@@ -1,0 +1,121 @@
+{
+  "scope": "static native/Java endpoint construction, not observed endpoints or live transmission",
+  "provider": {
+    "method_index": 26,
+    "method": "jnidispatchO",
+    "signature": "(I)Ljava/lang/Object;",
+    "cache_va": "0xc468c0",
+    "selector": 0
+  },
+  "java_prefix": "https://",
+  "java_suffix": "/deidentified_telemetry",
+  "fallback_native_string_selector": 22,
+  "strings": [
+    {
+      "va": "0xf29cb",
+      "value": "privatestats/wameta/transport/task/skip - already sending a task"
+    },
+    {
+      "va": "0xfd458",
+      "value": "privatestats/wameta/transport/task/pickandsending"
+    },
+    {
+      "va": "0xfb2ee",
+      "value": "privatestats/wameta/transport/invalid_ps_endpoint, ignoring"
+    },
+    {
+      "va": "0xb28f2",
+      "value": "privatestats/wameta/transport/create/custom_endpoint/success"
+    },
+    {
+      "va": "0xfa6bd",
+      "value": "privatestats/wameta/transport/create/custom_endpoint/missing"
+    },
+    {
+      "va": "0x1468e4",
+      "value": "privatestats/wameta/transport/fetch_endpoints/custom_endpoints - got endpoints: %d"
+    }
+  ],
+  "windows": [
+    {
+      "name": "scheduler",
+      "start_va": "0x727d40",
+      "end_va": "0x728050",
+      "file_offset": "0x723d40",
+      "bytes": 784,
+      "sha256": "18b05d57a06151cd221ce1f8657f74a97ae878ab0f924558739898f9a5e36834"
+    },
+    {
+      "name": "java-object-bridge",
+      "start_va": "0x6ecde0",
+      "end_va": "0x6ece48",
+      "file_offset": "0x6e8de0",
+      "bytes": 104,
+      "sha256": "fccc59fda02f51b6ed9f36847a94b326a0014d8f35555b162f73fe635566d7b7"
+    },
+    {
+      "name": "java-array-conversion",
+      "start_va": "0x6ea11c",
+      "end_va": "0x6ea124",
+      "file_offset": "0x6e611c",
+      "bytes": 8,
+      "sha256": "d1cd5241d85a2c8700c69db1d0ae80c9f2214491d2a32e1162d222548c060847"
+    },
+    {
+      "name": "endpoint-array-init",
+      "start_va": "0xbe5224",
+      "end_va": "0xbe5230",
+      "file_offset": "0xbe1224",
+      "bytes": 12,
+      "sha256": "8e541d2b611f8247104dd6427aaf96e8f772a912bfebc14049a0e5539f9e0196"
+    },
+    {
+      "name": "task-dictionary-arguments",
+      "start_va": "0x547a90",
+      "end_va": "0x547a9c",
+      "file_offset": "0x543a90",
+      "bytes": 12,
+      "sha256": "555a45992cd7c5bc8910fe6c2c3cfb0001eb3bf9627e3fdf0fc114508dd3771f"
+    },
+    {
+      "name": "dynamic-url-append-arguments",
+      "start_va": "0xbe66f4",
+      "end_va": "0xbe6700",
+      "file_offset": "0xbe26f4",
+      "bytes": 12,
+      "sha256": "c2d809c3e113cc6294689e55ac342922d8f75e11837b05539eef787882a226c6"
+    },
+    {
+      "name": "url-index-arguments",
+      "start_va": "0xbec3dc",
+      "end_va": "0xbec3e8",
+      "file_offset": "0xbe83dc",
+      "bytes": 12,
+      "sha256": "bb93f5e9c9331dd01d29cf3e76a9148516f560c70e700af61af675ae26c17a6d"
+    },
+    {
+      "name": "fallback-append-arguments",
+      "start_va": "0x547618",
+      "end_va": "0x547624",
+      "file_offset": "0x543618",
+      "bytes": 12,
+      "sha256": "82f4e8dd34834098c7822f38e225cc4629231d7a7295fc6b1b05ed51318c1ed4"
+    },
+    {
+      "name": "first-url-arguments",
+      "start_va": "0xbe2e4c",
+      "end_va": "0xbe2e58",
+      "file_offset": "0xbdee4c",
+      "bytes": 12,
+      "sha256": "77a35131c41cf01de65ac1da37b115e6cd52f530f855508c9a03f178f3ecc6aa"
+    },
+    {
+      "name": "busy-gate-arguments",
+      "start_va": "0xbe23e0",
+      "end_va": "0xbe23ec",
+      "file_offset": "0xbde3e0",
+      "bytes": 12,
+      "sha256": "5b8846a176ab043a6b23ca51317287e755d0982c9f0941f4d4a285794eea8d89"
+    }
+  ]
+}

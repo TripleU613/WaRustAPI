@@ -1,0 +1,118 @@
+# class: Lcom/whatsapp/wamsys/JniBridge;
+.method public jnidispatchO(LI)  # .registers 8
+    # full signature: Lcom/whatsapp/wamsys/JniBridge;->jnidispatchO(I)Ljava/lang/Object;
+    0000..0002  const/4  v6, #0x0
+    0002..0006  if-eqz  v7, +0x13
+    0006..0008  const/4  v0, #0x1
+    0008..000c  if-eq  v7, v0, +0x3
+    000c..000e  return-object  v6
+    000e..0012  sget-object  v0, Lcom/whatsapp/wamsys/JniBridge;->INSTANCE:Lcom/whatsapp/wamsys/JniBridge;
+    0012..0016  iget-object  v0, v0, Lcom/whatsapp/wamsys/JniBridge;->jniCallbacksIJniCallbacksAndroidIntegrity:LX/0Wc;
+    0016..001a  iget-object  v1, v0, LX/0Wc;->A04:LX/08Y;
+    001a..001e  const/16  v0, #0x281a
+    001e..0024  invoke-virtual  {v1, v0}, LX/00E;->A0i(I)Ljava/lang/String;
+    0024..0026  move-result-object  v0
+    0026..0028  return-object  v0
+    0028..002c  sget-object  v0, Lcom/whatsapp/wamsys/JniBridge;->INSTANCE:Lcom/whatsapp/wamsys/JniBridge;
+    002c..0030  iget-object  v0, v0, Lcom/whatsapp/wamsys/JniBridge;->jniCallbacksIJniCallbacks:LX/0WS;
+    0030..0034  iget-object  v0, v0, LX/0WS;->A06:LX/00x;
+    0034..003a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    003a..003c  move-result-object  v2
+    003c..0040  check-cast  v2, LX/2CQ;
+    0040..0044  new-instance  v5, Ljava/util/ArrayList;
+    0044..004a  invoke-direct  {v5}, Ljava/util/ArrayList;-><init>()V
+    004a..004e  iget-object  v1, v2, LX/2CQ;->A00:LX/00x;
+    004e..0054  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    0054..0056  move-result-object  v0
+    0056..005a  check-cast  v0, LX/0ZW;
+    005a..0060  invoke-virtual  {v0}, LX/0ZW;->A03()LX/JzG;
+    0060..0062  move-result-object  v3
+    0062..0068  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    0068..006a  move-result-object  v1
+    006a..006e  check-cast  v1, LX/0ZW;
+    006e..0074  invoke-static  {v1}, LX/0ZW;->A00(LX/0ZW;)LX/0ZX;
+    0074..0076  move-result-object  v0
+    0076..007c  invoke-virtual  {v0}, LX/0ZX;->A04()Z
+    007c..007e  move-result  v0
+    007e..0082  if-eqz  v0, +0x37
+    0082..0088  invoke-static  {v1}, LX/0ZW;->A00(LX/0ZW;)LX/0ZX;
+    0088..008a  move-result-object  v0
+    008a..008e  iget-object  v1, v0, LX/0ZX;->A00:LX/08Y;
+    008e..0092  const/16  v0, #0xfea
+    0092..0098  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    0098..009a  move-result  v0
+    009a..009e  if-eqz  v0, +0x29
+    009e..00a2  if-eqz  v3, +0x27
+    00a2..00a6  new-instance  v1, Ljava/lang/StringBuilder;
+    00a6..00ac  invoke-direct  {v1}, Ljava/lang/StringBuilder;-><init>()V
+    00ac..00b0  sget-object  v0, LX/0cJ;->A0T:Ljava/lang/String;
+    00b0..00b6  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00b6..00ba  iget-object  v0, v3, LX/JzG;->A03:Ljava/lang/String;
+    00ba..00c0  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00c0..00c4  const-string  v0, ":"
+    00c4..00ca  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00ca..00ce  iget  v0, v3, LX/JzG;->A01:I
+    00ce..00d4  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00d4..00d8  sget-object  v0, LX/0cJ;->A0X:Ljava/lang/String;
+    00d8..00de  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00de..00e4  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00e4..00e6  move-result-object  v0
+    00e6..00ec  invoke-virtual  {v5, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    00ec..00f0  iget-object  v1, v2, LX/2CQ;->A01:LX/08Y;
+    00f0..00f4  const/16  v0, #0xfb4
+    00f4..00fa  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    00fa..00fc  move-result  v0
+    00fc..0100  if-eqz  v0, +0x64
+    0100..0104  iget-object  v0, v2, LX/2CQ;->A02:LX/0VM;
+    0104..010a  invoke-static  {v0}, LX/0VM;->A08(LX/0VM;)V
+    010a..0110  invoke-virtual  {v0}, LX/0VM;->A0P()LX/1t5;
+    0110..0112  move-result-object  v0
+    0112..0116  if-eqz  v0, +0x59
+    0116..011a  iget-object  v0, v0, LX/1t5;->A0C:Ljava/util/List;
+    011a..0120  invoke-interface  {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0120..0122  move-result-object  v4
+    0122..0128  invoke-interface  {v4}, Ljava/util/Iterator;->hasNext()Z
+    0128..012a  move-result  v0
+    012a..012e  if-eqz  v0, +0x4d
+    012e..0134  invoke-interface  {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0134..0136  move-result-object  v3
+    0136..013a  check-cast  v3, LX/1t1;
+    013a..013e  iget-object  v0, v3, LX/1t1;->A0B:Ljava/util/Set;
+    013e..0142  if-eqz  v0, +0x8
+    0142..0148  invoke-interface  {v0}, Ljava/util/Set;->isEmpty()Z
+    0148..014a  move-result  v0
+    014a..014e  if-nez  v0, -0x14
+    014e..0152  iget-object  v2, v3, LX/1t1;->A05:Ljava/lang/String;
+    0152..0156  if-eqz  v2, +0x1b
+    0156..015a  new-instance  v1, Ljava/lang/StringBuilder;
+    015a..0160  invoke-direct  {v1}, Ljava/lang/StringBuilder;-><init>()V
+    0160..0164  sget-object  v0, LX/0cJ;->A0T:Ljava/lang/String;
+    0164..016a  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    016a..0170  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0170..0174  sget-object  v0, LX/0cJ;->A0X:Ljava/lang/String;
+    0174..017a  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    017a..0180  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0180..0182  move-result-object  v0
+    0182..0188  invoke-virtual  {v5, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0188..018c  iget-object  v2, v3, LX/1t1;->A01:Ljava/lang/String;
+    018c..0190  if-eqz  v2, -0x35
+    0190..0194  new-instance  v1, Ljava/lang/StringBuilder;
+    0194..019a  invoke-direct  {v1}, Ljava/lang/StringBuilder;-><init>()V
+    019a..019e  sget-object  v0, LX/0cJ;->A0T:Ljava/lang/String;
+    019e..01a4  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    01a4..01aa  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    01aa..01ae  sget-object  v0, LX/0cJ;->A0X:Ljava/lang/String;
+    01ae..01b4  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    01b4..01ba  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    01ba..01bc  move-result-object  v0
+    01bc..01c2  invoke-virtual  {v5, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    01c2..01c4  goto  -0x50
+    01c4..01c6  return-object  v5
+    01c6..01c8  move-exception  v1
+    01c8..01cc  sget-object  v0, Lcom/whatsapp/wamsys/JniBridge;->INSTANCE:Lcom/whatsapp/wamsys/JniBridge;
+    01cc..01d0  iget-object  v0, v0, Lcom/whatsapp/wamsys/JniBridge;->jniBridgeExceptionHandler:LX/0Wg;
+    01d0..01d6  invoke-virtual  {v0, v1}, LX/0Wg;->A00(Ljava/lang/Exception;)V
+    01d6..01d8  return-object  v6
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/Exception; code_units 0007..00e3 -> 00e3
+.end method

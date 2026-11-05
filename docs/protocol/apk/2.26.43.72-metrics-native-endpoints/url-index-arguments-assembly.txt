@@ -1,0 +1,3 @@
+            0x00bec3dc      mov   x0, x23
+            0x00bec3e0      mov   w1, w25
+            0x00bec3e4      ret

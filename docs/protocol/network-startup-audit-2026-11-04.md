@@ -492,3 +492,15 @@ write/close/count but uses wb; atomic durability remains unproven.
 [Paired native bodies, raw schema, fixtures and failure-branch limits](apk/2.26.43.72-metrics-native-credential-file/README.md).
 Observer callback is persistence, not endpoint production. Endpoints, full load
 scheduling, crypto and runtime behavior remain open. No Rust/live change.
+
+### Native metrics endpoint production and finite-list fallback (2026-11-05)
+
+**Confirmed static / observed bounded synthetic append/store, APK43.72:**
+scheduler replaces one task's URL list with accepted provider entries in order
+then native selector22 fallback. JNI index26 binds Java selector0 provider; its
+selected prefix/suffix decode to https:// and /deidentified_telemetry. Seven
+native cases verify append/store ordering with controlled URL results. Sender
+consumes index0 before construction; selected response fallback reuses the list.
+[Producer conditions, native bodies, fixtures and remaining scope](apk/2.26.43.72-metrics-native-endpoints/README.md).
+Actual dynamic/default endpoint values, generic URL policy, full retry timing
+and generation fencing remain open. No Rust runtime or live operation added.

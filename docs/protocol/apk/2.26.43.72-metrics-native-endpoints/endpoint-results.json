@@ -1,0 +1,99 @@
+{
+  "scope": "synthetic endpoint append/store only; URL parsing, provider, strings and network not executed",
+  "unicorn_version": "2.1.4",
+  "instruction_cap_per_case": 100000,
+  "timeout_microseconds_per_case": 1000000,
+  "cases": [
+    {
+      "case": "absent-provider-list",
+      "dynamic_parse_results": [],
+      "fallback_parse_result": true,
+      "appended_synthetic_urls": [
+        "0x10000800"
+      ],
+      "stored": true,
+      "aborted": false
+    },
+    {
+      "case": "empty-list",
+      "dynamic_parse_results": [],
+      "fallback_parse_result": true,
+      "appended_synthetic_urls": [
+        "0x10000800"
+      ],
+      "stored": true,
+      "aborted": false
+    },
+    {
+      "case": "one-valid",
+      "dynamic_parse_results": [
+        true
+      ],
+      "fallback_parse_result": true,
+      "appended_synthetic_urls": [
+        "0x10002000",
+        "0x10000800"
+      ],
+      "stored": true,
+      "aborted": false
+    },
+    {
+      "case": "all-invalid",
+      "dynamic_parse_results": [
+        false,
+        false
+      ],
+      "fallback_parse_result": true,
+      "appended_synthetic_urls": [
+        "0x10000800"
+      ],
+      "stored": true,
+      "aborted": false
+    },
+    {
+      "case": "mixed-order",
+      "dynamic_parse_results": [
+        true,
+        false,
+        true
+      ],
+      "fallback_parse_result": true,
+      "appended_synthetic_urls": [
+        "0x10002000",
+        "0x10002020",
+        "0x10000800"
+      ],
+      "stored": true,
+      "aborted": false
+    },
+    {
+      "case": "several-valid",
+      "dynamic_parse_results": [
+        true,
+        true,
+        true
+      ],
+      "fallback_parse_result": true,
+      "appended_synthetic_urls": [
+        "0x10002000",
+        "0x10002010",
+        "0x10002020",
+        "0x10000800"
+      ],
+      "stored": true,
+      "aborted": false
+    },
+    {
+      "case": "invalid-fallback",
+      "dynamic_parse_results": [
+        true
+      ],
+      "fallback_parse_result": false,
+      "appended_synthetic_urls": [
+        "0x10002000"
+      ],
+      "stored": false,
+      "aborted": true
+    }
+  ]
+}

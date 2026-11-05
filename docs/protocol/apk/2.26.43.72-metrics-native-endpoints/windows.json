@@ -1,0 +1,52 @@
+[
+  {
+    "name": "scheduler",
+    "start_va": "0x727d40",
+    "end_va": "0x728050"
+  },
+  {
+    "name": "java-object-bridge",
+    "start_va": "0x6ecde0",
+    "end_va": "0x6ece48"
+  },
+  {
+    "name": "java-array-conversion",
+    "start_va": "0x6ea11c",
+    "end_va": "0x6ea124"
+  },
+  {
+    "name": "endpoint-array-init",
+    "start_va": "0xbe5224",
+    "end_va": "0xbe5230"
+  },
+  {
+    "name": "task-dictionary-arguments",
+    "start_va": "0x547a90",
+    "end_va": "0x547a9c"
+  },
+  {
+    "name": "dynamic-url-append-arguments",
+    "start_va": "0xbe66f4",
+    "end_va": "0xbe6700"
+  },
+  {
+    "name": "url-index-arguments",
+    "start_va": "0xbec3dc",
+    "end_va": "0xbec3e8"
+  },
+  {
+    "name": "fallback-append-arguments",
+    "start_va": "0x547618",
+    "end_va": "0x547624"
+  },
+  {
+    "name": "first-url-arguments",
+    "start_va": "0xbe2e4c",
+    "end_va": "0xbe2e58"
+  },
+  {
+    "name": "busy-gate-arguments",
+    "start_va": "0xbe23e0",
+    "end_va": "0xbe23ec"
+  }
+]

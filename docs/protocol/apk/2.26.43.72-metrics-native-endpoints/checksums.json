@@ -1,0 +1,78 @@
+{
+  "README.md": {
+    "bytes": 7319,
+    "sha256": "366be2de7c86cc78a1d19fc5d5f7715dcbb58c73e086ca5b8ef597a899e785f3"
+  },
+  "busy-gate-arguments-assembly.txt": {
+    "bytes": 114,
+    "sha256": "625c125ec6c7119ea5d0f1c3764ca188879e83cd7d21725ad83d6c9dbb799931"
+  },
+  "check-endpoints.py": {
+    "bytes": 6070,
+    "sha256": "e6922b6ac1541e3f3411356cc9dd9b3b63140521ef9b87ca0a178f46be03d623"
+  },
+  "dynamic-url-append-arguments-assembly.txt": {
+    "bytes": 116,
+    "sha256": "a87c389e3fe0296e3cef729f46ea72220a00c29b0876be379442deb3cf8ba2d4"
+  },
+  "endpoint-array-init-assembly.txt": {
+    "bytes": 117,
+    "sha256": "c154cf20bb710e9f20b80a72182bc8da52893ac3f5cde6907e0d8bca114fa997"
+  },
+  "endpoint-boundaries.json": {
+    "bytes": 3560,
+    "sha256": "903d32fd5d831f3c8d3f5459db7b0543bc6ba2df5d0b46656aad99b259aab234"
+  },
+  "endpoint-constants-excerpt.txt": {
+    "bytes": 665,
+    "sha256": "f029a71cd3b2cb6aabcd164d5292ba595f41e01beddb76cf1ae59b4b7eb613a5"
+  },
+  "endpoint-results.json": {
+    "bytes": 2127,
+    "sha256": "26623fb19e7311de446fe8c8fa05ab3c4458883b884f1b5a3f7f721947559cde"
+  },
+  "fallback-append-arguments-assembly.txt": {
+    "bytes": 116,
+    "sha256": "ea76f002f8491d651a3eb3576635ae5b609b1860ffd60ecd43b09dc428f87834"
+  },
+  "first-url-arguments-assembly.txt": {
+    "bytes": 116,
+    "sha256": "b60b4569f04e4e4a40d1f61ca27544ab20fc2d3a7202b627e3a0339e89227a02"
+  },
+  "inspect-endpoints.py": {
+    "bytes": 1744,
+    "sha256": "2a40a79bd88accc4bdde2df21d54d0309e3cb755320e7855b2c237a6b45e1450"
+  },
+  "java-array-conversion-assembly.txt": {
+    "bytes": 85,
+    "sha256": "ffc481c007b7cdf7f1d96d332331ed106e23825d5cfc2a789ed962f06afc175e"
+  },
+  "java-endpoint-provider.txt": {
+    "bytes": 7292,
+    "sha256": "6548ea2a721b268fec4859af71e356710db1cec047678dd52f7ac55b29685e68"
+  },
+  "java-object-bridge-assembly.txt": {
+    "bytes": 1412,
+    "sha256": "e29612b3d82e4c3a4ce8c7348311613929a6f9faf9ade2ad2d027adccda84792"
+  },
+  "java-string-decoder.txt": {
+    "bytes": 1035,
+    "sha256": "d7bf21e06470cafbfba1f38c785b8755f3e308431f79543f8ee50faa1333aa91"
+  },
+  "scheduler-assembly.txt": {
+    "bytes": 11368,
+    "sha256": "aff2a38adec0a02cdc4d58ac14c850a7ccfd699ab8ece4244ef4592d48391680"
+  },
+  "task-dictionary-arguments-assembly.txt": {
+    "bytes": 116,
+    "sha256": "80e3f254056a6c79c5e2cc488c624c1340460c10dc8b5e376aa0a8fd17445d92"
+  },
+  "url-index-arguments-assembly.txt": {
+    "bytes": 116,
+    "sha256": "b525530742c04dc53b718a2a831edd8fb67e7c61edb72bb686c3a3614175045f"
+  },
+  "windows.json": {
+    "bytes": 985,
+    "sha256": "597c78e558ea2a906d332c931f56fd0d1208a384b29c81cd1e0642251747516a"
+  }
+}

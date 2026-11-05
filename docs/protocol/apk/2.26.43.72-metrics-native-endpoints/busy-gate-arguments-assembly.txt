@@ -1,0 +1,3 @@
+            0x00be23e0      mov   x19, x0
+            0x00be23e4      cmp   w8, 1
+            0x00be23e8      ret

@@ -1,0 +1,26 @@
+            0x006ecde0      paciasp
+            0x006ecde4      sub   sp, sp, 0x40
+            0x006ecde8      stp   x29, x30, [sp, 0x20]
+            0x006ecdec      stp   x20, x19, [sp, 0x30]
+            0x006ecdf0      add   x29, sp, 0x20
+            0x006ecdf4      mrs   x20, tpidr_el0
+            0x006ecdf8      adrp  x9, 0xc46000
+            0x006ecdfc      mov   w3, w1
+            0x006ece00      bl    0xbe0704
+            0x006ece04      adrp  x8, 0xc44000
+            0x006ece08      ldr   x1, [x8, 0xbd0]                      ; [0xbd0:4]=0x54d2
+            0x006ece0c      ldr   x2, [x9, 0x8c0]                      ; [0x8c0:4]=0
+            0x006ece10      add   x8, sp, 8
+            0x006ece14      bl    method.facebook::simplejni.callStaticObjectMethod__JNIEnv____jclass____jmethodID___...
+            0x006ece18      ldr   x19, [sp, 0x10]                      ; [0x10:4]=0xb70003
+            0x006ece1c      add   x0, sp, 8
+            0x006ece20      str   xzr, [sp, 0x10]
+            0x006ece24      bl    0x6ea124
+            0x006ece28      bl    0xbdd77c
+        ┌─< 0x006ece2c      b.ne  0x6ece44
+        │   0x006ece30      bl    0xbe18bc
+        │   0x006ece34      ldp   x29, x30, [sp, 0x20]
+        │   0x006ece38      add   sp, sp, 0x40
+        │   0x006ece3c      autiasp
+        │   0x006ece40      ret
+        └─> 0x006ece44      bl    sym.imp.__stack_chk_fail

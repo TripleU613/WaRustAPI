@@ -1,0 +1,196 @@
+        ╎   0x00727d40      paciasp
+        ╎   0x00727d44      stp   x29, x30, [sp, -0x60]!
+        ╎   0x00727d48      bl    0xbdc944
+        ╎   0x00727d4c      mov   x29, sp
+        ╎   0x00727d50      ldrb  w8, [x0, 0xb0]                       ; [0xb0:4]=1
+        ╎   0x00727d54      bl    0xbe23e0
+       ┌──< 0x00727d58      b.ne  0x727d7c
+       │╎   0x00727d5c      bl    sym.imp.MCFAbsoluteTimeGetCurrent
+       │╎   0x00727d60      ldr   d1, [x19, 0xb8]                      ; [0xb8:4]=0x47fcb0
+       │╎   0x00727d64      fmov  d2, 15.00000000
+       │╎   0x00727d68      fsub  d1, d0, d1
+       │╎   0x00727d6c      fcmp  d1, d2
+      ┌───< 0x00727d70      b.le  0x727d7c
+      ││╎   0x00727d74      strb  wzr, [x19, 0xc0]
+      ││╎   0x00727d78      str   d0, [x19, 0xb8]
+      └└──> 0x00727d7c      ldrb  w8, [x19, 0xc0]                      ; [0xc0:4]=0x483cb0 segment.LOAD1
+        ╎   0x00727d80      cmp   w8, 1
+       ┌──< 0x00727d84      b.ne  0x727db0
+       │╎   0x00727d88      ldr   x0, [x19, 0x28]                      ; [0x28:4]=0xc306e8
+       │╎   0x00727d8c      bl    0x49bcb4
+       │╎   0x00727d90      adrp  x2, 0xf2000
+       │╎   0x00727d94      add   x2, x2, 0x9cb
+       │╎   0x00727d98      bl    0xbe05a4
+       │╎   0x00727d9c      mov   w1, 2
+       │╎   0x00727da0      ldp   x28, x27, [sp, 0x10]
+       │╎   0x00727da4      ldp   x29, x30, [sp], 0x60
+       │╎   0x00727da8      autiasp
+       │└─< 0x00727dac      b     0x7216b0
+       └──> 0x00727db0      ldr   x0, [x19, 0x60]                      ; [0x60:4]=0x230 ; "0\U00000002"
+            0x00727db4      bl    sym.imp.MCFDictionaryGetCount
+            0x00727db8      mov   w8, w0
+            0x00727dbc      ldr   x0, [x19, 0x28]                      ; [0x28:4]=0xc306e8
+        ┌─< 0x00727dc0      cbz   w8, 0x727f80
+        │   0x00727dc4      adrp  x2, 0xfd000
+        │   0x00727dc8      add   x2, x2, 0x458
+        │   0x00727dcc      mov   w1, 2
+        │   0x00727dd0      bl    0x7216b0
+        │   0x00727dd4      mov   w0, 1
+        │   0x00727dd8      bl    sym.imp.MCFArrayCreateMutable
+        │   0x00727ddc      ldr   x8, [x19, 0x60]                      ; [0x60:4]=0x230 ; "0\U00000002"
+        │   0x00727de0      bl    0xbe2e34
+        │   0x00727de4      bl    sym.imp.MCFDictionaryGetCount
+        │   0x00727de8      cmp   w0, 0
+       ┌──< 0x00727dec      b.le  0x727e6c
+       ││   0x00727df0      mov   w1, 8
+       ││   0x00727df4      mov   w23, w0
+       ││   0x00727df8      bl    sym.imp.MCFSafeMalloc
+       ││   0x00727dfc      mov   x21, x0
+       ││   0x00727e00      mov   w0, w23
+       ││   0x00727e04      mov   w1, 8
+       ││   0x00727e08      bl    sym.imp.MCFSafeMalloc
+       ││   0x00727e0c      ldr   x8, [x19, 0x60]                      ; [0x60:4]=0x230 ; "0\U00000002"
+       ││   0x00727e10      mov   x22, x0
+       ││   0x00727e14      bl    0x547a90
+       ││   0x00727e18      mov   x0, x8
+       ││   0x00727e1c      bl    sym.imp.MCFDictionaryGetKeysAndValues
+       ││   0x00727e20      ubfiz x24, x23, 3, 0x20
+       ││   0x00727e24      mov   x25, xzr
+      ┌───> 0x00727e28      cmp   x24, x25
+     ┌────< 0x00727e2c      b.eq  0x727e5c
+     │╎││   0x00727e30      ldr   x23, [x21, x25]
+     │╎││   0x00727e34      mov   x0, x20
+     │╎││   0x00727e38      bl    sym.imp.MCFArrayGetCount
+     │╎││   0x00727e3c      cmp   w0, 2
+    ┌─────< 0x00727e40      b.ge  0x728048
+    ││╎││   0x00727e44      cmp   w0, 1
+   ┌──────< 0x00727e48      b.eq  0x727e54
+   │││╎││   0x00727e4c      bl    0x54875c
+   │││╎││   0x00727e50      bl    sym.imp.MCFArrayAppendValue
+   └──────> 0x00727e54      add   x25, x25, 8
+    ││└───< 0x00727e58      b     0x727e28
+    │└────> 0x00727e5c      mov   x0, x22
+    │  ││   0x00727e60      bl    sym.imp.MCFFree
+    │  ││   0x00727e64      mov   x0, x21
+    │  ││   0x00727e68      bl    sym.imp.MCFFree
+    │  └──> 0x00727e6c      bl    0x5ce230
+    │   │   0x00727e70      bl    sym.imp.MCFArrayGetValueAtIndex
+    │   │   0x00727e74      ldr   x8, [x19, 0x68]                      ; [0x68:4]=0x230 ; "0\U00000002"
+    │   │   0x00727e78      mov   x21, x0
+    │   │   0x00727e7c      bl    0xbedd24
+    │   │   0x00727e80      bl    sym.imp.MCFDictionaryRemoveValue
+    │   │   0x00727e84      mov   w0, wzr
+    │   │   0x00727e88      bl    sym.imp.MCFArrayCreateMutable
+    │   │   0x00727e8c      bl    0xbe5224
+    │   │   0x00727e90      mov   w8, 1
+    │  ┌──< 0x00727e94      tbz   w8, 0, 0x727ef8
+    │ ┌───> 0x00727e98      ldr   x8, [x19, 0x48]                      ; [0x48:4]=64 ; "@"
+    │ ╎││   0x00727e9c      cmp   x8, 0
+    │ ╎││   0x00727ea0      cset  w8, eq
+    │┌────< 0x00727ea4      tbnz  w8, 0, 0x727ef0
+   ┌──────> 0x00727ea8      mov   w8, 1
+  ┌───────< 0x00727eac      tbz   w8, 0, 0x727ee8
+  ────────> 0x00727eb0      bl    sym.imp.wa_log_require_thread_attached
+  │╎││╎││   0x00727eb4      mov   w1, wzr
+  │╎││╎││   0x00727eb8      mov   x24, x0
+  │╎││╎││   0x00727ebc      bl    0x6ecde0
+  │╎││╎││   0x00727ec0      mov   x25, x0
+  │╎││╎││   0x00727ec4      bl    0x49c5e8
+  │╎││╎││   0x00727ec8      bl    0x6ea11c
+  │╎││╎││   0x00727ecc      ldr   x8, [x24]
+  │╎││╎││   0x00727ed0      mov   x23, x0
+  │╎││╎││   0x00727ed4      bl    0x49c5e8
+  │╎││╎││   0x00727ed8      ldr   x8, [x8, 0xb8]                       ; [0xb8:4]=0x47fcb0
+  │╎││╎││   0x00727edc      blr   x8
+  │╎││╎││   0x00727ee0      mov   w8, wzr
+  ────────< 0x00727ee4      tbnz  w8, 0, 0x727eb0
+  └───────> 0x00727ee8      mov   w8, 1
+   └──────< 0x00727eec      tbz   w8, 0, 0x727ea8
+    │└────> 0x00727ef0      mov   w8, wzr
+    │ └───< 0x00727ef4      tbnz  w8, 0, 0x727e98
+    │ ┌└──> 0x00727ef8      cbz   x23, 0x727fa8
+    │ │ │   0x00727efc      mov   x0, x23
+    │ │ │   0x00727f00      bl    sym.imp.MCFArrayGetCount
+    │ │ │   0x00727f04      cmp   w0, 1
+    │ │┌──< 0x00727f08      b.lt  0x727fbc
+    │ │││   0x00727f0c      mov   w24, w0
+    │ │││   0x00727f10      bl    0xbe2e4c
+    │ │││   0x00727f14      bl    sym.imp.MCFArrayGetValueAtIndex
+    │ │││   0x00727f18      mov   w25, wzr
+    │ │││   0x00727f1c      adrp  x26, 0xfb000
+    │ │││   0x00727f20      add   x26, x26, 0x2ee
+    │ │││   0x00727f24      adrp  x27, 0xb2000
+    │ │││   0x00727f28      add   x27, x27, 0x8f2
+    │┌────> 0x00727f2c      cmp   w24, w25
+   ┌──────< 0x00727f30      b.eq  0x727fbc
+   ││╎│││   0x00727f34      bl    0xbec3dc
+   ││╎│││   0x00727f38      bl    sym.imp.MCFArrayGetValueAtIndex
+   ││╎│││   0x00727f3c      bl    sym.imp.MCFURLCreateWithString
+   ││╎│││   0x00727f40      mov   x28, x0
+   ││╎│││   0x00727f44      ldr   x0, [x19, 0x28]                      ; [0x28:4]=0xc306e8
+  ┌───────< 0x00727f48      cbz   x28, 0x727f64
+  │││╎│││   0x00727f4c      mov   w1, 2
+  │││╎│││   0x00727f50      mov   x2, x27
+  │││╎│││   0x00727f54      bl    0x7216b0
+  │││╎│││   0x00727f58      bl    0xbe66f4
+  │││╎│││   0x00727f5c      bl    sym.imp.MCFArrayAppendValue
+  ────────< 0x00727f60      b     0x727f70
+  └───────> 0x00727f64      mov   w1, 3
+   ││╎│││   0x00727f68      mov   x2, x26
+   ││╎│││   0x00727f6c      bl    0x7216b0
+  ────────> 0x00727f70      mov   x0, x28
+   ││╎│││   0x00727f74      bl    sym.imp.MCFRelease
+   ││╎│││   0x00727f78      add   w25, w25, 1
+   ││└────< 0x00727f7c      b     0x727f2c
+   ││ ││└─> 0x00727f80      adrp  x2, 0x118000
+   ││ ││    0x00727f84      add   x2, x2, 0x5b1
+   ││ ││    0x00727f88      mov   w1, 2
+   ││ ││    0x00727f8c      bl    0x7216b0
+   ││ ││    0x00727f90      bl    0xbdfcf0
+   ││ ││    0x00727f94      mov   w1, wzr
+   ││ ││    0x00727f98      bl    0xbdd73c
+   ││ ││    0x00727f9c      ldp   x29, x30, [sp], 0x60
+   ││ ││    0x00727fa0      autiasp
+   ││ ││┌─< 0x00727fa4      b     0x728050
+   ││ └───> 0x00727fa8      ldr   x0, [x19, 0x28]                      ; [0x28:4]=0xc306e8
+   ││  ││   0x00727fac      adrp  x2, 0xfa000
+   ││  ││   0x00727fb0      add   x2, x2, 0x6bd
+   ││  ││   0x00727fb4      mov   w1, 3
+   ││  ││   0x00727fb8      bl    0x7216b0
+   └───└──> 0x00727fbc      mov   x0, x23
+    │   │   0x00727fc0      bl    sym.imp.MCFRelease
+    │   │   0x00727fc4      ldr   x23, [x19, 0x28]                     ; [0x28:4]=0xc306e8
+    │   │   0x00727fc8      mov   x0, x22
+    │   │   0x00727fcc      bl    sym.imp.MCFArrayGetCount
+    │   │   0x00727fd0      mov   w3, w0
+    │   │   0x00727fd4      adrp  x2, 0x146000
+    │   │   0x00727fd8      add   x2, x2, 0x8e4
+    │   │   0x00727fdc      bl    0xbe90a0
+    │   │   0x00727fe0      bl    0x7216b0
+    │   │   0x00727fe4      mov   w0, 0x16
+    │   │   0x00727fe8      bl    0x730a54
+    │   │   0x00727fec      mov   x23, x0
+    │   │   0x00727ff0      bl    sym.imp.MCFASCIIStringGetCString
+    │   │   0x00727ff4      bl    sym.imp.MCFURLCreateWithCString
+    │  ┌──< 0x00727ff8      cbz   x0, 0x72804c
+    │  ││   0x00727ffc      mov   x24, x0
+    │  ││   0x00728000      bl    0x547618
+    │  ││   0x00728004      bl    sym.imp.MCFArrayAppendValue
+    │  ││   0x00728008      mov   x0, x23
+    │  ││   0x0072800c      bl    sym.imp.MCFRelease
+    │  ││   0x00728010      mov   x0, x24
+    │  ││   0x00728014      bl    sym.imp.MCFRelease
+    │  ││   0x00728018      ldr   x0, [x19, 0x68]                      ; [0x68:4]=0x230 ; "0\U00000002"
+    │  ││   0x0072801c      bl    0x547a90
+    │  ││   0x00728020      bl    sym.imp.MCFDictionarySetValue
+    │  ││   0x00728024      mov   x0, x22
+    │  ││   0x00728028      bl    sym.imp.MCFRelease
+    │  ││   0x0072802c      mov   x0, x20
+    │  ││   0x00728030      bl    sym.imp.MCFRelease
+    │  ││   0x00728034      bl    0x4b13e0
+    │  ││   0x00728038      bl    0x49b480
+    │  ││   0x0072803c      ldp   x29, x30, [sp], 0x60
+    │  ││   0x00728040      autiasp
+    │ ┌───< 0x00728044      b     0x7280dc
+    └─────> 0x00728048      bl    sym.imp.abort
+      │└──> 0x0072804c      bl    sym.imp.abort

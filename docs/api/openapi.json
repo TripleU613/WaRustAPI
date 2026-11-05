@@ -16233,5 +16233,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-metrics-native-credential-file/README.md",
     "description": "Paired native credential save/load uses version2 25-byte header; stored expiry/count override constructor defaults. 23 bounded header cases verify admission only, including zero lengths/trailing bytes. Write/close/count handling retained; wb, atomicity and broader recovery remain scoped. No real credentials, Rust runtime or live operation added."
+  },
+  "x-metrics-native-endpoint-list-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK static and synthetic endpoint-list evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-metrics-native-endpoints/README.md",
+    "description": "JNI-bound Java selector0 produces conditional custom endpoints with selected https prefix/telemetry suffix. Native scheduler preserves successful conversion order, appends selector22 fallback and stores per-task list; selected response fallback consumes it. Seven controlled append/store fixtures pass. Actual endpoints, URL policy and full retry/generation behavior remain open. No Rust/live capability added."
   }
 }

@@ -1,3 +1,12 @@
+2026-11-05 — **Native metrics endpoint list production traced.**
+
+Java provider entries are converted in order, invalid conversions skipped and
+fallback appended last; selected response retries consume the stored list.
+Seven bounded append/store cases pass. [Evidence and limits](docs/protocol/apk/2.26.43.72-metrics-native-endpoints/README.md).
+Actual endpoint values, full retry/generation policy and crypto remain open.
+Validation: pinned native/constant resolver, fixtures, exact Java export, coverage
+and bundle/link hygiene. No Rust runtime or live traffic changed.
+
 2026-11-05 — **Native metrics credential file and restoration traced.**
 
 Paired save/load retains expiry/use count instead of relying on constructor

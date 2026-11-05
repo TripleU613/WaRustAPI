@@ -1,0 +1,24 @@
+
+# class: LX/0cJ;
+# extends: Ljava/lang/Object;
+
+.method public A00(LL)  # .registers 4
+    # full signature: LX/0cJ;->A00(Ljava/lang/String;)Ljava/lang/String;
+    0000..0004  new-instance  v2, Ljava/lang/StringBuilder;
+    0004..000a  invoke-direct  {v2}, Ljava/lang/StringBuilder;-><init>()V
+    000a..000c  const/4  v1, #0x0
+    000c..0012  invoke-virtual  {v3}, Ljava/lang/String;->length()I
+    0012..0014  move-result  v0
+    0014..0018  if-ge  v1, v0, +0xf
+    0018..001e  invoke-virtual  {v3, v1}, Ljava/lang/String;->charAt(I)C
+    001e..0020  move-result  v0
+    0020..0024  xor-int/lit8  v0, v0, #0x12
+    0024..0026  int-to-char  v0, v0
+    0026..002c  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(C)Ljava/lang/StringBuilder;
+    002c..0030  add-int/lit8  v1, v1, #0x1
+    0030..0032  goto  -0x12
+    0032..0038  invoke-virtual  {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0038..003a  move-result-object  v0
+    003a..003c  return-object  v0
+    # exception table: 0 try range(s)
+.end method
