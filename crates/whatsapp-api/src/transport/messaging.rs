@@ -858,14 +858,32 @@ pub fn received_confirmation_for_account(
 /// Only the receipt types this client handles are acknowledged — delivery,
 /// read and played. Retry success/error handling is distinct: the evidenced
 /// unsupported-version and confirmed schema-error branches get error487;
-/// other retry cases wait for their handler/completion policy implementation.
+/// a separately reserved resend may receive a success ACK through the private
+/// handled constructor. Other cases wait for their completion policy.
 fn receipt_ack(incoming: &Node) -> Option<Node> {
+    receipt_ack_after_processing(incoming, false)
+}
+
+// Only retry_answer's completed durable reservation calls this. A valid parser
+// result alone is not proof that this client handled a receipt.
+pub(super) fn handled_retry_confirmation(incoming: &Node) -> Option<Node> {
+    let retry = super::receipts::parse_retry(incoming)?;
+    if !retry.chat.is_user_like()
+        || !retry.device.is_user_like()
+        || !retry_context_supported(incoming)
+    {
+        return None;
+    }
+    receipt_ack_after_processing(incoming, true)
+}
+
+fn receipt_ack_after_processing(incoming: &Node, handled_retry: bool) -> Option<Node> {
     let from = super::receipts::ack_address(super::receipts::network_jid(incoming, "from")?);
     // APK43.72 distinguishes F10 null/unhandled (2Cx) from LIL parse errors
     // (1rg). Both use487, but their context fields differ. Local capability
     // refusals are not a generic parse error. docs/protocol/retry-ack-dispatch.md
     let retry_error = retry_receipt_error(incoming);
-    let kind = if retry_error.is_some() {
+    let kind = if retry_error.is_some() || handled_retry {
         "retry"
     } else {
         super::receipts::receipt_kind(incoming)?
@@ -915,24 +933,31 @@ enum RetryReceiptError {
     Parsing(&'static str),
 }
 
-fn retry_receipt_error(incoming: &Node) -> Option<RetryReceiptError> {
-    if incoming.get_attr("type").and_then(|v| v.as_text()) != Some("retry") {
-        return None;
-    }
+fn retry_context_supported(incoming: &Node) -> bool {
     // Keep unsupported context/address grammars unacknowledged. In particular,
     // do not infer which exception precedes F10 for a context we cannot read.
     if incoming.get_attr("participant").is_some()
         && super::receipts::network_jid(incoming, "participant").is_none()
     {
-        return None;
+        return false;
     }
     if incoming.get_attr("recipient").is_some() && super::receipts::recipient(incoming).is_none() {
-        return None;
+        return false;
     }
     if incoming
         .get_attr("edit")
         .is_some_and(|v| v.as_text().is_none())
     {
+        return false;
+    }
+    true
+}
+
+fn retry_receipt_error(incoming: &Node) -> Option<RetryReceiptError> {
+    if incoming.get_attr("type").and_then(|v| v.as_text()) != Some("retry") {
+        return None;
+    }
+    if !retry_context_supported(incoming) {
         return None;
     }
     // F10.A04 reads required retry, then registration (0Tp.A0G throws LIL),

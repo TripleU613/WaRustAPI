@@ -1,5 +1,11 @@
 {
   "openapi": "3.1.0",
+  "x-reserved-direct-retry-success-ack": {
+    "x-cli": false,
+    "x-transport": "normal direct receive reserved message retry response",
+    "x-live": false,
+    "description": "Private answer_with_confirmation calls existing answer reservation first; a reserved message with supported user-like request/context may attach root-id receipt ACK type=retry, without error. NodeLink writes ACK before resend and stops on either write failure. Public answer API unchanged. Generic confirmation still excludes valid unhandled retries. No success ACK for key query/refusal/duplicate/group/broadcast/unsupported context. Reserved uncertain work is held without automatic replay; full key-query/redelivery/recovery policy remains unfinished. Synthetic Signal/store workflow and injected write-outcome test, no live acceptance or HTTP route. APK43.72 160 callback registration ->14h.A00 ACK submission before Runnable. docs/protocol/retry-ack-dispatch.md"
+  },
   "x-retry-refetch-settlement-ownership": {
     "x-cli": false,
     "x-transport": "normal direct retry refetch completion persistence guard",

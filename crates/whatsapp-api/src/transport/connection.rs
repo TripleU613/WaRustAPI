@@ -256,6 +256,23 @@ impl NodeLink {
     ) -> Self {
         Self { incoming, outgoing }
     }
+    // APK43.72 14h.A00 submits the ACK before running the deferred Fe5
+    // callback. Reservation has committed before this handoff. Any write error
+    // ends the epoch; neither an ACK nor a resend authorizes replay.
+    async fn send_retry_answer(
+        &self,
+        answer: &super::retry_answer::ReservedAnswer,
+    ) -> Result<bool> {
+        let confirmed = if let Some(confirmation) = &answer.confirmation {
+            self.send(confirmation).await?;
+            true
+        } else {
+            false
+        };
+        self.send(&answer.node).await?;
+        Ok(confirmed)
+    }
+
     /// Write one stanza and wait for the socket outcome. A closed writer is a
     /// consumed connection: the caller must end this epoch, never retry here.
     async fn send(&self, node: &Node) -> Result<()> {
@@ -952,11 +969,12 @@ pub(crate) async fn drive(
                 // A peer that could not decrypt our direct send asks for it
                 // again (2.26.37.71 RetryReceiptHandler; retry_answer). The
                 // answer is reserved before this write; refusals are recorded.
+                let mut confirmed = false;
                 if receipt_recorded {
-                    match super::retry_answer::answer(&store, &account, &node, epoch).await {
-                        Ok(Some(resend)) => {
-                            link.send(&resend).await?;
-                            tracing::info!(target: "whatsapp_api::incoming", kind = %resend.description, "retry receipt answered (message), or its fresh-bundle query sent (iq)");
+                    match super::retry_answer::answer_with_confirmation(&store, &account, &node, epoch).await {
+                        Ok(Some(answer)) => {
+                            confirmed = link.send_retry_answer(&answer).await?;
+                            tracing::info!(target: "whatsapp_api::incoming", kind = %answer.node.description, "retry receipt answered (message), or its fresh-bundle query sent (iq)");
                         }
                         Ok(None) => {}
                         Err(Error::InvalidInput { field, reason }) => tracing::warn!(field, reason, "retry receipt not answered"),
@@ -976,7 +994,6 @@ pub(crate) async fn drive(
                         Err(error) => return Err(error),
                     }
                 }
-                let mut confirmed = false;
                 if ((node.description == "receipt" && receipt_recorded) || matches!(received, super::inbox::IncomingResult::Decrypted | super::inbox::IncomingResult::Duplicate))
                     && let Some(confirmation) = super::messaging::received_confirmation_for_account(&store, &account, &node)? {
                         // Raw capture and session/inbox commit precede this write.
@@ -1437,6 +1454,56 @@ mod tests {
     }
     fn peer() -> Jid {
         Jid::parse("15555550101@s.whatsapp.net").unwrap()
+    }
+
+    #[tokio::test]
+    async fn retry_ack_write_precedes_resend_and_failure_stops_the_pair() {
+        for outcome_kind in ["ack_failed", "resend_failed", "written"] {
+            let (_incoming, incoming) = mpsc::channel(1);
+            let (outgoing, mut writes) = mpsc::channel(2);
+            let link = NodeLink::new(incoming, outgoing);
+            let task = tokio::spawn(async move {
+                link.send_retry_answer(&super::super::retry_answer::ReservedAnswer {
+                    confirmation: Some(
+                        Node::new("ack")
+                            .attr("id", "ROOT")
+                            .attr("class", "receipt")
+                            .attr("type", "retry"),
+                    ),
+                    node: Node::new("message").attr("id", "W1"),
+                })
+                .await
+            });
+            let (first, outcome) = writes.recv().await.unwrap();
+            assert_eq!(first.description, "ack");
+            assert_eq!(first.get_attr("id").and_then(|v| v.as_text()), Some("ROOT"));
+            assert!(matches!(
+                writes.try_recv(),
+                Err(mpsc::error::TryRecvError::Empty)
+            ));
+            if outcome_kind != "ack_failed" {
+                outcome.send(Ok(())).unwrap();
+                let (second, outcome) = writes.recv().await.unwrap();
+                assert_eq!(second.description, "message");
+                assert_eq!(second.get_attr("id").and_then(|v| v.as_text()), Some("W1"));
+                if outcome_kind == "written" {
+                    outcome.send(Ok(())).unwrap();
+                    assert!(task.await.unwrap().unwrap());
+                } else {
+                    outcome
+                        .send(Err(Error::Transport(TransportError::Closed)))
+                        .unwrap();
+                    assert!(task.await.unwrap().is_err());
+                    assert!(writes.recv().await.is_none());
+                }
+            } else {
+                outcome
+                    .send(Err(Error::Transport(TransportError::Closed)))
+                    .unwrap();
+                assert!(task.await.unwrap().is_err());
+                assert!(writes.recv().await.is_none());
+            }
+        }
     }
 
     /// The fake server side of one injected link.

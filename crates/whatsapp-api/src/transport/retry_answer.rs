@@ -74,6 +74,42 @@ fn unanswered(store: &ProtocolStore, key: &str, reason: &str) -> Result<Option<N
     Ok(None)
 }
 
+/// A resend/key query whose state has already committed. A confirmation is
+/// attached only for an actual reserved message, never merely parsed input.
+pub(crate) struct ReservedAnswer {
+    pub node: Node,
+    pub confirmation: Option<Node>,
+}
+
+pub(crate) async fn answer_with_confirmation(
+    store: &ProtocolStore,
+    account: &AccountRecord,
+    node: &Node,
+    epoch: ConnectionEpoch,
+) -> Result<Option<ReservedAnswer>> {
+    let Some(answer) = answer(store, account, node, epoch).await? else {
+        return Ok(None);
+    };
+    let confirmation = if answer.description == "message" {
+        let confirmation = super::messaging::handled_retry_confirmation(node);
+        if confirmation.is_none() {
+            tracing::warn!(
+                field = "retry_context",
+                "reserved retry lacks supported ACK context"
+            );
+        }
+        confirmation
+    } else {
+        // Fresh-bundle work has a different asynchronous path. Do not infer
+        // its complete ACK/recovery policy from the saved-session callback.
+        None
+    };
+    Ok(Some(ReservedAnswer {
+        node: answer,
+        confirmation,
+    }))
+}
+
 /// Answer `node` if it is a retry receipt for our server-accepted direct send.
 /// Returns the resend to write, already reserved; `None` when not answered.
 pub async fn answer(
@@ -1568,7 +1604,18 @@ mod tests {
                 // no delivery fact, and only then reaches the answer.
                 super::super::receipts::validate(&node)?;
                 assert_eq!(super::super::receipts::record(store_ref, &node)?, 0);
-                answer(store_ref, account_ref, &node, ConnectionEpoch(2)).await
+                let reserved =
+                    answer_with_confirmation(store_ref, account_ref, &node, ConnectionEpoch(2))
+                        .await?;
+                Ok::<_, Error>(reserved.map(|answer| {
+                    if answer.node.description == "iq" {
+                        assert!(
+                            answer.confirmation.is_none(),
+                            "query alone is not success-ACK authority"
+                        );
+                    }
+                    answer.node
+                }))
             }
         };
 
@@ -1728,10 +1775,46 @@ mod tests {
             super::super::receipts::record(&store, &default_count).unwrap(),
             0
         );
-        let resend = answer(&store, &account, &default_count, ConnectionEpoch(2))
-            .await
+        let reserved =
+            answer_with_confirmation(&store, &account, &default_count, ConnectionEpoch(2))
+                .await
+                .unwrap()
+                .expect("default count answered as1");
+        let confirmation = reserved
+            .confirmation
+            .expect("reserved message has a receipt ACK");
+        assert_eq!(confirmation.description, "ack");
+        assert_eq!(
+            confirmation.get_attr("id").and_then(|v| v.as_text()),
+            Some("ROOT-RECEIPT")
+        );
+        assert_eq!(
+            confirmation.get_attr("type").and_then(|v| v.as_text()),
+            Some("retry")
+        );
+        assert_eq!(
+            confirmation.get_attr("recipient").and_then(|v| v.as_jid()),
+            Some(&retry_alias)
+        );
+        assert!(confirmation.get_attr("error").is_none());
+        let checkpoint: serde_json::Value = store
+            .read(|tx| {
+                tx.get_json(
+                    Table::Checkpoints,
+                    format!("retry-answer:W1:{peer}:1").as_bytes(),
+                    1,
+                )
+            })
             .unwrap()
-            .expect("default count answered as1");
+            .unwrap();
+        assert_eq!(checkpoint["status"], "reserved");
+        assert!(
+            answer_with_confirmation(&store, &account, &default_count, ConnectionEpoch(2))
+                .await
+                .unwrap()
+                .is_none()
+        );
+        let resend = reserved.node;
         assert_eq!(resend.get_attr("id").and_then(|v| v.as_text()), Some("W1"));
         assert_eq!(
             resend.get_attr("type").and_then(|v| v.as_text()),

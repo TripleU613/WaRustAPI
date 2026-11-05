@@ -1,3 +1,11 @@
+2026-11-05 — **Reserved direct retries now ACK before resend write.**
+
+Normal receive attaches success ACK only after durable message reservation and
+uses root receipt correlation. ACK failure prevents resend submission; any
+uncertain work stays held. Queries/refusals/duplicates/group paths remain outside
+this ACK authority. Validation:1325 tests, strict Clippy, fmt, CLI reference
+and hygiene passed. [Evidence, tests and limits](docs/protocol/retry-ack-dispatch.md#reserved-direct-resend-success-ack--2026-11-05). No live traffic.
+
 2026-11-05 — **Retry refetch settlement ownership strengthened.**
 
 Refusal and resend reservation now recheck the pending job snapshot and exact

@@ -881,3 +881,10 @@ Refusal and resend reservation now recheck the pending job snapshot and exact
 fetching/query/count checkpoint before consumption. Changed jobs/terminal or
 legacy markers remain held without overwriting peer or retry state.
 [Race regressions and limits](retry-answers.md#refetch-completion-ownership-guard-2026-11-05). No new send or success ACK.
+
+2026-11-05 — **Reserved direct retries now ACK before resend write.**
+
+Normal receive attaches success ACK only after durable message reservation and
+uses root receipt correlation. ACK failure prevents resend submission; any
+uncertain work stays held. Queries/refusals/duplicates/group paths remain outside
+this ACK authority. [Evidence, tests and limits](retry-ack-dispatch.md#reserved-direct-resend-success-ack--2026-11-05). No live traffic.

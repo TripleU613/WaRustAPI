@@ -364,3 +364,11 @@ families and full registration/routing remain unfinished. No account traffic.
 Validation:1324 workspace/all-feature tests passed, including the three filtered
 refetch tests. Strict workspace/all-target/all-feature Clippy, formatting, CLI
 reference regeneration, APK coverage and repository hygiene passed. All offline.
+
+## Normal reserved-resend ACK ordering (2026-11-05)
+
+The normal receive driver now attaches an APK-backed success ACK after a direct
+message resend has committed its reservation and before submitting that resend.
+Key-query/refused/duplicate paths do not gain ACK authority. The public answer
+API is unchanged; the private normal-driver wrapper carries the optional ACK.
+[Evidence, ordering/fault regressions and remaining recovery scope](retry-ack-dispatch.md#reserved-direct-resend-success-ack--2026-11-05).

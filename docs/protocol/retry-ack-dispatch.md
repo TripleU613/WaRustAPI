@@ -87,3 +87,51 @@ Validation:1323 workspace/all-feature tests passed, including25 filtered retry
 tests. Strict workspace/all-target/all-feature Clippy, formatting and CLI
 reference regeneration passed. APK coverage and research hygiene checked before
 push. This validates local decoded-node behavior, not live server acceptance.
+
+## Reserved direct resend success ACK — 2026-11-05
+
+**Confirmed static / bounded local port.** In pinned43.72,160.A04 buildsFe5 and
+puts it into14h.A09 at0668..06ac. On the selected non-BX2 successful-handler
+path,14h.A00 calls0Sf.A0O at0156..015c then branches to00fe, removes the Runnable
+and invokes it at0112..0118. The previously retained
+[dispatch](apk/2.26.43.72-retry-ack-dispatch/base-dispatch.txt),
+[handler](apk/2.26.43.72-retry-ack-dispatch/retry-handler.txt) and
+[writer binding](apk/2.26.43.72-retry-version-error-ack/README.md)
+establish ACK submission before this deferred callback. They do not establish
+remote receipt, cross-thread physical wire order or every query/group branch.
+
+Normal direct receive now uses answer_with_confirmation: it first calls the
+existing answer entrypoint, which prepares and atomically reserves the advanced
+session/re-encryption attempt. Only a returned **message** can attach a private
+handled-retry confirmation. Its decoded request must remain parseable with
+user-like chat/device and supported root correlation fields. The ACK uses root
+receipt id/from/type=retry/participant/recipient/edit, with no error attribute;
+its id is independent of the resend's nested original-message id.
+
+NodeLink.send_retry_answer submits the ACK and waits for its local write outcome
+before submitting the reserved resend. An ACK write error ends the epoch and
+prevents submitting that resend on the failed link; a resend error also ends the
+epoch. The existing reservation remains held/uncertain, never rolled back or
+replayed. This is a bounded local failure policy, not parity with every native
+queue/recovery behavior. Capture/admission and durable reservation still precede
+both writes. The generic confirmation helper does not newly ACK valid retries,
+so the later generic receive step cannot duplicate this success ACK.
+
+A key query alone, locally refused/unanswered request, duplicate/held answer,
+missing root context, group/broadcast retry and comparison group window do not
+gain success ACK authority from this change. Full key-query ACK sequencing,
+redelivery ACKs for already-held work, count/base-key policy and native ACK
+recovery remain unfinished. A crash between ACK and resend can still leave held
+uncertain work; this chunk adds no automatic replay or recovery claim.
+
+The existing real saved/fresh Signal/store workflow now exercises the normal
+wrapper, verifies the committed reserved checkpoint and same-ID attempt before
+observing a root-ID ACK, verifies a duplicate produces no new pair, and checks
+fresh-bundle queries have no success ACK. An injected NodeLink test checks the
+ACK is first, no resend is queued until its successful write outcome, and
+ACK/resend write failures stop without another submission. It executes local
+channels and synthetic crypto/store data, not a socket, APK runtime or account.
+
+Validation:1325 workspace/all-feature tests passed, along with strict workspace/
+all-target/all-feature Clippy, formatting, CLI-reference regeneration, APK
+coverage and repository hygiene. No live request or runtime-native observation.
