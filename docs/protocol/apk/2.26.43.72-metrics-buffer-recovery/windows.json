@@ -1,0 +1,37 @@
+[
+  {
+    "name": "buffer-loader",
+    "start_va": "0x6fe1a8",
+    "end_va": "0x6fe628"
+  },
+  {
+    "name": "outgoing-loader-entry",
+    "start_va": "0x726660",
+    "end_va": "0x7266d0"
+  },
+  {
+    "name": "bulk-delete-worker",
+    "start_va": "0x7266d0",
+    "end_va": "0x7268f8"
+  },
+  {
+    "name": "close-open-handles",
+    "start_va": "0x6fdfb0",
+    "end_va": "0x6fe084"
+  },
+  {
+    "name": "maximum-read-header-size",
+    "start_va": "0x72c4f0",
+    "end_va": "0x72c4fc"
+  },
+  {
+    "name": "adler-initial-arguments",
+    "start_va": "0xbe5ed0",
+    "end_va": "0xbe5edc"
+  },
+  {
+    "name": "header-second-byte-arguments",
+    "start_va": "0xbe7318",
+    "end_va": "0xbe7324"
+  }
+]

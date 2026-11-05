@@ -1,3 +1,12 @@
+2026-11-05 — **Metrics buffer loader admission and bulk-delete distinction traced.**
+
+Loader accepts selected prefix/type and WMT versions1/2/3 with positive bounded
+payload; restores checksum/state without payload comparison in this body.
+Separate directory walk is bulk deletion. [Evidence and limits](apk/2.26.43.72-metrics-buffer-recovery/README.md).
+Validation:18 native header cases and pinned loader/helper windows. Remaining
+files can pass local gates; automatic restart replay and cleanup policy remain
+unproven. No real I/O, Rust runtime change or live traffic.
+
 2026-11-05 — **Metrics completion-to-file-removal chain traced.**
 
 Selected regular table now binds owner callbacks: null-error success queues

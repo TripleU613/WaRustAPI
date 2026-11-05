@@ -609,3 +609,14 @@ removal. Worker remove failures report errno separately. [Evidence and limits](a
 Validation:4 controlled full-worker cases and pinned construction/function
 windows. Downstream bookkeeping/recovery remains open; no real files removed,
 Rust runtime change or live traffic.
+
+## Metrics file recovery (2026-11-05)
+
+2026-11-05 — **Metrics buffer loader admission and bulk-delete distinction traced.**
+
+Loader accepts selected prefix/type and WMT versions1/2/3 with positive bounded
+payload; restores checksum/state without payload comparison in this body.
+Separate directory walk is bulk deletion. [Evidence and limits](apk/2.26.43.72-metrics-buffer-recovery/README.md).
+Validation:18 native header cases and pinned loader/helper windows. Remaining
+files can pass local gates; automatic restart replay and cleanup policy remain
+unproven. No real I/O, Rust runtime change or live traffic.

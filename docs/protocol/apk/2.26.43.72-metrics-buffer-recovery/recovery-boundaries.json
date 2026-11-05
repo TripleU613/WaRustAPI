@@ -1,0 +1,82 @@
+{
+  "scope": "static file loader, header admission and separate bulk deletion; no full runtime recovery proof",
+  "loader_direct_bl_callers": [
+    "0x7262dc",
+    "0x7266ac"
+  ],
+  "strings": [
+    {
+      "virtual_address": "0x2fc21b",
+      "file_offset": "0x2fc21b",
+      "value": "wamt-a"
+    },
+    {
+      "virtual_address": "0x2fc222",
+      "file_offset": "0x2fc222",
+      "value": "wamt-o"
+    },
+    {
+      "virtual_address": "0xcaafa",
+      "file_offset": "0xcaafa",
+      "value": "%s/%s"
+    }
+  ],
+  "windows": [
+    {
+      "name": "buffer-loader",
+      "start_va": "0x6fe1a8",
+      "end_va": "0x6fe628",
+      "file_offset": "0x6fa1a8",
+      "bytes": 1152,
+      "sha256": "0fd64f9c41a0634422687ab301215825cd0fab3fc098434ebccdca7e5ab99ccf"
+    },
+    {
+      "name": "outgoing-loader-entry",
+      "start_va": "0x726660",
+      "end_va": "0x7266d0",
+      "file_offset": "0x722660",
+      "bytes": 112,
+      "sha256": "328650a3f311052b75722fe5c227303800ef20f09c5d6cad01598b81cf7a68ef"
+    },
+    {
+      "name": "bulk-delete-worker",
+      "start_va": "0x7266d0",
+      "end_va": "0x7268f8",
+      "file_offset": "0x7226d0",
+      "bytes": 552,
+      "sha256": "954252988b14b6b7a839adb787d7386e5699595f878cfe939eac595c129f3ea9"
+    },
+    {
+      "name": "close-open-handles",
+      "start_va": "0x6fdfb0",
+      "end_va": "0x6fe084",
+      "file_offset": "0x6f9fb0",
+      "bytes": 212,
+      "sha256": "9f2036e7576688b0b2c7b8e4f6fcb52ea8866245dca98b0bf6269d7586c49920"
+    },
+    {
+      "name": "maximum-read-header-size",
+      "start_va": "0x72c4f0",
+      "end_va": "0x72c4fc",
+      "file_offset": "0x7284f0",
+      "bytes": 12,
+      "sha256": "630f744c9a9f4b648b16e36899b993aa9c8ce5be99a990c1ff4835cb4ae5cddd"
+    },
+    {
+      "name": "adler-initial-arguments",
+      "start_va": "0xbe5ed0",
+      "end_va": "0xbe5edc",
+      "file_offset": "0xbe1ed0",
+      "bytes": 12,
+      "sha256": "68d05565878cc8237228d08d2ec13ee0b6ef5a79ec3aabfcef9e36c4a1a86429"
+    },
+    {
+      "name": "header-second-byte-arguments",
+      "start_va": "0xbe7318",
+      "end_va": "0xbe7324",
+      "file_offset": "0xbe3318",
+      "bytes": 12,
+      "sha256": "63d3aa090711921c484edd28c8213cdc3a472fbeee356728531210c14a6cb404"
+    }
+  ]
+}

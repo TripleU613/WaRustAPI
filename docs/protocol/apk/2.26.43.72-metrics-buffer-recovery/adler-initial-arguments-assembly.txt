@@ -1,0 +1,3 @@
+            0x00be5ed0      mov   x1, xzr
+            0x00be5ed4      mov   w2, wzr
+            0x00be5ed8      ret

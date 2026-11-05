@@ -1,0 +1,3 @@
+            0x00be7318      mov   x0, x28
+            0x00be731c      mov   w1, 1
+            0x00be7320      ret

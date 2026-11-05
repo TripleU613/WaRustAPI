@@ -1,0 +1,54 @@
+            0x006fdfb0      paciasp
+            0x006fdfb4      stp   x29, x30, [sp, -0x50]!
+            0x006fdfb8      str   x25, [sp, 0x10]
+            0x006fdfbc      bl    0x49b664
+            0x006fdfc0      mov   x29, sp
+            0x006fdfc4      bl    0xbe75d0
+            0x006fdfc8      bl    sym.imp.MCFDictionaryGetCount
+            0x006fdfcc      cmp   w0, 1
+        ┌─< 0x006fdfd0      b.lt  0x6fe074
+        │   0x006fdfd4      mov   w1, 8
+        │   0x006fdfd8      mov   w21, w0
+        │   0x006fdfdc      bl    sym.imp.MCFSafeMalloc
+        │   0x006fdfe0      ldr   x8, [x19, 0x40]                      ; segment.PHDR
+        │                                                              ; [0x40:4]=6
+        │   0x006fdfe4      mov   x19, x0
+        │   0x006fdfe8      mov   x1, xzr
+        │   0x006fdfec      bl    0xbed5c0
+        │   0x006fdff0      bl    sym.imp.MCFDictionaryGetKeysAndValues
+        │   0x006fdff4      ubfiz x25, x21, 3, 0x20
+        │   0x006fdff8      mov   x24, xzr
+        │   0x006fdffc      adrp  x20, 0xea000
+        │   0x006fe000      add   x20, x20, 0x95e
+        │   0x006fe004      adrp  x21, 0xc5000
+        │   0x006fe008      add   x21, x21, 0xb3d
+        │   0x006fe00c      adrp  x22, 0x175000
+        │   0x006fe010      add   x22, x22, 0xb44
+       ┌──> 0x006fe014      cmp   x25, x24
+      ┌───< 0x006fe018      b.eq  0x6fe060
+      │╎│   0x006fe01c      ldr   x0, [x19, x24]
+      │╎│   0x006fe020      bl    0x734448
+      │╎│   0x006fe024      mov   x23, x0
+      │╎│   0x006fe028      cmp   w23, 2
+     ┌────< 0x006fe02c      b.eq  0x6fe058
+     ││╎│   0x006fe030      bl    0xbe1b80
+     ││╎│   0x006fe034      bl    sym.imp.MCILogRegistryGlobalsIsLoggingEnabled
+     ││╎│   0x006fe038      tst   w0, 0xff
+    ┌─────< 0x006fe03c      b.eq  0x6fe058
+    │││╎│   0x006fe040      lsr   x7, x23, 0x20
+    │││╎│   0x006fe044      bl    0xbe1b80
+    │││╎│   0x006fe048      bl    0xbe6d80
+    │││╎│   0x006fe04c      mov   w4, 0x1d7
+    │││╎│   0x006fe050      mov   x6, x22
+    │││╎│   0x006fe054      bl    0x734a98
+    └└────> 0x006fe058      add   x24, x24, 8
+      │└──< 0x006fe05c      b     0x6fe014
+      └───> 0x006fe060      mov   x0, x19
+        │   0x006fe064      bl    0x4c8c74
+        │   0x006fe068      ldp   x29, x30, [sp], 0x50
+        │   0x006fe06c      autiasp
+       ┌──< 0x006fe070      b     sym.imp.MCFFree
+       │└─> 0x006fe074      bl    0x4b1c6c
+       │    0x006fe078      ldp   x29, x30, [sp], 0x50
+       │    0x006fe07c      autiasp
+       │    0x006fe080      ret

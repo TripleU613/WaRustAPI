@@ -117,3 +117,10 @@ into file removal. **Observed live:** none. **Unknown:** alternate constructor
 branches, full registration/lifetimes, downstream delete bookkeeping, failed
 remove recovery, terminal-file scanning/cleanup and server restriction effects.
 No Rust sender/retry behavior or live operation was added.
+
+## Loader follow-up
+
+The [file loader trace](../2.26.43.72-metrics-buffer-recovery/README.md) now
+establishes local prefix/type/header admission and distinguishes a separate
+bulk-delete routine. Full startup consumers and terminal-file policy remain
+untraced; surviving file admission is conditional, not proved automatic replay.

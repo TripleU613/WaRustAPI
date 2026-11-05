@@ -1,0 +1,135 @@
+{
+  "scope": "native header-admission slice only; MCFData byte/length and adler32-initial adapters; no directory, file read, deletion, task creation or network",
+  "unicorn_version": "2.1.4",
+  "cases": [
+    {
+      "case": "v0",
+      "bytes": 25,
+      "header_hex": "574d540000000000000029405b0000000100000078563412",
+      "accepted": false
+    },
+    {
+      "case": "v1",
+      "bytes": 25,
+      "header_hex": "574d540100000000000029405b0000000100000078563412",
+      "accepted": true,
+      "header_bytes": 20,
+      "payload_bytes": 1,
+      "restored_checksum": 1
+    },
+    {
+      "case": "v2",
+      "bytes": 25,
+      "header_hex": "574d540200000000000029405b0000000100000078563412",
+      "accepted": true,
+      "header_bytes": 24,
+      "payload_bytes": 1,
+      "restored_checksum": 305419896
+    },
+    {
+      "case": "v3",
+      "bytes": 25,
+      "header_hex": "574d540300000000000029405b0000000100000078563412",
+      "accepted": true,
+      "header_bytes": 24,
+      "payload_bytes": 1,
+      "restored_checksum": 305419896
+    },
+    {
+      "case": "v4",
+      "bytes": 25,
+      "header_hex": "574d540400000000000029405b0000000100000078563412",
+      "accepted": false
+    },
+    {
+      "case": "short-23",
+      "bytes": 23,
+      "header_hex": "574d540300000000000029405b00000001000000785634",
+      "accepted": false
+    },
+    {
+      "case": "bad-W",
+      "bytes": 25,
+      "header_hex": "584d540300000000000029405b0000000100000078563412",
+      "accepted": false
+    },
+    {
+      "case": "bad-M",
+      "bytes": 25,
+      "header_hex": "5758540300000000000029405b0000000100000078563412",
+      "accepted": false
+    },
+    {
+      "case": "bad-T",
+      "bytes": 25,
+      "header_hex": "574d580300000000000029405b0000000100000078563412",
+      "accepted": false
+    },
+    {
+      "case": "zero-payload",
+      "bytes": 25,
+      "header_hex": "574d540300000000000029405b0000000000000078563412",
+      "accepted": false
+    },
+    {
+      "case": "negative-payload",
+      "bytes": 25,
+      "header_hex": "574d540300000000000029405b000000ffffffff78563412",
+      "accepted": false
+    },
+    {
+      "case": "oversized-payload",
+      "bytes": 25,
+      "header_hex": "574d540300000000000029405b000000ffffff7f78563412",
+      "accepted": false
+    },
+    {
+      "case": "v2-truncated",
+      "bytes": 25,
+      "header_hex": "574d540200000000000029405b0000000200000078563412",
+      "accepted": false
+    },
+    {
+      "case": "v3-trailing",
+      "bytes": 30,
+      "header_hex": "574d540300000000000029405b0000000100000078563412",
+      "accepted": true,
+      "header_bytes": 24,
+      "payload_bytes": 1,
+      "restored_checksum": 305419896
+    },
+    {
+      "case": "v1-min24",
+      "bytes": 24,
+      "header_hex": "574d540100000000000029405b0000000400000078563412",
+      "accepted": true,
+      "header_bytes": 20,
+      "payload_bytes": 4,
+      "restored_checksum": 1
+    },
+    {
+      "case": "v1-short21",
+      "bytes": 21,
+      "header_hex": "574d540100000000000029405b0000000100000078",
+      "accepted": false
+    },
+    {
+      "case": "unchecked-checksum-zero",
+      "bytes": 25,
+      "header_hex": "574d540300000000000029405b0000000100000000000000",
+      "accepted": true,
+      "header_bytes": 24,
+      "payload_bytes": 1,
+      "restored_checksum": 0
+    },
+    {
+      "case": "unchecked-checksum-max",
+      "bytes": 25,
+      "header_hex": "574d540300000000000029405b00000001000000ffffffff",
+      "accepted": true,
+      "header_bytes": 24,
+      "payload_bytes": 1,
+      "restored_checksum": 4294967295
+    }
+  ]
+}

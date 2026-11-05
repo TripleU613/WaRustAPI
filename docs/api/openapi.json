@@ -16314,5 +16314,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-metrics-buffer-deletion/README.md",
     "description": "Selected construction binds regular completion slots to owner: null error schedules buffer remove; terminal local error skips that deletion path despite transport set removal. Four controlled native worker cases verify success, ENOENT, EACCES and wrong-context abort; no real file operation. Full callback lifetimes and downstream persistence/recovery remain open. No Rust/live capability added."
+  },
+  "x-metrics-buffer-recovery-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK static and synthetic buffer recovery evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-metrics-buffer-recovery/README.md",
+    "description": "Loader prefix/type and WMT header admission traced; versions1/2/3, positive bounded payload, trailing bytes and restored checksum/state.18 native header-slice fixtures; no real I/O. Separate directory walker is bulk deletion. Full startup consumers, terminal cleanup and replay remain unproven. No Rust/live capability added."
   }
 }

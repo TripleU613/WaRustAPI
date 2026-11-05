@@ -1,0 +1,289 @@
+            0x006fe1a8      paciasp
+            0x006fe1ac      sub   sp, sp, 0xb0
+            0x006fe1b0      str   d8, [sp, 0x40]
+            0x006fe1b4      stp   x29, x30, [sp, 0x50]
+            0x006fe1b8      stp   x28, x27, [sp, 0x60]
+            0x006fe1bc      bl    0x4b05c8
+            0x006fe1c0      add   x29, sp, 0x50
+            0x006fe1c4      mrs   x25, tpidr_el0
+            0x006fe1c8      mov   x22, x0
+            0x006fe1cc      mov   x19, x2
+            0x006fe1d0      ldr   x8, [x25, 0x28]                      ; [0x28:4]=0xc306e8
+            0x006fe1d4      mov   w20, w1
+            0x006fe1d8      stur  x8, [x29, -0x18]
+            0x006fe1dc      ldr   x0, [x0, 0x18]                       ; [0x18:4]=0
+            0x006fe1e0      bl    sym.imp.MCIExecutionGlobalQueueCheckIsOnContext
+            0x006fe1e4      tst   w0, 0xff
+        ┌─< 0x006fe1e8      b.eq  0x6fe620
+        │   0x006fe1ec      mov   w0, 0xa
+        │   0x006fe1f0      bl    sym.imp.MCFDictionaryCreateMutable
+        │   0x006fe1f4      mov   x26, x0
+        │   0x006fe1f8      ldr   x0, [x22, 0x28]                      ; [0x28:4]=0xc306e8
+        │   0x006fe1fc      adrp  x8, 0x2fc000
+        │   0x006fe200      add   x8, x8, 0x222
+        │   0x006fe204      cmp   w20, 0
+        │   0x006fe208      adrp  x9, 0x2fc000
+        │   0x006fe20c      add   x9, x9, 0x21b
+        │   0x006fe210      csel  x23, x9, x8, eq
+        │   0x006fe214      bl    sym.imp.MCFASCIIStringGetCString
+        │   0x006fe218      bl    sym.imp.opendir
+       ┌──< 0x006fe21c      cbz   x0, 0x6fe564
+       ││   0x006fe220      mov   x24, x0
+       ││   0x006fe224      stp   x25, x26, [sp, 0x20]
+       ││   0x006fe228      adrp  x25, 0xca000
+       ││   0x006fe22c      add   x25, x25, 0xafa
+       ││   0x006fe230      str   x19, [sp, 0x10]
+       ││   0x006fe234      str   w20, [sp, 0x1c]
+   ┌┌┌┌───> 0x006fe238      mov   x0, x24
+   ╎╎╎╎││   0x006fe23c      bl    sym.imp.readdir
+  ┌───────< 0x006fe240      cbz   x0, 0x6fe550
+  │╎╎╎╎││   0x006fe244      ldrb  w8, [x0, 0x12]                       ; [0x12:4]=0x100b7
+  │╎╎╎╎││   0x006fe248      mov   x27, x0
+  │╎╎╎╎││   0x006fe24c      cmp   w8, 8
+  │└──────< 0x006fe250      b.ne  0x6fe238
+  │ ╎╎╎││   0x006fe254      add   x0, x27, 0x13
+  │ ╎╎╎││   0x006fe258      mov   x1, x23
+  │ ╎╎╎││   0x006fe25c      mov   w2, 6
+  │ ╎╎╎││   0x006fe260      bl    sym.imp.strncmp
+  │ └─────< 0x006fe264      cbnz  w0, 0x6fe238
+  │  ╎╎││   0x006fe268      ldr   x0, [x22, 0x28]                      ; [0x28:4]=0xc306e8
+  │  ╎╎││   0x006fe26c      bl    sym.imp.MCFASCIIStringGetCString
+  │  ╎╎││   0x006fe270      mov   x1, x0
+  │  ╎╎││   0x006fe274      add   x2, x27, 0x13
+  │  ╎╎││   0x006fe278      mov   x0, x25
+  │  ╎╎││   0x006fe27c      bl    sym.imp.MCFASCIIStringCreateWithFormat
+  │  ╎╎││   0x006fe280      bl    sym.imp.MCFASCIIStringEnsureNotNull
+  │  ╎╎││   0x006fe284      mov   x28, x0
+  │  ╎╎││   0x006fe288      bl    sym.imp.MCFASCIIStringCreateMCFString
+  │  ╎╎││   0x006fe28c      bl    0xbe8dc4
+  │  ╎╎││   0x006fe290      bl    sym.imp.MCFURLCreateWithFileSystemPath
+  │  ╎╎││   0x006fe294      mov   x26, x0
+  │  ╎╎││   0x006fe298      ldr   x0, [x22, 0x20]                      ; [0x20:4]=64 ; "@"
+  │  ╎╎││   0x006fe29c      mov   w2, wzr
+  │  ╎╎││   0x006fe2a0      mov   x1, x26
+  │  ╎╎││   0x006fe2a4      stur  xzr, [x29, -0x20]
+  │  ╎╎││   0x006fe2a8      bl    0x733ce0
+  │  ╎╎││   0x006fe2ac      mov   x19, x0
+  │ ┌─────< 0x006fe2b0      cbz   x0, 0x6fe2f4
+  │ │╎╎││   0x006fe2b4      ldr   w20, [x22, 0x30]                     ; [0x30:4]=0
+  │ │╎╎││   0x006fe2b8      bl    0x72c4f0
+  │ │╎╎││   0x006fe2bc      sub   x1, x29, 0x20
+  │ │╎╎││   0x006fe2c0      add   w2, w0, w20
+  │ │╎╎││   0x006fe2c4      mov   x0, x19
+  │ │╎╎││   0x006fe2c8      bl    0x734174
+  │┌──────< 0x006fe2cc      cbz   w0, 0x6fe2e8
+  │││╎╎││   0x006fe2d0      mov   x0, x28
+  │││╎╎││   0x006fe2d4      bl    sym.imp.MCFASCIIStringGetCString
+  │││╎╎││   0x006fe2d8      bl    sym.imp.remove
+  │││╎╎││   0x006fe2dc      ldur  x0, [x29, -0x20]
+  │││╎╎││   0x006fe2e0      bl    sym.imp.MCFRelease
+  │││╎╎││   0x006fe2e4      stur  xzr, [x29, -0x20]
+  │└──────> 0x006fe2e8      mov   x0, x19
+  │ │╎╎││   0x006fe2ec      bl    0x734448
+  │┌──────< 0x006fe2f0      b     0x6fe324
+  ││└─────> 0x006fe2f4      bl    0xbe1b80
+  ││ ╎╎││   0x006fe2f8      bl    sym.imp.MCILogRegistryGlobalsIsLoggingEnabled
+  ││ ╎╎││   0x006fe2fc      tst   w0, 0xff
+  ││┌─────< 0x006fe300      b.eq  0x6fe324
+  │││╎╎││   0x006fe304      bl    0xbe1b80
+  │││╎╎││   0x006fe308      bl    0xbe2374
+  │││╎╎││   0x006fe30c      adrp  x3, 0x110000
+  │││╎╎││   0x006fe310      add   x3, x3, 0x113
+  │││╎╎││   0x006fe314      mov   w4, 0x176
+  │││╎╎││   0x006fe318      adrp  x6, 0xfd000
+  │││╎╎││   0x006fe31c      add   x6, x6, 0x917
+  │││╎╎││   0x006fe320      bl    0x734a98
+  │└└─────> 0x006fe324      mov   x0, x21
+  │  ╎╎││   0x006fe328      bl    sym.imp.MCFRelease
+  │  ╎╎││   0x006fe32c      mov   x0, x28
+  │  ╎╎││   0x006fe330      bl    sym.imp.MCFRelease
+  │  ╎╎││   0x006fe334      mov   x0, x26
+  │  ╎╎││   0x006fe338      bl    sym.imp.MCFRelease
+  │  ╎╎││   0x006fe33c      mov   x0, x19
+  │  ╎╎││   0x006fe340      bl    sym.imp.MCFRelease
+  │  ╎╎││   0x006fe344      ldur  x28, [x29, -0x20]
+  │  └────< 0x006fe348      cbz   x28, 0x6fe238
+  │   ╎││   0x006fe34c      mov   x0, x28
+  │   ╎││   0x006fe350      bl    sym.imp.MCFDataGetLength
+  │   ╎││   0x006fe354      cmp   w0, 0x18
+  │  ┌────< 0x006fe358      b.lt  0x6fe428
+  │  │╎││   0x006fe35c      mov   x0, x28
+  │  │╎││   0x006fe360      mov   w1, wzr
+  │  │╎││   0x006fe364      bl    0x72c9f4
+  │  │╎││   0x006fe368      and   w8, w0, 0xff
+  │  │╎││   0x006fe36c      cmp   w8, 0x57
+  │ ┌─────< 0x006fe370      b.ne  0x6fe428
+  │ ││╎││   0x006fe374      bl    0xbe7318
+  │ ││╎││   0x006fe378      bl    0x72c9f4
+  │ ││╎││   0x006fe37c      and   w8, w0, 0xff
+  │ ││╎││   0x006fe380      cmp   w8, 0x4d
+  │┌──────< 0x006fe384      b.ne  0x6fe428
+  ││││╎││   0x006fe388      mov   x0, x28
+  ││││╎││   0x006fe38c      mov   w1, 2
+  ││││╎││   0x006fe390      bl    0x72c9f4
+  ││││╎││   0x006fe394      and   w8, w0, 0xff
+  ││││╎││   0x006fe398      cmp   w8, 0x54
+  ────────< 0x006fe39c      b.ne  0x6fe428
+  ││││╎││   0x006fe3a0      mov   x0, x28
+  ││││╎││   0x006fe3a4      mov   w1, 3
+  ││││╎││   0x006fe3a8      bl    0x72c9f4
+  ││││╎││   0x006fe3ac      and   w8, w0, 0xff
+  ││││╎││   0x006fe3b0      cmp   w8, 3
+  ────────< 0x006fe3b4      b.hi  0x6fe428
+  ││││╎││   0x006fe3b8      mov   x0, x28
+  ││││╎││   0x006fe3bc      bl    sym.imp.MCFDataGetBytePtr
+  ────────< 0x006fe3c0      cbz   x0, 0x6fe628
+  ││││╎││   0x006fe3c4      ldp   w8, w21, [x0, 0xc]
+  ││││╎││   0x006fe3c8      mov   x26, x0
+  ││││╎││   0x006fe3cc      ldrb  w19, [x0, 3]                         ; [0x3:4]=0x1010246
+  ││││╎││   0x006fe3d0      ldur  d8, [x0, 4]                          ; [0x4:4]=0x10102
+  ││││╎││   0x006fe3d4      mov   x0, xzr
+  ││││╎││   0x006fe3d8      bl    0xbe5ed0
+  ││││╎││   0x006fe3dc      str   w8, [sp, 0xc]
+  ││││╎││   0x006fe3e0      bl    sym.imp.adler32
+  ││││╎││   0x006fe3e4      sub   w8, w19, 2
+  ││││╎││   0x006fe3e8      cmp   w8, 2
+  ────────< 0x006fe3ec      b.hs  0x6fe3fc
+  ││││╎││   0x006fe3f0      ldr   w0, [x26, 0x14]                      ; [0x14:4]=1
+  ││││╎││   0x006fe3f4      mov   w26, 0x18
+  ────────< 0x006fe3f8      b     0x6fe408
+  ────────> 0x006fe3fc      cmp   w19, 1
+  ────────< 0x006fe400      b.ne  0x6fe428
+  ││││╎││   0x006fe404      mov   w26, 0x14
+  ────────> 0x006fe408      cmp   w21, 1
+  ────────< 0x006fe40c      b.lt  0x6fe428
+  ││││╎││   0x006fe410      mov   x20, x0
+  ││││╎││   0x006fe414      mov   x0, x28
+  ││││╎││   0x006fe418      bl    sym.imp.MCFDataGetLength
+  ││││╎││   0x006fe41c      sub   w8, w0, w21
+  ││││╎││   0x006fe420      cmp   w8, w26
+  ────────< 0x006fe424      b.ge  0x6fe498
+  ─└└└────> 0x006fe428      bl    0xbe39e0
+  │   ╎││   0x006fe42c      bl    sym.imp.MCILogRegistryGlobalsIsLoggingEnabled
+  │   ╎││   0x006fe430      tst   w0, 0xff
+  │  ┌────< 0x006fe434      b.eq  0x6fe45c
+  │  │╎││   0x006fe438      add   x7, x27, 0x13
+  │  │╎││   0x006fe43c      bl    0xbe39e0
+  │  │╎││   0x006fe440      bl    0xbe2374
+  │  │╎││   0x006fe444      adrp  x3, 0xb4000
+  │  │╎││   0x006fe448      add   x3, x3, 0x390
+  │  │╎││   0x006fe44c      mov   w4, 0x1ac
+  │  │╎││   0x006fe450      adrp  x6, 0xcb000
+  │  │╎││   0x006fe454      add   x6, x6, 0x481
+  │  │╎││   0x006fe458      bl    0x734a98
+  │  └────> 0x006fe45c      ldr   x0, [x22, 0x28]                      ; [0x28:4]=0xc306e8
+  │   ╎││   0x006fe460      bl    sym.imp.MCFASCIIStringGetCString
+  │   ╎││   0x006fe464      mov   x1, x0
+  │   ╎││   0x006fe468      add   x2, x27, 0x13
+  │   ╎││   0x006fe46c      mov   x0, x25
+  │   ╎││   0x006fe470      bl    sym.imp.MCFASCIIStringCreateWithFormat
+  │   ╎││   0x006fe474      bl    sym.imp.MCFASCIIStringEnsureNotNull
+  │   ╎││   0x006fe478      mov   x19, x0
+  │   ╎││   0x006fe47c      bl    sym.imp.MCFASCIIStringGetCString
+  │   ╎││   0x006fe480      bl    sym.imp.remove
+  │  ┌────> 0x006fe484      mov   x0, x19
+  │  ╎╎││   0x006fe488      bl    sym.imp.MCFRelease
+  │  ╎╎││   0x006fe48c      mov   x0, x28
+  │  ╎╎││   0x006fe490      bl    sym.imp.MCFRelease
+  │  ╎└───< 0x006fe494      b     0x6fe238
+  ────────> 0x006fe498      mov   x0, x28
+  │  ╎ ││   0x006fe49c      bl    sym.imp.MCFDataGetBytePtr
+  │  ╎ ││   0x006fe4a0      add   x0, x0, x26
+  │  ╎ ││   0x006fe4a4      mov   w1, w21
+  │  ╎ ││   0x006fe4a8      bl    sym.imp.MCFDataCreateWithBytesNoCopyNoDealloc
+  │  ╎ ││   0x006fe4ac      mov   x26, x0
+  │  ╎ ││   0x006fe4b0      mov   w0, w21
+  │  ╎ ││   0x006fe4b4      mov   x1, x26
+  │  ╎ ││   0x006fe4b8      bl    sym.imp.MCFDataCreateMutableCopy
+  │  ╎ ││   0x006fe4bc      mov   x21, x0
+  │  ╎ ││   0x006fe4c0      bl    0x72bcc0
+  │  ╎ ││   0x006fe4c4      bl    0xbdf224
+  │  ╎ ││   0x006fe4c8      bl    sym.imp.MCFRuntimeCreateInstance
+  │  ╎ ││   0x006fe4cc      ldr   w8, [sp, 0xc]                        ; [0xc:4]=0
+  │  ╎ ││   0x006fe4d0      mov   x27, x0
+  │  ╎ ││   0x006fe4d4      str   d8, [x0, 0x20]
+  │  ╎ ││   0x006fe4d8      str   w20, [x0, 0x30]
+  │  ╎ ││   0x006fe4dc      stp   w8, wzr, [x0, 0x28]
+  │  ╎ ││   0x006fe4e0      strb  w19, [x0, 0x34]
+  │  ╎ ││   0x006fe4e4      str   x21, [x0, 0x18]
+  │  ╎ ││   0x006fe4e8      mov   x0, x21
+  │  ╎ ││   0x006fe4ec      bl    sym.imp.MCFRetain
+  │  ╎ ││   0x006fe4f0      mov   x0, x26
+  │  ╎ ││   0x006fe4f4      bl    sym.imp.MCFRelease
+  │  ╎ ││   0x006fe4f8      mov   x0, x21
+  │  ╎ ││   0x006fe4fc      bl    sym.imp.MCFRelease
+  │  ╎ ││   0x006fe500      mov   x0, x27
+  │  ╎ ││   0x006fe504      bl    0x72bf08
+  │  ╎ ││   0x006fe508      mov   w19, w0
+  │  ╎ ││   0x006fe50c      mov   x0, x27
+  │  ╎ ││   0x006fe510      bl    0x72bec4
+  │  ╎ ││   0x006fe514      ldrb  w21, [x0, 4]                         ; [0x4:4]=0x10102
+  │  ╎ ││   0x006fe518      mov   x0, x27
+  │  ╎ ││   0x006fe51c      bl    0x72bf28
+  │  ╎ ││   0x006fe520      mov   w1, w0
+  │  ╎ ││   0x006fe524      and   w0, w19, 0xffff
+  │  ╎ ││   0x006fe528      mov   w2, w21
+  │  ╎ ││   0x006fe52c      bl    0x71f6b0
+  │  ╎ ││   0x006fe530      mov   x19, x0
+  │  ╎ ││   0x006fe534      ldr   x0, [sp, 0x28]                       ; [0x28:4]=0xc306e8
+  │  ╎ ││   0x006fe538      mov   x2, x27
+  │  ╎ ││   0x006fe53c      mov   x1, x19
+  │  ╎ ││   0x006fe540      bl    sym.imp.MCFDictionarySetValue
+  │  ╎ ││   0x006fe544      mov   x0, x27
+  │  ╎ ││   0x006fe548      bl    sym.imp.MCFRelease
+  │  └────< 0x006fe54c      b     0x6fe484
+  └───────> 0x006fe550      mov   x0, x24
+       ││   0x006fe554      bl    sym.imp.closedir
+       ││   0x006fe558      ldp   x25, x26, [sp, 0x20]
+       ││   0x006fe55c      ldr   w20, [sp, 0x1c]                      ; [0x1c:4]=0
+       ││   0x006fe560      ldr   x19, [sp, 0x10]                      ; [0x10:4]=0xb70003
+       └──> 0x006fe564      bl    0x736504
+        │   0x006fe568      mov   x1, x19
+        │   0x006fe56c      bl    sym.imp.__MCFCastToClassNotNull
+        │   0x006fe570      ldr   x19, [x0, 0x28]                      ; [0x28:4]=0xc306e8
+        │   0x006fe574      bl    0xbe0c7c
+        │   0x006fe578      bl    sym.imp.MCIExecutionQueueGetExecutionContext
+       ┌──< 0x006fe57c      cbz   w0, 0x6fe5dc
+       ││   0x006fe580      mov   w0, w20
+       ││   0x006fe584      bl    0x6fe95c
+       ││   0x006fe588      mov   x20, x0
+       ││   0x006fe58c      mov   w0, 4
+       ││   0x006fe590      mov   x1, x21
+       ││   0x006fe594      mov   x2, x26
+       ││   0x006fe598      mov   x3, x20
+       ││   0x006fe59c      mov   x4, xzr
+       ││   0x006fe5a0      bl    sym.imp.MCIParamsCreate
+       ││   0x006fe5a4      bl    0xbe0ce8
+       ││   0x006fe5a8      bl    sym.imp.MCFRelease
+       ││   0x006fe5ac      movi  d0, 0000000000000000
+       ││   0x006fe5b0      adrp  x2, 0xbd8000
+       ││   0x006fe5b4      add   x2, x2, 0xe68
+       ││   0x006fe5b8      adrp  x4, 0xf0000
+       ││   0x006fe5bc      add   x4, x4, 0x2a9
+       ││   0x006fe5c0      bl    0xbe06b0
+       ││   0x006fe5c4      mov   x3, x21
+       ││   0x006fe5c8      mov   w5, 1
+       ││   0x006fe5cc      bl    sym.imp.MCIExecutionQueueExecuteAsyncHelper
+       ││   0x006fe5d0      mov   x0, x21
+       ││   0x006fe5d4      bl    sym.imp.MCFRelease
+      ┌───< 0x006fe5d8      b     0x6fe5f0
+      │└──> 0x006fe5dc      ldp   x8, x3, [x21, 0x18]
+      │ │   0x006fe5e0      mov   x0, x26
+      │ │   0x006fe5e4      mov   w1, w20
+      │ │   0x006fe5e8      mov   x2, xzr
+      │ │   0x006fe5ec      blr   x8
+      └───> 0x006fe5f0      mov   x0, x26
+        │   0x006fe5f4      bl    sym.imp.MCFRelease
+        │   0x006fe5f8      bl    0xbdea28
+       ┌──< 0x006fe5fc      b.ne  0x6fe624
+       ││   0x006fe600      ldp   x20, x19, [sp, 0xa0]
+       ││   0x006fe604      ldr   d8, [sp, 0x40]                       ; segment.PHDR
+       ││                                                              ; [0x40:4]=6
+       ││   0x006fe608      bl    0xbddeac
+       ││   0x006fe60c      ldp   x28, x27, [sp, 0x60]
+       ││   0x006fe610      ldp   x29, x30, [sp, 0x50]
+       ││   0x006fe614      add   sp, sp, 0xb0
+       ││   0x006fe618      autiasp
+       ││   0x006fe61c      ret
+       │└─> 0x006fe620      bl    sym.imp.abort
+       └──> 0x006fe624      bl    sym.imp.__stack_chk_fail
