@@ -85,3 +85,9 @@ Nested-field follow-up validation:1318 workspace/all-feature tests, strict
 workspace/all-target/all-feature Clippy, formatting and CLI-reference regeneration
 passed. Required-reader/key-construction exports reproduced; APK coverage and
 repository hygiene checked before push.
+
+## Original-chat selection follow-up (2026-11-05)
+
+[Supported recipient selection and original-chat correlation](retry-original-chat.md)
+now separate the failed message chat from the requesting device, using existing
+saved peer/LID state. Full native context/alias/fallback/ACK parity remains open.

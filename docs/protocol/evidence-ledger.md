@@ -1,3 +1,10 @@
+2026-11-05 — **Retry original-chat selection/correlation strengthened.**
+
+Shared parser separates explicit recipient/normalized chat from asking device.
+Normal direct retry checks the selected chat against original peer/known LID
+before session work or a query. [Evidence and regressions](retry-original-chat.md).
+No receipt-derived alias adoption, live request or full native routing claim.
+
 2026-11-05 — **Retry original-message correlation corrected.**
 
 Shared parser now uses required nested retry.id for original lookup and requires

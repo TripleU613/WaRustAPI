@@ -1,0 +1,58 @@
+{
+  "README.md": {
+    "bytes": 4124,
+    "sha256": "a8ecf7c324d6356fe6c61aa7122790f7be22058316aa4dfa8755062e495a7fef"
+  },
+  "ack-context-reader.txt": {
+    "bytes": 24572,
+    "sha256": "e809408589e3fa60971d9d4e1eaccb007e9d83525e74848e5f84ed187cd00b0d"
+  },
+  "context-constructor-callers.txt": {
+    "bytes": 65,
+    "sha256": "505dc4935a9a4934037d90f559caca7630e320b0c15b20610205acf8df3962f9"
+  },
+  "context-freeze-callers.txt": {
+    "bytes": 4300,
+    "sha256": "1502212a055d87504f0523797f049d2ca85343038611e4e00099ce7f65cffc81"
+  },
+  "context-freeze.txt": {
+    "bytes": 1859,
+    "sha256": "349587fd5020bce518c36f486e5cfd40069338df46bbbbdcceb8f02195a1bc57"
+  },
+  "context-from-field-writes.txt": {
+    "bytes": 4200,
+    "sha256": "1b4f84f5bff81b4d5bdae08acdae8e72cb38d148e69cc7f3c25a424eba0f5b30"
+  },
+  "context-model.txt": {
+    "bytes": 19013,
+    "sha256": "3b687be66d696b5b59a62cc2789033396bb586368b8767c8e6a3503e77ba4811"
+  },
+  "message-chat-alias-helper.txt": {
+    "bytes": 1154,
+    "sha256": "891745357c5cfa94af9acefd3d7b018d60ccacab4aafc3e9e882f352e0ee6158"
+  },
+  "message-chat-cast.txt": {
+    "bytes": 815,
+    "sha256": "dc908f426344c70d20203690ccf16f96cd48daa4ea1742674ec057cccac76d5e"
+  },
+  "message-context-builder-callers.txt": {
+    "bytes": 464,
+    "sha256": "4e3b4e56700f5f7c2f7ad9bcba6934eec7cfb6b6335efd8bc13c95630f18ea49"
+  },
+  "message-context-builder.txt": {
+    "bytes": 3295,
+    "sha256": "a10b841a285a4bb1fa7e3be8d82ecb11a9748e71508fb938f572d164b127a9fb"
+  },
+  "parse-error-context-reader.txt": {
+    "bytes": 3436,
+    "sha256": "9c08e4a31285d47f6da32159d51f9b2c981e0f138e1080fe4b0657cf34162d05"
+  },
+  "retry-parser-callers.txt": {
+    "bytes": 132,
+    "sha256": "037cca622f91cfc9f722bca0095adbe4e706656b7fcff081a912619183b895c1"
+  },
+  "typed-jid-reader.txt": {
+    "bytes": 4444,
+    "sha256": "0e1523de412bd1c3e33fecc249ec1ed222f1656cb875b02634893a0b574fbee8"
+  }
+}

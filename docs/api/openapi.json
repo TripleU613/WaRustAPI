@@ -16404,5 +16404,14 @@
     "x-live": false,
     "evidence": "docs/protocol/retry-parser-admission.md#nested-message-key-and-timestamp-correction-2026-11-05",
     "description": "RetryRequest.message_id now comes from required nested retry.id, not root receipt id. Nested retry.t must parse as signed64-bit; malformed/missing nested fields cause no actionable retry or state mutation. Root/nested equality is not required. Parser/full workflow regressions prove wrong nested message cannot resend root-named original, while distinct root ID with nested W1 resends intended W1 once. Timestamp consumers and complete ACK/routing parity remain open. No new CLI/HTTP route, clock policy or live request."
+  },
+  "x-retry-original-chat-correlation": {
+    "x-cli": false,
+    "x-transport": [
+      "shared retry parser and explicit normal direct retry driver; offline tested"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/retry-original-chat.md",
+    "description": "Retry chat uses supported plain-user recipient when present, otherwise normalized from; requesting device remains participant/from. Direct driver checks selected chat against saved original peer/existing peer-to-LID mapping before session work or key-query reservation, recording local not_the_original_chat on mismatch. Malformed/device-form recipient refuses locally. Parser/driver regressions include wrong chat with matching device, explicit wrong recipient and valid pre-saved LID workflow. No receipt-derived mapping, new CLI/HTTP route or live request; full native alias/context/fallback policy remains open."
   }
 }

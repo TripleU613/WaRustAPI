@@ -2870,3 +2870,15 @@ same original wire ID and remains once-only. Existing parser/version/count/key
 fixtures now include valid id/t so they continue testing their intended fields.
 The group comparison admission fixtures likewise use nested IDs. No live receipt,
 key query, resend or ACK was sent.
+
+## Retry original-chat correlation (2026-11-05)
+
+2026-11-05 — **Retry original-chat selection/correlation strengthened.**
+
+Shared parser separates explicit recipient/normalized chat from asking device.
+Normal direct retry checks the selected chat against original peer/known LID
+before session work or a query. [Evidence and regressions](retry-original-chat.md).
+No receipt-derived alias adoption, live request or full native routing claim.
+
+Native effective alias/context binding and typed-reader fallback remain open;
+malformed explicit recipients use a strict local supported-path refusal.

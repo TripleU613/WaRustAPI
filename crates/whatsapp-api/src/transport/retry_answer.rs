@@ -109,6 +109,13 @@ pub async fn answer(
     // Our direct send addressed exactly `peer` (device 0); the receipt may
     // name that device by its LID.
     let lid = super::inbox::lid_for(store, &peer)?;
+    // Native retry lookup includes the original remote JID, not only message
+    // id/device. Compare using our existing saved PN/LID relation; do not learn
+    // or rewrite identities from a receipt (docs/protocol/retry-original-chat.md).
+    let retry_chat = retry.chat.to_non_ad();
+    if !(retry_chat == peer.to_non_ad() || Some(&retry_chat) == lid.as_ref()) {
+        return unanswered(store, &key, "not_the_original_chat");
+    }
     let device = retry.device.to_non_ad();
     if retry.device.device != peer.device
         || !(device == peer.to_non_ad() || Some(&device) == lid.as_ref())
@@ -1173,6 +1180,108 @@ mod tests {
     /// answered once, under the saved session and the original message id;
     /// every refused case is recorded with its reason and sends nothing.
     #[tokio::test]
+    async fn retry_original_chat_mismatch_never_reserves_or_reencrypts() {
+        for explicit_recipient in [false, true] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = ProtocolStore::open(OpenOptions {
+                path: dir.path().join("chat.redb"),
+                account_id: AccountId::new("test").unwrap(),
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [7; 32],
+                ))),
+                create: true,
+            })
+            .unwrap();
+            let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+            let other = Jid::parse("15555550200@s.whatsapp.net").unwrap();
+            let outbox = super::super::outgoing::outbox();
+            store
+                .write(|tx| {
+                    let request = SendRequest {
+                        client_request_id: ClientRequestId::new("chat-fixture")?,
+                        chat: ChatId::from_jid(&peer)?,
+                        content: MessageContent::Text {
+                            body: "fixture".into(),
+                            quoted: None,
+                            style: Default::default(),
+                        },
+                    };
+                    let id = outbox.enqueue(tx, &request)?.0.local_id;
+                    let mut entry = outbox.get_mut(tx, id)?.unwrap();
+                    entry.wire_id = Some(MessageId::new("W1")?);
+                    entry.attempts.push(AttemptRecord {
+                        index: 0,
+                        prepared_at: Timestamp::now(),
+                        epoch: Some(ConnectionEpoch(1)),
+                        payload: Some(vec![1].into()),
+                        re_encryption: false,
+                    });
+                    outbox.set_progress(tx, &mut entry, AttemptProgress::InFlight)?;
+                    outbox.record_fact(
+                        tx,
+                        &mut entry,
+                        DeliveryFact {
+                            kind: DeliveryFactKind::ServerAccepted,
+                            device: None,
+                            observed_at: Timestamp::now(),
+                            server_timestamp: None,
+                            code: None,
+                        },
+                    )?;
+                    keep_source_in(tx, "W1", &[1, 2, 3])?;
+                    tx.put_json(
+                        Table::SignalSessions,
+                        format!("comparison-direct:{peer}").as_bytes(),
+                        1,
+                        &vec![2u8],
+                    )?;
+                    tx.put_json(
+                        Table::PeerIdentities,
+                        format!("comparison-direct:{peer}").as_bytes(),
+                        1,
+                        &vec![3u8],
+                    )
+                })
+                .unwrap();
+            let protected = || {
+                store
+                    .read(|tx| {
+                        [Table::Outbox, Table::SignalSessions, Table::PeerIdentities]
+                            .into_iter()
+                            .map(|table| tx.scan(table, 1, 10000))
+                            .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = protected();
+            let checkpoints = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                .unwrap();
+            let node = if explicit_recipient {
+                receipt(&peer, 1, 42).attr("recipient", other.clone())
+            } else {
+                receipt(&other, 1, 42).attr("participant", peer.clone())
+            };
+            assert!(
+                answer(&store, &AccountRecord::default(), &node, ConnectionEpoch(2))
+                    .await
+                    .unwrap()
+                    .is_none()
+            );
+            assert_eq!(
+                reason(&store, 1, &peer).as_deref(),
+                Some("not_the_original_chat")
+            );
+            assert_eq!(protected(), before);
+            let after = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                .unwrap();
+            assert_eq!(after.len(), checkpoints.len() + 1);
+            assert!(checkpoints.iter().all(|row| after.contains(row)));
+        }
+    }
+
+    #[tokio::test]
     async fn answers_once_under_the_saved_session_and_records_every_refusal() {
         for pending_outcome in ["undelivered", "delivered", "aged"] {
             retry_workflow(pending_outcome).await;
@@ -1266,6 +1375,17 @@ mod tests {
                 keep_source_in(tx, "W1", &source)?;
                 tx.put_json(Table::SignalSessions, key.as_bytes(), 1, &*first.session)?;
                 tx.put_json(Table::PeerIdentities, key.as_bytes(), 1, &first.identity)
+            })
+            .unwrap();
+        let retry_alias = Jid::parse("222222222222222@lid").unwrap();
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    format!("authenticated-lid:{retry_alias}").as_bytes(),
+                    1,
+                    &peer,
+                )
             })
             .unwrap();
         let (store_ref, account_ref) = (&store, &account);
@@ -1426,6 +1546,7 @@ mod tests {
         // A later supported receipt without keys still follows normal policy.
         let default_count = receipt(&peer, 1, 42)
             .attr("id", "ROOT-RECEIPT")
+            .attr("recipient", retry_alias.clone())
             .children(vec![
                 Node::new("retry").attr("id", "W1").attr("t", "1"),
                 Node::new("registration").bytes(42u32.to_be_bytes().to_vec()),

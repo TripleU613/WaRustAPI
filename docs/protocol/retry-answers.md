@@ -321,3 +321,7 @@ A successful local write is not a recipient-delivery result.
 The [nested retry message-key correction](retry-parser-admission.md#nested-message-key-and-timestamp-correction-2026-11-05)
 uses retry.id instead of root receipt id for original lookup, requires valid
 retry.t and preserves the independent root ACK/correlation policy.
+
+The [original-chat guard](retry-original-chat.md) now honors supported explicit
+recipient selection and validates chat plus message/device against the saved
+original. Unknown alias/property/fallback behavior is not claimed ported.

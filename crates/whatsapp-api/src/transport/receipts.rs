@@ -4222,7 +4222,8 @@ mod tests {
 /// is what makes a retry per-device rather than a verdict on the stanza.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RetryRequest {
-    /// The chat the failed message was in — a group, broadcast or direct peer.
+    /// The failed message chat: explicit plain-user `recipient` when present,
+    /// otherwise the `from` identity without its device suffix.
     pub chat: Jid,
     /// The device that could not decrypt and wants it again.
     pub device: Jid,
@@ -4314,10 +4315,43 @@ pub fn parse_retry(node: &Node) -> Option<RetryRequest> {
         tracing::debug!(field = "retry.id", "invalid original message id length");
         return None;
     }
+    let from = jid("from")?;
+    let chat = if node.get_attr("recipient").is_some() {
+        // Text device0 suffixes can normalize to a plain Rust JID. Keep the
+        // explicit recipient capability limited to plain user syntax too.
+        if node
+            .get_attr("recipient")
+            .and_then(|value| value.as_text())
+            .is_some_and(|text| {
+                text.split('@')
+                    .next()
+                    .is_some_and(|user| user.contains([':', '.']))
+            })
+        {
+            tracing::debug!(
+                field = "recipient",
+                "retry recipient must not carry device syntax"
+            );
+            return None;
+        }
+        let Some(recipient) = jid("recipient").filter(|jid| jid.is_user_like() && !jid.is_ad())
+        else {
+            tracing::debug!(
+                field = "recipient",
+                "retry recipient requires a plain user identity"
+            );
+            return None;
+        };
+        recipient
+    } else {
+        // F10.A04 uses0Dn.A00(context.A02), which strips a DeviceJid to
+        // its user identity. Requesting device remains participant/from.
+        from.to_non_ad()
+    };
     Some(RetryRequest {
-        chat: jid("from")?,
-        // A direct retry names no participant; the peer is the chat itself.
-        device: jid("participant").or_else(|| jid("from"))?,
+        chat,
+        // Recipient selects the original chat, never the requesting device.
+        device: jid("participant").unwrap_or(from),
         message_id: message_id.to_owned(),
         count,
         registration: Some(registration),
@@ -4490,6 +4524,28 @@ mod retry_tests {
             }
             assert!(parse_retry(&base.clone().children(vec![retry, registration()])).is_none());
         }
+    }
+
+    #[test]
+    fn retry_recipient_selects_original_chat_without_changing_requesting_device() {
+        let from = Jid::parse("15551234567:7@s.whatsapp.net").unwrap();
+        let recipient = Jid::parse("222222222222222@lid").unwrap();
+        let base = receipt(true).attr("from", from.clone());
+        let participant = parse_retry(&base).unwrap().device;
+        assert_eq!(parse_retry(&base).unwrap().chat, from.to_non_ad());
+        let explicit = parse_retry(&base.clone().attr("recipient", recipient.clone())).unwrap();
+        assert_eq!(explicit.chat, recipient);
+        assert_eq!(explicit.device, participant);
+        for recipient in [
+            "bad",
+            "120363000000000001@g.us",
+            "222222222222222:7@lid",
+            "222222222222222:0@lid",
+        ] {
+            assert!(parse_retry(&base.clone().attr("recipient", recipient)).is_none());
+        }
+        let ad_zero = Jid::new_ad("222222222222222", 0, 0, Server::Lid).unwrap();
+        assert!(parse_retry(&base.attr("recipient", ad_zero)).is_none());
     }
 
     /// Anything that is not a retry must not be mistaken for one — a delivery

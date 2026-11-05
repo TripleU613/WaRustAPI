@@ -1,0 +1,76 @@
+classes.dex  LX/0Sf;->A02(LL)
+  write opcode 0x5b, dex byte offset: 0x5ac38a
+classes.dex  LX/0x0;->A04(LLLLL)
+  write opcode 0x5b, dex byte offset: 0x771f22
+classes.dex  LX/0x0;->A05(LL)
+  write opcode 0x5b, dex byte offset: 0x771fea
+classes.dex  LX/137;->A01(LLLLLI)
+  write opcode 0x5b, dex byte offset: 0x7e0620
+classes2.dex  LX/1rH;->A03(VL)
+  write opcode 0x5b, dex byte offset: 0x240dec
+classes2.dex  LX/1rg;->A03(VLI)
+  write opcode 0x5b, dex byte offset: 0x24570a
+classes5.dex  LX/8AF;->A07(VLL)
+  write opcode 0x5b, dex byte offset: 0x42e574
+classes5.dex  LX/8AF;->A07(VLL)
+  write opcode 0x5b, dex byte offset: 0x4307e8
+classes5.dex  LX/8iv;->invokeSuspend(LL)
+  write opcode 0x5b, dex byte offset: 0x5be2f2
+classes5.dex  Lcom/whatsapp/newsletter/scheduling/job/CancelNewsletterScheduledUpdateJob;->A0L(V)
+  write opcode 0x5b, dex byte offset: 0x5d11e4
+classes5.dex  Lcom/whatsapp/newsletter/scheduling/job/SendNewsletterScheduledUpdateNowJob;->A0L(V)
+  write opcode 0x5b, dex byte offset: 0x5d148a
+classes5.dex  Lcom/whatsapp/newsletter/scheduling/job/RescheduleNewsletterScheduledUpdateJob;->A0L(V)
+  write opcode 0x5b, dex byte offset: 0x5d169e
+classes8.dex  LX/Dxr;->A0B(LLL)
+  write opcode 0x5b, dex byte offset: 0x50edf6
+classes8.dex  LX/Eoh;->A00(L)
+  write opcode 0x5b, dex byte offset: 0x5d67d2
+classes8.dex  LX/F0R;->A00(LLLLLLLJ)
+  write opcode 0x5b, dex byte offset: 0x63e1bc
+classes8.dex  LX/F1Z;->A0B(LLL)
+  write opcode 0x5b, dex byte offset: 0x65e512
+classes8.dex  LX/FIh;->B8b(LLLLLJ)
+  write opcode 0x5b, dex byte offset: 0x74bf6e
+classes8.dex  LX/FKf;->BLW(VL)
+  write opcode 0x5b, dex byte offset: 0x76555a
+classes8.dex  LX/FTr;->ATZ(VLLL)
+  write opcode 0x5b, dex byte offset: 0x7ae02e
+classes8.dex  LX/Ffj;->invoke(L)
+  write opcode 0x5b, dex byte offset: 0x8542ec
+classes8.dex  Lcom/whatsapp/messaging/jobqueue/job/SendOrderStatusUpdateFailureReceiptJob;->A0L(V)
+  write opcode 0x5b, dex byte offset: 0x8ca93a
+classes8.dex  Lcom/whatsapp/status/api/SendNewsletterStatusViewReceiptJob;->A0L(V)
+  write opcode 0x5b, dex byte offset: 0x8cc448
+classes8.dex  Lcom/whatsapp/newsletter/messages/job/SendViewReceiptJob;->A0L(V)
+  write opcode 0x5b, dex byte offset: 0x8cc72a
+classes8.dex  Lcom/whatsapp/xmpp/jobqueue/job/ReceiptAggregatedByIdProcessingJob;->A0L(V)
+  write opcode 0x5b, dex byte offset: 0x8cd172
+classes8.dex  Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;->A0L(V)
+  write opcode 0x5b, dex byte offset: 0x8cd3f8
+classes8.dex  Lcom/whatsapp/payments/productinfra/jobqueue/job/SendPaymentInviteSetupJob;->A0L(V)
+  write opcode 0x5b, dex byte offset: 0x8cd698
+classes8.dex  Lcom/whatsapp/jobqueue/job/SendMediaErrorReceiptJob;->A0L(V)
+  write opcode 0x5b, dex byte offset: 0x8cddc0
+classes8.dex  Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->A0L(V)
+  write opcode 0x5b, dex byte offset: 0x8ce354
+classes8.dex  Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->A0L(V)
+  write opcode 0x5b, dex byte offset: 0x8cf7d6
+classes8.dex  Lcom/whatsapp/jobqueue/job/SendRetryReceiptJob;->A0L(V)
+  write opcode 0x5b, dex byte offset: 0x8cfe4a
+classes8.dex  Lcom/whatsapp/locationsharing/jobqueue/job/SendLiveLocationKeyJob;->A0L(V)
+  write opcode 0x5b, dex byte offset: 0x8d2bf6
+classes8.dex  Lcom/whatsapp/companiondevice/devices/jobqueue/job/SendPeerMessageJob;->A0L(V)
+  write opcode 0x5b, dex byte offset: 0x8d364c
+classes8.dex  Lcom/whatsapp/productinfra/status/sendflow/SendNewsletterStatusJob;->A0L(V)
+  write opcode 0x5b, dex byte offset: 0x8d4682
+classes8.dex  Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A06(ZLLLLLLLLLLIJZZ)
+  write opcode 0x5b, dex byte offset: 0x8d9670
+classes8.dex  Lcom/whatsapp/newsletter/messages/job/SendNewsletterMessageJob;->A0L(V)
+  write opcode 0x5b, dex byte offset: 0x8de324
+classes8.dex  Lcom/whatsapp/productinfra/status/sendflow/SendE2eStatusJob;->A0L(V)
+  write opcode 0x5b, dex byte offset: 0x8e1fd0
+classes8.dex  Lcom/whatsapp/productinfra/status/sendflow/SendE2eStatusJob;->A0L(V)
+  write opcode 0x5b, dex byte offset: 0x8e21de
+classes8.dex  Lcom/whatsapp/productinfra/status/sendflow/SendE2eStatusJob;->A0L(V)
+  write opcode 0x5b, dex byte offset: 0x8e39ca
