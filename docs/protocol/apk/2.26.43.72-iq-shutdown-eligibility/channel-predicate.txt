@@ -1,0 +1,22 @@
+
+# class: LX/1A3;
+# extends: Landroid/os/Handler;
+
+.method public BNJ(Z)  # .registers 3
+    # full signature: LX/1A3;->BNJ()Z
+    0000..0002  const/4  v0, #0x4
+    0002..0008  invoke-virtual  {v2, v0}, Landroid/os/Handler;->hasMessages(I)Z
+    0008..000a  move-result  v0
+    000a..000e  if-nez  v0, +0x12
+    000e..0012  iget-object  v0, v2, LX/1A3;->A00:LX/0ZJ;
+    0012..0018  invoke-static  {v0}, LX/0ZJ;->A0K(LX/0ZJ;)LX/0vH;
+    0018..001a  move-result-object  v0
+    001a..0020  invoke-static  {v0}, LX/00L;->A05(Ljava/lang/Object;)V
+    0020..0026  invoke-interface  {v0}, LX/0vH;->BNJ()Z
+    0026..0028  move-result  v1
+    0028..002a  const/4  v0, #0x0
+    002a..002e  if-eqz  v1, +0x3
+    002e..0030  const/4  v0, #0x1
+    0030..0032  return  v0
+    # exception table: 0 try range(s)
+.end method

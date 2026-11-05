@@ -1,0 +1,150 @@
+
+# class: LX/1A3;
+# extends: Landroid/os/Handler;
+
+.method public handleMessage(VL)  # .registers 13
+    # full signature: LX/1A3;->handleMessage(Landroid/os/Message;)V
+    0000..0004  iget-object  v7, v11, LX/1A3;->A00:LX/0ZJ;
+    0004..000a  invoke-static  {v7}, LX/0ZJ;->A0B(LX/0ZJ;)LX/00x;
+    000a..000c  move-result-object  v0
+    000c..0012  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0012..0014  move-result-object  v0
+    0014..0018  check-cast  v0, LX/00X;
+    0018..001e  invoke-virtual  {v0}, LX/00X;->A02()LX/00Z;
+    001e..0020  move-result-object  v1
+    0020..0024  const/16  v0, #0xbf3
+    0024..002a  invoke-static  {v1, v0}, LX/09H;->A00(LX/00Y;I)LX/05a;
+    002a..002c  move-result-object  v10
+    002c..0030  iget  v0, v12, Landroid/os/Message;->what:I
+    0030..0034  const-string  v6, " connectedNetworkId="
+    0034..0038  const-string  v5, "connected_network_id"
+    0038..003c  const-string  v1, "network_id"
+    003c..003e  const/4  v4, #0xff (-1)
+    003e..0042  const-string  v3, "disconnectReason"
+    0042..0044  const/4  v8, #0x1
+    0044..0048  const-string  v9, "requestTime"
+    0048..004e  packed-switch  v0, payload@0x248, cases=[0:@0x1b0, 1:@0x186, 2:@0x15e, 3:@0x152, 4:@0x14a, 5:@0x4e, 6:@0x142, 7:@0x13a, 8:@0x132, 9:@0xba, 10:@0xb2, 11:@0x50], default@0x4e
+    004e..0050  return-void
+    0050..0056  invoke-virtual  {v12}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    0056..0058  move-result-object  v0
+    0058..005e  invoke-virtual  {v0, v1}, Landroid/os/BaseBundle;->getLong(Ljava/lang/String;)J
+    005e..0060  move-result-wide  v1
+    0060..0066  invoke-virtual  {v12}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    0066..0068  move-result-object  v0
+    0068..006e  invoke-virtual  {v0, v5}, Landroid/os/BaseBundle;->getLong(Ljava/lang/String;)J
+    006e..0070  move-result-wide  v3
+    0070..0074  const-string  v5, "ConnectionThread/MessageServiceHandler/recv/networkUnblocked networkId="
+    0074..0078  new-instance  v0, Ljava/lang/StringBuilder;
+    0078..007e  invoke-direct  {v0, v5}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    007e..0084  invoke-virtual  {v0, v1, v2}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    0084..008a  invoke-virtual  {v0, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    008a..0090  invoke-virtual  {v0, v3, v4}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    0090..0096  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0096..0098  move-result-object  v0
+    0098..009e  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    009e..00a4  invoke-virtual  {v10}, LX/05a;->get()Ljava/lang/Object;
+    00a4..00a6  move-result-object  v0
+    00a6..00aa  check-cast  v0, LX/1B0;
+    00aa..00b0  invoke-virtual  {v0, v1, v2, v3, v4}, LX/1B0;->A0N(JJ)V
+    00b0..00b2  return-void
+    00b2..00b8  invoke-static  {v7}, LX/0ZJ;->A1B(LX/0ZJ;)V
+    00b8..00ba  return-void
+    00ba..00c0  invoke-virtual  {v12}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    00c0..00c2  move-result-object  v0
+    00c2..00c8  invoke-virtual  {v0, v1}, Landroid/os/BaseBundle;->getLong(Ljava/lang/String;)J
+    00c8..00ca  move-result-wide  v3
+    00ca..00d0  invoke-virtual  {v12}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    00d0..00d2  move-result-object  v0
+    00d2..00d8  invoke-virtual  {v0, v5}, Landroid/os/BaseBundle;->getLong(Ljava/lang/String;)J
+    00d8..00da  move-result-wide  v1
+    00da..00de  const-string  v5, "ConnectionThread/MessageServiceHandler/recv/networkBlocked networkId="
+    00de..00e2  new-instance  v0, Ljava/lang/StringBuilder;
+    00e2..00e8  invoke-direct  {v0, v5}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00e8..00ee  invoke-virtual  {v0, v3, v4}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    00ee..00f4  invoke-virtual  {v0, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00f4..00fa  invoke-virtual  {v0, v1, v2}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    00fa..0100  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0100..0102  move-result-object  v0
+    0102..0108  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0108..010e  invoke-virtual  {v10}, LX/05a;->get()Ljava/lang/Object;
+    010e..0110  move-result-object  v0
+    0110..0114  check-cast  v0, LX/1B0;
+    0114..011a  invoke-virtual  {v0, v3, v4, v1, v2}, LX/1B0;->A0M(JJ)V
+    011a..0120  invoke-virtual  {v12}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    0120..0122  move-result-object  v0
+    0122..0128  invoke-virtual  {v0, v9}, Landroid/os/BaseBundle;->getLong(Ljava/lang/String;)J
+    0128..012a  move-result-wide  v0
+    012a..0130  invoke-static  {v7, v8, v0, v1, v8}, LX/0ZJ;->A1L(LX/0ZJ;IJZ)V
+    0130..0132  return-void
+    0132..0138  invoke-static  {v7}, LX/0ZJ;->A1C(LX/0ZJ;)V
+    0138..013a  return-void
+    013a..0140  invoke-static  {v7}, LX/0ZJ;->A1D(LX/0ZJ;)V
+    0140..0142  return-void
+    0142..0148  invoke-static  {v7}, LX/0ZJ;->A1E(LX/0ZJ;)V
+    0148..014a  return-void
+    014a..0150  invoke-static  {v12, v7}, LX/0ZJ;->A0t(Landroid/os/Message;LX/0ZJ;)V
+    0150..0152  return-void
+    0152..0156  iget  v0, v12, Landroid/os/Message;->arg1:I
+    0156..015c  invoke-static  {v7, v0}, LX/0ZJ;->A1I(LX/0ZJ;I)V
+    015c..015e  return-void
+    015e..0164  invoke-virtual  {v12}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    0164..0166  move-result-object  v0
+    0166..016c  invoke-virtual  {v0, v9}, Landroid/os/BaseBundle;->getLong(Ljava/lang/String;)J
+    016c..016e  move-result-wide  v0
+    016e..0174  invoke-virtual  {v12}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    0174..0176  move-result-object  v2
+    0176..017c  invoke-virtual  {v2, v3, v4}, Landroid/os/BaseBundle;->getInt(Ljava/lang/String;I)I
+    017c..017e  move-result  v2
+    017e..0184  invoke-static  {v7, v2, v0, v1, v8}, LX/0ZJ;->A1L(LX/0ZJ;IJZ)V
+    0184..0186  return-void
+    0186..018c  invoke-virtual  {v12}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    018c..018e  move-result-object  v0
+    018e..0194  invoke-virtual  {v0, v9}, Landroid/os/BaseBundle;->getLong(Ljava/lang/String;)J
+    0194..0196  move-result-wide  v1
+    0196..019c  invoke-virtual  {v12}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    019c..019e  move-result-object  v0
+    019e..01a4  invoke-virtual  {v0, v3, v4}, Landroid/os/BaseBundle;->getInt(Ljava/lang/String;I)I
+    01a4..01a6  move-result  v3
+    01a6..01a8  const/4  v0, #0x0
+    01a8..01ae  invoke-static  {v7, v3, v1, v2, v0}, LX/0ZJ;->A1L(LX/0ZJ;IJZ)V
+    01ae..01b0  return-void
+    01b0..01b4  const-string  v0, "ConnectionThread/MessageServiceHandler/recv/connect"
+    01b4..01ba  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    01ba..01c0  invoke-virtual  {v12}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    01c0..01c2  move-result-object  v1
+    01c2..01c6  const-string  v0, "ipaddress"
+    01c6..01cc  invoke-virtual  {v1, v0}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    01cc..01ce  move-result-object  v3
+    01ce..01d2  const-string  v0, "available"
+    01d2..01d8  invoke-virtual  {v1, v0}, Landroid/os/BaseBundle;->getBoolean(Ljava/lang/String;)Z
+    01d8..01da  move-result  v2
+    01da..01de  const-string  v0, "forcePassiveMode"
+    01de..01e4  invoke-virtual  {v1, v0}, Landroid/os/BaseBundle;->getBoolean(Ljava/lang/String;)Z
+    01e4..01e6  move-result  v1
+    01e6..01ea  iget-object  v0, v12, Landroid/os/Message;->obj:Ljava/lang/Object;
+    01ea..01ee  check-cast  v0, LX/1iH;
+    01ee..01f4  invoke-static  {v0, v7, v3, v2, v1}, LX/0ZJ;->A0y(LX/1iH;LX/0ZJ;Ljava/lang/String;ZZ)V
+    01f4..01fa  invoke-static  {v7}, LX/0ZJ;->A0P(LX/0ZJ;)LX/0YC;
+    01fa..01fc  move-result-object  v0
+    01fc..0202  invoke-virtual  {v0}, LX/0YC;->A01()Z
+    0202..0204  move-result  v0
+    0204..0208  if-eqz  v0, +0x11
+    0208..020c  const/16  v0, #0xa
+    020c..0212  invoke-virtual  {v11, v0}, Landroid/os/Handler;->removeMessages(I)V
+    0212..0218  invoke-static  {v7}, LX/0ZJ;->A0O(LX/0ZJ;)LX/0uu;
+    0218..021a  move-result-object  v0
+    021a..0220  invoke-static  {v0}, LX/00L;->A05(Ljava/lang/Object;)V
+    0220..0226  invoke-virtual  {v0}, LX/0uu;->A05()V
+    0226..022c  invoke-static  {v7}, LX/0ZJ;->A0M(LX/0ZJ;)LX/0YS;
+    022c..022e  move-result-object  v0
+    022e..0234  invoke-interface  {v0}, LX/0YS;->BqF()V
+    0234..0236  return-void
+    0236..0238  move-exception  v1
+    0238..023e  invoke-static  {v7}, LX/0ZJ;->A0M(LX/0ZJ;)LX/0YS;
+    023e..0240  move-result-object  v0
+    0240..0246  invoke-interface  {v0}, LX/0YS;->BqF()V
+    0246..0248  throw  v1
+    0248..0280  packed-switch-payload  size=12
+    # exception table: 1 try range(s)
+    # catch <all> code_units 00e1..0113 -> 011b
+.end method

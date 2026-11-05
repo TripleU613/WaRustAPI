@@ -224,3 +224,15 @@ BsS, without clearingA0I in its selected IQ block.
 [Complete selected bodies, ordering and limits](apk/2.26.43.72-iq-promotion-shutdown/README.md).
 Full socket/reconnect behavior, shutdown eligibility, concurrent and durable
 ownership remain open. No Rust behavior change, new replay authority or live traffic.
+
+### IQ shutdown eligibility and cancellation-map ownership (2026-11-04)
+
+**Confirmed static, APK43.72:** ordinary disconnect passes the original reason
+and channel.BNJ (false when absent) into the registry flush. The selected
+login-back failure branch instead gates the call on BNJ and passes(true,-1).
+Concrete1A3.BNJ is queued-handler-message4 OR delegate.BNJ, not a connection
+state alias. Adjacent0Sf.A0J invokes cancellation callbacks and clears a
+separate map; it does not directly clear IQ maps or the pending token slot.
+[Complete selected bodies, channel path and limits](apk/2.26.43.72-iq-shutdown-eligibility/README.md).
+Delegate semantics, cancellation callback effects, full reconnect ordering and
+durable ownership remain open. No Rust behavior change or live traffic.

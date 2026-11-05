@@ -1,3 +1,11 @@
+2026-11-04 — **IQ shutdown arguments and cancellation-map boundary traced.**
+
+Disconnect and selected login-back failure pass different flush arguments.
+The channel predicate includes a queued-message check; adjacent cancellation
+uses a separate map. [Evidence and limits](docs/protocol/apk/2.26.43.72-iq-shutdown-eligibility/README.md).
+Research only; no runtime changes or live traffic. Validation: checked exports,
+checksums, JSON, coverage freshness and repository hygiene.
+
 2026-11-04 — **Partial encrypted write uncertainty now has a regression test.**
 
 A local verified-Noise peer receives a ciphertext prefix, then disconnects.
