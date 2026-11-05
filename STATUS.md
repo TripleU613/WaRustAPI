@@ -1,3 +1,15 @@
+2026-11-05 — **Next client ping waits a full interval after its response.**
+
+A delayed reply no longer allows an almost-immediate next ping. Independent
+maintenance still drains queued work on its existing cadence; malformed and
+unowned replies do not restart ping scheduling. Red/green regression covers
+both result/error, preserved uncertainty and exact paused-time delay.
+[Source, packaged timing entries and unported effective configuration](docs/protocol/apk/2.26.43.72-client-ping-scheduling/README.md).
+No duration/configuration, request shape, retry/reset or live account operation added.
+Validation:1373 workspace/all-feature tests, strict Clippy, fmt, CLI/OpenAPI,
+APK coverage, pinned APK hash, exact specifier derivation and checksum/link
+hygiene passed. The delayed-response regression failed against the prior driver.
+
 2026-11-05 — **Malformed client pong results cannot clear liveness timers.**
 
 The driver validates required supported sender JID, original ID and native

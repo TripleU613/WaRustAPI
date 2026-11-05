@@ -1,0 +1,26 @@
+{
+  "README.md": {
+    "bytes": 6347,
+    "sha256": "abc8ea9bc8a646b1df4183de6c1e996774a487c32e658cb5491acc371d945ed4"
+  },
+  "derive-specifiers.py": {
+    "bytes": 1602,
+    "sha256": "5682dbfc9f55ee965ec782a19c354160517c9a155f3536b3254f8b7119e5c521"
+  },
+  "integer-entries.txt": {
+    "bytes": 2390,
+    "sha256": "79ec16736c11c220893ba5191c0f8003393fea68ea2d5c56e87e182d43a3b4d1"
+  },
+  "literal-key-xrefs.txt": {
+    "bytes": 279,
+    "sha256": "ec3ab5e47286ad1ac58708af5e7646f3cdeeadae7ff63789974c6f8f78ca95e7"
+  },
+  "map-binding-and-boolean-entry.txt": {
+    "bytes": 6082,
+    "sha256": "7b3736ad0b0de751041657d7619580f9ad95f691746cc8ebceb53727fd3bc19b"
+  },
+  "specifiers.json": {
+    "bytes": 524,
+    "sha256": "e2c2244b06df117cfb8f67e783f7ec386346dbf1c6e10b819fa720d05adb323f"
+  }
+}

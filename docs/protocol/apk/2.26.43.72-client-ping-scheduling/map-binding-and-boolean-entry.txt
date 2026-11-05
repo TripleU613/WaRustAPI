@@ -1,0 +1,76 @@
+# Selected static DEX excerpt; not a complete method.
+# Full export SHA256: 009d605b135aedae3c507b09f88bafd2f847eab8bbb7db29f2785e6d014b138d
+
+# Selected byte-PC range 00d4..00e4 (end exclusive)
+    00d4..00da  invoke-static  {}, Lcom/google/common/collect/ImmutableMap;->builder()Lcom/google/common/collect/ImmutableMap$Builder;
+    00da..00dc  move-result-object  v14
+    00dc..00e2  invoke-static  {}, Lcom/google/common/collect/ImmutableMap;->builder()Lcom/google/common/collect/ImmutableMap$Builder;
+    00e2..00e4  move-result-object  v13
+
+# Selected byte-PC range 015c..0258 (end exclusive)
+    015c..015e  const/4  v1, #0x0
+    015e..0164  const  v0, #0x8267
+    0164..016a  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    016a..016c  move-result-object  v0
+    016c..0172  invoke-static  {v1}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0172..0174  move-result-object  v2
+    0174..017a  invoke-virtual  {v14, v0, v2}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    017a..0180  const  v0, #0x8153
+    0180..0186  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0186..0188  move-result-object  v0
+    0188..018e  invoke-virtual  {v14, v0, v2}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    018e..0192  const/16  v0, #0x6c15
+    0192..0198  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0198..019a  move-result-object  v0
+    019a..01a0  invoke-virtual  {v14, v0, v2}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    01a0..01a6  const  v0, #0x83da
+    01a6..01ac  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    01ac..01ae  move-result-object  v0
+    01ae..01b4  invoke-virtual  {v14, v0, v2}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    01b4..01b8  const/16  v0, #0x6391
+    01b8..01be  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    01be..01c0  move-result-object  v0
+    01c0..01c6  invoke-virtual  {v14, v0, v2}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    01c6..01cc  const  v0, #0x8e74
+    01cc..01d2  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    01d2..01d4  move-result-object  v0
+    01d4..01da  invoke-virtual  {v14, v0, v2}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    01da..01de  const/16  v0, #0x22b9
+    01de..01e4  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    01e4..01e6  move-result-object  v0
+    01e6..01ec  invoke-virtual  {v14, v0, v2}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    01ec..01f0  const/16  v0, #0x2083
+    01f0..01f6  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    01f6..01f8  move-result-object  v0
+    01f8..01fe  invoke-virtual  {v14, v0, v2}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    01fe..0202  const/16  v0, #0x3c49
+    0202..0208  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0208..020a  move-result-object  v0
+    020a..0210  invoke-virtual  {v14, v0, v2}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    0210..0214  const/16  v0, #0x6211
+    0214..021a  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    021a..021c  move-result-object  v0
+    021c..0222  invoke-virtual  {v14, v0, v2}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    0222..0226  const/16  v0, #0x75e1
+    0226..022c  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    022c..022e  move-result-object  v0
+    022e..0234  invoke-virtual  {v14, v0, v2}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    0234..0238  const/16  v0, #0xf66
+    0238..023e  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    023e..0240  move-result-object  v0
+    0240..0246  invoke-virtual  {v14, v0, v2}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    0246..024a  const/16  v0, #0x195d
+    024a..0250  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0250..0252  move-result-object  v0
+    0252..0258  invoke-virtual  {v14, v0, v2}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+
+# Selected byte-PC range 43b2..43c4 (end exclusive)
+    43b2..43b8  invoke-static  {v13}, LX/08Y;->A0B(Lcom/google/common/collect/ImmutableMap$Builder;)V
+    43b8..43be  invoke-static  {v13}, LX/08Y;->A0I(Lcom/google/common/collect/ImmutableMap$Builder;)V
+    43be..43c4  invoke-static  {v13}, LX/08Y;->A0Q(Lcom/google/common/collect/ImmutableMap$Builder;)V
+
+# Selected byte-PC range cc16..cc28 (end exclusive)
+    cc16..cc1c  invoke-virtual  {v13}, Lcom/google/common/collect/ImmutableMap$Builder;->buildKeepingLast()Lcom/google/common/collect/ImmutableMap;
+    cc1c..cc1e  move-result-object  v1
+    cc1e..cc24  invoke-static  {v1}, LX/00l;->A05(Ljava/lang/Object;)V
+    cc24..cc28  iput-object  v1, v0, LX/08Y;->A02:Lcom/google/common/collect/ImmutableMap;

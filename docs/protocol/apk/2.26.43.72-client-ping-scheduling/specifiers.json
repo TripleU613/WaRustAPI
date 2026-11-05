@@ -1,0 +1,23 @@
+{
+  "source_sha256": "3d4034aa9b13618d835abc9f413dffab6a2766192de460251f02e52e60d4f386",
+  "literal_writes_checked": 2065,
+  "array_length": 41080,
+  "selected": {
+    "6493": {
+      "literal_entry_present": false,
+      "specifier_hex": "0x0"
+    },
+    "15103": {
+      "literal_entry_present": false,
+      "specifier_hex": "0x0"
+    },
+    "15183": {
+      "literal_entry_present": false,
+      "specifier_hex": "0x0"
+    },
+    "15270": {
+      "literal_entry_present": false,
+      "specifier_hex": "0x0"
+    }
+  }
+}

@@ -16892,5 +16892,12 @@
     "x-live": false,
     "description": "Successful client keepalive results require supported parsed from JID, request ID equality, exact result type and signed decimal t within inclusive1577865600..4102473600. Malformed result consumes the live callback claim without clearing or extending its timer; subsequent same-ID replies cannot resurrect it. Fixed field-only diagnostic; no timestamp adoption. Rust JID grammar bounds and local ping timing remain explicit limits.",
     "evidence": "docs/protocol/apk/2.26.43.72-client-pong-schema/README.md"
+  },
+  "x-client-ping-response-relative-scheduling": {
+    "x-cli": true,
+    "x-transport": "experimental",
+    "x-live": false,
+    "description": "Normal driver schedules its next client keepalive relative to accepted result/error response, independently of maintenance deadlines. Delayed replies cannot cause an early fixed-grid ping; malformed/duplicate/unowned replies do not restart scheduling. Existing locally selected durations remain unchanged. Selected native packaged15s/240s/32s entries and resolver/mode limits are documented, not applied as effective settings.",
+    "evidence": "docs/protocol/apk/2.26.43.72-client-ping-scheduling/README.md"
   }
 }

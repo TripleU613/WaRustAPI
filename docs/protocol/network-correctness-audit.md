@@ -3299,3 +3299,16 @@ field diagnostics contain no supplied values. Error-response behavior remains
 separate. Existing Rust JID text bounds are a local supported-path limit.
 [Reader/exception/ownership proof, regressions and remaining gaps](apk/2.26.43.72-client-pong-schema/README.md).
 No clock adoption, replay, new request, cadence/timeout change or live traffic.
+
+
+## Client ping interval restarts on response — 2026-11-05
+
+**Confirmed static / locally corrected**, APK2.26.43.72:1A7.A05 schedules the
+next periodic ping from its accepted response. Rust's fixed shared tick could
+send again1second after a response delayed19seconds. Separate maintenance and
+next-ping deadlines now restart only the ping interval; queued work still drains
+at its original local maintenance deadline. Invalid/duplicate/unowned replies
+do not restart it. Red/green actor regression covers bothresult anderror.
+[Evidence, packaged15s/240s/32s entries and resolver limits](apk/2.26.43.72-client-ping-scheduling/README.md).
+Effective native durations/configuration/mode remain unported; existing local
+values, wire requests, uncertainty guards and no-live-operation boundary remain.

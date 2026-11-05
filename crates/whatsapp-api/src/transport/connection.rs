@@ -504,9 +504,10 @@ pub(crate) async fn drive(
         .await?;
     let mut ready = Some(ready);
     let ping_period = Duration::from_millis((config.transport.timeout_ms / 2).clamp(1000, 20000));
-    let mut heartbeat = tokio::time::interval(ping_period);
-    heartbeat.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Delay);
-    heartbeat.tick().await;
+    // Maintenance stays on its own local cadence. Native 1A7.A05 restarts
+    // periodic ping scheduling from each accepted response, not a fixed tick.
+    let mut maintenance_due = tokio::time::Instant::now() + ping_period;
+    let mut next_ping_due = maintenance_due;
     let mut pending_ping: Option<PendingPing> = None;
     // Pending jobs stay durable, but callback authority is local to this link.
     let mut retry_refetches = super::retry_answer::ActiveRefetches::default();
@@ -550,6 +551,11 @@ pub(crate) async fn drive(
             .map(|q| q.deadline)
             .unwrap_or_else(tokio::time::Instant::now);
         let action_deadline = action_replies.deadline();
+        let maintenance_or_ping_due = if pending_ping.is_none() {
+            maintenance_due.min(next_ping_due)
+        } else {
+            maintenance_due
+        };
         tokio::select! {
             _ = tokio::time::sleep_until(action_deadline.unwrap_or_else(tokio::time::Instant::now)), if action_deadline.is_some() => {
                 action_replies.expire();
@@ -609,20 +615,22 @@ pub(crate) async fn drive(
             _ = tokio::time::sleep_until(activated_deadline), if ready.is_some() => {
                 return Err(Error::invalid("connection", "activation outcome unknown; frames preserved"));
             }
-            _ = heartbeat.tick(), if ready.is_none() => {
-                // Authenticated primary-key changes and offline requests can
-                // queue work during this connection without a devices notification.
-                if device_query.is_none() && group_outgoing.as_ref().is_none_or(|g| !g.devices_pending())
-                    && let Some((query,node))=device_cursor.begin_next(&store,device_context)? {
-                    device_query=Some(query);
-                    link.send(&node).await?;
+            _ = tokio::time::sleep_until(maintenance_or_ping_due), if ready.is_none() => {
+                if tokio::time::Instant::now() >= maintenance_due {
+                    maintenance_due = tokio::time::Instant::now() + ping_period;
+                    // Authenticated primary-key changes and offline requests can
+                    // queue work during this connection without a devices notification.
+                    if device_query.is_none() && group_outgoing.as_ref().is_none_or(|g| !g.devices_pending())
+                        && let Some((query,node))=device_cursor.begin_next(&store,device_context)? {
+                        device_query=Some(query);
+                        link.send(&node).await?;
+                    }
+                    for receipt in super::receipts::reserve_pending(&store)? { link.send(&receipt).await?; }
+                    action_drain.trigger();
                 }
-                for receipt in super::receipts::reserve_pending(&store)? { link.send(&receipt).await?; }
-                action_drain.trigger();
-                // A maintenance write can delay this ping within the heartbeat
-                // interval. Its response window belongs to its own admission,
-                // not the next timer tick (43.72 0Sf.A06 -> 0ln.A08).
-                if pending_ping.is_some() { continue; }
+                // A maintenance write can delay a due ping. Its response window
+                // belongs to its own admission (43.72 0Sf.A06 -> 0ln.A08).
+                if pending_ping.is_some() || tokio::time::Instant::now() < next_ping_due { continue; }
                 let id = super::messaging::new_message_id()?;
                 // Comparison LX/EIY.<init>(VLI), branch 15, 0x006a..009e.
                 let ping = Node::new("iq").attr("id", id.as_str()).attr("type", "get")
@@ -825,7 +833,9 @@ pub(crate) async fn drive(
                         if node.get_attr("type").and_then(|v| v.as_text()) == Some("error") {
                             tracing::info!("keepalive error response received");
                         }
-                        pending_ping = None; continue;
+                        pending_ping = None;
+                        next_ping_due = tokio::time::Instant::now() + ping_period;
+                        continue;
                     }
                 }
                 let received = super::inbox::process_with_policy(&store, &account, &node, &capture, config.transport.identity_changes).await?;
@@ -5501,6 +5511,68 @@ mod tests {
             Err("from")
         );
         assert_eq!(validate_keepalive_result(&valid, "other"), Err("id"));
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn delayed_ping_response_restarts_only_ping_schedule_not_maintenance() {
+        use super::super::{about, actions};
+        for outcome in ["result", "error"] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("ping-schedule.redb"));
+            let mut fake = start(&store, false, None);
+            fake.activate().await;
+            let (first, written) = fake.written_within(Duration::from_secs(60)).await;
+            written.send(Ok(())).unwrap();
+            fake.nothing_written(Duration::from_secs(19)).await;
+            let id = first.get_attr("id").unwrap().clone();
+            let reply = if outcome == "result" {
+                valid_keepalive_reply(id)
+            } else {
+                Node::new("iq").attr("id", id).attr("type", "error")
+            };
+            let responded_at = tokio::time::Instant::now();
+            fake.deliver(reply).await;
+            // This response proves the preceding client reply was processed.
+            fake.deliver(
+                Node::new("iq")
+                    .attr("type", "get")
+                    .attr("xmlns", "urn:xmpp:ping"),
+            )
+            .await;
+            let (pong, written) = fake.written().await;
+            assert_eq!(
+                pong.get_attr("type").and_then(|v| v.as_text()),
+                Some("result")
+            );
+            written.send(Ok(())).unwrap();
+            let action_id = about::queue_set(&store, "Available").unwrap();
+            // The old maintenance tick is still one second away. It must drain
+            // the action, while the next client ping waits a full response interval.
+            let (action, written) = fake.written_within(Duration::from_secs(2)).await;
+            assert_eq!(
+                action.get_attr("id").and_then(|v| v.as_text()),
+                Some(action_id.as_str())
+            );
+            written.send(Ok(())).unwrap();
+            fake.nothing_written(Duration::from_secs(18)).await;
+            let (second, written) = fake.written_within(Duration::from_secs(2)).await;
+            assert_eq!(
+                second.get_attr("xmlns").and_then(|v| v.as_text()),
+                Some("w:p")
+            );
+            assert_ne!(second.get_attr("id"), first.get_attr("id"));
+            assert_eq!(
+                tokio::time::Instant::now() - responded_at,
+                Duration::from_secs(20)
+            );
+            written.send(Ok(())).unwrap();
+            fake.stop_cleanly().await;
+            assert_eq!(
+                actions::outcomes(&store).unwrap()[0].status,
+                actions::ActionStatus::Sent
+            );
+            assert!(actions::reserve_pending(&store).unwrap().is_empty());
+        }
     }
 
     #[tokio::test(start_paused = true)]
