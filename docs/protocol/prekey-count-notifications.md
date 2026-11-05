@@ -222,3 +222,10 @@ its keys under a fresh legacy upload after reconnect. [Reopen regression and sco
 reserved KEM row to exist and validate; missing material rolls back complete
 settlement. [Partial-write/reopen regression and native-policy distinction](network-correctness-audit.md#kem-acknowledgement-inventory-integrity-2026-11-04).
 No key regeneration or uncertain-state reset.
+
+## Consumption before upload ACK (2026-11-04)
+
+**Local correction:** ordinary KEM consumption now leaves a nonsecret atomic
+marker, allowing later upload settlement without resurrecting its key. Unexplained
+loss still refuses; stale allocators cannot reuse consumed IDs.
+[Ordering/rollback/reopen regressions and prior-guard qualification](network-correctness-audit.md#consumed-kem-key-before-upload-ack-2026-11-04).

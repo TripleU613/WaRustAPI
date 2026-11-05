@@ -1,3 +1,12 @@
+2026-11-04 — **Consumed KEM keys can settle later upload ACKs without resurrection.**
+
+Atomic nonsecret inbox marker distinguishes legitimate consumption from missing
+material. Stale allocator reuse refuses; rollback/reopen paths tested.
+[Prior-guard correction and scope](docs/protocol/network-correctness-audit.md#consumed-kem-key-before-upload-ack-2026-11-04).
+Validation: **1,285 workspace/all-feature tests**, targeted consumption checks,
+strict Clippy, CLI reference, formatting, coverage freshness and repository
+hygiene passed. No live traffic.
+
 2026-11-04 — **KEM acknowledgement cannot silently skip lost key material.**
 
 Settlement requires/validates every reserved KEM row. Missing-second-row

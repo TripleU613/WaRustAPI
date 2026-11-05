@@ -1190,6 +1190,19 @@ mod tests {
         store
             .write(|tx| tx.put_json(Table::Prekeys, missing_key.as_bytes(), 1, &row))
             .unwrap();
+        // The real inbox helper may consume an ordinary key before upload ACK.
+        // Its marker explains the absence without resurrecting private material.
+        store
+            .write(|tx| super::super::kem_prekeys::consume_in(tx, missing_id, &row))
+            .unwrap();
+        assert!(
+            store
+                .read(|tx| super::super::kem_prekeys::load(tx, missing_id))
+                .unwrap()
+                .is_none()
+        );
+        drop(store);
+        let store = open(&path);
         // Only the original correlated result releases that uncertainty.
         pending
             .settle(
@@ -1199,6 +1212,12 @@ mod tests {
                     .attr("type", "result"),
             )
             .unwrap();
+        assert!(
+            store
+                .read(|tx| super::super::kem_prekeys::load(tx, missing_id))
+                .unwrap()
+                .is_none()
+        );
         let (_, next) = begin_upload(&store, &account, &signed).unwrap().unwrap();
         assert!(next.child("pq_list").is_none());
         assert!(next.child("pq_last_resort_key").is_none());

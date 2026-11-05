@@ -37,6 +37,16 @@ pub(crate) fn record_key(id: u32) -> String {
     format!("{RECORD_PREFIX}{id}")
 }
 
+#[derive(Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct ConsumedKem {
+    id: u32,
+    public_sha256: [u8; 32],
+}
+fn consumed_key(id: u32) -> String {
+    format!("kem-prekey-consumed:v1:{id}")
+}
+
 /// One account-local KEM prekey row. Encrypted at rest by the store; the
 /// secret is zeroized on drop and never printed.
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -115,6 +125,18 @@ pub(crate) fn consume_in(tx: &mut WriteTx<'_>, id: u32, original: &StoredKemPrek
             "KEM prekey changed before commit; not consumed",
         ));
     }
+    // The inbox commits this marker with authenticated consumption. It carries
+    // no private material and distinguishes use-before-upload-ACK from loss.
+    use sha2::{Digest, Sha256};
+    tx.put_json(
+        Table::Checkpoints,
+        consumed_key(id).as_bytes(),
+        1,
+        &ConsumedKem {
+            id,
+            public_sha256: Sha256::digest(&original.public).into(),
+        },
+    )?;
     tx.delete(Table::Prekeys, key.as_bytes())?;
     Ok(())
 }
@@ -177,6 +199,17 @@ fn generate_in(tx: &mut WriteTx<'_>, last_resort: bool) -> Result<()> {
     if id > 0x00ff_ffff {
         return Err(invalid("KEM prekey id space exhausted"));
     }
+    if tx
+        .get_json::<ConsumedKem>(Table::Checkpoints, consumed_key(id).as_bytes(), 1)?
+        .is_some()
+        || tx
+            .get(Table::Prekeys, record_key(id).as_bytes(), 1)?
+            .is_some()
+    {
+        return Err(invalid(
+            "KEM prekey id collision; refusing to overwrite or reuse",
+        ));
+    }
     let (public, secret) = crate::signal::kem::generate_key_pair()?;
     let row = StoredKemPrekey {
         id,
@@ -230,11 +263,21 @@ pub(crate) fn upload_rows_in(tx: &mut WriteTx<'_>, batch: usize) -> Result<Vec<S
 pub(crate) fn mark_sent_in(tx: &mut WriteTx<'_>, ids: &[u32]) -> Result<()> {
     for id in ids {
         let key = record_key(*id);
-        // A reserved key must remain usable locally when its acknowledgement
-        // settles. Never silently promote the batch after losing its secret.
-        let mut row = tx
-            .get_json::<StoredKemPrekey>(Table::Prekeys, key.as_bytes(), 1)?
-            .ok_or_else(|| invalid("reserved KEM prekey disappeared before acknowledgement"))?;
+        // Ordinary keys may be authenticated/consumed before the upload reply.
+        // Only the inbox's durable marker explains a missing row; never invent
+        // consumption for historical missing material or recreate its secret.
+        let Some(mut row) = tx.get_json::<StoredKemPrekey>(Table::Prekeys, key.as_bytes(), 1)?
+        else {
+            if tx
+                .get_json::<ConsumedKem>(Table::Checkpoints, consumed_key(*id).as_bytes(), 1)?
+                .is_some_and(|consumed| consumed.id == *id)
+            {
+                continue;
+            }
+            return Err(invalid(
+                "reserved KEM prekey disappeared before acknowledgement",
+            ));
+        };
         row.validate(*id)?;
         row.sent = true;
         tx.put_json(Table::Prekeys, key.as_bytes(), 1, &row)?;
@@ -321,7 +364,29 @@ mod tests {
         let mut changed = ordinary.clone();
         changed.last_resort = true;
         assert!(store.write(|tx| consume_in(tx, 5, &changed)).is_err());
+        let failed: Result<()> = store.write(|tx| {
+            consume_in(tx, 5, &ordinary)?;
+            Err(invalid("synthetic inbox commit cut"))
+        });
+        assert!(failed.is_err());
+        assert!(store.read(|tx| load(tx, 5)).unwrap().is_some());
+        assert!(
+            store
+                .read(|tx| tx.get_json::<ConsumedKem>(
+                    Table::Checkpoints,
+                    consumed_key(5).as_bytes(),
+                    1
+                ))
+                .unwrap()
+                .is_none()
+        );
         store.write(|tx| consume_in(tx, 5, &ordinary)).unwrap();
+        // Even a stale allocator checkpoint cannot reuse a consumed key ID.
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, NEXT_ID, 1, &5u32))
+            .unwrap();
+        assert!(store.write(|tx| generate_in(tx, false)).is_err());
+        assert!(store.read(|tx| load(tx, 5)).unwrap().is_none());
         assert!(store.read(|tx| load(tx, 5)).unwrap().is_none());
         assert!(store.read(|tx| load(tx, 6)).unwrap().is_some());
         // The ordinary one-time row sharing the numeric ID is a different key.

@@ -985,3 +985,35 @@ zero-updated-row handling/crypto-material consistency is not proven equivalent.
 A saved authenticated result remains inbound evidence even when local promotion
 fails; this change does not assert server refusal, resend, or clear uncertainty.
 Current-build ADD/inventory port and broader audit remain unfinished. No live traffic.
+
+## Consumed KEM key before upload ACK (2026-11-04)
+
+**Confirmed interaction / correction to prior integrity guard:** inbox.rs commits
+kem_prekeys.consume_in after authenticated hybrid processing, legitimately deleting
+an ordinary KEM row. A message can therefore consume the row before its upload
+ACK is processed. The preceding missing-row guard alone was incomplete: absence
+must distinguish known consumption from unexplained local loss.
+
+consume_in now atomically writes an internal versioned marker containing key ID
+and SHA256(public), no secret, with deletion in the existing inbox transaction.
+mark_sent_in accepts a missing row only with that typed, matching-ID marker; it
+does not recreate material or waive the matching upload reply. Historical missing
+rows without a marker still fail closed; no backfill is attempted. New KEM generation
+refuses an occupied or consumed ID even if a stale local allocator points there.
+
+**Offline regressions:** the PQ upload/reconnect/integrity scenario first proves
+unexplained deletion still rolls back settlement, then invokes the exact inbox
+consume helper on the restored synthetic ordinary row. Across reopen the original
+result settles while the consumed row stays absent. This is helper-level ordering,
+not a newly decrypted live envelope. Existing inventory test additionally cuts the
+inbox transaction after consume: both row deletion and marker roll back. A stale
+allocator pointed to consumed ID5 refuses reuse. Last-resort consumption guard
+remains unchanged; last-resort rows are retained, not marked consumed by this path.
+
+**Evidence distinction:** APK37.71 0kh.BWa ordinary-only deletion evidence remains
+in [hybrid incoming](hybrid-incoming.md). The receipt/consume ordering and marker
+are local durable policy, not a native tombstone-equivalence claim. Markers are
+internal encrypted-store provenance, not sender authority or HTTP/CLI wire output.
+Future cursor migration must preserve occupied/consumed IDs. Full authenticated
+receive-to-upload interleaving and historical absent-row diagnosis remain open.
+No live traffic or key resurrection. This qualifies the prior integrity section.
