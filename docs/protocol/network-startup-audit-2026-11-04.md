@@ -867,3 +867,10 @@ Shared confirmation mirrors supported receipt context for explicit non-1 text
 versions after four-byte registration admission. Writer binding and deferred
 callback ordering traced. [Evidence, regressions and limits](retry-ack-dispatch.md#unsupported-version-error-response-correction--2026-11-05).
 Other retry ACK/error/recovery policy remains incomplete; no live traffic.
+
+2026-11-05 — **Retry schema-error ACK context corrected.**
+
+Confirmed required-field/ASCII numeric errors now receive487 with fresh native
+context, omitting recipient/edit. Unsupported-version487 keeps its copied context;
+first-error order and local capability refusals remain distinct.
+[Evidence, tests and limits](retry-ack-dispatch.md#required-field-parsing-error-responses--2026-11-05). No live traffic.

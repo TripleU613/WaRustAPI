@@ -1,5 +1,11 @@
 {
   "openapi": "3.1.0",
+  "x-retry-parse-error-ack": {
+    "x-cli": false,
+    "x-transport": "shared normal and comparison receipt confirmation",
+    "x-live": false,
+    "description": "APK43.72 confirmed required retry/registration, exact four-byte registration, ASCII signed32 count, required ASCII signed64 t and missing nested id failures now get error487 using 1rg.A03 fresh context: root id/from/type/participant, no recipient/edit. Native first-error ordering retained; non-1 version uses the separate copied 2Cx context. Local negative/high counts, empty/oversize ids, carried-key support, non-text/Unicode and unsupported root grammars do not become generic native errors. No success ACK, key fetch/session mutation or new route. Complete routing/BX2/error/recovery parity and live acceptance remain unverified. docs/protocol/retry-ack-dispatch.md"
+  },
   "x-retry-version-error-ack": {
     "x-cli": false,
     "x-transport": "shared normal and comparison receipt confirmation",

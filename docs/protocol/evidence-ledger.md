@@ -1,3 +1,10 @@
+2026-11-05 — **Retry schema-error ACK context corrected.**
+
+Confirmed required-field/ASCII numeric errors now receive487 with fresh native
+context, omitting recipient/edit. Unsupported-version487 keeps its copied context;
+first-error order and local capability refusals remain distinct.
+[Evidence, tests and limits](retry-ack-dispatch.md#required-field-parsing-error-responses--2026-11-05). No live traffic.
+
 2026-11-05 — **Unsupported retry versions now receive error487.**
 
 Shared confirmation mirrors supported receipt context for explicit non-1 text

@@ -64,3 +64,26 @@ Validation for the correction:1322 workspace/all-feature tests passed, strict
 workspace/all-target/all-feature Clippy and formatting passed, CLI reference
 regeneration passed, and APK coverage/checksum/link hygiene passed. All checks
 were offline.
+
+## Required-field parsing-error responses — 2026-11-05
+
+[Selected exception paths, fresh context, regression table and limits](apk/2.26.43.72-retry-parse-error-ack/README.md).
+Shared confirmation now separately classifies missing retry/registration,
+non-four-byte binary registration, invalid ASCII signed32 count, missing/invalid
+ASCII signed64 t, and missing nested id. These confirmed nativeLIL paths get487
+with root id/from/type/participant, **without recipient/edit**, matching1rg.A03's
+fresh context. Unsupported-version487 still preserves those fields via2Cx's copy.
+Classification follows native read order; registration errors beat version,
+unsupported version beats later fields, and count beats t/id.
+
+Default counts/versions, negative/high valid counts, empty/oversize IDs, carried
+keys, Unicode and non-text grammar are not generically declared native errors.
+Unsupported root context remains locally refused. This does not complete retry
+success ACKs, malformed carried-key processing, full routing/BX2 or ACK recovery.
+The shared helper remains after existing caller capture/admission sequencing.
+No account traffic or server-acceptance claim.
+
+Validation:1323 workspace/all-feature tests passed, including25 filtered retry
+tests. Strict workspace/all-target/all-feature Clippy, formatting and CLI
+reference regeneration passed. APK coverage and research hygiene checked before
+push. This validates local decoded-node behavior, not live server acceptance.

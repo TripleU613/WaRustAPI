@@ -857,16 +857,15 @@ pub fn received_confirmation_for_account(
 ///
 /// Only the receipt types this client handles are acknowledged — delivery,
 /// read and played. Retry success/error handling is distinct: the evidenced
-/// unsupported-version branch below gets error487, while other retry cases
-/// remain unacknowledged until their handler/completion policy is implemented.
+/// unsupported-version and confirmed schema-error branches get error487;
+/// other retry cases wait for their handler/completion policy implementation.
 fn receipt_ack(incoming: &Node) -> Option<Node> {
     let from = super::receipts::ack_address(super::receipts::network_jid(incoming, "from")?);
-    // APK43.72 F10.A04 returns null for a non-1 version after registration
-    // admission; 160.A04 -> 14h.A00 -> 2Cx.A00 adds error487. This is not a
-    // generic response to parse_retry(None) or a local capability refusal.
-    // docs/protocol/retry-ack-dispatch.md
-    let retry_error = unsupported_retry_version(incoming);
-    let kind = if retry_error {
+    // APK43.72 distinguishes F10 null/unhandled (2Cx) from LIL parse errors
+    // (1rg). Both use487, but their context fields differ. Local capability
+    // refusals are not a generic parse error. docs/protocol/retry-ack-dispatch.md
+    let retry_error = retry_receipt_error(incoming);
+    let kind = if retry_error.is_some() {
         "retry"
     } else {
         super::receipts::receipt_kind(incoming)?
@@ -885,61 +884,103 @@ fn receipt_ack(incoming: &Node) -> Option<Node> {
     if let Some(participant) = super::receipts::network_jid(incoming, "participant") {
         ack = ack.attr("participant", super::receipts::ack_address(participant));
     }
-    if let Some(recipient) = super::receipts::recipient(incoming) {
-        ack = ack.attr("recipient", recipient);
+    // 1rg.A03 makes a fresh parse-error context with no recipient/edit.
+    // 2Cx's unhandled-version path instead copies the original Eoh context.
+    if !matches!(retry_error, Some(RetryReceiptError::Parsing(_))) {
+        if let Some(recipient) = super::receipts::recipient(incoming) {
+            ack = ack.attr("recipient", recipient);
+        }
+        if let Some(edit) = incoming
+            .get_attr("edit")
+            .and_then(|v| v.as_text())
+            .filter(|e| !e.is_empty() && *e != "0")
+        {
+            ack = ack.attr("edit", edit);
+        }
     }
-    if let Some(edit) = incoming
-        .get_attr("edit")
-        .and_then(|v| v.as_text())
-        .filter(|e| !e.is_empty() && *e != "0")
-    {
-        ack = ack.attr("edit", edit);
-    }
-    if retry_error {
-        tracing::debug!(
-            field = "retry.v",
-            error = 487,
-            "unsupported retry version response"
-        );
+    if let Some(error) = retry_error {
+        let field = match error {
+            RetryReceiptError::UnsupportedVersion => "retry.v",
+            RetryReceiptError::Parsing(field) => field,
+        };
+        tracing::debug!(field, error = 487, "retry receipt error response");
         ack = ack.attr("error", "487");
     }
     Some(ack)
 }
 
-fn unsupported_retry_version(incoming: &Node) -> bool {
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum RetryReceiptError {
+    UnsupportedVersion,
+    Parsing(&'static str),
+}
+
+fn retry_receipt_error(incoming: &Node) -> Option<RetryReceiptError> {
     if incoming.get_attr("type").and_then(|v| v.as_text()) != Some("retry") {
-        return false;
+        return None;
     }
-    // F10 reads required retry/registration before version, and returns before
-    // reading count/t/id/keys for an unsupported version. Do not infer this
-    // branch for missing/non-binary registration or non-text attributes.
+    // Keep unsupported context/address grammars unacknowledged. In particular,
+    // do not infer which exception precedes F10 for a context we cannot read.
+    if incoming.get_attr("participant").is_some()
+        && super::receipts::network_jid(incoming, "participant").is_none()
+    {
+        return None;
+    }
+    if incoming.get_attr("recipient").is_some() && super::receipts::recipient(incoming).is_none() {
+        return None;
+    }
+    if incoming
+        .get_attr("edit")
+        .is_some_and(|v| v.as_text().is_none())
+    {
+        return None;
+    }
+    // F10.A04 reads required retry, then registration (0Tp.A0G throws LIL),
+    // and requires exactly four registration bytes before checking version.
+    let Some(retry) = incoming.child("retry") else {
+        return Some(RetryReceiptError::Parsing("retry"));
+    };
     if !matches!(
         incoming.child("registration").map(|n| &n.content),
         Some(crate::binary::NodeContent::Bytes(bytes)) if bytes.len() == 4
     ) {
-        return false;
+        return Some(RetryReceiptError::Parsing("registration"));
     }
-    if !incoming
-        .child("retry")
-        .and_then(|n| n.get_attr("v"))
-        .and_then(|v| v.as_text())
-        .is_some_and(|v| v != "1")
-    {
-        return false;
+    let version = match retry.get_attr("v") {
+        None => "1",
+        Some(value) => value.as_text()?,
+    };
+    if version != "1" {
+        return Some(RetryReceiptError::UnsupportedVersion);
     }
-    // Keep unsupported context/address grammars unacknowledged rather than
-    // silently dropping supplied correlation fields from the error response.
-    if incoming.get_attr("participant").is_some()
-        && super::receipts::network_jid(incoming, "participant").is_none()
-    {
-        return false;
+    // F10 then reads count (default1), required signed64 t, required id. Java
+    // parseInt/parseLong wrap NumberFormatException as LIL. Classify ASCII
+    // only: unsupported Unicode grammar must not become a false protocol error.
+    if let Some(count) = retry.get_attr("count") {
+        let count = count.as_text()?;
+        if !count.is_ascii() {
+            return None;
+        }
+        if count.parse::<i32>().is_err() {
+            return Some(RetryReceiptError::Parsing("retry.count"));
+        }
     }
-    if incoming.get_attr("recipient").is_some() && super::receipts::recipient(incoming).is_none() {
-        return false;
+    let Some(timestamp) = retry.get_attr("t") else {
+        return Some(RetryReceiptError::Parsing("retry.t"));
+    };
+    let timestamp = timestamp.as_text()?;
+    if !timestamp.is_ascii() {
+        return None;
     }
-    incoming
-        .get_attr("edit")
-        .is_none_or(|v| v.as_text().is_some())
+    if timestamp.parse::<i64>().is_err() {
+        return Some(RetryReceiptError::Parsing("retry.t"));
+    }
+    if retry.get_attr("id").is_none() {
+        return Some(RetryReceiptError::Parsing("retry.id"));
+    }
+    // Empty/oversize ids, negative/high counts and carried keys are local
+    // admission/capability limits, not evidence of a native LIL exception.
+    None
 }
 
 /// Comparison LX/0ip.A07: request current media routes, not an upload.
@@ -1372,7 +1413,13 @@ mod tests {
         assert_eq!(ack.description, "ack");
         assert_eq!(ack.get_attr("class").unwrap().as_text(), Some("receipt"));
         assert_eq!(ack.get_attr("type").unwrap().as_text(), Some("read"));
-        assert!(received_confirmation(&receipt.clone().attr("type", "retry")).is_none());
+        assert!(
+            received_confirmation(&receipt.clone().attr("type", "retry").children(vec![
+                Node::new("retry").attr("id", "W1").attr("t", "1"),
+                Node::new("registration").bytes(vec![1, 2, 3, 4]),
+            ]))
+            .is_none()
+        );
         assert!(
             received_confirmation(&receipt.attr("type", "delivery"))
                 .unwrap()
@@ -1436,9 +1483,26 @@ mod tests {
             .attr("type", "retry");
         let registration = || Node::new("registration").bytes(vec![1, 2, 3, 4]);
         for retry in [
-            Node::new("retry"),
-            Node::new("retry").attr("v", "1"),
-            Node::new("retry").attr("v", "1").attr("count", "4"),
+            Node::new("retry").attr("id", "W1").attr("t", "1"),
+            Node::new("retry")
+                .attr("v", "1")
+                .attr("id", "W1")
+                .attr("t", "1"),
+            Node::new("retry")
+                .attr("v", "1")
+                .attr("count", "4")
+                .attr("id", "W1")
+                .attr("t", "1"),
+            Node::new("retry")
+                .attr("count", "-1")
+                .attr("id", "W1")
+                .attr("t", "1"),
+            Node::new("retry").attr("id", "").attr("t", "1"),
+            Node::new("retry")
+                .attr("count", "١")
+                .attr("id", "W1")
+                .attr("t", "1"),
+            Node::new("retry").attr("id", "W1").attr("t", "١"),
         ] {
             assert!(
                 received_confirmation(&base.clone().children(vec![
@@ -1449,24 +1513,6 @@ mod tests {
                 .is_none()
             );
         }
-        for bytes in [vec![], vec![1, 2, 3], vec![1, 2, 3, 4, 5]] {
-            assert!(
-                received_confirmation(&base.clone().children(vec![
-                    Node::new("retry").attr("v", "2"),
-                    Node::new("registration").bytes(bytes)
-                ]))
-                .is_none()
-            );
-        }
-        assert!(
-            received_confirmation(
-                &base
-                    .clone()
-                    .children(vec![Node::new("retry").attr("v", "2")])
-            )
-            .is_none()
-        );
-        assert!(received_confirmation(&base.clone().children(vec![registration()])).is_none());
         let unsupported = base.children(vec![Node::new("retry").attr("v", "2"), registration()]);
         for (name, value) in [
             ("participant", "bad"),
@@ -1475,6 +1521,103 @@ mod tests {
             ("from", "bad"),
         ] {
             assert!(received_confirmation(&unsupported.clone().attr(name, value)).is_none());
+        }
+    }
+
+    #[test]
+    fn retry_schema_errors_use_fresh_native_context_in_parser_order() {
+        let from = Jid::parse("15555550100:2@s.whatsapp.net").unwrap();
+        let participant = Jid::parse("15555550101:3@s.whatsapp.net").unwrap();
+        let base = Node::new("receipt")
+            .attr("type", "retry")
+            .attr("id", "ROOT")
+            .attr("from", from.clone())
+            .attr("participant", participant.clone())
+            .attr("recipient", Jid::parse("123456789@lid").unwrap())
+            .attr("edit", "7");
+        let reg = || Node::new("registration").bytes(vec![1, 2, 3, 4]);
+        let valid = || Node::new("retry").attr("id", "W1").attr("t", "1");
+        let mut cases = vec![
+            (vec![], "retry"),
+            (vec![reg()], "retry"),
+            (vec![valid()], "registration"),
+            (vec![valid(), Node::new("registration")], "registration"),
+            (
+                vec![
+                    valid(),
+                    Node::new("registration").children(vec![Node::new("x")]),
+                ],
+                "registration",
+            ),
+            // Registration is checked before version/count, so this uses the
+            // fresh parse-error context rather than the copied version context.
+            (
+                vec![
+                    Node::new("retry").attr("v", "2").attr("count", "bad"),
+                    Node::new("registration").bytes(vec![1]),
+                ],
+                "registration",
+            ),
+            (vec![Node::new("retry"), reg()], "retry.t"),
+            (vec![Node::new("retry").attr("t", "1"), reg()], "retry.id"),
+        ];
+        for bytes in [vec![], vec![1, 2, 3], vec![1, 2, 3, 4, 5]] {
+            cases.push((
+                vec![valid(), Node::new("registration").bytes(bytes)],
+                "registration",
+            ));
+        }
+        for count in ["", "bad", " 1", "1.0", "2147483648", "-2147483649"] {
+            cases.push((
+                vec![Node::new("retry").attr("count", count), reg()],
+                "retry.count",
+            ));
+        }
+        for t in [
+            "",
+            "bad",
+            " 1",
+            "9223372036854775808",
+            "-9223372036854775809",
+        ] {
+            cases.push((vec![Node::new("retry").attr("t", t), reg()], "retry.t"));
+        }
+        let expected = Node::new("ack")
+            .attr("id", "ROOT")
+            .attr("to", super::super::receipts::ack_address(from))
+            .attr("class", "receipt")
+            .attr("type", "retry")
+            .attr(
+                "participant",
+                super::super::receipts::ack_address(participant),
+            )
+            .attr("error", "487");
+        for (children, field) in cases {
+            let node = base.clone().children(children);
+            assert_eq!(
+                retry_receipt_error(&node),
+                Some(RetryReceiptError::Parsing(field))
+            );
+            let ack = received_confirmation(&node).unwrap();
+            assert_eq!(ack, expected);
+            let dict = TokenDictionary::comparison_2_26_37_71();
+            let wire = Encoder::new(dict).encode(&ack).unwrap();
+            assert_eq!(
+                Decoder::new(&wire[1..], dict, &Limits::default())
+                    .decode_node()
+                    .unwrap(),
+                expected
+            );
+        }
+        // Java accepts signs and signed minimum; local count/id limits do not
+        // justify classifying these as malformed input.
+        for count in ["+1", "-1", "-2147483648", "2147483647"] {
+            assert!(
+                received_confirmation(&base.clone().children(
+                    vec![valid().attr("count", count).attr("t", "-9223372036854775808"), reg()]
+                ))
+                .is_none()
+            );
         }
     }
 
@@ -1529,7 +1672,10 @@ mod tests {
         assert!(received_confirmation(&edited).is_some());
 
         // A type this client does not process is preserved, not acknowledged.
-        let retry = group_receipt.attr("type", "retry");
+        let retry = group_receipt.attr("type", "retry").children(vec![
+            Node::new("retry").attr("id", "W1").attr("t", "1"),
+            Node::new("registration").bytes(vec![1, 2, 3, 4]),
+        ]);
         assert!(received_confirmation(&retry).is_none());
     }
 

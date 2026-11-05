@@ -1,0 +1,18 @@
+{
+  "README.md": {
+    "bytes": 4946,
+    "sha256": "924731aacefa22fb742733c9027486b8899cba62d1f1acd5034c4fb22ea8003d"
+  },
+  "error-attribute-setter.txt": {
+    "bytes": 593,
+    "sha256": "3fed8aab41bd496ddd2365981ad24294e0cf75fd9ec7a580ccbca67c9b65f0bb"
+  },
+  "fresh-context-constructor.txt": {
+    "bytes": 450,
+    "sha256": "cbfc86952e18fda50789c6cec7b8c3cece45bf6fc365f663c3e60e87cef8f80b"
+  },
+  "required-child-reader.txt": {
+    "bytes": 1354,
+    "sha256": "0fd3fe1f4524c8094fb8f143ed251d6c5da9b58c0fccfac23ceb309a353e559e"
+  }
+}
