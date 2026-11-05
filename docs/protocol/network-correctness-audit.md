@@ -1586,3 +1586,15 @@ are not one atomic transaction.
 [Methods, offsets, local persistence gap and next port boundary](apk/2.26.43.72-sender-key-ack-confirmation/README.md).
 Native out-of-band distribution address/registration ownership remains open.
 No production change, new replay authority or live operation.
+
+### ACK callback normalization and inbound bridge (2026-11-04)
+
+**Confirmed static, APK43.72:** Ewq/Eng preserve the job's Eoh callback key.
+0Sf.A02 canonicalizes supported device-zero from/participant fields to user
+JIDs and retains nonzero companions. This helper does not establish PN/LID
+alias equivalence. The generic1lZ.A1D ->1lY.Big ->0ln.A09 bridge is now
+connected; the selected inbound bridge does not call that outbound normalizer.
+A0T is exact normalized-key failure removal, not success handling.
+[Field propagation, type predicates, callers and port limits](apk/2.26.43.72-ack-key-normalization/README.md).
+Distribution producer inputs and parser/type mapping still need tracing before
+changing expected-address admission. No production or live behavior changed.

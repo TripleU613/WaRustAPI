@@ -1,0 +1,42 @@
+
+# class: LX/0Sf;
+# extends: Ljava/lang/Object;
+
+.method public A02(LL)  # .registers 4
+    # full signature: LX/0Sf;->A02(LX/Eoh;)LX/Eoh;
+    0000..0004  iget-object  v1, v3, LX/Eoh;->A02:Lcom/whatsapp/infra/core/jid/Jid;
+    0004..000a  invoke-static  {v1}, LX/0Dn;->A0S(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    000a..000c  move-result  v0
+    000c..0010  if-eqz  v0, +0x39
+    0010..0014  const-string  v0, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.DeviceJid"
+    0014..001a  invoke-static  {v1, v0}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    001a..001e  check-cast  v1, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    001e..0024  invoke-virtual  {v1}, Lcom/whatsapp/infra/core/jid/Jid;->getDevice()I
+    0024..0026  move-result  v0
+    0026..002a  if-nez  v0, +0x2c
+    002a..0030  invoke-virtual  {v3}, LX/Eoh;->A00()LX/Efa;
+    0030..0032  move-result-object  v2
+    0032..0036  iget-object  v0, v1, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    0036..003a  iput-object  v0, v2, LX/Efa;->A02:Lcom/whatsapp/infra/core/jid/Jid;
+    003a..003e  iget-object  v1, v3, LX/Eoh;->A01:Lcom/whatsapp/infra/core/jid/Jid;
+    003e..0042  sget-object  v0, Lcom/whatsapp/infra/core/jid/DeviceJid;->Companion:LX/0EB;
+    0042..0048  invoke-virtual  {v0, v1}, LX/0EB;->A00(Lcom/whatsapp/infra/core/jid/Jid;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0048..004a  move-result-object  v1
+    004a..004e  if-eqz  v1, +0x17
+    004e..0054  invoke-virtual  {v1}, Lcom/whatsapp/infra/core/jid/Jid;->getDevice()I
+    0054..0056  move-result  v0
+    0056..005a  if-nez  v0, +0x11
+    005a..005e  if-nez  v2, +0x6
+    005e..0064  invoke-virtual  {v3}, LX/Eoh;->A00()LX/Efa;
+    0064..0066  move-result-object  v2
+    0066..006a  iget-object  v0, v1, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    006a..006e  iput-object  v0, v2, LX/Efa;->A01:Lcom/whatsapp/infra/core/jid/Jid;
+    006e..0074  invoke-virtual  {v2}, LX/Efa;->A00()LX/Eoh;
+    0074..0076  move-result-object  v0
+    0076..0078  return-object  v0
+    0078..007c  if-nez  v2, -0x5
+    007c..007e  return-object  v3
+    007e..0080  const/4  v2, #0x0
+    0080..0082  goto  -0x23
+    # exception table: 0 try range(s)
+.end method

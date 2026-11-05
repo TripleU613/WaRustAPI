@@ -1,0 +1,58 @@
+{
+  "README.md": {
+    "bytes": 6101,
+    "sha256": "4532bef749fb5a055988e8e08fe3de7e6ed64627536147a4caaa3dd81b015847"
+  },
+  "builder-init.txt": {
+    "bytes": 1802,
+    "sha256": "8d4d6b5cfec6292457db3b1861fe0d657031ff94c2bf76decc0bbc5722c8539f"
+  },
+  "builder.txt": {
+    "bytes": 4538,
+    "sha256": "1f714824a8f1e7d2287bf48a3ca0f8538c34c2c2e28886da0d0ecaaec2efd619"
+  },
+  "device-predicate.txt": {
+    "bytes": 915,
+    "sha256": "2df23cd04d4a21544a3036276201c0fd22aa991aceca37cc2cf72c29b8c0718a"
+  },
+  "inbound-bridge.txt": {
+    "bytes": 612,
+    "sha256": "f8a13cfaa19178a442ef6a18e594f4c2e518924cd8e91ec7bd975d5e6651f671"
+  },
+  "inbound-handler.txt": {
+    "bytes": 4807,
+    "sha256": "ce5e0de9b6d49a0808374951e0dd1fa1323f1ea86fcc3dcedfef8664c002524b"
+  },
+  "manager-callers.txt": {
+    "bytes": 143,
+    "sha256": "ed106f37c8738722fcde5c163f8da8fb18ab89b446114b9168153ccc05f3b274"
+  },
+  "message-init.txt": {
+    "bytes": 1371,
+    "sha256": "b7bc99681b6d7a58eabafd1e0bb27311ebca2f36fba80c897b2da9806999f82a"
+  },
+  "normalization-callers.txt": {
+    "bytes": 383,
+    "sha256": "762fd29cf5d6d1c07d55b5fbf03a8fde57df980abf2d0967a07de42577b40771"
+  },
+  "normalization.txt": {
+    "bytes": 2292,
+    "sha256": "2f6edfd0a23db41930c28f6296426a37fba049c334d95e85e9550cb2347dcad1"
+  },
+  "participant-conversion.txt": {
+    "bytes": 1196,
+    "sha256": "c52a92cc1a5b7016342ea43399be0a0ece0ea1002c83c64e1cc9214905f86bef"
+  },
+  "reply-callers.txt": {
+    "bytes": 196,
+    "sha256": "58af0066a8600b51f74bd6f200b09663d0fffc9c7775b44a50a65426343ae258"
+  },
+  "reply-path.txt": {
+    "bytes": 1476,
+    "sha256": "0762de0f2fd8f6cd33d1f0d9a92f748aebb17d9c086cf5d519dc0be5272a378c"
+  },
+  "user-predicate.txt": {
+    "bytes": 873,
+    "sha256": "15ac20b5755091ceb6fa5e8645b00557e528b2d7821e65e46c50130d8a622e6b"
+  }
+}

@@ -137,3 +137,15 @@ Follow-up: [paginated ACK correlation](ack-correlation-pages.md) removes our
 10,000-row history refusal and rejects duplicate wire authority atomically.
 It also corrects the Android selector description above: event 19 is arg1.
 Complete native status/user-row admission remains unported.
+
+### ACK callback normalization and inbound bridge (2026-11-04)
+
+**Confirmed static, APK43.72:** Ewq/Eng preserve the job's Eoh callback key.
+0Sf.A02 canonicalizes supported device-zero from/participant fields to user
+JIDs and retains nonzero companions. This helper does not establish PN/LID
+alias equivalence. The generic1lZ.A1D ->1lY.Big ->0ln.A09 bridge is now
+connected; the selected inbound bridge does not call that outbound normalizer.
+A0T is exact normalized-key failure removal, not success handling.
+[Field propagation, type predicates, callers and port limits](apk/2.26.43.72-ack-key-normalization/README.md).
+Distribution producer inputs and parser/type mapping still need tracing before
+changing expected-address admission. No production or live behavior changed.

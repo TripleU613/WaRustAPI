@@ -1,0 +1,23 @@
+
+# class: LX/Eng;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLLLLLII)  # .registers 13
+    # full signature: LX/Eng;-><init>(Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/UserJid;LX/1dW;LX/Eoh;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;Ljava/util/Set;II)V
+    0000..0002  const/4  v0, #0x7
+    0002..0008  invoke-static  {v8, v9, v10, v0}, LX/DBc;->A1M(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+    0008..000e  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    000e..0012  iput-object  v6, v1, LX/Eng;->A03:LX/Eoh;
+    0012..0016  iput-object  v5, v1, LX/Eng;->A02:LX/1dW;
+    0016..001a  iput-object  v3, v1, LX/Eng;->A09:Lcom/whatsapp/infra/core/jid/Jid;
+    001a..001e  iput  v11, v1, LX/Eng;->A01:I
+    001e..0022  iput-object  v2, v1, LX/Eng;->A08:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0022..0026  iput-object  v4, v1, LX/Eng;->A0A:Lcom/whatsapp/infra/core/jid/UserJid;
+    0026..002a  iput-object  v7, v1, LX/Eng;->A04:Ljava/lang/String;
+    002a..002e  iput-object  v8, v1, LX/Eng;->A05:Ljava/util/List;
+    002e..0032  iput  v12, v1, LX/Eng;->A00:I
+    0032..0036  iput-object  v9, v1, LX/Eng;->A06:Ljava/util/Map;
+    0036..003a  iput-object  v10, v1, LX/Eng;->A07:Ljava/util/Set;
+    003a..003c  return-void
+    # exception table: 0 try range(s)
+.end method

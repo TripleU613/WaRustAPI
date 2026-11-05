@@ -1,3 +1,12 @@
+2026-11-04 — **ACK key propagation and normalization traced.**
+
+Device-zero canonicalization and exact-key failure removal distinguished from
+generic inbound forwarding. Distribution address admission remains bounded by
+untraced producer/parser inputs.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-ack-key-normalization/README.md).
+Validation: checksum/link hygiene, JSON and coverage freshness. Evidence only;
+no production changes or live traffic.
+
 2026-11-04 — **Sender-key ACK marking and one-time reset distinguished.**
 
 Native callback registration/wait, normal SQL marking, conditional reset and

@@ -15618,5 +15618,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-sender-key-ack-confirmation/README.md",
     "description": "Traces native message ACK callback registration and wait, successful normal sender-key marking and conditional one-time-key reset. Connects registration-time pre-ACK marker snapshot to matched callback retirement after wrapped result. Rust per-distribution durable confirmation and native address ownership remain incomplete. Evidence only; no command, HTTP route or production behavior change."
+  },
+  "x-ack-key-normalization-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-ack-key-normalization/README.md",
+    "description": "Native callback-key propagation, primary-device normalization, exact-key failure removal and generic inbound bridge traced. Distribution expected-address inputs and native parser mapping remain incomplete. No new command, route, normalization policy or production behavior."
   }
 }

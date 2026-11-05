@@ -1,0 +1,10 @@
+classes.dex  LX/0Sf;->A0B(LLL)
+  invoke dex byte offset: 0x5acb42
+classes.dex  LX/0Sf;->A0C(LLLI)
+  invoke dex byte offset: 0x5acb9c
+classes.dex  LX/0Sf;->A0D(LLLI)
+  invoke dex byte offset: 0x5acc34
+classes.dex  LX/0Sf;->A0T(VLL)
+  invoke dex byte offset: 0x5ad4a0
+classes8.dex  Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A06(ZLLLLLLLLLLIJZZ)
+  invoke dex byte offset: 0x8da8a2
