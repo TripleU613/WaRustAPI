@@ -15954,5 +15954,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-push-config-fbns-token-received/README.md#provider-message-ack-after-normal-handling-or-json-failure",
     "description": "Selected FBNS message worker sends an authenticated provider IPC ACK after normal handling, empty data or JSONException, gated by sender/notification ID and sender allowlist. Completion flag is not successful payload application or WhatsApp stanza ACK. Full downstream processing, delivery and durable ownership remain open. No provider invocation, sender, route or live operation added."
+  },
+  "x-unified-session-startup-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-unified-session-startup/README.md",
+    "description": "Selected post-config startup node is ib/unified_session with a cached clock-derived String ID. Explicit refresh and identity observer can submit separately through family447, without proving delivery. Full startup gates, clock authority, cadence, writer/ACK policy and durable recovery remain open. No sender, route or live operation added."
   }
 }

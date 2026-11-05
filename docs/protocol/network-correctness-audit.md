@@ -2187,3 +2187,14 @@ durable processing or WhatsApp stanza acknowledgement.
 [Branch offsets, error continuation and limits](apk/2.26.43.72-push-config-fbns-token-received/README.md#provider-message-ack-after-normal-handling-or-json-failure).
 Full downstream processing, provider delivery and durable ACK ownership remain
 open. No Rust behavior, provider IPC or live account operation changed.
+
+### Unified-session startup node and cached ID (2026-11-05)
+
+**Confirmed static, APK43.72:** the node immediately after config GET in the
+selected startup block is ib/unified_session, not another IQ. Its String ID is
+cached/generated from an offset-aware clock modulo a week, with separate refresh
+and identity-observer producers. Refresh submission uses family447 and its local
+boolean does not establish delivery.
+[Exact methods, callers and limits](apk/2.26.43.72-unified-session-startup/README.md).
+Full eligibility, clock authority, cadence, writer/ACK and durable recovery remain
+open. No Rust behavior or live account operation changed.

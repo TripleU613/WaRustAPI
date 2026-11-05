@@ -1,0 +1,16 @@
+classes.dex  LX/0Sb;->A00(VL)
+  write opcode 0x5b, dex byte offset: 0x5ab83c
+classes.dex  LX/0Sb;->A00(VL)
+  write opcode 0x5b, dex byte offset: 0x5ab866
+classes.dex  LX/0Sb;->A03(L)
+  read opcode 0x54, dex byte offset: 0x5ab9a0
+classes.dex  LX/0Sb;->A03(L)
+  read opcode 0x54, dex byte offset: 0x5ab9ca
+classes.dex  LX/0Sb;->A03(L)
+  read opcode 0x54, dex byte offset: 0x5ab9e0
+classes.dex  LX/0Sb;->A03(L)
+  read opcode 0x54, dex byte offset: 0x5aba12
+classes.dex  LX/0Sb;->A04(V)
+  read opcode 0x54, dex byte offset: 0x5aba48
+classes.dex  LX/1WM;->Bnp(VL)
+  read opcode 0x54, dex byte offset: 0x930198

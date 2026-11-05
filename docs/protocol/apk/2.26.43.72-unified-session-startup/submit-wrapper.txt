@@ -1,0 +1,25 @@
+# class: LX/0Sf;
+# extends: Ljava/lang/Object;
+
+.method public A0X(ZLI)  # .registers 8
+    # full signature: LX/0Sf;->A0X(LX/0Tp;I)Z
+    0000..0002  const/4  v4, #0x1
+    0002..0008  invoke-static  {v6, v4}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  iget-object  v0, v5, LX/0Sf;->A07:LX/0AI;
+    000c..0010  iget-boolean  v0, v0, LX/0AI;->A06:Z
+    0010..0014  if-eqz  v0, +0x16
+    0014..0016  const/4  v1, #0x0
+    0016..0018  const/4  v3, #0x0
+    0018..001a  const/4  v0, #0x6
+    001a..0020  invoke-static  {v1, v3, v0, v7, v6}, Landroid/os/Message;->obtain(Landroid/os/Handler;IIILjava/lang/Object;)Landroid/os/Message;
+    0020..0022  move-result-object  v2
+    0022..0028  invoke-virtual  {v2}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    0028..002a  move-result-object  v1
+    002a..002e  const-string  v0, "messageClient:dropIfOffline"
+    002e..0034  invoke-virtual  {v1, v0, v3}, Landroid/os/BaseBundle;->putBoolean(Ljava/lang/String;Z)V
+    0034..003a  invoke-static  {v2, v5, v3, v3}, LX/0Sf;->A05(Landroid/os/Message;LX/0Sf;ZZ)V
+    003a..003c  return  v4
+    003c..003e  const/4  v0, #0x0
+    003e..0040  return  v0
+    # exception table: 0 try range(s)
+.end method

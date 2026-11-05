@@ -1,0 +1,49 @@
+# class: LX/0Sf;
+# extends: Ljava/lang/Object;
+
+.method public A05(VLLZZ)  # .registers 6
+    # full signature: LX/0Sf;->A05(Landroid/os/Message;LX/0Sf;ZZ)V
+    0000..0004  iget-object  v0, v3, LX/0Sf;->A0J:LX/1A0;
+    0004..0008  if-nez  v0, +0x14
+    0008..000c  iget-object  v1, v3, LX/0Sf;->A07:LX/0AI;
+    000c..0010  iget-boolean  v0, v1, LX/0AI;->A06:Z
+    0010..0014  if-nez  v0, +0x45
+    0014..0018  iget  v1, v1, LX/0AI;->A02:I
+    0018..001c  const/16  v0, #0xc
+    001c..0020  if-ne  v1, v0, +0x3f
+    0020..0024  const-string  v0, "MessageClient/sendXmpp/drop the stanza if xmpp is not ready for a good reason"
+    0024..002a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    002a..002c  return-void
+    002c..0032  invoke-static  {v2}, LX/1i7;->A00(Landroid/os/Message;)I
+    0032..0034  move-result  v0
+    0034..003a  sparse-switch  v0, payload@0xac, cases=[4:@0x3e, 8:@0x3e, 12:@0x3e, 25:@0x3e, 27:@0x3e, 38:@0x3e, 59:@0x3e, 60:@0x3e, 71:@0x3e, 72:@0x3e, 73:@0x3e, 77:@0x3e, 89:@0x3e, 118:@0x3e, 119:@0x3e, 157:@0x3e, 194:@0x3e, 206:@0x3e, 220:@0x3e, 255:@0x3e, 327:@0x3e, 371:@0x3e, 381:@0x3e, 402:@0x3e], default@0x3a
+    003a..003e  if-eqz  v4, +0xa
+    003e..0042  iget-object  v0, v3, LX/0Sf;->A00:LX/1AD;
+    0042..0048  invoke-static  {v0}, LX/00L;->A05(Ljava/lang/Object;)V
+    0048..004e  invoke-virtual  {v0}, LX/1AD;->A00()V
+    004e..0052  if-eqz  v5, +0x11
+    0052..0056  iget-object  v1, v3, LX/0Sf;->A0J:LX/1A0;
+    0056..005a  if-eqz  v1, -0x16
+    005a..0060  invoke-static  {v2}, Landroid/os/Message;->obtain(Landroid/os/Message;)Landroid/os/Message;
+    0060..0062  move-result-object  v0
+    0062..0068  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    0068..006e  invoke-interface  {v1, v0}, LX/1A0;->CdY(Landroid/os/Message;)V
+    006e..0070  return-void
+    0070..0076  invoke-direct  {v3, v2}, LX/0Sf;->A00(Landroid/os/Message;)Landroid/os/Message;
+    0076..0078  move-result-object  v1
+    0078..007c  iget-object  v0, v3, LX/0Sf;->A0J:LX/1A0;
+    007c..0080  if-eqz  v0, -0x29
+    0080..0084  if-nez  v1, +0x6
+    0084..008a  invoke-static  {v2}, Landroid/os/Message;->obtain(Landroid/os/Message;)Landroid/os/Message;
+    008a..008c  move-result-object  v1
+    008c..0092  invoke-static  {v1}, LX/00l;->A08(Ljava/lang/Object;)V
+    0092..0098  invoke-interface  {v0, v1}, LX/1A0;->CdY(Landroid/os/Message;)V
+    0098..009a  return-void
+    009a..009e  const-string  v1, "sendXmpp called before sending channel is ready"
+    009e..00a2  new-instance  v0, Ljava/lang/NullPointerException;
+    00a2..00a8  invoke-direct  {v0, v1}, Ljava/lang/NullPointerException;-><init>(Ljava/lang/String;)V
+    00a8..00aa  throw  v0
+    00aa..00ac  nop
+    00ac..0170  sparse-switch-payload  size=24
+    # exception table: 0 try range(s)
+.end method

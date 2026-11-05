@@ -1,0 +1,18 @@
+# class: LX/0Sb;
+# extends: Ljava/lang/Object;
+
+.method public A04(V)  # .registers 3
+    # full signature: LX/0Sb;->A04()V
+    0000..0004  iget-object  v1, v2, LX/0Sb;->A05:Ljava/lang/Object;
+    0004..0006  monitor-enter
+    0006..000c  invoke-static  {v2}, LX/0Sb;->A00(LX/0Sb;)V
+    000c..0010  iget-object  v0, v2, LX/0Sb;->A06:Ljava/lang/String;
+    0010..0012  monitor-exit
+    0012..0018  invoke-static  {v2, v0}, LX/0Sb;->A01(LX/0Sb;Ljava/lang/String;)V
+    0018..001a  return-void
+    001a..001c  move-exception  v0
+    001c..001e  monitor-exit
+    001e..0020  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0003..0008 -> 000d
+.end method

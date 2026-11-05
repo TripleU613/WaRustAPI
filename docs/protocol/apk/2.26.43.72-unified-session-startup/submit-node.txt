@@ -1,0 +1,38 @@
+# class: LX/0Sb;
+# extends: Ljava/lang/Object;
+
+.method public A01(VLL)  # .registers 11
+    # full signature: LX/0Sb;->A01(LX/0Sb;Ljava/lang/String;)V
+    0000..0002  move-object  v5, v10
+    0002..0006  if-eqz  v10, +0x40
+    0006..000a  iget-object  v0, v9, LX/0Sb;->A02:LX/05a;
+    000a..000e  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    000e..0014  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0014..0016  move-result-object  v4
+    0016..001a  check-cast  v4, LX/0Sf;
+    001a..001c  const/4  v10, #0x0
+    001c..0020  const-string  v0, "ib"
+    0020..0024  new-instance  v3, LX/0Tj;
+    0024..002a  invoke-direct  {v3, v0}, LX/0Tj;-><init>(Ljava/lang/String;)V
+    002a..0030  const-string/jumbo  v0, "unified_session"
+    0030..0034  new-instance  v2, LX/0Tj;
+    0034..003a  invoke-direct  {v2, v0}, LX/0Tj;-><init>(Ljava/lang/String;)V
+    003a..003e  const-wide/16  v6, #0x0
+    003e..0042  const-wide/16  v8, #0x40
+    0042..0048  invoke-static/range  {v5..v10}, LX/0Tk;->A06(Ljava/lang/String;JJZ)Z
+    0048..004a  move-result  v0
+    004a..004e  if-eqz  v0, +0xc
+    004e..0052  const-string  v1, "id"
+    0052..0056  new-instance  v0, LX/0Tl;
+    0056..005c  invoke-direct  {v0, v1, v5}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    005c..0062  invoke-virtual  {v2, v0}, LX/0Tj;->A02(LX/0Tl;)V
+    0062..0068  invoke-virtual  {v2}, LX/0Tj;->A01()LX/0Tp;
+    0068..006a  move-result-object  v0
+    006a..0070  invoke-virtual  {v3, v0}, LX/0Tj;->A03(LX/0Tp;)V
+    0070..0076  invoke-virtual  {v3}, LX/0Tj;->A01()LX/0Tp;
+    0076..0078  move-result-object  v1
+    0078..007c  const/16  v0, #0x1bf
+    007c..0082  invoke-virtual  {v4, v1, v0}, LX/0Sf;->A0X(LX/0Tp;I)Z
+    0082..0084  return-void
+    # exception table: 0 try range(s)
+.end method

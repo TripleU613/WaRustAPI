@@ -158,3 +158,14 @@ provider no-body limitations. They do not close full bootstrap equivalence.
 The follow-on [Noise/auth-key audit](authkey-lifecycle.md) adds persisted
 Curve25519 public/private consistency checking to preflight, without replacing
 keys or implementing the still-unclosed server rotation lifecycle.
+
+### Unified-session startup node and cached ID (2026-11-05)
+
+**Confirmed static, APK43.72:** the node immediately after config GET in the
+selected startup block is ib/unified_session, not another IQ. Its String ID is
+cached/generated from an offset-aware clock modulo a week, with separate refresh
+and identity-observer producers. Refresh submission uses family447 and its local
+boolean does not establish delivery.
+[Exact methods, callers and limits](apk/2.26.43.72-unified-session-startup/README.md).
+Full eligibility, clock authority, cadence, writer/ACK and durable recovery remain
+open. No Rust behavior or live account operation changed.

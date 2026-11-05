@@ -1,0 +1,49 @@
+# class: LX/1WM;
+# extends: Ljava/lang/Object;
+
+.method public Bnp(VL)  # .registers 6
+    # full signature: LX/1WM;->Bnp(LX/0E2;)V
+    0000..0004  iget  v0, v4, LX/1WM;->$t:I
+    0004..0008  iget-object  v3, v4, LX/1WM;->A00:Ljava/lang/Object;
+    0008..000c  if-eqz  v0, +0x26
+    000c..0010  check-cast  v3, LX/0Sb;
+    0010..0014  iget-object  v0, v3, LX/0Sb;->A03:LX/09F;
+    0014..001a  invoke-interface  {v0}, LX/09F;->Auo()Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    001a..001c  move-result-object  v2
+    001c..0020  iget-object  v1, v3, LX/0Sb;->A05:Ljava/lang/Object;
+    0020..0022  monitor-enter
+    0022..0026  iget-object  v0, v3, LX/0Sb;->A00:Lcom/whatsapp/infra/core/jid/UserJid;
+    0026..002c  invoke-static  {v2, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    002c..002e  move-result  v0
+    002e..0032  if-nez  v0, +0xa
+    0032..0036  iput-object  v2, v3, LX/0Sb;->A00:Lcom/whatsapp/infra/core/jid/UserJid;
+    0036..003c  invoke-static  {v3}, LX/0Sb;->A00(LX/0Sb;)V
+    003c..0040  iget-object  v0, v3, LX/0Sb;->A06:Ljava/lang/String;
+    0040..0042  goto  +0x2
+    0042..0044  const/4  v0, #0x0
+    0044..0046  monitor-exit
+    0046..004c  invoke-static  {v3, v0}, LX/0Sb;->A01(LX/0Sb;Ljava/lang/String;)V
+    004c..004e  return-void
+    004e..0050  move-exception  v0
+    0050..0052  monitor-exit
+    0052..0054  throw  v0
+    0054..0058  check-cast  v3, LX/0gd;
+    0058..005e  invoke-static  {v3}, LX/0gd;->A01(LX/0gd;)LX/0cq;
+    005e..0060  move-result-object  v0
+    0060..0066  invoke-virtual  {v0}, LX/0cq;->A02()V
+    0066..006c  invoke-static  {v3}, LX/0gd;->A01(LX/0gd;)LX/0cq;
+    006c..006e  move-result-object  v0
+    006e..0074  invoke-virtual  {v0}, LX/0cq;->A03()V
+    0074..0078  iget-object  v0, v3, LX/0gd;->A03:LX/05a;
+    0078..007e  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    007e..0080  move-result-object  v2
+    0080..0084  check-cast  v2, LX/08Z;
+    0084..0088  const/16  v0, #0x20
+    0088..008c  new-instance  v1, LX/TB7;
+    008c..0092  invoke-direct  {v1, v3, v0}, LX/TB7;-><init>(Ljava/lang/Object;I)V
+    0092..0096  const-string  v0, "pathfinder_registration_transitions"
+    0096..009c  invoke-interface  {v2, v0, v1}, LX/08Z;->CbU(Ljava/lang/String;Ljava/lang/Runnable;)V
+    009c..009e  return-void
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0011..0022 -> 0027
+.end method

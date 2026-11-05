@@ -1,0 +1,40 @@
+# class: LX/0Sb;
+# extends: Ljava/lang/Object;
+
+.method public A00(VL)  # .registers 5
+    # full signature: LX/0Sb;->A00(LX/0Sb;)V
+    0000..0004  iget-boolean  v0, v4, LX/0Sb;->A07:Z
+    0004..0008  if-nez  v0, +0xf
+    0008..000c  iget-object  v2, v4, LX/0Sb;->A03:LX/09F;
+    000c..000e  const/4  v1, #0x1
+    000e..0012  new-instance  v0, LX/1WM;
+    0012..0018  invoke-direct  {v0, v4, v1}, LX/1WM;-><init>(Ljava/lang/Object;I)V
+    0018..001e  invoke-interface  {v2, v0}, LX/09F;->CWa(LX/09f;)V
+    001e..0022  iput-boolean  v1, v4, LX/0Sb;->A07:Z
+    0022..0026  iget-object  v1, v4, LX/0Sb;->A03:LX/09F;
+    0026..002c  invoke-interface  {v1}, LX/09F;->Auo()Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    002c..002e  move-result-object  v0
+    002e..0032  iput-object  v0, v4, LX/0Sb;->A00:Lcom/whatsapp/infra/core/jid/UserJid;
+    0032..0038  invoke-interface  {v1}, LX/09F;->BUx()Z
+    0038..003a  move-result  v0
+    003a..003e  if-nez  v0, +0x6
+    003e..0040  const/4  v0, #0x0
+    0040..0044  iput-object  v0, v4, LX/0Sb;->A06:Ljava/lang/String;
+    0044..0046  return-void
+    0046..004a  iget-object  v0, v4, LX/0Sb;->A04:LX/08q;
+    004a..0050  invoke-static  {v0}, LX/08q;->A00(LX/08q;)J
+    0050..0052  move-result-wide  v2
+    0052..0058  const-wide/32  v0, #0xf731400
+    0058..005a  add-long/2addr  v2, v0
+    005a..0060  const-wide/32  v0, #0x240c8400
+    0060..0062  rem-long/2addr  v2, v0
+    0062..0068  invoke-static  {v2, v3}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+    0068..006a  move-result-object  v0
+    006a..006e  iput-object  v0, v4, LX/0Sb;->A06:Ljava/lang/String;
+    006e..0072  iget-wide  v2, v4, LX/0Sb;->A01:J
+    0072..0076  const-wide/16  v0, #0x1
+    0076..0078  add-long/2addr  v2, v0
+    0078..007c  iput-wide  v2, v4, LX/0Sb;->A01:J
+    007c..007e  return-void
+    # exception table: 0 try range(s)
+.end method
