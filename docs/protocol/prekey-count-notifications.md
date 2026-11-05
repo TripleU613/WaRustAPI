@@ -182,3 +182,9 @@ No runtime switch.
 0Yj.A00 does not strip its first byte. Enum A02 resolves to ML_KEM_1024.
 [Java byte provenance, Rust comparison and native-body limits](apk/2.26.43.72-prekey-upload-replies/README.md#pq-signing-and-wire-byte-provenance-2026-11-04).
 No prefix/algorithm patch is inferred from enum constructor codes.
+
+## Current-build PQ inventory versus batch
+
+**Confirmed static, 43.72:** generation target property21200 defaults200;
+upload batch property21201 defaults10. The provider captures the former in
+0Yj; runtime account values were not read. [Source/default proof and Rust gap](apk/2.26.43.72-prekey-upload-replies/README.md#pq-target-provider-and-declared-defaults-2026-11-04).

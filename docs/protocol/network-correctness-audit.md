@@ -856,3 +856,13 @@ body; current public length/prefix and primitive equivalence are not established
 by these wrappers alone.
 [Exports, Rust comparison and exact limitations](apk/2.26.43.72-prekey-upload-replies/README.md#pq-signing-and-wire-byte-provenance-2026-11-04).
 No production change/live traffic. ADD runtime policy remains unfinished.
+
+## Current-build PQ target provider/default distinction (2026-11-04)
+
+**Confirmed static, 43.72:** 0WJ.<init> supplies property21200 to 0Yj.A00;
+matching 08Y.A0Q default registry declares generation target200 and separate
+upload batch property21201 default10. Rust currently fills the selected batch,
+so setting its batch default200 would confuse inventory and upload controls.
+[Provider chain, reused REA identity and lifecycle limits](apk/2.26.43.72-prekey-upload-replies/README.md#pq-target-provider-and-declared-defaults-2026-11-04).
+No production/config changes or live traffic. Effective account values and
+initial/continuation admission remain unverified.

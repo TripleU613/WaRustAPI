@@ -489,3 +489,40 @@ Additional export hashes:
 - [pq-sign-function.txt](pq-sign-function.txt): `e7d48499f1fac433f1e5f8c507506aea186e7a776b87b35478ae6e82338aa2c2`
 - [pq-native-wrapper.txt](pq-native-wrapper.txt): `18cd6927f4618721fb4ff5a2ad719c30efd31dcb37510a75ebb46bf5507e1d41`
 - [pq-public-wrapper.txt](pq-public-wrapper.txt): `d821fe2b941dcbf2546032811b92660885151060224c142b161989751fd9fb89`
+
+## PQ target provider and declared defaults (2026-11-04)
+
+**Confirmed static**, same pinned 43.72, reusing an existing matching-build REA
+record rather than duplicating its method export.
+
+- Exact 0Yj.<init> caller search finds **0WJ.<init>**. At **0170–017c** it
+  reads integer property **0x52d0 =21200** through 00E.A0a; the result flows
+  unchanged in v36 to **0Yj.<init>** at0260–0266, which stores its final argument
+  in A00 (prior pq-target export). This closes the generation-target DI chain.
+- The matching APK default registry **08Y.A0Q** contains **21200 ->200** and
+  **21201 ->10**. Existing REA evidence
+  [ev_135fccfdf04c5e17931490728a40bf7deb18d2732c6418d1a17bf53553c6fc38](../../rea/2.26.43.72-privacy-mex-config/27-X-C08Y-A0Q.json)
+  has subject SHA256 matching this pinned APK. Its method body was inspected
+  directly for both entries. No new REA envelope or fabricated coverage added.
+- Therefore ordinary PQ generation target is property21200 (declared default200),
+  while requested/retrieval batch size is property21201/0x52d1 (declared default10).
+  These are distinct controls, not a shared10-key inventory target or812 legacy
+  target. Runtime overrides remain possible; no live effective value was read.
+- 0Yj captures generation target at coordinator construction. Its per-call batch
+  selection reads current config through A1A/A0B. Constructor capture does not
+  prove automatic reconstruction after config changes; that lifecycle is open.
+
+**Rust comparison:** kem_prekeys.upload_rows_in currently fills only its selected
+ordinary batch count, default10, alongside last-resort generation. That older SET
+strategy does not reproduce current native ordinary inventory target200 or ADD's
+non-last-resort replenishment. The two controls need separate versioned runtime
+handling rather than changing a single default from10 to200 (which would also
+change transmitted batch size). Existing rows/uncertain batches remain untouched.
+This evidence closes target source/default while leaving effective config and
+current-build initial/continuation admission for the implementation stage.
+No production change or live traffic.
+
+Additional export hashes:
+
+- [pq-target-callers.txt](pq-target-callers.txt): `3eb0c339e9913def990e195ea39cae3670de6b2ee3c9da9b3b6d99ccec5d258c`
+- [pq-target-provider.txt](pq-target-provider.txt): `f224b42c70d8419ab934ca54b030bd811f1b3bac9677e950737c0b7e6007bbcb`

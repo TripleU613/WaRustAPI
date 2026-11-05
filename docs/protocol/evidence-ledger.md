@@ -1,3 +1,10 @@
+2026-11-04 — **PQ generation target and upload batch defaults distinguished.**
+
+43.72 provider21200/default200 governs inventory;21201/default10 governs
+batch. Matching REA registry reused; runtime values/lifecycle remain open.
+[Evidence and Rust gap](apk/2.26.43.72-prekey-upload-replies/README.md#pq-target-provider-and-declared-defaults-2026-11-04).
+No production change or live traffic.
+
 2026-11-04 — **Current-build PQ signing/wire provenance traced.**
 
 ML-KEM-1024 enum and same-public-array signing/upload linkage retained.
