@@ -1,0 +1,56 @@
+            0x00726580      paciasp
+            0x00726584      sub   sp, sp, 0x60
+            0x00726588      stp   x29, x30, [sp, 0x20]
+            0x0072658c      str   x23, [sp, 0x30]
+            0x00726590      bl    0x4c8a08
+            0x00726594      add   x29, sp, 0x20
+            0x00726598      bl    0xbdd428
+            0x0072659c      stp   xzr, xzr, [sp, 8]
+            0x007265a0      bl    sym.imp.MCIParamsGetTypeID
+            0x007265a4      mov   x1, x19
+            0x007265a8      bl    sym.imp.__MCFCastToClassNotNull
+            0x007265ac      mov   x19, x0
+            0x007265b0      bl    0x725ee0
+            0x007265b4      mov   x20, x0
+            0x007265b8      bl    0x71f5b0
+            0x007265bc      bl    0xbdfa60
+            0x007265c0      bl    0xbe25b0
+            0x007265c4      bl    sym.imp.MCIParamsUnpackWithTypeIDs
+            0x007265c8      ldp   x19, x8, [sp, 8]
+            0x007265cc      ldr   x21, [x8, 0x18]                      ; [0x18:4]=0
+            0x007265d0      ldr   x20, [x8, 0x28]                      ; [0x28:4]=0xc306e8
+            0x007265d4      ldr   x0, [x21, 0x18]                      ; [0x18:4]=0
+            0x007265d8      bl    sym.imp.MCIExecutionGlobalQueueCheckIsOnContext
+            0x007265dc      tst   w0, 0xff
+        ┌─< 0x007265e0      b.eq  0x726658
+        │   0x007265e4      ldr   x0, [x21, 0x28]                      ; [0x28:4]=0xc306e8
+        │   0x007265e8      bl    0xbe529c
+        │   0x007265ec      bl    0x6fe0d0
+        │   0x007265f0      mov   x21, x0
+        │   0x007265f4      bl    sym.imp.MCFASCIIStringGetCString
+        │   0x007265f8      bl    sym.imp.remove
+       ┌──< 0x007265fc      cbz   w0, 0x72662c
+       ││   0x00726600      bl    sym.imp.__errno
+       ││   0x00726604      ldr   w1, [x0]
+       ││   0x00726608      bl    0xbed63c
+       ││   0x0072660c      mov   x2, xzr
+       ││   0x00726610      bl    sym.imp.MCFErrorCreate
+       ││   0x00726614      mov   x22, x0
+       ││   0x00726618      bl    0xbe0424
+       ││   0x0072661c      bl    0x71f248
+       ││   0x00726620      mov   x0, x22
+       ││   0x00726624      bl    sym.imp.MCFRelease
+      ┌───< 0x00726628      b     0x726634
+      │└──> 0x0072662c      bl    0xbdfe78
+      │ │   0x00726630      bl    0x71f248
+      └───> 0x00726634      mov   x0, x21
+        │   0x00726638      bl    sym.imp.MCFRelease
+        │   0x0072663c      bl    0xbdd6fc
+       ┌──< 0x00726640      b.ne  0x72665c
+       ││   0x00726644      bl    0x5ccddc
+       ││   0x00726648      ldp   x29, x30, [sp, 0x20]
+       ││   0x0072664c      add   sp, sp, 0x60
+       ││   0x00726650      autiasp
+       ││   0x00726654      ret
+       │└─> 0x00726658      bl    sym.imp.abort
+       └──> 0x0072665c      bl    sym.imp.__stack_chk_fail

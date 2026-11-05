@@ -104,3 +104,10 @@ policy, automatic retry or ban-prevention guarantee is inferred.
 The [regular status and timer trace](../2.26.43.72-metrics-regular-recovery/README.md)
 binds a separate interval30 readiness/idle recheck and provider-identity gate.
 This does not turn the drain-end notifier into backoff or prove durable deletion.
+
+## Selected owner/deletion binding
+
+The [completion and deletion trace](../2.26.43.72-metrics-buffer-deletion/README.md)
+now binds the selected regular callback table to owner completion. Success can
+queue remove; terminal local error skips this deletion path. Full callback
+lifetimes, alternate construction and durable recovery remain open.

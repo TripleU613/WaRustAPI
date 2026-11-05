@@ -16305,5 +16305,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-metrics-regular-recovery/README.md",
     "description": "Regular status callback checks provider identity; status0 idle starts drain and interval30 timer, status1 cancels timer and signals error. Timer requires readiness/idle low bits.72 status and16 timer native decision-slice fixtures; weak resolution and real operations not executed. Full registration, task generations and durable ownership remain open. No Rust/live capability added."
+  },
+  "x-metrics-buffer-deletion-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK static and synthetic buffer deletion evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-metrics-buffer-deletion/README.md",
+    "description": "Selected construction binds regular completion slots to owner: null error schedules buffer remove; terminal local error skips that deletion path despite transport set removal. Four controlled native worker cases verify success, ENOENT, EACCES and wrong-context abort; no real file operation. Full callback lifetimes and downstream persistence/recovery remain open. No Rust/live capability added."
   }
 }

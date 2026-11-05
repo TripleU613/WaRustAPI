@@ -1,0 +1,37 @@
+            0x00726c80      paciasp
+            0x00726c84      stp   x29, x30, [sp, -0x30]!
+            0x00726c88      str   x21, [sp, 0x10]
+            0x00726c8c      stp   x20, x19, [sp, 0x20]
+            0x00726c90      mov   x29, sp
+        ┌─< 0x00726c94      cbz   x0, 0x726d00
+        │   0x00726c98      mov   x19, x0
+        │   0x00726c9c      bl    sym.imp.MCFWeakGetTypeID
+        │   0x00726ca0      mov   x1, x19
+        │   0x00726ca4      bl    sym.imp.__MCFCastToClassNotNull
+       ┌──< 0x00726ca8      cbz   x0, 0x726d00
+       ││   0x00726cac      bl    0x726b14
+       ││   0x00726cb0      mov   x20, x0
+       ││   0x00726cb4      bl    sym.imp.MCFWeakGetTypeID
+       ││   0x00726cb8      mov   x21, x0
+       ││   0x00726cbc      bl    sym.imp.MCFWeakGetTypeID
+       ││   0x00726cc0      mov   x1, x19
+       ││   0x00726cc4      bl    sym.imp.__MCFCastToClassNotNull
+       ││   0x00726cc8      bl    0xbe0a3c
+       ││   0x00726ccc      bl    sym.imp.__MCFCastToClassNotNull
+       ││   0x00726cd0      bl    sym.imp.MCFWeakCopyRef
+       ││   0x00726cd4      bl    0xbe0ebc
+       ││   0x00726cd8      bl    sym.imp.__MCFCastToClassNullableOwnedObject
+      ┌───< 0x00726cdc      cbz   x0, 0x726d00
+      │││   0x00726ce0      bl    0xbe2550
+      │││   0x00726ce4      bl    sym.imp.MCIExecutionGlobalQueueCheckIsOnContext
+      │││   0x00726ce8      tst   w0, 0xff
+     ┌────< 0x00726cec      b.eq  0x726d10
+     ││││   0x00726cf0      bl    0x49d294
+     ││││   0x00726cf4      ldp   x29, x30, [sp], 0x30
+     ││││   0x00726cf8      autiasp
+    ┌─────< 0x00726cfc      b     sym.imp.MCFRelease
+    ││└└└─> 0x00726d00      bl    0x4b1850
+    ││      0x00726d04      ldp   x29, x30, [sp], 0x30
+    ││      0x00726d08      autiasp
+    ││      0x00726d0c      ret
+    │└────> 0x00726d10      bl    sym.imp.abort

@@ -1,0 +1,32 @@
+            0x006fe0d0      paciasp
+            0x006fe0d4      stp   x29, x30, [sp, -0x40]!
+            0x006fe0d8      str   x23, [sp, 0x10]
+            0x006fe0dc      bl    0x49be00
+            0x006fe0e0      mov   x29, sp
+            0x006fe0e4      bl    0xbe6640
+            0x006fe0e8      bl    sym.imp.MCFASCIIStringGetCString
+            0x006fe0ec      mov   x21, x0
+            0x006fe0f0      adrp  x8, 0x2fc000
+            0x006fe0f4      add   x8, x8, 0x222
+            0x006fe0f8      cmp   w19, 0
+            0x006fe0fc      adrp  x9, 0x2fc000
+            0x006fe100      add   x9, x9, 0x21b
+            0x006fe104      mov   x0, x20
+            0x006fe108      csel  x19, x9, x8, eq
+            0x006fe10c      bl    0x71f6f8
+            0x006fe110      bl    0xbe3a70
+            0x006fe114      bl    0x71f714
+            0x006fe118      sxtb  w23, w0
+            0x006fe11c      mov   x0, x20
+            0x006fe120      bl    0x71de74
+            0x006fe124      mov   w5, w0
+            0x006fe128      adrp  x0, 0x134000
+            0x006fe12c      add   x0, x0, 0x28
+            0x006fe130      bl    0xbe2ccc
+            0x006fe134      mov   w3, w22
+            0x006fe138      mov   w4, w23
+            0x006fe13c      bl    sym.imp.MCFASCIIStringCreateWithFormat
+            0x006fe140      bl    0x4c8058
+            0x006fe144      ldp   x29, x30, [sp], 0x40
+            0x006fe148      autiasp
+        ┌─< 0x006fe14c      b     sym.imp.MCFASCIIStringEnsureNotNull

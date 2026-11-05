@@ -1,0 +1,70 @@
+            0x006f933c      bl    0x7268f8
+            0x006f9340      mov   w1, 0x10
+            0x006f9344      bl    0xbe1ac0
+            0x006f9348      bl    sym.imp.MCFRuntimeCreateInstance
+            0x006f934c      mov   x25, x0
+            0x006f9350      str   w24, [x0, 0x20]
+            0x006f9354      str   x23, [x0, 0x18]
+            0x006f9358      mov   x0, x23
+            0x006f935c      bl    sym.imp.MCFRetain
+            0x006f9360      mov   x0, x22
+            0x006f9364      bl    sym.imp.MCIExecutionGlobalQueueGetExecutionQueue
+            0x006f9368      ldr   x23, [x20, 0x30]                     ; [0x30:4]=0
+            0x006f936c      mov   x24, x0
+            0x006f9370      bl    0x736504
+            0x006f9374      mov   x21, x0
+            0x006f9378      nop
+            0x006f937c      adr   x1, 0x7226d4
+            0x006f9380      mov   x0, x24
+            0x006f9384      mov   x2, x23
+            0x006f9388      bl    0x736578
+            0x006f938c      bl    0xbe0a3c
+            0x006f9390      bl    sym.imp.__MCFCastToClassNotNull
+            0x006f9394      str   x0, [x20, 0x40]
+            0x006f9398      mov   x0, x22
+            0x006f939c      bl    sym.imp.MCIExecutionGlobalQueueGetExecutionQueue
+            0x006f93a0      ldr   x21, [x20, 0x30]                     ; [0x30:4]=0
+            0x006f93a4      mov   x23, x0
+            0x006f93a8      bl    0x736504
+            0x006f93ac      mov   x24, x0
+            0x006f93b0      nop
+            0x006f93b4      adr   x1, 0x72282c
+            0x006f93b8      mov   x0, x23
+            0x006f93bc      mov   x2, x21
+            0x006f93c0      bl    0x736578
+            0x006f93c4      bl    0xbe1234
+            0x006f93c8      bl    sym.imp.__MCFCastToClassNotNull
+            0x006f93cc      str   x0, [x20, 0x48]
+            0x006f93d0      ldr   x24, [x20, 0x40]                     ; segment.PHDR
+                                                                       ; [0x40:4]=6
+            0x006f93d4      mov   x21, x0
+            0x006f93d8      ldrb  w19, [x27, 0xb8]                     ; [0xb8:4]=0x47fcb0
+            0x006f93dc      strb  w19, [x20, 0xfa]
+            0x006f93e0      bl    0x726b14
+            0x006f93e4      mov   w1, 0x78                             ; 'x'
+            0x006f93e8      bl    0xbe1ac0
+            0x006f93ec      bl    sym.imp.MCFRuntimeCreateInstance
+            0x006f93f0      mov   x23, x0
+            0x006f93f4      ldr   x0, [sp, 0x18]                       ; [0x18:4]=0
+            0x006f93f8      str   x0, [x23, 0x20]
+            0x006f93fc      bl    sym.imp.MCFRetain
+            0x006f9400      mov   x0, x23
+            0x006f9404      bl    sym.imp.MCFWeakCreate
+            0x006f9408      str   x0, [x23, 0x28]
+            0x006f940c      mov   x0, x22
+            0x006f9410      str   x22, [x23, 0x18]
+            0x006f9414      bl    sym.imp.MCFRetain
+            0x006f9418      ldp   w8, w9, [sp, 0x24]
+            0x006f941c      mov   x0, x25
+            0x006f9420      strb  w19, [x23, 0x81]
+            0x006f9424      mov   x19, x25
+            0x006f9428      str   x25, [x23, 0x68]
+            0x006f942c      str   w9, [x23, 0x60]
+            0x006f9430      strb  w8, [x23, 0x80]
+            0x006f9434      bl    sym.imp.MCFRetain
+            0x006f9438      mov   x0, x24
+            0x006f943c      str   x24, [x23, 0x50]
+            0x006f9440      bl    sym.imp.MCFRetain
+            0x006f9444      mov   x0, x21
+            0x006f9448      str   x21, [x23, 0x58]
+            0x006f944c      bl    sym.imp.MCFRetain

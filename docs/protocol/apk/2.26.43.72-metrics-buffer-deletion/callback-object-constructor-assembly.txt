@@ -1,0 +1,22 @@
+            0x00736578      paciasp
+            0x0073657c      stp   x29, x30, [sp, -0x30]!
+            0x00736580      bl    0x63c894
+            0x00736584      mov   x29, sp
+            0x00736588      bl    0x49b830
+            0x0073658c      bl    0x736504
+            0x00736590      bl    0xbdf224
+            0x00736594      bl    sym.imp.MCFRuntimeCreateInstance
+            0x00736598      mov   x22, x0
+            0x0073659c      str   x19, [x0, 0x20]
+            0x007365a0      mov   x0, x19
+            0x007365a4      bl    sym.imp.MCFRetain
+            0x007365a8      mov   x0, x21
+            0x007365ac      str   x21, [x22, 0x28]
+            0x007365b0      bl    sym.imp.MCFRetain
+            0x007365b4      str   wzr, [x22, 0x30]
+            0x007365b8      mov   x0, x22
+            0x007365bc      str   x20, [x22, 0x18]
+            0x007365c0      bl    0x49c11c
+            0x007365c4      ldp   x29, x30, [sp], 0x30
+            0x007365c8      autiasp
+            0x007365cc      ret

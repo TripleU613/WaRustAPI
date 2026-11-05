@@ -1,0 +1,95 @@
+{
+  "scope": "complete selected worker with typed parameter, path, remove, errno and callback adapters; no real file deletion or durable storage",
+  "unicorn_version": "2.1.4",
+  "cases": [
+    {
+      "case": "removed",
+      "events": [
+        {
+          "action": "path-request",
+          "temporary_argument": 1
+        },
+        {
+          "action": "remove",
+          "return_value": 0
+        },
+        {
+          "action": "completion",
+          "error_present": false
+        },
+        {
+          "action": "release",
+          "object": "0x10000b00"
+        }
+      ]
+    },
+    {
+      "case": "missing-file",
+      "events": [
+        {
+          "action": "path-request",
+          "temporary_argument": 1
+        },
+        {
+          "action": "remove",
+          "return_value": -1
+        },
+        {
+          "action": "error-create",
+          "errno": 2,
+          "domain_va": "0xc30098"
+        },
+        {
+          "action": "completion",
+          "error_present": true
+        },
+        {
+          "action": "release",
+          "object": "0x10000f00"
+        },
+        {
+          "action": "release",
+          "object": "0x10000b00"
+        }
+      ]
+    },
+    {
+      "case": "permission-denied",
+      "events": [
+        {
+          "action": "path-request",
+          "temporary_argument": 1
+        },
+        {
+          "action": "remove",
+          "return_value": -1
+        },
+        {
+          "action": "error-create",
+          "errno": 13,
+          "domain_va": "0xc30098"
+        },
+        {
+          "action": "completion",
+          "error_present": true
+        },
+        {
+          "action": "release",
+          "object": "0x10000f00"
+        },
+        {
+          "action": "release",
+          "object": "0x10000b00"
+        }
+      ]
+    },
+    {
+      "case": "wrong-context",
+      "events": [
+        {
+          "action": "abort"
+        }
+      ]
+    }
+  ]
+}

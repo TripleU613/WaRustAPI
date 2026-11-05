@@ -1,0 +1,51 @@
+            0x00727064      paciasp
+            0x00727068      sub   sp, sp, 0x50
+            0x0072706c      stp   x29, x30, [sp, 0x20]
+            0x00727070      str   x21, [sp, 0x30]
+            0x00727074      stp   x20, x19, [sp, 0x40]
+            0x00727078      add   x29, sp, 0x20
+            0x0072707c      bl    0xbdd120
+            0x00727080      stp   xzr, xzr, [sp, 8]
+            0x00727084      bl    sym.imp.MCIParamsGetTypeID
+            0x00727088      mov   x1, x19
+            0x0072708c      bl    sym.imp.__MCFCastToClassNotNull
+            0x00727090      mov   x19, x0
+            0x00727094      bl    sym.imp.MCFWeakGetTypeID
+            0x00727098      mov   x20, x0
+            0x0072709c      bl    0x727130
+            0x007270a0      bl    0xbdfa60
+            0x007270a4      bl    0xbe25b0
+            0x007270a8      bl    sym.imp.MCIParamsUnpackWithTypeIDs
+            0x007270ac      ldr   x19, [sp, 0x10]                      ; [0x10:4]=0xb70003
+            0x007270b0      bl    0x7279a4
+            0x007270b4      bl    0xbdff44
+            0x007270b8      bl    sym.imp.MCFRuntimeCreateInstance
+            0x007270bc      nop
+            0x007270c0      adr   x8, 0x726bdc
+            0x007270c4      nop
+            0x007270c8      adr   x9, 0x726c80
+            0x007270cc      mov   x20, x0
+            0x007270d0      str   x19, [x0, 0x38]
+            0x007270d4      stp   x8, x9, [x0, 0x18]
+            0x007270d8      nop
+            0x007270dc      adr   x8, 0x726d14
+            0x007270e0      nop
+            0x007270e4      adr   x9, 0x726e18
+            0x007270e8      stp   x8, x9, [x0, 0x28]
+            0x007270ec      mov   x0, x19
+            0x007270f0      bl    sym.imp.MCFRetain
+            0x007270f4      ldr   x8, [sp, 8]                          ; [0x8:4]=0
+            0x007270f8      mov   x1, x20
+            0x007270fc      ldr   x9, [x8, 0x18]                       ; [0x18:4]=0
+            0x00727100      ldr   x0, [x8, 0x38]                       ; [0x38:4]=0x40000a
+            0x00727104      blr   x9
+            0x00727108      mov   x0, x20
+            0x0072710c      bl    sym.imp.MCFRelease
+            0x00727110      bl    0xbdd71c
+        ┌─< 0x00727114      b.ne  0x72712c
+        │   0x00727118      bl    0x49c200
+        │   0x0072711c      ldp   x29, x30, [sp, 0x20]
+        │   0x00727120      add   sp, sp, 0x50
+        │   0x00727124      autiasp
+        │   0x00727128      ret
+        └─> 0x0072712c      bl    sym.imp.__stack_chk_fail

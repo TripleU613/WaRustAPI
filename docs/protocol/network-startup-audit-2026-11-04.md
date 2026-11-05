@@ -598,3 +598,14 @@ require ready and idle low bits. [Evidence and limits](apk/2.26.43.72-metrics-re
 Validation:72 native status-decision and16 timer-decision fixtures plus pinned
 window resolver. Weak resolution, actual timers and durable ownership remain
 separate; no Rust runtime or live traffic changed.
+
+## Metrics buffer deletion (2026-11-05)
+
+2026-11-05 — **Metrics completion-to-file-removal chain traced.**
+
+Selected regular table now binds owner callbacks: null-error success queues
+buffer removal; terminal local error skips that deletion path despite set
+removal. Worker remove failures report errno separately. [Evidence and limits](apk/2.26.43.72-metrics-buffer-deletion/README.md).
+Validation:4 controlled full-worker cases and pinned construction/function
+windows. Downstream bookkeeping/recovery remains open; no real files removed,
+Rust runtime change or live traffic.

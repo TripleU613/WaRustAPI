@@ -1,0 +1,65 @@
+            0x00726d14      paciasp
+            0x00726d18      stp   x29, x30, [sp, -0x30]!
+            0x00726d1c      bl    0x63c894
+            0x00726d20      mov   x29, sp
+        ┌─< 0x00726d24      cbz   x0, 0x726e04
+        │   0x00726d28      bl    0x5d1ebc
+        │   0x00726d2c      bl    sym.imp.MCFWeakGetTypeID
+        │   0x00726d30      mov   x1, x20
+        │   0x00726d34      bl    sym.imp.__MCFCastToClassNotNull
+       ┌──< 0x00726d38      cbz   x0, 0x726e04
+       ││   0x00726d3c      bl    0x726b14
+       ││   0x00726d40      mov   x21, x0
+       ││   0x00726d44      bl    sym.imp.MCFWeakGetTypeID
+       ││   0x00726d48      mov   x22, x0
+       ││   0x00726d4c      bl    sym.imp.MCFWeakGetTypeID
+       ││   0x00726d50      mov   x1, x20
+       ││   0x00726d54      bl    sym.imp.__MCFCastToClassNotNull
+       ││   0x00726d58      bl    0xbe13d8
+       ││   0x00726d5c      bl    sym.imp.__MCFCastToClassNotNull
+       ││   0x00726d60      bl    sym.imp.MCFWeakCopyRef
+       ││   0x00726d64      bl    0xbe0a3c
+       ││   0x00726d68      bl    sym.imp.__MCFCastToClassNullableOwnedObject
+      ┌───< 0x00726d6c      cbz   x0, 0x726e04
+      │││   0x00726d70      bl    0xbedce8
+      │││   0x00726d74      bl    sym.imp.MCIExecutionGlobalQueueCheckIsOnContext
+      │││   0x00726d78      tst   w0, 0xff
+     ┌────< 0x00726d7c      b.eq  0x726e14
+     ││││   0x00726d80      mov   x0, x19
+     ││││   0x00726d84      bl    0x71e250
+     ││││   0x00726d88      bl    0x72bf08
+     ││││   0x00726d8c      mov   w21, w0
+     ││││   0x00726d90      bl    0xbe1b80
+     ││││   0x00726d94      bl    sym.imp.MCILogRegistryGlobalsIsLoggingEnabled
+     ││││   0x00726d98      tst   w0, 0xff
+    ┌─────< 0x00726d9c      b.eq  0x726dc4
+    │││││   0x00726da0      bl    0xbe2374
+    │││││   0x00726da4      adrp  x3, 0x8b000
+    │││││   0x00726da8      add   x3, x3, 0x1ab
+    │││││   0x00726dac      adrp  x6, 0x16e000
+    │││││   0x00726db0      add   x6, x6, 0x1a
+    │││││   0x00726db4      and   w7, w21, 0xffff
+    │││││   0x00726db8      bl    0xbe1b80
+    │││││   0x00726dbc      mov   w4, 0x89
+    │││││   0x00726dc0      bl    0x734a98
+    └─────> 0x00726dc4      ldr   x21, [x20, 0x50]                     ; [0x50:4]=64
+    ┌─────< 0x00726dc8      cbz   x21, 0x726df4
+    │││││   0x00726dcc      bl    0xbe9ce8
+    │││││   0x00726dd0      mov   w1, 2
+    │││││   0x00726dd4      mov   x2, xzr
+    │││││   0x00726dd8      bl    sym.imp.MCFErrorCreate
+    │││││   0x00726ddc      mov   x22, x0
+    │││││   0x00726de0      bl    0x4c9ec4
+    │││││   0x00726de4      mov   x2, x22
+    │││││   0x00726de8      bl    0x726964
+    │││││   0x00726dec      mov   x0, x22
+    │││││   0x00726df0      bl    sym.imp.MCFRelease
+    └─────> 0x00726df4      bl    0xbdf2b0
+     ││││   0x00726df8      ldp   x29, x30, [sp], 0x30
+     ││││   0x00726dfc      autiasp
+    ┌─────< 0x00726e00      b     sym.imp.MCFRelease
+    ││└└└─> 0x00726e04      bl    0x49c11c
+    ││      0x00726e08      ldp   x29, x30, [sp], 0x30
+    ││      0x00726e0c      autiasp
+    ││      0x00726e10      ret
+    │└────> 0x00726e14      bl    sym.imp.abort

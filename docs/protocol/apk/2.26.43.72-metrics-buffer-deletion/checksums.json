@@ -1,0 +1,130 @@
+{
+  "README.md": {
+    "bytes": 6927,
+    "sha256": "a76616a56fa9128850e34bf8ecf8fdfd671080d136d8e25b4bea57d029a34aa5"
+  },
+  "callback-object-constructor-assembly.txt": {
+    "bytes": 1015,
+    "sha256": "c0054158054a48e8416a27c53a875f786c00492b9dba58ee9a9e48b7c1590b0f"
+  },
+  "callback-table-factory-assembly.txt": {
+    "bytes": 2556,
+    "sha256": "61ce59d4058947d8705779d0f69fa2f12ab5be995cd93f53f0946632aa6dc09d"
+  },
+  "check-deletion.py": {
+    "bytes": 6335,
+    "sha256": "5333923dfe85852b967ad863ddb7e864f9f9832fe035a07a9e19aa2378b6fdb0"
+  },
+  "completion-dispatch-assembly.txt": {
+    "bytes": 1891,
+    "sha256": "075b20537f0dcef3e55d12925df537dd9b5c61273815386a55c11139419abf32"
+  },
+  "completion-thunk-assembly.txt": {
+    "bytes": 85,
+    "sha256": "867fdee47d2aadc3b77edda4b4096d671481acaf59d3161ecd34a919bc4a9857"
+  },
+  "deletion-boundaries.json": {
+    "bytes": 6869,
+    "sha256": "a75d440802f5e0851cc7319ae2bb2a07682a8f3d4eec91e39b96f8383f03969f"
+  },
+  "deletion-results.json": {
+    "bytes": 1943,
+    "sha256": "8119d6c506f9fe7f332a081b0f772e60128f2d6d6043077283d30c093ae71b0d"
+  },
+  "deletion-thunk-assembly.txt": {
+    "bytes": 85,
+    "sha256": "d6478746b6237b9bc35e7ab3eead857218631c991faff25ab182b800fe7e9b5d"
+  },
+  "deletion-worker-assembly.txt": {
+    "bytes": 2948,
+    "sha256": "804a2f74627dc946275f820f0db0e5bccf8e12be8779f0507ecb25656caf92da"
+  },
+  "descriptor-byte-assembly.txt": {
+    "bytes": 214,
+    "sha256": "4d8030c307091e2b6d118d2c10107403ab548420c54a321c7b977090fa593ae0"
+  },
+  "descriptor-first-number-assembly.txt": {
+    "bytes": 116,
+    "sha256": "56ebd58292afff981905a64b7821607c231edf597f919345a4606dccc5845142"
+  },
+  "descriptor-last-number-assembly.txt": {
+    "bytes": 116,
+    "sha256": "032e7cc7c7a7dfb252e281b06989f071e4105a33a40b042e704becdc630b3189"
+  },
+  "errno-domain-assembly.txt": {
+    "bytes": 111,
+    "sha256": "576e36983a5dfc5a1e303d7d47c67911a90913af2711f688e329fcc20e170c93"
+  },
+  "failure-completion-arguments-assembly.txt": {
+    "bytes": 126,
+    "sha256": "e33025b8169614bd069ce506da34123eb759820192de7071fa3acdd173fe826a"
+  },
+  "inspect-deletion.py": {
+    "bytes": 1420,
+    "sha256": "709ad6c9af982f7bd61d06633b4462fb73601130923bc8c0f0120e564f40a4c5"
+  },
+  "owner-completion-assembly.txt": {
+    "bytes": 4779,
+    "sha256": "80539a1a175cbf09b71dcb689d4fb55fe6ac55d333b6700745ea616ea4c768fe"
+  },
+  "owner-construction-excerpt-assembly.txt": {
+    "bytes": 3621,
+    "sha256": "aed364c1a1cde73b9c3a1bfdaf30636749b2503ea4b2025e9f1846522449f266"
+  },
+  "owner-entry-arguments-assembly.txt": {
+    "bytes": 126,
+    "sha256": "6d91c133c4df47cf72e61c8804359e76f1e852e05e33ee214128d8e863f913ff"
+  },
+  "path-arguments-assembly.txt": {
+    "bytes": 114,
+    "sha256": "e4495da4570270b8ea3e6231c8f046913d0e457799a9b13c870c8d92ea6607e1"
+  },
+  "path-builder-assembly.txt": {
+    "bytes": 1502,
+    "sha256": "6f3c97d98596804437d8e8cca4eff73134b8eec7c06e9394e7d9add61dc306f4"
+  },
+  "path-builder-setup-assembly.txt": {
+    "bytes": 116,
+    "sha256": "39bc2f247597a236df5ce1302076432e52e320bfdca6b2cc7356772733128211"
+  },
+  "path-format-arguments-assembly.txt": {
+    "bytes": 116,
+    "sha256": "082c9fe2cf23a3f959f94a4e13bedc991e55f7c4b244fa10be3da9ef2f4c7a85"
+  },
+  "queued-completion-assembly.txt": {
+    "bytes": 1427,
+    "sha256": "3cbdb72a875c5f9a89c09521c65eb39fc26accad0c7761d1891ee4eb68c37074"
+  },
+  "regular-table-install-excerpt-assembly.txt": {
+    "bytes": 880,
+    "sha256": "e9f555a33358cd9d373b91db1827064cde0d666f48026aeb4066be901d16c19f"
+  },
+  "regular-table-setter-assembly.txt": {
+    "bytes": 1317,
+    "sha256": "485443232347d7af33161dee3a9e1681d00db7172e022a2498dcf8f68d43c560"
+  },
+  "retryable-wrapper-assembly.txt": {
+    "bytes": 2016,
+    "sha256": "98e702026d43547e4c11e999db228ca550e12d84a5f12499c1140d78da9794b2"
+  },
+  "success-completion-arguments-assembly.txt": {
+    "bytes": 126,
+    "sha256": "68557ae46a5bde28d35b2c5362793748fa8c6b0536fcc956a277ff478420648f"
+  },
+  "success-wrapper-assembly.txt": {
+    "bytes": 2268,
+    "sha256": "913c5735487f720fdc31a49fa9d5f28e0f1b879efc0cecbdf320f7cf10f9fc34"
+  },
+  "table-copy-constructor-assembly.txt": {
+    "bytes": 934,
+    "sha256": "1233c437d4026aa76462f79d5e19a3aedea074e0409a2b724d2ce8e4bde1bfb1"
+  },
+  "terminal-wrapper-assembly.txt": {
+    "bytes": 3610,
+    "sha256": "274dd9db3f1d6829feb503cd83e7ee24e05711b5ccbd30148dc5c864a5f4fb01"
+  },
+  "windows.json": {
+    "bytes": 2536,
+    "sha256": "00c0fa16f34194ea1aa3dfdbc2e7c05077490a967ff114c27db0e8f146bf5d60"
+  }
+}

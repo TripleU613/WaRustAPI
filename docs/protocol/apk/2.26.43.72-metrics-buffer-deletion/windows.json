@@ -1,0 +1,132 @@
+[
+  {
+    "name": "owner-construction-excerpt",
+    "start_va": "0x6f933c",
+    "end_va": "0x6f9450"
+  },
+  {
+    "name": "regular-table-install-excerpt",
+    "start_va": "0x6f957c",
+    "end_va": "0x6f95c8"
+  },
+  {
+    "name": "callback-table-factory",
+    "start_va": "0x727064",
+    "end_va": "0x727130"
+  },
+  {
+    "name": "table-copy-constructor",
+    "start_va": "0x72719c",
+    "end_va": "0x7271ec"
+  },
+  {
+    "name": "regular-table-setter",
+    "start_va": "0x727444",
+    "end_va": "0x7274a0"
+  },
+  {
+    "name": "success-wrapper",
+    "start_va": "0x726bdc",
+    "end_va": "0x726c80"
+  },
+  {
+    "name": "retryable-wrapper",
+    "start_va": "0x726c80",
+    "end_va": "0x726d14"
+  },
+  {
+    "name": "terminal-wrapper",
+    "start_va": "0x726d14",
+    "end_va": "0x726e18"
+  },
+  {
+    "name": "completion-dispatch",
+    "start_va": "0x726964",
+    "end_va": "0x7269f8"
+  },
+  {
+    "name": "queued-completion",
+    "start_va": "0x7269f8",
+    "end_va": "0x726a70"
+  },
+  {
+    "name": "owner-completion",
+    "start_va": "0x7226d4",
+    "end_va": "0x72282c"
+  },
+  {
+    "name": "deletion-thunk",
+    "start_va": "0xbd8f28",
+    "end_va": "0xbd8f30"
+  },
+  {
+    "name": "deletion-worker",
+    "start_va": "0x726580",
+    "end_va": "0x726660"
+  },
+  {
+    "name": "path-builder",
+    "start_va": "0x6fe0d0",
+    "end_va": "0x6fe150"
+  },
+  {
+    "name": "callback-object-constructor",
+    "start_va": "0x736578",
+    "end_va": "0x7365d0"
+  },
+  {
+    "name": "path-arguments",
+    "start_va": "0xbe529c",
+    "end_va": "0xbe52a8"
+  },
+  {
+    "name": "failure-completion-arguments",
+    "start_va": "0xbe0424",
+    "end_va": "0xbe0430"
+  },
+  {
+    "name": "success-completion-arguments",
+    "start_va": "0xbdfe78",
+    "end_va": "0xbdfe84"
+  },
+  {
+    "name": "errno-domain",
+    "start_va": "0xbed63c",
+    "end_va": "0xbed648"
+  },
+  {
+    "name": "completion-thunk",
+    "start_va": "0xbd8f48",
+    "end_va": "0xbd8f50"
+  },
+  {
+    "name": "owner-entry-arguments",
+    "start_va": "0xbdf858",
+    "end_va": "0xbdf864"
+  },
+  {
+    "name": "descriptor-first-number",
+    "start_va": "0xbe5898",
+    "end_va": "0xbe58a0"
+  },
+  {
+    "name": "descriptor-last-number",
+    "start_va": "0xbe58ac",
+    "end_va": "0xbe58b4"
+  },
+  {
+    "name": "descriptor-byte",
+    "start_va": "0x71f714",
+    "end_va": "0x71f724"
+  },
+  {
+    "name": "path-builder-setup",
+    "start_va": "0xbe6640",
+    "end_va": "0xbe664c"
+  },
+  {
+    "name": "path-format-arguments",
+    "start_va": "0xbe2ccc",
+    "end_va": "0xbe2cd8"
+  }
+]

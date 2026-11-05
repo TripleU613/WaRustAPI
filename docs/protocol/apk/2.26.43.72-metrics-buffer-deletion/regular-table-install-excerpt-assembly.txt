@@ -1,0 +1,19 @@
+            0x006f957c      nop
+            0x006f9580      adr   x8, 0x727444
+            0x006f9584      adrp  x9, 0xbd8000
+            0x006f9588      add   x9, x9, 0xf78
+            0x006f958c      sub   x0, x29, 0x40
+            0x006f9590      mov   x1, x19
+            0x006f9594      stp   x8, x9, [x29, -0x40]
+            0x006f9598      nop
+            0x006f959c      adr   x8, 0x7274f4
+            0x006f95a0      adrp  x9, 0xbd8000
+            0x006f95a4      add   x9, x9, 0xf80
+            0x006f95a8      stp   x8, x9, [x29, -0x30]
+            0x006f95ac      bl    0x72719c
+            0x006f95b0      bl    0xbe1374
+            0x006f95b4      bl    sym.imp.MCFRelease
+            0x006f95b8      str   x22, [x23, 0x40]
+        ┌─< 0x006f95bc      cbz   x22, 0x6fa6bc
+        │   0x006f95c0      bl    0x49c104
+        │   0x006f95c4      bl    0x72700c

@@ -1,0 +1,86 @@
+            0x007226d4      paciasp
+            0x007226d8      stp   x29, x30, [sp, -0x40]!
+            0x007226dc      str   x23, [sp, 0x10]
+            0x007226e0      bl    0x49be00
+            0x007226e4      mov   x29, sp
+        ┌─< 0x007226e8      cbz   x2, 0x722780
+        │   0x007226ec      bl    0xbdf858
+        │   0x007226f0      bl    sym.imp.MCFWeakGetTypeID
+        │   0x007226f4      mov   x1, x19
+        │   0x007226f8      bl    sym.imp.__MCFCastToClassNotNull
+       ┌──< 0x007226fc      cbz   x0, 0x722780
+       ││   0x00722700      bl    0x7223b0
+       ││   0x00722704      mov   x22, x0
+       ││   0x00722708      bl    sym.imp.MCFWeakGetTypeID
+       ││   0x0072270c      mov   x23, x0
+       ││   0x00722710      bl    sym.imp.MCFWeakGetTypeID
+       ││   0x00722714      mov   x1, x19
+       ││   0x00722718      bl    sym.imp.__MCFCastToClassNotNull
+       ││   0x0072271c      bl    0xbe19a0
+       ││   0x00722720      bl    sym.imp.__MCFCastToClassNotNull
+       ││   0x00722724      bl    sym.imp.MCFWeakCopyRef
+       ││   0x00722728      bl    0xbe13d8
+       ││   0x0072272c      bl    sym.imp.__MCFCastToClassNullableOwnedObject
+      ┌───< 0x00722730      cbz   x0, 0x722780
+      │││   0x00722734      bl    0xbe2550
+      │││   0x00722738      bl    sym.imp.MCIExecutionGlobalQueueCheckIsOnContext
+      │││   0x0072273c      tst   w0, 0xff
+     ┌────< 0x00722740      b.eq  0x722828
+    ┌─────< 0x00722744      cbz   x21, 0x722790
+    │││││   0x00722748      bl    0xbe1b80
+    │││││   0x0072274c      bl    sym.imp.MCILogRegistryGlobalsIsLoggingEnabled
+    │││││   0x00722750      tst   w0, 0xff
+   ┌──────< 0x00722754      b.eq  0x722818
+   ││││││   0x00722758      bl    0xbe2374
+   ││││││   0x0072275c      adrp  x3, 0xae000
+   ││││││   0x00722760      add   x3, x3, 0xdac
+   ││││││   0x00722764      adrp  x6, 0xf2000
+   ││││││   0x00722768      add   x6, x6, 0x9ab
+   ││││││   0x0072276c      mov   x0, x21
+   ││││││   0x00722770      mov   w1, 0x200
+   ││││││   0x00722774      mov   w4, 0x1b8
+   ││││││   0x00722778      bl    0x734900
+  ┌───────< 0x0072277c      b     0x722818
+  ││││└└└─> 0x00722780      bl    0x4c8058
+  ││││      0x00722784      ldp   x29, x30, [sp], 0x40
+  ││││      0x00722788      autiasp
+  ││││      0x0072278c      ret
+  ││└─────> 0x00722790      mov   x0, x20
+  ││ │      0x00722794      bl    0x71e250
+  ││ │      0x00722798      bl    0x72bf08
+  ││ │      0x0072279c      bl    0xbe4814
+  ││ │      0x007227a0      bl    0x71f6f8
+  ││ │      0x007227a4      bl    0xbe3a70
+  ││ │      0x007227a8      bl    0x721690
+  ││ │      0x007227ac      mov   w2, w0
+  ││ │      0x007227b0      and   w0, w21, 0xffff
+  ││ │      0x007227b4      mov   w1, w22
+  ││ │      0x007227b8      bl    0x71f6b0
+  ││ │      0x007227bc      ldr   x20, [x19, 0x90]                     ; [0x90:4]=0
+  ││ │      0x007227c0      mov   x21, x0
+  ││ │      0x007227c4      mov   w0, 2
+  ││ │      0x007227c8      mov   x2, x21
+  ││ │      0x007227cc      mov   x1, x20
+  ││ │      0x007227d0      bl    sym.imp.MCIParamsCreate
+  ││ │      0x007227d4      ldr   x8, [x20, 0x18]                      ; [0x18:4]=0
+  ││ │      0x007227d8      mov   x20, x0
+  ││ │      0x007227dc      bl    0xbe7138
+  ││ │      0x007227e0      bl    sym.imp.MCIExecutionGlobalQueueGetExecutionQueue
+  ││ │      0x007227e4      movi  d0, 0000000000000000
+  ││ │      0x007227e8      adrp  x2, 0xbd8000
+  ││ │      0x007227ec      add   x2, x2, 0xf28
+  ││ │      0x007227f0      adrp  x4, 0xd8000
+  ││ │      0x007227f4      add   x4, x4, 0xb97
+  ││ │      0x007227f8      mov   w1, wzr
+  ││ │      0x007227fc      mov   x3, x20
+  ││ │      0x00722800      mov   w5, 1
+  ││ │      0x00722804      bl    sym.imp.MCIExecutionQueueExecuteAsyncHelper
+  ││ │      0x00722808      mov   x0, x20
+  ││ │      0x0072280c      bl    sym.imp.MCFRelease
+  ││ │      0x00722810      mov   x0, x21
+  ││ │      0x00722814      bl    sym.imp.MCFRelease
+  └└──────> 0x00722818      bl    0xbdd9c0
+     │      0x0072281c      ldp   x29, x30, [sp], 0x40
+     │      0x00722820      autiasp
+     │  ┌─< 0x00722824      b     sym.imp.MCFRelease
+     └────> 0x00722828      bl    sym.imp.abort

@@ -1,0 +1,41 @@
+            0x00726bdc      paciasp
+            0x00726be0      stp   x29, x30, [sp, -0x30]!
+            0x00726be4      bl    0x63c894
+            0x00726be8      mov   x29, sp
+        ┌─< 0x00726bec      cbz   x0, 0x726c6c
+        │   0x00726bf0      bl    0x5d1ebc
+        │   0x00726bf4      bl    sym.imp.MCFWeakGetTypeID
+        │   0x00726bf8      mov   x1, x20
+        │   0x00726bfc      bl    sym.imp.__MCFCastToClassNotNull
+       ┌──< 0x00726c00      cbz   x0, 0x726c6c
+       ││   0x00726c04      bl    0x726b14
+       ││   0x00726c08      mov   x21, x0
+       ││   0x00726c0c      bl    sym.imp.MCFWeakGetTypeID
+       ││   0x00726c10      mov   x22, x0
+       ││   0x00726c14      bl    sym.imp.MCFWeakGetTypeID
+       ││   0x00726c18      mov   x1, x20
+       ││   0x00726c1c      bl    sym.imp.__MCFCastToClassNotNull
+       ││   0x00726c20      bl    0xbe13d8
+       ││   0x00726c24      bl    sym.imp.__MCFCastToClassNotNull
+       ││   0x00726c28      bl    sym.imp.MCFWeakCopyRef
+       ││   0x00726c2c      bl    0xbe0a3c
+       ││   0x00726c30      bl    sym.imp.__MCFCastToClassNullableOwnedObject
+      ┌───< 0x00726c34      cbz   x0, 0x726c6c
+      │││   0x00726c38      bl    0xbedce8
+      │││   0x00726c3c      bl    sym.imp.MCIExecutionGlobalQueueCheckIsOnContext
+      │││   0x00726c40      tst   w0, 0xff
+     ┌────< 0x00726c44      b.eq  0x726c7c
+     ││││   0x00726c48      ldr   x0, [x20, 0x50]                      ; [0x50:4]=64
+    ┌─────< 0x00726c4c      cbz   x0, 0x726c5c
+    │││││   0x00726c50      mov   x1, x19
+    │││││   0x00726c54      mov   x2, xzr
+    │││││   0x00726c58      bl    0x726964
+    └─────> 0x00726c5c      bl    0xbdf2b0
+     ││││   0x00726c60      ldp   x29, x30, [sp], 0x30
+     ││││   0x00726c64      autiasp
+    ┌─────< 0x00726c68      b     sym.imp.MCFRelease
+    ││└└└─> 0x00726c6c      bl    0x49c11c
+    ││      0x00726c70      ldp   x29, x30, [sp], 0x30
+    ││      0x00726c74      autiasp
+    ││      0x00726c78      ret
+    │└────> 0x00726c7c      bl    sym.imp.abort

@@ -1,0 +1,37 @@
+            0x00726964      paciasp
+            0x00726968      stp   x29, x30, [sp, -0x30]!
+            0x0072696c      bl    0x63c894
+            0x00726970      mov   x29, sp
+            0x00726974      bl    0x49b830
+            0x00726978      bl    0x736504
+            0x0072697c      mov   x1, x21
+            0x00726980      bl    sym.imp.__MCFCastToClassNotNull
+            0x00726984      ldr   x21, [x0, 0x28]                      ; [0x28:4]=0xc306e8
+            0x00726988      bl    0x4d73b0
+            0x0072698c      bl    sym.imp.MCIExecutionQueueGetExecutionContext
+        ┌─< 0x00726990      cbz   w0, 0x7269d8
+        │   0x00726994      mov   w0, 3
+        │   0x00726998      bl    0xbe2688
+        │   0x0072699c      mov   x3, x19
+        │   0x007269a0      bl    sym.imp.MCIParamsCreate
+        │   0x007269a4      movi  d0, 0000000000000000
+        │   0x007269a8      mov   x19, x0
+        │   0x007269ac      adrp  x2, 0xbd8000
+        │   0x007269b0      add   x2, x2, 0xf48
+        │   0x007269b4      adrp  x4, 0xf0000
+        │   0x007269b8      add   x4, x4, 0x1ce
+        │   0x007269bc      mov   x0, x21
+        │   0x007269c0      bl    0xbdfcb0
+        │   0x007269c4      bl    sym.imp.MCIExecutionQueueExecuteAsyncHelper
+        │   0x007269c8      bl    0xbde028
+        │   0x007269cc      ldp   x29, x30, [sp], 0x30
+        │   0x007269d0      autiasp
+       ┌──< 0x007269d4      b     sym.imp.MCFRelease
+       │└─> 0x007269d8      ldp   x16, x2, [x22, 0x18]
+       │    0x007269dc      mov   x0, x20
+       │    0x007269e0      mov   x1, x19
+       │    0x007269e4      ldp   x20, x19, [sp, 0x20]
+       │    0x007269e8      ldp   x22, x21, [sp, 0x10]
+       │    0x007269ec      ldp   x29, x30, [sp], 0x30
+       │    0x007269f0      autiasp
+       │    0x007269f4      br    x16
