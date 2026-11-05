@@ -1,3 +1,11 @@
+2026-11-04 — **Legacy IQ handler registration boundary traced.**
+
+Inherited handler declares `iq`; registration rejects duplicate tags.
+Factory membership remains unknown after a bounded direct-constructor search.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#legacy-iq-handler-registration-boundary-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. No production change or live traffic.
+
 2026-11-04 — **Legacy writer/reader reply-map alias traced.**
 
 Normal setup passes one ConcurrentHashMap through both writer and reader

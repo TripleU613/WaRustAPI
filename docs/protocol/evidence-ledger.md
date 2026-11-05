@@ -4647,3 +4647,11 @@ window authenticated/activated/stopped with unchanged actions/receipts/outbox,
 generation/registration/head and 8 new inbound checkpoints. No qualifying
 companion ADV or decrypted message; live branch parity unknown. Historical
 untracked identity action stays unapplied. [Redacted record](adv-details-serialization-live.json).
+
+## 2026-11-04 — Legacy IQ registration boundary
+
+**Confirmed static (43.72):** inherited 1rA.A02 maps 1rD to `iq`;
+0ZJ.A19 rejects duplicate tag registration. Exact 1rC constructor search
+finds no direct invoke callers, which does not establish factory absence.
+Configured factory membership and actual dispatch remain unknown.
+[Exports and limits](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-iq-handler-registration-boundary-2026-11-04). No production change or live traffic.

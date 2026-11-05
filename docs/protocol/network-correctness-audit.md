@@ -1069,3 +1069,11 @@ map-reference boundary is closed conditionally on factory use.
 [Constructor offsets, branch scope and remaining registration/lifetime proof](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-writerreader-map-alias-2026-11-04).
 Factory-set membership, listener dispatch and teardown remain open. No durable
 account ownership, runtime change or live traffic is inferred from map aliasing.
+
+## 2026-11-04 — Legacy IQ registration boundary
+
+**Confirmed static (43.72):** inherited 1rA.A02 maps 1rD to `iq`;
+0ZJ.A19 rejects duplicate tag registration. Exact 1rC constructor search
+finds no direct invoke callers, which does not establish factory absence.
+Configured factory membership and actual dispatch remain unknown.
+[Exports and limits](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-iq-handler-registration-boundary-2026-11-04). No production change or live traffic.

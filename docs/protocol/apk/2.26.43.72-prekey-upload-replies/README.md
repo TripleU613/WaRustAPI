@@ -816,3 +816,37 @@ Additional export hashes:
 - [map-transport-binding.txt](map-transport-binding.txt): `e75620ce701dd4a50da59adedbfe4f7686c08b6d34c24bea401bf45a2d8cbd69`
 - [map-reader-context.txt](map-reader-context.txt): `96e64014c4f4238bedb03128387ba114741e636618245ba4c95d343a974e73bb`
 - [map-context-constructor.txt](map-context-constructor.txt): `573053bd91fffb64ba2f2b03728fedd870e1dd8adc1dc58d552ed30aa606eaee`
+
+## Legacy IQ handler registration boundary (2026-11-04)
+
+**Confirmed static**, pinned 2.26.43.72, same APK SHA-256 as this bundle.
+Checked DEX exports below are disassemblies, not REA Evidence envelopes.
+
+- **1rA.A02, 00da–00ee** recognizes a `1rD` instance and returns the
+  single stanza tag `iq`. Exact `1rD.A02` body search finds none; the
+  inherited method supplies this tag. Other subclasses have different tags.
+- **0ZJ.A19, 0000–003e** obtains every tag through virtual `A02`, checks
+  `Map.containsKey`, and inserts `(tag, handler)` only if absent. A duplicate
+  throws `IllegalStateException` with the retained addStanzaHandler diagnostic;
+  registration does not silently replace an earlier handler. Together with
+  the earlier A0S loop, this establishes how a returned `1rD` would be
+  registered under `iq`, not which configured factories are present.
+- Full **1rC** export has a trivial Object constructor, `AL0` returning null,
+  and the previously traced `AL1` constructing `1rD` from the shared context.
+  Exact `1rC.<init>` caller search returns **zero direct invoke callers**.
+  This is a bounded negative: it does not rule out reflective construction,
+  generated provider configuration or other type-based registration. Factory
+  set membership remains **unknown**, and absence from the runtime set is
+  not inferred.
+
+**Remaining:** prove A1H factory membership and actual reader dispatch; concrete
+CPm listener routing, teardown/reconnect cleanup and durable ownership are still
+open. No production change, automatic retry or live traffic.
+
+Additional export hashes:
+
+- [registration-factory-class.txt](registration-factory-class.txt): `b3d365c9a2aa701dc2b53386ffffc18a3b6a4ef43cbf30d33a7370d8e9e24024`
+- [registration-parser-register.txt](registration-parser-register.txt): `5acde23d6f188328557a56d9593cfc9bfa191da4960a5f2f1fe2a6012b3bca89`
+- [registration-factory-callers.txt](registration-factory-callers.txt): `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- [registration-parser-tags.txt](registration-parser-tags.txt): `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- [registration-parser-tags-base.txt](registration-parser-tags-base.txt): `f1a9e0f0cfd210e978f8fc8f86167bf812a5196456de4c30939a2065a3954648`
