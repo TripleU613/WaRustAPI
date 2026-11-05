@@ -1,0 +1,40 @@
+
+# class: LX/1iV;
+# extends: Ljava/lang/Object;
+
+.method private A00(III)  # .registers 7
+    # full signature: LX/1iV;->A00(II)I
+    0000..0004  iget-object  v3, v4, LX/1iV;->A0J:LX/0Ll;
+    0004..000a  invoke-virtual  {v3}, Ljava/util/AbstractCollection;->size()I
+    000a..000c  move-result  v1
+    000c..0010  iget-object  v0, v4, LX/1iV;->A0I:LX/0Ll;
+    0010..0016  invoke-virtual  {v0}, Ljava/util/AbstractCollection;->size()I
+    0016..0018  move-result  v0
+    0018..001a  add-int/2addr  v1, v0
+    001a..001e  const/16  v0, #0x7d0
+    001e..0024  invoke-static  {v0, v5}, Ljava/lang/Math;->min(II)I
+    0024..0026  move-result  v0
+    0026..002c  invoke-static  {v1, v0}, Ljava/lang/Math;->min(II)I
+    002c..002e  move-result  v2
+    002e..0034  invoke-virtual  {v3}, Ljava/util/AbstractCollection;->size()I
+    0034..0036  move-result  v1
+    0036..003a  iget  v0, v4, LX/1iV;->A01:I
+    003a..003e  if-lt  v1, v0, +0x16
+    003e..0044  invoke-virtual  {v3}, Ljava/util/AbstractCollection;->size()I
+    0044..0046  move-result  v0
+    0046..004a  if-ge  v0, v5, +0x10
+    004a..004e  if-lez  v6, +0x17
+    004e..0052  iget  v1, v4, LX/1iV;->A01:I
+    0052..0058  invoke-virtual  {v3}, Ljava/util/AbstractCollection;->size()I
+    0058..005a  move-result  v0
+    005a..0060  invoke-static  {v6, v0}, Ljava/lang/Math;->max(II)I
+    0060..0062  move-result  v0
+    0062..0066  if-lt  v1, v0, +0xb
+    0066..006c  invoke-virtual  {v3}, Ljava/util/AbstractCollection;->size()I
+    006c..006e  move-result  v0
+    006e..0074  invoke-static  {v2, v0}, Ljava/lang/Math;->min(II)I
+    0074..0076  move-result  v0
+    0076..0078  return  v0
+    0078..007a  return  v2
+    # exception table: 0 try range(s)
+.end method

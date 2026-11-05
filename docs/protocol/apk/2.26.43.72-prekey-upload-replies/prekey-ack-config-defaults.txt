@@ -1,0 +1,45 @@
+
+# class: LX/1hy;
+# extends: Ljava/lang/Object;
+
+.method public <clinit>(V)  # .registers 5
+    # full signature: LX/1hy;-><clinit>()V
+    0000..0006  const  v1, #0x86ff
+    0006..0008  const/4  v4, #0x0
+    0008..000c  new-instance  v0, LX/00f;
+    000c..0012  invoke-direct  {v0, v1, v4, v4}, LX/00f;-><init>(IZZ)V
+    0012..0016  sput-object  v0, LX/1hy;->A00:LX/00f;
+    0016..001c  const  v1, #0x98e7
+    001c..001e  const/4  v3, #0x1
+    001e..0022  new-instance  v0, LX/00f;
+    0022..0028  invoke-direct  {v0, v1, v4, v3}, LX/00f;-><init>(IZZ)V
+    0028..002c  sput-object  v0, LX/1hy;->A01:LX/00f;
+    002c..0032  const  v2, #0x8709
+    0032..0038  const  v1, #0xea60
+    0038..003c  new-instance  v0, LX/0AB;
+    003c..0042  invoke-direct  {v0, v2, v1, v1}, LX/0AB;-><init>(III)V
+    0042..0046  sput-object  v0, LX/1hy;->A03:LX/0AB;
+    0046..004c  const  v1, #0x882e
+    004c..0050  new-instance  v0, LX/0AB;
+    0050..0056  invoke-direct  {v0, v1, v4, v4}, LX/0AB;-><init>(III)V
+    0056..005a  sput-object  v0, LX/1hy;->A04:LX/0AB;
+    005a..0060  const  v1, #0x882f
+    0060..0064  new-instance  v0, LX/0AB;
+    0064..006a  invoke-direct  {v0, v1, v4, v4}, LX/0AB;-><init>(III)V
+    006a..006e  sput-object  v0, LX/1hy;->A05:LX/0AB;
+    006e..0074  const  v2, #0x8294
+    0074..0078  const/16  v1, #0x2710
+    0078..007c  new-instance  v0, LX/0AB;
+    007c..0082  invoke-direct  {v0, v2, v1, v1}, LX/0AB;-><init>(III)V
+    0082..0086  sput-object  v0, LX/1hy;->A06:LX/0AB;
+    0086..008c  const  v1, #0x989a
+    008c..0090  new-instance  v0, LX/0AB;
+    0090..0096  invoke-direct  {v0, v1, v4, v4}, LX/0AB;-><init>(III)V
+    0096..009a  sput-object  v0, LX/1hy;->A07:LX/0AB;
+    009a..009e  const/16  v1, #0x7c82
+    009e..00a2  new-instance  v0, LX/00f;
+    00a2..00a8  invoke-direct  {v0, v1, v4, v3}, LX/00f;-><init>(IZZ)V
+    00a8..00ac  sput-object  v0, LX/1hy;->A02:LX/00f;
+    00ac..00ae  return-void
+    # exception table: 0 try range(s)
+.end method

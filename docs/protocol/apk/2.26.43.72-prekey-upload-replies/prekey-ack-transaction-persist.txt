@@ -1,0 +1,104 @@
+
+# class: LX/1iV;
+# extends: Ljava/lang/Object;
+
+.method public A0I(VLL)  # .registers 15
+    # full signature: LX/1iV;->A0I(LX/0aq;Ljava/util/List;)V
+    0000..0002  const/4  v0, #0x1
+    0002..0008  invoke-static  {v14, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-interface  {v14}, Ljava/util/List;->isEmpty()Z
+    000e..0010  move-result  v0
+    0010..0014  if-nez  v0, +0x16
+    0014..001a  invoke-direct  {v12}, LX/1iV;->A08()Z
+    001a..001c  move-result  v0
+    001c..0020  if-eqz  v0, +0x11
+    0020..0026  invoke-interface  {v14}, Ljava/util/List;->size()I
+    0026..0028  move-result  v1
+    0028..002c  const/16  v0, #0x18
+    002c..0030  new-instance  v2, LX/Fec;
+    0030..0036  invoke-direct  {v2, v12, v1, v0}, LX/Fec;-><init>(Ljava/lang/Object;II)V
+    0036..003c  invoke-virtual  {v13, v2}, LX/0aq;->A04(Ljava/lang/Runnable;)V
+    003c..003e  return-void
+    003e..0042  iget-object  v0, v12, LX/1iV;->A09:LX/05a;
+    0042..0046  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0046..004c  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    004c..004e  move-result-object  v2
+    004e..0052  check-cast  v2, LX/1iY;
+    0052..0056  const-string  v7, "preacks"
+    0056..005a  const/16  v1, #0x4e3
+    005a..005e  iget-object  v0, v2, LX/1iY;->A01:LX/05a;
+    005e..0062  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0062..0068  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0068..006a  move-result-object  v0
+    006a..006e  check-cast  v0, LX/00X;
+    006e..0074  invoke-virtual  {v0}, LX/00X;->A01()LX/00Y;
+    0074..0076  move-result-object  v0
+    0076..007a  check-cast  v0, LX/00Z;
+    007a..0080  invoke-static  {v0, v1}, LX/09H;->A03(LX/00Y;I)Ljava/lang/Object;
+    0080..0082  move-result-object  v6
+    0082..0086  check-cast  v6, LX/0B0;
+    0086..008c  invoke-interface  {v14}, Ljava/util/List;->isEmpty()Z
+    008c..008e  move-result  v0
+    008e..0092  if-eqz  v0, +0x1a
+    0092..0096  sget-object  v5, LX/01k;->A00:LX/01k;
+    0096..009c  invoke-interface  {v5}, Ljava/util/List;->isEmpty()Z
+    009c..009e  move-result  v0
+    009e..00a2  if-nez  v0, -0x31
+    00a2..00a8  invoke-static  {v12}, LX/1iV;->A01(LX/1iV;)I
+    00a8..00aa  move-result  v0
+    00aa..00ac  const/4  v1, #0x0
+    00ac..00b0  if-lez  v0, +0x3
+    00b0..00b2  const/4  v1, #0x1
+    00b2..00b6  const/16  v0, #0xb
+    00b6..00ba  new-instance  v2, LX/TB5;
+    00ba..00c0  invoke-direct  {v2, v5, v12, v0, v1}, LX/TB5;-><init>(Ljava/lang/Object;Ljava/lang/Object;IZ)V
+    00c0..00c2  goto  -0x45
+    00c2..00c8  invoke-static  {v2}, LX/1iY;->A01(LX/1iY;)Z
+    00c8..00cc  new-instance  v5, Ljava/util/ArrayList;
+    00cc..00d2  invoke-direct  {v5}, Ljava/util/ArrayList;-><init>()V
+    00d2..00d6  const/16  v0, #0x40
+    00d6..00da  new-instance  v4, Ljava/io/ByteArrayOutputStream;
+    00da..00e0  invoke-direct  {v4, v0}, Ljava/io/ByteArrayOutputStream;-><init>(I)V
+    00e0..00e6  invoke-interface  {v14}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    00e6..00e8  move-result-object  v11
+    00e8..00ee  invoke-interface  {v11}, Ljava/util/Iterator;->hasNext()Z
+    00ee..00f0  move-result  v0
+    00f0..00f4  if-eqz  v0, +0x43
+    00f4..00fa  invoke-interface  {v11}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    00fa..00fc  move-result-object  v3
+    00fc..0100  check-cast  v3, LX/1vZ;
+    0100..0104  new-instance  v9, Landroid/content/ContentValues;
+    0104..010a  invoke-direct  {v9}, Landroid/content/ContentValues;-><init>()V
+    010a..010e  iget-object  v8, v3, LX/1vZ;->A01:LX/0Tp;
+    010e..0114  invoke-static  {v8, v4}, LX/27E;->A01(LX/0Tp;Ljava/io/ByteArrayOutputStream;)[B
+    0114..0116  move-result-object  v1
+    0116..011a  const-string  v0, "ptn"
+    011a..0120  invoke-virtual  {v9, v0, v1}, Landroid/content/ContentValues;->put(Ljava/lang/String;[B)V
+    0120..0124  iget-object  v2, v13, LX/0aq;->A02:LX/0KU;
+    0124..0128  const-string  v1, "PreacksStore/INSERT_IN_TRANSACTION"
+    0128..012a  const/4  v0, #0x3
+    012a..0130  invoke-virtual  {v2, v7, v1, v9, v0}, LX/0KU;->A09(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;I)J
+    0130..0132  move-result-wide  v9
+    0132..0136  const-wide/16  v1, #0x0
+    0136..013a  cmp-long  v0, v9, v1
+    013a..013e  if-ltz  v0, -0x29
+    013e..0142  iget-wide  v1, v3, LX/1vZ;->A00:J
+    0142..0148  invoke-static  {v9, v10}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0148..014a  move-result-object  v3
+    014a..014e  new-instance  v0, LX/1vZ;
+    014e..0154  invoke-direct  {v0, v8, v3, v1, v2}, LX/1vZ;-><init>(LX/0Tp;Ljava/lang/Long;J)V
+    0154..015a  invoke-virtual  {v5, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    015a..015c  goto  -0x39
+    015c..015e  move-exception  v2
+    015e..0162  const-string  v0, "PreacksStore/insertInTransaction failed to persist pre-ack"
+    0162..0168  invoke-static  {v0, v2}, LX/00L;->A08(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0168..016c  const-string  v1, "failed_to_persist_pre_ack_txn"
+    016c..016e  const/4  v0, #0x0
+    016e..0174  invoke-virtual  {v6, v1, v0, v2}, LX/0B0;->A0e(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+    0174..0176  goto  -0x46
+    0176..017c  invoke-virtual  {v5}, Ljava/util/AbstractCollection;->size()I
+    017c..0182  invoke-interface  {v14}, Ljava/util/List;->size()I
+    0182..0184  goto  -0x76
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/Exception; code_units 0080..00ae -> 00ae
+.end method

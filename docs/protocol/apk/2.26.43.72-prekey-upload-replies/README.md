@@ -1814,3 +1814,120 @@ Exports:
 - [prekey-ack-ping-root.txt](prekey-ack-ping-root.txt): `e7bcf562b6d84960044e5cab5394998726164c1210dda625c0ef3094c1e7f251`
 - [prekey-ack-ping-timeout-registration.txt](prekey-ack-ping-timeout-registration.txt): `99acfbec072ba7b3e3cd1818627a04fa3664293655cc0a429564b416f57dfee8`
 - [prekey-ack-ping-type.txt](prekey-ack-ping-type.txt): `203fcd9e64b071140ef6579afb8cceada18c23762247371686f9889150e55be8`
+
+## Pre-ACK reload, capacity and connection-generation ownership (2026-11-04)
+
+**Confirmed static**, pinned43.72 SHA256 reverified. Checked DEX exports only;
+no live branch/configuration values or REA Evidence envelopes are claimed.
+
+### Configuration and initial load
+
+1hy.<clinit> declares A04(property0x882e) andA05(0x882f) integer descriptor
+values0/0; these are the replay window and cap read by1iV.A01/A02. A03(0x8709)
+declares60000/60000 for ping scheduling, A06(0x8294)10000/10000 for periodic
+flush (clamped at least100ms byA05), andA07(0x989a)0/0. A00 Boolean0x86ff is
+constructed withfalse,false. A01(0x98e7) andA02(0x7c82) usefalse,true; which
+Boolean member is default/alternate is not inferred here. Effective MobileConfig
+and runtime descriptor overrides remain unknown; these are not new Rust defaults.
+
+The retained2JI.run selector41 targets1fac. It reads the current window and:
+
+- Window<=0: calls1iY.A01 dictionary check, then selects all _id,ptn rows ORDER BY
+  _id. Normal results append toA0J and its size becomesA01 (persisted count).
+  Caught load exceptions log failed_to_load_pre_acks and supply an empty result.
+- Positive window: counts total rows (clamped0..i32::MAX), loads the oldest
+  configured page ORDER BY _id LIMIT?, then can advance by WHERE _id>lastRowId
+  when the decoded page is empty but a last row ID exists. It gives up after
+  eight skipped pages. Count and page operations share an Fbg resource scope;
+  its precise SQLite isolation/transaction semantics are not established here.
+  The resulting list appends toA0J, total count becomesA01, andA06 records
+  whether a nonempty loaded page is present. Normal branches release A0C latch;
+  unexpected exceptions outside the selected catches are not claimed to do so.
+
+Previously retained1iY.A00 preserves the last visited SQLite ID even when the
+node decoder returnsnull and skips adding that row. Loaded1vZ has its persisted
+row ID and loggable ID=-1; it does not invent an original live loggable ID.
+1iY.A01 compares wa_dictionary_version with3, updates it when different, and
+for an old nonzero version other than3 deletes the preacks table and returns
+true. Old0 or3 does not take that delete branch. This is pre-ACK codec migration,
+not authority to reset identities, prekeys, business records or raw captures.
+The preference apply and SQL deletion are not shown as one atomic migration.
+Value3 is a storage preference, not an APK release or proof of wire-dictionary
+compatibility between builds.
+
+### Selection, periodic capacity pruning and transaction insertion
+
+The newly retained1iV.A00 computes min(pending+loaded, min(2000,window)). It can
+restrict that count to loaded rows when not all persisted rows are loaded, the
+loaded window is full, or the configured cap condition is reached. Together with
+A0D (persisted first, then pending), it does not authorize leapfrogging an unseen
+persisted prefix with newly produced ACKs. Nonpositive-mode last2000 selection
+remains as previously documented; no unconditional cap2000 on the database is
+inferred.
+
+2JI selector42 targets1d76: it flushesA0F, callsA04, then with positive cap
+prunes persisted rows when total exceeds max(cap,loadedWindow.size). Its SQL
+selects IDs above the oldest retained boundary but deletes ORDER BY _id DESC,
+LIMIT500 each pass. Thus it prunes the newest excess rows, not the oldest
+unconfirmed prefix. It updates counts and reschedulesA05 even on its selected
+exception path. Corrupt-page handling and cap pruning must not be merged into
+confirmation-based retirement.
+
+A separate1iV.A0I(0aq,List) path inserts serialized ptn values using the supplied
+SQLite wrapper, creates row-ID-bearing1vZ wrappers for nonnegative insert IDs,
+and registers TB5 selector11 through0aq.A04; the capacity path registersFec24.
+0aq.A04 asserts inTransaction and registers an MZH adapter through0HC.A00.
+Its exact commit/rollback callback semantics remain a next boundary; registering
+this callback is not yet proof that it runs only after a successful commit.
+The captured filename prekey-ack-transaction-persist.txt describes this method;
+it is not an epoch snapshot API.
+
+### Connection generation and sent cursor
+
+1iV.A0A under a monitor clears sent row watermarkA04, clearsA05 and increments
+A03, returning that connection generation. This is an in-memory replay epoch,
+not AccountGeneration or a durable registration/identity epoch.
+
+A0K(marker,generation), logged onBatchSent, compares that generation withA03.
+A stale callback leaves the cursor alone. A matching persisted marker stores
+its row ID inA04; a marker without a row ID instead setsA05=true. This method
+marks sending progress; it does not itself delete SQL rows.
+
+A0G(generation) clears the replay-deferred hold (A02=-1) only when the generation
+matches; stale callbacks leave the current hold unchanged. A0H schedules Fec25.
+Fec.run selector25->0154 rechecks generation at execution, reads A04, and if
+present removes loaded entries at/below that row ID then calls1iY.A02's
+cumulative SQL delete. Its updated persisted count is never below loaded size.
+Thus the generation check remains inside delayed retirement, not merely at
+scheduling time. Serialization against a simultaneous A0A epoch change is not
+proved by that entry check alone. Sent cursor and clear-hold initialization callers, FcN's other
+watermark write and complete batch delivery authority remain open.
+
+**Port implications:** future Rust ACK recovery must distinguish durable row ID,
+loggable ID, account generation, connection generation, loaded/pending windows,
+sent cursor and confirmed retirement. Neither an empty loaded page nor a stale
+connection callback authorizes clearing the queue. Declared defaults and these
+selected methods do not establish full current-build replay/lifecycle parity.
+No Rust recovery, send, reset, replay, wait or deletion policy changed here.
+
+Independent SQL check: [preack_sql_reference.py](../../oracles/preack_sql_reference.py)
+executes the retained predicates against in-memory synthetic rows with gaps in
+row IDs. [Fixture](../../../../crates/whatsapp-api/fixtures/prekeys/2.26.43.72-preack-sql-reference.json)
+checks strict-after paging, cumulative<= retirement, and pruning1205 rows to200
+in newest-first delete batches500,500,5, preserving the oldest200. This verifies
+SQLite predicate semantics only, not native callback, codec, load or crash parity.
+Command: python3 docs/protocol/oracles/preack_sql_reference.py --check.
+
+Exports:
+
+- [prekey-ack-config-defaults.txt](prekey-ack-config-defaults.txt): `fdba4733593018a8fb594ee2b49a767e4e0aa3c5c8dee10e2ae2ca0be86eca09`
+- [prekey-ack-epoch-begin.txt](prekey-ack-epoch-begin.txt): `0debb61a95c3ba5fee275f4d0e4462a2b609a33465599c85dbc270fc7a7a4c4c`
+- [prekey-ack-epoch-retirement.txt](prekey-ack-epoch-retirement.txt): `edabfc9f78bb58af1f7d10dda3c2f9d597e886421b147296e93bf9b68dfd6551`
+- [prekey-ack-epoch-worker.txt](prekey-ack-epoch-worker.txt): `3c62379a77a87336b3e9ab0acabb9e9ee57ee833a20a910557376ad12f9b5770`
+- [prekey-ack-loader-worker.txt](prekey-ack-loader-worker.txt): `1f2028887956226083d0595ed98d5c118d82ed2b419d4a7f39353a3d8e4d5c0a`
+- [prekey-ack-replay-clear-hold.txt](prekey-ack-replay-clear-hold.txt): `1261b91c08208fa33c1fe474fe38712b2f4fb6f062fed33928d928ed2ff39543`
+- [prekey-ack-replay-selection.txt](prekey-ack-replay-selection.txt): `fbcda8d018559fac515357ddec02a7673b8955f282d3dc0cf47d22d81cda4d0a`
+- [prekey-ack-sent-snapshot.txt](prekey-ack-sent-snapshot.txt): `48b423d8cb97aff3267834c8d01daf98b1282b841323adcbd3984e823a326d9e`
+- [prekey-ack-sent-watermark-writes.txt](prekey-ack-sent-watermark-writes.txt): `a0aa1aa1bb968db4c1a9cbff69ab833c09e84a89984cda159a8e29e3f8e48572`
+- [prekey-ack-transaction-callback.txt](prekey-ack-transaction-callback.txt): `e2d49eb8be1f175c28e9be6e9fab47443f8dd34fa7ba92a9d02c6eabc5c31088`
+- [prekey-ack-transaction-persist.txt](prekey-ack-transaction-persist.txt): `844a43d0a263b4032a91a35b6bb4ee40eafdde0e1a3bb9af3de98180a882d935`

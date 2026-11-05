@@ -1,0 +1,22 @@
+
+# class: LX/1iV;
+# extends: Ljava/lang/Object;
+
+.method public A0A(I)  # .registers 2
+    # full signature: LX/1iV;->A0A()I
+    0000..0002  monitor-enter
+    0002..0004  const/4  v0, #0x0
+    0004..0008  iput-object  v0, v1, LX/1iV;->A04:Ljava/lang/Long;
+    0008..000a  const/4  v0, #0x0
+    000a..000e  iput-boolean  v0, v1, LX/1iV;->A05:Z
+    000e..0012  iget  v0, v1, LX/1iV;->A03:I
+    0012..0016  add-int/lit8  v0, v0, #0x1
+    0016..001a  iput  v0, v1, LX/1iV;->A03:I
+    001a..001c  monitor-exit
+    001c..001e  return  v0
+    001e..0020  move-exception  v0
+    0020..0022  monitor-exit
+    0022..0024  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0002..000d -> 000f
+.end method

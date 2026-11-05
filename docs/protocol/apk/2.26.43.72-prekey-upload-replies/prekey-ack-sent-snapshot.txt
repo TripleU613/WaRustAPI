@@ -1,0 +1,28 @@
+
+# class: LX/1iV;
+# extends: Ljava/lang/Object;
+
+.method public A0K(VLI)  # .registers 4
+    # full signature: LX/1iV;->A0K(LX/1vZ;I)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  monitor-enter
+    000a..000e  iget  v0, v1, LX/1iV;->A03:I
+    000e..0012  if-eq  v0, v3, +0x8
+    0012..0016  const-string  v0, "PreacksQueue/onBatchSent superseded by a reconnect, leaving the cursor alone"
+    0016..001c  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    001c..001e  goto  +0xb
+    001e..0022  iget-object  v0, v2, LX/1vZ;->A02:Ljava/lang/Long;
+    0022..0026  if-nez  v0, +0x6
+    0026..0028  const/4  v0, #0x1
+    0028..002c  iput-boolean  v0, v1, LX/1iV;->A05:Z
+    002c..002e  goto  +0x3
+    002e..0032  iput-object  v0, v1, LX/1iV;->A04:Ljava/lang/Long;
+    0032..0034  monitor-exit
+    0034..0036  return-void
+    0036..0038  move-exception  v0
+    0038..003a  monitor-exit
+    003a..003c  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0005..0019 -> 001b
+.end method

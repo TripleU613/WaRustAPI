@@ -1,0 +1,31 @@
+{
+  "scope": "synthetic SQLite semantics only; not native queue/callback or node-codec parity",
+  "source": "APK 2.26.43.72 1iY.A02/A03 and 2JI.run selector42",
+  "row_ids": {
+    "count": 1205,
+    "first": 7,
+    "stride": 3
+  },
+  "strict_after_page": [
+    607,
+    610,
+    613
+  ],
+  "retirement": {
+    "watermark": 55,
+    "deleted": 17,
+    "next": 58
+  },
+  "pruning": {
+    "cap": 200,
+    "limit_per_delete": 500,
+    "deleted_per_pass": [
+      500,
+      500,
+      5
+    ],
+    "kept": 200,
+    "first": 7,
+    "last": 604
+  }
+}

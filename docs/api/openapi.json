@@ -15534,5 +15534,20 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#confirmation-ping-request-and-independent-timeout-2026-11-04",
     "description": "Keepalive owns an admission-time response deadline instead of expiring on the next heartbeat phase after delayed maintenance writes. Existing configured duration, IQ shape, result/error correlation and recoverable timeout classification are retained. Native pre-ACK ping callback timing is separate from this local correction; no durable ACK replay, new route or live validation. Awaited writes can still delay observing expiry."
+  },
+  "x-preack-reload-epoch-evidence": {
+    "x-cli": {
+      "commands": [
+        "xtask apk-smali APK --class CLASS --method METHOD --signatures --exceptions",
+        "python3 docs/protocol/oracles/preack_sql_reference.py --check"
+      ],
+      "description": "Offline developer evidence and synthetic in-memory SQLite oracle; no WhatsApp command or HTTP route added"
+    },
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#pre-ack-reload-capacity-and-connection-generation-ownership-2026-11-04",
+    "description": "Native reload modes, dictionary-version invalidation, declared window/cap/flush values, newest-first capacity pruning and connection-generation sent cursor/retirement checks traced. Synthetic SQL fixture verifies predicates, not callback/codec or live policy parity. Effective config, transaction callback semantics, full replay ownership and epoch serialization remain open. No Rust ACK recovery, sends, deletion or timing behavior changed."
   }
 }

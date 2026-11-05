@@ -1415,3 +1415,24 @@ purpose). [Request, timer methods and regression limits](apk/2.26.43.72-prekey-u
 The native pre-ACK delay does not replace Rust's local keepalive setting. This
 does not port durable ACK replay/retirement, or guarantee timely observation
 while the actor is blocked in a write. No live operation was performed.
+
+### Pre-ACK reload and replay-generation ownership (2026-11-04)
+
+**Confirmed static,43.72:** initial load has unbounded and oldest-window modes;
+window mode tracks total persisted count separately and can skip up to eight
+empty decoded pages. Reload preserves SQLite IDs with loggableID=-1. The store
+compares dictionary version3 and deletes incompatible nonzero-version pre-ACK
+rows; this is not identity/key reset authority. Declared descriptor values are
+retained, while effective configuration remains unknown.
+
+Replay generation initialization clears the sent watermark and increments an
+in-memory connection counter. Mark-sent, clear-deferred and delayed retirement
+check that generation; a watermark is not an account-generation or stanza ID.
+Capacity SQL prunes newest excess rows in batches500, preserving the oldest
+prefix. An independent synthetic SQLite oracle verifies strict-after paging,
+cumulative retirement and that pruning direction. [Exact boundaries,11 new
+exports and oracle](apk/2.26.43.72-prekey-upload-replies/README.md#pre-ack-reload-capacity-and-connection-generation-ownership-2026-11-04).
+
+A supplied-transaction insertion path also exists, but its callback commit/
+rollback semantics and full replay-batch ownership remain unfinished. No Rust
+send/replay/deletion, socket order, timer or account behavior changed here.

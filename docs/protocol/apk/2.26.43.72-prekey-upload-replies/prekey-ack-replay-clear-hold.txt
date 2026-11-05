@@ -1,0 +1,31 @@
+
+# class: LX/1iV;
+# extends: Ljava/lang/Object;
+
+.method public A0G(VI)  # .registers 4
+    # full signature: LX/1iV;->A0G(I)V
+    0000..0002  monitor-enter
+    0002..0006  iget  v0, v2, LX/1iV;->A03:I
+    0006..000a  if-eq  v0, v3, +0x9
+    000a..000e  const-string  v0, "PreacksQueue/clearReplayDeferred superseded by a reconnect, leaving the hold alone"
+    000e..0014  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0014..0016  monitor-exit
+    0016..0018  return-void
+    0018..001a  const/4  v0, #0xff (-1)
+    001a..001e  iput  v0, v2, LX/1iV;->A02:I
+    001e..0020  monitor-exit
+    0020..0024  const-string  v1, "PreacksQueue/clearReplayDeferred generation="
+    0024..0028  new-instance  v0, Ljava/lang/StringBuilder;
+    0028..002e  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    002e..0034  invoke-virtual  {v0, v3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0034..003a  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    003a..003c  move-result-object  v0
+    003c..0042  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0042..0044  return-void
+    0044..0046  move-exception  v0
+    0046..0048  monitor-exit
+    0048..004a  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0001..000a -> 0022
+    # catch <all> code_units 000c..000f -> 0022
+.end method
