@@ -1,0 +1,48 @@
+
+# class: LX/EHq;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLLI)  # .registers 8
+    # full signature: LX/EHq;->A00(Ljava/lang/Exception;[BI)LX/EtY;
+    0000..0004  if-eqz  v5, +0x7
+    0004..0008  const-string  v0, "axolotl"
+    0008..000e  invoke-static  {v0, v5}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;Ljava/lang/Throwable;)V
+    000e..0010  const/4  v4, #0x0
+    0010..0014  if-nez  v7, +0x39
+    0014..0018  if-eqz  v6, +0x2f
+    0018..001a  array-length  v3, v6
+    001a..001e  if-eqz  v3, +0x2c
+    001e..0020  const/4  v2, #0x0
+    0020..0024  add-int/lit8  v0, v3, #0xff (-1)
+    0024..0028  aget-byte  v0, v6, v0
+    0028..002c  and-int/lit16  v0, v0, #0xff
+    002c..0030  if-nez  v0, +0xf
+    0030..0034  const-string  v0, "SignalCoordinatorDefault/removePadding/ axolotl derived plaintext has invalid padding"
+    0034..003a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    003a..003e  const/16  v1, #0xd8f0 (-10000)
+    003e..0042  new-instance  v0, LX/EtY;
+    0042..0048  invoke-direct  {v0, v4, v1}, LX/EtY;-><init>([BI)V
+    0048..004a  return-object  v0
+    004a..004e  if-lt  v0, v3, +0x5
+    004e..0052  const-string  v0, "SignalCoordinatorDefault/removePadding/ axolotl derived entire plaintext as padding"
+    0052..0054  goto  -0xf
+    0054..0056  sub-int/2addr  v3, v0
+    0056..005a  new-array  v1, v3, [B
+    005a..0060  invoke-static  {v6, v2, v1, v2, v3}, Ljava/lang/System;->arraycopy(Ljava/lang/Object;ILjava/lang/Object;II)V
+    0060..0062  array-length  v0, v1
+    0062..0066  if-eqz  v0, -0x14
+    0066..006a  new-instance  v0, LX/EtY;
+    006a..0070  invoke-direct  {v0, v1, v2}, LX/EtY;-><init>([BI)V
+    0070..0072  return-object  v0
+    0072..0076  const-string  v0, "SignalCoordinator/createDecryptionResult axolotl derived null or empty plaintext from message"
+    0076..007c  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    007c..0080  const/16  v1, #0xfc18 (-1000)
+    0080..0082  goto  -0x21
+    0082..0086  if-eqz  v5, +0x6
+    0086..008c  invoke-virtual  {v5}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    008c..008e  move-result-object  v4
+    008e..0092  new-instance  v0, LX/EtY;
+    0092..0098  invoke-direct  {v0, v4, v7}, LX/EtY;-><init>(Ljava/lang/String;I)V
+    0098..009a  return-object  v0
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,86 @@
+{
+  "README.md": {
+    "bytes": 5940,
+    "sha256": "964c4cc804f6061254fa9438255f9ef447301209491ce15676f92a4bf0435a60"
+  },
+  "crypto-result-factory.txt": {
+    "bytes": 2401,
+    "sha256": "c5a21acf306790985713711965aa4baca52d9f1f19ea51b59ab0960b759fda06"
+  },
+  "crypto-result-to-kind.txt": {
+    "bytes": 9075,
+    "sha256": "6d05b6b977fa65919f9217099141ba818d734db008d3c8930acde2c889fd0130"
+  },
+  "crypto-result.txt": {
+    "bytes": 3741,
+    "sha256": "96335c64f12131cc610c6250ede0bdf0ac0a20db1d8907f9525775869e55867d"
+  },
+  "decrypt-retry-dispatch.txt": {
+    "bytes": 7353,
+    "sha256": "b9595a00141f48fc68773a6b8f45c568ae05bbe09dff96200a0bdb021d0fd090"
+  },
+  "direct-wire-code-producer.txt": {
+    "bytes": 34676,
+    "sha256": "8ff5608e9a99aa23d70f0320309334cf1c6696e1e6e22a0820d53ee307c1a327"
+  },
+  "exception-ED4.txt": {
+    "bytes": 323,
+    "sha256": "821cfe996b76e7484ac2a116c7f6bd676b7fc48b575fa996679a1839ea3baea9"
+  },
+  "exception-EDQ.txt": {
+    "bytes": 554,
+    "sha256": "cb2d65c18267fe5e341980c5b99f92c53bbc8618fdae2ca7ca6dcdf43b1fb3b5"
+  },
+  "exception-EDR.txt": {
+    "bytes": 601,
+    "sha256": "ba5d9849c4d6d6794b2833ec6689efcc85f4c4b6cdc8f4cb355685ca7cda86fb"
+  },
+  "exception-EDY.txt": {
+    "bytes": 1361,
+    "sha256": "f9f393ab13f52fb5f2f3fb4b859f5f757c1165188d5959af9fc6572d1208ea43"
+  },
+  "failure-kind-to-wire.txt": {
+    "bytes": 1050,
+    "sha256": "ea88173ff8d84dc30d2819c05b90d9f4c84c1650bb1ea680ebe018fd8733afed"
+  },
+  "failure-kind-writers.txt": {
+    "bytes": 725,
+    "sha256": "8965ac1adf60a83ac1350c8fcedcd308f4e8e139c5450365909028e9816216d9"
+  },
+  "message-admission.txt": {
+    "bytes": 51115,
+    "sha256": "21d5385c117c4d0467f78f389a0f4923413c11e6c51e3ea7c6294c2e7ddfbf52"
+  },
+  "message-processing-kind.txt": {
+    "bytes": 29562,
+    "sha256": "bda6ab8a474613c42177180882f499273691bdb3f46cbe6d59a06c1d0c0382d2"
+  },
+  "nonpersistable-callers.txt": {
+    "bytes": 136,
+    "sha256": "bcb775f6020a718abc29e0229aa98c45223c0901765a766712216f9bddeaec66"
+  },
+  "nonpersistable-forwarder.txt": {
+    "bytes": 2963,
+    "sha256": "462530476823742df48cc36d207eb7e6ec2dfd54808b9cfbb4e5ce12a9b0de55"
+  },
+  "prefix-predicate.txt": {
+    "bytes": 476,
+    "sha256": "e29ad802bd5333310726917ac1a173cbc13eef3e5f5478f12bcbf9406f818c64"
+  },
+  "prekey-decrypt-result.txt": {
+    "bytes": 10091,
+    "sha256": "86de9dcdef5eb5cf20fee73aa719e2393d339068674c442c373074238fdf5df9"
+  },
+  "result-retry-dispatch.txt": {
+    "bytes": 4987,
+    "sha256": "d45ec94f566e2f813a28c99829cfc783e1cffbe753f0d967fed039a9b25cd237"
+  },
+  "retry-entry-callers.txt": {
+    "bytes": 343,
+    "sha256": "29cd2422114c3118eb5dd1064c590180f7d3347bf439c18022cc372228f3e284"
+  },
+  "signal-result-callers.txt": {
+    "bytes": 612,
+    "sha256": "46a4633ff71d3b3e7e205ac9a761293b1429e08c70bf1a99cb1a202906d6c0ca"
+  }
+}

@@ -1,0 +1,17 @@
+
+# class: LX/EDQ;
+# extends: Ljava/lang/Exception;
+
+.method public <init>(V)  # .registers 1
+    # full signature: LX/EDQ;-><init>()V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Exception;-><init>()V
+    0006..0008  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VL)  # .registers 2
+    # full signature: LX/EDQ;-><init>(Ljava/lang/String;)V
+    0000..0006  invoke-direct  {v0, v1}, Ljava/lang/Exception;-><init>(Ljava/lang/String;)V
+    0006..0008  return-void
+    # exception table: 0 try range(s)
+.end method

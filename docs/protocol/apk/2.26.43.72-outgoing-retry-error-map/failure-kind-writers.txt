@@ -1,0 +1,18 @@
+classes8.dex  LX/F0b;->A00(VLLLLLL)
+  write opcode 0x59, dex byte offset: 0x641008
+classes8.dex  LX/F2q;->A01(LLLLLLLZ)
+  write opcode 0x59, dex byte offset: 0x689fa8
+classes8.dex  LX/F2q;->A04(VLLL)
+  write opcode 0x59, dex byte offset: 0x68b074
+classes8.dex  LX/F2q;->A04(VLLL)
+  write opcode 0x59, dex byte offset: 0x68b140
+classes8.dex  LX/F2q;->A09(VLLL)
+  write opcode 0x59, dex byte offset: 0x68bad2
+classes8.dex  LX/F2q;->A0A(VLLLII)
+  write opcode 0x59, dex byte offset: 0x68bce6
+classes8.dex  LX/F2q;->A0A(VLLLII)
+  write opcode 0x59, dex byte offset: 0x68bd44
+classes8.dex  LX/Fc1;->run(V)
+  write opcode 0x59, dex byte offset: 0x7f21a2
+classes8.dex  LX/Fc1;->run(V)
+  write opcode 0x59, dex byte offset: 0x7f2872

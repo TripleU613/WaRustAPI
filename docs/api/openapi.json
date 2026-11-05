@@ -1,5 +1,11 @@
 {
   "openapi": "3.1.0",
+  "x-outgoing-retry-error-domain-audit": {
+    "x-cli": false,
+    "x-transport": "offline outgoing retry error and eligibility research",
+    "x-live": false,
+    "description": "APK43.72 EtY eligible crypto-status set ->F2q internal F1Z.A00 kind ->DxB wire error recovered, plus status=-1005 message refinements. Native MAC category reaches wire7, signature category wire5 only through their guarded producer path. Nonpersistent/device producers can supply wire11/12/13 directly, so DxB default0/max11 are not universal request policy. Generic Rust Undecryptable loses typed cause and eligibility before queueing; production propagation/mapping remains unfinished. No runtime behavior, route, default error or live acceptance claim. docs/protocol/outgoing-retry-receipts.md"
+  },
   "x-outgoing-retry-original-timestamp": {
     "x-cli": false,
     "x-transport": "normal and comparison automatic outgoing retry receipt queue",

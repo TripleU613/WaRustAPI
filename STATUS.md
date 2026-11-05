@@ -1,3 +1,10 @@
+2026-11-05 — **Outgoing retry error domains/eligibility mapped.**
+
+Crypto status, internal failure kind and wire error are distinct; selected
+crypto eligibility and guarded refinements recovered. Other producers bypass
+the converter. [Evidence and remaining typed-cause work](docs/protocol/outgoing-retry-receipts.md#error-domains-and-eligibility-recovered--2026-11-05).
+No blanket error default, runtime behavior change or live traffic.
+
 2026-11-05 — **Outgoing retries now preserve original message timestamp.**
 
 Automatic retry.t uses failed message root t instead of local queue time.

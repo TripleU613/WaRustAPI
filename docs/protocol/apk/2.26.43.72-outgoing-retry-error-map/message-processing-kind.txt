@@ -1,0 +1,555 @@
+
+# class: LX/F0b;
+# extends: Ljava/lang/Object;
+
+.method public A00(VLLLLLL)  # .registers 26
+    # full signature: LX/F0b;->A00(LX/FUe;LX/Dxs;LX/1k2;LX/DiW;LX/F0b;[B)V
+    0000..0004  move-object/from16  v3, v24
+    0004..0008  iget-object  v2, v3, LX/F0b;->A09:LX/EdS;
+    0008..000c  iget-object  v1, v3, LX/F0b;->A04:LX/E0A;
+    000c..000e  const/4  v0, #0x1
+    000e..0010  const/4  v5, #0x3
+    0010..0014  move-object/from16  v4, v25
+    0014..001a  invoke-static  {v4, v5}, LX/00l;->A09(Ljava/lang/Object;I)V
+    001a..001e  move-object/from16  v6, v21
+    001e..0024  invoke-virtual  {v6}, LX/F1Z;->A08()Lcom/whatsapp/infra/core/jid/UserJid;
+    0024..0026  move-result-object  v5
+    0026..002a  const-string  v4, "SharedMessageProcessor/processRegularMessage, senderJid="
+    002a..0030  invoke-static  {v4, v5}, LX/2LA;->A1L(Ljava/lang/String;Ljava/lang/Object;)V
+    0030..0034  move-object/from16  v7, v20
+    0034..0038  move-object/from16  v4, v23
+    0038..003c  iput-object  v4, v7, LX/FUe;->A03:LX/DiW;
+    003c..0042  invoke-virtual  {v4}, LX/DiW;->A0B()Z
+    0042..0044  move-result  v5
+    0044..0048  if-eqz  v5, +0x1f
+    0048..004c  iget-object  v5, v4, LX/DiW;->messageContextInfo_:LX/DiV;
+    004c..004e  move-object  v8, v5
+    004e..0052  if-nez  v5, +0x4
+    0052..0056  sget-object  v5, LX/DiV;->DEFAULT_INSTANCE:LX/DiV;
+    0056..005a  iget  v5, v5, LX/DiV;->bitField0_:I
+    005a..005e  and-int/lit8  v5, v5, #0x8
+    005e..0062  if-eqz  v5, +0x12
+    0062..0066  if-nez  v8, +0x4
+    0066..006a  sget-object  v8, LX/DiV;->DEFAULT_INSTANCE:LX/DiV;
+    006a..006e  iget-object  v5, v8, LX/DiV;->paddingBytes_:Lcom/google/protobuf/ByteString;
+    006e..0074  invoke-virtual  {v5}, Lcom/google/protobuf/ByteString;->size()I
+    0074..0076  move-result  v5
+    0076..007c  invoke-static  {v5}, LX/2L6;->A17(I)Ljava/lang/Long;
+    007c..007e  move-result-object  v5
+    007e..0082  iput-object  v5, v7, LX/FUe;->A05:Ljava/lang/Long;
+    0082..0086  const-string  v17, " message="
+    0086..008a  const-string  v16, " description="
+    008a..008c  const/4  v9, #0x0
+    008c..0090  move-object/from16  v5, v22
+    0090..0094  iget-object  v8, v2, LX/EdS;->A04:LX/05a;
+    0094..009a  invoke-static  {v8}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    009a..009c  move-result-object  v14
+    009c..00a0  check-cast  v14, LX/EXn;
+    00a0..00a4  iget-object  v13, v14, LX/EXn;->A05:LX/08Y;
+    00a4..00aa  invoke-static  {v13, v4}, LX/F2g;->A01(LX/08Y;LX/DiW;)LX/DiB;
+    00aa..00ac  move-result-object  v12
+    00ac..00b0  iget-object  v8, v14, LX/EXn;->A04:LX/05a;
+    00b0..00b6  invoke-static  {v8}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    00b6..00b8  move-result-object  v11
+    00b8..00bc  check-cast  v11, LX/COP;
+    00bc..00c0  iget-object  v10, v14, LX/EXn;->A06:LX/0Fy;
+    00c0..00c4  iget-object  v8, v6, LX/F1Z;->A07:Lcom/whatsapp/infra/core/jid/Jid;
+    00c4..00ca  invoke-static  {v8}, LX/DBf;->A0H(Lcom/whatsapp/infra/core/jid/Jid;)LX/0DY;
+    00ca..00cc  move-result-object  v8
+    00cc..00d2  invoke-static  {v13, v10, v8, v11, v4}, LX/F0S;->A02(LX/08Y;LX/0Fy;LX/0DY;LX/COP;LX/DiW;)Z
+    00d2..00d4  move-result  v10
+    00d4..00d8  if-nez  v10, +0x10
+    00d8..00dc  const-class  v8, LX/FUj;
+    00dc..00e2  invoke-static  {v6, v8}, LX/B1z;->A0C(LX/F1Z;Ljava/lang/Class;)LX/Frq;
+    00e2..00e4  move-result-object  v8
+    00e4..00e8  check-cast  v8, LX/FUj;
+    00e8..00ec  if-eqz  v8, +0x3c
+    00ec..00f0  iget-boolean  v8, v8, LX/FUj;->A00:Z
+    00f0..00f4  if-eqz  v8, +0x38
+    00f4..00f8  const-class  v8, LX/FUj;
+    00f8..00fe  invoke-static  {v6, v8}, LX/B1z;->A0C(LX/F1Z;Ljava/lang/Class;)LX/Frq;
+    00fe..0100  move-result-object  v8
+    0100..0104  check-cast  v8, LX/FUj;
+    0104..0108  if-eqz  v8, +0x2c
+    0108..010c  iget-boolean  v11, v8, LX/FUj;->A00:Z
+    010c..0110  const-string  v8, "IncomingFMessageBuilder/buildFMessage building futureproof, unknown="
+    0110..0116  invoke-static  {v8, v10}, LX/2L8;->A1M(Ljava/lang/String;Z)Ljava/lang/StringBuilder;
+    0116..0118  move-result-object  v10
+    0118..011c  const-string  v8, "  companionNotSupported="
+    011c..0122  invoke-static  {v8, v10, v11}, LX/2LA;->A1O(Ljava/lang/String;Ljava/lang/StringBuilder;Z)V
+    0122..0126  iget-object  v8, v14, LX/EXn;->A08:LX/1wh;
+    0126..012c  invoke-static  {v4}, LX/EJx;->A00(LX/DiW;)I
+    012c..012e  move-result  v24
+    012e..0132  const/16  v23, #0x2
+    0132..0136  move-object/from16  v22, v25
+    0136..013a  move-object/from16  v18, v8
+    013a..013e  move-object/from16  v19, v7
+    013e..0142  move-object/from16  v20, v6
+    0142..0146  move-object/from16  v21, v12
+    0146..014c  invoke-virtual/range  {v18..v24}, LX/1wh;->A01(LX/FUe;LX/Dxs;LX/DiB;[BII)LX/1f2;
+    014c..014e  move-result-object  v11
+    014e..0152  new-instance  v10, LX/FbS;
+    0152..0158  invoke-direct  {v10, v11}, LX/FbS;-><init>(LX/18U;)V
+    0158..015c  goto/16  +0x1fa
+    015c..015e  const/4  v11, #0x0
+    015e..0160  goto  -0x29
+    0160..0164  iget-object  v8, v14, LX/EXn;->A02:LX/05a;
+    0164..016a  invoke-static  {v8}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    016a..016c  move-result-object  v10
+    016c..0170  check-cast  v10, LX/F3Z;
+    0170..0174  move-object/from16  v8, v25
+    0174..017a  invoke-virtual  {v10, v6, v4, v8}, LX/F3Z;->A08(LX/Dxs;LX/DiW;[B)LX/7M1;
+    017a..017c  move-result-object  v11
+    017c..0180  if-eqz  v11, +0x12
+    0180..0184  iget-object  v8, v14, LX/EXn;->A08:LX/1wh;
+    0184..0188  const/16  v22, #0x0
+    0188..018c  move-object/from16  v18, v8
+    018c..0190  move-object/from16  v19, v11
+    0190..0194  move-object/from16  v23, v22
+    0194..0198  move-object/from16  v24, v25
+    0198..019e  invoke-virtual/range  {v18..v24}, LX/1wh;->A03(LX/18U;LX/FUe;LX/Dxs;LX/DiB;LX/DiV;[B)V
+    019e..01a0  goto  -0x28
+    01a0..01a4  if-eqz  v12, +0x4d
+    01a4..01a8  iget  v8, v12, LX/DiB;->bitField0_:I
+    01a8..01ac  and-int/lit16  v8, v8, #0x400
+    01ac..01b0  if-eqz  v8, +0x47
+    01b0..01b4  iget-object  v15, v6, LX/Dxs;->A08:LX/EF4;
+    01b4..01b8  iget-object  v8, v15, LX/EF4;->A00:LX/1dW;
+    01b8..01bc  iget-object  v11, v8, LX/1dW;->A00:LX/0DY;
+    01bc..01c0  iget-boolean  v10, v8, LX/1dW;->A02:Z
+    01c0..01c4  iget-object  v8, v12, LX/DiB;->placeholderKey_:LX/DiT;
+    01c4..01c8  if-nez  v8, +0x4
+    01c8..01cc  sget-object  v8, LX/DiT;->DEFAULT_INSTANCE:LX/DiT;
+    01cc..01d2  invoke-static  {v11, v8, v10}, LX/DBf;->A0P(LX/0DY;LX/DiT;Z)LX/1dW;
+    01d2..01d4  move-result-object  v13
+    01d4..01d8  iget-object  v8, v14, LX/EXn;->A00:LX/05a;
+    01d8..01de  invoke-static  {v8, v13}, LX/6ok;->A0T(LX/05a;LX/1dW;)LX/18U;
+    01de..01e0  move-result-object  v11
+    01e0..01e4  if-eqz  v11, +0x2d
+    01e4..01e8  iget  v8, v11, LX/18U;->A0i:I
+    01e8..01ea  move  v10, v8
+    01ea..01ee  const/16  v8, #0x1f
+    01ee..01f2  if-ne  v10, v8, +0x26
+    01f2..01f8  invoke-virtual  {v11}, LX/18U;->B6v()Lcom/whatsapp/infra/core/jid/UserJid;
+    01f8..01fa  move-result-object  v10
+    01fa..0200  invoke-virtual  {v6}, LX/F1Z;->A08()Lcom/whatsapp/infra/core/jid/UserJid;
+    0200..0202  move-result-object  v8
+    0202..0208  invoke-static  {v10, v8}, LX/09W;->A00(Ljava/lang/Object;Ljava/lang/Object;)Z
+    0208..020a  move-result  v8
+    020a..020e  if-eqz  v8, +0x18
+    020e..0212  const-string  v8, "IncomingFMessageBuilder/placeholder message"
+    0212..0218  invoke-static  {v8}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0218..021c  iget-object  v11, v13, LX/1dW;->A01:Ljava/lang/String;
+    021c..0220  if-eqz  v11, +0xf
+    0220..0224  iget-object  v8, v15, LX/EF4;->A00:LX/1dW;
+    0224..0228  iget-object  v10, v8, LX/1dW;->A00:LX/0DY;
+    0228..022c  iget-boolean  v8, v8, LX/1dW;->A02:Z
+    022c..0232  invoke-static  {v10, v11, v8}, LX/DBb;->A0g(LX/0DY;Ljava/lang/String;Z)LX/1dW;
+    0232..0234  move-result-object  v8
+    0234..023a  invoke-virtual  {v7, v8}, LX/FUe;->A00(LX/1dW;)V
+    023a..0240  invoke-static  {v7, v6, v4}, LX/Epa;->A01(LX/FUe;LX/Dxs;LX/DiW;)LX/Edb;
+    0240..0242  move-result-object  v8
+    0242..0248  invoke-virtual  {v8}, LX/Edb;->A00()LX/F2D;
+    0248..024a  move-result-object  v10
+    024a..024e  iget-object  v8, v14, LX/EXn;->A07:LX/1x6;
+    024e..0254  invoke-virtual  {v8, v10}, LX/1x6;->A00(LX/F2D;)LX/18U;
+    0254..0256  move-result-object  v11
+    0256..025a  iget-object  v8, v14, LX/EXn;->A01:LX/05a;
+    025a..0260  invoke-static  {v8}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0260..0262  move-result-object  v8
+    0262..0266  check-cast  v8, LX/C7S;
+    0266..026c  invoke-virtual  {v8, v11}, LX/C7S;->A00(LX/18U;)V
+    026c..0270  instance-of  v8, v11, LX/1f2;
+    0270..0274  if-eqz  v8, +0xb
+    0274..0278  iget  v10, v11, LX/18U;->A00:I
+    0278..027a  const/4  v8, #0x7
+    027a..027e  if-eq  v10, v8, +0x27
+    027e..0282  const/16  v8, #0x8
+    0282..0286  if-eq  v10, v8, +0x23
+    0286..028a  iget-object  v8, v14, LX/EXn;->A08:LX/1wh;
+    028a..0290  invoke-static  {v11, v6}, LX/1wh;->A00(LX/18U;LX/Dxs;)V
+    0290..0296  invoke-static  {v4}, LX/DBd;->A12(LX/DiW;)LX/DiV;
+    0296..0298  move-result-object  v23
+    0298..029c  move-object/from16  v18, v8
+    029c..02a0  move-object/from16  v19, v11
+    02a0..02a4  move-object/from16  v22, v12
+    02a4..02a8  move-object/from16  v24, v25
+    02a8..02ae  invoke-virtual/range  {v18..v24}, LX/1wh;->A03(LX/18U;LX/FUe;LX/Dxs;LX/DiB;LX/DiV;[B)V
+    02ae..02b2  iget-object  v8, v14, LX/EXn;->A03:LX/05a;
+    02b2..02b8  invoke-static  {v8}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    02b8..02ba  move-result-object  v8
+    02ba..02be  check-cast  v8, LX/EZO;
+    02be..02c4  invoke-virtual  {v8, v11}, LX/EZO;->A00(LX/18U;)V
+    02c4..02c8  goto/16  -0xbb
+    02c8..02cc  const-string  v8, "IncomingFMessageBuilder/buildFMessage futureproof message with editedVersion "
+    02cc..02d2  invoke-static  {v8, v10}, LX/6ol;->A1L(Ljava/lang/String;I)V
+    02d2..02d6  iget  v10, v11, LX/18U;->A00:I
+    02d6..02da  const-string  v8, "Future proof message with editedVersion "
+    02da..02e0  invoke-static  {v8, v10}, LX/2LA;->A0p(Ljava/lang/String;I)Ljava/lang/String;
+    02e0..02e2  move-result-object  v8
+    02e2..02e8  invoke-static  {v8, v9}, LX/Dxp;->A06(Ljava/lang/String;I)LX/Dxp;
+    02e8..02ea  move-result-object  v8
+    02ea..02ec  throw  v8
+    02ec..02ee  move-exception  v13
+    02ee..02f2  iget-object  v12, v6, LX/F1Z;->A0C:Ljava/lang/String;
+    02f2..02f8  invoke-virtual  {v13}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    02f8..02fa  move-result-object  v11
+    02fa..02fe  const-string  v8, "SharedMessageProcessor/ProtobufSubsystemException "
+    02fe..0304  invoke-static  {v8}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0304..0306  move-result-object  v10
+    0306..030a  move-object/from16  v8, v17
+    030a..0310  invoke-static  {v12, v8, v11, v10}, LX/3q4;->A1J(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    0310..0316  invoke-virtual  {v10}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0316..0318  move-result-object  v8
+    0318..031e  invoke-static  {v8, v13}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;Ljava/lang/Throwable;)V
+    031e..0322  new-instance  v10, LX/FbU;
+    0322..0328  invoke-direct  {v10, v4, v9}, LX/FbU;-><init>(LX/DiW;I)V
+    0328..032c  goto/16  +0x110
+    032c..032e  move-exception  v12
+    032e..0332  iget-object  v11, v6, LX/F1Z;->A0C:Ljava/lang/String;
+    0332..0336  iget-object  v10, v12, LX/Dxp;->description:Ljava/lang/String;
+    0336..033a  const-string  v8, "SharedMessageProcessor/BadE2eMessageException "
+    033a..0340  invoke-static  {v8}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0340..0342  move-result-object  v9
+    0342..0346  move-object/from16  v8, v16
+    0346..034c  invoke-static  {v11, v8, v10, v9}, LX/3q4;->A1J(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    034c..0352  invoke-virtual  {v9}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0352..0354  move-result-object  v8
+    0354..035a  invoke-static  {v8, v12}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;Ljava/lang/Throwable;)V
+    035a..035e  iget  v8, v12, LX/Dxp;->e2eFailureReason:I
+    035e..0362  goto/16  +0xf0
+    0362..0364  move-exception  v8
+    0364..0368  iget-object  v10, v6, LX/F1Z;->A0C:Ljava/lang/String;
+    0368..036c  iget-object  v11, v8, LX/Dxp;->description:Ljava/lang/String;
+    036c..0370  const-string  v8, "SharedMessageProcessor/DiscardWithDeliveryReceiptException "
+    0370..0376  invoke-static  {v8, v10}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0376..0378  move-result-object  v10
+    0378..037c  move-object/from16  v8, v16
+    037c..0382  invoke-static  {v8, v11, v10}, LX/DBh;->A1G(Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    0382..0386  iget-object  v8, v2, LX/EdS;->A0A:LX/05a;
+    0386..038c  invoke-static  {v8}, LX/DBe;->A0n(LX/05a;)LX/0x0;
+    038c..038e  move-result-object  v8
+    038e..0394  invoke-virtual  {v8, v5, v7, v6, v9}, LX/0x0;->A0Y(LX/1k2;LX/Fuy;LX/F1Z;I)V
+    0394..0398  sget-object  v10, LX/FbV;->A00:LX/FbV;
+    0398..039c  goto/16  +0xd8
+    039c..039e  move-exception  v10
+    039e..03a2  iget-object  v9, v6, LX/F1Z;->A0C:Ljava/lang/String;
+    03a2..03a6  const-string  v8, "SharedMessageProcessor/InvalidReportingTokenMessageException "
+    03a6..03ac  invoke-static  {v8, v9, v10}, LX/DBh;->A1I(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+    03ac..03b0  iget  v8, v10, LX/Dxp;->e2eFailureReason:I
+    03b0..03b4  goto/16  +0xc7
+    03b4..03b6  move-exception  v11
+    03b6..03ba  iget-object  v8, v2, LX/EdS;->A08:LX/05a;
+    03ba..03c0  invoke-static  {v8}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    03c0..03c2  move-result-object  v10
+    03c2..03c6  check-cast  v10, LX/1ve;
+    03c6..03ca  iget-object  v8, v11, LX/Dxn;->messageOrphan:LX/2Ev;
+    03ca..03d0  invoke-virtual  {v10, v8}, LX/1ve;->A02(LX/2Ev;)I
+    03d0..03d2  move-result  v11
+    03d2..03d4  const/4  v8, #0x4
+    03d4..03d8  if-ne  v11, v8, +0x18
+    03d8..03da  const/4  v9, #0x1
+    03da..03de  iget-object  v8, v2, LX/EdS;->A00:LX/05a;
+    03de..03e4  invoke-static  {v8}, LX/05a;->A00(LX/05a;)LX/00E;
+    03e4..03e6  move-result-object  v10
+    03e6..03ea  sget-object  v8, LX/0Yq;->A03:LX/00f;
+    03ea..03f0  invoke-static  {v10, v8}, LX/00E;->A0F(LX/00E;LX/00f;)Z
+    03f0..03f2  move-result  v10
+    03f2..03f6  iget-object  v8, v2, LX/EdS;->A0A:LX/05a;
+    03f6..03fc  invoke-static  {v8}, LX/DBe;->A0n(LX/05a;)LX/0x0;
+    03fc..03fe  move-result-object  v8
+    03fe..0404  invoke-virtual  {v8, v5, v7, v6, v10}, LX/0x0;->A0Y(LX/1k2;LX/Fuy;LX/F1Z;I)V
+    0404..0408  new-instance  v10, LX/FbT;
+    0408..040e  invoke-direct  {v10, v11, v9}, LX/FbT;-><init>(IZ)V
+    040e..0412  goto/16  +0x9d
+    0412..0414  move-exception  v10
+    0414..0418  iget-object  v8, v6, LX/Dxs;->A08:LX/EF4;
+    0418..041c  iget-object  v9, v8, LX/EF4;->A00:LX/1dW;
+    041c..0420  const-string  v8, "SharedMessageProcessor/createFPMessageForFPException key="
+    0420..0426  invoke-static  {v8, v9}, LX/1Xl;->A0w(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/String;
+    0426..0428  move-result-object  v8
+    0428..042e  invoke-static  {v8, v10}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;Ljava/lang/Throwable;)V
+    042e..0432  iget  v9, v10, LX/Dxo;->futureMessageType:I
+    0432..0436  if-nez  v9, +0x6
+    0436..043c  invoke-static  {v4}, LX/EJx;->A00(LX/DiW;)I
+    043c..043e  move-result  v9
+    043e..0442  iget-object  v8, v2, LX/EdS;->A04:LX/05a;
+    0442..0448  invoke-static  {v8}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0448..044a  move-result-object  v8
+    044a..044e  check-cast  v8, LX/EXn;
+    044e..0452  iget-object  v8, v8, LX/EXn;->A08:LX/1wh;
+    0452..0454  const/4  v14, #0x0
+    0454..0458  const/16  v16, #0x2
+    0458..045c  move-object/from16  v15, v25
+    045c..0460  move/from16  v17, v9
+    0460..0462  move-object  v11, v8
+    0462..0464  move-object  v12, v7
+    0464..0466  move-object  v13, v6
+    0466..046c  invoke-virtual/range  {v11..v17}, LX/1wh;->A01(LX/FUe;LX/Dxs;LX/DiB;[BII)LX/1f2;
+    046c..046e  move-result-object  v9
+    046e..0472  iget-object  v8, v10, LX/DxA;->parentAssociationInfo:LX/FMx;
+    0472..0478  invoke-static  {v9, v8}, LX/ADE;->A04(LX/18U;LX/FMx;)V
+    0478..047c  iget  v8, v10, LX/DxA;->viewMode:I
+    047c..0482  invoke-static  {v9, v8}, LX/DBc;->A1J(LX/18U;I)V
+    0482..0484  goto  +0x2c
+    0484..0486  move-exception  v10
+    0486..048a  iget-object  v8, v6, LX/Dxs;->A08:LX/EF4;
+    048a..048e  iget-object  v9, v8, LX/EF4;->A00:LX/1dW;
+    048e..0492  const-string  v8, "SharedMessageProcessor/createFPMessageForFPException key="
+    0492..0498  invoke-static  {v8, v9}, LX/1Xl;->A0w(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/String;
+    0498..049a  move-result-object  v8
+    049a..04a0  invoke-static  {v8, v10}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;Ljava/lang/Throwable;)V
+    04a0..04a4  iget  v9, v10, LX/Dxo;->futureMessageType:I
+    04a4..04a8  if-nez  v9, +0x6
+    04a8..04ae  invoke-static  {v4}, LX/EJx;->A00(LX/DiW;)I
+    04ae..04b0  move-result  v9
+    04b0..04b4  iget-object  v8, v2, LX/EdS;->A04:LX/05a;
+    04b4..04ba  invoke-static  {v8}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    04ba..04bc  move-result-object  v8
+    04bc..04c0  check-cast  v8, LX/EXn;
+    04c0..04c4  iget-object  v8, v8, LX/EXn;->A08:LX/1wh;
+    04c4..04c6  const/4  v11, #0x0
+    04c6..04c8  const/4  v13, #0x2
+    04c8..04cc  move-object/from16  v12, v25
+    04cc..04ce  move  v14, v9
+    04ce..04d0  move-object  v9, v7
+    04d0..04d2  move-object  v10, v6
+    04d2..04d8  invoke-virtual/range  {v8..v14}, LX/1wh;->A01(LX/FUe;LX/Dxs;LX/DiB;[BII)LX/1f2;
+    04d8..04da  move-result-object  v9
+    04da..04de  iget-object  v8, v2, LX/EdS;->A02:LX/05a;
+    04de..04e4  invoke-static  {v8}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    04e4..04e6  move-result-object  v8
+    04e6..04ea  check-cast  v8, LX/1wR;
+    04ea..04f0  invoke-static  {v8, v9, v7, v6}, LX/1wR;->A00(LX/1wR;LX/18U;LX/FUe;LX/Dxs;)LX/Fs7;
+    04f0..04f4  sget-object  v10, LX/FbW;->A00:LX/FbW;
+    04f4..04f6  goto  +0x2a
+    04f6..04f8  move-exception  v12
+    04f8..04fc  iget-object  v11, v6, LX/F1Z;->A0C:Ljava/lang/String;
+    04fc..0502  invoke-virtual  {v12}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    0502..0504  move-result-object  v10
+    0504..0508  const-string  v8, "SharedMessageProcessor/BadBroadcastEphemeralSettingException "
+    0508..050e  invoke-static  {v8}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    050e..0510  move-result-object  v9
+    0510..0514  move-object/from16  v8, v17
+    0514..051a  invoke-static  {v11, v8, v10, v9}, LX/3q4;->A1J(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    051a..0520  invoke-virtual  {v9}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0520..0522  move-result-object  v8
+    0522..0528  invoke-static  {v8, v12}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0528..052c  const/16  v8, #0x9
+    052c..0530  iput  v8, v6, LX/F1Z;->A00:I
+    0530..0534  iget  v8, v12, LX/ED9;->failureReason:I
+    0534..0538  if-eqz  v8, +0x16f
+    0538..053c  if-ne  v8, v0, +0x181
+    053c..053e  const/4  v8, #0x0
+    053e..0542  new-instance  v10, LX/FbU;
+    0542..0548  invoke-direct  {v10, v4, v8}, LX/FbU;-><init>(LX/DiW;I)V
+    0548..054c  check-cast  v10, LX/FsU;
+    054c..0550  instance-of  v8, v10, LX/FbW;
+    0550..0554  if-eqz  v8, +0x54
+    0554..0558  sget-object  v7, LX/Fba;->A00:LX/Fba;
+    0558..055c  check-cast  v7, LX/FsV;
+    055c..0560  instance-of  v0, v7, LX/Fbb;
+    0560..0564  if-eqz  v0, +0x16
+    0564..0566  const/4  v0, #0x0
+    0566..056a  iput-boolean  v0, v3, LX/F0b;->A00:Z
+    056a..056e  iget-object  v0, v2, LX/EdS;->A0C:LX/05a;
+    056e..0574  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0574..0576  move-result-object  v2
+    0576..057a  check-cast  v2, LX/F2C;
+    057a..057e  check-cast  v7, LX/Fbb;
+    057e..0582  iget-object  v1, v7, LX/Fbb;->A00:LX/1vZ;
+    0582..0584  const/4  v0, #0x0
+    0584..058a  invoke-virtual  {v2, v0, v5, v1}, LX/F2C;->A06(LX/1k3;LX/1k2;LX/1vZ;)V
+    058a..058c  return-void
+    058c..0590  instance-of  v0, v7, LX/Fba;
+    0590..0594  if-nez  v0, +0x14
+    0594..0598  instance-of  v0, v7, LX/FbZ;
+    0598..059c  if-eqz  v0, +0x6
+    059c..059e  const/4  v0, #0x0
+    059e..05a2  iput-boolean  v0, v3, LX/F0b;->A00:Z
+    05a2..05a4  return-void
+    05a4..05a8  instance-of  v0, v7, LX/FbX;
+    05a8..05ac  if-eqz  v0, +0xe
+    05ac..05b0  check-cast  v7, LX/FbX;
+    05b0..05b4  iget-boolean  v0, v7, LX/FbX;->A00:Z
+    05b4..05b8  if-nez  v0, -0x15
+    05b8..05bc  iget-object  v0, v2, LX/EdS;->A0C:LX/05a;
+    05bc..05c2  invoke-static  {v0, v5}, LX/F2C;->A02(LX/05a;LX/1k2;)V
+    05c2..05c4  return-void
+    05c4..05c8  instance-of  v0, v7, LX/FbY;
+    05c8..05cc  if-eqz  v0, +0x12f
+    05cc..05d0  check-cast  v7, LX/FbY;
+    05d0..05d4  iget-object  v1, v7, LX/FbY;->A01:LX/DiW;
+    05d4..05d8  iget-object  v0, v2, LX/EdS;->A0D:LX/05a;
+    05d8..05de  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    05de..05e0  move-result-object  v0
+    05e0..05e4  check-cast  v0, LX/EZh;
+    05e4..05ea  invoke-virtual  {v0, v6, v1}, LX/EZh;->A00(LX/Dxs;LX/DiW;)Z
+    05ea..05ec  move-result  v0
+    05ec..05f0  if-eqz  v0, +0x117
+    05f0..05f2  const/4  v0, #0x0
+    05f2..05f6  iput-boolean  v0, v3, LX/F0b;->A00:Z
+    05f6..05f8  goto  -0x1f
+    05f8..05fc  instance-of  v8, v10, LX/FbV;
+    05fc..0600  if-eqz  v8, +0x5
+    0600..0604  sget-object  v7, LX/FbZ;->A00:LX/FbZ;
+    0604..0606  goto  -0x56
+    0606..060a  instance-of  v8, v10, LX/FbT;
+    060a..060e  if-eqz  v8, +0x10
+    060e..0612  check-cast  v10, LX/FbT;
+    0612..0616  iget  v1, v10, LX/FbT;->A00:I
+    0616..061a  iget-boolean  v0, v10, LX/FbT;->A01:Z
+    061a..061e  new-instance  v7, LX/FbX;
+    061e..0624  invoke-direct  {v7, v1, v0}, LX/FbX;-><init>(IZ)V
+    0624..0628  check-cast  v7, LX/FsV;
+    0628..062a  goto  -0x66
+    062a..062e  instance-of  v8, v10, LX/FbU;
+    062e..0632  if-eqz  v8, +0xe
+    0632..0636  check-cast  v10, LX/FbU;
+    0636..063a  iget  v1, v10, LX/FbU;->A00:I
+    063a..063e  iget-object  v0, v10, LX/FbU;->A01:LX/DiW;
+    063e..0642  new-instance  v7, LX/FbY;
+    0642..0648  invoke-direct  {v7, v0, v1}, LX/FbY;-><init>(LX/DiW;I)V
+    0648..064a  goto  -0x12
+    064a..064e  instance-of  v8, v10, LX/FbS;
+    064e..0652  if-eqz  v8, +0xf1
+    0652..0656  check-cast  v10, LX/FbS;
+    0656..065a  iget-object  v8, v10, LX/FbS;->A00:LX/18U;
+    065a..065e  iget  v11, v8, LX/18U;->A0i:I
+    065e..0662  const/16  v12, #0x9a
+    0662..0666  const/16  v10, #0x45
+    0666..0668  const/4  v9, #0x1
+    0668..066c  if-ne  v11, v12, +0x1b
+    066c..0670  const-string  v1, "SharedMessageProcessor/unsupported message"
+    0670..0676  invoke-static  {v1}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0676..067a  iget-object  v1, v2, LX/EdS;->A01:LX/05a;
+    067a..0680  invoke-static  {v1}, LX/2L8;->A0a(LX/05a;)LX/0wZ;
+    0680..0682  move-result-object  v7
+    0682..0688  invoke-static  {v8}, LX/2L7;->A1M(Ljava/lang/Object;)Ljava/util/List;
+    0688..068a  move-result-object  v1
+    068a..0690  invoke-virtual  {v7, v1, v0}, LX/0wZ;->A0a(Ljava/util/Collection;I)V
+    0690..0694  new-instance  v7, LX/FbY;
+    0694..069a  invoke-direct  {v7, v4, v10}, LX/FbY;-><init>(LX/DiW;I)V
+    069a..069e  goto/16  -0xa1
+    069e..06a4  invoke-static  {v8}, LX/F2u;->A04(LX/18U;)Ljava/lang/Integer;
+    06a4..06a6  move-result-object  v12
+    06a6..06aa  if-eqz  v1, +0x6
+    06aa..06ae  if-eqz  v12, +0x4
+    06ae..06b2  iput-object  v12, v1, LX/E0A;->A01:Ljava/lang/Integer;
+    06b2..06b6  iget-object  v12, v2, LX/EdS;->A06:LX/05a;
+    06b6..06bc  invoke-static  {v12}, LX/DBb;->A0p(LX/05a;)LX/0wT;
+    06bc..06be  move-result-object  v12
+    06be..06c2  iget-object  v12, v12, LX/0wT;->A0D:LX/00x;
+    06c2..06c8  invoke-static  {v12, v8}, LX/DDS;->A00(LX/00x;LX/18U;)I
+    06c8..06ca  move-result  v12
+    06ca..06ce  if-eqz  v1, +0x4
+    06ce..06d2  iput  v12, v1, LX/E0C;->A00:I
+    06d2..06d8  invoke-static  {v8}, LX/1dX;->A0Q(LX/18U;)Z
+    06d8..06da  move-result  v1
+    06da..06de  if-nez  v1, +0x12
+    06de..06e2  iget  v1, v8, LX/18U;->A00:I
+    06e2..06e6  if-eqz  v1, +0x3a
+    06e6..06ea  instance-of  v1, v8, LX/DwX;
+    06ea..06ee  if-nez  v1, +0xa
+    06ee..06f2  instance-of  v1, v8, LX/DwV;
+    06f2..06f6  if-nez  v1, +0x6
+    06f6..06fa  instance-of  v1, v8, LX/Dwb;
+    06fa..06fe  if-eqz  v1, +0x2e
+    06fe..0700  const/4  v14, #0x1
+    0700..0704  iget  v12, v8, LX/18U;->A00:I
+    0704..0708  if-eqz  v12, +0xc
+    0708..070a  const/4  v1, #0x2
+    070a..070e  if-eq  v12, v1, +0x9
+    070e..0712  if-eq  v12, v0, +0x7
+    0712..0716  const/16  v1, #0xc
+    0716..0718  const/4  v13, #0x0
+    0718..071c  if-ne  v11, v1, +0x3
+    071c..071e  const/4  v13, #0x1
+    071e..0722  if-nez  v14, +0x1e
+    0722..0726  if-nez  v13, +0x1c
+    0726..072a  iget-object  v0, v8, LX/18U;->A0j:LX/1dW;
+    072a..072e  iget-object  v7, v0, LX/1dW;->A01:Ljava/lang/String;
+    072e..0732  const-string  v0, "SharedMessageProcessor/unsupported message; edit="
+    0732..0738  invoke-static  {v12, v0}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    0738..073a  move-result-object  v1
+    073a..073e  const-string  v0, ", type="
+    073e..0744  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0744..074a  invoke-virtual  {v1, v11}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    074a..074e  const-string  v0, ", id="
+    074e..0754  invoke-static  {v0, v7, v1}, LX/DBb;->A1J(Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    0754..0756  goto  -0x62
+    0756..0758  const/4  v14, #0x0
+    0758..075a  goto  -0x2c
+    075a..075e  iget-object  v1, v2, LX/EdS;->A00:LX/05a;
+    075e..0764  invoke-static  {v1}, LX/05a;->A00(LX/05a;)LX/00E;
+    0764..0766  move-result-object  v4
+    0766..076a  const/16  v1, #0x216c
+    076a..0770  invoke-virtual  {v4, v1}, LX/00E;->A14(I)Z
+    0770..0772  move-result  v1
+    0772..0776  if-eqz  v1, +0x11
+    0776..077a  iget-object  v1, v2, LX/EdS;->A09:LX/05a;
+    077a..0780  invoke-static  {v1}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0780..0782  move-result-object  v4
+    0782..0786  check-cast  v4, LX/Ejy;
+    0786..078a  iget-object  v1, v8, LX/18U;->A0j:LX/1dW;
+    078a..078e  iget-object  v1, v1, LX/1dW;->A01:Ljava/lang/String;
+    078e..0794  invoke-virtual  {v4, v1}, LX/Ejy;->A02(Ljava/lang/String;)V
+    0794..0798  instance-of  v1, v5, LX/1k3;
+    0798..079c  if-eqz  v1, +0xb
+    079c..07a0  iget-object  v1, v2, LX/EdS;->A0C:LX/05a;
+    07a0..07a6  invoke-static  {v1}, LX/F2C;->A03(LX/05a;)Z
+    07a6..07a8  move-result  v4
+    07a8..07aa  const/4  v1, #0x1
+    07aa..07ae  if-nez  v4, +0x3
+    07ae..07b0  const/4  v1, #0x0
+    07b0..07b4  iput-boolean  v1, v8, LX/18U;->A0x:Z
+    07b4..07b8  if-eqz  v5, +0x2d
+    07b8..07be  invoke-interface  {v5}, LX/1k2;->BUp()Z
+    07be..07c0  move-result  v1
+    07c0..07c4  if-ne  v1, v0, +0x27
+    07c4..07c8  iput-boolean  v9, v8, LX/18U;->A12:Z
+    07c8..07cc  iget-object  v0, v2, LX/EdS;->A02:LX/05a;
+    07cc..07d2  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    07d2..07d4  move-result-object  v0
+    07d4..07d8  check-cast  v0, LX/1wR;
+    07d8..07de  invoke-static  {v0, v8, v7, v6}, LX/1wR;->A00(LX/1wR;LX/18U;LX/FUe;LX/Dxs;)LX/Fs7;
+    07de..07e0  move-result-object  v1
+    07e0..07e4  iget-boolean  v0, v8, LX/18U;->A0x:Z
+    07e4..07e8  if-eqz  v0, +0x13
+    07e8..07ec  iget-object  v0, v2, LX/EdS;->A0A:LX/05a;
+    07ec..07f2  invoke-static  {v0}, LX/DBe;->A0n(LX/05a;)LX/0x0;
+    07f2..07f4  move-result-object  v0
+    07f4..07fa  invoke-virtual  {v0, v8, v1}, LX/0x0;->A0M(LX/18U;LX/Fs7;)LX/1vZ;
+    07fa..07fc  move-result-object  v0
+    07fc..0800  new-instance  v7, LX/Fbb;
+    0800..0806  invoke-direct  {v7, v0}, LX/Fbb;-><init>(LX/1vZ;)V
+    0806..080a  goto/16  -0x155
+    080a..080c  const/4  v0, #0x0
+    080c..080e  goto  -0x8
+    080e..0810  const/4  v9, #0x0
+    0810..0812  goto  -0x26
+    0812..0816  const/16  v8, #0x23
+    0816..081a  goto/16  -0x16c
+    081a..081e  iget  v0, v7, LX/FbY;->A00:I
+    081e..0824  invoke-static  {v5, v1, v3, v0}, LX/F0b;->A01(LX/1k2;LX/DiW;LX/F0b;I)V
+    0824..0826  return-void
+    0826..082c  invoke-static  {}, LX/2L6;->A1N()LX/2K2;
+    082c..082e  move-result-object  v0
+    082e..0830  throw  v0
+    0830..0836  invoke-static  {}, LX/2L6;->A1N()LX/2K2;
+    0836..0838  move-result-object  v0
+    0838..083a  throw  v0
+    083a..083e  const-string  v0, "Invalid failure reason"
+    083e..0844  invoke-static  {v0}, LX/1Xl;->A0f(Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    0844..0846  move-result-object  v0
+    0846..0848  throw  v0
+    # exception table: 1 try range(s)
+    # catch LX/DxA; code_units 0046..0176 -> 0209
+    # catch LX/Dxo; code_units 0046..0176 -> 0242
+    # catch LX/Dxn; code_units 0046..0176 -> 01da
+    # catch LX/Dxi; code_units 0046..0176 -> 01ce
+    # catch LX/Dxj; code_units 0046..0176 -> 01b1
+    # catch LX/Dxp; code_units 0046..0176 -> 0196
+    # catch LX/EDP; code_units 0046..0176 -> 0176
+    # catch LX/ED9; code_units 0046..0176 -> 027b
+.end method

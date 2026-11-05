@@ -1,0 +1,65 @@
+
+# class: LX/F2q;
+# extends: Ljava/lang/Object;
+
+.method public A0A(VLLLII)  # .registers 20
+    # full signature: LX/F2q;->A0A(LX/1k2;LX/Fuy;LX/F1Z;II)V
+    0000..0004  instance-of  v0, v14, LX/E5T;
+    0004..0006  move-object  v4, v15
+    0006..000a  move-object/from16  v8, v16
+    000a..000e  move-object/from16  v9, v17
+    000e..0012  move/from16  v1, v19
+    0012..0016  move/from16  v3, v18
+    0016..001a  if-eqz  v0, +0x2c
+    001a..001c  move-object  v2, v14
+    001c..0020  check-cast  v2, LX/E5T;
+    0020..0026  invoke-static  {v9, v8}, LX/2LA;->A17(Ljava/lang/Object;Ljava/lang/Object;)V
+    0026..002c  invoke-virtual  {v9}, LX/F1Z;->A0O()Z
+    002c..002e  move-result  v0
+    002e..0032  if-eqz  v0, +0x4
+    0032..0036  iput  v3, v9, LX/F1Z;->A00:I
+    0036..003a  iget-object  v0, v2, LX/E5T;->A07:LX/05a;
+    003a..0040  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0040..0042  move-result-object  v0
+    0042..0046  check-cast  v0, LX/DJZ;
+    0046..0048  const/4  v5, #0x0
+    0048..004a  const/4  v12, #0x0
+    004a..004e  new-instance  v3, LX/EXs;
+    004e..0050  move-object  v7, v5
+    0050..0052  move-object  v10, v5
+    0052..0054  move-object  v11, v5
+    0054..0056  move-object  v6, v5
+    0056..0058  move  v13, v12
+    0058..005e  invoke-direct/range  {v3..v13}, LX/EXs;-><init>(LX/1k2;LX/ETs;LX/ETs;LX/ETs;LX/Fuy;LX/F1Z;[B[BIZ)V
+    005e..0064  invoke-virtual  {v0, v3}, LX/DJZ;->A00(LX/EXs;)LX/EuT;
+    0064..0066  move-result-object  v0
+    0066..006c  invoke-virtual  {v0, v1}, LX/EuT;->A01(I)V
+    006c..006e  return-void
+    006e..0070  move-object  v2, v14
+    0070..0074  check-cast  v2, LX/E5U;
+    0074..007a  invoke-static  {v9, v8}, LX/2LA;->A17(Ljava/lang/Object;Ljava/lang/Object;)V
+    007a..007e  const-string  v0, "DecryptMessageRunnable/sendNonPersistableRetryRequest"
+    007e..0084  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0084..008a  invoke-virtual  {v9}, LX/F1Z;->A0O()Z
+    008a..008c  move-result  v0
+    008c..0090  if-eqz  v0, +0x4
+    0090..0094  iput  v3, v9, LX/F1Z;->A00:I
+    0094..0098  iget-object  v0, v2, LX/E5U;->A0D:LX/05a;
+    0098..009e  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    009e..00a0  move-result-object  v0
+    00a0..00a4  check-cast  v0, LX/DJZ;
+    00a4..00a6  const/4  v5, #0x0
+    00a6..00a8  const/4  v12, #0x0
+    00a8..00ac  new-instance  v3, LX/EXs;
+    00ac..00ae  move-object  v7, v5
+    00ae..00b0  move-object  v10, v5
+    00b0..00b2  move-object  v11, v5
+    00b2..00b4  move-object  v6, v5
+    00b4..00b6  move  v13, v12
+    00b6..00bc  invoke-direct/range  {v3..v13}, LX/EXs;-><init>(LX/1k2;LX/ETs;LX/ETs;LX/ETs;LX/Fuy;LX/F1Z;[B[BIZ)V
+    00bc..00c2  invoke-virtual  {v0, v3}, LX/DJZ;->A00(LX/EXs;)LX/EuT;
+    00c2..00c4  move-result-object  v0
+    00c4..00ca  invoke-virtual  {v0, v1}, LX/EuT;->A01(I)V
+    00ca..00cc  return-void
+    # exception table: 0 try range(s)
+.end method

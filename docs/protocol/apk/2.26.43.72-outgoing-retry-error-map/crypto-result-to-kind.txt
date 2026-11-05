@@ -1,0 +1,179 @@
+
+# class: LX/F2q;
+# extends: Ljava/lang/Object;
+
+.method private A01(LLLLLLLZ)  # .registers 26
+    # full signature: LX/F2q;->A01(LX/DqX;LX/EtY;LX/1k2;LX/Fuy;LX/F1Z;LX/E0A;Z)Ljava/lang/Integer;
+    0000..0004  move-object/from16  v5, v20
+    0004..0008  if-eqz  v20, +0x132
+    0008..000c  iget  v2, v5, LX/EtY;->A00:I
+    000c..0010  move-object/from16  v9, v23
+    0010..0014  iget-object  v3, v9, LX/F1Z;->A0C:Ljava/lang/String;
+    0014..0018  iget-object  v4, v9, LX/F1Z;->A07:Lcom/whatsapp/infra/core/jid/Jid;
+    0018..001c  const-string  v0, "DecryptMessageRunnable/handleDecryptionResult axolotl status="
+    001c..0022  invoke-static  {v2, v0}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    0022..0024  move-result-object  v1
+    0024..0028  const-string  v0, " id="
+    0028..002e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    002e..0034  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0034..0038  const-string  v0, ", chatJid="
+    0038..003e  invoke-static  {v4, v0, v1}, LX/2LA;->A1J(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    003e..0042  if-eqz  v2, +0x115
+    0042..0044  const/4  v1, #0x0
+    0044..004a  invoke-static  {v1}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    004a..004c  move-result-object  v0
+    004c..0050  move-object/from16  v7, v19
+    0050..0054  iput-object  v0, v7, LX/DqX;->A00:Ljava/lang/Boolean;
+    0054..0058  move-object/from16  v6, v24
+    0058..005c  if-eqz  v24, +0x4
+    005c..0060  iput-boolean  v1, v6, LX/E0C;->A02:Z
+    0060..0064  const/16  v4, #0xfc17 (-1001)
+    0064..0068  move-object/from16  v10, v18
+    0068..006c  if-eq  v2, v4, +0x1e
+    006c..0072  invoke-static  {v2}, LX/0x3;->A01(I)Ljava/lang/Integer;
+    0072..0074  move-result-object  v0
+    0074..0078  iput-object  v0, v7, LX/DqX;->A0B:Ljava/lang/Integer;
+    0078..007c  iget-object  v0, v10, LX/F2q;->A0T:Ljava/util/List;
+    007c..0082  invoke-interface  {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0082..0084  move-result-object  v1
+    0084..008a  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    008a..008c  move-result  v0
+    008c..0090  if-eqz  v0, +0xc
+    0090..0096  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0096..009a  const-string  v0, "onDecryptFailed"
+    009a..00a0  invoke-static  {v0}, LX/2L6;->A18(Ljava/lang/String;)Ljava/lang/NullPointerException;
+    00a0..00a2  move-result-object  v0
+    00a2..00a4  throw  v0
+    00a4..00aa  invoke-virtual  {v5}, LX/EtY;->A00()Z
+    00aa..00ac  move-result  v0
+    00ac..00b0  if-eqz  v0, +0x31
+    00b0..00b2  const/4  v0, #0x1
+    00b2..00b6  iput-boolean  v0, v9, LX/F1Z;->A03:Z
+    00b6..00ba  const/16  v0, #0xfc10 (-1008)
+    00ba..00bc  const/4  v1, #0x1
+    00bc..00c0  if-eq  v2, v0, +0x14
+    00c0..00c4  const/16  v0, #0xfc13 (-1005)
+    00c4..00c6  const/4  v1, #0x4
+    00c6..00ca  if-eq  v2, v0, +0xf
+    00ca..00ce  const/16  v0, #0xfc15 (-1003)
+    00ce..00d0  const/4  v1, #0x3
+    00d0..00d4  if-eq  v2, v0, +0xa
+    00d4..00d8  const/16  v0, #0xfc16 (-1002)
+    00d8..00dc  if-eq  v2, v0, +0x19
+    00dc..00e2  packed-switch  v2, payload@0x270, cases=[-1206:@0x10a, -1205:@0x104, -1204:@0xfe, -1203:@0xf8, -1202:@0xf2], default@0xe2
+    00e2..00e4  const/4  v1, #0x0
+    00e4..00e8  iput  v1, v9, LX/F1Z;->A00:I
+    00e8..00ec  if-eqz  v25, +0xc0
+    00ec..00f0  sget-object  v0, LX/02X;->A01:Ljava/lang/Integer;
+    00f0..00f2  return-object  v0
+    00f2..00f6  const/16  v1, #0xa
+    00f6..00f8  goto  -0x9
+    00f8..00fc  const/16  v1, #0xb
+    00fc..00fe  goto  -0xc
+    00fe..0102  const/16  v1, #0xc
+    0102..0104  goto  -0xf
+    0104..0108  const/16  v1, #0xd
+    0108..010a  goto  -0x12
+    010a..010c  const/4  v1, #0x2
+    010c..010e  goto  -0x14
+    010e..0112  const/16  v1, #0xfc12 (-1006)
+    0112..0116  const/16  v0, #0xfc11 (-1007)
+    0116..011a  move-object/from16  v8, v21
+    011a..011e  move-object/from16  v5, v22
+    011e..0122  if-eq  v2, v1, +0x2a
+    0122..0126  if-ne  v2, v0, +0x33
+    0126..012a  instance-of  v0, v10, LX/E5T;
+    012a..012e  if-nez  v0, +0x24
+    012e..0130  move-object  v2, v10
+    0130..0134  check-cast  v2, LX/E5U;
+    0134..0136  move-object  v1, v9
+    0136..013a  check-cast  v1, LX/Dxs;
+    013a..013c  const/4  v0, #0x0
+    013c..0142  invoke-static  {v1, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0142..0146  iget-object  v0, v2, LX/E5U;->A03:LX/05a;
+    0146..014c  invoke-static  {v0}, LX/2L8;->A0a(LX/05a;)LX/0wZ;
+    014c..014e  move-result-object  v11
+    014e..0152  iget-object  v0, v1, LX/Dxs;->A08:LX/EF4;
+    0152..0156  iget-object  v13, v0, LX/EF4;->A00:LX/1dW;
+    0156..015c  invoke-static  {v1}, LX/F1Z;->A00(LX/F1Z;)LX/0DY;
+    015c..015e  move-result-object  v12
+    015e..0162  iget-wide  v0, v1, LX/F1Z;->A05:J
+    0162..0166  const/16  v15, #0x19f
+    0166..0168  const/4  v14, #0x0
+    0168..016c  move-wide/from16  v16, v0
+    016c..0172  invoke-virtual/range  {v11..v17}, LX/0wZ;->A0N(LX/0DY;LX/1dW;Ljava/lang/String;IJ)V
+    0172..0176  iget-object  v0, v10, LX/F2q;->A0I:LX/05a;
+    0176..017c  invoke-static  {v0}, LX/DBe;->A0n(LX/05a;)LX/0x0;
+    017c..017e  move-result-object  v1
+    017e..0180  const/4  v0, #0x0
+    0180..0186  invoke-virtual  {v1, v8, v5, v9, v0}, LX/0x0;->A0Y(LX/1k2;LX/Fuy;LX/F1Z;I)V
+    0186..0188  goto  -0x4f
+    0188..018c  if-ne  v2, v4, +0x70
+    018c..0190  if-nez  v25, +0x6e
+    0190..0194  iget-boolean  v0, v9, LX/F1Z;->A03:Z
+    0194..0198  if-nez  v0, +0x6a
+    0198..019e  invoke-virtual  {v9}, LX/F1Z;->A0J()Ljava/lang/Integer;
+    019e..01a0  move-result-object  v0
+    01a0..01a6  invoke-static  {v0}, LX/2L9;->A1W(Ljava/lang/Object;)Z
+    01a6..01a8  move-result  v0
+    01a8..01ac  if-nez  v0, +0xe
+    01ac..01ae  move-object  v0, v7
+    01ae..01b0  move-object  v1, v8
+    01b0..01b2  move-object  v2, v5
+    01b2..01b4  move-object  v3, v9
+    01b4..01b6  move-object  v4, v6
+    01b6..01b8  move-object  v5, v10
+    01b8..01be  invoke-static/range  {v0..v5}, LX/F2q;->A03(LX/DqX;LX/1k2;LX/Fuy;LX/F1Z;LX/E0A;LX/F2q;)V
+    01be..01c2  sget-object  v0, LX/02X;->A0C:Ljava/lang/Integer;
+    01c2..01c4  return-object  v0
+    01c4..01c8  iget-object  v2, v9, LX/F1Z;->A09:Ljava/lang/Integer;
+    01c8..01cc  if-eqz  v2, +0x3d
+    01cc..01d0  iget-object  v0, v10, LX/F2q;->A0B:LX/05a;
+    01d0..01d6  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    01d6..01d8  move-result-object  v0
+    01d8..01dc  check-cast  v0, LX/1iX;
+    01dc..01e0  iget-object  v0, v0, LX/1iX;->A02:LX/00p;
+    01e0..01e6  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    01e6..01e8  move-result-object  v1
+    01e8..01ec  check-cast  v1, LX/1iZ;
+    01ec..01ee  monitor-enter
+    01ee..01f2  iget-object  v0, v1, LX/1iZ;->A00:Ljava/util/LinkedHashSet;
+    01f2..01f8  invoke-virtual  {v0, v2}, Ljava/util/AbstractCollection;->contains(Ljava/lang/Object;)Z
+    01f8..01fa  move-result  v0
+    01fa..01fc  monitor-exit
+    01fc..0200  if-eqz  v0, +0x23
+    0200..0204  const-string  v0, "DecryptMessageRunnable/maybeLogMessageDropEventAndSendAck logging DUPLICATE_MESSAGE and sending receipt using cache id="
+    0204..020a  invoke-static  {v0, v3}, LX/2LA;->A1N(Ljava/lang/String;Ljava/lang/String;)V
+    020a..020e  iget-object  v0, v10, LX/F2q;->A0E:LX/05a;
+    020e..0214  invoke-static  {v0}, LX/DBb;->A0p(LX/05a;)LX/0wT;
+    0214..0216  move-result-object  v11
+    0216..021c  invoke-static  {v8}, LX/DBd;->A17(LX/1k2;)Ljava/lang/Boolean;
+    021c..021e  move-result-object  v14
+    021e..0222  const/16  v16, #0xf
+    0222..0224  const/4  v15, #0x0
+    0224..0226  move-object  v12, v5
+    0226..0228  move-object  v13, v9
+    0228..022e  invoke-virtual/range  {v11..v16}, LX/0wT;->A0B(LX/Fuy;LX/F1Z;Ljava/lang/Boolean;Ljava/lang/Integer;I)V
+    022e..0232  iget-object  v0, v10, LX/F2q;->A0I:LX/05a;
+    0232..0238  invoke-static  {v0}, LX/DBe;->A0n(LX/05a;)LX/0x0;
+    0238..023a  move-result-object  v0
+    023a..0240  invoke-virtual  {v0, v8, v9}, LX/0x0;->A0Z(LX/1k2;LX/F1Z;)V
+    0240..0242  goto  -0x41
+    0242..0246  iget-object  v0, v10, LX/F2q;->A0R:LX/05a;
+    0246..024c  invoke-static  {v0}, LX/2L8;->A10(LX/05a;)LX/08Z;
+    024c..024e  move-result-object  v0
+    024e..0250  const/4  v11, #0x4
+    0250..0254  new-instance  v4, LX/FdC;
+    0254..025a  invoke-direct/range  {v4..v11}, LX/FdC;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+    025a..0260  invoke-interface  {v0, v4}, LX/08Z;->CbD(Ljava/lang/Runnable;)V
+    0260..0262  goto  -0x51
+    0262..0264  move-exception  v0
+    0264..0266  monitor-exit
+    0266..0268  throw  v0
+    0268..026c  sget-object  v0, LX/02X;->A00:Ljava/lang/Integer;
+    026c..026e  return-object  v0
+    026e..0270  nop
+    0270..028c  packed-switch-payload  size=5
+    # exception table: 1 try range(s)
+    # catch <all> code_units 00f7..00fd -> 0131
+.end method

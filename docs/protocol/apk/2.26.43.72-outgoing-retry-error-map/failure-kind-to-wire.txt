@@ -1,0 +1,32 @@
+
+# class: LX/DxB;
+# extends: LX/Exf;
+
+.method public A00(II)  # .registers 2
+    # full signature: LX/DxB;->A00(I)I
+    0000..0002  const/4  v0, #0x1
+    0002..0006  if-eq  v1, v0, +0xf
+    0006..0008  const/4  v0, #0x2
+    0008..000c  if-eq  v1, v0, +0xc
+    000c..000e  const/4  v0, #0x3
+    000e..0012  if-eq  v1, v0, +0x9
+    0012..0014  const/4  v0, #0x4
+    0014..0018  if-eq  v1, v0, +0x6
+    0018..001e  packed-switch  v1, payload@0x40, cases=[8:@0x22, 9:@0x28, 10:@0x2e, 11:@0x32, 12:@0x36, 13:@0x3a], default@0x1e
+    001e..0020  const/4  v0, #0x0
+    0020..0022  return  v0
+    0022..0026  const/16  v0, #0xb
+    0026..0028  return  v0
+    0028..002c  const/16  v0, #0xa
+    002c..002e  return  v0
+    002e..0030  const/4  v0, #0x6
+    0030..0032  return  v0
+    0032..0034  const/4  v0, #0x5
+    0034..0036  return  v0
+    0036..0038  const/4  v0, #0x7
+    0038..003a  return  v0
+    003a..003e  const/16  v0, #0x8
+    003e..0040  return  v0
+    0040..0060  packed-switch-payload  size=6
+    # exception table: 0 try range(s)
+.end method

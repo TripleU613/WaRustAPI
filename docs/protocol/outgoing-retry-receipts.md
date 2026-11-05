@@ -34,3 +34,28 @@ remain open. This is not a complete outgoing retry receipt port.
 Validation:1327 workspace/all-feature tests passed, strict workspace/all-target/
 all-feature Clippy and formatting passed, CLI reference regenerated, and APK
 coverage plus research checksum/link hygiene passed. Offline verification only.
+
+## Error domains and eligibility recovered — 2026-11-05
+
+[Native crypto-status → failure-kind → wire-error tables and producer limits](apk/2.26.43.72-outgoing-retry-error-map/README.md)
+now distinguish the three number domains. EtY's selected eligible crypto set
+maps throughF2q/DxB; several nonpersistent/device paths supply wire errors
+withoutDxB. Its default0 and maximum explicit output11 are not universal policy.
+
+EtY's guarded status=-1005 refinements identify native signature, key-type,
+future-counter, MAC and no-valid-session categories. Exception class identity
+for other primitive-specific failures remains open; generic obfuscated class
+constructors do not establish their semantic names. Rust's redacted typed
+Signal errors are merged before its generic Undecryptable result reaches the
+retry queue. Preserve that typed cause and eligibility before serializing an
+error; do not add a blanket default or parse arbitrary provider error strings.
+
+This is a research chunk, with no production behavior change. The native
+selected eligibility predicate also excludes several nonzero crypto statuses,
+so a complete fix must cover **whether to request a retry**, not only its error
+attribute. Typed cause propagation, other primitives/producer paths, key/count
+policy and full routing remain unfinished. No live request.
+
+Validation for this research chunk:29 filtered retry tests passed; APK coverage,
+staged whitespace and research checksum/link hygiene passed. No Rust source
+changed, so the full workspace suite was not rerun for the mapping-only change.
