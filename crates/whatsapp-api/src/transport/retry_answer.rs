@@ -38,6 +38,11 @@ pub const MAX_COUNT: u32 = 4;
 /// `150.A04 0426`: originals older than 60 days are not resent.
 pub const MAX_AGE_MS: i64 = 5_184_000_000;
 
+fn original_too_old(prepared_at: Timestamp, now: Timestamp) -> bool {
+    // Strict >60-day boundary without overflow on extreme saved timestamps.
+    i128::from(now.as_millis()) - i128::from(prepared_at.as_millis()) > i128::from(MAX_AGE_MS)
+}
+
 /// The plaintext `Message` of a direct send, kept for a retry answer.
 pub(crate) fn source_key(wire_id: &str) -> String {
     format!("retry-source:{wire_id}")
@@ -136,7 +141,7 @@ pub async fn answer(
     let Some(first) = entry.attempts.first() else {
         return unanswered(store, &key, "original_attempt_missing");
     };
-    if Timestamp::now().as_millis() - first.prepared_at.as_millis() > MAX_AGE_MS {
+    if original_too_old(first.prepared_at, Timestamp::now()) {
         return unanswered(store, &key, "original_older_than_60_days");
     }
     let Some(original) = first.payload.as_deref() else {
@@ -369,7 +374,15 @@ pub async fn complete_refetch(
     {
         return refuse("original_not_server_accepted");
     }
-    let Some(original) = entry.attempts.first().and_then(|a| a.payload.clone()) else {
+    let Some(first) = entry.attempts.first() else {
+        return refuse("original_attempt_missing");
+    };
+    // APK 37.71 150.A04 0416..043c: originals older than 60 days refuse.
+    // Reapply eligibility after waiting for the bundle, before a new send.
+    if original_too_old(first.prepared_at, Timestamp::now()) {
+        return refuse("original_older_than_60_days");
+    }
+    let Some(original) = first.payload.clone() else {
         return refuse("original_stanza_missing");
     };
     let bundle = match crate::signal::direct::prekey_bundle_for(node, &peer) {
@@ -424,6 +437,9 @@ pub async fn complete_refetch(
             .ok_or_else(|| Error::invalid("retry", "original send vanished"))?;
         if current != entry {
             return Err(Error::invalid("retry", "original send changed before refetch reservation"));
+        }
+        if original_too_old(first.prepared_at, Timestamp::now()) {
+            return Err(Error::invalid("retry", "original expired before refetch reservation"));
         }
         tx.put_json(
             Table::Checkpoints,
@@ -602,6 +618,15 @@ mod tests {
                 .and_then(|v| v.as_text()),
             Some("9")
         );
+    }
+
+    #[test]
+    fn retry_age_is_strict_and_does_not_overflow() {
+        assert!(!original_too_old(Timestamp(0), Timestamp(MAX_AGE_MS)));
+        assert!(original_too_old(Timestamp(0), Timestamp(MAX_AGE_MS + 1)));
+        assert!(!original_too_old(Timestamp(1), Timestamp(0)));
+        assert!(original_too_old(Timestamp(i64::MIN), Timestamp(i64::MAX)));
+        assert!(!original_too_old(Timestamp(i64::MAX), Timestamp(i64::MIN)));
     }
 
     #[test]
@@ -803,12 +828,12 @@ mod tests {
     /// every refused case is recorded with its reason and sends nothing.
     #[tokio::test]
     async fn answers_once_under_the_saved_session_and_records_every_refusal() {
-        for delivered_during_fetch in [false, true] {
-            retry_workflow(delivered_during_fetch).await;
+        for pending_outcome in ["undelivered", "delivered", "aged"] {
+            retry_workflow(pending_outcome).await;
         }
     }
 
-    async fn retry_workflow(delivered_during_fetch: bool) {
+    async fn retry_workflow(pending_outcome: &str) {
         let dir = tempfile::tempdir().unwrap();
         let store = ProtocolStore::open(OpenOptions {
             path: dir.path().join("retry.redb"),
@@ -1026,7 +1051,7 @@ mod tests {
                 .unwrap()
                 .is_none()
         );
-        if delivered_during_fetch {
+        if pending_outcome == "delivered" {
             store
                 .write(|tx| {
                     let mut entry = outbox
@@ -1081,6 +1106,50 @@ mod tests {
                     .is_none()
             );
             assert_eq!(snapshot(), before);
+            return;
+        }
+        if pending_outcome == "aged" {
+            // Make the saved original stale after its query is reserved.
+            // This is an offline fixture, not a production clock change.
+            store
+                .write(|tx| {
+                    let mut entry = outbox
+                        .by_wire_id_in_write(tx, &MessageId::new("W1")?)?
+                        .unwrap();
+                    entry.attempts[0].prepared_at =
+                        Timestamp(Timestamp::now().as_millis() - MAX_AGE_MS - 1);
+                    tx.put_json(Table::Outbox, &entry.local_id.0, 1, &entry)
+                })
+                .unwrap();
+            let snapshot = || {
+                store
+                    .read(|tx| {
+                        [Table::Outbox, Table::SignalSessions, Table::PeerIdentities]
+                            .into_iter()
+                            .map(|table| tx.scan(table, 1, 10000))
+                            .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot();
+            assert!(matches!(
+                complete_refetch(&store, &account, &reply, ConnectionEpoch(2))
+                    .await
+                    .unwrap(),
+                Some(None)
+            ));
+            assert_eq!(snapshot(), before);
+            let outcome: serde_json::Value = store
+                .read(|tx| {
+                    tx.get_json(
+                        Table::Checkpoints,
+                        format!("retry-answer:W1:{peer}:2").as_bytes(),
+                        1,
+                    )
+                })
+                .unwrap()
+                .unwrap();
+            assert_eq!(outcome["reason"], "original_older_than_60_days");
             return;
         }
         let resend = complete_refetch(&store, &account, &reply, ConnectionEpoch(2))

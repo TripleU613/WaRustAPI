@@ -712,3 +712,28 @@ same-ID re-encryption; delivered settles already_delivered without changing full
 outbox/session/identity tables, and duplicate reply is ignored. Recipient alias
 lookup is current local mapping, not newly authenticated authority. Original age,
 source changes and the full account lifecycle remain under review. No live traffic.
+
+## Retry-refetch age eligibility recheck (2026-11-04)
+
+**Confirmed source gap / fixed offline:** answer checked the 60-day age before
+reserving a key query; complete_refetch never rechecked it. Completion now refuses
+an original older than the limit before crypto and checks age again within resend
+reservation, so an await crossing the boundary cannot commit a new send. A
+reservation-time expiry returns a local error with the job retained; it does not
+auto-retry. Missing original attempts now retain their distinct diagnostic.
+The shared comparison uses widened subtraction to avoid debug panic/release wrap
+on extreme i64 saved timestamps; exactly 60 days remains allowed, greater refuses.
+
+**Confirmed static basis / approximation:** APK **2.26.37.71 150.A04**,
+0416–043c compares original **178.A0F** with now minus **0x134fd9000 ms**.
+[Existing retry trace](retry-answers.md). Rust continues using the first saved
+attempt's prepared_at, not a newly proven equivalent of native 178.A0F. Rechecking
+after the fetch is local eligibility preservation, not newly traced native
+callback timing. Future timestamps retain prior non-old behavior.
+
+**Offline regression:** real signed-bundle workflow adds an aged-original fixture
+after query reservation; completion settles original_older_than_60_days without
+changing outbox/session/identity tables. Normal and delivered scenarios still run.
+Boundary tests cover exactly limit, limit+1, future time and both i64 extremes.
+No wall-clock wait, production timestamp migration or live traffic. Full native
+original timestamp provenance and pending-account lifecycle remain open.

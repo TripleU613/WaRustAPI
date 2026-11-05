@@ -1,3 +1,11 @@
+2026-11-04 — **Retry refetch rechecks original age before resend.**
+
+Completion and reservation enforce the existing strict 60-day limit. Shared
+comparison avoids signed overflow; regression covers aged pending fetch and
+boundary/extreme timestamps. [Evidence and approximation limits](docs/protocol/network-correctness-audit.md#retry-refetch-age-eligibility-recheck-2026-11-04).
+Validation: **1,282 workspace/all-feature tests**, strict Clippy, CLI reference,
+formatting, coverage freshness and repository hygiene passed. No live traffic.
+
 2026-11-04 — **Delivery received during key refetch suppresses retry resend.**
 
 Completion rechecks acceptance/delivery and atomically guards the original send

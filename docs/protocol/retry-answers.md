@@ -184,3 +184,9 @@ retiring its job. [Guard regression and remaining concurrency scope](network-cor
 when a reserved key query answers and verifies the original send row is unchanged
 at reservation. A delivery arriving while keys are pending suppresses resend.
 [Native DNP basis, workflow regression and remaining scope](network-correctness-audit.md#retry-refetch-delivery-recheck-2026-11-04).
+
+## Age while refetch waits (2026-11-04)
+
+**Confirmed local correction:** completion and its resend transaction recheck
+the original first-attempt age; overflow-safe comparison preserves strict >60-day
+refusal. [Native timestamp distinction and tests](network-correctness-audit.md#retry-refetch-age-eligibility-recheck-2026-11-04).
