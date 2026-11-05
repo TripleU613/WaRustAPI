@@ -33,5 +33,35 @@
     "name": "descriptor-arguments",
     "start_va": "0xbe67b4",
     "end_va": "0xbe67c0"
+  },
+  {
+    "name": "retry-varargs-save",
+    "start_va": "0xbdc9ac",
+    "end_va": "0xbdc9c4"
+  },
+  {
+    "name": "retry-varargs-pointer",
+    "start_va": "0xbdd7bc",
+    "end_va": "0xbdd7d0"
+  },
+  {
+    "name": "retry-varargs-list",
+    "start_va": "0xbdc45c",
+    "end_va": "0xbdc494"
+  },
+  {
+    "name": "pair-varargs-save",
+    "start_va": "0xbdcc0c",
+    "end_va": "0xbdcc30"
+  },
+  {
+    "name": "pair-varargs-pointer",
+    "start_va": "0xbe27c8",
+    "end_va": "0xbe27d4"
+  },
+  {
+    "name": "pair-varargs-list",
+    "start_va": "0xbdc68c",
+    "end_va": "0xbdc6c4"
   }
 ]

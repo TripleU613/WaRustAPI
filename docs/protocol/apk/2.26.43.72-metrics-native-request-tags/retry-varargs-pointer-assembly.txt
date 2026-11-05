@@ -1,0 +1,5 @@
+            0x00bdd7bc      stp   q0, q1, [sp]
+            0x00bdd7c0      movi  v0.2d, 0000000000000000
+            0x00bdd7c4      stp   q2, q3, [sp, 0x20]
+            0x00bdd7c8      sub   x3, x29, 0x50
+            0x00bdd7cc      ret

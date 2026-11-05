@@ -1,0 +1,9 @@
+            0x00bdcc0c      stp   x4, x5, [x29, -0x70]
+            0x00bdcc10      sub   x10, x29, 0x70
+            0x00bdcc14      mov   x11, sp
+            0x00bdcc18      stp   x6, x7, [x29, -0x60]
+            0x00bdcc1c      add   x10, x10, 0x20
+            0x00bdcc20      mov   x8, x3
+            0x00bdcc24      stp   q0, q1, [sp]
+            0x00bdcc28      movi  v0.2d, 0000000000000000
+            0x00bdcc2c      ret

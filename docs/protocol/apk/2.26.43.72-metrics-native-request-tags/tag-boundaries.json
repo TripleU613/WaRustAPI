@@ -196,6 +196,54 @@
       "file_offset": "0xbe27b4",
       "bytes": 12,
       "sha256": "14acbebe558d6120320f0d216d8dbcbc1b9993458851b9578aa8bf74148ba190"
+    },
+    {
+      "name": "retry-varargs-save",
+      "start_va": "0xbdc9ac",
+      "end_va": "0xbdc9c4",
+      "file_offset": "0xbd89ac",
+      "bytes": 24,
+      "sha256": "59c0aa0b8d26fca0ac8e2a6a010315b0d7e89939ccbf6b0e1510f164a429c19f"
+    },
+    {
+      "name": "retry-varargs-pointer",
+      "start_va": "0xbdd7bc",
+      "end_va": "0xbdd7d0",
+      "file_offset": "0xbd97bc",
+      "bytes": 20,
+      "sha256": "01180c6a294d8906273806de96b83901702cc6408301de0d543b566ca7d4b326"
+    },
+    {
+      "name": "retry-varargs-list",
+      "start_va": "0xbdc45c",
+      "end_va": "0xbdc494",
+      "file_offset": "0xbd845c",
+      "bytes": 56,
+      "sha256": "97704ab763aae62b493bdfad7490e3e7300aa1379c091f74c3e94bd4b6f51048"
+    },
+    {
+      "name": "pair-varargs-save",
+      "start_va": "0xbdcc0c",
+      "end_va": "0xbdcc30",
+      "file_offset": "0xbd8c0c",
+      "bytes": 36,
+      "sha256": "a5620a4de03d611618fe5ac768b93a9dddf461072f10c92d94781178b501a81d"
+    },
+    {
+      "name": "pair-varargs-pointer",
+      "start_va": "0xbe27c8",
+      "end_va": "0xbe27d4",
+      "file_offset": "0xbde7c8",
+      "bytes": 12,
+      "sha256": "0e5d35426b60930ea5085f959b6bedc666deaedfc807a1b17b4068faecf85247"
+    },
+    {
+      "name": "pair-varargs-list",
+      "start_va": "0xbdc68c",
+      "end_va": "0xbdc6c4",
+      "file_offset": "0xbd868c",
+      "bytes": 56,
+      "sha256": "571986982f97945dd160cd89357d7d27bb646bc6e8f0465504dcb715decf580e"
     }
   ]
 }

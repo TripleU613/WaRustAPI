@@ -1,3 +1,12 @@
+2026-11-05 — **Selected native analytics bytes verified end to end offline.**
+
+19 full-builder cases match expected bytes with controlled libc adapters,
+including buffer growth, retry truncation and raw-object/quote behavior.
+[Native harness and scope](docs/protocol/apk/2.26.43.72-metrics-native-request-tags/README.md#complete-selected-serialization-fixtures-2026-11-05).
+Earlier24 branch cases remain distinct. Validation: pinned resolver and both
+harness reproductions, coverage, staged diff and bundle/link hygiene. General
+inputs/allocator failures and live acceptance remain open. No Rust/live change.
+
 2026-11-05 — **Native request analytics mappings and metadata traced.**
 
 Selected purpose1=prefetch and category4=analytics; metadata Boolean/config

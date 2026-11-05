@@ -2545,3 +2545,14 @@ data, not Host. Raw clock/mode semantics and actual product remain unknown.
 [Descriptor, tables, formatter scope, metadata provenance and fixtures](apk/2.26.43.72-metrics-native-request-tags/README.md).
 No Rust runtime, invented telemetry or live requests added. General formatting,
 selector plaintext and crypto remain open.
+
+### Complete selected native analytics serialization (2026-11-05)
+
+**Observed bounded synthetic emulation, APK43.72:**19 additional cases run the
+complete native tag builder/pair/retry code with explicit allocation/strlen and
+host snprintf adapters reading native va_list. Exact bytes match independent
+expected JSON or an intentional invalid-quote fixture. Retry text truncates to
+four characters; raw object insertion and no quote escaping are corroborated.
+[Full-builder harness, exact outputs, ABI windows and limits](apk/2.26.43.72-metrics-native-request-tags/README.md#complete-selected-serialization-fixtures-2026-11-05).
+This extends the earlier24 branch-only cases. No Android libc, real product,
+allocator-failure behavior, live traffic or Rust telemetry implementation proved.

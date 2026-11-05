@@ -1,11 +1,15 @@
 {
   "README.md": {
-    "bytes": 6555,
-    "sha256": "9a4571c7fbcfe22e8574558661f7da499f7316f82ff4002f3eb7cb1ef39ce7ae"
+    "bytes": 9809,
+    "sha256": "a81abf449133b8b2d8d79c161da2e45f47eae8b65517917b90cbfd60420b1df7"
   },
   "check-tag-selection.py": {
     "bytes": 6175,
     "sha256": "cda0ade3d6cd26d0a0d66f83c2cdd6cc4e42f722e08981a4b23b46ca46c7b93e"
+  },
+  "check-tag-serialization.py": {
+    "bytes": 8587,
+    "sha256": "b162f7aad406e91934ea60cd31e407650f772863944199f1af9372a6c83a45d0"
   },
   "descriptor-arguments-assembly.txt": {
     "bytes": 132,
@@ -15,13 +19,37 @@
     "bytes": 1413,
     "sha256": "cb741365e8b30935b65ef2a2e4d9a4476a8a48c9942dd66a5e2a736ccb45bd31"
   },
+  "pair-varargs-list-assembly.txt": {
+    "bytes": 745,
+    "sha256": "caf96fdd74a8b05d60b5fb40dec8df29cdd894836de807907ac1be9c6aa4bc6c"
+  },
+  "pair-varargs-pointer-assembly.txt": {
+    "bytes": 133,
+    "sha256": "e95cbf8860f57823b6975712fa24a028392ab9d1714c931139dbff9df1887328"
+  },
+  "pair-varargs-save-assembly.txt": {
+    "bytes": 428,
+    "sha256": "5b29d2e0410cd3233cff8e77025b07f98d49b9f871860cde92d2dd70df5a9ff6"
+  },
   "retry-format-assembly.txt": {
     "bytes": 1002,
     "sha256": "d55da660cd9a58eb6d8b743bc25ceb32e5676e6cad6beda8a6eb4b48da15d6e5"
   },
+  "retry-varargs-list-assembly.txt": {
+    "bytes": 741,
+    "sha256": "9ac6305907415111cd4796aafbba048bfe151683ffcf46f2060d18fc44f79125"
+  },
+  "retry-varargs-pointer-assembly.txt": {
+    "bytes": 238,
+    "sha256": "ece08e9814d62a4e7090156f34e8707e2313a2d77d53559d244171a27f3cd2db"
+  },
+  "retry-varargs-save-assembly.txt": {
+    "bytes": 279,
+    "sha256": "f28a30ada530066747baf5b91c7f351a6149f7bfb00a412e738253f0f9e8a1f7"
+  },
   "tag-boundaries.json": {
-    "bytes": 4129,
-    "sha256": "2f35b8705fe3c21b6d2af0dad9c2d093d29def03d0aa927295a4c0e17271760a"
+    "bytes": 5584,
+    "sha256": "20bad8b83983b493d2134e85a64ca431ee5fcfb248c98b768b3fb129f8602d37"
   },
   "tag-builder-assembly.txt": {
     "bytes": 9001,
@@ -39,6 +67,10 @@
     "bytes": 11367,
     "sha256": "3e9cf272b945c496b7c3d0deb2c2189e134b2a5de5cea883e160a245149bfd39"
   },
+  "tag-serialization-results.json": {
+    "bytes": 25174,
+    "sha256": "9e47d4e26870eaebf8c19112c5fc10f1d3a7af957305ab196946cee9bf1296a8"
+  },
   "unknown-enum-assembly.txt": {
     "bytes": 127,
     "sha256": "bfb50f862a675ee37f9c7274c51f2e23e82822a81d9e23b93759dd122de90717"
@@ -48,7 +80,7 @@
     "sha256": "91e155fb97701966196a045cd55602925e13751488e505d8f648d22af68b6bd9"
   },
   "windows.json": {
-    "bytes": 647,
-    "sha256": "3350632bd426085f7c0801dac76eb289da1eabb6c22da5e3836728f5f305d6b0"
+    "bytes": 1226,
+    "sha256": "a2f2f40b9d834e80c9b99d49aedd9792168058033706c2987e1b93da45b729c3"
   }
 }

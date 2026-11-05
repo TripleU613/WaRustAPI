@@ -1,0 +1,990 @@
+{
+  "scope": "complete native tag builder with synthetic allocation and host libc snprintf adapters; no Android/network",
+  "unicorn_version": "2.1.4",
+  "instruction_cap_per_case": 100000,
+  "timeout_microseconds_per_case": 1000000,
+  "cases": [
+    {
+      "case": "retry-0",
+      "retry_input": 0,
+      "native_bytes": "{\"network_tags\":{\"product\":\"synthetic-product\",\"purpose\":\"prefetch\",\"request_category\":\"analytics\",\"retry_attempt\":\"0\"}}",
+      "matches_independent_expected_bytes": true,
+      "live_allocation_count": 1,
+      "imports": {
+        "malloc": 2,
+        "strlen": 14,
+        "realloc": 4,
+        "vsnprintf": 6,
+        "free": 1
+      },
+      "format_calls": [
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 31,
+          "would_write": 30,
+          "written": 30
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 33,
+          "would_write": 21,
+          "written": 21
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 76,
+          "would_write": 31,
+          "written": 31
+        },
+        {
+          "format": "%d",
+          "capacity": 5,
+          "would_write": 1,
+          "written": 1
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 45,
+          "would_write": 20,
+          "written": 20
+        },
+        {
+          "format": "\"%s\":%s,",
+          "capacity": 127,
+          "would_write": 119,
+          "written": 119
+        }
+      ]
+    },
+    {
+      "case": "retry-1",
+      "retry_input": 1,
+      "native_bytes": "{\"network_tags\":{\"product\":\"synthetic-product\",\"purpose\":\"prefetch\",\"request_category\":\"analytics\",\"retry_attempt\":\"1\"}}",
+      "matches_independent_expected_bytes": true,
+      "live_allocation_count": 1,
+      "imports": {
+        "malloc": 2,
+        "strlen": 14,
+        "realloc": 4,
+        "vsnprintf": 6,
+        "free": 1
+      },
+      "format_calls": [
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 31,
+          "would_write": 30,
+          "written": 30
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 33,
+          "would_write": 21,
+          "written": 21
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 76,
+          "would_write": 31,
+          "written": 31
+        },
+        {
+          "format": "%d",
+          "capacity": 5,
+          "would_write": 1,
+          "written": 1
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 45,
+          "would_write": 20,
+          "written": 20
+        },
+        {
+          "format": "\"%s\":%s,",
+          "capacity": 127,
+          "would_write": 119,
+          "written": 119
+        }
+      ]
+    },
+    {
+      "case": "retry-9",
+      "retry_input": 9,
+      "native_bytes": "{\"network_tags\":{\"product\":\"synthetic-product\",\"purpose\":\"prefetch\",\"request_category\":\"analytics\",\"retry_attempt\":\"9\"}}",
+      "matches_independent_expected_bytes": true,
+      "live_allocation_count": 1,
+      "imports": {
+        "malloc": 2,
+        "strlen": 14,
+        "realloc": 4,
+        "vsnprintf": 6,
+        "free": 1
+      },
+      "format_calls": [
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 31,
+          "would_write": 30,
+          "written": 30
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 33,
+          "would_write": 21,
+          "written": 21
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 76,
+          "would_write": 31,
+          "written": 31
+        },
+        {
+          "format": "%d",
+          "capacity": 5,
+          "would_write": 1,
+          "written": 1
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 45,
+          "would_write": 20,
+          "written": 20
+        },
+        {
+          "format": "\"%s\":%s,",
+          "capacity": 127,
+          "would_write": 119,
+          "written": 119
+        }
+      ]
+    },
+    {
+      "case": "retry-99",
+      "retry_input": 99,
+      "native_bytes": "{\"network_tags\":{\"product\":\"synthetic-product\",\"purpose\":\"prefetch\",\"request_category\":\"analytics\",\"retry_attempt\":\"99\"}}",
+      "matches_independent_expected_bytes": true,
+      "live_allocation_count": 1,
+      "imports": {
+        "malloc": 2,
+        "strlen": 14,
+        "realloc": 4,
+        "vsnprintf": 6,
+        "free": 1
+      },
+      "format_calls": [
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 31,
+          "would_write": 30,
+          "written": 30
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 33,
+          "would_write": 21,
+          "written": 21
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 76,
+          "would_write": 31,
+          "written": 31
+        },
+        {
+          "format": "%d",
+          "capacity": 5,
+          "would_write": 2,
+          "written": 2
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 45,
+          "would_write": 21,
+          "written": 21
+        },
+        {
+          "format": "\"%s\":%s,",
+          "capacity": 127,
+          "would_write": 120,
+          "written": 120
+        }
+      ]
+    },
+    {
+      "case": "retry-999",
+      "retry_input": 999,
+      "native_bytes": "{\"network_tags\":{\"product\":\"synthetic-product\",\"purpose\":\"prefetch\",\"request_category\":\"analytics\",\"retry_attempt\":\"999\"}}",
+      "matches_independent_expected_bytes": true,
+      "live_allocation_count": 1,
+      "imports": {
+        "malloc": 2,
+        "strlen": 14,
+        "realloc": 4,
+        "vsnprintf": 6,
+        "free": 1
+      },
+      "format_calls": [
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 31,
+          "would_write": 30,
+          "written": 30
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 33,
+          "would_write": 21,
+          "written": 21
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 76,
+          "would_write": 31,
+          "written": 31
+        },
+        {
+          "format": "%d",
+          "capacity": 5,
+          "would_write": 3,
+          "written": 3
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 45,
+          "would_write": 22,
+          "written": 22
+        },
+        {
+          "format": "\"%s\":%s,",
+          "capacity": 127,
+          "would_write": 121,
+          "written": 121
+        }
+      ]
+    },
+    {
+      "case": "retry-9999",
+      "retry_input": 9999,
+      "native_bytes": "{\"network_tags\":{\"product\":\"synthetic-product\",\"purpose\":\"prefetch\",\"request_category\":\"analytics\",\"retry_attempt\":\"9999\"}}",
+      "matches_independent_expected_bytes": true,
+      "live_allocation_count": 1,
+      "imports": {
+        "malloc": 2,
+        "strlen": 14,
+        "realloc": 4,
+        "vsnprintf": 6,
+        "free": 1
+      },
+      "format_calls": [
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 31,
+          "would_write": 30,
+          "written": 30
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 33,
+          "would_write": 21,
+          "written": 21
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 76,
+          "would_write": 31,
+          "written": 31
+        },
+        {
+          "format": "%d",
+          "capacity": 5,
+          "would_write": 4,
+          "written": 4
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 45,
+          "would_write": 23,
+          "written": 23
+        },
+        {
+          "format": "\"%s\":%s,",
+          "capacity": 127,
+          "would_write": 122,
+          "written": 122
+        }
+      ]
+    },
+    {
+      "case": "retry-10000",
+      "retry_input": 10000,
+      "native_bytes": "{\"network_tags\":{\"product\":\"synthetic-product\",\"purpose\":\"prefetch\",\"request_category\":\"analytics\",\"retry_attempt\":\"1000\"}}",
+      "matches_independent_expected_bytes": true,
+      "live_allocation_count": 1,
+      "imports": {
+        "malloc": 2,
+        "strlen": 14,
+        "realloc": 4,
+        "vsnprintf": 6,
+        "free": 1
+      },
+      "format_calls": [
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 31,
+          "would_write": 30,
+          "written": 30
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 33,
+          "would_write": 21,
+          "written": 21
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 76,
+          "would_write": 31,
+          "written": 31
+        },
+        {
+          "format": "%d",
+          "capacity": 5,
+          "would_write": 5,
+          "written": 4
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 45,
+          "would_write": 23,
+          "written": 23
+        },
+        {
+          "format": "\"%s\":%s,",
+          "capacity": 127,
+          "would_write": 122,
+          "written": 122
+        }
+      ]
+    },
+    {
+      "case": "retry-2147483647",
+      "retry_input": 2147483647,
+      "native_bytes": "{\"network_tags\":{\"product\":\"synthetic-product\",\"purpose\":\"prefetch\",\"request_category\":\"analytics\",\"retry_attempt\":\"2147\"}}",
+      "matches_independent_expected_bytes": true,
+      "live_allocation_count": 1,
+      "imports": {
+        "malloc": 2,
+        "strlen": 14,
+        "realloc": 4,
+        "vsnprintf": 6,
+        "free": 1
+      },
+      "format_calls": [
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 31,
+          "would_write": 30,
+          "written": 30
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 33,
+          "would_write": 21,
+          "written": 21
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 76,
+          "would_write": 31,
+          "written": 31
+        },
+        {
+          "format": "%d",
+          "capacity": 5,
+          "would_write": 10,
+          "written": 4
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 45,
+          "would_write": 23,
+          "written": 23
+        },
+        {
+          "format": "\"%s\":%s,",
+          "capacity": 127,
+          "would_write": 122,
+          "written": 122
+        }
+      ]
+    },
+    {
+      "case": "retry--1",
+      "retry_input": -1,
+      "native_bytes": "{\"network_tags\":{\"product\":\"synthetic-product\",\"purpose\":\"prefetch\",\"request_category\":\"analytics\",\"retry_attempt\":\"-1\"}}",
+      "matches_independent_expected_bytes": true,
+      "live_allocation_count": 1,
+      "imports": {
+        "malloc": 2,
+        "strlen": 14,
+        "realloc": 4,
+        "vsnprintf": 6,
+        "free": 1
+      },
+      "format_calls": [
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 31,
+          "would_write": 30,
+          "written": 30
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 33,
+          "would_write": 21,
+          "written": 21
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 76,
+          "would_write": 31,
+          "written": 31
+        },
+        {
+          "format": "%d",
+          "capacity": 5,
+          "would_write": 2,
+          "written": 2
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 45,
+          "would_write": 21,
+          "written": 21
+        },
+        {
+          "format": "\"%s\":%s,",
+          "capacity": 127,
+          "would_write": 120,
+          "written": 120
+        }
+      ]
+    },
+    {
+      "case": "retry--99",
+      "retry_input": -99,
+      "native_bytes": "{\"network_tags\":{\"product\":\"synthetic-product\",\"purpose\":\"prefetch\",\"request_category\":\"analytics\",\"retry_attempt\":\"-99\"}}",
+      "matches_independent_expected_bytes": true,
+      "live_allocation_count": 1,
+      "imports": {
+        "malloc": 2,
+        "strlen": 14,
+        "realloc": 4,
+        "vsnprintf": 6,
+        "free": 1
+      },
+      "format_calls": [
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 31,
+          "would_write": 30,
+          "written": 30
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 33,
+          "would_write": 21,
+          "written": 21
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 76,
+          "would_write": 31,
+          "written": 31
+        },
+        {
+          "format": "%d",
+          "capacity": 5,
+          "would_write": 3,
+          "written": 3
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 45,
+          "would_write": 22,
+          "written": 22
+        },
+        {
+          "format": "\"%s\":%s,",
+          "capacity": 127,
+          "would_write": 121,
+          "written": 121
+        }
+      ]
+    },
+    {
+      "case": "retry--999",
+      "retry_input": -999,
+      "native_bytes": "{\"network_tags\":{\"product\":\"synthetic-product\",\"purpose\":\"prefetch\",\"request_category\":\"analytics\",\"retry_attempt\":\"-999\"}}",
+      "matches_independent_expected_bytes": true,
+      "live_allocation_count": 1,
+      "imports": {
+        "malloc": 2,
+        "strlen": 14,
+        "realloc": 4,
+        "vsnprintf": 6,
+        "free": 1
+      },
+      "format_calls": [
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 31,
+          "would_write": 30,
+          "written": 30
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 33,
+          "would_write": 21,
+          "written": 21
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 76,
+          "would_write": 31,
+          "written": 31
+        },
+        {
+          "format": "%d",
+          "capacity": 5,
+          "would_write": 4,
+          "written": 4
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 45,
+          "would_write": 23,
+          "written": 23
+        },
+        {
+          "format": "\"%s\":%s,",
+          "capacity": 127,
+          "would_write": 122,
+          "written": 122
+        }
+      ]
+    },
+    {
+      "case": "retry--1000",
+      "retry_input": -1000,
+      "native_bytes": "{\"network_tags\":{\"product\":\"synthetic-product\",\"purpose\":\"prefetch\",\"request_category\":\"analytics\",\"retry_attempt\":\"-100\"}}",
+      "matches_independent_expected_bytes": true,
+      "live_allocation_count": 1,
+      "imports": {
+        "malloc": 2,
+        "strlen": 14,
+        "realloc": 4,
+        "vsnprintf": 6,
+        "free": 1
+      },
+      "format_calls": [
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 31,
+          "would_write": 30,
+          "written": 30
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 33,
+          "would_write": 21,
+          "written": 21
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 76,
+          "would_write": 31,
+          "written": 31
+        },
+        {
+          "format": "%d",
+          "capacity": 5,
+          "would_write": 5,
+          "written": 4
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 45,
+          "would_write": 23,
+          "written": 23
+        },
+        {
+          "format": "\"%s\":%s,",
+          "capacity": 127,
+          "would_write": 122,
+          "written": 122
+        }
+      ]
+    },
+    {
+      "case": "retry--2147483648",
+      "retry_input": -2147483648,
+      "native_bytes": "{\"network_tags\":{\"product\":\"synthetic-product\",\"purpose\":\"prefetch\",\"request_category\":\"analytics\",\"retry_attempt\":\"-214\"}}",
+      "matches_independent_expected_bytes": true,
+      "live_allocation_count": 1,
+      "imports": {
+        "malloc": 2,
+        "strlen": 14,
+        "realloc": 4,
+        "vsnprintf": 6,
+        "free": 1
+      },
+      "format_calls": [
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 31,
+          "would_write": 30,
+          "written": 30
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 33,
+          "would_write": 21,
+          "written": 21
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 76,
+          "would_write": 31,
+          "written": 31
+        },
+        {
+          "format": "%d",
+          "capacity": 5,
+          "would_write": 11,
+          "written": 4
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 45,
+          "would_write": 23,
+          "written": 23
+        },
+        {
+          "format": "\"%s\":%s,",
+          "capacity": 127,
+          "would_write": 122,
+          "written": 122
+        }
+      ]
+    },
+    {
+      "case": "all-optional",
+      "retry_input": 0,
+      "native_bytes": "{\"network_tags\":{\"product\":\"synthetic-product\",\"purpose\":\"fetch\",\"surface\":\"synthetic-surface\",\"is_ad\":\"0\",\"request_category\":\"api\",\"retry_attempt\":\"0\"},\"application_tags\":{\"bucket\":\"synthetic\"}}",
+      "matches_independent_expected_bytes": true,
+      "live_allocation_count": 1,
+      "imports": {
+        "malloc": 2,
+        "strlen": 16,
+        "realloc": 5,
+        "vsnprintf": 9,
+        "free": 1
+      },
+      "format_calls": [
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 31,
+          "would_write": 30,
+          "written": 30
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 33,
+          "would_write": 18,
+          "written": 18
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 79,
+          "would_write": 30,
+          "written": 30
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 49,
+          "would_write": 12,
+          "written": 12
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 37,
+          "would_write": 25,
+          "written": 25
+        },
+        {
+          "format": "%d",
+          "capacity": 5,
+          "would_write": 1,
+          "written": 1
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 140,
+          "would_write": 20,
+          "written": 20
+        },
+        {
+          "format": "\"%s\":%s,",
+          "capacity": 255,
+          "would_write": 152,
+          "written": 152
+        },
+        {
+          "format": "\"%s\":%s,",
+          "capacity": 103,
+          "would_write": 42,
+          "written": 42
+        }
+      ]
+    },
+    {
+      "case": "string-application",
+      "retry_input": 0,
+      "native_bytes": "{\"network_tags\":{\"is_ad\":\"1\",\"retry_attempt\":\"0\"},\"application_tags\":\"synthetic-app\"}",
+      "matches_independent_expected_bytes": true,
+      "live_allocation_count": 1,
+      "imports": {
+        "malloc": 2,
+        "strlen": 8,
+        "vsnprintf": 5,
+        "realloc": 3,
+        "free": 1
+      },
+      "format_calls": [
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 15,
+          "would_write": 12,
+          "written": 12
+        },
+        {
+          "format": "%d",
+          "capacity": 5,
+          "would_write": 1,
+          "written": 1
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 51,
+          "would_write": 20,
+          "written": 20
+        },
+        {
+          "format": "\"%s\":%s,",
+          "capacity": 63,
+          "would_write": 49,
+          "written": 49
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 78,
+          "would_write": 35,
+          "written": 35
+        }
+      ]
+    },
+    {
+      "case": "empty-fields",
+      "retry_input": 0,
+      "native_bytes": "{\"network_tags\":{\"retry_attempt\":\"0\"}}",
+      "matches_independent_expected_bytes": true,
+      "live_allocation_count": 1,
+      "imports": {
+        "malloc": 2,
+        "strlen": 10,
+        "vsnprintf": 3,
+        "realloc": 2,
+        "free": 1
+      },
+      "format_calls": [
+        {
+          "format": "%d",
+          "capacity": 5,
+          "would_write": 1,
+          "written": 1
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 31,
+          "would_write": 20,
+          "written": 20
+        },
+        {
+          "format": "\"%s\":%s,",
+          "capacity": 63,
+          "would_write": 37,
+          "written": 37
+        }
+      ]
+    },
+    {
+      "case": "long-product",
+      "retry_input": 0,
+      "native_bytes": "{\"network_tags\":{\"product\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"purpose\":\"refresh\",\"request_category\":\"document\",\"retry_attempt\":\"0\"}}",
+      "matches_independent_expected_bytes": true,
+      "live_allocation_count": 1,
+      "imports": {
+        "malloc": 2,
+        "strlen": 10,
+        "realloc": 2,
+        "vsnprintf": 6,
+        "free": 1
+      },
+      "format_calls": [
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 1023,
+          "would_write": 525,
+          "written": 525
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 498,
+          "would_write": 20,
+          "written": 20
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 478,
+          "would_write": 30,
+          "written": 30
+        },
+        {
+          "format": "%d",
+          "capacity": 5,
+          "would_write": 1,
+          "written": 1
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 448,
+          "would_write": 20,
+          "written": 20
+        },
+        {
+          "format": "\"%s\":%s,",
+          "capacity": 1023,
+          "would_write": 612,
+          "written": 612
+        }
+      ]
+    },
+    {
+      "case": "raw-object-product",
+      "retry_input": 0,
+      "native_bytes": "{\"network_tags\":{\"product\":{\"synthetic\":1},\"purpose\":\"prefetch\",\"request_category\":\"analytics\",\"retry_attempt\":\"0\"}}",
+      "matches_independent_expected_bytes": true,
+      "live_allocation_count": 1,
+      "imports": {
+        "malloc": 2,
+        "strlen": 10,
+        "realloc": 4,
+        "vsnprintf": 6,
+        "free": 1
+      },
+      "format_calls": [
+        {
+          "format": "\"%s\":%s,",
+          "capacity": 31,
+          "would_write": 26,
+          "written": 26
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 37,
+          "would_write": 21,
+          "written": 21
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 80,
+          "would_write": 31,
+          "written": 31
+        },
+        {
+          "format": "%d",
+          "capacity": 5,
+          "would_write": 1,
+          "written": 1
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 49,
+          "would_write": 20,
+          "written": 20
+        },
+        {
+          "format": "\"%s\":%s,",
+          "capacity": 127,
+          "would_write": 115,
+          "written": 115
+        }
+      ]
+    },
+    {
+      "case": "unescaped-quote",
+      "retry_input": 0,
+      "native_bytes": "{\"network_tags\":{\"product\":\"synthetic\"quote\",\"purpose\":\"prefetch\",\"request_category\":\"analytics\",\"retry_attempt\":\"0\"}}",
+      "matches_independent_expected_bytes": true,
+      "live_allocation_count": 1,
+      "imports": {
+        "malloc": 2,
+        "strlen": 10,
+        "realloc": 4,
+        "vsnprintf": 6,
+        "free": 1
+      },
+      "format_calls": [
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 31,
+          "would_write": 28,
+          "written": 28
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 35,
+          "would_write": 21,
+          "written": 21
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 78,
+          "would_write": 31,
+          "written": 31
+        },
+        {
+          "format": "%d",
+          "capacity": 5,
+          "would_write": 1,
+          "written": 1
+        },
+        {
+          "format": "\"%s\":\"%s\",",
+          "capacity": 47,
+          "would_write": 20,
+          "written": 20
+        },
+        {
+          "format": "\"%s\":%s,",
+          "capacity": 127,
+          "would_write": 117,
+          "written": 117
+        }
+      ]
+    }
+  ]
+}

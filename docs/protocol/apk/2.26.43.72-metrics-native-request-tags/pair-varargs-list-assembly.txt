@@ -1,0 +1,14 @@
+            0x00bdc68c      stp   q6, q7, [sp, 0x60]
+            0x00bdc690      mrs   x19, tpidr_el0
+            0x00bdc694      ldr   x9, [x19, 0x28]                      ; [0x28:4]=0xc306e8
+            0x00bdc698      stur  x9, [x29, -8]
+            0x00bdc69c      add   x9, x29, 0x20
+            0x00bdc6a0      stp   q0, q0, [x29, -0x30]
+            0x00bdc6a4      stp   x9, x10, [x29, -0x30]
+            0x00bdc6a8      mov   x10, -0x20
+            0x00bdc6ac      add   x9, x11, 0x80
+            0x00bdc6b0      movk  x10, 0xff80, lsl 32
+            0x00bdc6b4      stp   x9, x10, [x29, -0x20]
+            0x00bdc6b8      ldp   q0, q1, [x29, -0x30]
+            0x00bdc6bc      stp   q0, q1, [x29, -0x50]
+            0x00bdc6c0      ret

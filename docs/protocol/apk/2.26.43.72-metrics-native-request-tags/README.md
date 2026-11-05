@@ -120,3 +120,57 @@ metrics path is ported. **Observed live:** none. **Unknown:** upstream product
 value, general formatting/escaping/allocation behavior, metadata clock/mode
 semantics, actual Host/fallback selector plaintext, cryptography and deployment
 necessity. No full metrics parity or account-restriction guarantee is claimed.
+
+## Complete selected serialization fixtures (2026-11-05)
+
+**Observed bounded synthetic emulation:**19 additional cases execute builder
+0x72ca94 through its native return, including pair helper0x72cd78, retry
+formatter0x72cd24, dynamic buffer growth and native variadic-list setup. This
+extends the branch-only fixtures above; their narrower claims remain valid.
+No formatter helper is intercepted in this additional harness.
+
+Imported malloc/realloc/free/strlen are explicit bounded emulated-heap adapters.
+Imported vsnprintf decodes the actual native AArch64 va_list register/stack
+layout, permits only the three retained fixed formats, then delegates their
+bounded formatting to host libc snprintf. It copies the result into emulated
+memory with C size/NUL semantics. Android's libc implementation is not executed
+or claimed identical beyond these tested supported operations. Unexpected
+formats/imports, out-of-bounds allocator destinations, unterminated strings and
+target interrupts fail. Real heap allocation failure is not modeled.
+
+Exact native bytes match independent JSON serialization for supported safe
+inputs, plus an explicitly invalid-JSON quote fixture. Covered cases include:
+
+- Selected purpose1/category4 with retry boundaries0..9999 and signed extremes.
+- Retry10000 → string `1000`; signed maximum → `2147`; signed minimum → `-214`.
+  These are actual native caller bytes with the controlled snprintf adapter,
+  not a speculative interpretation of the size5 argument.
+- Optional surface and nested application_tags, application string, empty
+  fields and a512-character product that forces buffer growth.
+- A product beginning with `{` is inserted as a raw nested object. It is not
+  quoted as an ordinary string by the selected pair helper.
+- Synthetic product `synthetic"quote` produces unescaped embedded quote bytes;
+  the complete result fails a separate JSON parser as expected. No valid input
+  domain or production product value is inferred from this malformed fixture.
+
+On the ordinary selected sender fixture with synthetic product, output is:
+
+```json
+{"network_tags":{"product":"synthetic-product","purpose":"prefetch","request_category":"analytics","retry_attempt":"0"}}
+```
+
+All19 cases return exactly one live synthetic allocation: the returned outer
+string. Inner allocations/replaced buffers are accounted for by the adapters.
+This is not a whole-runtime leak, allocator-failure or concurrency proof. The
+malformed input demonstrates a formatting boundary; it does not justify
+accepting malformed JSON or inventing telemetry in a Rust port.
+
+With Unicorn2.1.4 and host libc available, run
+`python check-tag-serialization.py RECONSTRUCTED_LIBWHATSAPP.so`; stdout must
+match tag-serialization-results.json. Each case has100000-instruction/one-second
+caps. Native varargs support windows were added to windows.json and the pinned
+resolver. No real credentials, HTTP header transmission or Android process is
+used. **Still unknown:** arbitrary-input/general allocator behavior, real
+product values, full request acceptance, metadata semantics and credential
+cryptography. The bounded final serialization gap for these fixtures is closed;
+full protocol correctness and deployment requirements are not established.

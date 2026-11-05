@@ -16250,6 +16250,6 @@
     ],
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-metrics-native-request-tags/README.md",
-    "description": "Descriptor/switch tables map selected purpose1 to prefetch and category4 to analytics; empty optional fields omit. 24 bounded native selection fixtures use controlled pair/zero-format adapters, not full JSON serialization. Metadata Boolean/config sources retained separately. Upstream product, general formatting, clock/mode semantics and selector plaintext remain open. No Rust/live capability or invented telemetry added."
+    "description": "Descriptor/switch tables map selected purpose1 to prefetch and category4 to analytics; empty optional fields omit. 24 bounded native selection fixtures use controlled pair/zero-format adapters. An additional 19 full-builder cases verify exact bytes with synthetic allocation and host snprintf adapters reading native va_list; retry truncation/raw-object/quote behavior retained. Metadata Boolean/config sources retained separately. Upstream product, general formatting, clock/mode semantics and selector plaintext remain open. No Rust/live capability or invented telemetry added."
   }
 }
