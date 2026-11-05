@@ -1,0 +1,104 @@
+
+# class: LX/0WJ;
+# extends: Ljava/lang/Object;
+
+.method public A0l(V)  # .registers 19
+    # full signature: LX/0WJ;->A0l()V
+    0000..0004  move-object/from16  v1, v18
+    0004..0008  iget-object  v0, v1, LX/0WJ;->A0I:LX/0Wk;
+    0008..000e  invoke-virtual  {v0}, LX/0Wk;->A04()LX/FjI;
+    000e..0010  move-result-object  v11
+    0010..0014  iget-object  v0, v1, LX/0WJ;->A01:LX/0Yl;
+    0014..0018  iget-object  v0, v0, LX/0Yl;->A03:LX/0Yj;
+    0018..001c  iget-object  v0, v0, LX/0Yj;->A07:LX/0Yb;
+    001c..0020  iget-object  v4, v0, LX/0Yb;->A01:LX/0Xp;
+    0020..0026  invoke-virtual  {v4}, LX/0Xp;->A07()LX/0aq;
+    0026..0028  move-result-object  v2
+    0028..002e  invoke-virtual  {v2}, LX/0aq;->A00()LX/1hk;
+    002e..0030  move-result-object  v10
+    0030..0034  new-instance  v13, Landroid/content/ContentValues;
+    0034..003a  invoke-direct  {v13}, Landroid/content/ContentValues;-><init>()V
+    003a..003e  const-string  v1, "sent_to_server"
+    003e..0040  const/4  v9, #0x0
+    0040..0046  invoke-static  {v9}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0046..0048  move-result-object  v0
+    0048..004e  invoke-virtual  {v13, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Boolean;)V
+    004e..0054  const-string/jumbo  v3, "upload_timestamp"
+    0054..0058  const-wide/16  v0, #0x0
+    0058..005e  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    005e..0060  move-result-object  v0
+    0060..0066  invoke-virtual  {v13, v3, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+    0066..006a  iget-object  v12, v2, LX/0aq;->A02:LX/0KU;
+    006a..006e  const-string  v14, "prekeys"
+    006e..0072  const-string  v15, "sent_to_server != 0"
+    0072..0076  const-string  v16, "SignalPreKeyStore/markAllPreKeysAsUnsentToServer"
+    0076..007a  const/16  v17, #0x0
+    007a..0080  invoke-virtual/range  {v12..v17}, LX/0KU;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+    0080..0084  const-string  v0, "SignalPreKeyStore/markAllPreKeysAsUnsentToServer recorded no prekeys as received by server"
+    0084..008a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    008a..008e  const-string  v8, "SignalPreKeyStore/deleteAllPreKeyUploads deleted prekey upload timestamps:"
+    008e..0094  invoke-virtual  {v4}, LX/0Xp;->A07()LX/0aq;
+    0094..0096  move-result-object  v7
+    0096..009a  iget-object  v6, v7, LX/0aq;->A02:LX/0KU;
+    009a..009e  const-string  v5, "prekey_uploads"
+    009e..00a2  const-string  v4, "key_type = ?"
+    00a2..00a8  invoke-static  {v9}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+    00a8..00aa  move-result-object  v3
+    00aa..00ac  const/4  v0, #0x1
+    00ac..00b0  new-array  v1, v0, [Ljava/lang/String;
+    00b0..00b4  aput-object  v3, v1, v9
+    00b4..00b8  const-string  v0, "SignalPreKeyStore/deleteAllPreKeyUploads"
+    00b8..00be  invoke-virtual  {v6, v5, v4, v0, v1}, LX/0KU;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+    00be..00c0  move-result  v1
+    00c0..00c4  new-instance  v0, Ljava/lang/StringBuilder;
+    00c4..00ca  invoke-direct  {v0, v8}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00ca..00d0  invoke-virtual  {v0, v1}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00d0..00d6  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00d6..00d8  move-result-object  v0
+    00d8..00de  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    00de..00e4  invoke-virtual  {v7}, LX/0aq;->close()V
+    00e4..00ea  invoke-virtual  {v10}, LX/1hk;->A00()V
+    00ea..00f0  invoke-virtual  {v10}, LX/1hk;->close()V
+    00f0..00f6  invoke-virtual  {v2}, LX/0aq;->close()V
+    00f6..00fc  invoke-virtual  {v11}, LX/FjI;->close()V
+    00fc..00fe  return-void
+    00fe..0100  move-exception  v1
+    0100..0106  invoke-virtual  {v7}, LX/0aq;->close()V
+    0106..0108  goto  +0x5
+    0108..010a  move-exception  v0
+    010a..0110  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    0110..0112  throw  v1
+    0112..0114  move-exception  v1
+    0114..011a  invoke-virtual  {v10}, LX/1hk;->close()V
+    011a..011c  goto  +0x5
+    011c..011e  move-exception  v0
+    011e..0124  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    0124..0126  throw  v1
+    0126..0128  move-exception  v1
+    0128..012e  invoke-virtual  {v2}, LX/0aq;->close()V
+    012e..0130  goto  +0x5
+    0130..0132  move-exception  v0
+    0132..0138  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    0138..013a  throw  v1
+    013a..013c  move-exception  v1
+    013c..0142  invoke-virtual  {v11}, LX/FjI;->close()V
+    0142..0144  throw  v1
+    0144..0146  move-exception  v0
+    0146..014c  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    014c..014e  throw  v1
+    # exception table: 14 try range(s)
+    # catch <all> code_units 0008..0014 -> 009d
+    # catch <all> code_units 0014..0018 -> 0093
+    # catch <all> code_units 0018..004b -> 0089
+    # catch <all> code_units 004b..006f -> 007f
+    # catch <all> code_units 006f..0075 -> 0089
+    # catch <all> code_units 0075..0078 -> 0093
+    # catch <all> code_units 0078..007b -> 009d
+    # catch <all> code_units 0080..0084 -> 0084
+    # catch <all> code_units 0084..0089 -> 0089
+    # catch <all> code_units 008a..008e -> 008e
+    # catch <all> code_units 008f..0093 -> 0093
+    # catch <all> code_units 0094..0098 -> 0098
+    # catch <all> code_units 0098..009d -> 009d
+    # catch <all> code_units 009e..00a1 -> 00a2
+.end method

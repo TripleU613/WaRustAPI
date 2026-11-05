@@ -1,3 +1,11 @@
+2026-11-04 — **Digest404/503 recovery and metadata scope traced.**
+
+404 resync differs from503 attemptclear;resync SQL doesnot imply private
+key deletion or authority to release uncertain Rust reservations.
+[Evidence and port boundaries](docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#digest-not-foundserver-error-and-metadata-resync-scope-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. No production change or live traffic.
+
 2026-11-04 — **Digest local verifier and resync reasons traced.**
 
 Ordered hashpreimage/SHA1-SHA256 selection retained; parsed digest isnot

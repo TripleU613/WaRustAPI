@@ -1,0 +1,40 @@
+
+# class: LX/0Yd;
+# extends: Ljava/lang/Object;
+
+.method public A03(V)  # .registers 9
+    # full signature: LX/0Yd;->A03()V
+    0000..0004  const-string  v7, "SignalKyberPreKeyStore/deleteAllKyberPreKeyUploads deleted "
+    0004..0008  iget-object  v0, v8, LX/0Yd;->A01:LX/0Xp;
+    0008..000e  invoke-virtual  {v0}, LX/0Xp;->A07()LX/0aq;
+    000e..0010  move-result-object  v6
+    0010..0014  iget-object  v5, v6, LX/0aq;->A02:LX/0KU;
+    0014..0018  const-string  v4, "prekey_uploads"
+    0018..001c  const-string  v3, "key_type = ?"
+    001c..001e  const/4  v0, #0x1
+    001e..0022  new-array  v2, v0, [Ljava/lang/String;
+    0022..0026  const-string  v1, "1"
+    0026..0028  const/4  v0, #0x0
+    0028..002c  aput-object  v1, v2, v0
+    002c..0030  const-string  v0, "SignalKyberPreKeyStore/deleteAllKyberPreKeyUploads"
+    0030..0036  invoke-virtual  {v5, v4, v3, v0, v2}, LX/0KU;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+    0036..0038  move-result  v0
+    0038..003c  new-instance  v1, Ljava/lang/StringBuilder;
+    003c..0042  invoke-direct  {v1, v7}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0042..0048  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0048..004c  const-string  v0, " kyber prekey uploads"
+    004c..0052  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0052..0058  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0058..005a  move-result-object  v0
+    005a..0060  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0060..0066  invoke-virtual  {v6}, LX/0aq;->close()V
+    0066..0068  return-void
+    0068..006a  move-exception  v1
+    006a..006c  throw  v1
+    006c..006e  move-exception  v0
+    006e..0074  invoke-static  {v6, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    0074..0076  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0008..0030 -> 0034
+    # catch <all> code_units 0035..0036 -> 0036
+.end method

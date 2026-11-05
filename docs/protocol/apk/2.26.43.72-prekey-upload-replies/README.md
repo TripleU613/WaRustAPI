@@ -1495,3 +1495,46 @@ Additional export hashes:
 - [digest-attempt-clear.txt](digest-attempt-clear.txt): `60c829af81fff2e1fd6ebdf2b0ae32bd4b0b774578049786864f2aa773316b00`
 - [digest-sha-helper.txt](digest-sha-helper.txt): `a2efcb6b06279aa8cab9377bc8e7d50fdc0d032c777f119365792dff4a575492`
 - [digest-preference-clear.txt](digest-preference-clear.txt): `4982d067679a8b1da01af3ad4bcf75a58175eb039c00dc8a37b34ac035db8827`
+
+## Digest not-found/server-error and metadata resync scope (2026-11-04)
+
+**Confirmed static**, pinned2.26.43.72, same APK SHA-256 as this bundle.
+Checked DEX exports are not REA Evidence envelopes. Only FeK selector21
+and selected14o error branches are audited; unrelated worker branches remain
+outside scope. No Rust implementation of these state changes yet.
+
+- Prior291selector1 maps404 ->83,503 ->84. **14o.BLn83,0998–09c4**
+  clears attempttimeA0P then schedules **FeK(listener,21)**. **FeK08b4–08d6**
+  calls **13z.A0Q(reason4)** then **09S.A17(false)**, clearingneed-digest
+  on normalcompletion. IfA0Q throws the followingclear is not shown guaranteed.
+- **14o.BLn84,07d6–07ec** logsservererror and calls **A0P** only. Thus
+  this selected503 path clears attempttime but doesnot clear persisted
+  need_to_get_pre_key_digest, markkeysunsent or directlyqueue anotherupload.
+  A later startup may still enterdigest when its separateflag allows. No
+  synthetic exponential retry is inferred from503 alone.
+- **13z.A0Q** firstcalls **0WJ.A0l**. NewA0l updates legacy **prekeys**
+  where **sent_to_server !=0** to false and upload_timestamp=0; deletes
+  **prekey_uploads WHERE key_type=0**. It wrapsdatabase transaction/FjI,
+  preservingprivate record fields and IDs in these explicit statements.
+- PreviouslyretainedA0Q additionally performs analogous KEM sentflag/time
+  updates whenPQgateenabled. Its **0Yd.A03** nowtraced deletes only
+  **prekey_uploads WHERE key_type=1**. Neither these statements norA0l
+  deleteprivate prekeys, rotateidentity or invoke the406 deleteStoreA0m path.
+  Full nativewrapper atomicity and exceptional outcomes remain separate.
+- Gateenabledmark-unsent includes uploadedLR rows, so the same migration
+  predicate can becomefalse untilSETack. This is explicit digestresync,
+  not authority to resetmigration on ordinary reconnect. A0Q closes its
+  scopes and callsA0S(inputreason) usingexisting material.
+
+**Port constraints:** correlate a fresh digest/404 to its original request,
+account and local generation before any statechange. RustOutcomeUnknown
+reservations are a distinct local state and must not be converted toUnsent
+merely because native updates formerlysent rows. Historical digest imports
+oroffline inspection are not reset authority. Current saved-refusal hold
+remains; no new retry/reset operation or live accounttraffic here.
+
+Additional export hashes:
+
+- [digest-resync-legacy.txt](digest-resync-legacy.txt): `8823a93bebf5301b703e756666d1e98d7955031743d69a59b9c7452a296c3125`
+- [digest-none-worker.txt](digest-none-worker.txt): `76e4d710c781be5935fb76b7841afdc5ae4aa46a6b214407309ee967d74ba536`
+- [digest-resync-kem-history.txt](digest-resync-kem-history.txt): `c0773dc2f020747600e1da17c4790a63d3bb2655fbacff062ee7a117adbfb990`
