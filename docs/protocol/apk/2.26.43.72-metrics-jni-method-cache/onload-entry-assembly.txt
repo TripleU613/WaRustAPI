@@ -1,0 +1,24 @@
+            ;-- JNI_OnLoad:
+            0x00651ca8      paciasp
+            0x00651cac      sub   sp, sp, 0x70
+            0x00651cb0      stp   x29, x30, [sp, 0x10]
+            0x00651cb4      bl    0x5cb538
+            0x00651cb8      add   x29, sp, 0x10
+            0x00651cbc      mrs   x23, tpidr_el0
+            0x00651cc0      adrp  x21, 0xc44000
+            0x00651cc4      add   x21, x21, 0x630
+            0x00651cc8      ldr   x8, [x23, 0x28]                      ; [0x28:4]=0xc306e8
+            0x00651ccc      bl    0x5d0f68
+            0x00651cd0      str   x8, [sp, 8]
+            0x00651cd4      str   x0, [x21]
+            0x00651cd8      str   x0, [x21, 0xd00]
+            0x00651cdc      bl    0xa82cac
+            0x00651ce0      bl    0x49d4ec
+            0x00651ce4      bl    0x483d0c
+            0x00651ce8      bl    0x500f10
+            0x00651cec      str   xzr, [sp]
+            0x00651cf0      bl    method.facebook::simplejni.ensureInitialized__JNIEnv_____JavaVM
+            0x00651cf4      add   x8, x21, 0x5a8
+            0x00651cf8      ldr   x21, [sp]
+            0x00651cfc      ldarb w8, [x8]
+        ┌─< 0x00651d00      tbz   w8, 0, 0x6527fc

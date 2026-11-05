@@ -1,0 +1,282 @@
+{
+  "scope": "static JNI binding, not observed Java initialization",
+  "class_name": "com/whatsapp/wamsys/JniBridge",
+  "class_lookup_slot_va": "0xc44bc0",
+  "outbound_class_slot_va": "0xc44bd0",
+  "all_lookup_flag_va": "0xc4435c",
+  "symbols": [
+    {
+      "name": "JNI_OnLoad",
+      "entry_va": "0x651ca8",
+      "size": 6704
+    }
+  ],
+  "methods": [
+    {
+      "index": 0,
+      "name_slot_va": "0xc076e0",
+      "signature_slot_va": "0xc077c8",
+      "name": "jnidispatchIO",
+      "signature": "(ILjava/lang/Object;)J",
+      "cache_slot_va": "0xc467f0"
+    },
+    {
+      "index": 1,
+      "name_slot_va": "0xc076e8",
+      "signature_slot_va": "0xc077d0",
+      "name": "jnidispatchI",
+      "signature": "(I)J",
+      "cache_slot_va": "0xc467f8"
+    },
+    {
+      "index": 2,
+      "name_slot_va": "0xc076f0",
+      "signature_slot_va": "0xc077d8",
+      "name": "jnidispatchOO",
+      "signature": "(ILjava/lang/Object;)Ljava/lang/Object;",
+      "cache_slot_va": "0xc46800"
+    },
+    {
+      "index": 3,
+      "name_slot_va": "0xc076f8",
+      "signature_slot_va": "0xc077e0",
+      "name": "jnidispatchOI",
+      "signature": "(J)Ljava/lang/Object;",
+      "cache_slot_va": "0xc46808"
+    },
+    {
+      "index": 4,
+      "name_slot_va": "0xc07700",
+      "signature_slot_va": "0xc077e8",
+      "name": "jnidispatchIIOOO",
+      "signature": "(IJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+      "cache_slot_va": "0xc46810"
+    },
+    {
+      "index": 5,
+      "name_slot_va": "0xc07708",
+      "signature_slot_va": "0xc077f0",
+      "name": "jnidispatchOIOO",
+      "signature": "(IJLjava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+      "cache_slot_va": "0xc46818"
+    },
+    {
+      "index": 6,
+      "name_slot_va": "0xc07710",
+      "signature_slot_va": "0xc077f8",
+      "name": "jnidispatchOIO",
+      "signature": "(IJLjava/lang/Object;)Ljava/lang/Object;",
+      "cache_slot_va": "0xc46820"
+    },
+    {
+      "index": 7,
+      "name_slot_va": "0xc07718",
+      "signature_slot_va": "0xc07800",
+      "name": "jnidispatchIIOO",
+      "signature": "(IJLjava/lang/Object;Ljava/lang/Object;)J",
+      "cache_slot_va": "0xc46828"
+    },
+    {
+      "index": 8,
+      "name_slot_va": "0xc07720",
+      "signature_slot_va": "0xc07808",
+      "name": "jnidispatchIIO",
+      "signature": "(IJLjava/lang/Object;)J",
+      "cache_slot_va": "0xc46830"
+    },
+    {
+      "index": 9,
+      "name_slot_va": "0xc07728",
+      "signature_slot_va": "0xc07810",
+      "name": "jnidispatchOIOOO",
+      "signature": "(IJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+      "cache_slot_va": "0xc46838"
+    },
+    {
+      "index": 10,
+      "name_slot_va": "0xc07730",
+      "signature_slot_va": "0xc07818",
+      "name": "jnidispatchIIOOOO",
+      "signature": "(IJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+      "cache_slot_va": "0xc46840"
+    },
+    {
+      "index": 11,
+      "name_slot_va": "0xc07738",
+      "signature_slot_va": "0xc07820",
+      "name": "jnidispatchOOO",
+      "signature": "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+      "cache_slot_va": "0xc46848"
+    },
+    {
+      "index": 12,
+      "name_slot_va": "0xc07740",
+      "signature_slot_va": "0xc07828",
+      "name": "jnidispatchIOO",
+      "signature": "(ILjava/lang/Object;Ljava/lang/Object;)J",
+      "cache_slot_va": "0xc46850"
+    },
+    {
+      "index": 13,
+      "name_slot_va": "0xc07748",
+      "signature_slot_va": "0xc07830",
+      "name": "jnidispatchIOOO",
+      "signature": "(ILjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+      "cache_slot_va": "0xc46858"
+    },
+    {
+      "index": 14,
+      "name_slot_va": "0xc07750",
+      "signature_slot_va": "0xc07838",
+      "name": "jnidispatchOOOOO",
+      "signature": "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+      "cache_slot_va": "0xc46860"
+    },
+    {
+      "index": 15,
+      "name_slot_va": "0xc07758",
+      "signature_slot_va": "0xc07840",
+      "name": "jnidispatchIIIIOOOOO",
+      "signature": "(JJJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+      "cache_slot_va": "0xc46868"
+    },
+    {
+      "index": 16,
+      "name_slot_va": "0xc07760",
+      "signature_slot_va": "0xc07848",
+      "name": "jnidispatchIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO",
+      "signature": "(JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+      "cache_slot_va": "0xc46870"
+    },
+    {
+      "index": 17,
+      "name_slot_va": "0xc07768",
+      "signature_slot_va": "0xc07850",
+      "name": "jnidispatchIIIIIIIIIIIIIIIIIIIIIIIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO",
+      "signature": "(JJJJJJJJJJJJJJJJJJJJJJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+      "cache_slot_va": "0xc46878"
+    },
+    {
+      "index": 18,
+      "name_slot_va": "0xc07770",
+      "signature_slot_va": "0xc07858",
+      "name": "jnidispatchIIIIIIIIIIIIIIIIIIIIIIIIIIOOOOOOOOOOOOOOOOOOOOOOOOOOOOO",
+      "signature": "(JJJJJJJJJJJJJJJJJJJJJJJJJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+      "cache_slot_va": "0xc46880"
+    },
+    {
+      "index": 19,
+      "name_slot_va": "0xc07778",
+      "signature_slot_va": "0xc07860",
+      "name": "jnidispatchIIIIIIIIIIIIIIIIIOOOOOOOOOOOOOOOOOOOO",
+      "signature": "(JJJJJJJJJJJJJJJJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+      "cache_slot_va": "0xc46888"
+    },
+    {
+      "index": 20,
+      "name_slot_va": "0xc07780",
+      "signature_slot_va": "0xc07868",
+      "name": "jnidispatchIIOOOOOO",
+      "signature": "(JLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+      "cache_slot_va": "0xc46890"
+    },
+    {
+      "index": 21,
+      "name_slot_va": "0xc07788",
+      "signature_slot_va": "0xc07870",
+      "name": "jnidispatchIIIIIIOOOO",
+      "signature": "(IJJJJJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+      "cache_slot_va": "0xc46898"
+    },
+    {
+      "index": 22,
+      "name_slot_va": "0xc07790",
+      "signature_slot_va": "0xc07878",
+      "name": "jnidispatchIIOOOOO",
+      "signature": "(JLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+      "cache_slot_va": "0xc468a0"
+    },
+    {
+      "index": 23,
+      "name_slot_va": "0xc07798",
+      "signature_slot_va": "0xc07880",
+      "name": "jnidispatchIIIOOOOOO",
+      "signature": "(JJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+      "cache_slot_va": "0xc468a8"
+    },
+    {
+      "index": 24,
+      "name_slot_va": "0xc077a0",
+      "signature_slot_va": "0xc07888",
+      "name": "jnidispatchIIIOOOO",
+      "signature": "(IJJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+      "cache_slot_va": "0xc468b0"
+    },
+    {
+      "index": 25,
+      "name_slot_va": "0xc077a8",
+      "signature_slot_va": "0xc07890",
+      "name": "jnidispatchIIIIIIIIIIOOOOOOOOO",
+      "signature": "(JJJJJJJJJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+      "cache_slot_va": "0xc468b8"
+    },
+    {
+      "index": 26,
+      "name_slot_va": "0xc077b0",
+      "signature_slot_va": "0xc07898",
+      "name": "jnidispatchO",
+      "signature": "(I)Ljava/lang/Object;",
+      "cache_slot_va": "0xc468c0"
+    },
+    {
+      "index": 27,
+      "name_slot_va": "0xc077b8",
+      "signature_slot_va": "0xc078a0",
+      "name": "jnidispatchIII",
+      "signature": "(JJ)J",
+      "cache_slot_va": "0xc468c8"
+    },
+    {
+      "index": 28,
+      "name_slot_va": "0xc077c0",
+      "signature_slot_va": "0xc078a8",
+      "name": "jnidispatchIIIIOOO",
+      "signature": "(JJJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+      "cache_slot_va": "0xc468d0"
+    }
+  ],
+  "windows": [
+    {
+      "name": "onload-entry",
+      "start_va": "0x651ca8",
+      "end_va": "0x651d04",
+      "file_offset": "0x64dca8",
+      "bytes": 92,
+      "sha256": "a5219f1918533be4095c8a356b49b41e8556c43e923850ac06072502e87c9cd3"
+    },
+    {
+      "name": "method-initializer",
+      "start_va": "0x6527fc",
+      "end_va": "0x6528bc",
+      "file_offset": "0x64e7fc",
+      "bytes": 192,
+      "sha256": "30f895265d794ee6bc131874672aea69331ec2db6e6eb54630fb1166e0971414"
+    },
+    {
+      "name": "class-initializer",
+      "start_va": "0x6534ac",
+      "end_va": "0x6534e0",
+      "file_offset": "0x64f4ac",
+      "bytes": 52,
+      "sha256": "bfbb0e87671efaebbbccf21bb2dd98d7d254ea1a17ca35b19070526e7209e8e5"
+    },
+    {
+      "name": "outbound-cache-use",
+      "start_va": "0x6ea324",
+      "end_va": "0x6ea348",
+      "file_offset": "0x6e6324",
+      "bytes": 36,
+      "sha256": "311f992d4e77bbf267a1cc68805d1492c36beeabe6cab223710b66ceea0d22cd"
+    }
+  ]
+}

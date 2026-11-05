@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "bytes": 5005,
+    "sha256": "ddbab907eb8ece347ac9c04ed05847c1ba872621cdc63ec795a9661041107264"
+  },
+  "cache-boundaries.json": {
+    "bytes": 10979,
+    "sha256": "e7d74646615435d52d7d38d06dcd895032551521a060cc5c82646bde71272b51"
+  },
+  "cache-results.json": {
+    "bytes": 27361,
+    "sha256": "d6af829501e3b1f460eaafabea1ae16ae3dfcff03b7262c6f1f1bc2027b7fb14"
+  },
+  "check-cache.py": {
+    "bytes": 6101,
+    "sha256": "88e9a02c49fa184234f6290b40e6911229ad054292f87a5f67a9125371fb3c8d"
+  },
+  "class-initializer-assembly.txt": {
+    "bytes": 737,
+    "sha256": "3fd03ee2f0882a5fe943840ea3ebfae12a0003d74cf881c603525576149a59c1"
+  },
+  "inspect-cache.py": {
+    "bytes": 2035,
+    "sha256": "0f715c5c406013412f89815306318c8f289c7cdeea4aaed50632a947e4bf67b2"
+  },
+  "method-initializer-assembly.txt": {
+    "bytes": 2786,
+    "sha256": "548b933b4374d5223b99da407ebe2de9555b241bb183d7cc1ae5088ab6c3662c"
+  },
+  "onload-entry-assembly.txt": {
+    "bytes": 1183,
+    "sha256": "3b4043ec9edcf1eafc43b52eeb70ae6dbd7aa9c0f9bf6e578d812d126ed98c24"
+  },
+  "outbound-cache-use-assembly.txt": {
+    "bytes": 551,
+    "sha256": "229cc469cf3f394f307fabb116be3ee96e62142a24436a40444d3440580f7b0c"
+  },
+  "windows.json": {
+    "bytes": 380,
+    "sha256": "87db39259bbbda6bfb437e3e431d12cd6fb9c578a615709b68c48740f4d9c922"
+  }
+}

@@ -1,3 +1,12 @@
+2026-11-05 — **Outbound metrics JNI method-cache binding resolved.**
+
+JNI_OnLoad's indexed lookup/store links native cache0xc467f0 to the exact Java
+credential producer. Five bounded native-loop fixtures cover complete/partial
+lookup and aggregate initialization flag. [Evidence and limits](docs/protocol/apk/2.26.43.72-metrics-jni-method-cache/README.md).
+Live initialization, whole-loader recovery and crypto remain open. Validation:
+pinned ELF symbol/table resolver and fixture reproduction, coverage, staged diff
+and bundle/link hygiene. No Rust runtime or live traffic changed.
+
 2026-11-05 — **Credential callback timeout and parse-failure ownership traced.**
 
 Pinned class_def proves Hyg's ordinary dispatch path. Timeout claims callback

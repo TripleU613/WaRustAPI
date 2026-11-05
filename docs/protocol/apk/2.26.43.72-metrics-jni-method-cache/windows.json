@@ -1,0 +1,22 @@
+[
+  {
+    "name": "onload-entry",
+    "start_va": "0x651ca8",
+    "end_va": "0x651d04"
+  },
+  {
+    "name": "method-initializer",
+    "start_va": "0x6527fc",
+    "end_va": "0x6528bc"
+  },
+  {
+    "name": "class-initializer",
+    "start_va": "0x6534ac",
+    "end_va": "0x6534e0"
+  },
+  {
+    "name": "outbound-cache-use",
+    "start_va": "0x6ea324",
+    "end_va": "0x6ea348"
+  }
+]

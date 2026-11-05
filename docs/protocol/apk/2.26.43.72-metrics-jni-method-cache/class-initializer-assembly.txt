@@ -1,0 +1,13 @@
+       ╎╎   0x006534ac      adrp  x0, 0xc44000
+       ╎╎   0x006534b0      add   x0, x0, 0xbc8
+       ╎╎   0x006534b4      bl    sym.imp.__wrap___cxa_guard_acquire
+       └──< 0x006534b8      cbz   w0, 0x652824
+        ╎   0x006534bc      adrp  x1, 0x112000
+        ╎   0x006534c0      add   x1, x1, 0x2cd
+        ╎   0x006534c4      mov   x0, x21
+        ╎   0x006534c8      bl    method.facebook::simplejni.findClassAndTurnToGlobalRef__JNIEnv___char_const
+        ╎   0x006534cc      mov   x8, x22
+        ╎   0x006534d0      str   x0, [x8], 8
+        ╎   0x006534d4      mov   x0, x8
+        ╎   0x006534d8      bl    sym.imp.__wrap___cxa_guard_release
+        └─< 0x006534dc      b     0x652824

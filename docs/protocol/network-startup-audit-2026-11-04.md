@@ -469,3 +469,14 @@ ownership without invoking that native completion; broader recovery is unknown.
 [Callback-specific interface proof, shared dispatcher trace and scoped risk](apk/2.26.43.72-metrics-credential-iq/README.md#credential-callback-timeout-ownership-and-schema-failure-2026-11-05).
 No Rust/live change or automatic retry authority; full generation/recovery
 behavior remains unproven.
+
+### Outbound metrics JNI cache binding closed statically (2026-11-05)
+
+**Confirmed static / observed bounded synthetic emulation, APK43.72:**
+JNI_OnLoad resolves JniBridge.jnidispatchIO(ILjava/lang/Object;)J at index0
+into cache0xc467f0, consumed by the outbound static-long bridge. Five native-loop
+fixtures verify success and early lookup failures. Earlier slots may remain
+nonnull while the all-lookup flag is false; runtime initialization is unobserved.
+[ELF symbol/tables, indexed-store proof, native fixtures and limits](apk/2.26.43.72-metrics-jni-method-cache/README.md).
+This supersedes the prior static cache-binding unknown. Whole-loader recovery,
+crypto and runtime availability remain open. No Rust/live change.

@@ -98,12 +98,15 @@ If false, the refresh worker invokes completion with null data/raw1 and clears
 its provider context (retained worker0x729c24..0x729c38). Java's selected
 not-ready path therefore has an explicit native-side false-return handling path.
 
-**Inferred connection:** selector7 and byte-array/long signature match the Java
-producer above. Runtime initialization of cache0xc467f0 to that exact Java
-method remains **unknown**. The bounded ARM64 scan for ADRP page0xc46000 plus
+**Confirmed static binding (subsequent trace):** selector7 and byte-array/long
+signature identify the Java producer above through its initializer and cache. The static cache initialization is now confirmed by the
+[JNI_OnLoad method-cache trace](../2.26.43.72-metrics-jni-method-cache/README.md):
+index0 resolves that exact name/signature into0xc467f0. Live initialization
+remains unobserved. The bounded ARM64 scan for ADRP page0xc46000 plus
 nearby same-register 64-bit load/store offset0x7f0 found only this load; it does
 not cover indirect stores, address materialization or the initializer generally.
-Do not call this a fully closed outbound native-to-Java binding.
+That limited scan did not cover the indexed store subsequently found in
+JNI_OnLoad; the static binding is now closed by that separate evidence.
 
 The APK anchor privatestats also finds separate 1hS.A00 ACSSender and1ro static
 initialization. The retained other-acs-request.txt is a different producer;
@@ -124,11 +127,12 @@ native-boundaries.json (digest-bound mapped windows, selector/thunk destinations
 Checksums cover all other files. These exports establish static source behavior,
 not synthetic execution tests or live interoperability.
 
-**Unknown:** runtime Java method-cache binding, blinded-credential/verification
+**Unknown:** live Java method-cache availability, blinded-credential/verification
 algorithms, full error/timeout dispatcher, retry waits, callback generation and
 durability, and whether this metrics subsystem is required for a deployment.
 No mandatory telemetry, server restriction policy or ban guarantee is inferred.
-Next useful work is method-cache/provider binding and timeout/error dispatch,
+The method-cache static binding and selected timeout/error dispatch are now
+retained in subsequent sections/bundles. Next useful work is provider recovery,
 followed by evidence-backed Rust behavior only where a real surface exists.
 
 ## Credential callback timeout, ownership and schema failure (2026-11-05)

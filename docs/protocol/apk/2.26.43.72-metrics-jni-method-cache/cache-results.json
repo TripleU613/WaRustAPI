@@ -1,0 +1,581 @@
+{
+  "scope": "synthetic JNI method-cache loop only; no Java/runtime/native registration executed",
+  "unicorn_version": "2.1.4",
+  "instruction_cap_per_case": 100000,
+  "timeout_microseconds_per_case": 1000000,
+  "cases": [
+    {
+      "failed_lookup_index": null,
+      "all_lookup_flag": 1,
+      "outbound_slot_value": "0x10002000",
+      "lookups": [
+        {
+          "index": 0,
+          "name": "jnidispatchIO",
+          "signature": "(ILjava/lang/Object;)J",
+          "synthetic_method_id": "0x10002000"
+        },
+        {
+          "index": 1,
+          "name": "jnidispatchI",
+          "signature": "(I)J",
+          "synthetic_method_id": "0x10002008"
+        },
+        {
+          "index": 2,
+          "name": "jnidispatchOO",
+          "signature": "(ILjava/lang/Object;)Ljava/lang/Object;",
+          "synthetic_method_id": "0x10002010"
+        },
+        {
+          "index": 3,
+          "name": "jnidispatchOI",
+          "signature": "(J)Ljava/lang/Object;",
+          "synthetic_method_id": "0x10002018"
+        },
+        {
+          "index": 4,
+          "name": "jnidispatchIIOOO",
+          "signature": "(IJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x10002020"
+        },
+        {
+          "index": 5,
+          "name": "jnidispatchOIOO",
+          "signature": "(IJLjava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+          "synthetic_method_id": "0x10002028"
+        },
+        {
+          "index": 6,
+          "name": "jnidispatchOIO",
+          "signature": "(IJLjava/lang/Object;)Ljava/lang/Object;",
+          "synthetic_method_id": "0x10002030"
+        },
+        {
+          "index": 7,
+          "name": "jnidispatchIIOO",
+          "signature": "(IJLjava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x10002038"
+        },
+        {
+          "index": 8,
+          "name": "jnidispatchIIO",
+          "signature": "(IJLjava/lang/Object;)J",
+          "synthetic_method_id": "0x10002040"
+        },
+        {
+          "index": 9,
+          "name": "jnidispatchOIOOO",
+          "signature": "(IJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+          "synthetic_method_id": "0x10002048"
+        },
+        {
+          "index": 10,
+          "name": "jnidispatchIIOOOO",
+          "signature": "(IJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x10002050"
+        },
+        {
+          "index": 11,
+          "name": "jnidispatchOOO",
+          "signature": "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+          "synthetic_method_id": "0x10002058"
+        },
+        {
+          "index": 12,
+          "name": "jnidispatchIOO",
+          "signature": "(ILjava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x10002060"
+        },
+        {
+          "index": 13,
+          "name": "jnidispatchIOOO",
+          "signature": "(ILjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x10002068"
+        },
+        {
+          "index": 14,
+          "name": "jnidispatchOOOOO",
+          "signature": "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+          "synthetic_method_id": "0x10002070"
+        },
+        {
+          "index": 15,
+          "name": "jnidispatchIIIIOOOOO",
+          "signature": "(JJJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x10002078"
+        },
+        {
+          "index": 16,
+          "name": "jnidispatchIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO",
+          "signature": "(JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x10002080"
+        },
+        {
+          "index": 17,
+          "name": "jnidispatchIIIIIIIIIIIIIIIIIIIIIIIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO",
+          "signature": "(JJJJJJJJJJJJJJJJJJJJJJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x10002088"
+        },
+        {
+          "index": 18,
+          "name": "jnidispatchIIIIIIIIIIIIIIIIIIIIIIIIIIOOOOOOOOOOOOOOOOOOOOOOOOOOOOO",
+          "signature": "(JJJJJJJJJJJJJJJJJJJJJJJJJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x10002090"
+        },
+        {
+          "index": 19,
+          "name": "jnidispatchIIIIIIIIIIIIIIIIIOOOOOOOOOOOOOOOOOOOO",
+          "signature": "(JJJJJJJJJJJJJJJJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x10002098"
+        },
+        {
+          "index": 20,
+          "name": "jnidispatchIIOOOOOO",
+          "signature": "(JLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x100020a0"
+        },
+        {
+          "index": 21,
+          "name": "jnidispatchIIIIIIOOOO",
+          "signature": "(IJJJJJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x100020a8"
+        },
+        {
+          "index": 22,
+          "name": "jnidispatchIIOOOOO",
+          "signature": "(JLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x100020b0"
+        },
+        {
+          "index": 23,
+          "name": "jnidispatchIIIOOOOOO",
+          "signature": "(JJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x100020b8"
+        },
+        {
+          "index": 24,
+          "name": "jnidispatchIIIOOOO",
+          "signature": "(IJJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x100020c0"
+        },
+        {
+          "index": 25,
+          "name": "jnidispatchIIIIIIIIIIOOOOOOOOO",
+          "signature": "(JJJJJJJJJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x100020c8"
+        },
+        {
+          "index": 26,
+          "name": "jnidispatchO",
+          "signature": "(I)Ljava/lang/Object;",
+          "synthetic_method_id": "0x100020d0"
+        },
+        {
+          "index": 27,
+          "name": "jnidispatchIII",
+          "signature": "(JJ)J",
+          "synthetic_method_id": "0x100020d8"
+        },
+        {
+          "index": 28,
+          "name": "jnidispatchIIIIOOO",
+          "signature": "(JJJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x100020e0"
+        }
+      ],
+      "imports": [
+        "_ZN8facebook9simplejni15registerNativesEP7_JNIEnvPKcPK15JNINativeMethodm",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "__wrap___cxa_guard_release"
+      ]
+    },
+    {
+      "failed_lookup_index": 0,
+      "all_lookup_flag": 0,
+      "outbound_slot_value": "0x0",
+      "lookups": [
+        {
+          "index": 0,
+          "name": "jnidispatchIO",
+          "signature": "(ILjava/lang/Object;)J",
+          "synthetic_method_id": "0x0"
+        }
+      ],
+      "imports": [
+        "_ZN8facebook9simplejni15registerNativesEP7_JNIEnvPKcPK15JNINativeMethodm",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "__wrap___cxa_guard_release"
+      ]
+    },
+    {
+      "failed_lookup_index": 1,
+      "all_lookup_flag": 0,
+      "outbound_slot_value": "0x10002000",
+      "lookups": [
+        {
+          "index": 0,
+          "name": "jnidispatchIO",
+          "signature": "(ILjava/lang/Object;)J",
+          "synthetic_method_id": "0x10002000"
+        },
+        {
+          "index": 1,
+          "name": "jnidispatchI",
+          "signature": "(I)J",
+          "synthetic_method_id": "0x0"
+        }
+      ],
+      "imports": [
+        "_ZN8facebook9simplejni15registerNativesEP7_JNIEnvPKcPK15JNINativeMethodm",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "__wrap___cxa_guard_release"
+      ]
+    },
+    {
+      "failed_lookup_index": 12,
+      "all_lookup_flag": 0,
+      "outbound_slot_value": "0x10002000",
+      "lookups": [
+        {
+          "index": 0,
+          "name": "jnidispatchIO",
+          "signature": "(ILjava/lang/Object;)J",
+          "synthetic_method_id": "0x10002000"
+        },
+        {
+          "index": 1,
+          "name": "jnidispatchI",
+          "signature": "(I)J",
+          "synthetic_method_id": "0x10002008"
+        },
+        {
+          "index": 2,
+          "name": "jnidispatchOO",
+          "signature": "(ILjava/lang/Object;)Ljava/lang/Object;",
+          "synthetic_method_id": "0x10002010"
+        },
+        {
+          "index": 3,
+          "name": "jnidispatchOI",
+          "signature": "(J)Ljava/lang/Object;",
+          "synthetic_method_id": "0x10002018"
+        },
+        {
+          "index": 4,
+          "name": "jnidispatchIIOOO",
+          "signature": "(IJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x10002020"
+        },
+        {
+          "index": 5,
+          "name": "jnidispatchOIOO",
+          "signature": "(IJLjava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+          "synthetic_method_id": "0x10002028"
+        },
+        {
+          "index": 6,
+          "name": "jnidispatchOIO",
+          "signature": "(IJLjava/lang/Object;)Ljava/lang/Object;",
+          "synthetic_method_id": "0x10002030"
+        },
+        {
+          "index": 7,
+          "name": "jnidispatchIIOO",
+          "signature": "(IJLjava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x10002038"
+        },
+        {
+          "index": 8,
+          "name": "jnidispatchIIO",
+          "signature": "(IJLjava/lang/Object;)J",
+          "synthetic_method_id": "0x10002040"
+        },
+        {
+          "index": 9,
+          "name": "jnidispatchOIOOO",
+          "signature": "(IJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+          "synthetic_method_id": "0x10002048"
+        },
+        {
+          "index": 10,
+          "name": "jnidispatchIIOOOO",
+          "signature": "(IJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x10002050"
+        },
+        {
+          "index": 11,
+          "name": "jnidispatchOOO",
+          "signature": "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+          "synthetic_method_id": "0x10002058"
+        },
+        {
+          "index": 12,
+          "name": "jnidispatchIOO",
+          "signature": "(ILjava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x0"
+        }
+      ],
+      "imports": [
+        "_ZN8facebook9simplejni15registerNativesEP7_JNIEnvPKcPK15JNINativeMethodm",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "__wrap___cxa_guard_release"
+      ]
+    },
+    {
+      "failed_lookup_index": 28,
+      "all_lookup_flag": 0,
+      "outbound_slot_value": "0x10002000",
+      "lookups": [
+        {
+          "index": 0,
+          "name": "jnidispatchIO",
+          "signature": "(ILjava/lang/Object;)J",
+          "synthetic_method_id": "0x10002000"
+        },
+        {
+          "index": 1,
+          "name": "jnidispatchI",
+          "signature": "(I)J",
+          "synthetic_method_id": "0x10002008"
+        },
+        {
+          "index": 2,
+          "name": "jnidispatchOO",
+          "signature": "(ILjava/lang/Object;)Ljava/lang/Object;",
+          "synthetic_method_id": "0x10002010"
+        },
+        {
+          "index": 3,
+          "name": "jnidispatchOI",
+          "signature": "(J)Ljava/lang/Object;",
+          "synthetic_method_id": "0x10002018"
+        },
+        {
+          "index": 4,
+          "name": "jnidispatchIIOOO",
+          "signature": "(IJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x10002020"
+        },
+        {
+          "index": 5,
+          "name": "jnidispatchOIOO",
+          "signature": "(IJLjava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+          "synthetic_method_id": "0x10002028"
+        },
+        {
+          "index": 6,
+          "name": "jnidispatchOIO",
+          "signature": "(IJLjava/lang/Object;)Ljava/lang/Object;",
+          "synthetic_method_id": "0x10002030"
+        },
+        {
+          "index": 7,
+          "name": "jnidispatchIIOO",
+          "signature": "(IJLjava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x10002038"
+        },
+        {
+          "index": 8,
+          "name": "jnidispatchIIO",
+          "signature": "(IJLjava/lang/Object;)J",
+          "synthetic_method_id": "0x10002040"
+        },
+        {
+          "index": 9,
+          "name": "jnidispatchOIOOO",
+          "signature": "(IJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+          "synthetic_method_id": "0x10002048"
+        },
+        {
+          "index": 10,
+          "name": "jnidispatchIIOOOO",
+          "signature": "(IJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x10002050"
+        },
+        {
+          "index": 11,
+          "name": "jnidispatchOOO",
+          "signature": "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+          "synthetic_method_id": "0x10002058"
+        },
+        {
+          "index": 12,
+          "name": "jnidispatchIOO",
+          "signature": "(ILjava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x10002060"
+        },
+        {
+          "index": 13,
+          "name": "jnidispatchIOOO",
+          "signature": "(ILjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x10002068"
+        },
+        {
+          "index": 14,
+          "name": "jnidispatchOOOOO",
+          "signature": "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+          "synthetic_method_id": "0x10002070"
+        },
+        {
+          "index": 15,
+          "name": "jnidispatchIIIIOOOOO",
+          "signature": "(JJJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x10002078"
+        },
+        {
+          "index": 16,
+          "name": "jnidispatchIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO",
+          "signature": "(JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x10002080"
+        },
+        {
+          "index": 17,
+          "name": "jnidispatchIIIIIIIIIIIIIIIIIIIIIIIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO",
+          "signature": "(JJJJJJJJJJJJJJJJJJJJJJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x10002088"
+        },
+        {
+          "index": 18,
+          "name": "jnidispatchIIIIIIIIIIIIIIIIIIIIIIIIIIOOOOOOOOOOOOOOOOOOOOOOOOOOOOO",
+          "signature": "(JJJJJJJJJJJJJJJJJJJJJJJJJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x10002090"
+        },
+        {
+          "index": 19,
+          "name": "jnidispatchIIIIIIIIIIIIIIIIIOOOOOOOOOOOOOOOOOOOO",
+          "signature": "(JJJJJJJJJJJJJJJJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x10002098"
+        },
+        {
+          "index": 20,
+          "name": "jnidispatchIIOOOOOO",
+          "signature": "(JLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x100020a0"
+        },
+        {
+          "index": 21,
+          "name": "jnidispatchIIIIIIOOOO",
+          "signature": "(IJJJJJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x100020a8"
+        },
+        {
+          "index": 22,
+          "name": "jnidispatchIIOOOOO",
+          "signature": "(JLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x100020b0"
+        },
+        {
+          "index": 23,
+          "name": "jnidispatchIIIOOOOOO",
+          "signature": "(JJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x100020b8"
+        },
+        {
+          "index": 24,
+          "name": "jnidispatchIIIOOOO",
+          "signature": "(IJJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x100020c0"
+        },
+        {
+          "index": 25,
+          "name": "jnidispatchIIIIIIIIIIOOOOOOOOO",
+          "signature": "(JJJJJJJJJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x100020c8"
+        },
+        {
+          "index": 26,
+          "name": "jnidispatchO",
+          "signature": "(I)Ljava/lang/Object;",
+          "synthetic_method_id": "0x100020d0"
+        },
+        {
+          "index": 27,
+          "name": "jnidispatchIII",
+          "signature": "(JJ)J",
+          "synthetic_method_id": "0x100020d8"
+        },
+        {
+          "index": 28,
+          "name": "jnidispatchIIIIOOO",
+          "signature": "(JJJLjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J",
+          "synthetic_method_id": "0x0"
+        }
+      ],
+      "imports": [
+        "_ZN8facebook9simplejni15registerNativesEP7_JNIEnvPKcPK15JNINativeMethodm",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "_ZN8facebook9simplejni17getStaticMethodIdEP7_JNIEnvP7_jclassPKcS6_",
+        "__wrap___cxa_guard_release"
+      ]
+    }
+  ]
+}
