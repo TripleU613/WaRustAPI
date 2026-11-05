@@ -1,0 +1,109 @@
+# Declared overrides: LX/0Xp;->A0C()Z
+# Coverage: 114178 APK classes; superclass ancestry only; external/runtime/interface dispatch unverified
+# ancestry: LX/0Xp; -> Landroid/database/sqlite/SQLiteOpenHelper;
+
+# class: LX/0Xp;
+# extends: Landroid/database/sqlite/SQLiteOpenHelper;
+
+.method public A0C(Z)  # .registers 5
+    # full signature: LX/0Xp;->A0C()Z
+    0000..0004  iget-object  v0, v4, LX/0Xp;->A02:LX/05a;
+    0004..0008  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0008..000e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    000e..0010  move-result-object  v1
+    0010..0014  check-cast  v1, LX/00E;
+    0014..0018  const/16  v0, #0x64c7
+    0018..001e  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    001e..0020  move-result  v0
+    0020..0024  if-eqz  v0, +0xd
+    0024..0028  iget-object  v1, v4, LX/0Xp;->A0B:Ljava/lang/Object;
+    0028..002a  monitor-enter
+    002a..002c  const/4  v0, #0x0
+    002c..0030  iput-object  v0, v4, LX/0Xp;->A00:LX/0KU;
+    0030..0032  goto  +0x4
+    0032..0034  move-exception  v0
+    0034..0036  monitor-exit
+    0036..0038  throw  v0
+    0038..003a  monitor-exit
+    003a..0040  invoke-virtual  {v4}, Landroid/database/sqlite/SQLiteOpenHelper;->getDatabaseName()Ljava/lang/String;
+    0040..0042  move-result-object  v3
+    0042..0046  const-string  v1, "BaseSQLiteOpenHelper/deleteDatabaseFiles for "
+    0046..004a  new-instance  v0, Ljava/lang/StringBuilder;
+    004a..0050  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0050..0056  invoke-virtual  {v0, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0056..005c  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    005c..005e  move-result-object  v0
+    005e..0064  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0064..0068  if-eqz  v3, +0x95
+    0068..006c  iget-object  v0, v4, LX/0Xp;->A01:Landroid/content/Context;
+    006c..0072  invoke-virtual  {v0, v3}, Landroid/content/Context;->getDatabasePath(Ljava/lang/String;)Ljava/io/File;
+    0072..0074  move-result-object  v2
+    0074..007a  invoke-virtual  {v2}, Ljava/io/File;->exists()Z
+    007a..007c  move-result  v0
+    007c..0080  if-eqz  v0, +0x1e
+    0080..0086  invoke-virtual  {v2}, Ljava/io/File;->delete()Z
+    0086..0088  move-result  v0
+    0088..008c  if-nez  v0, +0x18
+    008c..0090  const-string  v0, "BaseSQLiteOpenHelper/failed to delete "
+    0090..0094  new-instance  v1, Ljava/lang/StringBuilder;
+    0094..009a  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    009a..00a0  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00a0..00a4  const-string  v0, " db"
+    00a4..00aa  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00aa..00b0  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00b0..00b2  move-result-object  v0
+    00b2..00b8  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    00b8..00bc  const-string  v0, "BaseSQLiteOpenHelper"
+    00bc..00c2  invoke-static  {v2, v0}, LX/0KT;->A03(Ljava/io/File;Ljava/lang/String;)Z
+    00c2..00c8  invoke-virtual  {v2}, Ljava/io/File;->exists()Z
+    00c8..00ca  move-result  v0
+    00ca..00ce  if-nez  v0, +0x64
+    00ce..00d4  invoke-virtual  {v2}, Ljava/io/File;->getPath()Ljava/lang/String;
+    00d4..00d6  move-result-object  v0
+    00d6..00da  new-instance  v1, Ljava/lang/StringBuilder;
+    00da..00e0  invoke-direct  {v1}, Ljava/lang/StringBuilder;-><init>()V
+    00e0..00e6  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00e6..00ea  const-string  v0, "-wal"
+    00ea..00f0  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00f0..00f6  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00f6..00f8  move-result-object  v1
+    00f8..00fc  new-instance  v0, Ljava/io/File;
+    00fc..0102  invoke-direct  {v0, v1}, Ljava/io/File;-><init>(Ljava/lang/String;)V
+    0102..0108  invoke-virtual  {v0}, Ljava/io/File;->exists()Z
+    0108..010a  move-result  v0
+    010a..010e  if-nez  v0, +0x44
+    010e..0114  invoke-virtual  {v2}, Ljava/io/File;->getPath()Ljava/lang/String;
+    0114..0116  move-result-object  v0
+    0116..011a  new-instance  v1, Ljava/lang/StringBuilder;
+    011a..0120  invoke-direct  {v1}, Ljava/lang/StringBuilder;-><init>()V
+    0120..0126  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0126..012a  const-string  v0, "-journal"
+    012a..0130  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0130..0136  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0136..0138  move-result-object  v1
+    0138..013c  new-instance  v0, Ljava/io/File;
+    013c..0142  invoke-direct  {v0, v1}, Ljava/io/File;-><init>(Ljava/lang/String;)V
+    0142..0148  invoke-virtual  {v0}, Ljava/io/File;->exists()Z
+    0148..014a  move-result  v0
+    014a..014e  if-nez  v0, +0x24
+    014e..0154  invoke-virtual  {v2}, Ljava/io/File;->getPath()Ljava/lang/String;
+    0154..0156  move-result-object  v0
+    0156..015a  new-instance  v1, Ljava/lang/StringBuilder;
+    015a..0160  invoke-direct  {v1}, Ljava/lang/StringBuilder;-><init>()V
+    0160..0166  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0166..016a  const-string  v0, "-shm"
+    016a..0170  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0170..0176  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0176..0178  move-result-object  v1
+    0178..017c  new-instance  v0, Ljava/io/File;
+    017c..0182  invoke-direct  {v0, v1}, Ljava/io/File;-><init>(Ljava/lang/String;)V
+    0182..0188  invoke-virtual  {v0}, Ljava/io/File;->exists()Z
+    0188..018a  move-result  v0
+    018a..018e  if-nez  v0, +0x4
+    018e..0190  const/4  v0, #0x1
+    0190..0192  return  v0
+    0192..0194  const/4  v0, #0x0
+    0194..0196  return  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0016..0019 -> 0019
+.end method

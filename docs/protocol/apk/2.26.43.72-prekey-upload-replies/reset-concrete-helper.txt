@@ -1,0 +1,31 @@
+
+# class: LX/0Xv;
+# extends: LX/0Xt;
+
+.method public <init>(V)  # .registers 11
+    # full signature: LX/0Xv;-><init>()V
+    0000..0004  const-string  v6, "axolotl.db"
+    0004..0006  const/4  v2, #0x1
+    0006..0008  const/4  v1, #0x7
+    0008..000c  new-instance  v0, LX/1XA;
+    000c..0012  invoke-direct  {v0, v1}, LX/1XA;-><init>(I)V
+    0012..0018  invoke-static  {v0}, LX/00o;->A01(Lkotlin/jvm/functions/Function0;)LX/00q;
+    0018..001a  move-result-object  v8
+    001a..001e  sget-object  v7, LX/06e;->A00:LX/06e;
+    001e..0022  const/16  v0, #0xc2e
+    0022..0028  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0028..002a  move-result-object  v5
+    002a..002e  check-cast  v5, LX/0HJ;
+    002e..0032  new-instance  v4, LX/0Y4;
+    0032..0038  invoke-direct  {v4}, LX/0Y4;-><init>()V
+    0038..003c  const/16  v9, #0x28
+    003c..003e  move-object  v3, v10
+    003e..0044  invoke-direct/range  {v3..v9}, LX/0Xt;-><init>(LX/0HL;LX/0HJ;Ljava/lang/String;Ljava/util/Set;LX/00p;I)V
+    0044..0048  iput-boolean  v2, v10, LX/0Xv;->A02:Z
+    0048..004c  const/16  v0, #0xc2b
+    004c..0052  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0052..0054  move-result-object  v0
+    0054..0058  iput-object  v0, v10, LX/0Xv;->A01:LX/05a;
+    0058..005a  return-void
+    # exception table: 0 try range(s)
+.end method

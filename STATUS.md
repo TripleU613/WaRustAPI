@@ -1,3 +1,11 @@
+2026-11-04 — **SQLite reset base and helper selection traced.**
+
+Cleanup attempts database deletion; helper variants are flag-selected.
+Full reset/reconstruction effects remain unproven; Rust hold retained.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#sqlite-reset-base-implementation-and-helper-selection-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. No production change or live traffic.
+
 2026-11-04 — **Legacy refusal workers and reset boundary traced.**
 
 406 legacy continuation differs from modern PQ SET;5xx scheduled work

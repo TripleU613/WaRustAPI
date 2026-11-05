@@ -15381,5 +15381,12 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#legacy-refusal-retry-workers-and-reset-boundary-2026-11-04",
     "description": "Static43.72 legacy refusal workers traced:406 A05/A0m reset boundary differs from modern path;5xx workers recheck backoff/admission. Full cleanup and retry port incomplete. No new reset/retry capability."
+  },
+  "x-prekey-reset-helper-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#sqlite-reset-base-implementation-and-helper-selection-2026-11-04",
+    "description": "Static43.72 base SQLite delete/check and cache clear traced with helper selection; full virtual/native reset/reconstruction unproven. No reset capability added."
   }
 }

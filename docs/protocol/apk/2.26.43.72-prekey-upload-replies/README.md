@@ -1180,3 +1180,57 @@ Additional export hashes:
 - [retry-legacy-clear-timestamp.txt](retry-legacy-clear-timestamp.txt): `a22c18346f91bde5083d37e9b9a13b5795a392f1d809ae1ae410ebd8f515f442`
 - [retry-legacy-reset-boundary.txt](retry-legacy-reset-boundary.txt): `311333af004a1fdd9625ec4d0ba49c5cd94001a0d7fc0b863657d816de1e6bef`
 - [retry-legacy-store-cleanup.txt](retry-legacy-store-cleanup.txt): `752a3b4007437a9d72b14da5b9c34145fda350a8c54b91022efa1b96eeade069`
+
+## SQLite reset base implementation and helper selection (2026-11-04)
+
+**Confirmed static**, pinned2.26.43.72, same APK SHA-256 as this bundle.
+Checked DEX exports are not REA Evidence envelopes. Base implementation
+and selected provider branches are traced, not every configured subclass.
+
+- **0Xp.A0B** obtains the write-lock object, checks current-thread read hold
+  count and locks only when no read hold exists. It closesSQLiteOpenHelper,
+  calls virtualA0C and unlocks on normal/exception exit when it acquired
+  the write lock. A read-held branch logs deletion without write lock;
+  do not claim universal exclusive-lock protection.
+- **0Xp.A0C** optionally clearsA00 cache underA0B monitor (flag0x64c7),
+  getsDatabaseName/path, attempts File.delete for an existing database, logs
+  failure, invokes0KT.A03(file,label), then checks absence of the database
+  and `-wal`, `-journal`, `-shm` paths before returningtrue. It returnsfalse
+  if those checks fail. 0KT's own sidecar-deletion mechanics are untraced;
+  absence checks are not proof each sidecar is explicitly deleted here.
+  PriorA0E ignores this boolean, so it does not itself guarantee deletion
+  succeeded or stop downstream cleanup onfalse.
+- **Eoe.A02** clearsA00 map, A02 set andA01 map under monitor. Their
+  semantic payloads and native jvidispatchIO effects remain untraced.
+- Retained0WJ ctor005c–0070 obtainsA0Q helper through **0Xd.A00**,
+  which returns lazyA01. New0Xd ctor uses **1X1(selector38)**. Itsinvoke
+  branch0260–0296 reads **flag0x646a**: true binding0xc2d=3117, false
+  binding0xc2c=3116. Existinggroup0/A01 dispatch selects1Uw.A0T.
+  Case3117 constructs0Xv; case3116 calls0Xa.A00 returning28o, whose
+  construction and overridden cleanup behavior are not traced here.
+- **0Xv.<init>** passes literal **axolotl.db** to0Xt constructor. This
+  identifies that helper's configured database name, not all runtime variants
+  or exact tables recreated afterward.0Xt constructor chain/virtual cleanup
+  overrides still require proof before assuming base methods apply unchanged.
+- The attempted `apk-virtual-overrides` with0Xv as declaring class rejects
+  because no exact declaration exists there. Its emptystdout export is a
+  bounded tool result; it does not prove inherited method behavior or absence
+  of intermediate overrides. Base0Xp invocation is separately retained.
+
+**Impact:** legacy406 cleanup cannot be implemented as merely refilling
+prekey inventory. Full helper selection, reconstruction and native reset
+semantics remain open. Rust's temporary saved-refusal hold is retained.
+No account store was deleted/reset; no production change or live traffic.
+
+Additional export hashes:
+
+- [reset-sqlite.txt](reset-sqlite.txt): `44402ac1bff1f6fda519f8e442f8343815eaf132f7c8a948f7540855c9e3c00e`
+- [reset-cache.txt](reset-cache.txt): `93dca850eb014c21dcf29084a124f3ba2237c49c2289b6e3084bcb77abda3a08`
+- [reset-file-delete.txt](reset-file-delete.txt): `04bbb80f9e2ca1718f7a7177caddf3255d9d0b165d147f1746c13fd23903a253`
+- [reset-delete-overrides.txt](reset-delete-overrides.txt): `ff086e05c1e161a0f8d3194bec92443e267f9ebfa9839d73860e77b90f2a90bc`
+- [reset-concrete-helper.txt](reset-concrete-helper.txt): `88d10ec08e9b5255982f7f605c0ff5b31d6974cd5b6b975dc46ef2c369cb1fa3`
+- [reset-concrete-overrides.txt](reset-concrete-overrides.txt): `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- [reset-helper-provider.txt](reset-helper-provider.txt): `c1026df211b676889ca890e6b5b523c5490f3b109cb9a9b00716d39fd3d0603e`
+- [reset-helper-lazy.txt](reset-helper-lazy.txt): `0f23ca95487f4cafa3349c9151abac71f1bbbb30510fa7331a7495820964b232`
+- [reset-helper-factory.txt](reset-helper-factory.txt): `4b8e4195403c5ca7072089492e18dc2fdb962cf8b5155f84538913bc8b6014bd`
+- [reset-helper-bindings.txt](reset-helper-bindings.txt): `9b5098a540e5115973a1b6f1345fe62848bbc7da66f478d1f93ba146983e8001`

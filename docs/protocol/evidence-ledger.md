@@ -4750,3 +4750,11 @@ thenA0S(reason7), distinct from modernFea13/A06/A0R. A0m records identity
 reset reason and enters cleanup whose full effects remain unknown.
 Legacy5xx Fea10/11 ->Fea8 rechecks backoff/admission beforeA03.
 [Exports and incomplete port scope](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-refusal-retry-workers-and-reset-boundary-2026-11-04). No production change or live traffic.
+
+## 2026-11-04 — SQLite reset base/helper selection
+
+**Confirmed static (43.72):**base helper attempts database deletion and
+checks sidecar absence;Eoe clears three collections. Helper flag0x646a
+selects0Xv(axolotl.db) or28o path. Full virtual/native cleanup and rebuild
+semantics remain unproven. [Exports and limits](apk/2.26.43.72-prekey-upload-replies/README.md#sqlite-reset-base-implementation-and-helper-selection-2026-11-04).
+No production change, account reset or live traffic.
