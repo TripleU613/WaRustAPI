@@ -1,0 +1,5 @@
+Unicorn Python package 2.1.4; ARM64 Unicorn engine.
+Isolated venv: android-lab/venv-native-emulation (ignored).
+Target: pinned libsuperpack.so, helper VA 0x218bc, no JNI_OnLoad or Android runtime.
+Helper assembly: clang --target=aarch64-linux-gnu -c emulated-memory.s -o MEMORY.o
+Compiled .text: 52 bytes; memset at +0, memcpy at +24.

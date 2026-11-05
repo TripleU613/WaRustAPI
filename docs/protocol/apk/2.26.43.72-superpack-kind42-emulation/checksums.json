@@ -1,0 +1,38 @@
+{
+  "README.md": {
+    "bytes": 5273,
+    "sha256": "a7ee0d5788a7f3b08832396b9a4564de4123b1bfc9ca30c6c075627dbc551e03"
+  },
+  "bounded-stops.json": {
+    "bytes": 692,
+    "sha256": "8a51d1bbe0de2d67179caf21ae110ea167088c955c3883ba2ac689fec5a24988"
+  },
+  "decoded-candidates.json": {
+    "bytes": 627,
+    "sha256": "520e77f61286c27370407e9d8b678fa9e8d5998653507b7ff427c92014ed4b94"
+  },
+  "decoder-entry-assembly.txt": {
+    "bytes": 5116,
+    "sha256": "300a5e149efa833ef1b2f7632a2f4bdea5ce498c0e34527ee2ec920b6dbc4893"
+  },
+  "emulate-block.py": {
+    "bytes": 5230,
+    "sha256": "66be8ad47fb32341a28e6c5da2b49fdabb234be1b96901e34b3ba34c17fe10c9"
+  },
+  "emulated-memory.s": {
+    "bytes": 302,
+    "sha256": "57372f7ec54deed0bd0e652aabb89cda1093e3562d6f4312daf20aba630c4d72"
+  },
+  "environment.txt": {
+    "bytes": 335,
+    "sha256": "9b7338adf4359f6ba61a38000a0199dc416eff2e7f0c3223dcdca236acfadb96"
+  },
+  "execution-results.txt": {
+    "bytes": 886,
+    "sha256": "9279e88f503aa3bbc21538eb98b180786165f5d50349a986d272b7f17622650c"
+  },
+  "range.json": {
+    "bytes": 159,
+    "sha256": "e221decec037ba6751372164df5005771592f351648d17d73c5a51f51c27ce17"
+  }
+}

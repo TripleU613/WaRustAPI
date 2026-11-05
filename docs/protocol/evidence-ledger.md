@@ -5931,3 +5931,13 @@ unverified. No runtime behavior or live account operation changed.
 [Digest-bound descriptor/block inspector and full reader/worker windows](apk/2.26.43.72-superpack-transform-blocks/README.md).
 Decoded stitching, complete ELF recovery and metrics network behavior remain
 unverified. No runtime behavior or live account operation changed.
+
+### Type-42 native decoder bounded emulation (2026-11-05)
+
+**Observed in Unicorn emulator / static entry mapping, APK 2.26.43.72:** selected
+type-42 blocks 0, 168 and 201 return declared output lengths; ordinal 0 reproduced
+byte-for-byte and 201 agreed across two memory-helper implementations. This
+executes selected target instructions in memory, not an Android app or account.
+[Digest-bound harness, results and execution limits](apk/2.26.43.72-superpack-kind42-emulation/README.md).
+Candidates are not ELF images; member stitching/checksums, other type-42 blocks
+and native metrics network behavior remain open. No Rust behavior/live traffic changed.

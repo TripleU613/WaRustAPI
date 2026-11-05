@@ -1,3 +1,13 @@
+2026-11-05 — **Type-42 decoder produced three bounded emulated block candidates.**
+
+The largest selected block returned 17778932 bytes and reproduced exactly.
+These are intermediate buffers, not usable native libraries.
+[Harness, results and limits](docs/protocol/apk/2.26.43.72-superpack-kind42-emulation/README.md).
+Selected target instructions ran under Unicorn with controlled memory imports;
+no Android app, account or network operation. Rust client behavior unchanged.
+Validation: pinned hashes, candidate reproduction, helper comparison, JSON,
+coverage, byte-window/bundle checksums and link hygiene.
+
 2026-11-05 — **Entire Superpack payload mapped as 213 framed blocks.**
 
 The spo descriptor and parser account for the exact archive boundary: 140 XZ

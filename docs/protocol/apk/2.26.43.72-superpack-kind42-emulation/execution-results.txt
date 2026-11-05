@@ -1,0 +1,6 @@
+{"ordinal": 0, "return": 17778932, "pc": "0x50001000", "failure": null, "imports": {"calloc": 5, "malloc": 4469, "free": 4474}, "heap_bytes": 2359760}
+{"bytes": 17778932, "sha256": "eb63ece20b7aba4b2c69e57edc83a44ba56ffbf163d017742385216409a91f43", "prefix": "081dff59ffffffc3ffffff58ffffff01"}
+{"ordinal": 168, "return": 4038, "pc": "0x50001000", "failure": null, "imports": {"calloc": 5, "malloc": 23, "memcmp": 80, "free": 28}, "heap_bytes": 188912}
+{"bytes": 4038, "sha256": "6ea28e58af9ba0554d31b9fa1efc72777168412cdc7216bf9c894db4c291d1f5", "prefix": "00010002000300010002000300010002"}
+{"ordinal": 201, "return": 58, "pc": "0x50001000", "failure": null, "imports": {"calloc": 5, "malloc": 13, "memcmp": 2, "free": 18}, "heap_bytes": 186352}
+{"bytes": 58, "sha256": "422e665faa1f57716c9d30b6867c976456cff73e6f21fed262c5bca8cc9ac2b7", "prefix": "00040000000c000d000e000c000d0004"}

@@ -16107,5 +16107,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-superpack-transform-blocks/README.md",
     "description": "Relocated spo descriptor and 213 framed blocks account for exact pinned archive boundary: 140 kind-1 XZ-magic payloads and 73 kind-42 payloads with separate native decoder. No complete decoded libraries or native metrics wire behavior established. No runtime or live operation added."
+  },
+  "x-superpack-kind42-emulation-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK emulation evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-superpack-kind42-emulation/README.md",
+    "description": "Bounded Unicorn ARM64 harness executes pinned type-42 decoder on selected blocks 0,168,201 with controlled memory imports. Output lengths match declarations; no usable native libraries or native metrics wire behavior established. No client runtime or live operation added."
   }
 }

@@ -1,0 +1,27 @@
+{
+  "scope": "initial bounded attempts, not successful decodes",
+  "attempts": [
+    {
+      "ordinal": 0,
+      "memory_helpers": "Python callbacks",
+      "instruction_cap": 1000000000,
+      "timeout_microseconds": 45000000,
+      "stopped_pc": "0x1fa08",
+      "returned_to_sentinel": false,
+      "output_saved": false
+    },
+    {
+      "ordinal": 0,
+      "memory_helpers": "emulated ARM64 byte loops",
+      "instruction_cap": 1000000000,
+      "timeout_microseconds": 45000000,
+      "stopped_pc": "0x31afc",
+      "returned_to_sentinel": false,
+      "output_saved": false
+    }
+  ],
+  "successful_cap": {
+    "instructions": 10000000000,
+    "timeout_microseconds": 45000000
+  }
+}
