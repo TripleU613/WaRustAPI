@@ -1,3 +1,13 @@
+2026-11-04 — **Distribution ACK family admission corrected.**
+
+Group preparation now requires message-class ACKs before advancing or refusing
+a distribution waiter. Native class-key evidence and offline before/after
+regression retained; sender normalization remains untraced.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-distribution-ack-admission/README.md).
+Validation:1,303 workspace/all-feature tests, strict Clippy, regenerated CLI
+reference, formatting, JSON, coverage freshness and repository hygiene passed.
+No live traffic.
+
 2026-11-04 — **Outgoing preparation deadlines enforced independently.**
 
 Late group device results cannot advance into key queries after expiry.

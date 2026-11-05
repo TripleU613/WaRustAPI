@@ -402,3 +402,17 @@ Existing durations, durable uncertainty and no-retry policy are preserved.
 The late group-device regression fails before the fix and passes afterward,
 including durable reopen. Native distribution ACK ownership remains untraced.
 [Evidence, regression and limits](network-correctness-audit.md#outgoing-preparation-owns-its-deadline-2026-11-04).
+
+### Distribution ACK class admission (2026-11-04)
+
+**Confirmed static / fixed offline:** APK43.72 1rH.A03 dispatches ordinary
+message ACKs by exact class; Efa/Eoh field propagation and Eoh.equals confirm
+class is part of callback identity. Rust's distribution waiter previously
+accepted any ACK family with the same ID. It now requires class=message for
+both success and error settlement. Missing/receipt/notification/call/case-mismatch
+regressions fail before the fix and pass afterward, with valid reaction
+distributions still completing the existing crypto and reopen/no-replay test.
+[Retained methods, error459 qualification and unknowns](apk/2.26.43.72-distribution-ack-admission/README.md).
+Native distribution callback registration, address normalization and complete
+durable confirmation remain open; no raw sender-equality rule or retry was added.
+No live operations or complete ban-prevention claim.

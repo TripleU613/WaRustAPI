@@ -233,6 +233,31 @@ pub(super) mod tests {
                         None if query.description == "message" => {
                             let id = query.get_attr("id").unwrap().as_text().unwrap().to_owned();
                             distribution = Some(query.clone());
+                            // A different ACK family sharing this ID must not
+                            // release the dependent group stanza or refusal path.
+                            let before = preparation(&store, pending.entry.local_id).unwrap();
+                            for class in [
+                                None,
+                                Some("receipt"),
+                                Some("notification"),
+                                Some("call"),
+                                Some("Message"),
+                            ] {
+                                for refused in [false, true] {
+                                    let mut unrelated = Node::new("ack").attr("id", id.clone());
+                                    if let Some(class) = class {
+                                        unrelated = unrelated.attr("class", class);
+                                    }
+                                    if refused {
+                                        unrelated = unrelated.attr("error", "500");
+                                    }
+                                    assert!(!pending.matches(&unrelated));
+                                }
+                            }
+                            assert_eq!(
+                                preparation(&store, pending.entry.local_id).unwrap(),
+                                before
+                            );
                             Node::new("ack").attr("class", "message").attr("id", id)
                         }
                         Some("w:g2") => membership(&query, &own, std::slice::from_ref(&peer)),
@@ -1612,6 +1637,9 @@ impl Pending {
             Waiting::Devices(query) => query.matches(node),
             Waiting::Distribution { id, .. } => {
                 node.description == "ack"
+                    // APK43.72 1rH.A03 0282..0292 routes message ACKs
+                    // separately from receipt/call/notification families.
+                    && node.get_attr("class").and_then(|v| v.as_text()) == Some("message")
                     && node.get_attr("id").and_then(|v| v.as_text()) == Some(id)
             }
         }

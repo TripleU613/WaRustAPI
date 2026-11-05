@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "bytes": 4508,
+    "sha256": "05c1384450d76abad58f01eb52aa5d79db9b872bfefa5e0a46c28a44c5b8cbce"
+  },
+  "callback.txt": {
+    "bytes": 669,
+    "sha256": "df562e3811df46aa95c9fa1da42e06df89dd7064238e590602c7d75be6e877c7"
+  },
+  "equality.txt": {
+    "bytes": 4770,
+    "sha256": "06740cb4d370d788240a7d71ce0549d2f767811a20a73914575a03686070c174"
+  },
+  "fallback.txt": {
+    "bytes": 943,
+    "sha256": "37ce6e21831661d8c3e8d35c56f4ad5af1fd61f99853ac70586cf5cbe362400d"
+  },
+  "fields.txt": {
+    "bytes": 1859,
+    "sha256": "349587fd5020bce518c36f486e5cfd40069338df46bbbbdcceb8f02195a1bc57"
+  },
+  "handler-callback.txt": {
+    "bytes": 30971,
+    "sha256": "4c8a65dfb8084a0e069c95bf190c90cf19c93a0dd6c6c362f198bacae16bc94f"
+  },
+  "handler.txt": {
+    "bytes": 18462,
+    "sha256": "d7b6358b54d457f4079315a840a52c31526d2f91f644829351ac598113ff482d"
+  },
+  "native.txt": {
+    "bytes": 24572,
+    "sha256": "e809408589e3fa60971d9d4e1eaccb007e9d83525e74848e5f84ed187cd00b0d"
+  },
+  "router.txt": {
+    "bytes": 3873,
+    "sha256": "f1a9e0f0cfd210e978f8fc8f86167bf812a5196456de4c30939a2065a3954648"
+  },
+  "value.txt": {
+    "bytes": 1283,
+    "sha256": "ef5655aede1d50217f2ab6dbfae846d2fa89b6dd7b530d82bba49f49e6bc9bd9"
+  }
+}

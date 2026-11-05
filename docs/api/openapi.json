@@ -15597,5 +15597,17 @@
     "x-live": false,
     "evidence": "docs/protocol/network-correctness-audit.md#outgoing-preparation-owns-its-deadline-2026-11-04",
     "description": "Outgoing preparation owns independent deadlines instead of waiting for the next outbox tick. Expired IQ replies and group distribution ACK waiters cannot advance dependent preparation. Existing local30s durations, reserved/no-retry direct error and durable group outcome_unknown policy remain. Raw captures and generic durable ACK processing are unchanged. Native distribution ACK ownership remains an audit lead; no new HTTP route or live operation."
+  },
+  "x-distribution-ack-class-admission": {
+    "x-cli": {
+      "command": "whatsapp-cli listen",
+      "description": "Existing experimental group outbox; no new flag"
+    },
+    "x-transport": [
+      "experimental-transport group distribution ACK admission"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-distribution-ack-admission/README.md",
+    "description": "Group preparation requires exact ACK class message as well as matching ID before advancing or refusing an out-of-band distribution waiter. Other ACK families cannot release dependent sends. Native callback class-key evidence retained; sender normalization, special error459 and full durable distribution confirmation remain separate unknowns. No new HTTP route, replay or live operation."
   }
 }

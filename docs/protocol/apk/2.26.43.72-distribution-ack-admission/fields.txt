@@ -1,0 +1,32 @@
+
+# class: LX/Efa;
+# extends: Ljava/lang/Object;
+
+.method public A00(L)  # .registers 14
+    # full signature: LX/Efa;->A00()LX/Eoh;
+    0000..0004  iget-object  v1, v13, LX/Efa;->A0A:Ljava/util/Map;
+    0004..000a  invoke-interface  {v1}, Ljava/util/Map;->isEmpty()Z
+    000a..000c  move-result  v0
+    000c..0010  if-eqz  v0, +0x20
+    0010..0012  const/4  v10, #0x0
+    0012..0016  iget-object  v1, v13, LX/Efa;->A02:Lcom/whatsapp/infra/core/jid/Jid;
+    0016..001a  iget-object  v5, v13, LX/Efa;->A06:Ljava/lang/String;
+    001a..001e  iget-object  v6, v13, LX/Efa;->A08:Ljava/lang/String;
+    001e..0024  invoke-static  {v6}, LX/00L;->A05(Ljava/lang/Object;)V
+    0024..0028  iget-object  v7, v13, LX/Efa;->A09:Ljava/lang/String;
+    0028..002c  iget-object  v8, v13, LX/Efa;->A05:Ljava/lang/String;
+    002c..0030  iget-object  v2, v13, LX/Efa;->A01:Lcom/whatsapp/infra/core/jid/Jid;
+    0030..0034  iget-object  v3, v13, LX/Efa;->A03:Lcom/whatsapp/infra/core/jid/UserJid;
+    0034..0038  iget-object  v9, v13, LX/Efa;->A07:Ljava/lang/String;
+    0038..003c  iget-wide  v11, v13, LX/Efa;->A00:J
+    003c..0040  iget-object  v4, v13, LX/Efa;->A04:LX/0Tp;
+    0040..0044  new-instance  v0, LX/Eoh;
+    0044..004a  invoke-direct/range  {v0..v12}, LX/Eoh;-><init>(Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/UserJid;LX/0Tp;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;J)V
+    004a..004c  return-object  v0
+    004c..0052  invoke-interface  {v1}, Ljava/util/Map;->values()Ljava/util/Collection;
+    0052..0054  move-result-object  v0
+    0054..005a  invoke-static  {v0}, LX/2L6;->A1D(Ljava/util/Collection;)Ljava/util/ArrayList;
+    005a..005c  move-result-object  v10
+    005c..005e  goto  -0x25
+    # exception table: 0 try range(s)
+.end method

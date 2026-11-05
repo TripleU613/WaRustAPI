@@ -1,0 +1,105 @@
+
+# class: LX/Eoh;
+# extends: Ljava/lang/Object;
+
+.method public equals(ZL)  # .registers 5
+    # full signature: LX/Eoh;->equals(Ljava/lang/Object;)Z
+    0000..0004  if-ne  v3, v4, +0x4
+    0004..0006  const/4  v0, #0x1
+    0006..0008  return  v0
+    0008..000a  const/4  v2, #0x0
+    000a..000e  if-eqz  v4, +0x16
+    000e..0014  invoke-virtual  {v3}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+    0014..0016  move-result-object  v1
+    0016..001c  invoke-virtual  {v4}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+    001c..001e  move-result-object  v0
+    001e..0022  if-ne  v1, v0, +0xc
+    0022..0026  check-cast  v4, LX/Eoh;
+    0026..002a  iget-object  v1, v3, LX/Eoh;->A06:Ljava/lang/String;
+    002a..002e  iget-object  v0, v4, LX/Eoh;->A06:Ljava/lang/String;
+    002e..0032  if-nez  v1, +0x5
+    0032..0036  if-eqz  v0, +0xa
+    0036..0038  return  v2
+    0038..003e  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    003e..0040  move-result  v0
+    0040..0044  if-nez  v0, +0x3
+    0044..0046  return  v2
+    0046..004a  iget-object  v1, v3, LX/Eoh;->A02:Lcom/whatsapp/infra/core/jid/Jid;
+    004a..004e  iget-object  v0, v4, LX/Eoh;->A02:Lcom/whatsapp/infra/core/jid/Jid;
+    004e..0052  if-nez  v1, +0x5
+    0052..0056  if-eqz  v0, +0xa
+    0056..0058  return  v2
+    0058..005e  invoke-virtual  {v1, v0}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
+    005e..0060  move-result  v0
+    0060..0064  if-nez  v0, +0x3
+    0064..0066  return  v2
+    0066..006a  iget-object  v1, v3, LX/Eoh;->A08:Ljava/lang/String;
+    006a..006e  iget-object  v0, v4, LX/Eoh;->A08:Ljava/lang/String;
+    006e..0072  if-nez  v1, +0x5
+    0072..0076  if-eqz  v0, +0xa
+    0076..0078  return  v2
+    0078..007e  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    007e..0080  move-result  v0
+    0080..0084  if-nez  v0, +0x3
+    0084..0086  return  v2
+    0086..008a  iget-object  v1, v3, LX/Eoh;->A01:Lcom/whatsapp/infra/core/jid/Jid;
+    008a..008e  iget-object  v0, v4, LX/Eoh;->A01:Lcom/whatsapp/infra/core/jid/Jid;
+    008e..0092  if-nez  v1, +0x5
+    0092..0096  if-eqz  v0, +0xa
+    0096..0098  return  v2
+    0098..009e  invoke-virtual  {v1, v0}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
+    009e..00a0  move-result  v0
+    00a0..00a4  if-nez  v0, +0x3
+    00a4..00a6  return  v2
+    00a6..00aa  iget-object  v1, v3, LX/Eoh;->A03:Lcom/whatsapp/infra/core/jid/UserJid;
+    00aa..00ae  iget-object  v0, v4, LX/Eoh;->A03:Lcom/whatsapp/infra/core/jid/UserJid;
+    00ae..00b2  if-nez  v1, +0x5
+    00b2..00b6  if-eqz  v0, +0xa
+    00b6..00b8  return  v2
+    00b8..00be  invoke-virtual  {v1, v0}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
+    00be..00c0  move-result  v0
+    00c0..00c4  if-nez  v0, +0x3
+    00c4..00c6  return  v2
+    00c6..00ca  iget-object  v1, v3, LX/Eoh;->A09:Ljava/lang/String;
+    00ca..00ce  iget-object  v0, v4, LX/Eoh;->A09:Ljava/lang/String;
+    00ce..00d2  if-nez  v1, +0x5
+    00d2..00d6  if-eqz  v0, +0xa
+    00d6..00d8  return  v2
+    00d8..00de  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    00de..00e0  move-result  v0
+    00e0..00e4  if-nez  v0, +0x3
+    00e4..00e6  return  v2
+    00e6..00ea  iget-object  v1, v3, LX/Eoh;->A07:Ljava/lang/String;
+    00ea..00ee  iget-object  v0, v4, LX/Eoh;->A07:Ljava/lang/String;
+    00ee..00f2  if-nez  v1, +0x5
+    00f2..00f6  if-eqz  v0, +0xa
+    00f6..00f8  return  v2
+    00f8..00fe  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    00fe..0100  move-result  v0
+    0100..0104  if-nez  v0, +0x3
+    0104..0106  return  v2
+    0106..010a  iget-object  v1, v3, LX/Eoh;->A0A:Ljava/util/List;
+    010a..010e  iget-object  v0, v4, LX/Eoh;->A0A:Ljava/util/List;
+    010e..0112  if-nez  v1, +0x5
+    0112..0116  if-eqz  v0, +0xa
+    0116..0118  return  v2
+    0118..011e  invoke-interface  {v1, v0}, Ljava/util/List;->equals(Ljava/lang/Object;)Z
+    011e..0120  move-result  v0
+    0120..0124  if-nez  v0, +0x3
+    0124..0126  return  v2
+    0126..012a  iget-object  v1, v3, LX/Eoh;->A04:LX/0Tp;
+    012a..012e  iget-object  v0, v4, LX/Eoh;->A04:LX/0Tp;
+    012e..0132  if-nez  v1, +0x5
+    0132..0136  if-eqz  v0, +0xa
+    0136..0138  return  v2
+    0138..013e  invoke-virtual  {v1, v0}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
+    013e..0140  move-result  v0
+    0140..0144  if-nez  v0, +0x3
+    0144..0146  return  v2
+    0146..014a  iget-object  v1, v3, LX/Eoh;->A05:Ljava/lang/String;
+    014a..014e  iget-object  v0, v4, LX/Eoh;->A05:Ljava/lang/String;
+    014e..0154  invoke-static  {v1, v0}, LX/09W;->A00(Ljava/lang/Object;Ljava/lang/Object;)Z
+    0154..0156  move-result  v0
+    0156..0158  return  v0
+    # exception table: 0 try range(s)
+.end method
