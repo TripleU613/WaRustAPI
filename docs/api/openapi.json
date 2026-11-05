@@ -15756,5 +15756,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-client-auth-token-trigger/README.md",
     "description": "GCM pn maps to the argument labelled pushNonce; manager guard and numeric state==2 predicate traced. Full consumer control-flow preservation, trusted provenance, state2 producer and durable recovery remain incomplete. No sender, route, replay authority or live operation added."
+  },
+  "x-client-auth-token-readiness-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-client-auth-token-readiness/README.md",
+    "description": "Connected-handler branches produce state2; selector2 notifies BzL and the token-manager callback drains a replaceable in-memory slot with a readiness recheck. Observer registration, scheduling, concurrent lifecycle and durable recovery remain incomplete. No sender, route or replay authority added."
   }
 }

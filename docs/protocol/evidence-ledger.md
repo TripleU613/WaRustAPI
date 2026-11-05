@@ -5485,3 +5485,15 @@ full v31 control-flow preservation and trusted delivery provenance remain open.
 diagnostic) and4. The state2 producer and complete eligibility remain unknown.
 [Checked exports, caller inventory and limits](apk/2.26.43.72-client-auth-token-trigger/README.md).
 No sender, retry authority, production behavior change or live traffic.
+
+### Client-auth-token readiness producer (2026-11-04)
+
+**Confirmed static, APK43.72:** 0AI.A0M writes state2, opens the condition
+variable and invokes the selector2 observer notifier. Both exact callers are
+in the connected handler, on distinct branches; state2 does not prove every
+connected-path side effect completed. The notifier invokes BzL; the token
+manager implementation drains one replaceable in-memory pending slot and
+rechecks readiness. Registration, scheduling, instance identity and concurrent
+lifecycle ordering remain untraced.
+[Full selected bodies and limits](apk/2.26.43.72-client-auth-token-readiness/README.md).
+No runtime sender, durable recovery claim, new replay authority or live traffic.

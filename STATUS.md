@@ -1,3 +1,11 @@
+2026-11-04 — **Client-auth-token readiness producer traced.**
+
+Connected-handler branches set state2; notifier and manager callback connect
+to a replaceable pending slot. Observer registration and lifecycle ordering
+remain open. [Evidence](docs/protocol/apk/2.26.43.72-client-auth-token-readiness/README.md).
+Research only; no runtime changes or live traffic. Validation: checksum,
+JSON, coverage freshness and repository-hygiene checks.
+
 2026-11-04 — **Client-auth-token trigger boundary narrowed.**
 
 GCM pn maps to the pushNonce argument; numeric gate is state==2. Trusted
