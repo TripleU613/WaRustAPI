@@ -844,3 +844,15 @@ and separate positive cursor. Target provider and signing/conversion internals
 remain open. ADD ordinary-PQ selection does not require SET last-resort material.
 [Methods, SQL, branches and porting limits](apk/2.26.43.72-prekey-upload-replies/README.md#add-ordinary-pq-selection-and-generation-dispatch-2026-11-04).
 No runtime change/live traffic; this is not full current-build PQ upload parity.
+
+## Current-build PQ signing and wire provenance (2026-11-04)
+
+**Confirmed static, 43.72:** generation enum A02 is ML_KEM_1024; EqE.A00
+signs its public array and stores it/signature, and 0Yj.A00 supplies that array
+to ADD without legacy-style stripping. 1oA.A03 delegates randomized signing
+with a32-byte identity private key. Rust signs the same local row bytes sent
+as value, matching that Java dataflow shape. Native generateNative has no DEX
+body; current public length/prefix and primitive equivalence are not established
+by these wrappers alone.
+[Exports, Rust comparison and exact limitations](apk/2.26.43.72-prekey-upload-replies/README.md#pq-signing-and-wire-byte-provenance-2026-11-04).
+No production change/live traffic. ADD runtime policy remains unfinished.

@@ -1,0 +1,17 @@
+
+# class: Lorg/whispersystems/libsignal/kem/KEMKeyPair;
+# extends: Ljava/lang/Object;
+
+.method public access$generateNative(LL)  # .registers 1
+    # full signature: Lorg/whispersystems/libsignal/kem/KEMKeyPair;->access$generateNative(Lorg/whispersystems/libsignal/kem/KEMKeyType;)Lorg/whispersystems/libsignal/kem/KEMKeyPair;
+    0000..0006  invoke-static  {v0}, Lorg/whispersystems/libsignal/kem/KEMKeyPair;->generateNative(Lorg/whispersystems/libsignal/kem/KEMKeyType;)Lorg/whispersystems/libsignal/kem/KEMKeyPair;
+    0006..0008  move-result-object  v0
+    0008..000a  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public generateNative(LL)  # .registers 0
+    # full signature: Lorg/whispersystems/libsignal/kem/KEMKeyPair;->generateNative(Lorg/whispersystems/libsignal/kem/KEMKeyType;)Lorg/whispersystems/libsignal/kem/KEMKeyPair;
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method

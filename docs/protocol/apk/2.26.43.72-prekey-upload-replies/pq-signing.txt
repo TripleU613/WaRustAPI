@@ -1,0 +1,45 @@
+
+# class: LX/EqE;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLLI)  # .registers 8
+    # full signature: LX/EqE;->A00(LX/ESk;Lorg/whispersystems/libsignal/kem/KEMKeyType;I)LX/EQ8;
+    0000..0006  invoke-static  {v6}, Lorg/whispersystems/libsignal/kem/KEMKeyPair;->generateNative(Lorg/whispersystems/libsignal/kem/KEMKeyType;)Lorg/whispersystems/libsignal/kem/KEMKeyPair;
+    0006..0008  move-result-object  v6
+    0008..000c  iget-object  v3, v5, LX/ESk;->A01:LX/EQ7;
+    000c..0010  iget-object  v0, v6, Lorg/whispersystems/libsignal/kem/KEMKeyPair;->publicKey:Lorg/whispersystems/libsignal/kem/KEMPublicKey;
+    0010..0014  iget-object  v2, v0, Lorg/whispersystems/libsignal/kem/KEMPublicKey;->A00:[B
+    0014..0018  sget-object  v1, LX/EMC;->A00:LX/1oA;
+    0018..001c  iget-object  v0, v3, LX/EQ7;->A00:[B
+    001c..0022  invoke-virtual  {v1, v0, v2}, LX/1oA;->A03([B[B)[B
+    0022..0024  move-result-object  v5
+    0024..002a  invoke-static  {}, Ljava/lang/System;->currentTimeMillis()J
+    002a..002c  move-result-wide  v1
+    002c..0030  sget-object  v0, LX/Dfd;->DEFAULT_INSTANCE:LX/Dfd;
+    0030..0036  invoke-virtual  {v0}, Lcom/google/protobuf/GeneratedMessageLite;->createBuilder()Lcom/google/protobuf/GeneratedMessageLite$Builder;
+    0036..0038  move-result-object  v4
+    0038..003c  check-cast  v4, LX/DW8;
+    003c..0042  invoke-virtual  {v4, v7}, LX/DW8;->A00(I)V
+    0042..0046  iget-object  v0, v6, Lorg/whispersystems/libsignal/kem/KEMKeyPair;->publicKey:Lorg/whispersystems/libsignal/kem/KEMPublicKey;
+    0046..004a  iget-object  v0, v0, Lorg/whispersystems/libsignal/kem/KEMPublicKey;->A00:[B
+    004a..004c  const/4  v3, #0x0
+    004c..0052  invoke-static  {v0, v3}, LX/DBc;->A09([BI)Lcom/google/protobuf/ByteString;
+    0052..0054  move-result-object  v0
+    0054..005a  invoke-virtual  {v4, v0}, LX/DW8;->A03(Lcom/google/protobuf/ByteString;)V
+    005a..005e  iget-object  v0, v6, Lorg/whispersystems/libsignal/kem/KEMKeyPair;->secretKey:Lorg/whispersystems/libsignal/kem/KEMSecretKey;
+    005e..0062  iget-object  v0, v0, Lorg/whispersystems/libsignal/kem/KEMSecretKey;->A00:[B
+    0062..0068  invoke-static  {v0, v3}, LX/DBc;->A09([BI)Lcom/google/protobuf/ByteString;
+    0068..006a  move-result-object  v0
+    006a..0070  invoke-virtual  {v4, v0}, LX/DW8;->A02(Lcom/google/protobuf/ByteString;)V
+    0070..0076  invoke-static  {v5, v3}, LX/DBc;->A09([BI)Lcom/google/protobuf/ByteString;
+    0076..0078  move-result-object  v0
+    0078..007e  invoke-virtual  {v4, v0}, LX/DW8;->A04(Lcom/google/protobuf/ByteString;)V
+    007e..0084  invoke-virtual  {v4, v1, v2}, LX/DW8;->A01(J)V
+    0084..008a  invoke-virtual  {v4}, Lcom/google/protobuf/GeneratedMessageLite$Builder;->build()Lcom/google/protobuf/GeneratedMessageLite;
+    008a..008c  move-result-object  v1
+    008c..0090  check-cast  v1, LX/Dfd;
+    0090..0094  new-instance  v0, LX/EQ8;
+    0094..009a  invoke-direct  {v0, v1}, LX/EQ8;-><init>(LX/Dfd;)V
+    009a..009c  return-object  v0
+    # exception table: 0 try range(s)
+.end method

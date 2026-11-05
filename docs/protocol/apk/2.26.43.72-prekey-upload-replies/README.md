@@ -444,3 +444,48 @@ Additional export hashes:
 - [pq-generate.txt](pq-generate.txt): `8396a8f8a77ba85979664a3e67321dc4298eef056bbf367821e384f6a3289e97`
 - [pq-select-sql.txt](pq-select-sql.txt): `513ae1e2069257144d2505856e5015a21d511c9c91184745e24be337283c294d`
 - [pq-target.txt](pq-target.txt): `f7a384316b86f180773159089b55439ca42e4a4685b4d0cbd3860992bfbcd5b0`
+
+## PQ signing and wire-byte provenance (2026-11-04)
+
+**Confirmed static**, same pinned 43.72. This closes Java-side provenance, not
+the native KEM algorithm implementation or runtime byte lengths.
+
+- **KEMKeyType.<clinit>**, 002c–0044 maps **A02** to **ML_KEM_1024**, ordinal2,
+  constructor code10. The other entries are ML_KEM_512/code6 and ML_KEM_768/code7.
+  These constructor codes are not automatically wire-prefix bytes.
+- **EqE.A00**, 0000–0024 calls **KEMKeyPair.generateNative(type)**, reads its
+  **publicKey.A00** byte array, and passes that entire array as message to
+  **EMC.A00 -> 1oA.A03(identityPrivate,publicBytes)**. No ID concatenation,
+  prehash, type-byte removal or domain-prefix construction appears in this method.
+  It stores the same public array and generated signature in Dfd along with
+  private bytes, ID and System.currentTimeMillis timestamp.
+- **1oA.A03** requires a32-byte private key, requests64 random bytes, and delegates
+  **calculateSignature(random,private,message)** to its **1oB** provider.
+  The concrete provider/native signature primitive remains outside this trace;
+  Java input provenance is established, not full cryptographic equivalence.
+- **0Yj.A00** reconstructs a KEMKeyPair from saved public/private bytes, reads
+  publicKey.A00 and the saved Dfd signature, then constructs ETs with3-byte ID.
+  Unlike the legacy converter it contains no arraycopy stripping a type byte.
+  ADD passes those ETs bytes directly to value/signature (previous layout trace).
+- **KEMPublicKey.<init>** simply retains the supplied array. **generateNative**
+  has no DEX body (native); access$generateNative delegates to it. Therefore
+  this Java trace alone does **not** establish public byte length, native secret
+  serialization, wire prefix0x44 or the mathematical KEM implementation.
+
+**Bounded Rust comparison:** prekeys.kem_upload_children signs row.public and
+uses the same bytes as value; this matches the observed Java dataflow shape.
+The local signal/kem generator produces1568-byte ML-KEM-1024 public bytes with
+its expanded secret representation, supported by separately retained
+[native vector work](../../native-kem-vectors.md). No byte-prefix change is
+justified solely from KEMKeyType's numeric code. Current ADD/generation policy
+and provider/target parity remain unfinished; there is no new wire-format or
+signature patch in this research chunk. No live traffic.
+
+Additional export hashes:
+
+- [pq-signing.txt](pq-signing.txt): `647531382bc55b0502ebdaf8e038ddea897eb87075c870707c5c45f090bf5837`
+- [pq-wire-conversion.txt](pq-wire-conversion.txt): `1c536b4ca6fa1618063c6eacde419cf4abae03f5c35dc25be84fc0c10bf48154`
+- [pq-type.txt](pq-type.txt): `bd6d690f47528dbcd31ad7dc0eb064ac7f4fa3650ae523f40b143ec130673515`
+- [pq-sign-function.txt](pq-sign-function.txt): `e7d48499f1fac433f1e5f8c507506aea186e7a776b87b35478ae6e82338aa2c2`
+- [pq-native-wrapper.txt](pq-native-wrapper.txt): `18cd6927f4618721fb4ff5a2ad719c30efd31dcb37510a75ebb46bf5507e1d41`
+- [pq-public-wrapper.txt](pq-public-wrapper.txt): `d821fe2b941dcbf2546032811b92660885151060224c142b161989751fd9fb89`

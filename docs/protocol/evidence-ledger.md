@@ -1,3 +1,10 @@
+2026-11-04 — **Current-build PQ signing/wire provenance traced.**
+
+ML-KEM-1024 enum and same-public-array signing/upload linkage retained.
+Native byte lengths/prefix remain outside the Java wrapper proof.
+[Evidence and Rust comparison](apk/2.26.43.72-prekey-upload-replies/README.md#pq-signing-and-wire-byte-provenance-2026-11-04).
+No production change or live traffic.
+
 2026-11-04 — **ADD ordinary-PQ selection/generation boundary traced.**
 
 Non-last-resort SQL selection, supplied generation target, native-loader gate

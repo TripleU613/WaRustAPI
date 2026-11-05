@@ -1,0 +1,30 @@
+
+# class: LX/0Yj;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLI)  # .registers 6
+    # full signature: LX/0Yj;->A00(LX/EQ8;I)LX/ETs;
+    0000..0004  iget-object  v4, v4, LX/EQ8;->A00:LX/Dfd;
+    0004..0008  iget-object  v0, v4, LX/Dfd;->publicKey_:Lcom/google/protobuf/ByteString;
+    0008..000e  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    000e..0010  move-result-object  v2
+    0010..0016  invoke-static  {v2}, LX/00l;->A05(Ljava/lang/Object;)V
+    0016..001a  iget-object  v0, v4, LX/Dfd;->privateKey_:Lcom/google/protobuf/ByteString;
+    001a..0020  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    0020..0022  move-result-object  v1
+    0022..0028  invoke-static  {v1}, LX/00l;->A05(Ljava/lang/Object;)V
+    0028..002c  new-instance  v0, Lorg/whispersystems/libsignal/kem/KEMKeyPair;
+    002c..0032  invoke-direct  {v0, v2, v1}, Lorg/whispersystems/libsignal/kem/KEMKeyPair;-><init>([B[B)V
+    0032..0036  iget-object  v0, v0, Lorg/whispersystems/libsignal/kem/KEMKeyPair;->publicKey:Lorg/whispersystems/libsignal/kem/KEMPublicKey;
+    0036..003a  iget-object  v3, v0, Lorg/whispersystems/libsignal/kem/KEMPublicKey;->A00:[B
+    003a..003e  iget-object  v0, v4, LX/Dfd;->signature_:Lcom/google/protobuf/ByteString;
+    003e..0044  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    0044..0046  move-result-object  v2
+    0046..004c  invoke-static  {v2}, LX/00l;->A05(Ljava/lang/Object;)V
+    004c..0052  invoke-static  {v5}, LX/1nr;->A04(I)[B
+    0052..0054  move-result-object  v1
+    0054..0058  new-instance  v0, LX/ETs;
+    0058..005e  invoke-direct  {v0, v1, v3, v2}, LX/ETs;-><init>([B[B[B)V
+    005e..0060  return-object  v0
+    # exception table: 0 try range(s)
+.end method

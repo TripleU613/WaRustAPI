@@ -1,0 +1,11 @@
+
+# class: Lorg/whispersystems/libsignal/kem/KEMPublicKey;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VL)  # .registers 2
+    # full signature: Lorg/whispersystems/libsignal/kem/KEMPublicKey;-><init>([B)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v1, v0, Lorg/whispersystems/libsignal/kem/KEMPublicKey;->A00:[B
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method

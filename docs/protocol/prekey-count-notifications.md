@@ -175,3 +175,10 @@ Existing local zero-based cursor remains unchanged pending versioned compatibili
 generation fills an injected target with loader gating,<=50 chunks and separate
 cursor. [Evidence and remaining target/signature/admission trace](apk/2.26.43.72-prekey-upload-replies/README.md#add-ordinary-pq-selection-and-generation-dispatch-2026-11-04).
 No runtime switch.
+
+## Current-build PQ signing input
+
+**Confirmed static, 43.72:** EqE signs the public byte array later uploaded;
+0Yj.A00 does not strip its first byte. Enum A02 resolves to ML_KEM_1024.
+[Java byte provenance, Rust comparison and native-body limits](apk/2.26.43.72-prekey-upload-replies/README.md#pq-signing-and-wire-byte-provenance-2026-11-04).
+No prefix/algorithm patch is inferred from enum constructor codes.

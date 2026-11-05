@@ -1,0 +1,38 @@
+
+# class: Lorg/whispersystems/libsignal/kem/KEMKeyType;
+# extends: Ljava/lang/Enum;
+
+.method public <clinit>(V)  # .registers 6
+    # full signature: Lorg/whispersystems/libsignal/kem/KEMKeyType;-><clinit>()V
+    0000..0002  const/4  v2, #0x0
+    0002..0004  const/4  v1, #0x6
+    0004..0008  const-string  v0, "ML_KEM_512"
+    0008..000c  new-instance  v5, Lorg/whispersystems/libsignal/kem/KEMKeyType;
+    000c..0012  invoke-direct  {v5, v0, v2, v1}, Lorg/whispersystems/libsignal/kem/KEMKeyType;-><init>(Ljava/lang/String;II)V
+    0012..0016  sput-object  v5, Lorg/whispersystems/libsignal/kem/KEMKeyType;->A03:Lorg/whispersystems/libsignal/kem/KEMKeyType;
+    0016..0018  const/4  v2, #0x1
+    0018..001a  const/4  v1, #0x7
+    001a..001e  const-string  v0, "ML_KEM_768"
+    001e..0022  new-instance  v4, Lorg/whispersystems/libsignal/kem/KEMKeyType;
+    0022..0028  invoke-direct  {v4, v0, v2, v1}, Lorg/whispersystems/libsignal/kem/KEMKeyType;-><init>(Ljava/lang/String;II)V
+    0028..002c  sput-object  v4, Lorg/whispersystems/libsignal/kem/KEMKeyType;->A04:Lorg/whispersystems/libsignal/kem/KEMKeyType;
+    002c..002e  const/4  v3, #0x2
+    002e..0032  const/16  v1, #0xa
+    0032..0036  const-string  v0, "ML_KEM_1024"
+    0036..003a  new-instance  v2, Lorg/whispersystems/libsignal/kem/KEMKeyType;
+    003a..0040  invoke-direct  {v2, v0, v3, v1}, Lorg/whispersystems/libsignal/kem/KEMKeyType;-><init>(Ljava/lang/String;II)V
+    0040..0044  sput-object  v2, Lorg/whispersystems/libsignal/kem/KEMKeyType;->A02:Lorg/whispersystems/libsignal/kem/KEMKeyType;
+    0044..0046  const/4  v0, #0x3
+    0046..004a  new-array  v1, v0, [Lorg/whispersystems/libsignal/kem/KEMKeyType;
+    004a..004c  const/4  v0, #0x0
+    004c..0050  aput-object  v5, v1, v0
+    0050..0052  const/4  v0, #0x1
+    0052..0056  aput-object  v4, v1, v0
+    0056..005a  aput-object  v2, v1, v3
+    005a..005e  sput-object  v1, Lorg/whispersystems/libsignal/kem/KEMKeyType;->A01:[Lorg/whispersystems/libsignal/kem/KEMKeyType;
+    005e..0064  invoke-static  {v1}, LX/068;->A00([Ljava/lang/Enum;)LX/06C;
+    0064..0066  move-result-object  v0
+    0066..006a  sput-object  v0, Lorg/whispersystems/libsignal/kem/KEMKeyType;->A00:LX/06B;
+    006a..006c  return-void
+    # exception table: 0 try range(s)
+.end method
