@@ -1,0 +1,30 @@
+{
+  "README.md": {
+    "bytes": 3759,
+    "sha256": "d7ea17eb017fd3864c3aed284b9d9d7abe54280d94b5614dcf7104d55a31f53a"
+  },
+  "bridge.txt": {
+    "bytes": 593,
+    "sha256": "e8ecbcf4053a7c08665288e5f300bfd449bcd1470bc59188aa7a7e36707980e5"
+  },
+  "dispatch.txt": {
+    "bytes": 934,
+    "sha256": "bb60dbf1c60d424b7283aaa3987b0be0be508b926f9f5a51b693200a49bc4db4"
+  },
+  "integer-parse.txt": {
+    "bytes": 1686,
+    "sha256": "ff0f1f7c71b9a6726dff0257b0cdf58a9bb0554480a8b439e943143007451445"
+  },
+  "integer.txt": {
+    "bytes": 601,
+    "sha256": "71844beba60f9b9c35aa7c483d0f497598195ff5f6b14728e5f5117cdb72db35"
+  },
+  "lookup.txt": {
+    "bytes": 1776,
+    "sha256": "298ec9ae0c5d136625ceec4319bf8600cd2dec77e999977f5391353488b337be"
+  },
+  "manager.txt": {
+    "bytes": 541,
+    "sha256": "04ed8b379869e4e4ee8d40b1ebd13ff809ede5ebe5aba8d566a48a956a7ee648"
+  }
+}

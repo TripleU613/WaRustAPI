@@ -258,6 +258,16 @@ pub(super) mod tests {
                                 preparation(&store, pending.entry.local_id).unwrap(),
                                 before
                             );
+                            for error in ["459", "+459", "000459", "４５９"] {
+                                assert!(
+                                    !pending.matches(
+                                        &Node::new("ack")
+                                            .attr("class", "message")
+                                            .attr("id", id.clone())
+                                            .attr("error", error)
+                                    )
+                                );
+                            }
                             Node::new("ack").attr("class", "message").attr("id", id)
                         }
                         Some("w:g2") => membership(&query, &own, std::slice::from_ref(&peer)),
@@ -1640,6 +1650,7 @@ impl Pending {
                     // APK43.72 1rH.A03 0282..0292 routes message ACKs
                     // separately from receipt/call/notification families.
                     && node.get_attr("class").and_then(|v| v.as_text()) == Some("message")
+                    && !super::outgoing::is_auth_challenge_ack(node)
                     && node.get_attr("id").and_then(|v| v.as_text()) == Some(id)
             }
         }

@@ -15636,5 +15636,17 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-ack-api-variants/README.md",
     "description": "Distinguishes native null-result and node-result ACK wrappers, selected offline readiness failure branches and location notification distribution. Location jobs and includeSenderKeysInMessage alone do not establish ordinary direct reaction SKDM shape or expected ACK addresses. No command, route or production behavior change."
+  },
+  "x-ack-auth-challenge-admission": {
+    "x-cli": {
+      "command": "whatsapp-cli listen",
+      "description": "Existing experimental actor; no new command or flag"
+    },
+    "x-transport": [
+      "experimental-transport direct and group distribution ACK admission"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-ack-auth-challenge/README.md",
+    "description": "Numeric ACK error459 takes the native auth-challenge diversion rather than ordinary terminal message ACK settlement. Rust preserves uncertain direct/group reservations, including Java decimal spellings. Full challenge controller, other comparison send loops and account-wide policy remain unported. No automatic challenge retry, bypass, new HTTP route or live operation."
   }
 }

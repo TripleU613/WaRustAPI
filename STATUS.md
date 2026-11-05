@@ -1,3 +1,13 @@
+2026-11-04 — **Auth-challenge ACKs no longer become ordinary send failures.**
+
+Numeric459 retains uncertain direct/group reservations; native diversion and
+manager-map transfer traced. Challenge-controller recovery remains unported.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-ack-auth-challenge/README.md).
+Validation:1,303 workspace/all-feature tests, strict Clippy, CLI reference,
+formatting, JSON, coverage freshness and repository hygiene passed. An unrelated
+timestamp-tie fixture was corrected before the passing full rerun.
+No live traffic or challenge retry.
+
 2026-11-04 — **ACK API result variants and location distribution distinguished.**
 
 Null-returning ACK wrappers differ from node-returning message callbacks.

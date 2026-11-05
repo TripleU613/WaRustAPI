@@ -120,3 +120,14 @@ are unchanged. Private command output remains in ignored private local storage.
 
 Repository hygiene passed: 917 local links, tracked-file budgets, package
 licenses and 3,840,464 bytes across five checksum-verified APK bundles.
+
+### Auth-challenge ACKs preserve uncertainty (2026-11-04)
+
+**Confirmed static / fixed offline:** APK43.72 1rH.A03 diverts numeric459
+to onAuthChallengeReceived before ordinary ACK class processing. The traced
+manager transfers an existing request between maps; it is not an ordinary
+terminal message failure or proof of a ban. Rust direct/group ACK settlement
+now excludes459, preserving original reservations and uncertainty. Java decimal
+spellings are covered; no challenge bypass, retry or account-wide policy added.
+[Methods, before/after regression and unported boundaries](apk/2.26.43.72-ack-auth-challenge/README.md).
+No live operations. Full challenge-controller parity remains incomplete.

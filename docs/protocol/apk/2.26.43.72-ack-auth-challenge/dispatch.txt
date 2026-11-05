@@ -1,0 +1,18 @@
+
+# class: LX/1lZ;
+# extends: Ljava/lang/Object;
+
+.method public A1F(VL)  # .registers 4
+    # full signature: LX/1lZ;->A1F(LX/Eoh;)V
+    0000..0004  const-string  v1, "ConnectionThreadRequestsImpl/onAuthChallengeReceived; stanzaKey="
+    0004..0008  new-instance  v0, Ljava/lang/StringBuilder;
+    0008..000e  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    000e..0014  invoke-virtual  {v0, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0014..001a  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    001a..001c  move-result-object  v0
+    001c..0022  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0022..0026  iget-object  v0, v2, LX/1lZ;->A01:LX/1lW;
+    0026..002c  invoke-interface  {v0, v3}, LX/1lW;->BkU(LX/Eoh;)V
+    002c..002e  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1211,9 +1211,22 @@ impl Pending {
     }
 }
 
+/// APK43.72 1rH.A03 diverts numeric459 to1lZ.A1F before class dispatch.
+/// This unsupported challenge is not an ordinary terminal send refusal.
+pub(super) fn is_auth_challenge_ack(node: &Node) -> bool {
+    node.description == "ack"
+        && node
+            .get_attr("error")
+            .and_then(|v| v.as_text())
+            .and_then(super::mex::java_decimal_long)
+            .and_then(|v| i32::try_from(v).ok())
+            == Some(459)
+}
+
 /// Correlate message ACKs to an existing in-flight intent by ID and recipient.
 pub fn acknowledge(store: &ProtocolStore, node: &Node) -> Result<bool> {
-    if node.description != "ack"
+    if is_auth_challenge_ack(node)
+        || node.description != "ack"
         || node.get_attr("class").and_then(|v| v.as_text()) != Some("message")
     {
         return Ok(false);
@@ -2049,6 +2062,19 @@ mod tests {
                     .local_id)
             })
             .unwrap();
+        // Wall-clock enqueues can share a millisecond; production deliberately
+        // breaks those ties by local ID. Give this accept-order fixture distinct
+        // timestamps instead of depending on scheduler/storage speed.
+        store
+            .write(|tx| {
+                for (id, accepted_at) in [(first, Timestamp(1000)), (second, Timestamp(2000))] {
+                    let mut entry = outbox().get_mut(tx, id)?.unwrap();
+                    entry.accepted_at = accepted_at;
+                    tx.put_json(Table::Outbox, &id.0, 1, &entry)?;
+                }
+                Ok(())
+            })
+            .unwrap();
         let cancelled = store
             .write(|tx| {
                 let id = other_namespace
@@ -2842,6 +2868,17 @@ mod tests {
             .unwrap()
         );
         let ack = ack.attr("from", "15555550100@s.whatsapp.net");
+        // APK43.72 dispatches459 to auth-challenge handling, not ordinary
+        // terminal ACK settlement. Preserve the complete original reservation.
+        let before_challenge = store.read(|tx| outbox().get(tx, local_id)).unwrap();
+        for error in ["459", "+459", "000459", "４５９"] {
+            assert!(!acknowledge(&store, &ack.clone().attr("error", error)).unwrap());
+            assert_eq!(
+                store.read(|tx| outbox().get(tx, local_id)).unwrap(),
+                before_challenge
+            );
+            assert!(begin_selected(&store, Some(local_id)).unwrap().is_none());
+        }
         // APK success participant conversion applies to primary users and
         // companion devices, for both literal-text and decoded JID attributes.
         for participant in [

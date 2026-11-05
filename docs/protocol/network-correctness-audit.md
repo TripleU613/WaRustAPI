@@ -1610,3 +1610,20 @@ not ordinary direct messages. Neither that job nor includeSenderKeysInMessage
 proves the native ordinary reaction distribution shape or callback address tuple.
 [Methods, caller inventories and remaining gaps](apk/2.26.43.72-ack-api-variants/README.md).
 No production behavior, speculative address restriction or live operation changed.
+
+### Auth-challenge ACKs preserve uncertainty (2026-11-04)
+
+**Confirmed static / fixed offline:** APK43.72 1rH.A03 diverts numeric459
+to onAuthChallengeReceived before ordinary ACK class processing. The traced
+manager transfers an existing request between maps; it is not an ordinary
+terminal message failure or proof of a ban. Rust direct/group ACK settlement
+now excludes459, preserving original reservations and uncertainty. Java decimal
+spellings are covered; no challenge bypass, retry or account-wide policy added.
+[Methods, before/after regression and unported boundaries](apk/2.26.43.72-ack-auth-challenge/README.md).
+No live operations. Full challenge-controller parity remains incomplete.
+
+**Validation follow-up:** the full run exposed an unrelated outbox eligibility
+fixture assuming distinct wall-clock milliseconds. Production sorts timestamp
+ties by local ID. The fixture now assigns distinct accepted_at values; send
+ordering policy is unchanged. The failed run is retained locally, and the full
+suite is rerun after this test-only correction.
