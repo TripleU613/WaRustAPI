@@ -29,14 +29,23 @@ fn invalid(reason: &'static str) -> Error {
     Error::invalid("two_factor", reason)
 }
 
-/// What to change. At least one field must be present, because an empty `<2fa>`
-/// asks the server for nothing.
-#[derive(Debug, Clone, Default)]
+/// What to change. This local API requires at least one supplied field.
+/// Debug reports field presence without exposing either value.
+#[derive(Clone, Default)]
 pub struct TwoFactorChange<'a> {
     /// The new PIN, or `Some("")` to turn two-step verification **off**.
     pub code: Option<&'a str>,
     /// Recovery email address, or `Some("")` to clear it.
     pub email: Option<&'a str>,
+}
+
+impl std::fmt::Debug for TwoFactorChange<'_> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("TwoFactorChange")
+            .field("code", &self.code.map(|_| "[REDACTED]"))
+            .field("email", &self.email.map(|_| "[REDACTED]"))
+            .finish()
+    }
 }
 
 /// Build the request. The PIN is never an attribute and never logged: it is the
@@ -77,6 +86,18 @@ pub fn set_request(id: &str, change: &TwoFactorChange<'_>) -> Result<Node> {
         .children(vec![Node::new("2fa").children(children)]))
 }
 
+// APK43.72 1HL.A07: account/set contains exactly the 2fa operation;
+// signup PIN challenges use HTTP and do not match this IQ producer.
+pub(crate) fn is_set_request(node: &Node) -> bool {
+    node.description == "iq"
+        && node.get_attr("type").and_then(|value| value.as_text()) == Some("set")
+        && node.get_attr("xmlns").and_then(|value| value.as_text())
+            == Some("urn:xmpp:whatsapp:account")
+        && matches!(node.child_nodes(), [operation]
+            if operation.description == "2fa"
+                && operation.child_nodes().iter().all(|child| matches!(child.description.as_str(), "code" | "email")))
+}
+
 /// Queue the change on the durable action queue. Nothing is sent until a
 /// session drains it, and the PIN lives only in the encrypted request record.
 pub fn queue_set(store: &ProtocolStore, change: &TwoFactorChange<'_>) -> Result<String> {
@@ -99,6 +120,44 @@ pub fn queue_set(store: &ProtocolStore, change: &TwoFactorChange<'_>) -> Result<
 mod tests {
     use super::*;
     use crate::binary::NodeContent;
+
+    #[test]
+    fn debug_redacts_supplied_values_including_clear_operations() {
+        for change in [
+            TwoFactorChange {
+                code: Some("928374"),
+                email: Some("private@example.invalid"),
+            },
+            TwoFactorChange {
+                code: Some(""),
+                email: Some(""),
+            },
+            TwoFactorChange::default(),
+        ] {
+            for debug in [format!("{change:?}"), format!("{change:#?}")] {
+                assert!(!debug.contains("928374"));
+                assert!(!debug.contains("private@example.invalid"));
+                assert!(!debug.contains("Some(\"\")"));
+                assert_eq!(
+                    debug.matches("[REDACTED]").count(),
+                    usize::from(change.code.is_some()) + usize::from(change.email.is_some())
+                );
+            }
+            if change.code.is_some() {
+                // Debug is not a mutation of the request or an instruction to
+                // clear either field: explicit empty versus absent is retained.
+                let request = set_request("DEBUG-FIXTURE", &change).unwrap();
+                assert_eq!(
+                    text_of(request.child("2fa").unwrap(), "code").as_deref(),
+                    change.code
+                );
+                assert_eq!(
+                    text_of(request.child("2fa").unwrap(), "email").as_deref(),
+                    change.email
+                );
+            }
+        }
+    }
 
     fn text_of(node: &Node, name: &str) -> Option<String> {
         match &node.child(name)?.content {

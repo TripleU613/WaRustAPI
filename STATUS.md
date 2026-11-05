@@ -1,3 +1,12 @@
+2026-11-05 — **Two-step verification callbacks now use native32s expiry.**
+
+Typed outer results preserve the native payload-ignoring success semantics;
+expiry retains uncertainty without retry. Debug no longer exposes PIN/email.
+[Evidence, tests and unported credential lifecycle](docs/protocol/apk/2.26.43.72-two-factor-callback/README.md).
+Validation:1344 workspace/all-feature tests, strict Clippy, fmt, CLI reference,
+APK coverage and hygiene passed. No live account operation; the broader audit
+remains unfinished.
+
 2026-11-05 — **Profile upload success no longer inherits generic nested refusals.**
 
 A typed upload result with first picture child retains native success when

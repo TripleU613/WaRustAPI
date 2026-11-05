@@ -1,0 +1,125 @@
+
+# class: LX/FcH;
+# extends: Ljava/lang/Object;
+
+.method public run(V)  # .registers 10
+    # full signature: LX/FcH;->run()V
+    0000..0004  iget-object  v3, v9, LX/FcH;->A01:LX/1HL;
+    0004..0008  iget-object  v4, v9, LX/FcH;->A02:Ljava/lang/String;
+    0008..000c  iget-object  v6, v9, LX/FcH;->A03:Ljava/lang/String;
+    000c..0010  iget  v7, v9, LX/FcH;->A00:I
+    0010..0012  monitor-enter
+    0012..0016  const-string  v0, "TwoFactorAuthManager/storeAuthSettingsAsync"
+    0016..001c  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    001c..0020  if-eqz  v4, +0xb6
+    0020..0026  invoke-virtual  {v4}, Ljava/lang/String;->isEmpty()Z
+    0026..0028  move-result  v0
+    0028..002c  if-nez  v0, +0xb0
+    002c..0030  iput-object  v4, v3, LX/1HL;->A0G:Ljava/lang/String;
+    0030..0034  iget-object  v0, v3, LX/1HL;->A07:LX/00x;
+    0034..003a  invoke-static  {v0}, LX/2LA;->A0I(LX/00x;)LX/00Y;
+    003a..003c  move-result-object  v1
+    003c..0040  check-cast  v1, LX/00Z;
+    0040..0044  const/16  v0, #0x4e3
+    0044..004a  invoke-static  {v1, v0}, LX/09H;->A03(LX/00Y;I)Ljava/lang/Object;
+    004a..004c  move-result-object  v5
+    004c..0050  check-cast  v5, LX/0GO;
+    0050..0054  iget-object  v0, v3, LX/1HL;->A06:LX/00x;
+    0054..005a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    005a..005c  move-result-object  v2
+    005c..0060  check-cast  v2, LX/14C;
+    0060..0064  sget-object  v0, LX/08u;->A0E:Ljava/nio/charset/Charset;
+    0064..006a  invoke-virtual  {v4, v0}, Ljava/lang/String;->getBytes(Ljava/nio/charset/Charset;)[B
+    006a..006c  move-result-object  v1
+    006c..0070  sget-object  v0, LX/0cJ;->A0Y:Ljava/lang/String;
+    0070..0076  invoke-virtual  {v2, v0, v1}, LX/14C;->A01(Ljava/lang/String;[B)LX/1np;
+    0076..0078  move-result-object  v0
+    0078..007a  const/4  v8, #0x0
+    007a..007e  if-eqz  v0, +0x23
+    007e..0084  invoke-virtual  {v0}, LX/1np;->A00()Ljava/lang/String;
+    0084..0086  move-result-object  v1
+    0086..008a  if-eqz  v1, +0xd
+    008a..0090  invoke-static  {v3, v1}, LX/1HL;->A01(LX/1HL;Ljava/lang/String;)Ljava/lang/String;
+    0090..0092  move-result-object  v0
+    0092..0098  invoke-virtual  {v4, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0098..009a  move-result  v0
+    009a..009e  if-eqz  v0, +0x3
+    009e..00a0  goto  +0x10
+    00a0..00a2  const/4  v2, #0x0
+    00a2..00a8  invoke-static  {v1}, LX/2L9;->A1X(Ljava/lang/Object;)Z
+    00a8..00aa  move-result  v0
+    00aa..00b0  invoke-static  {v0}, Ljava/lang/String;->valueOf(Z)Ljava/lang/String;
+    00b0..00b2  move-result-object  v1
+    00b2..00b6  const-string  v0, "TwoFactorAuthManager/encryptCode/EncryptedCodeFailure"
+    00b6..00bc  invoke-virtual  {v5, v0, v1, v2}, LX/0B0;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+    00bc..00be  goto  +0x2
+    00be..00c0  move-object  v8, v1
+    00c0..00c2  const/4  v5, #0x0
+    00c2..00c4  const/4  v2, #0x0
+    00c4..00c8  if-eqz  v8, +0x4
+    00c8..00ca  const/4  v2, #0x1
+    00ca..00cc  move-object  v4, v8
+    00cc..00d0  const-string  v0, "TwoFactorAuthManager/storeNewAuthSettings/isUsingEncryption: "
+    00d0..00d6  invoke-static  {v0, v2}, LX/2LA;->A1P(Ljava/lang/String;Z)V
+    00d6..00dc  invoke-static  {v3}, LX/1HL;->A00(LX/1HL;)Landroid/content/SharedPreferences;
+    00dc..00de  move-result-object  v0
+    00de..00e4  invoke-interface  {v0}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
+    00e4..00e6  move-result-object  v1
+    00e6..00ec  const-string/jumbo  v0, "two_factor_auth_code"
+    00ec..00f2  invoke-interface  {v1, v0, v4}, Landroid/content/SharedPreferences$Editor;->putString(Ljava/lang/String;Ljava/lang/String;)Landroid/content/SharedPreferences$Editor;
+    00f2..00f4  move-result-object  v1
+    00f4..00fa  const-string/jumbo  v0, "two_factor_auth_using_encryption"
+    00fa..0100  invoke-interface  {v1, v0, v2}, Landroid/content/SharedPreferences$Editor;->putBoolean(Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;
+    0100..0102  move-result-object  v4
+    0102..0108  const-string/jumbo  v2, "two_factor_auth_nag_time"
+    0108..010e  invoke-static  {}, Ljava/lang/System;->currentTimeMillis()J
+    010e..0110  move-result-wide  v0
+    0110..0116  invoke-interface  {v4, v2, v0, v1}, Landroid/content/SharedPreferences$Editor;->putLong(Ljava/lang/String;J)Landroid/content/SharedPreferences$Editor;
+    0116..0118  move-result-object  v1
+    0118..011e  const-string/jumbo  v0, "two_factor_auth_nag_interval"
+    011e..0124  invoke-interface  {v1, v0, v7}, Landroid/content/SharedPreferences$Editor;->putInt(Ljava/lang/String;I)Landroid/content/SharedPreferences$Editor;
+    0124..0126  move-result-object  v1
+    0126..012c  const-string/jumbo  v0, "two_factor_auth_last_code_correctness"
+    012c..0132  invoke-interface  {v1, v0, v5}, Landroid/content/SharedPreferences$Editor;->putBoolean(Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;
+    0132..0134  move-result-object  v1
+    0134..013a  const-string/jumbo  v0, "two_factor_auth_dynamic_validated"
+    013a..0140  invoke-interface  {v1, v0}, Landroid/content/SharedPreferences$Editor;->remove(Ljava/lang/String;)Landroid/content/SharedPreferences$Editor;
+    0140..0142  move-result-object  v2
+    0142..0146  if-eqz  v6, +0xb
+    0146..014c  invoke-virtual  {v6}, Ljava/lang/String;->length()I
+    014c..014e  move-result  v0
+    014e..0150  const/4  v1, #0x2
+    0150..0154  if-lez  v0, +0x20
+    0154..0156  const/4  v1, #0x1
+    0156..0158  goto  +0x1d
+    0158..015e  invoke-static  {v3}, LX/1HL;->A00(LX/1HL;)Landroid/content/SharedPreferences;
+    015e..0160  move-result-object  v1
+    0160..0166  const-string/jumbo  v0, "two_factor_auth_email_set"
+    0166..016c  invoke-interface  {v1, v0, v5}, Landroid/content/SharedPreferences;->getInt(Ljava/lang/String;I)I
+    016c..016e  move-result  v0
+    016e..0172  if-nez  v0, +0x17
+    0172..0176  iget-object  v1, v3, LX/1HL;->A09:LX/0fW;
+    0176..017a  new-instance  v0, Lcom/whatsapp/twofactor/Fetch2FAEmailStatusJob;
+    017a..0180  invoke-direct  {v0}, Lcom/whatsapp/twofactor/Fetch2FAEmailStatusJob;-><init>()V
+    0180..0186  invoke-virtual  {v1, v0}, LX/0fW;->A01(Lorg/whispersystems/jobqueue/Job;)V
+    0186..0188  goto  +0xb
+    0188..018e  invoke-virtual  {v3}, LX/1HL;->A05()V
+    018e..0190  goto  +0xa
+    0190..0196  const-string/jumbo  v0, "two_factor_auth_email_set"
+    0196..019c  invoke-interface  {v2, v0, v1}, Landroid/content/SharedPreferences$Editor;->putInt(Ljava/lang/String;I)Landroid/content/SharedPreferences$Editor;
+    019c..01a2  invoke-interface  {v2}, Landroid/content/SharedPreferences$Editor;->apply()V
+    01a2..01a6  iget-object  v2, v3, LX/1HL;->A0B:LX/0Js;
+    01a6..01aa  const/16  v1, #0x31
+    01aa..01ae  new-instance  v0, LX/CvT;
+    01ae..01b4  invoke-direct  {v0, v3, v1}, LX/CvT;-><init>(Ljava/lang/Object;I)V
+    01b4..01ba  invoke-virtual  {v2, v0}, LX/0Js;->CbP(Ljava/lang/Runnable;)V
+    01ba..01bc  monitor-exit
+    01bc..01be  return-void
+    01be..01c0  move-exception  v0
+    01c0..01c2  monitor-exit
+    01c2..01c4  throw  v0
+    # exception table: 3 try range(s)
+    # catch <all> code_units 0009..0050 -> 00df
+    # catch <all> code_units 0055..00dd -> 00df
+    # catch <all> code_units 00e0..00e1 -> 00df
+.end method

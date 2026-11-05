@@ -16623,5 +16623,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-profile-photo-callbacks/README.md",
     "description": "APK43.72 Hyd upload helper confirms to=s.whatsapp.net, and6p1 lookup addresses it explicitly. Both pass duration0 through distinctA0W/A0R wrappers; no invented20/32s callback timer. Typed byte/image upload result with first picture child now ignores later error extensions like Hyd.CK4; outer error and other action refusal semantics remain intact. Exact4/5 outer attribute/server checks,60s same-connection callback and normal-driver synthetic-extension regressions. Full malformed-result admission, lookup/cache/removal/account-center/target normalization/image transformation policies remain open; no live verification or media fetch."
+  },
+  "x-two-factor-callback-and-debug-privacy": {
+    "x-cli": false,
+    "x-transport": [
+      "normal experimental two-step verification action; offline tested"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-two-factor-callback/README.md",
+    "description": "APK43.72 1HL.A07 passes32000ms to0Sf.A0W before dispatch. Normal account/set2fa callback ownership now expires32s from pre-write start without replay, adoption or rollback; typed two-factor-set result follows FUS payload-ignoring success, while outer error/code stays separate. TwoFactorChange Debug now redacts PIN/email, preserving absent versus supplied values and unchanged wire/persistence. Paused-clock31/32s/write-delay/result/error/expiry tests, normal-driver continuation and diagnostic tests. Native credential encryption/adoption, error/observer and email-status-job policy remain open; no new route or live account operation."
   }
 }

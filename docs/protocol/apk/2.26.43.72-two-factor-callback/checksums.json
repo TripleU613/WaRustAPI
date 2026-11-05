@@ -1,0 +1,30 @@
+{
+  "README.md": {
+    "bytes": 5351,
+    "sha256": "cdb2162552f7b40d57bd5c321f6d57e42e9632bd2586312df8df83d2a9c43e7e"
+  },
+  "callback.txt": {
+    "bytes": 3950,
+    "sha256": "8f7223e553e34c3245f826ad13f935662103636435f19ade56348a9d01d32496"
+  },
+  "failure-observer.txt": {
+    "bytes": 1834,
+    "sha256": "0d0bb5d2da31c8d8639541993d98e2fa082c052530eff8f552b752ea51a2f00f"
+  },
+  "set.txt": {
+    "bytes": 5601,
+    "sha256": "28420a2d82ab36a087109f47bcb36e5b7fd5b3f82e8a6e39c5d0192996eb7610"
+  },
+  "success.txt": {
+    "bytes": 7337,
+    "sha256": "3849c2f70cda4ee2fcafc81d094f2366611d8904e03c8e77f6381cd57ad70461"
+  },
+  "timeout-constructor.txt": {
+    "bytes": 1444,
+    "sha256": "4c927631ddc396ddf7fb87b9b148171d2d2e71c8a5707ada1d40e8a6748f830f"
+  },
+  "timeout.txt": {
+    "bytes": 20418,
+    "sha256": "99533da42002f12edab399b608502ba3817b36275d5ff022948ab895686fa9a2"
+  }
+}

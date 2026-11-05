@@ -1977,3 +1977,19 @@ outer result/error, duplicate/mislabeled requests and normal receive continuatio
 Lookup result adoption, full malformed-result admission, cache/removal/account-center,
 target normalization and image transforms remain unfinished. No live traffic or
 observed server extension response is claimed.
+
+## Two-step verification callback and diagnostic privacy — 2026-11-05
+
+**Confirmed static / implemented offline:** current1HL.A07 passes32000ms to
+0Sf.A0W; FUS.CK4 schedules original supplied values without reading response
+payload. Normal two-factor-set callbacks now expire32s from pre-write start,
+retaining Sent uncertainty without retry or credential adoption. Typed outer
+result ignores nested error extensions; outer error/code remains separate.
+[Producer, timeout/success paths, tests and limits](apk/2.26.43.72-two-factor-callback/README.md).
+TwoFactorChange's derived Debug exposed PIN/email; custom Debug now preserves
+field presence and redacts values without changing inputs or request bytes.
+Paused-clock tests cover31/32s, delayed write, PIN/disable/email-only changes,
+result/error/duplicate and unchanged durable rows after expiry. Normal-driver
+late-result/receive/no-resend test includes this producer. Native credential
+adoption, encryption, email-status job and error/observer behavior remain open;
+no live account operation or server extension response is claimed.

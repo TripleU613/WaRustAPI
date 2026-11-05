@@ -426,6 +426,10 @@ impl LiveReplies {
                 // This is the account default IQ, not per-chat E2E timers
                 // or a disappearing_mode child nested inside usync.
                 Some(20)
+            } else if super::two_factor::is_set_request(node) {
+                // APK43.72 1HL.A07 017c..018a -> 0Sf.A0W: 32000ms
+                // from registration, not the registration HTTP PIN flow.
+                Some(32)
             } else {
                 None
             };
@@ -535,12 +539,18 @@ pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
                 .child_nodes()
                 .first()
                 .is_some_and(|child| child.description == "picture");
+        // APK43.72 FUS.CK4 schedules the originally requested values without
+        // reading response payload. Preserve outer-type dispatch for this
+        // typed producer, independently of unrelated nested-refusal parsers.
+        let two_factor_result = kind == Some("result")
+            && row.kind == super::two_factor::ACTION_KIND
+            && super::two_factor::is_set_request(&request);
         // An `iq type=result` can still carry a refusal further in. App-state
         // answers per collection: `<sync><collection type="error"><error
         // code="409" text="conflict"/>`, observed live 2026-09-24. Reading only
         // the outer type recorded that as success, which is worse than an error
         // — it is an error the caller is told is fine.
-        let inner_error = if about_result || photo_set_result {
+        let inner_error = if about_result || photo_set_result || two_factor_result {
             None
         } else {
             node.child_nodes()
@@ -1502,6 +1512,84 @@ mod tests {
             .unwrap()
         );
         assert_eq!(outcomes(&store).unwrap()[0].status, ActionStatus::Error);
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn two_factor_callback_expiry_and_outer_type_preserve_uncertainty() {
+        use super::super::two_factor::{self, TwoFactorChange};
+        use std::time::Duration;
+        use tokio::time::{Instant, advance};
+        for change in [
+            TwoFactorChange {
+                code: Some("928374"),
+                email: None,
+            },
+            TwoFactorChange {
+                code: Some(""),
+                email: None,
+            },
+            TwoFactorChange {
+                code: None,
+                email: Some("private@example.invalid"),
+            },
+        ] {
+            for outcome in ["expire", "result", "error"] {
+                let (_dir, store) = store();
+                let id = two_factor::queue_set(&store, &change).unwrap();
+                let request = reserve_next(&store).unwrap().unwrap();
+                let started = Instant::now();
+                advance(Duration::from_secs(5)).await;
+                let mut live = LiveReplies::default();
+                live.record_written(&request, started);
+                assert_eq!(live.deadline(), Some(started + Duration::from_secs(32)));
+                advance(Duration::from_secs(26)).await;
+                live.expire();
+                assert!(live.0.contains(&id));
+                let reply = Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr(
+                        "type",
+                        if outcome == "error" {
+                            "error"
+                        } else {
+                            "result"
+                        },
+                    )
+                    .children(vec![Node::new("error").attr("code", "403")]);
+                let before = store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap();
+                if outcome != "expire" {
+                    assert!(live.record_reply(&store, &reply).unwrap());
+                }
+                advance(Duration::from_secs(1)).await;
+                live.expire();
+                assert!(!live.record_reply(&store, &reply).unwrap());
+                assert!(live.deadline().is_none());
+                let outcomes = outcomes(&store).unwrap();
+                let saved = outcomes.iter().find(|a| a.id == id).unwrap();
+                assert_eq!(
+                    saved.status,
+                    match outcome {
+                        "expire" => ActionStatus::Sent,
+                        "result" => ActionStatus::Ok,
+                        _ => ActionStatus::Error,
+                    }
+                );
+                assert_eq!(
+                    saved.error_code,
+                    if outcome == "error" { Some(403) } else { None }
+                );
+                if outcome == "expire" {
+                    assert_eq!(
+                        store
+                            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                            .unwrap(),
+                        before
+                    );
+                }
+            }
+        }
     }
 
     #[test]
