@@ -3244,3 +3244,17 @@ reset does not clear every wait key and is not generic retry permission.
 Rust eligibility/reset behavior is unchanged; query reachability, clock authority,
 authenticated notification/reset adoption and effective configuration remain open.
 No live account operations or server acceptance claims.
+
+
+## Contact protocol refusal inspection — 2026-11-05
+
+**Confirmed static and locally tested**, APK2.26.43.72: an outer usync IQ result
+can carry a separate contact-protocol refusal. Actions now durably expose
+`contact_protocol_refusal` with native backoff-first parsing, absentcode-1 and
+absentbackoff3600000ms. Outer-IQ refusal defaults remain separate. Numeric
+parse failures are fixed/redacted diagnostics, not guessed waits. Existing
+plain/JSON actions inspection retains the field across projection and reopen;
+duplicates cannot settle again. Legacy absent fields remain unknown.
+[Source readers, JVM oracle, tests and unported adoption/wait policy](apk/2.26.43.72-contact-protocol-refusal/README.md).
+Outer action status/per-user projection remain separate; no automatic retry,
+wait enforcement, live operations or complete native integrity-policy claim.

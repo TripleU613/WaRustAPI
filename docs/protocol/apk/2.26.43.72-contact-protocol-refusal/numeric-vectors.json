@@ -1,0 +1,30 @@
+{
+  "cases": [
+    {"code_text": null, "backoff_text": null, "code": -1, "backoff_millis": 3600000, "failure": null},
+    {"code_text": "503", "backoff_text": null, "code": 503, "backoff_millis": 3600000, "failure": null},
+    {"code_text": null, "backoff_text": "30", "code": -1, "backoff_millis": 30000, "failure": null},
+    {"code_text": "503", "backoff_text": "30", "code": 503, "backoff_millis": 30000, "failure": null},
+    {"code_text": "+503", "backoff_text": "+30", "code": 503, "backoff_millis": 30000, "failure": null},
+    {"code_text": "٥٠٣", "backoff_text": "٣٠", "code": 503, "backoff_millis": 30000, "failure": null},
+    {"code_text": "0", "backoff_text": "0", "code": 0, "backoff_millis": 0, "failure": null},
+    {"code_text": "-1", "backoff_text": "-1", "code": -1, "backoff_millis": -1000, "failure": null},
+    {"code_text": "503", "backoff_text": "7200", "code": 503, "backoff_millis": 3600000, "failure": null},
+    {"code_text": "503", "backoff_text": "3600", "code": 503, "backoff_millis": 3600000, "failure": null},
+    {"code_text": "503", "backoff_text": "3601", "code": 503, "backoff_millis": 3600000, "failure": null},
+    {"code_text": "503", "backoff_text": "-7200", "code": 503, "backoff_millis": -7200000, "failure": null},
+    {"code_text": "2147483647", "backoff_text": "1", "code": 2147483647, "backoff_millis": 1000, "failure": null},
+    {"code_text": "-2147483648", "backoff_text": "1", "code": -2147483648, "backoff_millis": 1000, "failure": null},
+    {"code_text": "2147483648", "backoff_text": "30", "code": null, "backoff_millis": 30000, "failure": "code"},
+    {"code_text": "-2147483649", "backoff_text": "30", "code": null, "backoff_millis": 30000, "failure": "code"},
+    {"code_text": "", "backoff_text": "30", "code": null, "backoff_millis": 30000, "failure": "code"},
+    {"code_text": " 503", "backoff_text": "30", "code": null, "backoff_millis": 30000, "failure": "code"},
+    {"code_text": "503", "backoff_text": "", "code": null, "backoff_millis": null, "failure": "backoff"},
+    {"code_text": "503", "backoff_text": " 30", "code": null, "backoff_millis": null, "failure": "backoff"},
+    {"code_text": "503", "backoff_text": "9223372036854775808", "code": null, "backoff_millis": null, "failure": "backoff"},
+    {"code_text": "503", "backoff_text": "9223372036854775807", "code": 503, "backoff_millis": -1000, "failure": null},
+    {"code_text": "503", "backoff_text": "-9223372036854775808", "code": 503, "backoff_millis": 0, "failure": null},
+    {"code_text": "503", "backoff_text": "9223372036854776", "code": 503, "backoff_millis": -9223372036854775616, "failure": null},
+    {"code_text": "503", "backoff_text": "--1", "code": null, "backoff_millis": null, "failure": "backoff"},
+    {"code_text": "bad", "backoff_text": "bad", "code": null, "backoff_millis": null, "failure": "backoff"}
+  ]
+}

@@ -582,7 +582,7 @@
             ],
             "minimum": -2147483648,
             "maximum": 2147483647,
-            "description": "Signed Java integer; absent attribute uses0; malformed present is null."
+            "description": "Signed Java integer; absent attribute uses0 for outer usync_refusal, -1 for contact_protocol_refusal; malformed present is null."
           },
           "code_present": {
             "type": "boolean"
@@ -594,7 +594,7 @@
             ],
             "minimum": -9223372036854775808,
             "maximum": 3600000,
-            "description": "Signed wrapping seconds*1000 capped above. Absent=-1; invalid present=null. A relative parsed value, not an enforced wait."
+            "description": "Signed wrapping seconds*1000 capped above. Absent=-1 for outer usync_refusal, 3600000 for contact_protocol_refusal; invalid present=null. A relative parsed value, not an enforced wait."
           },
           "backoff_present": {
             "type": "boolean"
@@ -1148,6 +1148,10 @@
           "contact_projection": {
             "$ref": "#/components/schemas/ContactProjection",
             "description": "Optional local contact-status projection result, distinct from outer IQ status. Saved atomically with status/once-only marker; omitted for legacy/unrelated/not-yet-projected rows. No raw phone/time."
+          },
+          "contact_protocol_refusal": {
+            "$ref": "#/components/schemas/UsyncRefusal",
+            "description": "Optional contact-protocol error inside an owned outer usync result for requested contact protocol. Backoff parsed before code; absent wait is3600000ms and code-1. Separate from outer status, per-user type and outer-IQ refusal. Legacy absence is unknown; no backfill, wait enforcement or retry authorization."
           },
           "usync_refusal": {
             "$ref": "#/components/schemas/UsyncRefusal",
@@ -16860,5 +16864,12 @@
     "x-live": false,
     "description": "Static APK2.26.43.72 contact executor per-protocol wait gates and event-bound reset callers; runtime wait enforcement/reset adoption remain unported. FULL contact/sidelist key selection depends on effective property37559. Notification sync scheduling uses after and stanza t; no generic retry reset is authorized.",
     "evidence": "docs/protocol/apk/2.26.43.72-contact-backoff-gates/README.md"
+  },
+  "x-contact-protocol-refusal-metadata": {
+    "x-cli": true,
+    "x-transport": "experimental",
+    "x-live": false,
+    "description": "Durable contact_protocol_refusal inspection through existing actions plain/JSON. Native A01 numeric defaults and parsing; complete integrity/adoption, observer deadline and dispatch policy remain unported.",
+    "evidence": "docs/protocol/apk/2.26.43.72-contact-protocol-refusal/README.md"
   }
 }

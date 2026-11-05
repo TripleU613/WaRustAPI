@@ -493,7 +493,7 @@ fn parse_user(user: &Node, lid_succeeded: bool) -> Option<(String, ContactStatus
     ))
 }
 
-/// Fixed numeric parse failure in a usync outer-IQ refusal.
+/// Fixed numeric parse failure in usync refusal metadata.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum UsyncRefusalFailure {
@@ -503,16 +503,17 @@ pub enum UsyncRefusalFailure {
     Backoff,
 }
 
-/// APK43.72 0pD.Bvj outer-IQ error metadata, not an effective wait policy.
+/// APK43.72 usync refusal numeric metadata, not an effective wait policy.
 /// Defaults/presence remain distinct; invalid input never creates a guessed wait.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct UsyncRefusal {
-    /// Parsed signed code, or the native absent-code default zero.
+    /// Parsed signed code; absent defaults are zero for outer IQ, -1 for contact protocol.
     pub code: Option<i32>,
     /// Whether an actual code attribute was present.
     pub code_present: bool,
     /// Native signed wrapping seconds*1000, capped above at3600000.
-    /// Absent backoff is-1; malformed present data is null with failure.
+    /// Absent wait is-1 for outer IQ, 3600000 for contact protocol.
+    /// Malformed present data is null with failure.
     pub backoff_millis: Option<i64>,
     /// Whether an actual backoff attribute was present.
     pub backoff_present: bool,
@@ -564,6 +565,63 @@ pub(crate) fn outer_usync_refusal(request: &Node, reply: &Node) -> Option<UsyncR
     };
     if result.backoff_millis.is_none() {
         result.failure = Some(UsyncRefusalFailure::Backoff);
+    }
+    Some(result)
+}
+
+// 0pD.CK4 -> A01: selected contact protocol error in an outer result.
+// This only retains numeric metadata; integrity/adoption and observer waits are separate.
+pub(crate) fn contact_protocol_refusal(request: &Node, reply: &Node) -> Option<UsyncRefusal> {
+    if request.description != "iq"
+        || request.get_attr("xmlns").and_then(|v| v.as_text()) != Some("usync")
+        || request.get_attr("type").and_then(|v| v.as_text()) != Some("get")
+        || request
+            .child("usync")?
+            .child("query")?
+            .child("contact")
+            .is_none()
+        || reply.description != "iq"
+        || reply.get_attr("type").and_then(|v| v.as_text()) != Some("result")
+    {
+        return None;
+    }
+    let error = reply
+        .child("usync")?
+        .child("result")?
+        .child("contact")?
+        .child("error")?;
+    let code = error.get_attr("code");
+    let backoff = error.get_attr("backoff");
+    let mut result = UsyncRefusal {
+        code: None,
+        code_present: code.is_some(),
+        backoff_millis: None,
+        backoff_present: backoff.is_some(),
+        failure: None,
+    };
+    // A01 parses backoff before code: absent7200 seconds, signed Java wrap then cap.
+    result.backoff_millis = if let Some(value) = backoff {
+        value
+            .as_text()
+            .and_then(super::mex::java_decimal_long)
+            .map(|seconds| seconds.wrapping_mul(1000).min(3_600_000))
+    } else {
+        Some(3_600_000)
+    };
+    if result.backoff_millis.is_none() {
+        result.failure = Some(UsyncRefusalFailure::Backoff);
+        return Some(result);
+    }
+    result.code = if let Some(value) = code {
+        value
+            .as_text()
+            .and_then(super::mex::java_decimal_long)
+            .and_then(|value| i32::try_from(value).ok())
+    } else {
+        Some(-1)
+    };
+    if result.code.is_none() {
+        result.failure = Some(UsyncRefusalFailure::Code);
     }
     Some(result)
 }
@@ -825,6 +883,154 @@ mod tests {
         })
         .unwrap();
         (dir, s)
+    }
+
+    fn protocol_refusal_request() -> Node {
+        Node::new("iq")
+            .attr("xmlns", "usync")
+            .attr("type", "get")
+            .children(vec![Node::new("usync").children(vec![
+                Node::new("query").children(vec![Node::new("contact")]),
+            ])])
+    }
+
+    fn protocol_refusal_reply(error: Node) -> Node {
+        Node::new("iq")
+            .attr("type", "result")
+            .children(vec![Node::new("usync").children(vec![
+                Node::new("result").children(vec![Node::new("contact").children(vec![error])]),
+                Node::new("list"),
+            ])])
+    }
+
+    #[test]
+    fn contact_protocol_refusal_numbers_match_independent_jvm_oracle() {
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../../../../docs/protocol/apk/2.26.43.72-contact-protocol-refusal/numeric-vectors.json"
+        ))
+        .unwrap();
+        for case in fixture["cases"].as_array().unwrap() {
+            let mut error = Node::new("error");
+            if let Some(value) = case["code_text"].as_str() {
+                error = error.attr("code", value);
+            }
+            if let Some(value) = case["backoff_text"].as_str() {
+                error = error.attr("backoff", value);
+            }
+            let parsed = contact_protocol_refusal(
+                &protocol_refusal_request(),
+                &protocol_refusal_reply(error),
+            )
+            .unwrap();
+            assert_eq!(serde_json::to_value(parsed.code).unwrap(), case["code"]);
+            assert_eq!(
+                serde_json::to_value(parsed.backoff_millis).unwrap(),
+                case["backoff_millis"]
+            );
+            assert_eq!(
+                serde_json::to_value(parsed.failure).unwrap(),
+                case["failure"]
+            );
+            assert_eq!(parsed.code_present, !case["code_text"].is_null());
+            assert_eq!(parsed.backoff_present, !case["backoff_text"].is_null());
+        }
+    }
+
+    #[test]
+    fn contact_protocol_refusal_preserves_scope_first_child_and_redaction() {
+        let request = protocol_refusal_request();
+        let reply = protocol_refusal_reply(Node::new("error").attr("code", "429"));
+        let metadata = contact_protocol_refusal(&request, &reply).unwrap();
+        assert_eq!(
+            (metadata.code, metadata.backoff_millis),
+            (Some(429), Some(3_600_000))
+        );
+        assert!(outer_usync_refusal(&request, &reply).is_none());
+        assert!(contact_protocol_refusal(&Node::new("iq"), &reply).is_none());
+        assert!(
+            contact_protocol_refusal(&request, &Node::new("iq").attr("type", "error")).is_none()
+        );
+        let no_error = protocol_refusal_reply(Node::new("refresh").attr("backoff", "99"));
+        assert!(contact_protocol_refusal(&request, &no_error).is_none());
+        let first =
+            Node::new("iq")
+                .attr("type", "result")
+                .children(vec![Node::new("usync").children(vec![
+                    Node::new("result").children(vec![Node::new("contact").children(vec![
+                        Node::new("error")
+                            .attr("code", "503")
+                            .attr("backoff", "2")
+                            .attr("text", "private-refusal"),
+                        Node::new("error")
+                            .attr("code", "429")
+                            .attr("backoff", "bad"),
+                    ])]),
+                ])]);
+        let metadata = contact_protocol_refusal(&request, &first).unwrap();
+        assert_eq!(
+            (metadata.code, metadata.backoff_millis),
+            (Some(503), Some(2000))
+        );
+        assert!(
+            !serde_json::to_string(&metadata)
+                .unwrap()
+                .contains("private-refusal")
+        );
+        let nontext = protocol_refusal_reply(
+            Node::new("error").attr("backoff", Jid::parse("15551234567@s.whatsapp.net").unwrap()),
+        );
+        let metadata = contact_protocol_refusal(&request, &nontext).unwrap();
+        assert_eq!(metadata.failure, Some(UsyncRefusalFailure::Backoff));
+        assert_eq!(metadata.code, None);
+    }
+
+    #[test]
+    fn contact_protocol_refusal_survives_settlement_projection_and_reopen() {
+        use super::super::actions;
+        let (dir, store) = store();
+        let id = queue_check(&store, "+15551234567").unwrap();
+        actions::reserve_pending(&store).unwrap();
+        let reply =
+            protocol_refusal_reply(Node::new("error").attr("code", "429")).attr("id", id.as_str());
+        assert!(actions::record_reply(&store, &reply).unwrap());
+        let action = actions::outcomes(&store).unwrap().pop().unwrap();
+        assert_eq!(action.status, actions::ActionStatus::Ok);
+        assert_eq!(action.error_code, None);
+        assert_eq!(action.usync_refusal, None);
+        let metadata = action.contact_protocol_refusal.unwrap();
+        assert_eq!(
+            (metadata.code, metadata.backoff_millis),
+            (Some(429), Some(3_600_000))
+        );
+        assert_eq!(ingest(&store).unwrap(), 0);
+        assert_eq!(
+            actions::outcomes(&store).unwrap()[0].contact_projection,
+            Some(ContactProjection::NoMatchingUser)
+        );
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        assert!(!actions::record_reply(&store, &reply).unwrap());
+        assert_eq!(
+            before,
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap()
+        );
+        drop(store);
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("c.redb"),
+            account_id: AccountId::new("a").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([11u8; 32]))),
+            create: false,
+        })
+        .unwrap();
+        assert_eq!(
+            actions::outcomes(&store).unwrap()[0].contact_protocol_refusal,
+            Some(metadata)
+        );
+        assert_eq!(ingest(&store).unwrap(), 0);
+        assert!(actions::reserve_pending(&store).unwrap().is_empty());
     }
 
     #[test]

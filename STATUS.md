@@ -1,3 +1,13 @@
+2026-11-05 — **Contact-protocol refusals survive outer-IQ success.**
+
+Actions now expose durable contact_protocol_refusal independently of outer-IQ
+status and per-user contact projection. Native defaults/parse order, malformed
+values, Unicode digits and wrapping arithmetic are checked against a JVM oracle.
+[Evidence, tests and remaining policy gaps](docs/protocol/apk/2.26.43.72-contact-protocol-refusal/README.md).
+No wait enforcement, automatic retry, request change or live account operation.
+Validation:1369 workspace/all-feature tests, strict Clippy, fmt, CLI/OpenAPI,
+APK coverage, exact JVM oracle regeneration and checksum/link hygiene passed.
+
 2026-11-05 — **Contact wait gates and reset events traced further.**
 
 The native executor filters protocols separately and uses effective configuration

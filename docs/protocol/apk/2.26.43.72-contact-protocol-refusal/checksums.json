@@ -1,0 +1,26 @@
+{
+  "ContactRefusalOracle.java": {
+    "bytes": 1994,
+    "sha256": "256beca3c5ceb95d0ee3f4b3024812f0b1fd7e3b098c61b34f499d0602de4dbb"
+  },
+  "README.md": {
+    "bytes": 4711,
+    "sha256": "b3a3ace4ca202f787ecba9d7ac00931a2e591e80dff0904ad00c9a6c526febb8"
+  },
+  "int-parser.txt": {
+    "bytes": 1686,
+    "sha256": "ff0f1f7c71b9a6726dff0257b0cdf58a9bb0554480a8b439e943143007451445"
+  },
+  "int-reader.txt": {
+    "bytes": 601,
+    "sha256": "71844beba60f9b9c35aa7c483d0f497598195ff5f6b14728e5f5117cdb72db35"
+  },
+  "long-parser.txt": {
+    "bytes": 1694,
+    "sha256": "94de8395dcebb094970e2f3114054891775aee56443f6ce8eef0296f40df38fb"
+  },
+  "numeric-vectors.json": {
+    "bytes": 2866,
+    "sha256": "66007a3cd1a580d584ac32399a4e18252491c68fd7b6d5c9db31b76af5b501ba"
+  }
+}
