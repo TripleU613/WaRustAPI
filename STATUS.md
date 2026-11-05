@@ -1,3 +1,14 @@
+2026-11-05 — **Contact checks prepare request and correlation atomically.**
+
+A full-disk regression reproduced the prior sendable-orphan defect. One transaction
+now commits both records. Historical queued requests with missing provenance hold
+locally; mismatches refuse before reservation. Existing actions shows the hold.
+[Fault tests, source and caller-specific usync timeout boundary](docs/protocol/apk/2.26.43.72-contact-queue-atomicity/README.md).
+Validation:1360 workspace/all-feature tests, strict Clippy, fmt, CLI reference,
+APK coverage and hygiene passed. Full-disk regression failed before the fix.
+No automatic retry, action reset or live account traffic. Contact factory/deadline
+parity and the broader network audit remain unfinished.
+
 2026-11-05 — **Token target/storage namespace rules re-anchored to current APK.**
 
 Wire/pending user and store canonicalization use different rules; counterpart

@@ -36,7 +36,7 @@ const SYNC_ACTION_KIND: &str = "contact-sync";
 const STATUS_PREFIX: &str = "contact-status:";
 const CHECK_REQUEST_PREFIX: &str = "contact-check-req:";
 const INGESTED_PREFIX: &str = "contacts-ingested:";
-const ACTION_KIND: &str = "contact-check";
+pub(crate) const ACTION_KIND: &str = "contact-check";
 
 fn invalid(reason: impl Into<String>) -> Error {
     Error::invalid("contacts", reason)
@@ -302,44 +302,100 @@ pub struct ContactStatus {
 /// session drains queued actions (see `super::actions`).
 pub fn queue_check(store: &ProtocolStore, phone: &str) -> Result<String> {
     let (digits, canonical) = normalize(phone)?;
-    let id = super::actions::queue(store, ACTION_KIND, "contact check", |id| {
-        let sid = super::messaging::new_message_id()?;
-        Ok(Node::new("iq")
-            .attr("xmlns", "usync")
-            .attr("id", id)
-            .attr("type", "get")
-            .children(vec![
-                Node::new("usync")
-                    .attr("sid", sid.as_str())
-                    .attr("index", "0")
-                    .attr("last", "true")
-                    .attr("mode", "query")
-                    .attr("context", "interactive")
-                    .children(vec![
-                        Node::new("query").children(vec![
-                            Node::new("contact"),
-                            Node::new("lid"),
-                            Node::new("disappearing_mode"),
-                        ]),
-                        Node::new("list").children(vec![
-                            Node::new("user")
-                                .children(vec![Node::new("contact").text(canonical.clone())]),
-                        ]),
-                    ]),
-            ]))
-    })?;
-    // Labels must never carry a phone number, so the checked number is kept
-    // in its own row: a top-level `iq type=error` reply carries no per-user
-    // node to recover it from.
+    // Queue bytes and reply-correlation provenance must survive together.
+    // A partial preparation is not eligible for later transmission.
     store.write(|tx| {
+        let id = super::actions::queue_in(tx, ACTION_KIND, "contact check", |id| {
+            let sid = super::messaging::new_message_id()?;
+            Ok(Node::new("iq")
+                .attr("xmlns", "usync")
+                .attr("id", id)
+                .attr("type", "get")
+                .children(vec![
+                    Node::new("usync")
+                        .attr("sid", sid.as_str())
+                        .attr("index", "0")
+                        .attr("last", "true")
+                        .attr("mode", "query")
+                        .attr("context", "interactive")
+                        .children(vec![
+                            Node::new("query").children(vec![
+                                Node::new("contact"),
+                                Node::new("lid"),
+                                Node::new("disappearing_mode"),
+                            ]),
+                            Node::new("list").children(vec![
+                                Node::new("user")
+                                    .children(vec![Node::new("contact").text(canonical.clone())]),
+                            ]),
+                        ]),
+                ]))
+        })?;
+        // Labels must never carry a phone number, so the checked number is kept
+        // in its own row: a top-level `iq type=error` reply carries no per-user
+        // node to recover it from.
         tx.put_json(
             Table::Checkpoints,
             check_request_key(&id).as_bytes(),
             1,
             &digits,
-        )
-    })?;
-    Ok(id)
+        )?;
+        Ok(id)
+    })
+}
+
+/// Local provenance guard, not a native usync gate or a retry permission.
+pub(crate) fn check_correlation_in(
+    tx: &crate::store::WriteTx<'_>,
+    id: &str,
+    request: &Node,
+) -> Result<bool> {
+    let Some(saved): Option<serde_json::Value> =
+        tx.get_json(Table::Checkpoints, check_request_key(id).as_bytes(), 1)?
+    else {
+        return Ok(false);
+    };
+    let bad = || invalid("saved contact request correlation does not match its request");
+    let saved = saved.as_str().ok_or_else(bad)?;
+    let (digits, canonical) = normalize(saved).map_err(|_| bad())?;
+    if digits != saved
+        || request.get_attr("xmlns").and_then(|v| v.as_text()) != Some("usync")
+        || request.get_attr("type").and_then(|v| v.as_text()) != Some("get")
+    {
+        return Err(bad());
+    }
+    let [usync] = request.child_nodes() else {
+        return Err(bad());
+    };
+    if usync.description != "usync" {
+        return Err(bad());
+    }
+    let mut lists = usync
+        .child_nodes()
+        .iter()
+        .filter(|node| node.description == "list");
+    let list = lists.next().ok_or_else(bad)?;
+    if lists.next().is_some() {
+        return Err(bad());
+    }
+    let [user] = list.child_nodes() else {
+        return Err(bad());
+    };
+    let [contact] = user.child_nodes() else {
+        return Err(bad());
+    };
+    let text = match &contact.content {
+        NodeContent::Text(value) => Some(value.as_str()),
+        NodeContent::Bytes(value) => std::str::from_utf8(value).ok(),
+        _ => None,
+    };
+    if user.description != "user"
+        || contact.description != "contact"
+        || text != Some(canonical.as_str())
+    {
+        return Err(bad());
+    }
+    Ok(true)
 }
 
 fn attr_jid(node: &Node, name: &str) -> Option<Jid> {
@@ -631,6 +687,142 @@ mod tests {
         })
         .unwrap();
         (dir, s)
+    }
+
+    #[test]
+    fn missing_contact_correlation_holds_legacy_request_without_blocking_other_actions() {
+        use super::super::actions;
+        let (_dir, store) = store();
+        let id = queue_check(&store, "+15551234567").unwrap();
+        store
+            .write(|tx| tx.delete(Table::Checkpoints, check_request_key(&id).as_bytes()))
+            .unwrap();
+        let other = actions::queue(&store, "control", "control", |id| {
+            Ok(Node::new("iq").attr("id", id).attr("type", "get"))
+        })
+        .unwrap();
+        let reserved = actions::reserve_pending(&store).unwrap();
+        assert_eq!(reserved.len(), 1);
+        assert_eq!(
+            reserved[0].get_attr("id").and_then(|v| v.as_text()),
+            Some(other.as_str())
+        );
+        let held = actions::outcomes(&store)
+            .unwrap()
+            .into_iter()
+            .find(|row| row.id == id)
+            .unwrap();
+        assert_eq!(held.status, actions::ActionStatus::Queued);
+        assert_eq!(
+            held.deferred_reason,
+            Some(actions::ActionDeferReason::ContactCheckCorrelationMissing)
+        );
+        assert!(store.write(|tx| actions::reserve_one_in(tx, &id)).is_err());
+        // Restoring explicit original provenance permits one reservation and clears the hold.
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    check_request_key(&id).as_bytes(),
+                    1,
+                    &"15551234567",
+                )
+            })
+            .unwrap();
+        assert!(store.write(|tx| actions::reserve_one_in(tx, &id)).is_ok());
+        let held = actions::outcomes(&store)
+            .unwrap()
+            .into_iter()
+            .find(|row| row.id == id)
+            .unwrap();
+        assert_eq!(held.deferred_reason, None);
+        assert_eq!(held.status, actions::ActionStatus::Sent);
+    }
+
+    #[test]
+    fn mismatched_contact_correlation_refuses_reservation_without_partial_changes_or_echo() {
+        use super::super::actions;
+        let (_dir, store) = store();
+        let id = queue_check(&store, "+15551234567").unwrap();
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    check_request_key(&id).as_bytes(),
+                    1,
+                    &"15559999999",
+                )
+            })
+            .unwrap();
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        for selected in [false, true] {
+            let error = if selected {
+                store
+                    .write(|tx| actions::reserve_one_in(tx, &id))
+                    .unwrap_err()
+            } else {
+                actions::reserve_pending(&store).unwrap_err()
+            };
+            let diagnostic = error.to_string();
+            for private in [id.as_str(), "15551234567", "15559999999"] {
+                assert!(!diagnostic.contains(private));
+            }
+            assert_eq!(
+                before,
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap()
+            );
+        }
+    }
+
+    #[test]
+    fn contact_request_and_error_correlation_commit_together_under_disk_faults() {
+        use crate::store::full_disk;
+        for fsync_only in [false, true] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("contacts.db");
+            let faults = full_disk::Faults::new();
+            let store = full_disk::open(&path, "contact-atomic", [18; 32], &faults).unwrap();
+            faults.arm_on(CHECK_REQUEST_PREFIX.as_bytes(), fsync_only);
+            assert!(queue_check(&store, "+15551234567").is_err());
+            drop(store);
+            faults.set_full(false);
+            faults.set_sync_fails(false);
+            let store = full_disk::open(&path, "contact-atomic", [18; 32], &faults).unwrap();
+            let actions = super::super::actions::outcomes(&store).unwrap();
+            if !fsync_only {
+                assert!(
+                    actions.is_empty(),
+                    "failed correlation commit left a sendable orphan"
+                );
+            }
+            assert!(actions.len() <= 1);
+            let rows = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            assert_eq!(
+                rows.iter()
+                    .filter(|(key, _)| key.starts_with(CHECK_REQUEST_PREFIX.as_bytes()))
+                    .count(),
+                actions.len()
+            );
+            for action in actions {
+                assert_eq!(action.status, super::super::actions::ActionStatus::Queued);
+                assert_eq!(
+                    store
+                        .read(|tx| tx.get_json::<String>(
+                            Table::Checkpoints,
+                            check_request_key(&action.id).as_bytes(),
+                            1
+                        ))
+                        .unwrap(),
+                    Some("15551234567".to_owned())
+                );
+            }
+        }
     }
 
     #[test]

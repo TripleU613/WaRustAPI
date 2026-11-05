@@ -82,6 +82,8 @@ pub enum ActionDeferReason {
     PrivacyTokenExpired,
     /// Another action owns this user's current token schedule.
     PrivacyTokenSuperseded,
+    /// A queued contact check lacks its original error-correlation record.
+    ContactCheckCorrelationMissing,
 }
 
 /// Stored row.
@@ -297,12 +299,24 @@ pub(crate) fn for_kind_in(
     }
 }
 
-fn prepare_token_in(
+fn prepare_for_reservation_in(
     tx: &mut crate::store::WriteTx<'_>,
     id: &str,
     row: &mut Row,
     node: Node,
 ) -> Result<Option<Node>> {
+    if row.kind == super::contacts::ACTION_KIND {
+        if !super::contacts::check_correlation_in(tx, id, &node)? {
+            let reason = ActionDeferReason::ContactCheckCorrelationMissing;
+            if row.deferred_reason != Some(reason) {
+                row.deferred_reason = Some(reason);
+                tx.put_json(Table::Checkpoints, key(id).as_bytes(), 1, row)?;
+                tracing::info!(?reason, "contact check deferred before reservation");
+            }
+            return Ok(None);
+        }
+        row.deferred_reason = None;
+    }
     if row.kind != super::token_issue::ACTION_KIND {
         return Ok(Some(node));
     }
@@ -375,7 +389,7 @@ fn reserve_limit(store: &ProtocolStore, limit: usize) -> Result<Vec<Node>> {
                 let id = std::str::from_utf8(&key[PREFIX.len()..])
                     .map_err(|_| Error::invalid("action", "invalid saved action row identity"))?;
                 let node = decode_owned(id, &row.wire)?;
-                let Some(node) = prepare_token_in(tx, id, &mut row, node)? else {
+                let Some(node) = prepare_for_reservation_in(tx, id, &mut row, node)? else {
                     continue;
                 };
                 if row.kind == super::app_state_sync::HELD_FETCH_ACTION_KIND {
@@ -432,10 +446,10 @@ pub(crate) fn reserve_one_in(tx: &mut crate::store::WriteTx<'_>, id: &str) -> Re
         ));
     }
     let node = decode_owned(id, &row.wire)?;
-    let node = prepare_token_in(tx, id, &mut row, node)?.ok_or_else(|| {
+    let node = prepare_for_reservation_in(tx, id, &mut row, node)?.ok_or_else(|| {
         Error::invalid(
-            "privacy_token",
-            "selected token action is locally deferred; no request reserved",
+            "action",
+            "selected action is locally deferred; no request reserved",
         )
     })?;
     if row.kind == super::app_state_sync::HELD_FETCH_ACTION_KIND

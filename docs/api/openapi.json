@@ -572,9 +572,10 @@
         "enum": [
           "privacy_token_state_missing",
           "privacy_token_expired",
-          "privacy_token_superseded"
+          "privacy_token_superseded",
+          "contact_check_correlation_missing"
         ],
-        "description": "Local pre-write token deferral, distinct from server refusal or uncertain delivery."
+        "description": "Local pre-write action deferral, distinct from server refusal or uncertain delivery. Missing contact-check correlation holds historical queued requests; it is not a retry permit."
       },
       "HistoryNoticeMetadata": {
         "type": "object",
@@ -16735,5 +16736,12 @@
     "x-live": false,
     "description": "Static APK2.26.43.72 token namespace audit:14303 selects pending/job user separately from0ht.A0L storage normalization. Counterpart cleanup requires15491=false and equal original/normalized user. Full mapping authority remains unported. Native types26/27 are @bot user/device; existing Rust PN/LID allowlist exclusion is regression-tested with no mutation and positive controls. No command, send policy or alias adoption changed. Reproduce with existing xtask APK disassembly.",
     "evidence": "docs/protocol/apk/2.26.43.72-token-namespace-selection/README.md"
+  },
+  "x-contact-check-preparation-atomicity": {
+    "x-cli": true,
+    "x-transport": "experimental",
+    "x-live": false,
+    "description": "contacts check now commits its durable action and error-correlation provenance atomically. Full-disk faults leave neither; uncertain fsync permits neither/both, never a partial pair. Single/bulk reservation holds Queued contact-check rows missing correlation with ActionOutcome.deferred_reason=contact_check_correlation_missing and refuses mismatched/invalid provenance with fixed diagnostics. Existing actions plain/JSON exposes the hold. No fabricated correlation, Sent reset/replay or new route/flag. Native usync caller-specific timeout selection remains unported.",
+    "evidence": "docs/protocol/apk/2.26.43.72-contact-queue-atomicity/README.md"
   }
 }

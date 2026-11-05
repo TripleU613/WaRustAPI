@@ -1,0 +1,16 @@
+# Selected original lines, LX/0p7;->A0O; not a complete method.
+# Full local export SHA256 67b4ecb7186b1a44761980528cdaae0c3674b117dda06922bb6b029ce2b66882
+
+# class: LX/0p7;
+# extends: Ljava/lang/Object;
+
+.method public A0O(LLLLLI)  # .registers 45
+    # full signature: LX/0p7;->A0O(LX/1w4;LX/3GQ;LX/0vC;Ljava/util/Collection;I)LX/1xM;
+    0000..0004  move-object/from16  v7, v43
+    0004..0008  const-string  v17, "ContactSyncHelper/syncQueryMultiProtocols"
+    09b6..09ba  iget-object  v4, v0, LX/0p7;->A0c:LX/0pD;
+    09ba..09c0  const-wide/32  v1, #0x1f400
+    09c0..09c6  invoke-virtual  {v4, v5, v6, v1, v2}, LX/0pD;->A07(LX/HcZ;Ljava/lang/String;J)LX/FfK;
+    09c6..09c8  move-result-object  v2
+    09c8..09cc  move-object/from16  v1, v17
+    09cc..09d2  invoke-virtual  {v0, v3, v1, v2}, LX/0p7;->A0W(LX/1w4;Ljava/lang/String;Ljava/util/concurrent/Future;)Z

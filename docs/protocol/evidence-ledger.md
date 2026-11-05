@@ -6819,3 +6819,16 @@ existing exclusion. Rust's PN/LID allowlist already excludes them; a regression
 proves no action/state mutation and retains PN/LID positive controls.
 [Current methods, conditional namespace table and mapping limits](apk/2.26.43.72-token-namespace-selection/README.md).
 No automatic alias merge/deletion or live account operation was introduced.
+
+## Contact-check preparation and reservation atomicity —2026-11-05
+
+Confirmed local fault: separate action/correlation commits could leave a sendable
+orphan on disk. queue_check now prepares both atomically. Real full-disk and
+uncertain-fsync tests verify neither/both consistency after reopen. Existing
+Queued requests lacking correlation defer with contact_check_correlation_missing;
+invalid/mismatched correlation refuses locally, and unrelated eligible traffic
+drain continues. No automatic correlation repair, Sent reset or replay.
+[Fault evidence, native caller-dependent usync timers and tests](apk/2.26.43.72-contact-queue-atomicity/README.md).
+Current0pD.A07 receives a caller timeout: selected HxV lightweight call is32s,
+while another0p7 call is128s. Rust contact-check's exact factory/deadline remains
+unported; no universal usync timer is inferred. No live traffic was sent.

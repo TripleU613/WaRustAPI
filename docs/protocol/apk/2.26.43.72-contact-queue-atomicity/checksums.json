@@ -1,0 +1,22 @@
+{
+  "README.md": {
+    "bytes": 4590,
+    "sha256": "747c0f0aebba43864a83deb3cf41c497df68b40857f5ec049290605a41048968"
+  },
+  "dispatch-callers.txt": {
+    "bytes": 994,
+    "sha256": "65c4f035cf5b6637ffd513cd113eb35076bc1d9a2e9f28c9c00c83969a3521bc"
+  },
+  "lightweight-query.txt": {
+    "bytes": 11679,
+    "sha256": "1a90c8ec7c59e3863fc48f87fb500a792f1173a81fab1ec11d1d340967b1577a"
+  },
+  "other-caller-timeout.txt": {
+    "bytes": 867,
+    "sha256": "cf0d64505359469b63272b98f50aea4aeaeed3c32c2825594139671a77e51bc5"
+  },
+  "usync-dispatch.txt": {
+    "bytes": 6807,
+    "sha256": "47844dc380df64f1d2730d87ac9cbc3253ee6cc6c38d2265d986930d3b086c53"
+  }
+}

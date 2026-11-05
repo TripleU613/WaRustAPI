@@ -953,3 +953,16 @@ result/error/duplicate and unchanged durable rows after expiry. Normal-driver
 late-result/receive/no-resend test includes this producer. Native credential
 adoption, encryption, email-status job and error/observer behavior remain open;
 no live account operation or server extension response is claimed.
+
+## Contact-check preparation and reservation atomicity —2026-11-05
+
+Confirmed local fault: separate action/correlation commits could leave a sendable
+orphan on disk. queue_check now prepares both atomically. Real full-disk and
+uncertain-fsync tests verify neither/both consistency after reopen. Existing
+Queued requests lacking correlation defer with contact_check_correlation_missing;
+invalid/mismatched correlation refuses locally, and unrelated eligible traffic
+drain continues. No automatic correlation repair, Sent reset or replay.
+[Fault evidence, native caller-dependent usync timers and tests](apk/2.26.43.72-contact-queue-atomicity/README.md).
+Current0pD.A07 receives a caller timeout: selected HxV lightweight call is32s,
+while another0p7 call is128s. Rust contact-check's exact factory/deadline remains
+unported; no universal usync timer is inferred. No live traffic was sent.
