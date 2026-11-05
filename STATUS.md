@@ -1,3 +1,11 @@
+2026-11-05 — **Comparison group retry peer state and write settlement fixed.**
+
+Reservation checks identity/session snapshots and holds advanced peer state with
+a reserved checkpoint before I/O. Owned settlement records written or uncertain;
+legacy/held checkpoints never replay. [Tests and limits](docs/protocol/group-retry-admission.md#peer-snapshot-and-write-settlement-correction-2026-11-05).
+Validation:1316 tests, strict Clippy, fmt and CLI reference passed.
+No live socket, key fetch or resend operation.
+
 2026-11-05 — **Comparison group retry admission strengthened.**
 
 Before reserving a device or querying keys, the window checks group-chat/message

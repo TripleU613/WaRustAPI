@@ -2786,3 +2786,43 @@ completion claimed.
 
 Group retry write-checkpoint ordering, session commit guard and encryption-child
 count remain explicit follow-ups; status routing equality is not inferred.
+
+## Peer snapshot and write settlement correction (2026-11-05)
+
+**Confirmed local correction / implemented offline:** group/status comparison
+retry preparation now captures identity and session together in one read snapshot.
+Its write transaction requires both to remain unchanged and refuses an existing
+retry checkpoint before saving the prepared session/pin. A concurrent ratchet
+advance, session appearance/removal or pin change therefore preserves newer
+state and creates no replacement reservation. This is local concurrency control,
+not a newly inferred native reset/fetch policy.
+
+The prepared peer state and checkpoint commit atomically **before** socket I/O.
+The checkpoint is now **reserved**, with the key-query ID as reservation token,
+received count and reservation timestamp. A successful `write_node` is followed
+by owned settlement to **written**; an error settles to **uncertain**. Settlement
+requires the same token/count and still-reserved status. Duplicate/stale settlement
+cannot overwrite another state. Existing checkpoints, including legacy written
+records, are not re-reserved or migrated into a resend.
+
+A failed/ambiguous write does not roll back the advanced session and is not
+retried. A crash after reservation leaves reserved state, also not replayable.
+If socket I/O succeeds but settlement fails, the reservation remains held and an
+explicit diagnostic reports the socket outcome without claiming a settled send.
+The caller no longer claims the recipient can read the message: written proves
+only the local write operation completed, not server ACK, delivery or decryption.
+
+Two deterministic store regressions exercise the actual reservation/settlement
+helpers: unchanged input; changed identity/session; absent→present and removed
+session; existing legacy checkpoint; interruption/reopen after reservation;
+stale token/count settlement; duplicate reservation/settlement; successful and
+uncertain outcomes across reopen. Assertions preserve all checked tables on
+refusal and preserve advanced peer state after either outcome. Socket outcomes
+are supplied to the settlement helper; no real socket, process crash, concurrent
+thread, crypto or injected storage fault is executed by these tests.
+
+The group retry encryption-child count/root policy, status addressing and full
+native base-key/key handling remain open. This fixes the two source issues above
+without claiming full group/status retry parity or live acceptance.
+
+[Implementation and prior source findings](group-retry-admission.md).

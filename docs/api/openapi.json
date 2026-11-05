@@ -16376,6 +16376,15 @@
     ],
     "x-live": false,
     "evidence": "docs/protocol/group-retry-admission.md",
-    "description": "Internal admission precedes answered-device reservation and key queries: original message/group chat, supported counts1/2, no carried keys, original device and no duplicate attempt. Counts3/4 and keys are explicit local capability limits; native maximum remains4.14-case pure admission regression; no live receive/socket or crypto tested. Status addressing, write-checkpoint ordering, prior-session guard and exact group enc-count policy remain open. No new CLI/HTTP route."
+    "description": "Internal admission precedes answered-device reservation and key queries: original message/group chat, supported counts1/2, no carried keys, original device and no duplicate attempt. Counts3/4 and keys are explicit local capability limits; native maximum remains4.14-case pure admission regression; no live receive/socket or crypto tested. Status addressing and exact group enc-count policy remain open; later write-settlement evidence corrects checkpoint ordering and prior-session guard. No new CLI/HTTP route."
+  },
+  "x-comparison-group-retry-write-settlement": {
+    "x-cli": false,
+    "x-transport": [
+      "explicit CLI group/status comparison send window; offline tested"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/group-retry-admission.md#peer-snapshot-and-write-settlement-correction-2026-11-05",
+    "description": "Internal retry commit now checks captured identity/session and absent checkpoint, atomically saves advanced peer state and reserved token/count before I/O. Owned settlement marks written only after successful local socket write, or uncertain after error; no ratchet rollback or replay. Store regressions cover changed/missing/appearing peer state, legacy checkpoint, reopen, stale/duplicate settlement and both simulated write outcomes. Historical written records are not retroactive transmission proof; delivery/ACK and native group enc-count policy remain open. No new CLI/HTTP route or live operation."
   }
 }

@@ -657,7 +657,7 @@ async fn answer_retries(
         .await
         {
             Ok(()) => {
-                println!("group-send: retry answered; the recipient should now be able to read it")
+                println!("group-send: retry stanza written; recipient delivery is unverified")
             }
             Err(error) => eprintln!("group-send: retry answer failed for one device: {error}"),
         }
@@ -726,14 +726,14 @@ async fn answer_one(
     .await?;
     backlog.extend(pending);
     let peer_key = session_key(&retry.device);
-    let identity: Option<Vec<u8>> =
-        store.read(|tx| tx.get_json(Table::PeerIdentities, peer_key.as_bytes(), 1))?;
+    let expected = retry_peer_snapshot(store, &peer_key)?;
+    let identity = expected.identity.as_deref();
     // A device row carrying pqkey takes the same verified hybrid derivation as
     // the shared fan-out (docs/protocol/hybrid-fanout.md); never drop the key.
     let prepared = if whatsapp_api::signal::hybrid::selects_pq_key(&reply, &retry.device)? {
         whatsapp_api::signal::hybrid::bundle_for(&reply, &retry.device)?.prepare_initial(
             account,
-            identity.as_deref(),
+            identity,
             distribution,
         )?
     } else {
@@ -743,7 +743,7 @@ async fn answer_one(
             &retry.device,
             Some(&bundle),
             None,
-            identity.as_deref(),
+            identity,
             distribution,
         )
         .await?
@@ -761,46 +761,273 @@ async fn answer_one(
         }],
         skmsg,
     )?;
-    // The new session commits before the stanza goes out, exactly as the
-    // original send does: a session we used but did not persist cannot
-    // decrypt what the peer sends back under it.
+    let checkpoint = format!("message:{}:retry:{}", message.request_id, retry.device);
+    let reservation = RetryReservation {
+        checkpoint: &checkpoint,
+        query: &id,
+        count: retry.count,
+    };
+    reserve_retry_write(
+        store,
+        &peer_key,
+        &expected,
+        &prepared.session,
+        &prepared.identity,
+        &reservation,
+    )?;
+    let written = write_node(channel, &resend).await;
+    if let Err(error) = settle_retry_write(store, &reservation, written.is_ok()) {
+        eprintln!(
+            "group-send: retry checkpoint settlement failed (socket_write_ok={}); reserved state must not be replayed",
+            written.is_ok()
+        );
+        return Err(error);
+    }
+    written.map_err(Error::from)
+}
+
+struct RetryPeerSnapshot {
+    identity: Option<Vec<u8>>,
+    session: Option<Vec<u8>>,
+}
+
+struct RetryReservation<'a> {
+    checkpoint: &'a str,
+    query: &'a str,
+    count: u32,
+}
+
+fn retry_peer_snapshot(store: &ProtocolStore, peer_key: &str) -> Result<RetryPeerSnapshot, Error> {
+    store.read(|tx| {
+        Ok(RetryPeerSnapshot {
+            identity: tx.get_json(Table::PeerIdentities, peer_key.as_bytes(), 1)?,
+            session: tx.get_json(Table::SignalSessions, peer_key.as_bytes(), 1)?,
+        })
+    })
+}
+
+// Local concurrency/commit discipline, not a new native session-reset policy.
+// Never overwrite a ratchet advanced during async preparation; reserve before
+// writing and settle only after the write (docs/protocol/group-retry-admission.md).
+fn reserve_retry_write(
+    store: &ProtocolStore,
+    peer_key: &str,
+    expected: &RetryPeerSnapshot,
+    session: &[u8],
+    identity: &[u8],
+    reservation: &RetryReservation<'_>,
+) -> Result<(), Error> {
     store.write(|tx| {
+        if tx
+            .get_json::<serde_json::Value>(
+                Table::Checkpoints,
+                reservation.checkpoint.as_bytes(),
+                1,
+            )?
+            .is_some()
+        {
+            return Err(invalid("retry checkpoint already exists; no replay"));
+        }
         let current_identity: Option<Vec<u8>> =
             tx.get_json(Table::PeerIdentities, peer_key.as_bytes(), 1)?;
-        if current_identity != identity {
+        let current_session: Option<Vec<u8>> =
+            tx.get_json(Table::SignalSessions, peer_key.as_bytes(), 1)?;
+        if current_identity != expected.identity {
             return Err(invalid("peer identity changed before the retry commit"));
         }
-        tx.put_json(
-            Table::SignalSessions,
-            peer_key.as_bytes(),
-            1,
-            &*prepared.session,
-        )?;
-        tx.put_json(
-            Table::PeerIdentities,
-            peer_key.as_bytes(),
-            1,
-            &prepared.identity,
-        )?;
+        if current_session != expected.session {
+            return Err(invalid("peer session changed before the retry commit"));
+        }
+        tx.put_json(Table::SignalSessions, peer_key.as_bytes(), 1, &session)?;
+        tx.put_json(Table::PeerIdentities, peer_key.as_bytes(), 1, &identity)?;
         tx.put_json(
             Table::Checkpoints,
-            format!("message:{}:retry:{}", message.request_id, retry.device).as_bytes(),
+            reservation.checkpoint.as_bytes(),
             1,
-            &serde_json::json!({
-                "status": "written",
-                "count": retry.count,
-                "at": Timestamp::now(),
-            }),
+            &serde_json::json!({"status":"reserved", "query":reservation.query,
+                "count":reservation.count, "reserved_at":Timestamp::now()}),
         )
-    })?;
-    write_node(channel, &resend).await?;
-    Ok(())
+    })
+}
+
+fn settle_retry_write(
+    store: &ProtocolStore,
+    reservation: &RetryReservation<'_>,
+    written: bool,
+) -> Result<(), Error> {
+    store.write(|tx| {
+        let mut state: serde_json::Value = tx
+            .get_json(Table::Checkpoints, reservation.checkpoint.as_bytes(), 1)?
+            .ok_or_else(|| invalid("retry reservation vanished before write settlement"))?;
+        if state["status"].as_str() != Some("reserved")
+            || state["query"].as_str() != Some(reservation.query)
+            || state["count"].as_u64() != Some(u64::from(reservation.count))
+        {
+            return Err(invalid("retry reservation changed before write settlement"));
+        }
+        state["status"] = (if written { "written" } else { "uncertain" }).into();
+        state["settled_at"] = serde_json::json!(Timestamp::now());
+        tx.put_json(
+            Table::Checkpoints,
+            reservation.checkpoint.as_bytes(),
+            1,
+            &state,
+        )
+    })
 }
 
 #[cfg(test)]
 mod retry_admission_tests {
     use super::*;
     use whatsapp_api::{binary::Node, transport::receipts::parse_retry};
+
+    fn open_retry_store(path: &std::path::Path) -> ProtocolStore {
+        use whatsapp_api::{
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        ProtocolStore::open(OpenOptions {
+            path: path.into(),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([7; 32]))),
+            create: true,
+        })
+        .unwrap()
+    }
+
+    fn retry_snapshot(store: &ProtocolStore) -> Vec<Vec<(Vec<u8>, Vec<u8>)>> {
+        store
+            .read(|tx| {
+                [
+                    Table::Checkpoints,
+                    Table::SignalSessions,
+                    Table::PeerIdentities,
+                ]
+                .into_iter()
+                .map(|table| tx.scan(table, 1, 10000))
+                .collect()
+            })
+            .unwrap()
+    }
+
+    #[test]
+    fn group_retry_commit_preserves_newer_peer_state_and_existing_checkpoint() {
+        for change in [
+            "unchanged",
+            "identity",
+            "session",
+            "session_appeared",
+            "session_removed",
+            "prior_checkpoint",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open_retry_store(&dir.path().join("retry.redb"));
+            let peer = "comparison-direct:222222222222222:4@lid";
+            store
+                .write(|tx| {
+                    tx.put_json(Table::PeerIdentities, peer.as_bytes(), 1, &vec![1u8])?;
+                    if change != "session_appeared" {
+                        tx.put_json(Table::SignalSessions, peer.as_bytes(), 1, &vec![2u8])?;
+                    }
+                    Ok(())
+                })
+                .unwrap();
+            let expected = retry_peer_snapshot(&store, peer).unwrap();
+            store
+                .write(|tx| {
+                    match change {
+                        "identity" => {
+                            tx.put_json(Table::PeerIdentities, peer.as_bytes(), 1, &vec![3u8])?
+                        }
+                        "session" | "session_appeared" => {
+                            tx.put_json(Table::SignalSessions, peer.as_bytes(), 1, &vec![3u8])?
+                        }
+                        "session_removed" => {
+                            tx.delete(Table::SignalSessions, peer.as_bytes())?;
+                        }
+                        "prior_checkpoint" => tx.put_json(
+                            Table::Checkpoints,
+                            b"retry",
+                            1,
+                            &serde_json::json!({"status":"written"}),
+                        )?,
+                        _ => {}
+                    }
+                    Ok(())
+                })
+                .unwrap();
+            let before = retry_snapshot(&store);
+            let reservation = RetryReservation {
+                checkpoint: "retry",
+                query: "Q1",
+                count: 2,
+            };
+            let result = reserve_retry_write(&store, peer, &expected, &[9], &[1], &reservation);
+            if change == "unchanged" {
+                result.unwrap();
+                let after = retry_peer_snapshot(&store, peer).unwrap();
+                assert_eq!(after.session, Some(vec![9]));
+                assert_eq!(after.identity, Some(vec![1]));
+                let checkpoint: serde_json::Value = store
+                    .read(|tx| tx.get_json(Table::Checkpoints, b"retry", 1))
+                    .unwrap()
+                    .unwrap();
+                assert_eq!(checkpoint["status"], "reserved");
+            } else {
+                assert!(result.is_err(), "{change}");
+                assert_eq!(retry_snapshot(&store), before, "{change}");
+            }
+        }
+    }
+
+    #[test]
+    fn group_retry_write_settlement_is_owned_durable_and_never_rewinds_the_ratchet() {
+        for written in [true, false] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("retry.redb");
+            let store = open_retry_store(&path);
+            let peer = "comparison-direct:222222222222222:4@lid";
+            let expected = retry_peer_snapshot(&store, peer).unwrap();
+            let reservation = RetryReservation {
+                checkpoint: "retry",
+                query: "Q1",
+                count: 2,
+            };
+            reserve_retry_write(&store, peer, &expected, &[9], &[1], &reservation).unwrap();
+            drop(store); // Simulated interruption after commit, before socket outcome.
+            let store = open_retry_store(&path);
+            let before = retry_snapshot(&store);
+            assert!(
+                reserve_retry_write(&store, peer, &expected, &[8], &[1], &reservation).is_err()
+            );
+            for (query, count) in [("Q2", 2), ("Q1", 1)] {
+                let stale = RetryReservation {
+                    checkpoint: "retry",
+                    query,
+                    count,
+                };
+                assert!(settle_retry_write(&store, &stale, written).is_err());
+                assert_eq!(retry_snapshot(&store), before);
+            }
+            settle_retry_write(&store, &reservation, written).unwrap();
+            let settled = retry_snapshot(&store);
+            assert!(settle_retry_write(&store, &reservation, written).is_err());
+            assert_eq!(retry_snapshot(&store), settled);
+            drop(store);
+            let store = open_retry_store(&path);
+            let checkpoint: serde_json::Value = store
+                .read(|tx| tx.get_json(Table::Checkpoints, b"retry", 1))
+                .unwrap()
+                .unwrap();
+            assert_eq!(
+                checkpoint["status"],
+                if written { "written" } else { "uncertain" }
+            );
+            let peer = retry_peer_snapshot(&store, peer).unwrap();
+            assert_eq!(peer.session, Some(vec![9]));
+            assert_eq!(peer.identity, Some(vec![1]));
+        }
+    }
 
     #[test]
     fn group_retry_admission_correlates_chat_count_keys_and_recipient_before_action() {

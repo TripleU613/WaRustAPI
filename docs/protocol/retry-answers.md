@@ -313,3 +313,7 @@ The explicit group/status window now [checks admission before device reservation
 and key fetching](group-retry-admission.md). It refuses unported carried keys
 and counts3/4, and correlates group chat in addition to message/device. Remaining
 checkpoint/session/count issues are recorded there; no full group retry port.
+
+The comparison group/status window now also [guards its peer snapshot and
+settles reserved retry writes](group-retry-admission.md#peer-snapshot-and-write-settlement-correction-2026-11-05).
+A successful local write is not a recipient-delivery result.

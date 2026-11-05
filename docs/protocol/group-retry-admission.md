@@ -48,11 +48,9 @@ It does not execute the receive loop, filesystem, socket or cryptography.
 The audit also identified separate source boundaries still requiring correction
 or proof; this admission change does not close them:
 
-- `answer_one` currently commits a checkpoint labelled `written` **before** its
-  socket write. That label is not proof the retry stanza was written or accepted.
-- Its retry crypto commit checks the identity pin but not a captured previous
-  session, unlike the newly guarded normal direct retry path. Concurrent ratchet
-  updates require a follow-up reservation audit.
+- The prior checkpoint label and missing previous-session guard are corrected
+  in the peer snapshot/write-settlement follow-up below. Historical `written`
+  checkpoints are not retroactive proof of a successful socket write.
 - The group retry builder does not explicitly apply the received count to an
   outgoing encryption child. Exact current native group-child count/root policy
   needs a trace before changing fan-out bytes.
@@ -64,3 +62,45 @@ follows from this offline source correction.
 Validation: `1314` workspace/all-feature tests, strict workspace/all-target/
 all-feature Clippy, formatting and CLI-reference regeneration passed. APK
 coverage and repository hygiene checked before push.
+
+## Peer snapshot and write settlement correction (2026-11-05)
+
+**Confirmed local correction / implemented offline:** group/status comparison
+retry preparation now captures identity and session together in one read snapshot.
+Its write transaction requires both to remain unchanged and refuses an existing
+retry checkpoint before saving the prepared session/pin. A concurrent ratchet
+advance, session appearance/removal or pin change therefore preserves newer
+state and creates no replacement reservation. This is local concurrency control,
+not a newly inferred native reset/fetch policy.
+
+The prepared peer state and checkpoint commit atomically **before** socket I/O.
+The checkpoint is now **reserved**, with the key-query ID as reservation token,
+received count and reservation timestamp. A successful `write_node` is followed
+by owned settlement to **written**; an error settles to **uncertain**. Settlement
+requires the same token/count and still-reserved status. Duplicate/stale settlement
+cannot overwrite another state. Existing checkpoints, including legacy written
+records, are not re-reserved or migrated into a resend.
+
+A failed/ambiguous write does not roll back the advanced session and is not
+retried. A crash after reservation leaves reserved state, also not replayable.
+If socket I/O succeeds but settlement fails, the reservation remains held and an
+explicit diagnostic reports the socket outcome without claiming a settled send.
+The caller no longer claims the recipient can read the message: written proves
+only the local write operation completed, not server ACK, delivery or decryption.
+
+Two deterministic store regressions exercise the actual reservation/settlement
+helpers: unchanged input; changed identity/session; absent→present and removed
+session; existing legacy checkpoint; interruption/reopen after reservation;
+stale token/count settlement; duplicate reservation/settlement; successful and
+uncertain outcomes across reopen. Assertions preserve all checked tables on
+refusal and preserve advanced peer state after either outcome. Socket outcomes
+are supplied to the settlement helper; no real socket, process crash, concurrent
+thread, crypto or injected storage fault is executed by these tests.
+
+The group retry encryption-child count/root policy, status addressing and full
+native base-key/key handling remain open. This fixes the two source issues above
+without claiming full group/status retry parity or live acceptance.
+
+Follow-up validation:1316 workspace/all-feature tests passed, along with strict
+workspace/all-target/all-feature Clippy, formatting and CLI-reference regeneration.
+Coverage/hygiene checked before push; no live socket outcome was measured.
