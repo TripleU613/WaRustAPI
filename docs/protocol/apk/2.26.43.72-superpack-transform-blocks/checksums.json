@@ -1,0 +1,38 @@
+{
+  "README.md": {
+    "bytes": 5474,
+    "sha256": "f959367c1a821f60724e3877b7965a496714e33f5ac4230f2333892195d1fe63"
+  },
+  "block-reader-assembly.txt": {
+    "bytes": 37558,
+    "sha256": "9b1e91de81ffa0139c734bdfdb91d00498b2adb05289dbba8e0505f94ae3b426"
+  },
+  "blocks.json": {
+    "bytes": 141326,
+    "sha256": "67228445876f747cd7b435e133399ccf41b9ca2c79bceda6d3a4388bf0f5c43e"
+  },
+  "constructors-assembly.txt": {
+    "bytes": 1552,
+    "sha256": "b128ad4e7598fa31488700c83c24439ca1e6b62dc3f67bd197f685dbe856a0f0"
+  },
+  "dispatch-assembly.txt": {
+    "bytes": 4983,
+    "sha256": "6bdf9bc838f2b79a7c05317855dff8afb9f3e92c138c22cdc8ae1dfafe4e8b93"
+  },
+  "inspect-blocks.py": {
+    "bytes": 3757,
+    "sha256": "4f301a4f8d53ecf0fc027912f44d82a55a6290b5aae47eb9043f04e4306e0e15"
+  },
+  "ranges.json": {
+    "bytes": 1056,
+    "sha256": "1e9ae69e36b806e5cf0494a67b2fa604115b0da3752e10061db20d8a653375b9"
+  },
+  "settings-assembly.txt": {
+    "bytes": 1625,
+    "sha256": "8e11d826700909968feb9c40c524ce6b9a08f126d51c224e360557ecc5620215"
+  },
+  "worker-assembly.txt": {
+    "bytes": 23912,
+    "sha256": "0401191da11adc83dcda75af1bceb8721c9b3fbd65d78958704525ab246e3abb"
+  }
+}

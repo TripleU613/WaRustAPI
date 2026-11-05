@@ -1,0 +1,33 @@
+            0x0001eb60      mov   x8, x0
+            0x0001eb64      cmp   w1, 1
+            0x0001eb68      mov   w0, -1
+        ┌─< 0x0001eb6c      b.gt  0x1eb8c
+       ┌──< 0x0001eb70      cbz   w1, 0x1ebb0
+       ││   0x0001eb74      cmp   w1, 1
+      ┌───< 0x0001eb78      b.ne  0x1ebd8
+      │││   0x0001eb7c      ldr   w9, [x2]
+      │││   0x0001eb80      mov   w0, wzr
+      │││   0x0001eb84      str   w9, [x8, 0xc0]
+      │││   0x0001eb88      ret
+      ││└─> 0x0001eb8c      cmp   w1, 2
+      ││┌─< 0x0001eb90      b.eq  0x1ebd0
+      │││   0x0001eb94      cmp   w1, 3
+     ┌────< 0x0001eb98      b.ne  0x1ebd8
+     ││││   0x0001eb9c      ldr   w9, [x2]
+     ││││   0x0001eba0      mov   w0, wzr
+     ││││   0x0001eba4      mov   w10, 1
+     ││││   0x0001eba8      stp   w10, w9, [x8, 0xc8]
+     ││││   0x0001ebac      ret
+     ││└──> 0x0001ebb0      str   x30, [sp, -0x10]!
+     ││ │   0x0001ebb4      ldr   w9, [x2]
+     ││ │   0x0001ebb8      mov   x0, x2
+     ││ │   0x0001ebbc      strb  w9, [x8, 0xb8]
+     ││ │   0x0001ebc0      bl    0x315dc
+     ││ │   0x0001ebc4      mov   w0, wzr
+     ││ │   0x0001ebc8      ldr   x30, [sp], 0x10
+     ││ │   0x0001ebcc      ret
+     ││ └─> 0x0001ebd0      mov   w0, wzr
+     ││     0x0001ebd4      str   x2, [x8, 0xd0]
+     └└───> 0x0001ebd8      ret
+            0x0001ebdc      ldrb  w0, [x0, 0xc5]                       ; [0xc5:4]=0x80000000
+            0x0001ebe0      ret

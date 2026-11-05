@@ -1,0 +1,33 @@
+            0x0001e0ac      stp   x30, x19, [sp, -0x10]!
+            0x0001e0b0      mov   x19, x0
+            0x0001e0b4      mov   w0, 1
+            0x0001e0b8      mov   w1, 0xd8
+            0x0001e0bc      bl    0x33144
+            0x0001e0c0      str   xzr, [x0, 0x28]
+            0x0001e0c4      strb  wzr, [x0, 0xc5]
+            0x0001e0c8      str   wzr, [x0, 0xbc]
+            0x0001e0cc      str   x19, [x0]
+            0x0001e0d0      ldp   x30, x19, [sp], 0x10
+            0x0001e0d4      ret
+            0x0001e0d8      str   x30, [sp, -0x20]!
+            0x0001e0dc      stp   x20, x19, [sp, 0x10]
+            0x0001e0e0      mov   x19, x1
+            0x0001e0e4      mov   x20, x0
+            0x0001e0e8      mov   w0, 1
+            0x0001e0ec      mov   w1, 0xd8
+            0x0001e0f0      bl    0x33144
+            0x0001e0f4      mov   x1, xzr
+            0x0001e0f8      str   xzr, [x0, 0x28]
+            0x0001e0fc      strb  wzr, [x0, 0xc5]
+            0x0001e100      str   wzr, [x0, 0xbc]
+        ┌─< 0x0001e104      cbz   x20, 0x1e120
+       ┌──< 0x0001e108      cbz   x0, 0x1e120
+       ││   0x0001e10c      mov   w8, 1
+       ││   0x0001e110      mov   x1, x0
+       ││   0x0001e114      stp   x20, x19, [x0, 8]
+       ││   0x0001e118      str   xzr, [x0, 0x18]
+       ││   0x0001e11c      str   w8, [x0, 0x20]
+       └└─> 0x0001e120      ldp   x20, x19, [sp, 0x10]
+            0x0001e124      mov   x0, x1
+            0x0001e128      ldr   x30, [sp], 0x20
+            0x0001e12c      ret

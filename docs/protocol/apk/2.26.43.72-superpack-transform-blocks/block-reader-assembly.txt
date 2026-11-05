@@ -1,0 +1,579 @@
+            0x0001e130      stp   x29, x30, [sp, -0x60]!
+            0x0001e134      stp   x28, x27, [sp, 0x10]
+            0x0001e138      stp   x26, x25, [sp, 0x20]
+            0x0001e13c      stp   x24, x23, [sp, 0x30]
+            0x0001e140      stp   x22, x21, [sp, 0x40]
+            0x0001e144      stp   x20, x19, [sp, 0x50]
+            0x0001e148      sub   sp, sp, 8, lsl 12
+            0x0001e14c      sub   sp, sp, 0xc0
+            0x0001e150      mov   x19, x0
+            0x0001e154      mov   w0, 0x903
+            0x0001e158      mov   x21, x1
+            0x0001e15c      bl    0x2ded0
+            0x0001e160      mov   x28, x0
+            0x0001e164      cmp   x0, 0x17
+        ┌─< 0x0001e168      b.hi  0x1e178
+       ┌──< 0x0001e16c      cbz   x28, 0x1e178
+       ││   0x0001e170      mov   w24, 5
+      ┌───< 0x0001e174      b     0x1e80c
+      │└└─> 0x0001e178      ldrb  w8, [x19, 0xb8]                      ; [0xb8:4]=0x33f80
+      │ ┌─< 0x0001e17c      cbz   w8, 0x1e198
+      │ │   0x0001e180      ldr   w9, [x19, 0xc0]                      ; [0xc0:4]=0x37f80 segment.GNU_RELRO
+      │ │   0x0001e184      add   x23, sp, 8, lsl 12
+      │ │   0x0001e188      add   x23, x23, 0x50
+      │ │   0x0001e18c      cmp   w9, w8
+      │┌──< 0x0001e190      b.lo  0x1e1b4
+     ┌────< 0x0001e194      b     0x1e1bc
+     │││└─> 0x0001e198      mov   w8, 4
+     │││    0x0001e19c      strb  w8, [x19, 0xb8]
+     │││    0x0001e1a0      ldr   w9, [x19, 0xc0]                      ; [0xc0:4]=0x37f80 segment.GNU_RELRO
+     │││    0x0001e1a4      add   x23, sp, 8, lsl 12
+     │││    0x0001e1a8      add   x23, x23, 0x50
+     │││    0x0001e1ac      cmp   w9, w8
+     │││┌─< 0x0001e1b0      b.hs  0x1e1bc
+     ││└──> 0x0001e1b4      strb  w9, [x19, 0xb8]
+     ││┌──< 0x0001e1b8      cbz   w9, 0x1e240
+     └──└─> 0x0001e1bc      add   x0, x19, 0x30
+      ││    0x0001e1c0      mov   x1, xzr
+      ││    0x0001e1c4      bl    sym.imp.pthread_mutex_init
+      ││    0x0001e1c8      add   x0, x19, 0x58
+      ││    0x0001e1cc      mov   x1, xzr
+      ││    0x0001e1d0      bl    sym.imp.pthread_cond_init
+      ││    0x0001e1d4      add   x0, x19, 0x88
+      ││    0x0001e1d8      mov   x1, xzr
+      ││    0x0001e1dc      bl    sym.imp.pthread_cond_init
+      ││    0x0001e1e0      add   x0, sp, 8, lsl 12
+      ││    0x0001e1e4      add   x0, x0, 0x88
+      ││    0x0001e1e8      bl    sym.imp.pthread_attr_init
+      ││    0x0001e1ec      ldrb  w8, [x19, 0xb8]                      ; [0xb8:4]=0x33f80
+      ││┌─< 0x0001e1f0      cbz   w8, 0x1e234
+      │││   0x0001e1f4      mov   w20, wzr
+      │││   0x0001e1f8      nop
+      │││   0x0001e1fc      adr   x22, 0x1ebe4
+     ┌────> 0x0001e200      add   x0, sp, 8, lsl 12
+     ╎│││   0x0001e204      add   x1, sp, 8, lsl 12
+     ╎│││   0x0001e208      mov   x2, x22
+     ╎│││   0x0001e20c      add   x0, x0, 0x80
+     ╎│││   0x0001e210      add   x1, x1, 0x88
+     ╎│││   0x0001e214      mov   x3, x19
+     ╎│││   0x0001e218      bl    sym.imp.pthread_create
+     ╎│││   0x0001e21c      ldr   x0, [x23, 0x30]                      ; [0x30:4]=0
+     ╎│││   0x0001e220      bl    sym.imp.pthread_detach
+     ╎│││   0x0001e224      ldrb  w8, [x19, 0xb8]                      ; [0xb8:4]=0x33f80
+     ╎│││   0x0001e228      add   w20, w20, 1
+     ╎│││   0x0001e22c      cmp   w20, w8
+     └────< 0x0001e230      b.lo  0x1e200
+      ││└─> 0x0001e234      add   x0, sp, 8, lsl 12
+      ││    0x0001e238      add   x0, x0, 0x88
+      ││    0x0001e23c      bl    sym.imp.pthread_attr_destroy
+      │└──> 0x0001e240      ldr   x8, [x19, 8]                         ; [0x8:4]=0
+      │ ┌─< 0x0001e244      cbz   x8, 0x1e264
+      │ │   0x0001e248      movi  v0.2d, 0000000000000000
+      │ │   0x0001e24c      ldr   w8, [x19, 0xc0]                      ; [0xc0:4]=0x37f80 segment.GNU_RELRO
+      │ │   0x0001e250      stur  q0, [x23, 0x1a]
+      │ │   0x0001e254      str   q0, [sp, 0x8060]
+      │ │   0x0001e258      str   q0, [sp, 0x8050]
+      │┌──< 0x0001e25c      cbnz  w8, 0x1e2e0
+     ┌────< 0x0001e260      b     0x1e75c
+     │││└─> 0x0001e264      ldr   x0, [x19]
+     │││    0x0001e268      bl    sym.imp.fileno
+     │││┌─< 0x0001e26c      tbnz  w0, 0x1f, 0x1e2b0
+     ││││   0x0001e270      mov   w22, w0
+     ││││   0x0001e274      ldr   x0, [x19]
+     ││││   0x0001e278      bl    sym.imp.ftell
+     ││││   0x0001e27c      cmn   x0, 1
+     ││││   0x0001e280      str   x0, [x19, 0x18]
+    ┌─────< 0x0001e284      b.eq  0x1e29c
+    │││││   0x0001e288      ldr   x0, [x19]
+    │││││   0x0001e28c      mov   x1, xzr
+    │││││   0x0001e290      mov   w2, 2
+    │││││   0x0001e294      bl    sym.imp.fseek
+   ┌──────< 0x0001e298      cbz   w0, 0x1e70c
+   │└─────> 0x0001e29c      nop
+   │ ││││   0x0001e2a0      adr   x1, str.Superpack                    ; 0x3b42
+   │ ││││   0x0001e2a4      adrp  x2, 0x4000
+   │ ││││   0x0001e2a8      add   x2, x2, 0x6ca
+   │┌─────< 0x0001e2ac      b     0x1e2c0
+   │││││└─> 0x0001e2b0      nop
+   │││││    0x0001e2b4      adr   x1, str.Superpack                    ; 0x3b42
+   │││││    0x0001e2b8      adrp  x2, 0x4000
+   │││││    0x0001e2bc      add   x2, x2, 0x7b3
+   │└───┌─> 0x0001e2c0      mov   w0, 5
+   │ │││╎   0x0001e2c4      bl    sym.imp.__android_log_print
+   │ │││╎   0x0001e2c8      movi  v0.2d, 0000000000000000
+   │ │││╎   0x0001e2cc      ldr   w8, [x19, 0xc0]                      ; [0xc0:4]=0x37f80 segment.GNU_RELRO
+   │ │││╎   0x0001e2d0      stur  q0, [x23, 0x1a]
+   │ │││╎   0x0001e2d4      str   q0, [sp, 0x8060]
+   │ │││╎   0x0001e2d8      str   q0, [sp, 0x8050]
+   │┌─────< 0x0001e2dc      cbz   w8, 0x1e75c
+  ┌────└──> 0x0001e2e0      add   x8, x19, 0x20
+  ╎││││ ╎   0x0001e2e4      mov   x22, xzr
+  ╎││││ ╎   0x0001e2e8      mov   w20, wzr
+  ╎││││ ╎   0x0001e2ec      stp   x21, x8, [sp, 0x18]
+  ╎││││ ╎   0x0001e2f0      add   x8, sp, 0x50
+  ╎││││ ╎   0x0001e2f4      add   x29, x19, 0x18
+  ╎││││ ╎   0x0001e2f8      add   x8, x8, 0x10
+  ╎││││ ╎   0x0001e2fc      str   x28, [sp, 0x30]
+  ╎││││ ╎   0x0001e300      str   x8, [sp, 0x10]
+  ╎││││ ╎   0x0001e304      str   x29, [sp, 0x40]
+  ╎││││┌──> 0x0001e308      ldr   x9, [x19, 8]                         ; [0x8:4]=0
+  ────────< 0x0001e30c      cbz   x9, 0x1e340
+  ╎││││╎╎   0x0001e310      ldp   x11, x10, [x19, 0x10]
+  ╎││││╎╎   0x0001e314      add   x8, x10, 0x2a
+  ╎││││╎╎   0x0001e318      cmp   x8, x11
+  ────────< 0x0001e31c      b.hi  0x1e694
+  ╎││││╎╎   0x0001e320      add   x9, x9, x10
+  ╎││││╎╎   0x0001e324      ldp   q0, q1, [x9]
+  ╎││││╎╎   0x0001e328      ldur  q2, [x9, 0x1a]                       ; [0x1a:4]=0
+  ╎││││╎╎   0x0001e32c      str   x8, [x29]
+  ╎││││╎╎   0x0001e330      str   q0, [sp, 0x8050]
+  ╎││││╎╎   0x0001e334      str   q1, [sp, 0x8060]
+  ╎││││╎╎   0x0001e338      stur  q2, [x23, 0x1a]
+  ────────< 0x0001e33c      b     0x1e360
+  ────────> 0x0001e340      ldr   x3, [x19]
+  ╎││││╎╎   0x0001e344      add   x0, sp, 8, lsl 12
+  ╎││││╎╎   0x0001e348      mov   w1, 0x2a                             ; '*'
+  ╎││││╎╎   0x0001e34c      add   x0, x0, 0x50
+  ╎││││╎╎   0x0001e350      mov   w2, 1
+  ╎││││╎╎   0x0001e354      bl    sym.imp.fread
+  ╎││││╎╎   0x0001e358      cmp   w0, 1
+  ────────< 0x0001e35c      b.ne  0x1e8d4
+  ────────> 0x0001e360      ldur  w24, [x23, 0x26]                     ; [0x26:4]=0x58780000
+  ────────< 0x0001e364      cbz   w24, 0x1e3f8
+  ╎││││╎╎   0x0001e368      ldr   x8, [x19, 8]                         ; [0x8:4]=0
+  ────────< 0x0001e36c      cbz   x8, 0x1e3dc
+  ╎││││╎╎   0x0001e370      ldp   x11, x9, [x19, 0x10]
+  ╎││││╎╎   0x0001e374      add   x10, x9, x24, lsl 2
+  ╎││││╎╎   0x0001e378      cmp   x10, x11
+  ────────< 0x0001e37c      b.hi  0x1e694
+  ╎││││╎╎   0x0001e380      cmp   w24, 7
+  ────────< 0x0001e384      b.ls  0x1e3a4
+  ╎││││╎╎   0x0001e388      add   x10, x8, x10
+  ╎││││╎╎   0x0001e38c      add   x12, x8, x9
+  ╎││││╎╎   0x0001e390      cmp   x29, x10
+  ────────< 0x0001e394      b.hs  0x1e640
+  ╎││││╎╎   0x0001e398      ldr   x10, [sp, 0x20]                      ; [0x20:4]=64 ; "@"
+  ╎││││╎╎   0x0001e39c      cmp   x12, x10
+  ────────< 0x0001e3a0      b.hs  0x1e640
+  ────────> 0x0001e3a4      mov   x10, xzr
+  ╎││││╎╎   0x0001e3a8      mov   x11, x9
+  ────────> 0x0001e3ac      add   x9, sp, 0x50
+  ╎││││╎╎   0x0001e3b0      add   x8, x8, x11
+  ╎││││╎╎   0x0001e3b4      add   x11, x11, 4
+  ╎││││╎╎   0x0001e3b8      add   x9, x9, x10, lsl 2
+  ╎││││╎╎   0x0001e3bc      sub   x10, x24, x10
+  ────────> 0x0001e3c0      ldr   w12, [x8], 4
+  ╎││││╎╎   0x0001e3c4      subs  x10, x10, 1
+  ╎││││╎╎   0x0001e3c8      str   x11, [x29]
+  ╎││││╎╎   0x0001e3cc      add   x11, x11, 4
+  ╎││││╎╎   0x0001e3d0      str   w12, [x9], 4
+  ────────< 0x0001e3d4      b.ne  0x1e3c0
+  ────────< 0x0001e3d8      b     0x1e3f8
+  ────────> 0x0001e3dc      ldr   x3, [x19]
+  ╎││││╎╎   0x0001e3e0      add   x0, sp, 0x50
+  ╎││││╎╎   0x0001e3e4      mov   w1, 4
+  ╎││││╎╎   0x0001e3e8      mov   x2, x24
+  ╎││││╎╎   0x0001e3ec      bl    sym.imp.fread
+  ╎││││╎╎   0x0001e3f0      cmp   x24, w0, sxtw
+  ────────< 0x0001e3f4      b.ne  0x1e9b4
+  ────────> 0x0001e3f8      ldur  x25, [x23, 0xc]                      ; [0xc:4]=0
+  ╎││││╎╎   0x0001e3fc      ldr   w8, [x19, 0xc8]                      ; [0xc8:4]=0x37f80 segment.GNU_RELRO
+  ╎││││╎╎   0x0001e400      mov   x26, x25
+  ────────< 0x0001e404      cbz   w8, 0x1e428
+  ╎││││╎╎   0x0001e408      ldr   w4, [x19, 0xcc]                      ; [0xcc:4]=0
+  ╎││││╎╎   0x0001e40c      mov   x26, x25
+  ╎││││╎╎   0x0001e410      cmp   w4, w24
+  ────────< 0x0001e414      b.hs  0x1e428
+  ╎││││╎╎   0x0001e418      add   x8, sp, 0x50
+  ╎││││╎╎   0x0001e41c      ldr   w26, [x8, x4, lsl 2]
+  ╎││││╎╎   0x0001e420      cmp   x25, x26
+  ────────< 0x0001e424      b.lo  0x1e984
+  ────────> 0x0001e428      ldur  x27, [x23, 0x14]                     ; [0x14:4]=1
+  ────────< 0x0001e42c      cbz   x27, 0x1e6d4
+  ╎││││╎╎   0x0001e430      ldr   w10, [x23]
+  ╎││││╎╎   0x0001e434      ldr   w8, [x28]
+  ╎││││╎╎   0x0001e438      cmp   w10, w8
+  ────────< 0x0001e43c      b.lo  0x1e458
+  ╎││││╎╎   0x0001e440      add   w1, w10, 1
+  ╎││││╎╎   0x0001e444      mov   x0, x28
+  ╎││││╎╎   0x0001e448      mov   w21, w10
+  ╎││││╎╎   0x0001e44c      bl    0x2dd3c
+  ╎││││╎╎   0x0001e450      mov   w10, w21
+  ────────< 0x0001e454      cbnz  w0, 0x1e8cc
+  ────────> 0x0001e458      ldrb  w23, [x23, 0x1c]                     ; [0x1c:4]=0
+  ╎││││╎╎   0x0001e45c      cmp   w23, 0x36
+  ────────< 0x0001e460      b.hi  0x1e638
+  ╎││││╎╎   0x0001e464      mov   w8, 1
+  ╎││││╎╎   0x0001e468      mov   x9, 0xe
+  ╎││││╎╎   0x0001e46c      lsl   x8, x8, x23
+  ╎││││╎╎   0x0001e470      movk  x9, 0x400, lsl 32
+  ╎││││╎╎   0x0001e474      movk  x9, 0x60, lsl 48
+  ╎││││╎╎   0x0001e478      tst   x8, x9
+  ────────< 0x0001e47c      b.eq  0x1e638
+  ────────> 0x0001e480      ldr   x8, [x28, 8]                         ; [0x8:4]=0
+  ╎││││╎╎   0x0001e484      mov   x1, x26
+  ╎││││╎╎   0x0001e488      mov   w21, w10
+  ╎││││╎╎   0x0001e48c      ldr   x24, [x8, w10, uxtw 3]
+  ╎││││╎╎   0x0001e490      mov   x0, x24
+  ╎││││╎╎   0x0001e494      str   x26, [x24, 0x10]
+  ╎││││╎╎   0x0001e498      bl    0x2e33c
+  ╎││││╎╎   0x0001e49c      ldr   x8, [x24]
+  ────────< 0x0001e4a0      cbz   x8, 0x1e6e8
+  ╎││││╎╎   0x0001e4a4      str   x8, [x24, 8]
+  ╎││││╎╎   0x0001e4a8      str   w20, [sp, 0x4c]
+  ╎││││╎╎   0x0001e4ac      add   x20, sp, 8, lsl 12
+  ╎││││╎╎   0x0001e4b0      ldr   x11, [x19, 8]                        ; [0x8:4]=0
+  ╎││││╎╎   0x0001e4b4      add   x20, x20, 0x50
+  ╎││││╎╎   0x0001e4b8      str   x22, [sp, 0x38]
+  ────────< 0x0001e4bc      cbz   x11, 0x1e4e4
+  ╎││││╎╎   0x0001e4c0      ldp   x10, x8, [x19, 0x10]
+  ╎││││╎╎   0x0001e4c4      add   x9, x8, x27
+  ╎││││╎╎   0x0001e4c8      cmp   x9, x10
+  ────────< 0x0001e4cc      b.hi  0x1e8ac
+  ╎││││╎╎   0x0001e4d0      mov   x29, x25
+  ╎││││╎╎   0x0001e4d4      add   x25, x11, x8
+  ╎││││╎╎   0x0001e4d8      ldr   x8, [sp, 0x40]                       ; segment.PHDR
+  ╎││││╎╎                                                              ; [0x40:4]=6
+  ╎││││╎╎   0x0001e4dc      str   x9, [x8]
+  ────────< 0x0001e4e0      b     0x1e518
+  ────────> 0x0001e4e4      mov   x0, x27
+  ╎││││╎╎   0x0001e4e8      bl    sym.imp.malloc
+  ────────< 0x0001e4ec      cbz   x0, 0x1e938
+  ╎││││╎╎   0x0001e4f0      ldr   x3, [x19]
+  ╎││││╎╎   0x0001e4f4      mov   x1, x27
+  ╎││││╎╎   0x0001e4f8      mov   w2, 1
+  ╎││││╎╎   0x0001e4fc      mov   x22, x0
+  ╎││││╎╎   0x0001e500      bl    sym.imp.fread
+  ╎││││╎╎   0x0001e504      cmp   w0, 1
+  ────────< 0x0001e508      b.ne  0x1e95c
+  ╎││││╎╎   0x0001e50c      ldr   x11, [x19, 8]                        ; [0x8:4]=0
+  ╎││││╎╎   0x0001e510      mov   x29, x25
+  ╎││││╎╎   0x0001e514      mov   x25, x22
+  ────────> 0x0001e518      ldr   x8, [x24]
+  ╎││││╎╎   0x0001e51c      ldur  x28, [x20, 0x1e]                     ; [0x1e:4]=0x400000
+  ╎││││╎╎   0x0001e520      cmp   x11, 0
+  ╎││││╎╎   0x0001e524      mov   w0, 1
+  ╎││││╎╎   0x0001e528      mov   w1, 0x68                             ; 'h'
+  ╎││││╎╎   0x0001e52c      str   x11, [sp, 0x28]
+  ╎││││╎╎   0x0001e530      ldr   x22, [x8, 8]                         ; [0x8:4]=0
+  ╎││││╎╎   0x0001e534      cset  w20, eq
+  ╎││││╎╎   0x0001e538      bl    sym.imp.calloc
+  ╎││││╎╎   0x0001e53c      cmp   x26, x29
+  ╎││││╎╎   0x0001e540      mov   x24, x0
+  ╎││││╎╎   0x0001e544      stp   w21, w23, [x0, 8]
+  ╎││││╎╎   0x0001e548      cset  w8, eq
+  ╎││││╎╎   0x0001e54c      cmp   w23, 0x36
+  ╎││││╎╎   0x0001e550      stp   x25, x22, [x0, 0x28]
+  ╎││││╎╎   0x0001e554      stp   x27, x29, [x0, 0x10]
+  ╎││││╎╎   0x0001e558      str   x28, [x0, 0x58]
+  ╎││││╎╎   0x0001e55c      str   w20, [x0, 0x64]
+  ╎││││╎╎   0x0001e560      str   x26, [x0, 0x20]
+  ╎││││╎╎   0x0001e564      str   w8, [x0, 0x50]
+  ────────< 0x0001e568      b.eq  0x1e574
+  ╎││││╎╎   0x0001e56c      cmp   w23, 4
+  ────────< 0x0001e570      b.ne  0x1e5d8
+  ────────> 0x0001e574      ldr   x8, [x19, 0xd0]                      ; [0xd0:4]=0xe20 "B" ; " \U0000000e"
+  ────────< 0x0001e578      cbz   x8, 0x1e680
+  ╎││││╎╎   0x0001e57c      ldr   x8, [x8]
+  ────────< 0x0001e580      cbz   x8, 0x1e680
+  ╎││││╎╎   0x0001e584      ldr   x9, [x8, 8]                          ; [0x8:4]=0
+  ────────< 0x0001e588      cbz   x9, 0x1e680
+  ╎││││╎╎   0x0001e58c      ldr   x9, [x9, w21, uxtw 3]
+  ────────< 0x0001e590      cbz   x9, 0x1e6b8
+  ╎││││╎╎   0x0001e594      ldp   x12, x11, [x9, 0x20]
+  ╎││││╎╎   0x0001e598      ldr   x10, [x9, 0x10]                      ; [0x10:4]=0xb70003
+  ╎││││╎╎   0x0001e59c      add   x10, x11, x10
+  ╎││││╎╎   0x0001e5a0      ldr   x11, [x9, 0x30]                      ; [0x30:4]=0
+  ╎││││╎╎   0x0001e5a4      sub   x10, x10, x12
+  ╎││││╎╎   0x0001e5a8      cmn   x10, x11
+  ────────< 0x0001e5ac      b.eq  0x1e6b8
+  ╎││││╎╎   0x0001e5b0      str   x9, [x24, 0x38]
+  ╎││││╎╎   0x0001e5b4      ldp   x12, x11, [x9, 0x20]
+  ╎││││╎╎   0x0001e5b8      ldr   x10, [x9, 0x10]                      ; [0x10:4]=0xb70003
+  ╎││││╎╎   0x0001e5bc      ldr   x9, [x9, 0x30]                       ; [0x30:4]=0
+  ╎││││╎╎   0x0001e5c0      add   x10, x11, x10
+  ╎││││╎╎   0x0001e5c4      sub   x10, x10, x12
+  ╎││││╎╎   0x0001e5c8      add   x9, x10, x9
+  ╎││││╎╎   0x0001e5cc      str   x9, [x24, 0x48]
+  ╎││││╎╎   0x0001e5d0      ldr   x8, [x8, 8]                          ; [0x8:4]=0
+  ╎││││╎╎   0x0001e5d4      str   xzr, [x8, w21, uxtw 3]
+  ────────> 0x0001e5d8      add   x0, x19, 0x30
+  ╎││││╎╎   0x0001e5dc      bl    sym.imp.pthread_mutex_lock
+  ╎││││╎╎   0x0001e5e0      ldr   x8, [x19, 0x28]                      ; [0x28:4]=0x35878 ; "xX\U00000003"
+  ────────< 0x0001e5e4      cbz   x8, 0x1e5f8
+  ╎││││╎╎   0x0001e5e8      ldr   x1, [sp, 0x38]                       ; [0x38:4]=0x400009 ; u"\t@\U0000001a\U00000019\U00000006"
+  ╎││││╎╎   0x0001e5ec      mov   x0, x24
+  ╎││││╎╎   0x0001e5f0      bl    0x335ec
+  ────────< 0x0001e5f4      b     0x1e5fc
+  ────────> 0x0001e5f8      str   x24, [x19, 0x28]
+  ────────> 0x0001e5fc      ldr   x28, [sp, 0x30]                      ; [0x30:4]=0
+  ╎││││╎╎   0x0001e600      add   x23, sp, 8, lsl 12
+  ╎││││╎╎   0x0001e604      ldr   w20, [sp, 0x4c]                      ; [0x4c:4]=0
+  ╎││││╎╎   0x0001e608      ldr   x29, [sp, 0x40]                      ; segment.PHDR
+  ╎││││╎╎                                                              ; [0x40:4]=6
+  ╎││││╎╎   0x0001e60c      add   x0, x19, 0x58
+  ╎││││╎╎   0x0001e610      add   x23, x23, 0x50
+  ╎││││╎╎   0x0001e614      bl    sym.imp.pthread_cond_broadcast
+  ╎││││╎╎   0x0001e618      add   x0, x19, 0x30
+  ╎││││╎╎   0x0001e61c      bl    sym.imp.pthread_mutex_unlock
+  ╎││││╎╎   0x0001e620      ldr   w8, [x19, 0xc0]                      ; [0xc0:4]=0x37f80 segment.GNU_RELRO
+  ╎││││╎╎   0x0001e624      add   w20, w20, 1
+  ╎││││╎╎   0x0001e628      mov   x22, x24
+  ╎││││╎╎   0x0001e62c      cmp   w20, w8
+  ╎││││└──< 0x0001e630      b.lo  0x1e308
+  ╎││││┌──< 0x0001e634      b     0x1e758
+  ────────> 0x0001e638      mov   x26, x25
+  ────────< 0x0001e63c      b     0x1e480
+  ────────> 0x0001e640      and   x10, x24, 0xfffffff8
+  ╎│││││╎   0x0001e644      ldr   x14, [sp, 0x10]                      ; [0x10:4]=0xb70003
+  ╎│││││╎   0x0001e648      add   x12, x12, 0x10
+  ╎│││││╎   0x0001e64c      add   x11, x9, x10, lsl 2
+  ╎│││││╎   0x0001e650      mov   x13, x10
+  ────────> 0x0001e654      ldp   q0, q1, [x12, -0x10]
+  ╎│││││╎   0x0001e658      subs  x13, x13, 8
+  ╎│││││╎   0x0001e65c      add   x12, x12, 0x20
+  ╎│││││╎   0x0001e660      add   x9, x9, 0x20
+  ╎│││││╎   0x0001e664      stp   q0, q1, [x14, -0x10]
+  ╎│││││╎   0x0001e668      add   x14, x14, 0x20
+  ────────< 0x0001e66c      b.ne  0x1e654
+  ╎│││││╎   0x0001e670      cmp   x10, x24
+  ╎│││││╎   0x0001e674      str   x9, [x29]
+  ────────< 0x0001e678      b.ne  0x1e3ac
+  ────────< 0x0001e67c      b     0x1e3f8
+  ────────> 0x0001e680      ldr   x8, [sp, 0x28]                       ; [0x28:4]=0x35878 ; "xX\U00000003"
+  ────────< 0x0001e684      cbz   x8, 0x1e894
+  ╎│││││╎   0x0001e688      adrp  x22, 0x4000
+  ╎│││││╎   0x0001e68c      add   x22, x22, 0x26a
+  ────────< 0x0001e690      b     0x1e6c8
+  ────────> 0x0001e694      nop
+  ╎│││││╎   0x0001e698      adr   x1, str.Superpack                    ; 0x3b42
+  ╎│││││╎   0x0001e69c      adrp  x2, 0x4000
+  ╎│││││╎   0x0001e6a0      add   x2, x2, 0x1ba
+  ╎│││││╎   0x0001e6a4      mov   w0, 6
+  ╎│││││╎   0x0001e6a8      bl    sym.imp.__android_log_print
+  ╎│││││╎   0x0001e6ac      mov   w24, 0xb
+  ────────< 0x0001e6b0      cbnz  x28, 0x1e804
+  ────────< 0x0001e6b4      b     0x1e80c
+  ────────> 0x0001e6b8      ldr   x8, [sp, 0x28]                       ; [0x28:4]=0x35878 ; "xX\U00000003"
+  ────────< 0x0001e6bc      cbz   x8, 0x1e8e8
+  ╎│││││╎   0x0001e6c0      adrp  x22, 0x4000
+  ╎│││││╎   0x0001e6c4      add   x22, x22, 0x227
+  ────────> 0x0001e6c8      ldr   x28, [sp, 0x30]                      ; [0x30:4]=0
+  ╎│││││╎   0x0001e6cc      ldr   x21, [sp, 0x18]                      ; [0x18:4]=0
+  ────────< 0x0001e6d0      b     0x1e90c
+  ────────> 0x0001e6d4      nop
+  ╎│││││╎   0x0001e6d8      adr   x1, str.Superpack                    ; 0x3b42
+  ╎│││││╎   0x0001e6dc      adrp  x2, 0x3000
+  ╎│││││╎   0x0001e6e0      add   x2, x2, 0x7bb
+  ────────< 0x0001e6e4      b     0x1e9c4
+  ────────> 0x0001e6e8      nop
+  ╎│││││╎   0x0001e6ec      adr   x1, str.Superpack                    ; 0x3b42
+  ╎│││││╎   0x0001e6f0      adrp  x2, 0x4000
+  ╎│││││╎   0x0001e6f4      add   x2, x2, 0x9b
+  ╎│││││╎   0x0001e6f8      mov   w0, 6
+  ╎│││││╎   0x0001e6fc      mov   x3, x26
+  ╎│││││╎   0x0001e700      bl    sym.imp.__android_log_print
+  ╎│││││╎   0x0001e704      mov   w24, 5
+  ────────< 0x0001e708      b     0x1e804
+  ╎└──────> 0x0001e70c      ldr   x0, [x19]
+  ╎ ││││╎   0x0001e710      bl    sym.imp.ftell
+  ╎ ││││╎   0x0001e714      cmn   x0, 1
+  ╎ ││││╎   0x0001e718      str   x0, [x19, 0x10]
+  ╎┌──────< 0x0001e71c      b.eq  0x1e734
+  ╎│││││╎   0x0001e720      ldr   x0, [x19]
+  ╎│││││╎   0x0001e724      ldr   x1, [x19, 0x18]                      ; [0x18:4]=0
+  ╎│││││╎   0x0001e728      mov   w2, wzr
+  ╎│││││╎   0x0001e72c      bl    sym.imp.fseek
+  ────────< 0x0001e730      cbz   w0, 0x1e9dc
+  ╎└──────> 0x0001e734      nop
+  ╎ ││││╎   0x0001e738      adr   x1, str.Superpack                    ; 0x3b42
+  ╎ ││││╎   0x0001e73c      adrp  x2, 0x4000
+  ╎ ││││╎   0x0001e740      add   x2, x2, 0x7e0
+  ╎ ││││╎   0x0001e744      mov   w0, 6
+  ╎ ││││╎   0x0001e748      bl    sym.imp.__android_log_print
+  ╎ ││││╎   0x0001e74c      mov   w24, 0x16
+  ╎┌──────< 0x0001e750      cbnz  x28, 0x1e804
+  ────────< 0x0001e754      b     0x1e80c
+  ╎││││└──> 0x0001e758      ldr   x21, [sp, 0x18]                      ; [0x18:4]=0
+  ╎│└└─┌──> 0x0001e75c      mov   w20, wzr
+  ╎│  │╎╎   0x0001e760      ldr   x8, [x19, 0xd0]                      ; [0xd0:4]=0xe20 "B" ; " \U0000000e"
+  ╎│ ┌────< 0x0001e764      cbz   x8, 0x1e778
+  ╎│┌─────> 0x0001e768      ldr   x0, [x8]
+  ╎│╎││╎╎   0x0001e76c      bl    0x2df38
+  ╎│╎││╎╎   0x0001e770      ldr   x8, [x19, 0xd0]                      ; [0xd0:4]=0xe20 "B" ; " \U0000000e"
+  ╎│╎││╎╎   0x0001e774      str   xzr, [x8]
+  ───└────> 0x0001e778      add   x0, x19, 0x30
+  ╎│╎ │╎╎   0x0001e77c      bl    sym.imp.pthread_mutex_lock
+  ╎│╎┌────< 0x0001e780      b     0x1e798
+  ────────> 0x0001e784      ldrb  w8, [x19, 0xb8]                      ; [0xb8:4]=0x33f80
+  ────────< 0x0001e788      cbz   w8, 0x1e7b0
+  ────────> 0x0001e78c      add   x0, x19, 0x88
+  ╎│╎││╎╎   0x0001e790      add   x1, x19, 0x30
+  ╎│╎││╎╎   0x0001e794      bl    sym.imp.pthread_cond_wait
+  ╎│╎└────> 0x0001e798      ldrb  w8, [x19, 0xc4]                      ; [0xc4:4]=0
+  ────────< 0x0001e79c      cbnz  w8, 0x1e784
+  ╎│╎ │╎╎   0x0001e7a0      ldrb  w8, [x19, 0xb9]                      ; [0xb9:4]=0x33f ; "?\U00000003"
+  ────────< 0x0001e7a4      cbnz  w8, 0x1e78c
+  ╎│╎ │╎╎   0x0001e7a8      ldr   x8, [x19, 0x28]                      ; [0x28:4]=0x35878 ; "xX\U00000003"
+  ────────< 0x0001e7ac      cbnz  x8, 0x1e78c
+  ────────> 0x0001e7b0      add   x0, x19, 0x30
+  ╎│╎ │╎╎   0x0001e7b4      bl    sym.imp.pthread_mutex_unlock
+  ╎│╎┌────< 0x0001e7b8      tbnz  w20, 0, 0x1e7c4
+  ╎│╎││╎╎   0x0001e7bc      ldrb  w24, [x19, 0xc5]                     ; [0xc5:4]=0x80000000
+  ────────< 0x0001e7c0      cbnz  w24, 0x1e800
+  ╎│╎└────> 0x0001e7c4      ldr   w8, [x19, 0x20]                      ; [0x20:4]=64 ; "@"
+  ╎│╎┌────< 0x0001e7c8      cbz   w8, 0x1e854
+  ────────> 0x0001e7cc      ldp   w4, w3, [x19, 0xbc]
+  ╎│╎││╎╎   0x0001e7d0      cmp   w4, w3
+  ────────< 0x0001e7d4      b.ne  0x1e7e4
+  ╎│╎││╎╎   0x0001e7d8      str   x28, [x21]
+  ╎│╎││╎╎   0x0001e7dc      mov   w0, 8
+  ────────< 0x0001e7e0      b     0x1e830
+  ────────> 0x0001e7e4      nop
+  ╎│╎││╎╎   0x0001e7e8      adr   x1, str.Superpack                    ; 0x3b42
+  ╎│╎││╎╎   0x0001e7ec      adrp  x2, 0x3000
+  ╎│╎││╎╎   0x0001e7f0      add   x2, x2, 0x120
+  ╎│╎││╎╎   0x0001e7f4      mov   w0, 6
+  ╎│╎││╎╎   0x0001e7f8      bl    sym.imp.__android_log_print
+  ╎│╎││╎╎   0x0001e7fc      mov   w24, 4
+  ────────> 0x0001e800      cbz   x28, 0x1e80c
+  ─└──────> 0x0001e804      mov   x0, x28
+  ╎ ╎││╎╎   0x0001e808      bl    0x2df38
+  ─┌──└───> 0x0001e80c      ldr   x0, [x19, 8]                         ; [0x8:4]=0
+  ╎╎╎│┌───< 0x0001e810      cbz   x0, 0x1e828
+  ╎╎╎││╎╎   0x0001e814      ldr   w8, [x19, 0x20]                      ; [0x20:4]=64 ; "@"
+  ────────< 0x0001e818      cbnz  w8, 0x1e828
+  ╎╎╎││╎╎   0x0001e81c      ldr   x1, [x19, 0x10]                      ; [0x10:4]=0xb70003
+  ╎╎╎││╎╎   0x0001e820      bl    sym.imp.munmap
+  ╎╎╎││╎╎   0x0001e824      str   xzr, [x19, 8]
+  ────└───> 0x0001e828      mov   w0, -1
+  ╎╎╎│ ╎╎   0x0001e82c      strb  w24, [x19, 0xc5]
+  ────────> 0x0001e830      add   sp, sp, 8, lsl 12
+  ╎╎╎│ ╎╎   0x0001e834      add   sp, sp, 0xc0
+  ╎╎╎│ ╎╎   0x0001e838      ldp   x20, x19, [sp, 0x50]
+  ╎╎╎│ ╎╎   0x0001e83c      ldp   x22, x21, [sp, 0x40]
+  ╎╎╎│ ╎╎   0x0001e840      ldp   x24, x23, [sp, 0x30]
+  ╎╎╎│ ╎╎   0x0001e844      ldp   x26, x25, [sp, 0x20]
+  ╎╎╎│ ╎╎   0x0001e848      ldp   x28, x27, [sp, 0x10]
+  ╎╎╎│ ╎╎   0x0001e84c      ldp   x29, x30, [sp], 0x60
+  ╎╎╎│ ╎╎   0x0001e850      ret
+  ╎╎╎└────> 0x0001e854      ldr   x8, [x19, 8]                         ; [0x8:4]=0
+  ────────< 0x0001e858      cbz   x8, 0x1e7cc
+  ╎╎╎  ╎╎   0x0001e85c      ldr   x0, [x19]
+  ╎╎╎  ╎╎   0x0001e860      ldr   x1, [x19, 0x18]                      ; [0x18:4]=0
+  ╎╎╎  ╎╎   0x0001e864      mov   w2, wzr
+  ╎╎╎  ╎╎   0x0001e868      bl    sym.imp.fseek
+  ────────< 0x0001e86c      cbz   w0, 0x1e7cc
+  ╎╎╎  ╎╎   0x0001e870      nop
+  ╎╎╎  ╎╎   0x0001e874      adr   x1, str.Superpack                    ; 0x3b42
+  ╎╎╎  ╎╎   0x0001e878      adrp  x2, 0x4000
+  ╎╎╎  ╎╎   0x0001e87c      add   x2, x2, 0x7e0
+  ╎╎╎  ╎╎   0x0001e880      mov   w0, 6
+  ╎╎╎  ╎╎   0x0001e884      bl    sym.imp.__android_log_print
+  ╎╎╎  ╎╎   0x0001e888      mov   w24, 2
+  ────────< 0x0001e88c      cbnz  x28, 0x1e804
+  ────────< 0x0001e890      b     0x1e80c
+  ────────> 0x0001e894      mov   x0, x25
+  ╎╎╎  ╎╎   0x0001e898      bl    sym.imp.free
+  ╎╎╎  ╎╎   0x0001e89c      ldr   x0, [x24, 0x38]                      ; [0x38:4]=0x400009 ; u"\t@\U0000001a\U00000019\U00000006"
+  ╎╎╎  ╎╎   0x0001e8a0      adrp  x22, 0x4000
+  ╎╎╎  ╎╎   0x0001e8a4      add   x22, x22, 0x26a
+  ╎╎╎ ┌───< 0x0001e8a8      b     0x1e8fc
+  ────────> 0x0001e8ac      nop
+  ╎╎╎ │╎╎   0x0001e8b0      adr   x1, str.Superpack                    ; 0x3b42
+  ╎╎╎ │╎╎   0x0001e8b4      adrp  x2, 0x3000
+  ╎╎╎ │╎╎   0x0001e8b8      add   x2, x2, 0xbdb
+  ╎╎╎ │╎╎   0x0001e8bc      mov   w0, 6
+  ╎╎╎ │╎╎   0x0001e8c0      bl    sym.imp.__android_log_print
+  ╎╎╎ │╎╎   0x0001e8c4      mov   w24, 4
+  ────────< 0x0001e8c8      b     0x1e804
+  ────────> 0x0001e8cc      mov   w24, w0
+  ────────< 0x0001e8d0      b     0x1e804
+  ────────> 0x0001e8d4      nop
+  ╎╎╎ │╎╎   0x0001e8d8      adr   x1, str.Superpack                    ; 0x3b42
+  ╎╎╎ │╎╎   0x0001e8dc      adrp  x2, 0x3000
+  ╎╎╎ │╎╎   0x0001e8e0      add   x2, x2, 0x88b
+  ╎╎╎┌────< 0x0001e8e4      b     0x1e9c4
+  ────────> 0x0001e8e8      mov   x0, x25
+  ╎╎╎││╎╎   0x0001e8ec      bl    sym.imp.free
+  ╎╎╎││╎╎   0x0001e8f0      ldr   x0, [x24, 0x38]                      ; [0x38:4]=0x400009 ; u"\t@\U0000001a\U00000019\U00000006"
+  ╎╎╎││╎╎   0x0001e8f4      adrp  x22, 0x4000
+  ╎╎╎││╎╎   0x0001e8f8      add   x22, x22, 0x227
+  ╎╎╎│└───> 0x0001e8fc      ldr   x28, [sp, 0x30]                      ; [0x30:4]=0
+  ╎╎╎│ ╎╎   0x0001e900      ldr   x21, [sp, 0x18]                      ; [0x18:4]=0
+  ╎╎╎│┌───< 0x0001e904      cbz   x0, 0x1e90c
+  ╎╎╎││╎╎   0x0001e908      bl    0x2dfdc
+  ────└───> 0x0001e90c      mov   x0, x24
+  ╎╎╎│ ╎╎   0x0001e910      bl    sym.imp.free
+  ╎╎╎│ ╎╎   0x0001e914      nop
+  ╎╎╎│ ╎╎   0x0001e918      adr   x1, str.Superpack                    ; 0x3b42
+  ╎╎╎│ ╎╎   0x0001e91c      mov   w0, 6
+  ╎╎╎│ ╎╎   0x0001e920      mov   x2, x22
+  ╎╎╎│ ╎╎   0x0001e924      bl    sym.imp.__android_log_print
+  ╎╎╎│ ╎╎   0x0001e928      mov   w20, 1
+  ╎╎╎│ ╎╎   0x0001e92c      ldr   x8, [x19, 0xd0]                      ; [0xd0:4]=0xe20 "B" ; " \U0000000e"
+  ╎╎└─────< 0x0001e930      cbnz  x8, 0x1e768
+  ────────< 0x0001e934      b     0x1e778
+  ────────> 0x0001e938      nop
+  ╎╎ │ ╎╎   0x0001e93c      adr   x1, str.Superpack                    ; 0x3b42
+  ╎╎ │ ╎╎   0x0001e940      adrp  x2, 0x4000
+  ╎╎ │ ╎╎   0x0001e944      add   x2, x2, 0xde
+  ╎╎ │ ╎╎   0x0001e948      mov   w0, 6
+  ╎╎ │ ╎╎   0x0001e94c      mov   x3, x27
+  ╎╎ │ ╎╎   0x0001e950      bl    sym.imp.__android_log_print
+  ╎╎ │ ╎╎   0x0001e954      mov   w24, 4
+  ────────< 0x0001e958      b     0x1e804
+  ────────> 0x0001e95c      nop
+  ╎╎ │ ╎╎   0x0001e960      adr   x1, str.Superpack                    ; 0x3b42
+  ╎╎ │ ╎╎   0x0001e964      adrp  x2, 0x3000
+  ╎╎ │ ╎╎   0x0001e968      add   x2, x2, 0x694
+  ╎╎ │ ╎╎   0x0001e96c      mov   w0, 6
+  ╎╎ │ ╎╎   0x0001e970      bl    sym.imp.__android_log_print
+  ╎╎ │ ╎╎   0x0001e974      mov   x0, x22
+  ╎╎ │ ╎╎   0x0001e978      bl    sym.imp.free
+  ╎╎ │ ╎╎   0x0001e97c      mov   w24, 4
+  ────────< 0x0001e980      b     0x1e804
+  ────────> 0x0001e984      nop
+  ╎╎ │ ╎╎   0x0001e988      adr   x1, str.Superpack                    ; 0x3b42
+  ╎╎ │ ╎╎   0x0001e98c      adrp  x2, 0x3000
+  ╎╎ │ ╎╎   0x0001e990      add   x2, x2, 0x732
+  ╎╎ │ ╎╎   0x0001e994      mov   w0, 6
+  ╎╎ │ ╎╎   0x0001e998      mov   w3, w20
+  ╎╎ │ ╎╎   0x0001e99c      mov   x5, x26
+  ╎╎ │ ╎╎   0x0001e9a0      mov   x6, x25
+  ╎╎ │ ╎╎   0x0001e9a4      bl    sym.imp.__android_log_print
+  ╎╎ │ ╎╎   0x0001e9a8      mov   w24, 0xb
+  ────────< 0x0001e9ac      cbnz  x28, 0x1e804
+  ────────< 0x0001e9b0      b     0x1e80c
+  ────────> 0x0001e9b4      nop
+  ╎╎ │ ╎╎   0x0001e9b8      adr   x1, str.Superpack                    ; 0x3b42
+  ╎╎ │ ╎╎   0x0001e9bc      adrp  x2, 0x3000
+  ╎╎ │ ╎╎   0x0001e9c0      add   x2, x2, 0x80f
+  ───└────> 0x0001e9c4      mov   w0, 6
+  ╎╎   ╎╎   0x0001e9c8      mov   w3, w20
+  ╎╎   ╎╎   0x0001e9cc      bl    sym.imp.__android_log_print
+  ╎╎   ╎╎   0x0001e9d0      mov   w24, 0xb
+  ────────< 0x0001e9d4      cbnz  x28, 0x1e804
+  ╎└──────< 0x0001e9d8      b     0x1e80c
+  ────────> 0x0001e9dc      ldr   x1, [x19, 0x10]                      ; [0x10:4]=0xb70003
+  ╎    ╎╎   0x0001e9e0      mov   x0, xzr
+  ╎    ╎╎   0x0001e9e4      mov   w2, 1
+  ╎    ╎╎   0x0001e9e8      mov   w3, 2
+  ╎    ╎╎   0x0001e9ec      mov   w4, w22
+  ╎    ╎╎   0x0001e9f0      mov   x5, xzr
+  ╎    ╎╎   0x0001e9f4      bl    sym.imp.mmap
+  ╎    ╎╎   0x0001e9f8      cmn   x0, 1
+  ╎   ┌───< 0x0001e9fc      b.eq  0x1ea20
+  ╎   │╎╎   0x0001ea00      str   x0, [x19, 8]
+  ╎   │╎╎   0x0001ea04      movi  v0.2d, 0000000000000000
+  ╎   │╎╎   0x0001ea08      ldr   w8, [x19, 0xc0]                      ; [0xc0:4]=0x37f80 segment.GNU_RELRO
+  ╎   │╎╎   0x0001ea0c      stur  q0, [x23, 0x1a]
+  ╎   │╎╎   0x0001ea10      str   q0, [sp, 0x8060]
+  ╎   │╎╎   0x0001ea14      str   q0, [sp, 0x8050]
+  └───────< 0x0001ea18      cbnz  w8, 0x1e2e0
+      │└──< 0x0001ea1c      b     0x1e75c
+      └───> 0x0001ea20      nop
+        ╎   0x0001ea24      adr   x1, str.Superpack                    ; 0x3b42
+        ╎   0x0001ea28      adrp  x2, 0x4000
+        ╎   0x0001ea2c      add   x2, x2, 0x79a
+        └─< 0x0001ea30      b     0x1e2c0

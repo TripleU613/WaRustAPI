@@ -16098,5 +16098,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-superpack-metadata/README.md",
     "description": "Digest-bound metadata inspector derives 83 native member records from traced pinned parser layout. Includes ordinal ranges, inherited types, declared sizes and opaque fields. No complete library recovery, metrics wire behavior or live operation established."
+  },
+  "x-superpack-transform-block-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-superpack-transform-blocks/README.md",
+    "description": "Relocated spo descriptor and 213 framed blocks account for exact pinned archive boundary: 140 kind-1 XZ-magic payloads and 73 kind-42 payloads with separate native decoder. No complete decoded libraries or native metrics wire behavior established. No runtime or live operation added."
   }
 }

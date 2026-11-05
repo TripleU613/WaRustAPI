@@ -1,0 +1,98 @@
+            0x0001dbec      stp   x30, x19, [sp, -0x10]!
+            0x0001dbf0      nop
+            0x0001dbf4      adr   x1, 0x3b3e
+            0x0001dbf8      mov   x19, x0
+            0x0001dbfc      bl    sym.imp.strcmp
+        ┌─< 0x0001dc00      cbz   w0, 0x1dc4c
+        │   0x0001dc04      adrp  x1, 0x2000
+        │   0x0001dc08      add   x1, x1, 0xe60
+        │   0x0001dc0c      mov   x0, x19
+        │   0x0001dc10      bl    sym.imp.strcmp
+       ┌──< 0x0001dc14      cbz   w0, 0x1dc60
+       ││   0x0001dc18      adrp  x1, 0x3000
+       ││   0x0001dc1c      add   x1, x1, 0x9a4
+       ││   0x0001dc20      mov   x0, x19
+       ││   0x0001dc24      bl    sym.imp.strcmp
+      ┌───< 0x0001dc28      cbz   w0, 0x1dc74
+      │││   0x0001dc2c      adrp  x1, 0x3000
+      │││   0x0001dc30      add   x1, x1, 0xb4c
+      │││   0x0001dc34      mov   x0, x19
+      │││   0x0001dc38      bl    sym.imp.strcmp
+     ┌────< 0x0001dc3c      cbz   w0, 0x1dc88
+     ││││   0x0001dc40      mov   x0, xzr
+     ││││   0x0001dc44      ldp   x30, x19, [sp], 0x10
+     ││││   0x0001dc48      ret
+     │││└─> 0x0001dc4c      nop
+     │││    0x0001dc50      adr   x8, 0x383a0
+     │││    0x0001dc54      ldr   x0, [x8]
+     │││    0x0001dc58      ldp   x30, x19, [sp], 0x10
+     │││    0x0001dc5c      ret
+     ││└──> 0x0001dc60      adrp  x8, 0x38000
+     ││     0x0001dc64      add   x8, x8, 0x3b0
+     ││     0x0001dc68      ldr   x0, [x8]
+     ││     0x0001dc6c      ldp   x30, x19, [sp], 0x10
+     ││     0x0001dc70      ret
+     │└───> 0x0001dc74      adrp  x8, 0x38000
+     │      0x0001dc78      add   x8, x8, 0x3c0
+     │      0x0001dc7c      ldr   x0, [x8]
+     │      0x0001dc80      ldp   x30, x19, [sp], 0x10
+     │      0x0001dc84      ret
+     └────> 0x0001dc88      adrp  x8, 0x38000
+            0x0001dc8c      add   x8, x8, 0x3d0
+            0x0001dc90      ldr   x0, [x8]
+            0x0001dc94      ldp   x30, x19, [sp], 0x10
+            0x0001dc98      ret
+        ┌─< 0x0001dc9c      cbz   x0, 0x1dd24
+        │   0x0001dca0      stp   x30, x21, [sp, -0x20]!
+        │   0x0001dca4      stp   x20, x19, [sp, 0x10]
+        │   0x0001dca8      mov   x19, x0
+        │   0x0001dcac      mov   x20, x1
+       ┌──< 0x0001dcb0      cbz   x4, 0x1dcbc
+       ││   0x0001dcb4      add   x8, x19, 0x50
+       ││   0x0001dcb8      str   x8, [x4]
+      ┌└──> 0x0001dcbc      cbz   x2, 0x1dd2c
+      │ │   0x0001dcc0      ldr   x8, [x19, 8]                         ; [0x8:4]=0
+      │ │   0x0001dcc4      mov   x0, x2
+      │ │   0x0001dcc8      mov   x1, x3
+      │ │   0x0001dccc      blr   x8
+      │ │   0x0001dcd0      mov   x21, x0
+      │┌──< 0x0001dcd4      cbz   x0, 0x1dd48
+     ┌────> 0x0001dcd8      mov   w0, 0x20
+     ╎│││   0x0001dcdc      bl    sym.imp.malloc
+    ┌─────< 0x0001dce0      cbz   x0, 0x1dd58
+    │╎│││   0x0001dce4      stp   x21, x19, [x0]
+    │╎│││   0x0001dce8      nop
+    │╎│││   0x0001dcec      adr   x1, 0x3b3e
+    │╎│││   0x0001dcf0      str   x20, [x0, 0x10]
+    │╎│││   0x0001dcf4      mov   x20, x0
+    │╎│││   0x0001dcf8      str   wzr, [x0, 0x18]
+    │╎│││   0x0001dcfc      add   x0, x19, 0x55
+    │╎│││   0x0001dd00      bl    sym.imp.strcmp
+    │╎│││   0x0001dd04      mov   w8, w0
+    │╎│││   0x0001dd08      mov   x0, x20
+    │╎│││   0x0001dd0c      cmp   w8, 0
+    │╎│││   0x0001dd10      cset  w8, eq
+    │╎│││   0x0001dd14      str   w8, [x20, 0x1c]
+    │╎│││   0x0001dd18      ldp   x20, x19, [sp, 0x10]
+    │╎│││   0x0001dd1c      ldp   x30, x21, [sp], 0x20
+    │╎│││   0x0001dd20      ret
+    │╎││└─> 0x0001dd24      mov   w0, 7
+    │╎││    0x0001dd28      ret
+    │╎└───> 0x0001dd2c      ldr   x8, [x19]
+    │╎ │    0x0001dd30      mov   x0, x20
+    │╎ │    0x0001dd34      mov   x1, x5
+    │╎ │    0x0001dd38      mov   x2, x3
+    │╎ │    0x0001dd3c      blr   x8
+    │╎ │    0x0001dd40      mov   x21, x0
+    │└────< 0x0001dd44      cbnz  x0, 0x1dcd8
+    │  └──> 0x0001dd48      mov   w0, 6
+    │       0x0001dd4c      ldp   x20, x19, [sp, 0x10]
+    │       0x0001dd50      ldp   x30, x21, [sp], 0x20
+    │       0x0001dd54      ret
+    └─────> 0x0001dd58      ldr   x8, [x19, 0x20]                      ; [0x20:4]=64 ; "@"
+            0x0001dd5c      mov   x0, x21
+            0x0001dd60      blr   x8
+            0x0001dd64      mov   w0, 6
+            0x0001dd68      ldp   x20, x19, [sp, 0x10]
+            0x0001dd6c      ldp   x30, x21, [sp], 0x20
+            0x0001dd70      ret

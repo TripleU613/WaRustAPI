@@ -324,3 +324,13 @@ metadata ends at archive offset 0xc73. This is not decoded ELF recovery.
 [Digest-bound inspector, full inventory and parser assembly](apk/2.26.43.72-superpack-metadata/README.md).
 The spo transform, complete members and native metrics network behavior remain
 unverified. No runtime behavior or live account operation changed.
+
+### Superpack spo transform dispatch and complete block framing (2026-11-05)
+
+**Confirmed static / derived, APK 2.26.43.72:** relocated spo descriptor and
+42-byte block headers yield 213 framed records ending exactly at archive length.
+140 kind-1 blocks start with XZ magic; 73 kind-42 blocks call a separate decoder
+0x218bc. The old XZ-only probe did not reconstruct complete native libraries.
+[Digest-bound descriptor/block inspector and full reader/worker windows](apk/2.26.43.72-superpack-transform-blocks/README.md).
+Decoded stitching, complete ELF recovery and metrics network behavior remain
+unverified. No runtime behavior or live account operation changed.

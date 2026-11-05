@@ -1,3 +1,12 @@
+2026-11-05 — **Entire Superpack payload mapped as 213 framed blocks.**
+
+The spo descriptor and parser account for the exact archive boundary: 140 XZ
+blocks and 73 blocks dispatched to a separate kind-42 decoder.
+[Reproduction and limits](docs/protocol/apk/2.26.43.72-superpack-transform-blocks/README.md).
+Research only; complete native images/metrics transport remain unverified.
+Validation: pinned hashes, exact inspector reproduction, assembly-range digests,
+JSON, coverage, checksum/link hygiene. No runtime change or live traffic.
+
 2026-11-05 — **Structured inventory identifies 83 packed native members.**
 
 Pinned parser-derived metadata now locates whatsapp/whatsappmerged records and

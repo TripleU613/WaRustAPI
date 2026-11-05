@@ -1,0 +1,37 @@
+[
+  {
+    "file": "dispatch-assembly.txt",
+    "virtual_address": "0x1dbec",
+    "file_offset": "0x1dbec",
+    "bytes": 392,
+    "sha256": "92b0ec4b9e1cdea4229d15acea3a5a6676cae34f3b41c1cb05533381f7cd5858"
+  },
+  {
+    "file": "constructors-assembly.txt",
+    "virtual_address": "0x1e0ac",
+    "file_offset": "0x1e0ac",
+    "bytes": 132,
+    "sha256": "500009793d8544a8513511d94c9fa8852a0d1951cd7bf0cd8131eeeafdfce49e"
+  },
+  {
+    "file": "block-reader-assembly.txt",
+    "virtual_address": "0x1e130",
+    "file_offset": "0x1e130",
+    "bytes": 2308,
+    "sha256": "29d36259d3272c0de85fa237d23b0bbb65604f50ce4661e7eda45b7fe4ebb0f7"
+  },
+  {
+    "file": "settings-assembly.txt",
+    "virtual_address": "0x1eb60",
+    "file_offset": "0x1eb60",
+    "bytes": 132,
+    "sha256": "68f335ccbac2b04c41263b105653c9eb8c923be596f28f25f5f4cd12dfaa421a"
+  },
+  {
+    "file": "worker-assembly.txt",
+    "virtual_address": "0x1ebe4",
+    "file_offset": "0x1ebe4",
+    "bytes": 1496,
+    "sha256": "c62f6d976d674d2a7f151a6c3b7dc6651f802608fc1aaa08bfa7ea2af9bdc0d1"
+  }
+]
