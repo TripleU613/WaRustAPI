@@ -1,0 +1,38 @@
+{
+  "README.md": {
+    "bytes": 5043,
+    "sha256": "490e7ed07169f85122173ab7168d7f4e64953e9b816518470369e8ccfd5373cd"
+  },
+  "argument-helper-assembly.txt": {
+    "bytes": 116,
+    "sha256": "d8f45c4d8e386ad3297485dd4694dfe9faf6104e8c5e393217d9882d383ea5a6"
+  },
+  "endpoint-index-helper-assembly.txt": {
+    "bytes": 116,
+    "sha256": "5430aa1452a4d84a1ea2c8f2330bf985646ca7a17df70790fc40f57fc2655f74"
+  },
+  "inspect-request.py": {
+    "bytes": 2065,
+    "sha256": "9f0b87a019a6c8f07840325dcf8e3988edc2e9b3345795c47368140b30a1fdef"
+  },
+  "multipart-helpers-assembly.txt": {
+    "bytes": 5574,
+    "sha256": "71dcc2d6763c1a58a3cc1963b88f209f3c0de63cb40f1cdf5b1c3b8dc745c59f"
+  },
+  "part-arguments-helper-assembly.txt": {
+    "bytes": 115,
+    "sha256": "355ce7f19d07895a2ca1fe0bbd3bbc76ace27c7db1cc63522e830e95abcef9a4"
+  },
+  "request-literals.json": {
+    "bytes": 2454,
+    "sha256": "f04440ea3516a850903cf35deddd3255e95f38ab199677f36290014304840f55"
+  },
+  "save-value-helper-assembly.txt": {
+    "bytes": 116,
+    "sha256": "8fa9c3d9b8e670c8e2ce67c313d619c54cca788ba6236ea3ed0812e97881ebcc"
+  },
+  "string-selector-entry-assembly.txt": {
+    "bytes": 2294,
+    "sha256": "d031faa35a62dbc5181c2bced398a18d6b6efc67445e70a5a2acfe92965e30c3"
+  }
+}

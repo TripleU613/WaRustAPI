@@ -1,0 +1,114 @@
+{
+  "scope": "static literals and relocated method symbol; no request executed",
+  "method": [
+    {
+      "got_va": "0xc27d98",
+      "relocation_type": 1025,
+      "symbol": "kMCIURLRequestHTTPMethodPOST"
+    }
+  ],
+  "strings": [
+    {
+      "va": "0x10c3ed",
+      "value": "Content-Type"
+    },
+    {
+      "va": "0xa9693",
+      "value": "Accept-Charset"
+    },
+    {
+      "va": "0xa01be",
+      "value": "Accept"
+    },
+    {
+      "va": "0x9ca2d",
+      "value": "Host"
+    },
+    {
+      "va": "0xc3761",
+      "value": "X-FB-Request-Analytics-Tags"
+    },
+    {
+      "va": "0x167252",
+      "value": "multipart/form-data; boundary=pfBvf7MwXQtqX5egJfP0Lg=="
+    },
+    {
+      "va": "0x16a166",
+      "value": "utf-8"
+    },
+    {
+      "va": "0xe8d21",
+      "value": "text/plain"
+    },
+    {
+      "va": "0x890d4",
+      "value": "{}"
+    },
+    {
+      "va": "0x890e8",
+      "value": "{\"t\": %ld,\"p\": %u,\"rt\": %s}"
+    },
+    {
+      "va": "0x89110",
+      "value": "{\"t\": %ld,\"p\": %u,\"rt\": %s,\"config_id\": \"%s\"}"
+    },
+    {
+      "va": "0xcab15",
+      "value": "%s+%s"
+    }
+  ],
+  "descriptors": [
+    {
+      "slot_va": "0xc0aba0",
+      "literal_va": "0x189a1e",
+      "length": 28,
+      "value": "--pfBvf7MwXQtqX5egJfP0Lg==\r\n"
+    },
+    {
+      "slot_va": "0xc0abb0",
+      "literal_va": "0x189a59",
+      "length": 2,
+      "value": "\r\n"
+    },
+    {
+      "slot_va": "0xc0abc0",
+      "literal_va": "0xe9707",
+      "length": 12,
+      "value": "access_token"
+    },
+    {
+      "slot_va": "0xc0abd0",
+      "literal_va": "0xf28bf",
+      "length": 10,
+      "value": "credential"
+    },
+    {
+      "slot_va": "0xc0abe0",
+      "literal_va": "0x189a3b",
+      "length": 32,
+      "value": "--pfBvf7MwXQtqX5egJfP0Lg==--\r\n\r\n"
+    }
+  ],
+  "fixed_body_slices": [
+    {
+      "va": "0x2fd7cc",
+      "length": 64,
+      "value": "Content-Type: text/plain\r\nContent-Disposition: form-data; name=\""
+    },
+    {
+      "va": "0x2fd80d",
+      "length": 5,
+      "value": "\"\r\n\r\n"
+    },
+    {
+      "va": "0x2fd813",
+      "length": 156,
+      "value": "Content-Disposition: form-data; name=\"message\"; filename=\"WAMEventBuffer.dat\"\r\nContent-Type: application/octet-stream\r\nContent-Transfer-Encoding: binary\r\n\r\n"
+    },
+    {
+      "va": "0x2fd8b0",
+      "length": 84,
+      "value": "Content-Type: application/json\r\nContent-Disposition: form-data; name=\"meta_data\"\r\n\r\n"
+    }
+  ]
+}

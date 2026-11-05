@@ -424,3 +424,13 @@ other failures. Regular task labels explicitly distinguish success, retryable,
 non-retryable and failure; callback ownership/deletion remains incomplete.
 [Complete selected transport bodies, labels/thunk resolver and scoped rules](apk/2.26.43.72-metrics-native-transport-responses/README.md).
 These rules are not universal account/login retry authority. No Rust/live change.
+
+### Native metrics request framing (2026-11-05)
+
+**Confirmed static / derived, APK 2.26.43.72:** imported POST method, five
+header sources, four multipart sections and exact boundary/header bytes retained.
+Host comes from selector 0x1a; access_token from selector 0x17. Endpoint index
+zero is removed before construction. Credential/provider decoding, metadata
+semantics and complete transport ownership remain open.
+[Digest-bound literal/relocation resolver, helper bodies and limits](apk/2.26.43.72-metrics-native-request-builder/README.md).
+No Rust runtime or live traffic changed; no mandatory telemetry or ban guarantee.

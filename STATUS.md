@@ -1,3 +1,11 @@
+2026-11-05 — **Native metrics POST and multipart framing traced.**
+
+Five header sources and four body sections retained with exact literals; endpoint
+consumption precedes construction. Selector decoding and full credential/schema
+contracts remain open. [Evidence and limits](docs/protocol/apk/2.26.43.72-metrics-native-request-builder/README.md).
+Validation: pinned image, literal/relocation resolver reproduction, JSON, coverage
+and bundle/link hygiene. No Rust behavior or live operation changed.
+
 2026-11-05 — **Native metrics transport status/endpoint ordering traced.**
 
 HTTP request-object creation, async completion, ordinary 200/no-error success,

@@ -1,0 +1,44 @@
+            0x00730a54      paciasp
+            0x00730a58      stp   x29, x30, [sp, -0x60]!
+            0x00730a5c      bl    0x49b42c
+            0x00730a60      sub   sp, sp, 0x440
+            0x00730a64      str   xzr, [sp]
+            0x00730a68      mrs   x24, tpidr_el0
+            0x00730a6c      adrp  x8, 0x2fe000
+            0x00730a70      add   x8, x8, 0x348
+            0x00730a74      ldr   x9, [x24, 0x28]                      ; [0x28:4]=0xc306e8
+            0x00730a78      adrp  x11, 0x2fe000
+            0x00730a7c      add   x11, x11, 0x688
+            0x00730a80      adrp  x10, 0xc0b000
+            0x00730a84      add   x10, x10, 0x380
+            0x00730a88      stur  x9, [x29, -0x10]
+            0x00730a8c      adrp  x9, 0xc0b000
+            0x00730a90      add   x9, x9, 0x6c0
+            0x00730a94      ldr   x20, [x8, w0, uxtw 3]
+            0x00730a98      ldr   x8, [x11, w0, uxtw 3]
+            0x00730a9c      ldr   x21, [x10, w0, uxtw 3]
+            0x00730aa0      ldr   x19, [x9, w0, uxtw 3]
+            0x00730aa4      mov   x0, x8
+            0x00730aa8      bl    sym.imp.MCFInt32FromSizeT
+            0x00730aac      bl    0xbe3b9c
+            0x00730ab0      bl    sym.imp.MCFDataCreateWithBytesNoCopyNoDealloc
+            0x00730ab4      bl    0xbe0d70
+            0x00730ab8      bl    sym.imp.MCFInt32FromSizeT
+        ┌─< 0x00730abc      tbnz  w0, 0x1f, 0x730c8c
+        │   0x00730ac0      mov   w22, w0
+        │   0x00730ac4      bl    0x732efc
+        │   0x00730ac8      bl    0xbdf470
+        │   0x00730acc      bl    sym.imp.MCFRuntimeCreateInstance
+        │   0x00730ad0      cmp   w22, 0x10
+        │   0x00730ad4      mov   w8, 0x10
+        │   0x00730ad8      mov   x20, x0
+        │   0x00730adc      csel  w2, w22, w8, lo
+        │   0x00730ae0      bl    0xbe4d40
+        │   0x00730ae4      mov   w3, 0x11
+        │   0x00730ae8      stp   xzr, xzr, [sp, 0x30]
+        │   0x00730aec      strb  wzr, [sp, 0x40]
+        │   0x00730af0      bl    sym.imp.__strncpy_chk
+        │   0x00730af4      add   x0, sp, 0x30
+        │   0x00730af8      mov   w1, 0x10
+        │   0x00730afc      stp   xzr, xzr, [sp, 0x20]
+        │   0x00730b00      bl    sym.imp.MCFDataCreateWithBytesNoCopyNoDealloc

@@ -1,0 +1,112 @@
+            0x0072afac      paciasp
+            0x0072afb0      sub   sp, sp, 0x40
+            0x0072afb4      stp   x29, x30, [sp, 0x20]
+            0x0072afb8      str   x19, [sp, 0x30]
+            0x0072afbc      add   x29, sp, 0x20
+            0x0072afc0      mrs   x19, tpidr_el0
+            0x0072afc4      adrp  x9, 0xc0a000
+            0x0072afc8      add   x9, x9, 0xba0
+            0x0072afcc      bl    0xbe3c44
+            0x0072afd0      adrp  x0, 0xc40000
+            0x0072afd4      add   x0, x0, 0x560
+            0x0072afd8      bl    0xbe2f54
+            0x0072afdc      str   q0, [sp]
+            0x0072afe0      bl    0x736668
+            0x0072afe4      bl    0xbdd838
+        ┌─< 0x0072afe8      b.ne  0x72b000
+        │   0x0072afec      ldp   x29, x30, [sp, 0x20]
+        │   0x0072aff0      ldr   x19, [sp, 0x30]                      ; [0x30:4]=0
+        │   0x0072aff4      add   sp, sp, 0x40
+        │   0x0072aff8      autiasp
+        │   0x0072affc      ret
+        └─> 0x0072b000      bl    sym.imp.__stack_chk_fail
+            0x0072b004      paciasp
+            0x0072b008      stp   x29, x30, [sp, -0x30]!
+            0x0072b00c      bl    0x63c894
+            0x0072b010      mov   x29, sp
+            0x0072b014      bl    0x4b11d0
+            0x0072b018      adrp  x1, 0x2fd000
+            0x0072b01c      add   x1, x1, 0x7cc
+            0x0072b020      mov   w2, 0x40
+            0x0072b024      mov   x19, x0
+            0x0072b028      bl    sym.imp.MCFDataAppendBytes
+            0x0072b02c      mov   x0, x21
+            0x0072b030      bl    sym.imp.MCFASCIIStringGetCString
+            0x0072b034      bl    0x4d73b0
+            0x0072b038      bl    sym.imp.MCFASCIIStringGetLength
+            0x0072b03c      mov   w2, w0
+            0x0072b040      bl    0x4d26c0
+            0x0072b044      bl    sym.imp.MCFDataAppendBytes
+            0x0072b048      adrp  x1, 0x2fd000
+            0x0072b04c      add   x1, x1, 0x80d
+            0x0072b050      mov   x0, x19
+            0x0072b054      mov   w2, 5
+            0x0072b058      bl    sym.imp.MCFDataAppendBytes
+            0x0072b05c      mov   x0, x20
+            0x0072b060      bl    sym.imp.MCFASCIIStringGetCString
+            0x0072b064      bl    0xbe0ce8
+            0x0072b068      bl    sym.imp.MCFASCIIStringGetLength
+            0x0072b06c      mov   w2, w0
+            0x0072b070      bl    0x4b13e0
+            0x0072b074      bl    sym.imp.MCFDataAppendBytes
+            0x0072b078      bl    0x72b0bc
+            0x0072b07c      bl    sym.imp.MCFASCIIStringGetCString
+            0x0072b080      mov   x20, x0
+            0x0072b084      bl    0x72b0bc
+            0x0072b088      bl    sym.imp.MCFASCIIStringGetLength
+            0x0072b08c      bl    0xbe0318
+            0x0072b090      bl    sym.imp.MCFDataAppendBytes
+            0x0072b094      bl    0x72afac
+            0x0072b098      bl    sym.imp.MCFASCIIStringGetCString
+            0x0072b09c      mov   x20, x0
+            0x0072b0a0      bl    0x72afac
+            0x0072b0a4      bl    sym.imp.MCFASCIIStringGetLength
+            0x0072b0a8      bl    0xbe0318
+            0x0072b0ac      bl    0x49c11c
+            0x0072b0b0      ldp   x29, x30, [sp], 0x30
+            0x0072b0b4      autiasp
+        ┌─< 0x0072b0b8      b     sym.imp.MCFDataAppendBytes
+        │   0x0072b0bc      paciasp
+        │   0x0072b0c0      sub   sp, sp, 0x40
+        │   0x0072b0c4      stp   x29, x30, [sp, 0x20]
+        │   0x0072b0c8      str   x19, [sp, 0x30]
+        │   0x0072b0cc      add   x29, sp, 0x20
+        │   0x0072b0d0      mrs   x19, tpidr_el0
+        │   0x0072b0d4      adrp  x9, 0xc0a000
+        │   0x0072b0d8      add   x9, x9, 0xbb0
+        │   0x0072b0dc      bl    0xbe3c44
+        │   0x0072b0e0      adrp  x0, 0xc40000
+        │   0x0072b0e4      add   x0, x0, 0x568
+        │   0x0072b0e8      bl    0xbe2f54
+        │   0x0072b0ec      str   q0, [sp]
+        │   0x0072b0f0      bl    0x736668
+        │   0x0072b0f4      bl    0xbdd838
+       ┌──< 0x0072b0f8      b.ne  0x72b110
+       ││   0x0072b0fc      ldp   x29, x30, [sp, 0x20]
+       ││   0x0072b100      ldr   x19, [sp, 0x30]                      ; [0x30:4]=0
+       ││   0x0072b104      add   sp, sp, 0x40
+       ││   0x0072b108      autiasp
+       ││   0x0072b10c      ret
+       └──> 0x0072b110      bl    sym.imp.__stack_chk_fail
+        │   0x0072b114      paciasp
+        │   0x0072b118      sub   sp, sp, 0x40
+        │   0x0072b11c      stp   x29, x30, [sp, 0x20]
+        │   0x0072b120      str   x19, [sp, 0x30]
+        │   0x0072b124      add   x29, sp, 0x20
+        │   0x0072b128      mrs   x19, tpidr_el0
+        │   0x0072b12c      adrp  x9, 0xc0a000
+        │   0x0072b130      add   x9, x9, 0xbe0
+        │   0x0072b134      bl    0xbe3c44
+        │   0x0072b138      adrp  x0, 0xc40000
+        │   0x0072b13c      add   x0, x0, 0x570
+        │   0x0072b140      bl    0xbe2f54
+        │   0x0072b144      str   q0, [sp]
+        │   0x0072b148      bl    0x736668
+        │   0x0072b14c      bl    0xbdd838
+       ┌──< 0x0072b150      b.ne  0x72b168
+       ││   0x0072b154      ldp   x29, x30, [sp, 0x20]
+       ││   0x0072b158      ldr   x19, [sp, 0x30]                      ; [0x30:4]=0
+       ││   0x0072b15c      add   sp, sp, 0x40
+       ││   0x0072b160      autiasp
+       ││   0x0072b164      ret
+       └──> 0x0072b168      bl    sym.imp.__stack_chk_fail

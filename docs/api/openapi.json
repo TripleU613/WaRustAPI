@@ -16188,5 +16188,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-metrics-native-transport-responses/README.md",
     "description": "Native metrics HTTP-body request and completion path traced. Error/endpoint fallback precedes ordinary 200/no-error acceptance and distinct 401 handling; regular callback labels separate success/retryable/non-retryable/failure. Request schema, ownership and retry timing remain incomplete. No universal login retry rule or client runtime/live operation added."
+  },
+  "x-metrics-native-request-framing-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK static native request evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-metrics-native-request-builder/README.md",
+    "description": "Imported POST method, five header sources, four multipart sections and exact literal bytes retained. Endpoint consumption precedes construction. Selector decoding, credential/provider and full metadata/analytics schema remain incomplete. No client runtime or live operation added; no mandatory telemetry or ban guarantee."
   }
 }
