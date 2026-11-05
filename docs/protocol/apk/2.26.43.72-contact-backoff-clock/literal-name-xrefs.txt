@@ -1,0 +1,4 @@
+# Observed xtask apk-xref result, not a DEX method export.
+# Anchors: com.whatsapp.infra.ntp.workers.NtpSyncWorker; NtpSyncWorker; ntp_sync
+# stdout empty; stderr: no references found for any anchor
+# Does not search const-class instructions or establish absence of scheduling.

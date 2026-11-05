@@ -1,0 +1,2 @@
+classes8.dex  LX/EYi;->A00(LLLLLL)
+  write opcode 0x68, dex byte offset: 0x574d5c

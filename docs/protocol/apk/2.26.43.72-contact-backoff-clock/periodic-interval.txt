@@ -1,0 +1,45 @@
+
+# class: LX/Km7;
+# extends: Ljava/lang/Object;
+
+.method public A01(VJJ)  # .registers 14
+    # full signature: LX/Km7;->A01(JJ)V
+    0000..0006  const-wide/32  v2, #0xdbba0
+    0006..000a  cmp-long  v0, v10, v2
+    000a..000e  if-gez  v0, +0xd
+    000e..0014  invoke-static  {}, LX/Km9;->A00()LX/Km9;
+    0014..0016  move-result-object  v4
+    0016..001a  sget-object  v1, LX/Km7;->A0P:Ljava/lang/String;
+    001a..001e  const-string  v0, "Interval duration lesser than minimum allowed value; Changed to 900000"
+    001e..0024  invoke-virtual  {v4, v1, v0}, LX/Km9;->A05(Ljava/lang/String;Ljava/lang/String;)V
+    0024..0028  cmp-long  v0, v10, v2
+    0028..002c  if-ltz  v0, +0x3
+    002c..002e  move-wide  v2, v10
+    002e..0032  iput-wide  v2, v9, LX/Km7;->A06:J
+    0032..0038  const-wide/32  v1, #0x493e0
+    0038..003a  move-wide  v3, v12
+    003a..003e  cmp-long  v0, v12, v1
+    003e..0042  if-gez  v0, +0xd
+    0042..0048  invoke-static  {}, LX/Km9;->A00()LX/Km9;
+    0048..004a  move-result-object  v2
+    004a..004e  sget-object  v1, LX/Km7;->A0P:Ljava/lang/String;
+    004e..0052  const-string  v0, "Flex duration lesser than minimum allowed value; Changed to 300000"
+    0052..0058  invoke-virtual  {v2, v1, v0}, LX/Km9;->A05(Ljava/lang/String;Ljava/lang/String;)V
+    0058..005c  iget-wide  v1, v9, LX/Km7;->A06:J
+    005c..0060  cmp-long  v0, v12, v1
+    0060..0064  if-lez  v0, +0x11
+    0064..006a  invoke-static  {}, LX/Km9;->A00()LX/Km9;
+    006a..006c  move-result-object  v2
+    006c..0070  sget-object  v1, LX/Km7;->A0P:Ljava/lang/String;
+    0070..0074  const-string  v0, "Flex duration greater than interval duration; Changed to "
+    0074..007a  invoke-static  {v10, v11, v0}, LX/2LA;->A0o(JLjava/lang/String;)Ljava/lang/String;
+    007a..007c  move-result-object  v0
+    007c..0082  invoke-virtual  {v2, v1, v0}, LX/Km9;->A05(Ljava/lang/String;Ljava/lang/String;)V
+    0082..0088  const-wide/32  v5, #0x493e0
+    0088..008c  iget-wide  v7, v9, LX/Km7;->A06:J
+    008c..0092  invoke-static/range  {v3..v8}, LX/0HS;->A05(JJJ)J
+    0092..0094  move-result-wide  v0
+    0094..0098  iput-wide  v0, v9, LX/Km7;->A04:J
+    0098..009a  return-void
+    # exception table: 0 try range(s)
+.end method

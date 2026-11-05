@@ -1,0 +1,10 @@
+["name.whatsapp.time.ntp"]  (2 reference(s))
+  classes8.dex  LX/Eoc;->A05(V)
+    dex byte offset: 0x5d4876
+  classes8.dex  LX/Eoc;->A05(V)
+    dex byte offset: 0x5d496c
+["tag.whatsapp.time.ntp"]  (2 reference(s))
+  classes8.dex  LX/Eoc;->A05(V)
+    dex byte offset: 0x5d4850
+  classes8.dex  LX/Eoc;->A05(V)
+    dex byte offset: 0x5d4976

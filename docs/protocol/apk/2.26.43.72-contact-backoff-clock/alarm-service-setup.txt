@@ -1,0 +1,86 @@
+
+# class: Lcom/whatsapp/alarmservice/AlarmService;
+# extends: LX/1uh;
+
+.method public A0B(VL)  # .registers 7
+    # full signature: Lcom/whatsapp/alarmservice/AlarmService;->A0B(Landroid/content/Intent;)V
+    0000..0006  invoke-virtual  {v6}, Landroid/content/Intent;->getAction()Ljava/lang/String;
+    0006..0008  move-result-object  v4
+    0008..000c  const-string  v0, "AlarmService/onHandleWork received intent with action "
+    000c..0012  invoke-static  {v0, v4}, LX/2LA;->A1N(Ljava/lang/String;Ljava/lang/String;)V
+    0012..0016  if-nez  v4, +0x8
+    0016..001a  const-string  v0, "AlarmService/onHandleWork received null action in intent"
+    001a..0020  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0020..0022  return-void
+    0022..0026  iget-object  v0, v5, Lcom/whatsapp/alarmservice/AlarmService;->A00:LX/00x;
+    0026..002c  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    002c..002e  move-result-object  v0
+    002e..0032  check-cast  v0, LX/0D8;
+    0032..0036  check-cast  v0, Lcom/whatsapp/infra/nativelibloader/WhatsAppLibLoader;
+    0036..003c  invoke-virtual  {v0}, Lcom/whatsapp/infra/nativelibloader/WhatsAppLibLoader;->BbM()Z
+    003c..003e  move-result  v0
+    003e..0042  if-nez  v0, +0x8
+    0042..0046  const-string  v0, "AlarmService/onHandleWork skip, native libraries missing"
+    0046..004c  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    004c..004e  return-void
+    004e..0050  const/4  v3, #0x0
+    0050..0054  sget-object  v0, Lcom/whatsapp/alarmservice/AlarmService;->A03:Ljava/lang/String;
+    0054..005a  invoke-static  {v4, v0}, Landroid/text/TextUtils;->equals(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Z
+    005a..005c  move-result  v0
+    005c..0060  if-eqz  v0, +0x2a
+    0060..0064  const-string  v0, "AlarmService/setup; intent="
+    0064..006a  invoke-static  {v0, v6}, LX/2LA;->A1L(Ljava/lang/String;Ljava/lang/Object;)V
+    006a..006e  iget-object  v0, v5, Lcom/whatsapp/alarmservice/AlarmService;->A01:LX/00x;
+    006e..0074  invoke-static  {v0}, LX/DBf;->A0u(LX/00x;)Ljava/util/Iterator;
+    0074..0076  move-result-object  v4
+    0076..007c  invoke-interface  {v4}, Ljava/util/Iterator;->hasNext()Z
+    007c..007e  move-result  v0
+    007e..0082  if-eqz  v0, +0x58
+    0082..0088  invoke-interface  {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0088..008a  move-result-object  v2
+    008a..008e  check-cast  v2, LX/Eoc;
+    008e..0092  const-string  v0, "AlarmService/setup: "
+    0092..0098  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0098..009a  move-result-object  v1
+    009a..00a0  invoke-static  {v2}, LX/3q3;->A0d(Ljava/lang/Object;)Ljava/lang/String;
+    00a0..00a2  move-result-object  v0
+    00a2..00a8  invoke-static  {v1, v0}, LX/2L9;->A1K(Ljava/lang/StringBuilder;Ljava/lang/String;)V
+    00a8..00ae  invoke-virtual  {v2}, LX/Eoc;->A05()V
+    00ae..00b0  goto  -0x1c
+    00b0..00b4  iget-object  v0, v5, Lcom/whatsapp/alarmservice/AlarmService;->A01:LX/00x;
+    00b4..00ba  invoke-static  {v0}, LX/DBf;->A0u(LX/00x;)Ljava/util/Iterator;
+    00ba..00bc  move-result-object  v1
+    00bc..00c2  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    00c2..00c4  move-result  v0
+    00c4..00c8  if-eqz  v0, +0x2c
+    00c8..00ce  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    00ce..00d0  move-result-object  v2
+    00d0..00d4  check-cast  v2, LX/Eoc;
+    00d4..00da  invoke-virtual  {v2, v6}, LX/Eoc;->A07(Landroid/content/Intent;)Z
+    00da..00dc  move-result  v0
+    00dc..00e0  if-eqz  v0, -0x10
+    00e0..00e6  invoke-static  {}, LX/1Xl;->A13()Ljava/lang/StringBuilder;
+    00e6..00e8  move-result-object  v1
+    00e8..00ec  const-string  v0, "AlarmService/onHandleWork: handling "
+    00ec..00f2  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00f2..00f8  invoke-virtual  {v1, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00f8..00fc  const-string  v0, " using "
+    00fc..0102  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0102..0108  invoke-static  {v2}, LX/3q3;->A0d(Ljava/lang/Object;)Ljava/lang/String;
+    0108..010a  move-result-object  v0
+    010a..0110  invoke-static  {v1, v0}, LX/2L9;->A1K(Ljava/lang/StringBuilder;Ljava/lang/String;)V
+    0110..0114  iput-object  v2, v5, Lcom/whatsapp/alarmservice/AlarmService;->A02:LX/Eoc;
+    0114..011a  invoke-virtual  {v2, v6}, LX/Eoc;->A08(Landroid/content/Intent;)V
+    011a..011c  goto  +0xa
+    011c..0122  invoke-static  {}, LX/1Xl;->A13()Ljava/lang/StringBuilder;
+    0122..0124  move-result-object  v1
+    0124..0128  const-string  v0, "AlarmService/onHandleWork: received unrecognized intent; intent="
+    0128..012e  invoke-static  {v6, v0, v1}, LX/DBh;->A1C(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    012e..0132  iput-object  v3, v5, Lcom/whatsapp/alarmservice/AlarmService;->A02:LX/Eoc;
+    0132..0134  return-void
+    0134..0136  move-exception  v0
+    0136..013a  iput-object  v3, v5, Lcom/whatsapp/alarmservice/AlarmService;->A02:LX/Eoc;
+    013a..013c  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0028..0097 -> 009a
+.end method

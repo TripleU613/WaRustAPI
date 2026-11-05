@@ -1,3 +1,15 @@
+2026-11-05 — **Contact backoff clock reanchored; NTP scheduler traced.**
+
+Pinned43.72 evidence separates NTP-preferred contact time from token time,
+12-hour periodic scheduling, six-hour flex/recent-success guards and one-day
+restart cache admission. Both selected scheduling branches also attempt sync
+immediately. Effective flags and full runtime clock/backoff port remain open.
+[Evidence and remaining implementation requirements](docs/protocol/apk/2.26.43.72-contact-backoff-clock/README.md).
+Research only: no request, clock, timer, retry/reset or live account state changed.
+Validation: pinned APK hash, checksum/link hygiene, APK coverage, CLI reference,
+OpenAPI library contract, formatting and strict Clippy passed. Shared Rust code
+is unchanged from the preceding 1369-test validated commit.
+
 2026-11-05 — **Contact-protocol refusals survive outer-IQ success.**
 
 Actions now expose durable contact_protocol_refusal independently of outer-IQ

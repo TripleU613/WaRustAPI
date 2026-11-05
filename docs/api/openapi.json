@@ -16871,5 +16871,12 @@
     "x-live": false,
     "description": "Durable contact_protocol_refusal inspection through existing actions plain/JSON. Native A01 numeric defaults and parsing; complete integrity/adoption, observer deadline and dispatch policy remain unported.",
     "evidence": "docs/protocol/apk/2.26.43.72-contact-protocol-refusal/README.md"
+  },
+  "x-contact-backoff-clock-research": {
+    "x-cli": false,
+    "x-transport": "experimental",
+    "x-live": false,
+    "description": "Static pinned APK2.26.43.72 NTP-preferred contact backoff clock and NTP scheduling trace: property170 WorkManager12h/6h-flex versus12h elapsed alarm, immediate setup acquisition, independent six-hour process success guard and one-day constructor cache admission. Effective flags, NTP acquisition and full contact deadline enforcement remain unported.",
+    "evidence": "docs/protocol/apk/2.26.43.72-contact-backoff-clock/README.md"
   }
 }

@@ -376,3 +376,16 @@ or times. No historical Ok replay/backfill; legacy missing metadata is unknown.
 [Native source, independent SQL vectors, reorder/reopen/rollback tests and limits](apk/2.26.43.72-token-success-state/README.md).
 Configured bucket policy, canonical counterparts and full job/cache lifecycle remain
 unfinished. No live account operation or automatic replay is introduced.
+
+
+## Pinned contact backoff clock and NTP scheduling — 2026-11-05
+
+**Confirmed static**, APK2.26.43.72: contact backoffs use NTP-preferred08q.A00,
+whereas token scheduling uses08q.A04. Constructor NTP cache admission is less
+than one day; selected in-process getters do not expire it. Newly traced
+property170 selects WorkManager12h/6h-flex versus12h elapsed alarm scheduling;
+both setup paths also invoke acquisition immediately. A separate six-hour
+process-static recent-success guard may skip it. Property2225 conditionally
+controls the dual one-day adoption rejection; neither effective value is known.
+[Source exports, field/caller census, search limits and port obligations](apk/2.26.43.72-contact-backoff-clock/README.md).
+No Rust clock/eligibility, NTP acquisition, retry/reset or live account changes.

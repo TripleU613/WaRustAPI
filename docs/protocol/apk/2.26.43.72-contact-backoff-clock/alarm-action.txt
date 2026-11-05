@@ -1,0 +1,57 @@
+
+# class: LX/Djl;
+# extends: LX/Eoc;
+
+.method public A00(VLL)  # .registers 9
+    # full signature: LX/Djl;->A00(Landroid/content/Intent;LX/Djl;)V
+    0000..0004  const-string  v0, "NtpAction#updateNtp; intent="
+    0004..000a  invoke-static  {v0, v7}, LX/2LA;->A1L(Ljava/lang/String;Ljava/lang/Object;)V
+    000a..000e  iget-object  v0, v8, LX/Djl;->A01:LX/0B8;
+    000e..0014  invoke-virtual  {v0}, LX/0B8;->A0G()Landroid/os/PowerManager;
+    0014..0016  move-result-object  v2
+    0016..001a  if-nez  v2, +0x9
+    001a..001e  const-string  v0, "NtpAction/updateNtp pm=null"
+    001e..0024  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0024..0026  const/4  v2, #0x0
+    0026..0028  goto  +0x13
+    0028..002c  const-string  v1, "NtpAction#updateNtp"
+    002c..002e  const/4  v0, #0x1
+    002e..0034  invoke-static  {v2, v1, v0}, LX/EHj;->A00(Landroid/os/PowerManager;Ljava/lang/String;I)Landroid/os/PowerManager$WakeLock;
+    0034..0036  move-result-object  v2
+    0036..003a  if-eqz  v2, +0xb
+    003a..0040  invoke-static  {v2}, LX/0a8;->A02(Landroid/os/PowerManager$WakeLock;)V
+    0040..0046  const-wide/32  v0, #0x493e0
+    0046..004c  invoke-static  {v2, v0, v1}, LX/0a8;->A03(Landroid/os/PowerManager$WakeLock;J)V
+    004c..0050  iget-object  v4, v8, LX/Djl;->A03:Landroid/content/Context;
+    0050..0054  iget-object  v6, v8, LX/Djl;->A04:LX/08q;
+    0054..0058  iget-object  v5, v8, LX/Djl;->A00:LX/08Y;
+    0058..005c  iget-object  v7, v8, LX/Djl;->A05:LX/1je;
+    005c..0060  iget-object  v8, v8, LX/Djl;->A02:LX/EbM;
+    0060..0064  sget-object  v3, Lcom/whatsapp/infra/ntp/workers/NtpSyncWorker;->A05:LX/EYi;
+    0064..006a  invoke-virtual/range  {v3..v8}, LX/EYi;->A00(Landroid/content/Context;LX/08Y;LX/08q;LX/1je;LX/EbM;)LX/JS5;
+    006a..006e  if-eqz  v2, +0x24
+    006e..0074  invoke-static  {v2}, LX/0a8;->A01(Landroid/os/PowerManager$WakeLock;)V
+    0074..0076  return-void
+    0076..0078  move-exception  v0
+    0078..007c  if-eqz  v2, +0x5
+    007c..0082  invoke-static  {v2}, LX/0a8;->A01(Landroid/os/PowerManager$WakeLock;)V
+    0082..0084  throw  v0
+    0084..0086  move-exception  v1
+    0086..008c  invoke-static  {v1}, LX/3Kf;->A01(Ljava/lang/Exception;)Z
+    008c..008e  move-result  v0
+    008e..0092  if-eqz  v0, +0x13
+    0092..0096  const-string  v0, "NtpAction/updateNtp/deadsystem"
+    0096..009c  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;Ljava/lang/Throwable;)V
+    009c..00a0  const/16  v0, #0x114
+    00a0..00a6  invoke-static  {v0}, LX/00D;->A00(I)LX/05h;
+    00a6..00a8  move-result-object  v1
+    00a8..00ac  const-string  v0, "NtpAction/updateNtp"
+    00ac..00b2  invoke-static  {v1, v0}, LX/3Kf;->A00(LX/00x;Ljava/lang/String;)V
+    00b2..00b4  return-void
+    00b4..00b6  throw  v1
+    # exception table: 4 try range(s)
+    # catch Ljava/lang/RuntimeException; code_units 0005..0026 -> 0042
+    # catch <all> code_units 0026..0037 -> 003b
+    # catch Ljava/lang/RuntimeException; code_units 0037..003b -> 0042
+    # catch Ljava/lang/RuntimeException; code_units 003e..0042 -> 0042
+.end method

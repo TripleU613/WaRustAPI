@@ -1,0 +1,2 @@
+classes.dex  LX/08q;->A07(VJJ)
+  write opcode 0x5a, dex byte offset: 0x4694ec

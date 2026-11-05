@@ -1,0 +1,39 @@
+
+# class: LX/MDJ;
+# extends: Ljava/lang/Object;
+
+.method public A05(LLLL)  # .registers 14
+    # full signature: LX/MDJ;->A05(LX/Kvm;Ljava/lang/Integer;Ljava/lang/String;)LX/Ncm;
+    0000..0002  move-object  v5, v10
+    0002..0006  check-cast  v5, LX/Kvi;
+    0006..000a  sget-object  v0, LX/02X;->A0C:Ljava/lang/Integer;
+    000a..000c  move-object  v7, v13
+    000c..0010  if-ne  v12, v0, +0x20
+    0010..0014  iget-object  v0, v5, LX/Kvi;->A02:LX/00U;
+    0014..0018  iget-object  v4, v0, LX/00U;->A06:LX/NUx;
+    0018..001c  const-string  v0, "enqueueUniquePeriodic_"
+    001c..0022  invoke-static  {v0, v13}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0022..0024  move-result-object  v3
+    0024..0028  iget-object  v0, v5, LX/Kvi;->A06:LX/NXa;
+    0028..002c  check-cast  v0, LX/MiO;
+    002c..0030  iget-object  v2, v0, LX/MiO;->A01:LX/N46;
+    0030..0036  invoke-static  {v2}, LX/00l;->A05(Ljava/lang/Object;)V
+    0036..0038  const/4  v1, #0x1
+    0038..003c  new-instance  v0, LX/NJV;
+    003c..0042  invoke-direct  {v0, v11, v5, v13, v1}, LX/NJV;-><init>(LX/LuR;LX/Kvi;Ljava/lang/String;I)V
+    0042..0048  invoke-static  {v4, v3, v2, v0}, Landroidx/work/OperationKt;->A00(LX/NUx;Ljava/lang/String;Ljava/util/concurrent/Executor;Lkotlin/jvm/functions/Function0;)LX/Mhy;
+    0048..004a  move-result-object  v0
+    004a..004c  return-object  v0
+    004c..0050  sget-object  v6, LX/02X;->A01:Ljava/lang/Integer;
+    0050..0054  if-eq  v12, v6, +0x4
+    0054..0058  sget-object  v6, LX/02X;->A00:Ljava/lang/Integer;
+    0058..005e  invoke-static  {v11}, Ljava/util/Collections;->singletonList(Ljava/lang/Object;)Ljava/util/List;
+    005e..0060  move-result-object  v8
+    0060..0062  const/4  v9, #0x0
+    0062..0066  new-instance  v4, LX/MW2;
+    0066..006c  invoke-direct/range  {v4..v9}, LX/MW2;-><init>(LX/Kvi;Ljava/lang/Integer;Ljava/lang/String;Ljava/util/List;Ljava/util/List;)V
+    006c..0072  invoke-virtual  {v4}, LX/MW2;->A02()LX/Ncm;
+    0072..0074  move-result-object  v0
+    0074..0076  return-object  v0
+    # exception table: 0 try range(s)
+.end method

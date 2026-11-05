@@ -1,0 +1,4 @@
+# Observed xtask apk-callers result, not a DEX method export.
+# Target Lcom/whatsapp/infra/ntp/workers/NtpSyncWorker;-><init>
+# stdout empty; stderr: 0 caller(s) of Lcom/whatsapp/infra/ntp/workers/NtpSyncWorker;-><init>
+# WorkManager uses a class token; zero direct invokes do not establish non-use.
