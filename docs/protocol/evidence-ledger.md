@@ -1,3 +1,10 @@
+2026-11-04 — **Prekey construction failures roll back upload reservation.**
+
+Identity validation/KEM child signing moved inside the reservation transaction.
+PQ-off/on regression proves complete key/checkpoint preservation and reopen,
+then valid reservation/settlement. [Details and remaining ADD port](network-correctness-audit.md#prekey-construction-and-reservation-atomicity-2026-11-04).
+No live traffic.
+
 2026-11-04 — **PQ generation target and upload batch defaults distinguished.**
 
 43.72 provider21200/default200 governs inventory;21201/default10 governs

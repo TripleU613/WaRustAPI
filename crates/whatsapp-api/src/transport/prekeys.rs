@@ -304,7 +304,8 @@ fn key_node(id: u32, public: &[u8], signature: Option<&[u8]>) -> Node {
 /// big-endian like the ordinary and signed keys (the parser's local rule).
 /// Docs: kem-prekey-inventory.md.
 ///
-/// Called by [`begin_upload`] only while property 21198 is on.
+/// Called by [`begin_upload`] inside its reservation transaction; identity
+/// validation also applies when no PQ rows are selected.
 pub(crate) fn kem_upload_children(
     identity: &crate::session::SignalIdentityKey,
     rows: &[super::kem_prekeys::StoredKemPrekey],
@@ -434,6 +435,9 @@ pub fn begin_upload(
                 },
             )?;
         }
+        // Build/sign before the reservation commits. A local construction
+        // failure must roll back legacy metadata and newly generated KEM rows.
+        let kem_children = kem_upload_children(identity, &kem_rows)?;
         tx.put_json(
             Table::Checkpoints,
             batch_key(&iq_id).as_bytes(),
@@ -447,12 +451,11 @@ pub fn begin_upload(
                 kem_ids: kem_rows.iter().map(|r| r.id).collect(),
             },
         )?;
-        Ok(Some((ids, keys, kem_rows)))
+        Ok(Some((ids, keys, kem_children)))
     })?;
-    let Some((ids, keys, kem_rows)) = reserved else {
+    let Some((ids, keys, kem_children)) = reserved else {
         return Ok(None);
     };
-    let kem_children = kem_upload_children(identity, &kem_rows)?;
     let node = Node::new("iq")
         .attr("id", iq_id.as_str())
         .attr("xmlns", "encrypt")
@@ -1025,6 +1028,60 @@ mod tests {
         assert!(pending.settle(&store, &result).unwrap().accepted);
         assert!(pending.settle(&store, &result).is_err());
         assert_eq!(summary(&store).unwrap().uploaded, 50);
+    }
+
+    #[test]
+    fn upload_construction_failure_rolls_back_keys_and_batch_across_reopen() {
+        for pq in [false, true] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("construction.redb");
+            let store = open(&path);
+            if pq {
+                let id = super::super::abprops::queue(&store).unwrap();
+                super::super::actions::reserve_pending(&store).unwrap();
+                super::super::actions::record_reply(
+                    &store,
+                    &Node::new("iq")
+                        .attr("id", id.as_str())
+                        .attr("type", "result")
+                        .children(vec![Node::new("props").attr("hash", "fixture").children(
+                            vec![
+                        Node::new("prop").attr("config_code", "21198").attr("config_value", "1")
+                    ],
+                        )]),
+                )
+                .unwrap();
+            }
+            generate(&store).unwrap();
+            let snapshot = |store: &ProtocolStore| {
+                store
+                    .read(|tx| {
+                        [Table::Prekeys, Table::Checkpoints]
+                            .into_iter()
+                            .map(|table| tx.scan(table, 1, 10000))
+                            .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot(&store);
+            let (mut account, signed) = account_and_signed();
+            account.signal_identity.as_mut().unwrap().0.public[0] ^= 1;
+            assert!(begin_upload(&store, &account, &signed).is_err());
+            assert_eq!(snapshot(&store), before);
+            let state = summary(&store).unwrap();
+            assert_eq!((state.unsent, state.uncertain, state.uploaded), (50, 0, 0));
+            drop(store);
+            let store = open(&path);
+            assert_eq!(snapshot(&store), before);
+            account.signal_identity.as_mut().unwrap().0.public[0] ^= 1;
+            let (pending, _) = begin_upload(&store, &account, &signed).unwrap().unwrap();
+            assert_eq!(summary(&store).unwrap().uncertain, 50);
+            assert!(begin_upload(&store, &account, &signed).unwrap().is_none());
+            let result = Node::new("iq")
+                .attr("id", pending.iq_id.as_str())
+                .attr("type", "result");
+            assert!(pending.settle(&store, &result).unwrap().accepted);
+        }
     }
 
     #[test]

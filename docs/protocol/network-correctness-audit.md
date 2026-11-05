@@ -866,3 +866,28 @@ so setting its batch default200 would confuse inventory and upload controls.
 [Provider chain, reused REA identity and lifecycle limits](apk/2.26.43.72-prekey-upload-replies/README.md#pq-target-provider-and-declared-defaults-2026-11-04).
 No production/config changes or live traffic. Effective account values and
 initial/continuation admission remain unverified.
+
+## Prekey construction and reservation atomicity (2026-11-04)
+
+**Confirmed local source defect / fixed offline:** begin_upload committed legacy
+OutcomeUnknown metadata, its Batch and optional newly generated KEM rows/cursor,
+then called kem_upload_children outside the write. That helper validates identity
+public/private consistency even with an empty PQ row list. A local identity mismatch
+could therefore strand an upload reservation before returning any node for writing.
+The helper now builds/signs inside the same transaction before Batch commit;
+all preceding key metadata/generation rolls back on construction failure.
+
+**Offline regression:** for both PQ-off and a synthetic saved A/B reply enabling
+PQ, mutate only the fixture identity public key to force construction failure.
+Full Prekeys/Checkpoints snapshots remain unchanged, with50 unsent/0 uncertain.
+Reopen preserves that exact state. Restoring the synthetic fixture pair permits
+one valid reservation and settlement; a second reservation before its reply is
+refused. In the PQ-on case the snapshot also proves generated ordinary/last-resort
+rows and cursor writes did not leak from the aborted transaction.
+
+**Evidence distinction / remaining scope:** this is Rust's not-sent construction
+boundary, not a newly traced native transaction claim. Native ADD ownership/storage
+sources remain in the [current-build evidence](apk/2.26.43.72-prekey-upload-replies/README.md).
+No uncertain existing request is reset by this fix. The ADD/generation/current-build
+strategy port remains open; this removes a real atomicity obstacle in the shared
+reservation path first. No live traffic or account-state migration.

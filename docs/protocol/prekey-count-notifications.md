@@ -188,3 +188,10 @@ No prefix/algorithm patch is inferred from enum constructor codes.
 **Confirmed static, 43.72:** generation target property21200 defaults200;
 upload batch property21201 defaults10. The provider captures the former in
 0Yj; runtime account values were not read. [Source/default proof and Rust gap](apk/2.26.43.72-prekey-upload-replies/README.md#pq-target-provider-and-declared-defaults-2026-11-04).
+
+## Construction rollback correction (2026-11-04)
+
+**Confirmed local correction:** identity validation/KEM child signing now happens
+inside upload reservation, so construction failure cannot commit uncertain keys
+or newly generated KEM state. [PQ-off/on reopen regression and scope](network-correctness-audit.md#prekey-construction-and-reservation-atomicity-2026-11-04).
+Current-build ADD port remains unfinished.
