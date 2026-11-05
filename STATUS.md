@@ -1,3 +1,11 @@
+2026-11-04 — **Prekey success continuation ADD construction gap confirmed.**
+
+43.72 Fcd selects ADD/configured batching; Rust follows older SET/812 layout.
+Generation dispatch and callback binding retained; full shape/selection and
+persistence compatibility remain open. [Evidence](docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#successful-continuation-selects-add-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. No production change or live traffic.
+
 2026-11-04 — **Limited prekey retry-mode writer scope traced.**
 
 FDh config allowance is conditional, not a general startup default; visible

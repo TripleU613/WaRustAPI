@@ -789,3 +789,15 @@ startup and the delay helper is not its only consumer.
 Optional provider/config values and listener lifecycle remain unknown. No runtime
 change, reset or live account operation. This narrows producer scope without
 claiming complete native retry parity.
+
+## Current-build prekey success continuation uses ADD (2026-11-04)
+
+**Confirmed static / unported construction gap:** 43.72 EcZ -> Fcd.run ->
+13z.A0B passes useSet=false, conditionally ensures requested key families,
+selects ADD with op mode=add and a configured legacy batch limit (EMZ.A03,
+declared default200, clamped>=1). The current Rust count_low follow-up reuses
+older full SET/812 layout, so current-build equivalence is disproven.
+[Exact branch, callback binding, retained methods and porting boundaries](apk/2.26.43.72-prekey-upload-replies/README.md#successful-continuation-selects-add-2026-11-04).
+No runtime patch yet: ADD selection SQL, full layout, generation and persisted
+batch compatibility must be traced. Existing uncertain reservations remain held.
+No live traffic. This gap stays open until implemented and validated.

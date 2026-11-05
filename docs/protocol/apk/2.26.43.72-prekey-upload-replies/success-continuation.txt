@@ -1,0 +1,16 @@
+
+# class: LX/Fcd;
+# extends: Ljava/lang/Object;
+
+.method public run(V)  # .registers 7
+    # full signature: LX/Fcd;->run()V
+    0000..0004  iget-object  v0, v6, LX/Fcd;->A01:LX/13z;
+    0004..0008  iget-boolean  v2, v6, LX/Fcd;->A02:Z
+    0008..000c  iget-boolean  v3, v6, LX/Fcd;->A03:Z
+    000c..0010  iget  v1, v6, LX/Fcd;->A00:I
+    0010..0014  iget-boolean  v5, v6, LX/Fcd;->A04:Z
+    0014..0016  const/4  v4, #0x0
+    0016..001c  invoke-static/range  {v0..v5}, LX/13z;->A0B(LX/13z;IZZZZ)V
+    001c..001e  return-void
+    # exception table: 0 try range(s)
+.end method

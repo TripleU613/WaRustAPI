@@ -203,3 +203,57 @@ Additional export hashes (full methods retained, findings bounded above):
 
 - [mode-worker.txt](mode-worker.txt): `d9824a2cb728862a92d87e2902c29da4f52bfae785b3bc081ecf994fe87e109f`
 - [mode-callback.txt](mode-callback.txt): `dd9fec9235588808024e9e1b0a39ce1dab2c16bb9c345b9367d3e1e612e8a8f1`
+
+## Successful continuation selects ADD (2026-11-04)
+
+**Confirmed static**, same pinned 43.72. Findings are confined to the continuation
+entry, generation dispatcher and selected request/callback construction blocks;
+the full A0B method is retained for subsequent branch-by-branch review.
+
+- EcZ success with either needs-more flag queues **Fcd** (031e–0342 in the
+  retained completion-policy method). Fcd.<init> binds the reason and booleans;
+  **Fcd.run** forwards them to **13z.A0B(manager,reason,legacy,pq,false,flag)**.
+  Its fourth boolean (useSet) is explicitly false, not inherited from the upload
+  that produced the result. This closes the prior Fcd entry boundary.
+- **13z.A0B**, 0000–0012 first calls **A0D(legacy,pq)**. A0D conditionally calls
+  0WJ.A0k for legacy and A0j for PQ generation under 0Wk scope. Generation
+  internals/amounts were not retraced here; these are ensure-if-needed dispatches,
+  not unconditional key rotation.
+- A0B uses config **0x52d1** for requested PQ count only when pq=true; otherwise
+  zero (branch0a46). It creates a fresh EcZ completion carrying flags/reason.
+- useSet=false branches to **06d8**, the ADD path. No legacy request and
+  pqCount<=0 logs no prekeys requested and clears the upload guard; ADD mode
+  marks A0V=2 and uses **13z.A0O -> 141** as IQ callback.
+- With legacy requested, **0712–0742** reads **EMZ.A03** through A0e and clamps
+  the batch limit to max(1,value). The prior EMZ initializer binds key **0x74cb**
+  and declared default **200**. Actual runtime value is not established. It
+  obtains legacy candidates through **0Yj.A02(limit)**. When legacy=false it
+  creates an empty array; PQ candidates are separately limited to min(requested,
+  available). Full selection SQL/eligibility remains an open boundary.
+- Empty combined candidates do not send. With candidates, **0836–0864** adds
+  **<op mode="add">**. The selected tail emits encrypt/set IQ to the existing
+  server JID, including legacy list and/or pq_list. This does not by itself
+  establish every ADD child/attribute order or ID/signature producer.
+- **0a00–0a18** freezes legacy/PQ arrays and this EcZ in 141 under its monitor;
+  **0a1a–0a3c** calls 0Sf.A0W(callback141,node,id,logicalType0x1da,delay0).
+  The zero delay is a shared-dispatch argument, not proof of unlimited feature
+  timeout or durable replay permission. SET path separately uses callback140
+  and logicalType0x1d9 (068a–06ce).
+
+**Confirmed Rust gap:** PendingUpload follow-up currently reuses the older
+37.71 full SET constructor/batch policy (812 cap) via maybe_upload. Current
+43.72 success continuation explicitly selects ADD with a configured legacy
+batch limit, so these cannot be called equivalent. No speculative op insertion
+or automatic policy switch is made in this evidence-only change. Before porting,
+trace ADD candidate SQL, exact full child/attribute shape, generation parameters,
+initial-vs-continuation admission and persisted batch compatibility, including
+PQ material and retained uncertain reservations. Native producer/callback linkage
+is now partially closed; all native upload paths remain far from fully audited.
+No production behavior or live traffic changed.
+
+Additional export hashes:
+
+- [success-continuation.txt](success-continuation.txt): `f75f193a076c53cba5d4973a48bf8c6f7722a270c98a1242dc439f57c70a14d2`
+- [success-constructor.txt](success-constructor.txt): `a024ab523e19a6507217f516a60a7962520146c9dc1fdd1b9d6fa52656f35577`
+- [continue-manager.txt](continue-manager.txt): `0914da61d2b4bbd955720c126a5b2d1b327442456c1ec96d2df4e3dab5dca7ce`
+- [generation-dispatch.txt](generation-dispatch.txt): `9f699fab4c95a2370b4087a06ec87b9668ec5dffc06bf04500e7cc2101e0f727`

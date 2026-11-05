@@ -1,0 +1,38 @@
+
+# class: LX/13z;
+# extends: LX/07o;
+
+.method private A0D(VZZ)  # .registers 6
+    # full signature: LX/13z;->A0D(ZZ)V
+    0000..0004  iget-object  v0, v3, LX/13z;->A0P:LX/0Wk;
+    0004..000a  invoke-virtual  {v0}, LX/0Wk;->A04()LX/FjI;
+    000a..000c  move-result-object  v2
+    000c..0010  if-eqz  v4, +0x12
+    0010..0014  const-string  v0, "MyPreKeysManager/ensurePreKeysGenerated generating legacy prekeys if needed"
+    0014..001a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    001a..001e  iget-object  v0, v3, LX/13z;->A0F:LX/00x;
+    001e..0024  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0024..0026  move-result-object  v0
+    0026..002a  check-cast  v0, LX/0WJ;
+    002a..0030  invoke-virtual  {v0}, LX/0WJ;->A0k()V
+    0030..0034  if-eqz  v5, +0x1d
+    0034..0038  const-string  v0, "MyPreKeysManager/ensurePreKeysGenerated generating PQ prekeys if needed"
+    0038..003e  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    003e..0042  iget-object  v0, v3, LX/13z;->A0F:LX/00x;
+    0042..0048  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0048..004a  move-result-object  v0
+    004a..004e  check-cast  v0, LX/0WJ;
+    004e..0054  invoke-virtual  {v0}, LX/0WJ;->A0j()V
+    0054..0056  goto  +0xb
+    0056..0058  move-exception  v1
+    0058..005e  invoke-virtual  {v2}, LX/FjI;->close()V
+    005e..0060  throw  v1
+    0060..0062  move-exception  v0
+    0062..0068  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    0068..006a  throw  v1
+    006a..0070  invoke-virtual  {v2}, LX/FjI;->close()V
+    0070..0072  return-void
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0008..002b -> 002b
+    # catch <all> code_units 002c..002f -> 0030
+.end method

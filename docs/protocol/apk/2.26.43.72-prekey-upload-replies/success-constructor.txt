@@ -1,0 +1,15 @@
+
+# class: LX/Fcd;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLIZZZ)  # .registers 6
+    # full signature: LX/Fcd;-><init>(LX/13z;IZZZ)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v1, v0, LX/Fcd;->A01:LX/13z;
+    000a..000e  iput-boolean  v3, v0, LX/Fcd;->A02:Z
+    000e..0012  iput-boolean  v4, v0, LX/Fcd;->A03:Z
+    0012..0016  iput  v2, v0, LX/Fcd;->A00:I
+    0016..001a  iput-boolean  v5, v0, LX/Fcd;->A04:Z
+    001a..001c  return-void
+    # exception table: 0 try range(s)
+.end method

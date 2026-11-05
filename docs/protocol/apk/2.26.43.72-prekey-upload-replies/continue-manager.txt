@@ -1,0 +1,679 @@
+
+# class: LX/13z;
+# extends: LX/07o;
+
+.method public A0B(VLIZZZZ)  # .registers 33
+    # full signature: LX/13z;->A0B(LX/13z;IZZZZ)V
+    0000..0004  move/from16  v5, v29
+    0004..0008  move/from16  v4, v30
+    0008..000c  move-object/from16  v0, v27
+    000c..0012  invoke-direct  {v0, v5, v4}, LX/13z;->A0D(ZZ)V
+    0012..0016  if-eqz  v30, +0x51a
+    0016..001a  iget-object  v1, v0, LX/13z;->A0J:LX/08Y;
+    001a..001e  const/16  v0, #0x52d1
+    001e..0024  invoke-virtual  {v1, v0}, LX/00E;->A0a(I)I
+    0024..0026  move-result  v3
+    0026..002a  const-string  v2, " useSet="
+    002a..002e  const-string  v0, "MyPreKeysManager/uploadNextBatch sending batch; uploadLegacy="
+    002e..0032  new-instance  v1, Ljava/lang/StringBuilder;
+    0032..0038  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0038..003e  invoke-virtual  {v1, v5}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    003e..0042  const-string  v0, " pqCount="
+    0042..0048  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0048..004e  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    004e..0054  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0054..0058  move/from16  v2, v31
+    0058..005e  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    005e..0064  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0064..0066  move-result-object  v0
+    0066..006c  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    006c..0070  new-instance  v19, LX/EcZ;
+    0070..0074  move/from16  v26, v28
+    0074..0078  move/from16  v9, v32
+    0078..007c  move-object/from16  v6, v19
+    007c..0080  move-object/from16  v7, v27
+    0080..0084  move/from16  v8, v26
+    0084..0086  move  v10, v5
+    0086..0088  move  v11, v4
+    0088..008a  move  v12, v2
+    008a..0090  invoke-direct/range  {v6..v12}, LX/EcZ;-><init>(LX/13z;IZZZZ)V
+    0090..0092  const/4  v6, #0x0
+    0092..0096  iput-object  v6, v7, LX/13z;->A0W:LX/Ejp;
+    0096..009a  if-eqz  v31, +0x321
+    009a..009c  const/4  v1, #0x1
+    009c..00a0  iput  v1, v7, LX/13z;->A0V:I
+    00a0..00a4  iget-object  v1, v7, LX/13z;->A0U:LX/140;
+    00a4..00a6  const/4  v4, #0x0
+    00a6..00aa  if-gtz  v3, +0x1c
+    00aa..00ae  const-string  v1, "PreKeysSetter/sendSetPQPreKeyIq invalid pqCount="
+    00ae..00b2  new-instance  v0, Ljava/lang/StringBuilder;
+    00b2..00b8  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00b8..00be  invoke-virtual  {v0, v3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00be..00c4  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00c4..00c6  move-result-object  v0
+    00c6..00cc  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    00cc..00d0  const-string  v0, "MyPreKeysManager/uploadNextBatch SET IQ not sent; clearing guard"
+    00d0..00d6  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    00d6..00dc  invoke-static/range  {v27..v27}, LX/13z;->A07(LX/13z;)V
+    00dc..00de  return-void
+    00de..00e2  iget-object  v7, v1, LX/140;->A08:LX/13z;
+    00e2..00e6  iget-object  v9, v7, LX/13z;->A0P:LX/0Wk;
+    00e6..00ec  invoke-virtual  {v9}, LX/0Wk;->A04()LX/FjI;
+    00ec..00ee  move-result-object  v6
+    00ee..00f2  iget-object  v8, v7, LX/13z;->A0F:LX/00x;
+    00f2..00f8  invoke-interface  {v8}, LX/00x;->get()Ljava/lang/Object;
+    00f8..00fa  move-result-object  v0
+    00fa..00fe  check-cast  v0, LX/0WJ;
+    00fe..0104  invoke-virtual  {v0}, LX/0WJ;->A1A()[LX/ETs;
+    0104..0106  move-result-object  v2
+    0106..010a  if-eqz  v2, +0x1f
+    010a..010c  array-length  v0, v2
+    010c..0110  if-eqz  v0, +0x1c
+    0110..0116  invoke-static  {v3, v0}, Ljava/lang/Math;->min(II)I
+    0116..0118  move-result  v0
+    0118..011e  invoke-static  {v2, v0}, Ljava/util/Arrays;->copyOf([Ljava/lang/Object;I)[Ljava/lang/Object;
+    011e..0120  move-result-object  v0
+    0120..0124  check-cast  v0, [LX/ETs;
+    0124..012a  invoke-interface  {v8}, LX/00x;->get()Ljava/lang/Object;
+    012a..012c  move-result-object  v2
+    012c..0130  check-cast  v2, LX/0WJ;
+    0130..0136  invoke-virtual  {v2}, LX/0WJ;->A0b()LX/ETs;
+    0136..0138  move-result-object  v3
+    0138..013c  new-instance  v2, LX/EhY;
+    013c..0142  invoke-direct  {v2, v3, v0}, LX/EhY;-><init>(LX/ETs;[LX/ETs;)V
+    0142..0144  goto  +0x4
+    0144..0148  new-array  v0, v4, [LX/ETs;
+    0148..014a  goto  -0x12
+    014a..0150  invoke-virtual  {v6}, LX/FjI;->close()V
+    0150..0154  iget-object  v3, v2, LX/EhY;->A00:LX/ETs;
+    0154..0158  if-nez  v3, +0x5
+    0158..015c  const-string  v0, "PreKeysSetter/sendSetPQPreKeyIq failed to get last resort kyber prekey; aborting PQ prekeys upload"
+    015c..015e  goto  -0x4b
+    015e..0162  iget-object  v2, v2, LX/EhY;->A01:[LX/ETs;
+    0162..0164  array-length  v0, v2
+    0164..0168  move/from16  v24, v0
+    0168..016c  if-nez  v0, +0x5
+    016c..0170  const-string  v0, "PreKeysSetter/sendSetPQPreKeyIq no PQ prekeys available"
+    0170..0172  goto  -0x55
+    0172..0176  iget-object  v0, v1, LX/140;->A04:LX/05a;
+    0176..017a  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    017a..017e  move-object/from16  v25, v0
+    017e..0184  invoke-interface/range  {v25..v25}, LX/00x;->get()Ljava/lang/Object;
+    0184..0186  move-result-object  v0
+    0186..018a  check-cast  v0, LX/0Sf;
+    018a..0190  invoke-virtual  {v0}, LX/0Sf;->A0G()Ljava/lang/String;
+    0190..0192  move-result-object  v23
+    0192..0196  if-eqz  v29, +0x117
+    0196..019c  invoke-virtual  {v7}, LX/13z;->A0a()[B
+    019c..019e  move-result-object  v10
+    019e..01a4  invoke-virtual  {v7}, LX/13z;->A0Z()[B
+    01a4..01a6  move-result-object  v6
+    01a6..01ac  invoke-virtual  {v9}, LX/0Wk;->A04()LX/FjI;
+    01ac..01ae  move-result-object  v5
+    01ae..01b4  invoke-interface  {v8}, LX/00x;->get()Ljava/lang/Object;
+    01b4..01b6  move-result-object  v0
+    01b6..01ba  check-cast  v0, LX/0WJ;
+    01ba..01c0  invoke-virtual  {v0}, LX/0WJ;->A1B()[LX/ETs;
+    01c0..01c2  move-result-object  v9
+    01c2..01c6  if-nez  v9, +0x4
+    01c6..01ca  new-array  v9, v4, [LX/ETs;
+    01ca..01d0  invoke-virtual  {v5}, LX/FjI;->close()V
+    01d0..01d6  invoke-virtual  {v7}, LX/13z;->A0L()LX/ETs;
+    01d6..01d8  move-result-object  v12
+    01d8..01dc  iget-object  v0, v7, LX/13z;->A0H:Lcom/google/common/base/Optional;
+    01dc..01e2  invoke-virtual  {v0}, Lcom/google/common/base/Optional;->A01()Ljava/lang/Object;
+    01e2..01e4  const/4  v11, #0x0
+    01e4..01ea  invoke-virtual  {v0}, Lcom/google/common/base/Optional;->A01()Ljava/lang/Object;
+    01ea..01ee  const/16  v22, #0x5
+    01ee..01f0  const/4  v8, #0x2
+    01f0..01f4  const/16  v21, #0x3
+    01f4..01f8  new-instance  v7, Ljava/util/ArrayList;
+    01f8..01fe  invoke-direct  {v7}, Ljava/util/ArrayList;-><init>()V
+    01fe..0200  const/4  v0, #0x1
+    0200..0204  new-array  v5, v0, [LX/0Tl;
+    0204..0208  const-string  v14, "mode"
+    0208..020c  const-string  v20, "set"
+    020c..0210  new-instance  v13, LX/0Tl;
+    0210..0214  move-object/from16  v0, v20
+    0214..021a  invoke-direct  {v13, v14, v0}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    021a..021c  const/4  v14, #0x0
+    021c..0220  aput-object  v13, v5, v4
+    0220..0224  const-string  v13, "op"
+    0224..0228  new-instance  v0, LX/0Tp;
+    0228..022e  invoke-direct  {v0, v13, v5}, LX/0Tp;-><init>(Ljava/lang/String;[LX/0Tl;)V
+    022e..0234  invoke-virtual  {v7, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0234..0238  const-string  v5, "registration"
+    0238..023c  new-instance  v0, LX/0Tp;
+    023c..0242  invoke-direct  {v0, v5, v10, v11}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    0242..0248  invoke-virtual  {v7, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0248..024c  const-string  v5, "identity"
+    024c..0250  new-instance  v0, LX/0Tp;
+    0250..0256  invoke-direct  {v0, v5, v6, v11}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    0256..025c  invoke-virtual  {v7, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    025c..025e  array-length  v13, v9
+    025e..0260  const/4  v0, #0x0
+    0260..0264  if-nez  v13, +0x3
+    0264..0266  const/4  v0, #0x1
+    0266..026a  const-string  v18, "key"
+    026a..0270  const-string/jumbo  v10, "value"
+    0270..0274  const-string  v6, "id"
+    0274..0278  if-nez  v0, +0x3c
+    0278..027c  new-array  v0, v13, [LX/0Tp;
+    027c..0280  move-object/from16  v17, v0
+    0280..0284  if-ge  v14, v13, +0x28
+    0284..0288  const/16  v16, #0x1
+    0288..028c  new-array  v15, v8, [LX/0Tp;
+    028c..0290  aget-object  v0, v9, v14
+    0290..0294  iget-object  v5, v0, LX/ETs;->A01:[B
+    0294..0298  new-instance  v0, LX/0Tp;
+    0298..029e  invoke-direct  {v0, v6, v5, v11}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    029e..02a2  aput-object  v0, v15, v4
+    02a2..02a6  aget-object  v0, v9, v14
+    02a6..02aa  iget-object  v5, v0, LX/ETs;->A00:[B
+    02aa..02ae  new-instance  v0, LX/0Tp;
+    02ae..02b4  invoke-direct  {v0, v10, v5, v11}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    02b4..02b8  aput-object  v0, v15, v16
+    02b8..02bc  new-instance  v5, LX/0Tp;
+    02bc..02c0  move-object/from16  v0, v18
+    02c0..02c6  invoke-direct  {v5, v0, v11, v15}, LX/0Tp;-><init>(Ljava/lang/String;[LX/0Tl;[LX/0Tp;)V
+    02c6..02ca  aput-object  v5, v17, v14
+    02ca..02ce  add-int/lit8  v14, v14, #0x1
+    02ce..02d0  goto  -0x27
+    02d0..02d2  const/4  v5, #0x1
+    02d2..02d6  const-string  v14, "list"
+    02d6..02da  new-instance  v13, LX/0Tp;
+    02da..02de  move-object/from16  v0, v17
+    02de..02e4  invoke-direct  {v13, v14, v11, v0}, LX/0Tp;-><init>(Ljava/lang/String;[LX/0Tl;[LX/0Tp;)V
+    02e4..02ea  invoke-virtual  {v7, v13}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    02ea..02ec  goto  +0x2
+    02ec..02ee  const/4  v5, #0x1
+    02ee..02f2  move/from16  v0, v21
+    02f2..02f6  new-array  v14, v0, [LX/0Tp;
+    02f6..02fa  iget-object  v13, v12, LX/ETs;->A01:[B
+    02fa..02fe  new-instance  v0, LX/0Tp;
+    02fe..0304  invoke-direct  {v0, v6, v13, v11}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    0304..0308  aput-object  v0, v14, v4
+    0308..030c  iget-object  v13, v12, LX/ETs;->A00:[B
+    030c..0310  new-instance  v0, LX/0Tp;
+    0310..0316  invoke-direct  {v0, v10, v13, v11}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    0316..031a  aput-object  v0, v14, v5
+    031a..031e  iget-object  v13, v12, LX/ETs;->A02:[B
+    031e..0324  const-string/jumbo  v12, "signature"
+    0324..0328  new-instance  v0, LX/0Tp;
+    0328..032e  invoke-direct  {v0, v12, v13, v11}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    032e..0332  aput-object  v0, v14, v8
+    0332..0338  const-string/jumbo  v13, "skey"
+    0338..033c  new-instance  v0, LX/0Tp;
+    033c..0342  invoke-direct  {v0, v13, v11, v14}, LX/0Tp;-><init>(Ljava/lang/String;[LX/0Tl;[LX/0Tp;)V
+    0342..0348  invoke-virtual  {v7, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0348..034c  move/from16  v0, v24
+    034c..0350  new-array  v0, v0, [LX/0Tp;
+    0350..0354  move-object/from16  v16, v0
+    0354..0356  const/4  v13, #0x0
+    0356..035a  move/from16  v0, v24
+    035a..035e  if-ge  v13, v0, +0x118
+    035e..0362  move/from16  v0, v21
+    0362..0366  new-array  v15, v0, [LX/0Tp;
+    0366..036a  aget-object  v0, v2, v13
+    036a..036e  iget-object  v14, v0, LX/ETs;->A01:[B
+    036e..0372  new-instance  v0, LX/0Tp;
+    0372..0378  invoke-direct  {v0, v6, v14, v11}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    0378..037c  aput-object  v0, v15, v4
+    037c..0380  aget-object  v0, v2, v13
+    0380..0384  iget-object  v14, v0, LX/ETs;->A00:[B
+    0384..0388  new-instance  v0, LX/0Tp;
+    0388..038e  invoke-direct  {v0, v10, v14, v11}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    038e..0392  aput-object  v0, v15, v5
+    0392..0396  aget-object  v0, v2, v13
+    0396..039a  iget-object  v14, v0, LX/ETs;->A02:[B
+    039a..039e  new-instance  v0, LX/0Tp;
+    039e..03a4  invoke-direct  {v0, v12, v14, v11}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    03a4..03a8  aput-object  v0, v15, v8
+    03a8..03ac  new-instance  v14, LX/0Tp;
+    03ac..03b0  move-object/from16  v0, v18
+    03b0..03b6  invoke-direct  {v14, v0, v11, v15}, LX/0Tp;-><init>(Ljava/lang/String;[LX/0Tl;[LX/0Tp;)V
+    03b6..03ba  aput-object  v14, v16, v13
+    03ba..03be  add-int/lit8  v13, v13, #0x1
+    03be..03c0  goto  -0x34
+    03c0..03c2  const/4  v11, #0x5
+    03c2..03c6  const/16  v18, #0x2
+    03c6..03c8  const/4  v8, #0x3
+    03c8..03cc  new-instance  v7, Ljava/util/ArrayList;
+    03cc..03d2  invoke-direct  {v7}, Ljava/util/ArrayList;-><init>()V
+    03d2..03d4  const/4  v10, #0x1
+    03d4..03d8  new-array  v9, v10, [LX/0Tl;
+    03d8..03dc  const-string  v6, "mode"
+    03dc..03e0  const-string  v17, "set"
+    03e0..03e4  new-instance  v5, LX/0Tl;
+    03e4..03e8  move-object/from16  v0, v17
+    03e8..03ee  invoke-direct  {v5, v6, v0}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    03ee..03f2  aput-object  v5, v9, v4
+    03f2..03f6  const-string  v5, "op"
+    03f6..03fa  new-instance  v0, LX/0Tp;
+    03fa..0400  invoke-direct  {v0, v5, v9}, LX/0Tp;-><init>(Ljava/lang/String;[LX/0Tl;)V
+    0400..0406  invoke-virtual  {v7, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0406..040a  new-array  v5, v10, [B
+    040a..040e  aput-byte  v11, v5, v4
+    040e..0414  const-string/jumbo  v6, "type"
+    0414..0416  const/4  v9, #0x0
+    0416..041a  new-instance  v0, LX/0Tp;
+    041a..0420  invoke-direct  {v0, v6, v5, v9}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    0420..0426  invoke-virtual  {v7, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0426..042a  move/from16  v0, v24
+    042a..042e  new-array  v12, v0, [LX/0Tp;
+    042e..0430  const/4  v13, #0x0
+    0430..0436  const-string/jumbo  v11, "signature"
+    0436..043c  const-string/jumbo  v5, "value"
+    043c..0440  const-string  v10, "id"
+    0440..0444  const/16  v16, #0x1
+    0444..0448  move/from16  v0, v24
+    0448..044c  if-ge  v13, v0, +0x31
+    044c..0450  new-array  v14, v8, [LX/0Tp;
+    0450..0454  aget-object  v0, v2, v13
+    0454..0458  iget-object  v0, v0, LX/ETs;->A01:[B
+    0458..045c  new-instance  v15, LX/0Tp;
+    045c..0462  invoke-direct  {v15, v10, v0, v9}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    0462..0466  aput-object  v15, v14, v4
+    0466..046a  aget-object  v0, v2, v13
+    046a..046e  iget-object  v10, v0, LX/ETs;->A00:[B
+    046e..0472  new-instance  v0, LX/0Tp;
+    0472..0478  invoke-direct  {v0, v5, v10, v9}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    0478..047c  aput-object  v0, v14, v16
+    047c..0480  aget-object  v0, v2, v13
+    0480..0484  iget-object  v5, v0, LX/ETs;->A02:[B
+    0484..0488  new-instance  v0, LX/0Tp;
+    0488..048e  invoke-direct  {v0, v11, v5, v9}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    048e..0492  aput-object  v0, v14, v18
+    0492..0496  const-string  v5, "key"
+    0496..049a  new-instance  v0, LX/0Tp;
+    049a..04a0  invoke-direct  {v0, v5, v9, v14}, LX/0Tp;-><init>(Ljava/lang/String;[LX/0Tl;[LX/0Tp;)V
+    04a0..04a4  aput-object  v0, v12, v13
+    04a4..04a8  add-int/lit8  v13, v13, #0x1
+    04a8..04aa  goto  -0x3c
+    04aa..04ae  const-string  v13, "pq_list"
+    04ae..04b2  new-instance  v0, LX/0Tp;
+    04b2..04b8  invoke-direct  {v0, v13, v9, v12}, LX/0Tp;-><init>(Ljava/lang/String;[LX/0Tl;[LX/0Tp;)V
+    04b8..04be  invoke-virtual  {v7, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    04be..04c2  new-array  v12, v8, [LX/0Tp;
+    04c2..04c6  iget-object  v13, v3, LX/ETs;->A01:[B
+    04c6..04ca  new-instance  v0, LX/0Tp;
+    04ca..04d0  invoke-direct  {v0, v10, v13, v9}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    04d0..04d4  aput-object  v0, v12, v4
+    04d4..04d8  iget-object  v13, v3, LX/ETs;->A00:[B
+    04d8..04dc  new-instance  v0, LX/0Tp;
+    04dc..04e2  invoke-direct  {v0, v5, v13, v9}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    04e2..04e6  aput-object  v0, v12, v16
+    04e6..04ea  iget-object  v5, v3, LX/ETs;->A02:[B
+    04ea..04ee  new-instance  v0, LX/0Tp;
+    04ee..04f4  invoke-direct  {v0, v11, v5, v9}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    04f4..04f8  aput-object  v0, v12, v18
+    04f8..04fc  const-string  v5, "pq_last_resort_key"
+    04fc..0500  new-instance  v0, LX/0Tp;
+    0500..0506  invoke-direct  {v0, v5, v9, v12}, LX/0Tp;-><init>(Ljava/lang/String;[LX/0Tl;[LX/0Tp;)V
+    0506..050c  invoke-virtual  {v7, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    050c..050e  const/4  v0, #0x4
+    050e..0512  new-array  v9, v0, [LX/0Tl;
+    0512..0516  new-instance  v5, LX/0Tl;
+    0516..051a  move-object/from16  v0, v23
+    051a..0520  invoke-direct  {v5, v10, v0}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    0520..0524  aput-object  v5, v9, v4
+    0524..052a  const-string/jumbo  v10, "xmlns"
+    052a..052e  const-string  v5, "encrypt"
+    052e..0532  new-instance  v0, LX/0Tl;
+    0532..0538  invoke-direct  {v0, v10, v5}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    0538..053c  aput-object  v0, v9, v16
+    053c..0540  new-instance  v5, LX/0Tl;
+    0540..0544  move-object/from16  v0, v17
+    0544..054a  invoke-direct  {v5, v6, v0}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    054a..054e  aput-object  v5, v9, v18
+    054e..0552  sget-object  v6, LX/0mL;->A00:LX/0mL;
+    0552..0558  const-string/jumbo  v5, "to"
+    0558..055c  new-instance  v0, LX/0Tl;
+    055c..0562  invoke-direct  {v0, v6, v5}, LX/0Tl;-><init>(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;)V
+    0562..0566  aput-object  v0, v9, v8
+    0566..056a  new-array  v0, v4, [LX/0Tp;
+    056a..0570  invoke-virtual  {v7, v0}, Ljava/util/AbstractCollection;->toArray([Ljava/lang/Object;)[Ljava/lang/Object;
+    0570..0572  move-result-object  v4
+    0572..0576  check-cast  v4, [LX/0Tp;
+    0576..057a  const-string  v0, "iq"
+    057a..057e  new-instance  v5, LX/0Tp;
+    057e..0584  invoke-direct  {v5, v0, v9, v4}, LX/0Tp;-><init>(Ljava/lang/String;[LX/0Tl;[LX/0Tp;)V
+    0584..0586  const/4  v9, #0x0
+    0586..058a  goto/16  +0x82
+    058a..058e  const-string  v14, "pq_list"
+    058e..0592  new-instance  v13, LX/0Tp;
+    0592..0596  move-object/from16  v0, v16
+    0596..059c  invoke-direct  {v13, v14, v11, v0}, LX/0Tp;-><init>(Ljava/lang/String;[LX/0Tl;[LX/0Tp;)V
+    059c..05a2  invoke-virtual  {v7, v13}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    05a2..05a6  move/from16  v0, v21
+    05a6..05aa  new-array  v13, v0, [LX/0Tp;
+    05aa..05ae  iget-object  v14, v3, LX/ETs;->A01:[B
+    05ae..05b2  new-instance  v0, LX/0Tp;
+    05b2..05b8  invoke-direct  {v0, v6, v14, v11}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    05b8..05bc  aput-object  v0, v13, v4
+    05bc..05c0  iget-object  v14, v3, LX/ETs;->A00:[B
+    05c0..05c4  new-instance  v0, LX/0Tp;
+    05c4..05ca  invoke-direct  {v0, v10, v14, v11}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    05ca..05ce  aput-object  v0, v13, v5
+    05ce..05d2  iget-object  v10, v3, LX/ETs;->A02:[B
+    05d2..05d6  new-instance  v0, LX/0Tp;
+    05d6..05dc  invoke-direct  {v0, v12, v10, v11}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    05dc..05e0  aput-object  v0, v13, v8
+    05e0..05e4  const-string  v10, "pq_last_resort_key"
+    05e4..05e8  new-instance  v0, LX/0Tp;
+    05e8..05ee  invoke-direct  {v0, v10, v11, v13}, LX/0Tp;-><init>(Ljava/lang/String;[LX/0Tl;[LX/0Tp;)V
+    05ee..05f4  invoke-virtual  {v7, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    05f4..05f8  new-array  v10, v5, [B
+    05f8..05fc  aput-byte  v22, v10, v4
+    05fc..0602  const-string/jumbo  v12, "type"
+    0602..0606  new-instance  v0, LX/0Tp;
+    0606..060c  invoke-direct  {v0, v12, v10, v11}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    060c..0612  invoke-virtual  {v7, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0612..0614  const/4  v0, #0x4
+    0614..0618  new-array  v10, v0, [LX/0Tl;
+    0618..061c  new-instance  v11, LX/0Tl;
+    061c..0620  move-object/from16  v0, v23
+    0620..0626  invoke-direct  {v11, v6, v0}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    0626..062a  aput-object  v11, v10, v4
+    062a..0630  const-string/jumbo  v11, "xmlns"
+    0630..0634  const-string  v6, "encrypt"
+    0634..0638  new-instance  v0, LX/0Tl;
+    0638..063e  invoke-direct  {v0, v11, v6}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    063e..0642  aput-object  v0, v10, v5
+    0642..0646  new-instance  v5, LX/0Tl;
+    0646..064a  move-object/from16  v0, v20
+    064a..0650  invoke-direct  {v5, v12, v0}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    0650..0654  aput-object  v5, v10, v8
+    0654..0658  sget-object  v6, LX/0mL;->A00:LX/0mL;
+    0658..065e  const-string/jumbo  v5, "to"
+    065e..0662  new-instance  v0, LX/0Tl;
+    0662..0668  invoke-direct  {v0, v6, v5}, LX/0Tl;-><init>(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;)V
+    0668..066c  aput-object  v0, v10, v21
+    066c..0670  new-array  v0, v4, [LX/0Tp;
+    0670..0676  invoke-virtual  {v7, v0}, Ljava/util/AbstractCollection;->toArray([Ljava/lang/Object;)[Ljava/lang/Object;
+    0676..0678  move-result-object  v4
+    0678..067c  check-cast  v4, [LX/0Tp;
+    067c..0680  const-string  v0, "iq"
+    0680..0684  new-instance  v5, LX/0Tp;
+    0684..068a  invoke-direct  {v5, v0, v10, v4}, LX/0Tp;-><init>(Ljava/lang/String;[LX/0Tl;[LX/0Tp;)V
+    068a..068c  monitor-enter
+    068c..0690  iput-object  v9, v1, LX/140;->A03:[LX/ETs;
+    0690..0694  iput-object  v2, v1, LX/140;->A02:[LX/ETs;
+    0694..0698  iput-object  v3, v1, LX/140;->A01:LX/ETs;
+    0698..069c  move-object/from16  v0, v19
+    069c..06a0  iput-object  v0, v1, LX/140;->A00:LX/EcZ;
+    06a0..06a4  move/from16  v0, v26
+    06a4..06a8  iput  v0, v1, LX/140;->A0A:I
+    06a8..06aa  monitor-exit
+    06aa..06b0  invoke-interface/range  {v25..v25}, LX/00x;->get()Ljava/lang/Object;
+    06b0..06b2  move-result-object  v0
+    06b2..06b6  check-cast  v0, LX/0Sf;
+    06b6..06ba  const-wide/16  v7, #0x0
+    06ba..06be  const/16  v6, #0x1d9
+    06be..06c0  move-object  v2, v0
+    06c0..06c2  move-object  v3, v1
+    06c2..06c4  move-object  v4, v5
+    06c4..06c8  move-object/from16  v5, v23
+    06c8..06ce  invoke-virtual/range  {v2..v8}, LX/0Sf;->A0W(LX/0lG;LX/0Tp;Ljava/lang/String;IJ)Z
+    06ce..06d0  move-result  v0
+    06d0..06d4  if-nez  v0, -0x2fa
+    06d4..06d8  goto/16  -0x304
+    06d8..06da  const/4  v1, #0x0
+    06da..06de  if-nez  v29, +0xd
+    06de..06e2  if-gtz  v3, +0xb
+    06e2..06e6  const-string  v0, "MyPreKeysManager/sendAddPreKeys no prekeys requested"
+    06e6..06ec  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    06ec..06f0  const-string  v0, "MyPreKeysManager/uploadNextBatch ADD IQ not sent; clearing guard"
+    06f0..06f4  goto/16  -0x310
+    06f4..06f6  const/4  v4, #0x2
+    06f6..06fa  iput  v4, v7, LX/13z;->A0V:I
+    06fa..06fe  iput-boolean  v1, v7, LX/13z;->A0b:Z
+    06fe..0702  iget-object  v2, v7, LX/13z;->A0O:LX/141;
+    0702..0704  const/4  v8, #0x0
+    0704..0708  if-nez  v29, +0x7
+    0708..070c  if-gtz  v3, +0x52
+    070c..0710  const-string  v0, "PreKeysAdder/sendAddPreKeysIq no prekeys requested"
+    0710..0712  goto  -0x15
+    0712..0716  iget-object  v0, v2, LX/141;->A03:LX/05a;
+    0716..071a  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    071a..0720  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0720..0722  move-result-object  v1
+    0722..0726  check-cast  v1, LX/00E;
+    0726..072a  sget-object  v0, LX/EMZ;->A03:LX/0AB;
+    072a..0730  invoke-static  {v0}, LX/00l;->A06(Ljava/lang/Object;)V
+    0730..0736  invoke-virtual  {v1, v0}, LX/00E;->A0e(LX/0AB;)I
+    0736..0738  move-result  v1
+    0738..073a  const/4  v0, #0x1
+    073a..0740  invoke-static  {v0, v1}, Ljava/lang/Math;->max(II)I
+    0740..0742  move-result  v9
+    0742..0746  iget-object  v1, v2, LX/141;->A07:LX/13z;
+    0746..074a  iget-object  v0, v1, LX/13z;->A0P:LX/0Wk;
+    074a..0750  invoke-virtual  {v0}, LX/0Wk;->A04()LX/FjI;
+    0750..0752  move-result-object  v7
+    0752..0756  iget-object  v0, v1, LX/13z;->A0F:LX/00x;
+    0756..075c  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    075c..075e  move-result-object  v1
+    075e..0762  check-cast  v1, LX/0WJ;
+    0762..0766  iget-object  v0, v1, LX/0WJ;->A0I:LX/0Wk;
+    0766..076c  invoke-virtual  {v0}, LX/0Wk;->A04()LX/FjI;
+    076c..076e  move-result-object  v5
+    076e..0772  iget-object  v0, v1, LX/0WJ;->A01:LX/0Yl;
+    0772..0776  iget-object  v0, v0, LX/0Yl;->A03:LX/0Yj;
+    0776..077c  invoke-virtual  {v0, v9}, LX/0Yj;->A02(I)[LX/ETs;
+    077c..077e  move-result-object  v9
+    077e..0784  invoke-virtual  {v5}, LX/FjI;->close()V
+    0784..0788  if-nez  v9, +0x4
+    0788..078c  new-array  v9, v8, [LX/ETs;
+    078c..0792  invoke-virtual  {v7}, LX/FjI;->close()V
+    0792..0796  if-gtz  v3, +0xf
+    0796..079a  new-array  v7, v8, [LX/ETs;
+    079a..079c  array-length  v13, v9
+    079c..07a0  if-nez  v13, +0x34
+    07a0..07a2  array-length  v0, v7
+    07a2..07a6  if-nez  v0, +0x31
+    07a6..07aa  const-string  v0, "PreKeysAdder/sendAddPreKeysIq no unsent prekeys available"
+    07aa..07ac  goto  -0x62
+    07ac..07b0  new-array  v9, v1, [LX/ETs;
+    07b0..07b4  iget-object  v1, v2, LX/141;->A07:LX/13z;
+    07b4..07b8  iget-object  v0, v1, LX/13z;->A0P:LX/0Wk;
+    07b8..07be  invoke-virtual  {v0}, LX/0Wk;->A04()LX/FjI;
+    07be..07c0  move-result-object  v5
+    07c0..07c4  iget-object  v0, v1, LX/13z;->A0F:LX/00x;
+    07c4..07ca  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    07ca..07cc  move-result-object  v0
+    07cc..07d0  check-cast  v0, LX/0WJ;
+    07d0..07d6  invoke-virtual  {v0}, LX/0WJ;->A1A()[LX/ETs;
+    07d6..07d8  move-result-object  v1
+    07d8..07dc  if-eqz  v1, +0x10
+    07dc..07de  array-length  v0, v1
+    07de..07e2  if-eqz  v0, +0xd
+    07e2..07e8  invoke-static  {v3, v0}, Ljava/lang/Math;->min(II)I
+    07e8..07ea  move-result  v0
+    07ea..07f0  invoke-static  {v1, v0}, Ljava/util/Arrays;->copyOf([Ljava/lang/Object;I)[Ljava/lang/Object;
+    07f0..07f2  move-result-object  v7
+    07f2..07f6  check-cast  v7, [LX/ETs;
+    07f6..07f8  goto  +0x3
+    07f8..07fc  new-array  v7, v8, [LX/ETs;
+    07fc..0802  invoke-virtual  {v5}, LX/FjI;->close()V
+    0802..0804  goto  -0x34
+    0804..0808  iget-object  v0, v2, LX/141;->A04:LX/05a;
+    0808..080c  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    080c..0810  move-object/from16  v20, v0
+    0810..0816  invoke-interface/range  {v20..v20}, LX/00x;->get()Ljava/lang/Object;
+    0816..0818  move-result-object  v0
+    0818..081c  check-cast  v0, LX/0Sf;
+    081c..0822  invoke-virtual  {v0}, LX/0Sf;->A0G()Ljava/lang/String;
+    0822..0824  move-result-object  v18
+    0824..0826  const/4  v10, #0x1
+    0826..082c  invoke-static  {v7, v4}, LX/00l;->A09(Ljava/lang/Object;I)V
+    082c..0830  new-instance  v5, Ljava/util/ArrayList;
+    0830..0836  invoke-direct  {v5}, Ljava/util/ArrayList;-><init>()V
+    0836..083a  new-array  v11, v10, [LX/0Tl;
+    083a..083e  const-string  v3, "mode"
+    083e..0842  const-string  v1, "add"
+    0842..0846  new-instance  v0, LX/0Tl;
+    0846..084c  invoke-direct  {v0, v3, v1}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    084c..0850  aput-object  v0, v11, v8
+    0850..0854  const-string  v1, "op"
+    0854..0858  new-instance  v0, LX/0Tp;
+    0858..085e  invoke-direct  {v0, v1, v11}, LX/0Tp;-><init>(Ljava/lang/String;[LX/0Tl;)V
+    085e..0864  invoke-virtual  {v5, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0864..0866  const/4  v0, #0x0
+    0866..086a  if-nez  v13, +0x3
+    086a..086c  const/4  v0, #0x1
+    086c..0872  const-string/jumbo  v17, "value"
+    0872..0876  const-string  v16, "key"
+    0876..087a  const-string  v3, "id"
+    087a..087e  if-nez  v0, +0x37
+    087e..0882  new-array  v12, v13, [LX/0Tp;
+    0882..0884  const/4  v14, #0x0
+    0884..0888  if-ge  v14, v13, +0x28
+    0888..088c  new-array  v11, v4, [LX/0Tp;
+    088c..0890  aget-object  v0, v9, v14
+    0890..0894  iget-object  v1, v0, LX/ETs;->A01:[B
+    0894..0898  new-instance  v0, LX/0Tp;
+    0898..089e  invoke-direct  {v0, v3, v1, v6}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    089e..08a2  aput-object  v0, v11, v8
+    08a2..08a6  aget-object  v0, v9, v14
+    08a6..08aa  iget-object  v15, v0, LX/ETs;->A00:[B
+    08aa..08ae  new-instance  v1, LX/0Tp;
+    08ae..08b2  move-object/from16  v0, v17
+    08b2..08b8  invoke-direct  {v1, v0, v15, v6}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    08b8..08bc  aput-object  v1, v11, v10
+    08bc..08c0  new-instance  v1, LX/0Tp;
+    08c0..08c4  move-object/from16  v0, v16
+    08c4..08ca  invoke-direct  {v1, v0, v6, v11}, LX/0Tp;-><init>(Ljava/lang/String;[LX/0Tl;[LX/0Tp;)V
+    08ca..08ce  aput-object  v1, v12, v14
+    08ce..08d2  add-int/lit8  v14, v14, #0x1
+    08d2..08d4  goto  -0x27
+    08d4..08d8  const-string  v1, "list"
+    08d8..08dc  new-instance  v0, LX/0Tp;
+    08dc..08e2  invoke-direct  {v0, v1, v6, v12}, LX/0Tp;-><init>(Ljava/lang/String;[LX/0Tl;[LX/0Tp;)V
+    08e2..08e8  invoke-virtual  {v5, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    08e8..08ea  array-length  v14, v7
+    08ea..08ee  if-nez  v14, +0x44
+    08ee..08f0  const/4  v11, #0x3
+    08f0..08f2  const/4  v0, #0x4
+    08f2..08f6  new-array  v6, v0, [LX/0Tl;
+    08f6..08fa  new-instance  v1, LX/0Tl;
+    08fa..08fe  move-object/from16  v0, v18
+    08fe..0904  invoke-direct  {v1, v3, v0}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    0904..0908  aput-object  v1, v6, v8
+    0908..090e  const-string/jumbo  v3, "xmlns"
+    090e..0912  const-string  v1, "encrypt"
+    0912..0916  new-instance  v0, LX/0Tl;
+    0916..091c  invoke-direct  {v0, v3, v1}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    091c..0920  aput-object  v0, v6, v10
+    0920..0926  const-string/jumbo  v3, "type"
+    0926..092a  const-string  v1, "set"
+    092a..092e  new-instance  v0, LX/0Tl;
+    092e..0934  invoke-direct  {v0, v3, v1}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    0934..0938  aput-object  v0, v6, v4
+    0938..093c  sget-object  v3, LX/0mL;->A00:LX/0mL;
+    093c..0942  const-string/jumbo  v1, "to"
+    0942..0946  new-instance  v0, LX/0Tl;
+    0946..094c  invoke-direct  {v0, v3, v1}, LX/0Tl;-><init>(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;)V
+    094c..0950  aput-object  v0, v6, v11
+    0950..0954  new-array  v0, v8, [LX/0Tp;
+    0954..095a  invoke-virtual  {v5, v0}, Ljava/util/AbstractCollection;->toArray([Ljava/lang/Object;)[Ljava/lang/Object;
+    095a..095c  move-result-object  v3
+    095c..0960  check-cast  v3, [LX/0Tp;
+    0960..0964  const-string  v0, "iq"
+    0964..0968  new-instance  v1, LX/0Tp;
+    0968..096e  invoke-direct  {v1, v0, v6, v3}, LX/0Tp;-><init>(Ljava/lang/String;[LX/0Tl;[LX/0Tp;)V
+    096e..0970  monitor-enter
+    0970..0972  goto  +0x48
+    0972..0974  const/4  v0, #0x3
+    0974..0978  new-array  v12, v14, [LX/0Tp;
+    0978..097a  const/4  v13, #0x0
+    097a..097e  new-array  v11, v0, [LX/0Tp;
+    097e..0982  aget-object  v0, v7, v13
+    0982..0986  iget-object  v1, v0, LX/ETs;->A01:[B
+    0986..098a  new-instance  v0, LX/0Tp;
+    098a..0990  invoke-direct  {v0, v3, v1, v6}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    0990..0994  aput-object  v0, v11, v8
+    0994..0998  aget-object  v0, v7, v13
+    0998..099c  iget-object  v15, v0, LX/ETs;->A00:[B
+    099c..09a0  new-instance  v1, LX/0Tp;
+    09a0..09a4  move-object/from16  v0, v17
+    09a4..09aa  invoke-direct  {v1, v0, v15, v6}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    09aa..09ae  aput-object  v1, v11, v10
+    09ae..09b2  aget-object  v0, v7, v13
+    09b2..09b6  iget-object  v15, v0, LX/ETs;->A02:[B
+    09b6..09bc  const-string/jumbo  v1, "signature"
+    09bc..09c0  new-instance  v0, LX/0Tp;
+    09c0..09c6  invoke-direct  {v0, v1, v15, v6}, LX/0Tp;-><init>(Ljava/lang/String;[B[LX/0Tl;)V
+    09c6..09ca  aput-object  v0, v11, v4
+    09ca..09ce  new-instance  v1, LX/0Tp;
+    09ce..09d2  move-object/from16  v0, v16
+    09d2..09d8  invoke-direct  {v1, v0, v6, v11}, LX/0Tp;-><init>(Ljava/lang/String;[LX/0Tl;[LX/0Tp;)V
+    09d8..09dc  aput-object  v1, v12, v13
+    09dc..09e0  add-int/lit8  v13, v13, #0x1
+    09e0..09e2  const/4  v0, #0x3
+    09e2..09e6  if-lt  v13, v14, -0x34
+    09e6..09e8  const/4  v11, #0x3
+    09e8..09ec  const-string  v1, "pq_list"
+    09ec..09f0  new-instance  v0, LX/0Tp;
+    09f0..09f6  invoke-direct  {v0, v1, v6, v12}, LX/0Tp;-><init>(Ljava/lang/String;[LX/0Tl;[LX/0Tp;)V
+    09f6..09fc  invoke-virtual  {v5, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    09fc..0a00  goto/16  -0x86
+    0a00..0a04  iput-object  v9, v2, LX/141;->A02:[LX/ETs;
+    0a04..0a08  iput-object  v7, v2, LX/141;->A01:[LX/ETs;
+    0a08..0a0c  move-object/from16  v0, v19
+    0a0c..0a10  iput-object  v0, v2, LX/141;->A00:LX/EcZ;
+    0a10..0a14  move/from16  v0, v26
+    0a14..0a18  iput  v0, v2, LX/141;->A09:I
+    0a18..0a1a  monitor-exit
+    0a1a..0a20  invoke-interface/range  {v20..v20}, LX/00x;->get()Ljava/lang/Object;
+    0a20..0a22  move-result-object  v3
+    0a22..0a26  check-cast  v3, LX/0Sf;
+    0a26..0a2a  const-wide/16  v8, #0x0
+    0a2a..0a2e  const/16  v7, #0x1da
+    0a2e..0a30  move-object  v4, v2
+    0a30..0a32  move-object  v5, v1
+    0a32..0a36  move-object/from16  v6, v18
+    0a36..0a3c  invoke-virtual/range  {v3..v9}, LX/0Sf;->A0W(LX/0lG;LX/0Tp;Ljava/lang/String;IJ)Z
+    0a3c..0a3e  move-result  v0
+    0a3e..0a42  if-nez  v0, -0x4b1
+    0a42..0a46  goto/16  -0x1ab
+    0a46..0a48  const/4  v3, #0x0
+    0a48..0a4c  goto/16  -0x511
+    0a4c..0a4e  move-exception  v0
+    0a4e..0a50  monitor-exit
+    0a50..0a52  throw  v0
+    0a52..0a54  move-exception  v1
+    0a54..0a5a  invoke-virtual  {v6}, LX/FjI;->close()V
+    0a5a..0a5c  throw  v1
+    0a5c..0a5e  move-exception  v0
+    0a5e..0a60  monitor-exit
+    0a60..0a62  throw  v0
+    0a62..0a64  move-exception  v1
+    0a64..0a6a  invoke-virtual  {v5}, LX/FjI;->close()V
+    0a6a..0a6c  throw  v1
+    0a6c..0a6e  move-exception  v1
+    0a6e..0a74  invoke-virtual  {v5}, LX/FjI;->close()V
+    0a74..0a76  goto  +0x5
+    0a76..0a78  move-exception  v0
+    0a78..0a7e  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    0a7e..0a80  throw  v1
+    0a80..0a82  move-exception  v1
+    0a82..0a88  invoke-virtual  {v7}, LX/FjI;->close()V
+    0a88..0a8a  throw  v1
+    0a8a..0a8c  move-exception  v0
+    0a8c..0a92  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    0a92..0a94  throw  v1
+    # exception table: 13 try range(s)
+    # catch <all> code_units 0077..00a5 -> 0529
+    # catch <all> code_units 00d7..00e5 -> 0531
+    # catch <all> code_units 0346..0354 -> 0526
+    # catch <all> code_units 03a9..03b7 -> 0540
+    # catch <all> code_units 03b7..03bf -> 0536
+    # catch <all> code_units 03bf..03c6 -> 0540
+    # catch <all> code_units 03e0..03fe -> 0531
+    # catch <all> code_units 0500..050c -> 052e
+    # catch <all> code_units 052a..052d -> 0545
+    # catch <all> code_units 0532..0535 -> 0545
+    # catch <all> code_units 0537..053b -> 053b
+    # catch <all> code_units 053b..0540 -> 0540
+    # catch <all> code_units 0541..0544 -> 0545
+.end method

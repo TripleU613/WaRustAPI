@@ -141,3 +141,9 @@ No Rust retry/scheduling behavior changed.
 FDh.CbF scope, not unconditional startup. 14o.BLn resets/consumes that mode.
 [Reachability and remaining listener/optional-provider gaps](apk/2.26.43.72-prekey-upload-replies/README.md#limited-mode-producer-boundary-2026-11-04).
 No Rust scheduler change.
+
+## Current-build success continuation construction gap
+
+**Confirmed static, 43.72 / unported:** EcZ/Fcd continuation uses ADD upload,
+configured legacy batch limit and distinct 141 callback ownership. Rust still
+uses older SET/812 follow-up construction. [Evidence and remaining porting inputs](apk/2.26.43.72-prekey-upload-replies/README.md#successful-continuation-selects-add-2026-11-04).
