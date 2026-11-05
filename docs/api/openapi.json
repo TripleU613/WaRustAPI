@@ -15585,5 +15585,17 @@
     "x-live": false,
     "evidence": "docs/protocol/network-correctness-audit.md#actor-iq-waits-expire-independently-2026-11-04",
     "description": "Prekey and device-query waits now expire independently of heartbeat phase at their existing local30s deadlines. Actor admission for these waits and keepalive refuses expired waiter ownership even when an incoming branch wins scheduling. Raw late responses remain captured. Uncertain prekeys and reserved device query/pending users remain; no timeout retry/reset is authorized. Native per-ID callback timing is distinguished from unverified family-specific timeout values and full callback-map parity. Other request families and awaited-write responsiveness remain separate. No new HTTP route or live operation."
+  },
+  "x-outgoing-preparation-independent-expiry": {
+    "x-cli": {
+      "command": "whatsapp-cli listen",
+      "description": "Existing experimental actor; no new command or flag"
+    },
+    "x-transport": [
+      "experimental-transport direct key-query and group preparation waits"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/network-correctness-audit.md#outgoing-preparation-owns-its-deadline-2026-11-04",
+    "description": "Outgoing preparation owns independent deadlines instead of waiting for the next outbox tick. Expired IQ replies and group distribution ACK waiters cannot advance dependent preparation. Existing local30s durations, reserved/no-retry direct error and durable group outcome_unknown policy remain. Raw captures and generic durable ACK processing are unchanged. Native distribution ACK ownership remains an audit lead; no new HTTP route or live operation."
   }
 }

@@ -1,3 +1,14 @@
+2026-11-04 — **Outgoing preparation deadlines enforced independently.**
+
+Late group device results cannot advance into key queries after expiry.
+Direct/group waiter admission now checks deadlines; existing uncertainty and
+no-retry behavior remain. Distribution ACK ownership is a retained audit lead.
+[Evidence and limits](docs/protocol/network-correctness-audit.md#outgoing-preparation-owns-its-deadline-2026-11-04).
+Validation: workspace/all-feature tests (bounded concurrency), strict Clippy,
+CLI reference regeneration, formatting, JSON, coverage freshness and repository
+hygiene passed.
+No live traffic or ban-prevention guarantee.
+
 2026-11-04 — **Offline digest inspection implemented.**
 
 Savedcapturegrammar/localkeycomparison produces redacteddiagnostics without

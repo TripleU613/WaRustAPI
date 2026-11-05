@@ -1620,3 +1620,12 @@ identical instead of storing a late503 refusal.
 and unrelated maintenance remain on their existing cadence. Outgoing/group
 waits and other request families are not converted by this chunk; no full
 network/timing or ban-prevention guarantee is claimed. No live operations.
+
+### Preparation expiry hardening (2026-11-04)
+
+**Confirmed local / offline:** the actor now owns independent direct/group
+preparation timers and refuses expired replies before advancing dependent sends.
+Existing durations, durable uncertainty and no-retry policy are preserved.
+The late group-device regression fails before the fix and passes afterward,
+including durable reopen. Native distribution ACK ownership remains untraced.
+[Evidence, regression and limits](network-correctness-audit.md#outgoing-preparation-owns-its-deadline-2026-11-04).

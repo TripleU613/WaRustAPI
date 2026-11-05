@@ -466,7 +466,21 @@ pub(crate) async fn drive(
             .as_ref()
             .map(|q| q.deadline)
             .unwrap_or_else(tokio::time::Instant::now);
+        let outgoing_deadline = outgoing
+            .as_ref()
+            .map(|q| q.deadline)
+            .unwrap_or_else(tokio::time::Instant::now);
+        let group_deadline = group_outgoing
+            .as_ref()
+            .map(|q| q.deadline)
+            .unwrap_or_else(tokio::time::Instant::now);
         tokio::select! {
+            _ = tokio::time::sleep_until(group_deadline), if group_outgoing.is_some() => {
+                group_outgoing.take().expect("expired group preparation").expire(&store, &mut device_cursor)?;
+            }
+            _ = tokio::time::sleep_until(outgoing_deadline), if outgoing.is_some() => {
+                return Err(Error::invalid("outbox", "key query outcome unknown; reserved, no retry"));
+            }
             // Like 43.72 0ln.A08's ID-specific timer, expiration belongs to
             // each pending request rather than the heartbeat's phase.
             _ = tokio::time::sleep_until(upload_deadline), if upload.is_some() => {
@@ -489,12 +503,6 @@ pub(crate) async fn drive(
                 }
             }
             _ = outbox_tick.tick(), if send_outbox && ready.is_none() => {
-                if group_outgoing.as_ref().is_some_and(|v|tokio::time::Instant::now()>=v.deadline) {
-                    group_outgoing.take().expect("expired group preparation").expire(&store, &mut device_cursor)?;
-                }
-                if outgoing.as_ref().is_some_and(|v|tokio::time::Instant::now()>=v.deadline) {
-                    return Err(Error::invalid("outbox", "key query outcome unknown; reserved, no retry"));
-                }
                 if outgoing.is_none() && group_outgoing.is_none() && let Some(id)=ticket
                     && let Some(stanza)=super::outgoing::resume_identity_selected(&store,&account,id,epoch,config.transport.outgoing_identity_changes).await? {
                     link.send(&stanza).await?;
@@ -614,7 +622,7 @@ pub(crate) async fn drive(
                 }
                 // A reserved group reaction waits for each out-of-band
                 // distribution's ACK; the ACK is then processed as usual.
-                if node.description == "ack" && group_outgoing.as_ref().is_some_and(|v|v.matches(&node)) {
+                if node.description == "ack" && group_outgoing.as_ref().is_some_and(|v|tokio::time::Instant::now() < v.deadline && v.matches(&node)) {
                     let next=group_outgoing.take().expect("matched group distribution").settle_with_policy(&store,&account,&node,epoch,&mut device_cursor,config.transport.outgoing_identity_changes).await?;
                     group_outgoing=next.pending;
                     if let Some(stanza)=next.node { link.send(&stanza).await?; }
@@ -633,14 +641,14 @@ pub(crate) async fn drive(
                         Err(Error::InvalidInput { field, reason }) => tracing::warn!(field, reason, "retry refetch not completed"),
                         Err(error) => return Err(error),
                     }
-                    if group_outgoing.as_ref().is_some_and(|v|v.matches(&node)) {
+                    if group_outgoing.as_ref().is_some_and(|v|tokio::time::Instant::now() < v.deadline && v.matches(&node)) {
                         let next=group_outgoing.take().expect("matched group preparation").settle_with_policy(&store,&account,&node,epoch,&mut device_cursor,config.transport.outgoing_identity_changes).await?;
                         group_outgoing=next.pending;
                         if let Some(pending) = &group_outgoing { pending.observe_device_query(&mut device_cursor); }
                         if let Some(stanza)=next.node { link.send(&stanza).await?; }
                         continue;
                     }
-                    if outgoing.as_ref().is_some_and(|v|v.matches(&node)) {
+                    if outgoing.as_ref().is_some_and(|v|tokio::time::Instant::now() < v.deadline && v.matches(&node)) {
                         if let Some(stanza)=outgoing.take().expect("matched pending query").prepare_with_policy(&store,&account,&node,epoch,config.transport.outgoing_identity_changes).await? {
                             link.send(&stanza).await?;
                         }
@@ -4701,6 +4709,91 @@ mod tests {
                 }
             }
         }
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn group_preparation_deadline_cannot_advance_on_a_late_device_result() {
+        use super::super::{group_fanout, outgoing_group};
+        use outgoing_group::tests::{device_reply, enqueue, membership};
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("group-preparation-deadline.redb");
+        let store = open(&path);
+        let f = group_fanout::tests::fixture();
+        store.write(|tx| f.alice.save(tx)).unwrap();
+        let ticket = enqueue(&store, &f.plan.chat, "group-deadline");
+        let mut fake = start(&store, true, Some(ticket));
+        fake.activate().await;
+        let (info, written) = fake.written().await;
+        assert_eq!(
+            info.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("w:g2")
+        );
+        written.send(Ok(())).unwrap();
+        // Reset the next stage's30s deadline between the1s outbox ticks.
+        tokio::time::advance(Duration::from_millis(500)).await;
+        fake.deliver(membership(&info, &f.plan.own, &f.plan.recipients))
+            .await;
+        let (devices, written) = fake.written().await;
+        assert_eq!(
+            devices.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("usync")
+        );
+        written.send(Ok(())).unwrap();
+        let reserved = outgoing_group::preparation(&store, ticket)
+            .unwrap()
+            .unwrap();
+        let (ping, written) = fake.written_within(Duration::from_secs(25)).await;
+        assert_eq!(
+            ping.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("w:p")
+        );
+        written.send(Ok(())).unwrap();
+        fake.deliver(result_for(&ping, false)).await;
+        // Service the due outbox tick at30s, then enter its gap before31s.
+        tokio::time::advance(Duration::from_secs(10)).await;
+        tokio::task::yield_now().await;
+        tokio::time::advance(Duration::from_millis(750)).await;
+        tokio::task::yield_now().await;
+        let late = device_reply(&devices);
+        let capture = format!(
+            "inbound:sha256:{}",
+            hex::encode(sha2::Sha256::digest(encode(&late).unwrap()))
+        );
+        fake.deliver(late).await;
+        fake.deliver(
+            Node::new("iq")
+                .attr("type", "get")
+                .attr("xmlns", "urn:xmpp:ping"),
+        )
+        .await;
+        let (pong, written) = fake.written().await;
+        // Old code advanced to an encrypt query instead of this receive barrier.
+        assert_eq!(
+            pong.get_attr("type").and_then(|v| v.as_text()),
+            Some("result")
+        );
+        written.send(Ok(())).unwrap();
+        fake.stop_cleanly().await;
+        let after = outgoing_group::preparation(&store, ticket)
+            .unwrap()
+            .unwrap();
+        assert_eq!(after.phase, "blocked");
+        assert_eq!(after.blocking_reason.as_deref(), Some("outcome_unknown"));
+        assert_eq!(after.key_queries, reserved.key_queries);
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                .unwrap()
+                .is_some()
+        );
+        drop(store);
+        let store = identity_store(&path);
+        assert_eq!(
+            outgoing_group::preparation(&store, ticket)
+                .unwrap()
+                .unwrap(),
+            after
+        );
     }
 
     #[tokio::test(start_paused = true)]

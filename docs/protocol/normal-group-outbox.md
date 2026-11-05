@@ -393,3 +393,12 @@ with reference_changed. No keep/reaction parent preview is copied or opened.
 See [native evidence, invocation and limitations](group-keep-outbox.md).
 Native keep permissions, expiry enforcement and fresh group acceptance remain
 unverified; this is supported codec/dispatch, not complete native keep policy.
+
+### Preparation expiry hardening (2026-11-04)
+
+**Confirmed local / offline:** the actor now owns independent direct/group
+preparation timers and refuses expired replies before advancing dependent sends.
+Existing durations, durable uncertainty and no-retry policy are preserved.
+The late group-device regression fails before the fix and passes afterward,
+including durable reopen. Native distribution ACK ownership remains untraced.
+[Evidence, regression and limits](network-correctness-audit.md#outgoing-preparation-owns-its-deadline-2026-11-04).

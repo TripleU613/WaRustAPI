@@ -1518,3 +1518,42 @@ identical instead of storing a late503 refusal.
 and unrelated maintenance remain on their existing cadence. Outgoing/group
 waits and other request families are not converted by this chunk; no full
 network/timing or ban-prevention guarantee is claimed. No live operations.
+
+### Outgoing preparation owns its deadline (2026-11-04)
+
+**Confirmed local defect, fixed offline:** direct key-query and group preparation
+expiry was checked only on the one-second outbox tick. A group device reply
+at30.75s, after its30.5s deadline but before the31s tick, could start an encrypt
+query. The paused-clock regression fails on the old actor and passes with
+independent timers and deadline checks before direct/group reply advancement.
+The same admission check covers the group's distribution-ACK waiter.
+
+Existing30-second local durations and failure policy remain: direct key-query
+expiry ends the actor with its reserved/no-retry error; group expiry persists
+blocked/outcome_unknown and defers an outstanding device query. No automatic
+resend, identity change, reservation release or retry was added. Nodes received
+by the actor still commit their raw capture before reply handling; actor exit
+does not promise reception of later traffic. Generic durable reply/ACK
+processing remains unchanged.
+Awaited writes can still delay timer observation; no family-specific native
+timeout duration or complete callback-map parity is claimed.
+
+**Confirmed static architectural support, APK2.26.43.72:**0Sf.A06 registers
+callbacks through0ln.A08 before dispatch, with an ID-specific delayed Handler
+message; see the retained [timer methods](apk/2.26.43.72-prekey-upload-replies/README.md#confirmation-ping-request-and-independent-timeout-2026-11-04).
+This supports independent ownership, not copying the separate native32s
+pre-ACK confirmation timeout into outgoing preparation.
+
+Regression: group_preparation_deadline_cannot_advance_on_a_late_device_result
+services the30s tick before advancing past the30.5s deadline. It verifies no
+new key query, a retained late capture, continued ping service and the same
+durable blocked summary after reopening without replacing account material.
+
+**Unknown / next trace:** outgoing_group::Pending::matches accepts a distribution
+ACK by description and ID; settle_with_policy inspects its error attribute.
+The separate outgoing::acknowledge route has stronger class/from/ledger checks.
+Native distribution ACK sender/class/callback ownership and whether every
+out-of-band distribution is represented in that generic ledger remain untraced.
+This is a local audit lead, not a confirmed APK mismatch; do not guess sender
+address requirements or claim generic ACK persistence covers every distribution.
+No live account or network operations were used.
