@@ -1,0 +1,30 @@
+
+# class: LX/0m2;
+# extends: Landroid/os/Handler;
+
+.method public A00(LL)  # .registers 2
+    # full signature: LX/0m2;->A00(Landroid/os/Message;)LX/1k2;
+    0000..0004  iget-object  v1, v1, Landroid/os/Message;->obj:Ljava/lang/Object;
+    0004..0008  instance-of  v0, v1, LX/1k2;
+    0008..000c  if-eqz  v0, +0x5
+    000c..0010  check-cast  v1, LX/1k2;
+    0010..0012  return-object  v1
+    0012..0016  instance-of  v0, v1, LX/1ua;
+    0016..001a  if-eqz  v0, +0x7
+    001a..001e  check-cast  v1, LX/1ua;
+    001e..0022  iget-object  v1, v1, LX/1ua;->A01:LX/1k2;
+    0022..0024  return-object  v1
+    0024..0028  instance-of  v0, v1, LX/1ub;
+    0028..002c  if-eqz  v0, +0x7
+    002c..0030  check-cast  v1, LX/1ub;
+    0030..0034  iget-object  v1, v1, LX/1ub;->A00:LX/1k2;
+    0034..0036  return-object  v1
+    0036..003a  instance-of  v0, v1, LX/1uc;
+    003a..003e  if-eqz  v0, +0x7
+    003e..0042  check-cast  v1, LX/1uc;
+    0042..0046  iget-object  v1, v1, LX/1uc;->A01:LX/1k2;
+    0046..0048  return-object  v1
+    0048..004a  const/4  v1, #0x0
+    004a..004c  return-object  v1
+    # exception table: 0 try range(s)
+.end method

@@ -15276,5 +15276,13 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#legacy-concrete-listener-handoff-2026-11-04",
     "finding": "Concrete listener and conditional asynchronous handoff confirmed static; final manager mapping remains unknown."
+  },
+  "x-upload-legacy-manager-binding-evidence": {
+    "build": "2.26.43.72",
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#legacy-enabled-route-manager-binding-2026-11-04",
+    "finding": "A0Q-enabled77/78 provider route binds14o.BLn; alternate routing and runtime configuration remain unknown."
   }
 }

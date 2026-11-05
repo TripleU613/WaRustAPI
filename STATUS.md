@@ -1,3 +1,11 @@
+2026-11-04 — **Legacy enabled-route manager binding traced.**
+
+Provider6735 binds selectors77/78 to14o when A0Q is enabled.
+Alternate routing and runtime configuration remain open.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#legacy-enabled-route-manager-binding-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. No production change or live traffic.
+
 2026-11-04 — **Concrete legacy listener handoff traced.**
 
 Normal setup binds1lZ to1lY. Conditional async routes retained;

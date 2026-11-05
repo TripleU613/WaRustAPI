@@ -897,3 +897,51 @@ Additional export hashes:
 - [listener-selector.txt](listener-selector.txt): `ad3a61d949a35c31be5a9712e3ccca005469657bc4fc9746360efc5cfbaedc89`
 - [listener-dispatch.txt](listener-dispatch.txt): `adea7a52ca16dee2b65b2eb01528b78ff20290ffb85829cde2c4304984cb140f`
 - [listener-manager-handler.txt](listener-manager-handler.txt): `4c8a65dfb8084a0e069c95bf190c90cf19c93a0dd6c6c362f198bacae16bc94f`
+
+## Legacy enabled-route manager binding (2026-11-04)
+
+**Confirmed static, conditional route**, pinned 2.26.43.72, same APK hash as
+this bundle. Checked DEX exports below are not REA Evidence envelopes. Only
+the selected routes in large dispatcher/provider methods were inspected.
+
+- **0ln.A00** with A0Q true compares selectors77/78 at0238–0248. Both
+  branch to0502 (023c +2*0x163;0244 +2*0x15f), loading **SQ0.A0s**.
+  The goto at0506 reaches0028: resolve provider, cast0Vw, call
+  **BLn(original copied Message, selector)**. This binds both numbers to
+  the same configured handler slot rather than merely matching names.
+- **SQ0.<init>01e6–01f6** installs **00D.A00(0x1a4f)** in A0s.
+  00D.A00 constructs05h with the integer;05h.<init> retains it.
+  **05h.get** lazily caches **00D.A02(id)**, which invokes00D.A03 using
+  the application scope. A03 returns an existing cached object or calls
+  **1Uw.A00(id,scope,application)** before caching the result.
+- For id **0x1a4f=6735**, **1Uw.A00** selects group0 (`id>>14 &0x7f`)
+  ->A01. A01 masks0x3fff and selects the range above0x193b through0x1a54
+  ->A0H. **A0H** packed-switch case6735 targets0c46, constructs **14o**,
+  and returns it at0c50. Exact14o constructor caller is this A0H.
+  Thus this enabled route resolves **14o.BLn**, whose77/78 bodies were
+  retained earlier in mode-callback.txt.
+- **0m2.A00** only unwraps supported1k2/1ua/1ub/1uc objects or returns
+  null; it is not an event-number-to-prekey-manager converter. The prior
+  selected handler region's Optional check does not supply the binding;
+  actual dispatch is0ln.A00 (retained handleMessage at07f8).
+
+**Boundary:** this closes the selected A0Q-enabled provider route, not runtime
+A0Q truth, the alternate sparse/list route or0ZJ.A0s forwarding. Provider
+cache/scoping synchronization is visible but no runtime substitution is
+observed. Factory membership, complete reader dispatch and teardown remain
+open. No production change, automatic retry or live traffic.
+
+Additional export hashes:
+
+- [manager-event-convert.txt](manager-event-convert.txt): `9db573779e431a639b15e8f49a26766048900fa543797078b28555fbdb20c7d3`
+- [manager-event-dispatch.txt](manager-event-dispatch.txt): `e7d9526bf0da728750f11810f974ac6d31f8c856425eb29224dfe691f128a77c`
+- [manager-providers.txt](manager-providers.txt): `abebad6e4d22114f5ea6d7b03bd7b1422df1922c51f57f72b4ceae82eb945e1a`
+- [manager-constructor-callers.txt](manager-constructor-callers.txt): `e9b291aa666423d1c37b74c6ac1fca7d0d141e0492697a497a912f1349e156f7`
+- [manager-provider-create.txt](manager-provider-create.txt): `f09f0f8fc6dff6d8b8f4046bf29e8043fd75b3d62c062976226feddfc0275e9d`
+- [manager-provider-wrapper.txt](manager-provider-wrapper.txt): `05ef4106d14c39c4c5450ec6f1711550676dca2555af38455d30ace66a4a217c`
+- [manager-provider-get.txt](manager-provider-get.txt): `74797a5d573d18c5f5c6c6bee0876dbe60726fb2132abfed7189045f7438ce75`
+- [manager-provider-resolve.txt](manager-provider-resolve.txt): `61ca1ae2033c7f40604569ffa0ea628b4aa09c36bba7a9826086157e739f557a`
+- [manager-provider-scope.txt](manager-provider-scope.txt): `c341b1ddb648a4214d7424c37940e96fb49defa16f827a93a33e935d7ceded9a`
+- [manager-provider-router.txt](manager-provider-router.txt): `f852095f305051f8344d087a0efeb3f6742c3538d9cdde11fe11f74e2f7dda7e`
+- [manager-provider-ctor.txt](manager-provider-ctor.txt): `54e4e9380731428ec7f6f8152419cfb60f33ebaa8ef817548a35473dc854fb02`
+- [manager-provider-subrouter.txt](manager-provider-subrouter.txt): `7c697c7e3e1c45ccef430c1ca605953a5a17fc0bab323e1a2e42bbe9d00df77e`

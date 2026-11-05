@@ -1085,3 +1085,11 @@ CPm uses arg1 and conditionally copies events to0ln/0m2 or queues on1lY.
 A0Q-enabled77/78 use0ln; subsequent14o manager binding remains unknown.
 [Exports, branch boundaries and interface-search limits](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-concrete-listener-handoff-2026-11-04).
 No production change or live traffic.
+
+## 2026-11-04 — Legacy enabled-route manager binding
+
+**Confirmed static, conditional (43.72):**0ln.A00 routes77/78 through
+SQ0.A0s provider6735, whose application-scope factory constructs14o.
+This closes the A0Q-enabled route to retained14o.BLn upload branches.
+Alternate configuration/factory membership remain unproven.
+[Exports and conditions](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-enabled-route-manager-binding-2026-11-04). No production change or live traffic.

@@ -1,0 +1,386 @@
+
+# class: LX/0ln;
+# extends: Ljava/lang/Object;
+
+.method public A00(VLLI)  # .registers 7
+    # full signature: LX/0ln;->A00(Landroid/os/Message;LX/0ln;I)V
+    0000..0004  iget-boolean  v0, v5, LX/0ln;->A0Q:Z
+    0004..0008  if-eqz  v0, +0x28f
+    0008..000c  iget-object  v0, v5, LX/0ln;->A0N:LX/00x;
+    000c..0012  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0012..0014  move-result-object  v0
+    0014..0018  check-cast  v0, LX/SJf;
+    0018..001c  iget-object  v1, v0, LX/SJf;->A00:LX/SQ0;
+    001c..0020  const/16  v0, #0xcb
+    0020..0024  if-ne  v6, v0, +0x11
+    0024..0028  iget-object  v0, v1, LX/SQ0;->A01:LX/00x;
+    0028..002e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    002e..0030  move-result-object  v0
+    0030..0034  check-cast  v0, LX/0Vw;
+    0034..003a  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    003a..0040  invoke-interface  {v0, v4, v6}, LX/0Vw;->BLn(Landroid/os/Message;I)Z
+    0040..0042  return-void
+    0042..0046  const/16  v0, #0x11b
+    0046..004a  if-ne  v6, v0, +0x5
+    004a..004e  iget-object  v0, v1, LX/SQ0;->A02:LX/00x;
+    004e..0050  goto  -0x13
+    0050..0054  const/16  v0, #0xca
+    0054..0058  if-ne  v6, v0, +0x5
+    0058..005c  iget-object  v0, v1, LX/SQ0;->A05:LX/00x;
+    005c..005e  goto  -0x1a
+    005e..0062  const/16  v0, #0x117
+    0062..0066  if-ne  v6, v0, +0x5
+    0066..006a  iget-object  v0, v1, LX/SQ0;->A0q:LX/00x;
+    006a..006c  goto  -0x21
+    006c..0070  const/16  v0, #0x11d
+    0070..0074  if-ne  v6, v0, +0x5
+    0074..0078  iget-object  v0, v1, LX/SQ0;->A0K:LX/00x;
+    0078..007a  goto  -0x28
+    007a..007e  const/16  v0, #0x96
+    007e..0082  if-eq  v6, v0, +0x24e
+    0082..0086  const/16  v0, #0xc0
+    0086..008a  if-eq  v6, v0, +0x24a
+    008a..008e  const/16  v0, #0xc1
+    008e..0092  if-eq  v6, v0, +0x246
+    0092..0096  const/16  v0, #0xc5
+    0096..009a  if-eq  v6, v0, +0x242
+    009a..009e  const/16  v0, #0x109
+    009e..00a2  if-ne  v6, v0, +0x5
+    00a2..00a6  iget-object  v0, v1, LX/SQ0;->A06:LX/00x;
+    00a6..00a8  goto  -0x3f
+    00a8..00ac  const/16  v0, #0xfc
+    00ac..00b0  if-ne  v6, v0, +0x5
+    00b0..00b4  iget-object  v0, v1, LX/SQ0;->A0S:LX/00x;
+    00b4..00b6  goto  -0x46
+    00b6..00ba  const/16  v0, #0x122
+    00ba..00be  if-ne  v6, v0, +0x5
+    00be..00c2  iget-object  v0, v1, LX/SQ0;->A0j:LX/00x;
+    00c2..00c4  goto  -0x4d
+    00c4..00c8  const/16  v0, #0xd5
+    00c8..00cc  if-ne  v6, v0, +0x5
+    00cc..00d0  iget-object  v0, v1, LX/SQ0;->A07:LX/00x;
+    00d0..00d2  goto  -0x54
+    00d2..00d6  const/16  v0, #0xdd
+    00d6..00da  if-ne  v6, v0, +0x5
+    00da..00de  iget-object  v0, v1, LX/SQ0;->A0n:LX/00x;
+    00de..00e0  goto  -0x5b
+    00e0..00e4  const/16  v0, #0xf2
+    00e4..00e8  if-eq  v6, v0, +0x217
+    00e8..00ec  const/16  v0, #0xf3
+    00ec..00f0  if-eq  v6, v0, +0x213
+    00f0..00f4  const/16  v0, #0xf4
+    00f4..00f8  if-eq  v6, v0, +0x20f
+    00f8..00fc  const/16  v0, #0xf5
+    00fc..0100  if-eq  v6, v0, +0x20b
+    0100..0104  const/16  v0, #0x116
+    0104..0108  if-eq  v6, v0, +0x207
+    0108..010c  const/16  v0, #0xd4
+    010c..0110  if-ne  v6, v0, +0x5
+    0110..0114  iget-object  v0, v1, LX/SQ0;->A0X:LX/00x;
+    0114..0116  goto  -0x76
+    0116..011a  const/16  v0, #0xd2
+    011a..011e  if-ne  v6, v0, +0x5
+    011e..0122  iget-object  v0, v1, LX/SQ0;->A11:LX/00x;
+    0122..0124  goto  -0x7d
+    0124..0128  const/16  v0, #0x19
+    0128..012c  if-ne  v6, v0, +0x6
+    012c..0130  iget-object  v0, v1, LX/SQ0;->A09:LX/00x;
+    0130..0134  goto/16  -0x84
+    0134..0138  const/16  v0, #0xe5
+    0138..013c  if-ne  v6, v0, +0x6
+    013c..0140  iget-object  v0, v1, LX/SQ0;->A0G:LX/00x;
+    0140..0144  goto/16  -0x8c
+    0144..0148  const/16  v0, #0xd1
+    0148..014c  if-ne  v6, v0, +0x6
+    014c..0150  iget-object  v0, v1, LX/SQ0;->A0O:LX/00x;
+    0150..0154  goto/16  -0x94
+    0154..0158  const/16  v0, #0xf8
+    0158..015c  if-ne  v6, v0, +0x6
+    015c..0160  iget-object  v0, v1, LX/SQ0;->A04:LX/00x;
+    0160..0164  goto/16  -0x9c
+    0164..0168  const/16  v0, #0xe4
+    0168..016c  if-ne  v6, v0, +0x6
+    016c..0170  iget-object  v0, v1, LX/SQ0;->A0I:LX/00x;
+    0170..0174  goto/16  -0xa4
+    0174..0178  const/16  v0, #0x102
+    0178..017c  if-ne  v6, v0, +0x6
+    017c..0180  iget-object  v0, v1, LX/SQ0;->A0e:LX/00x;
+    0180..0184  goto/16  -0xac
+    0184..0188  if-nez  v6, +0x6
+    0188..018c  iget-object  v0, v1, LX/SQ0;->A0W:LX/00x;
+    018c..0190  goto/16  -0xb2
+    0190..0194  const/16  v0, #0x65
+    0194..0198  if-ne  v6, v0, +0x6
+    0198..019c  iget-object  v0, v1, LX/SQ0;->A0C:LX/00x;
+    019c..01a0  goto/16  -0xba
+    01a0..01a4  const/16  v0, #0x101
+    01a4..01a8  if-ne  v6, v0, +0x6
+    01a8..01ac  iget-object  v0, v1, LX/SQ0;->A0h:LX/00x;
+    01ac..01b0  goto/16  -0xc2
+    01b0..01b4  const/16  v0, #0xb3
+    01b4..01b8  if-ne  v6, v0, +0x6
+    01b8..01bc  iget-object  v0, v1, LX/SQ0;->A0v:LX/00x;
+    01bc..01c0  goto/16  -0xca
+    01c0..01c4  const/16  v0, #0xfe
+    01c4..01c8  if-ne  v6, v0, +0x6
+    01c8..01cc  iget-object  v0, v1, LX/SQ0;->A0N:LX/00x;
+    01cc..01d0  goto/16  -0xd2
+    01d0..01d4  const/16  v0, #0x10e
+    01d4..01d8  if-ne  v6, v0, +0x6
+    01d8..01dc  iget-object  v0, v1, LX/SQ0;->A0R:LX/00x;
+    01dc..01e0  goto/16  -0xda
+    01e0..01e4  const/16  v0, #0xf0
+    01e4..01e8  if-ne  v6, v0, +0x6
+    01e8..01ec  iget-object  v0, v1, LX/SQ0;->A0U:LX/00x;
+    01ec..01f0  goto/16  -0xe2
+    01f0..01f4  const/16  v0, #0x75
+    01f4..01f8  if-eq  v6, v0, +0x18b
+    01f8..01fc  const/16  v0, #0xce
+    01fc..0200  if-eq  v6, v0, +0x187
+    0200..0204  const/16  v0, #0x11c
+    0204..0208  if-ne  v6, v0, +0x6
+    0208..020c  iget-object  v0, v1, LX/SQ0;->A0P:LX/00x;
+    020c..0210  goto/16  -0xf2
+    0210..0214  const/16  v0, #0x61
+    0214..0218  if-ne  v6, v0, +0x6
+    0218..021c  iget-object  v0, v1, LX/SQ0;->A0V:LX/00x;
+    021c..0220  goto/16  -0xfa
+    0220..0224  const/16  v0, #0x4a
+    0224..0228  if-eq  v6, v0, +0x16f
+    0228..022c  const/16  v0, #0x4b
+    022c..0230  if-eq  v6, v0, +0x16b
+    0230..0234  const/16  v0, #0x4c
+    0234..0238  if-eq  v6, v0, +0x167
+    0238..023c  const/16  v0, #0x4d
+    023c..0240  if-eq  v6, v0, +0x163
+    0240..0244  const/16  v0, #0x4e
+    0244..0248  if-eq  v6, v0, +0x15f
+    0248..024c  const/16  v0, #0x52
+    024c..0250  if-eq  v6, v0, +0x15b
+    0250..0254  const/16  v0, #0x53
+    0254..0258  if-eq  v6, v0, +0x157
+    0258..025c  const/16  v0, #0x54
+    025c..0260  if-eq  v6, v0, +0x153
+    0260..0264  const/16  v0, #0x100
+    0264..0268  if-ne  v6, v0, +0x6
+    0268..026c  iget-object  v0, v1, LX/SQ0;->A0g:LX/00x;
+    026c..0270  goto/16  -0x122
+    0270..0274  const/16  v0, #0xcc
+    0274..0278  if-ne  v6, v0, +0x6
+    0278..027c  iget-object  v0, v1, LX/SQ0;->A0D:LX/00x;
+    027c..0280  goto/16  -0x12a
+    0280..0284  const/16  v0, #0x105
+    0284..0288  if-ne  v6, v0, +0x6
+    0288..028c  iget-object  v0, v1, LX/SQ0;->A0E:LX/00x;
+    028c..0290  goto/16  -0x132
+    0290..0294  const/16  v0, #0x126
+    0294..0298  if-ne  v6, v0, +0x6
+    0298..029c  iget-object  v0, v1, LX/SQ0;->A0k:LX/00x;
+    029c..02a0  goto/16  -0x13a
+    02a0..02a4  const/16  v0, #0x11f
+    02a4..02a8  if-ne  v6, v0, +0x6
+    02a8..02ac  iget-object  v0, v1, LX/SQ0;->A0l:LX/00x;
+    02ac..02b0  goto/16  -0x142
+    02b0..02b4  const/16  v0, #0xf7
+    02b4..02b8  if-ne  v6, v0, +0x6
+    02b8..02bc  iget-object  v0, v1, LX/SQ0;->A0m:LX/00x;
+    02bc..02c0  goto/16  -0x14a
+    02c0..02c4  const/16  v0, #0xea
+    02c4..02c8  if-ne  v6, v0, +0x6
+    02c8..02cc  iget-object  v0, v1, LX/SQ0;->A0o:LX/00x;
+    02cc..02d0  goto/16  -0x152
+    02d0..02d4  const/16  v0, #0xd8
+    02d4..02d8  if-ne  v6, v0, +0x6
+    02d8..02dc  iget-object  v0, v1, LX/SQ0;->A0H:LX/00x;
+    02dc..02e0  goto/16  -0x15a
+    02e0..02e4  const/16  v0, #0xbd
+    02e4..02e8  if-ne  v6, v0, +0x6
+    02e8..02ec  iget-object  v0, v1, LX/SQ0;->A0p:LX/00x;
+    02ec..02f0  goto/16  -0x162
+    02f0..02f4  const/16  v0, #0x68
+    02f4..02f8  if-ne  v6, v0, +0x6
+    02f8..02fc  iget-object  v0, v1, LX/SQ0;->A0i:LX/00x;
+    02fc..0300  goto/16  -0x16a
+    0300..0304  const/16  v0, #0x114
+    0304..0308  if-ne  v6, v0, +0x6
+    0308..030c  iget-object  v0, v1, LX/SQ0;->A00:LX/00x;
+    030c..0310  goto/16  -0x172
+    0310..0314  const/16  v0, #0x121
+    0314..0318  if-ne  v6, v0, +0x6
+    0318..031c  iget-object  v0, v1, LX/SQ0;->A0r:LX/00x;
+    031c..0320  goto/16  -0x17a
+    0320..0324  const/16  v0, #0xfb
+    0324..0328  if-ne  v6, v0, +0x6
+    0328..032c  iget-object  v0, v1, LX/SQ0;->A0t:LX/00x;
+    032c..0330  goto/16  -0x182
+    0330..0334  const/16  v0, #0xc6
+    0334..0338  if-eq  v6, v0, +0xe3
+    0338..033c  const/16  v0, #0xc7
+    033c..0340  if-eq  v6, v0, +0xdf
+    0340..0344  const/16  v0, #0xc8
+    0344..0348  if-eq  v6, v0, +0xdb
+    0348..034c  const/16  v0, #0xc9
+    034c..0350  if-eq  v6, v0, +0xd7
+    0350..0354  const/16  v0, #0xee
+    0354..0358  if-ne  v6, v0, +0x6
+    0358..035c  iget-object  v0, v1, LX/SQ0;->A0L:LX/00x;
+    035c..0360  goto/16  -0x19a
+    0360..0364  const/16  v0, #0x113
+    0364..0368  if-ne  v6, v0, +0x6
+    0368..036c  iget-object  v0, v1, LX/SQ0;->A0Q:LX/00x;
+    036c..0370  goto/16  -0x1a2
+    0370..0374  const/16  v0, #0xec
+    0374..0378  if-ne  v6, v0, +0x6
+    0378..037c  iget-object  v0, v1, LX/SQ0;->A0y:LX/00x;
+    037c..0380  goto/16  -0x1aa
+    0380..0384  const/16  v0, #0x115
+    0384..0388  if-ne  v6, v0, +0x6
+    0388..038c  iget-object  v0, v1, LX/SQ0;->A0x:LX/00x;
+    038c..0390  goto/16  -0x1b2
+    0390..0394  const/16  v0, #0x112
+    0394..0398  if-ne  v6, v0, +0x6
+    0398..039c  iget-object  v0, v1, LX/SQ0;->A10:LX/00x;
+    039c..03a0  goto/16  -0x1ba
+    03a0..03a4  const/16  v0, #0xf9
+    03a4..03a8  if-ne  v6, v0, +0x6
+    03a8..03ac  iget-object  v0, v1, LX/SQ0;->A12:LX/00x;
+    03ac..03b0  goto/16  -0x1c2
+    03b0..03b4  const/16  v0, #0xf6
+    03b4..03b8  if-ne  v6, v0, +0x6
+    03b8..03bc  iget-object  v0, v1, LX/SQ0;->A14:LX/00x;
+    03bc..03c0  goto/16  -0x1ca
+    03c0..03c4  const/16  v0, #0x11a
+    03c4..03c8  if-ne  v6, v0, +0x6
+    03c8..03cc  iget-object  v0, v1, LX/SQ0;->A0A:LX/00x;
+    03cc..03d0  goto/16  -0x1d2
+    03d0..03d4  const/16  v0, #0x123
+    03d4..03d8  if-ne  v6, v0, +0x6
+    03d8..03dc  iget-object  v0, v1, LX/SQ0;->A0B:LX/00x;
+    03dc..03e0  goto/16  -0x1da
+    03e0..03e4  const/16  v0, #0x11e
+    03e4..03e8  if-ne  v6, v0, +0x6
+    03e8..03ec  iget-object  v0, v1, LX/SQ0;->A0M:LX/00x;
+    03ec..03f0  goto/16  -0x1e2
+    03f0..03f2  const/4  v0, #0x6
+    03f2..03f6  if-eq  v6, v0, +0x80
+    03f6..03fa  const/16  v0, #0x1b
+    03fa..03fe  if-eq  v6, v0, +0x7c
+    03fe..0402  const/16  v0, #0xfa
+    0402..0406  if-eq  v6, v0, +0x78
+    0406..040a  const/16  v0, #0x9f
+    040a..040e  if-eq  v6, v0, +0x74
+    040e..0412  const/16  v0, #0x12
+    0412..0416  if-eq  v6, v0, +0x70
+    0416..041a  const/16  v0, #0x8
+    041a..041e  if-ne  v6, v0, +0x6
+    041e..0422  iget-object  v0, v1, LX/SQ0;->A0F:LX/00x;
+    0422..0426  goto/16  -0x1fd
+    0426..042a  const/16  v0, #0xf1
+    042a..042e  if-ne  v6, v0, +0x6
+    042e..0432  iget-object  v0, v1, LX/SQ0;->A0J:LX/00x;
+    0432..0436  goto/16  -0x205
+    0436..043a  const/16  v0, #0xeb
+    043a..043e  if-ne  v6, v0, +0x6
+    043e..0442  iget-object  v0, v1, LX/SQ0;->A0w:LX/00x;
+    0442..0446  goto/16  -0x20d
+    0446..044a  const/16  v0, #0x107
+    044a..044e  if-ne  v6, v0, +0x6
+    044e..0452  iget-object  v0, v1, LX/SQ0;->A0Y:LX/00x;
+    0452..0456  goto/16  -0x215
+    0456..045a  const/16  v0, #0x106
+    045a..045e  if-eq  v6, v0, +0x48
+    045e..0462  const/16  v0, #0x13
+    0462..0466  if-eq  v6, v0, +0x44
+    0466..046a  const/16  v0, #0x10
+    046a..046e  if-eq  v6, v0, +0x40
+    046e..0470  const/4  v0, #0x2
+    0470..0474  if-ne  v6, v0, +0x6
+    0474..0478  iget-object  v0, v1, LX/SQ0;->A0a:LX/00x;
+    0478..047c  goto/16  -0x228
+    047c..0480  const/16  v0, #0x45
+    0480..0484  if-ne  v6, v0, +0x6
+    0484..0488  iget-object  v0, v1, LX/SQ0;->A0b:LX/00x;
+    0488..048c  goto/16  -0x230
+    048c..048e  const/4  v0, #0x1
+    048e..0492  if-ne  v6, v0, +0x6
+    0492..0496  iget-object  v0, v1, LX/SQ0;->A0c:LX/00x;
+    0496..049a  goto/16  -0x237
+    049a..049e  const/16  v0, #0x56
+    049e..04a2  if-eq  v6, v0, +0x22
+    04a2..04a6  const/16  v0, #0xf
+    04a6..04aa  if-eq  v6, v0, +0x1e
+    04aa..04ae  const/16  v0, #0xd7
+    04ae..04b2  if-eq  v6, v0, +0x1a
+    04b2..04b6  const/16  v0, #0xe3
+    04b6..04ba  if-eq  v6, v0, +0x16
+    04ba..04be  const/16  v0, #0x103
+    04be..04c2  if-eq  v6, v0, +0x12
+    04c2..04c6  const/16  v0, #0x118
+    04c6..04ca  if-ne  v6, v0, +0x6
+    04ca..04ce  iget-object  v0, v1, LX/SQ0;->A0f:LX/00x;
+    04ce..04d2  goto/16  -0x253
+    04d2..04d6  const/16  v0, #0x119
+    04d6..04da  if-ne  v6, v0, +0x78
+    04da..04de  iget-object  v0, v1, LX/SQ0;->A0z:LX/00x;
+    04de..04e2  goto/16  -0x25b
+    04e2..04e6  iget-object  v0, v1, LX/SQ0;->A0d:LX/00x;
+    04e6..04ea  goto/16  -0x25f
+    04ea..04ee  iget-object  v0, v1, LX/SQ0;->A0Z:LX/00x;
+    04ee..04f2  goto/16  -0x263
+    04f2..04f6  iget-object  v0, v1, LX/SQ0;->A03:LX/00x;
+    04f6..04fa  goto/16  -0x267
+    04fa..04fe  iget-object  v0, v1, LX/SQ0;->A0u:LX/00x;
+    04fe..0502  goto/16  -0x26b
+    0502..0506  iget-object  v0, v1, LX/SQ0;->A0s:LX/00x;
+    0506..050a  goto/16  -0x26f
+    050a..050e  iget-object  v0, v1, LX/SQ0;->A0T:LX/00x;
+    050e..0512  goto/16  -0x273
+    0512..0516  iget-object  v0, v1, LX/SQ0;->A08:LX/00x;
+    0516..051a  goto/16  -0x277
+    051a..051e  iget-object  v0, v1, LX/SQ0;->A13:LX/00x;
+    051e..0522  goto/16  -0x27b
+    0522..0526  iget-object  v1, v5, LX/0ln;->A02:Landroid/util/SparseIntArray;
+    0526..0528  const/4  v0, #0xff (-1)
+    0528..052e  invoke-virtual  {v1, v6, v0}, Landroid/util/SparseIntArray;->get(II)I
+    052e..0530  move-result  v3
+    0530..0534  if-ltz  v3, +0xb
+    0534..0538  iget-object  v0, v5, LX/0ln;->A0G:Ljava/util/List;
+    0538..053e  invoke-interface  {v0}, Ljava/util/List;->size()I
+    053e..0540  move-result  v0
+    0540..0542  const/4  v2, #0x1
+    0542..0546  if-lt  v3, v0, +0x3
+    0546..0548  const/4  v2, #0x0
+    0548..054c  const-string  v1, "No handler for recv message type:"
+    054c..0550  new-instance  v0, Ljava/lang/StringBuilder;
+    0550..0556  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0556..055c  invoke-virtual  {v0, v6}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    055c..0562  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0562..0564  move-result-object  v0
+    0564..056a  invoke-static  {v2, v0}, LX/00L;->A0E(ZLjava/lang/String;)V
+    056a..056e  iget-object  v2, v5, LX/0ln;->A0G:Ljava/util/List;
+    056e..0574  invoke-interface  {v2, v3}, Ljava/util/List;->get(I)Ljava/lang/Object;
+    0574..0576  move-result-object  v0
+    0576..057a  check-cast  v0, LX/0Vw;
+    057a..0580  invoke-interface  {v0, v4, v6}, LX/0Vw;->BLn(Landroid/os/Message;I)Z
+    0580..0582  move-result  v0
+    0582..0586  if-nez  v0, -0x2a1
+    0586..058a  const-string  v0, "Registered handler:"
+    058a..058e  new-instance  v1, Ljava/lang/StringBuilder;
+    058e..0594  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0594..059a  invoke-interface  {v2, v3}, Ljava/util/List;->get(I)Ljava/lang/Object;
+    059a..059c  move-result-object  v0
+    059c..05a2  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    05a2..05a6  const-string  v0, " can't handle message of type:"
+    05a6..05ac  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    05ac..05b2  invoke-virtual  {v1, v6}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    05b2..05b8  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    05b8..05ba  move-result-object  v0
+    05ba..05be  new-instance  v1, Ljava/lang/IllegalArgumentException;
+    05be..05c4  invoke-direct  {v1, v0}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;)V
+    05c4..05c6  throw  v1
+    05c6..05ca  const-string  v0, "No IncomingXmppMessageHandler registered for $recvType"
+    05ca..05ce  new-instance  v1, Ljava/lang/IllegalStateException;
+    05ce..05d4  invoke-direct  {v1, v0}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+    05d4..05d6  throw  v1
+    # exception table: 0 try range(s)
+.end method
