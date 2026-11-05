@@ -557,6 +557,61 @@
       }
     },
     "schemas": {
+      "UsyncRefusalFailure": {
+        "type": "string",
+        "enum": [
+          "code",
+          "backoff"
+        ],
+        "description": "Fixed local numeric parse failure; no raw values."
+      },
+      "UsyncRefusal": {
+        "type": "object",
+        "required": [
+          "code",
+          "code_present",
+          "backoff_millis",
+          "backoff_present",
+          "failure"
+        ],
+        "properties": {
+          "code": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": -2147483648,
+            "maximum": 2147483647,
+            "description": "Signed Java integer; absent attribute uses0; malformed present is null."
+          },
+          "code_present": {
+            "type": "boolean"
+          },
+          "backoff_millis": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": -9223372036854775808,
+            "maximum": 3600000,
+            "description": "Signed wrapping seconds*1000 capped above. Absent=-1; invalid present=null. A relative parsed value, not an enforced wait."
+          },
+          "backoff_present": {
+            "type": "boolean"
+          },
+          "failure": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "code",
+              "backoff",
+              null
+            ]
+          }
+        }
+      },
       "ContactProjection": {
         "type": "string",
         "enum": [
@@ -1093,6 +1148,10 @@
           "contact_projection": {
             "$ref": "#/components/schemas/ContactProjection",
             "description": "Optional local contact-status projection result, distinct from outer IQ status. Saved atomically with status/once-only marker; omitted for legacy/unrelated/not-yet-projected rows. No raw phone/time."
+          },
+          "usync_refusal": {
+            "$ref": "#/components/schemas/UsyncRefusal",
+            "description": "Optional parsed usync outer-IQ error metadata saved at settlement. Legacy absence means unknown/unparsed, not no wait. Inspection only; not an enforced absolute deadline or retry permit."
           }
         },
         "description": "Outcome of a one-shot queued action. Settlement receive order is a local journal property, not a server field. Session-specific pending group recovery also uses the sequenced order across group action kinds; unknown-order legacy pending replies remain preserved without projection, marker consumption or resend. Evidence and legacy limitations: docs/protocol/action-settlement-ordering.md.",
@@ -16783,5 +16842,16 @@
     "x-live": false,
     "description": "Static APK2.26.43.72 contact-factory comparison. Lightweight HxV.A0B does not enable disappearing_mode; regular HxV.A0C/HcZ.A00 does with additional flags. Rust fixed contact/lid/disappearing_mode is not exact lightweight parity. Selected phone-query dispatches use32s but other usync callers differ. Factory/config/observer/backoff integration remains unfinished; no request or timer policy changed. Reproduce through existing xtask disassembly.",
     "evidence": "docs/protocol/apk/2.26.43.72-contact-factory-selection/README.md"
+  },
+  "x-usync-outer-refusal-metadata": {
+    "x-cli": true,
+    "x-transport": "experimental",
+    "x-live": false,
+    "description": "Durable usync get-action outer errors now retain optional ActionOutcome.usync_refusal numeric metadata/presence/fixed failures atomically with settlement, exposed by existing actions plain/JSON. Native absent code0/backoff-1 is distinct from protocol-result error defaults. JVM vectors verify signed parsing, overflow/wrap and cap. Scope/read gates/absolute A00 clock adoption and wait enforcement remain unfinished; no retry, reset or historical backfill.",
+    "evidence": "docs/protocol/apk/2.26.43.72-usync-outer-refusal/README.md",
+    "x-library": [
+      "whatsapp_api::transport::contacts::UsyncRefusal",
+      "whatsapp_api::transport::contacts::UsyncRefusalFailure"
+    ]
   }
 }

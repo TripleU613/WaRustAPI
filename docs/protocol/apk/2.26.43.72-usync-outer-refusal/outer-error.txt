@@ -1,0 +1,62 @@
+
+# class: LX/0pD;
+# extends: Ljava/lang/Object;
+
+.method public Bvj(VLL)  # .registers 14
+    # full signature: LX/0pD;->Bvj(LX/0Tp;Ljava/lang/String;)V
+    0000..0004  iget-object  v0, v11, LX/0pD;->A07:Ljava/util/Map;
+    0004..000a  invoke-interface  {v0, v13}, Ljava/util/Map;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+    000a..000c  move-result-object  v4
+    000c..0010  check-cast  v4, LX/H6l;
+    0010..0014  if-eqz  v4, +0x64
+    0014..0018  const-string  v0, "error"
+    0018..001e  invoke-virtual  {v12, v0}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    001e..0020  move-result-object  v2
+    0020..0022  const/4  v8, #0x0
+    0022..0026  const-wide/16  v9, #0xffff (-1)
+    0026..002a  if-eqz  v2, +0x25
+    002a..002e  const-string  v0, "code"
+    002e..0030  const/4  v1, #0x0
+    0030..0036  invoke-virtual  {v2, v0, v1}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0036..0038  move-result-object  v0
+    0038..003c  if-eqz  v0, +0x6
+    003c..0042  invoke-static  {v0}, Ljava/lang/Integer;->parseInt(Ljava/lang/String;)I
+    0042..0044  move-result  v8
+    0044..0048  const-string  v0, "backoff"
+    0048..004e  invoke-virtual  {v2, v0, v1}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    004e..0050  move-result-object  v0
+    0050..0054  if-eqz  v0, +0x10
+    0054..005a  invoke-static  {v0}, Ljava/lang/Long;->parseLong(Ljava/lang/String;)J
+    005a..005c  move-result-wide  v2
+    005c..0060  const-wide/16  v0, #0x3e8
+    0060..0062  mul-long/2addr  v2, v0
+    0062..0068  const-wide/32  v0, #0x36ee80
+    0068..006e  invoke-static  {v2, v3, v0, v1}, Ljava/lang/Math;->min(JJ)J
+    006e..0070  move-result-wide  v9
+    0070..0074  const-string  v0, "UniSyncProtocolHelper/handleSyncContactError sid="
+    0074..0078  new-instance  v1, Ljava/lang/StringBuilder;
+    0078..007e  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    007e..0082  iget-object  v7, v4, LX/H6l;->A03:Ljava/lang/String;
+    0082..0088  invoke-virtual  {v1, v7}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0088..008c  const-string  v0, " code="
+    008c..0092  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0092..0098  invoke-virtual  {v1, v8}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0098..009c  const-string  v0, " backoff="
+    009c..00a2  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00a2..00a8  invoke-virtual  {v1, v9, v10}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    00a8..00ae  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00ae..00b0  move-result-object  v0
+    00b0..00b6  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    00b6..00ba  iget-object  v5, v11, LX/0pD;->A06:LX/0p9;
+    00ba..00be  iget-object  v6, v4, LX/H6l;->A00:LX/0vC;
+    00be..00c4  invoke-interface/range  {v5..v10}, LX/0p9;->BLg(LX/0vC;Ljava/lang/String;IJ)V
+    00c4..00c8  iget-object  v1, v4, LX/H6l;->A01:LX/FfK;
+    00c8..00ca  const/4  v0, #0x0
+    00ca..00d0  invoke-virtual  {v1, v0}, LX/FfK;->BsT(Ljava/lang/Object;)V
+    00d0..00d6  invoke-direct  {v11, v13}, LX/0pD;->A05(Ljava/lang/String;)V
+    00d6..00d8  return-void
+    00d8..00dc  const-string  v0, "UniSyncProtocolHelper/onError missing request"
+    00dc..00e2  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    00e2..00e4  goto  -0x9
+    # exception table: 0 try range(s)
+.end method

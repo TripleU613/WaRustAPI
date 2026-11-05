@@ -1,0 +1,22 @@
+{
+  "README.md": {
+    "bytes": 4978,
+    "sha256": "4572f5de320506b5460833f04ec712a9a31cbc1f162810a936f149f3990b1dbc"
+  },
+  "UsyncRefusalOracle.java": {
+    "bytes": 1973,
+    "sha256": "673974b76306dc3eb3ed73532d0ed5fb9e742c49983272b9158d2f99dccac157"
+  },
+  "numeric-vectors.json": {
+    "bytes": 2737,
+    "sha256": "ecc3c85a0932af31f93a48f518ee94855fa89cd7407afda9b07d53e0f4a70867"
+  },
+  "outer-error.txt": {
+    "bytes": 3629,
+    "sha256": "55c8ef619b141da542a3a51f60d8fb8b234dd4cd70bd2d490c6874c3faa28eca"
+  },
+  "query-preference-field-refs.txt": {
+    "bytes": 160,
+    "sha256": "28a3c46f8a195b25d77b755e1887e71c1d53963abce99b56fabe752094e44523"
+  }
+}

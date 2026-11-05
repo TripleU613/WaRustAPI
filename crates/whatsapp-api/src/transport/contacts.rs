@@ -493,6 +493,81 @@ fn parse_user(user: &Node, lid_succeeded: bool) -> Option<(String, ContactStatus
     ))
 }
 
+/// Fixed numeric parse failure in a usync outer-IQ refusal.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum UsyncRefusalFailure {
+    /// Present error code is not a Java signed integer.
+    Code,
+    /// Present backoff is not a Java signed long.
+    Backoff,
+}
+
+/// APK43.72 0pD.Bvj outer-IQ error metadata, not an effective wait policy.
+/// Defaults/presence remain distinct; invalid input never creates a guessed wait.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct UsyncRefusal {
+    /// Parsed signed code, or the native absent-code default zero.
+    pub code: Option<i32>,
+    /// Whether an actual code attribute was present.
+    pub code_present: bool,
+    /// Native signed wrapping seconds*1000, capped above at3600000.
+    /// Absent backoff is-1; malformed present data is null with failure.
+    pub backoff_millis: Option<i64>,
+    /// Whether an actual backoff attribute was present.
+    pub backoff_present: bool,
+    /// Fixed local parse diagnosis, with no raw error text or user data.
+    pub failure: Option<UsyncRefusalFailure>,
+}
+
+pub(crate) fn outer_usync_refusal(request: &Node, reply: &Node) -> Option<UsyncRefusal> {
+    if request.description != "iq"
+        || request.get_attr("xmlns").and_then(|value| value.as_text()) != Some("usync")
+        || request.get_attr("type").and_then(|value| value.as_text()) != Some("get")
+        || request.child("usync").is_none()
+        || reply.description != "iq"
+        || reply.get_attr("type").and_then(|value| value.as_text()) != Some("error")
+    {
+        return None;
+    }
+    let error = reply.child("error");
+    let code = error.and_then(|node| node.get_attr("code"));
+    let backoff = error.and_then(|node| node.get_attr("backoff"));
+    let mut result = UsyncRefusal {
+        code: None,
+        code_present: code.is_some(),
+        backoff_millis: None,
+        backoff_present: backoff.is_some(),
+        failure: None,
+    };
+    result.code = if let Some(value) = code {
+        value
+            .as_text()
+            .and_then(super::mex::java_decimal_long)
+            .and_then(|value| i32::try_from(value).ok())
+    } else {
+        Some(0)
+    };
+    if result.code.is_none() {
+        result.failure = Some(UsyncRefusalFailure::Code);
+        return Some(result);
+    }
+    // Bvj's absent wait is-1, unlike A01's protocol-result default7200s.
+    // Java mul-long wraps before Math.min; negative results are not a positive wait.
+    result.backoff_millis = if let Some(value) = backoff {
+        value
+            .as_text()
+            .and_then(super::mex::java_decimal_long)
+            .map(|seconds| seconds.wrapping_mul(1000).min(3_600_000))
+    } else {
+        Some(-1)
+    };
+    if result.backoff_millis.is_none() {
+        result.failure = Some(UsyncRefusalFailure::Backoff);
+    }
+    Some(result)
+}
+
 /// Local projection result, independent of the server IQ's outer outcome.
 /// A refused/unsupported projection is not proof of account absence.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -750,6 +825,145 @@ mod tests {
         })
         .unwrap();
         (dir, s)
+    }
+
+    #[test]
+    fn usync_outer_refusal_numbers_match_independent_jvm_oracle() {
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../../../../docs/protocol/apk/2.26.43.72-usync-outer-refusal/numeric-vectors.json"
+        ))
+        .unwrap();
+        let request = Node::new("iq")
+            .attr("xmlns", "usync")
+            .attr("type", "get")
+            .children(vec![Node::new("usync")]);
+        for case in fixture["cases"].as_array().unwrap() {
+            let mut error = Node::new("error");
+            if let Some(value) = case["code_text"].as_str() {
+                error = error.attr("code", value);
+            }
+            if let Some(value) = case["backoff_text"].as_str() {
+                error = error.attr("backoff", value);
+            }
+            let reply = Node::new("iq").attr("type", "error").children(vec![error]);
+            let parsed = outer_usync_refusal(&request, &reply).unwrap();
+            assert_eq!(serde_json::to_value(parsed.code).unwrap(), case["code"]);
+            assert_eq!(
+                serde_json::to_value(parsed.backoff_millis).unwrap(),
+                case["backoff_millis"]
+            );
+            assert_eq!(
+                serde_json::to_value(parsed.failure).unwrap(),
+                case["failure"]
+            );
+            assert_eq!(parsed.code_present, !case["code_text"].is_null());
+            assert_eq!(parsed.backoff_present, !case["backoff_text"].is_null());
+        }
+    }
+
+    #[test]
+    fn usync_outer_refusal_keeps_missing_first_child_and_protocol_scope_distinct() {
+        let request = Node::new("iq")
+            .attr("xmlns", "usync")
+            .attr("type", "get")
+            .children(vec![Node::new("usync")]);
+        let missing = Node::new("iq").attr("type", "error");
+        let parsed = outer_usync_refusal(&request, &missing).unwrap();
+        assert_eq!((parsed.code, parsed.backoff_millis), (Some(0), Some(-1)));
+        assert!(!parsed.code_present && !parsed.backoff_present);
+        let reply = Node::new("iq").attr("type", "error").children(vec![
+            Node::new("error")
+                .attr("code", "503")
+                .attr("backoff", "2")
+                .attr("text", "private-error"),
+            Node::new("error")
+                .attr("code", "bad")
+                .attr("backoff", "999999"),
+        ]);
+        let parsed = outer_usync_refusal(&request, &reply).unwrap();
+        assert_eq!(
+            (parsed.code, parsed.backoff_millis),
+            (Some(503), Some(2000))
+        );
+        assert!(
+            !serde_json::to_string(&parsed)
+                .unwrap()
+                .contains("private-error")
+        );
+        assert!(outer_usync_refusal(&Node::new("iq").attr("type", "get"), &reply).is_none());
+        assert!(
+            outer_usync_refusal(
+                &request,
+                &Node::new("iq").attr("type", "result").children(vec![
+                    Node::new("usync").children(vec![Node::new("result").children(vec![
+                        Node::new("contact").children(vec![Node::new("error").attr("code", "503")])
+                    ])])
+                ])
+            )
+            .is_none()
+        );
+        let nontext = Node::new("iq").attr("type", "error").children(vec![
+            Node::new("error").attr("code", Jid::parse("15551234567@s.whatsapp.net").unwrap()),
+        ]);
+        let parsed = outer_usync_refusal(&request, &nontext).unwrap();
+        assert_eq!(parsed.failure, Some(UsyncRefusalFailure::Code));
+        assert_eq!(parsed.backoff_millis, None);
+        assert!(
+            !serde_json::to_string(&parsed)
+                .unwrap()
+                .contains("15551234567")
+        );
+    }
+
+    #[test]
+    fn usync_outer_refusal_is_durable_through_projection_and_cannot_resettle() {
+        use super::super::actions;
+        let (dir, store) = store();
+        let id = queue_check(&store, "+15551234567").unwrap();
+        actions::reserve_pending(&store).unwrap();
+        let reply = Node::new("iq")
+            .attr("id", id.as_str())
+            .attr("type", "error")
+            .children(vec![
+                Node::new("error").attr("code", "503").attr("backoff", "30"),
+            ]);
+        assert!(actions::record_reply(&store, &reply).unwrap());
+        let metadata = actions::outcomes(&store).unwrap()[0]
+            .usync_refusal
+            .clone()
+            .unwrap();
+        assert_eq!(
+            (metadata.code, metadata.backoff_millis, metadata.failure),
+            (Some(503), Some(30000), None)
+        );
+        assert_eq!(ingest(&store).unwrap(), 1);
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        assert!(!actions::record_reply(&store, &reply).unwrap());
+        assert_eq!(
+            before,
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap()
+        );
+        drop(store);
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("c.redb"),
+            account_id: AccountId::new("a").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([11u8; 32]))),
+            create: false,
+        })
+        .unwrap();
+        let action = actions::outcomes(&store).unwrap().pop().unwrap();
+        assert_eq!(action.status, actions::ActionStatus::Error);
+        assert_eq!(action.usync_refusal, Some(metadata));
+        assert_eq!(
+            action.contact_projection,
+            Some(ContactProjection::ServerRefused)
+        );
+        assert!(actions::reserve_pending(&store).unwrap().is_empty());
+        assert_eq!(ingest(&store).unwrap(), 0);
     }
 
     #[test]

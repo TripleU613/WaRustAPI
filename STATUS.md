@@ -1,3 +1,14 @@
+2026-11-05 — **Usync outer-error waits have native numeric inspection.**
+
+Absent and malformed backoff now remain distinguishable from explicit signed
+values in durable action metadata. Outer-error defaults stay separate from
+protocol-result defaults. Independent JVM vectors verify parsing/wrap/cap.
+Existing actions plain/JSON exposes the metadata through reopen/projection.
+[Evidence, ownership tests and unported wait enforcement](docs/protocol/apk/2.26.43.72-usync-outer-refusal/README.md).
+No timeout/backoff enforcement, automatic retry or live account operation added.
+Validation:1366 workspace/all-feature tests, strict Clippy, fmt, CLI reference,
+APK coverage, exact JVM oracle regeneration and repository hygiene passed.
+
 2026-11-05 — **Contact factory comparison refutes lightweight parity shortcut.**
 
 Native lightweight phone query omits disappearing_mode; the regular factory

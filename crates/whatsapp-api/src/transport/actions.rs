@@ -100,6 +100,8 @@ struct Row {
     token_issue_completion: Option<super::token_issue::TokenIssueCompletion>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     contact_projection: Option<super::contacts::ContactProjection>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    usync_refusal: Option<super::contacts::UsyncRefusal>,
     #[serde(default)]
     sent_at: Option<Timestamp>,
     #[serde(default)]
@@ -136,6 +138,9 @@ pub struct ActionOutcome {
     /// Local contact-status projection result; distinct from the outer IQ outcome.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub contact_projection: Option<super::contacts::ContactProjection>,
+    /// Parsed usync outer error; this does not activate a backoff or retry policy.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub usync_refusal: Option<super::contacts::UsyncRefusal>,
     /// Server error code when refused.
     pub error_code: Option<u16>,
     /// Server error text when refused.
@@ -191,6 +196,7 @@ fn queue_prepared_in(
         deferred_reason: None,
         token_issue_completion: None,
         contact_projection: None,
+        usync_refusal: None,
         sent_at: None,
         settled_at: None,
         settlement_sequence: None,
@@ -259,6 +265,7 @@ pub(crate) fn view_in_write(
             deferred_reason: row.deferred_reason,
             token_issue_completion: row.token_issue_completion,
             contact_projection: row.contact_projection,
+            usync_refusal: row.usync_refusal,
             error_code: row.error_code,
             error_text: row.error_text,
         },
@@ -292,6 +299,7 @@ pub(crate) fn view_in(
             deferred_reason: row.deferred_reason,
             token_issue_completion: row.token_issue_completion,
             contact_projection: row.contact_projection,
+            usync_refusal: row.usync_refusal,
             error_code: row.error_code,
             error_text: row.error_text,
         },
@@ -738,6 +746,7 @@ pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
                     .map(str::to_owned);
             }
         }
+        row.usync_refusal = super::contacts::outer_usync_refusal(&request, node);
         row.settlement_sequence = Some(next_settlement_sequence_in(tx)?);
         row.settled_at = Some(Timestamp::now());
         row.reply = Some(encode(node)?);
@@ -816,6 +825,7 @@ pub fn outcomes(store: &ProtocolStore) -> Result<Vec<ActionOutcome>> {
                     deferred_reason: row.deferred_reason,
                     token_issue_completion: row.token_issue_completion,
                     contact_projection: row.contact_projection,
+                    usync_refusal: row.usync_refusal,
                     error_code: row.error_code,
                     error_text: row.error_text,
                 });
@@ -854,6 +864,7 @@ pub(crate) fn outcomes_in_write(tx: &crate::store::WriteTx<'_>) -> Result<Vec<Ac
                 deferred_reason: row.deferred_reason,
                 token_issue_completion: row.token_issue_completion,
                 contact_projection: row.contact_projection,
+                usync_refusal: row.usync_refusal,
                 error_code: row.error_code,
                 error_text: row.error_text,
             });
@@ -962,6 +973,7 @@ pub fn settled_for_kinds(
                     deferred_reason: row.deferred_reason,
                     token_issue_completion: row.token_issue_completion,
                     contact_projection: row.contact_projection,
+                    usync_refusal: row.usync_refusal,
                     error_code: row.error_code,
                     error_text: row.error_text,
                 };

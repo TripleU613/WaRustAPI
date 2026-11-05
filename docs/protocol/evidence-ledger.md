@@ -6868,3 +6868,15 @@ use128s; equal visible mode/context does not bind a complete factory policy.
 [Full constructors, field transfer, writer and caller comparison](apk/2.26.43.72-contact-factory-selection/README.md).
 Factory/configuration/observer/backoff integration remains open. No request or
 callback policy changed and no live account operation occurred.
+
+## Usync outer-refusal numeric metadata —2026-11-05
+
+Confirmed current0pD.Bvj uses absent code0/backoff-1, unlike protocol-result
+A01's absent-backoff default before its cap. Present values use signed JVM
+parse and wrapping seconds*1000 capped at3600000ms. Durable usync get-action
+outer errors now save optional ActionOutcome.usync_refusal with presence flags
+and fixed numeric parse failures, exposed through existing actions plain/JSON.
+Metadata survives projection/reopen; duplicate replies do not rewrite it.
+[Full callback, independent JVM vectors, tests and scope limits](apk/2.26.43.72-usync-outer-refusal/README.md).
+This does not enforce a wait, select an observer/deadline or replay historical
+callbacks. Factory/read/reset/clock adoption remains unfinished; no live traffic.
