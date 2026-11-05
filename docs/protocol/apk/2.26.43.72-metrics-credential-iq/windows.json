@@ -1,0 +1,72 @@
+[
+  {
+    "name": "native-java-long-bridge",
+    "start_va": "0x6ea324",
+    "end_va": "0x6ea348"
+  },
+  {
+    "name": "native-data-bridge",
+    "start_va": "0x6ecd60",
+    "end_va": "0x6ecdc0"
+  },
+  {
+    "name": "native-selector4",
+    "start_va": "0x6eef0c",
+    "end_va": "0x6eef68"
+  },
+  {
+    "name": "native-selector4-tail",
+    "start_va": "0x6ef258",
+    "end_va": "0x6ef2d0"
+  },
+  {
+    "name": "native-completion-dispatch",
+    "start_va": "0x6feba4",
+    "end_va": "0x6fec84"
+  },
+  {
+    "name": "native-queued-completion",
+    "start_va": "0x6fec84",
+    "end_va": "0x6fed5c"
+  },
+  {
+    "name": "native-callback-thunks",
+    "start_va": "0xbd8a70",
+    "end_va": "0xbd8a78"
+  },
+  {
+    "name": "native-queue-thunk",
+    "start_va": "0xbd8ba8",
+    "end_va": "0xbd8bb0"
+  },
+  {
+    "name": "null-response-arguments",
+    "start_va": "0xbdf888",
+    "end_va": "0xbdf898"
+  },
+  {
+    "name": "valid-response-arguments",
+    "start_va": "0x5d23e4",
+    "end_va": "0x5d23f0"
+  },
+  {
+    "name": "native-conversion-arguments",
+    "start_va": "0x547618",
+    "end_va": "0x547624"
+  },
+  {
+    "name": "native-bytearray-converter",
+    "start_va": "0x6e9ecc",
+    "end_va": "0x6e9f1c"
+  },
+  {
+    "name": "native-data-to-java-bytearray",
+    "start_va": "0x6e9f1c",
+    "end_va": "0x6e9f88"
+  },
+  {
+    "name": "native-null-return",
+    "start_va": "0x49c388",
+    "end_va": "0x49c390"
+  }
+]

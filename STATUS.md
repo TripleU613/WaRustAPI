@@ -1,3 +1,12 @@
+2026-11-05 — **Metrics credential IQ schema and callback mapping traced.**
+
+Java selector7 builds exact32-byte blinded credential request; independent
+callback registration precedes dispatch. Required response fields and JNI4
+failure-to-native-raw1 mapping retained. [Evidence and limits](docs/protocol/apk/2.26.43.72-metrics-credential-iq/README.md).
+Native outbound method-cache binding, crypto and full timeout/error dispatch
+remain open. No Rust runtime or live traffic changed. Validation: pinned native
+resolver reproduction, exact selected smali export, JSON, coverage/link hygiene.
+
 2026-11-05 — **Native metrics credential gates and refresh ownership traced.**
 
 17 bounded native fixtures verify constructor storage/defaults, counter setter

@@ -446,3 +446,15 @@ statically. These are metrics-local counters/results, not server/account limits.
 [Native bodies, pinned resolver, fixtures and unresolved provider/crypto scope](apk/2.26.43.72-metrics-native-credential-lifecycle/README.md).
 No Rust runtime or live operations changed; selector7 and completion binding
 remain open.
+
+### Metrics credential IQ producer and native callback mapping (2026-11-05)
+
+**Confirmed static / derived, APK 2.26.43.72:** Java selector7 constructs
+privatestats/sign_credential version1 with exact32-byte blinded_credential;
+callback registration and32000ms delay precede dispatch. Selected not-ready
+wrapper returns false without Java BsS. Hyg parses required integral t and
+signed/public-key data plus optional config_id. Both selected failure methods
+map through JNI selector4 to native raw1, not the Java diagnostic value3.
+[Producer, parsing/queue evidence, native bridges and binding limits](apk/2.26.43.72-metrics-credential-iq/README.md).
+Native method-cache initialization, crypto, full error/timeout dispatch and
+operational Rust support remain open. No Rust runtime or live request added.

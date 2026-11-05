@@ -1,0 +1,9 @@
+            0x006ea324      bti   c
+            0x006ea328      adrp  x8, 0xc44000
+            0x006ea32c      adrp  x9, 0xc46000
+            0x006ea330      mov   x4, x2
+            0x006ea334      ldr   x8, [x8, 0xbd0]                      ; [0xbd0:4]=0x54d2
+            0x006ea338      ldr   x2, [x9, 0x7f0]                      ; [0x7f0:4]=0
+            0x006ea33c      mov   w3, w1
+            0x006ea340      mov   x1, x8
+        ┌─< 0x006ea344      b     method.facebook::simplejni.callStaticLongMethod__JNIEnv____jclass____jmethodID___...

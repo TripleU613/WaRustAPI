@@ -16206,5 +16206,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-metrics-native-credential-lifecycle/README.md",
     "description": "17 bounded native fixtures verify constructor storage/default counter, signed setter and refresh guards. Admission/use ordering, mode-zero override, raw result switch and cleanup retained statically. Provider selector7, crypto, clock units and full ownership remain incomplete. No client runtime/live capability or server/account limit added."
+  },
+  "x-metrics-credential-iq-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK Java/native credential-IQ evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-metrics-credential-iq/README.md",
+    "description": "Java selector7 request uses privatestats/sign_credential version1 with exact32-byte binary child; callback delay32000ms registered before dispatch. Required response t and data children, optional config_id and JNI4-to-native-result mapping retained. Runtime outbound method-cache binding, crypto and full timeout/error dispatch remain open. No Rust/live capability added."
   }
 }

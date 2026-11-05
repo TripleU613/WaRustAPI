@@ -1,0 +1,120 @@
+{
+  "scope": "static bridge and selector evidence; runtime Java method-cache binding remains untraced",
+  "selector4_target": "0x6eef0c",
+  "direct_callback_target": "0x729cd0",
+  "queued_completion_target": "0x6fec84",
+  "windows": [
+    {
+      "name": "native-java-long-bridge",
+      "start_va": "0x6ea324",
+      "end_va": "0x6ea348",
+      "file_offset": "0x6e6324",
+      "bytes": 36,
+      "sha256": "311f992d4e77bbf267a1cc68805d1492c36beeabe6cab223710b66ceea0d22cd"
+    },
+    {
+      "name": "native-data-bridge",
+      "start_va": "0x6ecd60",
+      "end_va": "0x6ecdc0",
+      "file_offset": "0x6e8d60",
+      "bytes": 96,
+      "sha256": "abf805c25ffb4a753c8186a34dcc166416ddb9c926792ebd225eb1b78c663d06"
+    },
+    {
+      "name": "native-selector4",
+      "start_va": "0x6eef0c",
+      "end_va": "0x6eef68",
+      "file_offset": "0x6eaf0c",
+      "bytes": 92,
+      "sha256": "3c2cd96303a27b1359685d197656273411c41d77378eb21ea82d561604fe9d40"
+    },
+    {
+      "name": "native-selector4-tail",
+      "start_va": "0x6ef258",
+      "end_va": "0x6ef2d0",
+      "file_offset": "0x6eb258",
+      "bytes": 120,
+      "sha256": "5faabfc4fa76010249ee98fb3db2258222d183e3f829d22685b4ae6fd0120329"
+    },
+    {
+      "name": "native-completion-dispatch",
+      "start_va": "0x6feba4",
+      "end_va": "0x6fec84",
+      "file_offset": "0x6faba4",
+      "bytes": 224,
+      "sha256": "9cf110fb0c27e75f9ec2be5ab7e7c477fe6bdd86b9b288ec7ccfd55e98bac381"
+    },
+    {
+      "name": "native-queued-completion",
+      "start_va": "0x6fec84",
+      "end_va": "0x6fed5c",
+      "file_offset": "0x6fac84",
+      "bytes": 216,
+      "sha256": "6b5a9b4af4b219e18c2c10c259793e4beb749989dc63aa60a1b9c9ef5d74eec9"
+    },
+    {
+      "name": "native-callback-thunks",
+      "start_va": "0xbd8a70",
+      "end_va": "0xbd8a78",
+      "file_offset": "0xbd4a70",
+      "bytes": 8,
+      "sha256": "5bb07d107db9cb2849023a6c44c6a96b57ee74de85dc180dc964ea41bc1b80b0"
+    },
+    {
+      "name": "native-queue-thunk",
+      "start_va": "0xbd8ba8",
+      "end_va": "0xbd8bb0",
+      "file_offset": "0xbd4ba8",
+      "bytes": 8,
+      "sha256": "7a69adb3de610e53c54c6de181810ae8812b609cdf43505b6a3fd12cdf125938"
+    },
+    {
+      "name": "null-response-arguments",
+      "start_va": "0xbdf888",
+      "end_va": "0xbdf898",
+      "file_offset": "0xbdb888",
+      "bytes": 16,
+      "sha256": "f1f07f7a0fcbf497e8c0958e400708c91296e95b5de2959be67e1984d2992da1"
+    },
+    {
+      "name": "valid-response-arguments",
+      "start_va": "0x5d23e4",
+      "end_va": "0x5d23f0",
+      "file_offset": "0x5ce3e4",
+      "bytes": 12,
+      "sha256": "37ecf0da351013b2d334651934bf1bc7ceff4946cd2503005f162aaa09f2d24f"
+    },
+    {
+      "name": "native-conversion-arguments",
+      "start_va": "0x547618",
+      "end_va": "0x547624",
+      "file_offset": "0x543618",
+      "bytes": 12,
+      "sha256": "82f4e8dd34834098c7822f38e225cc4629231d7a7295fc6b1b05ed51318c1ed4"
+    },
+    {
+      "name": "native-bytearray-converter",
+      "start_va": "0x6e9ecc",
+      "end_va": "0x6e9f1c",
+      "file_offset": "0x6e5ecc",
+      "bytes": 80,
+      "sha256": "d783c3d477f3fd9179ca0bdf8b651b334377766f484d9af71c8b42dc3a1de970"
+    },
+    {
+      "name": "native-data-to-java-bytearray",
+      "start_va": "0x6e9f1c",
+      "end_va": "0x6e9f88",
+      "file_offset": "0x6e5f1c",
+      "bytes": 108,
+      "sha256": "ddba31bddcdcdc1b80f039cbc87b6711e2afe8ddbb309e58026821f9e9039c58"
+    },
+    {
+      "name": "native-null-return",
+      "start_va": "0x49c388",
+      "end_va": "0x49c390",
+      "file_offset": "0x498388",
+      "bytes": 8,
+      "sha256": "ed86e0b2911b6a4e9edfa1a48e9544ba115299466a1992e2370619d8ce8e29fc"
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "README.md": {
+    "bytes": 7907,
+    "sha256": "e6fa3e86212b6611d8b448b54b17211850bd89467831572aefe43319b0e1a985"
+  },
+  "binary-length-guard.txt": {
+    "bytes": 1445,
+    "sha256": "974f8eefcb6fa49b33b0f8fb37724896ead70fa7610ae8f58457fefcf2b6ce5d"
+  },
+  "callback-registration.txt": {
+    "bytes": 6233,
+    "sha256": "99acfbec072ba7b3e3cd1818627a04fa3664293655cc0a429564b416f57dfee8"
+  },
+  "inspect-native.py": {
+    "bytes": 1190,
+    "sha256": "b7c2cec83b9873cbdecd23d262f84c95b3431a51b8f3d0c392f8e1cd643440aa"
+  },
+  "integral-attribute.txt": {
+    "bytes": 493,
+    "sha256": "db6fe8dec4c1bb00b0c1aacd3dd70d090b6dc44096d4ddee1b8ac88033e6422a"
+  },
+  "java-request-dispatch.txt": {
+    "bytes": 21710,
+    "sha256": "75db78b830e3c40e49700126a657892d343e92ab3f48a53f8a1d988afe1776f2"
+  },
+  "java-response-callback.txt": {
+    "bytes": 6644,
+    "sha256": "14006628202cb0ad47b6d872d950698a56f83c21a3cfa4b055d191a94f94a58a"
+  },
+  "library-load-helper.txt": {
+    "bytes": 353,
+    "sha256": "3a356c3a18df08f841c54a3f15da949c476961d8e7e997ecb8efb87901f0e423"
+  },
+  "native-boundaries.json": {
+    "bytes": 3692,
+    "sha256": "52a25edfe101f61547643929dba241903ba5cc8020af8c93b090ec62a6446301"
+  },
+  "native-bytearray-converter-assembly.txt": {
+    "bytes": 1159,
+    "sha256": "24cbeea4733e38c2090cd30d3a39e885f8f69cb87809e8a6b533324cae3f2cd6"
+  },
+  "native-callback-thunks-assembly.txt": {
+    "bytes": 85,
+    "sha256": "5fcce2c244fc092cc87df89fdb8d5d10dbee1d77c269153302e93c6ce6f95943"
+  },
+  "native-completion-dispatch-assembly.txt": {
+    "bytes": 2866,
+    "sha256": "897b741bdb36a78aac4d6524efe323873c888f1921c0d4dae3e60557d2d343fa"
+  },
+  "native-conversion-arguments-assembly.txt": {
+    "bytes": 116,
+    "sha256": "ea76f002f8491d651a3eb3576635ae5b609b1860ffd60ecd43b09dc428f87834"
+  },
+  "native-data-bridge-assembly.txt": {
+    "bytes": 1082,
+    "sha256": "25f7f003c3c361e50e910c0d41ba0d72822165968ac3126a14c53be3592c0dea"
+  },
+  "native-data-to-java-bytearray-assembly.txt": {
+    "bytes": 1412,
+    "sha256": "5531e8392def87883347126259bfaf4cf7819f4ce4d38d99dc9e852aea249d46"
+  },
+  "native-java-long-bridge-assembly.txt": {
+    "bytes": 551,
+    "sha256": "229cc469cf3f394f307fabb116be3ee96e62142a24436a40444d3440580f7b0c"
+  },
+  "native-null-return-assembly.txt": {
+    "bytes": 74,
+    "sha256": "5d2e925910df410f34473e656a2a58931b15f2a20094c466b1ffdde5191cd3cd"
+  },
+  "native-queue-thunk-assembly.txt": {
+    "bytes": 85,
+    "sha256": "6fb08ea3b8a76d6883c83a5f6033b813acfc64fa858cd2090bb17f94d87c443a"
+  },
+  "native-queued-completion-assembly.txt": {
+    "bytes": 2807,
+    "sha256": "9e6347a8cc926eb2e2a6b21609238daba0ea5f4ef98e44b892df2f3ce62962ba"
+  },
+  "native-selector4-assembly.txt": {
+    "bytes": 1153,
+    "sha256": "fdde10e5b8c1109de26bda3efe570ca4e47806a42b49b730d7dc16d7f589b3ed"
+  },
+  "native-selector4-tail-assembly.txt": {
+    "bytes": 1539,
+    "sha256": "0a3730b53a9fa30233ae9de4a9cbd5c46ba4c9b50cf5dc130db40ef2f2e1007f"
+  },
+  "null-response-arguments-assembly.txt": {
+    "bytes": 156,
+    "sha256": "73b55bfd3f8b19f10f22fc0360da3e8a0d06d3ee62a67324e9b10e84a2e051ec"
+  },
+  "other-acs-request.txt": {
+    "bytes": 5156,
+    "sha256": "045e29054708e07ada9641e57136f6a2c4b6984c8d7ef8b29d7dc5e27994e8f1"
+  },
+  "parse-integral-attribute.txt": {
+    "bytes": 1694,
+    "sha256": "94de8395dcebb094970e2f3114054891775aee56443f6ce8eef0296f40df38fb"
+  },
+  "required-attribute.txt": {
+    "bytes": 1438,
+    "sha256": "eff6d1b171e5de4446d9680c816777d3f479af777668c7ad0fc9a97b6909092a"
+  },
+  "required-child.txt": {
+    "bytes": 1354,
+    "sha256": "0fd3fe1f4524c8094fb8f143ed251d6c5da9b58c0fccfac23ceb309a353e559e"
+  },
+  "send-admission.txt": {
+    "bytes": 3895,
+    "sha256": "efd03cb38cefe4ce4d1e78af6e10a40adc84c52a864e091253b669da7d901893"
+  },
+  "send-wrapper.txt": {
+    "bytes": 877,
+    "sha256": "fce6204f1d5114db614a7a56b807b661947730fe6ebdcdec66cb2aac612c2e77"
+  },
+  "valid-response-arguments-assembly.txt": {
+    "bytes": 116,
+    "sha256": "2274ea5283d6c70749f811a14fe068be98c33989297a66650a4b9417e8b668a1"
+  },
+  "windows.json": {
+    "bytes": 1410,
+    "sha256": "71f4e992af70d9f0434b5d59a3f6df16211f6268c3c25e65a7a73da3f5d8e29b"
+  }
+}

@@ -1,0 +1,27 @@
+            0x006e9f1c      paciasp
+            0x006e9f20      sub   sp, sp, 0x50
+            0x006e9f24      stp   x29, x30, [sp, 0x20]
+            0x006e9f28      bl    0x49bbe0
+            0x006e9f2c      add   x29, sp, 0x20
+            0x006e9f30      bl    0xbddae8
+        ┌─< 0x006e9f34      cbz   x1, 0x6e9f64
+        │   0x006e9f38      bl    0xbdf920
+        │   0x006e9f3c      stp   xzr, xzr, [sp, 8]
+        │   0x006e9f40      bl    sym.imp.MCFDataGetBytePtr
+        │   0x006e9f44      bl    0xbe0ce8
+        │   0x006e9f48      bl    sym.imp.MCFDataGetLength
+        │   0x006e9f4c      mov   w2, w0
+        │   0x006e9f50      add   x8, sp, 8
+        │   0x006e9f54      bl    0x4b13e0
+        │   0x006e9f58      bl    method.facebook::simplejni::JArray.newJavaByteArray__JNIEnv___signed_char___int
+        │   0x006e9f5c      ldr   x0, [sp, 0x10]                       ; [0x10:4]=0xb70003
+       ┌──< 0x006e9f60      b     0x6e9f68
+       │└─> 0x006e9f64      mov   x0, xzr
+       └──> 0x006e9f68      bl    0xbdd6d8
+        ┌─< 0x006e9f6c      b.ne  0x6e9f84
+        │   0x006e9f70      bl    0x4c8e6c
+        │   0x006e9f74      ldp   x29, x30, [sp, 0x20]
+        │   0x006e9f78      add   sp, sp, 0x50
+        │   0x006e9f7c      autiasp
+        │   0x006e9f80      ret
+        └─> 0x006e9f84      bl    sym.imp.__stack_chk_fail

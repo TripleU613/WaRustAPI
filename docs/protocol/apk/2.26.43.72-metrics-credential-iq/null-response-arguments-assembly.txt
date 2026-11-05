@@ -1,0 +1,4 @@
+            0x00bdf888      mov   x2, xzr
+            0x00bdf88c      mov   x3, xzr
+            0x00bdf890      mov   w4, 1
+            0x00bdf894      ret

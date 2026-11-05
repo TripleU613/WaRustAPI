@@ -1,0 +1,2 @@
+            0x0049c388      mov   x0, xzr
+            0x0049c38c      ret

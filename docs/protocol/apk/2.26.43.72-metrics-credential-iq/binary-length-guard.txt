@@ -1,0 +1,28 @@
+
+# class: LX/0Tk;
+# extends: Ljava/lang/Object;
+
+.method public A04(VLJJ)  # .registers 7
+    # full signature: LX/0Tk;->A04([BJJ)V
+    0000..0002  array-length  v0, v2
+    0002..0004  int-to-long  v1, v0
+    0004..0008  cmp-long  v0, v1, v3
+    0008..000c  if-gez  v0, +0x15
+    000c..0010  const-string  v0, "Length of binary byte array is less than the specified lower bound value of "
+    0010..0014  new-instance  v1, Ljava/lang/StringBuilder;
+    0014..001a  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    001a..0020  invoke-virtual  {v1, v3, v4}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    0020..0026  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0026..0028  move-result-object  v1
+    0028..002a  const/4  v0, #0x0
+    002a..0030  invoke-static  {v0, v1}, LX/00L;->A0C(ZLjava/lang/String;)V
+    0030..0032  return-void
+    0032..0036  cmp-long  v0, v1, v5
+    0036..003a  if-lez  v0, -0x3
+    003a..003e  const-string  v0, "Length of binary byte array is greater than the specified upper bound value of "
+    003e..0042  new-instance  v1, Ljava/lang/StringBuilder;
+    0042..0048  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0048..004e  invoke-virtual  {v1, v5, v6}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    004e..0050  goto  -0x17
+    # exception table: 0 try range(s)
+.end method

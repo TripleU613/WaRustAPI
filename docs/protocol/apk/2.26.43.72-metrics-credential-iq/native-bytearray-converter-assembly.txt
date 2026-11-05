@@ -1,0 +1,20 @@
+        ╎   0x006e9ecc      bti   c
+       ┌──< 0x006e9ed0      cbz   x1, 0x6e9f18
+       │╎   0x006e9ed4      paciasp
+       │╎   0x006e9ed8      stp   x29, x30, [sp, -0x30]!
+       │╎   0x006e9edc      bl    0x63c894
+       │╎   0x006e9ee0      mov   x29, sp
+       │╎   0x006e9ee4      bl    0x49c49c
+       │╎   0x006e9ee8      bl    method.facebook::simplejni::JArray.getByteArrayElements__JNIEnv____jbyteArray
+       │╎   0x006e9eec      bl    0xbdfd10
+       │╎   0x006e9ef0      bl    method.facebook::simplejni::JArray.getSize__JNIEnv____jarray
+       │╎   0x006e9ef4      bl    0xbe82f8
+       │╎   0x006e9ef8      bl    sym.imp.MCFDataCreate
+       │╎   0x006e9efc      mov   x22, x0
+       │╎   0x006e9f00      bl    0xbdf898
+       │╎   0x006e9f04      bl    method.facebook::simplejni::JArray.releaseByteArrayElements__JNIEnv____jbyteArray___signed_char
+       │╎   0x006e9f08      bl    0xbdfe38
+       │╎   0x006e9f0c      ldp   x29, x30, [sp], 0x30
+       │╎   0x006e9f10      autiasp
+       │╎   0x006e9f14      ret
+       └└─< 0x006e9f18      b     0x49c388

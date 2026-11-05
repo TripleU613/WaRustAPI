@@ -1,0 +1,56 @@
+            0x006feba4      paciasp
+            0x006feba8      stp   x29, x30, [sp, -0x40]!
+            0x006febac      bl    0xbddbd0
+            0x006febb0      mov   x29, sp
+            0x006febb4      mov   w22, w4
+            0x006febb8      mov   x19, x3
+            0x006febbc      bl    0x4b11d0
+            0x006febc0      mov   x23, x0
+            0x006febc4      bl    0x736504
+            0x006febc8      mov   x1, x23
+            0x006febcc      bl    sym.imp.__MCFCastToClassNotNull
+            0x006febd0      ldr   x23, [x0, 0x28]                      ; [0x28:4]=0xc306e8
+            0x006febd4      bl    0xbe3ed4
+            0x006febd8      bl    sym.imp.MCIExecutionQueueGetExecutionContext
+        ┌─< 0x006febdc      cbz   w0, 0x6fec40
+        │   0x006febe0      mov   w0, w22
+        │   0x006febe4      bl    0x6fe95c
+        │   0x006febe8      mov   x22, x0
+        │   0x006febec      mov   w0, 5
+        │   0x006febf0      mov   x1, x24
+        │   0x006febf4      bl    0x546c5c
+        │   0x006febf8      mov   x4, x19
+        │   0x006febfc      mov   x5, x22
+        │   0x006fec00      bl    sym.imp.MCIParamsCreate
+        │   0x006fec04      bl    0xbe1264
+        │   0x006fec08      bl    sym.imp.MCFRelease
+        │   0x006fec0c      movi  d0, 0000000000000000
+        │   0x006fec10      adrp  x2, 0xbd8000
+        │   0x006fec14      add   x2, x2, 0xba8
+        │   0x006fec18      adrp  x4, 0xf0000
+        │   0x006fec1c      add   x4, x4, 0x152
+        │   0x006fec20      mov   x0, x23
+        │   0x006fec24      bl    0xbdfcb0
+        │   0x006fec28      bl    sym.imp.MCIExecutionQueueExecuteAsyncHelper
+        │   0x006fec2c      mov   x0, x19
+        │   0x006fec30      bl    0x4d2418
+        │   0x006fec34      ldp   x29, x30, [sp], 0x40
+        │   0x006fec38      autiasp
+       ┌──< 0x006fec3c      b     sym.imp.MCFRelease
+       │└─> 0x006fec40      ldr   x16, [x24, 0x18]                     ; [0x18:4]=0
+       │    0x006fec44      adrp  x8, 0xbd8000
+       │    0x006fec48      add   x8, x8, 0xa70
+       │    0x006fec4c      cmp   x16, x8
+       │┌─< 0x006fec50      b.ne  0x6fec80
+       ││   0x006fec54      ldr   x4, [x24, 0x20]                      ; [0x20:4]=64 ; "@"
+       ││   0x006fec58      mov   x0, x21
+       ││   0x006fec5c      mov   x1, x20
+       ││   0x006fec60      mov   x2, x19
+       ││   0x006fec64      mov   w3, w22
+       ││   0x006fec68      ldp   x20, x19, [sp, 0x30]
+       ││   0x006fec6c      ldp   x22, x21, [sp, 0x20]
+       ││   0x006fec70      ldp   x24, x23, [sp, 0x10]
+       ││   0x006fec74      ldp   x29, x30, [sp], 0x40
+       ││   0x006fec78      autiasp
+       ││   0x006fec7c      br    x16
+       │└─> 0x006fec80      brk   0x5502

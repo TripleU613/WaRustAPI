@@ -1,0 +1,129 @@
+
+# class: LX/Hyg;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLJ)  # .registers 8
+    # full signature: LX/Hyg;-><init>(LX/0NX;LX/0BD;LX/08q;LX/0AI;Lcom/whatsapp/wamsys/JniBridge;J)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v5, v0, LX/Hyg;->A05:Lcom/whatsapp/wamsys/JniBridge;
+    000a..000e  iput-object  v1, v0, LX/Hyg;->A01:LX/0NX;
+    000e..0012  iput-object  v2, v0, LX/Hyg;->A02:LX/0BD;
+    0012..0016  iput-object  v4, v0, LX/Hyg;->A04:LX/0AI;
+    0016..001a  iput-object  v3, v0, LX/Hyg;->A03:LX/08q;
+    001a..001e  iput-wide  v6, v0, LX/Hyg;->A00:J
+    001e..0020  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method private A00(VI)  # .registers 8
+    # full signature: LX/Hyg;->A00(I)V
+    0000..0006  invoke-static  {}, Landroid/os/SystemClock;->elapsedRealtime()J
+    0006..0008  move-result-wide  v4
+    0008..000c  iget-wide  v0, v6, LX/Hyg;->A00:J
+    000c..000e  sub-long/2addr  v4, v0
+    000e..0012  new-instance  v3, LX/GJ2;
+    0012..0018  invoke-direct  {v3}, LX/GJ2;-><init>()V
+    0018..001e  invoke-static  {v7}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    001e..0020  move-result-object  v0
+    0020..0024  iput-object  v0, v3, LX/GJ2;->A04:Ljava/lang/Integer;
+    0024..002a  invoke-static  {v4, v5}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    002a..002c  move-result-object  v0
+    002c..0030  iput-object  v0, v3, LX/GJ2;->A05:Ljava/lang/Long;
+    0030..0034  iput-object  v0, v3, LX/GJ2;->A07:Ljava/lang/Long;
+    0034..0038  iget-object  v0, v6, LX/Hyg;->A02:LX/0BD;
+    0038..003c  iget-boolean  v0, v0, LX/0BD;->A02:Z
+    003c..003e  const/4  v2, #0x1
+    003e..0044  invoke-static  {v2}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0044..0046  move-result-object  v1
+    0046..004a  if-eqz  v0, +0x1e
+    004a..004e  iput-object  v1, v3, LX/GJ2;->A02:Ljava/lang/Integer;
+    004e..0052  iget-object  v0, v6, LX/Hyg;->A04:LX/0AI;
+    0052..0058  invoke-virtual  {v0}, LX/0AI;->A0O()Z
+    0058..005a  move-result  v0
+    005a..0060  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0060..0062  move-result-object  v0
+    0062..0066  iput-object  v0, v3, LX/GJ2;->A01:Ljava/lang/Boolean;
+    0066..006a  iput-object  v1, v3, LX/GJ2;->A03:Ljava/lang/Integer;
+    006a..0070  invoke-static  {v2}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0070..0072  move-result-object  v0
+    0072..0076  iput-object  v0, v3, LX/GJ2;->A00:Ljava/lang/Boolean;
+    0076..007a  iget-object  v0, v6, LX/Hyg;->A01:LX/0NX;
+    007a..0080  invoke-interface  {v0, v3}, LX/0NX;->CSW(LX/0FP;)V
+    0080..0082  return-void
+    0082..0088  invoke-static  {}, LX/2L7;->A14()Ljava/lang/Integer;
+    0088..008a  move-result-object  v0
+    008a..008e  iput-object  v0, v3, LX/GJ2;->A02:Ljava/lang/Integer;
+    008e..0090  goto  -0x20
+    # exception table: 0 try range(s)
+.end method
+
+.method public BsS(VL)  # .registers 5
+    # full signature: LX/Hyg;->BsS(Ljava/lang/String;)V
+    0000..0002  const/4  v0, #0x3
+    0002..0008  invoke-direct  {v3, v0}, LX/Hyg;->A00(I)V
+    0008..000c  iget-object  v0, v3, LX/Hyg;->A05:Lcom/whatsapp/wamsys/JniBridge;
+    000c..000e  const/4  v2, #0x0
+    000e..0014  invoke-static  {}, LX/Fws;->A1G()V
+    0014..0016  const/4  v1, #0x4
+    0016..001c  invoke-virtual  {v0}, Lcom/whatsapp/wamsys/JniBridge;->getWajContext()Lcom/facebook/simplejni/NativeHolder;
+    001c..001e  move-result-object  v0
+    001e..0024  invoke-static  {v1, v0, v2, v2, v2}, Lcom/whatsapp/wamsys/JniBridge;->jvidispatchIOOOO(ILjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J
+    0024..0026  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public Bvj(VLL)  # .registers 6
+    # full signature: LX/Hyg;->Bvj(LX/0Tp;Ljava/lang/String;)V
+    0000..0002  const/4  v0, #0x3
+    0002..0008  invoke-direct  {v3, v0}, LX/Hyg;->A00(I)V
+    0008..000c  iget-object  v0, v3, LX/Hyg;->A05:Lcom/whatsapp/wamsys/JniBridge;
+    000c..000e  const/4  v2, #0x0
+    000e..0014  invoke-static  {}, LX/Fws;->A1G()V
+    0014..0016  const/4  v1, #0x4
+    0016..001c  invoke-virtual  {v0}, Lcom/whatsapp/wamsys/JniBridge;->getWajContext()Lcom/facebook/simplejni/NativeHolder;
+    001c..001e  move-result-object  v0
+    001e..0024  invoke-static  {v1, v0, v2, v2, v2}, Lcom/whatsapp/wamsys/JniBridge;->jvidispatchIOOOO(ILjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J
+    0024..0026  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public CK4(VLL)  # .registers 8
+    # full signature: LX/Hyg;->CK4(LX/0Tp;Ljava/lang/String;)V
+    0000..0004  const-string  v0, "sign_credential"
+    0004..000a  invoke-virtual  {v6, v0}, LX/0Tp;->A0G(Ljava/lang/String;)LX/0Tp;
+    000a..000c  move-result-object  v1
+    000c..0010  const-string  v0, "t"
+    0010..0016  invoke-virtual  {v1, v0}, LX/0Tp;->A07(Ljava/lang/String;)J
+    0016..001a  const-string  v0, "signed_credential"
+    001a..0020  invoke-virtual  {v1, v0}, LX/0Tp;->A0G(Ljava/lang/String;)LX/0Tp;
+    0020..0022  move-result-object  v0
+    0022..0026  iget-object  v4, v0, LX/0Tp;->A01:[B
+    0026..002a  const-string  v0, "acs_public_key"
+    002a..0030  invoke-virtual  {v1, v0}, LX/0Tp;->A0G(Ljava/lang/String;)LX/0Tp;
+    0030..0032  move-result-object  v0
+    0032..0036  iget-object  v3, v0, LX/0Tp;->A01:[B
+    0036..003a  const-string  v0, "config_id"
+    003a..0040  invoke-virtual  {v1, v0}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    0040..0042  move-result-object  v0
+    0042..0046  if-eqz  v0, +0x16
+    0046..004a  iget-object  v2, v0, LX/0Tp;->A01:[B
+    004a..004c  const/4  v0, #0x1
+    004c..0052  invoke-direct  {v5, v0}, LX/Hyg;->A00(I)V
+    0052..0056  iget-object  v0, v5, LX/Hyg;->A05:Lcom/whatsapp/wamsys/JniBridge;
+    0056..005c  invoke-static  {}, LX/Fws;->A1G()V
+    005c..005e  const/4  v1, #0x4
+    005e..0064  invoke-virtual  {v0}, Lcom/whatsapp/wamsys/JniBridge;->getWajContext()Lcom/facebook/simplejni/NativeHolder;
+    0064..0066  move-result-object  v0
+    0066..006c  invoke-static  {v1, v0, v4, v3, v2}, Lcom/whatsapp/wamsys/JniBridge;->jvidispatchIOOOO(ILjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J
+    006c..006e  return-void
+    006e..0070  const/4  v2, #0x0
+    0070..0072  goto  -0x13
+    # exception table: 0 try range(s)
+.end method
+
+.method public CmQ(LL)  # .registers 3
+    # full signature: LX/Hyg;->CmQ(Ljava/lang/String;)LX/D33;
+    0000..0004  sget-object  v0, LX/KNW;->A00:LX/KNW;
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method

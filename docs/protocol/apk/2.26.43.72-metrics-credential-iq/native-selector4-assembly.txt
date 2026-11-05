@@ -1,0 +1,23 @@
+            0x006eef0c      bti   j
+            0x006eef10      bl    0x547618
+            0x006eef14      bl    0x6e99e8
+            0x006eef18      bl    0xbe1264
+            0x006eef1c      mov   x1, x25
+            0x006eef20      bl    0x6e9ecc
+            0x006eef24      mov   x20, x0
+            0x006eef28      bl    0x49d318
+            0x006eef2c      bl    0x6e9ecc
+            0x006eef30      mov   x21, x0
+            0x006eef34      bl    0x4c9de0
+            0x006eef38      bl    0x6e9ecc
+            0x006eef3c      ldr   x24, [x19, 0x48]                     ; [0x48:4]=64
+        ┌─< 0x006eef40      cbz   x24, 0x6ef2c8
+        │   0x006eef44      mov   x22, x0
+        │   0x006eef48      ldr   x0, [x24, 0x38]                      ; [0x38:4]=0x40000a
+       ┌──< 0x006eef4c      cbz   x0, 0x6ef258
+      ┌───< 0x006eef50      cbz   x20, 0x6ef2a4
+     ┌────< 0x006eef54      cbz   x21, 0x6ef2a4
+     ││││   0x006eef58      bl    0x5d23e4
+     ││││   0x006eef5c      mov   x3, x22
+     ││││   0x006eef60      mov   w4, wzr
+    ┌─────< 0x006eef64      b     0x6ef2ac

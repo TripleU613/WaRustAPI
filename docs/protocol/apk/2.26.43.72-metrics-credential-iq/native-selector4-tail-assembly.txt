@@ -1,0 +1,30 @@
+            0x006ef258      mov   x23, xzr
+        ┌─> 0x006ef25c      mov   x0, x22
+        ╎   0x006ef260      bl    sym.imp.MCFRelease
+        ╎   0x006ef264      mov   x0, x21
+        ╎   0x006ef268      bl    sym.imp.MCFRelease
+        ╎   0x006ef26c      mov   x0, x20
+        ╎   0x006ef270      bl    sym.imp.MCFRelease
+        ╎   0x006ef274      mov   x0, x19
+        ╎   0x006ef278      bl    sym.imp.MCFRelease
+       ┌──> 0x006ef27c      bl    0xbddc00
+      ┌───< 0x006ef280      b.ne  0x6ef2c4
+      │╎╎   0x006ef284      mov   x0, x23
+      │╎╎   0x006ef288      bl    0x4f467c
+      │╎╎   0x006ef28c      ldp   x29, x30, [sp, 0xb0]
+      │╎╎   0x006ef290      add   sp, sp, 0x110
+      │╎╎   0x006ef294      autiasp
+      │╎╎   0x006ef298      ret
+      │╎╎   0x006ef29c      mov   x23, xzr
+      │└──< 0x006ef2a0      b     0x6ef27c
+      │ ╎   0x006ef2a4      mov   x1, xzr
+      │ ╎   0x006ef2a8      bl    0xbdf888
+      │ ╎   0x006ef2ac      bl    0x6feba4
+      │ ╎   0x006ef2b0      ldr   x0, [x24, 0x38]                      ; [0x38:4]=0x40000a
+      │ ╎   0x006ef2b4      bl    sym.imp.MCFRelease
+      │ ╎   0x006ef2b8      mov   x23, xzr
+      │ ╎   0x006ef2bc      str   xzr, [x24, 0x38]
+      │ └─< 0x006ef2c0      b     0x6ef25c
+      └───> 0x006ef2c4      bl    sym.imp.__stack_chk_fail
+            0x006ef2c8      bl    sym.imp.abort
+            0x006ef2cc      bl    sym.imp.abort

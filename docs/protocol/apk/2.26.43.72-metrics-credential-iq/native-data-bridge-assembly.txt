@@ -1,0 +1,24 @@
+            0x006ecd60      paciasp
+            0x006ecd64      stp   x29, x30, [sp, -0x30]!
+            0x006ecd68      str   x21, [sp, 0x10]
+            0x006ecd6c      stp   x20, x19, [sp, 0x20]
+            0x006ecd70      mov   x29, sp
+            0x006ecd74      mov   w19, w1
+            0x006ecd78      mov   x1, x2
+            0x006ecd7c      mov   x20, x0
+            0x006ecd80      bl    0x6e9f1c
+            0x006ecd84      bl    0xbe0ce8
+            0x006ecd88      mov   w1, w19
+            0x006ecd8c      mov   x2, x21
+            0x006ecd90      bl    0x6ea324
+            0x006ecd94      ldr   x8, [x20]
+            0x006ecd98      cmp   x0, 0
+            0x006ecd9c      mov   x0, x20
+            0x006ecda0      mov   x1, x21
+            0x006ecda4      cset  w19, ne
+            0x006ecda8      ldr   x8, [x8, 0xb8]                       ; [0xb8:4]=0x47fcb0
+            0x006ecdac      blr   x8
+            0x006ecdb0      bl    0xbde0a8
+            0x006ecdb4      ldp   x29, x30, [sp], 0x30
+            0x006ecdb8      autiasp
+            0x006ecdbc      ret
