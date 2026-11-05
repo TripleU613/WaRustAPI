@@ -1,0 +1,61 @@
+
+# class: LX/1rt;
+# extends: LX/0mJ;
+
+.method public <init>(VL)  # .registers 15
+    # full signature: LX/1rt;-><init>(Ljava/lang/String;)V
+    0000..0004  const-string  v4, "1"
+    0004..0008  const-string  v6, "id"
+    0008..000a  const/4  v12, #0x0
+    000a..000c  move-object  v7, v14
+    000c..0012  invoke-static  {v14, v12}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0012..0018  invoke-direct  {v13}, Ljava/lang/Object;-><init>()V
+    0018..001a  const/4  v0, #0x2
+    001a..001e  new-array  v1, v0, [Ljava/lang/String;
+    001e..0022  const-string  v0, "0"
+    0022..0026  aput-object  v0, v1, v12
+    0026..0028  const/4  v0, #0x1
+    0028..002c  aput-object  v4, v1, v0
+    002c..0032  invoke-static  {v1}, LX/01i;->A0A([Ljava/lang/Object;)Ljava/util/List;
+    0032..0034  move-result-object  v3
+    0034..0038  iput-object  v3, v13, LX/1rt;->A01:Ljava/util/List;
+    0038..003c  const-string  v0, "iq"
+    003c..0040  new-instance  v2, LX/0Tj;
+    0040..0046  invoke-direct  {v2, v0}, LX/0Tj;-><init>(Ljava/lang/String;)V
+    0046..004a  sget-object  v5, LX/0mL;->A00:LX/0mL;
+    004a..004e  const-string  v1, "to"
+    004e..0052  new-instance  v0, LX/0Tl;
+    0052..0058  invoke-direct  {v0, v5, v1}, LX/0Tl;-><init>(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;)V
+    0058..005e  invoke-virtual  {v2, v0}, LX/0Tj;->A02(LX/0Tl;)V
+    005e..0062  const-string  v5, "xmlns"
+    0062..0066  const-string  v1, "urn:xmpp:whatsapp:push"
+    0066..006a  new-instance  v0, LX/0Tl;
+    006a..0070  invoke-direct  {v0, v5, v1}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    0070..0076  invoke-virtual  {v2, v0}, LX/0Tj;->A02(LX/0Tl;)V
+    0076..007a  const-string  v5, "type"
+    007a..007e  const-string  v1, "get"
+    007e..0082  new-instance  v0, LX/0Tl;
+    0082..0088  invoke-direct  {v0, v5, v1}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    0088..008e  invoke-virtual  {v2, v0}, LX/0Tj;->A02(LX/0Tl;)V
+    008e..0092  const-wide/16  v8, #0x0
+    0092..009c  const-wide  v10, #0x1fffffffffffff (9007199254740991)
+    009c..00a2  invoke-static/range  {v7..v12}, LX/0Tk;->A06(Ljava/lang/String;JJZ)Z
+    00a2..00a4  move-result  v0
+    00a4..00a8  if-eqz  v0, +0xa
+    00a8..00ac  new-instance  v0, LX/0Tl;
+    00ac..00b2  invoke-direct  {v0, v6, v14}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    00b2..00b8  invoke-virtual  {v2, v0}, LX/0Tj;->A02(LX/0Tl;)V
+    00b8..00bc  const-string  v0, "config"
+    00bc..00c0  new-instance  v1, LX/0Tj;
+    00c0..00c6  invoke-direct  {v1, v0}, LX/0Tj;-><init>(Ljava/lang/String;)V
+    00c6..00ca  const-string  v0, "version"
+    00ca..00d0  invoke-virtual  {v1, v4, v0, v3}, LX/0Tj;->A06(Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+    00d0..00d6  invoke-virtual  {v1}, LX/0Tj;->A01()LX/0Tp;
+    00d6..00d8  move-result-object  v0
+    00d8..00de  invoke-virtual  {v2, v0}, LX/0Tj;->A03(LX/0Tp;)V
+    00de..00e4  invoke-virtual  {v2}, LX/0Tj;->A01()LX/0Tp;
+    00e4..00e6  move-result-object  v0
+    00e6..00ea  iput-object  v0, v13, LX/1rt;->A00:LX/0Tp;
+    00ea..00ec  return-void
+    # exception table: 0 try range(s)
+.end method

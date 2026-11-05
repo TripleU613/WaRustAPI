@@ -1,0 +1,6 @@
+classes2.dex  LX/1rA;->A03(VL)
+  read opcode 0x54, dex byte offset: 0x240520
+classes2.dex  LX/1rA;->A03(VL)
+  read opcode 0x54, dex byte offset: 0x240556
+classes2.dex  LX/1rD;-><init>(VLL)
+  write opcode 0x5b, dex byte offset: 0x240c06

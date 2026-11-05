@@ -1,3 +1,11 @@
+2026-11-04 — **Lower-level IQ reader/writer map identity traced.**
+
+Push-config GET registers in the shared map before writing and has its own
+result bridge. The generic token writer does not explicitly add that record.
+[Evidence and scoped limits](docs/protocol/apk/2.26.43.72-lower-level-iq-ownership/README.md).
+Research only; no runtime changes or live traffic. Validation: checked exports,
+full-source/excerpt match, checksums, JSON, coverage freshness and hygiene.
+
 2026-11-04 — **IQ reader type/ID admission and fallback traced.**
 
 The selected response path requires result/error plus nonnull ID. Lower-level

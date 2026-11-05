@@ -1,0 +1,71 @@
+# Checked DEX excerpt; complete source retained at rea/2.26.43.72-authkey-outcomes/startup-trigger-checked.txt.
+# class: LX/0ZJ;
+# extends: Landroid/os/HandlerThread;
+    # full signature: LX/0ZJ;->A0z(LX/1iH;Ljava/lang/String;ZZ)V
+    0916..091a  new-instance  v13, Ljava/util/concurrent/ConcurrentHashMap;
+    091a..0920  invoke-direct  {v13}, Ljava/util/concurrent/ConcurrentHashMap;-><init>()V
+    0920..0924  iget-object  v6, v0, LX/0ZJ;->A0w:Lcom/google/common/base/Optional;
+    0924..092a  invoke-virtual  {v6}, Lcom/google/common/base/Optional;->isPresent()Z
+    092a..092c  move-result  v7
+    092c..0930  if-eqz  v7, +0x13
+    0930..0936  invoke-virtual  {v6}, Lcom/google/common/base/Optional;->get()Ljava/lang/Object;
+    0936..093a  const-string  v5, "createMockedReaderWriter"
+    093a..093e  new-instance  v4, Ljava/lang/NullPointerException;
+    093e..0944  invoke-direct  {v4, v5}, Ljava/lang/NullPointerException;-><init>(Ljava/lang/String;)V
+    0944..0946  throw  v4
+    0946..0948  move-exception  v6
+    0948..094c  goto/16  +0x3c1
+    094c..094e  move-exception  v6
+    094e..0952  goto/16  +0x41c
+    0952..0956  iget-object  v7, v0, LX/0ZJ;->A0x:LX/0Zj;
+    0956..095a  move-object/from16  v6, v27
+    095a..0960  invoke-virtual  {v7, v6}, LX/0Zj;->A00(LX/1lZ;)LX/1r5;
+    0960..0962  move-result-object  v7
+    0962..0968  invoke-direct  {v0, v7, v6, v13, v9}, LX/0ZJ;->A0S(LX/1r5;LX/1lZ;Ljava/util/Map;Z)Ljava/util/HashMap;
+    0968..096a  move-result-object  v42
+    096a..096e  iget-object  v6, v0, LX/0ZJ;->A11:LX/0ZP;
+    096e..0972  move-object/from16  v30, v6
+    0972..0976  iget-object  v6, v0, LX/0ZJ;->A0o:LX/00x;
+    0976..097c  invoke-interface  {v6}, LX/00x;->get()Ljava/lang/Object;
+    097c..097e  move-result-object  v12
+    097e..0982  check-cast  v12, LX/0V4;
+    0982..0986  iget-object  v6, v0, LX/0ZJ;->A0R:LX/00x;
+    0986..098a  move-object/from16  v44, v6
+    098a..0990  invoke-interface/range  {v44..v44}, LX/00x;->get()Ljava/lang/Object;
+    0990..0992  move-result-object  v11
+    0992..0996  check-cast  v11, LX/0Ta;
+    0996..099a  iget-object  v6, v0, LX/0ZJ;->A0g:LX/00x;
+    099a..09a0  invoke-interface  {v6}, LX/00x;->get()Ljava/lang/Object;
+    09a0..09a2  move-result-object  v7
+    09a2..09a6  check-cast  v7, LX/1rg;
+    09a6..09aa  new-instance  v6, LX/1rh;
+    09aa..09ae  move-object/from16  v35, v6
+    09ae..09b2  move-object/from16  v36, v30
+    09b2..09b6  move-object/from16  v37, v58
+    09b6..09ba  move-object/from16  v38, v11
+    09ba..09be  move-object/from16  v39, v12
+    09be..09c2  move-object/from16  v40, v23
+    09c2..09c6  move-object/from16  v41, v7
+    09c6..09ca  move-object/from16  v43, v13
+    09ca..09d0  invoke-direct/range  {v35..v43}, LX/1rh;-><init>(LX/0ZP;LX/08q;LX/0Ta;LX/0V4;LX/123;LX/1rg;Ljava/util/Map;Ljava/util/Map;)V
+    09d0..09d4  iput-object  v6, v0, LX/0ZJ;->A02:LX/1rh;
+    09d4..09d8  new-instance  v40, LX/1ri;
+    09d8..09de  invoke-direct/range  {v40..v40}, LX/1ri;-><init>()V
+    09de..09e2  iget-object  v12, v0, LX/0ZJ;->A16:LX/08Z;
+    09e2..09e6  iget-object  v6, v0, LX/0ZJ;->A0O:LX/00x;
+    09e6..09ec  invoke-interface  {v6}, LX/00x;->get()Ljava/lang/Object;
+    09ec..09ee  move-result-object  v11
+    09ee..09f2  check-cast  v11, LX/0Td;
+    09f2..09f8  invoke-interface/range  {v55..v55}, LX/00x;->get()Ljava/lang/Object;
+    09f8..09fa  move-result-object  v7
+    09fa..09fe  check-cast  v7, LX/09S;
+    09fe..0a02  new-instance  v6, LX/1rj;
+    0a02..0a06  move-object/from16  v35, v6
+    0a06..0a0a  move-object/from16  v36, v7
+    0a0a..0a0e  move-object/from16  v37, v12
+    0a0e..0a12  move-object/from16  v38, v14
+    0a12..0a16  move-object/from16  v39, v11
+    0a16..0a1a  move-object/from16  v41, v27
+    0a1a..0a1e  move-object/from16  v42, v13
+    0a1e..0a24  invoke-direct/range  {v35..v42}, LX/1rj;-><init>(LX/09S;LX/08Z;LX/1r0;LX/0Td;LX/1ri;LX/1lZ;Ljava/util/Map;)V
+    0a24..0a28  iput-object  v6, v0, LX/0ZJ;->A03:LX/1rj;

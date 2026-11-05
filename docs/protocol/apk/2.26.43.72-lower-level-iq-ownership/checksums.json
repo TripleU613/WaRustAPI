@@ -1,0 +1,46 @@
+{
+  "README.md": {
+    "bytes": 4544,
+    "sha256": "db2738417fcd692a6df396f61e7108f38b07a09db67e2f576b21ce2d14c468f8"
+  },
+  "config-callback-record.txt": {
+    "bytes": 397,
+    "sha256": "c76a44823261e45e1ab45d9e553b8fd04de3df47855f84ff088e0da2b7359991"
+  },
+  "config-reply-selected-constructor.txt": {
+    "bytes": 9490,
+    "sha256": "fb910b326203fd48d7238ed672a443a7b9ebb497e4d06b90db3d1996dfd8593f"
+  },
+  "config-request-producer.txt": {
+    "bytes": 1157,
+    "sha256": "b65f9186c143ab2b6f5f6a41db04f7df7e9870af5ad060c8b59c82fb9ec0105e"
+  },
+  "config-request.txt": {
+    "bytes": 3134,
+    "sha256": "63d71425f3551bda53d16f2e0a0377e2126d59efb652b1a50c0122607b66ae29"
+  },
+  "config-result-bridge.txt": {
+    "bytes": 640,
+    "sha256": "4ecab8927fd25237be9f965ba998882946cd57f33defa50c38f66c48096e8602"
+  },
+  "reader-map-references.txt": {
+    "bytes": 236,
+    "sha256": "a0b3272ed4a45187a1a6df74b11cb1184cdf3f1acbccdf41c0ce9e8d734f8920"
+  },
+  "result-callback-dispatch.txt": {
+    "bytes": 12653,
+    "sha256": "b5f8f8f5f62bb9bc5cefdaabe45cbb926572de3f5bb376d1668cb296ba682fa6"
+  },
+  "shared-map-setup-excerpt.txt": {
+    "bytes": 3966,
+    "sha256": "62c71c7675878f2a16c6fcdf8d50b5038fbb2c6a1383e997e27d285ebc511463"
+  },
+  "writer-constructor.txt": {
+    "bytes": 1910,
+    "sha256": "aeac1dc101f1c77ec63588d3f0375f2eee8f81feff44e9ebabbfebcdf90db401"
+  },
+  "writer-map-references.txt": {
+    "bytes": 923,
+    "sha256": "648bb0d257ec985ce33ea230ad88e77a2db10cfc07f663c8a5a700adcde37b2d"
+  }
+}

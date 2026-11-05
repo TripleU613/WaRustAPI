@@ -272,3 +272,15 @@ nonprocessing. Declared iq tag mapping and processor-map registration are
 traced; full injected/alternate bindings and callback effects remain open.
 [Selected bodies, caller inventories and limits](apk/2.26.43.72-iq-reader-admission/README.md).
 No Rust behavior change, new replay authority or live account operation.
+
+### Shared lower-level IQ ownership and push-config producer (2026-11-04)
+
+**Confirmed static, APK43.72:** the selected setup passes one new map to
+reader1rD.A00 and writer1rj.A03. Push-config GET registers1rv before writing;
+its result builds a configuration object and forwards it separately from the
+ordinary IQ registry. The generic token node path has no explicit low-level
+record insertion in the selected writer bodies. Alias escapes, ID collisions
+and full Cyu behavior remain open; this is not a global absence claim.
+[Shared-map setup, producer, result bridge and limits](apk/2.26.43.72-lower-level-iq-ownership/README.md).
+Full configuration grammar/application, other families and durable/generation
+ownership remain untraced. No Rust behavior change or live account operation.

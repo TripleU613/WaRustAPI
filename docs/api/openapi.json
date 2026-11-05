@@ -15855,5 +15855,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-iq-reader-admission/README.md",
     "description": "Selected IQ processor forwards result/error with nonnull ID to the ordinary callback router. Lower-level callback processing can precede that route; registry misses have a separate message-callback fallback. Full injected root bindings, callback effects, concurrency and durable ownership remain open. No sender, route, replay authority or live operation added."
+  },
+  "x-lower-level-iq-ownership-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-lower-level-iq-ownership/README.md",
+    "description": "Selected setup shares a new lower-level IQ map between reader and writer. Push-config GET registers before node writing and has a separate result bridge. Generic token writer has no explicit insertion in inspected bodies; aliases, ID collision and full Cyu effects remain open. Configuration grammar/application and durable ownership remain incomplete. No sender, route or live operation added."
   }
 }
