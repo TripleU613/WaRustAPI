@@ -1228,3 +1228,11 @@ existingunsent keys or onlygenerates;non-new-store digestflag drives
 A0M/readiness/elapsed>60000ms thenarg1=88. A0Q mark-unsent entry is not
 proven genericstartup. Rust startup parity remains incomplete.
 [Exports and port requirements](apk/2.26.43.72-prekey-upload-replies/README.md#new-store-startup-and-digest-entry-distinction-2026-11-04). No production change or live traffic.
+
+## 2026-11-04 — Digest request/reply wire grammar
+
+**Confirmed static (43.72):**arg1=88 GETencrypt/digest with291selector1;
+result fixed-sizefields/id lists and hash20/32 dependingonLR presence.
+Success/error events82/83/84 distinguished; numeric parser differs from
+upload290. [Exports and verification/port limits](apk/2.26.43.72-prekey-upload-replies/README.md#digest-request-and-wire-callback-grammar-2026-11-04).
+No production change or live traffic.

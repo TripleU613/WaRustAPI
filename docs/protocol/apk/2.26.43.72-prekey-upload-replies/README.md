@@ -1385,3 +1385,55 @@ Additional export hashes:
 - [startup-registration-clear.txt](startup-registration-clear.txt): `5f527e3bb0ccf3ec0daf932ef38a3846d1f96fc03098a1eeaab0a1837cd4451f`
 - [startup-upload-flag.txt](startup-upload-flag.txt): `9cc48cb08e54924b4194438d7a7824687e5fcae2b7bf31ef8af4de38ff29010f`
 - [startup-migration-entry.txt](startup-migration-entry.txt): `c2ebb2b52b52ad6139f73419c9206cb7af5b2461d97fa4e3b078d9e38246ccc3`
+
+## Digest request and wire callback grammar (2026-11-04)
+
+**Confirmed static**, pinned2.26.43.72, same APK SHA-256 as this bundle.
+Checked DEX exports are not REA Evidence envelopes. Existing fullwriter
+reachout-iq-write-admission.txt is reused (SHA256 retained in legacy writer
+section); no duplicate fullwriter export. Only selected digest branch audited.
+
+- **0v0.A00 arg1=88 ->230c–23c6** increments1rj.A00, hex-encodesID,
+  inserts **291(owner,selector1)** into sharedA03 reply map **beforeCyt**.
+  ParentIQ attrs: id,xmlns=encrypt,type=get,to=0mL.A00. Single emptydigest
+  child: v1=null at00ea, reused at23a8. A failedwrite is not proven safe replay.
+-291 extends1ru. Retained1rA.A03 exactresult/error removes map entry before
+  callback. **1ru.A02 selector1,00de–021c** requires viaA0G: digest,
+  registration,type,skey/id,list,hash. Each list child must be an `id` node
+  with3 bytes, not akey wrapper. Empty/no list childarray becomesemptyIDs.
+  Optionalpq_list has null IDs ifabsent and emptyIDs ifpresent with nochildren;
+  its direct children similarly must beid/3bytes. Optionalpq_last_resort_key
+  requires nestedid/3bytes. These presence distinctions survive forwarding.
+- **0Tp.A03** requires nonnull bytecontent of exactly suppliedlength, else
+  throwsLIL. Callback requires registration4bytes,type1byte,skeyID3bytes;
+  forwards type[0] without validating itsvalue here. **Hashlength32** when
+  pq_last_resort_key ispresent; otherwise branch021c sets **20**. Presence
+  ofpq_list alone doesnot select32. No hash algorithm or local equality
+  validation is inferred solely from byte size.
+- **1lZ.A1R ->A0d** forwards registration,type,signedKeyId,keyIds,hash and
+  optionalpqKeyIds/pqLastResortKeyId inBundle throughCPm. Message **what0,
+  arg1=82,arg2=0**. Retained14o.BLn has selector82, but its verifier and
+  digest matching/reset consequences remain untraced.
+- Error path differs from upload290: retained1rA.A03 non290 branch iterates
+  codederrorchildren, Integer.parseInt without0HF fallback, invokes1ru.A01
+  for eachpresent code. **291 selector1** routes **404 ->1lZ.A0i ->arg1=83**,
+  **503 ->A0j ->arg1=84**; other numeric codes return. No-code children skip.
+  Missing/malformed error behavior and exception recovery are not invented
+  from the upload parser, nor are repeated codedchildren assumed unique.
+
+**Remaining:** manager digest verification/algorithm, response-origin checks,
+reset/catchup rules, native timeout/cleanup, persistedstartup flags andRust
+request admission. No digest request capability or automatic reset added.
+No production change or live traffic.
+
+Additional export hashes:
+
+- [digest-callback.txt](digest-callback.txt): `a03740bfbc3c63db14fcc0704a8665760b987e7260ed829bd3ce4324e1103c15`
+- [digest-result-dispatch.txt](digest-result-dispatch.txt): `b5f8f8f5f62bb9bc5cefdaabe45cbb926572de3f5bb376d1668cb296ba682fa6`
+- [digest-success-event.txt](digest-success-event.txt): `411d95a02e8a36e6b50982496147edc1fe26ee9a1afc98760f014bed91144ef7`
+- [digest-bytes-helper.txt](digest-bytes-helper.txt): `dd77b241fbb948d54e1990dce1039a04e68bd733bbcd9c0c83087510e47c77d7`
+- [digest-event-message.txt](digest-event-message.txt): `9805ed5cedfba8c3cd4e38d5075eaf380ef38430227a573cb5839929a5f9c10d`
+- [digest-not-found.txt](digest-not-found.txt): `595410bcb925f5f3ee3e13009e4dd63c711b73f534f253bbc76eda1e1fddee4c`
+- [digest-server-error.txt](digest-server-error.txt): `a4ef2f579f831eafc254eb8ea3f46fb9cf45b3b47e97236e84fe17a256801c3c`
+- [digest-not-found-message.txt](digest-not-found-message.txt): `9355e1f3a328f5431ab93c872ed9435ccf25e360dd147712a177b571a0fdf2c4`
+- [digest-server-error-message.txt](digest-server-error-message.txt): `8cf13d0f09d619b87af7b4b38d00f8f53e1ea7f8912c3a9eecc96b8e0f79252f`

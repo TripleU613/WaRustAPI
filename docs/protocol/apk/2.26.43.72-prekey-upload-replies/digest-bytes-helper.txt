@@ -1,0 +1,38 @@
+
+# class: LX/0Tp;
+# extends: Ljava/lang/Object;
+
+.method public A03(LLI)  # .registers 5
+    # full signature: LX/0Tp;->A03(LX/0Tp;I)[B
+    0000..0004  iget-object  v1, v3, LX/0Tp;->A01:[B
+    0004..0008  const-string  v0, "failed require. node "
+    0008..000c  if-eqz  v1, +0x28
+    000c..000e  array-length  v2, v1
+    000e..0012  if-ne  v2, v4, +0x3
+    0012..0014  return-object  v1
+    0014..0018  new-instance  v1, Ljava/lang/StringBuilder;
+    0018..001e  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    001e..0024  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0024..0028  const-string  v0, " data length "
+    0028..002e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    002e..0034  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0034..0038  const-string  v0, " != required length "
+    0038..003e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    003e..0044  invoke-virtual  {v1, v4}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0044..004a  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    004a..004c  move-result-object  v1
+    004c..0050  new-instance  v0, LX/LIL;
+    0050..0056  invoke-direct  {v0, v1}, LX/LIL;-><init>(Ljava/lang/String;)V
+    0056..0058  throw  v0
+    0058..005c  new-instance  v1, Ljava/lang/StringBuilder;
+    005c..0062  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0062..0068  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0068..006c  const-string  v0, " missing data"
+    006c..0072  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0072..0078  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0078..007a  move-result-object  v1
+    007a..007e  new-instance  v0, LX/LIL;
+    007e..0084  invoke-direct  {v0, v1}, LX/LIL;-><init>(Ljava/lang/String;)V
+    0084..0086  throw  v0
+    # exception table: 0 try range(s)
+.end method

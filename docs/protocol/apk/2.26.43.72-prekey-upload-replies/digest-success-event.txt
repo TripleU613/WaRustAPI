@@ -1,0 +1,22 @@
+
+# class: LX/1lZ;
+# extends: Ljava/lang/Object;
+
+.method public A1R(VLLLLLLB)  # .registers 17
+    # full signature: LX/1lZ;->A1R([B[B[B[B[[B[[BB)V
+    0000..0004  const-string  v0, "ConnectionThreadRequestsImpl/on-get-pre-key-digest"
+    0004..000a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    000a..000e  iget-object  v1, v9, LX/1lZ;->A01:LX/1lW;
+    000e..0010  move-object  v2, v10
+    0010..0012  move-object  v3, v11
+    0012..0014  move-object  v4, v12
+    0014..0016  move-object  v5, v13
+    0016..0018  move-object  v6, v14
+    0018..001a  move-object  v7, v15
+    001a..001e  move/from16  v8, v16
+    001e..0024  invoke-static/range  {v2..v8}, LX/1lZ;->A0d([B[B[B[B[[B[[BB)Landroid/os/Message;
+    0024..0026  move-result-object  v0
+    0026..002c  invoke-interface  {v1, v0}, LX/1lW;->CPm(Landroid/os/Message;)V
+    002c..002e  return-void
+    # exception table: 0 try range(s)
+.end method

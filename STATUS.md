@@ -1,3 +1,11 @@
+2026-11-04 — **Digest request/reply wire grammar traced.**
+
+GETdigest writer,reply registration,requiredbytefields and20/32-bytehash
+branches retained. Local digest matching/startup integration stillopen.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#digest-request-and-wire-callback-grammar-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. No production change or live traffic.
+
 2026-11-04 — **New-store startup and digest entry distinguished.**
 
 Persisted new-store flag controls generate-or-send;separate digest flag
