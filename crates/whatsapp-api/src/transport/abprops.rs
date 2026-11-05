@@ -231,66 +231,92 @@ fn parse(reply: &Node, view: &mut AbPropsInspection) -> std::result::Result<(), 
 /// Whether the last A/B reply turned `PQ_KEYS_UPLOAD_CODE` (21198) on. Absent
 /// or invalid means the `07t.A0L` default, false. MobileConfig is unported.
 pub fn pq_keys_upload_enabled(store: &ProtocolStore) -> Result<bool> {
-    Ok(inspect(store)?.and_then(|view| view.pq_keys_upload_value) == Some(true))
+    store.read(pq_keys_upload_enabled_in)
+}
+
+/// Read the saved gate within the caller's immutable key/account snapshot.
+pub(crate) fn pq_keys_upload_enabled_in(tx: &crate::store::ReadTx<'_>) -> Result<bool> {
+    Ok(inspect_in(tx)?.and_then(|view| view.pq_keys_upload_value) == Some(true))
+}
+
+/// Read the saved gate in the same transaction that reserves publication bytes.
+pub(crate) fn pq_keys_upload_enabled_in_write(tx: &crate::store::WriteTx<'_>) -> Result<bool> {
+    let Some(id) = tx.get_json::<String>(Table::Checkpoints, MARKER, 1)? else {
+        return Ok(false);
+    };
+    let Some((outcome, reply, _request)) = actions::view_in_write(tx, &id)? else {
+        return Err(Error::invalid("abprops", "saved query action is missing"));
+    };
+    Ok(inspect_saved(&id, outcome, reply)?.pq_keys_upload_value == Some(true))
 }
 
 /// Inspect saved correlated evidence without queueing or applying feature values.
 pub fn inspect(store: &ProtocolStore) -> Result<Option<AbPropsInspection>> {
-    store.read(|tx| {
-        let Some(id) = tx.get_json::<String>(Table::Checkpoints, MARKER, 1)? else {
-            return Ok(None);
-        };
-        let Some((outcome, reply)) = actions::view_in(tx, &id)? else {
-            return Err(Error::invalid("abprops", "saved query action is missing"));
-        };
-        if outcome.kind != "abprops_query" {
-            return Err(Error::invalid(
-                "abprops",
-                "saved marker references another action kind",
-            ));
-        }
-        let mut view = AbPropsInspection {
-            action_id: id.clone(),
-            status: match outcome.status {
-                actions::ActionStatus::Queued => AbPropsStatus::Queued,
-                actions::ActionStatus::Sent => AbPropsStatus::OutcomeUnknown,
-                _ => AbPropsStatus::InvalidReply,
-            },
-            failure: None,
-            server_error_code: None,
-            configuration_rows: None,
-            sampling_rows: None,
-            delta_update: None,
-            hash_present: None,
-            removal_value: None,
-            removal_value_invalid: false,
-            token_counterpart_value: None,
-            token_counterpart_value_invalid: false,
-            token_pending_namespace_value: None,
-            token_pending_namespace_value_invalid: false,
-            pq_keys_upload_value: None,
-            pq_keys_upload_value_invalid: false,
-        };
-        let Some(reply) = reply else {
-            return Ok(Some(view));
-        };
-        if reply.description != "iq" || text(&reply, "id") != Some(id.as_str()) {
-            view.failure = Some(AbPropsFailure::Envelope);
-        } else if text(&reply, "type") == Some("error")
-            || (text(&reply, "type") == Some("result") && reply.child("error").is_some())
-        {
-            view.status = AbPropsStatus::ServerRefused;
-            view.server_error_code = reply
-                .child("error")
-                .and_then(|n| text(n, "code"))
-                .and_then(|s| s.parse().ok());
-        } else if text(&reply, "type") != Some("result") {
-            view.failure = Some(AbPropsFailure::Envelope);
-        } else if let Err(failure) = parse(&reply, &mut view) {
-            view.failure = Some(failure);
-        }
-        Ok(Some(view))
-    })
+    store.read(inspect_in)
+}
+
+fn inspect_in(tx: &crate::store::ReadTx<'_>) -> Result<Option<AbPropsInspection>> {
+    let Some(id) = tx.get_json::<String>(Table::Checkpoints, MARKER, 1)? else {
+        return Ok(None);
+    };
+    let Some((outcome, reply)) = actions::view_in(tx, &id)? else {
+        return Err(Error::invalid("abprops", "saved query action is missing"));
+    };
+    inspect_saved(&id, outcome, reply).map(Some)
+}
+
+fn inspect_saved(
+    id: &str,
+    outcome: actions::ActionOutcome,
+    reply: Option<Node>,
+) -> Result<AbPropsInspection> {
+    if outcome.kind != "abprops_query" {
+        return Err(Error::invalid(
+            "abprops",
+            "saved marker references another action kind",
+        ));
+    }
+    let mut view = AbPropsInspection {
+        action_id: id.to_owned(),
+        status: match outcome.status {
+            actions::ActionStatus::Queued => AbPropsStatus::Queued,
+            actions::ActionStatus::Sent => AbPropsStatus::OutcomeUnknown,
+            _ => AbPropsStatus::InvalidReply,
+        },
+        failure: None,
+        server_error_code: None,
+        configuration_rows: None,
+        sampling_rows: None,
+        delta_update: None,
+        hash_present: None,
+        removal_value: None,
+        removal_value_invalid: false,
+        token_counterpart_value: None,
+        token_counterpart_value_invalid: false,
+        token_pending_namespace_value: None,
+        token_pending_namespace_value_invalid: false,
+        pq_keys_upload_value: None,
+        pq_keys_upload_value_invalid: false,
+    };
+    let Some(reply) = reply else {
+        return Ok(view);
+    };
+    if reply.description != "iq" || text(&reply, "id") != Some(id) {
+        view.failure = Some(AbPropsFailure::Envelope);
+    } else if text(&reply, "type") == Some("error")
+        || (text(&reply, "type") == Some("result") && reply.child("error").is_some())
+    {
+        view.status = AbPropsStatus::ServerRefused;
+        view.server_error_code = reply
+            .child("error")
+            .and_then(|n| text(n, "code"))
+            .and_then(|s| s.parse().ok());
+    } else if text(&reply, "type") != Some("result") {
+        view.failure = Some(AbPropsFailure::Envelope);
+    } else if let Err(failure) = parse(&reply, &mut view) {
+        view.failure = Some(failure);
+    }
+    Ok(view)
 }
 
 #[cfg(test)]
@@ -320,6 +346,65 @@ mod tests {
             .attr("type", "result")
             .children(vec![props])
     }
+    #[test]
+    fn pq_gate_uses_the_callers_snapshot_and_uncommitted_reservation_state() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("pq-snapshot.redb");
+        let store = open(&path, true);
+        let id = queue(&store).unwrap();
+        actions::reserve_pending(&store).unwrap();
+        actions::record_reply(
+            &store,
+            &reply(
+                &id,
+                Node::new("props").attr("hash", "fixture").children(vec![
+                    Node::new("prop")
+                        .attr("config_code", "21198")
+                        .attr("config_value", "1"),
+                ]),
+            ),
+        )
+        .unwrap();
+        assert!(pq_keys_upload_enabled(&store).unwrap());
+        // A nested store.read here would see the committed true gate, not the
+        // caller's pending deletion. Reservation must use its own WriteTx.
+        let refused: Result<()> = store.write(|tx| {
+            assert!(pq_keys_upload_enabled_in_write(tx)?);
+            tx.delete(Table::Checkpoints, MARKER)?;
+            assert!(!pq_keys_upload_enabled_in_write(tx)?);
+            Err(Error::invalid("fixture", "rollback"))
+        });
+        assert!(refused.is_err());
+        assert!(pq_keys_upload_enabled(&store).unwrap());
+        // Hold an old read snapshot while a concurrent generation of local
+        // config/key state commits. Digest must not combine the two snapshots.
+        store
+            .read(|tx| {
+                assert!(pq_keys_upload_enabled_in(tx)?);
+                store.write(|writer| {
+                    writer.delete(Table::Checkpoints, MARKER)?;
+                    writer.put_json(Table::Prekeys, b"snapshot-fixture", 1, &true)
+                })?;
+                assert!(pq_keys_upload_enabled_in(tx)?);
+                assert!(
+                    tx.get_json::<bool>(Table::Prekeys, b"snapshot-fixture", 1)?
+                        .is_none()
+                );
+                Ok(())
+            })
+            .unwrap();
+        drop(store);
+        let store = open(&path, false);
+        assert!(!pq_keys_upload_enabled(&store).unwrap());
+        assert!(
+            store
+                .read(|tx| Ok(
+                    tx.get_json::<bool>(Table::Prekeys, b"snapshot-fixture", 1)? == Some(true)
+                ))
+                .unwrap()
+        );
+    }
+
     #[test]
     fn once_only_correlated_read_survives_reopen_and_preserves_private_state() {
         for refused in [false, true] {

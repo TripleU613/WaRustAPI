@@ -1276,3 +1276,25 @@ and Fdf digest preimage (see the prekey-upload-replies evidence bundle). This is
 partial storage parity: Rust signs at reservation, whereas native generation
 stores the signature earlier. No live verification, recovery, retry-policy or
 ban-prevention guarantee is implied.
+
+### PQ gate and key transaction consistency (2026-11-04)
+
+**Implemented, offline:** prekey SET/ADD reservation reads the saved property
+21198 through the same WriteTx that selects/generates key rows and freezes the
+publication request. Digest inspection reads the saved gate, account, registered
+signed key and local prekeys through one ReadTx. A prior separate store read
+could combine a previously read gate with later key state. This is a local
+transaction consistency fix, not new APK timing evidence or a MobileConfig port.
+
+Both paths reuse the existing correlated AB-property parser and its absent/
+invalid false default. The reservation path also validates decoding of the
+saved original query through the existing action write-view helper. A missing
+referenced action or malformed stored action remains a local error, never an
+inferred enabled gate. Static gate provenance remains APK 2.26.37.71 D1G.Bat /
+07t.A0L and 2.26.43.72 13z migration predicates in the retained prekey bundles.
+
+Regression holds an immutable snapshot across a committed config/key change,
+checks uncommitted gate deletion in a write transaction and rollback, and
+reopens the resulting synthetic store. Request/reply origin, current actor
+account binding, effective MobileConfig, startup recovery and safe resync remain
+separate unfinished work. No live operation or automatic recovery was added.

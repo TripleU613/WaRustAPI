@@ -469,12 +469,12 @@ fn begin_upload_selected(
         .signature()
         .map_err(|_| invalid("signed prekey signature"))?;
     let iq_id = super::messaging::new_message_id()?;
-    let pq_enabled = super::abprops::pq_keys_upload_enabled(store)?;
     // 07t.A0R 0196..01a2: property 21201 defaults to 10; returned values are
     // not applied (MobileConfig unported), so the default is used.
     let pq_batch = 10;
     let reserved =
         store.write(|tx| {
+            let pq_enabled = super::abprops::pq_keys_upload_enabled_in_write(tx)?;
             // Refusal retry/backoff/regeneration policy is not ported. Returning
             // keys to Unsent is inventory state, not authority to reserve a new
             // IQ on the next notification or reconnect (43.72 13z.A02/14o.BLn).

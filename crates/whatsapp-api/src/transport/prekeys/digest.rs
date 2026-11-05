@@ -119,11 +119,11 @@ pub struct Inspection {
 }
 
 /// Inspect an IQ result against local material without writes or network calls.
-/// The saved PQ gate is read separately from the account/key snapshot; this is
+/// The saved PQ gate, account and keys share one immutable snapshot. This is
 /// provisional offline evidence, never authority for state changes or recovery.
 pub fn inspect(store: &ProtocolStore, node: &Node) -> Result<Inspection> {
-    let gate = super::super::abprops::pq_keys_upload_enabled(store)?;
     store.read(|tx| {
+        let gate = super::super::abprops::pq_keys_upload_enabled_in(tx)?;
         let account =
             AccountRecord::load(tx)?.ok_or_else(|| invalid("local account unavailable"))?;
         let signed = crate::registration::factory::registered_signed_prekey_in(tx)?;

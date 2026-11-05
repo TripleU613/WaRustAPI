@@ -603,7 +603,7 @@ invalid localrecords/grammar return fixed diagnostics ratherthan rawpayload.
 MultipleuploadedLR rows returnAmbiguousLastResort because native insertion
 order metadata is not available locally; no highest-ID guess is made.
 
-**Local signature gap:** StoredKemPrekey doesnot persist uploadedLR signature.
+**Historical signature gap (closed for new reservations below):** older StoredKemPrekey rows do not persist uploadedLR signatures.
 Re-signing is randomized and would givefalsehashmismatch. Inspector recovers
 only from an acknowledged frozenmode=set request naming the sameLRID and
 publicbytes, validates requestID/type/namespace andidentitysignature, and
@@ -611,7 +611,7 @@ requires unambiguous signature bytes. Missinghistoricalwire orconflicting
 signatures returnsUnavailableLastResortSignature. No backfill or rowmutation.
 
 Account,keyrows and registeredsignedprekey validation shareoneReadTx via
-extractedfactory helper. The savedPQgate isread separately; results are
+extractedfactory helper. The saved PQ gate now shares that same ReadTx; results remain
 provisional offline evidence, **not request correlation, snapshot authority
 for recovery, or proof of currentserver state**. Historicalreply comparison
 usescurrentlocalmaterial and cannot establish a past match or authorize
@@ -621,7 +621,7 @@ Regressions: independentPython cryptography/X25519 +hashlibSHA1 public-material
 vector (oracles/prekey_digest_reference.py anddigest-referencefixture),
 reordered/repeated/missingIDs, invalidhashsize, read-onlytablecomparison;
 PQdigest builtfrompublishedSET verifies repeatedinspections do notresign;
-removing onlysynthetic frozenhistory yieldsUnavailableSignature.
+new rows retain exact publication signatures without frozen history; removing both synthetic signature and history yieldsUnavailableSignature.
 The structuralSHA1 fixture is not an authenticatedkey fixture; publicinspect
 validates the registeredsignedkey through existingfactory logic.
 
@@ -650,3 +650,29 @@ Clippy, CLI reference, fmt, coverage freshness and hygiene passed. The initial
 default-concurrency run hit an unexpected-write assertion in the migrated actor
 test; the same test passed alone and in the complete bounded run. Heartbeat
 timing under load is suspected, not proven; production timing was not changed.
+
+### PQ gate and key transaction consistency (2026-11-04)
+
+**Implemented, offline:** prekey SET/ADD reservation reads the saved property
+21198 through the same WriteTx that selects/generates key rows and freezes the
+publication request. Digest inspection reads the saved gate, account, registered
+signed key and local prekeys through one ReadTx. A prior separate store read
+could combine a previously read gate with later key state. This is a local
+transaction consistency fix, not new APK timing evidence or a MobileConfig port.
+
+Both paths reuse the existing correlated AB-property parser and its absent/
+invalid false default. The reservation path also validates decoding of the
+saved original query through the existing action write-view helper. A missing
+referenced action or malformed stored action remains a local error, never an
+inferred enabled gate. Static gate provenance remains APK 2.26.37.71 D1G.Bat /
+07t.A0L and 2.26.43.72 13z migration predicates in the retained prekey bundles.
+
+Regression holds an immutable snapshot across a committed config/key change,
+checks uncommitted gate deletion in a write transaction and rollback, and
+reopens the resulting synthetic store. Request/reply origin, current actor
+account binding, effective MobileConfig, startup recovery and safe resync remain
+separate unfinished work. No live operation or automatic recovery was added.
+
+Validation: all 1,296 workspace/all-feature tests passed with two test
+threads; strict Clippy, CLI reference, fmt, coverage freshness, JSON validation
+and repository hygiene passed. All tests used synthetic/offline stores.
