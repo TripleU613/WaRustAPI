@@ -5434,3 +5434,17 @@ cancelled by this helper. A failed write returns its existing error. Unread
 late records are not captured, and expiry never proves the server did not
 receive the write. Original uncertain intents remain nonreplayable. No native
 request-address/challenge-controller parity, new route or live operation.
+
+### Challenged-request selection and re-dispatch ownership (2026-11-04)
+
+**Confirmed static, APK43.72:**0TV.A03 selects eligible held requests without
+removing those source entries; over-budget entries are removed.0Sf.A08/A0L
+re-dispatch through A04 with the original callback retained when absent from
+the new invocation. A token-result callback and the selected handleConnected
+block reach selection. The token callback calls key rotation before dispatch,
+but does not prove rotation completion. Client-side selection counters are not
+a server retry allowance or authority to replay Rust reservations.
+[Exact methods, map inventories, count conditions and remaining gaps](apk/2.26.43.72-challenged-request-ownership/README.md).
+The post-token helper is now connected; token construction/converters, request
+family/callback ownership and durable restart recovery remain incomplete.
+No production change, new retry authority or live operation.

@@ -1,3 +1,12 @@
+2026-11-04 — **Challenged-request map ownership traced.**
+
+Held selection retains eligible entries; token-result and connected paths reach
+conditional re-dispatch. Callback/count/restart boundaries remain unported;
+Rust uncertainty holds are unchanged.
+[Evidence and port limits](docs/protocol/apk/2.26.43.72-challenged-request-ownership/README.md).
+Validation: evidence checksums, JSON, coverage freshness and repository hygiene.
+Research only; no live traffic.
+
 2026-11-04 — **Comparison request waits keep pre-write deadlines.**
 
 Nine existing comparison write/wait pairs now share one deadline instead of

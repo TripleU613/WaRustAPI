@@ -1,0 +1,14 @@
+classes.dex  LX/0Sf;->A04(VLLLLJZ)
+  read opcode 0x54, dex byte offset: 0x5ac470
+classes.dex  LX/0TV;-><init>(V)
+  write opcode 0x5b, dex byte offset: 0x5b1a62
+classes.dex  LX/0TV;->A02(LL)
+  read opcode 0x54, dex byte offset: 0x5b1d08
+classes.dex  LX/0TV;->A03(L)
+  read opcode 0x54, dex byte offset: 0x5b1d54
+classes.dex  LX/0m2;->handleMessage(VL)
+  read opcode 0x54, dex byte offset: 0x6de112
+classes.dex  LX/0m2;->handleMessage(VL)
+  read opcode 0x54, dex byte offset: 0x6de15a
+classes8.dex  Lcom/whatsapp/calling/service/OutgoingSignalingHandler;->preSendTerminate(ZLLZ)
+  read opcode 0x54, dex byte offset: 0x714570

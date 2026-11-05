@@ -1,0 +1,90 @@
+
+# class: LX/Eo7;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLI)  # .registers 4
+    # full signature: LX/Eo7;-><init>(Landroid/os/Message;LX/1ue;I)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v1, v0, LX/Eo7;->A01:Landroid/os/Message;
+    000a..000e  iput  v3, v0, LX/Eo7;->A00:I
+    000e..0012  iput-object  v2, v0, LX/Eo7;->A02:LX/1ue;
+    0012..0014  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(L)  # .registers 4
+    # full signature: LX/Eo7;->A00()LX/EV7;
+    0000..0004  iget-object  v2, v3, LX/Eo7;->A01:Landroid/os/Message;
+    0004..000a  invoke-static  {v2}, LX/1i7;->A00(Landroid/os/Message;)I
+    000a..000c  move-result  v1
+    000c..0010  const/16  v0, #0xce
+    0010..0014  if-ne  v1, v0, +0xc
+    0014..0018  iget-object  v1, v2, Landroid/os/Message;->obj:Ljava/lang/Object;
+    0018..001c  const-string  v0, "null cannot be cast to non-null type com.whatsapp.infra.protocol.CallStanza"
+    001c..0022  invoke-static  {v1, v0}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    0022..0026  check-cast  v1, LX/EV7;
+    0026..0028  return-object  v1
+    0028..002a  const/4  v1, #0x0
+    002a..002c  return-object  v1
+    # exception table: 0 try range(s)
+.end method
+
+.method public equals(ZL)  # .registers 6
+    # full signature: LX/Eo7;->equals(Ljava/lang/Object;)Z
+    0000..0002  const/4  v3, #0x1
+    0002..0006  if-eq  v4, v5, +0x24
+    0006..000a  instance-of  v0, v5, LX/Eo7;
+    000a..000c  const/4  v2, #0x0
+    000c..0010  if-eqz  v0, +0x1e
+    0010..0014  check-cast  v5, LX/Eo7;
+    0014..0018  iget-object  v1, v4, LX/Eo7;->A01:Landroid/os/Message;
+    0018..001c  iget-object  v0, v5, LX/Eo7;->A01:Landroid/os/Message;
+    001c..0022  invoke-static  {v1, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    0022..0024  move-result  v0
+    0024..0028  if-eqz  v0, +0x12
+    0028..002c  iget  v1, v4, LX/Eo7;->A00:I
+    002c..0030  iget  v0, v5, LX/Eo7;->A00:I
+    0030..0034  if-ne  v1, v0, +0xc
+    0034..0038  iget-object  v1, v4, LX/Eo7;->A02:LX/1ue;
+    0038..003c  iget-object  v0, v5, LX/Eo7;->A02:LX/1ue;
+    003c..0042  invoke-static  {v1, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    0042..0044  move-result  v0
+    0044..0048  if-nez  v0, +0x3
+    0048..004a  return  v2
+    004a..004c  return  v3
+    # exception table: 0 try range(s)
+.end method
+
+.method public hashCode(I)  # .registers 3
+    # full signature: LX/Eo7;->hashCode()I
+    0000..0004  iget-object  v0, v2, LX/Eo7;->A01:Landroid/os/Message;
+    0004..000a  invoke-static  {v0}, LX/2LB;->A01(Ljava/lang/Object;)I
+    000a..000c  move-result  v1
+    000c..0010  iget  v0, v2, LX/Eo7;->A00:I
+    0010..0012  add-int/2addr  v1, v0
+    0012..0016  mul-int/lit8  v1, v1, #0x1f
+    0016..001a  iget-object  v0, v2, LX/Eo7;->A02:LX/1ue;
+    001a..0020  invoke-static  {v0}, LX/1Xl;->A09(Ljava/lang/Object;)I
+    0020..0022  move-result  v0
+    0022..0024  add-int/2addr  v1, v0
+    0024..0026  return  v1
+    # exception table: 0 try range(s)
+.end method
+
+.method public toString(L)  # .registers 5
+    # full signature: LX/Eo7;->toString()Ljava/lang/String;
+    0000..0004  iget-object  v1, v4, LX/Eo7;->A01:Landroid/os/Message;
+    0004..0008  iget  v3, v4, LX/Eo7;->A00:I
+    0008..000c  iget-object  v2, v4, LX/Eo7;->A02:LX/1ue;
+    000c..0010  const-string  v0, "UnackedMessage(message="
+    0010..0016  invoke-static  {v1, v0}, LX/1Xl;->A15(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0016..0018  move-result-object  v1
+    0018..001c  const-string  v0, ", sendCount="
+    001c..0022  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0022..0028  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0028..002c  const-string  v0, ", deliveryCallback="
+    002c..0032  invoke-static  {v2, v0, v1}, LX/1Xm;->A06(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    0032..0034  move-result-object  v0
+    0034..0036  return-object  v0
+    # exception table: 0 try range(s)
+.end method
