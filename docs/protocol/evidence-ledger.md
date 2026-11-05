@@ -1,3 +1,10 @@
+2026-11-04 — **Current-build prekey reply callbacks retained.**
+
+43.72 140/141 callbacks confirm optional first list/pq_list count_low parsing;
+error extraction and result worker retained with downstream policy gaps explicit.
+[Static evidence and limits](apk/2.26.43.72-prekey-upload-replies/README.md).
+No production change or live traffic.
+
 2026-11-04 — **Retry refetch rechecks original age before resend.**
 
 Completion and reservation enforce the existing strict 60-day limit. Shared

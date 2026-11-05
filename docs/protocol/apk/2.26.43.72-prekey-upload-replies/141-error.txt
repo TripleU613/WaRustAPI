@@ -1,0 +1,82 @@
+
+# class: LX/141;
+# extends: Ljava/lang/Object;
+
+.method public Bvj(VLL)  # .registers 22
+    # full signature: LX/141;->Bvj(LX/0Tp;Ljava/lang/String;)V
+    0000..0002  const/4  v0, #0x1
+    0002..0006  move-object/from16  v1, v20
+    0006..000c  invoke-static  {v1, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000c..0012  invoke-static  {v1}, LX/1ud;->A01(LX/0Tp;)Landroid/util/Pair;
+    0012..0014  move-result-object  v2
+    0014..0016  const/4  v4, #0x0
+    0016..001a  if-eqz  v2, +0x1b
+    001a..001e  iget-object  v0, v2, Landroid/util/Pair;->first:Ljava/lang/Object;
+    001e..0022  check-cast  v0, Ljava/lang/Number;
+    0022..0026  if-eqz  v0, +0x15
+    0026..002c  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    002c..002e  move-result  v9
+    002e..0030  const/4  v1, #0x0
+    0030..0034  if-eqz  v2, +0xc
+    0034..0038  iget-object  v6, v2, Landroid/util/Pair;->second:Ljava/lang/Object;
+    0038..003c  check-cast  v6, Ljava/lang/String;
+    003c..0040  move-object/from16  v10, v19
+    0040..0044  iget  v2, v10, LX/141;->A09:I
+    0044..0046  monitor-enter
+    0046..0048  goto  +0x5
+    0048..004a  move-object  v6, v1
+    004a..004c  goto  -0x7
+    004c..004e  const/4  v9, #0x0
+    004e..0050  goto  -0x10
+    0050..0054  iget-object  v0, v10, LX/141;->A02:[LX/ETs;
+    0054..0058  if-eqz  v0, +0x15
+    0058..005a  array-length  v3, v0
+    005a..005e  iget-object  v0, v10, LX/141;->A01:[LX/ETs;
+    005e..0062  if-eqz  v0, +0x3
+    0062..0064  array-length  v4, v0
+    0064..0068  iput-object  v1, v10, LX/141;->A02:[LX/ETs;
+    0068..006c  iput-object  v1, v10, LX/141;->A01:[LX/ETs;
+    006c..0070  iget-object  v5, v10, LX/141;->A00:LX/EcZ;
+    0070..0074  iput-object  v1, v10, LX/141;->A00:LX/EcZ;
+    0074..0078  const/16  v0, #0xc
+    0078..007c  iput  v0, v10, LX/141;->A09:I
+    007c..007e  goto  +0x3
+    007e..0080  const/4  v3, #0x0
+    0080..0082  goto  -0x13
+    0082..0084  monitor-exit
+    0084..0088  const-string  v0, "PreKeysAdder/onError "
+    0088..008c  new-instance  v1, Ljava/lang/StringBuilder;
+    008c..0092  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0092..0098  invoke-virtual  {v1, v9}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0098..009c  const-string  v0, "; "
+    009c..00a2  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00a2..00a8  invoke-virtual  {v1, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00a8..00ac  const-string  v0, " legacyCount="
+    00ac..00b2  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00b2..00b8  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00b8..00bc  const-string  v0, " pqCount="
+    00bc..00c2  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00c2..00c8  invoke-virtual  {v1, v4}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00c8..00ce  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00ce..00d0  move-result-object  v0
+    00d0..00d6  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    00d6..00d8  int-to-long  v11, v9
+    00d8..00dc  const-wide/16  v13, #0x0
+    00dc..00de  const/4  v7, #0x0
+    00de..00e0  move-wide  v15, v13
+    00e0..00e4  move/from16  v17, v7
+    00e4..00e8  move/from16  v18, v2
+    00e8..00ee  invoke-virtual/range  {v10..v18}, LX/141;->A00(JJJZI)V
+    00ee..00f2  if-eqz  v5, +0x9
+    00f2..00f4  move  v10, v7
+    00f4..00f6  move  v11, v7
+    00f6..00f8  move  v12, v7
+    00f8..00fa  move  v8, v7
+    00fa..0100  invoke-virtual/range  {v5..v12}, LX/EcZ;->A00(Ljava/lang/String;IIIZZZ)V
+    0100..0102  return-void
+    0102..0104  move-exception  v0
+    0104..0106  monitor-exit
+    0106..0108  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0028..0041 -> 0081
+.end method

@@ -113,3 +113,10 @@ and reopen until a valid matching reply; no automatic retry is added.
 Older build-specific count/upload layout evidence above is not silently
 re-attributed to the current APK. Sender and full current response matrix
 remain open; no live behavior is verified.
+
+## Current-build upload reply bodies (2026-11-04)
+
+**Confirmed static:** 43.72 140.CK4 / 141.CK4 support optional first-list
+count_low case-insensitive true handling; they also forward a separate PQ flag.
+[Retained callbacks, first-child helper, error parser and limits](apk/2.26.43.72-prekey-upload-replies/README.md).
+No runtime change or full upload scheduling parity is claimed.

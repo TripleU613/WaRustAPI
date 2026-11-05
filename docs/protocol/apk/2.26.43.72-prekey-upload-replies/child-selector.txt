@@ -1,0 +1,23 @@
+
+# class: LX/0Tp;
+# extends: Ljava/lang/Object;
+
+.method public A0F(LL)  # .registers 8
+    # full signature: LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    0000..0004  iget-object  v5, v6, LX/0Tp;->A02:[LX/0Tp;
+    0004..0006  const/4  v4, #0x0
+    0006..000a  if-eqz  v5, +0x14
+    000a..000c  array-length  v3, v5
+    000c..000e  const/4  v2, #0x0
+    000e..0012  if-ge  v2, v3, +0x10
+    0012..0016  aget-object  v1, v5, v2
+    0016..001a  iget-object  v0, v1, LX/0Tp;->A00:Ljava/lang/String;
+    001a..0020  invoke-static  {v7, v0}, Landroid/text/TextUtils;->equals(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Z
+    0020..0022  move-result  v0
+    0022..0026  if-eqz  v0, +0x3
+    0026..0028  return-object  v1
+    0028..002c  add-int/lit8  v2, v2, #0x1
+    002c..002e  goto  -0xf
+    002e..0030  return-object  v4
+    # exception table: 0 try range(s)
+.end method

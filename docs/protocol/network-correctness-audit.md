@@ -737,3 +737,18 @@ changing outbox/session/identity tables. Normal and delivered scenarios still ru
 Boundary tests cover exactly limit, limit+1, future time and both i64 extremes.
 No wall-clock wait, production timestamp migration or live traffic. Full native
 original timestamp provenance and pending-account lifecycle remain open.
+
+## Current-build prekey reply-body callbacks (2026-11-04)
+
+**Confirmed static, APK 2.26.43.72:** 140.CK4 and 141.CK4 read optional first
+list/pq_list children and compare count_low with true case-insensitively.
+0Tp.A0F proves first exact direct-child selection. Missing list is not itself a
+refusal in these callback bodies. Existing Rust legacy boolean parsing is
+supported; no production change was needed. 141 snapshots/clears pending fields
+under a monitor, sets state 12, then schedules Fd9 selector 1 with both flags.
+Error callback 141.Bvj uses 1ud.A01 and forwards a failure callback; exact retry
+policy and durable key transitions need the downstream consumers.
+[Exports, offsets, hashes, diagnostic mismatch and open boundaries](apk/2.26.43.72-prekey-upload-replies/README.md).
+This is static method evidence, not a runtime observation or new REA envelope.
+No live traffic. Producer ownership, PQ flag policy and native ACK/upload order
+remain unproven; this trace does not establish complete prekey correctness.

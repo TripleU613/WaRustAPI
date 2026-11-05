@@ -1,0 +1,88 @@
+
+# class: LX/141;
+# extends: Ljava/lang/Object;
+
+.method public CK4(VLL)  # .registers 23
+    # full signature: LX/141;->CK4(LX/0Tp;Ljava/lang/String;)V
+    0000..0002  const/4  v8, #0x1
+    0002..0006  move-object/from16  v1, v21
+    0006..000c  invoke-static  {v1, v8}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000c..0010  const-string  v0, "list"
+    0010..0016  invoke-virtual  {v1, v0}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    0016..0018  move-result-object  v4
+    0018..001c  const-string  v0, "pq_list"
+    001c..0022  invoke-virtual  {v1, v0}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    0022..0024  move-result-object  v2
+    0024..002a  const-string/jumbo  v1, "true"
+    002a..002c  const/4  v3, #0x0
+    002c..0030  if-eqz  v4, +0x2f
+    0030..0034  const-string  v0, "count_low"
+    0034..003a  invoke-virtual  {v4, v0, v3}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    003a..003c  move-result-object  v0
+    003c..0042  invoke-virtual  {v1, v0}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+    0042..0044  move-result  v9
+    0044..0048  if-eqz  v2, +0x21
+    0048..004c  const-string  v0, "count_low"
+    004c..0052  invoke-virtual  {v2, v0, v3}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0052..0054  move-result-object  v0
+    0054..005a  invoke-virtual  {v1, v0}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+    005a..005c  move-result  v10
+    005c..0060  move-object/from16  v4, v20
+    0060..0064  iget  v2, v4, LX/141;->A09:I
+    0064..0068  new-instance  v5, LX/0O2;
+    0068..006e  invoke-direct  {v5}, Ljava/lang/Object;-><init>()V
+    006e..0072  new-instance  v6, LX/0O2;
+    0072..0078  invoke-direct  {v6}, Ljava/lang/Object;-><init>()V
+    0078..007c  new-instance  v7, LX/0O2;
+    007c..0082  invoke-direct  {v7}, Ljava/lang/Object;-><init>()V
+    0082..0084  monitor-enter
+    0084..0086  goto  +0x5
+    0086..0088  move-object  v0, v3
+    0088..008a  goto  -0x1a
+    008a..008c  move-object  v0, v3
+    008c..008e  goto  -0x28
+    008e..0092  iget-object  v0, v4, LX/141;->A02:[LX/ETs;
+    0092..0094  const/4  v1, #0x0
+    0094..0098  if-nez  v0, +0x4
+    0098..009c  new-array  v0, v1, [LX/ETs;
+    009c..00a0  iput-object  v0, v5, LX/0O2;->element:Ljava/lang/Object;
+    00a0..00a4  iget-object  v0, v4, LX/141;->A01:[LX/ETs;
+    00a4..00a8  if-nez  v0, +0x4
+    00a8..00ac  new-array  v0, v1, [LX/ETs;
+    00ac..00b0  iput-object  v0, v6, LX/0O2;->element:Ljava/lang/Object;
+    00b0..00b4  iget-object  v0, v4, LX/141;->A00:LX/EcZ;
+    00b4..00b8  iput-object  v0, v7, LX/0O2;->element:Ljava/lang/Object;
+    00b8..00bc  iput-object  v3, v4, LX/141;->A02:[LX/ETs;
+    00bc..00c0  iput-object  v3, v4, LX/141;->A01:[LX/ETs;
+    00c0..00c4  iput-object  v3, v4, LX/141;->A00:LX/EcZ;
+    00c4..00c8  const/16  v0, #0xc
+    00c8..00cc  iput  v0, v4, LX/141;->A09:I
+    00cc..00ce  monitor-exit
+    00ce..00d2  iget-object  v0, v5, LX/0O2;->element:Ljava/lang/Object;
+    00d2..00d6  check-cast  v0, [Ljava/lang/Object;
+    00d6..00d8  array-length  v0, v0
+    00d8..00da  int-to-long  v14, v0
+    00da..00de  iget-object  v0, v6, LX/0O2;->element:Ljava/lang/Object;
+    00de..00e2  check-cast  v0, [Ljava/lang/Object;
+    00e2..00e4  array-length  v0, v0
+    00e4..00e6  int-to-long  v0, v0
+    00e6..00ea  const-wide/16  v12, #0x0
+    00ea..00ec  move-object  v11, v4
+    00ec..00f0  move/from16  v18, v8
+    00f0..00f4  move/from16  v19, v2
+    00f4..00f8  move-wide/from16  v16, v0
+    00f8..00fe  invoke-virtual/range  {v11..v19}, LX/141;->A00(JJJZI)V
+    00fe..0102  iget-object  v0, v4, LX/141;->A08:LX/00p;
+    0102..0108  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    0108..010a  move-result-object  v0
+    010a..010e  check-cast  v0, LX/098;
+    010e..0112  new-instance  v3, LX/Fd9;
+    0112..0118  invoke-direct/range  {v3..v10}, LX/Fd9;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;IZZ)V
+    0118..011e  invoke-virtual  {v0, v3}, LX/098;->execute(Ljava/lang/Runnable;)V
+    011e..0120  return-void
+    0120..0122  move-exception  v0
+    0122..0124  monitor-exit
+    0124..0126  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0047..0066 -> 0090
+.end method
