@@ -1,0 +1,19 @@
+
+# class: LX/Fdf;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLLLII)  # .registers 10
+    # full signature: LX/Fdf;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;II)V
+    0000..0004  iput  v9, v0, LX/Fdf;->$t:I
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000a..000e  iput-object  v2, v0, LX/Fdf;->A01:Ljava/lang/Object;
+    000e..0012  iput-object  v4, v0, LX/Fdf;->A02:Ljava/lang/Object;
+    0012..0016  iput-object  v1, v0, LX/Fdf;->A03:Ljava/lang/Object;
+    0016..001a  iput  v8, v0, LX/Fdf;->A00:I
+    001a..001e  iput-object  v7, v0, LX/Fdf;->A04:Ljava/lang/Object;
+    001e..0022  iput-object  v5, v0, LX/Fdf;->A05:Ljava/lang/Object;
+    0022..0026  iput-object  v3, v0, LX/Fdf;->A06:Ljava/lang/Object;
+    0026..002a  iput-object  v6, v0, LX/Fdf;->A07:Ljava/lang/Object;
+    002a..002c  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1437,3 +1437,61 @@ Additional export hashes:
 - [digest-server-error.txt](digest-server-error.txt): `a4ef2f579f831eafc254eb8ea3f46fb9cf45b3b47e97236e84fe17a256801c3c`
 - [digest-not-found-message.txt](digest-not-found-message.txt): `9355e1f3a328f5431ab93c872ed9435ccf25e360dd147712a177b571a0fdf2c4`
 - [digest-server-error-message.txt](digest-server-error-message.txt): `8cf13d0f09d619b87af7b4b38d00f8f53e1ea7f8912c3a9eecc96b8e0f79252f`
+
+## Digest local material verification and resynchronization (2026-11-04)
+
+**Confirmed static**, pinned2.26.43.72, same APK SHA-256 as this bundle.
+Checked DEX exports are not REA Evidence envelopes. Fdf.run nonzero
+selector1 branch only; its unrelated zero branch is not audited.
+
+- Retained **14o.BLn82** readsBundle, preserves null/empty PQ ID distinction,
+  calls **13z.A0P** before schedulingFdf(selector1). NewA0P clears **A01=0**
+  under monitor: the earlier60s uptime check is an attempt/inflight guard
+  reset on this result path, not evidence of a persisted cooldown.
+- Fdf constructor maps listener,registration,signedID,legacyIDs,hash,PQIDs,
+  LRID andtype to its fields. **run006c–00c8** requires typebyte5; converts
+  registration with1nr.A01 and compares local0YT.A08; then compares signed
+  ID to current0WJ.A0c().A01. Localidentity comes from0WJ.A19.
+- Legacy records are read and parsed into SparseArray, then selected in
+  **server-provided ID order**. A missing/failed row means no complete array;
+  array count must match server ID count. SQL scanorder is not hashorder.
+  No ID uniqueness check occurs on selected loop: do not silently sort or
+  deduplicate IDs when reconstructing this digest.
+- Digest algorithm at0260–0296 is **SHA-256** only whenEx8.A04 gate is
+  enabled **and LRID ispresent**, otherwise **SHA1**. DBb.A0x independently
+  resolvesliteralSHA-256. PQ-list presence alone doesnot selectSHA-256.
+- Updates inexact order: **identity bytes || signedprekey.A00(public) ||
+  signedprekey.A02(signature) || each legacy.A00(public)**. WhenPQ gate is
+  enabled andLRID present, load newest **uploaded** LR through0Yd.A00(true),
+  require itsID equal serverLRID, then append **LR.A00(public) ||
+  LR.A02(signature)**. Independently, withPQgate enabled and nonemptyPQ IDs,
+  load rowsbyIDs, reconstruct
+  **server order**, require allpresent, append each **ordinaryPQ.A00(public)**.
+  IDs themselves,ordinaryPQ signatures,registration andtype are not fed to
+  MessageDigest on this selected path. ETs public/signature mapping comes
+  from prior legacy/KEM serialization traces; no private key hash is inferred.
+- At055e–058e comparesdigest bytes with serverhash viaArrays.equals. Success
+  sets localworkflagfalse, avoidingA0Q. Registrationmismatch uses **A0Q(5)**;
+  selectedtype/signedID/missinglegacy/LR/PQ mismatches reach **A0Q(3)**;
+  hashmismatch setsreason3 thenA0Q. Defaultreason12/exception handling is
+  retained but full catch-path outcome is not independently enumerated here.
+  PriorA0Q trace marks sent KEM keys unsent and re-entersSET, so this is state
+  resynchronization, not mere diagnostic logging.
+- On selected normal completion **09S.A17(false)** clears persisted
+  **need_to_get_pre_key_digest**. It is separate from clearingA01 attempttime
+  or successful uploadedLR migration. Full preference producers and pending
+  digest/request ownership remain open.
+
+**Important boundary:** wire parser chooses hashlength32 based solelyonLR
+presence, while verifier also checksPQ gate foralgorithm. Do not collapse
+those independent checks. Missing local keys or a parsed server digest are
+not proof of successful reconciliation. No Rust digest request, mark-unsent
+recovery, account reset or live traffic added by this research.
+
+Additional export hashes:
+
+- [digest-verifier-worker.txt](digest-verifier-worker.txt): `32df299819b5bdc0ad940d62e213f15eeaf8ce226cc6cf0f5dde9c3dc88f9e69`
+- [digest-verifier-ctor.txt](digest-verifier-ctor.txt): `57bdfa4d59c08785fe8b7fce5a06ea3886fd4b7867bc29b99a27674e24692d2e`
+- [digest-attempt-clear.txt](digest-attempt-clear.txt): `60c829af81fff2e1fd6ebdf2b0ae32bd4b0b774578049786864f2aa773316b00`
+- [digest-sha-helper.txt](digest-sha-helper.txt): `a2efcb6b06279aa8cab9377bc8e7d50fdc0d032c777f119365792dff4a575492`
+- [digest-preference-clear.txt](digest-preference-clear.txt): `4982d067679a8b1da01af3ad4bcf75a58175eb039c00dc8a37b34ac035db8827`

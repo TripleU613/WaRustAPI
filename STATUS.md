@@ -1,3 +1,11 @@
+2026-11-04 — **Digest local verifier and resync reasons traced.**
+
+Ordered hashpreimage/SHA1-SHA256 selection retained; parsed digest isnot
+proof of matching local material. Recovery integration remains unfinished.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#digest-local-material-verification-and-resynchronization-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. No production change or live traffic.
+
 2026-11-04 — **Digest request/reply wire grammar traced.**
 
 GETdigest writer,reply registration,requiredbytefields and20/32-bytehash

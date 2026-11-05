@@ -4814,3 +4814,11 @@ result fixed-sizefields/id lists and hash20/32 dependingonLR presence.
 Success/error events82/83/84 distinguished; numeric parser differs from
 upload290. [Exports and verification/port limits](apk/2.26.43.72-prekey-upload-replies/README.md#digest-request-and-wire-callback-grammar-2026-11-04).
 No production change or live traffic.
+
+## 2026-11-04 — Digest local verifier/resynchronization
+
+**Confirmed static (43.72):**orderedlocalkey-material digest with
+SHA1/SHA256 chosenbyPQgate+LRpresence;IDs arenot hashed. Registration,
+key availability/ID andhashmismatches have separateA0Q reasons.
+Attempttime andpersisted digestflag clears distinguished.
+[Exports, preimage and recovery limits](apk/2.26.43.72-prekey-upload-replies/README.md#digest-local-material-verification-and-resynchronization-2026-11-04). No production change or live traffic.

@@ -1,0 +1,18 @@
+
+# class: LX/13z;
+# extends: LX/07o;
+
+.method public A0P(V)  # .registers 3
+    # full signature: LX/13z;->A0P()V
+    0000..0002  monitor-enter
+    0002..0006  const-wide/16  v0, #0x0
+    0006..000a  iput-wide  v0, v2, LX/13z;->A01:J
+    000a..000c  monitor-exit
+    000c..000e  return-void
+    000e..0010  move-exception  v0
+    0010..0012  monitor-exit
+    0012..0014  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0003..0005 -> 0007
+    # catch <all> code_units 0008..0009 -> 0007
+.end method

@@ -15443,5 +15443,12 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#digest-request-and-wire-callback-grammar-2026-11-04",
     "description": "Static43.72 encrypt GETdigest writer and291 callback grammar traced; hashlength20/32 depends onLR presence. Manager verification/startup integration remain open; no request/reset capability added."
+  },
+  "x-prekey-digest-local-verifier-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#digest-local-material-verification-and-resynchronization-2026-11-04",
+    "description": "Static43.72 digest verifier: ordered local key preimage, SHA1/SHA256 predicate, mismatch resync reasons and preference/attempt clears traced. Runtime recovery/request ownership port remains incomplete; no automatic reset/recovery added."
   }
 }

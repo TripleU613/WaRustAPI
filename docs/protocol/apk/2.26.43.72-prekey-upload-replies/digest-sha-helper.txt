@@ -1,0 +1,12 @@
+
+# class: LX/DBb;
+# extends: Ljava/lang/Object;
+
+.method public A0x(L)  # .registers 1
+    # full signature: LX/DBb;->A0x()Ljava/security/MessageDigest;
+    0000..0004  const-string  v0, "SHA-256"
+    0004..000a  invoke-static  {v0}, Ljava/security/MessageDigest;->getInstance(Ljava/lang/String;)Ljava/security/MessageDigest;
+    000a..000c  move-result-object  v0
+    000c..000e  return-object  v0
+    # exception table: 0 try range(s)
+.end method
