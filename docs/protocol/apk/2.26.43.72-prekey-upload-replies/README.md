@@ -772,3 +772,47 @@ Additional export hashes:
 - [legacy-reply-dispatch.txt](legacy-reply-dispatch.txt): `28e18ba55fd1c87e6b8974285009ec71c52304bbcb3de606da8ff2259279c638`
 - [legacy-error-event.txt](legacy-error-event.txt): `d2a45174e7aecf68cb3559783edf89311c26017a7782cb7cbfdc648bc3c2e034`
 - [legacy-error-message.txt](legacy-error-message.txt): `f3f20a338e90987fcb9a45b08c286bd8f125733943ca9be82d98eef5b2fcb5ee`
+
+## Legacy writer/reader map alias (2026-11-04)
+
+**Confirmed static**, pinned43.72. Full constructor/selected transport method
+exports retained; unrelated A0z connection branches are not claimed audited.
+
+- **0ZJ.A0z**, **0916–0920** allocates one **ConcurrentHashMap** in v13.
+  In the normal non-mocked branch, **0962–0968** passes v13 to **0ZJ.A0S**
+  while **0a1a–0a24** passes the same v13 into **1rj.<init>**. No reassignment
+  to v13 occurs between those calls on this selected normal path. Mock-provider
+  present branch at0920–0944 throws createMockedReaderWriter-labelled exception;
+  it is not evidence of another normally functioning alias.
+- **1rj.<init>005a–005e** retains the incoming map in **A03**. The legacy writer
+  uses that exact field for its generated-ID/290 entry (prior writer trace).
+- **0ZJ.A0S001a–0024** passes its supplied map unchanged into **1r7**.
+  **1r7.<init>000a–000e** retains it in A03. A0S invokes each configured
+  1r8 factory'sAL1 with that same context and registers returned parser.
+- **1rC.AL1** reads context.A03 and passes it into **1rD.<init>**; that
+  constructor stores the reference in **A00**, the map removed by1rA.A03's
+  result/error branches. Thus **when this factory is used**, writer1rj.A03 and
+  reader1rD.A00 are aliases of that per-setup ConcurrentHashMap.
+- Exact constructor caller searches bind1rj to0ZJ.A0z and1rD to1rC.AL1.
+  1rA base constructor initializes dependencies; it does not allocate the reply
+  map. No global shared-IQ-map equivalence is inferred from inheritance.
+
+**Closed boundary / remaining proof:** the concrete constructor reference flow
+is now proven for the normal setup path. Configured factory-set membership and
+registration dispatch, CPm listener binding, teardown/reconnect reuse and reader
+map cleanup are not proven by these constructors alone. Allocation per A0z
+invocation is not a durable account/request ownership guarantee. This advances
+prior alias unknowns without claiming the complete lifecycle is closed.
+No runtime change, new retry or live traffic.
+
+Additional export hashes:
+
+- [map-1rA.txt](map-1rA.txt): `3fc8e1a224a9d35647fd9325d4d962054fb24d3e97f87afc6c84d194d6282df7`
+- [map-1rD.txt](map-1rD.txt): `89d549c450413c115d87f48910692a098374df40646ac9f57bfaa67e3926be3d`
+- [map-1rj.txt](map-1rj.txt): `aeac1dc101f1c77ec63588d3f0375f2eee8f81feff44e9ebabbfebcdf90db401`
+- [map-callers-1rD.txt](map-callers-1rD.txt): `b62f4368c9154a5e687bcd91105c5b1e942d86d0a04d6de44af5889e093ca5e5`
+- [map-callers-1rj.txt](map-callers-1rj.txt): `2dac608722772aa6d7a2e8c7973fd287569a68e05059ecfaeab3ae68e2fe9080`
+- [map-reader-factory.txt](map-reader-factory.txt): `ce27aabbce0f341b19a7cde62e688dcbe6fe0252a6926638dd1d6e48e2b4fe5f`
+- [map-transport-binding.txt](map-transport-binding.txt): `e75620ce701dd4a50da59adedbfe4f7686c08b6d34c24bea401bf45a2d8cbd69`
+- [map-reader-context.txt](map-reader-context.txt): `96e64014c4f4238bedb03128387ba114741e636618245ba4c95d343a974e73bb`
+- [map-context-constructor.txt](map-context-constructor.txt): `573053bd91fffb64ba2f2b03728fedd870e1dd8adc1dc58d552ed30aa606eaee`

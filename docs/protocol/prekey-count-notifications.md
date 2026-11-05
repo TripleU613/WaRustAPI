@@ -257,3 +257,9 @@ The prior what85 prose was corrected to what0,arg1=85.
 error;290 error uses coded-error extractor then emits arg1=78 with code/text.
 [Special route versus generic callback and map/listener limits](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-reply-removal-and-error-event-path-2026-11-04).
 No retry/reset port yet.
+
+## Legacy reply-map reference binding
+
+**Confirmed static,43.72:** normal transport setup shares one map through writer
+and reader factory context. [Alias proof and remaining factory/lifecycle scope](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-writerreader-map-alias-2026-11-04).
+This is in-memory binding, not durable replay/account-state policy.

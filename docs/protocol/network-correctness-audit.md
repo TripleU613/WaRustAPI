@@ -1059,3 +1059,13 @@ binding still need proof.
 [Offsets, raw/negative evidence and remaining policy gap](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-reply-removal-and-error-event-path-2026-11-04).
 Legacy type admission independently supports the existing Rust correction.
 Numeric error/scheduling parity remains unported; no runtime change/live traffic.
+
+## Current-build legacy map reference binding (2026-11-04)
+
+**Confirmed static,43.72:** normal0ZJ.A0z creates one ConcurrentHashMap and
+passes it to both1rj writer and0ZJ.A0S reader context.1rC.AL1 supplies that
+context map to1rD. WriterA03 and readerA00 alias on this factory path; prior
+map-reference boundary is closed conditionally on factory use.
+[Constructor offsets, branch scope and remaining registration/lifetime proof](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-writerreader-map-alias-2026-11-04).
+Factory-set membership, listener dispatch and teardown remain open. No durable
+account ownership, runtime change or live traffic is inferred from map aliasing.

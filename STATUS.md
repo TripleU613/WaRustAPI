@@ -1,3 +1,11 @@
+2026-11-04 — **Legacy writer/reader reply-map alias traced.**
+
+Normal setup passes one ConcurrentHashMap through both writer and reader
+factory context; configured factory membership/lifetime remains open.
+[Evidence and boundaries](docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#legacy-writerreader-map-alias-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. No production change or live traffic.
+
 2026-11-04 — **Legacy prekey reply removal and error event traced.**
 
 Exact result/error removes the legacy map entry;290 error extracts code/text

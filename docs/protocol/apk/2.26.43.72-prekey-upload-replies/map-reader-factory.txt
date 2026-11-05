@@ -1,0 +1,15 @@
+
+# class: LX/1rC;
+# extends: Ljava/lang/Object;
+
+.method public AL1(LL)  # .registers 5
+    # full signature: LX/1rC;->AL1(LX/1r7;)LX/1rA;
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v4, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  iget-object  v2, v4, LX/1r7;->A02:LX/1lZ;
+    000c..0010  iget-object  v1, v4, LX/1r7;->A03:Ljava/util/Map;
+    0010..0014  new-instance  v0, LX/1rD;
+    0014..001a  invoke-direct  {v0, v2, v1}, LX/1rD;-><init>(LX/1lZ;Ljava/util/Map;)V
+    001a..001c  return-object  v0
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,25 @@
+
+# class: LX/1rA;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 2
+    # full signature: LX/1rA;-><init>()V
+    0000..0006  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    0006..000a  const/16  v0, #0x42
+    000a..0010  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0010..0012  move-result-object  v0
+    0012..0016  check-cast  v0, LX/08Y;
+    0016..001a  iput-object  v0, v1, LX/1rA;->A00:LX/08Y;
+    001a..001e  const/16  v0, #0x114
+    001e..0024  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0024..0026  move-result-object  v0
+    0026..002a  check-cast  v0, LX/0B0;
+    002a..002e  iput-object  v0, v1, LX/1rA;->A02:LX/0B0;
+    002e..0032  const/16  v0, #0x3bf
+    0032..0038  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0038..003a  move-result-object  v0
+    003a..003e  check-cast  v0, LX/0NX;
+    003e..0042  iput-object  v0, v1, LX/1rA;->A01:LX/0NX;
+    0042..0044  return-void
+    # exception table: 0 try range(s)
+.end method
