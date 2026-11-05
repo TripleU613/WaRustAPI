@@ -414,6 +414,19 @@ pub fn begin_upload(
             }
             // Kyber keys ride in the same IQ only while the server enables them
             // (property 21198; see kem_prekeys::upload_rows_in).
+            if pq_enabled
+                && scan_prefix::<Batch>(&*tx, Table::Checkpoints, BATCH_PREFIX)?
+                    .iter()
+                    .any(|(_, batch)| {
+                        batch.status == "outcome_unknown" && !batch.kem_ids.is_empty()
+                    })
+            {
+                // KEM rows only record sent=false until acknowledgement. Never
+                // select those same rows under a new IQ after a reconnect.
+                // Hold the complete upload rather than silently omitting PQ.
+                tracing::warn!("prekey upload held: prior KEM batch outcome unknown");
+                return Ok(None);
+            }
             let kem_rows = if pq_enabled {
                 super::kem_prekeys::upload_rows_in(tx, pq_batch)?
             } else {
@@ -1092,6 +1105,72 @@ mod tests {
                 .attr("type", "result");
             assert!(pending.settle(&store, &result).unwrap().accepted);
         }
+    }
+
+    #[test]
+    fn uncertain_kem_batch_cannot_be_selected_again_with_new_legacy_keys() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("kem-uncertain.redb");
+        let store = open(&path);
+        let (account, signed) = account_and_signed();
+        let id = super::super::abprops::queue(&store).unwrap();
+        super::super::actions::reserve_pending(&store).unwrap();
+        super::super::actions::record_reply(
+            &store,
+            &Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "result")
+                .children(vec![Node::new("props").attr("hash", "fixture").children(
+                    vec![
+                Node::new("prop").attr("config_code", "21198").attr("config_value", "1")
+            ],
+                )]),
+        )
+        .unwrap();
+        generate(&store).unwrap();
+        let (pending, first) = begin_upload(&store, &account, &signed).unwrap().unwrap();
+        assert!(first.child("pq_list").is_some());
+        assert!(first.child("pq_last_resort_key").is_some());
+        // A fresh connection may generate new legacy keys. The previous KEM
+        // rows still have sent=false, but are held by the original Batch.
+        generate(&store).unwrap();
+        let snapshot = |store: &ProtocolStore| {
+            store
+                .read(|tx| {
+                    [Table::Prekeys, Table::Checkpoints]
+                        .into_iter()
+                        .map(|table| tx.scan(table, 1, 10000))
+                        .collect::<Result<Vec<_>>>()
+                })
+                .unwrap()
+        };
+        let before = snapshot(&store);
+        assert!(begin_upload(&store, &account, &signed).unwrap().is_none());
+        assert_eq!(snapshot(&store), before);
+        drop(store);
+        let store = open(&path);
+        assert_eq!(snapshot(&store), before);
+        assert!(begin_upload(&store, &account, &signed).unwrap().is_none());
+        assert_eq!(snapshot(&store), before);
+        assert_eq!(
+            (
+                summary(&store).unwrap().unsent,
+                summary(&store).unwrap().uncertain
+            ),
+            (50, 50)
+        );
+        // Only the original correlated result releases that uncertainty.
+        pending
+            .settle(
+                &store,
+                &Node::new("iq")
+                    .attr("id", pending.iq_id.as_str())
+                    .attr("type", "result"),
+            )
+            .unwrap();
+        let (_, next) = begin_upload(&store, &account, &signed).unwrap().unwrap();
+        assert!(next.child("pq_list").is_none());
+        assert!(next.child("pq_last_resort_key").is_none());
     }
 
     #[test]

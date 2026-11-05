@@ -209,3 +209,9 @@ No Rust account migration or scheduling switch.
 retained internally under store encryption before returning the node. Older
 batches receive no backfill and uncertain requests remain unreplayed.
 [Reopen/settlement regression and exact scope](network-correctness-audit.md#frozen-prekey-request-provenance-2026-11-04).
+
+## Uncertain KEM selection correction (2026-11-04)
+
+**Confirmed local correction:** PQ-enabled uploads remain held while a prior
+KEM-bearing Batch is outcome_unknown; sent=false no longer permits selecting
+its keys under a fresh legacy upload after reconnect. [Reopen regression and scope](network-correctness-audit.md#uncertain-kem-batch-replay-admission-2026-11-04).

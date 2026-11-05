@@ -1,3 +1,10 @@
+2026-11-04 — **Uncertain KEM batches cannot ride a fresh upload again.**
+
+Transactional hold prevents sent=false KEM rows being selected under a new IQ
+with newly generated legacy keys. Full-store regression covers reopen and
+release only by original settlement. [Details and limits](network-correctness-audit.md#uncertain-kem-batch-replay-admission-2026-11-04).
+No live traffic.
+
 2026-11-04 — **New prekey reservations freeze their encoded request.**
 
 Wire payload/mode/dictionary checkpoint commits with keys and Batch. Reopen

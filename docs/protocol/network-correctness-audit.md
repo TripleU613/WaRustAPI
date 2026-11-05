@@ -928,3 +928,33 @@ or settlement. The earlier PQ-off/on construction-failure snapshot also now cove
 this new write boundary. This is provenance for future versioned-mode work,
 never permission to replay uncertain requests. ADD/generation strategy remains
 unfinished. No live traffic.
+
+## Uncertain KEM batch replay admission (2026-11-04)
+
+**Confirmed local replay defect / fixed offline:** legacy keys acquire explicit
+OutcomeUnknown metadata, but KEM rows retain sent=false until acceptance.
+kem_prekeys.upload_rows_in selected those unsent rows again if a new upload had
+fresh legacy keys. A reconnect could generate fresh legacy rows, enter a new IQ
+and resend the previous uncertain ordinary/last-resort KEM rows under another ID.
+This contradicted the runtime's stated uncertain-batch hold policy.
+
+Before KEM generation/selection, begin_upload now scans Batch reservations inside
+the same write transaction. With PQ enabled, any outcome_unknown batch carrying
+kem_ids holds the complete new upload and emits a fixed warning. It neither
+marks those rows sent/refused nor drops PQ from the new request. Existing known
+outcome settlement remains authoritative; no replay/reset API was introduced.
+
+**Offline regression:** enable PQ through a synthetic saved A/B reply; reserve
+one legacy+ordinary-PQ+last-resort upload; generate a fresh legacy batch. A second
+begin returns None without changing any Prekeys/Checkpoints rows. Reopen preserves
+the same snapshot and blocks again, with50 unsent/50 uncertain legacy keys.
+Only the original matching result settles the first batch; the next valid upload
+then omits the already-sent KEM rows under the existing SET policy.
+
+**Evidence distinction / limits:** this is local durable reservation policy,
+not an assertion that APK in-memory callbacks implement the same hold forever.
+Native selected-array callback ownership/mark-sent paths are retained in
+[current-build evidence](apk/2.26.43.72-prekey-upload-replies/README.md). Historical
+Batch rows without kem_ids default empty as before; this fix cannot reconstruct
+unknown historical wire contents. Current-build ADD/inventory/migration port is
+still open. No account-state reset or live traffic.
