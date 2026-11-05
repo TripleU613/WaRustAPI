@@ -16728,5 +16728,12 @@
     "x-library": [
       "whatsapp_api::transport::token_issue::TokenIssueCompletion"
     ]
+  },
+  "x-token-namespace-selection-audit": {
+    "x-cli": true,
+    "x-transport": "experimental",
+    "x-live": false,
+    "description": "Static APK2.26.43.72 token namespace audit:14303 selects pending/job user separately from0ht.A0L storage normalization. Counterpart cleanup requires15491=false and equal original/normalized user. Full mapping authority remains unported. Native types26/27 are @bot user/device; existing Rust PN/LID allowlist exclusion is regression-tested with no mutation and positive controls. No command, send policy or alias adoption changed. Reproduce with existing xtask APK disassembly.",
+    "evidence": "docs/protocol/apk/2.26.43.72-token-namespace-selection/README.md"
   }
 }

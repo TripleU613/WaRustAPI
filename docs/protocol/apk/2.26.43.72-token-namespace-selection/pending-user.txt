@@ -1,0 +1,26 @@
+
+# class: LX/87x;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLL)  # .registers 4
+    # full signature: LX/87x;->A00(Lcom/whatsapp/infra/core/jid/UserJid;LX/87x;)Lcom/whatsapp/infra/core/jid/UserJid;
+    0000..0004  iget-object  v1, v3, LX/87x;->A00:LX/08Y;
+    0004..0008  const/16  v0, #0x37df
+    0008..000e  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    000e..0010  move-result  v0
+    0010..0014  if-eqz  v0, +0x9
+    0014..0018  iget-object  v0, v3, LX/87x;->A03:LX/0ht;
+    0018..001e  invoke-virtual  {v0, v2}, LX/0ht;->A0L(Lcom/whatsapp/infra/core/jid/UserJid;)Lcom/whatsapp/infra/core/jid/UserJid;
+    001e..0020  move-result-object  v2
+    0020..0022  return-object  v2
+    0022..0028  invoke-static  {v2}, LX/0Dn;->A0Y(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0028..002a  move-result  v0
+    002a..002e  if-eqz  v0, -0x5
+    002e..0032  iget-object  v0, v3, LX/87x;->A04:LX/0Ws;
+    0032..0038  invoke-static  {v2}, LX/6oe;->A1O(Ljava/lang/Object;)V
+    0038..003e  invoke-static  {v0, v2}, LX/6of;->A0b(LX/0Ws;Ljava/lang/Object;)Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    003e..0040  move-result-object  v0
+    0040..0044  if-eqz  v0, -0x10
+    0044..0046  return-object  v0
+    # exception table: 0 try range(s)
+.end method

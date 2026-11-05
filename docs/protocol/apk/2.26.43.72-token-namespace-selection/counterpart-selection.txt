@@ -1,0 +1,22 @@
+
+# class: LX/0ht;
+# extends: LX/07o;
+
+.method private A02(LLL)  # .registers 5
+    # full signature: LX/0ht;->A02(Lcom/whatsapp/infra/core/jid/UserJid;Lcom/whatsapp/infra/core/jid/UserJid;)Lcom/whatsapp/infra/core/jid/UserJid;
+    0000..0004  iget-object  v1, v2, LX/0ht;->A00:LX/08Y;
+    0004..0008  const/16  v0, #0x3c83
+    0008..000e  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    000e..0010  move-result  v0
+    0010..0014  if-eqz  v0, +0x4
+    0014..0016  const/4  v3, #0x0
+    0016..0018  return-object  v3
+    0018..001e  invoke-static  {v4, v3}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    001e..0020  move-result  v0
+    0020..0024  if-eqz  v0, -0x5
+    0024..0028  iget-object  v0, v2, LX/0ht;->A06:LX/0Ws;
+    0028..002e  invoke-virtual  {v0, v3}, LX/0Ws;->A0K(Lcom/whatsapp/infra/core/jid/UserJid;)Lcom/whatsapp/infra/core/jid/UserJid;
+    002e..0030  move-result-object  v3
+    0030..0032  return-object  v3
+    # exception table: 0 try range(s)
+.end method

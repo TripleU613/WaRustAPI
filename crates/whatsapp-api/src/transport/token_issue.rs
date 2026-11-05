@@ -275,6 +275,9 @@ pub(crate) fn schedule_after_ack_in(
     chat: &Jid,
     now_seconds: i64,
 ) -> Result<Option<String>> {
+    // 43.72 87x.A04 -> 0Dn.A0O rejects BotJid/Device types26/27 (@bot).
+    // This direct-user allowlist already excludes both; namespace mapping
+    // and hosted/other producer parity are separate, not inferred here.
     if !matches!(chat.server, Server::User | Server::Lid) || chat.user.is_empty() {
         return Ok(None);
     }
@@ -361,6 +364,44 @@ mod tests {
     }
     fn now() -> i64 {
         crate::model::time::Timestamp::now().as_millis() / 1000
+    }
+
+    #[test]
+    fn native_bot_targets_never_schedule_or_change_state_but_direct_users_still_do() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open_at(&dir.path().join("state"), true);
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        // APK43.72 0xC.getServer/getType: bot/26; Dv2: bot/27, primary device.
+        for raw in ["123456789@bot", "123456789:0@bot"] {
+            let bot = Jid::parse(raw).unwrap();
+            assert!(
+                store
+                    .write(|tx| schedule_after_ack_in(tx, &bot, 1_800_000_000))
+                    .unwrap()
+                    .is_none()
+            );
+            assert!(!is_issue_request(
+                &issue_request("0123456789abcdef0123456789abcdef", &bot, 1_800_000_000).unwrap()
+            ));
+            assert_eq!(
+                before,
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap()
+            );
+        }
+        for raw in ["15555550101@s.whatsapp.net", "123456789@lid"] {
+            let user = Jid::parse(raw).unwrap();
+            assert!(
+                store
+                    .write(|tx| schedule_after_ack_in(tx, &user, 1_800_000_000))
+                    .unwrap()
+                    .is_some()
+            );
+        }
+        assert_eq!(super::super::actions::outcomes(&store).unwrap().len(), 2);
     }
 
     #[test]

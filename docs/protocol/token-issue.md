@@ -256,3 +256,16 @@ or times. No historical Ok replay/backfill; legacy missing metadata is unknown.
 [Native source, independent SQL vectors, reorder/reopen/rollback tests and limits](apk/2.26.43.72-token-success-state/README.md).
 Configured bucket policy, canonical counterparts and full job/cache lifecycle remain
 unfinished. No live account operation or automatic replay is introduced.
+
+## Token namespace selection and existing bot guard —2026-11-05
+
+Confirmed current87x.A00 uses14303 to choose pending/job user, while0ht.A0L
+independently normalizes PN storage through0Ws.A0E. Counterpart deletion also
+requires15491=false and original==normalized before0Ws.A0K; a mapped PN does
+not automatically authorize deletion of its original row. Lookup readiness,
+own-user/ranked-row authority and effective flags remain unported.
+Current getType26/27 are bot user/device identities (@bot), explaining87x.A04's
+existing exclusion. Rust's PN/LID allowlist already excludes them; a regression
+proves no action/state mutation and retains PN/LID positive controls.
+[Current methods, conditional namespace table and mapping limits](apk/2.26.43.72-token-namespace-selection/README.md).
+No automatic alias merge/deletion or live account operation was introduced.

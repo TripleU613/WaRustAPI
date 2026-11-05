@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "bytes": 5594,
+    "sha256": "4d68f55dbc97428d686192a9f138a601d9d6bcfb1eeb340c96f176200b1d678f"
+  },
+  "account-predicate.txt": {
+    "bytes": 697,
+    "sha256": "1c50ac0ff34f3256e807ebe2b87af734f2956d1530b8cc1161ca12d769b82ad1"
+  },
+  "bot-device.txt": {
+    "bytes": 3551,
+    "sha256": "580e0a5eba0a471c16f90224e0380e846cdbe4848cee59a81f91beadcc8403d9"
+  },
+  "bot-jid.txt": {
+    "bytes": 5549,
+    "sha256": "405fe2041194f40c46cfc80299a3c5189a875072bac61872661bedc9705cbc61"
+  },
+  "counterpart-dispatch.txt": {
+    "bytes": 1330,
+    "sha256": "a600c73c18fdf1f5fb31e52e3d394357792a30e53dea453f2847be2b6c04ae24"
+  },
+  "counterpart-selection.txt": {
+    "bytes": 990,
+    "sha256": "61848158231185450c5517e537aa75eb81d77d07f4698fc8f2ecf21d4b390597"
+  },
+  "pending-user.txt": {
+    "bytes": 1249,
+    "sha256": "fa16050783725ab6ca4a11a60df06a92bf15aa5df70b5ee393f1f7983fbd1e46"
+  },
+  "phone-predicate.txt": {
+    "bytes": 486,
+    "sha256": "145e0c7cc0b3caf1186683230829207b176ebb35f90b06749b5aeb0f7ea9a98a"
+  },
+  "phone-to-account-lookup.txt": {
+    "bytes": 3616,
+    "sha256": "b1733cce7c2966dfa10ad573eb265efbb296f51e884bce5438b07c7a933b84f7"
+  },
+  "storage-user.txt": {
+    "bytes": 914,
+    "sha256": "c613bc1cc1c9991873def62fe9e1cd54bc2aa5920bebe588cf623ff34b58920f"
+  }
+}

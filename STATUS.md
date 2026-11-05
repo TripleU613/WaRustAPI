@@ -1,3 +1,14 @@
+2026-11-05 — **Token target/storage namespace rules re-anchored to current APK.**
+
+Wire/pending user and store canonicalization use different rules; counterpart
+cleanup has a separate flag/equality guard. Mapping authority remains unported.
+Native excluded types26/27 are bots. The existing PN/LID allowlist correctly
+excludes them; a new no-mutation regression includes positive direct controls.
+[Evidence, conditional table and unresolved mapping policy](docs/protocol/apk/2.26.43.72-token-namespace-selection/README.md).
+Validation:1357 workspace/all-feature tests, strict Clippy, fmt, CLI reference,
+APK coverage and hygiene passed. No sending policy change, automatic alias
+deletion or live traffic.
+
 2026-11-05 — **Token results now persist captured success timestamps atomically.**
 
 Older completions preserve newer schedules; matching completions clear real-time

@@ -1,0 +1,29 @@
+
+# class: LX/0Ws;
+# extends: LX/0Wr;
+
+.method public A0K(LL)  # .registers 4
+    # full signature: LX/0Ws;->A0K(Lcom/whatsapp/infra/core/jid/UserJid;)Lcom/whatsapp/infra/core/jid/UserJid;
+    0000..0002  const/4  v1, #0x0
+    0002..0006  if-eqz  v3, +0x24
+    0006..000c  invoke-static  {v3}, LX/0Dn;->A0X(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    000c..000e  move-result  v0
+    000e..0012  if-nez  v0, +0x1e
+    0012..0018  invoke-static  {v3}, LX/0Dn;->A0Y(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0018..001a  move-result  v0
+    001a..001e  if-eqz  v0, +0xb
+    001e..0022  check-cast  v3, LX/0Dw;
+    0022..0028  invoke-virtual  {v2, v3}, LX/0Ws;->A0J(LX/0Dw;)Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    0028..002a  move-result-object  v0
+    002a..002e  check-cast  v0, Lcom/whatsapp/infra/core/jid/UserJid;
+    002e..0030  return-object  v0
+    0030..0036  invoke-static  {v3}, LX/0Dn;->A0c(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0036..0038  move-result  v0
+    0038..003c  if-eqz  v0, +0x9
+    003c..0040  check-cast  v3, Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    0040..0046  invoke-virtual  {v2, v3}, LX/0Ws;->A0E(Lcom/whatsapp/infra/core/jid/PhoneUserJid;)LX/0Dw;
+    0046..0048  move-result-object  v0
+    0048..004a  goto  -0xf
+    004a..004c  return-object  v1
+    # exception table: 0 try range(s)
+.end method

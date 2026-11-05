@@ -1,0 +1,21 @@
+
+# class: LX/0ht;
+# extends: LX/07o;
+
+.method public A0L(LL)  # .registers 4
+    # full signature: LX/0ht;->A0L(Lcom/whatsapp/infra/core/jid/UserJid;)Lcom/whatsapp/infra/core/jid/UserJid;
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-static  {v3}, LX/0Dn;->A0d(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    000e..0010  move-result  v0
+    0010..0014  if-eqz  v0, +0xe
+    0014..0018  iget-object  v1, v2, LX/0ht;->A06:LX/0Ws;
+    0018..001a  move-object  v0, v3
+    001a..001e  check-cast  v0, Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    001e..0024  invoke-virtual  {v1, v0}, LX/0Ws;->A0E(Lcom/whatsapp/infra/core/jid/PhoneUserJid;)LX/0Dw;
+    0024..0026  move-result-object  v0
+    0026..002a  if-eqz  v0, +0x3
+    002a..002c  return-object  v0
+    002c..002e  return-object  v3
+    # exception table: 0 try range(s)
+.end method

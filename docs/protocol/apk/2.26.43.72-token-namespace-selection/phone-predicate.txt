@@ -1,0 +1,15 @@
+
+# class: LX/0Dn;
+# extends: Ljava/lang/Object;
+
+.method public A0d(ZL)  # .registers 2
+    # full signature: LX/0Dn;->A0d(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0000..0004  if-eqz  v1, +0x9
+    0004..000a  invoke-virtual  {v1}, Lcom/whatsapp/infra/core/jid/Jid;->getType()I
+    000a..000c  move-result  v1
+    000c..000e  const/4  v0, #0x1
+    000e..0012  if-eqz  v1, +0x3
+    0012..0014  const/4  v0, #0x0
+    0014..0016  return  v0
+    # exception table: 0 try range(s)
+.end method
