@@ -16587,5 +16587,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-abprops-callback-timer/README.md",
     "description": "Initial abt/get/props protocol1 empty-hash query without refresh_id gets32s callback expiry from immediately before local write, without post-write reset. Dedicated select branch removes only live callback authority; durable Sent uncertainty remains without retry or configuration application. Result/error claims cancel the timer. No absolute reply-age predicate or default timeout for other IQs. Paused-clock and normal-driver write-delay/late-result regressions; exact Android threading parity remains open."
+  },
+  "x-blocklist-callback-expiry": {
+    "x-cli": false,
+    "x-transport": [
+      "normal experimental block/unblock action receive; offline tested"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-blocklist-callback-timing/README.md",
+    "description": "APK43.72 ordinary block/unblock sets pass20000ms via0Sf.A0W/A0A; block-list fetch passes0 viaA0Q/A06, with no positive replacement. Normal live ownership now expires only the supported set callback20s from immediately before local write. Expiry keeps durable Sent uncertainty, without replay, local list/hash mutation or rollback. Result/error cancels timer; no independent reply-age test. Fetch retains connection-owned callback without invented20/32s default. Paused-clock and normal-driver delayed-write/late-result tests; concrete native failure CE5(false) downstream policy and exact thread scheduling remain open."
   }
 }

@@ -1657,67 +1657,75 @@ mod tests {
         }
     }
     #[tokio::test(start_paused = true)]
-    async fn abprops_expiry_preserves_uncertainty_without_stopping_receive() {
+    async fn timed_action_expiry_preserves_uncertainty_without_stopping_receive() {
         use super::super::actions::{self, ActionStatus};
-        let dir = tempfile::tempdir().unwrap();
-        let store = open(&dir.path().join("abprops-expiry.redb"));
-        let id = super::super::abprops::queue(&store).unwrap();
-        let mut fake = start(&store, false, None);
-        fake.activate().await;
-        (&mut fake.ready).await.unwrap();
-        let (query, written) = fake.written().await;
-        assert_eq!(
-            query.get_attr("id").and_then(|v| v.as_text()),
-            Some(id.as_str())
-        );
-        // Include time spent waiting for the local write; completing it must
-        // not start another32s budget. No delivery assertion follows expiry.
-        tokio::time::advance(Duration::from_secs(33)).await;
-        written.send(Ok(())).unwrap();
-        let (ping, written) = fake.written().await;
-        assert_eq!(
-            ping.get_attr("xmlns").and_then(|v| v.as_text()),
-            Some("w:p")
-        );
-        written.send(Ok(())).unwrap();
-        fake.deliver(
-            Node::new("iq")
-                .attr("id", ping.get_attr("id").and_then(|v| v.as_text()).unwrap())
-                .attr("type", "result"),
-        )
-        .await;
-        // Let the due expiry branch run before presenting the late reply.
-        fake.nothing_written(Duration::from_millis(1)).await;
-        fake.deliver(
-            Node::new("iq")
-                .attr("id", id.as_str())
-                .attr("type", "result"),
-        )
-        .await;
-        fake.deliver(
-            Node::new("receipt")
-                .attr("from", peer())
-                .attr("id", "AFTER-ABPROPS-EXPIRY"),
-        )
-        .await;
-        let (ack, written) = fake.written().await;
-        assert_eq!(ack.description, "ack");
-        assert_eq!(
-            ack.get_attr("id").and_then(|v| v.as_text()),
-            Some("AFTER-ABPROPS-EXPIRY")
-        );
-        written.send(Ok(())).unwrap();
-        assert_eq!(
-            actions::outcomes(&store)
-                .unwrap()
-                .iter()
-                .find(|a| a.id == id)
-                .unwrap()
-                .status,
-            ActionStatus::Sent
-        );
-        fake.nothing_written(Duration::from_millis(1)).await;
-        fake.stop_cleanly().await;
+        for kind in ["abprops", "block", "unblock"] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("abprops-expiry.redb"));
+            let id = match kind {
+                "abprops" => super::super::abprops::queue(&store),
+                "block" => super::super::blocklist::queue_block(&store, &peer()),
+                _ => super::super::blocklist::queue_unblock(&store, &peer()),
+            }
+            .unwrap();
+            let mut fake = start(&store, false, None);
+            fake.activate().await;
+            (&mut fake.ready).await.unwrap();
+            let (query, written) = fake.written().await;
+            assert_eq!(
+                query.get_attr("id").and_then(|v| v.as_text()),
+                Some(id.as_str())
+            );
+            // Include time spent waiting for the local write; completing it must
+            // not start a fresh callback budget. No delivery assertion follows expiry.
+            tokio::time::advance(Duration::from_secs(33)).await;
+            written.send(Ok(())).unwrap();
+            let (ping, written) = fake.written().await;
+            assert_eq!(
+                ping.get_attr("xmlns").and_then(|v| v.as_text()),
+                Some("w:p")
+            );
+            written.send(Ok(())).unwrap();
+            fake.deliver(
+                Node::new("iq")
+                    .attr("id", ping.get_attr("id").and_then(|v| v.as_text()).unwrap())
+                    .attr("type", "result"),
+            )
+            .await;
+            // Let the due expiry branch run before presenting the late reply.
+            fake.nothing_written(Duration::from_millis(1)).await;
+            fake.deliver(
+                Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", "result"),
+            )
+            .await;
+            fake.deliver(
+                Node::new("receipt")
+                    .attr("from", peer())
+                    .attr("id", "AFTER-ABPROPS-EXPIRY"),
+            )
+            .await;
+            let (ack, written) = fake.written().await;
+            assert_eq!(ack.description, "ack");
+            assert_eq!(
+                ack.get_attr("id").and_then(|v| v.as_text()),
+                Some("AFTER-ABPROPS-EXPIRY")
+            );
+            written.send(Ok(())).unwrap();
+            assert_eq!(
+                actions::outcomes(&store)
+                    .unwrap()
+                    .iter()
+                    .find(|a| a.id == id)
+                    .unwrap()
+                    .status,
+                ActionStatus::Sent
+            );
+            fake.nothing_written(Duration::from_millis(1)).await;
+            assert!(super::super::blocklist::blocked(&store).unwrap().is_empty());
+            fake.stop_cleanly().await;
+        }
     }
 
     #[tokio::test]

@@ -742,3 +742,19 @@ Paused-clock unit and normal-driver tests cover expiry, reply cancellation,
 late replies, write delay, unrelated IQs and continued receive. Rust serializes
 expiry after awaited local writes; full Android concurrent scheduling, other
 producer durations and configuration scheduling remain open. No live traffic.
+
+## Block-list read/change callback timing corrected — 2026-11-05
+
+**Confirmed static / implemented offline:** current APK1dH.A05 block/unblock
+uses20000ms through0Sf.A0W/A0A;1dH.A0M fetch passes0 throughA0Q/A06,
+which supplies no positive-duration replacement. The normal Rust loop now
+expires block/unblock live callbacks20s from the pre-write boundary, retaining
+Sent uncertainty without list/hash mutation, rollback or retry. Fetch receives
+no invented20/32s timeout. Reply cancellation and expiry remain competing claims.
+[Complete producer, failure callback, tests and limits](apk/2.26.43.72-blocklist-callback-timing/README.md).
+Paused-clock tests cover19/20s, delayed write, result/error cancellation and
+fetch reply at60s. Normal-driver delayed-write/late-reply tests now cover both
+changes and initial AB-properties, continued receive and no resend/projection.
+The native change failure callback reaches2KT.CE5(false); its concrete downstream
+side effects remain open. Full native scheduler parity and other producers'
+deadlines remain unfinished. No live account operation.

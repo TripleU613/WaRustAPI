@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "bytes": 4391,
+    "sha256": "b8df5bc7315545c7f352d0b8cdee1da70885ec2d2f7a7009cc4d0b1b2706891a"
+  },
+  "failure-post.txt": {
+    "bytes": 515,
+    "sha256": "4b45f5f8f2c86fe33dd2ea0a3ed6a5803cf7d539cb4d0baea3951cd5c1f46672"
+  },
+  "query-admission.txt": {
+    "bytes": 4183,
+    "sha256": "1e1cfa0680809b0ffe191a5f394920317bea49600ecd12affab395cd38ac7456"
+  },
+  "query-failure.txt": {
+    "bytes": 1129,
+    "sha256": "52f6e63ec927b643bf4a563735f600da58ad0b411cd27687dbe7e1f3775f66ab"
+  },
+  "query-wrapper.txt": {
+    "bytes": 815,
+    "sha256": "a9950bb7cfad49f8d6d9d63fc20232c97c3018474add06d31ceed965b9c04e28"
+  },
+  "query.txt": {
+    "bytes": 7854,
+    "sha256": "96fd2c53629f78042472c31bce45b28dc1b912d1abd356cfdb0a4b7a82a1878c"
+  },
+  "set-failure-runnable.txt": {
+    "bytes": 56195,
+    "sha256": "051ae0f9995138343a1e0d63ad715f8e24f9920123e26941d67e4947463d95c6"
+  },
+  "set-failure.txt": {
+    "bytes": 874,
+    "sha256": "af516ea1cc21e0eb25c136c06983ed960ca6a7b9a7daca38d787a2e6cec64843"
+  },
+  "set-owner-constructor.txt": {
+    "bytes": 2591,
+    "sha256": "7c166ada5b012b750ab53ba9ab8432560bb55c26b371bc21f98a79818ece7bb0"
+  },
+  "set.txt": {
+    "bytes": 53679,
+    "sha256": "7a86df7c542204001434d3c2859943d65e3d49f246115cbc62311c691e5e06f5"
+  }
+}

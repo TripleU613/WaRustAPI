@@ -1,3 +1,12 @@
+2026-11-05 — **Block/unblock callback expiry now follows its20s APK timer.**
+
+Fetch uses a distinct native zero-duration path and receives no invented timer.
+Expired changes stay uncertain without replay or local block/hash mutation;
+normal receive continues. [Evidence, tests and downstream limits](docs/protocol/apk/2.26.43.72-blocklist-callback-timing/README.md).
+Validation:1337 workspace/all-feature tests, strict Clippy, fmt, CLI reference,
+APK coverage and hygiene passed. No live account traffic; other callback
+producers remain under audit.
+
 2026-11-05 — **Initial AB-properties callback now expires without replay.**
 
 The normal loop uses its confirmed32s pre-write timer, including write delay.

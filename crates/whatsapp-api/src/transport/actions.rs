@@ -389,7 +389,7 @@ impl LiveReplies {
             // APK43.72 HBE.A00 -> 0Sf.A0W/A0A -> 0ln.A08: the initial
             // AB-properties callback has 32000ms from pre-dispatch registration.
             // Other producers' durations are not inferred from this request.
-            if node.get_attr("type").and_then(|v| v.as_text()) == Some("get")
+            let seconds = if node.get_attr("type").and_then(|v| v.as_text()) == Some("get")
                 && node.get_attr("xmlns").and_then(|v| v.as_text()) == Some("abt")
                 && let [props] = node.child_nodes()
                 && props.description == "props"
@@ -397,8 +397,29 @@ impl LiveReplies {
                 && props.get_attr("hash").and_then(|v| v.as_text()) == Some("")
                 && props.get_attr("refresh_id").is_none()
             {
-                self.1
-                    .insert(id.to_owned(), started + std::time::Duration::from_secs(32));
+                Some(32)
+            } else if node.get_attr("type").and_then(|v| v.as_text()) == Some("set")
+                && node.get_attr("xmlns").and_then(|v| v.as_text()) == Some("blocklist")
+                && node.child_nodes().first().is_some_and(|item| {
+                    item.description == "item"
+                        && matches!(
+                            item.get_attr("action").and_then(|v| v.as_text()),
+                            Some("block" | "unblock")
+                        )
+                })
+            {
+                // APK43.72 1dH.A05 0638..0650 -> 0Sf.A0W: block/unblock
+                // use20000ms. A0M fetch uses zero through A0Q/A06, so it
+                // does not inherit this set-request timer.
+                Some(20)
+            } else {
+                None
+            };
+            if let Some(seconds) = seconds {
+                self.1.insert(
+                    id.to_owned(),
+                    started + std::time::Duration::from_secs(seconds),
+                );
             }
         }
     }
@@ -1169,6 +1190,76 @@ mod tests {
                 )
                 .unwrap()
             );
+        }
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn block_changes_expire_at_twenty_seconds_but_fetch_has_no_timer() {
+        use super::super::blocklist;
+        use crate::model::jid::Jid;
+        use std::time::Duration;
+        use tokio::time::{Instant, advance};
+        for block in [false, true] {
+            for settle in [false, true] {
+                let (_dir, store) = store();
+                let peer = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+                let id = if block {
+                    blocklist::queue_block(&store, &peer)
+                } else {
+                    blocklist::queue_unblock(&store, &peer)
+                }
+                .unwrap();
+                let request = reserve_next(&store).unwrap().unwrap();
+                let fetch = blocklist::queue_fetch(&store).unwrap();
+                let fetch_request = reserve_next(&store).unwrap().unwrap();
+                let started = Instant::now();
+                let mut live = LiveReplies::default();
+                advance(Duration::from_secs(3)).await;
+                live.record_written(&request, started);
+                live.record_written(&fetch_request, started);
+                assert_eq!(live.deadline(), Some(started + Duration::from_secs(20)));
+                advance(Duration::from_secs(16)).await;
+                live.expire();
+                assert!(live.0.contains(&id));
+                let reply = Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", if block { "result" } else { "error" });
+                if settle {
+                    assert!(live.record_reply(&store, &reply).unwrap());
+                    assert!(live.deadline().is_none());
+                }
+                advance(Duration::from_secs(1)).await;
+                live.expire();
+                assert!(!live.record_reply(&store, &reply).unwrap());
+                assert_eq!(
+                    outcomes(&store)
+                        .unwrap()
+                        .iter()
+                        .find(|a| a.id == id)
+                        .unwrap()
+                        .status,
+                    if !settle {
+                        ActionStatus::Sent
+                    } else if block {
+                        ActionStatus::Ok
+                    } else {
+                        ActionStatus::Error
+                    }
+                );
+                assert!(live.deadline().is_none());
+                advance(Duration::from_secs(40)).await;
+                live.expire();
+                assert!(
+                    live.record_reply(
+                        &store,
+                        &Node::new("iq")
+                            .attr("id", fetch.as_str())
+                            .attr("type", "result")
+                    )
+                    .unwrap()
+                );
+                assert!(blocklist::blocked(&store).unwrap().is_empty());
+            }
         }
     }
 

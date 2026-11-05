@@ -1,0 +1,18 @@
+
+# class: LX/8R7;
+# extends: Ljava/lang/Object;
+
+.method public BsS(VL)  # .registers 5
+    # full signature: LX/8R7;->BsS(Ljava/lang/String;)V
+    0000..0004  iget-object  v0, v3, LX/8R7;->A03:LX/7vW;
+    0004..0008  iget-object  v2, v0, LX/7vW;->A00:LX/7vV;
+    0008..000c  iget-object  v0, v2, LX/7vV;->A0A:LX/2Cl;
+    000c..0010  iget-object  v1, v0, LX/2Cl;->A04:Lcom/whatsapp/infra/core/jid/UserJid;
+    0010..0014  const-string  v0, "BlockListResponseHandler/general_request_timeout jid="
+    0014..001a  invoke-static  {v0, v1}, LX/2LA;->A1L(Ljava/lang/String;Ljava/lang/Object;)V
+    001a..001e  iget-object  v1, v2, LX/7vV;->A0D:LX/0Js;
+    001e..0022  iget-object  v0, v2, LX/7vV;->A0E:Ljava/lang/Runnable;
+    0022..0028  invoke-virtual  {v1, v0}, LX/0Js;->CbR(Ljava/lang/Runnable;)V
+    0028..002a  return-void
+    # exception table: 0 try range(s)
+.end method
