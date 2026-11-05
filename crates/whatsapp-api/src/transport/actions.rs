@@ -430,6 +430,10 @@ impl LiveReplies {
                 // APK43.72 1HL.A07 017c..018a -> 0Sf.A0W: 32000ms
                 // from registration, not the registration HTTP PIN flow.
                 Some(32)
+            } else if super::token_issue::is_issue_request(node) {
+                // APK43.72 GeneratePrivacyTokenJob.A0L 0144..015c:
+                // trusted-contact request299 has its own32000ms timer.
+                Some(32)
             } else {
                 None
             };
@@ -545,27 +549,33 @@ pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
         let two_factor_result = kind == Some("result")
             && row.kind == super::two_factor::ACTION_KIND
             && super::two_factor::is_set_request(&request);
+        // APK43.72 8R8.CK4 selector3 uses captured user/timestamp and
+        // resolves the job future without parsing the response payload.
+        let privacy_token_result = kind == Some("result")
+            && row.kind == super::token_issue::ACTION_KIND
+            && super::token_issue::is_issue_request(&request);
         // An `iq type=result` can still carry a refusal further in. App-state
         // answers per collection: `<sync><collection type="error"><error
         // code="409" text="conflict"/>`, observed live 2026-09-24. Reading only
         // the outer type recorded that as success, which is worse than an error
         // — it is an error the caller is told is fine.
-        let inner_error = if about_result || photo_set_result || two_factor_result {
-            None
-        } else {
-            node.child_nodes()
-                .iter()
-                .flat_map(|child| child.child_nodes())
-                .find_map(|child| {
-                    // An encrypt directory result can carry <list><user><error/>
-                    // without type=error on user. Preserve that refusal too.
-                    (child.description == "user"
-                        || child.get_attr("type").and_then(|v| v.as_text()) == Some("error"))
-                    .then(|| child.child("error"))
-                    .flatten()
-                })
-                .or_else(|| node.child("error"))
-        };
+        let inner_error =
+            if about_result || photo_set_result || two_factor_result || privacy_token_result {
+                None
+            } else {
+                node.child_nodes()
+                    .iter()
+                    .flat_map(|child| child.child_nodes())
+                    .find_map(|child| {
+                        // An encrypt directory result can carry <list><user><error/>
+                        // without type=error on user. Preserve that refusal too.
+                        (child.description == "user"
+                            || child.get_attr("type").and_then(|v| v.as_text()) == Some("error"))
+                        .then(|| child.child("error"))
+                        .flatten()
+                    })
+                    .or_else(|| node.child("error"))
+            };
         if kind == Some("result") && inner_error.is_none() {
             row.status = ActionStatus::Ok;
         } else {
@@ -1590,6 +1600,93 @@ mod tests {
                 }
             }
         }
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn privacy_token_expiry_keeps_scheduled_state_and_uses_outer_reply_type() {
+        use super::super::token_issue;
+        use std::time::Duration;
+        use tokio::time::{Instant, advance};
+        for domain in ["s.whatsapp.net", "lid"] {
+            for outcome in ["expire", "result", "error"] {
+                let (_dir, store) = store();
+                let user = crate::model::jid::Jid::parse(&format!("15555550101@{domain}")).unwrap();
+                let scheduled = 1_800_000_000;
+                let id = store
+                    .write(|tx| token_issue::schedule_after_ack_in(tx, &user, scheduled))
+                    .unwrap()
+                    .unwrap();
+                let request = reserve_next(&store).unwrap().unwrap();
+                let started = Instant::now();
+                advance(Duration::from_secs(5)).await;
+                let mut live = LiveReplies::default();
+                live.record_written(&request, started);
+                assert_eq!(live.deadline(), Some(started + Duration::from_secs(32)));
+                advance(Duration::from_secs(26)).await;
+                live.expire();
+                assert!(live.0.contains(&id));
+                let reply = Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr(
+                        "type",
+                        if outcome == "error" {
+                            "error"
+                        } else {
+                            "result"
+                        },
+                    )
+                    .children(vec![Node::new("error").attr("code", "403")]);
+                let before = store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap();
+                if outcome != "expire" {
+                    assert!(live.record_reply(&store, &reply).unwrap());
+                }
+                advance(Duration::from_secs(1)).await;
+                live.expire();
+                assert!(!live.record_reply(&store, &reply).unwrap());
+                assert!(live.deadline().is_none());
+                let outcomes = outcomes(&store).unwrap();
+                let saved = outcomes.iter().find(|a| a.id == id).unwrap();
+                assert_eq!(
+                    saved.status,
+                    match outcome {
+                        "expire" => ActionStatus::Sent,
+                        "result" => ActionStatus::Ok,
+                        _ => ActionStatus::Error,
+                    }
+                );
+                assert_eq!(
+                    saved.error_code,
+                    if outcome == "error" { Some(403) } else { None }
+                );
+                if outcome == "expire" {
+                    assert_eq!(
+                        store
+                            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                            .unwrap(),
+                        before
+                    );
+                }
+                assert!(
+                    store
+                        .write(|tx| token_issue::schedule_after_ack_in(tx, &user, scheduled + 60))
+                        .unwrap()
+                        .is_none()
+                );
+            }
+        }
+        // Account-privacy setters share xmlns=privacy but not this producer.
+        let mut live = LiveReplies::default();
+        live.record_written(
+            &Node::new("iq")
+                .attr("id", "PRIVACY-SETTING")
+                .attr("xmlns", "privacy")
+                .attr("type", "set")
+                .children(vec![Node::new("privacy")]),
+            Instant::now(),
+        );
+        assert!(live.deadline().is_none());
     }
 
     #[test]

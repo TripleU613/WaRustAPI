@@ -1,0 +1,15 @@
+
+# class: LX/8R8;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLI)  # .registers 6
+    # full signature: LX/8R8;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+    0000..0004  iput  v5, v0, LX/8R8;->$t:I
+    0004..0008  iput-object  v4, v0, LX/8R8;->A02:Ljava/lang/Object;
+    0008..000c  iput-object  v2, v0, LX/8R8;->A03:Ljava/lang/Object;
+    000c..0010  iput-object  v1, v0, LX/8R8;->A01:Ljava/lang/Object;
+    0010..0014  iput-object  v3, v0, LX/8R8;->A00:Ljava/lang/Object;
+    0014..001a  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    001a..001c  return-void
+    # exception table: 0 try range(s)
+.end method

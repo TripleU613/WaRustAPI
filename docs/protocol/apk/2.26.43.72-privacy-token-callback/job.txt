@@ -1,0 +1,238 @@
+
+# class: Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;
+# extends: Lorg/whispersystems/jobqueue/Job;
+
+.method public <init>(VL)  # .registers 4
+    # full signature: Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;-><init>(Lcom/whatsapp/infra/core/jid/UserJid;)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  new-instance  v1, LX/DCZ;
+    000c..0012  invoke-direct  {v1}, LX/DCZ;-><init>()V
+    0012..0016  const-string  v0, "generate-tc-token"
+    0016..001c  invoke-static  {v0, v1}, LX/6ol;->A0n(Ljava/lang/String;LX/DCZ;)Lorg/whispersystems/jobqueue/JobParameters;
+    001c..001e  move-result-object  v0
+    001e..0024  invoke-direct  {v2, v0}, Lorg/whispersystems/jobqueue/Job;-><init>(Lorg/whispersystems/jobqueue/JobParameters;)V
+    0024..002a  invoke-virtual  {v3}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+    002a..002c  move-result-object  v0
+    002c..0030  iput-object  v0, v2, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->toJid:Ljava/lang/String;
+    0030..0032  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A0J(V)  # .registers 1
+    # full signature: Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->A0J()V
+    0000..0002  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A0K(V)  # .registers 4
+    # full signature: Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->A0K()V
+    0000..0004  iget-object  v1, v3, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->A01:Lcom/whatsapp/infra/core/jid/UserJid;
+    0004..0008  if-eqz  v1, +0x10
+    0008..000c  iget-object  v0, v3, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->A02:LX/87x;
+    000c..0010  if-nez  v0, +0x9
+    0010..0014  const-string  v0, "privacyTokenSendManager"
+    0014..001a  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    001a..001c  const/4  v0, #0x0
+    001c..001e  throw  v0
+    001e..0024  invoke-virtual  {v0, v1}, LX/87x;->A03(Lcom/whatsapp/infra/core/jid/UserJid;)V
+    0024..0028  iget-wide  v1, v3, Lorg/whispersystems/jobqueue/Job;->A01:J
+    0028..002c  const-string  v0, "; persistentId="
+    002c..0032  invoke-static  {v1, v2, v0}, LX/2LA;->A0o(JLjava/lang/String;)Ljava/lang/String;
+    0032..0034  move-result-object  v1
+    0034..0038  const-string  v0, "canceled generate privacy token job "
+    0038..003e  invoke-static  {v0, v1}, LX/2LE;->A1B(Ljava/lang/String;Ljava/lang/String;)V
+    003e..0040  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A0L(V)  # .registers 24
+    # full signature: Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->A0L()V
+    0000..0004  move-object/from16  v10, v23
+    0004..0008  iget-object  v9, v10, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->A01:Lcom/whatsapp/infra/core/jid/UserJid;
+    0008..000c  if-nez  v9, +0x8
+    000c..0010  const-string  v0, "GeneratePrivacyTokenJob/onRun Stored UserJid String was invalid"
+    0010..0016  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0016..0018  return-void
+    0018..001e  invoke-static  {v9}, LX/0Dn;->A0O(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    001e..0020  move-result  v0
+    0020..0024  const-string  v16, "privacyTokenSendManager"
+    0024..0028  if-nez  v0, +0xc3
+    0028..002c  iget-object  v0, v10, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->A00:LX/0ht;
+    002c..0030  const-string  v1, "privacyTokenManager"
+    0030..0034  if-eqz  v0, +0xc5
+    0034..003a  invoke-virtual  {v0, v9}, LX/0ht;->A0O(Lcom/whatsapp/infra/core/jid/UserJid;)LX/7p3;
+    003a..003c  move-result-object  v0
+    003c..0040  if-eqz  v0, +0xab
+    0040..0044  iget-wide  v3, v0, LX/7p3;->A00:J
+    0044..004a  invoke-static  {v3, v4}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    004a..004c  move-result-object  v13
+    004c..0050  if-eqz  v13, +0xa4
+    0050..0054  iget-object  v0, v10, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->A00:LX/0ht;
+    0054..0058  if-eqz  v0, +0xb3
+    0058..005c  iget-object  v0, v0, LX/0ht;->A04:LX/0hu;
+    005c..0062  invoke-virtual  {v0}, LX/0hu;->A01()J
+    0062..0064  move-result-wide  v1
+    0064..0068  cmp-long  v0, v3, v1
+    0068..006c  if-ltz  v0, +0x96
+    006c..0070  iget-object  v1, v10, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->A03:LX/0Sf;
+    0070..0074  const-string  v0, "messageClient"
+    0074..0078  if-eqz  v1, +0x8b
+    0078..007e  invoke-virtual  {v1}, LX/0Sf;->A0G()Ljava/lang/String;
+    007e..0080  move-result-object  v15
+    0080..0084  new-instance  v20, LX/FfK;
+    0084..008a  invoke-direct/range  {v20..v20}, LX/FfK;-><init>()V
+    008a..008e  iget-object  v8, v10, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->A03:LX/0Sf;
+    008e..0092  if-eqz  v8, +0x7e
+    0092..0096  const-string  v14, "id"
+    0096..0098  const/4  v12, #0x0
+    0098..009c  const-string  v1, "jid"
+    009c..009e  const/4  v11, #0x1
+    009e..00a2  const-string  v0, "trusted_contact"
+    00a2..00a4  const/4  v7, #0x3
+    00a4..00a6  const/4  v6, #0x2
+    00a6..00aa  const-string  v5, "type"
+    00aa..00ae  new-array  v2, v7, [LX/0Tl;
+    00ae..00b4  invoke-static  {v9, v1, v2, v12}, LX/6oe;->A1K(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;[Ljava/lang/Object;I)V
+    00b4..00ba  invoke-static  {v5, v0, v2, v11}, LX/3q1;->A1T(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;I)V
+    00ba..00be  const-string  v1, "t"
+    00be..00c2  new-instance  v0, LX/0Tl;
+    00c2..00c8  invoke-direct  {v0, v1, v3, v4}, LX/0Tl;-><init>(Ljava/lang/String;J)V
+    00c8..00cc  aput-object  v0, v2, v6
+    00cc..00d0  const-string  v0, "token"
+    00d0..00d4  new-instance  v1, LX/0Tp;
+    00d4..00da  invoke-direct  {v1, v0, v2}, LX/0Tp;-><init>(Ljava/lang/String;[LX/0Tl;)V
+    00da..00de  const-string  v2, "tokens"
+    00de..00e0  const/4  v0, #0x0
+    00e0..00e4  new-instance  v3, LX/0Tp;
+    00e4..00ea  invoke-direct  {v3, v1, v2, v0}, LX/0Tp;-><init>(LX/0Tp;Ljava/lang/String;[LX/0Tl;)V
+    00ea..00ec  const/4  v0, #0x4
+    00ec..00f0  new-array  v2, v0, [LX/0Tl;
+    00f0..00f6  invoke-static  {v14, v15, v2, v12}, LX/3q1;->A1T(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;I)V
+    00f6..00fa  sget-object  v1, LX/0mL;->A00:LX/0mL;
+    00fa..00fe  const-string  v0, "to"
+    00fe..0104  invoke-static  {v1, v0, v2, v11}, LX/6oe;->A1K(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;[Ljava/lang/Object;I)V
+    0104..0108  const-string  v1, "xmlns"
+    0108..010c  const-string  v0, "privacy"
+    010c..0112  invoke-static  {v1, v0, v2, v6}, LX/3q1;->A1T(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;I)V
+    0112..0116  const-string  v0, "set"
+    0116..011c  invoke-static  {v5, v0, v2, v7}, LX/3q1;->A1T(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;I)V
+    011c..0120  const-string  v1, "iq"
+    0120..0124  new-instance  v0, LX/0Tp;
+    0124..012a  invoke-direct  {v0, v3, v1, v2}, LX/0Tp;-><init>(LX/0Tp;Ljava/lang/String;[LX/0Tl;)V
+    012a..012e  new-instance  v17, LX/8R8;
+    012e..0132  move/from16  v22, v7
+    0132..0136  move-object/from16  v19, v10
+    0136..013a  move-object/from16  v21, v9
+    013a..013e  move-object/from16  v18, v13
+    013e..0144  invoke-direct/range  {v17..v22}, LX/8R8;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+    0144..0148  const-wide/16  v6, #0x7d00
+    0148..014c  const/16  v5, #0x12b
+    014c..014e  move-object  v1, v8
+    014e..0152  move-object/from16  v2, v17
+    0152..0154  move-object  v3, v0
+    0154..0156  move-object  v4, v15
+    0156..015c  invoke-virtual/range  {v1..v7}, LX/0Sf;->A0W(LX/0lG;LX/0Tp;Ljava/lang/String;IJ)Z
+    015c..0162  invoke-virtual/range  {v20..v20}, LX/FfK;->get()Ljava/lang/Object;
+    0162..0166  iget-object  v0, v10, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->A02:LX/87x;
+    0166..016a  if-nez  v0, +0x7
+    016a..0170  invoke-static/range  {v16..v16}, LX/00l;->A0H(Ljava/lang/String;)V
+    0170..0172  const/4  v0, #0x0
+    0172..0174  throw  v0
+    0174..017a  invoke-virtual  {v0, v9}, LX/87x;->A03(Lcom/whatsapp/infra/core/jid/UserJid;)V
+    017a..017c  return-void
+    017c..017e  move-exception  v1
+    017e..0182  const-string  v0, "GeneratePrivacyTokenJob/onRun Failed to deliver Privacy Token generate request"
+    0182..0188  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0188..018a  throw  v1
+    018a..0190  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    0190..0192  goto  +0x18
+    0192..0194  const/4  v13, #0x0
+    0194..0198  const-string  v0, "GeneratePrivacyTokenJob/onRun Token timestamp "
+    0198..019e  invoke-static  {v13, v0}, LX/1Xl;->A15(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    019e..01a0  move-result-object  v1
+    01a0..01a4  const-string  v0, " missing or too old to send"
+    01a4..01aa  invoke-static  {v1, v0}, LX/2LD;->A1D(Ljava/lang/StringBuilder;Ljava/lang/String;)V
+    01aa..01ae  iget-object  v0, v10, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->A02:LX/87x;
+    01ae..01b2  if-nez  v0, +0xb
+    01b2..01b8  invoke-static/range  {v16..v16}, LX/00l;->A0H(Ljava/lang/String;)V
+    01b8..01ba  goto  +0x4
+    01ba..01c0  invoke-static  {v1}, LX/00l;->A0H(Ljava/lang/String;)V
+    01c0..01c2  const/4  v0, #0x0
+    01c2..01c4  throw  v0
+    01c4..01ca  invoke-virtual  {v0, v9}, LX/87x;->A03(Lcom/whatsapp/infra/core/jid/UserJid;)V
+    01ca..01cc  return-void
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/Exception; code_units 00ae..00be -> 00be
+.end method
+
+.method public A0N(ZL)  # .registers 7
+    # full signature: Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->A0N(Ljava/lang/Exception;)Z
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v6, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-virtual  {v6}, Ljava/lang/Throwable;->getCause()Ljava/lang/Throwable;
+    000e..0010  move-result-object  v1
+    0010..0014  instance-of  v0, v1, LX/Giq;
+    0014..0018  if-eqz  v0, +0x2f
+    0018..001c  check-cast  v1, LX/Giq;
+    001c..0020  iget-object  v0, v1, LX/Giq;->node:LX/0Tp;
+    0020..0024  if-eqz  v0, +0x29
+    0024..002a  invoke-static  {v0}, LX/1ud;->A00(LX/0Tp;)I
+    002a..002c  move-result  v1
+    002c..0030  const/16  v0, #0x190
+    0030..0034  if-gt  v0, v1, +0x21
+    0034..0038  const/16  v0, #0x1f4
+    0038..003c  if-ge  v1, v0, +0x1d
+    003c..003e  const/4  v4, #0x0
+    003e..0042  const-string  v3, "not "
+    0042..0046  iget-wide  v1, v5, Lorg/whispersystems/jobqueue/Job;->A01:J
+    0046..004a  const-string  v0, "; persistentId="
+    004a..0050  invoke-static  {v1, v2, v0}, LX/2LA;->A0o(JLjava/lang/String;)Ljava/lang/String;
+    0050..0052  move-result-object  v2
+    0052..0056  const-string  v0, "exception while running generate privacy token job, "
+    0056..005c  invoke-static  {v0, v3}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    005c..005e  move-result-object  v1
+    005e..0062  const-string  v0, "retrying"
+    0062..0068  invoke-static  {v0, v2, v1}, LX/1Xl;->A0x(Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    0068..006a  move-result-object  v0
+    006a..0070  invoke-static  {v0, v6}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0070..0072  return  v4
+    0072..0074  const/4  v4, #0x1
+    0074..0078  const-string  v3, ""
+    0078..007a  goto  -0x1b
+    # exception table: 0 try range(s)
+.end method
+
+.method public Cf0(VL)  # .registers 4
+    # full signature: Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->Cf0(Landroid/content/Context;)V
+    0000..0004  const/16  v0, #0x8d
+    0004..000a  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    000a..000c  move-result-object  v0
+    000c..0010  check-cast  v0, LX/0Sf;
+    0010..0014  iput-object  v0, v2, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->A03:LX/0Sf;
+    0014..0018  const/16  v0, #0x1131
+    0018..001e  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    001e..0020  move-result-object  v0
+    0020..0024  check-cast  v0, LX/0ht;
+    0024..0028  iput-object  v0, v2, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->A00:LX/0ht;
+    0028..002c  const/16  v0, #0x1134
+    002c..0032  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0032..0034  move-result-object  v0
+    0034..0038  check-cast  v0, LX/87x;
+    0038..003c  iput-object  v0, v2, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->A02:LX/87x;
+    003c..0040  sget-object  v1, Lcom/whatsapp/infra/core/jid/UserJid;->Companion:LX/0Dj;
+    0040..0044  iget-object  v0, v2, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->toJid:Ljava/lang/String;
+    0044..004a  invoke-virtual  {v1, v0}, LX/0Dj;->A02(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/UserJid;
+    004a..004c  move-result-object  v1
+    004c..0050  iput-object  v1, v2, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->A01:Lcom/whatsapp/infra/core/jid/UserJid;
+    0050..0054  if-eqz  v1, +0x10
+    0054..0058  iget-object  v0, v2, Lcom/whatsapp/infra/privacytoken/jobqueue/job/GeneratePrivacyTokenJob;->A02:LX/87x;
+    0058..005c  if-nez  v0, +0x9
+    005c..0060  const-string  v0, "privacyTokenSendManager"
+    0060..0066  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    0066..0068  const/4  v0, #0x0
+    0068..006a  throw  v0
+    006a..0070  invoke-virtual  {v0, v1}, LX/87x;->A05(Lcom/whatsapp/infra/core/jid/UserJid;)Z
+    0070..0072  return-void
+    # exception table: 0 try range(s)
+.end method

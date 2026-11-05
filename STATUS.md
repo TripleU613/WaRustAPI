@@ -1,3 +1,12 @@
+2026-11-05 — **Trusted-contact token callbacks now use their native32s timer.**
+
+Expiry preserves uncertain actions and scheduled markers without retry; typed
+results follow captured-data success. Account-privacy setters remain separate.
+[Evidence/tests and newly confirmed send-time validation gap](docs/protocol/apk/2.26.43.72-privacy-token-callback/README.md).
+Validation:1345 workspace/all-feature tests, strict Clippy, fmt, CLI reference,
+APK coverage and hygiene passed. Queued token-state reload/expiry/coalescing
+remains unfinished; no live traffic.
+
 2026-11-05 — **Two-step verification callbacks now use native32s expiry.**
 
 Typed outer results preserve the native payload-ignoring success semantics;

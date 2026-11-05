@@ -1,0 +1,38 @@
+{
+  "README.md": {
+    "bytes": 5620,
+    "sha256": "12bff3821c2c3e47fb9cc987ba743d9fb0922303ff19961fa24ad12787635170"
+  },
+  "constructor.txt": {
+    "bytes": 674,
+    "sha256": "d3feb8211b9d2f5f278090a63b887286ee4f74004858092f2dbe1d5e270cec23"
+  },
+  "error.txt": {
+    "bytes": 1810,
+    "sha256": "1de33c16cc5d6f9245d3782aec16922eed339ba6424669e5e0921a4167ba77fe"
+  },
+  "expiry-threshold.txt": {
+    "bytes": 912,
+    "sha256": "f6a98066be83dee6ddd7ee298573352c2959cf62601e465654eb86b919ef59c0"
+  },
+  "failure.txt": {
+    "bytes": 3045,
+    "sha256": "ebcdd10854a19f6365dd246124665fcf4bd1974b6c4f45bb030dfc68f77fc54e"
+  },
+  "job.txt": {
+    "bytes": 14030,
+    "sha256": "ecb072861cef6e43c6cae7be58ac85d559abe805cf1490ae3737f56e0ee20b45"
+  },
+  "result.txt": {
+    "bytes": 14757,
+    "sha256": "997a950fe66b5a6b0de05e66b04e260d9a82e4e60963c7b69a420fd25f9835cb"
+  },
+  "success-store.txt": {
+    "bytes": 7878,
+    "sha256": "6fb4e64b18bbc9b848c5fe1d0197cb71a4d0c5fc5f9a0d98a59b7a62f086d4a1"
+  },
+  "user-exclusion.txt": {
+    "bytes": 625,
+    "sha256": "6092b714709b158a7becce008f2bf445b93bc44b972755deaa913983284fc87e"
+  }
+}

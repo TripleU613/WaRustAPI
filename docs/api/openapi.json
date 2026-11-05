@@ -16632,5 +16632,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-two-factor-callback/README.md",
     "description": "APK43.72 1HL.A07 passes32000ms to0Sf.A0W before dispatch. Normal account/set2fa callback ownership now expires32s from pre-write start without replay, adoption or rollback; typed two-factor-set result follows FUS payload-ignoring success, while outer error/code stays separate. TwoFactorChange Debug now redacts PIN/email, preserving absent versus supplied values and unchanged wire/persistence. Paused-clock31/32s/write-delay/result/error/expiry tests, normal-driver continuation and diagnostic tests. Native credential encryption/adoption, error/observer and email-status-job policy remain open; no new route or live account operation."
+  },
+  "x-trusted-contact-callback-and-send-time-gap": {
+    "x-cli": false,
+    "x-transport": [
+      "normal experimental trusted-contact token issue callback; offline tested"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-privacy-token-callback/README.md",
+    "description": "APK43.72 trusted-contact job request299 uses32000ms independently of client-auth request314. Normal metadata-only privacy/set tokens/token trusted_contact callbacks now expire32s from pre-write start, preserving Sent uncertainty and scheduled state without retry/window reset. Typed privacy-token result follows captured-data selector3 success; outer errors remain refusals. PN/LID, delayed-write, expiry/checkpoint/duplicate/same-window and normal-driver tests. Confirmed unported gap: native job reloads scheduled state and checks execution-time expiry, while Rust freezes t at queue time. Supersession/coalescing, effective clock/expiry, success-store and job retry policy remain open; no live operation or Sent-row rewrite."
   }
 }

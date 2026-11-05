@@ -1,0 +1,24 @@
+
+# class: LX/0hu;
+# extends: Ljava/lang/Object;
+
+.method public A01(J)  # .registers 5
+    # full signature: LX/0hu;->A01()J
+    0000..0004  iget-object  v1, v4, LX/0hu;->A00:LX/08Y;
+    0004..0008  const/16  v0, #0x3e4
+    0008..000e  invoke-virtual  {v1, v0}, LX/00E;->A0a(I)I
+    000e..0010  move-result  v0
+    0010..0012  int-to-long  v2, v0
+    0012..0016  const/16  v0, #0x3e5
+    0016..001c  invoke-virtual  {v1, v0}, LX/00E;->A0a(I)I
+    001c..001e  move-result  v0
+    001e..0020  int-to-long  v0, v0
+    0020..0026  invoke-static  {v4, v2, v3, v0, v1}, LX/0hu;->A00(LX/0hu;JJ)J
+    0026..0028  move-result-wide  v2
+    0028..002e  invoke-virtual  {v4}, LX/0hu;->A02()J
+    002e..0030  move-result-wide  v0
+    0030..0036  invoke-static  {v2, v3, v0, v1}, Ljava/lang/Math;->min(JJ)J
+    0036..0038  move-result-wide  v0
+    0038..003a  return-wide  v0
+    # exception table: 0 try range(s)
+.end method

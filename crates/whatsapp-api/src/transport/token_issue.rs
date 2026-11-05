@@ -25,6 +25,8 @@ use crate::{
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
+pub(crate) const ACTION_KIND: &str = "privacy-token";
+
 /// `0q3.A00` fallback floor: now_seconds - 15,724,800 (182 days).
 pub const FALLBACK_SECONDS: i64 = 15_724_800;
 
@@ -57,6 +59,23 @@ pub fn issue_request(id: &str, user: &Jid, t: i64) -> Result<Node> {
         ])]))
 }
 
+// APK43.72 infra/privacytoken/GeneratePrivacyTokenJob.A0L: metadata-only
+// trusted-contact issue, distinct from client-auth nonce/token requests.
+pub(crate) fn is_issue_request(node: &Node) -> bool {
+    node.description == "iq"
+        && node.get_attr("type").and_then(|value| value.as_text()) == Some("set")
+        && node.get_attr("xmlns").and_then(|value| value.as_text()) == Some("privacy")
+        && matches!(node.child_nodes(), [tokens]
+            if tokens.description == "tokens"
+                && matches!(tokens.child_nodes(), [token]
+                    if token.description == "token"
+                        && token.get_attr("type").and_then(|value| value.as_text()) == Some("trusted_contact")
+                        && token.get_attr("jid").and_then(|value| value.as_jid()).is_some_and(|jid|
+                            !jid.user.is_empty() && matches!(jid.server, Server::User | Server::Lid))
+                        && token.get_attr("t").and_then(|value| value.as_text()).and_then(super::mex::java_decimal_long).is_some()
+                        && matches!(&token.content, crate::binary::NodeContent::Empty)))
+}
+
 /// After a successful server ACK of a message to `chat`, schedule our token
 /// for that user unless one was issued within the window. Returns the queued
 /// action ID. Groups, broadcasts and non-user chats are ignored.
@@ -75,15 +94,19 @@ pub(crate) fn schedule_after_ack_in(
     {
         return Ok(None);
     }
-    // 0q2.A0W writes the scheduled time before the job; it is not proof of
-    // server acceptance, and a failed issue is not retried until it expires.
+    // 0q2.A0W writes the scheduled time before the job, not server acceptance.
+    // Rust retains this marker after uncertainty; native job-level retry and
+    // pending-set lifecycle are not reconstructed by this one-shot queue.
     tx.put_json(
         Table::Checkpoints,
         &selector,
         1,
         &SendState { sent: now_seconds },
     )?;
-    let id = super::actions::queue_in(tx, "privacy-token", "trusted-contact token issue", |id| {
+    // APK43.72 GeneratePrivacyTokenJob.A0L reloads the scheduled timestamp at
+    // execution. Rust freezes it here: send-time reload/freshness and expiry
+    // gates remain an explicit gap (docs/protocol/token-issue.md).
+    let id = super::actions::queue_in(tx, ACTION_KIND, "trusted-contact token issue", |id| {
         issue_request(id, &user, now_seconds)
     })?;
     Ok(Some(id))

@@ -1752,12 +1752,24 @@ mod tests {
     #[tokio::test(start_paused = true)]
     async fn timed_action_expiry_preserves_uncertainty_without_stopping_receive() {
         use super::super::actions::{self, ActionStatus};
-        for kind in ["abprops", "block", "unblock", "dm-default", "two-factor"] {
+        for kind in [
+            "abprops",
+            "block",
+            "unblock",
+            "dm-default",
+            "two-factor",
+            "privacy-token",
+        ] {
             let dir = tempfile::tempdir().unwrap();
             let store = open(&dir.path().join("abprops-expiry.redb"));
             let id = match kind {
                 "abprops" => super::super::abprops::queue(&store),
                 "dm-default" => super::super::chat_settings::queue_default_timer(&store, 86400),
+                "privacy-token" => store
+                    .write(|tx| {
+                        super::super::token_issue::schedule_after_ack_in(tx, &peer(), 1_800_000_000)
+                    })
+                    .map(|id| id.expect("fresh token fixture")),
                 "two-factor" => super::super::two_factor::queue_set(
                     &store,
                     &super::super::two_factor::TwoFactorChange {

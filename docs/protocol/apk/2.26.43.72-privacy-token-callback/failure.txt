@@ -1,0 +1,47 @@
+
+# class: LX/8R8;
+# extends: Ljava/lang/Object;
+
+.method public BsS(VL)  # .registers 4
+    # full signature: LX/8R8;->BsS(Ljava/lang/String;)V
+    0000..0004  iget  v0, v2, LX/8R8;->$t:I
+    0004..000a  packed-switch  v0, payload@0xa0, cases=[0:@0x2c, 1:@0x52, 2:@0x78], default@0xa
+    000a..000c  const/4  v0, #0x0
+    000c..0012  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0012..0016  iget-object  v1, v2, LX/8R8;->A00:Ljava/lang/Object;
+    0016..001a  check-cast  v1, LX/FfK;
+    001a..001e  new-instance  v0, LX/7gg;
+    001e..0024  invoke-direct  {v0, v3}, LX/7gg;-><init>(Ljava/lang/String;)V
+    0024..002a  invoke-virtual  {v1, v0}, LX/FfK;->BsR(Ljava/lang/Exception;)V
+    002a..002c  return-void
+    002c..0030  const-string  v0, "GroupXmppMethods/sendJoinGroupByCode/onDeliveryFailure; iq="
+    0030..0036  invoke-static  {v0, v3}, LX/2LA;->A1N(Ljava/lang/String;Ljava/lang/String;)V
+    0036..003a  iget-object  v1, v2, LX/8R8;->A01:Ljava/lang/Object;
+    003a..003e  check-cast  v1, Lcom/google/common/util/concurrent/AbstractFuture;
+    003e..0042  const-string  v0, "joinGroupByCode IQ was not delivered: iq="
+    0042..0048  invoke-static  {v0, v3}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0048..004a  move-result-object  v0
+    004a..0050  invoke-static  {v1, v0}, LX/6oh;->A1L(Lcom/google/common/util/concurrent/AbstractFuture;Ljava/lang/String;)V
+    0050..0052  return-void
+    0052..0056  const-string  v0, "GroupXmppMethods/sendGetGroupInfoByInviteAddKey/onDeliveryFailure; iq="
+    0056..005c  invoke-static  {v0, v3}, LX/2LA;->A1N(Ljava/lang/String;Ljava/lang/String;)V
+    005c..0060  iget-object  v1, v2, LX/8R8;->A02:Ljava/lang/Object;
+    0060..0064  check-cast  v1, Lcom/google/common/util/concurrent/AbstractFuture;
+    0064..0068  const-string  v0, "sendGetGroupInfoByInviteAddKey IQ was not delivered: iq="
+    0068..006e  invoke-static  {v0, v3}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    006e..0070  move-result-object  v0
+    0070..0076  invoke-static  {v1, v0}, LX/6oh;->A1L(Lcom/google/common/util/concurrent/AbstractFuture;Ljava/lang/String;)V
+    0076..0078  return-void
+    0078..007c  const-string  v0, "GroupXmppMethods/sendRevokeGroupInvites/onDeliveryFailure; iq="
+    007c..0082  invoke-static  {v0, v3}, LX/2LA;->A1N(Ljava/lang/String;Ljava/lang/String;)V
+    0082..0086  iget-object  v1, v2, LX/8R8;->A01:Ljava/lang/Object;
+    0086..008a  check-cast  v1, Lcom/google/common/util/concurrent/AbstractFuture;
+    008a..008e  const-string  v0, "sendRevokeGroupInvites IQ was not delivered: iq="
+    008e..0094  invoke-static  {v0, v3}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0094..0096  move-result-object  v0
+    0096..009c  invoke-static  {v1, v0}, LX/6oh;->A1L(Lcom/google/common/util/concurrent/AbstractFuture;Ljava/lang/String;)V
+    009c..009e  return-void
+    009e..00a0  nop
+    00a0..00b4  packed-switch-payload  size=3
+    # exception table: 0 try range(s)
+.end method

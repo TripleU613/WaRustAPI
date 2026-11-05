@@ -171,3 +171,21 @@ client's; `DNf`'s raw exclusions (`9NJ`/`Bn8`, positive `178.A07`) and the
 call-invite producers are not reproduced; groups and broadcasts never schedule
 (the APK's `17J.BFC` ignores the participant-present branch). The comparison
 `lab-transport` path does not schedule.
+
+## Trusted-contact token callback and execution-time gap — 2026-11-05
+
+**Confirmed static / implemented offline:** current infra/privacytoken
+GeneratePrivacyTokenJob.A0L request299 uses32000ms through0Sf.A0W. This is
+separate from client-auth request314. Normal trusted-contact callbacks now
+expire32s from pre-write start, retaining Sent uncertainty and scheduled state
+without retry/window reset. Typed result follows8R8 selector3's captured-data
+success rather than generic nested-refusal parsing; outer errors stay separate.
+[Full job/callback evidence, tests and important remaining gap](apk/2.26.43.72-privacy-token-callback/README.md).
+PN/LID tests cover31/32s, delayed write, result/error/duplicate, checkpoint
+preservation, unchanged same-window scheduling and same-namespace exclusions.
+Normal-driver late-reply/receive/no-resend test includes the actual scheduler.
+**Remaining confirmed gap:** the APK reloads scheduled state and checks the
+execution-time threshold before constructing the request; Rust freezes t at
+queue time. Queued supersession/coalescing, effective expiry/clock, success-store
+and native job retry policy need a separate port. Sent rows must not be rewritten
+or replayed as a workaround. No live account operation.

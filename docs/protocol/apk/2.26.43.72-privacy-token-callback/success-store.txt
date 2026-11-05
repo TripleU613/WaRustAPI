@@ -1,0 +1,135 @@
+
+# class: LX/0ht;
+# extends: LX/07o;
+
+.method public A0V(VLJ)  # .registers 26
+    # full signature: LX/0ht;->A0V(Lcom/whatsapp/infra/core/jid/UserJid;J)V
+    0000..0002  const/4  v6, #0x0
+    0002..0006  move-object/from16  v9, v23
+    0006..000c  invoke-static  {v9, v6}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000c..0010  move-object/from16  v8, v22
+    0010..0016  invoke-virtual  {v8, v9}, LX/0ht;->A0L(Lcom/whatsapp/infra/core/jid/UserJid;)Lcom/whatsapp/infra/core/jid/UserJid;
+    0016..0018  move-result-object  v7
+    0018..001c  iget-object  v0, v8, LX/0ht;->A05:LX/0hv;
+    001c..0020  const-string  v10, "real_issue_timestamp"
+    0020..0024  const-string  v11, "sent_tc_token_timestamp"
+    0024..0028  const-string  v20, "jid"
+    0028..002c  iget-object  v0, v0, LX/0ai;->A00:LX/0an;
+    002c..0030  move-object/from16  v21, v0
+    0030..0036  invoke-virtual/range  {v21..v21}, LX/0Xp;->A07()LX/0aq;
+    0036..0038  move-result-object  v5
+    0038..003e  invoke-virtual  {v5}, LX/0aq;->A00()LX/1hk;
+    003e..0040  move-result-object  v12
+    0040..0042  const/4  v14, #0x2
+    0042..0046  new-instance  v15, Landroid/content/ContentValues;
+    0046..004c  invoke-direct  {v15, v14}, Landroid/content/ContentValues;-><init>(I)V
+    004c..0052  invoke-static/range  {v24..v25}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0052..0054  move-result-object  v13
+    0054..005a  invoke-virtual  {v15, v11, v13}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+    005a..0060  invoke-virtual  {v15, v10}, Landroid/content/ContentValues;->putNull(Ljava/lang/String;)V
+    0060..0066  const-string/jumbo  v4, "wa_trusted_contacts_send"
+    0066..006a  const-string  v1, "jid = ? AND sent_tc_token_timestamp <= ?"
+    006a..0070  invoke-virtual  {v7}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+    0070..0072  move-result-object  v3
+    0072..0078  invoke-static/range  {v24..v25}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+    0078..007a  move-result-object  v19
+    007a..007e  new-array  v0, v14, [Ljava/lang/String;
+    007e..0080  const/4  v2, #0x0
+    0080..0084  aput-object  v3, v0, v6
+    0084..0086  const/4  v3, #0x1
+    0086..008a  aput-object  v19, v0, v3
+    008a..0090  invoke-static  {v15, v5, v4, v1, v0}, LX/0ai;->A02(Landroid/content/ContentValues;LX/0aq;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)J
+    0090..0092  move-result-wide  v15
+    0092..0096  const-string  v1, "Should have only one row per JID"
+    0096..009a  const-wide/16  v17, #0x1
+    009a..009e  cmp-long  v0, v15, v17
+    009e..00a2  if-ltz  v0, +0x10
+    00a2..00a6  cmp-long  v0, v15, v17
+    00a6..00aa  if-nez  v0, +0x3
+    00aa..00ac  const/4  v2, #0x1
+    00ac..00b2  invoke-static  {v2, v1}, LX/00L;->A0C(ZLjava/lang/String;)V
+    00b2..00b8  invoke-virtual  {v12}, LX/1hk;->A00()V
+    00b8..00bc  sget-object  v1, LX/02X;->A01:Ljava/lang/Integer;
+    00bc..00be  goto  +0x53
+    00be..00c2  new-instance  v15, Landroid/content/ContentValues;
+    00c2..00c8  invoke-direct  {v15, v3}, Landroid/content/ContentValues;-><init>(I)V
+    00c8..00ce  invoke-virtual  {v15, v10, v13}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+    00ce..00d2  const-string  v10, "jid = ? AND real_issue_timestamp IS NOT NULL AND real_issue_timestamp <= ?"
+    00d2..00d8  invoke-virtual  {v7}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+    00d8..00da  move-result-object  v16
+    00da..00de  new-array  v0, v14, [Ljava/lang/String;
+    00de..00e2  aput-object  v16, v0, v6
+    00e2..00e6  aput-object  v19, v0, v3
+    00e6..00ec  invoke-static  {v15, v5, v4, v10, v0}, LX/0ai;->A02(Landroid/content/ContentValues;LX/0aq;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)J
+    00ec..00ee  move-result-wide  v15
+    00ee..00f2  cmp-long  v0, v15, v17
+    00f2..00f6  if-ltz  v0, +0x10
+    00f6..00fa  cmp-long  v0, v15, v17
+    00fa..00fe  if-nez  v0, +0x3
+    00fe..0100  const/4  v2, #0x1
+    0100..0106  invoke-static  {v2, v1}, LX/00L;->A0C(ZLjava/lang/String;)V
+    0106..010c  invoke-virtual  {v12}, LX/1hk;->A00()V
+    010c..0110  sget-object  v1, LX/02X;->A01:Ljava/lang/Integer;
+    0110..0112  goto  +0x29
+    0112..0116  new-instance  v10, Landroid/content/ContentValues;
+    0116..011c  invoke-direct  {v10, v14}, Landroid/content/ContentValues;-><init>(I)V
+    011c..0122  invoke-virtual  {v7}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+    0122..0124  move-result-object  v1
+    0124..0128  move-object/from16  v0, v20
+    0128..012e  invoke-virtual  {v10, v0, v1}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+    012e..0134  invoke-virtual  {v10, v11, v13}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+    0134..0138  iget-object  v2, v5, LX/0aq;->A02:LX/0KU;
+    0138..013c  const-string  v1, "PrivacyTokenStore/insert_wa_trusted_contacts_send"
+    013c..013e  const/4  v0, #0x4
+    013e..0144  invoke-virtual  {v2, v4, v1, v10, v0}, LX/0KU;->A09(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;I)J
+    0144..0146  move-result-wide  v10
+    0146..014c  invoke-virtual  {v12}, LX/1hk;->A00()V
+    014c..0150  const-wide/16  v1, #0xffff (-1)
+    0150..0154  cmp-long  v0, v10, v1
+    0154..0158  if-eqz  v0, +0x5
+    0158..015c  sget-object  v1, LX/02X;->A00:Ljava/lang/Integer;
+    015c..015e  goto  +0x3
+    015e..0162  sget-object  v1, LX/02X;->A0C:Ljava/lang/Integer;
+    0162..0168  invoke-virtual  {v12}, LX/1hk;->close()V
+    0168..016e  invoke-virtual  {v5}, LX/0aq;->close()V
+    016e..0172  sget-object  v0, LX/02X;->A0C:Ljava/lang/Integer;
+    0172..0176  if-eq  v1, v0, +0x2b
+    0176..017a  iget-object  v0, v8, LX/0ht;->A08:LX/00p;
+    017a..0180  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    0180..0182  move-result-object  v0
+    0182..0188  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    0188..018c  check-cast  v0, Ljava/util/Map;
+    018c..0192  invoke-interface  {v0, v7}, Ljava/util/Map;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+    0192..0198  invoke-direct  {v8, v9, v7}, LX/0ht;->A02(Lcom/whatsapp/infra/core/jid/UserJid;Lcom/whatsapp/infra/core/jid/UserJid;)Lcom/whatsapp/infra/core/jid/UserJid;
+    0198..019a  move-result-object  v0
+    019a..019e  if-eqz  v0, +0x17
+    019e..01a4  invoke-virtual/range  {v21..v21}, LX/0Xp;->A07()LX/0aq;
+    01a4..01a6  move-result-object  v5
+    01a6..01ac  const-string/jumbo  v2, "wa_trusted_contacts_send.jid = ?"
+    01ac..01b2  invoke-virtual  {v0}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+    01b2..01b4  move-result-object  v1
+    01b4..01b8  new-array  v0, v3, [Ljava/lang/String;
+    01b8..01bc  aput-object  v1, v0, v6
+    01bc..01c2  invoke-static  {v5, v4, v2, v0}, LX/0ai;->A03(LX/0aq;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)J
+    01c2..01c8  invoke-virtual  {v5}, LX/0aq;->close()V
+    01c8..01ca  return-void
+    01ca..01cc  move-exception  v1
+    01cc..01ce  throw  v1
+    01ce..01d0  move-exception  v0
+    01d0..01d6  invoke-static  {v12, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    01d6..01d8  throw  v0
+    01d8..01da  move-exception  v1
+    01da..01dc  throw  v1
+    01dc..01de  move-exception  v0
+    01de..01e4  invoke-static  {v5, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    01e4..01e6  throw  v0
+    # exception table: 8 try range(s)
+    # catch <all> code_units 001c..0020 -> 00ec
+    # catch <all> code_units 0020..0049 -> 00e5
+    # catch <all> code_units 0056..00b1 -> 00e5
+    # catch <all> code_units 00b1..00b4 -> 00ec
+    # catch <all> code_units 00d3..00e1 -> 00ec
+    # catch <all> code_units 00e6..00e7 -> 00e7
+    # catch <all> code_units 00e8..00ec -> 00ec
+    # catch <all> code_units 00ed..00ee -> 00ee
+.end method
