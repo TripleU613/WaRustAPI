@@ -1,0 +1,22 @@
+{
+  "README.md": {
+    "bytes": 4342,
+    "sha256": "1b96410e1226424e4fa1dc1fd340002b2207e0ac099d8a49cdb4897f0015299d"
+  },
+  "key-processing-policy.txt": {
+    "bytes": 10071,
+    "sha256": "5f8276f0af18d8a9ae52c906eba221802f8e239b0172e4eb9494c021533a5ba3"
+  },
+  "legacy-pq-session-cleanup.txt": {
+    "bytes": 1721,
+    "sha256": "d91a93b009c83373ca99d32b478c4a72b6bd1bae7d117e18d194da5fdb263459"
+  },
+  "receipt-parser.txt": {
+    "bytes": 13077,
+    "sha256": "0e1ed55d1b7bef1ee8b74085c9b99ce18017b478df35daf1e017aefa37efd774"
+  },
+  "session-policy-entry.txt": {
+    "bytes": 4316,
+    "sha256": "d3b980b3b620225dfa5c885ba93683a02047ae991276f11d1563b9df99577c59"
+  }
+}

@@ -1,0 +1,83 @@
+
+# class: LX/163;
+# extends: Ljava/lang/Object;
+
+.method public A05(LLLLLLLLLIIZ)  # .registers 30
+    # full signature: LX/163;->A05(LX/Ejp;Lcom/whatsapp/infra/core/jid/DeviceJid;LX/1dW;LX/ETs;LX/ETs;LX/ETs;[B[BIIZ)[B
+    0000..0004  move-object/from16  v12, v24
+    0004..0008  const-string  v2, "RetryReceiptHandler/axolotl checking sessions for "
+    0008..000c  move-object/from16  v6, v18
+    000c..0010  iget-object  v0, v6, LX/163;->A0a:LX/0Wk;
+    0010..0014  move-object/from16  v8, v20
+    0014..001a  invoke-virtual  {v0, v8}, LX/0Wk;->A05(Lcom/whatsapp/infra/core/jid/DeviceJid;)LX/FjI;
+    001a..001c  move-result-object  v4
+    001c..0022  invoke-static  {v8}, LX/F3k;->A05(Lcom/whatsapp/infra/core/jid/DeviceJid;)LX/EoY;
+    0022..0024  move-result-object  v3
+    0024..0028  new-instance  v1, Ljava/lang/StringBuilder;
+    0028..002e  invoke-direct  {v1, v2}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    002e..0034  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0034..0038  const-string  v0, " due to retry receipt for "
+    0038..003e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    003e..0042  move-object/from16  v9, v21
+    0042..0048  invoke-virtual  {v1, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0048..004e  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    004e..0050  move-result-object  v0
+    0050..0056  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0056..0058  const/4  v2, #0x0
+    0058..005c  move-object/from16  v10, v22
+    005c..0060  move-object/from16  v14, v26
+    0060..0064  if-eqz  v26, +0x5
+    0064..0066  const/4  v0, #0x1
+    0066..006a  if-nez  v22, +0x3
+    006a..006c  const/4  v0, #0x0
+    006c..0070  if-eqz  v0, +0x3
+    0070..0072  goto  +0x3
+    0072..0074  move-object  v12, v2
+    0074..0076  goto  +0xf
+    0076..007a  iget-object  v0, v6, LX/163;->A0H:LX/00x;
+    007a..0080  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0080..0082  move-result-object  v0
+    0082..0086  check-cast  v0, LX/Ex8;
+    0086..008c  invoke-virtual  {v0}, LX/Ex8;->A02()Z
+    008c..008e  move-result  v0
+    008e..0092  if-eqz  v0, -0xe
+    0092..0096  const/16  v16, #0x1
+    0096..009a  move-object/from16  v7, v19
+    009a..009e  move-object/from16  v11, v23
+    009e..00a2  move-object/from16  v13, v25
+    00a2..00a6  move/from16  v15, v28
+    00a6..00aa  move/from16  v17, v29
+    00aa..00b0  invoke-static/range  {v6..v17}, LX/163;->A02(LX/163;LX/Ejp;Lcom/whatsapp/infra/core/jid/DeviceJid;LX/1dW;LX/ETs;LX/ETs;LX/ETs;[B[BIZZ)Z
+    00b0..00b4  move/from16  v5, v27
+    00b4..00ba  invoke-direct  {v6, v3, v9, v5, v15}, LX/163;->A04(LX/EoY;LX/1dW;II)[B
+    00ba..00bc  move-result-object  v0
+    00bc..00c0  if-nez  v0, +0x23
+    00c0..00c4  iget-object  v0, v6, LX/163;->A0H:LX/00x;
+    00c4..00ca  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    00ca..00cc  move-result-object  v0
+    00cc..00d0  check-cast  v0, LX/Ex8;
+    00d0..00d6  invoke-virtual  {v0}, LX/Ex8;->A02()Z
+    00d6..00d8  move-result  v0
+    00d8..00dc  if-eqz  v0, +0x11
+    00dc..00e0  sget-object  v1, LX/E78;->A02:LX/E78;
+    00e0..00e4  sget-object  v0, LX/E7N;->A02:LX/E7N;
+    00e4..00ea  invoke-static  {v8, v1, v0}, LX/F3k;->A06(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/E78;LX/E7N;)LX/EoY;
+    00ea..00ec  move-result-object  v0
+    00ec..00f2  invoke-direct  {v6, v0, v9, v5, v15}, LX/163;->A04(LX/EoY;LX/1dW;II)[B
+    00f2..00f4  move-result-object  v0
+    00f4..00f8  if-eqz  v0, +0x3
+    00f8..00fa  goto  +0x5
+    00fa..0100  invoke-virtual  {v4}, LX/FjI;->close()V
+    0100..0102  return-object  v2
+    0102..0108  invoke-virtual  {v4}, LX/FjI;->close()V
+    0108..010a  return-object  v0
+    010a..010c  move-exception  v1
+    010c..0112  invoke-virtual  {v4}, LX/FjI;->close()V
+    0112..0114  throw  v1
+    0114..0116  move-exception  v0
+    0116..011c  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    011c..011e  throw  v1
+    # exception table: 2 try range(s)
+    # catch <all> code_units 000e..007d -> 0085
+    # catch <all> code_units 0086..0089 -> 008a
+.end method

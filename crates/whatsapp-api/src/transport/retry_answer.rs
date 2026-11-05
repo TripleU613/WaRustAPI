@@ -16,7 +16,7 @@
 //! unchanged and FTy.AK7 -> F3f.A04 -> F3f.A09 writes nonzero `enc count` as
 //! decimal (docs/protocol/retry-enc-count.md). Both answer paths preserve it.
 //! Not reproduced: the count-2 base-key record/current-key comparison
-//! (`163.A04`, `0WJ.A0s/A15` in 43.72), receipts carrying `<keys>`, and
+//! (`163.A04`, `0WJ.A0s/A15` in 43.72), receipts carrying `<keys>` (explicitly refused), and
 //! group/broadcast retries. Counts above two remain refused.
 
 use crate::{
@@ -147,6 +147,12 @@ pub async fn answer(
     let Some(original) = first.payload.as_deref() else {
         return unanswered(store, &key, "original_stanza_missing");
     };
+    // APK43.72 F10.A04 and163.A02 route receipt-carried keys through a
+    // separate session/verification policy. Until ported, do not silently
+    // substitute our ordinary saved-session or directory-fetch answer.
+    if node.child("keys").is_some() {
+        return unanswered(store, &key, "receipt_keys_unsupported");
+    }
     let peer_key = format!("comparison-direct:{peer}");
     let answer_key = format!(
         "retry-answer:{}:{}:{}",
@@ -1272,6 +1278,61 @@ mod tests {
             }
         };
 
+        // A receipt-carried bundle is a separate, unported policy. Neither
+        // a matching nor changed registration may fall through to encryption
+        // or a directory query, including empty/malformed keys children.
+        let protected = || {
+            store
+                .read(|tx| {
+                    [Table::Outbox, Table::SignalSessions, Table::PeerIdentities]
+                        .into_iter()
+                        .map(|table| tx.scan(table, 1, 10000))
+                        .collect::<Result<Vec<_>>>()
+                })
+                .unwrap()
+        };
+        let before_keys = protected();
+        let checkpoints_before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+            .unwrap();
+        let mut refused_snapshot = None;
+        for registration in [42, 43] {
+            for keys in [
+                Node::new("keys"),
+                Node::new("keys").bytes(vec![1]),
+                Node::new("keys").children(vec![Node::new("identity").bytes(vec![2; 32])]),
+            ] {
+                let node = receipt(&peer, 1, registration);
+                let mut children = node.child_nodes().to_vec();
+                children.push(keys);
+                let node = node.children(children);
+                assert!(
+                    answer(&store, &account, &node, ConnectionEpoch(2))
+                        .await
+                        .unwrap()
+                        .is_none()
+                );
+                assert_eq!(
+                    reason(&store, 1, &peer).as_deref(),
+                    Some("receipt_keys_unsupported")
+                );
+                assert_eq!(protected(), before_keys);
+                let checkpoints = store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                    .unwrap();
+                assert_eq!(checkpoints.len(), checkpoints_before.len() + 1);
+                assert!(
+                    checkpoints_before
+                        .iter()
+                        .all(|row| checkpoints.contains(row))
+                );
+                if let Some(previous) = &refused_snapshot {
+                    assert_eq!(&checkpoints, previous);
+                }
+                refused_snapshot = Some(checkpoints);
+            }
+        }
+        // A later supported receipt without keys still follows normal policy.
         let resend = ask(1, 42).await.unwrap().expect("answered");
         assert_eq!(resend.get_attr("id").and_then(|v| v.as_text()), Some("W1"));
         assert_eq!(

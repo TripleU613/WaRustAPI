@@ -2734,3 +2734,30 @@ interleaving simulations, not scheduled multithread races or live key requests.
 
 **Observed live:** none. Full current-APK root normalization and higher-count
 base-key policy remain unresolved. No new CLI command, route or protocol feature.
+
+## Receipt-carried keys capability boundary (2026-11-05)
+
+**Confirmed / corrected offline:** the normal direct retry driver previously
+ignored a receipt's `keys` child despite receipt-key handling being unported.
+It could answer under the saved session or reserve a directory query for a
+branch whose real key/session/verification policy was not implemented.
+
+The driver now explicitly returns no send/query and records local
+`receipt_keys_unsupported` after existing original/recipient/count/acceptance/age
+eligibility checks. Any top-level keys child triggers that local limit, including
+malformed/empty keys; no key material is adopted or validated here. Repeats keep
+one unanswered checkpoint and leave normal answer/query markers absent. A later
+supported receipt without keys can still follow the ordinary policy.
+
+[Current-build checked parser and session policy](apk/2.26.43.72-retry-receipt-keys/README.md)
+retain F10.A04,163.A02/A05 and the distinct163.A01 legacy/PQ cleanup helper.
+The explicit refusal is our capability boundary, **not** a claim that Android
+always rejects key-carrying retries. Its conditional AEA/session/registration and
+legacy/PQ fallback behavior still requires a full port. Receipt ACK policy and
+other consumers of the parser are unchanged.
+
+The full retry workflow regression tests matching/changed registration with
+empty, byte-valued and partial structured keys. It asserts no node, unchanged
+outbox/session/pin rows, only one unanswered checkpoint, no refetch job and
+successful later no-keys resend. These are synthetic offline fixtures, not valid
+native key bundles or live compatibility proof.

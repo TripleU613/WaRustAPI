@@ -92,3 +92,7 @@ unresolved state. This does not establish universal direct-retry normalization.
 No root attribute changes were made. The separate
 [saved-session reservation correction](retry-answers.md#saved-session-retry-reservation-guard-2026-11-05)
 rechecks local outbox/peer snapshots and age without expanding supported counts.
+
+Receipt-key support remains unported; the normal direct driver now
+[explicitly refuses keys-bearing receipts](retry-answers.md#receipt-carried-keys-capability-boundary-2026-11-05)
+without silently substituting saved-session encryption or a directory query.

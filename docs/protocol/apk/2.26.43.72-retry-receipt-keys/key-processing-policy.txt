@@ -1,0 +1,173 @@
+
+# class: LX/163;
+# extends: Ljava/lang/Object;
+
+.method public A02(ZLLLLLLLLLIZZ)  # .registers 31
+    # full signature: LX/163;->A02(LX/163;LX/Ejp;Lcom/whatsapp/infra/core/jid/DeviceJid;LX/1dW;LX/ETs;LX/ETs;LX/ETs;[B[BIZZ)Z
+    0000..0004  const/16  v17, #0x5
+    0004..0008  move-object/from16  v12, v23
+    0008..000c  move-object/from16  v14, v27
+    000c..0010  if-eqz  v27, +0x5
+    0010..0012  const/4  v0, #0x1
+    0012..0016  if-nez  v23, +0x3
+    0016..0018  const/4  v0, #0x0
+    0018..001c  const/16  v18, #0x0
+    001c..0020  if-eqz  v0, +0x27
+    0020..0024  move-object/from16  v2, v21
+    0024..002a  invoke-static  {v2}, LX/F3k;->A05(Lcom/whatsapp/infra/core/jid/DeviceJid;)LX/EoY;
+    002a..002c  move-result-object  v5
+    002c..0030  move-object/from16  v3, v19
+    0030..0034  move-object/from16  v1, v22
+    0034..0038  if-eqz  v30, +0x2d
+    0038..003c  iget-object  v4, v3, LX/163;->A0Z:LX/0WJ;
+    003c..0042  invoke-virtual  {v4, v5}, LX/0WJ;->A14(LX/EoY;)Z
+    0042..0044  move-result  v0
+    0044..0048  if-nez  v0, +0x14
+    0048..004c  const-string  v2, "RetryReceiptHandler/axolotl Not processing keys from the receipt, missing session for "
+    004c..0050  new-instance  v0, Ljava/lang/StringBuilder;
+    0050..0056  invoke-direct  {v0, v2}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0056..005c  invoke-virtual  {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    005c..0062  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0062..0064  move-result-object  v0
+    0064..006a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    006a..006c  return  v18
+    006c..0072  invoke-virtual  {v4, v5}, LX/0WJ;->A0M(LX/EoY;)LX/Etk;
+    0072..0074  move-result-object  v0
+    0074..0078  iget-object  v0, v0, LX/Etk;->A01:LX/EZK;
+    0078..007c  iget-object  v0, v0, LX/EZK;->A00:LX/Dha;
+    007c..0080  iget  v0, v0, LX/Dha;->remoteRegistrationId_:I
+    0080..0084  move/from16  v4, v28
+    0084..0088  if-eq  v0, v4, +0x5
+    0088..008c  const-string  v2, "RetryReceiptHandler/Not processing keys from the receipt, registrationId does not match for "
+    008c..008e  goto  -0x20
+    008e..0092  sget-object  v5, LX/E78;->A02:LX/E78;
+    0092..0096  move-object/from16  v13, v25
+    0096..009a  if-eqz  v25, +0x65
+    009a..009e  sget-object  v0, LX/E7N;->A02:LX/E7N;
+    009e..00a4  invoke-static  {v2, v5, v0}, LX/F3k;->A06(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/E78;LX/E7N;)LX/EoY;
+    00a4..00a6  move-result-object  v9
+    00a6..00ac  invoke-virtual  {v2}, Lcom/whatsapp/infra/core/jid/Jid;->getDevice()I
+    00ac..00ae  move-result  v0
+    00ae..00b2  move-object/from16  v8, v20
+    00b2..00b6  move-object/from16  v11, v24
+    00b6..00ba  move-object/from16  v15, v26
+    00ba..00be  if-nez  v0, +0x50
+    00be..00c2  iget-object  v4, v3, LX/163;->A0U:LX/08Y;
+    00c2..00c6  const/16  v0, #0x6f6f
+    00c6..00cc  invoke-virtual  {v4, v0}, LX/00E;->A14(I)Z
+    00cc..00ce  move-result  v0
+    00ce..00d2  if-eqz  v0, +0x46
+    00d2..00d6  if-nez  v20, +0xa
+    00d6..00da  sget-object  v0, LX/32i;->A00:LX/00f;
+    00da..00e0  invoke-virtual  {v4, v0}, LX/00E;->A17(LX/00f;)Z
+    00e0..00e2  move-result  v0
+    00e2..00e6  if-eqz  v0, +0x3c
+    00e6..00ea  iget-object  v0, v3, LX/163;->A02:LX/00x;
+    00ea..00f0  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    00f0..00f2  move-result-object  v0
+    00f2..00f6  check-cast  v0, LX/Em2;
+    00f6..00fc  invoke-static  {v14}, LX/00L;->A05(Ljava/lang/Object;)V
+    00fc..0102  invoke-static  {v12}, LX/00L;->A05(Ljava/lang/Object;)V
+    0102..0104  const/4  v10, #0x0
+    0104..0108  new-instance  v7, LX/EoQ;
+    0108..010c  move-object/from16  v16, v10
+    010c..0110  move/from16  v19, v18
+    0110..0116  invoke-direct/range  {v7..v19}, LX/EoQ;-><init>(LX/Ejp;LX/EoY;LX/ElG;LX/ETs;LX/ETs;LX/ETs;[B[B[BBZZ)V
+    0116..011c  invoke-virtual  {v0, v7}, LX/Em2;->A01(LX/EoQ;)LX/EEJ;
+    011c..011e  move-result-object  v4
+    011e..0122  instance-of  v0, v4, LX/Dta;
+    0122..0126  const-string  v7, "; jid="
+    0126..012a  if-eqz  v0, +0x20
+    012a..012e  const-string  v3, "RetryReceiptHandler/axolotl AEA verification rejected the keys from the receipt; message.key="
+    012e..0132  new-instance  v0, Ljava/lang/StringBuilder;
+    0132..0138  invoke-direct  {v0, v3}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0138..013e  invoke-virtual  {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    013e..0144  invoke-virtual  {v0, v7}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0144..014a  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    014a..0150  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0150..0152  move-result-object  v0
+    0152..0158  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0158..015a  return  v18
+    015a..015e  sget-object  v4, LX/Dtb;->A00:LX/Dtb;
+    015e..0160  goto  -0x20
+    0160..0164  sget-object  v0, LX/E7N;->A03:LX/E7N;
+    0164..0166  goto  -0x63
+    0166..016a  const-string  v6, "RetryReceiptHandler/axolotl processing keys from the receipt; message.key="
+    016a..016e  new-instance  v0, Ljava/lang/StringBuilder;
+    016e..0174  invoke-direct  {v0, v6}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0174..017a  invoke-virtual  {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    017a..0180  invoke-virtual  {v0, v7}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0180..0186  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0186..018c  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    018c..018e  move-result-object  v0
+    018e..0194  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0194..0198  if-eqz  v29, +0x25
+    0198..019c  if-nez  v25, +0x23
+    019c..01a0  sget-object  v0, LX/E7N;->A02:LX/E7N;
+    01a0..01a6  invoke-static  {v2, v5, v0}, LX/F3k;->A06(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/E78;LX/E7N;)LX/EoY;
+    01a6..01a8  move-result-object  v5
+    01a8..01ac  const-string  v0, "RetryReceiptHandler/axolotl deleting PQ session for "
+    01ac..01b0  new-instance  v1, Ljava/lang/StringBuilder;
+    01b0..01b6  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    01b6..01bc  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    01bc..01c0  const-string  v0, " due to retry receipt with legacy prekeys"
+    01c0..01c6  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    01c6..01cc  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    01cc..01ce  move-result-object  v0
+    01ce..01d4  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    01d4..01d8  iget-object  v0, v3, LX/163;->A0Z:LX/0WJ;
+    01d8..01de  invoke-virtual  {v0, v5}, LX/0WJ;->A0q(LX/EoY;)V
+    01de..01e2  instance-of  v0, v4, LX/DtZ;
+    01e2..01e4  const/4  v5, #0x0
+    01e4..01e8  if-eqz  v0, +0x4b
+    01e8..01ec  if-eqz  v20, +0xd
+    01ec..01ee  move-object  v0, v4
+    01ee..01f2  check-cast  v0, LX/DtZ;
+    01f2..01f6  iget-object  v0, v0, LX/DtZ;->A00:LX/Evl;
+    01f6..01fa  iget-object  v1, v0, LX/Evl;->A00:LX/E7b;
+    01fa..01fe  sget-object  v0, LX/E7b;->A02:LX/E7b;
+    01fe..0202  if-eq  v1, v0, +0x3e
+    0202..0206  check-cast  v4, LX/DtZ;
+    0206..020c  invoke-static  {v14}, LX/00L;->A05(Ljava/lang/Object;)V
+    020c..0212  invoke-static  {v12}, LX/00L;->A05(Ljava/lang/Object;)V
+    0212..0216  if-eqz  v4, +0x6
+    0216..021a  iget-object  v0, v4, LX/DtZ;->A00:LX/Evl;
+    021a..021e  iget-object  v5, v0, LX/Evl;->A00:LX/E7b;
+    021e..0222  iget-object  v0, v3, LX/163;->A0Z:LX/0WJ;
+    0222..0224  move-object  v6, v0
+    0224..0226  move-object  v7, v5
+    0226..0228  move-object  v8, v9
+    0228..022a  move-object  v9, v11
+    022a..022c  move-object  v10, v12
+    022c..022e  move-object  v11, v13
+    022e..0230  move-object  v12, v14
+    0230..0232  move-object  v13, v15
+    0232..0236  move/from16  v14, v17
+    0236..023c  invoke-virtual/range  {v6..v14}, LX/0WJ;->A0K(LX/E7b;LX/EoY;LX/ETs;LX/ETs;LX/ETs;[B[BB)I
+    023c..023e  move-result  v5
+    023e..0242  if-nez  v5, +0x20
+    0242..0246  iget-object  v5, v3, LX/163;->A00:Landroid/os/Handler;
+    0246..024a  const/16  v1, #0x1f
+    024a..024e  new-instance  v0, LX/Fed;
+    024e..0254  invoke-direct  {v0, v2, v3, v1}, LX/Fed;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V
+    0254..025a  invoke-virtual  {v5, v0}, Landroid/os/Handler;->post(Ljava/lang/Runnable;)Z
+    025a..025e  const/16  v18, #0x1
+    025e..0262  if-eqz  v4, -0xfa
+    0262..0266  iget-object  v0, v3, LX/163;->A02:LX/00x;
+    0266..026c  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    026c..026e  move-result-object  v0
+    026e..0272  check-cast  v0, LX/Em2;
+    0272..0278  invoke-virtual  {v0, v4, v2}, LX/Em2;->A02(LX/DtZ;Lcom/whatsapp/infra/core/jid/DeviceJid;)V
+    0278..027a  return  v18
+    027a..027c  move-object  v4, v5
+    027c..027e  goto  -0x3b
+    027e..0282  const-string  v1, "RetryReceiptHandler/Error received from SignalCoordinator; status="
+    0282..0286  new-instance  v0, Ljava/lang/StringBuilder;
+    0286..028c  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    028c..0292  invoke-virtual  {v0, v5}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0292..0298  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0298..029a  move-result-object  v0
+    029a..02a0  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    02a0..02a2  return  v18
+    # exception table: 0 try range(s)
+.end method

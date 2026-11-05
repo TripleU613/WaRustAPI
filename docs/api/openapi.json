@@ -16350,5 +16350,14 @@
     "x-live": false,
     "evidence": "docs/protocol/retry-answers.md#refetch-query-reservation-inputs-2026-11-05",
     "description": "Initial retry prekey-query reservation now checks original outbox snapshot/age and identity/session inputs in the transaction creating fetching marker and pending job. Stale or missing inputs commit nothing; existing answer marker prevents another job. Deterministic store-interleaving regressions include missing-to-present session, delivery/failure/attempt updates, age and duplicate reservation. No live request, new route/CLI command or expanded retry behavior."
+  },
+  "x-retry-receipt-keys-unsupported": {
+    "x-cli": false,
+    "x-transport": [
+      "explicit comparison transport; offline tested"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-retry-receipt-keys/README.md",
+    "description": "Normal direct retry driver explicitly refuses a top-level keys child with local reason receipt_keys_unsupported, returning no resend or key query and preserving outbox/session/pin state. Synthetic workflow regressions cover matching/changed registration, repeated empty/byte/partial keys and later supported no-keys resend. This is a local unported capability boundary, not a server/APK universal refusal. Full key validation/session/AEA/PQ policy remains unported; ACK policy unchanged. No new CLI/HTTP route or live verification."
   }
 }

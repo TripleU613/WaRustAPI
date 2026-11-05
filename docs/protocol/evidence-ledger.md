@@ -1,3 +1,9 @@
+2026-11-05 — **Unported receipt-key retries no longer fall through.**
+
+Normal direct retry driver records receipt_keys_unsupported and returns no
+resend/key query when keys are carried. Supported no-keys retries still work.
+[Evidence, local limit and tests](retry-answers.md#receipt-carried-keys-capability-boundary-2026-11-05). No key adoption or live requests.
+
 2026-11-05 — **Retry refetch query reservation now rechecks its inputs.**
 
 Original row/age and identity/session snapshots are checked atomically with
