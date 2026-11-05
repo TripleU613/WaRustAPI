@@ -1,3 +1,11 @@
+2026-11-05 — **Current-build bare availability and startup conditions traced.**
+
+The selected post-config/unified-session write is conditional bare availability.
+Rust shape agrees; complete mode policy and server ACK behavior remain open.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-startup-availability/README.md).
+Research only; no runtime changes or live traffic. Validation: checked exports,
+source/excerpt match, checksums, JSON, coverage freshness and repository hygiene.
+
 2026-11-05 — **Unified-session generic envelope and writer path traced.**
 
 Kind447 uses envelope6, bypasses selected pre-ACK normalization and has no IQ-ID

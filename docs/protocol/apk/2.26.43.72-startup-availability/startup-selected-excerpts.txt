@@ -1,0 +1,51 @@
+# Explicit excerpts, not complete0ZJ.A0z.
+# Source: ../../rea/2.26.43.72-authkey-outcomes/startup-trigger-checked.txt
+# Printed offsets are bytes; branch deltas are code units.
+    00aa..00ae  iget-object  v1, v0, LX/0ZJ;->A0H:LX/00x;
+    00ae..00b4  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    00b4..00b6  move-result-object  v1
+    00b6..00ba  check-cast  v1, LX/0GS;
+    00ba..00c0  invoke-virtual  {v1}, LX/0GS;->A02()Z
+    00c0..00c2  move-result  v9
+    00c2..00c6  iget-object  v11, v0, LX/0ZJ;->A13:LX/09F;
+    00c6..00cc  invoke-interface  {v11}, LX/09F;->Aum()Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    00cc..00ce  move-result-object  v10
+    00ce..00d0  const/4  v2, #0x0
+    00d0..00d4  if-nez  v10, +0x5
+    00d4..00d8  if-eqz  v9, +0x3a
+    00d8..00da  move-object  v10, v2
+    00da..00de  const-string  v1, "ConnectionThread/connect/start jid="
+    00de..00e2  new-instance  v3, Ljava/lang/StringBuilder;
+    00e2..00e8  invoke-direct  {v3, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00e8..00ee  invoke-virtual  {v3, v10}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    00ee..00f2  const-string  v1, " available="
+    00f2..00f8  invoke-virtual  {v3, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00f8..00fc  move/from16  v22, v64
+    00fc..0100  move/from16  v1, v22
+    0100..0106  invoke-virtual  {v3, v1}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    0106..010a  const-string  v1, " forcePassiveMode="
+    010a..0110  invoke-virtual  {v3, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0110..0114  move/from16  v15, v65
+    0114..011a  invoke-virtual  {v3, v15}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    011a..0120  invoke-virtual  {v3}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0120..0122  move-result-object  v1
+    0b78..0b7c  iget-object  v6, v0, LX/0ZJ;->A03:LX/1rj;
+    0b7c..0b82  invoke-virtual  {v6}, LX/1rj;->A02()V
+    0b82..0b86  iget-object  v6, v0, LX/0ZJ;->A18:LX/0Sb;
+    0b86..0b8c  invoke-virtual  {v6}, LX/0Sb;->A02()LX/0Tp;
+    0b8c..0b8e  move-result-object  v7
+    0b8e..0b92  if-eqz  v7, +0x7
+    0b92..0b96  iget-object  v6, v0, LX/0ZJ;->A03:LX/1rj;
+    0b96..0b9c  invoke-virtual  {v6, v7}, LX/1rj;->A03(LX/0Tp;)V
+    0b9c..0ba0  if-nez  v9, +0x1a
+    0ba0..0ba4  if-eqz  v64, +0x7
+    0ba4..0ba8  iget-object  v6, v0, LX/0ZJ;->A03:LX/1rj;
+    0ba8..0bae  invoke-virtual  {v6}, LX/1rj;->A01()V
+    0bae..0bb2  iget-object  v6, v0, LX/0ZJ;->A0f:LX/00x;
+    0bb2..0bb8  invoke-interface  {v6}, LX/00x;->get()Ljava/lang/Object;
+    0bb8..0bba  move-result-object  v7
+    0bba..0bbe  check-cast  v7, LX/1s1;
+    0bbe..0bc4  invoke-virtual  {v1}, LX/1jv;->A08()LX/1jz;
+    0bc4..0bc6  move-result-object  v6
+    0bc6..0bca  iget  v6, v6, LX/1jz;->A08:I
+    0bca..0bd0  invoke-virtual  {v7, v6}, LX/1s1;->A00(I)V

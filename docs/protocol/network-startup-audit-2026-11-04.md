@@ -190,3 +190,13 @@ or durable replay authority.
 [Helpers, exact branch offsets and limits](apk/2.26.43.72-unified-session-writer/README.md).
 Full Cyu/reconnect, server ACK policy and generation recovery remain open.
 No Rust behavior or live account operation changed.
+
+### Conditional startup availability and bounded inbound search (2026-11-05)
+
+**Confirmed static, APK43.72:** after config/unified-session, selected startup
+conditionally calls the bare presence/type=available writer. Rust shape agrees;
+full availability/mode/control-flow policy remains unproven. Exact unified_session
+literal search finds only its two outbound builders, not proof of absent ACKs.
+[Complete writer, selected gates, query and limits](apk/2.26.43.72-startup-availability/README.md).
+Full caller/companion/passive semantics, response policy and generation recovery
+remain open. No Rust behavior or live account operation changed.

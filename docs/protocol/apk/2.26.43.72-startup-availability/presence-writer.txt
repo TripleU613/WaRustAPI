@@ -1,0 +1,29 @@
+# class: LX/1rj;
+# extends: Ljava/lang/Object;
+
+.method public A01(V)  # .registers 5
+    # full signature: LX/1rj;->A01()V
+    0000..0004  const-string  v3, "available"
+    0004..0006  const/4  v0, #0x2
+    0006..000a  new-array  v2, v0, [Ljava/lang/String;
+    000a..000c  const/4  v0, #0x0
+    000c..0010  aput-object  v3, v2, v0
+    0010..0014  const-string  v1, "unavailable"
+    0014..0016  const/4  v0, #0x1
+    0016..001a  aput-object  v1, v2, v0
+    001a..0020  invoke-static  {v2}, LX/01i;->A0A([Ljava/lang/Object;)Ljava/util/List;
+    0020..0022  move-result-object  v2
+    0022..0026  const-string  v0, "presence"
+    0026..002a  new-instance  v1, LX/0Tj;
+    002a..0030  invoke-direct  {v1, v0}, LX/0Tj;-><init>(Ljava/lang/String;)V
+    0030..0034  const-string  v0, "type"
+    0034..003a  invoke-virtual  {v1, v3, v0, v2}, LX/0Tj;->A06(Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+    003a..0040  invoke-virtual  {v1}, LX/0Tj;->A01()LX/0Tp;
+    0040..0042  move-result-object  v2
+    0042..0046  iget-object  v1, v4, LX/1rj;->A06:LX/1r0;
+    0046..004a  check-cast  v1, LX/1r2;
+    004a..004c  const/4  v0, #0x1
+    004c..0052  invoke-virtual  {v1, v2, v0}, LX/1r2;->Cyu(LX/0Tp;I)V
+    0052..0054  return-void
+    # exception table: 0 try range(s)
+.end method

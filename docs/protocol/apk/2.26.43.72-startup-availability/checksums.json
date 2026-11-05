@@ -1,0 +1,22 @@
+{
+  "README.md": {
+    "bytes": 3772,
+    "sha256": "6db3e38f91643ea4f1dd5d48f9065c9f392706bae661446c3d6178917707e5f1"
+  },
+  "entry-mode-predicate.txt": {
+    "bytes": 1418,
+    "sha256": "1c05039ead9400dcfc120be5eb3f04d336ae33ff4d0674abc1bca73acc34ee6c"
+  },
+  "presence-writer.txt": {
+    "bytes": 1284,
+    "sha256": "104fa20dddf0a547caf998ed3437f42d7db60e08f05927567ab35e82ff6f59bd"
+  },
+  "startup-selected-excerpts.txt": {
+    "bytes": 2970,
+    "sha256": "6374a195824543a7620f8db794688f52548e088355c0d68e443756ae22a2cfc2"
+  },
+  "unified-session-literal-references.txt": {
+    "bytes": 162,
+    "sha256": "75894c64f92b2c16f025c959f806a4cf2341b1287e941db81a55f2cf7fafd880"
+  }
+}

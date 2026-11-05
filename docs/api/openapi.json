@@ -15981,5 +15981,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-unified-session-writer/README.md",
     "description": "Unified-session kind447 uses generic envelope6 and branch-specific normalization returns no replacement. Selected writer skips null IQ-ID promotion, can defer offline and requeue on IOException. These local queues do not prove delivery or authorize durable replay. Full Cyu/reconnect, ACK and generation recovery remain open. No sender, retry, route or live operation added."
+  },
+  "x-startup-availability-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-startup-availability/README.md",
+    "description": "Current-build selected startup conditionally emits bare availability after config/unified-session. Rust wire shape agrees but full mode/gate policy remains unproven. Unified-session literal search finds only outbound builders; this does not establish absence of replies or ACKs. Full Cyu, response policy and generation recovery remain open. No sender, retry, route or live operation added."
   }
 }

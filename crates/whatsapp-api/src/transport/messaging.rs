@@ -661,9 +661,11 @@ pub fn active_request(id: &str) -> Node {
 /// validated against the set `{available, unavailable}`; no `to` and no
 /// children.
 ///
-/// Every real client announces availability after connecting and this one never
-/// did, which made it the last normal post-login behaviour we lacked. It is a
-/// fire-and-forget stanza, not an `iq`, so there is no reply to correlate.
+/// Current-build evidence (2.26.43.72 `LX/1rj->A01` and `LX/0ZJ->A0z`)
+/// confirms this shape and a conditional startup call, not universal availability
+/// on every connection. See `docs/protocol/apk/2.26.43.72-startup-availability/`.
+/// This builder does not select startup policy or establish server ACK behavior;
+/// it supplies no IQ request ID for correlation.
 pub fn available_presence() -> Node {
     Node::new("presence").attr("type", "available")
 }
