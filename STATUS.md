@@ -1,3 +1,12 @@
+2026-11-04 — **Sender-key ACK marking and one-time reset distinguished.**
+
+Native callback registration/wait, normal SQL marking, conditional reset and
+pre-ACK confirmation wrapper origin traced. Per-distribution Rust durable
+confirmation remains incomplete; no speculative recovery behavior added.
+[Evidence and next boundary](docs/protocol/apk/2.26.43.72-sender-key-ack-confirmation/README.md).
+Validation: evidence checksums, JSON, coverage freshness and repository hygiene.
+Docs/evidence only; no live traffic.
+
 2026-11-04 — **Distribution ACK family admission corrected.**
 
 Group preparation now requires message-class ACKs before advancing or refusing

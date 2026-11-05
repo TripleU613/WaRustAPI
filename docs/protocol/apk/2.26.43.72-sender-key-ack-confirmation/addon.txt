@@ -1,0 +1,45 @@
+
+# class: LX/0i9;
+# extends: Ljava/lang/Object;
+
+.method public A0X(VLL)  # .registers 10
+    # full signature: LX/0i9;->A0X(LX/0nT;Ljava/util/Collection;)V
+    0000..0002  const/4  v6, #0x0
+    0002..0008  invoke-static  {v8, v6}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  iget-object  v0, v7, LX/0i9;->A0B:LX/0j7;
+    000c..0010  iget-object  v2, v0, LX/0j7;->A09:LX/0jG;
+    0010..0014  const-string  v1, "ParticipantSenderKeyStore/resetSentSenderKeyForDevices "
+    0014..0018  new-instance  v0, Ljava/lang/StringBuilder;
+    0018..001e  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    001e..0024  invoke-virtual  {v0, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0024..002a  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    002a..002c  move-result-object  v0
+    002c..0032  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0032..0036  iget-object  v0, v2, LX/0jG;->A05:LX/0j9;
+    0036..003c  invoke-static  {v8, v0, v9, v6}, LX/0j9;->A01(LX/0nT;LX/0j9;Ljava/util/Collection;Z)V
+    003c..0040  iget-object  v0, v2, LX/0jG;->A01:LX/0j7;
+    0040..0046  invoke-virtual  {v0, v8}, LX/0j7;->A0H(LX/0nT;)LX/1fm;
+    0046..0048  move-result-object  v5
+    0048..004e  invoke-interface  {v9}, Ljava/util/Collection;->iterator()Ljava/util/Iterator;
+    004e..0050  move-result-object  v4
+    0050..0056  invoke-interface  {v4}, Ljava/util/Iterator;->hasNext()Z
+    0056..0058  move-result  v0
+    0058..005c  if-eqz  v0, +0x22
+    005c..0062  invoke-interface  {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0062..0064  move-result-object  v1
+    0064..0068  check-cast  v1, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0068..006c  iget-object  v0, v1, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    006c..0072  invoke-virtual  {v5, v0, v6}, LX/1fm;->A0G(Lcom/whatsapp/infra/core/jid/UserJid;Z)LX/0j4;
+    0072..0074  move-result-object  v3
+    0074..0078  if-eqz  v3, -0x12
+    0078..007c  const/16  v0, #0x2a
+    007c..0080  new-instance  v2, LX/Fgg;
+    0080..0086  invoke-direct  {v2, v3, v1, v0}, LX/Fgg;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V
+    0086..008a  const/16  v1, #0x15
+    008a..008e  new-instance  v0, LX/Fgc;
+    008e..0094  invoke-direct  {v0, v2, v1}, LX/Fgc;-><init>(Ljava/lang/Object;I)V
+    0094..009a  invoke-static  {v3, v0}, LX/0j4;->A01(LX/0j4;Lkotlin/jvm/functions/Function1;)V
+    009a..009c  goto  -0x25
+    009c..009e  return-void
+    # exception table: 0 try range(s)
+.end method

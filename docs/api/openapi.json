@@ -15609,5 +15609,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-distribution-ack-admission/README.md",
     "description": "Group preparation requires exact ACK class message as well as matching ID before advancing or refusing an out-of-band distribution waiter. Other ACK families cannot release dependent sends. Native callback class-key evidence retained; sender normalization, special error459 and full durable distribution confirmation remain separate unknowns. No new HTTP route, replay or live operation."
+  },
+  "x-sender-key-ack-confirmation-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-sender-key-ack-confirmation/README.md",
+    "description": "Traces native message ACK callback registration and wait, successful normal sender-key marking and conditional one-time-key reset. Connects registration-time pre-ACK marker snapshot to matched callback retirement after wrapped result. Rust per-distribution durable confirmation and native address ownership remain incomplete. Evidence only; no command, HTTP route or production behavior change."
   }
 }

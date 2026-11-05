@@ -2160,3 +2160,12 @@ Exports:
 - [prekey-ack-window-refill.txt](prekey-ack-window-refill.txt): `1ecfb73888fa2ad6be6f83ae520e0af41d5f84d36244f8c381c37994f4c86030`
 - [prekey-ack-window-sort.txt](prekey-ack-window-sort.txt): `40af51f80d36d33e0fcdf6866a0e63531d0791e61293f602a29f872069f5cd50`
 - [prekey-ack-window-take.txt](prekey-ack-window-take.txt): `af7242b8182dd1a899fc56b226048d1627ba68b0216b484eb127bbb2e3519b1b`
+
+## Message ACK wrapper origin follow-up (2026-11-04)
+
+**Confirmed static:** the previously untraced2Gc selector1 constructor originates
+in0Th.A02 registration; it snapshots the pre-ACK marker before send dispatch.
+Matched ACK callback success invokes the wrapped result before A0J retirement.
+[Exact origin, ordering and limits](../2.26.43.72-sender-key-ack-confirmation/README.md).
+This supersedes the earlier constructor-origin unknown for this selected branch,
+not the limits on other callers or socket-write confirmation authority.

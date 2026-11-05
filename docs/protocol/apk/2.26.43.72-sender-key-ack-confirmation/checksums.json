@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "bytes": 6617,
+    "sha256": "53d413f48c5bc7bfe96c7c96c817d9028ec9f989771c457ea3b441a6db33bae4"
+  },
+  "addon.txt": {
+    "bytes": 2620,
+    "sha256": "052b2da7decfbbbc38cfb6146f7fad81e5ec96cf813024b225b933c8501a2686"
+  },
+  "future.txt": {
+    "bytes": 4547,
+    "sha256": "98ee2d6cf1d5b090cb16d55041d452b3fde6035cbe0b959a5cdf71a4f3861ebc"
+  },
+  "job.txt": {
+    "bytes": 137381,
+    "sha256": "572d6304696d7098436a3dfa5a588559879aa2f971072964af719509b84183a7"
+  },
+  "normal.txt": {
+    "bytes": 11779,
+    "sha256": "6ebb2e955fcf4fc1d31295140a359cf18443d7b383dbdd0ce3735bf360f9bea4"
+  },
+  "registration.txt": {
+    "bytes": 3420,
+    "sha256": "b5e4ea502916c5ebaab717b1b286129feed8a2e64a2114354ab26abc9800f511"
+  },
+  "store.txt": {
+    "bytes": 27816,
+    "sha256": "d760a5b9ebf164c5c5d16c614623aae5f098bae3d478c8ae72cde8dd5dc16f41"
+  },
+  "wrapper-init.txt": {
+    "bytes": 639,
+    "sha256": "3dd2809e29bed83711ad22bb7d8d90fb4b1d6947346da50afbdb9ea67bdaa019"
+  },
+  "wrapper.txt": {
+    "bytes": 1868,
+    "sha256": "3236c6386ccc2b03bda3973a0a0052b3199b22f541584b6655a0e129b6f2f488"
+  },
+  "xrefs.txt": {
+    "bytes": 224,
+    "sha256": "58967d3eefd9f0be6e456181f955cddf14ce89a92c0928801ebcdf20d2bb0765"
+  }
+}

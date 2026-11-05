@@ -5149,3 +5149,18 @@ distributions still completing the existing crypto and reopen/no-replay test.
 Native distribution callback registration, address normalization and complete
 durable confirmation remain open; no raw sender-equality rule or retry was added.
 No live operations or complete ban-prevention claim.
+
+### Sender-key ACK marking, one-time reset and callback ownership (2026-11-04)
+
+**Confirmed static, APK43.72:** SendE2EMessageJob.A06 registers FfK before
+dispatch and waits for its matched callback; normal successful ACK processing
+checks key existence and marks selected devices. The one-time-key branch instead
+reaches0i9.A0X ->0j9.A01, which resets sent_sender_key=0, not1. Blanket
+interpretations of every post-ACK helper as marking reusable key possession
+are refuted. This is not proof that reactions use the one-time branch.
+0Th.A02 also connects2Gc selector1's pre-ACK marker origin: a matched callback
+invokes the wrapped result before scheduling marker retirement, so those effects
+are not one atomic transaction.
+[Methods, offsets, local persistence gap and next port boundary](apk/2.26.43.72-sender-key-ack-confirmation/README.md).
+Native out-of-band distribution address/registration ownership remains open.
+No production change, new replay authority or live operation.
