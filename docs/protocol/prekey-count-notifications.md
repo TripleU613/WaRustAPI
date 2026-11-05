@@ -445,3 +445,24 @@ rawKEM cursor and advancespositive cursor. Storage writes upload_timestamp
 while sent=false, so timestamp is not migration/ACK proof. Current Rust
 SET helper differs; entry-driven ADD/rotation port remains incomplete.
 [Exports and boundaries](apk/2.26.43.72-prekey-upload-replies/README.md#last-resort-producer-and-pre-upload-timestamp-2026-11-04). No production change or live traffic.
+
+## Refusal hold actor verification (2026-11-04)
+
+**Verified synthetic actor, not live.** New connection regression
+`refused_prekey_upload_keeps_count_acks_without_retry_after_reopen` drives
+the actual public-client actor through a fake NodeLink. Activation emits one
+reserved50-key SET; a matching503 refusal settles it. Two subsequent zero
+legacy-count notifications each produce only their matching ACK, and the
+actor stops cleanly. The encrypted synthetic store is reopened without
+reinstalling account/key material. A second activation emits no upload;
+another count notification receives its ACK without a replacement request.
+
+The test checks that only one refused batch remains, no uncertain/uploaded
+keys are invented,50 keys remainunsent, and all private prekey row bytes are
+unchanged through both actor epochs. Bounded no-write windows cover immediate
+output, not all future elapsed time; durable begin_upload admission is
+separately tested. The hold must not suppress ACKs or end normal receiving.
+
+This broadens prior helper-level refusal verification to actor wiring. It
+does not port native retry scheduling, prove server interoperability or
+claim an actual account was tested. No production behavior changed here.

@@ -4766,3 +4766,10 @@ rawKEM cursor and advancespositive cursor. Storage writes upload_timestamp
 while sent=false, so timestamp is not migration/ACK proof. Current Rust
 SET helper differs; entry-driven ADD/rotation port remains incomplete.
 [Exports and boundaries](apk/2.26.43.72-prekey-upload-replies/README.md#last-resort-producer-and-pre-upload-timestamp-2026-11-04). No production change or live traffic.
+
+## 2026-11-04 — Refusal hold actor verification
+
+**Verified synthetic actor:**503 settlement, repeated count notification
+ACKs, clean receive and exact-store reopen produce no replacement upload
+or changed private prekey rows. Only the original refused batch remains.
+[Regression scope and limits](prekey-count-notifications.md#refusal-hold-actor-verification-2026-11-04). No live traffic or new retry capability.

@@ -3929,6 +3929,73 @@ mod tests {
         fake.stop_cleanly().await;
     }
 
+    #[tokio::test]
+    async fn refused_prekey_upload_keeps_count_acks_without_retry_after_reopen() {
+        use super::super::prekeys::summary;
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("refused-prekey-actor.redb");
+        let store = registered_store(&path);
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let (upload, write) = fake.written().await;
+        assert_eq!(assert_upload(&upload).len(), 50);
+        write.send(Ok(())).unwrap();
+        fake.deliver(
+            Node::new("iq")
+                .attr("id", upload.get_attr("id").unwrap().as_text().unwrap())
+                .attr("type", "error")
+                .children(vec![Node::new("error").attr("code", "503")]),
+        )
+        .await;
+        fake.nothing_written(Duration::from_millis(200)).await;
+        assert!(summary(&store).unwrap().upload_held_after_refusal);
+        let keys = store.read(|tx| tx.scan(Table::Prekeys, 1, 10000)).unwrap();
+        for id in ["HELD1", "HELD2"] {
+            fake.deliver(count_notification(id, "count", "0")).await;
+            let (ack, write) = fake.written().await;
+            assert_eq!(ack.description, "ack");
+            assert_eq!(ack.get_attr("id").and_then(|v| v.as_text()), Some(id));
+            write.send(Ok(())).unwrap();
+            fake.nothing_written(Duration::from_millis(200)).await;
+        }
+        fake.stop_cleanly().await;
+        assert_eq!(
+            store.read(|tx| tx.scan(Table::Prekeys, 1, 10000)).unwrap(),
+            keys
+        );
+        drop(store);
+        // Reopen the exact synthetic account without reinstalling material.
+        let store = Arc::new(
+            ProtocolStore::open(OpenOptions {
+                path,
+                account_id: AccountId::new("test").unwrap(),
+                key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([4; 32]))),
+                create: false,
+            })
+            .unwrap(),
+        );
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        fake.nothing_written(Duration::from_millis(200)).await;
+        fake.deliver(count_notification("HELD3", "count", "0"))
+            .await;
+        let (ack, write) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        assert_eq!(ack.get_attr("id").and_then(|v| v.as_text()), Some("HELD3"));
+        write.send(Ok(())).unwrap();
+        fake.nothing_written(Duration::from_millis(200)).await;
+        fake.stop_cleanly().await;
+        let state = summary(&store).unwrap();
+        assert!(state.upload_held_after_refusal);
+        assert_eq!(state.batches.len(), 1);
+        assert_eq!(state.batches.get("refused"), Some(&1));
+        assert_eq!((state.unsent, state.uncertain, state.uploaded), (50, 0, 0));
+        assert_eq!(
+            store.read(|tx| tx.scan(Table::Prekeys, 1, 10000)).unwrap(),
+            keys
+        );
+    }
+
     #[tokio::test(start_paused = true)]
     async fn newly_queued_device_work_is_picked_up_without_a_notification_or_reconnect() {
         use super::super::devices::{pending_users, request_sync};

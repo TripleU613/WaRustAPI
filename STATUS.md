@@ -1,3 +1,12 @@
+2026-11-04 — **Refusal hold verified through actor/reopen.**
+
+Count notifications remain ACKed; no replacement upload is written across
+two actor epochs and exact-store reopen. Private prekey rows unchanged.
+[Regression and limits](docs/protocol/prekey-count-notifications.md#refusal-hold-actor-verification-2026-11-04).
+Validation: workspace/all-feature tests, strict Clippy, CLI reference,
+formatting, JSON, coverage freshness and repository hygiene passed.
+No live traffic.
+
 2026-11-04 — **Last-resort generation lifecycle traced.**
 
 Newest unsentLR reuse/generation/cursor/storage traced; timestamp may precede

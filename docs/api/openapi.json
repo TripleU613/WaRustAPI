@@ -15395,5 +15395,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#last-resort-producer-and-pre-upload-timestamp-2026-11-04",
     "description": "Static43.72 last-resort producer traced: newest unsent reuse/generation, nativecursor and timestamp stored beforeACK. Timestamp is not uploaded/migration proof. ADD/lifecycle port remains incomplete."
+  },
+  "x-prekey-refusal-hold-actor-verification": {
+    "x-cli": "whatsapp-cli listen (existing actor)",
+    "x-transport": [
+      "comparison public-client"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/prekey-count-notifications.md#refusal-hold-actor-verification-2026-11-04",
+    "description": "Synthetic actor regression verifies refusal hold retains count ACKs and suppresses replacement uploads across exact-store reopen, without changing private prekey rows. Native retry policy still incomplete; no new route."
   }
 }
