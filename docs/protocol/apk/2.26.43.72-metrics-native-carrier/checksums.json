@@ -1,0 +1,46 @@
+{
+  "README.md": {
+    "bytes": 4043,
+    "sha256": "59b421a584f86253bede943ff4112ff0c3b58b8eacf985b89ce68a26dbddd603"
+  },
+  "carrier-identity.json": {
+    "bytes": 1263,
+    "sha256": "69d35b312022601d9a8a4c2be79b80b5370222e59d460e4e2ce71c8cb2585989"
+  },
+  "dynamic-symbols.txt": {
+    "bytes": 579,
+    "sha256": "e98cc915bd276de0e644d2ed53cdb49ddba58ff66481455bb3cef14928cb3826"
+  },
+  "elf-header.txt": {
+    "bytes": 938,
+    "sha256": "0fe2d430dcea19d31c71caac87ea8b0b5eb5ee3813d534f8e4edd943a6ca86cd"
+  },
+  "elf-sections.txt": {
+    "bytes": 2559,
+    "sha256": "144787db45c6e7bf31f2cf9d95997f52dcc93b196989a7ca921846aef566506b"
+  },
+  "event-native-declaration.txt": {
+    "bytes": 324,
+    "sha256": "90ca69a00ccc5810bd9c7dff4596fa60afad9704e5507618b8a2035cdf3d15f0"
+  },
+  "init-native-declaration.txt": {
+    "bytes": 339,
+    "sha256": "40d8aca5562e30a1f5cfb971254b0dc42db9948f67d0763000c74548a49b5b77"
+  },
+  "inspect-native-flags.py": {
+    "bytes": 2233,
+    "sha256": "1c6b8ed983dab63102b0f15ac8182485d94d35e0263a8629574a0f79f911fb03"
+  },
+  "native-flags.txt": {
+    "bytes": 160,
+    "sha256": "93ef9f4a0243fd41f8edbbd5102f4d1cffdd8ae4efabfa2146bd0178fd6ec820"
+  },
+  "provider-availability.json": {
+    "bytes": 774,
+    "sha256": "2c15409a26af4b4135d299f3b59258ea12c0c3fe3486961289055903e634892f"
+  },
+  "readelf-version.txt": {
+    "bytes": 277,
+    "sha256": "e478be1a230b8a58aca0fbc35e5ba6b1a6a3b821cefd62fe7a07706994d8abfe"
+  }
+}

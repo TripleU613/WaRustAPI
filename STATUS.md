@@ -1,3 +1,11 @@
+2026-11-05 — **Metrics native declarations and ARM64 carrier pinned.**
+
+The selected carrier exposes superpack archive markers; JNI implementation
+requires inner-library extraction/registration proof. Native REA is unavailable.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-metrics-native-carrier/README.md).
+Research only; no runtime changes or live traffic. Validation: APK/member digests,
+exact declarations, readelf output, checksums, JSON, coverage and repository hygiene.
+
 2026-11-05 — **Metrics FIFO and exceptional latch-release ordering verified.**
 
 The serial wrapper advances after thrown initialization work as well as normal

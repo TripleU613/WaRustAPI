@@ -16035,5 +16035,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-metrics-readiness-latch/README.md#fifo-completion-advances-even-after-an-initialization-exception",
     "description": "Reverified serial executor advances queued tasks after normal or exceptional completion. Metrics initialization precedes latch-release task but failure can still advance toward release; latch opening is not a native-success result. Underlying dispatch failure, activation authority, native transport and durable recovery remain open. No sender, retry, route or live operation added."
+  },
+  "x-metrics-native-carrier-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-metrics-native-carrier/README.md",
+    "description": "Metrics event/setup Java declarations are native. Pinned ARM64 carrier exposes superpack archive coordinates with different file/virtual offsets, not named JNI dispatchers in its dynamic symbols. Current REA native providers are unavailable. Inner-library extraction, JNI registration, transport and durable recovery remain open. No telemetry, sender, route or live operation added."
   }
 }

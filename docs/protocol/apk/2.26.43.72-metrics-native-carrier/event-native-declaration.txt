@@ -1,0 +1,8 @@
+# class: Lcom/whatsapp/wamsys/JniBridge;
+# extends: Ljava/lang/Object;
+
+.method public jvidispatchIIIIIOO(JJJJJLL)  # .registers 0
+    # full signature: Lcom/whatsapp/wamsys/JniBridge;->jvidispatchIIIIIOO(JJJJLjava/lang/Object;Ljava/lang/Object;)J
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method

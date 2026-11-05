@@ -1,0 +1,6 @@
+# Exact selected declaration from seven substring matches.
+.method public jvidispatchIOOOO(JILLLL)  # .registers 0
+    # full signature: Lcom/whatsapp/wamsys/JniBridge;->jvidispatchIOOOO(ILjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)J
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method

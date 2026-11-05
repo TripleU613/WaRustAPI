@@ -1,0 +1,8 @@
+Symbol table '.dynsym' contains 6 entries:
+   Num:    Value          Size Type    Bind   Vis      Ndx Name
+     0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND
+     1: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __cxa_finalize@LIBC (2)
+     2: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __cxa_atexit@LIBC (2)
+     3: 000000000000c870     0 NOTYPE  GLOBAL DEFAULT   19 _superpack_archive_start
+     4: 0000000000dc2eb1     0 NOTYPE  GLOBAL DEFAULT   19 _superpack_archive_end
+     5: 0000000000db6641     0 NOTYPE  GLOBAL DEFAULT  ABS _superpack_archive_size

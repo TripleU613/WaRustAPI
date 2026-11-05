@@ -1,0 +1,26 @@
+{
+  "operation": "binary_session",
+  "record_type": "selected availability projection, not an Evidence envelope",
+  "server_version": "6.5.0",
+  "open": false,
+  "candidates": [
+    {
+      "id": "ghidra",
+      "status": "unavailable",
+      "code": "executable_missing",
+      "reason": "Point GHIDRA_INSTALL_DIR at the root of an extracted official Ghidra release."
+    },
+    {
+      "id": "hopper",
+      "status": "unavailable",
+      "code": "executable_missing",
+      "reason": "Hopper launcher is missing or not executable: /opt/hopper/bin/Hopper"
+    },
+    {
+      "id": "ida",
+      "status": "unavailable",
+      "code": "not_configured",
+      "reason": "Set REA_IDA_MCP_CONFIG to an upstream IDA MCP JSON registration; see docs/ida-provider.md."
+    }
+  ]
+}

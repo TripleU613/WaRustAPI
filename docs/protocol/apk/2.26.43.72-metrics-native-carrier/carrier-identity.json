@@ -1,0 +1,58 @@
+{
+  "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+  "members": [
+    {
+      "member": "lib/arm64-v8a/libs.so",
+      "bytes": 14383776
+    },
+    {
+      "member": "lib/arm64-v8a/libsuperpack.so",
+      "bytes": 220920
+    },
+    {
+      "member": "lib/arm64-v8a/libunwindstack_binary.so",
+      "bytes": 11800
+    },
+    {
+      "member": "lib/armeabi-v7a/libs.so",
+      "bytes": 14556248
+    },
+    {
+      "member": "lib/armeabi-v7a/libsuperpack.so",
+      "bytes": 118824
+    },
+    {
+      "member": "lib/armeabi-v7a/libunwindstack_binary.so",
+      "bytes": 8228
+    },
+    {
+      "member": "lib/x86/libs.so",
+      "bytes": 18315712
+    },
+    {
+      "member": "lib/x86/libsuperpack.so",
+      "bytes": 190956
+    },
+    {
+      "member": "lib/x86/libunwindstack_binary.so",
+      "bytes": 9516
+    },
+    {
+      "member": "lib/x86_64/libs.so",
+      "bytes": 16451056
+    },
+    {
+      "member": "lib/x86_64/libsuperpack.so",
+      "bytes": 234664
+    },
+    {
+      "member": "lib/x86_64/libunwindstack_binary.so",
+      "bytes": 12176
+    }
+  ],
+  "selected": {
+    "member": "lib/arm64-v8a/libs.so",
+    "bytes": 14383776,
+    "sha256": "1387f4a589266b39551c5ace0bd1cf11e4b658b341519e6bb38e70bfa48f33d5"
+  }
+}

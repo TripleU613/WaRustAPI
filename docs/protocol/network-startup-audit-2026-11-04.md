@@ -251,3 +251,14 @@ release. An open latch therefore remains distinct from native success.
 [Full executor links and scoped failure analysis](apk/2.26.43.72-metrics-readiness-latch/README.md#fifo-completion-advances-even-after-an-initialization-exception).
 Underlying dispatch failure, middle task, activation authority and native transport
 remain open. No Rust behavior or live account operation changed.
+
+### Metrics native carrier and provider boundary (2026-11-05)
+
+**Confirmed static, APK43.72:** exact event/setup Java methods are native. The
+selected ARM64 libs.so exposes superpack archive coordinates, not named JNI
+dispatchers in its six-entry dynamic-symbol table. Carrier digest and differing
+file/virtual offsets are retained; inner code is not yet decoded. Current REA
+native providers are unavailable under their configured paths.
+[Declarations, carrier metadata, readelf and scope](apk/2.26.43.72-metrics-native-carrier/README.md).
+Unpacking, JNI registration, native transport and durable recovery remain open.
+No Rust behavior or live account operation changed.
