@@ -1,0 +1,54 @@
+
+# class: LX/13z;
+# extends: LX/07o;
+
+.method public A0M(V)  # .registers 9
+    # full signature: LX/13z;->A0M()V
+    0000..0004  const-string  v7, "MyPreKeysManager/send-get-pre-key-digest/skip-digest-check last:"
+    0004..0006  monitor-enter
+    0006..000a  iget-object  v0, v8, LX/13z;->A0Q:LX/0AI;
+    000a..000e  iget-boolean  v0, v0, LX/0AI;->A06:Z
+    000e..0012  if-eqz  v0, +0x1e
+    0012..0016  iget-wide  v5, v8, LX/13z;->A01:J
+    0016..001a  const-wide/16  v1, #0x0
+    001a..001e  cmp-long  v0, v5, v1
+    001e..0022  if-eqz  v0, +0xe
+    0022..0028  invoke-static  {}, Landroid/os/SystemClock;->uptimeMillis()J
+    0028..002a  move-result-wide  v3
+    002a..002c  sub-long/2addr  v3, v5
+    002c..0032  const-wide/32  v1, #0xea60
+    0032..0036  cmp-long  v0, v3, v1
+    0036..003a  if-lez  v0, +0xa
+    003a..0040  invoke-static  {}, Landroid/os/SystemClock;->uptimeMillis()J
+    0040..0042  move-result-wide  v0
+    0042..0046  iput-wide  v0, v8, LX/13z;->A01:J
+    0046..0048  const/4  v0, #0x1
+    0048..004a  goto  +0x13
+    004a..004e  new-instance  v2, Ljava/lang/StringBuilder;
+    004e..0054  invoke-direct  {v2, v7}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0054..0058  iget-wide  v0, v8, LX/13z;->A01:J
+    0058..005e  invoke-virtual  {v2, v0, v1}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    005e..0064  invoke-virtual  {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0064..0066  move-result-object  v0
+    0066..006c  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    006c..006e  const/4  v0, #0x0
+    006e..0070  monitor-exit
+    0070..0074  if-eqz  v0, +0x15
+    0074..0078  iget-object  v0, v8, LX/13z;->A0C:LX/00x;
+    0078..007e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    007e..0080  move-result-object  v3
+    0080..0084  check-cast  v3, LX/0Sf;
+    0084..0086  const/4  v2, #0x0
+    0086..008a  const/16  v1, #0x58
+    008a..008c  const/4  v0, #0x0
+    008c..0092  invoke-static  {v0, v2, v1, v2}, Landroid/os/Message;->obtain(Landroid/os/Handler;III)Landroid/os/Message;
+    0092..0094  move-result-object  v0
+    0094..009a  invoke-virtual  {v3, v0}, LX/0Sf;->A0V(Landroid/os/Message;)Z
+    009a..009c  return-void
+    009c..009e  move-exception  v0
+    009e..00a0  monitor-exit
+    00a0..00a2  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0003..003a -> 004e
+    # catch <all> code_units 004f..0050 -> 004e
+.end method

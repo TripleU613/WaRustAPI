@@ -1,0 +1,63 @@
+
+# class: LX/0Yj;
+# extends: Ljava/lang/Object;
+
+.method public A01(Z)  # .registers 6
+    # full signature: LX/0Yj;->A01()Z
+    0000..0004  iget-object  v0, v5, LX/0Yj;->A07:LX/0Yb;
+    0004..0008  iget-object  v0, v0, LX/0Yb;->A01:LX/0Xp;
+    0008..000e  invoke-virtual  {v0}, LX/0Xp;->A06()LX/0aq;
+    000e..0010  move-result-object  v4
+    0010..0014  iget-object  v3, v4, LX/0aq;->A02:LX/0KU;
+    0014..0018  const-string  v2, "SELECT COUNT(*) as count FROM prekeys WHERE sent_to_server = 0 AND direct_distribution = 0"
+    0018..001c  const-string  v1, "SignalPreKeyStore/hasUnsentPreKeys"
+    001c..001e  const/4  v0, #0x0
+    001e..0024  invoke-virtual  {v3, v2, v1, v0}, LX/0KU;->A0A(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
+    0024..0026  move-result-object  v3
+    0026..002c  invoke-interface  {v3}, Landroid/database/Cursor;->moveToNext()Z
+    002c..002e  move-result  v0
+    002e..0032  if-eqz  v0, +0x28
+    0032..0036  const-string  v0, "count"
+    0036..003c  invoke-interface  {v3, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    003c..003e  move-result  v0
+    003e..0044  invoke-interface  {v3, v0}, Landroid/database/Cursor;->getInt(I)I
+    0044..0046  move-result  v0
+    0046..0048  const/4  v2, #0x0
+    0048..004c  if-eqz  v0, +0x3
+    004c..004e  const/4  v2, #0x1
+    004e..0054  invoke-interface  {v3}, Landroid/database/Cursor;->close()V
+    0054..005a  invoke-virtual  {v4}, LX/0aq;->close()V
+    005a..005e  const-string  v1, "SignalPreKeyStore/hasUnsentPreKeys has unsent prekeys: "
+    005e..0062  new-instance  v0, Ljava/lang/StringBuilder;
+    0062..0068  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0068..006e  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    006e..0074  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0074..0076  move-result-object  v0
+    0076..007c  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    007c..007e  return  v2
+    007e..0082  const-string  v1, "Unable to count unsent entries in prekeys table"
+    0082..0086  new-instance  v0, Landroid/database/sqlite/SQLiteException;
+    0086..008c  invoke-direct  {v0, v1}, Landroid/database/sqlite/SQLiteException;-><init>(Ljava/lang/String;)V
+    008c..008e  throw  v0
+    008e..0090  move-exception  v1
+    0090..0094  if-eqz  v3, +0xa
+    0094..009a  invoke-interface  {v3}, Landroid/database/Cursor;->close()V
+    009a..009c  goto  +0x5
+    009c..009e  move-exception  v0
+    009e..00a4  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    00a4..00a6  throw  v1
+    00a6..00a8  move-exception  v1
+    00a8..00ae  invoke-virtual  {v4}, LX/0aq;->close()V
+    00ae..00b0  throw  v1
+    00b0..00b2  move-exception  v0
+    00b2..00b8  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    00b8..00ba  throw  v1
+    # exception table: 7 try range(s)
+    # catch <all> code_units 0008..0013 -> 0053
+    # catch <all> code_units 0013..0027 -> 0047
+    # catch <all> code_units 0027..002a -> 0053
+    # catch <all> code_units 003f..0047 -> 0047
+    # catch <all> code_units 004a..004e -> 004e
+    # catch <all> code_units 004f..0053 -> 0053
+    # catch <all> code_units 0054..0057 -> 0058
+.end method

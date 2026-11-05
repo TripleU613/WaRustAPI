@@ -15429,5 +15429,12 @@
     "x-live": false,
     "evidence": "docs/protocol/prekey-count-notifications.md#count-notification-setadd-routing-2026-11-04",
     "description": "Count entry uses gated uploaded-LR migration to choose legacy ADD or non-migrated SET. PQ-only notification stays ACK-only using EMv0x70d7 declared defaultfalse; effective config application remains unported. Success PQ demand is independent. Frozen reservations and uncertainty/refusal holds retained; no new route."
+  },
+  "x-prekey-startup-new-store-digest-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#new-store-startup-and-digest-entry-distinction-2026-11-04",
+    "description": "Static43.72 startup new-store versus digest preference routing traced. Generation-only branch and >60s digest throttle retained; complete digest/flag producer port remains open. No reset or new request capability."
   }
 }

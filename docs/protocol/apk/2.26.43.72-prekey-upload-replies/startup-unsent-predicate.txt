@@ -1,0 +1,25 @@
+
+# class: LX/0WJ;
+# extends: Ljava/lang/Object;
+
+.method public A10(Z)  # .registers 4
+    # full signature: LX/0WJ;->A10()Z
+    0000..0004  iget-object  v0, v3, LX/0WJ;->A0I:LX/0Wk;
+    0004..000a  invoke-virtual  {v0}, LX/0Wk;->A04()LX/FjI;
+    000a..000c  move-result-object  v2
+    000c..0010  iget-object  v0, v3, LX/0WJ;->A01:LX/0Yl;
+    0010..0014  iget-object  v0, v0, LX/0Yl;->A03:LX/0Yj;
+    0014..001a  invoke-virtual  {v0}, LX/0Yj;->A01()Z
+    001a..001c  move-result  v0
+    001c..0022  invoke-virtual  {v2}, LX/FjI;->close()V
+    0022..0024  return  v0
+    0024..0026  move-exception  v1
+    0026..002c  invoke-virtual  {v2}, LX/FjI;->close()V
+    002c..002e  throw  v1
+    002e..0030  move-exception  v0
+    0030..0036  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    0036..0038  throw  v1
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0006..000e -> 0012
+    # catch <all> code_units 0013..0016 -> 0017
+.end method

@@ -1,0 +1,26 @@
+
+# class: LX/09S;
+# extends: Ljava/lang/Object;
+
+.method public A1I(Z)  # .registers 5
+    # full signature: LX/09S;->A1I()Z
+    0000..0004  iget-object  v0, v4, LX/09S;->A0U:LX/00x;
+    0004..000a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    000a..000c  move-result-object  v0
+    000c..0010  check-cast  v0, LX/0Fa;
+    0010..0014  iget-object  v3, v0, LX/0Fa;->A00:Ljava/lang/Object;
+    0014..0016  monitor-enter
+    0016..001c  invoke-virtual  {v0}, LX/0FZ;->A03()Landroid/content/SharedPreferences;
+    001c..001e  move-result-object  v2
+    001e..0022  const-string  v1, "need_to_get_pre_key_digest"
+    0022..0024  const/4  v0, #0x1
+    0024..002a  invoke-interface  {v2, v1, v0}, Landroid/content/SharedPreferences;->getBoolean(Ljava/lang/String;Z)Z
+    002a..002c  move-result  v0
+    002c..002e  monitor-exit
+    002e..0030  return  v0
+    0030..0032  move-exception  v0
+    0032..0034  monitor-exit
+    0034..0036  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 000b..0016 -> 0018
+.end method

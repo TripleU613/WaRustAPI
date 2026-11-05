@@ -1330,3 +1330,58 @@ Additional export hashes:
 - [legacy-success-backoff-clear.txt](legacy-success-backoff-clear.txt): `cfdb7f1287494c24651bada35ae003a53c6289dbd6c47095a7cc9e4f5cf6d13e`
 - [legacy-success-complete.txt](legacy-success-complete.txt): `7ecdefbef8fb0cbd4f8c6b944418e2b057ecb2735b4ebd26c38930c1cf13fa26`
 - [legacy-success-followup-ctor.txt](legacy-success-followup-ctor.txt): `b90893bb52154b9a8bad77bb421eabf289c996ce6eaaf66ac45e58a852337047`
+
+## New-store startup and digest entry distinction (2026-11-04)
+
+**Confirmed static**, pinned2.26.43.72, same APK SHA-256 as this bundle.
+Checked DEX exports are not REA Evidence envelopes. Selected normal setup
+branches only; unrelated caller bodies are not claimed audited.
+
+- Retained **0ZJ.A0z050c–0514** captures09S.A1J into v45. At0ce6 it
+  branches on that captured flag; true invokes **13z.A0N**. A0N rechecks
+  A1J and submits **Fea(selector6)** to0YM.A00("prekeys") and waits on
+  FutureTask.get. A0z catches selected execution/interruption exceptions.
+- **09S.A1J** reads **signal_protocol_store_is_new**, defaultfalse, under
+  preference monitor. A19 writes that same flag (the previously traced
+  success worker clears it). This is distinct from key count or PQ migration.
+- Retained **Fea6,0b30–0b9c** obtainsFjI and calls **0WJ.A10 ->0Yj.A01**.
+  The latter counts legacy prekeys where sent_to_server=0 AND
+  direct_distribution=0, returning nonzero; missing count result throws.
+  With unsent keys, worker closesFjI then calls **A0S(reason1)**. Without
+  them it callsA0k ensure, closes and returns without sending in that
+  invocation (0b90 branch to005a return-void). Generation is not the same as send.
+- In A0z's selected **non-new-store** branch0d1e–0d4c, **09S.A1I** reads
+  **need_to_get_pre_key_digest**, defaulttrue. When true, **13z.A0M**
+  separately checks0AI.A06 readiness and last attempt uptimeA01 under monitor.
+  A01=0 permits immediately; otherwise **elapsed>60000ms** permits and
+  updatesA01 to currentuptime. Equality60000 still skips. If admitted it sends
+  **Messagewhat0,arg1=88,arg2=0** through0Sf.A0V. Digest writer/reply
+  lifecycle remains untraced here; this is not an upload admission.
+- Exact A0S caller search also finds **13z.A0Q**. Its retained body calls
+  A0l, then with gateenabled marks previouslysent KEM rows unsent and clears
+  upload_timestamp beforeA0S(inputReason). Its upstream callers are FcT,
+  Fdf andFeK variants; contexts remain untraced. **Do not classify A0Q as
+  generic startup** or port its mark-unsent behavior to reconnect merely
+  because it eventually callsSET.
+
+**Rust gap:** startup currently checks inventory and may generate/send in one
+epoch, without these persisted new-store/digest flags and digest lifecycle.
+This is explicit local behavior, not native startup parity. Port requires
+registration flag producers, digest request/callback and applicable lifecycle
+ownership. No production change or account flag/reset operation here.
+No live traffic.
+
+Additional export hashes:
+
+- [startup-set-callers.txt](startup-set-callers.txt): `e5ff93345c5429afbeae4e606add9e7980b5cb04e91de0e43b9943e714c94b49`
+- [startup-unsent-predicate.txt](startup-unsent-predicate.txt): `85d5c3b61ae6e6493a0228bc13d28a45687005866eb16224beb8fb6ada98fc77`
+- [startup-manager-entry.txt](startup-manager-entry.txt): `06d9f847e78d64c77d327ecd0e94a034cefc8bf3119238c637083b589cef56d5`
+- [startup-manager-callers.txt](startup-manager-callers.txt): `425939b4dc2cecec2eea188add8cb1dbd3c087d86a49eee45ee69295aa1145a5`
+- [startup-unsent-query.txt](startup-unsent-query.txt): `07918d7a6e491559702a184fc9a4afb0e0bcae146536d0a5de9f6f7ecccc2da0`
+- [startup-worker-callers.txt](startup-worker-callers.txt): `cf91556425dd52364617b3a2b068635af7d2d31141c96f2b8021e55910cd76f4`
+- [startup-dispatch.txt](startup-dispatch.txt): `c78187b325d39aecedd26c44ab31d7203c329b37b0929a714de1903d7ad4c5d5`
+- [startup-dispatch-callers.txt](startup-dispatch-callers.txt): `d701156af38d4264bc0c93f43a0cc343a972522f0da236151974e64dc9f2c744`
+- [startup-registration-flag.txt](startup-registration-flag.txt): `917e619b900144aad7a39b1f0b275582a94c61fb596c17c9a787363d6702ddc3`
+- [startup-registration-clear.txt](startup-registration-clear.txt): `5f527e3bb0ccf3ec0daf932ef38a3846d1f96fc03098a1eeaab0a1837cd4451f`
+- [startup-upload-flag.txt](startup-upload-flag.txt): `9cc48cb08e54924b4194438d7a7824687e5fcae2b7bf31ef8af4de38ff29010f`
+- [startup-migration-entry.txt](startup-migration-entry.txt): `c2ebb2b52b52ad6139f73419c9206cb7af5b2461d97fa4e3b078d9e38246ccc3`

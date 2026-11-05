@@ -1,3 +1,11 @@
+2026-11-04 — **New-store startup and digest entry distinguished.**
+
+Persisted new-store flag controls generate-or-send;separate digest flag
+uses readiness/uptime guard. Rust inventory-only startup remains incomplete.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#new-store-startup-and-digest-entry-distinction-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. No production change or live traffic.
+
 2026-11-04 — **Count notifications select migrated ADD or legacy SET.**
 
 Actor preserves entry reason;PQ-only default-flag notifications remainACK-only,

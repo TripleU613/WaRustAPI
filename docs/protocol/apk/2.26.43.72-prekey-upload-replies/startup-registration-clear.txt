@@ -1,0 +1,33 @@
+
+# class: LX/09S;
+# extends: Ljava/lang/Object;
+
+.method public A19(VZ)  # .registers 6
+    # full signature: LX/09S;->A19(Z)V
+    0000..0004  iget-object  v0, v4, LX/09S;->A0U:LX/00x;
+    0004..000a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    000a..000c  move-result-object  v3
+    000c..0010  check-cast  v3, LX/0Fa;
+    0010..0016  const-string/jumbo  v1, "wa-shared-prefs/setsignalprotocolstoreisnew/"
+    0016..001a  new-instance  v0, Ljava/lang/StringBuilder;
+    001a..0020  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0020..0026  invoke-virtual  {v0, v5}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    0026..002c  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    002c..002e  move-result-object  v0
+    002e..0034  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0034..0038  iget-object  v2, v3, LX/0Fa;->A01:Ljava/lang/Object;
+    0038..003a  monitor-enter
+    003a..0040  invoke-virtual  {v3}, LX/0FZ;->A02()Landroid/content/SharedPreferences$Editor;
+    0040..0042  move-result-object  v1
+    0042..0048  const-string/jumbo  v0, "signal_protocol_store_is_new"
+    0048..004e  invoke-interface  {v1, v0, v5}, Landroid/content/SharedPreferences$Editor;->putBoolean(Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;
+    004e..0050  move-result-object  v0
+    0050..0056  invoke-interface  {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
+    0056..0058  monitor-exit
+    0058..005a  return-void
+    005a..005c  move-exception  v0
+    005c..005e  monitor-exit
+    005e..0060  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 001d..002b -> 002d
+.end method

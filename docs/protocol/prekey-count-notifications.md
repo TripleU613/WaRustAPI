@@ -550,3 +550,11 @@ before/after reopen. Existing non-migrated count and receive tests remain.
 strategy, native retry/backoff/reset and cursor/storage migration. Local ACK
 wire ordering still follows durable capture before upload work; complete native
 worker/ACK durability/order is not proven. No live traffic/full parity claim.
+
+## 2026-11-04 — Startup new-store/digest distinction
+
+**Confirmed static (43.72):**new-store flag drivesFea6, which sends
+existingunsent keys or onlygenerates;non-new-store digestflag drives
+A0M/readiness/elapsed>60000ms thenarg1=88. A0Q mark-unsent entry is not
+proven genericstartup. Rust startup parity remains incomplete.
+[Exports and port requirements](apk/2.26.43.72-prekey-upload-replies/README.md#new-store-startup-and-digest-entry-distinction-2026-11-04). No production change or live traffic.

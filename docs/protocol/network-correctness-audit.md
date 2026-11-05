@@ -1220,3 +1220,11 @@ notifications use ADD;non-migrated use SET;PQ-only remainsACK-only under
 EMv0x70d7 defaultfalse. Explicit actor trigger preserves entry semantics.
 Reopen/uncertain-KEM and synthetic actor tests expanded.
 [Evidence and config/ACK/startup limits](prekey-count-notifications.md#count-notification-setadd-routing-2026-11-04). No live traffic.
+
+## 2026-11-04 — Startup new-store/digest distinction
+
+**Confirmed static (43.72):**new-store flag drivesFea6, which sends
+existingunsent keys or onlygenerates;non-new-store digestflag drives
+A0M/readiness/elapsed>60000ms thenarg1=88. A0Q mark-unsent entry is not
+proven genericstartup. Rust startup parity remains incomplete.
+[Exports and port requirements](apk/2.26.43.72-prekey-upload-replies/README.md#new-store-startup-and-digest-entry-distinction-2026-11-04). No production change or live traffic.

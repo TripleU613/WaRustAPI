@@ -1,0 +1,24 @@
+
+# class: LX/13z;
+# extends: LX/07o;
+
+.method public A0N(V)  # .registers 4
+    # full signature: LX/13z;->A0N()V
+    0000..0004  iget-object  v0, v3, LX/13z;->A0K:LX/09S;
+    0004..000a  invoke-virtual  {v0}, LX/09S;->A1J()Z
+    000a..000c  move-result  v0
+    000c..0010  if-eqz  v0, +0x19
+    0010..0014  iget-object  v0, v3, LX/13z;->A0G:LX/00x;
+    0014..001a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    001a..001c  move-result-object  v2
+    001c..0020  check-cast  v2, LX/0YM;
+    0020..0022  const/4  v0, #0x6
+    0022..0026  new-instance  v1, LX/Fea;
+    0026..002c  invoke-direct  {v1, v3, v0}, LX/Fea;-><init>(Ljava/lang/Object;I)V
+    002c..0030  const-string  v0, "prekeys"
+    0030..0036  invoke-virtual  {v2, v1, v0}, LX/0YM;->A00(Ljava/lang/Runnable;Ljava/lang/String;)Ljava/util/concurrent/FutureTask;
+    0036..0038  move-result-object  v0
+    0038..003e  invoke-virtual  {v0}, Ljava/util/concurrent/FutureTask;->get()Ljava/lang/Object;
+    003e..0040  return-void
+    # exception table: 0 try range(s)
+.end method
