@@ -4702,3 +4702,11 @@ remain. [Exports and conditions](apk/2.26.43.72-prekey-upload-replies/README.md#
 ignore error metadata; refusals ignore count_low flags. Synthetic mixed-body
 reply regression verifies outcomes and persisted batches after reopen.
 [Evidence, test and remaining gaps](apk/2.26.43.72-prekey-upload-replies/README.md#rust-reply-field-separation-2026-11-04). No live traffic.
+
+## 2026-11-04 — First coded upload error and numeric conversion
+
+**Confirmed static / implemented offline (43.72):**1ud.A01/0HF.A00
+select first present code, parse signed Java integer, default0. Rust now
+persists canonical decimal without eight-character truncation; historical
+batches retained. Reopen regression covers malformed-first and limits.
+[Evidence and remaining scope](apk/2.26.43.72-prekey-upload-replies/README.md#rust-coded-error-selection-and-numeric-conversion-2026-11-04). No automatic retry or live traffic.

@@ -1,3 +1,12 @@
+2026-11-04 — **Upload refusals retain the native numeric code.**
+
+Code-less children are skipped; first present code parses as signed Java
+i32/default0, without truncation. Historical batches remain untouched.
+[Evidence and regression](docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#rust-coded-error-selection-and-numeric-conversion-2026-11-04).
+Validation: workspace/all-feature tests, strict Clippy, CLI reference,
+formatting, JSON, coverage freshness and repository hygiene passed.
+No new retry behavior or live traffic.
+
 2026-11-04 — **Upload reply fields follow selected callback.**
 
 Results no longer retain error metadata; refusals no longer retain

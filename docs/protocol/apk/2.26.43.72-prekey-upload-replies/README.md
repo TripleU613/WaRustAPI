@@ -1103,3 +1103,31 @@ count_low=false/code503. This tests stored semantics, not live acceptance.
 **Remaining:** numeric native error extraction (including first coded child),
 PQ follow-up flags, ADD strategy and gated retry are not ported by this fix.
 The historical stored batch representation is not rewritten. No live traffic.
+
+## Rust coded-error selection and numeric conversion (2026-11-04)
+
+**Confirmed static / implemented offline**, pinned2.26.43.72, same APK
+SHA-256 as this bundle. Retained1ud.A01 skips error children whose code
+is absent, then returns the first present code transformed by0HF.A00(code,0).
+The newly retained **0HF.A00** checks TextUtils.isEmpty, returns the default
+for empty input, otherwise calls Integer.parseInt and catches
+NumberFormatException to return the default. No trim or search for a later
+valid code is performed. This checked DEX export is not a REA envelope.
+
+Rust settlement now selects the first error child with textual code, parses
+with the existing Java decimal helper and i32 bounds, and records canonical
+decimal text. Missing/malformed/out-of-range codes become
+`Some("0")` on refusals; successful results retain no code. The string field
+is retained for storage compatibility; historical batches are not rewritten.
+This replaces first-error-only selection and arbitrary eight-character
+truncation, which could lose a later code or truncate signed i32 values.
+
+Regression `upload_refusal_selects_first_coded_error_and_preserves_java_integer`
+settles synthetic refusals after a code-less child, reopens the store and
+checks canonical signed limits, plus/leading zeros, fullwidth digits, missing,
+empty, whitespace, malformed and overflow inputs. A later406 cannot replace
+a present malformed first code. Native text metadata remains unported, and
+no numeric retry or regeneration policy is activated by this correction.
+No live traffic.
+
+- [error-number-parser.txt](error-number-parser.txt): `d02330cc5123b8be9d99bc042a5262fad59a71c60138568edd59c1d6a85514d5`

@@ -15317,5 +15317,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#rust-reply-field-separation-2026-11-04",
     "description": "Offline correction: result parses legacy count_low and ignores error code; error parses code and ignores count_low. Existing batch persistence only; no new route or retry."
+  },
+  "x-prekey-upload-numeric-refusal-code": {
+    "x-cli": "whatsapp-cli listen (existing prekey settlement)",
+    "x-transport": [
+      "comparison public-client"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#rust-coded-error-selection-and-numeric-conversion-2026-11-04",
+    "description": "New refusal batches record first present error code as canonical signed32 Java decimal string; absent/malformed/overflow becomes0. Historical strings unchanged. No automatic retry or HTTP route."
   }
 }

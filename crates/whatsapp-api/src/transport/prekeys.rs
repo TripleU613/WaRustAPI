@@ -154,7 +154,8 @@ pub struct Batch {
     pub ids: Vec<u32>,
     /// `outcome_unknown`, `server_acknowledged` or `refused`.
     pub status: String,
-    /// Sanitized server error code for a refusal.
+    /// Canonical signed 32-bit server code for a refusal (invalid/missing -> 0).
+    /// Historical batches may retain the earlier truncated raw string.
     pub code: Option<String>,
     /// Server still wants more legacy keys (`list/@count_low`).
     pub count_low: Option<bool>,
@@ -541,16 +542,19 @@ impl PendingUpload {
                 .and_then(|c| c.get_attr("count_low"))
                 .and_then(|v| v.as_text())
                 .is_some_and(|v| v.eq_ignore_ascii_case("true"));
-        let code = (!accepted)
-            .then(|| {
-                node.child_nodes()
-                    .iter()
-                    .find(|c| c.description == "error")
-                    .and_then(|c| c.get_attr("code"))
-                    .and_then(|v| v.as_text())
-                    .map(|v| v.chars().take(8).collect::<String>())
-            })
-            .flatten();
+        let code = (!accepted).then(|| {
+            // APK 43.72 1ud.A01 skips code-less errors, then 0HF.A00
+            // uses Integer.parseInt with default zero. Do not skip a present
+            // malformed code in favor of a later child's different outcome.
+            node.child_nodes()
+                .iter()
+                .filter(|c| c.description == "error")
+                .find_map(|c| c.get_attr("code").and_then(|v| v.as_text()))
+                .and_then(super::mex::java_decimal_long)
+                .and_then(|v| i32::try_from(v).ok())
+                .unwrap_or(0)
+                .to_string()
+        });
         store.write(|tx| {
             let key = batch_key(&self.iq_id);
             let mut batch: Batch = tx
@@ -1445,6 +1449,46 @@ mod tests {
                     "refused"
                 }
             );
+        }
+    }
+
+    #[test]
+    fn upload_refusal_selects_first_coded_error_and_preserves_java_integer() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("coded-errors.redb");
+        let (account, signed) = account_and_signed();
+        for (raw, expected) in [
+            (None, "0"),
+            (Some("+00503"), "503"),
+            (Some("-2147483648"), "-2147483648"),
+            (Some("2147483647"), "2147483647"),
+            (Some("2147483648"), "0"),
+            (Some(""), "0"),
+            (Some(" 503"), "0"),
+            (Some("oops"), "0"),
+            (Some("５０３"), "503"),
+        ] {
+            let store = open(&path);
+            generate(&store).unwrap();
+            let (pending, _) = begin_upload(&store, &account, &signed).unwrap().unwrap();
+            let mut children = vec![Node::new("error").attr("text", "no-code")];
+            if let Some(raw) = raw {
+                children.push(Node::new("error").attr("code", raw));
+                children.push(Node::new("error").attr("code", "406"));
+            }
+            let reply = Node::new("iq")
+                .attr("id", pending.iq_id.as_str())
+                .attr("type", "error")
+                .children(children);
+            assert!(!pending.settle(&store, &reply).unwrap().accepted);
+            drop(store);
+            let store = open(&path);
+            let batch: Batch = store
+                .read(|tx| tx.get_json(Table::Checkpoints, batch_key(&pending.iq_id).as_bytes(), 1))
+                .unwrap()
+                .unwrap();
+            assert_eq!(batch.code.as_deref(), Some(expected), "input {raw:?}");
+            assert_eq!(batch.status, "refused");
         }
     }
 
