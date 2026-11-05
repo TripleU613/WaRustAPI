@@ -1,0 +1,4 @@
+classes2.dex  LX/1rh;-><init>(VLLLLLLLL)
+  write opcode 0x5b, dex byte offset: 0x245912
+classes2.dex  LX/1s2;->run(V)
+  read opcode 0x54, dex byte offset: 0x247ef4

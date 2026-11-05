@@ -1657,6 +1657,49 @@ mod tests {
         }
     }
     #[tokio::test(start_paused = true)]
+    async fn about_result_extensions_do_not_become_refusals_in_receive() {
+        use super::super::actions::{self, ActionStatus};
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("about-reply.redb"));
+        let id = super::super::about::queue_set(&store, "Available").unwrap();
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        (&mut fake.ready).await.unwrap();
+        let (query, written) = fake.written().await;
+        assert_eq!(
+            query.get_attr("id").and_then(|v| v.as_text()),
+            Some(id.as_str())
+        );
+        written.send(Ok(())).unwrap();
+        fake.deliver(
+            Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "result")
+                .children(vec![Node::new("error").attr("code", "403")]),
+        )
+        .await;
+        fake.deliver(
+            Node::new("receipt")
+                .attr("from", peer())
+                .attr("id", "AFTER-ABOUT-RESULT"),
+        )
+        .await;
+        let (ack, written) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        assert_eq!(
+            ack.get_attr("id").and_then(|v| v.as_text()),
+            Some("AFTER-ABOUT-RESULT")
+        );
+        written.send(Ok(())).unwrap();
+        let outcomes = actions::outcomes(&store).unwrap();
+        let outcome = outcomes.iter().find(|a| a.id == id).unwrap();
+        assert_eq!(outcome.status, ActionStatus::Ok);
+        assert_eq!(outcome.error_code, None);
+        fake.nothing_written(Duration::from_millis(1)).await;
+        fake.stop_cleanly().await;
+    }
+
+    #[tokio::test(start_paused = true)]
     async fn timed_action_expiry_preserves_uncertainty_without_stopping_receive() {
         use super::super::actions::{self, ActionStatus};
         for kind in ["abprops", "block", "unblock", "dm-default"] {

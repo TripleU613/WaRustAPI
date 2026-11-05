@@ -1,0 +1,350 @@
+
+# class: Lcom/whatsapp/profile/ui/SetAboutInfo;
+# extends: LX/0Ir;
+
+.method public <init>(V)  # .registers 4
+    # full signature: Lcom/whatsapp/profile/ui/SetAboutInfo;-><init>()V
+    0000..0006  invoke-direct  {v3}, LX/0Ir;-><init>()V
+    0006..000c  const  v0, #0x20468
+    000c..0012  invoke-static  {v0}, LX/00D;->A00(I)LX/05h;
+    0012..0014  move-result-object  v0
+    0014..0018  iput-object  v0, v3, Lcom/whatsapp/profile/ui/SetAboutInfo;->A01:LX/00x;
+    0018..001e  invoke-static  {}, LX/2L9;->A0k()LX/0Js;
+    001e..0020  move-result-object  v0
+    0020..0024  iput-object  v0, v3, Lcom/whatsapp/profile/ui/SetAboutInfo;->A08:LX/0Js;
+    0024..0028  const/16  v0, #0x192c
+    0028..002e  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    002e..0030  move-result-object  v0
+    0030..0034  check-cast  v0, LX/3Jd;
+    0034..0038  iput-object  v0, v3, Lcom/whatsapp/profile/ui/SetAboutInfo;->A03:LX/3Jd;
+    0038..003e  invoke-static  {}, Landroid/os/Looper;->getMainLooper()Landroid/os/Looper;
+    003e..0040  move-result-object  v2
+    0040..0042  const/4  v0, #0x1
+    0042..0046  new-instance  v1, LX/K57;
+    0046..004c  invoke-direct  {v1, v3, v0}, LX/K57;-><init>(Ljava/lang/Object;I)V
+    004c..0050  new-instance  v0, Landroid/os/Handler;
+    0050..0056  invoke-direct  {v0, v2, v1}, Landroid/os/Handler;-><init>(Landroid/os/Looper;Landroid/os/Handler$Callback;)V
+    0056..005a  iput-object  v0, v3, Lcom/whatsapp/profile/ui/SetAboutInfo;->A07:Landroid/os/Handler;
+    005a..0060  invoke-static  {}, LX/6oe;->A0V()LX/0sb;
+    0060..0062  move-result-object  v0
+    0062..0066  iput-object  v0, v3, Lcom/whatsapp/profile/ui/SetAboutInfo;->A06:LX/0sb;
+    0066..006a  const/16  v1, #0x9
+    006a..006e  new-instance  v0, LX/KFt;
+    006e..0074  invoke-direct  {v0, v3, v1}, LX/KFt;-><init>(Ljava/lang/Object;I)V
+    0074..0078  iput-object  v0, v3, Lcom/whatsapp/profile/ui/SetAboutInfo;->A09:LX/0d0;
+    0078..007a  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A03(VL)  # .registers 4
+    # full signature: Lcom/whatsapp/profile/ui/SetAboutInfo;->A03(Lcom/whatsapp/profile/ui/SetAboutInfo;)V
+    0000..0004  const-string  v1, "status"
+    0004..0006  const/4  v0, #0x0
+    0006..000c  invoke-virtual  {v3, v1, v0}, Landroid/content/Context;->openFileOutput(Ljava/lang/String;I)Ljava/io/FileOutputStream;
+    000c..000e  move-result-object  v0
+    000e..0012  new-instance  v3, Ljava/io/ObjectOutputStream;
+    0012..0018  invoke-direct  {v3, v0}, Ljava/io/ObjectOutputStream;-><init>(Ljava/io/OutputStream;)V
+    0018..001e  invoke-static  {}, LX/1Xl;->A13()Ljava/lang/StringBuilder;
+    001e..0020  move-result-object  v2
+    0020..0024  sget-object  v0, Lcom/whatsapp/profile/ui/SetAboutInfo;->A0A:Ljava/util/List;
+    0024..002a  invoke-interface  {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    002a..002c  move-result-object  v1
+    002c..0032  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    0032..0034  move-result  v0
+    0034..0038  if-eqz  v0, +0xf
+    0038..003e  invoke-static  {v1}, LX/2LB;->A1A(Ljava/util/Iterator;)Ljava/lang/String;
+    003e..0040  move-result-object  v0
+    0040..0046  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0046..004a  const-string  v0, "\n"
+    004a..0050  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0050..0052  goto  -0x12
+    0052..0058  invoke-virtual  {v2}, Ljava/lang/StringBuilder;->length()I
+    0058..005a  move-result  v0
+    005a..005c  const/4  v1, #0x1
+    005c..0060  if-le  v0, v1, +0xa
+    0060..0066  invoke-virtual  {v2}, Ljava/lang/StringBuilder;->length()I
+    0066..0068  move-result  v0
+    0068..006a  sub-int/2addr  v0, v1
+    006a..0070  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->deleteCharAt(I)Ljava/lang/StringBuilder;
+    0070..0076  invoke-virtual  {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0076..0078  move-result-object  v0
+    0078..007e  invoke-virtual  {v3, v0}, Ljava/io/ObjectOutputStream;->writeObject(Ljava/lang/Object;)V
+    007e..0084  invoke-virtual  {v3}, Ljava/io/OutputStream;->close()V
+    0084..0086  return-void
+    0086..0088  move-exception  v1
+    0088..008e  invoke-virtual  {v3}, Ljava/io/OutputStream;->close()V
+    008e..0090  goto  +0x5
+    0090..0092  move-exception  v0
+    0092..0098  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    0098..009a  throw  v1
+    009a..009c  move-exception  v1
+    009c..00a0  const-string  v0, "SetStatus/writeStatusListString"
+    00a0..00a6  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    00a6..00a8  return-void
+    # exception table: 5 try range(s)
+    # catch Ljava/io/IOException; code_units 0000..000c -> 004d
+    # catch <all> code_units 000c..003f -> 0043
+    # catch Ljava/io/IOException; code_units 003f..0043 -> 004d
+    # catch <all> code_units 0044..0048 -> 0048
+    # catch Ljava/io/IOException; code_units 0049..004d -> 004d
+.end method
+
+.method public A5f(VL)  # .registers 6
+    # full signature: Lcom/whatsapp/profile/ui/SetAboutInfo;->A5f(Ljava/lang/String;)V
+    0000..0006  const  v0, #0x7f12008f
+    0006..000c  invoke-virtual  {v4, v0}, LX/0Ij;->A4y(I)Z
+    000c..000e  move-result  v0
+    000e..0012  if-nez  v0, +0x35
+    0012..0014  const/4  v0, #0x2
+    0014..001a  invoke-static  {v4, v0}, LX/COw;->A01(Landroid/app/Activity;I)V
+    001a..001e  iget-object  v0, v4, Lcom/whatsapp/profile/ui/SetAboutInfo;->A01:LX/00x;
+    001e..0024  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0024..0026  move-result-object  v3
+    0026..002a  check-cast  v3, LX/FxR;
+    002a..002e  new-instance  v2, LX/Jc5;
+    002e..0034  invoke-direct  {v2, v4}, LX/Jc5;-><init>(Lcom/whatsapp/profile/ui/SetAboutInfo;)V
+    0034..0036  const/4  v0, #0x3
+    0036..003a  new-instance  v1, LX/Hzt;
+    003a..0040  invoke-direct  {v1, v4, v0}, LX/Hzt;-><init>(Ljava/lang/Object;I)V
+    0040..0044  new-instance  v0, LX/Jc6;
+    0044..004a  invoke-direct  {v0, v4}, LX/Jc6;-><init>(Lcom/whatsapp/profile/ui/SetAboutInfo;)V
+    004a..0050  invoke-virtual  {v3, v1, v2, v0, v5}, LX/FxR;->A04(LX/8ow;LX/Jc5;LX/Jc6;Ljava/lang/String;)Z
+    0050..0052  move-result  v0
+    0052..0056  if-nez  v0, +0xb
+    0056..005a  iget-object  v1, v4, Lcom/whatsapp/profile/ui/SetAboutInfo;->A07:Landroid/os/Handler;
+    005a..005c  const/4  v0, #0x0
+    005c..0062  invoke-virtual  {v1, v0}, Landroid/os/Handler;->removeMessages(I)V
+    0062..0068  invoke-virtual  {v1, v0}, Landroid/os/Handler;->sendEmptyMessage(I)Z
+    0068..006c  iget-object  v3, v4, Lcom/whatsapp/profile/ui/SetAboutInfo;->A07:Landroid/os/Handler;
+    006c..006e  const/4  v2, #0x0
+    006e..0072  const-wide/16  v0, #0x7d00
+    0072..0078  invoke-virtual  {v3, v2, v0, v1}, Landroid/os/Handler;->sendEmptyMessageDelayed(IJ)Z
+    0078..007a  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public Bld(VL)  # .registers 2
+    # full signature: Lcom/whatsapp/profile/ui/SetAboutInfo;->Bld(Ljava/lang/String;)V
+    0000..0002  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public Bn2(VI)  # .registers 4
+    # full signature: Lcom/whatsapp/profile/ui/SetAboutInfo;->Bn2(I)V
+    0000..0002  const/4  v0, #0x4
+    0002..0006  if-ne  v3, v0, +0x8
+    0006..000a  iget-object  v1, v2, Lcom/whatsapp/profile/ui/SetAboutInfo;->A03:LX/3Jd;
+    000a..000c  const/4  v0, #0x2
+    000c..0012  invoke-virtual  {v1, v0}, LX/3Jd;->A01(I)V
+    0012..0014  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public Bue(VIL)  # .registers 6
+    # full signature: Lcom/whatsapp/profile/ui/SetAboutInfo;->Bue(ILjava/lang/String;)V
+    0000..0002  const/4  v0, #0x4
+    0002..0006  if-ne  v4, v0, +0x2a
+    0006..000c  invoke-virtual  {v5}, Ljava/lang/String;->length()I
+    000c..000e  move-result  v0
+    000e..0012  if-lez  v0, +0x24
+    0012..0016  iget-object  v0, v3, Lcom/whatsapp/profile/ui/SetAboutInfo;->A04:Lcom/whatsapp/ui/coreui/base/TextEmojiLabel;
+    0016..001c  invoke-virtual  {v0}, Landroid/widget/TextView;->getText()Ljava/lang/CharSequence;
+    001c..001e  move-result-object  v0
+    001e..0024  invoke-interface  {v0}, Ljava/lang/CharSequence;->toString()Ljava/lang/String;
+    0024..0026  move-result-object  v0
+    0026..002c  invoke-virtual  {v5, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    002c..002e  move-result  v0
+    002e..0032  if-nez  v0, +0x14
+    0032..0036  iget-object  v2, v3, Lcom/whatsapp/profile/ui/SetAboutInfo;->A00:Landroid/view/View;
+    0036..0038  const/4  v1, #0x0
+    0038..003e  const  v0, #0xda8b4bec
+    003e..0044  invoke-static  {v2, v1, v0}, Lcom/whatsapp/infra/logging/UXLog;->setOnClickListener(Ljava/lang/Object;Landroid/view/View$OnClickListener;I)V
+    0044..004a  invoke-virtual  {v3, v5}, Lcom/whatsapp/profile/ui/SetAboutInfo;->A5f(Ljava/lang/String;)V
+    004a..004e  iget-object  v1, v3, Lcom/whatsapp/profile/ui/SetAboutInfo;->A03:LX/3Jd;
+    004e..0050  const/4  v0, #0x1
+    0050..0056  invoke-virtual  {v1, v0}, LX/3Jd;->A01(I)V
+    0056..0058  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public onContextItemSelected(ZL)  # .registers 6
+    # full signature: Lcom/whatsapp/profile/ui/SetAboutInfo;->onContextItemSelected(Landroid/view/MenuItem;)Z
+    0000..0006  invoke-interface  {v5}, Landroid/view/MenuItem;->getMenuInfo()Landroid/view/ContextMenu$ContextMenuInfo;
+    0006..0008  move-result-object  v3
+    0008..000c  check-cast  v3, Landroid/widget/AdapterView$AdapterContextMenuInfo;
+    000c..0012  invoke-interface  {v5}, Landroid/view/MenuItem;->getItemId()I
+    0012..0014  move-result  v0
+    0014..0016  const/4  v2, #0x1
+    0016..001a  if-ne  v0, v2, +0x17
+    001a..001e  sget-object  v1, Lcom/whatsapp/profile/ui/SetAboutInfo;->A0A:Ljava/util/List;
+    001e..0022  iget  v0, v3, Landroid/widget/AdapterView$AdapterContextMenuInfo;->position:I
+    0022..0028  invoke-interface  {v1, v0}, Ljava/util/List;->remove(I)Ljava/lang/Object;
+    0028..002c  iget-object  v0, v4, Lcom/whatsapp/profile/ui/SetAboutInfo;->A02:LX/Ig5;
+    002c..0032  invoke-virtual  {v0}, Landroid/widget/BaseAdapter;->notifyDataSetChanged()V
+    0032..0038  invoke-static  {v4}, Lcom/whatsapp/profile/ui/SetAboutInfo;->A03(Lcom/whatsapp/profile/ui/SetAboutInfo;)V
+    0038..003c  iget-object  v1, v4, Lcom/whatsapp/profile/ui/SetAboutInfo;->A03:LX/3Jd;
+    003c..003e  const/4  v0, #0x4
+    003e..0044  invoke-virtual  {v1, v0}, LX/3Jd;->A01(I)V
+    0044..0046  return  v2
+    # exception table: 0 try range(s)
+.end method
+
+.method public onCreate(VL)  # .registers 5
+    # full signature: Lcom/whatsapp/profile/ui/SetAboutInfo;->onCreate(Landroid/os/Bundle;)V
+    0000..0006  invoke-super  {v3, v4}, LX/0Ir;->onCreate(Landroid/os/Bundle;)V
+    0006..000c  const  v0, #0x7f122c81
+    000c..0012  invoke-virtual  {v3, v0}, Landroid/app/Activity;->setTitle(I)V
+    0012..0018  invoke-static  {v3}, LX/2LE;->A0s(LX/0IZ;)V
+    0018..001e  const  v0, #0x7f0e1375
+    001e..0024  invoke-virtual  {v3, v0}, LX/0Ir;->setContentView(I)V
+    0024..002a  const  v0, #0x7f0b3951
+    002a..0030  invoke-virtual  {v3, v0}, LX/0IZ;->findViewById(I)Landroid/view/View;
+    0030..0032  move-result-object  v2
+    0032..0036  iput-object  v2, v3, Lcom/whatsapp/profile/ui/SetAboutInfo;->A00:Landroid/view/View;
+    0036..003a  const/16  v0, #0x19
+    003a..0040  invoke-static  {v3, v0}, LX/K8M;->A00(Ljava/lang/Object;I)LX/K8M;
+    0040..0042  move-result-object  v1
+    0042..0048  const  v0, #0x97ad1ade
+    0048..004e  invoke-static  {v2, v1, v0}, Lcom/whatsapp/infra/logging/UXLog;->setOnClickListener(Ljava/lang/Object;Landroid/view/View$OnClickListener;I)V
+    004e..0054  const  v0, #0x7f0b39ff
+    0054..005a  invoke-virtual  {v3, v0}, LX/0IZ;->findViewById(I)Landroid/view/View;
+    005a..005c  move-result-object  v1
+    005c..0060  check-cast  v1, Lcom/whatsapp/ui/coreui/base/TextEmojiLabel;
+    0060..0064  iput-object  v1, v3, Lcom/whatsapp/profile/ui/SetAboutInfo;->A04:Lcom/whatsapp/ui/coreui/base/TextEmojiLabel;
+    0064..0068  iget-object  v0, v3, Lcom/whatsapp/profile/ui/SetAboutInfo;->A01:LX/00x;
+    0068..006e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    006e..0070  move-result-object  v0
+    0070..0074  check-cast  v0, LX/FxR;
+    0074..007a  invoke-virtual  {v0}, LX/FxR;->A00()Ljava/lang/String;
+    007a..007c  move-result-object  v0
+    007c..0082  invoke-virtual  {v1, v0}, Lcom/whatsapp/ui/coreui/base/TextEmojiLabel;->A0M(Ljava/lang/CharSequence;)V
+    0082..0086  iget-object  v1, v3, LX/0Ie;->A04:LX/08Z;
+    0086..008a  const/16  v0, #0x22
+    008a..0090  invoke-static  {v3, v0}, LX/KVM;->A00(Ljava/lang/Object;I)LX/KVM;
+    0090..0092  move-result-object  v0
+    0092..0098  invoke-interface  {v1, v0}, LX/08Z;->CbN(Ljava/lang/Runnable;)V
+    0098..009c  iget-object  v1, v3, Lcom/whatsapp/profile/ui/SetAboutInfo;->A06:LX/0sb;
+    009c..00a0  iget-object  v0, v3, Lcom/whatsapp/profile/ui/SetAboutInfo;->A09:LX/0d0;
+    00a0..00a6  invoke-virtual  {v1, v0}, LX/07o;->A0K(Ljava/lang/Object;)Z
+    00a6..00ac  const  v2, #0x7f040736
+    00ac..00b2  const  v1, #0x7f0409a3
+    00b2..00b8  const  v0, #0x7f0606b5
+    00b8..00be  invoke-static  {v3, v1, v0}, Lcom/whatsapp/ui/wds/utils/WDSColorsUtils;->A05(Landroid/content/Context;II)I
+    00be..00c0  move-result  v0
+    00c0..00c6  invoke-static  {v3, v2, v0}, LX/1Ce;->A00(Landroid/content/Context;II)I
+    00c6..00c8  move-result  v1
+    00c8..00ce  const  v0, #0x7f0b3a00
+    00ce..00d4  invoke-virtual  {v3, v0}, LX/0IZ;->findViewById(I)Landroid/view/View;
+    00d4..00d6  move-result-object  v0
+    00d6..00da  check-cast  v0, Landroid/widget/ImageView;
+    00da..00e0  invoke-static  {v0, v1}, LX/1eX;->A0A(Landroid/widget/ImageView;I)V
+    00e0..00e2  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public onCreateContextMenu(VLLL)  # .registers 7
+    # full signature: Lcom/whatsapp/profile/ui/SetAboutInfo;->onCreateContextMenu(Landroid/view/ContextMenu;Landroid/view/View;Landroid/view/ContextMenu$ContextMenuInfo;)V
+    0000..0006  invoke-super  {v3, v4, v5, v6}, LX/0Ir;->onCreateContextMenu(Landroid/view/ContextMenu;Landroid/view/View;Landroid/view/ContextMenu$ContextMenuInfo;)V
+    0006..0008  const/4  v2, #0x1
+    0008..000e  const  v1, #0x7f125781
+    000e..0010  const/4  v0, #0x0
+    0010..0016  invoke-interface  {v4, v0, v2, v0, v1}, Landroid/view/Menu;->add(IIII)Landroid/view/MenuItem;
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public onCreateDialog(LI)  # .registers 6
+    # full signature: Lcom/whatsapp/profile/ui/SetAboutInfo;->onCreateDialog(I)Landroid/app/Dialog;
+    0000..0004  if-eqz  v5, +0x43
+    0004..0006  const/4  v0, #0x1
+    0006..000a  if-eq  v5, v0, +0x35
+    000a..000c  const/4  v0, #0x2
+    000c..0010  if-eq  v5, v0, +0x26
+    0010..0012  const/4  v0, #0x3
+    0012..0016  if-eq  v5, v0, +0x7
+    0016..001c  invoke-super  {v4, v5}, Landroid/app/Activity;->onCreateDialog(I)Landroid/app/Dialog;
+    001c..001e  move-result-object  v0
+    001e..0020  return-object  v0
+    0020..0026  invoke-static  {v4}, LX/CP6;->A05(Landroid/content/Context;)LX/G36;
+    0026..0028  move-result-object  v3
+    0028..002e  const  v0, #0x7f12154b
+    002e..0034  invoke-virtual  {v3, v0}, LX/G36;->A0N(I)V
+    0034..003a  const  v2, #0x7f121548
+    003a..003e  const/16  v1, #0xb
+    003e..0042  new-instance  v0, LX/K4d;
+    0042..0048  invoke-direct  {v0, v4, v1}, LX/K4d;-><init>(Ljava/lang/Object;I)V
+    0048..004e  invoke-static  {v0, v3, v2}, LX/B21;->A0v(Landroid/content/DialogInterface$OnClickListener;LX/G36;I)V
+    004e..0054  invoke-virtual  {v3}, Landroidx/appcompat/app/AlertDialog$Builder;->create()LX/Ij0;
+    0054..0056  move-result-object  v0
+    0056..0058  return-object  v0
+    0058..005e  const  v0, #0x7f12242e
+    005e..0064  invoke-virtual  {v4, v0}, Landroid/content/Context;->getString(I)Ljava/lang/String;
+    0064..0066  move-result-object  v0
+    0066..006c  invoke-static  {v4, v0}, LX/Jud;->A00(Landroid/content/Context;Ljava/lang/CharSequence;)LX/Ij0;
+    006c..006e  move-result-object  v0
+    006e..0070  return-object  v0
+    0070..0076  const  v0, #0x7f12242b
+    0076..007c  invoke-virtual  {v4, v0}, Landroid/content/Context;->getString(I)Ljava/lang/String;
+    007c..007e  move-result-object  v3
+    007e..0084  const  v0, #0x7f12242c
+    0084..0086  goto  +0xb
+    0086..008c  const  v0, #0x7f12242d
+    008c..0092  invoke-virtual  {v4, v0}, Landroid/content/Context;->getString(I)Ljava/lang/String;
+    0092..0094  move-result-object  v3
+    0094..009a  const  v0, #0x7f12242e
+    009a..00a0  invoke-virtual  {v4, v0}, Landroid/content/Context;->getString(I)Ljava/lang/String;
+    00a0..00a2  move-result-object  v2
+    00a2..00a4  const/4  v1, #0x0
+    00a4..00aa  const  v0, #0x7f0e11f4
+    00aa..00b0  invoke-static  {v4, v3, v2, v0, v1}, LX/Jud;->A01(Landroid/content/Context;Ljava/lang/CharSequence;Ljava/lang/CharSequence;IZ)LX/Ij0;
+    00b0..00b2  move-result-object  v0
+    00b2..00b4  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public onCreateOptionsMenu(ZL)  # .registers 4
+    # full signature: Lcom/whatsapp/profile/ui/SetAboutInfo;->onCreateOptionsMenu(Landroid/view/Menu;)Z
+    0000..0002  const/4  v1, #0x0
+    0002..0008  const  v0, #0x7f121548
+    0008..000e  invoke-interface  {v3, v1, v1, v1, v0}, Landroid/view/Menu;->add(IIII)Landroid/view/MenuItem;
+    000e..0010  const/4  v0, #0x1
+    0010..0012  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public onDestroy(V)  # .registers 3
+    # full signature: Lcom/whatsapp/profile/ui/SetAboutInfo;->onDestroy()V
+    0000..0006  invoke-super  {v2}, LX/0Ir;->onDestroy()V
+    0006..000a  iget-object  v1, v2, Lcom/whatsapp/profile/ui/SetAboutInfo;->A06:LX/0sb;
+    000a..000e  iget-object  v0, v2, Lcom/whatsapp/profile/ui/SetAboutInfo;->A09:LX/0d0;
+    000e..0014  invoke-virtual  {v1, v0}, LX/07o;->A0H(Ljava/lang/Object;)V
+    0014..0016  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public onOptionsItemSelected(ZL)  # .registers 5
+    # full signature: Lcom/whatsapp/profile/ui/SetAboutInfo;->onOptionsItemSelected(Landroid/view/MenuItem;)Z
+    0000..0006  const  v0, #0x558c791b
+    0006..000c  invoke-static  {v4, v3, v0}, LX/6og;->A02(Landroid/view/MenuItem;Ljava/lang/Object;I)I
+    000c..000e  move-result  v2
+    000e..0010  const/4  v1, #0x1
+    0010..0014  if-eqz  v2, +0x10
+    0014..001a  const  v0, #0x102002c
+    001a..001e  if-eq  v2, v0, +0x7
+    001e..0024  invoke-super  {v3, v4}, LX/0Ij;->onOptionsItemSelected(Landroid/view/MenuItem;)Z
+    0024..0026  move-result  v0
+    0026..0028  return  v0
+    0028..002e  invoke-virtual  {v3}, Landroid/app/Activity;->finish()V
+    002e..0030  return  v1
+    0030..0034  sget-object  v0, Lcom/whatsapp/profile/ui/SetAboutInfo;->A0A:Ljava/util/List;
+    0034..003a  invoke-interface  {v0}, Ljava/util/List;->size()I
+    003a..003c  move-result  v0
+    003c..0040  if-nez  v0, +0x9
+    0040..0046  const  v0, #0x7f122f6a
+    0046..004c  invoke-virtual  {v3, v0}, LX/0Ij;->BaY(I)V
+    004c..004e  return  v1
+    004e..0050  const/4  v0, #0x3
+    0050..0056  invoke-static  {v3, v0}, LX/COw;->A01(Landroid/app/Activity;I)V
+    0056..0058  return  v1
+    # exception table: 0 try range(s)
+.end method

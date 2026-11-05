@@ -1,0 +1,72 @@
+
+# class: LX/K57;
+# extends: Ljava/lang/Object;
+
+.method public handleMessage(ZL)  # .registers 6
+    # full signature: LX/K57;->handleMessage(Landroid/os/Message;)Z
+    0000..0004  iget  v0, v4, LX/K57;->$t:I
+    0004..000a  packed-switch  v0, payload@0xe8, cases=[0:@0xa4, 1:@0x54], default@0xa
+    000a..000e  iget-object  v2, v4, LX/K57;->A00:Ljava/lang/Object;
+    000e..0012  check-cast  v2, LX/Imu;
+    0012..0016  iget  v0, v5, Landroid/os/Message;->what:I
+    0016..001a  if-nez  v0, +0x67
+    001a..001e  new-instance  v0, LX/K0s;
+    001e..0024  invoke-direct  {v0}, LX/K0s;-><init>()V
+    0024..002a  invoke-virtual  {v0}, LX/K0s;->A01()LX/K0s;
+    002a..002c  move-result-object  v0
+    002c..0030  iput-object  v0, v2, LX/Imu;->A2p:LX/K0s;
+    0030..0034  iget-object  v0, v2, LX/Imu;->A0P:Ljava/lang/Runnable;
+    0034..0038  if-eqz  v0, +0x5
+    0038..003e  invoke-interface  {v0}, Ljava/lang/Runnable;->run()V
+    003e..0042  iget-object  v1, v2, LX/Imu;->A0Y:Landroid/os/Handler;
+    0042..0044  const/4  v0, #0x0
+    0044..004a  invoke-virtual  {v1, v0}, Landroid/os/Handler;->removeMessages(I)V
+    004a..0050  invoke-static  {v2}, LX/Imu;->A0L(LX/Imu;)V
+    0050..0052  const/4  v0, #0x1
+    0052..0054  return  v0
+    0054..0058  iget-object  v3, v4, LX/K57;->A00:Ljava/lang/Object;
+    0058..005c  check-cast  v3, Lcom/whatsapp/profile/ui/SetAboutInfo;
+    005c..0060  iget  v1, v5, Landroid/os/Message;->what:I
+    0060..0062  const/4  v0, #0x1
+    0062..0066  if-ne  v1, v0, +0x17
+    0066..006a  iget-object  v0, v3, Lcom/whatsapp/profile/ui/SetAboutInfo;->A01:LX/00x;
+    006a..0070  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0070..0072  move-result-object  v2
+    0072..0076  check-cast  v2, LX/FxR;
+    0076..007a  iget-object  v1, v5, Landroid/os/Message;->obj:Ljava/lang/Object;
+    007a..007e  check-cast  v1, Ljava/lang/String;
+    007e..0080  const/4  v0, #0x0
+    0080..0086  invoke-virtual  {v2, v1, v0}, LX/FxR;->A03(Ljava/lang/String;Ljava/lang/String;)V
+    0086..0088  const/4  v0, #0x2
+    0088..008e  invoke-static  {v3, v0}, LX/COw;->A00(Landroid/app/Activity;I)V
+    008e..0090  goto  -0x1f
+    0090..0094  iget-object  v2, v3, Lcom/whatsapp/profile/ui/SetAboutInfo;->A08:LX/0Js;
+    0094..009a  const  v1, #0x7f12242f
+    009a..009c  const/4  v0, #0x0
+    009c..00a2  invoke-virtual  {v2, v1, v0}, LX/0Js;->A0A(II)V
+    00a2..00a4  goto  -0xe
+    00a4..00a8  iget  v0, v5, Landroid/os/Message;->what:I
+    00a8..00ac  if-nez  v0, +0x1e
+    00ac..00b0  iget-object  v3, v4, LX/K57;->A00:Ljava/lang/Object;
+    00b0..00b4  check-cast  v3, LX/K3P;
+    00b4..00b8  iget-object  v2, v5, Landroid/os/Message;->obj:Ljava/lang/Object;
+    00b8..00bc  check-cast  v2, LX/Jf6;
+    00bc..00c0  iget-object  v1, v3, LX/K3P;->A03:Ljava/lang/Object;
+    00c0..00c2  monitor-enter
+    00c2..00c6  iget-object  v0, v3, LX/K3P;->A00:LX/Jf6;
+    00c6..00ca  if-eq  v0, v2, +0x6
+    00ca..00ce  iget-object  v0, v3, LX/K3P;->A01:LX/Jf6;
+    00ce..00d2  if-ne  v0, v2, +0x6
+    00d2..00d4  const/4  v0, #0x2
+    00d4..00da  invoke-static  {v2, v3, v0}, LX/K3P;->A04(LX/Jf6;LX/K3P;I)Z
+    00da..00dc  monitor-exit
+    00dc..00de  goto  -0x46
+    00de..00e0  move-exception  v0
+    00e0..00e2  monitor-exit
+    00e2..00e4  throw  v0
+    00e4..00e6  const/4  v0, #0x0
+    00e6..00e8  return  v0
+    00e8..00f8  packed-switch-payload  size=2
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0061..0071 -> 006f
+.end method

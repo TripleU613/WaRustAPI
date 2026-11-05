@@ -1,0 +1,98 @@
+
+# class: LX/1r7;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLL)  # .registers 5
+    # full signature: LX/1r7;-><init>(LX/1r5;LX/1r6;LX/1lZ;Ljava/util/Map;)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v3, v0, LX/1r7;->A02:LX/1lZ;
+    000a..000e  iput-object  v4, v0, LX/1r7;->A03:Ljava/util/Map;
+    000e..0012  iput-object  v1, v0, LX/1r7;->A00:LX/1r5;
+    0012..0016  iput-object  v2, v0, LX/1r7;->A01:LX/1r6;
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public equals(ZL)  # .registers 6
+    # full signature: LX/1r7;->equals(Ljava/lang/Object;)Z
+    0000..0002  const/4  v3, #0x1
+    0002..0006  if-eq  v4, v5, +0x32
+    0006..000a  instance-of  v0, v5, LX/1r7;
+    000a..000c  const/4  v2, #0x0
+    000c..0010  if-eqz  v0, +0x2c
+    0010..0014  check-cast  v5, LX/1r7;
+    0014..0018  iget-object  v1, v4, LX/1r7;->A02:LX/1lZ;
+    0018..001c  iget-object  v0, v5, LX/1r7;->A02:LX/1lZ;
+    001c..0022  invoke-static  {v1, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    0022..0024  move-result  v0
+    0024..0028  if-eqz  v0, +0x20
+    0028..002c  iget-object  v1, v4, LX/1r7;->A03:Ljava/util/Map;
+    002c..0030  iget-object  v0, v5, LX/1r7;->A03:Ljava/util/Map;
+    0030..0036  invoke-static  {v1, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    0036..0038  move-result  v0
+    0038..003c  if-eqz  v0, +0x16
+    003c..0040  iget-object  v1, v4, LX/1r7;->A00:LX/1r5;
+    0040..0044  iget-object  v0, v5, LX/1r7;->A00:LX/1r5;
+    0044..004a  invoke-static  {v1, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    004a..004c  move-result  v0
+    004c..0050  if-eqz  v0, +0xc
+    0050..0054  iget-object  v1, v4, LX/1r7;->A01:LX/1r6;
+    0054..0058  iget-object  v0, v5, LX/1r7;->A01:LX/1r6;
+    0058..005e  invoke-static  {v1, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    005e..0060  move-result  v0
+    0060..0064  if-nez  v0, +0x3
+    0064..0066  return  v2
+    0066..0068  return  v3
+    # exception table: 0 try range(s)
+.end method
+
+.method public hashCode(I)  # .registers 3
+    # full signature: LX/1r7;->hashCode()I
+    0000..0004  iget-object  v0, v2, LX/1r7;->A02:LX/1lZ;
+    0004..000a  invoke-virtual  {v0}, Ljava/lang/Object;->hashCode()I
+    000a..000c  move-result  v0
+    000c..0010  mul-int/lit8  v1, v0, #0x1f
+    0010..0014  iget-object  v0, v2, LX/1r7;->A03:Ljava/util/Map;
+    0014..001a  invoke-virtual  {v0}, Ljava/lang/Object;->hashCode()I
+    001a..001c  move-result  v0
+    001c..001e  add-int/2addr  v1, v0
+    001e..0022  mul-int/lit8  v1, v1, #0x1f
+    0022..0026  iget-object  v0, v2, LX/1r7;->A00:LX/1r5;
+    0026..002c  invoke-virtual  {v0}, Ljava/lang/Object;->hashCode()I
+    002c..002e  move-result  v0
+    002e..0030  add-int/2addr  v1, v0
+    0030..0034  mul-int/lit8  v1, v1, #0x1f
+    0034..0038  iget-object  v0, v2, LX/1r7;->A01:LX/1r6;
+    0038..003e  invoke-virtual  {v0}, Ljava/lang/Object;->hashCode()I
+    003e..0040  move-result  v0
+    0040..0042  add-int/2addr  v1, v0
+    0042..0044  return  v1
+    # exception table: 0 try range(s)
+.end method
+
+.method public toString(L)  # .registers 7
+    # full signature: LX/1r7;->toString()Ljava/lang/String;
+    0000..0004  iget-object  v5, v6, LX/1r7;->A02:LX/1lZ;
+    0004..0008  iget-object  v4, v6, LX/1r7;->A03:Ljava/util/Map;
+    0008..000c  iget-object  v3, v6, LX/1r7;->A00:LX/1r5;
+    000c..0010  iget-object  v2, v6, LX/1r7;->A01:LX/1r6;
+    0010..0014  const-string  v0, "StanzaConfig(connectionThreadRequests="
+    0014..0018  new-instance  v1, Ljava/lang/StringBuilder;
+    0018..001e  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    001e..0024  invoke-virtual  {v1, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0024..0028  const-string  v0, ", pendingServerRequests="
+    0028..002e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    002e..0034  invoke-virtual  {v1, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0034..0038  const-string  v0, ", companionXmppReadInterceptor="
+    0038..003e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    003e..0044  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0044..0048  const-string  v0, ", statusAckHandler="
+    0048..004e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    004e..0054  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0054..0058  const-string  v0, ")"
+    0058..005e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    005e..0064  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0064..0066  move-result-object  v0
+    0066..0068  return-object  v0
+    # exception table: 0 try range(s)
+.end method

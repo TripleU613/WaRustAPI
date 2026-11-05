@@ -1,3 +1,12 @@
+2026-11-05 — **About results no longer inherit unrelated nested-refusal rules.**
+
+Typed About outer result follows the APK payload-ignoring success callback;
+outer error/code stays a refusal. Its32s screen wait is not a network expiry.
+[Native map identity, callback paths and regressions](docs/protocol/apk/2.26.43.72-about-callback-lifetime/README.md).
+Validation:1340 workspace/all-feature tests, strict Clippy, fmt, CLI reference,
+APK coverage and hygiene passed. No replay or live account traffic; broader
+audit remains unfinished.
+
 2026-11-05 — **Account-default timer callbacks now have native20s expiry.**
 
 The normal action loop covers default-timer set and empty get shapes, without

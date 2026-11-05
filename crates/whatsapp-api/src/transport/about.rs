@@ -12,6 +12,10 @@
 //! ```
 //!
 //! The reply is matched by id to the screen's success and failure callbacks.
+//! Current 2.26.43.72 uses FxR.A04 -> writer29 -> JAj in the legacy
+//! 1rj/1rD shared callback map. SetAboutInfo.A5f's 32-second UI wait does
+//! not remove that callback (K57 selector1); it is not an IQ expiry policy.
+//! See docs/protocol/apk/2.26.43.72-about-callback-lifetime/README.md.
 //! `LX/8lM->A04` replaces a null or empty text with a single space before
 //! posting it, so "clearing" the About sends `" "`, and so does this.
 //!

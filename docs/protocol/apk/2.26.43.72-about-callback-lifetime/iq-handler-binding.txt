@@ -1,0 +1,34 @@
+
+# class: LX/0ZJ;
+# extends: Landroid/os/HandlerThread;
+
+.method private A0S(LLLLZ)  # .registers 9
+    # full signature: LX/0ZJ;->A0S(LX/1r5;LX/1lZ;Ljava/util/Map;Z)Ljava/util/HashMap;
+    0000..0004  new-instance  v3, Ljava/util/HashMap;
+    0004..000a  invoke-direct  {v3}, Ljava/util/HashMap;-><init>()V
+    000a..000e  iget-object  v1, v4, LX/0ZJ;->A19:LX/0Zh;
+    000e..0012  iget-object  v0, v4, LX/0ZJ;->A0u:Lcom/google/common/base/Optional;
+    0012..0018  invoke-virtual  {v1, v0}, LX/0Zh;->A00(Lcom/google/common/base/Optional;)LX/1r6;
+    0018..001a  move-result-object  v0
+    001a..001e  new-instance  v2, LX/1r7;
+    001e..0024  invoke-direct  {v2, v5, v0, v6, v7}, LX/1r7;-><init>(LX/1r5;LX/1r6;LX/1lZ;Ljava/util/Map;)V
+    0024..0028  iget-object  v0, v4, LX/0ZJ;->A1H:Ljava/util/Set;
+    0028..002e  invoke-interface  {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    002e..0030  move-result-object  v1
+    0030..0036  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    0036..0038  move-result  v0
+    0038..003c  if-eqz  v0, +0x10
+    003c..0042  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0042..0044  move-result-object  v0
+    0044..0048  check-cast  v0, LX/1r8;
+    0048..004e  invoke-interface  {v0, v2}, LX/1r8;->AL1(LX/1r7;)LX/1rA;
+    004e..0050  move-result-object  v0
+    0050..0056  invoke-static  {v0, v3}, LX/0ZJ;->A19(LX/1rA;Ljava/util/Map;)V
+    0056..0058  goto  -0x13
+    0058..005c  if-eqz  v8, +0xa
+    005c..0060  new-instance  v0, LX/295;
+    0060..0066  invoke-direct  {v0}, LX/295;-><init>()V
+    0066..006c  invoke-static  {v0, v3}, LX/0ZJ;->A19(LX/1rA;Ljava/util/Map;)V
+    006c..006e  return-object  v3
+    # exception table: 0 try range(s)
+.end method

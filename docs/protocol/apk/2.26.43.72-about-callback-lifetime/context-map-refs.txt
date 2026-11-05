@@ -1,0 +1,12 @@
+classes2.dex  LX/1r7;-><init>(VLLLL)
+  write opcode 0x5b, dex byte offset: 0x23fd02
+classes2.dex  LX/1r7;->equals(ZL)
+  read opcode 0x54, dex byte offset: 0x23fd48
+classes2.dex  LX/1r7;->equals(ZL)
+  read opcode 0x54, dex byte offset: 0x23fd4c
+classes2.dex  LX/1r7;->hashCode(I)
+  read opcode 0x54, dex byte offset: 0x23fda8
+classes2.dex  LX/1r7;->toString(L)
+  read opcode 0x54, dex byte offset: 0x23fdf0
+classes2.dex  LX/1rC;->AL1(LL)
+  read opcode 0x54, dex byte offset: 0x240be0

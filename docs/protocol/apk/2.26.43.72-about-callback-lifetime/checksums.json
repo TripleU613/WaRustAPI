@@ -1,0 +1,86 @@
+{
+  "README.md": {
+    "bytes": 5706,
+    "sha256": "2088bcd68311ad81977bdbb041b3c734998d3a239c5f12c173176f608bb18c5a"
+  },
+  "callback-map-refs.txt": {
+    "bytes": 923,
+    "sha256": "648bb0d257ec985ce33ea230ad88e77a2db10cfc07f663c8a5a700adcde37b2d"
+  },
+  "callback.txt": {
+    "bytes": 2588,
+    "sha256": "a65372071bee146ee9a9f888d13001ad8451e138144e76a709649afa7c020aa8"
+  },
+  "context-map-refs.txt": {
+    "bytes": 483,
+    "sha256": "aa9613ba5f8d886971b67aad6c9460400a2cafc67e6e5fb8f503409a5ee41dda"
+  },
+  "dispatch-admission.txt": {
+    "bytes": 2143,
+    "sha256": "0ca962de6520bb563aaa26e201a139412a3a8001491c214374f5f94e86d7d3c8"
+  },
+  "dispatch.txt": {
+    "bytes": 459,
+    "sha256": "b6cf93a6091f2f3cbb5366d05fcb61e26ca7b5f20cc52c4fd6aaac222041104b"
+  },
+  "handler-context.txt": {
+    "bytes": 5154,
+    "sha256": "8544f1c79c0632d84b681f9327a5091133792bbf0ca746e29d3b31636a33bfc1"
+  },
+  "iq-factory.txt": {
+    "bytes": 585,
+    "sha256": "ce27aabbce0f341b19a7cde62e688dcbe6fe0252a6926638dd1d6e48e2b4fe5f"
+  },
+  "iq-handler-binding.txt": {
+    "bytes": 1747,
+    "sha256": "96e64014c4f4238bedb03128387ba114741e636618245ba4c95d343a974e73bb"
+  },
+  "legacy-iq-base.txt": {
+    "bytes": 45597,
+    "sha256": "fb220bde9bb5c4211edabec2b4ab9b3c7a320607debb1c2178460890f0d0c346"
+  },
+  "legacy-iq-handler.txt": {
+    "bytes": 402,
+    "sha256": "89d549c450413c115d87f48910692a098374df40646ac9f57bfaa67e3926be3d"
+  },
+  "legacy-owner.txt": {
+    "bytes": 8859,
+    "sha256": "9357716c81285bc6ac71c48038948313e45ccbc1a97604743d36a69492fea5f8"
+  },
+  "owner-callers.txt": {
+    "bytes": 68,
+    "sha256": "2dac608722772aa6d7a2e8c7973fd287569a68e05059ecfaeab3ae68e2fe9080"
+  },
+  "owner-initialization.txt": {
+    "bytes": 107271,
+    "sha256": "e75620ce701dd4a50da59adedbfe4f7686c08b6d34c24bea401bf45a2d8cbd69"
+  },
+  "producer.txt": {
+    "bytes": 1470,
+    "sha256": "e2f56512c2b890eddbbcf573b85c9c7da08ab66625c855667ca2d1efc3dd69a3"
+  },
+  "reader-constructor.txt": {
+    "bytes": 836,
+    "sha256": "da060c1a7b6fc6729d81db716ffb5da9b278d6f797ee3cd6cc4cc6247951603c"
+  },
+  "reader-map-refs.txt": {
+    "bytes": 164,
+    "sha256": "200ee9426d0eefcfc8d6e13878fe0ca3e1231af44c5b1c3b479e82644ae13d59"
+  },
+  "reply-dispatch-callers.txt": {
+    "bytes": 68,
+    "sha256": "3cc928170961b881ba93e64bd87a5b18b57677d8148d4721222c4f40c2d3f9c0"
+  },
+  "reply-dispatch.txt": {
+    "bytes": 67740,
+    "sha256": "01cb40753a2d16b60eb82cbb32563689ddbd855f07220ad810a2c7a306ecfcd6"
+  },
+  "ui-handler.txt": {
+    "bytes": 3480,
+    "sha256": "55b5be6c8276cdc602a512e8a498b8859d8e996c604f05db3fdd0b3a5f2589b3"
+  },
+  "ui.txt": {
+    "bytes": 19525,
+    "sha256": "72ea3ddbc04100682d0a1c2464060cf423713c7aeb29a4088f72b00d4179717e"
+  }
+}

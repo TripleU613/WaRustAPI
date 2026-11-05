@@ -510,26 +510,37 @@ pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
         }
         // A damaged saved request must not settle a different row merely
         // because the incoming ID matches that row's key.
-        decode_owned(id, &row.wire)?;
+        let request = decode_owned(id, &row.wire)?;
+        let kind = node.get_attr("type").and_then(|v| v.as_text());
+        // APK43.72 1rA.A03 selects result -> JAj.A02; that About callback
+        // ignores the response payload. Do not reinterpret an extension child
+        // as a refusal, or extend this producer-specific rule to app-state.
+        let about_result = kind == Some("result")
+            && row.kind == super::about::ACTION_KIND
+            && request.get_attr("xmlns").and_then(|v| v.as_text()) == Some("status")
+            && request.get_attr("type").and_then(|v| v.as_text()) == Some("set")
+            && matches!(request.child_nodes(), [status] if status.description == "status");
         // An `iq type=result` can still carry a refusal further in. App-state
         // answers per collection: `<sync><collection type="error"><error
         // code="409" text="conflict"/>`, observed live 2026-09-24. Reading only
         // the outer type recorded that as success, which is worse than an error
         // — it is an error the caller is told is fine.
-        let inner_error = node
-            .child_nodes()
-            .iter()
-            .flat_map(|child| child.child_nodes())
-            .find_map(|child| {
-                // An encrypt directory result can carry <list><user><error/>
-                // without type=error on user. Preserve that refusal too.
-                (child.description == "user"
-                    || child.get_attr("type").and_then(|v| v.as_text()) == Some("error"))
-                .then(|| child.child("error"))
-                .flatten()
-            })
-            .or_else(|| node.child("error"));
-        let kind = node.get_attr("type").and_then(|v| v.as_text());
+        let inner_error = if about_result {
+            None
+        } else {
+            node.child_nodes()
+                .iter()
+                .flat_map(|child| child.child_nodes())
+                .find_map(|child| {
+                    // An encrypt directory result can carry <list><user><error/>
+                    // without type=error on user. Preserve that refusal too.
+                    (child.description == "user"
+                        || child.get_attr("type").and_then(|v| v.as_text()) == Some("error"))
+                    .then(|| child.child("error"))
+                    .flatten()
+                })
+                .or_else(|| node.child("error"))
+        };
         if kind == Some("result") && inner_error.is_none() {
             row.status = ActionStatus::Ok;
         } else {
@@ -1342,6 +1353,62 @@ mod tests {
                 live.expire();
                 assert!(!live.0.contains(&props));
                 assert!(live.deadline().is_none());
+            }
+        }
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn about_ui_wait_and_outer_reply_type_keep_their_native_meaning() {
+        use std::time::Duration;
+        use tokio::time::{Instant, advance};
+        // APK43.72 SetAboutInfo.A5f posts UI message0 after32000ms, but
+        // K57 selector1 does not remove the shared1rj/1rD callback map.
+        for text in ["", "Available"] {
+            for outcome in ["result", "error"] {
+                let (_dir, store) = store();
+                let id = super::super::about::queue_set(&store, text).unwrap();
+                let request = reserve_next(&store).unwrap().unwrap();
+                let abprops = super::super::abprops::queue(&store).unwrap();
+                let props_request = reserve_next(&store).unwrap().unwrap();
+                let mut live = LiveReplies::default();
+                let started = Instant::now();
+                live.record_written(&request, started);
+                live.record_written(&props_request, started);
+                advance(Duration::from_secs(32)).await;
+                live.expire();
+                assert!(live.0.contains(&id));
+                assert!(!live.0.contains(&abprops));
+                assert!(live.deadline().is_none());
+                advance(Duration::from_secs(28)).await;
+                live.expire();
+                let reply = Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", outcome)
+                    .children(vec![Node::new("error").attr("code", "403")]);
+                assert!(live.record_reply(&store, &reply).unwrap());
+                assert!(!live.record_reply(&store, &reply).unwrap());
+                assert_eq!(
+                    outcomes(&store)
+                        .unwrap()
+                        .iter()
+                        .find(|a| a.id == id)
+                        .unwrap()
+                        .status,
+                    if outcome == "result" {
+                        ActionStatus::Ok
+                    } else {
+                        ActionStatus::Error
+                    }
+                );
+                assert_eq!(
+                    outcomes(&store)
+                        .unwrap()
+                        .iter()
+                        .find(|a| a.id == id)
+                        .unwrap()
+                        .error_code,
+                    if outcome == "result" { None } else { Some(403) }
+                );
             }
         }
     }

@@ -16605,5 +16605,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-default-timer-callback/README.md",
     "description": "APK43.72 ChangeDMSettingActivity.A0c set and0oy.A00 get pass20000ms before dispatch. Normal action callback ownership now expires matching account-default IQ shapes20s from immediately before local write; expiry retains Sent uncertainty without replay, adoption or rollback. Result/error cancels timer; other deadlines remain independent. Native timeout republishes saved value while successful callback has a separate preference-write path. Default-setting adoption, alternate-mode gates, complete observer/error behavior and exact native thread scheduling remain open. No new read command/scheduler or live verification."
+  },
+  "x-about-reply-and-ui-timeout-semantics": {
+    "x-cli": false,
+    "x-transport": [
+      "normal experimental typed About action settlement; offline tested"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-about-callback-lifetime/README.md",
+    "description": "APK43.72 About writer29 stores JAj in a legacy map shared by1rj/1rh/1rD. The screen32s timer does not itself expire this network callback. Outer result dispatch calls JAj.A02 without examining response payload. Typed about-set with matching saved status/set shape now settles result asOk even with synthetic nested error extensions; outer error/code and other action nested-refusal policies remain intact. Paused-clock60s ownership/independent AB-properties expiry and normal-driver regressions. No new timer/replay/adoption/route; full native lifecycle and observer behavior remain open."
   }
 }

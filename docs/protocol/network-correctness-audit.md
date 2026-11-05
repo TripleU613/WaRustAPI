@@ -3015,3 +3015,20 @@ Native timeout publishes the saved duration through observers; successful
 callback has a distinct preference-write path. Complete Rust default-setting
 adoption, alternate-mode gates, native error/observer behavior and exact
 concurrent scheduling remain open. No live account operation.
+
+## About reply semantics and UI/network lifetime distinguished — 2026-11-05
+
+**Confirmed static / implemented offline:** current APK FxR.A04 sends writer29,
+which storesJAj in a legacy map shared by1rj/1rh/1rD. SetAboutInfo.A5f's32s
+UI wait does not itself remove the callback in the selected handler. No32s
+network timer is invented for About. Selected reader teardown invokes failure
+callbacks then clears this map; full lifecycle/concurrency policy remains open.
+Native outer result removes the callback andJAj.A02 ignores the payload, so a
+synthetic nested error extension must not turn typed About success into refusal.
+Rust now preserves this producer-specific meaning; outer error/code and other
+producers' nested refusals remain intact. [Full alias/dispatch evidence and regression limits](apk/2.26.43.72-about-callback-lifetime/README.md).
+Paused-clock regression covers empty/nonempty About at60s, independent32s
+AB-properties expiry, outer result/error and duplicate claims. Normal-driver
+regression verifiesOk/no refusal code, continued receipt ACK and no resend.
+Saved About adoption, UI observers and full native lifecycle remain unfinished;
+no live account operation or observed server extension response is claimed.
