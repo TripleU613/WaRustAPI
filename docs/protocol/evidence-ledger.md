@@ -5521,3 +5521,15 @@ the notifier; token-manager delivery still rechecks readiness.
 Membership/category gaps from the prior trace are closed for this selected
 path. Executor completion/order, cache resets, generation binding, trusted
 push origin and failure/backoff remain open. No runtime or live change.
+
+### Client-auth-token nonce register preservation (2026-11-04)
+
+**Confirmed static, APK43.72:** a digest-bound conservative CFG checker
+finds only the original v69-to-v31 copy reaches the manager argument move.
+The later v31 reuses cannot reach it without another definition; the sole
+call chain is guarded by the original nonce's nonnull check. The previously
+retained method was regenerated from the pinned APK and matched byte-for-byte.
+[Reproducible checker, results and limits](apk/2.26.43.72-client-auth-token-nonce-flow/README.md).
+This closes the register-preservation gap, not trusted push origin, freshness,
+complete eligibility, failure/backoff or durable recovery. No runtime change,
+sender, new retry authority or live traffic.

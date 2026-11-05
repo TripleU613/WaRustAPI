@@ -1,3 +1,11 @@
+2026-11-04 — **Token-manager nonce register flow verified statically.**
+
+Conservative control-flow analysis confirms the original nonnull push nonce
+reaches the manager call despite register reuse elsewhere.
+[Checker and limits](docs/protocol/apk/2.26.43.72-client-auth-token-nonce-flow/README.md).
+Research only; no sender or live traffic. Validation: fresh APK export match,
+digest-bound CFG check, checksums, JSON, coverage freshness and hygiene.
+
 2026-11-04 — **Token-manager observer membership confirmed statically.**
 
 Provider binding and DEX interface inheritance connect readiness to the07v
