@@ -1,3 +1,12 @@
+2026-11-04 — **Comparison request waits keep pre-write deadlines.**
+
+Nine existing comparison write/wait pairs now share one deadline instead of
+starting a fresh window after a slow write. Payloads and no-retry policy remain.
+[Evidence, regression and limits](docs/protocol/network-correctness-audit.md#comparison-request-deadlines-start-before-write-2026-11-04).
+Validation:1,309 workspace/all-feature tests, strict Clippy, CLI reference,
+formatting, JSON, coverage freshness and repository hygiene passed.
+No live traffic.
+
 2026-11-04 — **Activation admission and deadline ownership hardened.**
 
 Comparison receive ignores request-shaped activation IQs. Actor/CLI activation

@@ -1119,23 +1119,59 @@ pub async fn wait_for<S: AsyncRead + AsyncWrite + Unpin>(
         |_| Ok(()),
         description,
         id,
+        tokio::time::Instant::now() + Duration::from_secs(30),
     )
     .await
 }
 
 /// Persist decoded nodes and decrypted undecodable frames during a comparison wait.
 /// Undecodable frames and capture failures stop with uncertainty; no resend.
+/// Request senders should use [`write_and_wait_captured`] to include write latency.
 pub async fn wait_for_captured<S: AsyncRead + AsyncWrite + Unpin>(
     store: &crate::store::ProtocolStore,
     channel: &mut EncryptedConnection<S>,
     description: &str,
     id: &str,
 ) -> crate::Result<(Node, Vec<Node>)> {
+    wait_for_captured_until(
+        store,
+        channel,
+        description,
+        id,
+        tokio::time::Instant::now() + Duration::from_secs(30),
+    )
+    .await
+}
+
+/// Write exactly once and await a captured response under one pre-write deadline.
+/// The caller owns any required durable reservation; this helper never retries.
+/// Awaited writes can delay observing expiry but cannot restart the30s window.
+pub async fn write_and_wait_captured<S: AsyncRead + AsyncWrite + Unpin>(
+    store: &crate::store::ProtocolStore,
+    channel: &mut EncryptedConnection<S>,
+    request: &Node,
+    description: &str,
+    id: &str,
+) -> crate::Result<(Node, Vec<Node>)> {
+    // APK43.72 0Sf.A0A registers through0ln.A08 before dispatch.
+    let deadline = tokio::time::Instant::now() + Duration::from_secs(30);
+    write_node(channel, request).await?;
+    wait_for_captured_until(store, channel, description, id, deadline).await
+}
+
+async fn wait_for_captured_until<S: AsyncRead + AsyncWrite + Unpin>(
+    store: &crate::store::ProtocolStore,
+    channel: &mut EncryptedConnection<S>,
+    description: &str,
+    id: &str,
+    deadline: tokio::time::Instant,
+) -> crate::Result<(Node, Vec<Node>)> {
     wait_for_observed(
         async || captured_wait_node(store, read_frame(channel).await?),
         |node| super::inbox::preserve(store, node).map(|_| ()),
         description,
         id,
+        deadline,
     )
     .await
 }
@@ -1161,13 +1197,16 @@ async fn wait_for_observed<R, C, E>(
     mut capture: C,
     description: &str,
     id: &str,
+    deadline: tokio::time::Instant,
 ) -> Result<(Node, Vec<Node>), E>
 where
     R: AsyncFnMut() -> Result<Node, E>,
     C: FnMut(&Node) -> Result<(), E>,
     E: From<TransportError>,
 {
-    let deadline = tokio::time::Instant::now() + Duration::from_secs(30);
+    if tokio::time::Instant::now() >= deadline {
+        return Err(E::from(TransportError::Deadline("correlated stanza")));
+    }
     tokio::time::timeout_at(deadline, async {
         let mut pending = Vec::new();
         for _ in 0..32 {
@@ -2515,6 +2554,7 @@ mod captured_wait_tests {
                 },
                 "iq",
                 "reserved-iq",
+                tokio::time::Instant::now() + Duration::from_secs(30),
             )
             .await;
             if mode == "success" {
@@ -2579,5 +2619,39 @@ mod captured_wait_tests {
                 Some(intent)
             );
         }
+    }
+}
+
+#[cfg(test)]
+mod prewrite_deadline_tests {
+    use super::*;
+    #[tokio::test(start_paused = true)]
+    async fn expired_request_deadline_is_not_restarted_when_reply_wait_begins() {
+        let deadline = tokio::time::Instant::now() + Duration::from_secs(30);
+        // Model time consumed by the already-reserved request's write.
+        tokio::time::advance(Duration::from_secs(31)).await;
+        let reads = std::cell::Cell::new(0);
+        let result: Result<_, TransportError> = wait_for_observed(
+            async || {
+                reads.set(reads.get() + 1);
+                Ok(Node::new("iq")
+                    .attr("id", "reserved")
+                    .attr("type", "result"))
+            },
+            |_| Ok(()),
+            "iq",
+            "reserved",
+            deadline,
+        )
+        .await;
+        assert!(matches!(
+            result,
+            Err(TransportError::Deadline("correlated stanza"))
+        ));
+        assert_eq!(
+            reads.get(),
+            0,
+            "expired requests cannot consume a queued late reply"
+        );
     }
 }

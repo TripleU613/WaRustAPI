@@ -15708,5 +15708,17 @@
     "x-live": false,
     "evidence": "docs/protocol/network-correctness-audit.md#activation-reply-grammar-and-deadline-ownership-2026-11-04",
     "description": "Activation uses shared IQ result/error correlation and requires an unexpired waiter before readiness/startup advancement. Existing30s deadlines start before activation write, so a slow write cannot restart the window. Captures and uncertainty remain; awaited writes can still delay expiry observation. Native grammar/predispatch timer ownership is distinguished from unverified activation duration and scheduler parity. No new route, automatic resend or live operation."
+  },
+  "x-comparison-request-prewrite-deadline": {
+    "x-cli": {
+      "command": "whatsapp-cli lab-transport",
+      "description": "Existing comparison IQ/ACK requests; no new flag"
+    },
+    "x-transport": [
+      "messaging::write_and_wait_captured pre-write request deadline"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/network-correctness-audit.md#comparison-request-deadlines-start-before-write-2026-11-04",
+    "description": "Nine comparison write/wait pairs share one30s deadline created before a single request write. The capture-aware wait does not restart it; preexpired ownership returns Deadline before consuming a queued response. Existing payloads, reservations and no-retry behavior remain. Pending writes can delay observing expiry under their existing I/O policy. Legacy read-only wait APIs, unpaired sends and native family-specific durations remain separate; no route or live operation."
   }
 }

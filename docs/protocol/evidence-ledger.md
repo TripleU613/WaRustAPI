@@ -5388,3 +5388,49 @@ response arrives, activation remains unconfirmed. Existing account/key/send
 reservations are not cleared by expiry. Other reply families, awaited-write
 responsiveness and full native request-address policy remain separate audits.
 No live operations or complete ban-prevention guarantee.
+
+### Comparison request deadlines start before write (2026-11-04)
+
+**Confirmed local timing gap / fixed offline:** comparison IQ/message callers
+performed write_node and only then started wait_for_captured's30-second window.
+A slow request write could therefore extend request ownership by a fresh30s.
+Activation was already fixed separately; the remaining9 repository comparison
+write/wait pairs now use messaging::write_and_wait_captured.
+
+The helper creates the existing30-second monotonic deadline before exactly one
+write and passes that same deadline into the capture-aware wait. An expired
+deadline immediately returns uncertainty without reading a queued late response.
+The existing post-capture expiry guard also remains. Request envelopes, IDs,
+query batching, encryption and saved send reservations are unchanged. No send
+is reserved or retried by the helper itself; the caller retains that duty.
+Membership/read-only and retry-refetch request durability is not newly claimed.
+
+Covered pairs: group membership, device batches, directory batches, direct
+distributions, final group send, group retry key refetch, direct message send,
+media-route query and direct-message key query. Other unpaired writes and
+receive loops retain their existing policies. Read-only wait_for and
+wait_for_captured APIs still start a window when called; request senders should
+use the new combined helper to avoid splitting deadline ownership.
+
+**Confirmed static architectural support, APK43.72:**0Sf.A0A calls0ln.A08
+registration before A05 dispatch; A08 schedules its positive-duration callback
+timer by ID. [Retained send order](rea/2.26.43.72-authkey-outcomes/send-iq-internal.json)
+and [registration](rea/2.26.43.72-authkey-outcomes/pending-registration.json).
+The separate [ACK APIs](apk/2.26.43.72-ack-api-variants/README.md) also register
+with0Th before dispatch; their full timer policy remains distinct.
+This supports registration-time ownership, not a claim that30s is the native
+duration for every covered request or that all native scheduling is ported.
+
+Regression expired_request_deadline_is_not_restarted_when_reply_wait_begins
+advances the paused clock past a preexisting deadline before entering the actual
+shared wait loop, then verifies Deadline and zero reader calls despite a queued
+matching result. This models slow-write latency; it is not a new encrypted
+socket integration test. Existing decoded/malformed capture and uncertainty
+reopen regressions exercise the same deadline-aware core.
+
+**Limits:** a pending write is still governed by its existing transport I/O
+policy and can delay observation of the response deadline; it is not silently
+cancelled by this helper. A failed write returns its existing error. Unread
+late records are not captured, and expiry never proves the server did not
+receive the write. Original uncertain intents remain nonreplayable. No native
+request-address/challenge-controller parity, new route or live operation.

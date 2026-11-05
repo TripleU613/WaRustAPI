@@ -7,7 +7,7 @@ use whatsapp_api::{
     store::{ProtocolStore, Table},
     transport::{
         handshake::EncryptedConnection,
-        messaging::{MessageRequest, direct_message, wait_for_captured as wait_for, write_node},
+        messaging::{MessageRequest, direct_message, write_and_wait_captured},
     },
 };
 
@@ -152,8 +152,7 @@ pub(super) async fn send(
             "text"
         }
     );
-    write_node(channel, &node).await?;
-    let (ack, pending) = wait_for(store, channel, "ack", &wire_id).await?;
+    let (ack, pending) = write_and_wait_captured(store, channel, &node, "ack", &wire_id).await?;
     let outcome = whatsapp_api::transport::messaging::message_ack_outcome(&ack);
     let accepted = outcome == whatsapp_api::transport::messaging::MessageAckOutcome::Accepted;
     let code = ack

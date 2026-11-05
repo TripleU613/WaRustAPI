@@ -395,13 +395,11 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
             ));
         }
         if media_route {
-            use whatsapp_api::transport::messaging::{
-                new_message_id, wait_for_captured as wait_for, write_node,
-            };
+            use whatsapp_api::transport::messaging::{new_message_id, write_and_wait_captured};
             let id = new_message_id()?;
             let request = whatsapp_api::transport::media_routing::refresh::prepare(&store, &id)?;
-            write_node(&mut channel, &request).await?;
-            let (reply, pending) = wait_for(&store, &mut channel, "iq", &id).await?;
+            let (reply, pending) =
+                write_and_wait_captured(&store, &mut channel, &request, "iq", &id).await?;
             let dict = TokenDictionary::comparison_2_26_37_71();
             let settlement = store.write(|tx| {
                 let settlement =
@@ -802,12 +800,10 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                     &recipient,
                     &format!("{}-keys", message.request_id),
                 );
-                whatsapp_api::transport::messaging::write_node(&mut channel, &query)
-                    .await
-                    .map_err(map)?;
-                let (reply, pending) = whatsapp_api::transport::messaging::wait_for_captured(
+                let (reply, pending) = whatsapp_api::transport::messaging::write_and_wait_captured(
                     &store,
                     &mut channel,
+                    &query,
                     "iq",
                     &format!("{}-keys", message.request_id),
                 )
