@@ -902,3 +902,29 @@ flags unchanged; constructor/dispatched selector assumptions are not admission.
 [Exact entry arguments, SQL and upstream/lifetime gaps](apk/2.26.43.72-prekey-upload-replies/README.md#setadd-entry-admission-and-migrated-state-2026-11-04).
 No runtime strategy port yet; do not fabricate migrated state or reset pending
 batches. No production change/live traffic.
+
+## Frozen prekey request provenance (2026-11-04)
+
+**Confirmed local persistence improvement / implemented offline:** new upload
+reservations now build the entire node, encode it with the existing comparison
+2.26.37.71 token dictionary, and save an encrypted internal checkpoint
+prekey-upload-request:v1:<id> containing mode=set, dictionary label and wire
+bytes in the same transaction as Batch/key metadata. Encoding/construction
+failure rolls back the reservation. The bytes are encoded node payload, not
+Noise ciphertext or evidence of a completed socket write.
+
+The separate prefix is intentionally outside the Batch-summary scan. CLI prekeys
+remains counts-only; it does not print/export these request bytes or expose a
+replay command. No account keys or wire values are copied into documentation.
+The checkpoint preserves the existing request semantics, not a claim of native
+SET/ADD admission parity. Native callback binding evidence remains
+[retained here](apk/2.26.43.72-prekey-upload-replies/README.md).
+
+**Offline regression:** byte-for-byte comparison with the returned node encoding,
+mode/dictionary assertions, full checkpoint preservation across reopen, no second
+reservation, and unchanged frozen request after settlement. A synthetic historical
+batch without the new checkpoint remains held and receives no backfill on reopen
+or settlement. The earlier PQ-off/on construction-failure snapshot also now covers
+this new write boundary. This is provenance for future versioned-mode work,
+never permission to replay uncertain requests. ADD/generation strategy remains
+unfinished. No live traffic.

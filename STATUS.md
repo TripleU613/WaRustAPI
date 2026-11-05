@@ -1,3 +1,11 @@
+2026-11-04 — **New prekey reservations freeze their encoded request.**
+
+Wire payload/mode/dictionary checkpoint commits with keys and Batch. Reopen
+regression proves unchanged provenance, no replay and no historical backfill.
+[Scope and pending ADD strategy](docs/protocol/network-correctness-audit.md#frozen-prekey-request-provenance-2026-11-04).
+Validation: **1,284 workspace/all-feature tests**, strict Clippy, CLI reference,
+formatting, coverage freshness and repository hygiene passed. No live traffic.
+
 2026-11-04 — **SET/ADD manager entry and migration predicates traced.**
 
 Low-count ADD requires21198 plus a sent last-resort PQ row; PQ-only SET has

@@ -36,7 +36,7 @@
 //! separate runs). Follow-up uploads after `count_low` are capped per session.
 use crate::{
     Error, Result,
-    binary::Node,
+    binary::{Encoder, Node, TokenDictionary},
     model::{jid::Jid, time::Timestamp},
     session::AccountRecord,
     store::{ProtocolStore, ReadTx, Table, WriteTx},
@@ -125,6 +125,10 @@ fn meta_key(id: u32) -> String {
 }
 fn batch_key(iq_id: &str) -> String {
     format!("{BATCH_PREFIX}{iq_id}")
+}
+fn request_key(iq_id: &str) -> String {
+    // Separate prefix: batch summary scans must never decode wire data as Batch.
+    format!("prekey-upload-request:v1:{iq_id}")
 }
 
 /// Upload state of one generated key. Missing metadata means unsent.
@@ -402,82 +406,88 @@ pub fn begin_upload(
     // 07t.A0R 0196..01a2: property 21201 defaults to 10; returned values are
     // not applied (MobileConfig unported), so the default is used.
     let pq_batch = 10;
-    let reserved = store.write(|tx| {
-        let ids: Vec<u32> = unsent_in(&*tx)?.into_iter().take(UNSENT_TARGET).collect();
-        if ids.is_empty() {
-            return Ok(None);
-        }
-        // Kyber keys ride in the same IQ only while the server enables them
-        // (property 21198; see kem_prekeys::upload_rows_in).
-        let kem_rows = if pq_enabled {
-            super::kem_prekeys::upload_rows_in(tx, pq_batch)?
-        } else {
-            Vec::new()
-        };
-        let mut keys = Vec::with_capacity(ids.len());
-        for id in &ids {
-            let record: Vec<u8> = tx
-                .get_json(Table::Prekeys, record_key(*id).as_bytes(), 1)?
-                .ok_or_else(|| invalid("unsent prekey record disappeared"))?;
-            let record =
-                PreKeyRecord::deserialize(&record).map_err(|_| invalid("invalid prekey record"))?;
-            let public = record
-                .public_key()
-                .map_err(|_| invalid("prekey public key"))?;
-            keys.push(key_node(*id, public.public_key_bytes(), None));
+    let reserved =
+        store.write(|tx| {
+            let ids: Vec<u32> = unsent_in(&*tx)?.into_iter().take(UNSENT_TARGET).collect();
+            if ids.is_empty() {
+                return Ok(None);
+            }
+            // Kyber keys ride in the same IQ only while the server enables them
+            // (property 21198; see kem_prekeys::upload_rows_in).
+            let kem_rows = if pq_enabled {
+                super::kem_prekeys::upload_rows_in(tx, pq_batch)?
+            } else {
+                Vec::new()
+            };
+            let mut keys = Vec::with_capacity(ids.len());
+            for id in &ids {
+                let record: Vec<u8> = tx
+                    .get_json(Table::Prekeys, record_key(*id).as_bytes(), 1)?
+                    .ok_or_else(|| invalid("unsent prekey record disappeared"))?;
+                let record = PreKeyRecord::deserialize(&record)
+                    .map_err(|_| invalid("invalid prekey record"))?;
+                let public = record
+                    .public_key()
+                    .map_err(|_| invalid("prekey public key"))?;
+                keys.push(key_node(*id, public.public_key_bytes(), None));
+                tx.put_json(
+                    Table::Checkpoints,
+                    meta_key(*id).as_bytes(),
+                    1,
+                    &Meta {
+                        status: KeyStatus::OutcomeUnknown,
+                        batch: Some(iq_id.clone()),
+                    },
+                )?;
+            }
+            // Build/sign before the reservation commits. A local construction
+            // failure must roll back legacy metadata and newly generated KEM rows.
+            let kem_children = kem_upload_children(identity, &kem_rows)?;
+            let node = Node::new("iq")
+                .attr("id", iq_id.as_str())
+                .attr("xmlns", "encrypt")
+                .attr("type", "set")
+                .attr("to", Jid::parse("s.whatsapp.net")?)
+                .children(vec![
+                    Node::new("identity").bytes(identity.0.public.to_vec()),
+                    Node::new("registration").bytes(registration.to_be_bytes().to_vec()),
+                    Node::new("type").bytes(vec![0x05]),
+                    Node::new("list").children(keys),
+                    Node::new("skey").children(vec![
+                        Node::new("id").bytes(be3(signed_id)),
+                        Node::new("value").bytes(signed_public.public_key_bytes().to_vec()),
+                        Node::new("signature").bytes(signed_signature.to_vec()),
+                    ]),
+                ]);
+            let node = if kem_children.is_empty() {
+                node
+            } else {
+                let mut children = node.child_nodes().to_vec();
+                children.extend(kem_children);
+                node.children(children)
+            };
+            // Local durable provenance: freeze the exact request before commit.
+            // This is inspection evidence, never authority to replay an uncertain IQ.
+            let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(&node)?;
+            tx.put_json(Table::Checkpoints, request_key(&iq_id).as_bytes(), 1,
+            &serde_json::json!({"mode":"set", "dictionary":"comparison_2_26_37_71", "wire":wire}))?;
             tx.put_json(
                 Table::Checkpoints,
-                meta_key(*id).as_bytes(),
+                batch_key(&iq_id).as_bytes(),
                 1,
-                &Meta {
-                    status: KeyStatus::OutcomeUnknown,
-                    batch: Some(iq_id.clone()),
+                &Batch {
+                    ids: ids.clone(),
+                    status: "outcome_unknown".into(),
+                    code: None,
+                    count_low: None,
+                    reserved_at: Timestamp::now(),
+                    kem_ids: kem_rows.iter().map(|r| r.id).collect(),
                 },
             )?;
-        }
-        // Build/sign before the reservation commits. A local construction
-        // failure must roll back legacy metadata and newly generated KEM rows.
-        let kem_children = kem_upload_children(identity, &kem_rows)?;
-        tx.put_json(
-            Table::Checkpoints,
-            batch_key(&iq_id).as_bytes(),
-            1,
-            &Batch {
-                ids: ids.clone(),
-                status: "outcome_unknown".into(),
-                code: None,
-                count_low: None,
-                reserved_at: Timestamp::now(),
-                kem_ids: kem_rows.iter().map(|r| r.id).collect(),
-            },
-        )?;
-        Ok(Some((ids, keys, kem_children)))
-    })?;
-    let Some((ids, keys, kem_children)) = reserved else {
+            Ok(Some((ids, node)))
+        })?;
+    let Some((ids, node)) = reserved else {
         return Ok(None);
-    };
-    let node = Node::new("iq")
-        .attr("id", iq_id.as_str())
-        .attr("xmlns", "encrypt")
-        .attr("type", "set")
-        .attr("to", Jid::parse("s.whatsapp.net")?)
-        .children(vec![
-            Node::new("identity").bytes(identity.0.public.to_vec()),
-            Node::new("registration").bytes(registration.to_be_bytes().to_vec()),
-            Node::new("type").bytes(vec![0x05]),
-            Node::new("list").children(keys),
-            Node::new("skey").children(vec![
-                Node::new("id").bytes(be3(signed_id)),
-                Node::new("value").bytes(signed_public.public_key_bytes().to_vec()),
-                Node::new("signature").bytes(signed_signature.to_vec()),
-            ]),
-        ]);
-    let node = if kem_children.is_empty() {
-        node
-    } else {
-        let mut children = node.child_nodes().to_vec();
-        children.extend(kem_children);
-        node.children(children)
     };
     Ok(Some((
         PendingUpload {
@@ -1081,6 +1091,72 @@ mod tests {
                 .attr("id", pending.iq_id.as_str())
                 .attr("type", "result");
             assert!(pending.settle(&store, &result).unwrap().accepted);
+        }
+    }
+
+    #[test]
+    fn frozen_upload_request_survives_reopen_without_replay_or_legacy_backfill() {
+        for historical in [false, true] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("frozen.redb");
+            let store = open(&path);
+            let (account, signed) = account_and_signed();
+            generate(&store).unwrap();
+            let (pending, node) = begin_upload(&store, &account, &signed).unwrap().unwrap();
+            let key = request_key(&pending.iq_id);
+            let frozen: serde_json::Value = store
+                .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
+                .unwrap()
+                .unwrap();
+            let expected = Encoder::new(TokenDictionary::comparison_2_26_37_71())
+                .encode(&node)
+                .unwrap();
+            assert_eq!(frozen["mode"], "set");
+            assert_eq!(frozen["dictionary"], "comparison_2_26_37_71");
+            assert_eq!(
+                serde_json::from_value::<Vec<u8>>(frozen["wire"].clone()).unwrap(),
+                expected
+            );
+            if historical {
+                // Model an older reserved batch which never stored wire bytes.
+                store
+                    .write(|tx| tx.delete(Table::Checkpoints, key.as_bytes()))
+                    .unwrap();
+            }
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                .unwrap();
+            assert_eq!(
+                summary(&store).unwrap().batches.get("outcome_unknown"),
+                Some(&1)
+            );
+            drop(store);
+            let store = open(&path);
+            assert!(begin_upload(&store, &account, &signed).unwrap().is_none());
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                    .unwrap(),
+                before
+            );
+            let saved: Option<serde_json::Value> = store
+                .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
+                .unwrap();
+            assert_eq!(saved, (!historical).then_some(frozen.clone()));
+            let reply = Node::new("iq")
+                .attr("id", pending.iq_id.as_str())
+                .attr("type", "result");
+            assert!(pending.settle(&store, &reply).unwrap().accepted);
+            assert_eq!(
+                store
+                    .read(|tx| tx.get_json::<serde_json::Value>(
+                        Table::Checkpoints,
+                        key.as_bytes(),
+                        1
+                    ))
+                    .unwrap(),
+                saved
+            );
         }
     }
 

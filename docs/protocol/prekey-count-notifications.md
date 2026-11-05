@@ -202,3 +202,10 @@ Current-build ADD port remains unfinished.
 ADD; migration predicate requires21198 and sent last-resort PQ row. A0R is
 separate PQ-only SET scope. [Flags, shared guard and upstream gaps](apk/2.26.43.72-prekey-upload-replies/README.md#setadd-entry-admission-and-migrated-state-2026-11-04).
 No Rust account migration or scheduling switch.
+
+## Frozen request provenance (2026-11-04)
+
+**Implemented offline:** newly reserved upload node bytes/mode/dictionary are
+retained internally under store encryption before returning the node. Older
+batches receive no backfill and uncertain requests remain unreplayed.
+[Reopen/settlement regression and exact scope](network-correctness-audit.md#frozen-prekey-request-provenance-2026-11-04).
