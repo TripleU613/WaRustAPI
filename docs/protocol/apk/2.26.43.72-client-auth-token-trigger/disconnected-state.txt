@@ -1,0 +1,27 @@
+
+# class: LX/1iM;
+# extends: Ljava/lang/Object;
+
+.method public A04(V)  # .registers 4
+    # full signature: LX/1iM;->A04()V
+    0000..0004  iget-object  v0, v3, LX/1iM;->A0j:LX/00x;
+    0004..000a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    000a..000c  move-result-object  v2
+    000c..0010  check-cast  v2, LX/0AI;
+    0010..0012  monitor-enter
+    0012..0014  const/4  v0, #0x4
+    0014..0018  iput  v0, v2, LX/0AI;->A04:I
+    0018..001a  const/4  v0, #0x1
+    001a..001e  new-instance  v1, LX/FIt;
+    001e..0024  invoke-direct  {v1, v0}, LX/FIt;-><init>(I)V
+    0024..0026  const/4  v0, #0x0
+    0026..002c  invoke-static  {v2, v0, v1}, LX/07o;->A00(LX/07o;LX/0Kl;LX/0Km;)V
+    002c..002e  monitor-exit
+    002e..0030  return-void
+    0030..0032  move-exception  v0
+    0032..0034  monitor-exit
+    0034..0036  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 000a..0016 -> 0018
+    # catch <all> code_units 0019..001a -> 0018
+.end method

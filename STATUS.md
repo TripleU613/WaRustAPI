@@ -1,3 +1,11 @@
+2026-11-04 — **Client-auth-token trigger boundary narrowed.**
+
+GCM pn maps to the pushNonce argument; numeric gate is state==2. Trusted
+provenance, full consumer control flow and state2 producer remain open.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-client-auth-token-trigger/README.md).
+Research only; no sender or live traffic. Validation: checksums, JSON,
+coverage freshness and repository hygiene.
+
 2026-11-04 — **Client-auth-token reply validation traced.**
 
 Original request ID/destination and result type bind token parsing; cat holds

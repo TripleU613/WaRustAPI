@@ -1,0 +1,10 @@
+classes8.dex  Lcom/whatsapp/infra/push/GcmListenerService;->A02(V)
+  invoke dex byte offset: 0x443702
+classes8.dex  Lcom/whatsapp/infra/push/GcmListenerService;->A04(VL)
+  invoke dex byte offset: 0x443af0
+classes8.dex  Lcom/whatsapp/infra/push/GcmListenerService;->A04(VL)
+  invoke dex byte offset: 0x443bbc
+classes8.dex  LX/EoH;->A00(VLL)
+  invoke dex byte offset: 0x5cff40
+classes8.dex  LX/Fei;->run(V)
+  invoke dex byte offset: 0x838cb2

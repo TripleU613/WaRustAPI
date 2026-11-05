@@ -1907,3 +1907,13 @@ returns without token persistence or held-request dispatch.
 This closes the selected reply converter gap, not native JID parser, input
 authenticity, failure/backoff or durable recovery parity. No production change
 or live operation; Rust uncertain holds remain.
+
+### Client-auth-token trigger boundary (2026-11-04)
+
+**Confirmed static, APK43.72:** GCM map key pn maps to the push-consumer
+argument labelled pushNonce. The manager call is guarded by its nonnull check;
+full v31 control-flow preservation and trusted delivery provenance remain open.
+0AI.A0O is exactly state==2; traced transitions write3 (with server-disconnected
+diagnostic) and4. The state2 producer and complete eligibility remain unknown.
+[Checked exports, caller inventory and limits](apk/2.26.43.72-client-auth-token-trigger/README.md).
+No sender, retry authority, production behavior change or live traffic.
