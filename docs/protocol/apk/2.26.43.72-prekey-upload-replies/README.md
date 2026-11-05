@@ -727,3 +727,48 @@ Additional export hashes:
 - [legacy-reply-parser.txt](legacy-reply-parser.txt): `b5f8f8f5f62bb9bc5cefdaabe45cbb926572de3f5bb376d1668cb296ba682fa6`
 - [legacy-success-event.txt](legacy-success-event.txt): `22e2d9a34c65835642f3fd1cd5474e4f8d87535455b668fc8fcc4019aeb534d5`
 - [legacy-success-message.txt](legacy-success-message.txt): `795ee5f04496745f054701f806be8842561a5511435f806094bb26d7685dd1f4`
+
+## Legacy reply removal and error-event path (2026-11-04)
+
+**Confirmed static**, pinned43.72. Findings concern the selected result/error
+branches, not every unrelated branch of the retained dispatcher method.
+
+- Exact1ru.A02 caller search reaches **1rA.A03**. Its type=result branch
+  **0040–0078** requires ID, removes the ID from **1rD.A00** map, invokes
+  found1ru.A02, then forwards the node/ID through1lZ.A1E. This establishes
+  removal-before-legacy-result callback in that path; shared0ln pending state
+  is not interchangeable with this map. Writer-map to reader-map constructor
+  alias and all teardown/error paths remain to be bound explicitly.
+- The exacttype=error branch **007a–00ee** removes the map entry; for **290**
+  it calls the already retained **1ud.A01** coded-error extractor, defaults
+  missing pair to numeric0/textnull, then **1lZ.A0r(code,text)**. This is a
+  special node-aware path, not generic1ru.A01 integer callback handling.
+- **1lZ.A0r -> A0X** places errorCode as int and errorText as string in a Bundle,
+  constructs **Message(what=0,arg1=78,arg2=0,obj=bundle)**, then submits through
+  **1lW.CPm**. This matches14o.BLn selector78 and its retained retry/error policy.
+  Concrete CPm listener routing remains open; matching code numbers alone do
+  not establish complete event lifecycle or durable callback ownership.
+- **1ru.A00** is a no-op; **1ru.A01(int)** handles other subclasses, with no290
+  branch. Negative A03 method lookup has no body. These bounded results refute
+  treating any of those methods as the selected legacy prekey error parser.
+- The dispatcher distinguishes exact result/error before these map removals;
+  other types reach other request routing. This independently supports Rust's
+  prekey reply-type admission correction for the legacy path as well as shared
+  0ln evidence. It does not prove native retention after every malformed input,
+  sender validation or complete result/error body validation.
+
+**Rust impact:** legacy error extraction has numeric/text handling and manager
+error scheduling, while Rust retains a bounded code string and stops. The gap
+remains explicit; this research does not add reset, automatic retry or key
+regeneration. Missing/error-text grammar is not invented from generic APIs.
+No production change or live traffic.
+
+Additional export hashes:
+
+- [legacy-error-A00.txt](legacy-error-A00.txt): `4a4185b8e8d740b22891dd1b0a1a9ff7f6fb44c4cf5c156ac10afedade8c893c`
+- [legacy-error-A01.txt](legacy-error-A01.txt): `1701b58f618861abc925c5fbb8d852cd259a85b37ae3953311d63972f2e07c73`
+- [legacy-error-A03.txt](legacy-error-A03.txt): `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- [legacy-reply-dispatch-callers.txt](legacy-reply-dispatch-callers.txt): `59c087aeb48377679276c9229cfc5790903bd2881a30eccc431b6525c722e91e`
+- [legacy-reply-dispatch.txt](legacy-reply-dispatch.txt): `28e18ba55fd1c87e6b8974285009ec71c52304bbcb3de606da8ff2259279c638`
+- [legacy-error-event.txt](legacy-error-event.txt): `d2a45174e7aecf68cb3559783edf89311c26017a7782cb7cbfdc648bc3c2e034`
+- [legacy-error-message.txt](legacy-error-message.txt): `f3f20a338e90987fcb9a45b08c286bd8f125733943ca9be82d98eef5b2fcb5ee`

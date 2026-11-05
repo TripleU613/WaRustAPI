@@ -1048,3 +1048,14 @@ The preceding handoff prose incorrectly named what85; corrected to what0,arg1=85
 consistent with the writer's actual arg1 read. Raw evidence did not change.
 [Reused writer identity, fields and callback/error lifecycle gaps](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-writer-shape-and-success-event-path-2026-11-04).
 No production change/live traffic; legacy routing is not proven by shared0ln alone.
+
+## Current-build legacy reply removal/error event (2026-11-04)
+
+**Confirmed static,43.72:** 1rA.A03 exact result/error branches remove the
+legacy ID map entry before handling.290 error uses1ud.A01/default0/null and
+1lZ.A0r/A0X ->what0,arg1=78; result reaches1ru.A02 and generic forwarding.
+Generic1ru.A01 is not290 error handling. Writer/reader map alias and CPm listener
+binding still need proof.
+[Offsets, raw/negative evidence and remaining policy gap](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-reply-removal-and-error-event-path-2026-11-04).
+Legacy type admission independently supports the existing Rust correction.
+Numeric error/scheduling parity remains unported; no runtime change/live traffic.

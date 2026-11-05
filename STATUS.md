@@ -1,3 +1,11 @@
+2026-11-04 — **Legacy prekey reply removal and error event traced.**
+
+Exact result/error removes the legacy map entry;290 error extracts code/text
+and emits arg1=78. Generic callback assumption refuted.
+[Evidence and map/listener limits](docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#legacy-reply-removal-and-error-event-path-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. No production change or live traffic.
+
 2026-11-04 — **Legacy SET writer and result-event path traced.**
 
 Retained writer case arg1=85 confirms fullSET/op fields and separate reply map;

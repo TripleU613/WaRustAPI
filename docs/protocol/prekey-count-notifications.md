@@ -250,3 +250,10 @@ No runtime port from this trace alone.
 fields with conditional op, while290/1ru forwards result count_low via success
 event arg1=77. [Writer and separate reply-map scope](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-writer-shape-and-success-event-path-2026-11-04).
 The prior what85 prose was corrected to what0,arg1=85.
+
+## Current-build legacy error event
+
+**Confirmed static,43.72:** 1rA removes matching legacy entry for exact result/
+error;290 error uses coded-error extractor then emits arg1=78 with code/text.
+[Special route versus generic callback and map/listener limits](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-reply-removal-and-error-event-path-2026-11-04).
+No retry/reset port yet.

@@ -1,0 +1,9 @@
+
+# class: LX/1ru;
+# extends: Ljava/lang/Object;
+
+.method public A00(V)  # .registers 1
+    # full signature: LX/1ru;->A00()V
+    0000..0002  return-void
+    # exception table: 0 try range(s)
+.end method

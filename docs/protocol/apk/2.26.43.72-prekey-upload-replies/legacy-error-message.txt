@@ -1,0 +1,20 @@
+
+# class: LX/1lZ;
+# extends: Ljava/lang/Object;
+
+.method public A0X(LLI)  # .registers 6
+    # full signature: LX/1lZ;->A0X(Ljava/lang/String;I)Landroid/os/Message;
+    0000..0004  new-instance  v3, Landroid/os/Bundle;
+    0004..000a  invoke-direct  {v3}, Landroid/os/Bundle;-><init>()V
+    000a..000e  const-string  v0, "errorCode"
+    000e..0014  invoke-virtual  {v3, v0, v5}, Landroid/os/BaseBundle;->putInt(Ljava/lang/String;I)V
+    0014..0018  const-string  v0, "errorText"
+    0018..001e  invoke-virtual  {v3, v0, v4}, Landroid/os/BaseBundle;->putString(Ljava/lang/String;Ljava/lang/String;)V
+    001e..0020  const/4  v2, #0x0
+    0020..0024  const/16  v1, #0x4e
+    0024..0026  const/4  v0, #0x0
+    0026..002c  invoke-static  {v0, v2, v1, v2, v3}, Landroid/os/Message;->obtain(Landroid/os/Handler;IIILjava/lang/Object;)Landroid/os/Message;
+    002c..002e  move-result-object  v0
+    002e..0030  return-object  v0
+    # exception table: 0 try range(s)
+.end method
