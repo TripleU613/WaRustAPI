@@ -15891,5 +15891,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-push-config-corrective-submit/README.md",
     "description": "Corrective push-config sender builds IQ SET with one config child via same-tag merge. Ready/channel admission, deferred offline queueing and selector0 callbacks differ from token requests. Boolean return is not server acceptance; generated bounds are not proven hard rejection limits. Full grammar, trigger policy and durable ownership remain open. No sender, route or live operation added."
+  },
+  "x-push-config-reply-collection-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-push-config-reply-collection/README.md",
+    "description": "Push-config reply collection bounds converted wrappers at0..2; null conversions are skipped and the first nonnull variant wins. Selected helpers do not catch converter exceptions. Individual variant grammar, duplicate semantics and durable reconciliation remain open. No parser, sender, route or live operation added."
   }
 }

@@ -1,0 +1,22 @@
+{
+  "README.md": {
+    "bytes": 3067,
+    "sha256": "0c2fa1f3129aa950cb3fec003258dcdb979dac61e140260e218554400ff85a6d"
+  },
+  "collection-count.txt": {
+    "bytes": 383,
+    "sha256": "87ae3674cee0c3c00d211f38849d82d73096abd14fe720705776b855797961e0"
+  },
+  "reply-constructor.txt": {
+    "bytes": 9490,
+    "sha256": "fb910b326203fd48d7238ed672a443a7b9ebb497e4d06b90db3d1996dfd8593f"
+  },
+  "variant-attempt.txt": {
+    "bytes": 1053,
+    "sha256": "9855e03e6cb9636f2e880fd9efd691e31d392282873934c1756863c77139a7af"
+  },
+  "variant-choice.txt": {
+    "bytes": 4045,
+    "sha256": "74395cf6353988586929d0de482a68caf9a786c16b961e3f8073532b27d73b0e"
+  }
+}

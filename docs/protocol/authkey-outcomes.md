@@ -320,3 +320,13 @@ persistence/recovery and its immediate-failure path.
 [Sender, helper composition, validators and limits](apk/2.26.43.72-push-config-corrective-submit/README.md).
 Full attribute/trigger policy, helper effects, races and durable/generation
 ownership remain open. No Rust behavior change or live account operation.
+
+### Push-config reply collection and variant choice (2026-11-05)
+
+**Confirmed static, APK43.72:**7Ow bounds successfully converted config wrappers
+at0..2, rather than counting every raw config child.8B6.A0K returns the first
+nonnull variant or null after all candidates fail; the constructor skips null
+conversions. Converter exceptions are not caught by the selected helpers.
+[Complete selected methods and limits](apk/2.26.43.72-push-config-reply-collection/README.md).
+Individual variant grammar, thrown failures, duplicate semantics and durable
+reconciliation remain open. No Rust behavior change or live account operation.

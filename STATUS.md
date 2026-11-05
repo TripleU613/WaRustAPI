@@ -1,3 +1,10 @@
+2026-11-05 — **Push-config reply collection bound traced.**
+
+The0..2 bound counts converted wrappers; null variant conversions are skipped.
+Thrown converter failures remain distinct. [Evidence and limits](docs/protocol/apk/2.26.43.72-push-config-reply-collection/README.md).
+Research only; no runtime changes or live traffic. Validation: checked exports,
+checksums, JSON, coverage freshness and repository hygiene.
+
 2026-11-05 — **Corrective push-config sender shape and admission traced.**
 
 Same-tag builder merges yield one config child. The submit gate and offline
