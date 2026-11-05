@@ -686,3 +686,29 @@ fix. APK fresh-bundle behavior remains **2.26.37.71 151.A00**, retained in
 [retry answers](retry-answers.md); no native compare-and-swap or complete native
 account lifecycle equivalence is claimed. Concurrent changes to original-send
 facts/source and full actor scheduling still require review. No live traffic.
+
+## Retry-refetch delivery recheck (2026-11-04)
+
+**Confirmed source gap / fixed offline:** answer checked server acceptance and
+recipient delivery before querying keys; complete_refetch did not repeat either
+check when the query eventually answered. Completion now refuses already
+Delivered/Read/Played for the original peer or its known LID alias (or an
+unscoped receipt), and refuses missing acceptance/recorded failure before crypto.
+A result for another device does not by itself satisfy recipient delivery.
+The reservation transaction also compares the complete original OutboxEntry
+against the pre-preparation snapshot, preventing newly arrived facts or changed
+attempts from being overwritten/ignored during the await. A concurrent change
+returns a local error and retains the pending fetch; it is not auto-retried.
+
+**Confirmed static basis:** APK **2.26.37.71 DNP.run**, 01c6–01f4, skips a
+message already marked delivered for that device. [Existing native trace and
+scope](retry-answers.md). Applying this eligibility again after waiting for a
+bundle and guarding the local row transaction are Rust implementation choices,
+not a claim that native storage uses this exact concurrency mechanism.
+
+**Offline regression:** real signed-bundle workflow runs with and without a
+Delivered fact arriving after query reservation. Undelivered still produces one
+same-ID re-encryption; delivered settles already_delivered without changing full
+outbox/session/identity tables, and duplicate reply is ignored. Recipient alias
+lookup is current local mapping, not newly authenticated authority. Original age,
+source changes and the full account lifecycle remain under review. No live traffic.

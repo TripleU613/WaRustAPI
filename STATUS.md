@@ -1,3 +1,11 @@
+2026-11-04 — **Delivery received during key refetch suppresses retry resend.**
+
+Completion rechecks acceptance/delivery and atomically guards the original send
+row against changes during preparation. Real signed-bundle workflow covers both
+delivered and undelivered outcomes. [Evidence and limits](docs/protocol/network-correctness-audit.md#retry-refetch-delivery-recheck-2026-11-04).
+Validation: **1,281 workspace/all-feature tests**, strict Clippy, CLI reference,
+formatting, coverage freshness and repository hygiene passed. No live traffic.
+
 2026-11-04 — **Retry refetch refuses to overwrite newer peer state.**
 
 Identity/session are rechecked inside resend reservation after async preparation.

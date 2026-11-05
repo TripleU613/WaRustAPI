@@ -340,6 +340,35 @@ pub async fn complete_refetch(
         return refuse("original_send_missing");
     };
     let peer = entry.intent.chat.jid().clone();
+    // APK 37.71 DNP.run rechecks whether the recipient already has the
+    // message before resending. Delivery may arrive while the query waits.
+    let alias = super::inbox::lid_for(store, &peer)?;
+    let addresses = std::iter::once(&peer)
+        .chain(alias.as_ref())
+        .filter_map(|jid| DeviceAddress::from_jid(jid).ok())
+        .collect::<Vec<_>>();
+    if entry.facts.iter().any(|fact| {
+        matches!(
+            fact.kind,
+            DeliveryFactKind::Delivered | DeliveryFactKind::Read | DeliveryFactKind::Played
+        ) && fact
+            .device
+            .as_ref()
+            .is_none_or(|device| addresses.contains(device))
+    }) {
+        return refuse("already_delivered");
+    }
+    if !entry
+        .facts
+        .iter()
+        .any(|fact| fact.kind == DeliveryFactKind::ServerAccepted)
+        || entry
+            .facts
+            .iter()
+            .any(|fact| fact.kind == DeliveryFactKind::Failed)
+    {
+        return refuse("original_not_server_accepted");
+    }
     let Some(original) = entry.attempts.first().and_then(|a| a.payload.clone()) else {
         return refuse("original_stanza_missing");
     };
@@ -393,6 +422,9 @@ pub async fn complete_refetch(
         let mut current = outbox
             .by_wire_id_in_write(tx, &wire_id)?
             .ok_or_else(|| Error::invalid("retry", "original send vanished"))?;
+        if current != entry {
+            return Err(Error::invalid("retry", "original send changed before refetch reservation"));
+        }
         tx.put_json(
             Table::Checkpoints,
             job.answer_key.as_bytes(),
@@ -771,6 +803,12 @@ mod tests {
     /// every refused case is recorded with its reason and sends nothing.
     #[tokio::test]
     async fn answers_once_under_the_saved_session_and_records_every_refusal() {
+        for delivered_during_fetch in [false, true] {
+            retry_workflow(delivered_during_fetch).await;
+        }
+    }
+
+    async fn retry_workflow(delivered_during_fetch: bool) {
         let dir = tempfile::tempdir().unwrap();
         let store = ProtocolStore::open(OpenOptions {
             path: dir.path().join("retry.redb"),
@@ -988,6 +1026,63 @@ mod tests {
                 .unwrap()
                 .is_none()
         );
+        if delivered_during_fetch {
+            store
+                .write(|tx| {
+                    let mut entry = outbox
+                        .by_wire_id_in_write(tx, &MessageId::new("W1")?)?
+                        .unwrap();
+                    outbox.record_fact(
+                        tx,
+                        &mut entry,
+                        DeliveryFact {
+                            kind: DeliveryFactKind::Delivered,
+                            device: Some(DeviceAddress::from_jid(&peer)?),
+                            observed_at: Timestamp::now(),
+                            server_timestamp: None,
+                            code: None,
+                        },
+                    )
+                })
+                .unwrap();
+            let snapshot = || {
+                store
+                    .read(|tx| {
+                        [Table::Outbox, Table::SignalSessions, Table::PeerIdentities]
+                            .into_iter()
+                            .map(|table| tx.scan(table, 1, 10000))
+                            .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot();
+            assert!(matches!(
+                complete_refetch(&store, &account, &reply, ConnectionEpoch(2))
+                    .await
+                    .unwrap(),
+                Some(None)
+            ));
+            assert_eq!(snapshot(), before);
+            let outcome: serde_json::Value = store
+                .read(|tx| {
+                    tx.get_json(
+                        Table::Checkpoints,
+                        format!("retry-answer:W1:{peer}:2").as_bytes(),
+                        1,
+                    )
+                })
+                .unwrap()
+                .unwrap();
+            assert_eq!(outcome["reason"], "already_delivered");
+            assert!(
+                complete_refetch(&store, &account, &reply, ConnectionEpoch(2))
+                    .await
+                    .unwrap()
+                    .is_none()
+            );
+            assert_eq!(snapshot(), before);
+            return;
+        }
         let resend = complete_refetch(&store, &account, &reply, ConnectionEpoch(2))
             .await
             .unwrap()

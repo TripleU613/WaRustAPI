@@ -177,3 +177,10 @@ leave the job held instead of stranding fetching history. [Fault regression and 
 **Confirmed local correction:** the reservation transaction rechecks the identity
 and session captured before async preparation, refusing stale replacement without
 retiring its job. [Guard regression and remaining concurrency scope](network-correctness-audit.md#retry-refetch-peer-state-reservation-guard-2026-11-04).
+
+## Delivery during refetch (2026-11-04)
+
+**Confirmed / fixed offline:** completion repeats acceptance/delivery checks
+when a reserved key query answers and verifies the original send row is unchanged
+at reservation. A delivery arriving while keys are pending suppresses resend.
+[Native DNP basis, workflow regression and remaining scope](network-correctness-audit.md#retry-refetch-delivery-recheck-2026-11-04).
