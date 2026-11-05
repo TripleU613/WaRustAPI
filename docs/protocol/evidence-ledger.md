@@ -1,3 +1,10 @@
+2026-11-04 — **Legacy SET writer and result-event path traced.**
+
+Retained writer case arg1=85 confirms fullSET/op fields and separate reply map;
+290/1ru result produces success arg1=77. Prior what85 wording corrected.
+[Evidence and lifecycle limits](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-writer-shape-and-success-event-path-2026-11-04).
+No production change or live traffic.
+
 2026-11-04 — **Legacy SET snapshot and message85 handoff traced.**
 
 A0S/A03/Fdv retains a separate legacy path from modern SET/ADD, including

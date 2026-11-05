@@ -1038,3 +1038,13 @@ upstream scope remains open.
 [Exact argument flow, PQ conditions and final-writer boundary](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-set-snapshot-and-message85-handoff-2026-11-04).
 No runtime switch/live traffic. Native durable/account-lifetime equivalence and
 final writer/reply-event routing are not established by this snapshot trace.
+
+## Current-build legacy writer and success-event path (2026-11-04)
+
+**Confirmed static,43.72:** retained0v0.A00 case arg1=85 constructs fullSET,
+conditional op gating, hex ID and separate1rj reply-map entry290. Inherited
+1ru.A02 forwards count_low flags to1lZ.A1Q/A0c ->what0,arg1=77 success event.
+The preceding handoff prose incorrectly named what85; corrected to what0,arg1=85,
+consistent with the writer's actual arg1 read. Raw evidence did not change.
+[Reused writer identity, fields and callback/error lifecycle gaps](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-writer-shape-and-success-event-path-2026-11-04).
+No production change/live traffic; legacy routing is not proven by shared0ln alone.

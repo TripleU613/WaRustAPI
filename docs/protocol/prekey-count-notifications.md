@@ -243,3 +243,10 @@ upload decision; asynchronous wire order is not established.
 EXb through message85, distinct from modern callback-based SET/ADD.
 [Conditions, reason argument and remaining final-writer scope](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-set-snapshot-and-message85-handoff-2026-11-04).
 No runtime port from this trace alone.
+
+## Current-build legacy writer/result path
+
+**Confirmed static,43.72:** arg1=85 fullSET writer emits the broad existing
+fields with conditional op, while290/1ru forwards result count_low via success
+event arg1=77. [Writer and separate reply-map scope](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-writer-shape-and-success-event-path-2026-11-04).
+The prior what85 prose was corrected to what0,arg1=85.

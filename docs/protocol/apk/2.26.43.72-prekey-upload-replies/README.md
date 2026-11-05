@@ -661,7 +661,7 @@ through its descriptor handoff, not the final message85 writer.
   last-resort in13z.A08/A07/A02. These are in-memory reservations, not durable
   encrypted-store guarantees.
 - It builds **EXb** from signed/last-resort keys, strings, identity/registration
-  and arrays, then **Message.obtain(...,what=0x55,arg1=0,arg2=0,obj=EXb)**.
+  and arrays, then **Message.obtain(...,what=0,arg1=0x55,arg2=0,obj=EXb)**.
   It invokes **0Sf.A04(message,null,transport,null,delay0,false)**. Final writer
   layout and legacy reply-event routing remain untraced in this follow-up.
 
@@ -677,3 +677,53 @@ Additional export hashes:
 - [legacy-set-entry.txt](legacy-set-entry.txt): `e7ac4860e525bb00efc0e3f89b0a372d5fc1fcb868b825c08fde0524f8e4a6f6`
 - [legacy-set-builder.txt](legacy-set-builder.txt): `b1a950feb704b17cff5442f53d9bd985af30284de905cc7b4811d91b1cd94c00`
 - [legacy-set-handoff.txt](legacy-set-handoff.txt): `8f76d7f0c73bfe56c5cead182b7d427daad8ae280653be97a39c62fdde64a835`
+
+## Legacy writer shape and success-event path (2026-11-04)
+
+**Confirmed static**, pinned43.72, reusing the already retained full
+[0v0.A00 writer](../../rea/2.26.43.72-reachout-state/reachout-iq-write-admission.txt)
+(SHA256 `6ec286521e703b2e16b3ff057c27e744fe5835683b8edd815cfeefec12c32d3d`).
+No duplicate huge writer export or new REA coverage is added.
+
+**Correction to preceding handoff note:** Fdv obtains Message with **what=0,
+arg1=85,arg2=0**, not what85. Writer0v0.A00 reads **arg1** at00ce and its
+sparse switch selects case85 ->12be. The corrected argument mapping is reflected
+above; raw exports were unchanged. Success event likewise uses what0,arg1=77.
+
+- **12be–1334** reads EXb, allocates an ID using incremented1rj.A00 converted
+  by Integer.toHexString, and stores **290(owner,registrationBytes)** in
+  **1rj.A03** map under that ID. This is separate from the shared0ln IQ callback
+  registry; its complete matching/removal/error lifecycle remains untraced.
+- **1342–13a6** builds legacy key{id,value}. **13a6–1460** prepends op(mode=set)
+  when property0x5bf2 is true OR both reason/coex-token strings are present;
+  only the paired-string case includes reason and coex_token child. Current
+  runtime flag and token-authority policy are not established by this writer.
+- **1460–1528** appends identity, registration, type byte05, list and
+  skey{id,value,signature}. **1528–1608** conditionally appends ordinary
+  pq_list and last-resort key with{id,value,signature}. **1608–1684** constructs
+  outer attributes id,xmlns=encrypt,type=set,to=0mL.A00 in that order.
+  **1684–168e** calls1r0.Cyt(node), followed by write/set-pre-key log routing.
+  This closes the selected legacy field-shape boundary, not full wire output.
+- **290** extends **1ru** and captures owner/registration in its constructor.
+  Inherited **1ru.A02** reaches its290 branch0340–039e, reads optional first
+  list/pq_list count_low using case-insensitive true, then calls1lZ.A1Q(legacy,pq).
+  The rest of this shared parser is retained but not fully audited here.
+- **1lZ.A1Q -> A0c** constructs **what0,arg1=77,arg2=0**, setting bundle
+  needsMoreLegacyPrekeys/needsMorePQPrekeys only when at least one is true,
+  and submits through1lW.CPm. This matches14o.BLn selector77 and its flag reads;
+  concrete event-consumer dispatch and legacy error-event path remain open.
+
+**Rust comparison / remaining work:** broad full-SET fields match the legacy
+writer; op gating/coexistence authority, hex-ID allocator/lifetime, callback/error
+routing and initial reason ownership remain incomplete. Modern ADD remains a
+different request mode and continuation policy. No production change or live
+traffic. Do not claim shared0ln callback behavior alone proves legacy routing.
+
+Additional export hashes:
+
+- [descriptor-callers.txt](descriptor-callers.txt): `3633e9230cfceaf14ea81f4d470d9ad9c2626c67f6c5ece65d720f409c89b8df`
+- [set-writer-xref.txt](set-writer-xref.txt): `baef2d62d1b34d9cb7c37a692fbb0e9903f3b7d38301f85e9b7297688bf83431`
+- [legacy-reply-callback.txt](legacy-reply-callback.txt): `2beed47b26ceb88566226ffa2f2fd38a05aece9e0a9a7c4299731e691a006d16`
+- [legacy-reply-parser.txt](legacy-reply-parser.txt): `b5f8f8f5f62bb9bc5cefdaabe45cbb926572de3f5bb376d1668cb296ba682fa6`
+- [legacy-success-event.txt](legacy-success-event.txt): `22e2d9a34c65835642f3fd1cd5474e4f8d87535455b668fc8fcc4019aeb534d5`
+- [legacy-success-message.txt](legacy-success-message.txt): `795ee5f04496745f054701f806be8842561a5511435f806094bb26d7685dd1f4`
