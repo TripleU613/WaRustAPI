@@ -1,0 +1,67 @@
+{
+  "scope": "static regular drain status, not server retry/backoff or persistent buffer ownership",
+  "drain_flag_offset": "0x50",
+  "callback_table_offset": "0x40",
+  "status_slot_offset": "0x30",
+  "error_domain_object_va": "0xc30518",
+  "local_error_code": 3,
+  "drain_job_target": "0x6fedf0",
+  "windows": [
+    {
+      "name": "drain-start",
+      "start_va": "0x727294",
+      "end_va": "0x7273a8",
+      "file_offset": "0x723294",
+      "bytes": 276,
+      "sha256": "b63452c46d02314f74123ea996ba12c8fbe255ed2abe3049cb6f77997cfb00f5"
+    },
+    {
+      "name": "drain-end",
+      "start_va": "0x7273a8",
+      "end_va": "0x727444",
+      "file_offset": "0x7233a8",
+      "bytes": 156,
+      "sha256": "b7e47e6da5533987be5ba4dfc0ae9575bd395b4c753ec124afadf585be2fde04"
+    },
+    {
+      "name": "status-error-domain",
+      "start_va": "0xbe9ce8",
+      "end_va": "0xbe9cf4",
+      "file_offset": "0xbe5ce8",
+      "bytes": 12,
+      "sha256": "3a3cf0513935345d41c07fe01ae7d5ebf00eca280379084b08ca5024c0cfbc8b"
+    },
+    {
+      "name": "status-error-arguments",
+      "start_va": "0xbe3ab8",
+      "end_va": "0xbe3ac4",
+      "file_offset": "0xbdfab8",
+      "bytes": 12,
+      "sha256": "064b58d7a37adda3d9625468dbd0bd882bb6032be1b3d21e39f3ba54ad0c3528"
+    },
+    {
+      "name": "status-start-arguments",
+      "start_va": "0xbe3bb4",
+      "end_va": "0xbe3bc0",
+      "file_offset": "0xbdfbb4",
+      "bytes": 12,
+      "sha256": "cb23fdf1bc1e16af668e96a49adc6a5db9a66a65a04e6eb2327d407577c932c1"
+    },
+    {
+      "name": "task-error-arguments",
+      "start_va": "0x4b0be8",
+      "end_va": "0x4b0bf4",
+      "file_offset": "0x4acbe8",
+      "bytes": 12,
+      "sha256": "8f791dc1608e9d41f776c0a22f9656734b576561c04ab2ae251d3aed945b54e1"
+    },
+    {
+      "name": "drain-job-thunk",
+      "start_va": "0xbd8bb8",
+      "end_va": "0xbd8bc0",
+      "file_offset": "0xbd4bb8",
+      "bytes": 8,
+      "sha256": "3ebed43fb56ae3be378609f1750beb380f3197ab5b64f08973bf5135c4f8d969"
+    }
+  ]
+}

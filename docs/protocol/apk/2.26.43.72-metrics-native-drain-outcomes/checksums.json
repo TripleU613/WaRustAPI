@@ -1,0 +1,54 @@
+{
+  "README.md": {
+    "bytes": 5713,
+    "sha256": "4bd3001a7cef6634dd0e2b65b62c7d9de98132fc6a5e0d5922136187c48a1a25"
+  },
+  "check-drain-end.py": {
+    "bytes": 5780,
+    "sha256": "c4bf92a2eccc17b5ff20e290c072efca01506ea4a74f068db79d86106df24b9f"
+  },
+  "drain-boundaries.json": {
+    "bytes": 2005,
+    "sha256": "1f9bf98c12b2ed92cc623fbbd9118cd0a3e1fe28d6a1226011da06c561a379aa"
+  },
+  "drain-end-assembly.txt": {
+    "bytes": 2309,
+    "sha256": "39a10034053cb62046684d0dca046af38895821f6a4d3c4fb31890421a5a84e6"
+  },
+  "drain-end-results.json": {
+    "bytes": 4923,
+    "sha256": "53a9f407ed2d229c62b65f002856de30ec0305988f1c3c18b1554970b8934690"
+  },
+  "drain-job-thunk-assembly.txt": {
+    "bytes": 85,
+    "sha256": "0dadf82c7996277a969a7b22024a2409467889414ac74c0592f08bae93bf87cf"
+  },
+  "drain-start-assembly.txt": {
+    "bytes": 3753,
+    "sha256": "b17c3b02216bda028710d0b4d770fd8329ca8c04798a4d4dd2d4ec2474395480"
+  },
+  "inspect-drain.py": {
+    "bytes": 1089,
+    "sha256": "d93afaf1c975630a0c4c48336b55d2e5bb9ba8017daed8fb58e75442064e72d2"
+  },
+  "status-error-arguments-assembly.txt": {
+    "bytes": 116,
+    "sha256": "839f4312638f0abe4fadfb29aafa1bc8e5a5ca2f2542324582158906d0817c90"
+  },
+  "status-error-domain-assembly.txt": {
+    "bytes": 111,
+    "sha256": "a43198c644c25b85664a7c97bae3e6048275791050225220e47dd0c372a1469e"
+  },
+  "status-start-arguments-assembly.txt": {
+    "bytes": 114,
+    "sha256": "8597852e09a3ed470b3a9b400034e7b01f8fbcf88dfc477c4491a9af3d142f38"
+  },
+  "task-error-arguments-assembly.txt": {
+    "bytes": 114,
+    "sha256": "1912e345dcc1321c143deca8fa44f9c9248e2a9aee067b45761de38b0c66983e"
+  },
+  "windows.json": {
+    "bytes": 667,
+    "sha256": "9206f7c417356303b7c62597083d62e64e370dbdda7a898adf20e2c94379a1b6"
+  }
+}

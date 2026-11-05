@@ -1,3 +1,12 @@
+2026-11-05 — **Regular metrics drain notifier separated from task ownership.**
+
+Fourteen native helper cases verify one-shot flag/status/error behavior. This
+helper does not implement backoff or mutate persistent buffers. Task outcome
+retention/removal remains separate. [Evidence and limits](docs/protocol/apk/2.26.43.72-metrics-native-drain-outcomes/README.md).
+Validation: pinned resolver and fixtures, coverage, staged diff and bundle/link
+hygiene. Full upper callback/retry/durable ownership remains open. No Rust
+runtime or live traffic changed.
+
 2026-11-05 — **Native metrics task cancellation ordering traced.**
 
 Twelve bounded native cases verify handle cancel/callback arguments and local

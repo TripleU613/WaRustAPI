@@ -1,0 +1,37 @@
+[
+  {
+    "name": "drain-start",
+    "start_va": "0x727294",
+    "end_va": "0x7273a8"
+  },
+  {
+    "name": "drain-end",
+    "start_va": "0x7273a8",
+    "end_va": "0x727444"
+  },
+  {
+    "name": "status-error-domain",
+    "start_va": "0xbe9ce8",
+    "end_va": "0xbe9cf4"
+  },
+  {
+    "name": "status-error-arguments",
+    "start_va": "0xbe3ab8",
+    "end_va": "0xbe3ac4"
+  },
+  {
+    "name": "status-start-arguments",
+    "start_va": "0xbe3bb4",
+    "end_va": "0xbe3bc0"
+  },
+  {
+    "name": "task-error-arguments",
+    "start_va": "0x4b0be8",
+    "end_va": "0x4b0bf4"
+  },
+  {
+    "name": "drain-job-thunk",
+    "start_va": "0xbd8bb8",
+    "end_va": "0xbd8bc0"
+  }
+]

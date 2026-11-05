@@ -69,8 +69,9 @@ its diagnostic string, reads a four-entry relocated label table:
 | 2 | non-retryable | nonzero-outcome helper; remove from set; optional callback slot +0x28 |
 | 3 | failure | nonzero-outcome helper; optional callback slot +0x20 |
 
-The nonzero helper is 0x7273a8 and its complete lifecycle effects remain untraced
-in this bundle. The callback unwraps a weak reference, checks set membership and
+The nonzero helper0x7273a8 is now traced as a one-shot regular-drain status
+notifier, not backoff or persistent task mutation; see the
+[drain outcome trace](../2.26.43.72-metrics-native-drain-outcomes/README.md). The callback unwraps a weak reference, checks set membership and
 can diagnose missing membership before continuing. Whether surrounding layers
 exclude obsolete completions still requires proof. The callback-table bindings
 between all transports and these interfaces remain incomplete; do not equate

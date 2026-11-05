@@ -6148,3 +6148,14 @@ synthetic cancel arguments, queued task keys and cleanup/invariant branches.
 [Native bodies, direct callers, fixtures and delivery/ownership limits](apk/2.26.43.72-metrics-native-task-cancellation/README.md).
 Real cancellation, queued callback completion and durable replay remain open.
 No Rust runtime or live operations changed.
+
+### Native regular drain status versus task outcome (2026-11-05)
+
+**Confirmed static / observed bounded synthetic execution, APK43.72:** helper
+7273a8 ends active drain once, optionally creating local error3; it is not
+backoff or persistent buffer mutation. Fourteen native helper cases verify
+flag/argument/optional-table/repeated-call behavior. Task outcomes separately
+retain retryable/failure entries or remove success/non-retryable entries.
+[Start/end bodies, helper fixtures and ownership distinctions](apk/2.26.43.72-metrics-native-drain-outcomes/README.md).
+Upper callback/network job binding, backoff, generation and durable ownership
+remain open. No Rust runtime or live operation changed.

@@ -1,0 +1,70 @@
+            0x00727294      paciasp
+            0x00727298      stp   x29, x30, [sp, -0x30]!
+            0x0072729c      bl    0x63c894
+            0x007272a0      mov   x29, sp
+            0x007272a4      mov   x20, x0
+            0x007272a8      ldr   x0, [x0, 0x48]                       ; [0x48:4]=64
+            0x007272ac      bl    sym.imp.MCFSetGetCount
+            0x007272b0      cmp   w0, 0
+            0x007272b4      mov   w21, w0
+            0x007272b8      mov   x19, xzr
+            0x007272bc      cset  w8, gt
+        ┌─< 0x007272c0      tbz   w8, 0, 0x72731c
+       ┌──> 0x007272c4      mov   w0, w21
+       ╎│   0x007272c8      mov   w1, 8
+       ╎│   0x007272cc      bl    sym.imp.MCFSafeMalloc
+       ╎│   0x007272d0      mov   x22, x0
+       ╎│   0x007272d4      mov   w8, 1
+      ┌───< 0x007272d8      tbz   w8, 0, 0x727314
+     ┌────> 0x007272dc      ldr   x0, [x20, 0x48]                      ; [0x48:4]=64
+     ╎│╎│   0x007272e0      mov   x1, x22
+     ╎│╎│   0x007272e4      bl    sym.imp.MCFSetGetValues
+     ╎│╎│   0x007272e8      cmp   w21, 1
+    ┌─────< 0x007272ec      b.lt  0x727304
+    │╎│╎│   0x007272f0      ldr   x19, [x22]
+    │╎│╎│   0x007272f4      mov   x0, x19
+    │╎│╎│   0x007272f8      bl    0x71f6f8
+    │╎│╎│   0x007272fc      mov   x0, x19
+    │╎│╎│   0x00727300      bl    sym.imp.MCFRetain
+    └─────> 0x00727304      mov   x0, x22
+     ╎│╎│   0x00727308      bl    sym.imp.MCFFree
+     ╎│╎│   0x0072730c      mov   w8, wzr
+     └────< 0x00727310      tbnz  w8, 0, 0x7272dc
+      └───> 0x00727314      mov   w8, wzr
+       └──< 0x00727318      tbnz  w8, 0, 0x7272c4
+       ┌└─> 0x0072731c      cbz   x19, 0x727394
+       │    0x00727320      ldr   x8, [x20, 0x40]                      ; segment.PHDR
+       │                                                               ; [0x40:4]=6
+       │    0x00727324      mov   w9, 1
+       │    0x00727328      strb  w9, [x20, 0x50]
+       │┌─< 0x0072732c      cbz   x8, 0x727340
+       ││   0x00727330      ldp   x9, x0, [x8, 0x30]
+       ││   0x00727334      bl    0xbe3bb4
+       ││   0x00727338      mov   x3, xzr
+       ││   0x0072733c      blr   x9
+       │└─> 0x00727340      ldp   x21, x3, [x20, 0x28]
+       │    0x00727344      mov   w0, 3
+       │    0x00727348      mov   x2, x19
+       │    0x0072734c      mov   x1, x21
+       │    0x00727350      bl    sym.imp.MCIParamsCreate
+       │    0x00727354      ldr   x8, [x21, 0x28]                      ; [0x28:4]=0xc306e8
+       │    0x00727358      bl    0xbe2e34
+       │    0x0072735c      bl    sym.imp.MCIExecutionGlobalQueueGetExecutionQueue
+       │    0x00727360      movi  d0, 0000000000000000
+       │    0x00727364      adrp  x2, 0xbd8000
+       │    0x00727368      add   x2, x2, 0xbb8
+       │    0x0072736c      adrp  x4, 0xf2000
+       │    0x00727370      add   x4, x4, 0xdb0
+       │    0x00727374      bl    0xbe7bf0
+       │    0x00727378      bl    sym.imp.MCIExecutionQueueExecuteAsyncHelper
+       │    0x0072737c      mov   x0, x20
+       │    0x00727380      bl    sym.imp.MCFRelease
+       │    0x00727384      bl    0xbde028
+       │    0x00727388      ldp   x29, x30, [sp], 0x30
+       │    0x0072738c      autiasp
+       │┌─< 0x00727390      b     sym.imp.MCFRelease
+       └──> 0x00727394      bl    0xbdf2b0
+        │   0x00727398      mov   w1, wzr
+        │   0x0072739c      ldp   x29, x30, [sp], 0x30
+        │   0x007273a0      autiasp
+       ┌──< 0x007273a4      b     0x7273a8

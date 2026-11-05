@@ -16269,5 +16269,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-metrics-native-task-cancellation/README.md",
     "description": "12 bounded native cancellation/destructor cases verify synthetic backend cancel arguments, queued task keys and cleanup branches. Destructor clears callback table first; endpoint map is separate and absent-network path preserves busy byte. Actual cancel, queued callback completion and persistent replay/ownership remain unproven. No Rust/live capability added."
+  },
+  "x-metrics-native-drain-outcome-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK static and synthetic regular-drain evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-metrics-native-drain-outcomes/README.md",
+    "description": "14 bounded native cases verify regular one-shot drain-end flag/status/error behavior. It is not a backoff or persistent mutation helper; per-task retain/remove branches remain distinct. Start/async job boundary retained statically. Upper callback binding, full retry/generation and durable ownership remain open. No Rust/live capability added."
   }
 }

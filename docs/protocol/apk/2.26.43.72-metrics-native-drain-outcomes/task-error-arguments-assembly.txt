@@ -1,0 +1,3 @@
+            0x004b0be8      mov   x0, x20
+            0x004b0bec      mov   w1, 1
+            0x004b0bf0      ret
