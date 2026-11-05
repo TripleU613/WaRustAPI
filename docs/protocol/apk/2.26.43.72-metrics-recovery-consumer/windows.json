@@ -1,0 +1,52 @@
+[
+  {
+    "name": "storage-callback-construction-excerpt",
+    "start_va": "0x6f96b0",
+    "end_va": "0x6f97cc"
+  },
+  {
+    "name": "initialization-load-excerpt",
+    "start_va": "0x7238f0",
+    "end_va": "0x7239b4"
+  },
+  {
+    "name": "recovered-buffer-consumer",
+    "start_va": "0x722ce0",
+    "end_va": "0x723008"
+  },
+  {
+    "name": "task-handoff",
+    "start_va": "0x7250c4",
+    "end_va": "0x72522c"
+  },
+  {
+    "name": "mode-zero-state-handoff",
+    "start_va": "0x72503c",
+    "end_va": "0x7250c4"
+  },
+  {
+    "name": "load-entry-thunk",
+    "start_va": "0xbd8f30",
+    "end_va": "0xbd8f38"
+  },
+  {
+    "name": "callback-create-arguments",
+    "start_va": "0xbe4e54",
+    "end_va": "0xbe4e60"
+  },
+  {
+    "name": "consumer-entry-arguments",
+    "start_va": "0xbe5a5c",
+    "end_va": "0xbe5a68"
+  },
+  {
+    "name": "load-param-arguments",
+    "start_va": "0xbe6e40",
+    "end_va": "0xbe6e4c"
+  },
+  {
+    "name": "checksum-payload-arguments",
+    "start_va": "0xbe3c38",
+    "end_va": "0xbe3c44"
+  }
+]

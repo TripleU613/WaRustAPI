@@ -2649,3 +2649,15 @@ Separate directory walk is bulk deletion. [Evidence and limits](apk/2.26.43.72-m
 Validation:18 native header cases and pinned loader/helper windows. Remaining
 files can pass local gates; automatic restart replay and cleanup policy remain
 unproven. No real I/O, Rust runtime change or live traffic.
+
+## Recovered metrics consumer (2026-11-05)
+
+2026-11-05 — **Recovered metrics consumer checksum and task admission traced.**
+
+Version3 payload Adler32 is checked after file loading; versions1/2 skip this
+consumer comparison. Mismatch increments a counter and ends the remaining
+snapshot walk. Passing outgoing entries reach conditional transport handoff.
+[Evidence and limits](apk/2.26.43.72-metrics-recovery-consumer/README.md).
+Validation:12 native checksum cases and mismatch-counter slices plus pinned
+binding/windows. Startup flag/lifetime and actual replay remain unobserved.
+No real I/O, Rust runtime change or live traffic.

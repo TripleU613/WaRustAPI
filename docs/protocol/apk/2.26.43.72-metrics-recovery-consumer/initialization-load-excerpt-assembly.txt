@@ -1,0 +1,49 @@
+            0x007238f0      mov   x0, x20
+            0x007238f4      str   x21, [x19, 0xa8]
+            0x007238f8      bl    sym.imp.MCFRelease
+            0x007238fc      ldr   x0, [x19, 0x78]                      ; [0x78:4]=1
+            0x00723900      bl    0x7360fc
+            0x00723904      bl    0xbe05c8
+            0x00723908      bl    0x7225d8
+            0x0072390c      bl    0xbe05c8
+            0x00723910      bl    0x722698
+            0x00723914      bl    0xbe05c8
+            0x00723918      bl    0x7224d4
+            0x0072391c      mov   x0, x19
+            0x00723920      bl    0x7239ec
+            0x00723924      ldrb  w8, [x19, 0xf8]                      ; [0xf8:4]=0xbf7730 segment.GNU_RELRO
+            0x00723928      cmp   w8, 1
+        ┌─< 0x0072392c      b.ne  0x7239b4
+        │   0x00723930      ldr   x20, [x19, 0x90]                     ; [0x90:4]=0
+        │   0x00723934      bl    0xbe6e40
+        │   0x00723938      bl    sym.imp.MCIParamsCreate
+        │   0x0072393c      ldr   x8, [x20, 0x18]                      ; [0x18:4]=0
+        │   0x00723940      mov   x20, x0
+        │   0x00723944      bl    0xbe7138
+        │   0x00723948      bl    sym.imp.MCIExecutionGlobalQueueGetExecutionQueue
+        │   0x0072394c      movi  d0, 0000000000000000
+        │   0x00723950      adrp  x2, 0xbd8000
+        │   0x00723954      add   x2, x2, 0xf30
+        │   0x00723958      adrp  x4, 0xb4000
+        │   0x0072395c      add   x4, x4, 0x3ed
+        │   0x00723960      mov   w1, wzr
+        │   0x00723964      mov   x3, x20
+        │   0x00723968      mov   w5, 1
+        │   0x0072396c      bl    sym.imp.MCIExecutionQueueExecuteAsyncHelper
+        │   0x00723970      mov   x0, x20
+        │   0x00723974      bl    sym.imp.MCFRelease
+        │   0x00723978      ldr   x19, [x19, 0x90]                     ; [0x90:4]=0
+        │   0x0072397c      bl    0xbe392c
+        │   0x00723980      bl    sym.imp.MCIParamsCreate
+        │   0x00723984      bl    0xbe8b68
+        │   0x00723988      bl    0xbe7138
+        │   0x0072398c      bl    sym.imp.MCIExecutionGlobalQueueGetExecutionQueue
+        │   0x00723990      movi  d0, 0000000000000000
+        │   0x00723994      adrp  x2, 0xbd8000
+        │   0x00723998      add   x2, x2, 0xf18
+        │   0x0072399c      adrp  x4, 0xb4000
+        │   0x007239a0      add   x4, x4, 0x3cc
+        │   0x007239a4      bl    0xbdfcb0
+        │   0x007239a8      bl    sym.imp.MCIExecutionQueueExecuteAsyncHelper
+        │   0x007239ac      mov   x0, x19
+        │   0x007239b0      bl    sym.imp.MCFRelease

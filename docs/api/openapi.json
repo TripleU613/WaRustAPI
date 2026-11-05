@@ -16323,5 +16323,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-metrics-buffer-recovery/README.md",
     "description": "Loader prefix/type and WMT header admission traced; versions1/2/3, positive bounded payload, trailing bytes and restored checksum/state.18 native header-slice fixtures; no real I/O. Separate directory walker is bulk deletion. Full startup consumers, terminal cleanup and replay remain unproven. No Rust/live capability added."
+  },
+  "x-metrics-recovery-consumer-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK static and synthetic recovery consumer evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-metrics-recovery-consumer/README.md",
+    "description": "Selected conditional initialization binds outgoing loader to consumer; version3 payload Adler32 compared after file loading, versions1/2 skip comparison. Mismatch increments counter and exits snapshot walk; passing entries reach conditional task handoff.12 native gate fixtures with host zlib adapter and mismatch-counter slices. No real I/O or actual replay observed; full startup/lifetimes remain open. No Rust/live capability added."
   }
 }

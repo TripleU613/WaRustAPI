@@ -1,0 +1,66 @@
+{
+  "README.md": {
+    "bytes": 6392,
+    "sha256": "e8292beff67d250c08c1817b09aa82d5c3915b53f50c7e5f4b392ddf3cabe1d7"
+  },
+  "callback-create-arguments-assembly.txt": {
+    "bytes": 116,
+    "sha256": "208f0fda7cac1e63a17f5979c78323d4a6c3b1167ddb4f870bce53c65dcd8712"
+  },
+  "check-checksum.py": {
+    "bytes": 6347,
+    "sha256": "aa7728fc7b6e16fcfc4c64a33ed9e064618f194cf290b9f022cf950133b349fe"
+  },
+  "checksum-payload-arguments-assembly.txt": {
+    "bytes": 115,
+    "sha256": "8935e2527fefce2556fc0690d1f982d1cc94e17685d4779ef427bfb9a59548ee"
+  },
+  "checksum-results.json": {
+    "bytes": 4814,
+    "sha256": "822f3967cf1e727b77046ad7709d85bdd1b17304d8277c85215647318d670272"
+  },
+  "consumer-boundaries.json": {
+    "bytes": 2702,
+    "sha256": "6b59037a3978313af7600433d049b77733307b4d2df1149a0880d94ddd8e160e"
+  },
+  "consumer-entry-arguments-assembly.txt": {
+    "bytes": 116,
+    "sha256": "157ba4400e08030ccad0c2293404dea88acad39be3f01e9346ed060e74e00384"
+  },
+  "initialization-load-excerpt-assembly.txt": {
+    "bytes": 2670,
+    "sha256": "f3da78ac8be00e73fe35dce71acecfc7652e5e40d762362e4db04281c79199e8"
+  },
+  "inspect-consumer.py": {
+    "bytes": 1205,
+    "sha256": "af7c211f18804f156fcb0b2b6c72bb0ce31687302cb8c2acfabe7a8fd61002b2"
+  },
+  "load-entry-thunk-assembly.txt": {
+    "bytes": 85,
+    "sha256": "a0b83f69b782d54ad033729dce1b05a7fd1bc269bb2770922bdc50907c2cd4ac"
+  },
+  "load-param-arguments-assembly.txt": {
+    "bytes": 114,
+    "sha256": "e14ace784460665c16ec1b6d8cd9e31f520335cbcc40c9bf58ef3310b850dff0"
+  },
+  "mode-zero-state-handoff-assembly.txt": {
+    "bytes": 1655,
+    "sha256": "09d82ece7f9667ae776989f71d12f4307b21d8bee1d289afc158c293985e2648"
+  },
+  "recovered-buffer-consumer-assembly.txt": {
+    "bytes": 11889,
+    "sha256": "389f650abaaa357434173b4a2f6fa1b6207f463fbc34d2e75bf1ad6edec4d0c9"
+  },
+  "storage-callback-construction-excerpt-assembly.txt": {
+    "bytes": 3525,
+    "sha256": "00c5eb8c271a0bbf4337c04278fe0cd744c2b9b67e7618dffc1453e24338719d"
+  },
+  "task-handoff-assembly.txt": {
+    "bytes": 5388,
+    "sha256": "99ca7162cbfc66c34f9e2b13363a3c33541ca29e48b3f0f1a2e52cd6ca1bd139"
+  },
+  "windows.json": {
+    "bytes": 1018,
+    "sha256": "c7e2200129d6b2043b70a8adec98ff442ce17eb50cbf36acf19cf74ad3404d5d"
+  }
+}

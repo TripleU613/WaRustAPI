@@ -115,3 +115,11 @@ The surrounding lifecycle/I/O claims above remain static branch conclusions.
 **Observed live:** none. **Unknown:** full header producers, filesystem/read
 semantics, checksum/state consumers, startup/terminal cleanup policy, downstream
 callback/bookkeeping and actual replay/durability. No Rust/live behavior added.
+
+## Consumer follow-up
+
+The [bound callback consumer](../2.26.43.72-metrics-recovery-consumer/README.md)
+now establishes the later version3 payload checksum comparison and selected
+conditional task handoff. The absence of a checksum comparison in the file
+reader is not a global absence. Startup flag producers, complete lifetimes and
+actual replay remain open.

@@ -1,0 +1,87 @@
+{
+  "scope": "static selected loader scheduling, consumer checksum and task-handoff chain; not observed startup or replay",
+  "loader_thunk_target": "0x726660",
+  "consumer_function_target": "0x722ce0",
+  "windows": [
+    {
+      "name": "storage-callback-construction-excerpt",
+      "start_va": "0x6f96b0",
+      "end_va": "0x6f97cc",
+      "file_offset": "0x6f56b0",
+      "bytes": 284,
+      "sha256": "36f2d255aded79663f5a8bc4c2c088b24bf78991f9df7aecbd83987fd2fe15ac"
+    },
+    {
+      "name": "initialization-load-excerpt",
+      "start_va": "0x7238f0",
+      "end_va": "0x7239b4",
+      "file_offset": "0x71f8f0",
+      "bytes": 196,
+      "sha256": "e31b6b4b5a4b49445b89332b599b3e86990c0c54d575dfeed0403bf059b32904"
+    },
+    {
+      "name": "recovered-buffer-consumer",
+      "start_va": "0x722ce0",
+      "end_va": "0x723008",
+      "file_offset": "0x71ece0",
+      "bytes": 808,
+      "sha256": "6441386490585355157984531b0a89ef87b126bdb3db70d3b4f91d5b9eb2464a"
+    },
+    {
+      "name": "task-handoff",
+      "start_va": "0x7250c4",
+      "end_va": "0x72522c",
+      "file_offset": "0x7210c4",
+      "bytes": 360,
+      "sha256": "4a449e65d724f1d01bbe4825a299efedf336dba209a6f8dae2b17efec15c1aee"
+    },
+    {
+      "name": "mode-zero-state-handoff",
+      "start_va": "0x72503c",
+      "end_va": "0x7250c4",
+      "file_offset": "0x72103c",
+      "bytes": 136,
+      "sha256": "713cbdda5f420b8aea888353bc7c9ce2809e2994214948a8dfa5fda6b6fa3943"
+    },
+    {
+      "name": "load-entry-thunk",
+      "start_va": "0xbd8f30",
+      "end_va": "0xbd8f38",
+      "file_offset": "0xbd4f30",
+      "bytes": 8,
+      "sha256": "8b1c1414b787bee4c149568717c55b547fd0159cf8780a5d721fbb05dc1b1fcd"
+    },
+    {
+      "name": "callback-create-arguments",
+      "start_va": "0xbe4e54",
+      "end_va": "0xbe4e60",
+      "file_offset": "0xbe0e54",
+      "bytes": 12,
+      "sha256": "e23be07bdd2d7f046a802eef0161cddabec567a18dcc54b5576bc5bcbc915d27"
+    },
+    {
+      "name": "consumer-entry-arguments",
+      "start_va": "0xbe5a5c",
+      "end_va": "0xbe5a68",
+      "file_offset": "0xbe1a5c",
+      "bytes": 12,
+      "sha256": "87f317b10fee82efe851bf72a32e1bfa23216e8896fc38d198103fa70117247d"
+    },
+    {
+      "name": "load-param-arguments",
+      "start_va": "0xbe6e40",
+      "end_va": "0xbe6e4c",
+      "file_offset": "0xbe2e40",
+      "bytes": 12,
+      "sha256": "6b32c93ec01bd0c262bb377ba3829a447367cb32a680a2f5bb07f4331e9abbdc"
+    },
+    {
+      "name": "checksum-payload-arguments",
+      "start_va": "0xbe3c38",
+      "end_va": "0xbe3c44",
+      "file_offset": "0xbdfc38",
+      "bytes": 12,
+      "sha256": "9c97651841dbfb67cb42250c84121881db29c3c2fc8014b586a00203d9ff6573"
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+            0x006f96b0      str   x21, [x20, 0x88]
+            0x006f96b4      bl    0x725ee0
+            0x006f96b8      mov   w1, 0x30                             ; '0'
+            0x006f96bc      bl    0xbe1ac0
+            0x006f96c0      bl    sym.imp.MCFRuntimeCreateInstance
+            0x006f96c4      mov   x22, x0
+            0x006f96c8      ldr   x0, [sp, 0x48]                       ; [0x48:4]=64
+            0x006f96cc      str   x0, [x22, 0x18]
+            0x006f96d0      bl    sym.imp.MCFRetain
+            0x006f96d4      mov   x0, x23
+            0x006f96d8      bl    sym.imp.MCIExecutionGlobalQueueGetExecutionQueue
+            0x006f96dc      mov   x21, x0
+            0x006f96e0      bl    0x736504
+            0x006f96e4      mov   x24, x0
+            0x006f96e8      nop
+            0x006f96ec      adr   x1, 0x722968
+            0x006f96f0      bl    0xbe4e54
+            0x006f96f4      bl    0x736578
+            0x006f96f8      bl    0xbe1234
+            0x006f96fc      bl    sym.imp.__MCFCastToClassNotNull
+            0x006f9700      str   x0, [x22, 0x20]
+            0x006f9704      mov   x0, x23
+            0x006f9708      bl    sym.imp.MCIExecutionGlobalQueueGetExecutionQueue
+            0x006f970c      mov   x21, x0
+            0x006f9710      bl    0x736504
+            0x006f9714      mov   x24, x0
+            0x006f9718      nop
+            0x006f971c      adr   x1, 0x722a9c
+            0x006f9720      bl    0xbe4e54
+            0x006f9724      bl    0x736578
+            0x006f9728      bl    0xbe1234
+            0x006f972c      bl    sym.imp.__MCFCastToClassNotNull
+            0x006f9730      str   x0, [x22, 0x28]
+            0x006f9734      mov   x0, x23
+            0x006f9738      bl    sym.imp.MCIExecutionGlobalQueueGetExecutionQueue
+            0x006f973c      mov   x21, x0
+            0x006f9740      bl    0x736504
+            0x006f9744      mov   x24, x0
+            0x006f9748      nop
+            0x006f974c      adr   x1, 0x722bc8
+            0x006f9750      bl    0xbe4e54
+            0x006f9754      bl    0x736578
+            0x006f9758      bl    0xbe1234
+            0x006f975c      bl    sym.imp.__MCFCastToClassNotNull
+            0x006f9760      str   x0, [x22, 0x30]
+            0x006f9764      mov   x0, x23
+            0x006f9768      bl    sym.imp.MCIExecutionGlobalQueueGetExecutionQueue
+            0x006f976c      mov   x21, x0
+            0x006f9770      bl    0x736504
+            0x006f9774      mov   x24, x0
+            0x006f9778      nop
+            0x006f977c      adr   x1, 0x722ce0
+            0x006f9780      bl    0xbe4e54
+            0x006f9784      bl    0x736578
+            0x006f9788      bl    0xbe1234
+            0x006f978c      bl    sym.imp.__MCFCastToClassNotNull
+            0x006f9790      str   x0, [x22, 0x38]
+            0x006f9794      mov   x0, x23
+            0x006f9798      bl    sym.imp.MCIExecutionGlobalQueueGetExecutionQueue
+            0x006f979c      mov   x21, x0
+            0x006f97a0      bl    0x736504
+            0x006f97a4      mov   x23, x0
+            0x006f97a8      nop
+            0x006f97ac      adr   x1, 0x723008
+            0x006f97b0      bl    0xbe4e54
+            0x006f97b4      bl    0x736578
+            0x006f97b8      bl    0xbe19a0
+            0x006f97bc      bl    sym.imp.__MCFCastToClassNotNull
+            0x006f97c0      str   x0, [x22, 0x40]
+            0x006f97c4      ldr   x0, [x20, 0x18]                      ; [0x18:4]=0
+            0x006f97c8      str   x22, [x20, 0x90]

@@ -1,3 +1,13 @@
+2026-11-05 — **Recovered metrics consumer checksum and task admission traced.**
+
+Version3 payload Adler32 is checked after file loading; versions1/2 skip this
+consumer comparison. Mismatch increments a counter and ends the remaining
+snapshot walk. Passing outgoing entries reach conditional transport handoff.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-metrics-recovery-consumer/README.md).
+Validation:12 native checksum cases and mismatch-counter slices plus pinned
+binding/windows. Startup flag/lifetime and actual replay remain unobserved.
+No real I/O, Rust runtime change or live traffic.
+
 2026-11-05 — **Metrics buffer loader admission and bulk-delete distinction traced.**
 
 Loader accepts selected prefix/type and WMT versions1/2/3 with positive bounded
