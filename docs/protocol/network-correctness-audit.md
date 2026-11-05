@@ -635,3 +635,29 @@ body constraints and automatic refresh scheduling remain open. No live traffic.
 so two different usable one-host routes can have identical summaries. The
 regression therefore verifies the final Current.action_id and decoded route ID
 directly; summary equality is not evidence that route authority is unchanged.
+
+## Retry-refetch atomic settlement (2026-11-04)
+
+**Confirmed local persistence defect / fixed offline:** complete_refetch deleted
+its Refetch checkpoint in an independent store.write before parsing/preparation
+or outcome storage. Any subsequent storage/preparation error could strand the
+answer in fetching with no pending job. Refusal also wrote answer and unanswered
+diagnostic in separate commits. It now retires the job inside the same write as
+both refusal records, or inside the existing transaction that reserves the
+same-wire-ID resend, session and peer identity. Refusal verifies the saved answer
+still references this query before changing it. Unexpected errors retain the job;
+there is no new replay, timeout retry, ID replacement or recovery-reset API.
+
+**Regression:** the encrypted reopen test now inserts an intentionally malformed
+unanswered diagnostic. Refusal fails while reading that row after job deletion
+and answer write inside the transaction; comparison of all checkpoint/outbox/
+session/identity rows proves rollback preserves the pending fetch and answer.
+The synthetic corrupt row is removed only in the test so the same job can then
+settle one actual error and ignore its duplicate. Existing real signed-bundle
+workflow still verifies exactly one replacement send/session reservation.
+
+**Evidence distinction:** this is a Rust transaction-boundary correction, not
+newly reverse-engineered APK durable storage policy. Native retry fresh-bundle
+basis remains **2.26.37.71 151.A00** in [retry answers](retry-answers.md);
+shared reply admission is **2.26.43.72 0ln.A01**. Native crash/account lifetime
+parity and concurrent session-authority comparison remain unproven. No live traffic.

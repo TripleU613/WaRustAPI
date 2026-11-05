@@ -165,3 +165,9 @@ session's remote registration; not live (a retry cannot be forced).
 **Confirmed / implemented offline:** same-ID non-reply IQs no longer delete
 the pending fetch or record refetch_refused. Exact result/error is required
 before any checkpoint mutation. [APK 43.72 0ln.A01 and durable regressions](network-correctness-audit.md#retry-refetch-reply-type-admission-2026-11-04).
+
+## Atomic refetch settlement (2026-11-04)
+
+**Confirmed local correction:** retiring a pending fetch now commits together
+with both refusal records or the reserved replacement send/session. Later errors
+leave the job held instead of stranding fetching history. [Fault regression and evidence limits](network-correctness-audit.md#retry-refetch-atomic-settlement-2026-11-04).

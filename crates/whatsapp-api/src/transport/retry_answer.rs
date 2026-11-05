@@ -306,17 +306,30 @@ pub async fn complete_refetch(
     else {
         return Ok(None);
     };
-    store.write(|tx| tx.delete(Table::Checkpoints, refetch_key(query).as_bytes()))?;
     let refuse = |reason: &str| -> Result<Option<Option<Node>>> {
         store.write(|tx| {
+            let state: Option<serde_json::Value> =
+                tx.get_json(Table::Checkpoints, job.answer_key.as_bytes(), 1)?;
+            if state.as_ref().and_then(|v| v["query"].as_str()) != Some(query) {
+                return Err(Error::invalid("retry", "answer changed before refusal"));
+            }
+            // Retire the fetch only with both durable refusal records. A store
+            // fault must not leave a fetching answer without its pending job.
+            tx.delete(Table::Checkpoints, refetch_key(query).as_bytes())?;
             tx.put_json(
                 Table::Checkpoints,
                 job.answer_key.as_bytes(),
                 1,
                 &serde_json::json!({"status": "unanswered", "reason": reason}),
-            )
+            )?;
+            if tx.get_json::<serde_json::Value>(Table::Checkpoints, job.unanswered_key.as_bytes(), 1)?.is_none() {
+                tx.put_json(Table::Checkpoints, job.unanswered_key.as_bytes(), 1,
+                    &serde_json::json!({"status":"unanswered", "reason":reason, "observed_at":Timestamp::now()}))?;
+            }
+            Ok(())
         })?;
-        unanswered(store, &job.unanswered_key, reason).map(|_| Some(None))
+        tracing::warn!(reason, "retry receipt not answered");
+        Ok(Some(None))
     };
     if node.get_attr("type").and_then(|v| v.as_text()) != Some("result") {
         return refuse("refetch_refused");
@@ -372,6 +385,9 @@ pub async fn complete_refetch(
         if state.as_ref().and_then(|v| v["query"].as_str()) != Some(query) {
             return Err(Error::invalid("retry", "answer changed before reservation"));
         }
+        // The consumed job, replacement session and reserved same-ID resend
+        // commit together; preparation/storage failure leaves the fetch held.
+        tx.delete(Table::Checkpoints, refetch_key(query).as_bytes())?;
         let mut current = outbox
             .by_wire_id_in_write(tx, &wire_id)?
             .ok_or_else(|| Error::invalid("retry", "original send vanished"))?;
@@ -610,6 +626,31 @@ mod tests {
         drop(store);
         let store = open();
         assert_eq!(snapshot(&store), before);
+        // A corrupt durable diagnostic row fails after deletion/first write
+        // inside the transaction. The entire pending job and answer must survive.
+        store
+            .write(|tx| {
+                tx.put(
+                    Table::Checkpoints,
+                    b"fixture-unanswered",
+                    1,
+                    b"invalid-json",
+                )
+            })
+            .unwrap();
+        let corrupt = snapshot(&store);
+        let error = Node::new("iq").attr("id", "Q1").attr("type", "error");
+        assert!(
+            complete_refetch(&store, &account, &error, ConnectionEpoch(2))
+                .await
+                .is_err()
+        );
+        assert_eq!(snapshot(&store), corrupt);
+        // Repair only this synthetic fixture to prove the original job can
+        // still settle; production never repairs corrupt state automatically.
+        store
+            .write(|tx| tx.delete(Table::Checkpoints, b"fixture-unanswered"))
+            .unwrap();
         let error = Node::new("iq").attr("id", "Q1").attr("type", "error");
         assert!(matches!(
             complete_refetch(&store, &account, &error, ConnectionEpoch(2))

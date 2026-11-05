@@ -1,3 +1,11 @@
+2026-11-04 — **Retry-refetch retirement commits atomically with its outcome.**
+
+Separate early job deletion removed; refusal records or reserved replacement
+send/session now share the retirement transaction. Fault regression proves
+rollback retains pending work. [Details and native parity limits](docs/protocol/network-correctness-audit.md#retry-refetch-atomic-settlement-2026-11-04).
+Validation: **1,280 workspace/all-feature tests**, strict Clippy, CLI reference,
+formatting, coverage freshness and repository hygiene passed. No live traffic.
+
 2026-11-04 — **Media refresh admission and durable route preservation verified.**
 
 Existing type/ID/tag/generation guard reviewed; new regression preserves full
