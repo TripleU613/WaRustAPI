@@ -1,3 +1,11 @@
+2026-11-04 — **Disabled-flag upload event registry proven.**
+
+Successful startup registry initialization maps77/78 to14o even with
+A0Q disabled. Earlier fallback disposition is now explicitly qualified.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#disabled-flag-registry-route-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. No production change or live traffic.
+
 2026-11-04 — **Configured legacy IQ factory membership proven.**
 
 Set7466 includes binding126 allocating1rC; constructor inlining explains

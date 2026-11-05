@@ -1038,3 +1038,45 @@ Additional export hashes:
 - [factory-set-container.txt](factory-set-container.txt): `f6887ecf7c8fc4daa6b380dfb63f9318189fe946ae2102de18371d90c6a3c23c`
 - [factory-set-get.txt](factory-set-get.txt): `6c47f1491e121445026eff9320f7ded1ecaf4d497033d9b496f4aa16ac453bed`
 - [factory-routing-ctor.txt](factory-routing-ctor.txt): `ae4ff1844574b41ccb13bfb9415f46b570458ea9a535915b102c81cd972f97e2`
+
+## Disabled-flag registry route (2026-11-04)
+
+**Confirmed static after successful registry initialization**, pinned2.26.43.72,
+same APK hash as this bundle. DEX exports are not REA Evidence envelopes.
+
+- Retained0ln constructor013e–015a stores **00D.A05(0x1d2d=7469)** set
+  in A0K. Existing1Uw group0/A01/A0K case7469 loads **07q.A80** at061a.
+  Retained07q initializer **aa96–aaa2** inserts **0x1a4f=6735** at index34;
+  A80 is assigned at ac22. Binding6735 constructs14o (prior provider trace).
+- **00D.A05** resolves throughA02, then switches a07r container's provider
+  to00D.A05/05g when A06 is true. **00D.<clinit>** constructs05g; its
+  **get(id)** delegates unchanged to00D.A02, retaining application-scope
+  resolution. This is distinct from the prior00T set wrapper.
+- **14o.Amf** returns74,75,76,**77,78**,82,83,84 from its little-endian
+  int payload. **0ln.A05** with A0Q false, under A0P monitor and once-only
+  A01 guard, iteratesA0K, adds each handler toA0G and maps every Amf
+  selector to its list index in A02. Duplicate selectors throw; initialization
+  recordsA01=true only after completing the loop. A0Q true skips this registry.
+- **0ZJ.onLooperPrepared0062–0078** resolves0ln and invokesA05. Exact
+  callers also includeFfx.invoke, not traced here. Once this initialization
+  succeeds,77/78 have valid registry membership: retainedA0G admits them;
+  retained0ln.A00 disabled branch invokes the indexed14o.BLn.
+
+**Correction to scope of earlier fallback finding:** the fallback handler
+does ignore77/78 if reached, but normal successfully initialized disabled-flag
+registration supplies a route through0ln, just as the enabled direct provider
+does. Do not report ordinary disabled configuration as necessarily losing
+upload completion. Failure/early-event behavior, effective runtime flags,
+reader dispatch and reconnect/teardown still need separate evidence.
+No production change or live traffic.
+
+Additional export hashes:
+
+- [registry-index-refs.txt](registry-index-refs.txt): `1cc4199c50472a1f30a18708131c9a12dd924baeccb727e876c1447e77a0e8ca`
+- [registry-set-wrapper.txt](registry-set-wrapper.txt): `ab81e1f0c13f081ddd7511615b1a7fe2b9b60115f4c28bb7a845725f8a618deb`
+- [registry-populate.txt](registry-populate.txt): `a0d6f1c1dac7349a6440de38a839c7115b17a0b1712108d313306849377a4f84`
+- [registry-selectors.txt](registry-selectors.txt): `5c1c4110dc3537e38e85ce797f8ef495af653ef18334f5c6c8074abe1bf19324`
+- [registry-populate-callers.txt](registry-populate-callers.txt): `ca6b5d893938ef33f254074cb68650691d30fc65b6d068139f04de0e53b3f196`
+- [registry-provider-init.txt](registry-provider-init.txt): `8d048311d43487bfce78c3d3ed5385cdf89de5e966d1a00e62bce23558f0b596`
+- [registry-startup.txt](registry-startup.txt): `72ae356f4478cdfe0a5d276a6921549c115f9747c456d31737786f5c114eab03`
+- [registry-provider-get.txt](registry-provider-get.txt): `9cdcd72ef69009750d2c0fb5fe488fe74c6dbb4d68663ca069fe40a5388806f3`

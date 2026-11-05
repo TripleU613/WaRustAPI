@@ -1,0 +1,19 @@
+
+# class: LX/00D;
+# extends: Ljava/lang/Object;
+
+.method public <clinit>(V)  # .registers 2
+    # full signature: LX/00D;-><clinit>()V
+    0000..0002  const/4  v1, #0x0
+    0002..0006  new-instance  v0, LX/1Vn;
+    0006..000c  invoke-direct  {v0, v1}, LX/1Vn;-><init>(I)V
+    000c..0010  sput-object  v0, LX/00D;->A04:LX/05e;
+    0010..0014  new-instance  v0, Ljava/util/concurrent/ConcurrentHashMap;
+    0014..001a  invoke-direct  {v0}, Ljava/util/concurrent/ConcurrentHashMap;-><init>()V
+    001a..001e  sput-object  v0, LX/00D;->A03:Ljava/util/concurrent/ConcurrentHashMap;
+    001e..0022  new-instance  v0, LX/05g;
+    0022..0028  invoke-direct  {v0}, LX/05g;-><init>()V
+    0028..002c  sput-object  v0, LX/00D;->A05:LX/05f;
+    002c..002e  return-void
+    # exception table: 0 try range(s)
+.end method

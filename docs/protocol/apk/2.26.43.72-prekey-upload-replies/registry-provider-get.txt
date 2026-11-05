@@ -1,0 +1,11 @@
+
+# class: LX/05g;
+# extends: Ljava/lang/Object;
+
+.method public get(LI)  # .registers 3
+    # full signature: LX/05g;->get(I)Ljava/lang/Object;
+    0000..0006  invoke-static  {v2}, LX/00D;->A02(I)Ljava/lang/Object;
+    0006..0008  move-result-object  v0
+    0008..000a  return-object  v0
+    # exception table: 0 try range(s)
+.end method

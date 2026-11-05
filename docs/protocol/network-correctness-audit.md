@@ -1109,3 +1109,11 @@ allocates1rC through08o.A0Q with Object constructor inlining. Membership
 is now proven; earlier zero direct constructor callers did not cover it.
 A0Q comes from property0x4c7a at construction; runtime value unknown.
 [Exports and remaining lifecycle scope](apk/2.26.43.72-prekey-upload-replies/README.md#configured-legacy-iq-factory-membership-2026-11-04). No production change or live traffic.
+
+## 2026-11-04 — Disabled-flag registry route
+
+**Confirmed static after initialization (43.72):** set7469 includes14o
+(binding6735), Amf declares77/78, and0ZJ.onLooperPrepared calls0ln.A05
+to register them. Disabled flag does not itself imply callback loss.
+Fallback disposition remains true if reached; early-event/lifecycle unknowns
+remain. [Exports and conditions](apk/2.26.43.72-prekey-upload-replies/README.md#disabled-flag-registry-route-2026-11-04). No production change or live traffic.

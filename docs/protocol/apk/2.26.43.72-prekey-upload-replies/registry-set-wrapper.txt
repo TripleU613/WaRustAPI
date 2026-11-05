@@ -1,0 +1,30 @@
+
+# class: LX/00D;
+# extends: Ljava/lang/Object;
+
+.method public A05(LI)  # .registers 3
+    # full signature: LX/00D;->A05(I)Ljava/util/Set;
+    0000..0006  invoke-static  {v2}, LX/00D;->A02(I)Ljava/lang/Object;
+    0006..0008  move-result-object  v2
+    0008..000c  check-cast  v2, Ljava/util/Set;
+    000c..0010  instance-of  v0, v2, LX/07r;
+    0010..0014  if-eqz  v0, +0x16
+    0014..0016  move-object  v1, v2
+    0016..001a  check-cast  v1, LX/07r;
+    001a..001c  monitor-enter
+    001c..0020  iget-boolean  v0, v1, LX/07r;->A06:Z
+    0020..0022  goto  +0x4
+    0022..0024  move-exception  v0
+    0024..0026  monitor-exit
+    0026..0028  throw  v0
+    0028..002a  monitor-exit
+    002a..002e  if-eqz  v0, +0x9
+    002e..0032  sget-object  v0, LX/00D;->A05:LX/05f;
+    0032..0036  iput-object  v0, v1, LX/07r;->A05:LX/05f;
+    0036..0038  const/4  v0, #0x0
+    0038..003c  iput-boolean  v0, v1, LX/07r;->A06:Z
+    003c..003e  return-object  v2
+    # exception table: 2 try range(s)
+    # catch <all> code_units 000e..0011 -> 0011
+    # catch <all> code_units 0012..0013 -> 0011
+.end method
