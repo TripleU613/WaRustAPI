@@ -661,3 +661,28 @@ newly reverse-engineered APK durable storage policy. Native retry fresh-bundle
 basis remains **2.26.37.71 151.A00** in [retry answers](retry-answers.md);
 shared reply admission is **2.26.43.72 0ln.A01**. Native crash/account lifetime
 parity and concurrent session-authority comparison remain unproven. No live traffic.
+
+## Retry-refetch peer-state reservation guard (2026-11-04)
+
+**Confirmed local concurrency gap / fixed offline:** complete_refetch read the
+pinned identity, awaited fresh-session preparation, then overwrote peer identity
+and session in its reservation transaction after checking only answer/query.
+It now snapshots the prior session alongside identity and checks both again
+inside that write, before retiring the job or reserving a resend. A newer pin
+or ratchet produces a redacted InvalidInput and leaves pending work and newer
+peer state unchanged. This is optimistic concurrency protection, not authority
+to replace an identity, retry a refused query or reset any history.
+
+**Offline regression:** the exact guard used at reservation accepts matching
+identity/session, then independently refuses simulated identity and session
+changes. Full checkpoint/identity/session snapshots are unchanged, including
+the pending job. This exercises the transactional guard directly rather than
+claiming a timed concurrent actor race. Existing signed-bundle workflow verifies
+the unchanged-state case still reserves one same-ID replacement. Crash/reopen
+coverage for settlement remains in the prior regression.
+
+**Evidence distinction:** local source/read-await-write boundary supports this
+fix. APK fresh-bundle behavior remains **2.26.37.71 151.A00**, retained in
+[retry answers](retry-answers.md); no native compare-and-swap or complete native
+account lifecycle equivalence is claimed. Concurrent changes to original-send
+facts/source and full actor scheduling still require review. No live traffic.

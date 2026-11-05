@@ -171,3 +171,9 @@ before any checkpoint mutation. [APK 43.72 0ln.A01 and durable regressions](netw
 **Confirmed local correction:** retiring a pending fetch now commits together
 with both refusal records or the reserved replacement send/session. Later errors
 leave the job held instead of stranding fetching history. [Fault regression and evidence limits](network-correctness-audit.md#retry-refetch-atomic-settlement-2026-11-04).
+
+## Refetch peer-state guard (2026-11-04)
+
+**Confirmed local correction:** the reservation transaction rechecks the identity
+and session captured before async preparation, refusing stale replacement without
+retiring its job. [Guard regression and remaining concurrency scope](network-correctness-audit.md#retry-refetch-peer-state-reservation-guard-2026-11-04).

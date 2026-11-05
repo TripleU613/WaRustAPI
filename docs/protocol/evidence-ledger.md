@@ -1,3 +1,10 @@
+2026-11-04 — **Retry refetch refuses to overwrite newer peer state.**
+
+Identity/session are rechecked inside resend reservation after async preparation.
+Regression independently changes each and proves newer state and pending fetch
+are preserved. [Evidence and remaining concurrency scope](network-correctness-audit.md#retry-refetch-peer-state-reservation-guard-2026-11-04).
+No live traffic.
+
 2026-11-04 — **Retry-refetch retirement commits atomically with its outcome.**
 
 Separate early job deletion removed; refusal records or reserved replacement

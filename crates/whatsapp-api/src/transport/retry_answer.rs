@@ -349,14 +349,15 @@ pub async fn complete_refetch(
         Err(error) => return Err(error),
     };
     let peer_key = format!("comparison-direct:{peer}");
-    let (source, identity): (Option<Vec<u8>>, Option<Vec<u8>>) = store.read(|tx| {
+    let (source, identity, previous_session) = store.read(|tx| {
         Ok((
-            tx.get_json(
+            tx.get_json::<Vec<u8>>(
                 Table::Checkpoints,
                 source_key(wire_id.as_str()).as_bytes(),
                 1,
             )?,
-            tx.get_json(Table::PeerIdentities, peer_key.as_bytes(), 1)?,
+            tx.get_json::<Vec<u8>>(Table::PeerIdentities, peer_key.as_bytes(), 1)?,
+            tx.get_json::<Vec<u8>>(Table::SignalSessions, peer_key.as_bytes(), 1)?,
         ))
     })?;
     let Some(source) = source else {
@@ -385,6 +386,7 @@ pub async fn complete_refetch(
         if state.as_ref().and_then(|v| v["query"].as_str()) != Some(query) {
             return Err(Error::invalid("retry", "answer changed before reservation"));
         }
+        ensure_refetch_peer_unchanged(tx, &peer_key, identity.as_deref(), previous_session.as_deref())?;
         // The consumed job, replacement session and reserved same-ID resend
         // commit together; preparation/storage failure leaves the fetch held.
         tx.delete(Table::Checkpoints, refetch_key(query).as_bytes())?;
@@ -409,6 +411,28 @@ pub async fn complete_refetch(
         tx.put_json(Table::Outbox, &current.local_id.0, 1, &current)
     })?;
     Ok(Some(Some(resend)))
+}
+
+// Local optimistic concurrency guard, not a native identity-reset policy.
+// Crypto preparation awaits outside the write transaction; a newer ratchet or
+// pin must survive rather than being overwritten by this prepared replacement.
+fn ensure_refetch_peer_unchanged(
+    tx: &WriteTx<'_>,
+    peer_key: &str,
+    identity: Option<&[u8]>,
+    session: Option<&[u8]>,
+) -> Result<()> {
+    let held_identity: Option<Vec<u8>> =
+        tx.get_json(Table::PeerIdentities, peer_key.as_bytes(), 1)?;
+    let held_session: Option<Vec<u8>> =
+        tx.get_json(Table::SignalSessions, peer_key.as_bytes(), 1)?;
+    if held_identity.as_deref() != identity || held_session.as_deref() != session {
+        return Err(Error::invalid(
+            "retry",
+            "peer state changed before refetch reservation",
+        ));
+    }
+    Ok(())
 }
 
 /// The original stanza with its `enc` re-encrypted and its protocol retry
@@ -546,6 +570,75 @@ mod tests {
                 .and_then(|v| v.as_text()),
             Some("9")
         );
+    }
+
+    #[test]
+    fn refetch_guard_preserves_newer_peer_state_and_pending_job() {
+        for changed_table in [Table::PeerIdentities, Table::SignalSessions] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = ProtocolStore::open(OpenOptions {
+                path: dir.path().join("peer-change.redb"),
+                account_id: AccountId::new("test").unwrap(),
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [7; 32],
+                ))),
+                create: true,
+            })
+            .unwrap();
+            let peer_key = "comparison-direct:15555550100@s.whatsapp.net";
+            store
+                .write(|tx| {
+                    tx.put_json(Table::PeerIdentities, peer_key.as_bytes(), 1, &vec![1u8])?;
+                    tx.put_json(Table::SignalSessions, peer_key.as_bytes(), 1, &vec![2u8])?;
+                    tx.put_json(
+                        Table::Checkpoints,
+                        refetch_key("Q1").as_bytes(),
+                        1,
+                        &Refetch {
+                            wire_id: "W1".into(),
+                            answer_key: "answer".into(),
+                            unanswered_key: "unanswered".into(),
+                            count: 2,
+                        },
+                    )
+                })
+                .unwrap();
+            store
+                .write(|tx| {
+                    ensure_refetch_peer_unchanged(tx, peer_key, Some(&[1]), Some(&[2]))?;
+                    Ok(())
+                })
+                .unwrap();
+            // Simulate another authenticated receive advancing the ratchet or
+            // replacing the pin while async crypto is being prepared.
+            store
+                .write(|tx| tx.put_json(changed_table, peer_key.as_bytes(), 1, &vec![9u8]))
+                .unwrap();
+            let snapshot = || {
+                store
+                    .read(|tx| {
+                        [
+                            Table::Checkpoints,
+                            Table::PeerIdentities,
+                            Table::SignalSessions,
+                        ]
+                        .into_iter()
+                        .map(|t| tx.scan(t, 1, 10000))
+                        .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot();
+            assert!(
+                store
+                    .write(|tx| {
+                        ensure_refetch_peer_unchanged(tx, peer_key, Some(&[1]), Some(&[2]))?;
+                        tx.delete(Table::Checkpoints, refetch_key("Q1").as_bytes())
+                    })
+                    .is_err()
+            );
+            assert_eq!(snapshot(), before);
+        }
     }
 
     #[tokio::test]
