@@ -1,3 +1,12 @@
+2026-11-04 — **Direct/group send preparation requires actual IQ reply types.**
+
+Same-ID non-reply IQs no longer fail direct intents or consume group membership/
+key waits. APK 43.72 0ln.A01 supports exact result/error callback admission.
+Encrypted-store regressions retain reservations and original intent across reopen.
+[Evidence, test scope and remaining gaps](docs/protocol/network-correctness-audit.md#send-preparation-reply-type-admission-2026-11-04).
+Validation: **1,276 workspace/all-feature tests**, strict Clippy, CLI reference,
+formatting, coverage freshness and repository hygiene passed. No live traffic.
+
 2026-11-04 — **Device-query non-reply IQs preserve uncertain state.**
 
 Exact result/error now required before matching and ingestion, grounded in

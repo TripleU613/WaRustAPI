@@ -488,3 +488,39 @@ full usync body parity. Unlike prekey upload, begin_query does not suppress a ne
 reservation simply because another query is uncertain: scheduling belongs to
 the receive cursor. No new reservation/retry guarantee is claimed by this test.
 Direct and group send preparation matchers remain under audit. No live traffic.
+
+## Send preparation reply type admission (2026-11-04)
+
+**Confirmed source defects / fixed offline:** direct outgoing Pending.matches
+and outgoing_group Pending.matches (membership and key variants) admitted any
+same-ID iq. The actor takes those pending objects before settlement. Direct
+prepare classified every non-result as refusal and marked the queued intent
+Failed; group membership/key settlement could block preparation or propagate
+an error without an actual result/error reply. They now require exact
+result/error before matching or settlement; distribution ACK admission is unchanged.
+Device waits delegate to the previously corrected DeviceQuery matcher.
+
+**Confirmed static basis:** APK **2.26.43.72**, **0ln.A01**, offsets 0014–004c,
+compares exact result/error and calls CK4/Bvj respectively. Other types are
+reported, never dispatched to either callback. See retained
+[dispatcher export](rea/2.26.43.72-reachout-state/reachout-iq-reply-dispatch.txt).
+This establishes callback type admission, not complete native pending-map
+lifetime parity: retaining uncertain durable Rust reservations is local policy,
+not proof the native callback remains registered after an unexpected type.
+
+**Regression / scope:** direct tests cover missing/get/set/uppercase/unknown
+with a misleading error child, unchanged full outbox/checkpoint/session rows,
+reopen and refusal to reserve that intent again. Group tests exercise membership
+and key wait admission before variant-specific settlement, preserve all five
+protocol tables across rejection/reopen, and refuse reselecting the intent.
+The key-wait test selects that enum variant explicitly; it is not evidence of
+full membership-to-key workflow parity. Existing group workflow tests cover
+ordinary result/error paths. Full reply-body, sender, timeout and account
+ownership policies remain open; no live account operation occurred.
+
+**Next confirmed source gap from bounded follow-up:** retry_answer.complete_refetch
+checks iq/id, loads and deletes its Refetch checkpoint, then treats every
+non-result as refetch_refused. It is called before the corrected outgoing
+matchers in connection.rs. The same callback-type admission issue remains there;
+fixing it requires a separate refetch checkpoint/retry-history regression. This
+chunk does not claim that retry refetch or activation admission is corrected.

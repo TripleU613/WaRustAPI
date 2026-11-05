@@ -958,6 +958,67 @@ pub(super) mod tests {
     }
 
     #[tokio::test]
+    async fn non_reply_iqs_cannot_consume_group_membership_or_key_waits() {
+        for keys in [false, true] {
+            for kind in [
+                None,
+                Some("get"),
+                Some("set"),
+                Some("RESULT"),
+                Some("unexpected"),
+            ] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("group-nonreply.redb");
+                let store = group_fanout::tests::open(&path);
+                let f = group_fanout::tests::fixture();
+                let id = enqueue(&store, &f.plan.chat, "nonreply");
+                let (mut pending, query) = begin_selected(&store, id).unwrap().unwrap();
+                // Exercise the shared IQ admission for both wait variants before
+                // any variant-specific settlement. No fake key reply is applied.
+                if keys {
+                    pending.waiting = Waiting::Keys("key-query".into());
+                }
+                let iq_id = if keys {
+                    "key-query"
+                } else {
+                    query.get_attr("id").unwrap().as_text().unwrap()
+                };
+                for reply_type in ["result", "error"] {
+                    assert!(
+                        pending
+                            .matches(&Node::new("iq").attr("id", iq_id).attr("type", reply_type))
+                    );
+                }
+                let mut node = Node::new("iq")
+                    .attr("id", iq_id)
+                    .children(vec![Node::new("error").attr("code", "503")]);
+                if let Some(kind) = kind {
+                    node = node.attr("type", kind);
+                }
+                let before = rows(&store);
+                assert!(!pending.matches(&node));
+                assert!(
+                    pending
+                        .settle(
+                            &store,
+                            &f.alice,
+                            &node,
+                            ConnectionEpoch(1),
+                            &mut devices::DeviceSyncCursor::default()
+                        )
+                        .await
+                        .is_err()
+                );
+                assert_eq!(rows(&store), before);
+                drop(store);
+                let store = group_fanout::tests::open(&path);
+                assert_eq!(rows(&store), before);
+                assert!(begin_selected(&store, id).unwrap().is_none());
+            }
+        }
+    }
+
+    #[tokio::test]
     async fn refused_partial_and_interrupted_queries_preserve_original_intents_and_do_not_reselect()
     {
         for cut in [
@@ -1545,6 +1606,8 @@ impl Pending {
             Waiting::Membership(id) | Waiting::Keys(id) => {
                 node.description == "iq"
                     && node.get_attr("id").and_then(|v| v.as_text()) == Some(id)
+                    // APK 43.72 0ln.A01 admits only result/error callbacks.
+                    && matches!(node.get_attr("type").and_then(|v| v.as_text()), Some("result" | "error"))
             }
             Waiting::Devices(query) => query.matches(node),
             Waiting::Distribution { id, .. } => {

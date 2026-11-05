@@ -707,6 +707,8 @@ impl Pending {
     pub fn matches(&self, node: &Node) -> bool {
         node.description == "iq"
             && node.get_attr("id").and_then(|v| v.as_text()) == Some(self.query_id.as_str())
+            // APK 43.72 0ln.A01: only result/error reach IQ callbacks.
+            && matches!(node.get_attr("type").and_then(|v| v.as_text()), Some("result" | "error"))
     }
     fn suspend_identity(
         &self,
@@ -2117,7 +2119,13 @@ mod tests {
             query.get_attr("xmlns").and_then(|v| v.as_text()),
             Some("encrypt")
         );
-        assert!(pending.matches(&Node::new("iq").attr("id", pending.query_id.as_str())));
+        assert!(
+            pending.matches(
+                &Node::new("iq")
+                    .attr("id", pending.query_id.as_str())
+                    .attr("type", "result")
+            )
+        );
         assert!(
             store
                 .read(|tx| tx.get(Table::Checkpoints, query_key(id).as_bytes(), 1))
@@ -2620,6 +2628,55 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn non_reply_iqs_cannot_fail_direct_intents_or_release_queries() {
+        for kind in [
+            None,
+            Some("get"),
+            Some("set"),
+            Some("RESULT"),
+            Some("unexpected"),
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("direct-nonreply.redb");
+            let store = open(&path);
+            let id = enqueue(&store);
+            let (pending, _) = begin(&store).unwrap().unwrap();
+            let snapshot = |store: &ProtocolStore| {
+                store
+                    .read(|tx| {
+                        Ok((
+                            tx.scan(Table::Outbox, 1, 10000)?,
+                            tx.scan(Table::Checkpoints, 1, 10000)?,
+                            tx.scan(Table::SignalSessions, 1, 10000)?,
+                        ))
+                    })
+                    .unwrap()
+            };
+            let before = snapshot(&store);
+            let mut node = Node::new("iq")
+                .attr("id", pending.query_id.as_str())
+                .children(vec![Node::new("error").attr("code", "503")]);
+            if let Some(kind) = kind {
+                node = node.attr("type", kind);
+            }
+            assert!(!pending.matches(&node));
+            let fixture = super::super::group_fanout::tests::fixture();
+            assert!(
+                pending
+                    .prepare(&store, &fixture.alice, &node, ConnectionEpoch(1))
+                    .await
+                    .is_err()
+            );
+            assert_eq!(snapshot(&store), before);
+            assert!(begin_selected(&store, Some(id)).unwrap().is_none());
+            drop(store);
+            let store = open(&path);
+            assert_eq!(snapshot(&store), before);
+            assert!(begin_selected(&store, Some(id)).unwrap().is_none());
+        }
+    }
+
+    #[tokio::test]
     async fn query_reservation_survives_restart_without_repeating_requests() {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("outbox.redb");
@@ -2627,9 +2684,13 @@ mod tests {
         let local_id = enqueue(&store);
         let (pending, query) = begin(&store).unwrap().unwrap();
         assert_eq!(pending.local_id, local_id);
-        assert!(pending.matches(
-            &Node::new("iq").attr("id", query.get_attr("id").unwrap().as_text().unwrap())
-        ));
+        assert!(
+            pending.matches(
+                &Node::new("iq")
+                    .attr("id", query.get_attr("id").unwrap().as_text().unwrap())
+                    .attr("type", "result")
+            )
+        );
         assert!(!pending.matches(&Node::new("iq").attr("id", "wrong")));
         assert!(begin(&store).unwrap().is_none());
         drop(store);

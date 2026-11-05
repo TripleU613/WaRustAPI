@@ -251,3 +251,9 @@ group texts. Whether the APK uses `sent_add_on_sender_key` for the
 same purpose is still untraced. `reaction_distribution_unsupported` remains
 only on preparations saved before the change; a refused distribution ACK blocks
 as `distribution_refused` with the reserved reaction left uncertain, never sent.
+
+## Normal-outbox reply type correction (2026-11-04)
+
+**Confirmed / implemented offline:** membership and key waits require matching
+iq/id and exact result/error; device waits share DeviceQuery admission. ACK-based
+distributions are unchanged. [APK 43.72 0ln.A01 evidence and persistence tests](network-correctness-audit.md#send-preparation-reply-type-admission-2026-11-04).
