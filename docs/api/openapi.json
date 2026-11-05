@@ -15999,5 +15999,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-startup-session-hooks/README.md",
     "description": "Selected post-availability startup hooks record session/uptime and conditionally hand offline-resume metrics to a sink. Persisted metrics are removed before parse/handoff. Sink invocation does not prove transmission, mandatory telemetry or application completion. Full sink transport, offline-complete semantics and durable generation recovery remain open. No sender, retry, route or live operation added."
+  },
+  "x-startup-metrics-sink-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-startup-metrics-sink/README.md",
+    "description": "Startup metrics provider959 resolves to a configuration-selected sink. Primary sampling can drop before local queueing; routing predicates can select primary or alternate paths. This is not proof of mandatory per-connect telemetry or network delivery. Full source authority, predicates, buffers, transport, responses and durable generation recovery remain open. No telemetry event, sender, route or live operation added."
   }
 }

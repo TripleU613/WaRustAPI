@@ -1,0 +1,33 @@
+# class: LX/0NY;
+# extends: Ljava/lang/Object;
+
+.method private A01(VLI)  # .registers 7
+    # full signature: LX/0NY;->A01(LX/0FP;I)V
+    0000..0004  iget  v1, v5, LX/0FP;->bufferChannel:I
+    0004..0006  const/4  v0, #0x3
+    0006..000a  if-ne  v1, v0, +0x1d
+    000a..000e  sget-object  v2, LX/Gtg;->A01:[I
+    000e..0012  iget  v3, v5, LX/0FP;->code:I
+    0012..0014  const/4  v1, #0x0
+    0014..0018  aget  v0, v2, v1
+    0018..001c  if-eq  v0, v3, +0x14
+    001c..0020  add-int/lit8  v1, v1, #0x1
+    0020..0022  const/4  v0, #0x5
+    0022..0026  if-lt  v1, v0, -0x7
+    0026..002a  sget-object  v2, LX/Gtg;->A00:[I
+    002a..002c  const/4  v1, #0x0
+    002c..0030  aget  v0, v2, v1
+    0030..0034  if-eq  v0, v3, +0x8
+    0034..0038  add-int/lit8  v1, v1, #0x1
+    0038..003a  const/4  v0, #0x3
+    003a..003e  if-ge  v1, v0, +0x11
+    003e..0040  goto  -0x9
+    0040..0044  const/16  v0, #0xe
+    0044..0048  new-instance  v1, LX/KTj;
+    0048..004e  invoke-direct  {v1, v5, v6, v0, v4}, LX/KTj;-><init>(Ljava/lang/Object;IILjava/lang/Object;)V
+    004e..0052  iget-object  v0, v4, LX/0NY;->A09:LX/0NR;
+    0052..0056  iget-object  v0, v0, LX/0NR;->A01:LX/098;
+    0056..005c  invoke-virtual  {v0, v1}, LX/098;->execute(Ljava/lang/Runnable;)V
+    005c..005e  return-void
+    # exception table: 0 try range(s)
+.end method

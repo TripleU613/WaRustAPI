@@ -5808,3 +5808,13 @@ completion, mandatory telemetry or request replay authority.
 [Complete methods, explicit worker excerpts and limits](apk/2.26.43.72-startup-session-hooks/README.md).
 Full sink transport/sampling, offline-complete semantics and durable/generation
 recovery remain open. No Rust behavior or live account operation changed.
+
+### Startup metrics sink selection and sampling (2026-11-05)
+
+**Confirmed static, APK43.72:** metrics provider959 resolves to a factory selecting
+0NY,KJu orKJv by configuration. PrimaryCSJ can drop via nullable sampling result;
+accepted events reach another conditional local queue. Routing may target primary,
+alternate or both, not a universal per-connect network write.
+[Factory route, complete entries, metadata and limits](apk/2.26.43.72-startup-metrics-sink/README.md).
+Full predicates, event authority, queue/transport, responses and durable generation
+recovery remain open. No Rust behavior or live account operation changed.

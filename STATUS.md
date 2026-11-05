@@ -1,3 +1,11 @@
+2026-11-05 — **Startup metrics sink factory and primary sampling traced.**
+
+Configuration selects one of three sinks; primary admission can drop or queue.
+Neither a metrics call nor scheduling proves a network write or delivery.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-startup-metrics-sink/README.md).
+Research only; no runtime changes or live traffic. Validation: pinned APK digest,
+checked exports/excerpt, checksums, JSON, coverage freshness and hygiene.
+
 2026-11-05 — **Post-availability session bookkeeping and metrics traced.**
 
 Selected hooks record session/uptime and conditionally hand offline-resume

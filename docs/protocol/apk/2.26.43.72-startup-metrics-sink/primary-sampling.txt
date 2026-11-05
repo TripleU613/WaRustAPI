@@ -1,0 +1,29 @@
+# class: LX/0NY;
+# extends: Ljava/lang/Object;
+
+.method public CSJ(VLLZ)  # .registers 7
+    # full signature: LX/0NY;->CSJ(LX/0FP;LX/011;Z)V
+    0000..0004  iget-object  v1, v3, LX/0NY;->A0F:LX/0FU;
+    0004..0008  iget  v0, v4, LX/0FP;->code:I
+    0008..000c  if-nez  v5, +0x4
+    000c..0010  iget-object  v5, v4, LX/0FP;->samplingRate:LX/011;
+    0010..0016  invoke-virtual  {v1, v5, v0, v6}, LX/0FU;->A00(LX/011;IZ)Ljava/lang/Integer;
+    0016..0018  move-result-object  v2
+    0018..001c  if-eqz  v2, +0x20
+    001c..0022  invoke-virtual  {v2}, Ljava/lang/Number;->intValue()I
+    0022..0024  move-result  v0
+    0024..002a  invoke-direct  {v3, v4, v0}, LX/0NY;->A01(LX/0FP;I)V
+    002a..002e  const-string  v0, "(sampled with weight "
+    002e..0032  new-instance  v1, Ljava/lang/StringBuilder;
+    0032..0038  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0038..003e  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    003e..0042  const-string  v0, ")"
+    0042..0048  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0048..004e  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    004e..0050  move-result-object  v0
+    0050..0056  invoke-direct  {v3, v4, v0}, LX/0NY;->A02(LX/0FP;Ljava/lang/String;)V
+    0056..0058  return-void
+    0058..005c  const-string  v0, "(dropped)"
+    005c..005e  goto  -0x6
+    # exception table: 0 try range(s)
+.end method
