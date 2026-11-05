@@ -1,3 +1,10 @@
+2026-11-05 — **Retry refetch settlement ownership strengthened.**
+
+Refusal and resend reservation now recheck the pending job snapshot and exact
+fetching/query/count checkpoint before consumption. Changed jobs/terminal or
+legacy markers remain held without overwriting peer or retry state.
+[Race regressions and limits](retry-answers.md#refetch-completion-ownership-guard-2026-11-05). No new send or success ACK.
+
 2026-11-05 — **Retry schema-error ACK context corrected.**
 
 Confirmed required-field/ASCII numeric errors now receive487 with fresh native

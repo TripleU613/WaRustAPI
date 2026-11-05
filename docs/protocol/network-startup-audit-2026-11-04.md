@@ -874,3 +874,10 @@ Confirmed required-field/ASCII numeric errors now receive487 with fresh native
 context, omitting recipient/edit. Unsupported-version487 keeps its copied context;
 first-error order and local capability refusals remain distinct.
 [Evidence, tests and limits](retry-ack-dispatch.md#required-field-parsing-error-responses--2026-11-05). No live traffic.
+
+2026-11-05 — **Retry refetch settlement ownership strengthened.**
+
+Refusal and resend reservation now recheck the pending job snapshot and exact
+fetching/query/count checkpoint before consumption. Changed jobs/terminal or
+legacy markers remain held without overwriting peer or retry state.
+[Race regressions and limits](retry-answers.md#refetch-completion-ownership-guard-2026-11-05). No new send or success ACK.

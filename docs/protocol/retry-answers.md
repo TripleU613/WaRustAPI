@@ -325,3 +325,42 @@ retry.t and preserves the independent root ACK/correlation policy.
 The [original-chat guard](retry-original-chat.md) now honors supported explicit
 recipient selection and validates chat plus message/device against the saved
 original. Unknown alias/property/fallback behavior is not claimed ported.
+
+## Refetch completion ownership guard (2026-11-05)
+
+**Confirmed local correction / implemented offline:** complete_refetch formerly
+checked only answer.query before both its refusal transaction and the successful
+resend reservation. The pending Refetch row had been read before asynchronous
+crypto; neither settlement compared that row again or required answer.status
+fetching and matching numeric count. A replaced pending job could be deleted,
+or a terminal/legacy marker carrying the same query overwritten. This is a
+local concurrency/persistence finding, not a newly discovered APK wire rule.
+
+Both consuming transactions now call ensure_refetch_owned. It re-reads the
+pending typed job and compares wire_id/answer_key/unanswered_key/count with the
+loaded snapshot. It also requires supported count1/2 and an answer checkpoint
+with status=fetching, exact query, and the same numeric count. Missing/replaced
+job or mismatched/legacy answer returns a redacted InvalidInput before any job
+retirement, refusal write, new attempt or peer-state update. No repair, resend
+or checkpoint reset occurs. Existing outbox-age/delivery/snapshot and identity/
+session guards still apply to the successful reservation.
+
+A deterministic interleaving regression changes each job field, removes rows,
+or changes status/query/count/count type/legacy marker between load and guarded
+consumption. Refused snapshots are byte-preserved across reopening across
+checkpoints/outbox/session/pin tables. The unchanged job settles once; a second
+consumption is refused. The actual complete_refetch refusal entrypoint also
+preserves missing/stale/legacy answer state. This is not a live callback/thread
+scheduler race; existing full saved/fresh crypto workflow and store-fault
+rollback tests remain in the workspace suite.
+
+[Selected APK deferred-work/ACK ordering](apk/2.26.43.72-retry-version-error-ack/README.md)
+motivates keeping admission, durable work and eventual send distinct, but does
+not establish parity between Rust checkpoint rows and native queues. This
+correction adds no network operation or retry success ACK. A supported success
+ACK/durable-work handoff, native ACK recovery/replay behavior, other retry
+families and full registration/routing remain unfinished. No account traffic.
+
+Validation:1324 workspace/all-feature tests passed, including the three filtered
+refetch tests. Strict workspace/all-target/all-feature Clippy, formatting, CLI
+reference regeneration, APK coverage and repository hygiene passed. All offline.

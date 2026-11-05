@@ -272,12 +272,39 @@ fn refetch_key(query: &str) -> String {
 }
 
 /// A retry answer waiting for the device's fresh prekey bundle.
-#[derive(serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 struct Refetch {
     wire_id: String,
     answer_key: String,
     unanswered_key: String,
     count: u32,
+}
+
+// A delayed directory callback owns exactly the job it loaded and a fetching
+// answer for that query/count. Recheck both in the transaction that consumes
+// them; checking only query permits replacing a newer job or terminal marker.
+fn ensure_refetch_owned(tx: &mut WriteTx<'_>, query: &str, job: &Refetch) -> Result<()> {
+    let current: Option<Refetch> =
+        tx.get_json(Table::Checkpoints, refetch_key(query).as_bytes(), 1)?;
+    if current.as_ref() != Some(job) {
+        return Err(Error::invalid(
+            "retry",
+            "pending refetch changed before settlement",
+        ));
+    }
+    let state: Option<serde_json::Value> =
+        tx.get_json(Table::Checkpoints, job.answer_key.as_bytes(), 1)?;
+    if !matches!(job.count, 1 | 2)
+        || state.as_ref().and_then(|v| v["status"].as_str()) != Some("fetching")
+        || state.as_ref().and_then(|v| v["query"].as_str()) != Some(query)
+        || state.as_ref().and_then(|v| v["count"].as_u64()) != Some(u64::from(job.count))
+    {
+        return Err(Error::invalid(
+            "retry",
+            "refetch answer ownership changed before settlement",
+        ));
+    }
+    Ok(())
 }
 
 // Reserving a key query must use the same eligibility snapshot as the retry
@@ -351,11 +378,7 @@ pub async fn complete_refetch(
     };
     let refuse = |reason: &str| -> Result<Option<Option<Node>>> {
         store.write(|tx| {
-            let state: Option<serde_json::Value> =
-                tx.get_json(Table::Checkpoints, job.answer_key.as_bytes(), 1)?;
-            if state.as_ref().and_then(|v| v["query"].as_str()) != Some(query) {
-                return Err(Error::invalid("retry", "answer changed before refusal"));
-            }
+            ensure_refetch_owned(tx, query, &job)?;
             // Retire the fetch only with both durable refusal records. A store
             // fault must not leave a fetching answer without its pending job.
             tx.delete(Table::Checkpoints, refetch_key(query).as_bytes())?;
@@ -461,11 +484,7 @@ pub async fn complete_refetch(
     let resend = replace_enc(&original, prepared.kind, prepared.ciphertext, job.count)?;
     let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(&resend)?;
     store.write(|tx| {
-        let state: Option<serde_json::Value> =
-            tx.get_json(Table::Checkpoints, job.answer_key.as_bytes(), 1)?;
-        if state.as_ref().and_then(|v| v["query"].as_str()) != Some(query) {
-            return Err(Error::invalid("retry", "answer changed before reservation"));
-        }
+        ensure_refetch_owned(tx, query, &job)?;
         ensure_retry_peer_unchanged(tx, &peer_key, identity.as_deref(), previous_session.as_deref())?;
         // The consumed job, replacement session and reserved same-ID resend
         // commit together; preparation/storage failure leaves the fetch held.
@@ -978,6 +997,159 @@ mod tests {
             } else {
                 assert!(result.is_err(), "{change}");
                 assert_eq!(snapshot(), before, "{change}");
+            }
+        }
+    }
+
+    #[tokio::test]
+    async fn refetch_settlement_preserves_replaced_job_and_non_fetching_answer() {
+        for change in [
+            "unchanged",
+            "missing_job",
+            "wire_id",
+            "answer_key",
+            "unanswered_key",
+            "job_count",
+            "missing_answer",
+            "status",
+            "query",
+            "count",
+            "string_count",
+            "legacy",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("refetch-ownership.redb");
+            let open = || {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: AccountId::new("test").unwrap(),
+                    key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                        [7; 32],
+                    ))),
+                    create: true,
+                })
+                .unwrap()
+            };
+            let store = open();
+            let expected = Refetch {
+                wire_id: "W1".into(),
+                answer_key: "answer".into(),
+                unanswered_key: "unanswered".into(),
+                count: 2,
+            };
+            store
+                .write(|tx| {
+                    tx.put_json(
+                        Table::Checkpoints,
+                        refetch_key("Q1").as_bytes(),
+                        1,
+                        &expected,
+                    )?;
+                    tx.put_json(
+                        Table::Checkpoints,
+                        b"answer",
+                        1,
+                        &serde_json::json!({"status":"fetching", "query":"Q1", "count":2}),
+                    )
+                })
+                .unwrap();
+            // Snapshot was loaded before another transaction changed ownership.
+            store
+                .write(|tx| {
+                    let mut job = expected.clone();
+                    match change {
+                        "missing_job" => {
+                            tx.delete(Table::Checkpoints, refetch_key("Q1").as_bytes())?;
+                        }
+                        "wire_id" | "answer_key" | "unanswered_key" | "job_count" => {
+                            match change {
+                                "wire_id" => job.wire_id = "W2".into(),
+                                "answer_key" => job.answer_key = "new-answer".into(),
+                                "unanswered_key" => job.unanswered_key = "new-unanswered".into(),
+                                _ => job.count = 1,
+                            }
+                            tx.put_json(Table::Checkpoints, refetch_key("Q1").as_bytes(), 1, &job)?;
+                        }
+                        "missing_answer" => {
+                            tx.delete(Table::Checkpoints, b"answer")?;
+                        }
+                        "status" | "query" | "count" | "string_count" | "legacy" => {
+                            let mut state =
+                                serde_json::json!({"status":"fetching", "query":"Q1", "count":2});
+                            match change {
+                                "status" => state["status"] = "reserved".into(),
+                                "query" => state["query"] = "Q2".into(),
+                                "count" => state["count"] = 1.into(),
+                                "string_count" => state["count"] = "2".into(),
+                                _ => state = serde_json::json!({"query":"Q1"}),
+                            }
+                            tx.put_json(Table::Checkpoints, b"answer", 1, &state)?;
+                        }
+                        _ => {}
+                    }
+                    Ok(())
+                })
+                .unwrap();
+            let snapshot = |store: &ProtocolStore| {
+                store
+                    .read(|tx| {
+                        [
+                            Table::Checkpoints,
+                            Table::Outbox,
+                            Table::SignalSessions,
+                            Table::PeerIdentities,
+                        ]
+                        .into_iter()
+                        .map(|t| tx.scan(t, 1, 10000))
+                        .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot(&store);
+            let result = store.write(|tx| {
+                ensure_refetch_owned(tx, "Q1", &expected)?;
+                tx.delete(Table::Checkpoints, refetch_key("Q1").as_bytes())?;
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"answer",
+                    1,
+                    &serde_json::json!({"status":"reserved"}),
+                )
+            });
+            if change == "unchanged" {
+                result.unwrap();
+                let settled = snapshot(&store);
+                assert!(
+                    store
+                        .write(|tx| ensure_refetch_owned(tx, "Q1", &expected))
+                        .is_err()
+                );
+                assert_eq!(snapshot(&store), settled);
+            } else {
+                assert!(result.is_err(), "{change}");
+                assert_eq!(snapshot(&store), before, "{change}");
+                // Real refusal entrypoint must not retire a job on a stale or
+                // legacy answer marker, even with an otherwise matching query.
+                if matches!(
+                    change,
+                    "missing_answer" | "status" | "query" | "count" | "string_count" | "legacy"
+                ) {
+                    let reply = Node::new("iq").attr("id", "Q1").attr("type", "error");
+                    assert!(
+                        complete_refetch(
+                            &store,
+                            &AccountRecord::default(),
+                            &reply,
+                            ConnectionEpoch(1)
+                        )
+                        .await
+                        .is_err()
+                    );
+                    assert_eq!(snapshot(&store), before);
+                }
+                drop(store);
+                let store = open();
+                assert_eq!(snapshot(&store), before, "{change}");
             }
         }
     }

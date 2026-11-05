@@ -1,5 +1,11 @@
 {
   "openapi": "3.1.0",
+  "x-retry-refetch-settlement-ownership": {
+    "x-cli": false,
+    "x-transport": "normal direct retry refetch completion persistence guard",
+    "x-live": false,
+    "description": "Both delayed retry refetch refusal and successful resend reservation now re-read and compare pending typed job wire_id/answer_key/unanswered_key/count, requiring supported count1/2 and exact fetching/query/numeric count checkpoint before consuming it. Missing/replaced jobs, terminal/mismatched/legacy markers return a redacted local error without state retirement or replay. Existing original/peer snapshot guards remain. Deterministic race/reopen and actual refusal-entrypoint regressions; not native queue parity or live acceptance. No route, new send or successful retry ACK. docs/protocol/retry-answers.md#refetch-completion-ownership-guard-2026-11-05"
+  },
   "x-retry-parse-error-ack": {
     "x-cli": false,
     "x-transport": "shared normal and comparison receipt confirmation",
