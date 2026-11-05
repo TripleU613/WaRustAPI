@@ -37,8 +37,10 @@ Full job-queue retry/backoff/terminal dispatch remains unported.
 
 0ht.A0V normalizes the user, uses conditional sent/real_issue timestamp updates
 and an insert fallback before later cache/counterpart effects. Complete selected
-body is retained; this chunk does not port its persistence/counterpart behavior
-or equate a queued sent timestamp with successful issuance.
+body is retained. Its selected direct-user timestamp persistence is now
+[ported with SQL-vector and rollback tests](../2.26.43.72-token-success-state/README.md).
+Counterpart/cache policy remains unported; a queued sent timestamp is not
+proof of successful issuance.
 
 ## Send-time gap identified in the preceding chunk
 

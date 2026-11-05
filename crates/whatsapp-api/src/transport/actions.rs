@@ -94,6 +94,8 @@ struct Row {
     created_at: Timestamp,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     deferred_reason: Option<ActionDeferReason>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    token_issue_completion: Option<super::token_issue::TokenIssueCompletion>,
     #[serde(default)]
     sent_at: Option<Timestamp>,
     #[serde(default)]
@@ -124,6 +126,9 @@ pub struct ActionOutcome {
     /// Last local reservation deferral; cleared when the action is reserved.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub deferred_reason: Option<ActionDeferReason>,
+    /// Local timestamp effect recorded atomically with a trusted-contact result.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub token_issue_completion: Option<super::token_issue::TokenIssueCompletion>,
     /// Server error code when refused.
     pub error_code: Option<u16>,
     /// Server error text when refused.
@@ -177,6 +182,7 @@ fn queue_prepared_in(
         status: ActionStatus::Queued,
         created_at: Timestamp::now(),
         deferred_reason: None,
+        token_issue_completion: None,
         sent_at: None,
         settled_at: None,
         settlement_sequence: None,
@@ -220,6 +226,7 @@ pub(crate) fn view_in_write(
             label: row.label,
             status: row.status,
             deferred_reason: row.deferred_reason,
+            token_issue_completion: row.token_issue_completion,
             error_code: row.error_code,
             error_text: row.error_text,
         },
@@ -251,6 +258,7 @@ pub(crate) fn view_in(
             label: row.label,
             status: row.status,
             deferred_reason: row.deferred_reason,
+            token_issue_completion: row.token_issue_completion,
             error_code: row.error_code,
             error_text: row.error_text,
         },
@@ -667,6 +675,10 @@ pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
                     .or_else(|| node.child("error"))
             };
         if kind == Some("result") && inner_error.is_none() {
+            if privacy_token_result {
+                row.token_issue_completion =
+                    Some(super::token_issue::record_success_in(tx, id, &request)?);
+            }
             row.status = ActionStatus::Ok;
         } else {
             row.status = ActionStatus::Error;
@@ -757,6 +769,7 @@ pub fn outcomes(store: &ProtocolStore) -> Result<Vec<ActionOutcome>> {
                     label: row.label,
                     status: row.status,
                     deferred_reason: row.deferred_reason,
+                    token_issue_completion: row.token_issue_completion,
                     error_code: row.error_code,
                     error_text: row.error_text,
                 });
@@ -793,6 +806,7 @@ pub(crate) fn outcomes_in_write(tx: &crate::store::WriteTx<'_>) -> Result<Vec<Ac
                 label: row.label,
                 status: row.status,
                 deferred_reason: row.deferred_reason,
+                token_issue_completion: row.token_issue_completion,
                 error_code: row.error_code,
                 error_text: row.error_text,
             });
@@ -899,6 +913,7 @@ pub fn settled_for_kinds(
                     label: row.label,
                     status: row.status,
                     deferred_reason: row.deferred_reason,
+                    token_issue_completion: row.token_issue_completion,
                     error_code: row.error_code,
                     error_text: row.error_text,
                 };
@@ -1752,6 +1767,14 @@ mod tests {
                 assert_eq!(
                     saved.error_code,
                     if outcome == "error" { Some(403) } else { None }
+                );
+                assert_eq!(
+                    saved.token_issue_completion,
+                    if outcome == "result" {
+                        Some(token_issue::TokenIssueCompletion::ScheduledTimestampConfirmed)
+                    } else {
+                        None
+                    }
                 );
                 if outcome == "expire" {
                     assert_eq!(

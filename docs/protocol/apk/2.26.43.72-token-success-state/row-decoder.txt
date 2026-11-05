@@ -1,0 +1,34 @@
+
+# class: LX/0hv;
+# extends: LX/0ai;
+
+.method public A08(LL)  # .registers 8
+    # full signature: LX/0hv;->A08(Landroid/database/Cursor;)LX/7p3;
+    0000..0004  const-string  v0, "real_issue_timestamp"
+    0004..000a  invoke-interface  {v7, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    000a..000c  move-result  v1
+    000c..0010  const-string  v0, "sent_tc_token_timestamp"
+    0010..0016  invoke-interface  {v7, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0016..0018  move-result  v0
+    0018..001e  invoke-interface  {v7, v0}, Landroid/database/Cursor;->getLong(I)J
+    001e..0020  move-result-wide  v5
+    0020..0026  invoke-interface  {v7, v1}, Landroid/database/Cursor;->isNull(I)Z
+    0026..0028  move-result  v0
+    0028..002c  if-eqz  v0, +0xc
+    002c..0032  invoke-static  {v5, v6}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0032..0034  move-result-object  v1
+    0034..0038  new-instance  v0, LX/7p3;
+    0038..003e  invoke-direct  {v0, v1, v5, v6}, LX/7p3;-><init>(Ljava/lang/Long;J)V
+    003e..0040  return-object  v0
+    0040..0046  invoke-interface  {v7, v1}, Landroid/database/Cursor;->getLong(I)J
+    0046..0048  move-result-wide  v3
+    0048..004c  const-wide/16  v1, #0x0
+    004c..0050  cmp-long  v0, v3, v1
+    0050..0054  if-nez  v0, +0x4
+    0054..0056  const/4  v1, #0x0
+    0056..0058  goto  -0x11
+    0058..005e  invoke-static  {v3, v4}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    005e..0060  move-result-object  v1
+    0060..0062  goto  -0x16
+    # exception table: 0 try range(s)
+.end method

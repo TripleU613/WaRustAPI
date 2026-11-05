@@ -1,0 +1,27 @@
+
+# class: LX/FKt;
+# extends: Ljava/lang/Object;
+
+.method public ATc(VLL)  # .registers 8
+    # full signature: LX/FKt;->ATc(LX/0MT;LX/0MY;)V
+    0000..0006  invoke-static  {v7}, LX/6oh;->A0c(Ljava/lang/Object;)LX/0Me;
+    0006..0008  move-result-object  v4
+    0008..000a  const/4  v0, #0x3
+    000a..000e  new-array  v3, v0, [LX/0Mf;
+    000e..0012  const-string  v0, "jid"
+    0012..0018  invoke-static  {v4, v0}, LX/DBf;->A18(LX/0Me;Ljava/lang/String;)V
+    0018..001e  invoke-static  {v4, v3}, LX/6ok;->A1Z(LX/0Me;[Ljava/lang/Object;)Z
+    001e..0020  move-result  v2
+    0020..0024  const-string  v0, "sent_tc_token_timestamp"
+    0024..0028  iput-object  v0, v4, LX/0Me;->A02:Ljava/lang/String;
+    0028..002c  sget-object  v1, LX/0Mg;->A08:LX/0Mg;
+    002c..0030  iput-object  v1, v4, LX/0Me;->A00:LX/0Mg;
+    0030..0034  iput-boolean  v2, v4, LX/0Me;->A06:Z
+    0034..003a  invoke-static  {v4, v3, v2}, LX/6of;->A1I(LX/0Me;[Ljava/lang/Object;I)V
+    003a..003e  const-string  v0, "real_issue_timestamp"
+    003e..0044  invoke-static  {v4, v1, v0, v3}, LX/6ok;->A0w(LX/0Me;LX/0Mg;Ljava/lang/String;[Ljava/lang/Object;)V
+    0044..004a  const-string/jumbo  v0, "wa_trusted_contacts_send"
+    004a..0050  invoke-interface  {v7, v0, v3}, LX/0MY;->CWk(Ljava/lang/String;[LX/0Mf;)V
+    0050..0052  return-void
+    # exception table: 0 try range(s)
+.end method

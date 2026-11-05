@@ -557,6 +557,16 @@
       }
     },
     "schemas": {
+      "TokenIssueCompletion": {
+        "type": "string",
+        "enum": [
+          "scheduled_timestamp_confirmed",
+          "earlier_issue_timestamp_advanced",
+          "inserted_completed_state",
+          "no_timestamp_change"
+        ],
+        "description": "Local selected direct-user timestamp persistence effect of a correlated token result, not delivery, effective expiry or a retry permit."
+      },
       "ActionDeferReason": {
         "type": "string",
         "enum": [
@@ -1062,6 +1072,10 @@
           "deferred_reason": {
             "$ref": "#/components/schemas/ActionDeferReason",
             "description": "Optional last local reservation deferral; cleared when reserved. Omitted when absent."
+          },
+          "token_issue_completion": {
+            "$ref": "#/components/schemas/TokenIssueCompletion",
+            "description": "Optional trusted-contact result effect saved atomically with settlement; omitted for legacy/unrelated/unsuccessful actions. No raw user/time."
           }
         },
         "description": "Outcome of a one-shot queued action. Settlement receive order is a local journal property, not a server field. Session-specific pending group recovery also uses the sequenced order across group action kinds; unknown-order legacy pending replies remain preserved without projection, marker consumption or resend. Evidence and legacy limitations: docs/protocol/action-settlement-ordering.md.",
@@ -16704,5 +16718,15 @@
     "x-live": false,
     "description": "Static APK 2.26.43.72 0A8.B8Q/0El mapping gives nonzero MobileConfig specifiers for 865/909/996/997. DI ID66 binds08Y; ID252 binds0A8. One BPZ branch marks SDK readiness and resets cache. These are not effective account values or a runtime port. Reproduce with existing xtask apk-smali and retained Python derivation.",
     "evidence": "docs/protocol/apk/2.26.43.72-token-mobileconfig-binding/README.md"
+  },
+  "x-trusted-contact-success-state": {
+    "x-cli": true,
+    "x-transport": "experimental",
+    "x-live": false,
+    "description": "Trusted-contact result settlement now applies captured request user/time to selected 0ht.A0V timestamp state atomically with the action. Older callbacks preserve newer schedules. A0W metadata carry/reset is ported. Optional ActionOutcome.token_issue_completion appears in existing actions plain/JSON. Legacy history is not inferred or backfilled. Full configured, counterpart/cache and job policies remain unfinished.",
+    "evidence": "docs/protocol/apk/2.26.43.72-token-success-state/README.md",
+    "x-library": [
+      "whatsapp_api::transport::token_issue::TokenIssueCompletion"
+    ]
   }
 }

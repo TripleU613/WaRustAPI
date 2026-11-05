@@ -241,3 +241,18 @@ One producer is closed, not the complete initialization or override lifecycle.
 [Exact specifiers, full methods, derivation and binary-asset boundary](apk/2.26.43.72-token-mobileconfig-binding/README.md).
 Effective account integers, parameter-map defaults and configured token policy
 remain unported. No send policy changed and no live account traffic occurred.
+
+## Trusted-contact successful issue state — 2026-11-05
+
+Confirmed current 0ht.A0V/8R8.CK4 selected timestamp persistence now accompanies
+Rust token action settlement atomically. Captured request time confirms a matching
+schedule/nulls real metadata, or advances nonnull real time while protecting a
+newer schedule; missing state inserts captured completion, dominating state stays
+unchanged. A0W carries nonnegative decoded issue time: known SQL NULL means prior
+sent time, raw zero means unissued. Missing/negative projection initializes zero.
+Legacy unknown completion history stays distinct.
+Existing actions plain/JSON reports optional token_issue_completion without users
+or times. No historical Ok replay/backfill; legacy missing metadata is unknown.
+[Native source, independent SQL vectors, reorder/reopen/rollback tests and limits](apk/2.26.43.72-token-success-state/README.md).
+Configured bucket policy, canonical counterparts and full job/cache lifecycle remain
+unfinished. No live account operation or automatic replay is introduced.

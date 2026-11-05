@@ -1,0 +1,140 @@
+{
+  "source": "APK43.72 0ht.A0V selected conditional SQL, synthetic SQLite replay",
+  "vectors": [
+    {
+      "before": null,
+      "captured": 1800000000,
+      "after": {
+        "sent": 1800000000,
+        "real_issue": null
+      },
+      "effect": "inserted_completed_state"
+    },
+    {
+      "before": {
+        "sent": 1799999999,
+        "real_issue": 0
+      },
+      "captured": 1800000000,
+      "after": {
+        "sent": 1800000000,
+        "real_issue": null
+      },
+      "effect": "scheduled_timestamp_confirmed"
+    },
+    {
+      "before": {
+        "sent": 1800000000,
+        "real_issue": 0
+      },
+      "captured": 1800000000,
+      "after": {
+        "sent": 1800000000,
+        "real_issue": null
+      },
+      "effect": "scheduled_timestamp_confirmed"
+    },
+    {
+      "before": {
+        "sent": 1800000001,
+        "real_issue": 0
+      },
+      "captured": 1800000000,
+      "after": {
+        "sent": 1800000001,
+        "real_issue": 1800000000
+      },
+      "effect": "earlier_issue_timestamp_advanced"
+    },
+    {
+      "before": {
+        "sent": 1800000001,
+        "real_issue": null
+      },
+      "captured": 1800000000,
+      "after": {
+        "sent": 1800000001,
+        "real_issue": null
+      },
+      "effect": "no_timestamp_change"
+    },
+    {
+      "before": {
+        "sent": 1800000001,
+        "real_issue": 1800000001
+      },
+      "captured": 1800000000,
+      "after": {
+        "sent": 1800000001,
+        "real_issue": 1800000001
+      },
+      "effect": "no_timestamp_change"
+    },
+    {
+      "before": {
+        "sent": 1800000001,
+        "real_issue": 1800000000
+      },
+      "captured": 1800000000,
+      "after": {
+        "sent": 1800000001,
+        "real_issue": 1800000000
+      },
+      "effect": "earlier_issue_timestamp_advanced"
+    },
+    {
+      "before": {
+        "sent": 1800000001,
+        "real_issue": -1
+      },
+      "captured": 1800000000,
+      "after": {
+        "sent": 1800000001,
+        "real_issue": 1800000000
+      },
+      "effect": "earlier_issue_timestamp_advanced"
+    },
+    {
+      "before": {
+        "sent": 1799999999,
+        "real_issue": 1800000100
+      },
+      "captured": 1800000000,
+      "after": {
+        "sent": 1800000000,
+        "real_issue": null
+      },
+      "effect": "scheduled_timestamp_confirmed"
+    }
+  ],
+  "schedule_vectors": [
+    {
+      "before": {
+        "sent": 1800000000,
+        "real_issue": null
+      },
+      "after_real_issue": 1800000000
+    },
+    {
+      "before": {
+        "sent": 1800000000,
+        "real_issue": -1
+      },
+      "after_real_issue": 0
+    },
+    {
+      "before": {
+        "sent": 1800000000,
+        "real_issue": 0
+      },
+      "after_real_issue": 0
+    },
+    {
+      "before": {
+        "sent": 1800000000,
+        "real_issue": 1800000000
+      },
+      "after_real_issue": 1800000000
+    }
+  ]
+}

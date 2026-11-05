@@ -1,0 +1,23 @@
+
+# class: LX/0Me;
+# extends: Ljava/lang/Object;
+
+.method public A00(L)  # .registers 4
+    # full signature: LX/0Me;->A00()LX/0Mf;
+    0000..0002  const/4  v2, #0x0
+    0002..0006  new-instance  v1, LX/0Mf;
+    0006..000c  invoke-direct  {v1, v3}, LX/0Mf;-><init>(LX/0Me;)V
+    000c..0010  iput-object  v2, v3, LX/0Me;->A02:Ljava/lang/String;
+    0010..0014  iput-object  v2, v3, LX/0Me;->A00:LX/0Mg;
+    0014..0018  iput-object  v2, v3, LX/0Me;->A01:Ljava/lang/String;
+    0018..001a  const/4  v0, #0x0
+    001a..001e  iput-boolean  v0, v3, LX/0Me;->A08:Z
+    001e..0022  iput-boolean  v0, v3, LX/0Me;->A07:Z
+    0022..0026  iput-boolean  v0, v3, LX/0Me;->A06:Z
+    0026..002a  iput-boolean  v0, v3, LX/0Me;->A09:Z
+    002a..002e  iput-boolean  v0, v3, LX/0Me;->A05:Z
+    002e..0032  iput-object  v2, v3, LX/0Me;->A04:Ljava/lang/String;
+    0032..0036  iput-object  v2, v3, LX/0Me;->A03:Ljava/lang/String;
+    0036..0038  return-object  v1
+    # exception table: 0 try range(s)
+.end method

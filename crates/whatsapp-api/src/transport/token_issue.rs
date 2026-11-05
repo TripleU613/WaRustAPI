@@ -36,9 +36,31 @@ pub const FALLBACK_SECONDS: i64 = 15_724_800;
 struct SendState {
     /// `sent_tc_token_timestamp`, in seconds.
     sent: i64,
+    /// Native nullable real_issue_timestamp. Absent legacy fields are unknown;
+    /// a new schedule uses zero and a matching completion stores null.
+    #[serde(default)]
+    real_issue: Option<i64>,
+    /// False for legacy records that never persisted completion metadata.
+    #[serde(default)]
+    real_issue_known: bool,
     /// Current schedule owner, not a live callback; legacy rows omit it.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     action_id: Option<String>,
+}
+
+/// Content-free effect of a correlated token result on saved timestamp state.
+/// This is not delivery proof or permission to retry.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum TokenIssueCompletion {
+    /// Captured time confirmed/advanced the scheduled timestamp; real time cleared.
+    ScheduledTimestampConfirmed,
+    /// An older completion advanced a nonnull real time without replacing a newer schedule.
+    EarlierIssueTimestampAdvanced,
+    /// No state existed; the captured completed schedule was inserted.
+    InsertedCompletedState,
+    /// No supported timestamp change; newer/completed or unknown legacy state preserved.
+    NoTimestampChange,
 }
 
 fn key(user: &Jid) -> Vec<u8> {
@@ -200,6 +222,51 @@ pub(crate) fn prepare_in(
     )?))
 }
 
+/// 43.72 8R8.CK4 selector3 -> 0ht.A0V uses the captured user/time,
+/// never response metadata or receipt wall time. The caller settles the action
+/// in this same transaction, preserving both facts or neither on local failure.
+pub(crate) fn record_success_in(
+    tx: &mut WriteTx<'_>,
+    id: &str,
+    request: &Node,
+) -> Result<TokenIssueCompletion> {
+    let (user, captured) = details(id, request)?;
+    let selector = key(&user);
+    let Some(mut state) = tx.get_json::<SendState>(Table::Checkpoints, &selector, 1)? else {
+        tx.put_json(
+            Table::Checkpoints,
+            &selector,
+            1,
+            &SendState {
+                sent: captured,
+                real_issue: None,
+                real_issue_known: true,
+                action_id: Some(id.to_owned()),
+            },
+        )?;
+        return Ok(TokenIssueCompletion::InsertedCompletedState);
+    };
+    let effect = if state.sent <= captured {
+        state.sent = captured;
+        state.real_issue = None;
+        state.real_issue_known = true;
+        TokenIssueCompletion::ScheduledTimestampConfirmed
+    } else if state.real_issue_known
+        && state
+            .real_issue
+            .is_some_and(|previous| previous <= captured)
+    {
+        state.real_issue = Some(captured);
+        TokenIssueCompletion::EarlierIssueTimestampAdvanced
+    } else {
+        // Native insert-on-conflict IGNORE changes nothing after both
+        // conditional updates miss. Do not overwrite the newer schedule owner.
+        return Ok(TokenIssueCompletion::NoTimestampChange);
+    };
+    tx.put_json(Table::Checkpoints, &selector, 1, &state)?;
+    Ok(effect)
+}
+
 /// After a successful server ACK of a message to `chat`, schedule our token
 /// for that user unless one was issued within the window. Returns the queued
 /// action ID. Groups, broadcasts and non-user chats are ignored.
@@ -244,6 +311,22 @@ pub(crate) fn schedule_after_ack_in(
         1,
         &SendState {
             sent: now_seconds,
+            // 43.72 0hv.A08 projects raw NULL as the prior sent time,
+            // raw zero as no issue time, otherwise the raw value. A0W
+            // carries that nonnegative projection or initializes zero.
+            // Legacy Rust rows have no proven raw completion state.
+            real_issue: Some(
+                previous
+                    .as_ref()
+                    .and_then(|state| {
+                        state
+                            .real_issue_known
+                            .then_some(state.real_issue.unwrap_or(state.sent))
+                    })
+                    .filter(|value| *value >= 0)
+                    .unwrap_or(0),
+            ),
+            real_issue_known: true,
             action_id: Some(id.clone()),
         },
     )?;
@@ -278,6 +361,303 @@ mod tests {
     }
     fn now() -> i64 {
         crate::model::time::Timestamp::now().as_millis() / 1000
+    }
+
+    #[test]
+    fn older_success_preserves_new_schedule_owner_and_later_completion_clears_real_time() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("state");
+        let store = open_at(&path, true);
+        let user = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let captured = 1_800_000_000;
+        let old = store
+            .write(|tx| schedule_after_ack_in(tx, &user, captured))
+            .unwrap()
+            .unwrap();
+        super::super::actions::reserve_next(&store)
+            .unwrap()
+            .unwrap();
+        let later = captured + FALLBACK_SECONDS + 60;
+        let current = store
+            .write(|tx| schedule_after_ack_in(tx, &user, later))
+            .unwrap()
+            .unwrap();
+        assert_ne!(old, current);
+        let response = |id: &str| Node::new("iq").attr("id", id).attr("type", "result");
+        assert!(super::super::actions::record_reply(&store, &response(&old)).unwrap());
+        let state = store
+            .read(|tx| tx.get_json::<SendState>(Table::Checkpoints, &key(&user), 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(
+            (state.sent, state.real_issue, state.action_id),
+            (later, Some(captured), Some(current.clone()))
+        );
+        let request = super::super::actions::reserve_next(&store)
+            .unwrap()
+            .unwrap();
+        assert_eq!(details(&current, &request).unwrap().1, later);
+        assert!(super::super::actions::record_reply(&store, &response(&current)).unwrap());
+        assert!(!super::super::actions::record_reply(&store, &response(&old)).unwrap());
+        let state = store
+            .read(|tx| tx.get_json::<SendState>(Table::Checkpoints, &key(&user), 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(
+            (state.sent, state.real_issue, state.action_id),
+            (later, None, Some(current))
+        );
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../../../../docs/protocol/apk/2.26.43.72-token-success-state/timestamp-vectors.json"
+        ))
+        .unwrap();
+        for case in fixture["schedule_vectors"].as_array().unwrap() {
+            store
+                .write(|tx| {
+                    let mut before = case["before"].clone();
+                    before["real_issue_known"] = serde_json::json!(true);
+                    tx.put_json(Table::Checkpoints, &key(&user), 1, &before)?;
+                    schedule_after_ack_in(tx, &user, captured + FALLBACK_SECONDS + 60)?;
+                    Ok(())
+                })
+                .unwrap();
+            assert_eq!(
+                store
+                    .read(|tx| tx.get_json::<SendState>(Table::Checkpoints, &key(&user), 1))
+                    .unwrap()
+                    .unwrap()
+                    .real_issue,
+                case["after_real_issue"].as_i64()
+            );
+        }
+        // Unknown legacy history is not promoted into a completed prior issue.
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    &key(&user),
+                    1,
+                    &serde_json::json!({"sent": captured}),
+                )?;
+                schedule_after_ack_in(tx, &user, captured + FALLBACK_SECONDS + 60)?;
+                Ok(())
+            })
+            .unwrap();
+        assert_eq!(
+            store
+                .read(|tx| tx.get_json::<SendState>(Table::Checkpoints, &key(&user), 1))
+                .unwrap()
+                .unwrap()
+                .real_issue,
+            Some(0)
+        );
+    }
+
+    #[test]
+    fn malformed_success_state_rolls_back_action_and_error_leaves_timestamps_untouched() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("state");
+        let store = open_at(&path, true);
+        let user = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let id = store
+            .write(|tx| schedule_after_ack_in(tx, &user, 1_800_000_000))
+            .unwrap()
+            .unwrap();
+        super::super::actions::reserve_next(&store)
+            .unwrap()
+            .unwrap();
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    &key(&user),
+                    1,
+                    &serde_json::json!({"sent":"invalid saved timestamp"}),
+                )
+            })
+            .unwrap();
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        assert!(
+            super::super::actions::record_reply(
+                &store,
+                &Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", "result")
+            )
+            .is_err()
+        );
+        assert_eq!(
+            before,
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap()
+        );
+        assert!(
+            super::super::actions::record_reply(
+                &store,
+                &Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", "error")
+            )
+            .unwrap()
+        );
+        let outcome = super::super::actions::outcomes(&store)
+            .unwrap()
+            .pop()
+            .unwrap();
+        assert_eq!(outcome.status, super::super::actions::ActionStatus::Error);
+        assert_eq!(outcome.token_issue_completion, None);
+        assert_eq!(
+            store
+                .read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, &key(&user), 1))
+                .unwrap()
+                .unwrap(),
+            serde_json::json!({"sent":"invalid saved timestamp"})
+        );
+    }
+
+    #[test]
+    fn later_settlement_fault_rolls_back_completed_token_state() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open_at(&dir.path().join("state"), true);
+        let user = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let id = store
+            .write(|tx| schedule_after_ack_in(tx, &user, 1_800_000_000))
+            .unwrap()
+            .unwrap();
+        super::super::actions::reserve_next(&store)
+            .unwrap()
+            .unwrap();
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, b"action-settlement-sequence", 1, &0u64))
+            .unwrap();
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        assert!(
+            super::super::actions::record_reply(
+                &store,
+                &Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", "result")
+            )
+            .is_err()
+        );
+        assert_eq!(
+            before,
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap()
+        );
+        let state = store
+            .read(|tx| tx.get_json::<SendState>(Table::Checkpoints, &key(&user), 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(state.real_issue, Some(0));
+        assert_eq!(
+            super::super::actions::outcomes(&store).unwrap()[0].status,
+            super::super::actions::ActionStatus::Sent
+        );
+    }
+
+    #[test]
+    fn correlated_success_matches_independent_native_sql_vectors_and_survives_reopen() {
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../../../../docs/protocol/apk/2.26.43.72-token-success-state/timestamp-vectors.json"
+        ))
+        .unwrap();
+        for domain in ["s.whatsapp.net", "lid"] {
+            for case in fixture["vectors"].as_array().unwrap() {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("state");
+                let store = open_at(&path, true);
+                let user = Jid::parse(&format!("15555550101@{domain}")).unwrap();
+                let captured = case["captured"].as_i64().unwrap();
+                let id = store
+                    .write(|tx| schedule_after_ack_in(tx, &user, captured))
+                    .unwrap()
+                    .unwrap();
+                let request = super::super::actions::reserve_next(&store)
+                    .unwrap()
+                    .unwrap();
+                store
+                    .write(|tx| {
+                        if case["before"].is_null() {
+                            tx.delete(Table::Checkpoints, &key(&user))?;
+                        } else {
+                            let mut before = case["before"].clone();
+                            before["action_id"] = serde_json::json!(id);
+                            before["real_issue_known"] = serde_json::json!(true);
+                            tx.put_json(Table::Checkpoints, &key(&user), 1, &before)?;
+                        }
+                        Ok(())
+                    })
+                    .unwrap();
+                let response = Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", "result")
+                    .attr("t", "1999999999")
+                    .children(vec![Node::new("error").attr("code", "403")]);
+                assert!(super::super::actions::record_reply(&store, &response).unwrap());
+                let saved = store
+                    .read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, &key(&user), 1))
+                    .unwrap()
+                    .unwrap();
+                assert_eq!(saved["sent"], case["after"]["sent"]);
+                assert_eq!(saved["real_issue"], case["after"]["real_issue"]);
+                assert_eq!(saved["action_id"], id);
+                let outcome = super::super::actions::outcomes(&store)
+                    .unwrap()
+                    .into_iter()
+                    .find(|row| row.id == id)
+                    .unwrap();
+                assert_eq!(outcome.status, super::super::actions::ActionStatus::Ok);
+                assert_eq!(
+                    serde_json::to_value(outcome.token_issue_completion.unwrap()).unwrap(),
+                    case["effect"]
+                );
+                let snapshot = store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap();
+                assert!(!super::super::actions::record_reply(&store, &response).unwrap());
+                assert_eq!(
+                    snapshot,
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap()
+                );
+                drop(store);
+                let store = open_at(&path, false);
+                assert_eq!(
+                    saved,
+                    store
+                        .read(|tx| tx.get_json::<serde_json::Value>(
+                            Table::Checkpoints,
+                            &key(&user),
+                            1
+                        ))
+                        .unwrap()
+                        .unwrap()
+                );
+                assert_eq!(
+                    Some(request),
+                    store
+                        .write(|tx| super::super::actions::view_in_write(tx, &id))
+                        .unwrap()
+                        .map(|(_, _, request)| request)
+                );
+                assert_eq!(
+                    super::super::actions::outcomes(&store)
+                        .unwrap()
+                        .into_iter()
+                        .find(|row| row.id == id)
+                        .unwrap(),
+                    outcome
+                );
+            }
+        }
     }
 
     #[test]

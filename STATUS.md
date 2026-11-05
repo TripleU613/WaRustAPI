@@ -1,3 +1,14 @@
+2026-11-05 — **Token results now persist captured success timestamps atomically.**
+
+Older completions preserve newer schedules; matching completions clear real-time
+metadata. Scheduling carries/reset metadata using the current APK branch.
+Existing actions inspection reports content-free completion effects. Independent
+SQL vectors and reorder/reopen/rollback tests cover the port.
+[Evidence and unported configured/counterpart lifecycle](docs/protocol/apk/2.26.43.72-token-success-state/README.md).
+Validation:1356 workspace/all-feature tests, strict Clippy, fmt, CLI reference,
+APK coverage and hygiene passed. Independent SQL/decoder vectors reproduce.
+No live account operations; the broader protocol audit remains unfinished.
+
 2026-11-05 — **Token MobileConfig lookup and one readiness producer traced.**
 
 All four token IDs have nonzero SDK specifiers. Concrete DI bindings are closed,
