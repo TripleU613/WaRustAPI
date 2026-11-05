@@ -1,3 +1,12 @@
+2026-11-05 — **Native metrics connection-status timer semantics traced.**
+
+Corrected provisional load-completion label: connection status starts/stops
+the repeating task timer. Fifteen bounded native cases verify arm/event/cancel
+and readiness gating. [Evidence and concurrency limits](docs/protocol/apk/2.26.43.72-metrics-native-recovery-timer/README.md).
+Validation: pinned resolver/fixtures, prior credential-file repro after rename,
+coverage and bundle/link hygiene. No justified universal Rust IQ-origin change
+found; no Rust runtime or live traffic changed.
+
 2026-11-05 — **Selected native analytics bytes verified end to end offline.**
 
 19 full-builder cases match expected bytes with controlled libc adapters,

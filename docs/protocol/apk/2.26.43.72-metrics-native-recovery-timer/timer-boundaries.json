@@ -1,0 +1,128 @@
+{
+  "scope": "static connection-status and repeating scheduler timer; no real queues or recovery execution",
+  "credential_callback_target": "0x72acd8",
+  "generic_timer_event_target": "0x7361cc",
+  "selected_interval": 30.0,
+  "interval_diagnostic_unit": "seconds",
+  "constructor_repeat_byte": 1,
+  "strings": [
+    {
+      "va": "0x144d70",
+      "value": "privatestats/wameta/transport/statuschangedcallback - new status: %d"
+    },
+    {
+      "va": "0x12464d",
+      "value": "privatestats/wameta/transport/timer/invalidating - status change triggered"
+    },
+    {
+      "va": "0x1455f4",
+      "value": "privatestats/wameta/transport/connection_status_changed - status: %d"
+    },
+    {
+      "va": "0xc26ff",
+      "value": "privatestats/wameta/transport/connection_ready - starting timer and sending tasks"
+    },
+    {
+      "va": "0xc6cc4",
+      "value": "privatestats/wameta/transport/timer/started - interval: %.1f seconds"
+    },
+    {
+      "va": "0xd6170",
+      "value": "privatestats/wameta/transport/connection_unavailable - stopping timer"
+    },
+    {
+      "va": "0xec9fa",
+      "value": "privatestats/wameta/transport/timer/no_connection_impl"
+    },
+    {
+      "va": "0x1221cd",
+      "value": "privatestats/wameta/transport/timer/not_connected"
+    },
+    {
+      "va": "0xfd5a8",
+      "value": "WAMTransportPrivateTaskSending"
+    }
+  ],
+  "windows": [
+    {
+      "name": "credential-timer-callback",
+      "start_va": "0x72acd8",
+      "end_va": "0x72ad9c",
+      "file_offset": "0x726cd8",
+      "bytes": 196,
+      "sha256": "a87ac42e16e72db65baab32ae7bb630e66aaf0733ba72497cebdc0c5f1727408"
+    },
+    {
+      "name": "timer-constructor",
+      "start_va": "0x735fdc",
+      "end_va": "0x7360fc",
+      "file_offset": "0x731fdc",
+      "bytes": 288,
+      "sha256": "e086f9ddbc3b9d2dcf27382cb8cbced3213aac1f5f14de2089d01974ea16b4d4"
+    },
+    {
+      "name": "timer-arm",
+      "start_va": "0x7360fc",
+      "end_va": "0x7361cc",
+      "file_offset": "0x7320fc",
+      "bytes": 208,
+      "sha256": "a76a85e0a9771d95292eb5cc84f606097543b210bd99e014b80f524e8eb089fe"
+    },
+    {
+      "name": "timer-event",
+      "start_va": "0x7361cc",
+      "end_va": "0x73629c",
+      "file_offset": "0x7321cc",
+      "bytes": 208,
+      "sha256": "f4eb77aef9ee9664e0de1eaea19bc7a0fb34e2e25819d0dde8a17ea643da0fe2"
+    },
+    {
+      "name": "timer-cancel",
+      "start_va": "0x73629c",
+      "end_va": "0x736320",
+      "file_offset": "0x73229c",
+      "bytes": 132,
+      "sha256": "519585b22b0794fa97aff469e7e4242424f99c4712e581b43bde27527e5ed6a1"
+    },
+    {
+      "name": "credential-timer-thunk",
+      "start_va": "0xbd8fc8",
+      "end_va": "0xbd8fd0",
+      "file_offset": "0xbd4fc8",
+      "bytes": 8,
+      "sha256": "7933247ddf5588fb1d61fe294f3e83721ef6bdee1e969ba289eba75deec3370c"
+    },
+    {
+      "name": "shared-timer-thunk",
+      "start_va": "0xbd9168",
+      "end_va": "0xbd9170",
+      "file_offset": "0xbd5168",
+      "bytes": 8,
+      "sha256": "06b193a7665e42d2bb274b220e15fbaca5f3d6fc34de60b6ce551e488421daea"
+    },
+    {
+      "name": "timer-create-arguments",
+      "start_va": "0x49bf28",
+      "end_va": "0x49bf34",
+      "file_offset": "0x497f28",
+      "bytes": 12,
+      "sha256": "5ac9f3ea6197ff80c72f83073c8e9947dca2ea5ca3799b72cf96ec547aef937d"
+    },
+    {
+      "name": "failure-arguments",
+      "start_va": "0xbe05c8",
+      "end_va": "0xbe05d4",
+      "file_offset": "0xbdc5c8",
+      "bytes": 12,
+      "sha256": "981cd9e2a013285b54af8435df1a9f831029024c7639ae372c77b171d5faf0c2"
+    },
+    {
+      "name": "weak-reference-arguments",
+      "start_va": "0xbe0ebc",
+      "end_va": "0xbe0ec8",
+      "file_offset": "0xbdcebc",
+      "bytes": 12,
+      "sha256": "04ee70534f40a13017b753da6596cf6f5f4fdfacc354ad76aff136fe1886217f"
+    }
+  ]
+}

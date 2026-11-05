@@ -1,0 +1,52 @@
+            0x007360fc      paciasp
+            0x00736100      sub   sp, sp, 0xc0
+            0x00736104      stp   x29, x30, [sp, 0xa0]
+            0x00736108      stp   x20, x19, [sp, 0xb0]
+            0x0073610c      add   x29, sp, 0xa0
+            0x00736110      bl    0xbddda8
+        ┌─< 0x00736114      cbz   x0, 0x7361c4
+        │   0x00736118      mov   x19, x0
+        │   0x0073611c      add   x0, x0, 0x24
+        │   0x00736120      bl    sym.imp.pthread_mutex_lock
+        │   0x00736124      ldr   x8, [x19, 0x18]                      ; [0x18:4]=0
+       ┌──< 0x00736128      cbz   x8, 0x736154
+       ││   0x0073612c      movi  v0.2d, 0000000000000000
+       ││   0x00736130      ldr   x0, [x19, 0x78]                      ; [0x78:4]=1
+       ││   0x00736134      mov   w1, 0x100
+       ││   0x00736138      bl    0xbeb6c0
+       ││   0x0073613c      bl    0xbe2224
+       ││   0x00736140      str   x8, [sp, 8]
+       ││   0x00736144      bl    0xbde5c4
+       ││   0x00736148      bl    sym.imp.MCFStringCopyToHeapOrStackAsCString
+       ││   0x0073614c      ldr   x1, [x19, 0x78]                      ; [0x78:4]=1
+       ││   0x00736150      bl    sym.imp.MCFStringDeallocateCharArray
+       └──> 0x00736154      ldrb  w8, [x19, 0x20]                      ; [0x20:4]=64 ; "@"
+       ┌──< 0x00736158      tbnz  w8, 0, 0x736164
+       ││   0x0073615c      ldrb  w8, [x19, 0x21]                      ; [0x21:4]=0
+      ┌───< 0x00736160      tbz   w8, 0, 0x736170
+      │└──> 0x00736164      add   x0, x19, 0x24
+      │ │   0x00736168      bl    sym.imp.pthread_mutex_unlock
+      │┌──< 0x0073616c      b     0x7361a8
+      └───> 0x00736170      mov   w8, 1
+       ││   0x00736174      add   x0, x19, 0x24
+       ││   0x00736178      strb  w8, [x19, 0x21]
+       ││   0x0073617c      bl    sym.imp.pthread_mutex_unlock
+       ││   0x00736180      ldr   x0, [x19, 0x68]                      ; [0x68:4]=0x230
+       ││   0x00736184      ldr   x3, [x19, 0x50]                      ; [0x50:4]=64
+       ││   0x00736188      adrp  x2, 0xbd9000
+       ││   0x0073618c      add   x2, x2, 0x168
+       ││   0x00736190      ldr   d0, [x19, 0x70]                      ; [0x70:4]=8
+       ││   0x00736194      adrp  x4, 0x9f000
+       ││   0x00736198      add   x4, x4, 0xb09
+       ││   0x0073619c      mov   w1, wzr
+       ││   0x007361a0      mov   w5, wzr
+       ││   0x007361a4      bl    sym.imp.MCIExecutionQueueExecuteAsyncHelper
+       └──> 0x007361a8      bl    0xbdd77c
+       ┌──< 0x007361ac      b.ne  0x7361c8
+       ││   0x007361b0      ldp   x20, x19, [sp, 0xb0]
+       ││   0x007361b4      ldp   x29, x30, [sp, 0xa0]
+       ││   0x007361b8      add   sp, sp, 0xc0
+       ││   0x007361bc      autiasp
+       ││   0x007361c0      ret
+       │└─> 0x007361c4      bl    sym.imp.abort
+       └──> 0x007361c8      bl    sym.imp.__stack_chk_fail

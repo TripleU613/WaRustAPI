@@ -83,7 +83,7 @@
       "sha256": "0fdcefa8c308268c9bde37af9395b4874facac80b1a0b4c1ff35aa46514aec1f"
     },
     {
-      "name": "load-completion",
+      "name": "connection-status",
       "start_va": "0x72ab10",
       "end_va": "0x72acd8",
       "file_offset": "0x726b10",

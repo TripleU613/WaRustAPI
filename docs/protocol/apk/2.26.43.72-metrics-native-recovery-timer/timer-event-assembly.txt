@@ -1,0 +1,52 @@
+            0x007361cc      paciasp
+            0x007361d0      stp   x29, x30, [sp, -0x20]!
+            0x007361d4      stp   x20, x19, [sp, 0x10]
+            0x007361d8      mov   x29, sp
+        ┌─< 0x007361dc      cbz   x0, 0x736298
+        │   0x007361e0      mov   x19, x0
+        │   0x007361e4      bl    0x735f44
+        │   0x007361e8      mov   x20, x0
+        │   0x007361ec      bl    sym.imp.MCFWeakGetTypeID
+        │   0x007361f0      mov   x1, x19
+        │   0x007361f4      bl    sym.imp.__MCFCastToClassNotNull
+        │   0x007361f8      bl    sym.imp.MCFWeakCopyRef
+        │   0x007361fc      bl    0xbe0ebc
+        │   0x00736200      bl    sym.imp.__MCFCastToClassNullableOwnedObject
+       ┌──< 0x00736204      cbz   x0, 0x736288
+       ││   0x00736208      mov   x19, x0
+       ││   0x0073620c      add   x0, x0, 0x24
+       ││   0x00736210      bl    sym.imp.pthread_mutex_lock
+       ││   0x00736214      ldrb  w20, [x19, 0x20]                     ; [0x20:4]=64 ; "@"
+       ││   0x00736218      add   x0, x19, 0x24
+       ││   0x0073621c      bl    sym.imp.pthread_mutex_unlock
+      ┌───< 0x00736220      tbnz  w20, 0, 0x73622c
+      │││   0x00736224      ldp   x8, x0, [x19, 0x58]
+      │││   0x00736228      blr   x8
+      └───> 0x0073622c      ldrb  w8, [x19, 0x80]                      ; [0x80:4]=0
+       ││   0x00736230      cmp   w8, 1
+      ┌───< 0x00736234      b.ne  0x736278
+      │││   0x00736238      add   x0, x19, 0x24
+      │││   0x0073623c      bl    sym.imp.pthread_mutex_lock
+      │││   0x00736240      ldrb  w20, [x19, 0x20]                     ; [0x20:4]=64 ; "@"
+      │││   0x00736244      add   x0, x19, 0x24
+      │││   0x00736248      bl    sym.imp.pthread_mutex_unlock
+     ┌────< 0x0073624c      tbnz  w20, 0, 0x736278
+     ││││   0x00736250      ldr   x0, [x19, 0x68]                      ; [0x68:4]=0x230
+     ││││   0x00736254      ldr   x3, [x19, 0x50]                      ; [0x50:4]=64
+     ││││   0x00736258      adrp  x2, 0xbd9000
+     ││││   0x0073625c      add   x2, x2, 0x168
+     ││││   0x00736260      ldr   d0, [x19, 0x70]                      ; [0x70:4]=8
+     ││││   0x00736264      adrp  x4, 0xf5000
+     ││││   0x00736268      add   x4, x4, 0x457
+     ││││   0x0073626c      mov   w1, wzr
+     ││││   0x00736270      mov   w5, wzr
+     ││││   0x00736274      bl    sym.imp.MCIExecutionQueueExecuteAsyncHelper
+     └└───> 0x00736278      bl    0x4f47ec
+       ││   0x0073627c      ldp   x29, x30, [sp], 0x20
+       ││   0x00736280      autiasp
+      ┌───< 0x00736284      b     sym.imp.MCFRelease
+      │└──> 0x00736288      ldp   x20, x19, [sp, 0x10]
+      │ │   0x0073628c      ldp   x29, x30, [sp], 0x20
+      │ │   0x00736290      autiasp
+      │ │   0x00736294      ret
+      │ └─> 0x00736298      bl    sym.imp.abort

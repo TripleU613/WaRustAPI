@@ -98,8 +98,11 @@ renewal; the selected malformed-header branch does not remove the file. A
 read/close error branch instead calls remove(path) before renewal. Missing/open
 failure also falls back to renewal. Distinguish those branches; removal here
 concerns the local metrics credential file, not account identity or message
-outcome history. The separate load-completion body is retained for follow-up;
-its broader timer/recovery policy is not semantically closed in this bundle.
+outcome history. The separately retained body0x72ab10 was initially labelled load-completion;
+subsequent log/argument/timer analysis identifies connection-status handling.
+Its file is now connection-status-assembly.txt; see the
+[status/timer trace](../2.26.43.72-metrics-native-recovery-timer/README.md).
+It must not be treated as proof of credential-file load success.
 
 ## Fixture scope and reproduction
 

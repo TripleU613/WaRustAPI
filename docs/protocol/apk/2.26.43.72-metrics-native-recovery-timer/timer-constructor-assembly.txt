@@ -1,0 +1,72 @@
+            0x00735fdc      paciasp
+            0x00735fe0      sub   sp, sp, 0xf0
+            0x00735fe4      str   d8, [sp, 0xa0]
+            0x00735fe8      stp   x29, x30, [sp, 0xa8]
+            0x00735fec      str   x25, [sp, 0xb8]
+            0x00735ff0      bl    0x6053c4
+            0x00735ff4      add   x29, sp, 0xa8
+            0x00735ff8      mrs   x25, tpidr_el0
+            0x00735ffc      fcmp  d0, 0.0
+            0x00736000      ldr   x8, [x25, 0x28]                      ; [0x28:4]=0xc306e8
+            0x00736004      stur  x8, [x29, -0x10]
+        ┌─< 0x00736008      b.le  0x7360f4
+        │   0x0073600c      mov   x21, x4
+        │   0x00736010      fmov  d8, d0
+        │   0x00736014      bl    0xbe6658
+        │   0x00736018      bl    0xbe9d60
+        │   0x0073601c      bl    0x735f44
+        │   0x00736020      mov   w1, 0x70                             ; 'p'
+        │   0x00736024      bl    0xbe1ac0
+        │   0x00736028      bl    sym.imp.MCFRuntimeCreateInstance
+        │   0x0073602c      mov   x19, x0
+        │   0x00736030      bl    sym.imp.MCFWeakCreate
+        │   0x00736034      stp   x0, x24, [x19, 0x50]
+        │   0x00736038      mov   x0, x23
+        │   0x0073603c      str   x23, [x19, 0x60]
+        │   0x00736040      bl    sym.imp.MCFRetain
+        │   0x00736044      mov   x0, x22
+        │   0x00736048      str   x22, [x19, 0x68]
+        │   0x0073604c      bl    sym.imp.MCFRetain
+        │   0x00736050      mov   w8, 1
+        │   0x00736054      str   d8, [x19, 0x70]
+        │   0x00736058      strb  w8, [x19, 0x80]
+        │   0x0073605c      bl    sym.imp.MCFAbsoluteTimeGetCurrent
+        │   0x00736060      fcvtzs w8, d0
+        │   0x00736064      str   w8, [x19, 0x84]
+       ┌──< 0x00736068      cbz   x21, 0x736080
+       ││   0x0073606c      mov   w1, 0x100
+       ││   0x00736070      mov   x0, x21
+       ││   0x00736074      movk  w1, 0x800, lsl 16
+       ││   0x00736078      bl    sym.imp.MCFStringCreateWithCString
+       ││   0x0073607c      str   x0, [x19, 0x78]
+       └──> 0x00736080      mov   x0, x20
+        │   0x00736084      str   x20, [x19, 0x18]
+        │   0x00736088      bl    sym.imp.MCFRetain
+        │   0x0073608c      ldr   x8, [x19, 0x18]                      ; [0x18:4]=0
+       ┌──< 0x00736090      cbz   x8, 0x7360bc
+       ││   0x00736094      bl    0xbe2694
+       ││   0x00736098      bl    0xbeb6c0
+       ││   0x0073609c      bl    0xbe2224
+       ││   0x007360a0      str   x8, [sp, 8]
+       ││   0x007360a4      bl    0xbde5c4
+       ││   0x007360a8      ldr   x0, [x19, 0x78]                      ; [0x78:4]=1
+       ││   0x007360ac      bl    sym.imp.MCFStringCopyToHeapOrStackAsCString
+       ││   0x007360b0      ldrb  wzr, [x19, 0x20]                     ; [0x20:4]=64 ; "@"
+       ││   0x007360b4      ldr   x1, [x19, 0x78]                      ; [0x78:4]=1
+       ││   0x007360b8      bl    sym.imp.MCFStringDeallocateCharArray
+       └──> 0x007360bc      add   x0, x19, 0x24
+        │   0x007360c0      mov   x1, xzr
+        │   0x007360c4      bl    sym.imp.pthread_mutex_init
+        │   0x007360c8      bl    0xbddf98
+       ┌──< 0x007360cc      b.ne  0x7360f8
+       ││   0x007360d0      mov   x0, x19
+       ││   0x007360d4      bl    0x514720
+       ││   0x007360d8      ldr   x25, [sp, 0xb8]                      ; [0xb8:4]=0x47fcb0
+       ││   0x007360dc      ldp   x24, x23, [sp, 0xc0]
+       ││   0x007360e0      ldr   d8, [sp, 0xa0]                       ; [0xa0:4]=0x47fca4
+       ││   0x007360e4      ldp   x29, x30, [sp, 0xa8]
+       ││   0x007360e8      add   sp, sp, 0xf0
+       ││   0x007360ec      autiasp
+       ││   0x007360f0      ret
+       │└─> 0x007360f4      bl    sym.imp.abort
+       └──> 0x007360f8      bl    sym.imp.__stack_chk_fail

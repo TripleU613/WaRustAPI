@@ -1,0 +1,328 @@
+{
+  "scope": "synthetic arm/event/cancel and callback gating; fake mutex/weak/scheduler; no actual queues or network",
+  "unicorn_version": "2.1.4",
+  "instruction_cap_per_case": 100000,
+  "timeout_microseconds_per_case": 1000000,
+  "cases": [
+    {
+      "case": "ready",
+      "work_calls": 1,
+      "queued_events": [
+        {
+          "callback_va": "0xbd9168",
+          "context": "0x10000400",
+          "raw_interval": 30.0
+        }
+      ],
+      "imports": [
+        "MCFWeakGetTypeID",
+        "__MCFCastToClassNotNull",
+        "MCFWeakCopyRef",
+        "__MCFCastToClassNullableOwnedObject",
+        "pthread_mutex_lock",
+        "pthread_mutex_unlock",
+        "MCFWeakGetTypeID",
+        "__MCFCastToClassNotNull",
+        "MCFWeakGetTypeID",
+        "MCFWeakGetTypeID",
+        "__MCFCastToClassNotNull",
+        "__MCFCastToClassNotNull",
+        "MCFWeakCopyRef",
+        "__MCFCastToClassNullableOwnedObject",
+        "MCFRelease",
+        "pthread_mutex_lock",
+        "pthread_mutex_unlock",
+        "MCIExecutionQueueExecuteAsyncHelper",
+        "MCFRelease"
+      ]
+    },
+    {
+      "case": "not-ready",
+      "work_calls": 0,
+      "queued_events": [
+        {
+          "callback_va": "0xbd9168",
+          "context": "0x10000400",
+          "raw_interval": 30.0
+        }
+      ],
+      "imports": [
+        "MCFWeakGetTypeID",
+        "__MCFCastToClassNotNull",
+        "MCFWeakCopyRef",
+        "__MCFCastToClassNullableOwnedObject",
+        "pthread_mutex_lock",
+        "pthread_mutex_unlock",
+        "MCFWeakGetTypeID",
+        "__MCFCastToClassNotNull",
+        "MCFWeakGetTypeID",
+        "MCFWeakGetTypeID",
+        "__MCFCastToClassNotNull",
+        "__MCFCastToClassNotNull",
+        "MCFWeakCopyRef",
+        "__MCFCastToClassNullableOwnedObject",
+        "MCFRelease",
+        "pthread_mutex_lock",
+        "pthread_mutex_unlock",
+        "MCIExecutionQueueExecuteAsyncHelper",
+        "MCFRelease"
+      ]
+    },
+    {
+      "case": "no-provider",
+      "work_calls": 0,
+      "queued_events": [
+        {
+          "callback_va": "0xbd9168",
+          "context": "0x10000400",
+          "raw_interval": 30.0
+        }
+      ],
+      "imports": [
+        "MCFWeakGetTypeID",
+        "__MCFCastToClassNotNull",
+        "MCFWeakCopyRef",
+        "__MCFCastToClassNullableOwnedObject",
+        "pthread_mutex_lock",
+        "pthread_mutex_unlock",
+        "MCFWeakGetTypeID",
+        "__MCFCastToClassNotNull",
+        "MCFWeakGetTypeID",
+        "MCFWeakGetTypeID",
+        "__MCFCastToClassNotNull",
+        "__MCFCastToClassNotNull",
+        "MCFWeakCopyRef",
+        "__MCFCastToClassNullableOwnedObject",
+        "MCFRelease",
+        "pthread_mutex_lock",
+        "pthread_mutex_unlock",
+        "MCIExecutionQueueExecuteAsyncHelper",
+        "MCFRelease"
+      ]
+    },
+    {
+      "case": "manager-gone",
+      "work_calls": 0,
+      "queued_events": [
+        {
+          "callback_va": "0xbd9168",
+          "context": "0x10000400",
+          "raw_interval": 30.0
+        }
+      ],
+      "imports": [
+        "MCFWeakGetTypeID",
+        "__MCFCastToClassNotNull",
+        "MCFWeakCopyRef",
+        "__MCFCastToClassNullableOwnedObject",
+        "pthread_mutex_lock",
+        "pthread_mutex_unlock",
+        "MCFWeakGetTypeID",
+        "__MCFCastToClassNotNull",
+        "MCFWeakGetTypeID",
+        "MCFWeakGetTypeID",
+        "__MCFCastToClassNotNull",
+        "__MCFCastToClassNotNull",
+        "MCFWeakCopyRef",
+        "__MCFCastToClassNullableOwnedObject",
+        "pthread_mutex_lock",
+        "pthread_mutex_unlock",
+        "MCIExecutionQueueExecuteAsyncHelper",
+        "MCFRelease"
+      ]
+    },
+    {
+      "case": "timer-gone",
+      "work_calls": 0,
+      "queued_events": [],
+      "imports": [
+        "MCFWeakGetTypeID",
+        "__MCFCastToClassNotNull",
+        "MCFWeakCopyRef",
+        "__MCFCastToClassNullableOwnedObject"
+      ]
+    },
+    {
+      "case": "canceled",
+      "work_calls": 0,
+      "queued_events": [],
+      "imports": [
+        "MCFWeakGetTypeID",
+        "__MCFCastToClassNotNull",
+        "MCFWeakCopyRef",
+        "__MCFCastToClassNullableOwnedObject",
+        "pthread_mutex_lock",
+        "pthread_mutex_unlock",
+        "pthread_mutex_lock",
+        "pthread_mutex_unlock",
+        "MCFRelease"
+      ]
+    },
+    {
+      "case": "nonrepeating-zero",
+      "work_calls": 1,
+      "queued_events": [],
+      "imports": [
+        "MCFWeakGetTypeID",
+        "__MCFCastToClassNotNull",
+        "MCFWeakCopyRef",
+        "__MCFCastToClassNullableOwnedObject",
+        "pthread_mutex_lock",
+        "pthread_mutex_unlock",
+        "MCFWeakGetTypeID",
+        "__MCFCastToClassNotNull",
+        "MCFWeakGetTypeID",
+        "MCFWeakGetTypeID",
+        "__MCFCastToClassNotNull",
+        "__MCFCastToClassNotNull",
+        "MCFWeakCopyRef",
+        "__MCFCastToClassNullableOwnedObject",
+        "MCFRelease",
+        "MCFRelease"
+      ]
+    },
+    {
+      "case": "nonrepeating-two",
+      "work_calls": 1,
+      "queued_events": [],
+      "imports": [
+        "MCFWeakGetTypeID",
+        "__MCFCastToClassNotNull",
+        "MCFWeakCopyRef",
+        "__MCFCastToClassNullableOwnedObject",
+        "pthread_mutex_lock",
+        "pthread_mutex_unlock",
+        "MCFWeakGetTypeID",
+        "__MCFCastToClassNotNull",
+        "MCFWeakGetTypeID",
+        "MCFWeakGetTypeID",
+        "__MCFCastToClassNotNull",
+        "__MCFCastToClassNotNull",
+        "MCFWeakCopyRef",
+        "__MCFCastToClassNullableOwnedObject",
+        "MCFRelease",
+        "MCFRelease"
+      ]
+    },
+    {
+      "case": "arm",
+      "before_flags": [
+        0,
+        0
+      ],
+      "after_flags": [
+        0,
+        1
+      ],
+      "queued_events": [
+        {
+          "callback_va": "0xbd9168",
+          "context": "0x10000400",
+          "raw_interval": 30.0
+        }
+      ],
+      "imports": [
+        "pthread_mutex_lock",
+        "pthread_mutex_unlock",
+        "MCIExecutionQueueExecuteAsyncHelper"
+      ]
+    },
+    {
+      "case": "arm",
+      "before_flags": [
+        1,
+        0
+      ],
+      "after_flags": [
+        1,
+        0
+      ],
+      "queued_events": [],
+      "imports": [
+        "pthread_mutex_lock",
+        "pthread_mutex_unlock"
+      ]
+    },
+    {
+      "case": "arm",
+      "before_flags": [
+        0,
+        1
+      ],
+      "after_flags": [
+        0,
+        1
+      ],
+      "queued_events": [],
+      "imports": [
+        "pthread_mutex_lock",
+        "pthread_mutex_unlock"
+      ]
+    },
+    {
+      "case": "arm",
+      "before_flags": [
+        1,
+        1
+      ],
+      "after_flags": [
+        1,
+        1
+      ],
+      "queued_events": [],
+      "imports": [
+        "pthread_mutex_lock",
+        "pthread_mutex_unlock"
+      ]
+    },
+    {
+      "case": "arm",
+      "before_flags": [
+        2,
+        0
+      ],
+      "after_flags": [
+        2,
+        1
+      ],
+      "queued_events": [
+        {
+          "callback_va": "0xbd9168",
+          "context": "0x10000400",
+          "raw_interval": 30.0
+        }
+      ],
+      "imports": [
+        "pthread_mutex_lock",
+        "pthread_mutex_unlock",
+        "MCIExecutionQueueExecuteAsyncHelper"
+      ]
+    },
+    {
+      "case": "cancel",
+      "before_cancel_flag": 0,
+      "after_flags": [
+        1,
+        1
+      ],
+      "queued_events": [],
+      "imports": [
+        "pthread_mutex_lock",
+        "pthread_mutex_unlock"
+      ]
+    },
+    {
+      "case": "cancel",
+      "before_cancel_flag": 2,
+      "after_flags": [
+        1,
+        1
+      ],
+      "queued_events": [],
+      "imports": [
+        "pthread_mutex_lock",
+        "pthread_mutex_unlock"
+      ]
+    }
+  ]
+}

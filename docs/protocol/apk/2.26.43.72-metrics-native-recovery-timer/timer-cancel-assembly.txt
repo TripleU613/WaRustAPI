@@ -1,0 +1,33 @@
+            0x0073629c      paciasp
+            0x007362a0      sub   sp, sp, 0xc0
+            0x007362a4      stp   x29, x30, [sp, 0xa0]
+            0x007362a8      stp   x20, x19, [sp, 0xb0]
+            0x007362ac      add   x29, sp, 0xa0
+            0x007362b0      bl    0xbe0964
+            0x007362b4      add   x0, x0, 0x24
+            0x007362b8      bl    0xbe0704
+            0x007362bc      bl    sym.imp.pthread_mutex_lock
+            0x007362c0      ldr   x8, [x19, 0x18]                      ; [0x18:4]=0
+        ┌─< 0x007362c4      cbz   x8, 0x7362f0
+        │   0x007362c8      movi  v0.2d, 0000000000000000
+        │   0x007362cc      ldr   x0, [x19, 0x78]                      ; [0x78:4]=1
+        │   0x007362d0      mov   w1, 0x100
+        │   0x007362d4      bl    0xbeb6c0
+        │   0x007362d8      bl    0xbe2224
+        │   0x007362dc      str   x8, [sp, 8]
+        │   0x007362e0      bl    0xbde5c4
+        │   0x007362e4      bl    sym.imp.MCFStringCopyToHeapOrStackAsCString
+        │   0x007362e8      ldr   x1, [x19, 0x78]                      ; [0x78:4]=1
+        │   0x007362ec      bl    sym.imp.MCFStringDeallocateCharArray
+        └─> 0x007362f0      mov   w8, 1
+            0x007362f4      add   x0, x19, 0x24
+            0x007362f8      strb  w8, [x19, 0x20]
+            0x007362fc      bl    sym.imp.pthread_mutex_unlock
+            0x00736300      bl    0xbdd77c
+        ┌─< 0x00736304      b.ne  0x73631c
+        │   0x00736308      ldp   x20, x19, [sp, 0xb0]
+        │   0x0073630c      ldp   x29, x30, [sp, 0xa0]
+        │   0x00736310      add   sp, sp, 0xc0
+        │   0x00736314      autiasp
+        │   0x00736318      ret
+        └─> 0x0073631c      bl    sym.imp.__stack_chk_fail

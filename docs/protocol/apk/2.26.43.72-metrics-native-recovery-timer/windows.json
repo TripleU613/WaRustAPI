@@ -1,0 +1,52 @@
+[
+  {
+    "name": "credential-timer-callback",
+    "start_va": "0x72acd8",
+    "end_va": "0x72ad9c"
+  },
+  {
+    "name": "timer-constructor",
+    "start_va": "0x735fdc",
+    "end_va": "0x7360fc"
+  },
+  {
+    "name": "timer-arm",
+    "start_va": "0x7360fc",
+    "end_va": "0x7361cc"
+  },
+  {
+    "name": "timer-event",
+    "start_va": "0x7361cc",
+    "end_va": "0x73629c"
+  },
+  {
+    "name": "timer-cancel",
+    "start_va": "0x73629c",
+    "end_va": "0x736320"
+  },
+  {
+    "name": "credential-timer-thunk",
+    "start_va": "0xbd8fc8",
+    "end_va": "0xbd8fd0"
+  },
+  {
+    "name": "shared-timer-thunk",
+    "start_va": "0xbd9168",
+    "end_va": "0xbd9170"
+  },
+  {
+    "name": "timer-create-arguments",
+    "start_va": "0x49bf28",
+    "end_va": "0x49bf34"
+  },
+  {
+    "name": "failure-arguments",
+    "start_va": "0xbe05c8",
+    "end_va": "0xbe05d4"
+  },
+  {
+    "name": "weak-reference-arguments",
+    "start_va": "0xbe0ebc",
+    "end_va": "0xbe0ec8"
+  }
+]

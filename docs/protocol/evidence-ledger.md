@@ -6124,3 +6124,15 @@ four characters; raw object insertion and no quote escaping are corroborated.
 [Full-builder harness, exact outputs, ABI windows and limits](apk/2.26.43.72-metrics-native-request-tags/README.md#complete-selected-serialization-fixtures-2026-11-05).
 This extends the earlier24 branch-only cases. No Android libc, real product,
 allocator-failure behavior, live traffic or Rust telemetry implementation proved.
+
+### Native metrics connection-status repeating timer (2026-11-05)
+
+**Confirmed static / observed bounded synthetic execution, APK43.72:** body
+72ab10 is connection-status handling, correcting a provisional load-completion
+label. Ready0 schedules tasks and starts interval30 timer; unavailable1 cancels
+then signals error. Fifteen native arm/event/cancel/callback fixtures verify
+repeating/cancellation and readiness gates with explicit queue/mutex adapters.
+Not-ready callback does not itself stop generic timer repetition.
+[Native bodies, corrected scope, fixtures and concurrency limits](apk/2.26.43.72-metrics-native-recovery-timer/README.md).
+Rust IQ review did not establish a universal from rule; no guessed guard/retry
+was added. Status producers/generation/concurrency and live behavior remain open.

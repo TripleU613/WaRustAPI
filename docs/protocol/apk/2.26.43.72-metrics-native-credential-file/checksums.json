@@ -1,7 +1,7 @@
 {
   "README.md": {
-    "bytes": 7525,
-    "sha256": "d8d507ab36ac22f29724537bc1addfa1dc456ab24625c2747b652e11010e3599"
+    "bytes": 7740,
+    "sha256": "9587e26f4c3209aec51bf9b6162d18b626233dff8874e55055479a24c1fbfd15"
   },
   "check-header.py": {
     "bytes": 5628,
@@ -10,6 +10,10 @@
   "clone-arguments-assembly.txt": {
     "bytes": 115,
     "sha256": "9dff3f7b8b5b9ac25ee23d008986c69947ebeef8734b75d737da2a70c7a9ae32"
+  },
+  "connection-status-assembly.txt": {
+    "bytes": 6446,
+    "sha256": "bd7922971707f867660ea1755c5de2e15a226af7d5d416075dae2f5d07d85e54"
   },
   "credential-load-assembly.txt": {
     "bytes": 15277,
@@ -24,8 +28,8 @@
     "sha256": "a1b6d59d4ac5c754a0176e7bcfdde89bd344d5ec3a694d3fab21fae2a01a5065"
   },
   "file-boundaries.json": {
-    "bytes": 4126,
-    "sha256": "f5e0406d92673167a0e5554d2879434efa21610070b74f3123b1bbcac6902c16"
+    "bytes": 4128,
+    "sha256": "cd4003b844dbf7644ff14b358fd8237957f22d828b86b697ca0fd7e8cff8e355"
   },
   "file-close-assembly.txt": {
     "bytes": 1885,
@@ -55,16 +59,12 @@
     "bytes": 1726,
     "sha256": "92d36efe56987defae68ecb90919337b6fcd03728fe6308d4ae1395e67473afa"
   },
-  "load-completion-assembly.txt": {
-    "bytes": 6446,
-    "sha256": "bd7922971707f867660ea1755c5de2e15a226af7d5d416075dae2f5d07d85e54"
-  },
   "read-result-arguments-assembly.txt": {
     "bytes": 116,
     "sha256": "d147e5c922d3e07ad8e719fb6cd1297a1e8eba7fee5de2161cbc8c6fd6c4fbc3"
   },
   "windows.json": {
-    "bytes": 1038,
-    "sha256": "4d26490ce421c19e157437a024198773c0fba9250797668004a5d1b46db27581"
+    "bytes": 1040,
+    "sha256": "2cbd49ee1b8cd993611114394f6122b6e2c7e07334c3bcad2eb4953d0840cc4b"
   }
 }

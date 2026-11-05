@@ -10,7 +10,7 @@
     "end_va": "0x72ab10"
   },
   {
-    "name": "load-completion",
+    "name": "connection-status",
     "start_va": "0x72ab10",
     "end_va": "0x72acd8"
   },
