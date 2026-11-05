@@ -2070,6 +2070,7 @@ pub(super) async fn run(
                 // Offline replay sends nothing, so an undecryptable capture is
                 // counted with the unsupported rather than answered.
                 whatsapp_api::transport::inbox::IncomingResult::Unsupported
+                | whatsapp_api::transport::inbox::IncomingResult::MissingSession
                 | whatsapp_api::transport::inbox::IncomingResult::Undecryptable => replayed.2 += 1,
             }
         }
@@ -2435,7 +2436,8 @@ pub(super) async fn run(
             }
             whatsapp_api::transport::inbox::IncomingResult::Duplicate => {}
             whatsapp_api::transport::inbox::IncomingResult::Unsupported => {}
-            whatsapp_api::transport::inbox::IncomingResult::Undecryptable => {
+            whatsapp_api::transport::inbox::IncomingResult::MissingSession
+            | whatsapp_api::transport::inbox::IncomingResult::Undecryptable => {
                 println!("inbox: a saved payload could not be decrypted; no receipt sent offline");
             }
         }

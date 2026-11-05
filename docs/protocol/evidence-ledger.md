@@ -6398,3 +6398,33 @@ Fj2.A00 exact Invalid signature! directly throws EDY, supporting selected group
 wire5; bundle key signatures use a separate producer. No new wire code/runtime
 behavior added. Remaining cause propagation, provider equivalence and full
 retry/ACK policy are open. No live account operation.
+
+## Missing-session retry error preserved — 2026-11-05
+
+**Confirmed static:** [ordinary direct parser/session order and -1008 -> wire1](apk/2.26.43.72-direct-retry-cause-paths/README.md),
+and [group absent sender-key EDS -> -1008](apk/2.26.43.72-group-counter-error-paths/README.md).
+A0N constructs Fj3 beforeF22.A05 tests session presence. Eyj.A01 checks empty
+sender-key record before parsing its message. These orderings differ.
+
+**Implemented / offline tested:** IncomingResult::MissingSession preserves the
+specific absence through normal receive. Direct requires no saved session and
+successful SignalMessage syntax admission; a present session with missing
+identity remains generic Undecryptable. No sender-key record yields MissingSession
+on the group path. Normal receive queues retry with error=1 using the existing
+count1/original timestamp and durable selector/reservation. Malformed direct
+input does not inherit this cause. Syntax admission does not authenticate MAC
+or plaintext without a session.
+
+The existing public low-level queue_retry_for_incoming and retry_receipt helpers
+retain their unclassified behavior; callers without cause evidence do not gain
+a guessed default. Private construction accepts the confirmed code from normal
+receive. Existing reservation lookup keeps old held/uncertain/acknowledged wire
+unchanged; introducing a cause never resets retry count or creates a second
+attempt. Offline CLI replay recognizes the new outcome and sends nothing.
+
+Production-loop regression uses a structurally valid synthetic Signal message
+for the direct absent-session case and absent group key for skmsg; asserts
+error1/original timestamp, pending reservation before failed write, and no repeat
+or delivery ACK after reconnect/redelivery. This does not prove server acceptance.
+Generic failures still lack full typed eligibility/error classification, and
+native key/count/routing/ACK parity remains unfinished. No live account traffic.

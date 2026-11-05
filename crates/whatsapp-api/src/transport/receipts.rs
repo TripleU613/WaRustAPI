@@ -378,6 +378,18 @@ pub fn queue_retry_for_incoming(
     account: &crate::session::AccountRecord,
     node: &Node,
 ) -> Result<usize> {
+    queue_retry_for_incoming_with_cause(store, account, node, false)
+}
+
+// APK43.72 F22.A05/0WJ.A0N and Eyj.A01/0Yl.A00: missing
+// session/sender-key record -> EDS -> -1008 -> internal1 -> wire1.
+// Other causes retain legacy behavior until their producer policy is ported.
+pub(crate) fn queue_retry_for_incoming_with_cause(
+    store: &ProtocolStore,
+    account: &crate::session::AccountRecord,
+    node: &Node,
+    missing_session: bool,
+) -> Result<usize> {
     if node.description != "message" {
         return Err(Error::invalid(
             "receipt",
@@ -449,13 +461,14 @@ pub fn queue_retry_for_incoming(
                 "retry requires a usable original message timestamp",
             )
         })?;
-    let retry = super::messaging::retry_receipt(
+    let retry = super::messaging::retry_receipt_with_error(
         &chat,
         participant.as_ref(),
         id,
         1,
         registration,
         message_seconds,
+        missing_session.then_some(1),
     )?;
     let wire = crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
         .encode(&retry)?;
@@ -1533,11 +1546,26 @@ mod tests {
                 .and_then(|v| v.as_text()),
             Some("1700000000")
         );
+        // Adding a newly classified cause after reopen must not replace the
+        // historical unclassified wire or reset its uncertain reservation.
+        assert!(
+            pending[0]
+                .child("retry")
+                .unwrap()
+                .get_attr("error")
+                .is_none()
+        );
         let held = store
             .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
             .unwrap();
         assert_eq!(
-            queue_retry_for_incoming(&store, &account, &message.attr("t", "1700000001")).unwrap(),
+            queue_retry_for_incoming_with_cause(
+                &store,
+                &account,
+                &message.attr("t", "1700000001"),
+                true
+            )
+            .unwrap(),
             0
         );
         assert!(reserve_pending(&store).unwrap().is_empty());

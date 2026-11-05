@@ -984,8 +984,8 @@ pub(crate) async fn drive(
                         Err(error) => return Err(error),
                     }
                 }
-                if received == super::inbox::IncomingResult::Undecryptable {
-                    match super::receipts::queue_retry_for_incoming(&store, &account, &node) {
+                if matches!(received, super::inbox::IncomingResult::Undecryptable | super::inbox::IncomingResult::MissingSession) {
+                    match super::receipts::queue_retry_for_incoming_with_cause(&store, &account, &node, received == super::inbox::IncomingResult::MissingSession) {
                         Ok(0) => tracing::info!(target: "whatsapp_api::incoming", "retry already recorded; no repeat"),
                         Ok(_) => {
                             for receipt in super::receipts::reserve_pending(&store)? {
@@ -2521,6 +2521,22 @@ mod tests {
                 .unwrap();
             // Like the inbox resilience fixture: no session for this sender, so
             // this is a genuine decryption failure through the production loop.
+            use wacore_libsignal::protocol::{IdentityKeyPair, KeyPair, SignalMessage};
+            let mut rng = rand::rng();
+            let sender = IdentityKeyPair::generate(&mut rng);
+            let receiver = IdentityKeyPair::generate(&mut rng);
+            let ratchet = KeyPair::generate(&mut rng);
+            let message = SignalMessage::new(
+                3,
+                &[7; 32],
+                ratchet.public_key,
+                0,
+                0,
+                &[9; 48],
+                sender.identity_key(),
+                receiver.identity_key(),
+            )
+            .unwrap();
             let failed = Node::new("message")
                 .attr("t", "1700000000")
                 .attr("from", peer())
@@ -2530,7 +2546,7 @@ mod tests {
                     Node::new("enc")
                         .attr("v", "2")
                         .attr("type", "msg")
-                        .bytes(vec![9; 48]),
+                        .bytes(message.serialized().to_vec()),
                 ]);
             let failed = if grouped {
                 failed
@@ -2550,6 +2566,14 @@ mod tests {
             fake.deliver(failed.clone()).await;
             let (retry, reply) = fake.written().await;
             assert_eq!(retry.description, "receipt");
+            assert_eq!(
+                retry
+                    .child("retry")
+                    .unwrap()
+                    .get_attr("error")
+                    .and_then(|v| v.as_text()),
+                Some("1")
+            );
             assert_eq!(
                 retry
                     .child("retry")

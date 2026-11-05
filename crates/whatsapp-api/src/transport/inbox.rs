@@ -60,6 +60,9 @@ pub enum IncomingResult {
     /// recovery: an unsupported envelope stays unacknowledged, while supported
     /// ciphertext without usable keys can request a bounded resend.
     Undecryptable,
+    /// A syntactically supported direct message has no saved session, or a
+    /// group message has no sender-key record. Eligible for retry error1.
+    MissingSession,
 }
 
 // Token/string node bodies can be Text; raw binary bodies remain Bytes.
@@ -1087,9 +1090,13 @@ async fn process_direct(
         used_prekey = incoming.consumed_prekey;
         (incoming.received, incoming.identity)
     } else {
+        // APK43.72 A0N parses Fj3 before F22.A05 tests session existence.
+        // Malformed input must not inherit the missing-session retry cause.
+        if session.is_none() {
+            crate::signal::direct::validate_incoming_message(ciphertext)?;
+            return Ok(IncomingResult::MissingSession);
+        }
         let (Some(session), Some(identity)) = (&session, &identity) else {
-            // A `msg` with no session: the sender is encrypting against a
-            // ratchet we do not have, which only a resend can fix.
             return Ok(IncomingResult::Undecryptable);
         };
         (
@@ -1812,7 +1819,7 @@ async fn process_group_inner(
             tracing::warn!(
                 "group stanza preserved: sender key missing; decryption requires distribution"
             );
-            return Ok(IncomingResult::Undecryptable);
+            return Ok(IncomingResult::MissingSession);
         };
         final_key = Some(received.updated_key.to_vec());
         group_plaintext = Some(received.plaintext);
@@ -2449,7 +2456,7 @@ mod tests {
         let capture = preserve(&store, &node).unwrap();
         assert_eq!(
             process(&store, &account, &node, &capture).await.unwrap(),
-            IncomingResult::Undecryptable
+            IncomingResult::MissingSession
         );
         let text_body = node.clone().children(vec![
             Node::new("enc")
@@ -2462,7 +2469,7 @@ mod tests {
             process(&store, &account, &text_body, &text_capture)
                 .await
                 .unwrap(),
-            IncomingResult::Undecryptable
+            IncomingResult::MissingSession
         );
         // No sender key, session or inbox row was created.
         assert!(
@@ -2870,7 +2877,7 @@ mod tests {
         let capture = preserve(&store, &node).unwrap();
         assert_eq!(
             process(&store, &account, &node, &capture).await.unwrap(),
-            IncomingResult::Undecryptable
+            IncomingResult::MissingSession
         );
         assert_eq!(
             super::super::receipts::queue_retry_for_incoming(&store, &account, &node).unwrap(),

@@ -1,3 +1,13 @@
+2026-11-05 — **Normal missing-session retries now include error1.**
+
+Direct syntax admission precedes absent-session classification; group absent
+sender-key record retains its own ordering. The normal retry path preserves
+this cause and keeps original timestamp/count/reservation behavior. Offline CLI
+replay remains offline. [Implementation, evidence and remaining gaps](docs/protocol/outgoing-retry-receipts.md#missing-session-retry-error-preserved--2026-11-05).
+Validation:1328 workspace tests plus historical-wire regression, strict Clippy,
+fmt, CLI reference, APK coverage and hygiene passed. Other error policies remain
+unfinished; no live traffic.
+
 2026-11-05 — **Direct retry cause chains and attribution corrected.**
 
 Ordinary direct A0N independently confirms old-counter exclusion. Missing

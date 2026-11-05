@@ -16494,5 +16494,12 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-direct-retry-cause-paths/README.md",
     "description": "Corrects A0P to fast-ratchet group decrypt; ordinary direct A0N independently maps old counters to excluded -1001. F22 missing session EDS maps to -1008/wire1. EDY session-attempt aggregation supplies No valid sessions./wire8; raw primitive BadMac mapping would lose this context. Fj2 sender-key signature failure supplies exact EDY refinement/wire5, distinct from bundle signature producers. No new wire code or runtime behavior; full producer equivalence remains incomplete."
+  },
+  "x-missing-session-retry-error": {
+    "x-cli": false,
+    "x-transport": ["normal experimental receive; offline tested"],
+    "x-live": false,
+    "evidence": "docs/protocol/outgoing-retry-receipts.md#missing-session-retry-error-preserved--2026-11-05",
+    "description": "IncomingResult::MissingSession distinguishes supported direct ciphertext with absent session and group absent sender-key record. Direct syntax parsing precedes missing-session classification; missing identity with existing session stays generic. Normal receive serializes retry/error=1 for this cause with existing count1/original timestamp and durable once-only reservations. Historical held wire is not rewritten or replayed. Offline CLI replay sends nothing. Existing public unclassified builders retain behavior; no HTTP route, new CLI flag or live acceptance added. Other causes/native retry policies remain incomplete."
   }
 }

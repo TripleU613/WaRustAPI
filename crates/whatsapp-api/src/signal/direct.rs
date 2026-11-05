@@ -209,6 +209,13 @@ fn payload_summary_depth(bytes: &[u8], depth: usize) -> Result<String> {
     }
     Ok(summary)
 }
+/// Syntax admission before selecting a missing-session retry cause. No MAC
+/// authentication or ratchet mutation is claimed without a session.
+pub(crate) fn validate_incoming_message(ciphertext: &[u8]) -> Result<()> {
+    signal::SignalMessage::try_from(ciphertext).map_err(crypto)?;
+    Ok(())
+}
+
 pub(super) fn crypto(error: SignalProtocolError) -> Error {
     // libsignal errors can carry peer addresses, application strings and
     // backend details. Classify by variant, never format the underlying error.

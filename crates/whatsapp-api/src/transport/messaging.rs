@@ -622,6 +622,26 @@ pub fn retry_receipt(
     registration_id: u32,
     message_seconds: i64,
 ) -> crate::Result<Node> {
+    retry_receipt_with_error(
+        chat,
+        participant,
+        message_id,
+        count,
+        registration_id,
+        message_seconds,
+        None,
+    )
+}
+
+pub(crate) fn retry_receipt_with_error(
+    chat: &Jid,
+    participant: Option<&Jid>,
+    message_id: &str,
+    count: u32,
+    registration_id: u32,
+    message_seconds: i64,
+    error: Option<u32>,
+) -> crate::Result<Node> {
     if message_id.is_empty() || message_id.len() > 128 {
         return Err(crate::Error::invalid("receipt", "invalid message id"));
     }
@@ -638,12 +658,16 @@ pub fn retry_receipt(
     if let Some(participant) = participant {
         node = node.attr("participant", participant.clone());
     }
+    let mut retry = Node::new("retry")
+        .attr("count", count.to_string().as_str())
+        .attr("id", message_id)
+        .attr("t", message_seconds.to_string().as_str())
+        .attr("v", "1");
+    if let Some(error) = error {
+        retry = retry.attr("error", error.to_string());
+    }
     Ok(node.children(vec![
-        Node::new("retry")
-            .attr("count", count.to_string().as_str())
-            .attr("id", message_id)
-            .attr("t", message_seconds.to_string().as_str())
-            .attr("v", "1"),
+        retry,
         Node::new("registration").bytes(registration_id.to_be_bytes().to_vec()),
     ]))
 }
