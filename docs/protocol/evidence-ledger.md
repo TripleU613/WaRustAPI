@@ -5869,3 +5869,14 @@ these outputs are partial payloads, not recovered native libraries.
 [Complete loader/API, reproducible probe and limits](apk/2.26.43.72-superpack-unpack-boundary/README.md).
 Archive transforms, member identity, JNI registration and native transport/recovery
 remain open. No Rust behavior or live account operation changed.
+
+### Superpack decoder usability is a narrow JNI probe (2026-11-05)
+
+**Confirmed static, APK43.72:** decoder member/export bytes pinned. The56-byte
+usability export constructs47 77 53 and passes them through one JNI-table call;
+it does not exercise archive decompression. Host JNI layout supports setter
+identity as an inference, not observed Android execution. Openbox Java wrapper
+exposes file-range/reader-pointer boundaries, not a restored container schema.
+[Exact assembly, symbols, API and limits](apk/2.26.43.72-superpack-decoder-entry/README.md).
+Native registration/transforms, complete inner libraries and metrics transport
+remain open. No Rust behavior or live account operation changed.

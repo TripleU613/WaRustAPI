@@ -1,0 +1,38 @@
+{
+  "README.md": {
+    "bytes": 4232,
+    "sha256": "9149c91557ed982f4666068a9d5cbd0ced8b99c6a8b24b9929e29b5cd144b5cd"
+  },
+  "decoder-identity.json": {
+    "bytes": 422,
+    "sha256": "3a0f278799802c47bddbe79ac92f3b694b12ae81dff8ddcb24e5f0491568d9ea"
+  },
+  "dynamic-symbols.txt": {
+    "bytes": 7621,
+    "sha256": "c0a4581ce3f884e6b9135a26c32f307022d6f0004e6adea6d6a3c8930a928a34"
+  },
+  "elf-sections.txt": {
+    "bytes": 2742,
+    "sha256": "49e3a2e4a91f334015e20291b01e805898c713a2c866bcd742cf39902ce679b0"
+  },
+  "jni-layout.c": {
+    "bytes": 222,
+    "sha256": "92c8d52ccafb5d6918702edbe9da358d26f7b9d6caf0e8c3bd4c71a6c254fc44"
+  },
+  "jni-layout.txt": {
+    "bytes": 48,
+    "sha256": "4c0151acfb87bc5a43d72eaf42f006601bfe4f6be9df743e92df51e8a2b16d56"
+  },
+  "openbox-java-api.txt": {
+    "bytes": 6937,
+    "sha256": "d2c708df5afeb823d14bf49dbd05952411fdb97b75ee65928f0e235618c129f8"
+  },
+  "rizin-version.txt": {
+    "bytes": 27,
+    "sha256": "cf3024e952c1805dc7e3d40c5be900d0108078f33c5a3005380437e6edac937e"
+  },
+  "usability-assembly.txt": {
+    "bytes": 812,
+    "sha256": "e1a9d90fe2506aef6c1b2be8cec6dbe59fe7431d2cc0b5f56a82d8e9b8018a32"
+  }
+}

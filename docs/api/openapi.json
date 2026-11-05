@@ -16053,5 +16053,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-superpack-unpack-boundary/README.md",
     "description": "Superpack loader/API bodies and bounded digest-verified XZ probe retained. First12 of140 magic candidates decode to non-ELF-prefix payloads, not reconstructed inner libraries. Full container transforms, member identity, JNI registration and native transport/recovery remain open. No telemetry, sender, route or live operation added."
+  },
+  "x-superpack-decoder-entry-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-superpack-decoder-entry/README.md",
+    "description": "Pinned decoder usability export constructs fixed bytes through one JNI-table call, not archive decompression. Host JNI layout supports setter inference; Openbox Java wrapper exposes native file-range reader boundaries. Full native registration, transforms, inner-library recovery and metrics transport remain open. No sender, telemetry, route or live operation added."
   }
 }

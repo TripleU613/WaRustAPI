@@ -1,0 +1,12 @@
+{
+  "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+  "member": "lib/arm64-v8a/libsuperpack.so",
+  "bytes": 220920,
+  "sha256": "fe24d8091d7fc96e0b3dee9cda3d7ecb5ec5cbe4582b86d9c42010b04d98e45f",
+  "usability_function": {
+    "virtual_address": "0xa4cc",
+    "file_offset": "0xa4cc",
+    "bytes": 56,
+    "sha256": "c84753876c11086ab9a3c46b4f1322e5a79c8d82008db6c184cc4235e3f92e8b"
+  }
+}
