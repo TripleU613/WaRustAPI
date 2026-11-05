@@ -1,3 +1,11 @@
+2026-11-05 — **Push-config startup order and404 reconciliation work traced.**
+
+The selected GET follows token drain/conditional rotation. Its404 error queues
+VERIFY with null String inputs rather than directly retrying the GET.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-push-config-trigger-error/README.md).
+Research only; no runtime changes or live traffic. Validation: checked exports,
+source/excerpt match, checksums, JSON, coverage freshness and repository hygiene.
+
 2026-11-05 — **Alternate push-config admission and Long syntax traced.**
 
 Non-Android parsed entries still consume the reply collection allowance, despite

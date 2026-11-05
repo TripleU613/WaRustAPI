@@ -1,0 +1,63 @@
+# class: LX/1ru;
+# extends: Ljava/lang/Object;
+
+.method public A01(VI)  # .registers 5
+    # full signature: LX/1ru;->A01(I)V
+    0000..0004  instance-of  v0, v3, LX/1rv;
+    0004..0008  if-eqz  v0, +0xd
+    0008..000a  move-object  v0, v3
+    000a..000e  check-cast  v0, LX/1rv;
+    000e..0012  iget-object  v0, v0, LX/1rv;->A00:LX/1rj;
+    0012..0016  iget-object  v0, v0, LX/1rj;->A07:LX/1lZ;
+    0016..001c  invoke-virtual  {v0, v4}, LX/1lZ;->A0o(I)V
+    001c..001e  return-void
+    001e..0022  instance-of  v0, v3, LX/291;
+    0022..0026  if-eqz  v0, -0x3
+    0026..0028  move-object  v2, v3
+    0028..002c  check-cast  v2, LX/291;
+    002c..0030  iget  v0, v2, LX/291;->$t:I
+    0030..0036  packed-switch  v0, payload@0xe0, cases=[1:@0x38, 2:@0xba, 3:@0xa6, 4:@0x70], default@0x36
+    0036..0038  return-void
+    0038..003c  const/16  v0, #0x194
+    003c..0040  if-ne  v4, v0, +0xc
+    0040..0044  iget-object  v0, v2, LX/291;->A00:Ljava/lang/Object;
+    0044..0048  check-cast  v0, LX/1rj;
+    0048..004c  iget-object  v0, v0, LX/1rj;->A07:LX/1lZ;
+    004c..0052  invoke-virtual  {v0}, LX/1lZ;->A0i()V
+    0052..0054  return-void
+    0054..0058  const/16  v0, #0x1f7
+    0058..005c  if-ne  v4, v0, -0x1e
+    005c..0060  iget-object  v0, v2, LX/291;->A00:Ljava/lang/Object;
+    0060..0064  check-cast  v0, LX/1rj;
+    0064..0068  iget-object  v0, v0, LX/1rj;->A07:LX/1lZ;
+    0068..006e  invoke-virtual  {v0}, LX/1lZ;->A0j()V
+    006e..0070  return-void
+    0070..0074  const-string  v1, "ConnectionWriter/change number failed; code="
+    0074..0078  new-instance  v0, Ljava/lang/StringBuilder;
+    0078..007e  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    007e..0084  invoke-virtual  {v0, v4}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0084..008a  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    008a..008c  move-result-object  v0
+    008c..0092  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0092..0096  iget-object  v0, v2, LX/291;->A00:Ljava/lang/Object;
+    0096..009a  check-cast  v0, LX/1rj;
+    009a..009e  iget-object  v0, v0, LX/1rj;->A07:LX/1lZ;
+    009e..00a4  invoke-virtual  {v0, v4}, LX/1lZ;->A0n(I)V
+    00a4..00a6  return-void
+    00a6..00aa  iget-object  v0, v2, LX/291;->A00:Ljava/lang/Object;
+    00aa..00ae  check-cast  v0, LX/1rj;
+    00ae..00b2  iget-object  v0, v0, LX/1rj;->A07:LX/1lZ;
+    00b2..00b8  invoke-virtual  {v0, v4}, LX/1lZ;->A0p(I)V
+    00b8..00ba  return-void
+    00ba..00be  const-string  v1, "ConnectionWriter/sendClearFbnsToken/failed to clear code="
+    00be..00c2  new-instance  v0, Ljava/lang/StringBuilder;
+    00c2..00c8  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00c8..00ce  invoke-virtual  {v0, v4}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00ce..00d4  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00d4..00d6  move-result-object  v0
+    00d6..00dc  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    00dc..00de  return-void
+    00de..00e0  nop
+    00e0..00f8  packed-switch-payload  size=4
+    # exception table: 0 try range(s)
+.end method

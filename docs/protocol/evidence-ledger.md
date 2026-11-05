@@ -5711,3 +5711,14 @@ Character.digit delegates digit acceptance to the Android runtime.
 [Selected converter gates, complete exports and limits](apk/2.26.43.72-push-config-variant-admission/README.md).
 Full optional/Apple item semantics, Unicode tables, header validation, provenance
 and durable reconciliation remain open. No Rust behavior or live traffic changed.
+
+### Push-config GET startup ordering and404 work (2026-11-05)
+
+**Confirmed static, APK43.72:** the sole direct GET producer caller is in the
+selected startup method after token drain/conditional rotation. Lower-level
+error ownership is removed before code parsing and can emit more than one
+callback for multiple error children. Its type27 bridge reaches selected404
+handling that queues VERIFY with seven null String inputs, not a direct GET
+retry. [Caller, excerpt, error bodies and limits](apk/2.26.43.72-push-config-trigger-error/README.md).
+Full startup eligibility, provider work, timeouts and durable recovery remain
+open. No Rust behavior or live account operation changed.

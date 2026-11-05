@@ -15918,5 +15918,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-push-config-variant-admission/README.md",
     "description": "Selected non-Android config converters contribute to the converted-entry bound despite no Android holder projection. Long helper handles optional sign, leading zeros and overflow, without trimming; digit acceptance delegates to Android Character.digit. Full optional/Apple item grammar, Unicode tables, header/provenance and durable ownership remain open. No parser, sender, route or live operation added."
+  },
+  "x-push-config-trigger-error-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-push-config-trigger-error/README.md",
+    "description": "Selected startup calls config GET after token drain and conditional rotation. Lower-level error code callbacks bridge type27; selected404 handler queues VERIFY with null String inputs, not a direct GET retry. Multiple error children can produce repeated callbacks. Full startup gates, providers, timeout and durable recovery remain open. No sender, route or live operation added."
   }
 }
