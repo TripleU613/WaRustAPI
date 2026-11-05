@@ -16536,5 +16536,12 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-sender-key-future-retry/README.md",
     "description": "Error::SignalSenderKeyFutureCounter and IncomingResult::SenderKeyFutureCounter preserve a confirmed matching-chain excessive jump after backend signature verification. Read-only effective loaded-record metadata selects the actual retained chain; both counters must fit nonnegative Java int and jump exceed2000. No provider string matching/component export; temporary bytes zeroized. Normal receive sends retry/error6 with existing count1/timestamp/reservation and no replay/ACK/state commit on failure. Boundary2000, older chain, reservation, signature precedence and high-bit unmapped cases tested. High-bit/full native parity remains open; no route/CLI flag or live acceptance added."
+  },
+  "x-missing-sender-key-chain-retry-error": {
+    "x-cli": false,
+    "x-transport": ["normal experimental group receive; offline tested"],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-sender-key-chain-retry/README.md",
+    "description": "Error::SignalMissingSenderKeyChain and IncomingResult::MissingSenderKeyChain preserve unknown chain in a nonempty saved sender-key record, selecting retry/error4. Stored empty record is checked before backend parsing and retains MissingSession/error1. Native wrapped EDR/EDY cause plus documented Android constructor semantics distinguish this from bare-prefix or direct-prekey errors. Production-loop fixtures preserve timestamp, uncertain reservation and unchanged keys/no repeated retry or delivery ACK. Offline replay sends nothing; no new route/CLI flag or live acceptance. Full native policy remains incomplete."
   }
 }

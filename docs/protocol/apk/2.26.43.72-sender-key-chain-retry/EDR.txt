@@ -1,0 +1,17 @@
+
+# class: LX/EDR;
+# extends: Ljava/lang/Exception;
+
+.method public <init>(VL)  # .registers 2
+    # full signature: LX/EDR;-><init>(Ljava/lang/String;)V
+    0000..0006  invoke-direct  {v0, v1}, Ljava/lang/Exception;-><init>(Ljava/lang/String;)V
+    0006..0008  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VL)  # .registers 2
+    # full signature: LX/EDR;-><init>(Ljava/lang/Throwable;)V
+    0000..0006  invoke-direct  {v0, v1}, Ljava/lang/Exception;-><init>(Ljava/lang/Throwable;)V
+    0006..0008  return-void
+    # exception table: 0 try range(s)
+.end method

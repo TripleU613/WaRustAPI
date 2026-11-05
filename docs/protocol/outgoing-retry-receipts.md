@@ -261,3 +261,27 @@ primitives and full retry key/count/routing/ACK parity remain open. No live traf
 Validation:1329 workspace/all-feature tests passed. Formatting, strict workspace
 all-target/all-feature Clippy, CLI reference regeneration, APK coverage, staged
 whitespace and research checksum/link hygiene passed. Offline only.
+
+## Empty sender-key records and missing chains — 2026-11-05
+
+**Confirmed static + platform contract / inferred equivalence:** [native empty
+record versus wrapped missing-chain paths](apk/2.26.43.72-sender-key-chain-retry/README.md).
+Empty record is checked before message parsing and selects error1. Unknown chain
+inside a nonempty record constructs EDR then EDY(Throwable); Android's documented
+class-prefixed cause-message behavior prevents the bare No keys prefix refinement,
+retaining -1005 -> wire4. Full classes, platform references and a local OpenJDK
+corroboration fixture are retained; no APK runtime observation is claimed.
+
+receive_group now preserves empty-record precedence. Nonempty-record typed
+NoSenderKeyState becomes SignalMissingSenderKeyChain / MissingSenderKeyChain and
+normal retry/error4. Diagnostics are fixed/redacted. Production-loop fixtures
+check error1 for malformed input with an empty record, error4 for a parsed unknown
+chain, and unchanged keys/no repeated retry or delivery ACK after uncertain write.
+Existing signature/future/missing-session cases retain5/6/1. Offline CLI replay
+sends nothing. Other causes, count/key/routing/ACK parity and live acceptance
+remain incomplete. No live account operation.
+
+Validation:1329 workspace/all-feature tests passed. Formatting, strict workspace
+all-target/all-feature Clippy, CLI reference regeneration, APK coverage, staged
+whitespace and research checksum/link hygiene passed. Local platform-contract
+fixture passed separately; no APK or live account execution.

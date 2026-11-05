@@ -1,0 +1,14 @@
+{
+  "checked_on": "2026-11-05",
+  "sources": [
+    {
+      "url": "https://developer.android.com/reference/java/lang/Exception#Exception(java.lang.Throwable)",
+      "fact": "Cause-only Exception construction uses the cause string representation as the outer detail message."
+    },
+    {
+      "url": "https://developer.android.com/reference/java/lang/Throwable#toString()",
+      "fact": "Default throwable string representation starts with its runtime class name before its localized message."
+    }
+  ],
+  "scope": "Android API contract verification; not device or APK runtime observation. Local Java fixture separately identifies its own OpenJDK runtime."
+}

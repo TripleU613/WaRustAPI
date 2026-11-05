@@ -1,0 +1,12 @@
+{
+  "package": "wacore-libsignal",
+  "version": "0.7.0",
+  "file": "src/protocol/group_cipher.rs",
+  "bytes": 29940,
+  "sha256": "324b55313055b7542166c37d59748ab7b1afb3aa82cbf29db086e140350cb950",
+  "facts": [
+    "group_decrypt203-221 parses before loading record; absent load returns NoSenderKeyState",
+    "223-240 nonmatching chain in saved record also returns NoSenderKeyState; selection precedes signature verification",
+    "wrapper supplies a present nonempty record after its early native-order check; NoSenderKeyState at this call therefore identifies the missing chain"
+  ]
+}

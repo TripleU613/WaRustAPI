@@ -988,6 +988,7 @@ pub(crate) async fn drive(
                     super::inbox::IncomingResult::MissingSession => Some(super::receipts::RetryCause::MissingSession),
                     super::inbox::IncomingResult::InvalidSenderKeySignature => Some(super::receipts::RetryCause::SenderKeySignature),
                     super::inbox::IncomingResult::SenderKeyFutureCounter => Some(super::receipts::RetryCause::SenderKeyFutureCounter),
+                    super::inbox::IncomingResult::MissingSenderKeyChain => Some(super::receipts::RetryCause::MissingSenderKeyChain),
                     _ => None,
                 };
                 if received == super::inbox::IncomingResult::Undecryptable || retry_cause.is_some() {
@@ -2515,12 +2516,18 @@ mod tests {
 
     #[tokio::test]
     async fn undecryptable_message_requests_once_before_write_cut_and_never_replays() {
-        for (grouped, bad_signature, future_counter) in [
-            (false, false, false),
-            (true, false, false),
-            (true, true, false),
-            (true, false, true),
+        for case in [
+            "direct_missing",
+            "group_missing",
+            "group_empty",
+            "signature",
+            "future",
+            "chain",
         ] {
+            let grouped = case != "direct_missing";
+            let bad_signature = case == "signature";
+            let future_counter = case == "future";
+            let missing_chain = case == "chain";
             let dir = tempfile::tempdir().unwrap();
             let store = open(&dir.path().join("retry-cut.redb"));
             store
@@ -2559,7 +2566,7 @@ mod tests {
                         .attr("type", "msg")
                         .bytes(message.serialized().to_vec()),
                 ]);
-            let group_ciphertext = if bad_signature || future_counter {
+            let group_ciphertext = if bad_signature || future_counter || missing_chain {
                 use crate::signal::group::{
                     commit_skdm, encrypt_group_payload, extract_skdm_from_payload,
                     prepare_own_sender_key, process_skdm, sender_key_db_key,
@@ -2578,14 +2585,18 @@ mod tests {
                 .await
                 .unwrap();
                 assert!(store.write(|tx| commit_skdm(tx, &installed)).unwrap());
-                if future_counter {
+                if future_counter || missing_chain {
                     use wacore_libsignal::protocol::{SenderKeyMessage, SenderKeyRecord};
                     let own_record = SenderKeyRecord::deserialize(&mine.updated_key).unwrap();
                     let state = own_record.sender_key_state().unwrap();
                     SenderKeyMessage::new(
                         3,
-                        state.chain_id(),
-                        2001,
+                        if missing_chain {
+                            state.chain_id().wrapping_add(1)
+                        } else {
+                            state.chain_id()
+                        },
+                        if future_counter { 2001 } else { 0 },
                         vec![0; 1].into_boxed_slice(),
                         &mut rng,
                         &state.signing_key_private().unwrap(),
@@ -2606,6 +2617,17 @@ mod tests {
             } else {
                 vec![9; 48]
             };
+            if case == "group_empty" {
+                let group = Jid::parse("120363000000000001@g.us").unwrap();
+                let sender = peer().with_device(3);
+                let key = crate::signal::group::sender_key_db_key(&group, &sender);
+                let empty = wacore_libsignal::protocol::SenderKeyRecord::new_empty()
+                    .serialize()
+                    .unwrap();
+                store
+                    .write(|tx| tx.put_json(Table::SenderKeys, &key, 1, &empty))
+                    .unwrap();
+            }
             let held_keys = store.read(|tx| tx.scan(Table::SenderKeys, 1, 10)).unwrap();
             let failed = if grouped {
                 failed
@@ -2635,6 +2657,8 @@ mod tests {
                     "5"
                 } else if future_counter {
                     "6"
+                } else if missing_chain {
+                    "4"
                 } else {
                     "1"
                 })

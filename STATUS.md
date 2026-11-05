@@ -1,3 +1,12 @@
+2026-11-05 — **Missing sender-key chains now carry retry error4.**
+
+A stored empty record retains error1 before parsing; an unknown chain in a
+nonempty record preserves its distinct wrapped native cause. Redelivery after
+uncertain write remains held and sender keys stay unchanged. [Evidence, platform contract and regressions](docs/protocol/outgoing-retry-receipts.md#empty-sender-key-records-and-missing-chains--2026-11-05).
+Validation:1329 tests, strict Clippy, fmt, CLI reference, APK coverage, hygiene
+and local platform-contract fixture passed. No live traffic; complete native retry
+policy remains unfinished.
+
 2026-11-05 — **Confirmed sender-key future jumps now carry retry error6.**
 
 Typed classification uses the effective matching saved chain, preserves signature

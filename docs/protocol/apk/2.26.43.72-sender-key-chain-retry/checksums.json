@@ -1,0 +1,34 @@
+{
+  "EDR.txt": {
+    "bytes": 601,
+    "sha256": "ba5d9849c4d6d6794b2833ec6689efcc85f4c4b6cdc8f4cb355685ca7cda86fb"
+  },
+  "EDY.txt": {
+    "bytes": 1361,
+    "sha256": "f9f393ab13f52fb5f2f3fb4b859f5f757c1165188d5959af9fc6572d1208ea43"
+  },
+  "README.md": {
+    "bytes": 4300,
+    "sha256": "3434a7f634002ce5ae54de1ca623b50624a0de980703e781bfa4b96cc767028b"
+  },
+  "WrapperContract.java": {
+    "bytes": 706,
+    "sha256": "5a2bb9aa0d40b6e99aa9e02a451c15e0e4d37927608cf5f365056b0c5918e515"
+  },
+  "backend-source-identity.json": {
+    "bytes": 587,
+    "sha256": "1ae88ec01ee053a3bb318953776b0b0c5ae15acc06d487e4e6fd3cdc59781212"
+  },
+  "java-version.txt": {
+    "bytes": 128,
+    "sha256": "f0dac3382d0120e4f4e3463bada25a7c4a3469444b58bbc315c3bf7ee4187ba7"
+  },
+  "platform-contract.json": {
+    "bytes": 663,
+    "sha256": "7cd3cc05c949d414890a2f1f033f92f8313b4053130799fd525856384f31a35a"
+  },
+  "wrapper-result.txt": {
+    "bytes": 56,
+    "sha256": "7952c158a664e44df7e06721da11499a23157797a776889752e6f4a2bd5425b3"
+  }
+}

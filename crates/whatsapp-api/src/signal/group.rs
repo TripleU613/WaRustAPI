@@ -193,6 +193,11 @@ pub async fn receive_group(
         return Ok(None);
     }
     let mut store = SenderKeys::new(previous_bytes)?;
+    // Eyj.A01 checks an empty record before constructing Fj2. The backend
+    // parses first, so retain native missing-session precedence here as well.
+    if store.record.as_ref().is_none_or(SenderKeyRecord::is_empty) {
+        return Ok(None);
+    }
     let name = SenderKeyName::from_parts(&group.to_string(), &sender.to_string());
     let plaintext = signal::group_decrypt(ciphertext, &mut store, &name)
         .await
@@ -205,6 +210,10 @@ pub async fn receive_group(
             SignalProtocolError::SignatureValidationFailed => {
                 Error::SignalInvalidSenderKeySignature
             }
+            // Only the nonempty loaded record reaches this call. Backend
+            // NoSenderKeyState now means unknown chain ID; Eyj wraps EDR in
+            // EDY(Throwable), retaining -1005 -> kind4 -> wire4.
+            SignalProtocolError::NoSenderKeyState(_) => Error::SignalMissingSenderKeyChain,
             // Backend group_decrypt verifies the signature before producing
             // InvalidMessage from its counter/CBC paths. Inspect only on error;
             // do not move the counter check ahead of signature verification.

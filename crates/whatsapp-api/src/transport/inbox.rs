@@ -69,6 +69,9 @@ pub enum IncomingResult {
     /// Verified sender-key message exceeds the confirmed forward-counter window.
     /// Eligible for the scoped native future-counter retry error6.
     SenderKeyFutureCounter,
+    /// A supported sender-key message names no chain in the saved nonempty record.
+    /// Eligible for the scoped native wrapped-chain-error retry error4.
+    MissingSenderKeyChain,
 }
 
 // Token/string node bodies can be Text; raw binary bodies remain Bytes.
@@ -1517,6 +1520,10 @@ async fn process_group(
     policy: IdentityChangePolicy,
 ) -> Result<IncomingResult> {
     match process_group_inner(store, account, node, capture, policy).await {
+        Err(Error::SignalMissingSenderKeyChain) => {
+            tracing::warn!("sender-key chain unavailable; capture preserved for bounded retry");
+            Ok(IncomingResult::MissingSenderKeyChain)
+        }
         Err(Error::SignalSenderKeyFutureCounter) => {
             tracing::warn!(
                 "sender-key counter exceeds forward window; capture preserved for bounded retry"

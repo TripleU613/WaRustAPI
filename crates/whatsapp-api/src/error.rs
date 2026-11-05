@@ -38,6 +38,10 @@ pub enum Error {
     #[error("Signal sender-key message exceeds the forward-counter window")]
     SignalSenderKeyFutureCounter,
 
+    /// A parsed sender-key message names no chain in a nonempty saved record.
+    #[error("Signal sender-key message chain is unavailable")]
+    SignalMissingSenderKeyChain,
+
     /// A caller-supplied value failed validation.
     #[error("invalid input for `{field}`: {reason}")]
     InvalidInput {

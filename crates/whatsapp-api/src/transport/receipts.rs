@@ -387,6 +387,7 @@ pub(crate) enum RetryCause {
     MissingSession,
     SenderKeySignature,
     SenderKeyFutureCounter,
+    MissingSenderKeyChain,
 }
 
 impl RetryCause {
@@ -398,6 +399,9 @@ impl RetryCause {
             Self::SenderKeySignature => 5,
             // Eyj.A01 -> EtY -1202 -> internal10 -> DxB wire6.
             Self::SenderKeyFutureCounter => 6,
+            // Eyj.A01 EDR -> EDY(Throwable) class-prefixed message retains
+            // EtY -1005 -> internal4 -> DxB wire4, not bare-prefix wire2.
+            Self::MissingSenderKeyChain => 4,
         }
     }
 }
