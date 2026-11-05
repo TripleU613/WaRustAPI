@@ -1,3 +1,11 @@
+2026-11-04 — **IQ callback promotion is confirmed pre-write.**
+
+The native sent registry does not prove socket delivery. Presence checks and
+promotion are separate; selected shutdown handling flushes the sent map,
+not every queued callback. [Evidence and limits](docs/protocol/apk/2.26.43.72-iq-promotion-shutdown/README.md).
+Research only; no runtime changes or live traffic. Validation: checked writer,
+registry and handler exports, checksums, JSON, coverage freshness and hygiene.
+
 2026-11-04 — **Token delivery-failure and IQ-error effects distinguished.**
 
 Delivery failure restores a nonce only into an empty pending slot; IQ error

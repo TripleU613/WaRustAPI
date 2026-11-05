@@ -1,0 +1,82 @@
+{
+  "README.md": {
+    "bytes": 4882,
+    "sha256": "c97fd1dc06ba5e74dcc6ec44186d999b9530c43ec15a2869eb3b99477b52e44f"
+  },
+  "callback-presence.txt": {
+    "bytes": 646,
+    "sha256": "cc3a1843d60e1b50cc4e2a794c5b3e1c8efef0301660d761b808b06e76374244"
+  },
+  "handler.txt": {
+    "bytes": 30971,
+    "sha256": "4c8a65dfb8084a0e069c95bf190c90cf19c93a0dd6c6c362f198bacae16bc94f"
+  },
+  "message-envelope.txt": {
+    "bytes": 1874,
+    "sha256": "99775e583e92969cc9a79bf2e3fce66aa13388798f58f50d116053441e943ce8"
+  },
+  "message-type.txt": {
+    "bytes": 730,
+    "sha256": "ecb66e7eb17c60a5cd71bfd34b7fa3797197af6f2142436f84b1b17eca915914"
+  },
+  "node-write.txt": {
+    "bytes": 413,
+    "sha256": "2a6d993bd4da16a463587872e941b6f03102b5db887fadd1ff8c92abebd709a9"
+  },
+  "promotion-callback.txt": {
+    "bytes": 615,
+    "sha256": "20d45e6ce0ba6b1fc81bb5d06fd5d70c0ea5dd2c232c43477bce9e3b613f4d4a"
+  },
+  "promotion-callers.txt": {
+    "bytes": 65,
+    "sha256": "6681c1c7a422ea7ac614632fce0e06142a7f99bc3d471fc0e5e4ea5f35bd9773"
+  },
+  "registry-A03.txt": {
+    "bytes": 2846,
+    "sha256": "a66ef894d84185c46c145b7317360847629bd9f3de5d817b8e94d3611df0d0b1"
+  },
+  "registry-A0C.txt": {
+    "bytes": 3447,
+    "sha256": "78d534733624b00e2389ad7dda172b252e7df89ebe7ace640cec2ca31e672b2a"
+  },
+  "registry-A0D.txt": {
+    "bytes": 1283,
+    "sha256": "880da968a0b77c24012107974736580cff59671957eed5c0a4ccfc9064018423"
+  },
+  "registry-A0F.txt": {
+    "bytes": 2103,
+    "sha256": "7d5360791aaeb9cce4c1a538351be7d2b65fd588937629af5e67032bc939f2e9"
+  },
+  "registry-A0I.txt": {
+    "bytes": 609,
+    "sha256": "40dd1c0312a9006d697c87bc43075ae415b6b6abefeb6e5e55a5872e718f3535"
+  },
+  "shutdown-callers.txt": {
+    "bytes": 142,
+    "sha256": "1c206d46495d9e6c68733bc44397ce744a01dd9c5e8469f7a69c25c3133ab665"
+  },
+  "writer-callback-callers.txt": {
+    "bytes": 65,
+    "sha256": "75079cf0c7dd1d663f674d2e938918a19fc54cb268fd4cb742578db903dc3233"
+  },
+  "writer-constructor-callers.txt": {
+    "bytes": 77,
+    "sha256": "2621327bb8590d2e68cb21ab083765f34638c0037672a795c594a39d96cbd6c3"
+  },
+  "writer-constructor.txt": {
+    "bytes": 955,
+    "sha256": "41e154a145e837dcdd3009be3fca214e76a694f729ffea6284269bb6222189e3"
+  },
+  "writer-drop-callback.txt": {
+    "bytes": 615,
+    "sha256": "d0127103afd4410efd232f387b8e8dddc9e8ce6a3bfa33862f7ddb4826cb1403"
+  },
+  "writer-initialization.txt": {
+    "bytes": 1785,
+    "sha256": "72ae356f4478cdfe0a5d276a6921549c115f9747c456d31737786f5c114eab03"
+  },
+  "writer.txt": {
+    "bytes": 139977,
+    "sha256": "6ec286521e703b2e16b3ff057c27e744fe5835683b8edd815cfeefec12c32d3d"
+  }
+}

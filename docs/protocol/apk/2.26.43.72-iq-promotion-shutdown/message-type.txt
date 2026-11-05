@@ -1,0 +1,22 @@
+
+# class: LX/1i7;
+# extends: Ljava/lang/Object;
+
+.method public A00(IL)  # .registers 3
+    # full signature: LX/1i7;->A00(Landroid/os/Message;)I
+    0000..0004  iget  v1, v2, Landroid/os/Message;->arg1:I
+    0004..0008  const/16  v0, #0xe9
+    0008..000c  if-eq  v1, v0, +0x12
+    000c..0010  const/16  v0, #0x164
+    0010..0014  if-eq  v1, v0, +0xe
+    0014..0016  const/4  v0, #0x6
+    0016..001a  if-eq  v1, v0, +0xb
+    001a..001e  const/16  v0, #0x157
+    001e..0022  if-eq  v1, v0, +0x7
+    0022..0026  const/16  v0, #0x1e6
+    0026..002a  if-eq  v1, v0, +0x3
+    002a..002c  return  v1
+    002c..0030  iget  v0, v2, Landroid/os/Message;->arg2:I
+    0030..0032  return  v0
+    # exception table: 0 try range(s)
+.end method

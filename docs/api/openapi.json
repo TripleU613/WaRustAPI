@@ -15801,5 +15801,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-client-auth-token-failure/README.md",
     "description": "Token delivery-failure callback restores original nonce only if pending slot is empty; IQ-error callback only logs. Submit gate additionally requires ready flag plus state2 and registers callback before dispatch. No immediate retry established; global backoff, callback/shutdown races and durable recovery remain open. No sender, route, replay authority or live operation added."
+  },
+  "x-iq-promotion-shutdown-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-iq-promotion-shutdown/README.md",
+    "description": "Selected native writer promotes queued callbacks before node writing; sent-map membership is not proof of delivery. Presence check/promotion allow a possible timeout interleaving. Local drops and sent-map shutdown flush schedule delivery-failure callbacks; queued-map and global reconnect ownership remain incomplete. No sender, route, replay authority or live operation added."
   }
 }

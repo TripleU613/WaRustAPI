@@ -211,3 +211,16 @@ state2 check; failure calls BsS directly, while success registers before dispatc
 Timer expiry shares BsS restoration, not proof of rejection or safe replay.
 Global backoff, shutdown/callback races and durable recovery remain open.
 No Rust sender, runtime change, new retry authority or live traffic.
+
+### IQ pre-write promotion and shutdown boundaries (2026-11-04)
+
+**Confirmed static, APK43.72:** writer C0e promotes callbacks fromA0I toA0H
+before its node-write entry point. The concrete0uw binding is traced through
+writer initialization. A0H membership is not proof of wire delivery. Callback
+presence check and promotion are separate, leaving a possible timeout
+interleaving; removal alone cannot establish definite non-delivery. Local
+drops post a failure path; shutdown case3 snapshots/clearsA0H and schedules
+BsS, without clearingA0I in its selected IQ block.
+[Complete selected bodies, ordering and limits](apk/2.26.43.72-iq-promotion-shutdown/README.md).
+Full socket/reconnect behavior, shutdown eligibility, concurrent and durable
+ownership remain open. No Rust behavior change, new replay authority or live traffic.

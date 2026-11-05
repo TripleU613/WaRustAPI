@@ -1,0 +1,35 @@
+
+# class: LX/0ZJ;
+# extends: Landroid/os/HandlerThread;
+
+.method public onLooperPrepared(V)  # .registers 4
+    # full signature: LX/0ZJ;->onLooperPrepared()V
+    0000..0004  iget-object  v0, v3, LX/0ZJ;->A0n:LX/00x;
+    0004..000a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    000a..000c  move-result-object  v0
+    000c..0010  check-cast  v0, Lcom/whatsapp/infra/nativelibloader/WhatsAppLibLoader;
+    0010..0016  invoke-virtual  {v0}, Lcom/whatsapp/infra/nativelibloader/WhatsAppLibLoader;->CyG()V
+    0016..001a  new-instance  v0, LX/0uu;
+    001a..0020  invoke-direct  {v0, v3}, LX/0uu;-><init>(LX/0ZJ;)V
+    0020..0024  iput-object  v0, v3, LX/0ZJ;->A09:LX/0uu;
+    0024..0028  new-instance  v2, LX/0uw;
+    0028..002e  invoke-direct  {v2, v3}, LX/0uw;-><init>(LX/0ZJ;)V
+    002e..0032  iget-object  v0, v3, LX/0ZJ;->A0d:LX/00x;
+    0032..0038  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0038..003a  move-result-object  v0
+    003a..003e  check-cast  v0, LX/0ux;
+    003e..0044  invoke-virtual  {v0}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+    0044..0048  new-instance  v1, LX/0uz;
+    0048..004e  invoke-direct  {v1, v0}, LX/0uz;-><init>(LX/0ux;)V
+    004e..0052  new-instance  v0, LX/0v0;
+    0052..0058  invoke-direct  {v0, v2, v1}, LX/0v0;-><init>(LX/0uv;LX/0uz;)V
+    0058..005c  iput-object  v0, v3, LX/0ZJ;->A05:LX/0v0;
+    005c..0062  invoke-virtual  {v0}, Ljava/lang/Thread;->start()V
+    0062..0066  iget-object  v0, v3, LX/0ZJ;->A0p:LX/00x;
+    0066..006c  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    006c..006e  move-result-object  v0
+    006e..0072  check-cast  v0, LX/0ln;
+    0072..0078  invoke-virtual  {v0}, LX/0ln;->A05()V
+    0078..007a  return-void
+    # exception table: 0 try range(s)
+.end method
