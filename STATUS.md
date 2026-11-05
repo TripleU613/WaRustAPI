@@ -1,3 +1,14 @@
+2026-11-05 — **Contact factory comparison refutes lightweight parity shortcut.**
+
+Native lightweight phone query omits disappearing_mode; the regular factory
+selects it with additional flags. Rust's three-protocol request is still a local
+composition. Constructor/field-transfer evidence and selected32s dispatch paths
+are now retained together; complete native factory/backoff policy stays open.
+[Source and concrete next port requirements](docs/protocol/apk/2.26.43.72-contact-factory-selection/README.md).
+Validation: pinned APK hash, checksum/link hygiene, coverage, CLI/OpenAPI,
+fmt and strict Clippy passed. Research only; no request, timeout or live
+account behavior changed.
+
 2026-11-05 — **Single-contact replies cannot overwrite unrelated contact statuses.**
 
 A red regression reproduced the wrong-target projection. Saved request provenance

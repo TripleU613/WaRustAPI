@@ -1,0 +1,60 @@
+
+# class: LX/HxV;
+# extends: Ljava/lang/Object;
+
+.method public A0C(LLLLZ)  # .registers 20
+    # full signature: LX/HxV;->A0C(LX/0vC;Ljava/lang/Integer;Ljava/lang/String;Z)Landroid/util/Pair;
+    0000..0004  sget-object  v2, LX/0vC;->A0J:LX/0vC;
+    0004..0008  move-object/from16  v5, v16
+    0008..000c  if-eq  v5, v2, +0xd
+    000c..0010  sget-object  v0, LX/0vC;->A01:LX/0vC;
+    0010..0014  if-eq  v5, v0, +0x9
+    0014..0018  const-string  v0, "Check failed."
+    0018..001e  invoke-static  {v0}, LX/1Xl;->A0g(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+    001e..0020  move-result-object  v0
+    0020..0022  throw  v0
+    0022..0024  const/4  v1, #0x4
+    0024..0028  move-object/from16  v6, v18
+    0028..002e  invoke-virtual  {v6}, Ljava/lang/String;->length()I
+    002e..0030  move-result  v0
+    0030..0036  invoke-static  {v1, v0}, Ljava/lang/Math;->min(II)I
+    0036..0038  move-result  v0
+    0038..003e  invoke-static  {v6, v0}, LX/1dx;->A17(Ljava/lang/String;I)Ljava/lang/String;
+    003e..0040  move-result-object  v1
+    0040..0044  const-string  v0, "ContactQuerySync/querySyncPhoneNumber: pn="
+    0044..004a  invoke-static  {v0, v1}, LX/2LA;->A1N(Ljava/lang/String;Ljava/lang/String;)V
+    004a..0050  invoke-static  {v15}, LX/HxV;->A00(LX/HxV;)I
+    0050..0052  move-result  v7
+    0052..0056  iget-object  v1, v15, LX/HxV;->A0A:LX/08Y;
+    0056..005a  const/16  v0, #0x1677
+    005a..0060  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    0060..0062  move-result  v8
+    0062..0066  const/16  v0, #0x16cf
+    0066..006c  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    006c..006e  move-result  v9
+    006e..0072  iget-object  v0, v15, LX/HxV;->A03:LX/05a;
+    0072..0078  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0078..007a  move-result-object  v0
+    007a..007e  check-cast  v0, LX/0eE;
+    007e..0084  invoke-virtual  {v0}, LX/0eE;->A0L()Z
+    0084..0086  move-result  v10
+    0086..0088  const/4  v3, #0x0
+    0088..008a  const/4  v12, #0x1
+    008a..008e  if-eq  v5, v2, +0x7
+    008e..0092  sget-object  v1, LX/0vC;->A01:LX/0vC;
+    0092..0094  const/4  v0, #0x0
+    0094..0098  if-ne  v5, v1, +0x3
+    0098..009a  const/4  v0, #0x1
+    009a..00a0  invoke-static  {v0}, LX/00L;->A0B(Z)V
+    00a0..00a2  move  v14, v12
+    00a2..00a6  move/from16  v11, v19
+    00a6..00a8  move-object  v4, v3
+    00a8..00aa  move  v13, v12
+    00aa..00b0  invoke-static/range  {v3..v14}, LX/HcZ;->A00(Lcom/whatsapp/infra/core/jid/UserJid;LX/6p2;LX/0vC;Ljava/lang/String;IZZZZZZZ)LX/HcZ;
+    00b0..00b2  move-result-object  v0
+    00b2..00b6  move-object/from16  v1, v17
+    00b6..00bc  invoke-direct  {v15, v5, v0, v1, v6}, LX/HxV;->A02(LX/0vC;LX/HcZ;Ljava/lang/Integer;Ljava/lang/String;)Landroid/util/Pair;
+    00bc..00be  move-result-object  v0
+    00be..00c0  return-object  v0
+    # exception table: 0 try range(s)
+.end method

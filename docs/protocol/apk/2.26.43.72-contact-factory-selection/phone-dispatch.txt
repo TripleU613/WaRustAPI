@@ -1,0 +1,176 @@
+
+# class: LX/HxV;
+# extends: Ljava/lang/Object;
+
+.method private A02(LLLLL)  # .registers 22
+    # full signature: LX/HxV;->A02(LX/0vC;LX/HcZ;Ljava/lang/Integer;Ljava/lang/String;)Landroid/util/Pair;
+    0000..0004  const-string  v10, "ContactQuerySync/querySyncPhoneNumber: empty sync result for [REDACTED_PII] (syncId is "
+    0004..000a  invoke-static  {}, Landroid/os/SystemClock;->elapsedRealtime()J
+    000a..000c  move-result-wide  v15
+    000c..0010  move-object/from16  v4, v17
+    0010..0014  iget-object  v0, v4, LX/HxV;->A0N:LX/0pL;
+    0014..0018  move-object/from16  v12, v18
+    0018..001c  move-object/from16  v1, v20
+    001c..0022  invoke-virtual  {v0, v12, v1}, LX/0pL;->A02(LX/0vC;Ljava/lang/Integer;)LX/1w4;
+    0022..0024  move-result-object  v6
+    0024..0028  iget-object  v0, v4, LX/HxV;->A0J:LX/07p;
+    0028..002e  invoke-virtual  {v0}, LX/07p;->A0T()Z
+    002e..0030  move-result  v0
+    0030..0032  const/4  v7, #0x0
+    0032..0036  if-nez  v0, +0x11
+    0036..003a  const-string  v0, "ContactQuerySync/querySyncPhoneNumber: network_unavailable"
+    003a..0040  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0040..0044  sget-object  v0, LX/1xM;->A05:LX/1xM;
+    0044..004a  invoke-direct  {v4, v6, v0}, LX/HxV;->A08(LX/1w4;LX/1xM;)V
+    004a..0050  invoke-static  {v0, v7}, LX/HxV;->A03(Ljava/lang/Object;Ljava/lang/Object;)Landroid/util/Pair;
+    0050..0052  move-result-object  v6
+    0052..0054  return-object  v6
+    0054..0058  iget-object  v3, v4, LX/HxV;->A0P:Ljava/util/concurrent/ConcurrentHashMap;
+    0058..005c  move-object/from16  v5, v21
+    005c..0062  invoke-virtual  {v3, v5, v5}, Ljava/util/concurrent/ConcurrentHashMap;->putIfAbsent(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0062..0064  move-result-object  v0
+    0064..0068  if-eqz  v0, +0xd
+    0068..006c  const-string  v0, "ContactQuerySync/querySyncPhoneNumber: skip too frequent query for phone [REDACTED_PII]"
+    006c..0072  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0072..0078  invoke-direct  {v4, v6}, LX/HxV;->A07(LX/1w4;)V
+    0078..007c  sget-object  v0, LX/1xM;->A09:LX/1xM;
+    007c..007e  goto  -0x19
+    007e..0082  const-string  v0, "sync_sid_query"
+    0082..0088  invoke-static  {v0}, LX/1xA;->A00(Ljava/lang/String;)Ljava/lang/String;
+    0088..008a  move-result-object  v2
+    008a..0090  invoke-static  {v2}, LX/00l;->A05(Ljava/lang/Object;)V
+    0090..0094  iget-object  v0, v4, LX/HxV;->A0H:LX/00p;
+    0094..009a  invoke-static  {v0}, LX/2L7;->A1J(LX/00p;)Ljava/lang/Object;
+    009a..009c  move-result-object  v8
+    009c..00a0  check-cast  v8, LX/0pD;
+    00a0..00a4  const-wide/16  v0, #0x7d00
+    00a4..00a8  move-object/from16  v9, v19
+    00a8..00ae  invoke-virtual  {v8, v9, v2, v0, v1}, LX/0pD;->A07(LX/HcZ;Ljava/lang/String;J)LX/FfK;
+    00ae..00b0  move-result-object  v9
+    00b0..00b6  invoke-static  {v9}, LX/00l;->A05(Ljava/lang/Object;)V
+    00b6..00ba  sget-object  v8, Ljava/util/concurrent/TimeUnit;->MILLISECONDS:Ljava/util/concurrent/TimeUnit;
+    00ba..00c0  invoke-virtual  {v9, v0, v1, v8}, LX/FfK;->get(JLjava/util/concurrent/TimeUnit;)Ljava/lang/Object;
+    00c0..00c4  iget-object  v1, v4, LX/HxV;->A0G:Ljava/util/concurrent/ConcurrentHashMap;
+    00c4..00ca  invoke-virtual  {v1, v2}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    00ca..00cc  move-result-object  v8
+    00cc..00d0  check-cast  v8, LX/Gzg;
+    00d0..00d4  if-nez  v8, +0xc
+    00d4..00da  invoke-static  {v10, v2}, LX/2LF;->A0O(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    00da..00dc  move-result-object  v0
+    00dc..00e2  invoke-static  {v4, v6, v0}, LX/HxV;->A01(LX/HxV;LX/1w4;Ljava/lang/String;)Landroid/util/Pair;
+    00e2..00e4  move-result-object  v6
+    00e4..00e8  goto/16  +0x8b
+    00e8..00ec  iget-object  v9, v8, LX/Gzg;->A01:[LX/H6v;
+    00ec..00ee  array-length  v0, v9
+    00ee..00f2  if-nez  v0, +0x2a
+    00f2..00f6  iget-object  v0, v8, LX/Gzg;->A00:LX/HMk;
+    00f6..00fa  iget-object  v0, v0, LX/HMk;->A01:LX/HLG;
+    00fa..00fe  if-eqz  v0, +0x1d
+    00fe..0102  iget-object  v0, v0, LX/HLG;->A01:Ljava/lang/Integer;
+    0102..0106  if-eqz  v0, +0x19
+    0106..010c  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    010c..010e  move-result  v8
+    010e..0112  const/16  v0, #0x1ad
+    0112..0116  if-ne  v8, v0, +0x11
+    0116..011a  const-string  v0, "ContactQuerySync/querySyncPhoneNumber: rate-limit-error [REDACTED_PII]"
+    011a..0120  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0120..0124  sget-object  v0, LX/1xM;->A06:LX/1xM;
+    0124..012a  invoke-direct  {v4, v6, v0}, LX/HxV;->A08(LX/1w4;LX/1xM;)V
+    012a..0130  invoke-static  {v0, v7}, LX/HxV;->A03(Ljava/lang/Object;Ljava/lang/Object;)Landroid/util/Pair;
+    0130..0132  move-result-object  v6
+    0132..0134  goto  +0x64
+    0134..0138  const-string  v0, "ContactQuerySync/querySyncPhoneNumber: no users for [REDACTED_PII]"
+    0138..013e  invoke-static  {v4, v6, v0}, LX/HxV;->A01(LX/HxV;LX/1w4;Ljava/lang/String;)Landroid/util/Pair;
+    013e..0140  move-result-object  v6
+    0140..0142  goto  +0x5d
+    0142..0144  const/4  v7, #0x0
+    0144..0148  aget-object  v13, v9, v7
+    0148..014c  iget  v9, v13, LX/H6v;->A04:I
+    014c..014e  const/4  v0, #0x1
+    014e..0152  if-ne  v9, v0, +0x42
+    0152..0156  iget-object  v10, v4, LX/HxV;->A0I:LX/HXp;
+    0156..015c  invoke-static  {v13}, LX/2L7;->A1M(Ljava/lang/Object;)Ljava/util/List;
+    015c..015e  move-result-object  v0
+    015e..0164  invoke-virtual  {v10, v0}, LX/HXp;->A03(Ljava/util/Collection;)V
+    0164..0168  iget-object  v0, v4, LX/HxV;->A01:LX/05a;
+    0168..016e  invoke-static  {v0}, LX/2LB;->A0Z(LX/05a;)LX/0bD;
+    016e..0170  move-result-object  v9
+    0170..0174  iget-object  v0, v13, LX/H6v;->A0A:Lcom/whatsapp/infra/core/jid/UserJid;
+    0174..0178  if-eqz  v0, +0x4a
+    0178..017e  invoke-virtual  {v9, v0}, LX/0bD;->A0C(LX/0DY;)LX/0wj;
+    017e..0180  move-result-object  v11
+    0180..0184  iget-object  v14, v8, LX/Gzg;->A00:LX/HMk;
+    0184..0186  const/4  v8, #0x1
+    0186..018c  invoke-virtual/range  {v10..v16}, LX/HXp;->A02(LX/0wj;LX/0vC;LX/H6v;LX/HMk;J)V
+    018c..0190  iget-object  v0, v4, LX/HxV;->A04:LX/05a;
+    0190..0196  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0196..0198  move-result-object  v0
+    0198..019c  check-cast  v0, LX/HIV;
+    019c..01a2  invoke-virtual  {v0}, LX/HIV;->A00()Z
+    01a2..01a4  move-result  v0
+    01a4..01a8  if-nez  v0, +0xe
+    01a8..01ac  iget-object  v10, v4, LX/HxV;->A0L:LX/08Z;
+    01ac..01b0  const/16  v9, #0x14
+    01b0..01b4  new-instance  v0, LX/3e9;
+    01b4..01ba  invoke-direct  {v0, v4, v13, v9}, LX/3e9;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V
+    01ba..01c0  invoke-interface  {v10, v0}, LX/08Z;->CbD(Ljava/lang/Runnable;)V
+    01c0..01c4  iget-object  v0, v13, LX/H6v;->A0N:Ljava/util/List;
+    01c4..01c8  if-eqz  v0, +0x12
+    01c8..01ce  invoke-static  {v0}, LX/3q1;->A1Z(Ljava/util/List;)Z
+    01ce..01d0  move-result  v0
+    01d0..01d2  goto  +0x3
+    01d2..01d4  const/4  v8, #0x1
+    01d4..01d6  goto  -0xa
+    01d6..01da  if-ne  v0, v8, +0x9
+    01da..01de  iget-object  v0, v13, LX/H6v;->A0N:Ljava/util/List;
+    01de..01e2  if-eqz  v0, +0x5
+    01e2..01e8  invoke-interface  {v0, v7}, Ljava/util/List;->get(I)Ljava/lang/Object;
+    01e8..01ee  invoke-direct  {v4, v6}, LX/HxV;->A06(LX/1w4;)V
+    01ee..01f2  sget-object  v0, LX/1xM;->A07:LX/1xM;
+    01f2..01f8  invoke-static  {v0, v13}, LX/HxV;->A03(Ljava/lang/Object;Ljava/lang/Object;)Landroid/util/Pair;
+    01f8..01fa  move-result-object  v6
+    01fa..0200  invoke-virtual  {v3, v5}, Ljava/util/AbstractMap;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+    0200..0206  invoke-virtual  {v1, v2}, Ljava/util/AbstractMap;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+    0206..0208  return-object  v6
+    0208..020e  invoke-static  {}, LX/3q2;->A0l()Ljava/lang/IllegalArgumentException;
+    020e..0210  move-result-object  v0
+    0210..0212  throw  v0
+    0212..0214  move-exception  v1
+    0214..0218  const-string  v0, "ContactQuerySync/querySyncPhoneNumber: exception during Query Sync [REDACTED_PII]"
+    0218..021e  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    021e..0222  sget-object  v0, LX/1xM;->A03:LX/1xM;
+    0222..0228  invoke-direct  {v4, v6, v0}, LX/HxV;->A08(LX/1w4;LX/1xM;)V
+    0228..022e  invoke-static  {v0, v7}, LX/HxV;->A03(Ljava/lang/Object;Ljava/lang/Object;)Landroid/util/Pair;
+    022e..0230  move-result-object  v6
+    0230..0232  goto  +0x17
+    0232..0234  move-exception  v1
+    0234..0238  const-string  v0, "querySyncPhoneNumber"
+    0238..023e  invoke-direct  {v4, v0, v1}, LX/HxV;->A09(Ljava/lang/String;Ljava/util/concurrent/ExecutionException;)V
+    023e..0242  sget-object  v0, LX/1xM;->A04:LX/1xM;
+    0242..0248  invoke-direct  {v4, v6, v0}, LX/HxV;->A08(LX/1w4;LX/1xM;)V
+    0248..024e  invoke-static  {v0, v7}, LX/HxV;->A03(Ljava/lang/Object;Ljava/lang/Object;)Landroid/util/Pair;
+    024e..0250  move-result-object  v6
+    0250..0252  goto  +0x7
+    0252..0256  const-string  v0, "ContactQuerySync/querySyncPhoneNumber/timeout"
+    0256..025c  invoke-static  {v4, v6, v0}, LX/HxV;->A01(LX/HxV;LX/1w4;Ljava/lang/String;)Landroid/util/Pair;
+    025c..025e  move-result-object  v6
+    025e..0264  invoke-virtual  {v3, v5}, Ljava/util/AbstractMap;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+    0264..0268  iget-object  v0, v4, LX/HxV;->A0G:Ljava/util/concurrent/ConcurrentHashMap;
+    0268..026e  invoke-virtual  {v0, v2}, Ljava/util/AbstractMap;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+    026e..0270  return-object  v6
+    0270..0272  move-exception  v1
+    0272..0278  invoke-virtual  {v3, v5}, Ljava/util/AbstractMap;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+    0278..027c  iget-object  v0, v4, LX/HxV;->A0G:Ljava/util/concurrent/ConcurrentHashMap;
+    027c..0282  invoke-virtual  {v0, v2}, Ljava/util/AbstractMap;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+    0282..0284  throw  v1
+    # exception table: 6 try range(s)
+    # catch <all> code_units 0048..005b -> 0138
+    # catch Ljava/util/concurrent/TimeoutException; code_units 005b..0060 -> 0129
+    # catch Ljava/util/concurrent/ExecutionException; code_units 005b..0060 -> 0119
+    # catch Ljava/lang/InterruptedException; code_units 005b..0060 -> 0109
+    # catch <all> code_units 005b..0060 -> 0138
+    # catch <all> code_units 0060..00fd -> 0138
+    # catch <all> code_units 0104..0109 -> 0138
+    # catch <all> code_units 010a..0119 -> 0138
+    # catch <all> code_units 011a..012f -> 0138
+.end method

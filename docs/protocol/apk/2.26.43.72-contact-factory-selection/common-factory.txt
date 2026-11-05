@@ -1,0 +1,42 @@
+
+# class: LX/HcZ;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLLLLIZZZZZZZ)  # .registers 18
+    # full signature: LX/HcZ;->A00(Lcom/whatsapp/infra/core/jid/UserJid;LX/6p2;LX/0vC;Ljava/lang/String;IZZZZZZZ)LX/HcZ;
+    0000..0002  const/4  v4, #0x1
+    0002..0006  if-eqz  v17, +0x10
+    0006..000c  invoke-static  {v9}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+    000c..000e  move-result  v0
+    000e..0012  if-eqz  v0, +0x36
+    0012..0016  if-nez  v13, +0x34
+    0016..001c  invoke-static  {v6}, LX/0Dn;->A0Y(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    001c..001e  move-result  v0
+    001e..0022  if-eqz  v0, +0x2e
+    0022..0024  const/4  v5, #0x0
+    0024..0028  new-instance  v0, LX/Hck;
+    0028..002e  invoke-direct  {v0, v6, v9}, LX/Hck;-><init>(Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;)V
+    002e..0032  iput-boolean  v5, v0, LX/Hck;->A0C:Z
+    0032..0036  iput-boolean  v14, v0, LX/Hck;->A0O:Z
+    0036..003a  iput-boolean  v4, v0, LX/Hck;->A0L:Z
+    003a..003e  iput-boolean  v11, v0, LX/Hck;->A0E:Z
+    003e..0042  iput-boolean  v4, v0, LX/Hck;->A0B:Z
+    0042..0046  iput-boolean  v15, v0, LX/Hck;->A0F:Z
+    0046..004a  iput-boolean  v4, v0, LX/Hck;->A0I:Z
+    004a..004e  move/from16  v1, v16
+    004e..0052  iput-boolean  v1, v0, LX/Hck;->A0Q:Z
+    0052..0056  iput-boolean  v12, v0, LX/Hck;->A0P:Z
+    0056..005a  iput-object  v7, v0, LX/Hck;->A04:LX/6p2;
+    005a..0060  invoke-virtual  {v0}, LX/Hck;->A00()LX/H6w;
+    0060..0062  move-result-object  v0
+    0062..0068  invoke-static  {v0}, Ljava/util/Collections;->singletonList(Ljava/lang/Object;)Ljava/util/List;
+    0068..006a  move-result-object  v2
+    006a..006e  new-instance  v0, LX/HcZ;
+    006e..0070  move-object  v1, v8
+    0070..0072  move  v3, v10
+    0072..0078  invoke-direct/range  {v0..v5}, LX/HcZ;-><init>(LX/0vC;Ljava/util/List;IZZ)V
+    0078..007a  return-object  v0
+    007a..007c  const/4  v5, #0x1
+    007c..007e  goto  -0x2c
+    # exception table: 0 try range(s)
+.end method

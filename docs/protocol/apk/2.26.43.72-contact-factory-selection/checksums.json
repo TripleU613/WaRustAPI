@@ -1,0 +1,54 @@
+{
+  "README.md": {
+    "bytes": 5225,
+    "sha256": "092c6bcaffe4fc91b30602ae58e22e6694b19c5d7b66b6e9be2338178f7f2ad2"
+  },
+  "common-factory.txt": {
+    "bytes": 2008,
+    "sha256": "af4f2d4c7c9f90bb2f7b04ba27acda7ebc8b533c76b8a907eb95c07073a915bb"
+  },
+  "contexts.txt": {
+    "bytes": 4502,
+    "sha256": "87e7de01e7710bc1817e06dcc2124a8919e1187da21a1de3d2cebfcc71eb439f"
+  },
+  "modes.txt": {
+    "bytes": 2051,
+    "sha256": "35d968b426813b3899feef3d2e9045d18ab2e064a3e28f8483508917e5bc77ee"
+  },
+  "other-phone-entry.txt": {
+    "bytes": 1514,
+    "sha256": "f3877ef314883fa92d641248a62e6acc56183c6e1502d83403ccfc525cfadc73"
+  },
+  "phone-dispatch.txt": {
+    "bytes": 10715,
+    "sha256": "222a60ad7ad5e6e907b215e519192b083aa24be6805a5688a00ceb52be2a17db"
+  },
+  "phone-factory.txt": {
+    "bytes": 2874,
+    "sha256": "b8aa733092b6aa02e339334b05c60f5f8d537d1b602b15c6b9572358672ad199"
+  },
+  "presets.txt": {
+    "bytes": 16857,
+    "sha256": "8d306d84c02dd03bc05e4e61fabb9b253e4bd2dcffd0ac807c7662772cdaea5b"
+  },
+  "request-constructors.txt": {
+    "bytes": 1156,
+    "sha256": "a6578195c1fcf57c278193c70459335a401f0262770ab6ffdfdc7e69e106d206"
+  },
+  "user-build.txt": {
+    "bytes": 2056,
+    "sha256": "7bb8e8dd46b5ac137907291a6531f2ba4245df2d67e3f93c7afc83771fdad759"
+  },
+  "user-constructors.txt": {
+    "bytes": 4836,
+    "sha256": "9937145be546a634a144fe8d9e17ea33dda1de802a1d9f5560e09517fc523204"
+  },
+  "user-record.txt": {
+    "bytes": 3860,
+    "sha256": "01e298257098e408da5c0cd9a31ef8d1f732c704edfc51fc3bc782d2e08705e8"
+  },
+  "writer.txt": {
+    "bytes": 57541,
+    "sha256": "56a33e6b158c4b391cad937d7585a19216c62ad902f5791a3863b184cd22c81c"
+  }
+}

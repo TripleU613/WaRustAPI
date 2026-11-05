@@ -1,0 +1,48 @@
+
+# class: LX/Hck;
+# extends: Ljava/lang/Object;
+
+.method public A00(L)  # .registers 4
+    # full signature: LX/Hck;->A00()LX/H6w;
+    0000..0004  iget-object  v2, v3, LX/Hck;->A0S:LX/0wj;
+    0004..0006  const/4  v1, #0x0
+    0006..000a  if-eqz  v2, +0x22
+    000a..0010  invoke-static  {v2}, LX/12W;->A0J(LX/0wj;)Z
+    0010..0012  move-result  v0
+    0012..0016  if-eqz  v0, +0x1c
+    0016..001a  iput-boolean  v1, v3, LX/Hck;->A0H:Z
+    001a..001e  iget-boolean  v0, v3, LX/Hck;->A0I:Z
+    001e..0022  if-eqz  v0, +0x10
+    0022..0026  iget-object  v0, v3, LX/Hck;->A0U:Lcom/whatsapp/infra/core/jid/UserJid;
+    0026..002c  invoke-static  {v0}, LX/0Dn;->A0Y(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    002c..002e  move-result  v0
+    002e..0032  if-eqz  v0, +0x8
+    0032..0036  iget-boolean  v0, v3, LX/Hck;->A0G:Z
+    0036..003a  if-nez  v0, +0x4
+    003a..003e  iput-boolean  v1, v3, LX/Hck;->A0I:Z
+    003e..0042  new-instance  v0, LX/H6w;
+    0042..0048  invoke-direct  {v0, v3}, LX/H6w;-><init>(LX/Hck;)V
+    0048..004a  return-object  v0
+    004a..004e  iget-object  v0, v3, LX/Hck;->A0U:Lcom/whatsapp/infra/core/jid/UserJid;
+    004e..0054  invoke-static  {v0}, LX/0Dn;->A0Z(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0054..0056  move-result  v0
+    0056..005a  if-eqz  v0, -0x1e
+    005a..005e  iget-object  v0, v3, LX/Hck;->A0R:LX/00x;
+    005e..0064  invoke-static  {v0}, LX/Fws;->A0P(LX/00x;)LX/0eE;
+    0064..0066  move-result-object  v0
+    0066..006c  invoke-virtual  {v0}, LX/0eE;->A0L()Z
+    006c..006e  move-result  v0
+    006e..0072  if-nez  v0, -0x2a
+    0072..0076  if-eqz  v2, +0xc
+    0076..007a  iget-object  v0, v2, LX/0wj;->A0D:LX/11T;
+    007a..007e  iget-boolean  v0, v0, LX/11T;->A13:Z
+    007e..0082  if-nez  v0, +0xa
+    0082..0086  iget-boolean  v0, v3, LX/Hck;->A0D:Z
+    0086..008a  if-nez  v0, +0x6
+    008a..008c  const/4  v0, #0x1
+    008c..0090  iput-boolean  v0, v3, LX/Hck;->A0H:Z
+    0090..0092  goto  -0x3b
+    0092..0094  const/4  v0, #0x0
+    0094..0096  goto  -0x4
+    # exception table: 0 try range(s)
+.end method

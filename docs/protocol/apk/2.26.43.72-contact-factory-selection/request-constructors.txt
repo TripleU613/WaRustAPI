@@ -1,0 +1,30 @@
+
+# class: LX/HcZ;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLIZZ)  # .registers 13
+    # full signature: LX/HcZ;-><init>(LX/0vC;Ljava/util/List;IZZ)V
+    0000..0002  const/4  v6, #0x0
+    0002..0004  move-object  v0, v7
+    0004..0006  move-object  v1, v8
+    0006..0008  move-object  v2, v9
+    0008..000a  move  v3, v10
+    000a..000c  move  v4, v11
+    000c..000e  move  v5, v12
+    000e..0014  invoke-direct/range  {v0..v6}, LX/HcZ;-><init>(LX/0vC;Ljava/util/List;IZZZ)V
+    0014..0016  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VLLIZZZ)  # .registers 7
+    # full signature: LX/HcZ;-><init>(LX/0vC;Ljava/util/List;IZZZ)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v1, v0, LX/HcZ;->A01:LX/0vC;
+    000a..000e  iput-object  v2, v0, LX/HcZ;->A02:Ljava/util/List;
+    000e..0012  iput-boolean  v4, v0, LX/HcZ;->A05:Z
+    0012..0016  iput  v3, v0, LX/HcZ;->A00:I
+    0016..001a  iput-boolean  v5, v0, LX/HcZ;->A03:Z
+    001a..001e  iput-boolean  v6, v0, LX/HcZ;->A04:Z
+    001e..0020  return-void
+    # exception table: 0 try range(s)
+.end method

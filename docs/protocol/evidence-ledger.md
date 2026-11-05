@@ -6856,3 +6856,15 @@ projection diagnostic and once-only marker commit atomically; settled wire/reply
 sequence and historical consumed markers stay unchanged. No query is replayed.
 [Red regression, disk-fault/reopen tests, inspection and native-policy limits](contact-projection-correlation.md).
 Current native protocol integrity/backoff and exact factory/deadline remain open.
+
+## Contact factory flag comparison —2026-11-05
+
+Current HxV lightweight A0B leavesHck.A0F false; H6w maps it toA0J and0pD
+uses that flag to emit disappearing_mode. The regular A0C/common factory sets
+it true alongside additional picture/business/username flags. Rust's fixed
+contact/lid/disappearing_mode request is therefore not exact lightweight parity.
+Both selected native phone-query dispatch paths are32s, but other usync callers
+use128s; equal visible mode/context does not bind a complete factory policy.
+[Full constructors, field transfer, writer and caller comparison](apk/2.26.43.72-contact-factory-selection/README.md).
+Factory/configuration/observer/backoff integration remains open. No request or
+callback policy changed and no live account operation occurred.

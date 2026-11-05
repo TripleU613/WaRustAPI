@@ -1,0 +1,72 @@
+
+# class: LX/H6w;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VL)  # .registers 4
+    # full signature: LX/H6w;-><init>(LX/Hck;)V
+    0000..0006  invoke-direct  {v2}, Ljava/lang/Object;-><init>()V
+    0006..000a  iget-object  v0, v3, LX/Hck;->A0S:LX/0wj;
+    000a..000e  iput-object  v0, v2, LX/H6w;->A04:LX/0wj;
+    000e..0012  iget-object  v0, v3, LX/Hck;->A0U:Lcom/whatsapp/infra/core/jid/UserJid;
+    0012..0016  iput-object  v0, v2, LX/H6w;->A06:Lcom/whatsapp/infra/core/jid/UserJid;
+    0016..001a  iget-object  v0, v3, LX/Hck;->A0V:Ljava/lang/String;
+    001a..001e  iput-object  v0, v2, LX/H6w;->A0B:Ljava/lang/String;
+    001e..0022  iget-object  v0, v3, LX/Hck;->A08:Ljava/lang/String;
+    0022..0026  iput-object  v0, v2, LX/H6w;->A0C:Ljava/lang/String;
+    0026..002a  iget-object  v0, v3, LX/Hck;->A09:Ljava/lang/String;
+    002a..002e  iput-object  v0, v2, LX/H6w;->A0D:Ljava/lang/String;
+    002e..0032  iget-object  v0, v3, LX/Hck;->A0T:LX/0Dx;
+    0032..0036  iput-object  v0, v2, LX/H6w;->A05:LX/0Dx;
+    0036..003a  iget-object  v0, v3, LX/Hck;->A07:Ljava/lang/String;
+    003a..003e  iput-object  v0, v2, LX/H6w;->A0A:Ljava/lang/String;
+    003e..0042  iget-boolean  v0, v3, LX/Hck;->A0D:Z
+    0042..0046  iput-boolean  v0, v2, LX/H6w;->A0H:Z
+    0046..004a  iget-wide  v0, v3, LX/Hck;->A03:J
+    004a..004e  iput-wide  v0, v2, LX/H6w;->A03:J
+    004e..0052  iget-object  v0, v3, LX/Hck;->A05:Ljava/lang/String;
+    0052..0056  iput-object  v0, v2, LX/H6w;->A08:Ljava/lang/String;
+    0056..005a  iget-object  v0, v3, LX/Hck;->A0A:Ljava/lang/String;
+    005a..005e  iput-object  v0, v2, LX/H6w;->A0E:Ljava/lang/String;
+    005e..0062  iget-boolean  v0, v3, LX/Hck;->A0H:Z
+    0062..0066  iput-boolean  v0, v2, LX/H6w;->A0L:Z
+    0066..006a  iget-object  v0, v3, LX/Hck;->A06:Ljava/lang/String;
+    006a..006e  iput-object  v0, v2, LX/H6w;->A09:Ljava/lang/String;
+    006e..0072  iget-wide  v0, v3, LX/Hck;->A02:J
+    0072..0076  iput-wide  v0, v2, LX/H6w;->A02:J
+    0076..007a  iget-wide  v0, v3, LX/Hck;->A01:J
+    007a..007e  iput-wide  v0, v2, LX/H6w;->A01:J
+    007e..0082  iget  v0, v3, LX/Hck;->A00:I
+    0082..0086  iput  v0, v2, LX/H6w;->A00:I
+    0086..008a  iget-boolean  v0, v3, LX/Hck;->A0C:Z
+    008a..008e  iput-boolean  v0, v2, LX/H6w;->A0G:Z
+    008e..0092  iget-boolean  v0, v3, LX/Hck;->A0N:Z
+    0092..0096  iput-boolean  v0, v2, LX/H6w;->A0R:Z
+    0096..009a  iget-boolean  v0, v3, LX/Hck;->A0O:Z
+    009a..009e  iput-boolean  v0, v2, LX/H6w;->A0S:Z
+    009e..00a2  iget-boolean  v0, v3, LX/Hck;->A0L:Z
+    00a2..00a6  iput-boolean  v0, v2, LX/H6w;->A0P:Z
+    00a6..00aa  iget-boolean  v0, v3, LX/Hck;->A0B:Z
+    00aa..00ae  iput-boolean  v0, v2, LX/H6w;->A0F:Z
+    00ae..00b2  iget-boolean  v0, v3, LX/Hck;->A0E:Z
+    00b2..00b6  iput-boolean  v0, v2, LX/H6w;->A0I:Z
+    00b6..00ba  iget-boolean  v0, v3, LX/Hck;->A0F:Z
+    00ba..00be  iput-boolean  v0, v2, LX/H6w;->A0J:Z
+    00be..00c2  iget-boolean  v0, v3, LX/Hck;->A0I:Z
+    00c2..00c6  iput-boolean  v0, v2, LX/H6w;->A0M:Z
+    00c6..00ca  iget-boolean  v0, v3, LX/Hck;->A0Q:Z
+    00ca..00ce  iput-boolean  v0, v2, LX/H6w;->A0U:Z
+    00ce..00d2  iget-boolean  v0, v3, LX/Hck;->A0P:Z
+    00d2..00d6  iput-boolean  v0, v2, LX/H6w;->A0T:Z
+    00d6..00da  iget-boolean  v0, v3, LX/Hck;->A0K:Z
+    00da..00de  iput-boolean  v0, v2, LX/H6w;->A0O:Z
+    00de..00e2  iget-object  v0, v3, LX/Hck;->A04:LX/6p2;
+    00e2..00e6  iput-object  v0, v2, LX/H6w;->A07:LX/6p2;
+    00e6..00ea  iget-boolean  v0, v3, LX/Hck;->A0M:Z
+    00ea..00ee  iput-boolean  v0, v2, LX/H6w;->A0Q:Z
+    00ee..00f2  iget-boolean  v0, v3, LX/Hck;->A0J:Z
+    00f2..00f6  iput-boolean  v0, v2, LX/H6w;->A0N:Z
+    00f6..00fa  iget-boolean  v0, v3, LX/Hck;->A0G:Z
+    00fa..00fe  iput-boolean  v0, v2, LX/H6w;->A0K:Z
+    00fe..0100  return-void
+    # exception table: 0 try range(s)
+.end method

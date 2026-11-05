@@ -16776,5 +16776,12 @@
     "x-library": [
       "whatsapp_api::transport::contacts::ContactProjection"
     ]
+  },
+  "x-contact-factory-selection-audit": {
+    "x-cli": true,
+    "x-transport": "experimental",
+    "x-live": false,
+    "description": "Static APK2.26.43.72 contact-factory comparison. Lightweight HxV.A0B does not enable disappearing_mode; regular HxV.A0C/HcZ.A00 does with additional flags. Rust fixed contact/lid/disappearing_mode is not exact lightweight parity. Selected phone-query dispatches use32s but other usync callers differ. Factory/config/observer/backoff integration remains unfinished; no request or timer policy changed. Reproduce through existing xtask disassembly.",
+    "evidence": "docs/protocol/apk/2.26.43.72-contact-factory-selection/README.md"
   }
 }

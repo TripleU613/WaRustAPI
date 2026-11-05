@@ -1,0 +1,34 @@
+
+# class: LX/HxV;
+# extends: Ljava/lang/Object;
+
+.method public A0E(LL)  # .registers 16
+    # full signature: LX/HxV;->A0E(Ljava/lang/String;)Landroid/util/Pair;
+    0000..0002  const/4  v2, #0x0
+    0002..0006  sget-object  v4, LX/0vC;->A0U:LX/0vC;
+    0006..000c  invoke-static  {v14}, LX/HxV;->A00(LX/HxV;)I
+    000c..000e  move-result  v6
+    000e..0012  iget-object  v1, v14, LX/HxV;->A0A:LX/08Y;
+    0012..0016  const/16  v0, #0x1677
+    0016..001c  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    001c..001e  move-result  v7
+    001e..0022  iget-object  v0, v14, LX/HxV;->A03:LX/05a;
+    0022..0028  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0028..002a  move-result-object  v0
+    002a..002e  check-cast  v0, LX/0eE;
+    002e..0034  invoke-virtual  {v0}, LX/0eE;->A0L()Z
+    0034..0036  move-result  v9
+    0036..0038  const/4  v8, #0x0
+    0038..003a  const/4  v13, #0x1
+    003a..003c  move  v11, v8
+    003c..003e  move  v12, v8
+    003e..0040  move-object  v5, v15
+    0040..0042  move-object  v3, v2
+    0042..0044  move  v10, v8
+    0044..004a  invoke-static/range  {v2..v13}, LX/HcZ;->A00(Lcom/whatsapp/infra/core/jid/UserJid;LX/6p2;LX/0vC;Ljava/lang/String;IZZZZZZZ)LX/HcZ;
+    004a..004c  move-result-object  v0
+    004c..0052  invoke-direct  {v14, v4, v0, v2, v15}, LX/HxV;->A02(LX/0vC;LX/HcZ;Ljava/lang/Integer;Ljava/lang/String;)Landroid/util/Pair;
+    0052..0054  move-result-object  v0
+    0054..0056  return-object  v0
+    # exception table: 0 try range(s)
+.end method
