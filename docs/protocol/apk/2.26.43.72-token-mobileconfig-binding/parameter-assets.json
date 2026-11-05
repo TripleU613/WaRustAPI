@@ -1,0 +1,26 @@
+[
+  {
+    "path": "assets/params_map_v4_u1.txt",
+    "bytes": 5222,
+    "sha256": "a1c9d71b0dd0fba7d42119c73577e9eb4fea318eca9737630138ac97f45c6829",
+    "prefix_hex": "76343e00ff7f7b02850213025f0007000c00000000000000000085022000"
+  },
+  {
+    "path": "assets/params_map_v4_u2.txt",
+    "bytes": 179726,
+    "sha256": "f8c3ced3dd60b59c5532641dd9410d354a00bd641edc213fef8b3643e1722f37",
+    "prefix_hex": "76343e00ff7f7e57ba57a1443b0eb1002d040000000000000000ba572000"
+  },
+  {
+    "path": "assets/params_map_v4_u4.txt",
+    "bytes": 638,
+    "sha256": "d133f3f26b18586b0ee539cac157174cb1fb17d1017896efeb95f77541b414b0",
+    "prefix_hex": "76343e00ff7f020048003c00060003000300000000000000000048002000"
+  },
+  {
+    "path": "assets/params_map_v4_u6.txt",
+    "bytes": 366,
+    "sha256": "e271c238a962812961acb40e4888b490c185f0ffdb90594ee60db99e75bb5255",
+    "prefix_hex": "76343e00ff7f2600260019000c0000000100000000000000000026002000"
+  }
+]

@@ -3131,3 +3131,14 @@ Full hashless replies expose none; delta/hash rules match the existing parser.
 Legacy views deserialize with an empty map; saved replies reparse after reopen.
 This does not resolve cache/preferences/MobileConfig or apply values to sending.
 [Evidence, reused current-APK adapters, tests and unresolved mapping](apk/2.26.43.72-token-bucket-configuration/README.md).
+
+## Token MobileConfig binding and one ready transition — 2026-11-05
+
+**Confirmed static, 2.26.43.72:** concrete 0A8.B8Q indexes 0El's table.
+865/909/996/997 all have nonzero SDK specifiers; missing raw AB rows do not
+imply an unmapped/zero SDK property. ID66 binds08Y, ID252 binds0A8. A retained
+0A8.BPZ branch sets08Y's A08 ready true and resets its SDK cache viaA0t.
+One producer is closed, not the complete initialization or override lifecycle.
+[Exact specifiers, full methods, derivation and binary-asset boundary](apk/2.26.43.72-token-mobileconfig-binding/README.md).
+Effective account integers, parameter-map defaults and configured token policy
+remain unported. No send policy changed and no live account traffic occurred.

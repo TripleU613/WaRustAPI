@@ -1,3 +1,13 @@
+2026-11-05 — **Token MobileConfig lookup and one readiness producer traced.**
+
+All four token IDs have nonzero SDK specifiers. Concrete DI bindings are closed,
+and one native initialization branch enables SDK reads and resets their cache.
+[Static evidence and reproducible table derivation](docs/protocol/apk/2.26.43.72-token-mobileconfig-binding/README.md).
+Effective account settings/parameter defaults and the configured token policy
+remain unfinished. Research only; send behavior unchanged and no live traffic.
+Validation: pinned APK hash and all 2065 map writes checked; derivation matches
+retained JSON. CLI/OpenAPI, fmt, strict Clippy, coverage and hygiene passed.
+
 2026-11-05 — **Saved AB replies expose token bucket integer evidence.**
 
 abprops-query --show includes returned 865/909/996/997 values, preserving missing,

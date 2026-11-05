@@ -92,3 +92,7 @@ last invalid duplicates, overflow/whitespace, zero/negative values, hash/delta
 branches, exclusion of unrelated values, JSON roundtrip and legacy defaults.
 Effective configuration resolution and the configured scheduling/admission port
 remain unfinished; exposing raw rows is not evidence of native eligibility.
+
+The subsequent [concrete MobileConfig binding trace](../2.26.43.72-token-mobileconfig-binding/README.md)
+closes the four token specifiers, case66/252 DI bindings and one readiness/cache
+transition. Effective SDK values and the complete lifecycle still remain open.

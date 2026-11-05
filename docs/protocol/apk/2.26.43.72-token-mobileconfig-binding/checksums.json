@@ -1,0 +1,46 @@
+{
+  "README.md": {
+    "bytes": 4776,
+    "sha256": "6214236651531c0347b1a5b785827ccb8a4775e8b818524e3160b41055e42147"
+  },
+  "derive-specifiers.py": {
+    "bytes": 1539,
+    "sha256": "e16088f88af7da21e92bb0c93d9be5302a846e9eb7782a2d3f03a5e5e8c09cae"
+  },
+  "implementations.json": {
+    "bytes": 254,
+    "sha256": "68e1afc11c37fc5dad30a3bc1827083d8a697f8aa39a1f7687ceb4bd54ba0583"
+  },
+  "initialize-and-ready.txt": {
+    "bytes": 32232,
+    "sha256": "e50f34afb61b6ba9223ab4b9003dbfbaadd7b79db27416f19f41869304ea4783"
+  },
+  "lookup-map.txt": {
+    "bytes": 301698,
+    "sha256": "3d4034aa9b13618d835abc9f413dffab6a2766192de460251f02e52e60d4f386"
+  },
+  "lookup.txt": {
+    "bytes": 598,
+    "sha256": "46d4f0011bdae682a42039dd6582be1d3bcab7cdd2ed4eb4053aeabccfd3fc76"
+  },
+  "parameter-assets.json": {
+    "bytes": 939,
+    "sha256": "85608ef3b94749ae2277526d2476f508878a9355b0ab2d1ed9c3d60c15a86ea5"
+  },
+  "provider-cases.txt": {
+    "bytes": 3766,
+    "sha256": "003de9edc4d10e1467dc08bf9ad82f03d12ec4fa24f49065888f5d0223b58264"
+  },
+  "provider-router.txt": {
+    "bytes": 3374,
+    "sha256": "f852095f305051f8344d087a0efeb3f6742c3538d9cdde11fe11f74e2f7dda7e"
+  },
+  "ready-cache-reset.txt": {
+    "bytes": 586,
+    "sha256": "3fc4b7e1f85fbb3d6ff94dc2871c2b71cbeac038d87aa67e363cd69b7fbf98f1"
+  },
+  "specifiers.json": {
+    "bytes": 557,
+    "sha256": "11391a2bb549a7947304d26ebfb78ac009a110696697c5f0205e9db16fd293b2"
+  }
+}

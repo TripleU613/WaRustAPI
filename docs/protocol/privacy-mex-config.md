@@ -115,8 +115,8 @@ ready `A08` starts false. The Java recovery obscures the `08Y` condition; use
 are **unknown**, so constructor defaults are not a permanent mode assertion.
 
 `00D.A02(66)` -> `A03` checks the global DI cache then calls
-`1Uw.A00(66,context,...)`. The concrete case-66 producer remains **unknown**
-in this continuation. `08Y` explicitly supplies preference name `ab-props`
+`1Uw.A00(66,context,...)`. The concrete case-66 producer is now **confirmed** as 08Y in the
+[token MobileConfig follow-up](apk/2.26.43.72-token-mobileconfig-binding/README.md). `08Y` explicitly supplies preference name `ab-props`
 and the MobileConfig dependencies. This establishes a real configuration owner,
 but not that Rust can infer the selected source from an absent local record.
 
@@ -141,7 +141,7 @@ adoption of arbitrary category strings. Existing pending-value reconciliation
 is documented in the first trace and must survive a future port.
 
 **Unknown implementation dependencies:** effective configuration hydration and
-precedence in Rust; case-66 provider binding; MobileConfig specifier 23463 and
+precedence in Rust; MobileConfig specifier 23463 and
 ready-state lifecycle; current MEX namespace/outer transport; own-user model
 and collection coercion details; full account-category persistence/observers;
 pending setters and retry/dirty lifecycle. `1az.A05/A0C` narrows the optional
@@ -155,3 +155,14 @@ port needs an explicit configuration owner and category state, not an
 unreferenced request-builder utility. This chunk changes evidence only; it does
 not claim protocol equivalence, live acceptance or any account-restriction
 causation. No live requests, state resets or fabricated provenance occurred.
+
+## Token MobileConfig binding and one ready transition — 2026-11-05
+
+**Confirmed static, 2.26.43.72:** concrete 0A8.B8Q indexes 0El's table.
+865/909/996/997 all have nonzero SDK specifiers; missing raw AB rows do not
+imply an unmapped/zero SDK property. ID66 binds08Y, ID252 binds0A8. A retained
+0A8.BPZ branch sets08Y's A08 ready true and resets its SDK cache viaA0t.
+One producer is closed, not the complete initialization or override lifecycle.
+[Exact specifiers, full methods, derivation and binary-asset boundary](apk/2.26.43.72-token-mobileconfig-binding/README.md).
+Effective account integers, parameter-map defaults and configured token policy
+remain unported. No send policy changed and no live account traffic occurred.

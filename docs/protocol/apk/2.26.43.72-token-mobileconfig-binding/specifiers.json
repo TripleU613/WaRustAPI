@@ -1,0 +1,23 @@
+{
+  "source_sha256": "3d4034aa9b13618d835abc9f413dffab6a2766192de460251f02e52e60d4f386",
+  "literal_writes_checked": 2065,
+  "array_length": 41080,
+  "selected": {
+    "865": {
+      "specifier_hex": "0x8201a700000065",
+      "value_instruction": "1ddc"
+    },
+    "909": {
+      "specifier_hex": "0x8201bc0000006e",
+      "value_instruction": "1f56"
+    },
+    "996": {
+      "specifier_hex": "0x8201e30000007d",
+      "value_instruction": "2214"
+    },
+    "997": {
+      "specifier_hex": "0x8201e40000007e",
+      "value_instruction": "2226"
+    }
+  }
+}

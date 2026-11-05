@@ -16697,5 +16697,12 @@
     "x-live": false,
     "description": "Static APK 2.26.43.72 selected token integer entries 865/996=604800 and 909/997=4 would imply 21 to under 28 day expiry if effective. These are not effective account settings: whole-map final defaults and cache/preferences/MobileConfig precedence remain unfinished. No runtime policy changed. Reproduce with existing xtask apk-smali.",
     "evidence": "docs/protocol/apk/2.26.43.72-token-bucket-configuration/README.md"
+  },
+  "x-token-mobileconfig-binding-research": {
+    "x-cli": true,
+    "x-transport": "experimental",
+    "x-live": false,
+    "description": "Static APK 2.26.43.72 0A8.B8Q/0El mapping gives nonzero MobileConfig specifiers for 865/909/996/997. DI ID66 binds08Y; ID252 binds0A8. One BPZ branch marks SDK readiness and resets cache. These are not effective account values or a runtime port. Reproduce with existing xtask apk-smali and retained Python derivation.",
+    "evidence": "docs/protocol/apk/2.26.43.72-token-mobileconfig-binding/README.md"
   }
 }

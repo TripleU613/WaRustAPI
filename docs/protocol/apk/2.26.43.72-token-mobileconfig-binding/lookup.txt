@@ -1,0 +1,19 @@
+
+# class: LX/0A8;
+# extends: Ljava/lang/Object;
+
+.method public B8Q(JI)  # .registers 4
+    # full signature: LX/0A8;->B8Q(I)J
+    0000..0004  sget-object  v1, LX/0El;->A00:[J
+    0004..0008  if-nez  v1, +0x6
+    0008..000e  invoke-static  {}, LX/0El;->A0L()[J
+    000e..0010  move-result-object  v1
+    0010..0014  if-ltz  v3, +0x8
+    0014..0016  array-length  v0, v1
+    0016..001a  if-ge  v3, v0, +0x5
+    001a..001e  aget-wide  v0, v1, v3
+    001e..0020  return-wide  v0
+    0020..0024  const-wide/16  v0, #0x0
+    0024..0026  return-wide  v0
+    # exception table: 0 try range(s)
+.end method
