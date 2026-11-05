@@ -1,0 +1,27 @@
+[
+  {
+    "name": "number-extraction",
+    "start": "0x71dc40",
+    "end_exclusive": "0x71dc90"
+  },
+  {
+    "name": "worker-cast-arguments",
+    "start": "0xbe4e24",
+    "end_exclusive": "0xbe4e30"
+  },
+  {
+    "name": "worker-substring-arguments",
+    "start": "0xbe19a0",
+    "end_exclusive": "0xbe19ac"
+  },
+  {
+    "name": "body-cast-arguments",
+    "start": "0xbe13d8",
+    "end_exclusive": "0xbe13e4"
+  },
+  {
+    "name": "body-input-arguments",
+    "start": "0x5d0084",
+    "end_exclusive": "0x5d0090"
+  }
+]

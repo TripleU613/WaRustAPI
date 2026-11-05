@@ -1,0 +1,87 @@
+{
+  "scope": "static keys and branch bytes; no observed server semantics",
+  "recognized_subcodes": [
+    3067002,
+    3067003,
+    3067004
+  ],
+  "raw_results": [
+    2,
+    3,
+    4
+  ],
+  "strings": [
+    {
+      "object_va": "0xc3b6c0",
+      "pointer_slot_va": "0xc3b6e8",
+      "string_va": "0xd2caf",
+      "file_offset": "0xd2caf",
+      "value": "error"
+    },
+    {
+      "object_va": "0xc3b6f0",
+      "pointer_slot_va": "0xc3b718",
+      "string_va": "0x114328",
+      "file_offset": "0x114328",
+      "value": "error_subcode"
+    },
+    {
+      "object_va": "0xc3b720",
+      "pointer_slot_va": "0xc3b748",
+      "string_va": "0x1813a6",
+      "file_offset": "0x1813a6",
+      "value": "Error Content = "
+    }
+  ],
+  "windows": [
+    {
+      "name": "response-worker",
+      "virtual_address": "0x728e18",
+      "file_offset": "0x724e18",
+      "bytes": 1528,
+      "sha256": "8a6a73839a959c9b21b1586126e17e513414e38b7b70f1b0d956f2ace4557f67"
+    },
+    {
+      "name": "regular-error-parser",
+      "virtual_address": "0x72943c",
+      "file_offset": "0x72543c",
+      "bytes": 260,
+      "sha256": "f409a65c248072af77133bbb3400308e1e71ead96db51c11092eb52aa8abd628"
+    },
+    {
+      "name": "number-extraction",
+      "virtual_address": "0x71dc40",
+      "file_offset": "0x719c40",
+      "bytes": 80,
+      "sha256": "03f6cf757cde0ae4a9d289f69b8c90dac6e06775f542be66471353197f41ccd1"
+    },
+    {
+      "name": "worker-cast-arguments",
+      "virtual_address": "0xbe4e24",
+      "file_offset": "0xbe0e24",
+      "bytes": 12,
+      "sha256": "4bf771cfdd68cd48bc09dd6b02adfbec9b46daec43cb26a076bf93e980546506"
+    },
+    {
+      "name": "worker-substring-arguments",
+      "virtual_address": "0xbe19a0",
+      "file_offset": "0xbdd9a0",
+      "bytes": 12,
+      "sha256": "bda589da9ed7b0b82854c9c103112ab510aa8db61308a8695ceafd83bf615661"
+    },
+    {
+      "name": "body-cast-arguments",
+      "virtual_address": "0xbe13d8",
+      "file_offset": "0xbdd3d8",
+      "bytes": 12,
+      "sha256": "46879325355028744490365ce7d2159dd53fbb344fd0aab66c3c11f6be55b862"
+    },
+    {
+      "name": "body-input-arguments",
+      "virtual_address": "0x5d0084",
+      "file_offset": "0x5cc084",
+      "bytes": 12,
+      "sha256": "845c91b7582cd1e0d2c35f4f536f78175fb3bb09488188b8f4e679a7461d9c3e"
+    }
+  ]
+}

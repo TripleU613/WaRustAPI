@@ -2604,3 +2604,15 @@ not hard writer rejection; prior credential exact32-byte guard wording corrected
 [Native/Java contract, callback interfaces and diagnostic source](apk/2.26.43.72-metrics-regular-iq/README.md).
 No Rust runtime or live request added. Full buffer/retry/durable ownership
 remains open.
+
+## Metrics subcode handling (2026-11-05)
+
+2026-11-05 — **Metrics error subcodes and credential effects traced.**
+
+Pinned native paths recognize3067002/3067003/3067004, release the current
+metrics credential and promote a spare or request gated renewal. Failure-reason
+suffix parsing is distinct from response-body parsing; diagnostic numbers are
+not account restriction codes. [Evidence and limits](apk/2.26.43.72-metrics-error-subcodes/README.md).
+Validation:24 synthetic body-parser cases,7 worker integer-slice cases, pinned
+resolver and bundle checks. Full retry/durable ownership and server meanings
+remain open. No Rust runtime or live traffic changed.

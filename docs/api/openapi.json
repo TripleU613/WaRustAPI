@@ -16287,5 +16287,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-metrics-regular-iq/README.md",
     "description": "Regular native job binds Java selector6 w:stats/add producer and FfK/T54 callback wait; exact result maps to native success0, other outcomes failure3. Delay32000ms is a callback timer, not hard whole-operation deadline. A04 and nonnull A05 bounds log through nonthrowing A0C; prior hard credential-length guard wording corrected. Eligibility, full framing/retry/durable ownership remain open. No Rust/live capability added."
+  },
+  "x-metrics-error-subcodes-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK static and synthetic metrics error evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-metrics-error-subcodes/README.md",
+    "description": "Selected native failure-reason suffix and body parser recognize error.error_subcode3067002/3067003/3067004, release current metrics credential and promote spare or call gated renewal.24 typed-object parser fixtures and7 worker integer-slice fixtures; no real JSON/HTTP or renewal execution. Local diagnostic numbers are not restriction codes; server meanings, retry generation and durable ownership remain open. No Rust/live capability added."
   }
 }

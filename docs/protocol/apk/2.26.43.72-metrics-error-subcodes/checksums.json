@@ -1,0 +1,46 @@
+{
+  "README.md": {
+    "bytes": 6433,
+    "sha256": "b47520bbee928460fabae4f7e24f563ef02b2aa702fd89b647f6a54ba4ab7b28"
+  },
+  "body-cast-arguments-assembly.txt": {
+    "bytes": 115,
+    "sha256": "eb67ebb6a973f5b34810b90af36f348931597d9247da033902e8c4ac7a782cd6"
+  },
+  "body-input-arguments-assembly.txt": {
+    "bytes": 115,
+    "sha256": "b510fff8ac299e08f7151d537db9dc762a8aeebc9faf312cc9d54c4f5f044216"
+  },
+  "check-subcodes.py": {
+    "bytes": 6925,
+    "sha256": "a7c5c39c066480e48c32c37d6648db4fb7687122809c8a3900e796d8d05cdf82"
+  },
+  "inspect-subcodes.py": {
+    "bytes": 1862,
+    "sha256": "2f7e7587fab38cfc72f2540091e1aab35cb1c8d09d096a36ee55839548f7028a"
+  },
+  "number-extraction-assembly.txt": {
+    "bytes": 982,
+    "sha256": "c9fe7b4e297a9ee4900b1324fb5cdb93aff7f35e40f62db0064d53bad7be2de3"
+  },
+  "subcode-boundaries.json": {
+    "bytes": 2311,
+    "sha256": "5f5701736c888cc4a5d148bc3ea748395134eb73908aa64b405584fd228c9393"
+  },
+  "subcode-results.json": {
+    "bytes": 6001,
+    "sha256": "3937a136076ef8414c789a2b9c87f5908b07a67502f558b6c503b6c7bec18a2e"
+  },
+  "windows.json": {
+    "bytes": 516,
+    "sha256": "2cb59bc3d8c0e18b2f352c5b9d988291e9b94019a0f82bae684711512b9b047f"
+  },
+  "worker-cast-arguments-assembly.txt": {
+    "bytes": 115,
+    "sha256": "eeeaec63439951383deb7538c94a1c070f3f1996dc77f017091fa46060fff730"
+  },
+  "worker-substring-arguments-assembly.txt": {
+    "bytes": 115,
+    "sha256": "7f8397edc8476b8c80b1dc8a8c6538006a2e1406fc2f1769ed6891eb65f30116"
+  }
+}

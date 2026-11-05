@@ -44,8 +44,9 @@ The following order matters in the selected response worker:
 4. Other failures follow manager-flag-specific branches. A selected regular
    branch parses response data through 0x72943c, invokes callback slot +0x20 and
    logs `failed temporarily`. A different branch parses failure-reason text and
-   may try another endpoint or clear/renew a credential slot. Complete parser
-   schema, credential lifetime and retry timing remain open.
+   may try another endpoint or clear/renew a credential slot. The selected failure-subcode schema and credential-slot effects are now
+   [traced separately](../2.26.43.72-metrics-error-subcodes/README.md). Full
+   credential policy and retry timing remain open.
 
 These are native metrics transport rules. They do **not** authorize extending
 Rust registration/login/message retries to HTTP 401, rotating account identity,

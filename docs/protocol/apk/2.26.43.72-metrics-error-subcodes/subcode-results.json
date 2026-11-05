@@ -1,0 +1,252 @@
+{
+  "scope": "synthetic typed-object adapters; native body-parser and worker integer slice only; no JSON library, HTTP or durable storage execution",
+  "unicorn_version": "2.1.4",
+  "parser_cases": [
+    {
+      "case": "no-body",
+      "spare_present": false,
+      "raw_result": 6,
+      "released_current": false,
+      "refresh_calls": 0,
+      "current_after": "0x10000b00",
+      "spare_after": "0x0"
+    },
+    {
+      "case": "no-body",
+      "spare_present": true,
+      "raw_result": 6,
+      "released_current": false,
+      "refresh_calls": 0,
+      "current_after": "0x10000b00",
+      "spare_after": "0x10000d00"
+    },
+    {
+      "case": "non-dictionary-root",
+      "spare_present": false,
+      "raw_result": 5,
+      "released_current": false,
+      "refresh_calls": 0,
+      "current_after": "0x10000b00",
+      "spare_after": "0x0"
+    },
+    {
+      "case": "non-dictionary-root",
+      "spare_present": true,
+      "raw_result": 5,
+      "released_current": false,
+      "refresh_calls": 0,
+      "current_after": "0x10000b00",
+      "spare_after": "0x10000d00"
+    },
+    {
+      "case": "missing-error",
+      "spare_present": false,
+      "raw_result": 5,
+      "released_current": false,
+      "refresh_calls": 0,
+      "current_after": "0x10000b00",
+      "spare_after": "0x0"
+    },
+    {
+      "case": "missing-error",
+      "spare_present": true,
+      "raw_result": 5,
+      "released_current": false,
+      "refresh_calls": 0,
+      "current_after": "0x10000b00",
+      "spare_after": "0x10000d00"
+    },
+    {
+      "case": "missing-subcode",
+      "spare_present": false,
+      "raw_result": 5,
+      "released_current": false,
+      "refresh_calls": 0,
+      "current_after": "0x10000b00",
+      "spare_after": "0x0"
+    },
+    {
+      "case": "missing-subcode",
+      "spare_present": true,
+      "raw_result": 5,
+      "released_current": false,
+      "refresh_calls": 0,
+      "current_after": "0x10000b00",
+      "spare_after": "0x10000d00"
+    },
+    {
+      "case": "subcode-0",
+      "spare_present": false,
+      "raw_result": 5,
+      "released_current": false,
+      "refresh_calls": 0,
+      "current_after": "0x10000b00",
+      "spare_after": "0x0"
+    },
+    {
+      "case": "subcode-0",
+      "spare_present": true,
+      "raw_result": 5,
+      "released_current": false,
+      "refresh_calls": 0,
+      "current_after": "0x10000b00",
+      "spare_after": "0x10000d00"
+    },
+    {
+      "case": "subcode-3067001",
+      "spare_present": false,
+      "raw_result": 5,
+      "released_current": false,
+      "refresh_calls": 0,
+      "current_after": "0x10000b00",
+      "spare_after": "0x0"
+    },
+    {
+      "case": "subcode-3067001",
+      "spare_present": true,
+      "raw_result": 5,
+      "released_current": false,
+      "refresh_calls": 0,
+      "current_after": "0x10000b00",
+      "spare_after": "0x10000d00"
+    },
+    {
+      "case": "subcode-3067002",
+      "spare_present": false,
+      "raw_result": 2,
+      "released_current": true,
+      "refresh_calls": 1,
+      "current_after": "0x0",
+      "spare_after": "0x0"
+    },
+    {
+      "case": "subcode-3067002",
+      "spare_present": true,
+      "raw_result": 2,
+      "released_current": true,
+      "refresh_calls": 0,
+      "current_after": "0x10000d00",
+      "spare_after": "0x0"
+    },
+    {
+      "case": "subcode-3067003",
+      "spare_present": false,
+      "raw_result": 3,
+      "released_current": true,
+      "refresh_calls": 1,
+      "current_after": "0x0",
+      "spare_after": "0x0"
+    },
+    {
+      "case": "subcode-3067003",
+      "spare_present": true,
+      "raw_result": 3,
+      "released_current": true,
+      "refresh_calls": 0,
+      "current_after": "0x10000d00",
+      "spare_after": "0x0"
+    },
+    {
+      "case": "subcode-3067004",
+      "spare_present": false,
+      "raw_result": 4,
+      "released_current": true,
+      "refresh_calls": 1,
+      "current_after": "0x0",
+      "spare_after": "0x0"
+    },
+    {
+      "case": "subcode-3067004",
+      "spare_present": true,
+      "raw_result": 4,
+      "released_current": true,
+      "refresh_calls": 0,
+      "current_after": "0x10000d00",
+      "spare_after": "0x0"
+    },
+    {
+      "case": "subcode-3067005",
+      "spare_present": false,
+      "raw_result": 5,
+      "released_current": false,
+      "refresh_calls": 0,
+      "current_after": "0x10000b00",
+      "spare_after": "0x0"
+    },
+    {
+      "case": "subcode-3067005",
+      "spare_present": true,
+      "raw_result": 5,
+      "released_current": false,
+      "refresh_calls": 0,
+      "current_after": "0x10000b00",
+      "spare_after": "0x10000d00"
+    },
+    {
+      "case": "subcode-2147483647",
+      "spare_present": false,
+      "raw_result": 5,
+      "released_current": false,
+      "refresh_calls": 0,
+      "current_after": "0x10000b00",
+      "spare_after": "0x0"
+    },
+    {
+      "case": "subcode-2147483647",
+      "spare_present": true,
+      "raw_result": 5,
+      "released_current": false,
+      "refresh_calls": 0,
+      "current_after": "0x10000b00",
+      "spare_after": "0x10000d00"
+    },
+    {
+      "case": "subcode-4294967295",
+      "spare_present": false,
+      "raw_result": 5,
+      "released_current": false,
+      "refresh_calls": 0,
+      "current_after": "0x10000b00",
+      "spare_after": "0x0"
+    },
+    {
+      "case": "subcode-4294967295",
+      "spare_present": true,
+      "raw_result": 5,
+      "released_current": false,
+      "refresh_calls": 0,
+      "current_after": "0x10000b00",
+      "spare_after": "0x10000d00"
+    }
+  ],
+  "worker_integer_cases": [
+    {
+      "subcode": 0,
+      "raw_result": 5
+    },
+    {
+      "subcode": 3067001,
+      "raw_result": 5
+    },
+    {
+      "subcode": 3067002,
+      "raw_result": 2
+    },
+    {
+      "subcode": 3067003,
+      "raw_result": 3
+    },
+    {
+      "subcode": 3067004,
+      "raw_result": 4
+    },
+    {
+      "subcode": 3067005,
+      "raw_result": 5
+    },
+    {
+      "subcode": 4294967295,
+      "raw_result": 5
+    }
+  ]
+}
