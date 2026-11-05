@@ -487,13 +487,13 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                     &serde_json::json!({"status":"outcome_unknown", "at":Timestamp::now()}),
                 )
             })?;
+            let deadline = tokio::time::Instant::now() + Duration::from_secs(30);
             whatsapp_api::transport::messaging::write_node(
                 &mut channel,
                 &whatsapp_api::transport::messaging::active_request(&capture),
             )
             .await?;
             let mut activated = false;
-            let deadline = tokio::time::Instant::now() + Duration::from_secs(30);
             for index in 0..64 {
                 let next = tokio::time::timeout_at(
                     deadline,
@@ -533,8 +533,8 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                 })?;
                 // Persist every frame before correlating, including messages arriving
                 // before the IQ result. Timeout must not discard these frames.
-                if node.description == "iq"
-                    && node.get_attr("id").and_then(|v| v.as_text()) == Some(capture.as_str())
+                if tokio::time::Instant::now() < deadline
+                    && whatsapp_api::transport::messaging::iq_reply_matches(&node, &capture)
                 {
                     activated = node.get_attr("type").and_then(|v| v.as_text()) == Some("result");
                     store.write(|tx| tx.put_json(Table::Checkpoints, activation_key.as_bytes(), 1,

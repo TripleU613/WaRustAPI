@@ -15696,5 +15696,17 @@
     "x-live": false,
     "evidence": "docs/protocol/network-correctness-audit.md#undecodable-comparison-wait-frames-retained-2026-11-04",
     "description": "Comparison waits persist successfully decrypted records that fail inflation or stanza decoding before exiting with outcome uncertainty. Uses existing encrypted undecodable captures, codec labels and epoch=None; no classification, ACK or retry follows failure. Default offline undecodable inspection includes them. Unread, incomplete and authentication-failed ciphertext and legacy no-store waits remain outside scope; no native decoder-policy parity, new HTTP route or live operation."
+  },
+  "x-activation-response-admission": {
+    "x-cli": {
+      "command": "whatsapp-cli listen",
+      "description": "Existing actor and lab-transport comparison activation paths; no new flag"
+    },
+    "x-transport": [
+      "actor and comparison activation response admission"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/network-correctness-audit.md#activation-reply-grammar-and-deadline-ownership-2026-11-04",
+    "description": "Activation uses shared IQ result/error correlation and requires an unexpired waiter before readiness/startup advancement. Existing30s deadlines start before activation write, so a slow write cannot restart the window. Captures and uncertainty remain; awaited writes can still delay expiry observation. Native grammar/predispatch timer ownership is distinguished from unverified activation duration and scheduler parity. No new route, automatic resend or live operation."
   }
 }

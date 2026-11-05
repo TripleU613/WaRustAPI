@@ -400,6 +400,10 @@ pub fn last_login_status(store: &ProtocolStore) -> Result<Option<String>> {
     })
 }
 
+fn activation_matches(node: &Node, id: &str, deadline: tokio::time::Instant) -> bool {
+    super::messaging::iq_reply_matches(node, id) && tokio::time::Instant::now() < deadline
+}
+
 /// The authenticated session loop over a node link. Every durable effect
 /// (capture, session/inbox commit, reservation) precedes the socket write it
 /// leads to, so a cut at any await leaves state a later epoch can continue from.
@@ -427,10 +431,11 @@ pub(crate) async fn drive(
     // Repair the gap after a crash without deleting markers or replaying IQs.
     super::contacts::ingest(&store)?;
     let active_id = super::messaging::new_message_id()?;
+    // APK43.72 0Sf.A0A/0ln.A08 register the callback timer before dispatch.
+    let activated_deadline = tokio::time::Instant::now() + Duration::from_secs(30);
     link.send(&super::messaging::active_request(&active_id))
         .await?;
     let mut ready = Some(ready);
-    let activated_deadline = tokio::time::Instant::now() + Duration::from_secs(30);
     let ping_period = Duration::from_millis((config.transport.timeout_ms / 2).clamp(1000, 20000));
     let mut heartbeat = tokio::time::interval(ping_period);
     heartbeat.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Delay);
@@ -655,10 +660,8 @@ pub(crate) async fn drive(
                         continue;
                     }
                     let id = node.get_attr("id").and_then(|v| v.as_text());
-                    // APK 43.72 0ln.A01 dispatches only result/error callbacks.
-                    // A same-ID request is not an activation refusal.
-                    if id == Some(active_id.as_str()) && ready.is_some()
-                        && matches!(node.get_attr("type").and_then(|v| v.as_text()), Some("result" | "error")) {
+                    // A queued late result cannot win readiness by select order.
+                    if ready.is_some() && activation_matches(&node, &active_id, activated_deadline) {
                         if node.get_attr("type").and_then(|v| v.as_text()) != Some("result") {
                             return Err(Error::invalid("connection", "activation refused"));
                         }
@@ -2298,6 +2301,61 @@ mod tests {
         written.send(Ok(())).unwrap();
         (&mut fake.ready).await.unwrap();
         fake.stop_cleanly().await;
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn activation_admission_rejects_the_deadline_boundary_and_later_replies() {
+        let deadline = tokio::time::Instant::now() + Duration::from_secs(30);
+        for kind in ["result", "error"] {
+            let reply = Node::new("iq").attr("id", "active").attr("type", kind);
+            assert!(activation_matches(&reply, "active", deadline));
+            assert!(!activation_matches(&reply, "another", deadline));
+        }
+        tokio::time::advance(Duration::from_secs(30)).await;
+        for delay in [Duration::ZERO, Duration::from_millis(1)] {
+            tokio::time::advance(delay).await;
+            for kind in ["result", "error"] {
+                assert!(!activation_matches(
+                    &Node::new("iq").attr("id", "active").attr("type", kind),
+                    "active",
+                    deadline
+                ));
+            }
+        }
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn slow_activation_write_does_not_restart_the_response_deadline() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("activation-write-deadline.redb"));
+        let mut fake = start(&store, false, None);
+        let (_active, written) = fake.written().await;
+        tokio::time::advance(Duration::from_secs(31)).await;
+        written.send(Ok(())).unwrap();
+        let Fake {
+            ready,
+            task,
+            mut from_worker,
+            ..
+        } = fake;
+        let error = tokio::time::timeout(Duration::from_secs(1), task)
+            .await
+            .expect("expired activation must end without a fresh30s wait")
+            .unwrap()
+            .unwrap_err();
+        assert!(matches!(
+            error,
+            Error::InvalidInput {
+                field: "connection",
+                ..
+            }
+        ));
+        assert!(!error.is_recoverable_by_reconnect());
+        assert!(ready.await.is_err());
+        assert!(
+            from_worker.try_recv().is_err(),
+            "no availability/startup write after expiry"
+        );
     }
 
     #[tokio::test]

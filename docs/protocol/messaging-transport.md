@@ -1778,3 +1778,43 @@ yet read do not yield a decrypted frame for this path. The legacy no-store
 wait_for remains uncaptured. The earlier decoded-only comparison limitation is
 closed for successfully decrypted records; no old missing evidence is restored.
 This adds no replay, account reset, fabricated response, new route or live operation.
+
+### Activation reply grammar and deadline ownership (2026-11-04)
+
+**Confirmed local defects / fixed offline:** comparison receive classified any
+same-ID IQ as activation result/refusal, including request-shaped IQs. Actor
+activation already checked result/error but could admit a late result when the
+incoming select branch won against its elapsed timer. Both also started their
+30-second response window only after the activation write completed.
+
+The comparison path now uses shared messaging::iq_reply_matches, admitting only
+exact IQ/id/result-or-error, and checks its deadline after capture. The actor
+checks the same grammar and monotonic deadline before activation-triggered
+availability, readiness and startup work. Both create the existing30-second
+deadline before sending the request. An awaited write can still delay timer
+observation; completion does not restart the response window or authorize a
+late result. No activation resend or identity reset was added.
+
+**Confirmed static architectural support, APK43.72:**0ln.A01 dispatches exact
+result/error, and0Sf.A0A registers through0ln.A08 before request dispatch.
+A08 schedules an ID-specific delayed Handler message for a positive duration.
+[Retained callback grammar](rea/2.26.43.72-authkey-outcomes/incoming-iq-callback.json),
+[registration](rea/2.26.43.72-authkey-outcomes/pending-registration.json) and
+[send order](rea/2.26.43.72-authkey-outcomes/send-iq-internal.json).
+This supports grammar and timer ownership, not proof of a native30-second
+activation duration or complete callback-map/activation scheduler parity.
+
+Regressions: activation_admission_rejects_the_deadline_boundary_and_later_replies
+checks result/error before, at and after expiry using the production admission
+helper. slow_activation_write_does_not_restart_the_response_deadline holds the
+fake activation write for31seconds, then verifies prompt terminal uncertainty,
+no readiness and no availability/startup write. Existing non-reply IQ actor
+coverage and native server ping/activation cut tests remain. The comparison
+loop's encrypted-socket behavior is not independently newly exercised here.
+
+Captures precede reply admission. A comparison request-shaped activation IQ
+stays captured rather than becoming a refusal; if no timely valid
+response arrives, activation remains unconfirmed. Existing account/key/send
+reservations are not cleared by expiry. Other reply families, awaited-write
+responsiveness and full native request-address policy remain separate audits.
+No live operations or complete ban-prevention guarantee.

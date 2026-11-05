@@ -1086,12 +1086,23 @@ pub fn direct_media(
         ]))
 }
 
-fn waited_reply_matches(node: &Node, description: &str, id: &str) -> bool {
-    node.description == description
+/// IQ response grammar only; caller supplies its reserved ID and deadline policy.
+/// APK43.72 0ln.A01 dispatches exact result/error, never request types.
+pub fn iq_reply_matches(node: &Node, id: &str) -> bool {
+    node.description == "iq"
         && node.get_attr("id").and_then(|v| v.as_text()) == Some(id)
-        // APK43.72 0ln.A01 dispatches IQ result/error, not request types.
-        && (description != "iq"
-            || matches!(node.get_attr("type").and_then(|v| v.as_text()), Some("result" | "error")))
+        && matches!(
+            node.get_attr("type").and_then(|v| v.as_text()),
+            Some("result" | "error")
+        )
+}
+
+fn waited_reply_matches(node: &Node, description: &str, id: &str) -> bool {
+    if description == "iq" {
+        iq_reply_matches(node, id)
+    } else {
+        node.description == description && node.get_attr("id").and_then(|v| v.as_text()) == Some(id)
+    }
 }
 
 /// Wait for an exact stanza/id pair (IQ requires result/error), with a

@@ -1,3 +1,12 @@
+2026-11-04 — **Activation admission and deadline ownership hardened.**
+
+Comparison receive ignores request-shaped activation IQs. Actor/CLI activation
+checks expiry before advancing, and request writes no longer restart the window.
+[Native evidence, regressions and limits](docs/protocol/network-correctness-audit.md#activation-reply-grammar-and-deadline-ownership-2026-11-04).
+Validation:1,308 workspace/all-feature tests, strict Clippy, CLI reference,
+formatting, JSON, coverage freshness and repository hygiene passed.
+No live traffic.
+
 2026-11-04 — **Malformed comparison wait records captured before exit.**
 
 Successfully decrypted but undecodable records now survive comparison wait
