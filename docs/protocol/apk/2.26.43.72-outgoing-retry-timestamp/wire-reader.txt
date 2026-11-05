@@ -1,0 +1,76 @@
+
+# class: LX/Ewu;
+# extends: Ljava/lang/Object;
+
+.method public A02(LLLLLLLLLJ)  # .registers 15
+    # full signature: LX/Ewu;->A02(Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/Jid;LX/0Tp;Ljava/lang/Integer;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/String;Lkotlin/jvm/functions/Function1;J)LX/Dxr;
+    0000..0002  const/4  v0, #0x2
+    0002..0008  invoke-static  {v11, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  new-instance  v3, LX/Edc;
+    000c..0012  invoke-direct  {v3}, LX/Edc;-><init>()V
+    0012..0016  iput-object  v5, v3, LX/Edc;->A01:Lcom/whatsapp/infra/core/jid/Jid;
+    0016..001a  iput-object  v6, v3, LX/Edc;->A00:Lcom/whatsapp/infra/core/jid/Jid;
+    001a..001e  iput-object  v11, v3, LX/Edc;->A0R:Ljava/lang/String;
+    001e..0024  invoke-static  {v13, v14}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0024..0026  move-result-object  v0
+    0026..002a  iput-object  v0, v3, LX/Edc;->A0M:Ljava/lang/Long;
+    002a..002e  iget-object  v0, v4, LX/Ewu;->A00:LX/05a;
+    002e..0032  iget-object  v1, v0, LX/05a;->A00:LX/00x;
+    0032..0038  invoke-static  {v1}, LX/2L6;->A0o(LX/00x;)LX/09F;
+    0038..003a  move-result-object  v0
+    003a..0040  invoke-static  {v6, v0}, LX/F0Q;->A03(Lcom/whatsapp/infra/core/jid/Jid;LX/09F;)Z
+    0040..0042  move-result  v0
+    0042..0046  if-nez  v0, +0x17
+    0046..004c  invoke-static  {v1}, LX/2L6;->A0o(LX/00x;)LX/09F;
+    004c..004e  move-result-object  v1
+    004e..0050  const/4  v0, #0x1
+    0050..0056  invoke-static  {v1, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0056..005a  instance-of  v0, v6, Lcom/whatsapp/infra/core/jid/UserJid;
+    005a..005e  if-eqz  v0, +0x54
+    005e..0062  check-cast  v6, LX/0DY;
+    0062..0068  invoke-interface  {v1, v6}, LX/09F;->BVC(LX/0DY;)Z
+    0068..006a  move-result  v1
+    006a..006c  const/4  v0, #0x0
+    006c..0070  if-eqz  v1, +0x3
+    0070..0072  const/4  v0, #0x1
+    0072..0078  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0078..007a  move-result-object  v0
+    007a..007e  iput-object  v0, v3, LX/Edc;->A0D:Ljava/lang/Boolean;
+    007e..0084  const-string/jumbo  v0, "type"
+    0084..008a  invoke-static  {v7, v0}, LX/6oe;->A18(LX/0Tp;Ljava/lang/String;)Ljava/lang/String;
+    008a..008c  move-result-object  v0
+    008c..0090  iput-object  v0, v3, LX/Edc;->A0S:Ljava/lang/String;
+    0090..0094  iput-object  v7, v3, LX/Edc;->A04:LX/0Tp;
+    0094..0098  iput-object  v8, v3, LX/Edc;->A0J:Ljava/lang/Integer;
+    0098..009c  const-string  v0, "status"
+    009c..00a0  iput-object  v0, v3, LX/Edc;->A0V:Ljava/lang/String;
+    00a0..00a4  if-nez  v10, +0xc
+    00a4..00a8  iget-object  v0, v4, LX/Ewu;->A01:LX/05a;
+    00a8..00ae  invoke-static  {v0}, LX/2LE;->A02(LX/05a;)J
+    00ae..00b0  move-result-wide  v0
+    00b0..00b6  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    00b6..00b8  move-result-object  v10
+    00b8..00bc  iput-object  v10, v3, LX/Edc;->A0K:Ljava/lang/Long;
+    00bc..00c0  iget-object  v0, v4, LX/Ewu;->A01:LX/05a;
+    00c0..00c6  invoke-static  {v0}, LX/DBe;->A01(LX/05a;)J
+    00c6..00c8  move-result-wide  v0
+    00c8..00ce  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    00ce..00d0  move-result-object  v0
+    00d0..00d4  iput-object  v0, v3, LX/Edc;->A0L:Ljava/lang/Long;
+    00d4..00d8  if-eqz  v9, +0x15
+    00d8..00de  invoke-virtual  {v9}, Ljava/lang/Number;->longValue()J
+    00de..00e0  move-result-wide  v1
+    00e0..00e2  long-to-int  v0, v1
+    00e2..00e8  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    00e8..00ea  move-result-object  v0
+    00ea..00ee  iput-object  v0, v3, LX/Edc;->A0H:Ljava/lang/Integer;
+    00ee..00f4  invoke-interface  {v12, v3}, Lkotlin/jvm/functions/Function1;->invoke(Ljava/lang/Object;)Ljava/lang/Object;
+    00f4..00fa  invoke-virtual  {v3}, LX/Edc;->A00()LX/Dxr;
+    00fa..00fc  move-result-object  v0
+    00fc..00fe  return-object  v0
+    00fe..0100  const/4  v0, #0x0
+    0100..0102  goto  -0xb
+    0102..0104  const/4  v6, #0x0
+    0104..0106  goto  -0x51
+    # exception table: 0 try range(s)
+.end method

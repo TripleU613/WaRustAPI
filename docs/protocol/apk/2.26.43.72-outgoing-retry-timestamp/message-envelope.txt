@@ -1,0 +1,33 @@
+
+# class: LX/Dxr;
+# extends: LX/F1Z;
+
+.method public <init>(VLLLLLLLLLLLLJZ)  # .registers 28
+    # full signature: LX/Dxr;-><init>(Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/Jid;LX/0Tp;LX/Enw;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JZ)V
+    0000..0002  move-object  v3, v14
+    0002..0006  move-wide/from16  v10, v25
+    0006..0008  move-object  v1, v12
+    0008..000a  move-object  v2, v13
+    000a..000c  move-object  v4, v15
+    000c..0010  move-object/from16  v5, v17
+    0010..0014  move-object/from16  v6, v19
+    0014..0018  move-object/from16  v7, v20
+    0018..001c  move-object/from16  v8, v21
+    001c..0020  move-object/from16  v9, v22
+    0020..0026  invoke-direct/range  {v1..v11}, LX/F1Z;-><init>(Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/Jid;LX/0Tp;Ljava/lang/Integer;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;J)V
+    0026..002a  move/from16  v0, v27
+    002a..002e  iput-boolean  v0, v12, LX/Dxr;->A05:Z
+    002e..0032  move-object/from16  v0, v18
+    0032..0036  iput-object  v0, v12, LX/Dxr;->A01:Ljava/lang/Integer;
+    0036..003a  move-object/from16  v0, v23
+    003a..003e  iput-object  v0, v12, LX/Dxr;->A02:Ljava/lang/String;
+    003e..0042  move-object/from16  v0, v24
+    0042..0046  iput-object  v0, v12, LX/Dxr;->A03:Ljava/lang/String;
+    0046..004a  move-object/from16  v0, v16
+    004a..004e  iput-object  v0, v12, LX/Dxr;->A00:LX/Enw;
+    004e..0054  invoke-static  {}, LX/2L6;->A1E()Ljava/util/HashMap;
+    0054..0056  move-result-object  v0
+    0056..005a  iput-object  v0, v12, LX/Dxr;->A04:Ljava/util/HashMap;
+    005a..005c  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,5 +1,11 @@
 {
   "openapi": "3.1.0",
+  "x-outgoing-retry-original-timestamp": {
+    "x-cli": false,
+    "x-transport": "normal and comparison automatic outgoing retry receipt queue",
+    "x-live": false,
+    "description": "APK43.72 selected FVv/Ewu ->Edc/F1Z ->SendRetryReceiptJob/EYI ->F3e.A08 carries the failed message timestamp into retry.t. Queue now uses original root t rather than current local clock; missing/unusable or millis-conversion-overflow inputs refuse before queue writes. Existing held reservation/deduplication remains. Public builder explicit seconds parameter documented as message_seconds. Store/reopen and normal direct/group write-cut regressions; no account traffic or HTTP route. Native unconditional retry.error producer classification, extra keys/count progression and full timestamp grammar/range admission remain incomplete; no guessed error code. docs/protocol/outgoing-retry-receipts.md"
+  },
   "x-retry-refetch-live-callback": {
     "x-cli": false,
     "x-transport": "normal receive per-connection retry refetch callback authority",

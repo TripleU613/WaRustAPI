@@ -434,13 +434,28 @@ pub fn queue_retry_for_incoming(
         }
         Ok(historical)
     };
+    // APK43.72 FVv -> Ewu -> F1Z.A05 -> SendRetryReceiptJob.timestamp
+    // -> EYI.A06 -> F3e.A08 preserves the failed message's timestamp, not
+    // retry creation time. Keep unsupported/missing values local rather than
+    // inventing a clock value. docs/protocol/outgoing-retry-receipts.md
+    let message_seconds = node
+        .get_attr("t")
+        .and_then(|v| v.as_text())
+        .and_then(super::mex::java_decimal_long)
+        .filter(|seconds| seconds.checked_mul(1000).is_some())
+        .ok_or_else(|| {
+            Error::invalid(
+                "receipt",
+                "retry requires a usable original message timestamp",
+            )
+        })?;
     let retry = super::messaging::retry_receipt(
         &chat,
         participant.as_ref(),
         id,
         1,
         registration,
-        crate::model::time::Timestamp::now().0 / 1000,
+        message_seconds,
     )?;
     let wire = crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
         .encode(&retry)?;
@@ -1467,6 +1482,74 @@ mod tests {
     }
 
     #[test]
+    fn outgoing_retry_uses_original_timestamp_and_never_fabricates_a_missing_one() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("retry-time.redb");
+        let store = open(&path, true);
+        let account = crate::session::AccountRecord {
+            signal_registration_id: Some(31),
+            ..Default::default()
+        };
+        let message = Node::new("message")
+            .attr("from", Jid::parse("15555550100@s.whatsapp.net").unwrap())
+            .attr("id", "FAILED");
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+            .unwrap();
+        for timestamp in [
+            None,
+            Some(""),
+            Some("bad"),
+            Some(" 1700000000"),
+            Some("9223372036854775808"),
+            Some("9223372036854775807"),
+        ] {
+            let node = match timestamp {
+                None => message.clone(),
+                Some(t) => message.clone().attr("t", t),
+            };
+            assert!(queue_retry_for_incoming(&store, &account, &node).is_err());
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                    .unwrap(),
+                before
+            );
+        }
+        assert_eq!(
+            queue_retry_for_incoming(&store, &account, &message.clone().attr("t", "+1700000000"))
+                .unwrap(),
+            1
+        );
+        drop(store);
+        let store = open(&path, false);
+        let pending = reserve_pending(&store).unwrap();
+        assert_eq!(pending.len(), 1);
+        assert_eq!(
+            pending[0]
+                .child("retry")
+                .unwrap()
+                .get_attr("t")
+                .and_then(|v| v.as_text()),
+            Some("1700000000")
+        );
+        let held = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+            .unwrap();
+        assert_eq!(
+            queue_retry_for_incoming(&store, &account, &message.attr("t", "1700000001")).unwrap(),
+            0
+        );
+        assert!(reserve_pending(&store).unwrap().is_empty());
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                .unwrap(),
+            held
+        );
+    }
+
+    #[test]
     fn retry_queue_is_once_per_route_and_survives_restart_and_uncertainty() {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("retry.redb");
@@ -1476,6 +1559,7 @@ mod tests {
             ..Default::default()
         };
         let incoming = Node::new("message")
+            .attr("t", "1700000000")
             .attr("from", Jid::parse("15555550100@s.whatsapp.net").unwrap())
             .attr("id", "FAILED");
         assert_eq!(
@@ -1553,11 +1637,13 @@ mod tests {
         let jid = |value: &str| Jid::parse(value).unwrap();
         let direct = |from: &str, id: &str| {
             Node::new("message")
+                .attr("t", "1700000000")
                 .attr("from", jid(from))
                 .attr("id", id.to_owned())
         };
         let group = |participant: &str, id: &str| {
             Node::new("message")
+                .attr("t", "1700000000")
                 .attr("from", jid("120363000000000001@g.us"))
                 .attr("participant", jid(participant))
                 .attr("id", id.to_owned())
@@ -1727,10 +1813,11 @@ mod tests {
                     let mut m = member.clone();
                     m.kind = member_kind;
                     let node = Node::new("message")
+                        .attr("t", "1700000000")
                         .attr("from", c)
                         .attr("participant", m)
                         .attr("id", "LEGACY-GROUP")
-                        .attr("t", "changed");
+                        .attr("t", "1700000001");
                     assert_eq!(
                         queue_retry_for_incoming(&store, &account, &node).unwrap(),
                         0
@@ -1742,6 +1829,7 @@ mod tests {
                 before
             );
             let other = Node::new("message")
+                .attr("t", "1700000000")
                 .attr("from", chat)
                 .attr("participant", member.with_device(4))
                 .attr("id", "LEGACY-GROUP");
@@ -1777,6 +1865,7 @@ mod tests {
         chat.kind = JidKind::AgentDevice;
         let member = Jid::parse("123456:3@lid").unwrap();
         let incoming = Node::new("message")
+            .attr("t", "1700000000")
             .attr("from", chat.clone())
             .attr("participant", member.clone())
             .attr("id", "ACK-KIND");
@@ -1828,6 +1917,7 @@ mod tests {
         let store = open(&dir.path().join("invalid-retry.redb"), true);
         let account = crate::session::AccountRecord::default();
         let incoming = Node::new("message")
+            .attr("t", "1700000000")
             .attr("id", "FAILED")
             .attr("from", Jid::parse("15555550100@s.whatsapp.net").unwrap());
         assert!(queue_retry_for_incoming(&store, &account, &incoming).is_err());
@@ -1837,7 +1927,9 @@ mod tests {
         };
         for invalid in [
             Node::new("receipt"),
-            Node::new("message").attr("from", Jid::parse("15555550100@s.whatsapp.net").unwrap()),
+            Node::new("message")
+                .attr("t", "1700000000")
+                .attr("from", Jid::parse("15555550100@s.whatsapp.net").unwrap()),
             incoming
                 .clone()
                 .attr("from", Jid::parse("status@broadcast").unwrap()),

@@ -1,0 +1,579 @@
+
+# class: LX/FVv;
+# extends: Ljava/lang/Object;
+
+.method public ABJ(LLL)  # .registers 43
+    # full signature: LX/FVv;->ABJ(LX/0Tp;LX/8B6;)Ljava/lang/Object;
+    0000..0004  move-object/from16  v0, v40
+    0004..0008  iget  v2, v0, LX/FVv;->$t:I
+    0008..000c  move-object/from16  v0, v41
+    000c..0010  move-object/from16  v1, v42
+    0010..0016  packed-switch  v2, payload@0x894, cases=[0:@0x58a, 1:@0x306, 2:@0x274, 3:@0x16, 4:@0x1e2, 5:@0x1d6, 6:@0x104, 7:@0xf8, 8:@0x16, 9:@0x1d6, 10:@0xf8, 11:@0x16, 12:@0xa0], default@0x16
+    0016..0018  const/4  v6, #0x0
+    0018..001e  invoke-static  {v0, v1, v6}, LX/1Xl;->A1Y(Ljava/lang/Object;Ljava/lang/Object;I)Z
+    001e..0020  move-result  v5
+    0020..0024  const-string  v2, "error"
+    0024..002a  invoke-virtual  {v1, v0, v2}, LX/8B6;->A0N(LX/0Tp;Ljava/lang/String;)Z
+    002a..002c  move-result  v2
+    002c..002e  const/4  v4, #0x0
+    002e..0032  if-eqz  v2, +0x38
+    0032..0036  new-array  v3, v5, [Ljava/lang/String;
+    0036..003a  const-string  v2, "text"
+    003a..003e  aput-object  v2, v3, v6
+    003e..0042  const-class  v9, Ljava/lang/String;
+    0042..0048  invoke-static  {}, LX/6oi;->A0r()Ljava/lang/Long;
+    0048..004a  move-result-object  v10
+    004a..0050  invoke-static  {}, LX/6oi;->A0s()Ljava/lang/Long;
+    0050..0052  move-result-object  v11
+    0052..0056  const-string  v12, "rate-overlimit"
+    0056..0058  move-object  v7, v1
+    0058..005a  move-object  v8, v0
+    005a..005c  move-object  v13, v3
+    005c..005e  move  v14, v6
+    005e..0064  invoke-virtual/range  {v7..v14}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    0064..0066  move-result-object  v2
+    0066..006a  if-eqz  v2, +0x1c
+    006a..006e  new-array  v5, v5, [Ljava/lang/String;
+    006e..0072  const-string  v2, "code"
+    0072..0076  aput-object  v2, v5, v6
+    0076..007a  sget-object  v9, Ljava/lang/Long;->TYPE:Ljava/lang/Class;
+    007a..007e  const-wide/16  v2, #0x1ad
+    007e..0084  invoke-static  {v2, v3}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0084..0086  move-result-object  v12
+    0086..0088  move-object  v13, v5
+    0088..008e  invoke-virtual/range  {v7..v14}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    008e..0090  move-result-object  v1
+    0090..0094  if-eqz  v1, +0x7
+    0094..0098  new-instance  v4, LX/DyU;
+    0098..009e  invoke-direct  {v4, v0}, LX/DyU;-><init>(LX/0Tp;)V
+    009e..00a0  return-object  v4
+    00a0..00a2  const/4  v3, #0x1
+    00a2..00a8  invoke-static  {v0, v3, v1}, LX/1Xl;->A1P(Ljava/lang/Object;ILjava/lang/Object;)V
+    00a8..00aa  const/4  v5, #0x0
+    00aa..00ae  const-string  v2, "notice"
+    00ae..00b4  invoke-virtual  {v1, v0, v2}, LX/8B6;->A0N(LX/0Tp;Ljava/lang/String;)Z
+    00b4..00b6  move-result  v2
+    00b6..00b8  const/4  v4, #0x0
+    00b8..00bc  if-eqz  v2, -0xd
+    00bc..00c0  new-array  v3, v3, [Ljava/lang/String;
+    00c0..00c4  const-string  v2, "t"
+    00c4..00c8  aput-object  v2, v3, v5
+    00c8..00ce  invoke-static  {v0, v1, v3}, LX/8B6;->A05(LX/0Tp;LX/8B6;[Ljava/lang/String;)Ljava/lang/Object;
+    00ce..00d0  move-result-object  v2
+    00d0..00d4  check-cast  v2, Ljava/lang/Number;
+    00d4..00d8  if-eqz  v2, -0x1b
+    00d8..00de  invoke-virtual  {v2}, Ljava/lang/Number;->longValue()J
+    00de..00e0  move-result-wide  v2
+    00e0..00e6  invoke-static  {v0, v1}, LX/Exw;->A00(LX/0Tp;LX/8B6;)LX/DyW;
+    00e6..00e8  move-result-object  v1
+    00e8..00ec  if-eqz  v1, -0x25
+    00ec..00f0  new-instance  v4, LX/7Ni;
+    00f0..00f6  invoke-direct  {v4, v0, v1, v2, v3}, LX/7Ni;-><init>(LX/0Tp;LX/DyW;J)V
+    00f6..00f8  return-object  v4
+    00f8..00fa  const/4  v2, #0x0
+    00fa..0100  invoke-static  {v0, v2}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0100..0102  const/4  v2, #0x1
+    0102..0104  goto  +0x75
+    0104..0106  const/4  v5, #0x1
+    0106..010c  invoke-static  {v0, v5, v1}, LX/1Xl;->A1P(Ljava/lang/Object;ILjava/lang/Object;)V
+    010c..010e  const/4  v13, #0x0
+    010e..0112  const-string  v2, "notice"
+    0112..0118  invoke-virtual  {v1, v0, v2}, LX/8B6;->A0N(LX/0Tp;Ljava/lang/String;)Z
+    0118..011a  move-result  v2
+    011a..011c  const/4  v4, #0x0
+    011c..0120  if-eqz  v2, -0x3f
+    0120..0124  new-array  v3, v5, [Ljava/lang/String;
+    0124..0128  const-string  v2, "t"
+    0128..012c  aput-object  v2, v3, v13
+    012c..0130  sget-object  v8, Ljava/lang/Long;->TYPE:Ljava/lang/Class;
+    0130..0136  invoke-static  {}, LX/3q4;->A0d()Ljava/lang/Long;
+    0136..0138  move-result-object  v9
+    0138..013e  invoke-static  {}, LX/6oi;->A0s()Ljava/lang/Long;
+    013e..0140  move-result-object  v10
+    0140..0142  move-object  v6, v1
+    0142..0144  move-object  v7, v0
+    0144..0146  move-object  v11, v4
+    0146..0148  move-object  v12, v3
+    0148..014e  invoke-virtual/range  {v6..v13}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    014e..0150  move-result-object  v2
+    0150..0154  check-cast  v2, Ljava/lang/Number;
+    0154..0158  if-eqz  v2, -0x5b
+    0158..015e  invoke-virtual  {v2}, Ljava/lang/Number;->longValue()J
+    015e..0160  move-result-wide  v22
+    0160..0164  new-array  v3, v5, [Ljava/lang/String;
+    0164..016a  const-string/jumbo  v2, "version"
+    016a..016e  aput-object  v2, v3, v13
+    016e..0174  invoke-static  {}, LX/6oj;->A0p()Ljava/lang/Long;
+    0174..0176  move-result-object  v17
+    0176..0178  move-object  v14, v1
+    0178..017a  move-object  v15, v0
+    017a..017e  move-object/from16  v16, v8
+    017e..0182  move-object/from16  v18, v10
+    0182..0186  move-object/from16  v19, v4
+    0186..018a  move-object/from16  v20, v3
+    018a..018e  move/from16  v21, v13
+    018e..0194  invoke-virtual/range  {v14..v21}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    0194..0196  move-result-object  v3
+    0196..019a  check-cast  v3, Ljava/lang/Long;
+    019a..01a0  invoke-static  {v5}, LX/6of;->A1Y(I)[Ljava/lang/String;
+    01a0..01a2  move-result-object  v12
+    01a2..01a8  invoke-virtual/range  {v6..v13}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    01a8..01aa  move-result-object  v2
+    01aa..01ae  check-cast  v2, Ljava/lang/Long;
+    01ae..01b4  invoke-static  {v0, v1}, LX/Exw;->A00(LX/0Tp;LX/8B6;)LX/DyW;
+    01b4..01b6  move-result-object  v19
+    01b6..01ba  if-eqz  v19, -0x8c
+    01ba..01be  new-instance  v4, LX/7NY;
+    01be..01c2  move-object/from16  v17, v4
+    01c2..01c6  move-object/from16  v18, v0
+    01c6..01ca  move-object/from16  v20, v3
+    01ca..01ce  move-object/from16  v21, v2
+    01ce..01d4  invoke-direct/range  {v17..v23}, LX/7NY;-><init>(LX/0Tp;LX/DyW;Ljava/lang/Long;Ljava/lang/Long;J)V
+    01d4..01d6  return-object  v4
+    01d6..01d8  const/4  v2, #0x1
+    01d8..01de  invoke-static  {v0, v2}, LX/00l;->A09(Ljava/lang/Object;I)V
+    01de..01e0  const/4  v2, #0x2
+    01e0..01e2  goto  +0x4f
+    01e2..01e4  const/4  v2, #0x1
+    01e4..01ea  invoke-static  {v0, v2}, LX/00l;->A09(Ljava/lang/Object;I)V
+    01ea..01ec  const/4  v2, #0x2
+    01ec..01f2  invoke-static  {v1, v2}, LX/00l;->A09(Ljava/lang/Object;I)V
+    01f2..01f4  const/4  v13, #0x0
+    01f4..01f6  const/4  v5, #0x1
+    01f6..01fa  const-string  v2, "error"
+    01fa..0200  invoke-virtual  {v1, v0, v2}, LX/8B6;->A0N(LX/0Tp;Ljava/lang/String;)Z
+    0200..0202  move-result  v2
+    0202..0204  const/4  v4, #0x0
+    0204..0208  if-eqz  v2, -0xb3
+    0208..020c  new-array  v3, v5, [Ljava/lang/String;
+    020c..0210  const-string  v2, "text"
+    0210..0214  aput-object  v2, v3, v13
+    0214..0218  const-class  v8, Ljava/lang/String;
+    0218..021e  invoke-static  {}, LX/6oi;->A0r()Ljava/lang/Long;
+    021e..0220  move-result-object  v9
+    0220..0226  invoke-static  {}, LX/6oi;->A0s()Ljava/lang/Long;
+    0226..0228  move-result-object  v10
+    0228..022c  const-string  v11, "internal-server-error"
+    022c..022e  move-object  v6, v1
+    022e..0230  move-object  v7, v0
+    0230..0232  move-object  v12, v3
+    0232..0238  invoke-virtual/range  {v6..v13}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    0238..023a  move-result-object  v2
+    023a..023e  if-eqz  v2, -0xce
+    023e..0242  new-array  v5, v5, [Ljava/lang/String;
+    0242..0246  const-string  v2, "code"
+    0246..024a  aput-object  v2, v5, v13
+    024a..024e  sget-object  v8, Ljava/lang/Long;->TYPE:Ljava/lang/Class;
+    024e..0252  const-wide/16  v2, #0x1f4
+    0252..0258  invoke-static  {v2, v3}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0258..025a  move-result-object  v11
+    025a..025c  move-object  v12, v5
+    025c..0262  invoke-virtual/range  {v6..v13}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    0262..0264  move-result-object  v1
+    0264..0268  if-eqz  v1, -0xe3
+    0268..026c  new-instance  v4, LX/DyT;
+    026c..0272  invoke-direct  {v4, v0}, LX/DyT;-><init>(LX/0Tp;)V
+    0272..0274  return-object  v4
+    0274..0276  const/4  v2, #0x0
+    0276..027c  invoke-static  {v0, v2}, LX/00l;->A09(Ljava/lang/Object;I)V
+    027c..027e  const/4  v2, #0x1
+    027e..0284  invoke-static  {v1, v2}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0284..0286  const/4  v13, #0x0
+    0286..0288  const/4  v5, #0x1
+    0288..028c  const-string  v2, "error"
+    028c..0292  invoke-virtual  {v1, v0, v2}, LX/8B6;->A0N(LX/0Tp;Ljava/lang/String;)Z
+    0292..0294  move-result  v2
+    0294..0296  const/4  v4, #0x0
+    0296..029a  if-eqz  v2, -0xfc
+    029a..029e  new-array  v3, v5, [Ljava/lang/String;
+    029e..02a2  const-string  v2, "text"
+    02a2..02a6  aput-object  v2, v3, v13
+    02a6..02aa  const-class  v8, Ljava/lang/String;
+    02aa..02b0  invoke-static  {}, LX/6oi;->A0r()Ljava/lang/Long;
+    02b0..02b2  move-result-object  v9
+    02b2..02b8  invoke-static  {}, LX/6oi;->A0s()Ljava/lang/Long;
+    02b8..02ba  move-result-object  v10
+    02ba..02be  const-string  v11, "bad-request"
+    02be..02c0  move-object  v6, v1
+    02c0..02c2  move-object  v7, v0
+    02c2..02c4  move-object  v12, v3
+    02c4..02ca  invoke-virtual/range  {v6..v13}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    02ca..02cc  move-result-object  v2
+    02cc..02d0  if-eqz  v2, -0x117
+    02d0..02d4  new-array  v5, v5, [Ljava/lang/String;
+    02d4..02d8  const-string  v2, "code"
+    02d8..02dc  aput-object  v2, v5, v13
+    02dc..02e0  sget-object  v8, Ljava/lang/Long;->TYPE:Ljava/lang/Class;
+    02e0..02e4  const-wide/16  v2, #0x190
+    02e4..02ea  invoke-static  {v2, v3}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    02ea..02ec  move-result-object  v11
+    02ec..02ee  move-object  v12, v5
+    02ee..02f4  invoke-virtual/range  {v6..v13}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    02f4..02f6  move-result-object  v1
+    02f6..02fa  if-eqz  v1, -0x12c
+    02fa..02fe  new-instance  v4, LX/DyS;
+    02fe..0304  invoke-direct  {v4, v0}, LX/DyS;-><init>(LX/0Tp;)V
+    0304..0306  return-object  v4
+    0306..0308  const/4  v2, #0x0
+    0308..030e  invoke-static  {v0, v1, v2}, LX/1Xl;->A1Y(Ljava/lang/Object;Ljava/lang/Object;I)Z
+    030e..0310  move-result  v3
+    0310..0316  invoke-static  {v0, v1}, LX/DBc;->A1W(LX/0Tp;LX/8B6;)Z
+    0316..0318  move-result  v5
+    0318..031a  const/4  v4, #0x0
+    031a..031e  if-eqz  v5, -0x13e
+    031e..0322  new-array  v6, v3, [Ljava/lang/String;
+    0322..0326  const-string  v5, "from"
+    0326..032a  aput-object  v5, v6, v2
+    032a..032e  const-class  v14, LX/1bc;
+    032e..0334  invoke-static  {}, LX/6oi;->A0r()Ljava/lang/Long;
+    0334..0336  move-result-object  v15
+    0336..033c  invoke-static  {}, LX/6oi;->A0s()Ljava/lang/Long;
+    033c..033e  move-result-object  v16
+    033e..0340  move-object  v12, v1
+    0340..0342  move-object  v13, v0
+    0342..0346  move-object/from16  v17, v4
+    0346..034a  move-object/from16  v18, v6
+    034a..034e  move/from16  v19, v2
+    034e..0354  invoke-virtual/range  {v12..v19}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    0354..0356  move-result-object  v8
+    0356..035a  check-cast  v8, LX/1bc;
+    035a..035e  if-eqz  v8, -0x15e
+    035e..0362  new-array  v6, v3, [Ljava/lang/String;
+    0362..0366  const-string  v5, "participant"
+    0366..036a  aput-object  v5, v6, v2
+    036a..036e  const-class  v14, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    036e..0372  move-object/from16  v18, v6
+    0372..0378  invoke-virtual/range  {v12..v19}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    0378..037a  move-result-object  v7
+    037a..037e  check-cast  v7, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    037e..0382  if-eqz  v7, -0x170
+    0382..0386  new-array  v6, v3, [Ljava/lang/String;
+    0386..038a  const-string  v5, "participant_pn"
+    038a..038e  aput-object  v5, v6, v2
+    038e..0392  const-class  v14, Lcom/whatsapp/infra/core/jid/UserJid;
+    0392..0396  move-object/from16  v18, v6
+    0396..039c  invoke-virtual/range  {v12..v19}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    039c..039e  move-result-object  v14
+    039e..03a2  check-cast  v14, Lcom/whatsapp/infra/core/jid/UserJid;
+    03a2..03a6  new-array  v9, v3, [Ljava/lang/String;
+    03a6..03aa  const-string  v5, "participant_username"
+    03aa..03ae  aput-object  v5, v9, v2
+    03ae..03b2  const-class  v19, Ljava/lang/String;
+    03b2..03b6  const-wide/16  v5, #0x3
+    03b6..03bc  invoke-static  {v5, v6}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    03bc..03be  move-result-object  v20
+    03be..03c2  const-wide/16  v5, #0x23
+    03c2..03c8  invoke-static  {v5, v6}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    03c8..03ca  move-result-object  v21
+    03ca..03ce  move-object/from16  v17, v1
+    03ce..03d2  move-object/from16  v18, v0
+    03d2..03d6  move-object/from16  v22, v4
+    03d6..03da  move-object/from16  v23, v9
+    03da..03de  move/from16  v24, v2
+    03de..03e4  invoke-virtual/range  {v17..v24}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    03e4..03e6  move-result-object  v13
+    03e6..03ea  check-cast  v13, Ljava/lang/String;
+    03ea..03ee  new-array  v5, v3, [Ljava/lang/String;
+    03ee..03f2  const-string  v6, "notify"
+    03f2..03f6  aput-object  v6, v5, v2
+    03f6..03fc  invoke-static  {}, LX/6oj;->A0p()Ljava/lang/Long;
+    03fc..03fe  move-result-object  v20
+    03fe..0402  const-wide/16  v9, #0x400
+    0402..0408  invoke-static  {v9, v10}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0408..040a  move-result-object  v21
+    040a..040e  move-object/from16  v23, v5
+    040e..0414  invoke-virtual/range  {v17..v24}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    0414..0416  move-result-object  v12
+    0416..041a  check-cast  v12, Ljava/lang/String;
+    041a..041e  new-array  v6, v3, [Ljava/lang/String;
+    041e..0422  const-string  v5, "offline"
+    0422..0426  aput-object  v5, v6, v2
+    0426..042a  sget-object  v19, Ljava/lang/Long;->TYPE:Ljava/lang/Class;
+    042a..042e  move-object/from16  v20, v15
+    042e..0432  move-object/from16  v21, v16
+    0432..0436  move-object/from16  v23, v6
+    0436..043c  invoke-virtual/range  {v17..v24}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    043c..043e  move-result-object  v10
+    043e..0442  check-cast  v10, Ljava/lang/Long;
+    0442..0446  new-array  v5, v3, [Ljava/lang/String;
+    0446..044a  const-string  v6, "t"
+    044a..044e  aput-object  v6, v5, v2
+    044e..0454  const-wide/32  v15, #0x5e0c5180
+    0454..045a  invoke-static/range  {v15..v16}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    045a..045c  move-result-object  v20
+    045c..0466  const-wide  v15, #0xf486c780 (4102473600)
+    0466..046c  invoke-static/range  {v15..v16}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    046c..046e  move-result-object  v21
+    046e..0472  move-object/from16  v23, v5
+    0472..0478  invoke-virtual/range  {v17..v24}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    0478..047a  move-result-object  v5
+    047a..047e  check-cast  v5, Ljava/lang/Number;
+    047e..0482  if-eqz  v5, -0x1f0
+    0482..0488  invoke-virtual  {v5}, Ljava/lang/Number;->longValue()J
+    0488..048a  move-result-wide  v35
+    048a..0490  invoke-static  {v0, v1}, LX/F42;->A00(LX/0Tp;LX/8B6;)LX/7NF;
+    0490..0492  move-result-object  v16
+    0492..0498  invoke-static  {v0, v1}, LX/F42;->A0M(LX/0Tp;LX/8B6;)LX/7NL;
+    0498..049a  move-result-object  v23
+    049a..04a0  invoke-static  {v0, v1}, LX/F42;->A0K(LX/0Tp;LX/8B6;)LX/7NL;
+    04a0..04a2  move-result-object  v24
+    04a2..04a8  invoke-static  {v0, v1}, LX/F42;->A06(LX/0Tp;LX/8B6;)LX/7Nk;
+    04a8..04aa  move-result-object  v17
+    04aa..04b0  invoke-static  {v0, v1}, LX/F42;->A05(LX/0Tp;LX/8B6;)LX/7Nk;
+    04b0..04b2  move-result-object  v18
+    04b2..04b8  invoke-static  {v0, v1}, LX/F42;->A0N(LX/0Tp;LX/8B6;)LX/7NL;
+    04b8..04ba  move-result-object  v25
+    04ba..04c0  invoke-static  {v0, v1}, LX/F42;->A08(LX/0Tp;LX/8B6;)LX/7Nm;
+    04c0..04c2  move-result-object  v22
+    04c2..04c8  invoke-static  {v0, v1}, LX/F42;->A0F(LX/0Tp;LX/8B6;)LX/7NL;
+    04c8..04ca  move-result-object  v26
+    04ca..04d0  invoke-static  {v0, v1}, LX/F42;->A01(LX/0Tp;LX/8B6;)LX/7Nk;
+    04d0..04d2  move-result-object  v19
+    04d2..04d8  invoke-static  {v0, v1}, LX/F42;->A04(LX/0Tp;LX/8B6;)LX/7Nk;
+    04d8..04da  move-result-object  v20
+    04da..04e0  invoke-static  {v0, v1}, LX/F42;->A0J(LX/0Tp;LX/8B6;)LX/7NL;
+    04e0..04e2  move-result-object  v27
+    04e2..04e8  invoke-static  {v0, v1}, LX/F42;->A0L(LX/0Tp;LX/8B6;)LX/7NL;
+    04e8..04ea  move-result-object  v28
+    04ea..04f0  invoke-static  {v0, v1}, LX/F42;->A0I(LX/0Tp;LX/8B6;)LX/7NL;
+    04f0..04f2  move-result-object  v29
+    04f2..04f4  const/4  v6, #0x2
+    04f4..04fa  invoke-static  {v0, v1}, LX/F42;->A07(LX/0Tp;LX/8B6;)LX/7Nk;
+    04fa..04fc  move-result-object  v21
+    04fc..0500  new-array  v5, v6, [LX/8oe;
+    0500..0504  sget-object  v9, LX/FVS;->A00:LX/FVS;
+    0504..0508  aput-object  v9, v5, v2
+    0508..050c  sget-object  v9, LX/FVT;->A00:LX/FVT;
+    050c..0512  invoke-static  {v9, v5, v3}, LX/2L6;->A1H(Ljava/lang/Object;[Ljava/lang/Object;I)Ljava/util/List;
+    0512..0514  move-result-object  v11
+    0514..0518  new-array  v9, v2, [Ljava/lang/String;
+    0518..051c  const-string  v5, "StatusEncDualEnc|StatusEncSingleEnc"
+    051c..0522  invoke-virtual  {v1, v0, v5, v11, v9}, LX/8B6;->A0K(LX/0Tp;Ljava/lang/String;Ljava/util/List;[Ljava/lang/String;)Ljava/lang/Object;
+    0522..0524  move-result-object  v5
+    0524..0528  if-eqz  v5, -0x243
+    0528..052c  check-cast  v5, LX/Fta;
+    052c..052e  const/4  v4, #0x3
+    052e..0532  new-array  v4, v4, [LX/8oe;
+    0532..0536  sget-object  v9, LX/FVU;->A00:LX/FVU;
+    0536..053a  aput-object  v9, v4, v2
+    053a..053e  sget-object  v9, LX/FVV;->A00:LX/FVV;
+    053e..0542  aput-object  v9, v4, v3
+    0542..0546  sget-object  v3, LX/FVW;->A00:LX/FVW;
+    0546..054c  invoke-static  {v3, v4, v6}, LX/2L6;->A1H(Ljava/lang/Object;[Ljava/lang/Object;I)Ljava/util/List;
+    054c..054e  move-result-object  v4
+    054e..0552  new-array  v3, v2, [Ljava/lang/String;
+    0552..0556  const-string  v2, "StatusEdit|StatusRevoke|StatusAdminRevoke"
+    0556..055c  invoke-virtual  {v1, v0, v2, v4, v3}, LX/8B6;->A0K(LX/0Tp;Ljava/lang/String;Ljava/util/List;[Ljava/lang/String;)Ljava/lang/Object;
+    055c..055e  move-result-object  v1
+    055e..0562  check-cast  v1, LX/Ftb;
+    0562..0566  new-instance  v4, LX/Dyb;
+    0566..056a  move-object/from16  v30, v5
+    056a..056e  move-object/from16  v31, v1
+    056e..0572  move-object/from16  v32, v10
+    0572..0576  move-object/from16  v33, v13
+    0576..057a  move-object/from16  v34, v12
+    057a..057c  move-object  v15, v0
+    057c..057e  move-object  v13, v8
+    057e..0580  move-object  v12, v7
+    0580..0582  move-object  v11, v4
+    0582..0588  invoke-direct/range  {v11..v36}, LX/Dyb;-><init>(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/1bc;Lcom/whatsapp/infra/core/jid/UserJid;LX/0Tp;LX/7NF;LX/7Nk;LX/7Nk;LX/7Nk;LX/7Nk;LX/7Nk;LX/7Nm;LX/7NL;LX/7NL;LX/7NL;LX/7NL;LX/7NL;LX/7NL;LX/7NL;LX/Fta;LX/Ftb;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;J)V
+    0588..058a  return-object  v4
+    058a..058c  const/4  v2, #0x0
+    058c..0592  invoke-static  {v0, v1, v2}, LX/1Xl;->A1Y(Ljava/lang/Object;Ljava/lang/Object;I)Z
+    0592..0594  move-result  v3
+    0594..059a  invoke-static  {v0, v1}, LX/DBc;->A1W(LX/0Tp;LX/8B6;)Z
+    059a..059c  move-result  v5
+    059c..059e  const/4  v4, #0x0
+    059e..05a2  if-eqz  v5, -0x280
+    05a2..05a6  new-array  v6, v3, [Ljava/lang/String;
+    05a6..05aa  const-string  v5, "participant"
+    05aa..05ae  aput-object  v5, v6, v2
+    05ae..05b2  const-class  v15, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    05b2..05b8  invoke-static  {}, LX/6oi;->A0r()Ljava/lang/Long;
+    05b8..05ba  move-result-object  v16
+    05ba..05c0  invoke-static  {}, LX/6oi;->A0s()Ljava/lang/Long;
+    05c0..05c2  move-result-object  v17
+    05c2..05c4  move-object  v13, v1
+    05c4..05c6  move-object  v14, v0
+    05c6..05ca  move-object/from16  v18, v4
+    05ca..05ce  move-object/from16  v19, v6
+    05ce..05d2  move/from16  v20, v2
+    05d2..05d8  invoke-virtual/range  {v13..v20}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    05d8..05da  move-result-object  v10
+    05da..05de  check-cast  v10, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    05de..05e2  if-eqz  v10, -0x2a0
+    05e2..05e6  new-array  v6, v3, [Ljava/lang/String;
+    05e6..05ea  const-string  v5, "participant_pn"
+    05ea..05ee  aput-object  v5, v6, v2
+    05ee..05f2  const-class  v15, Lcom/whatsapp/infra/core/jid/UserJid;
+    05f2..05f6  move-object/from16  v19, v6
+    05f6..05fc  invoke-virtual/range  {v13..v20}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    05fc..05fe  move-result-object  v15
+    05fe..0602  check-cast  v15, Lcom/whatsapp/infra/core/jid/UserJid;
+    0602..0606  new-array  v7, v3, [Ljava/lang/String;
+    0606..060a  const-string  v5, "participant_username"
+    060a..060e  aput-object  v5, v7, v2
+    060e..0612  const-class  v20, Ljava/lang/String;
+    0612..0616  const-wide/16  v5, #0x3
+    0616..061c  invoke-static  {v5, v6}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    061c..061e  move-result-object  v21
+    061e..0622  const-wide/16  v5, #0x23
+    0622..0628  invoke-static  {v5, v6}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0628..062a  move-result-object  v22
+    062a..062e  move-object/from16  v18, v1
+    062e..0632  move-object/from16  v19, v0
+    0632..0636  move-object/from16  v23, v4
+    0636..063a  move-object/from16  v24, v7
+    063a..063e  move/from16  v25, v2
+    063e..0644  invoke-virtual/range  {v18..v25}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    0644..0646  move-result-object  v14
+    0646..064a  check-cast  v14, Ljava/lang/String;
+    064a..064e  new-array  v7, v3, [Ljava/lang/String;
+    064e..0652  const-string  v5, "notify"
+    0652..0656  aput-object  v5, v7, v2
+    0656..065c  invoke-static  {}, LX/6oj;->A0p()Ljava/lang/Long;
+    065c..065e  move-result-object  v21
+    065e..0662  const-wide/16  v5, #0x400
+    0662..0668  invoke-static  {v5, v6}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0668..066a  move-result-object  v22
+    066a..066e  move-object/from16  v24, v7
+    066e..0674  invoke-virtual/range  {v18..v25}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    0674..0676  move-result-object  v13
+    0676..067a  check-cast  v13, Ljava/lang/String;
+    067a..067e  new-array  v6, v3, [Ljava/lang/String;
+    067e..0682  const-string  v5, "offline"
+    0682..0686  aput-object  v5, v6, v2
+    0686..068a  sget-object  v23, Ljava/lang/Long;->TYPE:Ljava/lang/Class;
+    068a..068e  move-object/from16  v21, v1
+    068e..0692  move-object/from16  v22, v0
+    0692..0696  move-object/from16  v24, v16
+    0696..069a  move-object/from16  v25, v17
+    069a..069e  move-object/from16  v26, v4
+    069e..06a2  move-object/from16  v27, v6
+    06a2..06a6  move/from16  v28, v2
+    06a6..06ac  invoke-virtual/range  {v21..v28}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    06ac..06ae  move-result-object  v12
+    06ae..06b2  check-cast  v12, Ljava/lang/Long;
+    06b2..06b6  new-array  v5, v3, [Ljava/lang/String;
+    06b6..06ba  const-string  v6, "t"
+    06ba..06be  aput-object  v6, v5, v2
+    06be..06c4  const-wide/32  v6, #0x5e0c5180
+    06c4..06ca  invoke-static  {v6, v7}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    06ca..06cc  move-result-object  v24
+    06cc..06d6  const-wide  v6, #0xf486c780 (4102473600)
+    06d6..06dc  invoke-static  {v6, v7}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    06dc..06de  move-result-object  v25
+    06de..06e2  move-object/from16  v27, v5
+    06e2..06e8  invoke-virtual/range  {v21..v28}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    06e8..06ea  move-result-object  v5
+    06ea..06ee  check-cast  v5, Ljava/lang/Number;
+    06ee..06f2  if-eqz  v5, -0x328
+    06f2..06f8  invoke-virtual  {v5}, Ljava/lang/Number;->longValue()J
+    06f8..06fa  move-result-wide  v38
+    06fa..06fe  new-array  v7, v3, [Ljava/lang/String;
+    06fe..0702  const-string  v5, "from"
+    0702..0706  aput-object  v5, v7, v2
+    0706..070a  const-class  v23, LX/2p4;
+    070a..0710  invoke-static  {v5}, LX/0Tk;->A00(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    0710..0712  move-result-object  v6
+    0712..0716  const-string  v5, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.StatusJid"
+    0716..071c  invoke-static  {v6, v5}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    071c..0720  move-object/from16  v24, v16
+    0720..0724  move-object/from16  v25, v17
+    0724..0728  move-object/from16  v26, v6
+    0728..072c  move-object/from16  v27, v7
+    072c..0732  invoke-virtual/range  {v21..v28}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    0732..0734  move-result-object  v7
+    0734..0738  check-cast  v7, LX/2p4;
+    0738..073c  if-eqz  v7, -0x34d
+    073c..0740  new-array  v5, v3, [Ljava/lang/String;
+    0740..0744  const-string  v6, "original_addressing_mode"
+    0744..0748  aput-object  v6, v5, v2
+    0748..074c  const-string  v23, "lid"
+    074c..0750  move-object/from16  v21, v16
+    0750..0754  move-object/from16  v22, v17
+    0754..0758  move-object/from16  v24, v5
+    0758..075c  move/from16  v25, v2
+    075c..0762  invoke-virtual/range  {v18..v25}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    0762..0764  move-result-object  v11
+    0764..0768  check-cast  v11, Ljava/lang/String;
+    0768..076e  invoke-static  {v0, v1}, LX/F42;->A00(LX/0Tp;LX/8B6;)LX/7NF;
+    076e..0770  move-result-object  v17
+    0770..0776  invoke-static  {v0, v1}, LX/F42;->A0K(LX/0Tp;LX/8B6;)LX/7NL;
+    0776..0778  move-result-object  v25
+    0778..077e  invoke-static  {v0, v1}, LX/F42;->A0M(LX/0Tp;LX/8B6;)LX/7NL;
+    077e..0780  move-result-object  v26
+    0780..0786  invoke-static  {v0, v1}, LX/F42;->A06(LX/0Tp;LX/8B6;)LX/7Nk;
+    0786..0788  move-result-object  v18
+    0788..078e  invoke-static  {v0, v1}, LX/F42;->A05(LX/0Tp;LX/8B6;)LX/7Nk;
+    078e..0790  move-result-object  v19
+    0790..0796  invoke-static  {v0, v1}, LX/F42;->A0N(LX/0Tp;LX/8B6;)LX/7NL;
+    0796..0798  move-result-object  v27
+    0798..079e  invoke-static  {v0, v1}, LX/F42;->A08(LX/0Tp;LX/8B6;)LX/7Nm;
+    079e..07a0  move-result-object  v23
+    07a0..07a6  invoke-static  {v0, v1}, LX/F42;->A0F(LX/0Tp;LX/8B6;)LX/7NL;
+    07a6..07a8  move-result-object  v28
+    07a8..07ae  invoke-static  {v0, v1}, LX/F42;->A01(LX/0Tp;LX/8B6;)LX/7Nk;
+    07ae..07b0  move-result-object  v20
+    07b0..07b6  invoke-static  {v0, v1}, LX/F42;->A04(LX/0Tp;LX/8B6;)LX/7Nk;
+    07b6..07b8  move-result-object  v21
+    07b8..07be  invoke-static  {v0, v1}, LX/F42;->A0J(LX/0Tp;LX/8B6;)LX/7NL;
+    07be..07c0  move-result-object  v29
+    07c0..07c6  invoke-static  {v0, v1}, LX/F42;->A0L(LX/0Tp;LX/8B6;)LX/7NL;
+    07c6..07c8  move-result-object  v30
+    07c8..07ce  invoke-static  {v0, v1}, LX/F42;->A0I(LX/0Tp;LX/8B6;)LX/7NL;
+    07ce..07d0  move-result-object  v31
+    07d0..07d2  const/4  v6, #0x2
+    07d2..07d8  invoke-static  {v0, v1}, LX/F42;->A07(LX/0Tp;LX/8B6;)LX/7Nk;
+    07d8..07da  move-result-object  v22
+    07da..07de  new-array  v5, v6, [LX/8oe;
+    07de..07e2  sget-object  v8, LX/FVM;->A00:LX/FVM;
+    07e2..07e6  aput-object  v8, v5, v2
+    07e6..07ea  sget-object  v8, LX/FVN;->A00:LX/FVN;
+    07ea..07f0  invoke-static  {v8, v5, v3}, LX/2L6;->A1H(Ljava/lang/Object;[Ljava/lang/Object;I)Ljava/util/List;
+    07f0..07f2  move-result-object  v9
+    07f2..07f6  new-array  v8, v2, [Ljava/lang/String;
+    07f6..07fa  const-string  v5, "StatusEncDualEnc|StatusEncSingleEnc"
+    07fa..0800  invoke-virtual  {v1, v0, v5, v9, v8}, LX/8B6;->A0K(LX/0Tp;Ljava/lang/String;Ljava/util/List;[Ljava/lang/String;)Ljava/lang/Object;
+    0800..0802  move-result-object  v5
+    0802..0806  if-eqz  v5, -0x3b2
+    0806..080a  check-cast  v5, LX/FtY;
+    080a..080e  new-array  v4, v6, [LX/8oe;
+    080e..0812  sget-object  v8, LX/FVO;->A00:LX/FVO;
+    0812..0816  aput-object  v8, v4, v2
+    0816..081a  sget-object  v8, LX/FVP;->A00:LX/FVP;
+    081a..0820  invoke-static  {v8, v4, v3}, LX/2L6;->A1H(Ljava/lang/Object;[Ljava/lang/Object;I)Ljava/util/List;
+    0820..0822  move-result-object  v9
+    0822..0826  new-array  v8, v2, [Ljava/lang/String;
+    0826..082a  const-string  v4, "StatusEdit|StatusRevoke"
+    082a..0830  invoke-virtual  {v1, v0, v4, v9, v8}, LX/8B6;->A0K(LX/0Tp;Ljava/lang/String;Ljava/util/List;[Ljava/lang/String;)Ljava/lang/Object;
+    0830..0832  move-result-object  v8
+    0832..0836  check-cast  v8, LX/Dyi;
+    0836..083a  new-array  v4, v6, [LX/8oe;
+    083a..083e  sget-object  v6, LX/FVQ;->A00:LX/FVQ;
+    083e..0842  aput-object  v6, v4, v2
+    0842..0846  sget-object  v6, LX/FVR;->A00:LX/FVR;
+    0846..084c  invoke-static  {v6, v4, v3}, LX/2L6;->A1H(Ljava/lang/Object;[Ljava/lang/Object;I)Ljava/util/List;
+    084c..084e  move-result-object  v4
+    084e..0852  new-array  v3, v2, [Ljava/lang/String;
+    0852..0856  const-string  v2, "StatusEncOrgSetting|StatusEncSetting"
+    0856..085c  invoke-virtual  {v1, v0, v2, v4, v3}, LX/8B6;->A0K(LX/0Tp;Ljava/lang/String;Ljava/util/List;[Ljava/lang/String;)Ljava/lang/Object;
+    085c..085e  move-result-object  v1
+    085e..0862  check-cast  v1, LX/FtZ;
+    0862..0866  new-instance  v4, LX/Dyc;
+    0866..086a  move-object/from16  v24, v8
+    086a..086e  move-object/from16  v32, v5
+    086e..0872  move-object/from16  v33, v1
+    0872..0876  move-object/from16  v34, v12
+    0876..087a  move-object/from16  v35, v14
+    087a..087e  move-object/from16  v36, v13
+    087e..0882  move-object/from16  v37, v11
+    0882..0886  move-object/from16  v16, v0
+    0886..0888  move-object  v14, v7
+    0888..088a  move-object  v13, v10
+    088a..088c  move-object  v12, v4
+    088c..0892  invoke-direct/range  {v12..v39}, LX/Dyc;-><init>(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/2p4;Lcom/whatsapp/infra/core/jid/UserJid;LX/0Tp;LX/7NF;LX/7Nk;LX/7Nk;LX/7Nk;LX/7Nk;LX/7Nk;LX/7Nm;LX/Dyi;LX/7NL;LX/7NL;LX/7NL;LX/7NL;LX/7NL;LX/7NL;LX/7NL;LX/FtY;LX/FtZ;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;J)V
+    0892..0894  return-object  v4
+    0894..08d0  packed-switch-payload  size=13
+    # exception table: 0 try range(s)
+.end method

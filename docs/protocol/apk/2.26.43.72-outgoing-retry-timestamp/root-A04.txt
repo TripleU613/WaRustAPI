@@ -1,0 +1,73 @@
+
+# class: LX/Ewu;
+# extends: Ljava/lang/Object;
+
+.method public A04(LLLLLLL)  # .registers 30
+    # full signature: LX/Ewu;->A04(LX/0Tp;LX/Dyb;LX/Dzc;LX/Ek4;Ljava/lang/Integer;Ljava/lang/Long;)LX/Dxr;
+    0000..0004  move-object/from16  v0, v25
+    0004..0008  move-object/from16  v1, v26
+    0008..000e  invoke-static  {v1, v0}, LX/00l;->A0A(Ljava/lang/Object;Ljava/lang/Object;)V
+    000e..0012  iget-object  v2, v0, LX/Dyb;->A04:LX/7Nk;
+    0012..0016  const/16  v17, #0x0
+    0016..001a  if-eqz  v2, +0x71
+    001a..001e  iget-object  v3, v2, LX/7Nk;->A00:Ljava/lang/Object;
+    001e..0022  check-cast  v3, [B
+    0022..0026  iget-object  v2, v0, LX/Dyb;->A05:LX/7Nk;
+    0026..002a  if-eqz  v2, +0x66
+    002a..002e  iget-object  v2, v2, LX/7Nk;->A01:Ljava/lang/Object;
+    002e..0032  check-cast  v2, [B
+    0032..0036  iget-object  v4, v0, LX/Dyb;->A0F:LX/Ftb;
+    0036..003a  if-eqz  v4, +0xa
+    003a..0040  invoke-interface  {v4}, LX/Ftb;->Ahj()Ljava/lang/String;
+    0040..0042  move-result-object  v4
+    0042..0048  invoke-static  {v4}, LX/0Cd;->A06(Ljava/lang/String;)Ljava/lang/Integer;
+    0048..004a  move-result-object  v17
+    004a..004e  iget-object  v5, v0, LX/Dyb;->A0H:Ljava/lang/String;
+    004e..0052  iget-object  v12, v0, LX/Dyb;->A0A:LX/7NL;
+    0052..0056  iget-object  v13, v0, LX/Dyb;->A0C:LX/7NL;
+    0056..005a  iget-object  v8, v0, LX/Dyb;->A07:LX/7Nk;
+    005a..005e  iget-object  v9, v0, LX/Dyb;->A06:LX/7Nk;
+    005e..0062  iget-object  v14, v0, LX/Dyb;->A0D:LX/7NL;
+    0062..0066  iget-object  v15, v0, LX/Dyb;->A0B:LX/7NL;
+    0066..006a  iget-object  v7, v0, LX/Dyb;->A03:Lcom/whatsapp/infra/core/jid/UserJid;
+    006a..006e  iget-object  v4, v0, LX/Dyb;->A0I:Ljava/lang/String;
+    006e..0072  iget-object  v11, v0, LX/Dyb;->A09:LX/7Nm;
+    0072..0076  iget-object  v10, v0, LX/Dyb;->A08:LX/7Nk;
+    0076..007a  const/16  v16, #0x0
+    007a..007e  new-instance  v6, LX/Enr;
+    007e..0082  move-object/from16  v20, v16
+    0082..0086  move-object/from16  v21, v3
+    0086..008a  move-object/from16  v22, v2
+    008a..008e  move-object/from16  v18, v5
+    008e..0092  move-object/from16  v19, v4
+    0092..0098  invoke-direct/range  {v6..v22}, LX/Enr;-><init>(Lcom/whatsapp/infra/core/jid/UserJid;LX/7Nk;LX/7Nk;LX/7Nk;LX/7Nm;LX/7NL;LX/7NL;LX/7NL;LX/7NL;LX/FtZ;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[B[B)V
+    0098..009c  iget-object  v8, v0, LX/Dyb;->A02:LX/1bc;
+    009c..00a0  iget-object  v9, v0, LX/Dyb;->A01:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    00a0..00a4  iget-object  v5, v1, LX/Dzc;->A01:Ljava/lang/String;
+    00a4..00a8  iget-wide  v1, v0, LX/Dyb;->A00:J
+    00a8..00ac  const-wide/16  v3, #0x3e8
+    00ac..00ae  mul-long/2addr  v1, v3
+    00ae..00b2  iget-object  v0, v0, LX/Dyb;->A0G:Ljava/lang/Long;
+    00b2..00b6  const/16  v20, #0x2
+    00b6..00ba  new-instance  v15, LX/FgV;
+    00ba..00be  move-object/from16  v7, v23
+    00be..00c2  move-object/from16  v10, v24
+    00c2..00c6  move-object/from16  v18, v27
+    00c6..00ca  move-object/from16  v16, v7
+    00ca..00ce  move-object/from16  v17, v10
+    00ce..00d2  move-object/from16  v19, v6
+    00d2..00d8  invoke-direct/range  {v15..v20}, LX/FgV;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+    00d8..00dc  move-object/from16  v11, v28
+    00dc..00e0  move-object/from16  v13, v29
+    00e0..00e2  move-object  v12, v0
+    00e2..00e4  move-object  v14, v5
+    00e4..00e8  move-wide/from16  v16, v1
+    00e8..00ee  invoke-virtual/range  {v7..v17}, LX/Ewu;->A02(Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/Jid;LX/0Tp;Ljava/lang/Integer;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/String;Lkotlin/jvm/functions/Function1;J)LX/Dxr;
+    00ee..00f0  move-result-object  v0
+    00f0..00f2  return-object  v0
+    00f2..00f6  move-object/from16  v2, v17
+    00f6..00f8  goto  -0x62
+    00f8..00fc  move-object/from16  v3, v17
+    00fc..00fe  goto  -0x6d
+    # exception table: 0 try range(s)
+.end method

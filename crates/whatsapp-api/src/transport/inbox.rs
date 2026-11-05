@@ -2827,6 +2827,7 @@ mod tests {
             .await
             .unwrap();
         let node = Node::new("message")
+            .attr("t", "1700000000")
             .attr("from", group.clone())
             .attr("participant", sender.clone())
             .attr("id", "LATE-KEY")

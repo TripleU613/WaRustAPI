@@ -2522,6 +2522,7 @@ mod tests {
             // Like the inbox resilience fixture: no session for this sender, so
             // this is a genuine decryption failure through the production loop.
             let failed = Node::new("message")
+                .attr("t", "1700000000")
                 .attr("from", peer())
                 .attr("id", "FAILED")
                 .attr("type", "text")
@@ -2549,6 +2550,14 @@ mod tests {
             fake.deliver(failed.clone()).await;
             let (retry, reply) = fake.written().await;
             assert_eq!(retry.description, "receipt");
+            assert_eq!(
+                retry
+                    .child("retry")
+                    .unwrap()
+                    .get_attr("t")
+                    .and_then(|v| v.as_text()),
+                Some("1700000000")
+            );
             assert_eq!(
                 retry.get_attr("type").and_then(|v| v.as_text()),
                 Some("retry")

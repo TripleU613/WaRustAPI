@@ -1,0 +1,11 @@
+
+# class: LX/2LB;
+# extends: Ljava/lang/Object;
+
+.method public A06(JJ)  # .registers 4
+    # full signature: LX/2LB;->A06(J)J
+    0000..0004  const-wide/16  v0, #0x3e8
+    0004..0006  div-long/2addr  v2, v0
+    0006..0008  return-wide  v2
+    # exception table: 0 try range(s)
+.end method

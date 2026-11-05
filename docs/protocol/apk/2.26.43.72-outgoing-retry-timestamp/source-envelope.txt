@@ -1,0 +1,22 @@
+
+# class: LX/F1Z;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLLLLJ)  # .registers 12
+    # full signature: LX/F1Z;-><init>(Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/Jid;LX/0Tp;Ljava/lang/Integer;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;J)V
+    0000..0006  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v2, v1, LX/F1Z;->A07:Lcom/whatsapp/infra/core/jid/Jid;
+    000a..000e  iput-object  v8, v1, LX/F1Z;->A0C:Ljava/lang/String;
+    000e..0012  iput-wide  v10, v1, LX/F1Z;->A05:J
+    0012..0016  iput-object  v3, v1, LX/F1Z;->A06:Lcom/whatsapp/infra/core/jid/Jid;
+    0016..001a  iput-object  v9, v1, LX/F1Z;->A0D:Ljava/lang/String;
+    001a..001e  iput-object  v6, v1, LX/F1Z;->A0A:Ljava/lang/Long;
+    001e..0022  iput-object  v7, v1, LX/F1Z;->A0B:Ljava/lang/Long;
+    0022..0026  iput-object  v4, v1, LX/F1Z;->A08:LX/0Tp;
+    0026..002a  iput-object  v5, v1, LX/F1Z;->A09:Ljava/lang/Integer;
+    002a..0030  invoke-static  {}, LX/05p;->A0K()LX/05q;
+    0030..0032  move-result-object  v0
+    0032..0036  iput-object  v0, v1, LX/F1Z;->A0E:Ljava/util/Map;
+    0036..0038  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,33 @@
+
+# class: LX/EYI;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLLLLLLLLBIIIJJ)  # .registers 23
+    # full signature: LX/EYI;-><init>(Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/UserJid;LX/ETs;LX/ETs;LX/ETs;Ljava/lang/String;Ljava/lang/String;[B[B[B[BBIIIJJ)V
+    0000..0006  invoke-direct  {v2}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v3, v2, LX/EYI;->A07:Lcom/whatsapp/infra/core/jid/Jid;
+    000a..000e  iput-object  v9, v2, LX/EYI;->A0E:Ljava/lang/String;
+    000e..0012  iput-object  v4, v2, LX/EYI;->A08:Lcom/whatsapp/infra/core/jid/Jid;
+    0012..0016  iput-object  v5, v2, LX/EYI;->A09:Lcom/whatsapp/infra/core/jid/UserJid;
+    0016..001a  move-wide/from16  v0, v19
+    001a..001e  iput-wide  v0, v2, LX/EYI;->A06:J
+    001e..0022  move/from16  v0, v16
+    0022..0026  iput  v0, v2, LX/EYI;->A03:I
+    0026..002a  iput-object  v11, v2, LX/EYI;->A0I:[B
+    002a..002e  iput-object  v12, v2, LX/EYI;->A0G:[B
+    002e..0032  ??(0x5d)  v15, v2, LX/EYI;->A01:B
+    0032..0036  iput-object  v6, v2, LX/EYI;->A0C:LX/ETs;
+    0036..003a  iput-object  v7, v2, LX/EYI;->A0B:LX/ETs;
+    003a..003e  iput-object  v8, v2, LX/EYI;->A0A:LX/ETs;
+    003e..0042  iput-object  v13, v2, LX/EYI;->A0F:[B
+    0042..0046  move-wide/from16  v0, v21
+    0046..004a  iput-wide  v0, v2, LX/EYI;->A05:J
+    004a..004e  iput-object  v10, v2, LX/EYI;->A0D:Ljava/lang/String;
+    004e..0052  move/from16  v0, v17
+    0052..0056  iput  v0, v2, LX/EYI;->A04:I
+    0056..005a  iput-object  v14, v2, LX/EYI;->A0H:[B
+    005a..005e  move/from16  v0, v18
+    005e..0062  iput  v0, v2, LX/EYI;->A02:I
+    0062..0064  return-void
+    # exception table: 0 try range(s)
+.end method

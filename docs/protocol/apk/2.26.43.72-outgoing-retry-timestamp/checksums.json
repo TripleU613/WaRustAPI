@@ -1,0 +1,106 @@
+{
+  "README.md": {
+    "bytes": 5677,
+    "sha256": "95e58fa65c5cb5a575d63397f2c33b4bff69d0ecf30517dac92a396f9f153ab3"
+  },
+  "admission.txt": {
+    "bytes": 22148,
+    "sha256": "b085967f1ca37bea9fc5380d8f19eea4e1a6ead3c3fd98748291dd893c2f434c"
+  },
+  "envelope-callers.txt": {
+    "bytes": 276,
+    "sha256": "e8ae1ce55d4debf295c79d534dc78549585a16f36658809d0ec0b17ae0dcfcc1"
+  },
+  "envelope.txt": {
+    "bytes": 1734,
+    "sha256": "7f34c3788dc4a58d2ea77bcc54f6aee2dd5b2dddac61d332d7f07ac2456fd4db"
+  },
+  "incoming-time.txt": {
+    "bytes": 2474,
+    "sha256": "092411739a0daa27d63a027ea2912714e690594205f597a6379613b012f5c735"
+  },
+  "job-callers.txt": {
+    "bytes": 66,
+    "sha256": "d1a39dd4a777ed588171406ed8b03e0588363efd4f1b495092be0e792943ea59"
+  },
+  "job-constructor.txt": {
+    "bytes": 6368,
+    "sha256": "2d77d3e0a5dbd5cd6a8a9be7c04ec52ebc24209b4533ccac1f411c1261ebac59"
+  },
+  "job-run.txt": {
+    "bytes": 14301,
+    "sha256": "27016174b41b291792a7f59b3cc8de792e2ec8506c0e2291f2be5f47a2103c27"
+  },
+  "message-callers.txt": {
+    "bytes": 65,
+    "sha256": "191b6a834b669824fceac05b23d1ba9c4e204df72a81277454ab8dd6e1da2fd1"
+  },
+  "message-envelope.txt": {
+    "bytes": 1792,
+    "sha256": "acab6e647da99ca13b20d9a0ac26ca664e6638e9011c50fb3b28eb53aec9609b"
+  },
+  "message-freeze.txt": {
+    "bytes": 6641,
+    "sha256": "10557354bfc7eccd7328787c8c4db35b60d72ef89c1ffe2e19a5830e32a33c63"
+  },
+  "message-reader.txt": {
+    "bytes": 36388,
+    "sha256": "9277b2acf56207b0ceb2bdf0c5eb569b9cac0607e38e89981cc1648b0fcff9fa"
+  },
+  "message-time-parser.txt": {
+    "bytes": 32854,
+    "sha256": "7c9da0c6f9f8bc7e5038dc7e45c164ab1b218f5919a66e1301bab024604807c7"
+  },
+  "millis-to-seconds.txt": {
+    "bytes": 290,
+    "sha256": "98b8a6677477891ad6aa3d4057f4068c8e713e95daa8cedc3244d40a9cfe9274"
+  },
+  "parsed-alternate.txt": {
+    "bytes": 2724,
+    "sha256": "ecd68ad351e10da21473b50a4feab192dcfdb4f8b0bdbc66522c3441e32ebf91"
+  },
+  "parsed-message-callers.txt": {
+    "bytes": 67,
+    "sha256": "7077b7d7f1ea0ffe6c39c91ef08e0dbfe643724288991ed9d2ab28eaf39e077a"
+  },
+  "parsed-message.txt": {
+    "bytes": 2966,
+    "sha256": "e767b232bbfb6ade38b999a6c788cc199508665e734cad8dbce0347758567408"
+  },
+  "root-A03.txt": {
+    "bytes": 4586,
+    "sha256": "543edfc6685abbf0c776a164a817e54a0ac3065c706598a91faba3e374a42658"
+  },
+  "root-A04.txt": {
+    "bytes": 4002,
+    "sha256": "55e4c6478de21ef31136458a352896d79c439abf4c4d952cb845a86bb40302c4"
+  },
+  "source-callers.txt": {
+    "bytes": 184,
+    "sha256": "59551f879a3096ec653d76bdb511f93b4626b0baf4042bcd9fbad34082a4cf73"
+  },
+  "source-envelope.txt": {
+    "bytes": 1228,
+    "sha256": "9b477acae767279214cf8567a7bf62ac2a08aeb9ac7fba822d96f27235afe79b"
+  },
+  "time-producers-corrected.txt": {
+    "bytes": 566,
+    "sha256": "4d03eb191910b1869aa8c76bef4886d01bc45ae48c3557fa8084ed2b18ca454a"
+  },
+  "time-producers.txt": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "wire-reader-callers.txt": {
+    "bytes": 142,
+    "sha256": "8da4618974733e7595fd04811ac75b32b13760faa4bbaee314ba60de79823361"
+  },
+  "wire-reader.txt": {
+    "bytes": 4131,
+    "sha256": "2399174c3316856ece71b8e42df68ae217ec3515fcd586c55c71ab8539feff85"
+  },
+  "writer.txt": {
+    "bytes": 10950,
+    "sha256": "5396ae5b7adf61476df27c1cbffeb349060687f9e1c2c2362ebc5f0d89808aa2"
+  }
+}

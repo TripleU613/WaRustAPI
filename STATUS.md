@@ -1,3 +1,11 @@
+2026-11-05 — **Outgoing retries now preserve original message timestamp.**
+
+Automatic retry.t uses failed message root t instead of local queue time.
+Missing/unusable timestamps refuse without queue writes; held retries do not
+reset on changed metadata. [Native chain, regressions and limits](docs/protocol/outgoing-retry-receipts.md).
+Validation:1327 tests, strict Clippy, fmt, CLI reference and hygiene passed.
+Error-code/key/count progression remains incomplete; no live traffic.
+
 2026-11-05 — **Retry refetch callbacks now belong to their live connection.**
 
 Only a locally written query can complete through normal receive; result/error

@@ -1,0 +1,53 @@
+
+# class: LX/Dyc;
+# extends: LX/EEy;
+
+.method public <init>(VLLLLLLLLLLLLLLLLLLLLLLLLLJ)  # .registers 31
+    # full signature: LX/Dyc;-><init>(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/2p4;Lcom/whatsapp/infra/core/jid/UserJid;LX/0Tp;LX/7NF;LX/7Nk;LX/7Nk;LX/7Nk;LX/7Nk;LX/7Nk;LX/7Nm;LX/Dyi;LX/7NL;LX/7NL;LX/7NL;LX/7NL;LX/7NL;LX/7NL;LX/7NL;LX/FtY;LX/FtZ;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;J)V
+    0000..0004  const/16  v0, #0x16
+    0004..0008  move-object/from16  v2, v23
+    0008..000e  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000e..0014  invoke-direct  {v3}, Ljava/lang/Object;-><init>()V
+    0014..0018  iput-object  v4, v3, LX/Dyc;->A01:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0018..001c  iput-object  v6, v3, LX/Dyc;->A03:Lcom/whatsapp/infra/core/jid/UserJid;
+    001c..0020  move-object/from16  v0, v26
+    0020..0024  iput-object  v0, v3, LX/Dyc;->A0K:Ljava/lang/String;
+    0024..0028  move-object/from16  v0, v27
+    0028..002c  iput-object  v0, v3, LX/Dyc;->A0I:Ljava/lang/String;
+    002c..0030  move-object/from16  v0, v25
+    0030..0034  iput-object  v0, v3, LX/Dyc;->A0H:Ljava/lang/Long;
+    0034..0038  move-wide/from16  v0, v29
+    0038..003c  iput-wide  v0, v3, LX/Dyc;->A00:J
+    003c..0040  iput-object  v5, v3, LX/Dyc;->A02:LX/2p4;
+    0040..0044  move-object/from16  v0, v28
+    0044..0048  iput-object  v0, v3, LX/Dyc;->A0J:Ljava/lang/String;
+    0048..004c  iput-object  v8, v3, LX/Dyc;->A0M:LX/7NF;
+    004c..0050  move-object/from16  v0, v16
+    0050..0054  iput-object  v0, v3, LX/Dyc;->A0D:LX/7NL;
+    0054..0058  move-object/from16  v0, v17
+    0058..005c  iput-object  v0, v3, LX/Dyc;->A0P:LX/7NL;
+    005c..0060  iput-object  v9, v3, LX/Dyc;->A07:LX/7Nk;
+    0060..0064  iput-object  v10, v3, LX/Dyc;->A06:LX/7Nk;
+    0064..0068  move-object/from16  v0, v18
+    0068..006c  iput-object  v0, v3, LX/Dyc;->A0E:LX/7NL;
+    006c..0070  iput-object  v14, v3, LX/Dyc;->A09:LX/7Nm;
+    0070..0074  move-object/from16  v0, v19
+    0074..0078  iput-object  v0, v3, LX/Dyc;->A0N:LX/7NL;
+    0078..007c  iput-object  v11, v3, LX/Dyc;->A04:LX/7Nk;
+    007c..0080  iput-object  v12, v3, LX/Dyc;->A05:LX/7Nk;
+    0080..0084  move-object/from16  v0, v20
+    0084..0088  iput-object  v0, v3, LX/Dyc;->A0C:LX/7NL;
+    0088..008c  move-object/from16  v0, v21
+    008c..0090  iput-object  v0, v3, LX/Dyc;->A0O:LX/7NL;
+    0090..0094  move-object/from16  v0, v22
+    0094..0098  iput-object  v0, v3, LX/Dyc;->A0B:LX/7NL;
+    0098..009c  iput-object  v13, v3, LX/Dyc;->A08:LX/7Nk;
+    009c..00a0  iput-object  v2, v3, LX/Dyc;->A0F:LX/FtY;
+    00a0..00a4  iput-object  v15, v3, LX/Dyc;->A0A:LX/Dyi;
+    00a4..00a8  move-object/from16  v0, v24
+    00a8..00ac  iput-object  v0, v3, LX/Dyc;->A0G:LX/FtZ;
+    00ac..00b0  iput-object  v7, v3, LX/Dyc;->A0L:LX/0Tp;
+    00b0..00b4  iput-object  v7, v3, LX/EEy;->A00:LX/0Tp;
+    00b4..00b6  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,47 @@
+
+# class: LX/1rR;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLLLLJ)  # .registers 10
+    # full signature: LX/1rR;->A00(LX/0DY;LX/0DY;LX/1rR;Ljava/lang/String;J)LX/Dxr;
+    0000..0004  new-instance  v3, LX/Edc;
+    0004..000a  invoke-direct  {v3}, LX/Edc;-><init>()V
+    000a..000e  iput-object  v4, v3, LX/Edc;->A01:Lcom/whatsapp/infra/core/jid/Jid;
+    000e..0012  iput-object  v5, v3, LX/Edc;->A00:Lcom/whatsapp/infra/core/jid/Jid;
+    0012..0016  iget-object  v0, v6, LX/1rR;->A00:LX/05a;
+    0016..001a  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    001a..0020  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0020..0022  move-result-object  v0
+    0022..0026  check-cast  v0, LX/09F;
+    0026..002c  invoke-interface  {v0, v5}, LX/09F;->BVC(LX/0DY;)Z
+    002c..002e  move-result  v0
+    002e..0034  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0034..0036  move-result-object  v0
+    0036..003a  iput-object  v0, v3, LX/Edc;->A0D:Ljava/lang/Boolean;
+    003a..003e  iput-object  v7, v3, LX/Edc;->A0R:Ljava/lang/String;
+    003e..0044  invoke-static  {v8, v9}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0044..0046  move-result-object  v0
+    0046..004a  iput-object  v0, v3, LX/Edc;->A0M:Ljava/lang/Long;
+    004a..004e  iget-object  v0, v6, LX/1rR;->A03:LX/05a;
+    004e..0052  iget-object  v2, v0, LX/05a;->A00:LX/00x;
+    0052..0058  invoke-interface  {v2}, LX/00x;->get()Ljava/lang/Object;
+    0058..005a  move-result-object  v0
+    005a..005e  check-cast  v0, LX/08q;
+    005e..0064  invoke-static  {v0}, LX/08q;->A00(LX/08q;)J
+    0064..0066  move-result-wide  v0
+    0066..006c  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    006c..006e  move-result-object  v0
+    006e..0072  iput-object  v0, v3, LX/Edc;->A0K:Ljava/lang/Long;
+    0072..0078  invoke-interface  {v2}, LX/00x;->get()Ljava/lang/Object;
+    0078..007e  invoke-static  {}, Landroid/os/SystemClock;->uptimeMillis()J
+    007e..0080  move-result-wide  v0
+    0080..0086  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0086..0088  move-result-object  v0
+    0088..008c  iput-object  v0, v3, LX/Edc;->A0L:Ljava/lang/Long;
+    008c..008e  const/4  v0, #0x1
+    008e..0092  iput-boolean  v0, v3, LX/Edc;->A0W:Z
+    0092..0098  invoke-virtual  {v3}, LX/Edc;->A00()LX/Dxr;
+    0098..009a  move-result-object  v0
+    009a..009c  return-object  v0
+    # exception table: 0 try range(s)
+.end method

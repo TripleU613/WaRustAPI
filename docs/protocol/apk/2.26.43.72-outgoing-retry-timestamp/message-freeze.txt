@@ -1,0 +1,119 @@
+
+# class: LX/Edc;
+# extends: Ljava/lang/Object;
+
+.method public A00(L)  # .registers 52
+    # full signature: LX/Edc;->A00()LX/Dxr;
+    0000..0004  move-object/from16  v0, v51
+    0004..0008  iget-object  v10, v0, LX/Edc;->A01:Lcom/whatsapp/infra/core/jid/Jid;
+    0008..000c  if-eqz  v10, +0xd0
+    000c..0010  iget-object  v9, v0, LX/Edc;->A0R:Ljava/lang/String;
+    0010..0014  if-eqz  v9, +0xc5
+    0014..0018  iget-object  v1, v0, LX/Edc;->A0M:Ljava/lang/Long;
+    0018..001c  if-eqz  v1, +0xba
+    001c..0022  invoke-virtual  {v1}, Ljava/lang/Number;->longValue()J
+    0022..0024  move-result-wide  v39
+    0024..0028  iget-object  v1, v0, LX/Edc;->A0D:Ljava/lang/Boolean;
+    0028..002c  if-eqz  v1, +0xab
+    002c..0032  invoke-virtual  {v1}, Ljava/lang/Boolean;->booleanValue()Z
+    0032..0034  move-result  v41
+    0034..0038  iget-object  v1, v0, LX/Edc;->A00:Lcom/whatsapp/infra/core/jid/Jid;
+    0038..003c  move-object/from16  v50, v1
+    003c..0040  iget-object  v1, v0, LX/Edc;->A0S:Ljava/lang/String;
+    0040..0044  move-object/from16  v49, v1
+    0044..0048  iget-object  v1, v0, LX/Edc;->A0K:Ljava/lang/Long;
+    0048..004c  move-object/from16  v48, v1
+    004c..0050  iget-object  v1, v0, LX/Edc;->A0L:Ljava/lang/Long;
+    0050..0054  move-object/from16  v47, v1
+    0054..0058  iget-object  v1, v0, LX/Edc;->A04:LX/0Tp;
+    0058..005c  move-object/from16  v46, v1
+    005c..0060  iget-object  v1, v0, LX/Edc;->A0J:Ljava/lang/Integer;
+    0060..0064  move-object/from16  v45, v1
+    0064..0068  iget-object  v1, v0, LX/Edc;->A0H:Ljava/lang/Integer;
+    0068..006c  move-object/from16  v44, v1
+    006c..0070  iget-object  v1, v0, LX/Edc;->A0N:Ljava/lang/String;
+    0070..0074  move-object/from16  v43, v1
+    0074..0078  iget-object  v1, v0, LX/Edc;->A0V:Ljava/lang/String;
+    0078..007c  move-object/from16  v42, v1
+    007c..0080  iget-object  v1, v0, LX/Edc;->A0Q:Ljava/lang/String;
+    0080..0084  move-object/from16  v31, v1
+    0084..0088  iget-object  v1, v0, LX/Edc;->A0P:Ljava/lang/String;
+    0088..008c  move-object/from16  v21, v1
+    008c..0090  iget-object  v1, v0, LX/Edc;->A0G:Ljava/lang/Integer;
+    0090..0094  move-object/from16  v28, v1
+    0094..0098  iget-object  v1, v0, LX/Edc;->A0F:Ljava/lang/Integer;
+    0098..009c  move-object/from16  v29, v1
+    009c..00a0  iget-object  v1, v0, LX/Edc;->A0X:[B
+    00a0..00a4  move-object/from16  v20, v1
+    00a4..00a8  iget-object  v1, v0, LX/Edc;->A0Y:[B
+    00a8..00ac  move-object/from16  v19, v1
+    00ac..00b0  iget-object  v1, v0, LX/Edc;->A03:LX/Ezj;
+    00b0..00b4  move-object/from16  v17, v1
+    00b4..00b8  iget-object  v1, v0, LX/Edc;->A02:LX/Ezj;
+    00b8..00bc  move-object/from16  v18, v1
+    00bc..00c0  iget-object  v15, v0, LX/Edc;->A0I:Ljava/lang/Integer;
+    00c0..00c4  iget-object  v14, v0, LX/Edc;->A0U:Ljava/lang/String;
+    00c4..00c8  iget-object  v13, v0, LX/Edc;->A0T:Ljava/lang/String;
+    00c8..00cc  iget-boolean  v12, v0, LX/Edc;->A0W:Z
+    00cc..00d0  iget-object  v11, v0, LX/Edc;->A0B:LX/FV0;
+    00d0..00d4  iget-object  v8, v0, LX/Edc;->A0C:Ljava/lang/Boolean;
+    00d4..00d8  iget-object  v7, v0, LX/Edc;->A0A:LX/FUp;
+    00d8..00dc  iget-object  v6, v0, LX/Edc;->A0E:Ljava/lang/Boolean;
+    00dc..00e0  iget-object  v5, v0, LX/Edc;->A08:LX/FUw;
+    00e0..00e4  iget-object  v4, v0, LX/Edc;->A05:LX/FV2;
+    00e4..00e8  iget-object  v3, v0, LX/Edc;->A06:LX/FUn;
+    00e8..00ec  iget-object  v2, v0, LX/Edc;->A09:LX/FUz;
+    00ec..00f0  iget-object  v1, v0, LX/Edc;->A07:LX/FUo;
+    00f0..00f4  iget-object  v0, v0, LX/Edc;->A0O:Ljava/lang/String;
+    00f4..00f8  new-instance  v16, LX/Enw;
+    00f8..00fc  move-object/from16  v32, v21
+    00fc..0100  move-object/from16  v33, v14
+    0100..0104  move-object/from16  v34, v13
+    0104..0108  move-object/from16  v35, v0
+    0108..010c  move-object/from16  v36, v20
+    010c..0110  move-object/from16  v37, v19
+    0110..0114  move/from16  v38, v12
+    0114..0118  move-object/from16  v19, v4
+    0118..011c  move-object/from16  v20, v3
+    011c..0120  move-object/from16  v21, v1
+    0120..0124  move-object/from16  v22, v5
+    0124..0128  move-object/from16  v23, v2
+    0128..012c  move-object/from16  v24, v7
+    012c..0130  move-object/from16  v25, v11
+    0130..0134  move-object/from16  v26, v8
+    0134..0138  move-object/from16  v27, v6
+    0138..013c  move-object/from16  v30, v15
+    013c..0142  invoke-direct/range  {v16..v38}, LX/Enw;-><init>(LX/Ezj;LX/Ezj;LX/FV2;LX/FUn;LX/FUo;LX/FUw;LX/FUz;LX/FUp;LX/FV0;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[B[BZ)V
+    0142..0146  new-instance  v26, LX/Dxr;
+    0146..014a  move-object/from16  v27, v10
+    014a..014e  move-object/from16  v28, v50
+    014e..0152  move-object/from16  v29, v46
+    0152..0156  move-object/from16  v30, v16
+    0156..015a  move-object/from16  v31, v45
+    015a..015e  move-object/from16  v32, v44
+    015e..0162  move-object/from16  v33, v48
+    0162..0166  move-object/from16  v34, v47
+    0166..016a  move-object/from16  v35, v9
+    016a..016e  move-object/from16  v36, v49
+    016e..0172  move-object/from16  v37, v43
+    0172..0176  move-object/from16  v38, v42
+    0176..017c  invoke-direct/range  {v26..v41}, LX/Dxr;-><init>(Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/Jid;LX/0Tp;LX/Enw;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JZ)V
+    017c..017e  return-object  v26
+    017e..0182  const-string  v0, "StatusParsedValues/fromMe must be provided"
+    0182..0188  invoke-static  {v0}, LX/1Xl;->A0g(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+    0188..018a  move-result-object  v0
+    018a..018c  throw  v0
+    018c..0190  const-string  v0, "StatusParsedValues/timestampMillis must be provided"
+    0190..0196  invoke-static  {v0}, LX/1Xl;->A0g(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+    0196..0198  move-result-object  v0
+    0198..019a  throw  v0
+    019a..019e  const-string  v0, "StatusParsedValues/id must be provided"
+    019e..01a4  invoke-static  {v0}, LX/1Xl;->A0g(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+    01a4..01a6  move-result-object  v0
+    01a6..01a8  throw  v0
+    01a8..01ac  const-string  v0, "StatusParsedValues/remoteJid must be provided"
+    01ac..01b2  invoke-static  {v0}, LX/1Xl;->A0g(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+    01b2..01b4  move-result-object  v0
+    01b4..01b6  throw  v0
+    # exception table: 0 try range(s)
+.end method

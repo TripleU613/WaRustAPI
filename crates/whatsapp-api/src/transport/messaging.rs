@@ -609,6 +609,9 @@ pub fn key_request_many_with_identity_changes(
 /// is still current — that is the field that lets them decide between reusing a
 /// session and fetching a fresh bundle.
 ///
+/// `message_seconds` is the failed message's original timestamp, not the local
+/// request time (APK43.72 F3e.A08 / SendRetryReceiptJob).
+///
 /// Sending one asks for a repeat of a message we already hold; it acknowledges
 /// nothing and confirms no delivery.
 pub fn retry_receipt(
@@ -617,7 +620,7 @@ pub fn retry_receipt(
     message_id: &str,
     count: u32,
     registration_id: u32,
-    now_seconds: i64,
+    message_seconds: i64,
 ) -> crate::Result<Node> {
     if message_id.is_empty() || message_id.len() > 128 {
         return Err(crate::Error::invalid("receipt", "invalid message id"));
@@ -639,7 +642,7 @@ pub fn retry_receipt(
         Node::new("retry")
             .attr("count", count.to_string().as_str())
             .attr("id", message_id)
-            .attr("t", now_seconds.to_string().as_str())
+            .attr("t", message_seconds.to_string().as_str())
             .attr("v", "1"),
         Node::new("registration").bytes(registration_id.to_be_bytes().to_vec()),
     ]))
