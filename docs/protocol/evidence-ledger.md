@@ -1,3 +1,10 @@
+2026-11-05 — **Retry refetch callbacks now belong to their live connection.**
+
+Only a locally written query can complete through normal receive; result/error
+consumes its callback once. Disconnect/restart never resurrects callbacks from
+held jobs. [Native cancellation evidence, tests and limits](retry-answers.md#live-refetch-callback-lifetime-2026-11-05).
+No guessed timeout, new request, reset or automatic replay; no live traffic.
+
 2026-11-05 — **Retry key-query manager-to-wire construction audited.**
 
 Classic non-identity/context-disabled IQ baseline matches Rust. Source12 is not

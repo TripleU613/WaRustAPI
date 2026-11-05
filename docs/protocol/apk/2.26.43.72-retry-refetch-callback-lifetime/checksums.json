@@ -1,0 +1,18 @@
+{
+  "README.md": {
+    "bytes": 4979,
+    "sha256": "2c3c4b469a1c1f5a27324c10478da96cf2e2fa0120cfb4ded9a0584db452618d"
+  },
+  "callback-manager.txt": {
+    "bytes": 10416,
+    "sha256": "1d928ffa2e93251c3bc1b0ee74c191c7a56b0c24c88770757617c2195441bbb7"
+  },
+  "router-remove-entry.txt": {
+    "bytes": 988,
+    "sha256": "4e4a2f3bf409c4277b2a0998685087145a9367952e05239d32e13ce9d29d58c3"
+  },
+  "router-response-dispatch.txt": {
+    "bytes": 4141,
+    "sha256": "8b29f6e3bf5c91e05c350ec6cfa5c1bd6e21261dc2ed5b4f0a31c1bf16018f2b"
+  }
+}

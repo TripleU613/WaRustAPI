@@ -380,3 +380,24 @@ entry, the normal private wrapper also attaches a receipt ACK to an already
 reserved fresh-key IQ. Both pending job and fetching marker precede ACK/query
 writes. Directory reply handling remains guarded and sends no extra receipt ACK.
 [Evidence, workflow/fault regressions and limits](retry-ack-dispatch.md#durable-retry-key-query-ack-ordering--2026-11-05).
+
+## Live refetch callback lifetime (2026-11-05)
+
+Normal receive now accepts a delayed key IQ only through a per-drive live
+callback registry. Queries enter it after successful local write; matching exact
+result/error removes its ID before completion. Disconnect/restart drops it;
+durable jobs remain held and do not recreate callbacks. This closes acceptance
+of an old connection's reply based only on saved query ID. The local epoch
+counter alone would be insufficient across process restarts.
+
+[Native future-map cancellation/completion evidence, regression and limits](apk/2.26.43.72-retry-refetch-callback-lifetime/README.md).
+Existing job/original/peer transaction guards still apply. Failed callbacks are
+not invoked again. No timeout, new request, checkpoint reset or automatic replay
+is introduced. The public low-level complete_refetch still requires its caller
+to own live-query authority; normal ingestion now enforces that prerequisite.
+Full native queue recovery, sender correlation and deadline policy remain open.
+
+Validation:1326 workspace/all-feature tests passed, including the live callback/
+reopen regression. Strict workspace/all-target/all-feature Clippy, formatting,
+CLI reference regeneration, APK coverage and repository hygiene passed. Offline
+only; no full native timeout/recovery parity or live acceptance claim.

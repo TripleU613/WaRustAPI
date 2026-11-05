@@ -458,6 +458,8 @@ pub(crate) async fn drive(
     heartbeat.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Delay);
     heartbeat.tick().await;
     let mut pending_ping: Option<(String, tokio::time::Instant)> = None;
+    // Pending jobs stay durable, but callback authority is local to this link.
+    let mut retry_refetches = super::retry_answer::ActiveRefetches::default();
     let mut outgoing: Option<super::outgoing::Pending> = None;
     let mut group_outgoing: Option<super::outgoing_group::Pending> = None;
     let mut upload: Option<super::prekeys::PendingUpload> = None;
@@ -651,7 +653,7 @@ pub(crate) async fn drive(
                 }
                 if node.description == "iq" {
                     // A retry answer waiting for the peer's fresh bundle (retry_answer).
-                    match super::retry_answer::complete_refetch(&store, &account, &node, epoch).await {
+                    match retry_refetches.complete(&store, &account, &node, epoch).await {
                         Ok(Some(resend)) => {
                             if let Some(resend) = resend {
                                 link.send(&resend).await?;
@@ -974,6 +976,7 @@ pub(crate) async fn drive(
                     match super::retry_answer::answer_with_confirmation(&store, &account, &node, epoch).await {
                         Ok(Some(answer)) => {
                             confirmed = link.send_retry_answer(&answer).await?;
+                            retry_refetches.record_written(&answer);
                             tracing::info!(target: "whatsapp_api::incoming", kind = %answer.node.description, "retry receipt answered (message), or its fresh-bundle query sent (iq)");
                         }
                         Ok(None) => {}

@@ -36,8 +36,10 @@ bound is explicitly local and is not changed from this trace.
 
 BulkGetPreKeyJob.A0L reconstructs requested and identityChangedJids, creates an
 Android Message with arg1=87 at01ec, and places id/jids/identityJids/fetchPqPrekey/
-contextJid/sessionScopeOrdinal/isPqSessionUpgrade in its Bundle. It dispatches via
-0Sf.A05 and0ln callback registration, then waits onFfK.get. Its numeric request
+contextJid/sessionScopeOrdinal/isPqSessionUpgrade in its Bundle. It inserts its future into0Th.A05, dispatches via0Sf.A05, calls0ln.A0E
+(which removes an optional router entry), then waits onFfK.get. The
+[callback lifetime follow-up](../2.26.43.72-retry-refetch-callback-lifetime/README.md)
+corrects the earlier mistaken description ofA0E as registration. Its numeric request
 source contributes toDqO diagnostics; no source12/retry reason is placed in
 this writer message or the final selected IQ attributes.
 

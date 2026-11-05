@@ -74,6 +74,48 @@ fn unanswered(store: &ProtocolStore, key: &str, reason: &str) -> Result<Option<N
     Ok(None)
 }
 
+/// Live callback ownership for one drive invocation. Durable refetch jobs are
+/// reservations, not permission for a later connection to consume an old IQ.
+/// APK43.72 0Th.A03 fails/clears pending IQ futures on disconnect.
+#[derive(Default)]
+pub(crate) struct ActiveRefetches(std::collections::HashSet<String>);
+
+impl ActiveRefetches {
+    pub(crate) fn record_written(&mut self, answer: &ReservedAnswer) {
+        if answer.node.description == "iq"
+            && let Some(id) = answer.node.get_attr("id").and_then(|v| v.as_text())
+        {
+            self.0.insert(id.to_owned());
+        }
+    }
+
+    pub(crate) async fn complete(
+        &mut self,
+        store: &ProtocolStore,
+        account: &AccountRecord,
+        node: &Node,
+        epoch: ConnectionEpoch,
+    ) -> Result<Option<Option<Node>>> {
+        if node.description != "iq"
+            || !matches!(
+                node.get_attr("type").and_then(|v| v.as_text()),
+                Some("result" | "error")
+            )
+        {
+            return Ok(None);
+        }
+        let Some(id) = node.get_attr("id").and_then(|v| v.as_text()) else {
+            return Ok(None);
+        };
+        // Consume before processing: a callback failure cannot authorize a
+        // second reply, nor can a persisted row resurrect a dead callback.
+        if !self.0.remove(id) {
+            return Ok(None);
+        }
+        complete_refetch(store, account, node, epoch).await
+    }
+}
+
 /// A resend/key query whose state has already committed. A confirmation is
 /// attached only after actual message/query work commits, never merely parsed input.
 pub(crate) struct ReservedAnswer {
@@ -383,6 +425,8 @@ fn reserve_refetch(
 }
 
 /// Finish a retry answer from the directory reply to its key query.
+/// The transport caller must own a live query on the current connection;
+/// normal receive enforces this through ActiveRefetches before calling here.
 /// `Ok(None)` when the reply is not one of ours, `Ok(Some(None))` when it was
 /// ours but nothing is sent (the reason is recorded), else the resend.
 ///
@@ -1257,6 +1301,167 @@ mod tests {
                     .is_err()
             );
             assert_eq!(snapshot(), before);
+        }
+    }
+
+    #[tokio::test]
+    async fn active_refetch_callbacks_do_not_survive_disconnect_or_failed_completion() {
+        for outcome in ["live", "disconnect", "local_failure"] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("active-refetch.redb");
+            let open = || {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: AccountId::new("test").unwrap(),
+                    key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                        [7; 32],
+                    ))),
+                    create: true,
+                })
+                .unwrap()
+            };
+            let store = open();
+            let fetching = serde_json::json!({"status":"fetching","query":"Q1","count":2});
+            store
+                .write(|tx| {
+                    tx.put_json(
+                        Table::Checkpoints,
+                        refetch_key("Q1").as_bytes(),
+                        1,
+                        &Refetch {
+                            wire_id: "W1".into(),
+                            answer_key: "answer".into(),
+                            unanswered_key: "unanswered".into(),
+                            count: 2,
+                        },
+                    )?;
+                    tx.put_json(Table::Checkpoints, b"answer", 1, &fetching)?;
+                    tx.put_json(Table::SignalSessions, b"peer", 1, &vec![1u8])?;
+                    tx.put_json(Table::PeerIdentities, b"peer", 1, &vec![2u8])
+                })
+                .unwrap();
+            let snapshot = |store: &ProtocolStore| {
+                store
+                    .read(|tx| {
+                        [
+                            Table::Checkpoints,
+                            Table::Outbox,
+                            Table::SignalSessions,
+                            Table::PeerIdentities,
+                        ]
+                        .into_iter()
+                        .map(|t| tx.scan(t, 1, 10000))
+                        .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot(&store);
+            let account = AccountRecord::default();
+            let reply = Node::new("iq").attr("id", "Q1").attr("type", "error");
+            let mut active = ActiveRefetches::default();
+            // A durable reservation alone is never a live callback.
+            assert!(
+                active
+                    .complete(&store, &account, &reply, ConnectionEpoch(1))
+                    .await
+                    .unwrap()
+                    .is_none()
+            );
+            assert_eq!(snapshot(&store), before);
+            active.record_written(&ReservedAnswer {
+                node: Node::new("message").attr("id", "Q1"),
+                confirmation: None,
+            });
+            assert!(active.0.is_empty());
+            active.record_written(&ReservedAnswer {
+                node: Node::new("iq").attr("id", "Q1"),
+                confirmation: None,
+            });
+            for node in [
+                Node::new("iq").attr("id", "Q1"),
+                Node::new("iq").attr("id", "Q1").attr("type", "get"),
+                Node::new("iq").attr("id", "Q1").attr("type", "set"),
+                Node::new("message").attr("id", "Q1").attr("type", "result"),
+                Node::new("iq").attr("id", "OTHER").attr("type", "error"),
+            ] {
+                assert!(
+                    active
+                        .complete(&store, &account, &node, ConnectionEpoch(1))
+                        .await
+                        .unwrap()
+                        .is_none()
+                );
+                assert!(active.0.contains("Q1"));
+                assert_eq!(snapshot(&store), before);
+            }
+            if outcome == "disconnect" {
+                drop(active);
+                drop(store);
+                let store = open();
+                let mut reconnected = ActiveRefetches::default();
+                // Even an epoch counter reused after process restart cannot
+                // revive this query: no write occurred on the new link.
+                assert!(
+                    reconnected
+                        .complete(&store, &account, &reply, ConnectionEpoch(1))
+                        .await
+                        .unwrap()
+                        .is_none()
+                );
+                assert_eq!(snapshot(&store), before);
+            } else if outcome == "local_failure" {
+                store
+                    .write(|tx| {
+                        tx.put_json(
+                            Table::Checkpoints,
+                            b"answer",
+                            1,
+                            &serde_json::json!({"status":"reserved","query":"Q1","count":2}),
+                        )
+                    })
+                    .unwrap();
+                let changed = snapshot(&store);
+                assert!(
+                    active
+                        .complete(&store, &account, &reply, ConnectionEpoch(1))
+                        .await
+                        .is_err()
+                );
+                assert!(active.0.is_empty());
+                assert_eq!(snapshot(&store), changed);
+                // Repair only a synthetic fixture; an already-consumed live
+                // callback still cannot be invoked by a second reply.
+                store
+                    .write(|tx| tx.put_json(Table::Checkpoints, b"answer", 1, &fetching))
+                    .unwrap();
+                assert!(
+                    active
+                        .complete(&store, &account, &reply, ConnectionEpoch(1))
+                        .await
+                        .unwrap()
+                        .is_none()
+                );
+                assert_eq!(snapshot(&store), before);
+            } else {
+                assert!(matches!(
+                    active
+                        .complete(&store, &account, &reply, ConnectionEpoch(1))
+                        .await
+                        .unwrap(),
+                    Some(None)
+                ));
+                assert!(active.0.is_empty());
+                let settled = snapshot(&store);
+                assert_ne!(settled, before);
+                assert!(
+                    active
+                        .complete(&store, &account, &reply, ConnectionEpoch(1))
+                        .await
+                        .unwrap()
+                        .is_none()
+                );
+                assert_eq!(snapshot(&store), settled);
+            }
         }
     }
 

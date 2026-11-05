@@ -1,5 +1,11 @@
 {
   "openapi": "3.1.0",
+  "x-retry-refetch-live-callback": {
+    "x-cli": false,
+    "x-transport": "normal receive per-connection retry refetch callback authority",
+    "x-live": false,
+    "description": "ActiveRefetches per drive registers only after local key-query write success. Exact IQ result/error consumes a matching callback before completion; unrelated types/IDs, duplicates, old connections/restarts cannot complete from durable jobs alone. Reservations remain held without replay/reset; original/job/peer guards remain. APK43.72 0Th.A05 future insertion, 0YB disconnect ->0Th.A03 failure/clear, selected completion removes before invocation. 0ln.A0E removes a router entry, not registration or a proven timer. No guessed timeout, sender-proof, route, new request or full recovery parity. Low-level complete_refetch callers remain responsible for live-query authority. docs/protocol/retry-answers.md#live-refetch-callback-lifetime-2026-11-05"
+  },
   "x-retry-key-query-wire-audit": {
     "x-cli": false,
     "x-transport": "offline retry key-query construction audit",
