@@ -1,10 +1,16 @@
 {
   "openapi": "3.1.0",
+  "x-retry-key-query-wire-audit": {
+    "x-cli": false,
+    "x-transport": "offline retry key-query construction audit",
+    "x-live": false,
+    "description": "APK43.72 14t manager ->BulkGetPreKeyJob ->Message87 ->0v0.A00 closes the selected key IQ construction chain. Classic non-identity/context-disabled baseline matches current Rust. Request source12 is diagnostic, not a selected wire field. reason=identity depends on identityJids; reason=pq on upgrade; pqsupport on fetchPqPrekey; context_jid on effective0x6530 and context predicates. No unconditional missing attribute established. Strict-after60000 manager in-flight expiry is not a proven IQ callback deadline/server replay authority; large-list partition is not a server limit. No runtime policy/route/live change; full context/PQ/manager/recovery parity remains incomplete. docs/protocol/retry-key-query-wire.md"
+  },
   "x-durable-retry-key-query-ack": {
     "x-cli": false,
     "x-transport": "normal direct receive durable fresh-key retry query ACK",
     "x-live": false,
-    "description": "Selected APK43.72 post-ACK Fe5 creates SendE2EMessageJob with session/different-old-base-key requirements; A0J calls14t.A07 for unmet device requirement. Normal private answer wrapper now attaches root receipt ACK after pending Refetch and matching fetching/query/count marker commit, before IQ write. Injected ACK/IQ failure ordering and actual synthetic pending-job workflow verified. Query reply retains ownership/original/peer guards and adds no second receipt ACK. No key-request field/backoff/replay changes or HTTP route. Manager wire/batching/recovery/redelivery/other providers remain incomplete. docs/protocol/retry-ack-dispatch.md"
+    "description": "Selected APK43.72 post-ACK Fe5 creates SendE2EMessageJob with session/different-old-base-key requirements; A0J calls14t.A07 for unmet device requirement. Normal private answer wrapper now attaches root receipt ACK after pending Refetch and matching fetching/query/count marker commit, before IQ write. Injected ACK/IQ failure ordering and actual synthetic pending-job workflow verified. Query reply retains ownership/original/peer guards and adds no second receipt ACK. No key-request field/backoff/replay changes or HTTP route. Follow-up x-retry-key-query-wire-audit traces the selected baseline serializer. Effective context/PQ, batching/recovery/redelivery/other providers remain incomplete. docs/protocol/retry-ack-dispatch.md"
   },
   "x-reserved-direct-retry-success-ack": {
     "x-cli": false,

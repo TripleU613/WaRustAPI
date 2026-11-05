@@ -168,3 +168,8 @@ Validation:1325 workspace/all-feature tests passed with the expanded query
 reservation and two-route write-failure checks. Strict workspace/all-target/
 all-feature Clippy, formatting, CLI reference, APK coverage and research hygiene
 passed. No live server or native-runtime validation.
+
+Follow-up: [selected key-query manager-to-wire construction](retry-key-query-wire.md)
+is now traced throughBulkGetPreKeyJob/Message87. Its classic baseline matches
+Rust; effective context/PQ/manager timing and recovery remain open. This
+supersedes the selected final-serializer gap above, not those broader unknowns.

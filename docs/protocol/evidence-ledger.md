@@ -1,3 +1,10 @@
+2026-11-05 — **Retry key-query manager-to-wire construction audited.**
+
+Classic non-identity/context-disabled IQ baseline matches Rust. Source12 is not
+a wire field; identity/PQ/context attrs have separate predicates. Manager entry
+expiry is not a proven IQ deadline. [Evidence and remaining gaps](retry-key-query-wire.md).
+No production field/backoff/replay change or live traffic.
+
 2026-11-05 — **Durable retry key queries now ACK first.**
 
 Selected post-ACK job/session-requirement fetch entry traced. Normal wrapper

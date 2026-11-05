@@ -2924,3 +2924,10 @@ Selected post-ACK job/session-requirement fetch entry traced. Normal wrapper
 attaches root receipt ACK only after pending job and fetching marker commit;
 ACK/query failure stops without replay. [Evidence, tests and limits](retry-ack-dispatch.md#durable-retry-key-query-ack-ordering--2026-11-05).
 No key-request field/backoff change or live traffic; recovery remains incomplete.
+
+2026-11-05 — **Retry key-query manager-to-wire construction audited.**
+
+Classic non-identity/context-disabled IQ baseline matches Rust. Source12 is not
+a wire field; identity/PQ/context attrs have separate predicates. Manager entry
+expiry is not a proven IQ deadline. [Evidence and remaining gaps](retry-key-query-wire.md).
+No production field/backoff/replay change or live traffic.
