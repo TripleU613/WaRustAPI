@@ -1,0 +1,26 @@
+{
+  "0WJ-method-signatures.txt": {
+    "bytes": 4386,
+    "sha256": "e0713218601994053577717506d13fc4ae8141eb11783f924727c7604eb38cbe"
+  },
+  "A0N.txt": {
+    "bytes": 6428,
+    "sha256": "5b9787efc0cb99774920e1a67b5327896181d5b39ed833b85ebc36f8d1a120ec"
+  },
+  "F22-A01.txt": {
+    "bytes": 3804,
+    "sha256": "feb02f17d8530e9b5e66eb83c8a2dfefb8e6975151415ead8e8b0f5c5892ff8b"
+  },
+  "F22-A05.txt": {
+    "bytes": 1522,
+    "sha256": "fdf166481735ae14caf6eafab32102b40f5ab26932277f0abd0624033b728a4b"
+  },
+  "Fj2-A00.txt": {
+    "bytes": 1308,
+    "sha256": "eacd0bdbdd0d83844e35c541a0cecf3d231b0d437ebd5adc7ba30632be7308ec"
+  },
+  "README.md": {
+    "bytes": 3808,
+    "sha256": "aad2c46f66e681d4b7970f4ffeaecbaafdaaac8fcc3b9d9edbecd657b7701301"
+  }
+}

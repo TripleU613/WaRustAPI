@@ -221,7 +221,7 @@ pub(super) fn crypto(error: SignalProtocolError) -> Error {
         SignalProtocolError::InvalidPreKeyId => "Signal one-time prekey unavailable or invalid",
         SignalProtocolError::InvalidSignedPreKeyId => "Signal signed prekey unavailable or invalid",
         SignalProtocolError::SessionNotFound(_) => "Signal session not found",
-        // APK43.72 F22.A02 / 0WJ.A0P: old counter -> ED4 -> -1001,
+        // APK43.72 F22.A02 -> A01/A05 -> 0WJ.A0N: old counter -> ED4 -> -1001,
         // excluded by EtY.A00 retry eligibility. Keep this typed at the inbox.
         SignalProtocolError::DuplicatedMessage(..) => return Error::SignalOldMessageCounter,
         SignalProtocolError::BadMac(_) => "Signal message MAC verification failed",

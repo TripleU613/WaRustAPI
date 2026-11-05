@@ -483,3 +483,18 @@ also use a different exception from the exact “Invalid signature!” refinemen
 Global exception/error-name -> wire-code mappings would lose these distinctions.
 No other retry wire-code policy changed. Full native ACK policy and remaining
 producer/primitive/key/count/routing parity remain open; no live request.
+
+## Direct coordinator attribution and cause aggregation — 2026-11-05
+
+**Correction / confirmed static:**0WJ.A0P is fast-ratchet group decrypt, not
+ordinary direct decrypt. Ordinary direct0WJ.A0N -> F22.A05/A01/A02 independently
+confirms ED4 -> -1001, supporting the already implemented no-retry behavior.
+[Selected methods, missing-session chain and signature producer](apk/2.26.43.72-direct-retry-cause-paths/README.md).
+
+F22.A05 missing session throws EDS -> A0N -1008 -> wire1. F22.A01 aggregates
+EDY failures into EDY(List), whose outer No valid sessions. message refines to
+wire8; raw BadMac/future-counter mappings cannot ignore this wrapper. Sender-key
+Fj2.A00 exact Invalid signature! directly throws EDY, supporting selected group
+wire5; bundle key signatures use a separate producer. No new wire code/runtime
+behavior added. Remaining cause propagation, provider equivalence and full
+retry/ACK policy are open. No live account operation.

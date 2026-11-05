@@ -1,0 +1,31 @@
+
+# class: LX/F22;
+# extends: Ljava/lang/Object;
+
+.method public A05(LLL)  # .registers 10
+    # full signature: LX/F22;->A05(LX/FuC;LX/Fj3;)[B
+    0000..0004  iget-object  v6, v7, LX/F22;->A01:LX/0Yh;
+    0004..0008  iget-object  v5, v7, LX/F22;->A00:LX/Ej3;
+    0008..000e  invoke-interface  {v6, v5}, LX/0Yh;->AIe(LX/Ej3;)Z
+    000e..0010  move-result  v0
+    0010..0014  if-eqz  v0, +0x1a
+    0014..001a  invoke-interface  {v6, v5}, LX/0Yh;->BbU(LX/Ej3;)LX/Eul;
+    001a..001c  move-result-object  v4
+    001c..001e  const/4  v0, #0x2
+    001e..0024  invoke-direct  {v7, v9, v4, v0}, LX/F22;->A01(LX/Fj3;LX/Eul;I)[B
+    0024..0026  move-result-object  v3
+    0026..002c  invoke-interface  {v8, v3}, LX/FuC;->BLW([B)V
+    002c..0030  const-string  v2, "SessionCipher"
+    0030..0034  const-string  v1, "/decryptWithoutLock: Finish decrypting signal message. Store the session."
+    0034..0036  const/4  v0, #0x4
+    0036..003c  invoke-static  {v0, v2, v1}, LX/EK4;->A00(ILjava/lang/String;Ljava/lang/String;)V
+    003c..0042  invoke-interface  {v6, v5, v4}, LX/0Yh;->CrT(LX/Ej3;LX/Eul;)V
+    0042..0044  return-object  v3
+    0044..0048  const-string  v0, "No session for: "
+    0048..004e  invoke-static  {v0, v5}, LX/1Xl;->A0w(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/String;
+    004e..0050  move-result-object  v1
+    0050..0054  new-instance  v0, LX/EDS;
+    0054..005a  invoke-direct  {v0, v1}, LX/EDS;-><init>(Ljava/lang/String;)V
+    005a..005c  throw  v0
+    # exception table: 0 try range(s)
+.end method

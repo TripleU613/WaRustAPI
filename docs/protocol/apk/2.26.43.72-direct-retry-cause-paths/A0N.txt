@@ -1,0 +1,132 @@
+
+# class: LX/0WJ;
+# extends: Ljava/lang/Object;
+
+.method public A0N(LLLL)  # .registers 19
+    # full signature: LX/0WJ;->A0N(LX/FtG;LX/EoY;[B)LX/EtY;
+    0000..0004  iget-object  v0, v15, LX/0WJ;->A0I:LX/0Wk;
+    0004..0008  move-object/from16  v2, v17
+    0008..000e  invoke-static  {v2, v0}, LX/0Wk;->A00(LX/EoY;LX/0Wk;)LX/FjI;
+    000e..0010  move-result-object  v6
+    0010..0016  invoke-virtual  {v6}, Ljava/util/concurrent/locks/ReentrantLock;->lock()V
+    0016..001a  iget-object  v5, v15, LX/0WJ;->A01:LX/0Yl;
+    001a..001e  iget-object  v1, v2, LX/EoY;->A03:LX/E7N;
+    001e..0022  sget-object  v0, LX/E7N;->A04:LX/E7N;
+    0022..0026  if-ne  v1, v0, +0x1d
+    0026..002a  new-instance  v14, LX/Fj5;
+    002a..0030  invoke-direct  {v14}, LX/Fj5;-><init>()V
+    0030..0034  iget-object  v9, v5, LX/0Yl;->A03:LX/0Yj;
+    0034..0038  iget-object  v10, v9, LX/0Yj;->A09:LX/0Yk;
+    0038..003c  new-instance  v12, LX/Fj4;
+    003c..0042  invoke-direct  {v12, v9}, LX/Fj4;-><init>(LX/0Yj;)V
+    0042..0048  invoke-static  {v2}, LX/F39;->A05(LX/EoY;)LX/Ej3;
+    0048..004a  move-result-object  v11
+    004a..004e  iget-object  v8, v5, LX/0Yl;->A02:LX/0Ym;
+    004e..0052  new-instance  v7, LX/F22;
+    0052..0054  move-object  v13, v9
+    0054..005a  invoke-direct/range  {v7..v14}, LX/F22;-><init>(LX/0Ym;LX/0Yj;LX/0Yk;LX/Ej3;LX/0Yi;LX/0Yc;LX/0Yh;)V
+    005a..005c  goto  +0x5
+    005c..0062  invoke-virtual  {v5, v2}, LX/0Yl;->A05(LX/EoY;)LX/F22;
+    0062..0064  move-result-object  v7
+    0064..0066  const/4  v2, #0x0
+    0066..006a  move-object/from16  v0, v16
+    006a..006e  if-eqz  v16, +0x3
+    006e..0070  goto  +0x7
+    0070..0074  new-instance  v4, LX/Fiw;
+    0074..007a  invoke-direct  {v4}, Ljava/lang/Object;-><init>()V
+    007a..007c  goto  +0x6
+    007c..0080  new-instance  v4, LX/Fix;
+    0080..0086  invoke-direct  {v4, v0}, LX/Fix;-><init>(LX/FtG;)V
+    0086..008a  iget-object  v3, v5, LX/0Yl;->A00:LX/08Y;
+    008a..008e  sget-object  v1, LX/00G;->A02:LX/00G;
+    008e..0092  const/16  v0, #0x60e5
+    0092..0098  invoke-static  {v1, v3, v2, v0}, LX/00E;->A0D(LX/00G;LX/00E;Ljava/lang/Boolean;I)Z
+    0098..009a  move-result  v0
+    009a..009e  move-object/from16  v1, v18
+    009e..00a2  if-nez  v0, +0x1b
+    00a2..00a6  iget-object  v0, v5, LX/0Yl;->A05:LX/0YM;
+    00a6..00ac  invoke-virtual  {v0}, LX/0YM;->A03()Z
+    00ac..00ae  move-result  v0
+    00ae..00b2  if-eqz  v0, +0x13
+    00b2..00b6  new-instance  v0, LX/Fj3;
+    00b6..00bc  invoke-direct  {v0, v1}, LX/Fj3;-><init>([B)V
+    00bc..00c0  sget-object  v1, LX/F22;->A06:Ljava/lang/Object;
+    00c0..00c2  monitor-enter
+    00c2..00c8  invoke-virtual  {v7, v4, v0}, LX/F22;->A05(LX/FuC;LX/Fj3;)[B
+    00c8..00ca  move-result-object  v3
+    00ca..00cc  monitor-exit
+    00cc..00ce  goto  +0xd
+    00ce..00d0  move-exception  v0
+    00d0..00d2  monitor-exit
+    00d2..00d4  throw  v0
+    00d4..00d8  new-instance  v0, LX/Fj3;
+    00d8..00de  invoke-direct  {v0, v1}, LX/Fj3;-><init>([B)V
+    00de..00e4  invoke-virtual  {v7, v4, v0}, LX/F22;->A05(LX/FuC;LX/Fj3;)[B
+    00e4..00e6  move-result-object  v3
+    00e6..00e8  const/4  v0, #0x0
+    00e8..00ee  invoke-static  {v2, v3, v0}, LX/EHq;->A00(Ljava/lang/Exception;[BI)LX/EtY;
+    00ee..00f0  move-result-object  v0
+    00f0..00f2  goto  +0x3a
+    00f2..00f4  move-exception  v1
+    00f4..00f8  instance-of  v0, v1, LX/Fj7;
+    00f8..00fc  if-nez  v0, +0x16
+    00fc..0100  instance-of  v0, v1, Landroid/database/sqlite/SQLiteFullException;
+    0100..0104  if-nez  v0, +0x12
+    0104..0108  instance-of  v0, v1, Landroid/database/sqlite/SQLiteDatabaseCorruptException;
+    0108..010c  if-nez  v0, +0xe
+    010c..0110  const-string  v0, "SignalCoordinatorDefault/decryptForIndividual"
+    0110..0116  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0116..011a  const/16  v0, #0xfc18 (-1000)
+    011a..0120  invoke-static  {v1, v2, v0}, LX/EHq;->A00(Ljava/lang/Exception;[BI)LX/EtY;
+    0120..0122  move-result-object  v0
+    0122..0124  goto  +0x21
+    0124..0126  throw  v1
+    0126..0128  move-exception  v1
+    0128..012c  const/16  v0, #0xfc10 (-1008)
+    012c..0132  invoke-static  {v1, v2, v0}, LX/EHq;->A00(Ljava/lang/Exception;[BI)LX/EtY;
+    0132..0134  move-result-object  v0
+    0134..0136  goto  +0x18
+    0136..0138  move-exception  v1
+    0138..013c  const/16  v0, #0xfc11 (-1007)
+    013c..0142  invoke-static  {v1, v2, v0}, LX/EHq;->A00(Ljava/lang/Exception;[BI)LX/EtY;
+    0142..0144  move-result-object  v0
+    0144..0146  goto  +0x10
+    0146..0148  move-exception  v1
+    0148..014c  const/16  v0, #0xfc17 (-1001)
+    014c..0152  invoke-static  {v1, v2, v0}, LX/EHq;->A00(Ljava/lang/Exception;[BI)LX/EtY;
+    0152..0154  move-result-object  v0
+    0154..0156  goto  +0x8
+    0156..0158  move-exception  v1
+    0158..015c  const/16  v0, #0xfc13 (-1005)
+    015c..0162  invoke-static  {v1, v2, v0}, LX/EHq;->A00(Ljava/lang/Exception;[BI)LX/EtY;
+    0162..0164  move-result-object  v0
+    0164..016a  invoke-virtual  {v6}, LX/FjI;->close()V
+    016a..016c  return-object  v0
+    016c..016e  move-exception  v1
+    016e..0174  invoke-virtual  {v6}, LX/FjI;->close()V
+    0174..0176  throw  v1
+    0176..0178  move-exception  v0
+    0178..017e  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    017e..0180  throw  v1
+    # exception table: 10 try range(s)
+    # catch <all> code_units 000b..0038 -> 00b6
+    # catch LX/EDY; code_units 0038..0061 -> 00ab
+    # catch LX/ED4; code_units 0038..0061 -> 00a3
+    # catch LX/ED6; code_units 0038..0061 -> 009b
+    # catch LX/EDS; code_units 0038..0061 -> 0093
+    # catch Ljava/lang/Exception; code_units 0038..0061 -> 0079
+    # catch <all> code_units 0038..0061 -> 00b6
+    # catch <all> code_units 0061..0069 -> 0067
+    # catch LX/EDY; code_units 0069..0079 -> 00ab
+    # catch LX/ED4; code_units 0069..0079 -> 00a3
+    # catch LX/ED6; code_units 0069..0079 -> 009b
+    # catch LX/EDS; code_units 0069..0079 -> 0093
+    # catch Ljava/lang/Exception; code_units 0069..0079 -> 0079
+    # catch <all> code_units 0069..0079 -> 00b6
+    # catch <all> code_units 0079..0093 -> 00b6
+    # catch <all> code_units 0096..009b -> 00b6
+    # catch <all> code_units 009e..00a3 -> 00b6
+    # catch <all> code_units 00a6..00ab -> 00b6
+    # catch <all> code_units 00ae..00b2 -> 00b6
+    # catch <all> code_units 00b7..00ba -> 00bb
+.end method

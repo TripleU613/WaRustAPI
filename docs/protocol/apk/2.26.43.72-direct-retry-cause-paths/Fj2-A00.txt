@@ -1,0 +1,33 @@
+
+# class: LX/Fj2;
+# extends: Ljava/lang/Object;
+
+.method public A00(VL)  # .registers 6
+    # full signature: LX/Fj2;->A00(LX/Fbl;)V
+    0000..0004  iget-object  v2, v4, LX/Fj2;->A03:[B
+    0004..0006  array-length  v1, v2
+    0006..000a  const/16  v0, #0x40
+    000a..000c  sub-int/2addr  v1, v0
+    000c..0012  invoke-static  {v2, v1, v0}, LX/Exr;->A01([BII)[[B
+    0012..0014  move-result-object  v1
+    0014..0016  const/4  v0, #0x0
+    0016..001a  aget-object  v3, v1, v0
+    001a..001c  const/4  v0, #0x1
+    001c..0020  aget-object  v2, v1, v0
+    0020..0024  sget-object  v1, LX/EMC;->A00:LX/1oA;
+    0024..0028  iget-object  v0, v5, LX/Fbl;->A00:[B
+    0028..002e  invoke-virtual  {v1, v0, v3, v2}, LX/1oA;->A01([B[B[B)Z
+    002e..0030  move-result  v0
+    0030..0034  if-eqz  v0, +0x3
+    0034..0036  return-void
+    0036..003a  const-string  v1, "Invalid signature!"
+    003a..003e  new-instance  v0, LX/EDY;
+    003e..0044  invoke-direct  {v0, v1}, LX/EDY;-><init>(Ljava/lang/String;)V
+    0044..0046  throw  v0
+    0046..0048  move-exception  v1
+    0048..004c  new-instance  v0, LX/EDY;
+    004c..0052  invoke-direct  {v0, v1}, LX/EDY;-><init>(Ljava/lang/Throwable;)V
+    0052..0054  throw  v0
+    # exception table: 1 try range(s)
+    # catch LX/EDQ; code_units 0000..0023 -> 0023
+.end method

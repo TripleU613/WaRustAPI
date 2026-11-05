@@ -5,7 +5,7 @@
 Checked-DEX exports, not REA Evidence envelopes. No APK execution or live traffic.
 
 F22.A02 at069e..06c0 constructs and throws ED4 with “Received message with old
-counter: ” and counter values. Ordinary message decryptor0WJ.A0P independently
+counter: ” and counter values. Fast-ratchet group decryptor0WJ.A0P independently
 constructs the same ED4 at0186..01bc. Its ED4 catch handler at code-unit0134
 (byte0268) loads -1001 at026a. The previously retained
 [EtY/F2q classification](../2.26.43.72-outgoing-retry-error-map/README.md)
@@ -44,3 +44,7 @@ acceptance remain unverified.
 Validation:1327 workspace/all-feature tests passed; formatting, strict workspace
 all-target/all-feature Clippy, CLI reference regeneration, APK coverage and
 research checksum/link hygiene passed. Offline only.
+
+Attribution correction:0WJ.A0P is decryptForGroupUsingFastRatchet, not ordinary
+direct decrypt. The independently traced ordinary direct A0N also catches
+ED4 as -1001. [Corrected chains and producer aggregation](../2.26.43.72-direct-retry-cause-paths/README.md).

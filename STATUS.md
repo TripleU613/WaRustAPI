@@ -1,3 +1,11 @@
+2026-11-05 — **Direct retry cause chains and attribution corrected.**
+
+Ordinary direct A0N independently confirms old-counter exclusion. Missing
+session -> wire1 and aggregated No valid sessions. -> wire8 traced; selected
+group signature -> wire5 distinguished from bundle signatures. Earlier A0P
+label corrected to fast-ratchet group decrypt. [Evidence and remaining work](docs/protocol/outgoing-retry-receipts.md#direct-coordinator-attribution-and-cause-aggregation--2026-11-05).
+Research only; no production behavior change or live traffic.
+
 2026-11-05 — **Sender-key old counters now avoid automatic retries.**
 
 Group replay preserves the typed old-counter condition; group diagnostics no

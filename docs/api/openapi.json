@@ -16487,5 +16487,12 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-group-counter-error-paths/README.md",
     "description": "Sender-key DuplicatedMessage preserves SignalOldMessageCounter through group inbox handling: no retry, delivery ACK or committed state mutation. Authenticated durable duplicates retain existing behavior. Group crypto errors use fixed variant-only diagnostics instead of provider strings. APK Eyj/0Yl confirms old-counter ED4 -> -1001 excluded by selected retry predicate. Other key/signature mappings depend on producer/wrapping and remain unported; no route or live capability added."
+  },
+  "x-direct-retry-cause-aggregation-evidence": {
+    "x-cli": false,
+    "x-transport": ["offline pinned-APK static evidence only"],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-direct-retry-cause-paths/README.md",
+    "description": "Corrects A0P to fast-ratchet group decrypt; ordinary direct A0N independently maps old counters to excluded -1001. F22 missing session EDS maps to -1008/wire1. EDY session-attempt aggregation supplies No valid sessions./wire8; raw primitive BadMac mapping would lose this context. Fj2 sender-key signature failure supplies exact EDY refinement/wire5, distinct from bundle signature producers. No new wire code or runtime behavior; full producer equivalence remains incomplete."
   }
 }
