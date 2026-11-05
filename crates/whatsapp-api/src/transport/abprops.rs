@@ -9,6 +9,7 @@ use crate::{
     store::{ProtocolStore, Table},
 };
 use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 
 const MARKER: &[u8] = b"abprops-initial-query";
 // 0bq.<clinit> 0050..0064 and 07t.A0J 1ed2..1ee6, APK 2.26.37.71.
@@ -83,6 +84,11 @@ pub enum AbPropsFailure {
 /// These are not effective APK gates: MobileConfig may supersede them.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct AbPropsInspection {
+    /// Last returned signed integer values for token bucket properties
+    /// 865/909/996/997. Missing keys were not returned/applied; null means
+    /// the last value was invalid. These are evidence, not effective settings.
+    #[serde(default)]
+    pub token_bucket_values: BTreeMap<i32, Option<i32>>,
     /// Original durable action selector.
     pub action_id: String,
     /// Correlated read lifecycle.
@@ -149,6 +155,7 @@ fn parse(reply: &Node, view: &mut AbPropsInspection) -> std::result::Result<(), 
     let mut count = 0usize;
     let mut sampling = 0usize;
     let mut removal = None;
+    let mut token_buckets = BTreeMap::new();
     let mut token_counterpart: Option<&str> = None;
     let mut token_pending_namespace: Option<&str> = None;
     let mut pq_keys_upload: Option<&str> = None;
@@ -171,6 +178,11 @@ fn parse(reply: &Node, view: &mut AbPropsInspection) -> std::result::Result<(), 
             // IWy.C8f 0164 SparseArray.append replaces duplicate IDs; 0Ci.A00
             // converts after collection, so an invalid last row hides earlier ones.
             match code {
+                // 43.72 0hu.A01/A02 and 08Y.A0Q: registered integer
+                // inputs; inspect returned rows without resolving MobileConfig.
+                865 | 909 | 996 | 997 => {
+                    token_buckets.insert(code, integer(value));
+                }
                 REMOVAL_PROPERTY => removal = Some(value),
                 TOKEN_COUNTERPART_PROPERTY => token_counterpart = Some(value),
                 TOKEN_PENDING_NAMESPACE_PROPERTY => token_pending_namespace = Some(value),
@@ -196,6 +208,7 @@ fn parse(reply: &Node, view: &mut AbPropsInspection) -> std::result::Result<(), 
         view.status = AbPropsStatus::NotModified;
     } else {
         view.status = AbPropsStatus::ConfigurationReceived;
+        view.token_bucket_values = token_buckets;
         for (value, parsed, invalid) in [
             (
                 removal,
@@ -277,6 +290,7 @@ fn inspect_saved(
         ));
     }
     let mut view = AbPropsInspection {
+        token_bucket_values: BTreeMap::new(),
         action_id: id.to_owned(),
         status: match outcome.status {
             actions::ActionStatus::Queued => AbPropsStatus::Queued,
@@ -464,6 +478,18 @@ mod tests {
                             Node::new("prop")
                                 .attr("config_code", "14303")
                                 .attr("config_value", "0"),
+                            Node::new("prop")
+                                .attr("config_code", "865")
+                                .attr("config_value", "+604800"),
+                            Node::new("prop")
+                                .attr("config_code", "909")
+                                .attr("config_value", "4"),
+                            Node::new("prop")
+                                .attr("config_code", "996")
+                                .attr("config_value", "604800"),
+                            Node::new("prop")
+                                .attr("config_code", "997")
+                                .attr("config_value", "4"),
                         ]),
                 )
             };
@@ -485,6 +511,19 @@ mod tests {
             assert_eq!(
                 view.token_pending_namespace_value,
                 if refused { None } else { Some(false) }
+            );
+            assert_eq!(
+                view.token_bucket_values,
+                if refused {
+                    BTreeMap::new()
+                } else {
+                    BTreeMap::from([
+                        (865, Some(604800)),
+                        (909, Some(4)),
+                        (996, Some(604800)),
+                        (997, Some(4)),
+                    ])
+                }
             );
             let encoded = serde_json::to_string(&view).unwrap();
             for secret in ["private-hash", "private-key", "private-error"] {
@@ -517,6 +556,7 @@ mod tests {
     }
     fn view() -> AbPropsInspection {
         AbPropsInspection {
+            token_bucket_values: BTreeMap::new(),
             action_id: "TEST".into(),
             status: AbPropsStatus::InvalidReply,
             failure: None,
@@ -535,6 +575,54 @@ mod tests {
             pq_keys_upload_value_invalid: false,
         }
     }
+    #[test]
+    fn token_bucket_evidence_keeps_last_invalid_zero_negative_and_hash_rules() {
+        let row = |code: i32, value: &str| {
+            Node::new("prop")
+                .attr("config_code", code.to_string())
+                .attr("config_value", value)
+        };
+        for (hash, delta, applied) in [
+            ("", "false", false),
+            ("", "true", true),
+            ("h", "false", true),
+        ] {
+            let mut evidence = view();
+            parse(
+                &reply(
+                    "TEST",
+                    Node::new("props")
+                        .attr("hash", hash)
+                        .attr("delta_update", delta)
+                        .children(vec![
+                            row(865, "604800"),
+                            row(909, "4"),
+                            row(996, "0"),
+                            row(997, "-1"),
+                            row(865, "2147483648"),
+                            row(909, " 4"),
+                            row(123456, "private-unselected-value"),
+                        ]),
+                ),
+                &mut evidence,
+            )
+            .unwrap();
+            let expected = if applied {
+                BTreeMap::from([(865, None), (909, None), (996, Some(0)), (997, Some(-1))])
+            } else {
+                BTreeMap::new()
+            };
+            assert_eq!(evidence.token_bucket_values, expected);
+            let encoded = serde_json::to_string(&evidence).unwrap();
+            assert!(!encoded.contains("private-unselected-value"));
+            assert!(!encoded.contains("604800"));
+            assert_eq!(
+                serde_json::from_str::<AbPropsInspection>(&encoded).unwrap(),
+                evidence
+            );
+        }
+    }
+
     #[test]
     fn token_boolean_evidence_uses_last_values_without_defaults_or_policy_application() {
         let token = |code: i32, value: &str| {
@@ -593,6 +681,7 @@ mod tests {
         ] {
             let mut evidence = view();
             parse(&reply("TEST", props), &mut evidence).unwrap();
+            assert!(evidence.token_bucket_values.is_empty());
             assert_eq!(evidence.token_counterpart_value, None);
             assert_eq!(evidence.token_pending_namespace_value, None);
             assert!(!evidence.token_counterpart_value_invalid);
@@ -604,6 +693,7 @@ mod tests {
     fn legacy_abprops_inspection_has_unknown_token_values() {
         let legacy = r#"{"action_id":"TEST","status":"configuration_received","failure":null,"server_error_code":null,"configuration_rows":1,"sampling_rows":0,"delta_update":false,"hash_present":true,"removal_value":false,"removal_value_invalid":false}"#;
         let evidence: AbPropsInspection = serde_json::from_str(legacy).unwrap();
+        assert!(evidence.token_bucket_values.is_empty());
         assert_eq!(evidence.token_counterpart_value, None);
         assert_eq!(evidence.token_pending_namespace_value, None);
         assert!(!evidence.token_counterpart_value_invalid);

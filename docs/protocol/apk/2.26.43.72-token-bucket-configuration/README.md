@@ -58,3 +58,37 @@ Its SHA256 identifies the local full 08Y export used to select the excerpts.
 The full current 0hu and 87x scheduling branches are in the previous bundle.
 Checksums cover all other files here. Effective policy port and full native
 pending/retry/counterpart lifecycle remain unfinished.
+
+## Adapter follow-up and returned-value inspection
+
+**Confirmed static:** the existing [privacy configuration trace](../../privacy-mex-config.md#effective-integer-configuration-has-two-authorities)
+already retains the exact same 00E integer getter and 1XN/1XO adapters under
+current-APK REA records. Reuse that evidence rather than treating this as a
+newly discovered general resolver. 00G.A03 has firstAccessValue=false and
+selects legacy cache A0P. The integer result adapter is 1XN selector 0;
+0A7.B8Q zero yields integer zero with INVALID_SPECIFIER_MISSING_IN_WA_LOOKUP_MAP,
+nonzero calls Arl and narrows Java long to int. Direct adapter 1XO selector 1
+likewise resolves B8Q and narrows Arl; its extra mode argument covers sampling.
+These are not AB-response integer coercion. 0A7 implementation mapping for the
+four token IDs and readiness transitions are still unresolved. The generic
+superclass-only apk-virtual-overrides query for 0A7.B8Q returns only the abstract
+interface declaration; it cannot enumerate interface implementations, so that
+negative result does not prove the lookup is absent.
+
+**Implemented offline:** existing abprops-query --show now includes
+`token_bucket_values`, a map containing only returned integer property IDs
+865/909/996/997. Decimal JSON keys map to signed i32 values; null is an invalid
+last returned value, and an absent key is missing/inapplicable. Duplicate rows
+use the last value even when invalid. Nonpositive values remain integers so
+they can be inspected without silently selecting defaults. Full hashless replies
+remain not_modified with an empty map, while deltas may carry values without a
+hash. Unknown values, hashes and other private metadata remain excluded.
+The map is observational and never read by token scheduling/reservation.
+Legacy serialized inspections default it to empty; saved replies are reparsed
+without mutation, so prior durable responses also gain this inspection.
+
+Tests cover valid returned values across encrypted-store reopen and refusals,
+last invalid duplicates, overflow/whitespace, zero/negative values, hash/delta
+branches, exclusion of unrelated values, JSON roundtrip and legacy defaults.
+Effective configuration resolution and the configured scheduling/admission port
+remain unfinished; exposing raw rows is not evidence of native eligibility.

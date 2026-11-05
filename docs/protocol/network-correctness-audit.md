@@ -3121,3 +3121,13 @@ Whole-map final defaults, adapters and complete override precedence remain open.
 [Selected entries, complete resolver methods and reproduction](apk/2.26.43.72-token-bucket-configuration/README.md).
 No send policy changed; no live traffic. Next work is effective-policy resolution,
 then configured scheduling/admission rather than silently hardcoding these entries.
+
+## Token bucket returned-value inspection — 2026-11-05
+
+Existing abprops-query --show reports token_bucket_values: selected 865/909/996/997
+signed integers only. Missing keys are absent/inapplicable, null means invalid
+last value; duplicates replace earlier values, including valid-to-invalid.
+Full hashless replies expose none; delta/hash rules match the existing parser.
+Legacy views deserialize with an empty map; saved replies reparse after reopen.
+This does not resolve cache/preferences/MobileConfig or apply values to sending.
+[Evidence, reused current-APK adapters, tests and unresolved mapping](apk/2.26.43.72-token-bucket-configuration/README.md).

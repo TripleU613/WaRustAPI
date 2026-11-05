@@ -137,3 +137,13 @@ cache/preferences/MobileConfig getter boundary. `abprops-query --show` reports
 Missing/non-applicable values remain null; no APK default is substituted.
 These are selected returned properties, not effective gates, and do not activate
 refresh or adopt configuration. Effective MobileConfig results remain unknown.
+
+## Token bucket returned-value inspection — 2026-11-05
+
+Existing abprops-query --show reports token_bucket_values: selected 865/909/996/997
+signed integers only. Missing keys are absent/inapplicable, null means invalid
+last value; duplicates replace earlier values, including valid-to-invalid.
+Full hashless replies expose none; delta/hash rules match the existing parser.
+Legacy views deserialize with an empty map; saved replies reparse after reopen.
+This does not resolve cache/preferences/MobileConfig or apply values to sending.
+[Evidence, reused current-APK adapters, tests and unresolved mapping](apk/2.26.43.72-token-bucket-configuration/README.md).

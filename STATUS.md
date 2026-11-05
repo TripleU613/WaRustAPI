@@ -1,3 +1,13 @@
+2026-11-05 — **Saved AB replies expose token bucket integer evidence.**
+
+abprops-query --show includes returned 865/909/996/997 values, preserving missing,
+invalid-last, zero/negative and full/delta distinctions across reopen. These do
+not select effective policy. Current-APK adapter evidence is linked and reused;
+lookup specifiers and ready-state transitions remain open. No live traffic.
+Validation:1352 workspace/all-feature tests, strict Clippy, fmt, CLI reference,
+APK coverage and repository hygiene passed.
+[Inspection contract and limits](docs/protocol/apk/2.26.43.72-token-bucket-configuration/README.md).
+
 2026-11-05 — **Token bucket configuration traced further in the current APK.**
 
 Selected packaged entries are seven-day buckets/four valid buckets; if effective,

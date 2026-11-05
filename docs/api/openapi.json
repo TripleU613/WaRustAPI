@@ -13968,7 +13968,8 @@
                         "token_counterpart_value",
                         "token_counterpart_value_invalid",
                         "token_pending_namespace_value",
-                        "token_pending_namespace_value_invalid"
+                        "token_pending_namespace_value_invalid",
+                        "token_bucket_values"
                       ],
                       "properties": {
                         "action_id": {
@@ -14065,6 +14066,26 @@
                         "token_pending_namespace_value_invalid": {
                           "type": "boolean",
                           "description": "Last returned 14303 failed signed integer conversion; earlier duplicates and defaults are not substituted."
+                        },
+                        "token_bucket_values": {
+                          "type": "object",
+                          "description": "Returned AB integer evidence only for 865/909/996/997, not effective configuration. Missing key means absent/inapplicable; null means invalid last signed-i32 value. Empty for full hashless responses. Never applied to token sends.",
+                          "propertyNames": {
+                            "enum": [
+                              "865",
+                              "909",
+                              "996",
+                              "997"
+                            ]
+                          },
+                          "additionalProperties": {
+                            "type": [
+                              "integer",
+                              "null"
+                            ],
+                            "minimum": -2147483648,
+                            "maximum": 2147483647
+                          }
                         }
                       }
                     }
