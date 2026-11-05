@@ -1,3 +1,10 @@
+2026-11-04 — **Limited prekey retry-mode writer scope traced.**
+
+FDh config allowance is conditional, not a general startup default; visible
+exception paths and 14o reset/consumption retained.
+[Evidence and unknown lifecycle](apk/2.26.43.72-prekey-upload-replies/README.md#limited-mode-producer-boundary-2026-11-04).
+No production change or live traffic.
+
 2026-11-04 — **Prekey retry boundaries and delay inputs traced.**
 
 43.72 13z.A02 separates limited allowance from backoff counter bounds;

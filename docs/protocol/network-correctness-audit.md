@@ -777,3 +777,15 @@ and runnable effects remain untraced; Rust scheduling remains unchanged.
 [Exact strict boundaries, raw exports and inferred sequence limits](apk/2.26.43.72-prekey-upload-replies/README.md#retry-limits-and-delay-inputs-2026-11-04).
 No live traffic or production change; this is not permission to retry/reforge
 uncertain upload reservations or regenerate account keys.
+
+## Current-build limited prekey retry mode producer (2026-11-04)
+
+**Confirmed static, 43.72:** FDh.CbF reads allowance config0x3741 and writes
+A05/A00 only under Optional-present scope, whose visible continuations throw a
+deleteVNameCert-labelled exception. 14o.BLn resets mode on selector77; selector78
+also consumes allowance for a legacy503 branch. The initializer is not generic
+startup and the delay helper is not its only consumer.
+[Conditional reachability, offsets and retained methods](apk/2.26.43.72-prekey-upload-replies/README.md#limited-mode-producer-boundary-2026-11-04).
+Optional provider/config values and listener lifecycle remain unknown. No runtime
+change, reset or live account operation. This narrows producer scope without
+claiming complete native retry parity.

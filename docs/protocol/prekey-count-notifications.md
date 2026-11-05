@@ -134,3 +134,10 @@ untraced downstream boundary without proving full retry or regeneration policy.
 and limited mode by a decrementing allowance; 406/503 limited mode uses a
 configured delay. [Configuration descriptor, helpers and unresolved producers](apk/2.26.43.72-prekey-upload-replies/README.md#retry-limits-and-delay-inputs-2026-11-04).
 No Rust retry/scheduling behavior changed.
+
+## Limited-mode producer boundary
+
+**Confirmed static, 43.72:** allowance comes from config0x3741 in conditional
+FDh.CbF scope, not unconditional startup. 14o.BLn resets/consumes that mode.
+[Reachability and remaining listener/optional-provider gaps](apk/2.26.43.72-prekey-upload-replies/README.md#limited-mode-producer-boundary-2026-11-04).
+No Rust scheduler change.

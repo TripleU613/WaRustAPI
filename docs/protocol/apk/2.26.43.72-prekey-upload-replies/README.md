@@ -160,3 +160,46 @@ Additional export hashes:
 - [limited-mode-writers.txt](limited-mode-writers.txt): `3e2e8081d2a7fb5008e9695646b48180315f07fba0bd135956541b6b065413b3`
 - [flag-constructor.txt](flag-constructor.txt): `95640509d28e00f7f00fffc5d569127c738d6d03594a8292e9679b977ca52717`
 - [manager-constructor.txt](manager-constructor.txt): `b9f2b70458589561ca4509b4270257d398506c3a23518e374500a2a3a955bb96`
+
+## Limited-mode producer boundary (2026-11-04)
+
+**Confirmed static**, same pinned 43.72. This follow-up examines the A05 write
+inventory, not every branch of the large retained 14o.BLn method.
+
+- **FDh.CbF**, 005a–0066 reads allowance through A0a(**0x3741**). It also reads
+  0mi.A0E and config **0x6f43**, builds FDj with the allowance/flags, and
+  registers it via 13z.A0T. These inputs do not prove current account values.
+- 00aa–00ba tests **13z.A0I Optional.isPresent**; only its present branch reaches
+  00ca–00da, which under a monitor sets **A05=true**, **A00=allowance**, and
+  **A03=the derived boolean**. The absent branch jumps to 011a, bypassing those
+  writes. Therefore this is not unconditional upload/startup retry initialization.
+- The present branch evaluates **EMZ.A01**, and its two visible continuations
+  invoke Optional.get then construct/throw a NullPointerException labelled
+  **deleteVNameCert** (00e0–0114). Do not interpret the label as a successfully
+  executed deletion operation or assume these paths complete normally. Which
+  product/flavor supplies the optional dependency remains unknown.
+- The absent branch resolves 13z again, unregisters FDj through A0U, and resumes
+  a result/callback path. FDj's independent event behavior and the wider lifecycle
+  of A0T/A0U remain untraced; the CbF write alone does not prove normal retry mode.
+- **14o.BLn** selector **77** (switch target0184), reads needsMoreLegacyPrekeys /
+  needsMorePQPrekeys and clears pending arrays/state. At 01fc–0208 it sets
+  A05=false, A00=0 and A03=false before further scheduling. This is a reset,
+  not another allowance initializer.
+- Selector **78** (target00ea), later failure path with **EMZ.A02 false**, has
+  separate legacy handling: for 503 while A05=true it reads delay config
+  **0x374b** and decrements the old allowance (0364–039c). Old<1 clears
+  A06/A05/A00/A03 and cancels the scheduler path; otherwise delay scheduling
+  proceeds. Thus 13z.A02 is not the only consumer of the limited allowance.
+  Other failure branches and scheduled runnable effects are not fully audited.
+
+**Bounded conclusion:** within the prior A05 field-write inventory, FDh.CbF is
+its explicit true writer, while 14o and 13z clear it. Its conditional/exception
+paths prevent treating this as a ready-to-port generic retry mode. Runtime
+optional provider, config values/default registry, FDj callbacks and account
+teardown still require tracing. No key reset, certificate deletion, retry
+scheduler or runtime behavior was implemented. No live traffic occurred.
+
+Additional export hashes (full methods retained, findings bounded above):
+
+- [mode-worker.txt](mode-worker.txt): `d9824a2cb728862a92d87e2902c29da4f52bfae785b3bc081ecf994fe87e109f`
+- [mode-callback.txt](mode-callback.txt): `dd9fec9235588808024e9e1b0a39ce1dab2c16bb9c345b9367d3e1e612e8a8f1`

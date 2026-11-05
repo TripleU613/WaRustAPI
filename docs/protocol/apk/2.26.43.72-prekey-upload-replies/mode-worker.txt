@@ -1,0 +1,112 @@
+
+# class: LX/FDh;
+# extends: Ljava/lang/Object;
+
+.method public CbF(LLLLLL)  # .registers 27
+    # full signature: LX/FDh;->CbF(LX/FuN;LX/E5i;LX/FuQ;Ljava/lang/String;LX/0cf;)Ljava/lang/Object;
+    0000..0006  invoke-static/range  {v26..v26}, LX/6ol;->A0m(LX/0cf;)LX/0eh;
+    0006..0008  move-result-object  v4
+    0008..000c  const/16  v1, #0x4e3
+    000c..0010  move-object/from16  v12, v21
+    0010..0014  iget-object  v0, v12, LX/FDh;->A01:LX/05a;
+    0014..001a  invoke-static  {v0, v1}, LX/8t6;->A0Q(LX/05a;I)Ljava/lang/Object;
+    001a..001c  move-result-object  v14
+    001c..0020  check-cast  v14, LX/0GO;
+    0020..0024  iget-object  v3, v12, LX/FDh;->A00:LX/05a;
+    0024..002a  invoke-static  {v3}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    002a..002c  move-result-object  v0
+    002c..0030  check-cast  v0, LX/0UM;
+    0030..0034  const-class  v2, LX/13z;
+    0034..003a  invoke-virtual  {v0, v2}, LX/0UM;->A00(Ljava/lang/Class;)LX/0FT;
+    003a..003c  move-result-object  v15
+    003c..0040  check-cast  v15, LX/13z;
+    0040..0044  new-instance  v16, LX/Km2;
+    0044..004a  invoke-direct/range  {v16..v16}, Ljava/lang/Object;-><init>()V
+    004a..004e  iget-object  v1, v12, LX/FDh;->A03:LX/08Y;
+    004e..0052  sget-object  v0, LX/0mi;->A0E:LX/00f;
+    0052..0058  invoke-static  {v1, v0}, LX/00E;->A0F(LX/00E;LX/00f;)Z
+    0058..005a  move-result  v19
+    005a..005e  const/16  v0, #0x3741
+    005e..0064  invoke-virtual  {v1, v0}, LX/00E;->A0a(I)I
+    0064..0066  move-result  v5
+    0066..006a  const/16  v0, #0x6f43
+    006a..0070  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    0070..0072  move-result  v20
+    0072..0076  move-object/from16  v11, v23
+    0076..007a  if-eqz  v20, +0x7
+    007a..007e  sget-object  v0, LX/E5i;->A02:LX/E5i;
+    007e..0080  const/4  v1, #0x1
+    0080..0084  if-eq  v11, v0, +0x3
+    0084..0086  const/4  v1, #0x0
+    0086..008a  new-instance  v9, LX/FDj;
+    008a..008e  move-object/from16  v10, v22
+    008e..0092  move-object/from16  v13, v24
+    0092..0096  move/from16  v18, v5
+    0096..009a  move-object/from16  v17, v4
+    009a..00a0  invoke-direct/range  {v9..v20}, LX/FDj;-><init>(LX/FuN;LX/E5i;LX/FDh;LX/FuQ;LX/0GO;LX/13z;LX/Km2;LX/0ef;IZZ)V
+    00a0..00a4  sget-object  v8, LX/E5i;->A02:LX/E5i;
+    00a4..00aa  invoke-virtual  {v15, v9}, LX/13z;->A0T(LX/FwV;)V
+    00aa..00ae  iget-object  v7, v15, LX/13z;->A0I:Lcom/google/common/base/Optional;
+    00ae..00b4  invoke-virtual  {v7}, Lcom/google/common/base/Optional;->isPresent()Z
+    00b4..00b6  move-result  v0
+    00b6..00ba  if-eqz  v0, +0x32
+    00ba..00be  iget-object  v6, v15, LX/13z;->A0J:LX/08Y;
+    00be..00c2  sget-object  v0, LX/EMZ;->A01:LX/00f;
+    00c2..00c8  invoke-virtual  {v6, v0}, LX/00E;->A17(LX/00f;)Z
+    00c8..00ca  move-result  v6
+    00ca..00cc  monitor-enter
+    00cc..00ce  const/4  v0, #0x1
+    00ce..00d2  iput-boolean  v0, v15, LX/13z;->A05:Z
+    00d2..00d6  iput  v5, v15, LX/13z;->A00:I
+    00d6..00da  iput-boolean  v1, v15, LX/13z;->A03:Z
+    00da..00dc  monitor-exit
+    00dc..00e0  if-eqz  v6, +0xc
+    00e0..00e6  invoke-virtual  {v7}, Lcom/google/common/base/Optional;->get()Ljava/lang/Object;
+    00e6..00ea  const-string  v0, "deleteVNameCert"
+    00ea..00f0  invoke-static  {v0}, LX/2L6;->A18(Ljava/lang/String;)Ljava/lang/NullPointerException;
+    00f0..00f2  move-result-object  v0
+    00f2..00f4  throw  v0
+    00f4..00fa  invoke-virtual  {v7}, Lcom/google/common/base/Optional;->isPresent()Z
+    00fa..00fc  move-result  v0
+    00fc..0100  if-eqz  v0, +0xf
+    0100..0106  invoke-virtual  {v7}, Lcom/google/common/base/Optional;->get()Ljava/lang/Object;
+    0106..010a  const-string  v0, "deleteVNameCert"
+    010a..0110  invoke-static  {v0}, LX/2L6;->A18(Ljava/lang/String;)Ljava/lang/NullPointerException;
+    0110..0112  move-result-object  v0
+    0112..0114  throw  v0
+    0114..0116  move-exception  v0
+    0116..0118  monitor-exit
+    0118..011a  throw  v0
+    011a..0120  invoke-static  {v3}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0120..0122  move-result-object  v0
+    0122..0126  check-cast  v0, LX/0UM;
+    0126..012c  invoke-virtual  {v0, v2}, LX/0UM;->A00(Ljava/lang/Class;)LX/0FT;
+    012c..012e  move-result-object  v0
+    012e..0132  check-cast  v0, LX/13z;
+    0132..0138  invoke-virtual  {v0, v9}, LX/13z;->A0U(LX/FwV;)V
+    0138..013c  if-ne  v11, v8, +0x1c
+    013c..0140  if-eqz  v24, +0x9
+    0140..0144  const/16  v1, #0xfff2 (-14)
+    0144..0148  const/16  v0, #0x9
+    0148..014e  invoke-interface  {v13, v0, v1}, LX/FuQ;->BcH(II)V
+    014e..0152  sget-object  v3, LX/E6R;->A02:LX/E6R;
+    0152..0154  const/4  v2, #0x0
+    0154..0156  const/4  v1, #0x0
+    0156..015a  new-instance  v0, LX/ETN;
+    015a..0160  invoke-direct  {v0, v3, v2, v1}, LX/ETN;-><init>(LX/E6R;LX/Ejp;Z)V
+    0160..0166  invoke-virtual  {v4, v0}, LX/0eh;->resumeWith(Ljava/lang/Object;)V
+    0166..016c  invoke-virtual  {v4}, LX/0eh;->A0E()Ljava/lang/Object;
+    016c..016e  move-result-object  v0
+    016e..0170  return-object  v0
+    0170..0174  sget-object  v0, LX/E5i;->A03:LX/E5i;
+    0174..0178  if-ne  v11, v0, -0x13
+    0178..017c  if-eqz  v22, -0x15
+    017c..0180  const-wide/16  v2, #0xfff2 (-14)
+    0180..0182  const/4  v1, #0x0
+    0182..0184  const/4  v0, #0x3
+    0184..018a  invoke-interface  {v10, v2, v3, v1, v0}, LX/FuN;->BcG(JLjava/lang/String;I)V
+    018a..018c  goto  -0x1e
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0067..0070 -> 008a
+    # catch <all> code_units 008b..008c -> 008a
+.end method
