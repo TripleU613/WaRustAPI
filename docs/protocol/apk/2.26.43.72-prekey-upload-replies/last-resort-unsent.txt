@@ -1,0 +1,30 @@
+
+# class: LX/0WJ;
+# extends: Ljava/lang/Object;
+
+.method public A0b(L)  # .registers 5
+    # full signature: LX/0WJ;->A0b()LX/ETs;
+    0000..0004  iget-object  v1, v4, LX/0WJ;->A0K:LX/0Yd;
+    0004..0006  const/4  v0, #0x0
+    0006..000c  invoke-static  {v1, v0}, LX/0Yd;->A00(LX/0Yd;Z)LX/EQ8;
+    000c..000e  move-result-object  v3
+    000e..0012  if-nez  v3, +0x9
+    0012..0016  const-string  v0, "SignalCoordinator/no unsent last resort kyber pre key found for sending"
+    0016..001c  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    001c..001e  const/4  v0, #0x0
+    001e..0020  return-object  v0
+    0020..0024  const-string  v0, "SignalCoordinator/loaded the latest last resort kyber pre key for sending: "
+    0024..0028  new-instance  v2, Ljava/lang/StringBuilder;
+    0028..002e  invoke-direct  {v2, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    002e..0032  iget-object  v1, v3, LX/EQ8;->A00:LX/Dfd;
+    0032..0036  iget  v0, v1, LX/Dfd;->id_:I
+    0036..003c  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    003c..0042  invoke-virtual  {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0042..0044  move-result-object  v0
+    0044..004a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    004a..004e  iget  v0, v1, LX/Dfd;->id_:I
+    004e..0054  invoke-static  {v3, v0}, LX/0Yj;->A00(LX/EQ8;I)LX/ETs;
+    0054..0056  move-result-object  v0
+    0056..0058  return-object  v0
+    # exception table: 0 try range(s)
+.end method

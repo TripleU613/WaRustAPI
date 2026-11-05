@@ -1,0 +1,83 @@
+
+# class: LX/0Yd;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLZ)  # .registers 10
+    # full signature: LX/0Yd;->A00(LX/0Yd;Z)LX/EQ8;
+    0000..0004  const-string  v6, "SignalKyberPreKeyStore/loadLastResortKyberPreKeyBySentStatus loaded last resort kyber prekey with id: "
+    0004..0008  const-string  v7, "SignalKyberPreKeyStore/loadLastResortKyberPreKeyBySentStatus no last resort kyber prekey found with sentToServer="
+    0008..000c  if-eqz  v9, +0xb
+    000c..0010  const-string  v5, "1"
+    0010..0014  iget-object  v0, v8, LX/0Yd;->A01:LX/0Xp;
+    0014..001a  invoke-virtual  {v0}, LX/0Xp;->A06()LX/0aq;
+    001a..001c  move-result-object  v4
+    001c..001e  goto  +0x4
+    001e..0022  const-string  v5, "0"
+    0022..0024  goto  -0x9
+    0024..0028  iget-object  v3, v4, LX/0aq;->A02:LX/0KU;
+    0028..002c  const-string  v2, "SELECT prekey_id, record FROM kyber_prekeys WHERE last_resort_key = 1 AND sent_to_server = ? ORDER BY _id DESC LIMIT 1"
+    002c..002e  const/4  v0, #0x1
+    002e..0032  new-array  v1, v0, [Ljava/lang/String;
+    0032..0034  const/4  v0, #0x0
+    0034..0038  aput-object  v5, v1, v0
+    0038..003c  const-string  v0, "SignalKyberPreKeyStore/loadLastResortKyberPreKeyBySentStatus"
+    003c..0042  invoke-virtual  {v3, v2, v0, v1}, LX/0KU;->A0A(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
+    0042..0044  move-result-object  v5
+    0044..004a  invoke-interface  {v5}, Landroid/database/Cursor;->moveToNext()Z
+    004a..004c  move-result  v0
+    004c..004e  const/4  v1, #0x0
+    004e..0052  if-nez  v0, +0x18
+    0052..0056  new-instance  v0, Ljava/lang/StringBuilder;
+    0056..005c  invoke-direct  {v0, v7}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    005c..0062  invoke-virtual  {v0, v9}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    0062..0068  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0068..006a  move-result-object  v0
+    006a..0070  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0070..0076  invoke-interface  {v5}, Landroid/database/Cursor;->close()V
+    0076..007c  invoke-virtual  {v4}, LX/0aq;->close()V
+    007c..007e  return-object  v1
+    007e..0082  const-string  v0, "prekey_id"
+    0082..0088  invoke-interface  {v5, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0088..008a  move-result  v0
+    008a..0090  invoke-interface  {v5, v0}, Landroid/database/Cursor;->getInt(I)I
+    0090..0092  move-result  v3
+    0092..0096  const-string  v0, "record"
+    0096..009c  invoke-interface  {v5, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    009c..009e  move-result  v0
+    009e..00a4  invoke-interface  {v5, v0}, Landroid/database/Cursor;->getBlob(I)[B
+    00a4..00a6  move-result-object  v2
+    00a6..00aa  new-instance  v1, Ljava/lang/StringBuilder;
+    00aa..00b0  invoke-direct  {v1, v6}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00b0..00b6  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00b6..00ba  const-string  v0, ", sentToServer="
+    00ba..00c0  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00c0..00c6  invoke-virtual  {v1, v9}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    00c6..00cc  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00cc..00ce  move-result-object  v0
+    00ce..00d4  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    00d4..00da  invoke-static  {v2}, LX/00l;->A08(Ljava/lang/Object;)V
+    00da..00e0  invoke-static  {v2}, LX/EqE;->A01([B)LX/EQ8;
+    00e0..00e2  move-result-object  v0
+    00e2..00e8  invoke-interface  {v5}, Landroid/database/Cursor;->close()V
+    00e8..00ee  invoke-virtual  {v4}, LX/0aq;->close()V
+    00ee..00f0  return-object  v0
+    00f0..00f2  move-exception  v1
+    00f2..00f4  throw  v1
+    00f4..00f6  move-exception  v0
+    00f6..00fc  invoke-static  {v5, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    00fc..00fe  throw  v0
+    00fe..0100  move-exception  v1
+    0100..0102  throw  v1
+    0102..0104  move-exception  v0
+    0104..010a  invoke-static  {v4, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    010a..010c  throw  v0
+    # exception table: 8 try range(s)
+    # catch <all> code_units 0012..0022 -> 007f
+    # catch <all> code_units 0022..0038 -> 0078
+    # catch <all> code_units 0038..003b -> 007f
+    # catch <all> code_units 003f..0071 -> 0078
+    # catch <all> code_units 0071..0074 -> 007f
+    # catch <all> code_units 0079..007a -> 007a
+    # catch <all> code_units 007b..007f -> 007f
+    # catch <all> code_units 0080..0081 -> 0081
+.end method

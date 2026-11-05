@@ -1234,3 +1234,51 @@ Additional export hashes:
 - [reset-helper-lazy.txt](reset-helper-lazy.txt): `0f23ca95487f4cafa3349c9151abac71f1bbbb30510fa7331a7495820964b232`
 - [reset-helper-factory.txt](reset-helper-factory.txt): `4b8e4195403c5ca7072089492e18dc2fdb962cf8b5155f84538913bc8b6014bd`
 - [reset-helper-bindings.txt](reset-helper-bindings.txt): `9b5098a540e5115973a1b6f1345fe62848bbc7da66f478d1f93ba146983e8001`
+
+## Last-resort producer and pre-upload timestamp (2026-11-04)
+
+**Confirmed static**, pinned2.26.43.72, same APK SHA-256 as this bundle.
+Checked DEX exports are not REA Evidence envelopes. No runtime generation,
+rotation interval or migration-completion observation is claimed.
+
+- **0WJ.A0e** obtainsFjI, computes08q.A00/1000 seconds and checks native
+  loaderBbM. If unavailable it logs and returnsnull after closing.
+  It queries **0Yd.A00(false)**. Existing result is reconstructed through
+  0Yj.A00 and returned; no age comparison occurs on this selected path.
+- **0Yd.A00** queries `last_resort_key = 1 AND sent_to_server = ?`
+  ordered **_id DESC LIMIT1**; false binds`0`, true binds`1`. Thus newest
+  is by database row order, not highestprekeyID, and A0e reuses newest
+  **unsent** LR. **0WJ.A0b** uses the same false query without generation.
+- With no unsentLR, **A0e00f4–0130** getsidentityAnw, reads raw
+  **next_kyber_prekey_id=N**, generates **EqE.A00(identity,ML_KEM_1024,N)**,
+  computes nextcursor **((N+1)%0xfffffe)+1**. This matches the current
+  positive native cursor convention, not Rust's historical monotonic/local
+  cursor. Do not reinterpret persisted Rust cursors from this trace.
+- **A0e0130–01b8** obtainsFjI/database transaction, stores the serialized
+  Dfd as singletonERb via **0Yd.A01(nowSeconds,rows,1)**, saves nextcursor
+  and marks/ closes transaction before reconstruction/return. Exact SQLite
+  conflict policy0KU.A06 and FjI semantics remain untraced.
+- **0Yd.A01** writes sent_to_server=false, direct_distribution=false,
+  last_resort_key=the suppliedinteger(1 here), and optional **upload_timestamp**
+  from its Long argument. **Therefore this producer writes upload_timestamp
+  before server acknowledgement**. The name is not evidence of sent=true.
+  The existing migration predicate specifically requires uploaded LR; do
+  not replace it with timestamp presence or row existence.
+- A0e catches UnsatisfiedLinkError around selected generation work, logs
+  and returnsnull; other exceptions close wrappers and propagate. Native
+  primitive/signing itself is the previously retainedEqE trace.
+
+**Rust impact / remaining port:** current SET helper creates LR only if noLR
+exists and omitsPQ afterLR sent; nativeA0e can create a new unsentLR when only
+sentLR exists. This does **not** imply it should be called at every ADD or
+startup; entry routing still decides. Current ADD strategy, configured
+inventory/batch values, cursor migration and actor transitions remain
+incomplete. No production request or cursor semantics changed in this chunk.
+No live account traffic.
+
+Additional export hashes:
+
+- [last-resort-producer.txt](last-resort-producer.txt): `165f855614afc9f3cbbf62355318d756453dfb964b65396a82af8342eddae8ee`
+- [last-resort-unsent.txt](last-resort-unsent.txt): `4885300896395f84913fafe78f62923a00cd61ea596e9d084857d83c8cd4eebd`
+- [last-resort-query.txt](last-resort-query.txt): `391c5d016d8cf3101b475d0b027174bcbd153784e3514062fb1ee01e34441a9c`
+- [last-resort-storage.txt](last-resort-storage.txt): `03b76a20ee172dae0efc271825eb9bb99e0150f9baa042fff883b53787abb2c5`

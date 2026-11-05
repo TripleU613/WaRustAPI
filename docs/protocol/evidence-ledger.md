@@ -4758,3 +4758,11 @@ checks sidecar absence;Eoe clears three collections. Helper flag0x646a
 selects0Xv(axolotl.db) or28o path. Full virtual/native cleanup and rebuild
 semantics remain unproven. [Exports and limits](apk/2.26.43.72-prekey-upload-replies/README.md#sqlite-reset-base-implementation-and-helper-selection-2026-11-04).
 No production change, account reset or live traffic.
+
+## 2026-11-04 — Last-resort producer and timestamp
+
+**Confirmed static (43.72):**A0e reuses newest unsentLR or generates at
+rawKEM cursor and advancespositive cursor. Storage writes upload_timestamp
+while sent=false, so timestamp is not migration/ACK proof. Current Rust
+SET helper differs; entry-driven ADD/rotation port remains incomplete.
+[Exports and boundaries](apk/2.26.43.72-prekey-upload-replies/README.md#last-resort-producer-and-pre-upload-timestamp-2026-11-04). No production change or live traffic.

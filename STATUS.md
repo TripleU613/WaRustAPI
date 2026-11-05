@@ -1,3 +1,11 @@
+2026-11-04 — **Last-resort generation lifecycle traced.**
+
+Newest unsentLR reuse/generation/cursor/storage traced; timestamp may precede
+ACK and cannot establish migration. Current strategy port remains incomplete.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#last-resort-producer-and-pre-upload-timestamp-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. No production change or live traffic.
+
 2026-11-04 — **SQLite reset base and helper selection traced.**
 
 Cleanup attempts database deletion; helper variants are flag-selected.

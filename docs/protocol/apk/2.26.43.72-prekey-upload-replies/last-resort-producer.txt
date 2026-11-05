@@ -1,0 +1,167 @@
+
+# class: LX/0WJ;
+# extends: Ljava/lang/Object;
+
+.method public A0e(L)  # .registers 17
+    # full signature: LX/0WJ;->A0e()LX/ETs;
+    0000..0004  move-object/from16  v1, v16
+    0004..0008  iget-object  v0, v1, LX/0WJ;->A0I:LX/0Wk;
+    0008..000e  invoke-virtual  {v0}, LX/0Wk;->A04()LX/FjI;
+    000e..0010  move-result-object  v15
+    0010..0014  iget-object  v0, v1, LX/0WJ;->A01:LX/0Yl;
+    0014..0018  iget-object  v5, v0, LX/0Yl;->A03:LX/0Yj;
+    0018..001c  iget-object  v0, v0, LX/0Yl;->A01:LX/08q;
+    001c..0022  invoke-static  {v0}, LX/08q;->A00(LX/08q;)J
+    0022..0024  move-result-wide  v13
+    0024..0028  const-wide/16  v0, #0x3e8
+    0028..002a  div-long/2addr  v13, v0
+    002a..002e  iget-object  v0, v5, LX/0Yj;->A01:LX/00x;
+    002e..0034  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0034..0036  move-result-object  v0
+    0036..003a  check-cast  v0, LX/00X;
+    003a..0040  invoke-virtual  {v0}, LX/00X;->A01()LX/00Y;
+    0040..0042  move-result-object  v1
+    0042..0046  check-cast  v1, LX/00Z;
+    0046..004a  const/16  v0, #0x4e3
+    004a..0050  invoke-static  {v1, v0}, LX/09H;->A00(LX/00Y;I)LX/05a;
+    0050..0052  move-result-object  v6
+    0052..0056  iget-object  v0, v5, LX/0Yj;->A02:LX/00x;
+    0056..005c  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    005c..005e  move-result-object  v0
+    005e..0062  check-cast  v0, Lcom/whatsapp/infra/nativelibloader/WhatsAppLibLoader;
+    0062..0068  invoke-virtual  {v0}, Lcom/whatsapp/infra/nativelibloader/WhatsAppLibLoader;->BbM()Z
+    0068..006a  move-result  v0
+    006a..006c  const/4  v7, #0x0
+    006c..0070  const-string  v4, "SignalProtocolStore/rotateLastResortKyberPreKey"
+    0070..0072  const/4  v2, #0x1
+    0072..0076  if-nez  v0, +0x16
+    0076..007a  const-string  v0, "SignalProtocolStore/rotateLastResortKyberPreKey native library not loaded, skipping"
+    007a..0080  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0080..0084  iget-object  v0, v6, LX/05a;->A00:LX/00x;
+    0084..008a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    008a..008c  move-result-object  v1
+    008c..0090  check-cast  v1, LX/0GO;
+    0090..0094  const-string  v0, "Failure loading libwhatsapp explicitly; skipping PQ rotate last resort kyber prekey"
+    0094..009a  invoke-virtual  {v1, v4, v0, v2}, LX/0B0;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+    009a..009e  goto/16  +0xc2
+    009e..00a2  iget-object  v1, v5, LX/0Yj;->A06:LX/0Yd;
+    00a2..00a4  const/4  v0, #0x0
+    00a4..00aa  invoke-static  {v1, v0}, LX/0Yd;->A00(LX/0Yd;Z)LX/EQ8;
+    00aa..00ac  move-result-object  v3
+    00ac..00b0  if-eqz  v3, +0x1f
+    00b0..00b4  const-string  v0, "SignalProtocolStore/rotateLastResortKyberPreKey an existing lastReortKey found: "
+    00b4..00b8  new-instance  v2, Ljava/lang/StringBuilder;
+    00b8..00be  invoke-direct  {v2, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00be..00c2  iget-object  v1, v3, LX/EQ8;->A00:LX/Dfd;
+    00c2..00c6  iget  v0, v1, LX/Dfd;->id_:I
+    00c6..00cc  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00cc..00d2  invoke-virtual  {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00d2..00d4  move-result-object  v0
+    00d4..00da  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    00da..00de  iget  v0, v1, LX/Dfd;->id_:I
+    00de..00e4  invoke-static  {v3, v0}, LX/0Yj;->A00(LX/EQ8;I)LX/ETs;
+    00e4..00e6  move-result-object  v7
+    00e6..00ea  goto/16  +0x9c
+    00ea..00ee  const-string  v0, "SignalProtocolStore/rotateLastResortKyberPreKey generating new last resort kyber prekey"
+    00ee..00f4  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    00f4..00fa  invoke-virtual  {v5}, LX/0Yj;->Anw()LX/ESk;
+    00fa..00fc  move-result-object  v3
+    00fc..0100  iget-object  v2, v5, LX/0Yj;->A05:LX/0YT;
+    0100..0104  const-string  v10, "next_kyber_prekey_id"
+    0104..0108  const-string  v1, "getNextKyberPreKeyId"
+    0108..010c  const-string  v0, "SELECT next_kyber_prekey_id FROM identities WHERE recipient_id =? AND recipient_type = ? AND device_id =?"
+    010c..0112  invoke-static  {v2, v0, v10, v1}, LX/0YT;->A01(LX/0YT;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I
+    0112..0114  move-result  v9
+    0114..0118  sget-object  v0, Lorg/whispersystems/libsignal/kem/KEMKeyType;->A02:Lorg/whispersystems/libsignal/kem/KEMKeyType;
+    0118..011e  invoke-static  {v3, v0, v9}, LX/EqE;->A00(LX/ESk;Lorg/whispersystems/libsignal/kem/KEMKeyType;I)LX/EQ8;
+    011e..0120  move-result-object  v8
+    0120..0124  add-int/lit8  v1, v9, #0x1
+    0124..012a  const  v0, #0xfffffe
+    012a..012c  rem-int/2addr  v1, v0
+    012c..0130  add-int/lit8  v7, v1, #0x1
+    0130..0134  iget-object  v12, v5, LX/0Yj;->A03:LX/0WJ;
+    0134..0138  iget-object  v0, v12, LX/0WJ;->A0I:LX/0Wk;
+    0138..013e  invoke-virtual  {v0}, LX/0Wk;->A04()LX/FjI;
+    013e..0140  move-result-object  v11
+    0140..0144  iget-object  v0, v12, LX/0WJ;->A0Q:LX/0Xp;
+    0144..014a  invoke-virtual  {v0}, LX/0Xp;->A07()LX/0aq;
+    014a..014c  move-result-object  v6
+    014c..0152  invoke-virtual  {v6}, LX/0aq;->A00()LX/1hk;
+    0152..0154  move-result-object  v5
+    0154..0158  iget-object  v4, v12, LX/0WJ;->A0K:LX/0Yd;
+    0158..015c  iget-object  v0, v8, LX/EQ8;->A00:LX/Dfd;
+    015c..0162  invoke-virtual  {v0}, Lcom/google/protobuf/AbstractMessageLite;->toByteArray()[B
+    0162..0164  move-result-object  v3
+    0164..016a  invoke-static  {v13, v14}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    016a..016c  move-result-object  v2
+    016c..016e  const/4  v1, #0x1
+    016e..0172  new-instance  v0, LX/ERb;
+    0172..0178  invoke-direct  {v0, v9, v3}, LX/ERb;-><init>(I[B)V
+    0178..017e  invoke-static  {v0}, Ljava/util/Collections;->singletonList(Ljava/lang/Object;)Ljava/util/List;
+    017e..0180  move-result-object  v0
+    0180..0186  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    0186..018c  invoke-static  {v4, v2, v0, v1}, LX/0Yd;->A01(LX/0Yd;Ljava/lang/Long;Ljava/util/List;I)V
+    018c..0190  iget-object  v1, v12, LX/0WJ;->A0J:LX/0YT;
+    0190..0194  const-string  v0, "saveNextKyberPreKeyId"
+    0194..019a  invoke-static  {v1, v10, v0, v7}, LX/0YT;->A06(LX/0YT;Ljava/lang/String;Ljava/lang/String;I)V
+    019a..01a0  invoke-virtual  {v5}, LX/1hk;->A00()V
+    01a0..01a6  invoke-virtual  {v5}, LX/1hk;->close()V
+    01a6..01ac  invoke-virtual  {v6}, LX/0aq;->close()V
+    01ac..01b2  invoke-virtual  {v11}, LX/FjI;->close()V
+    01b2..01b8  invoke-static  {v8, v9}, LX/0Yj;->A00(LX/EQ8;I)LX/ETs;
+    01b8..01ba  move-result-object  v7
+    01ba..01bc  goto  +0x32
+    01bc..01be  move-exception  v1
+    01be..01c4  invoke-virtual  {v5}, LX/1hk;->close()V
+    01c4..01c6  goto  +0x5
+    01c6..01c8  move-exception  v0
+    01c8..01ce  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    01ce..01d0  throw  v1
+    01d0..01d2  move-exception  v1
+    01d2..01d8  invoke-virtual  {v6}, LX/0aq;->close()V
+    01d8..01da  goto  +0x5
+    01da..01dc  move-exception  v0
+    01dc..01e2  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    01e2..01e4  throw  v1
+    01e4..01e6  move-exception  v1
+    01e6..01ec  invoke-virtual  {v11}, LX/FjI;->close()V
+    01ec..01ee  goto  +0x5
+    01ee..01f0  move-exception  v0
+    01f0..01f6  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    01f6..01f8  throw  v1
+    01f8..01fa  move-exception  v2
+    01fa..01fe  const-string  v0, "SignalProtocolStore/rotateLastResortKyberPreKey UnsatisfiedLinkError generating Kyber prekeys"
+    01fe..0204  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0204..0208  iget-object  v0, v6, LX/05a;->A00:LX/00x;
+    0208..020e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    020e..0210  move-result-object  v1
+    0210..0214  check-cast  v1, LX/0GO;
+    0214..0218  const-string  v0, "UnsatisfiedLinkError generating new last resort kyber prekey"
+    0218..021e  invoke-virtual  {v1, v4, v0, v2}, LX/0B0;->A0e(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+    021e..0224  invoke-virtual  {v15}, LX/FjI;->close()V
+    0224..0226  return-object  v7
+    0226..0228  move-exception  v1
+    0228..022e  invoke-virtual  {v15}, LX/FjI;->close()V
+    022e..0230  throw  v1
+    0230..0232  move-exception  v0
+    0232..0238  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    0238..023a  throw  v1
+    # exception table: 16 try range(s)
+    # catch <all> code_units 0008..008a -> 0113
+    # catch Ljava/lang/UnsatisfiedLinkError; code_units 008a..0090 -> 00fc
+    # catch <all> code_units 008a..0090 -> 0113
+    # catch <all> code_units 0090..00a0 -> 0113
+    # catch <all> code_units 00a0..00a6 -> 00f2
+    # catch <all> code_units 00a6..00aa -> 00e8
+    # catch <all> code_units 00aa..00d0 -> 00de
+    # catch <all> code_units 00d0..00d3 -> 00e8
+    # catch <all> code_units 00d3..00d6 -> 00f2
+    # catch <all> code_units 00d6..00de -> 0113
+    # catch <all> code_units 00df..00e3 -> 00e3
+    # catch <all> code_units 00e4..00e8 -> 00e8
+    # catch <all> code_units 00e9..00ed -> 00ed
+    # catch <all> code_units 00ee..00f2 -> 00f2
+    # catch <all> code_units 00f3..00f7 -> 00f7
+    # catch <all> code_units 00f7..010f -> 0113
+    # catch <all> code_units 0114..0117 -> 0118
+.end method
