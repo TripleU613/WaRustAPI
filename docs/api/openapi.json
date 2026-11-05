@@ -16564,5 +16564,12 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-application-padding-retry/README.md",
     "description": "Private shared application unpadding follows APK EHq unsigned final-count rule0<count<plaintext length, without repeated-byte or16 cap; crypto authentication/CBC block padding and sender padding remain unchanged. Error::SignalInvalidApplicationPadding preserves empty/invalid framing as Unsupported without automatic retry, delivery ACK or Rust atomic state/event commit. Count255/nonrepeating/entire-padding and authenticated production-loop regressions added. Native store-before-trim durability and full ACK/provider policies remain open; no route/CLI flag or live acceptance."
+  },
+  "x-action-live-reply-ownership": {
+    "x-cli": false,
+    "x-transport": ["normal experimental action receive; offline tested"],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-action-callback-lifetime/README.md",
+    "description": "Normal drive requires private live reply ownership recorded after a successful local action write. Exact IQ result/error consumes it before durable settlement; wrong shapes do not consume and duplicate/local fault cannot claim twice. Reconnect/reopen does not rebuild ownership from Sent rows or epochs. Production loop leaves late old action held while current and fast written-action replies settle. Bulk/single/feature reservation and settlement recheck saved-wire IQ/row identity, rejecting corruption atomically without ID echo. Public low-level/captured-reply reconciliation and specialized group Pending owners remain separate. No reset/replay/new request/route/CLI flag or live acceptance; full deadline/native lifecycle policy remains incomplete."
   }
 }

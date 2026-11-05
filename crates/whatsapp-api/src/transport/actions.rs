@@ -7,7 +7,10 @@
 //! arrives (`result` → `ok`, `error` → `error` with the server code). A `sent`
 //! action whose reply never arrives stays `sent`: nothing here retries, in line
 //! with the rest of the transport (uncertain outcomes are preserved, never
-//! replayed). Rows live in [`Table::Checkpoints`] under `action-outbox:<iq id>`.
+//! replayed). Normal receive requires a callback owned by an action locally
+//! written on that connection; durable rows do not recreate live ownership.
+//! Explicit saved-reply reconciliation remains separate. Rows live in
+//! [`Table::Checkpoints`] under `action-outbox:<iq id>`.
 use crate::{
     Error, Result,
     binary::{Encoder, Node, TokenDictionary},
@@ -29,6 +32,24 @@ pub(crate) fn decode(bytes: &[u8]) -> Result<Node> {
         crate::binary::Decoder::new(&raw, TokenDictionary::comparison_2_26_37_71(), &limits)
             .decode_node()?,
     )
+}
+
+fn decode_owned(id: &str, wire: &[u8]) -> Result<Node> {
+    if id.len() != 32 || !id.bytes().all(|byte| byte.is_ascii_hexdigit()) {
+        return Err(Error::invalid(
+            "action",
+            "invalid saved action row identity",
+        ));
+    }
+    let node = decode(wire)?;
+    if node.description != "iq" || node.get_attr("id").and_then(|value| value.as_text()) != Some(id)
+    {
+        return Err(Error::invalid(
+            "action",
+            "saved action wire does not match its row identity",
+        ));
+    }
+    Ok(node)
 }
 
 fn encode(node: &Node) -> Result<Vec<u8>> {
@@ -262,7 +283,9 @@ fn reserve_limit(store: &ProtocolStore, limit: usize) -> Result<Vec<Node>> {
                     );
                     continue;
                 }
-                let node = decode(&row.wire)?;
+                let id = std::str::from_utf8(&key[PREFIX.len()..])
+                    .map_err(|_| Error::invalid("action", "invalid saved action row identity"))?;
+                let node = decode_owned(id, &row.wire)?;
                 if row.kind == super::app_state_sync::HELD_FETCH_ACTION_KIND {
                     let id = node
                         .get_attr("id")
@@ -316,7 +339,7 @@ pub(crate) fn reserve_one_in(tx: &mut crate::store::WriteTx<'_>, id: &str) -> Re
             "recorded reach-out restriction remains active; group creation stays queued until an explicit inactive update",
         ));
     }
-    let node = decode(&row.wire)?;
+    let node = decode_owned(id, &row.wire)?;
     if row.kind == super::app_state_sync::HELD_FETCH_ACTION_KIND
         && !super::app_state_sync::held_fetch::reserve_in(tx, id, &row.wire)?
     {
@@ -347,8 +370,48 @@ pub(crate) fn reserve_one_in(tx: &mut crate::store::WriteTx<'_>, id: &str) -> Re
     Ok(node)
 }
 
+/// Callback claims for actions written by one normal connection invocation.
+/// Durable Sent rows are reservations, not callbacks on a later connection.
+/// APK43.72 0ln.A02 removes sent-map ownership before callback parsing;
+/// selected disconnect handler case3 clears A0H, separately from queued A0I.
+#[derive(Default)]
+pub(crate) struct LiveReplies(std::collections::HashSet<String>);
+
+impl LiveReplies {
+    pub(crate) fn record_written(&mut self, node: &Node) {
+        if node.description == "iq"
+            && let Some(id) = node.get_attr("id").and_then(|value| value.as_text())
+        {
+            self.0.insert(id.to_owned());
+        }
+    }
+
+    pub(crate) fn record_reply(&mut self, store: &ProtocolStore, node: &Node) -> Result<bool> {
+        if node.description != "iq"
+            || !matches!(
+                node.get_attr("type").and_then(|value| value.as_text()),
+                Some("result" | "error")
+            )
+        {
+            return Ok(false);
+        }
+        let Some(id) = node.get_attr("id").and_then(|value| value.as_text()) else {
+            return Ok(false);
+        };
+        // Claim once before parsing or durable settlement. A local failure
+        // leaves uncertainty; it cannot authorize a second callback attempt.
+        if !self.0.remove(id) {
+            return Ok(false);
+        }
+        record_reply(store, node)
+    }
+}
+
 /// Settle a `sent` action from its `iq` reply. Returns `true` when the node
 /// matched a queued action (the caller then treats it as consumed).
+/// Caller must own a live request callback or explicit captured-reply
+/// reconciliation authority; a durable Sent row alone is not a live callback.
+/// The normal driver enforces this through LiveReplies.
 pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
     // Current APK 0ln.A01 dispatches only result/error; another IQ carrying
     // the same ID is not a definite refusal of the original request.
@@ -374,6 +437,9 @@ pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
         if row.status != ActionStatus::Sent {
             return Ok(false);
         }
+        // A damaged saved request must not settle a different row merely
+        // because the incoming ID matches that row's key.
+        decode_owned(id, &row.wire)?;
         // An `iq type=result` can still carry a refusal further in. App-state
         // answers per collection: `<sync><collection type="error"><error
         // code="409" text="conflict"/>`, observed live 2026-09-24. Reading only
@@ -1001,6 +1067,159 @@ mod tests {
         })
         .unwrap();
         (dir, s)
+    }
+
+    #[test]
+    fn live_reply_claims_do_not_resurrect_from_durable_rows() {
+        for outcome in ["result", "error", "disconnect", "local_failure"] {
+            let (dir, store) = store();
+            let id = queue(&store, "fixture", "fixture", ping).unwrap();
+            let request = reserve_next(&store).unwrap().unwrap();
+            let reply = Node::new("iq").attr("id", id.as_str()).attr(
+                "type",
+                if outcome == "error" {
+                    "error"
+                } else {
+                    "result"
+                },
+            );
+            let mut live = LiveReplies::default();
+            assert!(
+                !live.record_reply(&store, &reply).unwrap(),
+                "reservation alone owns no callback"
+            );
+            live.record_written(&request);
+            for wrong in [
+                Node::new("iq").attr("id", id.as_str()).attr("type", "get"),
+                Node::new("iq").attr("id", id.as_str()).attr("type", "set"),
+                Node::new("iq").attr("id", id.as_str()),
+                Node::new("message")
+                    .attr("id", id.as_str())
+                    .attr("type", "result"),
+                Node::new("iq").attr("id", "OTHER").attr("type", "result"),
+            ] {
+                assert!(!live.record_reply(&store, &wrong).unwrap());
+                assert!(live.0.contains(&id));
+            }
+            if outcome == "disconnect" {
+                let before = store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap();
+                drop(live);
+                drop(store);
+                let reopened = ProtocolStore::open(OpenOptions {
+                    path: dir.path().join("p.redb"),
+                    account_id: AccountId::new("a").unwrap(),
+                    key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([7; 32]))),
+                    create: false,
+                })
+                .unwrap();
+                assert!(
+                    !LiveReplies::default()
+                        .record_reply(&reopened, &reply)
+                        .unwrap()
+                );
+                assert_eq!(
+                    reopened
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    before
+                );
+            } else if outcome == "local_failure" {
+                store
+                    .write(|tx| tx.put_json(Table::Checkpoints, SETTLEMENT_SEQUENCE, 1, &0u64))
+                    .unwrap();
+                assert!(live.record_reply(&store, &reply).is_err());
+                assert!(!live.0.contains(&id));
+                store
+                    .write(|tx| tx.delete(Table::Checkpoints, SETTLEMENT_SEQUENCE))
+                    .unwrap();
+                assert!(!live.record_reply(&store, &reply).unwrap());
+                assert_eq!(outcomes(&store).unwrap()[0].status, ActionStatus::Sent);
+            } else {
+                assert!(live.record_reply(&store, &reply).unwrap());
+                let before = outcomes(&store).unwrap();
+                assert_eq!(
+                    before[0].status,
+                    if outcome == "error" {
+                        ActionStatus::Error
+                    } else {
+                        ActionStatus::Ok
+                    }
+                );
+                assert!(!live.record_reply(&store, &reply).unwrap());
+                assert_eq!(outcomes(&store).unwrap(), before);
+            }
+        }
+    }
+
+    #[test]
+    fn saved_wire_identity_mismatch_never_reserves_or_settles() {
+        let (_dir, store) = store();
+        let other = queue(&store, "fixture", "fixture", ping).unwrap();
+        store.write(|tx| reserve_one_in(tx, &other)).unwrap();
+        let id = queue(&store, "fixture", "fixture", ping).unwrap();
+        let original: Row = store
+            .read(|tx| tx.get_json(Table::Checkpoints, key(&id).as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        for wrong in [
+            Node::new("iq")
+                .attr("id", other.as_str())
+                .attr("type", "get"),
+            Node::new("message").attr("id", id.as_str()),
+            Node::new("iq"),
+        ] {
+            let mut row = original.clone();
+            row.wire = encode(&wrong).unwrap();
+            store
+                .write(|tx| tx.put_json(Table::Checkpoints, key(&id).as_bytes(), 1, &row))
+                .unwrap();
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            for error in [
+                reserve_pending(&store).unwrap_err(),
+                reserve_next(&store).unwrap_err(),
+                store.write(|tx| reserve_one_in(tx, &id)).unwrap_err(),
+            ] {
+                assert!(
+                    error
+                        .to_string()
+                        .contains("saved action wire does not match")
+                );
+                assert!(!error.to_string().contains(&id));
+                assert!(!error.to_string().contains(&other));
+            }
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                before
+            );
+            row.status = ActionStatus::Sent;
+            store
+                .write(|tx| tx.put_json(Table::Checkpoints, key(&id).as_bytes(), 1, &row))
+                .unwrap();
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            assert!(
+                record_reply(
+                    &store,
+                    &Node::new("iq")
+                        .attr("id", id.as_str())
+                        .attr("type", "result")
+                )
+                .is_err()
+            );
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                before
+            );
+        }
     }
 
     fn ping(id: &str) -> Result<Node> {

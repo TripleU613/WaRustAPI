@@ -1,3 +1,12 @@
+2026-11-05 — **Normal action replies now require live connection ownership.**
+
+Late replies cannot resurrect held action callbacks after reconnect/reopen;
+duplicates/local failure cannot claim twice. Saved wire must match its durable
+row ID at reservation/settlement. Current and fast replies still settle.
+[Native sent-map evidence, tests and remaining limits](docs/protocol/replay-safety-audit.md#one-shot-action-callbacks-stay-with-their-connection--2026-11-05).
+Validation:1334 tests, strict Clippy, fmt, CLI reference, APK coverage and hygiene
+passed. No replay/status reset or live account traffic.
+
 2026-11-05 — **Application-padding admission now follows the APK count rule.**
 
 Receive accepts count-only nonrepeating tails and counts above16, rejects empty/

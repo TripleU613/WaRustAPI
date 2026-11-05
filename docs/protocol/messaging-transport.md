@@ -1873,3 +1873,10 @@ receive now follows that rule after crypto authentication/block unpadding. Empty
 or invalid framing stays captured without retry, confirmation or Rust atomic
 message-state commit. [Evidence, tests and native durability/ACK limits](outgoing-retry-receipts.md#application-padding-count-and-retry-admission-corrected--2026-11-05).
 No live acceptance or complete native commit policy is claimed.
+
+### Action callback lifetime — 2026-11-05
+
+Normal receive settles one-shot IQ actions only through callbacks owned by a
+locally successful write on the current drive. Durable Sent reservations survive
+disconnect as holds, not live callbacks. Explicit captured-reply reconciliation
+and independently owned membership waits are separate. [Evidence, regressions and limits](replay-safety-audit.md#one-shot-action-callbacks-stay-with-their-connection--2026-11-05).

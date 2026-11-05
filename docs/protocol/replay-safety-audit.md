@@ -685,3 +685,30 @@ trimming is retained as a separate durability/transaction tracing gap. Tests cov
 unsigned counts through255, nonrepeating tails, actual authenticated ciphertext
 and production-loop no-retry/no-confirmation/no-state-event behavior. CBC/provider
 errors, full native commit/ACK policy and other causes remain open; no live traffic.
+
+## One-shot action callbacks stay with their connection — 2026-11-05
+
+**Confirmed static / inferred ownership / implemented offline:**
+[selected sent-map flush, callback claim and Rust lifetime guard](apk/2.26.43.72-action-callback-lifetime/README.md).
+Normal receive now requires private LiveReplies ownership from a successful local
+action write on that drive. Exact result/error consumes the claim before durable
+settlement; duplicates or a local failure cannot claim twice. Reconnect/reopen
+never reconstructs callbacks from held Sent rows or numeric epochs.
+
+Regression covers reserved-only rows, wrong kind/type/ID, result/error, duplicate,
+local transactional failure and disk reopen. Production-loop failed-write then
+reconnect leaves the old action Sent despite a late result, while the new action
+settles normally. Public low-level/captured-reply reconciliation and separately
+owned group membership waits remain unchanged. No replay/status reset, new route
+or live account operation. Complete action deadlines, upstream/native lifecycle
+branches and queued-callback policy remain open.
+
+The same chunk rechecks the queue's saved-wire/row ID identity before bulk, single
+and feature-owned reservation and before settlement. Malformed/mismatched stored
+wire fails atomically instead of registering a callback under another request's
+ID. Corruption regressions verify no row/status changes and no identifier echo.
+A fast reply queued before local write completion still settles after success.
+
+Validation:1334 workspace/all-feature tests passed. Formatting, strict workspace
+all-target/all-feature Clippy, CLI reference regeneration, APK coverage, staged
+whitespace and research checksum/link hygiene passed. Offline only.

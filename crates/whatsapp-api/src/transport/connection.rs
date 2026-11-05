@@ -468,6 +468,7 @@ pub(crate) async fn drive(
     let mut device_cursor = super::devices::DeviceSyncCursor::default();
     let mut device_context = super::devices::SyncContext::Interactive;
     let mut action_drain = ActionDrain::default();
+    let mut action_replies = super::actions::LiveReplies::default();
     let mut outbox_tick = tokio::time::interval(Duration::from_secs(1));
     // Set by a frame whose stanza name could not be read; cleared by the next
     // decoded stanza. A server close right after such a frame may be the end
@@ -521,6 +522,7 @@ pub(crate) async fn drive(
             _ = tokio::time::sleep_until(action_drain.deadline()), if ready.is_none() && action_drain.remaining > 0 => {
                 if let Some(action) = super::actions::reserve_next(&store)? {
                     link.send(&action).await?;
+                    action_replies.record_written(&action);
                     action_drain.sent(config.transport.action_delay_ms);
                 } else {
                     action_drain.finish();
@@ -709,7 +711,7 @@ pub(crate) async fn drive(
                         continue;
                     }
                     // Queued one-shot actions (block list, reports, lookups) settle by iq id.
-                    if super::actions::record_reply(&store, &node)? {
+                    if action_replies.record_reply(&store, &node)? {
                         if let Some(id) = node.get_attr("id").and_then(|v| v.as_text()) {
                             match super::app_state_sync::ingest_action(&store, id) {
                                 Ok(_) => {}
@@ -1699,16 +1701,78 @@ mod tests {
                     second.get_attr("id").and_then(|v| v.as_text()),
                     Some(first_id.as_str())
                 );
+                let second_id = second
+                    .get_attr("id")
+                    .and_then(|v| v.as_text())
+                    .unwrap()
+                    .to_owned();
                 written.send(Ok(())).unwrap();
+                next.deliver(
+                    Node::new("iq")
+                        .attr("id", first_id.as_str())
+                        .attr("type", "result"),
+                )
+                .await;
+                next.deliver(
+                    Node::new("receipt")
+                        .attr("from", peer())
+                        .attr("id", "AFTER-STALE-ACTION"),
+                )
+                .await;
+                let (ack, reply) = next.written().await;
+                assert_eq!(ack.description, "ack");
+                assert_eq!(
+                    ack.get_attr("id").and_then(|v| v.as_text()),
+                    Some("AFTER-STALE-ACTION")
+                );
+                reply.send(Ok(())).unwrap();
+                assert_eq!(
+                    actions::outcomes(&store)
+                        .unwrap()
+                        .iter()
+                        .find(|a| a.id == first_id)
+                        .unwrap()
+                        .status,
+                    ActionStatus::Sent
+                );
+                next.deliver(
+                    Node::new("iq")
+                        .attr("id", second_id.as_str())
+                        .attr("type", "result"),
+                )
+                .await;
+                next.deliver(
+                    Node::new("receipt")
+                        .attr("from", peer())
+                        .attr("id", "AFTER-LIVE-ACTION"),
+                )
+                .await;
+                let (ack, reply) = next.written().await;
+                assert_eq!(
+                    ack.get_attr("id").and_then(|v| v.as_text()),
+                    Some("AFTER-LIVE-ACTION")
+                );
+                reply.send(Ok(())).unwrap();
+                assert_eq!(
+                    actions::outcomes(&store)
+                        .unwrap()
+                        .iter()
+                        .find(|a| a.id == second_id)
+                        .unwrap()
+                        .status,
+                    ActionStatus::Ok
+                );
                 next.stop_cleanly().await;
             } else {
-                written.send(Ok(())).unwrap();
                 fake.deliver(
                     Node::new("iq")
                         .attr("id", first_id.as_str())
                         .attr("type", "result"),
                 )
                 .await;
+                // Reply was queued while the local write awaited completion.
+                // Register ownership before the loop processes that fast reply.
+                written.send(Ok(())).unwrap();
                 tokio::time::timeout(Duration::from_secs(1), async {
                     while actions::outcomes(&store)
                         .unwrap()
