@@ -393,19 +393,31 @@ async fn transmit(
             write_node(channel, &distribution).await?;
             let (ack, pending) = wait_for(channel, "ack", &id).await?;
             keep(store, &pending)?;
-            let accepted = ack.get_attr("error").is_none();
+            inbox::preserve(store, &ack)?;
+            let outcome = whatsapp_api::transport::messaging::message_ack_outcome(&ack);
+            let accepted =
+                outcome == whatsapp_api::transport::messaging::MessageAckOutcome::Accepted;
             store.write(|tx| {
                 tx.put_json(
                     Table::Checkpoints,
                     format!("message:{}:skdm:{}", message.request_id, target.device).as_bytes(),
                     1,
                     &serde_json::json!({
-                        "status": if accepted { "server_acknowledged" } else { "server_refused" },
+                        "status": outcome.status(),
                         "wire_id": id,
                         "at": Timestamp::now(),
                     }),
                 )
             })?;
+            if matches!(
+                outcome,
+                whatsapp_api::transport::messaging::MessageAckOutcome::AuthChallenge
+                    | whatsapp_api::transport::messaging::MessageAckOutcome::Unrelated
+            ) {
+                return Err(invalid(
+                    "distribution ACK unresolved or auth-challenged; group stanza not sent; reservation remains uncertain; no automatic retry",
+                ));
+            }
             if !accepted {
                 return Err(invalid(
                     "a sender-key distribution message was refused; the group stanza was not sent",
@@ -417,18 +429,14 @@ async fn transmit(
 
     write_node(channel, &node).await?;
     let (ack, pending) = wait_for(channel, "ack", &wire_id).await?;
-    let accepted = ack.get_attr("class").and_then(|v| v.as_text()) == Some("message")
-        && ack.get_attr("error").is_none();
+    let outcome = whatsapp_api::transport::messaging::message_ack_outcome(&ack);
+    let accepted = outcome == whatsapp_api::transport::messaging::MessageAckOutcome::Accepted;
     let code = ack
         .get_attr("error")
         .and_then(|v| v.as_text())
         .filter(|v| v.len() <= 5 && v.bytes().all(|b| b.is_ascii_digit()));
     let mut result = intent;
-    result["status"] = serde_json::json!(if accepted {
-        "server_acknowledged"
-    } else {
-        "server_refused"
-    });
+    result["status"] = serde_json::json!(outcome.status());
     result["error"] = serde_json::json!(code);
     store.write(|tx| {
         tx.put_json(Table::Checkpoints, intent_key.as_bytes(), 1, &result)?;
@@ -447,6 +455,18 @@ async fn transmit(
         }
         Ok(())
     })?;
+    if outcome == whatsapp_api::transport::messaging::MessageAckOutcome::AuthChallenge {
+        return Err(Error::invalid(
+            "message",
+            "server auth challenge459; reservation remains uncertain; no automatic retry",
+        ));
+    }
+    if outcome == whatsapp_api::transport::messaging::MessageAckOutcome::Unrelated {
+        return Err(Error::invalid(
+            "message",
+            "unrelated ACK family; reservation remains uncertain; no automatic retry",
+        ));
+    }
     if accepted {
         println!("send: fan-out server_acknowledged; handset delivery/read not yet verified");
         answer_retries(

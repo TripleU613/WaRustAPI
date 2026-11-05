@@ -897,6 +897,57 @@ pub fn media_route_request(id: &str) -> Node {
         .children(vec![Node::new("media_conn")])
 }
 
+/// Classification only: callers must separately correlate the request ID/address.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum MessageAckOutcome {
+    /// Message-class ACK without an error; correlation is the caller's duty.
+    Accepted,
+    /// Ordinary message-class error, excluding the special auth challenge.
+    Refused,
+    /// Numeric459 diverted by the APK before ordinary ACK dispatch.
+    AuthChallenge,
+    /// Other tags or ACK classes cannot settle a message request.
+    Unrelated,
+}
+impl MessageAckOutcome {
+    /// Durable comparison-send status; uncertain outcomes never authorize replay.
+    pub fn status(self) -> &'static str {
+        match self {
+            Self::Accepted => "server_acknowledged",
+            Self::Refused => "server_refused",
+            Self::AuthChallenge | Self::Unrelated => "outcome_unknown",
+        }
+    }
+}
+
+/// APK43.72 1rH.A03 diverts numeric459 to1lZ.A1F before class dispatch.
+/// This unsupported challenge is not an ordinary terminal send refusal.
+pub(crate) fn is_auth_challenge_ack(node: &Node) -> bool {
+    node.description == "ack"
+        && node
+            .get_attr("error")
+            .and_then(|v| v.as_text())
+            .and_then(super::mex::java_decimal_long)
+            .and_then(|v| i32::try_from(v).ok())
+            == Some(459)
+}
+
+/// APK43.72 1rH.A03: challenge459 precedes ordinary message-class dispatch.
+/// This does not implement native challenge recovery or address normalization.
+pub fn message_ack_outcome(node: &Node) -> MessageAckOutcome {
+    if is_auth_challenge_ack(node) {
+        MessageAckOutcome::AuthChallenge
+    } else if node.description != "ack"
+        || node.get_attr("class").and_then(|v| v.as_text()) != Some("message")
+    {
+        MessageAckOutcome::Unrelated
+    } else if node.get_attr("error").is_some() {
+        MessageAckOutcome::Refused
+    } else {
+        MessageAckOutcome::Accepted
+    }
+}
+
 /// Direct primary-device message envelope; encrypted payload only.
 pub fn direct_message(
     recipient: &Jid,
@@ -2207,6 +2258,47 @@ mod tests {
         assert!(
             MessageRequest::read(&write("none.json", r#"{"text":"hi","request_id":"r4"}"#))
                 .is_err()
+        );
+    }
+}
+
+#[cfg(test)]
+mod message_ack_outcome_tests {
+    use super::*;
+    #[test]
+    fn native_ack_family_and_challenge_diversion_control_comparison_status() {
+        let message = Node::new("ack").attr("class", "message");
+        assert_eq!(message_ack_outcome(&message), MessageAckOutcome::Accepted);
+        assert_eq!(
+            message_ack_outcome(&message.clone().attr("error", "500")),
+            MessageAckOutcome::Refused
+        );
+        for class in ["message", "receipt", "notification", "call"] {
+            let ack = Node::new("ack").attr("class", class);
+            for error in ["459", "+459", "000459", "４５９"] {
+                let outcome = message_ack_outcome(&ack.clone().attr("error", error));
+                assert_eq!(outcome, MessageAckOutcome::AuthChallenge);
+                assert_eq!(outcome.status(), "outcome_unknown");
+            }
+            if class != "message" {
+                assert_eq!(message_ack_outcome(&ack), MessageAckOutcome::Unrelated);
+                assert_eq!(
+                    message_ack_outcome(&ack.attr("error", "500")).status(),
+                    "outcome_unknown"
+                );
+            }
+        }
+        assert_eq!(
+            message_ack_outcome(&Node::new("ack")),
+            MessageAckOutcome::Unrelated
+        );
+        assert_eq!(
+            message_ack_outcome(
+                &Node::new("iq")
+                    .attr("class", "message")
+                    .attr("error", "459")
+            ),
+            MessageAckOutcome::Unrelated
         );
     }
 }

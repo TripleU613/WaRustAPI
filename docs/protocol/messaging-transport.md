@@ -1629,3 +1629,37 @@ Existing durations, durable uncertainty and no-retry policy are preserved.
 The late group-device regression fails before the fix and passes afterward,
 including durable reopen. Native distribution ACK ownership remains untraced.
 [Evidence, regression and limits](network-correctness-audit.md#outgoing-preparation-owns-its-deadline-2026-11-04).
+
+### Comparison sends share message ACK classification (2026-11-04)
+
+**Confirmed local defects / fixed offline:** CLI comparison direct and final
+group sends stored every nonaccepted ACK as server_refused, including numeric459.
+The out-of-band group distribution loop accepted any ACK family without an
+error and did not preserve the matched ACK itself with its other captures.
+
+All three now use messaging::message_ack_outcome: ordinary message-class ACKs
+classify as accepted/refused; numeric459 is AuthChallenge before class dispatch;
+other ACK families are Unrelated. Challenge/unrelated map to outcome_unknown
+and return an explicit no-retry error after saving the response. Distribution
+ACKs are preserved through the encrypted inbound capture path, and unresolved
+ones stop the loop before any later distribution/group write. They do not
+confirm sender-key possession. Original intents remain nonreplayable.
+
+**Confirmed static support, APK43.72:**1rH.A03's class dispatch and special459
+diversion, Integer.parseInt grammar and callback-map distinction are retained
+in [auth-challenge evidence](apk/2.26.43.72-ack-auth-challenge/README.md) and
+[ACK admission evidence](apk/2.26.43.72-distribution-ack-admission/README.md).
+The shared helper classifies a node only; ID/address binding remains the caller's
+duty. Existing wait_for matches tag/ID. Full native expected-address tuples,
+participant/type/edit rules and challenge recovery remain incomplete.
+
+The bounded CLI exits with uncertainty rather than waiting for a later matching
+family; this is local no-replay policy, not a port of the native callback
+scheduler. Existing ordinary refusal statuses remain unchanged. Historical
+saved server_refused rows are not rewritten. This chunk adds no retry, reset,
+new request shape or live operation.
+
+Validation: protocol table covers missing/wrong classes, numeric459 decimal
+variants including full-width digits, ordinary500, accepted ACKs and non-ACK
+nodes. Existing durable actor reservation regressions still exercise the same
+shared challenge parser. Full socket-level CLI sequence coverage is not claimed.

@@ -15648,5 +15648,17 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-ack-auth-challenge/README.md",
     "description": "Numeric ACK error459 takes the native auth-challenge diversion rather than ordinary terminal message ACK settlement. Rust preserves uncertain direct/group reservations, including Java decimal spellings. Full challenge controller, other comparison send loops and account-wide policy remain unported. No automatic challenge retry, bypass, new HTTP route or live operation."
+  },
+  "x-comparison-message-ack-classification": {
+    "x-cli": {
+      "command": "whatsapp-cli lab-transport --message",
+      "description": "Existing comparison direct/group send paths; no new flag"
+    },
+    "x-transport": [
+      "experimental comparison direct/group message sends and out-of-band distributions"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/network-correctness-audit.md#comparison-sends-share-message-ack-classification-2026-11-04",
+    "description": "Shared messaging::MessageAckOutcome classifies ACK family and numeric459 diversion; it does not correlate ID/address. Comparison direct/final-group sends save challenges/unrelated ACKs as outcome_unknown, capture responses and return explicit no-retry errors. Distribution sends also retain matched inbound ACKs and require ordinary message-class acceptance before advancing. Existing historical refusals are not migrated. Full address/challenge controller and socket-level CLI sequence parity remain incomplete; no HTTP route or live operation."
   }
 }

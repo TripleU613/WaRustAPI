@@ -1,3 +1,13 @@
+2026-11-04 — **Comparison send ACK outcomes hardened.**
+
+Direct/group comparison sends preserve auth challenges and unrelated ACKs as
+uncertain. Group distributions require message ACKs and preserve the matched
+reply before allowing the next send.
+[Evidence, tests and limits](docs/protocol/network-correctness-audit.md#comparison-sends-share-message-ack-classification-2026-11-04).
+Validation:1,304 workspace/all-feature tests, strict Clippy, CLI reference,
+formatting, JSON, coverage freshness and repository hygiene passed.
+No live traffic.
+
 2026-11-04 — **Auth-challenge ACKs no longer become ordinary send failures.**
 
 Numeric459 retains uncertain direct/group reservations; native diversion and

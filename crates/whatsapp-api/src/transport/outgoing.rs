@@ -1211,17 +1211,7 @@ impl Pending {
     }
 }
 
-/// APK43.72 1rH.A03 diverts numeric459 to1lZ.A1F before class dispatch.
-/// This unsupported challenge is not an ordinary terminal send refusal.
-pub(super) fn is_auth_challenge_ack(node: &Node) -> bool {
-    node.description == "ack"
-        && node
-            .get_attr("error")
-            .and_then(|v| v.as_text())
-            .and_then(super::mex::java_decimal_long)
-            .and_then(|v| i32::try_from(v).ok())
-            == Some(459)
-}
+pub(super) use super::messaging::is_auth_challenge_ack;
 
 /// Correlate message ACKs to an existing in-flight intent by ID and recipient.
 pub fn acknowledge(store: &ProtocolStore, node: &Node) -> Result<bool> {
