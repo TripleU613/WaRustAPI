@@ -1,3 +1,11 @@
+2026-11-05 — **Structured inventory identifies 83 packed native members.**
+
+Pinned parser-derived metadata now locates whatsapp/whatsappmerged records and
+the remaining payload boundary. Complete native images remain unreconstructed.
+[Inspector, evidence and limits](docs/protocol/apk/2.26.43.72-superpack-metadata/README.md).
+Research only; no runtime change or live traffic. Validation: pinned APK/member
+hashes, inspector output reproduction, raw assembly digests, JSON, coverage/hygiene.
+
 2026-11-05 — **Superpack member ranges and disk-output boundary traced.**
 
 The core selects iterator ordinals and returns names after selected writes;

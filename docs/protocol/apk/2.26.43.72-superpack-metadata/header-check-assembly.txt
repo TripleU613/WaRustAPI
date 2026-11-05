@@ -1,0 +1,36 @@
+            0x0001d558      mov   x9, 0x100
+            0x0001d55c      ldr   x8, [x0]
+            0x0001d560      movk  x9, 0x50c0, lsl 16
+            0x0001d564      movk  x9, 0xaf01, lsl 32
+            0x0001d568      movk  x9, 0x5ab, lsl 48
+            0x0001d56c      cmp   x8, x9
+            0x0001d570      mov   w8, 3
+            0x0001d574      csel  w0, wzr, w8, eq
+            0x0001d578      ret
+            0x0001d57c      ubfx  x8, x0, 0x10, 0x10
+            0x0001d580      and   w9, w0, 0xff000000
+            0x0001d584      bfi   w9, w8, 0x10, 8
+            0x0001d588      bfxil w9, w0, 0, 0x10
+            0x0001d58c      cmp   w9, 0x81
+        ┌─< 0x0001d590      b.ne  0x1d59c
+        │   0x0001d594      mov   w0, wzr
+        │   0x0001d598      ret
+        └─> 0x0001d59c      sub   sp, sp, 0x20
+            0x0001d5a0      str   x30, [sp, 0x10]
+            0x0001d5a4      ubfx  w7, w0, 0x10, 8
+            0x0001d5a8      lsr   w6, w0, 0x18
+            0x0001d5ac      and   w8, w0, 0xffff
+            0x0001d5b0      nop
+            0x0001d5b4      adr   x1, str.Superpack                    ; 0x3b42
+            0x0001d5b8      adrp  x2, 0x4000
+            0x0001d5bc      add   x2, x2, 0xc0d
+            0x0001d5c0      mov   w0, 6
+            0x0001d5c4      mov   w3, wzr
+            0x0001d5c8      mov   w4, wzr
+            0x0001d5cc      mov   w5, 0x81
+            0x0001d5d0      str   w8, [sp]
+            0x0001d5d4      bl    sym.imp.__android_log_print
+            0x0001d5d8      ldr   x30, [sp, 0x10]                      ; [0x10:4]=0xb70003
+            0x0001d5dc      mov   w0, 8
+            0x0001d5e0      add   sp, sp, 0x20
+            0x0001d5e4      ret

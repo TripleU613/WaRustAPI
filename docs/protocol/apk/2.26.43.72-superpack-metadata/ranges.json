@@ -1,0 +1,23 @@
+[
+  {
+    "file": "archive-open-assembly.txt",
+    "virtual_address": "0x1c7ac",
+    "file_offset": "0x1c7ac",
+    "bytes": 1248,
+    "sha256": "32081a391a350a0ba6249760edfcd543a74f64c8a8b525278f069f7a7a396d62"
+  },
+  {
+    "file": "header-check-assembly.txt",
+    "virtual_address": "0x1d558",
+    "file_offset": "0x1d558",
+    "bytes": 144,
+    "sha256": "ef219161607c06e8ac93b485e7025ba6be2fabf51ae9289f1cb27b0cb010a2e4"
+  },
+  {
+    "file": "auxiliary-metadata-assembly.txt",
+    "virtual_address": "0x2d560",
+    "file_offset": "0x2d560",
+    "bytes": 212,
+    "sha256": "083c6a6bd707c9ca3f7b8e8ccce6a2ea50608fa885f97a84f8904382dea048c5"
+  }
+]

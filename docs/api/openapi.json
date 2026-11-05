@@ -16089,5 +16089,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-superpack-member-output/README.md",
     "description": "Static core selects iterator ordinal ranges with exclusive end and returns selected written member names. Selected writer checks fwrite length but ignores fclose result; full parser/transforms and complete libraries remain unverified. No runtime behavior, route or live operation added."
+  },
+  "x-superpack-metadata-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-superpack-metadata/README.md",
+    "description": "Digest-bound metadata inspector derives 83 native member records from traced pinned parser layout. Includes ordinal ranges, inherited types, declared sizes and opaque fields. No complete library recovery, metrics wire behavior or live operation established."
   }
 }

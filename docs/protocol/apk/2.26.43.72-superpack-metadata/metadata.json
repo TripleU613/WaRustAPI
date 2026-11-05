@@ -1,0 +1,850 @@
+{
+  "scope": "metadata only; no decoded members or payload validation",
+  "archive_bytes": 14378561,
+  "header_words_u32le": [
+    1354760448,
+    95137537,
+    129,
+    83,
+    14378561,
+    0,
+    213
+  ],
+  "auxiliary_count": 0,
+  "auxiliary_bytes_consumed": 28,
+  "member_count": 83,
+  "members": [
+    {
+      "ordinal": 0,
+      "archive_offset": "0x38",
+      "carrier_file_offset": "0x8a8",
+      "name": "libhiddenapis2.so",
+      "raw_type": "so",
+      "effective_type": "so",
+      "declared_size": 21984,
+      "opaque_u64": "0x7392b6dc922f1283"
+    },
+    {
+      "ordinal": 1,
+      "archive_offset": "0x5d",
+      "carrier_file_offset": "0x8cd",
+      "name": "libfbjni.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 67456,
+      "opaque_u64": "0x3c7adea990b4ca9e"
+    },
+    {
+      "ordinal": 2,
+      "archive_offset": "0x7a",
+      "carrier_file_offset": "0x8ea",
+      "name": "libfbunwindstack.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 330152,
+      "opaque_u64": "0x3789e12c17a9f38d"
+    },
+    {
+      "ordinal": 3,
+      "archive_offset": "0x9f",
+      "carrier_file_offset": "0x90f",
+      "name": "libfb.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 38384,
+      "opaque_u64": "0xe84544e27b0dcabe"
+    },
+    {
+      "ordinal": 4,
+      "archive_offset": "0xb9",
+      "carrier_file_offset": "0x929",
+      "name": "libfbsofterror.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 15376,
+      "opaque_u64": "0xf881ebbddc247218"
+    },
+    {
+      "ordinal": 5,
+      "archive_offset": "0xdc",
+      "carrier_file_offset": "0x94c",
+      "name": "libforce_dlopen.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 8200,
+      "opaque_u64": "0x7e4110506840521f"
+    },
+    {
+      "ordinal": 6,
+      "archive_offset": "0x100",
+      "carrier_file_offset": "0x970",
+      "name": "libsimplejni.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 45792,
+      "opaque_u64": "0x14d40882cd8b13ec"
+    },
+    {
+      "ordinal": 7,
+      "archive_offset": "0x121",
+      "carrier_file_offset": "0x991",
+      "name": "libfortify.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 3704,
+      "opaque_u64": "0x1896c5d463e22571"
+    },
+    {
+      "ordinal": 8,
+      "archive_offset": "0x140",
+      "carrier_file_offset": "0x9b0",
+      "name": "libglog.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 43048,
+      "opaque_u64": "0xbb5fd1461a94b41"
+    },
+    {
+      "ordinal": 9,
+      "archive_offset": "0x15c",
+      "carrier_file_offset": "0x9cc",
+      "name": "libqpl.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 285856,
+      "opaque_u64": "0x238d8ce3279a674e"
+    },
+    {
+      "ordinal": 10,
+      "archive_offset": "0x177",
+      "carrier_file_offset": "0x9e7",
+      "name": "libsigmux.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 10008,
+      "opaque_u64": "0xc4739b86bb4ab0df"
+    },
+    {
+      "ordinal": 11,
+      "archive_offset": "0x195",
+      "carrier_file_offset": "0xa05",
+      "name": "libnative_utils.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 12344,
+      "opaque_u64": "0x652fa6f0412ccaeb"
+    },
+    {
+      "ordinal": 12,
+      "archive_offset": "0x1b9",
+      "carrier_file_offset": "0xa29",
+      "name": "libvlc.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 5192,
+      "opaque_u64": "0x99271e90fabb6c2c"
+    },
+    {
+      "ordinal": 13,
+      "archive_offset": "0x1d4",
+      "carrier_file_offset": "0xa44",
+      "name": "librtvip.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 7000,
+      "opaque_u64": "0xcefc85f12b4c2ff9"
+    },
+    {
+      "ordinal": 14,
+      "archive_offset": "0x1f1",
+      "carrier_file_offset": "0xa61",
+      "name": "libwa_log.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 16032,
+      "opaque_u64": "0x7528f224285b60e2"
+    },
+    {
+      "ordinal": 15,
+      "archive_offset": "0x20f",
+      "carrier_file_offset": "0xa7f",
+      "name": "libc++_shared.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 498056,
+      "opaque_u64": "0xf4535e2a280ace5f"
+    },
+    {
+      "ordinal": 16,
+      "archive_offset": "0x231",
+      "carrier_file_offset": "0xaa1",
+      "name": "libessential.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 433920,
+      "opaque_u64": "0x5dd3978317fe3661"
+    },
+    {
+      "ordinal": 17,
+      "archive_offset": "0x252",
+      "carrier_file_offset": "0xac2",
+      "name": "libcurve25519.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 99464,
+      "opaque_u64": "0xb0d1bc5aaf5b8c13"
+    },
+    {
+      "ordinal": 18,
+      "archive_offset": "0x274",
+      "carrier_file_offset": "0xae4",
+      "name": "libctsmarttrim-frame-based-native.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 1607448,
+      "opaque_u64": "0x5156c2ab41457c3a"
+    },
+    {
+      "ordinal": 19,
+      "archive_offset": "0x2aa",
+      "carrier_file_offset": "0xb1a",
+      "name": "libffsingletonmerged.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 2264928,
+      "opaque_u64": "0xd39e1a250aba3a27"
+    },
+    {
+      "ordinal": 20,
+      "archive_offset": "0x2d3",
+      "carrier_file_offset": "0xb43",
+      "name": "libqnn_runtime_paths_jni.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 10904,
+      "opaque_u64": "0xef331b630e0c2955"
+    },
+    {
+      "ordinal": 21,
+      "archive_offset": "0x300",
+      "carrier_file_offset": "0xb70",
+      "name": "libmobileconfig-jni.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 852440,
+      "opaque_u64": "0x495873fdf5feb748"
+    },
+    {
+      "ordinal": 22,
+      "archive_offset": "0x328",
+      "carrier_file_offset": "0xb98",
+      "name": "libfbandroid_java_com_facebook_privacy_acs_jni_jni-bridge-helpers.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 5904,
+      "opaque_u64": "0x21e48c86f17dfea9"
+    },
+    {
+      "ordinal": 23,
+      "archive_offset": "0x37e",
+      "carrier_file_offset": "0xbee",
+      "name": "libvoprf-ed25519.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 17568,
+      "opaque_u64": "0xa5d7f3beb800ddda"
+    },
+    {
+      "ordinal": 24,
+      "archive_offset": "0x3a3",
+      "carrier_file_offset": "0xc13",
+      "name": "libvoprf-ristretto.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 16920,
+      "opaque_u64": "0x7e3dde03947e716f"
+    },
+    {
+      "ordinal": 25,
+      "archive_offset": "0x3ca",
+      "carrier_file_offset": "0xc3a",
+      "name": "libvesta_client_jni.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 292008,
+      "opaque_u64": "0x7a353f4d9662c445"
+    },
+    {
+      "ordinal": 26,
+      "archive_offset": "0x3f2",
+      "carrier_file_offset": "0xc62",
+      "name": "libxplat_psi.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 185880,
+      "opaque_u64": "0x8557760e8a059b59"
+    },
+    {
+      "ordinal": 27,
+      "archive_offset": "0x413",
+      "carrier_file_offset": "0xc83",
+      "name": "libpsi.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 81552,
+      "opaque_u64": "0x346c84b3065c5bfc"
+    },
+    {
+      "ordinal": 28,
+      "archive_offset": "0x42e",
+      "carrier_file_offset": "0xc9e",
+      "name": "libbloks_gpu_query.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 20624,
+      "opaque_u64": "0x53064c6c9c14bc05"
+    },
+    {
+      "ordinal": 29,
+      "archive_offset": "0x455",
+      "carrier_file_offset": "0xcc5",
+      "name": "libgifimage.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 38152,
+      "opaque_u64": "0xd2767d1455866823"
+    },
+    {
+      "ordinal": 30,
+      "archive_offset": "0x475",
+      "carrier_file_offset": "0xce5",
+      "name": "libnative-filters.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 20144,
+      "opaque_u64": "0x7745d56f6e7451cc"
+    },
+    {
+      "ordinal": 31,
+      "archive_offset": "0x49b",
+      "carrier_file_offset": "0xd0b",
+      "name": "libstatic-webp.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 40016,
+      "opaque_u64": "0x2c7837787ea64330"
+    },
+    {
+      "ordinal": 32,
+      "archive_offset": "0x4be",
+      "carrier_file_offset": "0xd2e",
+      "name": "libsmartglasses-bundle.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 1717624,
+      "opaque_u64": "0xf06e40308ec03a2f"
+    },
+    {
+      "ordinal": 33,
+      "archive_offset": "0x4e9",
+      "carrier_file_offset": "0xd59",
+      "name": "libexecutorch.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 11601272,
+      "opaque_u64": "0xd41746af0364e837"
+    },
+    {
+      "ordinal": 34,
+      "archive_offset": "0x50b",
+      "carrier_file_offset": "0xd7b",
+      "name": "libar-bundle2.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 2934840,
+      "opaque_u64": "0xef20dddd9ec0cd27"
+    },
+    {
+      "ordinal": 35,
+      "archive_offset": "0x52d",
+      "carrier_file_offset": "0xd9d",
+      "name": "libar-bundle3.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 2290264,
+      "opaque_u64": "0xea154c370b334747"
+    },
+    {
+      "ordinal": 36,
+      "archive_offset": "0x54f",
+      "carrier_file_offset": "0xdbf",
+      "name": "libar-bundle4.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 1755520,
+      "opaque_u64": "0x8643c819485b20b1"
+    },
+    {
+      "ordinal": 37,
+      "archive_offset": "0x571",
+      "carrier_file_offset": "0xde1",
+      "name": "libar-bundle5.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 9427848,
+      "opaque_u64": "0x4495a5ea4fa764e8"
+    },
+    {
+      "ordinal": 38,
+      "archive_offset": "0x593",
+      "carrier_file_offset": "0xe03",
+      "name": "libarcore_sdk_c.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 68120,
+      "opaque_u64": "0x4a515a826fe8e1ab"
+    },
+    {
+      "ordinal": 39,
+      "archive_offset": "0x5b7",
+      "carrier_file_offset": "0xe27",
+      "name": "libfbjni_kt.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 24608,
+      "opaque_u64": "0xd7bf9336301f9449"
+    },
+    {
+      "ordinal": 40,
+      "archive_offset": "0x5d7",
+      "carrier_file_offset": "0xe47",
+      "name": "libgraphicsengine-arengineservices-whatsappservicehost-native.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 1619040,
+      "opaque_u64": "0x3fba2d2d343e487b"
+    },
+    {
+      "ordinal": 41,
+      "archive_offset": "0x629",
+      "carrier_file_offset": "0xe99",
+      "name": "libpyspeech.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 685672,
+      "opaque_u64": "0x116f3a9b7c7d6c8b"
+    },
+    {
+      "ordinal": 42,
+      "archive_offset": "0x649",
+      "carrier_file_offset": "0xeb9",
+      "name": "libwebpencoder-native.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 20960,
+      "opaque_u64": "0xc5f5fed90870c4e9"
+    },
+    {
+      "ordinal": 43,
+      "archive_offset": "0x673",
+      "carrier_file_offset": "0xee3",
+      "name": "libfb_libyuv_jni.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 21920,
+      "opaque_u64": "0xc0bacf88d78b8f92"
+    },
+    {
+      "ordinal": 44,
+      "archive_offset": "0x698",
+      "carrier_file_offset": "0xf08",
+      "name": "libDav1dExo.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 331832,
+      "opaque_u64": "0x289af19b2d98cab1"
+    },
+    {
+      "ordinal": 45,
+      "archive_offset": "0x6b8",
+      "carrier_file_offset": "0xf28",
+      "name": "libandroidx.graphics.path.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 10096,
+      "opaque_u64": "0xbcc0d996f8720300"
+    },
+    {
+      "ordinal": 46,
+      "archive_offset": "0x6e6",
+      "carrier_file_offset": "0xf56",
+      "name": "libdav1d.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 579064,
+      "opaque_u64": "0xb6a4bd3a333cecdb"
+    },
+    {
+      "ordinal": 47,
+      "archive_offset": "0x703",
+      "carrier_file_offset": "0xf73",
+      "name": "libsqlitejni.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 47464,
+      "opaque_u64": "0xbcf66547edb97f92"
+    },
+    {
+      "ordinal": 48,
+      "archive_offset": "0x724",
+      "carrier_file_offset": "0xf94",
+      "name": "libsqlitevec.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 86880,
+      "opaque_u64": "0x856be0599494e188"
+    },
+    {
+      "ordinal": 49,
+      "archive_offset": "0x745",
+      "carrier_file_offset": "0xfb5",
+      "name": "libflexlayout.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 44992,
+      "opaque_u64": "0x5e6be61b40949dcb"
+    },
+    {
+      "ordinal": 50,
+      "archive_offset": "0x767",
+      "carrier_file_offset": "0xfd7",
+      "name": "libminscompiler-jni.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 72792,
+      "opaque_u64": "0x1cab098a730a8fa3"
+    },
+    {
+      "ordinal": 51,
+      "archive_offset": "0x78f",
+      "carrier_file_offset": "0xfff",
+      "name": "libopus_mlow.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 727416,
+      "opaque_u64": "0x921eb764f87d0fee"
+    },
+    {
+      "ordinal": 52,
+      "archive_offset": "0x7b0",
+      "carrier_file_offset": "0x1020",
+      "name": "libsodium.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 76168,
+      "opaque_u64": "0xdfc931b24f3057e7"
+    },
+    {
+      "ordinal": 53,
+      "archive_offset": "0x7ce",
+      "carrier_file_offset": "0x103e",
+      "name": "libfb_sqlite_3530200.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 900616,
+      "opaque_u64": "0x6896ba183756acb6"
+    },
+    {
+      "ordinal": 54,
+      "archive_offset": "0x7f7",
+      "carrier_file_offset": "0x1067",
+      "name": "libwa_sandboxed_gifimage.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 81440,
+      "opaque_u64": "0xc7185b355219aff2"
+    },
+    {
+      "ordinal": 55,
+      "archive_offset": "0x824",
+      "carrier_file_offset": "0x1094",
+      "name": "libyoga.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 61896,
+      "opaque_u64": "0x2039850d8ceebba4"
+    },
+    {
+      "ordinal": 56,
+      "archive_offset": "0x840",
+      "carrier_file_offset": "0x10b0",
+      "name": "libohai.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 291376,
+      "opaque_u64": "0x9af076f0256634d3"
+    },
+    {
+      "ordinal": 57,
+      "archive_offset": "0x85c",
+      "carrier_file_offset": "0x10cc",
+      "name": "libggml_core_ops_enhanced.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 13512,
+      "opaque_u64": "0x4abc9e800d96a154"
+    },
+    {
+      "ordinal": 58,
+      "archive_offset": "0x88a",
+      "carrier_file_offset": "0x10fa",
+      "name": "libggml_core_ops_universal.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 13560,
+      "opaque_u64": "0x3a014476e930d351"
+    },
+    {
+      "ordinal": 59,
+      "archive_offset": "0x8b9",
+      "carrier_file_offset": "0x1129",
+      "name": "libunityjni.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 245336,
+      "opaque_u64": "0x721662c7cb7e33f8"
+    },
+    {
+      "ordinal": 60,
+      "archive_offset": "0x8d9",
+      "carrier_file_offset": "0x1149",
+      "name": "liblacrimajni.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 159224,
+      "opaque_u64": "0xe221ab5a01da2bdc"
+    },
+    {
+      "ordinal": 61,
+      "archive_offset": "0x8fb",
+      "carrier_file_offset": "0x116b",
+      "name": "libtransparency.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 49696,
+      "opaque_u64": "0x2e72cabda1798d01"
+    },
+    {
+      "ordinal": 62,
+      "archive_offset": "0x91f",
+      "carrier_file_offset": "0x118f",
+      "name": "libwzav1.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 1117080,
+      "opaque_u64": "0x38c8c9ebcd3c7ed3"
+    },
+    {
+      "ordinal": 63,
+      "archive_offset": "0x93c",
+      "carrier_file_offset": "0x11ac",
+      "name": "libwhatsapp.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 12783016,
+      "opaque_u64": "0xb7443168bac496ee"
+    },
+    {
+      "ordinal": 64,
+      "archive_offset": "0x95c",
+      "carrier_file_offset": "0x11cc",
+      "name": "libwhatsappmerged.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 7871544,
+      "opaque_u64": "0x49f44c7bfaab3c13"
+    },
+    {
+      "ordinal": 65,
+      "archive_offset": "0x982",
+      "carrier_file_offset": "0x11f2",
+      "name": "libprofilo.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 98864,
+      "opaque_u64": "0x31a5022d2069e2c6"
+    },
+    {
+      "ordinal": 66,
+      "archive_offset": "0x9a1",
+      "carrier_file_offset": "0x1211",
+      "name": "libprofilo_atrace.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 71768,
+      "opaque_u64": "0x6010fe6948725fa1"
+    },
+    {
+      "ordinal": 67,
+      "archive_offset": "0x9c7",
+      "carrier_file_offset": "0x1237",
+      "name": "libprofilo_mmapbuf.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 27160,
+      "opaque_u64": "0x3756ee611e202f41"
+    },
+    {
+      "ordinal": 68,
+      "archive_offset": "0x9ee",
+      "carrier_file_offset": "0x125e",
+      "name": "libprofilo_systemcounters.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 51288,
+      "opaque_u64": "0x9d2dd3822b78002f"
+    },
+    {
+      "ordinal": 69,
+      "archive_offset": "0xa1c",
+      "carrier_file_offset": "0x128c",
+      "name": "libprofilo_stacktrace.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 149504,
+      "opaque_u64": "0x36e2711ea74f6464"
+    },
+    {
+      "ordinal": 70,
+      "archive_offset": "0xa46",
+      "carrier_file_offset": "0x12b6",
+      "name": "libprofilo_threadmetadata.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 19640,
+      "opaque_u64": "0x70bcdffa14856779"
+    },
+    {
+      "ordinal": 71,
+      "archive_offset": "0xa74",
+      "carrier_file_offset": "0x12e4",
+      "name": "libprofilo_multi_buffer_logger.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 12400,
+      "opaque_u64": "0x24003c56c63f9932"
+    },
+    {
+      "ordinal": 72,
+      "archive_offset": "0xaa7",
+      "carrier_file_offset": "0x1317",
+      "name": "libprofilo_counters.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 47280,
+      "opaque_u64": "0x859c23e12e218690"
+    },
+    {
+      "ordinal": 73,
+      "archive_offset": "0xacf",
+      "carrier_file_offset": "0x133f",
+      "name": "libprofilo_mmapbuf_buffer.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 13000,
+      "opaque_u64": "0xdda6dc569eba96b9"
+    },
+    {
+      "ordinal": 74,
+      "archive_offset": "0xafd",
+      "carrier_file_offset": "0x136d",
+      "name": "libprofilo_mmapbuf_buffer_jni.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 20600,
+      "opaque_u64": "0x53147ccb477ad004"
+    },
+    {
+      "ordinal": 75,
+      "archive_offset": "0xb2f",
+      "carrier_file_offset": "0x139f",
+      "name": "libprofilo_logger.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 14128,
+      "opaque_u64": "0x45ecb5887d155435"
+    },
+    {
+      "ordinal": 76,
+      "archive_offset": "0xb55",
+      "carrier_file_offset": "0x13c5",
+      "name": "libfbsocketthreadlocalscope.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 4472,
+      "opaque_u64": "0xf32b61d859c59d84"
+    },
+    {
+      "ordinal": 77,
+      "archive_offset": "0xb85",
+      "carrier_file_offset": "0x13f5",
+      "name": "libgraphstorecerealutil.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 13216,
+      "opaque_u64": "0xdfe475673ca0973b"
+    },
+    {
+      "ordinal": 78,
+      "archive_offset": "0xbb1",
+      "carrier_file_offset": "0x1421",
+      "name": "libgraphutil.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 12096,
+      "opaque_u64": "0x4b37f5e3429f919a"
+    },
+    {
+      "ordinal": 79,
+      "archive_offset": "0xbd2",
+      "carrier_file_offset": "0x1442",
+      "name": "libpando-client-runtimedefaults-jni.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 34168,
+      "opaque_u64": "0x713926ea0db17ebd"
+    },
+    {
+      "ordinal": 80,
+      "archive_offset": "0xc0a",
+      "carrier_file_offset": "0x147a",
+      "name": "libtigon-ue-reporter.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 16792,
+      "opaque_u64": "0xcdfe7bf672dc4143"
+    },
+    {
+      "ordinal": 81,
+      "archive_offset": "0xc33",
+      "carrier_file_offset": "0x14a3",
+      "name": "libwasafe.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 15232,
+      "opaque_u64": "0x64faa99a426812d5"
+    },
+    {
+      "ordinal": 82,
+      "archive_offset": "0xc51",
+      "carrier_file_offset": "0x14c1",
+      "name": "libwasafedeps.so",
+      "raw_type": "",
+      "effective_type": "so",
+      "declared_size": 15896,
+      "opaque_u64": "0xa25d47612e197e8f"
+    }
+  ],
+  "payload_archive_offset": "0xc73",
+  "payload_carrier_file_offset": "0x14e3"
+}

@@ -1,0 +1,30 @@
+{
+  "README.md": {
+    "bytes": 5187,
+    "sha256": "4cf215ee6e0932e7b237f699091399588107139e15b4c9607c5f90a603339a4a"
+  },
+  "archive-open-assembly.txt": {
+    "bytes": 18691,
+    "sha256": "4fc355f41dbe8fd6db9b82ea9ee250a1de8a54c4f8de33eae9d8ab455a26bd40"
+  },
+  "auxiliary-metadata-assembly.txt": {
+    "bytes": 2685,
+    "sha256": "e4b1e45451799816585119022f4c1220404ad49ad119c81fcfa9245fec718ff0"
+  },
+  "header-check-assembly.txt": {
+    "bytes": 1715,
+    "sha256": "18b3ba05a285069b812c43ba153cbd30edc7982196c9790c5ca1e88e8eeb6fbd"
+  },
+  "inspect-metadata.py": {
+    "bytes": 2985,
+    "sha256": "a4595bfcd301105f4190eaef50b355191e39d081014be44cf6cfe3d1348d4451"
+  },
+  "metadata.json": {
+    "bytes": 22493,
+    "sha256": "58d4ad7f40b9320d71375cf41c6fc15251200a75409ed04e1e860d3f96708330"
+  },
+  "ranges.json": {
+    "bytes": 649,
+    "sha256": "df2cbb9b14db5effef9a89f54cb13169c957bc4303cdd2813d53401f517271be"
+  }
+}

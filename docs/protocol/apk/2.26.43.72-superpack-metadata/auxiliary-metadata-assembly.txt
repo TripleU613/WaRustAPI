@@ -1,0 +1,53 @@
+            0x0002d560      cmp   x2, 0x1c
+        ┌─< 0x0002d564      b.hs  0x2d570
+        │   0x0002d568      mov   w0, 6
+        │   0x0002d56c      ret
+        └─> 0x0002d570      str   x30, [sp, -0x40]!
+            0x0002d574      stp   x24, x23, [sp, 0x10]
+            0x0002d578      stp   x22, x21, [sp, 0x20]
+            0x0002d57c      stp   x20, x19, [sp, 0x30]
+            0x0002d580      ldr   q0, [x1]
+            0x0002d584      ldur  q1, [x1, 0xc]                        ; [0xc:4]=0
+            0x0002d588      str   q0, [x0]
+            0x0002d58c      ldur  w20, [x0, 2]                         ; [0x2:4]=0x102464c
+            0x0002d590      stur  q1, [x0, 0xc]
+        ┌─< 0x0002d594      cbz   w20, 0x2d5e0
+        │   0x0002d598      lsl   x19, x20, 2
+        │   0x0002d59c      mov   x24, x0
+        │   0x0002d5a0      mov   x23, x2
+        │   0x0002d5a4      mov   x22, x1
+        │   0x0002d5a8      mov   x21, x3
+        │   0x0002d5ac      mov   x0, x19
+        │   0x0002d5b0      bl    sym.imp.malloc
+        │   0x0002d5b4      stur  x0, [x24, 0x1d]
+       ┌──< 0x0002d5b8      cbz   x0, 0x2d5e8
+       ││   0x0002d5bc      add   x8, x19, 0x1c
+       ││   0x0002d5c0      cmp   x8, x23
+      ┌───< 0x0002d5c4      b.ls  0x2d600
+      │││   0x0002d5c8      mov   w0, 6
+      │││   0x0002d5cc      ldp   x20, x19, [sp, 0x30]
+      │││   0x0002d5d0      ldp   x22, x21, [sp, 0x20]
+      │││   0x0002d5d4      ldp   x24, x23, [sp, 0x10]
+      │││   0x0002d5d8      ldr   x30, [sp], 0x40
+      │││   0x0002d5dc      ret
+      ││└─> 0x0002d5e0      stur  xzr, [x0, 0x1d]
+      ││┌─< 0x0002d5e4      b     0x2d610
+      │└──> 0x0002d5e8      mov   w0, 5
+      │ │   0x0002d5ec      ldp   x20, x19, [sp, 0x30]
+      │ │   0x0002d5f0      ldp   x22, x21, [sp, 0x20]
+      │ │   0x0002d5f4      ldp   x24, x23, [sp, 0x10]
+      │ │   0x0002d5f8      ldr   x30, [sp], 0x40
+      │ │   0x0002d5fc      ret
+      └───> 0x0002d600      add   x1, x22, 0x1c
+        │   0x0002d604      mov   x2, x19
+        │   0x0002d608      bl    sym.imp.memcpy
+        │   0x0002d60c      mov   x3, x21
+        └─> 0x0002d610      lsl   w8, w20, 2
+            0x0002d614      mov   w0, wzr
+            0x0002d618      add   w8, w8, 0x1c
+            0x0002d61c      str   w8, [x3]
+            0x0002d620      ldp   x20, x19, [sp, 0x30]
+            0x0002d624      ldp   x22, x21, [sp, 0x20]
+            0x0002d628      ldp   x24, x23, [sp, 0x10]
+            0x0002d62c      ldr   x30, [sp], 0x40
+            0x0002d630      ret

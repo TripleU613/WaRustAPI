@@ -314,3 +314,13 @@ ignores fclose result; this body has no fsync/rename or prior-file rollback.
 [Complete selected core/writer windows, ABI probe and limits](apk/2.26.43.72-superpack-member-output/README.md).
 Parser transforms, usable complete libraries and native metrics transport remain
 unverified. No Rust behavior or live account operation changed.
+
+### Superpack structured native-member inventory (2026-11-05)
+
+**Confirmed static / derived, APK 2.26.43.72:** traced header and metadata parser
+yields 83 records, including libwhatsapp.so (ordinal 63) and whatsappmerged
+(64). Raw/effective type, declared size, opaque second word and offsets retained;
+metadata ends at archive offset 0xc73. This is not decoded ELF recovery.
+[Digest-bound inspector, full inventory and parser assembly](apk/2.26.43.72-superpack-metadata/README.md).
+The spo transform, complete members and native metrics network behavior remain
+unverified. No runtime behavior or live account operation changed.
