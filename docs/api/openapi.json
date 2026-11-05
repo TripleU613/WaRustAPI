@@ -15864,5 +15864,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-lower-level-iq-ownership/README.md",
     "description": "Selected setup shares a new lower-level IQ map between reader and writer. Push-config GET registers before node writing and has a separate result bridge. Generic token writer has no explicit insertion in inspected bodies; aliases, ID collision and full Cyu effects remain open. Configuration grammar/application and durable ownership remain incomplete. No sender, route or live operation added."
+  },
+  "x-push-config-projection-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-push-config-projection/README.md",
+    "description": "Push-config visitor projects eight internal values and selected type6 handler forwards seven strings to push-registration handling with FBNS separate. Internal Bundle keys are not proven wire attributes. Wire grammar, handler/provider binding, downstream effects and durable reconciliation remain open. No sender, route or live operation added."
   }
 }

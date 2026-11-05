@@ -1,0 +1,49 @@
+
+# class: LX/0ZJ;
+# extends: Landroid/os/HandlerThread;
+
+.method private A0q(VL)  # .registers 7
+    # full signature: LX/0ZJ;->A0q(Landroid/os/Message;)V
+    0000..0006  invoke-static  {v6}, LX/1uW;->A00(Landroid/os/Message;)I
+    0006..0008  move-result  v1
+    0008..000a  const/4  v0, #0x4
+    000a..000e  if-eq  v1, v0, +0x21
+    000e..0012  const/16  v0, #0x57
+    0012..0016  if-eq  v1, v0, +0xc
+    0016..001a  iget-object  v1, v5, LX/0ZJ;->A1B:LX/0YS;
+    001a..0020  invoke-static  {v6}, Landroid/os/Message;->obtain(Landroid/os/Message;)Landroid/os/Message;
+    0020..0022  move-result-object  v0
+    0022..0028  invoke-interface  {v1, v0}, LX/0YS;->CPn(Landroid/os/Message;)V
+    0028..002a  return-void
+    002a..002e  iget-object  v0, v6, Landroid/os/Message;->obj:Ljava/lang/Object;
+    002e..0034  invoke-static  {v0}, LX/00L;->A05(Ljava/lang/Object;)V
+    0034..0038  check-cast  v0, Ljava/lang/Boolean;
+    0038..003e  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue()Z
+    003e..0040  move-result  v1
+    0040..0044  iget  v0, v5, LX/0ZJ;->A1L:I
+    0044..004a  invoke-direct  {v5, v1, v0}, LX/0ZJ;->A1S(ZI)V
+    004a..004c  return-void
+    004c..0052  invoke-virtual  {v6}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    0052..0054  move-result-object  v1
+    0054..005a  const-string/jumbo  v0, "timestamp"
+    005a..0060  invoke-virtual  {v1, v0}, Landroid/os/BaseBundle;->getLong(Ljava/lang/String;)J
+    0060..0062  move-result-wide  v3
+    0062..0066  iget-object  v2, v5, LX/0ZJ;->A15:LX/08q;
+    0066..006a  const-wide/16  v0, #0x3e8
+    006a..006c  mul-long/2addr  v3, v0
+    006c..0072  invoke-virtual  {v2}, LX/08q;->A03()J
+    0072..0074  move-result-wide  v0
+    0074..007a  invoke-virtual  {v2, v3, v4, v0, v1}, LX/08q;->A07(JJ)V
+    007a..007e  iget-object  v1, v5, LX/0ZJ;->A04:LX/0vH;
+    007e..0084  invoke-static  {v1}, LX/00L;->A05(Ljava/lang/Object;)V
+    0084..008a  invoke-static  {}, LX/0ZJ;->A07()Landroid/os/Message;
+    008a..008c  move-result-object  v0
+    008c..0092  invoke-interface  {v1, v0}, LX/0vH;->CdY(Landroid/os/Message;)V
+    0092..0096  iget-object  v0, v5, LX/0ZJ;->A0q:LX/00x;
+    0096..009c  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    009c..009e  move-result-object  v0
+    009e..00a2  check-cast  v0, LX/1lQ;
+    00a2..00a8  invoke-virtual  {v0}, LX/1lQ;->A03()V
+    00a8..00aa  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,90 @@
+{
+  "README.md": {
+    "bytes": 4925,
+    "sha256": "f21278a5ffd980883d198c1dc2d191fb08f5ad70d8d76df30f8aecf6c9669fe3"
+  },
+  "bundle-message.txt": {
+    "bytes": 2532,
+    "sha256": "c48b982b914dde83ffeec5e5c0b1fa5573d17ce846c3717d64821e8e8de82fe7"
+  },
+  "connection-consumer.txt": {
+    "bytes": 2439,
+    "sha256": "2e1144001ae26240ac67d9692605314132e2b210b329f374aed8d41ca21936a9"
+  },
+  "connection-forwarder.txt": {
+    "bytes": 317,
+    "sha256": "6bbd1f87763a2a684d21e34e843e3cec2526c28d073af93270fdcbe10ec83d46"
+  },
+  "consumer-string-xref.txt": {
+    "bytes": 157,
+    "sha256": "6c698a5a9d46446b115d61321547dc9067864ab164054c99f8c969550d0520b8"
+  },
+  "consumer-types.txt": {
+    "bytes": 486,
+    "sha256": "b326b232d9d17830c1a0f08ac5b5dfb8b7ecd0991d82cb78de442b40958a9dad"
+  },
+  "consumer.txt": {
+    "bytes": 12007,
+    "sha256": "6b228ac6a1c96fdc071d2370e5658615d3976fcb50bb800883e533fac8b6269f"
+  },
+  "handler-lookup.txt": {
+    "bytes": 7960,
+    "sha256": "98886db83a86a8ddd55b360ab8de162d4782ca574921f766115d13564fdfb9ad"
+  },
+  "message-type.txt": {
+    "bytes": 392,
+    "sha256": "ad3a61d949a35c31be5a9712e3ccca005469657bc4fc9746360efc5cfbaedc89"
+  },
+  "number-string.txt": {
+    "bytes": 482,
+    "sha256": "7a015d0febda55da045ae6e69d15fb816f59a16615d960e75c2872b8d476ad1e"
+  },
+  "observer-submit.txt": {
+    "bytes": 1373,
+    "sha256": "eb2d4f590bd95fbd6cc2ac5a1eec93dc693270d899bc032d729d65a6ec05ee08"
+  },
+  "owner-submit.txt": {
+    "bytes": 418,
+    "sha256": "1d83f6a5ed8e06ff127e171fa8826537728a756404f46bc95ad60995f4ffb669"
+  },
+  "registry-message-dispatch.txt": {
+    "bytes": 16540,
+    "sha256": "9bc9e66465674ccb035404f9d25ea6252e032934a8477f328875eebbf8e071a4"
+  },
+  "special-submit.txt": {
+    "bytes": 535,
+    "sha256": "adea7a52ca16dee2b65b2eb01528b78ff20290ffb85829cde2c4304984cb140f"
+  },
+  "values-constructor.txt": {
+    "bytes": 980,
+    "sha256": "7275e90ad50ab598c73c1ba2a1daa17b8bfa6608b9e0a0a9d1a3cb760dc79d95"
+  },
+  "variant-7OU.txt": {
+    "bytes": 310,
+    "sha256": "30b45ea3cfdb2ab8b8d77187a3bd188ff117f734fa60c17b4b820c506719058d"
+  },
+  "variant-7OV.txt": {
+    "bytes": 310,
+    "sha256": "ee751b751ed605a09ecfaf88c4e619ae81941b14fff07b33910839d52d3c15c5"
+  },
+  "variant-7OW.txt": {
+    "bytes": 310,
+    "sha256": "40b76a1100a3838dce1fcadbedb05fbbff40ec4a3b9a6200315afee15f50a878"
+  },
+  "variant-7OX.txt": {
+    "bytes": 310,
+    "sha256": "e670c067fd84a0a86d723eda034b78ac130616f372e3270bbc0645ee62b16019"
+  },
+  "variant-7OY.txt": {
+    "bytes": 310,
+    "sha256": "1e9e3e0968ebd3f76e76c87ccbef47d599f2eac9aa3ca0dc5fd6e0ac4f79ae44"
+  },
+  "variant-7OZ.txt": {
+    "bytes": 2942,
+    "sha256": "5071e39cce688f6d31c569646da3e93901af9999a0241eb4df01296e62764aa9"
+  },
+  "visitor-holders.txt": {
+    "bytes": 1032,
+    "sha256": "6a4fe22a4b8b861ec019a86b7b4356d53b180c5f16888849a53dea286abfd99d"
+  }
+}

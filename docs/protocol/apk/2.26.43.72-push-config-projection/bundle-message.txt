@@ -1,0 +1,40 @@
+
+# class: LX/1lZ;
+# extends: Ljava/lang/Object;
+
+.method public A0S(LL)  # .registers 5
+    # full signature: LX/1lZ;->A0S(LX/2Dz;)Landroid/os/Message;
+    0000..0004  new-instance  v3, Landroid/os/Bundle;
+    0004..000a  invoke-direct  {v3}, Landroid/os/Bundle;-><init>()V
+    000a..000e  const-string  v1, "gcmToken"
+    000e..0012  iget-object  v0, v4, LX/2Dz;->A03:Ljava/lang/String;
+    0012..0018  invoke-virtual  {v3, v1, v0}, Landroid/os/BaseBundle;->putString(Ljava/lang/String;Ljava/lang/String;)V
+    0018..001c  const-string  v1, "fbnsToken"
+    001c..0020  iget-object  v0, v4, LX/2Dz;->A02:Ljava/lang/String;
+    0020..0026  invoke-virtual  {v3, v1, v0}, Landroid/os/BaseBundle;->putString(Ljava/lang/String;Ljava/lang/String;)V
+    0026..002a  const-string  v1, "admToken"
+    002a..002e  iget-object  v0, v4, LX/2Dz;->A00:Ljava/lang/String;
+    002e..0034  invoke-virtual  {v3, v1, v0}, Landroid/os/BaseBundle;->putString(Ljava/lang/String;Ljava/lang/String;)V
+    0034..0038  const-string  v1, "mutedChatsHash"
+    0038..003c  iget-object  v0, v4, LX/2Dz;->A04:Ljava/lang/String;
+    003c..0042  invoke-virtual  {v3, v1, v0}, Landroid/os/BaseBundle;->putString(Ljava/lang/String;Ljava/lang/String;)V
+    0042..0046  const-string  v1, "appMuteConfig"
+    0046..004a  iget-object  v0, v4, LX/2Dz;->A01:Ljava/lang/String;
+    004a..0050  invoke-virtual  {v3, v1, v0}, Landroid/os/BaseBundle;->putString(Ljava/lang/String;Ljava/lang/String;)V
+    0050..0054  const-string  v1, "num_acc"
+    0054..0058  iget-object  v0, v4, LX/2Dz;->A05:Ljava/lang/String;
+    0058..005e  invoke-virtual  {v3, v1, v0}, Landroid/os/BaseBundle;->putString(Ljava/lang/String;Ljava/lang/String;)V
+    005e..0062  const-string  v1, "pkey"
+    0062..0066  iget-object  v0, v4, LX/2Dz;->A06:Ljava/lang/String;
+    0066..006c  invoke-virtual  {v3, v1, v0}, Landroid/os/BaseBundle;->putString(Ljava/lang/String;Ljava/lang/String;)V
+    006c..0070  const-string  v1, "voip_payload_type"
+    0070..0074  iget-object  v0, v4, LX/2Dz;->A07:Ljava/lang/String;
+    0074..007a  invoke-virtual  {v3, v1, v0}, Landroid/os/BaseBundle;->putString(Ljava/lang/String;Ljava/lang/String;)V
+    007a..007c  const/4  v2, #0x0
+    007c..007e  const/4  v1, #0x6
+    007e..0080  const/4  v0, #0x0
+    0080..0086  invoke-static  {v0, v2, v1, v2, v3}, Landroid/os/Message;->obtain(Landroid/os/Handler;IIILjava/lang/Object;)Landroid/os/Message;
+    0086..0088  move-result-object  v0
+    0088..008a  return-object  v0
+    # exception table: 0 try range(s)
+.end method

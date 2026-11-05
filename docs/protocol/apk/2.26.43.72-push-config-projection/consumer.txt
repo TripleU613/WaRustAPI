@@ -1,0 +1,197 @@
+
+# class: LX/15F;
+# extends: Ljava/lang/Object;
+
+.method public BLn(ZLI)  # .registers 18
+    # full signature: LX/15F;->BLn(Landroid/os/Message;I)Z
+    0000..0002  const/4  v0, #0x1
+    0002..0006  move-object/from16  v3, v16
+    0006..000c  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000c..000e  const/4  v1, #0x6
+    000e..0012  const-string  v4, "null cannot be cast to non-null type android.os.Bundle"
+    0012..0016  move/from16  v2, v17
+    0016..001a  if-eq  v2, v1, +0x5d
+    001a..001e  const/16  v1, #0x12
+    001e..0022  if-eq  v2, v1, +0xb
+    0022..0026  const/16  v1, #0x1b
+    0026..002a  if-eq  v2, v1, +0x8
+    002a..002e  const/16  v1, #0x9f
+    002e..0032  if-eq  v2, v1, +0x151
+    0032..0034  const/4  v0, #0x0
+    0034..0036  return  v0
+    0036..003a  iget  v3, v3, Landroid/os/Message;->arg2:I
+    003a..003e  const-string  v2, "AppMessagingXmppHandler/clientConfigError code="
+    003e..0042  new-instance  v1, Ljava/lang/StringBuilder;
+    0042..0048  invoke-direct  {v1, v2}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0048..004e  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    004e..0054  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0054..0056  move-result-object  v1
+    0056..005c  invoke-static  {v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    005c..0060  const/16  v1, #0x194
+    0060..0064  if-ne  v3, v1, -0x16
+    0064..0068  sget-object  v2, Lcom/whatsapp/infra/push/RegistrationIntentService;->A0F:LX/1uj;
+    0068..006c  iget-object  v3, v15, LX/15F;->A00:Landroid/app/Application;
+    006c..0070  iget-object  v1, v15, LX/15F;->A04:LX/05a;
+    0070..0074  iget-object  v1, v1, LX/05a;->A00:LX/00x;
+    0074..007a  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    007a..007c  move-result-object  v4
+    007c..0080  check-cast  v4, LX/0Gq;
+    0080..0082  const/4  v5, #0x0
+    0082..0084  const/4  v1, #0x2
+    0084..008a  invoke-static  {v4, v1}, LX/00l;->A09(Ljava/lang/Object;I)V
+    008a..008c  move-object  v7, v5
+    008c..008e  move-object  v8, v5
+    008e..0090  move-object  v9, v5
+    0090..0092  move-object  v10, v5
+    0092..0094  move-object  v11, v5
+    0094..0096  move-object  v6, v5
+    0096..009c  invoke-virtual/range  {v2..v11}, LX/1uj;->A04(Landroid/content/Context;LX/0Gq;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+    009c..00a0  iget-object  v1, v15, LX/15F;->A01:LX/05a;
+    00a0..00a4  iget-object  v2, v1, LX/05a;->A00:LX/00x;
+    00a4..00aa  invoke-interface  {v2}, LX/00x;->get()Ljava/lang/Object;
+    00aa..00ac  move-result-object  v1
+    00ac..00b0  check-cast  v1, LX/1uo;
+    00b0..00b6  invoke-virtual  {v1}, LX/1uo;->A01()Z
+    00b6..00b8  move-result  v1
+    00b8..00bc  if-eqz  v1, -0x42
+    00bc..00c2  invoke-interface  {v2}, LX/00x;->get()Ljava/lang/Object;
+    00c2..00c4  move-result-object  v1
+    00c4..00c8  check-cast  v1, LX/1uo;
+    00c8..00ce  invoke-virtual  {v1, v5}, LX/1uo;->A00(Ljava/lang/String;)V
+    00ce..00d0  return  v0
+    00d0..00d4  iget-object  v3, v3, Landroid/os/Message;->obj:Ljava/lang/Object;
+    00d4..00da  invoke-static  {v3, v4}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    00da..00de  check-cast  v3, Landroid/os/BaseBundle;
+    00de..00e2  const-string  v1, "gcmToken"
+    00e2..00e8  invoke-virtual  {v3, v1}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    00e8..00ea  move-result-object  v8
+    00ea..00ee  const-string  v1, "fbnsToken"
+    00ee..00f4  invoke-virtual  {v3, v1}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    00f4..00f6  move-result-object  v2
+    00f6..00fa  const-string  v1, "admToken"
+    00fa..0100  invoke-virtual  {v3, v1}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    0100..0102  move-result-object  v14
+    0102..0106  const-string  v1, "mutedChatsHash"
+    0106..010c  invoke-virtual  {v3, v1}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    010c..010e  move-result-object  v9
+    010e..0112  const-string  v1, "appMuteConfig"
+    0112..0118  invoke-virtual  {v3, v1}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    0118..011a  move-result-object  v10
+    011a..011e  const-string  v1, "num_acc"
+    011e..0124  invoke-virtual  {v3, v1}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    0124..0126  move-result-object  v11
+    0126..012a  const-string  v1, "pkey"
+    012a..0130  invoke-virtual  {v3, v1}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    0130..0132  move-result-object  v12
+    0132..0138  const-string/jumbo  v1, "voip_payload_type"
+    0138..013e  invoke-virtual  {v3, v1}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    013e..0140  move-result-object  v13
+    0140..0142  const/4  v5, #0x0
+    0142..0146  if-eqz  v8, +0x99
+    0146..014c  invoke-virtual  {v8}, Ljava/lang/String;->length()I
+    014c..014e  move-result  v1
+    014e..0154  invoke-static  {v1}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0154..0156  move-result-object  v7
+    0156..015a  if-eqz  v2, +0x8c
+    015a..0160  invoke-virtual  {v2}, Ljava/lang/String;->length()I
+    0160..0162  move-result  v1
+    0162..0168  invoke-static  {v1}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0168..016a  move-result-object  v6
+    016a..016e  if-eqz  v14, +0xa
+    016e..0174  invoke-virtual  {v14}, Ljava/lang/String;->length()I
+    0174..0176  move-result  v1
+    0176..017c  invoke-static  {v1}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    017c..017e  move-result-object  v5
+    017e..0180  const/4  v4, #0x0
+    0180..0184  if-eqz  v12, +0x3
+    0184..0186  const/4  v4, #0x1
+    0186..018a  const-string  v1, "AppMessagingXmppHandler/received client config from server; gcmToken="
+    018a..018e  new-instance  v3, Ljava/lang/StringBuilder;
+    018e..0194  invoke-direct  {v3, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0194..019a  invoke-virtual  {v3, v7}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    019a..019e  const-string  v1, " bytes; fbnsToken="
+    019e..01a4  invoke-virtual  {v3, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    01a4..01aa  invoke-virtual  {v3, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    01aa..01ae  const-string  v1, " bytes; admToken="
+    01ae..01b4  invoke-virtual  {v3, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    01b4..01ba  invoke-virtual  {v3, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    01ba..01be  const-string  v1, " bytes: mutedChatsHash="
+    01be..01c4  invoke-virtual  {v3, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    01c4..01ca  invoke-virtual  {v3, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    01ca..01ce  const-string  v1, " appMuteConfig:"
+    01ce..01d4  invoke-virtual  {v3, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    01d4..01da  invoke-virtual  {v3, v10}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    01da..01de  const-string  v1, " numberOfAccounts:"
+    01de..01e4  invoke-virtual  {v3, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    01e4..01ea  invoke-virtual  {v3, v11}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    01ea..01ee  const-string  v1, " has pKeyHash:"
+    01ee..01f4  invoke-virtual  {v3, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    01f4..01fa  invoke-virtual  {v3, v4}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    01fa..01fe  const-string  v1, " voipPayloadType:"
+    01fe..0204  invoke-virtual  {v3, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0204..020a  invoke-virtual  {v3, v13}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    020a..0210  invoke-virtual  {v3}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0210..0212  move-result-object  v1
+    0212..0218  invoke-static  {v1}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0218..021c  sget-object  v5, Lcom/whatsapp/infra/push/RegistrationIntentService;->A0F:LX/1uj;
+    021c..0220  iget-object  v6, v15, LX/15F;->A00:Landroid/app/Application;
+    0220..0224  iget-object  v1, v15, LX/15F;->A04:LX/05a;
+    0224..0228  iget-object  v1, v1, LX/05a;->A00:LX/00x;
+    0228..022e  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    022e..0230  move-result-object  v7
+    0230..0234  check-cast  v7, LX/0Gq;
+    0234..023a  invoke-virtual/range  {v5..v14}, LX/1uj;->A04(Landroid/content/Context;LX/0Gq;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+    023a..023e  iget-object  v1, v15, LX/15F;->A01:LX/05a;
+    023e..0242  iget-object  v3, v1, LX/05a;->A00:LX/00x;
+    0242..0248  invoke-interface  {v3}, LX/00x;->get()Ljava/lang/Object;
+    0248..024a  move-result-object  v1
+    024a..024e  check-cast  v1, LX/1uo;
+    024e..0254  invoke-virtual  {v1}, LX/1uo;->A01()Z
+    0254..0256  move-result  v1
+    0256..025a  if-eqz  v1, +0x12
+    025a..0260  invoke-interface  {v3}, LX/00x;->get()Ljava/lang/Object;
+    0260..0262  move-result-object  v1
+    0262..0266  check-cast  v1, LX/1uo;
+    0266..026c  invoke-virtual  {v1, v2}, LX/1uo;->A00(Ljava/lang/String;)V
+    026c..026e  return  v0
+    026e..0270  move-object  v6, v5
+    0270..0274  goto/16  -0x83
+    0274..0276  move-object  v7, v5
+    0276..027a  goto/16  -0x90
+    027a..027e  if-eqz  v2, -0x123
+    027e..0284  invoke-virtual  {v2}, Ljava/lang/String;->length()I
+    0284..0286  move-result  v1
+    0286..028a  if-eqz  v1, -0x129
+    028a..028e  iget-object  v1, v15, LX/15F;->A02:LX/05a;
+    028e..0292  iget-object  v1, v1, LX/05a;->A00:LX/00x;
+    0292..0298  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    0298..029a  move-result-object  v1
+    029a..029e  check-cast  v1, LX/0mD;
+    029e..02a2  iget-object  v1, v1, LX/0mD;->A00:LX/05a;
+    02a2..02a6  iget-object  v1, v1, LX/05a;->A00:LX/00x;
+    02a6..02ac  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    02ac..02ae  move-result-object  v4
+    02ae..02b2  check-cast  v4, LX/0Sf;
+    02b2..02b4  const/4  v3, #0x0
+    02b4..02b8  const/16  v2, #0x107
+    02b8..02ba  const/4  v1, #0x0
+    02ba..02c0  invoke-static  {v1, v3, v2, v3}, Landroid/os/Message;->obtain(Landroid/os/Handler;III)Landroid/os/Message;
+    02c0..02c2  move-result-object  v1
+    02c2..02c8  invoke-static  {v1}, LX/00l;->A05(Ljava/lang/Object;)V
+    02c8..02ce  invoke-virtual  {v4, v1}, LX/0Sf;->A0V(Landroid/os/Message;)Z
+    02ce..02d0  return  v0
+    02d0..02d4  iget-object  v2, v3, Landroid/os/Message;->obj:Ljava/lang/Object;
+    02d4..02da  invoke-static  {v2, v4}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    02da..02de  check-cast  v2, Landroid/os/BaseBundle;
+    02de..02e4  const-string/jumbo  v1, "timestampMs"
+    02e4..02ea  invoke-virtual  {v2, v1}, Landroid/os/BaseBundle;->getLong(Ljava/lang/String;)J
+    02ea..02ec  move-result-wide  v2
+    02ec..02f0  iget-object  v1, v15, LX/15F;->A03:LX/05a;
+    02f0..02f4  iget-object  v1, v1, LX/05a;->A00:LX/00x;
+    02f4..02fa  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    02fa..02fc  move-result-object  v1
+    02fc..0300  check-cast  v1, LX/0Vd;
+    0300..0306  invoke-virtual  {v1, v2, v3}, LX/0Vd;->A01(J)V
+    0306..0308  return  v0
+    # exception table: 0 try range(s)
+.end method

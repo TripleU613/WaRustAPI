@@ -1,3 +1,11 @@
+2026-11-04 — **Push-config internal fields and selected consumer traced.**
+
+Eight projected values concern push registration, mute/account/key state and
+VOIP payload type; FBNS follows a separate conditional consumer call.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-push-config-projection/README.md).
+Research only; no runtime changes or live traffic. Validation: checked exports,
+checksums, JSON, coverage freshness and repository hygiene.
+
 2026-11-04 — **Lower-level IQ reader/writer map identity traced.**
 
 Push-config GET registers in the shared map before writing and has its own

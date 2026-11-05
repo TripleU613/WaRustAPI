@@ -5643,3 +5643,14 @@ and full Cyu behavior remain open; this is not a global absence claim.
 [Shared-map setup, producer, result bridge and limits](apk/2.26.43.72-lower-level-iq-ownership/README.md).
 Full configuration grammar/application, other families and durable/generation
 ownership remain untraced. No Rust behavior change or live account operation.
+
+### Push-config projection and selected consumer (2026-11-04)
+
+**Confirmed static, APK43.72:** parsed config projects eight internal Bundle
+keys: push tokens, mute state, account count, pkey and VOIP payload type.
+Long-to-String and per-field holder overwrite behavior are traced; the keys
+are not proven wire attribute names. Selected type6 consumer forwards seven
+Strings to1uj.A04 and handles FBNS separately via conditional1uo.A00.
+[Projection, dispatch/consumer bodies and limits](apk/2.26.43.72-push-config-projection/README.md).
+Full wire grammar, injected handler binding, downstream effects and durable
+reconciliation remain open. No Rust behavior change or live account operation.

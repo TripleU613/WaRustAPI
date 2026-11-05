@@ -1,0 +1,13 @@
+
+# class: LX/3q2;
+# extends: Ljava/lang/Object;
+
+.method public A0z(LL)  # .registers 2
+    # full signature: LX/3q2;->A0z(Ljava/lang/Number;)Ljava/lang/String;
+    0000..0006  invoke-virtual  {v1}, Ljava/lang/Number;->longValue()J
+    0006..0008  move-result-wide  v0
+    0008..000e  invoke-static  {v0, v1}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+    000e..0010  move-result-object  v0
+    0010..0012  return-object  v0
+    # exception table: 0 try range(s)
+.end method
