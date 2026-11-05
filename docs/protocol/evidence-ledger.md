@@ -4790,3 +4790,11 @@ and exact ADD children frozen transactionally. Existing cursors/SET wire
 and uncertainty/refusal holds retained. Actor/PQ-only and rollback/reopen
 regressions added. [Scope and remaining routing/config gaps](prekey-count-notifications.md#migrated-success-followup-add-2026-11-04).
 No live traffic or full replenishment parity claimed.
+
+## 2026-11-04 — Count notification SET/ADD routing
+
+**Implemented offline,43.72 declared-default branch:**migrated legacy
+notifications use ADD;non-migrated use SET;PQ-only remainsACK-only under
+EMv0x70d7 defaultfalse. Explicit actor trigger preserves entry semantics.
+Reopen/uncertain-KEM and synthetic actor tests expanded.
+[Evidence and config/ACK/startup limits](prekey-count-notifications.md#count-notification-setadd-routing-2026-11-04). No live traffic.

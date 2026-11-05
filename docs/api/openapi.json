@@ -15420,5 +15420,14 @@
     "x-live": false,
     "evidence": "docs/protocol/prekey-count-notifications.md#migrated-success-followup-add-2026-11-04",
     "description": "Offline migrated-success followup: gate21198 plus uploadedLR admits ADD using independent legacy/PQ demand. Exact op/list/pq_list layout, defaults inventory812/200 and batches200/10, transactionally frozen mode/wire. Preserves historical cursors/SET requests and uncertainty/refusal holds. Effective MobileConfig, notification/startup current routing and native retry strategy remain incomplete. No new HTTP route."
+  },
+  "x-prekey-count-notification-set-add-routing": {
+    "x-cli": "whatsapp-cli listen (existing comparison actor)",
+    "x-transport": [
+      "comparison public-client"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/prekey-count-notifications.md#count-notification-setadd-routing-2026-11-04",
+    "description": "Count entry uses gated uploaded-LR migration to choose legacy ADD or non-migrated SET. PQ-only notification stays ACK-only using EMv0x70d7 declared defaultfalse; effective config application remains unported. Success PQ demand is independent. Frozen reservations and uncertainty/refusal holds retained; no new route."
   }
 }

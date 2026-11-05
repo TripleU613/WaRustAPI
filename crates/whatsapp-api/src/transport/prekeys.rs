@@ -404,7 +404,7 @@ pub fn begin_upload(
     account: &AccountRecord,
     signed: &[u8],
 ) -> Result<Option<(PendingUpload, Node)>> {
-    begin_upload_selected(store, account, signed, None)
+    begin_upload_selected(store, account, signed, None, false)
 }
 
 /// Follow-up demand from the legacy success callback (43.72 Fcj3/Fc8(7)
@@ -416,7 +416,22 @@ pub(crate) fn begin_followup_upload(
     legacy: bool,
     pq: bool,
 ) -> Result<Option<(PendingUpload, Node)>> {
-    begin_upload_selected(store, account, signed, Some((legacy, pq)))
+    begin_upload_selected(store, account, signed, Some((legacy, pq)), false)
+}
+
+/// Count-notification path with the declared EMv0x70d7 defaultfalse:
+/// migrated legacy demand uses ADD; non-migrated legacy demand uses SET.
+/// PQ-only notifications remain inert until effective MobileConfig is ported.
+pub(crate) fn begin_notification_upload(
+    store: &ProtocolStore,
+    account: &AccountRecord,
+    signed: &[u8],
+    legacy: bool,
+) -> Result<Option<(PendingUpload, Node)>> {
+    if !legacy {
+        return Ok(None);
+    }
+    begin_upload_selected(store, account, signed, Some((true, false)), true)
 }
 
 fn begin_upload_selected(
@@ -424,6 +439,7 @@ fn begin_upload_selected(
     account: &AccountRecord,
     signed: &[u8],
     demand: Option<(bool, bool)>,
+    notification: bool,
 ) -> Result<Option<(PendingUpload, Node)>> {
     let identity = account
         .signal_identity
@@ -455,9 +471,10 @@ fn begin_upload_selected(
                 tracing::warn!("prekey upload held: saved refusal; retry policy unimplemented");
                 return Ok(None);
             }
-            let add = demand.is_some();
+            let migrated = pq_enabled && super::kem_prekeys::migrated_in(tx)?;
+            let add = demand.is_some() && (!notification || migrated);
             let (legacy, pq) = demand.unwrap_or((true, pq_enabled));
-            if add && (!(legacy || pq) || !pq_enabled || !super::kem_prekeys::migrated_in(tx)?) {
+            if add && (!(legacy || pq) || !migrated) {
                 return Ok(None);
             }
             // Kyber keys ride in the same IQ only while the server enables them
@@ -478,6 +495,7 @@ fn begin_upload_selected(
             // Native ADD replenishes the inventory in <=50-key chunks.
             // Retain this store's historical local cursor convention.
             if add && legacy { while generate_in(tx)? != 0 {} }
+            if notification && !add && unsent_in(&*tx)?.is_empty() { generate_in(tx)?; }
             // Declared 43.72 default: legacy ADD batch200 (EMZ0x74cb).
             // Effective MobileConfig values remain unported, as with PQ limits.
             let ids: Vec<u32> = if legacy { unsent_in(&*tx)?.into_iter().take(if add { 200 } else { UNSENT_TARGET }).collect() } else { Vec::new() };
@@ -1954,8 +1972,23 @@ mod tests {
                     "uncertain KEM reservation must hold"
                 );
             }
+            if pq {
+                assert!(
+                    begin_notification_upload(&store, &account, &signed, true)
+                        .unwrap()
+                        .is_none(),
+                    "notification cannot bypass uncertain KEM reservation"
+                );
+            }
             drop(store);
             let store = open(&path);
+            if pq {
+                assert!(
+                    begin_notification_upload(&store, &account, &signed, true)
+                        .unwrap()
+                        .is_none()
+                );
+            }
             if pq {
                 assert!(
                     begin_followup_upload(&store, &account, &signed, legacy, pq)

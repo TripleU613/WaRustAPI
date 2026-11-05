@@ -1,3 +1,12 @@
+2026-11-04 — **Count notifications select migrated ADD or legacy SET.**
+
+Actor preserves entry reason;PQ-only default-flag notifications remainACK-only,
+independent of PQ upload-result demand. Uncertainty/refusal holds retained.
+[Evidence, regressions and gaps](docs/protocol/prekey-count-notifications.md#count-notification-setadd-routing-2026-11-04).
+Validation: workspace/all-feature tests, strict Clippy, CLI reference,
+formatting, JSON, coverage freshness and repository hygiene passed.
+No live traffic.
+
 2026-11-04 — **Migrated success demand uses ADD reservations.**
 
 Legacy/PQ flags select families independently after uploaded-LR migration.

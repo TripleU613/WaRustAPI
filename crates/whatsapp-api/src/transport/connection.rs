@@ -651,7 +651,7 @@ pub(crate) async fn drive(
                         if let Some(ready) = ready.take() { let _ = ready.send(()); }
                         // LX/DNq.run: unsent prekeys (or a store that never generated any) upload at start.
                         if super::prekeys::wants_upload(&store)? {
-                            maybe_upload(&store, &account, &link, &mut upload, &mut upload_rounds, None).await?;
+                            maybe_upload(&store, &account, &link, &mut upload, &mut upload_rounds, PrekeyUploadTrigger::Startup).await?;
                         }
                         // SyncDevicesJob default preset: pending users are queried interactively.
                         if let Some((query, node)) = device_cursor.begin_next(&store, device_context)? {
@@ -704,7 +704,7 @@ pub(crate) async fn drive(
                         let outcome = upload.take().expect("matched pending upload").settle(&store, &node)?;
                         // 43.72 Fcj3/Fc8(7): success demand enters migrated ADD admission.
                         if outcome.accepted && (outcome.count_low || outcome.pq_count_low) {
-                            maybe_upload(&store, &account, &link, &mut upload, &mut upload_rounds, Some((outcome.count_low, outcome.pq_count_low))).await?;
+                            maybe_upload(&store, &account, &link, &mut upload, &mut upload_rounds, PrekeyUploadTrigger::Success { legacy: outcome.count_low, pq: outcome.pq_count_low }).await?;
                         }
                         continue;
                     }
@@ -911,10 +911,11 @@ pub(crate) async fn drive(
                 };
                 if let Some((low, low_ack)) = low {
                     // Local ACK ordering follows durable capture; native 14z.A02 ACKs after worker processing.
-                    // Its first-child legacy flag triggers upload even for an unknown count; PQ-only is inert.
+                    // 43.72 15v.A02 default PQ-notification flagfalse:
+                    // legacy presence chooses migrated ADD or non-migrated SET.
                     link.send(&low_ack).await?;
                     if low.legacy_present {
-                        maybe_upload(&store, &account, &link, &mut upload, &mut upload_rounds, None).await?;
+                        maybe_upload(&store, &account, &link, &mut upload, &mut upload_rounds, PrekeyUploadTrigger::Count { legacy: low.legacy_present }).await?;
                     }
                 }
                 super::outgoing::acknowledge(&store, &node)?;
@@ -1014,17 +1015,23 @@ fn incoming_line(
     );
 }
 
-/// One bounded prekey upload for this session: generate when nothing is
-/// unsent (`LX/14z.A02` `0174..0190`), reserve a batch, write it. Accounts
-/// without Signal material or a registered signed prekey cannot upload and are
-/// skipped; the follow-up count is capped per session.
+/// Entry reason is preserved so count notifications and successful replies
+/// cannot silently take the generic startup SET path.
+#[derive(Clone, Copy)]
+enum PrekeyUploadTrigger {
+    Startup,
+    Success { legacy: bool, pq: bool },
+    Count { legacy: bool },
+}
+
+/// Reserve before write, with per-session bound and registered-material checks.
 async fn maybe_upload(
     store: &Arc<ProtocolStore>,
     account: &AccountRecord,
     link: &NodeLink,
     upload: &mut Option<super::prekeys::PendingUpload>,
     rounds: &mut u32,
-    demand: Option<(bool, bool)>,
+    trigger: PrekeyUploadTrigger,
 ) -> Result<()> {
     if upload.is_some() || *rounds >= super::prekeys::MAX_ROUNDS_PER_SESSION {
         return Ok(());
@@ -1039,13 +1046,19 @@ async fn maybe_upload(
             return Ok(());
         }
     };
-    if demand.is_none() && super::prekeys::unsent_ids(store)?.is_empty() {
+    if matches!(trigger, PrekeyUploadTrigger::Startup)
+        && super::prekeys::unsent_ids(store)?.is_empty()
+    {
         super::prekeys::generate(store)?;
     }
-    let reserved = if let Some((legacy, pq)) = demand {
-        super::prekeys::begin_followup_upload(store, account, &signed, legacy, pq)?
-    } else {
-        super::prekeys::begin_upload(store, account, &signed)?
+    let reserved = match trigger {
+        PrekeyUploadTrigger::Startup => super::prekeys::begin_upload(store, account, &signed)?,
+        PrekeyUploadTrigger::Success { legacy, pq } => {
+            super::prekeys::begin_followup_upload(store, account, &signed, legacy, pq)?
+        }
+        PrekeyUploadTrigger::Count { legacy } => {
+            super::prekeys::begin_notification_upload(store, account, &signed, legacy)?
+        }
     };
     if let Some((pending, node)) = reserved {
         *rounds += 1;
@@ -3942,7 +3955,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn pq_only_success_demand_writes_add_without_legacy_or_last_resort() {
+    async fn migrated_success_and_count_notifications_write_family_specific_add() {
         let dir = tempfile::tempdir().unwrap();
         let store = registered_store(&dir.path().join("pq-add-actor.redb"));
         let prop = super::super::abprops::queue(&store).unwrap();
@@ -3988,13 +4001,44 @@ mod tests {
         write.send(Ok(())).unwrap();
         fake.deliver(result_for(&add, false)).await;
         fake.nothing_written(Duration::from_millis(200)).await;
+        // With EMv0x70d7's declared defaultfalse, PQ-only notification is
+        // ACKed without a request; result PQ demand above is independent.
+        fake.deliver(count_notification("MIG-PQ", "pq_count", "0"))
+            .await;
+        let (ack, write) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        assert_eq!(ack.get_attr("id").and_then(|v| v.as_text()), Some("MIG-PQ"));
+        write.send(Ok(())).unwrap();
+        fake.nothing_written(Duration::from_millis(200)).await;
+        // Optional legacy count can be unparseable: presence still requests ADD.
+        fake.deliver(count_notification("MIG-LEGACY", "count", "not-an-int"))
+            .await;
+        let (ack, write) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        assert_eq!(
+            ack.get_attr("id").and_then(|v| v.as_text()),
+            Some("MIG-LEGACY")
+        );
+        write.send(Ok(())).unwrap();
+        let (add, write) = fake.written().await;
+        assert_eq!(
+            add.child_nodes()
+                .iter()
+                .map(|n| n.description.as_str())
+                .collect::<Vec<_>>(),
+            ["op", "list"]
+        );
+        assert_eq!(add.child("list").unwrap().child_nodes().len(), 200);
+        write.send(Ok(())).unwrap();
+        fake.deliver(result_for(&add, false)).await;
+        fake.nothing_written(Duration::from_millis(200)).await;
         fake.stop_cleanly().await;
         assert_eq!(
             super::super::prekeys::summary(&store)
                 .unwrap()
                 .batches
                 .get("server_acknowledged"),
-            Some(&2)
+            Some(&3)
         );
     }
 

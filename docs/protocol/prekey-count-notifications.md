@@ -518,3 +518,35 @@ subsequent independent count notifications keep their existing path.
 **Remaining:** notification/startup current routing, effective config values,
 full retry/backoff/reset strategy and native cursor/storage migration. No live
 account operation or complete native replenishment parity is claimed.
+
+## Count notification SET/ADD routing (2026-11-04)
+
+**Implemented offline from43.72 evidence, declared flagdefault branch.**
+Retained15v.A02 distinguishes migrated ADD/non-migrated SET. With EMv.A00
+(0x70d7) false, migrated legacy presence invokesA0V(true,false); PQ-only
+notification skips upload. The descriptor declaresfalse; effective MobileConfig
+application remains unported, so this is **not** a live/effective flag assertion.
+
+The actor now keeps explicit Startup/Success/Count triggers. Count routes
+through begin_notification_upload: within reservation transaction, gate21198
+and uploadedLR select migrated legacy-only ADD; otherwise legacy SET.
+Legacy child presence triggers even if optional value is unparseable, as
+before. PQ-only notifications remain ACK-only under declaredfalse. A PQ
+upload-result demand flag independently enters ADD through Success.
+
+Non-migrated empty legacy inventory generation now occurs inside its SET
+reservation transaction. Migrated ADD uses existing family-specific inventory
+and batch defaults. Uncertain KEM/refusal holds are checked before any such
+generation/reservation. Cursor conventions and historical frozen requests
+remain unchanged. No timestamp-based migration inference is introduced.
+
+Synthetic actor regression now exercises initialPQ SET ->PQ-only success
+ADD, then PQ-only count ACK without upload, then malformed optional legacy
+count ACK +legacy-only ADD200, settling allthree batches. Expanded library
+regression verifies a count notification cannot bypass an uncertain KEM ADD
+before/after reopen. Existing non-migrated count and receive tests remain.
+
+**Remaining:** effective PQ-notification configtrue branch, current startup
+strategy, native retry/backoff/reset and cursor/storage migration. Local ACK
+wire ordering still follows durable capture before upload work; complete native
+worker/ACK durability/order is not proven. No live traffic/full parity claim.
