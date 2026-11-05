@@ -1,3 +1,13 @@
+2026-11-04 — **Retry refetch preserves pending state for non-reply IQs.**
+
+Exact result/error is admitted before loading/deleting a refetch checkpoint.
+Encrypted-store regression covers reopen, unchanged retry/send/session history,
+one genuine error and duplicate; the real signed-bundle result workflow also
+remains available after non-replies.
+[Evidence and scope](docs/protocol/network-correctness-audit.md#retry-refetch-reply-type-admission-2026-11-04).
+Validation: **1,277 workspace/all-feature tests**, strict Clippy, CLI reference,
+formatting, coverage freshness and repository hygiene passed. No live traffic.
+
 2026-11-04 — **Direct/group send preparation requires actual IQ reply types.**
 
 Same-ID non-reply IQs no longer fail direct intents or consume group membership/

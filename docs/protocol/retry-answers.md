@@ -159,3 +159,9 @@ or unusable bundle records `refetch_refused` / `refetch_bundle_unusable`. One
 fetch per (message, device, count). Offline-tested, including the new
 session's remote registration; not live (a retry cannot be forced).
 
+
+## Refetch reply admission correction (2026-11-04)
+
+**Confirmed / implemented offline:** same-ID non-reply IQs no longer delete
+the pending fetch or record refetch_refused. Exact result/error is required
+before any checkpoint mutation. [APK 43.72 0ln.A01 and durable regressions](network-correctness-audit.md#retry-refetch-reply-type-admission-2026-11-04).

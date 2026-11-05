@@ -288,7 +288,14 @@ pub async fn complete_refetch(
     node: &Node,
     epoch: ConnectionEpoch,
 ) -> Result<Option<Option<Node>>> {
-    if node.description != "iq" {
+    // APK 43.72 0ln.A01 invokes IQ callbacks only for exact result/error.
+    // A same-ID request must not consume the reserved refetch or retry history.
+    if node.description != "iq"
+        || !matches!(
+            node.get_attr("type").and_then(|v| v.as_text()),
+            Some("result" | "error")
+        )
+    {
         return Ok(None);
     }
     let Some(query) = node.get_attr("id").and_then(|v| v.as_text()) else {
@@ -525,6 +532,106 @@ mod tests {
         );
     }
 
+    #[tokio::test]
+    async fn non_reply_iqs_preserve_refetch_and_retry_history_across_reopen() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("refetch.redb");
+        let open = || {
+            ProtocolStore::open(OpenOptions {
+                path: path.clone(),
+                account_id: AccountId::new("test").unwrap(),
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [7; 32],
+                ))),
+                create: true,
+            })
+            .unwrap()
+        };
+        let store = open();
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    refetch_key("Q1").as_bytes(),
+                    1,
+                    &Refetch {
+                        wire_id: "W1".into(),
+                        answer_key: "fixture-answer".into(),
+                        unanswered_key: "fixture-unanswered".into(),
+                        count: 2,
+                    },
+                )?;
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"fixture-answer",
+                    1,
+                    &serde_json::json!({"status":"fetching", "query":"Q1", "count":2}),
+                )
+            })
+            .unwrap();
+        let snapshot = |store: &ProtocolStore| {
+            store
+                .read(|tx| {
+                    [
+                        Table::Checkpoints,
+                        Table::Outbox,
+                        Table::SignalSessions,
+                        Table::PeerIdentities,
+                    ]
+                    .into_iter()
+                    .map(|table| tx.scan(table, 1, 10000))
+                    .collect::<Result<Vec<_>>>()
+                })
+                .unwrap()
+        };
+        let before = snapshot(&store);
+        let account = AccountRecord::default();
+        for kind in [
+            None,
+            Some("get"),
+            Some("set"),
+            Some("RESULT"),
+            Some("unexpected"),
+        ] {
+            let mut node = Node::new("iq")
+                .attr("id", "Q1")
+                .children(vec![Node::new("error").attr("code", "503")]);
+            if let Some(kind) = kind {
+                node = node.attr("type", kind);
+            }
+            assert!(
+                complete_refetch(&store, &account, &node, ConnectionEpoch(1))
+                    .await
+                    .unwrap()
+                    .is_none()
+            );
+            assert_eq!(snapshot(&store), before);
+        }
+        drop(store);
+        let store = open();
+        assert_eq!(snapshot(&store), before);
+        let error = Node::new("iq").attr("id", "Q1").attr("type", "error");
+        assert!(matches!(
+            complete_refetch(&store, &account, &error, ConnectionEpoch(2))
+                .await
+                .unwrap(),
+            Some(None)
+        ));
+        let settled = snapshot(&store);
+        let saved: serde_json::Value = store
+            .read(|tx| tx.get_json(Table::Checkpoints, b"fixture-answer", 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(saved["reason"], "refetch_refused");
+        assert!(
+            complete_refetch(&store, &account, &error, ConnectionEpoch(2))
+                .await
+                .unwrap()
+                .is_none()
+        );
+        assert_eq!(snapshot(&store), settled);
+    }
+
     /// The APK's no-fetch branch: count 1/2 with a matching registration is
     /// answered once, under the saved session and the original message id;
     /// every refused case is recorded with its reason and sends nothing.
@@ -669,6 +776,55 @@ mod tests {
         );
         assert!(ask(2, 43).await.unwrap().is_none(), "one fetch per count");
         let qid = query.get_attr("id").unwrap().as_text().unwrap().to_owned();
+        // Non-replies leave the real reserved fetch available for the valid
+        // bundle below, without changing original send/session history.
+        let before_nonreply = store
+            .read(|tx| {
+                [
+                    Table::Checkpoints,
+                    Table::Outbox,
+                    Table::SignalSessions,
+                    Table::PeerIdentities,
+                ]
+                .into_iter()
+                .map(|table| tx.scan(table, 1, 10000))
+                .collect::<Result<Vec<_>>>()
+            })
+            .unwrap();
+        for kind in [
+            None,
+            Some("get"),
+            Some("set"),
+            Some("RESULT"),
+            Some("unexpected"),
+        ] {
+            let mut node = Node::new("iq").attr("id", qid.as_str());
+            if let Some(kind) = kind {
+                node = node.attr("type", kind);
+            }
+            assert!(
+                complete_refetch(&store, &account, &node, ConnectionEpoch(2))
+                    .await
+                    .unwrap()
+                    .is_none()
+            );
+            assert_eq!(
+                store
+                    .read(|tx| {
+                        [
+                            Table::Checkpoints,
+                            Table::Outbox,
+                            Table::SignalSessions,
+                            Table::PeerIdentities,
+                        ]
+                        .into_iter()
+                        .map(|table| tx.scan(table, 1, 10000))
+                        .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap(),
+                before_nonreply
+            );
+        }
         let signed2 = KeyPair::generate(&mut rng);
         let signature2 = remote
             .private_key()

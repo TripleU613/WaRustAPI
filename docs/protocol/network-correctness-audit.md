@@ -524,3 +524,28 @@ non-result as refetch_refused. It is called before the corrected outgoing
 matchers in connection.rs. The same callback-type admission issue remains there;
 fixing it requires a separate refetch checkpoint/retry-history regression. This
 chunk does not claim that retry refetch or activation admission is corrected.
+
+## Retry-refetch reply type admission (2026-11-04)
+
+**Confirmed source defect / fixed offline:** retry_answer.complete_refetch
+loaded and deleted its Refetch checkpoint after iq/id admission, then treated
+any non-result as refetch_refused. connection invokes it before direct/group
+outgoing matching. It now returns unhandled for every type except exact
+result/error before reading/deleting a job or touching retry history.
+
+**Confirmed static basis:** pinned APK **2.26.43.72**, **0ln.A01**, offsets
+0014–004c dispatch only exact result/error to CK4/Bvj. Retained
+[shared dispatcher](rea/2.26.43.72-reachout-state/reachout-iq-reply-dispatch.txt).
+This closes the refetch source gap recorded in the preceding send-preparation
+section. Preserving durable uncertain reservations is local policy; native
+unexpected-type callback registration lifetime is not established by this method.
+
+**Verified offline:** a reserved-fetch fixture rejects missing/get/set/uppercase/
+unknown type with misleading error content, compares full checkpoint/outbox/
+session/identity tables, reopens the encrypted store, then settles one genuine
+error and ignores its duplicate without further mutation. The existing genuine
+retry workflow now injects the same non-replies before its valid signed-bundle
+result: table snapshots stay identical and the later reply still produces one
+same-wire-ID re-encryption with the received retry count. No retry/requeue,
+identity reset or live operation was added. Sender/body policies, higher counts,
+base-key decisions and activation admission remain separate unfinished work.
