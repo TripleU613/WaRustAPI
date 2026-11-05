@@ -15972,5 +15972,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-unified-session-eligibility/README.md",
     "description": "Selected unified-session provider resolves09G delegating to09O.BUx, which lazy-loads and tests nonnull Me record. This is not socket readiness or fresh authentication proof. Cached ID fast path can return without rechecking. Provider/load authority, generation fence, writer/ACK and durable recovery remain open. No sender, route or live operation added."
+  },
+  "x-unified-session-writer-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-unified-session-writer/README.md",
+    "description": "Unified-session kind447 uses generic envelope6 and branch-specific normalization returns no replacement. Selected writer skips null IQ-ID promotion, can defer offline and requeue on IOException. These local queues do not prove delivery or authorize durable replay. Full Cyu/reconnect, ACK and generation recovery remain open. No sender, retry, route or live operation added."
   }
 }

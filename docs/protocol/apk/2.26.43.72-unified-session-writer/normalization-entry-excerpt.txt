@@ -1,0 +1,8 @@
+# Explicit entry excerpt; not a complete method: LX/0Sf;->A00(Landroid/os/Message;)Landroid/os/Message;
+# Complete export SHA256: 6bf3bbd4a8cda9691971e0a5003066c0c2e41086e8451c72acad294f06571bb0
+# Reproduce: xtask apk-smali APK --class CLASS --method METHOD --signatures --exceptions
+    0000..0006  invoke-static  {v8}, LX/1i8;->A07(Landroid/os/Message;)LX/1vZ;
+    0006..0008  move-result-object  v3
+    0008..000c  if-nez  v3, +0x4
+    000c..000e  const/4  v0, #0x0
+    000e..0010  return-object  v0

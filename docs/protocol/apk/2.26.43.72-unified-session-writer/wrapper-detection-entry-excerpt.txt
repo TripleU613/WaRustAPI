@@ -1,0 +1,28 @@
+# Explicit entry excerpt; not a complete method: LX/1i8;->A07(Landroid/os/Message;)LX/1vZ;
+# Complete export SHA256: eb41c1a8e70420f09881e13784678553df2d77898588ecc7f2c2bc90f6a11fac
+# Reproduce: xtask apk-smali APK --class CLASS --method METHOD --signatures --exceptions
+    0000..0004  iget  v3, v11, Landroid/os/Message;->arg1:I
+    0004..0008  const/16  v0, #0x9
+    0008..000c  if-eq  v3, v0, +0x153
+    000c..0010  const/16  v0, #0xb
+    0010..0014  if-eq  v3, v0, +0x109
+    0014..0018  const/16  v0, #0x4c
+    0018..001c  if-eq  v3, v0, +0xf5
+    001c..0020  const/16  v0, #0x81
+    0020..0024  if-eq  v3, v0, +0xf1
+    0024..0028  const/16  v0, #0x9d
+    0028..002c  const-string  v2, "loggableStanzaId"
+    002c..0030  const-string  v4, "callId"
+    0030..0034  const-string  v8, "callCreatorJid"
+    0034..0038  const-string  v5, "jid"
+    0038..003c  const-string  v1, "id"
+    003c..0040  if-eq  v3, v0, +0xa1
+    0040..0044  const/16  v0, #0x1a3
+    0044..0048  if-eq  v3, v0, +0x8e
+    0048..004c  const/16  v0, #0x1af
+    004c..0050  if-eq  v3, v0, +0x70
+    0050..0054  const/16  v0, #0x1db
+    0054..0058  if-eq  v3, v0, +0x5d
+    0058..005e  packed-switch  v3, payload@0x2dc, cases=[71:@0x62, 72:@0xb8, 73:@0x23e], default@0x5e
+    005e..0060  const/4  v5, #0x0
+    0060..0062  return-object  v5

@@ -1,3 +1,11 @@
+2026-11-05 — **Unified-session generic envelope and writer path traced.**
+
+Kind447 uses envelope6, bypasses selected pre-ACK normalization and has no IQ-ID
+promotion here. Offline defer and I/O requeue are local, not delivery proof.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-unified-session-writer/README.md).
+Research only; no runtime changes or live traffic. Validation: reused writer
+match, checked excerpts, checksums, JSON, coverage freshness and hygiene.
+
 2026-11-05 — **Unified-session eligibility provider resolved.**
 
 The selected predicate loads and tests Me-record presence, not socket readiness.

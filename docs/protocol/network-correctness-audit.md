@@ -2208,3 +2208,14 @@ can return before rechecking it; explicit refresh and identity observer are sepa
 [Provider route, metadata, exact predicate and limits](apk/2.26.43.72-unified-session-eligibility/README.md).
 Full provider/load authority, generation fencing, writer/ACK policy and durable
 recovery remain open. No Rust behavior or live account operation changed.
+
+### Unified-session envelope and writer queue (2026-11-05)
+
+**Confirmed static, APK43.72:** logical kind447 travels in arg2 of generic
+arg1=6; normalization returns no replacement for this envelope. The selected
+writer skips IQ promotion, can defer offline and calls the generic node writer.
+IOException requeues locally; neither queueing nor local return proves delivery
+or durable replay authority.
+[Helpers, exact branch offsets and limits](apk/2.26.43.72-unified-session-writer/README.md).
+Full Cyu/reconnect, server ACK policy and generation recovery remain open.
+No Rust behavior or live account operation changed.
