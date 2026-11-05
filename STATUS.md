@@ -1,3 +1,12 @@
+2026-11-04 — **Comparison IQ waits reject request-shaped replies.**
+
+The shared waiter requires exact result/error for same-ID IQ responses.
+Native dispatch evidence reused; timeout-path pending capture loss remains open.
+[Evidence and regression scope](docs/protocol/network-correctness-audit.md#comparison-iq-waiter-reply-admission-2026-11-04).
+Validation:1,305 workspace/all-feature tests, strict Clippy, CLI reference,
+formatting, JSON, coverage freshness and repository hygiene passed.
+No live traffic.
+
 2026-11-04 — **Comparison send ACK outcomes hardened.**
 
 Direct/group comparison sends preserve auth challenges and unrelated ACKs as

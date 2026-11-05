@@ -5233,3 +5233,36 @@ Validation: protocol table covers missing/wrong classes, numeric459 decimal
 variants including full-width digits, ordinary500, accepted ACKs and non-ACK
 nodes. Existing durable actor reservation regressions still exercise the same
 shared challenge parser. Full socket-level CLI sequence coverage is not claimed.
+
+### Comparison IQ waiter reply admission (2026-11-04)
+
+**Confirmed local defect / fixed offline:** messaging::wait_for matched only
+node tag and ID. A same-ID IQ get/set, absent type, empty type or differently
+cased Result could return as a request response, ending the wait and reaching
+a caller's success/refusal or parsing path. The shared comparison waiter now
+requires exact result/error for IQs. Other stanza families keep tag/ID matching;
+message ACK classification remains separate.
+
+**Confirmed static, APK43.72**, SHA-256887a6f94…0c2e:
+0ln.A01 reads type and invokes CK4 only for result and Bvj only for error;
+unexpected types reach unexpected_recv_iq_type diagnostics/assertion.
+[Retained REA method](rea/2.26.43.72-authkey-outcomes/incoming-iq-callback.json),
+Evidence ev_445bcabed23b1091f4b30e63e2bd073f980299ad5b82df8787e84b425d8bf9c2.
+This supports dispatch grammar, not identical native pending-map lifetime or
+assertion/error policy. Rust retains unmatched IQs in its existing bounded
+pending buffer and continues awaiting a valid reply. No new resend.
+
+The existing30-second whole-operation timeout and32-node count bound remain
+local policy. Regression comparison_iq_wait_only_admits_native_result_error_replies
+fails with the old extracted predicate and passes after the guard; it covers
+request/absent/empty/case-mismatched types, both response types, wrong IDs/tags
+and unchanged ACK tag/ID admission. This is a predicate regression, not a new
+encrypted-socket integration proof or complete native callback-map parity.
+
+**Remaining capture gap:** wait_for returns buffered unmatched nodes only on
+success. Timeout, terminal stanza, read error and count exhaustion currently
+discard that local buffer; the helper has no store parameter. That loss is not
+fixed by this admission guard and must be addressed separately without turning
+a failed wait into permission to resend reserved requests. Generic ACK sender
+normalization and challenge-controller integration also remain incomplete.
+No live traffic or account operation.

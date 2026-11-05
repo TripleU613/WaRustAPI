@@ -1086,8 +1086,17 @@ pub fn direct_media(
         ]))
 }
 
-/// Wait for an exact stanza/id pair, with a whole-operation deadline and count
-/// bound. No resend. Nonmatching frames are returned for encrypted persistence.
+fn waited_reply_matches(node: &Node, description: &str, id: &str) -> bool {
+    node.description == description
+        && node.get_attr("id").and_then(|v| v.as_text()) == Some(id)
+        // APK43.72 0ln.A01 dispatches IQ result/error, not request types.
+        && (description != "iq"
+            || matches!(node.get_attr("type").and_then(|v| v.as_text()), Some("result" | "error")))
+}
+
+/// Wait for an exact stanza/id pair (IQ requires result/error), with a
+/// whole-operation deadline and count bound. No resend. Nonmatching frames are
+/// returned for encrypted persistence on success; error paths do not return them.
 pub async fn wait_for<S: AsyncRead + AsyncWrite + Unpin>(
     channel: &mut EncryptedConnection<S>,
     description: &str,
@@ -1097,9 +1106,7 @@ pub async fn wait_for<S: AsyncRead + AsyncWrite + Unpin>(
         let mut pending = Vec::new();
         for _ in 0..32 {
             let node = read_node(channel).await?;
-            if node.description == description
-                && node.get_attr("id").and_then(|v| v.as_text()) == Some(id)
-            {
+            if waited_reply_matches(&node, description, id) {
                 return Ok((node, pending));
             }
             if matches!(node.description.as_str(), "failure" | "stream:error") {
@@ -2300,5 +2307,38 @@ mod message_ack_outcome_tests {
             ),
             MessageAckOutcome::Unrelated
         );
+    }
+}
+
+#[cfg(test)]
+mod waited_reply_tests {
+    use super::*;
+    #[test]
+    fn comparison_iq_wait_only_admits_native_result_error_replies() {
+        for kind in [None, Some("get"), Some("set"), Some("Result"), Some("")] {
+            let mut node = Node::new("iq").attr("id", "reserved-iq");
+            if let Some(kind) = kind {
+                node = node.attr("type", kind);
+            }
+            assert!(!waited_reply_matches(&node, "iq", "reserved-iq"));
+        }
+        for kind in ["result", "error"] {
+            let node = Node::new("iq").attr("id", "reserved-iq").attr("type", kind);
+            assert!(waited_reply_matches(&node, "iq", "reserved-iq"));
+            assert!(!waited_reply_matches(&node, "iq", "another-id"));
+        }
+        // ACK content has its own classifier; receipt type is not an IQ type.
+        assert!(waited_reply_matches(
+            &Node::new("ack").attr("id", "reserved-iq"),
+            "ack",
+            "reserved-iq"
+        ));
+        assert!(!waited_reply_matches(
+            &Node::new("message")
+                .attr("id", "reserved-iq")
+                .attr("type", "result"),
+            "iq",
+            "reserved-iq"
+        ));
     }
 }

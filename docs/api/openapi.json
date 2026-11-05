@@ -15660,5 +15660,17 @@
     "x-live": false,
     "evidence": "docs/protocol/network-correctness-audit.md#comparison-sends-share-message-ack-classification-2026-11-04",
     "description": "Shared messaging::MessageAckOutcome classifies ACK family and numeric459 diversion; it does not correlate ID/address. Comparison direct/final-group sends save challenges/unrelated ACKs as outcome_unknown, capture responses and return explicit no-retry errors. Distribution sends also retain matched inbound ACKs and require ordinary message-class acceptance before advancing. Existing historical refusals are not migrated. Full address/challenge controller and socket-level CLI sequence parity remain incomplete; no HTTP route or live operation."
+  },
+  "x-comparison-iq-reply-admission": {
+    "x-cli": {
+      "command": "whatsapp-cli lab-transport",
+      "description": "Existing comparison IQ waits; no new command or flag"
+    },
+    "x-transport": [
+      "comparison IQ reply admission in messaging::wait_for"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/network-correctness-audit.md#comparison-iq-waiter-reply-admission-2026-11-04",
+    "description": "Shared comparison waiter requires exact result/error for matching IQ tag/ID. Request-shaped IQs remain pending instead of ending the wait. Existing30s/32-node local bounds and ACK classification remain. Native result/error dispatch evidence reused; pending capture loss on failed waits and full callback-map parity remain incomplete. No new route, retry or live operation."
   }
 }
