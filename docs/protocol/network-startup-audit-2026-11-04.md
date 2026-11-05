@@ -745,3 +745,15 @@ No live request or expanded higher-count/key handling.
 Parser and full retry-workflow regressions verify malformed fields preserve all
 retry state and default-count receipts can produce the supported count1 answer.
 Receipt ACK and complete parser/routing parity remain separate.
+
+## Comparison group retry admission (2026-11-05)
+
+2026-11-05 — **Comparison group retry admission strengthened.**
+
+Before reserving a device or querying keys, the window checks group-chat/message
+correlation, supported count, carried-key exclusion and original/duplicate device.
+[Evidence, tests and remaining issues](group-retry-admission.md). No live request or group policy
+completion claimed.
+
+Group retry write-checkpoint ordering, session commit guard and encryption-child
+count remain explicit follow-ups; status routing equality is not inferred.

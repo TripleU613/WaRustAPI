@@ -1,3 +1,11 @@
+2026-11-05 — **Comparison group retry admission strengthened.**
+
+Before reserving a device or querying keys, the window checks group-chat/message
+correlation, supported count, carried-key exclusion and original/duplicate device.
+[Evidence, tests and remaining issues](docs/protocol/group-retry-admission.md). No live request or group policy
+completion claimed. Validation:1314 tests, strict Clippy, fmt and CLI
+reference passed.
+
 2026-11-05 — **Retry parser registration/version/defaults corrected.**
 
 Shared parser requires four registration bytes, defaults missing v/count to1

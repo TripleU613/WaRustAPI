@@ -306,3 +306,10 @@ and repository hygiene passed. Pinned parser/policy exports reproduced exactly.
 [Registration/version/count admission](retry-parser-admission.md) now follows
 selected current-APK gates/defaults. Malformed registration no longer starts a
 refetch; valid missing count defaults1. Full ACK/routing policy remains open.
+
+## Comparison group admission correction (2026-11-05)
+
+The explicit group/status window now [checks admission before device reservation
+and key fetching](group-retry-admission.md). It refuses unported carried keys
+and counts3/4, and correlates group chat in addition to message/device. Remaining
+checkpoint/session/count issues are recorded there; no full group retry port.

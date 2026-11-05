@@ -16368,5 +16368,14 @@
     "x-live": false,
     "evidence": "docs/protocol/retry-parser-admission.md",
     "description": "Shared retry parser requires exactly four binary registration bytes; missing version/count default to1; unsupported version and malformed/nonnegative signed32-bit count violations are not actionable. Redacted debug diagnostics name refused fields. Normal retry workflow verifies malformed registration cannot create a key query or mutate retry state; missing defaults produce a supported count1 answer. Public optional registration model retained; full nested id/t/routing/ACK and higher-count parity remain open. No new CLI/HTTP route or live verification."
+  },
+  "x-comparison-group-retry-admission": {
+    "x-cli": false,
+    "x-transport": [
+      "explicit CLI group/status comparison send window; offline tested"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/group-retry-admission.md",
+    "description": "Internal admission precedes answered-device reservation and key queries: original message/group chat, supported counts1/2, no carried keys, original device and no duplicate attempt. Counts3/4 and keys are explicit local capability limits; native maximum remains4.14-case pure admission regression; no live receive/socket or crypto tested. Status addressing, write-checkpoint ordering, prior-session guard and exact group enc-count policy remain open. No new CLI/HTTP route."
   }
 }

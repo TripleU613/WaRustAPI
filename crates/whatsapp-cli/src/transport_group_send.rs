@@ -626,16 +626,9 @@ async fn answer_retries(
         let Some(retry) = parse_retry(&node) else {
             continue;
         };
-        if retry.message_id != wire_id {
-            println!("group-send: retry for another message; preserved, not answered");
-            continue;
-        }
-        if answered.contains(&retry.device) {
-            println!("group-send: this device was already answered in this window");
-            continue;
-        }
-        if !plan.devices.contains(&retry.device) {
-            println!("group-send: retry from a device this send did not address; not answered");
+        if let Some(reason) = retry_refusal(&node, &retry, chat, wire_id, &plan.devices, &answered)
+        {
+            println!("group-send: retry preserved, not answered ({reason})");
             continue;
         }
         println!(
@@ -673,6 +666,37 @@ async fn answer_retries(
         "group-send: post-send window complete; {} retry answer(s) attempted",
         answered.len()
     );
+}
+
+// Local supported-path admission before reserving a device or sending a key
+// query. APK DNP.run excludes non-original recipients; count>4 is rejected by
+// the native handler/job. Counts3/4 and receipt keys need unported base-key/key
+// verification policy, as in the normal driver (docs/protocol/group-retry-admission.md).
+fn retry_refusal(
+    node: &whatsapp_api::binary::Node,
+    retry: &whatsapp_api::transport::receipts::RetryRequest,
+    chat: &Jid,
+    wire_id: &str,
+    devices: &[Jid],
+    answered: &[Jid],
+) -> Option<&'static str> {
+    if retry.message_id != wire_id {
+        Some("different_message")
+    } else if chat.is_group() && &retry.chat != chat {
+        Some("different_chat")
+    } else if retry.count == 0 || retry.count > whatsapp_api::transport::retry_answer::MAX_COUNT {
+        Some("count_out_of_range")
+    } else if retry.count > 2 {
+        Some("base_key_policy_unsupported")
+    } else if node.child("keys").is_some() {
+        Some("receipt_keys_unsupported")
+    } else if answered.contains(&retry.device) {
+        Some("already_answered")
+    } else if !devices.contains(&retry.device) {
+        Some("not_an_original_recipient")
+    } else {
+        None
+    }
 }
 
 /// Answer one device's retry receipt: fresh bundle, fresh session, the same
@@ -771,4 +795,112 @@ async fn answer_one(
     })?;
     write_node(channel, &resend).await?;
     Ok(())
+}
+
+#[cfg(test)]
+mod retry_admission_tests {
+    use super::*;
+    use whatsapp_api::{binary::Node, transport::receipts::parse_retry};
+
+    #[test]
+    fn group_retry_admission_correlates_chat_count_keys_and_recipient_before_action() {
+        let chat = Jid::parse("120363000000000001@g.us").unwrap();
+        let device = Jid::parse("222222222222222:4@lid").unwrap();
+        let other = Jid::parse("333333333333333:4@lid").unwrap();
+        let receipt = |from: &Jid, peer: &Jid, id: &str, count: u32, keys: bool| {
+            let mut children = vec![
+                Node::new("retry").attr("count", count.to_string()),
+                Node::new("registration").bytes(vec![0, 0, 0, 42]),
+            ];
+            if keys {
+                children.push(Node::new("keys"));
+            }
+            Node::new("receipt")
+                .attr("type", "retry")
+                .attr("id", id)
+                .attr("from", from.clone())
+                .attr("participant", peer.clone())
+                .children(children)
+        };
+        let devices = vec![device.clone()];
+        let other_chat = Jid::parse("120363000000000002@g.us").unwrap();
+        let cases = [
+            (receipt(&chat, &device, "W1", 1, false), false, None),
+            (receipt(&chat, &device, "W1", 2, false), false, None),
+            (
+                receipt(&chat, &device, "W2", 1, false),
+                false,
+                Some("different_message"),
+            ),
+            (
+                receipt(&other_chat, &device, "W1", 1, false),
+                false,
+                Some("different_chat"),
+            ),
+            (
+                receipt(&device, &device, "W1", 1, false),
+                false,
+                Some("different_chat"),
+            ),
+            (
+                receipt(&chat, &other, "W1", 1, false),
+                false,
+                Some("not_an_original_recipient"),
+            ),
+            (
+                receipt(&chat, &device, "W1", 0, false),
+                false,
+                Some("count_out_of_range"),
+            ),
+            (
+                receipt(&chat, &device, "W1", 3, false),
+                false,
+                Some("base_key_policy_unsupported"),
+            ),
+            (
+                receipt(&chat, &device, "W1", 4, false),
+                false,
+                Some("base_key_policy_unsupported"),
+            ),
+            (
+                receipt(&chat, &device, "W1", 5, false),
+                false,
+                Some("count_out_of_range"),
+            ),
+            (
+                receipt(&chat, &device, "W1", i32::MAX as u32, false),
+                false,
+                Some("count_out_of_range"),
+            ),
+            (
+                receipt(&chat, &device, "W1", 1, true),
+                false,
+                Some("receipt_keys_unsupported"),
+            ),
+            (
+                receipt(&chat, &device, "W1", 2, true),
+                false,
+                Some("receipt_keys_unsupported"),
+            ),
+            (
+                receipt(&chat, &device, "W1", 1, false),
+                true,
+                Some("already_answered"),
+            ),
+        ];
+        for (node, already_answered, expected) in cases {
+            let retry = parse_retry(&node).unwrap();
+            let answered = if already_answered {
+                vec![device.clone()]
+            } else {
+                vec![]
+            };
+            assert_eq!(
+                retry_refusal(&node, &retry, &chat, "W1", &devices, &answered),
+                expected
+            );
+            assert_eq!(devices, vec![device.clone()]);
+            assert_eq!(answered.len(), usize::from(already_answered));
+        }
+    }
 }
