@@ -1,3 +1,14 @@
+2026-11-05 — **Single-contact replies cannot overwrite unrelated contact statuses.**
+
+A red regression reproduced the wrong-target projection. Saved request provenance
+now selects one matching user; ambiguous/missing/malformed cases preserve data.
+Existing actions inspection shows the fixed projection result. Status, diagnostic
+and once-only marker commit together under real disk/fsync fault tests.
+[Evidence, recovery and unported native protocol policy](docs/protocol/contact-projection-correlation.md).
+Validation:1363 workspace/all-feature tests, strict Clippy, fmt, CLI reference,
+APK coverage and hygiene passed. Wrong-target regression failed before the fix.
+No action replay or live account traffic; broader protocol work remains unfinished.
+
 2026-11-05 — **Contact protocol backoff producer/observer scopes traced.**
 
 Native contact error metadata carries capped millisecond waits separately from

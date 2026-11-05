@@ -98,6 +98,8 @@ struct Row {
     deferred_reason: Option<ActionDeferReason>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     token_issue_completion: Option<super::token_issue::TokenIssueCompletion>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    contact_projection: Option<super::contacts::ContactProjection>,
     #[serde(default)]
     sent_at: Option<Timestamp>,
     #[serde(default)]
@@ -131,6 +133,9 @@ pub struct ActionOutcome {
     /// Local timestamp effect recorded atomically with a trusted-contact result.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub token_issue_completion: Option<super::token_issue::TokenIssueCompletion>,
+    /// Local contact-status projection result; distinct from the outer IQ outcome.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub contact_projection: Option<super::contacts::ContactProjection>,
     /// Server error code when refused.
     pub error_code: Option<u16>,
     /// Server error text when refused.
@@ -185,6 +190,7 @@ fn queue_prepared_in(
         created_at: Timestamp::now(),
         deferred_reason: None,
         token_issue_completion: None,
+        contact_projection: None,
         sent_at: None,
         settled_at: None,
         settlement_sequence: None,
@@ -198,6 +204,29 @@ fn queue_prepared_in(
 
 fn key(id: &str) -> String {
     format!("{PREFIX}{id}")
+}
+
+/// Save contact projection diagnostics in the same transaction as data/marker.
+/// Does not change request bytes, settlement order or callback ownership.
+pub(crate) fn record_contact_projection_in(
+    tx: &mut crate::store::WriteTx<'_>,
+    id: &str,
+    projection: super::contacts::ContactProjection,
+) -> Result<()> {
+    let selector = key(id);
+    let mut row: Row = tx
+        .get_json(Table::Checkpoints, selector.as_bytes(), 1)?
+        .ok_or_else(|| Error::invalid("contacts", "projection action is missing"))?;
+    if row.kind != super::contacts::ACTION_KIND
+        || !matches!(row.status, ActionStatus::Ok | ActionStatus::Error)
+    {
+        return Err(Error::invalid(
+            "contacts",
+            "projection requires a settled contact action",
+        ));
+    }
+    row.contact_projection = Some(projection);
+    tx.put_json(Table::Checkpoints, selector.as_bytes(), 1, &row)
 }
 
 /// Successful reply for validating an explicit refresh in the same transaction.
@@ -229,6 +258,7 @@ pub(crate) fn view_in_write(
             status: row.status,
             deferred_reason: row.deferred_reason,
             token_issue_completion: row.token_issue_completion,
+            contact_projection: row.contact_projection,
             error_code: row.error_code,
             error_text: row.error_text,
         },
@@ -261,6 +291,7 @@ pub(crate) fn view_in(
             status: row.status,
             deferred_reason: row.deferred_reason,
             token_issue_completion: row.token_issue_completion,
+            contact_projection: row.contact_projection,
             error_code: row.error_code,
             error_text: row.error_text,
         },
@@ -784,6 +815,7 @@ pub fn outcomes(store: &ProtocolStore) -> Result<Vec<ActionOutcome>> {
                     status: row.status,
                     deferred_reason: row.deferred_reason,
                     token_issue_completion: row.token_issue_completion,
+                    contact_projection: row.contact_projection,
                     error_code: row.error_code,
                     error_text: row.error_text,
                 });
@@ -821,6 +853,7 @@ pub(crate) fn outcomes_in_write(tx: &crate::store::WriteTx<'_>) -> Result<Vec<Ac
                 status: row.status,
                 deferred_reason: row.deferred_reason,
                 token_issue_completion: row.token_issue_completion,
+                contact_projection: row.contact_projection,
                 error_code: row.error_code,
                 error_text: row.error_text,
             });
@@ -928,6 +961,7 @@ pub fn settled_for_kinds(
                     status: row.status,
                     deferred_reason: row.deferred_reason,
                     token_issue_completion: row.token_issue_completion,
+                    contact_projection: row.contact_projection,
                     error_code: row.error_code,
                     error_text: row.error_text,
                 };

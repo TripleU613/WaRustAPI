@@ -557,6 +557,18 @@
       }
     },
     "schemas": {
+      "ContactProjection": {
+        "type": "string",
+        "enum": [
+          "applied",
+          "server_refused",
+          "missing_request_correlation",
+          "malformed_reply",
+          "no_matching_user",
+          "ambiguous_user"
+        ],
+        "description": "Local single-contact projection result. Applied does not imply on-WhatsApp or complete native protocol success. Rejected projection preserves data and is not account absence or a retry permit."
+      },
       "TokenIssueCompletion": {
         "type": "string",
         "enum": [
@@ -1077,6 +1089,10 @@
           "token_issue_completion": {
             "$ref": "#/components/schemas/TokenIssueCompletion",
             "description": "Optional trusted-contact result effect saved atomically with settlement; omitted for legacy/unrelated/unsuccessful actions. No raw user/time."
+          },
+          "contact_projection": {
+            "$ref": "#/components/schemas/ContactProjection",
+            "description": "Optional local contact-status projection result, distinct from outer IQ status. Saved atomically with status/once-only marker; omitted for legacy/unrelated/not-yet-projected rows. No raw phone/time."
           }
         },
         "description": "Outcome of a one-shot queued action. Settlement receive order is a local journal property, not a server field. Session-specific pending group recovery also uses the sequenced order across group action kinds; unknown-order legacy pending replies remain preserved without projection, marker consumption or resend. Evidence and legacy limitations: docs/protocol/action-settlement-ordering.md.",
@@ -16750,5 +16766,15 @@
     "x-live": false,
     "description": "Static APK2.26.43.72 contact-protocol error/backoff audit. Protocol metadata is separate from per-user in/out/invalid. Positive waits are observer-scoped absolute A00 deadlines; selected503 errors also write a contact-executor global deadline. Native lightweight/regular scopes differ. Rust protocol metadata/wait adoption remains unported; outer IQ result is insufficient proof of contact protocol success. Existing xtask disassembly reproduces evidence. No runtime wait, retry, reset, flag or HTTP route added.",
     "evidence": "docs/protocol/apk/2.26.43.72-contact-protocol-backoff/README.md"
+  },
+  "x-contact-projection-correlation": {
+    "x-cli": true,
+    "x-transport": "experimental",
+    "x-live": false,
+    "description": "Single-contact settled replies project only the uniquely matching original target after validating frozen request/correlation. Unrelated rows never update other contacts. Missing/ambiguous/malformed results preserve data. Optional ActionOutcome.contact_projection appears in existing actions plain/JSON. Status/diagnostic/once-only marker are atomic; outer IQ status, request bytes and historical consumed markers remain unchanged. Disk recovery reprojects retained replies without a network query. Native integrity/backoff/factory/deadline policy remains unfinished.",
+    "evidence": "docs/protocol/contact-projection-correlation.md",
+    "x-library": [
+      "whatsapp_api::transport::contacts::ContactProjection"
+    ]
   }
 }

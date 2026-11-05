@@ -359,6 +359,8 @@ pub(crate) fn check_correlation_in(
     let saved = saved.as_str().ok_or_else(bad)?;
     let (digits, canonical) = normalize(saved).map_err(|_| bad())?;
     if digits != saved
+        || request.description != "iq"
+        || request.get_attr("id").and_then(|value| value.as_text()) != Some(id)
         || request.get_attr("xmlns").and_then(|v| v.as_text()) != Some("usync")
         || request.get_attr("type").and_then(|v| v.as_text()) != Some("get")
     {
@@ -491,8 +493,66 @@ fn parse_user(user: &Node, lid_succeeded: bool) -> Option<(String, ContactStatus
     ))
 }
 
+/// Local projection result, independent of the server IQ's outer outcome.
+/// A refused/unsupported projection is not proof of account absence.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ContactProjection {
+    /// The uniquely matching contact row was projected.
+    Applied,
+    /// The outer IQ refusal was attributed to its original requested number.
+    ServerRefused,
+    /// Historical action has no saved original-request correlation.
+    MissingRequestCorrelation,
+    /// Expected usync/list structure is missing or ambiguous.
+    MalformedReply,
+    /// No parseable returned user matched the requested number.
+    NoMatchingUser,
+    /// More than one returned user matched the single requested number.
+    AmbiguousUser,
+}
+
+fn select_contact_reply(
+    reply: Option<&Node>,
+    expected: &str,
+) -> std::result::Result<ContactStatus, ContactProjection> {
+    let reply = reply.ok_or(ContactProjection::MalformedReply)?;
+    let mut syncs = reply
+        .child_nodes()
+        .iter()
+        .filter(|node| node.description == "usync");
+    let usync = syncs.next().ok_or(ContactProjection::MalformedReply)?;
+    if syncs.next().is_some() {
+        return Err(ContactProjection::MalformedReply);
+    }
+    let mut lists = usync
+        .child_nodes()
+        .iter()
+        .filter(|node| node.description == "list");
+    let list = lists.next().ok_or(ContactProjection::MalformedReply)?;
+    if lists.next().is_some() {
+        return Err(ContactProjection::MalformedReply);
+    }
+    let mut selected = None;
+    for user in list
+        .child_nodes()
+        .iter()
+        .filter(|node| node.description == "user")
+    {
+        if let Some((digits, status)) = parse_user(user, lid_protocol_succeeded(usync))
+            && digits == expected
+        {
+            if selected.is_some() {
+                return Err(ContactProjection::AmbiguousUser);
+            }
+            selected = Some(status);
+        }
+    }
+    selected.ok_or(ContactProjection::NoMatchingUser)
+}
+
 /// Ingest every settled `contact-check` action not yet processed, saving a
-/// [`ContactStatus`] row per resolved number. Idempotent: a
+/// [`ContactStatus`] only for its uniquely matched original number. Idempotent: a
 /// `contacts-ingested:<action id>` marker skips actions already ingested.
 /// Returns the number of status rows newly recorded.
 pub fn ingest(store: &ProtocolStore) -> Result<usize> {
@@ -506,42 +566,43 @@ pub fn ingest(store: &ProtocolStore) -> Result<usize> {
             {
                 return Ok(0usize);
             }
+            let (_, _, request) = super::actions::view_in_write(tx, &outcome.id)?
+                .ok_or_else(|| invalid("settled contact action is missing"))?;
             let mut count = 0usize;
-            match outcome.status {
-                super::actions::ActionStatus::Ok => {
-                    if let Some(node) = &reply
-                        && let Some(usync) = node.child("usync")
-                        && let Some(list) = usync.child("list")
-                    {
-                        for user in list
-                            .child_nodes()
-                            .iter()
-                            .filter(|n| n.description == "user")
-                        {
-                            let Some((digits, status)) =
-                                parse_user(user, lid_protocol_succeeded(usync))
-                            else {
-                                continue;
-                            };
-                            tx.put_json(
-                                Table::Checkpoints,
-                                status_key(&digits).as_bytes(),
-                                1,
-                                &status,
-                            )?;
-                            count += 1;
+            let projection = if !check_correlation_in(tx, &outcome.id, &request)? {
+                ContactProjection::MissingRequestCorrelation
+            } else {
+                // The preflight also validates canonical stored digits against
+                // the frozen single-user request. Never derive the target from
+                // an unsolicited result row or from the current address book.
+                let digits: String = tx
+                    .get_json(
+                        Table::Checkpoints,
+                        check_request_key(&outcome.id).as_bytes(),
+                        1,
+                    )?
+                    .ok_or_else(|| invalid("contact correlation disappeared"))?;
+                match outcome.status {
+                    super::actions::ActionStatus::Ok => {
+                        match select_contact_reply(reply.as_ref(), &digits) {
+                            Ok(status) => {
+                                tx.put_json(
+                                    Table::Checkpoints,
+                                    status_key(&digits).as_bytes(),
+                                    1,
+                                    &status,
+                                )?;
+                                count = 1;
+                                ContactProjection::Applied
+                            }
+                            Err(reason) => reason,
                         }
                     }
-                }
-                super::actions::ActionStatus::Error => {
-                    let req_key = check_request_key(&outcome.id);
-                    if let Some(digits) =
-                        tx.get_json::<String>(Table::Checkpoints, req_key.as_bytes(), 1)?
-                    {
+                    super::actions::ActionStatus::Error => {
                         let error = outcome
                             .error_text
                             .clone()
-                            .or_else(|| outcome.error_code.map(|c| c.to_string()))
+                            .or_else(|| outcome.error_code.map(|code| code.to_string()))
                             .unwrap_or_else(|| "refused".to_owned());
                         tx.put_json(
                             Table::Checkpoints,
@@ -556,11 +617,13 @@ pub fn ingest(store: &ProtocolStore) -> Result<usize> {
                                 error: Some(error),
                             },
                         )?;
-                        count += 1;
+                        count = 1;
+                        ContactProjection::ServerRefused
                     }
+                    _ => return Err(invalid("contact projection requires a settled action")),
                 }
-                super::actions::ActionStatus::Queued | super::actions::ActionStatus::Sent => {}
-            }
+            };
+            super::actions::record_contact_projection_in(tx, &outcome.id, projection)?;
             tx.put_json(Table::Checkpoints, marker.as_bytes(), 1, &true)?;
             Ok(count)
         })?;
@@ -687,6 +750,186 @@ mod tests {
         })
         .unwrap();
         (dir, s)
+    }
+
+    #[test]
+    fn contact_projection_is_request_bound_unambiguous_and_once_only_after_reopen() {
+        use super::super::actions;
+        for case in [
+            "matching_with_unrelated",
+            "duplicate",
+            "missing_origin",
+            "malformed",
+        ] {
+            let (dir, store) = store();
+            let id = queue_check(&store, "+15551234567").unwrap();
+            let request = actions::reserve_pending(&store).unwrap().pop().unwrap();
+            let target = user_node("+15551234567", Some("15551234567@s.whatsapp.net"), None);
+            let users = if case == "duplicate" {
+                vec![target.clone(), target]
+            } else {
+                vec![user_node("+15559999999", None, None), target]
+            };
+            let reply = Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "result")
+                .children(if case == "malformed" {
+                    vec![]
+                } else {
+                    vec![Node::new("usync").children(vec![Node::new("list").children(users)])]
+                });
+            actions::record_reply(&store, &reply).unwrap();
+            if case == "missing_origin" {
+                store
+                    .write(|tx| tx.delete(Table::Checkpoints, check_request_key(&id).as_bytes()))
+                    .unwrap();
+            }
+            let expected = match case {
+                "duplicate" => ContactProjection::AmbiguousUser,
+                "missing_origin" => ContactProjection::MissingRequestCorrelation,
+                "malformed" => ContactProjection::MalformedReply,
+                _ => ContactProjection::Applied,
+            };
+            assert_eq!(
+                ingest(&store).unwrap(),
+                usize::from(case == "matching_with_unrelated")
+            );
+            assert!(status(&store, "+15559999999").unwrap().is_none());
+            assert_eq!(
+                status(&store, "+15551234567").unwrap().is_some(),
+                case == "matching_with_unrelated"
+            );
+            assert_eq!(
+                actions::outcomes(&store).unwrap()[0].contact_projection,
+                Some(expected)
+            );
+            assert_eq!(
+                store
+                    .write(|tx| actions::view_in_write(tx, &id))
+                    .unwrap()
+                    .unwrap()
+                    .2,
+                request
+            );
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            drop(store);
+            let store = ProtocolStore::open(OpenOptions {
+                path: dir.path().join("c.redb"),
+                account_id: AccountId::new("a").unwrap(),
+                key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([11u8; 32]))),
+                create: false,
+            })
+            .unwrap();
+            assert_eq!(ingest(&store).unwrap(), 0);
+            assert_eq!(
+                before,
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap()
+            );
+            assert_eq!(
+                actions::outcomes(&store).unwrap()[0].contact_projection,
+                Some(expected)
+            );
+        }
+    }
+
+    #[test]
+    fn contact_projection_status_diagnostic_and_marker_are_atomic_under_disk_faults() {
+        use super::super::actions;
+        use crate::store::full_disk;
+        for fsync_only in [false, true] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("contacts.db");
+            let faults = full_disk::Faults::new();
+            let store = full_disk::open(&path, "contact-projection", [18; 32], &faults).unwrap();
+            let id = queue_check(&store, "+15551234567").unwrap();
+            actions::reserve_pending(&store).unwrap();
+            actions::record_reply(
+                &store,
+                &Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", "result")
+                    .children(vec![Node::new("usync").children(vec![
+                        Node::new("list").children(vec![user_node(
+                            "+15551234567",
+                            Some("15551234567@s.whatsapp.net"),
+                            None,
+                        )]),
+                    ])]),
+            )
+            .unwrap();
+            faults.arm_on(INGESTED_PREFIX.as_bytes(), fsync_only);
+            assert!(ingest(&store).is_err());
+            drop(store);
+            faults.set_full(false);
+            faults.set_sync_fails(false);
+            let store = full_disk::open(&path, "contact-projection", [18; 32], &faults).unwrap();
+            let saved = status(&store, "+15551234567").unwrap();
+            let marker = store
+                .read(|tx| tx.get_json::<bool>(Table::Checkpoints, ingested_key(&id).as_bytes(), 1))
+                .unwrap();
+            let action = actions::outcomes(&store).unwrap().pop().unwrap();
+            assert_eq!(action.status, actions::ActionStatus::Ok);
+            assert_eq!(saved.is_some(), marker == Some(true));
+            assert_eq!(
+                action.contact_projection,
+                saved.as_ref().map(|_| ContactProjection::Applied)
+            );
+            if !fsync_only {
+                assert!(saved.is_none());
+            }
+            assert!(actions::reserve_pending(&store).unwrap().is_empty());
+            // Local recovery reprojects the retained reply once, without a query.
+            assert_eq!(ingest(&store).unwrap(), usize::from(saved.is_none()));
+            assert_eq!(ingest(&store).unwrap(), 0);
+        }
+    }
+
+    #[test]
+    fn single_contact_reply_never_overwrites_an_unrequested_contact() {
+        let (_dir, store) = store();
+        let other = queue_check(&store, "+15559999999").unwrap();
+        super::super::actions::reserve_pending(&store).unwrap();
+        let response = |id: &str, phone: &str, registered| {
+            Node::new("iq")
+                .attr("id", id)
+                .attr("type", "result")
+                .children(vec![Node::new("usync").children(vec![
+                    Node::new("list").children(vec![user_node(
+                        phone,
+                        if registered {
+                            Some("15559999999@s.whatsapp.net")
+                        } else {
+                            None
+                        },
+                        None,
+                    )]),
+                ])])
+        };
+        super::super::actions::record_reply(&store, &response(&other, "+15559999999", true))
+            .unwrap();
+        assert_eq!(ingest(&store).unwrap(), 1);
+        let previous = status(&store, "+15559999999").unwrap().unwrap();
+        let selected = queue_check(&store, "+15551234567").unwrap();
+        super::super::actions::reserve_pending(&store).unwrap();
+        super::super::actions::record_reply(&store, &response(&selected, "+15559999999", false))
+            .unwrap();
+        assert_eq!(ingest(&store).unwrap(), 0);
+        assert_eq!(status(&store, "+15559999999").unwrap().unwrap(), previous);
+        assert_eq!(
+            super::super::actions::outcomes(&store)
+                .unwrap()
+                .into_iter()
+                .find(|row| row.id == selected)
+                .unwrap()
+                .contact_projection,
+            Some(ContactProjection::NoMatchingUser)
+        );
+        assert!(status(&store, "+15551234567").unwrap().is_none());
+        assert_eq!(ingest(&store).unwrap(), 0);
     }
 
     #[test]
@@ -1348,6 +1591,15 @@ mod tests {
             ]);
         assert!(super::super::actions::record_reply(&s, &reply).unwrap());
         assert_eq!(ingest(&s).unwrap(), 1);
+        assert_eq!(
+            super::super::actions::outcomes(&s)
+                .unwrap()
+                .into_iter()
+                .find(|row| row.id == id)
+                .unwrap()
+                .contact_projection,
+            Some(ContactProjection::ServerRefused)
+        );
         let saved = status(&s, "+15551234567").unwrap().unwrap();
         assert!(!saved.on_whatsapp);
         assert_eq!(saved.error.as_deref(), Some("rate-overlimit"));

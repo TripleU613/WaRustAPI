@@ -2057,3 +2057,15 @@ drain continues. No automatic correlation repair, Sent reset or replay.
 Current0pD.A07 receives a caller timeout: selected HxV lightweight call is32s,
 while another0p7 call is128s. Rust contact-check's exact factory/deadline remains
 unported; no universal usync timer is inferred. No live traffic was sent.
+
+## Single-contact projection bound to original request —2026-11-05
+
+A reproduced local defect let a successful contact-check reply overwrite status
+for any returned phone. Projection now reloads/validates saved request provenance
+and applies only a uniquely matching requested number. Unrelated/duplicate/
+missing-origin/malformed cases preserve contact data and record a content-free
+ActionOutcome.contact_projection through existing actions inspection. Status,
+projection diagnostic and once-only marker commit atomically; settled wire/reply/
+sequence and historical consumed markers stay unchanged. No query is replayed.
+[Red regression, disk-fault/reopen tests, inspection and native-policy limits](contact-projection-correlation.md).
+Current native protocol integrity/backoff and exact factory/deadline remain open.
