@@ -1,0 +1,54 @@
+{
+  "README.md": {
+    "bytes": 4178,
+    "sha256": "24b9510d955fcb7f9f81ee14746b9804f4529b98daf8eec15b359972c35ce609"
+  },
+  "ack-message-factory.txt": {
+    "bytes": 1136,
+    "sha256": "501a406d4fe003738f86ed40035ba3106fe5b285a06b214330894f1354876504"
+  },
+  "base-dispatch.txt": {
+    "bytes": 6899,
+    "sha256": "d1f38e5fc8ee16bf6a3cb6a115fcdf9b0ac6aef51375e82710048923c45ca64d"
+  },
+  "base-handler.txt": {
+    "bytes": 12404,
+    "sha256": "7a79e40d56eead0630a310f5bbc64d6a88806cc4f8904c38d7ef38f22c491691"
+  },
+  "parse-error-allowlist.txt": {
+    "bytes": 1080,
+    "sha256": "9991685f78564079f8dc28391467a614fdf718ca9b13b0b44c262ae0792427eb"
+  },
+  "parse-error-policy.txt": {
+    "bytes": 5257,
+    "sha256": "f7d33038a6bfca315a4c288abfe7c00d062891ff418b108b3c7d667fe1bbf551"
+  },
+  "receipt-context-factory.txt": {
+    "bytes": 1816,
+    "sha256": "cf78bf95e8a884e76c192a69a031d28f0fb7926614ad341e677f8c4b4b97e900"
+  },
+  "receipt-context-fields.txt": {
+    "bytes": 2696,
+    "sha256": "1a89b64630f046e797b8f7285da65653696b35d66ae50f180afbc17a084b0114"
+  },
+  "retry-handler.txt": {
+    "bytes": 59075,
+    "sha256": "7219b27ee2ab8e543db1dc64aa7529b82a2e36677cba7c28519868e7dacb7a52"
+  },
+  "sender-common.txt": {
+    "bytes": 2060,
+    "sha256": "2fd03f7e1badafae636dcb81508843c130e4f0bf5236ba70b127e04dc2242903"
+  },
+  "sender-context.txt": {
+    "bytes": 3994,
+    "sha256": "57bdd6bba1ec8a42c401c89d4af3a33f1521c82b9384d9896ef4e053d91a99ef"
+  },
+  "sender-incoming.txt": {
+    "bytes": 376,
+    "sha256": "8ccfc367b2b56d5f10ae18f600e9c3af3548864f65fe35c74b3b723e5daccb37"
+  },
+  "unhandled-receipt.txt": {
+    "bytes": 3911,
+    "sha256": "b66c83ad13dc6b08e028eef33786df617ed504be5d98eea8acfbbacd578446bd"
+  }
+}

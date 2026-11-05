@@ -1,0 +1,34 @@
+
+# class: LX/F0R;
+# extends: Ljava/lang/Object;
+
+.method public A03(LLLJ)  # .registers 14
+    # full signature: LX/F0R;->A03(LX/0Tp;Ljava/lang/Integer;J)LX/Eoh;
+    0000..0004  const-string  v0, "category"
+    0004..0006  const/4  v4, #0x0
+    0006..0008  move-object  v5, v10
+    0008..000e  invoke-virtual  {v10, v0, v4}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    000e..0010  move-result-object  v3
+    0010..0014  const-class  v1, Lcom/whatsapp/infra/core/jid/UserJid;
+    0014..0018  const-string  v0, "recipient"
+    0018..001e  invoke-virtual  {v10, v1, v0}, LX/0Tp;->A0A(Ljava/lang/Class;Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    001e..0020  move-result-object  v2
+    0020..0024  check-cast  v2, Lcom/whatsapp/infra/core/jid/UserJid;
+    0024..0028  const-string  v0, "edit"
+    0028..002e  invoke-virtual  {v10, v0, v4}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    002e..0030  move-result-object  v1
+    0030..0034  const-string  v8, "receipt"
+    0034..0038  const-string  v9, "delivery"
+    0038..003a  move-object  v6, v11
+    003a..003c  move-wide  v10, v12
+    003c..003e  move-object  v7, v4
+    003e..0044  invoke-static/range  {v4..v11}, LX/F0R;->A00(Lcom/whatsapp/infra/core/jid/Jid;LX/0Tp;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;J)LX/Efa;
+    0044..0046  move-result-object  v0
+    0046..004a  iput-object  v2, v0, LX/Efa;->A03:Lcom/whatsapp/infra/core/jid/UserJid;
+    004a..004e  iput-object  v3, v0, LX/Efa;->A05:Ljava/lang/String;
+    004e..0052  iput-object  v1, v0, LX/Efa;->A07:Ljava/lang/String;
+    0052..0058  invoke-virtual  {v0}, LX/Efa;->A00()LX/Eoh;
+    0058..005a  move-result-object  v0
+    005a..005c  return-object  v0
+    # exception table: 0 try range(s)
+.end method

@@ -1,5 +1,11 @@
 {
   "openapi": "3.1.0",
+  "x-retry-ack-dispatch-audit": {
+    "x-cli": false,
+    "x-transport": "offline static research only",
+    "x-live": false,
+    "description": "Pinned APK2.26.43.72 retry receipt dispatch distinguishes handler success, unhandled error487 (490 is local diagnostic), and LIL parse-error handling. Actual selected base context factory 14h.BLn -> F0R.A03/A00 located. Current Rust excludes retry ACKs; suspected accidental plain ACK refuted. Final Android Message76 writer binding and async ordering remain open. No runtime ACK policy change or HTTP route. Evidence: docs/protocol/retry-ack-dispatch.md."
+  },
   "x-research-tools": [
     {
       "x-cli": "cargo run -p xtask -- apk-proto-fields <apk> --class <class-filter> [--literal-order]",

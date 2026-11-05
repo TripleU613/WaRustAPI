@@ -52,3 +52,7 @@ complete status/group/addressing, alias-property, ACK or receipt-key policy.
 Validation:1320 workspace/all-feature tests passed, along with strict workspace/
 all-target/all-feature Clippy, formatting and CLI-reference regeneration. Selected
 DEX mapping/JID exports reproduced; APK coverage and hygiene checked before push.
+
+Follow-up: [base-handler receipt factory located](retry-ack-dispatch.md) via
+14h.BLn → F0R.A03/A00. Earlier candidate-only context search is superseded for
+that entrypoint; full upstream registration and alias policy remain open.

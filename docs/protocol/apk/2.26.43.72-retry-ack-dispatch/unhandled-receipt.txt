@@ -1,0 +1,71 @@
+
+# class: LX/2Cx;
+# extends: Ljava/lang/Object;
+
+.method public A00(VLL)  # .registers 16
+    # full signature: LX/2Cx;->A00(LX/1k2;LX/Eoh;)V
+    0000..0002  move-object  v6, v14
+    0002..0006  new-instance  v5, LX/28V;
+    0006..000c  invoke-direct  {v5}, LX/28V;-><init>()V
+    000c..0010  const-wide/16  v0, #0x1ea
+    0010..0016  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0016..0018  move-result-object  v0
+    0018..001c  iput-object  v0, v5, LX/28V;->A00:Ljava/lang/Long;
+    001c..0020  const-string  v0, "receipt"
+    0020..0024  iput-object  v0, v5, LX/28V;->A01:Ljava/lang/String;
+    0024..0028  iget-object  v0, v15, LX/Eoh;->A09:Ljava/lang/String;
+    0028..002c  iput-object  v0, v5, LX/28V;->A02:Ljava/lang/String;
+    002c..0030  iget-object  v0, v13, LX/2Cx;->A02:LX/05a;
+    0030..0036  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0036..0038  move-result-object  v0
+    0038..003c  check-cast  v0, LX/0NX;
+    003c..0042  invoke-interface  {v0, v5}, LX/0NX;->CSW(LX/0FP;)V
+    0042..0048  invoke-virtual  {v15}, LX/Eoh;->A00()LX/Efa;
+    0048..004a  move-result-object  v4
+    004a..004e  const-string  v2, "error"
+    004e..0052  const/16  v3, #0x1e7
+    0052..0056  iget-object  v1, v4, LX/Efa;->A0A:Ljava/util/Map;
+    0056..005a  new-instance  v0, LX/0Tl;
+    005a..0060  invoke-direct  {v0, v2, v3}, LX/0Tl;-><init>(Ljava/lang/String;I)V
+    0060..0066  invoke-interface  {v1, v2, v0}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0066..006c  invoke-virtual  {v4}, LX/Efa;->A00()LX/Eoh;
+    006c..006e  move-result-object  v2
+    006e..0072  iget-object  v1, v2, LX/Eoh;->A08:Ljava/lang/String;
+    0072..0076  const-string  v0, "ReceiptHandlerInfraHelper/handlerStanza/unknown-stanza id="
+    0076..007c  invoke-static  {v0, v1}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    007c..007e  move-result-object  v1
+    007e..0082  const-string  v0, " "
+    0082..0088  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0088..008e  invoke-virtual  {v1, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    008e..0094  invoke-static  {v1}, LX/1Xl;->A1N(Ljava/lang/Object;)V
+    0094..009a  invoke-interface  {v14}, LX/1k2;->BX2()Z
+    009a..009c  move-result  v0
+    009c..00a0  if-eqz  v0, +0x26
+    00a0..00a4  check-cast  v6, LX/1k3;
+    00a4..00aa  invoke-static  {v3}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    00aa..00ac  move-result-object  v9
+    00ac..00ae  const/4  v5, #0x0
+    00ae..00b0  const/4  v11, #0x1
+    00b0..00b2  const/4  v12, #0x0
+    00b2..00b6  new-instance  v4, LX/2Dx;
+    00b6..00b8  move-object  v8, v5
+    00b8..00ba  move-object  v10, v5
+    00ba..00bc  move-object  v7, v5
+    00bc..00c2  invoke-direct/range  {v4..v12}, LX/2Dx;-><init>(Landroid/os/Bundle;LX/1k3;LX/1k3;LX/1vZ;Ljava/lang/Integer;Ljava/lang/Integer;ZZ)V
+    00c2..00c6  iget-object  v0, v13, LX/2Cx;->A01:LX/05a;
+    00c6..00cc  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    00cc..00ce  move-result-object  v1
+    00ce..00d2  check-cast  v1, LX/1ic;
+    00d2..00d8  invoke-static  {v4}, Ljava/util/Collections;->singletonList(Ljava/lang/Object;)Ljava/util/List;
+    00d8..00da  move-result-object  v0
+    00da..00e0  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    00e0..00e6  invoke-virtual  {v1, v0}, LX/1ic;->A0G(Ljava/util/List;)V
+    00e6..00e8  return-void
+    00e8..00ec  iget-object  v0, v13, LX/2Cx;->A00:LX/05a;
+    00ec..00f2  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    00f2..00f4  move-result-object  v0
+    00f4..00f8  check-cast  v0, LX/0Sf;
+    00f8..00fe  invoke-virtual  {v0, v14, v2}, LX/0Sf;->A0O(LX/1k2;LX/Eoh;)V
+    00fe..0100  return-void
+    # exception table: 0 try range(s)
+.end method

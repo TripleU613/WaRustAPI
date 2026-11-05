@@ -853,3 +853,10 @@ No receipt-derived alias adoption, live request or full native routing claim.
 
 Native effective alias/context binding and typed-reader fallback remain open;
 malformed explicit recipients use a strict local supported-path refusal.
+
+2026-11-05 — **Retry ACK dispatch traced; plain-ACK suspicion refuted.**
+
+Current Rust excludes retry ACKs. Selected APK handler separates handled,
+unhandled/error487 and parse-exception paths; actual receipt context factory
+located. Final Message76 writer binding/async order remain open.
+[Evidence and limits](retry-ack-dispatch.md). No runtime policy change or live request.
