@@ -1,0 +1,36 @@
+
+# class: LX/F3f;
+# extends: Ljava/lang/Object;
+
+.method public A06(LL)  # .registers 2
+    # full signature: LX/F3f;->A06(LX/Ezj;)Ljava/lang/String;
+    0000..0004  iget-boolean  v0, v1, LX/Ezj;->A04:Z
+    0004..0008  if-eqz  v0, +0x5
+    0008..000c  const-string  v0, "otsk"
+    000c..000e  return-object  v0
+    000e..0012  iget  v1, v1, LX/Ezj;->A00:I
+    0012..0016  if-eqz  v1, +0x21
+    0016..0018  const/4  v0, #0x1
+    0018..001c  if-eq  v1, v0, +0x1b
+    001c..001e  const/4  v0, #0x2
+    001e..0022  if-eq  v1, v0, +0x15
+    0022..0024  const/4  v0, #0x3
+    0024..0028  if-eq  v1, v0, +0xf
+    0028..002a  const/4  v0, #0x4
+    002a..002e  if-ne  v1, v0, +0x5
+    002e..0032  const-string  v0, "msmsg"
+    0032..0034  return-object  v0
+    0034..0038  const-string  v0, "Unsupported ciphertext type "
+    0038..003e  invoke-static  {v0, v1}, LX/000;->A02(Ljava/lang/String;I)Ljava/lang/IllegalArgumentException;
+    003e..0040  move-result-object  v0
+    0040..0042  throw  v0
+    0042..0046  const-string  v0, "frskmsg"
+    0046..0048  return-object  v0
+    0048..004c  const-string  v0, "skmsg"
+    004c..004e  return-object  v0
+    004e..0052  const-string  v0, "pkmsg"
+    0052..0054  return-object  v0
+    0054..0058  const-string  v0, "msg"
+    0058..005a  return-object  v0
+    # exception table: 0 try range(s)
+.end method

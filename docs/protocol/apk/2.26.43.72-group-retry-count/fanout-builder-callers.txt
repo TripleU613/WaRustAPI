@@ -1,0 +1,6 @@
+classes8.dex  Lcom/whatsapp/calling/service/OutgoingSignalingHandler;->A04(LLLL)
+  invoke dex byte offset: 0x7136fa
+classes8.dex  LX/FTx;->AKj(LLLZ)
+  invoke dex byte offset: 0x7b270e
+classes8.dex  LX/FTy;->AKj(LLLZ)
+  invoke dex byte offset: 0x7b2910

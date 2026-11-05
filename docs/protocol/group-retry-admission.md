@@ -51,9 +51,8 @@ or proof; this admission change does not close them:
 - The prior checkpoint label and missing previous-session guard are corrected
   in the peer snapshot/write-settlement follow-up below. Historical `written`
   checkpoints are not retroactive proof of a successful socket write.
-- The group retry builder does not explicitly apply the received count to an
-  outgoing encryption child. Exact current native group-child count/root policy
-  needs a trace before changing fan-out bytes.
+- The selected group encryption-child count is now traced and corrected in the
+  [count follow-up](group-retry-count.md). Full root/routing policy remains open.
 
 Full group/status retry eligibility, base-key/receipt-key semantics, successful
 write/delivery and restart behavior remain unverified. No ban/acceptance claim
@@ -97,10 +96,13 @@ refusal and preserve advanced peer state after either outcome. Socket outcomes
 are supplied to the settlement helper; no real socket, process crash, concurrent
 thread, crypto or injected storage fault is executed by these tests.
 
-The group retry encryption-child count/root policy, status addressing and full
+Remaining group retry root policy, status addressing and full
 native base-key/key handling remain open. This fixes the two source issues above
 without claiming full group/status retry parity or live acceptance.
 
 Follow-up validation:1316 workspace/all-feature tests passed, along with strict
 workspace/all-target/all-feature Clippy, formatting and CLI-reference regeneration.
 Coverage/hygiene checked before push; no live socket outcome was measured.
+
+The [checked count follow-up](group-retry-count.md) also preserves original bytes
+and metadata while applying count to the selected encrypted children.

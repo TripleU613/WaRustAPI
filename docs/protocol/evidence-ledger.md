@@ -1,3 +1,10 @@
+2026-11-05 — **Comparison group retry enc counts corrected from pinned DEX.**
+
+Received count1/2 now reaches root skmsg and pairwise distribution enc children
+unchanged; original first sends still omit it. Ciphertext/ID/addressing remain
+preserved. [Binding, wire regression and limits](group-retry-count.md).
+No live request or full group retry parity claimed.
+
 2026-11-05 — **Comparison group retry peer state and write settlement fixed.**
 
 Reservation checks identity/session snapshots and holds advanced peer state with

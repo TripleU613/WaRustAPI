@@ -2826,3 +2826,15 @@ native base-key/key handling remain open. This fixes the two source issues above
 without claiming full group/status retry parity or live acceptance.
 
 [Implementation and prior source findings](group-retry-admission.md).
+
+## Group comparison retry enc count (2026-11-05)
+
+2026-11-05 — **Comparison group retry enc counts corrected from pinned DEX.**
+
+Received count1/2 now reaches root skmsg and pairwise distribution enc children
+unchanged; original first sends still omit it. Ciphertext/ID/addressing remain
+preserved. [Binding, wire regression and limits](group-retry-count.md).
+No live request or full group retry parity claimed.
+
+Checked callback construction/interface/composition and both builder branches
+support the count correction; complete root/routing/key policy remains open.

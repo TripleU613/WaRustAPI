@@ -761,6 +761,7 @@ async fn answer_one(
         }],
         skmsg,
     )?;
+    let resend = retry_stanza_count(resend, retry.count)?;
     let checkpoint = format!("message:{}:retry:{}", message.request_id, retry.device);
     let reservation = RetryReservation {
         checkpoint: &checkpoint,
@@ -784,6 +785,82 @@ async fn answer_one(
         return Err(error);
     }
     written.map_err(Error::from)
+}
+
+// APK43.72 FTy.AK7/AKj -> F3f.A04/A08/A09 carry the same job retry
+// count to both skmsg and pairwise distribution enc children. Original sends
+// still use the zero-count builder (docs/protocol/group-retry-count.md).
+fn retry_stanza_count(
+    mut stanza: whatsapp_api::binary::Node,
+    count: u32,
+) -> Result<whatsapp_api::binary::Node, Error> {
+    use whatsapp_api::binary::{Attribute, NodeContent};
+    if !(1..=2).contains(&count) {
+        return Err(invalid("only retry counts1/2 are supported"));
+    }
+    if stanza.description != "message" {
+        return Err(invalid("retry requires a message stanza"));
+    }
+    let NodeContent::Children(children) = &mut stanza.content else {
+        return Err(invalid("retry stanza has no encrypted children"));
+    };
+    let set_count = |enc: &mut whatsapp_api::binary::Node, kinds: &[&str]| -> Result<(), Error> {
+        if !enc
+            .get_attr("type")
+            .and_then(|value| value.as_text())
+            .is_some_and(|kind| kinds.contains(&kind))
+        {
+            return Err(invalid("unsupported retry encryption child"));
+        }
+        enc.attributes.retain(|attribute| attribute.name != "count");
+        let position = enc
+            .attributes
+            .iter()
+            .position(|attribute| attribute.name == "type")
+            .ok_or_else(|| invalid("retry encryption type missing"))?
+            + 1;
+        enc.attributes.insert(
+            position,
+            Attribute {
+                name: "count".into(),
+                value: count.to_string().into(),
+            },
+        );
+        Ok(())
+    };
+    let mut root_enc = 0;
+    for child in children {
+        if child.description == "enc" {
+            set_count(child, &["skmsg"])?;
+            root_enc += 1;
+        } else if child.description == "participants" {
+            let NodeContent::Children(targets) = &mut child.content else {
+                return Err(invalid("retry participants missing targets"));
+            };
+            for target in targets {
+                if target.description != "to" {
+                    return Err(invalid("unexpected retry participant child"));
+                }
+                let NodeContent::Children(children) = &mut target.content else {
+                    return Err(invalid("retry target missing encrypted distribution"));
+                };
+                let mut found = false;
+                for enc in children {
+                    if enc.description == "enc" {
+                        set_count(enc, &["msg", "pkmsg"])?;
+                        found = true;
+                    }
+                }
+                if !found {
+                    return Err(invalid("retry target missing encrypted distribution"));
+                }
+            }
+        }
+    }
+    if root_enc != 1 {
+        return Err(invalid("retry requires one root skmsg"));
+    }
+    Ok(stanza)
 }
 
 struct RetryPeerSnapshot {
@@ -880,6 +957,99 @@ fn settle_retry_write(
 mod retry_admission_tests {
     use super::*;
     use whatsapp_api::{binary::Node, transport::receipts::parse_retry};
+
+    #[test]
+    fn group_retry_count_reaches_each_enc_without_changing_other_stanza_bytes() {
+        use whatsapp_api::binary::{Decoder, NodeContent};
+        let chat = Jid::parse("120363000000000001@g.us").unwrap();
+        let targets = [
+            groups::FanoutTarget {
+                device: Jid::parse("222222222222222:4@lid").unwrap(),
+                kind: "pkmsg",
+                ciphertext: vec![4, 5],
+            },
+            groups::FanoutTarget {
+                device: Jid::parse("15555550100@s.whatsapp.net").unwrap(),
+                kind: "msg",
+                ciphertext: vec![6, 7],
+            },
+        ];
+        let original = groups::sender_key_stanza(
+            &chat,
+            "W1",
+            StanzaContent::Media("image"),
+            Some("lid"),
+            Some("2:abc"),
+            &targets,
+            &[1, 2, 3],
+        )
+        .unwrap();
+        let dict = TokenDictionary::comparison_2_26_37_71();
+        let original_wire = Encoder::new(dict).encode(&original).unwrap();
+        fn strip_counts(mut node: Node) -> Node {
+            if node.description == "enc" {
+                node.attributes
+                    .retain(|attribute| attribute.name != "count");
+            }
+            if let NodeContent::Children(children) = &mut node.content {
+                for child in children {
+                    *child = strip_counts(child.clone());
+                }
+            }
+            node
+        }
+        for count in [1, 2] {
+            let once = retry_stanza_count(original.clone(), 1).unwrap();
+            let counted = retry_stanza_count(once, count).unwrap();
+            let wire = Encoder::new(dict).encode(&counted).unwrap();
+            let decoded = Decoder::new(&wire[1..], dict, &whatsapp_api::profile::Limits::default())
+                .decode_node()
+                .unwrap();
+            assert_eq!(decoded.attributes, original.attributes);
+            assert_eq!(strip_counts(decoded.clone()), original);
+            assert_eq!(
+                Encoder::new(dict)
+                    .encode(&strip_counts(decoded.clone()))
+                    .unwrap(),
+                original_wire
+            );
+            let encs = std::iter::once(decoded.child("enc").unwrap()).chain(
+                decoded
+                    .child("participants")
+                    .unwrap()
+                    .child_nodes()
+                    .iter()
+                    .map(|to| to.child("enc").unwrap()),
+            );
+            for enc in encs {
+                assert_eq!(
+                    enc.get_attr("count").and_then(|value| value.as_text()),
+                    Some(count.to_string().as_str())
+                );
+                assert_eq!(
+                    enc.attributes
+                        .iter()
+                        .filter(|attribute| attribute.name == "count")
+                        .count(),
+                    1
+                );
+                assert_eq!(enc.attributes[2].name, "count"); // Native A09 emits after v/type.
+            }
+        }
+        for count in [0, 3, 4, 5, u32::MAX] {
+            assert!(retry_stanza_count(original.clone(), count).is_err());
+        }
+        assert!(retry_stanza_count(Node::new("message"), 1).is_err());
+        assert!(
+            retry_stanza_count(
+                Node::new("message").children(vec![Node::new("enc").attr("type", "msg")]),
+                1
+            )
+            .is_err()
+        );
+        assert_eq!(Encoder::new(dict).encode(&original).unwrap(), original_wire);
+        assert!(original.child("enc").unwrap().get_attr("count").is_none());
+    }
 
     fn open_retry_store(path: &std::path::Path) -> ProtocolStore {
         use whatsapp_api::{

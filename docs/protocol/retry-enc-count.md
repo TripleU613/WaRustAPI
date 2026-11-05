@@ -96,3 +96,10 @@ rechecks local outbox/peer snapshots and age without expanding supported counts.
 Receipt-key support remains unported; the normal direct driver now
 [explicitly refuses keys-bearing receipts](retry-answers.md#receipt-carried-keys-capability-boundary-2026-11-05)
 without silently substituting saved-session encryption or a directory query.
+
+## Comparison group count correction (2026-11-05)
+
+The [checked group callback/fan-out trace](group-retry-count.md) now applies
+the same incoming count to root skmsg and pairwise distribution enc children in
+the explicit comparison retry path. Full group routing/root/key policy remains
+unverified; this does not expand the normal direct driver or supported counts.
