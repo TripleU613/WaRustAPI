@@ -466,3 +466,11 @@ separately tested. The hold must not suppress ACKs or end normal receiving.
 This broadens prior helper-level refusal verification to actor wiring. It
 does not port native retry scheduling, prove server interoperability or
 claim an actual account was tested. No production behavior changed here.
+
+## 2026-11-04 — Legacy success reaches migrated ADD admission
+
+**Confirmed static (43.72):**14o77 ->Fcj3 marks both families, clears
+backoff, then either demandflag ->Fc8(selector7) ->A0V. Thus existing
+migration/admission/ADD evidence applies to legacy SET success too.
+Rust unconditional legacy SET followup remains a confirmed gap.
+[Exports and port requirements](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-success-to-migrated-add-admission-2026-11-04). No production change or live traffic.

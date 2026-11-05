@@ -1,3 +1,11 @@
+2026-11-04 — **Legacy success-to-ADD admission edge proven.**
+
+Both demand flags pass throughFcj/Fc8 toA0V after mark-sent work.
+Current Rust followup strategy mismatch remains open for implementation.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#legacy-success-to-migrated-add-admission-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. No production change or live traffic.
+
 2026-11-04 — **Refusal hold verified through actor/reopen.**
 
 Count notifications remain ACKed; no replacement upload is written across

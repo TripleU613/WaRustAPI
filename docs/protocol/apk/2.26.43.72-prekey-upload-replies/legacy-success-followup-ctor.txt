@@ -1,0 +1,14 @@
+
+# class: LX/Fc8;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLIZZ)  # .registers 5
+    # full signature: LX/Fc8;-><init>(Ljava/lang/Object;IZZ)V
+    0000..0004  iput  v2, v0, LX/Fc8;->$t:I
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000a..000e  iput-object  v1, v0, LX/Fc8;->A00:Ljava/lang/Object;
+    000e..0012  iput-boolean  v3, v0, LX/Fc8;->A01:Z
+    0012..0016  iput-boolean  v4, v0, LX/Fc8;->A02:Z
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method

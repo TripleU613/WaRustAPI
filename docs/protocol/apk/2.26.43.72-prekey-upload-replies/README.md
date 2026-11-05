@@ -1282,3 +1282,51 @@ Additional export hashes:
 - [last-resort-unsent.txt](last-resort-unsent.txt): `4885300896395f84913fafe78f62923a00cd61ea596e9d084857d83c8cd4eebd`
 - [last-resort-query.txt](last-resort-query.txt): `391c5d016d8cf3101b475d0b027174bcbd153784e3514062fb1ee01e34441a9c`
 - [last-resort-storage.txt](last-resort-storage.txt): `03b76a20ee172dae0efc271825eb9bb99e0150f9baa042fff883b53787abb2c5`
+
+## Legacy success to migrated ADD admission (2026-11-04)
+
+**Confirmed static**, pinned2.26.43.72, same APK SHA-256 as this bundle.
+Checked DEX exports are not REA Evidence envelopes. Only selectedFcj.run
+default branch(selector3) is audited, not its unrelated branches.
+
+- Retained **14o.BLn selector77** snapshots/clears pending arrays and LR
+  under monitor, clears limited-mode state, cancels098 work, then builds
+  **Fcj(manager,PQarrayWithLR,legacyArray,3,legacyNeed,PQNeed)** at02a8–02b4
+  for named prekeys execution. Constructor stores its object arguments in
+  reversed field order: A01=third(legacy), A02=second(PQ); booleans unchanged.
+- **Fcj.run000e–007e** underFjI calls **0WJ.A0x(legacy)** then
+  **A0w(PQ)** (the stored mark-sent helpers previously traced), conditionally
+  invokes09S.A19(false)/A17(false) afterA1J, calls13z.A04 and closesFjI.
+  Failure propagates with wrapper close; no successful followup is claimed
+  after storage error or inferred cross-family SQLite atomicity.
+- **13z.A04** takes/removes pending shared preference identity_reset_reason
+  (default-1 means absent) and emits a2lU event with that reason plus current
+  seconds. Event sink semantics remain untraced; this is not itself another
+  key reset or upload. **Fcj0084–0098** clearsA09 throughA0C(0), callsA09.
+  **13z.A09** clearsA06 and resets0Vf only when backoffA06 wastrue.
+- **Fcj0098–00cc** schedules nothing when both needsfalse. Either needtrue
+  schedules **Fc8(manager,7,legacyNeed,PQNeed)** on098.execute. New constructor
+  binds fields without swapping flags. Retained **Fc8.run** has selectors0..6
+  only; selector7 reachesdefault and calls **13z.A0V(legacyNeed,PQNeed)**.
+- EarlierA0V evidence therefore applies to **legacy SET success**, not just
+  notifications: first admissionA0E(null,reason2,false), thenEx8.A03 migration
+  check, then generation/availability checks and **Fd5(useSet=false)** on
+  migrated path. Non-migrated returns without this ADD upload. Already-retained
+  Ex8 migration predicate combines gate21198 and uploaded LR existence.
+
+**Confirmed Rust gap:** currentactor follows accepted legacy count_low with
+unconditional currentlegacy SET helper, ignoresPQ-only followup and lacks
+this entry-specific migrated ADD admission. Full fix requires strategy
+integration (ADD shape/batching, family-specific demand, generation and
+durable reservation), not merely calling the modern callback's helper.
+This trace closes the legacy producer-to-A0V edge needed for that port; no
+production request, migration state or retry behavior changed here.
+No live traffic.
+
+Additional export hashes:
+
+- [legacy-success-worker.txt](legacy-success-worker.txt): `77499542ac96fae3386051d06a7dbe59cd11e1e39c8449f1014686846f30091e`
+- [legacy-success-ctor.txt](legacy-success-ctor.txt): `9b9c5442325a44193d85c28d3e1fec35209376ed6d427cb6ded3682f970fa946`
+- [legacy-success-backoff-clear.txt](legacy-success-backoff-clear.txt): `cfdb7f1287494c24651bada35ae003a53c6289dbd6c47095a7cc9e4f5cf6d13e`
+- [legacy-success-complete.txt](legacy-success-complete.txt): `7ecdefbef8fb0cbd4f8c6b944418e2b057ecb2735b4ebd26c38930c1cf13fa26`
+- [legacy-success-followup-ctor.txt](legacy-success-followup-ctor.txt): `b90893bb52154b9a8bad77bb421eabf289c996ce6eaaf66ac45e58a852337047`
