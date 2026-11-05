@@ -1278,6 +1278,59 @@ mod tests {
             }
         };
 
+        // Malformed registration/version/count must not turn into a key
+        // directory query or any retry bookkeeping (APK43.72 F10.A04).
+        let all_retry_state = || {
+            store
+                .read(|tx| {
+                    [
+                        Table::Outbox,
+                        Table::Checkpoints,
+                        Table::SignalSessions,
+                        Table::PeerIdentities,
+                    ]
+                    .into_iter()
+                    .map(|table| tx.scan(table, 1, 10000))
+                    .collect::<Result<Vec<_>>>()
+                })
+                .unwrap()
+        };
+        let before_invalid = all_retry_state();
+        for registration in [
+            None,
+            Some(vec![]),
+            Some(vec![1]),
+            Some(vec![1, 2, 3]),
+            Some(vec![1; 5]),
+            Some(vec![1; 64]),
+        ] {
+            let mut children = vec![Node::new("retry").attr("count", "1").attr("v", "1")];
+            children.extend(registration.map(|bytes| Node::new("registration").bytes(bytes)));
+            let node = receipt(&peer, 1, 42).children(children);
+            assert!(
+                answer(&store, &account, &node, ConnectionEpoch(2))
+                    .await
+                    .unwrap()
+                    .is_none()
+            );
+            assert_eq!(all_retry_state(), before_invalid);
+        }
+        for retry in [
+            Node::new("retry").attr("v", "2").attr("count", "1"),
+            Node::new("retry").attr("count", "2147483648"),
+        ] {
+            let node = receipt(&peer, 1, 42).children(vec![
+                retry,
+                Node::new("registration").bytes(42u32.to_be_bytes().to_vec()),
+            ]);
+            assert!(
+                answer(&store, &account, &node, ConnectionEpoch(2))
+                    .await
+                    .unwrap()
+                    .is_none()
+            );
+            assert_eq!(all_retry_state(), before_invalid);
+        }
         // A receipt-carried bundle is a separate, unported policy. Neither
         // a matching nor changed registration may fall through to encryption
         // or a directory query, including empty/malformed keys children.
@@ -1333,7 +1386,19 @@ mod tests {
             }
         }
         // A later supported receipt without keys still follows normal policy.
-        let resend = ask(1, 42).await.unwrap().expect("answered");
+        let default_count = receipt(&peer, 1, 42).children(vec![
+            Node::new("retry"),
+            Node::new("registration").bytes(42u32.to_be_bytes().to_vec()),
+        ]);
+        super::super::receipts::validate(&default_count).unwrap();
+        assert_eq!(
+            super::super::receipts::record(&store, &default_count).unwrap(),
+            0
+        );
+        let resend = answer(&store, &account, &default_count, ConnectionEpoch(2))
+            .await
+            .unwrap()
+            .expect("default count answered as1");
         assert_eq!(resend.get_attr("id").and_then(|v| v.as_text()), Some("W1"));
         assert_eq!(
             resend.get_attr("type").and_then(|v| v.as_text()),

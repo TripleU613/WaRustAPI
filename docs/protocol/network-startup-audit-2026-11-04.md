@@ -732,3 +732,16 @@ empty, byte-valued and partial structured keys. It asserts no node, unchanged
 outbox/session/pin rows, only one unanswered checkpoint, no refetch job and
 successful later no-keys resend. These are synthetic offline fixtures, not valid
 native key bundles or live compatibility proof.
+
+## Retry parser field admission (2026-11-05)
+
+2026-11-05 — **Retry parser registration/version/defaults corrected.**
+
+Shared parser requires four registration bytes, defaults missing v/count to1
+and refuses unsupported version/malformed count. Invalid registration no longer
+falls through to a key query. [Evidence and tests](retry-parser-admission.md).
+No live request or expanded higher-count/key handling.
+
+Parser and full retry-workflow regressions verify malformed fields preserve all
+retry state and default-count receipts can produce the supported count1 answer.
+Receipt ACK and complete parser/routing parity remain separate.

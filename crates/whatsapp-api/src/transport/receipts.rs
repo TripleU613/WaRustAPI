@@ -4233,7 +4233,9 @@ pub struct RetryRequest {
     pub count: u32,
     /// The asking device's current registration id. A value different from the
     /// one in the bundle we encrypted against means their identity moved and a
-    /// fresh prekey bundle is needed rather than the saved session.
+    /// fresh prekey bundle is needed rather than the saved session. Successful
+    /// `parse_retry` results always carry exactly four bytes; the optional type
+    /// remains for callers constructing this public model directly.
     pub registration: Option<Vec<u8>>,
 }
 
@@ -4254,18 +4256,50 @@ pub fn parse_retry(node: &Node) -> Option<RetryRequest> {
         return None;
     }
     let retry = node.child("retry")?;
-    let count = retry.get_attr("count")?.as_text()?.parse().ok()?;
-    let registration = node.child("registration").and_then(|n| match &n.content {
-        crate::binary::NodeContent::Bytes(b) if !b.is_empty() && b.len() <= 64 => Some(b.to_vec()),
-        _ => None,
-    });
+    // APK43.72 F10.A04 requires four registration bytes, defaults v to1
+    // and returns no request for another version. 0Tp.A05 defaults a missing
+    // count to1, but parses a present value as a Java signed32-bit integer.
+    // docs/protocol/retry-parser-admission.md
+    let registration = match node.child("registration").map(|node| &node.content) {
+        Some(crate::binary::NodeContent::Bytes(bytes)) if bytes.len() == 4 => bytes.to_vec(),
+        _ => {
+            tracing::debug!(
+                field = "registration",
+                "retry requires exactly four binary bytes"
+            );
+            return None;
+        }
+    };
+    if retry
+        .get_attr("v")
+        .is_some_and(|v| v.as_text() != Some("1"))
+    {
+        return None;
+    }
+    let count = match retry.get_attr("count") {
+        None => 1,
+        Some(value) => {
+            let count = value
+                .as_text()
+                .and_then(|text| text.parse::<i32>().ok())
+                .and_then(|count| u32::try_from(count).ok());
+            let Some(count) = count else {
+                tracing::debug!(
+                    field = "count",
+                    "retry count requires a nonnegative signed32-bit integer"
+                );
+                return None;
+            };
+            count
+        }
+    };
     Some(RetryRequest {
         chat: jid("from")?,
         // A direct retry names no participant; the peer is the chat itself.
         device: jid("participant").or_else(|| jid("from"))?,
         message_id,
         count,
-        registration,
+        registration: Some(registration),
     })
 }
 
@@ -4306,11 +4340,85 @@ mod retry_tests {
             .attr("from", Jid::parse("15551234567@s.whatsapp.net").unwrap())
             .attr("type", "retry")
             .attr("id", "M2")
-            .children(vec![Node::new("retry").attr("count", "2")]);
+            .children(vec![
+                Node::new("retry").attr("count", "2"),
+                Node::new("registration").bytes(vec![1, 2, 3, 4]),
+            ]);
         let parsed = parse_retry(&node).unwrap();
         assert_eq!(parsed.device, parsed.chat);
         assert_eq!(parsed.count, 2);
-        assert!(parsed.registration.is_none());
+        assert_eq!(parsed.registration.as_deref(), Some(&[1, 2, 3, 4][..]));
+    }
+
+    #[test]
+    fn retry_defaults_match_pinned_parser_but_malformed_inputs_do_not_act() {
+        let base = Node::new("receipt")
+            .attr("from", Jid::parse("15551234567@s.whatsapp.net").unwrap())
+            .attr("type", "retry")
+            .attr("id", "M2");
+        let registration = || Node::new("registration").bytes(vec![1, 2, 3, 4]);
+        let defaults = base
+            .clone()
+            .children(vec![Node::new("retry"), registration()]);
+        let parsed = parse_retry(&defaults).unwrap();
+        assert_eq!(parsed.count, 1);
+        assert_eq!(parsed.registration, Some(vec![1, 2, 3, 4]));
+        for version in ["", "0", "2", "01"] {
+            assert!(
+                parse_retry(
+                    &base
+                        .clone()
+                        .children(vec![Node::new("retry").attr("v", version), registration()])
+                )
+                .is_none()
+            );
+        }
+        for count in ["", "x", "-1", "2147483648", "4294967295"] {
+            assert!(
+                parse_retry(&base.clone().children(vec![
+                    Node::new("retry").attr("count", count),
+                    registration()
+                ]))
+                .is_none()
+            );
+        }
+        for bytes in [
+            vec![],
+            vec![1],
+            vec![1, 2, 3],
+            vec![1; 5],
+            vec![1; 64],
+            vec![1; 65],
+        ] {
+            assert!(
+                parse_retry(&base.clone().children(vec![
+                    Node::new("retry"),
+                    Node::new("registration").bytes(bytes)
+                ]))
+                .is_none()
+            );
+        }
+        for invalid in [
+            None,
+            Some(Node::new("registration")),
+            Some(Node::new("registration").children(vec![Node::new("value")])),
+        ] {
+            let mut children = vec![Node::new("retry")];
+            children.extend(invalid);
+            assert!(parse_retry(&base.clone().children(children)).is_none());
+        }
+        for count in ["0", "1", "2", "4", "2147483647"] {
+            assert_eq!(
+                parse_retry(&base.clone().children(vec![
+                    Node::new("retry").attr("v", "1").attr("count", count),
+                    registration()
+                ]))
+                .unwrap()
+                .count
+                .to_string(),
+                count
+            );
+        }
     }
 
     /// Anything that is not a retry must not be mistaken for one — a delivery

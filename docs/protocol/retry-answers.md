@@ -300,3 +300,9 @@ native key bundles or live compatibility proof.
 Validation: `1312` workspace/all-feature tests, strict workspace/all-target/
 all-feature Clippy, formatting, CLI-reference regeneration, current APK coverage
 and repository hygiene passed. Pinned parser/policy exports reproduced exactly.
+
+## Shared parser field correction (2026-11-05)
+
+[Registration/version/count admission](retry-parser-admission.md) now follows
+selected current-APK gates/defaults. Malformed registration no longer starts a
+refetch; valid missing count defaults1. Full ACK/routing policy remains open.

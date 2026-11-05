@@ -16359,5 +16359,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-retry-receipt-keys/README.md",
     "description": "Normal direct retry driver explicitly refuses a top-level keys child with local reason receipt_keys_unsupported, returning no resend or key query and preserving outbox/session/pin state. Synthetic workflow regressions cover matching/changed registration, repeated empty/byte/partial keys and later supported no-keys resend. This is a local unported capability boundary, not a server/APK universal refusal. Full key validation/session/AEA/PQ policy remains unported; ACK policy unchanged. No new CLI/HTTP route or live verification."
+  },
+  "x-retry-parser-field-admission": {
+    "x-cli": false,
+    "x-transport": [
+      "shared retry parser; explicit normal and group comparison transports; offline tested"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/retry-parser-admission.md",
+    "description": "Shared retry parser requires exactly four binary registration bytes; missing version/count default to1; unsupported version and malformed/nonnegative signed32-bit count violations are not actionable. Redacted debug diagnostics name refused fields. Normal retry workflow verifies malformed registration cannot create a key query or mutate retry state; missing defaults produce a supported count1 answer. Public optional registration model retained; full nested id/t/routing/ACK and higher-count parity remain open. No new CLI/HTTP route or live verification."
   }
 }

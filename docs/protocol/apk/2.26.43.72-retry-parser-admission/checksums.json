@@ -1,0 +1,14 @@
+{
+  "README.md": {
+    "bytes": 1783,
+    "sha256": "f18ad0e6dcca07e9988616deb7542853640b6d9a9f8a717c823e5612e0b300fe"
+  },
+  "count-default-reader.txt": {
+    "bytes": 601,
+    "sha256": "71844beba60f9b9c35aa7c483d0f497598195ff5f6b14728e5f5117cdb72db35"
+  },
+  "count-present-reader.txt": {
+    "bytes": 1686,
+    "sha256": "ff0f1f7c71b9a6726dff0257b0cdf58a9bb0554480a8b439e943143007451445"
+  }
+}
