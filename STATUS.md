@@ -1,3 +1,11 @@
+2026-11-04 — **Legacy SET snapshot and message85 handoff traced.**
+
+A0S/A03/Fdv retains a separate legacy path from modern SET/ADD, including
+reason-dependent PQ ensure argument and selected-array ownership.
+[Evidence and writer/entry limits](docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#legacy-set-snapshot-and-message85-handoff-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. No production change or live traffic.
+
 2026-11-04 — **Native notification/daily prekey routing traced.**
 
 43.72 distinguishes migrated ADD, legacy-only ADD and non-migrated SET;

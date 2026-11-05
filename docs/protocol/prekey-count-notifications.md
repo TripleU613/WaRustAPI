@@ -236,3 +236,10 @@ loss still refuses; stale allocators cannot reuse consumed IDs.
 legacy SET, passing count presence rather than threshold. Worker ACK follows
 upload decision; asynchronous wire order is not established.
 [Notification/daily sources and remaining porting scope](apk/2.26.43.72-prekey-upload-replies/README.md#notification-and-daily-pq-entry-routing-2026-11-04).
+
+## Current-build legacy SET handoff
+
+**Confirmed static,43.72:** A0S/A03/Fdv snapshots selected keys then hands
+EXb through message85, distinct from modern callback-based SET/ADD.
+[Conditions, reason argument and remaining final-writer scope](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-set-snapshot-and-message85-handoff-2026-11-04).
+No runtime port from this trace alone.

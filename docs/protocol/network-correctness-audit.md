@@ -1027,3 +1027,14 @@ order. FKS daily missing-migrated-state branch ensures PQ and reaches A0R(reason
 [Configuration descriptor, caller inventory, exact scope and unported gaps](apk/2.26.43.72-prekey-upload-replies/README.md#notification-and-daily-pq-entry-routing-2026-11-04).
 Unified Rust maybe_upload is not full native strategy. A0S/Fea startup paths and
 raw dispatch/effective config still need tracing. No production change/live traffic.
+
+## Current-build legacy SET message85 handoff (2026-11-04)
+
+**Confirmed static,43.72:** A0S admits throughA0E then snapshots account/key
+material inA03 and queuesFdv. Fdv stores selected arrays under a monitor and
+hands EXb through message85 to0Sf.A04; this is distinct from modernA0B callback
+SET/ADD. Reason==1 enables a separate builder ensure/override argument whose
+upstream scope remains open.
+[Exact argument flow, PQ conditions and final-writer boundary](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-set-snapshot-and-message85-handoff-2026-11-04).
+No runtime switch/live traffic. Native durable/account-lifetime equivalence and
+final writer/reply-event routing are not established by this snapshot trace.

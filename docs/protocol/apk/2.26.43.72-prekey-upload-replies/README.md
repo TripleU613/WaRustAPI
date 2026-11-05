@@ -634,3 +634,46 @@ Additional export hashes:
 - [daily-set-entry.txt](daily-set-entry.txt): `9eeabb113a9f5b16bed4acd708fa5db476e1c3af6e98f42a1f9ce137218c2184`
 - [count-async-routing.txt](count-async-routing.txt): `c79e8b7caa754200672f727530cca078ebd2dfe2b60cdd10553e1c4b0b97d33c`
 - [count-policy-flag.txt](count-policy-flag.txt): `ee6707c2b42e9f43caafecbc55c4c82a83e1ff9aa628cd42df1e042d9a407279`
+
+## Legacy SET snapshot and message85 handoff (2026-11-04)
+
+**Confirmed static**, pinned43.72. This closes the previously open A0S entry
+through its descriptor handoff, not the final message85 writer.
+
+- **13z.A0S(reason)** calls A0E(null,reason,false). On admission it calls
+  A03(callback=null,manager,token=null,other=null,true,reason==1). It is distinct
+  from A0B's callback140 SET and callback141 ADD constructors.
+- **13z.A03** checks09F.BU7 and optional transition callback handling, records
+  A0W/A0b and sets A0V=1. Inside 0Wk scope it snapshots registration via0YT.A08,
+  identity public bytes via0WJ.A19, legacy unsent array viaA1B, signed key viaA0c.
+  Full getters/selection limits and transition callback semantics remain open.
+- It reads Ex8.A04/21198. If gate or its final reason-dependent boolean is true,
+  it fetches an unsent last-resort throughA0b; if absent, it can log skipPQ.
+  With last-resort present it obtains ordinary PQ throughA1A, invoking ensure
+  A0j first only when the final boolean is true. Thus this builder has an explicit
+  caller-driven override/ensure distinction; do not reinterpret it as changing
+  the server gate or enabling arbitrary PQ upload. Reason1 upstream remains open.
+- It encodes registration via1nr.A03 and schedules **Fdv** carrying those frozen
+  values/arrays/signatures and its boolean. No node bytes are built in A03 itself.
+- **Fdv.run** calls Optional.A01 and00L.A01 before proceeding; their meanings
+  are not retraced here. On normal return, the carried boolean conditionally
+  calls13z.A09, then a monitor sets A04=true and saves legacy/PQ arrays and
+  last-resort in13z.A08/A07/A02. These are in-memory reservations, not durable
+  encrypted-store guarantees.
+- It builds **EXb** from signed/last-resort keys, strings, identity/registration
+  and arrays, then **Message.obtain(...,what=0x55,arg1=0,arg2=0,obj=EXb)**.
+  It invokes **0Sf.A04(message,null,transport,null,delay0,false)**. Final writer
+  layout and legacy reply-event routing remain untraced in this follow-up.
+
+**Porting impact:** a complete current-build strategy has both legacy message85
+SET and modern A0B SET/ADD paths. The older Rust full SET layout resembles the
+legacy path, but this does not prove all flags, prerequisites or callbacks match.
+Current ADD port cannot replace the legacy branch indiscriminately. Exact getter
+selection, reason1 source, assertion/provider behavior and final writer are the
+remaining concrete legacy-path questions. No runtime change or live traffic.
+
+Additional export hashes:
+
+- [legacy-set-entry.txt](legacy-set-entry.txt): `e7ac4860e525bb00efc0e3f89b0a372d5fc1fcb868b825c08fde0524f8e4a6f6`
+- [legacy-set-builder.txt](legacy-set-builder.txt): `b1a950feb704b17cff5442f53d9bd985af30284de905cc7b4811d91b1cd94c00`
+- [legacy-set-handoff.txt](legacy-set-handoff.txt): `8f76d7f0c73bfe56c5cead182b7d427daad8ae280653be97a39c62fdde64a835`
