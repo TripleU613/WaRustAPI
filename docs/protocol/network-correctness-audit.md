@@ -1477,3 +1477,44 @@ These are additional recovery-port inputs, not implemented Rust ACK replay or
 proof every callback schedules after loading. Complete bulk ACK-list provenance,
 Flr insertion, replay ownership and ambiguous persistence failures remain open.
 No production Rust source or live account/network behavior changed.
+
+### Actor IQ waits expire independently (2026-11-04)
+
+**Confirmed local defects, fixed offline:** prekey upload and device-query waits
+had30-second monotonic deadlines, but only a20-second heartbeat checked them.
+A reply at31seconds could settle either request before the40-second tick. In
+paused-clock regressions, the old code promoted50 prekeys to uploaded and
+converted a reserved device query to server-refused from such late replies.
+
+The actor now selects each wait's own deadline. Expired uploads drop only their
+session-local waiter and keep durable outcome_unknown/key reservations. Expired
+device queries are deferred for this session while pending users and the durable
+query row remain unchanged. This timeout does not authorize a resend, key reuse,
+repeating those deferred users, cooldown bypass or clearing uncertain history. Existing admission
+triggers and the selected30-second local durations are retained.
+
+Prekey, device-query and keepalive reply admission also checks that its waiter
+has not expired, so a simultaneously ready incoming branch cannot settle an
+expired waiter merely by winning select. Original inbound capture still commits
+before reply handling. Session monotonic deadlines are not reconstructed from
+wall-clock/server timestamps after restart; offline library settlement/inspection
+and other request families remain separate authority boundaries.
+
+**Confirmed static timing architecture, APK43.72:** 0Sf.A06 registers a pending
+ID callback through0ln.A08 before send dispatch; positive delays use an
+ID-specific Handler message. [Retained methods](apk/2.26.43.72-prekey-upload-replies/README.md#confirmation-ping-request-and-independent-timeout-2026-11-04).
+That supports independent request timers, not proof that30seconds is this APK's
+native timeout for both families or that Rust now ports its entire callback map.
+The earlier native pre-ACK confirmation ping's32-second delay remains distinct.
+
+Regressions: late_prekey_reply_cannot_settle_between_deadline_and_heartbeat and
+late_device_reply_cannot_settle_between_deadline_and_heartbeat. They preserve
+late captures, check uncertain/query/pending-user state, service an inbound ping
+and reopen without reinstalling account material. The former verifies50 keys
+remain uncertain and none uploaded; the latter verifies the query remains
+identical instead of storing a late503 refusal.
+
+**Limits:** awaited writes may still delay observing expiry. Device admission
+and unrelated maintenance remain on their existing cadence. Outgoing/group
+waits and other request families are not converted by this chunk; no full
+network/timing or ban-prevention guarantee is claimed. No live operations.

@@ -15573,5 +15573,17 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#ack-projection-serialization-merge-order-and-refill-2026-11-04",
     "description": "Native scheduled ACK projection uses a same-instance serial executor and delegates its load check to A07. Window comparator orders SQLite row IDs with Long.MAX_VALUE fallback; merge is concatenate/sort/take without deduplication. Refill distinguishes backend failure from successful exhaustion. Cross-thread epoch/SQL serialization and full recovery ownership remain open. Rust sends, replay, timing and deletion behavior are unchanged."
+  },
+  "x-actor-iq-independent-expiry": {
+    "x-cli": {
+      "command": "whatsapp-cli listen",
+      "description": "Existing experimental actor; no new command or flag"
+    },
+    "x-transport": [
+      "experimental-transport prekey/device IQ waits and keepalive reply admission"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/network-correctness-audit.md#actor-iq-waits-expire-independently-2026-11-04",
+    "description": "Prekey and device-query waits now expire independently of heartbeat phase at their existing local30s deadlines. Actor admission for these waits and keepalive refuses expired waiter ownership even when an incoming branch wins scheduling. Raw late responses remain captured. Uncertain prekeys and reserved device query/pending users remain; no timeout retry/reset is authorized. Native per-ID callback timing is distinguished from unverified family-specific timeout values and full callback-map parity. Other request families and awaited-write responsiveness remain separate. No new HTTP route or live operation."
   }
 }

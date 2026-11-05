@@ -458,7 +458,25 @@ pub(crate) async fn drive(
             .as_ref()
             .map(|(_, deadline)| *deadline)
             .unwrap_or_else(tokio::time::Instant::now);
+        let upload_deadline = upload
+            .as_ref()
+            .map(|u| u.deadline)
+            .unwrap_or_else(tokio::time::Instant::now);
+        let device_deadline = device_query
+            .as_ref()
+            .map(|q| q.deadline)
+            .unwrap_or_else(tokio::time::Instant::now);
         tokio::select! {
+            // Like 43.72 0ln.A08's ID-specific timer, expiration belongs to
+            // each pending request rather than the heartbeat's phase.
+            _ = tokio::time::sleep_until(upload_deadline), if upload.is_some() => {
+                tracing::warn!("prekey upload outcome unknown; reservation kept, no retry");
+                upload = None;
+            }
+            _ = tokio::time::sleep_until(device_deadline), if device_query.is_some() => {
+                tracing::warn!("device query unanswered; users remain pending");
+                if let Some(query) = device_query.take() { device_cursor.defer(&query); }
+            }
             _ = tokio::time::sleep_until(ping_deadline), if pending_ping.is_some() => {
                 return Err(Error::Timeout(ping_period));
             }
@@ -503,16 +521,6 @@ pub(crate) async fn drive(
                 return Err(Error::invalid("connection", "activation outcome unknown; frames preserved"));
             }
             _ = heartbeat.tick(), if ready.is_none() => {
-                if upload.as_ref().is_some_and(|u| tokio::time::Instant::now() >= u.deadline) {
-                    // The batch stays reserved as outcome_unknown; its keys are never re-sent.
-                    tracing::warn!("prekey upload outcome unknown; reservation kept, no retry");
-                    upload = None;
-                }
-                if device_query.as_ref().is_some_and(|q| tokio::time::Instant::now() >= q.deadline) {
-                    // Queries are reads: pending users stay pending for a later session.
-                    tracing::warn!("device query unanswered; users remain pending");
-                    if let Some(query) = device_query.take() { device_cursor.defer(&query); }
-                }
                 // Authenticated primary-key changes and offline requests can
                 // queue work during this connection without a devices notification.
                 if device_query.is_none() && group_outgoing.as_ref().is_none_or(|g| !g.devices_pending())
@@ -694,7 +702,7 @@ pub(crate) async fn drive(
                         }
                         continue;
                     }
-                    if device_query.as_ref().is_some_and(|q| q.matches(&node)) {
+                    if device_query.as_ref().is_some_and(|q| tokio::time::Instant::now() < q.deadline && q.matches(&node)) {
                         let query = device_query.take().expect("matched device query");
                         let summary = device_cursor.settle(&query, &store, &node)?;
                         if summary.verification_errors > 0 {
@@ -710,7 +718,7 @@ pub(crate) async fn drive(
                         }
                         continue;
                     }
-                    if upload.as_ref().is_some_and(|u| u.matches(&node)) {
+                    if upload.as_ref().is_some_and(|u| tokio::time::Instant::now() < u.deadline && u.matches(&node)) {
                         let outcome = upload.take().expect("matched pending upload").settle(&store, &node)?;
                         // 43.72 Fcj3/Fc8(7): success demand enters migrated ADD admission.
                         if outcome.accepted && (outcome.count_low || outcome.pq_count_low) {
@@ -719,7 +727,8 @@ pub(crate) async fn drive(
                         continue;
                     }
                     // APK 43.72 0ln.A01: non-reply IQs cannot settle a ping.
-                    if id == pending_ping.as_ref().map(|(id, _)| id.as_str()) && pending_ping.is_some()
+                    if id == pending_ping.as_ref().map(|(id, _)| id.as_str())
+                        && pending_ping.as_ref().is_some_and(|(_, deadline)| tokio::time::Instant::now() < *deadline)
                         && matches!(node.get_attr("type").and_then(|v| v.as_text()), Some("result" | "error")) {
                         if node.get_attr("type").and_then(|v| v.as_text()) != Some("result") { return Err(Error::invalid("connection", "keepalive refused")); }
                         pending_ping = None; continue;
@@ -4692,6 +4701,132 @@ mod tests {
                 }
             }
         }
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn late_prekey_reply_cannot_settle_between_deadline_and_heartbeat() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("prekey-deadline.redb");
+        let store = registered_store(&path);
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let (upload, written) = fake.written().await;
+        assert_eq!(assert_upload(&upload).len(), 50);
+        written.send(Ok(())).unwrap();
+        let (ping, written) = fake.written_within(Duration::from_secs(25)).await;
+        assert_eq!(
+            ping.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("w:p")
+        );
+        written.send(Ok(())).unwrap();
+        fake.deliver(result_for(&ping, false)).await;
+        tokio::time::advance(Duration::from_secs(11)).await;
+        tokio::task::yield_now().await;
+        // This result arrives at31s: after its30s deadline but before the40s tick.
+        let late = result_for(&upload, false);
+        let capture = format!(
+            "inbound:sha256:{}",
+            hex::encode(sha2::Sha256::digest(encode(&late).unwrap()))
+        );
+        fake.deliver(late).await;
+        fake.deliver(
+            Node::new("iq")
+                .attr("type", "get")
+                .attr("xmlns", "urn:xmpp:ping"),
+        )
+        .await;
+        let (pong, written) = fake.written().await;
+        assert_eq!(
+            pong.get_attr("type").and_then(|v| v.as_text()),
+            Some("result")
+        );
+        written.send(Ok(())).unwrap();
+        fake.stop_cleanly().await;
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                .unwrap()
+                .is_some()
+        );
+        let state = super::super::prekeys::summary(&store).unwrap();
+        assert_eq!(state.uncertain, 50);
+        assert_eq!(state.uploaded, 0);
+        assert_eq!(state.batches.get("outcome_unknown"), Some(&1));
+        drop(store);
+        let store = identity_store(&path);
+        assert_eq!(
+            super::super::prekeys::summary(&store).unwrap().uncertain,
+            50
+        );
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn late_device_reply_cannot_settle_between_deadline_and_heartbeat() {
+        use super::super::devices::{pending_users, query_record, request_sync};
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("device-deadline.redb");
+        let store = open(&path);
+        request_sync(&store, None, &peer(), None, "test").unwrap();
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let (query, written) = fake.written().await;
+        assert_eq!(
+            query.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("usync")
+        );
+        let id = query.get_attr("id").unwrap().as_text().unwrap().to_owned();
+        let before = query_record(&store, &id).unwrap().unwrap();
+        written.send(Ok(())).unwrap();
+        let (ping, written) = fake.written_within(Duration::from_secs(25)).await;
+        assert_eq!(
+            ping.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("w:p")
+        );
+        written.send(Ok(())).unwrap();
+        fake.deliver(result_for(&ping, false)).await;
+        tokio::time::advance(Duration::from_secs(11)).await;
+        tokio::task::yield_now().await;
+        // A late error must not turn the reserved read into a server refusal.
+        let late = Node::new("iq")
+            .attr("id", id.as_str())
+            .attr("type", "error")
+            .children(vec![Node::new("error").attr("code", "503")]);
+        let capture = format!(
+            "inbound:sha256:{}",
+            hex::encode(sha2::Sha256::digest(encode(&late).unwrap()))
+        );
+        fake.deliver(late).await;
+        fake.deliver(
+            Node::new("iq")
+                .attr("type", "get")
+                .attr("xmlns", "urn:xmpp:ping"),
+        )
+        .await;
+        let (pong, written) = fake.written().await;
+        assert_eq!(
+            pong.get_attr("type").and_then(|v| v.as_text()),
+            Some("result")
+        );
+        written.send(Ok(())).unwrap();
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                .unwrap()
+                .is_some()
+        );
+        assert_eq!(query_record(&store, &id).unwrap().unwrap(), before);
+        assert_eq!(pending_users(&store).unwrap(), vec![peer()]);
+        fake.stop_cleanly().await;
+        drop(store);
+        let store = identity_store(&path);
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                .unwrap()
+                .is_some()
+        );
+        assert_eq!(query_record(&store, &id).unwrap().unwrap(), before);
+        assert_eq!(pending_users(&store).unwrap(), vec![peer()]);
     }
 
     #[tokio::test(start_paused = true)]
