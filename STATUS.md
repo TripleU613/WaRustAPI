@@ -1,3 +1,11 @@
+2026-11-05 — **FBNS message ACK eligibility and JSON-failure continuation traced.**
+
+The provider IPC ACK can follow empty or invalid JSON data. Its completion flag
+is not payload-success, durable application or WhatsApp stanza-ACK proof.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-push-config-fbns-token-received/README.md#provider-message-ack-after-normal-handling-or-json-failure).
+Research only; no runtime changes or live traffic. Validation: checked exports,
+excerpt/source match, checksums, JSON, coverage freshness and repository hygiene.
+
 2026-11-05 — **FBNS callback persistence and optimistic marker traced.**
 
 The callback can write last_server_fbns_token after SET submission without

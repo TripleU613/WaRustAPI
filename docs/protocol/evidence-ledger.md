@@ -5744,3 +5744,14 @@ local-token comparison/save. The marker is not exclusively server-observed state
 [Receiver, explicit excerpts, helpers and limits](apk/2.26.43.72-push-config-fbns-token-received/README.md).
 Full provider/generation authority, ACKs and durable recovery remain open.
 No Rust behavior, provider IPC or live account operation changed.
+
+### FBNS provider message ACK continuation (2026-11-05)
+
+**Confirmed static, APK43.72:** the selected FBNS worker reaches provider ACK
+after normal message handling, empty data or its JSONException catch. Nonempty
+sender/notification ID and sender allowlist gate an authenticated Android
+broadcast with processor_completed=true. This does not prove payload success,
+durable processing or WhatsApp stanza acknowledgement.
+[Branch offsets, error continuation and limits](apk/2.26.43.72-push-config-fbns-token-received/README.md#provider-message-ack-after-normal-handling-or-json-failure).
+Full downstream processing, provider delivery and durable ACK ownership remain
+open. No Rust behavior, provider IPC or live account operation changed.

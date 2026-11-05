@@ -33,7 +33,8 @@ entering the out-of-line token state region at1e40. Receiver manifest admission,
 PendingIntent extraction helper and OS/provider runtime authenticity are not
 fully reconstructed; these selected checks are not a global trust proof.
 The adjacent message branch callsF2Y.A02 after JSON extraction, including pn;
-its full mapping and acknowledgement obligations remain a separate audit item.
+its full mapping remains a separate audit item. Selected provider ACK handling
+is traced below.
 
 ## Token state transition and order
 
@@ -69,10 +70,56 @@ The null callback and discarded boolean do not grant replay authority after a
 restart. This is native behavior to model carefully, not a confirmed existing
 Rust defect or a reason to weaken durable uncertain-outcome protections.
 
+## Provider message ACK after normal handling or JSON failure
+
+**Confirmed static,2026-11-05:** the literal ACK-action reference inventory finds
+one direct String reference inFei.run. That is a bounded literal search, not an
+exhaustive census of dynamically constructed actions or every provider version.
+The existing selected worker excerpts retain all instructions described here.
+
+After authenticated receive_type=message admission, the selected body either
+skips empty data, parses its JSON and invokesF2Y.A02, or catches JSONException.
+Empty data branches from08d4 to0a00. A normal downstream return branches from
+09ec to0a00. The catch table maps code units046c..04fa (printed bytes08d8..09f4)
+to04fa (printed09f4); that catch logs invalid payload then falls through to0a00.
+There is no payload-success boolean gate on this common ACK continuation.
+Other thrown failures are not converted to this JSON catch merely by the ACK
+flag's name; full downstream exception and deferred-work behavior remain open.
+
+At0a00 the worker reads extra_notification_sender and extra_notification_id.
+Null or String.isEmpty for either returns without broadcast. There is no trim
+in these selected checks. It constructs action
+com.facebook.rti.intent.ACTION_NOTIFICATION_ACK, copies extra_notification_id,
+and sets boolean extra_processor_completed=true. It then requires the sender
+String to belong to1uq.A00, the same three-package list retained in the earlier
+[provider bundle](../2.26.43.72-push-config-fbns-reconciliation/provider-list.txt).
+An unknown package logs instead of reaching the selected broadcast call.
+
+The out-of-line continuation at1e18 sets Intent.package to the sender String,
+adds1ur.A00's auth_bundle/PendingIntent metadata, and calls Context.sendBroadcast.
+The ACK destination is supplied by extra_notification_sender; the earlier
+PendingIntent creator was separately checked through1ur.A01. This ACK block does
+not compare those two package values or rerun1ur.A01 for the sender. That is a
+bounded description of these checks, not proof of an exploitable trust failure
+or permission to bypass provider admission. Manifest/OS authority remains open.
+
+The broadcast path catches RuntimeException: a DeadObjectException cause returns;
+other causes rethrow in its out-of-line handler. No selected response wait,
+delivery confirmation, retry timer or durable ACK reservation appears around this
+call. Normal sendBroadcast return is not observed receipt by the provider.
+
+This ACK is Android provider IPC, not an ack/class=notification WhatsApp stanza.
+extra_processor_completed=true is sent even after the selected JSON parse
+failure; it cannot establish successfulF2Y processing, decrypted message delivery,
+state persistence or a server-side WhatsApp acknowledgement. It must not be used
+to justify adding generic WhatsApp ACKs for unknown notification types. A future
+FBNS port needs the provider-specific authority and lifecycle; no such runtime
+path is enabled by this evidence-only change.
+
 ## Remaining work
 
 Full provider/manifest authority, callback freshness, monitor/account-generation
 binding, concurrent preference visibility, malformed IPC handling, optional SET
-attributes, later acknowledgements, retry ownership, disk recovery and FBNS
-message ACK semantics remain incomplete. No Rust behavior, provider invocation,
+attributes, later acknowledgements, retry ownership, disk recovery and complete downstream FBNS
+message processing/durable ACK ownership remain incomplete. No Rust behavior, provider invocation,
 sender, HTTP route or live account/network operation is added.
