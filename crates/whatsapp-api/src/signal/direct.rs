@@ -221,7 +221,9 @@ fn crypto(error: SignalProtocolError) -> Error {
         SignalProtocolError::InvalidPreKeyId => "Signal one-time prekey unavailable or invalid",
         SignalProtocolError::InvalidSignedPreKeyId => "Signal signed prekey unavailable or invalid",
         SignalProtocolError::SessionNotFound(_) => "Signal session not found",
-        SignalProtocolError::DuplicatedMessage(..) => "Signal duplicate or old message counter",
+        // APK43.72 F22.A02 / 0WJ.A0P: old counter -> ED4 -> -1001,
+        // excluded by EtY.A00 retry eligibility. Keep this typed at the inbox.
+        SignalProtocolError::DuplicatedMessage(..) => return Error::SignalOldMessageCounter,
         SignalProtocolError::BadMac(_) => "Signal message MAC verification failed",
         SignalProtocolError::InvalidMessage(..) => "Signal message invalid",
         SignalProtocolError::InvalidSessionStructure(_)
@@ -884,6 +886,12 @@ mod tests {
     use super::*;
     #[test]
     fn crypto_diagnostics_classify_without_address_or_backend_details() {
+        let duplicate = crypto(SignalProtocolError::DuplicatedMessage(123, 456));
+        assert!(matches!(duplicate, Error::SignalOldMessageCounter));
+        for diagnostic in [duplicate.to_string(), format!("{duplicate:?}")] {
+            assert!(!diagnostic.contains("123"));
+            assert!(!diagnostic.contains("456"));
+        }
         let address = ProtocolAddress::new("private-peer-marker", DeviceId::new(0));
         for (error, expected) in [
             (
@@ -896,10 +904,6 @@ mod tests {
             ),
             (SignalProtocolError::InvalidPreKeyId, "one-time prekey"),
             (SignalProtocolError::InvalidSignedPreKeyId, "signed prekey"),
-            (
-                SignalProtocolError::DuplicatedMessage(123, 456),
-                "old message counter",
-            ),
             (
                 SignalProtocolError::InvalidArgument("private-peer-marker".into()),
                 "operation failed",

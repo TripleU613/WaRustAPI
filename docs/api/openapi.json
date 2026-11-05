@@ -16473,5 +16473,12 @@
     "x-live": false,
     "evidence": "docs/protocol/retry-original-chat.md",
     "description": "Retry chat uses supported plain-user recipient when present, otherwise normalized from; requesting device remains participant/from. Direct driver checks selected chat against saved original peer/existing peer-to-LID mapping before session work or key-query reservation, recording local not_the_original_chat on mismatch. Malformed/device-form recipient refuses locally. Parser/driver regressions include wrong chat with matching device, explicit wrong recipient and valid pre-saved LID workflow. No receipt-derived mapping, new CLI/HTTP route or live request; full native alias/context/fallback policy remains open."
+  },
+  "x-signal-old-counter-retry-admission": {
+    "x-cli": false,
+    "x-transport": ["experimental transport; offline tested"],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-old-counter-no-retry/README.md",
+    "description": "Error::SignalOldMessageCounter preserves libsignal DuplicatedMessage without counters or peer details. Direct and pairwise SKDM inbox rejection returns Unsupported, with no automatic retry or delivery ACK. Authenticated durable duplicates retain existing confirmation. APK ED4 old-counter maps to -1001 excluded by selected native retry predicate; complete native ACK and other primitive/error policies remain unported. No CLI or HTTP route added."
   }
 }

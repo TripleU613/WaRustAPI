@@ -1,0 +1,230 @@
+
+# class: LX/0WJ;
+# extends: Ljava/lang/Object;
+
+.method public A0P(LLLL)  # .registers 17
+    # full signature: LX/0WJ;->A0P(LX/FtG;LX/F24;[B)LX/EtY;
+    0000..0004  iget-object  v0, v13, LX/0WJ;->A0I:LX/0Wk;
+    0004..000a  invoke-static  {v15, v0}, LX/0Wk;->A01(LX/F24;LX/0Wk;)LX/FjI;
+    000a..000c  move-result-object  v12
+    000c..0012  invoke-virtual  {v12}, Ljava/util/concurrent/locks/ReentrantLock;->lock()V
+    0012..0016  iget-object  v0, v13, LX/0WJ;->A01:LX/0Yl;
+    0016..001a  iget-object  v0, v0, LX/0Yl;->A03:LX/0Yj;
+    001a..001e  iget-object  v8, v0, LX/0Yj;->A04:LX/0YW;
+    001e..0024  invoke-static  {v15}, LX/F39;->A06(LX/F24;)LX/Eef;
+    0024..0026  move-result-object  v7
+    0026..0028  const/4  v2, #0x0
+    0028..002c  new-instance  v9, LX/Fix;
+    002c..0032  invoke-direct  {v9, v14}, LX/Fix;-><init>(LX/FtG;)V
+    0032..0036  sget-object  v11, LX/ELf;->A00:Ljava/lang/Object;
+    0036..0038  monitor-enter
+    0038..003c  const-string  v3, "No sender key for: "
+    003c..0042  invoke-virtual  {v8, v7}, LX/0YW;->A01(LX/Eef;)LX/EtP;
+    0042..0044  move-result-object  v10
+    0044..0048  iget-object  v1, v10, LX/EtP;->A00:Ljava/util/LinkedList;
+    0048..004e  invoke-virtual  {v1}, Ljava/util/AbstractCollection;->isEmpty()Z
+    004e..0050  move-result  v0
+    0050..0054  if-nez  v0, +0xcb
+    0054..0058  new-instance  v0, LX/Fj2;
+    0058..005c  move-object/from16  v3, v16
+    005c..0062  invoke-direct  {v0, v3}, LX/Fj2;-><init>([B)V
+    0062..0066  iget  v5, v0, LX/Fj2;->A01:I
+    0066..006c  invoke-virtual  {v1}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+    006c..006e  move-result-object  v4
+    006e..0074  invoke-interface  {v4}, Ljava/util/Iterator;->hasNext()Z
+    0074..0076  move-result  v1
+    0076..007a  if-eqz  v1, +0xa4
+    007a..0080  invoke-interface  {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0080..0082  move-result-object  v6
+    0082..0086  check-cast  v6, LX/EZo;
+    0086..008a  iget-object  v3, v6, LX/EZo;->A00:LX/Ddl;
+    008a..008e  iget  v1, v3, LX/Ddl;->senderKeyId_:I
+    008e..0092  if-ne  v1, v5, -0x10
+    0092..0096  iget-object  v1, v3, LX/Ddl;->senderSigningKey_:LX/Dc1;
+    0096..009a  if-nez  v1, +0x4
+    009a..009e  sget-object  v1, LX/Dc1;->DEFAULT_INSTANCE:LX/Dc1;
+    009e..00a2  iget-object  v1, v1, LX/Dc1;->public_:Lcom/google/protobuf/ByteString;
+    00a2..00a8  invoke-virtual  {v1}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    00a8..00aa  move-result-object  v1
+    00aa..00b0  invoke-static  {v1}, LX/0Yu;->A00([B)LX/Fbl;
+    00b0..00b2  move-result-object  v1
+    00b2..00b8  invoke-virtual  {v0, v1}, LX/Fj2;->A00(LX/Fbl;)V
+    00b8..00bc  iget  v5, v0, LX/Fj2;->A00:I
+    00bc..00c0  iget-object  v1, v6, LX/EZo;->A00:LX/Ddl;
+    00c0..00c4  iget-object  v1, v1, LX/Ddl;->senderChainKeys_:Lcom/google/protobuf/Internal$ProtobufList;
+    00c4..00c8  new-instance  v4, LX/F1s;
+    00c8..00ce  invoke-direct  {v4, v1}, LX/F1s;-><init>(Ljava/util/List;)V
+    00ce..00d2  iget  v3, v4, LX/F1s;->A00:I
+    00d2..00d6  if-gt  v3, v5, +0x5a
+    00d6..00da  if-ge  v3, v5, +0x7
+    00da..00dc  sub-int/2addr  v5, v3
+    00dc..00e2  invoke-virtual  {v4, v5}, LX/F1s;->A02(I)LX/F1s;
+    00e2..00e4  move-result-object  v4
+    00e4..00e6  const/4  v1, #0x1
+    00e6..00ec  invoke-virtual  {v4, v1}, LX/F1s;->A02(I)LX/F1s;
+    00ec..00ee  move-result-object  v1
+    00ee..00f4  invoke-virtual  {v6, v1}, LX/EZo;->A00(LX/F1s;)V
+    00f4..00fa  invoke-virtual  {v4}, LX/F1s;->A03()[[B
+    00fa..00fc  move-result-object  v5
+    00fc..0100  iget  v4, v4, LX/F1s;->A00:I
+    0100..0102  array-length  v1, v5
+    0102..0104  const/4  v3, #0x1
+    0104..0106  sub-int/2addr  v1, v3
+    0106..010a  aget-object  v1, v5, v1
+    010a..0110  invoke-static  {v1, v3}, LX/F1s;->A01([BB)[B
+    0110..0112  move-result-object  v1
+    0112..0116  new-instance  v3, LX/EVd;
+    0116..011c  invoke-direct  {v3, v4, v1}, LX/EVd;-><init>(I[B)V
+    011c..0120  iget-object  v1, v3, LX/EVd;->A02:[B
+    0120..0124  iget-object  v6, v3, LX/EVd;->A01:[B
+    0124..0128  iget-object  v5, v0, LX/Fj2;->A02:[B
+    0128..012c  new-instance  v4, Ljavax/crypto/spec/IvParameterSpec;
+    012c..0132  invoke-direct  {v4, v1}, Ljavax/crypto/spec/IvParameterSpec;-><init>([B)V
+    0132..0136  const-string  v0, "AES/CBC/PKCS5Padding"
+    0136..013c  invoke-static  {v0}, Ljavax/crypto/Cipher;->getInstance(Ljava/lang/String;)Ljavax/crypto/Cipher;
+    013c..013e  move-result-object  v3
+    013e..0142  const-string  v0, "AES"
+    0142..0146  new-instance  v1, Ljavax/crypto/spec/SecretKeySpec;
+    0146..014c  invoke-direct  {v1, v6, v0}, Ljavax/crypto/spec/SecretKeySpec;-><init>([BLjava/lang/String;)V
+    014c..014e  const/4  v0, #0x2
+    014e..0154  invoke-virtual  {v3, v0, v1, v4}, Ljavax/crypto/Cipher;->init(ILjava/security/Key;Ljava/security/spec/AlgorithmParameterSpec;)V
+    0154..015a  invoke-virtual  {v3, v5}, Ljavax/crypto/Cipher;->doFinal([B)[B
+    015a..015c  move-result-object  v1
+    015c..0162  invoke-virtual  {v9, v1}, LX/Fix;->BLW([B)V
+    0162..0168  invoke-virtual  {v8, v7, v10}, LX/0YW;->A03(LX/Eef;LX/EtP;)V
+    0168..016a  monitor-exit
+    016a..016c  const/4  v0, #0x0
+    016c..0172  invoke-static  {v2, v1, v0}, LX/EHq;->A00(Ljava/lang/Exception;[BI)LX/EtY;
+    0172..0174  move-result-object  v0
+    0174..0178  goto/16  +0x91
+    0178..017a  move-exception  v0
+    017a..017e  new-instance  v1, LX/EDY;
+    017e..0184  invoke-direct  {v1, v0}, LX/EDY;-><init>(Ljava/lang/Throwable;)V
+    0184..0186  goto  +0x49
+    0186..018a  const-string  v0, "Received message with old counter: "
+    018a..018e  new-instance  v1, Ljava/lang/StringBuilder;
+    018e..0194  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0194..019a  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    019a..019e  const-string  v0, " , "
+    019e..01a4  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    01a4..01aa  invoke-virtual  {v1, v5}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    01aa..01b0  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    01b0..01b2  move-result-object  v0
+    01b2..01b6  new-instance  v1, LX/ED4;
+    01b6..01bc  invoke-direct  {v1, v0}, LX/ED4;-><init>(Ljava/lang/String;)V
+    01bc..01be  goto  +0x2d
+    01be..01c2  const-string  v1, "No keys for: "
+    01c2..01c6  new-instance  v0, Ljava/lang/StringBuilder;
+    01c6..01cc  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    01cc..01d2  invoke-virtual  {v0, v5}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    01d2..01d8  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    01d8..01da  move-result-object  v0
+    01da..01de  new-instance  v1, LX/EDR;
+    01de..01e4  invoke-direct  {v1, v0}, LX/EDR;-><init>(Ljava/lang/String;)V
+    01e4..01e6  goto  +0x19
+    01e6..01ea  new-instance  v0, Ljava/lang/StringBuilder;
+    01ea..01f0  invoke-direct  {v0, v3}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    01f0..01f6  invoke-virtual  {v0, v7}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    01f6..01fc  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    01fc..01fe  move-result-object  v0
+    01fe..0202  new-instance  v1, LX/EDS;
+    0202..0208  invoke-direct  {v1, v0}, LX/EDS;-><init>(Ljava/lang/String;)V
+    0208..020a  goto  +0x7
+    020a..020c  move-exception  v0
+    020c..0210  new-instance  v1, Ljava/lang/AssertionError;
+    0210..0216  invoke-direct  {v1, v0}, Ljava/lang/AssertionError;-><init>(Ljava/lang/Object;)V
+    0216..0218  throw  v1
+    0218..021a  move-exception  v1
+    021a..021e  new-instance  v0, LX/EDY;
+    021e..0224  invoke-direct  {v0, v1}, LX/EDY;-><init>(Ljava/lang/Throwable;)V
+    0224..0226  throw  v0
+    0226..0228  move-exception  v0
+    0228..022a  monitor-exit
+    022a..022c  throw  v0
+    022c..022e  move-exception  v1
+    022e..0232  instance-of  v0, v1, Landroid/database/sqlite/SQLiteFullException;
+    0232..0236  if-nez  v0, +0x12
+    0236..023a  instance-of  v0, v1, Landroid/database/sqlite/SQLiteDatabaseCorruptException;
+    023a..023e  if-nez  v0, +0xe
+    023e..0242  const-string  v0, "SignalCoordinatorDefault/decryptForGroupUsingFastRatchet"
+    0242..0248  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0248..024c  const/16  v0, #0xfc18 (-1000)
+    024c..0252  invoke-static  {v1, v2, v0}, LX/EHq;->A00(Ljava/lang/Exception;[BI)LX/EtY;
+    0252..0254  move-result-object  v0
+    0254..0256  goto  +0x21
+    0256..0258  throw  v1
+    0258..025a  move-exception  v1
+    025a..025e  const/16  v0, #0xfc10 (-1008)
+    025e..0264  invoke-static  {v1, v2, v0}, LX/EHq;->A00(Ljava/lang/Exception;[BI)LX/EtY;
+    0264..0266  move-result-object  v0
+    0266..0268  goto  +0x18
+    0268..026a  move-exception  v1
+    026a..026e  const/16  v0, #0xfc17 (-1001)
+    026e..0274  invoke-static  {v1, v2, v0}, LX/EHq;->A00(Ljava/lang/Exception;[BI)LX/EtY;
+    0274..0276  move-result-object  v0
+    0276..0278  goto  +0x10
+    0278..027a  move-exception  v1
+    027a..027e  const/16  v0, #0xfc13 (-1005)
+    027e..0284  invoke-static  {v1, v2, v0}, LX/EHq;->A00(Ljava/lang/Exception;[BI)LX/EtY;
+    0284..0286  move-result-object  v0
+    0286..0288  goto  +0x8
+    0288..028a  move-exception  v1
+    028a..028e  const/16  v0, #0xfc11 (-1007)
+    028e..0294  invoke-static  {v1, v2, v0}, LX/EHq;->A00(Ljava/lang/Exception;[BI)LX/EtY;
+    0294..0296  move-result-object  v0
+    0296..029c  invoke-virtual  {v12}, LX/FjI;->close()V
+    029c..029e  return-object  v0
+    029e..02a0  move-exception  v1
+    02a0..02a6  invoke-virtual  {v12}, LX/FjI;->close()V
+    02a6..02a8  throw  v1
+    02a8..02aa  move-exception  v0
+    02aa..02b0  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    02b0..02b2  throw  v1
+    # exception table: 17 try range(s)
+    # catch <all> code_units 0009..0014 -> 014f
+    # catch LX/ED6; code_units 0014..001c -> 0144
+    # catch LX/EDY; code_units 0014..001c -> 013c
+    # catch LX/ED4; code_units 0014..001c -> 0134
+    # catch LX/EDS; code_units 0014..001c -> 012c
+    # catch Ljava/lang/Exception; code_units 0014..001c -> 0116
+    # catch <all> code_units 0014..001c -> 014f
+    # catch <all> code_units 001c..001e -> 0113
+    # catch LX/EDQ; code_units 001e..0094 -> 010c
+    # catch LX/EDR; code_units 001e..0094 -> 010c
+    # catch <all> code_units 001e..0094 -> 0113
+    # catch Ljava/security/NoSuchAlgorithmException; code_units 0094..00ae -> 0105
+    # catch Ljavax/crypto/NoSuchPaddingException; code_units 0094..00ae -> 0105
+    # catch Ljava/security/InvalidKeyException; code_units 0094..00ae -> 0105
+    # catch Ljava/security/InvalidAlgorithmParameterException; code_units 0094..00ae -> 0105
+    # catch Ljavax/crypto/IllegalBlockSizeException; code_units 0094..00ae -> 00bc
+    # catch Ljavax/crypto/BadPaddingException; code_units 0094..00ae -> 00bc
+    # catch LX/EDQ; code_units 0094..00ae -> 010c
+    # catch LX/EDR; code_units 0094..00ae -> 010c
+    # catch <all> code_units 0094..00ae -> 0113
+    # catch LX/EDQ; code_units 00ae..00b4 -> 010c
+    # catch LX/EDR; code_units 00ae..00b4 -> 010c
+    # catch <all> code_units 00ae..00b4 -> 0113
+    # catch <all> code_units 00b4..00b5 -> 0113
+    # catch LX/ED6; code_units 00b5..00bc -> 0144
+    # catch LX/EDY; code_units 00b5..00bc -> 013c
+    # catch LX/ED4; code_units 00b5..00bc -> 0134
+    # catch LX/EDS; code_units 00b5..00bc -> 012c
+    # catch Ljava/lang/Exception; code_units 00b5..00bc -> 0116
+    # catch <all> code_units 00b5..00bc -> 014f
+    # catch LX/EDQ; code_units 00bc..010c -> 010c
+    # catch LX/EDR; code_units 00bc..010c -> 010c
+    # catch <all> code_units 00bc..010c -> 0113
+    # catch <all> code_units 010c..0115 -> 0113
+    # catch LX/ED6; code_units 0115..0116 -> 0144
+    # catch LX/EDY; code_units 0115..0116 -> 013c
+    # catch LX/ED4; code_units 0115..0116 -> 0134
+    # catch LX/EDS; code_units 0115..0116 -> 012c
+    # catch Ljava/lang/Exception; code_units 0115..0116 -> 0116
+    # catch <all> code_units 0115..0116 -> 014f
+    # catch <all> code_units 0116..012c -> 014f
+    # catch <all> code_units 012f..0134 -> 014f
+    # catch <all> code_units 0137..013c -> 014f
+    # catch <all> code_units 013f..0144 -> 014f
+    # catch <all> code_units 0147..014b -> 014f
+    # catch <all> code_units 0150..0153 -> 0154
+.end method

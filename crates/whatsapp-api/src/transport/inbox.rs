@@ -817,12 +817,19 @@ pub async fn process_with_policy(
     // still propagated, so a single undecryptable `pkmsg` tore down the whole
     // connection and every stanza queued behind it went unprocessed.
     //
-    // Only the Signal layer's own failures are degraded, by their `field`. A
+    // Signal old counters are handled separately; other Signal failures are
+    // degraded by their `field`. A
     // transactional failure *after* a successful decryption also surfaces as
     // `InvalidInput`, and that one must keep propagating: it means the advanced
     // session and the inbox write rolled back together, which the caller has to
     // see rather than have reported as an ordinary undecryptable message.
     match process_direct(store, account, node, capture, policy).await {
+        Err(Error::SignalOldMessageCounter) => {
+            // Native ED4/-1001 is not retry eligible. It also does not prove
+            // a durable authenticated record, so do not authorize a delivery ACK.
+            tracing::warn!("old Signal counter preserved without retry or delivery ACK");
+            Ok(IncomingResult::Unsupported)
+        }
         Err(Error::InvalidInput { field, reason }) if field == "direct_message" => {
             tracing::warn!(
                 field,
@@ -1497,6 +1504,12 @@ async fn process_group(
     policy: IdentityChangePolicy,
 ) -> Result<IncomingResult> {
     match process_group_inner(store, account, node, capture, policy).await {
+        Err(Error::SignalOldMessageCounter) => {
+            // Native ED4/-1001 is not retry eligible. It also does not prove
+            // a durable authenticated record, so do not authorize a delivery ACK.
+            tracing::warn!("old Signal counter preserved without retry or delivery ACK");
+            Ok(IncomingResult::Unsupported)
+        }
         Err(Error::InvalidInput { field, reason }) => {
             // A group stanza that fails in the crypto is undecryptable; one
             // that fails elsewhere is merely unsupported. Only the first is
@@ -3152,6 +3165,16 @@ mod tests {
                     ))
                     .unwrap()
                     .is_none()
+            );
+            // Reusing the ciphertext under a new stanza ID bypasses the durable
+            // same-ID duplicate marker and reaches Signal's consumed counter.
+            let replay = node.clone().attr("id", "OLD-COUNTER-REPLAY");
+            let replay_capture = preserve(&store, &replay).unwrap();
+            assert_eq!(
+                process(&store, &bob_account, &replay, &replay_capture)
+                    .await
+                    .unwrap(),
+                IncomingResult::Unsupported
             );
             drop(store);
             let store = open(false);

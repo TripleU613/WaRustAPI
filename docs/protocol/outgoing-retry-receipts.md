@@ -59,3 +59,22 @@ policy and full routing remain unfinished. No live request.
 Validation for this research chunk:29 filtered retry tests passed; APK coverage,
 staged whitespace and research checksum/link hygiene passed. No Rust source
 changed, so the full workspace suite was not rerun for the mapping-only change.
+
+## Old counters no longer request retries — 2026-11-05
+
+**Confirmed static:** [ED4 old-counter producers and -1001 mapping](apk/2.26.43.72-old-counter-no-retry/README.md)
+close one typed cause: selected native retry eligibility excludes this status.
+**Inferred compatibility mapping / offline implementation:** libsignal's
+DuplicatedMessage now survives as Error::SignalOldMessageCounter. Direct and
+pairwise SKDM inbox handling preserves capture and continues as Unsupported,
+without retry or delivery ACK. Durable authenticated same-ID duplicates keep
+the existing Duplicate result. No counter/address/backend data enters the error.
+
+Other retry error codes, native old-counter confirmation policy, sender-key
+primitive classification and full route/key/count policy remain open. Existing
+group crypto error formatting is also still an uncorrected redaction gap; no
+primitive equivalence is inferred from direct cipher evidence. No live request.
+
+Validation:1327 workspace/all-feature tests passed; formatting, strict workspace
+all-target/all-feature Clippy, CLI reference regeneration, APK coverage and
+research checksum/link hygiene passed. Offline only.

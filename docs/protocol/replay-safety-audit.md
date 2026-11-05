@@ -452,3 +452,18 @@ and an I/O error cannot establish definite non-delivery. The checkpoint is
 a test fixture, not a production outbox reservation or complete reconnect
 policy; this is local duplex I/O, not a TCP/live-server observation. No runtime
 behavior, sender, retry authority or live account operation changes.
+
+## Old counters no longer request retries — 2026-11-05
+
+**Confirmed static:** [ED4 old-counter producers and -1001 mapping](apk/2.26.43.72-old-counter-no-retry/README.md)
+close one typed cause: selected native retry eligibility excludes this status.
+**Inferred compatibility mapping / offline implementation:** libsignal's
+DuplicatedMessage now survives as Error::SignalOldMessageCounter. Direct and
+pairwise SKDM inbox handling preserves capture and continues as Unsupported,
+without retry or delivery ACK. Durable authenticated same-ID duplicates keep
+the existing Duplicate result. No counter/address/backend data enters the error.
+
+Other retry error codes, native old-counter confirmation policy, sender-key
+primitive classification and full route/key/count policy remain open. Existing
+group crypto error formatting is also still an uncorrected redaction gap; no
+primitive equivalence is inferred from direct cipher evidence. No live request.

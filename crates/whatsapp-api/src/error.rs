@@ -20,6 +20,11 @@ pub type Result<T, E = Error> = std::result::Result<T, E>;
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
 pub enum Error {
+    /// Signal rejected an already-consumed or unavailable old message counter.
+    /// This does not prove the message has a durable authenticated inbox record.
+    #[error("Signal duplicate or old message counter")]
+    SignalOldMessageCounter,
+
     /// A caller-supplied value failed validation.
     #[error("invalid input for `{field}`: {reason}")]
     InvalidInput {

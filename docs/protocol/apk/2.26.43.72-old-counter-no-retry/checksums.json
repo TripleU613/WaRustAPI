@@ -1,0 +1,30 @@
+{
+  "ED4-constructors.txt": {
+    "bytes": 201,
+    "sha256": "4e9382a2a8133fc61800a898d5522642b0788dcf0154518ad19aeeee931f4e68"
+  },
+  "EDQ-constructors.txt": {
+    "bytes": 468,
+    "sha256": "e0d62589681f85812b119cedcd2d9a517ddb39a0b69baba35f71a100ebc93e5f"
+  },
+  "EDR-constructors.txt": {
+    "bytes": 666,
+    "sha256": "cf9ef5352911bb48134ef6b714ce712be58983d5cc69400f847d85e45dec5ed4"
+  },
+  "EDY-constructors.txt": {
+    "bytes": 2233,
+    "sha256": "6b25610c8c92a2ed36987c0cd51370dcc58652be61ebe8b1bb9051b878cdfcda"
+  },
+  "README.md": {
+    "bytes": 2805,
+    "sha256": "f16a2c1b289cba7a5704feba5118a280f115a25783d384b94f53df4c0c23b91a"
+  },
+  "duplicate-producer.txt": {
+    "bytes": 30015,
+    "sha256": "6e1be24e16978983f151eb58c66e603656fa875059d97cdcac83728b10188a7b"
+  },
+  "message-decrypt.txt": {
+    "bytes": 12612,
+    "sha256": "d7f67ad7756d88cab540606cbb1b5ddc6f6919d55f3f9bb247429f1af5ad372a"
+  }
+}

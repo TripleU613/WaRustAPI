@@ -1,3 +1,11 @@
+2026-11-05 — **Consumed Signal counters no longer trigger automatic retries.**
+
+Typed direct crypto rejection continues receive without retry or delivery ACK;
+authenticated stored duplicates keep their existing confirmation behavior.
+[APK evidence, offline regression and remaining gaps](docs/protocol/outgoing-retry-receipts.md#old-counters-no-longer-request-retries--2026-11-05).
+Validation:1327 workspace tests, strict Clippy, fmt, CLI reference, coverage
+and hygiene passed. No live traffic or zero-ban guarantee.
+
 2026-11-05 — **Outgoing retry error domains/eligibility mapped.**
 
 Crypto status, internal failure kind and wire error are distinct; selected
