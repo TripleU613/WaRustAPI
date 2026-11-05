@@ -1,0 +1,13 @@
+["next_prekey_id"]  (6 reference(s))
+  classes.dex  Lcom/whatsapp/wamsys/JniBridge;->jnidispatchIO(JIL)
+    dex byte offset: 0x52440c
+  classes.dex  LX/0WJ;->A0u(VLI)
+    dex byte offset: 0x5cce7c
+  classes.dex  LX/0Yg;->A02(VL)
+    dex byte offset: 0x5e78be
+  classes.dex  LX/0Yl;->A07(V)
+    dex byte offset: 0x5e89f8
+  classes2.dex  LX/1j8;->ATc(VLL)
+    dex byte offset: 0x1f73a0
+  classes2.dex  LX/28o;->onUpgrade(VLII)
+    dex byte offset: 0x2bc868

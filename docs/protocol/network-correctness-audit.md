@@ -825,3 +825,13 @@ Native saved cursor ID/next expressions differ from Rust's zero-based checkpoint
 Current Rust one-chunk generation is not current-build parity. Cursor initialization,
 PQ policy and explicit existing-store compatibility remain to be resolved before
 porting. No history reinterpretation, runtime change or live traffic occurred.
+
+## Current-build prekey cursor ownership and creation seed (2026-11-04)
+
+**Confirmed static, 43.72:** 0YT.A01/A06 read/write raw cursor on self identity
+tuple(-1,0,0); absent reader row throws instead of defaulting0. Creation0Yg.A02
+uses independent 0Yg.A00()+1 seeds for legacy/PQ, each in1..0xfffffe. This
+closes the creation range/reader boundary, not schema/JNI migration writers.
+[Exact exports, xref bounds and existing-store compatibility](apk/2.26.43.72-prekey-upload-replies/README.md#native-cursor-ownership-and-creation-seed-2026-11-04).
+A Rust port must keep local zero-based history distinct and preserve uncertain
+batches, not reseed existing accounts. No implementation/reset/live traffic.

@@ -352,3 +352,47 @@ Additional export hashes:
 - [generate-legacy.txt](generate-legacy.txt): `553e858708b1432e1bfa05a17cf52a915a9ec460638a3010b20356f148ff6908`
 - [unsent-count.txt](unsent-count.txt): `4bd4b68b7677ee496bc17fc7202fa900053e803c7c0148e5b15770476cb69fe4`
 - [generation-save.txt](generation-save.txt): `9ab858339a3ff714a9f8c59c8a1c8cc8252013096cc96023da4e23814031a82a`
+
+## Native cursor ownership and creation seed (2026-11-04)
+
+**Confirmed static**, same pinned 43.72; no existing store was reset or migrated.
+
+- **0YT.A01** binds the generator's supplied identity query to self tuple
+  **recipient_id=-1, recipient_type=0, device_id=0**. It reads the requested
+  column through Cursor.getInt and returns that saved value; no in-method
+  normalization/default is applied. Missing self row throws SQLiteException
+  **Missing entry for self in identities table**. It does not generate a new
+  cursor or treat the missing row as zero.
+- **0YT.A06** writes the supplied integer to the supplied column using that
+  same self tuple. It does not normalize the cursor either. Updated-row count
+  is not checked in this wrapper; full SQLite binding/lifecycle remains open.
+- The exact **next_prekey_id** xref has six references: generator0Yl.A07,
+  saver0WJ.A0u, creator0Yg.A02, JniBridge.jnidispatchIO, 1j8.ATc and
+  28o.onUpgrade. The JNI/migration paths were not audited here, so this is not
+  a claim every cursor writer follows creation semantics.
+- **0Yg.A02**, 00d6–00f4, seeds next_prekey_id with **0Yg.A00()+1**; a separate
+  invocation similarly seeds next_kyber_prekey_id (00f4–0112). It inserts the
+  identity row through SQLiteDatabase.insertOrThrow at012a–0132. This is an
+  identity-creation branch, not evidence of ordinary per-login reseeding.
+- **0Yg.A00** uses SecureRandom.getInstance(SHA1PRNG).nextInt(0xfffffe),
+  returning an integer in [0,0xfffffe). Adding1 yields cursor **1..0xfffffe**.
+  Algorithm-unavailable throws AssertionError. This establishes the range and
+  independence of the two draws, not observed randomness or runtime provider.
+  An earlier 0x7ffffffe draw in A02 serves another field and is not this seed.
+
+**Compatibility conclusion:** native positive cursor N means a first generated
+ID of N (per the preceding 0Yl formula); Rust's saved zero-based cursor c means
+first ID c+1 modulo its existing convention. Do not simply mark the existing
+NEXT_ID_KEY as native or replace it with a random seed. An explicit versioned
+strategy can retain old record/batch IDs and carry a separately owned native
+cursor, with collision refusal and no automatic account identity rotation.
+Exact migration policy is not implemented by this research. Native schema/JNI
+imports and signed/PQ bootstrap remain open. No production change or live traffic.
+
+Additional export hashes:
+
+- [cursor-A01.txt](cursor-A01.txt): `87ab111326c68d4f3711df4f2b88273957a3049479a774916e200a8d07a3014e`
+- [cursor-A06.txt](cursor-A06.txt): `eff4cb8c800e2b50602cf8522be64f1d93e820fea39c3863360c46135c2d42e1`
+- [cursor-xref.txt](cursor-xref.txt): `f3780f5da2bd5b2d70040a912386290d00b59ac222218508fa0fa05df0036c32`
+- [cursor-initialization.txt](cursor-initialization.txt): `fd9e6ca9522e1702ee489bf0f26e83ce287ff786886080afe2b5545392e2b3ac`
+- [cursor-random.txt](cursor-random.txt): `f33beedb4a9b05bab2ccc69b56d4fdc9484dd492ddb8378fb15ba647e7e1c2a4`

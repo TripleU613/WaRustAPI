@@ -1,0 +1,190 @@
+
+# class: LX/0Yg;
+# extends: Ljava/lang/Object;
+
+.method public A02(VL)  # .registers 15
+    # full signature: LX/0Yg;->A02(Landroid/database/sqlite/SQLiteDatabase;)V
+    0000..0004  iget-object  v4, v13, LX/0Yg;->A00:LX/0WJ;
+    0004..0008  iget-object  v0, v4, LX/0WJ;->A0D:LX/08q;
+    0008..000e  invoke-static  {v0}, LX/08q;->A00(LX/08q;)J
+    000e..0010  move-result-wide  v11
+    0010..0014  const-wide/16  v0, #0x3e8
+    0014..0016  div-long/2addr  v11, v0
+    0016..001c  invoke-static  {}, LX/F3k;->A01()LX/ERZ;
+    001c..001e  move-result-object  v1
+    001e..0022  iget-object  v0, v1, LX/ERZ;->A01:LX/Ehd;
+    0022..0026  new-instance  v2, LX/Ee1;
+    0026..002c  invoke-direct  {v2, v0}, LX/Ee1;-><init>(LX/Ehd;)V
+    002c..0030  iget-object  v0, v1, LX/ERZ;->A00:LX/Ee0;
+    0030..0034  new-instance  v1, LX/ERa;
+    0034..003a  invoke-direct  {v1, v0, v2}, LX/ERa;-><init>(LX/Ee0;LX/Ee1;)V
+    003a..003e  iget-object  v9, v4, LX/0WJ;->A0J:LX/0YT;
+    003e..0040  const/4  v7, #0x0
+    0040..0044  iget-object  v0, v1, LX/ERa;->A01:LX/Ee1;
+    0044..0048  iget-object  v0, v0, LX/Ee1;->A00:LX/Ehd;
+    0048..004e  invoke-virtual  {v0}, LX/Ehd;->A00()[B
+    004e..0050  move-result-object  v6
+    0050..0054  iget-object  v2, v1, LX/ERa;->A00:LX/Ee0;
+    0054..0058  iget-object  v5, v2, LX/Ee0;->A00:[B
+    0058..005c  const-string  v0, "SHA1PRNG"
+    005c..0062  invoke-static  {v0}, Ljava/security/SecureRandom;->getInstance(Ljava/lang/String;)Ljava/security/SecureRandom;
+    0062..0064  move-result-object  v1
+    0064..006a  const  v0, #0x7ffffffe
+    006a..0070  invoke-virtual  {v1, v0}, Ljava/util/Random;->nextInt(I)I
+    0070..0072  move-result  v0
+    0072..0076  add-int/lit8  v3, v0, #0x1
+    0076..007a  new-instance  v10, Landroid/content/ContentValues;
+    007a..0080  invoke-direct  {v10}, Landroid/content/ContentValues;-><init>()V
+    0080..0082  const/4  v0, #0xff (-1)
+    0082..0088  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0088..008a  move-result-object  v1
+    008a..008e  const-string  v0, "recipient_id"
+    008e..0094  invoke-virtual  {v10, v0, v1}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+    0094..009a  invoke-static  {v7}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    009a..009c  move-result-object  v1
+    009c..00a0  const-string  v0, "recipient_type"
+    00a0..00a6  invoke-virtual  {v10, v0, v1}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+    00a6..00aa  const-string  v0, "device_id"
+    00aa..00b0  invoke-virtual  {v10, v0, v1}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+    00b0..00b4  const-string  v1, "registration_id"
+    00b4..00ba  invoke-static  {v3}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    00ba..00bc  move-result-object  v0
+    00bc..00c2  invoke-virtual  {v10, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+    00c2..00c6  const-string  v0, "public_key"
+    00c6..00cc  invoke-virtual  {v10, v0, v6}, Landroid/content/ContentValues;->put(Ljava/lang/String;[B)V
+    00cc..00d0  const-string  v0, "private_key"
+    00d0..00d6  invoke-virtual  {v10, v0, v5}, Landroid/content/ContentValues;->put(Ljava/lang/String;[B)V
+    00d6..00dc  invoke-static  {}, LX/0Yg;->A00()I
+    00dc..00de  move-result  v0
+    00de..00e2  add-int/lit8  v0, v0, #0x1
+    00e2..00e8  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    00e8..00ea  move-result-object  v1
+    00ea..00ee  const-string  v0, "next_prekey_id"
+    00ee..00f4  invoke-virtual  {v10, v0, v1}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+    00f4..00fa  invoke-static  {}, LX/0Yg;->A00()I
+    00fa..00fc  move-result  v0
+    00fc..0100  add-int/lit8  v0, v0, #0x1
+    0100..0106  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0106..0108  move-result-object  v1
+    0108..010c  const-string  v0, "next_kyber_prekey_id"
+    010c..0112  invoke-virtual  {v10, v0, v1}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+    0112..0118  const-string/jumbo  v8, "timestamp"
+    0118..011e  invoke-static  {v11, v12}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    011e..0120  move-result-object  v7
+    0120..0126  invoke-virtual  {v10, v8, v7}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+    0126..012a  const-string  v1, "identities"
+    012a..012c  const/4  v0, #0x0
+    012c..0132  invoke-virtual  {v14, v1, v0, v10}, Landroid/database/sqlite/SQLiteDatabase;->insertOrThrow(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J
+    0132..0136  const-string  v0, "SignalIdentityKeyStore/inserted identity key pair"
+    0136..013c  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    013c..0140  new-instance  v0, LX/7oz;
+    0140..0146  invoke-direct  {v0, v6, v5}, LX/7oz;-><init>([B[B)V
+    0146..014a  iput-object  v0, v9, LX/0YT;->A01:LX/7oz;
+    014a..014e  iput  v3, v9, LX/0YT;->A00:I
+    014e..0152  iget-object  v3, v4, LX/0WJ;->A08:LX/00x;
+    0152..0158  invoke-interface  {v3}, LX/00x;->get()Ljava/lang/Object;
+    0158..015a  move-result-object  v0
+    015a..015e  check-cast  v0, LX/EeP;
+    015e..0164  invoke-virtual  {v0}, LX/EeP;->A00()I
+    0164..0166  move-result  v5
+    0166..016a  iget-object  v1, v4, LX/0WJ;->A01:LX/0Yl;
+    016a..0170  invoke-static  {}, LX/F3k;->A01()LX/ERZ;
+    0170..0172  move-result-object  v10
+    0172..0176  iget-object  v9, v10, LX/ERZ;->A01:LX/Ehd;
+    0176..017c  invoke-virtual  {v9}, LX/Ehd;->A00()[B
+    017c..017e  move-result-object  v0
+    017e..0184  invoke-static  {v2, v0}, LX/F3k;->A0C(LX/Ee0;[B)[B
+    0184..0186  move-result-object  v6
+    0186..018a  sget-object  v0, LX/Dfd;->DEFAULT_INSTANCE:LX/Dfd;
+    018a..0190  invoke-virtual  {v0}, Lcom/google/protobuf/GeneratedMessageLite;->createBuilder()Lcom/google/protobuf/GeneratedMessageLite$Builder;
+    0190..0192  move-result-object  v2
+    0192..0196  check-cast  v2, LX/DW8;
+    0196..019c  invoke-virtual  {v2, v5}, LX/DW8;->A00(I)V
+    019c..01a2  invoke-virtual  {v9}, LX/Ehd;->A00()[B
+    01a2..01a4  move-result-object  v0
+    01a4..01aa  invoke-static  {v0}, Lcom/google/protobuf/ByteString;->copyFrom([B)Lcom/google/protobuf/ByteString;
+    01aa..01ac  move-result-object  v0
+    01ac..01b2  invoke-virtual  {v2, v0}, LX/DW8;->A03(Lcom/google/protobuf/ByteString;)V
+    01b2..01b6  iget-object  v0, v10, LX/ERZ;->A00:LX/Ee0;
+    01b6..01ba  iget-object  v0, v0, LX/Ee0;->A00:[B
+    01ba..01c0  invoke-static  {v0}, Lcom/google/protobuf/ByteString;->copyFrom([B)Lcom/google/protobuf/ByteString;
+    01c0..01c2  move-result-object  v0
+    01c2..01c8  invoke-virtual  {v2, v0}, LX/DW8;->A02(Lcom/google/protobuf/ByteString;)V
+    01c8..01ce  invoke-static  {v6}, Lcom/google/protobuf/ByteString;->copyFrom([B)Lcom/google/protobuf/ByteString;
+    01ce..01d0  move-result-object  v0
+    01d0..01d6  invoke-virtual  {v2, v0}, LX/DW8;->A04(Lcom/google/protobuf/ByteString;)V
+    01d6..01da  iget-object  v0, v1, LX/0Yl;->A01:LX/08q;
+    01da..01e0  invoke-static  {v0}, LX/08q;->A00(LX/08q;)J
+    01e0..01e2  move-result-wide  v0
+    01e2..01e8  invoke-virtual  {v2, v0, v1}, LX/DW8;->A01(J)V
+    01e8..01ee  invoke-virtual  {v2}, Lcom/google/protobuf/GeneratedMessageLite$Builder;->build()Lcom/google/protobuf/GeneratedMessageLite;
+    01ee..01f0  move-result-object  v0
+    01f0..01f6  invoke-virtual  {v0}, Lcom/google/protobuf/AbstractMessageLite;->toByteArray()[B
+    01f6..01f8  move-result-object  v6
+    01f8..01fc  new-instance  v2, Landroid/content/ContentValues;
+    01fc..0202  invoke-direct  {v2}, Landroid/content/ContentValues;-><init>()V
+    0202..0206  const-string  v1, "prekey_id"
+    0206..020c  invoke-static  {v5}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    020c..020e  move-result-object  v0
+    020e..0214  invoke-virtual  {v2, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+    0214..021a  invoke-virtual  {v2, v8, v7}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+    021a..021e  const-string  v0, "record"
+    021e..0224  invoke-virtual  {v2, v0, v6}, Landroid/content/ContentValues;->put(Ljava/lang/String;[B)V
+    0224..022a  const-string/jumbo  v1, "signed_prekeys"
+    022a..022c  const/4  v0, #0x0
+    022c..0232  invoke-virtual  {v14, v1, v0, v2}, Landroid/database/sqlite/SQLiteDatabase;->insertOrThrow(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J
+    0232..0236  const-string  v0, "SignalIdentityKeyStore/inserted signed prekey"
+    0236..023c  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    023c..0240  const-string  v1, "SignalCoordinator/createIdentityKeysAndSignedPreKeys generated random starting ID: "
+    0240..0244  new-instance  v0, Ljava/lang/StringBuilder;
+    0244..024a  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    024a..0250  invoke-virtual  {v0, v5}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0250..0256  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0256..0258  move-result-object  v0
+    0258..025e  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    025e..0264  invoke-interface  {v3}, LX/00x;->get()Ljava/lang/Object;
+    0264..0266  move-result-object  v0
+    0266..026a  check-cast  v0, LX/EeP;
+    026a..0270  invoke-virtual  {v0}, LX/EeP;->A01()V
+    0270..0274  iget-object  v3, v4, LX/0WJ;->A0H:LX/0YM;
+    0274..0276  const/4  v1, #0x4
+    0276..027a  new-instance  v0, LX/Fea;
+    027a..0280  invoke-direct  {v0, v4, v1}, LX/Fea;-><init>(Ljava/lang/Object;I)V
+    0280..0284  const-string  v2, "prekeys"
+    0284..028a  invoke-virtual  {v3, v0, v2}, LX/0YM;->A00(Ljava/lang/Runnable;Ljava/lang/String;)Ljava/util/concurrent/FutureTask;
+    028a..028e  iget-object  v0, v4, LX/0WJ;->A04:LX/00x;
+    028e..0294  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0294..0296  move-result-object  v0
+    0296..029a  check-cast  v0, LX/Ex8;
+    029a..02a0  invoke-virtual  {v0}, LX/Ex8;->A04()Z
+    02a0..02a2  move-result  v0
+    02a2..02a6  if-eqz  v0, +0xb
+    02a6..02a8  const/4  v1, #0x5
+    02a8..02ac  new-instance  v0, LX/Fea;
+    02ac..02b2  invoke-direct  {v0, v4, v1}, LX/Fea;-><init>(Ljava/lang/Object;I)V
+    02b2..02b8  invoke-virtual  {v3, v0, v2}, LX/0YM;->A00(Ljava/lang/Runnable;Ljava/lang/String;)Ljava/util/concurrent/FutureTask;
+    02b8..02bc  iget-object  v1, v4, LX/0WJ;->A0C:LX/09S;
+    02bc..02be  const/4  v0, #0x1
+    02be..02c4  invoke-virtual  {v1, v0}, LX/09S;->A19(Z)V
+    02c4..02c8  iget-object  v0, v4, LX/0WJ;->A07:LX/00x;
+    02c8..02ce  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    02ce..02d0  move-result-object  v3
+    02d0..02d4  check-cast  v3, LX/07o;
+    02d4..02d8  sget-object  v2, LX/0Kl;->A02:LX/0Kl;
+    02d8..02dc  const/16  v1, #0xb
+    02dc..02e0  new-instance  v0, LX/3XN;
+    02e0..02e6  invoke-direct  {v0, v1}, LX/3XN;-><init>(I)V
+    02e6..02ec  invoke-static  {v3, v2, v0}, LX/07o;->A00(LX/07o;LX/0Kl;LX/0Km;)V
+    02ec..02ee  return-void
+    02ee..02f0  move-exception  v0
+    02f0..02f4  new-instance  v1, Ljava/lang/RuntimeException;
+    02f4..02fa  invoke-direct  {v1, v0}, Ljava/lang/RuntimeException;-><init>(Ljava/lang/Throwable;)V
+    02fa..02fc  throw  v1
+    02fc..02fe  move-exception  v0
+    02fe..0302  new-instance  v1, Ljava/lang/AssertionError;
+    0302..0308  invoke-direct  {v1, v0}, Ljava/lang/AssertionError;-><init>(Ljava/lang/Object;)V
+    0308..030a  throw  v1
+    # exception table: 2 try range(s)
+    # catch Ljava/security/NoSuchAlgorithmException; code_units 002c..003b -> 017e
+    # catch LX/ECt; code_units 00b5..00fc -> 0177
+.end method

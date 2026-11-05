@@ -1,3 +1,10 @@
+2026-11-04 — **Native prekey cursor ownership and creation range traced.**
+
+Self-row reader throws when missing; creation independently seeds positive
+legacy/PQ cursors. Existing local history must not be reinterpreted or reseeded.
+[Evidence and remaining schema/JNI paths](apk/2.26.43.72-prekey-upload-replies/README.md#native-cursor-ownership-and-creation-seed-2026-11-04).
+No production change or live traffic.
+
 2026-11-04 — **Current-build legacy generation loop/cursor gap confirmed.**
 
 43.72 fills the 812 deficit in <=50-key chunks; local generation stops at one

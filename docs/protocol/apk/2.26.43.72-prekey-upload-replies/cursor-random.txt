@@ -1,0 +1,20 @@
+
+# class: LX/0Yg;
+# extends: Ljava/lang/Object;
+
+.method public A00(I)  # .registers 2
+    # full signature: LX/0Yg;->A00()I
+    0000..0006  const  v1, #0xfffffe
+    0006..000a  const-string  v0, "SHA1PRNG"
+    000a..0010  invoke-static  {v0}, Ljava/security/SecureRandom;->getInstance(Ljava/lang/String;)Ljava/security/SecureRandom;
+    0010..0012  move-result-object  v0
+    0012..0018  invoke-virtual  {v0, v1}, Ljava/util/Random;->nextInt(I)I
+    0018..001a  move-result  v0
+    001a..001c  return  v0
+    001c..001e  move-exception  v1
+    001e..0022  new-instance  v0, Ljava/lang/AssertionError;
+    0022..0028  invoke-direct  {v0, v1}, Ljava/lang/AssertionError;-><init>(Ljava/lang/Object;)V
+    0028..002a  throw  v0
+    # exception table: 1 try range(s)
+    # catch Ljava/security/NoSuchAlgorithmException; code_units 0003..000e -> 000e
+.end method

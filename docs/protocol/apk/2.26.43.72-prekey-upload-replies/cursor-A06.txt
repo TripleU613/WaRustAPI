@@ -1,0 +1,47 @@
+
+# class: LX/0YT;
+# extends: Ljava/lang/Object;
+
+.method public A06(VLLLI)  # .registers 13
+    # full signature: LX/0YT;->A06(LX/0YT;Ljava/lang/String;Ljava/lang/String;I)V
+    0000..0004  const-string  v3, "SignalIdentityKeyStore/"
+    0004..0008  iget-object  v0, v9, LX/0YT;->A08:LX/0Xp;
+    0008..000e  invoke-virtual  {v0}, LX/0Xp;->A07()LX/0aq;
+    000e..0010  move-result-object  v2
+    0010..0012  const/4  v0, #0xff (-1)
+    0012..0018  invoke-static  {v0}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+    0018..001a  move-result-object  v1
+    001a..001c  const/4  v0, #0x3
+    001c..0020  new-array  v9, v0, [Ljava/lang/String;
+    0020..0022  const/4  v0, #0x0
+    0022..0026  aput-object  v1, v9, v0
+    0026..002a  const-string  v1, "0"
+    002a..002c  const/4  v0, #0x1
+    002c..0030  aput-object  v1, v9, v0
+    0030..0032  const/4  v0, #0x2
+    0032..0036  aput-object  v1, v9, v0
+    0036..003a  new-instance  v5, Landroid/content/ContentValues;
+    003a..0040  invoke-direct  {v5}, Landroid/content/ContentValues;-><init>()V
+    0040..0046  invoke-static  {v12}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0046..0048  move-result-object  v0
+    0048..004e  invoke-virtual  {v5, v10, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+    004e..0052  iget-object  v4, v2, LX/0aq;->A02:LX/0KU;
+    0052..0056  const-string  v6, "identities"
+    0056..005a  const-string  v7, "recipient_id =? AND recipient_type = ? AND device_id =?"
+    005a..005e  new-instance  v0, Ljava/lang/StringBuilder;
+    005e..0064  invoke-direct  {v0, v3}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0064..006a  invoke-virtual  {v0, v11}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    006a..0070  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0070..0072  move-result-object  v8
+    0072..0078  invoke-virtual/range  {v4..v9}, LX/0KU;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+    0078..007e  invoke-virtual  {v2}, LX/0aq;->close()V
+    007e..0080  return-void
+    0080..0082  move-exception  v1
+    0082..0084  throw  v1
+    0084..0086  move-exception  v0
+    0086..008c  invoke-static  {v2, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    008c..008e  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0008..003c -> 0040
+    # catch <all> code_units 0041..0042 -> 0042
+.end method

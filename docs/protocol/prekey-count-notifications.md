@@ -161,3 +161,10 @@ No runtime switch yet.
 to50 rather than returning after one chunk. Native cursor expressions differ
 from the local checkpoint convention. [Control flow and migration boundary](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-generation-loop-and-cursor-convention-2026-11-04).
 Older 37.71 text above is not evidence of current-build generation parity.
+
+## Current-build cursor ownership
+
+**Confirmed static, 43.72:** self identity tuple owns native cursor; missing row
+throws, creation seeds1..0xfffffe separately for legacy/PQ. This is not a reset
+policy. [Reader/writer and creation evidence](apk/2.26.43.72-prekey-upload-replies/README.md#native-cursor-ownership-and-creation-seed-2026-11-04).
+Existing local zero-based cursor remains unchanged pending versioned compatibility.
