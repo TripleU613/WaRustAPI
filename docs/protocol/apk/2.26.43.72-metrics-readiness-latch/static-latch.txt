@@ -1,0 +1,18 @@
+# class: LX/0NY;
+# extends: Ljava/lang/Object;
+
+.method public <clinit>(V)  # .registers 2
+    # full signature: LX/0NY;-><clinit>()V
+    0000..0002  const/4  v1, #0x1
+    0002..0006  new-instance  v0, Ljava/util/concurrent/CountDownLatch;
+    0006..000c  invoke-direct  {v0, v1}, Ljava/util/concurrent/CountDownLatch;-><init>(I)V
+    000c..0010  sput-object  v0, LX/0NY;->A0I:Ljava/util/concurrent/CountDownLatch;
+    0010..0014  new-instance  v0, LX/0NZ;
+    0014..001a  invoke-direct  {v0}, LX/0NZ;-><init>()V
+    001a..001e  new-instance  v0, LX/0FS;
+    001e..0024  invoke-direct  {v0}, LX/0FS;-><init>()V
+    0024..0028  new-instance  v0, LX/0Na;
+    0028..002e  invoke-direct  {v0}, LX/0Na;-><init>()V
+    002e..0030  return-void
+    # exception table: 0 try range(s)
+.end method

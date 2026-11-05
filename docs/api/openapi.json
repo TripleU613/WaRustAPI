@@ -16017,5 +16017,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-startup-metrics-native-handoff/README.md",
     "description": "Primary metrics worker can enqueue validation diagnostics while continuing the original event, waits on a latch and hands fields to a native JNI dispatcher. Interrupted wait returns normally after reinterrupt; native result is discarded. Native buffers, serialization, transport, responses and durable generation ownership remain open. No telemetry event, sender, route or live operation added."
+  },
+  "x-metrics-readiness-latch-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-metrics-readiness-latch/README.md",
+    "description": "Primary metrics activation submits initialization and a separate static latch-release task. isInitialized checks count zero, while activation is per-instance and native setup return is discarded. This does not establish native success for every instance. Executor, source authority, native transport and durable generation recovery remain open. No telemetry, sender, route or live operation added."
   }
 }

@@ -1,0 +1,16 @@
+# class: LX/0NY;
+# extends: Ljava/lang/Object;
+
+.method public isInitialized(Z)  # .registers 7
+    # full signature: LX/0NY;->isInitialized()Z
+    0000..0004  sget-object  v0, LX/0NY;->A0I:Ljava/util/concurrent/CountDownLatch;
+    0004..000a  invoke-virtual  {v0}, Ljava/util/concurrent/CountDownLatch;->getCount()J
+    000a..000c  move-result-wide  v4
+    000c..0010  const-wide/16  v2, #0x0
+    0010..0014  cmp-long  v1, v4, v2
+    0014..0016  const/4  v0, #0x0
+    0016..001a  if-nez  v1, +0x3
+    001a..001c  const/4  v0, #0x1
+    001c..001e  return  v0
+    # exception table: 0 try range(s)
+.end method

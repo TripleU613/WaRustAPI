@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "bytes": 4480,
+    "sha256": "2d8e77ecdcff1d5b2396ef4a9c4c4e11a0db65f023d5c7c85b7f5f4693ca0b2c"
+  },
+  "activate.txt": {
+    "bytes": 1660,
+    "sha256": "4b527a963e5a678f9fcf8c353303dd81abdbcc46029195e6226d8b5d2735677c"
+  },
+  "dependent-operation.txt": {
+    "bytes": 1322,
+    "sha256": "78ebf41be3b53f506a715449b0607b76296d09eca1832d43c0fb83cb6a2870c4"
+  },
+  "executor-constructor.txt": {
+    "bytes": 1069,
+    "sha256": "fef59d47dab3ef397d7feba983cab3aefc80ccd2cf3b297895adaa97cc8ba20d"
+  },
+  "initialization47-selected-excerpts.txt": {
+    "bytes": 10050,
+    "sha256": "9feb4cc3fdd79437e21f0262520c38e0c4d27c5c059d52365f6ac48197e053ee"
+  },
+  "latch-field-references.txt": {
+    "bytes": 856,
+    "sha256": "7618f8baff7b1c6797e6c6e2cf6c5bcd5284058b44aa70488525517b0bafc5fb"
+  },
+  "release-constructor.txt": {
+    "bytes": 321,
+    "sha256": "b45060bcbbdce598d836b0d2e82c9d808ecd974a73c74cc11eb254fc12b1ee1f"
+  },
+  "release-dispatch-all.txt": {
+    "bytes": 2134,
+    "sha256": "d3dc12170a4d85ad84d4dbe555dd7d1d66e7cee697b10565e6b9e1da7b21ba6d"
+  },
+  "static-latch.txt": {
+    "bytes": 787,
+    "sha256": "db05c02783d0f416a50bd44292d9493a96e789f7c0a2c8844f81287708056d5a"
+  },
+  "status.txt": {
+    "bytes": 609,
+    "sha256": "8687fea6e8c5f02b770ab22b09f1fa513e10d851d5ed1287d53b1a3fb4b62438"
+  }
+}

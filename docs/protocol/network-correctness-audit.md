@@ -2260,3 +2260,13 @@ The return is discarded; native/network delivery remains unproven.
 [Constructor, selected worker, wait and limits](apk/2.26.43.72-startup-metrics-native-handoff/README.md).
 Native serialization/transport, alternate sink, durability and generation ownership
 remain open. No Rust behavior or live account operation changed.
+
+### Metrics latch release and activation scheduling (2026-11-05)
+
+**Confirmed static, APK43.72:** static CountDownLatch(1) status is opened by a
+separately queuedI9Q selector3, after initialization submissions inALK. The
+activation flag is per-instance; initialization native return is discarded.
+Count zero is not by itself proof every instance's native setup succeeded.
+[Selected activation, release, status and native boundary](apk/2.26.43.72-metrics-readiness-latch/README.md).
+Executor failure/order, activation/source authority, native transport and durable
+generation recovery remain open. No Rust behavior or live account operation changed.

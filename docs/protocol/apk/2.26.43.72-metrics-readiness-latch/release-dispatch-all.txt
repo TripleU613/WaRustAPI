@@ -1,0 +1,41 @@
+# class: LX/I9Q;
+# extends: Ljava/lang/Object;
+
+.method public run(V)  # .registers 4
+    # full signature: LX/I9Q;->run()V
+    0000..0004  iget  v0, v3, LX/I9Q;->$t:I
+    0004..000a  packed-switch  v0, payload@0x80, cases=[0:@0x78, 1:@0x64, 2:@0x5e, 3:@0x52, 4:@0x46, 5:@0x3a, 6:@0x3a, 7:@0xa, 8:@0xa, 9:@0xa, 10:@0xa, 11:@0xa, 12:@0xa, 13:@0xa, 14:@0xc], default@0xa
+    000a..000c  return-void
+    000c..0010  sget-object  v2, LX/HZ4;->A02:Ljava/util/concurrent/BlockingQueue;
+    0010..0016  invoke-interface  {v2}, Ljava/util/Collection;->size()I
+    0016..0018  move-result  v0
+    0018..001c  rsub-int/lit8  v1, v0, #0x2
+    001c..0020  if-lez  v1, -0x9
+    0020..0026  invoke-static  {}, LX/Fwt;->A18()Ljava/security/KeyPair;
+    0026..0028  move-result-object  v0
+    0028..002e  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    002e..0034  invoke-interface  {v2, v0}, Ljava/util/concurrent/BlockingQueue;->put(Ljava/lang/Object;)V
+    0034..0038  add-int/lit8  v1, v1, #0xff (-1)
+    0038..003a  goto  -0xe
+    003a..003c  const/4  v1, #0x0
+    003c..003e  const/4  v0, #0x1
+    003e..0044  invoke-static  {v1, v0}, LX/HeH;->A01(Ljava/lang/String;Z)V
+    0044..0046  return-void
+    0046..004a  const-string  v0, "yoga"
+    004a..0050  invoke-static  {v0}, LX/0DG;->A07(Ljava/lang/String;)Z
+    0050..0052  return-void
+    0052..0056  sget-object  v0, LX/0NY;->A0I:Ljava/util/concurrent/CountDownLatch;
+    0056..005c  invoke-virtual  {v0}, Ljava/util/concurrent/CountDownLatch;->countDown()V
+    005c..005e  return-void
+    005e..0062  sget-object  v2, LX/02X;->A00:Ljava/lang/Integer;
+    0062..0064  goto  +0x3
+    0064..0068  sget-object  v2, LX/02X;->A0C:Ljava/lang/Integer;
+    0068..006c  sget-object  v1, LX/HcD;->A06:LX/HcD;
+    006c..0070  sget-object  v0, LX/Gh0;->A04:LX/Gh0;
+    0070..0076  invoke-static  {v0, v1, v2}, LX/HcD;->A00(LX/Gh0;LX/HcD;Ljava/lang/Integer;)V
+    0076..0078  return-void
+    0078..007e  invoke-static  {}, Lcom/whatsapp/infra/logging/Log;->rotate()Z
+    007e..0080  return-void
+    0080..00c4  packed-switch-payload  size=15
+    # exception table: 0 try range(s)
+.end method

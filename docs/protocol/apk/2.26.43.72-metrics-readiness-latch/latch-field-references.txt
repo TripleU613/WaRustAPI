@@ -1,0 +1,22 @@
+classes.dex  LX/0NY;-><clinit>(V)
+  write opcode 0x69, dex byte offset: 0x39ac90
+classes.dex  LX/0NY;->A00(V)
+  read opcode 0x62, dex byte offset: 0x58a85c
+classes.dex  LX/0NY;->CPo(VI)
+  read opcode 0x62, dex byte offset: 0x58aba0
+classes.dex  LX/0NY;->isInitialized(Z)
+  read opcode 0x62, dex byte offset: 0x58ae60
+classes.dex  LX/1Wz;->invoke(L)
+  read opcode 0x62, dex byte offset: 0x93b4ac
+classes.dex  LX/1Wz;->invoke(L)
+  read opcode 0x62, dex byte offset: 0x93b4c8
+classes.dex  LX/1Wz;->invoke(L)
+  read opcode 0x62, dex byte offset: 0x93b4f8
+classes10.dex  LX/KTj;->run(V)
+  read opcode 0x62, dex byte offset: 0x61cc7a
+classes9.dex  LX/I9Q;->run(V)
+  read opcode 0x62, dex byte offset: 0x73deb6
+classes9.dex  LX/I9X;->run(V)
+  read opcode 0x62, dex byte offset: 0x73f67c
+classes9.dex  LX/IBm;->run(V)
+  read opcode 0x62, dex byte offset: 0x766758
