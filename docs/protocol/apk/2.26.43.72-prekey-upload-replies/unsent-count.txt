@@ -1,0 +1,52 @@
+
+# class: LX/0Yb;
+# extends: Ljava/lang/Object;
+
+.method public A00(I)  # .registers 6
+    # full signature: LX/0Yb;->A00()I
+    0000..0004  iget-object  v0, v5, LX/0Yb;->A01:LX/0Xp;
+    0004..000a  invoke-virtual  {v0}, LX/0Xp;->A06()LX/0aq;
+    000a..000c  move-result-object  v4
+    000c..0010  iget-object  v3, v4, LX/0aq;->A02:LX/0KU;
+    0010..0014  const-string  v2, "SELECT COUNT(*) as count FROM prekeys WHERE sent_to_server = 0 AND direct_distribution = 0"
+    0014..0018  const-string  v1, "SignalPreKeyStore/getUnsentPreKeysCount"
+    0018..001a  const/4  v0, #0x0
+    001a..0020  invoke-virtual  {v3, v2, v1, v0}, LX/0KU;->A0A(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
+    0020..0022  move-result-object  v2
+    0022..0028  invoke-interface  {v2}, Landroid/database/Cursor;->moveToNext()Z
+    0028..002a  move-result  v0
+    002a..002e  if-eqz  v0, +0x13
+    002e..0032  const-string  v0, "count"
+    0032..0038  invoke-interface  {v2, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0038..003a  move-result  v0
+    003a..0040  invoke-interface  {v2, v0}, Landroid/database/Cursor;->getInt(I)I
+    0040..0042  move-result  v0
+    0042..0048  invoke-interface  {v2}, Landroid/database/Cursor;->close()V
+    0048..004e  invoke-virtual  {v4}, LX/0aq;->close()V
+    004e..0050  return  v0
+    0050..0056  const-string/jumbo  v1, "unable to fetch count from table"
+    0056..005a  new-instance  v0, Landroid/database/sqlite/SQLiteException;
+    005a..0060  invoke-direct  {v0, v1}, Landroid/database/sqlite/SQLiteException;-><init>(Ljava/lang/String;)V
+    0060..0062  throw  v0
+    0062..0064  move-exception  v1
+    0064..0068  if-eqz  v2, +0xa
+    0068..006e  invoke-interface  {v2}, Landroid/database/Cursor;->close()V
+    006e..0070  goto  +0x5
+    0070..0072  move-exception  v0
+    0072..0078  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    0078..007a  throw  v1
+    007a..007c  move-exception  v1
+    007c..0082  invoke-virtual  {v4}, LX/0aq;->close()V
+    0082..0084  throw  v1
+    0084..0086  move-exception  v0
+    0086..008c  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    008c..008e  throw  v1
+    # exception table: 7 try range(s)
+    # catch <all> code_units 0006..0011 -> 003d
+    # catch <all> code_units 0011..0021 -> 0031
+    # catch <all> code_units 0021..0024 -> 003d
+    # catch <all> code_units 0028..0031 -> 0031
+    # catch <all> code_units 0034..0038 -> 0038
+    # catch <all> code_units 0039..003d -> 003d
+    # catch <all> code_units 003e..0041 -> 0042
+.end method

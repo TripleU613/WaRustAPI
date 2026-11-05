@@ -154,3 +154,10 @@ uses older SET/812 follow-up construction. [Evidence and remaining porting input
 optional legacy/PQ lists, without repeating SET account/signature setup children.
 [Exact layouts and remaining generation/config/persistence work](apk/2.26.43.72-prekey-upload-replies/README.md#add-selection-and-exact-child-layout-2026-11-04).
 No runtime switch yet.
+
+## Current-build generation gap
+
+**Confirmed static, 43.72:** legacy ensure fills the 812 deficit in chunks up
+to50 rather than returning after one chunk. Native cursor expressions differ
+from the local checkpoint convention. [Control flow and migration boundary](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-generation-loop-and-cursor-convention-2026-11-04).
+Older 37.71 text above is not evidence of current-build generation parity.

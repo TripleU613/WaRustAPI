@@ -1,0 +1,117 @@
+
+# class: LX/0WJ;
+# extends: Ljava/lang/Object;
+
+.method public A0u(VLI)  # .registers 13
+    # full signature: LX/0WJ;->A0u(Ljava/util/List;I)V
+    0000..0004  iget-object  v0, v10, LX/0WJ;->A0I:LX/0Wk;
+    0004..000a  invoke-virtual  {v0}, LX/0Wk;->A04()LX/FjI;
+    000a..000c  move-result-object  v9
+    000c..0012  invoke-interface  {v11}, Ljava/util/List;->isEmpty()Z
+    0012..0014  move-result  v0
+    0014..0018  if-nez  v0, +0x9f
+    0018..001c  iget-object  v0, v10, LX/0WJ;->A0Q:LX/0Xp;
+    001c..0022  invoke-virtual  {v0}, LX/0Xp;->A07()LX/0aq;
+    0022..0024  move-result-object  v8
+    0024..002a  invoke-virtual  {v8}, LX/0aq;->A00()LX/1hk;
+    002a..002c  move-result-object  v7
+    002c..0030  iget-object  v0, v10, LX/0WJ;->A0L:LX/0Yb;
+    0030..0034  iget-object  v0, v0, LX/0Yb;->A01:LX/0Xp;
+    0034..003a  invoke-virtual  {v0}, LX/0Xp;->A07()LX/0aq;
+    003a..003c  move-result-object  v3
+    003c..0042  invoke-virtual  {v3}, LX/0aq;->A00()LX/1hk;
+    0042..0044  move-result-object  v6
+    0044..0048  new-instance  v4, Landroid/content/ContentValues;
+    0048..004e  invoke-direct  {v4}, Landroid/content/ContentValues;-><init>()V
+    004e..0054  invoke-interface  {v11}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0054..0056  move-result-object  v5
+    0056..005c  invoke-interface  {v5}, Ljava/util/Iterator;->hasNext()Z
+    005c..005e  move-result  v0
+    005e..0062  if-eqz  v0, +0x36
+    0062..0068  invoke-interface  {v5}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0068..006a  move-result-object  v2
+    006a..006e  check-cast  v2, LX/ERb;
+    006e..0074  invoke-virtual  {v4}, Landroid/content/ContentValues;->clear()V
+    0074..0078  const-string  v1, "prekey_id"
+    0078..007c  iget  v0, v2, LX/ERb;->A00:I
+    007c..0082  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0082..0084  move-result-object  v0
+    0084..008a  invoke-virtual  {v4, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+    008a..008e  const-string  v1, "record"
+    008e..0092  iget-object  v0, v2, LX/ERb;->A01:[B
+    0092..0098  invoke-virtual  {v4, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;[B)V
+    0098..009c  const-string  v2, "sent_to_server"
+    009c..009e  const/4  v0, #0x0
+    009e..00a4  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    00a4..00a6  move-result-object  v1
+    00a6..00ac  invoke-virtual  {v4, v2, v1}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Boolean;)V
+    00ac..00b0  const-string  v0, "direct_distribution"
+    00b0..00b6  invoke-virtual  {v4, v0, v1}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Boolean;)V
+    00b6..00ba  iget-object  v2, v3, LX/0aq;->A02:LX/0KU;
+    00ba..00be  const-string  v1, "prekeys"
+    00be..00c2  const-string  v0, "SignalPreKeyStore/savePreKeys"
+    00c2..00c8  invoke-virtual  {v2, v1, v0, v4}, LX/0KU;->A06(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J
+    00c8..00ca  goto  -0x39
+    00ca..00d0  invoke-virtual  {v6}, LX/1hk;->A00()V
+    00d0..00d6  invoke-virtual  {v6}, LX/1hk;->close()V
+    00d6..00dc  invoke-virtual  {v3}, LX/0aq;->close()V
+    00dc..00e0  iget-object  v2, v10, LX/0WJ;->A0J:LX/0YT;
+    00e0..00e4  const-string  v1, "next_prekey_id"
+    00e4..00e8  const-string  v0, "saveNextPreKeyId"
+    00e8..00ee  invoke-static  {v2, v1, v0, v12}, LX/0YT;->A06(LX/0YT;Ljava/lang/String;Ljava/lang/String;I)V
+    00ee..00f4  invoke-virtual  {v7}, LX/1hk;->A00()V
+    00f4..00fa  invoke-virtual  {v7}, LX/1hk;->close()V
+    00fa..0100  invoke-virtual  {v8}, LX/0aq;->close()V
+    0100..0102  goto  +0x29
+    0102..0104  move-exception  v1
+    0104..010a  invoke-virtual  {v6}, LX/1hk;->close()V
+    010a..010c  goto  +0x5
+    010c..010e  move-exception  v0
+    010e..0114  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    0114..0116  throw  v1
+    0116..0118  move-exception  v1
+    0118..011e  invoke-virtual  {v3}, LX/0aq;->close()V
+    011e..0120  goto  +0x5
+    0120..0122  move-exception  v0
+    0122..0128  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    0128..012a  throw  v1
+    012a..012c  move-exception  v1
+    012c..0132  invoke-virtual  {v7}, LX/1hk;->close()V
+    0132..0134  goto  +0x5
+    0134..0136  move-exception  v0
+    0136..013c  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    013c..013e  throw  v1
+    013e..0140  move-exception  v1
+    0140..0146  invoke-virtual  {v8}, LX/0aq;->close()V
+    0146..0148  goto  +0x5
+    0148..014a  move-exception  v0
+    014a..0150  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    0150..0152  throw  v1
+    0152..0158  invoke-virtual  {v9}, LX/FjI;->close()V
+    0158..015a  return-void
+    015a..015c  move-exception  v1
+    015c..0162  invoke-virtual  {v9}, LX/FjI;->close()V
+    0162..0164  throw  v1
+    0164..0166  move-exception  v0
+    0166..016c  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    016c..016e  throw  v1
+    # exception table: 18 try range(s)
+    # catch <all> code_units 0006..0012 -> 00ad
+    # catch <all> code_units 0012..0016 -> 009f
+    # catch <all> code_units 0016..001e -> 0095
+    # catch <all> code_units 001e..0022 -> 008b
+    # catch <all> code_units 0022..0068 -> 0081
+    # catch <all> code_units 0068..006b -> 008b
+    # catch <all> code_units 006b..007a -> 0095
+    # catch <all> code_units 007a..007d -> 009f
+    # catch <all> code_units 007d..0081 -> 00ad
+    # catch <all> code_units 0082..0086 -> 0086
+    # catch <all> code_units 0087..008b -> 008b
+    # catch <all> code_units 008c..0090 -> 0090
+    # catch <all> code_units 0090..0095 -> 0095
+    # catch <all> code_units 0096..009a -> 009a
+    # catch <all> code_units 009b..009f -> 009f
+    # catch <all> code_units 00a0..00a4 -> 00a4
+    # catch <all> code_units 00a5..00a9 -> 00ad
+    # catch <all> code_units 00ae..00b1 -> 00b2
+.end method

@@ -304,3 +304,51 @@ Additional export hashes:
 - [add-selection.txt](add-selection.txt): `8638c79ff033e0c1ee2ca0ff30848be4a095d7a57139d613fca15f39fec055ff`
 - [add-sql.txt](add-sql.txt): `f28abbda7c8aea030aecacdd3c062f870882137653de8e49be9544ec9ba1fc15`
 - [add-id-encoding.txt](add-id-encoding.txt): `56c82fe43c2043ccfc64976d164df83b9f415f23dbb9eaf51a01780395316fdc`
+
+## Legacy generation loop and cursor convention (2026-11-04)
+
+**Confirmed static**, same pinned 43.72. This exposes an additional Rust parity
+gap; it does not migrate existing keys or change runtime generation.
+
+- **0WJ.A0k** enters 0Wk scope and calls **0Yl.A07**. The latter obtains the
+  unsent count through **0Yb.A00**, whose SQL excludes sent_to_server and
+  direct_distribution rows. Count>=812 returns without generation.
+- **0Yl.A07**, 0046–0058 computes remaining deficit then a chunk of min(deficit,
+  50). Crucially, its final **01ec goto/16 -0xd3** targets **0046** (DEX branch
+  delta is in code units: 0x1ec - 2*0xd3 = 0x46). This is not a return after
+  one chunk. The remaining deficit is reduced by the preceding chunk and each
+  next chunk rereads next_prekey_id. Normal execution fills the initial deficit
+  to 812 in chunks of at most 50. With initial count0 this implies 16*50+12,
+  **17** chunks, not 50 keys total. This is static control-flow inference,
+  not observed execution or a claim about concurrent writers/failures.
+- **00c0–00da**: for saved native cursor N and chunk offset i, ID is
+  **((N-1+i) % 0xfffffe)+1** using Java signed int arithmetic. This differs
+  from Rust's local zero-based cursor formula ((next+i)%modulus)+1.
+- **01d4–01ec** computes saved next as **((N+chunkCount)%0xfffffe)+1**, then
+  calls **0WJ.A0u(records,next)** before looping. These exact expressions are
+  retained rather than silently normalized. Cursor range/default and overflow
+  preconditions still need the identity-row getter/initializer trace.
+- **0WJ.A0u**, 0044–00dc saves each generated record with sent_to_server=false
+  and direct_distribution=false; 00dc–00ee forwards the supplied next integer
+  unchanged to 0YT.A06 for next_prekey_id, within its transaction scope. The
+  SQL wrapper's insert collision semantics and complete identity binding remain
+  untraced; no overwrite permission is inferred.
+- **Rust gap:** prekeys.generate currently generates only min(deficit,50) per
+  call and advances a local zero-based checkpoint. Existing encrypted stores
+  therefore do not contain native cursor semantics. Changing the meaning of
+  that checkpoint in place would reinterpret history and risk collisions.
+  A current-build port needs explicit generation strategy/version ownership,
+  preserved old uncertain batches/keys, and collision refusal retained.
+
+This supersedes any assumption that a 50-key Rust call establishes current-build
+generation parity. The older 37.71 documents/source comments keep their original
+build attribution; no full older-build retrace was performed here. ADD generation
+amount is now traced; native initial cursor/provider and PQ generation/admission,
+configuration and durable migration still remain open. No live traffic.
+
+Additional export hashes:
+
+- [ensure-legacy.txt](ensure-legacy.txt): `9cf364892571b10a35a1677020aca7b066c536b5bc65bf6737312487ae1bbc04`
+- [generate-legacy.txt](generate-legacy.txt): `553e858708b1432e1bfa05a17cf52a915a9ec460638a3010b20356f148ff6908`
+- [unsent-count.txt](unsent-count.txt): `4bd4b68b7677ee496bc17fc7202fa900053e803c7c0148e5b15770476cb69fe4`
+- [generation-save.txt](generation-save.txt): `9ab858339a3ff714a9f8c59c8a1c8cc8252013096cc96023da4e23814031a82a`

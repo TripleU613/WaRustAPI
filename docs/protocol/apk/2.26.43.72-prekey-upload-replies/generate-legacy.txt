@@ -1,0 +1,125 @@
+
+# class: LX/0Yl;
+# extends: Ljava/lang/Object;
+
+.method public A07(V)  # .registers 15
+    # full signature: LX/0Yl;->A07()V
+    0000..0004  iget-object  v7, v14, LX/0Yl;->A03:LX/0Yj;
+    0004..0008  iget-object  v0, v7, LX/0Yj;->A07:LX/0Yb;
+    0008..000e  invoke-virtual  {v0}, LX/0Yb;->A00()I
+    000e..0010  move-result  v6
+    0010..0014  const/16  v5, #0x32c
+    0014..0018  if-lt  v6, v5, +0x19
+    0018..001c  const-string  v0, "SignalProtocolStore/get-schema skipping key generation because already more than "
+    001c..0020  new-instance  v1, Ljava/lang/StringBuilder;
+    0020..0026  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0026..002c  invoke-virtual  {v1, v5}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    002c..0030  const-string  v0, " are unsent"
+    0030..0036  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0036..003c  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    003c..003e  move-result-object  v0
+    003e..0044  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0044..0046  return-void
+    0046..0048  sub-int/2addr  v5, v6
+    0048..004c  if-lez  v5, -0x2
+    004c..0050  const/16  v0, #0x32
+    0050..0056  invoke-static  {v5, v0}, Ljava/lang/Math;->min(II)I
+    0056..0058  move-result  v6
+    0058..005c  iget-object  v3, v7, LX/0Yj;->A05:LX/0YT;
+    005c..0060  const-string  v2, "next_prekey_id"
+    0060..0064  const-string  v1, "getNextPreKeyId"
+    0064..0068  const-string  v0, "SELECT next_prekey_id FROM identities WHERE recipient_id =? AND recipient_type = ? AND device_id =?"
+    0068..006e  invoke-static  {v3, v0, v2, v1}, LX/0YT;->A01(LX/0YT;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I
+    006e..0070  move-result  v8
+    0070..0074  const-string  v0, "SignalProtocolStore/generate "
+    0074..0078  new-instance  v1, Ljava/lang/StringBuilder;
+    0078..007e  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    007e..0084  invoke-virtual  {v1, v6}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0084..0088  const-string  v0, " new prekeys starting from "
+    0088..008e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    008e..0094  invoke-virtual  {v1, v8}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0094..0098  const-string  v0, " and recording them in the db"
+    0098..009e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    009e..00a4  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00a4..00a6  move-result-object  v0
+    00a6..00ac  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    00ac..00b0  new-instance  v4, Ljava/util/ArrayList;
+    00b0..00b6  invoke-direct  {v4}, Ljava/util/ArrayList;-><init>()V
+    00b6..00ba  new-instance  v10, Ljava/util/LinkedList;
+    00ba..00c0  invoke-direct  {v10}, Ljava/util/LinkedList;-><init>()V
+    00c0..00c4  add-int/lit8  v13, v8, #0xff (-1)
+    00c4..00c6  const/4  v9, #0x0
+    00c6..00ca  if-ge  v9, v6, +0x66
+    00ca..00ce  add-int  v1, v13, v9
+    00ce..00d4  const  v0, #0xfffffe
+    00d4..00d6  rem-int/2addr  v1, v0
+    00d6..00da  add-int/lit8  v2, v1, #0x1
+    00da..00e0  invoke-static  {}, LX/0Yu;->A02()LX/ESl;
+    00e0..00e2  move-result-object  v12
+    00e2..00e6  new-instance  v3, LX/EEz;
+    00e6..00ec  invoke-direct  {v3}, Ljava/lang/Object;-><init>()V
+    00ec..00f0  sget-object  v0, LX/Ddm;->DEFAULT_INSTANCE:LX/Ddm;
+    00f0..00f6  invoke-virtual  {v0}, Lcom/google/protobuf/GeneratedMessageLite;->createBuilder()Lcom/google/protobuf/GeneratedMessageLite$Builder;
+    00f6..00f8  move-result-object  v11
+    00f8..00fe  invoke-virtual  {v11}, Lcom/google/protobuf/GeneratedMessageLite$Builder;->copyOnWrite()V
+    00fe..0102  iget-object  v1, v11, Lcom/google/protobuf/GeneratedMessageLite$Builder;->instance:Lcom/google/protobuf/GeneratedMessageLite;
+    0102..0106  check-cast  v1, LX/Ddm;
+    0106..010a  iget  v0, v1, LX/Ddm;->bitField0_:I
+    010a..010e  or-int/lit8  v0, v0, #0x1
+    010e..0112  iput  v0, v1, LX/Ddm;->bitField0_:I
+    0112..0116  iput  v2, v1, LX/Ddm;->id_:I
+    0116..011a  iget-object  v0, v12, LX/ESl;->A01:LX/Fbl;
+    011a..0120  invoke-virtual  {v0}, LX/Fbl;->A00()[B
+    0120..0122  move-result-object  v0
+    0122..0128  invoke-static  {v0}, Lcom/google/protobuf/ByteString;->copyFrom([B)Lcom/google/protobuf/ByteString;
+    0128..012a  move-result-object  v2
+    012a..0130  invoke-virtual  {v11}, Lcom/google/protobuf/GeneratedMessageLite$Builder;->copyOnWrite()V
+    0130..0134  iget-object  v1, v11, Lcom/google/protobuf/GeneratedMessageLite$Builder;->instance:Lcom/google/protobuf/GeneratedMessageLite;
+    0134..0138  check-cast  v1, LX/Ddm;
+    0138..013c  iget  v0, v1, LX/Ddm;->bitField0_:I
+    013c..0140  or-int/lit8  v0, v0, #0x2
+    0140..0144  iput  v0, v1, LX/Ddm;->bitField0_:I
+    0144..0148  iput-object  v2, v1, LX/Ddm;->publicKey_:Lcom/google/protobuf/ByteString;
+    0148..014c  iget-object  v0, v12, LX/ESl;->A00:LX/EQ7;
+    014c..0150  iget-object  v0, v0, LX/EQ7;->A00:[B
+    0150..0156  invoke-static  {v0}, Lcom/google/protobuf/ByteString;->copyFrom([B)Lcom/google/protobuf/ByteString;
+    0156..0158  move-result-object  v2
+    0158..015e  invoke-virtual  {v11}, Lcom/google/protobuf/GeneratedMessageLite$Builder;->copyOnWrite()V
+    015e..0162  iget-object  v1, v11, Lcom/google/protobuf/GeneratedMessageLite$Builder;->instance:Lcom/google/protobuf/GeneratedMessageLite;
+    0162..0166  check-cast  v1, LX/Ddm;
+    0166..016a  iget  v0, v1, LX/Ddm;->bitField0_:I
+    016a..016e  or-int/lit8  v0, v0, #0x4
+    016e..0172  iput  v0, v1, LX/Ddm;->bitField0_:I
+    0172..0176  iput-object  v2, v1, LX/Ddm;->privateKey_:Lcom/google/protobuf/ByteString;
+    0176..017c  invoke-virtual  {v11}, Lcom/google/protobuf/GeneratedMessageLite$Builder;->build()Lcom/google/protobuf/GeneratedMessageLite;
+    017c..017e  move-result-object  v0
+    017e..0182  check-cast  v0, LX/Ddm;
+    0182..0186  iput-object  v0, v3, LX/EEz;->A00:LX/Ddm;
+    0186..018c  invoke-virtual  {v10, v3}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    018c..0190  add-int/lit8  v9, v9, #0x1
+    0190..0192  goto  -0x65
+    0192..0198  invoke-interface  {v10}, Ljava/util/Deque;->iterator()Ljava/util/Iterator;
+    0198..019a  move-result-object  v3
+    019a..01a0  invoke-interface  {v3}, Ljava/util/Iterator;->hasNext()Z
+    01a0..01a2  move-result  v0
+    01a2..01a6  if-eqz  v0, +0x19
+    01a6..01ac  invoke-interface  {v3}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    01ac..01ae  move-result-object  v0
+    01ae..01b2  check-cast  v0, LX/EEz;
+    01b2..01b6  iget-object  v0, v0, LX/EEz;->A00:LX/Ddm;
+    01b6..01ba  iget  v2, v0, LX/Ddm;->id_:I
+    01ba..01c0  invoke-virtual  {v0}, Lcom/google/protobuf/AbstractMessageLite;->toByteArray()[B
+    01c0..01c2  move-result-object  v1
+    01c2..01c6  new-instance  v0, LX/ERb;
+    01c6..01cc  invoke-direct  {v0, v2, v1}, LX/ERb;-><init>(I[B)V
+    01cc..01d2  invoke-virtual  {v4, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    01d2..01d4  goto  -0x1c
+    01d4..01d6  add-int/2addr  v8, v6
+    01d6..01dc  const  v0, #0xfffffe
+    01dc..01de  rem-int/2addr  v8, v0
+    01de..01e2  add-int/lit8  v1, v8, #0x1
+    01e2..01e6  iget-object  v0, v7, LX/0Yj;->A03:LX/0WJ;
+    01e6..01ec  invoke-virtual  {v0, v4, v1}, LX/0WJ;->A0u(Ljava/util/List;I)V
+    01ec..01f0  goto/16  -0xd3
+    # exception table: 0 try range(s)
+.end method

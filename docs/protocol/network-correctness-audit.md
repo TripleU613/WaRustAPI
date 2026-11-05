@@ -813,3 +813,15 @@ It does not repeat SET identity/registration/type-byte/skey/last-resort fields.
 The known Rust SET-continuation gap remains unpatched; this closes layout and
 legacy selection research without changing initial-upload or replay policy.
 No live traffic or production change.
+
+## Current-build legacy generation loop/cursor gap (2026-11-04)
+
+**Confirmed static / unported:** 43.72 0WJ.A0k -> 0Yl.A07 fills the 812-key
+deficit in <=50-key chunks; its backward branch returns to0046 rather than
+exiting after one chunk. 0Yb.A00 count excludes sent/direct-distribution rows.
+Native saved cursor ID/next expressions differ from Rust's zero-based checkpoint.
+0WJ.A0u saves records and forwards the next value unchanged.
+[Exact arithmetic, branch calculation, exports and migration constraints](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-generation-loop-and-cursor-convention-2026-11-04).
+Current Rust one-chunk generation is not current-build parity. Cursor initialization,
+PQ policy and explicit existing-store compatibility remain to be resolved before
+porting. No history reinterpretation, runtime change or live traffic occurred.

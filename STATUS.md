@@ -1,3 +1,11 @@
+2026-11-04 — **Current-build legacy generation loop/cursor gap confirmed.**
+
+43.72 fills the 812 deficit in <=50-key chunks; local generation stops at one
+chunk and uses different cursor convention. Explicit store compatibility is
+required before porting. [Evidence](docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#legacy-generation-loop-and-cursor-convention-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. No production change or live traffic.
+
 2026-11-04 — **ADD prekey selection and exact child layout traced.**
 
 43.72 SQL filter, key conversion/ID bytes and ADD-only wire shape retained.
