@@ -1,0 +1,15 @@
+
+# class: LX/DBh;
+# extends: Ljava/lang/Object;
+
+.method public A1X(ZLZ)  # .registers 7
+    # full signature: LX/DBh;->A1X(Ljava/lang/Long;Z)Z
+    0000..0004  const-wide/16  v1, #0x0
+    0004..000e  const-wide  v3, #0x1fffffffffffff (9007199254740991)
+    000e..0010  move-object  v0, v5
+    0010..0012  move  v5, v6
+    0012..0018  invoke-static/range  {v0..v5}, LX/0Tk;->A05(Ljava/lang/Long;JJZ)Z
+    0018..001a  move-result  v0
+    001a..001c  return  v0
+    # exception table: 0 try range(s)
+.end method

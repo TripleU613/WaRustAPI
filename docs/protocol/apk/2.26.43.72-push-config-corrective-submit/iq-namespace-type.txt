@@ -1,0 +1,18 @@
+
+# class: LX/DBi;
+# extends: Ljava/lang/Object;
+
+.method public A0h(VLL)  # .registers 5
+    # full signature: LX/DBi;->A0h(LX/0Tj;Ljava/lang/String;)V
+    0000..0006  const-string/jumbo  v1, "xmlns"
+    0006..000a  new-instance  v0, LX/0Tl;
+    000a..0010  invoke-direct  {v0, v1, v4}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    0010..0016  invoke-virtual  {v3, v0}, LX/0Tj;->A02(LX/0Tl;)V
+    0016..001c  const-string/jumbo  v2, "type"
+    001c..0020  const-string  v1, "set"
+    0020..0024  new-instance  v0, LX/0Tl;
+    0024..002a  invoke-direct  {v0, v2, v1}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    002a..0030  invoke-virtual  {v3, v0}, LX/0Tj;->A02(LX/0Tl;)V
+    0030..0032  return-void
+    # exception table: 0 try range(s)
+.end method

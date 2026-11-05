@@ -1,0 +1,14 @@
+
+# class: LX/B21;
+# extends: Ljava/lang/Object;
+
+.method public A0P(LLL)  # .registers 2
+    # full signature: LX/B21;->A0P(LX/0Tj;LX/0Tj;)LX/0Tp;
+    0000..0006  invoke-virtual  {v0}, LX/0Tj;->A01()LX/0Tp;
+    0006..0008  move-result-object  v0
+    0008..000e  invoke-virtual  {v1, v0}, LX/0Tj;->A03(LX/0Tp;)V
+    000e..0014  invoke-virtual  {v1}, LX/0Tj;->A01()LX/0Tp;
+    0014..0016  move-result-object  v0
+    0016..0018  return-object  v0
+    # exception table: 0 try range(s)
+.end method

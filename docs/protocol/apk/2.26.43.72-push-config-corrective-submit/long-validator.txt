@@ -1,0 +1,36 @@
+
+# class: LX/0Tk;
+# extends: Ljava/lang/Object;
+
+.method public A05(ZLJJZ)  # .registers 10
+    # full signature: LX/0Tk;->A05(Ljava/lang/Long;JJZ)Z
+    0000..0004  if-nez  v4, +0xb
+    0004..0008  if-nez  v9, +0x9
+    0008..000c  const-string  v1, "Received null value for non-optional ':int'."
+    000c..000e  const/4  v0, #0x0
+    000e..0014  invoke-static  {v0, v1}, LX/00L;->A0C(ZLjava/lang/String;)V
+    0014..0016  return  v0
+    0016..0018  const/4  v3, #0x1
+    0018..001c  if-eqz  v4, +0x1c
+    001c..0022  invoke-virtual  {v4}, Ljava/lang/Number;->longValue()J
+    0022..0024  move-result-wide  v1
+    0024..0028  cmp-long  v0, v1, v5
+    0028..002c  if-gez  v0, +0x15
+    002c..0030  const-string  v0, "Value is less than the specified lower bound value of "
+    0030..0034  new-instance  v1, Ljava/lang/StringBuilder;
+    0034..003a  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    003a..0040  invoke-virtual  {v1, v5, v6}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    0040..0046  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0046..0048  move-result-object  v1
+    0048..004a  const/4  v0, #0x0
+    004a..0050  invoke-static  {v0, v1}, LX/00L;->A0C(ZLjava/lang/String;)V
+    0050..0052  return  v3
+    0052..0056  cmp-long  v0, v1, v7
+    0056..005a  if-lez  v0, -0x3
+    005a..005e  const-string  v0, "Value is greater than the specified lower bound value of "
+    005e..0062  new-instance  v1, Ljava/lang/StringBuilder;
+    0062..0068  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0068..006e  invoke-virtual  {v1, v7, v8}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    006e..0070  goto  -0x17
+    # exception table: 0 try range(s)
+.end method

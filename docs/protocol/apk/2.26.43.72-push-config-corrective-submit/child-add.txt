@@ -1,0 +1,12 @@
+
+# class: LX/0Tj;
+# extends: Ljava/lang/Object;
+
+.method public A03(VL)  # .registers 3
+    # full signature: LX/0Tj;->A03(LX/0Tp;)V
+    0000..0004  if-eqz  v2, +0x7
+    0004..0008  iget-object  v0, v1, LX/0Tj;->A03:Ljava/util/List;
+    0008..000e  invoke-interface  {v0, v2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method

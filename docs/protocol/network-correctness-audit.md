@@ -2098,3 +2098,16 @@ applies additional numeric/helper gates before invokingEbv.A00.
 [Projection, callers, selected gates and limits](apk/2.26.43.72-push-config-verification-work/README.md).
 Complete token/provider lifecycle, comparisons, sender outcomes and durable
 ownership remain open. No Rust behavior change or live account operation.
+
+### Corrective push-config construction and local admission (2026-11-05)
+
+**Confirmed static, APK43.72:** Ebv emits server iq/set with one config child;
+builderA04 merges same-tag fragments instead of appending another wrapper.
+Provider-token config ID and generated IQ ID are distinct. A0W/A0A requires
+ready flag/channel presence, logs connection state without gating on it,
+registers before dispatch and can permit deferred offline writer queueing.
+Its boolean is local admission. Config FUT selector0 differs from token
+persistence/recovery and its immediate-failure path.
+[Sender, helper composition, validators and limits](apk/2.26.43.72-push-config-corrective-submit/README.md).
+Full attribute/trigger policy, helper effects, races and durable/generation
+ownership remain open. No Rust behavior change or live account operation.

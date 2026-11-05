@@ -1,0 +1,196 @@
+
+# class: LX/Ebv;
+# extends: Ljava/lang/Object;
+
+.method public A00(ZLLLLLLL)  # .registers 42
+    # full signature: LX/Ebv;->A00(LX/Fuc;LX/Ee7;Ljava/lang/Integer;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z
+    0000..0002  const/4  v0, #0x0
+    0002..0006  move-object/from16  v3, v39
+    0006..000c  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000c..000e  const/4  v1, #0x1
+    000e..0010  const/4  v2, #0x0
+    0010..0014  move-object/from16  v5, v36
+    0014..0018  if-eqz  v36, +0x122
+    0018..001c  iget  v4, v5, LX/Ee7;->A00:I
+    001c..0020  if-nez  v4, +0x118
+    0020..0022  const/4  v9, #0x0
+    0022..0026  move-object/from16  v10, v34
+    0026..002a  iget-object  v4, v10, LX/Ebv;->A01:LX/05a;
+    002a..002e  iget-object  v4, v4, LX/05a;->A00:LX/00x;
+    002e..0032  move-object/from16  v33, v4
+    0032..0038  invoke-static/range  {v33..v33}, LX/6oj;->A12(LX/00x;)Ljava/lang/String;
+    0038..003a  move-result-object  v17
+    003a..003c  const/4  v7, #0x0
+    003c..0040  if-eqz  v36, +0x9
+    0040..0044  iget  v4, v5, LX/Ee7;->A00:I
+    0044..0048  and-int/lit8  v4, v4, #0x20
+    0048..004c  if-eqz  v4, +0x3
+    004c..004e  const/4  v7, #0x1
+    004e..0052  move-object/from16  v8, v41
+    0052..0056  if-eqz  v41, +0xfa
+    0056..005a  iget-object  v6, v10, LX/Ebv;->A03:LX/08Y;
+    005a..005e  const/16  v5, #0x1014
+    005e..0064  invoke-virtual  {v6, v5}, LX/00E;->A0a(I)I
+    0064..0066  move-result  v4
+    0066..006a  if-lez  v4, +0xf0
+    006a..0070  invoke-virtual  {v6, v5}, LX/00E;->A0a(I)I
+    0070..0072  move-result  v4
+    0072..0078  invoke-static  {v4}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+    0078..007a  move-result-object  v15
+    007a..007e  if-eqz  v7, +0x8
+    007e..0082  if-eqz  v9, +0x6
+    0082..0088  invoke-static  {v9}, LX/B1y;->A0m(Ljava/lang/String;)Ljava/lang/Long;
+    0088..008a  move-result-object  v2
+    008a..008e  sget-object  v7, LX/01k;->A00:LX/01k;
+    008e..0092  move-object/from16  v4, v37
+    0092..0098  invoke-static  {v4, v1}, LX/6og;->A05(Ljava/lang/Number;I)I
+    0098..009a  move-result  v4
+    009a..009c  int-to-long  v5, v4
+    009c..00a2  invoke-static  {v5, v6}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    00a2..00a4  move-result-object  v27
+    00a4..00a8  const-string  v9, "id"
+    00a8..00ac  const-string  v14, "platform"
+    00ac..00ae  const/4  v11, #0x3
+    00ae..00b2  new-array  v13, v11, [Ljava/lang/String;
+    00b2..00b6  const-string  v4, "adm"
+    00b6..00ba  aput-object  v4, v13, v0
+    00ba..00be  const-string  v4, "fbns"
+    00be..00c2  aput-object  v4, v13, v1
+    00c2..00c4  const/4  v12, #0x2
+    00c4..00c8  const-string  v4, "gcm"
+    00c8..00ce  invoke-static  {v4, v13, v12}, LX/2L6;->A1H(Ljava/lang/Object;[Ljava/lang/Object;I)Ljava/util/List;
+    00ce..00d0  move-result-object  v13
+    00d0..00d4  new-array  v4, v11, [Ljava/lang/String;
+    00d4..00d8  const-string  v16, "473039703209605"
+    00d8..00dc  aput-object  v16, v4, v0
+    00dc..00e0  const-string  v16, "614665046147756"
+    00e0..00e4  aput-object  v16, v4, v1
+    00e4..00e8  const-string  v16, "994766073959253"
+    00e8..00ec  aput-object  v16, v4, v12
+    00ec..00f2  invoke-static  {v4}, LX/01i;->A0A([Ljava/lang/Object;)Ljava/util/List;
+    00f2..00f6  new-array  v11, v11, [Ljava/lang/String;
+    00f6..00fa  const-string  v4, "0"
+    00fa..00fe  aput-object  v4, v11, v0
+    00fe..0102  const-string  v4, "1"
+    0102..0106  aput-object  v4, v11, v1
+    0106..010a  const-string  v4, "2"
+    010a..0110  invoke-static  {v4, v11, v12}, LX/2L6;->A1H(Ljava/lang/Object;[Ljava/lang/Object;I)Ljava/util/List;
+    0110..0112  move-result-object  v12
+    0112..0116  const-string  v16, "config"
+    0116..011c  invoke-static/range  {v16..v16}, LX/B1w;->A0a(Ljava/lang/String;)LX/0Tj;
+    011c..011e  move-result-object  v4
+    011e..0122  const-wide/16  v19, #0x1
+    0122..0126  const-wide/16  v21, #0x400
+    0126..012a  move/from16  v23, v0
+    012a..012e  move-object/from16  v18, v3
+    012e..0134  invoke-static/range  {v18..v23}, LX/0Tk;->A06(Ljava/lang/String;JJZ)Z
+    0134..0136  move-result  v11
+    0136..013a  if-eqz  v11, +0x5
+    013a..0140  invoke-static  {v4, v9, v3}, LX/B1y;->A1J(LX/0Tj;Ljava/lang/String;Ljava/lang/String;)V
+    0140..0144  if-eqz  v2, +0x11
+    0144..014a  invoke-static  {v2, v1}, LX/DBh;->A1X(Ljava/lang/Long;Z)Z
+    014a..014c  move-result  v3
+    014c..0150  if-eqz  v3, +0xb
+    0150..0154  const-string  v11, "app_mute"
+    0154..015a  invoke-virtual  {v2}, Ljava/lang/Number;->longValue()J
+    015a..015c  move-result-wide  v2
+    015c..0162  invoke-static  {v4, v11, v2, v3}, LX/B1y;->A1I(LX/0Tj;Ljava/lang/String;J)V
+    0162..0166  if-eqz  v41, +0x15
+    0166..016a  const-wide/16  v24, #0x40
+    016a..016e  move-object/from16  v21, v8
+    016e..0172  move-wide/from16  v22, v19
+    0172..0176  move/from16  v26, v1
+    0176..017c  invoke-static/range  {v21..v26}, LX/0Tk;->A06(Ljava/lang/String;JJZ)Z
+    017c..017e  move-result  v2
+    017e..0182  if-eqz  v2, +0x7
+    0182..0186  const-string  v2, "pkey"
+    0186..018c  invoke-static  {v4, v2, v8}, LX/B1y;->A1J(LX/0Tj;Ljava/lang/String;Ljava/lang/String;)V
+    018c..0190  if-eqz  v27, +0x13
+    0190..0194  const-wide/16  v28, #0x0
+    0194..0198  const-wide/16  v30, #0x5
+    0198..019c  move/from16  v32, v1
+    019c..01a2  invoke-static/range  {v27..v32}, LX/0Tk;->A05(Ljava/lang/Long;JJZ)Z
+    01a2..01a4  move-result  v2
+    01a4..01a8  if-eqz  v2, +0x7
+    01a8..01ac  const-string  v2, "num_acc"
+    01ac..01b2  invoke-static  {v4, v2, v5, v6}, LX/B1y;->A1I(LX/0Tj;Ljava/lang/String;J)V
+    01b2..01b6  move-object/from16  v3, v38
+    01b6..01ba  if-eqz  v38, +0x11
+    01ba..01c0  invoke-static  {v3, v1}, LX/DBh;->A1X(Ljava/lang/Long;Z)Z
+    01c0..01c2  move-result  v2
+    01c2..01c6  if-eqz  v2, +0xb
+    01c6..01ca  const-string  v5, "settings"
+    01ca..01d0  invoke-virtual  {v3}, Ljava/lang/Number;->longValue()J
+    01d0..01d2  move-result-wide  v2
+    01d2..01d8  invoke-static  {v4, v5, v2, v3}, LX/B1y;->A1I(LX/0Tj;Ljava/lang/String;J)V
+    01d8..01dc  move-object/from16  v6, v40
+    01dc..01e2  invoke-virtual  {v4, v6, v14, v13}, LX/0Tj;->A07(Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+    01e2..01e8  const-string/jumbo  v2, "voip_payload_type"
+    01e8..01ee  invoke-virtual  {v4, v15, v2, v12}, LX/0Tj;->A06(Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+    01ee..01f4  invoke-virtual  {v4}, LX/0Tj;->A01()LX/0Tp;
+    01f4..01f6  move-result-object  v11
+    01f6..01fc  invoke-static  {v7, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    01fc..0202  invoke-static/range  {v16..v16}, LX/B1w;->A0a(Ljava/lang/String;)LX/0Tj;
+    0202..0204  move-result-object  v8
+    0204..0208  const-wide/16  v2, #0x0
+    0208..0212  const-wide  v4, #0x7fffffffffffffff (9223372036854775807)
+    0212..0218  invoke-static  {v7, v2, v3, v4, v5}, LX/0Tk;->A07(Ljava/util/List;JJ)Z
+    0218..021a  move-result  v4
+    021a..021e  if-eqz  v4, +0x22
+    021e..0224  invoke-virtual  {v7}, LX/01k;->iterator()Ljava/util/Iterator;
+    0224..0226  move-result-object  v5
+    0226..022c  invoke-interface  {v5}, Ljava/util/Iterator;->hasNext()Z
+    022c..022e  move-result  v4
+    022e..0232  if-eqz  v4, +0x18
+    0232..0238  invoke-interface  {v5}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0238..023c  const-string  v0, "getNode"
+    023c..0242  invoke-static  {v0}, LX/2L6;->A18(Ljava/lang/String;)Ljava/lang/NullPointerException;
+    0242..0244  move-result-object  v0
+    0244..0246  throw  v0
+    0246..0248  move-object  v15, v2
+    0248..024c  goto/16  -0xe7
+    024c..0252  invoke-static  {v4}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+    0252..0254  move-result-object  v9
+    0254..0258  goto/16  -0x119
+    0258..025a  move-object  v9, v2
+    025a..025e  goto/16  -0x11c
+    025e..0264  invoke-virtual  {v8, v11}, LX/0Tj;->A04(LX/0Tp;)V
+    0264..026a  invoke-virtual  {v8}, LX/0Tj;->A01()LX/0Tp;
+    026a..026c  move-result-object  v7
+    026c..0270  const-string  v8, "iq"
+    0270..0276  invoke-static  {v8}, LX/B1w;->A0a(Ljava/lang/String;)LX/0Tj;
+    0276..0278  move-result-object  v5
+    0278..027e  invoke-static/range  {v16..v16}, LX/B1w;->A0a(Ljava/lang/String;)LX/0Tj;
+    027e..0280  move-result-object  v4
+    0280..0286  invoke-virtual  {v4, v7}, LX/0Tj;->A04(LX/0Tp;)V
+    0286..028c  invoke-static  {v4, v5}, LX/B21;->A0P(LX/0Tj;LX/0Tj;)LX/0Tp;
+    028c..028e  move-result-object  v7
+    028e..0294  invoke-static  {v8}, LX/B1w;->A0a(Ljava/lang/String;)LX/0Tj;
+    0294..0296  move-result-object  v5
+    0296..029c  invoke-static  {v5}, LX/B21;->A1A(LX/0Tj;)V
+    029c..02a2  const-string/jumbo  v4, "urn:xmpp:whatsapp:push"
+    02a2..02a8  invoke-static  {v5, v4}, LX/DBi;->A0h(LX/0Tj;Ljava/lang/String;)V
+    02a8..02b2  const-wide  v14, #0x1fffffffffffff (9007199254740991)
+    02b2..02b6  move-object/from16  v11, v17
+    02b6..02b8  move-wide  v12, v2
+    02b8..02bc  move/from16  v16, v0
+    02bc..02c2  invoke-static/range  {v11..v16}, LX/0Tk;->A06(Ljava/lang/String;JJZ)Z
+    02c2..02c4  move-result  v2
+    02c4..02c8  if-eqz  v2, +0x5
+    02c8..02ce  invoke-static  {v5, v9, v11}, LX/B1y;->A1J(LX/0Tj;Ljava/lang/String;Ljava/lang/String;)V
+    02ce..02d4  invoke-virtual  {v5, v7}, LX/0Tj;->A04(LX/0Tp;)V
+    02d4..02da  invoke-virtual  {v5}, LX/0Tj;->A01()LX/0Tp;
+    02da..02dc  move-result-object  v4
+    02dc..02e0  new-instance  v3, LX/FUT;
+    02e0..02e4  move-object/from16  v2, v35
+    02e4..02ea  invoke-direct  {v3, v2, v10, v6, v0}, LX/FUT;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;I)V
+    02ea..02f0  invoke-static/range  {v33..v33}, LX/6oe;->A0u(LX/00x;)LX/0Sf;
+    02f0..02f2  move-result-object  v2
+    02f2..02f6  const-wide/16  v7, #0x7d00
+    02f6..02f8  move-object  v5, v11
+    02f8..02fa  move  v6, v1
+    02fa..0300  invoke-virtual/range  {v2..v8}, LX/0Sf;->A0W(LX/0lG;LX/0Tp;Ljava/lang/String;IJ)Z
+    0300..0302  move-result  v0
+    0302..0304  return  v0
+    # exception table: 0 try range(s)
+.end method

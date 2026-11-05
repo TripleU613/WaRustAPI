@@ -15882,5 +15882,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-push-config-verification-work/README.md",
     "description": "Selected push-config consumer queues verification work with omitted empty String extras and account/VOIP int fallbacks1/0. Normal callback return does not prove enqueue completion or send. Later service comparison/gate path invokes a separate sender; full provider lifecycle, sender outcomes and durable ownership remain open. No sender, route or live operation added."
+  },
+  "x-push-config-corrective-submit-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-push-config-corrective-submit/README.md",
+    "description": "Corrective push-config sender builds IQ SET with one config child via same-tag merge. Ready/channel admission, deferred offline queueing and selector0 callbacks differ from token requests. Boolean return is not server acceptance; generated bounds are not proven hard rejection limits. Full grammar, trigger policy and durable ownership remain open. No sender, route or live operation added."
   }
 }

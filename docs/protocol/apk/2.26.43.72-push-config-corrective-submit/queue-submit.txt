@@ -1,0 +1,65 @@
+
+# class: LX/0Sf;
+# extends: Ljava/lang/Object;
+
+.method public A0A(ZLLLLIJZZ)  # .registers 21
+    # full signature: LX/0Sf;->A0A(LX/0lG;LX/0Tp;LX/0Sf;Ljava/lang/String;IJZZ)Z
+    0000..0002  const/4  v3, #0x1
+    0002..0006  iget-object  v1, v14, LX/0Sf;->A07:LX/0AI;
+    0006..000a  iget-boolean  v0, v1, LX/0AI;->A06:Z
+    000a..000c  const/4  v11, #0x0
+    000c..000e  move-object  v7, v15
+    000e..0012  move/from16  v8, v16
+    0012..0016  if-eqz  v0, +0x4e
+    0016..001a  iget-object  v0, v14, LX/0Sf;->A0J:LX/1A0;
+    001a..001e  if-eqz  v0, +0x4a
+    001e..0024  invoke-virtual  {v1}, LX/0AI;->A0O()Z
+    0024..0026  move-result  v2
+    0026..002a  const-string  v0, "MessageClient/sendIqWithCallbackInternal/add-to-pending type="
+    002a..002e  new-instance  v1, Ljava/lang/StringBuilder;
+    002e..0034  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0034..003a  invoke-virtual  {v1, v8}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    003a..003e  const-string  v0, " id="
+    003e..0044  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0044..004a  invoke-virtual  {v1, v15}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    004a..004e  const-string  v0, "isXmppConnected="
+    004e..0054  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0054..005a  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    005a..0060  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0060..0062  move-result-object  v0
+    0062..0068  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0068..006e  invoke-static  {v14}, LX/0Sf;->A03(LX/0Sf;)LX/0ln;
+    006e..0070  move-result-object  v5
+    0070..0072  move-object  v6, v12
+    0072..0076  move-wide/from16  v9, v17
+    0076..007c  invoke-virtual/range  {v5..v11}, LX/0ln;->A08(LX/0lG;Ljava/lang/String;IJZ)V
+    007c..0080  const-wide/16  v1, #0x0
+    0080..0084  cmp-long  v0, v17, v1
+    0084..0088  if-lez  v0, +0x3
+    0088..008a  const/4  v11, #0x1
+    008a..0090  invoke-static  {v11}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0090..0092  move-result-object  v6
+    0092..0094  move-object  v5, v13
+    0094..0098  move/from16  v9, v19
+    0098..009c  move/from16  v10, v20
+    009c..00a2  invoke-static/range  {v5..v10}, LX/0Sf;->A01(LX/0Tp;Ljava/lang/Boolean;Ljava/lang/String;IZZ)Landroid/os/Message;
+    00a2..00a4  move-result-object  v1
+    00a4..00a6  const/4  v0, #0x0
+    00a6..00ac  invoke-static  {v1, v14, v3, v0}, LX/0Sf;->A05(Landroid/os/Message;LX/0Sf;ZZ)V
+    00ac..00ae  return  v3
+    00ae..00b4  invoke-static  {v14}, LX/0Sf;->A03(LX/0Sf;)LX/0ln;
+    00b4..00b6  move-result-object  v0
+    00b6..00bc  invoke-virtual  {v0, v15}, LX/0ln;->A0E(Ljava/lang/String;)V
+    00bc..00c0  const-string  v0, "MessageClient/sendIqWithCallbackInternal not ready, type="
+    00c0..00c4  new-instance  v1, Ljava/lang/StringBuilder;
+    00c4..00ca  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00ca..00d0  invoke-virtual  {v1, v8}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00d0..00d4  const-string  v0, " iqId="
+    00d4..00da  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00da..00e0  invoke-virtual  {v1, v15}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00e0..00e6  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00e6..00e8  move-result-object  v0
+    00e8..00ee  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    00ee..00f0  return  v11
+    # exception table: 0 try range(s)
+.end method

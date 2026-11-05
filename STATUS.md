@@ -1,3 +1,11 @@
+2026-11-05 — **Corrective push-config sender shape and admission traced.**
+
+Same-tag builder merges yield one config child. The submit gate and offline
+defer policy differ from client-auth-token submission; its boolean proves
+local admission only. [Evidence and limits](docs/protocol/apk/2.26.43.72-push-config-corrective-submit/README.md).
+Research only; no runtime changes or live traffic. Validation: pinned APK hash,
+checked exports, checksums, JSON, coverage freshness and repository hygiene.
+
 2026-11-04 — **Push-config verification work and fallback values traced.**
 
 Config handling queues VERIFY work, omits empty String extras, and defaults
