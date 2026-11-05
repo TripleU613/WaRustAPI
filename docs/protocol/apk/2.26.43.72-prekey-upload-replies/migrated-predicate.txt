@@ -1,0 +1,33 @@
+
+# class: LX/Ex8;
+# extends: Ljava/lang/Object;
+
+.method public A03(Z)  # .registers 4
+    # full signature: LX/Ex8;->A03()Z
+    0000..0006  invoke-virtual  {v3}, LX/Ex8;->A04()Z
+    0006..0008  move-result  v0
+    0008..000c  if-nez  v0, +0x4
+    000c..000e  const/4  v0, #0x0
+    000e..0010  return  v0
+    0010..0014  iget-object  v0, v3, LX/Ex8;->A03:LX/05a;
+    0014..001a  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    001a..001c  move-result-object  v0
+    001c..0020  check-cast  v0, LX/0Wk;
+    0020..0026  invoke-virtual  {v0}, LX/0Wk;->A04()LX/FjI;
+    0026..0028  move-result-object  v2
+    0028..002c  iget-object  v0, v3, LX/Ex8;->A02:LX/05a;
+    002c..0032  invoke-static  {v0}, LX/DBe;->A0g(LX/05a;)LX/0WJ;
+    0032..0034  move-result-object  v0
+    0034..003a  invoke-virtual  {v0}, LX/0WJ;->A0z()Z
+    003a..003c  move-result  v0
+    003c..0042  invoke-virtual  {v2}, LX/FjI;->close()V
+    0042..0044  return  v0
+    0044..0046  move-exception  v1
+    0046..0048  throw  v1
+    0048..004a  move-exception  v0
+    004a..0050  invoke-static  {v2, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    0050..0052  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0014..001e -> 0022
+    # catch <all> code_units 0023..0024 -> 0024
+.end method

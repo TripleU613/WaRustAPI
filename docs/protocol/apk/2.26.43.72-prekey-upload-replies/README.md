@@ -526,3 +526,59 @@ Additional export hashes:
 
 - [pq-target-callers.txt](pq-target-callers.txt): `3eb0c339e9913def990e195ea39cae3670de6b2ee3c9da9b3b6d99ccec5d258c`
 - [pq-target-provider.txt](pq-target-provider.txt): `f224b42c70d8419ab934ca54b030bd811f1b3bac9677e950737c0b7e6007bbcb`
+
+## SET/ADD entry admission and migrated state (2026-11-04)
+
+**Confirmed static**, pinned 43.72. This closes manager-level entry predicates;
+upstream registration/startup/notification routing is not yet fully traced.
+
+- Exact **13z.A0B** callers are Fcd.run (known successful ADD continuation) and
+  **Fd5.run**. The latter passes stored reason plus four booleans unchanged.
+  Its constructor's extra integer **$t** is stored but **not read by run**;
+  do not invent dispatch semantics from that integer alone.
+- Fd5 constructor callers: **13z.A0R**, **13z.A0V**, **EcZ.A00**, **Fec.run**.
+  This is an exact concrete-call inventory, not proof of all reflection/native
+  entry paths. The Fec method remains untraced in this chunk.
+- **13z.A0R(reason)** first requires **Ex8.A04**, then shared A0E guard with
+  null token/false override. It queues Fd5 with **legacy=false,pq=true,useSet=true,
+  flag=true**. This is a PQ-only SET entry, not unconditional generic startup.
+  A0R's upstream callers remain to be traced.
+- **13z.A0V(legacy,pq)** rejects bothfalse, calls A0E(null,reason2,false), then
+  requires **Ex8.A03** (logged isPQMigrated). Non-migrated branch logs unexpected
+  and clears guard through A07. Migrated branch ensures the requested key
+  families, checks available legacy candidates through A1B when requested, and
+  queues Fd5 with **legacy=available,pq=input,useSet=false,flag=false**. Thus
+  this manager's low-count entry is ADD and depends on migrated state.
+- **Ex8.A04** reads Boolean property **0x52ce=21198**. **Ex8.A03** first requires
+  A04, then returns **0WJ.A0z**. That method executes
+  `SELECT EXISTS(SELECT 1 FROM kyber_prekeys WHERE last_resort_key = 1 AND sent_to_server = 1)`.
+  Migrated here therefore means the gate plus any sent last-resort row, not
+  merely the presence of any PQ key or an assumed account-wide marker. An empty
+  cursor result logs query failure and returns false; wider DB errors propagate.
+- **13z.A0E** checks transport0AI.A06, an inflight predicate A0Y(uptimeMillis),
+  and, absent caller override, blocks when A06 backoff flag plus config0x47af.
+  Accepted path records uptime through A0C and stores reason/token metadata.
+  A0Y/A0C expiry law, encoded02X return identities, full backoff lifecycle and
+  upstream ready/account binding remain open. Rust durable uncertain reservation
+  guarantees are not replaced by native in-memory timeout behavior.
+
+**Porting impact:** a future ADD implementation can bind mode to successful
+continuation and the migrated low-count scope, while retaining distinct PQ SET
+entry. It must not infer that all count notifications or all initial uploads
+use ADD, nor infer migration from unsent PQ existence. Rust currently lacks this
+current-build manager strategy. This is evidence, not an implementation or
+permission to mark keys sent locally to enter that scope. No production change
+or live traffic; existing account state and uncertain requests remain intact.
+
+Additional export hashes:
+
+- [upload-entry-callers.txt](upload-entry-callers.txt): `2114d4fe78b4ef265744b48cefa63e561f70ec44efc5269243a14a50b037cfe4`
+- [upload-entry-worker.txt](upload-entry-worker.txt): `78462946e9fc7f74847c8884795f9f40712429543615113b9b5e160ddbebc61e`
+- [entry-constructor-callers.txt](entry-constructor-callers.txt): `b5eacfc74d62ff3187bb0e590478c680292f94a5aeee009959e6e2b41130872a`
+- [entry-constructor.txt](entry-constructor.txt): `c77822f0bd8f78bedef59ec6615e4e2758b419593e6ba11a0687389a1c97aedd`
+- [entry-A0R.txt](entry-A0R.txt): `301db8f27f46668ac076d05bcd60fc69151cf499172796100e4901c41a452e34`
+- [entry-A0V.txt](entry-A0V.txt): `b97439a348d2761e5c5015af2aa64987e05b58e2015d0a105344af8262bb749e`
+- [upload-guard.txt](upload-guard.txt): `a3c3d5b7c5b621302453b6182fed43388ed005790a0bc3e80d240bde6c8b3a72`
+- [migrated-predicate.txt](migrated-predicate.txt): `df4a05e923ac0cc11fb2a20f1d473f1b1b840d7d0bdda8a1522b074411322a5a`
+- [set-admission.txt](set-admission.txt): `e58a2f2a9c7035d5d1f3246592541f3a90411141dd19ea3441fac3acb9ca1920`
+- [migration-state.txt](migration-state.txt): `ddaaa0effc16926ccff56b9c6bdaf28557b70ea58f835e0adaa58199c8b9cb2a`

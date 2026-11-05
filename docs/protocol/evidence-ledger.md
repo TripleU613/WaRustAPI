@@ -1,3 +1,10 @@
+2026-11-04 — **SET/ADD manager entry and migration predicates traced.**
+
+Low-count ADD requires21198 plus a sent last-resort PQ row; PQ-only SET has
+separate entry. Shared readiness/inflight/backoff guard retained.
+[Evidence and upstream limits](apk/2.26.43.72-prekey-upload-replies/README.md#setadd-entry-admission-and-migrated-state-2026-11-04).
+No production change or live traffic.
+
 2026-11-04 — **Prekey construction failures roll back upload reservation.**
 
 Identity validation/KEM child signing moved inside the reservation transaction.

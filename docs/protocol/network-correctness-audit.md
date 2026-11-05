@@ -891,3 +891,14 @@ sources remain in the [current-build evidence](apk/2.26.43.72-prekey-upload-repl
 No uncertain existing request is reset by this fix. The ADD/generation/current-build
 strategy port remains open; this removes a real atomicity obstacle in the shared
 reservation path first. No live traffic or account-state migration.
+
+## Current-build SET/ADD entry and migration admission (2026-11-04)
+
+**Confirmed static, 43.72:** 13z.A0V low-count entry requires migrated state
+then schedules ADD; A0R is separately gate+guard-admitted PQ-only SET. Ex8.A03
+combines property21198 with 0WJ.A0z's EXISTS(sent last-resort PQ row). Shared
+A0E guards readiness/inflight/backoff. Fd5.run ignores its stored $t and forwards
+flags unchanged; constructor/dispatched selector assumptions are not admission.
+[Exact entry arguments, SQL and upstream/lifetime gaps](apk/2.26.43.72-prekey-upload-replies/README.md#setadd-entry-admission-and-migrated-state-2026-11-04).
+No runtime strategy port yet; do not fabricate migrated state or reset pending
+batches. No production change/live traffic.

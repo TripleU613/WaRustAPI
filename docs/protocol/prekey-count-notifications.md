@@ -195,3 +195,10 @@ upload batch property21201 defaults10. The provider captures the former in
 inside upload reservation, so construction failure cannot commit uncertain keys
 or newly generated KEM state. [PQ-off/on reopen regression and scope](network-correctness-audit.md#prekey-construction-and-reservation-atomicity-2026-11-04).
 Current-build ADD port remains unfinished.
+
+## Current-build manager entry admission
+
+**Confirmed static, 43.72:** low-count13z.A0V requires migrated state before
+ADD; migration predicate requires21198 and sent last-resort PQ row. A0R is
+separate PQ-only SET scope. [Flags, shared guard and upstream gaps](apk/2.26.43.72-prekey-upload-replies/README.md#setadd-entry-admission-and-migrated-state-2026-11-04).
+No Rust account migration or scheduling switch.
