@@ -16,7 +16,7 @@
 //!   and `pq_last_resort_key{id,value,signature}` when Kyber keys exist
 //!   (`153c..161c`). `LX/13c.A03` `00d6..00e4` logs "skipping kyber prekeys
 //!   upload" without them, so the post-quantum children are optional; this
-//!   client has no Kyber material and never sends them. The conditional `op`
+//!   client conditionally generates and sends them when enabled. The conditional `op`
 //!   element (`13f0..1474`, runtime flag `0x5bf2` plus coexistence reason and
 //!   token) is not sent either.
 //! * Trigger `LX/14z.A09` `001a..008a`: `notification type=encrypt` with a
@@ -159,6 +159,9 @@ pub struct Batch {
     pub code: Option<String>,
     /// Server still wants more legacy keys (`list/@count_low`).
     pub count_low: Option<bool>,
+    /// Independent server PQ demand; None for historical/unsettled batches.
+    #[serde(default)]
+    pub pq_count_low: Option<bool>,
     /// Reservation time.
     pub reserved_at: Timestamp,
     /// Kyber prekey ids carried in the same IQ (`pq_list`/`pq_last_resort_key`).
@@ -177,11 +180,13 @@ pub struct Summary {
     /// Reserved batches by status.
     pub batches: std::collections::BTreeMap<String, usize>,
     /// Local ML-KEM-1024 prekey rows the inbox can use for incoming hybrid
-    /// bootstrap. No producer exists and none are ever uploaded
-    /// (docs/protocol/kem-prekey-inventory.md), so this is normally zero.
+    /// bootstrap. Enabled SET uploads can generate these locally; current
+    /// native ADD/replenishment strategy parity remains incomplete.
     pub kem_local: usize,
     /// Of those, native `last_resort_key` rows retained after successful use.
     pub kem_last_resort: usize,
+    /// Historical acknowledged batches reporting PQ count_low; not current demand.
+    pub pq_low_acknowledged_batches: usize,
 }
 
 fn scan_prefix<T: serde::de::DeserializeOwned>(
@@ -377,6 +382,8 @@ pub struct UploadOutcome {
     pub accepted: bool,
     /// `list/@count_low="true"`: the server still wants more legacy keys.
     pub count_low: bool,
+    /// Independent pq_list count-low flag; not a legacy upload trigger.
+    pub pq_count_low: bool,
 }
 
 /// Reserve up to 812 unsent keys and build the upload IQ. `signed` is the
@@ -496,6 +503,7 @@ pub fn begin_upload(
                     status: "outcome_unknown".into(),
                     code: None,
                     count_low: None,
+                    pq_count_low: None,
                     reserved_at: Timestamp::now(),
                     kem_ids: kem_ids.clone(),
                 },
@@ -537,14 +545,20 @@ impl PendingUpload {
         let accepted = node.get_attr("type").and_then(|v| v.as_text()) == Some("result");
         // APK 43.72 1rA.A03 selects result -> 1ru.A02 or error ->
         // 1ud.A01. Fields from the other callback must not affect settlement.
-        let count_low = accepted
-            && node
-                .child_nodes()
-                .iter()
-                .find(|c| c.description == "list")
-                .and_then(|c| c.get_attr("count_low"))
-                .and_then(|v| v.as_text())
-                .is_some_and(|v| v.eq_ignore_ascii_case("true"));
+        // APK 43.72 140/141.CK4 and 1ru.A02 select the first exact
+        // list/pq_list independently; an absent flag is false.
+        let low = |name: &str| {
+            accepted
+                && node
+                    .child_nodes()
+                    .iter()
+                    .find(|c| c.description == name)
+                    .and_then(|c| c.get_attr("count_low"))
+                    .and_then(|v| v.as_text())
+                    .is_some_and(|v| v.eq_ignore_ascii_case("true"))
+        };
+        let count_low = low("list");
+        let pq_count_low = low("pq_list");
         let code = (!accepted).then(|| {
             // APK 43.72 1ud.A01 skips code-less errors, then 0HF.A00
             // uses Integer.parseInt with default zero. Do not skip a present
@@ -593,6 +607,7 @@ impl PendingUpload {
             };
             batch.code = code.clone();
             batch.count_low = Some(count_low);
+            batch.pq_count_low = Some(pq_count_low);
             tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &batch)?;
             if accepted {
                 super::kem_prekeys::mark_sent_in(tx, &batch.kem_ids)?;
@@ -617,6 +632,7 @@ impl PendingUpload {
         Ok(UploadOutcome {
             accepted,
             count_low,
+            pq_count_low,
         })
     }
 }
@@ -739,6 +755,9 @@ pub fn summary(store: &ProtocolStore) -> Result<Summary> {
             }
         }
         for (_, batch) in scan_prefix::<Batch>(tx, Table::Checkpoints, BATCH_PREFIX)? {
+            if batch.status == "server_acknowledged" && batch.pq_count_low == Some(true) {
+                summary.pq_low_acknowledged_batches += 1;
+            }
             *summary.batches.entry(batch.status).or_default() += 1;
         }
         (summary.kem_local, summary.kem_last_resort) = super::kem_prekeys::counts(tx)?;
@@ -1419,7 +1438,8 @@ mod tests {
             pending.settle(&store, &result).unwrap(),
             UploadOutcome {
                 accepted: true,
-                count_low: true
+                count_low: true,
+                pq_count_low: false
             }
         );
         assert!(pending.settle(&store, &result).is_err(), "already settled");
@@ -1447,7 +1467,8 @@ mod tests {
             pending.settle(&store, &error).unwrap(),
             UploadOutcome {
                 accepted: false,
-                count_low: false
+                count_low: false,
+                pq_count_low: false
             }
         );
         drop(store);
@@ -1631,6 +1652,47 @@ mod tests {
             pending.settle(&store, &reply).is_err(),
             "ownership mismatch survives reopen"
         );
+    }
+
+    #[test]
+    fn pq_count_low_is_independent_first_child_and_persisted_without_backfill() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("pq-low.redb");
+        let (account, signed) = account_and_signed();
+        for (kind, first, expected) in [
+            ("result", "TrUe", true),
+            ("result", "false", false),
+            ("error", "true", false),
+        ] {
+            let store = open(&path);
+            generate(&store).unwrap();
+            let (pending, _) = begin_upload(&store, &account, &signed).unwrap().unwrap();
+            let reply = Node::new("iq")
+                .attr("id", pending.iq_id.as_str())
+                .attr("type", kind)
+                .children(vec![
+                    Node::new("pq_list").attr("count_low", first),
+                    Node::new("pq_list").attr("count_low", "true"),
+                ]);
+            let outcome = pending.settle(&store, &reply).unwrap();
+            assert!(!outcome.count_low, "PQ demand must not imply legacy demand");
+            assert_eq!(outcome.pq_count_low, expected);
+            drop(store);
+            let store = open(&path);
+            let batch: Batch = store
+                .read(|tx| tx.get_json(Table::Checkpoints, batch_key(&pending.iq_id).as_bytes(), 1))
+                .unwrap()
+                .unwrap();
+            assert_eq!(batch.pq_count_low, Some(expected));
+            assert_eq!(summary(&store).unwrap().pq_low_acknowledged_batches, 1);
+            let mut historical = serde_json::to_value(&batch).unwrap();
+            historical.as_object_mut().unwrap().remove("pq_count_low");
+            let restored: Batch = serde_json::from_value(historical).unwrap();
+            assert_eq!(
+                restored.pq_count_low, None,
+                "unknown historical flag stays unknown"
+            );
+        }
     }
 
     #[test]

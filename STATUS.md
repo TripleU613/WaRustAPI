@@ -1,3 +1,12 @@
+2026-11-04 — **PQ count-low replies retained independently.**
+
+New batch/outcome flag and historical acknowledged-batch status count preserve
+PQ demand separately; automatic PQ replenishment remains incomplete.
+[Evidence and regression](docs/protocol/prekey-count-notifications.md#independent-pq-count-low-retention-2026-11-04).
+Validation: workspace/all-feature tests, strict Clippy, CLI reference,
+formatting, JSON, coverage freshness and repository hygiene passed.
+No live traffic.
+
 2026-11-04 — **KEM upload IDs bound to original callback reservation.**
 
 Changed durable KEM lists refuse settlement before any batch/key writes.

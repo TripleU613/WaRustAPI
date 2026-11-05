@@ -1148,3 +1148,11 @@ from its reservation transaction and compares the durable list at settlement.
 Empty/reordered/substituted lists refuse before any writes, on result/error.
 Existing consumed-key late-ACK regression expanded.
 [Details and limits](prekey-count-notifications.md#kem-upload-reservation-binding-2026-11-04). No new retry or live traffic.
+
+## 2026-11-04 — Independent PQ count-low retention
+
+**Implemented offline,43.72 callback evidence:**persist independent PQ
+flag, retain historicalunknowns and expose redacted acknowledged-batch count
+in existing CLI/HTTP prekey status. No PQ-to-legacy trigger conflation or
+automatic PQ replenishment added.
+[Evidence and regression](prekey-count-notifications.md#independent-pq-count-low-retention-2026-11-04). No live traffic.

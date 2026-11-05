@@ -371,3 +371,25 @@ refuse with all Prekeys/Checkpoints bytes unchanged. Restoring the synthetic
 fixture allows the original missing-row/consumption/late-ACK checks to run,
 including no resurrection and the next upload's normal behavior. Production
 never repairs an uncertain batch to pass this guard. No new retry or live traffic.
+
+## Independent PQ count-low retention (2026-11-04)
+
+**Confirmed static / implemented offline.** Pinned43.72 140/141.CK4 and
+1ru.A02 read first exact list/pq_list independently, case-insensitive true,
+absent=false (checksummed prekey-upload-replies bundle). Rust now retains
+pq_count_low separately in UploadOutcome and durable Batch. Result parses
+the flag; error storesfalse. Historical batch field defaultsNone, not a
+backfilled observation. Original upload key ownership checks still apply.
+
+`prekeys` text/JSON and existing read-only GET /v1/prekeys summary expose
+pq_low_acknowledged_batches: a historical count of acknowledged batches
+with saved PQ flagtrue. It is not current demand or permission to upload.
+No account/key/request IDs or contents are exposed. Previously misleading
+CLI/schema no-KEM-producer wording is corrected.
+
+Regression uses PQ-only demand with mixed case, duplicate children (first
+wins), an error carryingtrue and reopen; legacy flag staysfalse and the
+historical counter is not incremented by refusals/false. Missing historical
+field deserializesNone. Existing actor still schedules followup from legacy
+count_low only: PQ-only automatic replenishment requires the incomplete
+current SET/ADD routing strategy. No such port or live behavior is claimed.

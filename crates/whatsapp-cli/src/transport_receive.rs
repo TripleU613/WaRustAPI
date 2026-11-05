@@ -1380,8 +1380,12 @@ pub(super) fn prekeys_status(cli: &super::Cli) -> Result<(), Error> {
         println!("  batches {status}: {count}");
     }
     println!(
-        "kem prekeys: local={} last_resort={} (no generation or upload is implemented; incoming hybrid bootstrap needs a local row)",
+        "kem prekeys: local={} last_resort={} (local inventory; replenishment parity remains incomplete)",
         summary.kem_local, summary.kem_last_resort
+    );
+    println!(
+        "  acknowledged batches with PQ count_low: {} (historical count, not current demand)",
+        summary.pq_low_acknowledged_batches
     );
     println!(
         "prekeys: an authenticated session uploads unsent keys at start and after a server low-count notification"
