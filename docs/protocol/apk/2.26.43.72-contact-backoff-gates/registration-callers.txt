@@ -1,0 +1,4 @@
+classes9.dex  Lcom/whatsapp/registration/app/RegisterNameManager;->A02(V)
+  invoke dex byte offset: 0x6ff5aa
+classes9.dex  LX/IC6;->run(V)
+  invoke dex byte offset: 0x7872de

@@ -1014,3 +1014,16 @@ Metadata survives projection/reopen; duplicate replies do not rewrite it.
 [Full callback, independent JVM vectors, tests and scope limits](apk/2.26.43.72-usync-outer-refusal/README.md).
 This does not enforce a wait, select an observer/deadline or replay historical
 callbacks. Factory/read/reset/clock adoption remains unfinished; no live traffic.
+
+
+## Contact backoff gates and reset callers — 2026-11-05
+
+**Confirmed static**, APK2.26.43.72: the selected contact executor filters
+protocols individually; its FULL contact/sidelist wait-key selection depends on
+property37559. Exact0pQ.A02 direct callers are registration contact-sync start
+and IBi selector16 scheduled by a contact `sync` notification. This event-bound
+reset does not clear every wait key and is not generic retry permission.
+[Evidence, delay arithmetic, branch scope and remaining port requirements](apk/2.26.43.72-contact-backoff-gates/README.md).
+Rust eligibility/reset behavior is unchanged; query reachability, clock authority,
+authenticated notification/reset adoption and effective configuration remain open.
+No live account operations or server acceptance claims.

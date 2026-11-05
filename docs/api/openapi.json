@@ -16853,5 +16853,12 @@
       "whatsapp_api::transport::contacts::UsyncRefusal",
       "whatsapp_api::transport::contacts::UsyncRefusalFailure"
     ]
+  },
+  "x-contact-backoff-gate-research": {
+    "x-cli": false,
+    "x-transport": "experimental",
+    "x-live": false,
+    "description": "Static APK2.26.43.72 contact executor per-protocol wait gates and event-bound reset callers; runtime wait enforcement/reset adoption remain unported. FULL contact/sidelist key selection depends on effective property37559. Notification sync scheduling uses after and stanza t; no generic retry reset is authorized.",
+    "evidence": "docs/protocol/apk/2.26.43.72-contact-backoff-gates/README.md"
   }
 }

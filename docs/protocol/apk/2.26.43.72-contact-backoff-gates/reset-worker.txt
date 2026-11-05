@@ -1,0 +1,47 @@
+# Selected static DEX excerpt; not a complete class or control-flow graph.
+# Full export SHA256: 45e8709a0d41788476c1a1a401bb566006deabebd872db24b779af255c6b4a0c
+
+# Selected byte-PC range 0000..000e (end exclusive)
+    0000..0004  move-object/from16  v1, v35
+    0004..0008  iget  v0, v1, LX/IBi;->$t:I
+    0008..000e  packed-switch  v0, payload@0x12c4, cases=[0:@0x1202, 1:@0x11f2, 2:@0x11ba, 3:@0x1174, 4:@0x1142, 5:@0xa52, 6:@0x1116, 7:@0x10f2, 8:@0x1072, 9:@0x1062, 10:@0x6f2, 11:@0x1052, 12:@0x2e8, 13:@0x102a, 14:@0x100a, 15:@0xfde, 16:@0xf48, 17:@0xf2c, 18:@0xf2c, 19:@0xf2c, 20:@0xf18, 21:@0xf18, 22:@0xefa, 23:@0x1288, 24:@0x2aa, 25:@0x180, 26:@0xe9c, 27:@0xe8c, 28:@0xe, 29:@0xea, 30:@0xe68, 31:@0x9e, 32:@0x66, 33:@0xe, 34:@0xe, 35:@0xd2c, 36:@0xce0, 37:@0xc9e, 38:@0xc80, 39:@0xc70, 40:@0xc60, 41:@0xc42, 42:@0xc42, 43:@0xb2c, 44:@0xb04, 45:@0xaf0, 46:@0xada, 47:@0xaca, 48:@0xa9e, 49:@0x1e], default@0xe
+
+# Selected byte-PC range 0f48..0fde (end exclusive)
+    0f48..0f4c  iget-object  v1, v1, LX/IBi;->A00:Ljava/lang/Object;
+    0f4c..0f50  check-cast  v1, LX/19V;
+    0f50..0f54  iget-object  v0, v1, LX/19V;->A0V:LX/0pQ;
+    0f54..0f5a  invoke-virtual  {v0}, LX/0pQ;->A02()V
+    0f5a..0f5e  iget-object  v3, v1, LX/19V;->A0M:LX/0ob;
+    0f5e..0f60  const/4  v8, #0x0
+    0f60..0f64  iget-object  v0, v3, LX/0ob;->A0D:LX/09F;
+    0f64..0f6a  invoke-interface  {v0}, LX/09F;->BU7()Z
+    0f6a..0f6c  move-result  v0
+    0f6c..0f70  if-eqz  v0, +0x26
+    0f70..0f76  invoke-static  {}, LX/1Xl;->A18()Ljava/util/ArrayList;
+    0f76..0f78  move-result-object  v7
+    0f78..0f7c  iget-object  v0, v3, LX/0ob;->A02:LX/00x;
+    0f7c..0f82  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0f82..0f84  move-result-object  v0
+    0f84..0f88  check-cast  v0, LX/3MP;
+    0f88..0f8e  invoke-virtual  {v0}, LX/3MP;->A0C()Ljava/util/ArrayList;
+    0f8e..0f90  move-result-object  v0
+    0f90..0f96  invoke-virtual  {v0}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+    0f96..0f98  move-result-object  v2
+    0f98..0f9e  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    0f9e..0fa0  move-result  v0
+    0fa0..0fa4  if-eqz  v0, +0x15
+    0fa4..0faa  invoke-static  {v2}, LX/2LB;->A0f(Ljava/util/Iterator;)LX/0wj;
+    0faa..0fac  move-result-object  v1
+    0fac..0fb0  const-class  v0, Lcom/whatsapp/infra/core/jid/UserJid;
+    0fb0..0fb6  invoke-static  {v1, v0, v7}, LX/Fwv;->A12(LX/0wj;Ljava/lang/Class;Ljava/util/AbstractCollection;)V
+    0fb6..0fb8  goto  -0xf
+    0fb8..0fbc  sget-object  v4, LX/0vY;->A0E:LX/0vY;
+    0fbc..0fc0  sget-object  v5, LX/0vJ;->A16:LX/0vJ;
+    0fc0..0fc4  sget-object  v6, LX/0vC;->A04:LX/0vC;
+    0fc4..0fc8  sget-object  v7, Ljava/util/Collections;->EMPTY_SET:Ljava/util/Set;
+    0fc8..0fca  goto  +0x7
+    0fca..0fce  sget-object  v6, LX/0vC;->A02:LX/0vC;
+    0fce..0fd2  sget-object  v5, LX/0vJ;->A16:LX/0vJ;
+    0fd2..0fd6  sget-object  v4, LX/0vY;->A0F:LX/0vY;
+    0fd6..0fdc  invoke-static/range  {v3..v8}, LX/0ob;->A01(LX/0ob;LX/0vY;LX/0vJ;LX/0vC;Ljava/util/Collection;Z)V
+    0fdc..0fde  return-void

@@ -1,0 +1,33 @@
+["contact_sync_backoff"]  (5 reference(s))
+  classes.dex  LX/0pA;->BLg(VLLIJ)
+    dex byte offset: 0x709ae0
+  classes.dex  LX/0pA;->BLh(VLL)
+    dex byte offset: 0x709cca
+  classes.dex  LX/0pQ;->A02(V)
+    dex byte offset: 0x70d5de
+  classes.dex  LX/0wB;->run(V)
+    dex byte offset: 0x74e694
+  classes9.dex  LX/Hzq;->BLg(VLLIJ)
+    dex byte offset: 0x708b06
+["global_backoff_time"]  (5 reference(s))
+  classes.dex  LX/0pA;->BLg(VLLIJ)
+    dex byte offset: 0x709b22
+  classes.dex  LX/0pQ;->A02(V)
+    dex byte offset: 0x70d65e
+  classes.dex  LX/0wB;->run(V)
+    dex byte offset: 0x74dace
+  classes9.dex  LX/Hzo;->BLg(VLLIJ)
+    dex byte offset: 0x7089be
+  classes9.dex  LX/Hzq;->BLg(VLLIJ)
+    dex byte offset: 0x708b24
+["sidelist_sync_backoff"]  (5 reference(s))
+  classes.dex  LX/0pA;->BLh(VLL)
+    dex byte offset: 0x709d60
+  classes.dex  LX/0pA;->BLi(VILJ)
+    dex byte offset: 0x70a2ca
+  classes.dex  LX/0pQ;->A02(V)
+    dex byte offset: 0x70d600
+  classes.dex  LX/0wB;->run(V)
+    dex byte offset: 0x74e68a
+  classes9.dex  LX/Hzo;->BLg(VLLIJ)
+    dex byte offset: 0x7089a0

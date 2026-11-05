@@ -1,0 +1,56 @@
+
+# class: LX/Hbf;
+# extends: Ljava/lang/Object;
+
+.method public A02(IL)  # .registers 18
+    # full signature: LX/Hbf;->A02(Landroid/os/Handler;)I
+    0000..0004  move-object/from16  v5, v16
+    0004..0008  iget-object  v0, v5, LX/Hbf;->A0N:LX/0pQ;
+    0008..000e  invoke-virtual  {v0}, LX/0pQ;->A02()V
+    000e..0010  goto  +0x18
+    0010..0012  move-exception  v2
+    0012..0016  iget-object  v4, v5, LX/Hbf;->A0K:LX/0GO;
+    0016..001a  const-string  v0, "RegistrationContactSync/startContactSync, clearSyncBackoffWindow exception"
+    001a..0020  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0020..0022  move-result-object  v1
+    0022..0028  invoke-virtual  {v2}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    0028..002a  move-result-object  v0
+    002a..0030  invoke-static  {v0, v1}, LX/1Xl;->A0z(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    0030..0032  move-result-object  v3
+    0032..0034  const/4  v2, #0x0
+    0034..0036  const/4  v1, #0x2
+    0036..0038  const/4  v0, #0x0
+    0038..003e  invoke-virtual  {v4, v3, v0, v2, v1}, LX/0B0;->A0h(Ljava/lang/String;Ljava/lang/String;ZI)V
+    003e..0042  iget-object  v0, v5, LX/Hbf;->A09:LX/00x;
+    0042..0048  invoke-static  {v0}, LX/1Xl;->A0G(LX/00x;)J
+    0048..004a  move-result-wide  v8
+    004a..004e  iget-object  v0, v5, LX/Hbf;->A0B:LX/00x;
+    004e..0054  invoke-static  {v0}, LX/2L6;->A0d(LX/00x;)LX/00E;
+    0054..0056  move-result-object  v1
+    0056..005a  const/16  v0, #0x58f6
+    005a..0060  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    0060..0062  move-result  v0
+    0062..0066  move-object/from16  v4, v17
+    0066..006a  if-eqz  v0, +0x13
+    006a..006e  iget-object  v0, v5, LX/Hbf;->A0L:LX/08Z;
+    006e..0070  const/4  v13, #0x5
+    0070..0074  new-instance  v10, LX/I9e;
+    0074..0076  move-object  v11, v4
+    0076..0078  move-object  v12, v5
+    0078..007a  move-wide  v14, v8
+    007a..0080  invoke-direct/range  {v10..v15}, LX/I9e;-><init>(Ljava/lang/Object;Ljava/lang/Object;IJ)V
+    0080..0086  invoke-interface  {v0, v10}, LX/08Z;->CbN(Ljava/lang/Runnable;)V
+    0086..008a  iget  v0, v5, LX/Hbf;->A00:I
+    008a..008c  return  v0
+    008c..0092  invoke-static  {}, LX/Fwu;->A1B()Ljava/util/concurrent/CountDownLatch;
+    0092..0094  move-result-object  v6
+    0094..0098  iget-object  v0, v5, LX/Hbf;->A0L:LX/08Z;
+    0098..009a  const/4  v7, #0x2
+    009a..009e  new-instance  v3, LX/I9t;
+    009e..00a4  invoke-direct/range  {v3..v9}, LX/I9t;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;IJ)V
+    00a4..00aa  invoke-interface  {v0, v3}, LX/08Z;->CbN(Ljava/lang/Runnable;)V
+    00aa..00b0  invoke-virtual  {v5, v6}, LX/Hbf;->A04(Ljava/util/concurrent/CountDownLatch;)V
+    00b0..00b2  goto  -0x15
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/Exception; code_units 0000..0008 -> 0008
+.end method

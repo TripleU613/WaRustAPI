@@ -1,3 +1,16 @@
+2026-11-05 — **Contact wait gates and reset events traced further.**
+
+The native executor filters protocols separately and uses effective configuration
+to select contact/sidelist wait keys. Reset callers are registration sync startup
+and a specifically scheduled contact-sync notification worker; the reset list
+omits two wait keys read by that executor. These are bounded static findings,
+not a completed query/backoff policy port.
+[Evidence and remaining implementation requirements](docs/protocol/apk/2.26.43.72-contact-backoff-gates/README.md).
+No Rust eligibility, automatic retry, reset command or live account operation added.
+Validation: pinned APK hash, checksum/link hygiene, APK coverage, CLI reference,
+OpenAPI library contract, formatting and strict Clippy passed. Research only;
+shared Rust code is unchanged from the preceding 1366-test validated commit.
+
 2026-11-05 — **Usync outer-error waits have native numeric inspection.**
 
 Absent and malformed backoff now remain distinguishable from explicit signed
