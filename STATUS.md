@@ -1,3 +1,11 @@
+2026-11-04 — **Configured legacy IQ factory membership proven.**
+
+Set7466 includes binding126 allocating1rC; constructor inlining explains
+earlier zero caller search. Runtime routing value and lifecycle remain open.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#configured-legacy-iq-factory-membership-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. No production change or live traffic.
+
 2026-11-04 — **Legacy fallback route narrowed.**
 
 Selected cold-start fallback does not handle upload events77/78;

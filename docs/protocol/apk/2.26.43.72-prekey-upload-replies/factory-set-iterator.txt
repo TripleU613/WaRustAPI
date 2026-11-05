@@ -1,0 +1,11 @@
+
+# class: LX/07r;
+# extends: Ljava/util/AbstractCollection;
+
+.method public iterator(L)  # .registers 2
+    # full signature: LX/07r;->iterator()Ljava/util/Iterator;
+    0000..0004  new-instance  v0, LX/08x;
+    0004..000a  invoke-direct  {v0, v1}, LX/08x;-><init>(LX/07r;)V
+    000a..000c  return-object  v0
+    # exception table: 0 try range(s)
+.end method

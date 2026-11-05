@@ -1,0 +1,20 @@
+
+# class: LX/1Vo;
+# extends: Ljava/lang/Object;
+
+.method public get(LI)  # .registers 4
+    # full signature: LX/1Vo;->get(I)Ljava/lang/Object;
+    0000..0004  iget  v1, v2, LX/1Vo;->$t:I
+    0004..0008  iget-object  v0, v2, LX/1Vo;->A00:Ljava/lang/Object;
+    0008..000c  if-eqz  v1, +0xc
+    000c..0010  check-cast  v0, LX/07r;
+    0010..0014  iget-object  v1, v0, LX/07r;->A02:LX/06h;
+    0014..0016  const/4  v0, #0x0
+    0016..001c  invoke-static  {v3, v1, v0}, LX/1Uw;->A00(ILX/06h;Ljava/lang/Object;)Ljava/lang/Object;
+    001c..001e  move-result-object  v0
+    001e..0020  return-object  v0
+    0020..0024  check-cast  v0, LX/19y;
+    0024..0028  iget-object  v1, v0, LX/19y;->A00:LX/06h;
+    0028..002a  goto  -0xa
+    # exception table: 0 try range(s)
+.end method

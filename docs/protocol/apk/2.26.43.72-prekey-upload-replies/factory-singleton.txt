@@ -1,0 +1,11 @@
+
+# class: LX/08o;
+# extends: Ljava/lang/Object;
+
+.method public A0Q(L)  # .registers 1
+    # full signature: LX/08o;->A0Q()LX/1rC;
+    0000..0004  new-instance  v0, LX/1rC;
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000a..000c  return-object  v0
+    # exception table: 0 try range(s)
+.end method

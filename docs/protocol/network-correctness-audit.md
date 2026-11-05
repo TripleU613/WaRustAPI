@@ -1101,3 +1101,11 @@ Alternate configuration/factory membership remain unproven.
 prove these events take fallback in normal configuration. Enabled route
 remains bound to14o; lifecycle guards remain unverified.
 [Exports and boundaries](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-fallback-event-route-2026-11-04). No production change or live traffic.
+
+## 2026-11-04 — Configured legacy IQ factory membership
+
+**Confirmed static (43.72):** A1H set7466 includes binding126, which
+allocates1rC through08o.A0Q with Object constructor inlining. Membership
+is now proven; earlier zero direct constructor callers did not cover it.
+A0Q comes from property0x4c7a at construction; runtime value unknown.
+[Exports and remaining lifecycle scope](apk/2.26.43.72-prekey-upload-replies/README.md#configured-legacy-iq-factory-membership-2026-11-04). No production change or live traffic.

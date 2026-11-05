@@ -990,3 +990,51 @@ Additional export hashes:
 - [alternate-listener.txt](alternate-listener.txt): `1d83f6a5ed8e06ff127e171fa8826537728a756404f46bc95ad60995f4ffb669`
 - [alternate-handler.txt](alternate-handler.txt): `098d0fcc38eb07bd64d3ac1baa91fa3ea8825cf5ac0cb23d8a4bdb1c22cc30f0`
 - [alternate-manager-ctor.txt](alternate-manager-ctor.txt): `fcbf8475a7e6e43caf6401e1535978929baa8751abc4a06e72809b1248e013a7`
+
+## Configured legacy IQ factory membership (2026-11-04)
+
+**Confirmed static**, pinned2.26.43.72, same APK SHA-256 as this bundle.
+Checked DEX exports are not REA Evidence envelopes. Full generated provider
+and array methods are retained; only selected bindings are claimed audited.
+
+- **0ZJ.<init>046a–047a** loads **00T.A05(0x1d2a)** into A1H.
+  A05 ->A04 resolves through1Uw.A00. Retained dispatcher group0/A01
+  sends id7466 (0x1d2a) to **1Uw.A0K** (range0x1c87..0x1d9f).
+- A0K case7466 at0602 loads **07q.A68** and branches095a to construct
+  **07r(scope,array)**. **07q.<clinit>871a–8796** constructs the14-element
+  A68 array, including **0x7e=126**. Other entries are125,127..129,3011..3019.
+  Initial constants at0000–0028 identify index registers. No protocol meaning
+  is inferred for the other factories.
+- **07r** retains that array in A04 and allocates matching cache length.
+  Its iterator is08x; **08x.next0052–0068** fetches the current array ID
+  and invokes07r.A02's05f provider. That provider is **1Vo(selector1)**;
+  **1Vo.get000c–0020** forwards ID/scope unchanged to1Uw.A00.
+- Binding126 follows group0/A01 case126 at04a2 to **08o.A0Q**. This
+  provider **allocates1rC**, invokes **Object.<init>** directly, and returns
+  it. This explains why the earlier exact1rC.<init> search had zero calls:
+  it did not cover this allocation with an inlined superclass constructor.
+  Earlier bounded negative is retained, but factory absence is refuted.
+- Together with retainedA0S iteration,1rC.AL1 and duplicate-safeA19, this
+  proves the configured set contains the factory creating1rD under`iq`
+  with the shared writer/reader reply map on normal setup. Actual runtime
+  execution and complete reader dispatch/lifecycle remain unobserved.
+- **0ln.<init>01fa–020a** captures **A14(0x4c7a)** in A0Q. Thus the
+  earlier enabled-route condition is a configuration read at construction,
+  not a fixed literal true. Effective runtime property value and disabled
+  sparse/list registration remain unknown.
+
+No production change, retries or live traffic. The remaining lifecycle proof
+includes teardown, stale readers and durable account/request ownership.
+
+Additional export hashes:
+
+- [factory-set-wrapper.txt](factory-set-wrapper.txt): `9c2c1936da9a9b6a8cb8c9c77e5d24baca8eb79eaf51f2d30725e00acc1a100a`
+- [factory-set-resolve.txt](factory-set-resolve.txt): `fc9a20b159051d888307fd8622f4a206ce3e7dcb4ffdb210593e424f08f7f914`
+- [factory-set-create.txt](factory-set-create.txt): `a4814ee6c3aafb2162aa89dc21c79db9961de3cd2499419c1529afe00ed22612`
+- [factory-set-arrays.txt](factory-set-arrays.txt): `d79dc1090c0d0fcf19386a9d65244c704d0e9ccc686f99faaed9f8fa54b68009`
+- [factory-set-iterator.txt](factory-set-iterator.txt): `37d135b0965da70876335e74fb47e7dec25a8b08b6d3077c91b34ca136b8a15b`
+- [factory-set-next.txt](factory-set-next.txt): `b1bd321d92bfa406594e2084cf7b715282677dfc814d2c57a1ef60f5914aed94`
+- [factory-singleton.txt](factory-singleton.txt): `37c7cf53dfbae900c0adac85e549972e1478381014e88ac7bf9390d6164f702d`
+- [factory-set-container.txt](factory-set-container.txt): `f6887ecf7c8fc4daa6b380dfb63f9318189fe946ae2102de18371d90c6a3c23c`
+- [factory-set-get.txt](factory-set-get.txt): `6c47f1491e121445026eff9320f7ded1ecaf4d497033d9b496f4aa16ac453bed`
+- [factory-routing-ctor.txt](factory-routing-ctor.txt): `ae4ff1844574b41ccb13bfb9415f46b570458ea9a535915b102c81cd972f97e2`

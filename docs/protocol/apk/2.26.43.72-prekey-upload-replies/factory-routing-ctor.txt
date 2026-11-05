@@ -1,0 +1,139 @@
+
+# class: LX/0ln;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 6
+    # full signature: LX/0ln;-><init>()V
+    0000..0006  invoke-direct  {v5}, Ljava/lang/Object;-><init>()V
+    0006..0008  const/4  v0, #0x5
+    0008..000e  invoke-static  {v0}, LX/00D;->A00(I)LX/05h;
+    000e..0010  move-result-object  v0
+    0010..0014  iput-object  v0, v5, LX/0ln;->A03:LX/00x;
+    0014..0018  const/16  v0, #0x15b
+    0018..001e  invoke-static  {v0}, LX/00T;->A01(I)Lcom/google/common/base/Optional;
+    001e..0020  move-result-object  v0
+    0020..0024  iput-object  v0, v5, LX/0ln;->A05:Lcom/google/common/base/Optional;
+    0024..0028  const/16  v0, #0x15a
+    0028..002e  invoke-static  {v0}, LX/00T;->A01(I)Lcom/google/common/base/Optional;
+    002e..0030  move-result-object  v0
+    0030..0034  iput-object  v0, v5, LX/0ln;->A04:Lcom/google/common/base/Optional;
+    0034..003a  const  v0, #0x3004e
+    003a..0040  invoke-static  {v0}, LX/00D;->A00(I)LX/05h;
+    0040..0042  move-result-object  v0
+    0042..0046  iput-object  v0, v5, LX/0ln;->A0N:LX/00x;
+    0046..004a  new-instance  v0, Ljava/lang/Object;
+    004a..0050  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0050..0054  iput-object  v0, v5, LX/0ln;->A0F:Ljava/lang/Object;
+    0054..0058  new-instance  v0, Ljava/lang/Object;
+    0058..005e  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    005e..0062  iput-object  v0, v5, LX/0ln;->A0P:Ljava/lang/Object;
+    0062..0064  const/4  v1, #0x0
+    0064..0068  iput-boolean  v1, v5, LX/0ln;->A01:Z
+    0068..006c  new-instance  v0, Ljava/util/HashMap;
+    006c..0072  invoke-direct  {v0}, Ljava/util/HashMap;-><init>()V
+    0072..0076  iput-object  v0, v5, LX/0ln;->A0I:Ljava/util/Map;
+    0076..007a  new-instance  v0, Ljava/util/HashMap;
+    007a..0080  invoke-direct  {v0}, Ljava/util/HashMap;-><init>()V
+    0080..0084  iput-object  v0, v5, LX/0ln;->A0H:Ljava/util/Map;
+    0084..0088  iput  v1, v5, LX/0ln;->A00:I
+    0088..008c  new-instance  v0, Landroid/util/SparseIntArray;
+    008c..0092  invoke-direct  {v0}, Landroid/util/SparseIntArray;-><init>()V
+    0092..0096  iput-object  v0, v5, LX/0ln;->A02:Landroid/util/SparseIntArray;
+    0096..009a  new-instance  v0, Ljava/util/ArrayList;
+    009a..00a0  invoke-direct  {v0}, Ljava/util/ArrayList;-><init>()V
+    00a0..00a4  iput-object  v0, v5, LX/0ln;->A0G:Ljava/util/List;
+    00a4..00a8  new-instance  v0, LX/0lo;
+    00a8..00ae  invoke-direct  {v0, v5}, LX/0lo;-><init>(LX/0ln;)V
+    00ae..00b2  iput-object  v0, v5, LX/0ln;->A09:LX/0lG;
+    00b2..00b6  const/16  v0, #0xa2
+    00b6..00bc  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    00bc..00be  move-result-object  v0
+    00be..00c2  check-cast  v0, LX/08q;
+    00c2..00c6  iput-object  v0, v5, LX/0ln;->A0O:LX/08q;
+    00c6..00ca  const/16  v0, #0x42
+    00ca..00d0  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    00d0..00d2  move-result-object  v4
+    00d2..00d6  check-cast  v4, LX/08Y;
+    00d6..00da  iput-object  v4, v5, LX/0ln;->A06:LX/08Y;
+    00da..00de  const/16  v0, #0x114
+    00de..00e4  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    00e4..00e6  move-result-object  v0
+    00e6..00ea  check-cast  v0, LX/0B0;
+    00ea..00ee  iput-object  v0, v5, LX/0ln;->A07:LX/0B0;
+    00ee..00f2  const/16  v0, #0x8f
+    00f2..00f8  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    00f8..00fa  move-result-object  v0
+    00fa..00fe  check-cast  v0, LX/0TT;
+    00fe..0102  iput-object  v0, v5, LX/0ln;->A0B:LX/0TT;
+    0102..0106  const/16  v0, #0x91
+    0106..010c  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    010c..010e  move-result-object  v0
+    010e..0112  check-cast  v0, LX/0TV;
+    0112..0116  iput-object  v0, v5, LX/0ln;->A0D:LX/0TV;
+    0116..011a  const/16  v0, #0x8e
+    011a..0120  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0120..0122  move-result-object  v0
+    0122..0126  check-cast  v0, LX/0TX;
+    0126..012a  iput-object  v0, v5, LX/0ln;->A0A:LX/0TX;
+    012a..012e  const/16  v0, #0x90
+    012e..0134  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0134..0136  move-result-object  v0
+    0136..013a  check-cast  v0, LX/0Th;
+    013a..013e  iput-object  v0, v5, LX/0ln;->A0C:LX/0Th;
+    013e..0142  const/16  v0, #0x1d2d
+    0142..0148  invoke-static  {v0}, LX/00D;->A05(I)Ljava/util/Set;
+    0148..014a  move-result-object  v2
+    014a..014c  const/4  v1, #0x0
+    014c..0150  new-instance  v0, LX/00y;
+    0150..0156  invoke-direct  {v0, v2, v1}, LX/00y;-><init>(Ljava/lang/Object;LX/00v;)V
+    0156..015a  iput-object  v0, v5, LX/0ln;->A0K:LX/00x;
+    015a..015e  const/16  v0, #0x53d
+    015e..0164  invoke-static  {v0}, LX/00T;->A03(I)Ljava/lang/Object;
+    0164..0168  const-string  v1, "XmppMessageRouter"
+    0168..016a  const/4  v2, #0x1
+    016a..016e  new-instance  v0, LX/0lq;
+    016e..0174  invoke-direct  {v0, v1, v2}, Landroid/os/HandlerThread;-><init>(Ljava/lang/String;I)V
+    0174..0178  iput-object  v0, v5, LX/0ln;->A0J:Landroid/os/HandlerThread;
+    0178..017e  invoke-virtual  {v0}, Ljava/lang/Thread;->start()V
+    017e..0184  invoke-virtual  {v0}, Landroid/os/HandlerThread;->getLooper()Landroid/os/Looper;
+    0184..0186  move-result-object  v1
+    0186..018a  new-instance  v0, LX/0m2;
+    018a..0190  invoke-direct  {v0, v1, v5}, LX/0m2;-><init>(Landroid/os/Looper;LX/0ln;)V
+    0190..0194  iput-object  v0, v5, LX/0ln;->A0E:LX/0m2;
+    0194..0198  const/16  v1, #0x6f
+    0198..019e  invoke-static  {v1}, LX/00D;->A02(I)Ljava/lang/Object;
+    019e..01a0  move-result-object  v0
+    01a0..01a4  check-cast  v0, LX/08Z;
+    01a4..01a8  new-instance  v3, LX/098;
+    01a8..01ae  invoke-direct  {v3, v0, v2}, LX/098;-><init>(LX/08Z;Z)V
+    01ae..01b2  iput-object  v3, v5, LX/0ln;->A08:LX/098;
+    01b2..01b8  invoke-static  {v1}, LX/00D;->A00(I)LX/05h;
+    01b8..01ba  move-result-object  v0
+    01ba..01be  iput-object  v0, v5, LX/0ln;->A0L:LX/00x;
+    01be..01c2  const/16  v0, #0x1370
+    01c2..01c8  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    01c8..01ca  move-result-object  v2
+    01ca..01ce  check-cast  v2, LX/0m4;
+    01ce..01d0  monitor-enter
+    01d0..01d4  iget-object  v1, v2, LX/0m4;->A03:Ljava/util/List;
+    01d4..01d8  new-instance  v0, LX/0mB;
+    01d8..01de  invoke-direct  {v0, v3}, LX/0mB;-><init>(LX/098;)V
+    01de..01e4  invoke-interface  {v1, v0}, Ljava/util/List;->add(Ljava/lang/Object;)Z
+    01e4..01e6  monitor-exit
+    01e6..01ea  sput-object  v3, LX/0mC;->A00:LX/098;
+    01ea..01ee  const/16  v0, #0x100
+    01ee..01f4  invoke-static  {v0}, LX/00D;->A00(I)LX/05h;
+    01f4..01f6  move-result-object  v0
+    01f6..01fa  iput-object  v0, v5, LX/0ln;->A0M:LX/00x;
+    01fa..01fe  const/16  v0, #0x4c7a
+    01fe..0204  invoke-virtual  {v4, v0}, LX/00E;->A14(I)Z
+    0204..0206  move-result  v0
+    0206..020a  iput-boolean  v0, v5, LX/0ln;->A0Q:Z
+    020a..020c  return-void
+    020c..020e  move-exception  v0
+    020e..0210  monitor-exit
+    0210..0212  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 00e8..00f3 -> 0106
+    # catch <all> code_units 0106..0108 -> 0106
+.end method

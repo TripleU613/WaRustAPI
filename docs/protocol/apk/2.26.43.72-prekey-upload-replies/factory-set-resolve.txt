@@ -1,0 +1,48 @@
+
+# class: LX/00T;
+# extends: Ljava/lang/Object;
+
+.method public A04(LLLI)  # .registers 6
+    # full signature: LX/00T;->A04(Landroid/content/Context;LX/06m;I)Ljava/lang/Object;
+    0000..0002  const/4  v2, #0x0
+    0002..0006  if-eqz  v3, +0xc
+    0006..000c  invoke-static  {v3}, LX/06i;->get(Landroid/content/Context;)LX/06i;
+    000c..000e  move-result-object  v4
+    000e..0012  check-cast  v4, LX/06m;
+    0012..0018  invoke-static  {v4}, LX/00T;->A07(LX/06h;)V
+    0018..001a  goto  +0x18
+    001a..001e  if-nez  v4, -0x6
+    001e..0022  sget-object  v0, LX/00T;->A00:Ljava/lang/ThreadLocal;
+    0022..0028  invoke-virtual  {v0}, Ljava/lang/ThreadLocal;->get()Ljava/lang/Object;
+    0028..002a  move-result-object  v0
+    002a..002e  check-cast  v0, LX/07P;
+    002e..0032  if-eqz  v0, +0x8
+    0032..0038  invoke-virtual  {v0}, LX/07P;->A00()LX/06m;
+    0038..003a  move-result-object  v4
+    003a..003e  if-nez  v4, -0x16
+    003e..0044  invoke-static  {}, LX/06o;->A00()LX/06o;
+    0044..0046  move-result-object  v4
+    0046..0048  goto  -0x1c
+    0048..004e  invoke-interface  {v4}, LX/06l;->AQh()LX/07P;
+    004e..0050  move-result-object  v1
+    0050..0052  move-object  v0, v4
+    0052..0056  check-cast  v0, LX/06k;
+    0056..005a  iget-object  v0, v0, LX/06k;->A00:LX/06i;
+    005a..0060  invoke-interface  {v0}, LX/06h;->B5f()LX/06q;
+    0060..0062  move-result-object  v0
+    0062..0068  invoke-static  {v5, v0, v2}, LX/1Uw;->A00(ILX/06h;Ljava/lang/Object;)Ljava/lang/Object;
+    0068..006a  move-result-object  v0
+    006a..0070  invoke-static  {}, LX/00T;->A06()V
+    0070..0076  invoke-interface  {v4, v1}, LX/06l;->ARX(Ljava/lang/Object;)V
+    0076..0078  return-object  v0
+    0078..007a  move-exception  v0
+    007a..007c  const/4  v1, #0x0
+    007c..007e  goto  +0x2
+    007e..0080  move-exception  v0
+    0080..0086  invoke-static  {}, LX/00T;->A06()V
+    0086..008c  invoke-interface  {v4, v1}, LX/06l;->ARX(Ljava/lang/Object;)V
+    008c..008e  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0024..0028 -> 003c
+    # catch <all> code_units 0028..0035 -> 003f
+.end method

@@ -15292,5 +15292,13 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#legacy-fallback-event-route-2026-11-04",
     "finding": "Selected cold-start fallback discards77/78; normal admission configuration and reconnect lifecycle remain unverified."
+  },
+  "x-upload-legacy-factory-membership-evidence": {
+    "build": "2.26.43.72",
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#configured-legacy-iq-factory-membership-2026-11-04",
+    "finding": "Configured set7466 contains126 allocating1rC; runtime routing value and lifecycle remain unverified."
   }
 }
