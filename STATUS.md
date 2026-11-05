@@ -1,3 +1,11 @@
+2026-11-04 — **Prekey storage effects and gated failure branches traced.**
+
+43.72 result worker marks legacy/Kyber sent before completion. EcZ has
+configuration-dependent 406/5xx branches; helper bounds and runnable effects
+remain open. [Evidence and limits](docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#store-effects-and-completion-policy-follow-up-2026-11-04).
+Validation: JSON parsing, coverage freshness, staged diff and repository
+hygiene passed. No production change or live traffic.
+
 2026-11-04 — **Current-build prekey reply callbacks retained.**
 
 43.72 140/141 callbacks confirm optional first list/pq_list count_low parsing;

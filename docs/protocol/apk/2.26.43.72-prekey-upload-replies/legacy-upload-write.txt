@@ -1,0 +1,144 @@
+
+# class: LX/0Yb;
+# extends: Ljava/lang/Object;
+
+.method public A03(VL)  # .registers 21
+    # full signature: LX/0Yb;->A03([I)V
+    0000..0004  move-object/from16  v0, v19
+    0004..0008  iget-object  v6, v0, LX/0Yb;->A01:LX/0Xp;
+    0008..000e  invoke-virtual  {v6}, LX/0Xp;->A07()LX/0aq;
+    000e..0010  move-result-object  v12
+    0010..0016  invoke-virtual  {v12}, LX/0aq;->A00()LX/1hk;
+    0016..0018  move-result-object  v11
+    0018..001c  iget-object  v0, v0, LX/0Yb;->A00:LX/08q;
+    001c..0022  invoke-static  {v0}, LX/08q;->A00(LX/08q;)J
+    0022..0024  move-result-wide  v0
+    0024..0028  const-wide/16  v2, #0x3e8
+    0028..002a  div-long/2addr  v0, v2
+    002a..002c  const/4  v9, #0x0
+    002c..0030  move-object/from16  v10, v20
+    0030..0032  array-length  v3, v10
+    0032..0036  if-ge  v9, v3, +0x90
+    0036..003a  add-int/lit16  v2, v9, #0xc8
+    003a..0040  invoke-static  {v2, v3}, Ljava/lang/Math;->min(II)I
+    0040..0042  move-result  v7
+    0042..0046  new-instance  v14, Landroid/content/ContentValues;
+    0046..004c  invoke-direct  {v14}, Landroid/content/ContentValues;-><init>()V
+    004c..004e  const/4  v2, #0x1
+    004e..0054  invoke-static  {v2}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0054..0056  move-result-object  v3
+    0056..005a  const-string  v2, "sent_to_server"
+    005a..0060  invoke-virtual  {v14, v2, v3}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Boolean;)V
+    0060..0066  const-string/jumbo  v3, "upload_timestamp"
+    0066..006c  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    006c..006e  move-result-object  v2
+    006e..0074  invoke-virtual  {v14, v3, v2}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+    0074..0078  const-string  v2, "?"
+    0078..007c  new-instance  v8, Ljava/lang/StringBuilder;
+    007c..0082  invoke-direct  {v8, v2}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0082..0086  sub-int  v2, v7, v9
+    0086..008a  new-array  v4, v2, [Ljava/lang/String;
+    008a..008c  move  v5, v9
+    008c..0090  if-ge  v5, v7, +0x16
+    0090..0094  sub-int  v3, v5, v9
+    0094..0098  aget  v2, v20, v5
+    0098..009e  invoke-static  {v2}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+    009e..00a0  move-result-object  v2
+    00a0..00a4  aput-object  v2, v4, v3
+    00a4..00a8  if-eq  v5, v9, +0x7
+    00a8..00ac  const-string  v2, ",?"
+    00ac..00b2  invoke-virtual  {v8, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00b2..00b6  add-int/lit8  v5, v5, #0x1
+    00b6..00b8  goto  -0x15
+    00b8..00be  invoke-virtual  {v6}, LX/0Xp;->A07()LX/0aq;
+    00be..00c0  move-result-object  v5
+    00c0..00c4  iget-object  v13, v5, LX/0aq;->A02:LX/0KU;
+    00c4..00c8  const-string  v15, "prekeys"
+    00c8..00cc  new-instance  v3, Ljava/lang/StringBuilder;
+    00cc..00d2  invoke-direct  {v3}, Ljava/lang/StringBuilder;-><init>()V
+    00d2..00d6  const-string  v2, "prekey_id IN ("
+    00d6..00dc  invoke-virtual  {v3, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00dc..00e2  invoke-virtual  {v3, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    00e2..00e6  const-string  v2, ")"
+    00e6..00ec  invoke-virtual  {v3, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00ec..00f2  invoke-virtual  {v3}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00f2..00f4  move-result-object  v16
+    00f4..00f8  const-string  v17, "SignalPreKeyStore/setPreKeysAsSentToServer"
+    00f8..00fc  move-object/from16  v18, v4
+    00fc..0102  invoke-virtual/range  {v13..v18}, LX/0KU;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+    0102..0104  move-result  v4
+    0104..0108  new-instance  v3, Ljava/lang/StringBuilder;
+    0108..010e  invoke-direct  {v3}, Ljava/lang/StringBuilder;-><init>()V
+    010e..0112  const-string  v2, "SignalPreKeyStore/setPreKeysAsSentToServerInternal updated "
+    0112..0118  invoke-virtual  {v3, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0118..011e  invoke-virtual  {v3, v4}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    011e..0122  const-string  v2, " prekeys; values="
+    0122..0128  invoke-virtual  {v3, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0128..012e  invoke-virtual  {v3, v14}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    012e..0134  invoke-virtual  {v3}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0134..0136  move-result-object  v2
+    0136..013c  invoke-static  {v2}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    013c..0142  invoke-virtual  {v5}, LX/0aq;->close()V
+    0142..0144  move  v9, v7
+    0144..0148  goto/16  -0x8c
+    0148..014a  move-exception  v1
+    014a..0150  invoke-virtual  {v5}, LX/0aq;->close()V
+    0150..0152  goto  +0x44
+    0152..0156  const-string  v7, "SignalPreKeyStore/savePreKeyUpload addPreKeyUpload ts:"
+    0156..015c  invoke-virtual  {v6}, LX/0Xp;->A07()LX/0aq;
+    015c..015e  move-result-object  v6
+    015e..0162  new-instance  v5, Landroid/content/ContentValues;
+    0162..0168  invoke-direct  {v5}, Landroid/content/ContentValues;-><init>()V
+    0168..016e  const-string/jumbo  v3, "upload_timestamp"
+    016e..0174  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0174..0176  move-result-object  v2
+    0176..017c  invoke-virtual  {v5, v3, v2}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+    017c..0180  iget-object  v4, v6, LX/0aq;->A02:LX/0KU;
+    0180..0184  const-string  v3, "prekey_uploads"
+    0184..0188  const-string  v2, "SignalPreKeyStore/savePreKeyUpload"
+    0188..018e  invoke-virtual  {v4, v3, v2, v5}, LX/0KU;->A05(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J
+    018e..0192  new-instance  v2, Ljava/lang/StringBuilder;
+    0192..0198  invoke-direct  {v2, v7}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0198..019e  invoke-virtual  {v2, v0, v1}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    019e..01a4  invoke-virtual  {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    01a4..01a6  move-result-object  v0
+    01a6..01ac  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    01ac..01b2  invoke-virtual  {v6}, LX/0aq;->close()V
+    01b2..01b8  invoke-virtual  {v11}, LX/1hk;->A00()V
+    01b8..01be  invoke-virtual  {v11}, LX/1hk;->close()V
+    01be..01c4  invoke-virtual  {v12}, LX/0aq;->close()V
+    01c4..01c6  return-void
+    01c6..01c8  move-exception  v1
+    01c8..01ce  invoke-virtual  {v6}, LX/0aq;->close()V
+    01ce..01d0  goto  +0x5
+    01d0..01d2  move-exception  v0
+    01d2..01d8  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    01d8..01da  throw  v1
+    01da..01dc  move-exception  v1
+    01dc..01e2  invoke-virtual  {v11}, LX/1hk;->close()V
+    01e2..01e4  goto  +0x5
+    01e4..01e6  move-exception  v0
+    01e6..01ec  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    01ec..01ee  throw  v1
+    01ee..01f0  move-exception  v1
+    01f0..01f6  invoke-virtual  {v12}, LX/0aq;->close()V
+    01f6..01f8  throw  v1
+    01f8..01fa  move-exception  v0
+    01fa..0200  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    0200..0202  throw  v1
+    # exception table: 14 try range(s)
+    # catch <all> code_units 0008..000c -> 00f7
+    # catch <all> code_units 000c..0060 -> 00ed
+    # catch <all> code_units 0060..009e -> 00a4
+    # catch <all> code_units 009e..00a4 -> 00ed
+    # catch <all> code_units 00a5..00a9 -> 00e8
+    # catch <all> code_units 00a9..00af -> 00ed
+    # catch <all> code_units 00af..00d6 -> 00e3
+    # catch <all> code_units 00d6..00dc -> 00ed
+    # catch <all> code_units 00dc..00df -> 00f7
+    # catch <all> code_units 00e4..00e8 -> 00e8
+    # catch <all> code_units 00e8..00ed -> 00ed
+    # catch <all> code_units 00ee..00f2 -> 00f2
+    # catch <all> code_units 00f3..00f7 -> 00f7
+    # catch <all> code_units 00f8..00fb -> 00fc
+.end method

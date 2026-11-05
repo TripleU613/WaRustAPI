@@ -1,0 +1,38 @@
+
+# class: LX/0WJ;
+# extends: Ljava/lang/Object;
+
+.method public A0x(VL)  # .registers 6
+    # full signature: LX/0WJ;->A0x([LX/ETs;)V
+    0000..0004  if-eqz  v5, +0x2f
+    0004..0006  array-length  v2, v5
+    0006..000a  if-eqz  v2, +0x2c
+    000a..000e  new-array  v3, v2, [I
+    000e..0010  const/4  v1, #0x0
+    0010..0014  aget-object  v0, v5, v1
+    0014..0018  iget-object  v0, v0, LX/ETs;->A01:[B
+    0018..001e  invoke-static  {v0}, LX/1nr;->A00([B)I
+    001e..0020  move-result  v0
+    0020..0024  aput  v0, v3, v1
+    0024..0028  add-int/lit8  v1, v1, #0x1
+    0028..002c  if-lt  v1, v2, -0xc
+    002c..0030  iget-object  v0, v4, LX/0WJ;->A0I:LX/0Wk;
+    0030..0036  invoke-virtual  {v0}, LX/0Wk;->A04()LX/FjI;
+    0036..0038  move-result-object  v2
+    0038..003c  iget-object  v0, v4, LX/0WJ;->A0L:LX/0Yb;
+    003c..0042  invoke-virtual  {v0, v3}, LX/0Yb;->A03([I)V
+    0042..0048  invoke-virtual  {v2}, LX/FjI;->close()V
+    0048..004a  return-void
+    004a..004c  move-exception  v1
+    004c..0052  invoke-virtual  {v2}, LX/FjI;->close()V
+    0052..0054  throw  v1
+    0054..0056  move-exception  v0
+    0056..005c  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    005c..005e  throw  v1
+    005e..0062  const-string  v0, "SignalCoordinator/tried to mark an empty list of preKeys as sent to server"
+    0062..0068  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0068..006a  return-void
+    # exception table: 2 try range(s)
+    # catch <all> code_units 001c..0021 -> 0025
+    # catch <all> code_units 0026..0029 -> 002a
+.end method

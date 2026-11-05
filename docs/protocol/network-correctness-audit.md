@@ -752,3 +752,16 @@ policy and durable key transitions need the downstream consumers.
 This is static method evidence, not a runtime observation or new REA envelope.
 No live traffic. Producer ownership, PQ flag policy and native ACK/upload order
 remain unproven; this trace does not establish complete prekey correctness.
+
+## Current-build prekey storage and completion policy (2026-11-04)
+
+**Confirmed static:** selected 141/Fd9 successful reply worker reaches
+13z.A0X/A0W -> 0WJ.A0x/A0w -> 0Yb.A03/0WJ.A0v: mark sent_to_server,
+seconds upload timestamps, 200-ID SQL update groups, upload history rows.
+Those calls return before EcZ.A00 completion; cross-family atomicity is not
+proven. EcZ adds configuration-dependent 406 and 5xx branches rather than a
+universal no-retry rule. Runtime helpers/runnables/config value remain untraced.
+[Exact branches, exports and limits](apk/2.26.43.72-prekey-upload-replies/README.md#store-effects-and-completion-policy-follow-up-2026-11-04).
+This advances the earlier downstream boundary; it does not implement retries,
+key regeneration or resets, nor claim the Rust failure policy is full parity.
+No live traffic or production change.

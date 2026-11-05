@@ -56,3 +56,58 @@ No production behavior or live account operation changed.
 - [error-parser.txt](error-parser.txt): `1be0e3bd36e81549ffcb65c4e65a02c4ee84656cf2cb81dcdbd59f06a56b6923`
 - [child-selector.txt](child-selector.txt): `d0d1534f2ccbf7046482d845157b888f83e86e8cb2bc779074725b95f3bfecb6`
 - [worker-constructor.txt](worker-constructor.txt): `bf7d5e615f6347d88359f879cb4f7d2d4a9067ceecdd77927b04ae2abb1c711a`
+
+## Store effects and completion policy follow-up (2026-11-04)
+
+**Confirmed static**, same pinned APK as above. This resolves the previous
+13z storage-call boundary for the selected 141/Fd9 result worker, not all upload
+producer paths or cross-family atomicity.
+
+- Fd9's nonzero selector calls 13z.A0X for the legacy array and 13z.A0W for
+  Kyber. Each facade enters/exits a 0Wk.A04 scope and delegates to 0WJ.A0x/A0w.
+  Those methods convert each ETs.A01 ID byte array through 1nr.A00; legacy
+  invokes 0Yb.A03, Kyber invokes 0WJ.A0v. ID-decoder internals remain untraced.
+- **0Yb.A03**, 0018–002a derives a seconds timestamp through 08q.A00 / 1000.
+  Updates are grouped in at most 200 IDs (0036–0042): prekeys rows selected by
+  prekey_id IN parameters get sent_to_server=true and upload_timestamp.
+  0152–01be inserts a prekey_uploads timestamp record and calls 1hk.A00/close.
+- **0WJ.A0v**, 0028–003a similarly derives seconds, updates kyber_prekeys in
+  at most 200-ID groups with the same fields, then inserts prekey_uploads with
+  key_type=1 (015c–01d6) and finishes its transaction scope. Full SQLite
+  wrapper semantics are not rederived here. These two storage operations run
+  sequentially before EcZ.A00 in Fd9; they are not proven one cross-family
+  atomic transaction. Rust's single-store settlement transaction is local policy.
+- Normal return from both mark-sent calls precedes the completion invocation;
+  Fd9 contains no catch around those calls. A thrown storage exception therefore
+  does not reach that success callback along this method. Full executor exception
+  recovery and process-crash semantics remain open.
+- **EcZ.A00** success=true (0018–00ca) calls 13z.A08 and either finalizes when
+  both count-low flags are false or queues Fcd when either is true (031e–0344).
+  Fcd's eventual work and callback construction/ownership remain untraced.
+- Failure selects **EMZ.A02** through A17 at 00d0–00e8. With that flag false,
+  406 logs regeneration and schedules Fea selector13; 500<=code<600 sets a
+  flag and uses 0Vf.A01()*1000 for delayed Fd5 scheduling; other codes stop.
+  This establishes branches, not Fea's actual key mutation or complete delay law.
+- With that flag true, 406 calls 13z.A02(406): null stops, nonnull queues Fec
+  selector22 with that delay. 500<=code<600 uses the same nullable helper, then
+  records the last code, calls A08 and schedules Fd5 when a delay exists; other
+  codes stop/reset. The flag's source/value, A02 retry bounds, scheduler units
+  beyond the explicit multiply, and runnable behavior are still untraced.
+
+**Rust implication / unknown:** ordinary successful legacy/KEM mark-sent before
+follow-up is supported. Native failure behavior is not universally stop/no-retry;
+Rust currently stops without reproducing these gated branches. Do not label that
+full parity or derive a key-regeneration/reset implementation from log text.
+Next trace targets: EMZ.A02 definition/value, 13z.A02 delay/bounds, Fcd/Fd5/Fec/Fea
+selected branches and upload producer-to-EcZ captured state. No runtime change
+or live traffic occurred. These are checked DEX TXT exports, not REA envelopes.
+
+Additional export hashes:
+
+- [store-facade-legacy.txt](store-facade-legacy.txt): `9251adb6cb74c2ad3fce155aa4668725acf88ef1b1ca1923afd46b1a66e3863e`
+- [store-facade-kyber.txt](store-facade-kyber.txt): `4b0cc689b5b159c5634788515038bfcad71bb87357ae399a0e2d63e0276a6214`
+- [store-coordinator-legacy.txt](store-coordinator-legacy.txt): `5794f7f6e7952da319b888bacc565ede21846222b97006203d3594de2fd4ba66`
+- [store-coordinator-kyber.txt](store-coordinator-kyber.txt): `e9518ad96af75fad91dfb5a7353f5d9af350d3d7ee078688c7dc40639324df9b`
+- [legacy-upload-write.txt](legacy-upload-write.txt): `089a5706fbf848ae3fbb5fcc028e26043a315d6007903978076a015df5d0589a`
+- [kyber-upload-write.txt](kyber-upload-write.txt): `a129382aa4da80fc00b371b799864ba27a011f769fdb32163981c387671828ec`
+- [completion-policy.txt](completion-policy.txt): `0241b2d1b32f46a863b4673debfbd8526b55b6c27c2eab431bebedee2cf17160`

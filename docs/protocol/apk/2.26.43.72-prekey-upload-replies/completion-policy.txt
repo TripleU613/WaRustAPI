@@ -1,0 +1,216 @@
+
+# class: LX/EcZ;
+# extends: Ljava/lang/Object;
+
+.method public A00(VLIIIZZZ)  # .registers 21
+    # full signature: LX/EcZ;->A00(Ljava/lang/String;IIIZZZ)V
+    0000..0004  iget-object  v6, v13, LX/EcZ;->A01:LX/13z;
+    0004..0008  iget  v7, v13, LX/EcZ;->A00:I
+    0008..000c  iget-boolean  v12, v13, LX/EcZ;->A02:Z
+    000c..0010  iget-boolean  v9, v13, LX/EcZ;->A03:Z
+    0010..0014  iget-boolean  v10, v13, LX/EcZ;->A04:Z
+    0014..0018  iget-boolean  v11, v13, LX/EcZ;->A05:Z
+    0018..001c  if-eqz  v18, +0x5c
+    001c..0020  const-string  v0, "MyPreKeysManager/uploadNextBatch batch complete; uploaded=(legacy:"
+    0020..0026  invoke-static  {v15, v0}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    0026..0028  move-result-object  v1
+    0028..002c  const-string  v0, " pq:"
+    002c..0032  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0032..0036  move/from16  v0, v16
+    0036..003c  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    003c..0040  const-string  v0, ") needsMoreLegacy="
+    0040..0046  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0046..004a  move/from16  v8, v19
+    004a..0050  invoke-virtual  {v1, v8}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    0050..0054  const-string  v0, " needsMorePQ="
+    0054..0058  move/from16  v2, v20
+    0058..005e  invoke-static  {v0, v1, v2}, LX/2LA;->A1O(Ljava/lang/String;Ljava/lang/StringBuilder;Z)V
+    005e..0064  invoke-static  {v6}, LX/13z;->A08(LX/13z;)V
+    0064..0068  if-nez  v19, +0x15d
+    0068..006c  if-nez  v20, +0x15b
+    006c..0070  const-string  v0, "MyPreKeysManager/scheduleContinueBatchUpload all batches completed successfully"
+    0070..0076  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0076..007a  iget-object  v1, v6, LX/13z;->A0K:LX/09S;
+    007a..0080  invoke-virtual  {v1}, LX/09S;->A1J()Z
+    0080..0082  move-result  v0
+    0082..0086  if-eqz  v0, +0xc
+    0086..0088  const/4  v0, #0x0
+    0088..008e  invoke-virtual  {v1, v0}, LX/09S;->A19(Z)V
+    008e..0094  invoke-virtual  {v1, v0}, LX/09S;->A17(Z)V
+    0094..009a  invoke-static  {v6}, LX/13z;->A04(LX/13z;)V
+    009a..009c  monitor-enter
+    009c..00a0  const-wide/16  v0, #0x0
+    00a0..00a6  invoke-static  {v6, v0, v1}, LX/13z;->A0C(LX/13z;J)V
+    00a6..00ac  invoke-static  {v6}, LX/13z;->A09(LX/13z;)V
+    00ac..00ae  monitor-exit
+    00ae..00b2  if-eqz  v12, +0x14a
+    00b2..00b6  iget-object  v1, v6, LX/13z;->A0W:LX/Ejp;
+    00b6..00ba  sget-object  v5, LX/0Kl;->A02:LX/0Kl;
+    00ba..00bc  const/4  v0, #0x4
+    00bc..00c0  new-instance  v2, LX/FIv;
+    00c0..00c6  invoke-direct  {v2, v1, v0}, LX/FIv;-><init>(Ljava/lang/Object;I)V
+    00c6..00ca  goto/16  +0xd4
+    00ca..00cc  move-exception  v0
+    00cc..00ce  monitor-exit
+    00ce..00d0  throw  v0
+    00d0..00d4  iget-object  v1, v6, LX/13z;->A0J:LX/08Y;
+    00d4..00d8  sget-object  v0, LX/EMZ;->A02:LX/00f;
+    00d8..00de  invoke-virtual  {v1, v0}, LX/00E;->A17(LX/00f;)Z
+    00de..00e0  move-result  v0
+    00e0..00e4  move/from16  v3, v17
+    00e4..00e8  if-nez  v0, +0x59
+    00e8..00ec  const/16  v0, #0x196
+    00ec..00f0  if-ne  v3, v0, +0x26
+    00f0..00f4  const-string  v0, "MyPreKeysManager/handleBatchUploadError errorCode=406; regenerating keys"
+    00f4..00fa  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    00fa..0100  invoke-static  {v6}, LX/13z;->A07(LX/13z;)V
+    0100..0104  if-eqz  v12, +0x9
+    0104..0108  sget-object  v1, LX/0Kl;->A02:LX/0Kl;
+    0108..010c  const/16  v0, #0xd
+    010c..0112  invoke-static  {v6, v1, v14, v0}, LX/FJB;->A00(LX/07o;LX/0Kl;Ljava/lang/String;I)V
+    0112..0116  iget-object  v0, v6, LX/13z;->A0E:LX/00x;
+    0116..011c  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    011c..011e  move-result-object  v2
+    011e..0122  check-cast  v2, LX/098;
+    0122..0126  const/16  v1, #0xd
+    0126..012a  new-instance  v0, LX/Fea;
+    012a..0130  invoke-direct  {v0, v6, v1}, LX/Fea;-><init>(Ljava/lang/Object;I)V
+    0130..0136  invoke-virtual  {v2, v0}, LX/098;->execute(Ljava/lang/Runnable;)V
+    0136..0138  return-void
+    0138..013c  const/16  v0, #0x1f4
+    013c..0140  if-lt  v3, v0, +0x19
+    0140..0144  const/16  v0, #0x258
+    0144..0148  if-ge  v3, v0, +0x15
+    0148..014a  monitor-enter
+    014a..014c  const/4  v0, #0x1
+    014c..0150  iput-boolean  v0, v6, LX/13z;->A06:Z
+    0150..0154  iget-object  v0, v6, LX/13z;->A0L:LX/0Vf;
+    0154..015a  invoke-virtual  {v0}, LX/0Vf;->A01()J
+    015a..015c  move-result-wide  v0
+    015c..0160  const-wide/16  v4, #0x3e8
+    0160..0162  mul-long/2addr  v0, v4
+    0162..0164  monitor-exit
+    0164..0168  goto/16  +0xb7
+    0168..016a  move-exception  v0
+    016a..016c  monitor-exit
+    016c..016e  throw  v0
+    016e..0172  const-string  v0, "MyPreKeysManager/handleBatchUploadError non-retryable error; errorCode="
+    0172..0178  invoke-static  {v3, v0}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    0178..017a  move-result-object  v1
+    017a..017e  const-string  v0, "; stopping"
+    017e..0184  invoke-static  {v1, v0}, LX/2L9;->A1J(Ljava/lang/StringBuilder;Ljava/lang/String;)V
+    0184..018a  invoke-static  {v6}, LX/13z;->A07(LX/13z;)V
+    018a..018e  if-eqz  v12, +0xdc
+    018e..0192  sget-object  v5, LX/0Kl;->A02:LX/0Kl;
+    0192..0194  const/4  v0, #0x2
+    0194..0196  goto  +0x68
+    0196..019a  const-string  v2, " delayMs="
+    019a..019e  const/16  v0, #0x196
+    019e..01a2  if-ne  v3, v0, +0x44
+    01a2..01a8  invoke-static  {v6}, LX/13z;->A07(LX/13z;)V
+    01a8..01ae  invoke-static  {v6, v0}, LX/13z;->A02(LX/13z;I)Ljava/lang/Long;
+    01ae..01b0  move-result-object  v3
+    01b0..01b6  invoke-static  {v3}, LX/2L9;->A1W(Ljava/lang/Object;)Z
+    01b6..01b8  move-result  v5
+    01b8..01bc  const-string  v0, "MyPreKeysManager/handleBatchUploadError errorCode=406; willRetry="
+    01bc..01c2  invoke-static  {v0, v5}, LX/2L8;->A1M(Ljava/lang/String;Z)Ljava/lang/StringBuilder;
+    01c2..01c4  move-result-object  v0
+    01c4..01ca  invoke-static  {v3, v2, v0}, LX/6ok;->A16(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    01ca..01ce  if-eqz  v12, +0xd
+    01ce..01d2  sget-object  v2, LX/0Kl;->A02:LX/0Kl;
+    01d2..01d4  const/4  v1, #0x2
+    01d4..01d8  new-instance  v0, LX/FIz;
+    01d8..01de  invoke-direct  {v0, v14, v5, v1}, LX/FIz;-><init>(Ljava/lang/String;ZI)V
+    01de..01e4  invoke-static  {v6, v2, v0}, LX/07o;->A00(LX/07o;LX/0Kl;LX/0Km;)V
+    01e4..01e8  if-eqz  v3, +0xaf
+    01e8..01ec  const-wide/16  v0, #0x196
+    01ec..01f2  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    01f2..01f4  move-result-object  v0
+    01f4..01f8  iput-object  v0, v6, LX/13z;->A0Y:Ljava/lang/Long;
+    01f8..01fc  iget-object  v0, v6, LX/13z;->A0E:LX/00x;
+    01fc..0202  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0202..0204  move-result-object  v4
+    0204..0208  check-cast  v4, LX/098;
+    0208..020e  invoke-virtual  {v3}, Ljava/lang/Number;->longValue()J
+    020e..0210  move-result-wide  v2
+    0210..0214  const/16  v1, #0x16
+    0214..0218  new-instance  v0, LX/Fec;
+    0218..021e  invoke-direct  {v0, v6, v7, v1}, LX/Fec;-><init>(Ljava/lang/Object;II)V
+    021e..0224  invoke-virtual  {v4, v0, v2, v3}, LX/098;->A05(Ljava/lang/Runnable;J)V
+    0224..0226  return-void
+    0226..022a  const/16  v0, #0x1f4
+    022a..022e  if-lt  v3, v0, +0x26
+    022e..0232  const/16  v0, #0x258
+    0232..0236  if-ge  v3, v0, +0x22
+    0236..023c  invoke-static  {v6, v3}, LX/13z;->A02(LX/13z;I)Ljava/lang/Long;
+    023c..023e  move-result-object  v1
+    023e..0242  const-string  v0, "MyPreKeysManager/handleBatchUploadError retryable error; errorCode="
+    0242..0248  invoke-static  {v3, v0}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    0248..024a  move-result-object  v0
+    024a..0250  invoke-static  {v1, v2, v0}, LX/6ok;->A16(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    0250..0254  if-nez  v1, +0x2a
+    0254..025a  invoke-static  {v6}, LX/13z;->A07(LX/13z;)V
+    025a..025e  if-eqz  v12, +0x74
+    025e..0262  sget-object  v5, LX/0Kl;->A02:LX/0Kl;
+    0262..0264  const/4  v0, #0x3
+    0264..0268  new-instance  v2, LX/FIy;
+    0268..026e  invoke-direct  {v2, v3, v14, v0}, LX/FIy;-><init>(ILjava/lang/String;I)V
+    026e..0274  invoke-static  {v6, v5, v2}, LX/07o;->A00(LX/07o;LX/0Kl;LX/0Km;)V
+    0274..0276  return-void
+    0276..027a  const-string  v0, "MyPreKeysManager/handleBatchUploadError non-retryable error; errorCode="
+    027a..0280  invoke-static  {v3, v0}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    0280..0282  move-result-object  v1
+    0282..0286  const-string  v0, "; stopping"
+    0286..028c  invoke-static  {v1, v0}, LX/2L9;->A1J(Ljava/lang/StringBuilder;Ljava/lang/String;)V
+    028c..0292  invoke-static  {v6}, LX/13z;->A07(LX/13z;)V
+    0292..0298  invoke-static  {v6}, LX/13z;->A09(LX/13z;)V
+    0298..029c  if-eqz  v12, +0x55
+    029c..02a0  sget-object  v5, LX/0Kl;->A02:LX/0Kl;
+    02a0..02a2  const/4  v0, #0x4
+    02a2..02a4  goto  -0x1f
+    02a4..02aa  invoke-static  {v3}, LX/2L6;->A17(I)Ljava/lang/Long;
+    02aa..02ac  move-result-object  v0
+    02ac..02b0  iput-object  v0, v6, LX/13z;->A0Y:Ljava/lang/Long;
+    02b0..02b6  invoke-static  {v6}, LX/13z;->A08(LX/13z;)V
+    02b6..02ba  iget-object  v0, v6, LX/13z;->A0E:LX/00x;
+    02ba..02c0  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    02c0..02c2  move-result-object  v2
+    02c2..02c6  check-cast  v2, LX/098;
+    02c6..02cc  invoke-virtual  {v1}, Ljava/lang/Number;->longValue()J
+    02cc..02ce  move-result-wide  v0
+    02ce..02d0  const/4  v8, #0x2
+    02d0..02d2  goto  +0x1e
+    02d2..02d6  const-string  v2, "MyPreKeysManager/handleBatchUploadError retryable error; errorCode="
+    02d6..02dc  invoke-static  {v3, v2}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    02dc..02de  move-result-object  v4
+    02de..02e2  const-string  v2, " delayMs="
+    02e2..02e8  invoke-static  {v2, v4, v0, v1}, LX/DBh;->A1L(Ljava/lang/String;Ljava/lang/StringBuilder;J)V
+    02e8..02ee  invoke-static  {v3}, LX/2L6;->A17(I)Ljava/lang/Long;
+    02ee..02f0  move-result-object  v2
+    02f0..02f4  iput-object  v2, v6, LX/13z;->A0Y:Ljava/lang/Long;
+    02f4..02fa  invoke-static  {v6}, LX/13z;->A08(LX/13z;)V
+    02fa..02fe  iget-object  v2, v6, LX/13z;->A0E:LX/00x;
+    02fe..0304  invoke-interface  {v2}, LX/00x;->get()Ljava/lang/Object;
+    0304..0306  move-result-object  v2
+    0306..030a  check-cast  v2, LX/098;
+    030a..030c  const/4  v8, #0x1
+    030c..0310  new-instance  v5, LX/Fd5;
+    0310..0316  invoke-direct/range  {v5..v12}, LX/Fd5;-><init>(LX/13z;IIZZZZ)V
+    0316..031c  invoke-virtual  {v2, v5, v0, v1}, LX/098;->A05(Ljava/lang/Runnable;J)V
+    031c..031e  return-void
+    031e..0322  iget-object  v0, v6, LX/13z;->A0E:LX/00x;
+    0322..0328  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0328..032a  move-result-object  v0
+    032a..032e  check-cast  v0, LX/098;
+    032e..0332  new-instance  v5, LX/Fcd;
+    0332..0334  move  v9, v2
+    0334..0336  move  v10, v12
+    0336..033c  invoke-direct/range  {v5..v10}, LX/Fcd;-><init>(LX/13z;IZZZ)V
+    033c..0342  invoke-virtual  {v0, v5}, LX/098;->execute(Ljava/lang/Runnable;)V
+    0342..0344  return-void
+    # exception table: 4 try range(s)
+    # catch <all> code_units 0050..0056 -> 0065
+    # catch <all> code_units 0066..0067 -> 0065
+    # catch <all> code_units 00a6..00b4 -> 00b4
+    # catch <all> code_units 00b5..00b6 -> 00b4
+.end method

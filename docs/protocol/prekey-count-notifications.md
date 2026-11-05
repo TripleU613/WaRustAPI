@@ -120,3 +120,10 @@ remain open; no live behavior is verified.
 count_low case-insensitive true handling; they also forward a separate PQ flag.
 [Retained callbacks, first-child helper, error parser and limits](apk/2.26.43.72-prekey-upload-replies/README.md).
 No runtime change or full upload scheduling parity is claimed.
+
+## Current-build successful storage and failure-policy boundary
+
+**Confirmed static, 43.72:** Fd9 marks legacy/Kyber uploaded before completion;
+EcZ.A00 has gated 406/5xx scheduling branches. This supersedes the earlier
+untraced downstream boundary without proving full retry or regeneration policy.
+[Exports and pending helper/runnable trace](apk/2.26.43.72-prekey-upload-replies/README.md#store-effects-and-completion-policy-follow-up-2026-11-04).

@@ -1,0 +1,25 @@
+
+# class: LX/0WJ;
+# extends: Ljava/lang/Object;
+
+.method public A0w(VL)  # .registers 6
+    # full signature: LX/0WJ;->A0w([LX/ETs;)V
+    0000..0004  if-eqz  v5, +0x1a
+    0004..0006  array-length  v3, v5
+    0006..000a  if-eqz  v3, +0x17
+    000a..000e  new-array  v2, v3, [I
+    000e..0010  const/4  v1, #0x0
+    0010..0014  aget-object  v0, v5, v1
+    0014..0018  iget-object  v0, v0, LX/ETs;->A01:[B
+    0018..001e  invoke-static  {v0}, LX/1nr;->A00([B)I
+    001e..0020  move-result  v0
+    0020..0024  aput  v0, v2, v1
+    0024..0028  add-int/lit8  v1, v1, #0x1
+    0028..002c  if-lt  v1, v3, -0xc
+    002c..0032  invoke-virtual  {v4, v2}, LX/0WJ;->A0v([I)V
+    0032..0034  return-void
+    0034..0038  const-string  v0, "SignalCoordinator/tried to mark an empty list of kyber preKeys as sent to server"
+    0038..003e  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    003e..0040  return-void
+    # exception table: 0 try range(s)
+.end method
