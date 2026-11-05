@@ -1,0 +1,15 @@
+
+# class: LX/CJN;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLI)  # .registers 2
+    # full signature: LX/CJN;->A00(LX/05a;I)LX/1cy;
+    0000..0004  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0004..000a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    000a..000c  move-result-object  v0
+    000c..0010  check-cast  v0, LX/CJN;
+    0010..0016  invoke-virtual  {v0, v1}, LX/CJN;->A01(I)LX/1cy;
+    0016..0018  move-result-object  v0
+    0018..001a  return-object  v0
+    # exception table: 0 try range(s)
+.end method

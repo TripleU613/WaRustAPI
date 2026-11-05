@@ -758,3 +758,20 @@ changes and initial AB-properties, continued receive and no resend/projection.
 The native change failure callback reaches2KT.CE5(false); its concrete downstream
 side effects remain open. Full native scheduler parity and other producers'
 deadlines remain unfinished. No live account operation.
+
+## Account-default disappearing timer callback expiry — 2026-11-05
+
+**Confirmed static / implemented offline:** current APK ChangeDMSettingActivity.A0c
+set and0oy.A00 get both pass20000ms to0Sf.A0W. Normal live action ownership
+now assigns20s to these account-default shapes from the pre-write boundary.
+Expiry preserves durable Sent uncertainty without replay, applying the requested
+value or local rollback. Result/error cancels that timer. Per-chat E2E timer
+messages and usync disappearing_mode children do not inherit it.
+[Producer, native success/failure distinction, tests and limits](apk/2.26.43.72-default-timer-callback/README.md).
+Paused-clock tests cover19/20s, delayed write, result/error and a separate
+AB-properties callback surviving until32s. The normal-driver expiry test also
+covers default-timer write delay, late reply, receive ACK and no resend.
+Native timeout publishes the saved duration through observers; successful
+callback has a distinct preference-write path. Complete Rust default-setting
+adoption, alternate-mode gates, native error/observer behavior and exact
+concurrent scheduling remain open. No live account operation.

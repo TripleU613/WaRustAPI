@@ -1,3 +1,12 @@
+2026-11-05 — **Account-default timer callbacks now have native20s expiry.**
+
+The normal action loop covers default-timer set and empty get shapes, without
+replay or adopting an uncertain setting. Other pending deadlines stay independent.
+[APK success/failure paths, tests and remaining policy gaps](docs/protocol/apk/2.26.43.72-default-timer-callback/README.md).
+Validation:1338 workspace/all-feature tests, strict Clippy, fmt, CLI reference,
+APK coverage and hygiene passed. No live account traffic; the broader audit
+remains unfinished.
+
 2026-11-05 — **Block/unblock callback expiry now follows its20s APK timer.**
 
 Fetch uses a distinct native zero-duration path and receives no invented timer.

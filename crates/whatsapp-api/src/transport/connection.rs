@@ -1659,11 +1659,12 @@ mod tests {
     #[tokio::test(start_paused = true)]
     async fn timed_action_expiry_preserves_uncertainty_without_stopping_receive() {
         use super::super::actions::{self, ActionStatus};
-        for kind in ["abprops", "block", "unblock"] {
+        for kind in ["abprops", "block", "unblock", "dm-default"] {
             let dir = tempfile::tempdir().unwrap();
             let store = open(&dir.path().join("abprops-expiry.redb"));
             let id = match kind {
                 "abprops" => super::super::abprops::queue(&store),
+                "dm-default" => super::super::chat_settings::queue_default_timer(&store, 86400),
                 "block" => super::super::blocklist::queue_block(&store, &peer()),
                 _ => super::super::blocklist::queue_unblock(&store, &peer()),
             }

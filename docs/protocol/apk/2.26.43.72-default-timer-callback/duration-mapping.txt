@@ -1,0 +1,25 @@
+
+# class: LX/CJN;
+# extends: Ljava/lang/Object;
+
+.method public A01(LI)  # .registers 4
+    # full signature: LX/CJN;->A01(I)LX/1cy;
+    0000..0004  iget-object  v0, v2, LX/CJN;->A01:LX/05a;
+    0004..000a  invoke-static  {v0, v3}, LX/B21;->A1Y(LX/05a;I)Z
+    000a..000c  move-result  v0
+    000c..0010  if-eqz  v0, +0x14
+    0010..0014  iget-object  v0, v2, LX/CJN;->A00:LX/05a;
+    0014..001a  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    001a..001c  move-result-object  v0
+    001c..0020  check-cast  v0, LX/0wU;
+    0020..0026  invoke-virtual  {v0}, LX/0wU;->A01()I
+    0026..0028  move-result  v0
+    0028..002c  new-instance  v1, LX/1cy;
+    002c..0032  invoke-direct  {v1, v0, v3}, LX/1cy;-><init>(II)V
+    0032..0034  return-object  v1
+    0034..0036  const/4  v0, #0x0
+    0036..003a  new-instance  v1, LX/1cy;
+    003a..0040  invoke-direct  {v1, v3, v0}, LX/1cy;-><init>(II)V
+    0040..0042  return-object  v1
+    # exception table: 0 try range(s)
+.end method

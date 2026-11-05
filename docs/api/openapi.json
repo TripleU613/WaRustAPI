@@ -16596,5 +16596,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-blocklist-callback-timing/README.md",
     "description": "APK43.72 ordinary block/unblock sets pass20000ms via0Sf.A0W/A0A; block-list fetch passes0 viaA0Q/A06, with no positive replacement. Normal live ownership now expires only the supported set callback20s from immediately before local write. Expiry keeps durable Sent uncertainty, without replay, local list/hash mutation or rollback. Result/error cancels timer; no independent reply-age test. Fetch retains connection-owned callback without invented20/32s default. Paused-clock and normal-driver delayed-write/late-result tests; concrete native failure CE5(false) downstream policy and exact thread scheduling remain open."
+  },
+  "x-default-disappearing-timer-callback-expiry": {
+    "x-cli": false,
+    "x-transport": [
+      "normal experimental account-default disappearing timer action; offline tested"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-default-timer-callback/README.md",
+    "description": "APK43.72 ChangeDMSettingActivity.A0c set and0oy.A00 get pass20000ms before dispatch. Normal action callback ownership now expires matching account-default IQ shapes20s from immediately before local write; expiry retains Sent uncertainty without replay, adoption or rollback. Result/error cancels timer; other deadlines remain independent. Native timeout republishes saved value while successful callback has a separate preference-write path. Default-setting adoption, alternate-mode gates, complete observer/error behavior and exact native thread scheduling remain open. No new read command/scheduler or live verification."
   }
 }

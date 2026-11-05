@@ -1,0 +1,24 @@
+
+# class: LX/Cgd;
+# extends: Ljava/lang/Object;
+
+.method public BsS(VL)  # .registers 4
+    # full signature: LX/Cgd;->BsS(Ljava/lang/String;)V
+    0000..0004  iget  v0, v2, LX/Cgd;->$t:I
+    0004..000a  packed-switch  v0, payload@0x3c, cases=[0:@0xc, 1:@0xa, 2:@0x28], default@0xa
+    000a..000c  return-void
+    000c..0010  const-string  v0, "EmailVerificationXmppMethods/confirmEmail/onDeliveryFailure/delivery failure"
+    0010..0016  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0016..001a  iget-object  v1, v2, LX/Cgd;->A00:Ljava/lang/Object;
+    001a..001e  check-cast  v1, LX/D4p;
+    001e..0020  const/4  v0, #0x0
+    0020..0026  invoke-interface  {v1, v0}, LX/D4p;->Bx1(Ljava/lang/Integer;)V
+    0026..0028  return-void
+    0028..002c  iget-object  v1, v2, LX/Cgd;->A00:Ljava/lang/Object;
+    002c..0030  check-cast  v1, LX/0cf;
+    0030..0034  sget-object  v0, LX/BWM;->A00:LX/BWM;
+    0034..003a  invoke-interface  {v1, v0}, LX/0cf;->resumeWith(Ljava/lang/Object;)V
+    003a..003c  return-void
+    003c..0050  packed-switch-payload  size=3
+    # exception table: 0 try range(s)
+.end method

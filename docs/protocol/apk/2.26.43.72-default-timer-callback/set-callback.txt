@@ -1,0 +1,133 @@
+
+# class: LX/Cgi;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLI)  # .registers 4
+    # full signature: LX/Cgi;-><init>(LX/0oy;LX/1cy;I)V
+    0000..0004  iput-object  v1, v0, LX/Cgi;->A02:LX/0oy;
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000a..000e  iput-object  v2, v0, LX/Cgi;->A00:LX/1cy;
+    000e..0012  iput  v3, v0, LX/Cgi;->A01:I
+    0012..0014  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(VLLZ)  # .registers 9
+    # full signature: LX/Cgi;->A00(LX/Cgi;Ljava/lang/String;Z)V
+    0000..0004  new-instance  v2, LX/BSL;
+    0004..000a  invoke-direct  {v2}, LX/BSL;-><init>()V
+    000a..000e  iget-object  v1, v6, LX/Cgi;->A00:LX/1cy;
+    000e..0012  iget  v0, v1, LX/1cy;->A00:I
+    0012..0014  move  v5, v0
+    0014..0018  if-gtz  v0, +0x4
+    0018..001c  iget  v0, v1, LX/1cy;->A01:I
+    001c..0022  invoke-static  {v0}, LX/2L6;->A17(I)Ljava/lang/Long;
+    0022..0024  move-result-object  v0
+    0024..0028  iput-object  v0, v2, LX/BSL;->A07:Ljava/lang/Long;
+    0028..002c  iget-object  v3, v6, LX/Cgi;->A02:LX/0oy;
+    002c..0030  iget-object  v4, v3, LX/0oy;->A04:LX/0p0;
+    0030..0036  invoke-virtual  {v4}, LX/0p0;->A06()LX/1cy;
+    0036..0038  move-result-object  v1
+    0038..003c  iget  v0, v1, LX/1cy;->A00:I
+    003c..0040  if-gtz  v0, +0x4
+    0040..0044  iget  v0, v1, LX/1cy;->A01:I
+    0044..004a  invoke-static  {v0}, LX/2L6;->A17(I)Ljava/lang/Long;
+    004a..004c  move-result-object  v0
+    004c..0050  iput-object  v0, v2, LX/BSL;->A08:Ljava/lang/Long;
+    0050..0056  invoke-static  {v4}, LX/0p0;->A01(LX/0p0;)LX/7tS;
+    0056..0058  move-result-object  v0
+    0058..005c  iget-object  v0, v0, LX/7tS;->A01:LX/00p;
+    005c..0062  invoke-static  {v0}, LX/1Xl;->A0L(LX/00p;)Landroid/content/SharedPreferences;
+    0062..0064  move-result-object  v1
+    0064..0068  const-string  v0, "disappearing_mode_timestamp"
+    0068..006e  invoke-static  {v1, v0}, LX/1Xl;->A0D(Landroid/content/SharedPreferences;Ljava/lang/String;)J
+    006e..0070  move-result-wide  v0
+    0070..0076  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0076..0078  move-result-object  v0
+    0078..007c  iput-object  v0, v2, LX/BSL;->A06:Ljava/lang/Long;
+    007c..0080  iget  v0, v6, LX/Cgi;->A01:I
+    0080..0086  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0086..0088  move-result-object  v0
+    0088..008c  iput-object  v0, v2, LX/BSL;->A02:Ljava/lang/Integer;
+    008c..0092  invoke-static  {v8}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0092..0094  move-result-object  v0
+    0094..0098  iput-object  v0, v2, LX/BSL;->A01:Ljava/lang/Boolean;
+    0098..009c  if-eqz  v7, +0x3a
+    009c..00a2  invoke-static  {v7}, LX/0Cd;->A08(Ljava/lang/String;)Ljava/lang/Long;
+    00a2..00a4  move-result-object  v0
+    00a4..00a8  iput-object  v0, v2, LX/BSL;->A05:Ljava/lang/Long;
+    00a8..00ac  iget-object  v0, v3, LX/0oy;->A01:LX/05a;
+    00ac..00b0  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    00b0..00b6  invoke-static  {v0}, LX/B20;->A1P(LX/00x;)Z
+    00b6..00b8  move-result  v0
+    00b8..00bc  if-eqz  v0, +0x24
+    00bc..00c2  invoke-static  {v5}, LX/2L9;->A1N(I)Z
+    00c2..00c4  move-result  v1
+    00c4..00ca  invoke-static  {v1}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    00ca..00cc  move-result-object  v0
+    00cc..00d0  iput-object  v0, v2, LX/BSL;->A00:Ljava/lang/Boolean;
+    00d0..00d4  if-eqz  v1, +0x8
+    00d4..00da  invoke-static  {v5}, LX/2L6;->A17(I)Ljava/lang/Long;
+    00da..00dc  move-result-object  v0
+    00dc..00e0  iput-object  v0, v2, LX/BSL;->A04:Ljava/lang/Long;
+    00e0..00e6  invoke-virtual  {v4}, LX/0p0;->A06()LX/1cy;
+    00e6..00e8  move-result-object  v0
+    00e8..00ec  iget  v1, v0, LX/1cy;->A00:I
+    00ec..00ee  const/4  v0, #0x2
+    00ee..00f2  if-lez  v1, +0x3
+    00f2..00f4  const/4  v0, #0x1
+    00f4..00fa  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    00fa..00fc  move-result-object  v0
+    00fc..0100  iput-object  v0, v2, LX/BSL;->A03:Ljava/lang/Integer;
+    0100..0104  iget-object  v0, v3, LX/0oy;->A05:LX/0NX;
+    0104..010a  invoke-interface  {v0, v2}, LX/0NX;->CSW(LX/0FP;)V
+    010a..010c  return-void
+    010c..010e  const/4  v0, #0x0
+    010e..0110  goto  -0x35
+    # exception table: 0 try range(s)
+.end method
+
+.method public BsS(VL)  # .registers 6
+    # full signature: LX/Cgi;->BsS(Ljava/lang/String;)V
+    0000..0004  iget-object  v3, v4, LX/Cgi;->A02:LX/0oy;
+    0004..0008  iget-object  v2, v3, LX/0oy;->A08:LX/0Js;
+    0008..000c  const/16  v1, #0x25
+    000c..0010  new-instance  v0, LX/CvG;
+    0010..0016  invoke-direct  {v0, v3, v4, v1}, LX/CvG;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V
+    0016..001c  invoke-virtual  {v2, v0}, LX/0Js;->CbR(Ljava/lang/Runnable;)V
+    001c..001e  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public Bvj(VLL)  # .registers 7
+    # full signature: LX/Cgi;->Bvj(LX/0Tp;Ljava/lang/String;)V
+    0000..0002  const/4  v0, #0x1
+    0002..0008  invoke-static  {v5, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  iget-object  v3, v4, LX/Cgi;->A02:LX/0oy;
+    000c..0010  iget-object  v2, v3, LX/0oy;->A08:LX/0Js;
+    0010..0014  const/16  v1, #0x27
+    0014..0018  new-instance  v0, LX/CvL;
+    0018..001e  invoke-direct  {v0, v4, v5, v3, v1}, LX/CvL;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+    001e..0024  invoke-virtual  {v2, v0}, LX/0Js;->CbR(Ljava/lang/Runnable;)V
+    0024..0026  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public CK4(VLL)  # .registers 7
+    # full signature: LX/Cgi;->CK4(LX/0Tp;Ljava/lang/String;)V
+    0000..0004  iget-object  v3, v4, LX/Cgi;->A02:LX/0oy;
+    0004..0008  iget-object  v2, v3, LX/0oy;->A08:LX/0Js;
+    0008..000c  const/16  v1, #0x24
+    000c..0010  new-instance  v0, LX/CvG;
+    0010..0016  invoke-direct  {v0, v3, v4, v1}, LX/CvG;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V
+    0016..001c  invoke-virtual  {v2, v0}, LX/0Js;->CbR(Ljava/lang/Runnable;)V
+    001c..001e  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public CmQ(LL)  # .registers 3
+    # full signature: LX/Cgi;->CmQ(Ljava/lang/String;)LX/D33;
+    0000..0004  sget-object  v0, LX/KNW;->A00:LX/KNW;
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method

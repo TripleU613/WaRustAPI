@@ -1,0 +1,50 @@
+{
+  "README.md": {
+    "bytes": 4961,
+    "sha256": "88fc2a234a1b63554e03ec2e27dc3655d4f7e7053247ef2a1350dda8a5bbbcbf"
+  },
+  "duration-mapping.txt": {
+    "bytes": 990,
+    "sha256": "9f95a849a1e93eb32c8437bd0d8d7d1d8607d4a4c7f41f0fd10b409f8ffe2819"
+  },
+  "duration-selection.txt": {
+    "bytes": 539,
+    "sha256": "517ca54e8c97e511cde039188e0ba6a81b4b50e29c371ebc963329534376ece3"
+  },
+  "get-failure.txt": {
+    "bytes": 1139,
+    "sha256": "a734d3657f20a68d4267b7929aecccfbcd99ba2e59018d23576766def183c2d5"
+  },
+  "get.txt": {
+    "bytes": 2709,
+    "sha256": "1263e0818f1d14740c37afb9f413d0697723ad601389adfdecffb63f45a8d099"
+  },
+  "save-default.txt": {
+    "bytes": 4042,
+    "sha256": "d9e5ba6c053176747f944ff524b0cbbc6f7acf26f2b6fdc81c51d87bb040dfcf"
+  },
+  "saved-default.txt": {
+    "bytes": 1180,
+    "sha256": "49b58a33f140adb438445069386db19c0626b979a2cdccc3e35b48b3c8e55dfc"
+  },
+  "saved-duration.txt": {
+    "bytes": 868,
+    "sha256": "a51eb02d5da91ddfe9b2e485d84532e4f5e5a3d408c96fb2eab3d92cb2829241"
+  },
+  "set-callback.txt": {
+    "bytes": 6402,
+    "sha256": "8ea609c26ba769fdc9246a6ae903794307009e4090afa1bf9858f8e43736612d"
+  },
+  "set-runnables.txt": {
+    "bytes": 76149,
+    "sha256": "5d92f87eb45116cdbfd941bca093b11c32f43db3e8c5a0d0aa62c70ab98ef546"
+  },
+  "set.txt": {
+    "bytes": 5761,
+    "sha256": "15331fffa25b1436c7bf5b23902caab1eddd95313b87d0b1632d8635ac28e698"
+  },
+  "timeout-notification.txt": {
+    "bytes": 416,
+    "sha256": "94b7094817fb7269c47673ffe10f89cae80387226dfb1754cd8cb6b0e1b1bce4"
+  }
+}

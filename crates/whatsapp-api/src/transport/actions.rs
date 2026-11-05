@@ -412,6 +412,20 @@ impl LiveReplies {
                 // use20000ms. A0M fetch uses zero through A0Q/A06, so it
                 // does not inherit this set-request timer.
                 Some(20)
+            } else if node.get_attr("xmlns").and_then(|v| v.as_text()) == Some("disappearing_mode")
+                && match node.get_attr("type").and_then(|v| v.as_text()) {
+                    Some("get") => node.child_nodes().is_empty(),
+                    Some("set") => matches!(node.child_nodes(), [mode]
+                        if mode.description == "disappearing_mode"
+                            && mode.get_attr("duration").and_then(|v| v.as_text()).is_some()),
+                    _ => false,
+                }
+            {
+                // APK43.72 ChangeDMSettingActivity.A0c 018a..0198 and
+                // 0oy.A00 00b4..00c2 both pass20000ms to 0Sf.A0W.
+                // This is the account default IQ, not per-chat E2E timers
+                // or a disappearing_mode child nested inside usync.
+                Some(20)
             } else {
                 None
             };
@@ -1259,6 +1273,75 @@ mod tests {
                     .unwrap()
                 );
                 assert!(blocklist::blocked(&store).unwrap().is_empty());
+            }
+        }
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn default_timer_expiry_is_independent_of_other_request_deadlines() {
+        use std::time::Duration;
+        use tokio::time::{Instant, advance};
+        for read in [false, true] {
+            for outcome in ["expire", "result", "error"] {
+                let (_dir, store) = store();
+                let id = if read {
+                    queue(&store, "dm-read-fixture", "default read", |id| {
+                        Ok(Node::new("iq")
+                            .attr("id", id)
+                            .attr("type", "get")
+                            .attr("xmlns", "disappearing_mode")
+                            .attr("to", crate::model::jid::Jid::parse("s.whatsapp.net")?))
+                    })
+                } else {
+                    super::super::chat_settings::queue_default_timer(&store, 86400)
+                }
+                .unwrap();
+                let request = reserve_next(&store).unwrap().unwrap();
+                let props = super::super::abprops::queue(&store).unwrap();
+                let props_request = reserve_next(&store).unwrap().unwrap();
+                let started = Instant::now();
+                advance(Duration::from_secs(2)).await;
+                let mut live = LiveReplies::default();
+                live.record_written(&request, started);
+                live.record_written(&props_request, started);
+                assert_eq!(live.deadline(), Some(started + Duration::from_secs(20)));
+                advance(Duration::from_secs(17)).await;
+                live.expire();
+                assert!(live.0.contains(&id));
+                let reply = Node::new("iq").attr("id", id.as_str()).attr(
+                    "type",
+                    if outcome == "error" {
+                        "error"
+                    } else {
+                        "result"
+                    },
+                );
+                if outcome != "expire" {
+                    assert!(live.record_reply(&store, &reply).unwrap());
+                    assert_eq!(live.deadline(), Some(started + Duration::from_secs(32)));
+                }
+                advance(Duration::from_secs(1)).await;
+                live.expire();
+                assert!(!live.record_reply(&store, &reply).unwrap());
+                assert!(live.0.contains(&props));
+                assert_eq!(live.deadline(), Some(started + Duration::from_secs(32)));
+                assert_eq!(
+                    outcomes(&store)
+                        .unwrap()
+                        .iter()
+                        .find(|a| a.id == id)
+                        .unwrap()
+                        .status,
+                    match outcome {
+                        "expire" => ActionStatus::Sent,
+                        "error" => ActionStatus::Error,
+                        _ => ActionStatus::Ok,
+                    }
+                );
+                advance(Duration::from_secs(12)).await;
+                live.expire();
+                assert!(!live.0.contains(&props));
+                assert!(live.deadline().is_none());
             }
         }
     }
