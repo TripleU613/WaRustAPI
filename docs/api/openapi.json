@@ -15684,5 +15684,17 @@
     "x-live": false,
     "evidence": "docs/protocol/network-correctness-audit.md#comparison-wait-captures-survive-failed-exits-2026-11-04",
     "description": "Capture-aware comparison waiter persists every decoded node, including matched and terminal replies, before matching or failing. Repository CLI comparison waits adopt it; capture errors stop the wait. Shared30s/32-node bounds and IQ grammar remain, with post-capture deadline admission. Legacy wait_for without store, unread/undecodable frames, native recovery parity and protocol processing of unrelated nodes remain limited. No new route, automatic retry or live operation."
+  },
+  "x-comparison-undecodable-capture": {
+    "x-cli": {
+      "command": "whatsapp-cli undecodable",
+      "description": "Existing offline inspection now also sees lab-transport comparison-wait decode failures; no new flag"
+    },
+    "x-transport": [
+      "comparison wait decrypted-frame capture in messaging::wait_for_captured"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/network-correctness-audit.md#undecodable-comparison-wait-frames-retained-2026-11-04",
+    "description": "Comparison waits persist successfully decrypted records that fail inflation or stanza decoding before exiting with outcome uncertainty. Uses existing encrypted undecodable captures, codec labels and epoch=None; no classification, ACK or retry follows failure. Default offline undecodable inspection includes them. Unread, incomplete and authentication-failed ciphertext and legacy no-store waits remain outside scope; no native decoder-policy parity, new HTTP route or live operation."
   }
 }

@@ -1742,3 +1742,39 @@ No existing historical loss is reconstructed, uncertain send is replayed,
 identity is changed, or server wait is overridden. Raw-node capture alone does
 not perform protocol ACK/business processing for unrelated notifications.
 No live account or network operations were used.
+
+### Undecodable comparison wait frames retained (2026-11-04)
+
+**Confirmed local gap / fixed offline:** wait_for_captured persisted decoded
+nodes but still used read_node, which discarded a decrypted frame on stanza
+inflation or binary decode failure. It now reads FrameRead and preserves an
+Undecodable frame through the existing encrypted inbox capture mechanism
+before returning a fixed uncertainty/no-retry error. Already captured decoded
+nodes remain. The loop never classifies the malformed frame as a response or
+ACKs it, and never reads another node after that failure.
+
+The stored record retains the exact decrypted, pre-inflation frame, fixed codec
+error class, first observation time and epoch=None (comparison/lab window),
+using the existing content-hash identity. The existing default `undecodable`
+command lists these captures redacted and rechecks them with the current
+decoder; it does not send traffic or automatically settle them. Capture-store
+errors propagate and cannot become successful request settlement.
+
+The shared wait-loop regression now includes malformed binary and invalid
+compressed payload cases after two decoded unmatched nodes. It verifies the
+error, all prior captures, exact saved frame bytes/class/size, absent actor
+epoch and unchanged uncertain send intent after reopening the encrypted store.
+Reader injection tests the shared control flow and capture storage; it is not
+a Noise-handshake or live malformed-server test.
+
+**Evidence/authority:** this is local diagnostic hardening, not a reconstructed
+APK decoder-failure policy. Existing native result/error dispatch evidence
+remains the admission reference; whether the APK continues or closes after each
+decode failure remains untraced. The comparison waiter exits conservatively.
+The ordinary actor's existing continue/capture policy is unchanged.
+
+**Limits:** ciphertext that fails authentication, incomplete frames and data not
+yet read do not yield a decrypted frame for this path. The legacy no-store
+wait_for remains uncaptured. The earlier decoded-only comparison limitation is
+closed for successfully decrypted records; no old missing evidence is restored.
+This adds no replay, account reset, fabricated response, new route or live operation.

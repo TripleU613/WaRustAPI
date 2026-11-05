@@ -1,3 +1,14 @@
+2026-11-04 — **Malformed comparison wait records captured before exit.**
+
+Successfully decrypted but undecodable records now survive comparison wait
+failure, including invalid compression. The request stays uncertain and no
+later send is authorized. Existing offline undecodable inspection applies.
+[Tests and capture limits](docs/protocol/network-correctness-audit.md#undecodable-comparison-wait-frames-retained-2026-11-04).
+Validation:1,306 workspace/all-feature tests, strict Clippy, regenerated CLI
+reference, formatting, JSON, coverage freshness and repository hygiene passed.
+The final full run includes the updated CLI description/reference.
+No live traffic.
+
 2026-11-04 — **Comparison failed-wait captures retained.**
 
 Repository CLI waits now commit decoded nodes before matching or exiting.

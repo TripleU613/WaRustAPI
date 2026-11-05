@@ -1112,8 +1112,8 @@ pub async fn wait_for<S: AsyncRead + AsyncWrite + Unpin>(
     .await
 }
 
-/// Persist every decoded node before matching or terminating a comparison wait.
-/// Capture failures stop the operation; timeout never authorizes a resend.
+/// Persist decoded nodes and decrypted undecodable frames during a comparison wait.
+/// Undecodable frames and capture failures stop with uncertainty; no resend.
 pub async fn wait_for_captured<S: AsyncRead + AsyncWrite + Unpin>(
     store: &crate::store::ProtocolStore,
     channel: &mut EncryptedConnection<S>,
@@ -1121,12 +1121,28 @@ pub async fn wait_for_captured<S: AsyncRead + AsyncWrite + Unpin>(
     id: &str,
 ) -> crate::Result<(Node, Vec<Node>)> {
     wait_for_observed(
-        async || read_node(channel).await,
+        async || captured_wait_node(store, read_frame(channel).await?),
         |node| super::inbox::preserve(store, node).map(|_| ()),
         description,
         id,
     )
     .await
+}
+
+fn captured_wait_node(
+    store: &crate::store::ProtocolStore,
+    frame: FrameRead,
+) -> crate::Result<Node> {
+    match frame {
+        FrameRead::Node(node) => Ok(node),
+        FrameRead::Undecodable { frame, class } => {
+            super::inbox::preserve_undecodable(store, &frame, class, None)?;
+            Err(crate::Error::invalid(
+                "comparison_wait",
+                "undecodable decrypted frame captured; response outcome unknown; no automatic retry",
+            ))
+        }
+    }
 }
 
 async fn wait_for_observed<R, C, E>(
@@ -1136,7 +1152,7 @@ async fn wait_for_observed<R, C, E>(
     id: &str,
 ) -> Result<(Node, Vec<Node>), E>
 where
-    R: AsyncFnMut() -> Result<Node, TransportError>,
+    R: AsyncFnMut() -> Result<Node, E>,
     C: FnMut(&Node) -> Result<(), E>,
     E: From<TransportError>,
 {
@@ -1144,7 +1160,7 @@ where
     tokio::time::timeout_at(deadline, async {
         let mut pending = Vec::new();
         for _ in 0..32 {
-            let node = read().await.map_err(E::from)?;
+            let node = read().await?;
             // Capture terminal and matched replies too, before any settlement.
             capture(&node)?;
             if tokio::time::Instant::now() >= deadline {
@@ -2405,6 +2421,8 @@ mod captured_wait_tests {
             "terminal",
             "count",
             "capture_error",
+            "undecodable",
+            "compression",
         ] {
             let dir = tempfile::tempdir().unwrap();
             let path = dir.path().join("wait.redb");
@@ -2446,6 +2464,17 @@ mod captured_wait_tests {
             } else if mode == "terminal" {
                 nodes.push_back(Node::new("stream:error"));
             }
+            let raw = if mode == "compression" {
+                vec![2, 0] // Compressed stanza flag followed by invalid zlib data.
+            } else {
+                vec![
+                    0,
+                    crate::binary::tags::LIST_8,
+                    1,
+                    crate::binary::tags::JID_PAIR,
+                ]
+            };
+            let raw_class = super::super::inbox::decode_frame(&raw).unwrap_err().class();
             let mut captures = Vec::new();
             let result: crate::Result<_> = wait_for_observed(
                 async || {
@@ -2454,8 +2483,16 @@ mod captured_wait_tests {
                     }
                     if mode == "timeout" {
                         std::future::pending().await
+                    } else if matches!(mode, "undecodable" | "compression") {
+                        captured_wait_node(
+                            &store,
+                            FrameRead::Undecodable {
+                                frame: raw.clone(),
+                                class: raw_class,
+                            },
+                        )
                     } else {
-                        Err(TransportError::Closed)
+                        Err(TransportError::Closed.into())
                     }
                 },
                 |node| {
@@ -2497,6 +2534,20 @@ mod captured_wait_tests {
             }
             drop(store);
             let store = open();
+            let unreadable = super::super::inbox::undecodable_frames(&store).unwrap();
+            if matches!(mode, "undecodable" | "compression") {
+                assert_eq!(unreadable.len(), 1);
+                assert_eq!(unreadable[0].class, raw_class);
+                assert_eq!(unreadable[0].bytes, raw.len());
+                assert_eq!(unreadable[0].epoch, None);
+                let saved: serde_json::Value = store
+                    .read(|tx| tx.get_json(Table::Checkpoints, unreadable[0].capture.as_bytes(), 1))
+                    .unwrap()
+                    .unwrap();
+                assert_eq!(saved["frame"], serde_json::json!(raw));
+            } else {
+                assert!(unreadable.is_empty());
+            }
             for key in captures {
                 assert!(
                     store

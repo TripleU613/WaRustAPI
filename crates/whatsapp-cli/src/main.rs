@@ -273,7 +273,7 @@ enum Cmd {
     /// Show queued read, played and retry receipts and their outcomes (offline, redacted).
     #[cfg(feature = "experimental-transport")]
     Receipts,
-    /// List received frames `listen` could not decode, re-checked with the
+    /// List received frames the transport could not decode, re-checked with the
     /// current decoder (offline, redacted: digest, error class, size).
     #[cfg(feature = "experimental-transport")]
     Undecodable {

@@ -168,7 +168,7 @@ Usage: whatsapp-cli receipts [OPTIONS]...
 
 ## whatsapp-cli undecodable
 
-List received frames `listen` could not decode, re-checked with the current decoder (offline, redacted: digest, error class, size)
+List received frames the transport could not decode, re-checked with the current decoder (offline, redacted: digest, error class, size)
 
 ```
 Usage: whatsapp-cli undecodable [OPTIONS]...
