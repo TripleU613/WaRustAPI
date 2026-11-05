@@ -1,3 +1,11 @@
+2026-11-05 — **Future-counter retry prerequisites identified.**
+
+Native sender-key future rejection maps to wire6 after signature verification;
+backend shares the generic error with CBC failure. Matching-chain access,
+reservation-aware projection and signed/unsigned counter boundaries prevent a
+blanket mapping. [Evidence and next implementation requirements](docs/protocol/outgoing-retry-receipts.md#future-counter-typed-mapping-prerequisites--2026-11-05).
+Research only; no runtime change or live traffic.
+
 2026-11-05 — **Sender-key signature retries now carry error5.**
 
 Receive preserves message-signature failure separately from generic decryption,

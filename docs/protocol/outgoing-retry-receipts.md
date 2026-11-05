@@ -219,3 +219,23 @@ policy and server acceptance remain unverified. No live account operation.
 Validation:1328 workspace/all-feature tests passed. Formatting, strict workspace
 all-target/all-feature Clippy, CLI reference regeneration, APK coverage, staged
 whitespace and research checksum/link hygiene passed. Offline only.
+
+## Future-counter typed mapping prerequisites — 2026-11-05
+
+**Confirmed static:** [sender-key signature-before-counter order, strict2000
+boundary and backend limits](apk/2.26.43.72-sender-key-future-counter/README.md).
+Native exact future-counter message refines to wire6. Backend also uses2000,
+but returns generic InvalidMessage shared with CBC failures. Its selected-chain
+accessor is private, front state may be wrong, and into_components advances the
+front chain to its lease ceiling rather than passively exposing current position.
+No provider-string matching or partial front-state mapping was added.
+
+Native signed-int versus backend unsigned-counter comparison also differs at
+high-bit inputs; this arithmetic inference prevents claiming universal cause
+parity from a matching normal-range constant. Full typed cause/state access,
+integer-domain compatibility, precedence and remaining retry/ACK policy are open.
+Research only; no runtime behavior or live request changed.
+
+Validation:31 filtered retry tests, APK coverage, staged whitespace and research
+checksum/link hygiene passed. No Rust source changed; the full workspace suite
+was not rerun for this research-only chunk.

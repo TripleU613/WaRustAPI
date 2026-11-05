@@ -1,0 +1,49 @@
+{
+  "package": "wacore-libsignal",
+  "version": "0.7.0",
+  "files": [
+    {
+      "file": "src/protocol/group_cipher.rs",
+      "sha256": "324b55313055b7542166c37d59748ab7b1afb3aa82cbf29db086e140350cb950",
+      "bytes": 29940,
+      "source_facts": [
+        "get_sender_key lines153-201: current/iteration are u32; current greater -> skipped key or DuplicatedMessage; otherwise jump as usize > MAX_FORWARD_JUMPS -> InvalidMessage(SenderKey, static reason)",
+        "group_decrypt lines203-255 parses, selects matching saved chain, checks version and verifies signature before get_sender_key",
+        "group_decrypt lines257-283 future-counter InvalidMessage and CBC failure InvalidMessage are separate producers of same enum variant"
+      ]
+    },
+    {
+      "file": "src/protocol/consts.rs",
+      "sha256": "d79f7d74c6f8ce243a1b5c7c94fcf564330e5e90ee81f852d7d9536969ad7242",
+      "bytes": 2516,
+      "source_facts": [
+        "MAX_FORWARD_JUMPS=2000; group get_sender_key uses this, not MAX_FORWARD_JUMPS_SELF=25000"
+      ]
+    },
+    {
+      "file": "src/protocol/error.rs",
+      "sha256": "cba96af7c392ba11da7549ac36b66d1dd0110e2a51fd9ae2fb2d9d96003bc5c7",
+      "bytes": 4452,
+      "source_facts": [
+        "InvalidMessage carries CiphertextMessageType and static string; no dedicated future-counter variant"
+      ]
+    },
+    {
+      "file": "src/protocol/sender_keys.rs",
+      "sha256": "bfa526fb70eb6345e64bc844c45fb89c92200db8f58a28c3ffa92aaffd52ab5c",
+      "bytes": 74034,
+      "source_facts": [
+        "sender_key_state_for_chain_id at785 is pub(crate); scans first matching chain ID in saved state order",
+        "into_components at640 first fast-forwards the front state to durable lease ceiling when positive; not a passive current-position projection"
+      ]
+    },
+    {
+      "file": "src/protocol/record_components.rs",
+      "sha256": "9d92d8b5684cb5c362fac9e436d73bcf90fb5b3493a93fd879657a0d74936a5d",
+      "bytes": 50905,
+      "source_facts": [
+        "SenderKeyStateComponents exposes key_id and chain_key.iteration together with key material; projection is not a metadata-only accessor"
+      ]
+    }
+  ]
+}

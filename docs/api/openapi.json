@@ -16522,5 +16522,12 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-sender-key-signature-retry/README.md",
     "description": "Error::SignalInvalidSenderKeySignature and IncomingResult::InvalidSenderKeySignature preserve skmsg verification failure against the saved signing key. Normal receive serializes retry/error5 using the private typed cause enum; missing session retains error1. Other signature producers and unclassified public builders retain behavior. Original timestamp/count1, routing, durable reservation and no replay/delivery ACK on uncertain retry are unchanged. Offline CLI replay sends nothing. No HTTP route/CLI flag or live acceptance added; full native parity remains unfinished."
+  },
+  "x-sender-key-future-counter-evidence": {
+    "x-cli": false,
+    "x-transport": ["offline pinned-APK and dependency source inspection only"],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-sender-key-future-counter/README.md",
+    "description": "Native sender-key strict2000 future-counter rejection follows signature verification and refines to wire6. Backend shares InvalidMessage with CBC failures, selected-chain accessor is private and component export fast-forwards reservation ceiling. Native signed versus backend unsigned arithmetic differs at high-bit counters. No global error-string/front-state mapping or runtime capability added; typed state/cause and integer-domain parity remain incomplete."
   }
 }

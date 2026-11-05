@@ -6483,3 +6483,19 @@ redelivery emits neither another retry nor delivery ACK. Sender-key rows remain
 unchanged. Existing direct/group missing-session cases retain error1. Offline CLI
 replay sends nothing. Count/key progression, other typed causes, full routing/ACK
 policy and server acceptance remain unverified. No live account operation.
+
+## Future-counter typed mapping prerequisites — 2026-11-05
+
+**Confirmed static:** [sender-key signature-before-counter order, strict2000
+boundary and backend limits](apk/2.26.43.72-sender-key-future-counter/README.md).
+Native exact future-counter message refines to wire6. Backend also uses2000,
+but returns generic InvalidMessage shared with CBC failures. Its selected-chain
+accessor is private, front state may be wrong, and into_components advances the
+front chain to its lease ceiling rather than passively exposing current position.
+No provider-string matching or partial front-state mapping was added.
+
+Native signed-int versus backend unsigned-counter comparison also differs at
+high-bit inputs; this arithmetic inference prevents claiming universal cause
+parity from a matching normal-range constant. Full typed cause/state access,
+integer-domain compatibility, precedence and remaining retry/ACK policy are open.
+Research only; no runtime behavior or live request changed.
