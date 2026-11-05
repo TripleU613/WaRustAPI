@@ -850,3 +850,50 @@ Additional export hashes:
 - [registration-factory-callers.txt](registration-factory-callers.txt): `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
 - [registration-parser-tags.txt](registration-parser-tags.txt): `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
 - [registration-parser-tags-base.txt](registration-parser-tags-base.txt): `f1a9e0f0cfd210e978f8fc8f86167bf812a5196456de4c30939a2065a3954648`
+
+## Legacy concrete listener handoff (2026-11-04)
+
+**Confirmed static**, pinned 2.26.43.72 and this bundle's APK SHA-256.
+These checked DEX exports are not REA Evidence envelopes. Only selected
+branches of the full handler exports were inspected.
+
+- Normal **0ZJ.A0z 04e4–0500** constructs `1lY(this)` and passes it to
+  `1lZ(08q,1lW)`. **1lZ.<init>0006–000a** stores that listener in A01,
+  closing the concrete CPm receiver for this setup path. The exact 1lZ
+  constructor caller search returns A0z.
+- **1lY.CPm** reads the selector through **1uW.A00**, which returns
+  `Message.arg1` unchanged. It calls **0ln.A0G(selector)**. When true it
+  copies the Message with `Message.obtain(original)` and calls **0ln.A07**;
+  otherwise it sets the original `what=0` and queues it on its own Handler.
+- **0ln.A0G**: when A0Q is true, explicit selector checks include 77 and78
+  (`0x4d`, `0x4e`, 0150–0168), both returning true. When A0Q is false the
+  SparseIntArray/list membership branch decides instead; no unconditional
+  routing claim is made for that configuration.
+- **0ln.A07** sets the copied event's `what=1`, retains the selector in
+  arg1 and queues on its A0E/0m2 Handler. **0m2.handleMessage** case what1
+  begins at021c and reads arg1. Its selected 0348–036e branch checks an
+  Optional and delegates to 0m2.A00/0ln.A00; their manager mapping is still
+  **unknown** here. This is asynchronous handoff, not proof of completion.
+- The other CPm route reaches **1lY.handleMessage what0,013c–0146**, which
+  forwards to **0ZJ.A0s**. Its subsequent listener mapping remains untraced.
+- `apk-virtual-overrides` on 1lW.CPm reports only the abstract declaration:
+  the tool explicitly covers superclass ancestry, not interface dispatch.
+  The concrete receiver above is proven by construction, not by treating
+  that bounded tool result as an exhaustive implementation search.
+
+**Remaining:** binding either handoff to 14o.BLn's77/78 manager branches,
+A0Q/runtime factory configuration, reader dispatch and teardown are open.
+Prior matching event numbers alone remain insufficient. No Rust behavior
+change, retry policy change or live traffic.
+
+Additional export hashes:
+
+- [listener-overrides.txt](listener-overrides.txt): `a97aec7bdcd4e99504d352f3d15a20ca8b015956bddfb7054ff1479e8c982242`
+- [listener-ctor.txt](listener-ctor.txt): `b146a6e9aabec78478a940be6a5df3e20ddf7e1a4de895e1358ce68d5b2f43aa`
+- [listener-callers.txt](listener-callers.txt): `cbbd9919b37933a4d3f1f018147f5501ca4d391bcf989b132053761ec280e126`
+- [listener-forward.txt](listener-forward.txt): `eb2d4f590bd95fbd6cc2ac5a1eec93dc693270d899bc032d729d65a6ec05ee08`
+- [listener-classify.txt](listener-classify.txt): `98886db83a86a8ddd55b360ab8de162d4782ca574921f766115d13564fdfb9ad`
+- [listener-handle.txt](listener-handle.txt): `ce5e0de9b6d49a0808374951e0dd1fa1323f1ea86fcc3dcedfef8664c002524b`
+- [listener-selector.txt](listener-selector.txt): `ad3a61d949a35c31be5a9712e3ccca005469657bc4fc9746360efc5cfbaedc89`
+- [listener-dispatch.txt](listener-dispatch.txt): `adea7a52ca16dee2b65b2eb01528b78ff20290ffb85829cde2c4304984cb140f`
+- [listener-manager-handler.txt](listener-manager-handler.txt): `4c8a65dfb8084a0e069c95bf190c90cf19c93a0dd6c6c362f198bacae16bc94f`

@@ -15268,5 +15268,13 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#legacy-iq-handler-registration-boundary-2026-11-04",
     "finding": "Inherited IQ handler tag and duplicate-tag rejection traced; configured factory membership and runtime dispatch unproven."
+  },
+  "x-upload-legacy-listener-evidence": {
+    "build": "2.26.43.72",
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#legacy-concrete-listener-handoff-2026-11-04",
+    "finding": "Concrete listener and conditional asynchronous handoff confirmed static; final manager mapping remains unknown."
   }
 }

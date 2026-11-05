@@ -4655,3 +4655,11 @@ untracked identity action stays unapplied. [Redacted record](adv-details-seriali
 finds no direct invoke callers, which does not establish factory absence.
 Configured factory membership and actual dispatch remain unknown.
 [Exports and limits](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-iq-handler-registration-boundary-2026-11-04). No production change or live traffic.
+
+## 2026-11-04 — Concrete legacy listener handoff
+
+**Confirmed static (43.72):** normal setup binds1lZ.A01 to1lY;
+CPm uses arg1 and conditionally copies events to0ln/0m2 or queues on1lY.
+A0Q-enabled77/78 use0ln; subsequent14o manager binding remains unknown.
+[Exports, branch boundaries and interface-search limits](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-concrete-listener-handoff-2026-11-04).
+No production change or live traffic.
