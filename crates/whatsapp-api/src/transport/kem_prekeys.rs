@@ -6,7 +6,8 @@
 //! `prekey_id` **and** `last_resort_key = 0` (docs/protocol/hybrid-incoming.md).
 //! Successful last-resort use therefore retains the key.
 //!
-//! Rows are produced by [`upload_rows_in`] only while the server's A/B
+//! Rows are produced by [`upload_rows_in`] and migrated [`add_rows_in`]
+//! only while the server's A/B
 //! property 21198 (`PQ_KEYS_UPLOAD_CODE`) is on, as 2.26.37.71 `13c.A03` does
 //! (docs/protocol/kem-prekey-inventory.md). Native generation and the initial
 //! `next_kyber_prekey_id` are untraced; ids start at 1 locally.
@@ -257,6 +258,38 @@ pub(crate) fn upload_rows_in(tx: &mut WriteTx<'_>, batch: usize) -> Result<Vec<S
             .take(1),
     );
     Ok(one_time)
+}
+
+/// Current-build migration predicate is an uploaded last-resort row
+/// (43.72 0WJ.A0z). The caller separately applies gate21198.
+pub(crate) fn migrated_in(tx: &WriteTx<'_>) -> Result<bool> {
+    Ok(all_rows(tx)?.iter().any(|r| r.last_resort && r.sent))
+}
+
+/// ADD uses ordinary unsent KEM rows only. 43.72 0Yl.A06 fills the
+/// configured inventory target; 0WJ.A1A selects an independent upload limit.
+/// Local persisted ID convention is retained; native cursor migration is open.
+pub(crate) fn add_rows_in(
+    tx: &mut WriteTx<'_>,
+    target: usize,
+    batch: usize,
+) -> Result<Vec<StoredKemPrekey>> {
+    let count = all_rows(tx)?
+        .iter()
+        .filter(|r| !r.last_resort && !r.sent)
+        .count();
+    for _ in count..target {
+        generate_in(tx, false)?;
+    }
+    let mut rows: Vec<_> = all_rows(tx)?
+        .into_iter()
+        .filter(|r| !r.last_resort && !r.sent)
+        .collect();
+    rows.truncate(batch.max(1));
+    for row in &rows {
+        row.validate(row.id)?;
+    }
+    Ok(rows)
 }
 
 /// `sent_to_server = 1` for the rows of an acknowledged batch.

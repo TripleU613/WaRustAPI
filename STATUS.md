@@ -1,3 +1,12 @@
+2026-11-04 — **Migrated success demand uses ADD reservations.**
+
+Legacy/PQ flags select families independently after uploaded-LR migration.
+Exact ADD shape, default inventory/batching and frozen reservation integrated.
+[Evidence, regressions and remaining gaps](docs/protocol/prekey-count-notifications.md#migrated-success-followup-add-2026-11-04).
+Validation: workspace/all-feature tests, strict Clippy, CLI reference,
+formatting, JSON, coverage freshness and repository hygiene passed.
+No live traffic.
+
 2026-11-04 — **Legacy success-to-ADD admission edge proven.**
 
 Both demand flags pass throughFcj/Fc8 toA0V after mark-sent work.

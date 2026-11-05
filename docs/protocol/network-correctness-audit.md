@@ -1203,3 +1203,12 @@ backoff, then either demandflag ->Fc8(selector7) ->A0V. Thus existing
 migration/admission/ADD evidence applies to legacy SET success too.
 Rust unconditional legacy SET followup remains a confirmed gap.
 [Exports and port requirements](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-success-to-migrated-add-admission-2026-11-04). No production change or live traffic.
+
+## 2026-11-04 — Migrated success followup ADD
+
+**Implemented offline,43.72 evidence:**independent success demand enters
+gated uploaded-LR ADD reservation; family-specific inventory/batch defaults
+and exact ADD children frozen transactionally. Existing cursors/SET wire
+and uncertainty/refusal holds retained. Actor/PQ-only and rollback/reopen
+regressions added. [Scope and remaining routing/config gaps](prekey-count-notifications.md#migrated-success-followup-add-2026-11-04).
+No live traffic or full replenishment parity claimed.

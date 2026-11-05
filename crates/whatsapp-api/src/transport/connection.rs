@@ -651,7 +651,7 @@ pub(crate) async fn drive(
                         if let Some(ready) = ready.take() { let _ = ready.send(()); }
                         // LX/DNq.run: unsent prekeys (or a store that never generated any) upload at start.
                         if super::prekeys::wants_upload(&store)? {
-                            maybe_upload(&store, &account, &link, &mut upload, &mut upload_rounds).await?;
+                            maybe_upload(&store, &account, &link, &mut upload, &mut upload_rounds, None).await?;
                         }
                         // SyncDevicesJob default preset: pending users are queried interactively.
                         if let Some((query, node)) = device_cursor.begin_next(&store, device_context)? {
@@ -702,9 +702,9 @@ pub(crate) async fn drive(
                     }
                     if upload.as_ref().is_some_and(|u| u.matches(&node)) {
                         let outcome = upload.take().expect("matched pending upload").settle(&store, &node)?;
-                        // LX/Bor.A03: list/@count_low=true schedules another legacy upload.
-                        if outcome.accepted && outcome.count_low {
-                            maybe_upload(&store, &account, &link, &mut upload, &mut upload_rounds).await?;
+                        // 43.72 Fcj3/Fc8(7): success demand enters migrated ADD admission.
+                        if outcome.accepted && (outcome.count_low || outcome.pq_count_low) {
+                            maybe_upload(&store, &account, &link, &mut upload, &mut upload_rounds, Some((outcome.count_low, outcome.pq_count_low))).await?;
                         }
                         continue;
                     }
@@ -914,7 +914,7 @@ pub(crate) async fn drive(
                     // Its first-child legacy flag triggers upload even for an unknown count; PQ-only is inert.
                     link.send(&low_ack).await?;
                     if low.legacy_present {
-                        maybe_upload(&store, &account, &link, &mut upload, &mut upload_rounds).await?;
+                        maybe_upload(&store, &account, &link, &mut upload, &mut upload_rounds, None).await?;
                     }
                 }
                 super::outgoing::acknowledge(&store, &node)?;
@@ -1024,6 +1024,7 @@ async fn maybe_upload(
     link: &NodeLink,
     upload: &mut Option<super::prekeys::PendingUpload>,
     rounds: &mut u32,
+    demand: Option<(bool, bool)>,
 ) -> Result<()> {
     if upload.is_some() || *rounds >= super::prekeys::MAX_ROUNDS_PER_SESSION {
         return Ok(());
@@ -1038,10 +1039,15 @@ async fn maybe_upload(
             return Ok(());
         }
     };
-    if super::prekeys::unsent_ids(store)?.is_empty() {
+    if demand.is_none() && super::prekeys::unsent_ids(store)?.is_empty() {
         super::prekeys::generate(store)?;
     }
-    if let Some((pending, node)) = super::prekeys::begin_upload(store, account, &signed)? {
+    let reserved = if let Some((legacy, pq)) = demand {
+        super::prekeys::begin_followup_upload(store, account, &signed, legacy, pq)?
+    } else {
+        super::prekeys::begin_upload(store, account, &signed)?
+    };
+    if let Some((pending, node)) = reserved {
         *rounds += 1;
         *upload = Some(pending);
         link.send(&node).await?;
@@ -3867,8 +3873,14 @@ mod tests {
             "reserved before the write"
         );
         reply.send(Ok(())).unwrap();
-        // count_low on the result schedules one more batch of freshly generated keys.
+        // 43.72 legacy success enters A0V: non-migrated accounts do not ADD.
         fake.deliver(result_for(&iq, true)).await;
+        fake.nothing_written(Duration::from_millis(200)).await;
+        fake.deliver(count_notification("FOLLOW", "count", "0"))
+            .await;
+        let (ack, write) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        write.send(Ok(())).unwrap();
         let (second, reply) = fake.written().await;
         let second_ids = assert_upload(&second);
         assert_eq!(second_ids.len(), 50);
@@ -3927,6 +3939,63 @@ mod tests {
         assert!(unsent_ids(&store).unwrap().is_empty());
         assert_eq!(summary(&store).unwrap().uncertain, 50);
         fake.stop_cleanly().await;
+    }
+
+    #[tokio::test]
+    async fn pq_only_success_demand_writes_add_without_legacy_or_last_resort() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = registered_store(&dir.path().join("pq-add-actor.redb"));
+        let prop = super::super::abprops::queue(&store).unwrap();
+        super::super::actions::reserve_pending(&store).unwrap();
+        super::super::actions::record_reply(
+            &store,
+            &Node::new("iq")
+                .attr("id", prop.as_str())
+                .attr("type", "result")
+                .children(vec![Node::new("props").attr("hash", "fixture").children(
+                    vec![Node::new("prop").attr("config_code", "21198").attr("config_value", "1")],
+                )]),
+        )
+        .unwrap();
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let (set, write) = fake.written().await;
+        assert!(set.child("pq_last_resort_key").is_some());
+        write.send(Ok(())).unwrap();
+        fake.deliver(
+            Node::new("iq")
+                .attr("id", set.get_attr("id").unwrap().as_text().unwrap())
+                .attr("type", "result")
+                .children(vec![Node::new("pq_list").attr("count_low", "true")]),
+        )
+        .await;
+        let (add, write) = fake.written().await;
+        assert_eq!(
+            add.child_nodes()
+                .iter()
+                .map(|n| n.description.as_str())
+                .collect::<Vec<_>>(),
+            ["op", "pq_list"]
+        );
+        assert_eq!(add.child("pq_list").unwrap().child_nodes().len(), 10);
+        assert_eq!(
+            add.child("op")
+                .unwrap()
+                .get_attr("mode")
+                .and_then(|v| v.as_text()),
+            Some("add")
+        );
+        write.send(Ok(())).unwrap();
+        fake.deliver(result_for(&add, false)).await;
+        fake.nothing_written(Duration::from_millis(200)).await;
+        fake.stop_cleanly().await;
+        assert_eq!(
+            super::super::prekeys::summary(&store)
+                .unwrap()
+                .batches
+                .get("server_acknowledged"),
+            Some(&2)
+        );
     }
 
     #[tokio::test]

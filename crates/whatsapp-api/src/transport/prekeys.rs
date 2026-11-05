@@ -30,6 +30,12 @@
 //!   (`LX/1Dz.A0c`, `needsMoreLegacyPrekeys`). Errors go through
 //!   `LX/13c.A02` backoff; this client records a refusal and does not retry.
 //!
+//! Current-build 43.72 success followup (14o77/Fcj3/Fc8(7)/A0V): after
+//! uploaded-LR migration with gate21198, reserve ADD for the independent demand
+//! flags. Defaults: legacy inventory812/batch200, ordinary KEM inventory200/
+//! batch10. Effective MobileConfig and native cursor migration remain unported;
+//! existing local cursor conventions and uncertain requests are preserved.
+//!
 //! Local policy: a batch is reserved durably before its socket write; keys in
 //! an uncertain batch are never re-sent. Startup generates first when nothing
 //! is unsent and then uploads in the same session (the APK does these on
@@ -245,47 +251,49 @@ pub fn unsent_ids(store: &ProtocolStore) -> Result<Vec<u32>> {
 /// Generate new keys the way `LX/0ko.A06` does. Returns how many were added.
 /// Never overwrites an existing record: an id collision after wrap-around fails.
 pub fn generate(store: &ProtocolStore) -> Result<usize> {
-    store.write(|tx| {
-        let unsent = unsent_in(&*tx)?.len();
-        if unsent >= UNSENT_TARGET {
-            return Ok(0);
+    store.write(generate_in)
+}
+
+fn generate_in(tx: &mut WriteTx<'_>) -> Result<usize> {
+    let unsent = unsent_in(&*tx)?.len();
+    if unsent >= UNSENT_TARGET {
+        return Ok(0);
+    }
+    let count = (UNSENT_TARGET - unsent).min(GENERATE_PER_CALL);
+    let next: u32 = tx
+        .get_json(Table::Checkpoints, NEXT_ID_KEY, 1)?
+        .unwrap_or(0);
+    let mut rng = rand::rng();
+    for i in 0..count as u32 {
+        let id = (next.wrapping_add(i) % ID_MODULUS) + 1;
+        if tx
+            .get(Table::Prekeys, record_key(id).as_bytes(), 1)?
+            .is_some()
+        {
+            return Err(invalid("prekey id collision; refusing to overwrite"));
         }
-        let count = (UNSENT_TARGET - unsent).min(GENERATE_PER_CALL);
-        let next: u32 = tx
-            .get_json(Table::Checkpoints, NEXT_ID_KEY, 1)?
-            .unwrap_or(0);
-        let mut rng = rand::rng();
-        for i in 0..count as u32 {
-            let id = (next.wrapping_add(i) % ID_MODULUS) + 1;
-            if tx
-                .get(Table::Prekeys, record_key(id).as_bytes(), 1)?
-                .is_some()
-            {
-                return Err(invalid("prekey id collision; refusing to overwrite"));
-            }
-            let pair = KeyPair::generate(&mut rng);
-            let record = PreKeyRecord::new(id.into(), &pair)
-                .serialize()
-                .map_err(|_| invalid("cannot serialize generated prekey"))?;
-            tx.put_json(Table::Prekeys, record_key(id).as_bytes(), 1, &record)?;
-            tx.put_json(
-                Table::Checkpoints,
-                meta_key(id).as_bytes(),
-                1,
-                &Meta {
-                    status: KeyStatus::Unsent,
-                    batch: None,
-                },
-            )?;
-        }
+        let pair = KeyPair::generate(&mut rng);
+        let record = PreKeyRecord::new(id.into(), &pair)
+            .serialize()
+            .map_err(|_| invalid("cannot serialize generated prekey"))?;
+        tx.put_json(Table::Prekeys, record_key(id).as_bytes(), 1, &record)?;
         tx.put_json(
             Table::Checkpoints,
-            NEXT_ID_KEY,
+            meta_key(id).as_bytes(),
             1,
-            &(next.wrapping_add(count as u32) % ID_MODULUS),
+            &Meta {
+                status: KeyStatus::Unsent,
+                batch: None,
+            },
         )?;
-        Ok(count)
-    })
+    }
+    tx.put_json(
+        Table::Checkpoints,
+        NEXT_ID_KEY,
+        1,
+        &(next.wrapping_add(count as u32) % ID_MODULUS),
+    )?;
+    Ok(count)
 }
 
 fn be3(id: u32) -> Vec<u8> {
@@ -396,6 +404,27 @@ pub fn begin_upload(
     account: &AccountRecord,
     signed: &[u8],
 ) -> Result<Option<(PendingUpload, Node)>> {
+    begin_upload_selected(store, account, signed, None)
+}
+
+/// Follow-up demand from the legacy success callback (43.72 Fcj3/Fc8(7)
+/// ->13z.A0V). Non-migrated accounts do not enter this ADD path.
+pub(crate) fn begin_followup_upload(
+    store: &ProtocolStore,
+    account: &AccountRecord,
+    signed: &[u8],
+    legacy: bool,
+    pq: bool,
+) -> Result<Option<(PendingUpload, Node)>> {
+    begin_upload_selected(store, account, signed, Some((legacy, pq)))
+}
+
+fn begin_upload_selected(
+    store: &ProtocolStore,
+    account: &AccountRecord,
+    signed: &[u8],
+    demand: Option<(bool, bool)>,
+) -> Result<Option<(PendingUpload, Node)>> {
     let identity = account
         .signal_identity
         .as_ref()
@@ -426,8 +455,9 @@ pub fn begin_upload(
                 tracing::warn!("prekey upload held: saved refusal; retry policy unimplemented");
                 return Ok(None);
             }
-            let ids: Vec<u32> = unsent_in(&*tx)?.into_iter().take(UNSENT_TARGET).collect();
-            if ids.is_empty() {
+            let add = demand.is_some();
+            let (legacy, pq) = demand.unwrap_or((true, pq_enabled));
+            if add && (!(legacy || pq) || !pq_enabled || !super::kem_prekeys::migrated_in(tx)?) {
                 return Ok(None);
             }
             // Kyber keys ride in the same IQ only while the server enables them
@@ -445,11 +475,22 @@ pub fn begin_upload(
                 tracing::warn!("prekey upload held: prior KEM batch outcome unknown");
                 return Ok(None);
             }
-            let kem_rows = if pq_enabled {
+            // Native ADD replenishes the inventory in <=50-key chunks.
+            // Retain this store's historical local cursor convention.
+            if add && legacy { while generate_in(tx)? != 0 {} }
+            // Declared 43.72 default: legacy ADD batch200 (EMZ0x74cb).
+            // Effective MobileConfig values remain unported, as with PQ limits.
+            let ids: Vec<u32> = if legacy { unsent_in(&*tx)?.into_iter().take(if add { 200 } else { UNSENT_TARGET }).collect() } else { Vec::new() };
+            if ids.is_empty() && !add { return Ok(None); }
+            let kem_rows = if add && pq {
+                // 08Y defaults:21200 inventory200,21201 batch10. Distinct limits.
+                super::kem_prekeys::add_rows_in(tx, 200, pq_batch)?
+            } else if !add && pq_enabled {
                 super::kem_prekeys::upload_rows_in(tx, pq_batch)?
             } else {
                 Vec::new()
             };
+            if ids.is_empty() && kem_rows.is_empty() { return Ok(None); }
             let mut keys = Vec::with_capacity(ids.len());
             for id in &ids {
                 let record: Vec<u8> = tx
@@ -474,7 +515,15 @@ pub fn begin_upload(
             // Build/sign before the reservation commits. A local construction
             // failure must roll back legacy metadata and newly generated KEM rows.
             let kem_children = kem_upload_children(identity, &kem_rows)?;
-            let node = Node::new("iq")
+            let node = if add {
+                // 43.72 13z.A0B ADD: op, optional list, optional pq_list;
+                // no identity/registration/type/skey/last-resort child.
+                let mut children = vec![Node::new("op").attr("mode", "add")];
+                if !keys.is_empty() { children.push(Node::new("list").children(keys)); }
+                Node::new("iq").attr("id", iq_id.as_str()).attr("xmlns", "encrypt")
+                    .attr("type", "set").attr("to", Jid::parse("s.whatsapp.net")?).children(children)
+            } else {
+                Node::new("iq")
                 .attr("id", iq_id.as_str())
                 .attr("xmlns", "encrypt")
                 .attr("type", "set")
@@ -489,7 +538,8 @@ pub fn begin_upload(
                         Node::new("value").bytes(signed_public.public_key_bytes().to_vec()),
                         Node::new("signature").bytes(signed_signature.to_vec()),
                     ]),
-                ]);
+                ])
+            };
             let node = if kem_children.is_empty() {
                 node
             } else {
@@ -501,7 +551,7 @@ pub fn begin_upload(
             // This is inspection evidence, never authority to replay an uncertain IQ.
             let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(&node)?;
             tx.put_json(Table::Checkpoints, request_key(&iq_id).as_bytes(), 1,
-            &serde_json::json!({"mode":"set", "dictionary":"comparison_2_26_37_71", "wire":wire}))?;
+            &serde_json::json!({"mode":if add { "add" } else { "set" }, "dictionary":"comparison_2_26_37_71", "wire":wire}))?;
             let kem_ids: Vec<u32> = kem_rows.iter().map(|r| r.id).collect();
             tx.put_json(
                 Table::Checkpoints,
@@ -1761,6 +1811,176 @@ mod tests {
                     .read(|tx| tx.scan(Table::Checkpoints, 1, 4096))
                     .unwrap(),
                 before
+            );
+        }
+    }
+
+    #[test]
+    fn migrated_followups_reserve_add_for_exact_demand_and_freeze_wire() {
+        for (legacy, pq) in [(true, false), (false, true), (true, true)] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("add.redb");
+            let store = open(&path);
+            let (account, signed) = account_and_signed();
+            assert!(
+                begin_followup_upload(&store, &account, &signed, legacy, pq)
+                    .unwrap()
+                    .is_none()
+            );
+            let prop = super::super::abprops::queue(&store).unwrap();
+            super::super::actions::reserve_pending(&store).unwrap();
+            super::super::actions::record_reply(
+                &store,
+                &Node::new("iq")
+                    .attr("id", prop.as_str())
+                    .attr("type", "result")
+                    .children(vec![Node::new("props").attr("hash", "fixture").children(
+                        vec![
+                            Node::new("prop")
+                                .attr("config_code", "21198")
+                                .attr("config_value", "1"),
+                        ],
+                    )]),
+            )
+            .unwrap();
+            // Gate alone does not prove uploaded-LR migration or generate ADD keys.
+            assert!(
+                begin_followup_upload(&store, &account, &signed, legacy, pq)
+                    .unwrap()
+                    .is_none()
+            );
+            generate(&store).unwrap();
+            let (initial, set) = begin_upload(&store, &account, &signed).unwrap().unwrap();
+            initial
+                .settle(
+                    &store,
+                    &Node::new("iq")
+                        .attr("id", initial.iq_id.as_str())
+                        .attr("type", "result"),
+                )
+                .unwrap();
+            let frozen_set: serde_json::Value = store
+                .read(|tx| {
+                    tx.get_json(
+                        Table::Checkpoints,
+                        request_key(&initial.iq_id).as_bytes(),
+                        1,
+                    )
+                })
+                .unwrap()
+                .unwrap();
+            assert!(set.child("pq_last_resort_key").is_some());
+            let snapshot = |store: &ProtocolStore| {
+                store
+                    .read(|tx| {
+                        [Table::Prekeys, Table::Checkpoints]
+                            .into_iter()
+                            .map(|t| tx.scan(t, 1, 10000))
+                            .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot(&store);
+            let mut wrong = account.clone();
+            wrong.signal_identity.as_mut().unwrap().0.public[0] ^= 1;
+            assert!(begin_followup_upload(&store, &wrong, &signed, legacy, pq).is_err());
+            assert_eq!(
+                snapshot(&store),
+                before,
+                "ADD construction failure must roll back inventory and reservation"
+            );
+            let (pending, add) = begin_followup_upload(&store, &account, &signed, legacy, pq)
+                .unwrap()
+                .unwrap();
+            let expected: Vec<&str> = match (legacy, pq) {
+                (true, true) => vec!["op", "list", "pq_list"],
+                (true, false) => vec!["op", "list"],
+                _ => vec!["op", "pq_list"],
+            };
+            assert_eq!(
+                add.child_nodes()
+                    .iter()
+                    .map(|n| n.description.as_str())
+                    .collect::<Vec<_>>(),
+                expected
+            );
+            assert_eq!(
+                add.child("op")
+                    .unwrap()
+                    .get_attr("mode")
+                    .and_then(|v| v.as_text()),
+                Some("add")
+            );
+            assert_eq!(pending.ids.len(), if legacy { 200 } else { 0 });
+            assert_eq!(pending.kem_ids.len(), if pq { 10 } else { 0 });
+            if legacy {
+                assert_eq!(summary(&store).unwrap().unsent, 612);
+            }
+            let checkpoint: serde_json::Value = store
+                .read(|tx| {
+                    tx.get_json(
+                        Table::Checkpoints,
+                        request_key(&pending.iq_id).as_bytes(),
+                        1,
+                    )
+                })
+                .unwrap()
+                .unwrap();
+            assert_eq!(checkpoint["mode"], "add");
+            assert_eq!(
+                checkpoint["wire"],
+                serde_json::json!(
+                    Encoder::new(TokenDictionary::comparison_2_26_37_71())
+                        .encode(&add)
+                        .unwrap()
+                )
+            );
+            assert_eq!(
+                store
+                    .read(|tx| tx.get_json::<serde_json::Value>(
+                        Table::Checkpoints,
+                        request_key(&initial.iq_id).as_bytes(),
+                        1
+                    ))
+                    .unwrap()
+                    .unwrap(),
+                frozen_set
+            );
+            if pq {
+                assert!(
+                    begin_followup_upload(&store, &account, &signed, legacy, pq)
+                        .unwrap()
+                        .is_none(),
+                    "uncertain KEM reservation must hold"
+                );
+            }
+            drop(store);
+            let store = open(&path);
+            if pq {
+                assert!(
+                    begin_followup_upload(&store, &account, &signed, legacy, pq)
+                        .unwrap()
+                        .is_none()
+                );
+            }
+            pending
+                .settle(
+                    &store,
+                    &Node::new("iq")
+                        .attr("id", pending.iq_id.as_str())
+                        .attr("type", "result"),
+                )
+                .unwrap();
+            assert_eq!(
+                store
+                    .read(|tx| tx.get_json::<serde_json::Value>(
+                        Table::Checkpoints,
+                        request_key(&pending.iq_id).as_bytes(),
+                        1
+                    ))
+                    .unwrap()
+                    .unwrap(),
+                checkpoint
             );
         }
     }

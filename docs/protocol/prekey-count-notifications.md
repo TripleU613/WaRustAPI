@@ -474,3 +474,47 @@ backoff, then either demandflag ->Fc8(selector7) ->A0V. Thus existing
 migration/admission/ADD evidence applies to legacy SET success too.
 Rust unconditional legacy SET followup remains a confirmed gap.
 [Exports and port requirements](apk/2.26.43.72-prekey-upload-replies/README.md#legacy-success-to-migrated-add-admission-2026-11-04). No production change or live traffic.
+
+## Migrated success followup ADD (2026-11-04)
+
+**Implemented offline from confirmed43.72 entry/writer evidence.** Legacy
+success14o77 ->Fcj3 marks keys sent, thenFc8(7) ->A0V uses both demand
+flags. A0V requires gate21198 and an uploadedLR, then selects ADD. See
+prekey-upload-replies README legacy-success-to-migrated-add-admission and
+ADD writer/selection sections.
+
+Rust's success actor now passes legacy/PQ flags independently to a dedicated
+reservation path; non-migrated/gate-off demand does not trigger another SET.
+Migrated ADD children are exactly op(mode=add), optional legacylist, optional
+ordinarypq_list. No identity/registration/type/skey/LR child is emitted.
+Initial startup and notification paths retain their existing SET behavior;
+this is an entry-specific port, not a claim that all routing is complete.
+
+Requested legacy inventory fills toward812 in <=50-key chunks inside the
+reservation transaction, then selects up to200. Requested ordinary KEM
+inventory fills toward200 and selects up to10, excluding LR. These are the
+retained declared defaults, **not observed/effective MobileConfig values**.
+Existing local legacy/KEM cursor conventions, collision/consumed-ID refusal
+and stored key bytes are preserved; no reinterpretation or reseeding.
+Native cursor migration, configuration application and direct-distribution
+metadata parity remain open. ADD still uses existing registered-material
+readiness validation, which is stricter than the native ADD wire requirements.
+
+Generation, identity/signing checks, reservations, batch IDs and exact encoded
+wire/mode=add commit together. Existing mode=set checkpoints are untouched.
+OutcomeUnknown KEM batches and saved refusals still hold new requests.
+Result/error settlement uses the same bound key lists and transactional
+ownership checks; no uncertain replay or refusal reset is introduced.
+The local per-session round cap remains.
+
+Regression covers all three demand combinations, gate-only/non-migrated
+refusal, legacy812/200 and KEM200/10 selection, exact omitted children,
+construction-failure rollback, encoded wire/mode freeze, reopen, original SET
+checkpoint preservation and uncertain KEM hold. A synthetic actor confirms
+PQ-only result demand emits op+pq_list ADD and settles it. Prior actor test
+now verifies non-migrated success does not unconditionally send another SET;
+subsequent independent count notifications keep their existing path.
+
+**Remaining:** notification/startup current routing, effective config values,
+full retry/backoff/reset strategy and native cursor/storage migration. No live
+account operation or complete native replenishment parity is claimed.

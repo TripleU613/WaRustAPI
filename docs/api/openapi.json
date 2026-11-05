@@ -15411,5 +15411,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-prekey-upload-replies/README.md#legacy-success-to-migrated-add-admission-2026-11-04",
     "description": "Static43.72 legacy success ->Fcj3 ->Fc8(7) ->A0V migrated ADD admission proven. Rust followup strategy remains incomplete; no automatic ADD capability added."
+  },
+  "x-prekey-migrated-success-followup-add": {
+    "x-cli": "whatsapp-cli listen (existing comparison actor)",
+    "x-transport": [
+      "comparison public-client"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/prekey-count-notifications.md#migrated-success-followup-add-2026-11-04",
+    "description": "Offline migrated-success followup: gate21198 plus uploadedLR admits ADD using independent legacy/PQ demand. Exact op/list/pq_list layout, defaults inventory812/200 and batches200/10, transactionally frozen mode/wire. Preserves historical cursors/SET requests and uncertainty/refusal holds. Effective MobileConfig, notification/startup current routing and native retry strategy remain incomplete. No new HTTP route."
   }
 }
