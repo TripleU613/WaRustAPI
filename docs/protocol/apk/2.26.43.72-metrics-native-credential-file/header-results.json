@@ -1,0 +1,321 @@
+{
+  "scope": "synthetic local header admission only; no file I/O, reconstruction or crypto validation",
+  "unicorn_version": "2.1.4",
+  "instruction_cap_per_case": 100000,
+  "timeout_microseconds_per_case": 1000000,
+  "cases": [
+    {
+      "case": "valid",
+      "bytes": 125,
+      "native_admitted": true,
+      "independent_header_check": true,
+      "imports": [
+        "MCFDataGetLength",
+        "MCFSizeTFromInt32",
+        "MCFRangeMake",
+        "MCFDataGetLength",
+        "MCFDataGetBytes",
+        "MCFDataGetBytePtr"
+      ]
+    },
+    {
+      "case": "header-only-zero-lengths",
+      "bytes": 25,
+      "native_admitted": true,
+      "independent_header_check": true,
+      "imports": [
+        "MCFDataGetLength",
+        "MCFSizeTFromInt32",
+        "MCFRangeMake",
+        "MCFDataGetLength",
+        "MCFDataGetBytes",
+        "MCFDataGetBytePtr"
+      ]
+    },
+    {
+      "case": "trailing-bytes",
+      "bytes": 130,
+      "native_admitted": true,
+      "independent_header_check": true,
+      "imports": [
+        "MCFDataGetLength",
+        "MCFSizeTFromInt32",
+        "MCFRangeMake",
+        "MCFDataGetLength",
+        "MCFDataGetBytes",
+        "MCFDataGetBytePtr"
+      ]
+    },
+    {
+      "case": "empty",
+      "bytes": 0,
+      "native_admitted": false,
+      "independent_header_check": false,
+      "imports": [
+        "MCFDataGetLength",
+        "MCFSizeTFromInt32"
+      ]
+    },
+    {
+      "case": "short-header",
+      "bytes": 24,
+      "native_admitted": false,
+      "independent_header_check": false,
+      "imports": [
+        "MCFDataGetLength",
+        "MCFSizeTFromInt32"
+      ]
+    },
+    {
+      "case": "wrong-version",
+      "bytes": 125,
+      "native_admitted": false,
+      "independent_header_check": false,
+      "imports": [
+        "MCFDataGetLength",
+        "MCFSizeTFromInt32",
+        "MCFRangeMake",
+        "MCFDataGetLength",
+        "MCFDataGetBytes"
+      ]
+    },
+    {
+      "case": "negative-count",
+      "bytes": 125,
+      "native_admitted": false,
+      "independent_header_check": false,
+      "imports": [
+        "MCFDataGetLength",
+        "MCFSizeTFromInt32",
+        "MCFRangeMake",
+        "MCFDataGetLength",
+        "MCFDataGetBytes",
+        "MCFDataGetBytePtr"
+      ]
+    },
+    {
+      "case": "max-count",
+      "bytes": 125,
+      "native_admitted": true,
+      "independent_header_check": true,
+      "imports": [
+        "MCFDataGetLength",
+        "MCFSizeTFromInt32",
+        "MCFRangeMake",
+        "MCFDataGetLength",
+        "MCFDataGetBytes",
+        "MCFDataGetBytePtr"
+      ]
+    },
+    {
+      "case": "zero-count",
+      "bytes": 125,
+      "native_admitted": true,
+      "independent_header_check": true,
+      "imports": [
+        "MCFDataGetLength",
+        "MCFSizeTFromInt32",
+        "MCFRangeMake",
+        "MCFDataGetLength",
+        "MCFDataGetBytes",
+        "MCFDataGetBytePtr"
+      ]
+    },
+    {
+      "case": "negative-expiry",
+      "bytes": 125,
+      "native_admitted": false,
+      "independent_header_check": false,
+      "imports": [
+        "MCFDataGetLength",
+        "MCFSizeTFromInt32",
+        "MCFRangeMake",
+        "MCFDataGetLength",
+        "MCFDataGetBytes",
+        "MCFDataGetBytePtr"
+      ]
+    },
+    {
+      "case": "zero-expiry",
+      "bytes": 125,
+      "native_admitted": true,
+      "independent_header_check": true,
+      "imports": [
+        "MCFDataGetLength",
+        "MCFSizeTFromInt32",
+        "MCFRangeMake",
+        "MCFDataGetLength",
+        "MCFDataGetBytes",
+        "MCFDataGetBytePtr"
+      ]
+    },
+    {
+      "case": "max-expiry",
+      "bytes": 125,
+      "native_admitted": true,
+      "independent_header_check": true,
+      "imports": [
+        "MCFDataGetLength",
+        "MCFSizeTFromInt32",
+        "MCFRangeMake",
+        "MCFDataGetLength",
+        "MCFDataGetBytes",
+        "MCFDataGetBytePtr"
+      ]
+    },
+    {
+      "case": "negative-length-0",
+      "bytes": 125,
+      "native_admitted": false,
+      "independent_header_check": false,
+      "imports": [
+        "MCFDataGetLength",
+        "MCFSizeTFromInt32",
+        "MCFRangeMake",
+        "MCFDataGetLength",
+        "MCFDataGetBytes",
+        "MCFDataGetBytePtr"
+      ]
+    },
+    {
+      "case": "oversized-length-0",
+      "bytes": 125,
+      "native_admitted": false,
+      "independent_header_check": false,
+      "imports": [
+        "MCFDataGetLength",
+        "MCFSizeTFromInt32",
+        "MCFRangeMake",
+        "MCFDataGetLength",
+        "MCFDataGetBytes",
+        "MCFDataGetBytePtr"
+      ]
+    },
+    {
+      "case": "negative-length-1",
+      "bytes": 125,
+      "native_admitted": false,
+      "independent_header_check": false,
+      "imports": [
+        "MCFDataGetLength",
+        "MCFSizeTFromInt32",
+        "MCFRangeMake",
+        "MCFDataGetLength",
+        "MCFDataGetBytes",
+        "MCFDataGetBytePtr"
+      ]
+    },
+    {
+      "case": "oversized-length-1",
+      "bytes": 125,
+      "native_admitted": false,
+      "independent_header_check": false,
+      "imports": [
+        "MCFDataGetLength",
+        "MCFSizeTFromInt32",
+        "MCFRangeMake",
+        "MCFDataGetLength",
+        "MCFDataGetBytes",
+        "MCFDataGetBytePtr"
+      ]
+    },
+    {
+      "case": "negative-length-2",
+      "bytes": 125,
+      "native_admitted": false,
+      "independent_header_check": false,
+      "imports": [
+        "MCFDataGetLength",
+        "MCFSizeTFromInt32",
+        "MCFRangeMake",
+        "MCFDataGetLength",
+        "MCFDataGetBytes",
+        "MCFDataGetBytePtr"
+      ]
+    },
+    {
+      "case": "oversized-length-2",
+      "bytes": 125,
+      "native_admitted": false,
+      "independent_header_check": false,
+      "imports": [
+        "MCFDataGetLength",
+        "MCFSizeTFromInt32",
+        "MCFRangeMake",
+        "MCFDataGetLength",
+        "MCFDataGetBytes",
+        "MCFDataGetBytePtr"
+      ]
+    },
+    {
+      "case": "truncated-1",
+      "bytes": 124,
+      "native_admitted": false,
+      "independent_header_check": false,
+      "imports": [
+        "MCFDataGetLength",
+        "MCFSizeTFromInt32",
+        "MCFRangeMake",
+        "MCFDataGetLength",
+        "MCFDataGetBytes",
+        "MCFDataGetBytePtr"
+      ]
+    },
+    {
+      "case": "truncated-4",
+      "bytes": 121,
+      "native_admitted": false,
+      "independent_header_check": false,
+      "imports": [
+        "MCFDataGetLength",
+        "MCFSizeTFromInt32",
+        "MCFRangeMake",
+        "MCFDataGetLength",
+        "MCFDataGetBytes",
+        "MCFDataGetBytePtr"
+      ]
+    },
+    {
+      "case": "truncated-5",
+      "bytes": 120,
+      "native_admitted": false,
+      "independent_header_check": false,
+      "imports": [
+        "MCFDataGetLength",
+        "MCFSizeTFromInt32",
+        "MCFRangeMake",
+        "MCFDataGetLength",
+        "MCFDataGetBytes",
+        "MCFDataGetBytePtr"
+      ]
+    },
+    {
+      "case": "truncated-68",
+      "bytes": 57,
+      "native_admitted": false,
+      "independent_header_check": false,
+      "imports": [
+        "MCFDataGetLength",
+        "MCFSizeTFromInt32",
+        "MCFRangeMake",
+        "MCFDataGetLength",
+        "MCFDataGetBytes",
+        "MCFDataGetBytePtr"
+      ]
+    },
+    {
+      "case": "truncated-100",
+      "bytes": 25,
+      "native_admitted": false,
+      "independent_header_check": false,
+      "imports": [
+        "MCFDataGetLength",
+        "MCFSizeTFromInt32",
+        "MCFRangeMake",
+        "MCFDataGetLength",
+        "MCFDataGetBytes",
+        "MCFDataGetBytePtr"
+      ]
+    }
+  ]
+}

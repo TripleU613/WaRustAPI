@@ -1,0 +1,57 @@
+[
+  {
+    "name": "credential-save",
+    "start_va": "0x729540",
+    "end_va": "0x7298b8"
+  },
+  {
+    "name": "credential-load",
+    "start_va": "0x72a740",
+    "end_va": "0x72ab10"
+  },
+  {
+    "name": "load-completion",
+    "start_va": "0x72ab10",
+    "end_va": "0x72acd8"
+  },
+  {
+    "name": "credential-path",
+    "start_va": "0x6fe6a0",
+    "end_va": "0x6fe6e0"
+  },
+  {
+    "name": "header-byte-reader",
+    "start_va": "0x72c9f4",
+    "end_va": "0x72ca94"
+  },
+  {
+    "name": "clone-arguments",
+    "start_va": "0xbe1c4c",
+    "end_va": "0xbe1c58"
+  },
+  {
+    "name": "file-open-arguments",
+    "start_va": "0xbedd24",
+    "end_va": "0xbedd30"
+  },
+  {
+    "name": "file-write-result",
+    "start_va": "0xbe72c4",
+    "end_va": "0xbe72d0"
+  },
+  {
+    "name": "file-close",
+    "start_va": "0x734448",
+    "end_va": "0x7344d4"
+  },
+  {
+    "name": "read-result-arguments",
+    "start_va": "0xbe20a4",
+    "end_va": "0xbe20b0"
+  },
+  {
+    "name": "file-read-wrapper",
+    "start_va": "0x734174",
+    "end_va": "0x734210"
+  }
+]

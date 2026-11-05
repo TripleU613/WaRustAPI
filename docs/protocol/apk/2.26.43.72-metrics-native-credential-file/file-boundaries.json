@@ -1,0 +1,158 @@
+{
+  "scope": "static local credential persistence, not account/message replay or live I/O",
+  "direct_path_helper_callers": [
+    "0x729684",
+    "0x72a7c4"
+  ],
+  "reader_requested_bytes": 537,
+  "header_bytes": 25,
+  "header_version": 2,
+  "header_layout": [
+    {
+      "offset": 0,
+      "bytes": 1,
+      "field": "version"
+    },
+    {
+      "offset": 1,
+      "bytes": 4,
+      "field": "signed remaining-use count"
+    },
+    {
+      "offset": 5,
+      "bytes": 8,
+      "field": "signed raw expiry"
+    },
+    {
+      "offset": 13,
+      "bytes": 4,
+      "field": "first data length"
+    },
+    {
+      "offset": 17,
+      "bytes": 4,
+      "field": "second data length"
+    },
+    {
+      "offset": 21,
+      "bytes": 4,
+      "field": "optional third data length"
+    }
+  ],
+  "strings": [
+    {
+      "va": "0x133fe7",
+      "value": "/WAMMetadataPrivateCredential-%d"
+    },
+    {
+      "va": "0x127ceb",
+      "value": "WAMPrivateCredentialStore: Save Private Credential To Storage Failed"
+    },
+    {
+      "va": "0x127caa",
+      "value": "WAMPrivateCredentialStore: Create Private Credential File Failed"
+    },
+    {
+      "va": "0x112da0",
+      "value": "WAMPrivateCredentialStoreImplSavePrivateCredentialToStorage"
+    },
+    {
+      "va": "0x127c0c",
+      "value": "WAMPrivateCredentialStore: Deserialize Credential Failed"
+    },
+    {
+      "va": "0x10afee",
+      "value": "WAMPrivateCredentialStore: Read file failure"
+    }
+  ],
+  "windows": [
+    {
+      "name": "credential-save",
+      "start_va": "0x729540",
+      "end_va": "0x7298b8",
+      "file_offset": "0x725540",
+      "bytes": 888,
+      "sha256": "f24f4cb6b96438b0d360f9f20f8bd8a188937ef76a5d227ed2c214aa4dec6632"
+    },
+    {
+      "name": "credential-load",
+      "start_va": "0x72a740",
+      "end_va": "0x72ab10",
+      "file_offset": "0x726740",
+      "bytes": 976,
+      "sha256": "0fdcefa8c308268c9bde37af9395b4874facac80b1a0b4c1ff35aa46514aec1f"
+    },
+    {
+      "name": "load-completion",
+      "start_va": "0x72ab10",
+      "end_va": "0x72acd8",
+      "file_offset": "0x726b10",
+      "bytes": 456,
+      "sha256": "d2e1afbb0f3ccea5a9ed0cb41e7dd0b74c49ee8306433974a416f3d78f8b514f"
+    },
+    {
+      "name": "credential-path",
+      "start_va": "0x6fe6a0",
+      "end_va": "0x6fe6e0",
+      "file_offset": "0x6fa6a0",
+      "bytes": 64,
+      "sha256": "3350a6610ac05f5812aac5d3c3ed454ca9fec9a3f3ab1f8b1b7478576689a44a"
+    },
+    {
+      "name": "header-byte-reader",
+      "start_va": "0x72c9f4",
+      "end_va": "0x72ca94",
+      "file_offset": "0x7289f4",
+      "bytes": 160,
+      "sha256": "904ca9bf8f88781794304c3dca4e5e3f137ad0d70506c245cbc9243bb83d428c"
+    },
+    {
+      "name": "clone-arguments",
+      "start_va": "0xbe1c4c",
+      "end_va": "0xbe1c58",
+      "file_offset": "0xbddc4c",
+      "bytes": 12,
+      "sha256": "74e90a3c290acc4a7ce4dbd0bf52eefea6dc5b850fea6304df08075a30427ada"
+    },
+    {
+      "name": "file-open-arguments",
+      "start_va": "0xbedd24",
+      "end_va": "0xbedd30",
+      "file_offset": "0xbe9d24",
+      "bytes": 12,
+      "sha256": "df065badf00b9ce9671b34fc31adc873c3fd73e00b6f24c704d524620097abca"
+    },
+    {
+      "name": "file-write-result",
+      "start_va": "0xbe72c4",
+      "end_va": "0xbe72d0",
+      "file_offset": "0xbe32c4",
+      "bytes": 12,
+      "sha256": "9002fe13515d4bcaa68bbec09fa45e616eb4a835bfad48a1712d00d5d7b89751"
+    },
+    {
+      "name": "file-close",
+      "start_va": "0x734448",
+      "end_va": "0x7344d4",
+      "file_offset": "0x730448",
+      "bytes": 140,
+      "sha256": "5b5f38e9dd5cd806b8dbcad86ef5839edbb8c0fd996f5a4ecfa7a9480617b39b"
+    },
+    {
+      "name": "read-result-arguments",
+      "start_va": "0xbe20a4",
+      "end_va": "0xbe20b0",
+      "file_offset": "0xbde0a4",
+      "bytes": 12,
+      "sha256": "391f4fef255a085de28b98c46fd4b468b0daecc31baa33dcd62ba3ce6847e129"
+    },
+    {
+      "name": "file-read-wrapper",
+      "start_va": "0x734174",
+      "end_va": "0x734210",
+      "file_offset": "0x730174",
+      "bytes": 156,
+      "sha256": "3b8f4890a7c641c852b2b8a2df072930fb4aa18bcef099f4bb8ed418e654a368"
+    }
+  ]
+}

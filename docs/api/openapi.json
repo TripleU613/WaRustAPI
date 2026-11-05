@@ -16224,5 +16224,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-metrics-jni-method-cache/README.md",
     "description": "JNI_OnLoad parallel table/indexed-store proof binds cache0xc467f0 to exact JniBridge.jnidispatchIO descriptor. Five bounded native-loop fixtures cover complete/partial lookup and aggregate flag; a nonnull early slot does not prove whole initialization. Live JVM availability, whole-loader recovery and crypto remain open. No Rust/live capability added."
+  },
+  "x-metrics-native-credential-file-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK static and synthetic local credential-file evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-metrics-native-credential-file/README.md",
+    "description": "Paired native credential save/load uses version2 25-byte header; stored expiry/count override constructor defaults. 23 bounded header cases verify admission only, including zero lengths/trailing bytes. Write/close/count handling retained; wb, atomicity and broader recovery remain scoped. No real credentials, Rust runtime or live operation added."
   }
 }

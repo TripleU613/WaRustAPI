@@ -1,0 +1,3 @@
+            0x00bedd24      mov   x1, x21
+            0x00bedd28      mov   x0, x8
+            0x00bedd2c      ret

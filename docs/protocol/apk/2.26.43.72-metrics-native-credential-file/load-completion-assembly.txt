@@ -1,0 +1,114 @@
+            0x0072ab10      paciasp
+            0x0072ab14      sub   sp, sp, 0x50
+            0x0072ab18      stp   x29, x30, [sp, 0x10]
+            0x0072ab1c      str   x23, [sp, 0x20]
+            0x0072ab20      bl    0x49bbe0
+            0x0072ab24      add   x29, sp, 0x10
+            0x0072ab28      mrs   x23, tpidr_el0
+            0x0072ab2c      bl    0xbe4674
+            0x0072ab30      ldr   x8, [x23, 0x28]                      ; [0x28:4]=0xc306e8
+            0x0072ab34      bl    0xbe1e8c
+            0x0072ab38      bl    sym.imp.MCIParamsGetTypeID
+            0x0072ab3c      mov   x1, x19
+            0x0072ab40      bl    sym.imp.__MCFCastToClassNotNull
+            0x0072ab44      mov   x19, x0
+            0x0072ab48      bl    sym.imp.MCFWeakGetTypeID
+            0x0072ab4c      bl    0xbea06c
+            0x0072ab50      bl    0xbe392c
+            0x0072ab54      bl    sym.imp.MCIParamsUnpackWithTypeIDs
+            0x0072ab58      ldr   x19, [sp]
+            0x0072ab5c      bl    sym.imp.MCFWeakGetTypeID
+            0x0072ab60      mov   x1, x19
+            0x0072ab64      bl    sym.imp.__MCFCastToClassNotNull
+        ┌─< 0x0072ab68      cbz   x0, 0x72acb4
+        │   0x0072ab6c      bl    0x727aec
+        │   0x0072ab70      mov   x21, x0
+        │   0x0072ab74      bl    sym.imp.MCFWeakGetTypeID
+        │   0x0072ab78      mov   x22, x0
+        │   0x0072ab7c      bl    sym.imp.MCFWeakGetTypeID
+        │   0x0072ab80      mov   x1, x19
+        │   0x0072ab84      bl    sym.imp.__MCFCastToClassNotNull
+        │   0x0072ab88      bl    0xbe13d8
+        │   0x0072ab8c      bl    sym.imp.__MCFCastToClassNotNull
+        │   0x0072ab90      bl    sym.imp.MCFWeakCopyRef
+        │   0x0072ab94      bl    0xbe0a3c
+        │   0x0072ab98      bl    sym.imp.__MCFCastToClassNullableOwnedObject
+       ┌──< 0x0072ab9c      cbz   x0, 0x72acb4
+       ││   0x0072aba0      bl    0xbe4704
+       ││   0x0072aba4      adrp  x2, 0x144000
+       ││   0x0072aba8      add   x2, x2, 0xd70
+       ││   0x0072abac      mov   w1, 2
+       ││   0x0072abb0      mov   w3, w20
+       ││   0x0072abb4      bl    0x7216b0
+       ││   0x0072abb8      ldr   x21, [x19, 0xa8]                     ; [0xa8:4]=0x4000
+      ┌───< 0x0072abbc      cbz   x21, 0x72abdc
+      │││   0x0072abc0      ldr   x0, [x19, 0x28]                      ; [0x28:4]=0xc306e8
+      │││   0x0072abc4      adrp  x2, 0x124000
+      │││   0x0072abc8      add   x2, x2, 0x64d
+      │││   0x0072abcc      mov   w1, 2
+      │││   0x0072abd0      bl    0x7216b0
+      │││   0x0072abd4      mov   x0, x21
+      │││   0x0072abd8      bl    0x73629c
+      └───> 0x0072abdc      ldr   x0, [x19, 0x28]                      ; [0x28:4]=0xc306e8
+       ││   0x0072abe0      adrp  x2, 0x145000
+       ││   0x0072abe4      add   x2, x2, 0x5f4
+       ││   0x0072abe8      mov   w1, 2
+       ││   0x0072abec      mov   w3, w20
+       ││   0x0072abf0      bl    0x7216b0
+       ││   0x0072abf4      cmp   w20, 1
+      ┌───< 0x0072abf8      b.eq  0x72ac90
+     ┌────< 0x0072abfc      cbnz  w20, 0x72acd4
+     ││││   0x0072ac00      ldr   x0, [x19, 0x28]                      ; [0x28:4]=0xc306e8
+     ││││   0x0072ac04      adrp  x2, 0xc2000
+     ││││   0x0072ac08      add   x2, x2, 0x6ff
+     ││││   0x0072ac0c      mov   w1, 2
+     ││││   0x0072ac10      bl    0x7216b0
+     ││││   0x0072ac14      mov   x0, x19
+     ││││   0x0072ac18      bl    0x727d40
+     ││││   0x0072ac1c      ldr   x0, [x19, 0x18]                      ; [0x18:4]=0
+     ││││   0x0072ac20      ldr   x20, [x19, 0x28]                     ; [0x28:4]=0xc306e8
+     ││││   0x0072ac24      ldr   x21, [x19, 0xa0]                     ; [0xa0:4]=0x47fca4
+     ││││   0x0072ac28      bl    sym.imp.MCIExecutionGlobalQueueGetExecutionQueue
+     ││││   0x0072ac2c      fmov  d0, 30.00000000
+     ││││   0x0072ac30      mov   x3, x0
+     ││││   0x0072ac34      adrp  x1, 0xbd8000
+     ││││   0x0072ac38      add   x1, x1, 0xfc8
+     ││││   0x0072ac3c      adrp  x4, 0xfd000
+     ││││   0x0072ac40      add   x4, x4, 0x5a8
+     ││││   0x0072ac44      bl    0x49bf28
+     ││││   0x0072ac48      bl    0x735fdc
+     ││││   0x0072ac4c      ldr   x21, [x19, 0xa8]                     ; [0xa8:4]=0x4000
+     ││││   0x0072ac50      mov   x20, x0
+     ││││   0x0072ac54      str   x0, [x19, 0xa8]
+     ││││   0x0072ac58      bl    sym.imp.MCFRetain
+     ││││   0x0072ac5c      mov   x0, x21
+     ││││   0x0072ac60      bl    sym.imp.MCFRelease
+     ││││   0x0072ac64      mov   x0, x20
+     ││││   0x0072ac68      bl    0x7360fc
+     ││││   0x0072ac6c      fmov  d0, 30.00000000
+     ││││   0x0072ac70      ldr   x0, [x19, 0x28]                      ; [0x28:4]=0xc306e8
+     ││││   0x0072ac74      adrp  x2, 0xc6000
+     ││││   0x0072ac78      add   x2, x2, 0xcc4
+     ││││   0x0072ac7c      mov   w1, 2
+     ││││   0x0072ac80      bl    0x7216b0
+     ││││   0x0072ac84      mov   x0, x20
+     ││││   0x0072ac88      bl    sym.imp.MCFRelease
+    ┌─────< 0x0072ac8c      b     0x72acac
+    ││└───> 0x0072ac90      ldr   x0, [x19, 0x28]                      ; [0x28:4]=0xc306e8
+    ││ ││   0x0072ac94      adrp  x2, 0xd6000
+    ││ ││   0x0072ac98      add   x2, x2, 0x170
+    ││ ││   0x0072ac9c      mov   w1, 3
+    ││ ││   0x0072aca0      bl    0x7216b0
+    ││ ││   0x0072aca4      bl    0xbe05c8
+    ││ ││   0x0072aca8      bl    0x728050
+    └─────> 0x0072acac      mov   x0, x19
+     │ ││   0x0072acb0      bl    sym.imp.MCFRelease
+     │ └└─> 0x0072acb4      bl    0xbddaf8
+     │  ┌─< 0x0072acb8      b.ne  0x72acd0
+     │  │   0x0072acbc      bl    0x5ce3fc
+     │  │   0x0072acc0      ldp   x29, x30, [sp, 0x10]
+     │  │   0x0072acc4      add   sp, sp, 0x50
+     │  │   0x0072acc8      autiasp
+     │  │   0x0072accc      ret
+     │  └─> 0x0072acd0      bl    sym.imp.__stack_chk_fail
+     └────> 0x0072acd4      bl    sym.imp.abort

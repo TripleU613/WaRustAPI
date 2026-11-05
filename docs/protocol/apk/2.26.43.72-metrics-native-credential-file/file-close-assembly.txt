@@ -1,0 +1,35 @@
+            0x00734448      paciasp
+            0x0073444c      stp   x29, x30, [sp, -0x20]!
+            0x00734450      str   x19, [sp, 0x10]
+            0x00734454      mov   x29, sp
+        ┌─< 0x00734458      cbz   x0, 0x7344d0
+        │   0x0073445c      ldr   w8, [x0, 0x2c]                       ; [0x2c:4]=0
+        │   0x00734460      mov   x19, x0
+        │   0x00734464      cmp   w8, 3
+       ┌──< 0x00734468      b.ne  0x734488
+       ││   0x0073446c      ldr   x0, [x19, 0x38]                      ; [0x38:4]=0x40000a
+       ││   0x00734470      adrp  x1, 0x10f000
+       ││   0x00734474      add   x1, x1, 0xf8c
+       ││   0x00734478      mov   w2, wzr
+       ││   0x0073447c      bl    0x733df0
+       ││   0x00734480      mov   w0, 2
+      ┌───< 0x00734484      b     0x7344c0
+      │└──> 0x00734488      ldr   x0, [x19, 0x20]                      ; [0x20:4]=64 ; "@"
+      │ │   0x0073448c      bl    sym.imp.fclose
+      │ │   0x00734490      mov   w8, 3
+      │ │   0x00734494      cmp   w0, 0
+      │ │   0x00734498      mov   w9, 1
+      │ │   0x0073449c      str   w8, [x19, 0x2c]
+      │ │   0x007344a0      cinc  x19, x9, eq
+      │┌──< 0x007344a4      cbz   w0, 0x7344b8
+      │││   0x007344a8      bl    sym.imp.__errno
+      │││   0x007344ac      ldr   w8, [x0]
+      │││   0x007344b0      lsl   x8, x8, 0x20
+     ┌────< 0x007344b4      b     0x7344bc
+     ││└──> 0x007344b8      mov   x8, xzr
+     └────> 0x007344bc      orr   x0, x8, x19
+      └───> 0x007344c0      ldr   x19, [sp, 0x10]                      ; [0x10:4]=0xb70003
+        │   0x007344c4      ldp   x29, x30, [sp], 0x20
+        │   0x007344c8      autiasp
+        │   0x007344cc      ret
+        └─> 0x007344d0      bl    sym.imp.abort

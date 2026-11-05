@@ -1,0 +1,70 @@
+{
+  "README.md": {
+    "bytes": 7525,
+    "sha256": "d8d507ab36ac22f29724537bc1addfa1dc456ab24625c2747b652e11010e3599"
+  },
+  "check-header.py": {
+    "bytes": 5628,
+    "sha256": "fd7028e3ca24f14fed18e5283441321e1762038f9d94e7c09203976e736564d6"
+  },
+  "clone-arguments-assembly.txt": {
+    "bytes": 115,
+    "sha256": "9dff3f7b8b5b9ac25ee23d008986c69947ebeef8734b75d737da2a70c7a9ae32"
+  },
+  "credential-load-assembly.txt": {
+    "bytes": 15277,
+    "sha256": "f96ee2500dba3ccd38f68d9ad4bdd7f5b953c66874099306f16c69e6a4b88561"
+  },
+  "credential-path-assembly.txt": {
+    "bytes": 850,
+    "sha256": "0788f32a532b26a56589e1335e7ad3892e4261d0afa4e13d886410c080bd0014"
+  },
+  "credential-save-assembly.txt": {
+    "bytes": 13490,
+    "sha256": "a1b6d59d4ac5c754a0176e7bcfdde89bd344d5ec3a694d3fab21fae2a01a5065"
+  },
+  "file-boundaries.json": {
+    "bytes": 4126,
+    "sha256": "f5e0406d92673167a0e5554d2879434efa21610070b74f3123b1bbcac6902c16"
+  },
+  "file-close-assembly.txt": {
+    "bytes": 1885,
+    "sha256": "7b50a1a3a03f8681bf17164bef5b4dd445fdde82d018132c50cabaafe2180cab"
+  },
+  "file-open-arguments-assembly.txt": {
+    "bytes": 115,
+    "sha256": "adf8b55fced1942bffaaaaa9ee929a7f230962072ffbc0a7fb71bc4755ae58ba"
+  },
+  "file-read-wrapper-assembly.txt": {
+    "bytes": 2215,
+    "sha256": "3f473f23f20878b5f50354475a257bd63f92fc217187d6d5f12a76771c76474f"
+  },
+  "file-write-result-assembly.txt": {
+    "bytes": 116,
+    "sha256": "c226a8e095a4871b3dd602d5bbd481937d4e10240b86c4c7f854172aa4447695"
+  },
+  "header-byte-reader-assembly.txt": {
+    "bytes": 2179,
+    "sha256": "a83d562a4dcee89c812cd0f76410aeadd409c5fe42b0597b20f268c1b5e02880"
+  },
+  "header-results.json": {
+    "bytes": 7519,
+    "sha256": "2a5cf25dc1b9b78ab1d70aad67a756e7b478bf67a2bdd158a9a9deb0ec07bb32"
+  },
+  "inspect-file.py": {
+    "bytes": 1726,
+    "sha256": "92d36efe56987defae68ecb90919337b6fcd03728fe6308d4ae1395e67473afa"
+  },
+  "load-completion-assembly.txt": {
+    "bytes": 6446,
+    "sha256": "bd7922971707f867660ea1755c5de2e15a226af7d5d416075dae2f5d07d85e54"
+  },
+  "read-result-arguments-assembly.txt": {
+    "bytes": 116,
+    "sha256": "d147e5c922d3e07ad8e719fb6cd1297a1e8eba7fee5de2161cbc8c6fd6c4fbc3"
+  },
+  "windows.json": {
+    "bytes": 1038,
+    "sha256": "4d26490ce421c19e157437a024198773c0fba9250797668004a5d1b46db27581"
+  }
+}

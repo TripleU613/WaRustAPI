@@ -1,0 +1,39 @@
+            0x00734174      paciasp
+            0x00734178      sub   sp, sp, 0x50
+            0x0073417c      stp   x29, x30, [sp, 0x20]
+            0x00734180      str   x21, [sp, 0x30]
+            0x00734184      stp   x20, x19, [sp, 0x40]
+            0x00734188      add   x29, sp, 0x20
+            0x0073418c      mrs   x21, tpidr_el0
+            0x00734190      ldr   x9, [x21, 0x28]                      ; [0x28:4]=0xc306e8
+            0x00734194      stur  x9, [x29, -8]
+        ┌─< 0x00734198      cbz   x0, 0x734208
+        │   0x0073419c      mov   x19, x1
+       ┌──< 0x007341a0      cbz   x1, 0x734204
+       ││   0x007341a4      ldr   x9, [x19]
+      ┌───< 0x007341a8      cbnz  x9, 0x734204
+      │││   0x007341ac      mov   w8, w2
+      │││   0x007341b0      add   x2, sp, 0x10
+      │││   0x007341b4      add   x3, sp, 0xc
+      │││   0x007341b8      mov   w1, w8
+      │││   0x007341bc      bl    0xbe676c
+      │││   0x007341c0      bl    0x734024
+      │││   0x007341c4      mov   x20, x0
+     ┌────< 0x007341c8      cbnz  w20, 0x7341e0
+     ││││   0x007341cc      ldr   x0, [sp, 0x10]                       ; [0x10:4]=0xb70003
+    ┌─────< 0x007341d0      cbz   x0, 0x7341e0
+    │││││   0x007341d4      ldr   w1, [sp, 0xc]                        ; [0xc:4]=0
+    │││││   0x007341d8      bl    sym.imp.MCFDataCreateWithBytesNoCopy
+    │││││   0x007341dc      str   x0, [x19]
+    └└────> 0x007341e0      bl    0xbdd71c
+     ┌────< 0x007341e4      b.ne  0x73420c
+     ││││   0x007341e8      mov   x0, x20
+     ││││   0x007341ec      ldp   x20, x19, [sp, 0x40]
+     ││││   0x007341f0      ldp   x29, x30, [sp, 0x20]
+     ││││   0x007341f4      ldr   x21, [sp, 0x30]                      ; [0x30:4]=0
+     ││││   0x007341f8      add   sp, sp, 0x50
+     ││││   0x007341fc      autiasp
+     ││││   0x00734200      ret
+     │└└──> 0x00734204      bl    sym.imp.abort
+     │  └─> 0x00734208      bl    sym.imp.abort
+     └────> 0x0073420c      bl    sym.imp.__stack_chk_fail

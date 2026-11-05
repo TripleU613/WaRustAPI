@@ -2509,3 +2509,15 @@ nonnull while the all-lookup flag is false; runtime initialization is unobserved
 [ELF symbol/tables, indexed-store proof, native fixtures and limits](apk/2.26.43.72-metrics-jni-method-cache/README.md).
 This supersedes the prior static cache-binding unknown. Whole-loader recovery,
 crypto and runtime availability remain open. No Rust/live change.
+
+### Native metrics credential persistence (2026-11-05)
+
+**Confirmed static / observed synthetic admission, APK43.72:** paired mode-
+suffixed private credential file uses version2/25-byte header and three data
+segments.23 bounded native header cases match independent parsing. Loader
+overrides constructor defaults with saved expiry/count; header admission permits
+zero lengths/trailing bytes and is not cryptographic validation. Save checks
+write/close/count but uses wb; atomic durability remains unproven.
+[Paired native bodies, raw schema, fixtures and failure-branch limits](apk/2.26.43.72-metrics-native-credential-file/README.md).
+Observer callback is persistence, not endpoint production. Endpoints, full load
+scheduling, crypto and runtime behavior remain open. No Rust/live change.

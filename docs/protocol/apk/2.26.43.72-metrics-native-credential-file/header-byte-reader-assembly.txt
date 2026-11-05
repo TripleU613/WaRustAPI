@@ -1,0 +1,40 @@
+            0x0072c9f4      paciasp
+            0x0072c9f8      sub   sp, sp, 0x40
+            0x0072c9fc      stp   x29, x30, [sp, 0x10]
+            0x0072ca00      bl    0x49be00
+            0x0072ca04      add   x29, sp, 0x10
+            0x0072ca08      bl    0xbe0a00
+            0x0072ca0c      mov   w0, w1
+            0x0072ca10      ldr   x8, [x21, 0x28]                      ; [0x28:4]=0xc306e8
+            0x0072ca14      mov   w1, 1
+            0x0072ca18      str   x8, [sp, 8]
+            0x0072ca1c      bl    sym.imp.MCFRangeMake
+            0x0072ca20      mov   x20, x0
+        ┌─< 0x0072ca24      tbnz  w20, 0x1f, 0x72ca80
+       ┌──< 0x0072ca28      tbnz  x20, 0x3f, 0x72ca84
+       ││   0x0072ca2c      lsr   x8, x20, 0x20
+       ││   0x0072ca30      eor   w9, w20, 0x7fffffff
+       ││   0x0072ca34      cmp   w9, w8
+      ┌───< 0x0072ca38      b.lt  0x72ca88
+      │││   0x0072ca3c      mov   x0, x19
+      │││   0x0072ca40      add   w22, w8, w20
+      │││   0x0072ca44      bl    sym.imp.MCFDataGetLength
+      │││   0x0072ca48      cmp   w22, w0
+     ┌────< 0x0072ca4c      b.gt  0x72ca8c
+     ││││   0x0072ca50      add   x2, sp, 4
+     ││││   0x0072ca54      bl    0x49d4ec
+     ││││   0x0072ca58      strb  wzr, [sp, 4]
+     ││││   0x0072ca5c      bl    sym.imp.MCFDataGetBytes
+     ││││   0x0072ca60      ldrb  w0, [sp, 4]                          ; [0x4:4]=0x10102
+     ││││   0x0072ca64      bl    0xbdd910
+    ┌─────< 0x0072ca68      b.ne  0x72ca90
+    │││││   0x0072ca6c      bl    0x49c220
+    │││││   0x0072ca70      ldp   x29, x30, [sp, 0x10]
+    │││││   0x0072ca74      add   sp, sp, 0x40
+    │││││   0x0072ca78      autiasp
+    │││││   0x0072ca7c      ret
+    ││││└─> 0x0072ca80      bl    sym.imp.abort
+    │││└──> 0x0072ca84      bl    sym.imp.abort
+    ││└───> 0x0072ca88      bl    sym.imp.abort
+    │└────> 0x0072ca8c      bl    sym.imp.abort
+    └─────> 0x0072ca90      bl    sym.imp.__stack_chk_fail

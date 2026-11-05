@@ -1,3 +1,12 @@
+2026-11-05 — **Native metrics credential file and restoration traced.**
+
+Paired save/load retains expiry/use count instead of relying on constructor
+defaults.23 bounded native header cases verify version/range/length checks.
+[Evidence, write/close handling and durability limits](docs/protocol/apk/2.26.43.72-metrics-native-credential-file/README.md).
+Header admission is not a valid credential. Endpoints, load scheduling and
+crypto remain open. Validation: pinned resolver/fixture reproduction, coverage,
+checksums/links and staged diff. No Rust runtime or live traffic changed.
+
 2026-11-05 — **Outbound metrics JNI method-cache binding resolved.**
 
 JNI_OnLoad's indexed lookup/store links native cache0xc467f0 to the exact Java
