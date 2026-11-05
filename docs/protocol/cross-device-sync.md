@@ -2261,3 +2261,9 @@ original-details assumption for 11T.A0D's companion device signatures only.
 GsB unknown fields/closed enums are preserved; native Azc has NON_E2EE=2.
 Signed index-list input is a separate consumer. Existing membership, own-device,
 teardown, freshness and nested-message authentication gates remain required.
+
+## Reply type admission follow-up (2026-11-04)
+
+**Confirmed / implemented offline:** matching device queries now require exact
+result/error in addition to iq/id. Non-reply IQs preserve uncertain query and
+pending users. [Pinned shared-dispatch evidence, regression and remaining scope](network-correctness-audit.md#device-query-reply-type-admission-2026-11-04).

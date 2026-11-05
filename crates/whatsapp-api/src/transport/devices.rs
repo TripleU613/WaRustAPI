@@ -992,7 +992,11 @@ fn ingest_user(
 impl DeviceQuery {
     /// Only the exact `iq` reply for this query settles it.
     pub fn matches(&self, node: &Node) -> bool {
-        node.description == "iq" && attr_text(node, "id") == Some(self.iq_id.as_str())
+        // APK 2.26.43.72 0ln.A01 admits only result/error to IQ callbacks.
+        // An incoming request with our ID must not settle an uncertain query.
+        node.description == "iq"
+            && attr_text(node, "id") == Some(self.iq_id.as_str())
+            && matches!(attr_text(node, "type"), Some("result" | "error"))
     }
     /// Apply the reply durably: each user's list is verified, reconciled and
     /// stored in one transaction; only ingested matching pending revisions clear.
@@ -2656,7 +2660,7 @@ mod tests {
             .filter_map(|u| attr_jid(u, "jid"))
             .collect();
         assert_eq!(users, vec![contact(), other.clone()]);
-        assert!(query.matches(&Node::new("iq").attr("id", attr_text(&iq, "id").unwrap())));
+        assert!(query.matches(&reply(&iq, vec![])));
         assert!(!query.matches(&Node::new("iq").attr("id", "other")));
         // Pending users stay pending until their list is ingested.
         assert_eq!(pending_users(&store).unwrap().len(), 2);
@@ -2666,6 +2670,52 @@ mod tests {
             .unwrap();
         assert_eq!(record.status, "outcome_unknown");
         assert_eq!(record.users.len(), 2);
+    }
+
+    #[test]
+    fn non_reply_iqs_preserve_uncertain_device_query_across_reopen() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("pending.redb");
+        let store = open(&path);
+        request_sync(&store, None, &contact(), None, "t").unwrap();
+        let (query, iq) = begin_query(&store, SyncContext::Notification)
+            .unwrap()
+            .unwrap();
+        let snapshot = |store: &ProtocolStore| -> serde_json::Value {
+            store
+                .read(|tx| tx.get_json(Table::Checkpoints, query_key(&query.iq_id).as_bytes(), 1))
+                .unwrap()
+                .unwrap()
+        };
+        let before = snapshot(&store);
+        for kind in [
+            None,
+            Some("get"),
+            Some("set"),
+            Some("RESULT"),
+            Some("unexpected"),
+        ] {
+            let mut node = Node::new("iq")
+                .attr("id", query.iq_id.as_str())
+                .children(vec![Node::new("error").attr("code", "503")]);
+            if let Some(kind) = kind {
+                node = node.attr("type", kind);
+            }
+            assert!(!query.matches(&node));
+            assert!(query.ingest(&store, &node).is_err());
+            assert_eq!(snapshot(&store), before);
+            assert_eq!(pending_users(&store).unwrap(), vec![contact()]);
+            assert!(device_list(&store, &contact()).unwrap().is_none());
+        }
+        drop(store);
+        let store = open(&path);
+        assert_eq!(snapshot(&store), before);
+        assert_eq!(pending_users(&store).unwrap(), vec![contact()]);
+        let result = reply(&iq, vec![user_node(&contact(), &[(0, 0, false)], None)]);
+        assert!(query.matches(&result));
+        assert!(query.ingest(&store, &result).unwrap().accepted);
+        assert_eq!(snapshot(&store)["status"], "server_acknowledged");
+        assert!(query.ingest(&store, &result).is_err());
     }
 
     #[test]

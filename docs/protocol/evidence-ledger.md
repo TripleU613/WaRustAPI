@@ -1,3 +1,10 @@
+2026-11-04 — **Device-query non-reply IQs preserve uncertain state.**
+
+Exact result/error now required before matching and ingestion, grounded in
+43.72 0ln.A01. Regression covers full query preservation, pending users,
+reopen and one valid settlement. No live traffic.
+[Evidence and limits](network-correctness-audit.md#device-query-reply-type-admission-2026-11-04).
+
 2026-11-04 — **Confirmed source defect fixed: prekey IQ type admission.**
 PendingUpload.matches previously checked tag/id only; settle treated every
 non-result as refusal and released keys. Pinned 43.72 0ln.A01 dispatches

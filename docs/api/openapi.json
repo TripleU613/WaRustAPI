@@ -5436,6 +5436,7 @@
         ],
         "summary": "Inspect one saved device query offline",
         "operationId": "inspectDeviceQuery",
+        "x-reply-admission": {"requires":"matching iq/id and exact result/error", "non_reply":"preserves uncertain query and pending users without ingestion or refusal", "x-cli":"device-query inspection; existing receive path", "x-transport":"experimental authenticated receive, no new HTTP handler", "x-live":false},
         "x-cli": "whatsapp-cli device-query",
         "x-transport": [
           "cli"

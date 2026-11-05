@@ -468,3 +468,23 @@ Bounded source review of identity_query and peer_keys also found existing
 ID/envelope/type and selected-user validation; this pass makes no new
 claim of their full native parity or changes their behavior. The broader
 devices/identity/prekeys audit remains unfinished.
+
+## Device-query reply type admission (2026-11-04)
+
+**Confirmed source defect / fixed offline:** DeviceQuery.matches checked iq/id
+only, while ingest classified every non-result as refused. The receive path
+could therefore consume a same-ID get/set, missing or unknown type as a reply.
+Pinned APK **2.26.43.72**, **0ln.A01**, admits exact result to CK4 and exact
+error to Bvj; other types do not enter either callback. Retained source:
+[shared IQ dispatcher](rea/2.26.43.72-reachout-state/reachout-iq-reply-dispatch.txt).
+DeviceQuery now requires exact result/error before matching or ingestion.
+The encrypted-store regression checks missing/get/set/uppercase/unknown types
+with a misleading error child, complete query-row preservation, unchanged pending
+users and absent list, reopen, then one valid result and duplicate refusal.
+Existing tests retain real error settlement coverage.
+
+**Scope / unknown:** this establishes type admission, not sender authorization or
+full usync body parity. Unlike prekey upload, begin_query does not suppress a new
+reservation simply because another query is uncertain: scheduling belongs to
+the receive cursor. No new reservation/retry guarantee is claimed by this test.
+Direct and group send preparation matchers remain under audit. No live traffic.
