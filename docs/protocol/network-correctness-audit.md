@@ -1327,3 +1327,31 @@ authentication timestamp update permits the valid request.
 **Remaining:** same-identity signed-key rotation ownership, account changes after
 reservation/before write, correlated digest recovery and native retry/reset
 policy are not closed by this guard. No live operations or automatic resets.
+
+### Prekey wire ID integrity (2026-11-04)
+
+**Confirmed local construction defects, fixed offline:** signed-prekey IDs wider
+than three bytes were truncated by be3. Legacy publication trusted the numeric
+store-key suffix without checking the deserialized PreKeyRecord ID, so a row
+could publish its public key under a different ID. Offline digest comparison
+likewise accepted those inconsistent rows and could match an aliased signed ID.
+
+Signed IDs are now checked before publication or digest comparison. Legacy rows
+share a checked loader that requires a lossless three-byte requested ID and an
+embedded record ID equal to its store key. Publication failures roll back the
+reservation transaction; read-only digest failures leave records untouched.
+KEM publication already checked the three-byte width and row ID binding.
+
+**Confirmed static boundary:** pinned APK 2.26.43.72 1nr.A04 writes low24 bits
+(shift16/8/0), retained under ADD selection and exact child layout in the
+prekey-upload-replies bundle. Its truncation is native encoder behavior; rejecting
+wide local values is our consistency guard, not evidence that native rejects
+those values. Native legacy row parsing can skip caught IOExceptions; Rust's
+stricter invalid-row refusal remains explicitly different. No cursor, sorting,
+generation, retry, reset or acknowledgement policy changes are inferred.
+
+Regressions cover mismatched legacy store/embedded IDs, wide legacy IDs, signed
+IDs 0x1000000/u32::MAX, and exact 0/0xffffff field boundaries. An independent
+SHA1 digest fixture is reused with unchanged public bytes but a mismatched row
+ID, and with an aliased wide signed ID: both now fail instead of falsely matching.
+These field-boundary tests do not establish native generation of ID zero.

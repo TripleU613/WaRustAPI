@@ -8,7 +8,7 @@ use crate::{
 };
 use serde::Serialize;
 use sha2::Digest;
-use wacore_libsignal::protocol::{GenericSignedPreKey, PreKeyRecord, SignedPreKeyRecord};
+use wacore_libsignal::protocol::{GenericSignedPreKey, SignedPreKeyRecord};
 
 fn invalid(reason: &'static str) -> Error {
     Error::invalid("prekey_digest", reason)
@@ -163,13 +163,13 @@ pub(super) fn inspect_in(
     }
     let signed =
         SignedPreKeyRecord::deserialize(signed).map_err(|_| invalid("invalid local signed key"))?;
-    if reply.signed.as_slice()
-        != super::be3(u32::from(
-            signed
-                .id()
-                .map_err(|_| invalid("invalid local signed key ID"))?,
-        ))
-    {
+    let signed_id = u32::from(
+        signed
+            .id()
+            .map_err(|_| invalid("invalid local signed key ID"))?,
+    );
+    super::check_wire_id(signed_id)?;
+    if reply.signed.as_slice() != super::be3(signed_id) {
         mismatch!(SignedKeyMismatch);
     }
     let identity = account
@@ -190,13 +190,9 @@ pub(super) fn inspect_in(
     );
     // Fdf hashes in supplied ID order; no sorting or deduplication.
     for key_id in reply.legacy {
-        let raw: Option<Vec<u8>> =
-            tx.get_json(Table::Prekeys, super::record_key(key_id).as_bytes(), 1)?;
-        let Some(raw) = raw else {
+        let Some(key) = super::legacy_record_in(tx, key_id)? else {
             mismatch!(MissingLegacyKey);
         };
-        let key =
-            PreKeyRecord::deserialize(&raw).map_err(|_| invalid("invalid local legacy key"))?;
         input.extend_from_slice(
             key.public_key()
                 .map_err(|_| invalid("invalid local legacy public key"))?

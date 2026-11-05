@@ -299,6 +299,32 @@ fn generate_in(tx: &mut WriteTx<'_>) -> Result<usize> {
     Ok(count)
 }
 
+// 43.72 1nr.A04 emits only the low 24 bits. Local callers must not
+// silently alias wider IDs, even though the native encoder itself truncates.
+fn check_wire_id(id: u32) -> Result<()> {
+    if id > 0x00ff_ffff {
+        return Err(invalid("prekey id does not fit three bytes"));
+    }
+    Ok(())
+}
+
+fn legacy_record_in(tx: &impl Lookup, id: u32) -> Result<Option<PreKeyRecord>> {
+    check_wire_id(id)?;
+    let Some(raw) = tx.get_json::<Vec<u8>>(Table::Prekeys, record_key(id).as_bytes(), 1)? else {
+        return Ok(None);
+    };
+    let record = PreKeyRecord::deserialize(&raw).map_err(|_| invalid("invalid prekey record"))?;
+    if u32::from(
+        record
+            .id()
+            .map_err(|_| invalid("invalid prekey record id"))?,
+    ) != id
+    {
+        return Err(invalid("prekey record id does not match store key"));
+    }
+    Ok(Some(record))
+}
+
 fn be3(id: u32) -> Vec<u8> {
     vec![(id >> 16) as u8, (id >> 8) as u8, id as u8]
 }
@@ -462,6 +488,7 @@ fn begin_upload_selected(
     let signed = SignedPreKeyRecord::deserialize(signed)
         .map_err(|_| invalid("invalid registered signed prekey"))?;
     let signed_id = u32::from(signed.id().map_err(|_| invalid("signed prekey id"))?);
+    check_wire_id(signed_id)?;
     let signed_public = signed
         .public_key()
         .map_err(|_| invalid("signed prekey public key"))?;
@@ -544,11 +571,8 @@ fn begin_upload_selected(
             if ids.is_empty() && kem_rows.is_empty() { return Ok(None); }
             let mut keys = Vec::with_capacity(ids.len());
             for id in &ids {
-                let record: Vec<u8> = tx
-                    .get_json(Table::Prekeys, record_key(*id).as_bytes(), 1)?
+                let record = legacy_record_in(&*tx, *id)?
                     .ok_or_else(|| invalid("unsent prekey record disappeared"))?;
-                let record = PreKeyRecord::deserialize(&record)
-                    .map_err(|_| invalid("invalid prekey record"))?;
                 let public = record
                     .public_key()
                     .map_err(|_| invalid("prekey public key"))?;
@@ -1166,6 +1190,94 @@ mod tests {
             drop(store);
             let store = open(&path);
             assert_eq!(snapshot(&store), before);
+        }
+    }
+
+    #[test]
+    fn publication_ids_are_lossless_and_legacy_rows_match_their_store_keys() {
+        for (stored, embedded, accepted) in [
+            (1u32, 2u32, false),
+            (0x0100_0001, 0x0100_0001, false),
+            (0x00ff_ffff, 0x00ff_ffff, true),
+            (0, 0, true),
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("legacy-id.redb");
+            let store = open(&path);
+            let (account, signed) = account_and_signed(&store);
+            let pair = KeyPair::generate(&mut rand::rng());
+            let raw = PreKeyRecord::new(embedded.into(), &pair)
+                .serialize()
+                .unwrap();
+            store
+                .write(|tx| tx.put_json(Table::Prekeys, record_key(stored).as_bytes(), 1, &raw))
+                .unwrap();
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                .unwrap();
+            let upload = begin_upload(&store, &account, &signed);
+            if accepted {
+                let (_, node) = upload.unwrap().unwrap();
+                assert_eq!(
+                    child_bytes(&node.child("list").unwrap().child_nodes()[0], "id"),
+                    Some(be3(stored).as_slice())
+                );
+            } else {
+                assert!(upload.is_err());
+                drop(store);
+                let store = open(&path);
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                        .unwrap(),
+                    before
+                );
+                assert_eq!(
+                    store
+                        .read(|tx| tx.get_json::<Vec<u8>>(
+                            Table::Prekeys,
+                            record_key(stored).as_bytes(),
+                            1
+                        ))
+                        .unwrap(),
+                    Some(raw)
+                );
+            }
+        }
+        for id in [0, 0x00ff_ffff, 0x0100_0000, u32::MAX] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("signed-id.redb"));
+            let (account, raw) = account_and_signed(&store);
+            let record = SignedPreKeyRecord::deserialize(&raw).unwrap();
+            let signed = SignedPreKeyRecord::new(
+                id.into(),
+                wacore_libsignal::protocol::Timestamp::from_epoch_millis(0),
+                &record.key_pair().unwrap(),
+                &record.signature().unwrap(),
+            )
+            .serialize()
+            .unwrap();
+            generate(&store).unwrap();
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                .unwrap();
+            let upload = begin_upload(&store, &account, &signed);
+            if id <= 0x00ff_ffff {
+                let (_, node) = upload.unwrap().unwrap();
+                assert_eq!(
+                    child_bytes(node.child("skey").unwrap(), "id"),
+                    Some(be3(id).as_slice())
+                );
+            } else {
+                assert!(upload.is_err());
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                        .unwrap(),
+                    before
+                );
+                assert_eq!(summary(&store).unwrap().uncertain, 0);
+            }
         }
     }
 
@@ -2255,6 +2367,41 @@ mod tests {
         assert_eq!(
             store.read(|tx| tx.scan(Table::Prekeys, 1, 100)).unwrap(),
             before
+        );
+        let wide = SignedPreKeyRecord::new(
+            0x0100_0007.into(),
+            SignalTimestamp::from_epoch_millis(0),
+            &pair(2),
+            &[7; 64],
+        )
+        .serialize()
+        .unwrap();
+        assert!(
+            store
+                .read(|tx| digest::inspect_in(tx, &account, &wide, false, &reply(&[1, 2])))
+                .is_err()
+        );
+        // Same public bytes reproduce the independent hash, but the embedded
+        // row ID disagrees with the requested ID. That is invalid local state.
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Prekeys,
+                    record_key(1).as_bytes(),
+                    1,
+                    &PreKeyRecord::new(2.into(), &pair(3)).serialize().unwrap(),
+                )
+            })
+            .unwrap();
+        let corrupt = store.read(|tx| tx.scan(Table::Prekeys, 1, 100)).unwrap();
+        assert!(
+            store
+                .read(|tx| digest::inspect_in(tx, &account, &signed, false, &reply(&[1, 2])))
+                .is_err()
+        );
+        assert_eq!(
+            store.read(|tx| tx.scan(Table::Prekeys, 1, 100)).unwrap(),
+            corrupt
         );
     }
 

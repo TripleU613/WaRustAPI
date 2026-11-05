@@ -15482,5 +15482,21 @@
     "x-live": false,
     "evidence": "docs/protocol/prekey-count-notifications.md#prekey-publication-account-authority-2026-11-04",
     "description": "Upload reservation binds caller publication identity to the registered durable account in its WriteTx, including generation, registration ID, own JID, phone and Signal identity bytes. Signed-prekey signature must verify under publication identity even with PQ disabled. Fixed local errors occur before reservation writes; no HTTP route, reset, retry or live validation added. Same-identity signed-key rotation authority and post-reservation account changes remain open."
+  },
+  "x-prekey-wire-id-integrity": {
+    "x-cli": {
+      "commands": [
+        "whatsapp-cli listen",
+        "whatsapp-cli prekeys --digest-capture <saved-inbound-capture-key>"
+      ],
+      "description": "Existing publication and offline inspection guards; no new command"
+    },
+    "x-transport": [
+      "experimental-transport prekey SET/ADD reservation",
+      "offline encrypted-store digest inspection"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/prekey-count-notifications.md#prekey-wire-id-integrity-2026-11-04",
+    "description": "Rejects signed or selected legacy IDs wider than three bytes and legacy PreKeyRecord IDs differing from store keys. Reservation failures roll back; digest inspection does not write. Native encoder low24-bit truncation and native row skipping are distinguished from these stricter local checks. No HTTP route, key repair, retry or reset added."
   }
 }
