@@ -1,3 +1,11 @@
+2026-11-04 — **KEM acknowledgement cannot silently skip lost key material.**
+
+Settlement requires/validates every reserved KEM row. Missing-second-row
+regression proves earlier writes and Batch status roll back across reopen.
+[Details and scope](docs/protocol/network-correctness-audit.md#kem-acknowledgement-inventory-integrity-2026-11-04).
+Validation: **1,285 workspace/all-feature tests**, strict Clippy, CLI reference,
+formatting, coverage freshness and repository hygiene passed. No live traffic.
+
 2026-11-04 — **Uncertain KEM batches cannot ride a fresh upload again.**
 
 Transactional hold prevents sent=false KEM rows being selected under a new IQ

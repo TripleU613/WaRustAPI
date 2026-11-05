@@ -215,3 +215,10 @@ batches receive no backfill and uncertain requests remain unreplayed.
 **Confirmed local correction:** PQ-enabled uploads remain held while a prior
 KEM-bearing Batch is outcome_unknown; sent=false no longer permits selecting
 its keys under a fresh legacy upload after reconnect. [Reopen regression and scope](network-correctness-audit.md#uncertain-kem-batch-replay-admission-2026-11-04).
+
+## KEM settlement integrity (2026-11-04)
+
+**Confirmed local correction:** acknowledged batch settlement requires each
+reserved KEM row to exist and validate; missing material rolls back complete
+settlement. [Partial-write/reopen regression and native-policy distinction](network-correctness-audit.md#kem-acknowledgement-inventory-integrity-2026-11-04).
+No key regeneration or uncertain-state reset.

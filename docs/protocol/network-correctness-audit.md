@@ -958,3 +958,30 @@ Native selected-array callback ownership/mark-sent paths are retained in
 Batch rows without kem_ids default empty as before; this fix cannot reconstruct
 unknown historical wire contents. Current-build ADD/inventory/migration port is
 still open. No account-state reset or live traffic.
+
+## KEM acknowledgement inventory integrity (2026-11-04)
+
+**Confirmed local settlement defect / fixed offline:** kem_prekeys.mark_sent_in
+silently skipped a missing reserved KEM row. PendingUpload.settle had already
+written server_acknowledged within that transaction and would still commit,
+misrepresenting local usable key inventory after loss of a reserved secret.
+mark_sent_in now requires every reserved row and validates its ID/key material
+before marking it sent. Failure rolls back the complete Batch/legacy/KEM settlement
+transaction rather than silently skipping or regenerating a key.
+
+**Offline regression:** extend the real PQ reservation/reconnect test, remove the
+second reserved KEM row, and attempt the original result. This places the fault
+after an earlier KEM row has been marked within the transaction. Complete Prekeys/
+Checkpoints snapshots remain unchanged, including batch status and earlier-row
+sent flag. Reopen keeps the same damaged state and still refuses settlement.
+Restoring only the deleted synthetic fixture allows the original reply to settle;
+no real-store repair/reset or replacement key generation is implemented.
+
+**Evidence distinction:** this is local storage-integrity policy, not a claim
+that native SQL treats missing update rows identically. APK43.72 0Yb.A03 and
+0WJ.A0v mark selected IDs sent before completion, as retained in
+[current-build evidence](apk/2.26.43.72-prekey-upload-replies/README.md). Their
+zero-updated-row handling/crypto-material consistency is not proven equivalent.
+A saved authenticated result remains inbound evidence even when local promotion
+fails; this change does not assert server refusal, resend, or clear uncertainty.
+Current-build ADD/inventory port and broader audit remain unfinished. No live traffic.

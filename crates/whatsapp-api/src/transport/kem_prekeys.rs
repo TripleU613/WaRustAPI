@@ -230,10 +230,14 @@ pub(crate) fn upload_rows_in(tx: &mut WriteTx<'_>, batch: usize) -> Result<Vec<S
 pub(crate) fn mark_sent_in(tx: &mut WriteTx<'_>, ids: &[u32]) -> Result<()> {
     for id in ids {
         let key = record_key(*id);
-        if let Some(mut row) = tx.get_json::<StoredKemPrekey>(Table::Prekeys, key.as_bytes(), 1)? {
-            row.sent = true;
-            tx.put_json(Table::Prekeys, key.as_bytes(), 1, &row)?;
-        }
+        // A reserved key must remain usable locally when its acknowledgement
+        // settles. Never silently promote the batch after losing its secret.
+        let mut row = tx
+            .get_json::<StoredKemPrekey>(Table::Prekeys, key.as_bytes(), 1)?
+            .ok_or_else(|| invalid("reserved KEM prekey disappeared before acknowledgement"))?;
+        row.validate(*id)?;
+        row.sent = true;
+        tx.put_json(Table::Prekeys, key.as_bytes(), 1, &row)?;
     }
     Ok(())
 }

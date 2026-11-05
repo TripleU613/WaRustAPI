@@ -1159,6 +1159,37 @@ mod tests {
             ),
             (50, 50)
         );
+        // A local missing key is a store fault, not a successful settlement.
+        // Remove the second KEM row so an earlier mark-sent write must roll back.
+        let batch: Batch = store
+            .read(|tx| tx.get_json(Table::Checkpoints, batch_key(&pending.iq_id).as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        let missing_id = batch.kem_ids[1];
+        let missing_key = super::super::kem_prekeys::record_key(missing_id);
+        let row: super::super::kem_prekeys::StoredKemPrekey = store
+            .read(|tx| tx.get_json(Table::Prekeys, missing_key.as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        store
+            .write(|tx| tx.delete(Table::Prekeys, missing_key.as_bytes()))
+            .unwrap();
+        let damaged = snapshot(&store);
+        let result = Node::new("iq")
+            .attr("id", pending.iq_id.as_str())
+            .attr("type", "result");
+        assert!(pending.settle(&store, &result).is_err());
+        assert_eq!(snapshot(&store), damaged);
+        drop(store);
+        let store = open(&path);
+        assert_eq!(snapshot(&store), damaged);
+        assert!(pending.settle(&store, &result).is_err());
+        assert_eq!(snapshot(&store), damaged);
+        // Restore only the deleted synthetic fixture, never generate replacement
+        // material or reset a real pending upload as an automatic repair.
+        store
+            .write(|tx| tx.put_json(Table::Prekeys, missing_key.as_bytes(), 1, &row))
+            .unwrap();
         // Only the original correlated result releases that uncertainty.
         pending
             .settle(
