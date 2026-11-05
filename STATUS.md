@@ -1,3 +1,13 @@
+2026-11-04 — **Comparison failed-wait captures retained.**
+
+Repository CLI waits now commit decoded nodes before matching or exiting.
+Timeout/error/count/terminal paths retain evidence without settling or replaying
+the uncertain request. Legacy no-store API and undecodable frames remain limited.
+[Evidence and reopen regression](docs/protocol/network-correctness-audit.md#comparison-wait-captures-survive-failed-exits-2026-11-04).
+Validation:1,306 workspace/all-feature tests, strict Clippy, CLI reference,
+formatting, JSON, coverage freshness and repository hygiene passed.
+No live traffic.
+
 2026-11-04 — **Comparison IQ waits reject request-shaped replies.**
 
 The shared waiter requires exact result/error for same-ID IQ responses.

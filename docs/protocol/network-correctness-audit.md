@@ -1694,3 +1694,49 @@ fixed by this admission guard and must be addressed separately without turning
 a failed wait into permission to resend reserved requests. Generic ACK sender
 normalization and challenge-controller integration also remain incomplete.
 No live traffic or account operation.
+
+### Comparison wait captures survive failed exits (2026-11-04)
+
+**Confirmed local defect / fixed for repository CLI callers:** wait_for kept
+unmatched decoded nodes only in its pending Vec, returned only on success.
+Timeout, transport error, terminal stanza and count exhaustion discarded that
+buffer before callers could persist it. This impaired diagnosis of reserved
+requests; it was not evidence those requests had never reached the server.
+
+New messaging::wait_for_captured uses the same bounded read/match loop with an
+observation callback that commits each decoded node through inbox::preserve
+before matching, checking a terminal tag or advancing the count. It captures
+the matched reply too. Capture failure propagates and stops the operation; it
+does not authorize settlement or another write. Every current repository CLI
+comparison IQ/ACK wait now supplies its existing encrypted store, including
+media routes, direct/group key queries, distributions and group retry refetch.
+Older successful-path captures remain for compatibility and content-hash writes
+remain idempotent; these are diagnostics, not ACKs or processing confirmations.
+
+The existing public wait_for signature is retained for callers without a store;
+it still has no durable capture guarantee. Both wrappers share the same IQ
+result/error admission,30-second whole-operation deadline and32-node bound.
+An explicit post-observation monotonic check prevents capture latency from
+allowing reply settlement after the deadline. Blocking storage can delay
+observing expiry; no hard real-time responsiveness guarantee is claimed.
+
+**Evidence scope:** this is local diagnostic/persistence hardening, not a claim
+that the APK uses our inbox table or content-hash keys. The pinned43.72
+[IQ callback grammar](rea/2.26.43.72-authkey-outcomes/incoming-iq-callback.json)
+remains the admission reference; native callback-map/challenge parity and
+per-request durable recovery are separate work.
+
+Regression decoded_wait_captures_survive_each_exit_and_reopen_without_settlement
+uses the actual shared wait loop and encrypted ProtocolStore. Synthetic readers
+exercise valid response, timeout, read error, terminal stanza, count exhaustion
+and injected capture failure. After reopen, every committed decoded-node
+capture exists and a saved uncertain intent remains unchanged.
+Capture failure prevents reading the queued matching response. The test is
+not an encrypted-socket/Noise interoperability proof.
+
+**Limits:** undecodable or partially read frames do not produce a Node and are
+not captured by this helper. Nodes not yet read at timeout cannot be preserved.
+No existing historical loss is reconstructed, uncertain send is replayed,
+identity is changed, or server wait is overridden. Raw-node capture alone does
+not perform protocol ACK/business processing for unrelated notifications.
+No live account or network operations were used.

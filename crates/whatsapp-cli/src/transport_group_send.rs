@@ -20,7 +20,7 @@ use whatsapp_api::{
         handshake::EncryptedConnection,
         inbox,
         messaging::FrameRead,
-        messaging::{key_request_many, new_message_id, wait_for, write_node},
+        messaging::{key_request_many, new_message_id, wait_for_captured as wait_for, write_node},
     },
 };
 
@@ -32,8 +32,9 @@ fn invalid(reason: impl Into<String>) -> Error {
 
 /// Keep every frame that arrived while we waited for a reply to something else.
 ///
-/// `wait_for` returns them rather than dropping them, and one of them may be a
-/// real incoming message or a retry receipt. They go to the same content-hashed
+/// The capture-aware waiter already saves nodes as they arrive. This keeps
+/// the existing successful-path projection too; one may be a real incoming
+/// message or a retry receipt. They go to the same content-hashed
 /// capture keys the receive loop uses, so `lab-inbox` opens them later exactly
 /// as it would a frame read by `--receive`.
 fn keep(store: &ProtocolStore, frames: &[whatsapp_api::binary::Node]) -> Result<(), Error> {
@@ -64,7 +65,7 @@ async fn fetch_membership(
 ) -> Result<(), Error> {
     let id = new_message_id()?;
     write_node(channel, &groups::info_request(chat, &id)?).await?;
-    let (reply, pending) = wait_for(channel, "iq", &id).await?;
+    let (reply, pending) = wait_for(store, channel, "iq", &id).await?;
     keep(store, &pending)?;
     if reply.get_attr("type").and_then(|v| v.as_text()) != Some("result") {
         return Err(invalid("group info query refused; membership unknown"));
@@ -109,7 +110,7 @@ async fn fetch_devices(
             id
         );
         write_node(channel, &node).await?;
-        let (reply, pending) = wait_for(channel, "iq", &id).await?;
+        let (reply, pending) = wait_for(store, channel, "iq", &id).await?;
         keep(store, &pending)?;
         if !query.matches(&reply) {
             return Err(invalid("device query reply did not match the reservation"));
@@ -307,7 +308,7 @@ async fn transmit(
             .and_then(|v| v.as_text())
             .ok_or_else(|| invalid("reserved key query has no ID"))?;
         write_node(channel, &query).await?;
-        let (reply, pending) = wait_for(channel, "iq", id).await?;
+        let (reply, pending) = wait_for(store, channel, "iq", id).await?;
         keep(store, &pending)?;
         if !whatsapp_api::transport::device_key_batches::settle(store, &request_id, &reply)? {
             return Err(invalid("key reply did not settle its saved batch"));
@@ -391,7 +392,7 @@ async fn transmit(
                 target.ciphertext.clone(),
             )?;
             write_node(channel, &distribution).await?;
-            let (ack, pending) = wait_for(channel, "ack", &id).await?;
+            let (ack, pending) = wait_for(store, channel, "ack", &id).await?;
             keep(store, &pending)?;
             inbox::preserve(store, &ack)?;
             let outcome = whatsapp_api::transport::messaging::message_ack_outcome(&ack);
@@ -428,7 +429,7 @@ async fn transmit(
     }
 
     write_node(channel, &node).await?;
-    let (ack, pending) = wait_for(channel, "ack", &wire_id).await?;
+    let (ack, pending) = wait_for(store, channel, "ack", &wire_id).await?;
     let outcome = whatsapp_api::transport::messaging::message_ack_outcome(&ack);
     let accepted = outcome == whatsapp_api::transport::messaging::MessageAckOutcome::Accepted;
     let code = ack
@@ -698,7 +699,7 @@ async fn answer_one(
         &key_request_many(std::slice::from_ref(&retry.device), &id)?,
     )
     .await?;
-    let (reply, pending) = wait_for(channel, "iq", &id).await?;
+    let (reply, pending) = wait_for(store, channel, "iq", &id).await?;
     backlog.extend(pending);
     let peer_key = session_key(&retry.device);
     let identity: Option<Vec<u8>> =

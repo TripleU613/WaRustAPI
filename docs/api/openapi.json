@@ -15672,5 +15672,17 @@
     "x-live": false,
     "evidence": "docs/protocol/network-correctness-audit.md#comparison-iq-waiter-reply-admission-2026-11-04",
     "description": "Shared comparison waiter requires exact result/error for matching IQ tag/ID. Request-shaped IQs remain pending instead of ending the wait. Existing30s/32-node local bounds and ACK classification remain. Native result/error dispatch evidence reused; pending capture loss on failed waits and full callback-map parity remain incomplete. No new route, retry or live operation."
+  },
+  "x-comparison-wait-durable-capture": {
+    "x-cli": {
+      "command": "whatsapp-cli lab-transport",
+      "description": "Existing comparison IQ/ACK wait paths; no new flag"
+    },
+    "x-transport": [
+      "messaging::wait_for_captured backed by encrypted ProtocolStore"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/network-correctness-audit.md#comparison-wait-captures-survive-failed-exits-2026-11-04",
+    "description": "Capture-aware comparison waiter persists every decoded node, including matched and terminal replies, before matching or failing. Repository CLI comparison waits adopt it; capture errors stop the wait. Shared30s/32-node bounds and IQ grammar remain, with post-capture deadline admission. Legacy wait_for without store, unread/undecodable frames, native recovery parity and protocol processing of unrelated nodes remain limited. No new route, automatic retry or live operation."
   }
 }

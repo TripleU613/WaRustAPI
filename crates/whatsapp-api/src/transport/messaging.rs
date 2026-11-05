@@ -1096,28 +1096,76 @@ fn waited_reply_matches(node: &Node, description: &str, id: &str) -> bool {
 
 /// Wait for an exact stanza/id pair (IQ requires result/error), with a
 /// whole-operation deadline and count bound. No resend. Nonmatching frames are
-/// returned for encrypted persistence on success; error paths do not return them.
+/// returned for persistence on success; error paths do not return them. Durable
+/// operations should use [`wait_for_captured`] instead.
 pub async fn wait_for<S: AsyncRead + AsyncWrite + Unpin>(
     channel: &mut EncryptedConnection<S>,
     description: &str,
     id: &str,
 ) -> Result<(Node, Vec<Node>), TransportError> {
-    tokio::time::timeout(Duration::from_secs(30), async {
+    wait_for_observed(
+        async || read_node(channel).await,
+        |_| Ok(()),
+        description,
+        id,
+    )
+    .await
+}
+
+/// Persist every decoded node before matching or terminating a comparison wait.
+/// Capture failures stop the operation; timeout never authorizes a resend.
+pub async fn wait_for_captured<S: AsyncRead + AsyncWrite + Unpin>(
+    store: &crate::store::ProtocolStore,
+    channel: &mut EncryptedConnection<S>,
+    description: &str,
+    id: &str,
+) -> crate::Result<(Node, Vec<Node>)> {
+    wait_for_observed(
+        async || read_node(channel).await,
+        |node| super::inbox::preserve(store, node).map(|_| ()),
+        description,
+        id,
+    )
+    .await
+}
+
+async fn wait_for_observed<R, C, E>(
+    mut read: R,
+    mut capture: C,
+    description: &str,
+    id: &str,
+) -> Result<(Node, Vec<Node>), E>
+where
+    R: AsyncFnMut() -> Result<Node, TransportError>,
+    C: FnMut(&Node) -> Result<(), E>,
+    E: From<TransportError>,
+{
+    let deadline = tokio::time::Instant::now() + Duration::from_secs(30);
+    tokio::time::timeout_at(deadline, async {
         let mut pending = Vec::new();
         for _ in 0..32 {
-            let node = read_node(channel).await?;
+            let node = read().await.map_err(E::from)?;
+            // Capture terminal and matched replies too, before any settlement.
+            capture(&node)?;
+            if tokio::time::Instant::now() >= deadline {
+                return Err(E::from(TransportError::Deadline("correlated stanza")));
+            }
             if waited_reply_matches(&node, description, id) {
                 return Ok((node, pending));
             }
             if matches!(node.description.as_str(), "failure" | "stream:error") {
-                return Err(error("server ended session while awaiting response"));
+                return Err(E::from(error(
+                    "server ended session while awaiting response",
+                )));
             }
             pending.push(node);
         }
-        Err(error("stanza count exceeded while awaiting response"))
+        Err(E::from(error(
+            "stanza count exceeded while awaiting response",
+        )))
     })
     .await
-    .map_err(|_| TransportError::Deadline("correlated stanza"))?
+    .map_err(|_| E::from(TransportError::Deadline("correlated stanza")))?
 }
 
 #[cfg(test)]
@@ -2340,5 +2388,134 @@ mod waited_reply_tests {
             "iq",
             "reserved-iq"
         ));
+    }
+}
+
+#[cfg(test)]
+mod captured_wait_tests {
+    use super::*;
+    use crate::store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource, Table};
+
+    #[tokio::test(start_paused = true)]
+    async fn decoded_wait_captures_survive_each_exit_and_reopen_without_settlement() {
+        for mode in [
+            "success",
+            "timeout",
+            "read_error",
+            "terminal",
+            "count",
+            "capture_error",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("wait.redb");
+            let open = || {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: crate::model::ids::AccountId::new("fixture").unwrap(),
+                    create: true,
+                    key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                        [9; 32],
+                    ))),
+                })
+                .unwrap()
+            };
+            let store = open();
+            let intent = serde_json::json!({"status":"outcome_unknown","wire_id":"reserved-iq","wire":[1,2,3]});
+            store
+                .write(|tx| tx.put_json(Table::Checkpoints, b"message:fixture:send", 1, &intent))
+                .unwrap();
+            let mut nodes: std::collections::VecDeque<_> = if mode == "count" {
+                (0..32)
+                    .map(|i| Node::new("receipt").attr("id", i.to_string()))
+                    .collect()
+            } else {
+                [
+                    Node::new("iq")
+                        .attr("id", "reserved-iq")
+                        .attr("type", "get"),
+                    Node::new("receipt").attr("id", "unrelated"),
+                ]
+                .into()
+            };
+            if mode == "success" || mode == "capture_error" {
+                nodes.push_back(
+                    Node::new("iq")
+                        .attr("id", "reserved-iq")
+                        .attr("type", "result"),
+                );
+            } else if mode == "terminal" {
+                nodes.push_back(Node::new("stream:error"));
+            }
+            let mut captures = Vec::new();
+            let result: crate::Result<_> = wait_for_observed(
+                async || {
+                    if let Some(node) = nodes.pop_front() {
+                        return Ok(node);
+                    }
+                    if mode == "timeout" {
+                        std::future::pending().await
+                    } else {
+                        Err(TransportError::Closed)
+                    }
+                },
+                |node| {
+                    if mode == "capture_error" && captures.len() == 1 {
+                        return Err(crate::Error::invalid("capture", "injected capture failure"));
+                    }
+                    captures.push(super::super::inbox::preserve(&store, node)?);
+                    Ok(())
+                },
+                "iq",
+                "reserved-iq",
+            )
+            .await;
+            if mode == "success" {
+                let (reply, pending) = result.unwrap();
+                assert_eq!(
+                    reply.get_attr("type").and_then(|v| v.as_text()),
+                    Some("result")
+                );
+                assert_eq!(pending.len(), 2);
+            } else {
+                assert!(result.is_err(), "{mode}");
+            }
+            assert_eq!(
+                captures.len(),
+                match mode {
+                    "count" => 32,
+                    "success" | "terminal" => 3,
+                    "capture_error" => 1,
+                    _ => 2,
+                }
+            );
+            if mode == "capture_error" {
+                assert_eq!(
+                    nodes.len(),
+                    1,
+                    "capture failure must stop before reading the matching response"
+                );
+            }
+            drop(store);
+            let store = open();
+            for key in captures {
+                assert!(
+                    store
+                        .read(|tx| tx.get(Table::Checkpoints, &key, 1))
+                        .unwrap()
+                        .is_some(),
+                    "{mode}"
+                );
+            }
+            assert_eq!(
+                store
+                    .read(|tx| tx.get_json::<serde_json::Value>(
+                        Table::Checkpoints,
+                        b"message:fixture:send",
+                        1
+                    ))
+                    .unwrap(),
+                Some(intent)
+            );
+        }
     }
 }
