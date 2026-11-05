@@ -1,0 +1,32 @@
+[
+  {
+    "name": "cancel-tasks",
+    "start_va": "0x727bd0",
+    "end_va": "0x727d40"
+  },
+  {
+    "name": "manager-destructor",
+    "start_va": "0x727b28",
+    "end_va": "0x727bd0"
+  },
+  {
+    "name": "cancel-task-callback",
+    "start_va": "0x727a10",
+    "end_va": "0x727a88"
+  },
+  {
+    "name": "clear-callback-table",
+    "start_va": "0x72ae18",
+    "end_va": "0x72ae68"
+  },
+  {
+    "name": "cancel-callback-thunk",
+    "start_va": "0xbd8f98",
+    "end_va": "0xbd8fa0"
+  },
+  {
+    "name": "destructor-thunk",
+    "start_va": "0xbd8fa0",
+    "end_va": "0xbd8fa8"
+  }
+]

@@ -1,0 +1,20 @@
+            0x0072ae18      paciasp
+            0x0072ae1c      stp   x29, x30, [sp, -0x20]!
+            0x0072ae20      str   x19, [sp, 0x10]
+            0x0072ae24      mov   x29, sp
+            0x0072ae28      mov   x19, x0
+            0x0072ae2c      bl    0x727aec
+            0x0072ae30      mov   x1, x19
+            0x0072ae34      bl    sym.imp.__MCFCastToClassNotNull
+            0x0072ae38      bl    0xbe2550
+            0x0072ae3c      bl    sym.imp.MCIExecutionGlobalQueueCheckIsOnContext
+            0x0072ae40      tst   w0, 0xff
+        ┌─< 0x0072ae44      b.eq  0x72ae64
+        │   0x0072ae48      ldr   x0, [x19, 0x70]                      ; [0x70:4]=8
+        │   0x0072ae4c      bl    sym.imp.MCFRelease
+        │   0x0072ae50      str   xzr, [x19, 0x70]
+        │   0x0072ae54      ldr   x19, [sp, 0x10]                      ; [0x10:4]=0xb70003
+        │   0x0072ae58      ldp   x29, x30, [sp], 0x20
+        │   0x0072ae5c      autiasp
+        │   0x0072ae60      ret
+        └─> 0x0072ae64      bl    sym.imp.abort

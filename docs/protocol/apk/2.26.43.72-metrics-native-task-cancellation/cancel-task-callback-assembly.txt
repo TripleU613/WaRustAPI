@@ -1,0 +1,30 @@
+            0x00727a10      paciasp
+            0x00727a14      sub   sp, sp, 0x50
+            0x00727a18      stp   x29, x30, [sp, 0x20]
+            0x00727a1c      str   x21, [sp, 0x30]
+            0x00727a20      stp   x20, x19, [sp, 0x40]
+            0x00727a24      add   x29, sp, 0x20
+            0x00727a28      bl    0xbdd120
+            0x00727a2c      stp   xzr, xzr, [sp, 8]
+            0x00727a30      bl    sym.imp.MCIParamsGetTypeID
+            0x00727a34      mov   x1, x19
+            0x00727a38      bl    sym.imp.__MCFCastToClassNotNull
+            0x00727a3c      mov   x19, x0
+            0x00727a40      bl    0x7279a4
+            0x00727a44      mov   x20, x0
+            0x00727a48      bl    0x721550
+            0x00727a4c      bl    0xbdfa60
+            0x00727a50      bl    0xbe25b0
+            0x00727a54      bl    sym.imp.MCIParamsUnpackWithTypeIDs
+            0x00727a58      ldp   x1, x8, [sp, 8]
+            0x00727a5c      ldr   x9, [x8, 0x28]                       ; [0x28:4]=0xc306e8
+            0x00727a60      ldr   x0, [x8, 0x38]                       ; [0x38:4]=0x40000a
+            0x00727a64      blr   x9
+            0x00727a68      bl    0xbdd71c
+        ┌─< 0x00727a6c      b.ne  0x727a84
+        │   0x00727a70      bl    0x49c200
+        │   0x00727a74      ldp   x29, x30, [sp, 0x20]
+        │   0x00727a78      add   sp, sp, 0x50
+        │   0x00727a7c      autiasp
+        │   0x00727a80      ret
+        └─> 0x00727a84      bl    sym.imp.__stack_chk_fail

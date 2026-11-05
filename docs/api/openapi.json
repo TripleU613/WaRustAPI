@@ -16260,5 +16260,14 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-metrics-native-recovery-timer/README.md",
     "description": "Connection-status body corrects a provisional load-completion label. Ready status starts repeating interval30 task timer; cancellation/readiness and weak-manager behavior checked in 15 bounded native fixtures with synthetic mutex/queue/provider adapters. No universal Rust IQ-from rule inferred. Status producers, concurrency/generation and runtime timing remain open. No Rust/live capability added."
+  },
+  "x-metrics-native-task-cancellation-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK static and synthetic cancellation evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-metrics-native-task-cancellation/README.md",
+    "description": "12 bounded native cancellation/destructor cases verify synthetic backend cancel arguments, queued task keys and cleanup branches. Destructor clears callback table first; endpoint map is separate and absent-network path preserves busy byte. Actual cancel, queued callback completion and persistent replay/ownership remain unproven. No Rust/live capability added."
   }
 }

@@ -1,3 +1,12 @@
+2026-11-05 — **Native metrics task cancellation ordering traced.**
+
+Twelve bounded native cases verify handle cancel/callback arguments and local
+cleanup. Destructor clears callback table before cancellation; endpoint map and
+durable delivery remain separate. [Evidence and limits](docs/protocol/apk/2.26.43.72-metrics-native-task-cancellation/README.md).
+Validation: pinned window/caller resolver, fixture reproduction, coverage, staged
+diff and bundle/link hygiene. Full callback/replay ownership and real cancel
+completion remain open. No Rust runtime or live traffic changed.
+
 2026-11-05 — **Native metrics connection-status timer semantics traced.**
 
 Corrected provisional load-completion label: connection status starts/stops

@@ -1,0 +1,92 @@
+            0x00727bd0      paciasp
+            0x00727bd4      stp   x29, x30, [sp, -0x60]!
+            0x00727bd8      bl    0xbdc944
+            0x00727bdc      mov   x29, sp
+            0x00727be0      ldr   x8, [x0, 0x58]                       ; [0x58:4]=64
+            0x00727be4      mov   x19, x0
+        ┌─< 0x00727be8      cbz   x8, 0x727d08
+        │   0x00727bec      ldr   x8, [x19, 0x48]                      ; [0x48:4]=64
+       ┌──< 0x00727bf0      cbz   x8, 0x727d3c
+       ││   0x00727bf4      ldr   x0, [x19, 0x60]                      ; [0x60:4]=0x230
+       ││   0x00727bf8      bl    sym.imp.MCFDictionaryGetCount
+       ││   0x00727bfc      cmp   w0, 0
+      ┌───< 0x00727c00      b.le  0x727ce4
+      │││   0x00727c04      mov   w1, 8
+      │││   0x00727c08      mov   w22, w0
+      │││   0x00727c0c      bl    sym.imp.MCFSafeMalloc
+      │││   0x00727c10      mov   x20, x0
+      │││   0x00727c14      mov   w0, w22
+      │││   0x00727c18      mov   w1, 8
+      │││   0x00727c1c      bl    sym.imp.MCFSafeMalloc
+      │││   0x00727c20      ldr   x8, [x19, 0x60]                      ; [0x60:4]=0x230
+      │││   0x00727c24      mov   x21, x0
+      │││   0x00727c28      bl    0x5d23e4
+      │││   0x00727c2c      mov   x0, x8
+      │││   0x00727c30      bl    sym.imp.MCFDictionaryGetKeysAndValues
+      │││   0x00727c34      ubfiz x28, x22, 3, 0x20
+      │││   0x00727c38      mov   x27, xzr
+      │││   0x00727c3c      adrp  x22, 0xbd8000
+      │││   0x00727c40      add   x22, x22, 0xf98
+      │││   0x00727c44      adrp  x23, 0x153000
+      │││   0x00727c48      add   x23, x23, 0x699
+     ┌────> 0x00727c4c      cmp   x28, x27
+    ┌─────< 0x00727c50      b.eq  0x727cd4
+    │╎│││   0x00727c54      ldr   x25, [x21, x27]
+    │╎│││   0x00727c58      ldr   x24, [x20, x27]
+    │╎│││   0x00727c5c      mov   x0, x25
+    │╎│││   0x00727c60      bl    sym.imp.MCFGetTypeID
+    │╎│││   0x00727c64      mov   x26, x0
+    │╎│││   0x00727c68      bl    sym.imp.MCFNullGetTypeID
+    │╎│││   0x00727c6c      cmp   x26, x0
+   ┌──────< 0x00727c70      b.eq  0x727c8c
+  ┌───────< 0x00727c74      cbz   x25, 0x727d2c
+  │││╎│││   0x00727c78      ldr   x8, [x25, 0x58]                      ; [0x58:4]=64
+  ────────< 0x00727c7c      cbz   x8, 0x727d30
+  │││╎│││   0x00727c80      ldr   x0, [x8, 0x30]                       ; [0x30:4]=0
+  │││╎│││   0x00727c84      ldr   x1, [x8, 0x58]                       ; [0x58:4]=64
+  │││╎│││   0x00727c88      bl    sym.imp.MCINetworkSessionCancelTask
+  │└──────> 0x00727c8c      ldr   x1, [x19, 0x70]                      ; [0x70:4]=8
+  │┌──────< 0x00727c90      cbz   x1, 0x727ccc
+  │││╎│││   0x00727c94      mov   w0, 2
+  │││╎│││   0x00727c98      mov   x2, x24
+  │││╎│││   0x00727c9c      bl    sym.imp.MCIParamsCreate
+  │││╎│││   0x00727ca0      mov   x24, x0
+  │││╎│││   0x00727ca4      bl    sym.imp.MCIGlobalGetMCIExecutionGlobalQueueForUtility
+  │││╎│││   0x00727ca8      movi  d0, 0000000000000000
+  │││╎│││   0x00727cac      mov   w1, wzr
+  │││╎│││   0x00727cb0      mov   x2, x22
+  │││╎│││   0x00727cb4      mov   x3, x24
+  │││╎│││   0x00727cb8      mov   x4, x23
+  │││╎│││   0x00727cbc      mov   w5, wzr
+  │││╎│││   0x00727cc0      bl    sym.imp.MCIGlobalExecuteAsyncHelper
+  │││╎│││   0x00727cc4      mov   x0, x24
+  │││╎│││   0x00727cc8      bl    sym.imp.MCFRelease
+  │└──────> 0x00727ccc      add   x27, x27, 8
+  │ │└────< 0x00727cd0      b     0x727c4c
+  │ └─────> 0x00727cd4      mov   x0, x21
+  │   │││   0x00727cd8      bl    sym.imp.MCFFree
+  │   │││   0x00727cdc      mov   x0, x20
+  │   │││   0x00727ce0      bl    sym.imp.MCFFree
+  │   └───> 0x00727ce4      ldr   x0, [x19, 0x60]                      ; [0x60:4]=0x230
+  │    ││   0x00727ce8      bl    sym.imp.MCFDictionaryRemoveAllValues
+  │    ││   0x00727cec      ldr   x0, [x19, 0x48]                      ; [0x48:4]=64
+  │    ││   0x00727cf0      bl    sym.imp.MCFRelease
+  │    ││   0x00727cf4      ldr   x0, [x19, 0x58]                      ; [0x58:4]=64
+  │    ││   0x00727cf8      str   xzr, [x19, 0x48]
+  │    ││   0x00727cfc      bl    sym.imp.MCFRelease
+  │    ││   0x00727d00      str   xzr, [x19, 0x58]
+  │    ││   0x00727d04      strb  wzr, [x19, 0xc0]
+  │    │└─> 0x00727d08      ldr   x8, [x19, 0x48]                      ; [0x48:4]=64
+  │    │┌─< 0x00727d0c      cbnz  x8, 0x727d34
+  │    ││   0x00727d10      ldr   x0, [x19, 0x60]                      ; [0x60:4]=0x230
+  │    ││   0x00727d14      bl    sym.imp.MCFDictionaryGetCount
+  │   ┌───< 0x00727d18      cbnz  w0, 0x727d38
+  │   │││   0x00727d1c      bl    0x49b480
+  │   │││   0x00727d20      ldp   x29, x30, [sp], 0x60
+  │   │││   0x00727d24      autiasp
+  │   │││   0x00727d28      ret
+  └───────> 0x00727d2c      bl    sym.imp.abort
+  ────────> 0x00727d30      bl    sym.imp.abort
+      ││└─> 0x00727d34      bl    sym.imp.abort
+      └───> 0x00727d38      bl    sym.imp.abort
+       └──> 0x00727d3c      bl    sym.imp.abort

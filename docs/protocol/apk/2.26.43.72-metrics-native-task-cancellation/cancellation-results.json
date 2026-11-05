@@ -1,0 +1,207 @@
+{
+  "scope": "synthetic cancellation/destructor only; queue/network cancellation recorded, never executed",
+  "unicorn_version": "2.1.4",
+  "instruction_cap_per_case": 100000,
+  "timeout_microseconds_per_case": 1000000,
+  "cases": [
+    {
+      "case": "absent-empty",
+      "aborted": false,
+      "cancel_requests": [],
+      "queued_callbacks": [],
+      "active_map_cleared": false,
+      "endpoint_pointer_unchanged": true,
+      "busy_byte": 1,
+      "released_objects": []
+    },
+    {
+      "case": "active-empty",
+      "aborted": false,
+      "cancel_requests": [],
+      "queued_callbacks": [],
+      "active_map_cleared": true,
+      "endpoint_pointer_unchanged": true,
+      "busy_byte": 0,
+      "released_objects": [
+        "0x10000400",
+        "0x10000500"
+      ]
+    },
+    {
+      "case": "placeholder",
+      "aborted": false,
+      "cancel_requests": [],
+      "queued_callbacks": [
+        {
+          "callback_va": "0xbd8f98",
+          "callback_table": "0x10000600",
+          "task_key": "0x10001000"
+        }
+      ],
+      "active_map_cleared": true,
+      "endpoint_pointer_unchanged": true,
+      "busy_byte": 0,
+      "released_objects": [
+        "0x10007000",
+        "0x10000400",
+        "0x10000500"
+      ]
+    },
+    {
+      "case": "active-task",
+      "aborted": false,
+      "cancel_requests": [
+        [
+          "0x10006000",
+          "0x10006400"
+        ]
+      ],
+      "queued_callbacks": [
+        {
+          "callback_va": "0xbd8f98",
+          "callback_table": "0x10000600",
+          "task_key": "0x10001000"
+        }
+      ],
+      "active_map_cleared": true,
+      "endpoint_pointer_unchanged": true,
+      "busy_byte": 0,
+      "released_objects": [
+        "0x10007000",
+        "0x10000400",
+        "0x10000500"
+      ]
+    },
+    {
+      "case": "mixed",
+      "aborted": false,
+      "cancel_requests": [
+        [
+          "0x10006100",
+          "0x10006500"
+        ]
+      ],
+      "queued_callbacks": [
+        {
+          "callback_va": "0xbd8f98",
+          "callback_table": "0x10000600",
+          "task_key": "0x10001000"
+        },
+        {
+          "callback_va": "0xbd8f98",
+          "callback_table": "0x10000600",
+          "task_key": "0x10001100"
+        }
+      ],
+      "active_map_cleared": true,
+      "endpoint_pointer_unchanged": true,
+      "busy_byte": 0,
+      "released_objects": [
+        "0x10007000",
+        "0x10007020",
+        "0x10000400",
+        "0x10000500"
+      ]
+    },
+    {
+      "case": "no-callback-table",
+      "aborted": false,
+      "cancel_requests": [
+        [
+          "0x10006000",
+          "0x10006400"
+        ]
+      ],
+      "queued_callbacks": [],
+      "active_map_cleared": true,
+      "endpoint_pointer_unchanged": true,
+      "busy_byte": 0,
+      "released_objects": [
+        "0x10000400",
+        "0x10000500"
+      ]
+    },
+    {
+      "case": "missing-provider",
+      "aborted": true,
+      "cancel_requests": [],
+      "queued_callbacks": [],
+      "active_map_cleared": false,
+      "endpoint_pointer_unchanged": true,
+      "busy_byte": 1,
+      "released_objects": []
+    },
+    {
+      "case": "orphan-provider",
+      "aborted": true,
+      "cancel_requests": [],
+      "queued_callbacks": [],
+      "active_map_cleared": false,
+      "endpoint_pointer_unchanged": true,
+      "busy_byte": 1,
+      "released_objects": []
+    },
+    {
+      "case": "orphan-tasks",
+      "aborted": true,
+      "cancel_requests": [],
+      "queued_callbacks": [],
+      "active_map_cleared": false,
+      "endpoint_pointer_unchanged": true,
+      "busy_byte": 1,
+      "released_objects": []
+    },
+    {
+      "case": "missing-backend",
+      "aborted": true,
+      "cancel_requests": [],
+      "queued_callbacks": [],
+      "active_map_cleared": false,
+      "endpoint_pointer_unchanged": true,
+      "busy_byte": 1,
+      "released_objects": []
+    },
+    {
+      "case": "null-value",
+      "aborted": true,
+      "cancel_requests": [],
+      "queued_callbacks": [],
+      "active_map_cleared": false,
+      "endpoint_pointer_unchanged": true,
+      "busy_byte": 1,
+      "released_objects": []
+    },
+    {
+      "case": "destructor-active",
+      "aborted": false,
+      "cancel_requests": [
+        [
+          "0x10006000",
+          "0x10006400"
+        ]
+      ],
+      "queued_callbacks": [],
+      "active_map_cleared": true,
+      "endpoint_pointer_unchanged": true,
+      "busy_byte": 0,
+      "released_objects": [
+        "0x10000600",
+        "0x10000400",
+        "0x10000500",
+        "0x0",
+        "0x0",
+        "0x10000200",
+        "0x10000300",
+        "0x0",
+        "0x0",
+        "0x0",
+        "0x0",
+        "0x0",
+        "0x0",
+        "0x0",
+        "0x0",
+        "0x0"
+      ]
+    }
+  ]
+}

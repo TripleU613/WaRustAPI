@@ -1,0 +1,62 @@
+{
+  "scope": "static native task cancellation and destructor; not observed disconnect/delivery or replay authority",
+  "direct_cancel_helper_callers": [
+    "0x727b58",
+    "0x729ef4"
+  ],
+  "cancel_callback_target": "0x727a10",
+  "destructor_target": "0x727b28",
+  "queued_callback_table_slot": "0x28",
+  "active_task_dictionary_offset": "0x60",
+  "endpoint_dictionary_offset": "0x68",
+  "windows": [
+    {
+      "name": "cancel-tasks",
+      "start_va": "0x727bd0",
+      "end_va": "0x727d40",
+      "file_offset": "0x723bd0",
+      "bytes": 368,
+      "sha256": "162fd9de474cdc00b4c23c0d805e923ce34dbedcfab2dd510a5ff034d1667f5a"
+    },
+    {
+      "name": "manager-destructor",
+      "start_va": "0x727b28",
+      "end_va": "0x727bd0",
+      "file_offset": "0x723b28",
+      "bytes": 168,
+      "sha256": "818698a579b79b58598086c2681dca2207d5fce6a5f623150529f6d9ec3b89a7"
+    },
+    {
+      "name": "cancel-task-callback",
+      "start_va": "0x727a10",
+      "end_va": "0x727a88",
+      "file_offset": "0x723a10",
+      "bytes": 120,
+      "sha256": "97ce3c4b15f60d5843f5463668b02fb5fcd963bb82b870a5b1fda1146cb0de5d"
+    },
+    {
+      "name": "clear-callback-table",
+      "start_va": "0x72ae18",
+      "end_va": "0x72ae68",
+      "file_offset": "0x726e18",
+      "bytes": 80,
+      "sha256": "a94955a4ddd420e625b62b6913bbfdbf7a6076b30e78191be2b8648560ce4ca5"
+    },
+    {
+      "name": "cancel-callback-thunk",
+      "start_va": "0xbd8f98",
+      "end_va": "0xbd8fa0",
+      "file_offset": "0xbd4f98",
+      "bytes": 8,
+      "sha256": "c098685b02b4d75dcac9efdfc72a49bb989e02654a09344aa07b53041258ceb5"
+    },
+    {
+      "name": "destructor-thunk",
+      "start_va": "0xbd8fa0",
+      "end_va": "0xbd8fa8",
+      "file_offset": "0xbd4fa0",
+      "bytes": 8,
+      "sha256": "1955bcc2aa69c87ab7fa923577596b82079f5c9c5171339b5097560e74c11f8b"
+    }
+  ]
+}

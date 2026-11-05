@@ -1,0 +1,50 @@
+{
+  "README.md": {
+    "bytes": 6054,
+    "sha256": "c658f67cfeb7c820897ddeff985a03332219ef87f04a6a9abf2106a5da5619c0"
+  },
+  "cancel-callback-thunk-assembly.txt": {
+    "bytes": 85,
+    "sha256": "b82f00f59aefe5af572da27cd4fd4fd909d324c58bb6245fffd5422bdad23633"
+  },
+  "cancel-task-callback-assembly.txt": {
+    "bytes": 1525,
+    "sha256": "e874f3264135d4f56030a4785c304bbe524765ae5c959e5a43bedaf2257d545b"
+  },
+  "cancel-tasks-assembly.txt": {
+    "bytes": 5743,
+    "sha256": "b188c69d4a84f0071c09a20cbf02fab0dd7430a6e0589edf167c8bcad7c3826b"
+  },
+  "cancellation-boundaries.json": {
+    "bytes": 1859,
+    "sha256": "2a3c1ccac36b70af7a18374c9491b1a5051d322d9513c8e4643f3a60142956a0"
+  },
+  "cancellation-results.json": {
+    "bytes": 4757,
+    "sha256": "258bf18b261a6c472818dfebb7b5db9115dd0ae9ab2245bcf6d9ffb35bfdcf32"
+  },
+  "check-cancellation.py": {
+    "bytes": 8679,
+    "sha256": "186545e73cc4dcf5e982fced6388b4f4577549d66b994d80ea51790cc5ee30d3"
+  },
+  "clear-callback-table-assembly.txt": {
+    "bytes": 1061,
+    "sha256": "eec38f884efa97cb4c5642eafeb460ae3da8e48c8f0abaf2abacb36f15e5d16c"
+  },
+  "destructor-thunk-assembly.txt": {
+    "bytes": 85,
+    "sha256": "a7fc243485906a969c667246119d527948cc11e5719cc9ba6df14bd849d6d055"
+  },
+  "inspect-cancellation.py": {
+    "bytes": 1503,
+    "sha256": "e8423dc4600f728734a62543d4d98a9f57d2dd53c7c0f6a1bb5754c7f9f262f9"
+  },
+  "manager-destructor-assembly.txt": {
+    "bytes": 2681,
+    "sha256": "307c764d32e36e60a7ebdb9ce059a2b07bcf99770e4c4576cbad72bd502d0192"
+  },
+  "windows.json": {
+    "bytes": 578,
+    "sha256": "afad2a0349cdf42685f775daa969d0e94ae8c73a46d4e163e46ee70af3d3e1a0"
+  }
+}

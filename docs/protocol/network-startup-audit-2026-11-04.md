@@ -539,3 +539,15 @@ Not-ready callback does not itself stop generic timer repetition.
 [Native bodies, corrected scope, fixtures and concurrency limits](apk/2.26.43.72-metrics-native-recovery-timer/README.md).
 Rust IQ review did not establish a universal from rule; no guessed guard/retry
 was added. Status producers/generation/concurrency and live behavior remain open.
+
+### Native metrics task cancellation and destructor ordering (2026-11-05)
+
+**Confirmed static / observed bounded synthetic execution, APK43.72:**
+cancel helper issues handle cancels and optional table+0x28 callbacks before
+clearing active tasks/provider/network. Endpoint map is separate; absent-network
+path does not clear busy byte. Destructor clears callback table first, so helper
+does not enqueue those callbacks during teardown.12 native cases verify exact
+synthetic cancel arguments, queued task keys and cleanup/invariant branches.
+[Native bodies, direct callers, fixtures and delivery/ownership limits](apk/2.26.43.72-metrics-native-task-cancellation/README.md).
+Real cancellation, queued callback completion and durable replay remain open.
+No Rust runtime or live operations changed.

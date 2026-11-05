@@ -1,0 +1,42 @@
+            0x00727b28      paciasp
+            0x00727b2c      stp   x29, x30, [sp, -0x20]!
+            0x00727b30      str   x19, [sp, 0x10]
+            0x00727b34      mov   x29, sp
+            0x00727b38      mov   x19, x0
+            0x00727b3c      bl    0x727aec
+            0x00727b40      mov   x1, x19
+            0x00727b44      bl    sym.imp.__MCFCastToClassNotNull
+            0x00727b48      ldr   x0, [x19, 0x70]                      ; [0x70:4]=8
+            0x00727b4c      bl    sym.imp.MCFRelease
+            0x00727b50      mov   x0, x19
+            0x00727b54      str   xzr, [x19, 0x70]
+            0x00727b58      bl    0x727bd0
+            0x00727b5c      ldr   x0, [x19, 0x18]                      ; [0x18:4]=0
+            0x00727b60      bl    sym.imp.MCFRelease
+            0x00727b64      ldr   x0, [x19, 0x28]                      ; [0x28:4]=0xc306e8
+            0x00727b68      bl    sym.imp.MCFRelease
+            0x00727b6c      ldr   x0, [x19, 0x60]                      ; [0x60:4]=0x230
+            0x00727b70      bl    sym.imp.MCFRelease
+            0x00727b74      ldr   x0, [x19, 0x68]                      ; [0x68:4]=0x230
+            0x00727b78      bl    sym.imp.MCFRelease
+            0x00727b7c      ldr   x0, [x19, 0x78]                      ; [0x78:4]=1
+            0x00727b80      bl    sym.imp.MCFRelease
+            0x00727b84      ldr   x0, [x19, 0x80]                      ; [0x80:4]=0
+            0x00727b88      bl    sym.imp.MCFRelease
+            0x00727b8c      ldr   x0, [x19, 0x38]                      ; [0x38:4]=0x40000a
+            0x00727b90      bl    sym.imp.MCFRelease
+            0x00727b94      ldr   x0, [x19, 0x90]                      ; [0x90:4]=0
+            0x00727b98      bl    sym.imp.MCFRelease
+            0x00727b9c      ldr   x0, [x19, 0x98]                      ; [0x98:4]=0x47fca4
+            0x00727ba0      bl    sym.imp.MCFRelease
+            0x00727ba4      ldr   x0, [x19, 0x50]                      ; [0x50:4]=64
+            0x00727ba8      bl    sym.imp.MCFRelease
+            0x00727bac      ldr   x0, [x19, 0xa0]                      ; [0xa0:4]=0x47fca4
+            0x00727bb0      bl    sym.imp.MCFRelease
+            0x00727bb4      ldr   x0, [x19, 0xa8]                      ; [0xa8:4]=0x4000
+            0x00727bb8      bl    sym.imp.MCFRelease
+            0x00727bbc      ldr   x0, [x19, 0xc8]                      ; [0xc8:4]=0x483cb0 segment.LOAD1
+            0x00727bc0      ldr   x19, [sp, 0x10]                      ; [0x10:4]=0xb70003
+            0x00727bc4      ldp   x29, x30, [sp], 0x20
+            0x00727bc8      autiasp
+        ┌─< 0x00727bcc      b     sym.imp.MCFRelease
