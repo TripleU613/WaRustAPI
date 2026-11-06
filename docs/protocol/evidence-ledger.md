@@ -8194,3 +8194,5 @@ Current43.72 response-state lifecycle narrowed: selected nonempty-read reset and
 Current43.72 MEX lookup operation ownership/default and conditional non-Pando send timeout retained; no blanket cancellation or native-race claim. [Operation handle ownership, conditional32-second send and remaining transport limits](bulk-prekey-refresh.md#missing-lid-mex-operation-ownership-and-nested-send-timeout-2026-11-06). No runtime or live operations.
 
 APK43.72 non-Pando MEX expiry removes ordinary pending ownership before scheduling delivery failure; local471 reaches exceptional future completion. [Registry expiry, typed delivery failure and late-reply limits](bulk-prekey-refresh.md#missing-lid-non-pando-mex-expiry-outcome-2026-11-06). No runtime or live operations.
+
+APK43.72 explicit exactly-one MEX result check closes a Rust first-child ambiguity; duplicate result cannot fall back to update. [Pinned cardinality evidence, both-order regression and limits](mex.md#duplicate-result-payload-rejection-2026-11-06). No live operation.

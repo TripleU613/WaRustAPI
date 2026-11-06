@@ -449,7 +449,20 @@ impl MexJsonResponse {
 pub fn parse_json_response(node: &Node) -> Result<MexJsonResponse> {
     use crate::binary::NodeContent;
     // LaT.A02+0000..002e and O4r.Cf4+009e..00c4 prefer result over update.
-    let (payload_child, payload) = if let Some(child) = node.child("result") {
+    // APK43.72 7Ou(0Tp,0mK) 01cc..025a requires exactly one result.
+    // Do not let first-child selection hide a conflicting result or fall back
+    // to update after ambiguous result authority.
+    let mut results = node
+        .child_nodes()
+        .iter()
+        .filter(|n| n.description == "result");
+    let (payload_child, payload) = if let Some(child) = results.next() {
+        if results.next().is_some() {
+            return Err(Error::invalid(
+                "mex.response",
+                "duplicate result payload children",
+            ));
+        }
         ("result", child)
     } else if let Some(child) = node.child("update") {
         ("update", child)
@@ -950,6 +963,39 @@ mod tests {
         let utf8 =
             Node::new("iq").children(vec![Node::new("result").bytes(vec![b'{', 0xff, b'}'])]);
         assert!(parse_json_response(&utf8).is_err());
+    }
+
+    #[test]
+    fn duplicate_result_payloads_refuse_without_update_fallback_or_content_echo() {
+        for second in [
+            r#"{"data":{"private-second":{}}}"#,
+            r#"{"errors":["private-error"]}"#,
+            "malformed-private",
+        ] {
+            for reverse in [false, true] {
+                let first = Node::new("result").text(r#"{"data":{"private-first":{}}}"#);
+                let other = Node::new("result").text(second);
+                let mut children = if reverse {
+                    vec![other, first]
+                } else {
+                    vec![first, other]
+                };
+                children.push(Node::new("update").text("{}"));
+                let error = parse_json_response(&Node::new("iq").children(children))
+                    .unwrap_err()
+                    .to_string();
+                assert!(error.contains("duplicate result"));
+                assert!(!error.contains("private"));
+            }
+        }
+        let update = Node::new("iq").children(vec![Node::new("update").text("{}")]);
+        assert_eq!(
+            parse_json_response(&update)
+                .unwrap()
+                .summary()
+                .payload_child,
+            "update"
+        );
     }
 
     #[test]

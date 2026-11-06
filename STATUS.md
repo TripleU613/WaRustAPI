@@ -1,3 +1,5 @@
+MEX JSON parser now rejects duplicate result payloads instead of choosing the first, matching the pinned non-Pando success constructor cardinality. [Pinned cardinality evidence, both-order regression and limits](docs/protocol/mex.md#duplicate-result-payload-rejection-2026-11-06). Offline only; no query/retry added.
+
 Non-Pando MEX expiry now traced from registry removal through typed local delivery failure to exceptional future completion. [Registry expiry, typed delivery failure and late-reply limits](docs/protocol/bulk-prekey-refresh.md#missing-lid-non-pando-mex-expiry-outcome-2026-11-06). Research only; no server471/retry or complete late-reply guarantee.
 
 Missing-LID MEX lookup now traced through fresh operation/default timeout and discarded start handle; non-Pando send uses32seconds while outer wait uses128seconds. [Operation handle ownership, conditional32-second send and remaining transport limits](docs/protocol/bulk-prekey-refresh.md#missing-lid-mex-operation-ownership-and-nested-send-timeout-2026-11-06). Research only; Pando/late-callback limits remain.

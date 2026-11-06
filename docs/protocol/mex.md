@@ -1550,3 +1550,9 @@ to an add/remove operation before later group processing.
 [Persisted-set methods, exact register mapping, ingress gates and unknowns](apk/2.26.43.72-group-missing-identification/README.md).
 Rust already exposes the explicit MEX context vocabulary; automatic lifecycle
 and fully admitted ingress parity remain unported. No runtime/live operation.
+
+## Duplicate result payload rejection (2026-11-06)
+
+**Confirmed APK43.72 / corrected Rust parser:** [complete constructors and exact-one branch](apk/2.26.43.72-mex-result-cardinality/README.md) show7Ou(0Tp,0mK) requires exactly one result child at01cc..025a. Rust parse_json_response previously selected the first and ignored additional results. It now refuses duplicates before body parsing, without falling back to update or echoing content. Result-over-update priority, update-only handling and the local JSON size bound remain. Root/request correlation and update streaming/cardinality are separate boundaries; no full MEX/Pando/adoption parity is claimed.
+
+Regression duplicate_result_payloads_refuse_without_update_fallback_or_content_echo checks two data payloads, data versus errors and data versus malformed body in both orders with a valid update present. All duplicates refuse with a fixed diagnostic; update-only remains valid. No request, retry, deadline or live account operation added.

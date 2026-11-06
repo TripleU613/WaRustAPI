@@ -17611,5 +17611,12 @@
     "x-live": false,
     "description": "Research-only APK43.72 non-Pando MEX registry expiry and concrete callback trace. Pending ownership is removed before scheduled delivery failure; typed local mex-delivery-failure471 reaches BsR, distinct from normal request-refusal completion. Full response parsing/adoption, race/fallback/Pando expiry remain unverified. No server471 response, retry permission or runtime behavior added.",
     "evidence": "docs/protocol/bulk-prekey-refresh.md#missing-lid-non-pando-mex-expiry-outcome-2026-11-06"
+},
+  "x-mex-result-cardinality": {
+    "x-cli": false,
+    "x-transport": "experimental",
+    "x-live": false,
+    "description": "MEX JSON response parser rejects multiple result payloads with a fixed local diagnostic before JSON parsing/update fallback, matching selected APK43.72 non-Pando success constructor exact-one cardinality. Result/update priority and update-only behavior remain. Root/request correlation, streaming and full MEX adoption are separate boundaries. No request or retry added.",
+    "evidence": "docs/protocol/mex.md#duplicate-result-payload-rejection-2026-11-06"
 }
 }
