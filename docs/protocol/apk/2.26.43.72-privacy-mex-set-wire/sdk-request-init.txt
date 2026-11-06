@@ -1,0 +1,22 @@
+
+# class: LX/0iT;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLLZ)  # .registers 9
+    # full signature: LX/0iT;-><init>(LX/0i1;Ljava/lang/Class;Ljava/lang/Class;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Z)V
+    0000..0002  const/4  v0, #0x1
+    0002..0008  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    000e..0012  iput-object  v5, v1, LX/0iT;->A05:Ljava/lang/String;
+    0012..0016  iput-object  v2, v1, LX/0iT;->A01:LX/0i1;
+    0016..001a  iput-object  v3, v1, LX/0iT;->A02:Ljava/lang/Class;
+    001a..001e  iput-object  v4, v1, LX/0iT;->A03:Ljava/lang/Class;
+    001e..0022  iput-object  v7, v1, LX/0iT;->A07:Lkotlin/jvm/functions/Function1;
+    0022..0026  iput-boolean  v8, v1, LX/0iT;->A08:Z
+    0026..002a  iput-object  v6, v1, LX/0iT;->A04:Ljava/lang/String;
+    002a..002e  new-instance  v0, Ljava/util/LinkedHashMap;
+    002e..0034  invoke-direct  {v0}, Ljava/util/LinkedHashMap;-><init>()V
+    0034..0038  iput-object  v0, v1, LX/0iT;->A06:Ljava/util/Map;
+    0038..003a  return-void
+    # exception table: 0 try range(s)
+.end method

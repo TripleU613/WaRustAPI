@@ -1,0 +1,14 @@
+
+# class: LX/2LE;
+# extends: Ljava/lang/Object;
+
+.method public A0Q(LLL)  # .registers 4
+    # full signature: LX/2LE;->A0Q(LX/0iq;LX/0cf;)Ljava/lang/Object;
+    0000..0002  const/4  v1, #0x3
+    0002..0006  new-instance  v0, LX/IE8;
+    0006..000c  invoke-direct  {v0, v1}, LX/IE8;-><init>(I)V
+    000c..0012  invoke-virtual  {v2, v0, v3}, LX/0iq;->ARv(Lkotlin/jvm/functions/Function1;LX/0cf;)Ljava/lang/Object;
+    0012..0014  move-result-object  v0
+    0014..0016  return-object  v0
+    # exception table: 0 try range(s)
+.end method

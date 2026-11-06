@@ -1,3 +1,11 @@
+2026-11-06 — **Held MEX privacy setter intent before notification ACK.**
+The pinned mutation serializes as w:mex IQ/get, so the classic-only guard missed
+it. Exact direct query_id recognition now preserves the hold across queued,
+sent, success and refusal outcomes and store reopen. Getter/body/nested-ID
+negatives remain admitted. Native typed ownership remains unported.
+[Wire proof and regression](docs/protocol/account-privacy-notifications.md#mex-mutation-intent-guard-2026-11-06).
+1534 workspace tests passed; no live account operation.
+
 2026-11-06 — **Traced privacy MEX setter input and response admission.**
 SetPrivacySettingMutation uses nested enum-valued setting input and a distinct
 persisted document. Null-response fallback and enum-translation failure stay

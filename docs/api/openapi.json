@@ -1,4 +1,11 @@
 {
+  "x-account-privacy-mex-intent-guard": {
+    "x-cli": "whatsapp-cli listen; whatsapp-cli actions; account-privacy-inspect; xtask apk-smali; xtask apk-field-refs",
+    "x-transport": "experimental account_sync notification guard; offline tested",
+    "x-live": false,
+    "description": "Pinned APK43.72 SetPrivacySettingMutation serializes as w:mex IQ/get with direct query query_id 26887749497493182. The transactional unowned privacy setter guard now recognizes that exact form alongside classic privacy/set and holds fresh notification adoption/ACK across queued, sent, Ok and Error outcomes and reopen. Getter IDs, nested query IDs and body-text matches do not claim intent. Processed redelivery re-ACK remains idempotent. No mutation sender, typed category owner, response projector, automatic refresh, replay or HTTP route is added. Native effective mode and recovery remain unported. SDK duration32000 is constructor-default stored/forwarded state with external writers, not a universal MEX deadline.",
+    "evidence": "docs/protocol/apk/2.26.43.72-privacy-mex-set-wire/README.md"
+  },
   "openapi": "3.1.0",
   "x-outgoing-retry-error-domain-audit": {
     "x-cli": false,

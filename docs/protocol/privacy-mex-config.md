@@ -200,3 +200,22 @@ initializers without duplicate records. Formatting, OpenAPI library test,
 APK coverage freshness and diff whitespace pass; hygiene checks440 bundles.
 No Rust source changed, so workspace tests/Clippy were not rerun for this
 evidence-only chunk. No live account or APK runtime operation.
+
+## MEX mutation intent guard (2026-11-06)
+
+**Confirmed static / offline tested correction:** the [SDK wire chain](apk/2.26.43.72-privacy-mex-set-wire/README.md)
+serializes SetPrivacySettingMutation as w:mex IQ/get with direct query
+query_id `26887749497493182`. The previous classic privacy/set-only guard missed
+this form. The same transactional unowned-intent hold now recognizes the exact
+operation ID on a direct query child. Queued, sent, Ok and Error outcomes stay
+held across encrypted-store reopen; outer IQ settlement cannot substitute for
+native pending-category reconciliation. Existing processed redeliveries re-ACK
+without applying old state. Getter IDs, nested query IDs and body text matching
+the mutation ID do not claim setter ownership.
+
+The regression was red before correction, green after; the actor test covers
+both refused wire forms, continued ping handling and no notification ACK,
+adoption or resend. Full workspace:1534 tests, nine suites including doc tests.
+No new sender, replay, timer, automatic refresh or live-account operation.
+Native category-keyed owner, effective protocol selection and success recovery
+remain unported; this conservative recognition is broader than native ownership.

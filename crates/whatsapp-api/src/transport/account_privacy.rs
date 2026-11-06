@@ -11,6 +11,25 @@ use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
 const STATE: &[u8] = b"account-privacy:readreceipts";
+// APK43.72 SetPrivacySettingMutation persisted record; 0mF/0mK encode the
+// mutation as IQ/get w:mex with this query_id, not classic privacy/set.
+// Evidence: docs/protocol/apk/2.26.43.72-privacy-mex-set-wire/README.md.
+const PRIVACY_SET_MEX_DOC_ID: &str = "26887749497493182";
+
+fn unowned_setter_request(request: &Node) -> bool {
+    match (
+        request.get_attr("xmlns").and_then(|value| value.as_text()),
+        request.get_attr("type").and_then(|value| value.as_text()),
+    ) {
+        (Some("privacy"), Some("set")) => request.child("privacy").is_some(),
+        (Some("w:mex"), Some("get")) => request.child_nodes().iter().any(|child| {
+            child.description == "query"
+                && child.get_attr("query_id").and_then(|value| value.as_text())
+                    == Some(PRIVACY_SET_MEX_DOC_ID)
+        }),
+        _ => false,
+    }
+}
 
 /// Server category value admitted by current `8AX.A00/A04` for readreceipts.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -210,10 +229,7 @@ pub(crate) fn handle(store: &ProtocolStore, node: &Node) -> Result<Option<Node>>
         for action in super::actions::outcomes_in_write(tx)? {
             let request = super::actions::request_in_write(tx, &action.id)?
                 .ok_or_else(|| invalid("saved action request is missing"))?;
-            if request.get_attr("xmlns").and_then(|v| v.as_text()) == Some("privacy")
-                && request.get_attr("type").and_then(|v| v.as_text()) == Some("set")
-                && request.child("privacy").is_some()
-            {
+            if unowned_setter_request(&request) {
                 // APK43.72 0oe.A0P inserts pending 7wp before dispatch and
                 // binds 6pB.A01=false. 8R5.Bvj -> 6pB.A00 then leaves that
                 // pending ownership intact even on a real IQ refusal.
@@ -591,6 +607,84 @@ mod tests {
                     assert_eq!(store.journal_head().unwrap(), head);
                 }
             }
+        }
+    }
+    #[test]
+    fn mex_privacy_mutation_keeps_guard_across_outcomes_and_reopen() {
+        use super::super::actions;
+        for phase in ["queued", "sent", "result", "error"] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("mex-pending.redb");
+            let store = open(&path);
+            let seed = notification("seed", vec![category("none")]);
+            let seed_ack = handle(&store, &seed).unwrap().unwrap();
+            let id = actions::queue(&store, "fixture", "MEX privacy setter", |id| {
+                Ok(Node::new("iq").attr("id", id).attr("to", Jid::parse("s.whatsapp.net")?)
+                    .attr("xmlns", "w:mex").attr("type", "get")
+                    .children(vec![
+                        Node::new("trace").children(vec![Node::new("flow_id").text("26887749497493182")]),
+                        Node::new("query").attr("query_id", "26887749497493182")
+                            .text(r#"{"queryId":"26887749497493182","variables":{"setting":{"feature":"READRECEIPTS","setting":"NONE"}}}"#),
+                    ]))
+            }).unwrap();
+            if phase != "queued" {
+                assert_eq!(actions::reserve_pending(&store).unwrap().len(), 1);
+            }
+            if matches!(phase, "result" | "error") {
+                let mut reply = Node::new("iq").attr("id", id.as_str()).attr("type", phase);
+                if phase == "error" {
+                    reply = reply.children(vec![Node::new("error").attr("code", "503")]);
+                }
+                assert!(actions::record_reply(&store, &reply).unwrap());
+            }
+            let frozen = actions::request(&store, &id).unwrap();
+            let before = snapshot(&store);
+            let head = store.journal_head().unwrap();
+            let fresh = notification("fresh", vec![category("all")]);
+            assert!(handle(&store, &fresh).unwrap().is_none(), "{phase}");
+            assert_eq!(snapshot(&store), before);
+            drop(store);
+            let store = open(&path);
+            assert!(handle(&store, &fresh).unwrap().is_none());
+            assert_eq!(handle(&store, &seed).unwrap(), Some(seed_ack));
+            assert_eq!(snapshot(&store), before);
+            assert_eq!(store.journal_head().unwrap(), head);
+            assert_eq!(
+                read_receipts(&store).unwrap().unwrap().value,
+                ReadReceiptValue::None
+            );
+            assert_eq!(actions::request(&store, &id).unwrap(), frozen);
+            if phase != "queued" {
+                assert!(actions::reserve_pending(&store).unwrap().is_empty());
+            }
+        }
+    }
+
+    #[test]
+    fn mex_privacy_getter_or_nested_id_does_not_own_setter_guard() {
+        use super::super::actions;
+        for nested in [false, true] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("mex-query.redb"));
+            actions::queue(&store, "fixture", "MEX query", |id| {
+                let mut query = Node::new("query").attr("query_id", "32774292262215379")
+                    .text(r#"{"queryId":"32774292262215379","variables":{"opaque":"26887749497493182"}}"#);
+                if nested {
+                    query = Node::new("metadata").children(vec![Node::new("query")
+                        .attr("query_id", "26887749497493182")]);
+                }
+                Ok(Node::new("iq").attr("id", id).attr("xmlns", "w:mex")
+                    .attr("type", "get").children(vec![query]))
+            }).unwrap();
+            assert!(
+                handle(&store, &notification("fresh", vec![category("all")]))
+                    .unwrap()
+                    .is_some()
+            );
+            assert_eq!(
+                read_receipts(&store).unwrap().unwrap().value,
+                ReadReceiptValue::All
+            );
         }
     }
 }

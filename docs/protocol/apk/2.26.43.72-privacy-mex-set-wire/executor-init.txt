@@ -1,0 +1,41 @@
+
+# class: LX/0iq;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLLLLLLL)  # .registers 14
+    # full signature: LX/0iq;-><init>(LX/0iQ;LX/00x;LX/00x;LX/00x;LX/00x;LX/00x;LX/00x;LX/07p;LX/08Z;LX/0io;LX/0ih;)V
+    0000..0002  const/4  v0, #0x2
+    0002..0008  invoke-static  {v4, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  const/4  v0, #0x3
+    000a..0010  invoke-static  {v5, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0010..0012  const/4  v0, #0x4
+    0012..0018  invoke-static  {v6, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0018..001a  const/4  v0, #0x5
+    001a..0020  invoke-static  {v7, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0020..0022  const/4  v0, #0x6
+    0022..0028  invoke-static  {v8, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0028..002a  const/4  v0, #0x7
+    002a..0030  invoke-static  {v9, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0030..0034  const/16  v0, #0x8
+    0034..003a  invoke-static  {v12, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    003a..003e  const/16  v0, #0x9
+    003e..0044  invoke-static  {v10, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0044..0048  const/16  v0, #0xa
+    0048..004e  invoke-static  {v11, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    004e..0054  invoke-direct  {v2}, Ljava/lang/Object;-><init>()V
+    0054..0058  iput-object  v3, v2, LX/0iq;->A06:LX/0iQ;
+    0058..005c  iput-object  v13, v2, LX/0iq;->A0G:LX/0ih;
+    005c..0060  iput-object  v4, v2, LX/0iq;->A0B:LX/00x;
+    0060..0064  iput-object  v5, v2, LX/0iq;->A09:LX/00x;
+    0064..0068  iput-object  v6, v2, LX/0iq;->A08:LX/00x;
+    0068..006c  iput-object  v7, v2, LX/0iq;->A0A:LX/00x;
+    006c..0070  iput-object  v8, v2, LX/0iq;->A07:LX/00x;
+    0070..0074  iput-object  v9, v2, LX/0iq;->A0C:LX/00x;
+    0074..0078  iput-object  v12, v2, LX/0iq;->A0F:LX/0io;
+    0078..007c  iput-object  v10, v2, LX/0iq;->A0D:LX/07p;
+    007c..0080  iput-object  v11, v2, LX/0iq;->A0E:LX/08Z;
+    0080..0084  const-wide/16  v0, #0x7d00
+    0084..0088  iput-wide  v0, v2, LX/0iq;->A00:J
+    0088..008a  return-void
+    # exception table: 0 try range(s)
+.end method

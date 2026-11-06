@@ -1,0 +1,29 @@
+# Selected DEX excerpt; not a complete method.
+
+# class: LX/0io;
+# extends: Ljava/lang/Object;
+
+.method public A02(LLL)  # .registers 12
+    # full signature: LX/0io;->A02(LX/0iQ;LX/12m;)LX/0mO;
+    0000..0004  instance-of  v0, v10, Lcom/facebook/pando/PandoGraphQLRequest;
+    0004..0008  if-eqz  v0, +0x5
+    0008..000c  sget-object  v0, LX/0mO;->A04:LX/0mO;
+    000c..000e  return-object  v0
+    000e..0014  invoke-interface  {v10}, LX/0iQ;->getCallName()Ljava/lang/String;
+    0014..0016  move-result-object  v4
+    0016..001c  invoke-static  {v4}, LX/00l;->A05(Ljava/lang/Object;)V
+    001c..0022  invoke-interface  {v10}, LX/0iQ;->getResolvedBuildConfigName()Ljava/lang/String;
+    0022..0024  move-result-object  v2
+    0024..002a  invoke-static  {v2}, LX/00l;->A05(Ljava/lang/Object;)V
+    002a..0030  const-string/jumbo  v0, "whatsapp-android-mex"
+    0030..0036  invoke-virtual  {v2, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0036..0038  move-result  v0
+    0038..003c  if-eqz  v0, +0xbd
+    003c..0040  instance-of  v0, v10, LX/0iT;
+    0040..0044  if-eqz  v0, +0xb6
+    0044..0048  check-cast  v10, LX/0iT;
+    0048..004c  iget-object  v0, v10, LX/0iT;->A03:Ljava/lang/Class;
+    004c..0050  if-eqz  v0, +0xb0
+    0050..0054  iget-object  v7, v10, LX/0iT;->A05:Ljava/lang/String;
+    01ac..01b0  sget-object  v0, LX/0mO;->A0B:LX/0mO;
+    01b0..01b2  return-object  v0

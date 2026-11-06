@@ -110,7 +110,9 @@ unknowns from [the preceding MEX/config trace](privacy-mex-config.md):
   `{queryId: docId, variables: queryParams}`. `0mK` constructs server-only
   IQ/get `xmlns=w:mex`, generated ID, trace/flow_id equal to document ID and
   query/query_id equal to that same ID. `0j3.A06` submits request discriminator
-  **341**, timeout literal **32000**. Units remain inferred here.
+  **341**, forwarding a stored duration. The default **32000** originates in
+  0iq constructor A00:J, passes through 0j3, and has external writers; see
+  the [wire trace](apk/2.26.43.72-privacy-mex-set-wire/README.md).
 - `0mb.CK4` delegates to `0md.CK4/A00`, trying success, request-error then
   server-error structural models. The correct `7Ou` success constructor is
   overload1 `(0Tp,0mK)V`; overload0 is unrelated. Success requires IQ result,
@@ -345,5 +347,24 @@ show successful result maps feed6pB.A01/0oe.A0R; selected failures feedA00(null)
 and do not retire the setter's false-flag pending intent. A successful response
 may use translated server category/value or the original pair on the explicit
 null-enum branch. Outer IQ or success Boolean alone is not full pending-category
-reconciliation. Rust's classic generic-setter guard is unchanged; arbitrary MEX
-mutation ownership and the typed setter remain unported. No live operation.
+reconciliation. Rust now recognizes this pinned MEX mutation in the conservative guard
+(see below); arbitrary MEX ownership and the typed setter remain unported. No live operation.
+
+## MEX mutation intent guard (2026-11-06)
+
+**Confirmed static / offline tested correction:** the [SDK wire chain](apk/2.26.43.72-privacy-mex-set-wire/README.md)
+serializes SetPrivacySettingMutation as w:mex IQ/get with direct query
+query_id `26887749497493182`. The previous classic privacy/set-only guard missed
+this form. The same transactional unowned-intent hold now recognizes the exact
+operation ID on a direct query child. Queued, sent, Ok and Error outcomes stay
+held across encrypted-store reopen; outer IQ settlement cannot substitute for
+native pending-category reconciliation. Existing processed redeliveries re-ACK
+without applying old state. Getter IDs, nested query IDs and body text matching
+the mutation ID do not claim setter ownership.
+
+The regression was red before correction, green after; the actor test covers
+both refused wire forms, continued ping handling and no notification ACK,
+adoption or resend. Full workspace:1534 tests, nine suites including doc tests.
+No new sender, replay, timer, automatic refresh or live-account operation.
+Native category-keyed owner, effective protocol selection and success recovery
+remain unported; this conservative recognition is broader than native ownership.

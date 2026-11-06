@@ -1,0 +1,82 @@
+{
+  "README.md": {
+    "bytes": 6406,
+    "sha256": "d29402a2167aa3ff38c3512386870aeebead917747230dc704de5a699d73b3c3"
+  },
+  "alternate-refs.txt": {
+    "bytes": 12449,
+    "sha256": "87839d080c904537e8c161429916b8a965b2b798448799e99f78fd087b2f0996"
+  },
+  "await-helper.txt": {
+    "bytes": 536,
+    "sha256": "55a0f144513b3c133685ae149f1a02b3df774ac4e114b5eb31e527b814108f32"
+  },
+  "client-executor.txt": {
+    "bytes": 1570,
+    "sha256": "f07dc9882fd13038aef5f91410eb523869bcff8ccab7bc8b142f5fa21808018a"
+  },
+  "duration-refs.txt": {
+    "bytes": 1099,
+    "sha256": "70fed017f4850802ae18b91d137bfc4c2a369950c9c99e65c8764730901e2ec4"
+  },
+  "execute-helper.txt": {
+    "bytes": 591,
+    "sha256": "9a0a0381292ad4460c86e760cee0a8103590ad142d6ac260ab8126759e890c04"
+  },
+  "executor-init.txt": {
+    "bytes": 2096,
+    "sha256": "e4193e9c56bf0c15a9b5f50a59a8d9c5ff07fe28909f9a752bfff27f2fca9e78"
+  },
+  "executor-route.txt": {
+    "bytes": 5118,
+    "sha256": "958e3a9fba47f9e858f85d5d27baa86e969cd25bdb9b293e6de28fc445087784"
+  },
+  "iq-constructor.txt": {
+    "bytes": 3604,
+    "sha256": "2d592b6269ef1ed6dc3c931428388f83c66e2260f89c0b5e835cb75550b1f74f"
+  },
+  "json-envelope.txt": {
+    "bytes": 2231,
+    "sha256": "62d7f02952d398737fe575d321b6ca7fae7ac225264bb81832196471e92ac02e"
+  },
+  "pando-conversion.txt": {
+    "bytes": 3877,
+    "sha256": "c7b94c704b6cf5ca70c533148f4c689b12cc33eddcb3b3b8167b275d3ffa010a"
+  },
+  "pando-rejection-selected.txt": {
+    "bytes": 1395,
+    "sha256": "ecfef49f4f04613f341bdebb3bfb82941c1f2662a85811040296af706e0e724f"
+  },
+  "query-params.txt": {
+    "bytes": 295,
+    "sha256": "5eba9904a9a995529e73540bbe4e99e8b1c77b810bfea9d56e758caca446e23c"
+  },
+  "request-flag-refs.txt": {
+    "bytes": 283,
+    "sha256": "93659aaf47faa419b7bd4a86b80aea7fdf28dc1b3eb2090491d93c1ac2c43e00"
+  },
+  "run.txt": {
+    "bytes": 589,
+    "sha256": "343aef400cc13a14887ff37c5b43ad671f7c07c39ff64735630841da46d504d4"
+  },
+  "sdk-request-init.txt": {
+    "bytes": 1171,
+    "sha256": "39b677a68a11a328adc9e19744dd6956086f1a43a9667ba84edb45a2f1d1947c"
+  },
+  "start.txt": {
+    "bytes": 571,
+    "sha256": "b8989017d166942cf0fcddb3cb16cf627297dfaade6283e290a9265dd027b352"
+  },
+  "suspend.txt": {
+    "bytes": 971,
+    "sha256": "62c2aaf7e321651ee5c62d173999a0bca56aef2536f4079c9df012cbcf2ad96c"
+  },
+  "xmpp-init.txt": {
+    "bytes": 1601,
+    "sha256": "ffec9d98af676e2b9d089390f9fa1e542bc3c50fa713d2e99fa238bc7de8890b"
+  },
+  "xmpp-submit.txt": {
+    "bytes": 5362,
+    "sha256": "acd3dcf6e75f3d93df7222d2764718ab85e463b2ab5569a8558b658421564d7b"
+  }
+}

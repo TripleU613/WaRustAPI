@@ -1,0 +1,10 @@
+
+# class: LX/0iT;
+# extends: Ljava/lang/Object;
+
+.method public getQueryParams(L)  # .registers 2
+    # full signature: LX/0iT;->getQueryParams()LX/0i0;
+    0000..0004  iget-object  v0, v1, LX/0iT;->A01:LX/0i1;
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method
