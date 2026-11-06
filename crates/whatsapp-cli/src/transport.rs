@@ -915,35 +915,24 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
             && let Some(message) = &message
         {
             let recipient = message.recipient()?;
-            let saved_keys: Option<Vec<u8>> = store.read(|tx| {
-                tx.get_json(
-                    Table::Checkpoints,
-                    format!("message:{}:keys", message.request_id).as_bytes(),
-                    1,
-                )
-            })?;
-            let (reply, pending) = if let Some(bytes) = saved_keys {
-                let decoded = unpack_frame_payload(&bytes, &limits)?;
-                (
-                    Decoder::new(&decoded, TokenDictionary::comparison_2_26_37_71(), &limits)
-                        .decode_node()?,
-                    Vec::new(),
-                )
-            } else {
-                let query = whatsapp_api::transport::messaging::key_request(
-                    &recipient,
-                    &format!("{}-keys", message.request_id),
-                );
-                let (reply, pending) = whatsapp_api::transport::messaging::write_and_wait_captured(
-                    &store,
-                    &mut channel,
-                    &query,
-                    "iq",
-                    &format!("{}-keys", message.request_id),
-                )
-                .await?;
-                (reply, pending)
-            };
+            let request_id =
+                whatsapp_api::model::ids::ClientRequestId::new(message.request_id.clone())?;
+            let (reply, pending) = super::transport_send::fetch_keys(
+                &store,
+                &request_id,
+                &recipient,
+                async |query, query_id| {
+                    whatsapp_api::transport::messaging::write_and_wait_captured(
+                        &store,
+                        &mut channel,
+                        query,
+                        "iq",
+                        query_id,
+                    )
+                    .await
+                },
+            )
+            .await?;
             let dict = TokenDictionary::comparison_2_26_37_71();
             store.write(|tx| {
                 let bytes = whatsapp_api::binary::Encoder::new(dict)
@@ -977,7 +966,7 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                 .unwrap_or("unknown");
             let user = reply.child("list").and_then(|v| v.child("user"));
             println!(
-                "transport: recipient key query type={kind}; user_present={}, identity_present={}, signed_key_present={}, one_time_key_present={}; response saved encrypted",
+                "transport: recipient key query type={kind}; user_present={}, identity_present={}, signed_key_present={}, one_time_key_present={}; bundle outcome retained encrypted",
                 user.is_some(),
                 user.is_some_and(|v| v.child("identity").is_some()),
                 user.is_some_and(|v| v.child("skey").is_some()),

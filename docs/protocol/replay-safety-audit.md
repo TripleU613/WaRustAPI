@@ -38,7 +38,7 @@ This is a code trace (**traced**), not live observation.
 - Direct send: wire ID, attempt, in-flight and delivery-unknown commit in one
   transaction that rechecks the intent and session before the stanza is
   returned; the stanza is built from the verified snapshot.
-- Direct key query: written `outcome_unknown` before the write; any query row
+- Normal-outbox direct key query: written `outcome_unknown` before the write; any query row
   excludes its intent from selection; a missed deadline ends the session without
   reconnecting.
 - Group send: batches written `OutcomeUnknown` before the write; unknown,
@@ -1526,3 +1526,56 @@ Validation: 1,463 workspace/all-feature tests passed, including original late-AC
 partial-write actor coverage. Strict workspace/all-target/all-feature Clippy,
 formatting, regenerated CLI reference, OpenAPI symbol validation, APK coverage
 freshness and repository hygiene passed. Offline only.
+
+## Experimental direct CLI key query reservation (2026-11-06)
+
+**Confirmed local defect / implemented offline:** the normal outbox's query
+reservation did not cover lab-transport's separate direct-message path. That
+path read message:<request_id>:keys, then sent a full encrypt/key query directly
+when no cached reply existed. It created the message send intent later, in
+transport_send::send. A cut after the query write but before reply caching left
+neither a key-query reservation nor a send intent to prevent another query.
+The older checked-and-sound statement above applies to the normal outbox.
+
+The direct CLI now calls transport_send::fetch_keys, using the existing
+transport::device_key_batches state machine with one frozen recipient. reserve_next
+commits OutcomeUnknown plus the actual generated IQ ID before returning a node
+to the writer. The captured exchange then settles only a matching result/error;
+assembled revalidates complete retained target rows and bundle signatures before
+handoff to Signal preparation. Unknown/refused/invalid outcomes refuse future
+reservation. A changed recipient cannot reuse the frozen plan. No new request
+format, batch width, crypto algorithm, native retry policy or timer is invented.
+The shared constructor remains key_request_many, which also implemented the
+previous one-recipient key_request call.
+
+A saved answered plan can supply its verified bundle without writing another
+query, including a cut before the compatibility cache write. message:<id>:keys
+now holds a derived aggregate for compatibility; original response bytes remain
+in the batch record and authenticated capture. The aggregate is not a separate
+server response and has no synthesized callback ID. A legacy cache without a
+frozen plan refuses with the existing provenance diagnostic; its bytes remain
+untouched. No old cache is migrated into presumed request ownership, deleted,
+or automatically fetched again. Completed message sends still return at the
+existing earlier saved-acceptance guard.
+
+**Verification:** two tests failed before correction: no reservation existed at
+the injected writer boundary, and a legacy unbound cached result was accepted.
+Three adapter regressions now cover a writer cut with reservation already
+present, byte-for-byte checkpoint continuity through reopen, original/changed
+recipient refusal without invoking the writer, immutable legacy cache/journal,
+matching outer error and a foreign result ID. Refusal or unowned response cannot
+authorize another write on reopen. Exchanges are injected offline boundaries,
+not real network operations. Existing library batch tests retain successful
+signed-bundle, completed-cache, target-freezing and revalidation coverage; this
+change does not claim a new end-to-end CLI socket/handset test.
+
+**Inspection:** existing group key-queries --request-id <original_request_id>
+also reads this shared direct-query plan. The existing read-only HTTP
+/v1/groups/key-queries inspection uses the same summary. Names/auth/keys are not
+printed; unbound legacy counts refuse rather than being guessed.
+
+**Remaining timing gap:** current-build full prekey-query callback duration is
+not mapped by the identity-only32s trace. This path retains the existing generic
+30s captured wait and configured I/O caps as local bounds. No32s timeout is
+inferred for it, no native scheduler is copied, and no live account operation or
+restriction-prevention guarantee is established.

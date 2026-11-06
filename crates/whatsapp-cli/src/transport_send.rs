@@ -11,6 +11,41 @@ use whatsapp_api::{
     },
 };
 
+// The injected exchange is the actual CLI captured writer, or an offline
+// fault boundary in tests. The adapter never opens its own connection.
+pub(super) async fn fetch_keys<R>(
+    store: &ProtocolStore,
+    request_id: &whatsapp_api::model::ids::ClientRequestId,
+    recipient: &whatsapp_api::model::jid::Jid,
+    mut exchange: R,
+) -> Result<(Node, Vec<Node>), Error>
+where
+    R: AsyncFnMut(&Node, &str) -> Result<(Node, Vec<Node>), Error>,
+{
+    // Reuse the group path's frozen-target, once-only key-query state machine.
+    // The legacy cache alone cannot prove which request/recipient owned it.
+    use whatsapp_api::transport::device_key_batches;
+    let targets = std::slice::from_ref(recipient);
+    let mut pending = Vec::new();
+    while let Some(query) = device_key_batches::reserve_next(store, request_id, targets)? {
+        let query_id = query
+            .get_attr("id")
+            .and_then(|value| value.as_text())
+            .ok_or_else(|| Error::invalid("message", "reserved key query has no ID"))?;
+        let (reply, observed) = exchange(&query, query_id).await?;
+        pending.extend(observed);
+        if !device_key_batches::settle(store, request_id, &reply)? {
+            return Err(Error::invalid(
+                "message",
+                "key reply does not own the reserved query",
+            ));
+        }
+    }
+    let reply = device_key_batches::assembled(store, request_id, targets)?
+        .ok_or_else(|| Error::invalid("message", "direct query has no retained bundle"))?;
+    Ok((reply, pending))
+}
+
 // A captured ACK does not own a send whose durable intent was replaced.
 pub(super) fn check_reserved_intent(
     tx: &whatsapp_api::store::WriteTx<'_>,
@@ -235,6 +270,175 @@ mod tests {
         model::ids::AccountId,
         store::{MasterKey, OpenOptions, StaticKeySource},
     };
+
+    #[tokio::test]
+    async fn direct_key_query_is_reserved_before_exchange_and_never_replayed_after_cut() {
+        use whatsapp_api::{
+            model::{ids::ClientRequestId, jid::Jid},
+            transport::device_key_batches,
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("direct-key-cut.redb");
+        let open = || {
+            ProtocolStore::open(OpenOptions {
+                path: path.clone(),
+                account_id: AccountId::new("fixture").unwrap(),
+                create: true,
+                key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+            })
+            .unwrap()
+        };
+        let store = open();
+        let id = ClientRequestId::new("direct-cut").unwrap();
+        let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let captured = std::cell::RefCell::new(Vec::new());
+        let calls = std::cell::Cell::new(0);
+        let result = fetch_keys(&store, &id, &peer, async |_, _| {
+            calls.set(calls.get() + 1);
+            assert_eq!(
+                device_key_batches::summary(&store, &id)?
+                    .expect("query reservation must precede writer")
+                    .outcome_unknown,
+                1
+            );
+            *captured.borrow_mut() = store.read(|tx| tx.scan(Table::Checkpoints, 1, 10000))?;
+            Err(Error::Transport(
+                whatsapp_api::transport::TransportError::Closed,
+            ))
+        })
+        .await;
+        assert!(result.is_err());
+        assert_eq!(calls.get(), 1);
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                .unwrap(),
+            *captured.borrow()
+        );
+        drop(store);
+        let reopened = open();
+        let changed = Jid::parse("15555550200@s.whatsapp.net").unwrap();
+        for target in [&peer, &changed] {
+            assert!(
+                fetch_keys(&reopened, &id, target, async |_, _| {
+                    panic!("uncertain query cannot be written again")
+                })
+                .await
+                .is_err()
+            );
+        }
+        assert_eq!(
+            reopened
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                .unwrap(),
+            *captured.borrow()
+        );
+    }
+
+    #[tokio::test]
+    async fn direct_key_query_refuses_unbound_legacy_cache_without_overwrite() {
+        use whatsapp_api::model::{ids::ClientRequestId, jid::Jid};
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("legacy.redb"),
+            account_id: AccountId::new("fixture").unwrap(),
+            create: true,
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+        })
+        .unwrap();
+        let id = ClientRequestId::new("legacy-direct").unwrap();
+        let bytes = Encoder::new(TokenDictionary::comparison_2_26_37_71())
+            .encode(
+                &Node::new("iq")
+                    .attr("type", "result")
+                    .children(vec![Node::new("list")]),
+            )
+            .unwrap();
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, b"message:legacy-direct:keys", 1, &bytes))
+            .unwrap();
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+            .unwrap();
+        let journal = store.journal_head().unwrap();
+        assert!(
+            fetch_keys(
+                &store,
+                &id,
+                &Jid::parse("15555550100@s.whatsapp.net").unwrap(),
+                async |_, _| { panic!("legacy cache must not authorize another query") }
+            )
+            .await
+            .is_err()
+        );
+        assert_eq!(store.journal_head().unwrap(), journal);
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                .unwrap(),
+            before
+        );
+    }
+
+    #[tokio::test]
+    async fn direct_key_query_refusal_or_foreign_reply_never_authorizes_another_write() {
+        use whatsapp_api::{
+            model::{ids::ClientRequestId, jid::Jid},
+            transport::device_key_batches,
+        };
+        for foreign in [false, true] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("direct-query-reply.redb");
+            let open = || {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: AccountId::new("fixture").unwrap(),
+                    create: true,
+                    key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+                })
+                .unwrap()
+            };
+            let store = open();
+            let id = ClientRequestId::new("direct-refusal").unwrap();
+            let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+            let calls = std::cell::Cell::new(0);
+            assert!(
+                fetch_keys(&store, &id, &peer, async |_, query_id| {
+                    calls.set(calls.get() + 1);
+                    Ok((
+                        Node::new("iq")
+                            .attr("id", if foreign { "unrelated" } else { query_id })
+                            .attr("type", if foreign { "result" } else { "error" }),
+                        Vec::new(),
+                    ))
+                })
+                .await
+                .is_err()
+            );
+            assert_eq!(calls.get(), 1);
+            let summary = device_key_batches::summary(&store, &id).unwrap().unwrap();
+            assert_eq!(summary.refused, usize::from(!foreign));
+            assert_eq!(summary.outcome_unknown, usize::from(foreign));
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                .unwrap();
+            drop(store);
+            let reopened = open();
+            assert!(
+                fetch_keys(&reopened, &id, &peer, async |_, _| {
+                    panic!("no retry after refusal or unowned reply")
+                })
+                .await
+                .is_err()
+            );
+            assert_eq!(
+                reopened
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                    .unwrap(),
+                before
+            );
+        }
+    }
 
     #[test]
     fn stale_direct_ack_cannot_overwrite_current_intent_after_reopen() {

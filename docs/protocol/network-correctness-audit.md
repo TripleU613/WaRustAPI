@@ -4533,3 +4533,14 @@ with a pre-write absolute deadline; configured shorter socket bounds remain
 honored. Failing-before encrypted31s response,32s expiry,30s I/O cap and reopen/
 no-resend controls retained. Selected callback/registry methods do not establish
 a sender whitelist; complete upstream sender admission remains open.
+
+## Captured caller timing and direct query ownership (2026-11-06)
+
+Audited the remaining generic captured-wait call sites (direct/full key query,
+group membership, usync, sender-key distribution/message ACK and retry refetch).
+The identity-only32s timer does not establish a full-prekey timeout; no guessed
+family deadline was assigned. **Confirmed local defect/fixed:** the experimental
+direct CLI bypassed the normal outbox reservation before querying keys. It now
+uses the existing frozen-target durable key-batch path. [Reservation-before-write,
+legacy-cache boundary, response correlation and reopen controls](replay-safety-audit.md#experimental-direct-cli-key-query-reservation-2026-11-06).
+Complete timing contracts for these other families remain open.

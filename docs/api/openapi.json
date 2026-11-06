@@ -18403,5 +18403,18 @@
     ],
     "description": "Explicit CLI media-route operation uses pinned nominal32000ms callback window starting before write, without restart. New reusable absolute-deadline captured writer refuses expired deadlines before I/O. Generic callers retain30s and configured shorter socket I/O caps remain honored, including30s caps. Synthetic encrypted31s result applies with60s I/O,32s callback expiry and30s I/O expiry preserve uncertain reservation across reopen; same ID cannot prepare again. Native Handler races/clocks and full sender admission remain unproven; no invented whitelist, config override, automatic refresh/retry, reset or live operation.",
     "evidence": "docs/protocol/media-network-outcomes.md#media-refresh-reply-window-2026-11-06"
+  },
+  "x-experimental-direct-key-query-reservation": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [
+      "whatsapp_api::transport::device_key_batches::reserve_next",
+      "whatsapp_api::transport::device_key_batches::settle",
+      "whatsapp_api::transport::device_key_batches::assembled",
+      "whatsapp_api::transport::device_key_batches::summary"
+    ],
+    "description": "Experimental lab-transport direct sends now use the existing durable single-recipient key-batch plan before captured query exchange. OutcomeUnknown and actual query ID commit before writer; matching results/errors settle, complete retained targets/bundle signatures revalidate before use. Unknown/refused/invalid outcomes or changed recipient cannot reserve another query. Unbound legacy message key caches remain untouched and refuse ownership inference; compatibility cache now stores derived aggregate, original responses stay in batch/capture. Existing group key-queries and GET /v1/groups/key-queries inspect the same plan; no new HTTP route. Two failing-before and three offline adapter tests cover cuts, legacy cache, foreign ID, refusal and reopen/no-replay. Full-key native timer remains unmapped; generic30s and configured I/O caps remain local. No automatic request, identity change or live validation.",
+    "evidence": "docs/protocol/replay-safety-audit.md#experimental-direct-cli-key-query-reservation-2026-11-06"
   }
 }

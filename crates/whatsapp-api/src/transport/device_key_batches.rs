@@ -1,4 +1,5 @@
-//! Durable bounded directory lookups for frozen group/status fanout devices.
+//! Durable bounded directory lookups for frozen recipient devices.
+//! Used by group/status fanout and the explicit experimental direct-send CLI.
 //! APK 37.71 0y0.A00 1786..193a builds iq/get/encrypt/key/user@jid batches;
 //! CQc.A00 verifies signed keys. Our 32-device width and no-retry policy are local.
 use crate::{
