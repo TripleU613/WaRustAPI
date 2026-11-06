@@ -251,3 +251,29 @@ trace. Existing API actor regressions use the independent registration producer.
 server acceptance or atomic reservation/result ownership. Those actor guards
 are not yet shared by the CLI lab-login path. No live operation, key rotation,
 new flag or credential migration.
+
+## CLI account load checks the registration copy (2026-11-06)
+
+**Confirmed local omission / fixed offline:** lab-transport loaded AccountRecord
+without checking present registration-lab-material before send-path claiming,
+refusal archival, image preparation or sockets. The actor's earlier consistency
+guard was not used by this separate entry point.
+
+The existing feature-gated factory.check_login_account_in is now public for
+cross-crate use. CLI load_transport_account loads the account and calls it in
+one read snapshot before any message-send-path claim. The shared invariant
+rejects malformed/present material, generation/phone/registration/public-key
+mismatch and invalid private/public relationships. It does not create material,
+repair keys or require the optional lab record on imported accounts. This is
+local consistency checking, not an APK storage-format requirement.
+
+The CLI regression checks optional absence, malformed present material,
+unchanged rows/journal/no checkpoint effects and refusal after reopen. Existing
+actor/factory regressions cover valid material plus distinct valid account Noise
+replacement and private-half corruption; the CLI calls that same helper rather
+than adding another parser or key comparison. No live operation.
+
+**Remaining boundary:** the read snapshot is not held through awaited network
+work. CLI login reservation/result ownership still needs the actor-equivalent
+checks; this initial load does not authorize stale material or account changes
+later in the request lifecycle.

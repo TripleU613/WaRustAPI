@@ -27,7 +27,7 @@ pub(crate) const RECORD_VERSION: u16 = 1;
 /// same read snapshot. Absence supports accounts imported without lab material;
 /// present malformed/mismatched material is never silently ignored or repaired.
 #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
-pub(crate) fn check_login_account_in(
+pub fn check_login_account_in(
     tx: &crate::store::ReadTx<'_>,
     account: &AccountRecord,
 ) -> Result<()> {

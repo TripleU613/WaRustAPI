@@ -17,6 +17,16 @@ use whatsapp_api::{
     },
 };
 
+/// Load the account and validate any lab registration copy in one snapshot.
+fn load_transport_account(store: &ProtocolStore) -> Result<AccountRecord, Error> {
+    store.read(|tx| {
+        let account = AccountRecord::load(tx)?
+            .ok_or_else(|| Error::invalid("transport", "missing account"))?;
+        whatsapp_api::registration::factory::check_login_account_in(tx, &account)?;
+        Ok(account)
+    })
+}
+
 /// Pure preflight: run before uploads, refusal-history mutation or sockets.
 fn saved_noise_identity(account: &AccountRecord) -> Result<StaticKeypair, Error> {
     let key = account
@@ -211,9 +221,7 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
         key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
         create: false,
     })?;
-    let account = store
-        .read(AccountRecord::load)?
-        .ok_or_else(|| Error::invalid("transport", "missing account"))?;
+    let account = load_transport_account(&store)?;
     if let Some(message) = &message {
         whatsapp_api::transport::send_path::claim(
             &store,
@@ -911,6 +919,50 @@ mod tests {
         model::jid::Jid,
         store::{MasterKey, StaticKeySource},
     };
+
+    #[test]
+    fn cli_account_load_refuses_present_invalid_material_without_mutation_after_reopen() {
+        use whatsapp_api::store::Table;
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("material-preflight.redb");
+        let open = |create| {
+            ProtocolStore::open(OpenOptions {
+                path: path.clone(),
+                account_id: AccountId::new("fixture").unwrap(),
+                create,
+                key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+            })
+            .unwrap()
+        };
+        let store = open(true);
+        store.write(|tx| AccountRecord::default().save(tx)).unwrap();
+        // Imported accounts need not have the optional lab registration record.
+        assert!(load_transport_account(&store).is_ok());
+        store
+            .write(|tx| tx.put(Table::Account, b"registration-lab-material", 1, b"{"))
+            .unwrap();
+        let rows = store.read(|tx| tx.scan(Table::Account, 1, 20)).unwrap();
+        let journal = store.journal_head().unwrap();
+        assert!(load_transport_account(&store).is_err());
+        assert_eq!(store.journal_head().unwrap(), journal);
+        assert_eq!(
+            store.read(|tx| tx.scan(Table::Account, 1, 20)).unwrap(),
+            rows
+        );
+        assert!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 20))
+                .unwrap()
+                .is_empty()
+        );
+        drop(store);
+        let store = open(false);
+        assert!(load_transport_account(&store).is_err());
+        assert_eq!(
+            store.read(|tx| tx.scan(Table::Account, 1, 20)).unwrap(),
+            rows
+        );
+    }
 
     #[test]
     fn cli_noise_preflight_refuses_unrelated_halves_without_repair_or_key_echo() {

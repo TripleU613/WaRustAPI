@@ -8242,3 +8242,5 @@ Local login result now requires current credential snapshot and exact unknown re
 CLI explicit refusal recheck now checks exact current row/history in its archive-delete transaction; stale reads cannot clear uncertainty. [CLI refusal recheck authority](authkey-lifecycle.md#cli-refusal-recheck-retains-current-authority-2026-11-06). No live operation or server-policy claim.
 
 Local CLI Noise-half consistency now checked before side effects; fixed diagnostics and valid/mutated/absent controls retained. [CLI Noise preflight before side effects](authkey-lifecycle.md#cli-validates-noise-halves-before-side-effects-2026-11-06). No wire or live acceptance claim.
+
+CLI account preflight now validates present registration material through the existing shared invariant, preserving optional absence and refusing malformed state before side effects. [CLI registration-copy preflight](authkey-lifecycle.md#cli-account-load-checks-the-registration-copy-2026-11-06). Offline only.

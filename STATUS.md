@@ -1,3 +1,5 @@
+CLI initial account load now uses the shared registration-material consistency guard in one read snapshot, before send-path claims or other side effects. [CLI registration-copy preflight](docs/protocol/authkey-lifecycle.md#cli-account-load-checks-the-registration-copy-2026-11-06). Awaited reservation/result ownership remains open.
+
 Fixed CLI Noise preflight omission: saved halves are checked before refusal-history writes, image preparation and sockets using the shared Curve25519 validator. [CLI Noise preflight before side effects](docs/protocol/authkey-lifecycle.md#cli-validates-noise-halves-before-side-effects-2026-11-06). CLI registration-copy/ownership gaps remain separate.
 
 Fixed CLI refusal-recheck stale deletion and history collision: archive/delete requires the exact current failure and absent/identical archive. [CLI refusal recheck authority](docs/protocol/authkey-lifecycle.md#cli-refusal-recheck-retains-current-authority-2026-11-06). Unknown/newer login state stays intact; offline regression only.

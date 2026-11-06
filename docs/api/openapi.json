@@ -17779,5 +17779,12 @@
     "x-live": false,
     "description": "Existing lab-transport validates saved Noise halves before refusal-history mutation, image preparation and socket/handshake operations. Shared StaticKeypair.validate_curve25519 is public under its existing Signal/transport gate. Invalid/missing keys refuse without repair or key echo. Registration-copy equality and CLI reservation/result ownership remain separate audit gaps; no live verification.",
     "evidence": "docs/protocol/authkey-lifecycle.md#cli-validates-noise-halves-before-side-effects-2026-11-06"
+},
+  "x-cli-registration-material-preflight": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Existing lab-transport initial account load checks present registration material in one read snapshot before send-path claiming and network side effects. Shared feature-gated factory.check_login_account_in is public. Optional absent lab material remains supported; no repair or rotation. Awaited CLI reservation/result ownership remains unresolved.",
+    "evidence": "docs/protocol/authkey-lifecycle.md#cli-account-load-checks-the-registration-copy-2026-11-06"
 }
 }
