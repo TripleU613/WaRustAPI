@@ -1,3 +1,5 @@
+Pinned APK tracing now shows a LID-only multi-query branch selects MEX UsyncQuery/include_lid, while devices uses a separate flag. [LID field chain, conditional MEX selection and remaining serializer/callback limits](docs/protocol/bulk-prekey-refresh.md#missing-lid-field-mapping-and-mex-selection-2026-11-06). Research only; no runtime request added.
+
 Contact projection and LID repair now withhold LID on duplicate protocol metadata/user fields; duplicate contact fields cannot choose status by order. [Nested duplicate-field controls and native-policy limits](docs/protocol/contact-projection-correlation.md#duplicate-field-authority-is-not-selected-by-order-2026-11-06). Local ambiguity policy, offline only.
 
 Contact-result ingestion now reads current settlement, request and reply together before projecting status, retaining settlement order and reply correlation. [Transaction snapshot fix, stale-enumeration controls and limits](docs/protocol/contact-projection-correlation.md#transaction-bound-settlement-projection-2026-11-06). Offline only; no query or replay added.

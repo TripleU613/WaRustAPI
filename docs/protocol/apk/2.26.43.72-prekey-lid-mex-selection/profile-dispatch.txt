@@ -1,0 +1,307 @@
+
+# class: LX/HSo;
+# extends: Ljava/lang/Object;
+
+.method public A01(LLLL)  # .registers 36
+    # full signature: LX/HSo;->A01(LX/0p9;LX/HcZ;Ljava/lang/String;)LX/FfK;
+    0000..0002  const/4  v5, #0x0
+    0002..0006  move-object/from16  v10, v35
+    0006..000c  invoke-static  {v10, v5}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000c..0010  move-object/from16  v26, v33
+    0010..0016  invoke-static/range  {v26..v26}, LX/3q3;->A1V(Ljava/lang/Object;)Z
+    0016..0018  move-result  v31
+    0018..001c  new-instance  v28, LX/FfK;
+    001c..0022  invoke-direct/range  {v28..v28}, LX/FfK;-><init>()V
+    0022..0026  move-object/from16  v6, v34
+    0026..002a  iget-object  v0, v6, LX/HcZ;->A02:Ljava/util/List;
+    002a..0030  invoke-static  {v0}, LX/2LD;->A0i(Ljava/util/List;)Ljava/util/ArrayList;
+    0030..0032  move-result-object  v4
+    0032..0038  invoke-interface  {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0038..003a  move-result-object  v25
+    003a..003e  const/16  v24, #0x0
+    003e..0042  const/16  v23, #0x0
+    0042..0046  const/16  v22, #0x0
+    0046..004a  const/16  v21, #0x0
+    004a..004e  const/16  v20, #0x0
+    004e..0052  const/16  v19, #0x0
+    0052..0056  const/16  v18, #0x0
+    0056..005a  const/16  v17, #0x0
+    005a..005e  const/16  v16, #0x0
+    005e..0060  const/4  v7, #0x0
+    0060..0066  invoke-interface/range  {v25..v25}, Ljava/util/Iterator;->hasNext()Z
+    0066..0068  move-result  v0
+    0068..006c  if-eqz  v0, +0x115
+    006c..0072  invoke-interface/range  {v25..v25}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0072..0074  move-result-object  v9
+    0074..0078  check-cast  v9, LX/H6w;
+    0078..007c  iget-object  v0, v9, LX/H6w;->A06:Lcom/whatsapp/infra/core/jid/UserJid;
+    007c..0080  if-eqz  v0, +0xdb
+    0080..0084  new-instance  v8, LX/FxW;
+    0084..008a  invoke-direct  {v8}, Lcom/facebook/graphql/calls/GraphQlCallInput;-><init>()V
+    008a..0090  invoke-virtual  {v8, v0}, LX/FxW;->A0D(Lcom/whatsapp/infra/core/jid/UserJid;)V
+    0090..0094  iget-boolean  v0, v9, LX/H6w;->A0U:Z
+    0094..0098  if-eqz  v0, +0x11
+    0098..009c  iget-object  v1, v9, LX/H6w;->A0A:Ljava/lang/String;
+    009c..00a0  if-eqz  v1, +0xd
+    00a0..00a6  invoke-virtual  {v1}, Ljava/lang/String;->length()I
+    00a6..00a8  move-result  v0
+    00a8..00ac  if-eqz  v0, +0x7
+    00ac..00b0  const-string  v0, "client_known_username"
+    00b0..00b6  invoke-virtual  {v8, v0, v1}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A0A(Ljava/lang/String;Ljava/lang/String;)V
+    00b6..00ba  iget-boolean  v0, v9, LX/H6w;->A0S:Z
+    00ba..00be  if-eqz  v0, +0x19
+    00be..00c2  sget-object  v1, Lcom/facebook/graphql/calls/GraphQlCallInput;->A02:LX/0iH;
+    00c2..00c4  const/4  v0, #0x0
+    00c4..00c8  const-string  v3, "dhash"
+    00c8..00ce  invoke-static  {v1, v0, v3}, LX/6og;->A0D(LX/0iH;Ljava/lang/Object;Ljava/lang/String;)LX/Nha;
+    00ce..00d0  move-result-object  v2
+    00d0..00d4  iget-wide  v0, v9, LX/H6w;->A03:J
+    00d4..00da  invoke-static  {v0, v1}, LX/2LB;->A06(J)J
+    00da..00dc  move-result-wide  v0
+    00dc..00e2  invoke-static  {v2, v3, v0, v1}, LX/Fwt;->A1H(LX/Nha;Ljava/lang/String;J)V
+    00e2..00e6  const-string  v0, "about_status"
+    00e6..00ec  invoke-static  {v2, v8, v0}, LX/Fwt;->A1G(LX/NhZ;Lcom/facebook/graphql/calls/GraphQlCallInput;Ljava/lang/String;)V
+    00ec..00f0  iget-boolean  v0, v9, LX/H6w;->A0P:Z
+    00f0..00f4  if-eqz  v0, +0x1b
+    00f4..00f8  iget  v3, v9, LX/H6w;->A00:I
+    00f8..00fc  if-lez  v3, +0x17
+    00fc..0100  sget-object  v1, Lcom/facebook/graphql/calls/GraphQlCallInput;->A02:LX/0iH;
+    0100..0102  const/4  v0, #0x0
+    0102..0106  const-string  v2, "id"
+    0106..010c  invoke-static  {v1, v0, v2}, LX/6og;->A0D(LX/0iH;Ljava/lang/Object;Ljava/lang/String;)LX/Nha;
+    010c..010e  move-result-object  v1
+    010e..0114  invoke-static  {v3}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+    0114..0116  move-result-object  v0
+    0116..011c  invoke-static  {v1, v0, v2}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    011c..0120  const-string  v0, "picture"
+    0120..0126  invoke-static  {v1, v8, v0}, LX/Fwt;->A1G(LX/NhZ;Lcom/facebook/graphql/calls/GraphQlCallInput;Ljava/lang/String;)V
+    0126..012a  iget-boolean  v0, v9, LX/H6w;->A0F:Z
+    012a..012e  if-eqz  v0, +0x24
+    012e..0130  const/4  v11, #0x0
+    0130..0134  sget-object  v0, Lcom/facebook/graphql/calls/GraphQlCallInput;->A02:LX/0iH;
+    0134..0138  const-string  v1, "serial"
+    0138..013e  invoke-static  {v0, v11, v1}, LX/6og;->A0D(LX/0iH;Ljava/lang/Object;Ljava/lang/String;)LX/Nha;
+    013e..0140  move-result-object  v3
+    0140..0144  const-string  v2, "tag"
+    0144..014a  invoke-static  {v3, v11, v2}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    014a..014e  iget-object  v0, v9, LX/H6w;->A0E:Ljava/lang/String;
+    014e..0152  if-eqz  v0, +0x9f
+    0152..0158  invoke-static  {v3, v0, v1}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    0158..015a  const/4  v1, #0x1
+    015a..015e  iget-object  v0, v9, LX/H6w;->A08:Ljava/lang/String;
+    015e..0162  if-eqz  v0, +0x93
+    0162..0168  invoke-static  {v3, v0, v2}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    0168..016c  const-string  v0, "business"
+    016c..0172  invoke-static  {v3, v8, v0}, LX/Fwt;->A1G(LX/NhZ;Lcom/facebook/graphql/calls/GraphQlCallInput;Ljava/lang/String;)V
+    0172..0176  iget-boolean  v0, v9, LX/H6w;->A0I:Z
+    0176..017a  if-eqz  v0, +0x3b
+    017a..017e  iget-object  v3, v9, LX/H6w;->A09:Ljava/lang/String;
+    017e..0182  if-eqz  v3, +0x37
+    0182..0188  invoke-virtual  {v3}, Ljava/lang/String;->length()I
+    0188..018a  move-result  v0
+    018a..018e  if-eqz  v0, +0x31
+    018e..0190  const/4  v2, #0x0
+    0190..0194  sget-object  v0, Lcom/facebook/graphql/calls/GraphQlCallInput;->A02:LX/0iH;
+    0194..0198  const-string  v13, "expected_timestamp"
+    0198..019e  invoke-static  {v0, v2, v13}, LX/6og;->A0D(LX/0iH;Ljava/lang/Object;Ljava/lang/String;)LX/Nha;
+    019e..01a0  move-result-object  v12
+    01a0..01a4  const-string  v0, "hash"
+    01a4..01aa  invoke-static  {v12, v2, v0}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    01aa..01ae  const-string  v1, "timestamp"
+    01ae..01b4  invoke-static  {v12, v2, v1}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    01b4..01ba  invoke-static  {v12, v3, v0}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    01ba..01be  iget-wide  v2, v9, LX/H6w;->A02:J
+    01be..01c2  const-wide/16  v14, #0x0
+    01c2..01c6  cmp-long  v0, v2, v14
+    01c6..01ca  if-lez  v0, +0xe
+    01ca..01d0  invoke-static  {v12, v1, v2, v3}, LX/Fwt;->A1H(LX/Nha;Ljava/lang/String;J)V
+    01d0..01d4  iget-wide  v0, v9, LX/H6w;->A01:J
+    01d4..01d8  cmp-long  v11, v0, v2
+    01d8..01dc  if-lez  v11, +0x5
+    01dc..01e2  invoke-static  {v12, v13, v0, v1}, LX/Fwt;->A1H(LX/Nha;Ljava/lang/String;J)V
+    01e2..01e6  const-string  v0, "devices"
+    01e6..01ec  invoke-static  {v12, v8, v0}, LX/Fwt;->A1G(LX/NhZ;Lcom/facebook/graphql/calls/GraphQlCallInput;Ljava/lang/String;)V
+    01ec..01f0  iget-object  v3, v9, LX/H6w;->A07:LX/6p2;
+    01f0..01f4  if-eqz  v3, +0x1e
+    01f4..01f8  iget-object  v2, v3, LX/6p2;->A01:LX/86r;
+    01f8..01fc  if-eqz  v2, +0xd
+    01fc..0200  sget-object  v1, Lcom/facebook/graphql/calls/GraphQlCallInput;->A02:LX/0iH;
+    0200..0204  iget-object  v0, v2, LX/86r;->A01:[B
+    0204..020a  invoke-static  {v0}, LX/FxS;->A00([B)Ljava/lang/String;
+    020a..020c  move-result-object  v0
+    020c..0212  invoke-static  {v1, v8, v2, v0}, LX/86r;->A00(LX/0iH;Lcom/facebook/graphql/calls/GraphQlCallInput;LX/86r;Ljava/lang/Object;)V
+    0212..0216  iget-object  v0, v3, LX/6p2;->A00:LX/1bc;
+    0216..021a  if-eqz  v0, +0xb
+    021a..0220  invoke-virtual  {v0}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+    0220..0222  move-result-object  v1
+    0222..0226  const-string  v0, "common_group"
+    0226..022c  invoke-virtual  {v8, v0, v1}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A0A(Ljava/lang/String;Ljava/lang/String;)V
+    022c..0232  invoke-virtual  {v4, v8}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0232..0236  iget-boolean  v0, v9, LX/H6w;->A0U:Z
+    0236..023a  or-int  v23, v23, v0
+    023a..023e  iget-boolean  v0, v9, LX/H6w;->A0Q:Z
+    023e..0242  or-int  v22, v22, v0
+    0242..0246  iget-boolean  v0, v9, LX/H6w;->A0N:Z
+    0246..024a  or-int  v21, v21, v0
+    024a..024e  iget-boolean  v0, v9, LX/H6w;->A0M:Z
+    024e..0252  or-int  v20, v20, v0
+    0252..0256  iget-boolean  v0, v9, LX/H6w;->A0S:Z
+    0256..025a  or-int  v19, v19, v0
+    025a..025e  iget-boolean  v0, v9, LX/H6w;->A0P:Z
+    025e..0262  or-int  v18, v18, v0
+    0262..0266  iget-boolean  v0, v9, LX/H6w;->A0F:Z
+    0266..026a  or-int  v17, v17, v0
+    026a..026e  iget-boolean  v0, v9, LX/H6w;->A0J:Z
+    026e..0272  or-int  v16, v16, v0
+    0272..0276  iget-boolean  v0, v9, LX/H6w;->A0I:Z
+    0276..0278  or-int/2addr  v7, v0
+    0278..027c  iget-boolean  v0, v9, LX/H6w;->A0O:Z
+    027c..0280  or-int  v24, v24, v0
+    0280..0284  goto/16  -0x110
+    0284..0288  if-eqz  v1, -0x89
+    0288..028c  goto/16  -0x90
+    028c..028e  const/4  v1, #0x0
+    028e..0292  goto/16  -0x9a
+    0292..0296  new-instance  v1, LX/FxV;
+    0296..029c  invoke-direct  {v1}, Lcom/facebook/graphql/calls/GraphQlCallInput;-><init>()V
+    029c..02a0  const-string  v0, "query_input"
+    02a0..02a6  invoke-virtual  {v1, v0, v4}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A0B(Ljava/lang/String;Ljava/util/List;)V
+    02a6..02aa  iget-object  v9, v6, LX/HcZ;->A01:LX/0vC;
+    02aa..02ae  iget-object  v0, v9, LX/0vC;->context:LX/0vD;
+    02ae..02b2  iget-object  v0, v0, LX/0vD;->contextString:Ljava/lang/String;
+    02b2..02b8  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    02b8..02be  invoke-static  {v0}, LX/B21;->A0j(Ljava/lang/String;)Ljava/lang/String;
+    02be..02c0  move-result-object  v0
+    02c0..02c4  sget-object  v11, Lcom/facebook/graphql/calls/GraphQlCallInput;->A02:LX/0iH;
+    02c4..02c6  const/4  v8, #0x0
+    02c6..02cc  invoke-static  {v11, v1, v0}, LX/Fwx;->A0z(LX/0iH;Lcom/facebook/graphql/calls/GraphQlCallInput;Ljava/lang/Object;)V
+    02cc..02d2  invoke-static  {v1}, LX/6oj;->A0P(Lcom/facebook/graphql/calls/GraphQlCallInput;)LX/0i1;
+    02d2..02d4  move-result-object  v3
+    02d4..02d8  if-eqz  v23, +0xb
+    02d8..02de  invoke-static/range  {v31..v31}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    02de..02e0  move-result-object  v1
+    02e0..02e4  const-string  v0, "include_username"
+    02e4..02ea  invoke-virtual  {v3, v0, v1}, LX/0i1;->A02(Ljava/lang/String;Ljava/lang/Boolean;)V
+    02ea..02ee  if-eqz  v22, +0xb
+    02ee..02f4  invoke-static/range  {v31..v31}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    02f4..02f6  move-result-object  v1
+    02f6..02fa  const-string  v0, "include_reachability"
+    02fa..0300  invoke-virtual  {v3, v0, v1}, LX/0i1;->A02(Ljava/lang/String;Ljava/lang/Boolean;)V
+    0300..0304  if-eqz  v21, +0xb
+    0304..030a  invoke-static/range  {v31..v31}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    030a..030c  move-result-object  v1
+    030c..0310  const-string  v0, "include_linked_profiles"
+    0310..0316  invoke-virtual  {v3, v0, v1}, LX/0i1;->A02(Ljava/lang/String;Ljava/lang/Boolean;)V
+    0316..031a  if-eqz  v20, +0xb
+    031a..0320  invoke-static/range  {v31..v31}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0320..0322  move-result-object  v1
+    0322..0326  const-string  v0, "include_lid"
+    0326..032c  invoke-virtual  {v3, v0, v1}, LX/0i1;->A02(Ljava/lang/String;Ljava/lang/Boolean;)V
+    032c..0330  if-eqz  v19, +0xb
+    0330..0336  invoke-static/range  {v31..v31}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0336..0338  move-result-object  v1
+    0338..033c  const-string  v0, "include_about_status"
+    033c..0342  invoke-virtual  {v3, v0, v1}, LX/0i1;->A02(Ljava/lang/String;Ljava/lang/Boolean;)V
+    0342..0346  move-object/from16  v2, v32
+    0346..034a  if-eqz  v18, +0x29
+    034a..034e  const-string  v1, "image"
+    034e..0352  sget-object  v0, LX/0vC;->A06:LX/0vC;
+    0352..0356  if-ne  v9, v0, +0xcf
+    0356..0358  move-object  v0, v1
+    0358..035e  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    035e..0360  move-result  v0
+    0360..0364  new-instance  v9, LX/G6w;
+    0364..0368  if-eqz  v0, +0xa5
+    0368..036e  invoke-direct  {v9}, Lcom/facebook/graphql/calls/GraphQlCallInput;-><init>()V
+    036e..0372  const-string  v1, "IMAGE"
+    0372..0376  const-string  v0, "type"
+    0376..037c  invoke-virtual  {v9, v0, v1}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A0A(Ljava/lang/String;Ljava/lang/String;)V
+    037c..0382  invoke-static/range  {v31..v31}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0382..0384  move-result-object  v1
+    0384..0388  const-string  v0, "include_picture"
+    0388..038e  invoke-virtual  {v3, v0, v1}, LX/0i1;->A02(Ljava/lang/String;Ljava/lang/Boolean;)V
+    038e..0392  const-string  v0, "picture_field_input"
+    0392..0398  invoke-virtual  {v3, v9, v0}, LX/0i1;->A00(Lcom/facebook/graphql/calls/GraphQlCallInput;Ljava/lang/String;)V
+    0398..039c  if-eqz  v17, +0x2f
+    039c..03a2  invoke-static/range  {v31..v31}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    03a2..03a4  move-result-object  v13
+    03a4..03a8  const-string  v0, "include_biz"
+    03a8..03ae  invoke-virtual  {v3, v0, v13}, LX/0i1;->A02(Ljava/lang/String;Ljava/lang/Boolean;)V
+    03ae..03b2  const-string  v12, "include_profile"
+    03b2..03b8  invoke-static  {v11, v8, v12}, LX/6og;->A0D(LX/0iH;Ljava/lang/Object;Ljava/lang/String;)LX/Nha;
+    03b8..03ba  move-result-object  v9
+    03ba..03be  const-string  v11, "include_vname"
+    03be..03c4  invoke-static  {v9, v8, v11}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    03c4..03c8  const-string  v1, "profile_version"
+    03c8..03ce  invoke-static  {v9, v8, v1}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    03ce..03d2  iget  v0, v6, LX/HcZ;->A00:I
+    03d2..03d8  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    03d8..03da  move-result-object  v0
+    03da..03e0  invoke-static  {v9, v0, v1}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    03e0..03e6  invoke-static  {v9, v13, v11}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    03e6..03ec  invoke-static  {v9, v13, v12}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    03ec..03f0  const-string  v0, "business_input"
+    03f0..03f6  invoke-static  {v9, v3, v0}, LX/3q4;->A16(LX/NhZ;LX/0i1;Ljava/lang/String;)V
+    03f6..03fa  if-eqz  v16, +0xb
+    03fa..0400  invoke-static/range  {v31..v31}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0400..0402  move-result-object  v1
+    0402..0406  const-string  v0, "include_ddm"
+    0406..040c  invoke-virtual  {v3, v0, v1}, LX/0i1;->A02(Ljava/lang/String;Ljava/lang/Boolean;)V
+    040c..0410  if-eqz  v7, +0xb
+    0410..0416  invoke-static/range  {v31..v31}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0416..0418  move-result-object  v1
+    0418..041c  const-string  v0, "include_devices"
+    041c..0422  invoke-virtual  {v3, v0, v1}, LX/0i1;->A02(Ljava/lang/String;Ljava/lang/Boolean;)V
+    0422..0426  if-eqz  v24, +0xb
+    0426..042c  invoke-static/range  {v31..v31}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    042c..042e  move-result-object  v1
+    042e..0432  const-string  v0, "include_orgs"
+    0432..0438  invoke-virtual  {v3, v0, v1}, LX/0i1;->A02(Ljava/lang/String;Ljava/lang/Boolean;)V
+    0438..043e  invoke-static  {}, LX/2L6;->A1E()Ljava/util/HashMap;
+    043e..0440  move-result-object  v25
+    0440..0446  invoke-static  {}, LX/2L6;->A1E()Ljava/util/HashMap;
+    0446..0448  move-result-object  v23
+    0448..044c  new-instance  v1, LX/H9Z;
+    044c..0452  invoke-direct  {v1, v6, v7}, LX/H9Z;-><init>(LX/HcZ;Z)V
+    0452..0456  iget-object  v7, v2, LX/HSo;->A02:LX/0if;
+    0456..045a  const-class  v13, LX/2ZW;
+    045a..045e  const-string  v16, "whatsapp-android-mex"
+    045e..0462  const-string  v15, "UsyncQuery"
+    0462..0466  new-instance  v0, LX/0iT;
+    0466..046a  move-object/from16  v17, v8
+    046a..046c  move-object  v11, v0
+    046c..046e  move-object  v12, v3
+    046e..0470  move-object  v14, v8
+    0470..0474  move/from16  v18, v5
+    0474..047a  invoke-direct/range  {v11..v18}, LX/0iT;-><init>(LX/0i1;Ljava/lang/Class;Ljava/lang/Class;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Z)V
+    047a..0480  invoke-virtual  {v4}, Ljava/util/AbstractCollection;->clear()V
+    0480..0486  invoke-static  {v0, v7}, LX/2LA;->A0Y(LX/0iQ;Ljava/lang/Object;)LX/0iq;
+    0486..0488  move-result-object  v3
+    0488..048c  new-instance  v0, LX/IDw;
+    048c..0490  move-object/from16  v22, v0
+    0490..0494  move-object/from16  v24, v1
+    0494..0498  move-object/from16  v27, v6
+    0498..049c  move-object/from16  v29, v2
+    049c..04a0  move-object/from16  v30, v10
+    04a0..04a6  invoke-direct/range  {v22..v31}, LX/IDw;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;I)V
+    04a6..04ac  invoke-virtual  {v3, v0}, LX/0iq;->AQY(Lkotlin/jvm/functions/Function1;)V
+    04ac..04ae  return-object  v28
+    04ae..04b4  invoke-direct  {v9}, Lcom/facebook/graphql/calls/GraphQlCallInput;-><init>()V
+    04b4..04b8  const-string  v1, "PREVIEW"
+    04b8..04bc  const-string  v0, "type"
+    04bc..04c2  invoke-virtual  {v9, v0, v1}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A0A(Ljava/lang/String;Ljava/lang/String;)V
+    04c2..04c6  iget-object  v0, v2, LX/HSo;->A00:LX/05a;
+    04c6..04cc  invoke-static  {v0}, LX/2L8;->A0o(LX/05a;)LX/08Y;
+    04cc..04ce  move-result-object  v0
+    04ce..04d4  invoke-static  {v0}, LX/6p0;->A00(LX/08Y;)I
+    04d4..04d6  move-result  v0
+    04d6..04da  if-lez  v0, -0xad
+    04da..04e0  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    04e0..04e2  move-result-object  v1
+    04e2..04e6  const-string  v0, "preview_px"
+    04e6..04ec  invoke-virtual  {v9, v0, v1}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A09(Ljava/lang/String;Ljava/lang/Integer;)V
+    04ec..04f0  goto/16  -0xb8
+    04f0..04f4  const-string  v0, "preview"
+    04f4..04f8  goto/16  -0xce
+    # exception table: 0 try range(s)
+.end method

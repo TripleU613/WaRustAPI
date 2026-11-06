@@ -1,0 +1,12 @@
+
+# class: LX/3q3;
+# extends: Ljava/lang/Object;
+
+.method public A1V(ZL)  # .registers 3
+    # full signature: LX/3q3;->A1V(Ljava/lang/Object;)Z
+    0000..0002  const/4  v1, #0x1
+    0002..0004  const/4  v0, #0x2
+    0004..000a  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000a..000c  return  v1
+    # exception table: 0 try range(s)
+.end method

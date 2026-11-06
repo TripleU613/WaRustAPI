@@ -8184,3 +8184,5 @@ Confirmed local LID-repair authority gap corrected: original request and current
 Local contact projection split-read gap corrected: enumeration no longer supplies stale reply/status authority across a later write transaction. [Transaction snapshot fix, stale-enumeration controls and limits](contact-projection-correlation.md#transaction-bound-settlement-projection-2026-11-06). No native wire or live-operation claim.
 
 Confirmed local nested-field ambiguity corrected for contact projection/repair, with both-order and reopen controls. [Nested duplicate-field controls and native-policy limits](contact-projection-correlation.md#duplicate-field-authority-is-not-selected-by-order-2026-11-06). Android duplicate semantics remain unverified; no live operation.
+
+APK43.72 LID Boolean/mask mapping and conditional MEX final dispatcher retained; classic usync writer alone is not this producer's wire oracle. [LID field chain, conditional MEX selection and remaining serializer/callback limits](bulk-prekey-refresh.md#missing-lid-field-mapping-and-mex-selection-2026-11-06). Offline research only.

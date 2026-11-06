@@ -1,0 +1,57 @@
+
+# class: LX/0p7;
+# extends: Ljava/lang/Object;
+
+.method private A0F(ZLLLLLIJZ)  # .registers 22
+    # full signature: LX/0p7;->A0F(LX/1w4;LX/0vC;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;IJZ)Z
+    0000..0004  const-string  v1, "ContactSyncHelper/sync_sid_"
+    0004..0008  new-instance  v0, Ljava/lang/StringBuilder;
+    0008..000e  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    000e..0012  move-object/from16  v1, v16
+    0012..0018  invoke-virtual  {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0018..001e  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    001e..0020  move-result-object  v0
+    0020..0026  invoke-static  {v0}, LX/1xA;->A00(Ljava/lang/String;)Ljava/lang/String;
+    0026..0028  move-result-object  v4
+    0028..002a  move-object  v5, v14
+    002a..002e  move-object/from16  v7, v17
+    002e..0032  move/from16  v0, v18
+    0032..0038  invoke-virtual  {v12, v14, v7, v0}, LX/0p7;->A0Q(LX/0vC;Ljava/util/List;I)LX/HcZ;
+    0038..003a  move-result-object  v3
+    003a..003e  if-eqz  v21, +0x19
+    003e..0042  iget-object  v0, v12, LX/0p7;->A0O:LX/00x;
+    0042..0048  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0048..004a  move-result-object  v1
+    004a..004e  check-cast  v1, LX/HSo;
+    004e..0052  iget-object  v0, v12, LX/0p7;->A0b:LX/0p9;
+    0052..0058  invoke-virtual  {v1, v0, v3, v4}, LX/HSo;->A01(LX/0p9;LX/HcZ;Ljava/lang/String;)LX/FfK;
+    0058..005a  move-result-object  v0
+    005a..005c  move-object  v4, v13
+    005c..0062  invoke-virtual  {v12, v13, v15, v0}, LX/0p7;->A0W(LX/1w4;Ljava/lang/String;Ljava/util/concurrent/Future;)Z
+    0062..0064  move-result  v0
+    0064..0068  if-nez  v0, +0xe
+    0068..006a  const/4  v0, #0x0
+    006a..006c  return  v0
+    006c..0070  iget-object  v2, v12, LX/0p7;->A0c:LX/0pD;
+    0070..0076  const-wide/32  v0, #0x1f400
+    0076..007c  invoke-virtual  {v2, v3, v4, v0, v1}, LX/0pD;->A07(LX/HcZ;Ljava/lang/String;J)LX/FfK;
+    007c..007e  move-result-object  v0
+    007e..0080  goto  -0x12
+    0080..0084  iget-object  v0, v12, LX/0p7;->A00:LX/Gzg;
+    0084..008a  invoke-static  {v0}, LX/00L;->A05(Ljava/lang/Object;)V
+    008a..008c  const/4  v1, #0x1
+    008c..0092  invoke-static  {v13, v0, v1}, LX/GoX;->A00(LX/1w4;LX/Gzg;Z)V
+    0092..0096  iget-object  v0, v12, LX/0p7;->A0F:LX/00x;
+    0096..009c  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    009c..009e  move-result-object  v3
+    009e..00a2  check-cast  v3, LX/HXp;
+    00a2..00a6  iget-object  v0, v12, LX/0p7;->A00:LX/Gzg;
+    00a6..00ac  invoke-static  {v0}, LX/00L;->A05(Ljava/lang/Object;)V
+    00ac..00b0  iget-object  v6, v0, LX/Gzg;->A00:LX/HMk;
+    00b0..00b4  iget-object  v8, v12, LX/0p7;->A0e:Ljava/util/Map;
+    00b4..00b8  iget-object  v9, v12, LX/0p7;->A03:Ljava/util/Map;
+    00b8..00bc  move-wide/from16  v10, v19
+    00bc..00c2  invoke-virtual/range  {v3..v11}, LX/HXp;->A01(LX/1w4;LX/0vC;LX/HMk;Ljava/util/List;Ljava/util/Map;Ljava/util/Map;J)V
+    00c2..00c4  return  v1
+    # exception table: 0 try range(s)
+.end method

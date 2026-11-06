@@ -1,0 +1,18 @@
+{
+  "README.md": {
+    "bytes": 4256,
+    "sha256": "38a733303b5ecd3ecee4eed5f45fa1b7b9b16da28f31055eb07624db2bd21f65"
+  },
+  "boolean-helper.txt": {
+    "bytes": 365,
+    "sha256": "d08423f3b87735de3380028910ba9417734830e3c06c6c428ef7f84cbc921717"
+  },
+  "final-dispatch.txt": {
+    "bytes": 3130,
+    "sha256": "81e7e33251b9b4abeb4d0340b738cd261d8b8800619a16e18366048ddc531888"
+  },
+  "profile-dispatch.txt": {
+    "bytes": 18512,
+    "sha256": "bf56708ad6ce1519e89f2622341abb0df872369f0b66bf2661530822ca5e230b"
+  }
+}
