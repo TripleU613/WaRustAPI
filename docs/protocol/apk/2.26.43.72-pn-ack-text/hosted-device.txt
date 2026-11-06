@@ -1,0 +1,22 @@
+
+# class: LX/Dv4;
+# extends: Lcom/whatsapp/infra/core/jid/DeviceJid;
+
+.method public <init>(VLI)  # .registers 5
+    # full signature: LX/Dv4;-><init>(Lcom/whatsapp/infra/core/jid/UserJid;I)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-direct  {v2, v3, v4}, Lcom/whatsapp/infra/core/jid/DeviceJid;-><init>(Lcom/whatsapp/infra/core/jid/UserJid;I)V
+    000e..0012  iput-object  v3, v2, LX/Dv4;->A01:Lcom/whatsapp/infra/core/jid/UserJid;
+    0012..0016  iput  v4, v2, LX/Dv4;->A00:I
+    0016..001a  const/16  v0, #0x63
+    001a..001e  if-ne  v4, v0, +0x3
+    001e..0020  return-void
+    0020..0024  const-string  v0, "device_id should be 99 for hosted device, is "
+    0024..002a  invoke-static  {v0, v4}, LX/2LA;->A0p(Ljava/lang/String;I)Ljava/lang/String;
+    002a..002c  move-result-object  v1
+    002c..0030  new-instance  v0, LX/09P;
+    0030..0036  invoke-direct  {v0, v1}, LX/09P;-><init>(Ljava/lang/String;)V
+    0036..0038  throw  v0
+    # exception table: 0 try range(s)
+.end method

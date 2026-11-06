@@ -18046,5 +18046,17 @@
     "x-library": ["whatsapp_api::transport::messaging::validate_received_ack", "whatsapp_api::transport::messaging::message_ack_outcome_for", "whatsapp_api::transport::outgoing::acknowledge"],
     "description": "LID/hosted.lid ACK text adapter preserves native null/user/device class and canonical base user. Device suffix uses Java signed-i32 parsing then signed-byte0..99 admission; hosted device additionally requires original integer99. Dot suffix is not parsed as agent; explicit device0 remains DeviceJid. Invalid construction follows null-sender call recovery, valid device recipient falls back to from, and valid device from unwraps to user for exact chat correlation. Ordinary success participant guard uses the same class/null result, including hosted aliases; refusal/challenge rules remain separate. No global JID rewrite, emitted device value, opaque binary-JID equivalence, identity merge, call feature, request, retry or live operation.",
     "evidence": "docs/protocol/message-ack.md#explicit-lid-device-ack-text-preserves-native-class-and-narrowing-2026-11-06"
+  },
+  "x-pn-ack-text-constructor": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [
+      "whatsapp_api::transport::messaging::validate_received_ack",
+      "whatsapp_api::transport::messaging::message_ack_outcome_for",
+      "whatsapp_api::transport::outgoing::acknowledge"
+    ],
+    "description": "Ordinary PN/hosted ACK text uses pinned PhoneUserJid grammar:5..20 ASCII digits, no leading zero, prefix10 requires1008. Hosted aliases canonicalize to s.whatsapp.net. Explicit device0 remains DeviceJid; signed-i32/byte-range admission and hosted original99 apply. Invalid recipient falls back to from, selected device from unwraps base, ordinary participant-success guard shares admission. Special0/Server/gdpr stay unclassified with existing handling. Opaque typed JIDs, other families, generic receipt parsing and full recovery remain separate. No live operation or no-ban guarantee.",
+    "evidence": "docs/protocol/message-ack.md#pn-ack-text-follows-its-own-constructor-grammar-2026-11-06"
   }
 }

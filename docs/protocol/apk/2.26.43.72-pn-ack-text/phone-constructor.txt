@@ -1,0 +1,27 @@
+
+# class: Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+# extends: Lcom/whatsapp/infra/core/jid/UserJid;
+
+.method public <init>(VL)  # .registers 5
+    # full signature: Lcom/whatsapp/infra/core/jid/PhoneUserJid;-><init>(Ljava/lang/String;)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v4, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-direct  {v3, v4}, Lcom/whatsapp/infra/core/jid/Jid;-><init>(Ljava/lang/String;)V
+    000e..0012  iput-object  v4, v3, Lcom/whatsapp/infra/core/jid/PhoneUserJid;->userString:Ljava/lang/String;
+    0012..0016  iget-object  v0, v3, Lcom/whatsapp/infra/core/jid/Jid;->user:Ljava/lang/String;
+    0016..001c  invoke-static  {v0}, LX/0Dl;->A02(Ljava/lang/String;)Z
+    001c..001e  move-result  v0
+    001e..0022  if-nez  v0, +0x18
+    0022..0026  iget-object  v2, v3, Lcom/whatsapp/infra/core/jid/Jid;->user:Ljava/lang/String;
+    0026..002a  const-string  v1, "Invalid user: "
+    002a..002e  new-instance  v0, Ljava/lang/StringBuilder;
+    002e..0034  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0034..003a  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    003a..0040  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0040..0042  move-result-object  v1
+    0042..0046  new-instance  v0, LX/09P;
+    0046..004c  invoke-direct  {v0, v1}, LX/09P;-><init>(Ljava/lang/String;)V
+    004c..004e  throw  v0
+    004e..0050  return-void
+    # exception table: 0 try range(s)
+.end method

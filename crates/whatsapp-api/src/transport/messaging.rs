@@ -1100,9 +1100,9 @@ pub(crate) fn ordinary_ack_has_participant(node: &Node) -> bool {
     if let Some(parsed) = node
         .get_attr("participant")
         .and_then(|value| value.as_text())
-        .and_then(ack_lid_text)
+        .and_then(ack_user_text)
     {
-        return !matches!(parsed, AckLidText::Null);
+        return !matches!(parsed, AckUserText::Null);
     }
 
     super::receipts::jid(node, "participant").is_some_and(|jid| {
@@ -1141,38 +1141,63 @@ pub(crate) fn native_plain_lid_user_valid(user: &str) -> bool {
         && !user.starts_with('0')
         && user.bytes().all(|byte| byte.is_ascii_digit())
 }
-pub(crate) enum AckLidText<'a> {
+// PhoneUserJid -> 0Dl.A02 (APK43.72): protocol user grammar, not
+// registration/E.164 validation. Special factory singletons bypass this.
+fn native_plain_pn_user_valid(user: &str) -> bool {
+    (5..=20).contains(&user.len())
+        && !user.starts_with('0')
+        && (!user.starts_with("10") || user.starts_with("1008"))
+        && user.bytes().all(|byte| byte.is_ascii_digit())
+}
+pub(crate) enum AckUserText<'a> {
     Null,
     User(&'a str),
     Device(&'a str),
 }
 // Pinned 0Dd.A00 uses last dot/colon, ignores the dot suffix, parses
 // device with Integer.parseInt, then DeviceJid narrows to byte before range
-// checking. Dv6 adds original-int == 99 for hosted.lid devices.
-pub(crate) fn ack_lid_text(text: &str) -> Option<AckLidText<'_>> {
+// checking. Dv6/Dv4 add original-int == 99 for hosted devices.
+pub(crate) fn ack_user_text(text: &str) -> Option<AckUserText<'_>> {
     let (local, domain) = text.rsplit_once('@')?;
-    if !matches!(domain, "lid" | "hosted.lid") {
+    if !matches!(domain, "lid" | "hosted.lid" | "s.whatsapp.net" | "hosted") {
         return None;
     }
     let dot = local.rfind('.');
     let colon = local.rfind(':');
+    let lid = matches!(domain, "lid" | "hosted.lid");
+    let base_end = dot.into_iter().chain(colon).min().unwrap_or(local.len());
+    // 0De.A02 has 0/Server singleton users; 0Dd.A00 additionally handles
+    // plain gdpr@s.whatsapp.net. Their conversion/selection is not ported.
+    if !lid
+        && (matches!(&local[..base_end], "0" | "Server")
+            || (local == "gdpr" && domain == "s.whatsapp.net"))
+    {
+        return None;
+    }
+    let valid_user = |user: &str| {
+        if lid {
+            native_plain_lid_user_valid(user)
+        } else {
+            native_plain_pn_user_valid(user)
+        }
+    };
     let prefix_end = match (dot, colon) {
         (None, None) => {
-            return Some(if native_plain_lid_user_valid(local) {
-                AckLidText::User(local)
+            return Some(if valid_user(local) {
+                AckUserText::User(local)
             } else {
-                AckLidText::Null
+                AckUserText::Null
             });
         }
         (Some(dot), Some(colon)) => dot.min(colon),
         (Some(index), None) | (None, Some(index)) => index,
     };
     if local.ends_with(['.', ':']) {
-        return Some(AckLidText::Null);
+        return Some(AckUserText::Null);
     }
     let user = &local[..prefix_end];
-    if !native_plain_lid_user_valid(user) {
-        return Some(AckLidText::Null);
+    if !valid_user(user) {
+        return Some(AckUserText::Null);
     }
     let device = match colon {
         None => 0,
@@ -1180,15 +1205,17 @@ pub(crate) fn ack_lid_text(text: &str) -> Option<AckLidText<'_>> {
             let Some(device) = super::mex::java_decimal_long(&local[colon + 1..])
                 .and_then(|v| i32::try_from(v).ok())
             else {
-                return Some(AckLidText::Null);
+                return Some(AckUserText::Null);
             };
             device
         }
     };
-    if !(0..=99).contains(&(device as i8)) || (domain == "hosted.lid" && device != 99) {
-        return Some(AckLidText::Null);
+    if !(0..=99).contains(&(device as i8))
+        || (matches!(domain, "hosted.lid" | "hosted") && device != 99)
+    {
+        return Some(AckUserText::Null);
     }
-    Some(AckLidText::Device(user))
+    Some(AckUserText::Device(user))
 }
 
 // APK43.72 0Tp.A0A -> 0Dd.A02/A00: definite null results for
@@ -1229,7 +1256,7 @@ fn call_ack_sender_known_null(node: &Node) -> bool {
     };
     // Empty-user cache keys omit @ (0Dd.A01); unknown domains cannot be
     // inserted by the selected parser or user/newsletter cache factories.
-    user.is_empty() || !recognized(domain) || matches!(ack_lid_text(text), Some(AckLidText::Null))
+    user.is_empty() || !recognized(domain) || matches!(ack_user_text(text), Some(AckUserText::Null))
 }
 
 /// Validate ACK required-ID, numeric and supported call-field admission. Stateful receivers must first capture the Node.
@@ -3240,6 +3267,57 @@ mod captured_wait_tests {
             assert_eq!(validate_received_ack(&ack).is_ok(), !nonnull, "{sender}");
             assert!(validate_received_ack(&ack.clone().attr("error", "459")).is_ok());
             assert!(validate_received_ack(&ack.attr("error", "bad")).is_err());
+        }
+    }
+
+    #[test]
+    fn pn_text_constructor_controls_call_ordering_and_specials_remain_unclassified() {
+        for domain in ["s.whatsapp.net", "hosted"] {
+            for (local, valid) in [
+                ("1234", false),
+                ("12345", true),
+                ("12345678901234567890", true),
+                ("123456789012345678901", false),
+                ("01234", false),
+                ("10123", false),
+                ("10080", true),
+                ("1008", false),
+                ("１２３４５", false),
+                ("١٢٣٤٥", false),
+                ("+12345", false),
+                ("12345:0", domain != "hosted"),
+                ("12345:256", domain != "hosted"),
+                ("12345:-256", domain != "hosted"),
+                ("12345:99", true),
+                ("12345:355", domain != "hosted"),
+                ("12345:100", false),
+                ("12345:2147483648", false),
+                ("12345.foo", domain != "hosted"),
+                ("12345:7.foo", false),
+            ] {
+                let ack = Node::new("ack")
+                    .attr("class", "call")
+                    .attr("id", "")
+                    .attr("from", format!("{local}@{domain}"));
+                assert_eq!(
+                    validate_received_ack(&ack).is_ok(),
+                    !valid,
+                    "{local}@{domain}"
+                );
+                assert!(validate_received_ack(&ack.clone().attr("error", "459")).is_ok());
+                assert!(validate_received_ack(&ack.attr("error", "bad")).is_err());
+            }
+        }
+        for text in [
+            "0@s.whatsapp.net",
+            "Server@hosted",
+            "0:7@s.whatsapp.net",
+            "gdpr@s.whatsapp.net",
+        ] {
+            assert!(ack_user_text(text).is_none(), "special {text}");
+            assert!(!call_ack_sender_known_null(
+                &Node::new("ack").attr("from", text)
+            ));
         }
     }
 

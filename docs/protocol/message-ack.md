@@ -675,3 +675,38 @@ Validation: 1,470 workspace/all-feature tests passed. Strict workspace/all-targe
 all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
 validation, APK coverage freshness and repository hygiene passed. Exact pinned
 parser re-export and APK hash verified. Offline only.
+
+
+## PN ACK text follows its own constructor grammar (2026-11-06)
+
+**Confirmed selected pinned static / Rust correction.** The
+[complete PN constructor exports and reproduction](apk/2.26.43.72-pn-ack-text/README.md)
+show PhoneUserJid ->0Dl.A02 requires5..20 ASCII digits, no leading0, and rejects
+prefix10 unless1008. Both ordinary PN text domains s.whatsapp.net and hosted
+use this base constructor/server. Unlike LID, a20-digit PN user can be valid;
+unlike the previous generic Rust adapter, four-digit or prefix10123 is null.
+This does not change registration phone validation.
+
+The shared ACK text classifier now covers ordinary PN/hosted as well as LID.
+Invalid construction follows known-null call continuation before later call
+fields, while global required-id/error checks still precede it. Device parsing
+preserves explicit device0 as a DeviceJid, signed-i32 parsing/byte narrowing,
+and hosted original99. Device-valued recipient falls back to from; selected
+from unwraps to base user. Hosted ordinary text canonicalizes to s.whatsapp.net.
+The participant guard follows the same null/user/device result for ordinary
+success; valid error ACKs remain separately eligible. Distribution and CLI
+classification reuse these helpers. Opaque typed JIDs retain existing handling.
+
+**Confirmed negative / unknown:** factory0/Server and parser gdpr special cases
+bypass PhoneUserJid. They remain unclassified by this new constructor adapter;
+existing handling is preserved, not claimed to match all native special routes.
+Other families, generic receipt parsing, full cache/runtime behavior, binary
+serialization, recovery and server policy remain open. No live sends/replay.
+
+**Offline regression:** PN constructor call-ordering table covers length4/5/20/21,
+zero/prefix1008 exceptions, Unicode base rejection, integer/narrowing/hosted
+boundaries,459 diversion and malformed-error precedence; special names remain
+outside null guesses. Actual in-flight outbox tables cover invalid-recipient
+fallback, device0 class, canonical hosted/device from,20-digit selected chat,
+wrong chat, participant success/refusal distinction, once-only facts, reopen
+and no reselection. These are local correctness checks, not zero-ban proof.

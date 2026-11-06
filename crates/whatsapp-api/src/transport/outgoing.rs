@@ -1256,21 +1256,28 @@ impl Pending {
 
 pub(super) use super::messaging::is_auth_challenge_ack;
 
-// The optional ACK JID accessor returns null on failed plain LID text
-// construction. Both native text aliases use 0Dx.getServer() == lid.
+// Optional ACK JID text follows pinned PN/LID construction and class cast.
+// Hosted aliases unwrap to the canonical base user server.
 fn message_ack_address(node: &Node, name: &str) -> Option<crate::model::jid::Jid> {
     if let Some(parsed) = node
         .get_attr(name)
         .and_then(|value| value.as_text())
-        .and_then(super::messaging::ack_lid_text)
+        .and_then(super::messaging::ack_user_text)
     {
-        use super::messaging::AckLidText;
+        use super::messaging::AckUserText;
         let user = match parsed {
-            AckLidText::Null => return None,
-            AckLidText::Device(_) if name == "recipient" => return None,
-            AckLidText::User(user) | AckLidText::Device(user) => user,
+            AckUserText::Null => return None,
+            AckUserText::Device(_) if name == "recipient" => return None,
+            AckUserText::User(user) | AckUserText::Device(user) => user,
         };
-        return crate::model::jid::Jid::parse(&format!("{user}@lid")).ok();
+        let domain = if node.get_attr(name)?.as_text()?.ends_with("@lid")
+            || node.get_attr(name)?.as_text()?.ends_with("@hosted.lid")
+        {
+            "lid"
+        } else {
+            "s.whatsapp.net"
+        };
+        return crate::model::jid::Jid::parse(&format!("{user}@{domain}")).ok();
     }
     super::receipts::jid(node, name)
 }
@@ -1290,7 +1297,14 @@ pub(crate) fn message_ack_chat(node: &Node) -> Option<crate::model::jid::Jid> {
         // normalization audit; do not fall back to from speculatively.
         return (matches!(recipient.server, Server::User | Server::Lid)
             && !recipient.user.is_empty()
-            && recipient.user.len() <= 15
+            && (recipient.user.len() <= 15
+                || (recipient.server == Server::User
+                    && matches!(
+                        node.get_attr("recipient")
+                            .and_then(|v| v.as_text())
+                            .and_then(super::messaging::ack_user_text),
+                        Some(super::messaging::AckUserText::User(_))
+                    )))
             && recipient.user.bytes().all(|b| b.is_ascii_digit()))
         .then_some(recipient);
     }
@@ -3039,6 +3053,35 @@ mod tests {
                     false,
                 ),
                 ("15555550100:7@s.whatsapp.net", None, true),
+                ("12345678901234567890@hosted", None, true),
+                (
+                    "12345678901234567890@s.whatsapp.net",
+                    Some("12345678901234567890@hosted"),
+                    true,
+                ),
+                ("15555550100:256@s.whatsapp.net", None, true),
+                ("15555550100:-256@s.whatsapp.net", None, true),
+                ("15555550100:100@s.whatsapp.net", None, false),
+                ("15555550100:99@hosted", None, true),
+                ("15555550100:355@hosted", None, false),
+                ("15555550100@hosted", None, true),
+                ("15555550100.foo@s.whatsapp.net", None, true),
+                (
+                    "15555550100@s.whatsapp.net",
+                    Some("15555550999:0@s.whatsapp.net"),
+                    true,
+                ),
+                (
+                    "15555550100@s.whatsapp.net",
+                    Some("1234@s.whatsapp.net"),
+                    true,
+                ),
+                (
+                    "15555550100@s.whatsapp.net",
+                    Some("10123@s.whatsapp.net"),
+                    true,
+                ),
+                ("1234@s.whatsapp.net", None, false),
                 ("99999@lid", Some("12345@lid"), true),
                 ("12345:7@lid", None, true),
                 ("12345.foo@lid", None, true),
@@ -3094,6 +3137,11 @@ mod tests {
                                 && (from.ends_with("@lid") || from.ends_with("@hosted.lid")))
                         {
                             entry.intent.chat = ChatId::from_jid(&Jid::parse("12345@lid")?)?;
+                        }
+                        if from.starts_with("12345678901234567890@") {
+                            entry.intent.chat = ChatId::from_jid(&Jid::parse(
+                                "12345678901234567890@s.whatsapp.net",
+                            )?)?;
                         }
                         entry.wire_id = Some(MessageId::new("fixture")?);
                         outbox().set_progress(tx, &mut entry, AttemptProgress::InFlight)
@@ -3327,10 +3375,18 @@ mod tests {
     }
 
     #[test]
-    fn lid_text_participant_guard_uses_native_device_constructor() {
+    fn user_text_participant_guard_uses_native_device_constructor() {
         for error in [None, Some("500")] {
             for (participant, blocks_success) in [
                 ("12345:0@lid", true),
+                ("1234@s.whatsapp.net", false),
+                ("10123@s.whatsapp.net", false),
+                ("01234@s.whatsapp.net", false),
+                ("12345:100@s.whatsapp.net", false),
+                ("12345:256@s.whatsapp.net", true),
+                ("12345:99@hosted", true),
+                ("12345:355@hosted", false),
+                ("12345678901234567890@hosted", true),
                 ("12345.foo@lid", true),
                 ("12345:-256@lid", true),
                 ("12345:99@hosted.lid", true),
