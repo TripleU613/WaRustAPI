@@ -1,0 +1,57 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000050edfc <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv>:
+  54edb0:      	paciasp
+  54edb4:      	sub	sp, sp, #0x70
+  54edb8:      	stp	x29, x30, [sp, #0x20]
+  54edbc:      	str	x25, [sp, #0x30]
+  54edc0:      	bl	0x2db660 <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0xd784>
+  54edc4:      	add	x29, sp, #0x20
+  54edc8:      	bl	0x727a30 <MCFSetGetCount+0x3978>
+  54edcc:      	stur	x8, [x29, #-0x8]
+  54edd0:      	ldr	x23, [x0, #0x30]
+  54edd4:      	mov	x0, sp
+  54edd8:      	bl	0x728c38 <MCFSetGetCount+0x4b80>
+  54eddc:      	sxtw	x1, w23
+  54ede0:      	bl	0x632798 <_ZN8crossapp9tigonhttp3mns11DNSResolver27setSecondaryResolverEnabledEh+0x138ac>
+  54ede4:      	ldr	x20, [sp]
+  54ede8:      	mov	x0, x21
+  54edec:      	mov	x2, xzr
+  54edf0:      	mov	x1, x20
+  54edf4:      	bl	0x648ae4 <MCFWeakCopyRef+0x1d8>
+  54edf8:      	ldr	x8, [sp, #0x8]
+  54edfc:      	bic	w23, w23, w23, asr #31
+  54ee00:      	sub	x8, x8, x20
+  54ee04:      	asr	x24, x8, #3
+  54ee08:      	mov	x8, xzr
+  54ee0c:      	cmp	x23, x8
+  54ee10:      	b.eq	0x54ee48 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x4004c>
+  54ee14:      	mov	x25, x8
+  54ee18:      	cmp	x24, x8
+  54ee1c:      	b.eq	0x54ee74 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x40078>
+  54ee20:      	ldr	x21, [x20, x25, lsl #3]
+  54ee24:      	bl	0x72e134 <MCFSetGetCount+0xa07c>
+  54ee28:      	bl	0x6414e8 <__MCFCastToClassNotNull>
+  54ee2c:      	bl	0x355c04 <_RNvXsp_NtCsUHwbHsI1a0_5alloc3vecINtB5_3VecmENtNtNtCsd0h5sCe2hTT_4core3ops4drop4Drop4dropCs83ZMWuwgNvG_3cxx+0x20ddc>
+  54ee30:      	mov	w2, #0x1                // =1
+  54ee34:      	bl	0x646eac <MCFStringCompare>
+  54ee38:      	add	x8, x25, #0x1
+  54ee3c:      	cbnz	w0, 0x54ee0c <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x40010>
+  54ee40:      	ldr	x19, [x20, x25, lsl #3]
+  54ee44:      	b	0x54ee4c <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x40050>
+  54ee48:      	mov	x19, xzr
+  54ee4c:      	mov	x0, sp
+  54ee50:      	bl	0x5bd10c <mbedtls_timing_get_timer+0x97c8>
+  54ee54:      	bl	0x7259d4 <MCFSetGetCount+0x191c>
+  54ee58:      	b.ne	0x54ee78 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x4007c>
+  54ee5c:      	mov	x0, x19
+  54ee60:      	bl	0x725b94 <MCFSetGetCount+0x1adc>
+  54ee64:      	ldp	x29, x30, [sp, #0x20]
+  54ee68:      	add	sp, sp, #0x70
+  54ee6c:      	autiasp
+  54ee70:      	ret
+  54ee74:      	brk	#0x1
+  54ee78:      	bl	0x7378f0 <__stack_chk_fail@plt>

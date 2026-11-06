@@ -764,3 +764,18 @@ The getDisableContentLengthHeader getter resolves toPandoTigonConfig, not the
 inspected TigonHttpClientConfig. Its existence is not an ordinary-upload header
 setting. No Rust body/header change or live operation. Next: queue expectedBytes
 producer and its relationship to actual headers/provider length.
+
+## Queue expected size is initialized from Content-Length 2026-11-06
+
+**Confirmed selected static:** initializer53b9c4 reads request header key788e58
+(relocated literal content-length), converts through642378, and stores expected
+size with STP WZR,W26 at+0x70, whose second word is+0x74. It initializes queued
+count+0x78 to0. Selected queue construction admits positive lengths or-1; absent
+lookup becomes0 and skips this allocation. Full predicates/other branches remain
+untraced. [Paired-store binding, exact key relocation, conversion and exclusions](apk/2.26.43.72-media-expected-length-source/README.md).
+
+This closes the immediate queue expected-value source, separate from progress
+total or inferred JNI length. Rust's known body includes the voice seal; preserve
+its actual length rather than substituting hash-input length. No Rust behavior
+change, live operation or replay. Native synthesis of absent explicit JAT length
+and full ordinary-upload transport binding remain open.

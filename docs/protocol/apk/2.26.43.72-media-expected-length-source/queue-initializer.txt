@@ -1,0 +1,82 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000050edfc <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv>:
+  51c510:      	ldr	x19, [x29, #0x60]
+  51c514:      	str	x21, [sp, #0x50]
+  51c518:      	ucvtf	d0, d0
+  51c51c:      	fdiv	d10, d0, d8
+  51c520:      	fcmp	d10, #0.0
+  51c524:      	b.eq	0x51c550 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xd754>
+  51c528:      	movi	d1, #0000000000000000
+  51c52c:      	mov	x8, #0x404e000000000000 // =4633641066610819072
+  51c530:      	fmov	d0, d10
+  51c534:      	fmov	d2, x8
+  51c538:      	adrp	x0, 0xd5000
+  51c53c:      	add	x0, x0, #0xdbf
+  51c540:      	bl	0x63d824 <MNSSettingValidatorIsValidOrReport>
+  51c544:      	tst	w0, #0xff
+  51c548:      	b.eq	0x51c550 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xd754>
+  51c54c:      	str	d10, [x20, #0x28]
+  51c550:      	ldr	x20, [sp, #0x180]
+  51c554:      	ldrb	w8, [x23, #0x1bc]
+  51c558:      	strb	w8, [x20, #0x89]
+  51c55c:      	ldr	w8, [x23, #0x1c0]
+  51c560:      	str	w8, [x20, #0x8c]
+  51c564:      	ldrb	w8, [x23, #0x1c4]
+  51c568:      	strb	w8, [x20, #0x90]
+  51c56c:      	ldr	w21, [x23, #0xd8]
+  51c570:      	cbz	w21, 0x51c598 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xd79c>
+  51c574:      	scvtf	d0, w21
+  51c578:      	movi	d1, #0000000000000000
+  51c57c:      	adrp	x0, 0xdc000
+  51c580:      	add	x0, x0, #0x822
+  51c584:      	fmov	d2, d9
+  51c588:      	bl	0x63d824 <MNSSettingValidatorIsValidOrReport>
+  51c58c:      	tst	w0, #0xff
+  51c590:      	b.eq	0x51c598 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xd79c>
+  51c594:      	str	w21, [x20, #0x74]
+  51c598:      	ldr	x20, [sp, #0x180]
+  51c59c:      	add	x0, sp, #0x280
+  51c5a0:      	mov	x1, x19
+  51c5a4:      	bl	0x43ee4c <_ZNK8facebook9stash_jni10JFileStash9removeAllEv+0x38f00>
+  51c5a8:      	ldr	w19, [x23, #0x228]
+  51c5ac:      	cbz	w19, 0x51c5e8 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xd7ec>
+  51c5b0:      	ldr	x8, [sp, #0x2a0]
+  51c5b4:      	cbz	x8, 0x51c5e8 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xd7ec>
+  51c5b8:      	scvtf	d0, w19
+  51c5bc:      	movi	d1, #0000000000000000
+  51c5c0:      	adrp	x0, 0xd1000
+  51c5c4:      	add	x0, x0, #0xb65
+  51c5c8:      	fmov	d2, d9
+  51c5cc:      	bl	0x63d824 <MNSSettingValidatorIsValidOrReport>
+  51c5d0:      	tst	w0, #0xff
+  51c5d4:      	b.eq	0x51c5e8 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xd7ec>
+  51c5d8:      	add	x0, x20, #0x1b0
+  51c5dc:      	add	x1, sp, #0x280
+  51c5e0:      	bl	0x54772c <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x38930>
+  51c5e4:      	str	w19, [x20, #0x1e0]
+  51c5e8:      	ldr	x19, [x29, #0x68]
+  51c5ec:      	add	x0, sp, #0x280
+  51c5f0:      	bl	0x464290 <MCINetworkSessionExecuteDataTask+0x5038>
+  51c5f4:      	ldr	w20, [x23, #0xd4]
+  51c5f8:      	cbz	w20, 0x51c624 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xd828>
+  51c5fc:      	scvtf	d0, w20
+  51c600:      	movi	d1, #0000000000000000
+  51c604:      	ldr	x21, [sp, #0x180]
+  51c608:      	fmov	d2, d9
+  51c60c:      	adrp	x0, 0xce000
+  51c610:      	add	x0, x0, #0x9c6
+  51c614:      	bl	0x63d824 <MNSSettingValidatorIsValidOrReport>
+  51c618:      	tst	w0, #0xff
+  51c61c:      	b.eq	0x51c624 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xd828>
+  51c620:      	str	w20, [x21, #0x78]
+  51c624:      	ldr	s0, [x23, #0xdc]
+  51c628:      	ldr	x20, [sp, #0x180]
+  51c62c:      	adrp	x24, 0x102000
+  51c630:      	ucvtf	d0, d0
+  51c634:      	fdiv	d10, d0, d8
+  51c638:      	fcmp	d10, #0.0
+  51c63c:      	b.eq	0x51c660 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xd864>

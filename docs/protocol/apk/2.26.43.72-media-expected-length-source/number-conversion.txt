@@ -1,0 +1,46 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000006422cc <MCFStringAppendCStringWithFormat>:
+  642378:      	paciasp
+  64237c:      	sub	sp, sp, #0xd0
+  642380:      	stp	x29, x30, [sp, #0xa0]
+  642384:      	str	x21, [sp, #0xb0]
+  642388:      	stp	x20, x19, [sp, #0xc0]
+  64238c:      	add	x29, sp, #0xa0
+  642390:      	mrs	x21, TPIDR_EL0
+  642394:      	bl	0x729234 <MCFSetGetCount+0x517c>
+  642398:      	ldr	x8, [x21, #0x28]
+  64239c:      	bl	0x727558 <MCFSetGetCount+0x34a0>
+  6423a0:      	bl	0x72e51c <MCFSetGetCount+0xa464>
+  6423a4:      	bl	0x7251dc <MCFSetGetCount+0x1124>
+  6423a8:      	str	x8, [sp, #0x8]
+  6423ac:      	bl	0x647ec0 <MCFStringCopyToHeapOrStackAsCString>
+  6423b0:      	ldr	x8, [sp, #0x8]
+  6423b4:      	cbz	x8, 0x6423ec <MCFStringAppendCStringWithFormat+0x120>
+  6423b8:      	bl	0x728b98 <MCFSetGetCount+0x4ae0>
+  6423bc:      	mov	x1, xzr
+  6423c0:      	mov	w2, wzr
+  6423c4:      	bl	0x736f40 <strtol@plt>
+  6423c8:      	mov	w8, #0x7fffffff         // =2147483647
+  6423cc:      	mov	x9, #-0x7fffffff        // =-2147483647
+  6423d0:      	cmp	x0, x8
+  6423d4:      	csel	x8, x0, x8, lt
+  6423d8:      	mov	x0, x19
+  6423dc:      	cmp	x8, x9
+  6423e0:      	csel	x20, x8, x9, gt
+  6423e4:      	bl	0x647280 <MCFStringDeallocateCharArray>
+  6423e8:      	b	0x6423f0 <MCFStringAppendCStringWithFormat+0x124>
+  6423ec:      	mov	w20, wzr
+  6423f0:      	bl	0x725a98 <MCFSetGetCount+0x19e0>
+  6423f4:      	b.ne	0x642414 <MCFStringAppendCStringWithFormat+0x148>
+  6423f8:      	mov	w0, w20
+  6423fc:      	ldp	x20, x19, [sp, #0xc0]
+  642400:      	ldp	x29, x30, [sp, #0xa0]
+  642404:      	ldr	x21, [sp, #0xb0]
+  642408:      	add	sp, sp, #0xd0
+  64240c:      	autiasp
+  642410:      	ret
+  642414:      	bl	0x7378f0 <__stack_chk_fail@plt>

@@ -1,0 +1,35 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000050edfc <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv>:
+  545b68:      	ldrb	w10, [x8, #0x281]
+  545b6c:      	ldrb	w9, [x8, #0x282]
+  545b70:      	mov	w0, #0x500              // =1280
+  545b74:      	stp	w10, w9, [sp, #0x28]
+  545b78:      	ldrb	w9, [x8, #0x91]
+  545b7c:      	ldrb	w8, [x8, #0x261]
+  545b80:      	str	w9, [sp, #0x30]
+  545b84:      	str	w8, [sp, #0x24]
+  545b88:      	bl	0x737430 <__wrap__Znwm@plt>
+  545b8c:      	mov	x22, x0
+  545b90:      	add	x0, sp, #0xc0
+  545b94:      	add	x1, x20, #0x4b8
+  545b98:      	bl	0x734f40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2ERKS5_@plt>
+  545b9c:      	bl	0x72a4c0 <MCFSetGetCount+0x6408>
+  545ba0:      	ldr	q1, [sp, #0x10]
+  545ba4:      	strb	w8, [x22, #0x18]
+  545ba8:      	adrp	x8, 0x76f000 <_ZTVN6google8protobuf11MessageLiteE+0x13e18>
+  545bac:      	add	x8, x8, #0x660
+  545bb0:      	mov	x25, x22
+  545bb4:      	str	x8, [x22]
+  545bb8:      	mov	w8, #0x3f800000         // =1065353216
+  545bbc:      	str	xzr, [x22, #0x10]
+  545bc0:      	str	xzr, [x25, #0x8]!
+  545bc4:      	strb	wzr, [x22, #0x20]
+  545bc8:      	strb	wzr, [x22, #0x28]
+  545bcc:      	stp	q1, q0, [x22, #0x30]
+  545bd0:      	stp	q0, q0, [x22, #0x50]
+  545bd4:      	str	xzr, [x22, #0x70]
+  545bd8:      	str	w8, [x22, #0x78]

@@ -1,0 +1,32 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000050edfc <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv>:
+  542d90:      	ldr	x8, [x19]
+  542d94:      	adrp	x1, 0x788000 <g_tripwireLogPtr+0x2a88>
+  542d98:      	add	x1, x1, #0xe58
+  542d9c:      	add	x0, x19, #0x50
+  542da0:      	ldr	x8, [x8, #0x10]
+  542da4:      	ldr	x24, [x8, #0x120]
+  542da8:      	bl	0x540018 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x3121c>
+  542dac:      	cbz	x0, 0x542df8 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x33ffc>
+  542db0:      	mov	x23, x0
+  542db4:      	ldr	x0, [sp, #0x10]
+  542db8:      	cbz	x0, 0x542dcc <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x33fd0>
+  542dbc:      	bl	0x728cc4 <MCFSetGetCount+0x4c0c>
+  542dc0:      	blr	x8
+  542dc4:      	tst	w0, #0xff
+  542dc8:      	b.ne	0x542df8 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x33ffc>
+  542dcc:      	mov	x0, x23
+  542dd0:      	bl	0x642378 <MCFStringAppendCStringWithFormat+0xac>
+  542dd4:      	cbz	w0, 0x542df8 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x33ffc>
+  542dd8:      	mov	w3, w0
+  542ddc:      	cbz	x24, 0x5431c8 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x343cc>
+  542de0:      	cmn	w3, #0x1
+  542de4:      	b.ne	0x542df8 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x33ffc>
+  542de8:      	adrp	x1, 0x788000 <g_tripwireLogPtr+0x2a88>
+  542dec:      	add	x1, x1, #0xe58
+  542df0:      	mov	x0, x20
+  542df4:      	bl	0x5431e8 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x343ec>

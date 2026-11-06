@@ -1,0 +1,80 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000050edfc <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv>:
+  53b9c4:      	paciasp
+  53b9c8:      	str	d8, [sp, #-0x70]!
+  53b9cc:      	stp	x29, x30, [sp, #0x10]
+  53b9d0:      	add	x29, sp, #0x10
+  53b9d4:      	bl	0x7245c4 <MCFSetGetCount+0x50c>
+  53b9d8:      	sub	sp, sp, #0x290
+  53b9dc:      	mrs	x28, TPIDR_EL0
+  53b9e0:      	mov	x19, x0
+  53b9e4:      	mov	x23, x1
+  53b9e8:      	ldr	x8, [x28, #0x28]
+  53b9ec:      	mov	x21, x4
+  53b9f0:      	bl	0x72e194 <MCFSetGetCount+0xa0dc>
+  53b9f4:      	stur	x8, [x29, #-0x20]
+  53b9f8:      	ldr	x8, [x0, #0x60]
+  53b9fc:      	bl	0x2e2a1c <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0x14b40>
+  53ba00:      	bl	0x53a4a0 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x2b6a4>
+  53ba04:      	ldr	x1, [x19, #0x60]
+  53ba08:      	ldr	x0, [x23, #0x20]
+  53ba0c:      	bl	0x53a4e8 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x2b6ec>
+  53ba10:      	ldr	x0, [x23, #0x20]
+  53ba14:      	fmov	d8, d0
+  53ba18:      	bl	0x54ec58 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x3fe5c>
+  53ba1c:      	tbnz	w0, #0x0, 0x53ba40 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x2cc44>
+  53ba20:      	adrp	x1, 0x788000 <g_tripwireLogPtr+0x2a88>
+  53ba24:      	add	x1, x1, #0xe58
+  53ba28:      	mov	x0, x23
+  53ba2c:      	bl	0x540018 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x3121c>
+  53ba30:      	cbz	x0, 0x53ba40 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x2cc44>
+  53ba34:      	bl	0x642378 <MCFStringAppendCStringWithFormat+0xac>
+  53ba38:      	mov	w26, w0
+  53ba3c:      	b	0x53ba44 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x2cc48>
+  53ba40:      	mov	w26, wzr
+  53ba44:      	mov	x0, x23
+  53ba48:      	bl	0x54006c <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x31270>
+  53ba4c:      	bl	0x7307ac <MCFSetGetCount+0xc6f4>
+  53ba50:      	bl	0x3df9e0 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x2e6f0>
+  53ba54:      	bl	0x2db2a4 <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0xd3c8>
+  53ba58:      	bl	0x72d498 <MCFSetGetCount+0x93e0>
+  53ba5c:      	mov	w1, #0x7                // =7
+  53ba60:      	bl	0x3a8b00 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0xa4c0>
+  53ba64:      	cmp	w26, #0x0
+  53ba68:      	mov	w25, w0
+  53ba6c:      	str	xzr, [sp, #0x78]
+  53ba70:      	ccmn	w26, #0x1, #0x4, le
+  53ba74:      	b.ne	0x53baec <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x2ccf0>
+  53ba78:      	orr	w8, w24, w25
+  53ba7c:      	tbz	w8, #0x0, 0x53ba88 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x2cc8c>
+  53ba80:      	mov	w27, #0x1               // =1
+  53ba84:      	b	0x53ba98 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x2cc9c>
+  53ba88:      	ldr	x8, [x19, #0x60]
+  53ba8c:      	ldrb	w8, [x8, #0x280]
+  53ba90:      	cmp	w8, #0x1
+  53ba94:      	cset	w27, eq
+  53ba98:      	mov	w0, #0x88               // =136
+  53ba9c:      	bl	0x737430 <__wrap__Znwm@plt>
+  53baa0:      	movi	v0.2d, #0000000000000000
+  53baa4:      	cmp	w26, #0x0
+  53baa8:      	stp	wzr, w26, [x0, #0x70]
+  53baac:      	ccmn	w26, #0x1, #0x4, le
+  53bab0:      	str	wzr, [x0, #0x78]
+  53bab4:      	strb	wzr, [x0, #0x7c]
+  53bab8:      	strb	w27, [x0, #0x7d]
+  53babc:      	stp	q0, q0, [x0]
+  53bac0:      	stp	q0, q0, [x0, #0x20]
+  53bac4:      	stp	q0, q0, [x0, #0x40]
+  53bac8:      	str	q0, [x0, #0x60]
+  53bacc:      	str	wzr, [x0, #0x80]
+  53bad0:      	b.ne	0x53be1c <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x2d020>
+  53bad4:      	mov	x1, x0
+  53bad8:      	add	x0, sp, #0x78
+  53badc:      	stur	xzr, [x29, #-0xe0]
+  53bae0:      	bl	0x53af6c <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x2c170>
+  53bae4:      	sub	x0, x29, #0xe0
+  53bae8:      	bl	0x53a53c <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x2b740>

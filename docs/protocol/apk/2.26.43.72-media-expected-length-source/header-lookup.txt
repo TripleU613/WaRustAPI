@@ -1,0 +1,27 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000050edfc <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv>:
+  540018:      	paciasp
+  54001c:      	stp	x29, x30, [sp, #-0x20]!
+  540020:      	str	x19, [sp, #0x10]
+  540024:      	mov	x29, sp
+  540028:      	bl	0x72e4e0 <MCFSetGetCount+0xa428>
+  54002c:      	cbz	x0, 0x540058 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x3125c>
+  540030:      	ldr	w8, [x0, #0x30]
+  540034:      	cbz	w8, 0x540058 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x3125c>
+  540038:      	bl	0x54edb0 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x3ffb4>
+  54003c:      	cbz	x0, 0x540058 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x3125c>
+  540040:      	mov	x1, x0
+  540044:      	ldr	x0, [x19, #0x48]
+  540048:      	bl	0x645170 <MCFDictionaryGetValue>
+  54004c:      	bl	0x727d3c <MCFSetGetCount+0x3c84>
+  540050:      	bl	0x64151c <__MCFCastToClassNullable>
+  540054:      	b	0x54005c <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x31260>
+  540058:      	mov	x19, xzr
+  54005c:      	bl	0x2db514 <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0xd638>
+  540060:      	ldp	x29, x30, [sp], #0x20
+  540064:      	autiasp
+  540068:      	ret

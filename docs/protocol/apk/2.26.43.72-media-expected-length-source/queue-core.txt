@@ -1,0 +1,102 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000061eeec <_ZN8crossapp9tigonhttp3mns11DNSResolver27setSecondaryResolverEnabledEh>:
+  633c80:      	bl	0x737480 <__wrap___cxa_guard_acquire@plt>
+  633c84:      	cbz	w0, 0x633c64 <_ZN8crossapp9tigonhttp3mns11DNSResolver27setSecondaryResolverEnabledEh+0x14d78>
+  633c88:      	adrp	x0, 0xdb000
+  633c8c:      	add	x0, x0, #0x465
+  633c90:      	mov	w1, #0x6                // =6
+  633c94:      	bl	0x736c50 <dlopen@plt>
+  633c98:      	cbz	x0, 0x633ca8 <_ZN8crossapp9tigonhttp3mns11DNSResolver27setSecondaryResolverEnabledEh+0x14dbc>
+  633c9c:      	adrp	x1, 0xdf000
+  633ca0:      	add	x1, x1, #0x9e0
+  633ca4:      	bl	0x736c60 <dlsym@plt>
+  633ca8:      	adrp	x8, 0x7a2000 <_ZN6google8protobuf8internal26fixed_address_empty_stringE+0x27b0>
+  633cac:      	add	x8, x8, #0xe10
+  633cb0:      	str	x0, [x8], #0x8
+  633cb4:      	mov	x0, x8
+  633cb8:      	bl	0x737390 <__wrap___cxa_guard_release@plt>
+  633cbc:      	b	0x633c64 <_ZN8crossapp9tigonhttp3mns11DNSResolver27setSecondaryResolverEnabledEh+0x14d78>
+  633cc0:      	paciasp
+  633cc4:      	stp	x29, x30, [sp, #-0x20]!
+  633cc8:      	stp	x20, x19, [sp, #0x10]
+  633ccc:      	mov	x29, sp
+  633cd0:      	mov	x19, x0
+  633cd4:      	add	x20, x0, #0x1
+  633cd8:      	bl	0x72dc88 <MCFSetGetCount+0x9bd0>
+  633cdc:      	tst	w8, #0x1
+  633ce0:      	csel	x0, x20, x9, eq
+  633ce4:      	bl	0x736e00 <unlink@plt>
+  633ce8:      	tbz	w0, #0x1f, 0x633cf8 <_ZN8crossapp9tigonhttp3mns11DNSResolver27setSecondaryResolverEnabledEh+0x14e0c>
+  633cec:      	bl	0x7356b0 <__errno@plt>
+  633cf0:      	bl	0x72f77c <MCFSetGetCount+0xb6c4>
+  633cf4:      	b.eq	0x633cd8 <_ZN8crossapp9tigonhttp3mns11DNSResolver27setSecondaryResolverEnabledEh+0x14dec>
+  633cf8:      	ldp	x20, x19, [sp, #0x10]
+  633cfc:      	ldp	x29, x30, [sp], #0x20
+  633d00:      	autiasp
+  633d04:      	ret
+  633d08:      	paciasp
+  633d0c:      	sub	sp, sp, #0xf0
+  633d10:      	stp	x29, x30, [sp, #0x90]
+  633d14:      	stp	x28, x27, [sp, #0xa0]
+  633d18:      	bl	0x724f4c <MCFSetGetCount+0xe94>
+  633d1c:      	add	x29, sp, #0x90
+  633d20:      	mrs	x24, TPIDR_EL0
+  633d24:      	bl	0x728f4c <MCFSetGetCount+0x4e94>
+  633d28:      	ldr	x8, [x24, #0x28]
+  633d2c:      	bl	0x7295b4 <MCFSetGetCount+0x54fc>
+  633d30:      	bl	0x45d978 <_ZN8facebook3jni4msys14NetworkSession17getNetworkSessionEv+0x6198>
+  633d34:      	mov	x0, x19
+  633d38:      	bl	0x4cf93c <_ZN6apache6thrift6detail31throw_on_bad_union_field_accessENSt6__ndk117basic_string_viewIcNS2_11char_traitsIcEEEEss+0x4c30>
+  633d3c:      	cbnz	x0, 0x633ed4 <_ZN8crossapp9tigonhttp3mns11DNSResolver27setSecondaryResolverEnabledEh+0x14fe8>
+  633d40:      	ldr	x8, [x19, #0x20]
+  633d44:      	subs	x8, x8, #0x200
+  633d48:      	b.lo	0x633d60 <_ZN8crossapp9tigonhttp3mns11DNSResolver27setSecondaryResolverEnabledEh+0x14e74>
+  633d4c:      	bl	0x728838 <MCFSetGetCount+0x4780>
+  633d50:      	stur	x8, [x29, #-0x30]
+  633d54:      	bl	0x72b490 <MCFSetGetCount+0x73d8>
+  633d58:      	bl	0x3ce20c <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x1cf1c>
+  633d5c:      	b	0x633ed4 <_ZN8crossapp9tigonhttp3mns11DNSResolver27setSecondaryResolverEnabledEh+0x14fe8>
+  633d60:      	mov	x8, x19
+  633d64:      	ldp	x12, x11, [x19, #0x8]
+  633d68:      	ldr	x9, [x8, #0x18]!
+  633d6c:      	ldr	x10, [x19]
+  633d70:      	sub	x21, x11, x12
+  633d74:      	sub	x12, x9, x10
+  633d78:      	cmp	x21, x12
+  633d7c:      	b.hs	0x633d9c <_ZN8crossapp9tigonhttp3mns11DNSResolver27setSecondaryResolverEnabledEh+0x14eb0>
+  633d80:      	mov	w0, #0x1000             // =4096
+  633d84:      	cmp	x9, x11
+  633d88:      	b.eq	0x633f28 <_ZN8crossapp9tigonhttp3mns11DNSResolver27setSecondaryResolverEnabledEh+0x1503c>
+  633d8c:      	bl	0x737430 <__wrap__Znwm@plt>
+  633d90:      	bl	0x729e24 <MCFSetGetCount+0x5d6c>
+  633d94:      	bl	0x3ce20c <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x1cf1c>
+  633d98:      	b	0x633ed4 <_ZN8crossapp9tigonhttp3mns11DNSResolver27setSecondaryResolverEnabledEh+0x14fe8>
+  633d9c:      	asr	x11, x12, #2
+  633da0:      	cmp	x9, x10
+  633da4:      	add	x22, x19, #0x28
+  633da8:      	str	x8, [sp, #0x50]
+  633dac:      	csinc	x0, x11, xzr, ne
+  633db0:      	bl	0x4cf964 <_ZN6apache6thrift6detail31throw_on_bad_union_field_accessENSt6__ndk117basic_string_viewIcNS2_11char_traitsIcEEEEss+0x4c58>
+  633db4:      	bl	0x733a2c <MCFSetGetCount+0xf974>
+  633db8:      	stp	x0, x8, [sp, #0x30]
+  633dbc:      	mov	w0, #0x1000             // =4096
+  633dc0:      	stp	x8, x9, [sp, #0x40]
+  633dc4:      	bl	0x737430 <__wrap__Znwm@plt>
+  633dc8:      	mov	w8, #0x200              // =512
+  633dcc:      	stur	x0, [x29, #-0x30]
+  633dd0:      	bl	0x730dfc <MCFSetGetCount+0xcd44>
+  633dd4:      	stp	x22, x8, [sp, #0x20]
+  633dd8:      	bl	0x3ce34c <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x1d05c>
+  633ddc:      	ldr	x25, [x19, #0x10]
+  633de0:      	ldr	x26, [sp, #0x50]
+  633de4:      	mov	w27, #0x2               // =2
+  633de8:      	str	xzr, [sp, #0x18]
+  633dec:      	ldr	x8, [x19, #0x8]
+  633df0:      	cmp	x25, x8
+  633df4:      	b.eq	0x633eac <_ZN8crossapp9tigonhttp3mns11DNSResolver27setSecondaryResolverEnabledEh+0x14fc0>
+  633df8:      	ldp	x8, x21, [sp, #0x30]
+  633dfc:      	cmp	x21, x8

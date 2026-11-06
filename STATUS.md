@@ -1,3 +1,10 @@
+2026-11-06 — **Native queue expected size traced to Content-Length.**
+
+Header key verified by relocation; paired store initializes expected/queued
+fields. [Exact producer, conversion and search exclusions](docs/protocol/media-network-outcomes.md#queue-expected-size-is-initialized-from-content-length-2026-11-06).
+No Rust behavior change; preserve actual sealed-body length and uncertain rows.
+No live operation or complete wire-parity claim.
+
 2026-11-06 — **Native upload queue bound found; Pando flag scope separated.**
 
 Selected queue rejects bytes above declared bound except-1 and rolls back this

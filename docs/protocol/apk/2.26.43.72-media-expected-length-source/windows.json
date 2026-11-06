@@ -1,0 +1,93 @@
+{
+  "scope": "Static initializer/header binding; no live upload or complete wire-stack proof",
+  "library_sha256": "d0ab3f2237e92a76ac3519c3577b5836b9e6f65a186c2016cefd43c4923f4b0d",
+  "key": {
+    "object_va": "0x788e58",
+    "pointer_slot_va": "0x788e80",
+    "string_va": "0xe0240",
+    "value": "content-length"
+  },
+  "excluded_setting": "http2MaxInFlightRequestsPerConnection",
+  "windows": [
+    {
+      "label": "actual-queue-init",
+      "start_va": "0x53b9c4",
+      "end_va": "0x53baec",
+      "file_offset": "0x5379c4",
+      "bytes": 296,
+      "sha256": "4401dd14f543e420fd8ba83ccd78b52ee48685091a863b6c800f66511d2099fd"
+    },
+    {
+      "label": "header-lookup",
+      "start_va": "0x540018",
+      "end_va": "0x54006c",
+      "file_offset": "0x53c018",
+      "bytes": 84,
+      "sha256": "13425a044ac184da3146d2f916fddf6c1dd870dac32cf76094b5cd0f328bcfaf"
+    },
+    {
+      "label": "key-resolution",
+      "start_va": "0x54edb0",
+      "end_va": "0x54ee7c",
+      "file_offset": "0x54adb0",
+      "bytes": 204,
+      "sha256": "af1f1e3498b38eb86e6c8b2663aa830fca7a20e5a8609e6d27d678ce5b25584b"
+    },
+    {
+      "label": "number-conversion",
+      "start_va": "0x642378",
+      "end_va": "0x642418",
+      "file_offset": "0x63e378",
+      "bytes": 160,
+      "sha256": "f3d344032470e1ceba565da7d1f4c185fee10b9ac24faf134b0fdb8bd712f2e8"
+    },
+    {
+      "label": "header-copy-binding",
+      "start_va": "0x542d90",
+      "end_va": "0x542df8",
+      "file_offset": "0x53ed90",
+      "bytes": 104,
+      "sha256": "f0fa0f51533f46afc5fc7f6420b3e04a6739556c076089dfd74c1f9be661ec1c"
+    },
+    {
+      "label": "excluded-settings",
+      "start_va": "0x51c510",
+      "end_va": "0x51c640",
+      "file_offset": "0x518510",
+      "bytes": 304,
+      "sha256": "1cde8ed4271b8d3f9a4b8b0b00ac5bbb38f86bd3bc54431c819d97a0aadf7bdf"
+    },
+    {
+      "label": "partial-header-reader",
+      "start_va": "0x53a980",
+      "end_va": "0x53ac80",
+      "file_offset": "0x536980",
+      "bytes": 768,
+      "sha256": "9973e63a5eb5e70bf258eb588128814d85c955991a2e125b601a0b00b7ca757d"
+    },
+    {
+      "label": "queue-core",
+      "start_va": "0x633c80",
+      "end_va": "0x633e00",
+      "file_offset": "0x62fc80",
+      "bytes": 384,
+      "sha256": "1aea416d7c65cbf9f8ffc3742de08bd0158fcaa1c48be3b6055c4c0061cb9995"
+    },
+    {
+      "label": "header-key-object",
+      "start_va": "0x788e58",
+      "end_va": "0x788e88",
+      "file_offset": "0x77ce58",
+      "bytes": 48,
+      "sha256": "25754ebecdd385178d162595eefb99a54dd93d3f8485cf590de59a21dcc0892e"
+    },
+    {
+      "label": "excluded-allocation",
+      "start_va": "0x545b68",
+      "end_va": "0x545bdc",
+      "file_offset": "0x541b68",
+      "bytes": 116,
+      "sha256": "bd54036257a2547161bae712f7f22d788bbc965754e6414f708f7b03ae58a0ed"
+    }
+  ]
+}

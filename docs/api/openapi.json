@@ -18488,5 +18488,13 @@
     "x-library": [],
     "description": "Static native queue check rejects bytes above expected length except-1 and rolls back current increment; expected-value producer and actual ordinary-upload binding remain unproven. Disable-content-length getter belongs to Pando config, not an established upload setting. Local native error is not a recognized server response or replay permission. No runtime request/header change or live validation.",
     "evidence": "docs/protocol/media-network-outcomes.md#native-queue-bound-and-disable-header-namespace-2026-11-06"
+},
+  "x-media-queue-expected-source-research": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Static ELF/LLVM resolves native expectedBytes initialization from request content-length via nullable header lookup, bounded conversion and paired store. Selected queue allocation admits positive lengths or-1. Actual upload transport/predicate and absent-header synthesis remain unproven. No product route, runtime header/body change, retries or live validation.",
+    "evidence": "docs/protocol/media-network-outcomes.md#queue-expected-size-is-initialized-from-content-length-2026-11-06"
 }
 }
