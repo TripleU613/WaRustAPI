@@ -1,0 +1,1170 @@
+
+# class: Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;
+# extends: Lorg/whispersystems/jobqueue/Job;
+
+.method private A00(V)  # .registers 9
+    # full signature: Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A00()V
+    0000..0002  monitor-enter
+    0002..0004  const/4  v1, #0x0
+    0004..0008  iput-object  v1, v8, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0Q:Ljava/lang/Object;
+    0008..000c  iget-object  v0, v8, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0L:Ljava/lang/Long;
+    000c..0010  iget-object  v7, v8, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0O:Ljava/lang/String;
+    0010..0014  iget-object  v6, v8, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0N:Ljava/lang/Runnable;
+    0014..0018  iget-object  v5, v8, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0M:Ljava/lang/Runnable;
+    0018..001c  iput-object  v1, v8, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0L:Ljava/lang/Long;
+    001c..0020  iput-object  v1, v8, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0O:Ljava/lang/String;
+    0020..0024  iput-object  v1, v8, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0N:Ljava/lang/Runnable;
+    0024..0028  iput-object  v1, v8, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0M:Ljava/lang/Runnable;
+    0028..002a  monitor-exit
+    002a..002e  if-eqz  v0, +0x2f
+    002e..0032  if-eqz  v6, +0x2d
+    0032..0036  iget-object  v4, v8, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0A:LX/1uS;
+    0036..003a  if-eqz  v4, +0x29
+    003a..0040  invoke-virtual  {v0}, Ljava/lang/Number;->longValue()J
+    0040..0042  move-result-wide  v0
+    0042..0046  iget-object  v3, v4, LX/1uS;->A02:Ljava/lang/Object;
+    0046..0048  monitor-enter
+    0048..004c  new-instance  v2, LX/2DW;
+    004c..0052  invoke-direct  {v2, v0, v1, v7}, LX/2DW;-><init>(JLjava/lang/String;)V
+    0052..0056  iget-object  v1, v4, LX/1uS;->A03:Ljava/util/Map;
+    0056..005c  invoke-interface  {v1, v2}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    005c..005e  move-result-object  v0
+    005e..0062  check-cast  v0, Ljava/util/Set;
+    0062..0066  if-eqz  v0, +0x12
+    0066..006c  invoke-interface  {v0, v6}, Ljava/util/Set;->remove(Ljava/lang/Object;)Z
+    006c..0072  invoke-interface  {v0}, Ljava/util/Set;->isEmpty()Z
+    0072..0074  move-result  v0
+    0074..0078  if-eqz  v0, +0x9
+    0078..007e  invoke-interface  {v1, v2}, Ljava/util/Map;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+    007e..0080  goto  +0x4
+    0080..0082  move-exception  v0
+    0082..0084  monitor-exit
+    0084..0086  throw  v0
+    0086..0088  monitor-exit
+    0088..008c  if-eqz  v5, +0x9
+    008c..0090  iget-object  v0, v8, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0H:LX/08Z;
+    0090..0094  if-eqz  v0, +0x5
+    0094..009a  invoke-interface  {v0, v5}, LX/08Z;->CYL(Ljava/lang/Runnable;)V
+    009a..009c  return-void
+    009c..009e  move-exception  v0
+    009e..00a0  monitor-exit
+    00a0..00a2  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0002..0014 -> 004e
+    # catch <all> code_units 0024..0040 -> 0040
+.end method
+
+.method private A01(V)  # .registers 13
+    # full signature: Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A01()V
+    0000..0006  invoke-direct  {v12}, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A00()V
+    0006..0008  const/4  v0, #0x0
+    0008..000c  iput-boolean  v0, v12, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0R:Z
+    000c..0010  iget-wide  v3, v12, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->expirationMs:J
+    0010..0014  const-wide/16  v1, #0x0
+    0014..0018  cmp-long  v0, v3, v1
+    0018..001c  if-gtz  v0, +0x8
+    001c..0020  iget-wide  v3, v12, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->startTimeMs:J
+    0020..0026  const-wide/32  v0, #0x36ee80
+    0026..0028  add-long/2addr  v3, v0
+    0028..002c  iget-object  v0, v12, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0G:LX/08q;
+    002c..002e  const/4  v11, #0x0
+    002e..0032  if-eqz  v0, +0x15c
+    0032..0038  invoke-static  {v0}, LX/08q;->A00(LX/08q;)J
+    0038..003a  move-result-wide  v1
+    003a..003c  const/4  v5, #0x1
+    003c..0040  cmp-long  v0, v1, v3
+    0040..0044  if-gtz  v0, +0x32
+    0044..0048  iget-object  v1, v12, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0D:LX/1ti;
+    0048..004c  if-nez  v1, +0x9
+    004c..0050  const-string  v0, "sendFlowStatusFactory"
+    0050..0056  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    0056..0058  const/4  v0, #0x0
+    0058..005a  throw  v0
+    005a..005e  iget-object  v0, v12, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A08:LX/Dwc;
+    005e..0064  invoke-virtual  {v1, v0}, LX/1ti;->A00(LX/Dwc;)LX/DyI;
+    0064..0066  move-result-object  v0
+    0066..006a  if-eqz  v0, +0x139
+    006a..006e  iget-object  v1, v0, LX/DyJ;->A00:LX/Fwa;
+    006e..0072  instance-of  v0, v1, LX/AQ5;
+    0072..0076  if-eqz  v0, +0x19
+    0076..007a  check-cast  v1, LX/AQ5;
+    007a..007e  if-eqz  v1, +0x15
+    007e..0082  iget-object  v7, v1, LX/AQ5;->A0I:Ljava/lang/Long;
+    0082..0086  if-eqz  v7, +0x11
+    0086..008c  invoke-virtual  {v7}, Ljava/lang/Number;->longValue()J
+    008c..008e  move-result-wide  v1
+    008e..0092  iget  v6, v12, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->canonicalAckWaitScopeValue:I
+    0092..0096  if-eq  v6, v5, +0xc
+    0096..0098  const/4  v0, #0x2
+    0098..009c  if-ne  v6, v0, +0x6
+    009c..00a0  iget-object  v11, v12, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->canonicalAckPartCode:Ljava/lang/String;
+    00a0..00a4  if-nez  v11, +0x5
+    00a4..00a8  iput-boolean  v5, v12, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0R:Z
+    00a8..00aa  return-void
+    00aa..00b0  invoke-static  {}, LX/2L6;->A19()Ljava/lang/Object;
+    00b0..00b2  move-result-object  v8
+    00b2..00b6  const/16  v0, #0x19
+    00b6..00ba  new-instance  v10, LX/Fef;
+    00ba..00c0  invoke-direct  {v10, v8, v12, v0}, LX/Fef;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V
+    00c0..00c2  monitor-enter
+    00c2..00c6  iput-object  v8, v12, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0Q:Ljava/lang/Object;
+    00c6..00ca  iput-object  v7, v12, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0L:Ljava/lang/Long;
+    00ca..00ce  iput-object  v11, v12, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0O:Ljava/lang/String;
+    00ce..00d2  iput-object  v10, v12, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0N:Ljava/lang/Runnable;
+    00d2..00d4  monitor-exit
+    00d4..00d8  iget-object  v0, v12, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0A:LX/1uS;
+    00d8..00dc  if-eqz  v0, +0x103
+    00dc..00e0  iget-object  v9, v0, LX/1uS;->A02:Ljava/lang/Object;
+    00e0..00e2  monitor-enter
+    00e2..00e6  iget-object  v7, v0, LX/1uS;->A03:Ljava/util/Map;
+    00e6..00ea  new-instance  v6, LX/2DW;
+    00ea..00f0  invoke-direct  {v6, v1, v2, v11}, LX/2DW;-><init>(JLjava/lang/String;)V
+    00f0..00f6  invoke-interface  {v7, v6}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    00f6..00f8  move-result-object  v0
+    00f8..00fc  if-nez  v0, +0x9
+    00fc..0102  invoke-static  {}, LX/2L6;->A1G()Ljava/util/LinkedHashSet;
+    0102..0104  move-result-object  v0
+    0104..010a  invoke-interface  {v7, v6, v0}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    010a..010e  check-cast  v0, Ljava/util/Set;
+    010e..0114  invoke-interface  {v0, v10}, Ljava/util/Set;->add(Ljava/lang/Object;)Z
+    0114..0116  monitor-exit
+    0116..011a  iget-object  v0, v12, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0G:LX/08q;
+    011a..011e  if-eqz  v0, +0xe6
+    011e..0124  invoke-static  {v0}, LX/08q;->A00(LX/08q;)J
+    0124..0126  move-result-wide  v6
+    0126..0128  sub-long/2addr  v3, v6
+    0128..012c  const-wide/16  v6, #0x0
+    012c..0130  cmp-long  v0, v3, v6
+    0130..0134  if-gez  v0, +0x4
+    0134..0138  const-wide/16  v3, #0x0
+    0138..013c  iget-object  v7, v12, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0H:LX/08Z;
+    013c..0140  if-nez  v7, +0x6
+    0140..0146  const-string/jumbo  v0, "waWorkers"
+    0146..0148  goto  -0x7b
+    0148..014c  const/16  v6, #0x1a
+    014c..0150  new-instance  v0, LX/Fef;
+    0150..0156  invoke-direct  {v0, v8, v12, v6}, LX/Fef;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V
+    0156..015c  invoke-interface  {v7, v0, v3, v4}, LX/08Z;->Cc2(Ljava/lang/Runnable;J)Ljava/lang/Runnable;
+    015c..015e  move-result-object  v3
+    015e..0160  monitor-enter
+    0160..0164  iget-object  v0, v12, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0Q:Ljava/lang/Object;
+    0164..0168  if-ne  v0, v8, +0x5
+    0168..016c  iput-object  v3, v12, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0M:Ljava/lang/Runnable;
+    016c..016e  goto  +0x10
+    016e..0172  iget-object  v0, v12, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0H:LX/08Z;
+    0172..0176  if-nez  v0, +0xa
+    0176..017c  const-string/jumbo  v0, "waWorkers"
+    017c..0182  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    0182..0184  const/4  v0, #0x0
+    0184..0186  throw  v0
+    0186..018c  invoke-interface  {v0, v3}, LX/08Z;->CYL(Ljava/lang/Runnable;)V
+    018c..018e  monitor-exit
+    018e..0192  iget-object  v3, v12, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0A:LX/1uS;
+    0192..0194  const/4  v4, #0x0
+    0194..0198  if-eqz  v3, +0xa5
+    0198..019c  iget-object  v0, v12, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A08:LX/Dwc;
+    019c..01a0  iget-object  v0, v0, LX/Dwc;->A02:Ljava/lang/String;
+    01a0..01a6  invoke-virtual  {v3, v0, v1, v2}, LX/1uS;->A0A(Ljava/lang/String;J)Ljava/util/ArrayList;
+    01a6..01a8  move-result-object  v7
+    01a8..01ae  invoke-virtual  {v7}, Ljava/util/AbstractCollection;->isEmpty()Z
+    01ae..01b0  move-result  v0
+    01b0..01b4  if-nez  v0, +0x3b
+    01b4..01b8  iget  v1, v12, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->canonicalAckWaitScopeValue:I
+    01b8..01ba  const/4  v0, #0x2
+    01ba..01be  if-ne  v1, v0, +0x41
+    01be..01c4  invoke-virtual  {v7}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+    01c4..01c6  move-result-object  v3
+    01c6..01cc  invoke-interface  {v3}, Ljava/util/Iterator;->hasNext()Z
+    01cc..01ce  move-result  v0
+    01ce..01d2  if-eqz  v0, +0x14
+    01d2..01d8  invoke-interface  {v3}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    01d8..01da  move-result-object  v2
+    01da..01dc  move-object  v0, v2
+    01dc..01e0  check-cast  v0, LX/EwQ;
+    01e0..01e4  iget-object  v1, v0, LX/EwQ;->A05:Ljava/lang/String;
+    01e4..01e8  iget-object  v0, v12, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->canonicalAckPartCode:Ljava/lang/String;
+    01e8..01ee  invoke-static  {v1, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    01ee..01f0  move-result  v0
+    01f0..01f4  if-eqz  v0, -0x15
+    01f4..01f6  move-object  v4, v2
+    01f6..01fa  check-cast  v4, LX/EwQ;
+    01fa..01fe  if-eqz  v4, +0x16
+    01fe..0202  iget-object  v6, v4, LX/EwQ;->A02:LX/E8T;
+    0202..0206  sget-object  v0, LX/E8T;->A06:LX/E8T;
+    0206..020a  if-ne  v6, v0, +0x16
+    020a..020e  iget-object  v0, v4, LX/EwQ;->A03:Ljava/lang/Long;
+    020e..0212  const-wide/16  v3, #0x0
+    0212..0216  if-eqz  v0, +0x10
+    0216..021c  invoke-virtual  {v0}, Ljava/lang/Number;->longValue()J
+    021c..021e  move-result-wide  v1
+    021e..0222  cmp-long  v0, v1, v3
+    0222..0226  if-lez  v0, +0x8
+    0226..022a  iput-boolean  v5, v12, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0R:Z
+    022a..0230  invoke-direct  {v12}, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A00()V
+    0230..0232  return-void
+    0232..0236  sget-object  v0, LX/E8T;->A03:LX/E8T;
+    0236..023a  if-ne  v6, v0, -0xc7
+    023a..023c  goto  -0xa
+    023c..0240  if-ne  v1, v5, -0xb
+    0240..0244  instance-of  v8, v7, Ljava/util/Collection;
+    0244..0248  if-eqz  v8, +0xf
+    0248..024e  invoke-interface  {v7}, Ljava/util/Collection;->isEmpty()Z
+    024e..0250  move-result  v0
+    0250..0254  if-eqz  v0, +0x9
+    0254..025a  invoke-interface  {v7}, Ljava/util/Collection;->isEmpty()Z
+    025a..025c  move-result  v0
+    025c..0260  if-eqz  v0, +0x29
+    0260..0262  goto  -0x1d
+    0262..0268  invoke-virtual  {v7}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+    0268..026a  move-result-object  v6
+    026a..0270  invoke-interface  {v6}, Ljava/util/Iterator;->hasNext()Z
+    0270..0272  move-result  v0
+    0272..0276  if-eqz  v0, +0x1b
+    0276..027c  invoke-static  {v6}, LX/DBc;->A0n(Ljava/util/Iterator;)LX/EwQ;
+    027c..027e  move-result-object  v2
+    027e..0282  iget-object  v1, v2, LX/EwQ;->A02:LX/E8T;
+    0282..0286  sget-object  v0, LX/E8T;->A06:LX/E8T;
+    0286..028a  if-ne  v1, v0, -0xe
+    028a..028e  iget-object  v0, v2, LX/EwQ;->A03:Ljava/lang/Long;
+    028e..0292  const-wide/16  v3, #0x0
+    0292..0296  if-eqz  v0, -0x14
+    0296..029c  invoke-virtual  {v0}, Ljava/lang/Number;->longValue()J
+    029c..029e  move-result-wide  v1
+    029e..02a2  cmp-long  v0, v1, v3
+    02a2..02a6  if-lez  v0, -0x1c
+    02a6..02a8  goto  -0x40
+    02a8..02ac  if-eqz  v8, +0x3
+    02ac..02ae  goto  -0x2c
+    02ae..02b4  invoke-virtual  {v7}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+    02b4..02b6  move-result-object  v2
+    02b6..02bc  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    02bc..02be  move-result  v0
+    02be..02c2  if-eqz  v0, -0x4c
+    02c2..02c8  invoke-static  {v2}, LX/DBc;->A0n(Ljava/util/Iterator;)LX/EwQ;
+    02c8..02ca  move-result-object  v0
+    02ca..02ce  iget-object  v1, v0, LX/EwQ;->A02:LX/E8T;
+    02ce..02d2  sget-object  v0, LX/E8T;->A03:LX/E8T;
+    02d2..02d6  if-ne  v1, v0, -0x115
+    02d6..02d8  goto  -0x10
+    02d8..02da  move-object  v1, v11
+    02da..02de  goto/16  -0x136
+    02de..02e2  const-string  v0, "statusSendPartStore"
+    02e2..02e6  goto/16  -0x149
+    02e6..02ec  const-string/jumbo  v0, "time"
+    02ec..02f0  goto/16  -0x14e
+    02f0..02f2  move-exception  v0
+    02f2..02f4  monitor-exit
+    02f4..02f6  throw  v0
+    02f6..02f8  move-exception  v0
+    02f8..02fa  monitor-exit
+    02fa..02fc  throw  v0
+    # exception table: 3 try range(s)
+    # catch <all> code_units 0061..0069 -> 017b
+    # catch <all> code_units 0071..008a -> 0178
+    # catch <all> code_units 00b0..00c6 -> 017b
+.end method
+
+.method private readObject(VL)  # .registers 8
+    # full signature: Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->readObject(Ljava/io/ObjectInputStream;)V
+    0000..0006  invoke-virtual  {v7}, Ljava/io/ObjectInputStream;->defaultReadObject()V
+    0006..000a  iget-object  v5, v6, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->rawUserJids:[Ljava/lang/String;
+    000a..000c  array-length  v4, v5
+    000c..0010  if-eqz  v4, +0x6b
+    0010..0016  invoke-static  {}, LX/2L6;->A1F()Ljava/util/HashSet;
+    0016..0018  move-result-object  v0
+    0018..001c  iput-object  v0, v6, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0E:Ljava/util/Set;
+    001c..001e  const/4  v3, #0x0
+    001e..0022  const-string  v2, "invalid jid:"
+    0022..0026  if-ge  v3, v4, +0x1b
+    0026..002a  aget-object  v0, v5, v3
+    002a..0030  invoke-static  {v0}, LX/6of;->A0d(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/UserJid;
+    0030..0032  move-result-object  v1
+    0032..0036  if-eqz  v1, +0xa
+    0036..003a  iget-object  v0, v6, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0E:Ljava/util/Set;
+    003a..0040  invoke-interface  {v0, v1}, Ljava/util/Set;->add(Ljava/lang/Object;)Z
+    0040..0044  add-int/lit8  v3, v3, #0x1
+    0044..0046  goto  -0x13
+    0046..004c  invoke-static  {v2, v0}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    004c..004e  move-result-object  v0
+    004e..0054  invoke-static  {v0}, LX/DBc;->A11(Ljava/lang/String;)Ljava/io/InvalidObjectException;
+    0054..0056  move-result-object  v0
+    0056..0058  throw  v0
+    0058..005c  sget-object  v1, LX/0DY;->A00:LX/0Di;
+    005c..0060  iget-object  v0, v6, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->remoteChatJid:Ljava/lang/String;
+    0060..0066  invoke-virtual  {v1, v0}, LX/0Di;->A02(Ljava/lang/String;)LX/0DY;
+    0066..0068  move-result-object  v3
+    0068..006c  if-eqz  v3, +0x32
+    006c..0070  iget-object  v2, v6, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->statusUUID:Ljava/lang/String;
+    0070..0074  sget-object  v1, LX/0EG;->A00:LX/0EG;
+    0074..0078  new-instance  v0, LX/Dwc;
+    0078..007e  invoke-direct  {v0, v1, v3, v2}, LX/Dwc;-><init>(LX/0DY;LX/0DY;Ljava/lang/String;)V
+    007e..0082  iput-object  v0, v6, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A08:LX/Dwc;
+    0082..0086  iget-boolean  v0, v6, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->waitingForCanonicalAck:Z
+    0086..008a  iget  v2, v6, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->canonicalAckWaitScopeValue:I
+    008a..008e  if-eqz  v0, +0x13
+    008e..0090  const/4  v1, #0x1
+    0090..0094  if-eq  v2, v1, +0x12
+    0094..0096  const/4  v0, #0x2
+    0096..009a  if-ne  v2, v0, +0x14
+    009a..009e  iget-object  v0, v6, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->canonicalAckPartCode:Ljava/lang/String;
+    009e..00a2  if-eqz  v0, +0x10
+    00a2..00a8  invoke-static  {v0}, LX/F2a;->A03(Ljava/lang/String;)Z
+    00a8..00aa  move-result  v0
+    00aa..00ae  if-ne  v0, v1, +0xa
+    00ae..00b0  return-void
+    00b0..00b4  if-nez  v2, +0x7
+    00b4..00b8  iget-object  v0, v6, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->canonicalAckPartCode:Ljava/lang/String;
+    00b8..00bc  if-nez  v0, +0x3
+    00bc..00be  return-void
+    00be..00c2  const-string  v0, "invalid canonical ACK wait scope"
+    00c2..00c8  invoke-static  {v0}, LX/DBc;->A11(Ljava/lang/String;)Ljava/io/InvalidObjectException;
+    00c8..00ca  move-result-object  v0
+    00ca..00cc  throw  v0
+    00cc..00d0  iget-object  v0, v6, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->remoteChatJid:Ljava/lang/String;
+    00d0..00d6  invoke-static  {v2, v0}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    00d6..00d8  move-result-object  v0
+    00d8..00de  invoke-static  {v0}, LX/DBc;->A11(Ljava/lang/String;)Ljava/io/InvalidObjectException;
+    00de..00e0  move-result-object  v0
+    00e0..00e2  throw  v0
+    00e2..00e6  const-string  v0, "rawJids must not be empty"
+    00e6..00ec  invoke-static  {v0}, LX/DBc;->A11(Ljava/lang/String;)Ljava/io/InvalidObjectException;
+    00ec..00ee  move-result-object  v0
+    00ee..00f0  throw  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A0J(V)  # .registers 3
+    # full signature: Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0J()V
+    0000..0006  invoke-virtual  {v2}, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0O()Ljava/lang/String;
+    0006..0008  move-result-object  v1
+    0008..000c  const-string  v0, "SyncDeviceAndResendStatusJob/onAdded/sync devices job added param="
+    000c..0012  invoke-static  {v0, v1}, LX/2LA;->A1N(Ljava/lang/String;Ljava/lang/String;)V
+    0012..0014  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A0K(V)  # .registers 3
+    # full signature: Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0K()V
+    0000..0006  invoke-direct  {v2}, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A00()V
+    0006..0008  const/4  v0, #0x0
+    0008..000c  iput-boolean  v0, v2, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->waitingForCanonicalAck:Z
+    000c..0010  iput  v0, v2, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->canonicalAckWaitScopeValue:I
+    0010..0012  const/4  v0, #0x0
+    0012..0016  iput-object  v0, v2, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->canonicalAckPartCode:Ljava/lang/String;
+    0016..001c  invoke-virtual  {v2}, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0O()Ljava/lang/String;
+    001c..001e  move-result-object  v1
+    001e..0022  const-string  v0, "SyncDeviceAndResendStatusJob/onCanceled/param="
+    0022..0028  invoke-static  {v0, v1}, LX/2LE;->A1B(Ljava/lang/String;Ljava/lang/String;)V
+    0028..002a  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A0L(V)  # .registers 18
+    # full signature: Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0L()V
+    0000..0004  move-object/from16  v5, v17
+    0004..000a  invoke-virtual  {v5}, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0O()Ljava/lang/String;
+    000a..000c  move-result-object  v1
+    000c..0010  const-string  v0, "SyncDeviceAndResendStatusJob/onRun/param="
+    0010..0016  invoke-static  {v0, v1}, LX/2LA;->A1N(Ljava/lang/String;Ljava/lang/String;)V
+    0016..001a  iget-wide  v3, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->expirationMs:J
+    001a..001e  const-wide/16  v1, #0x0
+    001e..0022  cmp-long  v0, v3, v1
+    0022..0026  if-lez  v0, +0xe
+    0026..002a  iget-object  v0, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0G:LX/08q;
+    002a..002e  if-nez  v0, +0x21e
+    002e..0034  const-string/jumbo  v0, "time"
+    0034..003a  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    003a..003c  const/4  v0, #0x0
+    003c..003e  throw  v0
+    003e..0042  iget-object  v2, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0E:Ljava/util/Set;
+    0042..0046  iget-object  v1, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A03:LX/0ob;
+    0046..004a  if-nez  v1, +0x9
+    004a..004e  const-string  v0, "contactSyncMethods"
+    004e..0054  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    0054..0056  const/4  v0, #0x0
+    0056..0058  throw  v0
+    0058..005c  const-string  v0, "jid list is empty"
+    005c..0062  invoke-static  {v0, v2}, LX/00L;->A09(Ljava/lang/String;Ljava/util/Collection;)V
+    0062..0066  sget-object  v0, LX/0vC;->A0M:LX/0vC;
+    0066..006c  invoke-virtual  {v1, v0, v2}, LX/0ob;->A09(LX/0vC;Ljava/util/Collection;)LX/E0F;
+    006c..006e  move-result-object  v0
+    006e..0074  invoke-virtual  {v0}, LX/FfK;->get()Ljava/lang/Object;
+    0074..0076  move-result-object  v1
+    0076..007a  check-cast  v1, LX/1xM;
+    007a..0080  invoke-static  {v1}, LX/00l;->A08(Ljava/lang/Object;)V
+    0080..0086  invoke-virtual  {v1}, LX/1xM;->A01()Z
+    0086..0088  move-result  v0
+    0088..008c  if-eqz  v0, +0x3a4
+    008c..0090  iget-object  v6, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A08:LX/Dwc;
+    0090..0094  iget-object  v2, v1, LX/1xM;->A02:Ljava/util/Set;
+    0094..0096  const/4  v4, #0x0
+    0096..009a  iget-object  v0, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0D:LX/1ti;
+    009a..009c  const/4  v1, #0x0
+    009c..00a0  if-nez  v0, +0x8
+    00a0..00a4  const-string  v0, "sendFlowStatusFactory"
+    00a4..00aa  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    00aa..00ac  throw  v1
+    00ac..00b2  invoke-virtual  {v0, v6}, LX/1ti;->A00(LX/Dwc;)LX/DyI;
+    00b2..00b4  move-result-object  v11
+    00b4..00b8  if-nez  v11, +0xf
+    00b8..00bc  const-string  v0, "SyncDeviceAndResendStatusJob/sendableStatus for "
+    00bc..00c2  invoke-static  {v6, v0}, LX/1Xl;->A15(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00c2..00c4  move-result-object  v1
+    00c4..00c8  const-string  v0, " no longer exist"
+    00c8..00ce  invoke-static  {v1, v0}, LX/2L9;->A1K(Ljava/lang/StringBuilder;Ljava/lang/String;)V
+    00ce..00d2  goto/16  +0x1e0
+    00d2..00d6  const-string  v0, "SyncDeviceAndResendStatusJob/message = "
+    00d6..00dc  invoke-static  {v0, v11}, LX/2LA;->A1L(Ljava/lang/String;Ljava/lang/Object;)V
+    00dc..00e0  if-eqz  v2, +0x374
+    00e0..00e6  invoke-interface  {v2}, Ljava/util/Set;->isEmpty()Z
+    00e6..00e8  move-result  v0
+    00e8..00ec  if-nez  v0, +0x36e
+    00ec..00f2  invoke-static  {}, LX/2L6;->A1F()Ljava/util/HashSet;
+    00f2..00f4  move-result-object  v9
+    00f4..00fa  invoke-interface  {v2}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    00fa..00fc  move-result-object  v1
+    00fc..0102  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    0102..0104  move-result  v0
+    0104..0108  if-eqz  v0, +0x10
+    0108..010e  invoke-static  {v1}, LX/2LB;->A0h(Ljava/util/Iterator;)LX/0DY;
+    010e..0110  move-result-object  v0
+    0110..0116  invoke-static  {v0}, LX/2L6;->A0n(Lcom/whatsapp/infra/core/jid/Jid;)Lcom/whatsapp/infra/core/jid/UserJid;
+    0116..0118  move-result-object  v0
+    0118..011c  if-eqz  v0, -0xe
+    011c..0122  invoke-virtual  {v9, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0122..0124  goto  -0x13
+    0124..012a  invoke-virtual  {v11}, LX/FVD;->BI8()LX/18O;
+    012a..012c  move-result-object  v1
+    012c..0130  instance-of  v0, v1, LX/AQ5;
+    0130..0132  const/4  v10, #0x0
+    0132..0136  if-eqz  v0, +0x10
+    0136..013a  check-cast  v1, LX/AQ5;
+    013a..013e  if-eqz  v1, +0xc
+    013e..0142  iget-object  v0, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0A:LX/1uS;
+    0142..0146  if-nez  v0, +0xa
+    0146..014a  const-string  v0, "statusSendPartStore"
+    014a..0150  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    0150..0152  throw  v10
+    0152..0154  const/4  v7, #0x0
+    0154..0156  goto  +0x8
+    0156..015c  invoke-static  {v1, v0}, LX/2Am;->A00(LX/AQ5;LX/1uS;)Z
+    015c..015e  move-result  v0
+    015e..0160  const/4  v7, #0x1
+    0160..0164  if-ne  v0, v7, -0x7
+    0164..0168  iget-object  v0, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A09:LX/Dto;
+    0168..016c  const-string  v16, "statusReceiptStore"
+    016c..0170  if-eqz  v0, +0x178
+    0170..0176  invoke-virtual  {v0, v6}, LX/Dto;->A0H(LX/Dwc;)Ljava/util/HashSet;
+    0176..0178  move-result-object  v3
+    0178..017c  if-eqz  v7, +0x49
+    017c..0180  iget-object  v0, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A09:LX/Dto;
+    0180..0184  if-eqz  v0, +0x16e
+    0184..018a  invoke-static  {v0}, LX/Dto;->A00(LX/Dto;)LX/0aq;
+    018a..018c  move-result-object  v2
+    018c..0190  iget-object  v12, v2, LX/0aq;->A02:LX/0KU;
+    0190..0194  const-string  v8, "\n        SELECT receipt_device_jid\n        FROM status_receipt_device\n        WHERE uuid = ? AND receipt_device_timestamp < 0\n      "
+    0194..0198  iget-object  v0, v6, LX/Dwc;->A02:Ljava/lang/String;
+    0198..019e  invoke-static  {v0}, LX/6of;->A1b(Ljava/lang/Object;)[Ljava/lang/String;
+    019e..01a0  move-result-object  v1
+    01a0..01a4  const-string  v0, "StatusReceiptStore/GET_PRE_WIRE_RECEIPT_ASSIGNMENT_DEVICES"
+    01a4..01aa  invoke-virtual  {v12, v8, v0, v1}, LX/0KU;->A0A(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
+    01aa..01ac  move-result-object  v8
+    01ac..01b0  const-string  v0, "receipt_device_jid"
+    01b0..01b6  invoke-interface  {v8, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    01b6..01b8  move-result  v13
+    01b8..01bc  new-instance  v12, LX/KmB;
+    01bc..01c2  invoke-direct  {v12}, LX/KmB;-><init>()V
+    01c2..01c8  invoke-interface  {v8}, Landroid/database/Cursor;->moveToNext()Z
+    01c8..01ca  move-result  v0
+    01ca..01ce  if-eqz  v0, +0x12
+    01ce..01d2  sget-object  v1, Lcom/whatsapp/infra/core/jid/DeviceJid;->Companion:LX/0EB;
+    01d2..01d8  invoke-interface  {v8, v13}, Landroid/database/Cursor;->getString(I)Ljava/lang/String;
+    01d8..01da  move-result-object  v0
+    01da..01e0  invoke-virtual  {v1, v0}, LX/0EB;->A04(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    01e0..01e2  move-result-object  v0
+    01e2..01e6  if-eqz  v0, -0x10
+    01e6..01ec  invoke-virtual  {v12, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    01ec..01ee  goto  -0x15
+    01ee..01f4  invoke-static  {v12}, LX/06c;->A00(Ljava/util/Set;)LX/KmB;
+    01f4..01f6  move-result-object  v0
+    01f6..01fc  invoke-interface  {v8}, Landroid/database/Cursor;->close()V
+    01fc..0202  invoke-virtual  {v2}, LX/0aq;->close()V
+    0202..0208  invoke-static  {v0, v3}, LX/0Ef;->A08(Ljava/lang/Iterable;Ljava/util/Set;)Ljava/util/Set;
+    0208..020a  move-result-object  v3
+    020a..020e  iget-object  v0, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A00:LX/0jD;
+    020e..0212  if-nez  v0, +0x6
+    0212..0218  const-string/jumbo  v0, "userDeviceManager"
+    0218..021a  goto  -0x67
+    021a..0220  invoke-virtual  {v0, v9}, LX/0jD;->A09(Ljava/util/Set;)Ljava/util/HashMap;
+    0220..0222  move-result-object  v0
+    0222..0228  invoke-virtual  {v0}, Ljava/util/AbstractMap;->values()Ljava/util/Collection;
+    0228..022a  move-result-object  v0
+    022a..0230  invoke-static  {v0}, LX/07S;->A0G(Ljava/lang/Iterable;)Ljava/util/ArrayList;
+    0230..0232  move-result-object  v0
+    0232..0238  invoke-static  {v0}, LX/07Z;->A1S(Ljava/lang/Iterable;)Ljava/util/Set;
+    0238..023a  move-result-object  v1
+    023a..023e  const-string  v0, "SyncDeviceAndResendStatusJob/original list = "
+    023e..0244  invoke-static  {v0, v3}, LX/2LA;->A1L(Ljava/lang/String;Ljava/lang/Object;)V
+    0244..0248  const-string  v0, "SyncDeviceAndResendStatusJob/current list for synced users = "
+    0248..024e  invoke-static  {v0, v1}, LX/2LA;->A1L(Ljava/lang/String;Ljava/lang/Object;)V
+    024e..0254  invoke-static  {v3, v1}, LX/0Ef;->A08(Ljava/lang/Iterable;Ljava/util/Set;)Ljava/util/Set;
+    0254..0256  move-result-object  v0
+    0256..025c  invoke-static  {v0}, LX/07Z;->A1R(Ljava/lang/Iterable;)Ljava/util/Set;
+    025c..025e  move-result-object  v12
+    025e..0264  invoke-interface  {v12}, Ljava/util/Set;->isEmpty()Z
+    0264..0266  move-result  v0
+    0266..026a  if-nez  v0, +0x113
+    026a..0270  invoke-interface  {v12}, Ljava/util/Set;->isEmpty()Z
+    0270..0272  move-result  v0
+    0272..0276  if-nez  v0, +0xd6
+    0276..027a  iget-object  v1, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0B:LX/0fd;
+    027a..027e  if-nez  v1, +0x8
+    027e..0282  const-string  v16, "primaryDeviceVersionStore"
+    0282..0288  invoke-static/range  {v16..v16}, LX/00l;->A0H(Ljava/lang/String;)V
+    0288..028a  throw  v10
+    028a..028e  iget-object  v0, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A04:LX/0B0;
+    028e..0292  if-nez  v0, +0x5
+    0292..0296  const-string  v16, "crashLogs"
+    0296..0298  goto  -0xa
+    0298..029e  invoke-static  {v0, v12}, LX/DBg;->A0l(LX/0B0;Ljava/util/Set;)Ljava/util/HashSet;
+    029e..02a0  move-result-object  v0
+    02a0..02a6  invoke-virtual  {v1, v0}, LX/0fd;->A01(Ljava/util/Set;)Ljava/util/HashMap;
+    02a6..02a8  move-result-object  v8
+    02a8..02ac  iget-object  v0, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A09:LX/Dto;
+    02ac..02b0  if-eqz  v0, -0x15
+    02b0..02b6  invoke-static  {}, LX/1Xl;->A1D()Ljava/util/LinkedHashMap;
+    02b6..02b8  move-result-object  v3
+    02b8..02be  invoke-static  {v0}, LX/Dto;->A00(LX/Dto;)LX/0aq;
+    02be..02c0  move-result-object  v2
+    02c0..02c4  iget-object  v14, v2, LX/0aq;->A02:LX/0KU;
+    02c4..02c8  const-string  v13, "\n          SELECT\n            receipt_device_jid,\n            receipt_device_timestamp,\n            primary_device_version\n          FROM status_receipt_device\n          WHERE\n            uuid = ?\n        "
+    02c8..02cc  iget-object  v9, v6, LX/Dwc;->A02:Ljava/lang/String;
+    02cc..02ce  const/4  v0, #0x1
+    02ce..02d2  new-array  v1, v0, [Ljava/lang/String;
+    02d2..02d6  aput-object  v9, v1, v4
+    02d6..02da  const-string  v0, "StatusReceiptStore/GET_RECEIPT_DEVICES_FOR_UUID"
+    02da..02e0  invoke-virtual  {v14, v13, v0, v1}, LX/0KU;->A0A(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
+    02e0..02e2  move-result-object  v9
+    02e2..02e6  const-string  v0, "receipt_device_jid"
+    02e6..02ec  invoke-interface  {v9, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    02ec..02ee  move-result  v14
+    02ee..02f2  const-string  v0, "primary_device_version"
+    02f2..02f8  invoke-interface  {v9, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    02f8..02fa  move-result  v13
+    02fa..0300  invoke-interface  {v9}, Landroid/database/Cursor;->moveToNext()Z
+    0300..0302  move-result  v0
+    0302..0304  const/4  v1, #0x0
+    0304..0308  if-eqz  v0, +0x24
+    0308..030e  invoke-interface  {v9, v14}, Landroid/database/Cursor;->getString(I)Ljava/lang/String;
+    030e..0310  move-result-object  v15
+    0310..0316  invoke-interface  {v9, v13}, Landroid/database/Cursor;->isNull(I)Z
+    0316..0318  move-result  v0
+    0318..031c  if-nez  v0, +0x6
+    031c..0322  invoke-static  {v9, v13}, LX/2L8;->A1F(Landroid/database/Cursor;I)Ljava/lang/Long;
+    0322..0324  move-result-object  v1
+    0324..032a  invoke-static  {v15}, LX/DBc;->A0a(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    032a..032c  move-result-object  v15
+    032c..0330  if-eqz  v15, -0x19
+    0330..0336  invoke-virtual  {v15}, Lcom/whatsapp/infra/core/jid/Jid;->getDevice()I
+    0336..0338  move-result  v0
+    0338..033c  if-nez  v0, -0x1f
+    033c..0340  if-eqz  v1, -0x21
+    0340..0344  iget-object  v0, v15, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    0344..034a  invoke-interface  {v3, v0, v1}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    034a..034c  goto  -0x28
+    034c..0352  invoke-interface  {v9}, Landroid/database/Cursor;->close()V
+    0352..0358  invoke-virtual  {v2}, LX/0aq;->close()V
+    0358..035e  invoke-static  {}, LX/2L6;->A1F()Ljava/util/HashSet;
+    035e..0360  move-result-object  v2
+    0360..0366  invoke-interface  {v12}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    0366..0368  move-result-object  v13
+    0368..036e  invoke-interface  {v13}, Ljava/util/Iterator;->hasNext()Z
+    036e..0370  move-result  v0
+    0370..0374  if-eqz  v0, +0x56
+    0374..037a  invoke-static  {v13}, LX/DBc;->A0b(Ljava/util/Iterator;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    037a..037c  move-result-object  v1
+    037c..0380  iget-object  v0, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A05:LX/09F;
+    0380..0384  if-nez  v0, +0x6
+    0384..0388  const-string  v16, "meManager"
+    0388..038c  goto/16  -0x83
+    038c..0392  invoke-interface  {v0, v1}, LX/09F;->BSA(Lcom/whatsapp/infra/core/jid/DeviceJid;)Z
+    0392..0394  move-result  v0
+    0394..0398  if-eqz  v0, +0x8
+    0398..039c  const-string  v0, "SyncDeviceAndResendStatusJob/filterInvalidDevices/dropping own current device"
+    039c..03a2  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    03a2..03a4  goto  -0x1d
+    03a4..03aa  invoke-static  {v1}, LX/EpS;->A00(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    03aa..03ac  move-result  v0
+    03ac..03b0  if-eqz  v0, +0x5
+    03b0..03b4  const-string  v0, "SyncDeviceAndResendStatusJob/filterInvalidDevices/dropping hosted jid"
+    03b4..03b6  goto  -0xc
+    03b6..03ba  iget-object  v0, v1, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    03ba..03c0  invoke-virtual  {v3, v0}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    03c0..03c2  move-result-object  v9
+    03c2..03c8  invoke-virtual  {v8, v0}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    03c8..03ca  move-result-object  v12
+    03ca..03ce  check-cast  v12, Ljava/lang/Long;
+    03ce..03d2  iget-object  v0, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A01:LX/0g3;
+    03d2..03d6  if-nez  v0, +0x6
+    03d6..03da  const-string  v16, "hostedCompanionDeviceManager"
+    03da..03de  goto/16  -0xac
+    03de..03e4  invoke-static  {v12, v9}, LX/09W;->A00(Ljava/lang/Object;Ljava/lang/Object;)Z
+    03e4..03e6  move-result  v0
+    03e6..03ea  if-eqz  v0, +0x6
+    03ea..03f0  invoke-virtual  {v2, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    03f0..03f2  goto  -0x44
+    03f2..03f6  const-string  v0, "SyncDeviceAndResendStatusJob/filterInvalidDevices/dropping: "
+    03f6..03fc  invoke-static  {v1, v0}, LX/1Xl;->A15(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    03fc..03fe  move-result-object  v1
+    03fe..0402  const-string  v0, " currentVersion: "
+    0402..0408  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0408..040e  invoke-virtual  {v1, v12}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    040e..0412  const-string  v0, " versionsAtTimeOfMessageSend: "
+    0412..0418  invoke-static  {v9, v0, v1}, LX/1Xl;->A0v(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    0418..041a  move-result-object  v0
+    041a..041c  goto  -0x3f
+    041c..041e  move-object  v12, v2
+    041e..0424  invoke-interface  {v12}, Ljava/util/Set;->isEmpty()Z
+    0424..0426  move-result  v0
+    0426..042a  if-nez  v0, +0x33
+    042a..042e  const-string  v1, "sendMessageMethods"
+    042e..0432  if-nez  v7, +0x47
+    0432..0436  iget-object  v0, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A09:LX/Dto;
+    0436..043a  if-eqz  v0, +0x13
+    043a..0440  invoke-virtual  {v0, v6, v12, v4}, LX/Dto;->A0R(LX/Dwc;Ljava/util/Set;Z)V
+    0440..0444  new-instance  v8, LX/FfK;
+    0444..044a  invoke-direct  {v8}, LX/FfK;-><init>()V
+    044a..044e  iget-object  v9, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A02:LX/FLk;
+    044e..0452  if-nez  v9, +0x44
+    0452..0458  invoke-static  {v1}, LX/00l;->A0H(Ljava/lang/String;)V
+    0458..045c  goto/16  -0x184
+    045c..0462  invoke-static/range  {v16..v16}, LX/00l;->A0H(Ljava/lang/String;)V
+    0462..0466  goto/16  -0x189
+    0466..046c  invoke-static  {v0}, LX/08q;->A00(LX/08q;)J
+    046c..046e  move-result-wide  v3
+    046e..0472  iget-wide  v1, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->expirationMs:J
+    0472..0476  cmp-long  v0, v3, v1
+    0476..047a  if-lez  v0, -0x21c
+    047a..047e  const-string  v0, "SyncDeviceAndResendStatusJob/onRun/skipping job due to expiration"
+    047e..0484  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0484..0486  const/4  v0, #0x5
+    0486..048c  invoke-virtual  {v5, v0}, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0P(I)V
+    048c..048e  return-void
+    048e..0490  return-void
+    0490..0492  move-exception  v0
+    0492..0494  throw  v0
+    0494..0496  move-exception  v1
+    0496..0498  goto  +0x8
+    0498..049a  move-exception  v0
+    049a..049c  throw  v0
+    049c..049e  move-exception  v1
+    049e..04a4  invoke-static  {v9, v0}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    04a4..04a6  goto  +0x4
+    04a6..04ac  invoke-static  {v8, v0}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    04ac..04ae  throw  v1
+    04ae..04b0  move-exception  v1
+    04b0..04b2  throw  v1
+    04b2..04b4  move-exception  v0
+    04b4..04ba  invoke-static  {v2, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    04ba..04bc  throw  v0
+    04bc..04c0  new-instance  v8, LX/FfK;
+    04c0..04c6  invoke-direct  {v8}, LX/FfK;-><init>()V
+    04c6..04ca  iget-object  v9, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A02:LX/FLk;
+    04ca..04ce  if-nez  v9, +0x6
+    04ce..04d4  invoke-static  {v1}, LX/00l;->A0H(Ljava/lang/String;)V
+    04d4..04d6  throw  v10
+    04d6..04da  iget-wide  v2, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->expirationMs:J
+    04da..04de  iget-wide  v0, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->startTimeMs:J
+    04de..04e2  iget-object  v7, v9, LX/FLk;->A0K:LX/08q;
+    04e2..04e6  new-instance  v6, LX/EY7;
+    04e6..04ec  invoke-direct  {v6, v7, v11}, LX/EY7;-><init>(LX/08q;LX/B1D;)V
+    04ec..04f0  iput-boolean  v4, v6, LX/EY7;->A09:Z
+    04f0..04f4  iput-boolean  v4, v6, LX/EY7;->A08:Z
+    04f4..04f8  iput-object  v12, v6, LX/EY7;->A07:Ljava/util/Set;
+    04f8..04fc  iput-wide  v2, v6, LX/EY7;->A03:J
+    04fc..0500  iput-wide  v0, v6, LX/EY7;->A01:J
+    0500..0504  new-instance  v0, LX/Enh;
+    0504..050a  invoke-direct  {v0, v6}, LX/Enh;-><init>(LX/EY7;)V
+    050a..0510  invoke-static  {v9, v8, v0, v10}, LX/FLk;->A00(LX/FLk;LX/FfK;LX/Enh;Ljava/lang/Runnable;)V
+    0510..0516  const-wide/32  v0, #0x927c0
+    0516..051a  iget-object  v2, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A07:LX/0cM;
+    051a..051e  const-string  v11, "statusInfraConfig"
+    051e..0520  const/4  v7, #0x0
+    0520..0524  if-eqz  v2, +0x14e
+    0524..052a  invoke-static  {v2}, LX/0cM;->A00(LX/0cM;)LX/08Y;
+    052a..052c  move-result-object  v3
+    052c..0530  sget-object  v2, LX/16j;->A0f:LX/00f;
+    0530..0536  invoke-static  {v3, v2}, LX/00E;->A0F(LX/00E;LX/00f;)Z
+    0536..0538  move-result  v9
+    0538..053a  const/4  v6, #0x1
+    053a..053e  if-nez  v9, +0x16
+    053e..0542  iget-object  v2, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A07:LX/0cM;
+    0542..0546  if-eqz  v2, +0x13d
+    0546..054c  invoke-static  {v2}, LX/0cM;->A00(LX/0cM;)LX/08Y;
+    054c..054e  move-result-object  v3
+    054e..0552  sget-object  v2, LX/16j;->A0e:LX/00f;
+    0552..0558  invoke-static  {v3, v2}, LX/00E;->A0F(LX/00E;LX/00f;)Z
+    0558..055a  move-result  v2
+    055a..055e  if-nez  v2, +0x6
+    055e..0564  invoke-virtual  {v8}, LX/FfK;->get()Ljava/lang/Object;
+    0564..0566  return-void
+    0566..056a  const/16  v3, #0x4e3
+    056a..056e  iget-object  v2, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0C:LX/00X;
+    056e..0572  if-nez  v2, +0xa
+    0572..0578  const-string/jumbo  v0, "waUserSessionManager"
+    0578..057e  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    057e..0582  goto/16  +0x122
+    0582..0588  invoke-virtual  {v2}, LX/00X;->A01()LX/00Y;
+    0588..058a  move-result-object  v2
+    058a..058e  check-cast  v2, LX/00Z;
+    058e..0594  invoke-static  {v2, v3}, LX/09H;->A00(LX/00Y;I)LX/05a;
+    0594..0596  move-result-object  v11
+    0596..0598  const/4  v3, #0x2
+    0598..059c  if-eqz  v9, +0x8
+    059c..05a0  sget-object  v2, Ljava/util/concurrent/TimeUnit;->MILLISECONDS:Ljava/util/concurrent/TimeUnit;
+    05a0..05a6  invoke-virtual  {v8, v0, v1, v2}, LX/FfK;->get(JLjava/util/concurrent/TimeUnit;)Ljava/lang/Object;
+    05a6..05a8  return-void
+    05a8..05ae  invoke-virtual  {v8}, LX/FfK;->get()Ljava/lang/Object;
+    05ae..05b0  return-void
+    05b0..05b2  move-exception  v9
+    05b2..05b6  iget-object  v7, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0D:LX/1ti;
+    05b6..05b8  const/4  v4, #0x0
+    05b8..05bc  if-nez  v7, +0x8
+    05bc..05c0  const-string  v0, "sendFlowStatusFactory"
+    05c0..05c6  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    05c6..05c8  throw  v10
+    05c8..05cc  iget-object  v2, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A08:LX/Dwc;
+    05cc..05d2  invoke-virtual  {v7, v2}, LX/1ti;->A00(LX/Dwc;)LX/DyI;
+    05d2..05d4  move-result-object  v2
+    05d4..05d8  if-eqz  v2, +0x4
+    05d8..05dc  iget-object  v4, v2, LX/DyJ;->A00:LX/Fwa;
+    05dc..05e0  instance-of  v2, v4, LX/AQ5;
+    05e0..05e4  if-eqz  v2, +0x35
+    05e4..05e8  check-cast  v4, LX/AQ5;
+    05e8..05ec  if-eqz  v4, +0x31
+    05ec..05f0  iget-object  v2, v4, LX/AQ5;->A0I:Ljava/lang/Long;
+    05f0..05f4  if-eqz  v2, +0x2d
+    05f4..05fa  invoke-virtual  {v2}, Ljava/lang/Number;->longValue()J
+    05fa..05fc  move-result-wide  v7
+    05fc..0600  iget-object  v2, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0A:LX/1uS;
+    0600..0604  const-string  v4, "statusSendPartStore"
+    0604..0608  if-nez  v2, +0x6
+    0608..060e  invoke-static  {v4}, LX/00l;->A0H(Ljava/lang/String;)V
+    060e..0610  goto  -0x24
+    0610..0616  invoke-virtual  {v2, v10, v7, v8}, LX/1uS;->A09(LX/0aq;J)Ljava/util/ArrayList;
+    0616..0618  move-result-object  v2
+    0618..061e  invoke-virtual  {v2}, Ljava/util/AbstractCollection;->isEmpty()Z
+    061e..0620  move-result  v2
+    0620..0624  if-nez  v2, +0x15
+    0624..0628  iget-object  v2, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0A:LX/1uS;
+    0628..062c  if-nez  v2, +0x6
+    062c..0632  invoke-static  {v4}, LX/00l;->A0H(Ljava/lang/String;)V
+    0632..0634  throw  v10
+    0634..063a  invoke-virtual  {v2, v7, v8}, LX/1uS;->A08(J)Ljava/util/ArrayList;
+    063a..063c  move-result-object  v2
+    063c..0642  invoke-virtual  {v2}, Ljava/util/AbstractCollection;->isEmpty()Z
+    0642..0644  move-result  v2
+    0644..0646  const/4  v7, #0x1
+    0646..064a  if-nez  v2, +0x3
+    064a..064c  const/4  v7, #0x0
+    064c..0650  const-string  v2, "SyncDeviceAndResendStatusJob/resendStatus/send did not settle within "
+    0650..0656  invoke-static  {v2, v0, v1}, LX/1Xl;->A17(Ljava/lang/String;J)Ljava/lang/StringBuilder;
+    0656..0658  move-result-object  v4
+    0658..065c  const-string  v2, "ms (noPendingParts="
+    065c..0662  invoke-static  {v2, v4, v7}, LX/1Xl;->A12(Ljava/lang/String;Ljava/lang/StringBuilder;Z)Ljava/lang/String;
+    0662..0664  move-result-object  v2
+    0664..066a  invoke-static  {v2, v9}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    066a..0670  invoke-static  {v11}, LX/8t3;->A0N(LX/05a;)LX/0GO;
+    0670..0672  move-result-object  v4
+    0672..0678  const-string/jumbo  v2, "timeoutMs="
+    0678..067e  invoke-static  {v2, v0, v1}, LX/1Xl;->A17(Ljava/lang/String;J)Ljava/lang/StringBuilder;
+    067e..0680  move-result-object  v1
+    0680..0684  const-string  v0, ", noPendingParts="
+    0684..068a  invoke-static  {v0, v1, v7}, LX/2LA;->A0q(Ljava/lang/String;Ljava/lang/StringBuilder;Z)Ljava/lang/String;
+    068a..068c  move-result-object  v1
+    068c..0690  if-nez  v7, +0x3
+    0690..0692  const/4  v3, #0x1
+    0692..0696  const-string  v0, "SyncDeviceAndResendStatusJob/sendCompletionTimeout"
+    0696..069c  invoke-virtual  {v4, v0, v1, v6, v3}, LX/0B0;->A0h(Ljava/lang/String;Ljava/lang/String;ZI)V
+    069c..069e  return-void
+    069e..06a0  move-exception  v1
+    06a0..06a4  const-string  v0, "SyncDeviceAndResendStatusJob/resendStatus/interrupted while awaiting the send"
+    06a4..06aa  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;Ljava/lang/Throwable;)V
+    06aa..06b0  invoke-static  {}, LX/DBd;->A1N()V
+    06b0..06b2  return-void
+    06b2..06b4  move-exception  v2
+    06b4..06ba  invoke-virtual  {v2}, Ljava/lang/Throwable;->getCause()Ljava/lang/Throwable;
+    06ba..06bc  move-result-object  v1
+    06bc..06c0  instance-of  v0, v1, Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildException;
+    06c0..06c4  if-eqz  v0, +0x8
+    06c4..06c8  check-cast  v1, Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildException;
+    06c8..06cc  if-eqz  v1, +0x4
+    06cc..06d0  iget-object  v7, v1, Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildException;->reason:Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildFailureReason;
+    06d0..06d4  sget-object  v0, Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildFailureReason;->A02:Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildFailureReason;
+    06d4..06d8  if-eq  v7, v0, +0x73
+    06d8..06dc  const-string  v0, "SyncDeviceAndResendStatusJob/resendStatus/send failed"
+    06dc..06e2  invoke-static  {v0, v2}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    06e2..06e8  invoke-virtual  {v5}, Lorg/whispersystems/jobqueue/Job;->A0M()Z
+    06e8..06ea  move-result  v0
+    06ea..06ee  if-eqz  v0, +0x68
+    06ee..06f4  invoke-virtual  {v2}, Ljava/lang/Throwable;->getCause()Ljava/lang/Throwable;
+    06f4..06f6  move-result-object  v1
+    06f6..06fa  if-nez  v1, +0x34
+    06fa..06fe  const-string  v1, "none"
+    06fe..0704  invoke-virtual  {v2}, Ljava/lang/Throwable;->getCause()Ljava/lang/Throwable;
+    0704..0706  move-result-object  v0
+    0706..070a  instance-of  v0, v0, LX/EDb;
+    070a..070e  if-nez  v0, +0x28
+    070e..0714  invoke-virtual  {v2}, Ljava/lang/Throwable;->getCause()Ljava/lang/Throwable;
+    0714..0716  move-result-object  v0
+    0716..071a  instance-of  v0, v0, Ljava/lang/RuntimeException;
+    071a..071e  if-nez  v0, +0xa
+    071e..0724  invoke-virtual  {v2}, Ljava/lang/Throwable;->getCause()Ljava/lang/Throwable;
+    0724..0726  move-result-object  v0
+    0726..072a  instance-of  v0, v0, LX/EDZ;
+    072a..072e  if-eqz  v0, +0x18
+    072e..0734  invoke-static  {v11}, LX/8t3;->A0N(LX/05a;)LX/0GO;
+    0734..0736  move-result-object  v2
+    0736..073a  const-string  v0, "cause="
+    073a..0740  invoke-static  {v0, v1}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0740..0742  move-result-object  v1
+    0742..0746  const-string  v0, ", terminal="
+    0746..074c  invoke-static  {v0, v1, v6}, LX/2LA;->A0q(Ljava/lang/String;Ljava/lang/StringBuilder;Z)Ljava/lang/String;
+    074c..074e  move-result-object  v1
+    074e..0752  const-string  v0, "SyncDeviceAndResendStatusJob/sendDeliveryFailure"
+    0752..0758  invoke-virtual  {v2, v0, v1, v4, v3}, LX/0B0;->A0h(Ljava/lang/String;Ljava/lang/String;ZI)V
+    0758..075a  goto  +0x30
+    075a..075c  const/4  v6, #0x0
+    075c..075e  goto  -0x17
+    075e..0762  instance-of  v0, v1, LX/EDb;
+    0762..0766  if-eqz  v0, +0x5
+    0766..076a  const-string  v1, "not_dispatched"
+    076a..076c  goto  -0x36
+    076c..0770  instance-of  v0, v1, LX/EDZ;
+    0770..0774  if-eqz  v0, +0x5
+    0774..0778  const-string  v1, "invalid_message"
+    0778..077a  goto  -0x3d
+    077a..077e  instance-of  v0, v1, Ljava/lang/NullPointerException;
+    077e..0782  if-eqz  v0, +0x5
+    0782..0786  const-string  v1, "npe"
+    0786..0788  goto  -0x44
+    0788..078c  instance-of  v0, v1, Ljava/lang/IllegalStateException;
+    078c..0790  if-eqz  v0, +0x5
+    0790..0794  const-string  v1, "illegal_state"
+    0794..0796  goto  -0x4b
+    0796..079a  instance-of  v0, v1, Ljava/lang/Error;
+    079a..079e  if-eqz  v0, +0x5
+    079e..07a2  const-string  v1, "error"
+    07a2..07a4  goto  -0x52
+    07a4..07a8  instance-of  v0, v1, Ljava/lang/RuntimeException;
+    07a8..07ac  if-eqz  v0, +0x5
+    07ac..07b0  const-string  v1, "runtime"
+    07b0..07b2  goto  -0x59
+    07b2..07b6  const-string  v1, "checked"
+    07b6..07b8  goto  -0x5c
+    07b8..07ba  return-void
+    07ba..07bc  throw  v2
+    07bc..07c2  invoke-static  {v11}, LX/00l;->A0H(Ljava/lang/String;)V
+    07c2..07c4  throw  v10
+    07c4..07c8  const-string  v0, "SyncDeviceAndResendStatusJob/resendStatus/no queried contacts, nothing to resend"
+    07c8..07ce  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    07ce..07d0  return-void
+    07d0..07d4  const/16  v0, #0x8
+    07d4..07da  invoke-virtual  {v5, v0}, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0P(I)V
+    07da..07dc  return-void
+    07dc..07de  move-exception  v2
+    07de..07e4  invoke-virtual  {v5}, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0O()Ljava/lang/String;
+    07e4..07e6  move-result-object  v1
+    07e6..07ea  const-string  v0, "SyncDeviceAndResendStatusJob/onRun/error, param="
+    07ea..07f0  invoke-static  {v0, v1}, LX/2LA;->A1M(Ljava/lang/String;Ljava/lang/String;)V
+    07f0..07f2  throw  v2
+    # exception table: 16 try range(s)
+    # catch Ljava/lang/Exception; code_units 001f..00c6 -> 03ee
+    # catch <all> code_units 00c6..00d6 -> 0257
+    # catch <all> code_units 00d6..00fb -> 0248
+    # catch <all> code_units 00fb..00fe -> 0257
+    # catch Ljava/lang/Exception; code_units 00fe..0160 -> 03ee
+    # catch <all> code_units 0160..0171 -> 0257
+    # catch <all> code_units 0171..01a6 -> 024c
+    # catch <all> code_units 01a6..01a9 -> 0257
+    # catch Ljava/lang/Exception; code_units 01a9..0233 -> 03ee
+    # catch <all> code_units 0249..024a -> 024a
+    # catch <all> code_units 024d..024e -> 024e
+    # catch <all> code_units 024f..0257 -> 0257
+    # catch <all> code_units 0258..0259 -> 0259
+    # catch Ljava/lang/Exception; code_units 0259..02ce -> 03ee
+    # catch Ljava/util/concurrent/ExecutionException; code_units 02ce..02d8 -> 0359
+    # catch Ljava/lang/InterruptedException; code_units 02ce..02d8 -> 034f
+    # catch Ljava/util/concurrent/TimeoutException; code_units 02ce..02d8 -> 02d8
+    # catch Ljava/lang/Exception; code_units 02ce..02d8 -> 03ee
+    # catch Ljava/lang/Exception; code_units 02d8..03ee -> 03ee
+.end method
+
+.method public A0M(Z)  # .registers 11
+    # full signature: Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0M()Z
+    0000..0006  invoke-static  {v10}, LX/DBe;->A13(Lorg/whispersystems/jobqueue/Job;)Ljava/util/Iterator;
+    0006..0008  move-result-object  v2
+    0008..000e  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    000e..0010  move-result  v0
+    0010..0012  const/4  v9, #0x0
+    0012..0014  const/4  v8, #0x1
+    0014..0018  if-eqz  v0, +0x15
+    0018..001e  invoke-interface  {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    001e..0020  move-result-object  v1
+    0020..0024  check-cast  v1, Lorg/whispersystems/jobqueue/requirements/Requirement;
+    0024..002a  invoke-interface  {v1}, Lorg/whispersystems/jobqueue/requirements/Requirement;->BWq()Z
+    002a..002c  move-result  v0
+    002c..0030  if-nez  v0, -0x12
+    0030..0034  instance-of  v0, v1, Lcom/whatsapp/infra/jobs/requirements/ChatConnectionRequirement;
+    0034..0038  if-eqz  v0, +0x4
+    0038..003c  iput-boolean  v8, v10, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0P:Z
+    003c..003e  return  v9
+    003e..0042  iget-boolean  v0, v10, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->waitingForCanonicalAck:Z
+    0042..0046  if-eqz  v0, +0x37
+    0046..004a  iget-object  v0, v10, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0G:LX/08q;
+    004a..004e  if-nez  v0, +0xa
+    004e..0054  const-string/jumbo  v0, "time"
+    0054..005a  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    005a..005c  const/4  v0, #0x0
+    005c..005e  throw  v0
+    005e..0064  invoke-static  {v0}, LX/08q;->A00(LX/08q;)J
+    0064..0066  move-result-wide  v6
+    0066..006a  iget-wide  v2, v10, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->expirationMs:J
+    006a..006e  const-wide/16  v4, #0x0
+    006e..0072  cmp-long  v0, v2, v4
+    0072..0076  if-gtz  v0, +0x8
+    0076..007a  iget-wide  v2, v10, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->startTimeMs:J
+    007a..0080  const-wide/32  v0, #0x36ee80
+    0080..0082  add-long/2addr  v2, v0
+    0082..0086  cmp-long  v0, v6, v2
+    0086..008c  invoke-static  {v0}, LX/2L9;->A1N(I)Z
+    008c..008e  move-result  v1
+    008e..0092  iget-boolean  v0, v10, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0R:Z
+    0092..0096  if-nez  v0, +0x5
+    0096..009a  if-nez  v1, +0x3
+    009a..009c  return  v9
+    009c..00a2  invoke-direct  {v10}, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A00()V
+    00a2..00a6  iput-boolean  v9, v10, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->waitingForCanonicalAck:Z
+    00a6..00aa  iput  v9, v10, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->canonicalAckWaitScopeValue:I
+    00aa..00ac  const/4  v0, #0x0
+    00ac..00b0  iput-object  v0, v10, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->canonicalAckPartCode:Ljava/lang/String;
+    00b0..00b2  return  v8
+    # exception table: 0 try range(s)
+.end method
+
+.method public A0N(ZL)  # .registers 7
+    # full signature: Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0N(Ljava/lang/Exception;)Z
+    0000..0002  const/4  v4, #0x0
+    0002..0008  invoke-static  {v6, v4}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-virtual  {v5}, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0O()Ljava/lang/String;
+    000e..0010  move-result-object  v1
+    0010..0014  const-string  v0, "SyncDeviceAndResendStatusJob/onShouldReply/param="
+    0014..001a  invoke-static  {v0, v1}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    001a..001c  move-result-object  v1
+    001c..0020  const-string  v0, " ;exception="
+    0020..0026  invoke-static  {v6, v0, v1}, LX/DBh;->A1C(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    0026..002a  instance-of  v0, v6, Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildException;
+    002a..002c  const/4  v3, #0x0
+    002c..0030  if-nez  v0, +0x2a
+    0030..0036  invoke-virtual  {v6}, Ljava/lang/Throwable;->getCause()Ljava/lang/Throwable;
+    0036..0038  move-result-object  v6
+    0038..003c  instance-of  v0, v6, Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildException;
+    003c..0040  if-nez  v0, +0x22
+    0040..0042  move-object  v6, v3
+    0042..0044  move-object  v1, v3
+    0044..0048  sget-object  v0, Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildFailureReason;->A02:Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildFailureReason;
+    0048..004a  const/4  v2, #0x1
+    004a..004e  if-ne  v1, v0, +0x12
+    004e..0052  iput-boolean  v2, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->waitingForCanonicalAck:Z
+    0052..0056  iget-object  v1, v6, Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildException;->canonicalAckPartCode:Ljava/lang/String;
+    0056..005a  iput-object  v1, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->canonicalAckPartCode:Ljava/lang/String;
+    005a..005c  const/4  v0, #0x2
+    005c..0060  if-nez  v1, +0x3
+    0060..0062  const/4  v0, #0x1
+    0062..0066  iput  v0, v5, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->canonicalAckWaitScopeValue:I
+    0066..006c  invoke-direct  {v5}, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A01()V
+    006c..006e  return  v2
+    006e..0072  if-eqz  v6, +0x4
+    0072..0076  iget-object  v3, v6, Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildException;->reason:Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildFailureReason;
+    0076..007a  sget-object  v0, Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildFailureReason;->A07:Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildFailureReason;
+    007a..007e  if-ne  v3, v0, -0x7
+    007e..0080  return  v4
+    0080..0084  check-cast  v6, Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildException;
+    0084..0088  if-eqz  v6, -0x21
+    0088..008c  iget-object  v1, v6, Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildException;->reason:Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildFailureReason;
+    008c..008e  goto  -0x24
+    # exception table: 0 try range(s)
+.end method
+
+.method public A0O(L)  # .registers 7
+    # full signature: Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0O()Ljava/lang/String;
+    0000..0004  iget-object  v1, v6, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A08:LX/Dwc;
+    0004..0008  iget-wide  v2, v6, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->expirationMs:J
+    0008..000c  iget-object  v5, v6, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0E:Ljava/util/Set;
+    000c..000e  const/4  v4, #0x0
+    000e..0012  const-string  v0, "; key="
+    0012..0018  invoke-static  {v1, v0}, LX/1Xl;->A15(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0018..001a  move-result-object  v1
+    001a..001e  const-string  v0, "; timeoutMs="
+    001e..0024  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0024..002a  invoke-virtual  {v1, v2, v3}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    002a..002e  const-string  v0, "; rawJids="
+    002e..0034  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0034..003a  invoke-virtual  {v1, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    003a..003e  const-string  v0, "; offlineInProgressDuringMessageSend="
+    003e..0044  invoke-static  {v4, v0, v1}, LX/1Xl;->A0v(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    0044..0046  move-result-object  v0
+    0046..0048  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A0P(VI)  # .registers 8
+    # full signature: Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0P(I)V
+    0000..0004  iget-object  v1, v6, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A08:LX/Dwc;
+    0004..0008  iget-object  v0, v6, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0D:LX/1ti;
+    0008..000a  const/4  v5, #0x0
+    000a..000e  if-nez  v0, +0x8
+    000e..0012  const-string  v0, "sendFlowStatusFactory"
+    0012..0018  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    0018..001a  throw  v5
+    001a..0020  invoke-virtual  {v0, v1}, LX/1ti;->A00(LX/Dwc;)LX/DyI;
+    0020..0022  move-result-object  v4
+    0022..0026  if-nez  v4, +0xe
+    0026..002a  const-string  v0, "SyncDeviceAndResendStatusJob/sendableStatus for "
+    002a..0030  invoke-static  {v1, v0}, LX/1Xl;->A15(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0030..0032  move-result-object  v1
+    0032..0036  const-string  v0, " no longer exist"
+    0036..003c  invoke-static  {v1, v0}, LX/2L9;->A1K(Ljava/lang/StringBuilder;Ljava/lang/String;)V
+    003c..003e  return-void
+    003e..0042  iget-object  v1, v6, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A09:LX/Dto;
+    0042..0046  if-nez  v1, +0x5
+    0046..004a  const-string  v0, "statusReceiptStore"
+    004a..004c  goto  -0x1c
+    004c..0050  iget-object  v0, v6, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A08:LX/Dwc;
+    0050..0056  invoke-virtual  {v1, v0}, LX/Dto;->A0H(LX/Dwc;)Ljava/util/HashSet;
+    0056..0058  move-result-object  v3
+    0058..005c  iget-object  v2, v6, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0J:LX/0x7;
+    005c..0060  if-nez  v2, +0x5
+    0060..0064  const-string  v0, "messageSendLogging"
+    0064..0066  goto  -0x29
+    0066..006a  sget-object  v0, LX/EuU;->A0P:LX/18U;
+    006a..006e  new-instance  v1, LX/F1z;
+    006e..0074  invoke-direct  {v1, v0, v4}, LX/F1z;-><init>(LX/18U;LX/B1D;)V
+    0074..0078  iput  v7, v1, LX/F1z;->A05:I
+    0078..007a  const/4  v0, #0x1
+    007a..007e  iput  v0, v1, LX/F1z;->A04:I
+    007e..0082  iget-object  v0, v6, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A04:LX/0B0;
+    0082..0086  if-nez  v0, +0x5
+    0086..008a  const-string  v0, "crashLogs"
+    008a..008c  goto  -0x3c
+    008c..0092  invoke-static  {v0, v3}, LX/DBg;->A0l(LX/0B0;Ljava/util/Set;)Ljava/util/HashSet;
+    0092..0094  move-result-object  v0
+    0094..009a  invoke-interface  {v0}, Ljava/util/Set;->size()I
+    009a..009c  move-result  v0
+    009c..00a0  iput  v0, v1, LX/F1z;->A02:I
+    00a0..00a6  invoke-virtual  {v3}, Ljava/util/AbstractCollection;->size()I
+    00a6..00a8  move-result  v0
+    00a8..00ac  iput  v0, v1, LX/F1z;->A00:I
+    00ac..00ae  const/4  v0, #0x1
+    00ae..00b2  iput-boolean  v0, v1, LX/F1z;->A0H:Z
+    00b2..00b6  iget-boolean  v0, v6, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0P:Z
+    00b6..00ba  iput-boolean  v0, v1, LX/F1z;->A0J:Z
+    00ba..00be  iput-object  v3, v1, LX/F1z;->A0G:Ljava/util/Collection;
+    00be..00c4  invoke-static  {v1, v2}, LX/F1z;->A01(LX/F1z;LX/0x7;)V
+    00c4..00c6  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public Cf0(VL)  # .registers 3
+    # full signature: Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->Cf0(Landroid/content/Context;)V
+    0000..0006  invoke-static  {}, LX/2L9;->A0e()LX/08q;
+    0006..0008  move-result-object  v0
+    0008..000c  iput-object  v0, v1, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0G:LX/08q;
+    000c..0012  invoke-static  {}, LX/1Xl;->A0X()LX/08Y;
+    0012..0014  move-result-object  v0
+    0014..0018  iput-object  v0, v1, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0F:LX/08Y;
+    0018..001c  const/16  v0, #0x114
+    001c..0022  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0022..0024  move-result-object  v0
+    0024..0028  check-cast  v0, LX/0B0;
+    0028..002c  iput-object  v0, v1, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A04:LX/0B0;
+    002c..0030  const/16  v0, #0x149d
+    0030..0036  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0036..0038  move-result-object  v0
+    0038..003c  check-cast  v0, LX/0ob;
+    003c..0040  iput-object  v0, v1, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A03:LX/0ob;
+    0040..0044  const/16  v0, #0xe47
+    0044..004a  invoke-static  {v0}, LX/00T;->A03(I)Ljava/lang/Object;
+    004a..004c  move-result-object  v0
+    004c..0050  check-cast  v0, LX/0x7;
+    0050..0054  iput-object  v0, v1, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0J:LX/0x7;
+    0054..0058  const/16  v0, #0xa6e
+    0058..005e  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    005e..0060  move-result-object  v0
+    0060..0064  check-cast  v0, LX/FLk;
+    0064..0068  iput-object  v0, v1, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A02:LX/FLk;
+    0068..006c  const/16  v0, #0xe9b
+    006c..0072  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0072..0074  move-result-object  v0
+    0074..0078  check-cast  v0, LX/Dto;
+    0078..007c  iput-object  v0, v1, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A09:LX/Dto;
+    007c..0080  const/16  v0, #0xea5
+    0080..0086  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0086..0088  move-result-object  v0
+    0088..008c  check-cast  v0, LX/1uS;
+    008c..0090  iput-object  v0, v1, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0A:LX/1uS;
+    0090..0094  const/16  v0, #0x4286
+    0094..009a  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    009a..009c  move-result-object  v0
+    009c..00a0  check-cast  v0, LX/1ti;
+    00a0..00a4  iput-object  v0, v1, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0D:LX/1ti;
+    00a4..00a8  const/16  v0, #0x429f
+    00a8..00ae  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    00ae..00b0  move-result-object  v0
+    00b0..00b4  check-cast  v0, LX/ExJ;
+    00b4..00b8  iput-object  v0, v1, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0K:LX/ExJ;
+    00b8..00bc  const/16  v0, #0xe08
+    00bc..00c2  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    00c2..00c4  move-result-object  v0
+    00c4..00c8  check-cast  v0, LX/F2k;
+    00c8..00cc  iput-object  v0, v1, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0I:LX/F2k;
+    00cc..00d0  const/16  v0, #0x41c
+    00d0..00d6  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    00d6..00d8  move-result-object  v0
+    00d8..00dc  check-cast  v0, LX/0fd;
+    00dc..00e0  iput-object  v0, v1, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0B:LX/0fd;
+    00e0..00e4  const/16  v0, #0xa0b
+    00e4..00ea  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    00ea..00ec  move-result-object  v0
+    00ec..00f0  check-cast  v0, LX/0g3;
+    00f0..00f4  iput-object  v0, v1, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A01:LX/0g3;
+    00f4..00f8  const/16  v0, #0xa0f
+    00f8..00fe  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    00fe..0100  move-result-object  v0
+    0100..0104  check-cast  v0, LX/0jD;
+    0104..0108  iput-object  v0, v1, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A00:LX/0jD;
+    0108..010e  invoke-static  {}, LX/2L9;->A0Z()LX/09F;
+    010e..0110  move-result-object  v0
+    0110..0114  iput-object  v0, v1, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A05:LX/09F;
+    0114..0118  const/16  v0, #0xec6
+    0118..011e  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    011e..0120  move-result-object  v0
+    0120..0124  check-cast  v0, LX/0cM;
+    0124..0128  iput-object  v0, v1, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A07:LX/0cM;
+    0128..012a  const/4  v0, #0x5
+    012a..0130  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0130..0132  move-result-object  v0
+    0132..0136  check-cast  v0, LX/00X;
+    0136..013a  iput-object  v0, v1, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0C:LX/00X;
+    013a..0140  invoke-static  {}, LX/6oe;->A0n()LX/0fW;
+    0140..0142  move-result-object  v0
+    0142..0146  iput-object  v0, v1, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A06:LX/0fW;
+    0146..014c  invoke-static  {}, LX/2LA;->A0V()LX/08Z;
+    014c..014e  move-result-object  v0
+    014e..0152  iput-object  v0, v1, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0H:LX/08Z;
+    0152..0156  iget-boolean  v0, v1, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->waitingForCanonicalAck:Z
+    0156..015a  if-eqz  v0, +0x5
+    015a..0160  invoke-direct  {v1}, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A01()V
+    0160..0162  return-void
+    # exception table: 0 try range(s)
+.end method

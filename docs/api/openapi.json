@@ -18172,5 +18172,13 @@
     "x-library": [],
     "description": "Pinned static research with reproducible xtask exports: status sender/remote/baseid key, participant-null phash reconciliation followed by saved-row lookup, exact state enum/predicates, backend-specificDyI updates and SQL state reread. Native SENT alone is not a once-only guarantee; state4 in this enum does not explain17f scheduled state. Timestamp helper agrees with existing Java-long/default0/wrapping-times1000 parser. Repair producers, complete writer/flags/callback ownership, multipart/scheduled operations remain unported. No runtime change, live operation, hard hash rejection or replay authority.",
     "evidence": "docs/protocol/message-ack.md#status-persistence-has-state-and-key-authority-beyond-ack-parsing-2026-11-06"
+  },
+  "x-status-phash-repair-job-research": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Pinned static xtask research identifies status phash repair producer, selected recipients/original key/expiry, SyncDeviceAndResendStatusJob sync and saved-row admission, lower send-builder boundary and canonical ACK wait ownership by row/part plus callbacks/deadline. ExJ separately submitsDra through0NX. Exception reason names, DCC predicate, exact wait-key/callback/sync/sender authority remain unported. No runtime change, inferred telemetry endpoint, generic retry, live operation or replay authority.",
+    "evidence": "docs/protocol/message-ack.md#status-hash-repair-queues-a-guarded-sync-and-resend-job-2026-11-06"
   }
 }

@@ -987,3 +987,28 @@ Existing Java-oracle and status edit-admission regressions cover Rust behavior;
 no native DB test or complete parity claim. This research chunk changes no Rust
 settlement, replay, callback or account behavior. Next authority gaps are repair
 producers, DB writer/flags, multipart ownership and scheduled operations.
+
+
+## Status hash repair queues a guarded sync-and-resend job (2026-11-06)
+
+**Confirmed selected pinned static / research / unknown authority.**
+[CompleteEcN/ExJ producers, report boundary, SyncDeviceAndResendStatusJob andFLk](apk/2.26.43.72-status-phash-repair-job/README.md)
+resolve the previous repair-producer gap: hash mismatch can enqueue a job with
+original status key, selected users, saved timing and operation-dependent
+admission. It is more than cache refresh. Revoke has aDCC original-key predicate;
+normal expiration is producerclock+1hour. Positive job expiry uses strictgreater
+comparison. The job syncs devices, reloads the saved row and reaches lower send
+builders under additional recipient/operation checks.
+
+The job also owns canonical ACK wait state: row/part-keyed listener, owner object,
+retained callback/deadline runnable and cleanup. A specific build exception
+switches it into that wait rather than naive repeated sending. Another exception
+reason refuses retry. Symbolic reason names, callbacks, key equality, full sync/
+send admission and writer authority remain untraced. ExJ submitsDra through0NX;
+no specific telemetry request/endpoint is inferred.
+
+This research chunk changes no Rust runtime. Existing reservation, once-only
+fact and no-replay rules stay intact; native conditional resend is not authority
+for a generic retry. Next work: DCC/reason enum/Fef/1uS wait ownership and actual
+sync/sender construction. Existing status edit/diversion regressions remain
+local controls, not tests of the unported native job. No live operations.

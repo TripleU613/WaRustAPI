@@ -1,0 +1,107 @@
+
+# class: LX/EcN;
+# extends: Ljava/lang/Object;
+
+.method public A00(VLZ)  # .registers 12
+    # full signature: LX/EcN;->A00(LX/Dwc;Z)V
+    0000..0002  const/4  v3, #0x0
+    0002..0006  const/16  v1, #0x4e3
+    0006..000a  iget-object  v0, v9, LX/EcN;->A04:LX/05a;
+    000a..0010  invoke-static  {v0, v1}, LX/2LA;->A0G(LX/05a;I)LX/05a;
+    0010..0012  move-result-object  v2
+    0012..0016  iget-object  v0, v9, LX/EcN;->A02:LX/05a;
+    0016..001c  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    001c..001e  move-result-object  v0
+    001e..0022  check-cast  v0, LX/Dto;
+    0022..0028  invoke-virtual  {v0, v10}, LX/Dto;->A0H(LX/Dwc;)Ljava/util/HashSet;
+    0028..002a  move-result-object  v1
+    002a..002e  iget-object  v0, v9, LX/EcN;->A01:LX/05a;
+    002e..0034  invoke-static  {v0}, LX/2L9;->A0b(LX/05a;)LX/09F;
+    0034..0036  move-result-object  v0
+    0036..003c  invoke-interface  {v0}, LX/09F;->Aui()LX/0EM;
+    003c..003e  move-result-object  v0
+    003e..0042  if-eqz  v0, +0x5
+    0042..0048  invoke-virtual  {v1, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0048..004e  invoke-static  {v2}, LX/8t3;->A0N(LX/05a;)LX/0GO;
+    004e..0050  move-result-object  v0
+    0050..0056  invoke-static  {v0, v1}, LX/0Dn;->A0F(LX/0GO;Ljava/util/Set;)Ljava/util/Set;
+    0056..0058  move-result-object  v1
+    0058..005c  iget-object  v0, v9, LX/EcN;->A00:LX/05a;
+    005c..0062  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0062..0064  move-result-object  v6
+    0064..0068  check-cast  v6, LX/0yD;
+    0068..006c  new-array  v0, v3, [Lcom/whatsapp/infra/core/jid/UserJid;
+    006c..0072  invoke-interface  {v1, v0}, Ljava/util/Set;->toArray([Ljava/lang/Object;)[Ljava/lang/Object;
+    0072..0074  move-result-object  v5
+    0074..0078  check-cast  v5, [Lcom/whatsapp/infra/core/jid/UserJid;
+    0078..007c  if-eqz  v11, +0x75
+    007c..0080  const-wide/16  v2, #0x0
+    0080..0082  const/4  v0, #0x1
+    0082..0088  invoke-static  {v5, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0088..008a  array-length  v8, v5
+    008a..008e  if-nez  v8, +0x8
+    008e..0092  const-string  v0, "DeviceSyncManager/empty recipients for "
+    0092..0098  invoke-static  {v0, v10}, LX/3q7;->A1W(Ljava/lang/String;Ljava/lang/Object;)V
+    0098..009a  return-void
+    009a..009e  iget-object  v0, v6, LX/0yD;->A03:LX/05a;
+    009e..00a4  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    00a4..00a6  move-result-object  v1
+    00a6..00aa  check-cast  v1, LX/DCC;
+    00aa..00ae  iget-object  v0, v10, LX/F1A;->A01:LX/1dW;
+    00ae..00b4  invoke-virtual  {v1, v0}, LX/DCC;->A01(LX/1dW;)Z
+    00b4..00b6  move-result  v0
+    00b6..00ba  if-eqz  v0, -0xf
+    00ba..00c0  invoke-static  {}, LX/2L6;->A1F()Ljava/util/HashSet;
+    00c0..00c2  move-result-object  v7
+    00c2..00c4  const/4  v4, #0x0
+    00c4..00c8  aget-object  v1, v5, v4
+    00c8..00cc  const-string  v0, "invalid jid"
+    00cc..00d2  invoke-static  {v1, v0}, LX/00L;->A06(Ljava/lang/Object;Ljava/lang/String;)V
+    00d2..00d8  invoke-virtual  {v7, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    00d8..00dc  add-int/lit8  v4, v4, #0x1
+    00dc..00e0  if-lt  v4, v8, -0xc
+    00e0..00e4  iget-object  v0, v6, LX/0yD;->A06:LX/05a;
+    00e4..00ea  invoke-static  {v0}, LX/DBe;->A0l(LX/05a;)LX/0fW;
+    00ea..00ec  move-result-object  v5
+    00ec..00f0  iget-object  v0, v6, LX/0yD;->A04:LX/05a;
+    00f0..00f6  invoke-static  {v0}, LX/2LE;->A02(LX/05a;)J
+    00f6..00f8  move-result-wide  v0
+    00f8..00fe  invoke-static  {}, LX/DCZ;->A00()LX/DCZ;
+    00fe..0100  move-result-object  v4
+    0100..0106  invoke-static  {v4}, LX/DCZ;->A01(LX/DCZ;)Lorg/whispersystems/jobqueue/JobParameters;
+    0106..0108  move-result-object  v6
+    0108..010c  new-instance  v4, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;
+    010c..0112  invoke-direct  {v4, v6}, Lorg/whispersystems/jobqueue/Job;-><init>(Lorg/whispersystems/jobqueue/JobParameters;)V
+    0112..0116  iput-object  v10, v4, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A08:LX/Dwc;
+    0116..011a  iput-object  v7, v4, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0E:Ljava/util/Set;
+    011a..011e  iput-wide  v2, v4, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->expirationMs:J
+    011e..0122  iput-wide  v0, v4, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->startTimeMs:J
+    0122..0126  iget-object  v0, v10, LX/Dwc;->A02:Ljava/lang/String;
+    0126..012a  iput-object  v0, v4, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->statusUUID:Ljava/lang/String;
+    012a..012e  iget-object  v0, v10, LX/Dwc;->A00:LX/0DY;
+    012e..0134  invoke-virtual  {v0}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+    0134..0136  move-result-object  v0
+    0136..013a  iput-object  v0, v4, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->remoteChatJid:Ljava/lang/String;
+    013a..013e  iget-object  v0, v4, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->A0E:Ljava/util/Set;
+    013e..0144  invoke-static  {v0}, LX/1Xl;->A19(Ljava/lang/Iterable;)Ljava/util/ArrayList;
+    0144..0146  move-result-object  v2
+    0146..014c  invoke-interface  {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    014c..014e  move-result-object  v1
+    014e..0154  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    0154..0156  move-result  v0
+    0156..015a  if-eqz  v0, +0x11
+    015a..0160  invoke-static  {v2, v1}, LX/2LE;->A1H(Ljava/util/AbstractCollection;Ljava/util/Iterator;)V
+    0160..0162  goto  -0x9
+    0162..0166  iget-object  v0, v9, LX/EcN;->A03:LX/05a;
+    0166..016c  invoke-static  {v0}, LX/2LE;->A02(LX/05a;)J
+    016c..016e  move-result-wide  v2
+    016e..0174  const-wide/32  v0, #0x36ee80
+    0174..0176  add-long/2addr  v2, v0
+    0176..0178  goto  -0x7b
+    0178..017e  invoke-static  {v2}, LX/6og;->A1b(Ljava/util/List;)[Ljava/lang/String;
+    017e..0180  move-result-object  v0
+    0180..0184  iput-object  v0, v4, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendStatusJob;->rawUserJids:[Ljava/lang/String;
+    0184..018a  invoke-virtual  {v5, v4}, LX/0fW;->A01(Lorg/whispersystems/jobqueue/Job;)V
+    018a..018c  return-void
+    # exception table: 0 try range(s)
+.end method
