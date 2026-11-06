@@ -1,0 +1,46 @@
+{
+  "README.md": {
+    "bytes": 5930,
+    "sha256": "7dcd4e9c55a6707b6e5f34c8304a4e0e12ee5fdff9bbaa31b791bed971a7d8a8"
+  },
+  "huc.txt": {
+    "bytes": 3351,
+    "sha256": "dfd98f6a12ac7b1bde555beda6ef0241bb3f907b918cd13075db87c0c5057a32"
+  },
+  "limiting.txt": {
+    "bytes": 658,
+    "sha256": "90459257818908976b591d99d6d94aa51d9d0e416934e274056e670a1e74f754"
+  },
+  "mns-arguments.txt": {
+    "bytes": 333,
+    "sha256": "3a921bba476a10a8e4dad7022ed70934c25c66661ef0e519289a2d5d092500d8"
+  },
+  "mns-frame-helper.txt": {
+    "bytes": 285,
+    "sha256": "eb048155094bc15647dba822179849e27b313c844f764c04af371c0f0a5f5462"
+  },
+  "mns.txt": {
+    "bytes": 2059,
+    "sha256": "1f7fa1dd71f25fbeec3a0a782298af017e23a5d667628c67d838d1abc8cee616"
+  },
+  "native-strings.txt": {
+    "bytes": 2095,
+    "sha256": "92eb3832222e012c53611107998081af08ea446bc3584fcdf0216dee8a9efab1"
+  },
+  "native-symbols.txt": {
+    "bytes": 490,
+    "sha256": "1f8b5f522d0f186027c08a125c509b5aa9f4300cfe27fea1814ba4871ba31f9b"
+  },
+  "resolve-vtables.py": {
+    "bytes": 1788,
+    "sha256": "7b323dcf4c3296645a812871c4ba6fda1f729710d28009a784c83160903072a6"
+  },
+  "vtables.json": {
+    "bytes": 2663,
+    "sha256": "8295893a8e71b8b24f7817e06a363cc6bc2591050664757d3ff84435fd4f605c"
+  },
+  "wrapper-construction.txt": {
+    "bytes": 4628,
+    "sha256": "fde3a63841af57d18084218bbf4a64eda9626d3474db3b8ce10a7dbe5a4c37f3"
+  }
+}

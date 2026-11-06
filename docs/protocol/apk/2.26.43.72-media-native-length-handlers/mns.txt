@@ -1,0 +1,38 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000050edfc <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv>:
+  517bc8:      	paciasp
+  517bcc:      	sub	sp, sp, #0x50
+  517bd0:      	stp	x29, x30, [sp, #0x20]
+  517bd4:      	str	x21, [sp, #0x30]
+  517bd8:      	stp	x20, x19, [sp, #0x40]
+  517bdc:      	add	x29, sp, #0x20
+  517be0:      	bl	0x727afc <MCFSetGetCount+0x3a44>
+  517be4:      	add	x0, sp, #0x8
+  517be8:      	add	x1, x8, #0x28
+  517bec:      	bl	0x72a0dc <MCFSetGetCount+0x6024>
+  517bf0:      	bl	0x5573c8 <_ZN8crossapp9tigonhttp3mns13TCPConnection6createENSt6__ndk110shared_ptrINS1_9EventLoopEEEPNS1_22TCPConnectionCallbacksENS1_11TCPSettingsE+0xb60>
+  517bf4:      	ldr	x21, [sp, #0x8]
+  517bf8:      	cbz	x21, 0x517c10 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x8e14>
+  517bfc:      	add	x0, x21, #0x290
+  517c00:      	bl	0x734fc0 <_ZNSt6__ndk15mutex4lockEv@plt>
+  517c04:      	add	x0, x21, #0x290
+  517c08:      	str	x19, [x21, #0x320]
+  517c0c:      	bl	0x734fd0 <_ZNSt6__ndk15mutex6unlockEv@plt>
+  517c10:      	bl	0x724e78 <MCFSetGetCount+0xdc0>
+  517c14:      	b.ne	0x517c44 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x8e48>
+  517c18:      	bl	0x2dba20 <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0xdb44>
+  517c1c:      	ldp	x29, x30, [sp, #0x20]
+  517c20:      	add	sp, sp, #0x50
+  517c24:      	autiasp
+  517c28:      	b	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  517c2c:      	bl	0x725ec4 <MCFSetGetCount+0x1e0c>
+  517c30:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  517c34:      	bl	0x725e44 <MCFSetGetCount+0x1d8c>
+  517c38:      	b.ne	0x517c44 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x8e48>
+  517c3c:      	mov	x0, x19
+  517c40:      	bl	0x7373e0 <__wrap__Unwind_Resume@plt>
+  517c44:      	bl	0x7378f0 <__stack_chk_fail@plt>

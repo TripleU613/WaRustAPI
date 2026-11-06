@@ -1,3 +1,10 @@
+2026-11-06 — **Conditional native upload length handlers identified.**
+
+RTTI/vtable checks resolve limiting/MNS/HUC slot0x30 candidates. Limiting forwards
+unchanged; selected MNS owner stores length under mutex. [Evidence and dynamic
+binding limits](docs/protocol/media-network-outcomes.md#native-length-handler-candidates-resolved-2026-11-06).
+No Rust behavior change or live traffic.
+
 2026-11-06 — **Upload body provider traced to native length forwarding.**
 
 Declared length reporting is separate from callback/EOF bytes; selected provider

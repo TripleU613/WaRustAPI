@@ -1,0 +1,2 @@
+  1186: 00000000006623c4   260 FUNC    GLOBAL DEFAULT   16 facebook::tigon::TigonBodyProvider::fromVector(std::__ndk1::vector<unsigned char, std::__ndk1::allocator<unsigned char> >&&)
+  1267: 0000000000663488    80 FUNC    GLOBAL DEFAULT   16 facebook::tigon::TigonMultiBufferBodyProvider::TigonMultiBufferBodyProvider(std::__ndk1::vector<std::__ndk1::shared_ptr<facebook::tigon::TigonBuffer const>, std::__ndk1::allocator<std::__ndk1::shared_ptr<facebook::tigon::TigonBuffer const> > >&&)

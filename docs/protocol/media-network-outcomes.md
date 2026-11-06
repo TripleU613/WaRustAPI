@@ -719,3 +719,18 @@ successful Android Evidence. ELF/LLVM inspection continued without executing the
 library. No Rust behavior change: declared length is not proof of body truncation,
 server acceptance or authority to replay. Next resolve native slot0x30/length
 handling and effective0x666; no live operation.
+
+## Native length-handler candidates resolved 2026-11-06
+
+**Confirmed selected static:** RTTI/relocations identify primary slot0x30 entries
+for TigonLimitingBodyStream, mns::TigonMNSBodyStream and TigonHucBodyStream in the
+verified reconstructed ARM64 library. Limiting entry forwards length unchanged
+to its wrapped stream. MNS normal nonnull-owner path stores the supplied length
+atowner+0x320 under mutex+0x290. This resolves conditional implementations of the
+previous JNI boundary, not actual stream selection or final wire length.
+[Resolver with executable-pointer checks, hashed assembly and exclusions](apk/2.26.43.72-media-native-length-handlers/README.md).
+
+HUC downstream target, limiting-wrapper gate, dynamic object binding and MNS
+stored-field consumers remain unknown. A class named Limiting does not itself
+prove length truncation. No Rust behavior change, replay or live traffic. Next:
+trace MNS+0x320 consumers or prove the actual stream implementation.
