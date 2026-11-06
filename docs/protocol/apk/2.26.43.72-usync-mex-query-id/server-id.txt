@@ -1,0 +1,22 @@
+
+# class: LX/0im;
+# extends: Ljava/lang/Object;
+
+.method public CRh(LL)  # .registers 4
+    # full signature: LX/0im;->CRh(Ljava/lang/String;)Ljava/lang/String;
+    0000..0004  iget-object  v0, v2, LX/0im;->A02:LX/00p;
+    0004..000a  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    000a..000c  move-result-object  v0
+    000c..0010  check-cast  v0, Lorg/json/JSONObject;
+    0010..0016  invoke-virtual  {v0, v3}, Lorg/json/JSONObject;->getJSONObject(Ljava/lang/String;)Lorg/json/JSONObject;
+    0016..0018  move-result-object  v1
+    0018..001c  const-string  v0, "doc_id"
+    001c..0022  invoke-virtual  {v1, v0}, Lorg/json/JSONObject;->getString(Ljava/lang/String;)Ljava/lang/String;
+    0022..0024  move-result-object  v0
+    0024..0026  return-object  v0
+    0026..002a  const-string  v0, ""
+    002a..002c  return-object  v0
+    # exception table: 1 try range(s)
+    # catch Lorg/json/JSONException; code_units 0000..0013 -> 0013
+    # catch Ljava/io/IOException; code_units 0000..0013 -> 0013
+.end method

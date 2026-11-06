@@ -17639,5 +17639,12 @@
     "x-live": false,
     "description": "Research-only current APK shared wrapper comparison matches selected existing Rust MEX envelope fields. Group-specific query ID/schema and live acceptance remain unverified. Native string-bound assertions do not imply normal false-return rejection. No runtime capability changed.",
     "evidence": "docs/protocol/mex.md#current-mex-request-envelope-comparison-2026-11-06"
+},
+  "x-usync-mex-query-id-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Research-only pinned APK43.72 UsyncQuery/whatsapp-android-mex CRh resolver and exact packaged server doc_id38635300486116501, distinct from client_doc_id. Effective runtime registry/Pando selection, variables/gates and server acceptance remain incomplete. No lookup/preflight/API added.",
+    "evidence": "docs/protocol/bulk-prekey-refresh.md#missing-lid-usyncquery-server-id-2026-11-06"
 }
 }

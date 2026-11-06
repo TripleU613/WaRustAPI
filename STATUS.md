@@ -1,3 +1,5 @@
+Pinned UsyncQuery server doc_id now recovered with exact asset and normal resolver chain; client_doc_id remains a distinct value. [Pinned server ID versus client ID, exact asset and resolver scope](docs/protocol/bulk-prekey-refresh.md#missing-lid-usyncquery-server-id-2026-11-06). Research only; no runtime lookup added.
+
 Current APK shared MEX request wrapper matches the existing Rust envelope in the selected fields; query-specific parity remains incomplete. [Current shared-envelope comparison and assertion limits](docs/protocol/mex.md#current-mex-request-envelope-comparison-2026-11-06). Research only.
 
 Pinned MEX server equality narrowed: request-to and exact s.whatsapp.net text resolve to0mL; user/server/type determine inherited equality. [Concrete server equality, diagnostic-only compliance check and remaining decoder limits](docs/protocol/mex.md#selected-mex-server-jid-equality-2026-11-06). Research only; binary/general aliases remain unverified.

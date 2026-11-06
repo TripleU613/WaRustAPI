@@ -203,3 +203,9 @@ A00 waits using inherited FfK.get() without a timeout for this null-timeout call
 **Confirmed static:** [registry expiry/runnable and concrete MEX failure chain](apk/2.26.43.72-prekey-lid-mex-iq-expiry/README.md) link0mb/0md to0mZ.BL6. The selected registry expiry removes ownership under lock before scheduling BsS. That callback creates typed local transport mex-delivery-failure471; its LIM classification reaches the MEX exceptional FfK.BsR path. This differs from request-refusal BsT(null), and does not establish a server471 response or retry permission. Both IQ outer callback methods share a typed body parser; outer result/error alone does not determine final model success.
 
 **Unknown / unported:** full response constructors/adoption, queued/concurrent callback timing, fallback late-reply effects, Pando expiry/cancellation and reconnect authority. Removal-before-delivery is confirmed; universal late-reply suppression is not. No Rust runtime change or live operation.
+
+## Missing-LID UsyncQuery server ID (2026-11-06)
+
+**Confirmed static APK43.72:** [exact asset, selected entry and constructor/registry/loader chain](apk/2.26.43.72-usync-mex-query-id/README.md) resolve UsyncQuery in whatsapp-android-mex throughCRh to packaged server doc_id38635300486116501. The longer client_doc_id407762649418300062941108847678 is separate. Exact decimal preservation matters because the server ID exceeds2^53. This narrows the prior query-identifier gap for the selected non-Pando resolver; fallback/unregistered config returns no usable server ID.
+
+**Unknown / unported:** effective runtime registry/Pando choice, remote acceptance, complete variables/gates and authenticated mapping adoption. No Rust MEX lookup/preflight or live operation added; this is pinned evidence, not a timeless ID.

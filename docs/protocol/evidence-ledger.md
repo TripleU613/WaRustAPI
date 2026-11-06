@@ -8202,3 +8202,5 @@ Current43.72 MEX envelope expected values are checked, not defaults: original re
 APK43.72 selected MEX server JID equality and diagnostic-only compliance path retained; no blanket parser rejection or alias policy inferred. [Concrete server equality, diagnostic-only compliance check and remaining decoder limits](mex.md#selected-mex-server-jid-equality-2026-11-06). Offline only.
 
 Current43.72 shared MEX request envelope comparison found no correction justified; native assertion/return semantics retained. [Current shared-envelope comparison and assertion limits](mex.md#current-mex-request-envelope-comparison-2026-11-06). No live operations.
+
+Current43.72 UsyncQuery packaged server ID and resolver chain retained with exact decimal identity; runtime/Pando/adoption remain separate. [Pinned server ID versus client ID, exact asset and resolver scope](bulk-prekey-refresh.md#missing-lid-usyncquery-server-id-2026-11-06). No live operation.

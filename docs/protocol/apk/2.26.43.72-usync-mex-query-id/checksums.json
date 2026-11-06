@@ -1,0 +1,70 @@
+{
+  "README.md": {
+    "bytes": 4771,
+    "sha256": "6b632903844ad276c052a95fd9a1f33f8f80799fc77486bc6b77217d9be6d6a8"
+  },
+  "asset-reader.txt": {
+    "bytes": 2043,
+    "sha256": "d437b24bb7a13cdf85af508910b3c8790ca6f1dbeb9c57025e068945471bc22a"
+  },
+  "config-enum.txt": {
+    "bytes": 4855,
+    "sha256": "60bc2fe9f51acf94c647993e8b32e5e5a136aa7e37237790f29c0ca670fab964"
+  },
+  "config.txt": {
+    "bytes": 1057,
+    "sha256": "c93d83f50b7007138ea3728caca6303b987d24be1aa1292979b92911b5d6bd85"
+  },
+  "factory-init.txt": {
+    "bytes": 3985,
+    "sha256": "d925846a0de7919d503cc4d60eedad4c22925957879f163fc48d4ec1d71ca8d0"
+  },
+  "fallback.txt": {
+    "bytes": 1577,
+    "sha256": "814d79eed62dd312aef56590845c8ff1f9d1e9f2f98c80e08ca86056c408fcdb"
+  },
+  "identity.txt": {
+    "bytes": 3668,
+    "sha256": "81d971c079924305485f324099c4428ec2643eafe68f82e31996f1969787734f"
+  },
+  "loader-init.txt": {
+    "bytes": 1682,
+    "sha256": "dee492ec5d9f6e5455f3d5ba6bd281cd0ba382c4fa133c2cd5619ed0090379a8"
+  },
+  "loader.txt": {
+    "bytes": 1430,
+    "sha256": "9d93cb0042df94b7a2d00afd36479beb4efdb13ee5c366e382474311e5e87485"
+  },
+  "persisted-ids.json": {
+    "bytes": 67366,
+    "sha256": "a30a4b3ce55150747820bbf353e5d2e742fde19e2a11dd3e43b094d7088ae797"
+  },
+  "register-callers.txt": {
+    "bytes": 813,
+    "sha256": "6eeeaae8726466e3b027a8278817349c2e8a55d77383f77f3ae647289de8fe52"
+  },
+  "register.txt": {
+    "bytes": 888,
+    "sha256": "a1018f3447376bb85404e0a365ed34b8633b9df27f47d5bf090b5f92df8bfd11"
+  },
+  "registration-factory.txt": {
+    "bytes": 32985,
+    "sha256": "6be11a728048c9d454fddfe65aa1aaa473674a0e5e2222c01907b2e1fbc1ec63"
+  },
+  "registry-refs.txt": {
+    "bytes": 234,
+    "sha256": "4a39f305c3bf51e398254388f6f58de8a55a683af50025ca8a51f0ec6ec00036"
+  },
+  "resolver.txt": {
+    "bytes": 1787,
+    "sha256": "1f8e0b493b537ed2598f966dc687ddaff2f3e9fada601ac96863f3aefe5e7673"
+  },
+  "selected-entry.json": {
+    "bytes": 466,
+    "sha256": "b21cdb6347a120b491973dd507097bf463df562848f7c63f431bf4455d688442"
+  },
+  "server-id.txt": {
+    "bytes": 1030,
+    "sha256": "d9b97803d74e90f0035f72d5005cc3a35f13ebb2738360af766d681bb5b04454"
+  }
+}

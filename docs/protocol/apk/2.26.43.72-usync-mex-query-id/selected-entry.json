@@ -1,0 +1,13 @@
+{
+  "asset": "assets/whatsapp-android-mex_client_persist_ids.json",
+  "asset_sha256": "a30a4b3ce55150747820bbf353e5d2e742fde19e2a11dd3e43b094d7088ae797",
+  "operation": {
+    "operation_name": "UsyncQuery",
+    "operation_name_hash": "4077626494",
+    "operation_text_hash": "18300062941108847678",
+    "client_doc_id": "407762649418300062941108847678",
+    "doc_id": 38635300486116501,
+    "schema": "whatsapp_mex"
+  },
+  "server_id_decimal": "38635300486116501"
+}
