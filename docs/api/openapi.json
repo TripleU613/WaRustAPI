@@ -17835,5 +17835,12 @@
     "x-live": false,
     "description": "Existing ordinary media GET reserves a local owner ID and requires exact expected reservation before success or HTTP refusal settlement. Changed/missing/settled state refuses without overwriting or returning newly decrypted media. Cached success and old unknown no-retry behavior remain. Shared HTTP no-redirect/no-retry configuration unchanged; no live verification.",
     "evidence": "docs/protocol/media-network-outcomes.md#download-result-reservation-ownership-2026-11-06"
+},
+  "x-shared-upload-account-preflight": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Existing shared upload entry validates config and registered-account/phone match before cached payload reuse, route selection, encryption randomness or reservation. Applies to prepare/prepare_outbox/upload_source; valid cache reuse remains. Bounded file reading/no-media handling precede this boundary; no account lock through HTTP awaits or live verification.",
+    "evidence": "docs/protocol/media-network-outcomes.md#shared-upload-preflight-precedes-cache-and-reservation-2026-11-06"
 }
 }

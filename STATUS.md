@@ -1,3 +1,5 @@
+Shared upload entry now checks config and registered matching account before cache reuse, route selection or persisted randomness/reservation. [Shared upload account/config preflight](docs/protocol/media-network-outcomes.md#shared-upload-preflight-precedes-cache-and-reservation-2026-11-06). Both public entry points have offline positive/refusal controls.
+
 Ordinary media GET success/refusal now require the exact initiating reservation; late results cannot overwrite changed or settled state. [Media GET result reservation ownership](docs/protocol/media-network-outcomes.md#download-result-reservation-ownership-2026-11-06). Shared HTTP client already disables redirects/retries; offline verification only.
 
 Media upload headers/body/protobuf transitions now require exact expected reservation state; independent encrypted HTTP observations survive stale settlement refusal. [Media-upload response reservation ownership](docs/protocol/replay-safety-audit.md#media-upload-response-transitions-retain-reservation-ownership-2026-11-06). Existing one-POST/no-retry behavior retained; offline only.

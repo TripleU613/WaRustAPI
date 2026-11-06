@@ -574,3 +574,31 @@ capture/live operation was performed.
 does not add independent capture of every stale/partial GET body, alter view-once
 consumption or solve all descriptor/session-generation races. No deletion,
 identity rotation or automatic repeat request is introduced.
+
+## Shared upload preflight precedes cache and reservation (2026-11-06)
+
+**Confirmed local omission / fixed offline:** upload_source checked config and
+registered-account/phone matching, but public prepare/prepare_outbox could reach
+upload_prepared without those checks. That common function returned cached success
+before config/account validation and could otherwise reach route selection,
+encryption and saved upload-token randomness with invalid account context.
+
+upload_prepared now validates config and requires a registered account with the
+same phone before cache lookup or any route/randomness/reservation work. Existing
+source-entry checks remain as an earlier boundary. Valid matching accounts can
+still reuse cached upload payloads; no checkpoint is repaired or reset. This is
+a local account/config integrity rule, not a recovered APK registration predicate.
+
+Async offline regression upload_preflight_precedes_cached_success_and_preserves_state_on_refusal
+runs both public entry points against a pre-existing cached success: absent,
+unregistered, phone-mismatched and invalid-zero-timeout contexts refuse without
+checkpoint/journal changes, while a valid registered matching account returns the
+cache unchanged. The older group-cache binding fixture now installs a valid
+account/config, preserving its recipient and explicit-group binding assertions.
+No route or HTTP server exists in these fixtures; no network operation ran.
+
+**Limits:** bounded local file reading can precede this common upload entry;
+no-media input still returns None without creating an upload. This preflight does
+not hold account state across later HTTP awaits or bind every account field to
+upload settlement. The separate response reservation checks remain required.
+No new retry, identity mutation or live operation.
