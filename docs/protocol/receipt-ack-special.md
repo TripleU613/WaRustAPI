@@ -192,3 +192,13 @@ ID-queue completion and specialized receipt state remain distinct. Strict
 Rust receipt correlation is unchanged; no new request, challenge recovery,
 retry, or runtime behavior. APK hash, evidence checksums, links and coverage
 freshness were checked. No Rust tests were rerun for this evidence-only audit.
+
+## Local reservation account authority on settlement (2026-11-06)
+
+**Confirmed Rust correction:** new receipt reservations persist an encrypted
+local account-authority digest and record_ack compares it before changing a
+matching uncertain row. Account/Signal mutation or missing/corrupt legacy
+binding leaves that row uncertain; no received ACK is used to invent missing
+ownership. This is separate from native full-key/ID-map semantics above, and
+is not proof of a socket write or complete callback parity. [Durability,
+compatibility and reopen regression](replay-safety-audit.md#persist-receipt-reservation-authority-through-ack-settlement-2026-11-06).

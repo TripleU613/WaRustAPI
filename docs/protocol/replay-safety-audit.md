@@ -1361,3 +1361,48 @@ to its caller. No new request/response, live account traffic or replay.
 Validation: 1,460 workspace/all-feature tests passed. Strict workspace/all-target/
 all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
 validation, APK coverage freshness and repository hygiene passed. Offline only.
+
+## Persist receipt reservation authority through ACK settlement (2026-11-06)
+
+**Confirmed Rust ownership gap / local correction:** the preceding writer guard
+kept its account digest only in memory. Once a receipt was reserved, record_ack
+could later settle the still-uncertain row using address/id/type/participant
+after its account had changed. A writer rejection alone did not bind a future
+matching ACK to that reservation's original account authority.
+
+New reservations now persist the same account_authority_sha256 as lowercase
+hex on each encrypted receipt-outbox member, atomically with outcome_unknown
+and any batch root id. The frozen member snapshots include this field too.
+record_ack recomputes current authority in its settlement write transaction,
+and requires a matching digest after its existing routing/correlation checks.
+Changed account or Signal identity cannot turn an old matching reservation
+into server_acknowledged or refused. Missing/malformed/different bindings leave
+the row uncertain with a fixed redacted warning. The digest is local encrypted
+metadata, not a native stanza field, server attestation or public CLI output.
+This follow-up supersedes the preceding connection-local-only storage boundary.
+
+Historical outcome_unknown rows without a binding are deliberately not assigned
+one on reception, migrated or released. Existing acknowledged/refused history
+is unchanged. Pending rows acquire their reservation-time binding when reserved;
+this does not authenticate their earlier creation owner. The low-level Node
+reservation wrapper also uses this reservation path.
+
+The new reopen regression covers 44 cases: direct/group two-member batches,
+success/refusal ACKs and unchanged/observation/removed/generation/JID/revoked/
+registration-id/public/private/legacy/corrupt-owner conditions. It reserves under
+the original account, changes account or binding, reopens the encrypted store,
+checks exact terminal/unknown status, duplicate refusal, no check-side writes
+on rejected settlement and no re-reservation. The existing writer matrix still
+checks the same digest's field scope and benign credentials/time updates.
+
+Limits: account authority is one necessary condition, not proof of actual
+socket write or original callback ownership. Full row-replacement/same-ID owner
+binding and historical queue origin remain separate. Batch members are checked
+individually by this existing adapter; this is not a claim that arbitrary
+partially replaced batches are fully authenticated. Noise/channel rotation,
+native recovery and server acceptance remain open. No retry, reset, new request
+or live account operation is added.
+
+Validation: 1,461 workspace/all-feature tests passed. Strict workspace/all-target/
+all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
+validation, APK coverage freshness and repository hygiene passed. Offline only.

@@ -900,6 +900,8 @@ pub fn reserve_pending_owned(store: &ProtocolStore) -> Result<Vec<ReservedReceip
             let mut automatic_direct_read = false;
             for (key, mut row) in reserved {
                 row["status"] = serde_json::json!("outcome_unknown");
+                // Local reservation owner, not a native stanza/key field.
+                row["account_authority_sha256"] = serde_json::json!(hex::encode(account_authority));
                 if batched {
                     row["batch_ack_id"] =
                         serde_json::json!(node.get_attr("id").unwrap().as_text().unwrap());
@@ -929,7 +931,9 @@ pub fn reserve_pending_owned(store: &ProtocolStore) -> Result<Vec<ReservedReceip
 /// Correlate an explicit receipt ACK by recipient, ID and type, not ID alone.
 /// Direct and group receipts retain their exact participant presence. APK
 /// 37.71 1Qy.A02 -> CSu.A00 -> Cb1.equals distinguishes nullable participants;
-/// recipient/edit routes remain unsupported by this queue.
+/// recipient/edit routes remain unsupported by this queue. Settlement also
+/// requires the reservation's persisted local account authority to match.
+/// Legacy uncertain rows without that binding remain uncertain, never replayed.
 pub fn record_ack(store: &ProtocolStore, node: &Node) -> Result<bool> {
     if !super::messaging::ack_error_is_valid(node) {
         if node.description == "ack"
@@ -956,6 +960,8 @@ pub fn record_ack(store: &ProtocolStore, node: &Node) -> Result<bool> {
         return Ok(false);
     }
     store.write(|tx| {
+        let account = crate::session::AccountRecord::load_in_write(tx)?;
+        let account_authority = hex::encode(receipt_account_authority(tx.generation(), account.as_ref())?);
         let mut cursor = None;
         let mut matched = false;
         loop {
@@ -997,6 +1003,10 @@ pub fn record_ack(store: &ProtocolStore, node: &Node) -> Result<bool> {
                             || jid(&sent, "participant").map(logical_address)
                                 != jid(node, "participant").map(logical_address)))
                 {
+                    continue;
+                }
+                if row["account_authority_sha256"].as_str() != Some(account_authority.as_str()) {
+                    tracing::warn!(target: "whatsapp_api::receipts", "receipt ACK has no matching reservation account authority; uncertainty retained");
                     continue;
                 }
                 row["status"] = serde_json::json!(if node.get_attr("error").is_some() {
@@ -3071,6 +3081,141 @@ mod tests {
                     before
                 );
                 assert_eq!(reopened.journal_head().unwrap(), head);
+            }
+        }
+    }
+
+    #[test]
+    fn receipt_ack_keeps_account_bound_reservations_uncertain_after_reopen() {
+        for group in [false, true] {
+            for refused in [false, true] {
+                for change in [
+                    "same",
+                    "observation",
+                    "missing",
+                    "generation",
+                    "jid",
+                    "registration",
+                    "regid",
+                    "public",
+                    "private",
+                    "legacy",
+                    "corrupt",
+                ] {
+                    let dir = tempfile::tempdir().unwrap();
+                    let path = dir.path().join("receipt-ack-account.redb");
+                    let db = open(&path, true);
+                    let account = crate::session::AccountRecord {
+                        generation: db.generation(),
+                        registration: crate::session::RegistrationStatus::Registered,
+                        signal_registration_id: Some(31),
+                        signal_identity: Some(crate::session::SignalIdentityKey(
+                            crate::session::KeyMaterial {
+                                public: [1; 32],
+                                private: [2; 32],
+                            },
+                        )),
+                        ..Default::default()
+                    };
+                    db.write(|tx| account.save(tx)).unwrap();
+                    for id in ["bound-first", "bound-last"] {
+                        let incoming = automatic_text_fixture(&db, id, group);
+                        queue_read_for_incoming(&db, &incoming).unwrap();
+                    }
+                    let reserved = reserve_pending_owned(&db).unwrap();
+                    assert_eq!(reserved.len(), 1);
+                    let node = reserved[0].node();
+                    let mut ack = Node::new("ack")
+                        .attr("class", "receipt")
+                        .attr("id", node.get_attr("id").unwrap().clone())
+                        .attr("from", node.get_attr("to").unwrap().clone());
+                    for name in ["type", "participant"] {
+                        if let Some(value) = node.get_attr(name) {
+                            ack = ack.attr(name, value.clone());
+                        }
+                    }
+                    if refused {
+                        ack = ack.attr("error", "500");
+                    }
+                    db.write(|tx| {
+                        if matches!(change, "legacy" | "corrupt") {
+                            for (key, _) in tx
+                                .scan(Table::Checkpoints, 1, 100)?
+                                .into_iter()
+                                .filter(|(k, _)| k.starts_with(b"receipt-outbox:"))
+                            {
+                                let mut row: serde_json::Value =
+                                    tx.get_json(Table::Checkpoints, &key, 1)?.unwrap();
+                                if change == "legacy" {
+                                    row.as_object_mut()
+                                        .unwrap()
+                                        .remove("account_authority_sha256");
+                                } else {
+                                    row["account_authority_sha256"] = "bad-owner".into();
+                                }
+                                tx.put_json(Table::Checkpoints, &key, 1, &row)?;
+                            }
+                            return Ok(());
+                        }
+                        if change == "missing" {
+                            tx.delete(Table::Account, b"account")?;
+                            return Ok(());
+                        }
+                        let mut current = account.clone();
+                        match change {
+                            "generation" => current.generation.0 += 1,
+                            "jid" => {
+                                current.own_jid =
+                                    Some(Jid::parse("15555550123@s.whatsapp.net").unwrap())
+                            }
+                            "registration" => {
+                                current.registration = crate::session::RegistrationStatus::Revoked
+                            }
+                            "regid" => current.signal_registration_id = Some(32),
+                            "public" => current.signal_identity.as_mut().unwrap().0.public[0] ^= 1,
+                            "private" => {
+                                current.signal_identity.as_mut().unwrap().0.private[0] ^= 1
+                            }
+                            "observation" => {
+                                current.last_authenticated_at =
+                                    Some(crate::model::time::Timestamp(123))
+                            }
+                            _ => {}
+                        }
+                        current.save(tx)
+                    })
+                    .unwrap();
+                    drop(reserved);
+                    drop(db);
+                    let db = open(&path, false);
+                    let before = db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap();
+                    let head = db.journal_head().unwrap();
+                    let accepted = matches!(change, "same" | "observation");
+                    assert_eq!(
+                        record_ack(&db, &ack).unwrap(),
+                        accepted,
+                        "{group}/{refused}/{change}"
+                    );
+                    assert!(!record_ack(&db, &ack).unwrap());
+                    if !accepted {
+                        assert_eq!(
+                            db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap(),
+                            before
+                        );
+                        assert_eq!(db.journal_head().unwrap(), head);
+                    }
+                    let rows = outcomes(&db).unwrap();
+                    assert_eq!(rows.len(), 2);
+                    assert!(rows.iter().all(|row| row.status
+                        == if !accepted {
+                            "outcome_unknown"
+                        } else if refused {
+                            "refused"
+                        } else {
+                            "server_acknowledged"
+                        }));
+                    assert!(reserve_pending_owned(&db).unwrap().is_empty());
+                }
             }
         }
     }
