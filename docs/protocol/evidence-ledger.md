@@ -1,3 +1,10 @@
+2026-11-06 — **Traced current PSA work-before-ACK obligations.**
+Native feature/campaign/revoke branches and one-shot deferred completion exceed
+the existing legacy PSA helper. Corrected universal ACK claims; effective flags,
+worker outcome and durable recovery remain open. Runtime policy unchanged.
+[Branch matrix, retained evidence and next obligations](psa-ack-lifecycle.md).
+No live account operation.
+
 2026-11-06 — **Preserved explicit hosted zero-device text qualification.**
 Raw hosted/hosted.lid zero qualifiers no longer become plain user metadata;
 valid plain/99 and ordinary PN device0 behavior remain. Original text and shared

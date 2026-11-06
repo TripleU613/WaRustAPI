@@ -1,4 +1,11 @@
 {
+  "x-psa-current-work-ack-evidence": {
+    "x-cli": "xtask apk-smali <apk> --class <class> --method <method> --signatures --exceptions; xtask apk-xref <apk> --anchor psa_wakeup",
+    "x-transport": "offline APK evidence; existing legacy notifications::psa_ack policy unchanged",
+    "x-live": false,
+    "description": "APK43.72 psa handler104/19n has feature3536/4200 disabled487 branches, zero-sender1844/revoke work and campaign/message paths. A07(true) transfers ACK ownership;89Y consumes local completion once, while Fd3 ingestion precedes normal plain completion and missing-id throws before it. This refutes universal immediate plain-base-ACK parity for the existing older Rust helper. Effective feature values, enabled worker/error outcomes, durable work/recovery and full ACK correlation remain unresolved. No new ACK/487/hold policy, flag default, ingestion, timer or HTTP route is implemented; no live operation.",
+    "evidence": "docs/protocol/psa-ack-lifecycle.md"
+  },
   "x-hosted-chatstate-text-qualification": {
     "x-cli": "whatsapp-cli lab-transport --receive ephemeral display; xtask apk-smali <apk> --class <class> --method A00 --signatures --exceptions",
     "x-transport": "library presence::parse_chatstate raw-text metadata reader",

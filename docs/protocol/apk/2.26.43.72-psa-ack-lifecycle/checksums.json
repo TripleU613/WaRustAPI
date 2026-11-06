@@ -1,0 +1,30 @@
+{
+  "README.md": {
+    "bytes": 4405,
+    "sha256": "ff3d2c3610c9bdf0bead0c1d007ee5ad4cd7b61a41491251d2e804b67931018f"
+  },
+  "defer.txt": {
+    "bytes": 4237,
+    "sha256": "4e1031bef6abe7c1d3dfc8d273f94a2e248d1139adebd5ee37e68844ba714750"
+  },
+  "handler-init.txt": {
+    "bytes": 6692,
+    "sha256": "f16bd05ec77115cc81652ff13e6b34691839c281828fe322c30210f7ecf10add"
+  },
+  "handler.txt": {
+    "bytes": 12334,
+    "sha256": "3ac2acee433d016cf8b254cf4716b781e8c5a5f4bbcff5cd56190a425788fda3"
+  },
+  "message-worker.txt": {
+    "bytes": 7207,
+    "sha256": "89d2045bad5dde45d968257587279d66d4c7a4a057d14d60acd7b1e321b936a6"
+  },
+  "refusal.txt": {
+    "bytes": 840,
+    "sha256": "4aa5e817e10a1cf2ee7bcda899200c89aa9191431d4797d3798f1c009e05f00b"
+  },
+  "wakeup-xref.txt": {
+    "bytes": 158,
+    "sha256": "11c04030d38ebf1e3a32a8eb7c4d855de85f86e1de0c54bb82ee8779da20296c"
+  }
+}

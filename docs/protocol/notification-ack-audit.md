@@ -46,7 +46,7 @@ current-APK parity for every handler. Most other handler traces are retained
 | `encrypt` prekey counts | `prekeys::low_count_ack` | Pure parse/ACK checks precede work; wire refusals continue without upload or ACK |
 | `mex` | `notifications::mex_ack` | Capture; recognized reach-out lock persists first; other operations remain unapplied |
 | `business`, `disappearing_mode` | respective known-type base ACK helpers | Capture retained; feature application remains partial |
-| `psa` | `notifications::psa_ack` | Plain base ACK, with 487 only for the traced disabled server PSA children |
+| `psa` | `notifications::psa_ack` | Legacy bounded helper; [current deferred work/feature/campaign gap](psa-ack-lifecycle.md) is unresolved. Do not treat capture as native work completion. |
 
 The known-type base shape is `ack` with `id`, `to`, `class=notification`,
 `type`, and optional `participant`. Retained 37.71 `CmG` notification-descriptor
@@ -507,3 +507,14 @@ not evidence that those known findings were globally unresolved. The canonical
 now connects both chains and identifies the actual remaining port gaps. A current
 source search found no client-auth-token maintenance path in transport; unrelated
 HTTP no_client_auth calls are not that protocol. No runtime behavior changed.
+
+## Current PSA deferral gap (2026-11-06)
+
+**Confirmed static / unresolved runtime obligation:** [current PSA branch matrix](psa-ack-lifecycle.md)
+refutes universal plain-base-ACK wording. Handler104/19n transfers ownership
+before feature-gated surfaces/wakeup and other zero-sender work; current1844,
+revoke/campaign and message ingestion branches differ from the Rust helper.
+487 is conditional, and the message worker can throw before normal completion.
+Effective feature settings, worker failures, persistence/recovery and full ACK
+correlation remain required. Runtime ACK policy is unchanged; no guessed flag,
+extra487, blanket hold or fabricated completion was introduced. No live request.

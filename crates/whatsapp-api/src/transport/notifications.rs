@@ -19,12 +19,16 @@ use super::receipts::jid;
 /// `LX/17o` (`PSANotificationHandler`) extends the base notification handler
 /// `0yO`, whose `A01` dispatches to `A09` and then ACKs through `A00` unless
 /// the handler deferred (`A07(true)`), in which case `AAR.A00` ACKs when the
-/// work finishes. Every psa notification is therefore ACKed exactly once.
+/// work finishes. This historical path is not a universal current-build ACK
+/// rule:43.72 has additional deferred feature/campaign/revoke work. See
+/// docs/protocol/psa-ack-lifecycle.md; this helper retains its legacy policy.
 /// `17o.A09` (0000..0104) only inspects children when `from` is
 /// `0@s.whatsapp.net`: a `surfaces` (QP surface) or `psa_wakeup` (push PSA)
 /// child whose feature is off is ACKed by `17o.A03` with the extra attribute
-/// `error="487"`. This client implements neither, which is that branch.
-/// Any other child or sender falls through to the plain base ACK.
+/// `error="487"`. The legacy Rust helper uses that unsupported-feature
+/// response for these payloads; current native effective flags remain unknown.
+/// The legacy Rust helper uses plain ACK for other children/senders; the
+/// complete current native branch matrix and work ownership remain unported.
 /// `Cp2.A05` writes id/to/class/type/participant (see
 /// identity-notification-ack.md). **Observed 2026-11-01:** without this ACK the
 /// server ended the session with `stream:error` echoing

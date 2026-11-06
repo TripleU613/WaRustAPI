@@ -4863,3 +4863,14 @@ aliases, valid99 text, typed AD handling and PN device0 projection remain.
 Original frames/typed inputs, shared JID parsing, hashes and saved identities
 are unchanged. Pre-collapsed typed values and full native text/agent grammar
 remain an open boundary. No ACK, request, state adoption or live operation.
+
+## Current PSA deferral gap (2026-11-06)
+
+**Confirmed static / unresolved runtime obligation:** [current PSA branch matrix](psa-ack-lifecycle.md)
+refutes universal plain-base-ACK wording. Handler104/19n transfers ownership
+before feature-gated surfaces/wakeup and other zero-sender work; current1844,
+revoke/campaign and message ingestion branches differ from the Rust helper.
+487 is conditional, and the message worker can throw before normal completion.
+Effective feature settings, worker failures, persistence/recovery and full ACK
+correlation remain required. Runtime ACK policy is unchanged; no guessed flag,
+extra487, blanket hold or fabricated completion was introduced. No live request.
