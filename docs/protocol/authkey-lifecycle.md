@@ -47,25 +47,37 @@ Only the getter/call-site relationship and explicitly tested storage boundaries
 above are used here. No portable key-rotation code was justified by these bodies
 alone.
 
-## Still needed before a faithful rotation port
+## Current implementation boundary (reconciled 2026-11-06)
 
-- Independently establish raw32-byte public encoding and pair serialization,
-  curve-provider choice and active-key binding used by the actual handshake.
-- Trace request manager331 timeout/delivery outcomes and every caller of the
-  rotation manager, including the lifetime of its reused in-memory candidate.
-- Determine current behavior after lost server results or process restart.
-  Candidate-memory and success-callback bodies alone do not prove whether the
-  server retains the old key or how acceptance can be reconciled. Persisting an
-  unconfirmed candidate as active, or replaying an uncertain IQ, is unjustified.
-- Integrate accepted replacement atomically with Rust account generation and
-  existing registration material. They currently contain separate Noise copies;
-  silently updating only one would cause a later material/account inconsistency.
-- Preserve native attempt/cooldown policy and test stale callbacks, duplicate
-  notification, failed store commit and crash boundaries. Keep existing Signal
-  identity, prekeys and history intact.
+The following selected static traces are already available. Older dated notes
+that leave these exact blocks open are superseded by these sources; this is
+not a claim of runtime acceptance or complete Android parity.
 
-These are specific remaining network/state obligations. They are not evidence
-that a particular historical restriction was caused by missing rotation.
+| Requirement | Evidence available | Remaining implementation/evidence gap |
+| --- | --- | --- |
+| Candidate/public versus stored pair | [Candidate and layout](apk/2.26.43.72-authkey-candidate-storage/README.md) | Concrete Curve25519 backend/randomness and independent wire vectors |
+| Active auth-key connection binding | Getter/connection trace above | Atomic Rust account/material generation update; current Noise copies are separate |
+| Rotation request, gates and outcomes | [Rotation lifecycle](apk/2.26.43.72-authkey-rotation/README.md), [queue/timer/response outcomes](authkey-outcomes.md#queue-acceptance-is-not-server-acceptance) | Wire-to-sent/shutdown generation ownership and uncertainty reconciliation |
+| Password-backed local replacement | [Checked commit/reload](apk/2.26.43.72-authkey-commit-reload/README.md), [concrete provider](apk/2.26.43.72-authkey-provider-binding/README.md) | Other keystore branches and platform crash durability; Android ciphertext format need not be ported |
+| Direct rotation triggers and reused candidate | [Caller/field inventory](apk/2.26.43.72-authkey-rotation-triggers/README.md) | Durable candidate recovery; exact-field inventory is not global absence proof |
+| Conditional token request and result | [Writer](apk/2.26.43.72-client-auth-token-writer/README.md), [correlated reply](apk/2.26.43.72-client-auth-token-reply/README.md) | Complete input authenticity, native JID/runtime behavior and durable token ownership |
+| Token readiness/pending nonce | [Membership](apk/2.26.43.72-client-auth-token-membership/README.md), [nonce flow](apk/2.26.43.72-client-auth-token-nonce-flow/README.md), [failure distinctions](apk/2.26.43.72-client-auth-token-failure/README.md) | Cross-thread/generation ordering and durable recovery |
+| Post-token held traffic | [Challenged-request ownership](apk/2.26.43.72-challenged-request-ownership/README.md) | Durable request-family ownership; selection is not permission to replay Rust reservations |
+
+There is still no Rust rotation or client-auth-token maintenance flow in the
+searched transport source. New state must retain the usable old key plus a
+separate durably owned candidate before publication, distinguish not-sent,
+uncertain, definite refusal and accepted-result/local-install outcomes, and
+coordinate future login material. These are local design requirements, not
+claims that the APK implements a durable journal with these names.
+
+A faithful implementation must resolve what the server accepts after a lost
+result/restart; current static callback and storage evidence does not answer
+that. Do not promote an unconfirmed candidate or resend an uncertain key IQ.
+Native attempt/cooldown distinctions must remain, with stale-callback,
+duplicate-notification, failed-commit and crash regressions. Existing Signal
+identity, prekeys and history are separate and must remain intact. This is an
+unfinished protocol-maintenance lifecycle, not evidence about a past ban.
 
 ## Separate confirmed Rust preflight correction
 

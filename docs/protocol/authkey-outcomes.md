@@ -87,6 +87,15 @@ past account or caused a restriction.
 
 ## Remaining implementation obligations
 
+**Current reconciliation (2026-11-06):** use the [requirement/evidence table](authkey-lifecycle.md#current-implementation-boundary-reconciled-2026-11-06)
+before starting another trace. The later token writer/reply/readiness/failure
+sections below already close selected gaps mentioned in earlier prose.
+Candidate layout and password-backed commit/provider details are now retained
+there too. Lost-result/restart acceptance and atomic Rust login-material
+installation remain unresolved; another export of the same callback is not
+progress on those gaps.
+
+
 Constructor28 and the selected reply converters are now traced; close
 push/connection gating, native JID parsing, wire-to-sent
 promotion, candidate lifetime and lost-result/restart reconciliation. Then

@@ -496,3 +496,14 @@ and crash recovery remain open. No Rust backend, ACK, replay or live operation c
 **Confirmed static APK43.72:** [three direct triggers, token-send side effect and candidate field census](apk/2.26.43.72-authkey-rotation-triggers/README.md) bind rotation to notification, selected connection and token-response paths. The connection Boolean comes from sending ib/cat using a saved client-auth token, not a pure readiness predicate. The token callback stores its parsed bytes before invoking rotation. Exact candidate-field references stay within19i.A00 and support in-process reuse, not durable restart recovery.
 
 **Unknown / unchanged:** complete token response/writer semantics, broader scheduler/connection lifecycle, durable candidate recovery and uncertain-publication policy. No runtime change or live operation.
+
+### Auth-key evidence reconciliation (2026-11-06)
+
+**Confirmed repository audit:** the earlier authkey-outcomes audit already
+retained token writer grammar, correlated result/byte gates, failure/readiness
+and held-request ownership. Recent rotation-trigger notes were bounded exports,
+not evidence that those known findings were globally unresolved. The canonical
+[requirement/evidence table](authkey-lifecycle.md#current-implementation-boundary-reconciled-2026-11-06)
+now connects both chains and identifies the actual remaining port gaps. A current
+source search found no client-auth-token maintenance path in transport; unrelated
+HTTP no_client_auth calls are not that protocol. No runtime behavior changed.

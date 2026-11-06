@@ -34,3 +34,15 @@ target/debug/xtask apk-smali "$APK" --class 'LX/1rj;' --method A05 --signatures 
 target/debug/xtask apk-smali "$APK" --class 'LX/1jA;' --method A00 --signatures --exceptions
 target/debug/xtask apk-smali "$APK" --class 'LX/1jA;' --method A01 --signatures --exceptions
 ```
+
+## Reconciliation with earlier evidence (2026-11-06)
+
+The earlier [canonical outcome audit](../../authkey-outcomes.md) already closes
+selected token writer, correlated reply, readiness/membership, nonce failure and
+held-request dispatch details. The unknowns above describe this export's scope,
+not a claim those blocks were never traced. In particular use the retained
+[reply converter](../2.26.43.72-client-auth-token-reply/README.md) and
+[failure callback](../2.26.43.72-client-auth-token-failure/README.md) rather than
+re-exporting them. Global generation/restart ownership remains unresolved.
+The [current requirements table](../../authkey-lifecycle.md#current-implementation-boundary-reconciled-2026-11-06)
+is the next-work index. No new native behavior is inferred by this correction.
