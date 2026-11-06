@@ -1,3 +1,5 @@
+Retry plaintext retention now refuses conflicting saved bytes; both resend commits recheck the source snapshot used by crypto. Exact repeats remain idempotent, and conflicts preserve state. [Source fidelity and limits](docs/protocol/retry-answers.md#original-retry-plaintext-retention-and-commit-binding-2026-11-06). Offline only.
+
 Retry reservations now recheck registered local account, store generation, address and Signal identity at commit across saved-session, fresh-key query and fresh-bundle paths. Observation-only updates remain allowed. [Account guard and limits](docs/protocol/retry-answers.md#retry-reservations-recheck-local-account-authority-2026-11-06). Offline only.
 
 Live retry-refetch callbacks now retain the written job snapshot; old replies cannot settle a replacement job under the same query ID. Duplicate active IDs refuse without replacing owners. [Mechanism and limits](docs/protocol/retry-answers.md#live-callbacks-retain-the-written-job-2026-11-06). Offline only.

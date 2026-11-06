@@ -50,12 +50,17 @@ pub(crate) fn source_key(wire_id: &str) -> String {
 
 /// Retain the plaintext under the store's at-rest encryption at reservation.
 pub(crate) fn keep_source_in(tx: &mut WriteTx<'_>, wire_id: &str, payload: &[u8]) -> Result<()> {
-    tx.put_json(
-        Table::Checkpoints,
-        source_key(wire_id).as_bytes(),
-        1,
-        &payload,
-    )
+    let key = source_key(wire_id);
+    if let Some(existing) = tx.get_json::<Vec<u8>>(Table::Checkpoints, key.as_bytes(), 1)? {
+        if existing != payload {
+            return Err(Error::invalid(
+                "retry",
+                "original retry source already retained with different bytes",
+            ));
+        }
+        return Ok(());
+    }
+    tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &payload)
 }
 
 fn unanswered(store: &ProtocolStore, key: &str, reason: &str) -> Result<Option<Node>> {
@@ -364,6 +369,7 @@ async fn answer_inner(
     let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(&resend)?;
     store.write(|tx| {
         ensure_retry_account(tx, account)?;
+        ensure_retry_source(tx, wire_id.as_str(), &source)?;
         let mut current = outbox
             .by_wire_id_in_write(tx, &wire_id)?
             .ok_or_else(|| Error::invalid("retry", "original send vanished"))?;
@@ -652,6 +658,7 @@ async fn complete_refetch_inner(
     let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(&resend)?;
     store.write(|tx| {
         ensure_retry_account(tx, account)?;
+        ensure_retry_source(tx, wire_id.as_str(), &source)?;
         ensure_refetch_owned(tx, query, &job)?;
         ensure_retry_peer_unchanged(tx, &peer_key, identity.as_deref(), previous_session.as_deref())?;
         // The consumed job, replacement session and reserved same-ID resend
@@ -702,6 +709,20 @@ fn ensure_original_unchanged(
         return Err(Error::invalid(
             "retry",
             "original expired before retry reservation",
+        ));
+    }
+    Ok(())
+}
+
+// Both retry paths await crypto outside the transaction. The original
+// plaintext is part of that preparation snapshot, just like peer ratchet state.
+fn ensure_retry_source(tx: &WriteTx<'_>, wire_id: &str, expected: &[u8]) -> Result<()> {
+    let current: Option<Vec<u8>> =
+        tx.get_json(Table::Checkpoints, source_key(wire_id).as_bytes(), 1)?;
+    if current.as_deref() != Some(expected) {
+        return Err(Error::invalid(
+            "retry",
+            "original retry source changed before reservation",
         ));
     }
     Ok(())
@@ -906,6 +927,123 @@ mod tests {
         assert!(!original_too_old(Timestamp(1), Timestamp(0)));
         assert!(original_too_old(Timestamp(i64::MIN), Timestamp(i64::MAX)));
         assert!(!original_too_old(Timestamp(i64::MAX), Timestamp(i64::MIN)));
+    }
+
+    #[test]
+    fn retry_source_retention_and_commit_preserve_original_bytes_across_reopen() {
+        for change in ["same", "different", "missing", "malformed"] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("retry-source.redb");
+            let open = || {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: AccountId::new("test").unwrap(),
+                    key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                        [7; 32],
+                    ))),
+                    create: true,
+                })
+                .unwrap()
+            };
+            let store = open();
+            let original = vec![1, 2, 3];
+            store
+                .write(|tx| keep_source_in(tx, "W1", &original))
+                .unwrap();
+            let retained = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            // Exact repetition is idempotent; conflicting producer writes
+            // roll back earlier work in the caller's reservation transaction.
+            store
+                .write(|tx| keep_source_in(tx, "W1", &original))
+                .unwrap();
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                retained
+            );
+            assert!(
+                store
+                    .write(|tx| {
+                        tx.put_json(Table::Checkpoints, b"synthetic-side-effect", 1, &true)?;
+                        keep_source_in(tx, "W1", &[4, 5, 6])
+                    })
+                    .is_err()
+            );
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                retained
+            );
+            // Model an independently changed/deleted/corrupt source after the
+            // retry loaded the original but before its crypto commit.
+            store
+                .write(|tx| match change {
+                    "different" => tx.put_json(
+                        Table::Checkpoints,
+                        source_key("W1").as_bytes(),
+                        1,
+                        &vec![4u8, 5, 6],
+                    ),
+                    "missing" => {
+                        tx.delete(Table::Checkpoints, source_key("W1").as_bytes())?;
+                        Ok(())
+                    }
+                    "malformed" => tx.put_json(
+                        Table::Checkpoints,
+                        source_key("W1").as_bytes(),
+                        1,
+                        &serde_json::json!({"invalid":"fixture"}),
+                    ),
+                    _ => Ok(()),
+                })
+                .unwrap();
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let result = store.write(|tx| {
+                tx.put_json(Table::Checkpoints, b"synthetic-retry-reservation", 1, &true)?;
+                ensure_retry_source(tx, "W1", &original)
+            });
+            if change == "same" {
+                result.unwrap();
+            } else {
+                assert!(result.is_err(), "{change}");
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    before
+                );
+            }
+            if change == "malformed" {
+                assert!(
+                    store
+                        .write(|tx| keep_source_in(tx, "W1", &original))
+                        .is_err()
+                );
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    before
+                );
+            }
+            let after = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            drop(store);
+            let reopened = open();
+            assert_eq!(
+                reopened
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                after
+            );
+        }
     }
 
     #[test]

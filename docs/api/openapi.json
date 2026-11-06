@@ -17870,5 +17870,12 @@
   "x-live": false,
   "description": "Saved-session retry, fresh-key query reservation and fresh-bundle resend require current registered account authority matching cached/store generation, phone/JID, Signal registration ID and both Signal identity components in the reservation transaction. Timestamp/observed-credential updates are allowed. No lock through later writer/socket, full registration-copy check, key rotation, replay or live acceptance claim.",
   "evidence": "docs/protocol/retry-answers.md#retry-reservations-recheck-local-account-authority-2026-11-06"
+},
+  "x-retry-original-source-integrity": {
+  "x-cli": false,
+  "x-transport": true,
+  "x-live": false,
+  "description": "Canonical direct-send retry-source retention creates absent records, accepts identical bytes and refuses conflicting/malformed existing values. Saved-session and fresh-bundle resend commits require the exact source snapshot used for crypto; conflicts roll back reservation/session/outbox writes. No checkpoint repair, socket lock, native storage-format claim, replay or live verification.",
+  "evidence": "docs/protocol/retry-answers.md#original-retry-plaintext-retention-and-commit-binding-2026-11-06"
 }
 }

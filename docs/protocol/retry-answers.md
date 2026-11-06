@@ -500,3 +500,45 @@ wire field, timer, retry/reset policy or live account operation.
 Validation:1,448 workspace/all-feature tests passed. Strict workspace/all-target/
 all-feature Clippy, formatting, CLI reference regeneration, OpenAPI symbol
 validation, APK coverage freshness and repository hygiene passed. Offline only.
+
+## Original retry plaintext retention and commit binding (2026-11-06)
+
+**Confirmed Rust defect fixed offline:** the canonical direct-send reservation
+writer `keep_source_in` previously replaced any saved plaintext under the same
+wire ID. Both retry crypto paths loaded that plaintext before awaiting
+preparation, then checked original outbox and peer/account authority at commit
+without checking the source bytes. A changed source could therefore diverge from
+the plaintext used to prepare the retry, despite those other guards.
+
+Source retention now creates only an absent record, accepts an exact existing
+byte copy without rewriting it, and refuses different bytes or malformed saved
+data. Because this executes inside the direct-send reservation transaction, a
+conflict rolls back earlier writes in that transaction too. No old source is
+silently replaced to make a send proceed.
+
+Saved-session and fresh-bundle resend transactions now require the retained
+source to equal the exact plaintext snapshot used for crypto, before reserving
+the resend or changing the session/outbox. Missing, changed or malformed source
+refuses; the pending refetch remains held on a failed fresh-bundle commit.
+
+**Native reference:** APK2.26.37.71 DNP.run's same-original-message resend
+described above motivates source fidelity. These are local persistence and
+optimistic concurrency corrections, not evidence that native uses this plaintext
+checkpoint format. No new APK trace or live acceptance claim.
+
+Regression: `retry_source_retention_and_commit_preserve_original_bytes_across_reopen`
+covers initial retention, identical repetition, conflicting producer bytes with
+transaction rollback, same/changed/missing/malformed commit-time source, corrupt
+source preservation and store reopen. Existing real-crypto saved-session and
+fresh-bundle workflows continue through the new commit guards as positive
+controls. No network or live account operation.
+
+**Limits:** source bytes are checked within the local transaction, not locked
+through later socket I/O. Unsupported manual writes/deletion of private
+checkpoints are not repaired. This does not port full native message edit,
+revocation, group retry, callback timing or recovery policy, nor authorize a
+second resend after uncertainty.
+
+Validation:1,449 workspace/all-feature tests passed. Strict workspace/all-target/
+all-feature Clippy, formatting, CLI reference regeneration, OpenAPI symbol
+validation, APK coverage freshness and repository hygiene passed. Offline only.
