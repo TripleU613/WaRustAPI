@@ -7383,3 +7383,13 @@ commits the supported change, then writes ACK. Missing/empty ID and unusable
 participant regressions preserve exact snapshot bytes and receive continuity;
 a valid control commits before ACK and survives reopen. Store faults remain
 visible; groups_dirty retains its own path. [Evidence, red/green test and limits](notification-ack-audit.md#validate-group-ack-envelope-before-membership-mutation-2026-11-05).
+
+
+### Public group-change envelope guard (2026-11-05)
+
+**Confirmed local defect/fix:** public groups::apply_change_notification now
+validates the same ACK envelope before store access; direct callers cannot
+bypass the receive actor's prerequisite. Three invalid-envelope regressions
+preserve exact snapshot bytes and journal head. A routing-race fixture gained
+a synthetic notification ID without weakening its assertions. The helper sends
+nothing. [Details and red/green validation](groups.md#public-group-change-admission-matches-receive-2026-11-05).

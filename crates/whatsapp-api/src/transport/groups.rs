@@ -362,10 +362,17 @@ pub fn notification_ack(node: &Node) -> Result<Option<Node>> {
 /// fetched stays absent (group sends fetch membership fresh either way).
 /// Malformed participants are skipped; `false` means nothing was changed.
 /// Not applied: descriptions, settings, linked groups, `create`/`delete`.
+/// Requires the existing notification ACK envelope to be valid before any
+/// store access. This validates locally; it does not send an ACK or capture.
 pub fn apply_change_notification(store: &ProtocolStore, node: &Node) -> Result<bool> {
     if node.description != "notification"
         || node.get_attr("type").and_then(|v| v.as_text()) != Some("w:gp2")
     {
+        return Ok(false);
+    }
+    // Public callers must meet the same control-envelope prerequisite as the
+    // receive actor before changing routing authority. Validation is local.
+    if notification_ack(node)?.is_none() {
         return Ok(false);
     }
     let Some(group) = super::receipts::jid(node, "from").filter(Jid::is_group) else {
@@ -1685,6 +1692,30 @@ mod tests {
         store
             .write(|tx| tx.put_json(Table::Checkpoints, key(group).as_bytes(), 1, &snapshot))
             .unwrap();
+        let saved_before = store
+            .read(|tx| tx.get(Table::Checkpoints, key(group).as_bytes(), 1))
+            .unwrap();
+        let journal_before = store.journal_head().unwrap();
+        let missing_id = Node::new("notification")
+            .attr("from", Jid::parse(group).unwrap())
+            .attr("type", "w:gp2")
+            .children(vec![Node::new("add").children(vec![part(b)])]);
+        for refused in [
+            missing_id.clone(),
+            missing_id.clone().attr("id", ""),
+            missing_id
+                .attr("id", "BAD-PARTICIPANT")
+                .attr("participant", ""),
+        ] {
+            assert!(apply_change_notification(&store, &refused).is_err());
+            assert_eq!(
+                store
+                    .read(|tx| tx.get(Table::Checkpoints, key(group).as_bytes(), 1))
+                    .unwrap(),
+                saved_before
+            );
+            assert_eq!(store.journal_head().unwrap(), journal_before);
+        }
         assert!(apply_change_notification(&store, &add_b).unwrap());
         assert!(!apply_change_notification(&store, &add_b).unwrap());
         assert!(

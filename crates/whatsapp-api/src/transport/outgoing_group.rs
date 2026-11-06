@@ -527,6 +527,7 @@ pub(super) mod tests {
             ];
             let change = Node::new("notification")
                 .attr("type", "w:gp2")
+                .attr("id", "ROUTING-CHANGE")
                 .attr("from", f.plan.chat.clone())
                 .children(changes);
             match change_kind {

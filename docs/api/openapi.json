@@ -17156,5 +17156,12 @@
     "x-live": false,
     "description": "Receive actor validates the existing non-dirty w:gp2 ACK envelope before applying a supported membership/subject change; successful commit precedes ACK write. Missing/empty ID or unusable participant leaves snapshot unchanged and receive running without ACK. Storage faults still surface before ACK. groups_dirty retains its separate scheduling path. Actor red/green regression includes three refused envelopes, ping barriers, valid commit-before-write and reopen. No new input limit, replay, query, identity change or HTTP route.",
     "evidence": "docs/protocol/notification-ack-audit.md#validate-group-ack-envelope-before-membership-mutation-2026-11-05"
+  },
+  "x-group-change-public-envelope-admission": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Public groups::apply_change_notification validates the existing notification ACK envelope before store access. Invalid recognized id/from/participant envelope returns InvalidInput; unrecognized/dedicated groups_dirty form returns false. No ACK/capture/query is performed by this helper. Regression covers missing/empty ID and unusable participant with exact saved bytes and journal unchanged; existing valid updates and outgoing routing-race assertions remain. No new wire limit or HTTP route.",
+    "evidence": "docs/protocol/groups.md#public-group-change-admission-matches-receive-2026-11-05"
   }
 }

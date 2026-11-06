@@ -224,3 +224,13 @@ dispatches A09; the [selected retained key path](apk/2.26.43.72-group-missing-id
 and [fields](apk/2.26.43.72-group-missing-identification/notification-key-fields.txt)
 provide the comparison boundary. Exact native malformed-envelope/error-ACK
 behavior and this client's128-byte ID bound are not claimed identical.
+
+
+### Public group-change envelope guard (2026-11-05)
+
+**Confirmed local defect/fix:** public groups::apply_change_notification now
+validates the same ACK envelope before store access; direct callers cannot
+bypass the receive actor's prerequisite. Three invalid-envelope regressions
+preserve exact snapshot bytes and journal head. A routing-race fixture gained
+a synthetic notification ID without weakening its assertions. The helper sends
+nothing. [Details and red/green validation](groups.md#public-group-change-admission-matches-receive-2026-11-05).

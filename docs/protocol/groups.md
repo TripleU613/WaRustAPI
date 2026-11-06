@@ -3308,3 +3308,27 @@ commits the supported change, then writes ACK. Missing/empty ID and unusable
 participant regressions preserve exact snapshot bytes and receive continuity;
 a valid control commits before ACK and survives reopen. Store faults remain
 visible; groups_dirty retains its own path. [Evidence, red/green test and limits](notification-ack-audit.md#validate-group-ack-envelope-before-membership-mutation-2026-11-05).
+
+
+### Public group-change admission matches receive (2026-11-05)
+
+**Confirmed local defect/fix:** the receive actor now validates the ACK envelope
+first, but direct public groups::apply_change_notification callers still could
+mutate membership from missing/empty ID or unusable participant envelopes. The
+public helper now calls the existing notification_ack validator before store
+access. An invalid recognized envelope returns its existing InvalidInput; an
+unrecognized or dedicated groups_dirty form returns false. The helper does not
+write an ACK, capture traffic, query state or adopt keys. Its valid supported
+change behavior and storage-error propagation remain intact.
+
+The existing change_notifications_update_only_a_saved_snapshot test was expanded
+with three refused envelopes. It failed on the old missing-ID path; after the
+fix each refusal preserves exact saved bytes and journal head. Existing valid
+add/remove/role/subject controls remain. The outgoing-group distribution race
+fixture now includes a synthetic notification ID so it exercises admitted wire
+shape; its membership/chain/device guards and expectations were not relaxed.
+The preceding actor regressions continue to cover receive continuity,
+commit-before-ACK and corruption/reopen. No new size/identity policy or live
+operation was added. This is the reusable admission counterpart to the
+[receive-order correction](notification-ack-audit.md#validate-group-ack-envelope-before-membership-mutation-2026-11-05),
+using the same pinned notification-key evidence and existing local bounds.

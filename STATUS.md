@@ -1,3 +1,8 @@
+Public group-change API now shares the receive envelope prerequisite before
+store access. Invalid-envelope regression preserves snapshot bytes and journal;
+valid routing-race coverage remains. No live validation.
+[Details](docs/protocol/groups.md#public-group-change-admission-matches-receive-2026-11-05).
+
 Fixed invalid group ACK envelopes mutating membership before refusal.
 Envelope validation now precedes the update; commit still precedes ACK write.
 Actor regression includes three refusals and a valid/reopen control.
