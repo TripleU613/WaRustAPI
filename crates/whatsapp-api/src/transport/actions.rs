@@ -742,6 +742,15 @@ pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
         let inner_error =
             if about_result || photo_set_result || two_factor_result || privacy_token_result {
                 None
+            } else if peer_directory_result {
+                // Bind refusal to the original single-peer request. A foreign
+                // user's error must not poison this peer's completion/refresh.
+                crate::signal::direct::child(&request, "key")
+                    .ok()
+                    .and_then(|key| crate::signal::direct::child(key, "user").ok())
+                    .and_then(|user| super::receipts::jid(user, "jid"))
+                    .and_then(|peer| super::peer_keys::selected_user(node, &peer).ok())
+                    .and_then(|user| user.child("error"))
             } else {
                 node.child_nodes()
                     .iter()

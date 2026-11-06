@@ -4505,3 +4505,5 @@ Confirmed static APK43.72 outer-type dispatch now governs shared bundle and froz
 Peer directory result/error attribution now follows saved outer type and selected user independently of generic action status. Typed peer-key root-error fallback corrected; historical outcomes retained without refresh/replay authority. [APK offsets, tests and remaining identity-only/foreign-action limits](peer-identity.md#peer-directory-inspection-uses-reply-context-2026-11-06). Offline only.
 
 Identity-only reply context and signed error codes now match the pinned43.72 FeM/FUP/0ln path. [Trace, regression, API type widening and remaining timer/adoption limits](peer-identity.md#identity-only-reply-context-and-signed-codes-2026-11-06). Offline only.
+
+Full-directory action refusal now binds to the original selected peer instead of first foreign nested error. Shared context guard, ordering/reopen tests and negative duplicate-list refresh check: [audit](peer-identity.md#full-directory-action-errors-belong-to-the-original-peer-2026-11-06). Historical Error and other-family semantics unchanged; offline only.

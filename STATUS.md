@@ -1,3 +1,8 @@
+Full-directory action refusal attribution now follows the original peer.
+Foreign user errors cannot poison a valid selected bundle or its explicit
+refresh gate. Duplicate result lists were verified already blocked.
+[Audit and limits](docs/protocol/peer-identity.md#full-directory-action-errors-belong-to-the-original-peer-2026-11-06).
+
 Identity-only replies now follow pinned APK43.72 outer-type/per-user error
 context. Root extensions cannot override the selected identity or refusal.
 Inspection retains signed i32 server codes; no identity adoption or replay.

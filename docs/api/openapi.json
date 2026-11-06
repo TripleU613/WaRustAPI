@@ -17476,7 +17476,7 @@
     "x-cli": true,
     "x-transport": true,
     "x-live": false,
-    "description": "Peer directory inspection reads saved outer IQ type, selected user refusal and signed bundle independently of generic action status. Typed peer_keys encrypt/get/key result settlement ignores root extension errors. Historical Error records remain unchanged and cannot authorize refresh; generic Ok does not prove bundle validity. No identity adoption, replay or live validation. Generic foreign-user attribution remains a separate audit gap; identity-only context is covered by x-identity-only-reply-context.",
+    "description": "Peer directory inspection reads saved outer IQ type, selected user refusal and signed bundle independently of generic action status. Typed peer_keys encrypt/get/key result settlement ignores root extension errors. Historical Error records remain unchanged and cannot authorize refresh; generic Ok does not prove bundle validity. No identity adoption, replay or live validation. Full-directory selected-peer attribution is covered by x-peer-directory-selected-error; other generic families remain separate. Identity-only outer context is covered by x-identity-only-reply-context.",
     "evidence": "docs/protocol/peer-identity.md#peer-directory-inspection-uses-reply-context-2026-11-06"
   },
   "x-identity-only-reply-context": {
@@ -17485,5 +17485,12 @@
     "x-live": false,
     "description": "Identity-only results follow APK43.72 0ln.A01 outer-type dispatch and FeM case16/FUP case0 per-user errors. Root extensions cannot override valid identity or selected refusal. Signed i32 inspection code replaces u16; existing JSON positive values remain compatible. Generic Ok does not prove usable identity; no adoption, callback timer port or replay.",
     "evidence": "docs/protocol/peer-identity.md#identity-only-reply-context-and-signed-codes-2026-11-06"
+  },
+  "x-peer-directory-selected-error": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Typed peer_keys full-directory result settlement attributes nested refusals only to the primary peer in its original single-user key request, sharing the inspector unique-list/user guard. Foreign errors do not poison selected completion. Ambiguous list/user context supplies no attributed server refusal; generic Ok never establishes signed bundle validity. Explicit refresh retains existing valid bundle and saved outcome requirements; historical Error rows unchanged. No automatic retry or live validation.",
+    "evidence": "docs/protocol/peer-identity.md#full-directory-action-errors-belong-to-the-original-peer-2026-11-06"
   }
 }

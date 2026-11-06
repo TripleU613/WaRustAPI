@@ -176,6 +176,42 @@ pub struct DirectoryInspection {
     pub linked_pin_matches: Vec<LinkedPinMatch>,
 }
 
+// Local unique-context guard shared by inspection and typed action attribution.
+// APK43.72 Dxh.A02 groups errors by originally requested devices (037a..0416).
+pub(super) fn selected_user<'a>(
+    reply: &'a crate::binary::Node,
+    peer: &Jid,
+) -> std::result::Result<&'a crate::binary::Node, DirectoryReplyFailure> {
+    let lists: Vec<_> = reply
+        .child_nodes()
+        .iter()
+        .filter(|node| node.description == "list")
+        .collect();
+    if lists.len() != 1 {
+        return Err(DirectoryReplyFailure::UserSet);
+    }
+    let users: Vec<_> = lists[0]
+        .child_nodes()
+        .iter()
+        .filter(|user| user.description == "user")
+        .filter(|user| {
+            user.get_attr("jid").is_some_and(|value| {
+                value
+                    .as_jid()
+                    .is_some_and(|jid| super::identity_query::same_primary_address(jid, peer))
+                    || value
+                        .as_text()
+                        .and_then(|text| Jid::parse(text).ok())
+                        .is_some_and(|jid| super::identity_query::same_primary_address(&jid, peer))
+            })
+        })
+        .collect();
+    if users.len() != 1 {
+        return Err(DirectoryReplyFailure::UserSet);
+    }
+    Ok(users[0])
+}
+
 /// Inspect saved directory evidence and pins in one read transaction. No key,
 /// session, journal, action, receipt or send record is changed.
 pub fn inspect(store: &ProtocolStore, peer: &Jid) -> Result<Option<DirectoryInspection>> {
@@ -247,37 +283,14 @@ pub fn inspect(store: &ProtocolStore, peer: &Jid) -> Result<Option<DirectoryInsp
                 result.server_error_code = root_errors.first().and_then(|error| code(error));
                 return Ok(Some(result));
             }
-            let lists: Vec<_> = reply
-                .child_nodes()
-                .iter()
-                .filter(|node| node.description == "list")
-                .collect();
-            if lists.len() != 1 {
-                result.failure = Some(DirectoryReplyFailure::UserSet);
-                return Ok(Some(result));
-            }
-            let users: Vec<_> = lists[0]
-                .child_nodes()
-                .iter()
-                .filter(|user| user.description == "user")
-                .filter(|user| {
-                    user.get_attr("jid").is_some_and(|value| {
-                        value.as_jid().is_some_and(|jid| {
-                            super::identity_query::same_primary_address(jid, peer)
-                        }) || value
-                            .as_text()
-                            .and_then(|text| Jid::parse(text).ok())
-                            .is_some_and(|jid| {
-                                super::identity_query::same_primary_address(&jid, peer)
-                            })
-                    })
-                })
-                .collect();
-            if users.len() != 1 {
-                result.failure = Some(DirectoryReplyFailure::UserSet);
-                return Ok(Some(result));
-            }
-            let errors: Vec<_> = users[0]
+            let user = match selected_user(&reply, peer) {
+                Ok(user) => user,
+                Err(reason) => {
+                    result.failure = Some(reason);
+                    return Ok(Some(result));
+                }
+            };
+            let errors: Vec<_> = user
                 .child_nodes()
                 .iter()
                 .filter(|node| node.description == "error")
@@ -581,6 +594,101 @@ mod tests {
         );
         assert!(queue(&store, &peer, true).is_err());
         assert_eq!(queue(&store, &peer, false).unwrap(), refreshed);
+    }
+
+    #[test]
+    fn directory_action_errors_belong_to_original_selected_peer() {
+        for first in [false, true] {
+            for refused in [false, true] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("selected.redb");
+                let store = open(&path);
+                let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+                let foreign = Jid::parse("15555550102@s.whatsapp.net").unwrap();
+                let identity = IdentityKeyPair::generate(&mut rand::rng());
+                let id = queue(&store, &peer, false).unwrap();
+                actions::reserve_pending(&store).unwrap();
+                let reply = signed_reply(&peer, &id, &identity, true);
+                let selected = if refused {
+                    Node::new("user")
+                        .attr("jid", peer.clone())
+                        .children(vec![Node::new("error").attr("code", "480")])
+                } else {
+                    reply.child("list").unwrap().child("user").unwrap().clone()
+                };
+                let other = Node::new("user").attr("jid", foreign).children(vec![
+                    Node::new("error")
+                        .attr("code", "503")
+                        .attr("text", "FOREIGN_PRIVATE"),
+                ]);
+                let users = if first {
+                    vec![other, selected]
+                } else {
+                    vec![selected, other]
+                };
+                let incoming = reply.children(vec![Node::new("list").children(users)]);
+                actions::record_reply(&store, &incoming).unwrap();
+                drop(store);
+                let store = open(&path);
+                let outcome = actions::outcomes(&store).unwrap().remove(0);
+                assert_eq!(
+                    outcome.status,
+                    if refused {
+                        actions::ActionStatus::Error
+                    } else {
+                        actions::ActionStatus::Ok
+                    }
+                );
+                assert_eq!(outcome.error_code, if refused { Some(480) } else { None });
+                assert!(
+                    !serde_json::to_string(&outcome)
+                        .unwrap()
+                        .contains("FOREIGN_PRIVATE")
+                );
+                assert_eq!(
+                    inspect(&store, &peer).unwrap().unwrap().status,
+                    if refused {
+                        DirectoryStatus::ServerRefused
+                    } else {
+                        DirectoryStatus::VerifiedBundle
+                    }
+                );
+                assert!(actions::reserve_pending(&store).unwrap().is_empty());
+                assert_eq!(actions::reply(&store, &id).unwrap(), Some(incoming));
+                assert_eq!(queue(&store, &peer, true).is_ok(), !refused);
+            }
+        }
+    }
+
+    #[test]
+    fn duplicate_result_lists_cannot_authorize_directory_refresh() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("duplicate-list.redb");
+        let store = open(&path);
+        let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let identity = IdentityKeyPair::generate(&mut rand::rng());
+        let id = queue(&store, &peer, false).unwrap();
+        actions::reserve_pending(&store).unwrap();
+        let reply = signed_reply(&peer, &id, &identity, true);
+        let list = reply.child("list").unwrap().clone();
+        let incoming = reply.children(vec![list.clone(), list]);
+        actions::record_reply(&store, &incoming).unwrap();
+        drop(store);
+        let store = open(&path);
+        let before = serde_json::to_value(actions::outcomes(&store).unwrap()).unwrap();
+        let head = store.journal_head().unwrap();
+        assert_eq!(
+            inspect(&store, &peer).unwrap().unwrap().failure,
+            Some(DirectoryReplyFailure::UserSet)
+        );
+        assert!(queue(&store, &peer, true).is_err());
+        assert_eq!(
+            serde_json::to_value(actions::outcomes(&store).unwrap()).unwrap(),
+            before
+        );
+        assert_eq!(store.journal_head().unwrap(), head);
+        assert_eq!(queue(&store, &peer, false).unwrap(), id);
+        assert!(actions::reserve_pending(&store).unwrap().is_empty());
     }
 
     #[test]
