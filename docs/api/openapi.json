@@ -383,6 +383,12 @@
     "x-live": false,
     "description": "APK43.72 7vV target Set.add/remove gates A08 hash persistence; 7PB backend true denotes execution/close, not affected-row count. Supported Rust single-cache projector now preserves cache/hash bytes for already-satisfied target membership, and adopts nullable selected-list hash only on a newly applied block/unblock (missing deletes). Inspection remains once-only, membership/hash/marker atomic; matched=false/malformed/correlation guards remain. No retry or new request. Native separate cache/DB/alias partial failure and stale-state equivalence are not claimed; old histories are not repaired. docs/protocol/chat-actions.md#blocklist-set-hash-membership-gate-2026-11-06"
   },
+  "x-blocklist-fetch-first-named-list": {
+    "x-cli": "blocklist; actions",
+    "x-transport": "durable library projection and existing experimental CLI inspection",
+    "x-live": false,
+    "description": "APK43.72 6p9.CK4 uses 0Tp.A0F first direct child named list, distinct from set first-child requirement. Fetch projection now validates/applies only first named list; prefix extensions/later lists cannot veto it. Malformed first match refuses without fallback or writes; nested-only/no-match retains unchanged cache/hash/reconciliation. Valid old unprojected histories can project once; no rewrite of already projected state, retry or new request. Strict selected-list admission and full dirty/metadata/alias/migration parity remain open. docs/protocol/chat-actions.md#blocklist-fetch-first-named-child-2026-11-06"
+  },
   "x-library-capabilities": [
     {
       "symbol": "whatsapp_api::transport::app_state_sync::binding::bind_inline_fetch_plan",

@@ -1469,3 +1469,30 @@ retaining Some(before). Strict workspace/all-target/all-feature Clippy,
 formatting, CLI reference regeneration, OpenAPI library coverage, APK coverage
 freshness and repository hygiene pass. Five selected DEX exports, both changed
 bundle checksums and subject APK hash match. No live result is claimed.
+
+## Blocklist fetch first named child (2026-11-06)
+
+**Confirmed pinned mismatch/correction:** [complete selector, reused callback
+and five-case regression](apk/2.26.43.72-blocklist-fetch-first-match/README.md)
+show6p9.CK4 uses0Tp.A0F to select the first immediate child named list, with
+no recursion or duplicate-list veto. This differs from set's required first
+child. Rust now validates/applies only that first named fetch list; later lists
+cannot stall a valid first snapshot. A malformed first match still refuses and
+cannot fall through. Nested-only/no-match lists retain unchanged behavior.
+
+The encrypted-store regression covers two valid lists, prefixed extension,
+valid/malformed and malformed/valid ordering, plus nested-only control. It
+checks selected cache/hash/reconciliation, refused checkpoint preservation,
+reply/journal, reopen/idempotency and no resend. The old selector fails on two
+valid lists with its invented ambiguity refusal. Previously unprojected valid
+histories may now project once; already projected history is not rewritten.
+Strict selected-node parser admission and native dirty/metadata/alias/migration
+remain gaps. No new sender, retry, automatic fetch or live operation added.
+
+Validation:1,523 workspace tests pass (9 result suites, four test threads),
+including the five-case selector/reopen regression. The old selector fails
+on two valid lists with InvalidInput(ambiguous blocklist snapshot). Strict
+workspace/all-target/all-feature Clippy, formatting, CLI reference regeneration,
+OpenAPI library coverage, APK coverage freshness and repository hygiene pass.
+Fresh selector/callback exports, bundle checksums and subject APK hash match.
+No live result is claimed.

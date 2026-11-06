@@ -310,17 +310,17 @@ fn parse_snapshot(list: &Node) -> Result<Snapshot> {
 }
 
 fn apply_fetch_in(tx: &mut crate::store::WriteTx<'_>, reply: &Node) -> Result<()> {
-    let mut lists = reply
+    // APK43.72 6p9.CK4 uses 0Tp.A0F: first direct child named list.
+    // Later children cannot veto it, and an invalid first match must not
+    // fall through to a later valid snapshot.
+    let Some(list) = reply
         .child_nodes()
         .iter()
-        .filter(|node| node.description == "list");
-    // Existing observed no-list response means unchanged, never an empty list.
-    let Some(list) = lists.next() else {
+        .find(|node| node.description == "list")
+    else {
+        // No matching direct child means unchanged, never an empty list.
         return Ok(());
     };
-    if lists.next().is_some() {
-        return Err(invalid("ambiguous blocklist snapshot"));
-    }
     let Snapshot {
         dhash,
         current,
@@ -1360,6 +1360,105 @@ mod tests {
             assert_eq!(
                 attr_text(block.child("item").unwrap(), "dhash"),
                 if cleared { None } else { Some("stale") }
+            );
+        }
+    }
+
+    #[test]
+    fn fetch_uses_first_direct_named_list_without_falling_through_malformed_after_reopen() {
+        for mode in [
+            "two_valid",
+            "prefix_then_list",
+            "valid_then_malformed",
+            "malformed_then_valid",
+            "nested_only",
+        ] {
+            let (dir, s) = store();
+            let seed = queue_fetch(&s).unwrap();
+            super::super::actions::reserve_pending(&s).unwrap();
+            super::super::actions::record_reply(
+                &s,
+                &fetch_reply(
+                    &seed,
+                    "before",
+                    vec![Node::new("item").attr("jid", phone())],
+                ),
+            )
+            .unwrap();
+            assert_eq!(ingest(&s).unwrap(), 1);
+            s.write(|tx| tx.put_json(Table::Checkpoints, RECONCILIATION_KEY, 1, &true))
+                .unwrap();
+            let id = queue_fetch(&s).unwrap();
+            super::super::actions::reserve_pending(&s).unwrap();
+            let selected = Node::new("list").attr("dhash", "selected").children(vec![
+                Node::new("item").attr("jid", "15555550888@s.whatsapp.net"),
+            ]);
+            let malformed = Node::new("list")
+                .attr("dhash", "PRIVATE-IGNORED-HASH")
+                .children(vec![Node::new("PRIVATE-INVALID-TAG")]);
+            let children = match mode {
+                "two_valid" => vec![
+                    selected,
+                    Node::new("list").attr("dhash", "PRIVATE-LATER-HASH"),
+                ],
+                "prefix_then_list" => vec![Node::new("extension"), selected],
+                "valid_then_malformed" => vec![selected, malformed],
+                "malformed_then_valid" => vec![malformed, selected],
+                "nested_only" => vec![Node::new("extension").children(vec![selected])],
+                _ => unreachable!(),
+            };
+            super::super::actions::record_reply(
+                &s,
+                &Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", "result")
+                    .children(children),
+            )
+            .unwrap();
+            let before = s.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap();
+            let head = s.journal_head().unwrap();
+            let refused = mode == "malformed_then_valid";
+            if refused {
+                let error = ingest(&s).unwrap_err().to_string();
+                assert!(!error.contains("PRIVATE"));
+                assert_eq!(
+                    s.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap(),
+                    before
+                );
+            } else {
+                assert_eq!(ingest(&s).unwrap(), 1);
+            }
+            drop(s);
+            let s = reopen(dir.path());
+            let unchanged = refused || mode == "nested_only";
+            assert_eq!(
+                saved_dhash(&s).unwrap().as_deref(),
+                Some(if unchanged { "before" } else { "selected" })
+            );
+            assert_eq!(
+                blocked(&s).unwrap()[0].jid,
+                if unchanged {
+                    phone().to_string()
+                } else {
+                    "15555550888@s.whatsapp.net".to_owned()
+                }
+            );
+            assert_eq!(reconciliation_required(&s).unwrap(), unchanged);
+            assert_eq!(s.journal_head().unwrap(), head);
+            assert!(super::super::actions::reply(&s, &id).unwrap().is_some());
+            if refused {
+                assert!(ingest(&s).is_err());
+                assert_eq!(
+                    s.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap(),
+                    before
+                );
+            } else {
+                assert_eq!(ingest(&s).unwrap(), 0);
+            }
+            assert!(
+                super::super::actions::reserve_pending(&s)
+                    .unwrap()
+                    .is_empty()
             );
         }
     }

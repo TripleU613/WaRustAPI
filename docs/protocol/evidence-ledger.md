@@ -1,3 +1,10 @@
+2026-11-06 — **Fetch results use the first direct named list.**
+Removed the non-native duplicate-list veto; later children cannot stall the
+selected valid snapshot. Malformed first matches still refuse without fallback,
+and nested-only lists do not replace cached state. Five-case reopen regression.
+[Evidence and limits](chat-actions.md#blocklist-fetch-first-named-child-2026-11-06).
+No new request or live account operation.
+
 2026-11-06 — **Set-result hash follows requested-target membership change.**
 Already-satisfied block/unblock retain cache/hash bytes; newly applied changes
 adopt or clear the selected-list hash. Clarified that the native backend Boolean
