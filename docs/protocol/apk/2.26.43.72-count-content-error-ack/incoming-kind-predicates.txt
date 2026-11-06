@@ -1,0 +1,29 @@
+
+# class: LX/1k2;
+# extends: Ljava/lang/Object;
+
+.method public BX2(Z)  # .registers 0
+    # full signature: LX/1k2;->BX2()Z
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/1k3;
+# extends: Ljava/lang/Object;
+
+.method public BX2(Z)  # .registers 2
+    # full signature: LX/1k3;->BX2()Z
+    0000..0002  const/4  v0, #0x1
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/1uU;
+# extends: Ljava/lang/Object;
+
+.method public BX2(Z)  # .registers 2
+    # full signature: LX/1uU;->BX2()Z
+    0000..0002  const/4  v0, #0x0
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method

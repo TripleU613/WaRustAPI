@@ -17240,5 +17240,12 @@
     "x-live": false,
     "description": "Static APK2.26.43.72 Flr selector7 trace establishes conditional selected-stanza and pre-ACK persistence before ACK admission. Alternate path lacks explicit outer pre-ACK insertion. Count-specific branch selection, crash replay and Rust queue port remain unimplemented.",
     "evidence": "docs/protocol/apk/2.26.43.72-preack-transactional-dispatch/README.md"
+  },
+  "x-count-content-error-ack": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Malformed present PQ count is captured and receives a normal encrypt notification ACK when its local envelope is valid, without upload work. Invalid ID/source still refuses ACK. Storage and ACK-write failures propagate. Native queue/crash replay and valid-count upload/ACK ordering remain unported.",
+    "evidence": "docs/protocol/apk/2.26.43.72-count-content-error-ack/README.md"
   }
 }

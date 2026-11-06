@@ -1,3 +1,8 @@
+Malformed PQ count content now receives its normal control ACK after capture,
+without upload work, following current native parser/base-handler catch flow.
+Invalid ACK envelopes remain refused; storage failures propagate.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-count-content-error-ack/README.md).
+
 Confirmed another native ACK persistence boundary: Flr selector7 can persist
 selected stanzas and pre-ACKs before ACK send admission, propagating outer-close
 failures before send. The alternate branch and selection limits are retained in

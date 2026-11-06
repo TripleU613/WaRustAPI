@@ -1028,29 +1028,35 @@ pub(crate) async fn drive(
                     }
                 }
 
-                let low = match super::prekeys::low_count(&node).and_then(|low| {
-                    // Built before any upload: a count notification without
-                    // `id` is refused like a malformed count, not fatal.
-                    low.map(|low| Ok((low, super::prekeys::low_count_ack(&node)?)))
-                        .transpose()
-                }) {
+                // APK43.72 15v.A09 parses PQ before A07(true). Its LIL
+                // failure is caught by 0v6.A01, which dispatches the original
+                // non-deferred ACK. No upload work runs for refused content.
+                let low = match super::prekeys::low_count(&node) {
+                    Ok(low) => low.map(Some),
+                    Err(Error::InvalidInput { field, reason }) => {
+                        tracing::warn!(field, reason, "prekey count content refused; capture retained; acknowledge without upload");
+                        Some(None)
+                    }
+                    Err(error) => return Err(error),
+                };
+                let low = match low
+                    .map(|low| Ok((low, super::prekeys::low_count_ack(&node)?)))
+                    .transpose()
+                {
                     Ok(low) => low,
                     Err(Error::InvalidInput { field, reason }) => {
-                        // APK 37.71 14z.A09 throws before queueing work; where that
-                        // is caught is not traced (prekey-count-notifications.md).
-                        // Continuing is local policy; no ACK means redelivery.
-                        tracing::warn!(field, reason, "prekey count refused locally; captured without ACK or upload; session continues");
+                        tracing::warn!(field, reason, "prekey count envelope refused locally; captured without ACK or upload; session continues");
                         None
                     }
                     Err(error) => return Err(error),
                 };
                 if let Some((low, low_ack)) = low {
-                    // Local ACK ordering follows durable capture; native 14z.A02 ACKs after worker processing.
+                    // Local ACK ordering follows durable capture; native 15v.A02 ACKs after worker processing.
                     // 43.72 15v.A02 default PQ-notification flagfalse:
                     // legacy presence chooses migrated ADD or non-migrated SET.
                     link.send(&low_ack).await?;
-                    if low.legacy_present {
-                        maybe_upload(&store, &account, &link, &mut upload, &mut upload_rounds, PrekeyUploadTrigger::Count { legacy: low.legacy_present }).await?;
+                    if low.is_some_and(|low| low.legacy_present) {
+                        maybe_upload(&store, &account, &link, &mut upload, &mut upload_rounds, PrekeyUploadTrigger::Count { legacy: true }).await?;
                     }
                 }
                 super::outgoing::acknowledge(&store, &node)?;
@@ -5318,12 +5324,25 @@ mod tests {
                 ))
             })
             .unwrap();
-        // A malformed count is refused locally: captured, no ACK, no upload,
-        // and the session keeps receiving (it would otherwise be redelivered
-        // and end every later session too).
+        // APK43.72 0v6.A01 catches malformed PQ content before metadata
+        // deferral, then dispatches the original ACK without upload work.
         let malformed = count_notification("malformed", "pq_count", "2147483648");
         let wire = encode(&malformed).unwrap();
         fake.deliver(malformed).await;
+        let (ack, write) = fake.written().await;
+        assert_eq!(
+            ack.get_attr("id").and_then(|v| v.as_text()),
+            Some("malformed")
+        );
+        assert_eq!(
+            ack.get_attr("class").and_then(|v| v.as_text()),
+            Some("notification")
+        );
+        assert_eq!(
+            ack.get_attr("type").and_then(|v| v.as_text()),
+            Some("encrypt")
+        );
+        write.send(Ok(())).unwrap();
         fake.nothing_written(Duration::from_millis(100)).await;
         let capture = format!(
             "inbound:sha256:{}",
@@ -5345,6 +5364,33 @@ mod tests {
                 .unwrap(),
             before
         );
+        // Mixed legacy/PQ refusal cannot fall back to a legacy upload.
+        let mixed = count_notification("mixed-malformed", "count", "0").children(vec![
+            Node::new("count").attr("value", "0"),
+            Node::new("pq_count").attr("value", "not-an-int"),
+        ]);
+        fake.deliver(mixed).await;
+        let (ack, write) = fake.written().await;
+        assert_eq!(
+            ack.get_attr("id").and_then(|v| v.as_text()),
+            Some("mixed-malformed")
+        );
+        write.send(Ok(())).unwrap();
+        fake.nothing_written(Duration::from_millis(100)).await;
+        assert_eq!(summary(&store).unwrap().uploaded, 100);
+        // Content refusal does not relax the local ACK-envelope guards.
+        let mut missing_id = count_notification("unused", "pq_count", "bad");
+        missing_id
+            .attributes
+            .retain(|attribute| attribute.name != "id");
+        fake.deliver(missing_id).await;
+        fake.nothing_written(Duration::from_millis(100)).await;
+        fake.deliver(
+            count_notification("invalid-from", "pq_count", "bad")
+                .attr("from", "1:invalid@s.whatsapp.net"),
+        )
+        .await;
+        fake.nothing_written(Duration::from_millis(100)).await;
         // The session is still receiving: a later valid count is answered.
         fake.deliver(count_notification("after", "count", "invalid"))
             .await;

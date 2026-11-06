@@ -7519,3 +7519,15 @@ A0I is set after send admission returns, not after server confirmation.
 This closes the Flr insertion-caller gap, not effective configuration,
 count-specific bulk membership, crash replay or upload/socket ordering.
 No Rust runtime behavior or live account operation changed.
+
+### Malformed count content still receives its control ACK (2026-11-05)
+
+**Confirmed static and fixed offline:** current15v.A09 throws LIL for a
+malformed present PQ count before deferring metadata or queueing upload work.
+0v6.A01 catches LIL and dispatches the still-present original ACK context;
+SQLite full/corruption failures instead rethrow. Rust now ACKs supported count
+envelopes on content refusal without upload. Invalid IDs/sources still refuse
+ACK; storage and uncertain write failures still propagate. This supersedes the
+earlier local no-ACK policy for malformed PQ content.
+[Exact parser/catch paths, incoming-kind census, regression and remaining queue limits](apk/2.26.43.72-count-content-error-ack/README.md).
+Valid-count upload/ACK ordering and full queue replay remain open. No live operations.

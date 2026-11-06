@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "bytes": 3943,
+    "sha256": "40f8618050943b88a367d7c167f5ca484fead5b2226f886952b0326d14ce99f4"
+  },
+  "base-handler-callers.txt": {
+    "bytes": 130,
+    "sha256": "f3e9aae17bac112e62a39ced85e36f71283663234bb59ec0acec8b9732ba024f"
+  },
+  "base-handler.txt": {
+    "bytes": 25306,
+    "sha256": "3adcdf6ee23cbb15e7760086777095d8dbb0a4923a54cf421c0ec72cfea41bf4"
+  },
+  "defaulted-integer.txt": {
+    "bytes": 601,
+    "sha256": "71844beba60f9b9c35aa7c483d0f497598195ff5f6b14728e5f5117cdb72db35"
+  },
+  "incoming-kind-predicates.txt": {
+    "bytes": 673,
+    "sha256": "4b750e746033b35764d7d1ec38e005b953b2d0192393d41391a2c1487d77b51c"
+  },
+  "incoming-reader.txt": {
+    "bytes": 67740,
+    "sha256": "01cb40753a2d16b60eb82cbb32563689ddbd855f07220ad810a2c7a306ecfcd6"
+  },
+  "notification-runner.txt": {
+    "bytes": 46760,
+    "sha256": "e772370b831918d13e9b020e2d44203fb55abf2c178117f136c04a62ddb67164"
+  },
+  "optional-integer.txt": {
+    "bytes": 721,
+    "sha256": "4acd4cf91d8b89b2c71a83ee3c2812587bf0e0d083ff4a563cde3820edbccc64"
+  },
+  "strict-integer.txt": {
+    "bytes": 1686,
+    "sha256": "ff0f1f7c71b9a6726dff0257b0cdf58a9bb0554480a8b439e943143007451445"
+  },
+  "untracked-wrapper-callers.txt": {
+    "bytes": 65,
+    "sha256": "e28a963ad45b8a88fa84ad1bd6dbd7f7cc1407bdffef627a56cfc99783bbde8b"
+  }
+}

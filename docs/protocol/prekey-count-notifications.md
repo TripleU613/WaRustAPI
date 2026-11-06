@@ -968,3 +968,19 @@ No Rust runtime behavior or live account operation changed.
 Validation: pinned APK SHA256, all five method exports plus README checksums,
 OpenAPI JSON parsing, APK coverage freshness, staged whitespace and repository
 hygiene passed. Research/docs-only chunk; Rust tests were not rerun.
+
+### Malformed count content still receives its control ACK (2026-11-05)
+
+**Confirmed static and fixed offline:** current15v.A09 throws LIL for a
+malformed present PQ count before deferring metadata or queueing upload work.
+0v6.A01 catches LIL and dispatches the still-present original ACK context;
+SQLite full/corruption failures instead rethrow. Rust now ACKs supported count
+envelopes on content refusal without upload. Invalid IDs/sources still refuse
+ACK; storage and uncertain write failures still propagate. This supersedes the
+earlier local no-ACK policy for malformed PQ content.
+[Exact parser/catch paths, incoming-kind census, regression and remaining queue limits](apk/2.26.43.72-count-content-error-ack/README.md).
+Valid-count upload/ACK ordering and full queue replay remain open. No live operations.
+
+Validation: red regression reproduced the missing ACK; all 1,392 workspace/
+all-feature tests passed after the fix, along with strict Clippy, CLI reference
+and OpenAPI library checks. Offline injected links only.

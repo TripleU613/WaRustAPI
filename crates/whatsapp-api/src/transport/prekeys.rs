@@ -811,7 +811,8 @@ fn pq_count_integer(node: &Node) -> Result<i32> {
     count_integer(node).ok_or_else(|| invalid("pq_count value is not a signed 32-bit Java decimal"))
 }
 /// Recognize a prekey-count notification using its first child.
-/// A malformed present PQ count refuses before ACK/upload; legacy count uses
+/// A malformed present PQ count refuses upload work; the actor separately ACKs
+/// supported envelopes via the native base-handler error path. Legacy count uses
 /// the APK's optional Integer.valueOf parser and can remain unknown.
 pub fn low_count(node: &Node) -> Result<Option<LowCount>> {
     if node.description != "notification"
