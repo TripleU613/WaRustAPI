@@ -1,7 +1,7 @@
 {
   "README.md": {
-    "bytes": 6657,
-    "sha256": "482470ff5d9975e119744ca2ad31edff4130a5f74d600ca1ca37fb54ac9b5afc"
+    "bytes": 9589,
+    "sha256": "c0c9338637f988a65af8b844bfc21aee9bb4927c5ff925db5b95195c06983d73"
   },
   "adjacent-flag-negative.txt": {
     "bytes": 119,
@@ -14,6 +14,10 @@
   "base-callers.txt": {
     "bytes": 130,
     "sha256": "f3e9aae17bac112e62a39ced85e36f71283663234bb59ec0acec8b9732ba024f"
+  },
+  "base-registration-callers-negative.txt": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   },
   "constructor-a-callers.txt": {
     "bytes": 67,
@@ -47,6 +51,10 @@
     "bytes": 119,
     "sha256": "3470a5b4253da61be44caf355bd50fd1e2be73083dd7bdf07a567e63bdf76d27"
   },
+  "gp2-string-refs.txt": {
+    "bytes": 426,
+    "sha256": "95f81b3b5ed3117b649f992124c956812d847f8e4adf68440eed8edbcaf0cbd3"
+  },
   "ingress-a-excerpt.txt": {
     "bytes": 2292,
     "sha256": "b9a0aafc0dd9955620a6f947300bce3f1506535e25de07ed0fee2e5286755df8"
@@ -66,6 +74,26 @@
   "mark-missing.txt": {
     "bytes": 1258,
     "sha256": "fe793eb861f189b466d2426ee05da943a32d17f28ae964023d1a41ae14331770"
+  },
+  "message-envelope.txt": {
+    "bytes": 934,
+    "sha256": "a6f3c125e904212899a1e604d68e84ba261e14e607e7867379a84d5da2222a3a"
+  },
+  "notification-consumer-constructor.txt": {
+    "bytes": 900,
+    "sha256": "4e527236b06320d8fed6565d84a7a3ae98345ab17b2b7907b46a9739138e0903"
+  },
+  "notification-type-consumer.txt": {
+    "bytes": 18722,
+    "sha256": "de79d68032919efc6a0ee7bd3a6c2aa16b28878fa6a42af337cf6780b167b8a1"
+  },
+  "notification-type-map-refs.txt": {
+    "bytes": 238,
+    "sha256": "2d232e5d980ebf354f1d6073532920762e90bf5f324d970250a4e87721155341"
+  },
+  "notification-type-map.txt": {
+    "bytes": 12875,
+    "sha256": "0b4d28e2cc291529803ea15fcc136e0824cd05a6c01458c8627c68abc1bf467a"
   },
   "preference-readers.txt": {
     "bytes": 236,
@@ -90,5 +118,9 @@
   "response-init.txt": {
     "bytes": 3713,
     "sha256": "9e04ca8e5f22cfa7aa86f0ee35edfddbebe53496dcc7567773fea235eaf7d749"
+  },
+  "runnable-13-excerpt.txt": {
+    "bytes": 3013,
+    "sha256": "3885375ca3a48ad720014aa023c6b0c41d3cd4d7f6117c3f9d05bb8c39e8b47e"
   }
 }

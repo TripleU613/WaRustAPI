@@ -96,3 +96,13 @@ durable processing or WhatsApp stanza acknowledgement.
 [Branch offsets, error continuation and limits](apk/2.26.43.72-push-config-fbns-token-received/README.md#provider-message-ack-after-normal-handling-or-json-failure).
 Full downstream processing, provider delivery and durable ACK ownership remain
 open. No Rust behavior, provider IPC or live account operation changed.
+
+
+### Current notification type mapping and picture gap (2026-11-05)
+
+**Confirmed static, APK2.26.43.72:** EL2 maps w:gp2 to209 and picture to189;
+1rN.A05 reads IncomingStanza type and passes that code as Message.arg1 via
+2Ai.A00. Marker admission remains feature/group/child dependent; picture uses
+set/delete. Rust has w:gp2 ACK handling but no picture consumer/ACK or automatic
+missing-identification lifecycle. Native deferral and state ordering still need
+reconciliation before porting. [Retained map, consumer and limits](apk/2.26.43.72-group-missing-identification/README.md).

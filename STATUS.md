@@ -1,3 +1,8 @@
+Current APK mapping confirmed: w:gp2 ->209, picture ->189. Rust picture
+consumer/ACK and automatic missing-identification lifecycle remain unported;
+native admission/deferral must be reconciled first.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-group-missing-identification/README.md).
+
 Research follow-up: current missing-identification handlers now traced through
 numeric registration and shared handler filtering; wire-type admission remains
 unclosed. No Rust runtime change or live operation. See the

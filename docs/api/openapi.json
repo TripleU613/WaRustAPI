@@ -15845,7 +15845,7 @@
     ],
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-group-missing-identification/README.md",
-    "description": "Traces persisted missing-identification group set, selected marker add, and converted group-info boolean add/remove through exact current field/register propagation. Rust already has explicit context vocabulary; numeric handler registration/filtering is traced, while wire-type admission, automatic lifecycle, preferences transaction parity and coordinator integration remain unported. No runtime policy, query, route or live operation added."
+    "description": "Traces persisted missing-identification group set, selected marker add, and converted group-info boolean add/remove through exact current field/register propagation. Rust already has explicit context vocabulary; map/consumer bind w:gp2 to209 and picture to189 (Message.arg1); selected feature/group/child admission is traced, while full deferral, picture ACK/consumer, automatic lifecycle, preferences transaction parity and coordinator integration remain unported. No runtime policy, query, route or live operation added."
   },
   "x-group-info-mex-timeout-evidence": {
     "x-cli": false,

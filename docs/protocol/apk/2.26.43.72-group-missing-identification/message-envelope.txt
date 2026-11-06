@@ -1,0 +1,20 @@
+
+# class: LX/2Ai;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLLI)  # .registers 7
+    # full signature: LX/2Ai;->A00(LX/1k2;Ljava/lang/Long;I)Landroid/os/Message;
+    0000..0002  const/4  v1, #0x0
+    0002..0004  const/4  v0, #0x0
+    0004..000a  invoke-static  {v1, v0, v6, v0, v4}, Landroid/os/Message;->obtain(Landroid/os/Handler;IIILjava/lang/Object;)Landroid/os/Message;
+    000a..000c  move-result-object  v4
+    000c..0010  if-eqz  v5, +0xf
+    0010..0016  invoke-virtual  {v4}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    0016..0018  move-result-object  v3
+    0018..001c  const-string  v2, "loggableStanzaId"
+    001c..0022  invoke-virtual  {v5}, Ljava/lang/Number;->longValue()J
+    0022..0024  move-result-wide  v0
+    0024..002a  invoke-virtual  {v3, v2, v0, v1}, Landroid/os/BaseBundle;->putLong(Ljava/lang/String;J)V
+    002a..002c  return-object  v4
+    # exception table: 0 try range(s)
+.end method

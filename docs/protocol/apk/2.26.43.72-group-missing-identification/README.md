@@ -110,3 +110,48 @@ Do not equate numeric handler codes with binary-node token IDs.
 
 No Rust behavior changed. Unknown notification admission remains a port blocker
 for a generic marker consumer, not a reason to invent a broader policy.
+
+## Wire notification type binding follow-up — 2026-11-05
+
+**Confirmed static:** EL2.<clinit> maps w:gp2 ->209 at000a..0022 and
+picture ->189 at0110..0126. Exact map references are its initializer and two
+reads in1rN.A05. In that method's1rc branch, IncomingStanza's node type is read
+at004e..005c. Following special devices/update and business/bizai routes, the
+map lookup019c..01b8 supplies the integer, jumps to0154 and calls2Ai.A00 with
+the original IncomingStanza. The resulting Message goes to1rc.A00.accept.
+2Ai.A00 passes the integer as Message.arg1; what is zero. These integers are
+not binary-node token IDs. The1rc constructor stores its callback; concrete
+callback/outer router wiring and transport authentication remain untraced.
+This closes the earlier unknown type-to-integer mapping, not all ingress.
+
+Base BLn constructs8bl selector13. Its retained0368..0412 arm stores
+child/offline bookkeeping, then calls0v6.A01 only when its A09 executor is
+null; otherwise it schedules8aj selector1 on098. Both handler constructors
+pass true and initialize that executor. The8aj selector body and scheduling
+guarantees remain unclosed; factory references do not prove synchronous ACKs.
+
+**Selected conditions:** w:gp2's0w9 resolves a group sender, checks feature
+0x36fe and obtains the first child before calling0zu.A02 on the whole node.
+Picture's19k resolves first-child jid, checks group type and has an Eof.A03
+refresh-and-return path. It handles set/delete photo changes; set parses its
+photo ID with -1 fallback, delete supplies -1. Group/photo-ID checks and
+0zP.A02 select normal photo work versus out-of-order logging. Both can reach
+0224: normal work runs a loop (03d0 onward), exits via05bc and05f8 ->0224;
+out-of-order work falls through021e. After feature0x36fe it re-reads first
+child and permits set/delete before the marker call027a. At024a v2 is set
+from0158, not create. Any earlier create/delete description of this range is
+corrected to set/delete. Runtime gates and complete photo helper semantics
+remain unknown. Picture type alone is insufficient marker admission.
+
+**Confirmed Rust source review:** connection.rs and notifications.rs have no
+picture-specific consumer/ACK. Existing w:gp2 handling ACKs after capture and
+supported changes; neither path automatically maintains this missing-ID set.
+This is a concrete parity gap. Native deferral, validation and group-state
+ordering must be reconciled before adding a picture ACK or marker consumer.
+No runtime behavior or live account operation changed here.
+
+**Bounded negatives:** exact0v6.Amf caller search returned zero, which does not
+exclude interface dispatch. Six w:gp2 string references were found; inspected
+1ro is a token array, E88 an enum,2ER a type list,T3n a registry constructor,
+and8B8.A0I a typed converter. These alone do not bind209/189; positive proof
+is the retained complete EL2 map and1rN consumer. Unrelated tables are omitted.
