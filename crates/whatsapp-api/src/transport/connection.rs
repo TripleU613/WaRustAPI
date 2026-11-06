@@ -4881,7 +4881,12 @@ mod tests {
     #[tokio::test]
     async fn prekey_upload_distinguishes_absent_and_invalid_registered_material() {
         let dir = tempfile::tempdir().unwrap();
-        for case in ["absent", "corrupt-json", "wrong-account"] {
+        for case in [
+            "absent",
+            "corrupt-json",
+            "wrong-account",
+            "signed-private-mismatch",
+        ] {
             let path = dir.path().join(format!("signed-material-{case}.redb"));
             let store = registered_store(&path);
             let mut account = store.read(AccountRecord::load).unwrap().unwrap();
@@ -4897,6 +4902,14 @@ mod tests {
                         "wrong-account" => {
                             account.signal_registration_id = Some(999);
                             account.save(tx)?;
+                        }
+                        "signed-private-mismatch" => {
+                            let mut record: serde_json::Value = tx
+                                .get_json(Table::Account, b"registration-lab-material", 1)?
+                                .unwrap();
+                            record["signed_pre_key"]["private"] =
+                                record["identity"]["private"].clone();
+                            tx.put_json(Table::Account, b"registration-lab-material", 1, &record)?;
                         }
                         _ => unreachable!(),
                     }
@@ -4921,6 +4934,12 @@ mod tests {
                     "corrupt-json" => assert!(matches!(error, Error::Storage(_)), "{error}"),
                     "wrong-account" => {
                         assert!(matches!(error, Error::InvalidInput { .. }), "{error}")
+                    }
+                    "signed-private-mismatch" => {
+                        assert!(
+                            matches!(&error, Error::InvalidInput { reason, .. } if reason == "signed prekey pair mismatch"),
+                            "{error}"
+                        );
                     }
                     _ => unreachable!(),
                 }

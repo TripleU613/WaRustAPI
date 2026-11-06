@@ -1021,3 +1021,31 @@ not claim all count work errors occur before its control ACK. No live operations
 Validation: red actor regression reproduced swallowed corruption; all 1,393
 workspace/all-feature tests, strict Clippy, CLI reference and OpenAPI library
 checks passed. Tests used only local stores and injected links.
+
+### Signed-prekey public/private consistency before upload (2026-11-05)
+
+**Confirmed local defect, fixed offline:** registered signed-prekey lookup
+verified the identity signature over the saved public key but constructed a
+SignedPreKeyRecord from an independently deserialized private half without
+checking that the halves matched. A valid public signature does not validate
+that private half. The shared optional/required lookup now derives its public
+key and refuses a mismatch with a secret-free InvalidInput reason before
+serialization. Upload admission propagates that error before generating,
+reserving or writing any upload. The digest required-key lookup also uses the
+same validation; no private bytes are exposed or repaired.
+
+Expanded actor corruption regression keeps the registered signed public key
+and its valid signature unchanged but substitutes the independently generated
+identity private key. Old code reached an upload write instead of returning an
+error (the actor-end expectation timed out). Corrected code returns the exact
+pair-mismatch error and leaves saved material and prekey rows unchanged.
+Existing clean-material upload and absence/corrupt-JSON/account-mismatch
+controls remain. This is a local cryptographic consistency check, not a new
+APK-derived wire requirement or proof of native corrupt-store handling.
+Registration request-factory loading outside this signed-key lookup is not
+claimed audited by this change. No identity rotation, key replacement, new
+retry or live account operation; valid-count ACK ordering remains unchanged.
+
+Validation: the mismatched-pair regression failed on old code; all 1,393
+workspace/all-feature tests, strict Clippy, CLI reference and OpenAPI library
+checks passed after the fix. Offline stores/injected links only.

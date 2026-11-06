@@ -17261,5 +17261,12 @@
     "x-live": false,
     "description": "Upload admission skips only absent registered signed-prekey material; corrupt JSON, account/material mismatch and validation/storage failures propagate before upload generation, reservation or write. Existing public required-key and digest lookup semantics remain. Local integrity fix, not native signed-key fallback parity or count ACK-order port.",
     "evidence": "docs/protocol/prekey-count-notifications.md#registered-signed-prekey-absence-versus-stored-state-faults-2026-11-05"
+  },
+  "x-registered-signed-prekey-pair-consistency": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Registered signed-prekey lookup derives public from saved private and refuses pair mismatch even when public signature is valid. Shared required/optional lookup protects upload admission and digest lookup; no key regeneration or replacement. Local integrity check, not native corrupt-store handling parity.",
+    "evidence": "docs/protocol/prekey-count-notifications.md#signed-prekey-publicprivate-consistency-before-upload-2026-11-05"
   }
 }

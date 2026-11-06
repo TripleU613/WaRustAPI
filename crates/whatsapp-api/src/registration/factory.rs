@@ -56,10 +56,20 @@ pub(crate) fn optional_registered_signed_prekey_in(
     if !identity.verify_signature(&public.serialize(), &record.signature) {
         return Err(invalid("signed prekey signature invalid"));
     }
+    let private = PrivateKey::deserialize(&record.signed_pre_key.private)
+        .map_err(|_| invalid("invalid signed private key"))?;
+    // A valid signature authenticates the public key, not the saved private
+    // half. Never publish material whose later private operation cannot match.
+    if private
+        .public_key()
+        .map_err(|_| invalid("invalid signed private key"))?
+        != public
+    {
+        return Err(invalid("signed prekey pair mismatch"));
+    }
     let pair = KeyPair {
         public_key: public,
-        private_key: PrivateKey::deserialize(&record.signed_pre_key.private)
-            .map_err(|_| invalid("invalid signed private key"))?,
+        private_key: private,
     };
     let signed = SignedPreKeyRecord::new(
         record.config.signed_pre_key_id.into(),

@@ -1,3 +1,8 @@
+Registered signed-prekey lookup now rejects public/private pair mismatches,
+even when the saved public key still has a valid identity signature. The actor
+surfaces the error before upload generation/reservation/write and preserves
+the saved material. [Local audit and limits](docs/protocol/prekey-count-notifications.md#signed-prekey-publicprivate-consistency-before-upload-2026-11-05).
+
 Prekey upload lookup now distinguishes absent registration material from
 corrupt/mismatched saved state: absence skips, stored-state errors propagate
 before upload generation/reservation/write. Existing required lookup semantics
