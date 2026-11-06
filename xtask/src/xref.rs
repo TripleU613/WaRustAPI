@@ -2095,12 +2095,95 @@ fn hierarchy_one(d: &[u8], out: &mut BTreeMap<String, String>) -> Result<(), Str
     Ok(())
 }
 
+fn interfaces_one(d: &[u8], out: &mut BTreeMap<String, Vec<String>>) -> Result<(), String> {
+    let dex = DexFile::parse(d)?;
+    for ci in 0..dex.class_count {
+        let off = dex.class_off as usize + 32 * ci as usize;
+        let class = dex.type_name(u32le(d, off)?)?;
+        let list = u32le(d, off + 12)? as usize;
+        let mut parents = Vec::new();
+        let mut unique = std::collections::BTreeSet::new();
+        if list != 0 {
+            if !list.is_multiple_of(4) {
+                return Err("dex: unaligned interface type list".into());
+            }
+            let count = u32le(d, list)? as usize;
+            let end = count
+                .checked_mul(2)
+                .and_then(|n| list.checked_add(4)?.checked_add(n))
+                .ok_or("dex: interface list extent overflow")?;
+            if end > d.len() {
+                return Err("dex: truncated interface type list".into());
+            }
+            for index in 0..count {
+                let parent = dex.type_name(u32::from(u16le(d, list + 4 + index * 2)?))?;
+                if !parent.starts_with('L')
+                    || !parent.ends_with(';')
+                    || !unique.insert(parent.clone())
+                {
+                    return Err("dex: invalid or duplicate interface type".into());
+                }
+                parents.push(parent);
+            }
+        }
+        if out.insert(class, parents).is_some() {
+            return Err("dex: duplicate interface class definition".into());
+        }
+    }
+    Ok(())
+}
+
+fn interface_ancestry_reaches<'a>(
+    class: &'a str,
+    root: &str,
+    hierarchy: &'a BTreeMap<String, String>,
+    interfaces: &'a BTreeMap<String, Vec<String>>,
+) -> Result<bool, String> {
+    let mut stack = vec![(class, false)];
+    let mut active = std::collections::BTreeSet::new();
+    let mut complete = std::collections::BTreeSet::new();
+    let mut belongs = false;
+    while let Some((class, exiting)) = stack.pop() {
+        if exiting {
+            active.remove(class);
+            complete.insert(class);
+            continue;
+        }
+        if complete.contains(class) {
+            continue;
+        }
+        if !active.insert(class) {
+            return Err("virtual overrides: ancestry cycle".into());
+        }
+        belongs |= class == root;
+        stack.push((class, true));
+        if let Some(parent) = hierarchy.get(class) {
+            stack.push((parent.as_str(), false));
+        }
+        if let Some(parents) = interfaces.get(class) {
+            stack.extend(parents.iter().map(|parent| (parent.as_str(), false)));
+        }
+    }
+    Ok(belongs)
+}
+
 fn select_virtual_overrides(
     methods: Vec<MethodDump>,
     hierarchy: &BTreeMap<String, String>,
     root: &str,
     name: &str,
     signature: &str,
+) -> Result<Vec<MethodDump>, String> {
+    select_virtual_overrides_in(methods, hierarchy, root, name, signature, None)
+}
+
+fn select_virtual_overrides_in(
+    methods: Vec<MethodDump>,
+    hierarchy: &BTreeMap<String, String>,
+    root: &str,
+    name: &str,
+    signature: &str,
+    interfaces: Option<&BTreeMap<String, Vec<String>>>,
 ) -> Result<Vec<MethodDump>, String> {
     if !hierarchy.contains_key(root) {
         return Err("virtual overrides: declaring class is not defined in the APK".into());
@@ -2114,16 +2197,21 @@ fn select_virtual_overrides(
         {
             continue;
         }
-        let mut class = method.class_name.as_str();
-        let mut seen = std::collections::BTreeSet::new();
-        let mut belongs = false;
-        while let Some(superclass) = hierarchy.get(class) {
-            if !seen.insert(class) {
-                return Err("virtual overrides: superclass cycle".into());
+        let belongs = if let Some(interfaces) = interfaces {
+            interface_ancestry_reaches(&method.class_name, root, hierarchy, interfaces)?
+        } else {
+            let mut class = method.class_name.as_str();
+            let mut seen = std::collections::BTreeSet::new();
+            let mut belongs = false;
+            while let Some(superclass) = hierarchy.get(class) {
+                if !seen.insert(class) {
+                    return Err("virtual overrides: superclass cycle".into());
+                }
+                belongs |= class == root;
+                class = superclass;
             }
-            belongs |= class == root;
-            class = superclass;
-        }
+            belongs
+        };
         if belongs {
             if selected
                 .iter()
@@ -2152,12 +2240,22 @@ fn select_virtual_overrides(
     Ok(selected)
 }
 
-/// Declared class overrides inside this APK, not inferred runtime dispatch or interface implementations.
 pub fn run_virtual_overrides(
     apk: &Path,
     root: &str,
     name: &str,
     signature: &str,
+) -> Result<(), String> {
+    run_virtual_overrides_with_interfaces(apk, root, name, signature, false)
+}
+
+/// Declared instance census with optional interface edges, not runtime/default-method resolution.
+pub fn run_virtual_overrides_with_interfaces(
+    apk: &Path,
+    root: &str,
+    name: &str,
+    signature: &str,
+    include_interfaces: bool,
 ) -> Result<(), String> {
     let f = std::fs::File::open(apk).map_err(|e| format!("{}: {e}", apk.display()))?;
     let mut zip = zip::ZipArchive::new(f).map_err(|e| format!("zip: {e}"))?;
@@ -2166,6 +2264,7 @@ pub fn run_virtual_overrides(
         return Err("no classes*.dex in APK".into());
     }
     let mut hierarchy = BTreeMap::new();
+    let mut interfaces = BTreeMap::new();
     let mut methods = Vec::new();
     for dex_name in names {
         let mut data = Vec::new();
@@ -2174,9 +2273,23 @@ pub fn run_virtual_overrides(
             .read_to_end(&mut data)
             .map_err(|e| e.to_string())?;
         hierarchy_one(&data, &mut hierarchy).map_err(|e| format!("{dex_name}: {e}"))?;
+        if include_interfaces {
+            interfaces_one(&data, &mut interfaces).map_err(|e| format!("{dex_name}: {e}"))?;
+        }
         smali_one(&data, "", Some(name), &mut methods).map_err(|e| format!("{dex_name}: {e}"))?;
     }
-    let selected = select_virtual_overrides(methods, &hierarchy, root, name, signature)?;
+    let selected = if include_interfaces {
+        select_virtual_overrides_in(
+            methods,
+            &hierarchy,
+            root,
+            name,
+            signature,
+            Some(&interfaces),
+        )?
+    } else {
+        select_virtual_overrides(methods, &hierarchy, root, name, signature)?
+    };
     // Validate signatures before emitting any purportedly complete census.
     for method in &selected {
         for instruction in &method.insns {
@@ -2185,11 +2298,19 @@ pub fn run_virtual_overrides(
             }
         }
     }
-    println!("# Declared overrides: {root}->{name}{signature}");
-    println!(
-        "# Coverage: {} APK classes; superclass ancestry only; external/runtime/interface dispatch unverified",
-        hierarchy.len()
-    );
+    if include_interfaces {
+        println!("# Declared overrides with interface ancestry: {root}->{name}{signature}");
+        println!(
+            "# Coverage: {} APK classes; superclass/interface ancestry; declared overrides only; inherited-target/default-method/external/runtime dispatch unverified",
+            hierarchy.len()
+        );
+    } else {
+        println!("# Declared overrides: {root}->{name}{signature}");
+        println!(
+            "# Coverage: {} APK classes; superclass ancestry only; external/runtime/interface dispatch unverified",
+            hierarchy.len()
+        );
+    }
     for method in &selected {
         let mut path = vec![method.class_name.as_str()];
         let mut class = method.class_name.as_str();
@@ -2198,6 +2319,15 @@ pub fn run_virtual_overrides(
             class = superclass;
         }
         println!("# ancestry: {}", path.join(" -> "));
+        if include_interfaces {
+            for class in path {
+                if let Some(parents) = interfaces.get(class)
+                    && !parents.is_empty()
+                {
+                    println!("# interfaces: {class} => {}", parents.join(", "));
+                }
+            }
+        }
     }
     print_smali(&selected, true, true)
 }
@@ -3678,6 +3808,126 @@ mod tests {
     }
 
     #[test]
+    fn interface_census_selects_transitive_interfaces_and_superclasses_without_diamond_cycles() {
+        let hierarchy: BTreeMap<String, String> = BTreeMap::from([
+            ("LX/I;".into(), "Ljava/lang/Object;".into()),
+            ("LX/J;".into(), "Ljava/lang/Object;".into()),
+            ("LX/Base;".into(), "Ljava/lang/Object;".into()),
+            ("LX/Leaf;".into(), "LX/Base;".into()),
+            ("LX/Other;".into(), "Ljava/lang/Object;".into()),
+        ]);
+        let mut interfaces = BTreeMap::from([
+            ("LX/J;".into(), vec!["LX/I;".into()]),
+            ("LX/Base;".into(), vec!["LX/I;".into(), "LX/J;".into()]),
+        ]);
+        let methods = || {
+            ["LX/I;", "LX/Base;", "LX/Leaf;", "LX/Other;"]
+                .into_iter()
+                .map(|class| MethodDump {
+                    class_name: class.into(),
+                    superclass: hierarchy[class].clone(),
+                    method_name: "event".into(),
+                    method_proto: "VL".into(),
+                    method_signature: Ok("(Ljava/util/Collection;)V".into()),
+                    access_flags: 1,
+                    virtual_method: true,
+                    registers: 0,
+                    insns: vec![],
+                    try_blocks: vec![],
+                })
+                .collect()
+        };
+        assert_eq!(
+            select_virtual_overrides(
+                methods(),
+                &hierarchy,
+                "LX/I;",
+                "event",
+                "(Ljava/util/Collection;)V"
+            )
+            .unwrap()
+            .len(),
+            1
+        );
+        let selected = select_virtual_overrides_in(
+            methods(),
+            &hierarchy,
+            "LX/I;",
+            "event",
+            "(Ljava/util/Collection;)V",
+            Some(&interfaces),
+        )
+        .unwrap();
+        assert_eq!(
+            selected
+                .iter()
+                .map(|m| m.class_name.as_str())
+                .collect::<Vec<_>>(),
+            ["LX/Base;", "LX/I;", "LX/Leaf;"]
+        );
+        interfaces.insert("LX/I;".into(), vec!["LX/J;".into()]);
+        assert!(
+            select_virtual_overrides_in(
+                methods(),
+                &hierarchy,
+                "LX/I;",
+                "event",
+                "(Ljava/util/Collection;)V",
+                Some(&interfaces)
+            )
+            .err()
+            .unwrap()
+            .contains("cycle")
+        );
+    }
+
+    #[test]
+    fn interface_type_list_reads_literal_offsets_and_rejects_malformed_metadata() {
+        let base = object_signature_fixture(0, &[0x0e, 0]);
+        let make = |entries: &[u16]| {
+            let mut data = base.clone();
+            let offset = data.len().next_multiple_of(4);
+            data.resize(offset, 0);
+            data.extend_from_slice(&(entries.len() as u32).to_le_bytes());
+            for entry in entries {
+                data.extend_from_slice(&entry.to_le_bytes());
+            }
+            data[0xbc..0xc0].copy_from_slice(&(offset as u32).to_le_bytes());
+            data
+        };
+        let mut interfaces = BTreeMap::new();
+        interfaces_one(&make(&[3]), &mut interfaces).unwrap();
+        assert_eq!(interfaces["LX/Contact;"], ["LX/Other;"]);
+        for entries in [&[3, 3][..], &[4][..], &[1][..]] {
+            assert!(interfaces_one(&make(entries), &mut BTreeMap::new()).is_err());
+        }
+        let valid = make(&[3]);
+        let offset = u32le(&valid, 0xbc).unwrap() as usize;
+        for case in ["truncated", "oversized", "unaligned"] {
+            let mut data = valid.clone();
+            match case {
+                "truncated" => {
+                    data.pop();
+                }
+                "oversized" => data[offset..offset + 4].copy_from_slice(&u32::MAX.to_le_bytes()),
+                "unaligned" => {
+                    data[0xbc..0xc0].copy_from_slice(&((offset + 1) as u32).to_le_bytes())
+                }
+                _ => unreachable!(),
+            }
+            assert!(
+                interfaces_one(&data, &mut BTreeMap::new()).is_err(),
+                "{case}"
+            );
+        }
+        assert!(
+            interfaces_one(&valid, &mut interfaces)
+                .unwrap_err()
+                .contains("duplicate")
+        );
+    }
+
+    #[test]
     fn virtual_override_census_refuses_later_bad_dex_before_printing() {
         use std::io::Write as _;
         let mut first = catch_fixture();
@@ -3701,6 +3951,15 @@ mod tests {
             zip.finish().unwrap();
             let error =
                 run_virtual_overrides(&path, "LX/Other;", "update", "(LX/Contact;)V").unwrap_err();
+            assert!(error.starts_with("classes2.dex:"), "{error}");
+            let error = run_virtual_overrides_with_interfaces(
+                &path,
+                "LX/Other;",
+                "update",
+                "(LX/Contact;)V",
+                true,
+            )
+            .unwrap_err();
             assert!(error.starts_with("classes2.dex:"), "{error}");
         }
     }

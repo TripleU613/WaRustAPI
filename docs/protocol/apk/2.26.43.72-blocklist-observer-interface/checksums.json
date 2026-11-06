@@ -1,0 +1,22 @@
+{
+  "README.md": {
+    "bytes": 5588,
+    "sha256": "b9de938cbb0889d56252f10de1ef0d107b1dd415e9be47e85f78a07a8a05b6d3"
+  },
+  "callback-constructors.txt": {
+    "bytes": 1215,
+    "sha256": "c86c4afbf36f74ee7c1faa7ffaaba49dae36a808d164f645dfe564dcf45a2841"
+  },
+  "callback-selected.txt": {
+    "bytes": 1179,
+    "sha256": "b84c6252705f903b87c516e31194c3615af0a9b888572610625b9e3cc0c2b589"
+  },
+  "interface-census.txt": {
+    "bytes": 34419,
+    "sha256": "d12f040efd5f286823ad0a7c1b59b9893205388e815f53fe78cb286cf5ad4fbf"
+  },
+  "observer-dispatch.txt": {
+    "bytes": 8069,
+    "sha256": "567e7480afe8a47331319f727620eb6b2d84dd9c3471d567b8b40a82b0e9ac46"
+  }
+}

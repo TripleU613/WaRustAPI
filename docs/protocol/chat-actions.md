@@ -1577,3 +1577,28 @@ regeneration, OpenAPI library coverage and APK coverage freshness pass (968
 distinct REA records,0 duplicate copies,72 explicitly mapped). No Rust behavior
 changed; workspace runtime tests were not rerun for this research-only chunk.
 Repository hygiene passes (432 APK checksum bundles).
+
+## Blocklist observer interface census (2026-11-06)
+
+**Confirmed selected static plus offline tool correction:** [CbC selector7,
+complete observer dispatcher and37-declaration interface census](apk/2.26.43.72-blocklist-observer-interface/README.md)
+close1dH.A09's callback to0d0.Blg(Collection). The original invoke-name lookup
+had no body because this callback's actual declared method isCbC. Marker/thread
+classification in07o can invoke or schedule listeners; downstream job effects
+and active registration remain open, so no UI-only/network-free claim follows.
+
+apk-virtual-overrides now offers --include-interfaces for transitive interface/
+superclass **declared** method ancestry. Default output is unchanged. Literal
+DEX metadata, diamond/cycle, truncation/type/duplicate checks and both-mode
+later-bad-DEX tests protect the census. No active listener count, inherited-target/
+default-method/runtime resolution or completed protocol port is inferred.
+Production notification/ACK behavior remains unchanged; no live request.
+
+Validation:1,525 workspace tests pass (9 result suites, four test threads).
+Final xtask119 tests and strict workspace/all-target/all-feature Clippy pass,
+along with formatting, CLI reference regeneration, OpenAPI library coverage
+and APK coverage freshness. Five export commands reproduce;37 declared bodies,
+README extraction, checksum bundle and subject APK digest match. Default
+superclass-only output matches the retained negative byte-for-byte. No live
+account, production protocol change or complete runtime dispatch claim.
+Repository hygiene passes (433 APK checksum bundles).

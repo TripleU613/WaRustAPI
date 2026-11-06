@@ -288,7 +288,7 @@ enum Cmd {
         #[arg(long)]
         writes_only: bool,
     },
-    /// Dump exact declared instance overrides through the APK superclass hierarchy.
+    /// Dump exact declared instance overrides, with optional interface ancestry.
     ApkVirtualOverrides {
         apk: PathBuf,
         /// Exact declaring class descriptor, for example LX/178;.
@@ -299,6 +299,9 @@ enum Cmd {
         /// Full DEX parameter/return descriptor, for example ()Z.
         #[arg(long)]
         signature: String,
+        /// Also traverse declared interface edges; still not runtime method resolution.
+        #[arg(long)]
+        include_interfaces: bool,
     },
     /// Dump the Dalvik instruction stream for classes whose name contains `--class`.
     ///
@@ -499,7 +502,20 @@ fn main() -> ExitCode {
             class_name,
             method_name,
             signature,
-        } => xref::run_virtual_overrides(&apk, &class_name, &method_name, &signature),
+            include_interfaces,
+        } => {
+            if include_interfaces {
+                xref::run_virtual_overrides_with_interfaces(
+                    &apk,
+                    &class_name,
+                    &method_name,
+                    &signature,
+                    true,
+                )
+            } else {
+                xref::run_virtual_overrides(&apk, &class_name, &method_name, &signature)
+            }
+        }
         Cmd::ApkSmali {
             apk,
             class_filter,

@@ -1,0 +1,15 @@
+# Selected DEX excerpt; not a complete method.
+
+# class: LX/3XP;
+# extends: Ljava/lang/Object;
+
+.method public CbC(VL)  # .registers 7
+    # full signature: LX/3XP;->CbC(Ljava/lang/Object;)V
+    0000..0004  iget  v0, v5, LX/3XP;->$t:I
+    0004..000a  packed-switch  v0, payload@0x580, cases=[0:@0x134, 1:@0x14e, 2:@0x18, 3:@0x168, 4:@0x180, 5:@0x198, 6:@0x1b0, 7:@0x1c8, 8:@0x1e2, 9:@0x1fc, 10:@0x216, 11:@0x230, 12:@0x24a, 13:@0x264, 14:@0x27e, 15:@0x298, 16:@0x2b2, 17:@0x2cc, 18:@0xec, 19:@0x56, 20:@0x2e6, 21:@0x300, 22:@0x31a, 23:@0x33e, 24:@0x350, 25:@0x36a, 26:@0x384, 27:@0x39e, 28:@0xfe, 29:@0x5e, 30:@0x90, 31:@0xba, 32:@0x3b8, 33:@0x41e, 34:@0x438, 35:@0x452, 36:@0x46c, 37:@0x486, 38:@0xa, 39:@0x4a0, 40:@0x4ba, 41:@0x4d4, 42:@0x4ee, 43:@0x508, 44:@0x522, 45:@0x110, 46:@0x122, 47:@0x54a, 48:@0xa, 49:@0x564], default@0xa
+    01c8..01cc  iget-object  v0, v5, LX/3XP;->A00:Ljava/lang/Object;
+    01cc..01d0  check-cast  v0, Ljava/util/Collection;
+    01d0..01d4  check-cast  v6, LX/0d0;
+    01d4..01da  invoke-static  {v6}, LX/1Xl;->A1M(Ljava/lang/Object;)V
+    01da..01e0  invoke-interface  {v6, v0}, LX/0d0;->Blg(Ljava/util/Collection;)V
+    01e0..01e2  return-void

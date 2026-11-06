@@ -1,3 +1,10 @@
+2026-11-06 — **Offline interface census closes blocklist observer handoff.**
+Added apk-virtual-overrides --include-interfaces with checked DEX type lists and
+transitive ancestry. Pinned callback routes to0d0.Blg;37 declared bodies retained,
+without claiming active registrations or complete runtime dispatch.
+[Tool, evidence and remaining jobs](chat-actions.md#blocklist-observer-interface-census-2026-11-06).
+No production protocol or live account change.
+
 2026-11-06 — **Blocklist delta storage and side-effect boundaries retained.**
 The async worker copies current membership, rewrites its table, then separately
 applies hash preferences/metadata/follow-up work. Transaction failures and ignored

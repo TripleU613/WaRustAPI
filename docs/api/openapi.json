@@ -327,6 +327,12 @@
       "x-transport": "offline controlled JVM reference; opt-in pinned public-source fetch",
       "x-live": false,
       "description": "Compile six hash-pinned, unchanged AOSP Android16 JSON sources with annotation-only compatibility stubs and execute four synthetic migration-shaped map cases. --fetch only obtains missing public source files; no account or APK/device is opened. --check compares complete emitted JSON/UTF8 fixtures and binds queryId to the pinned MigrateBlocklistLid export. This is controlled reference behavior, not live device/Pando serialization, sender capability or account acceptance. Evidence docs/protocol/chat-actions.md#migration-json-controlled-reference-2026-11-06."
+    },
+    {
+      "x-cli": "cargo run --locked -p xtask -- apk-virtual-overrides <apk> --class <class> --method <method> --signature <descriptor> [--include-interfaces]",
+      "x-transport": "offline CLI developer utility",
+      "x-live": false,
+      "description": "Exact declared ordinary instance method census. Default superclass-only output retained. Opt-in --include-interfaces reads checked DEX class interface lists and traverses transitive superclass/subinterface ancestry; malformed list alignment/extents/types/duplicates and encountered queried cycles refuse before output. Diamonds allowed; later malformed DEX cannot yield a partial success census. Retains exact full-signature/access/root/final checks. Does not resolve inherited implementation owners/default methods, active registrations, external/runtime dispatch or complete port coverage. Pinned blocklist observer root0d0.Blg yields37 declarations including abstract/no-op bodies, not37 active listeners. No account, APK execution or HTTP route. docs/protocol/chat-actions.md#blocklist-observer-interface-census-2026-11-06"
     }
   ],
   "x-blocklist-snapshot-last-membership": {
