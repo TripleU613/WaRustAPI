@@ -1,0 +1,68 @@
+# Declared overrides with interface ancestry: LX/08Z;->Cc2(Ljava/lang/Runnable;J)Ljava/lang/Runnable;
+# Coverage: 114178 APK classes; superclass/interface ancestry; declared overrides only; inherited-target/default-method/external/runtime dispatch unverified
+# ancestry: LX/08Z; -> Ljava/lang/Object;
+# ancestry: LX/08a; -> Ljava/lang/Object;
+# interfaces: LX/08a; => LX/08Z;
+# ancestry: LX/Qew; -> Ljava/lang/Object;
+# interfaces: LX/Qew; => LX/08Z;
+
+# class: LX/08Z;
+# extends: Ljava/lang/Object;
+
+.method public Cc2(LLJ)  # .registers 0
+    # full signature: LX/08Z;->Cc2(Ljava/lang/Runnable;J)Ljava/lang/Runnable;
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/08a;
+# extends: Ljava/lang/Object;
+
+.method public Cc2(LLJ)  # .registers 7
+    # full signature: LX/08a;->Cc2(Ljava/lang/Runnable;J)Ljava/lang/Runnable;
+    0000..0002  monitor-enter
+    0002..0006  iget-object  v2, v3, LX/08a;->A00:Landroid/os/Handler;
+    0006..000a  if-nez  v2, +0x1c
+    000a..000e  const-string  v2, "WhatsApp Worker Scheduler"
+    000e..0012  const/16  v1, #0xa
+    0012..0016  new-instance  v0, Landroid/os/HandlerThread;
+    0016..001c  invoke-direct  {v0, v2, v1}, Landroid/os/HandlerThread;-><init>(Ljava/lang/String;I)V
+    001c..0022  invoke-virtual  {v0}, Ljava/lang/Thread;->start()V
+    0022..0028  invoke-virtual  {v0}, Landroid/os/HandlerThread;->getLooper()Landroid/os/Looper;
+    0028..002a  move-result-object  v0
+    002a..0030  invoke-static  {v0}, LX/00L;->A05(Ljava/lang/Object;)V
+    0030..0034  new-instance  v2, Landroid/os/Handler;
+    0034..003a  invoke-direct  {v2, v0}, Landroid/os/Handler;-><init>(Landroid/os/Looper;)V
+    003a..003e  iput-object  v2, v3, LX/08a;->A00:Landroid/os/Handler;
+    003e..0042  const/16  v1, #0x13
+    0042..0046  new-instance  v0, LX/1Wa;
+    0046..004c  invoke-direct  {v0, v4, v3, v1}, LX/1Wa;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V
+    004c..0052  invoke-virtual  {v2, v0, v5, v6}, Landroid/os/Handler;->postDelayed(Ljava/lang/Runnable;J)Z
+    0052..0054  monitor-exit
+    0054..0056  return-object  v0
+    0056..0058  move-exception  v0
+    0058..005a  monitor-exit
+    005a..005c  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0001..0029 -> 002b
+    # catch <all> code_units 002c..002d -> 002b
+.end method
+
+# class: LX/Qew;
+# extends: Ljava/lang/Object;
+
+.method public Cc2(LLJ)  # .registers 6
+    # full signature: LX/Qew;->Cc2(Ljava/lang/Runnable;J)Ljava/lang/Runnable;
+    0000..0002  const/4  v0, #0x2
+    0002..0008  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  const/4  v0, #0x6
+    000a..000e  new-instance  v1, LX/Qlv;
+    000e..0014  invoke-direct  {v1, v3, v2, v0}, LX/Qlv;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V
+    0014..0018  iget-object  v0, v2, LX/Qew;->A02:LX/00p;
+    0018..001e  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    001e..0020  move-result-object  v0
+    0020..0024  check-cast  v0, Landroid/os/Handler;
+    0024..002a  invoke-virtual  {v0, v1, v4, v5}, Landroid/os/Handler;->postDelayed(Ljava/lang/Runnable;J)Z
+    002a..002c  return-object  v1
+    # exception table: 0 try range(s)
+.end method

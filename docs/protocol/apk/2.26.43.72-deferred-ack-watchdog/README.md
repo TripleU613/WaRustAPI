@@ -51,3 +51,11 @@ faithful port must keep diagnostics, work ownership, metadata-token ownership,
 send admission and server confirmation separate; expiring the tracking map
 must not itself authorize transmission or invalidate the held token.
 Static/offline only; no live account operation.
+
+## Scheduler and PSA follow-up (2026-11-06)
+
+[Declared scheduler and wakeup bindings](../2.26.43.72-psa-wakeup-completion/README.md)
+now retain Handler.postDelayed/CYL wrapper cancellation on both compiled
+implementations. This strengthens the unit/cancel binding without establishing
+runtime provider, wrapper/Looper lifecycle or per-token expiry. The diagnostic
+watchdog and late-completion distinctions above remain unchanged.

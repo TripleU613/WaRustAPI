@@ -1,0 +1,88 @@
+# Selected DEX excerpt; not a complete synthetic run method.
+
+# class: LX/Fc2;
+# extends: Ljava/lang/Object;
+
+.method public run(V)  # .registers 32
+    # full signature: LX/Fc2;->run()V
+    0000..0004  move-object/from16  v5, v31
+    0004..0008  iget  v0, v5, LX/Fc2;->$t:I
+    0008..000e  packed-switch  v0, payload@0x1d9c, cases=[0:@0x1bac, 1:@0x1b90, 2:@0x1b52, 3:@0x196c, 4:@0x1852, 5:@0x16f8, 6:@0x16a2, 7:@0x1678, 8:@0x165c, 9:@0x9b8, 10:@0x152a, 11:@0x14ea, 12:@0xa02, 13:@0x14ce, 14:@0x14ce, 15:@0x14b2, 16:@0x147e, 17:@0x1466, 18:@0x143e, 19:@0x13b4, 20:@0x994, 21:@0x1372, 22:@0x132c, 23:@0x912, 24:@0x868, 25:@0x558, 26:@0x130e, 27:@0x11dc, 28:@0x130e, 29:@0x10f0, 30:@0x41c, 31:@0x10bc, 32:@0x1086, 33:@0xe, 34:@0xe, 35:@0xeca, 36:@0xe, 37:@0x33e, 38:@0xe86, 39:@0xe42, 40:@0x1fa, 41:@0xe0a, 42:@0xdea, 43:@0xdd4, 44:@0xdd4, 45:@0x130, 46:@0xda8, 47:@0xd90, 48:@0x36, 49:@0x9ea], default@0xe
+    11dc..11e0  iget-object  v6, v5, LX/Fc2;->A00:Ljava/lang/Object;
+    11e0..11e4  check-cast  v6, LX/19n;
+    11e4..11e8  iget-object  v4, v5, LX/Fc2;->A01:Ljava/lang/Object;
+    11e8..11ec  check-cast  v4, LX/89Y;
+    11ec..11f0  if-eqz  v4, +0x8c
+    11f0..11f4  iget-object  v8, v6, LX/19n;->A0H:LX/08Y;
+    11f4..11f8  const/16  v0, #0x4a63
+    11f8..11fe  invoke-virtual  {v8, v0}, LX/00E;->A14(I)Z
+    11fe..1200  move-result  v0
+    1200..1202  const/4  v5, #0x0
+    1202..1206  if-eqz  v0, +0x1a
+    1206..120a  iget-object  v0, v4, LX/89Y;->A04:LX/1k2;
+    120a..120e  if-eqz  v0, +0x16
+    120e..1214  invoke-interface  {v0}, LX/1k2;->Ay8()LX/0Tp;
+    1214..1216  move-result-object  v1
+    1216..121a  if-eqz  v1, +0x10
+    121a..121e  const-string  v0, "psa_wakeup"
+    121e..1224  invoke-virtual  {v1, v0}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    1224..1226  move-result-object  v1
+    1226..122a  if-eqz  v1, +0x8
+    122a..122e  const-string  v0, "psa_push_id"
+    122e..1234  invoke-virtual  {v1, v0, v5}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    1234..1236  move-result-object  v5
+    1236..123a  iget-object  v7, v6, LX/19n;->A0I:LX/0NX;
+    123a..123e  new-instance  v1, LX/Ds1;
+    123e..1244  invoke-direct  {v1}, LX/Ds1;-><init>()V
+    1244..1248  iget-object  v0, v6, LX/19n;->A01:LX/05a;
+    1248..124c  iget-object  v3, v0, LX/05a;->A00:LX/00x;
+    124c..1252  invoke-interface  {v3}, LX/00x;->get()Ljava/lang/Object;
+    1252..1254  move-result-object  v0
+    1254..1258  check-cast  v0, LX/Fy0;
+    1258..125e  invoke-virtual  {v0}, LX/Fy0;->A00()Ljava/lang/String;
+    125e..1260  move-result-object  v0
+    1260..1264  iput-object  v0, v1, LX/Ds1;->A06:Ljava/lang/String;
+    1264..126a  invoke-static  {}, LX/2L7;->A1C()Ljava/lang/Integer;
+    126a..126c  move-result-object  v2
+    126c..1270  iput-object  v2, v1, LX/Ds1;->A01:Ljava/lang/Integer;
+    1270..1276  invoke-static  {}, LX/2L7;->A1D()Ljava/lang/Integer;
+    1276..1278  move-result-object  v0
+    1278..127c  iput-object  v0, v1, LX/Ds1;->A00:Ljava/lang/Integer;
+    127c..1280  iput-object  v5, v1, LX/Ds1;->A0A:Ljava/lang/String;
+    1280..1286  invoke-interface  {v7, v1}, LX/0NX;->CSW(LX/0FP;)V
+    1286..128a  new-instance  v1, LX/Dr5;
+    128a..1290  invoke-direct  {v1}, LX/Dr5;-><init>()V
+    1290..1296  invoke-interface  {v3}, LX/00x;->get()Ljava/lang/Object;
+    1296..1298  move-result-object  v0
+    1298..129c  check-cast  v0, LX/Fy0;
+    129c..12a2  invoke-virtual  {v0}, LX/Fy0;->A00()Ljava/lang/String;
+    12a2..12a4  move-result-object  v0
+    12a4..12a8  iput-object  v0, v1, LX/Dr5;->A02:Ljava/lang/String;
+    12a8..12ac  iput-object  v5, v1, LX/Dr5;->A03:Ljava/lang/String;
+    12ac..12b0  iput-object  v2, v1, LX/Dr5;->A00:Ljava/lang/Integer;
+    12b0..12b6  invoke-interface  {v7, v1}, LX/0NX;->CSW(LX/0FP;)V
+    12b6..12ba  const/16  v0, #0x4d73
+    12ba..12c0  invoke-virtual  {v8, v0}, LX/00E;->A14(I)Z
+    12c0..12c2  move-result  v0
+    12c2..12c6  if-eqz  v0, +0x12
+    12c6..12ca  iget-object  v0, v6, LX/19n;->A0D:LX/05a;
+    12ca..12d0  invoke-static  {v0}, LX/DBe;->A0a(LX/05a;)LX/12Q;
+    12d0..12d2  move-result-object  v0
+    12d2..12d8  invoke-interface  {v0}, LX/12Q;->ABu()Z
+    12d8..12da  move-result  v0
+    12da..12de  if-nez  v0, +0x6
+    12de..12e4  invoke-virtual  {v4}, LX/89Y;->A01()V
+    12e4..12e6  goto  +0x5
+    12e6..12ec  invoke-virtual  {v6, v5}, LX/19n;->A0A(Ljava/lang/String;)V
+    12ec..12ee  goto  -0x7
+    12ee..12f0  return-void
+    12f0..12f2  move-exception  v1
+    12f2..12f6  const-string  v0, "PSANotificationHandler/Push PSA corrupted: "
+    12f6..12fc  invoke-static  {v0, v1}, LX/2LE;->A1A(Ljava/lang/String;Ljava/lang/Object;)V
+    12fc..1302  invoke-static  {v4}, LX/19n;->A03(LX/89Y;)V
+    1302..1304  return-void
+    1304..130a  invoke-static  {}, LX/3q2;->A0l()Ljava/lang/IllegalArgumentException;
+    130a..130c  move-result-object  v4
+    130c..130e  throw  v4
+    # Selected exception range only:
+    # catch Ljava/lang/Exception; code_units 08f8..0978 -> 0978

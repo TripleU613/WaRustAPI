@@ -4874,3 +4874,14 @@ revoke/campaign and message ingestion branches differ from the Rust helper.
 Effective feature settings, worker failures, persistence/recovery and full ACK
 correlation remain required. Runtime ACK policy is unchanged; no guessed flag,
 extra487, blanket hold or fabricated completion was introduced. No live request.
+
+## PSA watchdog and wakeup completion (2026-11-06)
+
+**Confirmed static:** [current wakeup/scheduler follow-up](psa-ack-lifecycle.md#wakeup-completion-and-scheduler-follow-up-2026-11-06)
+reuses the already-retained diagnostic watchdog: tracking-map cleanup neither
+sends ACK nor consumes a held completion token. Declared scheduler methods
+bind6000 to Handler.postDelayed milliseconds and cancel returned wrappers.
+Waking worker27 normally completes after promotion selection/rendering method
+return; its selected Exception path uses487. No remote fetch or queued-render
+success is established by that call. Effective flags, wrapper/provider/runtime
+lifecycle, native application and recovery remain open. Runtime policy unchanged.

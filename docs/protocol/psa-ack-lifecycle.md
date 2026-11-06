@@ -39,8 +39,10 @@ wire delivery or replay authority after an uncertain write.
 Fd3 processes selected message bodies and invokes native ingestion before plain
 completion at its normal tail. Missing id explicitly throws; no catch/finally in
 this method guarantees completion on that path. Full ingestion transaction,
-restart/cut handling, scheduler acceptance, the6000 deferral task and other
-workers remain separate obligations. Do not equate normal async scheduling or
+restart/cut handling, scheduler acceptance and other workers remain separate
+obligations. The [retained diagnostic watchdog](apk/2.26.43.72-deferred-ack-watchdog/README.md)
+already establishes tracking-map cleanup without ACK/token consumption; a late
+held-token completion can still dispatch. It is not a six-second ACK deadline. Do not equate normal async scheduling or
 a returned ingestion call with committed state or server acceptance.
 
 ## Rust gap and next implementation evidence
@@ -59,3 +61,20 @@ required evidence/port work is effective feature authority, selected worker
 success/failure completion, transactional work/recovery ownership and the ACK
 writer's captured/live correlation. Existing capture and ACK helpers remain
 bounded legacy behavior, not a complete current-build port or zero-ban proof.
+
+## Wakeup completion and scheduler follow-up (2026-11-06)
+
+**Confirmed static:** [selected wakeup arm and scheduler implementations](apk/2.26.43.72-psa-wakeup-completion/README.md)
+close its normal/Exception completion joins. Property19043 controls optional
+push-ID reading;19827 and12Q.ABu gate promotion selection/rendering. Normal
+return joins89Y.A01; selected Exception routes487. Queued rendering is not a
+transferred notification completion owner. This does not establish a remote
+fetch or remote acceptance boundary; selector/filter/renderer internals remain
+open. Effective flags and durable/native work ownership are still unported.
+
+Both declared08Z.Cc2 implementations pass delay to Handler.postDelayed and
+return a wrapper; CYL cancels that wrapper with removeCallbacks. The6000 value
+is milliseconds on these compiled routes, while scheduler acceptance/provider,
+wrapper behavior and process lifecycle remain unverified. Existing watchdog
+proof was reused, correcting its omission in the initial PSA trace. No runtime
+ACK, timer, renderer, request or telemetry policy changed.

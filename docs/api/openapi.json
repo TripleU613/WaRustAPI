@@ -1,4 +1,11 @@
 {
+  "x-psa-watchdog-wakeup-evidence": {
+    "x-cli": "xtask apk-smali <apk> --class <class> --method <method> --signatures --exceptions; xtask apk-virtual-overrides <apk> --class <class> --method Cc2 --signature <signature> --include-interfaces",
+    "x-transport": "offline PSA evidence only; legacy runtime ACK policy unchanged",
+    "x-live": false,
+    "description": "Reuses current diagnostic-watchdog proof: map cleanup neither sends ACK nor consumes held89Y owner; late completion remains possible. Declared08a/Qew delay methods use Handler.postDelayed and return wrappers; cancellation removes callbacks, not native work ownership. Selected Fc2 case27 reads optional push ID under19043 and gates promotion selection/rendering under19827/12Q.ABu. Normal method return joins89Y.A01; selected Exception routes487. No newly established network fetch, remote acceptance or renderer completion rule. Effective flags, provider/wrapper/runtime lifecycle, other workers and durable application/recovery remain unported. No runtime timer/ACK/request/telemetry/HTTP route or live operation added.",
+    "evidence": "docs/protocol/apk/2.26.43.72-psa-wakeup-completion/README.md"
+  },
   "x-psa-current-work-ack-evidence": {
     "x-cli": "xtask apk-smali <apk> --class <class> --method <method> --signatures --exceptions; xtask apk-xref <apk> --anchor psa_wakeup",
     "x-transport": "offline APK evidence; existing legacy notifications::psa_ack policy unchanged",

@@ -1,0 +1,27 @@
+
+# class: LX/19n;
+# extends: LX/0v6;
+
+.method public A0A(VL)  # .registers 7
+    # full signature: LX/19n;->A0A(Ljava/lang/String;)V
+    0000..0004  const/16  v4, #0x2bdf
+    0004..0008  iget-object  v1, v5, LX/19n;->A00:Landroid/content/Context;
+    0008..000c  new-instance  v0, LX/Eni;
+    000c..0012  invoke-direct  {v0, v1}, LX/Eni;-><init>(Landroid/content/Context;)V
+    0012..0016  iput-object  v6, v0, LX/Eni;->A04:Ljava/lang/String;
+    0016..001a  new-instance  v3, LX/FbF;
+    001a..0020  invoke-direct  {v3}, Ljava/lang/Object;-><init>()V
+    0020..0024  iput-object  v0, v3, LX/FbF;->A00:LX/Eni;
+    0024..0028  iget-object  v0, v5, LX/19n;->A0E:LX/05a;
+    0028..002c  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    002c..0032  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0032..0034  move-result-object  v2
+    0034..0038  check-cast  v2, LX/1Oc;
+    0038..003e  const-string/jumbo  v1, "whatsapp_push_notification_event"
+    003e..0040  const/4  v0, #0x1
+    0040..0046  invoke-virtual  {v2, v3, v1, v4, v0}, LX/1Oc;->A00(LX/ITG;Ljava/lang/String;IZ)LX/Fy4;
+    0046..0048  move-result-object  v0
+    0048..004e  invoke-static  {v3, v5, v0}, LX/19n;->A04(LX/FbF;LX/19n;LX/Fy4;)V
+    004e..0050  return-void
+    # exception table: 0 try range(s)
+.end method

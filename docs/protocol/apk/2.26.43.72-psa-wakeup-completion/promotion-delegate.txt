@@ -1,0 +1,17 @@
+
+# class: LX/1Oc;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLLIZ)  # .registers 6
+    # full signature: LX/1Oc;->A00(LX/ITG;Ljava/lang/String;IZ)LX/Fy4;
+    0000..0002  const/4  v0, #0x1
+    0002..0008  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  iget-object  v0, v1, LX/1Oc;->A06:LX/00p;
+    000c..0012  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    0012..0014  move-result-object  v0
+    0014..0018  check-cast  v0, LX/Fy9;
+    0018..001e  invoke-virtual  {v0, v2, v3, v4, v5}, LX/Fy9;->A01(LX/ITG;Ljava/lang/String;IZ)LX/Fy4;
+    001e..0020  move-result-object  v0
+    0020..0022  return-object  v0
+    # exception table: 0 try range(s)
+.end method

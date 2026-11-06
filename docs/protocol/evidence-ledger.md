@@ -1,3 +1,10 @@
+2026-11-06 — **Bound PSA watchdog and wakeup completion semantics.**
+Linked previously retained diagnostic-only watchdog proof; it does not expire
+held ACK ownership. Traced scheduler units/cancellation and wakeup normal versus
+Exception completion. Promotion work is not presumed to be a network fetch.
+[Evidence and remaining runtime obligations](psa-ack-lifecycle.md#wakeup-completion-and-scheduler-follow-up-2026-11-06).
+Runtime policy unchanged; no live operation.
+
 2026-11-06 — **Traced current PSA work-before-ACK obligations.**
 Native feature/campaign/revoke branches and one-shot deferred completion exceed
 the existing legacy PSA helper. Corrected universal ACK claims; effective flags,

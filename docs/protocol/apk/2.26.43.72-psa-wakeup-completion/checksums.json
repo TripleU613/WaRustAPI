@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "bytes": 6240,
+    "sha256": "628de24e52d0107b1190dbe666cd71180895a4f5c1b3df8200bfa391b76e4d33"
+  },
+  "cancel-alternate.txt": {
+    "bytes": 796,
+    "sha256": "4cfb4a31150ed0c487173471b6e5f3231a511c145d4b5b80dd2cdaa65ff29b3e"
+  },
+  "cancel-worker.txt": {
+    "bytes": 676,
+    "sha256": "d1bab3ed7e1bc4fc8de19bc079fd97a43dd35c8ac4bf45d667e780485e78f568"
+  },
+  "delay-implementations.txt": {
+    "bytes": 3216,
+    "sha256": "c5185ab7369ff1363e71a859795e6d2d62fa56891768ee5b912fb60c41dc9b63"
+  },
+  "promotion-delegate.txt": {
+    "bytes": 713,
+    "sha256": "32e31dd73a5bae6a4ee6ff16eb566d4ddf660ea2cd1ebb857285973f8a5cde1c"
+  },
+  "promotion-entry.txt": {
+    "bytes": 1289,
+    "sha256": "696a30500ed6d81c7bba0f1b8a7c79811393bb28120a65c6a966675d6f6354fc"
+  },
+  "promotion-render.txt": {
+    "bytes": 4512,
+    "sha256": "b0caf21aee4731b0b81ec11418c400100113dbe2d0e642ad03fcda285ffa693d"
+  },
+  "promotion-select.txt": {
+    "bytes": 1894,
+    "sha256": "5563806be4b0c58b1c94d90467b338510c95ee95e58112c2e705388cb0d0f4f1"
+  },
+  "wakeup-init.txt": {
+    "bytes": 498,
+    "sha256": "557cad3ef7b9d4268687d9aab2473dd7f8c096cc919caac3b53228e61fbbafff"
+  },
+  "wakeup-selected.txt": {
+    "bytes": 4979,
+    "sha256": "122ada92d3c775a4d1d62a481654961a761ec25b072add2a865fe9ab94aaa90e"
+  }
+}
