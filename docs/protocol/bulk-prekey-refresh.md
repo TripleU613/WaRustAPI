@@ -197,3 +197,9 @@ A00 waits using inherited FfK.get() without a timeout for this null-timeout call
 **Confirmed static:** [factory/default/handle and transport selection exports](apk/2.26.43.72-prekey-lid-mex-operation/README.md) show HSo creates a fresh0iq with32000ms timeout and defaultA03=false, selecting0j3. Its start-and-returnAQY API discards the operation handle; the selected outer wait does not cancel it.0j3 then branches on transport: non-Pando calls0Sf.A0W with the copied32000ms, while Pando dispatches separately. The outer128000ms future wait and the separate classic usync128000ms send argument do not define this MEX transport's universal lifetime.
 
 **Unknown / unported:** effective Pando choice/deadline/cancellation, IQ callback expiry/removal, late callback suppression and mapping adoption. No native race or restriction is proven; no Rust deadline, callback or retry change was made. Offline research only.
+
+## Missing-LID non-Pando MEX expiry outcome (2026-11-06)
+
+**Confirmed static:** [registry expiry/runnable and concrete MEX failure chain](apk/2.26.43.72-prekey-lid-mex-iq-expiry/README.md) link0mb/0md to0mZ.BL6. The selected registry expiry removes ownership under lock before scheduling BsS. That callback creates typed local transport mex-delivery-failure471; its LIM classification reaches the MEX exceptional FfK.BsR path. This differs from request-refusal BsT(null), and does not establish a server471 response or retry permission. Both IQ outer callback methods share a typed body parser; outer result/error alone does not determine final model success.
+
+**Unknown / unported:** full response constructors/adoption, queued/concurrent callback timing, fallback late-reply effects, Pando expiry/cancellation and reconnect authority. Removal-before-delivery is confirmed; universal late-reply suppression is not. No Rust runtime change or live operation.

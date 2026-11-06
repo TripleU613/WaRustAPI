@@ -8192,3 +8192,5 @@ Current43.72 missing-LID MEX handlers bound by constructors: request refusal can
 Current43.72 response-state lifecycle narrowed: selected nonempty-read reset and drained/exception cleanup exist; per-batch and late-callback guarantees remain unknown. [Explicit resets/cleanup and remaining late-callback limits](bulk-prekey-refresh.md#missing-lid-shared-response-state-resets-2026-11-06). No native race or live-operation claim.
 
 Current43.72 MEX lookup operation ownership/default and conditional non-Pando send timeout retained; no blanket cancellation or native-race claim. [Operation handle ownership, conditional32-second send and remaining transport limits](bulk-prekey-refresh.md#missing-lid-mex-operation-ownership-and-nested-send-timeout-2026-11-06). No runtime or live operations.
+
+APK43.72 non-Pando MEX expiry removes ordinary pending ownership before scheduling delivery failure; local471 reaches exceptional future completion. [Registry expiry, typed delivery failure and late-reply limits](bulk-prekey-refresh.md#missing-lid-non-pando-mex-expiry-outcome-2026-11-06). No runtime or live operations.

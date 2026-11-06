@@ -17604,5 +17604,12 @@
     "x-live": false,
     "description": "Research-only APK43.72 HSo MEX operation factory/default/handle trace. Fresh operation selects0j3 with32000ms copied timeout; non-Pando send uses that value, Pando branches separately, outer wait uses128000ms. AQY discards the returned start handle. Effective Pando deadlines/cancellation and late callback cleanup remain unverified. No runtime timeout or retry added.",
     "evidence": "docs/protocol/bulk-prekey-refresh.md#missing-lid-mex-operation-ownership-and-nested-send-timeout-2026-11-06"
+},
+  "x-prekey-lid-mex-iq-expiry-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Research-only APK43.72 non-Pando MEX registry expiry and concrete callback trace. Pending ownership is removed before scheduled delivery failure; typed local mex-delivery-failure471 reaches BsR, distinct from normal request-refusal completion. Full response parsing/adoption, race/fallback/Pando expiry remain unverified. No server471 response, retry permission or runtime behavior added.",
+    "evidence": "docs/protocol/bulk-prekey-refresh.md#missing-lid-non-pando-mex-expiry-outcome-2026-11-06"
 }
 }
