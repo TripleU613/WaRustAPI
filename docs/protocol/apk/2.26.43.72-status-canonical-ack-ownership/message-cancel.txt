@@ -1,0 +1,25 @@
+
+# class: Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;
+# extends: Lorg/whispersystems/jobqueue/Job;
+
+.method public A0K(V)  # .registers 3
+    # full signature: Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;->A0K()V
+    0000..0004  const-string  v0, "SyncDeviceAndResendMessageJob/onCanceled/param="
+    0004..000a  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    000a..000c  move-result-object  v1
+    000c..0012  invoke-virtual  {v2}, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;->A0O()Ljava/lang/String;
+    0012..0014  move-result-object  v0
+    0014..001a  invoke-static  {v1, v0}, LX/2LD;->A1D(Ljava/lang/StringBuilder;Ljava/lang/String;)V
+    001a..001e  iget-object  v1, v2, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;->A0L:LX/DCC;
+    001e..0022  iget-object  v0, v2, Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;->A0C:LX/1dW;
+    0022..0026  iget-object  v1, v1, LX/DCC;->A02:Ljava/util/Set;
+    0026..0028  monitor-enter
+    0028..002e  invoke-interface  {v1, v0}, Ljava/util/Set;->remove(Ljava/lang/Object;)Z
+    002e..0030  monitor-exit
+    0030..0032  return-void
+    0032..0034  move-exception  v0
+    0034..0036  monitor-exit
+    0036..0038  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0014..001b -> 0019
+.end method

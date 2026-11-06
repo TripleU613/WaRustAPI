@@ -1,0 +1,44 @@
+
+# class: LX/Epe;
+# extends: Ljava/lang/Object;
+
+.method public A01(ZLL)  # .registers 6
+    # full signature: LX/Epe;->A01(LX/E8T;LX/E8T;)Z
+    0000..0002  const/4  v3, #0x0
+    0002..0008  invoke-static  {v4, v3}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  const/4  v2, #0x1
+    000a..0010  invoke-virtual  {v4}, Ljava/lang/Enum;->ordinal()I
+    0010..0012  move-result  v1
+    0012..0016  if-eq  v1, v3, +0x15
+    0016..001a  if-eq  v1, v2, +0x16
+    001a..001c  const/4  v0, #0x2
+    001c..0020  if-eq  v1, v0, +0xd
+    0020..0022  const/4  v0, #0x3
+    0022..0026  if-eq  v1, v0, +0x1b
+    0026..0028  const/4  v0, #0x4
+    0028..002c  if-eq  v1, v0, +0x24
+    002c..0032  invoke-static  {}, LX/2L6;->A1N()LX/2K2;
+    0032..0034  move-result-object  v0
+    0034..0036  throw  v0
+    0036..003a  sget-object  v0, LX/E8T;->A06:LX/E8T;
+    003a..003c  goto  +0x1d
+    003c..0040  sget-object  v0, LX/E8T;->A05:LX/E8T;
+    0040..0042  goto  +0x7
+    0042..0046  sget-object  v0, LX/E8T;->A05:LX/E8T;
+    0046..004a  if-eq  v5, v0, +0x1a
+    004a..004e  sget-object  v0, LX/E8T;->A06:LX/E8T;
+    004e..0052  if-eq  v5, v0, +0x16
+    0052..0056  sget-object  v0, LX/E8T;->A02:LX/E8T;
+    0056..0058  goto  +0xb
+    0058..005c  sget-object  v0, LX/E8T;->A02:LX/E8T;
+    005c..0060  if-eq  v5, v0, +0xf
+    0060..0064  sget-object  v0, LX/E8T;->A05:LX/E8T;
+    0064..0068  if-eq  v5, v0, +0xb
+    0068..006c  sget-object  v0, LX/E8T;->A06:LX/E8T;
+    006c..0070  if-eq  v5, v0, +0x7
+    0070..0074  sget-object  v0, LX/E8T;->A03:LX/E8T;
+    0074..0078  if-eq  v5, v0, +0x3
+    0078..007a  return  v3
+    007a..007c  return  v2
+    # exception table: 0 try range(s)
+.end method

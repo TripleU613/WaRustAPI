@@ -18180,5 +18180,13 @@
     "x-library": [],
     "description": "Pinned static xtask research identifies status phash repair producer, selected recipients/original key/expiry, SyncDeviceAndResendStatusJob sync and saved-row admission, lower send-builder boundary and canonical ACK wait ownership by row/part plus callbacks/deadline. ExJ separately submitsDra through0NX. Exception reason names, DCC predicate, exact wait-key/callback/sync/sender authority remain unported. No runtime change, inferred telemetry endpoint, generic retry, live operation or replay authority.",
     "evidence": "docs/protocol/message-ack.md#status-hash-repair-queues-a-guarded-sync-and-resend-job-2026-11-06"
+  },
+  "x-status-canonical-ack-ownership-research": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Pinned static xtask research: CANONICAL_ACK_PENDING wait and NON_CURRENT_BATCH no-retry, process-local full1dW revoke dedup, exact row/nullable-part wait key, owner-checked callback/deadline, SQL prior-state/statusUUID guards and commit-before-terminal notification. Completion readiness and scheduler wake are distinct. Full exception/current-batch producer, update-caller, restart/clock and sync/sender authority remain unported. No runtime change, raw-ID ACK wake, live operation or replay authority.",
+    "evidence": "docs/protocol/message-ack.md#canonical-status-ack-waits-require-committed-part-and-callback-ownership-2026-11-06"
   }
 }

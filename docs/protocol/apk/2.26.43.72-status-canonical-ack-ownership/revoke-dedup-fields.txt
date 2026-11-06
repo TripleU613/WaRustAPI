@@ -1,0 +1,8 @@
+classes8.dex  LX/DCC;-><init>(V)
+  write opcode 0x5b, dex byte offset: 0x3e8f0e
+classes8.dex  LX/DCC;->A01(ZL)
+  read opcode 0x54, dex byte offset: 0x3e8f60
+classes8.dex  Lcom/whatsapp/contact/sync/jobqueue/job/SyncDevicesAndSendInvisibleMessageJob;->A0K(V)
+  read opcode 0x54, dex byte offset: 0x8cd9a2
+classes8.dex  Lcom/whatsapp/jobqueue/job/SyncDeviceAndResendMessageJob;->A0K(V)
+  read opcode 0x54, dex byte offset: 0x8d04e2

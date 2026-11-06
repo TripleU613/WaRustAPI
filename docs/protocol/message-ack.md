@@ -1012,3 +1012,27 @@ fact and no-replay rules stay intact; native conditional resend is not authority
 for a generic retry. Next work: DCC/reason enum/Fef/1uS wait ownership and actual
 sync/sender construction. Existing status edit/diversion regressions remain
 local controls, not tests of the unported native job. No live operations.
+
+
+## Canonical status ACK waits require committed part and callback ownership (2026-11-06)
+
+**Confirmed selected pinned static / research / unknown authority.**
+[Complete reason enum, dedup/key types, callbacks, part registry and transitions](apk/2.26.43.72-status-canonical-ack-ownership/README.md)
+resolve CANONICAL_ACK_PENDING wait versus NON_CURRENT_BATCH no-retry. DCC is a
+process-local original1dW duplicate marker (chat/id/fromMe), not durable account
+admission. Direct field census plus two other job-cancel handlers bound removal;
+status-job marker cleanup remains open, with no invented permanent/expiry policy.
+
+Wait2DW matches row AND nullable part, and callbacks check exact owner identity.
+Completion marks readiness; deadline also wakes the scheduler on owner match.
+Part-storeA05 first admits a state transition under prior-state and optional
+statusUUID predicates. Successful terminal update commits/closes DB, snapshots
+row-wide/specific listeners under lock, invokes them outside lock, then wakes
+scheduler. Raw matching ACK is not that completion authority. The bundle retains
+exact part-state transition table and extra-guard limits.
+
+No Rust runtime change. Current once-only reservations/no-replay remain intact.
+Next gaps are exception/current-batch producers, full update-caller identities,
+serialized restart/clock domains and sync/sender construction. Existing local
+status regressions are controls, not tests of native job callbacks or DB.
+No live operations.
