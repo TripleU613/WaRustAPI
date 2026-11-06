@@ -1,3 +1,5 @@
+Normal action callbacks now retain the written reservation through atomic reply settlement; old replies cannot consume replaced rows under the same ID. Duplicate live registration preserves the first owner/deadline. [Action callback binding and limits](docs/protocol/action-settlement-ordering.md#action-callbacks-retain-the-written-reservation-2026-11-06). Offline only.
+
 Normal queued actions now require their exact reserved row and original producer deadline before encoding. Changed, missing or expired intents refuse without replay; untimed requests remain untimed. [Action writer boundary and remaining gaps](docs/protocol/action-settlement-ordering.md#queued-action-writer-ownership-and-deadlines-2026-11-06). Offline only.
 
 Pinned presence reader now traced; missing type correctly reports available for primary-user metadata. Device/group routing and signed last-seen/default-clock projection remain partial. [Current presence audit](docs/protocol/presence.md#current-readerdefault-type-audit-2026-11-06). No outgoing request or live operation.

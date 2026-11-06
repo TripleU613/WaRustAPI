@@ -788,7 +788,7 @@ pub(crate) async fn drive(
             _ = tokio::time::sleep_until(action_drain.deadline()), if ready.is_none() && action_drain.remaining > 0 => {
                 if let Some(action) = super::actions::reserve_next_owned(&store)? {
                     link.send_action(&store, &action).await?;
-                    action_replies.record_written(&action.node, action.started);
+                    action_replies.record_written(&action)?;
                     action_drain.sent(config.transport.action_delay_ms);
                 } else {
                     action_drain.finish();

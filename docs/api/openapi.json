@@ -17891,5 +17891,12 @@
   "x-live": false,
   "description": "Normal actor action dispatch retains exact reserved Sent-row bytes and original monotonic start through writer admission. Changed/missing/settled rows or expired existing producer timers refuse before encoding; reply timers use the same original base. Untimed requests stay untimed. No lock through socket I/O, sidecar revalidation, public low-level ownership change, callback row binding, replay or live verification.",
   "evidence": "docs/protocol/action-settlement-ordering.md#queued-action-writer-ownership-and-deadlines-2026-11-06"
+},
+  "x-action-written-reservation-callback-ownership": {
+  "x-cli": false,
+  "x-transport": true,
+  "x-live": false,
+  "description": "Normal actor action callbacks retain the written reservation snapshot and require exact current-row equality inside reply settlement before parsing, sequence allocation or feature application. Duplicate active IDs refuse without replacing owners/deadlines; missing/mismatched ID/timer registration refuses. Claim, expiry and disconnect drop snapshots without replay. Public low-level reconciliation still requires caller authority; existing timer-claim semantics stay unchanged. No new sender policy or live verification.",
+  "evidence": "docs/protocol/action-settlement-ordering.md#action-callbacks-retain-the-written-reservation-2026-11-06"
 }
 }

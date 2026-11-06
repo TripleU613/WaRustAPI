@@ -597,9 +597,13 @@ pub(crate) fn reserve_one_in(tx: &mut crate::store::WriteTx<'_>, id: &str) -> Re
 pub(crate) struct LiveReplies(
     std::collections::HashSet<String>,
     std::collections::HashMap<String, tokio::time::Instant>,
+    std::collections::HashMap<String, ActionWriteGuard>,
 );
 
 fn callback_seconds(node: &Node) -> Option<u64> {
+    // APK43.72 HBE.A00 -> 0Sf.A0W/A0A -> 0ln.A08 registers the initial
+    // AB-properties callback for32000ms before dispatch. Other producers'
+    // durations are selected separately below, not inferred from that request.
     if node.get_attr("type").and_then(|v| v.as_text()) == Some("get")
         && node.get_attr("xmlns").and_then(|v| v.as_text()) == Some("abt")
         && let [props] = node.child_nodes()
@@ -655,22 +659,43 @@ fn callback_seconds(node: &Node) -> Option<u64> {
 }
 
 impl LiveReplies {
-    pub(crate) fn record_written(&mut self, node: &Node, started: tokio::time::Instant) {
-        if node.description == "iq"
-            && let Some(id) = node.get_attr("id").and_then(|value| value.as_text())
-        {
-            self.0.insert(id.to_owned());
-            // APK43.72 HBE.A00 -> 0Sf.A0W/A0A -> 0ln.A08: the initial
-            // AB-properties callback has 32000ms from pre-dispatch registration.
-            // Other producers' durations are not inferred from this request.
-            let seconds = callback_seconds(node);
-            if let Some(seconds) = seconds {
-                self.1.insert(
-                    id.to_owned(),
-                    started + std::time::Duration::from_secs(seconds),
-                );
-            }
+    pub(crate) fn record_written(&mut self, action: &ReservedAction) -> Result<()> {
+        let node = &action.node;
+        if node.description != "iq" {
+            return Ok(());
         }
+        let id = node
+            .get_attr("id")
+            .and_then(|value| value.as_text())
+            .ok_or_else(|| Error::invalid("action", "written action lacks callback id"))?;
+        if action.guard.key != key(id).as_bytes() {
+            return Err(Error::invalid(
+                "action",
+                "written action callback owner does not match id",
+            ));
+        }
+        let deadline = callback_seconds(node)
+            .map(|seconds| action.started + std::time::Duration::from_secs(seconds));
+        if deadline != action.guard.deadline {
+            return Err(Error::invalid(
+                "action",
+                "written action callback timer does not match reservation",
+            ));
+        }
+        if self.0.contains(id) {
+            return Err(Error::invalid(
+                "action",
+                "action callback id already active",
+            ));
+        }
+        self.0.insert(id.to_owned());
+        self.2.insert(id.to_owned(), action.guard.clone());
+        // Same reservation-time base as writer admission; callback completion
+        // does not start a fresh duration after the socket write.
+        if let Some(deadline) = action.guard.deadline {
+            self.1.insert(id.to_owned(), deadline);
+        }
+        Ok(())
     }
 
     pub(crate) fn deadline(&self) -> Option<tokio::time::Instant> {
@@ -684,6 +709,7 @@ impl LiveReplies {
         self.1.retain(|id, deadline| {
             if *deadline <= now {
                 self.0.remove(id);
+                self.2.remove(id);
                 false
             } else {
                 true
@@ -709,7 +735,11 @@ impl LiveReplies {
             return Ok(false);
         }
         self.1.remove(id);
-        record_reply(store, node)
+        let owner = self
+            .2
+            .remove(id)
+            .ok_or_else(|| Error::invalid("action", "live callback lacks written reservation"))?;
+        record_reply_inner(store, node, Some(&owner))
     }
 }
 
@@ -719,6 +749,14 @@ impl LiveReplies {
 /// reconciliation authority; a durable Sent row alone is not a live callback.
 /// The normal driver enforces this through LiveReplies.
 pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
+    record_reply_inner(store, node, None)
+}
+
+fn record_reply_inner(
+    store: &ProtocolStore,
+    node: &Node,
+    owner: Option<&ActionWriteGuard>,
+) -> Result<bool> {
     // Current APK 0ln.A01 dispatches only result/error; another IQ carrying
     // the same ID is not a definite refusal of the original request.
     if node.description != "iq"
@@ -737,6 +775,18 @@ pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
     }
     let key = key(id);
     store.write(|tx| {
+        if let Some(owner) = owner {
+            let current = zeroize::Zeroizing::new(
+                tx.get(Table::Checkpoints, key.as_bytes(), 1)?
+                    .unwrap_or_default(),
+            );
+            if owner.key != key.as_bytes() || *current != *owner.row {
+                return Err(Error::invalid(
+                    "action",
+                    "written action changed before reply settlement",
+                ));
+            }
+        }
         let Some(mut row): Option<Row> = tx.get_json(Table::Checkpoints, key.as_bytes(), 1)? else {
             return Ok(false);
         };
@@ -1489,6 +1539,164 @@ mod tests {
         (dir, s)
     }
 
+    fn register_written(
+        live: &mut LiveReplies,
+        store: &ProtocolStore,
+        node: &Node,
+        started: tokio::time::Instant,
+    ) {
+        let id = node.get_attr("id").and_then(|v| v.as_text()).unwrap();
+        let key = key(id).into_bytes();
+        let row = store
+            .read(|tx| tx.get(Table::Checkpoints, &key, 1))
+            .unwrap()
+            .unwrap();
+        let action = ReservedAction {
+            node: node.clone(),
+            started,
+            guard: ActionWriteGuard {
+                key,
+                row: zeroize::Zeroizing::new(row),
+                deadline: callback_seconds(node)
+                    .map(|seconds| started + std::time::Duration::from_secs(seconds)),
+            },
+        };
+        live.record_written(&action).unwrap();
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn live_action_reply_keeps_written_row_and_rejects_replacement() {
+        use std::time::Duration;
+        for response in ["result", "error"] {
+            for change in [
+                "same", "missing", "status", "wire", "kind", "label", "sent_at", "expire",
+            ] {
+                let (dir, db) = store();
+                let peer = crate::model::jid::Jid::parse("15555550101@s.whatsapp.net").unwrap();
+                let id = super::super::blocklist::queue_block(&db, &peer).unwrap();
+                let action = reserve_next_owned(&db).unwrap().unwrap();
+                let mut live = LiveReplies::default();
+                // Registration does not reload the durable row to create authority.
+                for invalid in [
+                    ReservedAction {
+                        node: Node::new("iq"),
+                        started: action.started,
+                        guard: action.guard.clone(),
+                    },
+                    ReservedAction {
+                        node: action.node.clone().attr("id", "OTHER"),
+                        started: action.started,
+                        guard: action.guard.clone(),
+                    },
+                    ReservedAction {
+                        node: action.node.clone(),
+                        started: action.started + Duration::from_millis(1),
+                        guard: action.guard.clone(),
+                    },
+                ] {
+                    assert!(live.record_written(&invalid).is_err());
+                    assert!(live.0.is_empty() && live.1.is_empty() && live.2.is_empty());
+                }
+                live.record_written(&action).unwrap();
+                assert!(live.record_written(&action).is_err());
+                let mut replacement_guard = action.guard.clone();
+                replacement_guard.row.push(b' ');
+                assert!(
+                    live.record_written(&ReservedAction {
+                        node: action.node.clone(),
+                        started: action.started,
+                        guard: replacement_guard
+                    })
+                    .is_err()
+                );
+                assert!(live.2[&id].row == action.guard.row);
+                assert_eq!(live.deadline(), action.guard.deadline);
+                if matches!(
+                    change,
+                    "missing" | "status" | "wire" | "kind" | "label" | "sent_at"
+                ) {
+                    db.write(|tx| {
+                        if change == "missing" {
+                            tx.delete(Table::Checkpoints, key(&id).as_bytes())?;
+                            return Ok(());
+                        }
+                        let mut row: Row = tx
+                            .get_json(Table::Checkpoints, key(&id).as_bytes(), 1)?
+                            .unwrap();
+                        match change {
+                            "status" => row.status = ActionStatus::Ok,
+                            "wire" => {
+                                row.wire = Encoder::new(TokenDictionary::comparison_2_26_37_71())
+                                    .encode(&action.node.clone().attr("xmlns", "changed-fixture"))?
+                            }
+                            "kind" => row.kind = "changed-fixture".into(),
+                            "label" => row.label = "changed-fixture".into(),
+                            _ => row.sent_at = Some(Timestamp(1)),
+                        }
+                        tx.put_json(Table::Checkpoints, key(&id).as_bytes(), 1, &row)
+                    })
+                    .unwrap();
+                }
+                if change == "expire" {
+                    tokio::time::advance(Duration::from_secs(20)).await;
+                    live.expire();
+                    assert!(live.0.is_empty() && live.1.is_empty() && live.2.is_empty());
+                }
+                let before = db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap();
+                let head = db.journal_head().unwrap();
+                let mut reply = Node::new("iq")
+                    .attr("type", response)
+                    .attr("id", id.as_str());
+                if response == "error" {
+                    reply = reply.children(vec![Node::new("error").attr("code", "403")]);
+                }
+                let result = live.record_reply(&db, &reply);
+                if change == "same" {
+                    assert!(result.unwrap());
+                } else {
+                    if change == "expire" {
+                        assert!(!result.unwrap());
+                    } else {
+                        assert!(result.is_err(), "{response}/{change}");
+                    }
+                    assert_eq!(
+                        db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap(),
+                        before
+                    );
+                    assert_eq!(db.journal_head().unwrap(), head);
+                }
+                assert!(live.0.is_empty() && live.1.is_empty() && live.2.is_empty());
+                assert!(!live.record_reply(&db, &reply).unwrap());
+                let after = db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap();
+                drop(db);
+                let reopened = ProtocolStore::open(OpenOptions {
+                    path: dir.path().join("p.redb"),
+                    account_id: AccountId::new("a").unwrap(),
+                    key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([7; 32]))),
+                    create: false,
+                })
+                .unwrap();
+                assert_eq!(
+                    reopened
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    after
+                );
+                assert!(
+                    !LiveReplies::default()
+                        .record_reply(&reopened, &reply)
+                        .unwrap()
+                );
+                assert_eq!(
+                    reopened
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    after
+                );
+            }
+        }
+    }
+
     #[tokio::test(start_paused = true)]
     async fn queued_action_write_retains_row_and_original_deadline() {
         use std::time::Duration;
@@ -1568,7 +1776,7 @@ mod tests {
                 }
                 written.send(Ok(())).unwrap();
                 let mut replies = LiveReplies::default();
-                replies.record_written(&node, started);
+                register_written(&mut replies, &db, &node, started);
                 assert_eq!(
                     replies.deadline(),
                     timed.then_some(started + Duration::from_secs(20))
@@ -1733,8 +1941,8 @@ mod tests {
                 let started = Instant::now();
                 advance(Duration::from_secs(5)).await;
                 let mut live = LiveReplies::default();
-                live.record_written(&request, started);
-                live.record_written(&key_request, started);
+                register_written(&mut live, &db, &request, started);
+                register_written(&mut live, &db, &key_request, started);
                 assert_eq!(live.deadline(), Some(started + Duration::from_secs(32)));
                 advance(Duration::from_secs(26)).await;
                 live.expire();
@@ -1825,8 +2033,8 @@ mod tests {
             let started = Instant::now();
             advance(Duration::from_secs(5)).await;
             let mut live = LiveReplies::default();
-            live.record_written(&request, started);
-            live.record_written(&generic_request, started);
+            register_written(&mut live, &store, &request, started);
+            register_written(&mut live, &store, &generic_request, started);
             assert_eq!(live.deadline(), Some(started + Duration::from_secs(32)));
             advance(Duration::from_secs(26)).await;
             live.expire();
@@ -1900,8 +2108,8 @@ mod tests {
                 let started = Instant::now();
                 let mut live = LiveReplies::default();
                 advance(Duration::from_secs(3)).await;
-                live.record_written(&request, started);
-                live.record_written(&fetch_request, started);
+                register_written(&mut live, &store, &request, started);
+                register_written(&mut live, &store, &fetch_request, started);
                 assert_eq!(live.deadline(), Some(started + Duration::from_secs(20)));
                 advance(Duration::from_secs(16)).await;
                 live.expire();
@@ -1973,8 +2181,8 @@ mod tests {
                 let started = Instant::now();
                 advance(Duration::from_secs(2)).await;
                 let mut live = LiveReplies::default();
-                live.record_written(&request, started);
-                live.record_written(&props_request, started);
+                register_written(&mut live, &store, &request, started);
+                register_written(&mut live, &store, &props_request, started);
                 assert_eq!(live.deadline(), Some(started + Duration::from_secs(20)));
                 advance(Duration::from_secs(17)).await;
                 live.expire();
@@ -2032,8 +2240,8 @@ mod tests {
                 let props_request = reserve_next(&store).unwrap().unwrap();
                 let mut live = LiveReplies::default();
                 let started = Instant::now();
-                live.record_written(&request, started);
-                live.record_written(&props_request, started);
+                register_written(&mut live, &store, &request, started);
+                register_written(&mut live, &store, &props_request, started);
                 advance(Duration::from_secs(32)).await;
                 live.expire();
                 assert!(live.0.contains(&id));
@@ -2095,7 +2303,7 @@ mod tests {
                 .unwrap();
                 let request = reserve_next(&store).unwrap().unwrap();
                 let mut live = LiveReplies::default();
-                live.record_written(&request, Instant::now());
+                register_written(&mut live, &store, &request, Instant::now());
                 assert!(live.deadline().is_none());
                 advance(Duration::from_secs(60)).await;
                 live.expire();
@@ -2175,7 +2383,7 @@ mod tests {
                 let started = Instant::now();
                 advance(Duration::from_secs(5)).await;
                 let mut live = LiveReplies::default();
-                live.record_written(&request, started);
+                register_written(&mut live, &store, &request, started);
                 assert_eq!(live.deadline(), Some(started + Duration::from_secs(32)));
                 advance(Duration::from_secs(26)).await;
                 live.expire();
@@ -2245,7 +2453,7 @@ mod tests {
                 let started = Instant::now();
                 advance(Duration::from_secs(5)).await;
                 let mut live = LiveReplies::default();
-                live.record_written(&request, started);
+                register_written(&mut live, &store, &request, started);
                 assert_eq!(live.deadline(), Some(started + Duration::from_secs(32)));
                 advance(Duration::from_secs(26)).await;
                 live.expire();
@@ -2310,16 +2518,16 @@ mod tests {
             }
         }
         // Account-privacy setters share xmlns=privacy but not this producer.
-        let mut live = LiveReplies::default();
-        live.record_written(
-            &Node::new("iq")
-                .attr("id", "PRIVACY-SETTING")
-                .attr("xmlns", "privacy")
-                .attr("type", "set")
-                .children(vec![Node::new("privacy")]),
-            Instant::now(),
+        assert_eq!(
+            callback_seconds(
+                &Node::new("iq")
+                    .attr("id", "PRIVACY-SETTING")
+                    .attr("xmlns", "privacy")
+                    .attr("type", "set")
+                    .children(vec![Node::new("privacy")])
+            ),
+            None
         );
-        assert!(live.deadline().is_none());
     }
 
     #[test]
@@ -2387,7 +2595,7 @@ mod tests {
                 !live.record_reply(&store, &reply).unwrap(),
                 "reservation alone owns no callback"
             );
-            live.record_written(&request, tokio::time::Instant::now());
+            register_written(&mut live, &store, &request, tokio::time::Instant::now());
             for wrong in [
                 Node::new("iq").attr("id", id.as_str()).attr("type", "get"),
                 Node::new("iq").attr("id", id.as_str()).attr("type", "set"),

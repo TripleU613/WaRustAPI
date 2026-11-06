@@ -143,10 +143,63 @@ that callback expiry uses the original base, not write completion.
 privacy/restriction/backoff changes after reservation are not re-evaluated by
 this exact-row guard unless they change that row. Live reply ownership still
 correlates by ID/deadline rather than retaining this row snapshot through
-settlement; that is a separate remaining audit item. Low-level/feature-owned
+settlement; the written-row binding follow-up below closes that separate gap. Low-level/feature-owned
 writers retain their contracts. No reconnect, automatic retry, reset or live
 account operation was added.
 
 Validation:1,450 workspace/all-feature tests passed. Strict workspace/all-target/
+all-feature Clippy, formatting, CLI reference regeneration, OpenAPI symbol
+validation, APK coverage freshness and repository hygiene passed. Offline only.
+
+## Action callbacks retain the written reservation (2026-11-06)
+
+**Confirmed Rust defect fixed offline:** the per-drive action callback registry
+previously retained only IDs and deadlines. Generic settlement loaded the
+current Sent row for that ID. If local state replaced the row after the request
+was written, an old result/error could settle the replacement and dispatch its
+feature-specific interpretation. Existing wire-ID validation did not compare
+against the row that actually passed writer admission.
+
+Registration now consumes the owned-action handoff, retaining its zeroized
+row snapshot through callback lifetime. Missing/mismatched callback ID or
+inconsistent original timer refuses. A duplicate active ID refuses without
+replacing its first owner or deadline; the actor propagates that failure rather
+than silently rebinding an already-written request. These are local collision
+and consistency checks, not a claim that native Map.put rejects duplicate IDs.
+
+A matching result/error claims the callback and removes its timer and retained
+owner before settlement. Inside the same write transaction that parses and
+settles the action, current row bytes must equal the written snapshot. A missing
+or changed row refuses before response interpretation, sequence allocation,
+row mutation or feature processing. A duplicate response cannot invoke a failed
+callback again. Timer expiry drops the snapshot as well; disconnect drops the
+whole per-drive registry, and durable Sent rows cannot recreate it.
+
+**Confirmed static reference, APK2.26.43.72:**
+[IQ reader admission and registry dispatch](apk/2.26.43.72-iq-reader-admission/README.md)
+and existing source comments retain exact result/error dispatch and callback
+claim-before-parsing architecture. The row-byte comparison is a local
+persistence invariant. No new APK trace, sender policy, callback duration or
+native checkpoint-format claim is made. Existing timer-versus-response claim
+semantics are preserved; this does not add an elapsed-age rejection after a
+response has claimed its callback.
+
+Regression: `live_action_reply_keeps_written_row_and_rejects_replacement` covers
+result/error with unchanged, missing, terminal and independently replaced
+wire/kind/label/sent-time rows; missing/mismatched ID and timer registration;
+duplicate registration preserving the first snapshot/deadline; one-shot failed
+completion; expiration clearing all registry ownership; exact duplicate replies;
+and reopen without revived callback authority. Refused settlements preserve
+checkpoint bytes and journal head. Existing producer timer tests now register
+real reserved-row snapshots instead of an ID-only test path.
+
+**Limits:** the public low-level record_reply contract still requires the caller
+to own explicit callback/captured-reply reconciliation authority; only normal
+actor dispatch supplies this snapshot automatically. Other account/sidecar
+changes, sender admission, full native callback recovery and write-to-settlement
+lifecycle parity remain separate work. No new outgoing operation, automatic
+resend, reset, reconnect or live account operation.
+
+Validation:1,451 workspace/all-feature tests passed. Strict workspace/all-target/
 all-feature Clippy, formatting, CLI reference regeneration, OpenAPI symbol
 validation, APK coverage freshness and repository hygiene passed. Offline only.
