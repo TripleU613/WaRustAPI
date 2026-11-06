@@ -17254,5 +17254,12 @@
     "x-live": false,
     "description": "Static current APK trace: shared reset-on-deferral 6000ms watchdog logs pending ACK failure and clears tracking maps. It does not ACK or cancel work; held one-use metadata can still dispatch after clearing. No Rust watchdog or replay implementation.",
     "evidence": "docs/protocol/apk/2.26.43.72-deferred-ack-watchdog/README.md"
+  },
+  "x-prekey-upload-material-error-propagation": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Upload admission skips only absent registered signed-prekey material; corrupt JSON, account/material mismatch and validation/storage failures propagate before upload generation, reservation or write. Existing public required-key and digest lookup semantics remain. Local integrity fix, not native signed-key fallback parity or count ACK-order port.",
+    "evidence": "docs/protocol/prekey-count-notifications.md#registered-signed-prekey-absence-versus-stored-state-faults-2026-11-05"
   }
 }

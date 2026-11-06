@@ -1190,13 +1190,14 @@ async fn maybe_upload(
     if account.signal_identity.is_none() || account.signal_registration_id.is_none() {
         return Ok(());
     }
-    let signed = match crate::registration::factory::registered_signed_prekey(store) {
-        Ok(signed) => signed,
-        Err(_) => {
-            tracing::warn!("prekey upload skipped: registered signed prekey unavailable");
-            return Ok(());
-        }
-    };
+    let signed =
+        match store.read(crate::registration::factory::optional_registered_signed_prekey_in)? {
+            Some(signed) => signed,
+            None => {
+                tracing::warn!("prekey upload skipped: registered signed prekey unavailable");
+                return Ok(());
+            }
+        };
     if matches!(trigger, PrekeyUploadTrigger::Startup)
         && super::prekeys::unsent_ids(store)?.is_empty()
     {
@@ -4877,6 +4878,66 @@ mod tests {
         crate::registration::factory::install_test_material(&store, &config()).unwrap();
         Arc::new(store)
     }
+    #[tokio::test]
+    async fn prekey_upload_distinguishes_absent_and_invalid_registered_material() {
+        let dir = tempfile::tempdir().unwrap();
+        for case in ["absent", "corrupt-json", "wrong-account"] {
+            let path = dir.path().join(format!("signed-material-{case}.redb"));
+            let store = registered_store(&path);
+            let mut account = store.read(AccountRecord::load).unwrap().unwrap();
+            store
+                .write(|tx| {
+                    match case {
+                        "absent" => {
+                            tx.delete(Table::Account, b"registration-lab-material")?;
+                        }
+                        "corrupt-json" => {
+                            tx.put(Table::Account, b"registration-lab-material", 1, b"{")?
+                        }
+                        "wrong-account" => {
+                            account.signal_registration_id = Some(999);
+                            account.save(tx)?;
+                        }
+                        _ => unreachable!(),
+                    }
+                    Ok(())
+                })
+                .unwrap();
+            let material = store
+                .read(|tx| tx.get(Table::Account, b"registration-lab-material", 1))
+                .unwrap();
+            let keys = store.read(|tx| tx.scan(Table::Prekeys, 1, 1000)).unwrap();
+            let mut fake = start(&store, false, None);
+            fake.activate().await;
+            if case == "absent" {
+                fake.nothing_written(Duration::from_millis(100)).await;
+                fake.stop_cleanly().await;
+            } else {
+                let error = fake
+                    .finished()
+                    .await
+                    .expect_err("invalid saved material must surface");
+                match case {
+                    "corrupt-json" => assert!(matches!(error, Error::Storage(_)), "{error}"),
+                    "wrong-account" => {
+                        assert!(matches!(error, Error::InvalidInput { .. }), "{error}")
+                    }
+                    _ => unreachable!(),
+                }
+            }
+            assert_eq!(
+                store
+                    .read(|tx| tx.get(Table::Account, b"registration-lab-material", 1))
+                    .unwrap(),
+                material
+            );
+            assert_eq!(
+                store.read(|tx| tx.scan(Table::Prekeys, 1, 1000)).unwrap(),
+                keys
+            );
+        }
+    }
+
     fn assert_upload(iq: &Node) -> Vec<Vec<u8>> {
         assert_eq!(iq.description, "iq");
         assert_eq!(

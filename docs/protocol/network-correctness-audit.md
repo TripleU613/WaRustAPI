@@ -3892,3 +3892,26 @@ consume held89Y tokens. Deferral resets the shared6000ms schedule. A later
 its one-use token. [Exact schedule, branch and token distinction](apk/2.26.43.72-deferred-ack-watchdog/README.md).
 This closes the prior timer-action unknown, not count-specific routing,
 socket ordering or recovery parity. No Rust timer/replay or live operation added.
+
+### Registered signed-prekey absence versus stored-state faults (2026-11-05)
+
+**Confirmed local defect, fixed offline:** actor maybe_upload caught every
+error from registered_signed_prekey and reported a normal missing-key skip.
+That hid corrupt saved registration JSON, account/material mismatches and
+other lookup/validation failures. The shared factory now has an internal
+optional lookup: only an absent registration-lab-material row returns None.
+Existing JSON/account/signature/private-key/serialization errors propagate.
+The public required-key lookup and digest caller still require a row and
+return their existing unavailable error for absence. No identity, signed key
+or one-time key is generated to repair a failed lookup.
+
+The actor skips only None and propagates errors before generating/reserving
+or writing an upload. An injected-link regression reproduces the old swallowed
+corrupt-row error (actor never ended), then checks clean absence skip, Storage
+for corrupt JSON and InvalidInput for a mismatched account. Saved material and
+prekey rows are unchanged. Existing valid-material upload controls remain.
+This is local diagnosability/integrity behavior, not a claim about exact native
+signed-key fallback. The native base-handler SQLite exception distinction is
+retained in [the count error audit](apk/2.26.43.72-count-content-error-ack/README.md).
+Count ACK-before-upload ordering remains unported and unchanged, so this does
+not claim all count work errors occur before its control ACK. No live operations.

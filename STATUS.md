@@ -1,3 +1,8 @@
+Prekey upload lookup now distinguishes absent registration material from
+corrupt/mismatched saved state: absence skips, stored-state errors propagate
+before upload generation/reservation/write. Existing required lookup semantics
+remain. [Audit and limits](docs/protocol/prekey-count-notifications.md#registered-signed-prekey-absence-versus-stored-state-faults-2026-11-05).
+
 Confirmed native deferred-ACK watchdog behavior: its shared six-second timer
 logs and clears tracking maps without sending ACKs, canceling workers or
 consuming their held metadata tokens. Late completion can still dispatch.

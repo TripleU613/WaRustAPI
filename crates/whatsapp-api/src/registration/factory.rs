@@ -32,12 +32,22 @@ pub fn registered_signed_prekey(store: &ProtocolStore) -> Result<Zeroizing<Vec<u
 pub(crate) fn registered_signed_prekey_in(
     tx: &crate::store::ReadTx<'_>,
 ) -> Result<Zeroizing<Vec<u8>>> {
+    optional_registered_signed_prekey_in(tx)?
+        .ok_or_else(|| invalid("registered signed prekey unavailable"))
+}
+
+/// Absence is a supported upload skip; malformed or mismatched saved material
+/// must propagate so the actor does not disguise stored-state faults as absence.
+pub(crate) fn optional_registered_signed_prekey_in(
+    tx: &crate::store::ReadTx<'_>,
+) -> Result<Option<Zeroizing<Vec<u8>>>> {
     use wacore_libsignal::protocol::{
         GenericSignedPreKey, PrivateKey, SignedPreKeyRecord, Timestamp,
     };
-    let record: Material = tx
-        .get_json(Table::Account, MATERIAL_KEY, RECORD_VERSION)?
-        .ok_or_else(|| invalid("registered signed prekey unavailable"))?;
+    let Some(record) = tx.get_json::<Material>(Table::Account, MATERIAL_KEY, RECORD_VERSION)?
+    else {
+        return Ok(None);
+    };
     record.check_account(AccountRecord::load(tx)?)?;
     let public = PublicKey::from_djb_public_key_bytes(&record.signed_pre_key.public)
         .map_err(|_| invalid("invalid signed prekey"))?;
@@ -57,9 +67,9 @@ pub(crate) fn registered_signed_prekey_in(
         &pair,
         &record.signature,
     );
-    Ok(Zeroizing::new(signed.serialize().map_err(|_| {
+    Ok(Some(Zeroizing::new(signed.serialize().map_err(|_| {
         invalid("cannot serialize saved signed prekey")
-    })?))
+    })?)))
 }
 
 #[derive(Serialize, Deserialize)]
