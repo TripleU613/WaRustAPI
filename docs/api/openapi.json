@@ -434,6 +434,15 @@
     "x-live": false,
     "description": "Owned blocklist/get and block/unblock/set replies require saved request ID/type/namespace/destination match before producer-specific classification. Outer result remains Ok despite unrelated direct/nested error extensions; list projection/admission is separate and malformed lists still refuse without mutation. Outer error uses first direct error child with textual code, skipping uncoded children and nested user errors; generic u16 numeric diagnostic conversion remains compatibility data. Optional durable blocklist_error_code now separately preserves signed32 Java UTF16 decimal/default0 semantics, exposed in CLI text/JSON. Invalid/missing/overflow becomes0; old rows remain absent with no backfill. No retry or automatic recovery derives from this diagnostic. APK43.72 set400 plus failed native migration admission can clear hash/receive time and queue full fetch; Rust has no equivalent authority and does not automatically retry/refetch/reset hash. Reopen regressions cover all three kinds, malformed snapshots, durable diagnostics and no replay. Other action-family refusal rules unchanged. docs/protocol/chat-actions.md#blocklist-outer-result-and-coded-error-settlement-2026-11-06"
   },
+  "x-account-privacy-last-value-validation": {
+    "x-cli": "whatsapp-cli listen; offline library account_privacy::read_receipts inspection; xtask apk-smali <apk> --class <class> --method <method> --signatures --exceptions",
+    "x-transport": [
+      "library",
+      "experimental account_sync handler"
+    ],
+    "x-live": false,
+    "description": "APK43.72 19N.A09 builds raw category HashMap before0oe.A0R validates final values. Rust supported readreceipts notification path now selects last textual value before enum conversion, permitting overwritten unsupported/empty text followed by an admitted value. Every selected category still requires supported name, required text, attributes and empty body; invalid final value refuses. Root/envelope/child-count, pending setter guard and atomic preference/dedup-before-ACK unchanged. Reopen/redelivery matrix and enhanced session ACK-write-cut test cover ordering. No other category, refresh, generic ACK or live operation added. docs/protocol/account-privacy-notifications.md#duplicate-category-values-are-validated-after-selection-2026-11-06"
+  },
   "x-library-capabilities": [
     {
       "symbol": "whatsapp_api::transport::app_state_sync::binding::bind_inline_fetch_plan",
@@ -17384,7 +17393,7 @@
     "x-cli": false,
     "x-transport": true,
     "x-live": false,
-    "description": "Supported account_sync privacy admission filters category-tagged children before validating attributes/content/name/value, matching APK43.72 19N.A09/0Tp.A0N. Unrelated metadata cannot adopt state or suppress valid readreceipts. Existing64-total-child bound, selected readreceipts-only/value/body, root/action/envelope, pending-intent and transaction guards remain. Empty/metadata-only and actual unsupported categories remain refused. Red/green regression uses invalid readreceipts-like metadata plus valid category and verifies metadata-only refusal preserves checkpoints. No new category, query or HTTP route.",
+    "description": "Supported account_sync privacy admission filters category-tagged children before validating attributes/content/name/value, matching APK43.72 19N.A09/0Tp.A0N. Unrelated metadata cannot adopt state or suppress valid readreceipts. Existing64-total-child bound, selected readreceipts-only/required-text/body and final-value validation, root/action/envelope, pending-intent and transaction guards remain. Empty/metadata-only and actual unsupported categories remain refused. Red/green regression uses invalid readreceipts-like metadata plus valid category and verifies metadata-only refusal preserves checkpoints. No new category, query or HTTP route.",
     "evidence": "docs/protocol/account-privacy-notifications.md#named-category-filtering-2026-11-05"
   },
   "x-prekey-count-ack-optional-source": {

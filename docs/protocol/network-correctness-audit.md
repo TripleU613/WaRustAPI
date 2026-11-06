@@ -4612,3 +4612,13 @@ ActionOutcome.blocklist_error_code persists that value separately from generic
 u16 compatibility diagnostics; CLI exposes it. Old rows are not backfilled;
 other producers/results remain outside this field. No automatic400 recovery or
 request policy changed. Native migration authority remains unported.
+
+### Privacy duplicate raw values precede semantic validation (2026-11-06)
+
+**Confirmed APK mismatch / fixed offline:** [producer/consumer evidence and
+reopen/session tests](account-privacy-notifications.md#duplicate-category-values-are-validated-after-selection-2026-11-06)
+show19N builds raw HashMap entries before0oe validates final values. Rust no
+longer rejects an overwritten unsupported textual readreceipts value before its
+supported replacement. Required metadata/body/envelope/category-name guards,
+final enum admission, pending setter checks and atomic state-before-ACK remain.
+No refresh, broader category or generic account-sync ACK is introduced.

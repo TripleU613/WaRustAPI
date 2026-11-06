@@ -153,17 +153,23 @@ fn parse(node: &Node) -> Result<Option<Update>> {
         {
             return Err(invalid("unsupported privacy category"));
         }
-        value = Some(ReadReceiptValue::parse(
+        value = Some(
             category
                 .get_attr("value")
                 .and_then(|v| v.as_text())
                 .ok_or_else(|| invalid("invalid category value"))?,
-        )?);
+        );
     }
-    // 19N builds a HashMap with put: repeated supported names use the last value.
+    // APK43.72 19N.A09 puts raw category strings into a HashMap before
+    // 0oe.A0R/8AX validates final values. A replaced unsupported string must
+    // not veto the admitted last readreceipts value. Required text/structure
+    // checks still apply to every selected category before any state or ACK.
+    let value = ReadReceiptValue::parse(
+        value.ok_or_else(|| invalid("unsupported privacy category count"))?,
+    )?;
     Ok(Some(Update {
         id: id.to_owned(),
-        value: value.ok_or_else(|| invalid("unsupported privacy category count"))?,
+        value,
         ack: Node::new("ack")
             .attr("id", id)
             .attr("to", super::receipts::ack_address(from))
@@ -530,6 +536,56 @@ mod tests {
                     read_receipts(&store).unwrap().unwrap().value,
                     ReadReceiptValue::None
                 );
+            }
+        }
+    }
+    #[test]
+    fn duplicate_category_values_are_validated_after_last_write_selection() {
+        for prefix in ["fixture-unsupported", "contact_blacklist", ""] {
+            for final_value in ["all", "contacts", "none", "known", "off", "on_standard"] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("duplicate-values.redb");
+                let store = open(&path);
+                let old = notification(
+                    "old-duplicate",
+                    vec![category(prefix), category(final_value)],
+                );
+                validate(&old).unwrap();
+                let ack = handle(&store, &old).unwrap().unwrap();
+                assert_eq!(
+                    read_receipts(&store).unwrap().unwrap().value,
+                    ReadReceiptValue::parse(final_value).unwrap()
+                );
+                handle(&store, &notification("newer", vec![category("all")])).unwrap();
+                let before = snapshot(&store);
+                let head = store.journal_head().unwrap();
+                drop(store);
+                let store = open(&path);
+                assert_eq!(handle(&store, &old).unwrap(), Some(ack));
+                assert_eq!(snapshot(&store), before);
+                assert_eq!(store.journal_head().unwrap(), head);
+                assert_eq!(
+                    read_receipts(&store).unwrap().unwrap().value,
+                    ReadReceiptValue::All
+                );
+                for categories in [
+                    vec![category("all"), category(prefix)],
+                    vec![
+                        Node::new("category").attr("name", "readreceipts"),
+                        category("all"),
+                    ],
+                    vec![category(prefix).text("unsupported-body"), category("all")],
+                    vec![
+                        category(prefix).attr("extra", "unsupported"),
+                        category("all"),
+                    ],
+                ] {
+                    let bad = notification("bad-duplicate", categories);
+                    assert!(validate(&bad).is_err());
+                    assert!(handle(&store, &bad).is_err());
+                    assert_eq!(snapshot(&store), before);
+                    assert_eq!(store.journal_head().unwrap(), head);
+                }
             }
         }
     }

@@ -20,8 +20,10 @@ Sources are the retained
 The admitted values are `all`, `contacts`, `none`, `known`, `off`,
 `on_standard`. `8AX.A03` converts only `all` and `on_standard` to true;
 other admitted values convert to false. Do not collapse category admission
-into an assumption that only all/none exist. Repeated valid readreceipts
-categories use the final value, matching the current native HashMap producer.
+into an assumption that only all/none exist. Repeated textual readreceipts categories select the final raw value before
+semantic validation, matching the native HashMap producer. An unsupported
+earlier string cannot veto a valid replacement; every category still needs
+required text and supported structure.
 
 The receive loop captures the original node first, purely validates the
 supported wire subset, then atomically commits the preference and processed-ID
@@ -54,8 +56,10 @@ only; first outer event must be privacy (later siblings are not applied);
 plain supported
 category attributes and empty category bodies. Duplicate/unknown attributes,
 nontext metadata, mixed/unsupported categories and malformed values refuse
-before any state write. An invalid earlier duplicate is refused even if a later
-duplicate would replace it natively. `action=modify` remains unported and
+before any state write. A final unsupported value refuses; an earlier
+unsupported text value overwritten by a supported final value is ignored.
+Missing/nontext attributes and unsupported bodies still refuse even when an
+earlier category would be overwritten. `action=modify` remains unported and
 unacknowledged; other text actions follow the native non-modify branch.
 
 Native `0oe.A0R` preserves a contradictory pending desired value. Rust has no
@@ -187,3 +191,63 @@ unapplied. Metadata-only first privacy is refused with exact checkpoints
 unchanged, alongside existing invalid/unsupported first-event controls. Existing
 mixed selected-category/refusal/reopen/pending tests remain. No new category,
 refresh/device operation, query, identity policy or live account was introduced.
+
+## Duplicate category values are validated after selection (2026-11-06)
+
+**Confirmed APK mismatch / fixed offline:** fresh exports reproduce the
+[complete19N.A09 producer](rea/2.26.43.72-notification-sync-obligations/account-sync-dex.txt)
+and [0oe.A0R consumer](rea/2.26.43.72-account-privacy-refresh/privacy-map-adoption-dex.txt)
+byte-for-byte.19N obtains name/value through0Tp.A0L, puts raw strings into a
+HashMap at0a40, loops back and only then calls A0R at0a4c. A0R iterates final
+entries before invoking8AX value conversion/validation. Semantic validation of
+an overwritten raw string cannot occur through this selected map handoff.
+The fresh [required-attribute helper](apk/2.26.43.72-metrics-credential-iq/required-attribute.txt)
+also matches retained evidence: missing required text throws before map put.
+Branch0a16+0x19*2 reaches0a48 after the loop;0a46-0x1c*2 returns to0a0e.
+No new REA record is created by reusing these retained methods.
+
+Rust previously converted every readreceipts value immediately during parsing.
+An unsupported/empty earlier value followed by a valid duplicate therefore
+refused the complete notification before preference adoption or ACK. It now
+selects the final raw text and converts that value after the selected category
+loop. Structural/root/envelope/category-name/text-presence checks still apply
+to all selected categories. Final unsupported text still refuses. This does not
+implement other categories, modify/refresh, broader bodies/envelopes or native
+pending-map ownership. The existing same-transaction pending-setter guard and
+preference/processed-ID commit remain unchanged.
+
+Regression duplicate_category_values_are_validated_after_last_write_selection
+failed before the correction with unsupported readreceipts value. Its matrix
+covers unsupported, category-inapplicable and empty prefixes followed by each
+of six admitted values. It verifies final adoption/ACK, newer-state preservation
+on old redelivery after reopen, no checkpoint/journal changes on replay,
+and refusal of invalid final values, missing earlier value, earlier body or
+unsupported attribute even before a valid replacement. The enhanced production
+session ACK-cut test now uses such an overwritten prefix and proves capture/
+adoption precede ACK exposure; failed ACK write/reopen preserves state and
+redelivery can re-ACK without reapplying it.
+
+Reproduce from repository root with pinned APK and rebuilt xtask:
+
+```sh
+cargo test --locked -p whatsapp-api --all-features duplicate_category_values_are_validated_after_last_write_selection
+cargo test --locked -p whatsapp-api --all-features account_privacy_commits_before_ack_and_failed_write_survives_reopen
+APK=../android-lab/apks/WhatsApp.1.apk
+OUT=/tmp/privacy-category-last-value-repro
+mkdir -p "$OUT"
+target/debug/xtask apk-smali "$APK" --class 'LX/19N;' --method A09 --signatures --exceptions > "$OUT/account-sync-dex.txt"
+target/debug/xtask apk-smali "$APK" --class 'LX/0oe;' --method A0R --signatures --exceptions > "$OUT/privacy-map-adoption-dex.txt"
+target/debug/xtask apk-smali "$APK" --class 'LX/0Tp;' --method A0L --signatures --exceptions > "$OUT/required-attribute.txt"
+```
+
+Compare all three outputs to the linked retained files above. Parent bundles
+retain their complete checksums/evidence limitations. No account operation,
+APK execution, automatic refresh, request replay or generic account-sync ACK.
+
+Validation:1,531 workspace tests pass (9 result suites, four threads), including
+the new matrix and enhanced session ACK-cut regression. Strict workspace/
+all-target/all-feature Clippy, formatting, CLI reference, OpenAPI library
+coverage, APK coverage freshness and diff whitespace pass. Three fresh selected
+methods match retained exports; map branch targets and pinned APK digest verify.
+Hygiene passes (436 APK bundles); reused evidence adds no duplicate REA record.
+No live account or APK runtime test.

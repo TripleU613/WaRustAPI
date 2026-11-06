@@ -1,3 +1,10 @@
+2026-11-06 — **Fixed privacy duplicate-value validation order.**
+Supported readreceipts notifications now select the last raw value before enum
+validation, matching the native map producer. An overwritten unsupported text
+cannot suppress adoption/ACK; required text/structure and final validation stay.
+[Evidence, session ACK-cut test and limits](account-privacy-notifications.md#duplicate-category-values-are-validated-after-selection-2026-11-06).
+No live account or automatic refresh operation.
+
 2026-11-06 — **Preserved native signed blocklist error codes.**
 Added optional blocklist_error_code to saved outcomes and CLI views; Java
 signed32/default0 parsing no longer loses values through the generic u16 field.

@@ -2961,8 +2961,13 @@ mod tests {
             .attr("id", "PRIVACY-CUT")
             .attr("t", "1700000000")
             .children(vec![Node::new("privacy").children(vec![
-                Node::new("category").attr("name", "readreceipts").attr("value", "none")
-            ])]);
+                    Node::new("category")
+                        .attr("name", "readreceipts")
+                        .attr("value", "overwritten-unsupported"),
+                    Node::new("category")
+                        .attr("name", "readreceipts")
+                        .attr("value", "none"),
+                ])]);
         let capture = format!(
             "inbound:sha256:{}",
             hex::encode(sha2::Sha256::digest(encode(&notification).unwrap()))
