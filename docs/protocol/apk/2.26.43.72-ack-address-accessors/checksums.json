@@ -1,0 +1,14 @@
+{
+  "README.md": {
+    "bytes": 2769,
+    "sha256": "97976619466d34867c26292c54b0a676df43adefa2a64b4716a98b6913f88abf"
+  },
+  "optional-parser.txt": {
+    "bytes": 1017,
+    "sha256": "d153de3994b006bbd5e24fb449fda9a921854cea331acdc53face43836e0906a"
+  },
+  "typed-address.txt": {
+    "bytes": 4444,
+    "sha256": "0e1523de412bd1c3e33fecc249ec1ed222f1656cb875b02634893a0b574fbee8"
+  }
+}

@@ -340,3 +340,23 @@ helpers and raw read primitives still do not replace stateful admission.
 Validation: 1,458 workspace/all-feature tests passed. Strict workspace/all-target/
 all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
 validation, APK coverage freshness and repository hygiene passed. Offline only.
+
+## Optional typed ACK addresses are not a blanket fatal gate (2026-11-06)
+
+**Confirmed pinned static / negative finding:** [new A0A and optional JID
+parser exports](apk/2.26.43.72-ack-address-accessors/README.md) show that the
+ACK handler's from/participant Jid and recipient UserJid accessors differ from
+required id. Missing/unparseable text produces null through 0Dd.A02; a
+protocol-compliance failure is logged without rejection by that branch; a
+failed requested-class cast is logged and returns null. These cases do not
+justify adding a blanket fatal-address check to validate_received_ack.
+
+Rust receipts::jid already handles absent/unparseable addresses as None;
+outgoing::acknowledge requires a parsed matching from for its supported ordinary
+settlement. This is not full equivalence: native message routing first prefers
+nonnull recipient, otherwise normalizes from via0Dn.A00, and its no-chat path
+still reaches a generic ACK callback. Recipient-based correlation, exact JID
+subtype/normalization rules and that generic callback's ownership need further
+tracing before widening Rust settlement. Nontext cached representations and
+all helper exception paths remain unverified. No runtime claim, code change,
+new request/response, replay or stricter connection-stop policy in this audit.
