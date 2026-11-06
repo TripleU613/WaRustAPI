@@ -89,3 +89,10 @@ CLI-reference tests, APK coverage freshness and repository hygiene passed.
 The APK SHA256 and shared user-factory export were rechecked; all four new
 exports reproduce exactly. Focused regression:
 `cargo test --locked -p whatsapp-api --all-features hosted_chatstate_projects_underlying_user_without_changing_wire_identity`.
+
+## Raw-text qualifier follow-up (2026-11-06)
+
+[Scoped qualifier preservation](../../hosted-chatstate-text.md) now closes the
+raw-text zero-qualifier loss inside the incoming chatstate reader. Shared JID
+parsing and already-collapsed typed values remain separate; native trust/full
+grammar and all hash/store domain distinctions are unchanged.

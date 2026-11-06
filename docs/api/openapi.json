@@ -1,4 +1,11 @@
 {
+  "x-hosted-chatstate-text-qualification": {
+    "x-cli": "whatsapp-cli lab-transport --receive ephemeral display; xtask apk-smali <apk> --class <class> --method A00 --signatures --exceptions",
+    "x-transport": "library presence::parse_chatstate raw-text metadata reader",
+    "x-live": false,
+    "description": "APK43.72 0Dd.A00 tests local dot/colon presence before numeric qualifier value, selecting hosted device constructors that require99. Incoming raw hosted/hosted.lid text now preserves AD_JID kind even when agent/device numbers parse to0, so invalid explicit0/2 forms omit observation/author rather than becoming plain user metadata. Both from and participant share the reader; plain aliases, valid99 and ordinary PN device0 remain. Original Node/text and typed inputs are unchanged. Shared JID parsing, saved identity/hash/outbound/alias trust are untouched. Pre-collapsed typed values and full native grammar remain open. No new ACK, request/replay, journal state, HTTP route or live operation.",
+    "evidence": "docs/protocol/hosted-chatstate-text.md"
+  },
   "x-hosted-chatstate-user-projection": {
     "x-cli": "whatsapp-cli lab-transport --receive ephemeral metadata; xtask apk-smali <apk> --class <class> --method <method> --signatures --exceptions",
     "x-transport": "library presence::parse_chatstate metadata only",

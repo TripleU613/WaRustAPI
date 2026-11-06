@@ -4850,3 +4850,16 @@ Full text grammar (including pre-entry zero-qualifier normalization), all JID
 factories and other special families remain unported. This is ephemeral metadata,
 not a trust/admission validator. No ACK, request, replay, state adoption or live
 account operation.
+
+## Hosted textual zero qualifiers (2026-11-06)
+
+**Confirmed static / implemented offline:** [qualifier-presence trace and regression](hosted-chatstate-text.md)
+show native0Dd.A00 chooses a device path on dot/colon presence before examining
+numeric values. The shared Rust parser had flattened zero components to Plain,
+allowing invalid hosted device0 metadata to look like an unqualified alias.
+The incoming-only raw-text reader now retains AD wire kind for qualified hosted
+text; the existing device99 check omits invalid observations/authors. Plain
+aliases, valid99 text, typed AD handling and PN device0 projection remain.
+Original frames/typed inputs, shared JID parsing, hashes and saved identities
+are unchanged. Pre-collapsed typed values and full native text/agent grammar
+remain an open boundary. No ACK, request, state adoption or live operation.

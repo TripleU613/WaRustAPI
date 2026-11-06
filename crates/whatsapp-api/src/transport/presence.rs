@@ -31,7 +31,7 @@
 use crate::{
     Error, Result,
     binary::Node,
-    model::jid::{Jid, Server},
+    model::jid::{Jid, JidKind, Server},
 };
 
 /// Our bound, not WhatsApp's: the APK enforces none on the wire (see the
@@ -358,11 +358,24 @@ pub fn parse_chatstate(node: &Node) -> Option<IncomingChatState> {
         return None;
     }
     let jid = |name: &str| {
-        node.get_attr(name).and_then(|v| {
-            v.as_jid()
-                .cloned()
-                .or_else(|| Jid::parse(v.as_text()?).ok())
-        })
+        let value = node.get_attr(name)?;
+        if let Some(jid) = value.as_jid() {
+            return Some(jid.clone());
+        }
+        let text = value.as_text()?;
+        let mut jid = Jid::parse(text).ok()?;
+        // APK43.72 0Dd.A00 tests qualifier presence before numeric values.
+        // Keep hosted device0 distinct from an unqualified user alias: Dv4/
+        // Dv6 require99. Scope this to metadata, not global JID persistence.
+        // docs/protocol/hosted-chatstate-text.md.
+        if matches!(jid.server, Server::Hosted | Server::HostedLid)
+            && text
+                .rsplit_once('@')
+                .is_some_and(|(local, _)| local.contains(':') || local.contains('.'))
+        {
+            jid.kind = JidKind::AgentDevice;
+        }
+        Some(jid)
     };
     let chat = incoming_chatstate_identity(jid("from")?)?;
     let child = node.child_nodes().first()?;
@@ -539,6 +552,47 @@ mod tests {
                 assert_eq!(parse_chatstate(&node).unwrap().participant, None);
             }
         }
+    }
+
+    #[test]
+    fn hosted_chatstate_text_retains_explicit_zero_device_qualification() {
+        let group = Jid::parse("120363000000000001@g.us").unwrap();
+        for (domain, server) in [("hosted", Server::User), ("hosted.lid", Server::Lid)] {
+            for suffix in [":0", ".0", ".0:0", ":2"] {
+                let text = format!("15551234567{suffix}@{domain}");
+                let direct = Node::new("chatstate")
+                    .attr("from", text.as_str())
+                    .children(vec![Node::new("paused")]);
+                assert!(parse_chatstate(&direct).is_none(), "{suffix}@{domain}");
+                assert_eq!(
+                    direct.get_attr("from").and_then(|v| v.as_text()),
+                    Some(text.as_str())
+                );
+                let node = Node::new("chatstate")
+                    .attr("from", group.clone())
+                    .attr("participant", text.as_str())
+                    .children(vec![Node::new("composing")]);
+                assert_eq!(parse_chatstate(&node).unwrap().participant, None);
+            }
+            for suffix in ["", ":99", ".0:99"] {
+                let text = format!("15551234567{suffix}@{domain}");
+                let node = Node::new("chatstate")
+                    .attr("from", text.as_str())
+                    .children(vec![Node::new("composing")]);
+                assert_eq!(
+                    parse_chatstate(&node).unwrap().chat,
+                    Jid::new("15551234567", server.clone()).unwrap()
+                );
+            }
+        }
+        // Ordinary PN device0 is unwrapped, not rejected as a hosted device.
+        let node = Node::new("chatstate")
+            .attr("from", "15551234567:0@s.whatsapp.net")
+            .children(vec![Node::new("paused")]);
+        assert_eq!(
+            parse_chatstate(&node).unwrap().chat,
+            Jid::new("15551234567", Server::User).unwrap()
+        );
     }
 
     /// `LX/0y0->A00` case 3: `name` then `type="available"`, nothing else.

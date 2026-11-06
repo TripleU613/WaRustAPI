@@ -1,3 +1,10 @@
+2026-11-06 — **Preserved explicit hosted zero-device text qualification.**
+Raw hosted/hosted.lid zero qualifiers no longer become plain user metadata;
+valid plain/99 and ordinary PN device0 behavior remain. Original text and shared
+JID/store/hash behavior are unchanged.
+[Native parser evidence and regression](hosted-chatstate-text.md).
+No live account operation.
+
 2026-11-06 — **Projected hosted typing addresses through their native user identity.**
 Hosted/hosted.lid aliases and device99 now yield PN/LID display metadata while
 preserving original addresses. Unsupported explicit device forms stay omitted;
