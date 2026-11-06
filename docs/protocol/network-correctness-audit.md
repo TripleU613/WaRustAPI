@@ -4525,3 +4525,11 @@ Current43.72 identity ACK dispatch re-anchored through15v/Fc1/17o/0YM/0v6 plus h
 Current identity-triggered manager flags and suppression scoped: conditional PQ fetch is not a session upgrade; REGULAR/PQ differ in in-flight keys; strict60-second uptime cleanup is not durable retry authority. [Complete current methods, gates and remaining job/wire limits](bulk-prekey-refresh.md#current-notification-fetch-flags-and-manager-suppression-2026-11-06). Research only; no additional request/replay.
 
 Concrete bulk future/runner trace closes a prior1ue-effects gap: IQ result/error fallback can complete the job normally; disconnect/future exception is separate from server refusal and key acceptance. [Typed future, runtime-exception rethrow, requirement/defer and cancellation limits](bulk-prekey-refresh.md#bulk-job-completion-is-not-fetched-key-acceptance-2026-11-06). Research only; no retries added.
+
+## Media callback-window follow-through (2026-11-06)
+
+[Media refresh uses its pinned nominal32s callback window](media-network-outcomes.md#media-refresh-reply-window-2026-11-06)
+with a pre-write absolute deadline; configured shorter socket bounds remain
+honored. Failing-before encrypted31s response,32s expiry,30s I/O cap and reopen/
+no-resend controls retained. Selected callback/registry methods do not establish
+a sender whitelist; complete upstream sender admission remains open.

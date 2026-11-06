@@ -517,11 +517,13 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
             ));
         }
         if media_route {
-            use whatsapp_api::transport::messaging::{new_message_id, write_and_wait_captured};
+            use whatsapp_api::transport::{
+                media_routing::refresh::write_and_wait_captured, messaging::new_message_id,
+            };
             let id = new_message_id()?;
             let request = whatsapp_api::transport::media_routing::refresh::prepare(&store, &id)?;
             let (reply, pending) =
-                write_and_wait_captured(&store, &mut channel, &request, "iq", &id).await?;
+                write_and_wait_captured(&store, &mut channel, &request, &id).await?;
             let dict = TokenDictionary::comparison_2_26_37_71();
             let settlement = store.write(|tx| {
                 let settlement =

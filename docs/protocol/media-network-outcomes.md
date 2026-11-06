@@ -625,3 +625,32 @@ complete sender admission, native elapsed-clock/reboot parity, automatic native
 refresh scheduling and complete host policy. The conservative local wall-clock
 boundary remains; these checks do not prove server acceptance or prevent bans.
 No live operations occurred.
+
+## Media refresh reply window (2026-11-06)
+
+**Confirmed pinned static / implemented offline:**0VM.A07 passes32000ms to
+0Sf.A0R for media IQ124. The explicit CLI media-route operation previously used
+the generic30s captured wait. It now calls refresh::write_and_wait_captured,
+which uses public REPLY_TIMEOUT and messaging::write_and_wait_captured_until.
+The absolute deadline starts before write and never restarts afterward. An
+already expired supplied deadline refuses before any request record is written.
+Existing generic callers keep30s. Awaited writes may delay observing expiry;
+independent socket deadlines still apply. **A configured30s I/O cap still wins
+over the32s callback window.** No configuration is silently lengthened.
+
+[Exact registration source, shared timer chain and sender-admission negative](apk/2.26.43.72-media-reply-window/README.md).
+Native expiry depends on Handler ownership/scheduling; Rust's absolute32s cut
+is a local bounded policy, not a claim that Android universally rejects every
+reply at that age. Native suspend/reboot/queued callback parity remains open.
+No new sender rule was established, so no whitelist was invented.
+
+The paused-clock certificate-verified in-memory fixture first reproduced a
+31s reply failing at the generic correlated30s deadline with a60s I/O budget.
+It now applies that reply and retains the route after reopen. At32s the local
+callback deadline refuses settlement; a31s reply with30s I/O also refuses.
+Both refusal cases preserve the original uncertain reservation byte-for-byte
+through reopen, and preparing the same ID refuses rather than resending.
+An expired-before-write control makes the peer observe EOF without a request
+record. Existing prewrite-deadline controls cover no timer restart after write.
+These are synthetic encrypted exchanges, not live WhatsApp account traffic.
+No durable reset, throttle bypass, upload, automatic query or replay is added.

@@ -18391,5 +18391,17 @@
     ],
     "description": "Pinned123.A00/A01 rejects invalid list marker, zero count and null description;0Tl null-value check throws through00l.A0F. Initial LIL/runtime paths leave1s2.run. Four selected checks now use publicInvalidWireStructure/classinvalid_wire_structure, mapped toPeerProtocol for capture/epoch consumption and stopping later ACK/ping handling. Unknown value tags, genericInvalidNode and unported nested zero-count/token2 null-child semantics retain prior local refusal classes; root control still precedes count checks. Failing-before classification/encrypted tests, 16 synthetic encrypted cases, all-family actor receipt uncertainty/reopen/no-replay and captured waits retained. No native global backoff emulation, NACK, settlement, saved-diagnostic relabeling, replay permission or live operation.",
     "evidence": "docs/protocol/frame-admission.md#selected-wire-structure-failures-are-terminal-2026-11-06"
+  },
+  "x-media-refresh-reply-window": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [
+      "whatsapp_api::transport::media_routing::refresh::REPLY_TIMEOUT",
+      "whatsapp_api::transport::media_routing::refresh::write_and_wait_captured",
+      "whatsapp_api::transport::messaging::write_and_wait_captured_until"
+    ],
+    "description": "Explicit CLI media-route operation uses pinned nominal32000ms callback window starting before write, without restart. New reusable absolute-deadline captured writer refuses expired deadlines before I/O. Generic callers retain30s and configured shorter socket I/O caps remain honored, including30s caps. Synthetic encrypted31s result applies with60s I/O,32s callback expiry and30s I/O expiry preserve uncertain reservation across reopen; same ID cannot prepare again. Native Handler races/clocks and full sender admission remain unproven; no invented whitelist, config override, automatic refresh/retry, reset or live operation.",
+    "evidence": "docs/protocol/media-network-outcomes.md#media-refresh-reply-window-2026-11-06"
   }
 }

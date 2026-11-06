@@ -368,8 +368,13 @@ mod tests {
     enum RecordCase {
         Exchange,
         CancelRead,
+        ExpiredPrewrite,
         PartialWrite,
         StreamEnd,
+        MediaRefresh {
+            delay: u64,
+            io_limit: u64,
+        },
         MalformedStructure {
             direct: bool,
             compressed: bool,
@@ -485,13 +490,25 @@ mod tests {
                 // rather than a clean failure before any record bytes arrive.
                 return;
             }
-            if matches!(record_case, RecordCase::CancelRead) {
+            if matches!(
+                record_case,
+                RecordCase::CancelRead | RecordCase::ExpiredPrewrite
+            ) {
                 assert!(reader.read_frame(&mut server).await.unwrap().is_none());
                 return;
             }
             let incoming = reader.read_frame(&mut server).await.unwrap().unwrap();
             let plain = transport.decrypt(&incoming).unwrap();
-            assert_eq!(plain.as_slice(), b"local record fixture");
+            if let RecordCase::MediaRefresh { delay, .. } = record_case {
+                let request = super::super::inbox::decode_frame(&plain).unwrap();
+                assert_eq!(
+                    request.get_attr("id").and_then(|value| value.as_text()),
+                    Some("media-refresh")
+                );
+                tokio::time::sleep(std::time::Duration::from_secs(delay)).await;
+            } else {
+                assert_eq!(plain.as_slice(), b"local record fixture");
+            }
             if matches!(record_case, RecordCase::EmptyRecord { .. }) {
                 let empty = transport.encrypt(&[]).unwrap();
                 server
@@ -537,7 +554,29 @@ mod tests {
             } else {
                 [&[0][..], malformed_body].concat()
             };
+            let media_reply = crate::binary::Encoder::new(
+                crate::binary::TokenDictionary::comparison_2_26_37_71(),
+            )
+            .encode(
+                &crate::binary::Node::new("iq")
+                    .attr("id", "media-refresh")
+                    .attr("type", "result")
+                    .children(vec![
+                        crate::binary::Node::new("media_conn")
+                            .attr("auth", "fixture-auth")
+                            .attr("ttl", "3600")
+                            .attr("auth_ttl", "1800")
+                            .attr("is_new", "1")
+                            .children(vec![
+                                crate::binary::Node::new("host")
+                                    .attr("hostname", "media.whatsapp.net")
+                                    .children(vec![crate::binary::Node::new("upload")]),
+                            ]),
+                    ]),
+            )
+            .unwrap();
             let reply: &[u8] = match record_case {
+                RecordCase::MediaRefresh { .. } => &media_reply,
                 RecordCase::MalformedStructure { .. } => &malformed,
                 RecordCase::PackedFailure { negative: true, .. } => &[0, 0xF8, 1, 0xFF, 0x80],
                 RecordCase::PackedFailure {
@@ -564,13 +603,23 @@ mod tests {
                 _ => b"reply",
             };
             let buf = transport.encrypt(reply).unwrap();
-            server
-                .write_all(&codec.encode(&buf, None).unwrap())
-                .await
-                .unwrap();
+            let written = server.write_all(&codec.encode(&buf, None).unwrap()).await;
+            if !matches!(
+                record_case,
+                RecordCase::MediaRefresh { delay: 32.., .. }
+                    | RecordCase::MediaRefresh {
+                        io_limit: 0..=30,
+                        ..
+                    }
+            ) {
+                written.unwrap();
+            }
         });
-        let socket =
-            FramedConnection::new(client, ConnectionEpoch(1), SocketLimits::default()).unwrap();
+        let mut socket_limits = SocketLimits::default();
+        if let RecordCase::MediaRefresh { io_limit, .. } = record_case {
+            socket_limits.io_timeout = std::time::Duration::from_secs(io_limit);
+        }
+        let socket = FramedConnection::new(client, ConnectionEpoch(1), socket_limits).unwrap();
         let result = VerifiedHandshake::start(
             socket,
             &client_key,
@@ -586,7 +635,106 @@ mod tests {
             let verified = result.ok().unwrap();
             assert_eq!(verified.chain().leaf_serial, 9);
             let mut channel = verified.finish(b"local login fixture").await.unwrap();
-            if split {
+            if matches!(record_case, RecordCase::ExpiredPrewrite) {
+                use crate::store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource};
+                let dir = tempfile::tempdir().unwrap();
+                let store = ProtocolStore::open(OpenOptions {
+                    path: dir.path().join("expired.redb"),
+                    account_id: crate::model::ids::AccountId::new("fixture").unwrap(),
+                    key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                        [9; 32],
+                    ))),
+                    create: true,
+                })
+                .unwrap();
+                let result = super::super::messaging::write_and_wait_captured_until(
+                    &store,
+                    &mut channel,
+                    &crate::binary::Node::new("iq").attr("id", "expired"),
+                    "iq",
+                    "expired",
+                    tokio::time::Instant::now(),
+                )
+                .await;
+                assert!(matches!(
+                    result,
+                    Err(crate::Error::Transport(TransportError::Deadline(_)))
+                ));
+                channel.close(); // Peer must observe EOF without any request record.
+            } else if let RecordCase::MediaRefresh { delay, io_limit } = record_case {
+                use crate::store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource, Table};
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("media-window.redb");
+                let open = || {
+                    ProtocolStore::open(OpenOptions {
+                        path: path.clone(),
+                        account_id: crate::model::ids::AccountId::new("fixture").unwrap(),
+                        key_source: std::sync::Arc::new(StaticKeySource::new(
+                            MasterKey::from_bytes([9; 32]),
+                        )),
+                        create: true,
+                    })
+                    .unwrap()
+                };
+                let store = open();
+                let request =
+                    super::super::media_routing::refresh::prepare(&store, "media-refresh").unwrap();
+                let before = store
+                    .read(|tx| tx.get(Table::Checkpoints, b"media-route:media-refresh", 1))
+                    .unwrap();
+                let result = super::super::media_routing::refresh::write_and_wait_captured(
+                    &store,
+                    &mut channel,
+                    &request,
+                    "media-refresh",
+                )
+                .await;
+                if delay < 32 && io_limit > delay {
+                    let (reply, pending) =
+                        result.expect("31-second reply belongs to the media callback window");
+                    assert!(pending.is_empty());
+                    assert_eq!(
+                        store
+                            .write(|tx| super::super::media_routing::refresh::settle_in(
+                                tx,
+                                "media-refresh",
+                                &reply
+                            ))
+                            .unwrap(),
+                        super::super::media_routing::refresh::Settlement::Applied
+                    );
+                } else {
+                    assert!(matches!(
+                        result,
+                        Err(crate::Error::Transport(TransportError::Deadline(_)))
+                    ));
+                    assert_eq!(
+                        store
+                            .read(|tx| tx.get(Table::Checkpoints, b"media-route:media-refresh", 1))
+                            .unwrap(),
+                        before
+                    );
+                }
+                drop(store);
+                let reopened = open();
+                assert!(
+                    super::super::media_routing::refresh::prepare(&reopened, "media-refresh")
+                        .is_err()
+                );
+                if delay >= 32 || io_limit <= delay {
+                    assert_eq!(
+                        reopened
+                            .read(|tx| tx.get(Table::Checkpoints, b"media-route:media-refresh", 1))
+                            .unwrap(),
+                        before
+                    );
+                } else {
+                    assert_eq!(
+                        super::super::media_routing::refresh::current_summary(&reopened).unwrap(),
+                        Some((1, true))
+                    );
+                }
+            } else if split {
                 let (mut reader, mut writer) = channel.into_split().unwrap();
                 if matches!(record_case, RecordCase::CancelRead) {
                     assert!(
@@ -808,6 +956,14 @@ mod tests {
             )
             .await;
         }
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn media_refresh_retains_its_prewrite_32_second_reply_window() {
+        for (delay, io_limit) in [(31, 60), (32, 60), (31, 30)] {
+            exchange(false, false, RecordCase::MediaRefresh { delay, io_limit }).await;
+        }
+        exchange(false, false, RecordCase::ExpiredPrewrite).await;
     }
 
     #[tokio::test]

@@ -1,0 +1,52 @@
+
+# class: LX/0Sf;
+# extends: Ljava/lang/Object;
+
+.method public A0R(VLLLIJ)  # .registers 24
+    # full signature: LX/0Sf;->A0R(LX/0lG;LX/0Tp;Ljava/lang/String;IJ)V
+    0000..0004  const/16  v16, #0x1
+    0004..0008  move-object/from16  v3, v17
+    0008..000c  move-object/from16  v4, v18
+    000c..0010  move-object/from16  v5, v19
+    0010..0014  move-object/from16  v6, v20
+    0014..0018  move/from16  v7, v21
+    0018..001c  move-wide/from16  v8, v22
+    001c..0022  invoke-virtual/range  {v3..v9}, LX/0Sf;->A0W(LX/0lG;LX/0Tp;Ljava/lang/String;IJ)Z
+    0022..0024  move-result  v0
+    0024..0028  if-nez  v0, +0x40
+    0028..002c  const-string  v0, "MessageClient/sendIqWithCallback/add-to-pending type="
+    002c..0030  new-instance  v1, Ljava/lang/StringBuilder;
+    0030..0036  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0036..003c  invoke-virtual  {v1, v7}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    003c..0040  const-string  v0, " id="
+    0040..0046  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0046..004c  invoke-virtual  {v1, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    004c..0052  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0052..0054  move-result-object  v0
+    0054..005a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    005a..0060  invoke-static  {v3}, LX/0Sf;->A03(LX/0Sf;)LX/0ln;
+    0060..0062  move-result-object  v10
+    0062..0064  move-object  v11, v4
+    0064..0066  move-object  v12, v6
+    0066..0068  move  v13, v7
+    0068..006a  move-wide  v14, v8
+    006a..0070  invoke-virtual/range  {v10..v16}, LX/0ln;->A08(LX/0lG;Ljava/lang/String;IJZ)V
+    0070..0074  iget-object  v4, v3, LX/0Sf;->A09:LX/0TX;
+    0074..0078  const-wide/16  v2, #0x0
+    0078..007a  const/4  v12, #0x0
+    007a..007e  cmp-long  v1, v22, v2
+    007e..0080  const/4  v0, #0x0
+    0080..0084  if-lez  v1, +0x3
+    0084..0086  const/4  v0, #0x1
+    0086..008c  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    008c..008e  move-result-object  v9
+    008e..0090  move-object  v8, v5
+    0090..0092  move-object  v10, v6
+    0092..0094  move  v11, v7
+    0094..0096  move  v13, v12
+    0096..009c  invoke-static/range  {v8..v13}, LX/0Sf;->A01(LX/0Tp;Ljava/lang/Boolean;Ljava/lang/String;IZZ)Landroid/os/Message;
+    009c..009e  move-result-object  v0
+    009e..00a4  invoke-virtual  {v4, v0, v6}, LX/0TX;->A02(Landroid/os/Message;Ljava/lang/String;)V
+    00a4..00a6  return-void
+    # exception table: 0 try range(s)
+.end method

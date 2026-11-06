@@ -1729,8 +1729,33 @@ pub async fn write_and_wait_captured<S: AsyncRead + AsyncWrite + Unpin>(
     description: &str,
     id: &str,
 ) -> crate::Result<(Node, Vec<Node>)> {
+    write_and_wait_captured_until(
+        store,
+        channel,
+        request,
+        description,
+        id,
+        tokio::time::Instant::now() + Duration::from_secs(30),
+    )
+    .await
+}
+
+/// Write once and capture replies within a caller-owned absolute deadline.
+/// An expired deadline refuses before write. Write latency never restarts it;
+/// independent socket I/O limits may expire sooner or delay observing expiry.
+/// The caller owns durable reservation and channel disposal on failure. No retry.
+pub async fn write_and_wait_captured_until<S: AsyncRead + AsyncWrite + Unpin>(
+    store: &crate::store::ProtocolStore,
+    channel: &mut EncryptedConnection<S>,
+    request: &Node,
+    description: &str,
+    id: &str,
+    deadline: tokio::time::Instant,
+) -> crate::Result<(Node, Vec<Node>)> {
     // APK43.72 0Sf.A0A registers through0ln.A08 before dispatch.
-    let deadline = tokio::time::Instant::now() + Duration::from_secs(30);
+    if tokio::time::Instant::now() >= deadline {
+        return Err(TransportError::Deadline("correlated stanza").into());
+    }
     write_node(channel, request).await?;
     wait_for_captured_until(store, channel, description, id, deadline).await
 }

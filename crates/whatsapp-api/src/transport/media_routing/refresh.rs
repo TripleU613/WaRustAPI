@@ -18,6 +18,31 @@ pub fn recover_throttle(store: &ProtocolStore) -> Result<RecoveryReport> {
     recovery::recover_throttle(store)
 }
 
+/// APK43.72 0VM.A07 registers media IQ124 with32000ms through0Sf.A0R.
+/// Nominal callback window, not native Handler scheduling/clock equivalence.
+pub const REPLY_TIMEOUT: std::time::Duration = std::time::Duration::from_millis(32_000);
+
+/// Send one already-reserved media request and capture its correlated reply.
+/// The32s window starts before write and never restarts. A shorter configured
+/// socket I/O limit still wins. Caller owns preparation, settlement and channel
+/// disposal on failure; no automatic refresh, retry or durable reset is added.
+pub async fn write_and_wait_captured<S: tokio::io::AsyncRead + tokio::io::AsyncWrite + Unpin>(
+    store: &ProtocolStore,
+    channel: &mut super::super::handshake::EncryptedConnection<S>,
+    request: &Node,
+    id: &str,
+) -> Result<(Node, Vec<Node>)> {
+    super::super::messaging::write_and_wait_captured_until(
+        store,
+        channel,
+        request,
+        "iq",
+        id,
+        tokio::time::Instant::now() + REPLY_TIMEOUT,
+    )
+    .await
+}
+
 const CURRENT: &[u8] = b"media-routing-current:v1";
 const OWNER: &[u8] = b"media-routing-owner:v1";
 const THROTTLE: &[u8] = b"media-routing-throttle-until:v1";
