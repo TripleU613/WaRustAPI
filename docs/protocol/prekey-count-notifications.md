@@ -1504,3 +1504,47 @@ Validation: pinned APK SHA256 rechecked; all four bounded excerpts matched
 complete generated source bytes/hashes, selected instruction ranges and stated
 const/move censuses. OpenAPI library, coverage freshness and repository hygiene
 checks passed. No Rust source or live account behavior changed.
+
+### Queued prekey uploads recheck ownership at writer dequeue (2026-11-05)
+
+**Confirmed local defect, fixed offline:** begin_upload_selected checks account
+authority when reserving and settle checks it on reply, but NodeLink previously
+handed a queued Node directly to the writer. An account change committed after
+reservation/handoff could therefore reach encoding and transmission before a
+later settlement refusal. Reservation-time checks are not writer admission.
+
+Outbound is now an internal envelope with an optional prekey guard. All three
+maybe_upload triggers attach the reserved PendingUpload and store handle;
+ordinary sends retain their existing path. After dequeue, before encode or
+writer.write, shared Outbound.prepare invokes check_write_authority in one
+read snapshot. It requires registered current authority, matching transaction
+generation and the callback's account hash, plus an outcome_unknown batch with
+unchanged account binding, legacy/KEM IDs and public-hash vectors/cardinality.
+A refusal sends the actual local error to the waiting actor and stops the real
+writer epoch before encoding/writing that node. It does not settle, clear,
+repair or replay the reserved batch. Rounds/pending ownership stay consumed.
+
+queued_prekey_upload_rechecks_authority_before_writer_encoding holds an actual
+injected outbound envelope after reservation/handoff, then revokes the account
+or tampers its durable batch binding. Shared preparation refuses before the
+test's encoding counter advances; Account/Prekeys/Checkpoints remain byte-for-
+byte unchanged by preparation and the caller receives failure with its pending
+claim/round retained. An authentication-time-only update still encodes once.
+The initial regression used an accepting preflight to preserve the previous
+unguarded writer behavior and failed on revocation. Real writer code invokes
+the same preparation immediately before encoding; this is not a live socket
+observation. Existing fake-writer helpers now execute preparation too.
+
+This detects changes already committed when the writer's read snapshot opens.
+It does not lock account/store state across encoding or an awaited socket write,
+prevent changes after preflight, validate same-identity signed-key rotation, or
+make network and store effects atomic. Direct callers that transmit the returned
+Node through their own I/O do not gain this actor guard. Local key mutation after
+reservation and before write remains a separate material-lifetime concern.
+No new APK callback policy, wire fields, reconnect/retry authority or live
+account operation is claimed.
+
+Validation: the accepting-preflight regression reproduced queued revocation
+reaching encoding; all 1,403 workspace/all-feature tests, strict Clippy, CLI
+reference, OpenAPI library, formatting and coverage freshness checks passed.
+Injected links/local stores only; no real socket or live account operation.

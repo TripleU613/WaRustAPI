@@ -17422,5 +17422,12 @@
     "x-live": false,
     "description": "Static 2.26.43.72 constructor trace: hold gate 0x9952 has descriptor false inputs; disabled gate stores delay0, enabled gate reads signed-int key0x9953 with descriptor60000 inputs. Selected registry entries corroborate false/60000 and show false for separate scheduler gate0x6f06. Registry and preferences can override descriptor inputs on the selected fallback path. Effective config, full map collision/value-flow and refresh/scheduler semantics remain open. Bounded excerpts have full-source hashes/ranges; no Rust timer or replay authority is added.",
     "evidence": "docs/protocol/apk/2.26.43.72-count-hold-config/README.md"
+  },
+  "x-prekey-writer-ownership-preflight": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Internal prekey outbound envelopes now carry reservation/store ownership. Writer dequeue checks registered account authority, transaction generation and unchanged uncertain-batch bindings before encoding/writing. Failure reports its local error and ends the writer epoch without settlement, release or replay. Authentication-time-only changes remain allowed. Snapshot does not lock state across encoding/socket I/O; custom direct I/O and same-identity signed-key rotation remain outside this guard.",
+    "evidence": "docs/protocol/prekey-count-notifications.md#queued-prekey-uploads-recheck-ownership-at-writer-dequeue-2026-11-05"
   }
 }

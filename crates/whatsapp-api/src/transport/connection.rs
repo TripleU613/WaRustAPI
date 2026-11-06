@@ -214,7 +214,25 @@ fn update_login_identity(
 }
 
 /// One outbound stanza and where to report the socket write outcome.
-pub(crate) type Outbound = (Node, oneshot::Sender<Result<()>>);
+type Written = (Node, oneshot::Sender<Result<()>>);
+pub(crate) struct Outbound {
+    node: Node,
+    reply: oneshot::Sender<Result<()>>,
+    prekey_guard: Option<(Arc<ProtocolStore>, super::prekeys::PendingUpload)>,
+}
+impl Outbound {
+    // A refusal consumes the queued write and reports its actual local error.
+    // The writer ends the epoch without encoding, writing, or releasing a batch.
+    fn prepare(self) -> Option<Written> {
+        if let Some((store, pending)) = self.prekey_guard
+            && let Err(error) = pending.check_write_authority(&store)
+        {
+            let _ = self.reply.send(Err(error));
+            return None;
+        }
+        Some((self.node, self.reply))
+    }
+}
 
 /// Node-level link for one connection epoch. Real sessions adapt the split
 /// encrypted transport; tests inject channels and cut them at chosen points.
@@ -276,9 +294,29 @@ impl NodeLink {
     /// Write one stanza and wait for the socket outcome. A closed writer is a
     /// consumed connection: the caller must end this epoch, never retry here.
     async fn send(&self, node: &Node) -> Result<()> {
+        self.send_guarded(node, None).await
+    }
+    async fn send_prekey_upload(
+        &self,
+        store: &Arc<ProtocolStore>,
+        pending: super::prekeys::PendingUpload,
+        node: &Node,
+    ) -> Result<()> {
+        self.send_guarded(node, Some((store.clone(), pending)))
+            .await
+    }
+    async fn send_guarded(
+        &self,
+        node: &Node,
+        prekey_guard: Option<(Arc<ProtocolStore>, super::prekeys::PendingUpload)>,
+    ) -> Result<()> {
         let (reply, outcome) = oneshot::channel();
         self.outgoing
-            .send((node.clone(), reply))
+            .send(Outbound {
+                node: node.clone(),
+                reply,
+                prekey_guard,
+            })
             .await
             .map_err(|_| Error::Transport(super::TransportError::Closed))?;
         outcome
@@ -317,7 +355,10 @@ fn link_from(channel: EncryptedConnection<tokio::net::TcpStream>) -> Result<(Nod
     });
     let (outgoing_tx, mut outgoing_rx) = mpsc::channel::<Outbound>(16);
     let writer_task = tokio::spawn(async move {
-        while let Some((node, reply)) = outgoing_rx.recv().await {
+        while let Some(outbound) = outgoing_rx.recv().await {
+            let Some((node, reply)) = outbound.prepare() else {
+                break;
+            };
             let result = match encode(&node) {
                 Ok(bytes) => writer.write(&bytes).await.map_err(Error::from),
                 Err(e) => Err(e),
@@ -1214,8 +1255,8 @@ async fn maybe_upload(
     };
     if let Some((pending, node)) = reserved {
         *rounds += 1;
-        *upload = Some(pending);
-        link.send(&node).await?;
+        *upload = Some(pending.clone());
+        link.send_prekey_upload(store, pending, &node).await?;
     }
     Ok(())
 }
@@ -1580,7 +1621,7 @@ mod tests {
                     })
                     .await
                 });
-                let (first, outcome) = writes.recv().await.unwrap();
+                let (first, outcome) = writes.recv().await.unwrap().prepare().unwrap();
                 assert_eq!(first.description, "ack");
                 assert_eq!(first.get_attr("id").and_then(|v| v.as_text()), Some("ROOT"));
                 assert!(matches!(
@@ -1589,7 +1630,7 @@ mod tests {
                 ));
                 if outcome_kind != "ack_failed" {
                     outcome.send(Ok(())).unwrap();
-                    let (second, outcome) = writes.recv().await.unwrap();
+                    let (second, outcome) = writes.recv().await.unwrap().prepare().unwrap();
                     assert_eq!(second.description, answer_kind);
                     assert_eq!(second.get_attr("id").and_then(|v| v.as_text()), Some("W1"));
                     if outcome_kind == "written" {
@@ -1659,20 +1700,22 @@ mod tests {
         }
     }
     impl Fake {
-        async fn written(&mut self) -> Outbound {
+        async fn written(&mut self) -> Written {
             self.written_within(Duration::from_secs(5)).await
         }
-        async fn written_within(&mut self, window: Duration) -> Outbound {
+        async fn written_within(&mut self, window: Duration) -> Written {
             tokio::time::timeout(window, self.from_worker.recv())
                 .await
                 .expect("write within deadline")
                 .expect("link open")
+                .prepare()
+                .expect("writer preflight accepted")
         }
         async fn nothing_written(&mut self, window: Duration) {
             match tokio::time::timeout(window, self.from_worker.recv()).await {
                 Err(_) => {}
                 Ok(None) => panic!("link closed while checking for unexpected writes"),
-                Ok(Some((node, _))) => panic!(
+                Ok(Some(Outbound { node, .. })) => panic!(
                     "unexpected write: tag={} type={:?} xmlns={:?} children={:?}",
                     node.description,
                     node.get_attr("type").and_then(|v| v.as_text()),
@@ -4878,6 +4921,89 @@ mod tests {
         crate::registration::factory::install_test_material(&store, &config()).unwrap();
         Arc::new(store)
     }
+    #[tokio::test]
+    async fn queued_prekey_upload_rechecks_authority_before_writer_encoding() {
+        let dir = tempfile::tempdir().unwrap();
+        for case in ["revoked", "batch-binding", "auth-time"] {
+            let store = registered_store(&dir.path().join(format!("queued-authority-{case}.db")));
+            let account = store.read(AccountRecord::load).unwrap().unwrap();
+            let (_incoming, incoming) = mpsc::channel(1);
+            let (outgoing, mut writes) = mpsc::channel(1);
+            let link = NodeLink::new(incoming, outgoing);
+            let worker_store = store.clone();
+            let task = tokio::spawn(async move {
+                let mut pending = None;
+                let mut rounds = 0;
+                let result = maybe_upload(
+                    &worker_store,
+                    &account,
+                    &link,
+                    &mut pending,
+                    &mut rounds,
+                    PrekeyUploadTrigger::Startup,
+                )
+                .await;
+                (result, pending.is_some(), rounds)
+            });
+            // Hold the actual queued envelope before the shared writer preflight.
+            let queued = writes.recv().await.unwrap();
+            assert!(queued.prekey_guard.is_some());
+            let iq_id = queued
+                .node
+                .get_attr("id")
+                .and_then(|v| v.as_text())
+                .unwrap()
+                .to_owned();
+            store
+                .write(|tx| {
+                    if case == "batch-binding" {
+                        let key = format!("prekey-upload:{iq_id}");
+                        let mut batch: super::super::prekeys::Batch =
+                            tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?.unwrap();
+                        batch.account_authority_sha256.as_mut().unwrap()[0] ^= 1;
+                        tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &batch)
+                    } else {
+                        let mut current = AccountRecord::load_in_write(tx)?.unwrap();
+                        if case == "revoked" {
+                            current.registration = crate::session::RegistrationStatus::Revoked;
+                        } else {
+                            current.last_authenticated_at = Some(Timestamp::now());
+                        }
+                        current.save(tx)
+                    }
+                })
+                .unwrap();
+            let snapshot = || {
+                store
+                    .read(|tx| {
+                        [Table::Account, Table::Prekeys, Table::Checkpoints]
+                            .into_iter()
+                            .map(|t| tx.scan(t, 1, 10000))
+                            .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot();
+            let mut encoded = 0;
+            if let Some((node, outcome)) = queued.prepare() {
+                encode(&node).unwrap();
+                encoded += 1;
+                outcome.send(Ok(())).unwrap();
+            }
+            let (result, held, rounds) = task.await.unwrap();
+            assert!(held);
+            assert_eq!(rounds, 1);
+            assert_eq!(snapshot(), before);
+            if case == "auth-time" {
+                assert!(result.is_ok());
+                assert_eq!(encoded, 1);
+            } else {
+                assert!(result.is_err(), "{case} must stop queued upload");
+                assert_eq!(encoded, 0, "writer must refuse before encoding");
+            }
+        }
+    }
+
     #[tokio::test]
     async fn prekey_upload_distinguishes_absent_and_invalid_registered_material() {
         let dir = tempfile::tempdir().unwrap();

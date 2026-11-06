@@ -559,7 +559,7 @@ fn account_authority(account: &AccountRecord) -> Result<[u8; 32]> {
 }
 
 /// A reserved upload awaiting the server's `iq` reply for this connection.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct PendingUpload {
     iq_id: String,
     ids: Vec<u32>,
@@ -847,6 +847,36 @@ fn begin_upload_selected(
 }
 
 impl PendingUpload {
+    /// Recheck local ownership after queue handoff and before writer encoding.
+    pub(crate) fn check_write_authority(&self, store: &ProtocolStore) -> Result<()> {
+        store.read(|tx| {
+            let current = AccountRecord::load(tx)?
+                .ok_or_else(|| invalid("publication account unavailable before write"))?;
+            if current.generation != tx.generation()
+                || account_authority(&current)? != self.account_authority_sha256
+            {
+                return Err(invalid("publication account changed before write"));
+            }
+            let batch: Batch = tx
+                .get_json(Table::Checkpoints, batch_key(&self.iq_id).as_bytes(), 1)?
+                .ok_or_else(|| invalid("reserved batch disappeared before write"))?;
+            if batch.status != "outcome_unknown"
+                || batch.account_authority_sha256 != Some(self.account_authority_sha256)
+                || batch.ids != self.ids
+                || batch.public_sha256 != self.public_sha256
+                || batch.ids.len() != batch.public_sha256.len()
+                || batch.kem_ids != self.kem_ids
+                || batch.kem_public_sha256 != self.kem_public_sha256
+                || batch.kem_ids.len() != batch.kem_public_sha256.len()
+            {
+                return Err(invalid(
+                    "reserved publication ownership changed before write",
+                ));
+            }
+            Ok(())
+        })
+    }
+
     /// Only the exact `iq` result/error for this batch can settle it.
     pub fn matches(&self, node: &Node) -> bool {
         node.description == "iq"

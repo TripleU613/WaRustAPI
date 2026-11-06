@@ -1,3 +1,8 @@
+Queued prekey uploads now recheck reserved account/batch authority at writer
+dequeue, before encoding or socket write. Revocation or changed bindings refuse
+without releasing the batch; changes after the snapshot remain a stated limit.
+[Audit](docs/protocol/prekey-count-notifications.md#queued-prekey-uploads-recheck-ownership-at-writer-dequeue-2026-11-05).
+
 Native hold configuration now has traced descriptor and selected registry inputs:
 gatefalse, delay60000 when enabled, and stored delay0 when disabled. These are
 constructor/default facts, not effective runtime values or Rust timing changes.
