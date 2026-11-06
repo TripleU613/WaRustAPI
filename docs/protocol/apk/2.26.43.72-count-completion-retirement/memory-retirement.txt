@@ -1,0 +1,263 @@
+
+# class: LX/1id;
+# extends: Ljava/lang/Object;
+
+.method public A0J(VL)  # .registers 22
+    # full signature: LX/1id;->A0J(Ljava/util/List;)V
+    0000..0004  const/16  v1, #0xa
+    0004..0008  move-object/from16  v3, v21
+    0008..000e  invoke-static  {v3, v1}, LX/07S;->A0F(Ljava/lang/Iterable;I)I
+    000e..0010  move-result  v0
+    0010..0014  new-instance  v13, Ljava/util/ArrayList;
+    0014..001a  invoke-direct  {v13, v0}, Ljava/util/ArrayList;-><init>(I)V
+    001a..0020  invoke-interface  {v3}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0020..0022  move-result-object  v2
+    0022..0028  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    0028..002a  move-result  v0
+    002a..002e  if-eqz  v0, +0xe
+    002e..0034  invoke-interface  {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0034..0036  move-result-object  v0
+    0036..003a  check-cast  v0, LX/2Dx;
+    003a..003e  iget-object  v0, v0, LX/2Dx;->A02:LX/1k3;
+    003e..0044  invoke-virtual  {v13, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0044..0046  goto  -0x11
+    0046..004a  move-object/from16  v12, v20
+    004a..0050  invoke-static  {v12}, LX/1id;->A00(LX/1id;)LX/0av;
+    0050..0052  move-result-object  v0
+    0052..0056  iget-boolean  v0, v0, LX/0av;->A0S:Z
+    0056..005a  if-eqz  v0, +0x11
+    005a..005e  iget-object  v0, v12, LX/1id;->A0C:LX/1iq;
+    005e..0064  invoke-virtual  {v0, v3}, LX/1iq;->A0F(Ljava/util/List;)Ljava/util/List;
+    0064..0066  move-result-object  v2
+    0066..006a  iget-object  v5, v12, LX/1id;->A0C:LX/1iq;
+    006a..006e  const-string  v15, "QueueStoreCache/"
+    006e..0070  const/4  v8, #0x0
+    0070..0074  iget-object  v11, v5, LX/1iq;->A07:Ljava/util/HashMap;
+    0074..0076  monitor-enter
+    0076..0078  goto  +0x4
+    0078..007c  sget-object  v2, LX/01k;->A00:LX/01k;
+    007c..007e  goto  -0xb
+    007e..0082  iget-object  v14, v5, LX/1iq;->A06:Ljava/lang/String;
+    0082..0088  invoke-interface  {v13}, Ljava/util/List;->size()I
+    0088..008a  move-result  v10
+    008a..0090  invoke-virtual  {v11}, Ljava/util/AbstractMap;->size()I
+    0090..0092  move-result  v9
+    0092..0096  iget-object  v0, v5, LX/1iq;->A09:Ljava/util/List;
+    0096..009a  move-object/from16  v19, v0
+    009a..00a0  invoke-interface/range  {v19..v19}, Ljava/util/List;->size()I
+    00a0..00a2  move-result  v7
+    00a2..00a6  const-string  v6, ","
+    00a6..00a8  const/4  v0, #0x2
+    00a8..00ac  new-instance  v4, LX/FgD;
+    00ac..00b2  invoke-direct  {v4, v0}, LX/FgD;-><init>(I)V
+    00b2..00b4  const/4  v3, #0x0
+    00b4..00b8  const-string  v0, ""
+    00b8..00be  invoke-static  {v6, v0, v0, v13, v4}, LX/07Z;->A11(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
+    00be..00c0  move-result-object  v6
+    00c0..00c4  new-instance  v4, Ljava/lang/StringBuilder;
+    00c4..00ca  invoke-direct  {v4, v15}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00ca..00d0  invoke-virtual  {v4, v14}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00d0..00d4  const-string  v0, "/removeStanzasFromCache count="
+    00d4..00da  invoke-virtual  {v4, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00da..00e0  invoke-virtual  {v4, v10}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00e0..00e4  const-string  v0, " metadataSize="
+    00e4..00ea  invoke-virtual  {v4, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00ea..00f0  invoke-virtual  {v4, v9}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00f0..00f4  const-string  v0, " stanzasSize="
+    00f4..00fa  invoke-virtual  {v4, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00fa..0100  invoke-virtual  {v4, v7}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0100..0104  const-string  v0, " ids="
+    0104..010a  invoke-virtual  {v4, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    010a..0110  invoke-virtual  {v4, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0110..0116  invoke-virtual  {v4}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0116..0118  move-result-object  v0
+    0118..011e  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    011e..0124  invoke-static  {v13, v1}, LX/07S;->A0F(Ljava/lang/Iterable;I)I
+    0124..0126  move-result  v0
+    0126..012a  new-instance  v6, Ljava/util/ArrayList;
+    012a..0130  invoke-direct  {v6, v0}, Ljava/util/ArrayList;-><init>(I)V
+    0130..0136  invoke-interface  {v13}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0136..0138  move-result-object  v4
+    0138..013e  invoke-interface  {v4}, Ljava/util/Iterator;->hasNext()Z
+    013e..0140  move-result  v0
+    0140..0144  if-eqz  v0, +0xe
+    0144..014a  invoke-interface  {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    014a..014c  move-result-object  v0
+    014c..0150  check-cast  v0, LX/1k3;
+    0150..0154  iget-object  v0, v0, LX/1k3;->A05:LX/2DG;
+    0154..015a  invoke-virtual  {v6, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    015a..015c  goto  -0x11
+    015c..0162  invoke-static  {v6}, LX/07Z;->A1S(Ljava/lang/Iterable;)Ljava/util/Set;
+    0162..0164  move-result-object  v7
+    0164..0168  new-instance  v6, LX/Km2;
+    0168..016e  invoke-direct  {v6}, Ljava/lang/Object;-><init>()V
+    016e..0172  new-array  v0, v8, [LX/2DG;
+    0172..0178  invoke-interface  {v7, v0}, Ljava/util/Set;->toArray([Ljava/lang/Object;)[Ljava/lang/Object;
+    0178..017a  move-result-object  v0
+    017a..0180  invoke-static  {v11, v0}, LX/DCt;->A03(Ljava/util/Map;[Ljava/lang/Object;)V
+    0180..0184  iget-object  v0, v5, LX/1iq;->A0A:Ljava/util/Set;
+    0184..018a  invoke-interface  {v0, v7}, Ljava/util/Set;->removeAll(Ljava/util/Collection;)Z
+    018a..018e  const/16  v0, #0x8
+    018e..0192  new-instance  v4, LX/FgR;
+    0192..0198  invoke-direct  {v4, v6, v5, v7, v0}, LX/FgR;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+    0198..019c  move-object/from16  v0, v19
+    019c..01a2  invoke-static  {v0, v4}, LX/07W;->A0S(Ljava/util/List;Lkotlin/jvm/functions/Function1;)Z
+    01a2..01a6  iget  v0, v6, LX/Km2;->element:I
+    01a6..01a8  neg-int  v0, v0
+    01a8..01ae  invoke-static  {v5, v0}, LX/1iq;->A03(LX/1iq;I)V
+    01ae..01b4  invoke-interface  {v13}, Ljava/util/List;->isEmpty()Z
+    01b4..01b6  move-result  v0
+    01b6..01ba  if-nez  v0, +0x4
+    01ba..01be  iput-object  v3, v5, LX/1iq;->A01:LX/2E0;
+    01be..01c0  monitor-exit
+    01c0..01c6  invoke-interface  {v2}, Ljava/util/List;->isEmpty()Z
+    01c6..01c8  move-result  v0
+    01c8..01cc  if-nez  v0, +0xcc
+    01cc..01d0  iget-object  v0, v12, LX/1id;->A07:LX/05a;
+    01d0..01d4  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    01d4..01da  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    01da..01dc  move-result-object  v10
+    01dc..01e0  check-cast  v10, LX/Sd8;
+    01e0..01e4  iget-object  v0, v12, LX/1id;->A09:LX/1ig;
+    01e4..01e8  move-object/from16  v18, v0
+    01e8..01ee  invoke-static  {v2, v1}, LX/07S;->A0F(Ljava/lang/Iterable;I)I
+    01ee..01f0  move-result  v0
+    01f0..01f4  new-instance  v1, Ljava/util/ArrayList;
+    01f4..01fa  invoke-direct  {v1, v0}, Ljava/util/ArrayList;-><init>(I)V
+    01fa..0200  invoke-interface  {v2}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0200..0202  move-result-object  v4
+    0202..0208  invoke-interface  {v4}, Ljava/util/Iterator;->hasNext()Z
+    0208..020a  move-result  v0
+    020a..020e  if-eqz  v0, +0x10
+    020e..0214  invoke-interface  {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0214..0216  move-result-object  v0
+    0216..021a  check-cast  v0, LX/2Dx;
+    021a..021e  iget-object  v0, v0, LX/2Dx;->A02:LX/1k3;
+    021e..0222  iget-object  v0, v0, LX/1k3;->A06:LX/1kz;
+    0222..0228  invoke-virtual  {v1, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0228..022a  goto  -0x13
+    022a..022e  instance-of  v0, v2, Ljava/util/Collection;
+    022e..0230  const/4  v14, #0x0
+    0230..0234  if-eqz  v0, +0x1a
+    0234..023a  invoke-interface  {v2}, Ljava/util/Collection;->isEmpty()Z
+    023a..023c  move-result  v0
+    023c..0240  if-eqz  v0, +0x14
+    0240..0246  invoke-static  {v12}, LX/1id;->A00(LX/1id;)LX/0av;
+    0246..0248  move-result-object  v0
+    0248..024c  iget-wide  v7, v0, LX/0av;->A05:J
+    024c..0250  iget-object  v2, v10, LX/Sd8;->A03:[LX/SSm;
+    0250..0256  invoke-virtual/range  {v18..v18}, Ljava/lang/Enum;->ordinal()I
+    0256..0258  move-result  v0
+    0258..025c  aget-object  v9, v2, v0
+    025c..0260  iget-object  v6, v9, LX/SSm;->A0D:Ljava/lang/Object;
+    0260..0262  monitor-enter
+    0262..0264  goto  +0x1d
+    0264..026a  invoke-interface  {v2}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    026a..026c  move-result-object  v2
+    026c..0272  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    0272..0274  move-result  v0
+    0274..0278  if-eqz  v0, -0x1a
+    0278..027e  invoke-interface  {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    027e..0280  move-result-object  v0
+    0280..0284  check-cast  v0, LX/2Dx;
+    0284..0288  iget-object  v0, v0, LX/2Dx;->A05:Ljava/lang/Integer;
+    0288..028c  if-eqz  v0, -0xe
+    028c..0290  add-int/lit8  v14, v14, #0x1
+    0290..0294  if-gez  v14, -0x12
+    0294..029a  invoke-static  {}, LX/01i;->A0D()V
+    029a..029c  throw  v3
+    029c..02a0  iget-object  v0, v10, LX/Sd8;->A01:Lkotlin/jvm/functions/Function0;
+    02a0..02a6  invoke-interface  {v0}, Lkotlin/jvm/functions/Function0;->invoke()Ljava/lang/Object;
+    02a6..02a8  move-result-object  v0
+    02a8..02ac  check-cast  v0, Ljava/lang/Number;
+    02ac..02b2  invoke-virtual  {v0}, Ljava/lang/Number;->longValue()J
+    02b2..02b4  move-result-wide  v4
+    02b4..02ba  invoke-virtual  {v9, v4, v5}, LX/SSm;->A00(J)V
+    02ba..02c0  invoke-interface  {v1}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    02c0..02c2  move-result-object  v17
+    02c2..02c8  invoke-interface/range  {v17..v17}, Ljava/util/Iterator;->hasNext()Z
+    02c8..02ca  move-result  v0
+    02ca..02ce  if-eqz  v0, +0x24
+    02ce..02d4  invoke-interface/range  {v17..v17}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    02d4..02d6  move-result-object  v3
+    02d6..02da  check-cast  v3, LX/1kz;
+    02da..02de  iget-object  v2, v9, LX/SSm;->A0E:Ljava/util/EnumMap;
+    02de..02e4  invoke-virtual  {v2, v3}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    02e4..02e6  move-result-object  v0
+    02e6..02ea  check-cast  v0, Ljava/lang/Long;
+    02ea..02ee  if-eqz  v0, +0x11
+    02ee..02f4  invoke-virtual  {v0}, Ljava/lang/Number;->longValue()J
+    02f4..02f6  move-result-wide  v15
+    02f6..02fa  const-wide/16  v0, #0x1
+    02fa..02fc  add-long/2addr  v15, v0
+    02fc..0302  invoke-static/range  {v15..v16}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0302..0304  move-result-object  v0
+    0304..030a  invoke-virtual  {v2, v3, v0}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    030a..030c  goto  -0x24
+    030c..0310  const-wide/16  v15, #0x0
+    0310..0312  goto  -0xd
+    0312..0316  iget-wide  v2, v9, LX/SSm;->A06:J
+    0316..0318  int-to-long  v0, v14
+    0318..031a  add-long/2addr  v2, v0
+    031a..031e  iput-wide  v2, v9, LX/SSm;->A06:J
+    031e..0322  iget-wide  v0, v9, LX/SSm;->A0B:J
+    0322..0326  const-wide/16  v14, #0xffff (-1)
+    0326..032a  cmp-long  v2, v0, v14
+    032a..032e  if-eqz  v2, +0x12
+    032e..0332  sub-long  v2, v4, v0
+    0332..0336  cmp-long  v0, v2, v7
+    0336..033a  if-ltz  v0, +0xc
+    033a..033e  move-object/from16  v0, v18
+    033e..0344  invoke-static  {v0, v9, v4, v5}, LX/Sd8;->A00(LX/1ig;LX/SSm;J)LX/MO1;
+    0344..0346  move-result-object  v1
+    0346..0348  goto  +0x5
+    0348..034a  move-exception  v3
+    034a..034c  monitor-exit
+    034c..034e  throw  v3
+    034e..0350  const/4  v1, #0x0
+    0350..0352  monitor-exit
+    0352..0356  if-eqz  v1, +0x7
+    0356..035a  iget-object  v0, v10, LX/Sd8;->A02:Lkotlin/jvm/functions/Function1;
+    035a..0360  invoke-interface  {v0, v1}, Lkotlin/jvm/functions/Function1;->invoke(Ljava/lang/Object;)Ljava/lang/Object;
+    0360..0366  invoke-interface  {v13}, Ljava/util/List;->isEmpty()Z
+    0366..0368  move-result  v0
+    0368..036c  if-nez  v0, +0x38
+    036c..0370  iget-object  v3, v12, LX/1id;->A0A:LX/1im;
+    0370..0372  monitor-enter
+    0372..0376  move-object/from16  v0, v19
+    0376..037a  instance-of  v0, v0, Ljava/util/Collection;
+    037a..037c  const/4  v2, #0x0
+    037c..0380  if-eqz  v0, +0x9
+    0380..0386  invoke-interface/range  {v19..v19}, Ljava/util/Collection;->isEmpty()Z
+    0386..0388  move-result  v0
+    0388..038c  if-eqz  v0, +0x3
+    038c..038e  goto  +0x22
+    038e..0394  invoke-interface/range  {v19..v19}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0394..0396  move-result-object  v1
+    0396..039c  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    039c..039e  move-result  v0
+    039e..03a2  if-eqz  v0, +0x19
+    03a2..03a8  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    03a8..03aa  move-result-object  v0
+    03aa..03ae  check-cast  v0, LX/1k3;
+    03ae..03b2  iget-object  v0, v0, LX/1k3;->A0H:LX/2A3;
+    03b2..03b8  invoke-static  {v0}, LX/2Aa;->A00(LX/2A3;)Z
+    03b8..03ba  move-result  v0
+    03ba..03be  if-nez  v0, -0x12
+    03be..03c2  add-int/lit8  v2, v2, #0x1
+    03c2..03c6  if-gez  v2, -0x16
+    03c6..03cc  invoke-static  {}, LX/01i;->A0D()V
+    03cc..03ce  const/4  v0, #0x0
+    03ce..03d0  throw  v0
+    03d0..03d2  monitor-exit
+    03d2..03d8  invoke-interface  {v3, v2}, LX/1im;->CHt(I)V
+    03d8..03de  invoke-virtual  {v12}, LX/1id;->A05()I
+    03de..03e0  return-void
+    03e0..03e2  move-exception  v3
+    03e2..03e4  monitor-exit
+    03e4..03e6  throw  v3
+    # exception table: 3 try range(s)
+    # catch <all> code_units 003f..00df -> 01f0
+    # catch <all> code_units 014e..01a4 -> 01a4
+    # catch <all> code_units 01b9..01e8 -> 01f0
+.end method

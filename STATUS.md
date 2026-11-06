@@ -1,3 +1,9 @@
+Native failed completion now has a retained disk/cache retirement trace:
+transaction work deletes explicit stanza row IDs; Feh(46) separately removes
+cache entries. The no-work callback path is not disk-commit proof.
+[Evidence and recovery limits](docs/protocol/apk/2.26.43.72-count-completion-retirement/README.md).
+Offline research; Rust deletion/replay behavior unchanged.
+
 Native escaped-handler errors now have a retained NACK/completion trace:
 487 for parser LIL,500 for other selected failures, separate failed queue
 completion with ACK-list flagfalse. SQLite full/corruption still rethrow;

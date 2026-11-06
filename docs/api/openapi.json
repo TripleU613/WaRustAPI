@@ -17303,5 +17303,12 @@
     "x-live": false,
     "description": "Static current APK escaped-handler path requests NACK487 for LIL or500 for other selected failures, separately marking failed completion with ACK-list flagfalse. SQLite full/corruption rethrow. Inner count-parser LIL caught by base handler remains normal ACK. Full cleanup/NACK queue/recovery semantics unported; no Rust error/retry change.",
     "evidence": "docs/protocol/apk/2.26.43.72-count-handler-error-completion/README.md"
+  },
+  "x-count-completion-retirement-audit": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Static current APK failed completion separates explicit stanza row-ID deletion from Feh46 cache retirement. Direct transaction success callback and no-work callback differ. Membership filter is key-only, not account/content/row ownership. Shared backend transaction identity and crash/rollback recovery remain unproven; no Rust deletion or replay implementation.",
+    "evidence": "docs/protocol/apk/2.26.43.72-count-completion-retirement/README.md"
   }
 }

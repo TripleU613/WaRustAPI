@@ -1,0 +1,30 @@
+
+# class: LX/Feh;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLI)  # .registers 5
+    # full signature: LX/Feh;-><init>(LX/IZI;LX/0DY;LX/1dW;I)V
+    0000..0004  iput  v4, v0, LX/Feh;->$t:I
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000a..000e  iput-object  v1, v0, LX/Feh;->A00:Ljava/lang/Object;
+    000e..0012  rsub-int/lit8  v4, v4, #0xe
+    0012..0016  if-eqz  v4, +0x7
+    0016..001a  iput-object  v3, v0, LX/Feh;->A01:Ljava/lang/Object;
+    001a..001e  iput-object  v2, v0, LX/Feh;->A02:Ljava/lang/Object;
+    001e..0020  return-void
+    0020..0024  iput-object  v2, v0, LX/Feh;->A01:Ljava/lang/Object;
+    0024..0028  iput-object  v3, v0, LX/Feh;->A02:Ljava/lang/Object;
+    0028..002a  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VLLLI)  # .registers 5
+    # full signature: LX/Feh;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+    0000..0004  iput  v4, v0, LX/Feh;->$t:I
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000a..000e  iput-object  v3, v0, LX/Feh;->A00:Ljava/lang/Object;
+    000e..0012  iput-object  v2, v0, LX/Feh;->A01:Ljava/lang/Object;
+    0012..0016  iput-object  v1, v0, LX/Feh;->A02:Ljava/lang/Object;
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,26 @@
+{
+  "README.md": {
+    "bytes": 4320,
+    "sha256": "fe85b5dbc941947873a1b74827e9dc7802afb8e1dc6e41fb0387826b991afc69"
+  },
+  "callback-constructors.txt": {
+    "bytes": 1334,
+    "sha256": "c54dc56c00e26e9a7bce5704bc4e964002a829a1ffbd114e29c4a758f88a71f4"
+  },
+  "completion-callback.txt": {
+    "bytes": 117576,
+    "sha256": "b4b461433411584fc8b250730bcb8aa91fed66e35a4d87e75d934185d6400f39"
+  },
+  "completion-membership.txt": {
+    "bytes": 2572,
+    "sha256": "3288d87c8e969e487eafff985dc3e7819a7009d977a59189106482697d170faf"
+  },
+  "disk-retirement.txt": {
+    "bytes": 6074,
+    "sha256": "e408bb2d5c0e9b901d20a97902077b343c5689ec3c3ceaa9cdb8cabcd2b88dc4"
+  },
+  "memory-retirement.txt": {
+    "bytes": 14274,
+    "sha256": "1fa3834277e29e0346ae4f31feb918344d3c503ac6f0702a523762499aa619d4"
+  }
+}

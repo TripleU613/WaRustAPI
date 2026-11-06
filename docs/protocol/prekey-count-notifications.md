@@ -1098,3 +1098,15 @@ from persistence and server confirmation.
 [Eleven exact methods, response/completion separation and callback limits](apk/2.26.43.72-count-handler-error-completion/README.md).
 Count PQ parse LIL caught inside0v6 still follows its original normal ACK,
 not this escaped-error487 path. No Rust NACK/retry/replay or live operation added.
+
+### Failed completion disk retirement and cache removal differ (2026-11-05)
+
+**Confirmed static,43.72:** failure callback Feh(46) calls1id.A0J for cache
+retirement. In the selected transaction route,1ic.A0A separately collects
+nonnull row IDs for backend1ih.A04 deletion; the callback is normally released
+after successful outer completion. Its no-work path can invoke the callback
+without a transaction. Cache removal alone is not universal commit proof.
+1iq.A0F checks key membership only, not row/account/content identity.
+[Exact methods,975-ID batches and backend/rollback/helper limits](apk/2.26.43.72-count-completion-retirement/README.md).
+This is stanza-row retirement, distinct from confirmed pre-ACK watermark
+deletion. No Rust deletion, replay, retry or live operation added.
