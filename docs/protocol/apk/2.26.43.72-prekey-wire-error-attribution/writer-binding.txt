@@ -1,0 +1,141 @@
+# Selected byte-PC ranges, end exclusive; unrelated branches omitted.
+# Full export SHA256: 6ec286521e703b2e16b3ff057c27e744fe5835683b8edd815cfeefec12c32d3d
+# Range 1696..17de
+    1696..169c  invoke-static  {v7}, LX/00L;->A05(Ljava/lang/Object;)V
+    169c..16a2  invoke-virtual  {v7, v2}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    16a2..16a4  move-result-object  v8
+    16a4..16a8  const-string  v1, "jids"
+    16a8..16ae  invoke-virtual  {v7, v1}, Landroid/os/Bundle;->getParcelableArray(Ljava/lang/String;)[Landroid/os/Parcelable;
+    16ae..16b0  move-result-object  v5
+    16b0..16b4  check-cast  v5, [Lcom/whatsapp/infra/core/jid/DeviceJid;
+    16b4..16b8  const-string  v1, "identityJids"
+    16b8..16be  invoke-virtual  {v7, v1}, Landroid/os/Bundle;->getParcelableArray(Ljava/lang/String;)[Landroid/os/Parcelable;
+    16be..16c0  move-result-object  v11
+    16c0..16c4  const-string  v1, "fetchPqPrekey"
+    16c4..16c6  const/4  v4, #0x0
+    16c6..16cc  invoke-virtual  {v7, v1, v4}, Landroid/os/BaseBundle;->getBoolean(Ljava/lang/String;Z)Z
+    16cc..16ce  move-result  v1
+    16ce..16d2  const-string  v9, "contextJid"
+    16d2..16d8  invoke-virtual  {v7, v9}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    16d8..16da  move-result-object  v10
+    16da..16de  sget-object  v9, LX/0DY;->A00:LX/0Di;
+    16de..16e4  invoke-virtual  {v9, v10}, LX/0Di;->A02(Ljava/lang/String;)LX/0DY;
+    16e4..16e6  move-result-object  v19
+    16e6..16ea  const-string  v9, "sessionScopeOrdinal"
+    16ea..16f0  invoke-virtual  {v7, v9, v4}, Landroid/os/BaseBundle;->getInt(Ljava/lang/String;I)I
+    16f0..16f2  move-result  v10
+    16f2..16f6  const-string  v9, "isPqSessionUpgrade"
+    16f6..16fc  invoke-virtual  {v7, v9, v4}, Landroid/os/BaseBundle;->getBoolean(Ljava/lang/String;Z)Z
+    16fc..16fe  move-result  v7
+    16fe..1702  iget-object  v0, v0, LX/0v2;->A00:LX/0v0;
+    1702..1706  iget-object  v9, v0, LX/0v0;->A00:LX/1rj;
+    1706..170a  if-eqz  v7, +0xc
+    170a..170e  if-nez  v1, +0xa
+    170e..1712  const-string  v1, "a PQ session upgrade must fetch PQ prekeys"
+    1712..1716  new-instance  v0, Ljava/lang/IllegalArgumentException;
+    1716..171c  invoke-direct  {v0, v1}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;)V
+    171c..171e  throw  v0
+    171e..1724  invoke-static  {v10}, LX/EHr;->A00(I)LX/E78;
+    1724..1726  move-result-object  v13
+    1726..172a  iget-object  v10, v9, LX/1rj;->A03:Ljava/util/Map;
+    172a..172e  new-instance  v0, LX/Dxh;
+    172e..1730  move-object  v15, v5
+    1730..1734  move/from16  v16, v1
+    1734..1738  move/from16  v17, v7
+    1738..173a  move-object  v14, v9
+    173a..173c  move-object  v12, v0
+    173c..1742  invoke-direct/range  {v12..v17}, LX/Dxh;-><init>(LX/E78;LX/1rj;[Lcom/whatsapp/infra/core/jid/DeviceJid;ZZ)V
+    1742..1748  invoke-interface  {v10, v8, v0}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    1748..174a  array-length  v0, v5
+    174a..174e  move/from16  v20, v0
+    174e..1752  new-instance  v10, Ljava/util/ArrayList;
+    1752..1758  invoke-direct  {v10, v0}, Ljava/util/ArrayList;-><init>(I)V
+    1758..175e  invoke-static  {v11}, Ljava/util/Arrays;->asList([Ljava/lang/Object;)Ljava/util/List;
+    175e..1760  move-result-object  v11
+    1760..1764  new-instance  v18, Ljava/util/HashSet;
+    1764..1768  move-object/from16  v0, v18
+    1768..176e  invoke-direct  {v0, v11}, Ljava/util/HashSet;-><init>(Ljava/util/Collection;)V
+    176e..1770  const/4  v12, #0x0
+    1770..1772  const/4  v13, #0x2
+    1772..1774  const/4  v11, #0x1
+    1774..1778  move/from16  v0, v20
+    1778..177c  if-ge  v12, v0, +0x4b
+    177c..1780  aget-object  v14, v5, v12
+    1780..1784  move-object/from16  v0, v18
+    1784..178a  invoke-virtual  {v0, v14}, Ljava/util/AbstractCollection;->contains(Ljava/lang/Object;)Z
+    178a..178c  move-result  v0
+    178c..1790  const-string  v17, "reason"
+    1790..1796  const-string/jumbo  v16, "user"
+    1796..179a  if-eqz  v0, +0x21
+    179a..179e  new-array  v13, v13, [LX/0Tl;
+    179e..17a2  new-instance  v0, LX/0Tl;
+    17a2..17a8  invoke-direct  {v0, v14, v6}, LX/0Tl;-><init>(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;)V
+    17a8..17ac  aput-object  v0, v13, v4
+    17ac..17b0  const-string  v15, "identity"
+    17b0..17b4  new-instance  v14, LX/0Tl;
+    17b4..17b8  move-object/from16  v0, v17
+    17b8..17be  invoke-direct  {v14, v0, v15}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    17be..17c2  aput-object  v14, v13, v11
+    17c2..17c6  new-instance  v11, LX/0Tp;
+    17c6..17ca  move-object/from16  v0, v16
+    17ca..17d0  invoke-direct  {v11, v0, v13}, LX/0Tp;-><init>(Ljava/lang/String;[LX/0Tl;)V
+    17d0..17d6  invoke-virtual  {v10, v11}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    17d6..17d8  goto  +0x19
+    17d8..17dc  if-eqz  v7, +0xe
+    17dc..17e0  new-array  v13, v13, [LX/0Tl;
+# Range 18b4..194c
+    18b4..18b6  const/4  v0, #0x4
+    18b6..18ba  new-array  v6, v0, [LX/0Tl;
+    18ba..18be  new-instance  v0, LX/0Tl;
+    18be..18c4  invoke-direct  {v0, v2, v8}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    18c4..18c8  aput-object  v0, v6, v4
+    18c8..18ce  const-string/jumbo  v14, "xmlns"
+    18ce..18d2  const-string  v2, "encrypt"
+    18d2..18d6  new-instance  v0, LX/0Tl;
+    18d6..18dc  invoke-direct  {v0, v14, v2}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    18dc..18e0  aput-object  v0, v6, v11
+    18e0..18e6  const-string/jumbo  v11, "type"
+    18e6..18ea  const-string  v2, "get"
+    18ea..18ee  new-instance  v0, LX/0Tl;
+    18ee..18f4  invoke-direct  {v0, v11, v2}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    18f4..18f8  aput-object  v0, v6, v13
+    18f8..18fe  const-string/jumbo  v11, "to"
+    18fe..1902  sget-object  v0, LX/0mL;->A00:LX/0mL;
+    1902..1906  new-instance  v2, LX/0Tl;
+    1906..190c  invoke-direct  {v2, v0, v11}, LX/0Tl;-><init>(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;)V
+    190c..190e  const/4  v0, #0x3
+    190e..1912  aput-object  v2, v6, v0
+    1912..1916  new-array  v0, v4, [LX/0Tp;
+    1916..191c  invoke-virtual  {v10, v0}, Ljava/util/AbstractCollection;->toArray([Ljava/lang/Object;)[Ljava/lang/Object;
+    191c..191e  move-result-object  v2
+    191e..1922  check-cast  v2, [LX/0Tp;
+    1922..1926  const-string  v0, "key"
+    1926..192a  new-instance  v4, LX/0Tp;
+    192a..1930  invoke-direct  {v4, v0, v12, v2}, LX/0Tp;-><init>(Ljava/lang/String;[LX/0Tl;[LX/0Tp;)V
+    1930..1934  const-string  v0, "iq"
+    1934..1938  new-instance  v2, LX/0Tp;
+    1938..193e  invoke-direct  {v2, v4, v0, v6}, LX/0Tp;-><init>(LX/0Tp;Ljava/lang/String;[LX/0Tl;)V
+    193e..1942  iget-object  v0, v9, LX/1rj;->A06:LX/1r0;
+    1942..1948  invoke-interface  {v0, v2}, LX/1r0;->Cyt(LX/0Tp;)V
+    1948..194c  const-string  v0, "WriterThread/write/get-pre-key-batch; id="
+# Original full-method exception metadata:
+    # exception table: 5 try range(s)
+    # catch LX/E5W; code_units 005f..01de -> 12e1
+    # catch LX/E5X; code_units 005f..01de -> 12e5
+    # catch Ljava/io/IOException; code_units 005f..01de -> 12bc
+    # catch LX/E5W; code_units 01de..01e7 -> 0213
+    # catch LX/E5X; code_units 01de..01e7 -> 020a
+    # catch LX/E5W; code_units 01de..01e7 -> 12e1
+    # catch LX/E5X; code_units 01de..01e7 -> 12e5
+    # catch Ljava/io/IOException; code_units 01de..01e7 -> 12bc
+    # catch LX/E5W; code_units 01e7..1098 -> 12e1
+    # catch LX/E5X; code_units 01e7..1098 -> 12e5
+    # catch Ljava/io/IOException; code_units 01e7..1098 -> 12bc
+    # catch LX/E5W; code_units 1098..10a1 -> 10d1
+    # catch LX/E5X; code_units 1098..10a1 -> 10d9
+    # catch LX/E5W; code_units 1098..10a1 -> 12e1
+    # catch LX/E5X; code_units 1098..10a1 -> 12e5
+    # catch Ljava/io/IOException; code_units 1098..10a1 -> 12bc
+    # catch LX/E5W; code_units 10a1..12bc -> 12e1
+    # catch LX/E5X; code_units 10a1..12bc -> 12e5
+    # catch Ljava/io/IOException; code_units 10a1..12bc -> 12bc

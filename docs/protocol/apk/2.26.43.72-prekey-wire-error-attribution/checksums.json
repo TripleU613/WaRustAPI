@@ -1,0 +1,54 @@
+{
+  "README.md": {
+    "bytes": 5498,
+    "sha256": "bde3a58af3c88bc7a90622b87214cf5152d0a5120fbc31c62315dffd9e35d318"
+  },
+  "callback-callers.txt": {
+    "bytes": 65,
+    "sha256": "4e06445a760276ae4aae5803ba85149999e5db8a6403d3243a5ea407dba50ccb"
+  },
+  "callback.txt": {
+    "bytes": 17484,
+    "sha256": "fa27548d51100ae27034de585f3d354e239eab29a2376553d6c93ad7eab001b8"
+  },
+  "event-anchor.txt": {
+    "bytes": 138,
+    "sha256": "47e3283be280bf1c93a80d833b94405602e8f0fd526911be3ff19248ffc97944"
+  },
+  "event-callers.txt": {
+    "bytes": 132,
+    "sha256": "7e44d954baee2ea298dbc57973e780de5f8189e7910235838133d9b5fc9d90e3"
+  },
+  "event-factory.txt": {
+    "bytes": 1382,
+    "sha256": "42bc645d224522a186947411d58ff7d160f1faa6ec813ddff92d53f4d225b8d7"
+  },
+  "event-route.txt": {
+    "bytes": 1373,
+    "sha256": "eb2d4f590bd95fbd6cc2ac5a1eec93dc693270d899bc032d729d65a6ec05ee08"
+  },
+  "event-submit.txt": {
+    "bytes": 670,
+    "sha256": "d12ae63ae03b0aff3fea9bb8526b400f7a07cbfa53af985726553884b5ae4fdb"
+  },
+  "event-type.txt": {
+    "bytes": 392,
+    "sha256": "ad3a61d949a35c31be5a9712e3ccca005469657bc4fc9746360efc5cfbaedc89"
+  },
+  "integer-parser.txt": {
+    "bytes": 1686,
+    "sha256": "ff0f1f7c71b9a6726dff0257b0cdf58a9bb0554480a8b439e943143007451445"
+  },
+  "listener-types.txt": {
+    "bytes": 631,
+    "sha256": "5c1c4110dc3537e38e85ce797f8ef495af653ef18334f5c6c8074abe1bf19324"
+  },
+  "required-code.txt": {
+    "bytes": 483,
+    "sha256": "597d100312ac9154448fc3039f4d2d4ab1ee50e169dcf43cd4647a01e1b1c7d6"
+  },
+  "writer-binding.txt": {
+    "bytes": 8044,
+    "sha256": "c9f12c59f21f03bf9c1b782ff78ad2ebe3591da939dfbc0dc553147805e0eb8a"
+  }
+}

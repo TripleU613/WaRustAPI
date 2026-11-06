@@ -1,0 +1,15 @@
+
+# class: LX/1lZ;
+# extends: Ljava/lang/Object;
+
+.method public A1S(VLIIZ)  # .registers 7
+    # full signature: LX/1lZ;->A1S([LX/EoY;IIZ)V
+    0000..0004  const-string  v0, "ConnectionThreadRequestsImpl/on-get-pre-key-error"
+    0004..000a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    000a..000e  iget-object  v1, v2, LX/1lZ;->A01:LX/1lW;
+    000e..0014  invoke-static  {v3, v4, v5, v6}, LX/1lZ;->A0e([LX/EoY;IIZ)Landroid/os/Message;
+    0014..0016  move-result-object  v0
+    0016..001c  invoke-interface  {v1, v0}, LX/1lW;->CPm(Landroid/os/Message;)V
+    001c..001e  return-void
+    # exception table: 0 try range(s)
+.end method

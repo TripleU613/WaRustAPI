@@ -1,0 +1,26 @@
+
+# class: LX/1lZ;
+# extends: Ljava/lang/Object;
+
+.method public A0e(LLIIZ)  # .registers 7
+    # full signature: LX/1lZ;->A0e([LX/EoY;IIZ)Landroid/os/Message;
+    0000..0002  const/4  v2, #0x0
+    0002..0006  const/16  v1, #0x4c
+    0006..0008  const/4  v0, #0x0
+    0008..000e  invoke-static  {v0, v2, v1, v2, v3}, Landroid/os/Message;->obtain(Landroid/os/Handler;IIILjava/lang/Object;)Landroid/os/Message;
+    000e..0010  move-result-object  v2
+    0010..0016  invoke-virtual  {v2}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    0016..0018  move-result-object  v1
+    0018..001c  const-string  v0, "errorCode"
+    001c..0022  invoke-virtual  {v1, v0, v4}, Landroid/os/BaseBundle;->putInt(Ljava/lang/String;I)V
+    0022..0028  invoke-virtual  {v2}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    0028..002a  move-result-object  v1
+    002a..002e  const-string  v0, "isPqSessionUpgrade"
+    002e..0034  invoke-virtual  {v1, v0, v6}, Landroid/os/BaseBundle;->putBoolean(Ljava/lang/String;Z)V
+    0034..003a  invoke-virtual  {v2}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    003a..003c  move-result-object  v1
+    003c..0040  const-string  v0, "pqUpgradeDevicesRequested"
+    0040..0046  invoke-virtual  {v1, v0, v5}, Landroid/os/BaseBundle;->putInt(Ljava/lang/String;I)V
+    0046..0048  return-object  v2
+    # exception table: 0 try range(s)
+.end method

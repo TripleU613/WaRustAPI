@@ -164,8 +164,8 @@ pub struct DirectoryInspection {
     /// Fixed local invalid-reply diagnosis; null for accepted/refused/unstaged evidence.
     #[serde(default)]
     pub failure: Option<DirectoryReplyFailure>,
-    /// Numeric code from the unique root/selected-peer refusal. Raw text is not exposed.
-    pub server_error_code: Option<u16>,
+    /// Signed Java integer from a unique root/selected-peer refusal. No raw text.
+    pub server_error_code: Option<i32>,
     /// SHA-256 of serialized directory public identity, not a safety number.
     pub fingerprint: Option<String>,
     /// Null when no complete bundle can be checked.
@@ -212,7 +212,7 @@ pub fn inspect(store: &ProtocolStore, peer: &Jid) -> Result<Option<DirectoryInsp
             return Ok(Some(result));
         };
         // Correlation and duplicate rejection are local inspection guards.
-        // APK 37.71 DF6.C8f 008e..00b8 reads errors in their user context;
+        // APK43.72 Dxh.A02 reads signed code in each user context;
         // a generic action's first inner error need not belong to this peer.
         if reply.description != "iq"
             || reply.get_attr("id").and_then(|v| v.as_text()) != Some(result.action_id.as_str())
@@ -233,7 +233,8 @@ pub fn inspect(store: &ProtocolStore, peer: &Jid) -> Result<Option<DirectoryInsp
             let code = |node: &crate::binary::Node| {
                 node.get_attr("code")
                     .and_then(|value| value.as_text())
-                    .and_then(|text| text.parse::<u16>().ok())
+                    .and_then(super::mex::java_decimal_long)
+                    .and_then(|code| i32::try_from(code).ok())
             };
             if root_errors.len() > 1 {
                 result.failure = Some(DirectoryReplyFailure::ErrorNode);
@@ -776,6 +777,67 @@ mod tests {
             assert!(actions::reserve_pending(&store).unwrap().is_empty());
         }
     }
+    #[test]
+    fn directory_refusal_codes_preserve_java_integer_without_refresh_or_pin_changes() {
+        let oracle: serde_json::Value = serde_json::from_str(include_str!(
+            "../../../../docs/protocol/apk/2.26.43.72-about-error-codes/integer-oracle.json"
+        ))
+        .unwrap();
+        let peer = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let foreign = Jid::parse("15555550102@s.whatsapp.net").unwrap();
+        for root in [false, true] {
+            for case in oracle.as_array().unwrap() {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("directory-code.redb");
+                let store = open(&path);
+                let id = queue(&store, &peer, false).unwrap();
+                actions::reserve_pending(&store).unwrap();
+                let code = case["text"].as_str().unwrap();
+                let error = Node::new("error")
+                    .attr("code", code)
+                    .attr("text", "PRIVATE_REASON");
+                let children = if root {
+                    vec![error]
+                } else {
+                    let users = vec![
+                        Node::new("user")
+                            .attr("jid", foreign.clone())
+                            .children(vec![Node::new("error").attr("code", "503")]),
+                        Node::new("user")
+                            .attr("jid", peer.clone())
+                            .children(vec![error]),
+                    ];
+                    vec![Node::new("list").children(users)]
+                };
+                let reply = Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", if root { "error" } else { "result" })
+                    .children(children);
+                assert!(actions::record_reply(&store, &reply).unwrap());
+                let view = inspect(&store, &peer).unwrap().unwrap();
+                assert_eq!(view.status, DirectoryStatus::ServerRefused);
+                assert_eq!(
+                    view.server_error_code,
+                    case["integer"].as_i64().map(|v| v as i32),
+                    "{code}"
+                );
+                assert_eq!(view.failure, None);
+                assert_eq!(view.fingerprint, None);
+                assert_eq!(view.phone_pin_matches, None);
+                assert!(
+                    !serde_json::to_string(&view)
+                        .unwrap()
+                        .contains("PRIVATE_REASON")
+                );
+                assert!(queue(&store, &peer, true).is_err());
+                drop(store);
+                let store = open(&path);
+                assert_eq!(inspect(&store, &peer).unwrap().unwrap(), view);
+                assert!(actions::reserve_pending(&store).unwrap().is_empty());
+            }
+        }
+    }
+
     #[test]
     fn refusal_codes_are_bound_to_one_unambiguous_selected_context() {
         let peer = Jid::parse("15555550101@s.whatsapp.net").unwrap();

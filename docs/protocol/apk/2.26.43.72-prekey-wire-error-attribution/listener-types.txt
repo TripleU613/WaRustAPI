@@ -1,0 +1,13 @@
+
+# class: LX/14o;
+# extends: Ljava/lang/Object;
+
+.method public Amf(L)  # .registers 2
+    # full signature: LX/14o;->Amf()[I
+    0000..0004  const/16  v0, #0x8
+    0004..0008  new-array  v0, v0, [I
+    0008..000e  fill-array-data  v0, payload@0x10, element_width=4, size=8, data=[4a 00 00 00 4b 00 00 00 4c 00 00 00 4d 00 00 00 4e 00 00 00 52 00 00 00 53 00 00 00 54 00 00 00]
+    000e..0010  return-object  v0
+    0010..0038  fill-array-data-payload  element_width=4, size=8, data=[4a 00 00 00 4b 00 00 00 4c 00 00 00 4d 00 00 00 4e 00 00 00 52 00 00 00 53 00 00 00 54 00 00 00]
+    # exception table: 0 try range(s)
+.end method

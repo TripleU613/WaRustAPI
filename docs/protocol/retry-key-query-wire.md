@@ -43,3 +43,16 @@ admission does not establish a blanket stop of all key queries. **Unknown:**
 network-to-listener attribution, external reset authority and durable job/write
 recovery. No Rust retry, admission or reservation policy changed.
 [Exact anchors, source transitions and delay derivation](apk/2.26.43.72-prekey-error-backoff/README.md).
+
+### 2026-11-05: current key-fetch error attribution and signed codes
+
+**Confirmed static / implemented offline, APK 2.26.43.72:** writer binds Dxh to
+captured devices; outer errors map to that set and per-user errors are grouped
+only while iterating original requested devices. A1S/A0e constructs event 76
+matching the backoff listener. Signed Java integer code grammar is retained.
+DirectoryInspection.server_error_code widens from Option<u16> to Option<i32>,
+preserving valid negative/large/Unicode codes after existing unique-context guards.
+JVM-case regressions cover root/user attribution, redaction, reopen and no refresh
+or resend. Other inspectors/generic action fields remain unchanged. Full native
+registration, duplicate/missing-device and durable retry ownership remain open.
+[Source, API consequence and limits](apk/2.26.43.72-prekey-wire-error-attribution/README.md).

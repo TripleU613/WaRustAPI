@@ -1,3 +1,15 @@
+2026-11-05 — **Key-fetch wire error attribution and signed inspection corrected.**
+
+Current writer binds Dxh to original devices; its error event matches backoff
+selector 76. Directory inspection now preserves signed Java integer codes rather
+than dropping negative/large/Unicode values. Unique-context, no-refresh and
+no-replay guards remain; the public Rust field widens from u16 to i32.
+[Evidence, API consequence and durable regression](docs/protocol/apk/2.26.43.72-prekey-wire-error-attribution/README.md).
+Validation: all 1377 workspace/all-feature tests passed, including 26 root/user
+JVM-case inspections, reopen/no-refresh/no-resend checks. Fmt, strict Clippy,
+CLI/OpenAPI, coverage, pinned APK identity and staged checksum/link hygiene passed.
+No live account operation.
+
 2026-11-05 — **Current prekey error backoff re-anchored and scoped.**
 
 Non-PQ 5xx moves affected in-flight requests to pending; mode and posted flags

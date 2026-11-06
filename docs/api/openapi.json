@@ -3273,9 +3273,9 @@
               "integer",
               "null"
             ],
-            "minimum": 0,
-            "maximum": 65535,
-            "description": "Numeric code from a unique root refusal or the unique matching primary user error. Null for ambiguous/unmatched replies, even if generic action history stores another user's first error code. Raw text is never exposed; codes do not establish server internals or override waits."
+            "minimum": -2147483648,
+            "maximum": 2147483647,
+            "description": "Signed Java Integer code from a unique root refusal or the unique matching primary user error. Null for ambiguous/unmatched replies, even if generic action history stores another user's first error code. Raw text is never exposed; codes do not establish server internals or override waits."
           },
           "fingerprint": {
             "type": [
