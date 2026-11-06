@@ -1,0 +1,48 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000064987c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv>:
+  651bc8:      	ldr	x8, [x8, #0x10]
+  651bcc:      	add	x0, sp, #0x2a0
+  651bd0:      	mov	w1, #0x8                // =8
+  651bd4:      	blr	x8
+  651bd8:      	ldr	x8, [sp, #0x2a0]
+  651bdc:      	ldr	x20, [x0]
+  651be0:      	ldr	x8, [x8, #0x10]
+  651be4:      	add	x0, sp, #0x2a0
+  651be8:      	mov	w1, #0x8                // =8
+  651bec:      	blr	x8
+  651bf0:      	ldr	x8, [sp, #0x2a0]
+  651bf4:      	ldr	x28, [x0]
+  651bf8:      	ldr	x8, [x8, #0x10]
+  651bfc:      	add	x0, sp, #0x2a0
+  651c00:      	mov	w1, #0x8                // =8
+  651c04:      	blr	x8
+  651c08:      	ldr	x8, [sp, #0x2a0]
+  651c0c:      	ldr	x24, [x0]
+  651c10:      	ldr	x8, [x8, #0x10]
+  651c14:      	add	x0, sp, #0x2a0
+  651c18:      	mov	w1, #0x8                // =8
+  651c1c:      	blr	x8
+  651c20:      	ldr	x8, [sp, #0x2a0]
+  651c24:      	ldr	x25, [x0]
+  651c28:      	str	w19, [sp, #0x34]
+  651c2c:      	ldr	x8, [x8, #0x10]
+  651c30:      	add	x0, sp, #0x2a0
+  651c34:      	mov	w1, #0x4                // =4
+  651c38:      	blr	x8
+  651c3c:      	ldr	x8, [sp, #0x2a0]
+  651c40:      	mov	w19, w21
+  651c44:      	ldr	w21, [x0]
+  651c48:      	ldr	x8, [x8, #0x10]
+  651c4c:      	add	x0, sp, #0x2a0
+  651c50:      	mov	w1, #0x4                // =4
+  651c54:      	blr	x8
+  651c58:      	ldr	w27, [x0]
+  651c5c:      	stp	xzr, xzr, [x29, #-0xd8]
+  651c60:      	stur	xzr, [x29, #-0xc8]
+  651c64:      	sub	x0, x29, #0xd8
+  651c68:      	add	x1, sp, #0x2a0
+  651c6c:      	bl	0x6536b8 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x9e3c>

@@ -1,0 +1,70 @@
+{
+  "category-purpose-reads": [
+    "0x651bc8",
+    "0x651c70"
+  ],
+  "category-purpose-stores": [
+    "0x651d9c",
+    "0x651de8"
+  ],
+  "single-byte-read-helper": [
+    "0x7346c8",
+    "0x7346d4"
+  ],
+  "reader-construction": [
+    "0x65483c",
+    "0x6548c4"
+  ],
+  "reader-consume": [
+    "0x6548ec",
+    "0x65493c"
+  ],
+  "register-lifetime": [
+    "0x651c44",
+    "0x651de8"
+  ],
+  "string-decode": [
+    "0x6536b8",
+    "0x653718"
+  ],
+  "string-decode-restore": [
+    "0x2dbea4",
+    "0x2dbeb0"
+  ],
+  "url-construction": [
+    "0x668708",
+    "0x668894"
+  ],
+  "url-restore": [
+    "0x724a34",
+    "0x724a4c"
+  ],
+  "bool-normalize-helper": [
+    "0x730c58",
+    "0x730c64"
+  ],
+  "map-initialize-helper": [
+    "0x72a41c",
+    "0x72a428"
+  ],
+  "request-initialize-helper": [
+    "0x72a4c0",
+    "0x72a4cc"
+  ],
+  "string-view": [
+    "0x3df9e0",
+    "0x3dfa14"
+  ],
+  "string-view-helper": [
+    "0x729330",
+    "0x72933c"
+  ],
+  "view-pair-helper": [
+    "0x2db2a4",
+    "0x2db2b0"
+  ],
+  "url-argument-helper": [
+    "0x727c14",
+    "0x727c24"
+  ]
+}

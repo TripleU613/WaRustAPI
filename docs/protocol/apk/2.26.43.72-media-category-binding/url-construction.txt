@@ -1,0 +1,107 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000006681cc <_ZNK8facebook5tigon22TigonPropertyContainer27getPropertyGroupCopyOrEmptyENS1_3KeyE>:
+  668708:      	paciasp
+  66870c:      	sub	sp, sp, #0x120
+  668710:      	stp	x29, x30, [sp, #0xc0]
+  668714:      	stp	x28, x27, [sp, #0xd0]
+  668718:      	stp	x26, x25, [sp, #0xe0]
+  66871c:      	bl	0x37cc74 <_RNvXsp_NtCsUHwbHsI1a0_5alloc3vecINtB5_3VecmENtNtNtCsd0h5sCe2hTT_4core3ops4drop4Drop4dropCs83ZMWuwgNvG_3cxx+0x47e4c>
+  668720:      	add	x29, sp, #0xc0
+  668724:      	mrs	x8, TPIDR_EL0
+  668728:      	bl	0x310a78 <MCIJSONCreateDeserializedObjectFromString+0xe0dc>
+  66872c:      	str	x8, [sp, #0x18]
+  668730:      	bl	0x7291ec <MCFSetGetCount+0x5134>
+  668734:      	ldr	x8, [x8, #0x28]
+  668738:      	bl	0x72a38c <MCFSetGetCount+0x62d4>
+  66873c:      	mov	w20, w3
+  668740:      	add	x23, sp, #0x20
+  668744:      	stur	x8, [x29, #-0x10]
+  668748:      	bl	0x734d20 <memset@plt>
+  66874c:      	add	x0, sp, #0x20
+  668750:      	bl	0x355b6c <_RNvXsp_NtCsUHwbHsI1a0_5alloc3vecINtB5_3VecmENtNtNtCsd0h5sCe2hTT_4core3ops4drop4Drop4dropCs83ZMWuwgNvG_3cxx+0x20d44>
+  668754:      	bl	0x6684e0 <_ZNK8facebook5tigon22TigonPropertyContainer27getPropertyGroupCopyOrEmptyENS1_3KeyE+0x314>
+  668758:      	ldp	x24, x25, [sp, #0x30]
+  66875c:      	tbz	w20, #0x0, 0x66876c <_ZNK8facebook5tigon22TigonPropertyContainer27getPropertyGroupCopyOrEmptyENS1_3KeyE+0x5a0>
+  668760:      	mov	w8, #0x40               // =64
+  668764:      	mov	w9, #0x38               // =56
+  668768:      	b	0x66877c <_ZNK8facebook5tigon22TigonPropertyContainer27getPropertyGroupCopyOrEmptyENS1_3KeyE+0x5b0>
+  66876c:      	add	x0, sp, #0x20
+  668770:      	bl	0x737010 <_ZN8proxygen8ParseURL13stripBracketsEv@plt>
+  668774:      	mov	w8, #0x50               // =80
+  668778:      	mov	w9, #0x48               // =72
+  66877c:      	ldr	x28, [x23, x9]
+  668780:      	ldr	x20, [x23, x8]
+  668784:      	ldrh	w21, [sp, #0xa8]
+  668788:      	ldp	x9, x8, [sp, #0x98]
+  66878c:      	ldp	x26, x27, [sp, #0x78]
+  668790:      	ldp	x22, x23, [sp, #0x88]
+  668794:      	stp	x8, x9, [sp, #0x8]
+  668798:      	ldrb	w8, [sp, #0xaa]
+  66879c:      	str	w8, [sp, #0x4]
+  6687a0:      	mov	x0, x19
+  6687a4:      	bl	0x72b6f8 <MCFSetGetCount+0x7640>
+  6687a8:      	bl	0x3c2344 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x11054>
+  6687ac:      	add	x0, x19, #0x18
+  6687b0:      	mov	x1, x28
+  6687b4:      	mov	x2, x20
+  6687b8:      	bl	0x3c2344 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x11054>
+  6687bc:      	strh	w21, [x19, #0x30]
+  6687c0:      	add	x0, x19, #0x38
+  6687c4:      	mov	x1, x26
+  6687c8:      	mov	x2, x27
+  6687cc:      	bl	0x3c2344 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x11054>
+  6687d0:      	add	x0, x19, #0x50
+  6687d4:      	bl	0x2ed734 <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0x1f858>
+  6687d8:      	bl	0x3c2344 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x11054>
+  6687dc:      	ldp	x2, x1, [sp, #0x8]
+  6687e0:      	add	x0, x19, #0x68
+  6687e4:      	bl	0x3c2344 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x11054>
+  6687e8:      	ldr	w8, [sp, #0x4]
+  6687ec:      	mov	x0, x19
+  6687f0:      	strb	w8, [x19, #0x80]
+  6687f4:      	bl	0x668f30 <_ZN8facebook5tigon3url15getSanitizedUrlENSt6__ndk117basic_string_viewIcNS2_11char_traitsIcEEEE+0x310>
+  6687f8:      	add	x8, sp, #0x20
+  6687fc:      	add	x0, x8, #0x20
+  668800:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  668804:      	ldr	x8, [sp, #0x18]
+  668808:      	bl	0x725bcc <MCFSetGetCount+0x1b14>
+  66880c:      	b.ne	0x668888 <_ZNK8facebook5tigon22TigonPropertyContainer27getPropertyGroupCopyOrEmptyENS1_3KeyE+0x6bc>
+  668810:      	bl	0x724a34 <MCFSetGetCount+0x97c>
+  668814:      	ldp	x29, x30, [sp, #0xc0]
+  668818:      	add	sp, sp, #0x120
+  66881c:      	autiasp
+  668820:      	ret
+  668824:      	mov	x20, x0
+  668828:      	add	x0, x19, #0x50
+  66882c:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  668830:      	b	0x668838 <_ZNK8facebook5tigon22TigonPropertyContainer27getPropertyGroupCopyOrEmptyENS1_3KeyE+0x66c>
+  668834:      	mov	x20, x0
+  668838:      	add	x0, x19, #0x38
+  66883c:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  668840:      	b	0x668848 <_ZNK8facebook5tigon22TigonPropertyContainer27getPropertyGroupCopyOrEmptyENS1_3KeyE+0x67c>
+  668844:      	mov	x20, x0
+  668848:      	add	x0, x19, #0x18
+  66884c:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  668850:      	b	0x668858 <_ZNK8facebook5tigon22TigonPropertyContainer27getPropertyGroupCopyOrEmptyENS1_3KeyE+0x68c>
+  668854:      	mov	x20, x0
+  668858:      	mov	x0, x19
+  66885c:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  668860:      	b	0x668868 <_ZNK8facebook5tigon22TigonPropertyContainer27getPropertyGroupCopyOrEmptyENS1_3KeyE+0x69c>
+  668864:      	mov	x20, x0
+  668868:      	add	x8, sp, #0x20
+  66886c:      	add	x0, x8, #0x20
+  668870:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  668874:      	ldr	x8, [sp, #0x18]
+  668878:      	bl	0x725bcc <MCFSetGetCount+0x1b14>
+  66887c:      	b.ne	0x668888 <_ZNK8facebook5tigon22TigonPropertyContainer27getPropertyGroupCopyOrEmptyENS1_3KeyE+0x6bc>
+  668880:      	mov	x0, x20
+  668884:      	bl	0x7373e0 <__wrap__Unwind_Resume@plt>
+  668888:      	bl	0x7378f0 <__stack_chk_fail@plt>
+
+000000000066888c <_ZNK8facebook5tigon3url8TigonUrl7getHostEv>:
+  66888c:      	bti	c
+  668890:      	b	0x3853ec <_RINvMs2_NtCsi1jv7X85TMU_3std2fsNtB6_4File6createRNtNtB8_4path4PathEB8_+0xa8>

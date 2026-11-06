@@ -995,3 +995,23 @@ original producer/first-upload value and native category conversion remain
 unknown. No Rust request/header/retry/deadline/persistence change or live account
 operation. These negative results prevent a false fixed-header correction;
 previous static Priority header construction/activation proofs still stand.
+
+## Standard upload category/purpose native binding closed (2026-11-06)
+
+**Confirmed selected static:** Java serializes the explicit category.value and
+purpose.value as consecutive little-endian32-bit words after the four timeouts.
+Native raw reader consumes4 bytes twice; w21/w27 reach stores atsp+0x260/+0x264,
+which are request+0x1e0/+0x1e4 relative to base sp+0x80. AArch64 opcode/register/
+offset decoding independently checks all four load/store instructions. Reader
+vtable/body and intervening outlined-register preservation are retained in
+[the evidence bundle](apk/2.26.43.72-media-category-binding/README.md).
+
+This closes the previously open native enum-transfer boundary: standard MOu/JAT
+category8/purpose0 reach the pair copied into WA priority context without an
+intermediate remapping on the selected normal path. Its calculator prefix is
+`u=3, i` independently of flag38178. **Still unknown:** original property3
+writer and first-upload value/engagement for the optional r suffix, plus live
+runtime/server acceptance. The byte example is synthetic, not captured traffic.
+No Rust request/header/retry/timing/persistence behavior or live account action
+changed. Full converter error behavior and arbitrary malformed inputs are not
+claimed verified by this bounded transfer proof.

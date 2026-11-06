@@ -1,0 +1,19 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000003b12f0 <_ZN10tokenizers16Llama2cTokenizerC1Ev>:
+  3df9e0:      	bti	c
+  3df9e4:      	ldrb	w8, [x0]
+  3df9e8:      	ldr	x9, [x0, #0x8]
+  3df9ec:      	mov	x1, x30
+  3df9f0:      	bl	0x729330 <MCFSetGetCount+0x5278>
+  3df9f4:      	mov	x30, x1
+  3df9f8:      	csel	x1, x10, x9, eq
+  3df9fc:      	tbnz	x1, #0x3f, 0x3dfa10 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x2e720>
+  3dfa00:      	ldr	x9, [x0, #0x10]
+  3dfa04:      	tst	w8, #0x1
+  3dfa08:      	csinc	x0, x9, x0, ne
+  3dfa0c:      	ret
+  3dfa10:      	brk	#0x1

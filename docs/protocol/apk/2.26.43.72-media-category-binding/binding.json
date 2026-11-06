@@ -1,0 +1,183 @@
+{
+  "library_sha256": "d0ab3f2237e92a76ac3519c3577b5836b9e6f65a186c2016cefd43c4923f4b0d",
+  "reader_type_name": "N8facebook5tigon11serializers12DeserializerE",
+  "transfers": [
+    {
+      "va": "0x651c44",
+      "instruction_word": "0xb9400015",
+      "operation": "LDR W",
+      "register": 21,
+      "base_register": 0,
+      "displacement": "0x0"
+    },
+    {
+      "va": "0x651c58",
+      "instruction_word": "0xb940001b",
+      "operation": "LDR W",
+      "register": 27,
+      "base_register": 0,
+      "displacement": "0x0"
+    },
+    {
+      "va": "0x651de0",
+      "instruction_word": "0xb90263f5",
+      "operation": "STR W",
+      "register": 21,
+      "base_register": 31,
+      "displacement": "0x260"
+    },
+    {
+      "va": "0x651de4",
+      "instruction_word": "0xb90267fb",
+      "operation": "STR W",
+      "register": 27,
+      "base_register": 31,
+      "displacement": "0x264"
+    }
+  ],
+  "native_request_base_from_sp": "0x80",
+  "fields": {
+    "category": "0x1e0",
+    "purpose": "0x1e4"
+  },
+  "standard_upload_serialized_pair": "0800000000000000",
+  "windows": [
+    {
+      "name": "category-purpose-reads",
+      "start_va": "0x651bc8",
+      "end_va": "0x651c70",
+      "file_offset": "0x64dbc8",
+      "bytes": 168,
+      "sha256": "e1a1b82ffa5141934567c75396c50e82fd5fcfbc5aeb2fc99e6589907c17b752"
+    },
+    {
+      "name": "category-purpose-stores",
+      "start_va": "0x651d9c",
+      "end_va": "0x651de8",
+      "file_offset": "0x64dd9c",
+      "bytes": 76,
+      "sha256": "de47bdf58714564854840e6368f9016da4db7d6a4f673dc4c88c60a5636e7ab4"
+    },
+    {
+      "name": "single-byte-read-helper",
+      "start_va": "0x7346c8",
+      "end_va": "0x7346d4",
+      "file_offset": "0x7306c8",
+      "bytes": 12,
+      "sha256": "20ad99bf252a68be74dd2adf81574dd7ef4608b6df4f0e220d0b62544dc9bbb2"
+    },
+    {
+      "name": "reader-construction",
+      "start_va": "0x65483c",
+      "end_va": "0x6548c4",
+      "file_offset": "0x65083c",
+      "bytes": 136,
+      "sha256": "c141094b0b18590ebd715c7a80750999f98a909d7e1a420ed52464cdc81d7644"
+    },
+    {
+      "name": "reader-consume",
+      "start_va": "0x6548ec",
+      "end_va": "0x65493c",
+      "file_offset": "0x6508ec",
+      "bytes": 80,
+      "sha256": "9c2b39f622872474b524c8c3f224db202fb036ec31444a60b592a666439a4937"
+    },
+    {
+      "name": "register-lifetime",
+      "start_va": "0x651c44",
+      "end_va": "0x651de8",
+      "file_offset": "0x64dc44",
+      "bytes": 420,
+      "sha256": "4e6f81d1f87f7582454352d2c24802704b9b072c2d09f400f6c7a017f623fbb0"
+    },
+    {
+      "name": "string-decode",
+      "start_va": "0x6536b8",
+      "end_va": "0x653718",
+      "file_offset": "0x64f6b8",
+      "bytes": 96,
+      "sha256": "1048c817ca8aff35c0d2384ec6d8e7214a16b9f8eb2fca94df53171d347fc58f"
+    },
+    {
+      "name": "string-decode-restore",
+      "start_va": "0x2dbea4",
+      "end_va": "0x2dbeb0",
+      "file_offset": "0x2d7ea4",
+      "bytes": 12,
+      "sha256": "edf8b07306804d07a18c26c49dff70fe06b23488340f46d1039fc885ff7b08f4"
+    },
+    {
+      "name": "url-construction",
+      "start_va": "0x668708",
+      "end_va": "0x668894",
+      "file_offset": "0x664708",
+      "bytes": 396,
+      "sha256": "2b0271c81968eeadc9f2b5a434faff42d8bcc9bf7eeaa48f9d8b8763f3885fe3"
+    },
+    {
+      "name": "url-restore",
+      "start_va": "0x724a34",
+      "end_va": "0x724a4c",
+      "file_offset": "0x720a34",
+      "bytes": 24,
+      "sha256": "ef4ff3302b13784f0b0fcd91e41682c74bee552c91aedf2cdec605ec4f0bb8d9"
+    },
+    {
+      "name": "bool-normalize-helper",
+      "start_va": "0x730c58",
+      "end_va": "0x730c64",
+      "file_offset": "0x72cc58",
+      "bytes": 12,
+      "sha256": "a3bd12f52deb0eaa5a4c1ad0e8b488a7ee8fb6c25f910147cc7a0a7715cf6284"
+    },
+    {
+      "name": "map-initialize-helper",
+      "start_va": "0x72a41c",
+      "end_va": "0x72a428",
+      "file_offset": "0x72641c",
+      "bytes": 12,
+      "sha256": "caa71c4a57b559cdf525686f12b1e0192f12c21cca7ce7cb3692c18997db0546"
+    },
+    {
+      "name": "request-initialize-helper",
+      "start_va": "0x72a4c0",
+      "end_va": "0x72a4cc",
+      "file_offset": "0x7264c0",
+      "bytes": 12,
+      "sha256": "e5eff62805a8214551fe77add89ecd07ae6669bebc1f6e2c91ce021f4b097c06"
+    },
+    {
+      "name": "string-view",
+      "start_va": "0x3df9e0",
+      "end_va": "0x3dfa14",
+      "file_offset": "0x3db9e0",
+      "bytes": 52,
+      "sha256": "59541d69ba222262b0ecab0cbd6c3887e22141b38fe2e4ae6d7cb53488164991"
+    },
+    {
+      "name": "string-view-helper",
+      "start_va": "0x729330",
+      "end_va": "0x72933c",
+      "file_offset": "0x725330",
+      "bytes": 12,
+      "sha256": "5b3e34aec27e3e69ac351cf3dd778d4307abcaf67c6ff080742674348f1c7df6"
+    },
+    {
+      "name": "view-pair-helper",
+      "start_va": "0x2db2a4",
+      "end_va": "0x2db2b0",
+      "file_offset": "0x2d72a4",
+      "bytes": 12,
+      "sha256": "4f6cceb915e13d19efed3365743a9120b76e93beb304f62995bd22f8e5b0f36b"
+    },
+    {
+      "name": "url-argument-helper",
+      "start_va": "0x727c14",
+      "end_va": "0x727c24",
+      "file_offset": "0x723c14",
+      "bytes": 16,
+      "sha256": "79a29a6f5663ca59d42f5de270e3d1ff6a83d4c86fdc3732cb8b2d5149a58443"
+    }
+  ],
+  "scope": "Static selected normal decode/store path; not whole-method execution or wire/account proof"
+}

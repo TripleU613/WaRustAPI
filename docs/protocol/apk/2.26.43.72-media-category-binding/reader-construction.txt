@@ -1,0 +1,40 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000064987c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv>:
+  65483c:      	paciasp
+  654840:      	stp	x29, x30, [sp, #-0x20]!
+  654844:      	stp	x20, x19, [sp, #0x10]
+  654848:      	mov	x29, sp
+  65484c:      	adrp	x8, 0x778000 <_ZTVN6google8protobuf11MessageLiteE+0x1ce18>
+  654850:      	add	x8, x8, #0xd10
+  654854:      	bl	0x72a5bc <MCFSetGetCount+0x6504>
+  654858:      	ldr	x0, [x1]
+  65485c:      	mov	x20, x1
+  654860:      	stp	wzr, w2, [x19, #0x8]
+  654864:      	cbz	x0, 0x654870 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xaff4>
+  654868:      	bl	0x3a9a14 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0xb3d4>
+  65486c:      	cbz	x0, 0x654890 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xb014>
+  654870:      	str	x0, [x19, #0x10]
+  654874:      	ldr	x1, [x20]
+  654878:      	add	x0, x19, #0x18
+  65487c:      	bl	0x3adc48 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0xf608>
+  654880:      	ldp	x20, x19, [sp, #0x10]
+  654884:      	ldp	x29, x30, [sp], #0x20
+  654888:      	autiasp
+  65488c:      	ret
+  654890:      	mov	w0, #0x8                // =8
+  654894:      	bl	0x737380 <__wrap___cxa_allocate_exception@plt>
+  654898:      	mov	x19, x0
+  65489c:      	bl	0x737340 <__wrap__ZNSt9bad_allocC1Ev@plt>
+  6548a0:      	bl	0x72ae0c <MCFSetGetCount+0x6d54>
+  6548a4:      	mov	x0, x19
+  6548a8:      	ldr	x1, [x1, #0x650]
+  6548ac:      	ldr	x2, [x2, #0x648]
+  6548b0:      	bl	0x7373f0 <__wrap___cxa_throw@plt>
+  6548b4:      	bl	0x733060 <MCFSetGetCount+0xefa8>
+  6548b8:      	bl	0x41e188 <_ZNK8facebook9stash_jni10JFileStash9removeAllEv+0x1823c>
+  6548bc:      	mov	x0, x20
+  6548c0:      	bl	0x7373e0 <__wrap__Unwind_Resume@plt>

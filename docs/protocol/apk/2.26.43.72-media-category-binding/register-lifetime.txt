@@ -1,0 +1,111 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000064987c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv>:
+  651c44:      	ldr	w21, [x0]
+  651c48:      	ldr	x8, [x8, #0x10]
+  651c4c:      	add	x0, sp, #0x2a0
+  651c50:      	mov	w1, #0x4                // =4
+  651c54:      	blr	x8
+  651c58:      	ldr	w27, [x0]
+  651c5c:      	stp	xzr, xzr, [x29, #-0xd8]
+  651c60:      	stur	xzr, [x29, #-0xc8]
+  651c64:      	sub	x0, x29, #0xd8
+  651c68:      	add	x1, sp, #0x2a0
+  651c6c:      	bl	0x6536b8 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x9e3c>
+  651c70:      	ldr	x8, [sp, #0x2a0]
+  651c74:      	stp	x25, x28, [sp, #0x20]
+  651c78:      	ldr	x8, [x8, #0x10]
+  651c7c:      	add	x0, sp, #0x2a0
+  651c80:      	mov	w1, #0x4                // =4
+  651c84:      	blr	x8
+  651c88:      	ldr	x8, [sp, #0x2a0]
+  651c8c:      	ldr	w9, [x0]
+  651c90:      	mov	w25, w26
+  651c94:      	ldr	x8, [x8, #0x10]
+  651c98:      	str	w9, [sp, #0x30]
+  651c9c:      	add	x0, sp, #0x2a0
+  651ca0:      	mov	w1, #0x8                // =8
+  651ca4:      	blr	x8
+  651ca8:      	ldr	w8, [sp, #0x34]
+  651cac:      	mov	w1, wzr
+  651cb0:      	mov	w2, #0x1f8              // =504
+  651cb4:      	bl	0x730c58 <MCFSetGetCount+0xcba0>
+  651cb8:      	cmp	w19, #0x0
+  651cbc:      	add	x19, sp, #0x80
+  651cc0:      	cset	w26, ne
+  651cc4:      	cmp	w23, #0x0
+  651cc8:      	ldr	x23, [x0]
+  651ccc:      	add	x0, x19, #0x20
+  651cd0:      	str	w8, [sp, #0x34]
+  651cd4:      	cset	w28, ne
+  651cd8:      	bl	0x734d20 <memset@plt>
+  651cdc:      	bl	0x72a41c <MCFSetGetCount+0x6364>
+  651ce0:      	str	w8, [sp, #0xa0]
+  651ce4:      	str	w8, [sp, #0xc8]
+  651ce8:      	str	w8, [sp, #0xf0]
+  651cec:      	stp	q0, q0, [sp, #0x80]
+  651cf0:      	stur	q0, [sp, #0xa8]
+  651cf4:      	stur	q0, [sp, #0xb8]
+  651cf8:      	stp	q0, q0, [sp, #0xd0]
+  651cfc:      	add	x0, x19, #0x78
+  651d00:      	sub	x1, x29, #0x78
+  651d04:      	bl	0x734f40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2ERKS5_@plt>
+  651d08:      	add	x0, x19, #0x90
+  651d0c:      	sub	x1, x29, #0x90
+  651d10:      	bl	0x734f40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2ERKS5_@plt>
+  651d14:      	sub	x0, x29, #0x90
+  651d18:      	add	x19, sp, #0x80
+  651d1c:      	bl	0x3df9e0 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x2e6f0>
+  651d20:      	bl	0x2db2a4 <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0xd3c8>
+  651d24:      	add	x0, x19, #0xa8
+  651d28:      	bl	0x727c14 <MCFSetGetCount+0x3b5c>
+  651d2c:      	bl	0x668708 <_ZNK8facebook5tigon22TigonPropertyContainer27getPropertyGroupCopyOrEmptyENS1_3KeyE+0x53c>
+  651d30:      	bic	w9, w25, w25, asr #31
+  651d34:      	ldp	x8, x10, [x29, #-0xc0]
+  651d38:      	ldp	x11, x12, [x29, #-0xb0]
+  651d3c:      	mov	x19, x20
+  651d40:      	and	x9, x9, #0xff
+  651d44:      	ldur	w13, [x29, #-0xa0]
+  651d48:      	mov	x20, x24
+  651d4c:      	orr	x9, x9, x28, lsl #8
+  651d50:      	stp	xzr, xzr, [x29, #-0xc0]
+  651d54:      	stp	x8, x10, [sp, #0x1b0]
+  651d58:      	stp	x11, x12, [sp, #0x1c0]
+  651d5c:      	str	w13, [sp, #0x1d0]
+  651d60:      	cbz	x12, 0x651d9c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x8520>
+  651d64:      	sub	x13, x10, #0x1
+  651d68:      	ldr	x11, [x11, #0x8]
+  651d6c:      	add	x12, sp, #0x80
+  651d70:      	tst	x10, x13
+  651d74:      	add	x12, x12, #0x140
+  651d78:      	b.ne	0x651d84 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x8508>
+  651d7c:      	and	x11, x13, x11
+  651d80:      	b	0x651d94 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x8518>
+  651d84:      	cmp	x11, x10
+  651d88:      	b.lo	0x651d94 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x8518>
+  651d8c:      	udiv	x13, x11, x10
+  651d90:      	msub	x11, x13, x10, x11
+  651d94:      	str	x12, [x8, x11, lsl #3]
+  651d98:      	stp	xzr, xzr, [x22]
+  651d9c:      	bl	0x72a4c0 <MCFSetGetCount+0x6408>
+  651da0:      	add	x22, sp, #0x80
+  651da4:      	strb	w8, [sp, #0x201]
+  651da8:      	ldr	w8, [sp, #0x34]
+  651dac:      	str	x9, [sp, #0x1d8]
+  651db0:      	strb	w8, [sp, #0x202]
+  651db4:      	add	x8, x22, #0x188
+  651db8:      	stp	q0, q0, [x8]
+  651dbc:      	mov	w8, #0x3f800000         // =1065353216
+  651dc0:      	str	w8, [sp, #0x230]
+  651dc4:      	add	x8, x22, #0x1b8
+  651dc8:      	stp	q0, q0, [x8]
+  651dcc:      	mov	x8, #0x1500000000       // =90194313216
+  651dd0:      	strb	w26, [sp, #0x200]
+  651dd4:      	stp	q0, q0, [sp, #0x1e0]
+  651dd8:      	str	xzr, [sp, #0x228]
+  651ddc:      	str	x8, [sp, #0x258]
+  651de0:      	str	w21, [sp, #0x260]
+  651de4:      	str	w27, [sp, #0x264]

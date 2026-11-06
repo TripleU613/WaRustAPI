@@ -1,0 +1,26 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000064987c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv>:
+  6548ec:      	bti	c
+  6548f0:      	ldp	w8, w4, [x0, #0x8]
+  6548f4:      	ldr	x9, [x0, #0x28]
+  6548f8:      	sxtw	x8, w8
+  6548fc:      	add	w3, w8, w1
+  654900:      	cmp	w3, w4
+  654904:      	str	w3, [x0, #0x8]
+  654908:      	b.gt	0x654914 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xb098>
+  65490c:      	add	x0, x9, x8
+  654910:      	ret
+  654914:      	paciasp
+  654918:      	stp	x29, x30, [sp, #-0x10]!
+  65491c:      	mov	x29, sp
+  654920:      	mov	w5, w1
+  654924:      	adrp	x0, 0xef000
+  654928:      	add	x0, x0, #0x837
+  65492c:      	adrp	x1, 0xda000
+  654930:      	add	x1, x1, #0xb1
+  654934:      	mov	w2, #0x1f               // =31
+  654938:      	bl	0x7362e0 <_ZN8facebook14assertInternalEPKcz@plt>

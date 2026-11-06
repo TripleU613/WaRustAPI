@@ -1,0 +1,9 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000002cdedc <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers>:
+  2dbea4:      	ldp	x20, x19, [sp, #0x20]
+  2dbea8:      	ldr	x21, [sp, #0x10]
+  2dbeac:      	ret

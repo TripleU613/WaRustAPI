@@ -1,0 +1,27 @@
+
+# class: LX/1Fa;
+# extends: Ljava/lang/Object;
+
+.method public A00(VLI)  # .registers 3
+    # full signature: LX/1Fa;->A00(LX/1FX;I)V
+    0000..0004  and-int/lit16  v0, v2, #0xff
+    0004..0006  int-to-byte  v0, v0
+    0006..000c  invoke-virtual  {v1, v0}, LX/1FX;->A00(B)V
+    000c..0012  const  v0, #0xff00
+    0012..0014  and-int/2addr  v0, v2
+    0014..0018  shr-int/lit8  v0, v0, #0x8
+    0018..001a  int-to-byte  v0, v0
+    001a..0020  invoke-virtual  {v1, v0}, LX/1FX;->A00(B)V
+    0020..0024  const/high16  v0, #0xff0000
+    0024..0026  and-int/2addr  v0, v2
+    0026..002a  shr-int/lit8  v0, v0, #0x10
+    002a..002c  int-to-byte  v0, v0
+    002c..0032  invoke-virtual  {v1, v0}, LX/1FX;->A00(B)V
+    0032..0036  const/high16  v0, #0xff000000
+    0036..0038  and-int/2addr  v2, v0
+    0038..003c  shr-int/lit8  v0, v2, #0x18
+    003c..003e  int-to-byte  v0, v0
+    003e..0044  invoke-virtual  {v1, v0}, LX/1FX;->A00(B)V
+    0044..0046  return-void
+    # exception table: 0 try range(s)
+.end method

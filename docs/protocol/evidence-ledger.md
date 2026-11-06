@@ -1,3 +1,10 @@
+2026-11-06 — **Standard upload category/purpose native transfer confirmed.**
+
+Little-endian serialization and checked native register/member flow connect
+category8/purpose0 to WA priority context. The optional property3 suffix remains
+unknown. [Reader, instruction checks and scope](media-network-outcomes.md#standard-upload-categorypurpose-native-binding-closed-2026-11-06).
+No Rust behavior change or live account operation.
+
 2026-11-06 — **Priority property-origin search expanded across Java/native boundaries.**
 
 All24 physical key allocations include a dynamic decoder; request bridging also
