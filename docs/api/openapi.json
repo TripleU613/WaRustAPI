@@ -17674,5 +17674,12 @@
     "x-live": false,
     "description": "Research-only APK43.72 self-PN/LID hash input filtering and device-number-preserving own-account normalization. Current own-device addition differs from non-self primary inclusion. Source authentication, BUx/BVC, record semantics and subtype/device99 lifecycle remain incomplete; no generic alias rewrite or runtime change added.",
     "evidence": "docs/protocol/cross-device-sync.md#current-self-device-hash-input-normalization-2026-11-06"
+},
+  "x-hosted-lid-device99-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Research-only APK43.72 device99 LID conversion constructs hosted.lid, distinct from lid. Existing Rust device hash/reconciliation refuses hosted domains. Intermediate inheritance, complete self-device authority and lifecycle remain unresolved; no hosted runtime capability added.",
+    "evidence": "docs/protocol/cross-device-sync.md#hosted-lid-device99-hash-boundary-2026-11-06"
 }
 }

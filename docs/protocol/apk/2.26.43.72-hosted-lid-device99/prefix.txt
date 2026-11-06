@@ -1,0 +1,14 @@
+
+# class: LX/DBh;
+# extends: Ljava/lang/Object;
+
+.method public A0f(LL)  # .registers 3
+    # full signature: LX/DBh;->A0f(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0000..0004  new-instance  v1, Ljava/lang/StringBuilder;
+    0004..000a  invoke-direct  {v1}, Ljava/lang/StringBuilder;-><init>()V
+    000a..0010  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0010..0014  const-string  v0, ":"
+    0014..001a  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    001a..001c  return-object  v1
+    # exception table: 0 try range(s)
+.end method

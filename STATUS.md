@@ -1,3 +1,5 @@
+Pinned device99 LID constructor uses a distinct hosted.lid domain; Rust hash/reconciliation remains restricted to ordinary PN/LID. [Hosted LID device99 boundary and remaining dispatch/authority limits](docs/protocol/cross-device-sync.md#hosted-lid-device99-hash-boundary-2026-11-06). Research only; no runtime widening or live operation.
+
 Pinned self-PN/LID hash input helpers now traced through record filtering and account-specific device-number-preserving normalization. [Own-account source filtering, device-preserving mapping and limits](docs/protocol/cross-device-sync.md#current-self-device-hash-input-normalization-2026-11-06). Research only; general alias/identity authority unchanged.
 
 Pinned43.72 device-hash format bodies now match both existing Rust versions in the selected other-user scope; existing vectors pass. [Current formatter comparison, existing vectors and scope limits](docs/protocol/cross-device-sync.md#current-apk-device-hash-format-comparison-2026-11-06). Effective version/self-device/cache authority remain incomplete.

@@ -2320,3 +2320,9 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
 **Confirmed static APK43.72:** [own source/filter, PN/LID helpers and conversions](apk/2.26.43.72-self-device-hash-inputs/README.md) show account-specific normalization before hashing. BUx gates the source set; positiveF0I.A02 records are excluded. SelfPN keeps type0 inputs and conditionally maps own LID-category inputs; selfLID maps type0 inputs with the same device number and retains its accepted LID categories. The enclosing selector adds the current own-device address, distinct from non-self primary inclusion. Mapping failures can skip entries.
 
 **Unknown / unchanged:** source authentication, BUx/BVC authority, excluded-field meaning/units, subtype/device99 normalization and own-device lifecycle. This is not a general PN/LID alias rule and does not widen Rust membership/identity authority. No runtime change or live operation.
+
+## Hosted LID device99 hash boundary (2026-11-06)
+
+**Confirmed static APK43.72:** [device99 constructor, distinct domain and scope limits](apk/2.26.43.72-hosted-lid-device99/README.md) show the LID conversion constructs hosted.lid for99, with raw user:99@hosted.lid and type25. Ordinary0EM has server lid/type19/agent1. Hosted addresses must not be silently normalized into ordinary LID hash inputs. Rust hash/reconciliation currently refuses hosted domains; no supported-scope mismatch found.
+
+**Unknown / unchanged:** intermediate0EL declarations/full format3 dispatch, self-device mixed-domain collection authority, hosted lifecycle and effective version. No runtime change or live operation.
