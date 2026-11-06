@@ -396,7 +396,9 @@ pub fn apply_change_notification(store: &ProtocolStore, node: &Node) -> Result<b
             return Ok(false);
         };
         let before = snapshot.clone();
-        for change in node.child_nodes() {
+        // APK43.72 0w9.A09 selects0Tp.A0D (index0) as the event.
+        // Additional siblings may carry metadata, not another routing change.
+        for change in node.child_nodes().iter().take(1) {
             match change.description.as_str() {
                 "add" => {
                     for jid in jids(change) {
@@ -1716,7 +1718,31 @@ mod tests {
             );
             assert_eq!(store.journal_head().unwrap(), journal_before);
         }
-        assert!(apply_change_notification(&store, &add_b).unwrap());
+        let unselected_remove = note(vec![
+            Node::new("unsupported"),
+            Node::new("remove").children(vec![part(a)]),
+        ]);
+        assert!(!apply_change_notification(&store, &unselected_remove).unwrap());
+        assert_eq!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, key(group).as_bytes(), 1))
+                .unwrap(),
+            saved_before
+        );
+        let selected_add = note(vec![
+            Node::new("add").children(vec![part(b)]),
+            Node::new("remove").children(vec![part(a)]),
+        ]);
+        assert!(apply_change_notification(&store, &selected_add).unwrap());
+        let after_selected: GroupSnapshot = store
+            .read(|tx| tx.get_json(Table::Checkpoints, key(group).as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        assert!(
+            after_selected.members.iter().any(|member| member.jid == a),
+            "later sibling cannot remove an existing member"
+        );
+        assert!(!apply_change_notification(&store, &add_b).unwrap());
         assert!(!apply_change_notification(&store, &add_b).unwrap());
         assert!(
             apply_change_notification(

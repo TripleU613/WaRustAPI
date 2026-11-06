@@ -3332,3 +3332,15 @@ commit-before-ACK and corruption/reopen. No new size/identity policy or live
 operation was added. This is the reusable admission counterpart to the
 [receive-order correction](notification-ack-audit.md#validate-group-ack-envelope-before-membership-mutation-2026-11-05),
 using the same pinned notification-key evidence and existing local bounds.
+
+
+### First group event owns the supported change (2026-11-05)
+
+**Confirmed static / locally fixed:** APK43.72 0Tp.A0D/0w9.A09 selects first
+child as the event. Rust previously applied every outer sibling; unsupported+
+remove could remove membership and add+remove applied two changes. The helper
+now selects only the first event, retaining inner participant iteration and
+existing ACK/envelope/store guards. Red/green regression preserves unselected
+membership and standalone valid updates. Extra metadata siblings are permitted;
+full native event/timestamp/alias parity is not claimed.
+[Checked selection evidence](apk/2.26.43.72-group-event-selection/README.md).

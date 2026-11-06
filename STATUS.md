@@ -1,3 +1,8 @@
+Fixed group notifications applying later sibling events to membership.
+Only the first event now selects the supported change; metadata siblings stay
+permitted. Current APK selection evidence and red/green regression retained.
+[Details](docs/protocol/apk/2.26.43.72-group-event-selection/README.md).
+
 Public group-change API now shares the receive envelope prerequisite before
 store access. Invalid-envelope regression preserves snapshot bytes and journal;
 valid routing-race coverage remains. No live validation.

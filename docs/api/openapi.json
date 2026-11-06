@@ -17163,5 +17163,12 @@
     "x-live": false,
     "description": "Public groups::apply_change_notification validates the existing notification ACK envelope before store access. Invalid recognized id/from/participant envelope returns InvalidInput; unrecognized/dedicated groups_dirty form returns false. No ACK/capture/query is performed by this helper. Regression covers missing/empty ID and unusable participant with exact saved bytes and journal unchanged; existing valid updates and outgoing routing-race assertions remain. No new wire limit or HTTP route.",
     "evidence": "docs/protocol/groups.md#public-group-change-admission-matches-receive-2026-11-05"
+  },
+  "x-group-notification-first-event-selection": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "groups::apply_change_notification selects only the first outer event child, matching selected APK43.72 0Tp.A0D/0w9 dispatch. Later siblings cannot apply additional add/remove/role/subject changes; inner participant iteration remains. Multi-child metadata is permitted. Existing ACK/envelope/store guards remain. Red/green regression covers unsupported+remove and add+remove, preserving standalone valid changes. Missing-child native exception parity, all event families and live behavior remain unverified. No new query or HTTP route.",
+    "evidence": "docs/protocol/apk/2.26.43.72-group-event-selection/README.md"
   }
 }

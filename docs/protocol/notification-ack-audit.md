@@ -234,3 +234,15 @@ bypass the receive actor's prerequisite. Three invalid-envelope regressions
 preserve exact snapshot bytes and journal head. A routing-race fixture gained
 a synthetic notification ID without weakening its assertions. The helper sends
 nothing. [Details and red/green validation](groups.md#public-group-change-admission-matches-receive-2026-11-05).
+
+
+### First group event owns the supported change (2026-11-05)
+
+**Confirmed static / locally fixed:** APK43.72 0Tp.A0D/0w9.A09 selects first
+child as the event. Rust previously applied every outer sibling; unsupported+
+remove could remove membership and add+remove applied two changes. The helper
+now selects only the first event, retaining inner participant iteration and
+existing ACK/envelope/store guards. Red/green regression preserves unselected
+membership and standalone valid updates. Extra metadata siblings are permitted;
+full native event/timestamp/alias parity is not claimed.
+[Checked selection evidence](apk/2.26.43.72-group-event-selection/README.md).
