@@ -335,6 +335,7 @@ enum WriteGuard {
     Prekey(Arc<ProtocolStore>, super::prekeys::PendingUpload),
     Devices(Arc<ProtocolStore>, super::devices::DeviceQuery),
     RetryRefetch(Arc<ProtocolStore>, super::retry_answer::RefetchWriteGuard),
+    Action(Arc<ProtocolStore>, super::actions::ActionWriteGuard),
 }
 pub(crate) struct Outbound {
     node: Node,
@@ -349,6 +350,7 @@ impl Outbound {
             Some(WriteGuard::Prekey(store, pending)) => pending.check_write_authority(&store),
             Some(WriteGuard::Devices(store, query)) => query.check_write_authority(&store),
             Some(WriteGuard::RetryRefetch(store, pending)) => pending.check_write_authority(&store),
+            Some(WriteGuard::Action(store, action)) => action.check_write_authority(&store),
             None => Ok(()),
         };
         if let Err(error) = admission {
@@ -428,6 +430,18 @@ impl NodeLink {
     async fn send(&self, node: &Node) -> Result<()> {
         self.send_guarded(node, None).await
     }
+    pub(crate) async fn send_action(
+        &self,
+        store: &Arc<ProtocolStore>,
+        action: &super::actions::ReservedAction,
+    ) -> Result<()> {
+        self.send_guarded(
+            &action.node,
+            Some(WriteGuard::Action(store.clone(), action.guard.clone())),
+        )
+        .await
+    }
+
     async fn send_prekey_upload(
         &self,
         store: &Arc<ProtocolStore>,
@@ -772,10 +786,9 @@ pub(crate) async fn drive(
                 return Err(Error::Timeout(ping_period));
             }
             _ = tokio::time::sleep_until(action_drain.deadline()), if ready.is_none() && action_drain.remaining > 0 => {
-                if let Some(action) = super::actions::reserve_next(&store)? {
-                    let started = tokio::time::Instant::now();
-                    link.send(&action).await?;
-                    action_replies.record_written(&action, started);
+                if let Some(action) = super::actions::reserve_next_owned(&store)? {
+                    link.send_action(&store, &action).await?;
+                    action_replies.record_written(&action.node, action.started);
                     action_drain.sent(config.transport.action_delay_ms);
                 } else {
                     action_drain.finish();

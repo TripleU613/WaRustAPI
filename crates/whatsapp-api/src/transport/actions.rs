@@ -390,16 +390,63 @@ fn prepare_for_reservation_in(
 /// Reserve at most sixteen queued actions for one socket write, marking them
 /// `sent` before the write so a crash never resends them.
 pub fn reserve_pending(store: &ProtocolStore) -> Result<Vec<Node>> {
-    reserve_limit(store, BATCH)
+    Ok(reserve_limit_owned(store, BATCH)?
+        .into_iter()
+        .map(|action| action.node)
+        .collect())
 }
 
 /// Reserve only the next eligible action for the connection actor. All bulk
 /// admission guards remain shared; later actions stay queued until their turn.
+#[cfg(test)]
 pub(crate) fn reserve_next(store: &ProtocolStore) -> Result<Option<Node>> {
-    Ok(reserve_limit(store, 1)?.pop())
+    Ok(reserve_next_owned(store)?.map(|action| action.node))
 }
 
-fn reserve_limit(store: &ProtocolStore, limit: usize) -> Result<Vec<Node>> {
+pub(crate) struct ReservedAction {
+    pub node: Node,
+    pub started: tokio::time::Instant,
+    pub guard: ActionWriteGuard,
+}
+
+#[derive(Clone)]
+pub(crate) struct ActionWriteGuard {
+    key: Vec<u8>,
+    row: zeroize::Zeroizing<Vec<u8>>,
+    deadline: Option<tokio::time::Instant>,
+}
+impl ActionWriteGuard {
+    pub(crate) fn check_write_authority(&self, store: &ProtocolStore) -> Result<()> {
+        store.read(|tx| {
+            let current = zeroize::Zeroizing::new(
+                tx.get(Table::Checkpoints, &self.key, 1)?
+                    .unwrap_or_default(),
+            );
+            if *current != *self.row {
+                return Err(Error::invalid(
+                    "action",
+                    "reserved action changed before write",
+                ));
+            }
+            if self
+                .deadline
+                .is_some_and(|deadline| tokio::time::Instant::now() >= deadline)
+            {
+                return Err(Error::invalid(
+                    "action",
+                    "reserved action expired before write",
+                ));
+            }
+            Ok(())
+        })
+    }
+}
+
+pub(crate) fn reserve_next_owned(store: &ProtocolStore) -> Result<Option<ReservedAction>> {
+    Ok(reserve_limit_owned(store, 1)?.pop())
+}
+
+fn reserve_limit_owned(store: &ProtocolStore, limit: usize) -> Result<Vec<ReservedAction>> {
     store.write(|tx| {
         let mut out = Vec::new();
         let mut cursor = None;
@@ -461,10 +508,24 @@ fn reserve_limit(store: &ProtocolStore, limit: usize) -> Result<Vec<Node>> {
                         continue;
                     }
                 }
-                out.push(node);
                 row.status = ActionStatus::Sent;
                 row.sent_at = Some(Timestamp::now());
                 tx.put_json(Table::Checkpoints, key, 1, &row)?;
+                let started = tokio::time::Instant::now();
+                let deadline = callback_seconds(&node)
+                    .map(|seconds| started + std::time::Duration::from_secs(seconds));
+                let row = tx
+                    .get(Table::Checkpoints, key, 1)?
+                    .ok_or_else(|| Error::invalid("action", "reserved action missing"))?;
+                out.push(ReservedAction {
+                    node,
+                    started,
+                    guard: ActionWriteGuard {
+                        key: key.clone(),
+                        row: zeroize::Zeroizing::new(row),
+                        deadline,
+                    },
+                });
             }
         }
         Ok(out)
@@ -538,6 +599,61 @@ pub(crate) struct LiveReplies(
     std::collections::HashMap<String, tokio::time::Instant>,
 );
 
+fn callback_seconds(node: &Node) -> Option<u64> {
+    if node.get_attr("type").and_then(|v| v.as_text()) == Some("get")
+        && node.get_attr("xmlns").and_then(|v| v.as_text()) == Some("abt")
+        && let [props] = node.child_nodes()
+        && props.description == "props"
+        && props.get_attr("protocol").and_then(|v| v.as_text()) == Some("1")
+        && props.get_attr("hash").and_then(|v| v.as_text()) == Some("")
+        && props.get_attr("refresh_id").is_none()
+    {
+        Some(32)
+    } else if node.get_attr("type").and_then(|v| v.as_text()) == Some("set")
+        && node.get_attr("xmlns").and_then(|v| v.as_text()) == Some("blocklist")
+        && node.child_nodes().first().is_some_and(|item| {
+            item.description == "item"
+                && matches!(
+                    item.get_attr("action").and_then(|v| v.as_text()),
+                    Some("block" | "unblock")
+                )
+        })
+    {
+        // APK43.72 1dH.A05 0638..0650 -> 0Sf.A0W: block/unblock
+        // use20000ms. A0M fetch uses zero through A0Q/A06, so it
+        // does not inherit this set-request timer.
+        Some(20)
+    } else if node.get_attr("xmlns").and_then(|v| v.as_text()) == Some("disappearing_mode")
+        && match node.get_attr("type").and_then(|v| v.as_text()) {
+            Some("get") => node.child_nodes().is_empty(),
+            Some("set") => matches!(node.child_nodes(), [mode]
+                        if mode.description == "disappearing_mode"
+                            && mode.get_attr("duration").and_then(|v| v.as_text()).is_some()),
+            _ => false,
+        }
+    {
+        // APK43.72 ChangeDMSettingActivity.A0c 018a..0198 and
+        // 0oy.A00 00b4..00c2 both pass20000ms to 0Sf.A0W.
+        // This is the account default IQ, not per-chat E2E timers
+        // or a disappearing_mode child nested inside usync.
+        Some(20)
+    } else if super::two_factor::is_set_request(node) {
+        // APK43.72 1HL.A07 017c..018a -> 0Sf.A0W: 32000ms
+        // from registration, not the registration HTTP PIN flow.
+        Some(32)
+    } else if super::identity_query::is_request(node) {
+        // APK43.72 FeM.run case16 187a..1888 -> 0Sf.A0W:
+        // identity-only callback uses32000ms, not a universal key timer.
+        Some(32)
+    } else if super::token_issue::is_issue_request(node) {
+        // APK43.72 GeneratePrivacyTokenJob.A0L 0144..015c:
+        // trusted-contact request299 has its own32000ms timer.
+        Some(32)
+    } else {
+        None
+    }
+}
+
 impl LiveReplies {
     pub(crate) fn record_written(&mut self, node: &Node, started: tokio::time::Instant) {
         if node.description == "iq"
@@ -547,58 +663,7 @@ impl LiveReplies {
             // APK43.72 HBE.A00 -> 0Sf.A0W/A0A -> 0ln.A08: the initial
             // AB-properties callback has 32000ms from pre-dispatch registration.
             // Other producers' durations are not inferred from this request.
-            let seconds = if node.get_attr("type").and_then(|v| v.as_text()) == Some("get")
-                && node.get_attr("xmlns").and_then(|v| v.as_text()) == Some("abt")
-                && let [props] = node.child_nodes()
-                && props.description == "props"
-                && props.get_attr("protocol").and_then(|v| v.as_text()) == Some("1")
-                && props.get_attr("hash").and_then(|v| v.as_text()) == Some("")
-                && props.get_attr("refresh_id").is_none()
-            {
-                Some(32)
-            } else if node.get_attr("type").and_then(|v| v.as_text()) == Some("set")
-                && node.get_attr("xmlns").and_then(|v| v.as_text()) == Some("blocklist")
-                && node.child_nodes().first().is_some_and(|item| {
-                    item.description == "item"
-                        && matches!(
-                            item.get_attr("action").and_then(|v| v.as_text()),
-                            Some("block" | "unblock")
-                        )
-                })
-            {
-                // APK43.72 1dH.A05 0638..0650 -> 0Sf.A0W: block/unblock
-                // use20000ms. A0M fetch uses zero through A0Q/A06, so it
-                // does not inherit this set-request timer.
-                Some(20)
-            } else if node.get_attr("xmlns").and_then(|v| v.as_text()) == Some("disappearing_mode")
-                && match node.get_attr("type").and_then(|v| v.as_text()) {
-                    Some("get") => node.child_nodes().is_empty(),
-                    Some("set") => matches!(node.child_nodes(), [mode]
-                        if mode.description == "disappearing_mode"
-                            && mode.get_attr("duration").and_then(|v| v.as_text()).is_some()),
-                    _ => false,
-                }
-            {
-                // APK43.72 ChangeDMSettingActivity.A0c 018a..0198 and
-                // 0oy.A00 00b4..00c2 both pass20000ms to 0Sf.A0W.
-                // This is the account default IQ, not per-chat E2E timers
-                // or a disappearing_mode child nested inside usync.
-                Some(20)
-            } else if super::two_factor::is_set_request(node) {
-                // APK43.72 1HL.A07 017c..018a -> 0Sf.A0W: 32000ms
-                // from registration, not the registration HTTP PIN flow.
-                Some(32)
-            } else if super::identity_query::is_request(node) {
-                // APK43.72 FeM.run case16 187a..1888 -> 0Sf.A0W:
-                // identity-only callback uses32000ms, not a universal key timer.
-                Some(32)
-            } else if super::token_issue::is_issue_request(node) {
-                // APK43.72 GeneratePrivacyTokenJob.A0L 0144..015c:
-                // trusted-contact request299 has its own32000ms timer.
-                Some(32)
-            } else {
-                None
-            };
+            let seconds = callback_seconds(node);
             if let Some(seconds) = seconds {
                 self.1.insert(
                     id.to_owned(),
@@ -1422,6 +1487,121 @@ mod tests {
         })
         .unwrap();
         (dir, s)
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn queued_action_write_retains_row_and_original_deadline() {
+        use std::time::Duration;
+        use tokio::time::advance;
+        for (timed, delay_ms, change) in [
+            (true, 0, "same"),
+            (true, 19999, "same"),
+            (true, 20000, "same"),
+            (true, 20001, "same"),
+            (false, 60000, "same"),
+            (true, 0, "missing"),
+            (true, 0, "status"),
+            (true, 0, "wire"),
+            (true, 0, "label"),
+            (true, 0, "sent_at"),
+            (true, 0, "slow_completion"),
+        ] {
+            let (dir, db) = store();
+            let db = Arc::new(db);
+            let peer = crate::model::jid::Jid::parse("15555550101@s.whatsapp.net").unwrap();
+            let id = if timed {
+                super::super::blocklist::queue_block(&db, &peer)
+            } else {
+                super::super::blocklist::queue_fetch(&db)
+            }
+            .unwrap();
+            let action = reserve_next_owned(&db).unwrap().unwrap();
+            let started = action.started;
+            assert_eq!(
+                action.guard.deadline,
+                timed.then_some(started + Duration::from_secs(20))
+            );
+            let (_incoming, incoming) = tokio::sync::mpsc::channel(1);
+            let (outgoing, mut writes) = tokio::sync::mpsc::channel(1);
+            let link = super::super::connection::NodeLink::new(incoming, outgoing);
+            let worker_db = db.clone();
+            let task = tokio::spawn(async move { link.send_action(&worker_db, &action).await });
+            let queued = writes.recv().await.unwrap();
+            advance(Duration::from_millis(delay_ms)).await;
+            if !matches!(change, "same" | "slow_completion") {
+                db.write(|tx| {
+                    if change == "missing" {
+                        tx.delete(Table::Checkpoints, key(&id).as_bytes())?;
+                        return Ok(());
+                    }
+                    let mut row: Row = tx
+                        .get_json(Table::Checkpoints, key(&id).as_bytes(), 1)?
+                        .unwrap();
+                    match change {
+                        "status" => row.status = ActionStatus::Ok,
+                        "wire" => {
+                            let node =
+                                decode_owned(&id, &row.wire)?.attr("xmlns", "changed-fixture");
+                            row.wire = Encoder::new(TokenDictionary::comparison_2_26_37_71())
+                                .encode(&node)?;
+                        }
+                        "label" => row.label = "changed-fixture".into(),
+                        _ => row.sent_at = Some(Timestamp(1)),
+                    }
+                    tx.put_json(Table::Checkpoints, key(&id).as_bytes(), 1, &row)
+                })
+                .unwrap();
+            }
+            let before = db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap();
+            let head = db.journal_head().unwrap();
+            let admitted =
+                matches!(change, "same" | "slow_completion") && (!timed || delay_ms < 20000);
+            let prepared = queued.prepare();
+            assert_eq!(prepared.is_some(), admitted, "{timed}/{delay_ms}/{change}");
+            if let Some((node, written)) = prepared {
+                assert_eq!(
+                    node.get_attr("id").and_then(|v| v.as_text()),
+                    Some(id.as_str())
+                );
+                if change == "slow_completion" {
+                    advance(Duration::from_secs(21)).await;
+                }
+                written.send(Ok(())).unwrap();
+                let mut replies = LiveReplies::default();
+                replies.record_written(&node, started);
+                assert_eq!(
+                    replies.deadline(),
+                    timed.then_some(started + Duration::from_secs(20))
+                );
+                if change == "slow_completion" {
+                    replies.expire();
+                    assert!(replies.deadline().is_none());
+                    assert!(replies.0.is_empty());
+                }
+            }
+            assert_eq!(task.await.unwrap().is_ok(), admitted);
+            assert!(writes.recv().await.is_none());
+            assert_eq!(
+                db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap(),
+                before
+            );
+            assert_eq!(db.journal_head().unwrap(), head);
+            drop(db);
+            let reopened = ProtocolStore::open(OpenOptions {
+                path: dir.path().join("p.redb"),
+                account_id: AccountId::new("a").unwrap(),
+                key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([7; 32]))),
+                create: false,
+            })
+            .unwrap();
+            assert_eq!(
+                reopened
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                before
+            );
+            assert_eq!(reopened.journal_head().unwrap(), head);
+        }
     }
 
     #[test]

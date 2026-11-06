@@ -1,3 +1,5 @@
+Normal queued actions now require their exact reserved row and original producer deadline before encoding. Changed, missing or expired intents refuse without replay; untimed requests remain untimed. [Action writer boundary and remaining gaps](docs/protocol/action-settlement-ordering.md#queued-action-writer-ownership-and-deadlines-2026-11-06). Offline only.
+
 Pinned presence reader now traced; missing type correctly reports available for primary-user metadata. Device/group routing and signed last-seen/default-clock projection remain partial. [Current presence audit](docs/protocol/presence.md#current-readerdefault-type-audit-2026-11-06). No outgoing request or live operation.
 
 Retry plaintext retention now refuses conflicting saved bytes; both resend commits recheck the source snapshot used by crypto. Exact repeats remain idempotent, and conflicts preserve state. [Source fidelity and limits](docs/protocol/retry-answers.md#original-retry-plaintext-retention-and-commit-binding-2026-11-06). Offline only.

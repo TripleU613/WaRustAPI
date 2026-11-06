@@ -97,3 +97,56 @@ Validation: 1,177 workspace/all-feature tests, strict all-target/all-feature
 Clippy, formatting, CLI-reference checking, coverage freshness and repository
 hygiene passed. Legacy chronology and native fetch-generation admission remain
 unresolved; this validation does not prove server acceptance or account safety.
+
+## Queued action writer ownership and deadlines (2026-11-06)
+
+**Confirmed Rust defect fixed offline:** the normal actor reserved an action as
+Sent, then handed its Node to an unguarded writer queue. Replacing/removing or
+settling the stored action during that wait did not prevent encoding. Known
+response deadlines started before the queued write, but an already-expired
+request could still be encoded; only its later reply would be refused.
+
+The actor now reserves an internal owned action containing its original Node,
+monotonic start, exact saved Sent-row bytes and optional existing producer timer.
+The row snapshot is zeroized on drop and never logged. Immediately before
+encoding, the writer reads the current row and requires exact bytes plus an
+unexpired deadline after the read. Missing, changed, settled or expired intent
+refuses the queued item and reports the local error; the connection ends. This
+does not clear the Sent reservation, install a replacement or authorize replay.
+
+The existing producer-specific duration selection is shared between writer guard
+and live reply registry. The registry receives the reservation's original start,
+so queue time, transaction completion and slow socket write completion do not
+restart the timer. Untimed requests remain untimed; no universal IQ timeout is
+introduced. Public reserve_pending still returns Nodes, and feature-owned
+reserve_one_in keeps its existing contract. Only normal actor dispatch uses the
+new owned writer handoff automatically.
+
+**Confirmed static reference, APK2.26.43.72:**
+[block-list callback registration and read/set separation](apk/2.26.43.72-blocklist-callback-timing/README.md)
+retains1dH.A05's20000ms change request through0Sf.A0W and the separate zero-delay
+fetch path. Existing timer selectors for initial AB-properties, account default
+disappearing mode, two-factor, identity-only and token issue retain their source
+comments/conditions unchanged. The queue ownership check is a local invariant,
+not a claim that native uses Rust row bytes or durable Sent semantics. No new APK
+trace, wire grammar, request family or callback duration is claimed.
+
+Regression: `queued_action_write_retains_row_and_original_deadline` uses the
+actual NodeLink queue and writer admission. It covers unchanged ownership;
+missing row; independently changed status/wire/label/sent time;19999/20000/20001ms
+for the20-second request; untimed fetch after60seconds; and admitted write whose
+completion arrives after expiry. Refusals emit no next write, preserve checkpoint
+bytes and journal head, and survive reopen. The slow-completion control verifies
+that callback expiry uses the original base, not write completion.
+
+**Limits:** no lock spans encoding/socket I/O. Other account, sidecar admission,
+privacy/restriction/backoff changes after reservation are not re-evaluated by
+this exact-row guard unless they change that row. Live reply ownership still
+correlates by ID/deadline rather than retaining this row snapshot through
+settlement; that is a separate remaining audit item. Low-level/feature-owned
+writers retain their contracts. No reconnect, automatic retry, reset or live
+account operation was added.
+
+Validation:1,450 workspace/all-feature tests passed. Strict workspace/all-target/
+all-feature Clippy, formatting, CLI reference regeneration, OpenAPI symbol
+validation, APK coverage freshness and repository hygiene passed. Offline only.
