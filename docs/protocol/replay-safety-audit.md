@@ -1493,3 +1493,36 @@ Validation: 1,462 workspace/all-feature tests passed, including the existing
 partial-write/reconnect late-ACK actor regression. Strict workspace/all-target/
 all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
 validation, APK coverage freshness and repository hygiene passed. Offline only.
+
+## Validate durable callback member semantics before settlement (2026-11-06)
+
+**Confirmed Rust local metadata-validation gap / correction:** byte equality
+between a callback snapshot and current rows did not establish that all listed
+keys were valid receipt members of that callback. A malformed owner could append
+an unrelated checkpoint or snapshot an account/owner/route-rebound member; the
+old settlement loop would write terminal statuses to every listed unchanged row.
+This is a local encrypted-state integrity finding, not a native wire-format rule.
+
+Before changing any status, callback_members now validates the complete owner:
+1..16 unique receipt-outbox keys (the existing local reservation bound), original
+outcome_unknown state, matching callback_owner and current account authority,
+receipt-root wire and the same id/batch-root, logical destination/from, type
+and nullable participant correlation as the incoming ACK. Exact current-row
+comparison still follows. Only validated original rows enter the atomic status/
+consumed-owner commit. Inconsistent owner metadata returns a fixed redacted
+receipt error and rolls back, rather than rewriting unrelated or rebound rows.
+The normal row route predicate is shared with this validation to avoid drift.
+
+The new24-case reopen regression crosses direct/group and success/refusal with
+foreign checkpoint, duplicate key, mismatched account, mismatched owner,
+different destination and already-terminal member shapes. Snapshot and current
+bytes are made equal deliberately, so the old byte-only check would not protect
+them. Each case rejects with no row or journal mutation. Existing valid-batch,
+owner conflict, duplicate ACK, actual writer and partial-write/reconnect late-ACK
+regressions remain required and unchanged. No new wire field, stored schema,
+command, retry/recovery policy or live account operation is introduced.
+
+Validation: 1,463 workspace/all-feature tests passed, including original late-ACK/
+partial-write actor coverage. Strict workspace/all-target/all-feature Clippy,
+formatting, regenerated CLI reference, OpenAPI symbol validation, APK coverage
+freshness and repository hygiene passed. Offline only.

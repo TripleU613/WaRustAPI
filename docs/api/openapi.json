@@ -18010,5 +18010,11 @@
     "x-library": ["whatsapp_api::transport::receipts::ReservedReceipt::check_write_authority", "whatsapp_api::transport::receipts::reserve_pending_owned"],
     "description": "Owned receipt write guard also captures exact durable callback key/raw bytes at reservation. Actual actor writer and CLI-style authority checks compare that snapshot in the same read transaction as account/member/privacy checks. Late callback deletion, consumed-state mutation or corruption blocks the whole batch before encoding without recreating owner, releasing uncertainty or replaying. Snapshot remains opaque/zeroizing and Debug-redacted. No new persisted/wire field, method, native recovery policy or live-server claim. Existing durable late-ACK-after-partial-write behavior is preserved.",
     "evidence": "docs/protocol/replay-safety-audit.md#receipt-writer-also-owns-the-durable-callback-record-2026-11-06"
+  },
+  "x-receipt-callback-member-validation": {
+    "x-cli": true, "x-transport": true, "x-live": false,
+    "x-library": ["whatsapp_api::transport::receipts::record_ack"],
+    "description": "Durable callback settlement validates 1..16 unique receipt-outbox members (existing local reservation bound), original outcome_unknown state, callback_owner/account binding, receipt-root wire and id/batch-root/address/type/nullable-participant ACK correlation before exact current-row comparison and atomic settlement. Inconsistent callback metadata returns a redacted local receipt error without changing statuses or owner. Equal bytes alone cannot authorize unrelated or rebound checkpoint updates. No new schema/wire field, command, native-format rule, retry/recovery policy or live operation; legitimate partial-write/reconnect late ACK remains supported.",
+    "evidence": "docs/protocol/replay-safety-audit.md#validate-durable-callback-member-semantics-before-settlement-2026-11-06"
   }
 }
