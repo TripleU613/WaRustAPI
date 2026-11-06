@@ -47,3 +47,23 @@ response-settlement authority or live account operation is introduced.
 
 This resolves the specifically named colon/alphabet/count gap, not complete
 context-dependent serializer parity or the effects of every native parser fault.
+
+## Names and body text use different string rules (2026-11-06)
+
+**Confirmed selected static / implemented, APK2.26.43.72:**
+[Complete node constructors and typed-JID writer with existing A01/A05/A06](apk/2.26.43.72-string-context/README.md)
+show token lookup remains enabled for names, but unknown tag/attribute names
+and JID_PAIR servers do not nibble/hex pack. Users and attribute values allow packing.
+Node text content is converted to bytes in0Tp's constructor, then serialized
+without token lookup or packing. Rust now follows these distinct contexts.
+
+**Offline regression:** independent literal byte vectors cover a numeric tag,
+numeric attribute name, packed attribute value, token-looking body and colon
+body. They failed before the fix. Existing codec properties already normalize
+text content to bytes. Decoded token Text can now re-encode as raw byte content;
+wire spelling is canonicalized while text bytes remain unchanged. No automatic
+text-to-JID conversion or persistence/settlement/retry change is included.
+
+**Unknown:** A05's context-sensitive automatic JID conversion, full special
+class tuples, native default charset outside ASCII and parser fault routing
+remain separate evidence gaps. No live operation or complete codec parity claim.

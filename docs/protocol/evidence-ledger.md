@@ -8361,3 +8361,5 @@ Local public upload eligibility omission corrected at shared entry, including ca
 - **2026-11-06 confirmed pinned static / implemented:** native serializer omits empty child-array content; Rust now matches with literal failing-before/passing-after fixtures. Conditional serialization budget and size-failure ordering retained; optional colon packing remains open. [Sources and limits](node-serializer.md).
 
 - **2026-11-06 confirmed pinned static / implemented:** packed nibble12 is colon; actual13..15 rejected, oddpadding ignored before validation, negative digit count rejected. Rust encoder/decoder corrected with failing-before literal fixtures. [Reader/writer evidence and remaining context gaps](node-serializer.md#packed-nibble-colon-and-padding-match-the-apk-2026-11-06).
+
+- **2026-11-06 confirmed pinned static / implemented:** names/JID servers disable packing after token lookup; node text content is raw bytes. Rust contexts corrected with failing-before literal fixtures; auto text-to-JID and special tuple parity remain open. [Sources and limits](node-serializer.md#names-and-body-text-use-different-string-rules-2026-11-06).

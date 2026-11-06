@@ -70,14 +70,20 @@ impl<'a> Encoder<'a> {
     }
 
     fn write_string(&mut self, s: &str) -> Result<(), CodecError> {
+        self.write_string_with_packing(s, true)
+    }
+
+    // APK 43.72 1r2.A01/A00 disable packing for names and JID servers.
+    // Token lookup still precedes the raw-string fallback in A05.
+    fn write_string_with_packing(&mut self, s: &str, packing: bool) -> Result<(), CodecError> {
         if let Some(i) = self.dict.index_of_single(s) {
             self.push(i);
         } else if let Some((d, i)) = self.dict.index_of_double(s) {
             self.push(tags::DICTIONARY_0 + d);
             self.push(i);
-        } else if is_nibble(s) {
+        } else if packing && is_nibble(s) {
             self.write_packed(s, tags::NIBBLE_8);
-        } else if is_hex(s) {
+        } else if packing && is_hex(s) {
             self.write_packed(s, tags::HEX_8);
         } else {
             self.write_len_prefixed(s.as_bytes())?;
@@ -163,7 +169,7 @@ impl<'a> Encoder<'a> {
                 } else {
                     self.write_string(&jid.user)?;
                 }
-                self.write_string(jid.server.as_str())
+                self.write_string_with_packing(jid.server.as_str(), false)
             }
         }
     }
@@ -193,15 +199,17 @@ impl<'a> Encoder<'a> {
             _ => true,
         };
         self.list_start(1 + 2 * attrs.len() + usize::from(has_content))?;
-        self.write_string(&node.description)?;
+        self.write_string_with_packing(&node.description, false)?;
         for a in attrs {
-            self.write_string(&a.name)?;
+            self.write_string_with_packing(&a.name, false)?;
             self.write_attr_value(&a.value)?;
         }
         match &node.content {
             NodeContent::Empty => {}
             NodeContent::Bytes(b) => self.write_len_prefixed(b)?,
-            NodeContent::Text(t) => self.write_string(t)?,
+            // APK 43.72 0Tp's String-content constructor stores bytes;
+            // 1r2.A01 invokes A06 with packing=false for this content.
+            NodeContent::Text(t) => self.write_len_prefixed(t.as_bytes())?,
             NodeContent::Jid(j) => self.write_jid(j)?,
             NodeContent::Children(c) if c.is_empty() => {}
             NodeContent::Children(c) => {
@@ -248,6 +256,29 @@ mod tests {
         Decoder::new(&payload, dict(), &limits)
             .decode_node()
             .unwrap()
+    }
+
+    #[test]
+    fn apk_string_positions_use_distinct_wire_rules() {
+        // APK 43.72 1r2.A01 passes packing=false for names;
+        // 0Tp(String,String,attrs) stores content bytes before A01/A06.
+        let encode = |node: Node| Encoder::new(dict()).encode(&node).unwrap();
+        assert_eq!(
+            encode(Node::new("123")),
+            [0, 0xF8, 1, 0xFC, 3, b'1', b'2', b'3']
+        );
+        assert_eq!(
+            encode(Node::new("iq").attr("123", ":1")),
+            [0, 0xF8, 3, 25, 0xFC, 3, b'1', b'2', b'3', 0xFF, 1, 0xC1]
+        );
+        assert_eq!(
+            encode(Node::new("iq").text("get")),
+            [0, 0xF8, 2, 25, 0xFC, 3, b'g', b'e', b't']
+        );
+        assert_eq!(
+            encode(Node::new("iq").text(":1")),
+            [0, 0xF8, 2, 25, 0xFC, 2, b':', b'1']
+        );
     }
 
     #[test]
@@ -417,12 +448,13 @@ mod tests {
                 Node::new("enc")
                     .attr("type", "pkmsg")
                     .bytes(Bytes::from_static(&[0xFF, 0x00, 0x80, 0x7F])),
-                Node::new("presence").text("unavailable"),
+                // APK text-content constructor stores bytes, even for tokens.
+                Node::new("presence").bytes(Bytes::from_static(b"unavailable")),
             ]);
         let back = roundtrip(&node);
         assert_eq!(back, node);
-        // Raw (non-token) text content is indistinguishable from bytes on the
-        // wire and decodes as bytes; nothing is lossily converted.
+        // Text content serializes as bytes and decodes as bytes; nothing is
+        // lossily converted. Token-looking text is covered by literal fixtures.
         let raw = Node::new("text").text("some text");
         let back = roundtrip(&raw);
         assert_eq!(

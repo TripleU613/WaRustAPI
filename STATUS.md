@@ -1,3 +1,5 @@
+Fixed APK-confirmed string-context encoding differences: names/JID_PAIR servers retain token lookup but disable packing, and node text bodies serialize as raw bytes. [Literal fixtures and constructor/writer evidence](docs/protocol/node-serializer.md#names-and-body-text-use-different-string-rules-2026-11-06). No live operation, auto text-to-JID conversion or retry/settlement change.
+
 Fixed APK-confirmed packed-string mismatches: colon nibble12 now encodes/decodes, invalid actual13..15 reject, odd padding is ignored before validation, and negative digit counts reject. [Literal fixtures and native reader/writer evidence](docs/protocol/node-serializer.md#packed-nibble-colon-and-padding-match-the-apk-2026-11-06). No live operation or retry/settlement change.
 
 Fixed APK-confirmed binary-node encoding mismatch: empty child arrays now omit content instead of adding LIST_EMPTY; empty bytes remain present. [Literal fixtures, conditional serializer budget and remaining codec gaps](docs/protocol/node-serializer.md). No live operation, new retry or settlement change.

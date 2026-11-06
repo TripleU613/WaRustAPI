@@ -1,0 +1,14 @@
+{
+  "README.md": {
+    "bytes": 4241,
+    "sha256": "3542b3fcf75c70580db13330d1eabe9ad6d1d7ba5c3485551c0ed1a6c025350a"
+  },
+  "jid-writer.txt": {
+    "bytes": 5823,
+    "sha256": "fd15e791314d5ffd68701080a75e73d9b6d149ce268f5e6ef5d05c7c1bc63aa5"
+  },
+  "node-constructors.txt": {
+    "bytes": 3095,
+    "sha256": "07adfd28d8d2281625ace485bd180f07c4cb6e0618e22bbcdd70eb2348c4707a"
+  }
+}

@@ -18241,5 +18241,15 @@
     ],
     "description": "Pinned APK123.A07 and1r2.A06 agree on NIBBLE_8 colon12, invalid actual13..15 and2*pairs-odd digit count. Rust now packs/accepts colon, rejects invalid actual nibble data and oddzero-pair headers, and skips trailing odd padding before validation. HEX_8 alphabet unchanged. Independent literal fixtures failed before correction. No live verification, new retry, response settlement or complete context-specific codec parity claim.",
     "evidence": "docs/protocol/node-serializer.md#packed-nibble-colon-and-padding-match-the-apk-2026-11-06"
+  },
+  "x-string-context-compatibility": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [
+      "whatsapp_api::binary::Encoder"
+    ],
+    "description": "Pinned APK1r2.A01/A05/A00 and0Tp constructors distinguish names, values and body bytes. Encoder now disables nibble/hex packing for tag/attribute names and JID_PAIR server strings while preserving token lookup, and serializes NodeContent::Text as raw byte content without token/packing lookup. Literal regression failed before correction. User/value packing unchanged; auto text-to-JID, special tuples and complete codec parity remain open. No live verification, retry, persistence or settlement change.",
+    "evidence": "docs/protocol/node-serializer.md#names-and-body-text-use-different-string-rules-2026-11-06"
   }
 }
