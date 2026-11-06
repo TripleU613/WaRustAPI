@@ -212,11 +212,12 @@ fn scan_prefix<T: serde::de::DeserializeOwned>(
         let done = rows.len() < 512;
         cursor = rows.last().map(|(key, _)| key.clone());
         for (key, _) in rows {
-            if let Ok(name) = std::str::from_utf8(&key)
-                && name.starts_with(prefix)
-                && let Some(value) = tx.get_json::<T>(table, &key, 1)?
-            {
-                out.push((name.to_owned(), value));
+            if key.starts_with(prefix.as_bytes()) {
+                let name = std::str::from_utf8(&key)
+                    .map_err(|_| invalid("owned prekey inventory key is not UTF-8"))?;
+                if let Some(value) = tx.get_json::<T>(table, &key, 1)? {
+                    out.push((name.to_owned(), value));
+                }
             }
         }
         if done {
@@ -224,17 +225,31 @@ fn scan_prefix<T: serde::de::DeserializeOwned>(
         }
     }
 }
+// These namespaces are written with canonical decimal u32 IDs. Silently
+// ignoring malformed names or merging aliases can hide publication state.
+fn inventory_id(key: &str, prefix: &str) -> Result<u32> {
+    let suffix = key
+        .strip_prefix(prefix)
+        .ok_or_else(|| invalid("invalid prekey inventory prefix"))?;
+    let id: u32 = suffix
+        .parse()
+        .map_err(|_| invalid("invalid prekey inventory id"))?;
+    if id.to_string() != suffix {
+        return Err(invalid("noncanonical prekey inventory id"));
+    }
+    Ok(id)
+}
 fn meta_map(tx: &impl Lookup) -> Result<std::collections::BTreeMap<u32, Meta>> {
-    Ok(scan_prefix::<Meta>(tx, Table::Checkpoints, META_PREFIX)?
+    scan_prefix::<Meta>(tx, Table::Checkpoints, META_PREFIX)?
         .into_iter()
-        .filter_map(|(key, meta)| key[META_PREFIX.len()..].parse().ok().map(|id| (id, meta)))
-        .collect())
+        .map(|(key, meta)| Ok((inventory_id(&key, META_PREFIX)?, meta)))
+        .collect()
 }
 fn record_ids(tx: &impl Lookup) -> Result<Vec<u32>> {
     let mut ids: Vec<u32> = scan_prefix::<Vec<u8>>(tx, Table::Prekeys, RECORD_PREFIX)?
         .into_iter()
-        .filter_map(|(key, _)| key[RECORD_PREFIX.len()..].parse().ok())
-        .collect();
+        .map(|(key, _)| inventory_id(&key, RECORD_PREFIX))
+        .collect::<Result<_>>()?;
     ids.sort_unstable();
     Ok(ids)
 }
@@ -1086,6 +1101,69 @@ mod tests {
                 batch: None,
             },
         )
+    }
+
+    #[test]
+    fn malformed_owned_inventory_keys_cannot_be_ignored_or_alias_an_id() {
+        for table in [Table::Checkpoints, Table::Prekeys] {
+            for suffix in [b"01".as_slice(), b"bad", b"4294967296", b"1\xff"] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("inventory-key.redb");
+                let store = open(&path);
+                let (account, signed) = account_and_signed(&store);
+                generate(&store).unwrap();
+                store
+                    .write(|tx| {
+                        set_status(tx, 1, KeyStatus::OutcomeUnknown)?;
+                        let (prefix, original) = if table == Table::Checkpoints {
+                            (META_PREFIX, meta_key(1))
+                        } else {
+                            (RECORD_PREFIX, record_key(1))
+                        };
+                        let data = tx.get(table, original.as_bytes(), 1)?.unwrap();
+                        tx.delete(table, original.as_bytes())?;
+                        let mut key = prefix.as_bytes().to_vec();
+                        key.extend_from_slice(suffix);
+                        tx.put(table, &key, 1, &data)
+                    })
+                    .unwrap();
+                let snapshot = store
+                    .read(|tx| {
+                        Ok((
+                            tx.scan(Table::Prekeys, 1, 1000)?,
+                            tx.scan(Table::Checkpoints, 1, 1000)?,
+                        ))
+                    })
+                    .unwrap();
+                assert!(
+                    unsent_ids(&store).is_err(),
+                    "owned key must not be ignored or aliased"
+                );
+                assert!(generate(&store).is_err());
+                assert!(begin_upload(&store, &account, &signed).is_err());
+                assert_eq!(
+                    store
+                        .read(|tx| Ok((
+                            tx.scan(Table::Prekeys, 1, 1000)?,
+                            tx.scan(Table::Checkpoints, 1, 1000)?
+                        )))
+                        .unwrap(),
+                    snapshot
+                );
+                drop(store);
+                let store = open(&path);
+                assert!(unsent_ids(&store).is_err());
+                assert_eq!(
+                    store
+                        .read(|tx| Ok((
+                            tx.scan(Table::Prekeys, 1, 1000)?,
+                            tx.scan(Table::Checkpoints, 1, 1000)?
+                        )))
+                        .unwrap(),
+                    snapshot
+                );
+            }
+        }
     }
 
     #[test]

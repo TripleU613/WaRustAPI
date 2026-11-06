@@ -17324,5 +17324,12 @@
     "x-live": false,
     "description": "Static current APK0aq/0ar session acquisition shares cached writable0KU and0HC for the same stable helper/open-handle interval; both transaction factories construct1hk with differing health state. Exceptional close, replacement/reset and crash/ambiguous-disk behavior remain unproven. No Rust database mode or queue behavior change.",
     "evidence": "docs/protocol/apk/2.26.43.72-count-database-wrappers/README.md"
+  },
+  "x-prekey-inventory-key-integrity": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Owned prekey inventory prefixes reject invalid UTF-8; record and metadata IDs require canonical decimal u32 suffixes. Malformed/overflowing/aliased names refuse inventory, generation and upload admission rather than being ignored or merged. No repair, retry or wire-ID policy change; local storage-integrity guard.",
+    "evidence": "docs/protocol/prekey-count-notifications.md#owned-prekey-inventory-keys-cannot-be-ignored-or-alias-an-id-2026-11-05"
   }
 }

@@ -7699,3 +7699,28 @@ reaches the same SQLiteDatabase, narrowing the normal transaction identity gap.
 [Eight complete methods, assumptions and exceptional-close limits](apk/2.26.43.72-count-database-wrappers/README.md).
 Health callback failure, base close, replacement/reset, ambiguous disk commit
 and crash recovery remain open. No Rust backend, ACK, replay or live operation changed.
+
+### Owned prekey inventory keys cannot be ignored or alias an ID (2026-11-05)
+
+**Confirmed local defect, fixed offline:** prekeys.scan_prefix discarded invalid
+UTF-8 names even under its owned prefix, while meta_map and record_ids silently
+filtered unparsable ID suffixes. Parsed alternate spellings such as01 collapsed
+onto the same numeric ID; metadata collection could thereby merge distinct
+stored names. This can make corrupt publication state look like absent state
+or an otherwise usable inventory. It is not a demonstrated server restriction
+trigger or proof that every alias causes a resend.
+
+Owned namespaces now reject invalid UTF-8, and record/metadata ID suffixes must
+be exactly canonical decimal u32 text. Existing writers already use that form.
+No new numeric wire-width/zero-ID policy is introduced; existing serialized
+record/ID and upload validation remains. Unrelated namespace keys remain outside
+the selected scan. The caller receives a fixed secret-free InvalidInput reason
+instead of a partial inventory; no metadata is repaired, merged or deleted.
+
+Regression replaces canonical record or outcome-unknown metadata names with
+leading-zero, invalid, overflowing or invalid-UTF8 names. Old code accepted the
+first alias. Inventory lookup, generation and upload admission now refuse; exact
+prekey/checkpoint bytes remain unchanged and reopening still refuses. This is
+local storage-integrity behavior, not a claim that native SQL IDs use this Rust
+key format. Normal native inventory/wire evidence remains in this document.
+No live operation, new retry, reservation reset or key regeneration was added.

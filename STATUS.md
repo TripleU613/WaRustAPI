@@ -1,3 +1,8 @@
+Owned prekey inventory scans now reject malformed/noncanonical ID keys rather
+than ignoring them or merging numeric aliases. Inventory, generation and upload
+admission refuse corruption without repairing records, including after reopen.
+[Local audit](docs/protocol/prekey-count-notifications.md#owned-prekey-inventory-keys-cannot-be-ignored-or-alias-an-id-2026-11-05).
+
 Native0aq/0ar sessions now share a traced writable-handle/listener and1hk
 transaction chain. Stable-provider/open-handle assumptions establish normal
 nested identity; exceptional close and crash/disk outcomes remain open.
