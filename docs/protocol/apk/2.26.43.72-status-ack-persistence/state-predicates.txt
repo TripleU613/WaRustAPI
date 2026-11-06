@@ -1,0 +1,85 @@
+
+# class: LX/ACg;
+# extends: Ljava/lang/Object;
+
+.method public A00(ZL)  # .registers 3
+    # full signature: LX/ACg;->A00(LX/1uI;)Z
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  sget-object  v1, LX/1uI;->A00:Ljava/util/Set;
+    000c..0010  iget  v0, v2, LX/1uI;->value:I
+    0010..0016  invoke-static  {v0}, LX/2EA;->A00(I)LX/1uI;
+    0016..0018  move-result-object  v0
+    0018..001e  invoke-interface  {v1, v0}, Ljava/util/Set;->contains(Ljava/lang/Object;)Z
+    001e..0020  move-result  v0
+    0020..0022  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A01(ZL)  # .registers 4
+    # full signature: LX/ACg;->A01(LX/1uI;)Z
+    0000..0002  const/4  v2, #0x0
+    0002..0008  invoke-static  {v3, v2}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  iget  v1, v3, LX/1uI;->value:I
+    000c..0010  sget-object  v0, LX/1uI;->A06:LX/1uI;
+    0010..0014  iget  v0, v0, LX/1uI;->value:I
+    0014..0018  if-eq  v1, v0, +0x10
+    0018..001c  sget-object  v0, LX/1uI;->A0A:LX/1uI;
+    001c..0020  iget  v0, v0, LX/1uI;->value:I
+    0020..0024  if-eq  v1, v0, +0xa
+    0024..0028  sget-object  v0, LX/1uI;->A09:LX/1uI;
+    0028..002c  iget  v0, v0, LX/1uI;->value:I
+    002c..0030  if-eq  v1, v0, +0x4
+    0030..0032  const/4  v0, #0x1
+    0032..0034  return  v0
+    0034..0036  return  v2
+    # exception table: 0 try range(s)
+.end method
+
+.method public A02(ZL)  # .registers 5
+    # full signature: LX/ACg;->A02(LX/1uI;)Z
+    0000..0002  const/4  v3, #0x0
+    0002..0008  invoke-static  {v4, v3}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  iget  v2, v4, LX/1uI;->value:I
+    000c..0010  sget-object  v0, LX/1uI;->A03:LX/1uI;
+    0010..0014  iget  v0, v0, LX/1uI;->value:I
+    0014..0018  if-eq  v2, v0, +0x9
+    0018..001c  sget-object  v0, LX/1uI;->A04:LX/1uI;
+    001c..0020  iget  v0, v0, LX/1uI;->value:I
+    0020..0024  if-eq  v2, v0, +0x3
+    0024..0026  return  v3
+    0026..0028  const/4  v0, #0x1
+    0028..002a  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A03(ZL)  # .registers 5
+    # full signature: LX/ACg;->A03(LX/1uI;)Z
+    0000..0002  const/4  v3, #0x0
+    0002..0008  invoke-static  {v4, v3}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  iget  v2, v4, LX/1uI;->value:I
+    000c..0010  sget-object  v0, LX/1uI;->A0A:LX/1uI;
+    0010..0014  iget  v0, v0, LX/1uI;->value:I
+    0014..0018  if-eq  v2, v0, +0x9
+    0018..001c  sget-object  v0, LX/1uI;->A09:LX/1uI;
+    001c..0020  iget  v0, v0, LX/1uI;->value:I
+    0020..0024  if-eq  v2, v0, +0x3
+    0024..0026  return  v3
+    0026..0028  const/4  v0, #0x1
+    0028..002a  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A04(ZL)  # .registers 4
+    # full signature: LX/ACg;->A04(LX/1uI;)Z
+    0000..0002  const/4  v2, #0x0
+    0002..0008  invoke-static  {v3, v2}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  iget  v1, v3, LX/1uI;->value:I
+    000c..0010  sget-object  v0, LX/1uI;->A04:LX/1uI;
+    0010..0014  iget  v0, v0, LX/1uI;->value:I
+    0014..0018  if-ne  v1, v0, +0x4
+    0018..001a  const/4  v0, #0x1
+    001a..001c  return  v0
+    001c..001e  return  v2
+    # exception table: 0 try range(s)
+.end method

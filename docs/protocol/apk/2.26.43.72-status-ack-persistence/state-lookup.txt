@@ -1,0 +1,27 @@
+
+# class: LX/2EA;
+# extends: Ljava/lang/Object;
+
+.method public A00(LI)  # .registers 4
+    # full signature: LX/2EA;->A00(I)LX/1uI;
+    0000..0004  sget-object  v0, LX/1uI;->A01:LX/06B;
+    0004..000a  invoke-interface  {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    000a..000c  move-result-object  v2
+    000c..0012  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    0012..0014  move-result  v0
+    0014..0018  if-eqz  v0, +0x14
+    0018..001e  invoke-interface  {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    001e..0020  move-result-object  v1
+    0020..0022  move-object  v0, v1
+    0022..0026  check-cast  v0, LX/1uI;
+    0026..002a  iget  v0, v0, LX/1uI;->value:I
+    002a..002e  if-ne  v0, v3, -0xf
+    002e..0032  check-cast  v1, LX/1uI;
+    0032..0036  if-nez  v1, +0x7
+    0036..003a  sget-object  v0, LX/1uI;->A07:LX/1uI;
+    003a..003c  return-object  v0
+    003c..003e  const/4  v1, #0x0
+    003e..0040  goto  -0x8
+    0040..0042  return-object  v1
+    # exception table: 0 try range(s)
+.end method

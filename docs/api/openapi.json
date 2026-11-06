@@ -18164,5 +18164,13 @@
     ],
     "description": "Selected async status ACK routes parse nonnull edit as signed Javai32; absence defaults0. Malformed/out-of-range text now retains outbox/expected-chat uncertainty on success and refusal without ending reader epoch. Applies to status@broadcast and exactflagged group/newsletter selected chats;459 remains earlier, signed/BMP decimal controls pass. Complete native part-key/status handlers and newsletter404/edit7/8 success exception are retained research; private persistence/callback authority remains unported. No blanket404 success, live operation, retry or replay authority.",
     "evidence": "docs/protocol/message-ack.md#async-status-ack-edit-parsing-precedes-persistence-2026-11-06"
+  },
+  "x-status-ack-persistence-research": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Pinned static research with reproducible xtask exports: status sender/remote/baseid key, participant-null phash reconciliation followed by saved-row lookup, exact state enum/predicates, backend-specificDyI updates and SQL state reread. Native SENT alone is not a once-only guarantee; state4 in this enum does not explain17f scheduled state. Timestamp helper agrees with existing Java-long/default0/wrapping-times1000 parser. Repair producers, complete writer/flags/callback ownership, multipart/scheduled operations remain unported. No runtime change, live operation, hard hash rejection or replay authority.",
+    "evidence": "docs/protocol/message-ack.md#status-persistence-has-state-and-key-authority-beyond-ack-parsing-2026-11-06"
   }
 }

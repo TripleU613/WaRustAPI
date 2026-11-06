@@ -1,0 +1,290 @@
+
+# class: LX/1tj;
+# extends: Ljava/lang/Object;
+
+.method public A0C(VLLLLLJZZZ)  # .registers 36
+    # full signature: LX/1tj;->A0C(LX/AQ5;LX/1tj;Ljava/lang/Integer;Ljava/lang/Long;Ljava/lang/String;JZZZ)V
+    0000..0004  move-object/from16  v6, v26
+    0004..0008  move-object/from16  v21, v28
+    0008..000c  move-object/from16  v14, v29
+    000c..0010  move-object/from16  v7, v30
+    0010..0014  move-wide/from16  v29, v31
+    0014..0018  move/from16  v5, v34
+    0018..001c  move-object/from16  v23, v27
+    001c..0020  if-nez  v33, +0x1d
+    0020..0024  if-nez  v35, +0x1b
+    0024..0028  if-nez  v34, +0xb
+    0028..002c  iget-object  v0, v6, LX/AQ5;->A0W:LX/1uI;
+    002c..0032  invoke-static  {v0}, LX/ACg;->A01(LX/1uI;)Z
+    0032..0034  move-result  v0
+    0034..0038  if-nez  v0, +0x3
+    0038..003a  return-void
+    003a..003e  move-object/from16  v22, v6
+    003e..0042  move-object/from16  v24, v21
+    0042..0046  move-object/from16  v25, v14
+    0046..004a  move-object/from16  v26, v7
+    004a..004e  move-wide/from16  v27, v29
+    004e..0054  invoke-static/range  {v22..v28}, LX/1tj;->A0B(LX/AQ5;LX/1tj;Ljava/lang/Integer;Ljava/lang/Long;Ljava/lang/String;J)V
+    0054..0056  return-void
+    0056..005a  new-instance  v20, LX/1jL;
+    005a..0060  invoke-direct/range  {v20..v20}, Ljava/lang/Object;-><init>()V
+    0060..0066  invoke-static/range  {v23..v23}, LX/1tj;->A01(LX/1tj;)LX/1tk;
+    0066..0068  move-result-object  v0
+    0068..006e  invoke-virtual  {v0}, LX/0Xp;->A07()LX/0aq;
+    006e..0070  move-result-object  v8
+    0070..0076  invoke-virtual  {v8}, LX/0aq;->A00()LX/1hk;
+    0076..0078  move-result-object  v19
+    0078..007a  monitor-enter
+    007a..007e  iget-object  v0, v6, LX/AQ5;->A0I:Ljava/lang/Long;
+    007e..0080  const/4  v9, #0x0
+    0080..0082  const/4  v4, #0x1
+    0082..0086  if-eqz  v0, +0xaf
+    0086..008c  invoke-static/range  {v23..v23}, LX/1tj;->A02(LX/1tj;)LX/1uF;
+    008c..0092  invoke-virtual  {v0}, Ljava/lang/Number;->longValue()J
+    0092..0094  move-result-wide  v0
+    0094..0098  iget-object  v3, v8, LX/0aq;->A02:LX/0KU;
+    0098..009e  invoke-static  {v0, v1}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+    009e..00a0  move-result-object  v0
+    00a0..00a4  new-array  v2, v4, [Ljava/lang/String;
+    00a4..00a8  aput-object  v0, v2, v9
+    00a8..00ac  const-string  v1, "StatusStore/GET_STATUS_BY_ROW_ID"
+    00ac..00b0  const-string  v0, "\n        SELECT\n          \n          row_id,\n          sort_id,\n          uuid,\n          sender_user_jid,\n          status_info_row_id,\n          type,\n          timestamp,\n          server_receipt_timestamp,\n          text_data,\n          state,\n          secret,\n          content_proto,\n          fp_proto,\n          origin,\n          flags,\n          audience_type,\n          is_archived,\n          received_timestamp,\n          batch_state\n      \n        FROM\n          status\n        WHERE\n          row_id = ?\n          "
+    00b0..00b6  invoke-virtual  {v3, v0, v1, v2}, LX/0KU;->A0A(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
+    00b6..00b8  move-result-object  v3
+    00b8..00be  invoke-interface  {v3}, Landroid/database/Cursor;->moveToFirst()Z
+    00be..00c0  move-result  v0
+    00c0..00c4  if-nez  v0, +0x4
+    00c4..00c8  goto/16  +0x181
+    00c8..00cc  const-string  v0, "state"
+    00cc..00d2  invoke-interface  {v3, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    00d2..00d4  move-result  v0
+    00d4..00da  invoke-interface  {v3, v0}, Landroid/database/Cursor;->getInt(I)I
+    00da..00dc  move-result  v0
+    00dc..00e2  invoke-static  {v0}, LX/2EA;->A00(I)LX/1uI;
+    00e2..00e4  move-result-object  v2
+    00e4..00e8  const-string  v0, "content_proto"
+    00e8..00ee  invoke-interface  {v3, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    00ee..00f0  move-result  v0
+    00f0..00f6  invoke-interface  {v3, v0}, Landroid/database/Cursor;->getBlob(I)[B
+    00f6..00f8  move-result-object  v1
+    00f8..00fc  if-eqz  v1, +0xc
+    00fc..0100  sget-object  v0, LX/9AK;->DEFAULT_INSTANCE:LX/9AK;
+    0100..0106  invoke-static  {v0, v1}, Lcom/google/protobuf/GeneratedMessageLite;->parseFrom(Lcom/google/protobuf/GeneratedMessageLite;[B)Lcom/google/protobuf/GeneratedMessageLite;
+    0106..0108  move-result-object  v0
+    0108..010c  check-cast  v0, LX/9AK;
+    010c..0110  if-nez  v0, +0x4
+    0110..0114  sget-object  v0, LX/9AK;->DEFAULT_INSTANCE:LX/9AK;
+    0114..011a  invoke-static  {v0}, LX/00l;->A08(Ljava/lang/Object;)V
+    011a..011e  new-instance  v10, LX/AQD;
+    011e..0124  invoke-direct  {v10, v0}, LX/AQD;-><init>(LX/9AK;)V
+    0124..0128  iget-object  v1, v6, LX/AQ5;->A0W:LX/1uI;
+    0128..012e  invoke-static  {v1}, LX/ACg;->A00(LX/1uI;)Z
+    012e..0130  move-result  v0
+    0130..0134  if-eqz  v0, +0x43
+    0134..013a  invoke-static  {v2}, LX/ACg;->A00(LX/1uI;)Z
+    013a..013c  move-result  v0
+    013c..0140  if-eqz  v0, +0x3d
+    0140..0144  iget  v1, v1, LX/1uI;->value:I
+    0144..0148  iget  v0, v2, LX/1uI;->value:I
+    0148..014c  if-le  v1, v0, +0x37
+    014c..0150  const-string  v0, "server_receipt_timestamp"
+    0150..0156  invoke-interface  {v3, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0156..0158  move-result  v1
+    0158..015e  invoke-interface  {v3, v1}, Landroid/database/Cursor;->isNull(I)Z
+    015e..0160  move-result  v0
+    0160..0164  if-nez  v0, +0x28
+    0164..016a  invoke-interface  {v3, v1}, Landroid/database/Cursor;->getLong(I)J
+    016a..016c  move-result-wide  v0
+    016c..0172  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0172..0174  move-result-object  v2
+    0174..0178  if-eqz  v2, +0x1e
+    0178..017c  iput-wide  v0, v6, LX/AQ5;->A03:J
+    017c..0180  const-string  v0, "flags"
+    0180..0186  invoke-interface  {v3, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0186..0188  move-result  v0
+    0188..018e  invoke-interface  {v3, v0}, Landroid/database/Cursor;->getLong(I)J
+    018e..0190  move-result-wide  v0
+    0190..0194  iput-wide  v0, v6, LX/AQ5;->A01:J
+    0194..0198  const-string  v0, "is_archived"
+    0198..019e  invoke-interface  {v3, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    019e..01a0  move-result  v0
+    01a0..01a6  invoke-interface  {v3, v0}, Landroid/database/Cursor;->getInt(I)I
+    01a6..01a8  move-result  v1
+    01a8..01aa  const/4  v0, #0x0
+    01aa..01ae  if-eqz  v1, +0xb
+    01ae..01b0  goto  +0x8
+    01b0..01b4  iget-wide  v0, v6, LX/AQ5;->A03:J
+    01b4..01b6  goto  -0x1e
+    01b6..01bc  invoke-virtual  {v6, v2, v4}, LX/AQ5;->A0P(LX/1uI;Z)V
+    01bc..01be  goto  -0x38
+    01be..01c0  const/4  v0, #0x1
+    01c0..01c4  iput-boolean  v0, v6, LX/AQ5;->A0K:Z
+    01c4..01ca  invoke-static  {v6, v10}, LX/A5G;->A00(LX/AQ5;LX/AQD;)V
+    01ca..01d0  invoke-interface  {v3}, Landroid/database/Cursor;->close()V
+    01d0..01d2  goto  +0x8
+    01d2..01d4  move-exception  v1
+    01d4..01d6  throw  v1
+    01d6..01d8  move-exception  v0
+    01d8..01de  invoke-static  {v3, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    01de..01e0  throw  v0
+    01e0..01e4  if-eqz  v34, +0xa
+    01e4..01e8  iget-object  v0, v6, LX/AQ5;->A0W:LX/1uI;
+    01e8..01ee  invoke-static  {v0}, LX/ACg;->A00(LX/1uI;)Z
+    01ee..01f0  move-result  v0
+    01f0..01f4  if-nez  v0, +0xee
+    01f4..01f6  const/4  v13, #0x0
+    01f6..01fa  iget-object  v12, v6, LX/AQ5;->A0W:LX/1uI;
+    01fa..01fe  iget-wide  v2, v6, LX/AQ5;->A03:J
+    01fe..0202  iget-object  v11, v6, LX/AQ5;->A0P:[B
+    0202..0206  iget-object  v10, v6, LX/AQ5;->A09:LX/9JK;
+    0206..020a  iget-boolean  v0, v10, LX/1eM;->A03:Z
+    020a..020e  if-nez  v0, +0x7
+    020e..0212  sget-object  v0, LX/AQD;->A0G:LX/A5G;
+    0212..0218  invoke-virtual  {v0, v6}, LX/A5G;->A01(LX/AQ5;)V
+    0218..021c  iget-object  v0, v10, LX/1eM;->A02:LX/1eI;
+    021c..0220  check-cast  v0, LX/AQD;
+    0220..0224  if-eqz  v0, +0x4
+    0224..0228  iget-object  v13, v0, LX/AQD;->A06:LX/9Kw;
+    0228..022a  const/4  v15, #0x1
+    022a..022e  if-eqz  v13, +0x3
+    022e..0230  goto  +0x3
+    0230..0232  const/4  v4, #0x0
+    0232..0234  goto  +0x7
+    0234..023a  invoke-virtual  {v13}, LX/9Kw;->A0C()Z
+    023a..023c  move-result  v0
+    023c..0240  if-ne  v0, v4, -0x6
+    0240..0244  iget-object  v1, v6, LX/AQ5;->A0W:LX/1uI;
+    0244..0248  if-nez  v34, +0xf
+    0248..024e  invoke-static  {v1}, LX/ACg;->A00(LX/1uI;)Z
+    024e..0250  move-result  v0
+    0250..0254  if-eqz  v0, +0x9
+    0254..025a  invoke-static  {v1}, LX/ACg;->A01(LX/1uI;)Z
+    025a..025c  move-result  v0
+    025c..0260  if-nez  v0, +0x3
+    0260..0262  goto  +0x8
+    0262..0266  sget-object  v0, LX/1uI;->A08:LX/1uI;
+    0266..026c  invoke-virtual  {v6, v0}, LX/AQ5;->A0X(LX/1uI;)Z
+    026c..026e  move-result  v0
+    026e..0270  goto  +0x2
+    0270..0272  move  v0, v4
+    0272..0276  if-eqz  v0, +0xad
+    0276..027a  iget-wide  v0, v6, LX/AQ5;->A03:J
+    027a..027e  const-wide/16  v17, #0x0
+    027e..0282  cmp-long  v16, v0, v17
+    0282..0286  if-eqz  v16, +0x3
+    0286..0288  const/4  v15, #0x0
+    0288..028c  move-object/from16  v0, v20
+    028c..0290  iput-boolean  v15, v0, LX/1jL;->element:Z
+    0290..0294  if-nez  v15, +0x6
+    0294..0298  if-nez  v34, +0x8
+    0298..029c  if-eqz  v4, +0x6
+    029c..02a0  move-wide/from16  v0, v29
+    02a0..02a4  iput-wide  v0, v6, LX/AQ5;->A03:J
+    02a4..02a8  move-object/from16  v0, v21
+    02a8..02ae  invoke-static  {v6, v0, v14}, LX/1tj;->A06(LX/AQ5;Ljava/lang/Integer;Ljava/lang/Long;)LX/2Dm;
+    02ae..02b0  move-result-object  v14
+    02b0..02b4  if-eqz  v7, +0x2d
+    02b4..02ba  invoke-virtual  {v7}, Ljava/lang/String;->length()I
+    02ba..02bc  move-result  v0
+    02bc..02c0  if-eqz  v0, +0x27
+    02c0..02c4  iget-object  v0, v10, LX/1eM;->A02:LX/1eI;
+    02c4..02c8  check-cast  v0, LX/AQD;
+    02c8..02cc  if-eqz  v0, +0x21
+    02cc..02d0  iget-object  v0, v0, LX/AQD;->A0C:LX/9Ks;
+    02d0..02d6  invoke-virtual  {v0}, LX/ACb;->A04()Ljava/lang/Object;
+    02d6..02d8  move-result-object  v1
+    02d8..02dc  check-cast  v1, LX/9wj;
+    02dc..02e2  invoke-virtual  {v7}, Ljava/lang/String;->length()I
+    02e2..02e4  move-result  v0
+    02e4..02e8  if-eqz  v0, +0x17
+    02e8..02ec  iget-object  v0, v10, LX/1eM;->A02:LX/1eI;
+    02ec..02f0  check-cast  v0, LX/AQD;
+    02f0..02f4  if-eqz  v0, +0x11
+    02f4..02f8  iget-object  v15, v0, LX/AQD;->A0C:LX/9Ks;
+    02f8..02fc  new-instance  v0, LX/9wj;
+    02fc..0302  invoke-direct  {v0, v7}, LX/9wj;-><init>(Ljava/lang/String;)V
+    0302..0308  invoke-virtual  {v15, v0}, LX/ACb;->A06(Ljava/lang/Object;)V
+    0308..030a  goto  +0x5
+    030a..030c  const/4  v1, #0x0
+    030c..0310  if-eqz  v7, +0x3
+    0310..0312  goto  -0x1a
+    0312..0316  if-eqz  v13, +0x5
+    0316..031c  invoke-virtual  {v13, v5}, LX/9Kw;->A0B(Z)V
+    031c..031e  const/4  v15, #0x0
+    031e..0322  if-eqz  v34, +0x3
+    0322..0324  move-object  v15, v12
+    0324..032a  invoke-static/range  {v23..v23}, LX/1tj;->A05(LX/1tj;)LX/AB2;
+    032a..032c  move-result-object  v5
+    032c..0330  sget-object  v0, LX/9Zx;->A0H:LX/9Zx;
+    0330..0336  invoke-virtual  {v5, v6, v15, v0}, LX/AB2;->A04(LX/AQ5;LX/1uI;LX/9Zx;)Z
+    0336..0338  move-result  v0
+    0338..033c  if-nez  v0, +0x30
+    033c..0342  invoke-virtual  {v6, v12, v9}, LX/AQ5;->A0P(LX/1uI;Z)V
+    0342..0346  iput-wide  v2, v6, LX/AQ5;->A03:J
+    0346..034c  invoke-static  {v6, v14}, LX/1tj;->A0F(LX/AQ5;LX/2Dm;)V
+    034c..0350  if-eqz  v7, +0x13
+    0350..0356  invoke-virtual  {v7}, Ljava/lang/String;->length()I
+    0356..0358  move-result  v0
+    0358..035c  if-eqz  v0, +0xd
+    035c..0360  iget-object  v0, v10, LX/1eM;->A02:LX/1eI;
+    0360..0364  check-cast  v0, LX/AQD;
+    0364..0368  if-eqz  v0, +0x7
+    0368..036c  iget-object  v0, v0, LX/AQD;->A0C:LX/9Ks;
+    036c..0372  invoke-virtual  {v0, v1}, LX/ACb;->A06(Ljava/lang/Object;)V
+    0372..0376  if-eqz  v13, +0x5
+    0376..037c  invoke-virtual  {v13, v4}, LX/9Kw;->A0B(Z)V
+    037c..0380  iput-object  v11, v6, LX/AQ5;->A0P:[B
+    0380..0386  invoke-static/range  {v23..v23}, LX/1tj;->A04(LX/1tj;)LX/A6r;
+    0386..0388  move-result-object  v1
+    0388..038e  invoke-virtual  {v6}, LX/AQ5;->A0G()LX/Dwc;
+    038e..0390  move-result-object  v0
+    0390..0396  invoke-virtual  {v1, v0}, LX/A6r;->A02(LX/Dwc;)V
+    0396..0398  goto  +0x1b
+    0398..039a  monitor-exit
+    039a..039e  const/16  v25, #0x1
+    039e..03a2  new-instance  v0, LX/AiX;
+    03a2..03a6  move-object/from16  v21, v0
+    03a6..03aa  move-object/from16  v22, v20
+    03aa..03ae  move-object/from16  v24, v6
+    03ae..03b2  move-wide/from16  v26, v29
+    03b2..03b8  invoke-direct/range  {v21..v27}, LX/AiX;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;IJ)V
+    03b8..03be  invoke-virtual  {v8, v0}, LX/0aq;->A04(Ljava/lang/Runnable;)V
+    03be..03c4  invoke-virtual/range  {v19..v19}, LX/1hk;->A00()V
+    03c4..03c6  goto  +0x8
+    03c6..03cc  invoke-interface  {v3}, Landroid/database/Cursor;->close()V
+    03cc..03d2  invoke-virtual/range  {v19..v19}, LX/1hk;->A00()V
+    03d2..03d4  monitor-exit
+    03d4..03da  invoke-virtual/range  {v19..v19}, LX/1hk;->close()V
+    03da..03e0  invoke-virtual  {v8}, LX/0aq;->close()V
+    03e0..03e2  return-void
+    03e2..03e4  move-exception  v0
+    03e4..03e6  monitor-exit
+    03e6..03e8  throw  v0
+    03e8..03ea  move-exception  v2
+    03ea..03ec  throw  v2
+    03ec..03ee  move-exception  v1
+    03ee..03f2  move-object/from16  v0, v19
+    03f2..03f8  invoke-static  {v0, v2}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    03f8..03fa  throw  v1
+    03fa..03fc  move-exception  v1
+    03fc..03fe  throw  v1
+    03fe..0400  move-exception  v0
+    0400..0406  invoke-static  {v8, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    0406..0408  throw  v0
+    # exception table: 15 try range(s)
+    # catch <all> code_units 0038..003c -> 01fd
+    # catch <all> code_units 003c..003d -> 01f4
+    # catch <all> code_units 003d..005c -> 01f1
+    # catch <all> code_units 005c..00e5 -> 00e9
+    # catch <all> code_units 00e5..00e9 -> 01f1
+    # catch <all> code_units 00ea..00eb -> 00eb
+    # catch <all> code_units 00eb..01cc -> 01f1
+    # catch <all> code_units 01cc..01e3 -> 01f4
+    # catch <all> code_units 01e3..01e9 -> 01f1
+    # catch <all> code_units 01e9..01ea -> 01f4
+    # catch <all> code_units 01ea..01ed -> 01fd
+    # catch <all> code_units 01f2..01f4 -> 01f4
+    # catch <all> code_units 01f5..01f6 -> 01f6
+    # catch <all> code_units 01f7..01fd -> 01fd
+    # catch <all> code_units 01fe..01ff -> 01ff
+.end method

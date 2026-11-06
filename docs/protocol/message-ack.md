@@ -962,3 +962,28 @@ The initial regression attempted to construct a newsletter ordinary outbox chat
 and correctly failedContactId validation: ChatId supports direct/group/broadcast,
 not newsletters. Tests preserve that boundary and cover newsletter through the
 public expected-chat classifier rather than extending the model for a fixture.
+
+
+## Status persistence has state and key authority beyond ACK parsing (2026-11-06)
+
+**Confirmed selected pinned static / negative results / unknown authority.**
+[Complete privateA01, Dwc, DyI, enum/predicates, timestamp and SQL entrypoints](apk/2.26.43.72-status-ack-persistence/README.md)
+bind plain status success to a sender/remotechat/baseid key and saved row.
+Participant-null/nonemptyphash mismatch invokes reconciliation helpers before
+continuing to row lookup, not a hard ACK rejection. Repair network/ownership
+contract remains untraced; no resend added.
+
+The exact status enum establishes SENT/RECEIVED/VIEWING/VIEWED as the progressed
+set used to preserve refusal state. Success guards also protect later receipt/
+view states; SENT alone does not establish native once-only processing. DyI
+has three storage backends; the SQL path rereads state/content_proto inside a
+locked transaction and accounts for serverAckPending. The full helper/writer/
+callback/rollback contract remains open. Native state value4 here is RECEIVED,
+not evidence about integer4 passed to17f by scheduled-newsletter handling.
+
+**Confirmed compatibility:** status timestamp6ol.A06 uses the same lenient
+Java-long/default0/wrapping-times1000 behavior already ported for ordinary ACKs.
+Existing Java-oracle and status edit-admission regressions cover Rust behavior;
+no native DB test or complete parity claim. This research chunk changes no Rust
+settlement, replay, callback or account behavior. Next authority gaps are repair
+producers, DB writer/flags, multipart ownership and scheduled operations.

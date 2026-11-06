@@ -1,0 +1,49 @@
+
+# class: LX/DyI;
+# extends: LX/DyJ;
+
+.method public A0D(VLLLJ)  # .registers 14
+    # full signature: LX/DyI;->A0D(Ljava/lang/Integer;Ljava/lang/Long;Ljava/lang/String;J)V
+    0000..0004  instance-of  v0, v8, LX/E37;
+    0004..0008  if-eqz  v0, +0x1b
+    0008..000a  move-object  v2, v8
+    000a..000e  check-cast  v2, LX/E37;
+    000e..0012  iget-object  v1, v2, LX/E37;->A04:LX/2IU;
+    0012..0016  sget-object  v0, LX/1uI;->A08:LX/1uI;
+    0016..001a  iput-object  v0, v1, LX/2IU;->A03:LX/1uI;
+    001a..001e  iget-object  v0, v2, LX/E37;->A02:LX/05a;
+    001e..0024  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0024..0026  move-result-object  v0
+    0026..002a  check-cast  v0, LX/1uO;
+    002a..0030  invoke-static  {v0}, LX/1uO;->A00(LX/1uO;)LX/1uP;
+    0030..0032  move-result-object  v0
+    0032..0038  invoke-virtual  {v0, v1}, LX/1uP;->A03(LX/2IU;)LX/29t;
+    0038..003a  return-void
+    003a..003e  instance-of  v0, v8, LX/E36;
+    003e..0042  if-eqz  v0, +0x15
+    0042..0044  move-object  v1, v8
+    0044..0048  check-cast  v1, LX/E36;
+    0048..004c  iget-object  v0, v1, LX/E36;->A01:LX/05a;
+    004c..0052  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0052..0054  move-result-object  v2
+    0054..0058  check-cast  v2, LX/1uJ;
+    0058..005c  iget-object  v1, v1, LX/E36;->A03:LX/2IV;
+    005c..0060  sget-object  v0, LX/1uI;->A08:LX/1uI;
+    0060..0066  invoke-virtual  {v2, v0, v1}, LX/1uJ;->A06(LX/1uI;LX/2IV;)V
+    0066..0068  return-void
+    0068..006a  move-object  v1, v8
+    006a..006e  check-cast  v1, LX/E35;
+    006e..0072  iget-object  v0, v1, LX/E35;->A02:LX/05a;
+    0072..0078  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0078..007a  move-result-object  v0
+    007a..007e  check-cast  v0, LX/1tj;
+    007e..0082  iget-object  v1, v1, LX/E35;->A09:LX/AQ5;
+    0082..0084  const/4  v7, #0x0
+    0084..0086  move-object  v2, v9
+    0086..0088  move-object  v3, v10
+    0088..008a  move-object  v4, v11
+    008a..008c  move-wide  v5, v12
+    008c..0092  invoke-virtual/range  {v0..v7}, LX/1tj;->A0a(LX/AQ5;Ljava/lang/Integer;Ljava/lang/Long;Ljava/lang/String;JZ)V
+    0092..0094  return-void
+    # exception table: 0 try range(s)
+.end method

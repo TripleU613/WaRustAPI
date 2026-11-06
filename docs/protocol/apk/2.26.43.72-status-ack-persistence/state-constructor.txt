@@ -1,0 +1,11 @@
+
+# class: LX/1uI;
+# extends: Ljava/lang/Enum;
+
+.method public <init>(VLII)  # .registers 4
+    # full signature: LX/1uI;-><init>(Ljava/lang/String;II)V
+    0000..0006  invoke-direct  {v0, v1, v2}, Ljava/lang/Enum;-><init>(Ljava/lang/String;I)V
+    0006..000a  iput  v3, v0, LX/1uI;->value:I
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method

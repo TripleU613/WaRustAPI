@@ -1,0 +1,14 @@
+
+# class: LX/6ol;
+# extends: Ljava/lang/Object;
+
+.method public A06(JL)  # .registers 4
+    # full signature: LX/6ol;->A06(Ljava/lang/String;)J
+    0000..0004  const-wide/16  v0, #0x0
+    0004..000a  invoke-static  {v3, v0, v1}, LX/0HF;->A01(Ljava/lang/String;J)J
+    000a..000c  move-result-wide  v2
+    000c..0010  const-wide/16  v0, #0x3e8
+    0010..0012  mul-long/2addr  v2, v0
+    0012..0014  return-wide  v2
+    # exception table: 0 try range(s)
+.end method

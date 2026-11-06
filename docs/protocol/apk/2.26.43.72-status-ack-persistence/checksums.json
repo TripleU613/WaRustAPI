@@ -1,0 +1,46 @@
+{
+  "README.md": {
+    "bytes": 7112,
+    "sha256": "d458a853e8e0c4d8545152cac982a461627c44000aef1b037e8e011b8f31477c"
+  },
+  "plain-success.txt": {
+    "bytes": 6372,
+    "sha256": "d183b022524f0ac86a28a24ed62ba8ff5a0134b545638c682b9c991a9df21531"
+  },
+  "row-update.txt": {
+    "bytes": 2232,
+    "sha256": "18b8ff199e16d7cb2a0806ad1c1ecb358f0d44f4668754d8b61f64a7f61c7a57"
+  },
+  "state-constructor.txt": {
+    "bytes": 369,
+    "sha256": "c59c2cb49a1f56548a2f840cb29214bb2826fce31de8def00fb5448cf7d2f03c"
+  },
+  "state-init.txt": {
+    "bytes": 3442,
+    "sha256": "68b5c63a923f0a4f105c9772248e32f57853d76774fae97f09a2be105d326d97"
+  },
+  "state-lookup.txt": {
+    "bytes": 1045,
+    "sha256": "eeaf5568a8a7191a3cbb4725703f85cdd1e80712c451bf742efc9de4bceffc0c"
+  },
+  "state-predicates.txt": {
+    "bytes": 3268,
+    "sha256": "82d7f651d2818190c1c43c8454ab2c781d129848b4dbedea109e5aa3fb7b7d9f"
+  },
+  "status-key.txt": {
+    "bytes": 3704,
+    "sha256": "f4a040fe6d6a7970a2dbd0ce2003bfa5b42da0d2be288aaf3c8b2d4d8a5642ae"
+  },
+  "storage-dispatch.txt": {
+    "bytes": 14574,
+    "sha256": "a6b673b63f567a1f84440c0b2873392030c2533728936c12cb6a504d39b11270"
+  },
+  "storage-transaction.txt": {
+    "bytes": 14698,
+    "sha256": "ae4bf7f13701e054e70ee3a17b161bb511f6f424dacd222b9a12290427318af4"
+  },
+  "time-helper.txt": {
+    "bytes": 464,
+    "sha256": "838a10ca68fa37f15c4b493c727ad77a436e09423553931456e12f337946a649"
+  }
+}
