@@ -184,3 +184,25 @@ replaces a null or empty text with `" "`, so clearing the About sends a space.
 The 256-character bound is ours; the writer enforces none and the screen's own
 limit was not traced. "Status" is the old name for About and is unrelated to
 24-hour status posts.
+
+## Current reader/default-type audit (2026-11-06)
+
+**Confirmed pinned static and Rust correction:** APK2.26.43.72 inherited
+1rA.A03/1rF user-presence branch treats missing type as available, just like the
+explicit available string. The metadata parser now does so for supported primary PN/LID users, correcting
+the earlier untyped interpretation. Missing-type device/group metadata stays
+untyped because those routes are separate. Empty, unknown and nontext explicit types remain
+unsupported. [Complete selected methods, offsets, reproduction and limits](apk/2.26.43.72-presence-reader/README.md).
+
+**Confirmed support gaps:** native device admission and group count/offline
+routes precede this user route; the Rust metadata parser does not implement
+those state transitions. Native6qD.A00 maps missing last to currentTimeMillis,
+sentinels to zero and signed Java-long seconds through wrapping multiplication
+by1000. Rust LastSeen preserves raw absence/nonnegative seconds/sentinel text
+and still uses u64 parsing, so it is not full native timestamp projection. No
+ACK, request or account-state authority depends on this metadata parser. Full
+provider/consumer and exception policy remain open. No live operation occurred.
+
+Validation:1,449 workspace/all-feature tests passed. Strict workspace/all-target/
+all-feature Clippy, formatting, CLI reference regeneration, OpenAPI symbol
+validation, APK coverage freshness and repository hygiene passed. Offline only.

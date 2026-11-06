@@ -200,7 +200,9 @@ pub fn subscribe(to: &Jid, context: Option<&Jid>, tctoken: Option<&[u8]>) -> Res
     Ok(node)
 }
 
-/// When someone was last online, as `LX/8nc->A00` reads `last`.
+/// Supported raw last-seen metadata. This preserves absence/seconds/sentinels,
+/// not APK43.72 `6qD.A00`'s full millisecond/default-clock projection.
+/// See docs/protocol/presence.md for signed-number and routing limits.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum LastSeen {
     /// No `last` attribute.
@@ -211,13 +213,15 @@ pub enum LastSeen {
     Withheld(&'static str),
 }
 
-/// An incoming availability update, as `LX/1Qw->A02` reads it.
+/// An incoming availability update (APK43.72 `1rA.A03` / `1rF` branch).
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IncomingPresence {
     /// Whose it is.
     pub from: Jid,
     /// `Some(true)` for `type="available"`, `Some(false)` for `unavailable`,
-    /// `None` when there is no `type` (`LX/1Qw` acts on neither then).
+    /// Missing `type` means available for a primary user (APK43.72
+    /// `1rA.A03` 03c4..03e2); device/group routing remains separate.
+    /// `None` for unsupported explicit types or other untyped senders.
     pub available: Option<bool>,
     /// Their last-seen, when offline.
     pub last_seen: LastSeen,
@@ -234,10 +238,21 @@ pub fn parse_presence(node: &Node) -> Option<IncomingPresence> {
             .cloned()
             .or_else(|| Jid::parse(v.as_text()?).ok())
     })?;
-    let available = match node.get_attr("type").and_then(|v| v.as_text()) {
-        Some("available") => Some(true),
-        Some("unavailable") => Some(false),
-        _ => None,
+    let available = match node.get_attr("type") {
+        // APK43.72 1rA.A03 03c4 branches to A0x for null type too.
+        None if matches!(from.server, Server::User | Server::Lid)
+            && !from.user.is_empty()
+            && from.device == 0
+            && from.agent == 0 =>
+        {
+            Some(true)
+        }
+        None => None,
+        Some(value) => match value.as_text() {
+            Some("available") => Some(true),
+            Some("unavailable") => Some(false),
+            _ => None,
+        },
     };
     let last_seen = match node.get_attr("last").and_then(|v| v.as_text()) {
         None => LastSeen::Absent,
@@ -466,8 +481,50 @@ mod tests {
         let peer = Jid::parse("15551234567@s.whatsapp.net").unwrap();
         let online = Node::new("presence").attr("from", peer.clone());
         let parsed = parse_presence(&online).unwrap();
-        assert_eq!(parsed.available, None);
+        assert_eq!(parsed.available, Some(true));
         assert_eq!(parsed.last_seen, LastSeen::Absent);
+
+        for (kind, expected) in [
+            ("available", Some(true)),
+            ("unavailable", Some(false)),
+            ("", None),
+            ("AVAILABLE", None),
+            ("unknown", None),
+        ] {
+            let typed = online.clone().attr("type", kind);
+            assert_eq!(parse_presence(&typed).unwrap().available, expected);
+        }
+
+        assert_eq!(
+            parse_presence(&online.clone().attr("type", peer.clone()))
+                .unwrap()
+                .available,
+            None
+        );
+
+        let lid = Jid::parse("222222222222222@lid").unwrap();
+        assert_eq!(
+            parse_presence(&online.clone().attr("from", lid))
+                .unwrap()
+                .available,
+            Some(true)
+        );
+        let mut companion = peer.clone();
+        companion.device = 1;
+        let mut server = peer.clone();
+        server.user.clear();
+        for sender in [
+            companion,
+            server,
+            Jid::parse("120000000000000000@g.us").unwrap(),
+        ] {
+            assert_eq!(
+                parse_presence(&online.clone().attr("from", sender))
+                    .unwrap()
+                    .available,
+                None
+            );
+        }
 
         let offline = Node::new("presence")
             .attr("from", peer.clone())

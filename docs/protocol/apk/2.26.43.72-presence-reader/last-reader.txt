@@ -1,0 +1,32 @@
+
+# class: LX/6qD;
+# extends: Ljava/lang/Object;
+
+.method public A00(JL)  # .registers 2
+    # full signature: LX/6qD;->A00(LX/0Tp;)J
+    0000..0004  const-string  v0, "last"
+    0004..000a  invoke-static  {v1, v0}, LX/6oe;->A18(LX/0Tp;Ljava/lang/String;)Ljava/lang/String;
+    000a..000c  move-result-object  v1
+    000c..0010  if-nez  v1, +0x7
+    0010..0016  invoke-static  {}, Ljava/lang/System;->currentTimeMillis()J
+    0016..0018  move-result-wide  v0
+    0018..001a  return-wide  v0
+    001a..001e  const-string  v0, "deny"
+    001e..0024  invoke-virtual  {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0024..0026  move-result  v0
+    0026..002a  if-nez  v0, +0x17
+    002a..002e  const-string  v0, "error"
+    002e..0034  invoke-virtual  {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0034..0036  move-result  v0
+    0036..003a  if-nez  v0, +0xf
+    003a..003e  const-string  v0, "none"
+    003e..0044  invoke-virtual  {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0044..0046  move-result  v0
+    0046..004a  if-nez  v0, +0x7
+    004a..0050  invoke-static  {v1}, LX/6oe;->A03(Ljava/lang/String;)J
+    0050..0052  move-result-wide  v0
+    0052..0054  return-wide  v0
+    0054..0058  const-wide/16  v0, #0x0
+    0058..005a  return-wide  v0
+    # exception table: 0 try range(s)
+.end method

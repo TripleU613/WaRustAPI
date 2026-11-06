@@ -17877,5 +17877,12 @@
   "x-live": false,
   "description": "Canonical direct-send retry-source retention creates absent records, accepts identical bytes and refuses conflicting/malformed existing values. Saved-session and fresh-bundle resend commits require the exact source snapshot used for crypto; conflicts roll back reservation/session/outbox writes. No checkpoint repair, socket lock, native storage-format claim, replay or live verification.",
   "evidence": "docs/protocol/retry-answers.md#original-retry-plaintext-retention-and-commit-binding-2026-11-06"
+},
+  "x-presence-missing-type-reader-audit": {
+  "x-cli": true,
+  "x-transport": true,
+  "x-live": false,
+  "description": "Existing library/CLI presence metadata parser treats missing type as available for supported primary PN/LID users, matching APK43.72 1rA.A03/1rF user branch. Explicit unsupported/nontext types remain unsupported. This metadata parser does not authorize requests/ACKs/account changes; device/group routing, signed Java-long last-seen and millisecond/default-clock parity remain incomplete. No live verification.",
+  "evidence": "docs/protocol/presence.md#current-readerdefault-type-audit-2026-11-06"
 }
 }

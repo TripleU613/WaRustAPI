@@ -1,0 +1,135 @@
+["deny"]  (18 reference(s))
+  classes.dex  LX/0Fn;->onReceive(VLL)
+    dex byte offset: 0x52a38e
+  classes.dex  LX/0Fo;->A00(VLLL)
+    dex byte offset: 0x52a610
+  classes.dex  LX/0Fo;->A00(VLLL)
+    dex byte offset: 0x52a668
+  classes.dex  LX/0Fo;->A00(VLLL)
+    dex byte offset: 0x52a690
+  classes.dex  LX/17H;->onReceive(VLL)
+    dex byte offset: 0x81f99a
+  classes.dex  LX/17H;->onReceive(VLL)
+    dex byte offset: 0x81f9a0
+  classes.dex  LX/17H;->onReceive(VLL)
+    dex byte offset: 0x81fa82
+  classes.dex  LX/19b;->A09(VLI)
+    dex byte offset: 0x836d4a
+  classes10.dex  LX/KU9;->run(V)
+    dex byte offset: 0x622f22
+  classes11.dex  LX/KuO;->onStartCommand(ILII)
+    dex byte offset: 0x386a68
+  classes11.dex  LX/N9v;->emit(LLL)
+    dex byte offset: 0x750316
+  classes2.dex  LX/1ro;-><clinit>(V)
+    dex byte offset: 0x15efae
+  classes4.dex  Lcom/whatsapp/hatch/conversation/approval/BrowserCheckoutApprovalCardView;->A05(ZLL)
+    dex byte offset: 0x450c50
+  classes4.dex  LX/4ZO;-><clinit>(V)
+    dex byte offset: 0x322336
+  classes4.dex  LX/4Zz;-><clinit>(V)
+    dex byte offset: 0x3234ee
+  classes4.dex  LX/4aE;-><clinit>(V)
+    dex byte offset: 0x32408e
+  classes5.dex  LX/6qD;->A00(JL)
+    dex byte offset: 0x246ee6
+  classes7.dex  LX/CYJ;->Bch(VLLLL)
+    dex byte offset: 0x5037b4
+["last"]  (33 reference(s))
+  classes.dex  LX/0oe;-><clinit>(V)
+    dex byte offset: 0x3a2ad0
+  classes.dex  LX/0oe;->A0R(VL)
+    dex byte offset: 0x6f92c6
+  classes.dex  LX/0pD;->A06(LLLLIZ)
+    dex byte offset: 0x70b8a4
+  classes10.dex  LX/KWV;->invoke(L)
+    dex byte offset: 0x656e9e
+  classes12.dex  LX/P5y;-><clinit>(V)
+    dex byte offset: 0x34c5fe
+  classes12.dex  LX/Piw;->A00(VLLLLLCCZZZZZ)
+    dex byte offset: 0x540092
+  classes2.dex  LX/1ro;-><clinit>(V)
+    dex byte offset: 0x15ec42
+  classes5.dex  LX/6qD;->A00(JL)
+    dex byte offset: 0x246ecc
+  classes5.dex  LX/6u1;->A00(LL)
+    dex byte offset: 0x263586
+  classes5.dex  LX/7Ty;-><init>(V)
+    dex byte offset: 0x31dde8
+  classes5.dex  Lcom/whatsapp/lastseen/PresencePrivacyActivity;->A0c(VL)
+    dex byte offset: 0x399d26
+  classes5.dex  Lcom/whatsapp/lastseen/PresencePrivacyActivity;->A0i(VLIZ)
+    dex byte offset: 0x399e88
+  classes5.dex  Lcom/whatsapp/privacy/MexPrivacyContactListHandler;->A00(LLLLZ)
+    dex byte offset: 0x3bfccc
+  classes5.dex  Lcom/whatsapp/privacy/MexSetPrivacySettingsHandler;->A01(LLLL)
+    dex byte offset: 0x3c9b4a
+  classes5.dex  LX/83S;->A01(LL)
+    dex byte offset: 0x3f5104
+  classes5.dex  LX/8AX;->A01(LL)
+    dex byte offset: 0x4378c0
+  classes5.dex  LX/8AX;->A04(ZLIZZ)
+    dex byte offset: 0x437bf4
+  classes5.dex  LX/8Qs;->BdA(VL)
+    dex byte offset: 0x4af38e
+  classes5.dex  LX/8ck;->invoke(L)
+    dex byte offset: 0x517c74
+  classes5.dex  LX/8iZ;->invokeSuspend(LL)
+    dex byte offset: 0x5976c2
+  classes7.dex  LX/CuL;->run(V)
+    dex byte offset: 0x5945c8
+  classes8.dex  LX/DBv;->A00(LL)
+    dex byte offset: 0x3e72c0
+  classes8.dex  LX/FTI;->C05(VLLL)
+    dex byte offset: 0x7a4690
+  classes9.dex  LX/G6u;-><init>(VILZ)
+    dex byte offset: 0x3c9642
+  classes9.dex  Lcom/whatsapp/systemstatus/ui/SystemStatusActivity;->onCreate(VL)
+    dex byte offset: 0x4aeb84
+  classes9.dex  Lcom/whatsapp/systemstatus/ui/SystemStatusActivity;->onCreate(VL)
+    dex byte offset: 0x4aed30
+  classes9.dex  Lcom/whatsapp/systemstatus/ui/SystemStatusActivity;->onCreate(VL)
+    dex byte offset: 0x4aee0c
+  classes9.dex  Lcom/whatsapp/settings/ui/privacy/SettingsPrivacy;->A0X(LL)
+    dex byte offset: 0x4f7f30
+  classes9.dex  Lcom/whatsapp/settings/ui/privacy/SettingsPrivacy;->A10(VL)
+    dex byte offset: 0x4f84b8
+  classes9.dex  Lcom/whatsapp/settings/ui/privacy/SettingsPrivacy;->A5f(V)
+    dex byte offset: 0x4f864c
+  classes9.dex  Lcom/whatsapp/settings/ui/privacy/SettingsPrivacy;->CHI(VII)
+    dex byte offset: 0x4f8818
+  classes9.dex  Lcom/whatsapp/settings/ui/privacy/SettingsPrivacy;->onCreate(VL)
+    dex byte offset: 0x4f8ece
+  classes9.dex  LX/HxV;->A0H(LL)
+    dex byte offset: 0x6f12fa
+["presence"]  (15 reference(s))
+  classes.dex  LX/0YU;->handleMessage(VL)
+    dex byte offset: 0x5e5414
+  classes.dex  LX/0v0;->A00(VL)
+    dex byte offset: 0x738338
+  classes.dex  LX/0v0;->A00(VL)
+    dex byte offset: 0x7385c8
+  classes.dex  LX/0v0;->A00(VL)
+    dex byte offset: 0x739d02
+  classes.dex  LX/0v0;->A00(VL)
+    dex byte offset: 0x73a2b2
+  classes.dex  LX/0v0;->A00(VL)
+    dex byte offset: 0x73a31e
+  classes2.dex  LX/1lZ;->A0F(LLLLJ)
+    dex byte offset: 0x2073f8
+  classes2.dex  LX/1rA;->A02(L)
+    dex byte offset: 0x240458
+  classes2.dex  LX/1rA;->A03(VL)
+    dex byte offset: 0x240860
+  classes2.dex  LX/1rJ;->A03(VL)
+    dex byte offset: 0x241eac
+  classes2.dex  LX/1rj;->A01(V)
+    dex byte offset: 0x245a86
+  classes2.dex  LX/1ro;-><clinit>(V)
+    dex byte offset: 0x15e92a
+  classes3.dex  LX/2md;->getFieldsMapForFalco(L)
+    dex byte offset: 0x27b994
+  classes9.dex  Lcom/whatsapp/suggestions/SuggestionsEngine;->A05(LLLLLLIZ)
+    dex byte offset: 0x620438
+  classes9.dex  Lcom/whatsapp/suggestions/SuggestionsEngine;->A05(LLLLLLIZ)
+    dex byte offset: 0x62060a
