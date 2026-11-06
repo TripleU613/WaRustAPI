@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "bytes": 4982,
+    "sha256": "ffb014e27873df5836f42674a976827f94441751b02f02c3980ef50da051c795"
+  },
+  "config-reader.txt": {
+    "bytes": 377,
+    "sha256": "ce651c22d474a91b73079a40e93fb10cda6902f8b8243d17daa4616dfda500e9"
+  },
+  "config-resolution.txt": {
+    "bytes": 1073,
+    "sha256": "8d09d9989ef28e2dd7bd31706cf93cc99d9fa932c7cea63465dbefbd6df87570"
+  },
+  "consumer-factory.txt": {
+    "bytes": 313,
+    "sha256": "8dd86d9852d9b67e5a6ce994530720eece173f30e58e8380380d2ce9c24efd83"
+  },
+  "hold-constructor.txt": {
+    "bytes": 2273,
+    "sha256": "90b5cb382df2c6387d88863a0066ef4a5f63414ecdff9d54ddb013b2e27d9863"
+  },
+  "hold-factory.txt": {
+    "bytes": 313,
+    "sha256": "75cf02e4dbafe9aa22d808bcfba11b5b5127e9d3820c3fb90ab7353149f2322f"
+  },
+  "ordered-head-snapshot.txt": {
+    "bytes": 1171,
+    "sha256": "916de2a300a3bcfe3ef1bd3b8935560615ff38e3121b81149904b697a408249d"
+  },
+  "provider-bindings.txt": {
+    "bytes": 42742,
+    "sha256": "9b5098a540e5115973a1b6f1345fe62848bbc7da66f478d1f93ba146983e8001"
+  },
+  "provider-dispatch.txt": {
+    "bytes": 3374,
+    "sha256": "f852095f305051f8344d087a0efeb3f6742c3538d9cdde11fe11f74e2f7dda7e"
+  },
+  "provider-range.txt": {
+    "bytes": 51778,
+    "sha256": "7c697c7e3e1c45ccef430c1ca605953a5a17fc0bab323e1a2e42bbe9d00df77e"
+  }
+}

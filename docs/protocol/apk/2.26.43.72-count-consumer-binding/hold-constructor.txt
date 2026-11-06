@@ -1,0 +1,43 @@
+
+# class: LX/1k7;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 3
+    # full signature: LX/1k7;-><init>()V
+    0000..0006  invoke-direct  {v2}, Ljava/lang/Object;-><init>()V
+    0006..000a  const/16  v0, #0x41c3
+    000a..0010  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0010..0012  move-result-object  v0
+    0012..0016  iput-object  v0, v2, LX/1k7;->A04:LX/05a;
+    0016..001a  const/16  v0, #0xdc4
+    001a..0020  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0020..0022  move-result-object  v0
+    0022..0026  iput-object  v0, v2, LX/1k7;->A03:LX/05a;
+    0026..002a  const/16  v0, #0x6f
+    002a..0030  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0030..0032  move-result-object  v0
+    0032..0036  iput-object  v0, v2, LX/1k7;->A07:LX/05a;
+    0036..003a  const/16  v0, #0xd04
+    003a..0040  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0040..0042  move-result-object  v0
+    0042..0046  iput-object  v0, v2, LX/1k7;->A05:LX/05a;
+    0046..0048  const/4  v0, #0x5
+    0048..004e  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    004e..0050  move-result-object  v0
+    0050..0054  iput-object  v0, v2, LX/1k7;->A06:LX/05a;
+    0054..0056  const/4  v1, #0x0
+    0056..005a  new-instance  v0, Ljava/util/concurrent/atomic/AtomicBoolean;
+    005a..0060  invoke-direct  {v0, v1}, Ljava/util/concurrent/atomic/AtomicBoolean;-><init>(Z)V
+    0060..0064  iput-object  v0, v2, LX/1k7;->A0A:Ljava/util/concurrent/atomic/AtomicBoolean;
+    0064..0068  new-instance  v0, Ljava/util/concurrent/atomic/AtomicInteger;
+    0068..006e  invoke-direct  {v0, v1}, Ljava/util/concurrent/atomic/AtomicInteger;-><init>(I)V
+    006e..0072  iput-object  v0, v2, LX/1k7;->A0B:Ljava/util/concurrent/atomic/AtomicInteger;
+    0072..0076  new-instance  v0, Ljava/lang/Object;
+    0076..007c  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    007c..0080  iput-object  v0, v2, LX/1k7;->A08:Ljava/lang/Object;
+    0080..0084  new-instance  v0, Ljava/util/concurrent/atomic/AtomicBoolean;
+    0084..008a  invoke-direct  {v0, v1}, Ljava/util/concurrent/atomic/AtomicBoolean;-><init>(Z)V
+    008a..008e  iput-object  v0, v2, LX/1k7;->A09:Ljava/util/concurrent/atomic/AtomicBoolean;
+    008e..0090  return-void
+    # exception table: 0 try range(s)
+.end method

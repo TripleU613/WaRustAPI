@@ -1445,3 +1445,20 @@ kem_upload_children inside its reservation transaction, even with no selected
 KEM rows; that helper derives private.public and compares the identity public.
 This pass added no redundant guard or new private-key policy. Existing factory
 and direct signed-key validation remain distinct from this check.
+
+### Count queue consumer construction is resolved (2026-11-05)
+
+**Confirmed static, APK2.26.43.72:** queue1ix provider0xd04 follows1Uw.A00
+page0 ->A01 range(0xc10,0xd29] ->A0T case3332 ->0Zy.A0J ->new1iz.
+This closes the selected stable-provider construction unknown:1iz inherits
+base1il.CHt and uses its0x6f06 configuration branch. It does not use the
+separate1in/1iw ordered overrides on that construction path.
+
+The1iz hold-owner binding0xd09 resolves through case3337 ->0Zy.A0I ->new1k7;
+its A0A AtomicBoolean initializes false. Later mutation/value/release is open.
+00E.A15 passes null Boolean to A0D, not false; neither the declared default
+nor effective0x6f06 value is established. Shared provider-cache lifetime,
+pause/hold/capacity/CAS, rejection and crash boundaries remain distinct from
+job execution, ACK ordering or disk/server confirmation.
+[Complete branch exports, reproduction and limits](apk/2.26.43.72-count-consumer-binding/README.md).
+No Rust runtime change, replay authority or live operation.

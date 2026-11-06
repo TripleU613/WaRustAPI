@@ -17401,5 +17401,12 @@
     "x-live": false,
     "description": "Static 2.26.43.72 evidence: FgR selector8 removes cache entries by completion-key membership, counting non-QUEUED removals for a negative optional callback delta. Base 1il.CHt ignores the remaining-count argument and schedules only through A06 configuration; selected 1in/1iw overrides differ. Physical declaration census does not resolve effective DI/configuration. No Rust queue port, ACK-order guarantee or replay authority is added.",
     "evidence": "docs/protocol/apk/2.26.43.72-count-completion-rescheduling/README.md"
+  },
+  "x-apk-count-consumer-binding": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Static 2.26.43.72 provider trace resolves unordered queue binding 0xd04 through 1Uw and 0Zy.A0J to new 1iz, supporting its inherited base CHt/config0x6f06 branch. Hold-owner binding 0xd09 constructs 1k7 with A0A initially false. Config A15 passes null fallback, not false; effective/default values, hold mutation, runtime scheduling and ACK/disk/server ordering remain unproven. No Rust queue port or replay authority.",
+    "evidence": "docs/protocol/apk/2.26.43.72-count-consumer-binding/README.md"
   }
 }

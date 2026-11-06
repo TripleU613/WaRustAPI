@@ -1,0 +1,27 @@
+
+# class: LX/1k7;
+# extends: Ljava/lang/Object;
+
+.method public A00(LL)  # .registers 3
+    # full signature: LX/1k7;->A00(LX/1k7;)LX/1k9;
+    0000..0004  iget-object  v0, v2, LX/1k7;->A04:LX/05a;
+    0004..0008  iget-object  v1, v0, LX/05a;->A00:LX/00x;
+    0008..000e  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    000e..0010  move-result-object  v0
+    0010..0014  check-cast  v0, LX/1ic;
+    0014..001a  invoke-static  {v0}, LX/1ic;->A04(LX/1ic;)LX/1if;
+    001a..001c  move-result-object  v0
+    001c..0022  invoke-virtual  {v0}, LX/1id;->A0A()LX/2DG;
+    0022..0024  move-result-object  v2
+    0024..002a  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    002a..002c  move-result-object  v0
+    002c..0030  check-cast  v0, LX/1ic;
+    0030..0036  invoke-static  {v0}, LX/1ic;->A02(LX/1ic;)LX/1iu;
+    0036..0038  move-result-object  v0
+    0038..003e  invoke-virtual  {v0}, LX/1id;->A0A()LX/2DG;
+    003e..0040  move-result-object  v1
+    0040..0044  new-instance  v0, LX/1k9;
+    0044..004a  invoke-direct  {v0, v2, v1}, LX/1k9;-><init>(LX/2DG;LX/2DG;)V
+    004a..004c  return-object  v0
+    # exception table: 0 try range(s)
+.end method

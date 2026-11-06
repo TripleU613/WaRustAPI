@@ -1,3 +1,8 @@
+Native count queue provider0xd04 now resolves to a concrete1iz construction,
+confirming the selected inherited completion/configuration branch. Hold starts
+false; later hold state and effective configuration remain unproven.
+[Evidence](docs/protocol/apk/2.26.43.72-count-consumer-binding/README.md).
+
 Native count completion now has traced key-based cache removal, non-QUEUED
 count adjustment and conditional consumer rescheduling. These remain separate
 from disk retirement and server confirmation; effective DI/config is still open.
