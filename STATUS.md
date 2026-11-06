@@ -1,3 +1,8 @@
+Current notification census retains34 base-handler constructor bindings.
+Selected server_sync/server handlers expose collection/bootstrap/configuration
+obligations still absent from Rust; no generic ACK inferred.
+[Evidence](docs/protocol/apk/2.26.43.72-notification-handler-census/README.md).
+
 Current APK binary reader/writer confirms selected zero-device ACK pair
 normalization. Picture actor regression expanded to zero/nonzero PN/LID sender
 and participant forms; no runtime policy change.

@@ -1,0 +1,12 @@
+# Bounded constructor prefix; complete export SHA-256: 2a6d307ae0bfcd75b3cfe5a733661c4f90ffdb9f82f3bb40db9dcb2bebd1f793
+
+# class: LX/10I;
+# extends: LX/0v6;
+
+.method public <init>(V)  # .registers 4
+    # full signature: LX/10I;-><init>()V
+    0000..0004  const/16  v0, #0xcc
+    0004..000a  filled-new-array  {v0}, [I
+    000a..000c  move-result-object  v1
+    000c..000e  const/4  v0, #0x1
+    000e..0014  invoke-direct  {v3, v1, v0}, LX/0v6;-><init>([IZ)V

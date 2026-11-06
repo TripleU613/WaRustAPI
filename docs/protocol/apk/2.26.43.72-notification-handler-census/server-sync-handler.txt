@@ -1,0 +1,315 @@
+
+# class: LX/14l;
+# extends: LX/0v6;
+
+.method public <init>(V)  # .registers 3
+    # full signature: LX/14l;-><init>()V
+    0000..0004  const/16  v0, #0xd2
+    0004..000a  filled-new-array  {v0}, [I
+    000a..000c  move-result-object  v1
+    000c..000e  const/4  v0, #0x1
+    000e..0014  invoke-direct  {v2, v1, v0}, LX/0v6;-><init>([IZ)V
+    0014..0016  const/4  v0, #0x5
+    0016..001c  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    001c..001e  move-result-object  v0
+    001e..0022  iput-object  v0, v2, LX/14l;->A02:LX/05a;
+    0022..0026  const/16  v0, #0xd37
+    0026..002c  invoke-static  {v0}, LX/05W;->A00(I)LX/05a;
+    002c..002e  move-result-object  v0
+    002e..0032  iput-object  v0, v2, LX/14l;->A00:LX/05a;
+    0032..0036  const/16  v0, #0xa28
+    0036..003c  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    003c..003e  move-result-object  v0
+    003e..0042  iput-object  v0, v2, LX/14l;->A01:LX/05a;
+    0042..0046  new-instance  v0, Ljava/util/LinkedHashMap;
+    0046..004c  invoke-direct  {v0}, Ljava/util/LinkedHashMap;-><init>()V
+    004c..0050  iput-object  v0, v2, LX/14l;->A03:Ljava/util/Map;
+    0050..0052  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A09(VLI)  # .registers 26
+    # full signature: LX/14l;->A09(LX/0Tp;I)V
+    0000..0002  const/4  v4, #0x1
+    0002..0006  move-object/from16  v8, v24
+    0006..000c  invoke-static  {v8, v4}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000c..0010  const/16  v0, #0xd2
+    0010..0014  move/from16  v1, v25
+    0014..0018  if-ne  v1, v0, +0x210
+    0018..001a  const/4  v14, #0x0
+    001a..001e  sget-object  v12, LX/0mL;->A00:LX/0mL;
+    001e..0022  const-string  v20, "server_sync"
+    0022..0026  const-string  v0, "notification"
+    0026..002c  invoke-static  {v8, v0}, LX/0Tp;->A01(LX/0Tp;Ljava/lang/String;)V
+    002c..0030  new-instance  v7, LX/8B6;
+    0030..0036  invoke-direct  {v7}, Ljava/lang/Object;-><init>()V
+    0036..003a  new-array  v13, v4, [Ljava/lang/String;
+    003a..003e  const-string  v0, "from"
+    003e..0042  aput-object  v0, v13, v14
+    0042..0046  const-class  v9, LX/0mL;
+    0046..0050  const-wide  v0, #0xffe0000000000001 (-9007199254740991)
+    0050..0056  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0056..0058  move-result-object  v10
+    0058..0062  const-wide  v0, #0x1fffffffffffff (9007199254740991)
+    0062..0068  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0068..006a  move-result-object  v11
+    006a..0070  invoke-virtual/range  {v7..v14}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    0070..0072  move-result-object  v0
+    0072..0076  if-eqz  v0, +0x1d9
+    0076..007a  new-array  v1, v4, [Ljava/lang/String;
+    007a..0080  const-string/jumbo  v0, "type"
+    0080..0084  aput-object  v0, v1, v14
+    0084..0088  const-class  v17, Ljava/lang/String;
+    0088..008a  const/4  v2, #0x0
+    008a..008c  move-object  v15, v7
+    008c..0090  move-object/from16  v16, v8
+    0090..0094  move-object/from16  v18, v10
+    0094..0098  move-object/from16  v19, v11
+    0098..009c  move-object/from16  v21, v1
+    009c..00a0  move/from16  v22, v14
+    00a0..00a6  invoke-virtual/range  {v15..v22}, LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    00a6..00a8  move-result-object  v0
+    00a8..00ac  if-eqz  v0, +0x1b6
+    00ac..00b0  sget-object  v6, LX/88L;->A00:LX/88L;
+    00b0..00b2  const/4  v0, #0x5
+    00b2..00b6  new-instance  v1, LX/8RO;
+    00b6..00bc  invoke-direct  {v1, v6, v0}, LX/8RO;-><init>(Ljava/lang/Object;I)V
+    00bc..00c0  new-array  v0, v14, [Ljava/lang/String;
+    00c0..00c6  invoke-virtual  {v7, v8, v1, v0}, LX/8B6;->A0H(LX/0Tp;LX/8oe;[Ljava/lang/String;)Ljava/lang/Object;
+    00c6..00c8  move-result-object  v1
+    00c8..00cc  check-cast  v1, LX/7Nb;
+    00cc..00d0  if-eqz  v1, +0x19c
+    00d0..00d4  new-array  v5, v4, [Ljava/lang/String;
+    00d4..00d8  const-string  v0, "delete_all_data"
+    00d8..00dc  aput-object  v0, v5, v14
+    00dc..00de  const/4  v3, #0x6
+    00de..00e2  new-instance  v0, LX/8RO;
+    00e2..00e8  invoke-direct  {v0, v6, v3}, LX/8RO;-><init>(Ljava/lang/Object;I)V
+    00e8..00ee  invoke-virtual  {v7, v8, v0, v5}, LX/8B6;->A0G(LX/0Tp;LX/8oe;[Ljava/lang/String;)Ljava/lang/Object;
+    00ee..00f2  new-array  v10, v4, [Ljava/lang/String;
+    00f2..00f6  const-string  v0, "collection"
+    00f6..00fa  aput-object  v0, v10, v14
+    00fa..00fc  const/4  v0, #0x7
+    00fc..0100  new-instance  v9, LX/8RO;
+    0100..0106  invoke-direct  {v9, v6, v0}, LX/8RO;-><init>(Ljava/lang/Object;I)V
+    0106..010a  const-wide/16  v11, #0x0
+    010a..010e  const-wide/16  v13, #0x14
+    010e..0114  invoke-virtual/range  {v7..v14}, LX/8B6;->A0M(LX/0Tp;LX/8oe;[Ljava/lang/String;JJ)Ljava/util/ArrayList;
+    0114..0116  move-result-object  v8
+    0116..011a  if-eqz  v8, +0x16f
+    011a..011e  const/16  v3, #0xd24
+    011e..0122  move-object/from16  v7, v23
+    0122..0126  iget-object  v0, v7, LX/14l;->A02:LX/05a;
+    0126..012a  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    012a..0130  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0130..0132  move-result-object  v0
+    0132..0136  check-cast  v0, LX/00X;
+    0136..013c  invoke-virtual  {v0}, LX/00X;->A01()LX/00Y;
+    013c..013e  move-result-object  v0
+    013e..0144  invoke-static  {v0, v3}, LX/09H;->A00(LX/00Y;I)LX/05a;
+    0144..0146  move-result-object  v0
+    0146..014a  iget-object  v6, v0, LX/05a;->A00:LX/00x;
+    014a..0150  invoke-interface  {v6}, LX/00x;->get()Ljava/lang/Object;
+    0150..0152  move-result-object  v4
+    0152..0156  check-cast  v4, LX/1iC;
+    0156..015a  iget-object  v0, v4, LX/1iC;->A00:Ljava/util/concurrent/atomic/AtomicBoolean;
+    015a..0160  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->get()Z
+    0160..0162  move-result  v0
+    0162..0166  if-eqz  v0, +0x2e
+    0166..016a  iget-object  v3, v4, LX/1iC;->A07:Ljava/util/concurrent/atomic/AtomicInteger;
+    016a..016e  iget-object  v0, v4, LX/1iC;->A06:Ljava/util/concurrent/atomic/AtomicInteger;
+    016e..0174  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicInteger;->getAndIncrement()I
+    0174..0176  move-result  v0
+    0176..017c  invoke-virtual  {v3, v0}, Ljava/util/concurrent/atomic/AtomicInteger;->set(I)V
+    017c..0182  invoke-static  {v4}, LX/1iC;->A00(LX/1iC;)LX/0BX;
+    0182..0184  move-result-object  v5
+    0184..018a  invoke-virtual  {v3}, Ljava/util/concurrent/atomic/AtomicInteger;->get()I
+    018a..018c  move-result  v4
+    018c..0190  const-string  v0, "on_sync_d_"
+    0190..0194  new-instance  v3, Ljava/lang/StringBuilder;
+    0194..019a  invoke-direct  {v3, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    019a..01a0  invoke-virtual  {v3, v4}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    01a0..01a4  const-string  v0, "_start"
+    01a4..01aa  invoke-virtual  {v3, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    01aa..01b0  invoke-virtual  {v3}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    01b0..01b2  move-result-object  v3
+    01b2..01b8  const  v0, #0x10d0116c
+    01b8..01be  invoke-interface  {v5, v0, v3}, LX/0BX;->markerPoint(ILjava/lang/String;)V
+    01be..01c2  new-instance  v3, Ljava/util/LinkedHashMap;
+    01c2..01c8  invoke-direct  {v3}, Ljava/util/LinkedHashMap;-><init>()V
+    01c8..01ce  invoke-virtual  {v8}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+    01ce..01d0  move-result-object  v12
+    01d0..01d6  invoke-interface  {v12}, Ljava/util/Iterator;->hasNext()Z
+    01d6..01d8  move-result  v0
+    01d8..01dc  if-eqz  v0, +0x39
+    01dc..01e2  invoke-interface  {v12}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    01e2..01e4  move-result-object  v0
+    01e4..01e8  check-cast  v0, LX/7NX;
+    01e8..01ec  iget-object  v11, v0, LX/7NX;->A02:Ljava/lang/String;
+    01ec..01f0  iget-wide  v4, v0, LX/7NX;->A00:J
+    01f0..01f6  invoke-virtual  {v11}, Ljava/lang/String;->length()I
+    01f6..01f8  move-result  v0
+    01f8..01fc  if-eqz  v0, -0x14
+    01fc..0202  invoke-static  {v4, v5}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0202..0204  move-result-object  v0
+    0204..020a  invoke-interface  {v3, v11, v0}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    020a..020e  iget-object  v0, v1, LX/7Nb;->A02:Ljava/lang/Object;
+    020e..0212  if-eqz  v0, -0x1f
+    0212..0216  iget-object  v10, v7, LX/14l;->A03:Ljava/util/Map;
+    0216..021c  invoke-interface  {v10, v11}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    021c..021e  move-result-object  v0
+    021e..0222  check-cast  v0, Ljava/lang/Number;
+    0222..0226  if-eqz  v0, +0x11
+    0226..022c  invoke-virtual  {v0}, Ljava/lang/Number;->longValue()J
+    022c..022e  move-result-wide  v8
+    022e..0232  const-wide/16  v4, #0x1
+    0232..0234  add-long/2addr  v8, v4
+    0234..023a  invoke-static  {v8, v9}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    023a..023c  move-result-object  v0
+    023c..0242  invoke-interface  {v10, v11, v0}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0242..0244  goto  -0x39
+    0244..0248  const-wide/16  v8, #0x0
+    0248..024a  goto  -0xd
+    024a..0250  invoke-interface  {v6}, LX/00x;->get()Ljava/lang/Object;
+    0250..0252  move-result-object  v1
+    0252..0256  check-cast  v1, LX/1iC;
+    0256..025a  iget-object  v0, v1, LX/1iC;->A00:Ljava/util/concurrent/atomic/AtomicBoolean;
+    025a..0260  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->get()Z
+    0260..0262  move-result  v0
+    0262..0266  if-eqz  v0, +0x25
+    0266..026c  invoke-static  {v1}, LX/1iC;->A00(LX/1iC;)LX/0BX;
+    026c..026e  move-result-object  v5
+    026e..0272  iget-object  v0, v1, LX/1iC;->A07:Ljava/util/concurrent/atomic/AtomicInteger;
+    0272..0278  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicInteger;->get()I
+    0278..027a  move-result  v4
+    027a..027e  const-string  v0, "on_sync_d_update_"
+    027e..0282  new-instance  v1, Ljava/lang/StringBuilder;
+    0282..0288  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0288..028e  invoke-virtual  {v1, v4}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    028e..0292  const-string  v0, "_start"
+    0292..0298  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0298..029e  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    029e..02a0  move-result-object  v1
+    02a0..02a6  const  v0, #0x10d0116c
+    02a6..02ac  invoke-interface  {v5, v0, v1}, LX/0BX;->markerPoint(ILjava/lang/String;)V
+    02ac..02b0  iget-object  v0, v7, LX/14l;->A00:LX/05a;
+    02b0..02b4  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    02b4..02ba  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    02ba..02bc  move-result-object  v0
+    02bc..02c0  check-cast  v0, LX/1wf;
+    02c0..02c4  iget-object  v0, v0, LX/1wf;->A00:LX/05a;
+    02c4..02c8  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    02c8..02ce  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    02ce..02d0  move-result-object  v5
+    02d0..02d4  check-cast  v5, LX/0aS;
+    02d4..02da  invoke-virtual  {v5}, LX/0aS;->A0c()Z
+    02da..02dc  move-result  v0
+    02dc..02e0  if-nez  v0, +0x11
+    02e0..02e4  iget-object  v0, v5, LX/0aS;->A0Y:LX/09Z;
+    02e4..02ea  invoke-static  {v0}, LX/09Z;->A00(LX/09Z;)Landroid/content/SharedPreferences;
+    02ea..02ec  move-result-object  v1
+    02ec..02f0  const-string  v0, "companion_syncd_critical_bootstrap_state"
+    02f0..02f6  invoke-interface  {v1, v0, v2}, Landroid/content/SharedPreferences;->getInt(Ljava/lang/String;I)I
+    02f6..02f8  move-result  v1
+    02f8..02fa  const/4  v0, #0x1
+    02fa..02fe  if-ne  v1, v0, +0x2f
+    02fe..0304  invoke-interface  {v3}, Ljava/util/Map;->entrySet()Ljava/util/Set;
+    0304..0306  move-result-object  v0
+    0306..030c  invoke-interface  {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    030c..030e  move-result-object  v4
+    030e..0314  invoke-interface  {v4}, Ljava/util/Iterator;->hasNext()Z
+    0314..0316  move-result  v0
+    0316..031a  if-eqz  v0, +0x1e
+    031a..0320  invoke-interface  {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0320..0322  move-result-object  v0
+    0322..0326  check-cast  v0, Ljava/util/Map$Entry;
+    0326..032a  iget-object  v3, v5, LX/0aS;->A0J:LX/0l8;
+    032a..0330  invoke-interface  {v0}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+    0330..0332  move-result-object  v2
+    0332..0336  check-cast  v2, Ljava/lang/String;
+    0336..033c  invoke-interface  {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+    033c..033e  move-result-object  v0
+    033e..0342  check-cast  v0, Ljava/lang/Number;
+    0342..0348  invoke-virtual  {v0}, Ljava/lang/Number;->longValue()J
+    0348..034a  move-result-wide  v0
+    034a..0350  invoke-virtual  {v3, v2, v0, v1}, LX/0l8;->A07(Ljava/lang/String;J)V
+    0350..0352  goto  -0x21
+    0352..0358  invoke-virtual  {v5}, LX/0aS;->A0P()V
+    0358..035e  invoke-interface  {v6}, LX/00x;->get()Ljava/lang/Object;
+    035e..0360  move-result-object  v7
+    0360..0364  check-cast  v7, LX/1iC;
+    0364..0368  iget-object  v0, v7, LX/1iC;->A00:Ljava/util/concurrent/atomic/AtomicBoolean;
+    0368..036e  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->get()Z
+    036e..0370  move-result  v0
+    0370..0374  if-eqz  v0, +0x62
+    0374..037a  invoke-static  {v7}, LX/1iC;->A00(LX/1iC;)LX/0BX;
+    037a..037c  move-result-object  v3
+    037c..0380  iget-object  v6, v7, LX/1iC;->A07:Ljava/util/concurrent/atomic/AtomicInteger;
+    0380..0386  invoke-virtual  {v6}, Ljava/util/concurrent/atomic/AtomicInteger;->get()I
+    0386..0388  move-result  v2
+    0388..038c  const-string  v1, "on_sync_d_update_"
+    038c..0390  new-instance  v0, Ljava/lang/StringBuilder;
+    0390..0396  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0396..039c  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    039c..03a0  const-string  v5, "_end"
+    03a0..03a6  invoke-virtual  {v0, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    03a6..03ac  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    03ac..03ae  move-result-object  v0
+    03ae..03b4  const  v4, #0x10d0116c
+    03b4..03ba  invoke-interface  {v3, v4, v0}, LX/0BX;->markerPoint(ILjava/lang/String;)V
+    03ba..03c0  invoke-static  {v7}, LX/1iC;->A00(LX/1iC;)LX/0BX;
+    03c0..03c2  move-result-object  v3
+    03c2..03c8  invoke-virtual  {v6}, Ljava/util/concurrent/atomic/AtomicInteger;->get()I
+    03c8..03ca  move-result  v2
+    03ca..03ce  const-string  v1, "on_sync_d_"
+    03ce..03d2  new-instance  v0, Ljava/lang/StringBuilder;
+    03d2..03d8  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    03d8..03de  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    03de..03e4  invoke-virtual  {v0, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    03e4..03ea  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    03ea..03ec  move-result-object  v0
+    03ec..03f2  invoke-interface  {v3, v4, v0}, LX/0BX;->markerPoint(ILjava/lang/String;)V
+    03f2..03f4  return-void
+    03f4..03f8  iget-object  v1, v7, LX/8B6;->A00:Ljava/lang/String;
+    03f8..03fc  new-instance  v0, LX/LIL;
+    03fc..0402  invoke-direct  {v0, v1}, LX/LIL;-><init>(Ljava/lang/String;)V
+    0402..0404  throw  v0
+    0404..0408  iget-object  v1, v7, LX/8B6;->A00:Ljava/lang/String;
+    0408..040c  new-instance  v0, LX/LIL;
+    040c..0412  invoke-direct  {v0, v1}, LX/LIL;-><init>(Ljava/lang/String;)V
+    0412..0414  throw  v0
+    0414..0418  iget-object  v1, v7, LX/8B6;->A00:Ljava/lang/String;
+    0418..041c  new-instance  v0, LX/LIL;
+    041c..0422  invoke-direct  {v0, v1}, LX/LIL;-><init>(Ljava/lang/String;)V
+    0422..0424  throw  v0
+    0424..0428  iget-object  v1, v7, LX/8B6;->A00:Ljava/lang/String;
+    0428..042c  new-instance  v0, LX/LIL;
+    042c..0432  invoke-direct  {v0, v1}, LX/LIL;-><init>(Ljava/lang/String;)V
+    0432..0434  throw  v0
+    0434..0436  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public C6L(VI)  # .registers 2
+    # full signature: LX/14l;->C6L(I)V
+    0000..0002  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public C6M(VLL)  # .registers 3
+    # full signature: LX/14l;->C6M(Ljava/lang/Integer;Ljava/lang/Integer;)V
+    0000..0002  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public C6N(V)  # .registers 4
+    # full signature: LX/14l;->C6N()V
+    0000..0004  iget-object  v2, v3, LX/0v6;->A09:LX/098;
+    0004..000a  invoke-static  {v2}, LX/00L;->A05(Ljava/lang/Object;)V
+    000a..000c  const/4  v1, #0x6
+    000c..0010  new-instance  v0, LX/2JI;
+    0010..0016  invoke-direct  {v0, v3, v1}, LX/2JI;-><init>(Ljava/lang/Object;I)V
+    0016..001c  invoke-virtual  {v2, v0}, LX/098;->execute(Ljava/lang/Runnable;)V
+    001c..001e  return-void
+    # exception table: 0 try range(s)
+.end method

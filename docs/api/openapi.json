@@ -17135,5 +17135,12 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-group-missing-identification/README.md",
     "description": "The receive actor ACKs exact picture notifications after durable capture using existing base envelope guards and participant routing. Malformed envelopes log without ACK and receive continues; redelivery is ACKed again. Photo updates, automatic missing-identification lifecycle, native scheduling/CCQ parity and live acceptance remain unverified or unported. No new command or HTTP route. Offline actor regression covers capture before write, redelivery, malformed envelope plus ping, store reopen and omission of incoming recipient/edit/error/offline attributes. Current F0R fresh-key and F3e final-builder evidence confirms those omitted fields in the selected path. Current DBe/0Tl retain Jid objects; 0Tp compliance diagnostics log and continue rather than proving blanket rejection. Current123/1r2 selected zero-device PN/LID normalization now traced and actor-tested alongside nonzero-device routing; full special-subtype parity remains unverified. Native AD domain bits are distinct from Rust agent. No new address guard added."
+  },
+  "x-notification-handler-constructor-census": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-notification-handler-census/README.md",
+    "description": "Static APK census of34 physical base-handler constructor bindings; differs from38 type-map entries and is not a parity percentage. Selected server_sync/server collection/bootstrap/configuration obligations remain unported. No new generic ACK, runtime request, token, command or route. Reproduce with existing xtask apk-callers/apk-smali."
   }
 }

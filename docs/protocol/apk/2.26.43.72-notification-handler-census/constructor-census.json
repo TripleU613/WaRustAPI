@@ -1,0 +1,206 @@
+[
+  {
+    "class": "LX/0v7;",
+    "code": 258,
+    "base_executor_enabled": true,
+    "source": "0v7-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/0v9;",
+    "code": 228,
+    "base_executor_enabled": false,
+    "source": "0v9-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/0vQ;",
+    "code": 246,
+    "base_executor_enabled": true,
+    "source": "0vQ-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/0w2;",
+    "code": 279,
+    "base_executor_enabled": true,
+    "source": "0w2-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/0w9;",
+    "code": 209,
+    "base_executor_enabled": true,
+    "source": "0w9-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/0zw;",
+    "code": 276,
+    "base_executor_enabled": true,
+    "source": "0zw-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/10F;",
+    "code": 229,
+    "base_executor_enabled": false,
+    "source": "10F-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/10G;",
+    "code": 234,
+    "base_executor_enabled": true,
+    "source": "10G-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/10I;",
+    "code": 204,
+    "base_executor_enabled": true,
+    "source": "10I-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/10a;",
+    "code": 97,
+    "base_executor_enabled": true,
+    "source": "10a-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/111;",
+    "code": 287,
+    "base_executor_enabled": true,
+    "source": "111-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/11A;",
+    "code": 294,
+    "base_executor_enabled": true,
+    "source": "11A-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/11I;",
+    "code": 247,
+    "base_executor_enabled": true,
+    "source": "11I-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/12z;",
+    "code": 238,
+    "base_executor_enabled": false,
+    "source": "12z-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/139;",
+    "code": 261,
+    "base_executor_enabled": true,
+    "source": "139-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/13C;",
+    "code": 256,
+    "base_executor_enabled": false,
+    "source": "13C-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/13G;",
+    "code": 270,
+    "base_executor_enabled": true,
+    "source": "13G-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/13K;",
+    "code": 285,
+    "base_executor_enabled": true,
+    "source": "13K-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/14l;",
+    "code": 210,
+    "base_executor_enabled": true,
+    "source": "14l-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/14v;",
+    "code": 265,
+    "base_executor_enabled": true,
+    "source": "14v-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/15A;",
+    "code": 252,
+    "base_executor_enabled": true,
+    "source": "15A-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/15D;",
+    "code": 290,
+    "base_executor_enabled": true,
+    "source": "15D-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/15I;",
+    "code": 235,
+    "base_executor_enabled": true,
+    "source": "15I-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/15v;",
+    "code": 241,
+    "base_executor_enabled": false,
+    "source": "15v-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/19K;",
+    "code": 251,
+    "base_executor_enabled": true,
+    "source": "19K-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/19N;",
+    "code": 203,
+    "base_executor_enabled": false,
+    "source": "19N-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/19R;",
+    "code": 202,
+    "base_executor_enabled": true,
+    "source": "19R-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/19V;",
+    "code": 25,
+    "base_executor_enabled": true,
+    "source": "19V-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/19b;",
+    "code": 240,
+    "base_executor_enabled": false,
+    "source": "19b-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/19h;",
+    "code": 248,
+    "base_executor_enabled": true,
+    "source": "19h-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/19k;",
+    "code": 189,
+    "base_executor_enabled": true,
+    "source": "19k-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/19n;",
+    "code": 104,
+    "base_executor_enabled": true,
+    "source": "19n-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/19q;",
+    "code": 236,
+    "base_executor_enabled": true,
+    "source": "19q-constructor-prefix.txt"
+  },
+  {
+    "class": "LX/19v;",
+    "code": 274,
+    "base_executor_enabled": true,
+    "source": "19v-constructor-prefix.txt"
+  }
+]
