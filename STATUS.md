@@ -1,3 +1,5 @@
+Contact projection and LID repair now withhold LID on duplicate protocol metadata/user fields; duplicate contact fields cannot choose status by order. [Nested duplicate-field controls and native-policy limits](docs/protocol/contact-projection-correlation.md#duplicate-field-authority-is-not-selected-by-order-2026-11-06). Local ambiguity policy, offline only.
+
 Contact-result ingestion now reads current settlement, request and reply together before projecting status, retaining settlement order and reply correlation. [Transaction snapshot fix, stale-enumeration controls and limits](docs/protocol/contact-projection-correlation.md#transaction-bound-settlement-projection-2026-11-06). Offline only; no query or replay added.
 
 Local contact LID repair now reads and validates action, original request and correlated result inside its mapping update transaction, rejecting ambiguous containers. [Original request authority, nine corruption/reopen cases and limits](docs/protocol/chat-actions.md#lid-repair-retains-original-request-authority-2026-11-06). Offline only; no lookup/replay added.

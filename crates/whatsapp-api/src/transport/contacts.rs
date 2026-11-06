@@ -408,10 +408,20 @@ fn attr_jid(node: &Node, name: &str) -> Option<Jid> {
         .or_else(|| Jid::parse(value.as_text()?).ok())
 }
 
+// Local ambiguity guard: never let child order choose projection authority.
+// This is stricter than the retained native trace, whose duplicate semantics
+// remain unverified; ordinary single-field protocol behavior is unchanged.
+fn unique_child<'a>(node: &'a Node, name: &str) -> Option<&'a Node> {
+    let mut matches = node.child_nodes().iter().filter(|n| n.description == name);
+    let selected = matches.next()?;
+    matches.next().is_none().then_some(selected)
+}
+
 // APK 37.71 0u7.A01: non-contact protocols succeed only without an error
 // child; optional refresh uses Long.parseLong. A3p.<init> stores that flag.
 fn lid_protocol_succeeded(usync: &Node) -> bool {
-    let Some(lid) = usync.child("result").and_then(|result| result.child("lid")) else {
+    let Some(lid) = unique_child(usync, "result").and_then(|result| unique_child(result, "lid"))
+    else {
         return false;
     };
     lid.child("error").is_none()
@@ -452,7 +462,7 @@ fn parse_lid(node: &Node) -> Option<Jid> {
 /// Parse one reply `user` node into `(digits, status)`. Defensive: any
 /// unexpected shape is skipped rather than treated as an error.
 fn parse_user(user: &Node, lid_succeeded: bool) -> Option<(String, ContactStatus)> {
-    let contact = user.child("contact")?;
+    let contact = unique_child(user, "contact")?;
     // A wire round trip decodes non-token, non-packed content as raw bytes
     // (`binary/decoder.rs::read_content` never assumes UTF-8 for content, only
     // for attributes), even though it is a plain digit string, so both
@@ -478,7 +488,7 @@ fn parse_user(user: &Node, lid_succeeded: bool) -> Option<(String, ContactStatus
     // APK 37.71 0u7.C8f 0e0c..0e42 checks A3p.A05 before reading
     // user/lid@val as 0ZY. Contact metadata never authorizes identity changes.
     let lid = lid_succeeded
-        .then(|| user.child("lid").and_then(parse_lid))
+        .then(|| unique_child(user, "lid").and_then(parse_lid))
         .flatten();
     Some((
         digits,
@@ -1790,6 +1800,91 @@ mod tests {
         assert!(!lid_protocol_succeeded(&metadata(
             Node::new("lid").attr("refresh", "9223372036854775808")
         )));
+    }
+
+    #[test]
+    fn duplicate_contact_fields_never_select_lid_authority_by_child_order() {
+        use super::super::actions;
+        for case in ["result", "protocol_lid", "user_lid", "contact"] {
+            for reverse in [false, true] {
+                let (dir, store) = store();
+                let phone = "+15551234567";
+                let id = queue_check(&store, phone).unwrap();
+                actions::reserve_pending(&store).unwrap();
+                let good_contact = Node::new("contact").attr("type", "in").text(phone);
+                let good_lid = Node::new("lid").attr("val", "999999999999@lid");
+                let pair = |a: Node, b: Node| if reverse { vec![b, a] } else { vec![a, b] };
+                let fields = match case {
+                    "contact" => {
+                        let mut v = pair(
+                            good_contact.clone(),
+                            Node::new("contact").attr("type", "out").text(phone),
+                        );
+                        v.push(good_lid.clone());
+                        v
+                    }
+                    "user_lid" => {
+                        let mut v = pair(
+                            good_lid.clone(),
+                            Node::new("lid").attr("val", "888888888888@lid"),
+                        );
+                        v.push(good_contact.clone());
+                        v
+                    }
+                    _ => vec![good_contact, good_lid],
+                };
+                let user = Node::new("user")
+                    .attr("jid", "15551234567@s.whatsapp.net")
+                    .children(fields);
+                let success = Node::new("lid");
+                let failure =
+                    Node::new("lid").children(vec![Node::new("error").attr("code", "500")]);
+                let mut children = match case {
+                    "result" => pair(
+                        Node::new("result").children(vec![success]),
+                        Node::new("result").children(vec![failure]),
+                    ),
+                    "protocol_lid" => vec![Node::new("result").children(pair(success, failure))],
+                    _ => vec![Node::new("result").children(vec![success])],
+                };
+                children.push(Node::new("list").children(vec![user]));
+                let reply = Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", "result")
+                    .children(vec![Node::new("usync").children(children)]);
+                actions::record_reply(&store, &reply).unwrap();
+                assert_eq!(ingest(&store).unwrap(), usize::from(case != "contact"));
+                let saved = status(&store, phone).unwrap();
+                if case == "contact" {
+                    assert!(saved.is_none());
+                } else {
+                    let saved = saved.unwrap();
+                    assert!(saved.on_whatsapp);
+                    assert!(saved.lid.is_none());
+                    assert!(repair_lid(&store, &id).is_err());
+                }
+                let before = store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap();
+                drop(store);
+                let store = ProtocolStore::open(OpenOptions {
+                    path: dir.path().join("c.redb"),
+                    account_id: AccountId::new("a").unwrap(),
+                    key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([11u8; 32]))),
+                    create: false,
+                })
+                .unwrap();
+                assert_eq!(ingest(&store).unwrap(), 0);
+                assert!(repair_lid(&store, &id).is_err());
+                assert_eq!(
+                    before,
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    "{case}, reverse={reverse}"
+                );
+            }
+        }
     }
 
     #[test]

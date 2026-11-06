@@ -8182,3 +8182,5 @@ Current43.72 missing-LID preset-to-multi-query route and nested128-second send/w
 Confirmed local LID-repair authority gap corrected: original request and current correlated result must qualify atomically before metadata repair. [Original request authority, nine corruption/reopen cases and limits](chat-actions.md#lid-repair-retains-original-request-authority-2026-11-06). No native wire or live-operation claim.
 
 Local contact projection split-read gap corrected: enumeration no longer supplies stale reply/status authority across a later write transaction. [Transaction snapshot fix, stale-enumeration controls and limits](contact-projection-correlation.md#transaction-bound-settlement-projection-2026-11-06). No native wire or live-operation claim.
+
+Confirmed local nested-field ambiguity corrected for contact projection/repair, with both-order and reopen controls. [Nested duplicate-field controls and native-policy limits](contact-projection-correlation.md#duplicate-field-authority-is-not-selected-by-order-2026-11-06). Android duplicate semantics remain unverified; no live operation.
