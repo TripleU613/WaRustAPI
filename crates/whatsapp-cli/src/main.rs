@@ -257,7 +257,7 @@ enum Cmd {
         #[arg(long)]
         local_id: String,
     },
-    /// Inspect queued sends suspended by changed peer identities (offline, redacted).
+    /// Inspect queued sends suspended by directory replies (offline, redacted).
     #[cfg(feature = "experimental-transport")]
     OutboxSuspended,
     /// Inspect saved normal group-send preparation without replaying queries (offline, redacted).

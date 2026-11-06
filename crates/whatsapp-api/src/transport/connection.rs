@@ -4246,6 +4246,38 @@ mod tests {
                 .unwrap();
             drop(store);
             let reopened = identity_store(&path);
+            let snapshot = || {
+                reopened
+                    .read(|tx| {
+                        Table::ALL
+                            .iter()
+                            .map(|table| tx.scan(*table, 1, 10000))
+                            .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before_resume = snapshot();
+            let head = reopened.journal_head().unwrap();
+            for policy in [
+                crate::registration::request::IdentityChangePolicy::Pinned,
+                crate::registration::request::IdentityChangePolicy::ApkAuthenticated,
+            ] {
+                assert!(
+                    super::super::outgoing::resume_identity_selected(
+                        &reopened,
+                        &f.alice,
+                        ticket,
+                        ConnectionEpoch(99),
+                        policy
+                    )
+                    .await
+                    .unwrap()
+                    .is_none(),
+                    "{case}"
+                );
+                assert_eq!(snapshot(), before_resume);
+                assert_eq!(reopened.journal_head().unwrap(), head);
+            }
             assert_eq!(
                 super::super::outgoing::identity_suspension(&reopened, ticket)
                     .unwrap()

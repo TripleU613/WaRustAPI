@@ -1,3 +1,14 @@
+2026-11-05 — **Invalid-directory resume refusal verified through the actual API.**
+
+After reopen, all seven bad-reply/signature cases return no stanza under both
+identity policies and preserve every saved table/journal head. Suspension CLI
+wording now covers directory validation failures rather than only identity/PQ.
+[Regression and scope](docs/protocol/messaging-transport.md#explicit-resume-refusal-for-invalid-directory-suspensions-2026-11-05).
+Validation: strengthened actor/API regression, all 1386 workspace/all-feature
+tests, fmt, strict Clippy, regenerated CLI reference, OpenAPI, APK coverage,
+pinned APK identity and staged checksum/link hygiene passed. No runtime
+resume-policy change or live account operation.
+
 2026-11-05 — **Malformed direct key replies suspend one intent, preserving receive.**
 
 Pure directory parser errors now produce non-resumable invalid_directory_reply;

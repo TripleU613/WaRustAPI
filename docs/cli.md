@@ -132,7 +132,7 @@ Usage: whatsapp-cli outbox-versions [OPTIONS]...
 
 ## whatsapp-cli outbox-suspended
 
-Inspect queued sends suspended by changed peer identities (offline, redacted)
+Inspect queued sends suspended by directory replies (offline, redacted)
 
 ```
 Usage: whatsapp-cli outbox-suspended [OPTIONS]...

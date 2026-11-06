@@ -3556,3 +3556,12 @@ instead of ending receive. New-session classic signature refusal uses existing
 invalid_signed_bundle. Neither permits resume; no keys/ciphertext are adopted.
 [Actor red/green matrix, reopen and stored-corruption control](messaging-transport.md#malformed-direct-directory-replies-stay-intent-local-2026-11-05).
 No live operation, server-refusal fabrication or replay authority.
+
+### Invalid-directory explicit resume audit (2026-11-05)
+
+**Confirmed local:** after reopening, the actual direct resume API refuses all
+seven bad-directory/signature cases under both identity policies without any
+table or journal mutation. CLI suspension wording now includes directory
+validation failures; fixed reason fields are unchanged.
+[API-entry regression and boundaries](messaging-transport.md#explicit-resume-refusal-for-invalid-directory-suspensions-2026-11-05).
+No runtime resume policy, live operation or replay authority changed.

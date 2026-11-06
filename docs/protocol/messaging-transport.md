@@ -2340,3 +2340,20 @@ exception or job-scheduler equivalence. Outer IQ error behavior is unchanged;
 error-under-result is not manufactured into a terminal server refusal. Existing
 session signature policy, every later crypto failure and all other request
 families are outside this correction. No live account operation or replay.
+
+### Explicit resume refusal for invalid directory suspensions (2026-11-05)
+
+**Confirmed local / regression strengthened:** all seven malformed-directory
+and bad-new-session-signature cases now call the real resume_identity_selected
+API after reopening, under both Pinned and ApkAuthenticated policies. Every
+call returns no stanza and preserves every saved table and journal head. This
+checks the explicit offline resume entry point, beyond the existing automatic
+selection/no-send proof. No runtime resume policy changed: only the original
+identity_changed reason is eligible for that policy path.
+
+The outbox-suspended CLI help and plain summary now describe fetched directory
+replies generally; the old identity/PQ-only wording omitted malformed directory
+refusals. Individual fixed reasons and redacted peer tickets remain the same.
+Inspection grants no send, trust adoption, query, reset or replay authority.
+Native job equivalence and other suspension families remain outside this test.
+No live account operation.
