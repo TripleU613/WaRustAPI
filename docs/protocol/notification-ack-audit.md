@@ -466,3 +466,9 @@ reaches the same SQLiteDatabase, narrowing the normal transaction identity gap.
 [Eight complete methods, assumptions and exceptional-close limits](apk/2.26.43.72-count-database-wrappers/README.md).
 Health callback failure, base close, replacement/reset, ambiguous disk commit
 and crash recovery remain open. No Rust backend, ACK, replay or live operation changed.
+
+### Auth-key rotation is a state lifecycle (2026-11-06)
+
+**Confirmed static APK43.72:** [19h handler, gated w:auth:key request, callback and clock](apk/2.26.43.72-authkey-rotation/README.md) show a counter reset to5 followed by a gated candidate-key publication. Normal non-deferred base ACK follows handler return, independently of the later IQ outcome. Delivery failure only logs; error reply records failed time/decrements; success callback still requires local replacement to qualify before zeroing attempts and recording success. Bvj’s literal500 diagnostic is not parsed response-code evidence.
+
+**Missing Rust obligation:** no authkey_rotation consumer, publication/replacement lifecycle or ACK exists. Candidate generation, helper storage/atomicity, retry triggers, coherent time/state, correlation and restart uncertainty remain unported. ACK-only handling would not complete this behavior. No runtime change or live operation.

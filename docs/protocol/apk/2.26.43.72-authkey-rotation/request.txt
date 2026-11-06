@@ -1,0 +1,101 @@
+
+# class: LX/19i;
+# extends: Ljava/lang/Object;
+
+.method public A00(V)  # .registers 15
+    # full signature: LX/19i;->A00()V
+    0000..0004  iget-object  v3, v14, LX/19i;->A01:LX/144;
+    0004..0008  iget-object  v1, v3, LX/144;->A0B:LX/00S;
+    0008..000c  const-string  v0, "keystore"
+    000c..0012  invoke-virtual  {v1, v0}, LX/00S;->A04(Ljava/lang/String;)Landroid/content/SharedPreferences;
+    0012..0014  move-result-object  v8
+    0014..001a  invoke-static  {v8}, LX/00l;->A05(Ljava/lang/Object;)V
+    001a..001e  const-string  v0, "remaining_auth_key_rotation_attempts"
+    001e..0020  const/4  v13, #0x0
+    0020..0026  invoke-interface  {v8, v0, v13}, Landroid/content/SharedPreferences;->getInt(Ljava/lang/String;I)I
+    0026..0028  move-result  v0
+    0028..002c  if-lez  v0, +0xba
+    002c..0030  iget-object  v0, v3, LX/144;->A0D:LX/08q;
+    0030..0036  invoke-static  {v0}, LX/08q;->A00(LX/08q;)J
+    0036..0038  move-result-wide  v9
+    0038..003c  const-string  v0, "last_succeeded_auth_key_rotation_attempt"
+    003c..0040  const-wide/16  v1, #0xffff (-1)
+    0040..0046  invoke-interface  {v8, v0, v1, v2}, Landroid/content/SharedPreferences;->getLong(Ljava/lang/String;J)J
+    0046..0048  move-result-wide  v4
+    0048..004c  sub-long  v6, v9, v4
+    004c..0052  const-wide/32  v4, #0x5265c00
+    0052..0056  cmp-long  v0, v6, v4
+    0056..005a  if-ltz  v0, +0xa3
+    005a..005e  const-string  v0, "last_failed_auth_key_rotation_attempt"
+    005e..0064  invoke-interface  {v8, v0, v1, v2}, Landroid/content/SharedPreferences;->getLong(Ljava/lang/String;J)J
+    0064..0066  move-result-wide  v4
+    0066..006a  cmp-long  v0, v4, v1
+    006a..006e  if-eqz  v0, +0xa
+    006e..0070  sub-long/2addr  v9, v4
+    0070..0076  const-wide/32  v1, #0x1b7740
+    0076..007a  cmp-long  v0, v9, v1
+    007a..007e  if-lez  v0, +0x91
+    007e..0082  iget-object  v0, v14, LX/19i;->A00:LX/1nq;
+    0082..0086  if-nez  v0, +0x8
+    0086..008c  invoke-static  {}, LX/1nq;->A00()LX/1nq;
+    008c..008e  move-result-object  v0
+    008e..0092  iput-object  v0, v14, LX/19i;->A00:LX/1nq;
+    0092..0096  iget-object  v4, v14, LX/19i;->A02:LX/00x;
+    0096..009c  invoke-interface  {v4}, LX/00x;->get()Ljava/lang/Object;
+    009c..009e  move-result-object  v0
+    009e..00a2  check-cast  v0, LX/0Sf;
+    00a2..00a8  invoke-virtual  {v0}, LX/0Sf;->A0G()Ljava/lang/String;
+    00a8..00aa  move-result-object  v8
+    00aa..00ae  iget-object  v0, v14, LX/19i;->A00:LX/1nq;
+    00ae..00b2  iget-object  v0, v0, LX/1nq;->A02:LX/1nk;
+    00b2..00b6  iget-object  v6, v0, LX/1nk;->A01:[B
+    00b6..00ba  const-string  v2, "id"
+    00ba..00be  const-string  v0, "iq"
+    00be..00c2  new-instance  v5, LX/0Tj;
+    00c2..00c8  invoke-direct  {v5, v0}, LX/0Tj;-><init>(Ljava/lang/String;)V
+    00c8..00cc  sget-object  v7, LX/0mL;->A00:LX/0mL;
+    00cc..00d2  const-string/jumbo  v1, "to"
+    00d2..00d6  new-instance  v0, LX/0Tl;
+    00d6..00dc  invoke-direct  {v0, v7, v1}, LX/0Tl;-><init>(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;)V
+    00dc..00e2  invoke-virtual  {v5, v0}, LX/0Tj;->A02(LX/0Tl;)V
+    00e2..00e8  const-string/jumbo  v7, "xmlns"
+    00e8..00ee  const-string/jumbo  v1, "w:auth:key"
+    00ee..00f2  new-instance  v0, LX/0Tl;
+    00f2..00f8  invoke-direct  {v0, v7, v1}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    00f8..00fe  invoke-virtual  {v5, v0}, LX/0Tj;->A02(LX/0Tl;)V
+    00fe..0104  const-string/jumbo  v7, "type"
+    0104..0108  const-string  v1, "set"
+    0108..010c  new-instance  v0, LX/0Tl;
+    010c..0112  invoke-direct  {v0, v7, v1}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    0112..0118  invoke-virtual  {v5, v0}, LX/0Tj;->A02(LX/0Tl;)V
+    0118..011c  const-wide/16  v9, #0x0
+    011c..0126  const-wide  v11, #0x1fffffffffffff (9007199254740991)
+    0126..012c  invoke-static/range  {v8..v13}, LX/0Tk;->A06(Ljava/lang/String;JJZ)Z
+    012c..012e  move-result  v0
+    012e..0132  if-eqz  v0, +0xa
+    0132..0136  new-instance  v0, LX/0Tl;
+    0136..013c  invoke-direct  {v0, v2, v8}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    013c..0142  invoke-virtual  {v5, v0}, LX/0Tj;->A02(LX/0Tl;)V
+    0142..0146  const-string  v0, "key"
+    0146..014a  new-instance  v2, LX/0Tj;
+    014a..0150  invoke-direct  {v2, v0}, LX/0Tj;-><init>(Ljava/lang/String;)V
+    0150..0154  const-wide/16  v0, #0x20
+    0154..015a  invoke-static  {v6, v0, v1, v0, v1}, LX/0Tk;->A04([BJJ)V
+    015a..015e  iput-object  v6, v2, LX/0Tj;->A01:[B
+    015e..0164  invoke-virtual  {v2}, LX/0Tj;->A01()LX/0Tp;
+    0164..0166  move-result-object  v0
+    0166..016c  invoke-virtual  {v5, v0}, LX/0Tj;->A03(LX/0Tp;)V
+    016c..0172  invoke-virtual  {v5}, LX/0Tj;->A01()LX/0Tp;
+    0172..0174  move-result-object  v7
+    0174..017a  invoke-interface  {v4}, LX/00x;->get()Ljava/lang/Object;
+    017a..017c  move-result-object  v5
+    017c..0180  check-cast  v5, LX/0Sf;
+    0180..0184  iget-object  v0, v14, LX/19i;->A00:LX/1nq;
+    0184..0188  new-instance  v6, LX/2IS;
+    0188..018e  invoke-direct  {v6, v3, v14, v0}, LX/2IS;-><init>(LX/144;LX/19i;LX/1nq;)V
+    018e..0192  const-wide/16  v10, #0x7d00
+    0192..0196  const/16  v9, #0x14b
+    0196..019c  invoke-virtual/range  {v5..v11}, LX/0Sf;->A0W(LX/0lG;LX/0Tp;Ljava/lang/String;IJ)Z
+    019c..019e  return-void
+    # exception table: 0 try range(s)
+.end method

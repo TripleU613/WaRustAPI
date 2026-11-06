@@ -1,3 +1,5 @@
+Pinned authkey_rotation notification now traced through counter/time gates, w:auth:key publication and distinct callback outcomes. [Auth-key rotation lifecycle and missing Rust obligations](docs/protocol/notification-ack-audit.md#auth-key-rotation-is-a-state-lifecycle-2026-11-06). Missing lifecycle remains explicit; no ACK-only port or live operation.
+
 Pinned MEX error delivery now separated from telemetry: exception callback wraps a fresh Hbw before the product error handler. [MEX error delivery versus telemetry](docs/protocol/mex.md#current-mex-error-delivery-versus-telemetry-2026-11-06). Broader backoff consumers remain unverified; no runtime change.
 
 Pinned MEX IQ request/server error families and exact-one server-error child retained; transport errors remain distinct from GraphQL scoped backoff. [MEX IQ error families and backoff boundary](docs/protocol/mex.md#current-mex-iq-error-families-and-backoff-boundary-2026-11-06). Research only; no guessed retry or runtime change.

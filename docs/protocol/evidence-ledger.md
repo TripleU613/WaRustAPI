@@ -8220,3 +8220,5 @@ MEX map-constructor null behavior narrowed using pinned AOSP sources and APK cal
 APK43.72 MEX IQ error matchers/wrappers traced; ignored backoff read does not establish a retry duration. [MEX IQ error families and backoff boundary](mex.md#current-mex-iq-error-families-and-backoff-boundary-2026-11-06). Offline only.
 
 APK43.72 MEX error telemetry/product dispatch gap closed; exact raw-error field inventories bounded without claiming global nonuse. [MEX error delivery versus telemetry](mex.md#current-mex-error-delivery-versus-telemetry-2026-11-06). No live operation.
+
+APK43.72 authkey_rotation request/ACK ordering and response/local-key replacement boundaries retained. [Auth-key rotation lifecycle and missing Rust obligations](notification-ack-audit.md#auth-key-rotation-is-a-state-lifecycle-2026-11-06). No Rust runtime change.
