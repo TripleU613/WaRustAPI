@@ -345,7 +345,11 @@ struct DirtyNotification {
 /// durable encrypted capture keeps them, and group sends fetch membership
 /// fresh. Malformed id/from/participant is an error (captured, no ACK).
 pub fn notification_ack(node: &Node) -> Result<Option<Node>> {
-    if node.child_nodes().len() == 1 && node.child_nodes()[0].description == "groups_dirty" {
+    if node
+        .child_nodes()
+        .first()
+        .is_some_and(|child| child.description == "groups_dirty")
+    {
         return Ok(None);
     }
     super::notifications::base_ack(node, "w:gp2")
@@ -443,8 +447,9 @@ pub fn apply_change_notification(store: &ProtocolStore, node: &Node) -> Result<b
 pub fn handle_dirty_notification(store: &ProtocolStore, node: &Node) -> Result<Option<Node>> {
     if node.description != "notification"
         || node.get_attr("type").and_then(|v| v.as_text()) != Some("w:gp2")
-        || node.child_nodes().len() != 1
-        || node.child_nodes()[0].description != "groups_dirty"
+        // APK43.72 0w9.A09/0Tp.A0D selects the first event; metadata
+        // siblings do not remove dirty-refresh scheduling/ACK ownership.
+        || !node.child_nodes().first().is_some_and(|child| child.description == "groups_dirty")
     {
         return Ok(None);
     }
@@ -2684,8 +2689,15 @@ mod tests {
     #[test]
     fn dirty_notifications_queue_before_ack_and_deduplicate_across_restart() {
         let (dir, s) = store();
-        let node = dirty_fixture();
+        let base = dirty_fixture();
+        let mut children = base.child_nodes().to_vec();
+        children.push(Node::new("missing_participant_identification"));
+        let node = base.children(children);
         let ack = handle_dirty_notification(&s, &node).unwrap().unwrap();
+        assert!(
+            notification_ack(&node).unwrap().is_none(),
+            "dedicated dirty path owns the only ACK"
+        );
         for name in ["recipient", "category", "edit"] {
             assert!(ack.get_attr(name).is_none());
         }

@@ -36,3 +36,28 @@ later standalone valid role/subject/remove controls remain. No change to live
 accounts, automatic queries, identity policies or retransmission.
 
 Checksums record all other bundle files' bytes and SHA-256.
+
+## Dirty event with metadata siblings — 2026-11-05
+
+**Confirmed static:**0w9.A09 tests the same selected first child v0 for
+groups_dirty at2868..2878, then calls A0N(group) on that child and loops its
+selected group children. The retained excerpt closes this specific branch;
+there is no outer-node child-count==1 prerequisite in that selected test.
+The broader request scheduling path remains covered by the existing37.71
+and current group-lifecycle traces, not re-established by this short excerpt.
+
+**Confirmed local defect/fix:** handle_dirty_notification required exactly one
+outer child, so groups_dirty plus missing_participant_identification skipped
+refresh scheduling. The generic notification_ack then admitted the outer type,
+allowing ACK without that work. Both helpers now recognize first-child dirty:
+the dedicated handler retains the durable queue/dedup-before-ACK path, while
+the generic helper returns None to prevent a second ACK or fallback ACK after
+local dirty-content refusal. Additional siblings remain captured; this does not
+implement missing-identification state or authorize secondary sibling events.
+Local bounds on the inner group list and envelope remain unchanged.
+
+The existing queue-before-ACK/reopen regression now supplies that metadata
+sibling. It fails at missing dedicated ACK on the original code, then checks
+one queued refresh, no generic ACK, and dedup/original reservation retention
+after reopen. Changed-content same-ID refusal remains. No live request,
+identity change, automatic replay or additional query family was introduced.

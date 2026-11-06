@@ -17170,5 +17170,12 @@
     "x-live": false,
     "description": "groups::apply_change_notification selects only the first outer event child, matching selected APK43.72 0Tp.A0D/0w9 dispatch. Later siblings cannot apply additional add/remove/role/subject changes; inner participant iteration remains. Multi-child metadata is permitted. Existing ACK/envelope/store guards remain. Red/green regression covers unsupported+remove and add+remove, preserving standalone valid changes. Missing-child native exception parity, all event families and live behavior remain unverified. No new query or HTTP route.",
     "evidence": "docs/protocol/apk/2.26.43.72-group-event-selection/README.md"
+  },
+  "x-group-dirty-first-event-ack-ownership": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "First-child groups_dirty retains dedicated durable refresh scheduling and ACK ownership even with outer metadata siblings. Generic group ACK returns None for that first event, preventing fallback ACK after dirty validation refusal or duplicate ACK after accepted scheduling. Existing envelope/list/dedup/original reservation guards remain. Queue-before-ACK test now includes missing_participant_identification sibling and reopen without another reservation. This does not implement that marker lifecycle, secondary events, new query family or HTTP route.",
+    "evidence": "docs/protocol/apk/2.26.43.72-group-event-selection/README.md"
   }
 }

@@ -3344,3 +3344,15 @@ existing ACK/envelope/store guards. Red/green regression preserves unselected
 membership and standalone valid updates. Extra metadata siblings are permitted;
 full native event/timestamp/alias parity is not claimed.
 [Checked selection evidence](apk/2.26.43.72-group-event-selection/README.md).
+
+
+### Dirty group event with metadata siblings (2026-11-05)
+
+**Confirmed static / locally fixed:** current0w9 selects first-child groups_dirty
+without requiring exactly one outer child. Rust previously skipped refresh for
+metadata siblings and could generic-ACK without scheduling. Dedicated dirty
+handling now selects the first event; generic ACK stays suppressed for it.
+Existing durable queue/dedup/envelope/inner-list guards remain. The expanded
+queue-before-ACK regression covers metadata sibling, sole ACK ownership and
+reopen without another reservation. Missing-identification state remains unported.
+[Evidence and limits](apk/2.26.43.72-group-event-selection/README.md).

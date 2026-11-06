@@ -1,0 +1,38 @@
+# Bounded dirty event selection; complete export SHA-256: 1d435d87f0d71f1cfce2fe7ca08d6c8eb27abfecc7fd75d226b965e4954e251b
+
+# class: LX/0w9;
+# extends: LX/0v6;
+
+.method public A09(VLI)  # .registers 66
+    # full signature: LX/0w9;->A09(LX/0Tp;I)V
+    0000..0004  move-object/from16  v1, v63
+    2868..286c  const-string  v2, "groups_dirty"
+    286c..2872  invoke-static  {v0, v2}, LX/0Tp;->A02(LX/0Tp;Ljava/lang/String;)Z
+    2872..2874  move-result  v2
+    2874..2878  if-eqz  v2, +0x39
+    2878..287c  new-instance  v9, Ljava/util/ArrayList;
+    287c..2882  invoke-direct  {v9}, Ljava/util/ArrayList;-><init>()V
+    2882..2886  const-string  v2, "group"
+    2886..288c  invoke-virtual  {v0, v2}, LX/0Tp;->A0N(Ljava/lang/String;)Ljava/util/List;
+    288c..288e  move-result-object  v0
+    288e..2894  invoke-interface  {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    2894..2896  move-result-object  v4
+    2896..289c  invoke-interface  {v4}, Ljava/util/Iterator;->hasNext()Z
+    289c..289e  move-result  v0
+    289e..28a2  if-eqz  v0, +0x1771
+    28a2..28a8  invoke-interface  {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    28a8..28aa  move-result-object  v3
+    28aa..28ae  check-cast  v3, LX/0Tp;
+    28ae..28b2  const-string  v2, "jid"
+    28b2..28b4  const/4  v0, #0x0
+    28b4..28ba  invoke-virtual  {v3, v2, v0}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    28ba..28bc  move-result-object  v3
+    28bc..28c0  if-nez  v3, +0x8
+    28c0..28c4  const-string  v0, "GroupNotificationHandler/handleGroupsDirty: jid is null"
+    28c4..28ca  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    28ca..28cc  goto  -0x1a
+    28cc..28d2  invoke-static  {v5}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    28d2..28d4  move-result-object  v2
+    28d4..28d8  new-instance  v0, LX/08T;
+    28d8..28de  invoke-direct  {v0, v3, v2}, LX/08T;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+    28de..28e4  invoke-virtual  {v9, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z

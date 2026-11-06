@@ -1,7 +1,11 @@
 {
   "README.md": {
-    "bytes": 2356,
-    "sha256": "3a249388776d96102dfee5ce90f3e1ec29738f32f81d6df0a6bbdc5fe08286a5"
+    "bytes": 3934,
+    "sha256": "098c58f90781ce3b51cba1de94a358361159c4d86e5599f5283d42202aa879f9"
+  },
+  "dirty-event-selection-excerpt.txt": {
+    "bytes": 2065,
+    "sha256": "2b7ec76a489b24858b93bb257f4d574efdcc52bfbacdf4f0e64a04c4a6cde545"
   },
   "first-child-helper.txt": {
     "bytes": 1143,

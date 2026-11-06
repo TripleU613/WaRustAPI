@@ -1,3 +1,8 @@
+Fixed groups_dirty plus metadata siblings being ACKed without refresh work.
+Dedicated first-event dirty handling now retains scheduling before ACK; generic
+ACK stays suppressed. Queue/dedup/reopen regression expanded.
+[Evidence](docs/protocol/apk/2.26.43.72-group-event-selection/README.md).
+
 Fixed group notifications applying later sibling events to membership.
 Only the first event now selects the supported change; metadata siblings stay
 permitted. Current APK selection evidence and red/green regression retained.
