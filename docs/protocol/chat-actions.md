@@ -1186,3 +1186,29 @@ constructor/ARv and callback adapter match the retained methods. Formatting,
 CLI reference regeneration, OpenAPI library coverage, APK coverage freshness
 and repository hygiene pass. No Rust behavior changed; runtime tests were not
 rerun and no new runtime/live result is claimed for this research-only chunk.
+
+## Migration JSON controlled reference (2026-11-06)
+
+**Confirmed selected APK binding plus controlled external reference:**
+[reused shared envelope, six source hashes and four executed cases](apk/2.26.43.72-migration-json-reference/README.md)
+connect the prior migration-shaped maps to0mF's JSONObject(Map)/queryId/variables
+wrapper. The same shared serializer and pinned Android source had already been
+inspected for another MEX path; this chunk adds controlled execution, not a
+second discovery of that static implementation. Fresh constructor/trace/guard
+exports match retained source. Text-to-byte exports bind08Q.A05 toUTF8.
+
+The oracle compiles six unchanged pinned AOSP JSON sources with annotation-only
+compatibility stubs on JDK21, then tests only synthetic maps. Four cases retain
+explicit null presence, Boolean types/conditional absence, escaped string/UTF8
+roundtrip and empty-array semantics; complete emitted bodies are checked against
+expected.json. The query ID matches the pinned migration asset. Initial explicit
+public-source fetch and later offline execution both pass; no APK, device or
+account was executed. Exact live/OEM/Pando serialization and positive identifier
+policy remain unverified. No production sender, retry or migration state change.
+
+Validation: four controlled reference cases pass with the pinned public-source
+cache, including a fresh opt-in fetch followed by offline execution. Both retained
+text/charset DEX exports reproduce byte-for-byte and the APK hash matches.
+Bundle checksums, formatting, CLI reference regeneration, OpenAPI library
+coverage and APK coverage freshness pass. No Rust runtime behavior changed;
+workspace runtime tests were not rerun for this research-only chunk.

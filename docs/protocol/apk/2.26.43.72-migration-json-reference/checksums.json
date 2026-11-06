@@ -1,0 +1,30 @@
+{
+  "README.md": {
+    "bytes": 5435,
+    "sha256": "c18cdfaedb7e8959d3cedda7932786e7083a9c7aeb199d8eff82de3e3ebff918"
+  },
+  "ReferenceJson.java": {
+    "bytes": 3727,
+    "sha256": "8b9ce2c8e09a1bfca94c5e26fab41c83dc2513d17a73b4ecadf02185cb7b9831"
+  },
+  "charset.txt": {
+    "bytes": 2292,
+    "sha256": "69ac55ea0e4e83cb125dffb15ef6c4483509af82776f34bd4de1783bc6e00c47"
+  },
+  "expected.json": {
+    "bytes": 1419,
+    "sha256": "bef94b49a61b97e58c4bb9ee32a190c873b551c3f4fcd7fd67ed86d0243f5c82"
+  },
+  "reference_oracle.py": {
+    "bytes": 4469,
+    "sha256": "0beb1fb5be511b20f7db6ff7f947a07db94b9b65b19f3b9322c1b027d7ca97a4"
+  },
+  "sources.json": {
+    "bytes": 2059,
+    "sha256": "171f6349de38d5f050fabbbdd29df8545eaed5a82adb0d1e3d3e3212e9199246"
+  },
+  "text-encoding.txt": {
+    "bytes": 653,
+    "sha256": "e5dd80acb479040ba7097a31c3c925ad5673a5f9f72e5a33aea6d4ec44e69d4a"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "authority": "controlled Android16 source reference; not APK or device execution",
+  "cases": [
+    {
+      "name": "null_fields",
+      "body": "{\"queryId\":\"25028600226770432\",\"variables\":{\"input\":{\"blocklist\":[{\"identifier\":{\"display_name\":null,\"guest_name\":null,\"pn_jid\":null,\"unknown_identifier\":null,\"username\":null},\"jid\":\"123456789012345@lid\"}],\"dhash\":\"synthetic-hash\"}}}",
+      "utf8_bytes": 233
+    },
+    {
+      "name": "escaped_username_dirty",
+      "body": "{\"queryId\":\"25028600226770432\",\"variables\":{\"input\":{\"blocklist\":[{\"identifier\":{\"display_name\":null,\"guest_name\":null,\"pn_jid\":null,\"unknown_identifier\":null,\"username\":\"fixture\\\\\\\"\\n א\"},\"jid\":\"123456789012345@lid\"}],\"dhash\":\"synthetic-hash\",\"dirty_ack\":true}}}",
+      "utf8_bytes": 264
+    },
+    {
+      "name": "boolean_identifier",
+      "body": "{\"queryId\":\"25028600226770432\",\"variables\":{\"input\":{\"blocklist\":[{\"identifier\":{\"display_name\":null,\"guest_name\":null,\"pn_jid\":null,\"unknown_identifier\":true,\"username\":null},\"jid\":\"123456789012345@lid\"}],\"dhash\":\"synthetic-hash\",\"dirty_ack\":true}}}",
+      "utf8_bytes": 250
+    },
+    {
+      "name": "empty_blocklist",
+      "body": "{\"queryId\":\"25028600226770432\",\"variables\":{\"input\":{\"blocklist\":[],\"dhash\":\"synthetic-hash\"}}}",
+      "utf8_bytes": 95
+    }
+  ]
+}

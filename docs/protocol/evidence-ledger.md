@@ -1,3 +1,11 @@
+2026-11-06 — **Migration JSON null/escaping reference executed offline.**
+
+Reused existing shared envelope/AOSP inspection and added a hash-pinned,
+controlled JSON-library oracle: four migration-shaped cases verify explicit
+nulls, conditional Boolean fields, escaping/UTF8 and empty arrays. It executes
+no WhatsApp class or device. [Authority, fixtures and limits](chat-actions.md#migration-json-controlled-reference-2026-11-06).
+No Rust sender or live request added; Pando/device behavior remains open.
+
 2026-11-06 — **Migration intermediate values and coroutine lifetime narrowed.**
 
 Direct GraphQL setters retain null through TreeMap export; wrapper omission

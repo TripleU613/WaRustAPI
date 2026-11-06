@@ -1610,3 +1610,12 @@ returnsfalse and forwardsGiw failure. Its fresh default reaches the32-second
 non-Pando send branch, not a universal Pando/outer-wait deadline. No dedicated
 sender, request retries or migration state adoption are implemented by this
 research; final serialization/provider and writer/account authority remain open.
+
+## Controlled migration-shaped JSON reference (2026-11-06)
+
+[Four executed reference cases and explicit authority](chat-actions.md#migration-json-controlled-reference-2026-11-06)
+reuse the already retained common APK envelope and Android16 source inspection.
+The new oracle runs the unmodified pinned JSON library on synthetic maps and
+records complete bodies/UTF8 counts. It narrows the selected non-Pando value
+boundary under that reference; it does not observe Pando, a device library,
+account-safe write or server acceptance. No Rust migration sender is added.
