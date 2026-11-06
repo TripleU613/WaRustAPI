@@ -78,14 +78,40 @@ fn unanswered(store: &ProtocolStore, key: &str, reason: &str) -> Result<Option<N
 /// reservations, not permission for a later connection to consume an old IQ.
 /// APK43.72 0Th.A03 fails/clears pending IQ futures on disconnect.
 #[derive(Default)]
-pub(crate) struct ActiveRefetches(std::collections::HashSet<String>);
+pub(crate) struct ActiveRefetches(std::collections::HashMap<String, RefetchWriteGuard>);
 
 impl ActiveRefetches {
-    pub(crate) fn record_written(&mut self, answer: &ReservedAnswer) {
-        if answer.node.description == "iq"
-            && let Some(id) = answer.node.get_attr("id").and_then(|v| v.as_text())
-        {
-            self.0.insert(id.to_owned());
+    pub(crate) fn record_written(&mut self, answer: &ReservedAnswer) -> Result<()> {
+        if answer.node.description != "iq" {
+            return Ok(());
+        }
+        let id = answer
+            .node
+            .get_attr("id")
+            .and_then(|v| v.as_text())
+            .ok_or_else(|| Error::invalid("retry", "written refetch query lacks id"))?;
+        let owner = answer
+            .refetch
+            .as_ref()
+            .filter(|owner| owner.query == id)
+            .ok_or_else(|| {
+                Error::invalid(
+                    "retry",
+                    "written refetch lacks matching reservation snapshot",
+                )
+            })?;
+        // Never replace an existing callback with a later same-ID job. The
+        // native future-map owner is request-bound, not authority from any row
+        // subsequently saved under that ID (retry-answers.md).
+        match self.0.entry(id.to_owned()) {
+            std::collections::hash_map::Entry::Vacant(entry) => {
+                entry.insert(owner.clone());
+                Ok(())
+            }
+            std::collections::hash_map::Entry::Occupied(_) => Err(Error::invalid(
+                "retry",
+                "refetch callback id already active",
+            )),
         }
     }
 
@@ -109,10 +135,10 @@ impl ActiveRefetches {
         };
         // Consume before processing: a callback failure cannot authorize a
         // second reply, nor can a persisted row resurrect a dead callback.
-        if !self.0.remove(id) {
+        let Some(owner) = self.0.remove(id) else {
             return Ok(None);
-        }
-        complete_refetch(store, account, node, epoch).await
+        };
+        complete_refetch_inner(store, account, node, epoch, Some(&owner.job)).await
     }
 }
 
@@ -473,6 +499,16 @@ pub async fn complete_refetch(
     node: &Node,
     epoch: ConnectionEpoch,
 ) -> Result<Option<Option<Node>>> {
+    complete_refetch_inner(store, account, node, epoch, None).await
+}
+
+async fn complete_refetch_inner(
+    store: &ProtocolStore,
+    account: &AccountRecord,
+    node: &Node,
+    epoch: ConnectionEpoch,
+    expected: Option<&Refetch>,
+) -> Result<Option<Option<Node>>> {
     // APK 43.72 0ln.A01 invokes IQ callbacks only for exact result/error.
     // A same-ID request must not consume the reserved refetch or retry history.
     if node.description != "iq"
@@ -486,9 +522,15 @@ pub async fn complete_refetch(
     let Some(query) = node.get_attr("id").and_then(|v| v.as_text()) else {
         return Ok(None);
     };
-    let Some(job): Option<Refetch> =
-        store.read(|tx| tx.get_json(Table::Checkpoints, refetch_key(query).as_bytes(), 1))?
-    else {
+    let job: Option<Refetch> =
+        store.read(|tx| tx.get_json(Table::Checkpoints, refetch_key(query).as_bytes(), 1))?;
+    if expected.is_some_and(|expected| job.as_ref() != Some(expected)) {
+        return Err(Error::invalid(
+            "retry",
+            "written refetch job changed before reply",
+        ));
+    }
+    let Some(job) = job else {
         return Ok(None);
     };
     let refuse = |reason: &str| -> Result<Option<Option<Node>>> {
@@ -1471,6 +1513,155 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn live_refetch_reply_cannot_consume_replacement_job() {
+        for kind in ["result", "error"] {
+            for change in [
+                "same",
+                "missing",
+                "wire_id",
+                "answer_key",
+                "unanswered_key",
+                "count",
+            ] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("live-job-owner.redb");
+                let open = || {
+                    ProtocolStore::open(OpenOptions {
+                        path: path.clone(),
+                        account_id: AccountId::new("test").unwrap(),
+                        key_source: std::sync::Arc::new(StaticKeySource::new(
+                            MasterKey::from_bytes([7; 32]),
+                        )),
+                        create: true,
+                    })
+                    .unwrap()
+                };
+                let store = open();
+                let original = Refetch {
+                    wire_id: "W1".into(),
+                    answer_key: "answer".into(),
+                    unanswered_key: "unanswered".into(),
+                    count: 2,
+                };
+                let answer = ReservedAnswer {
+                    node: Node::new("iq").attr("id", "Q1"),
+                    confirmation: None,
+                    refetch: Some(RefetchWriteGuard {
+                        query: "Q1".into(),
+                        job: original.clone(),
+                    }),
+                };
+                let mut active = ActiveRefetches::default();
+                // Missing/mismatched snapshots cannot create authority.
+                for invalid in [
+                    ReservedAnswer {
+                        node: Node::new("iq").attr("id", "Q1"),
+                        confirmation: None,
+                        refetch: None,
+                    },
+                    ReservedAnswer {
+                        node: Node::new("iq"),
+                        confirmation: None,
+                        refetch: answer.refetch.clone(),
+                    },
+                    ReservedAnswer {
+                        node: Node::new("iq").attr("id", "OTHER"),
+                        confirmation: None,
+                        refetch: answer.refetch.clone(),
+                    },
+                ] {
+                    assert!(active.record_written(&invalid).is_err());
+                    assert!(active.0.is_empty());
+                }
+                active.record_written(&answer).unwrap();
+                let mut replacement = original.clone();
+                replacement.wire_id = "W2".into();
+                assert!(
+                    active
+                        .record_written(&ReservedAnswer {
+                            node: Node::new("iq").attr("id", "Q1"),
+                            confirmation: None,
+                            refetch: Some(RefetchWriteGuard {
+                                query: "Q1".into(),
+                                job: replacement
+                            }),
+                        })
+                        .is_err()
+                );
+                // Duplicate registration did not overwrite the first snapshot.
+                assert_eq!(active.0["Q1"].job, original);
+                let mut current = original.clone();
+                match change {
+                    "wire_id" => current.wire_id = "W2".into(),
+                    "answer_key" => current.answer_key = "new-answer".into(),
+                    "unanswered_key" => current.unanswered_key = "new-unanswered".into(),
+                    "count" => current.count = 1,
+                    _ => {}
+                }
+                store.write(|tx| {
+                    if change!="missing" {
+                        tx.put_json(Table::Checkpoints,refetch_key("Q1").as_bytes(),1,&current)?;
+                    }
+                    tx.put_json(Table::Checkpoints,current.answer_key.as_bytes(),1,
+                        &serde_json::json!({"status":"fetching","query":"Q1","count":current.count}))?;
+                    tx.put_json(Table::SignalSessions,b"peer",1,&vec![1u8])?;
+                    tx.put_json(Table::PeerIdentities,b"peer",1,&vec![2u8])
+                }).unwrap();
+                let snapshot = |store: &ProtocolStore| {
+                    store
+                        .read(|tx| {
+                            [
+                                Table::Checkpoints,
+                                Table::Outbox,
+                                Table::SignalSessions,
+                                Table::PeerIdentities,
+                            ]
+                            .into_iter()
+                            .map(|table| tx.scan(table, 1, 100))
+                            .collect::<Result<Vec<_>>>()
+                        })
+                        .unwrap()
+                };
+                let before = snapshot(&store);
+                let reply = Node::new("iq").attr("id", "Q1").attr("type", kind);
+                let result = active
+                    .complete(
+                        &store,
+                        &AccountRecord::default(),
+                        &reply,
+                        ConnectionEpoch(1),
+                    )
+                    .await;
+                assert!(active.0.is_empty());
+                if change == "same" {
+                    assert!(matches!(result.unwrap(), Some(None)));
+                    assert_ne!(snapshot(&store), before);
+                } else {
+                    assert!(result.is_err(), "{kind}/{change}");
+                    assert_eq!(snapshot(&store), before);
+                }
+                let after = snapshot(&store);
+                assert!(
+                    active
+                        .complete(
+                            &store,
+                            &AccountRecord::default(),
+                            &reply,
+                            ConnectionEpoch(1)
+                        )
+                        .await
+                        .unwrap()
+                        .is_none()
+                );
+                assert_eq!(snapshot(&store), after);
+                drop(store);
+                let reopened = open();
+                assert_eq!(snapshot(&reopened), after);
+            }
+        }
+    }
+
+    #[tokio::test]
     async fn active_refetch_callbacks_do_not_survive_disconnect_or_failed_completion() {
         for outcome in ["live", "disconnect", "local_failure"] {
             let dir = tempfile::tempdir().unwrap();
@@ -1488,19 +1679,15 @@ mod tests {
             };
             let store = open();
             let fetching = serde_json::json!({"status":"fetching","query":"Q1","count":2});
+            let job = Refetch {
+                wire_id: "W1".into(),
+                answer_key: "answer".into(),
+                unanswered_key: "unanswered".into(),
+                count: 2,
+            };
             store
                 .write(|tx| {
-                    tx.put_json(
-                        Table::Checkpoints,
-                        refetch_key("Q1").as_bytes(),
-                        1,
-                        &Refetch {
-                            wire_id: "W1".into(),
-                            answer_key: "answer".into(),
-                            unanswered_key: "unanswered".into(),
-                            count: 2,
-                        },
-                    )?;
+                    tx.put_json(Table::Checkpoints, refetch_key("Q1").as_bytes(), 1, &job)?;
                     tx.put_json(Table::Checkpoints, b"answer", 1, &fetching)?;
                     tx.put_json(Table::SignalSessions, b"peer", 1, &vec![1u8])?;
                     tx.put_json(Table::PeerIdentities, b"peer", 1, &vec![2u8])
@@ -1534,17 +1721,24 @@ mod tests {
                     .is_none()
             );
             assert_eq!(snapshot(&store), before);
-            active.record_written(&ReservedAnswer {
-                node: Node::new("message").attr("id", "Q1"),
-                confirmation: None,
-                refetch: None,
-            });
+            active
+                .record_written(&ReservedAnswer {
+                    node: Node::new("message").attr("id", "Q1"),
+                    confirmation: None,
+                    refetch: None,
+                })
+                .unwrap();
             assert!(active.0.is_empty());
-            active.record_written(&ReservedAnswer {
-                node: Node::new("iq").attr("id", "Q1"),
-                confirmation: None,
-                refetch: None,
-            });
+            active
+                .record_written(&ReservedAnswer {
+                    node: Node::new("iq").attr("id", "Q1"),
+                    confirmation: None,
+                    refetch: Some(RefetchWriteGuard {
+                        query: "Q1".into(),
+                        job,
+                    }),
+                })
+                .unwrap();
             for node in [
                 Node::new("iq").attr("id", "Q1"),
                 Node::new("iq").attr("id", "Q1").attr("type", "get"),
@@ -1559,7 +1753,7 @@ mod tests {
                         .unwrap()
                         .is_none()
                 );
-                assert!(active.0.contains("Q1"));
+                assert!(active.0.contains_key("Q1"));
                 assert_eq!(snapshot(&store), before);
             }
             if outcome == "disconnect" {

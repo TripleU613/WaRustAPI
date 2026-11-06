@@ -408,3 +408,48 @@ Normal runtime now carries the reserved job snapshot to both ACK and query
 writer admission, refusing changed/missing jobs or non-fetching answer markers
 before encoding. [Mechanism, queue/reopen tests and limits](retry-ack-dispatch.md#queued-key-refetch-writes-retain-reservation-ownership-2026-11-06).
 No guessed response timer, replay or live acceptance claim.
+
+## Live callbacks retain the written job (2026-11-06)
+
+**Confirmed Rust defect fixed offline:** the per-drive callback registry formerly
+held only IDs. Completion could load a newer, otherwise valid refetch job from
+the same ID before its transaction, then settle that newer job. Existing
+transaction guards compared against that newly loaded row, so they did not bind
+the reply to the job whose query actually passed writer admission.
+
+The registry now retains the reservation-time query/job snapshot carried by the
+written answer. A matching result/error removes that callback before completion,
+then requires the saved job to equal the written snapshot before parsing bundles,
+refusal settlement or crypto. Existing transaction guards still recheck the job
+and fetching marker at commit. Missing or changed jobs refuse without retiring
+them or altering answer/outbox/session/pin state. Exact duplicate replies cannot
+reinvoke a failed callback.
+
+Registration requires an IQ ID and matching snapshot; missing/mismatched owners
+refuse. Duplicate live IDs refuse without replacing the original callback, and
+the driver propagates that failure. This is a local collision boundary, not a
+claim that native Map.put rejects duplicate IDs. Disconnect still drops all live
+owners and durable jobs do not recreate them.
+
+**Confirmed static reference, APK2.26.43.72:**
+[BulkGetPreKeyJob pending concrete FfK and selected completion](apk/2.26.43.72-bulk-key-job-completion/README.md)
+and [callback removal/disconnect](apk/2.26.43.72-retry-refetch-callback-lifetime/README.md)
+remain the evidence for request-owned one-shot futures. No new APK/runtime trace
+or native checkpoint-format claim is made.
+
+Regression: `live_refetch_reply_cannot_consume_replacement_job` covers result/error,
+missing job, independently changed wire ID/answer key/unanswered key/count,
+duplicate registration, missing/mismatched registration authority, exact duplicate
+reply, unchanged live control and store reopen. Stored checkpoints, outbox,
+sessions and pins are compared; existing failed-completion/disconnect controls
+remain. These are offline fixtures, not server acceptance evidence.
+
+**Limits:** public low-level complete_refetch still relies on its caller's live
+authority; only normal runtime supplies the retained snapshot automatically.
+Full native sender correlation, callback deadlines, original-message/account
+mutation through all later stages and native recovery parity remain open. No new
+query, automatic resend, guessed timer or live account operation.
+
+Validation:1,447 workspace/all-feature tests passed. Strict workspace/all-target/
+all-feature Clippy, formatting, CLI reference regeneration, OpenAPI symbol
+validation, APK coverage freshness and repository hygiene passed.

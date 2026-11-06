@@ -83,3 +83,11 @@ Checksums cover every other file here.
 ## Concrete bulk future follow-up (2026-11-06)
 
 The [bulk job completion trace](../2.26.43.72-bulk-key-job-completion/README.md) now verifies the pending bulk job value as FfK implementing1ue, retaining BsT/BsR/get effects and runner exception/requirement policy. This closes that concrete future-effects gap; full provider binding, deferred scheduling and native recovery/retry parity remain separate. No automatic Rust resend is added.
+
+## Written-job binding follow-up (2026-11-06)
+
+The [normal-runtime registry now retains the written reservation snapshot](../../retry-answers.md#live-callbacks-retain-the-written-job-2026-11-06),
+rather than only a set of IDs. Completion refuses a replaced/missing saved job
+before using it; transaction-time checks remain. Duplicate active IDs refuse
+locally without replacing the first owner. This extends the earlier local
+correction; no new static trace, native duplicate-ID rule or timeout is claimed.

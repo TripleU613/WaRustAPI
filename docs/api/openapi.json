@@ -17856,5 +17856,12 @@
   "x-live": false,
   "description": "Normal runtime retry key-refetch ACK and query writer admission require the exact reserved job and matching fetching answer query/count before encoding. Stale work ends the connection without clearing uncertainty or replay. No lock across socket I/O, guessed timeout or live acceptance claim; direct retry messages and low-level callers remain separate.",
   "evidence": "docs/protocol/retry-ack-dispatch.md#queued-key-refetch-writes-retain-reservation-ownership-2026-11-06"
+},
+  "x-retry-refetch-written-job-callback-ownership": {
+  "x-cli": false,
+  "x-transport": true,
+  "x-live": false,
+  "description": "Normal runtime retains written retry-refetch job snapshots in per-drive one-shot callbacks. Reply completion refuses missing/replaced jobs before parsing or settlement; transaction guards remain. Missing/mismatched snapshot registration and duplicate active IDs refuse without replacing owners. Public low-level completion still requires caller authority; no timer, replay or live acceptance claim.",
+  "evidence": "docs/protocol/retry-answers.md#live-callbacks-retain-the-written-job-2026-11-06"
 }
 }

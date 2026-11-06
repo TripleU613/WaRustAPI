@@ -1264,7 +1264,7 @@ pub(crate) async fn drive(
                     match super::retry_answer::answer_with_confirmation(&store, &account, &node, epoch).await {
                         Ok(Some(answer)) => {
                             confirmed = link.send_retry_answer(&store, &answer).await?;
-                            retry_refetches.record_written(&answer);
+                            retry_refetches.record_written(&answer)?;
                             tracing::info!(target: "whatsapp_api::incoming", kind = %answer.node.description, "retry receipt answered (message), or its fresh-bundle query sent (iq)");
                         }
                         Ok(None) => {}

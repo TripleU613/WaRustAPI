@@ -1,3 +1,5 @@
+Live retry-refetch callbacks now retain the written job snapshot; old replies cannot settle a replacement job under the same query ID. Duplicate active IDs refuse without replacing owners. [Mechanism and limits](docs/protocol/retry-answers.md#live-callbacks-retain-the-written-job-2026-11-06). Offline only.
+
 Retry key-refetch ACK/query writes now recheck the reserved job and fetching answer at writer admission. Queued stale work refuses before encoding; no replay or guessed deadline. [Ownership fix and boundaries](docs/protocol/retry-ack-dispatch.md#queued-key-refetch-writes-retain-reservation-ownership-2026-11-06).
 
 Media refresh audit verified existing request/prior-route ownership and request-time TTL guards; corrected stale first-route false documentation. No runtime change. [Audit scope and open boundaries](docs/protocol/media-network-outcomes.md#refresh-authority-and-lifetime-audit-2026-11-06).
