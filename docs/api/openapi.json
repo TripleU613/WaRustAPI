@@ -17520,5 +17520,12 @@
     "x-live": false,
     "description": "Identity-refresh action/inspection follows APK43.72 0v0/Dxh/1rA outer-type dispatch and original requested-device errors. Valid signed result is not poisoned by root/foreign errors; outer refusal uses root diagnostics. Inspection code widens to signed i32; generic action code stays u16. End-to-end synthetic guarded adoption accepts only valid result and remains once-only; no new identity authority or live parity claim.",
     "evidence": "docs/protocol/identity-refresh-application.md#identity-refresh-resulterror-context-2026-11-06"
+  },
+  "x-directory-outer-refusal-context": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Typed peer_keys and peer_identity_query outer errors share identity_refresh unique-root action diagnostic extraction. Nested user errors cannot supply a whole-query code/text; absent or multiple root errors remain Error with no attributed code/text. Generic u16 parsing unchanged. Existing inspectors and no-replay/refresh guards remain; result and unrelated action semantics unchanged. Static APK evidence and offline regression only.",
+    "evidence": "docs/protocol/peer-identity.md#outer-directory-errors-cannot-inherit-nested-refusal-diagnostics-2026-11-06"
   }
 }

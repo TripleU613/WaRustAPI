@@ -713,14 +713,14 @@ pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
         // APK43.72 1rA.A03 dispatches result to Dxh.A02, which reads
         // per-user errors under list, not root extensions. Keep this scoped to
         // the typed peer directory producer; app-state has different semantics.
-        let peer_directory_result = kind == Some("result")
+        let peer_directory_reply = matches!(kind, Some("result" | "error"))
             && row.kind == "peer_keys"
             && request.get_attr("xmlns").and_then(|v| v.as_text()) == Some("encrypt")
             && request.get_attr("type").and_then(|v| v.as_text()) == Some("get")
             && request.child("key").is_some();
         // APK43.72 FeM.run case16 binds identity/user to FUP case0;
         // 0ln.A01 -> CK4 selects list/user errors instead of root extensions.
-        let identity_only_result = kind == Some("result")
+        let identity_only_reply = matches!(kind, Some("result" | "error"))
             && row.kind == "peer_identity_query"
             && request.get_attr("xmlns").and_then(|v| v.as_text()) == Some("encrypt")
             && request.get_attr("type").and_then(|v| v.as_text()) == Some("get")
@@ -741,7 +741,18 @@ pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
         let inner_error =
             if about_result || photo_set_result || two_factor_result || privacy_token_result {
                 None
-            } else if peer_directory_result {
+            } else if kind == Some("error")
+                && (peer_directory_reply || identity_only_reply || identity_refresh_peer.is_some())
+            {
+                // APK43.72 1rA.A03 and 0ln.A01 select outer-error
+                // callbacks. Nested device errors are not this query's code.
+                let mut errors = node
+                    .child_nodes()
+                    .iter()
+                    .filter(|child| child.description == "error");
+                let error = errors.next();
+                errors.next().is_none().then_some(error).flatten()
+            } else if peer_directory_reply {
                 // Bind refusal to the original single-peer request. A foreign
                 // user's error must not poison this peer's completion/refresh.
                 crate::signal::direct::child(&request, "key")
@@ -751,18 +762,9 @@ pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
                     .and_then(|peer| super::peer_keys::selected_user(node, &peer).ok())
                     .and_then(|user| user.child("error"))
             } else if let Some(peer) = identity_refresh_peer.as_ref() {
-                if kind == Some("error") {
-                    let mut errors = node
-                        .child_nodes()
-                        .iter()
-                        .filter(|child| child.description == "error");
-                    let error = errors.next();
-                    errors.next().is_none().then_some(error).flatten()
-                } else {
-                    super::peer_keys::selected_user(node, peer)
-                        .ok()
-                        .and_then(|user| user.child("error"))
-                }
+                super::peer_keys::selected_user(node, peer)
+                    .ok()
+                    .and_then(|user| user.child("error"))
             } else {
                 node.child_nodes()
                     .iter()
@@ -776,7 +778,7 @@ pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
                         .flatten()
                     })
                     .or_else(|| {
-                        (!peer_directory_result && !identity_only_result)
+                        (!peer_directory_reply && !identity_only_reply)
                             .then(|| node.child("error"))
                             .flatten()
                     })
@@ -1416,6 +1418,113 @@ mod tests {
         })
         .unwrap();
         (dir, s)
+    }
+
+    #[test]
+    fn directory_outer_errors_never_attribute_nested_device_failures() {
+        for producer in ["peer_keys", "peer_identity_query"] {
+            for roots in [0, 1, 2] {
+                for first in [false, true] {
+                    let (dir, db) = store();
+                    let peer = crate::model::jid::Jid::parse("15555550100@s.whatsapp.net").unwrap();
+                    let id = if producer == "peer_keys" {
+                        super::super::peer_keys::queue(&db, &peer, false).unwrap()
+                    } else {
+                        super::super::identity_query::queue(&db, &peer).unwrap()
+                    };
+                    reserve_pending(&db).unwrap();
+                    let selected = Node::new("user").attr("jid", peer.clone()).children(vec![
+                        Node::new("error")
+                            .attr("code", "480")
+                            .attr("text", "NESTED_PRIVATE"),
+                    ]);
+                    let list = Node::new("list").children(vec![selected]);
+                    let mut children = Vec::new();
+                    if first {
+                        children.push(list.clone());
+                    }
+                    if roots > 0 {
+                        children.push(
+                            Node::new("error")
+                                .attr("code", "429")
+                                .attr("text", "ROOT_CONTEXT"),
+                        );
+                    }
+                    if roots > 1 {
+                        children.push(
+                            Node::new("error")
+                                .attr("code", "500")
+                                .attr("text", "SECOND_ROOT"),
+                        );
+                    }
+                    if !first {
+                        children.push(list);
+                    }
+                    let incoming = Node::new("iq")
+                        .attr("id", id.as_str())
+                        .attr("type", "error")
+                        .children(children);
+                    assert!(record_reply(&db, &incoming).unwrap());
+                    drop(db);
+                    let db = ProtocolStore::open(OpenOptions {
+                        path: dir.path().join("p.redb"),
+                        account_id: AccountId::new("a").unwrap(),
+                        key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([7; 32]))),
+                        create: false,
+                    })
+                    .unwrap();
+                    let outcome = outcomes(&db).unwrap().remove(0);
+                    assert_eq!(outcome.status, ActionStatus::Error);
+                    assert_eq!(
+                        outcome.error_code,
+                        if roots == 1 { Some(429) } else { None },
+                        "{producer}/{roots}/{first}"
+                    );
+                    assert_eq!(
+                        outcome.error_text.as_deref(),
+                        if roots == 1 {
+                            Some("ROOT_CONTEXT")
+                        } else {
+                            None
+                        }
+                    );
+                    assert!(
+                        !serde_json::to_string(&outcome)
+                            .unwrap()
+                            .contains("NESTED_PRIVATE")
+                    );
+                    let before = db
+                        .read(|tx| tx.scan_after(Table::Checkpoints, 1, None, 512))
+                        .unwrap();
+                    let head = db.journal_head().unwrap();
+                    if producer == "peer_keys" {
+                        let view = super::super::peer_keys::inspect(&db, &peer)
+                            .unwrap()
+                            .unwrap();
+                        assert!(view.fingerprint.is_none());
+                        assert!(super::super::peer_keys::queue(&db, &peer, true).is_err());
+                        assert_eq!(
+                            super::super::peer_keys::queue(&db, &peer, false).unwrap(),
+                            id
+                        );
+                    } else {
+                        let view = super::super::identity_query::inspect(&db, &peer)
+                            .unwrap()
+                            .unwrap();
+                        assert!(view.fingerprint.is_none());
+                        assert_eq!(super::super::identity_query::queue(&db, &peer).unwrap(), id);
+                    }
+                    assert!(reserve_pending(&db).unwrap().is_empty());
+                    assert_eq!(reply(&db, &id).unwrap(), Some(incoming));
+                    assert_eq!(
+                        db.read(|tx| tx.scan_after(Table::Checkpoints, 1, None, 512))
+                            .unwrap(),
+                        before
+                    );
+                    assert_eq!(db.journal_head().unwrap(), head);
+                }
+            }
+        }
     }
 
     #[tokio::test(start_paused = true)]

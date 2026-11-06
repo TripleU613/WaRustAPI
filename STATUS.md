@@ -1,3 +1,8 @@
+Outer full-directory and identity-only refusals now retain whole-query error
+context in action diagnostics. Nested device codes/text cannot replace a root
+refusal or fill an absent/ambiguous root; Error still blocks replay/refresh.
+[Callback audit](docs/protocol/peer-identity.md#outer-directory-errors-cannot-inherit-nested-refusal-diagnostics-2026-11-06).
+
 Identity-refresh reply handling now follows APK43.72 outer IQ type and
 selected-device errors. Root/foreign errors cannot mask valid signed data;
 outer or selected refusal still blocks adoption. Inspection codes use i32.
