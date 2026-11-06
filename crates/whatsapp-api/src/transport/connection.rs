@@ -5808,6 +5808,127 @@ mod tests {
         }
     }
 
+    #[tokio::test]
+    async fn cancelled_group_preparation_settles_owned_reply_without_followup_or_disconnect() {
+        use super::super::{group_fanout, outgoing_group};
+        use outgoing_group::tests::{device_reply, enqueue, key_reply, membership};
+        for cancel_stage in ["membership", "devices", "keys"] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("cancelled-group.redb");
+            let store = open(&path);
+            let f = group_fanout::tests::fixture();
+            store.write(|tx| f.alice.save(tx)).unwrap();
+            let ticket = enqueue(&store, &f.plan.chat, "cancelled-group");
+            let outbox =
+                crate::outbox::Outbox::new("fixture-namespace", crate::profile::Limits::default());
+            let mut fake = start(&store, true, Some(ticket));
+            fake.activate().await;
+            let mut cancelled_entry = None;
+            let mut cancelled_query_id = String::new();
+            for stage in ["membership", "devices", "keys"] {
+                let (query, written) = fake.written().await;
+                assert_eq!(
+                    query.get_attr("xmlns").and_then(|v| v.as_text()),
+                    Some(match stage {
+                        "membership" => "w:g2",
+                        "devices" => "usync",
+                        _ => "encrypt",
+                    })
+                );
+                written.send(Ok(())).unwrap();
+                let reply = match stage {
+                    "membership" => membership(&query, &f.plan.own, &f.plan.recipients),
+                    "devices" => device_reply(&query),
+                    _ => key_reply(&query, &f),
+                };
+                if stage == cancel_stage {
+                    assert!(store.write(|tx| outbox.cancel(tx, ticket)).unwrap());
+                    cancelled_entry = store.read(|tx| outbox.get(tx, ticket)).unwrap();
+                    cancelled_query_id =
+                        query.get_attr("id").unwrap().as_text().unwrap().to_owned();
+                }
+                fake.deliver(reply).await;
+                if stage == cancel_stage {
+                    break;
+                }
+            }
+            // Prove the same actor still services receive and did not release
+            // another preparation query or encrypted message after cancellation.
+            fake.deliver(
+                Node::new("iq")
+                    .attr("type", "get")
+                    .attr("xmlns", "urn:xmpp:ping"),
+            )
+            .await;
+            let (pong, written) = fake.written().await;
+            assert_eq!(
+                pong.get_attr("type").and_then(|v| v.as_text()),
+                Some("result")
+            );
+            written.send(Ok(())).unwrap();
+            fake.nothing_written(Duration::from_millis(20)).await;
+            fake.stop_cleanly().await;
+            let summary = outgoing_group::preparation(&store, ticket)
+                .unwrap()
+                .unwrap();
+            assert_eq!(summary.blocking_reason.as_deref(), Some("intent_cancelled"));
+            assert_eq!(
+                store.read(|tx| outbox.get(tx, ticket)).unwrap(),
+                cancelled_entry
+            );
+            assert!(cancelled_entry.unwrap().attempts.is_empty());
+            if cancel_stage == "membership" {
+                let outcome = store
+                    .read(|tx| super::super::actions::view_in(tx, &cancelled_query_id))
+                    .unwrap()
+                    .unwrap()
+                    .0;
+                assert_eq!(outcome.status, super::super::actions::ActionStatus::Ok);
+            }
+            if cancel_stage == "devices" {
+                assert_eq!(
+                    super::super::devices::query_record(&store, &cancelled_query_id)
+                        .unwrap()
+                        .unwrap()
+                        .status,
+                    "server_acknowledged"
+                );
+            }
+            if cancel_stage == "keys" {
+                let batches = summary.key_batches.unwrap();
+                assert_eq!(batches.outcome_unknown, 0);
+                assert!(batches.complete);
+            }
+            for table in [
+                Table::SignalSessions,
+                Table::PeerIdentities,
+                Table::SenderKeys,
+            ] {
+                assert!(store.read(|tx| tx.scan(table, 1, 100)).unwrap().is_empty());
+            }
+            assert!(
+                outgoing_group::begin_selected(&store, ticket)
+                    .unwrap()
+                    .is_none()
+            );
+            drop(store);
+            let reopened = identity_store(&path);
+            assert_eq!(
+                outgoing_group::preparation(&reopened, ticket)
+                    .unwrap()
+                    .unwrap()
+                    .blocking_reason
+                    .as_deref(),
+                Some("intent_cancelled")
+            );
+            assert!(
+                outgoing_group::begin_selected(&reopened, ticket)
+                    .unwrap()
+                    .is_none()
+            );
+        }
+    }
+
     #[tokio::test(start_paused = true)]
     async fn group_preparation_deadline_cannot_advance_on_a_late_device_result() {
         use super::super::{group_fanout, outgoing_group};

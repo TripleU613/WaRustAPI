@@ -1,3 +1,14 @@
+2026-11-05 — **Cancelled group preparation settles its reply and stops cleanly.**
+
+Cancellation during membership/device/key waits no longer progresses to another
+query or ends the actor through the unchanged-intent guard. The owned reply is
+settled, intent_cancelled is visible, and cancelled work stays nonselectable.
+[Actor regression and cancellation limits](docs/protocol/normal-group-outbox.md#cancellation-while-a-preparation-query-is-pending-2026-11-05).
+Validation: actor regression failed before the fix and passes at all three
+cancellation stages afterward. All 1384 workspace/all-feature tests, fmt,
+strict Clippy, CLI/OpenAPI, APK coverage, pinned APK identity and staged
+checksum/link hygiene passed. No live account operation.
+
 2026-11-05 — **Fresh recipient device-sync work stops stale group continuation.**
 
 Recipient sync revisions now guard fanout reservation and later ACK-driven

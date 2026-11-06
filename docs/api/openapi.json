@@ -15837,6 +15837,20 @@
     "evidence": "docs/protocol/apk/2.26.43.72-sender-key-ack-confirmation/README.md",
     "description": "Traces native message ACK callback registration and wait, successful normal sender-key marking and conditional one-time-key reset. Connects registration-time pre-ACK marker snapshot to matched callback retirement after wrapped result. Rust per-distribution durable confirmation and native address ownership remain incomplete. Evidence only; no command, HTTP route or production behavior change."
   },
+  "x-group-cancelled-preparation-replies": {
+    "x-cli": {
+      "commands": [
+        "whatsapp-cli cancel",
+        "whatsapp-cli outbox-group-preparations"
+      ]
+    },
+    "x-transport": [
+      "experimental-transport group preparation"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/normal-group-outbox.md#cancellation-while-a-preparation-query-is-pending-2026-11-05",
+    "description": "An already-cancelled pre-reservation intent settles its currently owned membership/device/key reply then blocks with intent_cancelled. No new query, send-key adoption or dependent ciphertext; actor continues receiving. Existing rejection of cancellation after InFlight remains. No reset/replay or native cancellation parity claimed."
+  },
   "x-group-device-refresh-revision-guard": {
     "x-cli": {
       "command": "whatsapp-cli outbox-group-preparations"

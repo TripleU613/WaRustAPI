@@ -7178,3 +7178,12 @@ New affected-recipient refresh work blocks stale ciphertext even before a new
 list arrives; unrelated-contact work still permits continuation.
 [Red/green ACK-wait regression, fresh/cached race and limits](normal-group-outbox.md#device-refresh-revisions-across-preparation-and-ack-waits-2026-11-05).
 No pending-work deletion, counter reset, replay or live account operation.
+
+### Cancelled group preparation replies (2026-11-05)
+
+**Confirmed local defect / corrected offline:** a cancelled pre-reservation group
+intent now settles its owned current query and stops with intent_cancelled,
+without another query, crypto adoption or actor disconnect. Cancellation after
+InFlight remains rejected by the existing API.
+[Actor red/green test, reply history, reopen and boundaries](normal-group-outbox.md#cancellation-while-a-preparation-query-is-pending-2026-11-05).
+No reset, replay or live account operation.

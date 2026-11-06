@@ -1511,6 +1511,7 @@ enum Block {
     PeerIdentityChanged,
     OutcomeUnknown,
     PreparationChanged,
+    IntentCancelled,
     ForeignKeyHistory,
     CompanionAuthorityChanged,
     ReferenceChanged,
@@ -2010,6 +2011,38 @@ impl Pending {
     ) -> Result<Step> {
         if !self.matches(node) {
             return Err(invalid("mismatched group preparation reply"));
+        }
+        if store.read(|tx| {
+            Ok(outbox()
+                .get(tx, self.entry.local_id)?
+                .is_some_and(|entry| entry.progress == AttemptProgress::Cancelled))
+        })? {
+            // Cancellation ends dependent work, not ownership of the query
+            // already written. Settle that reply through its existing handler
+            // before stopping; never prepare another query or adopt send keys.
+            match &self.waiting {
+                Waiting::Membership(_) => {
+                    if !actions::record_reply(store, node)? {
+                        return Err(invalid("membership action cannot settle"));
+                    }
+                }
+                Waiting::Devices(query) => {
+                    cursor.settle(query, store, node)?;
+                }
+                Waiting::Keys(_) => {
+                    if !device_key_batches::settle(
+                        store,
+                        &bundle_selector(self.entry.local_id)?,
+                        node,
+                    )? {
+                        return Err(invalid("directory batch cannot settle"));
+                    }
+                }
+                // Public cancellation rejects InFlight intents, so this arm
+                // grants no new cancellation authority after crypto reservation.
+                Waiting::Distribution { .. } => {}
+            }
+            return self.block(store, Block::IntentCancelled);
         }
         match &self.waiting {
             Waiting::Membership(id) => {

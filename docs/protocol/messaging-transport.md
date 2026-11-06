@@ -2259,3 +2259,12 @@ the codes and malformed boundary atomically with settlement, exposed by actions
 plain/JSON. Legacy absence remains unknown. Duplicate/reopen/no-replay and JVM
 oracle tests cover the correction. No retry, cooldown or saved About adoption.
 [Exact source, oracle and limits](apk/2.26.43.72-about-error-codes/README.md).
+
+### Cancelled group preparation replies (2026-11-05)
+
+**Confirmed local defect / corrected offline:** a cancelled pre-reservation group
+intent now settles its owned current query and stops with intent_cancelled,
+without another query, crypto adoption or actor disconnect. Cancellation after
+InFlight remains rejected by the existing API.
+[Actor red/green test, reply history, reopen and boundaries](normal-group-outbox.md#cancellation-while-a-preparation-query-is-pending-2026-11-05).
+No reset, replay or live account operation.

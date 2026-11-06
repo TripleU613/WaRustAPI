@@ -791,3 +791,38 @@ guard conservatively stops even without proof the remote inventory changed.
 It does not reject every pre-existing pending marker, implement own-account
 companion synchronization, or make state validation atomic with socket write.
 Already exposed ciphertext, keys and uncertainty stay reserved; no live request.
+
+### Cancellation while a preparation query is pending (2026-11-05)
+
+**Confirmed local defect / corrected offline:** cancellation is allowed before
+the original outbox intent becomes InFlight. If it happened while a group
+membership query was pending, the reply entered normal continuation and failed
+the next device-query reservation's unchanged-intent check, ending the actor.
+A cancellation before a device reply could also progress to a directory query
+before the later crypto transaction noticed the changed intent.
+
+For an already-cancelled intent, a matching current preparation reply now goes
+through its existing owned handler (membership action, device cursor or key batch)
+and then persists the fixed intent_cancelled preparation block. No dependent
+query, key adoption, ciphertext reservation or send is returned. Original
+cancellation/events, completed query history and any pre-existing uncertainty
+remain held; cancellation does not erase a query already transmitted. Handler
+and store errors still propagate instead of being labelled successful cleanup.
+
+The actor regression
+`cancelled_group_preparation_settles_owned_reply_without_followup_or_disconnect`
+cancels during each of membership, device and key waits, delivers the matching
+result and services an inbound ping as a receive barrier. Old code failed with
+the link closed at the membership stage. Corrected code returns the pong, emits
+no follow-up query/ciphertext, retains a zero-attempt cancelled intent, records
+the owned reply as settled and adopts no Signal sessions/pins/sender keys.
+The preparation remains blocked and nonselectable after reopen.
+
+**Boundary:** Outbox::cancel already rejects InFlight/Failed intents. Thus
+ordinary cancellation during the later reserved distribution ACK waits was a
+negative finding, not a newly supported cancellation capability. This change
+observes cancellation before reply continuation; it does not make every external
+concurrent mutation atomic with socket write, port native job cancellation,
+authorize revocation, delete uncertain history or replay cancelled work. APK43.72
+result/error callback admission remains the existing prerequisite. No live
+account operation or new APK-runtime observation.
