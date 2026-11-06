@@ -17,6 +17,50 @@ use whatsapp_api::{
     },
 };
 
+/// Preserve exactly the refusal inspected by the explicit recheck path.
+/// A stale read must never clear a newer uncertain login reservation.
+fn archive_refusal_for_recheck(
+    store: &ProtocolStore,
+    expected: &serde_json::Value,
+) -> Result<String, Error> {
+    use whatsapp_api::store::Table;
+    const LOGIN_KEY: &[u8] = b"comparison-primary-login-v1";
+    if expected["status"] != "failure" {
+        return Err(Error::invalid(
+            "transport",
+            "recheck requires a saved failure",
+        ));
+    }
+    let history = format!(
+        "login-refusal-history:{}",
+        expected["at"].as_i64().unwrap_or(0)
+    );
+    store.write(|tx| {
+        let current: Option<serde_json::Value> = tx.get_json(Table::Checkpoints, LOGIN_KEY, 1)?;
+        if current.as_ref() != Some(expected) {
+            return Err(Error::invalid(
+                "transport",
+                "login changed before refusal recheck",
+            ));
+        }
+        let archived: Option<serde_json::Value> =
+            tx.get_json(Table::Checkpoints, history.as_bytes(), 1)?;
+        if let Some(archived) = archived {
+            if &archived != expected {
+                return Err(Error::invalid(
+                    "transport",
+                    "refusal history key already belongs to another result",
+                ));
+            }
+        } else {
+            tx.put_json(Table::Checkpoints, history.as_bytes(), 1, expected)?;
+        }
+        tx.delete(Table::Checkpoints, LOGIN_KEY)?;
+        Ok(())
+    })?;
+    Ok(history)
+}
+
 /// Hold an acknowledged connection open briefly and preserve whatever the
 /// server sends next.
 ///
@@ -228,24 +272,8 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                     },
                 ));
             }
-            use whatsapp_api::store::Table;
-            let history = format!(
-                "login-refusal-history:{}",
-                previous
-                    .as_ref()
-                    .and_then(|v| v["at"].as_i64())
-                    .unwrap_or(0)
-            );
-            let kept = previous.clone();
-            store.write(|tx| {
-                let existing: Option<serde_json::Value> =
-                    tx.get_json(Table::Checkpoints, history.as_bytes(), 1)?;
-                if existing.is_none() {
-                    tx.put_json(Table::Checkpoints, history.as_bytes(), 1, &kept)?;
-                }
-                tx.delete(Table::Checkpoints, LOGIN_KEY)?;
-                Ok(())
-            })?;
+            let history =
+                archive_refusal_for_recheck(&store, previous.as_ref().expect("checked failure"))?;
             eprintln!(
                 "transport: rechecking a saved login refusal ({}); the earlier result is preserved as {history}",
                 previous
@@ -876,6 +904,125 @@ mod tests {
         model::jid::Jid,
         store::{MasterKey, StaticKeySource},
     };
+
+    #[test]
+    fn refusal_recheck_preserves_newer_login_and_conflicting_history_after_reopen() {
+        use whatsapp_api::store::Table;
+        let expected = serde_json::json!({"status":"failure", "at":7, "reason":"403"});
+        for replacement in [
+            None,
+            Some(serde_json::json!({"status":"outcome_unknown", "reservation":"new-owner"})),
+            Some(serde_json::json!({"status":"success", "at":8})),
+            Some(serde_json::json!({"status":"failure", "at":8, "reason":"405"})),
+            Some(expected.clone()),
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("recheck.redb");
+            let open = |create| {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: AccountId::new("fixture").unwrap(),
+                    create,
+                    key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+                })
+                .unwrap()
+            };
+            let store = open(true);
+            store
+                .write(|tx| {
+                    if let Some(value) = &replacement {
+                        tx.put_json(Table::Checkpoints, b"comparison-primary-login-v1", 1, value)?;
+                    }
+                    // Keep stale-row cases independent of the archive collision.
+                    if replacement.as_ref() == Some(&expected) {
+                        tx.put_json(
+                            Table::Checkpoints,
+                            b"login-refusal-history:7",
+                            1,
+                            &serde_json::json!({"status":"failure", "at":7, "reason":"405"}),
+                        )?;
+                    }
+                    Ok(())
+                })
+                .unwrap();
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let journal = store.journal_head().unwrap();
+            assert!(archive_refusal_for_recheck(&store, &expected).is_err());
+            assert_eq!(store.journal_head().unwrap(), journal);
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                before
+            );
+            drop(store);
+            let store = open(false);
+            assert!(archive_refusal_for_recheck(&store, &expected).is_err());
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                before
+            );
+        }
+    }
+
+    #[test]
+    fn refusal_recheck_archives_only_exact_failure_and_preserves_identical_history() {
+        use whatsapp_api::store::Table;
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("recheck-valid.redb"),
+            account_id: AccountId::new("fixture").unwrap(),
+            create: true,
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+        })
+        .unwrap();
+        let failure = serde_json::json!({"status":"failure", "at":7, "reason":"403"});
+        for existing in [false, true] {
+            store
+                .write(|tx| {
+                    tx.put_json(
+                        Table::Checkpoints,
+                        b"comparison-primary-login-v1",
+                        1,
+                        &failure,
+                    )?;
+                    if !existing {
+                        tx.delete(Table::Checkpoints, b"login-refusal-history:7")?;
+                    }
+                    Ok(())
+                })
+                .unwrap();
+            assert_eq!(
+                archive_refusal_for_recheck(&store, &failure).unwrap(),
+                "login-refusal-history:7"
+            );
+            assert!(
+                store
+                    .read(|tx| tx.get(Table::Checkpoints, b"comparison-primary-login-v1", 1))
+                    .unwrap()
+                    .is_none()
+            );
+            assert_eq!(
+                store
+                    .read(|tx| tx.get_json::<serde_json::Value>(
+                        Table::Checkpoints,
+                        b"login-refusal-history:7",
+                        1
+                    ))
+                    .unwrap(),
+                Some(failure.clone())
+            );
+            assert!(archive_refusal_for_recheck(&store, &failure).is_err());
+        }
+        assert!(
+            archive_refusal_for_recheck(&store, &serde_json::json!({"status":"outcome_unknown"}))
+                .is_err()
+        );
+    }
 
     #[test]
     fn cli_account_confirmation_distinguishes_own_and_remote_status() {

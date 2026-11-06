@@ -17765,5 +17765,12 @@
     "x-live": false,
     "description": "Comparison connection login reservation carries a fresh local owner ID. Result settlement requires matching unknown reservation and account/material snapshot before clock/account/identity writes. Stale/duplicate replies preserve current state and uncertainty after capture. Separate CLI lab-transport login path is outside this helper; no live verification or rotation added.",
     "evidence": "docs/protocol/authkey-lifecycle.md#login-reply-owns-its-reservation-and-credentials-2026-11-06"
+},
+  "x-cli-refusal-recheck-authority": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Existing lab-transport --recheck-refusal archive/delete requires exact inspected failure to remain current and timestamp archive to be absent or identical. Changed/unknown/missing login or conflicting history refuses without mutation. Existing explicit flag/no-message prerequisites remain; separate CLI login ownership still under audit. No live recheck performed.",
+    "evidence": "docs/protocol/authkey-lifecycle.md#cli-refusal-recheck-retains-current-authority-2026-11-06"
 }
 }

@@ -1,3 +1,5 @@
+Fixed CLI refusal-recheck stale deletion and history collision: archive/delete requires the exact current failure and absent/identical archive. [CLI refusal recheck authority](docs/protocol/authkey-lifecycle.md#cli-refusal-recheck-retains-current-authority-2026-11-06). Unknown/newer login state stays intact; offline regression only.
+
 Fixed comparison connection login-result ownership: stale success/failure cannot settle another reservation or apply clock/account state after credentials change. [Login reply reservation and credential ownership](docs/protocol/authkey-lifecycle.md#login-reply-owns-its-reservation-and-credentials-2026-11-06). Capture remains first; separate CLI lab path remains outside this helper.
 
 Fixed stale-preflight login reservation: current account/material must match the prepared snapshot atomically before outcome_unknown is written. [Login reservation binds its preflight snapshot](docs/protocol/authkey-lifecycle.md#login-reservation-binds-its-preflight-snapshot-2026-11-06). Reopen and fresh/duplicate reservation controls pass; no live operation.

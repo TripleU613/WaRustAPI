@@ -196,3 +196,31 @@ transaction. The separate CLI comparison lab-transport login implementation is
 not routed through this helper and remains a distinct audit obligation. Legacy
 uncertain rows without an ownership ID remain blocked rather than upgraded.
 No live operation or rotation implementation.
+
+## CLI refusal recheck retains current authority (2026-11-06)
+
+**Confirmed local gap / fixed offline:** lab-transport --recheck-refusal inspected
+a saved failure, then archived that stale value and deleted the current login
+row in a later transaction. It did not require the current row to remain that
+failure. It also skipped an existing timestamp-based history key regardless of
+whether it held the same result, allowing deletion without preserving the actual
+failure under an archive collision.
+
+The archive/delete helper now requires expected status=failure and exact current
+row equality inside its write transaction. An existing history row must equal
+the failure too; otherwise it refuses without writes. Only a matching failure
+with absent/identical history is archived and removed. Caller prerequisites
+remain explicit recheck flag and no message; uncertain outcomes are never made
+recheckable. This is a local concurrency/history correction, not a server retry
+allowance or native policy claim.
+
+Two regressions cover missing/current-unknown/current-success/replaced-failure
+rows independently of archive collisions, same-timestamp different history,
+valid absent/identical history, duplicate invocation and nonfailure input.
+Refusals preserve checkpoints and journal and remain refused after reopening.
+No network operation is used by these tests.
+
+**Remaining scope:** this protects the explicit refusal-recheck archive transition;
+it does not yet route the CLI's socket/login reservation/result code through the
+actor's credential and owner checks. It does not make image preparation, handshake
+or login settlement one transaction. No live operation or refusal reset ran.
