@@ -48,7 +48,9 @@ The old projector fails the first valid case by retaining Some(stale).
 
 The separately retained7vV.A00 only calls1dH.A08 after selected in-memory set
 membership changes. A08 writes the supplied nullable hash only when7PB.A0Q
-returns true. That backend-change gate is newly retained here; it is not proof
+returns true. That backend execution-success gate is newly retained here (the
+[later backend trace](../2.26.43.72-blocklist-set-hash-gate/README.md) clarifies
+that true does not mean a positive affected-row count); it is not proof
 that every successful set without dhash should clear the Rust checkpoint.
 This correction changes full fetch snapshots only. Full native set hash-gating,
 alias/migration and metadata parity remain open. Old already-projected histories

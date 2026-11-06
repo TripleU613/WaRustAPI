@@ -1,0 +1,16 @@
+
+# class: LX/0ai;
+# extends: Ljava/lang/Object;
+
+.method public A03(JLLLL)  # .registers 5
+    # full signature: LX/0ai;->A03(LX/0aq;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)J
+    0000..0004  iget-object  v1, v1, LX/0aq;->A02:LX/0KU;
+    0004..0008  const-string  v0, "ContactProvider/delete/DELETE_"
+    0008..000e  invoke-static  {v0, v2}, LX/0ai;->A06(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    000e..0010  move-result-object  v0
+    0010..0016  invoke-virtual  {v1, v2, v3, v0, v4}, LX/0KU;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+    0016..0018  move-result  v0
+    0018..001a  int-to-long  v0, v0
+    001a..001c  return-wide  v0
+    # exception table: 0 try range(s)
+.end method

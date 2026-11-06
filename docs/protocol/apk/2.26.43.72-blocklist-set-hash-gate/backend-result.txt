@@ -1,0 +1,47 @@
+
+# class: LX/7PB;
+# extends: LX/0ai;
+
+.method public A0Q(ZLZ)  # .registers 9
+    # full signature: LX/7PB;->A0Q(Lcom/whatsapp/infra/core/jid/UserJid;Z)Z
+    0000..0002  const/4  v3, #0x0
+    0002..0006  iget-object  v0, v6, LX/0ai;->A00:LX/0an;
+    0006..000c  invoke-virtual  {v0}, LX/0Xp;->A07()LX/0aq;
+    000c..000e  move-result-object  v5
+    000e..0012  const-string  v4, "wa_block_list"
+    0012..0014  const/4  v2, #0x1
+    0014..0018  if-eqz  v8, +0x10
+    0018..001c  new-instance  v1, Landroid/content/ContentValues;
+    001c..0022  invoke-direct  {v1, v2}, Landroid/content/ContentValues;-><init>(I)V
+    0022..0026  const-string  v0, "jid"
+    0026..002c  invoke-static  {v1, v7, v0}, LX/2LB;->A1G(Landroid/content/ContentValues;Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;)V
+    002c..0032  invoke-static  {v1, v5, v4}, LX/0ai;->A01(Landroid/content/ContentValues;LX/0aq;Ljava/lang/String;)J
+    0032..0034  goto  +0xa
+    0034..0038  const-string  v1, "jid = ?"
+    0038..003e  invoke-static  {v7, v2, v3}, LX/2LC;->A1a(Lcom/whatsapp/infra/core/jid/Jid;II)[Ljava/lang/String;
+    003e..0040  move-result-object  v0
+    0040..0046  invoke-static  {v5, v4, v1, v0}, LX/0ai;->A03(LX/0aq;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)J
+    0046..004c  invoke-virtual  {v5}, LX/0aq;->close()V
+    004c..004e  return  v2
+    004e..0050  move-exception  v1
+    0050..0056  invoke-virtual  {v5}, LX/0aq;->close()V
+    0056..0058  goto  +0x5
+    0058..005a  move-exception  v0
+    005a..0060  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    0060..0062  throw  v1
+    0062..0064  move-exception  v2
+    0064..0068  const-string  v0, "contact-mgr-db/unable to update blocked state  "
+    0068..006e  invoke-static  {v7, v0}, LX/1Xl;->A15(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    006e..0070  move-result-object  v1
+    0070..0074  const-string  v0, ", "
+    0074..007a  invoke-static  {v0, v1, v8}, LX/2LA;->A0q(Ljava/lang/String;Ljava/lang/StringBuilder;Z)Ljava/lang/String;
+    007a..007c  move-result-object  v0
+    007c..0082  invoke-static  {v0, v2}, LX/00L;->A08(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0082..0084  return  v3
+    # exception table: 5 try range(s)
+    # catch Ljava/lang/IllegalArgumentException; code_units 0001..0007 -> 0031
+    # catch <all> code_units 000c..0023 -> 0027
+    # catch Ljava/lang/IllegalArgumentException; code_units 0023..0027 -> 0031
+    # catch <all> code_units 0028..002c -> 002c
+    # catch Ljava/lang/IllegalArgumentException; code_units 002d..0031 -> 0031
+.end method

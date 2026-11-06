@@ -1,0 +1,18 @@
+{
+  "README.md": {
+    "bytes": 4917,
+    "sha256": "df84473dac7a90bbaa01aaf1b4528780cec52f1b07da3a828b57ebcb777cda60"
+  },
+  "backend-result.txt": {
+    "bytes": 2607,
+    "sha256": "cb4821add825b72022497aa38788309c1c0fcfd0d783b8139670ca9e8da6383c"
+  },
+  "delete-helper.txt": {
+    "bytes": 758,
+    "sha256": "a85a9797a493e28262d52de6adea9d80781c483d87101d7b65a7038f2d9c8f38"
+  },
+  "insert-helper.txt": {
+    "bytes": 720,
+    "sha256": "ad7a280a9e038173a1745c9dd1e3b978141e889d1b3179b91830b5c4b16fcf75"
+  }
+}

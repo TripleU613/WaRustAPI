@@ -1408,7 +1408,7 @@ snapshots, no-list and malformed controls, reopen/idempotency/reconciliation,
 and explicitly queued offline get/block controls proving subsequent construction
 omits the stale hash only after admitted replacement. The old projector fails
 by retaining Some(stale). Set-result hash mutation has a separate native memory/
-backend-change gate; this fix does not guess its complete parity or rewrite old
+backend execution-success gate (clarified below); this fix does not guess its complete parity or rewrite old
 projected histories. Native metadata/alias/migration and live behavior remain open.
 
 Validation:1,519 workspace tests pass (9 result suites, four test threads),
@@ -1442,3 +1442,30 @@ Strict workspace/all-target/all-feature Clippy, formatting, CLI reference
 regeneration, OpenAPI library coverage, APK coverage freshness and repository
 hygiene pass. Four reused DEX exports, regenerated oracle output, bundle
 checksums and subject APK hash match. No live result is claimed.
+
+## Blocklist set hash membership gate (2026-11-06)
+
+**Confirmed pinned correction and interpretation refinement:** [complete backend
+result/helpers and reused success/write chain](apk/2.26.43.72-blocklist-set-hash-gate/README.md)
+show7vV only calls the hash-writing A08 when the requested target changes the
+in-memory set.7PB.A0Q's true is normal execution/close, not a positive affected
+row count: helper long results are discarded. Earlier backend-change wording
+is corrected to execution-success. Selected exception handling is retained.
+
+Rust's supported single durable-cache projector now changes hash only when
+its requested target changes membership. Newly applied changes adopt the
+selected-list nullable hash (missing deletes); already-satisfied block/unblock
+preserve cache/hash bytes. Valid results still get their once-only inspection;
+unmatched/malformed guards, correlation and atomic transaction remain. No
+new sender, retry or live operation. The12-case regression covers both actions,
+prior presence and missing/nonempty/empty hashes, unrelated contact/metadata,
+reopen/idempotency/journal and no resend. Native separate memory/DB/cache/alias
+partial failures, stale-state equivalence and historical repair remain open.
+
+Validation:1,522 workspace tests pass (9 result suites, four test threads),
+including the12-case membership/hash/reopen matrix and updated first-list
+control. The old projector fails changed membership with a missing hash by
+retaining Some(before). Strict workspace/all-target/all-feature Clippy,
+formatting, CLI reference regeneration, OpenAPI library coverage, APK coverage
+freshness and repository hygiene pass. Five selected DEX exports, both changed
+bundle checksums and subject APK hash match. No live result is claimed.

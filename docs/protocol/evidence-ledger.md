@@ -1,3 +1,10 @@
+2026-11-06 — **Set-result hash follows requested-target membership change.**
+Already-satisfied block/unblock retain cache/hash bytes; newly applied changes
+adopt or clear the selected-list hash. Clarified that the native backend Boolean
+means execution success, not affected-row change. Twelve-case reopen regression.
+[Evidence and separate-state limits](chat-actions.md#blocklist-set-hash-membership-gate-2026-11-06).
+No new request or live account operation.
+
 2026-11-06 — **Blocklist outbound hash omission follows distinct APK rules.**
 Get omits null/empty; block/unblock also omit Java-blank values. Nonblank hashes
 remain byte-for-byte unchanged. Controlled Java oracle checks every UTF16 unit;

@@ -396,7 +396,10 @@ fn apply_block_result_in(
     }
     let key = blocked_key(&target.to_string());
     let dhash = snapshot.dhash;
-    if action == "block" {
+    // APK43.72 7vV.A00 only reaches 1dH.A08 when add/remove of the
+    // requested target changes its membership. Its backend Boolean denotes
+    // execution success, not a positive affected-row count (7PB.A0Q).
+    let changed = if action == "block" {
         let existing: Option<BlockedRow> = tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?;
         if existing
             .as_ref()
@@ -404,18 +407,31 @@ fn apply_block_result_in(
         {
             return Err(invalid("saved blocked row names another identity"));
         }
-        let row = existing.unwrap_or_else(|| BlockedRow {
-            jid: target.to_string(),
-            display_name: None,
-            username: None,
-            since: Timestamp::now(),
-        });
-        tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &row)?;
+        if existing.is_none() {
+            let row = BlockedRow {
+                jid: target.to_string(),
+                display_name: None,
+                username: None,
+                since: Timestamp::now(),
+            };
+            tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &row)?;
+            true
+        } else {
+            false
+        }
     } else {
-        tx.delete(Table::Checkpoints, key.as_bytes())?;
-    }
-    if let Some(dhash) = dhash {
-        tx.put_json(Table::Checkpoints, DHASH_KEY.as_bytes(), 1, &dhash)?;
+        let present = tx.get(Table::Checkpoints, key.as_bytes(), 1)?.is_some();
+        if present {
+            tx.delete(Table::Checkpoints, key.as_bytes())?;
+        }
+        present
+    };
+    if changed {
+        if let Some(dhash) = dhash {
+            tx.put_json(Table::Checkpoints, DHASH_KEY.as_bytes(), 1, &dhash)?;
+        } else {
+            tx.delete(Table::Checkpoints, DHASH_KEY.as_bytes())?;
+        }
     }
     Ok(true)
 }
@@ -998,17 +1014,98 @@ mod tests {
                         mode == "unmatched"
                     );
                 }
-                let expected_hash = if mode == "first_only" {
-                    "selected"
-                } else {
-                    "before"
+                let expected_hash = match mode {
+                    "first_only" => Some("selected"),
+                    "root_hash_only" => None,
+                    _ => Some("before"),
                 };
-                assert_eq!(saved_dhash(&store).unwrap().as_deref(), Some(expected_hash));
+                assert_eq!(saved_dhash(&store).unwrap().as_deref(), expected_hash);
                 assert!(
                     super::super::actions::reserve_pending(&store)
                         .unwrap()
                         .is_empty()
                 );
+            }
+        }
+    }
+
+    #[test]
+    fn set_hash_updates_only_when_target_membership_changes_after_reopen() {
+        for action in ["block", "unblock"] {
+            for present in [false, true] {
+                for hash in [None, Some("updated"), Some("")] {
+                    let (dir, s) = store();
+                    let seed = queue_fetch(&s).unwrap();
+                    super::super::actions::reserve_pending(&s).unwrap();
+                    let other = Node::new("item")
+                        .attr("jid", "15555550999@s.whatsapp.net")
+                        .attr("display_name", "other");
+                    let mut items = vec![other];
+                    if present {
+                        items.push(
+                            Node::new("item")
+                                .attr("jid", phone())
+                                .attr("display_name", "saved-name"),
+                        );
+                    }
+                    super::super::actions::record_reply(&s, &fetch_reply(&seed, "before", items))
+                        .unwrap();
+                    assert_eq!(ingest(&s).unwrap(), 1);
+                    let cache = |store: &ProtocolStore| {
+                        store
+                            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                            .unwrap()
+                            .into_iter()
+                            .filter(|(k, _)| {
+                                k.starts_with(BLOCKED_PREFIX.as_bytes())
+                                    || k == DHASH_KEY.as_bytes()
+                            })
+                            .collect::<Vec<_>>()
+                    };
+                    let before = cache(&s);
+                    let id = if action == "block" {
+                        queue_block(&s, &phone())
+                    } else {
+                        queue_unblock(&s, &phone())
+                    }
+                    .unwrap();
+                    super::super::actions::reserve_pending(&s).unwrap();
+                    let mut list = Node::new("list");
+                    if let Some(hash) = hash {
+                        list = list.attr("dhash", hash);
+                    }
+                    super::super::actions::record_reply(
+                        &s,
+                        &Node::new("iq")
+                            .attr("id", id.as_str())
+                            .attr("type", "result")
+                            .children(vec![list]),
+                    )
+                    .unwrap();
+                    let head = s.journal_head().unwrap();
+                    let changed = present != (action == "block");
+                    assert_eq!(ingest(&s).unwrap(), 1);
+                    drop(s);
+                    let s = reopen(dir.path());
+                    assert_eq!(
+                        saved_dhash(&s).unwrap().as_deref(),
+                        if changed { hash } else { Some("before") }
+                    );
+                    assert_eq!(
+                        blocked(&s).unwrap().len(),
+                        1 + usize::from(action == "block")
+                    );
+                    if !changed {
+                        assert_eq!(cache(&s), before);
+                    }
+                    assert_eq!(s.journal_head().unwrap(), head);
+                    assert_eq!(ingest(&s).unwrap(), 0);
+                    assert!(
+                        super::super::actions::reserve_pending(&s)
+                            .unwrap()
+                            .is_empty()
+                    );
+                }
             }
         }
     }
