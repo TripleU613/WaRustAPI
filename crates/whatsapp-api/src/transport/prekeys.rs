@@ -53,6 +53,7 @@ use crate::{
 
 /// Read access shared by read and write transactions.
 pub(crate) trait Lookup {
+    fn get(&self, table: Table, key: &[u8], version: u16) -> Result<Option<Vec<u8>>>;
     fn scan_after(
         &self,
         table: Table,
@@ -68,6 +69,9 @@ pub(crate) trait Lookup {
     ) -> Result<Option<T>>;
 }
 impl Lookup for ReadTx<'_> {
+    fn get(&self, table: Table, key: &[u8], version: u16) -> Result<Option<Vec<u8>>> {
+        ReadTx::get(self, table, key, version)
+    }
     fn scan_after(
         &self,
         table: Table,
@@ -87,6 +91,9 @@ impl Lookup for ReadTx<'_> {
     }
 }
 impl Lookup for WriteTx<'_> {
+    fn get(&self, table: Table, key: &[u8], version: u16) -> Result<Option<Vec<u8>>> {
+        WriteTx::get(self, table, key, version)
+    }
     fn scan_after(
         &self,
         table: Table,
@@ -3166,6 +3173,53 @@ mod tests {
             "randomized re-signing would fail this"
         );
         assert_eq!(snapshot(&store), before);
+        // An unselected owned row cannot hide corruption behind LR/status filters.
+        for damage in 0..4 {
+            let mut extra = saved_rows.iter().find(|r| !r.last_resort).unwrap().clone();
+            extra.id = 1234;
+            extra.sent = false;
+            let key = if damage == 0 {
+                format!("{}01234", super::super::kem_prekeys::RECORD_PREFIX)
+            } else {
+                super::super::kem_prekeys::record_key(1234)
+            };
+            if damage == 1 {
+                extra.id = 1235;
+            }
+            if damage == 2 {
+                extra.public.pop();
+            }
+            store
+                .write(|tx| {
+                    tx.put_json(Table::Prekeys, key.as_bytes(), 1, &extra)?;
+                    if damage == 3 {
+                        tx.put_json(
+                            Table::Checkpoints,
+                            b"kem-prekey-consumed:v1:1234",
+                            1,
+                            &serde_json::json!({"id":1234,"public_sha256":vec![0u8;32]}),
+                        )?;
+                    }
+                    Ok(())
+                })
+                .unwrap();
+            let damaged = snapshot(&store);
+            assert!(
+                store
+                    .read(|tx| digest::inspect_in(tx, &account, &signed, true, &reply))
+                    .is_err(),
+                "unselected KEM corruption {damage} cannot produce Matches"
+            );
+            assert_eq!(snapshot(&store), damaged);
+            // Remove only injected synthetic rows/markers to continue independent cases.
+            store
+                .write(|tx| {
+                    tx.delete(Table::Prekeys, key.as_bytes())?;
+                    tx.delete(Table::Checkpoints, b"kem-prekey-consumed:v1:1234")?;
+                    Ok(())
+                })
+                .unwrap();
+        }
         store
             .write(|tx| tx.delete(Table::Checkpoints, request_key(&pending.iq_id).as_bytes()))
             .unwrap();

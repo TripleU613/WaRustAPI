@@ -195,7 +195,7 @@ pub(crate) fn counts(tx: &ReadTx<'_>) -> Result<(usize, usize)> {
 /// initial value is untraced, so starting at 1 is local, **inferred** policy).
 const NEXT_ID: &[u8] = b"kem-next-prekey-id";
 
-fn all_rows(tx: &WriteTx<'_>) -> Result<Vec<StoredKemPrekey>> {
+pub(crate) fn all_rows(tx: &impl super::prekeys::Lookup) -> Result<Vec<StoredKemPrekey>> {
     let mut out = Vec::new();
     let mut cursor: Option<Vec<u8>> = None;
     loop {

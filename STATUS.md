@@ -1,3 +1,8 @@
+PQ digest inspection now shares publication's validated KEM inventory for gated
+last-resort selection. Corrupt unselected records refuse instead of yielding a
+normal Matches result. Read-only comparison remains local evidence.
+[Audit](docs/protocol/prekey-count-notifications.md#pq-digest-rejects-corrupt-unselected-kem-rows-2026-11-05).
+
 Legacy inventory now validates every owned record before status filtering or
 replenishment. Corrupt uploaded/unselected rows and restored-consumption conflicts
 refuse inventory-driven writes without changing key/checkpoint state.

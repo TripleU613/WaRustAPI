@@ -7905,3 +7905,12 @@ The existing target-count generation test now uses valid serialized records in
 its synthetic bulk inventory instead of one-byte placeholders, preserving its
 count/target/wrap assertions. No production regeneration around corrupt rows or
 live account operation was added. Whole-store rollback remains outside the guard.
+
+### PQ digest uses validated KEM inventory (2026-11-05)
+
+**Confirmed local fix:** gated LR digest selection now shares all_rows validation
+with publication. Corrupt unselected ordinary/unsent records can no longer hide
+behind LR/status filtering and produce Matches. Four injected corruption cases
+preserve exact rows on refusal; existing published-signature controls remain.
+[Scope, reproducer and limits](prekey-count-notifications.md#pq-digest-rejects-corrupt-unselected-kem-rows-2026-11-05).
+No live request, resynchronization or replay authority.

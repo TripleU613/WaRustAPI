@@ -17380,5 +17380,12 @@
     "x-live": false,
     "description": "Owned legacy inventory now validates all serialized rows, IDs, private/public pairs and live-row/consumption-marker conflicts before status filtering. Uploaded or unselected corruption refuses inventory-driven generation/upload instead of being ignored. Local summary also refuses invalid legacy material. Earlier refusal holds remain non-writing; no repair, regeneration around corruption or retry authority is added.",
     "evidence": "docs/protocol/prekey-count-notifications.md#legacy-inventory-validates-uploaded-and-unselected-rows-2026-11-05"
+  },
+  "x-pq-digest-kem-inventory-integrity": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Offline prekeys digest inspection now validates all owned KEM rows before gated last-resort selection, using the same scan as publication. Noncanonical names, row/material mismatches and consumption-marker conflicts in unselected ordinary/unsent rows refuse rather than yield Matches. Classic/no-LR branches do not gain a full KEM census. No digest network admission, reset or replay authority is added.",
+    "evidence": "docs/protocol/prekey-count-notifications.md#pq-digest-rejects-corrupt-unselected-kem-rows-2026-11-05"
   }
 }

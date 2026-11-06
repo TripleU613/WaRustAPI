@@ -391,3 +391,12 @@ production does not repair reservations to make replies pass. No live operation.
 Validation: the replacement-public regression failed against the previous
 implementation. All 1,399 workspace/all-feature tests, strict Clippy, CLI
 reference and OpenAPI library checks passed. Offline synthetic stores only.
+
+### PQ digest uses validated KEM inventory (2026-11-05)
+
+**Confirmed local fix:** gated LR digest selection now shares all_rows validation
+with publication. Corrupt unselected ordinary/unsent records can no longer hide
+behind LR/status filtering and produce Matches. Four injected corruption cases
+preserve exact rows on refusal; existing published-signature controls remain.
+[Scope, reproducer and limits](prekey-count-notifications.md#pq-digest-rejects-corrupt-unselected-kem-rows-2026-11-05).
+No live request, resynchronization or replay authority.

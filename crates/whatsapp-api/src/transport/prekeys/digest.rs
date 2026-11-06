@@ -203,13 +203,11 @@ pub(super) fn inspect_in(
         if let Some(lr_id) = reply.lr {
             // Current local producer creates one LR. Multiple uploaded rows need
             // native insertion-order metadata, not a guessed highest numeric ID.
-            let rows = super::scan_prefix::<super::super::kem_prekeys::StoredKemPrekey>(
-                tx,
-                Table::Prekeys,
-                super::super::kem_prekeys::RECORD_PREFIX,
-            )?;
-            let mut sent = rows.iter().filter(|(_, r)| r.last_resort && r.sent);
-            let Some((_, lr)) = sent.next() else {
+            // Read-only evidence must not bypass the same owned-row integrity
+            // checks used for publication, even for rows excluded by LR/status.
+            let rows = super::super::kem_prekeys::all_rows(tx)?;
+            let mut sent = rows.iter().filter(|r| r.last_resort && r.sent);
+            let Some(lr) = sent.next() else {
                 mismatch!(LastResortMismatch);
             };
             if sent.next().is_some() {
@@ -218,8 +216,6 @@ pub(super) fn inspect_in(
             if lr.id != lr_id {
                 mismatch!(LastResortMismatch);
             }
-            let _ = super::super::kem_prekeys::load(tx, lr_id)?
-                .ok_or_else(|| invalid("local LR disappeared"))?;
             // New reservations retain their exact publication signature. Historical
             // rows may recover it from an acknowledged frozen SET; never re-sign.
             let mut signature = lr.signature.clone();

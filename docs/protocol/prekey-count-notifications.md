@@ -1346,3 +1346,37 @@ live account operation was added. Whole-store rollback remains outside the guard
 Validation: red regression reproduced ignored uploaded corruption; all 1,401
 workspace/all-feature tests, strict Clippy, CLI reference, OpenAPI library,
 formatting and APK coverage freshness checks passed. Local synthetic stores only.
+
+### PQ digest rejects corrupt unselected KEM rows (2026-11-05)
+
+**Confirmed local defect, fixed offline:** digest inspection's gated LR branch
+used scan_prefix to deserialize KEM rows, filtered by last_resort/sent, and then
+validated only the selected canonical LR through load. It could ignore malformed
+owned names, wrong embedded IDs, invalid public/private material or conflicting
+consumption evidence in an unselected ordinary/unsent row and report Matches.
+The separately loaded LR was discarded; the filtered scan row remained the
+preimage source. This was weaker than write-side inventory admission.
+
+The shared kem_prekeys::all_rows scan now accepts the existing read/write Lookup
+abstraction (with raw get added for consumption-marker existence). Digest LR
+selection uses its validated rows directly. Canonical names, row/material
+integrity and live-row/consumption-marker conflicts are checked before filtering.
+The redundant point lookup is removed. SET/ADD/migration use the same scan as
+before; diagnostic KEM counts remain separate and permissive. This applies when
+the PQ gate and supplied LR enter the inventory-selection branch; it does not
+claim a full KEM census for classic/no-LR digest inspection.
+
+Expanded offline_pq_digest_uses_acknowledged_frozen_signature_without_resigning
+injects an extra unselected ordinary row: noncanonical key, different embedded
+ID, short public key, or live-row/consumption-marker conflict. Every case refuses
+without changing exact prekey/checkpoint rows. Old code failed the alias case by
+returning a successful inspection. Synthetic injections are removed only inside
+the test to continue independent cases; production never repairs them. Existing
+published-wire digest and saved-signature/no-resigning controls remain intact.
+No wire fields, digest request admission, synchronization/reset authority, replay
+or live account operation is added. Matches remains offline comparison evidence,
+not authenticated server acceptance or a guarantee against restrictions.
+
+Validation: the alias regression reproduced a false Matches result before the
+fix. All 1,401 workspace/all-feature tests, strict Clippy, CLI reference, OpenAPI
+library, formatting and coverage freshness checks passed. Offline stores only.
