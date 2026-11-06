@@ -1,3 +1,9 @@
+Native0aq/0ar sessions now share a traced writable-handle/listener and1hk
+transaction chain. Stable-provider/open-handle assumptions establish normal
+nested identity; exceptional close and crash/disk outcomes remain open.
+[Evidence](docs/protocol/apk/2.26.43.72-count-database-wrappers/README.md).
+Offline research; Rust backend/queue behavior unchanged.
+
 Queue transaction and stanza-retirement suppliers now share a traced
 provider-ID/global-cache/memoized-owner chain. Stable-lifetime helper identity
 is established conditionally;0aq/0ar connection and crash semantics remain open.

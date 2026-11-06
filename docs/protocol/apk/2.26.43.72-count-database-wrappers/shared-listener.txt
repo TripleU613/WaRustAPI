@@ -1,0 +1,10 @@
+
+# class: LX/0Xp;
+# extends: Landroid/database/sqlite/SQLiteOpenHelper;
+
+.method public Ax0(L)  # .registers 2
+    # full signature: LX/0Xp;->Ax0()LX/0HC;
+    0000..0004  iget-object  v0, v1, LX/0Xp;->A06:LX/0HC;
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method

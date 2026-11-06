@@ -1,0 +1,33 @@
+
+# class: LX/0aq;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLZ)  # .registers 6
+    # full signature: LX/0aq;-><init>(LX/0HH;Ljava/util/concurrent/locks/ReentrantReadWriteLock$ReadLock;Z)V
+    0000..0006  invoke-direct  {v2}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v4, v2, LX/0aq;->A03:Ljava/util/concurrent/locks/ReentrantReadWriteLock$ReadLock;
+    000a..0010  invoke-interface  {v3}, LX/0HH;->Ax0()LX/0HC;
+    0010..0012  move-result-object  v0
+    0012..0016  iput-object  v0, v2, LX/0aq;->A01:LX/0HC;
+    0016..001a  if-eqz  v4, +0xc
+    001a..0020  invoke-virtual  {v4}, Ljava/util/concurrent/locks/ReentrantReadWriteLock$ReadLock;->lock()V
+    0020..0026  invoke-static  {}, Ljava/lang/Thread;->currentThread()Ljava/lang/Thread;
+    0026..0028  move-result-object  v0
+    0028..002e  invoke-virtual  {v0}, Ljava/lang/Thread;->getId()J
+    002e..0032  if-eqz  v5, +0x9
+    0032..0038  invoke-interface  {v3}, LX/0HH;->BIC()LX/0KU;
+    0038..003a  move-result-object  v0
+    003a..003e  iput-object  v0, v2, LX/0aq;->A02:LX/0KU;
+    003e..0040  return-void
+    0040..0046  invoke-interface  {v3}, LX/0HH;->B2w()LX/0KU;
+    0046..0048  move-result-object  v0
+    0048..004c  iput-object  v0, v2, LX/0aq;->A02:LX/0KU;
+    004c..004e  return-void
+    004e..0050  move-exception  v1
+    0050..0054  const-string  v0, "DatabaseSession/failed to get database"
+    0054..005a  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    005a..0060  invoke-virtual  {v2}, LX/0aq;->close()V
+    0060..0062  throw  v1
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0019..0027 -> 0027
+.end method

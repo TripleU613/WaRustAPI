@@ -1,0 +1,16 @@
+
+# class: LX/0aq;
+# extends: Ljava/lang/Object;
+
+.method public A02(LLLL)  # .registers 6
+    # full signature: LX/0aq;->A02(Landroid/database/sqlite/SQLiteTransactionListener;LX/0HC;LX/0KU;)LX/1hk;
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v5, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  const/4  v0, #0x1
+    000a..0010  invoke-static  {v4, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0010..0012  const/4  v1, #0x0
+    0012..0016  new-instance  v0, LX/1hk;
+    0016..001c  invoke-direct  {v0, v3, v4, v1, v5}, LX/1hk;-><init>(Landroid/database/sqlite/SQLiteTransactionListener;LX/0HC;LX/0H0;LX/0KU;)V
+    001c..001e  return-object  v0
+    # exception table: 0 try range(s)
+.end method

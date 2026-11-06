@@ -7688,3 +7688,14 @@ lifetime. Its646a backend choice occurs once per owner, not per operation.
 provider reset and crash/disk ambiguity still need tracing. Shared helper
 identity alone is not full atomicity proof. No Rust backend switch, ACK,
 replay or live account operation changed.
+
+### Base and alternate database wrappers share transaction primitives (2026-11-05)
+
+**Confirmed static,43.72:**0ar delegates acquisition to0aq; both use the helper
+writable-handle cache and shared0HC listener. Both virtual transaction factories
+construct1hk, passing the same handle/listener and differing health state.
+Within a stable provider/open-handle interval, synchronous nested retirement
+reaches the same SQLiteDatabase, narrowing the normal transaction identity gap.
+[Eight complete methods, assumptions and exceptional-close limits](apk/2.26.43.72-count-database-wrappers/README.md).
+Health callback failure, base close, replacement/reset, ambiguous disk commit
+and crash recovery remain open. No Rust backend, ACK, replay or live operation changed.

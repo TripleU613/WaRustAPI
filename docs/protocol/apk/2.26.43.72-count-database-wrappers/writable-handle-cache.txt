@@ -1,0 +1,33 @@
+
+# class: LX/0Xp;
+# extends: Landroid/database/sqlite/SQLiteOpenHelper;
+
+.method public BIC(L)  # .registers 5
+    # full signature: LX/0Xp;->BIC()LX/0KU;
+    0000..0004  iget-object  v3, v4, LX/0Xp;->A0B:Ljava/lang/Object;
+    0004..0006  monitor-enter
+    0006..000a  iget-object  v2, v4, LX/0Xp;->A00:LX/0KU;
+    000a..000e  if-eqz  v2, +0x9
+    000e..0012  iget-object  v0, v2, LX/0KU;->A02:Landroid/database/sqlite/SQLiteDatabase;
+    0012..0018  invoke-virtual  {v0}, Landroid/database/sqlite/SQLiteDatabase;->isOpen()Z
+    0018..001a  move-result  v0
+    001a..001c  goto  +0x15
+    001c..0022  invoke-virtual  {v4}, LX/0Xp;->A0F()LX/0KU;
+    0022..0024  move-result-object  v2
+    0024..0026  const/4  v1, #0x0
+    0026..002c  invoke-static  {v2, v1}, LX/00l;->A09(Ljava/lang/Object;I)V
+    002c..0030  iget-object  v0, v4, LX/0Xp;->A07:LX/0HL;
+    0030..0034  iput-object  v0, v2, LX/0KU;->A00:LX/0HL;
+    0034..0038  iput-boolean  v1, v2, LX/0KU;->A01:Z
+    0038..003c  iput-object  v2, v4, LX/0Xp;->A00:LX/0KU;
+    003c..0042  invoke-virtual  {v4, v2}, LX/0Xp;->A0A(LX/0KU;)V
+    0042..0044  goto  +0x3
+    0044..0048  if-eqz  v0, -0x14
+    0048..004a  monitor-exit
+    004a..004c  return-object  v2
+    004c..004e  move-exception  v0
+    004e..0050  monitor-exit
+    0050..0052  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0003..0024 -> 0026
+.end method

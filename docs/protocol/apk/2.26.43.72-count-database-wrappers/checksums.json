@@ -1,0 +1,30 @@
+{
+  "README.md": {
+    "bytes": 4121,
+    "sha256": "8f6b3314e7b317b6fa297c19e39541d0920e7912694a83964d7384328b89c97a"
+  },
+  "alternate-session.txt": {
+    "bytes": 12366,
+    "sha256": "f9abad9a861b14b31b6dc16e25af660dcac53836da1253fa2fd9df3c248d5ba7"
+  },
+  "base-session-constructor.txt": {
+    "bytes": 1691,
+    "sha256": "92f34d942d2c916b24758ba0b86810654b6a1cf9cb8b1903e19d1382fdd40c01"
+  },
+  "base-transaction-factory.txt": {
+    "bytes": 723,
+    "sha256": "c4b968fa0e4729dd368caff25eddaa9c997bbf319e2950d69d81ae4ff4e509d1"
+  },
+  "shared-listener.txt": {
+    "bytes": 297,
+    "sha256": "4a2ff9d25002c9f4abcc768bf60aea9021148a06ec2592bc1d5095a885d58379"
+  },
+  "transaction-entry.txt": {
+    "bytes": 678,
+    "sha256": "d1b6e8b774a7c1f584fe3610e14475d258a8ff438aad81393dd9b3b40f90422c"
+  },
+  "writable-handle-cache.txt": {
+    "bytes": 1399,
+    "sha256": "ae5d8847f930be8bbf98db741f882e203481f073535b2e659e3e83c9871382e3"
+  }
+}
