@@ -17800,5 +17800,12 @@
     "x-live": false,
     "description": "Existing lab-login success uses public transaction helper connection.update_login_identity for supplied PN/LID validation and partial updates. Malformed fields roll back owned settlement/account writes; canonical and legacy LID agree after supplied LID. Helper requires success root but caller owns authentication/capture/reservation. No live verification or new route.",
     "evidence": "docs/protocol/login-identity-updates.md#cli-shares-the-authenticated-identity-update-2026-11-06"
+},
+  "x-cli-direct-ack-intent-authority": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Existing CLI direct-send ACK settlement requires exact current uncertain intent before status/extra response writes. Shared wait preserves pending/ACK captures first. Changed/missing/settled intent refuses without replay or crypto changes. Auth-challenge459/unrelated-family uncertainty remains; no live verification or handset-delivery claim.",
+    "evidence": "docs/protocol/replay-safety-audit.md#cli-direct-send-ack-retains-intent-authority-2026-11-06"
 }
 }

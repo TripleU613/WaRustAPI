@@ -1138,3 +1138,30 @@ filtered these types. Red/green regression covers state equality, blocked reserv
 reopen, later valid settlement, duplicate refusal and complete local assembly.
 No new callback authority, key adoption, timeout or automatic retry is added.
 [Evidence, scope and unresolved native lifetime](device-key-batches.md#key-batch-reply-admission-correction-2026-11-05).
+
+## CLI direct-send ACK retains intent authority (2026-11-06)
+
+**Confirmed local gap / fixed offline:** transport_send::send froze its intent
+before the network write, but constructed its result from that cached value and
+unconditionally replaced the checkpoint after the awaited ACK. A changed, missing
+or already-settled durable intent was not checked at settlement.
+
+The settlement transaction now requires expected status=outcome_unknown and exact
+current intent equality before changing status or writing its additional response
+records. Existing shared ACK matching, outcome classification, deadline and
+capture-before-return remain unchanged. Pending frames and matching ACK are
+already retained by write_and_wait_captured, so stale settlement refusal does not
+discard network evidence. No session/identity is regenerated or reinstalled; no
+uncertain send is authorized for replay. This is a local persistence invariant,
+not a newly inferred Android ACK policy.
+
+Regressions cover missing intent, changed wire ID/reservation, already refused
+or acknowledged intent, unchanged captured evidence/checkpoints/journal and
+refusal after reopening. A valid exact reservation settles once, a duplicate
+cannot rewrite it, and saved Signal session bytes remain unchanged. All inputs
+are synthetic; no network or account operation ran.
+
+**Limits:** this closes CLI direct-send result replacement only. It does not add
+a session-wide credential lock, prove handset delivery, or port all group/media
+send paths. Existing auth-challenge459 and unrelated-family outcomes remain
+uncertain, without automatic retry.

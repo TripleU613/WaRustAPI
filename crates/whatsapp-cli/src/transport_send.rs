@@ -11,6 +11,23 @@ use whatsapp_api::{
     },
 };
 
+// A captured ACK does not own a send whose durable intent was replaced.
+fn settle_reserved_intent(
+    tx: &mut whatsapp_api::store::WriteTx<'_>,
+    key: &[u8],
+    expected: &serde_json::Value,
+    result: &serde_json::Value,
+) -> Result<(), Error> {
+    let current: Option<serde_json::Value> = tx.get_json(Table::Checkpoints, key, 1)?;
+    if expected["status"] != "outcome_unknown" || current.as_ref() != Some(expected) {
+        return Err(Error::invalid(
+            "message",
+            "send intent changed before acknowledgement settlement",
+        ));
+    }
+    tx.put_json(Table::Checkpoints, key, 1, result)
+}
+
 pub(super) async fn send(
     store: &ProtocolStore,
     account: &AccountRecord,
@@ -159,11 +176,11 @@ pub(super) async fn send(
         .get_attr("error")
         .and_then(|v| v.as_text())
         .filter(|v| v.len() <= 5 && v.bytes().all(|b| b.is_ascii_digit()));
-    let mut result = intent;
+    let mut result = intent.clone();
     result["status"] = serde_json::json!(outcome.status());
     result["error"] = serde_json::json!(code);
     store.write(|tx| {
-        tx.put_json(Table::Checkpoints, intent_key.as_bytes(), 1, &result)?;
+        settle_reserved_intent(tx, intent_key.as_bytes(), &intent, &result)?;
         for (index, node) in pending.iter().chain(std::iter::once(&ack)).enumerate() {
             let bytes = Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(node)?;
             tx.put_json(
@@ -198,5 +215,123 @@ pub(super) async fn send(
                 code.unwrap_or("unknown")
             ),
         ))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::sync::Arc;
+    use whatsapp_api::{
+        model::ids::AccountId,
+        store::{MasterKey, OpenOptions, StaticKeySource},
+    };
+
+    #[test]
+    fn stale_direct_ack_cannot_overwrite_current_intent_after_reopen() {
+        let expected = serde_json::json!({"status":"outcome_unknown", "wire_id":"original", "to":"fixture", "wire":[1,2,3]});
+        let accepted = serde_json::json!({"status":"server_acknowledged", "wire_id":"original"});
+        for current in [
+            None,
+            Some(serde_json::json!({"status":"outcome_unknown", "wire_id":"replacement"})),
+            Some(serde_json::json!({"status":"server_refused", "wire_id":"original"})),
+            Some(accepted.clone()),
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("direct-ack.redb");
+            let open = |create| {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: AccountId::new("fixture").unwrap(),
+                    create,
+                    key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+                })
+                .unwrap()
+            };
+            let store = open(true);
+            store
+                .write(|tx| {
+                    if let Some(current) = &current {
+                        tx.put_json(Table::Checkpoints, b"send", 1, current)?;
+                    }
+                    // The production wait captures before invoking this settlement.
+                    tx.put_json(
+                        Table::Checkpoints,
+                        b"captured-ack",
+                        1,
+                        &serde_json::json!({"class":"message","id":"original"}),
+                    )
+                })
+                .unwrap();
+            let rows = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let journal = store.journal_head().unwrap();
+            let settle = |store: &ProtocolStore| {
+                store.write(|tx| settle_reserved_intent(tx, b"send", &expected, &accepted))
+            };
+            assert!(settle(&store).is_err());
+            assert_eq!(store.journal_head().unwrap(), journal);
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                rows
+            );
+            drop(store);
+            let store = open(false);
+            assert!(settle(&store).is_err());
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                rows
+            );
+        }
+    }
+
+    #[test]
+    fn exact_direct_send_reservation_settles_once_without_rewriting_crypto() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("direct-valid.redb"),
+            account_id: AccountId::new("fixture").unwrap(),
+            create: true,
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+        })
+        .unwrap();
+        let expected =
+            serde_json::json!({"status":"outcome_unknown","wire_id":"original","wire":[1,2,3]});
+        let mut result = expected.clone();
+        result["status"] = serde_json::json!("server_acknowledged");
+        store
+            .write(|tx| {
+                tx.put_json(Table::Checkpoints, b"send", 1, &expected)?;
+                tx.put(Table::SignalSessions, b"fixture", 1, b"unchanged-session")
+            })
+            .unwrap();
+        store
+            .write(|tx| settle_reserved_intent(tx, b"send", &expected, &result))
+            .unwrap();
+        let journal = store.journal_head().unwrap();
+        assert!(
+            store
+                .write(|tx| settle_reserved_intent(tx, b"send", &expected, &result))
+                .is_err()
+        );
+        assert_eq!(store.journal_head().unwrap(), journal);
+        assert_eq!(
+            store
+                .read(|tx| tx.get(Table::SignalSessions, b"fixture", 1))
+                .unwrap()
+                .unwrap(),
+            b"unchanged-session"
+        );
+        assert_eq!(
+            store
+                .read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, b"send", 1))
+                .unwrap(),
+            Some(result)
+        );
     }
 }
