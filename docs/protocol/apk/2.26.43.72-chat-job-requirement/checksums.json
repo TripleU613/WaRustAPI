@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "bytes": 6310,
+    "sha256": "06bbe93082f5450be29f7caa8d5b14d386901ca6adbb1153c4cf9db0b613f196"
+  },
+  "check-callers.txt": {
+    "bytes": 608,
+    "sha256": "4b7bdd643e138967d4c9d438228e05c8b8a515c5737856c47c51ef0c42e358c9"
+  },
+  "constructor-callers.txt": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "predicate.txt": {
+    "bytes": 374,
+    "sha256": "a216b52f45a79c2024bd951455fc923fa5ad1270789110b58457d1bb36f6fac0"
+  },
+  "ready-callers.txt": {
+    "bytes": 140,
+    "sha256": "dac70cf8c5340f0b6a7a320df51efb972fee0b4bd15d1069e2c75209978b432f"
+  },
+  "ready-named-callback.txt": {
+    "bytes": 1450,
+    "sha256": "2632ab4b769b75c34ff527b1020658502c0bb501ebfde77e1101e4174898c48a"
+  },
+  "requirement.txt": {
+    "bytes": 1517,
+    "sha256": "30b765c307018243cd7dca530a4bb0594785e938d9b5f634935171800f34eb87"
+  },
+  "selector.txt": {
+    "bytes": 16660,
+    "sha256": "0c3142c013def0ed5abcf3c9d5c749c8e9a6330501d4219b56907dc847d82001"
+  },
+  "state-ready.txt": {
+    "bytes": 1070,
+    "sha256": "08062266bd912d52bbdc20ca2f9f81de40c965aa32db303f727eeaae48dd5473"
+  },
+  "state-writes.txt": {
+    "bytes": 397,
+    "sha256": "355f2a61f632d3e59294ce62c03d4d1ed5016ea56fb0f3eba867fe433a665501"
+  }
+}

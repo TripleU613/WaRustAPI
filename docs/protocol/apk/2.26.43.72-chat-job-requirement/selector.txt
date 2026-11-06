@@ -1,0 +1,280 @@
+
+# class: LX/NhM;
+# extends: Ljava/lang/Thread;
+
+.method public run(V)  # .registers 16
+    # full signature: LX/NhM;->run()V
+    0000..0004  iget-object  v3, v15, LX/NhM;->A02:Landroid/os/ConditionVariable;
+    0004..000a  invoke-virtual  {v3}, Landroid/os/ConditionVariable;->block()V
+    000a..0010  invoke-virtual  {v3}, Landroid/os/ConditionVariable;->close()V
+    0010..0014  iget-object  v9, v15, LX/NhM;->A03:LX/NhN;
+    0014..0016  monitor-enter
+    0016..001a  iget-object  v10, v9, LX/NhN;->A01:Ljava/util/LinkedList;
+    001a..0020  invoke-virtual  {v10}, Ljava/util/AbstractCollection;->size()I
+    0020..0022  move-result  v8
+    0022..0028  invoke-virtual  {v10}, Ljava/util/AbstractCollection;->isEmpty()Z
+    0028..002a  move-result  v0
+    002a..002c  const/4  v2, #0x0
+    002c..0030  if-nez  v0, +0xd
+    0030..0036  invoke-virtual  {v10}, Ljava/util/AbstractList;->listIterator()Ljava/util/ListIterator;
+    0036..0038  move-result-object  v11
+    0038..003c  new-instance  v6, Ljava/util/HashMap;
+    003c..0042  invoke-direct  {v6}, Ljava/util/HashMap;-><init>()V
+    0042..0044  const/4  v4, #0x0
+    0044..0046  goto  +0x19
+    0046..0048  const/4  v14, #0x0
+    0048..004a  const/4  v4, #0x0
+    004a..004c  goto  +0x12
+    004c..0052  invoke-interface  {v0, v4}, Ljava/util/Map;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+    0052..0056  iget-object  v0, v9, LX/NhN;->A04:Ljava/util/concurrent/SynchronousQueue;
+    0056..005c  invoke-virtual  {v0, v5}, Ljava/util/concurrent/SynchronousQueue;->offer(Ljava/lang/Object;)Z
+    005c..005e  move-result  v0
+    005e..0062  if-nez  v0, +0xb
+    0062..0068  invoke-interface  {v11}, Ljava/util/ListIterator;->hasNext()Z
+    0068..006a  move-result  v14
+    006a..006c  move-object  v2, v5
+    006c..006e  const/4  v4, #0x1
+    006e..0070  monitor-exit
+    0070..0074  goto/16  +0xc2
+    0074..0076  const/4  v4, #0x1
+    0076..007c  invoke-interface  {v11}, Ljava/util/ListIterator;->hasNext()Z
+    007c..007e  move-result  v0
+    007e..0082  if-eqz  v0, +0xb8
+    0082..0088  invoke-interface  {v11}, Ljava/util/ListIterator;->next()Ljava/lang/Object;
+    0088..008a  move-result-object  v5
+    008a..008e  check-cast  v5, Lorg/whispersystems/jobqueue/Job;
+    008e..0092  iget-object  v0, v5, Lorg/whispersystems/jobqueue/Job;->parameters:Lorg/whispersystems/jobqueue/JobParameters;
+    0092..0096  iget-object  v1, v0, Lorg/whispersystems/jobqueue/JobParameters;->groupId:Ljava/lang/String;
+    0096..009a  if-eqz  v1, +0xa
+    009a..009e  iget-object  v0, v9, LX/NhN;->A03:Ljava/util/Set;
+    009e..00a4  invoke-interface  {v0, v1}, Ljava/util/Set;->contains(Ljava/lang/Object;)Z
+    00a4..00a6  move-result  v0
+    00a6..00aa  if-nez  v0, +0xb
+    00aa..00b0  invoke-virtual  {v5}, Lorg/whispersystems/jobqueue/Job;->A0M()Z
+    00b0..00b2  move-result  v0
+    00b2..00b6  if-eqz  v0, +0x5
+    00b6..00ba  iget-boolean  v0, v9, LX/NhN;->A06:Z
+    00ba..00bc  goto  +0x21
+    00bc..00c0  iget-boolean  v0, v9, LX/NhN;->A06:Z
+    00c0..00c4  if-eqz  v0, -0x25
+    00c4..00c8  iget-object  v0, v5, Lorg/whispersystems/jobqueue/Job;->parameters:Lorg/whispersystems/jobqueue/JobParameters;
+    00c8..00cc  iget-object  v0, v0, Lorg/whispersystems/jobqueue/JobParameters;->groupId:Ljava/lang/String;
+    00cc..00d2  invoke-static  {v0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+    00d2..00d4  move-result  v0
+    00d4..00d8  if-nez  v0, -0x2f
+    00d8..00dc  iget-object  v0, v5, Lorg/whispersystems/jobqueue/Job;->parameters:Lorg/whispersystems/jobqueue/JobParameters;
+    00dc..00e0  iget-object  v0, v0, Lorg/whispersystems/jobqueue/JobParameters;->groupId:Ljava/lang/String;
+    00e0..00e6  invoke-virtual  {v6, v0}, Ljava/util/AbstractMap;->containsKey(Ljava/lang/Object;)Z
+    00e6..00e8  move-result  v0
+    00e8..00ec  if-nez  v0, -0x39
+    00ec..00f0  iget-object  v0, v5, Lorg/whispersystems/jobqueue/Job;->parameters:Lorg/whispersystems/jobqueue/JobParameters;
+    00f0..00f4  iget-object  v0, v0, Lorg/whispersystems/jobqueue/JobParameters;->groupId:Ljava/lang/String;
+    00f4..00fa  invoke-virtual  {v6, v0, v5}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    00fa..00fc  goto  -0x42
+    00fc..0100  if-eqz  v0, +0x51
+    0100..0104  iget-object  v0, v5, Lorg/whispersystems/jobqueue/Job;->parameters:Lorg/whispersystems/jobqueue/JobParameters;
+    0104..0108  iget-object  v0, v0, Lorg/whispersystems/jobqueue/JobParameters;->groupId:Ljava/lang/String;
+    0108..010e  invoke-static  {v0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+    010e..0110  move-result  v0
+    0110..0114  if-nez  v0, +0x47
+    0114..0118  iget-object  v0, v5, Lorg/whispersystems/jobqueue/Job;->parameters:Lorg/whispersystems/jobqueue/JobParameters;
+    0118..011c  iget-object  v0, v0, Lorg/whispersystems/jobqueue/JobParameters;->groupId:Ljava/lang/String;
+    011c..0122  invoke-virtual  {v6, v0}, Ljava/util/AbstractMap;->containsKey(Ljava/lang/Object;)Z
+    0122..0124  move-result  v0
+    0124..0128  if-eqz  v0, +0x3d
+    0128..012c  iget-object  v0, v5, Lorg/whispersystems/jobqueue/Job;->parameters:Lorg/whispersystems/jobqueue/JobParameters;
+    012c..0130  iget-object  v0, v0, Lorg/whispersystems/jobqueue/JobParameters;->groupId:Ljava/lang/String;
+    0130..0136  invoke-virtual  {v6, v0}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    0136..0138  move-result-object  v7
+    0138..013c  check-cast  v7, Lorg/whispersystems/jobqueue/Job;
+    013c..0142  invoke-virtual  {v7}, Lorg/whispersystems/jobqueue/Job;->A0M()Z
+    0142..0144  move-result  v0
+    0144..0148  if-eqz  v0, +0x24
+    0148..014c  iget-object  v0, v9, LX/NhN;->A00:LX/NhU;
+    014c..0150  if-eqz  v0, +0xa
+    0150..0154  const-string  v4, "JobQueue/DeterministicJobSelection/Fixed"
+    0154..0156  const/4  v1, #0x0
+    0156..015a  iget-object  v0, v0, LX/NhU;->A00:LX/0GO;
+    015a..0160  invoke-virtual  {v0, v4, v2, v1}, LX/0B0;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+    0160..0166  invoke-interface  {v11}, Ljava/util/ListIterator;->hasPrevious()Z
+    0166..0168  move-result  v0
+    0168..016c  if-eqz  v0, +0x9
+    016c..0172  invoke-interface  {v11}, Ljava/util/ListIterator;->previous()Ljava/lang/Object;
+    0172..0174  move-result-object  v0
+    0174..0178  if-eq  v0, v7, +0x3
+    0178..017a  goto  -0xc
+    017a..017e  iget-object  v0, v5, Lorg/whispersystems/jobqueue/Job;->parameters:Lorg/whispersystems/jobqueue/JobParameters;
+    017e..0182  iget-object  v0, v0, Lorg/whispersystems/jobqueue/JobParameters;->groupId:Ljava/lang/String;
+    0182..0188  invoke-virtual  {v6, v0}, Ljava/util/AbstractMap;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+    0188..018a  move-object  v5, v7
+    018a..018c  goto  +0xa
+    018c..0190  iget-object  v0, v9, LX/NhN;->A00:LX/NhU;
+    0190..0194  if-eqz  v0, +0x7
+    0194..0198  const-string  v0, "JobQueue/DeterministicJobSelection/Broken"
+    0198..019e  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    019e..01a4  invoke-interface  {v11}, Ljava/util/ListIterator;->remove()V
+    01a4..01a8  iget-object  v0, v5, Lorg/whispersystems/jobqueue/Job;->parameters:Lorg/whispersystems/jobqueue/JobParameters;
+    01a8..01ac  iget-object  v4, v0, Lorg/whispersystems/jobqueue/JobParameters;->groupId:Ljava/lang/String;
+    01ac..01b0  if-eqz  v4, -0xad
+    01b0..01b4  iget-object  v0, v9, LX/NhN;->A03:Ljava/util/Set;
+    01b4..01ba  invoke-interface  {v0, v4}, Ljava/util/Set;->add(Ljava/lang/Object;)Z
+    01ba..01bc  const/4  v1, #0x1
+    01bc..01c2  invoke-virtual  {v9, v4}, LX/NhN;->A01(Ljava/lang/String;)I
+    01c2..01c4  move-result  v0
+    01c4..01c8  if-eqz  v0, -0xb9
+    01c8..01cc  if-ne  v0, v1, +0x6
+    01cc..01d0  iget-object  v0, v9, LX/NhN;->A02:Ljava/util/Map;
+    01d0..01d4  goto/16  -0xc2
+    01d4..01d8  iget-object  v1, v9, LX/NhN;->A02:Ljava/util/Map;
+    01d8..01dc  add-int/lit8  v0, v0, #0xff (-1)
+    01dc..01e2  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    01e2..01e4  move-result-object  v0
+    01e4..01ea  invoke-interface  {v1, v4, v0}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    01ea..01ee  goto/16  -0xcc
+    01ee..01f0  const/4  v14, #0x0
+    01f0..01f4  goto/16  -0xc1
+    01f4..01f8  if-nez  v4, +0xaf
+    01f8..01fc  if-lez  v8, +0xad
+    01fc..0202  invoke-static  {}, Landroid/os/SystemClock;->uptimeMillis()J
+    0202..0204  move-result-wide  v4
+    0204..0208  iget-wide  v0, v15, LX/NhM;->A01:J
+    0208..020c  sub-long  v11, v4, v0
+    020c..0212  const-wide/32  v6, #0xea60
+    0212..0216  cmp-long  v0, v11, v6
+    0216..021a  if-ltz  v0, +0x9e
+    021a..021e  iget  v0, v15, LX/NhM;->A00:I
+    021e..0222  if-eq  v8, v0, +0x9a
+    0222..0226  iput-wide  v4, v15, LX/NhM;->A01:J
+    0226..022a  iput  v8, v15, LX/NhM;->A00:I
+    022a..022e  iget-object  v0, v9, LX/NhN;->A00:LX/NhU;
+    022e..0232  if-eqz  v0, +0x92
+    0232..0236  const-string  v0, "JobQueue/stall/queueSize: "
+    0236..023a  new-instance  v5, Ljava/lang/StringBuilder;
+    023a..0240  invoke-direct  {v5, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0240..0246  invoke-virtual  {v5, v8}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0246..0248  monitor-enter
+    0248..024e  invoke-virtual  {v10}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+    024e..0250  move-result-object  v11
+    0250..0252  const/4  v4, #0x0
+    0252..0258  invoke-interface  {v11}, Ljava/util/Iterator;->hasNext()Z
+    0258..025a  move-result  v0
+    025a..025e  if-eqz  v0, +0x73
+    025e..0264  invoke-interface  {v11}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0264..0266  move-result-object  v6
+    0266..026a  check-cast  v6, Lorg/whispersystems/jobqueue/Job;
+    026a..026e  const/16  v0, #0xa
+    026e..0272  if-ge  v4, v0, +0x69
+    0272..0276  new-instance  v8, Ljava/lang/StringBuilder;
+    0276..027c  invoke-direct  {v8}, Ljava/lang/StringBuilder;-><init>()V
+    027c..0280  iget-object  v0, v6, Lorg/whispersystems/jobqueue/Job;->parameters:Lorg/whispersystems/jobqueue/JobParameters;
+    0280..0284  iget-object  v0, v0, Lorg/whispersystems/jobqueue/JobParameters;->requirements:Ljava/util/List;
+    0284..028a  invoke-interface  {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    028a..028c  move-result-object  v7
+    028c..0292  invoke-interface  {v7}, Ljava/util/Iterator;->hasNext()Z
+    0292..0294  move-result  v0
+    0294..0298  if-eqz  v0, +0x25
+    0298..029e  invoke-interface  {v7}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    029e..02a0  move-result-object  v1
+    02a0..02a4  check-cast  v1, Lorg/whispersystems/jobqueue/requirements/Requirement;
+    02a4..02aa  invoke-interface  {v1}, Lorg/whispersystems/jobqueue/requirements/Requirement;->BWq()Z
+    02aa..02ac  move-result  v0
+    02ac..02b0  if-nez  v0, -0x10
+    02b0..02b6  invoke-virtual  {v8}, Ljava/lang/StringBuilder;->length()I
+    02b6..02b8  move-result  v0
+    02b8..02bc  if-lez  v0, +0x7
+    02bc..02c0  const-string  v0, ", "
+    02c0..02c6  invoke-virtual  {v8, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    02c6..02cc  invoke-virtual  {v1}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+    02cc..02ce  move-result-object  v0
+    02ce..02d4  invoke-virtual  {v0}, Ljava/lang/Class;->getSimpleName()Ljava/lang/String;
+    02d4..02d6  move-result-object  v0
+    02d6..02dc  invoke-virtual  {v8, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    02dc..02de  goto  -0x28
+    02de..02e4  invoke-virtual  {v8}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    02e4..02e6  move-result-object  v1
+    02e6..02ea  const-string  v0, ", ["
+    02ea..02f0  invoke-virtual  {v5, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    02f0..02f6  invoke-virtual  {v6}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+    02f6..02f8  move-result-object  v0
+    02f8..02fe  invoke-virtual  {v0}, Ljava/lang/Class;->getSimpleName()Ljava/lang/String;
+    02fe..0300  move-result-object  v0
+    0300..0306  invoke-virtual  {v5, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0306..030c  invoke-virtual  {v1}, Ljava/lang/String;->isEmpty()Z
+    030c..030e  move-result  v0
+    030e..0312  if-nez  v0, +0x10
+    0312..0316  const-string  v0, " blocked by: "
+    0316..031c  invoke-virtual  {v5, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    031c..0322  invoke-virtual  {v5, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0322..0326  const-string  v0, "]"
+    0326..032c  invoke-virtual  {v5, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    032c..032e  goto  +0x7
+    032e..0332  const-string  v0, " blocked by: groupId unavailable"
+    0332..0338  invoke-virtual  {v5, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0338..033a  goto  -0xb
+    033a..033e  add-int/lit8  v4, v4, #0x1
+    033e..0340  goto  -0x76
+    0340..0342  monitor-exit
+    0342..0348  invoke-virtual  {v5}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0348..034a  move-result-object  v1
+    034a..034c  const/4  v0, #0x0
+    034c..0352  invoke-static  {v1, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0352..0356  if-eqz  v2, -0x1a9
+    0356..035a  if-eqz  v14, +0x5
+    035a..0360  invoke-virtual  {v3}, Landroid/os/ConditionVariable;->open()V
+    0360..0364  const-wide/16  v3, #0x0
+    0364..036a  invoke-static  {}, Landroid/os/SystemClock;->uptimeMillis()J
+    036a..036c  move-result-wide  v0
+    036c..0370  iput-wide  v0, v9, LX/NhN;->A08:J
+    0370..0374  iget-object  v0, v9, LX/NhN;->A04:Ljava/util/concurrent/SynchronousQueue;
+    0374..037a  invoke-virtual  {v0, v2}, Ljava/util/concurrent/SynchronousQueue;->put(Ljava/lang/Object;)V
+    037a..0380  invoke-static  {}, Landroid/os/SystemClock;->uptimeMillis()J
+    0380..0382  move-result-wide  v6
+    0382..0386  iget-wide  v0, v9, LX/NhN;->A08:J
+    0386..0388  sub-long/2addr  v6, v0
+    0388..038c  iput-wide  v3, v9, LX/NhN;->A08:J
+    038c..0390  const-wide/16  v1, #0x7530
+    0390..0394  cmp-long  v0, v6, v1
+    0394..0398  if-lez  v0, -0x1ca
+    0398..039c  iget-object  v8, v9, LX/NhN;->A00:LX/NhU;
+    039c..03a0  if-eqz  v8, -0x1ce
+    03a0..03a4  const-string  v5, "JobQueue/ProducerPutSlow"
+    03a4..03a8  new-instance  v1, Ljava/lang/StringBuilder;
+    03a8..03ae  invoke-direct  {v1}, Ljava/lang/StringBuilder;-><init>()V
+    03ae..03b2  const-string  v0, "blocked_ms="
+    03b2..03b8  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    03b8..03be  invoke-virtual  {v1, v6, v7}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    03be..03c2  const-string  v0, ",queueSize="
+    03c2..03c8  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    03c8..03ca  monitor-enter
+    03ca..03d0  invoke-virtual  {v10}, Ljava/util/AbstractCollection;->size()I
+    03d0..03d2  move-result  v0
+    03d2..03d4  monitor-exit
+    03d4..03da  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    03da..03e0  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    03e0..03e2  move-result-object  v2
+    03e2..03e4  const/4  v1, #0x0
+    03e4..03e8  iget-object  v0, v8, LX/NhU;->A00:LX/0GO;
+    03e8..03ee  invoke-virtual  {v0, v5, v2, v1}, LX/0B0;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+    03ee..03f2  goto/16  -0x1f7
+    03f2..03f4  move-exception  v0
+    03f4..03f6  monitor-exit
+    03f6..03f8  throw  v0
+    03f8..03fc  iput-wide  v3, v9, LX/NhN;->A08:J
+    03fc..0400  goto/16  -0x1fe
+    0400..0402  move-exception  v0
+    0402..0404  monitor-exit
+    0404..0406  throw  v0
+    0406..0408  move-exception  v0
+    0408..040a  monitor-exit
+    040a..040c  throw  v0
+    # exception table: 9 try range(s)
+    # catch <all> code_units 000b..00fe -> 0203
+    # catch <all> code_units 0124..01a1 -> 0200
+    # catch Ljava/lang/InterruptedException; code_units 01b2..01e5 -> 01fc
+    # catch <all> code_units 01e5..01e9 -> 01f9
+    # catch Ljava/lang/InterruptedException; code_units 01e9..01f9 -> 01fc
+    # catch <all> code_units 01fa..01fb -> 01f9
+    # catch Ljava/lang/InterruptedException; code_units 01fb..01fc -> 01fc
+    # catch <all> code_units 0201..0202 -> 0200
+    # catch <all> code_units 0204..0205 -> 0203
+.end method

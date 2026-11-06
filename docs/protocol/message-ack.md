@@ -1154,3 +1154,23 @@ complete transitive side effects remain open. No proof of durable delivery
 state mutation, retry scheduling or safe replay follows. No native counters
 or telemetry are synthesized. Rust durable receipt ownership and partial-write
 controls pass unchanged; no runtime change or live account operation included.
+
+## Job connection requirement is local admission, not replay authority (2026-11-06)
+
+**Confirmed selected static, APK2.26.43.72:**
+[Requirement, selector, state/caller censuses and retained readiness linkage](apk/2.26.43.72-chat-job-requirement/README.md)
+bind ChatConnectionRequirement.BWq to0AI.A04==2. The existing connected-handler
+producer can set this before later handler work. NhM selection invokesJob.A0M,
+then hands off viaSynchronousQueue; its30000ms comparison is slow-producer
+logging, not a server deadline. Provider/wake binding, persistence/dedup and
+full handoff lifecycle remain open.
+
+An exact constructor caller census returnszero even though retainedDCZ.A02
+allocates the requirement and invokesObject.<init> directly. Allocation/body
+binding supplies positive evidence; a negative constructor census alone does
+not prove absence. FreshBulk A0L matches prior retained bytes; its completed
+future/retry audit is reused, not treated as new wire behavior.
+
+Rust durable original-owner regression passes unchanged. A connected predicate
+is not key acceptance, complete write readiness or permission to replay an
+uncertain reservation. No runtime, timing, retry or live-account change added.

@@ -1,0 +1,31 @@
+
+# class: LX/1iM;
+# extends: Ljava/lang/Object;
+
+.method public A03(V)  # .registers 4
+    # full signature: LX/1iM;->A03()V
+    0000..0004  const-string  v0, "MessageHandlerCallback/ready"
+    0004..000a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    000a..000e  iget-object  v0, v3, LX/1iM;->A0g:LX/00x;
+    000e..0014  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0014..0016  move-result-object  v0
+    0016..001a  check-cast  v0, LX/09S;
+    001a..001e  iget-object  v0, v0, LX/09S;->A09:LX/00x;
+    001e..0024  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0024..0026  move-result-object  v0
+    0026..002a  check-cast  v0, LX/0FZ;
+    002a..0030  invoke-virtual  {v0}, LX/0FZ;->A03()Landroid/content/SharedPreferences;
+    0030..0032  move-result-object  v2
+    0032..0036  const-string  v1, "refresh_broadcast_lists"
+    0036..0038  const/4  v0, #0x0
+    0038..003e  invoke-interface  {v2, v1, v0}, Landroid/content/SharedPreferences;->getBoolean(Ljava/lang/String;Z)Z
+    003e..0040  move-result  v0
+    0040..0044  if-eqz  v0, +0xd
+    0044..0048  iget-object  v0, v3, LX/1iM;->A0r:LX/00x;
+    0048..004e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    004e..0050  move-result-object  v0
+    0050..0054  check-cast  v0, LX/0oc;
+    0054..005a  invoke-virtual  {v0}, LX/0oc;->A00()V
+    005a..005c  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -18267,5 +18267,13 @@
     "x-library": [],
     "description": "Pinned static xtask research binds disconnectF1z toEuU and message-send logging0x7.A01. Result4 and mapped reason populateDqZ fields submitted through0NX.CSJ/CSW, not a proven durable message-state transition or retry command. Consumer has usage-preference/helper side effects; full transitive persistence/retry and downstream telemetry authority remain open. No runtime, synthetic telemetry, live operation or replay change.",
     "evidence": "docs/protocol/message-ack.md#disconnect-row-bookkeeping-feeds-logging-rather-than-a-proven-state-write-2026-11-06"
+  },
+  "x-chat-job-requirement-research": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Pinned static xtask research bindsChatConnectionRequirement to0AI.A04==2 and selected jobqueue requirement/handoff checks. State is not complete writer/account readiness;30000ms is ProducerPutSlow logging, not network timeout. Exact constructor-caller absence is refuted by optimized new-instance plusObject init. Existing bulk completion evidence reused byte-identically. Provider/wake, persistence/dedup and full generation ordering remain open; no runtime, retry or live operation.",
+    "evidence": "docs/protocol/message-ack.md#job-connection-requirement-is-local-admission-not-replay-authority-2026-11-06"
   }
 }
