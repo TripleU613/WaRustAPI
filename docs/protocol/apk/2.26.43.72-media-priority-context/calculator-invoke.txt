@@ -1,0 +1,53 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000065d11c <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE>:
+  65fd6c:      	paciasp
+  65fd70:      	stp	x29, x30, [sp, #-0x20]!
+  65fd74:      	stp	x20, x19, [sp, #0x10]
+  65fd78:      	mov	x29, sp
+  65fd7c:      	mov	x19, x8
+  65fd80:      	cbz	x1, 0x65fde0 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x2cc4>
+  65fd84:      	nop
+  65fd88:      	adr	x8, 0x7570d8 <_ZTVN8facebook10executor4a25AndroidSerialExecutorImplE+0x350>
+  65fd8c:      	mov	x20, x0
+  65fd90:      	nop
+  65fd94:      	adr	x2, 0x757088 <_ZTVN8facebook10executor4a25AndroidSerialExecutorImplE+0x300>
+  65fd98:      	bl	0x2e2a1c <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0x14b40>
+  65fd9c:      	mov	x3, xzr
+  65fda0:      	bl	0x7376e0 <__wrap___dynamic_cast@plt>
+  65fda4:      	cbz	x0, 0x65fde0 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x2cc4>
+  65fda8:      	ldrb	w8, [x20, #0x8]
+  65fdac:      	cmp	w8, #0x1
+  65fdb0:      	b.ne	0x65fde0 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x2cc4>
+  65fdb4:      	ldp	w9, w8, [x0, #0x8]
+  65fdb8:      	sub	w10, w9, #0xa
+  65fdbc:      	cmp	w10, #0x2
+  65fdc0:      	b.lo	0x65fdd4 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x2cb8>
+  65fdc4:      	cmp	w9, #0x2
+  65fdc8:      	b.eq	0x65fe04 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x2ce8>
+  65fdcc:      	cmp	w9, #0x1
+  65fdd0:      	b.ne	0x65fde0 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x2cc4>
+  65fdd4:      	cmp	w8, #0x1
+  65fdd8:      	sturh	wzr, [x19, #0x1]
+  65fddc:      	b	0x65fe14 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x2cf8>
+  65fde0:      	mov	w8, #0x103              // =259
+  65fde4:      	strb	wzr, [x19, #0x2]
+  65fde8:      	strh	w8, [x19]
+  65fdec:      	strb	wzr, [x19, #0x8]
+  65fdf0:      	strb	wzr, [x19, #0x10]
+  65fdf4:      	ldp	x20, x19, [sp, #0x10]
+  65fdf8:      	ldp	x29, x30, [sp], #0x20
+  65fdfc:      	autiasp
+  65fe00:      	ret
+  65fe04:      	cmp	w8, #0x1
+  65fe08:      	strb	wzr, [x19, #0x2]
+  65fe0c:      	cset	w8, ne
+  65fe10:      	strb	w8, [x19, #0x1]
+  65fe14:      	mov	w8, #0x3                // =3
+  65fe18:      	stp	xzr, xzr, [x19, #0x8]
+  65fe1c:      	cinc	w8, w8, eq
+  65fe20:      	strb	w8, [x19]
+  65fe24:      	b	0x65fdf4 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x2cd8>

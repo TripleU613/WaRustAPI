@@ -1,0 +1,66 @@
+{
+  "registration": [
+    "0x6602d8",
+    "0x6603ec"
+  ],
+  "interceptor-factory": [
+    "0x65fe28",
+    "0x65ff28"
+  ],
+  "make-interceptor": [
+    "0x65ff28",
+    "0x65ffc4"
+  ],
+  "interceptor-invoke": [
+    "0x660000",
+    "0x660134"
+  ],
+  "calculator-factory": [
+    "0x65fc1c",
+    "0x65fd28"
+  ],
+  "calculator-invoke": [
+    "0x65fd6c",
+    "0x65fe28"
+  ],
+  "context-destructor": [
+    "0x66017c",
+    "0x6601b8"
+  ],
+  "context-replacement": [
+    "0x4d80e8",
+    "0x4d8118"
+  ],
+  "context-string-helper": [
+    "0x6642d8",
+    "0x664338"
+  ],
+  "context-pair-move": [
+    "0x72c9f4",
+    "0x72ca00"
+  ],
+  "context-old-owner": [
+    "0x729c34",
+    "0x729c40"
+  ],
+  "rtti-argument-helper": [
+    "0x728b68",
+    "0x728b74"
+  ],
+  "result-register-helper": [
+    "0x729f80",
+    "0x729f8c"
+  ],
+  "create-calculator": [
+    "0x65fd28",
+    "0x65fd6c"
+  ],
+  "interceptor-result-helper": [
+    "0x7274c8",
+    "0x7274e0"
+  ],
+  "calculator-allocation-helper": [
+    "0x72f348",
+    "0x72f354"
+  ]
+}

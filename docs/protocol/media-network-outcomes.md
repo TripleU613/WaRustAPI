@@ -870,3 +870,30 @@ runtime activation, server acceptance/requirements and account restriction
 causes. Static compatibility work cannot establish zero bans. A zero physical
 constructor census was not absence proof: optimized allocation uses Object.init
 and explicit initHybrid, corroborated by checked DEX and complete REA output.
+
+## Native HTTP priority context separated from headers (2026-11-06)
+
+**Confirmed static:** the next interceptor installed by RlW attaches a shared
+WAHttpPriorityContext when the request lacks one; an existing context is
+preserved. Native registration, factory/vtable linkage and complete invocation
+are retained, alongside the calculator's numeric branch mapping, in
+[the evidence bundle](apk/2.26.43.72-media-priority-context/README.md).
+[Complete constructor REA Evidence](rea/2.26.43.72-media-priority-context/README.md)
+corroborates checked DEX. The calculator conditionally consumes this typed
+context when its boolean flag is1; Java's no-argument holder constructor passes
+false, which does not establish the selected app factory's effective value.
+
+**Bounded negative:** this invocation attaches internal context rather than
+directly inserting a request header. It does not establish a missing Priority
+header in Rust. No speculative header, scheduling value, deadline, retry or
+persistence change was made. **Unknown:** provider activation, flag selection,
+context numeric enum meanings, downstream HTTP/2/3 priority serialization and
+server policy. No target execution/live account operation, acceptance or ban
+claim. This resolves the immediate interceptor's direct-write scope; downstream
+middleware and scheduling remain open.
+
+Next concrete static boundary: retained `0eB.A00` at DEX byte0x059c..0x05ac
+obtains `0eA.A0z.getValue()` as HttpPriorityCalculatorProvider and passes it
+into the TigonHttpClient constructor at0x05f6. Trace that lazy producer before
+assuming which holder/boolean value is selected; the User-Agent bundle already
+retains the complete factory and 0eA class initializer.

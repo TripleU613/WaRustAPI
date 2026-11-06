@@ -18536,5 +18536,13 @@
     "x-library": [],
     "description": "New comparison media uploads require existing client.user_agent before route lookup, encryption checkpoint allocation, reservation or HTTP transmission. Missing value is local InvalidInput(client.user_agent). Saved uploaded/refused/uncertain outcomes keep their existing behavior. Configured header already applied by shared HTTP client; no invented identity, HTTP route, download behavior change, live validation or ban guarantee.",
     "evidence": "docs/protocol/media-network-outcomes.md#new-media-upload-user-agent-preflight-2026-11-06"
+},
+  "x-media-priority-context-research": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Static APK audit connects priority-context interceptor JNI registration/factory/vtables to context attachment and conditional numeric calculator branches. Existing context preserved; no direct header insertion established in the interceptor. Effective provider/flag and downstream priority serialization unknown. No product route, runtime behavior, header, retry, persistence or live validation changed.",
+    "evidence": "docs/protocol/media-network-outcomes.md#native-http-priority-context-separated-from-headers-2026-11-06"
 }
 }

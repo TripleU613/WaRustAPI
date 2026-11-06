@@ -1,0 +1,38 @@
+
+# class: Lcom/whatsapp/infra/tigon/WAHttpPriorityContextInterceptor;
+# extends: Lcom/facebook/tigon/interceptors/RequestInterceptor;
+
+.method public <clinit>(V)  # .registers 1
+    # full signature: Lcom/whatsapp/infra/tigon/WAHttpPriorityContextInterceptor;-><clinit>()V
+    0000..0004  new-instance  v0, LX/SBT;
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000a..000e  sput-object  v0, Lcom/whatsapp/infra/tigon/WAHttpPriorityContextInterceptor;->Companion:LX/SBT;
+    000e..0012  const-string  v0, "wahttpprioritycalculator-jni"
+    0012..0018  invoke-static  {v0}, LX/0DG;->A07(Ljava/lang/String;)Z
+    0018..001a  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(V)  # .registers 2
+    # full signature: Lcom/whatsapp/infra/tigon/WAHttpPriorityContextInterceptor;-><init>()V
+    0000..0006  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    0006..000c  invoke-static  {}, Lcom/whatsapp/infra/tigon/WAHttpPriorityContextInterceptor;->initHybrid()Lcom/facebook/jni/HybridData;
+    000c..000e  move-result-object  v0
+    000e..0012  iput-object  v0, v1, Lcom/facebook/tigon/interceptors/Interceptor;->mHybridData:Lcom/facebook/jni/HybridData;
+    0012..0014  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public access$initHybrid(L)  # .registers 1
+    # full signature: Lcom/whatsapp/infra/tigon/WAHttpPriorityContextInterceptor;->access$initHybrid()Lcom/facebook/jni/HybridData;
+    0000..0006  invoke-static  {}, Lcom/whatsapp/infra/tigon/WAHttpPriorityContextInterceptor;->initHybrid()Lcom/facebook/jni/HybridData;
+    0006..0008  move-result-object  v0
+    0008..000a  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public initHybrid(L)  # .registers 0
+    # full signature: Lcom/whatsapp/infra/tigon/WAHttpPriorityContextInterceptor;->initHybrid()Lcom/facebook/jni/HybridData;
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method

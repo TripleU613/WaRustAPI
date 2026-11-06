@@ -1,0 +1,70 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000065d11c <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE>:
+  65fe28:      	bti	c
+  65fe2c:      	nop
+  65fe30:      	adr	x2, 0x65fe38 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x2d1c>
+  65fe34:      	b	0x3ad67c <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0xf03c>
+  65fe38:      	paciasp
+  65fe3c:      	sub	sp, sp, #0x50
+  65fe40:      	stp	x29, x30, [sp, #0x20]
+  65fe44:      	str	x21, [sp, #0x30]
+  65fe48:      	stp	x20, x19, [sp, #0x40]
+  65fe4c:      	add	x29, sp, #0x20
+  65fe50:      	bl	0x729f80 <MCFSetGetCount+0x5ec8>
+  65fe54:      	mov	w0, #0x8                // =8
+  65fe58:      	bl	0x728c04 <MCFSetGetCount+0x4b4c>
+  65fe5c:      	bl	0x737430 <__wrap__Znwm@plt>
+  65fe60:      	mov	x20, x0
+  65fe64:      	adrp	x8, 0x77a000 <_ZTVN6google8protobuf11MessageLiteE+0x1ee18>
+  65fe68:      	add	x8, x8, #0x110
+  65fe6c:      	str	x8, [x0]
+  65fe70:      	str	xzr, [sp, #0x8]
+  65fe74:      	add	x8, sp, #0x8
+  65fe78:      	bl	0x735110 <_ZN8facebook3jni6detail10HybridData6createEv@plt>
+  65fe7c:      	ldr	x0, [sp, #0x8]
+  65fe80:      	bl	0x3a9a14 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0xb3d4>
+  65fe84:      	str	x0, [sp, #0x10]
+  65fe88:      	str	x20, [sp]
+  65fe8c:      	bl	0x34a99c <_RNvXsp_NtCsUHwbHsI1a0_5alloc3vecINtB5_3VecmENtNtNtCsd0h5sCe2hTT_4core3ops4drop4Drop4dropCs83ZMWuwgNvG_3cxx+0x15b74>
+  65fe90:      	bl	0x3a997c <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0xb33c>
+  65fe94:      	ldr	x0, [sp]
+  65fe98:      	cbz	x0, 0x65fea4 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x2d88>
+  65fe9c:      	bl	0x728b50 <MCFSetGetCount+0x4a98>
+  65fea0:      	blr	x8
+  65fea4:      	add	x0, sp, #0x10
+  65fea8:      	bl	0x41e188 <_ZNK8facebook9stash_jni10JFileStash9removeAllEv+0x1823c>
+  65feac:      	bl	0x7274a0 <MCFSetGetCount+0x33e8>
+  65feb0:      	bl	0x41e188 <_ZNK8facebook9stash_jni10JFileStash9removeAllEv+0x1823c>
+  65feb4:      	bl	0x725a98 <MCFSetGetCount+0x19e0>
+  65feb8:      	b.ne	0x65ff24 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x2e08>
+  65febc:      	bl	0x2dba20 <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0xdb44>
+  65fec0:      	ldp	x29, x30, [sp, #0x20]
+  65fec4:      	add	sp, sp, #0x50
+  65fec8:      	autiasp
+  65fecc:      	ret
+  65fed0:      	bl	0x72a03c <MCFSetGetCount+0x5f84>
+  65fed4:      	cbz	x0, 0x65fee0 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x2dc4>
+  65fed8:      	bl	0x728b50 <MCFSetGetCount+0x4a98>
+  65fedc:      	blr	x8
+  65fee0:      	add	x0, sp, #0x10
+  65fee4:      	bl	0x41e188 <_ZNK8facebook9stash_jni10JFileStash9removeAllEv+0x1823c>
+  65fee8:      	mov	x20, xzr
+  65feec:      	b	0x65fef4 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x2dd8>
+  65fef0:      	mov	x19, x0
+  65fef4:      	add	x0, sp, #0x8
+  65fef8:      	bl	0x41e188 <_ZNK8facebook9stash_jni10JFileStash9removeAllEv+0x1823c>
+  65fefc:      	cbnz	x20, 0x65ff08 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x2dec>
+  65ff00:      	b	0x65ff14 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x2df8>
+  65ff04:      	mov	x19, x0
+  65ff08:      	bl	0x728eb0 <MCFSetGetCount+0x4df8>
+  65ff0c:      	ldr	x8, [x8, #0x8]
+  65ff10:      	blr	x8
+  65ff14:      	bl	0x725a98 <MCFSetGetCount+0x19e0>
+  65ff18:      	b.ne	0x65ff24 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x2e08>
+  65ff1c:      	mov	x0, x19
+  65ff20:      	bl	0x7373e0 <__wrap__Unwind_Resume@plt>
+  65ff24:      	bl	0x7378f0 <__stack_chk_fail@plt>

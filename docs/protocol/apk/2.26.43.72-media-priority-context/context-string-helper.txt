@@ -1,0 +1,30 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000006642cc <_ZNK8facebook5tigon12TigonRequest11getTigonUrlEv>:
+  6642d8:      	paciasp
+  6642dc:      	sub	sp, sp, #0x50
+  6642e0:      	stp	x29, x30, [sp, #0x30]
+  6642e4:      	stp	x20, x19, [sp, #0x40]
+  6642e8:      	add	x29, sp, #0x30
+  6642ec:      	bl	0x7249e4 <MCFSetGetCount+0x92c>
+  6642f0:      	add	x0, sp, #0x8
+  6642f4:      	mov	w3, #0x2d               // =45
+  6642f8:      	bl	0x501bfc <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x30848>
+  6642fc:      	adrp	x2, 0x77d000
+  664300:      	bl	0x729d44 <MCFSetGetCount+0x5c8c>
+  664304:      	ldr	x2, [x2, #0x180]
+  664308:      	bl	0x4fa110 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x28d5c>
+  66430c:      	add	x0, sp, #0x8
+  664310:      	bl	0x3a7278 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x8c38>
+  664314:      	bl	0x725e44 <MCFSetGetCount+0x1d8c>
+  664318:      	b.ne	0x664330 <_ZNK8facebook5tigon12TigonRequest11getTigonUrlEv+0x64>
+  66431c:      	ldp	x20, x19, [sp, #0x40]
+  664320:      	ldp	x29, x30, [sp, #0x30]
+  664324:      	add	sp, sp, #0x50
+  664328:      	autiasp
+  66432c:      	ret
+  664330:      	bl	0x7378f0 <__stack_chk_fail@plt>
+  664334:      	bl	0x39fc68 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x1628>

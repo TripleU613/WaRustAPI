@@ -1,3 +1,9 @@
+2026-11-06 — **Native priority interceptor attaches typed scheduling context.**
+
+Confirmed static registration/factory/vtable/invocation and calculator numeric
+branches; no direct header insertion established in this interceptor. No Rust
+wire change or live operation. [Evidence and remaining scheduling boundary](media-network-outcomes.md#native-http-priority-context-separated-from-headers-2026-11-06).
+
 2026-11-06 — **New media uploads require an explicit configured User-Agent.**
 
 APK native HTTPS interceptor fills a missing header; Rust now refuses missing

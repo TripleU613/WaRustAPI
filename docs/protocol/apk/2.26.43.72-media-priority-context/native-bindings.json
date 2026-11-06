@@ -1,0 +1,148 @@
+{
+  "library_sha256": "d0ab3f2237e92a76ac3519c3577b5836b9e6f65a186c2016cefd43c4923f4b0d",
+  "jni": [
+    {
+      "slot_va": "0x756f40",
+      "name": "initHybrid",
+      "signature": "(Z)Lcom/facebook/jni/HybridData;",
+      "function_va": "0x65fc1c"
+    },
+    {
+      "slot_va": "0x756fd0",
+      "name": "initHybrid",
+      "signature": "()Lcom/facebook/jni/HybridData;",
+      "function_va": "0x65fe28"
+    }
+  ],
+  "windows": [
+    {
+      "name": "registration",
+      "start_va": "0x6602d8",
+      "end_va": "0x6603ec",
+      "file_offset": "0x65c2d8",
+      "bytes": 276,
+      "sha256": "cd4c967d5c890d1a1e76863418d072858236a30f483871138602577c4ada5ace"
+    },
+    {
+      "name": "interceptor-factory",
+      "start_va": "0x65fe28",
+      "end_va": "0x65ff28",
+      "file_offset": "0x65be28",
+      "bytes": 256,
+      "sha256": "6c1b7913ec6ad45d8b1fa993a2a19e7df683b429492b8e025a01e8d7b84c3ba9"
+    },
+    {
+      "name": "make-interceptor",
+      "start_va": "0x65ff28",
+      "end_va": "0x65ffc4",
+      "file_offset": "0x65bf28",
+      "bytes": 156,
+      "sha256": "451649384412322ca93d288e9b0a98e8d08fb4e40441fe61761a2fc87a5506b6"
+    },
+    {
+      "name": "interceptor-invoke",
+      "start_va": "0x660000",
+      "end_va": "0x660134",
+      "file_offset": "0x65c000",
+      "bytes": 308,
+      "sha256": "d1744e7e5ff11f92601ee5a13f680d85b4e69fdc31fd988c4b9a04a8e52b99a9"
+    },
+    {
+      "name": "calculator-factory",
+      "start_va": "0x65fc1c",
+      "end_va": "0x65fd28",
+      "file_offset": "0x65bc1c",
+      "bytes": 268,
+      "sha256": "27e5e172ca2d963859e068195e4880701944965835adebd816f3af57111c2bcd"
+    },
+    {
+      "name": "calculator-invoke",
+      "start_va": "0x65fd6c",
+      "end_va": "0x65fe28",
+      "file_offset": "0x65bd6c",
+      "bytes": 188,
+      "sha256": "9202aefcf2337b29266019dd988d0e0bde95a53b8d8f5995b1469bc404e6a018"
+    },
+    {
+      "name": "context-destructor",
+      "start_va": "0x66017c",
+      "end_va": "0x6601b8",
+      "file_offset": "0x65c17c",
+      "bytes": 60,
+      "sha256": "fae02f243f3bc4eb83f67e8c4810326570950837ba528d2f1f3375dd79e6fab6"
+    },
+    {
+      "name": "context-replacement",
+      "start_va": "0x4d80e8",
+      "end_va": "0x4d8118",
+      "file_offset": "0x4d40e8",
+      "bytes": 48,
+      "sha256": "bad295f52fd7fe676b91365d242c492ae7da2f987f18124055e6006a0df16e73"
+    },
+    {
+      "name": "context-string-helper",
+      "start_va": "0x6642d8",
+      "end_va": "0x664338",
+      "file_offset": "0x6602d8",
+      "bytes": 96,
+      "sha256": "8f741dcbe6044f5abbb2ed9d8a733c8f412572c046f3bd9d22c1a79fe4a8a5b4"
+    },
+    {
+      "name": "context-pair-move",
+      "start_va": "0x72c9f4",
+      "end_va": "0x72ca00",
+      "file_offset": "0x7289f4",
+      "bytes": 12,
+      "sha256": "26d9a084b30ca05d0b3e4dbd5e2f209c39badd0863e602c211f0d839612379b1"
+    },
+    {
+      "name": "context-old-owner",
+      "start_va": "0x729c34",
+      "end_va": "0x729c40",
+      "file_offset": "0x725c34",
+      "bytes": 12,
+      "sha256": "b911b13dce699ca8edbb4effd7ebb249635960d9952316e2542fa370882ea49b"
+    },
+    {
+      "name": "rtti-argument-helper",
+      "start_va": "0x728b68",
+      "end_va": "0x728b74",
+      "file_offset": "0x724b68",
+      "bytes": 12,
+      "sha256": "315c71debf023a000bd1d8ff4365549bc273a80d98749875472a9a8610fe9ebd"
+    },
+    {
+      "name": "result-register-helper",
+      "start_va": "0x729f80",
+      "end_va": "0x729f8c",
+      "file_offset": "0x725f80",
+      "bytes": 12,
+      "sha256": "e50d4d18f13bfdfdef5dafb784e5d2dd4e8d12678ddbc40a8e6e1dcc68610291"
+    },
+    {
+      "name": "create-calculator",
+      "start_va": "0x65fd28",
+      "end_va": "0x65fd6c",
+      "file_offset": "0x65bd28",
+      "bytes": 68,
+      "sha256": "d2d28ba89c3a44557d3a41e7afa9a5f9e9f7293bc7a56b8137c97a56a11465e0"
+    },
+    {
+      "name": "interceptor-result-helper",
+      "start_va": "0x7274c8",
+      "end_va": "0x7274e0",
+      "file_offset": "0x7234c8",
+      "bytes": 24,
+      "sha256": "8c519bee887ea02e544e724346d3226590bc6d2b797abd322f1bb0cdbe40b722"
+    },
+    {
+      "name": "calculator-allocation-helper",
+      "start_va": "0x72f348",
+      "end_va": "0x72f354",
+      "file_offset": "0x72b348",
+      "bytes": 12,
+      "sha256": "f568d51f29a97dadbf64cedf2d7bb2a4ebc23fd99a0d27fe48d17e02e851d80e"
+    }
+  ],
+  "scope": "Static relocation/RTTI bindings, no runtime activation or wire observation"
+}

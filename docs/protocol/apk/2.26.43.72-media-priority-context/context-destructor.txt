@@ -1,0 +1,21 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000065d11c <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE>:
+  66017c:      	bti	c
+  660180:      	adrp	x8, 0x77a000 <_ZTVN6google8protobuf11MessageLiteE+0x1ee18>
+  660184:      	add	x8, x8, #0x1e0
+  660188:      	str	x8, [x0], #0x10
+  66018c:      	b	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  660190:      	paciasp
+  660194:      	stp	x29, x30, [sp, #-0x20]!
+  660198:      	str	x19, [sp, #0x10]
+  66019c:      	mov	x29, sp
+  6601a0:      	mov	x19, x0
+  6601a4:      	bl	0x66017c <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x3060>
+  6601a8:      	bl	0x2db514 <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0xd638>
+  6601ac:      	ldp	x29, x30, [sp], #0x20
+  6601b0:      	autiasp
+  6601b4:      	b	0x7373a0 <__wrap__ZdlPv@plt>

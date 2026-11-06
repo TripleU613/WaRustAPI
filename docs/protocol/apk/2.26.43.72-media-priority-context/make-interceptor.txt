@@ -1,0 +1,45 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000065d11c <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE>:
+  65ff28:      	paciasp
+  65ff2c:      	sub	sp, sp, #0x80
+  65ff30:      	stp	x29, x30, [sp, #0x60]
+  65ff34:      	stp	x20, x19, [sp, #0x70]
+  65ff38:      	add	x29, sp, #0x60
+  65ff3c:      	bl	0x72998c <MCFSetGetCount+0x58d4>
+  65ff40:      	adrp	x1, 0xd6000
+  65ff44:      	add	x1, x1, #0xfad
+  65ff48:      	ldr	x8, [x20, #0x28]
+  65ff4c:      	bl	0x72be00 <MCFSetGetCount+0x7d48>
+  65ff50:      	bl	0x3a2c00 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x45c0>
+  65ff54:      	adrp	x8, 0x77a000 <_ZTVN6google8protobuf11MessageLiteE+0x1ee18>
+  65ff58:      	add	x8, x8, #0x140
+  65ff5c:      	add	x9, sp, #0x20
+  65ff60:      	str	x8, [sp, #0x20]
+  65ff64:      	str	x9, [sp, #0x40]
+  65ff68:      	add	x1, sp, #0x8
+  65ff6c:      	bl	0x72a610 <MCFSetGetCount+0x6558>
+  65ff70:      	bl	0x4d5500 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x414c>
+  65ff74:      	add	x0, sp, #0x20
+  65ff78:      	bl	0x464290 <MCINetworkSessionExecuteDataTask+0x5038>
+  65ff7c:      	add	x0, sp, #0x8
+  65ff80:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  65ff84:      	bl	0x725e44 <MCFSetGetCount+0x1d8c>
+  65ff88:      	b.ne	0x65ffc0 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x2ea4>
+  65ff8c:      	ldp	x20, x19, [sp, #0x70]
+  65ff90:      	ldp	x29, x30, [sp, #0x60]
+  65ff94:      	add	sp, sp, #0x80
+  65ff98:      	autiasp
+  65ff9c:      	ret
+  65ffa0:      	bl	0x7291ec <MCFSetGetCount+0x5134>
+  65ffa4:      	bl	0x464290 <MCINetworkSessionExecuteDataTask+0x5038>
+  65ffa8:      	add	x0, sp, #0x8
+  65ffac:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  65ffb0:      	bl	0x725e44 <MCFSetGetCount+0x1d8c>
+  65ffb4:      	b.ne	0x65ffc0 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x2ea4>
+  65ffb8:      	mov	x0, x19
+  65ffbc:      	bl	0x7373e0 <__wrap__Unwind_Resume@plt>
+  65ffc0:      	bl	0x7378f0 <__stack_chk_fail@plt>

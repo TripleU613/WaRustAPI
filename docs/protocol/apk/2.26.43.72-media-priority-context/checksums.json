@@ -1,0 +1,94 @@
+{
+  "README.md": {
+    "bytes": 5418,
+    "sha256": "2dfd59cdb49b9a09c5f14509979bca762fc00e5f4112f9fc8f0e2923baf165dd"
+  },
+  "calculator-allocation-helper.txt": {
+    "bytes": 285,
+    "sha256": "b274f513f265ddd59904845c7ecafc84551f7fc9558454c8334c6a87722ea39f"
+  },
+  "calculator-class.txt": {
+    "bytes": 2867,
+    "sha256": "a05b5a779cee73bf6d2b06d209b8e8ac87af09c7e3b8545a79ba8258777a6217"
+  },
+  "calculator-factory.txt": {
+    "bytes": 4180,
+    "sha256": "4b324a9d9a683008385e9bbc96a8f17b5f4687fe7619fa510ccaf3803f601f0b"
+  },
+  "calculator-invoke.txt": {
+    "bytes": 2815,
+    "sha256": "93a2588e737e8bdc6862810c6415a982bdbbb2215253a41da7bb58a6a090ad6a"
+  },
+  "context-destructor.txt": {
+    "bytes": 1049,
+    "sha256": "3937e580f4438ca5b4189abe459f974b0b5cf24ca55fd6e2f684044eab46a933"
+  },
+  "context-old-owner.txt": {
+    "bytes": 269,
+    "sha256": "f650faecb870cf10a2871431dcf9ec1ed4dffdfbc92d0300c23961b2b0047a13"
+  },
+  "context-pair-move.txt": {
+    "bytes": 270,
+    "sha256": "3bf62a332e26f5c57d815df4e1c05bf3c69e5f1af748494b4ab13e67a6865f8e"
+  },
+  "context-replacement.txt": {
+    "bytes": 785,
+    "sha256": "b22819aad58e00024b6bbcefba345ab96fe1e310aa145fee1d4444d74b1ccd8c"
+  },
+  "context-string-helper.txt": {
+    "bytes": 1501,
+    "sha256": "41325cf9a97163a1eed424c7a05f44c869aea21d22deadb85760e82e02dd30bf"
+  },
+  "create-calculator.txt": {
+    "bytes": 899,
+    "sha256": "cf400e2b724975500201d77a177e723b4158f14a9069e6fc82e1445fe43dc1b1"
+  },
+  "inspect-native.py": {
+    "bytes": 1989,
+    "sha256": "bd44bc0cce42ebc41da1884d13bfd70b43d3755c1e0df5bcc92c4fb6a2e0d3fd"
+  },
+  "interceptor-callers.txt": {
+    "bytes": 69,
+    "sha256": "827b6ee701cb6a60b51938b77e4460aa19bcc9d699c08544dc8ab3dbeba84686"
+  },
+  "interceptor-class.txt": {
+    "bytes": 1984,
+    "sha256": "60afb7f4ed0039f49e6fb80329cf521ae57430a8c914a0282572a77df1ea18e0"
+  },
+  "interceptor-factory.txt": {
+    "bytes": 4120,
+    "sha256": "e759117824bde2347d4899bfd6a44608e7ae1d10f4d3ad889612ef471f8fd380"
+  },
+  "interceptor-invoke.txt": {
+    "bytes": 4364,
+    "sha256": "5bab54fffd4fad1a861b7eb17a4fd96f104c4d68c459e1a5b0da517bdd52fe82"
+  },
+  "interceptor-result-helper.txt": {
+    "bytes": 390,
+    "sha256": "0e240f54dc67f53f1150fe51e420cc15eaba6e117a498524ac0348d5ac0d40d6"
+  },
+  "make-interceptor.txt": {
+    "bytes": 2341,
+    "sha256": "c6f1fb176a7483688782a5f7003d6e596390c31849a57c480e4ea556a4e32392"
+  },
+  "native-bindings.json": {
+    "bytes": 4421,
+    "sha256": "fa97621282fdc70748316e7707b5bda8f53d5976b4fa8ebece02f33c86c90193"
+  },
+  "native-windows.json": {
+    "bytes": 1011,
+    "sha256": "ee39f0387a4d65a044d18f9ad744fc588c1f0ec636243f33c3db3fa0265dbe7b"
+  },
+  "registration.txt": {
+    "bytes": 4390,
+    "sha256": "62feb309af43f886d6d8c4715f5b5ea0fe2d9103d0769136aae955428fe1e602"
+  },
+  "result-register-helper.txt": {
+    "bytes": 269,
+    "sha256": "0c9c817e44820c452114d7aa3fc648ed5620c14e91b71917d7fd483e3d4ef023"
+  },
+  "rtti-argument-helper.txt": {
+    "bytes": 269,
+    "sha256": "d61cbc9122be02044262a6fb6435e1d0659ce8ee55d9c480a7e8ead138510324"
+  }
+}
