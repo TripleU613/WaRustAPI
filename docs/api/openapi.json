@@ -17408,5 +17408,12 @@
     "x-live": false,
     "description": "Static 2.26.43.72 provider trace resolves unordered queue binding 0xd04 through 1Uw and 0Zy.A0J to new 1iz, supporting its inherited base CHt/config0x6f06 branch. Hold-owner binding 0xd09 constructs 1k7 with A0A initially false. Config A15 passes null fallback, not false; effective/default values, hold mutation, runtime scheduling and ACK/disk/server ordering remain unproven. No Rust queue port or replay authority.",
     "evidence": "docs/protocol/apk/2.26.43.72-count-consumer-binding/README.md"
+  },
+  "x-apk-count-unordered-hold-release": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Static 2.26.43.72 hold trace separates arm identity, release-change counter, hold atomic and one-batch bypass. Ordered completion can release the hold; an arm-checked timer permits a batch when either saved nonnull ordered head remains unchanged or both head pairs are null, otherwise rearming for changed heads. Pending uses loaded-cache metadata size, not SQL. Effective gates/delay, executor/timer failure and ACK ordering remain open. No Rust queue port or replay authority.",
+    "evidence": "docs/protocol/apk/2.26.43.72-count-hold-release/README.md"
   }
 }

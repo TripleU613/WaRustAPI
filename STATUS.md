@@ -1,3 +1,8 @@
+Native unordered hold/release now has traced ordered-pending checks, arm and
+change counters, conditional completion release and a timer-driven one-batch
+bypass. Effective gates/delay, failure recovery and wire ordering remain open.
+[Evidence](docs/protocol/apk/2.26.43.72-count-hold-release/README.md).
+
 Native count queue provider0xd04 now resolves to a concrete1iz construction,
 confirming the selected inherited completion/configuration branch. Hold starts
 false; later hold state and effective configuration remain unproven.

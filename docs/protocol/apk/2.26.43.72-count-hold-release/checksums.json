@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "bytes": 6066,
+    "sha256": "b00ca237c8a88e0605b3f67297cd09f9d9f5653b4bbc9fbd8b648e378ca4f57d"
+  },
+  "escape-timer.txt": {
+    "bytes": 119170,
+    "sha256": "747c173c6d1025db543e243550e322c59925a018000e242202cae330d9638cbf"
+  },
+  "head-list-helper.txt": {
+    "bytes": 670,
+    "sha256": "23fbdfadb3b9f14c9c6c70125af03b565fd6a3206a0f0c3bc875aef7d911d2ef"
+  },
+  "head-pair.txt": {
+    "bytes": 3332,
+    "sha256": "dbd793014ab74dcba3fe9891d34fee6c4c38589d9d8cdf88e4d5a48fbb1a7bfc"
+  },
+  "head-selector.txt": {
+    "bytes": 1413,
+    "sha256": "2dd14e273d40713f873472c43dc0a2eab718a5fb2762ef7f82ddd3812c216944"
+  },
+  "hold-field-references.txt": {
+    "bytes": 537,
+    "sha256": "abcb8fd0205b075e244eaa252d5ecb34c3e71db879cee480aff9700228e04eae"
+  },
+  "hold-owner-methods.txt": {
+    "bytes": 8611,
+    "sha256": "fd865196f005421f877ee157955f240e18c1ec229702680842cc1c65e90ae8f6"
+  },
+  "ordered-count.txt": {
+    "bytes": 561,
+    "sha256": "5552371b3e326beaa010fb618952520fe0298433fee0fa521b35cb65b047b535"
+  },
+  "ordered-pending.txt": {
+    "bytes": 1811,
+    "sha256": "3b61aad5f59e3901404d29c8354732b7d8af14db49f28f141f76143a096dc13c"
+  },
+  "timer-constructors.txt": {
+    "bytes": 1239,
+    "sha256": "1570403e2de06d8cc4df4916cd81f96ba92f3f56f071f93fcea8824a334214c5"
+  }
+}

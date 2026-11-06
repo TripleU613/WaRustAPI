@@ -1,0 +1,34 @@
+
+# class: LX/1id;
+# extends: Ljava/lang/Object;
+
+.method public A0A(L)  # .registers 8
+    # full signature: LX/1id;->A0A()LX/2DG;
+    0000..0004  iget-object  v0, v7, LX/1id;->A0G:LX/00p;
+    0004..000a  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    000a..000c  move-result-object  v0
+    000c..0010  check-cast  v0, Ljava/util/concurrent/CountDownLatch;
+    0010..0016  invoke-virtual  {v0}, Ljava/util/concurrent/CountDownLatch;->getCount()J
+    0016..0018  move-result-wide  v5
+    0018..001c  const-wide/16  v3, #0x0
+    001c..001e  const/4  v2, #0x0
+    001e..0022  cmp-long  v0, v5, v3
+    0022..0026  if-nez  v0, +0x18
+    0026..002a  iget-object  v0, v7, LX/1id;->A0C:LX/1iq;
+    002a..002e  iget-object  v1, v0, LX/1iq;->A07:Ljava/util/HashMap;
+    002e..0030  monitor-enter
+    0030..0034  iget-object  v0, v0, LX/1iq;->A09:Ljava/util/List;
+    0034..003a  invoke-static  {v0}, LX/07Z;->A0v(Ljava/util/List;)Ljava/lang/Object;
+    003a..003c  move-result-object  v0
+    003c..0040  check-cast  v0, LX/1k3;
+    0040..0042  monitor-exit
+    0042..0046  if-eqz  v0, +0x8
+    0046..004a  iget-object  v0, v0, LX/1k3;->A05:LX/2DG;
+    004a..004c  return-object  v0
+    004c..004e  move-exception  v0
+    004e..0050  monitor-exit
+    0050..0052  throw  v0
+    0052..0054  return-object  v2
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0018..0020 -> 0026
+.end method

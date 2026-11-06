@@ -1,0 +1,18 @@
+
+# class: LX/07Z;
+# extends: LX/07Y;
+
+.method public A0v(LL)  # .registers 3
+    # full signature: LX/07Z;->A0v(Ljava/util/List;)Ljava/lang/Object;
+    0000..0002  const/4  v1, #0x0
+    0002..0008  invoke-static  {v2, v1}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-interface  {v2}, Ljava/util/List;->isEmpty()Z
+    000e..0010  move-result  v0
+    0010..0014  if-eqz  v0, +0x4
+    0014..0016  const/4  v0, #0x0
+    0016..0018  return-object  v0
+    0018..001e  invoke-interface  {v2, v1}, Ljava/util/List;->get(I)Ljava/lang/Object;
+    001e..0020  move-result-object  v0
+    0020..0022  return-object  v0
+    # exception table: 0 try range(s)
+.end method

@@ -7958,3 +7958,21 @@ pause/hold/capacity/CAS, rejection and crash boundaries remain distinct from
 job execution, ACK ordering or disk/server confirmation.
 [Complete branch exports, reproduction and limits](apk/2.26.43.72-count-consumer-binding/README.md).
 No Rust runtime change, replay authority or live operation.
+
+### Unordered hold mutation and conditional release (2026-11-05)
+
+**Confirmed static, APK2.26.43.72:** selected2JI runner holds unordered pulls
+behind loaded ordered metadata when0av.A0U is true. Arm numberA00, change
+counterA0B, hold atomicA0A and one-batch bypassA01 have distinct roles.
+Ordered completion1k7.A03 clears the hold and asks the scheduler to run only
+when no loaded ordered metadata is pending and the old hold was true.
+
+The FeQ selector21 timer checks its captured arm. With ordered work pending,
+either unchanged nonnull saved head (OR, not both) or two matching null head
+pairs can permit a one-batch bypass; changed heads otherwise rearm the timer.
+The runner separately detects concurrent release throughA0B. Pending checks
+skip unloaded caches and inspect key-map size, not SQL or in-flight states.
+No fixed hold delay/default is inferred from0av.A06, and full executor/timer
+failure semantics and ACK ordering remain open.
+[Full exports, exact predicates, direct field census and limits](apk/2.26.43.72-count-hold-release/README.md).
+No Rust queue change, retry/replay authority or live account operation.

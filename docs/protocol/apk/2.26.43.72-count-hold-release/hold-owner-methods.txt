@@ -1,0 +1,168 @@
+
+# class: LX/1k7;
+# extends: Ljava/lang/Object;
+
+.method public <clinit>(V)  # .registers 2
+    # full signature: LX/1k7;-><clinit>()V
+    0000..0002  const/4  v1, #0x0
+    0002..0006  new-instance  v0, LX/1k9;
+    0006..000c  invoke-direct  {v0, v1, v1}, LX/1k9;-><init>(LX/2DG;LX/2DG;)V
+    000c..0010  sput-object  v0, LX/1k7;->A0D:LX/1k9;
+    0010..0012  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(V)  # .registers 3
+    # full signature: LX/1k7;-><init>()V
+    0000..0006  invoke-direct  {v2}, Ljava/lang/Object;-><init>()V
+    0006..000a  const/16  v0, #0x41c3
+    000a..0010  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0010..0012  move-result-object  v0
+    0012..0016  iput-object  v0, v2, LX/1k7;->A04:LX/05a;
+    0016..001a  const/16  v0, #0xdc4
+    001a..0020  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0020..0022  move-result-object  v0
+    0022..0026  iput-object  v0, v2, LX/1k7;->A03:LX/05a;
+    0026..002a  const/16  v0, #0x6f
+    002a..0030  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0030..0032  move-result-object  v0
+    0032..0036  iput-object  v0, v2, LX/1k7;->A07:LX/05a;
+    0036..003a  const/16  v0, #0xd04
+    003a..0040  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0040..0042  move-result-object  v0
+    0042..0046  iput-object  v0, v2, LX/1k7;->A05:LX/05a;
+    0046..0048  const/4  v0, #0x5
+    0048..004e  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    004e..0050  move-result-object  v0
+    0050..0054  iput-object  v0, v2, LX/1k7;->A06:LX/05a;
+    0054..0056  const/4  v1, #0x0
+    0056..005a  new-instance  v0, Ljava/util/concurrent/atomic/AtomicBoolean;
+    005a..0060  invoke-direct  {v0, v1}, Ljava/util/concurrent/atomic/AtomicBoolean;-><init>(Z)V
+    0060..0064  iput-object  v0, v2, LX/1k7;->A0A:Ljava/util/concurrent/atomic/AtomicBoolean;
+    0064..0068  new-instance  v0, Ljava/util/concurrent/atomic/AtomicInteger;
+    0068..006e  invoke-direct  {v0, v1}, Ljava/util/concurrent/atomic/AtomicInteger;-><init>(I)V
+    006e..0072  iput-object  v0, v2, LX/1k7;->A0B:Ljava/util/concurrent/atomic/AtomicInteger;
+    0072..0076  new-instance  v0, Ljava/lang/Object;
+    0076..007c  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    007c..0080  iput-object  v0, v2, LX/1k7;->A08:Ljava/lang/Object;
+    0080..0084  new-instance  v0, Ljava/util/concurrent/atomic/AtomicBoolean;
+    0084..008a  invoke-direct  {v0, v1}, Ljava/util/concurrent/atomic/AtomicBoolean;-><init>(Z)V
+    008a..008e  iput-object  v0, v2, LX/1k7;->A09:Ljava/util/concurrent/atomic/AtomicBoolean;
+    008e..0090  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(LL)  # .registers 3
+    # full signature: LX/1k7;->A00(LX/1k7;)LX/1k9;
+    0000..0004  iget-object  v0, v2, LX/1k7;->A04:LX/05a;
+    0004..0008  iget-object  v1, v0, LX/05a;->A00:LX/00x;
+    0008..000e  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    000e..0010  move-result-object  v0
+    0010..0014  check-cast  v0, LX/1ic;
+    0014..001a  invoke-static  {v0}, LX/1ic;->A04(LX/1ic;)LX/1if;
+    001a..001c  move-result-object  v0
+    001c..0022  invoke-virtual  {v0}, LX/1id;->A0A()LX/2DG;
+    0022..0024  move-result-object  v2
+    0024..002a  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    002a..002c  move-result-object  v0
+    002c..0030  check-cast  v0, LX/1ic;
+    0030..0036  invoke-static  {v0}, LX/1ic;->A02(LX/1ic;)LX/1iu;
+    0036..0038  move-result-object  v0
+    0038..003e  invoke-virtual  {v0}, LX/1id;->A0A()LX/2DG;
+    003e..0040  move-result-object  v1
+    0040..0044  new-instance  v0, LX/1k9;
+    0044..004a  invoke-direct  {v0, v2, v1}, LX/1k9;-><init>(LX/2DG;LX/2DG;)V
+    004a..004c  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A01(VLLI)  # .registers 9
+    # full signature: LX/1k7;->A01(LX/1k9;LX/1k7;I)V
+    0000..0004  iget-object  v0, v7, LX/1k7;->A07:LX/05a;
+    0004..0008  iget-object  v5, v0, LX/05a;->A00:LX/00x;
+    0008..000e  invoke-interface  {v5}, LX/00x;->get()Ljava/lang/Object;
+    000e..0010  move-result-object  v4
+    0010..0014  check-cast  v4, LX/08Z;
+    0014..0018  iget-object  v0, v7, LX/1k7;->A03:LX/05a;
+    0018..001c  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    001c..0022  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0022..0024  move-result-object  v0
+    0024..0028  check-cast  v0, LX/0av;
+    0028..002c  iget-wide  v1, v0, LX/0av;->A06:J
+    002c..0030  const/16  v3, #0x15
+    0030..0034  new-instance  v0, LX/FeQ;
+    0034..003a  invoke-direct  {v0, v7, v8, v3, v6}, LX/FeQ;-><init>(Ljava/lang/Object;IILjava/lang/Object;)V
+    003a..0040  invoke-interface  {v4, v0, v1, v2}, LX/08Z;->Cc2(Ljava/lang/Runnable;J)Ljava/lang/Runnable;
+    0040..0042  move-result-object  v2
+    0042..0046  iget-object  v1, v7, LX/1k7;->A02:Ljava/lang/Runnable;
+    0046..004a  if-eqz  v1, +0xb
+    004a..0050  invoke-interface  {v5}, LX/00x;->get()Ljava/lang/Object;
+    0050..0052  move-result-object  v0
+    0052..0056  check-cast  v0, LX/08Z;
+    0056..005c  invoke-interface  {v0, v1}, LX/08Z;->CYL(Ljava/lang/Runnable;)V
+    005c..0060  iput-object  v2, v7, LX/1k7;->A02:Ljava/lang/Runnable;
+    0060..0062  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A02(VLLZ)  # .registers 5
+    # full signature: LX/1k7;->A02(LX/1k7;Ljava/lang/String;Z)V
+    0000..0004  if-eqz  v4, +0x25
+    0004..0008  const-string  v0, "UnorderedHold/"
+    0008..000c  new-instance  v1, Ljava/lang/StringBuilder;
+    000c..0012  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0012..0018  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0018..001c  const-string  v0, ": ordered side empty, releasing the unordered queue"
+    001c..0022  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0022..0028  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0028..002a  move-result-object  v0
+    002a..0030  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0030..0034  iget-object  v0, v2, LX/1k7;->A05:LX/05a;
+    0034..0038  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0038..003e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    003e..0040  move-result-object  v0
+    0040..0044  check-cast  v0, LX/1il;
+    0044..004a  invoke-static  {v0}, LX/1il;->A01(LX/1il;)V
+    004a..004c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A03(V)  # .registers 5
+    # full signature: LX/1k7;->A03()V
+    0000..0004  iget-object  v0, v4, LX/1k7;->A03:LX/05a;
+    0004..0008  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0008..000e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    000e..0010  move-result-object  v0
+    0010..0014  check-cast  v0, LX/0av;
+    0014..0018  iget-boolean  v0, v0, LX/0av;->A0U:Z
+    0018..001c  if-eqz  v0, +0x32
+    001c..0020  iget-object  v0, v4, LX/1k7;->A04:LX/05a;
+    0020..0024  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0024..002a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    002a..002c  move-result-object  v0
+    002c..0030  check-cast  v0, LX/1ic;
+    0030..0036  invoke-virtual  {v0}, LX/1ic;->A0I()Z
+    0036..0038  move-result  v0
+    0038..003c  if-nez  v0, +0x22
+    003c..0040  const-string  v3, "onOrderedStanzasRemoved"
+    0040..0044  iget-object  v2, v4, LX/1k7;->A08:Ljava/lang/Object;
+    0044..0046  monitor-enter
+    0046..004a  iget-object  v0, v4, LX/1k7;->A09:Ljava/util/concurrent/atomic/AtomicBoolean;
+    004a..004c  const/4  v1, #0x0
+    004c..0052  invoke-virtual  {v0, v1}, Ljava/util/concurrent/atomic/AtomicBoolean;->set(Z)V
+    0052..0056  iput-boolean  v1, v4, LX/1k7;->A01:Z
+    0056..005a  iget-object  v0, v4, LX/1k7;->A0B:Ljava/util/concurrent/atomic/AtomicInteger;
+    005a..0060  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicInteger;->incrementAndGet()I
+    0060..0064  iget-object  v0, v4, LX/1k7;->A0A:Ljava/util/concurrent/atomic/AtomicBoolean;
+    0064..006a  invoke-virtual  {v0, v1}, Ljava/util/concurrent/atomic/AtomicBoolean;->getAndSet(Z)Z
+    006a..006c  move-result  v0
+    006c..006e  monitor-exit
+    006e..0074  invoke-static  {v4, v3, v0}, LX/1k7;->A02(LX/1k7;Ljava/lang/String;Z)V
+    0074..0076  return-void
+    0076..0078  move-exception  v0
+    0078..007a  monitor-exit
+    007a..007c  throw  v0
+    007c..007e  return-void
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0023..0036 -> 003b
+.end method

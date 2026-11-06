@@ -1,0 +1,18 @@
+
+# class: LX/1iq;
+# extends: LX/0Wr;
+
+.method public A0E(I)  # .registers 3
+    # full signature: LX/1iq;->A0E()I
+    0000..0004  iget-object  v1, v2, LX/1iq;->A07:Ljava/util/HashMap;
+    0004..0006  monitor-enter
+    0006..000c  invoke-virtual  {v1}, Ljava/util/AbstractMap;->size()I
+    000c..000e  move-result  v0
+    000e..0010  monitor-exit
+    0010..0012  return  v0
+    0012..0014  move-exception  v0
+    0014..0016  monitor-exit
+    0016..0018  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0003..0007 -> 0009
+.end method
