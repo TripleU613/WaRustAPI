@@ -1,0 +1,15 @@
+
+# class: LX/FcN;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLII)  # .registers 6
+    # full signature: LX/FcN;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;II)V
+    0000..0004  iput  v5, v0, LX/FcN;->$t:I
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000a..000e  iput-object  v3, v0, LX/FcN;->A01:Ljava/lang/Object;
+    000e..0012  iput-object  v1, v0, LX/FcN;->A02:Ljava/lang/Object;
+    0012..0016  iput-object  v2, v0, LX/FcN;->A03:Ljava/lang/Object;
+    0016..001a  iput  v4, v0, LX/FcN;->A00:I
+    001a..001c  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,3 +1,5 @@
+Disconnect research now separates full-key callback snapshot/clear/local failure, saved-row bookkeeping and directA05 cleanup. [Pinned handler/worker evidence and durable Rust controls](docs/protocol/message-ack.md#disconnect-clears-native-callbacks-without-proving-non-delivery-2026-11-06). No runtime/replay change; complete bookkeeping persistence, lifecycle races and restart ownership remain open.
+
 Fixed APK-confirmed string-context encoding differences: names/JID_PAIR servers retain token lookup but disable packing, and node text bodies serialize as raw bytes. [Literal fixtures and constructor/writer evidence](docs/protocol/node-serializer.md#names-and-body-text-use-different-string-rules-2026-11-06). No live operation, auto text-to-JID conversion or retry/settlement change.
 
 Fixed APK-confirmed packed-string mismatches: colon nibble12 now encodes/decodes, invalid actual13..15 reject, odd padding is ignored before validation, and negative digit counts reject. [Literal fixtures and native reader/writer evidence](docs/protocol/node-serializer.md#packed-nibble-colon-and-padding-match-the-apk-2026-11-06). No live operation or retry/settlement change.

@@ -18251,5 +18251,13 @@
     ],
     "description": "Pinned APK1r2.A01/A05/A00 and0Tp constructors distinguish names, values and body bytes. Encoder now disables nibble/hex packing for tag/attribute names and JID_PAIR server strings while preserving token lookup, and serializes NodeContent::Text as raw byte content without token/packing lookup. Literal regression failed before correction. User/value packing unchanged; auto text-to-JID, special tuples and complete codec parity remain open. No live verification, retry, persistence or settlement change.",
     "evidence": "docs/protocol/node-serializer.md#names-and-body-text-use-different-string-rules-2026-11-06"
+  },
+  "x-message-disconnect-callback-research": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Pinned static xtask research separates message3 full-keyA04 snapshot/clear before localE5V disconnected callback failure, saved-row FcN bookkeeping and directA05 cleanup under lock. AlternateA02 registration also usesA04. Offline writerC6j routes to string-ID IQ failure, not direct status settlement. Existing durable receipt ownership and partial-write uncertainty controls verified; no runtime/retry or live change. CompleteF1z persistence, A05 producers, races/generation/restart authority remain open.",
+    "evidence": "docs/protocol/message-ack.md#disconnect-clears-native-callbacks-without-proving-non-delivery-2026-11-06"
   }
 }

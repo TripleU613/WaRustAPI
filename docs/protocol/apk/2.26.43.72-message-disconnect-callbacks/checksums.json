@@ -1,0 +1,38 @@
+{
+  "README.md": {
+    "bytes": 6217,
+    "sha256": "d983c912c1cf7f73e891ac4a1b32c6fb58aa96f5c50909e49d47c5928066357f"
+  },
+  "alternate-registration.txt": {
+    "bytes": 3420,
+    "sha256": "b5e4ea502916c5ebaab717b1b286129feed8a2e64a2114354ab26abc9800f511"
+  },
+  "direct-callers.txt": {
+    "bytes": 142,
+    "sha256": "00460577e1cff1476bcd964630f173fc47654e03d594fc6a62e15ddf3f2bc733"
+  },
+  "direct-flush.txt": {
+    "bytes": 1402,
+    "sha256": "4c3c09988d056e20044b559da660ae0c0d5d7b67c042d85b68d547a0553ac11a"
+  },
+  "exception.txt": {
+    "bytes": 353,
+    "sha256": "745f03071ee037e5eb4650e1be998e2955dd38ec1e978f4239276f087e26c6f1"
+  },
+  "offline-drop.txt": {
+    "bytes": 615,
+    "sha256": "d0127103afd4410efd232f387b8e8dddc9e8ce6a3bfa33862f7ddb4826cb1403"
+  },
+  "other-map-refs.txt": {
+    "bytes": 370,
+    "sha256": "e869a2db5a3a377127efce594879e54f5f54578bf2f2ca5aaa8de74976c8cb7e"
+  },
+  "worker-constructor.txt": {
+    "bytes": 633,
+    "sha256": "05ea816ff047c78ac26940f63da8efe763a4990b1cad25c99c5023bb833adc20"
+  },
+  "worker.txt": {
+    "bytes": 42886,
+    "sha256": "73706d4cd838bc29f6064879e995660c8a0cc1d36015eee5f0637cd2b19b83f8"
+  }
+}

@@ -1113,3 +1113,27 @@ callback lifetime and ciphertext-store authority remain unresolved. No live
 operation, new retry or nonce rollback is authorized by this finding.
 
 - **2026-11-06 serializer follow-through:** fixed empty-child content omission; separated conditional pre-encryptionE5X from post-encryption framingE5W. [Pinned serializer evidence and remaining authority](node-serializer.md). No retry/settlement change.
+
+## Disconnect clears native callbacks without proving non-delivery (2026-11-06)
+
+**Confirmed selected static, APK2.26.43.72:**
+[Complete worker, exception, map cleanup and censuses with linked handler](apk/2.26.43.72-message-disconnect-callbacks/README.md)
+show posted0m2 message3 snapshots/clears full-key0Th.A04 under lock, then
+schedules message-only saved-key bookkeeping and fails callbacks with local
+E5V(disconnected) after unlocking. This is separate from sent-IQ mapA0H and
+direct0Th.A03'sA05 cleanup. AlternateA02 registration also usesA04, notA05.
+Malformed local edit-key projection or thrown callbacks can interrupt cleanup;
+no unconditional all-callback/reconnect guarantee follows.
+
+FcN case13 reloads an existing message row, skips absent rows and dispatches
+F1z carrying originalEoh, selected set/fields and disconnect reason. FullF1z
+persistence/retry meaning remains open; field4 is not called a server state.
+Writer offline-dropC6j routes to the separate string-ID IQ mechanism; it has
+no direct full-key callback removal and is not immediate status completion.
+
+**Rust comparison / no runtime change:** durable original receipt ownership
+and partial encrypted-write tests pass. Native ephemeral map clearing does
+not authorize dropping durable uncertainty, rolling back keys or resending;
+late matching ACKs retain their existing guarded settlement path. A05 producers,
+whole shutdown/ACK ordering and account/generation/restart authority remain
+unverified. No live account operation or complete lifecycle parity claim.
