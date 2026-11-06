@@ -1366,3 +1366,30 @@ Formatting, CLI reference regeneration, OpenAPI library coverage and APK coverag
 freshness pass. No new REA record or Rust behavior; workspace runtime tests were
 not rerun for this research-only chunk.
 Repository hygiene passes (424 APK checksum bundles).
+
+## Blocklist set first-list admission (2026-11-06)
+
+**Confirmed pinned mismatch/correction:** [required first-child method, reused
+callback/parser and regression](apk/2.26.43.72-blocklist-set-first-list/README.md)
+show8R7.CK4 requires children[0] to be list and parses it before matched.
+Rust now follows that first-child selection and validates through the shared
+snapshot parser before any set-result projection. Only the selected list's hash
+and matched value count; missing/wrong-first or malformed lists cannot apply a
+requested change/hash or be marked inspected. Trailing metadata cannot redirect
+the first-list branch. Existing matched=false reconciliation hold remains.
+
+The regression covers both block/unblock across eight result shapes, immutable
+settlement/reply, full checkpoint/journal preservation on refusal, encrypted
+reopen, selected hash/membership and no resend. The old projector fails the
+missing-list case with Ok(1). Existing positive fixtures now carry native list
+shape. Fetch no-list compatibility remains; malformed old set histories refuse
+without automatic quarantine/skip/repair. Strict Rust identity/metadata admission,
+separate native metadata/alias/migration and previously projected history repair
+remain gaps. No live account operation or new request added.
+
+Validation:1,518 workspace tests pass (9 result suites, four test threads),
+including the sixteen block/unblock shape/reopen cases in the new regression.
+The old projector fails the missing-list case with Ok(1). Strict workspace/
+all-target/all-feature Clippy, formatting, CLI reference regeneration, OpenAPI
+library coverage, APK coverage freshness and repository hygiene pass. Fresh
+callback/first-child exports reproduce and subject hash/bundle checksums match.

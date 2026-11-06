@@ -1,0 +1,25 @@
+
+# class: LX/0Tp;
+# extends: Ljava/lang/Object;
+
+.method public A0D(L)  # .registers 3
+    # full signature: LX/0Tp;->A0D()LX/0Tp;
+    0000..0004  iget-object  v1, v2, LX/0Tp;->A02:[LX/0Tp;
+    0004..0008  if-eqz  v1, +0x9
+    0008..000a  array-length  v0, v1
+    000a..000e  if-eqz  v0, +0x6
+    000e..0010  const/4  v0, #0x0
+    0010..0014  aget-object  v0, v1, v0
+    0014..0016  return-object  v0
+    0016..001a  const-string  v0, "required first child missing for tag "
+    001a..001e  new-instance  v1, Ljava/lang/StringBuilder;
+    001e..0024  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0024..0028  iget-object  v0, v2, LX/0Tp;->A00:Ljava/lang/String;
+    0028..002e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    002e..0034  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0034..0036  move-result-object  v1
+    0036..003a  new-instance  v0, LX/LIL;
+    003a..0040  invoke-direct  {v0, v1}, LX/LIL;-><init>(Ljava/lang/String;)V
+    0040..0042  throw  v0
+    # exception table: 0 try range(s)
+.end method

@@ -19,8 +19,9 @@
 //! saves the new `dhash`. Current43.72 `8R7.CK4` requires a `list` and routes
 //! literal `matched=false` into reconciliation rather than the requested change.
 //! This adapter holds those results without cache/hash mutation and exposes a
-//! reconciliation warning. Historical root/immediate-child `dhash` compatibility
-//! is retained; full current first-list admission and migration remain unported.
+//! reconciliation warning. Set results require the first child to be list and
+//! validate it before branching; only its dhash is admitted. Full native migration
+//! remains unported.
 //!
 //! None of this is live-verified; nothing here has been exercised against a
 //! live session.
@@ -214,21 +215,6 @@ fn user_attr(node: &Node, name: &str) -> Result<Option<Jid>> {
     Ok(Some(jid))
 }
 
-fn extract_dhash(node: &Node) -> Result<Option<String>> {
-    // Set-result placement is still untraced. Preserve the existing root/child
-    // allowance, but never select arbitrarily among contradictory hashes.
-    let mut result: Option<String> = None;
-    for candidate in std::iter::once(node).chain(node.child_nodes().iter()) {
-        if let Some(value) = text_attr(candidate, "dhash")? {
-            if result.as_deref().is_some_and(|held| held != value) {
-                return Err(invalid("conflicting blocklist hashes"));
-            }
-            result = Some(value.to_owned());
-        }
-    }
-    Ok(result)
-}
-
 fn require_request(request: &Node, id: &str, kind: &str) -> Result<()> {
     let request_type = if kind == "blocklist" { "get" } else { "set" };
     let recipient = request.get_attr("to").and_then(|value| {
@@ -248,24 +234,20 @@ fn require_request(request: &Node, id: &str, kind: &str) -> Result<()> {
     Ok(())
 }
 
-fn apply_fetch_in(tx: &mut crate::store::WriteTx<'_>, reply: &Node) -> Result<()> {
-    let mut lists = reply
-        .child_nodes()
-        .iter()
-        .filter(|node| node.description == "list");
-    // Existing observed no-list response means unchanged, never an empty list.
-    let Some(list) = lists.next() else {
-        return Ok(());
-    };
-    if lists.next().is_some()
-        || !matches!(
-            list.content,
-            crate::binary::NodeContent::Empty | crate::binary::NodeContent::Children(_)
-        )
-    {
-        return Err(invalid("ambiguous or malformed blocklist snapshot"));
+struct Snapshot {
+    dhash: Option<String>,
+    current: BTreeSet<String>,
+    rows: BTreeMap<String, BlockedRow>,
+}
+
+fn parse_snapshot(list: &Node) -> Result<Snapshot> {
+    if !matches!(
+        list.content,
+        crate::binary::NodeContent::Empty | crate::binary::NodeContent::Children(_)
+    ) {
+        return Err(invalid("malformed blocklist snapshot"));
     }
-    let dhash = text_attr(list, "dhash")?;
+    let dhash = text_attr(list, "dhash")?.map(str::to_owned);
     let mut current = BTreeSet::new();
     let mut new_rows = BTreeMap::new();
     for item in list.child_nodes() {
@@ -308,6 +290,30 @@ fn apply_fetch_in(tx: &mut crate::store::WriteTx<'_>, reply: &Node) -> Result<()
             },
         );
     }
+    Ok(Snapshot {
+        dhash,
+        current,
+        rows: new_rows,
+    })
+}
+
+fn apply_fetch_in(tx: &mut crate::store::WriteTx<'_>, reply: &Node) -> Result<()> {
+    let mut lists = reply
+        .child_nodes()
+        .iter()
+        .filter(|node| node.description == "list");
+    // Existing observed no-list response means unchanged, never an empty list.
+    let Some(list) = lists.next() else {
+        return Ok(());
+    };
+    if lists.next().is_some() {
+        return Err(invalid("ambiguous blocklist snapshot"));
+    }
+    let Snapshot {
+        dhash,
+        current,
+        rows: new_rows,
+    } = parse_snapshot(list)?;
     if let Some(dhash) = dhash {
         tx.put_json(Table::Checkpoints, DHASH_KEY.as_bytes(), 1, &dhash)?;
     }
@@ -359,21 +365,21 @@ fn apply_block_result_in(
     }
     let target =
         user_attr(item, "jid")?.ok_or_else(|| invalid("saved block request has no target"))?;
-    // APK43.72 8R7.CK4 routes literal matched=false through 7vW.A01,
-    // not the ordinary requested-change success path. Its full migration/hash
-    // reconciliation is unported: preserve this cache and never replay the set.
-    for list in reply
+    // APK43.72 8R7.CK4 requires A0D's first child to be list and parses
+    // it before testing matched. Trailing children cannot supply a hash or
+    // change which result branch is selected.
+    let list = reply
         .child_nodes()
-        .iter()
+        .first()
         .filter(|node| node.description == "list")
-    {
-        if text_attr(list, "matched")? == Some("false") {
-            tx.put_json(Table::Checkpoints, RECONCILIATION_KEY, 1, &true)?;
-            return Ok(false);
-        }
+        .ok_or_else(|| invalid("blocklist set result requires list as its first child"))?;
+    let snapshot = parse_snapshot(list)?;
+    if text_attr(list, "matched")? == Some("false") {
+        tx.put_json(Table::Checkpoints, RECONCILIATION_KEY, 1, &true)?;
+        return Ok(false);
     }
     let key = blocked_key(&target.to_string());
-    let dhash = extract_dhash(reply)?;
+    let dhash = snapshot.dhash;
     if action == "block" {
         let existing: Option<BlockedRow> = tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?;
         if existing
@@ -798,6 +804,137 @@ mod tests {
     }
 
     #[test]
+    fn set_result_first_list_admission_preserves_state_and_correlation_after_reopen() {
+        for action in ["block", "unblock"] {
+            for mode in [
+                "missing",
+                "wrong_first",
+                "unknown_child",
+                "unknown_unmatched",
+                "invalid_identity",
+                "first_only",
+                "root_hash_only",
+                "unmatched",
+            ] {
+                let (dir, store) = store();
+                let initial = queue_fetch(&store).unwrap();
+                super::super::actions::reserve_pending(&store).unwrap();
+                let initial_items = if action == "unblock" {
+                    vec![Node::new("item").attr("jid", phone())]
+                } else {
+                    vec![]
+                };
+                super::super::actions::record_reply(
+                    &store,
+                    &fetch_reply(&initial, "before", initial_items),
+                )
+                .unwrap();
+                assert_eq!(ingest(&store).unwrap(), 1);
+                let id = if action == "block" {
+                    queue_block(&store, &phone())
+                } else {
+                    queue_unblock(&store, &phone())
+                }
+                .unwrap();
+                super::super::actions::reserve_pending(&store).unwrap();
+                let good = Node::new("list").attr("dhash", "selected");
+                let children = match mode {
+                    "missing" => vec![],
+                    "wrong_first" => vec![Node::new("PRIVATE-WRONG-TAG"), good],
+                    "unknown_child" => vec![good.children(vec![Node::new("PRIVATE-WRONG-TAG")])],
+                    "unknown_unmatched" => vec![
+                        good.attr("matched", "false")
+                            .children(vec![Node::new("PRIVATE-WRONG-TAG")]),
+                    ],
+                    "invalid_identity" => vec![
+                        good.children(vec![Node::new("item").attr("jid", "PRIVATE-INVALID-JID")]),
+                    ],
+                    "first_only" => vec![
+                        good,
+                        Node::new("list")
+                            .attr("matched", "false")
+                            .attr("dhash", "PRIVATE-TRAILING-HASH"),
+                    ],
+                    "root_hash_only" => vec![Node::new("list")],
+                    "unmatched" => vec![good.attr("matched", "false")],
+                    _ => unreachable!(),
+                };
+                let reply = Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", "result")
+                    .attr("dhash", "PRIVATE-ROOT-HASH")
+                    .children(children);
+                assert!(super::super::actions::record_reply(&store, &reply).unwrap());
+                let before = store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap();
+                let head = store.journal_head().unwrap();
+                let invalid = !matches!(mode, "first_only" | "root_hash_only" | "unmatched");
+                if invalid {
+                    let error = ingest(&store).unwrap_err().to_string();
+                    assert!(!error.contains("PRIVATE"));
+                    assert_eq!(
+                        store
+                            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                            .unwrap(),
+                        before
+                    );
+                } else {
+                    assert_eq!(ingest(&store).unwrap(), usize::from(mode != "unmatched"));
+                }
+                drop(store);
+                let store = reopen(dir.path());
+                assert_eq!(store.journal_head().unwrap(), head);
+                assert!(super::super::actions::reply(&store, &id).unwrap().is_some());
+                let outcome = super::super::actions::outcomes(&store)
+                    .unwrap()
+                    .into_iter()
+                    .find(|o| o.id == id)
+                    .unwrap();
+                assert_eq!(outcome.status, super::super::actions::ActionStatus::Ok);
+                if invalid {
+                    assert!(ingest(&store).is_err());
+                    assert_eq!(
+                        store
+                            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                            .unwrap(),
+                        before
+                    );
+                    assert_eq!(
+                        blocked(&store).unwrap().len(),
+                        usize::from(action == "unblock")
+                    );
+                } else {
+                    assert_eq!(ingest(&store).unwrap(), 0);
+                    assert_eq!(
+                        blocked(&store).unwrap().len(),
+                        usize::from(if mode == "unmatched" {
+                            action == "unblock"
+                        } else {
+                            action == "block"
+                        })
+                    );
+                    assert_eq!(
+                        reconciliation_required(&store).unwrap(),
+                        mode == "unmatched"
+                    );
+                }
+                let expected_hash = if mode == "first_only" {
+                    "selected"
+                } else {
+                    "before"
+                };
+                assert_eq!(saved_dhash(&store).unwrap().as_deref(), Some(expected_hash));
+                assert!(
+                    super::super::actions::reserve_pending(&store)
+                        .unwrap()
+                        .is_empty()
+                );
+            }
+        }
+    }
+
+    #[test]
     fn ingest_block_result_adds_a_row_and_unblock_removes_it() {
         let (_d, s) = store();
         let id = queue_block(&s, &phone()).unwrap();
@@ -805,7 +942,7 @@ mod tests {
         let reply = Node::new("iq")
             .attr("id", id)
             .attr("type", "result")
-            .attr("dhash", "after-block");
+            .children(vec![Node::new("list").attr("dhash", "after-block")]);
         super::super::actions::record_reply(&s, &reply).unwrap();
         assert_eq!(ingest(&s).unwrap(), 1);
         let list = blocked(&s).unwrap();
@@ -815,7 +952,10 @@ mod tests {
 
         let uid = queue_unblock(&s, &phone()).unwrap();
         super::super::actions::reserve_pending(&s).unwrap();
-        let ureply = Node::new("iq").attr("id", uid).attr("type", "result");
+        let ureply = Node::new("iq")
+            .attr("id", uid)
+            .attr("type", "result")
+            .children(vec![Node::new("list")]);
         super::super::actions::record_reply(&s, &ureply).unwrap();
         ingest(&s).unwrap();
         assert!(blocked(&s).unwrap().is_empty());
@@ -917,10 +1057,12 @@ mod tests {
         for reply in [
             Node::new("iq")
                 .attr("type", "result")
-                .attr("id", block.as_str()),
+                .attr("id", block.as_str())
+                .children(vec![Node::new("list")]),
             Node::new("iq")
                 .attr("type", "result")
-                .attr("id", unblock.as_str()),
+                .attr("id", unblock.as_str())
+                .children(vec![Node::new("list")]),
             fetch_reply(
                 &fetch,
                 "latest",
@@ -1135,7 +1277,7 @@ mod tests {
             &Node::new("iq")
                 .attr("id", original)
                 .attr("type", "result")
-                .attr("dhash", "before"),
+                .children(vec![Node::new("list").attr("dhash", "before")]),
         )
         .unwrap();
         ingest(&s).unwrap();
@@ -1226,7 +1368,8 @@ mod tests {
             &s,
             &Node::new("iq")
                 .attr("type", "result")
-                .attr("id", id.as_str()),
+                .attr("id", id.as_str())
+                .children(vec![Node::new("list")]),
         )
         .unwrap();
         s.write(|tx| {

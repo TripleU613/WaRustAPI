@@ -1,3 +1,10 @@
+2026-11-06 — **Blocklist set results require the native first list.**
+Corrected unsupported empty-result acceptance and root/trailing hash/branch
+selection. The selected list is validated before cache/hash/reconciliation
+projection; synthetic block/unblock refusal/reopen and first-list controls.
+[Evidence and limits](docs/protocol/chat-actions.md#blocklist-set-first-list-admission-2026-11-06).
+No new request or live account operation.
+
 2026-11-06 — **Blocklist default metadata provider binding resolved.**
 Pinned provider/cache/factory instructions connect7to provider0xb43 ->0x430
 ->0bZ, with delegated12d and metadata helper12g. This establishes packaged
