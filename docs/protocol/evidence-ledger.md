@@ -6975,3 +6975,14 @@ rows or missing specifiers, and cache owner/replacement scope remains open.
 [Complete options/getters, field census and conditional precedence proof](apk/2.26.43.72-client-ping-first-access/README.md).
 Research only; native effective timing/configuration remains unported. No live,
 request, timer, retry/reset, account or clock behavior changed.
+
+### 2026-11-05: final compiled ping defaults
+
+**Confirmed static / derived static, APK 2.26.43.72:** whole integer-builder
+argument-flow analysis of 08Y.<init>, A0B, A0I and A0Q finds 4158 integer puts,
+3585 distinct keys, and exactly one write each for 15103=32000, 15183=240000
+and 15270=15000. The final snapshot binds to this.A02; no later target write
+replaces those entries. This closes the selected-assignment-only caveat for
+these three keys. **Unknown/unported:** effective account values and configuration
+owner lifetime. No runtime timer, retry, replay or live-account behavior changes.
+[Reproducible bounded proof and limits](apk/2.26.43.72-client-ping-final-defaults/README.md).

@@ -1,3 +1,13 @@
+2026-11-05 — **Final compiled ping defaults verified across the complete integer builder.**
+
+The three selected timing keys occur once each and survive into the final map:
+32s, 240s and 15s. This closes later-default-write uncertainty; it does not establish
+effective account settings. Runtime timing remains unchanged.
+[Proof, model guards and remaining configuration gaps](docs/protocol/apk/2.26.43.72-client-ping-final-defaults/README.md).
+Validation: fresh pinned-APK proof reproduction, four rejecting model guards,
+fmt, strict Clippy, CLI/OpenAPI, coverage and staged hygiene passed.
+Shared Rust is unchanged from the preceding 1373-test validated commit.
+
 2026-11-05 — **Client timing first-access cache and reset scope traced.**
 
 Native ping getters retain selected first-access values in a distinct cache;

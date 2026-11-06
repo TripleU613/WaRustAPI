@@ -1,0 +1,12 @@
+
+# class: Lcom/google/common/collect/ImmutableMap$Builder;
+# extends: Ljava/lang/Object;
+
+.method public buildKeepingLast(L)  # .registers 2
+    # full signature: Lcom/google/common/collect/ImmutableMap$Builder;->buildKeepingLast()Lcom/google/common/collect/ImmutableMap;
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-direct  {v1, v0}, Lcom/google/common/collect/ImmutableMap$Builder;->build(Z)Lcom/google/common/collect/ImmutableMap;
+    0008..000a  move-result-object  v0
+    000a..000c  return-object  v0
+    # exception table: 0 try range(s)
+.end method

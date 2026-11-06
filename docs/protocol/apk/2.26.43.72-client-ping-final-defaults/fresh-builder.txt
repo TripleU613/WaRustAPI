@@ -1,0 +1,11 @@
+
+# class: Lcom/google/common/collect/ImmutableMap;
+# extends: Ljava/lang/Object;
+
+.method public builder(L)  # .registers 1
+    # full signature: Lcom/google/common/collect/ImmutableMap;->builder()Lcom/google/common/collect/ImmutableMap$Builder;
+    0000..0004  new-instance  v0, Lcom/google/common/collect/ImmutableMap$Builder;
+    0004..000a  invoke-direct  {v0}, Lcom/google/common/collect/ImmutableMap$Builder;-><init>()V
+    000a..000c  return-object  v0
+    # exception table: 0 try range(s)
+.end method

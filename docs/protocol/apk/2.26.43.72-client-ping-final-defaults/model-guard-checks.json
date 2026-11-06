@@ -1,0 +1,22 @@
+[
+  {
+    "mutation": "control_flow",
+    "rejected": true,
+    "reason": "unsupported instruction: if-eqz"
+  },
+  {
+    "mutation": "unresolved_key",
+    "rejected": true,
+    "reason": "unknown boxed integer"
+  },
+  {
+    "mutation": "builder_escape",
+    "rejected": true,
+    "reason": "integer builder escapes to unknown helper"
+  },
+  {
+    "mutation": "wrong_owner",
+    "rejected": true,
+    "reason": "wrong final integer map/owner"
+  }
+]
