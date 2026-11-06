@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "bytes": 4156,
+    "sha256": "df427f872b585bde3977204cbd75532270e8d1959f4b242301e3107a3626563e"
+  },
+  "anchor.txt": {
+    "bytes": 207,
+    "sha256": "62fcf7ffc6a6d2323e90aece15072817b134a363c460b6d165658bdd9bb21e84"
+  },
+  "bot-alias.txt": {
+    "bytes": 616,
+    "sha256": "b246720c1dd82b48c80c4addaba5662c9d69e8ca4916e25ace67f3b060ce68c7"
+  },
+  "bot-feedback.txt": {
+    "bytes": 853,
+    "sha256": "a4e274f4def4c92ccdf028790aa73c5d89b7f9d514083a2ab59781072953a132"
+  },
+  "bot-predicate.txt": {
+    "bytes": 535,
+    "sha256": "d1097e16b8d95a1a2a92dde0b90c4d0a7571c9e602ced288f5be06b2306536aa"
+  },
+  "bundle-jid.txt": {
+    "bytes": 1459,
+    "sha256": "54837464c3dbbd54c8669b7c78937e27e65da79ef613f6ee8951f1594b3bc7d3"
+  },
+  "consumer.txt": {
+    "bytes": 72214,
+    "sha256": "09c5d37bf00f531c4dfb05c8273d2fa8bc4744982cbfba200dc38e8136efc170"
+  },
+  "device-conversion.txt": {
+    "bytes": 1196,
+    "sha256": "c52a92cc1a5b7016342ea43399be0a0ece0ea1002c83c64e1cc9214905f86bef"
+  },
+  "success-envelope.txt": {
+    "bytes": 4488,
+    "sha256": "be40c747a89a566c7c9a148c08123e504ac142971a7570c7762b80eaea6c3b83"
+  },
+  "user-types.txt": {
+    "bytes": 873,
+    "sha256": "15ac20b5755091ceb6fa5e8645b00557e528b2d7821e65e46c50130d8a622e6b"
+  }
+}

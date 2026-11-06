@@ -911,3 +911,9 @@ uncertain on timeout; no replay/resume is introduced. The real-crypto group
 reference test covers conflicting recipient success/refusal controls and later
 valid-address continuation. [Pinned message-key evidence, public comparison
 helper and limits](message-ack.md#bind-distribution-and-comparison-acks-to-the-expected-chat-2026-11-06).
+
+Ordinary participant-qualified distribution success is also excluded by the
+shared expected-chat classifier (2026-11-06). A supported plain/device PN/LID
+participant preserves the pending preparation; an error-present ordinary
+refusal remains distinct. [Refreshed pinned evidence and unported bot-feedback
+exception](message-ack.md#share-ordinary-participant-success-admission-2026-11-06).

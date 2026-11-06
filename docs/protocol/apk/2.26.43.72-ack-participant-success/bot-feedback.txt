@@ -1,0 +1,23 @@
+
+# class: LX/Ep1;
+# extends: Ljava/lang/Object;
+
+.method public A00(ZLL)  # .registers 4
+    # full signature: LX/Ep1;->A00(LX/0DY;LX/18U;)Z
+    0000..0002  const/4  v1, #0x0
+    0002..0006  instance-of  v0, v3, LX/DwD;
+    0006..000a  if-eqz  v0, +0x16
+    000a..000e  sget-object  v0, LX/0DY;->A00:LX/0Di;
+    000e..0014  invoke-static  {v2}, LX/0Di;->A00(Lcom/whatsapp/infra/core/jid/Jid;)LX/0DY;
+    0014..0016  move-result-object  v0
+    0016..001c  invoke-static  {v0}, LX/0x9;->A03(LX/0DY;)Z
+    001c..001e  move-result  v0
+    001e..0022  if-nez  v0, +0xa
+    0022..0028  invoke-static  {v2}, LX/0Dn;->A0l(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0028..002a  move-result  v0
+    002a..002e  if-eqz  v0, +0x4
+    002e..0030  const/4  v0, #0x1
+    0030..0032  return  v0
+    0032..0034  return  v1
+    # exception table: 0 try range(s)
+.end method

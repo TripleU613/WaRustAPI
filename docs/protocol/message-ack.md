@@ -439,3 +439,40 @@ traffic or server acceptance is claimed.
 Validation: 1,460 workspace/all-feature tests passed. Strict workspace/all-target/
 all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
 validation, APK coverage freshness and repository hygiene passed. Offline only.
+
+## Share ordinary participant-success admission (2026-11-06)
+
+**Confirmed pinned static / Rust consistency correction:** [new43.72 producer,
+conversion, consumer and explicit exception exports](apk/2.26.43.72-ack-participant-success/README.md)
+refresh the selected participant route previously traced on37.71. Plain PN/LID
+users convert to primary devices as well as explicit devices. Event19's ordinary
+success consumer ignores a nonnull participant. A special bot-feedback exception
+also exists and is explicitly retained as unported; its PN alias predicate is
+not generalized into ordinary sender acceptance. The whole external dispatcher
+chain is not newly proven by this selected producer/consumer export.
+
+Ordinary outbox settlement already applied the supported PN/LID guard, but
+message_ack_outcome_for did not. Consequently a participant-qualified success
+could release a dependent distribution or become an accepted CLI comparison
+result. The guard is now shared: expected-chat classification returns Unrelated
+(outcome_unknown) for ordinary success with a supported nonempty PN/LID
+participant, including device forms. Error-present refusals and459 challenges
+retain their separate classification. No fatal error or channel reset is added.
+
+The real-crypto group-reference regression now exercises plain/device PN/LID
+participant successes against the actual distribution matcher and verifies the
+preparation row stays unchanged. The same matching error500 ACK remains a
+refusal candidate; the original unqualified success continues normal crypto,
+decrypt and reopen verification. Shared expected-chat classifier controls cover
+unknown status, error500 refusal,459 challenge and non-user/malformed participant
+controls. Existing ordinary outbox participant and refusal/reopen tests remain.
+
+Limits: special bot-feedback, other user families, complete native grammar,
+external dispatcher and all account-recovery rules remain incomplete. Raw
+message_ack_outcome remains low-level class/error classification without chat
+or participant authority. Stateful callers need capture, admission, original
+ID and durable reservation checks independently. No live traffic or replay.
+
+Validation: 1,460 workspace/all-feature tests passed. Strict workspace/all-target/
+all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
+validation, APK coverage freshness and repository hygiene passed. Offline only.

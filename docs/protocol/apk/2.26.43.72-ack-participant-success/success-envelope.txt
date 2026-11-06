@@ -1,0 +1,68 @@
+
+# class: LX/1lZ;
+# extends: Ljava/lang/Object;
+
+.method public A0H(LLLLLLLIJJZ)  # .registers 17
+    # full signature: LX/1lZ;->A0H(Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/DeviceJid;LX/1dW;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IJJZ)Landroid/os/Message;
+    0000..0004  const-string  v2, "lid"
+    0004..0006  const/4  v3, #0x0
+    0006..000a  const/16  v1, #0x13
+    000a..000c  const/4  v0, #0x0
+    000c..0012  invoke-static  {v0, v3, v1, v3}, Landroid/os/Message;->obtain(Landroid/os/Handler;III)Landroid/os/Message;
+    0012..0014  move-result-object  v4
+    0014..001a  invoke-virtual  {v4}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    001a..001c  move-result-object  v3
+    001c..0020  const-string  v1, "msgid"
+    0020..0024  iget-object  v0, v7, LX/1dW;->A01:Ljava/lang/String;
+    0024..002a  invoke-virtual  {v3, v1, v0}, Landroid/os/BaseBundle;->putString(Ljava/lang/String;Ljava/lang/String;)V
+    002a..0030  invoke-virtual  {v4}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    0030..0032  move-result-object  v3
+    0032..0036  iget-object  v0, v7, LX/1dW;->A00:LX/0DY;
+    0036..003c  invoke-static  {v0}, LX/0Dn;->A09(Lcom/whatsapp/infra/core/jid/Jid;)Ljava/lang/String;
+    003c..003e  move-result-object  v1
+    003e..0042  const-string  v0, "remote_chat_jid"
+    0042..0048  invoke-virtual  {v3, v0, v1}, Landroid/os/BaseBundle;->putString(Ljava/lang/String;Ljava/lang/String;)V
+    0048..004e  invoke-virtual  {v4}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    004e..0050  move-result-object  v1
+    0050..0054  const-string  v0, "participant"
+    0054..005a  invoke-static  {v1, v5, v0}, LX/1lZ;->A0g(Landroid/os/Bundle;Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;)V
+    005a..0060  invoke-virtual  {v4}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    0060..0062  move-result-object  v1
+    0062..0066  const-string  v0, "remoteJid"
+    0066..006c  invoke-static  {v1, v6, v0}, LX/1lZ;->A0g(Landroid/os/Bundle;Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;)V
+    006c..0072  invoke-virtual  {v4}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    0072..0074  move-result-object  v1
+    0074..0078  const-string  v0, "phash"
+    0078..007e  invoke-virtual  {v1, v0, v8}, Landroid/os/BaseBundle;->putString(Ljava/lang/String;Ljava/lang/String;)V
+    007e..0084  invoke-virtual  {v4}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    0084..0086  move-result-object  v1
+    0086..008a  const-string  v0, "count"
+    008a..0090  invoke-virtual  {v1, v0, v11}, Landroid/os/BaseBundle;->putInt(Ljava/lang/String;I)V
+    0090..0096  invoke-virtual  {v4}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    0096..0098  move-result-object  v1
+    0098..009c  const-string  v0, "timestamp"
+    009c..00a2  invoke-virtual  {v1, v0, v12, v13}, Landroid/os/BaseBundle;->putLong(Ljava/lang/String;J)V
+    00a2..00a8  invoke-virtual  {v4}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    00a8..00aa  move-result-object  v1
+    00aa..00ae  const-string  v0, "smid"
+    00ae..00b4  invoke-virtual  {v1, v0, v14, v15}, Landroid/os/BaseBundle;->putLong(Ljava/lang/String;J)V
+    00b4..00ba  invoke-virtual  {v4}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    00ba..00bc  move-result-object  v1
+    00bc..00c0  const-string  v0, "edit"
+    00c0..00c6  invoke-virtual  {v1, v0, v9}, Landroid/os/BaseBundle;->putString(Ljava/lang/String;Ljava/lang/String;)V
+    00c6..00cc  invoke-virtual  {v4}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    00cc..00ce  move-result-object  v1
+    00ce..00d2  const-string  v0, "counter_abuse_token"
+    00d2..00d8  invoke-virtual  {v1, v0, v10}, Landroid/os/BaseBundle;->putString(Ljava/lang/String;Ljava/lang/String;)V
+    00d8..00de  invoke-virtual  {v4}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    00de..00e0  move-result-object  v1
+    00e0..00e4  const-string  v0, "addressing_mode"
+    00e4..00ea  invoke-virtual  {v1, v0, v2}, Landroid/os/BaseBundle;->putString(Ljava/lang/String;Ljava/lang/String;)V
+    00ea..00f0  invoke-virtual  {v4}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    00f0..00f2  move-result-object  v1
+    00f2..00f6  const-string  v0, "refresh_lid"
+    00f6..00fa  move/from16  v2, v16
+    00fa..0100  invoke-virtual  {v1, v0, v2}, Landroid/os/BaseBundle;->putBoolean(Ljava/lang/String;Z)V
+    0100..0102  return-object  v4
+    # exception table: 0 try range(s)
+.end method

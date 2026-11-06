@@ -295,6 +295,20 @@ pub(super) mod tests {
                                     before
                                 );
                             }
+                            for participant in [
+                                "12345@lid",
+                                "12345:7@lid",
+                                "15555550100@s.whatsapp.net",
+                                "15555550100:7@s.whatsapp.net",
+                            ] {
+                                let qualified = valid.clone().attr("participant", participant);
+                                assert!(!pending.matches(&qualified));
+                                assert!(pending.matches(&qualified.attr("error", "500")));
+                                assert_eq!(
+                                    preparation(&store, pending.entry.local_id).unwrap(),
+                                    before
+                                );
+                            }
                             valid
                         }
                         Some("w:g2") => membership(&query, &own, std::slice::from_ref(&peer)),

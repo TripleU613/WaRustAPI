@@ -1071,7 +1071,9 @@ impl MessageAckOutcome {
 /// Classify an ordinary message ACK only for its selected expected chat.
 /// The caller must separately bind the original wire ID and request ownership.
 /// This performs no capture, persistence, full envelope validation or replay.
-/// Expected PN/LID device addresses compare as their user address.
+/// Expected PN/LID device addresses compare as their user address. Ordinary
+/// success with a supported PN/LID participant remains uncertain; refusals
+/// and challenges use their separate existing outcome rules.
 pub fn message_ack_outcome_for(node: &Node, expected: &Jid) -> MessageAckOutcome {
     let expected = if matches!(
         expected.server,
@@ -1084,7 +1086,23 @@ pub fn message_ack_outcome_for(node: &Node, expected: &Jid) -> MessageAckOutcome
     if super::outgoing::message_ack_chat(node).as_ref() != Some(&expected) {
         return MessageAckOutcome::Unrelated;
     }
-    message_ack_outcome(node)
+    let outcome = message_ack_outcome(node);
+    if outcome == MessageAckOutcome::Accepted && ordinary_ack_has_participant(node) {
+        return MessageAckOutcome::Unrelated;
+    }
+    outcome
+}
+
+// APK43.72 1rH.A03 -> 0EB.A00 -> 1lZ.A10/A0H -> 196.BLn:
+// ordinary success ignores a converted participant. Plain PN/LID and their
+// devices convert too. Special bot-feedback handling is not implemented here.
+pub(crate) fn ordinary_ack_has_participant(node: &Node) -> bool {
+    super::receipts::jid(node, "participant").is_some_and(|jid| {
+        matches!(
+            jid.server,
+            crate::model::jid::Server::User | crate::model::jid::Server::Lid
+        ) && !jid.user.is_empty()
+    })
 }
 
 // APK43.72 1rH.A03 calls0Tp.A05(error,0) before class dispatch.
@@ -2836,6 +2854,43 @@ mod message_ack_outcome_tests {
             );
             let preferred = ack.attr("from", "67890@lid").attr("recipient", "12345@lid");
             assert_eq!(message_ack_outcome_for(&preferred, &expected), outcome);
+        }
+        for participant in [
+            "12345@lid",
+            "12345:7@lid",
+            "15555550100@s.whatsapp.net",
+            "15555550100:7@s.whatsapp.net",
+        ] {
+            let ack = base
+                .clone()
+                .attr("from", "12345@lid")
+                .attr("participant", participant);
+            assert_eq!(
+                message_ack_outcome_for(&ack, &expected),
+                MessageAckOutcome::Unrelated
+            );
+            assert_eq!(
+                message_ack_outcome_for(&ack, &expected).status(),
+                "outcome_unknown"
+            );
+            assert_eq!(
+                message_ack_outcome_for(&ack.clone().attr("error", "500"), &expected),
+                MessageAckOutcome::Refused
+            );
+            assert_eq!(
+                message_ack_outcome_for(&ack.attr("error", "459"), &expected),
+                MessageAckOutcome::AuthChallenge
+            );
+        }
+        for participant in ["12345-6@g.us", "not-a-jid"] {
+            let ack = base
+                .clone()
+                .attr("from", "12345@lid")
+                .attr("participant", participant);
+            assert_eq!(
+                message_ack_outcome_for(&ack, &expected),
+                MessageAckOutcome::Accepted
+            );
         }
         assert_eq!(
             message_ack_outcome_for(&base, &expected),

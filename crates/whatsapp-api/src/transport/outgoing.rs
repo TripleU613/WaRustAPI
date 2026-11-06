@@ -1305,15 +1305,7 @@ pub fn acknowledge(store: &ProtocolStore, node: &Node) -> Result<bool> {
     let Some(chat) = message_ack_chat(node) else {
         return Ok(false);
     };
-    // APK 2.26.37.71: 1Qy.A02 converts participant through 0DK.A00 only
-    // on success; 1Dz.A0H stores it in event 19, and 17J.BFC (023e..024c)
-    // ignores a nonnull DeviceJid. Plain PN/LID users convert to primary
-    // devices too. Other native user subtypes remain outside this adapter.
-    if node.get_attr("error").is_none()
-        && super::receipts::jid(node, "participant").is_some_and(|jid| {
-            matches!(jid.server, Server::User | Server::Lid) && !jid.user.is_empty()
-        })
-    {
+    if node.get_attr("error").is_none() && super::messaging::ordinary_ack_has_participant(node) {
         return Ok(false);
     }
     let Ok(wire_id) = MessageId::new(id) else {
