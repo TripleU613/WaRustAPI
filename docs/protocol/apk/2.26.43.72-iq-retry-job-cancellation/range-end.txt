@@ -1,0 +1,36 @@
+
+# class: LX/0Sk;
+# extends: Ljava/lang/Object;
+
+.method public A00(IIII)  # .registers 5
+    # full signature: LX/0Sk;->A00(III)I
+    0000..0004  if-lez  v4, +0x14
+    0004..0008  if-ge  v2, v3, +0x11
+    0008..000c  rem-int  v0, v3, v4
+    000c..0010  if-gez  v0, +0x3
+    0010..0012  add-int/2addr  v0, v4
+    0012..0014  rem-int/2addr  v2, v4
+    0014..0018  if-gez  v2, +0x3
+    0018..001a  add-int/2addr  v2, v4
+    001a..001c  sub-int/2addr  v0, v2
+    001c..001e  rem-int/2addr  v0, v4
+    001e..0022  if-gez  v0, +0x3
+    0022..0024  add-int/2addr  v0, v4
+    0024..0026  sub-int/2addr  v3, v0
+    0026..0028  return  v3
+    0028..002c  if-le  v2, v3, -0x1
+    002c..002e  neg-int  v1, v4
+    002e..0030  rem-int/2addr  v2, v1
+    0030..0034  if-gez  v2, +0x3
+    0034..0036  add-int/2addr  v2, v1
+    0036..003a  rem-int  v0, v3, v1
+    003a..003e  if-gez  v0, +0x3
+    003e..0040  add-int/2addr  v0, v1
+    0040..0042  sub-int/2addr  v2, v0
+    0042..0044  rem-int/2addr  v2, v1
+    0044..0048  if-gez  v2, +0x3
+    0048..004a  add-int/2addr  v2, v1
+    004a..004c  add-int/2addr  v3, v2
+    004c..004e  return  v3
+    # exception table: 0 try range(s)
+.end method

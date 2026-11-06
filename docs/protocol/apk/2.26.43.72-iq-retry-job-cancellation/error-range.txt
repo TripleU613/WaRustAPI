@@ -1,0 +1,11 @@
+
+# class: LX/0Si;
+# extends: LX/0Sg;
+
+.method public <init>(VII)  # .registers 4
+    # full signature: LX/0Si;-><init>(II)V
+    0000..0002  const/4  v0, #0x1
+    0002..0008  invoke-direct  {v1, v2, v3, v0}, LX/0Sg;-><init>(III)V
+    0008..000a  return-void
+    # exception table: 0 try range(s)
+.end method

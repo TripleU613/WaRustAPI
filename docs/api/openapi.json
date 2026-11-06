@@ -16934,5 +16934,12 @@
     "x-live": false,
     "description": "Static APK43.72 callback dispatch uses 1xZ.BVv and an effective feature gate; asynchronous reset clears awaiting-response map and schedules delivery failure, without proving cancellation of already-claimed workers or pre-send queued ownership. Local paused-time regression covers stale result/error across store reopen and driver restart. No runtime policy change.",
     "evidence": "docs/protocol/apk/2.26.43.72-client-ping-registry-lifecycle/README.md"
+  },
+  "x-iq-retry-job-cancellation-research": {
+    "x-cli": false,
+    "x-transport": "experimental",
+    "x-live": false,
+    "description": "Static APK43.72 disconnect cancellation map owns delayed retriable-IQ jobs. T56 requires shared budget/remaining window and original CmQ eligibility; selected errors additionally require allowed 500..599 code. Cancellation forwards original delivery failure. Status-privacy caller literals are scoped; no generic retry or uncertain-write replay is implemented.",
+    "evidence": "docs/protocol/apk/2.26.43.72-iq-retry-job-cancellation/README.md"
   }
 }

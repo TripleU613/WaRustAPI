@@ -1,3 +1,15 @@
+2026-11-05 — **Disconnect cancellation-map owner and bounded IQ retry path traced.**
+
+The adjacent map holds delayed retriable-IQ jobs, not queued callback ownership.
+Retry requires shared budget, remaining window and callback permission; the
+application caller found is a feature-gated status-privacy fetch. Cancellation
+forwards delivery failure. No generic retry/replay policy was added.
+[Source, exact callers and unresolved durable/cancellation boundaries](docs/protocol/apk/2.26.43.72-iq-retry-job-cancellation/README.md).
+Research only; no runtime or live-account behavior change.
+Validation: pinned APK identity, fmt, strict Clippy, CLI/OpenAPI, APK coverage,
+checksum/link hygiene and staged diff checks passed. No new full workspace run;
+shared Rust is unchanged from the preceding 1374-test validated commit.
+
 2026-11-05 — **Ping registry reset scope and stale-link ownership verified.**
 
 The native reset clears awaiting-response callbacks asynchronously; it does not

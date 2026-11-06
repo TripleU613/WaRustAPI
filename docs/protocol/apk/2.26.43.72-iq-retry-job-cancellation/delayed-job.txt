@@ -1,0 +1,86 @@
+# Selected byte-PC ranges, end exclusive; not complete method coverage.
+# Full export SHA256: 78db6fc7cea31e66a78985b537222b8ee3108be943650975e723f0d87b72eea3
+
+# Range 0000..0012
+    0000..0004  move-object/from16  v6, v47
+    0004..0008  move-object/from16  v0, v46
+    0008..000c  iget  v1, v0, LX/TKl;->$t:I
+    000c..0012  packed-switch  v1, payload@0x10b8, cases=[0:@0x76, 1:@0xd2, 2:@0x38e, 3:@0x50c, 4:@0xa56, 5:@0xb66, 6:@0xc5a, 7:@0xe34], default@0x12
+
+# Range 0b66..0c5a
+    0b66..0b6a  sget-object  v7, LX/0dd;->A02:LX/0dd;
+    0b6a..0b6e  iget  v1, v0, LX/TKl;->A00:I
+    0b6e..0b70  const/4  v3, #0x0
+    0b70..0b72  const/4  v4, #0x1
+    0b72..0b76  if-eqz  v1, +0xa
+    0b76..0b7a  if-ne  v1, v4, +0x3
+    0b7a..0b7c  goto  +0x18
+    0b7c..0b82  invoke-static  {}, LX/000;->A03()Ljava/lang/IllegalStateException;
+    0b82..0b84  move-result-object  v0
+    0b84..0b86  throw  v0
+    0b86..0b8c  invoke-static  {v6}, LX/0dg;->A01(Ljava/lang/Object;)V
+    0b8c..0b90  iget-object  v1, v0, LX/TKl;->A01:Ljava/lang/Object;
+    0b90..0b94  check-cast  v1, LX/SMN;
+    0b94..0b98  iget-wide  v1, v1, LX/SMN;->A01:J
+    0b98..0b9c  iput  v4, v0, LX/TKl;->A00:I
+    0b9c..0ba2  invoke-static  {v0, v1, v2}, LX/0nD;->A01(LX/0cf;J)Ljava/lang/Object;
+    0ba2..0ba4  move-result-object  v1
+    0ba4..0ba8  if-ne  v1, v7, +0x6
+    0ba8..0baa  return-object  v7
+    0baa..0bb0  invoke-static  {v6}, LX/0dg;->A01(Ljava/lang/Object;)V
+    0bb0..0bb4  iget-object  v8, v0, LX/TKl;->A02:Ljava/lang/Object;
+    0bb4..0bb8  check-cast  v8, LX/T56;
+    0bb8..0bbe  invoke-static  {}, Landroid/os/SystemClock;->elapsedRealtime()J
+    0bbe..0bc0  move-result-wide  v6
+    0bc0..0bc4  iget-wide  v1, v8, LX/T56;->A01:J
+    0bc4..0bc6  sub-long/2addr  v6, v1
+    0bc6..0bca  iget-object  v1, v0, LX/TKl;->A01:Ljava/lang/Object;
+    0bca..0bce  check-cast  v1, LX/SMN;
+    0bce..0bd2  iget-wide  v4, v1, LX/SMN;->A00:J
+    0bd2..0bd6  cmp-long  v1, v6, v4
+    0bd6..0bda  if-ltz  v1, +0x8
+    0bda..0be0  invoke-static  {v3, v8}, LX/T56;->A01(LX/0Tp;LX/T56;)V
+    0be0..0be4  sget-object  v6, LX/05u;->A00:LX/05u;
+    0be4..0be6  return-object  v6
+    0be6..0bea  iget-object  v4, v0, LX/TKl;->A04:Ljava/lang/Object;
+    0bea..0bee  check-cast  v4, LX/0Sf;
+    0bee..0bf2  iget-object  v2, v4, LX/0Sf;->A0E:Ljava/util/Map;
+    0bf2..0bf4  monitor-enter
+    0bf4..0bf8  iget-object  v1, v8, LX/T56;->A06:Ljava/lang/String;
+    0bf8..0bfe  invoke-interface  {v2, v1}, Ljava/util/Map;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+    0bfe..0c00  monitor-exit
+    0c00..0c04  iget-object  v2, v0, LX/TKl;->A02:Ljava/lang/Object;
+    0c04..0c08  check-cast  v2, LX/T56;
+    0c08..0c0c  iget  v9, v2, LX/T56;->A00:I
+    0c0c..0c10  iget-object  v8, v2, LX/T56;->A06:Ljava/lang/String;
+    0c10..0c14  iget-object  v7, v0, LX/TKl;->A03:Ljava/lang/Object;
+    0c14..0c18  check-cast  v7, LX/0Tp;
+    0c18..0c1c  if-nez  v7, +0x4
+    0c1c..0c20  iget-object  v7, v2, LX/T56;->A05:LX/0Tp;
+    0c20..0c24  iget-object  v6, v2, LX/T56;->A04:LX/0lG;
+    0c24..0c28  iget-object  v1, v0, LX/TKl;->A01:Ljava/lang/Object;
+    0c28..0c2c  check-cast  v1, LX/SMN;
+    0c2c..0c30  iget-wide  v10, v1, LX/SMN;->A00:J
+    0c30..0c34  iget-object  v5, v2, LX/T56;->A03:LX/1C8;
+    0c34..0c38  iget-boolean  v12, v2, LX/T56;->A07:Z
+    0c38..0c3e  invoke-virtual/range  {v4..v12}, LX/0Sf;->A0N(LX/1C8;LX/0lG;LX/0Tp;Ljava/lang/String;IJZ)V
+    0c3e..0c42  goto/16  +0x232
+    0c42..0c44  move-exception  v1
+    0c44..0c46  monitor-exit
+    0c46..0c48  throw  v1
+    0c48..0c4c  iget-object  v0, v0, LX/TKl;->A02:Ljava/lang/Object;
+    0c4c..0c50  check-cast  v0, LX/T56;
+    0c50..0c56  invoke-static  {v3, v0}, LX/T56;->A01(LX/0Tp;LX/T56;)V
+    0c56..0c5a  goto/16  +0x226
+
+# Range 10a2..10a8
+    10a2..10a6  sget-object  v6, LX/05u;->A00:LX/05u;
+    10a6..10a8  return-object  v6
+
+# Original full-method exception metadata (code units):
+    # exception table: 5 try range(s)
+    # catch <all> code_units 030a..04fe -> 0526
+    # catch Ljava/util/concurrent/CancellationException; code_units 05c6..05fa -> 0624
+    # catch <all> code_units 05fa..05ff -> 0621
+    # catch Ljava/util/concurrent/CancellationException; code_units 05ff..060a -> 0624
+    # catch Ljava/util/concurrent/CancellationException; code_units 060e..0624 -> 0624

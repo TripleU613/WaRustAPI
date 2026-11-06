@@ -1,0 +1,99 @@
+
+# class: Lcom/whatsapp/status/privacy/jobqueue/job/GetStatusPrivacyJob;
+# extends: Lorg/whispersystems/jobqueue/Job;
+
+.method public A0L(V)  # .registers 27
+    # full signature: Lcom/whatsapp/status/privacy/jobqueue/job/GetStatusPrivacyJob;->A0L()V
+    0000..0004  new-instance  v5, Ljava/util/concurrent/atomic/AtomicInteger;
+    0004..000a  invoke-direct  {v5}, Ljava/util/concurrent/atomic/AtomicInteger;-><init>()V
+    000a..000e  move-object/from16  v4, v26
+    000e..0012  iget-object  v1, v4, Lcom/whatsapp/status/privacy/jobqueue/job/GetStatusPrivacyJob;->A02:LX/7pi;
+    0012..0016  if-eqz  v1, +0x86
+    0016..001a  new-instance  v6, LX/7pl;
+    001a..0020  invoke-direct  {v6, v4, v5}, LX/7pl;-><init>(Lcom/whatsapp/status/privacy/jobqueue/job/GetStatusPrivacyJob;Ljava/util/concurrent/atomic/AtomicInteger;)V
+    0020..0024  new-instance  v3, Lcom/google/common/util/concurrent/SettableFuture;
+    0024..002a  invoke-direct  {v3}, Ljava/lang/Object;-><init>()V
+    002a..002e  iget-object  v0, v1, LX/7pi;->A00:LX/05a;
+    002e..0032  iget-object  v2, v0, LX/05a;->A00:LX/00x;
+    0032..0038  invoke-static  {v2}, LX/6oj;->A12(LX/00x;)Ljava/lang/String;
+    0038..003a  move-result-object  v13
+    003a..003e  iget-object  v1, v1, LX/7pi;->A01:LX/08Y;
+    003e..0042  const/16  v0, #0xf03
+    0042..0048  invoke-static  {v1, v0}, LX/2L7;->A1a(LX/00E;I)Z
+    0048..004a  move-result  v8
+    004a..0050  invoke-static  {v2}, LX/6oe;->A0u(LX/00x;)LX/0Sf;
+    0050..0052  move-result-object  v9
+    0052..0054  const/4  v0, #0x4
+    0054..0058  new-array  v7, v0, [LX/0Tl;
+    0058..005c  const-string  v0, "id"
+    005c..0060  new-instance  v1, LX/0Tl;
+    0060..0066  invoke-direct  {v1, v0, v13}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    0066..0068  const/4  v0, #0x0
+    0068..006c  aput-object  v1, v7, v0
+    006c..0070  const-string  v1, "xmlns"
+    0070..0074  const-string  v0, "status"
+    0074..007a  invoke-static  {v1, v0, v7}, LX/6oe;->A1T(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+    007a..007e  const-string  v1, "type"
+    007e..0082  const-string  v0, "get"
+    0082..0088  invoke-static  {v1, v0, v7}, LX/6oj;->A1Q(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+    0088..008c  sget-object  v2, LX/0mL;->A00:LX/0mL;
+    008c..0090  const-string  v0, "to"
+    0090..0094  new-instance  v1, LX/0Tl;
+    0094..009a  invoke-direct  {v1, v2, v0}, LX/0Tl;-><init>(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;)V
+    009a..009c  const/4  v0, #0x3
+    009c..00a0  aput-object  v1, v7, v0
+    00a0..00a4  const-string  v2, "privacy"
+    00a4..00a6  const/4  v0, #0x0
+    00a6..00aa  new-instance  v1, LX/0Tp;
+    00aa..00b0  invoke-direct  {v1, v2, v0}, LX/0Tp;-><init>(Ljava/lang/String;[LX/0Tl;)V
+    00b0..00b4  const-string  v0, "iq"
+    00b4..00b8  new-instance  v12, LX/0Tp;
+    00b8..00be  invoke-direct  {v12, v1, v0, v7}, LX/0Tp;-><init>(LX/0Tp;Ljava/lang/String;[LX/0Tl;)V
+    00be..00c2  const/16  v0, #0x11
+    00c2..00c6  new-instance  v11, LX/8RJ;
+    00c6..00cc  invoke-direct  {v11, v6, v3, v0}, LX/8RJ;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V
+    00cc..00d0  if-eqz  v8, +0x32
+    00d0..00d4  const/16  v14, #0x79
+    00d4..00d8  const-wide/16  v0, #0x7d00
+    00d8..00dc  const/16  v17, #0x0
+    00dc..00e0  iget-object  v2, v9, LX/0Sf;->A0G:LX/00p;
+    00e0..00e6  invoke-interface  {v2}, LX/00p;->getValue()Ljava/lang/Object;
+    00e6..00e8  move-result-object  v2
+    00e8..00ec  check-cast  v2, Ljava/util/Random;
+    00ec..00f0  const-wide/16  v20, #0x3
+    00f0..00f6  const-wide/32  v22, #0x36ee80
+    00f6..00fa  const-wide/16  v24, #0x3e8
+    00fa..00fe  new-instance  v10, LX/1C8;
+    00fe..0102  move-object/from16  v18, v10
+    0102..0106  move-object/from16  v19, v2
+    0106..010c  invoke-direct/range  {v18..v25}, LX/1C8;-><init>(Ljava/util/Random;JJJ)V
+    010c..010e  move-wide  v15, v0
+    010e..0114  invoke-virtual/range  {v9..v17}, LX/0Sf;->A0N(LX/1C8;LX/0lG;LX/0Tp;Ljava/lang/String;IJZ)V
+    0114..0118  sget-object  v2, Ljava/util/concurrent/TimeUnit;->MILLISECONDS:Ljava/util/concurrent/TimeUnit;
+    0118..011e  invoke-interface  {v3, v0, v1, v2}, Ljava/util/concurrent/Future;->get(JLjava/util/concurrent/TimeUnit;)Ljava/lang/Object;
+    011e..0124  invoke-virtual  {v5}, Ljava/util/concurrent/atomic/AtomicInteger;->get()I
+    0124..0126  move-result  v1
+    0126..012a  const/16  v0, #0x1f4
+    012a..012e  if-eq  v1, v0, +0x10
+    012e..0130  return-void
+    0130..0134  const-wide/16  v0, #0x7d00
+    0134..0138  const/16  v10, #0x79
+    0138..013a  move-object  v6, v9
+    013a..013c  move-object  v7, v11
+    013c..013e  move-object  v8, v12
+    013e..0140  move-object  v9, v13
+    0140..0142  move-wide  v11, v0
+    0142..0148  invoke-virtual/range  {v6..v12}, LX/0Sf;->A0W(LX/0lG;LX/0Tp;Ljava/lang/String;IJ)Z
+    0148..014a  goto  -0x1a
+    014a..014e  iget-wide  v1, v4, Lorg/whispersystems/jobqueue/Job;->A01:J
+    014e..0152  const-string  v0, "; persistentId="
+    0152..0158  invoke-static  {v1, v2, v0}, LX/2LA;->A0o(JLjava/lang/String;)Ljava/lang/String;
+    0158..015a  move-result-object  v1
+    015a..015e  const-string  v0, "server 500 error during get status privacy job"
+    015e..0164  invoke-static  {v0, v1}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0164..0166  move-result-object  v1
+    0166..016a  new-instance  v0, Ljava/lang/Exception;
+    016a..0170  invoke-direct  {v0, v1}, Ljava/lang/Exception;-><init>(Ljava/lang/String;)V
+    0170..0172  throw  v0
+    # exception table: 0 try range(s)
+.end method

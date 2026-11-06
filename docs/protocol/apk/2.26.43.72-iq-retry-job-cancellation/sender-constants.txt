@@ -1,0 +1,60 @@
+# Extracted complete method; full-class export SHA256: d5964f288b718234c5b65709c2e247dfae6a895c8931ecdc718470b01cd31286
+
+# class: LX/0Sf;
+# extends: Ljava/lang/Object;
+
+.method public <clinit>(V)  # .registers 13
+    # full signature: LX/0Sf;-><clinit>()V
+    0000..0002  const/4  v12, #0x2
+    0002..0004  const/4  v11, #0x0
+    0004..0006  const/4  v10, #0x1
+    0006..000a  const/16  v2, #0x1f4
+    000a..000e  const/16  v1, #0x257
+    000e..0012  new-instance  v0, LX/0Si;
+    0012..0018  invoke-direct  {v0, v2, v1}, LX/0Si;-><init>(II)V
+    0018..001c  sput-object  v0, LX/0Sf;->A0L:LX/0Si;
+    001c..0020  const/16  v0, #0x1f5
+    0020..0026  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0026..0028  move-result-object  v9
+    0028..002c  const/16  v0, #0x213
+    002c..0032  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0032..0034  move-result-object  v8
+    0034..0038  const/16  v0, #0x214
+    0038..003e  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    003e..0040  move-result-object  v7
+    0040..0044  const/16  v0, #0x215
+    0044..004a  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    004a..004c  move-result-object  v6
+    004c..0050  const/16  v0, #0x218
+    0050..0056  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0056..0058  move-result-object  v5
+    0058..005c  const/16  v0, #0x21e
+    005c..0062  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0062..0064  move-result-object  v4
+    0064..0068  const/16  v0, #0x223
+    0068..006e  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    006e..0070  move-result-object  v3
+    0070..0074  const/16  v0, #0x224
+    0074..007a  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    007a..007c  move-result-object  v2
+    007c..0080  const/16  v0, #0x8
+    0080..0084  new-array  v1, v0, [Ljava/lang/Integer;
+    0084..0088  aput-object  v9, v1, v11
+    0088..008c  aput-object  v8, v1, v10
+    008c..0090  aput-object  v7, v1, v12
+    0090..0092  const/4  v0, #0x3
+    0092..0096  aput-object  v6, v1, v0
+    0096..0098  const/4  v0, #0x4
+    0098..009c  aput-object  v5, v1, v0
+    009c..009e  const/4  v0, #0x5
+    009e..00a2  aput-object  v4, v1, v0
+    00a2..00a4  const/4  v0, #0x6
+    00a4..00a8  aput-object  v3, v1, v0
+    00a8..00aa  const/4  v0, #0x7
+    00aa..00ae  aput-object  v2, v1, v0
+    00ae..00b4  invoke-static  {v1}, LX/08w;->A0h([Ljava/lang/Object;)Ljava/util/Set;
+    00b4..00b6  move-result-object  v0
+    00b6..00ba  sput-object  v0, LX/0Sf;->A0K:Ljava/util/Set;
+    00ba..00bc  return-void
+    # exception table: 0 try range(s)
+.end method

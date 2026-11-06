@@ -1,0 +1,40 @@
+
+# class: LX/TKl;
+# extends: LX/0cj;
+
+.method public <init>(VLLLL)  # .registers 6
+    # full signature: LX/TKl;-><init>(Lcom/meta/wearable/acdc/sdk/socketfactory/ble/GattHandler;Ljava/util/UUID;LX/0cf;LX/0O2;)V
+    0000..0002  const/4  v0, #0x1
+    0002..0006  iput  v0, v1, LX/TKl;->$t:I
+    0006..000a  iput-object  v2, v1, LX/TKl;->A04:Ljava/lang/Object;
+    000a..000e  iput-object  v3, v1, LX/TKl;->A01:Ljava/lang/Object;
+    000e..0012  iput-object  v5, v1, LX/TKl;->A03:Ljava/lang/Object;
+    0012..0014  const/4  v0, #0x2
+    0014..001a  invoke-direct  {v1, v0, v4}, LX/0cj;-><init>(ILX/0cf;)V
+    001a..001c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VLLLI)  # .registers 6
+    # full signature: LX/TKl;-><init>(Ljava/lang/Object;Ljava/lang/Object;LX/0cf;I)V
+    0000..0004  iput  v5, v1, LX/TKl;->$t:I
+    0004..0008  iput-object  v3, v1, LX/TKl;->A04:Ljava/lang/Object;
+    0008..000c  iput-object  v2, v1, LX/TKl;->A03:Ljava/lang/Object;
+    000c..000e  const/4  v0, #0x2
+    000e..0014  invoke-direct  {v1, v0, v4}, LX/0cj;-><init>(ILX/0cf;)V
+    0014..0016  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VLLLLLI)  # .registers 8
+    # full signature: LX/TKl;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;LX/0cf;I)V
+    0000..0004  iput  v7, v1, LX/TKl;->$t:I
+    0004..0008  iput-object  v3, v1, LX/TKl;->A04:Ljava/lang/Object;
+    0008..000c  iput-object  v2, v1, LX/TKl;->A01:Ljava/lang/Object;
+    000c..0010  iput-object  v4, v1, LX/TKl;->A02:Ljava/lang/Object;
+    0010..0014  iput-object  v5, v1, LX/TKl;->A03:Ljava/lang/Object;
+    0014..0016  const/4  v0, #0x2
+    0016..001c  invoke-direct  {v1, v0, v6}, LX/0cj;-><init>(ILX/0cf;)V
+    001c..001e  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -2225,3 +2225,15 @@ a prior closed link cannot settle or extend the restarted link's ping after stor
 reopen. **Open:** complete queued disposal, native executor/registration ordering
 and claimed-worker cancellation. No production timing/retry policy changed.
 [Evidence, regression and limits](apk/2.26.43.72-client-ping-registry-lifecycle/README.md).
+
+### 2026-11-05: disconnect cancels a scoped retriable-IQ job map
+
+**Confirmed static, APK 2.26.43.72:** 0Sf.A0E holds delayed T56/TKl retry jobs,
+not queued IQ callback ownership. Disconnect requests job cancellation; selected
+coroutine cancellation forwards original delivery failure. Scheduling requires
+remaining budget and callback CmQ permission; errors additionally require allowed
+500..599 code excluding the retained eight-code set. Direct application caller
+is a feature-gated status-privacy job, not every IQ. **Unported/unknown:** caller
+callback eligibility, full job-queue/cancellation ordering and durable recovery.
+[Complete callback/budget bodies, caller census and boundaries](apk/2.26.43.72-iq-retry-job-cancellation/README.md).
+No runtime retry, replay, timer, account or persistence policy changed.

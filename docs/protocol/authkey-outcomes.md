@@ -396,3 +396,15 @@ durable processing or WhatsApp stanza acknowledgement.
 [Branch offsets, error continuation and limits](apk/2.26.43.72-push-config-fbns-token-received/README.md#provider-message-ack-after-normal-handling-or-json-failure).
 Full downstream processing, provider delivery and durable ACK ownership remain
 open. No Rust behavior, provider IPC or live account operation changed.
+
+### 2026-11-05: disconnect cancels a scoped retriable-IQ job map
+
+**Confirmed static, APK 2.26.43.72:** 0Sf.A0E holds delayed T56/TKl retry jobs,
+not queued IQ callback ownership. Disconnect requests job cancellation; selected
+coroutine cancellation forwards original delivery failure. Scheduling requires
+remaining budget and callback CmQ permission; errors additionally require allowed
+500..599 code excluding the retained eight-code set. Direct application caller
+is a feature-gated status-privacy job, not every IQ. **Unported/unknown:** caller
+callback eligibility, full job-queue/cancellation ordering and durable recovery.
+[Complete callback/budget bodies, caller census and boundaries](apk/2.26.43.72-iq-retry-job-cancellation/README.md).
+No runtime retry, replay, timer, account or persistence policy changed.

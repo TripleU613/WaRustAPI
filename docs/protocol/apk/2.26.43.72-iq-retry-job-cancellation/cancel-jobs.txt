@@ -1,0 +1,33 @@
+
+# class: LX/0Sf;
+# extends: Ljava/lang/Object;
+
+.method public A0J(V)  # .registers 5
+    # full signature: LX/0Sf;->A0J()V
+    0000..0004  iget-object  v3, v4, LX/0Sf;->A0E:Ljava/util/Map;
+    0004..0006  monitor-enter
+    0006..000c  invoke-interface  {v3}, Ljava/util/Map;->entrySet()Ljava/util/Set;
+    000c..000e  move-result-object  v0
+    000e..0014  invoke-interface  {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    0014..0016  move-result-object  v2
+    0016..001c  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    001c..001e  move-result  v0
+    001e..0022  if-eqz  v0, +0x13
+    0022..0028  invoke-interface  {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0028..002a  move-result-object  v0
+    002a..002e  check-cast  v0, Ljava/util/Map$Entry;
+    002e..0034  invoke-interface  {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+    0034..0036  move-result-object  v1
+    0036..003a  check-cast  v1, LX/0Sp;
+    003a..003c  const/4  v0, #0x0
+    003c..0042  invoke-interface  {v1, v0}, LX/0Sp;->AG3(Ljava/util/concurrent/CancellationException;)V
+    0042..0044  goto  -0x16
+    0044..004a  invoke-interface  {v3}, Ljava/util/Map;->clear()V
+    004a..004c  monitor-exit
+    004c..004e  return-void
+    004e..0050  move-exception  v0
+    0050..0052  monitor-exit
+    0052..0054  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0003..0025 -> 0027
+.end method

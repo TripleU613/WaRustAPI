@@ -1,0 +1,91 @@
+# Extracted complete method; full-class export SHA256: d5964f288b718234c5b65709c2e247dfae6a895c8931ecdc718470b01cd31286
+
+
+.method public A0N(VLLLLIJZ)  # .registers 34
+    # full signature: LX/0Sf;->A0N(LX/1C8;LX/0lG;LX/0Tp;Ljava/lang/String;IJZ)V
+    0000..0004  move-object/from16  v12, v25
+    0004..0008  iget-object  v8, v12, LX/0Sf;->A06:LX/08q;
+    0008..000c  new-instance  v7, LX/T56;
+    000c..0010  move-object/from16  v9, v26
+    0010..0014  move-object/from16  v10, v27
+    0014..0018  move-object/from16  v11, v28
+    0018..001c  move-object/from16  v13, v29
+    001c..0020  move/from16  v14, v30
+    0020..0024  move-wide/from16  v15, v31
+    0024..0028  move/from16  v17, v33
+    0028..002e  invoke-direct/range  {v7..v17}, LX/T56;-><init>(LX/08q;LX/1C8;LX/0lG;LX/0Tp;LX/0Sf;Ljava/lang/String;IJZ)V
+    002e..0032  iget-object  v0, v12, LX/0Sf;->A07:LX/0AI;
+    0032..0036  iget-boolean  v0, v0, LX/0AI;->A06:Z
+    0036..0038  const/4  v6, #0x1
+    0038..003c  const-wide/16  v4, #0x0
+    003c..0040  const-string  v3, " id="
+    0040..0042  const/4  v2, #0x0
+    0042..0046  if-eqz  v0, +0x46
+    0046..004a  iget-object  v0, v12, LX/0Sf;->A0J:LX/1A0;
+    004a..004e  if-eqz  v0, +0x42
+    004e..0052  const-string  v1, "MessageClient/sendIqWithRetryInternal/add-to-pending type="
+    0052..0056  new-instance  v0, Ljava/lang/StringBuilder;
+    0056..005c  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    005c..0062  invoke-virtual  {v0, v14}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0062..0068  invoke-virtual  {v0, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0068..006e  invoke-virtual  {v0, v13}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    006e..0074  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0074..0076  move-result-object  v0
+    0076..007c  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    007c..0082  invoke-static  {v12}, LX/0Sf;->A03(LX/0Sf;)LX/0ln;
+    0082..0084  move-result-object  v18
+    0084..0088  move-object/from16  v19, v7
+    0088..008c  move-object/from16  v20, v13
+    008c..0090  move/from16  v21, v14
+    0090..0094  move-wide/from16  v22, v15
+    0094..0098  move/from16  v24, v2
+    0098..009e  invoke-virtual/range  {v18..v24}, LX/0ln;->A08(LX/0lG;Ljava/lang/String;IJZ)V
+    009e..00a2  cmp-long  v0, v31, v4
+    00a2..00a6  if-gtz  v0, +0x3
+    00a6..00a8  const/4  v6, #0x0
+    00a8..00ae  invoke-static  {v6}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    00ae..00b0  move-result-object  v4
+    00b0..00b2  move-object  v3, v11
+    00b2..00b4  move-object  v5, v13
+    00b4..00b6  move  v6, v14
+    00b6..00ba  move/from16  v7, v17
+    00ba..00bc  move  v8, v2
+    00bc..00c2  invoke-static/range  {v3..v8}, LX/0Sf;->A01(LX/0Tp;Ljava/lang/Boolean;Ljava/lang/String;IZZ)Landroid/os/Message;
+    00c2..00c4  move-result-object  v1
+    00c4..00c6  const/4  v0, #0x1
+    00c6..00cc  invoke-static  {v1, v12, v0, v2}, LX/0Sf;->A05(Landroid/os/Message;LX/0Sf;ZZ)V
+    00cc..00ce  return-void
+    00ce..00d2  const-string  v1, "MessageClient/sendIqWithRetryInternal/add-to-pending inFlightMessages type="
+    00d2..00d6  new-instance  v0, Ljava/lang/StringBuilder;
+    00d6..00dc  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00dc..00e2  invoke-virtual  {v0, v14}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00e2..00e8  invoke-virtual  {v0, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00e8..00ee  invoke-virtual  {v0, v13}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00ee..00f4  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00f4..00f6  move-result-object  v0
+    00f6..00fc  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    00fc..0102  invoke-static  {v12}, LX/0Sf;->A03(LX/0Sf;)LX/0ln;
+    0102..0104  move-result-object  v17
+    0104..0108  move-object/from16  v18, v7
+    0108..010c  move-object/from16  v19, v13
+    010c..0110  move/from16  v20, v14
+    0110..0114  move-wide/from16  v21, v15
+    0114..0118  move/from16  v23, v2
+    0118..011e  invoke-virtual/range  {v17..v23}, LX/0ln;->A08(LX/0lG;Ljava/lang/String;IJZ)V
+    011e..0122  iget-object  v1, v12, LX/0Sf;->A09:LX/0TX;
+    0122..0126  cmp-long  v0, v31, v4
+    0126..012a  if-gtz  v0, +0x3
+    012a..012c  const/4  v6, #0x0
+    012c..0132  invoke-static  {v6}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0132..0134  move-result-object  v4
+    0134..0136  move  v8, v2
+    0136..0138  move-object  v3, v11
+    0138..013a  move-object  v5, v13
+    013a..013c  move  v6, v14
+    013c..013e  move  v7, v2
+    013e..0144  invoke-static/range  {v3..v8}, LX/0Sf;->A01(LX/0Tp;Ljava/lang/Boolean;Ljava/lang/String;IZZ)Landroid/os/Message;
+    0144..0146  move-result-object  v0
+    0146..014c  invoke-virtual  {v1, v0, v13}, LX/0TX;->A02(Landroid/os/Message;Ljava/lang/String;)V
+    014c..014e  return-void
+    # exception table: 0 try range(s)
+.end method

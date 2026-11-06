@@ -1,0 +1,13 @@
+
+# class: LX/SMN;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLJJ)  # .registers 6
+    # full signature: LX/SMN;-><init>(LX/T56;JJ)V
+    0000..0004  iput-object  v1, v0, LX/SMN;->A02:LX/T56;
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000a..000e  iput-wide  v2, v0, LX/SMN;->A01:J
+    000e..0012  iput-wide  v4, v0, LX/SMN;->A00:J
+    0012..0014  return-void
+    # exception table: 0 try range(s)
+.end method

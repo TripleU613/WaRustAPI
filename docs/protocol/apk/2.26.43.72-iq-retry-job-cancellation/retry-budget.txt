@@ -1,0 +1,99 @@
+
+# class: LX/1C8;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLJJJ)  # .registers 9
+    # full signature: LX/1C8;-><init>(Ljava/util/Random;JJJ)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    000e..0012  iput-object  v2, v1, LX/1C8;->A05:Ljava/util/Random;
+    0012..0016  iput-wide  v3, v1, LX/1C8;->A03:J
+    0016..001a  iput-wide  v5, v1, LX/1C8;->A04:J
+    001a..001e  iput-wide  v7, v1, LX/1C8;->A02:J
+    001e..0020  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(I)  # .registers 2
+    # full signature: LX/1C8;->A00()I
+    0000..0002  monitor-enter
+    0002..0006  iget  v0, v1, LX/1C8;->A00:I
+    0006..0008  monitor-exit
+    0008..000a  return  v0
+    000a..000c  move-exception  v0
+    000c..000e  monitor-exit
+    000e..0010  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0001..0003 -> 0005
+    # catch <all> code_units 0006..0007 -> 0005
+.end method
+
+.method public A01(L)  # .registers 9
+    # full signature: LX/1C8;->A01()Ljava/lang/Long;
+    0000..0002  monitor-enter
+    0002..0006  iget  v5, v8, LX/1C8;->A00:I
+    0006..0008  int-to-long  v3, v5
+    0008..000c  iget-wide  v1, v8, LX/1C8;->A03:J
+    000c..0010  cmp-long  v0, v3, v1
+    0010..0014  if-ltz  v0, +0x5
+    0014..0016  monitor-exit
+    0016..0018  const/4  v0, #0x0
+    0018..001a  return-object  v0
+    001a..001c  const/4  v7, #0x1
+    001c..0020  add-int/lit8  v2, v5, #0x1
+    0020..0024  iput  v2, v8, LX/1C8;->A00:I
+    0024..0028  iget-boolean  v0, v8, LX/1C8;->A01:Z
+    0028..002c  if-nez  v0, +0x2c
+    002c..0030  iget-wide  v5, v8, LX/1C8;->A02:J
+    0030..0034  const/16  v0, #0x32
+    0034..0038  if-le  v2, v0, +0x4
+    0038..003c  const/16  v2, #0x32
+    003c..0040  const-wide/16  v0, #0x1
+    0040..0042  shl-long/2addr  v0, v2
+    0042..0044  mul-long/2addr  v5, v0
+    0044..0048  const-wide/16  v0, #0x2
+    0048..004c  div-long  v3, v5, v0
+    004c..0050  iget-object  v0, v8, LX/1C8;->A05:Ljava/util/Random;
+    0050..0056  invoke-virtual  {v0}, Ljava/util/Random;->nextLong()J
+    0056..0058  move-result-wide  v0
+    0058..005a  rem-long/2addr  v0, v5
+    005a..0060  invoke-static  {v0, v1}, Ljava/lang/Math;->abs(J)J
+    0060..0062  move-result-wide  v0
+    0062..0064  add-long/2addr  v3, v0
+    0064..0068  iget-wide  v1, v8, LX/1C8;->A04:J
+    0068..006c  cmp-long  v0, v3, v1
+    006c..0070  if-ltz  v0, +0x5
+    0070..0074  iput-boolean  v7, v8, LX/1C8;->A01:Z
+    0074..0076  move-wide  v3, v1
+    0076..007c  invoke-static  {v3, v4}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    007c..007e  move-result-object  v0
+    007e..0080  goto  +0x7
+    0080..0084  iget-wide  v0, v8, LX/1C8;->A04:J
+    0084..008a  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    008a..008c  move-result-object  v0
+    008c..008e  monitor-exit
+    008e..0090  return-object  v0
+    0090..0092  move-exception  v0
+    0092..0094  monitor-exit
+    0094..0096  throw  v0
+    # exception table: 3 try range(s)
+    # catch <all> code_units 0001..000a -> 0048
+    # catch <all> code_units 000d..0046 -> 0048
+    # catch <all> code_units 0049..004a -> 0048
+.end method
+
+.method public A02(V)  # .registers 2
+    # full signature: LX/1C8;->A02()V
+    0000..0002  monitor-enter
+    0002..0004  const/4  v0, #0x0
+    0004..0008  iput  v0, v1, LX/1C8;->A00:I
+    0008..000a  monitor-exit
+    000a..000c  return-void
+    000c..000e  move-exception  v0
+    000e..0010  monitor-exit
+    0010..0012  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0002..0004 -> 0006
+    # catch <all> code_units 0007..0008 -> 0006
+.end method
