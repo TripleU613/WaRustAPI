@@ -1,3 +1,9 @@
+2026-11-06 — **Native request header member and timeout conversion traced.**
+
+Decoded header map moves to request+0x130; four native timeout inputs pass through
+validateTimeout. [Offsets, helper and local-bound distinction](docs/protocol/media-network-outcomes.md#native-header-transfer-and-timeout-normalization-2026-11-06).
+No Rust timing/header change or live operation; downstream middleware remains open.
+
 2026-11-06 — **Upload provider JNI class/table binding confirmed statically.**
 
 Named registration binds inherited factory and stream/service methods; JNI ABI

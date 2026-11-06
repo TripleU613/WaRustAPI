@@ -1,0 +1,76 @@
+{
+  "scope": "Selected static request conversion/timeout handling; no wire or runtime proof",
+  "library_sha256": "d0ab3f2237e92a76ac3519c3577b5836b9e6f65a186c2016cefd43c4923f4b0d",
+  "windows": [
+    {
+      "name": "request-transfer",
+      "start_va": "0x651b64",
+      "end_va": "0x651fa0",
+      "file_offset": "0x64db64",
+      "bytes": 1084,
+      "sha256": "b8255a44faab5f571e66564a0781599b7cc49b40c0e55c4289046b103f5a6822"
+    },
+    {
+      "name": "request-property",
+      "start_va": "0x651fa0",
+      "end_va": "0x652080",
+      "file_offset": "0x64dfa0",
+      "bytes": 224,
+      "sha256": "738ac6b300cd2df27c21aac114432122059b049a1b3df99f4afbf241a73544da"
+    },
+    {
+      "name": "timeout-normalizer",
+      "start_va": "0x66377c",
+      "end_va": "0x663844",
+      "file_offset": "0x65f77c",
+      "bytes": 200,
+      "sha256": "a0dcd8366b8ca110dafcd68f7dbef876683804008c12b2f0f6180a85cddff017"
+    },
+    {
+      "name": "timeout-setters",
+      "start_va": "0x66370c",
+      "end_va": "0x66377c",
+      "file_offset": "0x65f70c",
+      "bytes": 112,
+      "sha256": "8ba4433435cdd944ff3f353ad50d9dee6792a35951a9c205693eb09475b50949"
+    },
+    {
+      "name": "timeout-prologue",
+      "start_va": "0x725af8",
+      "end_va": "0x725b08",
+      "file_offset": "0x721af8",
+      "bytes": 16,
+      "sha256": "7c3a1bc298644b9cda28ed713c1d5e0f12b057ed3a064b9865e34a8c90a08a2b"
+    },
+    {
+      "name": "timeout-epilogue",
+      "start_va": "0x725ab8",
+      "end_va": "0x725ac8",
+      "file_offset": "0x721ab8",
+      "bytes": 16,
+      "sha256": "d64c97d74f515e5c1118a0ce9819436b56523f8662bd13aed651600536675119"
+    },
+    {
+      "name": "header-member",
+      "start_va": "0x663844",
+      "end_va": "0x66386c",
+      "file_offset": "0x65f844",
+      "bytes": 40,
+      "sha256": "cfb745f38068848b5efce75e1b8bf1ec1251b4a394bd7d287a731d663afec368"
+    },
+    {
+      "name": "header-member-helper",
+      "start_va": "0x7312b4",
+      "end_va": "0x7312c0",
+      "file_offset": "0x72d2b4",
+      "bytes": 12,
+      "sha256": "f824b3cfd808518f64d826b2483da13a0389ca2dd5eb8efbdebd15050abfa84c"
+    }
+  ],
+  "timeout_literals": {
+    "0xfec5f": "Timeout is too small: ",
+    "0xd9cc6": "xplat/Tigon/TigonRequest.cpp",
+    "0xce792": "validateTimeout",
+    "0xcefbd": "TigonRequest"
+  }
+}

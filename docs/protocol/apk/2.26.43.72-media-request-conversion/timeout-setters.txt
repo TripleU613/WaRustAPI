@@ -1,0 +1,36 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000066370c <_ZN8facebook5tigon12TigonRequest17setRequestTimeoutERKNSt6__ndk16chrono8durationIxNS2_5ratioILl1ELl1000EEEEE>:
+  66370c:      	paciasp
+  663710:      	stp	x29, x30, [sp, #-0x20]!
+  663714:      	str	x19, [sp, #0x10]
+  663718:      	mov	x29, sp
+  66371c:      	ldr	x8, [x1]
+  663720:      	bl	0x728b98 <MCFSetGetCount+0x4ae0>
+  663724:      	bl	0x66377c <_ZN8facebook5tigon12TigonRequest14setIdleTimeoutERKNSt6__ndk16chrono8durationIxNS2_5ratioILl1ELl1000EEEEE+0x38>
+  663728:      	mov	x8, x0
+  66372c:      	mov	x0, x19
+  663730:      	str	x8, [x19, #0x1c8]
+  663734:      	ldr	x19, [sp, #0x10]
+  663738:      	ldp	x29, x30, [sp], #0x20
+  66373c:      	autiasp
+  663740:      	ret
+
+0000000000663744 <_ZN8facebook5tigon12TigonRequest14setIdleTimeoutERKNSt6__ndk16chrono8durationIxNS2_5ratioILl1ELl1000EEEEE>:
+  663744:      	paciasp
+  663748:      	stp	x29, x30, [sp, #-0x20]!
+  66374c:      	str	x19, [sp, #0x10]
+  663750:      	mov	x29, sp
+  663754:      	ldr	x8, [x1]
+  663758:      	bl	0x728b98 <MCFSetGetCount+0x4ae0>
+  66375c:      	bl	0x66377c <_ZN8facebook5tigon12TigonRequest14setIdleTimeoutERKNSt6__ndk16chrono8durationIxNS2_5ratioILl1ELl1000EEEEE+0x38>
+  663760:      	mov	x8, x0
+  663764:      	mov	x0, x19
+  663768:      	str	x8, [x19, #0x1c0]
+  66376c:      	ldr	x19, [sp, #0x10]
+  663770:      	ldp	x29, x30, [sp], #0x20
+  663774:      	autiasp
+  663778:      	ret

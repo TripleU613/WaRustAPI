@@ -1,0 +1,277 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000064987c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv>:
+  651b64:      	ldr	x8, [sp, #0x2a0]
+  651b68:      	ldr	x8, [x8, #0x10]
+  651b6c:      	bl	0x7346c8 <MCFSetGetCount+0x10610>
+  651b70:      	blr	x8
+  651b74:      	ldr	x8, [sp, #0x2a0]
+  651b78:      	ldrb	w19, [x0]
+  651b7c:      	ldr	x8, [x8, #0x10]
+  651b80:      	bl	0x7346c8 <MCFSetGetCount+0x10610>
+  651b84:      	blr	x8
+  651b88:      	sxtb	w8, w19
+  651b8c:      	ldr	x9, [sp, #0x2a0]
+  651b90:      	ldrb	w23, [x0]
+  651b94:      	mov	w10, #0x7               // =7
+  651b98:      	cmp	w8, #0x7
+  651b9c:      	ldr	x9, [x9, #0x10]
+  651ba0:      	csel	w26, w8, w10, lt
+  651ba4:      	bl	0x7346c8 <MCFSetGetCount+0x10610>
+  651ba8:      	blr	x9
+  651bac:      	ldr	x8, [sp, #0x2a0]
+  651bb0:      	ldrb	w21, [x0]
+  651bb4:      	ldr	x8, [x8, #0x10]
+  651bb8:      	bl	0x7346c8 <MCFSetGetCount+0x10610>
+  651bbc:      	blr	x8
+  651bc0:      	ldr	x8, [sp, #0x2a0]
+  651bc4:      	ldrb	w19, [x0]
+  651bc8:      	ldr	x8, [x8, #0x10]
+  651bcc:      	add	x0, sp, #0x2a0
+  651bd0:      	mov	w1, #0x8                // =8
+  651bd4:      	blr	x8
+  651bd8:      	ldr	x8, [sp, #0x2a0]
+  651bdc:      	ldr	x20, [x0]
+  651be0:      	ldr	x8, [x8, #0x10]
+  651be4:      	add	x0, sp, #0x2a0
+  651be8:      	mov	w1, #0x8                // =8
+  651bec:      	blr	x8
+  651bf0:      	ldr	x8, [sp, #0x2a0]
+  651bf4:      	ldr	x28, [x0]
+  651bf8:      	ldr	x8, [x8, #0x10]
+  651bfc:      	add	x0, sp, #0x2a0
+  651c00:      	mov	w1, #0x8                // =8
+  651c04:      	blr	x8
+  651c08:      	ldr	x8, [sp, #0x2a0]
+  651c0c:      	ldr	x24, [x0]
+  651c10:      	ldr	x8, [x8, #0x10]
+  651c14:      	add	x0, sp, #0x2a0
+  651c18:      	mov	w1, #0x8                // =8
+  651c1c:      	blr	x8
+  651c20:      	ldr	x8, [sp, #0x2a0]
+  651c24:      	ldr	x25, [x0]
+  651c28:      	str	w19, [sp, #0x34]
+  651c2c:      	ldr	x8, [x8, #0x10]
+  651c30:      	add	x0, sp, #0x2a0
+  651c34:      	mov	w1, #0x4                // =4
+  651c38:      	blr	x8
+  651c3c:      	ldr	x8, [sp, #0x2a0]
+  651c40:      	mov	w19, w21
+  651c44:      	ldr	w21, [x0]
+  651c48:      	ldr	x8, [x8, #0x10]
+  651c4c:      	add	x0, sp, #0x2a0
+  651c50:      	mov	w1, #0x4                // =4
+  651c54:      	blr	x8
+  651c58:      	ldr	w27, [x0]
+  651c5c:      	stp	xzr, xzr, [x29, #-0xd8]
+  651c60:      	stur	xzr, [x29, #-0xc8]
+  651c64:      	sub	x0, x29, #0xd8
+  651c68:      	add	x1, sp, #0x2a0
+  651c6c:      	bl	0x6536b8 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x9e3c>
+  651c70:      	ldr	x8, [sp, #0x2a0]
+  651c74:      	stp	x25, x28, [sp, #0x20]
+  651c78:      	ldr	x8, [x8, #0x10]
+  651c7c:      	add	x0, sp, #0x2a0
+  651c80:      	mov	w1, #0x4                // =4
+  651c84:      	blr	x8
+  651c88:      	ldr	x8, [sp, #0x2a0]
+  651c8c:      	ldr	w9, [x0]
+  651c90:      	mov	w25, w26
+  651c94:      	ldr	x8, [x8, #0x10]
+  651c98:      	str	w9, [sp, #0x30]
+  651c9c:      	add	x0, sp, #0x2a0
+  651ca0:      	mov	w1, #0x8                // =8
+  651ca4:      	blr	x8
+  651ca8:      	ldr	w8, [sp, #0x34]
+  651cac:      	mov	w1, wzr
+  651cb0:      	mov	w2, #0x1f8              // =504
+  651cb4:      	bl	0x730c58 <MCFSetGetCount+0xcba0>
+  651cb8:      	cmp	w19, #0x0
+  651cbc:      	add	x19, sp, #0x80
+  651cc0:      	cset	w26, ne
+  651cc4:      	cmp	w23, #0x0
+  651cc8:      	ldr	x23, [x0]
+  651ccc:      	add	x0, x19, #0x20
+  651cd0:      	str	w8, [sp, #0x34]
+  651cd4:      	cset	w28, ne
+  651cd8:      	bl	0x734d20 <memset@plt>
+  651cdc:      	bl	0x72a41c <MCFSetGetCount+0x6364>
+  651ce0:      	str	w8, [sp, #0xa0]
+  651ce4:      	str	w8, [sp, #0xc8]
+  651ce8:      	str	w8, [sp, #0xf0]
+  651cec:      	stp	q0, q0, [sp, #0x80]
+  651cf0:      	stur	q0, [sp, #0xa8]
+  651cf4:      	stur	q0, [sp, #0xb8]
+  651cf8:      	stp	q0, q0, [sp, #0xd0]
+  651cfc:      	add	x0, x19, #0x78
+  651d00:      	sub	x1, x29, #0x78
+  651d04:      	bl	0x734f40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2ERKS5_@plt>
+  651d08:      	add	x0, x19, #0x90
+  651d0c:      	sub	x1, x29, #0x90
+  651d10:      	bl	0x734f40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2ERKS5_@plt>
+  651d14:      	sub	x0, x29, #0x90
+  651d18:      	add	x19, sp, #0x80
+  651d1c:      	bl	0x3df9e0 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x2e6f0>
+  651d20:      	bl	0x2db2a4 <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0xd3c8>
+  651d24:      	add	x0, x19, #0xa8
+  651d28:      	bl	0x727c14 <MCFSetGetCount+0x3b5c>
+  651d2c:      	bl	0x668708 <_ZNK8facebook5tigon22TigonPropertyContainer27getPropertyGroupCopyOrEmptyENS1_3KeyE+0x53c>
+  651d30:      	bic	w9, w25, w25, asr #31
+  651d34:      	ldp	x8, x10, [x29, #-0xc0]
+  651d38:      	ldp	x11, x12, [x29, #-0xb0]
+  651d3c:      	mov	x19, x20
+  651d40:      	and	x9, x9, #0xff
+  651d44:      	ldur	w13, [x29, #-0xa0]
+  651d48:      	mov	x20, x24
+  651d4c:      	orr	x9, x9, x28, lsl #8
+  651d50:      	stp	xzr, xzr, [x29, #-0xc0]
+  651d54:      	stp	x8, x10, [sp, #0x1b0]
+  651d58:      	stp	x11, x12, [sp, #0x1c0]
+  651d5c:      	str	w13, [sp, #0x1d0]
+  651d60:      	cbz	x12, 0x651d9c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x8520>
+  651d64:      	sub	x13, x10, #0x1
+  651d68:      	ldr	x11, [x11, #0x8]
+  651d6c:      	add	x12, sp, #0x80
+  651d70:      	tst	x10, x13
+  651d74:      	add	x12, x12, #0x140
+  651d78:      	b.ne	0x651d84 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x8508>
+  651d7c:      	and	x11, x13, x11
+  651d80:      	b	0x651d94 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x8518>
+  651d84:      	cmp	x11, x10
+  651d88:      	b.lo	0x651d94 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x8518>
+  651d8c:      	udiv	x13, x11, x10
+  651d90:      	msub	x11, x13, x10, x11
+  651d94:      	str	x12, [x8, x11, lsl #3]
+  651d98:      	stp	xzr, xzr, [x22]
+  651d9c:      	bl	0x72a4c0 <MCFSetGetCount+0x6408>
+  651da0:      	add	x22, sp, #0x80
+  651da4:      	strb	w8, [sp, #0x201]
+  651da8:      	ldr	w8, [sp, #0x34]
+  651dac:      	str	x9, [sp, #0x1d8]
+  651db0:      	strb	w8, [sp, #0x202]
+  651db4:      	add	x8, x22, #0x188
+  651db8:      	stp	q0, q0, [x8]
+  651dbc:      	mov	w8, #0x3f800000         // =1065353216
+  651dc0:      	str	w8, [sp, #0x230]
+  651dc4:      	add	x8, x22, #0x1b8
+  651dc8:      	stp	q0, q0, [x8]
+  651dcc:      	mov	x8, #0x1500000000       // =90194313216
+  651dd0:      	strb	w26, [sp, #0x200]
+  651dd4:      	stp	q0, q0, [sp, #0x1e0]
+  651dd8:      	str	xzr, [sp, #0x228]
+  651ddc:      	str	x8, [sp, #0x258]
+  651de0:      	str	w21, [sp, #0x260]
+  651de4:      	str	w27, [sp, #0x264]
+  651de8:      	add	x0, x22, #0x1e8
+  651dec:      	sub	x1, x29, #0xd8
+  651df0:      	bl	0x734f40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2ERKS5_@plt>
+  651df4:      	ldr	w8, [sp, #0x30]
+  651df8:      	str	x23, [sp, #0x288]
+  651dfc:      	str	wzr, [sp, #0x290]
+  651e00:      	str	w8, [sp, #0x280]
+  651e04:      	mov	x0, x19
+  651e08:      	add	x26, sp, #0x80
+  651e0c:      	bl	0x66377c <_ZN8facebook5tigon12TigonRequest14setIdleTimeoutERKNSt6__ndk16chrono8durationIxNS2_5ratioILl1ELl1000EEEEE+0x38>
+  651e10:      	ldp	x23, x24, [sp, #0x40]
+  651e14:      	ldr	x27, [sp, #0x38]
+  651e18:      	str	x0, [sp, #0x238]
+  651e1c:      	mov	x0, x20
+  651e20:      	bl	0x66377c <_ZN8facebook5tigon12TigonRequest14setIdleTimeoutERKNSt6__ndk16chrono8durationIxNS2_5ratioILl1ELl1000EEEEE+0x38>
+  651e24:      	str	x0, [sp, #0x248]
+  651e28:      	ldr	x0, [sp, #0x28]
+  651e2c:      	bl	0x66377c <_ZN8facebook5tigon12TigonRequest14setIdleTimeoutERKNSt6__ndk16chrono8durationIxNS2_5ratioILl1ELl1000EEEEE+0x38>
+  651e30:      	str	x0, [sp, #0x240]
+  651e34:      	ldr	x0, [sp, #0x20]
+  651e38:      	bl	0x66377c <_ZN8facebook5tigon12TigonRequest14setIdleTimeoutERKNSt6__ndk16chrono8durationIxNS2_5ratioILl1ELl1000EEEEE+0x38>
+  651e3c:      	ldr	x8, [sp, #0x2a0]
+  651e40:      	str	x0, [sp, #0x250]
+  651e44:      	ldr	x8, [x8, #0x10]
+  651e48:      	bl	0x7346c8 <MCFSetGetCount+0x10610>
+  651e4c:      	blr	x8
+  651e50:      	ldrb	w8, [x0]
+  651e54:      	cbz	w8, 0x651f6c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x86f0>
+  651e58:      	bl	0x7300c8 <MCFSetGetCount+0xc010>
+  651e5c:      	sub	x0, x29, #0x60
+  651e60:      	add	x1, sp, #0x2a0
+  651e64:      	sub	x19, x29, #0x60
+  651e68:      	bl	0x653718 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x9e9c>
+  651e6c:      	ldp	x9, x0, [x29, #-0x60]
+  651e70:      	sub	x8, x29, #0x48
+  651e74:      	ldur	x10, [x29, #-0x50]
+  651e78:      	add	x8, x8, #0x8
+  651e7c:      	stp	x9, x0, [x29, #-0x48]
+  651e80:      	stur	x10, [x29, #-0x38]
+  651e84:      	cbz	x10, 0x651ea0 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x8624>
+  651e88:      	str	x8, [x0, #0x10]
+  651e8c:      	add	x11, x19, #0x8
+  651e90:      	ldur	x10, [x29, #-0x38]
+  651e94:      	stur	x11, [x29, #-0x60]
+  651e98:      	stp	xzr, xzr, [x11]
+  651e9c:      	b	0x651ea8 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x862c>
+  651ea0:      	stur	x8, [x29, #-0x48]
+  651ea4:      	mov	x9, x8
+  651ea8:      	adrp	x21, 0x778000 <_ZTVN6google8protobuf11MessageLiteE+0x1ce18>
+  651eac:      	add	x21, x21, #0xca0
+  651eb0:      	stp	x0, x10, [x29, #-0xe8]
+  651eb4:      	stp	x21, x9, [x29, #-0xf8]
+  651eb8:      	sub	x9, x29, #0xf8
+  651ebc:      	add	x20, x9, #0x10
+  651ec0:      	cbz	x10, 0x651ed8 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x865c>
+  651ec4:      	str	x20, [x0, #0x10]
+  651ec8:      	mov	x0, xzr
+  651ecc:      	stur	x8, [x29, #-0x48]
+  651ed0:      	stp	xzr, xzr, [x8]
+  651ed4:      	b	0x651edc <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x8660>
+  651ed8:      	stur	x20, [x29, #-0xf0]
+  651edc:      	bl	0x3e9498 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x381a8>
+  651ee0:      	ldur	x0, [x29, #-0x58]
+  651ee4:      	bl	0x3e9498 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x381a8>
+  651ee8:      	mov	w0, #0x38               // =56
+  651eec:      	bl	0x737430 <__wrap__Znwm@plt>
+  651ef0:      	adrp	x8, 0x778000 <_ZTVN6google8protobuf11MessageLiteE+0x1ce18>
+  651ef4:      	add	x8, x8, #0xcd0
+  651ef8:      	ldur	x10, [x29, #-0xe0]
+  651efc:      	str	x8, [x0]
+  651f00:      	ldp	x9, x8, [x29, #-0xf0]
+  651f04:      	mov	x25, x0
+  651f08:      	bl	0x72de74 <MCFSetGetCount+0x9dbc>
+  651f0c:      	str	x21, [x19, #0x18]!
+  651f10:      	str	x9, [x0, #0x20]
+  651f14:      	mov	x9, x0
+  651f18:      	str	x8, [x9, #0x28]!
+  651f1c:      	str	x10, [x0, #0x30]
+  651f20:      	cbz	x10, 0x651f34 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x86b8>
+  651f24:      	str	x9, [x8, #0x10]
+  651f28:      	stur	x20, [x29, #-0xf0]
+  651f2c:      	stp	xzr, xzr, [x20]
+  651f30:      	b	0x651f38 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x86bc>
+  651f34:      	str	x9, [x25, #0x20]
+  651f38:      	adrp	x1, 0x757000 <_ZTVN8facebook10executor4a25AndroidSerialExecutorImplE+0x278>
+  651f3c:      	add	x1, x1, #0x388
+  651f40:      	add	x0, sp, #0x80
+  651f44:      	bl	0x3fbb94 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x4a8a4>
+  651f48:      	fmov	d0, x19
+  651f4c:      	ldr	x8, [x0, #0x8]
+  651f50:      	mov	v0.d[1], x25
+  651f54:      	bl	0x7348ac <MCFSetGetCount+0x107f4>
+  651f58:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  651f5c:      	mov	x0, xzr
+  651f60:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  651f64:      	sub	x0, x29, #0xf8
+  651f68:      	bl	0x6530ac <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x9830>
+  651f6c:      	add	x0, sp, #0x2a0
+  651f70:      	add	x1, x26, #0x28
+  651f74:      	bl	0x653dc4 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xa548>
+  651f78:      	sub	x0, x29, #0xd8
+  651f7c:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  651f80:      	sub	x0, x29, #0xc0
+  651f84:      	bl	0x3e9520 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38230>
+  651f88:      	sub	x0, x29, #0x90
+  651f8c:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  651f90:      	sub	x0, x29, #0x78
+  651f94:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  651f98:      	add	x0, sp, #0x2a0
+  651f9c:      	bl	0x65493c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xb0c0>

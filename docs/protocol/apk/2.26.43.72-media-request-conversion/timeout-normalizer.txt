@@ -1,0 +1,56 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+0000000000663744 <_ZN8facebook5tigon12TigonRequest14setIdleTimeoutERKNSt6__ndk16chrono8durationIxNS2_5ratioILl1ELl1000EEEEE>:
+  66377c:      	paciasp
+  663780:      	sub	sp, sp, #0x60
+  663784:      	stp	x29, x30, [sp, #0x40]
+  663788:      	stp	x20, x19, [sp, #0x50]
+  66378c:      	add	x29, sp, #0x40
+  663790:      	bl	0x725af8 <MCFSetGetCount+0x1a40>
+  663794:      	cbz	x0, 0x663808 <_ZN8facebook5tigon12TigonRequest14setIdleTimeoutERKNSt6__ndk16chrono8durationIxNS2_5ratioILl1ELl1000EEEEE+0xc4>
+  663798:      	cmp	x0, #0x3e7
+  66379c:      	b.gt	0x663808 <_ZN8facebook5tigon12TigonRequest14setIdleTimeoutERKNSt6__ndk16chrono8durationIxNS2_5ratioILl1ELl1000EEEEE+0xc4>
+  6637a0:      	add	x8, sp, #0x8
+  6637a4:      	bl	0x72936c <MCFSetGetCount+0x52b4>
+  6637a8:      	bl	0x7359f0 <_ZNSt6__ndk19to_stringEx@plt>
+  6637ac:      	adrp	x1, 0xfe000
+  6637b0:      	add	x1, x1, #0xc5f
+  6637b4:      	bl	0x72c2a0 <MCFSetGetCount+0x81e8>
+  6637b8:      	add	x20, sp, #0x20
+  6637bc:      	bl	0x3aa9b8 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0xc378>
+  6637c0:      	add	x0, sp, #0x8
+  6637c4:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  6637c8:      	bl	0x72dc70 <MCFSetGetCount+0x9bb8>
+  6637cc:      	adrp	x0, 0xd9000
+  6637d0:      	add	x0, x0, #0xcc6
+  6637d4:      	adrp	x1, 0xce000
+  6637d8:      	add	x1, x1, #0x792
+  6637dc:      	tst	w8, #0x1
+  6637e0:      	adrp	x4, 0xce000
+  6637e4:      	add	x4, x4, #0xfbd
+  6637e8:      	csinc	x5, x9, x20, ne
+  6637ec:      	mov	w2, #0x23               // =35
+  6637f0:      	mov	w3, #0x2                // =2
+  6637f4:      	mov	w6, #0x1                // =1
+  6637f8:      	bl	0x734e30 <_ZN8facebook5xplat9softerror15reportSoftErrorEPKcS3_iNS1_8SeverityES3_S3_j@plt>
+  6637fc:      	add	x0, sp, #0x20
+  663800:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  663804:      	mov	w0, #0x3e8              // =1000
+  663808:      	bl	0x725ab8 <MCFSetGetCount+0x1a00>
+  66380c:      	b.ne	0x663840 <_ZN8facebook5tigon12TigonRequest14setIdleTimeoutERKNSt6__ndk16chrono8durationIxNS2_5ratioILl1ELl1000EEEEE+0xfc>
+  663810:      	ldp	x20, x19, [sp, #0x50]
+  663814:      	ldp	x29, x30, [sp, #0x40]
+  663818:      	add	sp, sp, #0x60
+  66381c:      	autiasp
+  663820:      	ret
+  663824:      	bl	0x729658 <MCFSetGetCount+0x55a0>
+  663828:      	add	x0, sp, #0x8
+  66382c:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  663830:      	bl	0x725e44 <MCFSetGetCount+0x1d8c>
+  663834:      	b.ne	0x663840 <_ZN8facebook5tigon12TigonRequest14setIdleTimeoutERKNSt6__ndk16chrono8durationIxNS2_5ratioILl1ELl1000EEEEE+0xfc>
+  663838:      	mov	x0, x19
+  66383c:      	bl	0x7373e0 <__wrap__Unwind_Resume@plt>
+  663840:      	bl	0x7378f0 <__stack_chk_fail@plt>

@@ -821,3 +821,17 @@ This closes the prior static registration uncertainty in the provider chain.
 Actual loading/invocation/success remain unobserved. Effective wrapper gate,
 remaining native request conversion and header synthesis remain open. No Rust
 behavior change, registration execution, account mutation or live traffic.
+
+## Native header transfer and timeout normalization 2026-11-06
+
+**Confirmed selected static:** native request conversion moves the decoded
+header container into request+0x130; exported addHeader independently confirms
+that member. Four serialized millisecond fields pass through validateTimeout:
+zero and values>=1000 remain; other signed values report a soft error and become
+1000 on normal return. Native request/idle setters confirm two target offsets.
+[Exact field table, complete helper and selected conversion windows](apk/2.26.43.72-media-request-conversion/README.md).
+
+This is separate from Rust's configured total/connect bounds and callback
+windows; no silent extension of shorter local bounds is introduced. Later native
+properties/middleware, automatic headers and wire framing remain unproven.
+No Rust behavior, reservation, account or live operation changed.

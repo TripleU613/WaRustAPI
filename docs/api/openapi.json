@@ -18520,5 +18520,13 @@
     "x-library": [],
     "description": "Static named JNI class/table registration closes previous provider-factory binding uncertainty. RegisterNatives dispatch slot independently checked against installed JNI.h. Actual runtime loading/registration success, effective wrapper gate and native header middleware remain unproven. No product route, request/header change, saved-state mutation, retry or live operation.",
     "evidence": "docs/protocol/media-network-outcomes.md#upload-jni-class-to-table-registration-closed-statically-2026-11-06"
+},
+  "x-media-native-request-conversion-research": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Static native request conversion identifies moved header member and normalization of four timeout fields. Zero or at least1000 remains; other signed values report soft error and return1000 on normal path. Separate Rust local total/connect bounds remain unchanged. Downstream middleware/automatic wire headers unproven; no route, runtime behavior, retry or live validation changed.",
+    "evidence": "docs/protocol/media-network-outcomes.md#native-header-transfer-and-timeout-normalization-2026-11-06"
 }
 }
