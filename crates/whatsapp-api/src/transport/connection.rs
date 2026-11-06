@@ -4924,8 +4924,38 @@ mod tests {
     #[tokio::test]
     async fn queued_prekey_upload_rechecks_authority_before_writer_encoding() {
         let dir = tempfile::tempdir().unwrap();
-        for case in ["revoked", "batch-binding", "auth-time"] {
+        for case in [
+            "revoked",
+            "batch-binding",
+            "auth-time",
+            "legacy-replaced",
+            "legacy-missing",
+            "legacy-consumed",
+            "legacy-owner",
+            "kem-replaced",
+            "kem-missing",
+            "kem-consumed",
+            "kem-restored",
+        ] {
             let store = registered_store(&dir.path().join(format!("queued-authority-{case}.db")));
+            if case.starts_with("kem-") {
+                let prop = super::super::abprops::queue(&store).unwrap();
+                super::super::actions::reserve_pending(&store).unwrap();
+                super::super::actions::record_reply(
+                    &store,
+                    &Node::new("iq")
+                        .attr("id", prop.as_str())
+                        .attr("type", "result")
+                        .children(vec![Node::new("props").attr("hash", "fixture").children(
+                            vec![
+                                Node::new("prop")
+                                    .attr("config_code", "21198")
+                                    .attr("config_value", "1"),
+                            ],
+                        )]),
+                )
+                .unwrap();
+            }
             let account = store.read(AccountRecord::load).unwrap().unwrap();
             let (_incoming, incoming) = mpsc::channel(1);
             let (outgoing, mut writes) = mpsc::channel(1);
@@ -4956,6 +4986,75 @@ mod tests {
                 .to_owned();
             store
                 .write(|tx| {
+                    if case.starts_with("legacy-") || case.starts_with("kem-") {
+                        let batch: super::super::prekeys::Batch = tx
+                            .get_json(
+                                Table::Checkpoints,
+                                format!("prekey-upload:{iq_id}").as_bytes(),
+                                1,
+                            )?
+                            .unwrap();
+                        if case.starts_with("legacy-") {
+                            let id = batch.ids[0];
+                            let key = format!("comparison-prekey:{id}");
+                            let original: Vec<u8> =
+                                tx.get_json(Table::Prekeys, key.as_bytes(), 1)?.unwrap();
+                            match case {
+                                "legacy-replaced" => {
+                                    let pair = wacore_libsignal::core::curve::KeyPair::generate(
+                                        &mut rand::rng(),
+                                    );
+                                    let raw = wacore_libsignal::protocol::PreKeyRecord::new(
+                                        id.into(),
+                                        &pair,
+                                    )
+                                    .serialize()
+                                    .unwrap();
+                                    tx.put_json(Table::Prekeys, key.as_bytes(), 1, &raw)?;
+                                }
+                                "legacy-missing" => {
+                                    tx.delete(Table::Prekeys, key.as_bytes())?;
+                                }
+                                "legacy-consumed" => {
+                                    super::super::prekeys::consume_in(tx, id, &original)?
+                                }
+                                _ => {
+                                    let key = format!("comparison-prekey-meta:{id}");
+                                    let mut meta: serde_json::Value = tx
+                                        .get_json(Table::Checkpoints, key.as_bytes(), 1)?
+                                        .unwrap();
+                                    meta["status"] = serde_json::json!("uploaded");
+                                    tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &meta)?;
+                                }
+                            }
+                        } else {
+                            let rows = super::super::kem_prekeys::all_rows(&*tx)?;
+                            let mut row = rows
+                                .into_iter()
+                                .find(|r| !r.last_resort && batch.kem_ids.contains(&r.id))
+                                .unwrap();
+                            let key = super::super::kem_prekeys::record_key(row.id);
+                            match case {
+                                "kem-replaced" => {
+                                    let (public, secret) =
+                                        crate::signal::kem::generate_key_pair().unwrap();
+                                    row.public = public;
+                                    row.secret = secret.as_bytes().to_vec();
+                                    tx.put_json(Table::Prekeys, key.as_bytes(), 1, &row)?;
+                                }
+                                "kem-missing" => {
+                                    tx.delete(Table::Prekeys, key.as_bytes())?;
+                                }
+                                _ => {
+                                    super::super::kem_prekeys::consume_in(tx, row.id, &row)?;
+                                    if case == "kem-restored" {
+                                        tx.put_json(Table::Prekeys, key.as_bytes(), 1, &row)?;
+                                    }
+                                }
+                            }
+                        }
+                        return Ok(());
+                    }
                     if case == "batch-binding" {
                         let key = format!("prekey-upload:{iq_id}");
                         let mut batch: super::super::prekeys::Batch =

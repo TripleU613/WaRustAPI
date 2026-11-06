@@ -8034,3 +8034,43 @@ Node through their own I/O do not gain this actor guard. Local key mutation afte
 reservation and before write remains a separate material-lifetime concern.
 No new APK callback policy, wire fields, reconnect/retry authority or live
 account operation is claimed.
+
+### Queued publication requires live original key material (2026-11-06)
+
+**Confirmed local defect, fixed offline:** writer dequeue checked account and
+durable batch bindings but did not reread selected key rows. Replacing a legacy
+row with a different valid pair under the reserved ID still let the old frozen
+public bytes reach encoding even though their private key was no longer held.
+Missing/consumed KEM or legacy rows had the same admission gap. Later settlement
+checks could refuse an ACK, but could not undo that publication.
+
+check_write_authority now checks every selected legacy key's OutcomeUnknown
+metadata and IQ owner, loads it through strict legacy_record_in, requires a live
+row and compares its public fingerprint with the reservation. Every selected
+KEM key must likewise pass strict load (including live-row/consumption-marker
+conflict validation), exist and match the original public fingerprint. All checks
+share the existing read snapshot at dequeue, before encoding/socket write.
+
+A valid consumed-public marker is deliberately insufficient before first write:
+publication needs a live private row, whereas settlement after transmission can
+legitimately accept authenticated consume-before-ACK evidence. The fix leaves
+that late-ACK behavior intact. There is no marker deletion, private-key recovery,
+new key generation or reservation release to make admission pass.
+
+Expanded queued_prekey_upload_rechecks_authority_before_writer_encoding uses
+actual held injected outbound envelopes. New cases cover a well-formed legacy
+pair replacement, missing legacy row, real legacy consumption, changed legacy
+metadata status, well-formed KEM pair replacement, missing KEM row, real KEM
+consumption, and restoration beside its real marker. Every case refuses before
+encoding, preserves Account/Prekeys/Checkpoints exactly after the injection,
+and leaves the pending claim/session round consumed. Existing revocation,
+batch-binding and authentication-time positive controls remain. The old code
+failed the first added replacement case. These are synthetic local-store/channel
+checks, not server or real socket observations.
+
+Snapshot-to-write races remain after admission. This binds selected public
+identity and reuses existing private/material consistency validation; it does
+not prove arbitrary KEM private algebraic consistency or bind every signature,
+role/status metadata byte to the original row. Same-identity signed-key rotation,
+custom direct I/O and whole-store rollback remain outside this guard. No APK
+wire change, replay authority or live account operation.

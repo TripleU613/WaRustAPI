@@ -1,3 +1,8 @@
+Queued prekey publication now requires live original legacy/KEM material and
+legacy per-key ownership at writer dequeue. Missing, consumed or substituted
+keys refuse before encoding; valid consume-before-ACK settlement remains intact.
+[Audit](docs/protocol/prekey-count-notifications.md#queued-publication-requires-live-original-key-material-2026-11-06).
+
 Queued prekey uploads now recheck reserved account/batch authority at writer
 dequeue, before encoding or socket write. Revocation or changed bindings refuse
 without releasing the batch; changes after the snapshot remain a stated limit.

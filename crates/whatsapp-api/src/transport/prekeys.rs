@@ -873,6 +873,34 @@ impl PendingUpload {
                     "reserved publication ownership changed before write",
                 ));
             }
+            // Publication needs live private material. A consumption marker may
+            // settle a late ACK, but must never authorize publishing a spent key.
+            for (id, expected) in self.ids.iter().zip(&self.public_sha256) {
+                let meta: Meta = tx
+                    .get_json(Table::Checkpoints, meta_key(*id).as_bytes(), 1)?
+                    .ok_or_else(|| invalid("reserved key metadata disappeared before write"))?;
+                if meta.status != KeyStatus::OutcomeUnknown
+                    || meta.batch.as_deref() != Some(self.iq_id.as_str())
+                {
+                    return Err(invalid("reserved key ownership changed before write"));
+                }
+                let record = legacy_record_in(tx, *id)?
+                    .ok_or_else(|| invalid("reserved legacy prekey missing before write"))?;
+                if &public_fingerprint(&record)? != expected {
+                    return Err(invalid(
+                        "reserved legacy public material changed before write",
+                    ));
+                }
+            }
+            for (id, expected) in self.kem_ids.iter().zip(&self.kem_public_sha256) {
+                let row = super::kem_prekeys::load(tx, *id)?
+                    .ok_or_else(|| invalid("reserved KEM prekey missing before write"))?;
+                use sha2::{Digest, Sha256};
+                let actual: [u8; 32] = Sha256::digest(&row.public).into();
+                if &actual != expected {
+                    return Err(invalid("reserved KEM public material changed before write"));
+                }
+            }
             Ok(())
         })
     }

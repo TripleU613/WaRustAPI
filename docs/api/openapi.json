@@ -17429,5 +17429,12 @@
     "x-live": false,
     "description": "Internal prekey outbound envelopes now carry reservation/store ownership. Writer dequeue checks registered account authority, transaction generation and unchanged uncertain-batch bindings before encoding/writing. Failure reports its local error and ends the writer epoch without settlement, release or replay. Authentication-time-only changes remain allowed. Snapshot does not lock state across encoding/socket I/O; custom direct I/O and same-identity signed-key rotation remain outside this guard.",
     "evidence": "docs/protocol/prekey-count-notifications.md#queued-prekey-uploads-recheck-ownership-at-writer-dequeue-2026-11-05"
+  },
+  "x-prekey-writer-live-material-preflight": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Writer dequeue now requires live selected legacy/KEM rows with original public fingerprints, existing material consistency validation and no consumption conflict. Legacy per-key metadata must remain outcome_unknown under the original IQ. Valid consumption markers can settle late ACKs but cannot authorize publishing spent keys. Refusal preserves reservations/state without repair or replay. Snapshot-to-write races, full row/signature/role identity and arbitrary KEM private algebraic consistency remain outside this guard.",
+    "evidence": "docs/protocol/prekey-count-notifications.md#queued-publication-requires-live-original-key-material-2026-11-06"
   }
 }
