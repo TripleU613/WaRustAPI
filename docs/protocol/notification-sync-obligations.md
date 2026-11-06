@@ -32,7 +32,7 @@ then branches on its tag. Examples important to network/account state:
   Modify/offline schedules a device refresh. Recognized device payloads also
   schedule `Fee`/`FeS` work; three timeout reasons update
   `syncd_bootstrap_fail_time`.
-- `blocklist` handles version/hash/action reconciliation and can schedule a
+- `blocklist` handles previous-hash/action/admission reconciliation and can schedule a
   fresh blocklist fetch. `status`, `text_status`, `picture`, `notice`,
   `tos`, and gated `biz_opt_out_list` have separate processing paths.
 
@@ -120,3 +120,22 @@ operation `listen`, CLI `whatsapp-cli listen`). No API or code behavior changed
 in this audit. The missing network obligations above remain actionable gaps;
 retained source/constructor inventories are research coverage, not completed
 ports. No live acceptance or ban-related outcome is established.
+
+## Blocklist continuation (2026-11-06)
+
+**Confirmed selected static:** [delta/refresh routing and worker handoff](apk/2.26.43.72-blocklist-account-sync-obligation/README.md)
+close the blocklist child branch of the already-retained19N handler. Exactmodify,
+previous-hash mismatch or failed6pA admission selects a kind4 account refresh.
+Otherwise effective parsed additions/removals are applied; an empty payload or
+no effective membership change returns without advancing the hash.8al selector1
+persists the current full set, hash and metadata separately from handler ACK.
+
+Refresh flags map2D6.A01 to1sx.A01;1sv records kind4's time and requests1dH.A0M.
+The false last Boolean bypasses optional60-second suppression. Enabled retry
+bookkeeping with the default false request retry-mode saves3; this is not proof
+of three immediate requests. Selected normal handler return reaches base ACK
+without0v6.A07 deferral, so async completion may follow it. Admission/mode,
+A0A/A0C/backend effects, retries and durable Rust ACK/work mapping remain open.
+Rust still captures this unsupported child without ACK; no production behavior
+or automatic request is introduced by the trace. Do not replace it with ACK-only
+handling or treat advertised delta as a full snapshot.

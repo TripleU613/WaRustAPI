@@ -1,3 +1,10 @@
+2026-11-06 — **Blocklist account-sync delta/refresh obligations traced.**
+Matching previous hash/admission permits effective deltas; modify/mismatch or
+failed admission queues kind4 refresh. Async persistence is separate from the
+normal ACK boundary. Rust still captures this unsupported child without ACK.
+[Processing and remaining ownership](docs/protocol/chat-actions.md#blocklist-account-sync-notification-obligation-2026-11-06).
+No Rust runtime or live account change.
+
 2026-11-06 — **Dirty blocklist fetch role/admission gates resolved.**
 Post-adoption dirty reconciliation is primary-role-only;09F.BU7 is companion
 mode, not a feature flag. Readiness false bypasses mode checks; otherwise

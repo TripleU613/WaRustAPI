@@ -1,0 +1,19 @@
+
+# class: LX/1sx;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VZZZZZZZZZ)  # .registers 10
+    # full signature: LX/1sx;-><init>(ZZZZZZZZZ)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-boolean  v1, v0, LX/1sx;->A07:Z
+    000a..000e  iput-boolean  v2, v0, LX/1sx;->A05:Z
+    000e..0012  iput-boolean  v3, v0, LX/1sx;->A06:Z
+    0012..0016  iput-boolean  v4, v0, LX/1sx;->A02:Z
+    0016..001a  iput-boolean  v5, v0, LX/1sx;->A01:Z
+    001a..001e  iput-boolean  v6, v0, LX/1sx;->A03:Z
+    001e..0022  iput-boolean  v7, v0, LX/1sx;->A00:Z
+    0022..0026  iput-boolean  v8, v0, LX/1sx;->A08:Z
+    0026..002a  iput-boolean  v9, v0, LX/1sx;->A04:Z
+    002a..002c  return-void
+    # exception table: 0 try range(s)
+.end method

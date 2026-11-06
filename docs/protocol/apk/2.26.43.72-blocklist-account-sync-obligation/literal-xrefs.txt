@@ -1,0 +1,17 @@
+["blocklist"]  (8 reference(s))
+  classes.dex  LX/17v;->BLn(ZLI)
+    dex byte offset: 0x8284e4
+  classes.dex  LX/19N;->A09(VLI)
+    dex byte offset: 0x833116
+  classes2.dex  LX/1dH;->A05(VLLLLZ)
+    dex byte offset: 0x1c3396
+  classes2.dex  LX/1dH;->A0M(VLL)
+    dex byte offset: 0x1c492a
+  classes2.dex  LX/1ro;-><clinit>(V)
+    dex byte offset: 0x15fcb2
+  classes5.dex  LX/8ht;->invokeSuspend(LL)
+    dex byte offset: 0x573fd6
+  classes5.dex  LX/8ht;->invokeSuspend(LL)
+    dex byte offset: 0x574062
+  classes7.dex  LX/BVu;-><init>(VLLL)
+    dex byte offset: 0x30e9ca

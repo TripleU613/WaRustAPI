@@ -1,0 +1,30 @@
+
+# class: LX/1sv;
+# extends: Ljava/lang/Object;
+
+.method public A00(ZLIJZ)  # .registers 7
+    # full signature: LX/1sv;->A00(LX/1sv;IJZ)Z
+    0000..0004  if-eqz  v6, +0x23
+    0004..0008  iget-object  v2, v2, LX/1sv;->A0E:Ljava/util/Map;
+    0008..000e  invoke-static  {v3}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    000e..0010  move-result-object  v1
+    0010..0016  invoke-interface  {v2, v1}, Ljava/util/Map;->containsKey(Ljava/lang/Object;)Z
+    0016..0018  move-result  v0
+    0018..001c  if-eqz  v0, +0x17
+    001c..0022  invoke-interface  {v2, v1}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    0022..0024  move-result-object  v0
+    0024..0028  check-cast  v0, Ljava/lang/Number;
+    0028..002c  if-eqz  v0, +0x11
+    002c..0032  invoke-virtual  {v0}, Ljava/lang/Number;->longValue()J
+    0032..0034  move-result-wide  v0
+    0034..0036  sub-long/2addr  v4, v0
+    0036..003c  const-wide/32  v2, #0xea60
+    003c..0040  cmp-long  v1, v4, v2
+    0040..0042  const/4  v0, #0x0
+    0042..0046  if-lez  v1, +0x3
+    0046..0048  const/4  v0, #0x1
+    0048..004a  return  v0
+    004a..004e  const-wide/16  v0, #0x0
+    004e..0050  goto  -0xd
+    # exception table: 0 try range(s)
+.end method

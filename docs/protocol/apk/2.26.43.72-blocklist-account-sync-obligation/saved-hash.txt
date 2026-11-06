@@ -1,0 +1,17 @@
+
+# class: LX/09S;
+# extends: Ljava/lang/Object;
+
+.method public A0c(L)  # .registers 4
+    # full signature: LX/09S;->A0c()Ljava/lang/String;
+    0000..0004  iget-object  v0, v3, LX/09S;->A19:LX/00x;
+    0004..000a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    000a..000c  move-result-object  v2
+    000c..0010  check-cast  v2, Landroid/content/SharedPreferences;
+    0010..0014  const-string  v1, "block_list_v2_dhash"
+    0014..0016  const/4  v0, #0x0
+    0016..001c  invoke-interface  {v2, v1, v0}, Landroid/content/SharedPreferences;->getString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    001c..001e  move-result-object  v0
+    001e..0020  return-object  v0
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,49 @@
+# Selected DEX excerpt; not a complete method.
+
+# class: LX/8al;
+# extends: Ljava/lang/Object;
+
+.method public run(V)  # .registers 26
+    # full signature: LX/8al;->run()V
+    0000..0004  move-object/from16  v1, v25
+    0004..0008  iget  v0, v1, LX/8al;->$t:I
+    0008..000e  packed-switch  v0, payload@0x948, cases=[0:@0x8a0, 1:@0x804, 2:@0x78a, 3:@0x692, 4:@0x3ec, 5:@0x3b4, 6:@0x32c], default@0xe
+    0804..0808  iget-object  v5, v1, LX/8al;->A00:Ljava/lang/Object;
+    0808..080c  check-cast  v5, LX/1dH;
+    080c..0810  iget-object  v6, v1, LX/8al;->A04:Ljava/lang/String;
+    0810..0814  iget-object  v4, v1, LX/8al;->A01:Ljava/lang/Object;
+    0814..0818  check-cast  v4, LX/878;
+    0818..081c  iget-object  v3, v1, LX/8al;->A02:Ljava/lang/Object;
+    081c..0820  check-cast  v3, Ljava/util/Collection;
+    0820..0824  iget-object  v2, v1, LX/8al;->A03:Ljava/lang/Object;
+    0824..0828  check-cast  v2, Ljava/util/Collection;
+    0828..082c  sget-object  v0, LX/1dH;->A0c:Ljava/util/Set;
+    082c..0830  iget-object  v0, v5, LX/1dH;->A02:LX/05a;
+    0830..0836  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0836..0838  move-result-object  v1
+    0838..083c  check-cast  v1, LX/7PB;
+    083c..0842  invoke-virtual  {v5}, LX/1dH;->A0C()Ljava/util/Set;
+    0842..0844  move-result-object  v0
+    0844..084a  invoke-virtual  {v1, v0}, LX/7PB;->A0P(Ljava/util/Set;)V
+    084a..0850  invoke-static  {v5}, LX/1dH;->A02(LX/1dH;)LX/09S;
+    0850..0852  move-result-object  v0
+    0852..0858  invoke-static  {v0}, LX/09S;->A00(LX/09S;)Landroid/content/SharedPreferences$Editor;
+    0858..085a  move-result-object  v1
+    085a..085e  const-string  v0, "block_list_v2_dhash"
+    085e..0864  invoke-static  {v1, v0, v6}, LX/2L8;->A1U(Landroid/content/SharedPreferences$Editor;Ljava/lang/String;Ljava/lang/String;)V
+    0864..0868  iget-object  v0, v5, LX/1dH;->A06:LX/05a;
+    0868..086e  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    086e..0870  move-result-object  v0
+    0870..0874  check-cast  v0, LX/7to;
+    0874..087a  invoke-virtual  {v0, v4}, LX/7to;->A00(LX/878;)V
+    087a..087e  new-instance  v1, Ljava/util/HashSet;
+    087e..0884  invoke-direct  {v1, v3}, Ljava/util/HashSet;-><init>(Ljava/util/Collection;)V
+    0884..088a  invoke-interface  {v1, v2}, Ljava/util/Set;->addAll(Ljava/util/Collection;)Z
+    088a..0890  invoke-static  {v5}, LX/1dH;->A03(LX/1dH;)LX/0Js;
+    0890..0892  move-result-object  v3
+    0892..0894  const/4  v0, #0x6
+    0894..0898  new-instance  v2, LX/8be;
+    0898..089e  invoke-direct  {v2, v5, v1, v0}, LX/8be;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V
+    089e..08a0  goto  +0x51
+    0940..0946  invoke-virtual  {v3, v2}, LX/0Js;->CbP(Ljava/lang/Runnable;)V
+    0946..0948  return-void

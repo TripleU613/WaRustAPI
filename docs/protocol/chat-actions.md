@@ -1525,3 +1525,29 @@ APK coverage freshness pass (967 distinct REA records,0 duplicate copies,72
 explicitly mapped). No Rust behavior changed; workspace runtime tests were
 not rerun for this research-only chunk.
 Repository hygiene passes (430 APK checksum bundles).
+
+## Blocklist account-sync notification obligation (2026-11-06)
+
+**Confirmed selected static:** [first-child route, prev_dhash/admission delta
+conditions, worker and kind4 refresh](apk/2.26.43.72-blocklist-account-sync-obligation/README.md)
+connect blocklist changes toaccount_sync, not a standalone notification type.
+The parsed delta applies only with matching nullableprev_dhash, successful
+6pA admission and effective membership changes. modify/mismatch/failed admission
+queues a refresh; malformed parsing does not imply that fallback. Empty or
+no-effective-change deltas do not advance the saved hash in this branch.
+
+The worker persists current set/hash/metadata asynchronously; normal19N return
+has no base ACK deferral. Refresh goes through2D6.A01 ->1sx.A01 ->kind4 ->1dH.A0M,
+with false suppression flag and separate saved retry bookkeeping. Rust leaves
+this unsupported account child captured without ACK or execution. Admission,
+durable work/dedup/uncertain outcomes and remaining backend policy must be
+mapped before ACK support. No blanket ACK, blind snapshot/delta adoption,
+new sender, retry or live operation added.
+
+Validation: ten selected export commands reproduce, including the reused full
+account handler/refresh manager and admission/task constructor. README extraction
+and six relative branch checks execute exactly; bundle checksums and subject
+APK hash match. Formatting, CLI reference regeneration, OpenAPI library coverage
+and APK coverage freshness pass. No new REA record or Rust behavior; workspace
+runtime tests were not rerun for this research-only chunk.
+Repository hygiene passes (431 APK checksum bundles).

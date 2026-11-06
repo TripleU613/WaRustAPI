@@ -1,0 +1,20 @@
+
+# class: LX/2D6;
+# extends: Ljava/lang/Object;
+
+.method public A00(L)  # .registers 11
+    # full signature: LX/2D6;->A00()LX/1sx;
+    0000..0004  iget-boolean  v1, v10, LX/2D6;->A06:Z
+    0004..0008  iget-boolean  v2, v10, LX/2D6;->A04:Z
+    0008..000c  iget-boolean  v3, v10, LX/2D6;->A05:Z
+    000c..0010  iget-boolean  v4, v10, LX/2D6;->A02:Z
+    0010..0014  iget-boolean  v5, v10, LX/2D6;->A01:Z
+    0014..0018  iget-boolean  v7, v10, LX/2D6;->A00:Z
+    0018..001c  iget-boolean  v8, v10, LX/2D6;->A07:Z
+    001c..0020  iget-boolean  v9, v10, LX/2D6;->A03:Z
+    0020..0022  const/4  v6, #0x0
+    0022..0026  new-instance  v0, LX/1sx;
+    0026..002c  invoke-direct/range  {v0..v9}, LX/1sx;-><init>(ZZZZZZZZZ)V
+    002c..002e  return-object  v0
+    # exception table: 0 try range(s)
+.end method

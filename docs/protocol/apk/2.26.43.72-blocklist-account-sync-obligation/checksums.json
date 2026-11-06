@@ -1,0 +1,30 @@
+{
+  "README.md": {
+    "bytes": 8249,
+    "sha256": "66516d69d16dea3e6facb763ef81de8bf73dc24f52cad4a96161107a524bc92b"
+  },
+  "delta-worker-selected.txt": {
+    "bytes": 2772,
+    "sha256": "458db2761e768cbc1844f03afaddd23d74b540566fcb7bbc606f697235065c4f"
+  },
+  "literal-xrefs.txt": {
+    "bytes": 570,
+    "sha256": "790e85ad2411bb37ea94c09778b4f82b82bd20cc4a1946aca19b387e4412b12c"
+  },
+  "refresh-flags.txt": {
+    "bytes": 799,
+    "sha256": "e5b354dd148e26d37d2aa2cf987e91f3888a3497b1880e856661d8799cd7f497"
+  },
+  "refresh-request-init.txt": {
+    "bytes": 772,
+    "sha256": "bbe75cbae7cbb504a7701ab36950694c538409db3849ae8e9e6f40c303511014"
+  },
+  "refresh-suppression.txt": {
+    "bytes": 1225,
+    "sha256": "b2c3308c3657487489b8f2bc42595e136e5e5d4469c684d90bc30480269c0069"
+  },
+  "saved-hash.txt": {
+    "bytes": 744,
+    "sha256": "7e94e95f9f8a408fb3d68e344ee265408c21e5735316e0d98f2f75bf5d505301"
+  }
+}
