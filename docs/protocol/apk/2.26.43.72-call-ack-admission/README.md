@@ -55,3 +55,11 @@ target/debug/xtask apk-smali "$APK" --class 'LX/0Dn;' --method A0R --signatures 
 
 checksums.json covers every other file. Existing full parser/census/catch exports
 are linked instead of duplicated. Static evidence cannot establish zero bans.
+
+## Known-null sender ordering follow-up
+
+[New selected Exception handler and continuation trace](../2.26.43.72-call-null-sender/README.md)
+resolves the absent/empty-text sender path: it precedes call-field checks and
+returns to reading through generic1rg.A00. Rust now skips only those later
+class checks for known-null sender inputs; global required-id/numeric checks
+remain earlier. Other parsing/provider/recovery gaps remain open.

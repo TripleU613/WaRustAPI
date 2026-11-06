@@ -1,0 +1,28 @@
+
+# class: LX/1rg;
+# extends: Ljava/lang/Object;
+
+.method public A02(VLI)  # .registers 6
+    # full signature: LX/1rg;->A02(LX/0Tp;I)V
+    0000..0004  new-instance  v2, LX/28V;
+    0004..000a  invoke-direct  {v2}, LX/28V;-><init>()V
+    000a..000c  int-to-long  v0, v5
+    000c..0012  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0012..0014  move-result-object  v0
+    0014..0018  iput-object  v0, v2, LX/28V;->A00:Ljava/lang/Long;
+    0018..001c  iget-object  v0, v4, LX/0Tp;->A00:Ljava/lang/String;
+    001c..0020  iput-object  v0, v2, LX/28V;->A01:Ljava/lang/String;
+    0020..0024  const-string  v1, "type"
+    0024..0026  const/4  v0, #0x0
+    0026..002c  invoke-virtual  {v4, v1, v0}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    002c..002e  move-result-object  v0
+    002e..0032  iput-object  v0, v2, LX/28V;->A02:Ljava/lang/String;
+    0032..0036  iget-object  v0, v3, LX/1rg;->A04:LX/05a;
+    0036..003a  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    003a..0040  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0040..0042  move-result-object  v0
+    0042..0046  check-cast  v0, LX/0NX;
+    0046..004c  invoke-interface  {v0, v2}, LX/0NX;->CSW(LX/0FP;)V
+    004c..004e  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,14 @@
+{
+  "README.md": {
+    "bytes": 3505,
+    "sha256": "ad7a8b3ce5860060b31adf11e134da361fa6be22461fe2bceb7868939cdd6b39"
+  },
+  "diagnostic.txt": {
+    "bytes": 1310,
+    "sha256": "1c2dd74d2c6b95ef0f63e1be3515aabffebe0c1d5cd21ebb9cc6df1309312017"
+  },
+  "generic-exception-handler.txt": {
+    "bytes": 1024,
+    "sha256": "8d5a98ec3f9392d675eec9b4914c346a9faccadd8749d88e83caa33e46ce61b5"
+  }
+}

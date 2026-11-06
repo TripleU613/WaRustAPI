@@ -1150,6 +1150,10 @@ pub fn validate_received_ack(node: &Node) -> crate::Result<()> {
     if node.description == "ack"
         && node.get_attr("class").and_then(|v| v.as_text()) == Some("call")
         && !is_auth_challenge_ack(node)
+        // 04c2 null from throws IllegalStateException before call fields;
+        // 1s2.run's Exception -> 1rg.A00 path returns to reading instead.
+        && node.get_attr("from").is_some()
+        && node.get_attr("from").and_then(|v| v.as_text()) != Some("")
         && (node.get_attr("id").and_then(|v| v.as_text()) == Some("")
             || node.get_attr("type").is_none()
             || node.get_attr("type").and_then(|v| v.as_text()) == Some("")
@@ -3047,6 +3051,33 @@ mod waited_reply_tests {
 mod captured_wait_tests {
     use super::*;
     use crate::store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource, Table};
+
+    #[test]
+    fn call_ack_known_null_sender_precedes_class_field_checks() {
+        for sender in [None, Some("")] {
+            for id in ["", "fixture"] {
+                for kind in [None, Some(""), Some("offer")] {
+                    for error in [None, Some("0"), Some("500"), Some("459")] {
+                        let mut ack = Node::new("ack").attr("class", "call").attr("id", id);
+                        if let Some(sender) = sender {
+                            ack = ack.attr("from", sender);
+                        }
+                        if let Some(kind) = kind {
+                            ack = ack.attr("type", kind);
+                        }
+                        if let Some(error) = error {
+                            ack = ack.attr("error", error);
+                        }
+                        assert!(validate_received_ack(&ack).is_ok());
+                        let mut missing_id = ack.clone();
+                        missing_id.attributes.retain(|attr| attr.name != "id");
+                        assert!(validate_received_ack(&missing_id).is_err());
+                        assert!(validate_received_ack(&ack.attr("error", "bad")).is_err());
+                    }
+                }
+            }
+        }
+    }
 
     #[test]
     fn call_ack_requires_nonempty_text_fields_after_auth_challenge_diversion() {

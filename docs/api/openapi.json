@@ -18020,7 +18020,13 @@
   "x-call-ack-receive-admission": {
     "x-cli": true, "x-transport": true, "x-live": false,
     "x-library": ["whatsapp_api::transport::messaging::validate_received_ack"],
-    "description": "Shared received-ACK admission rejects ordinary call-class ACK empty textual id, missing/empty textual type and confirmed group/newsletter sender types after numeric459 diversion. Required id presence still precedes459. Normal actor/CLI captures then stops the epoch; captured waits stop before matching or next read, without settling/releasing pending work or sending an ACK error reply. Other classes retain prior rules. Nonempty strings are not trimmed/whitelisted. Nontext id/type, other sender families, missing-sender exception recovery, child payloads and full call-state handling remain unported. Local non-reconnectable error is conservative policy, not native account recovery equivalence. No call feature, new request, retry or live operation.",
+    "description": "Shared received-ACK admission rejects ordinary call-class ACK empty textual id, missing/empty textual type and confirmed group/newsletter sender types after numeric459 diversion, except known-null absent/empty-text sender takes the earlier recoverable generic path. Required id presence still precedes459. Normal actor/CLI captures then stops the epoch; captured waits stop before matching or next read, without settling/releasing pending work or sending an ACK error reply. Other classes retain prior rules. Nonempty strings are not trimmed/whitelisted. Nontext id/type, other sender families, missing-sender exception recovery, child payloads and full call-state handling remain unported. Local non-reconnectable error is conservative policy, not native account recovery equivalence. No call feature, new request, retry or live operation.",
     "evidence": "docs/protocol/message-ack.md#ordinary-call-ack-text-fields-and-known-sender-rejection-2026-11-06"
+  },
+  "x-call-ack-known-null-sender-ordering": {
+    "x-cli": true, "x-transport": true, "x-live": false,
+    "x-library": ["whatsapp_api::transport::messaging::validate_received_ack"],
+    "description": "Known-null absent/empty-text call ACK sender precedes class-field checks and follows the pinned recoverable Exception -> 1rg.A00 route. Shared capture-first receive now continues for these inputs even with later empty/missing call id/type. Required id presence and numeric error parsing still precede it;459 remains pre-class and nonnull-sender LIL failures remain fatal. No ACK-to-ACK error response or call-state acceptance is added. Other nonempty invalid sender spellings, nontext coercion, children, telemetry and native recovery remain open; no reset, retry or live operation.",
+    "evidence": "docs/protocol/message-ack.md#known-null-call-sender-precedes-fatal-class-field-checks-2026-11-06"
   }
 }

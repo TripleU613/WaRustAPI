@@ -2353,6 +2353,54 @@ mod tests {
         }
     }
 
+    #[tokio::test]
+    async fn call_ack_known_null_sender_is_captured_without_stopping_receive() {
+        use sha2::Digest;
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("call-ack-null-sender.redb"));
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        for (index, sender) in [None, Some("")].into_iter().enumerate() {
+            for (kind_index, kind) in [None, Some("")].into_iter().enumerate() {
+                let mut call = Node::new("ack").attr("class", "call").attr("id", "");
+                if let Some(sender) = sender {
+                    call = call.attr("from", sender);
+                }
+                if let Some(kind) = kind {
+                    call = call.attr("type", kind);
+                }
+                let capture = format!(
+                    "inbound:sha256:{}",
+                    hex::encode(sha2::Sha256::digest(encode(&call).unwrap()))
+                );
+                fake.deliver(call).await;
+                let barrier = format!("AFTER-NULL-CALL-{index}-{kind_index}");
+                fake.deliver(
+                    Node::new("receipt")
+                        .attr("from", peer())
+                        .attr("id", barrier.clone()),
+                )
+                .await;
+                let (ack, written) = fake.written().await;
+                assert_eq!(ack.description, "ack");
+                assert_eq!(
+                    ack.get_attr("id").and_then(|v| v.as_text()),
+                    Some(barrier.as_str())
+                );
+                written.send(Ok(())).unwrap();
+                assert!(
+                    store
+                        .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                        .unwrap()
+                        .is_some()
+                );
+                fake.nothing_written(Duration::from_millis(25)).await;
+            }
+        }
+        fake.stop_cleanly().await;
+        assert!(super::super::receipts::outcomes(&store).unwrap().is_empty());
+    }
+
     #[tokio::test(start_paused = true)]
     async fn about_result_extensions_do_not_become_refusals_in_receive() {
         use super::super::actions::{self, ActionStatus};

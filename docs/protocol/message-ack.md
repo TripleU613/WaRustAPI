@@ -513,3 +513,37 @@ Validation: 1,464 workspace/all-feature tests passed. Strict workspace/all-targe
 all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
 validation, APK coverage freshness and repository hygiene passed. Pinned APK
 hash and exact complete parser re-export were verified. Offline only.
+
+## Known-null call sender precedes fatal class-field checks (2026-11-06)
+
+**Confirmed pinned selected static / ordering correction:** [new generic
+exception/diagnostic methods and reader catch interpretation](apk/2.26.43.72-call-null-sender/README.md)
+show a recoverable route for an ordinary call ACK whose parsed from is null.
+The handler throws IllegalStateException before call id/type checks. Its mapped
+reader invocation selects the Exception catch, invokes1rg.A00 and returns to
+reading. Root ack produces no NACK there. It does not select the later LIL
+corruption/reader-exit route. Native telemetry provider effects remain untraced.
+
+The preceding Rust call-field guard incorrectly applied even when from was
+absent/empty text. validate_received_ack now skips those later class checks for
+these confirmed known-null cases. Required id absence and malformed numeric
+error still fail before this branch;459 remains pre-class. Nonnull supported
+sender with malformed call fields keeps the previous fatal behavior. No
+from-less call state is applied or accepted; the frame remains captured.
+
+A new actor regression delivers absent/empty from with empty id and absent/
+empty type, verifies encrypted capture, processes a following receipt barrier,
+and emits only that barrier's normal ACK. No extra error response or receipt
+outbox intent is generated. Unit controls cross sender/id/type/ordinary error/
+459 spellings and verify required-id/numeric precedence. Existing fatal call
+field, malformed numeric, capture/reopen and pending-state tests remain.
+
+Limits: only absent/empty textual from is proven here. Other nonempty invalid
+address spellings, nontext/cache coercion, child payloads and provider/native
+recovery remain incomplete. No full call feature, account-reset/ban policy,
+new request, resend or live account operation is added.
+
+Validation: 1,466 workspace/all-feature tests passed. Strict workspace/all-target/
+all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
+validation, APK coverage freshness and repository hygiene passed. Exact pinned
+reader re-export and APK hash verified. Offline only.
