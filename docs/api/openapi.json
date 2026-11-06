@@ -17986,5 +17986,11 @@
     "x-library": ["whatsapp_api::transport::messaging::message_ack_outcome_for", "whatsapp_api::transport::outgoing::acknowledge"],
     "description": "Ordinary success with supported nonempty PN/LID participant (plain or device) stays unrelated/outcome_unknown in expected-chat classification, matching the existing outbox guard. Distribution waits do not release dependent ciphertext; CLI comparisons do not record acceptance. Error-present refusal and459 challenge classification remain separate. No blanket arbitrary-participant rejection, fatal ACK rule or replay. Selected43.72 evidence retains an unported special bot-feedback exception; full other-user-family and native dispatcher/recovery equivalence remain open.",
     "evidence": "docs/protocol/message-ack.md#share-ordinary-participant-success-admission-2026-11-06"
+  },
+  "x-owned-receipt-account-authority": {
+    "x-cli": true, "x-transport": true, "x-live": false,
+    "x-library": ["whatsapp_api::transport::receipts::reserve_pending_owned", "whatsapp_api::transport::receipts::ReservedReceipt::check_write_authority"],
+    "description": "Owned receipt batches snapshot store/account generation, phone/JID, registration state/ID and Signal public/private identity authority at reservation. Actual writer recomputes it alongside exact member-row and privacy checks before encoding. Late account/key change blocks the whole batch and preserves uncertain reservations; routine credential/time observations do not invalidate ownership. Fingerprint is internal, private bytes are incrementally hashed and not serialized into metadata. No new registration requirement or persisted field. Historical pending-row origin, Noise/channel rotation, server acceptance and arbitrary low-level Node callers remain separate; no replay or live operation.",
+    "evidence": "docs/protocol/replay-safety-audit.md#receipt-writer-retains-its-reservation-account-authority-2026-11-06"
   }
 }

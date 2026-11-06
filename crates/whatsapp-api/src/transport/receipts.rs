@@ -677,6 +677,40 @@ pub fn outcomes(store: &ProtocolStore) -> Result<Vec<ReceiptOutcome>> {
     })
 }
 
+// Local write ownership, not native account-rotation emulation. Only identity
+// authority is hashed: routine credential/Noise/time observations do not own
+// this reserved receipt. Private key bytes enter only the incremental hash.
+fn receipt_account_authority(
+    generation: crate::model::ids::AccountGeneration,
+    account: Option<&crate::session::AccountRecord>,
+) -> Result<[u8; 32]> {
+    let metadata = serde_json::to_vec(&(
+        generation,
+        account.map(|a| {
+            (
+                a.generation,
+                &a.phone,
+                &a.own_jid,
+                a.registration,
+                a.signal_registration_id,
+            )
+        }),
+    ))
+    .map_err(|_| Error::invalid("receipt", "account authority serialization"))?;
+    let mut hash = Sha256::new();
+    hash.update(b"WaRustAPI receipt write authority v1\0");
+    hash.update((metadata.len() as u64).to_be_bytes());
+    hash.update(metadata);
+    if let Some(identity) = account.and_then(|a| a.signal_identity.as_ref()) {
+        hash.update([1]);
+        hash.update(identity.0.public);
+        hash.update(identity.0.private);
+    } else {
+        hash.update([0]);
+    }
+    Ok(hash.finalize().into())
+}
+
 /// One frozen receipt batch and its exact durable reservation members.
 /// A successful check is not permission to repeat a write after uncertainty.
 pub struct ReservedReceipt {
@@ -693,7 +727,7 @@ impl ReservedReceipt {
     pub fn node(&self) -> &Node {
         &self.node
     }
-    /// Recheck reservation members and the existing automatic-read privacy gate.
+    /// Recheck account authority, reservation members and automatic-read privacy.
     /// Normal actor uses this at its writer; direct writers must check just
     /// before encoding and preserve uncertainty on any failed/partial write.
     pub fn check_write_authority(&self, store: &ProtocolStore) -> Result<()> {
@@ -702,12 +736,22 @@ impl ReservedReceipt {
 }
 #[derive(Clone)]
 pub(crate) struct ReceiptWriteGuard {
+    account_authority: [u8; 32],
     members: Vec<(Vec<u8>, zeroize::Zeroizing<Vec<u8>>)>,
     automatic_direct_read: bool,
 }
 impl ReceiptWriteGuard {
     pub(crate) fn check_write_authority(&self, store: &ProtocolStore) -> Result<()> {
         store.read(|tx| {
+            let account = crate::session::AccountRecord::load(tx)?;
+            if receipt_account_authority(tx.generation(), account.as_ref())?
+                != self.account_authority
+            {
+                return Err(Error::invalid(
+                    "receipt",
+                    "local account changed before receipt write",
+                ));
+            }
             if self.members.is_empty() {
                 return Err(Error::invalid(
                     "receipt",
@@ -753,6 +797,8 @@ pub fn reserve_pending(store: &ProtocolStore) -> Result<Vec<Node>> {
 /// live acceptance is implied; all original uncertain rows stay reserved.
 pub fn reserve_pending_owned(store: &ProtocolStore) -> Result<Vec<ReservedReceipt>> {
     store.write(|tx| {
+        let account = crate::session::AccountRecord::load_in_write(tx)?;
+        let account_authority = receipt_account_authority(tx.generation(), account.as_ref())?;
         let mut pending = Vec::new();
         let mut cursor = None;
         while pending.len() < 16 {
@@ -870,6 +916,7 @@ pub fn reserve_pending_owned(store: &ProtocolStore) -> Result<Vec<ReservedReceip
             out.push(ReservedReceipt {
                 node,
                 guard: ReceiptWriteGuard {
+                    account_authority,
                     members,
                     automatic_direct_read,
                 },
@@ -2852,6 +2899,16 @@ mod tests {
         for mode in ["automatic", "manual", "mixed", "group", "singleton"] {
             for change in [
                 "same",
+                "account_missing",
+                "account_generation",
+                "account_phone",
+                "account_jid",
+                "account_registration",
+                "account_regid",
+                "account_public",
+                "account_private",
+                "account_no_identity",
+                "account_observation",
                 "missing_first",
                 "missing_last",
                 "settled_first",
@@ -2863,6 +2920,19 @@ mod tests {
                 let dir = tempfile::tempdir().unwrap();
                 let path = dir.path().join("receipt-write.redb");
                 let db = Arc::new(open(&path, true));
+                let account = crate::session::AccountRecord {
+                    generation: db.generation(),
+                    registration: crate::session::RegistrationStatus::Registered,
+                    signal_registration_id: Some(31),
+                    signal_identity: Some(crate::session::SignalIdentityKey(
+                        crate::session::KeyMaterial {
+                            public: [1; 32],
+                            private: [2; 32],
+                        },
+                    )),
+                    ..Default::default()
+                };
+                db.write(|tx| account.save(tx)).unwrap();
                 let count = if mode == "singleton" { 1 } else { 2 };
                 for i in 0..count {
                     let node =
@@ -2897,6 +2967,52 @@ mod tests {
                 let queued = writes.recv().await.unwrap();
                 if change == "privacy_disabled" {
                     server_read_preference(&db, "late-disabled", "none");
+                } else if change.starts_with("account_") {
+                    db.write(|tx| {
+                        if change == "account_missing" {
+                            tx.delete(Table::Account, b"account")?;
+                            return Ok(());
+                        }
+                        let mut current = account.clone();
+                        match change {
+                            "account_generation" => current.generation.0 += 1,
+                            "account_phone" => {
+                                current.phone = Some(
+                                    crate::model::phone::PhoneNumber::new(1, "5555550123").unwrap(),
+                                )
+                            }
+                            "account_jid" => {
+                                current.own_jid =
+                                    Some(Jid::parse("15555550123@s.whatsapp.net").unwrap())
+                            }
+                            "account_registration" => {
+                                current.registration = crate::session::RegistrationStatus::Revoked
+                            }
+                            "account_regid" => current.signal_registration_id = Some(32),
+                            "account_public" => {
+                                current.signal_identity.as_mut().unwrap().0.public[0] ^= 1
+                            }
+                            "account_private" => {
+                                current.signal_identity.as_mut().unwrap().0.private[0] ^= 1
+                            }
+                            "account_no_identity" => current.signal_identity = None,
+                            "account_observation" => {
+                                current.last_authenticated_at =
+                                    Some(crate::model::time::Timestamp(123));
+                                current
+                                    .credentials
+                                    .push(crate::session::ObservedCredential {
+                                        name: "fixture".into(),
+                                        value: zeroize::Zeroizing::new(vec![3]),
+                                        observed_at: crate::model::time::Timestamp(123),
+                                        source_step: None,
+                                    });
+                            }
+                            _ => unreachable!(),
+                        }
+                        current.save(tx)
+                    })
+                    .unwrap();
                 } else if change != "same" {
                     let key = if change.ends_with("last") {
                         keys.last().unwrap()
@@ -2925,7 +3041,7 @@ mod tests {
                 }
                 let before = db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap();
                 let head = db.journal_head().unwrap();
-                let admitted = change == "same"
+                let admitted = matches!(change, "same" | "account_observation")
                     || (change == "privacy_disabled" && matches!(mode, "manual" | "group"));
                 assert_eq!(
                     cli_view.check_write_authority(&db).is_ok(),

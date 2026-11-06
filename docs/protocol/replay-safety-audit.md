@@ -1315,3 +1315,49 @@ account operation, automatic replay or state reset.
 Validation:1,453 workspace/all-feature tests passed. Strict workspace/all-target/
 all-feature Clippy, formatting, CLI reference regeneration, OpenAPI symbol
 validation, APK coverage freshness and repository hygiene passed. Offline only.
+
+## Receipt writer retains its reservation account authority (2026-11-06)
+
+**Confirmed Rust ownership gap / local safety correction:** the previously
+owned receipt batch guarded exact member rows and late automatic-read privacy,
+but did not bind the account used when it was reserved. Account replacement,
+revocation or identity mutation after reservation could leave unchanged receipt
+rows eligible for the old queued writer. This is a local concurrency finding,
+not a new claim about APK storage format or native account-reset behavior.
+
+reserve_pending_owned now hashes store generation plus the optional account's
+generation, phone, own JID, registration status, Signal registration ID and
+Signal identity public/private halves in the same reservation transaction.
+The actual receipt writer recomputes that authority in the same read transaction
+as member/privacy checks, before encoding or any socket write. Changed/missing
+account or changed identity refuses the entire frozen batch with a redacted
+local error. All already-reserved rows stay outcome_unknown; no reset, retry,
+re-reservation or partial batch is authorized. CLI direct writers use the same
+public ReservedReceipt.check_write_authority contract.
+
+Private identity bytes enter only the incremental SHA256 state, never the
+serialized metadata buffer or diagnostic output. The fingerprint stays in the
+connection-local guard; it is not a persisted native field or public digest.
+Routine observed credentials/authentication time are excluded so their updates
+do not invalidate receipt ownership. Noise material is not bound by this local
+Signal/account snapshot; full channel/key-rotation lifetime remains separate.
+Absent-account synthetic/low-level reservations retain their previous support,
+with absence itself bound in the fingerprint. This adds no registration gate.
+
+The actual queued-writer regression now covers 90 combinations across automatic,
+manual, mixed, group and singleton batches: unchanged authority, removed account,
+generation/phone/JID/registration/registration-ID/public/private/missing-identity
+changes, benign combined credential/time observation, existing member mutation
+and privacy controls. CLI checks and actual Outbound.prepare agree, failures
+produce no prepared Node, rows/journal remain unchanged by checking, reservations
+are not reselected and uncertainty survives store reopen.
+
+Limits: this binds authority at reservation, not the historical origin of every
+pending row before reservation. It does not authenticate server acceptance,
+implement key rotation or mechanically poison arbitrary borrowed channels.
+Direct low-level reserve_pending still returns Nodes and leaves write ownership
+to its caller. No new request/response, live account traffic or replay.
+
+Validation: 1,460 workspace/all-feature tests passed. Strict workspace/all-target/
+all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
+validation, APK coverage freshness and repository hygiene passed. Offline only.
