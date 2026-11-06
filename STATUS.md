@@ -1,3 +1,5 @@
+Current APK shared MEX request wrapper matches the existing Rust envelope in the selected fields; query-specific parity remains incomplete. [Current shared-envelope comparison and assertion limits](docs/protocol/mex.md#current-mex-request-envelope-comparison-2026-11-06). Research only.
+
 Pinned MEX server equality narrowed: request-to and exact s.whatsapp.net text resolve to0mL; user/server/type determine inherited equality. [Concrete server equality, diagnostic-only compliance check and remaining decoder limits](docs/protocol/mex.md#selected-mex-server-jid-equality-2026-11-06). Research only; binary/general aliases remain unverified.
 
 Pinned MEX constructors now traced through original-ID and typed reply-from/request-to equality; Rust JSON payload parsing remains separate from live envelope admission. [Request ID/from equality evidence and payload-only Rust boundary](docs/protocol/mex.md#original-request-mex-envelope-correlation-2026-11-06). Research only; no guessed sender policy added.

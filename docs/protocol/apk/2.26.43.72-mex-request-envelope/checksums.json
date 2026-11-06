@@ -1,0 +1,14 @@
+{
+  "README.md": {
+    "bytes": 2104,
+    "sha256": "befc15032d4778fb0bf8cc7ad07ebe3af7624ac9c33338a51c3f1885c3dfa0a0"
+  },
+  "string-bound.txt": {
+    "bytes": 1859,
+    "sha256": "f59ac3f687221f42dc9f8bc9fd1c6d218245d8b2a2d0c5e809eef6fcc31244b9"
+  },
+  "trace.txt": {
+    "bytes": 1316,
+    "sha256": "02916dbb651271097c9d487edc9af7885ba6b238789325776f4c174af895d508"
+  }
+}

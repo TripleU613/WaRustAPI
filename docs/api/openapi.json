@@ -17632,5 +17632,12 @@
     "x-live": false,
     "description": "Research-only APK43.72 selected MEX request-to server singleton and exact s.whatsapp.net text parsing. Inherited equality compares user/server/type; protocol-compliance failure logs and continues before class cast. Binary encoding, general aliases/subtype overrides and trusted live admission remain incomplete. No Rust sender policy or request added.",
     "evidence": "docs/protocol/mex.md#selected-mex-server-jid-equality-2026-11-06"
+},
+  "x-mex-current-wrapper-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Research-only current APK shared wrapper comparison matches selected existing Rust MEX envelope fields. Group-specific query ID/schema and live acceptance remain unverified. Native string-bound assertions do not imply normal false-return rejection. No runtime capability changed.",
+    "evidence": "docs/protocol/mex.md#current-mex-request-envelope-comparison-2026-11-06"
 }
 }
