@@ -1,3 +1,5 @@
+Pinned auth-key replacement uses checked commit before readback; reload/type/length gates retained. [Auth-key commit and reload boundary](docs/protocol/notification-ack-audit.md#auth-key-commit-and-reload-boundary-2026-11-06). Concrete encryption provider and recovery remain incomplete; research only.
+
 Pinned authentication-key candidate layout and password-backed replacement readback now traced. [Auth-key candidate and storage verification](docs/protocol/notification-ack-audit.md#auth-key-candidate-and-storage-verification-2026-11-06). Local storage retry does not authorize network resend; runtime lifecycle remains unported.
 
 Pinned authkey_rotation notification now traced through counter/time gates, w:auth:key publication and distinct callback outcomes. [Auth-key rotation lifecycle and missing Rust obligations](docs/protocol/notification-ack-audit.md#auth-key-rotation-is-a-state-lifecycle-2026-11-06). Missing lifecycle remains explicit; no ACK-only port or live operation.

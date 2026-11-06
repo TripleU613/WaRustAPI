@@ -1,0 +1,43 @@
+
+# class: LX/144;
+# extends: Ljava/lang/Object;
+
+.method private A01(LL)  # .registers 6
+    # full signature: LX/144;->A01(Landroid/content/SharedPreferences;)LX/1nq;
+    0000..0004  const-string  v0, "client_static_keypair_pwd_enc"
+    0004..0006  const/4  v3, #0x0
+    0006..000c  invoke-interface  {v5, v0, v3}, Landroid/content/SharedPreferences;->getString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    000c..000e  move-result-object  v1
+    000e..0012  if-nez  v1, +0x3
+    0012..0014  return-object  v3
+    0014..0018  iget-object  v0, v4, LX/144;->A06:LX/00x;
+    0018..001e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    001e..0022  new-instance  v0, Lorg/json/JSONArray;
+    0022..0028  invoke-direct  {v0, v1}, Lorg/json/JSONArray;-><init>(Ljava/lang/String;)V
+    0028..002e  invoke-static  {v0}, LX/1no;->A00(Lorg/json/JSONArray;)LX/1np;
+    002e..0030  move-result-object  v2
+    0030..0034  if-nez  v2, +0x3
+    0034..0036  return-object  v3
+    0036..003a  iget  v1, v2, LX/1np;->A00:I
+    003a..003c  const/4  v0, #0x2
+    003c..0040  if-eq  v1, v0, +0x8
+    0040..0044  const-string  v0, "AuthKeyStore/readClientStaticKeypairEnc 3 not expected type"
+    0044..004a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    004a..004c  return-object  v3
+    004c..0050  iget-object  v1, v4, LX/144;->A0F:LX/149;
+    0050..0054  sget-object  v0, LX/02X;->A01:Ljava/lang/Integer;
+    0054..005a  invoke-virtual  {v1, v2, v0}, LX/149;->A05(LX/1np;Ljava/lang/Integer;)[B
+    005a..005c  move-result-object  v1
+    005c..0060  const-string  v0, "AuthKeyStore/readClientStaticKeypairEnc 3"
+    0060..0066  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0066..006a  if-nez  v1, +0x8
+    006a..006e  const-string  v0, "AuthKeyStore/readClientStaticKeypairEnc/failed to read data"
+    006e..0074  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0074..0076  return-object  v3
+    0076..007c  invoke-static  {v1}, LX/1nq;->A01([B)LX/1nq;
+    007c..007e  move-result-object  v0
+    007e..0080  return-object  v0
+    0080..0082  return-object  v3
+    # exception table: 1 try range(s)
+    # catch Lorg/json/JSONException; code_units 000a..001b -> 0040
+.end method

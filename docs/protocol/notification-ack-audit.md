@@ -478,3 +478,9 @@ and crash recovery remain open. No Rust backend, ACK, replay or live operation c
 **Confirmed static APK43.72:** [candidate generation, private/public serialization and storage readback](apk/2.26.43.72-authkey-candidate-storage/README.md) bind the request bytes to the public component, while local keypair encoding is private then public. The password-backed replacement helper verifies a readback byte match, retries once only after a false result, then throws on a second false result. Exceptions are not automatically retried there. This local storage retry is separate from IQ publication/retry authority.
 
 **Unknown / unchanged:** concrete crypto provider, encryption/commit/decryption helpers, all keystore branches, pre-send candidate durability, uncertain-result recovery and login coordination. No runtime port or live operation.
+
+### Auth-key commit and reload boundary (2026-11-06)
+
+**Confirmed static APK43.72:** [commit result, record parsing and reload](apk/2.26.43.72-authkey-commit-reload/README.md) show the password-backed key writer checks SharedPreferences.commit before readback, unlike counter/timestamp apply. Reload requires record type2 and a64-byte keypair. Record parsing checks nonempty fields without establishing their cryptographic roles or exact cipher sizes. Encryption/decryption declarations have no exported bodies.
+
+**Unknown / unchanged:** concrete provider, platform disk durability, cross-record atomicity and uncertain-publication recovery. Rust does not need Android storage-format compatibility. No runtime rotation or live operation.

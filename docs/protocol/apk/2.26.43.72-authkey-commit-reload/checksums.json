@@ -1,0 +1,34 @@
+{
+  "README.md": {
+    "bytes": 4004,
+    "sha256": "a1cfc095189fe080fc849f9a6357e0a0135f4538b425772a7261ac1978abb881"
+  },
+  "commit.txt": {
+    "bytes": 1714,
+    "sha256": "04b75cc63c6972f2939f85dae7d1773b1f9540eae4940c3c4709fbd9e0ca2ae0"
+  },
+  "decrypt-declaration.txt": {
+    "bytes": 230,
+    "sha256": "32da7e764a862bde84c2b378d423a8ef0949eebcc9f7d36e25e3e6d3cf5722c0"
+  },
+  "encrypt-declaration.txt": {
+    "bytes": 210,
+    "sha256": "9b74105146b58be35980ebc99f43333a401d999cc0656d3d04a91fea1a48639b"
+  },
+  "format.txt": {
+    "bytes": 1828,
+    "sha256": "ab7d434355b4dd15b1281d22eb3730210028d33546a7cdd6bf80ef6bb90a9252"
+  },
+  "parse.txt": {
+    "bytes": 4217,
+    "sha256": "32dee89b2ef4552d409607c6ddd6bbcaaef96eba6047c28719fd68eaf10e85b6"
+  },
+  "record-constructor.txt": {
+    "bytes": 579,
+    "sha256": "ad29b8e3a825d69cbdf46fc297d3f1fb27b3f64e0e31cc226bced36b6eaefcc3"
+  },
+  "reload.txt": {
+    "bytes": 2292,
+    "sha256": "6be0558d93e8a8d44419d981308d1bd16f24df45f53676ee04b2f8d9ca0f451c"
+  }
+}

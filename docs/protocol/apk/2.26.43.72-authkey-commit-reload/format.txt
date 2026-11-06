@@ -1,0 +1,33 @@
+
+# class: LX/1np;
+# extends: Ljava/lang/Object;
+
+.method public A00(L)  # .registers 4
+    # full signature: LX/1np;->A00()Ljava/lang/String;
+    0000..0004  new-instance  v2, Lorg/json/JSONArray;
+    0004..000a  invoke-direct  {v2}, Lorg/json/JSONArray;-><init>()V
+    000a..000e  iget  v0, v3, LX/1np;->A00:I
+    000e..0014  invoke-virtual  {v2, v0}, Lorg/json/JSONArray;->put(I)Lorg/json/JSONArray;
+    0014..0018  iget-object  v0, v3, LX/1np;->A02:[B
+    0018..001a  const/4  v1, #0x3
+    001a..0020  invoke-static  {v0, v1}, Landroid/util/Base64;->encodeToString([BI)Ljava/lang/String;
+    0020..0022  move-result-object  v0
+    0022..0028  invoke-virtual  {v2, v0}, Lorg/json/JSONArray;->put(Ljava/lang/Object;)Lorg/json/JSONArray;
+    0028..002c  iget-object  v0, v3, LX/1np;->A03:[B
+    002c..0030  if-eqz  v0, +0x9
+    0030..0036  invoke-static  {v0, v1}, Landroid/util/Base64;->encodeToString([BI)Ljava/lang/String;
+    0036..0038  move-result-object  v0
+    0038..003e  invoke-virtual  {v2, v0}, Lorg/json/JSONArray;->put(Ljava/lang/Object;)Lorg/json/JSONArray;
+    003e..0042  iget-object  v0, v3, LX/1np;->A04:[B
+    0042..0046  if-eqz  v0, +0x9
+    0046..004c  invoke-static  {v0, v1}, Landroid/util/Base64;->encodeToString([BI)Ljava/lang/String;
+    004c..004e  move-result-object  v0
+    004e..0054  invoke-virtual  {v2, v0}, Lorg/json/JSONArray;->put(Ljava/lang/Object;)Lorg/json/JSONArray;
+    0054..0058  iget-object  v0, v3, LX/1np;->A01:Ljava/lang/String;
+    0058..005c  if-eqz  v0, +0x5
+    005c..0062  invoke-virtual  {v2, v0}, Lorg/json/JSONArray;->put(Ljava/lang/Object;)Lorg/json/JSONArray;
+    0062..0068  invoke-virtual  {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0068..006a  move-result-object  v0
+    006a..006c  return-object  v0
+    # exception table: 0 try range(s)
+.end method

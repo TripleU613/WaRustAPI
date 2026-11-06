@@ -17716,5 +17716,12 @@
     "x-live": false,
     "description": "Research-only APK43.72 authentication-key candidate: public-only publication versus private/public local serialization; password-backed storage verifies byte-equal readback and retries once on false. Crypto provider details, commit durability, uncertain publication and login coordination remain unported. No runtime rotation or network retry added.",
     "evidence": "docs/protocol/notification-ack-audit.md#auth-key-candidate-and-storage-verification-2026-11-06"
+},
+  "x-authkey-commit-reload-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Research-only APK43.72 auth-key checked SharedPreferences commit before readback; reload requires type2 record and64-byte keypair. Concrete encrypt/decrypt declarations have no bodies; cipher roles, disk durability, cross-record atomicity and uncertain publication remain unresolved. No runtime rotation or storage-format migration added.",
+    "evidence": "docs/protocol/notification-ack-audit.md#auth-key-commit-and-reload-boundary-2026-11-06"
 }
 }

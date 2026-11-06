@@ -1,0 +1,92 @@
+
+# class: LX/1no;
+# extends: Ljava/lang/Object;
+
+.method public A00(LL)  # .registers 13
+    # full signature: LX/1no;->A00(Lorg/json/JSONArray;)LX/1np;
+    0000..0006  invoke-virtual  {v12}, Lorg/json/JSONArray;->length()I
+    0006..0008  move-result  v0
+    0008..000a  const/4  v5, #0x0
+    000a..000c  const/4  v1, #0x2
+    000c..0010  if-ge  v0, v1, +0x3
+    0010..0012  return-object  v5
+    0012..0014  const/4  v0, #0x0
+    0014..001a  invoke-virtual  {v12, v0}, Lorg/json/JSONArray;->getInt(I)I
+    001a..001c  move-result  v11
+    001c..001e  const/4  v0, #0x1
+    001e..0024  invoke-virtual  {v12, v0}, Lorg/json/JSONArray;->getString(I)Ljava/lang/String;
+    0024..0026  move-result-object  v4
+    0026..002a  if-eqz  v11, +0x3
+    002a..002c  goto  +0x6
+    002c..0032  invoke-virtual  {v12, v1}, Lorg/json/JSONArray;->getString(I)Ljava/lang/String;
+    0032..0034  move-result-object  v3
+    0034..0036  goto  +0x4
+    0036..003a  if-eq  v11, v1, -0x5
+    003a..003c  move-object  v3, v5
+    003c..003e  const/4  v2, #0x3
+    003e..0042  if-ne  v11, v1, +0x3
+    0042..0044  goto  +0x4
+    0044..0046  move-object  v1, v5
+    0046..0048  move-object  v7, v5
+    0048..004a  goto  +0xa
+    004a..0050  invoke-virtual  {v12, v2}, Lorg/json/JSONArray;->getString(I)Ljava/lang/String;
+    0050..0052  move-result-object  v1
+    0052..0054  const/4  v0, #0x4
+    0054..005a  invoke-virtual  {v12, v0}, Lorg/json/JSONArray;->getString(I)Ljava/lang/String;
+    005a..005c  move-result-object  v7
+    005c..0062  invoke-static  {v4, v2}, Landroid/util/Base64;->decode(Ljava/lang/String;I)[B
+    0062..0064  move-result-object  v8
+    0064..0068  if-eqz  v3, +0x7
+    0068..006e  invoke-static  {v3, v2}, Landroid/util/Base64;->decode(Ljava/lang/String;I)[B
+    006e..0070  move-result-object  v9
+    0070..0072  goto  +0x2
+    0072..0074  move-object  v9, v5
+    0074..0078  if-eqz  v1, +0x7
+    0078..007e  invoke-static  {v1, v2}, Landroid/util/Base64;->decode(Ljava/lang/String;I)[B
+    007e..0080  move-result-object  v10
+    0080..0082  goto  +0x2
+    0082..0084  move-object  v10, v5
+    0084..0088  if-eqz  v8, +0x37
+    0088..008a  array-length  v0, v8
+    008a..008e  if-lez  v0, +0x34
+    008e..0092  new-instance  v6, LX/1np;
+    0092..0098  invoke-direct/range  {v6..v11}, LX/1np;-><init>(Ljava/lang/String;[B[B[BI)V
+    0098..009c  iget  v1, v6, LX/1np;->A00:I
+    009c..00a0  if-nez  v1, +0xa
+    00a0..00a4  iget-object  v0, v6, LX/1np;->A03:[B
+    00a4..00a8  if-eqz  v0, +0x20
+    00a8..00aa  array-length  v0, v0
+    00aa..00ae  if-lez  v0, +0x1d
+    00ae..00b0  return-object  v6
+    00b0..00b2  const/4  v0, #0x2
+    00b2..00b6  if-ne  v1, v0, +0x1f
+    00b6..00ba  iget-object  v0, v6, LX/1np;->A03:[B
+    00ba..00be  if-eqz  v0, +0x15
+    00be..00c0  array-length  v0, v0
+    00c0..00c4  if-lez  v0, +0x12
+    00c4..00c8  iget-object  v0, v6, LX/1np;->A04:[B
+    00c8..00cc  if-eqz  v0, +0xe
+    00cc..00ce  array-length  v0, v0
+    00ce..00d2  if-lez  v0, +0xb
+    00d2..00d6  iget-object  v0, v6, LX/1np;->A01:Ljava/lang/String;
+    00d6..00dc  invoke-static  {v0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+    00dc..00de  move-result  v0
+    00de..00e2  if-nez  v0, +0x3
+    00e2..00e4  return-object  v6
+    00e4..00e8  const-string  v0, "KeyData/failed to parse json/key data not valid"
+    00e8..00ee  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    00ee..00f0  return-object  v5
+    00f0..00f2  return-object  v6
+    00f2..00f6  const-string  v0, "KeyData/failed to parse json/wrong data"
+    00f6..00fc  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    00fc..00fe  return-object  v5
+    00fe..0100  move-exception  v1
+    0100..0102  goto  +0x2
+    0102..0104  move-exception  v1
+    0104..0108  const-string  v0, "KeyData/failed to parse json"
+    0108..010e  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    010e..0110  return-object  v5
+    # exception table: 1 try range(s)
+    # catch Lorg/json/JSONException; code_units 000a..007f -> 007f
+    # catch Ljava/lang/IllegalArgumentException; code_units 000a..007f -> 0081
+.end method
