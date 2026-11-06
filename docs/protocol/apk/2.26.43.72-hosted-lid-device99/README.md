@@ -22,3 +22,10 @@ The complete0EM export returns agent1, server lid and type19. Dv6 does not overr
 Confirmed local source boundary: signal/adv/devices.rs primary_only, reconcile_devices and device_hash admit only Server::User or Server::Lid; reconciliation rejects a member with a different server or nonzero agent. Jid's ability to represent Server::HostedLid does not imply hash/reconciliation support. No incorrect hosted-address normalization was found in that bounded API scope. Retain these refusals rather than inventing a mixed-domain self-device collection rule.
 
 Unknown: hosted primary/address construction outside this branch,0EL declarations, full self-device set/alias authentication and cache adoption, effective hash-version config and native membership lifecycle. No Rust behavior, request or account state changed. Static correctness findings cannot guarantee zero bans.
+
+## Separate incoming metadata follow-up (2026-11-06)
+
+[Hosted chatstate mapping](../2.26.43.72-hosted-chatstate/README.md) now binds
+the underlying PN/LID user for this receive-only projection. It does not alter
+raw/hash domain distinctions, device reconciliation or authenticated alias
+adoption; the boundaries above remain in force for those separate APIs.

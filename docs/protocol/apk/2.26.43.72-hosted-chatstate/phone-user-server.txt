@@ -1,0 +1,10 @@
+
+# class: Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+# extends: Lcom/whatsapp/infra/core/jid/UserJid;
+
+.method public getServer(L)  # .registers 2
+    # full signature: Lcom/whatsapp/infra/core/jid/PhoneUserJid;->getServer()Ljava/lang/String;
+    0000..0004  const-string  v0, "s.whatsapp.net"
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method

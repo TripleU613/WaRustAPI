@@ -1,0 +1,44 @@
+
+# class: LX/0EB;
+# extends: Ljava/lang/Object;
+
+.method public A01(LLI)  # .registers 7
+    # full signature: LX/0EB;->A01(Lcom/whatsapp/infra/core/jid/UserJid;I)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v5, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  const/16  v0, #0x63
+    000c..000e  const/4  v1, #0x0
+    000e..0012  if-ne  v6, v0, +0x3
+    0012..0014  const/4  v1, #0x1
+    0014..001a  invoke-static  {v5}, LX/0Dn;->A0Z(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    001a..001c  move-result  v0
+    001c..0020  if-eqz  v1, +0x38
+    0020..0024  if-eqz  v0, +0x33
+    0024..0028  const-string  v3, "hosted.lid"
+    0028..002c  iget-object  v0, v5, Lcom/whatsapp/infra/core/jid/Jid;->user:Ljava/lang/String;
+    002c..0032  invoke-virtual  {v5}, Lcom/whatsapp/infra/core/jid/Jid;->getAgent()I
+    0032..0034  move-result  v2
+    0034..0038  new-instance  v1, Ljava/lang/StringBuilder;
+    0038..003e  invoke-direct  {v1}, Ljava/lang/StringBuilder;-><init>()V
+    003e..0044  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0044..0048  const-string  v0, "."
+    0048..004e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    004e..0054  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0054..0058  const-string  v0, ":"
+    0058..005e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    005e..0064  invoke-virtual  {v1, v6}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0064..0068  const-string  v0, "@"
+    0068..006e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    006e..0074  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0074..007a  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    007a..007c  move-result-object  v0
+    007c..0082  invoke-virtual  {v4, v0}, LX/0EB;->A03(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0082..0084  move-result-object  v0
+    0084..0086  return-object  v0
+    0086..008a  const-string  v3, "hosted"
+    008a..008c  goto  -0x31
+    008c..0092  invoke-virtual  {v5}, Lcom/whatsapp/infra/core/jid/Jid;->getServer()Ljava/lang/String;
+    0092..0094  move-result-object  v3
+    0094..0096  goto  -0x36
+    # exception table: 0 try range(s)
+.end method

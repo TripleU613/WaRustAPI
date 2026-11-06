@@ -1,3 +1,10 @@
+2026-11-06 — **Projected hosted typing addresses through their native user identity.**
+Hosted/hosted.lid aliases and device99 now yield PN/LID display metadata while
+preserving original addresses. Unsupported explicit device forms stay omitted;
+hash/store/outbound identity handling is unchanged.
+[Factory evidence, regression and remaining parser gaps](docs/protocol/presence.md#hosted-incoming-typing-identities-2026-11-06).
+No live account operation.
+
 2026-11-06 — **Corrected incoming PN/LID typing address projection.**
 Device-qualified from/participant now unwrap to user metadata; known group and
 server-only authors cannot appear as the supplied user. Original frames and

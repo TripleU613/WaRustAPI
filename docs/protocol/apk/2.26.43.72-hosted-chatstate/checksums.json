@@ -1,0 +1,22 @@
+{
+  "README.md": {
+    "bytes": 5362,
+    "sha256": "bf6ef08464808ce704c9e9bf0f79346a6c1ab65dd87f4384a38d269d22d5213f"
+  },
+  "device-factory.txt": {
+    "bytes": 2564,
+    "sha256": "6aed8a7897ee978ac5fea0afd732f63fac25d42070a038370480c2c21d29254f"
+  },
+  "device-init.txt": {
+    "bytes": 1718,
+    "sha256": "aeeb6523d16134888e9eebe3032aac265706b8ca2e8a2b3c3e3dd77fffa843f7"
+  },
+  "hosted-phone.txt": {
+    "bytes": 3751,
+    "sha256": "5cbe4456769e139b550ef97afaebe538f183ba5a48067448ec88069d29d4fe3e"
+  },
+  "phone-user-server.txt": {
+    "bytes": 378,
+    "sha256": "2c5045097b34fb28d910a5e991ffcb8e53ba38f8c728d1e1d522b2d7fb426f35"
+  }
+}

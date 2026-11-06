@@ -1,4 +1,11 @@
 {
+  "x-hosted-chatstate-user-projection": {
+    "x-cli": "whatsapp-cli lab-transport --receive ephemeral metadata; xtask apk-smali <apk> --class <class> --method <method> --signatures --exceptions",
+    "x-transport": "library presence::parse_chatstate metadata only",
+    "x-live": false,
+    "description": "APK43.72 0De.A02 maps hosted aliases to PN UserJid and hosted.lid aliases to LID UserJid; explicit hosted device classes Dv4/Dv6 require99, then incoming0Dn.A00 unwraps parent userJid. Incoming nonempty hosted/hosted.lid model addresses now project to ordinary PN/LID chat/participant metadata, removing device encoding; unsupported explicit device0/2 omit observation/author. Original typed/text attributes stay unchanged. No hash/reconciliation/store/alias-trust/outbound/token policy is normalized. Full native grammar and pre-entry global parser zero-qualifier loss, other JID factories/families and consumer semantics remain open. No trust/admission validator, ACK, request/retry, HTTP route or live operation.",
+    "evidence": "docs/protocol/apk/2.26.43.72-hosted-chatstate/README.md"
+  },
   "x-incoming-chatstate-address-projection": {
     "x-cli": "whatsapp-cli lab-transport --receive ephemeral display; xtask apk-smali <apk> --class <class> --method <method> --signatures --exceptions",
     "x-transport": "library presence::parse_chatstate; comparison CLI metadata only",

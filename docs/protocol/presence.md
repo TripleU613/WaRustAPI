@@ -254,3 +254,24 @@ composing. Other JID domains retain their prior metadata behavior pending full
 class mapping; this is not a complete native admission/trust validator. Native
 null-chat downstream handling and event consumer policy remain untraced.
 No journal/state adoption, ACK, refresh, request, replay or live operation.
+
+## Hosted incoming typing identities (2026-11-06)
+
+**Confirmed static / implemented offline:** [hosted factory/constructor/reader chain](apk/2.26.43.72-hosted-chatstate/README.md)
+separates the original hosted device domain from its underlying non-hosted
+UserJid.0De.A02 maps hosted to PhoneUserJid and hosted.lid to0Dx; device99
+constructs Dv4/Dv6 and incoming0Dn.A00 returns their parent userJid. Rust now
+projects these supported incoming aliases to ordinary PN/LID metadata. Explicit
+hosted device forms require99; no unsupported explicit device observation or
+author is fabricated. Plain model aliases and valid device99 text are covered.
+
+The original Node and text/typed attributes remain unchanged. This projection
+must not be applied to device hashes, stored identity/alias authentication,
+outbound targets or token lookup. No such paths changed. The earlier hosted
+hash/domain distinction remains valid. Red/green tests cover both domains,
+plain/99/group-author/text inputs, original attributes and explicit device0/2.
+
+Full text grammar (including pre-entry zero-qualifier normalization), all JID
+factories and other special families remain unported. This is ephemeral metadata,
+not a trust/admission validator. No ACK, request, replay, state adoption or live
+account operation.

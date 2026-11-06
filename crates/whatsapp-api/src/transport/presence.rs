@@ -311,7 +311,7 @@ pub fn held_tctoken(store: &crate::store::ProtocolStore, peer: &Jid) -> Result<O
 pub struct IncomingChatState {
     /// The chat it happened in: a person, or a group.
     pub chat: Jid,
-    /// Supplied user participant, with supported PN/LID devices unwrapped.
+    /// Supplied user participant, with supported PN/LID/hosted devices unwrapped.
     /// Missing/known non-user authors become None; it is not inferred from chat.
     pub participant: Option<Jid>,
     /// What they are doing.
@@ -319,10 +319,26 @@ pub struct IncomingChatState {
 }
 
 // APK43.72 1rA.A03 ->0Dn.A00 unwraps device.userJid before dispatch.
-// The reused type census binds PN/LID devices17/19. Other JID families keep
-// their existing metadata representation pending complete class mapping.
+// The reused type census binds PN/LID devices17/19; hosted projection is
+// separately bound below. Other families retain their existing representation.
 // docs/protocol/apk/2.26.43.72-chatstate-routing/README.md.
 fn incoming_chatstate_identity(jid: Jid) -> Option<Jid> {
+    // 0De.A02 maps hosted aliases to PN/LID UserJid. Dv4/Dv6 require
+    // device99, then0Dn.A00 returns their underlying non-hosted user.
+    // Projection is local metadata only; never change device-hash/store inputs.
+    // docs/protocol/apk/2.26.43.72-hosted-chatstate/README.md.
+    if matches!(jid.server, Server::Hosted | Server::HostedLid) {
+        if jid.user.is_empty() || (jid.is_ad() && jid.device != 99) {
+            return None;
+        }
+        let mut user = jid.to_non_ad();
+        user.server = if jid.server == Server::Hosted {
+            Server::User
+        } else {
+            Server::Lid
+        };
+        return Some(user);
+    }
     if matches!(jid.server, Server::User | Server::Lid) {
         if jid.user.is_empty() {
             return None;
@@ -468,6 +484,61 @@ mod tests {
             parse_chatstate(&node).is_none(),
             "native first-child selection remains"
         );
+    }
+
+    #[test]
+    fn hosted_chatstate_projects_underlying_user_without_changing_wire_identity() {
+        let group = Jid::parse("120363000000000001@g.us").unwrap();
+        for (server, canonical) in [
+            (Server::Hosted, Server::User),
+            (Server::HostedLid, Server::Lid),
+        ] {
+            for device in [None, Some(99)] {
+                let peer = match device {
+                    None => Jid::new("15551234567", server.clone()).unwrap(),
+                    Some(n) => Jid::new_ad("15551234567", 0, n, server.clone()).unwrap(),
+                };
+                let expected = Jid::new("15551234567", canonical.clone()).unwrap();
+                let direct = Node::new("chatstate")
+                    .attr("from", peer.clone())
+                    .children(vec![Node::new("composing")]);
+                assert_eq!(parse_chatstate(&direct).unwrap().chat, expected);
+                let text = peer.to_string();
+                let textual = Node::new("chatstate")
+                    .attr("from", text.as_str())
+                    .children(vec![Node::new("composing")]);
+                assert_eq!(parse_chatstate(&textual).unwrap().chat, expected);
+                assert_eq!(
+                    textual.get_attr("from").and_then(|v| v.as_text()),
+                    Some(text.as_str())
+                );
+                assert_eq!(
+                    direct.get_attr("from").and_then(|v| v.as_jid()),
+                    Some(&peer)
+                );
+                let node = Node::new("chatstate")
+                    .attr("from", group.clone())
+                    .attr("participant", peer.clone())
+                    .children(vec![Node::new("paused")]);
+                assert_eq!(parse_chatstate(&node).unwrap().participant, Some(expected));
+                assert_eq!(
+                    node.get_attr("participant").and_then(|v| v.as_jid()),
+                    Some(&peer)
+                );
+            }
+            for device in [0, 2] {
+                let invalid = Jid::new_ad("15551234567", 0, device, server.clone()).unwrap();
+                let node = Node::new("chatstate")
+                    .attr("from", invalid.clone())
+                    .children(vec![Node::new("paused")]);
+                assert!(parse_chatstate(&node).is_none());
+                let node = Node::new("chatstate")
+                    .attr("from", group.clone())
+                    .attr("participant", invalid)
+                    .children(vec![Node::new("paused")]);
+                assert_eq!(parse_chatstate(&node).unwrap().participant, None);
+            }
+        }
     }
 
     /// `LX/0y0->A00` case 3: `name` then `type="available"`, nothing else.

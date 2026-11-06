@@ -1,0 +1,31 @@
+
+# class: Lcom/whatsapp/infra/core/jid/DeviceJid;
+# extends: Lcom/whatsapp/infra/core/jid/Jid;
+
+.method public <init>(VLI)  # .registers 6
+    # full signature: Lcom/whatsapp/infra/core/jid/DeviceJid;-><init>(Lcom/whatsapp/infra/core/jid/UserJid;I)V
+    0000..0002  int-to-byte  v2, v5
+    0002..0006  iget-object  v0, v4, Lcom/whatsapp/infra/core/jid/Jid;->user:Ljava/lang/String;
+    0006..000c  invoke-direct  {v3, v0}, Lcom/whatsapp/infra/core/jid/Jid;-><init>(Ljava/lang/String;)V
+    000c..0010  iput-object  v4, v3, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    0010..0014  ??(0x5d)  v2, v3, Lcom/whatsapp/infra/core/jid/DeviceJid;->deviceByte:B
+    0014..0018  sget-object  v0, LX/0EG;->A00:LX/0EG;
+    0018..001c  if-eq  v4, v0, +0x1d
+    001c..0020  if-ltz  v2, +0x7
+    0020..0024  const/16  v0, #0x63
+    0024..0028  if-gt  v2, v0, +0x3
+    0028..002a  return-void
+    002a..002e  const-string  v1, "Invalid device: "
+    002e..0032  new-instance  v0, Ljava/lang/StringBuilder;
+    0032..0038  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0038..003e  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    003e..0044  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0044..0046  move-result-object  v1
+    0046..004a  new-instance  v0, LX/09P;
+    004a..0050  invoke-direct  {v0, v1}, LX/09P;-><init>(Ljava/lang/String;)V
+    0050..0052  throw  v0
+    0052..0056  new-instance  v0, LX/09P;
+    0056..005c  invoke-direct  {v0, v4}, LX/09P;-><init>(Lcom/whatsapp/infra/core/jid/Jid;)V
+    005c..005e  throw  v0
+    # exception table: 0 try range(s)
+.end method

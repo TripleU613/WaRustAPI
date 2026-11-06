@@ -111,3 +111,10 @@ CLI-reference tests, APK coverage freshness and repository hygiene passed.
 All eight retained dispatch/reader exports reproduce exactly; reused conversion
 methods and selected PN/LID census bodies match their retained sources.
 Focused suite: `cargo test --locked -p whatsapp-api --all-features transport::presence::tests`.
+
+## Hosted family follow-up (2026-11-06)
+
+[Hosted projection](../2.26.43.72-hosted-chatstate/README.md) now binds the
+hosted/hosted.lid underlying user and device99 rule in the same metadata
+adapter. Other-family and full text/admission limits remain; this does not
+change the original wire/hash/store address handling.
