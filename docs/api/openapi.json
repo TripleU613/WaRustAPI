@@ -18303,5 +18303,13 @@
     ],
     "description": "Pinned APK123.A01/A0A passes null attribute markers into checked0Tl constructors, which refuse them. Decoder now returnsInvalidNode null attribute value instead of manufacturing present empty text. Explicit rawempty strings and empty bodies remain distinct. Literal fixture failed before correction. No new ACK/notification settlement, retry/NACK, persistence migration or live verification; full native failure routing remains open.",
     "evidence": "docs/protocol/node-serializer.md#null-attribute-values-cannot-become-empty-text-2026-11-06"
+  },
+  "x-stream-end-control-research": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Pinned static xtask research identifies native root descriptiontoken2 -> null -> readerC2o(-1)/return, with concrete1lY/0ZJ logout/disconnect reporting. Coordinated Rust actor/low-level/CLI termination remains unimplemented; textual name checks and existing terminal-error tests do not establish parity. Capture/uncertainty/no-following-I/O regressions required; full reconnect/backoff authority untraced. No runtime fix, new refusal policy or live operation claimed.",
+    "evidence": "docs/protocol/node-serializer.md#root-stream-end-token-requires-coordinated-receive-termination-2026-11-06"
   }
 }

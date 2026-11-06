@@ -1,0 +1,38 @@
+
+# class: LX/1rh;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLLLL)  # .registers 9
+    # full signature: LX/1rh;-><init>(LX/0ZP;LX/08q;LX/0Ta;LX/0V4;LX/123;LX/1rg;Ljava/util/Map;Ljava/util/Map;)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v2, v0, LX/1rh;->A06:LX/08q;
+    000a..000e  iput-object  v1, v0, LX/1rh;->A02:LX/0ZP;
+    000e..0012  iput-object  v4, v0, LX/1rh;->A03:LX/0V4;
+    0012..0016  iput-object  v3, v0, LX/1rh;->A07:LX/0Ta;
+    0016..001a  iput-object  v6, v0, LX/1rh;->A05:LX/1rg;
+    001a..001e  iput-object  v7, v0, LX/1rh;->A01:Ljava/util/Map;
+    001e..0022  iput-object  v8, v0, LX/1rh;->A00:Ljava/util/Map;
+    0022..0026  iput-object  v5, v0, LX/1rh;->A04:LX/123;
+    0026..0028  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(V)  # .registers 4
+    # full signature: LX/1rh;->A00()V
+    0000..0004  iget-object  v2, v3, LX/1rh;->A07:LX/0Ta;
+    0004..0008  const-string  v1, "offline_resume"
+    0008..000a  const/4  v0, #0x0
+    000a..0010  invoke-virtual  {v2, v1, v0}, LX/0Ta;->A01(Ljava/lang/String;Z)V
+    0010..0012  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A01(V)  # .registers 4
+    # full signature: LX/1rh;->A01()V
+    0000..0004  iget-object  v2, v3, LX/1rh;->A07:LX/0Ta;
+    0004..0008  const-string  v1, "offline_resume"
+    0008..000a  const/4  v0, #0x0
+    000a..0010  invoke-virtual  {v2, v1, v0}, LX/0Ta;->A01(Ljava/lang/String;Z)V
+    0010..0012  return-void
+    # exception table: 0 try range(s)
+.end method

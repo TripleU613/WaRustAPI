@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "bytes": 6458,
+    "sha256": "161a5d324976a65d4ca7e3d7cc223130bbe9816417814781452b9e5d9907fcf6"
+  },
+  "disconnected-submit.txt": {
+    "bytes": 469,
+    "sha256": "15197865e3563500ea75f4d98282ef14c60a6e51405512426029756e9e5f9084"
+  },
+  "frame-reader.txt": {
+    "bytes": 7576,
+    "sha256": "578b59692c1af38e09fea95d951c26d8e15463bd73b230ef51004dbd9b9848ef"
+  },
+  "logout-proxy.txt": {
+    "bytes": 279,
+    "sha256": "0f11a546539119c51966f3fa94350ae29d6ded1fac8309f443d144290266004e"
+  },
+  "logout-report.txt": {
+    "bytes": 1881,
+    "sha256": "0590c5fb46b2dd8fbf804b0be018c08b2862b464c85b3b2bb5812ffb061649eb"
+  },
+  "logout-state.txt": {
+    "bytes": 474,
+    "sha256": "2d00c5ec60058d1705008dc57085d81e7a3991ff4f1edb7182b313e4ca1e8b49"
+  },
+  "logout-submit.txt": {
+    "bytes": 501,
+    "sha256": "30b069dc9572d2d8be41dac829004388184a2c08ef8dfa52f5bdb3bcf77062d5"
+  },
+  "observer-handler.txt": {
+    "bytes": 4807,
+    "sha256": "ce5e0de9b6d49a0808374951e0dd1fa1323f1ea86fcc3dcedfef8664c002524b"
+  },
+  "reader-callers.txt": {
+    "bytes": 68,
+    "sha256": "3cc928170961b881ba93e64bd87a5b18b57677d8148d4721222c4f40c2d3f9c0"
+  },
+  "reader-owner.txt": {
+    "bytes": 1594,
+    "sha256": "798a16ecd7835fba4a0003def7a31f5a0d0081ef94c184db051c937e9ccaefbb"
+  }
+}

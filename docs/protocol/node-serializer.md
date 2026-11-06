@@ -98,3 +98,19 @@ controls pass. No semantic ACK/notification rule, retry/NACK, persistence migrat
 or live operation is added. Complete native failure routing and older stored
 empty/null ambiguity remain separate. This does not make all empty values
 invalid or establish complete node-constructor/parser parity.
+
+## Root stream-end token requires coordinated receive termination (2026-11-06)
+
+**Confirmed selected static / implementation gap, APK2.26.43.72:**
+[Complete frame reader and concrete logout/disconnect-report chain](apk/2.26.43.72-stream-end/README.md)
+show descriptiontoken2 returnsnull before ordinary node construction, and1s2
+immediately callsC2o(-1) then returns. Concrete1lY/0ZJ chain maps this through
+local logout/report logic; complete reconnect/backoff remains untraced.
+
+Rust currently lacks coordinated rawroot-token handling across actor and
+low-level/CLI receive paths; ordinaryxmlstreamend node handling or generic
+capture-and-continue is not native termination parity. No code fix is claimed
+in this research chunk. Existing terminal-error control passes but does not
+cover token2. Required follow-through preserves capture/uncertainty, prevents
+later reads/ACKs/settlement and distinguishes raw text/nested context without
+inventing refusal/reconnect policy. No live account operation performed.
