@@ -4603,3 +4603,12 @@ skipping uncoded children and nested user failures. Native set-only400 plus
 failed migration admission can clear preferences and queue a full fetch;
 missing Rust authority means no such automatic recovery is invented here.
 All three action kinds have encrypted-store reopen regressions. No live test.
+
+### Signed blocklist numeric diagnostic (2026-11-06)
+
+**Confirmed static / implemented offline:** [native parseInt helper and tests](apk/2.26.43.72-blocklist-reply-dispatch/README.md#signed-blocklist-error-diagnostic-follow-up)
+bind signed32/default0 semantics to the first direct coded blocklist error.
+ActionOutcome.blocklist_error_code persists that value separately from generic
+u16 compatibility diagnostics; CLI exposes it. Old rows are not backfilled;
+other producers/results remain outside this field. No automatic400 recovery or
+request policy changed. Native migration authority remains unported.

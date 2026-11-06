@@ -1711,3 +1711,32 @@ Strict workspace/all-target/all-feature Clippy, formatting, CLI reference,
 OpenAPI library coverage, APK coverage freshness and diff whitespace pass.
 Five fresh exports, two reused parsers, branch targets, checksum bundle and
 pinned APK digest match. Hygiene passes (436 bundles). No live account test.
+
+## Signed blocklist error diagnostics (2026-11-06)
+
+**Confirmed native numeric contract / fixed offline:** [0HF parser reuse,
+source chain and regression](apk/2.26.43.72-blocklist-reply-dispatch/README.md#signed-blocklist-error-diagnostic-follow-up)
+close the previous integer-range gap.1ud.A00/A01 use Integer.parseInt through
+0HF with0 fallback, so signed values, >65535 and supported BMP decimal spellings
+cannot be represented faithfully by the generic u16 field alone.
+
+New optional ActionOutcome.blocklist_error_code retains signed32 for owned
+blocklist outer errors, including0 for absent/malformed/overflowed code. It
+reuses the host-Java-reference-checked UTF16 parser. Existing generic diagnostics
+are preserved. All row views propagate the saved field; CLI text/JSON expose
+it. Legacy absent data stays absent, with no retrospective reconstruction.
+Results/other owners/mismatched namespaces do not acquire this metadata.
+
+Seventeen-case fetch/block/unblock regression covers signs, limits, Unicode,
+empty/invalid/overflow, encrypted-store reopen, ordered views, legacy absence
+and no replay/cache mutation. No native runtime, new request, automatic400
+reconciliation or recovery/ban-policy guarantee is claimed.
+
+Validation:1,530 workspace tests pass (9 result suites, four threads), including
+the two new diagnostic/scope regressions and existing Java numeric reference
+tests. The persistence regression fails against previous settlement code.
+Strict workspace/all-target/all-feature Clippy, formatting, CLI reference,
+OpenAPI library coverage, optional signed32 schema check, APK coverage freshness
+and diff whitespace pass. Numeric helper reproduces retained evidence exactly;
+bundle checksums and subject APK digest match. Hygiene passes (436 bundles).
+No live account test or retry policy change.

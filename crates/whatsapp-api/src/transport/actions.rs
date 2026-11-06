@@ -106,6 +106,8 @@ struct Row {
     contact_protocol_refusal: Option<super::contacts::UsyncRefusal>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     about_refusal: Option<super::about::AboutRefusal>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    blocklist_error_code: Option<i32>,
     #[serde(default)]
     sent_at: Option<Timestamp>,
     #[serde(default)]
@@ -151,6 +153,10 @@ pub struct ActionOutcome {
     /// Ordered native About error codes; legacy absent metadata remains unknown.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub about_refusal: Option<super::about::AboutRefusal>,
+    /// Native signed blocklist outer-error code; zero includes parser fallback.
+    /// Absent for other producers/results and legacy rows; no retry authority.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub blocklist_error_code: Option<i32>,
     /// Server error code when refused.
     pub error_code: Option<u16>,
     /// Server error text when refused.
@@ -209,6 +215,7 @@ fn queue_prepared_in(
         usync_refusal: None,
         contact_protocol_refusal: None,
         about_refusal: None,
+        blocklist_error_code: None,
         sent_at: None,
         settled_at: None,
         settlement_sequence: None,
@@ -271,6 +278,7 @@ pub(crate) fn view_in_write(
             usync_refusal: row.usync_refusal,
             contact_protocol_refusal: row.contact_protocol_refusal,
             about_refusal: row.about_refusal,
+            blocklist_error_code: row.blocklist_error_code,
             error_code: row.error_code,
             error_text: row.error_text,
         },
@@ -307,6 +315,7 @@ pub(crate) fn view_in(
             usync_refusal: row.usync_refusal,
             contact_protocol_refusal: row.contact_protocol_refusal,
             about_refusal: row.about_refusal,
+            blocklist_error_code: row.blocklist_error_code,
             error_code: row.error_code,
             error_text: row.error_text,
         },
@@ -965,6 +974,17 @@ fn record_reply_inner(
                     .map(str::to_owned);
             }
         }
+        // APK43.72 8R7/6p9.Bvj -> 1ud.A00/A01 -> 0HF.A00(code,0):
+        // Java Integer.parseInt, signed32 with zero on missing/invalid code.
+        // Keep compatibility u16 diagnostics separate; neither field retries.
+        row.blocklist_error_code = (blocklist_reply && kind == Some("error")).then(|| {
+            inner_error
+                .and_then(|error| error.get_attr("code"))
+                .and_then(|value| value.as_text())
+                .and_then(super::mex::java_decimal_long)
+                .and_then(|value| i32::try_from(value).ok())
+                .unwrap_or(0)
+        });
         row.about_refusal = (row.kind == super::about::ACTION_KIND)
             .then(|| super::about::refusal(&request, node))
             .flatten();
@@ -1051,6 +1071,7 @@ pub fn outcomes(store: &ProtocolStore) -> Result<Vec<ActionOutcome>> {
                     usync_refusal: row.usync_refusal,
                     contact_protocol_refusal: row.contact_protocol_refusal,
                     about_refusal: row.about_refusal,
+                    blocklist_error_code: row.blocklist_error_code,
                     error_code: row.error_code,
                     error_text: row.error_text,
                 });
@@ -1092,6 +1113,7 @@ pub(crate) fn outcomes_in_write(tx: &crate::store::WriteTx<'_>) -> Result<Vec<Ac
                 usync_refusal: row.usync_refusal,
                 contact_protocol_refusal: row.contact_protocol_refusal,
                 about_refusal: row.about_refusal,
+                blocklist_error_code: row.blocklist_error_code,
                 error_code: row.error_code,
                 error_text: row.error_text,
             });
@@ -1203,6 +1225,7 @@ pub fn settled_for_kinds(
                     usync_refusal: row.usync_refusal,
                     contact_protocol_refusal: row.contact_protocol_refusal,
                     about_refusal: row.about_refusal,
+                    blocklist_error_code: row.blocklist_error_code,
                     error_code: row.error_code,
                     error_text: row.error_text,
                 };

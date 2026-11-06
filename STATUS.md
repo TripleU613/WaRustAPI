@@ -1,3 +1,10 @@
+2026-11-06 — **Preserved native signed blocklist error codes.**
+Added optional blocklist_error_code to saved outcomes and CLI views; Java
+signed32/default0 parsing no longer loses values through the generic u16 field.
+Legacy rows remain unknown; request/retry behavior is unchanged.
+[Evidence, Unicode/range tests and limits](docs/protocol/chat-actions.md#signed-blocklist-error-diagnostics-2026-11-06).
+No live account operation.
+
 2026-11-06 — **Fixed blocklist reply dispatch and error attribution.**
 Owned outer results cannot be turned into failures by unrelated error
 extensions; the separate snapshot validator still applies. Outer errors use

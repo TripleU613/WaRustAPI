@@ -1953,4 +1953,119 @@ mod tests {
             assert!(actions::reserve_pending(&s).unwrap().is_empty());
         }
     }
+    #[test]
+    fn blocklist_error_integer_diagnostic_survives_reopen_without_retry() {
+        use super::super::actions;
+        for kind in ["blocklist", "block", "unblock"] {
+            for (code, expected) in [
+                (None, 0),
+                (Some(""), 0),
+                (Some("-1"), -1),
+                (Some("65536"), 65536),
+                (Some("2147483647"), i32::MAX),
+                (Some("-2147483648"), i32::MIN),
+                (Some("2147483648"), 0),
+                (Some("-2147483649"), 0),
+                (Some("+４００"), 400),
+                (Some("٤٠٠"), 400),
+                (Some("𝟜𝟘𝟘"), 0),
+                (Some(" 400"), 0),
+                (Some("400 "), 0),
+                (Some("+"), 0),
+                (Some("000400"), 400),
+                (Some("-0"), 0),
+                (Some("fixture-invalid"), 0),
+            ] {
+                let (dir, s) = store();
+                let id = match kind {
+                    "blocklist" => queue_fetch(&s),
+                    "block" => queue_block(&s, &phone()),
+                    _ => queue_unblock(&s, &phone()),
+                }
+                .unwrap();
+                actions::reserve_pending(&s).unwrap();
+                let mut errors = vec![Node::new("error").attr("text", "uncoded")];
+                if let Some(code) = code {
+                    errors.push(Node::new("error").attr("code", code));
+                    errors.push(Node::new("error").attr("code", "500"));
+                }
+                let reply = Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", "error")
+                    .children(errors);
+                assert!(actions::record_reply(&s, &reply).unwrap());
+                drop(s);
+                let s = reopen(dir.path());
+                let outcome = actions::outcomes(&s).unwrap().pop().unwrap();
+                assert_eq!(outcome.status, actions::ActionStatus::Error);
+                let json = serde_json::to_value(&outcome).unwrap();
+                assert_eq!(
+                    json.get("blocklist_error_code"),
+                    Some(&serde_json::json!(expected)),
+                    "{kind} {code:?}"
+                );
+                let ordered = actions::settled_for_kinds(&s, &[kind]).unwrap();
+                assert_eq!(
+                    serde_json::to_value(&ordered[0].0).unwrap()["blocklist_error_code"],
+                    expected
+                );
+                assert_eq!(ingest(&s).unwrap(), 0);
+                assert!(blocked(&s).unwrap().is_empty());
+                assert!(saved_dhash(&s).unwrap().is_none());
+                assert!(actions::reserve_pending(&s).unwrap().is_empty());
+                assert!(!actions::record_reply(&s, &reply).unwrap());
+                // Legacy rows are unknown, not retroactively parsed/reclassified.
+                s.write(|tx| {
+                    let key = format!("action-outbox:{id}");
+                    let mut row: serde_json::Value =
+                        tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?.unwrap();
+                    row.as_object_mut().unwrap().remove("blocklist_error_code");
+                    tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &row)
+                })
+                .unwrap();
+                drop(s);
+                let s = reopen(dir.path());
+                let outcome = actions::outcomes(&s).unwrap().pop().unwrap();
+                assert!(
+                    serde_json::to_value(&outcome)
+                        .unwrap()
+                        .get("blocklist_error_code")
+                        .is_none()
+                );
+                assert!(actions::reserve_pending(&s).unwrap().is_empty());
+            }
+        }
+    }
+    #[test]
+    fn blocklist_error_integer_is_absent_on_results_and_other_action_owners() {
+        use super::super::actions;
+        for (kind, reply_type, namespace) in [
+            ("blocklist", "result", "blocklist"),
+            ("other-owner", "error", "blocklist"),
+            ("blocklist", "error", "other-namespace"),
+        ] {
+            let (_dir, s) = store();
+            let id = actions::queue(&s, kind, "fixture", |id| {
+                Ok(Node::new("iq")
+                    .attr("id", id)
+                    .attr("type", "get")
+                    .attr("xmlns", namespace)
+                    .attr("to", Jid::parse("s.whatsapp.net")?))
+            })
+            .unwrap();
+            actions::reserve_pending(&s).unwrap();
+            let reply = Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", reply_type)
+                .children(vec![Node::new("error").attr("code", "400")]);
+            actions::record_reply(&s, &reply).unwrap();
+            let outcome = actions::outcomes(&s).unwrap().pop().unwrap();
+            assert!(
+                serde_json::to_value(&outcome)
+                    .unwrap()
+                    .get("blocklist_error_code")
+                    .is_none()
+            );
+        }
+    }
 }

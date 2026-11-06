@@ -22,7 +22,7 @@ were freshly compared byte-for-byte. A00 uses the Pair's numeric first value or
 zero if absent. A01 asks0Tp.A0N(error) for children and iterates until a code
 string is nonnull, then returns0HF.A00(code,0) and that same child's optional
 text. It skips uncoded errors, not malformed numeric strings with a present
-code. Exact0HF integer syntax/range remains untraced. New complete A0N proves
+code. The signed-integer follow-up below closes0HF syntax/range via its parseInt call. New complete A0N proves
 this is an ordered direct-child filter, not a descendant search.
 
 ## Error400 can queue a separate reconciliation fetch
@@ -63,9 +63,10 @@ uncoded children. Unrelated action families retain their own refusal rules,
 including app-state collection errors. Shared request validation is internal,
 not a new library/CLI capability.
 
-Numeric diagnostic conversion remains the existing Option<u16> parser; absent,
-invalid, negative and out-of-range code/text-materialization parity is not
-claimed. No automatic400 reconciliation, hash clearing, migration-mode guess,
+Generic numeric diagnostic conversion remains the existing Option<u16>
+compatibility parser; the later optional signed blocklist diagnostic below
+records native integer semantics separately. Full text-materialization parity
+is not claimed. No automatic400 reconciliation, hash clearing, migration-mode guess,
 request replay or ACK behavior is introduced. A malformed selected list remains
 unprojected with its durable reply preserved. The error action remains Error;
 it cannot apply the originally requested block/unblock or replace the cache.
@@ -99,3 +100,48 @@ Compare the first five exports to this bundle and the last two to the reused
 files above. checksums.json binds every other file in this bundle. Native
 migration, full notification processing and every other request family remain
 outside this correction; no complete audit or ban-prevention guarantee.
+
+## Signed blocklist error diagnostic follow-up
+
+**Confirmed static / implemented offline:** a fresh0HF.A00 export matches the
+existing [prekey numeric helper](../2.26.43.72-prekey-upload-replies/error-number-parser.txt)
+byte-for-byte. It checks TextUtils.isEmpty, returns its supplied default when
+empty, otherwise calls Integer.parseInt and catches NumberFormatException to
+return that same default. Here1ud.A01 supplies0. Native code is signed32,
+not an unsigned16-bit diagnostic; missing Pair/code also yields0 through A00.
+A present malformed first code therefore yields0, not a later valid code.
+
+ActionOutcome/its durable row now optionally retain blocklist_error_code:i32.
+Only an outer error for the already-owned blocklist/get or block/unblock/set
+producer receives the field. Conversion reuses the checked Java UTF16 decimal
+helper (signed accumulation followed by i32 range check); invalid/missing input
+becomes0. Its BMP digit table and long parsing are already checked against the
+host Java reference in fixtures/mex/2.26.37.71-numeric-reference.json, also used
+by other current protocol parsers. This is host-reference corroboration, not
+Android/OEM runtime execution. The field includes negative and >65535 codes,
+ASCII signs/BMP decimal digits, and no trimming. Supplementary digit scalars,
+nondecimal input and signed32 overflow fall back to0.
+
+The existing generic error_code Option<u16> and error_text remain unchanged.
+CLI actions JSON exposes the optional field and text lists print it explicitly.
+Its absence on old rows/results/other producers remains unknown or inapplicable;
+no historical backfill, classification change, migration action, request, retry
+or ban/rate-limit decision is derived from the diagnostic. All action views
+propagate the stored value rather than reparsing a saved reply.
+
+Regression blocklist_error_integer_diagnostic_survives_reopen_without_retry
+covers17 cases for each of three action kinds, including null/empty, signed
+limits/overflow, fullwidth/Arabic digits, supplementary digits, whitespace,
+leading zeros, sign-only and invalid input. It checks durable outcome and ordered
+settlement views, cache/hash preservation, no replay/duplicate settlement, and
+legacy absence after field removal/reopen. A separate control verifies absence
+on outer result, another action owner or a mismatched saved namespace.
+
+```sh
+cargo test --locked -p whatsapp-api --all-features blocklist_error_integer
+# With the same APK and OUT variables as above:
+target/debug/xtask apk-smali "$APK" --class 'LX/0HF;' --method A00 --signatures --exceptions > "$OUT/error-number-parser.txt"
+```
+
+Compare that export with the reused prekey helper. Full native numeric value is
+now retained; complete recovery/automatic400 reconciliation remains unported.
