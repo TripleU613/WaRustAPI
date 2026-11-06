@@ -172,3 +172,23 @@ Callback delivery, local diagnostic refused/server_acknowledged status and
 specialized receipt state remain separate. No code change or live account
 traffic. APK hash, exact handler re-export, bundle checksums, links and coverage
 freshness were verified; Rust tests were not rerun for this evidence-only chunk.
+
+## Bound the independent ID-map producers before changing receipts (2026-11-06)
+
+**Confirmed selected pinned static / negative finding:** [new direct producer/
+field censuses, queue insertion and reconnect methods](apk/2.26.43.72-id-ack-owners/README.md)
+connect0TV.A05 to0Sf.A04's explicit tracking flag, original Message/callback
+and count. A0L enables tracking; A0M disables it. The bounded direct callers
+identify VoIP EV7 offers/accepts as a tracked source. Other shown direct A04
+producers pass false, while0YB/A08 drain or resubmit retained records. No
+ordinary receipt producer was established by this census; runtime/reflection/
+aliasing completeness is not claimed.
+
+Native reconnect selects active and challenged ID records and resubmits their
+Messages through the tracked wrapper. Its selector includes VoIP tag/config/
+attempt policy. This is retained as a separate unported mechanism, not a
+reason to replay Rust uncertain receipts or sends. Original full-key callback,
+ID-queue completion and specialized receipt state remain distinct. Strict
+Rust receipt correlation is unchanged; no new request, challenge recovery,
+retry, or runtime behavior. APK hash, evidence checksums, links and coverage
+freshness were checked. No Rust tests were rerun for this evidence-only audit.

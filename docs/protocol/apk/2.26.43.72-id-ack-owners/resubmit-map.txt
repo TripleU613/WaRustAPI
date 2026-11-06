@@ -1,0 +1,27 @@
+
+# class: LX/0Sf;
+# extends: Ljava/lang/Object;
+
+.method public A08(VLL)  # .registers 5
+    # full signature: LX/0Sf;->A08(LX/0Sf;Ljava/util/Map;)V
+    0000..0006  invoke-interface  {v4}, Ljava/util/Map;->entrySet()Ljava/util/Set;
+    0006..0008  move-result-object  v0
+    0008..000e  invoke-interface  {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    000e..0010  move-result-object  v2
+    0010..0016  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    0016..0018  move-result  v0
+    0018..001c  if-eqz  v0, +0x18
+    001c..0022  invoke-interface  {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0022..0024  move-result-object  v0
+    0024..0028  check-cast  v0, Ljava/util/Map$Entry;
+    0028..002e  invoke-interface  {v0}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+    002e..0030  move-result-object  v1
+    0030..0034  check-cast  v1, Ljava/lang/String;
+    0034..003a  invoke-interface  {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+    003a..003c  move-result-object  v0
+    003c..0040  check-cast  v0, Landroid/os/Message;
+    0040..0046  invoke-virtual  {v3, v0, v1}, LX/0Sf;->A0L(Landroid/os/Message;Ljava/lang/String;)V
+    0046..0048  goto  -0x1b
+    0048..004a  return-void
+    # exception table: 0 try range(s)
+.end method

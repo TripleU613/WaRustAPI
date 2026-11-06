@@ -71,3 +71,10 @@ cmp /tmp/receipt-ack-handler.txt docs/protocol/apk/2.26.43.72-distribution-ack-a
 
 checksums.json covers every other file here. Existing complete handler and ACK
 parser are linked rather than duplicated. Static evidence cannot prove bans.
+
+## Producer follow-up
+
+[Bounded producer census and reconnect selection](../2.26.43.72-id-ack-owners/README.md)
+now identify the explicit tracked submission path and a VoIP original producer.
+No ordinary receipt producer was established. Full runtime/aliasing coverage
+and native recovery parity remain open; no Rust replay authority follows.

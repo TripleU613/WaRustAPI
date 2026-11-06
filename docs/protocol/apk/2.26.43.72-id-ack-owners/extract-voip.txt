@@ -1,0 +1,20 @@
+
+# class: LX/Eo7;
+# extends: Ljava/lang/Object;
+
+.method public A00(L)  # .registers 4
+    # full signature: LX/Eo7;->A00()LX/EV7;
+    0000..0004  iget-object  v2, v3, LX/Eo7;->A01:Landroid/os/Message;
+    0004..000a  invoke-static  {v2}, LX/1i7;->A00(Landroid/os/Message;)I
+    000a..000c  move-result  v1
+    000c..0010  const/16  v0, #0xce
+    0010..0014  if-ne  v1, v0, +0xc
+    0014..0018  iget-object  v1, v2, Landroid/os/Message;->obj:Ljava/lang/Object;
+    0018..001c  const-string  v0, "null cannot be cast to non-null type com.whatsapp.infra.protocol.CallStanza"
+    001c..0022  invoke-static  {v1, v0}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    0022..0026  check-cast  v1, LX/EV7;
+    0026..0028  return-object  v1
+    0028..002a  const/4  v1, #0x0
+    002a..002c  return-object  v1
+    # exception table: 0 try range(s)
+.end method

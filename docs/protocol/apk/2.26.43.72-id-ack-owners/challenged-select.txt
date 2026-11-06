@@ -1,0 +1,28 @@
+
+# class: LX/0TV;
+# extends: Ljava/lang/Object;
+
+.method public A03(L)  # .registers 6
+    # full signature: LX/0TV;->A03()Ljava/util/LinkedHashMap;
+    0000..0006  const-string/jumbo  v4, "unacked-messages/getChallengedMessages: "
+    0006..000a  new-instance  v3, Ljava/util/LinkedHashMap;
+    000a..0010  invoke-direct  {v3}, Ljava/util/LinkedHashMap;-><init>()V
+    0010..0014  iget-object  v2, v5, LX/0TV;->A04:Ljava/util/LinkedHashMap;
+    0014..0016  monitor-enter
+    0016..001c  invoke-static  {v5, v2, v3}, LX/0TV;->A00(LX/0TV;Ljava/util/LinkedHashMap;Ljava/util/LinkedHashMap;)V
+    001c..0022  invoke-virtual  {v3}, Ljava/util/AbstractMap;->size()I
+    0022..0024  move-result  v1
+    0024..0028  new-instance  v0, Ljava/lang/StringBuilder;
+    0028..002e  invoke-direct  {v0, v4}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    002e..0034  invoke-virtual  {v0, v1}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0034..003a  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    003a..003c  move-result-object  v0
+    003c..0042  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0042..0044  monitor-exit
+    0044..0046  return-object  v3
+    0046..0048  move-exception  v0
+    0048..004a  monitor-exit
+    004a..004c  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 000b..0021 -> 0023
+.end method
