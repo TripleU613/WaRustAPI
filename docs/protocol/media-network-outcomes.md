@@ -1100,3 +1100,30 @@ candidate or every account/session-generation race. Database-page secure erasure
 viewer success and server-open synchronization remain separate. No repeat GET,
 consumption reset, retry or new opened receipt is introduced. This is a Rust
 state-identity correction; no new APK policy or ban-cause claim is made.
+
+## Opened-receipt collision and replay audit (2026-11-06)
+
+Rust `transport::receipts::queue_opened` was reviewed at the local viewer-to-queue
+boundary. It creates the pending played receipt and changes the consumed inbox
+marker from awaiting_viewer to queued in one store transaction. Existing receipt
+rows block replacement independently of their outcome. No production defect was
+found in this transition; no production behavior changed.
+
+Regression `opened_queue_refusals_preserve_checkpoint_bytes_and_journal_after_reopen`
+uses synthetic routing and real encrypted stores. It checks missing source,
+unconsumed source, queued/unknown/empty viewer markers, unavailable/malformed
+routes, and collisions with pending, outcome_unknown, server_acknowledged and
+refused receipt rows. Repeated refusal and refusal after reopen preserve every
+checkpoint byte and the journal head. Existing
+`opened_queue_survives_restart_and_never_replays_uncertain_receipts` supplies the
+valid transition and one-time reservation/ACK controls.
+
+Limits: this verifies local queue state, not actual viewer rendering, stanza
+transmission, server acceptance, every PN/LID/group routing identity, or account
+generation replacement. The ticket remains derived from the inbox key; no new
+ticket generation policy is inferred. No viewer, user content, account or network
+operation was used. No new APK or ban-cause claim is made.
+
+Validation: 1,513 workspace tests (9 result suites), strict all-target/all-feature
+Clippy, formatting, OpenAPI library coverage, CLI reference regeneration, APK
+coverage freshness and repository hygiene pass.

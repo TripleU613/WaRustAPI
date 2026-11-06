@@ -1,3 +1,12 @@
+2026-11-06 — **Opened-receipt collision and replay protections verified offline.**
+
+New encrypted-store regression covers missing/unready sources, malformed routes,
+and existing pending, uncertain, acknowledged or refused receipt intents. Refusals
+preserve checkpoint bytes and journal across reopen. No production defect found
+or behavior changed; queued intent is not transmission or acceptance.
+1,513 workspace tests, strict Clippy and repository hygiene pass.
+[Audit and limits](docs/protocol/media-network-outcomes.md#opened-receipt-collision-and-replay-audit-2026-11-06).
+
 2026-11-06 — **View-once consumption now verifies the selected source identity.**
 
 A still-decrypted replacement inbox row can no longer be overwritten while the

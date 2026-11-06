@@ -2294,6 +2294,100 @@ mod tests {
     }
 
     #[test]
+    fn opened_queue_refusals_preserve_checkpoint_bytes_and_journal_after_reopen() {
+        let key = b"received:15555550100@s.whatsapp.net:fixture";
+        let ticket = hex::encode(Sha256::digest(key));
+        let receipt_key = format!("receipt-outbox:{ticket}:played");
+        let route =
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
+                .encode(
+                    &Node::new("message")
+                        .attr("id", "fixture")
+                        .attr("from", Jid::parse("15555550100@s.whatsapp.net").unwrap()),
+                )
+                .unwrap();
+        let valid = serde_json::json!({
+            "status":"consumed", "opened_receipt":"awaiting_viewer", "route":route
+        });
+        let mut cases = vec![("missing", None, None)];
+        for (name, status, opened) in [
+            ("unconsumed", "decrypted", "awaiting_viewer"),
+            ("queued", "consumed", "queued"),
+            ("unknown", "consumed", "outcome_unknown"),
+            ("missing-marker", "consumed", ""),
+        ] {
+            let mut row = valid.clone();
+            row["status"] = serde_json::json!(status);
+            row["opened_receipt"] = serde_json::json!(opened);
+            cases.push((name, Some(row), None));
+        }
+        for (name, route) in [
+            ("missing-route", serde_json::Value::Null),
+            ("malformed-route", serde_json::json!([255])),
+        ] {
+            let mut row = valid.clone();
+            row["route"] = route;
+            cases.push((name, Some(row), None));
+        }
+        for status in [
+            "pending",
+            "outcome_unknown",
+            "server_acknowledged",
+            "refused",
+        ] {
+            cases.push((
+                status,
+                Some(valid.clone()),
+                Some(serde_json::json!({
+                    "status":status, "wire":[1,2,3], "sentinel":"preserve"
+                })),
+            ));
+        }
+        for (name, source, collision) in cases {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("opened-refusal.redb");
+            let store = open(&path, true);
+            store
+                .write(|tx| {
+                    if let Some(source) = &source {
+                        tx.put_json(Table::Checkpoints, key, 1, source)?;
+                    }
+                    if let Some(collision) = &collision {
+                        tx.put_json(Table::Checkpoints, receipt_key.as_bytes(), 1, collision)?;
+                    }
+                    Ok(())
+                })
+                .unwrap();
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let head = store.journal_head().unwrap();
+            for _ in 0..2 {
+                assert!(queue_opened(&store, &ticket).is_err(), "{name}");
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    before,
+                    "{name}"
+                );
+                assert_eq!(store.journal_head().unwrap(), head, "{name}");
+            }
+            drop(store);
+            let store = open(&path, false);
+            assert!(queue_opened(&store, &ticket).is_err(), "reopened {name}");
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                before,
+                "reopened {name}"
+            );
+            assert_eq!(store.journal_head().unwrap(), head, "reopened {name}");
+        }
+    }
+
+    #[test]
     fn opened_queue_survives_restart_and_never_replays_uncertain_receipts() {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("receipts.redb");
