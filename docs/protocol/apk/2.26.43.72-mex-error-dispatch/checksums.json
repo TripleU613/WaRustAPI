@@ -1,0 +1,26 @@
+{
+  "README.md": {
+    "bytes": 4435,
+    "sha256": "2f407f72658ac987cca39d2ea1d2a7ad6d86673e39e3ecd2f0dd9c7f7b5c17ff"
+  },
+  "adapter-constructor.txt": {
+    "bytes": 2214,
+    "sha256": "7283f85f738f2b4d161ce0d0997a0565e72a4413ab823322bf6daceae7792ce1"
+  },
+  "exception-error-refs.txt": {
+    "bytes": 81,
+    "sha256": "78272a6bdf80ce3e6d0422148fcd21d8acea054fd59076b6d6f877bda3bde073"
+  },
+  "raw-error-refs.txt": {
+    "bytes": 82,
+    "sha256": "923a7ee7558ba751b88faea169aac3e4136e9b7b81c7902ec76091bdfacf1cf9"
+  },
+  "telemetry-annotations.txt": {
+    "bytes": 2396,
+    "sha256": "de5501319c724169b531c93718d61698cc7919dba81b3fb348c626235e343f0d"
+  },
+  "telemetry-subclass.txt": {
+    "bytes": 2533,
+    "sha256": "ea6cfa552ac4922ef57d552bcb8cbba20bf6672d1e554d3ddaf3f28e906b055d"
+  }
+}

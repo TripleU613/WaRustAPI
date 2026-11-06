@@ -1,3 +1,5 @@
+Pinned MEX error delivery now separated from telemetry: exception callback wraps a fresh Hbw before the product error handler. [MEX error delivery versus telemetry](docs/protocol/mex.md#current-mex-error-delivery-versus-telemetry-2026-11-06). Broader backoff consumers remain unverified; no runtime change.
+
 Pinned MEX IQ request/server error families and exact-one server-error child retained; transport errors remain distinct from GraphQL scoped backoff. [MEX IQ error families and backoff boundary](docs/protocol/mex.md#current-mex-iq-error-families-and-backoff-boundary-2026-11-06). Research only; no guessed retry or runtime change.
 
 Pinned Android16 JSONObject(Map) preserves MEX cached-device nulls; APK call site supports a platform-qualified explicit-null prediction. [MEX null serialization platform boundary](docs/protocol/bulk-prekey-refresh.md#missing-lid-mex-null-serialization-platform-boundary-2026-11-06). Pando/runtime identity remain unverified; research only.

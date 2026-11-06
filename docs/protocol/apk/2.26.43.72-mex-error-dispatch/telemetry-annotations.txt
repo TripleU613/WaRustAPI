@@ -1,0 +1,45 @@
+
+# class: LX/0mT;
+# extends: Ljava/lang/Object;
+
+.method public A02(VLZ)  # .registers 9
+    # full signature: LX/0mT;->A02(LX/Hbw;Z)V
+    0000..0004  iget-object  v5, v6, LX/0mT;->A02:LX/0BX;
+    0004..0008  iget  v4, v6, LX/0mT;->A01:I
+    0008..000c  iget  v3, v6, LX/0mT;->A00:I
+    000c..0010  const-string  v0, "has_data"
+    0010..0016  invoke-interface  {v5, v4, v3, v0, v8}, LX/0BX;->markerAnnotate(IILjava/lang/String;Z)V
+    0016..001a  if-eqz  v7, +0x41
+    001a..001e  const-string  v1, "errors"
+    001e..0024  invoke-virtual  {v7}, LX/Hbw;->A03()Ljava/lang/String;
+    0024..0026  move-result-object  v0
+    0026..002c  invoke-interface  {v5, v4, v3, v1, v0}, LX/0BX;->markerAnnotate(IILjava/lang/String;Ljava/lang/String;)V
+    002c..0032  invoke-virtual  {v7}, LX/Hbw;->A02()Ljava/lang/String;
+    0032..0034  move-result-object  v1
+    0034..0038  if-nez  v1, +0x4
+    0038..003c  const-string  v1, ""
+    003c..0040  const-string  v0, "error_codes"
+    0040..0046  invoke-interface  {v5, v4, v3, v0, v1}, LX/0BX;->markerAnnotate(IILjava/lang/String;Ljava/lang/String;)V
+    0046..004a  iget-object  v2, v7, LX/Hbw;->A01:Ljava/util/List;
+    004a..0050  invoke-interface  {v2}, Ljava/util/List;->size()I
+    0050..0052  move-result  v0
+    0052..0054  const/4  v1, #0x1
+    0054..0058  if-gt  v0, v1, +0x3
+    0058..005a  const/4  v1, #0x0
+    005a..005e  const-string  v0, "has_multiple_errors"
+    005e..0064  invoke-interface  {v5, v4, v3, v0, v1}, LX/0BX;->markerAnnotate(IILjava/lang/String;Z)V
+    0064..006a  invoke-static  {v2}, LX/Hbw;->A00(Ljava/util/List;)LX/Nap;
+    006a..006c  move-result-object  v2
+    006c..0070  const-string  v1, "first_critical_error"
+    0070..0076  invoke-interface  {v2}, LX/Nap;->Aga()Ljava/lang/String;
+    0076..0078  move-result-object  v0
+    0078..007e  invoke-interface  {v5, v4, v3, v1, v0}, LX/0BX;->markerAnnotate(IILjava/lang/String;Ljava/lang/String;)V
+    007e..0084  invoke-interface  {v2}, LX/Nap;->Aby()I
+    0084..0086  move-result  v0
+    0086..008c  invoke-static  {v0}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+    008c..008e  move-result-object  v1
+    008e..0092  const-string  v0, "first_critical_error_code"
+    0092..0098  invoke-interface  {v5, v4, v3, v0, v1}, LX/0BX;->markerAnnotate(IILjava/lang/String;Ljava/lang/String;)V
+    0098..009a  return-void
+    # exception table: 0 try range(s)
+.end method

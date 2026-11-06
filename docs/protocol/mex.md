@@ -1578,3 +1578,9 @@ Regression duplicate_result_payloads_refuse_without_update_fallback_or_content_e
 **Confirmed static APK43.72:** [typed IQ error models and transport wrappers](apk/2.26.43.72-mex-iq-error-models/README.md) bind bad-request/400 and feature-not-implemented/501 to request errors, and rate-overlimit/429, internal-server-error/500, service-unavailable/503 to server errors. The server constructor requires exactly one error child and reads but does not retain the backoff scalar; it retains the raw child. Both callback families construct LIM transport errors, distinct from GraphQL Hxy scoped extension backoff. Delegate constructor order, rather than an error child alone, selects the category.
 
 **Unknown / unchanged:** ignored backoff-read diagnostic effects, units/consumers/persistence, full callback dispatch and outer admission/Pando. Rust JSON payload parsing is not a live IQ error classifier; no guessed retry, mixed-child guard or runtime behavior added. No live operation.
+
+## Current MEX error delivery versus telemetry (2026-11-06)
+
+**Confirmed static APK43.72:** [concrete telemetry methods, callback binding and exact-field inventories](apk/2.26.43.72-mex-error-dispatch/README.md) resolve0mT.A02 as telemetry; product failure instead goes through0mZ.A00 ->Bx5(Throwable) ->BaseMexCallback.A06 ->A08(Hbw). The product callback wraps the exception afresh, distinct from the telemetry Hbw. Both exact7Ol.A01 and7MD.error field inventories contain only constructor writes; inherited original-IQ consumers/reflection/native access remain outside that search.
+
+**Unknown / unchanged:** broader raw-IQ/backoff consumers, reporting policy, all product callbacks and Pando. Telemetry completion does not establish product completion or response adoption. No runtime change, retry authority or live operation added.

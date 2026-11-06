@@ -8218,3 +8218,5 @@ APK43.72 hosted LID device99 distinction retained; current Rust domain guard avo
 MEX map-constructor null behavior narrowed using pinned AOSP sources and APK call site; put(null) removal is a different API. [MEX null serialization platform boundary](bulk-prekey-refresh.md#missing-lid-mex-null-serialization-platform-boundary-2026-11-06). No live operation.
 
 APK43.72 MEX IQ error matchers/wrappers traced; ignored backoff read does not establish a retry duration. [MEX IQ error families and backoff boundary](mex.md#current-mex-iq-error-families-and-backoff-boundary-2026-11-06). Offline only.
+
+APK43.72 MEX error telemetry/product dispatch gap closed; exact raw-error field inventories bounded without claiming global nonuse. [MEX error delivery versus telemetry](mex.md#current-mex-error-delivery-versus-telemetry-2026-11-06). No live operation.

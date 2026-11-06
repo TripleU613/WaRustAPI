@@ -17695,5 +17695,12 @@
     "x-live": false,
     "description": "Research-only APK43.72 MEX IQ error models: request400/501 and server429/500/503 expected code/text pairs; exactly-one server error child; LIM transport wrappers distinct from GraphQL scoped backoff. Backoff scalar is read but not retained by this constructor; timers/consumers remain unknown. No retry or runtime classifier added.",
     "evidence": "docs/protocol/mex.md#current-mex-iq-error-families-and-backoff-boundary-2026-11-06"
+},
+  "x-mex-error-dispatch-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Research-only APK43.72 MEX error delivery: 0mT.A02 annotates telemetry; 0mZ.A00 calls Bx5 and BaseMexCallback wraps a fresh Hbw for A08. Exact raw-error fields have constructor writes only; inherited IQ/reflection/native/backoff consumers remain unverified. No runtime callback or retry added.",
+    "evidence": "docs/protocol/mex.md#current-mex-error-delivery-versus-telemetry-2026-11-06"
 }
 }

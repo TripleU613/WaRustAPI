@@ -1,0 +1,2 @@
+classes5.dex  LX/7MD;-><init>(VL)
+  write opcode 0x5b, dex byte offset: 0x2ef2c0
