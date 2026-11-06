@@ -1,0 +1,51 @@
+
+# class: LX/05h;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VI)  # .registers 2
+    # full signature: LX/05h;-><init>(I)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput  v1, v0, LX/05h;->A00:I
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public BFb(L)  # .registers 2
+    # full signature: LX/05h;->BFb()Ljava/lang/Object;
+    0000..0006  invoke-virtual  {v1}, LX/05h;->get()Ljava/lang/Object;
+    0006..0008  move-result-object  v0
+    0008..000a  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public get(L)  # .registers 2
+    # full signature: LX/05h;->get()Ljava/lang/Object;
+    0000..0004  iget-object  v0, v1, LX/05h;->A01:Ljava/lang/Object;
+    0004..0008  if-nez  v0, +0x14
+    0008..000a  monitor-enter
+    000a..000e  iget-object  v0, v1, LX/05h;->A01:Ljava/lang/Object;
+    000e..0012  if-nez  v0, +0xa
+    0012..0016  iget  v0, v1, LX/05h;->A00:I
+    0016..001c  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    001c..001e  move-result-object  v0
+    001e..0022  iput-object  v0, v1, LX/05h;->A01:Ljava/lang/Object;
+    0022..0024  monitor-exit
+    0024..0026  goto  +0x4
+    0026..0028  move-exception  v0
+    0028..002a  monitor-exit
+    002a..002c  throw  v0
+    002c..0030  iget-object  v0, v1, LX/05h;->A01:Ljava/lang/Object;
+    0030..0032  return-object  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0005..0015 -> 0013
+.end method
+
+.method public isInitialized(Z)  # .registers 3
+    # full signature: LX/05h;->isInitialized()Z
+    0000..0004  iget-object  v1, v2, LX/05h;->A01:Ljava/lang/Object;
+    0004..0006  const/4  v0, #0x0
+    0006..000a  if-eqz  v1, +0x3
+    000a..000c  const/4  v0, #0x1
+    000c..000e  return  v0
+    # exception table: 0 try range(s)
+.end method

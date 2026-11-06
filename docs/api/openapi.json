@@ -18416,5 +18416,13 @@
     ],
     "description": "Experimental lab-transport direct sends now use the existing durable single-recipient key-batch plan before captured query exchange. OutcomeUnknown and actual query ID commit before writer; matching results/errors settle, complete retained targets/bundle signatures revalidate before use. Unknown/refused/invalid outcomes or changed recipient cannot reserve another query. Unbound legacy message key caches remain untouched and refuse ownership inference; compatibility cache now stores derived aggregate, original responses stay in batch/capture. Existing group key-queries and GET /v1/groups/key-queries inspect the same plan; no new HTTP route. Two failing-before and three offline adapter tests cover cuts, legacy cache, foreign ID, refusal and reopen/no-replay. Full-key native timer remains unmapped; generic30s and configured I/O caps remain local. No automatic request, identity change or live validation.",
     "evidence": "docs/protocol/replay-safety-audit.md#experimental-direct-cli-key-query-reservation-2026-11-06"
+  },
+  "x-full-key-failure-ownership-research": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Static xtask full-prekey lifecycle research: concreteDxh inherits bare-return1ru.A00, so selected reader-map cleanup does not release bulkFfK in separate0Th.A05. Exact physical failure callers0YB.A05 and selected0YU login-back branch retained. Message-client direct and disconnect lazy access select provider0x90; global cache gives conditional object identity while entry unchanged, not account-switch/reset proof. Untimed future completion/failure is not usable-key adoption, a32s full-query timer or replay authority. New REA Android call failed on configured missing Java21; full tool error retained, not REA Evidence. No runtime behavior, sender, deadline, request or retry changed.",
+    "evidence": "docs/protocol/retry-answers.md#full-key-cleanup-and-future-failure-are-separate-2026-11-06"
   }
 }

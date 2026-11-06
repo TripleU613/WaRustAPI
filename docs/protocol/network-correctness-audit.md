@@ -4544,3 +4544,12 @@ direct CLI bypassed the normal outbox reservation before querying keys. It now
 uses the existing frozen-target durable key-batch path. [Reservation-before-write,
 legacy-cache boundary, response correlation and reopen controls](replay-safety-audit.md#experimental-direct-cli-key-query-reservation-2026-11-06).
 Complete timing contracts for these other families remain open.
+
+## Full prekey failure ownership (2026-11-06)
+
+[Selected full-key callback cleanup and provider bridge](retry-answers.md#full-key-cleanup-and-future-failure-are-separate-2026-11-06)
+now distinguish no-op Dxh reader cleanup from the job's separate FfK completion/
+failure map. Exact0Th.A03 failure callers and conditional shared provider0x90
+are retained. This narrows lifecycle ownership without inventing a32s full-key
+callback timer, clearing durable reservations or copying native retry loops.
+Global provider-reset/account-switch and complete watchdog policy remain open.

@@ -1,0 +1,60 @@
+
+# class: LX/00D;
+# extends: Ljava/lang/Object;
+
+.method public A03(LLI)  # .registers 8
+    # full signature: LX/00D;->A03(LX/06h;I)Ljava/lang/Object;
+    0000..0006  invoke-static  {v7}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0006..0008  move-result-object  v5
+    0008..000c  sget-object  v4, LX/00D;->A03:Ljava/util/concurrent/ConcurrentHashMap;
+    000c..0012  invoke-virtual  {v4, v5}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    0012..0014  move-result-object  v0
+    0014..0018  if-nez  v0, +0x54
+    0018..001e  invoke-static  {v7}, LX/07N;->A00(I)Ljava/lang/Object;
+    001e..0020  move-result-object  v3
+    0020..0022  monitor-enter
+    0022..0028  invoke-virtual  {v4, v5}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    0028..002a  move-result-object  v0
+    002a..002e  if-nez  v0, +0x44
+    002e..0034  invoke-interface  {v6}, LX/06h;->B5f()LX/06q;
+    0034..0036  move-result-object  v2
+    0036..003a  const-class  v1, LX/00D;
+    003a..003e  sget-object  v0, LX/00D;->A04:LX/05e;
+    003e..0044  invoke-virtual  {v2, v0, v1, v2}, LX/06q;->A00(LX/05e;Ljava/lang/Class;Ljava/lang/Object;)Ljava/lang/Object;
+    0044..0046  move-result-object  v1
+    0046..004a  check-cast  v1, LX/00D;
+    004a..004e  iget-object  v0, v1, LX/00D;->A01:LX/06i;
+    004e..0054  invoke-interface  {v0}, LX/06h;->Aoa()LX/07P;
+    0054..0056  move-result-object  v2
+    0056..005a  iget-object  v1, v1, LX/00D;->A00:LX/07O;
+    005a..005e  iget-object  v0, v2, LX/07P;->A00:Ljava/util/List;
+    005e..0064  invoke-interface  {v0, v1}, Ljava/util/List;->add(Ljava/lang/Object;)Z
+    0064..006a  invoke-interface  {v6}, LX/06h;->AWp()LX/06h;
+    006a..006c  move-result-object  v0
+    006c..0072  invoke-static  {v0}, LX/00T;->A07(LX/06h;)V
+    0072..0078  invoke-interface  {v0}, LX/06h;->B5f()LX/06q;
+    0078..007a  move-result-object  v1
+    007a..0080  invoke-static  {}, LX/00J;->A00()Landroid/app/Application;
+    0080..0082  move-result-object  v0
+    0082..0088  invoke-static  {v7, v1, v0}, LX/1Uw;->A00(ILX/06h;Ljava/lang/Object;)Ljava/lang/Object;
+    0088..008a  move-result-object  v0
+    008a..008e  if-eqz  v0, +0xe
+    008e..0094  invoke-virtual  {v4, v5, v0}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0094..0096  goto  +0x9
+    0096..0098  move-exception  v0
+    0098..009e  invoke-static  {}, LX/00T;->A06()V
+    009e..00a4  invoke-virtual  {v2}, LX/07P;->A01()V
+    00a4..00a6  throw  v0
+    00a6..00ac  invoke-static  {}, LX/00T;->A06()V
+    00ac..00b2  invoke-virtual  {v2}, LX/07P;->A01()V
+    00b2..00b4  monitor-exit
+    00b4..00b6  return-object  v0
+    00b6..00b8  move-exception  v0
+    00b8..00ba  monitor-exit
+    00ba..00bc  throw  v0
+    00bc..00be  return-object  v0
+    # exception table: 3 try range(s)
+    # catch <all> code_units 0011..0039 -> 005b
+    # catch <all> code_units 0039..004b -> 004b
+    # catch <all> code_units 004b..005d -> 005b
+.end method

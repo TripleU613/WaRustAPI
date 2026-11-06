@@ -542,3 +542,30 @@ second resend after uncertainty.
 Validation:1,449 workspace/all-feature tests passed. Strict workspace/all-target/
 all-feature Clippy, formatting, CLI reference regeneration, OpenAPI symbol
 validation, APK coverage freshness and repository hygiene passed. Offline only.
+
+## Full-key cleanup and future failure are separate (2026-11-06)
+
+**Confirmed selected static, APK2.26.43.72:** writer case87 stores concrete
+Dxh in the shared reader/writer map; Dxh inherits1ru.A00's bare-return cleanup
+hook. Thus initial-reader map cleanup does not itself complete/fail the bulk
+job's separately registered FfK in0Th.A05. FfK still uses untimed get in the
+selected job. Result/error fallback completes it with null, independently of
+whether returned keys are usable. No32s full-key callback timer is established.
+[Complete sources, physical failure callers and provider bridge](apk/2.26.43.72-full-key-failure-ownership/README.md).
+
+The exact direct failure callers are0YB.A05(disconnected IOException) and the
+selected0YU login-back failure branch. Both resolve0Th through0YB.A0W. That
+lazy provider and0Sf.A0B's direct provider select00D key0x90;00D caches a
+nonnull object by key, giving conditional shared-manager identity while the
+cache entry is unchanged. Global cache invalidation, account-switch boundaries,
+provider lifetime and full reconnect/job scheduling remain open. A callback
+throw can prevent later failure delivery/map clear; no all-callback cleanup
+success is inferred.
+
+**Rust boundary:** do not treat lower reader-map deletion, job future completion,
+local write or a manager60000 expiry as verified key adoption or safe resend.
+The existing one-shot live refetch owner and durable reservations remain. This
+research changes no timeout, callback, retry, sender or account policy. Generic
+captured30s and configured I/O caps remain local bounds, not APK full-key timers.
+The renewed REA Android call failed on its configured missing Java21 path;
+complete error retained and xtask fallback used without configuration mutation.

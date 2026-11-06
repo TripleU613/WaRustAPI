@@ -1,0 +1,89 @@
+
+# class: LX/0Sf;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 3
+    # full signature: LX/0Sf;-><init>()V
+    0000..0004  const/16  v0, #0x159
+    0004..000a  invoke-static  {v0}, LX/05W;->A01(I)LX/0BP;
+    000a..000c  move-result-object  v0
+    000c..0012  invoke-direct  {v2}, Ljava/lang/Object;-><init>()V
+    0012..0016  iput-object  v0, v2, LX/0Sf;->A03:Lcom/google/common/base/Optional;
+    0016..001a  const/16  v0, #0x88c
+    001a..0020  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0020..0022  move-result-object  v0
+    0022..0026  check-cast  v0, LX/0TR;
+    0026..002a  iput-object  v0, v2, LX/0Sf;->A0H:LX/0TR;
+    002a..002e  const/16  v0, #0x114
+    002e..0034  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0034..0036  move-result-object  v0
+    0036..003a  check-cast  v0, LX/0B0;
+    003a..003e  iput-object  v0, v2, LX/0Sf;->A05:LX/0B0;
+    003e..0042  const/16  v0, #0xa2
+    0042..0048  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0048..004a  move-result-object  v0
+    004a..004e  check-cast  v0, LX/08q;
+    004e..0052  iput-object  v0, v2, LX/0Sf;->A06:LX/08q;
+    0052..0056  const/16  v0, #0x42
+    0056..005c  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    005c..005e  move-result-object  v0
+    005e..0062  check-cast  v0, LX/08Y;
+    0062..0066  iput-object  v0, v2, LX/0Sf;->A04:LX/08Y;
+    0066..006a  const/16  v0, #0x8f
+    006a..0070  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0070..0072  move-result-object  v0
+    0072..0076  check-cast  v0, LX/0TT;
+    0076..007a  iput-object  v0, v2, LX/0Sf;->A0A:LX/0TT;
+    007a..007e  const/16  v0, #0x85
+    007e..0084  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0084..0086  move-result-object  v0
+    0086..008a  iput-object  v0, v2, LX/0Sf;->A01:LX/05a;
+    008a..008e  const/16  v0, #0x91
+    008e..0094  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0094..0096  move-result-object  v0
+    0096..009a  check-cast  v0, LX/0TV;
+    009a..009e  iput-object  v0, v2, LX/0Sf;->A0C:LX/0TV;
+    009e..00a2  const/16  v0, #0x8e
+    00a2..00a8  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    00a8..00aa  move-result-object  v0
+    00aa..00ae  check-cast  v0, LX/0TX;
+    00ae..00b2  iput-object  v0, v2, LX/0Sf;->A09:LX/0TX;
+    00b2..00b6  const/16  v0, #0x101
+    00b6..00bc  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    00bc..00be  move-result-object  v0
+    00be..00c2  check-cast  v0, LX/0AI;
+    00c2..00c6  iput-object  v0, v2, LX/0Sf;->A07:LX/0AI;
+    00c6..00ca  const/16  v0, #0x3a8
+    00ca..00d0  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    00d0..00d2  move-result-object  v0
+    00d2..00d6  check-cast  v0, LX/0BZ;
+    00d6..00da  iput-object  v0, v2, LX/0Sf;->A08:LX/0BZ;
+    00da..00de  const/16  v0, #0x894
+    00de..00e4  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    00e4..00e6  move-result-object  v0
+    00e6..00ea  check-cast  v0, LX/0Td;
+    00ea..00ee  iput-object  v0, v2, LX/0Sf;->A0D:LX/0Td;
+    00ee..00f2  const/16  v0, #0x90
+    00f2..00f8  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    00f8..00fa  move-result-object  v0
+    00fa..00fe  check-cast  v0, LX/0Th;
+    00fe..0102  iput-object  v0, v2, LX/0Sf;->A0B:LX/0Th;
+    0102..0106  const/16  v0, #0x92
+    0106..010c  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    010c..010e  move-result-object  v0
+    010e..0112  iput-object  v0, v2, LX/0Sf;->A02:LX/05a;
+    0112..0116  new-instance  v0, Ljava/util/concurrent/atomic/AtomicInteger;
+    0116..011c  invoke-direct  {v0}, Ljava/util/concurrent/atomic/AtomicInteger;-><init>()V
+    011c..0120  iput-object  v0, v2, LX/0Sf;->A0F:Ljava/util/concurrent/atomic/AtomicInteger;
+    0120..0124  const/16  v1, #0x17
+    0124..0128  new-instance  v0, LX/1Wv;
+    0128..012e  invoke-direct  {v0, v1}, LX/1Wv;-><init>(I)V
+    012e..0134  invoke-static  {v0}, LX/00o;->A01(Lkotlin/jvm/functions/Function0;)LX/00q;
+    0134..0136  move-result-object  v0
+    0136..013a  iput-object  v0, v2, LX/0Sf;->A0G:LX/00p;
+    013a..013e  new-instance  v0, Ljava/util/LinkedHashMap;
+    013e..0144  invoke-direct  {v0}, Ljava/util/LinkedHashMap;-><init>()V
+    0144..0148  iput-object  v0, v2, LX/0Sf;->A0E:Ljava/util/Map;
+    0148..014a  return-void
+    # exception table: 0 try range(s)
+.end method
