@@ -371,6 +371,12 @@
     "x-live": false,
     "description": "APK43.72 admitted full blocklist snapshot replaces nullable dhash: missing hash deletes old checkpoint atomically with membership/inspection/reconciliation. Subsequent explicitly queued get/set construction no longer reuses stale hash. No-list unchanged fetch preserves hash; malformed input preserves all state. Android putString(null) removal contract plus selected native replacement paths retained. Native set-result hash writes have separate memory/backend-change gates and remain outside this correction. No automatic request, old-history rewrite or live acceptance. docs/protocol/chat-actions.md#blocklist-full-snapshot-nullable-hash-2026-11-06"
   },
+  "x-blocklist-outbound-hash-omission": {
+    "x-cli": "blocklist; block; unblock; java docs/protocol/apk/2.26.43.72-blocklist-outbound-hash/BlankUnits.java",
+    "x-transport": "existing durable request construction; offline controlled Java oracle",
+    "x-live": false,
+    "description": "APK43.72 1dH.A0M get omits only null/empty saved dhash; A05 block/unblock omit null/blank under Java UTF16 whitespace OR space-char predicate. Nonblank values and nonempty get whitespace are carried unchanged; construction never mutates saved hash. Authored Java21 reference measures all65536 UTF16 units; Rust predicate checks complete true/false domain. Synthetic ten-case get/block/unblock controls, no network/automatic retry. Android/OEM runtime Unicode and full alias/migration/set-result hash-gate parity remain open. docs/protocol/chat-actions.md#blocklist-outbound-hash-omission-2026-11-06"
+  },
   "x-library-capabilities": [
     {
       "symbol": "whatsapp_api::transport::app_state_sync::binding::bind_inline_fetch_plan",

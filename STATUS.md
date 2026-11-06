@@ -1,3 +1,10 @@
+2026-11-06 — **Blocklist outbound hash omission follows distinct APK rules.**
+Get omits null/empty; block/unblock also omit Java-blank values. Nonblank hashes
+remain byte-for-byte unchanged. Controlled Java oracle checks every UTF16 unit;
+synthetic get/block/unblock controls retain request/checkpoint evidence.
+[Details and limits](docs/protocol/chat-actions.md#blocklist-outbound-hash-omission-2026-11-06).
+No live account operation or automatic request.
+
 2026-11-06 — **Full blocklist snapshots clear an absent hash.**
 Corrected stale checkpoint retention after an admitted no-hash full snapshot.
 No-list/malformed controls preserve prior state; offline get/block construction

@@ -113,6 +113,18 @@ fn build_iq(id: &str, kind: &str, children: Vec<Node>) -> Result<Node> {
         .children(children))
 }
 
+// APK43.72 0Cf.A0q -> 0Fv.A01 checks Java UTF-16 char whitespace or
+// space-char, independently verified across all BMP units by BlankUnits.java.
+// Rust's Unicode White_Space differs at U+001C..001F and U+0085.
+fn blank_hash_unit(unit: u16) -> bool {
+    matches!(unit, 0x0009..=0x000d | 0x001c..=0x0020 | 0x00a0 | 0x1680
+        | 0x2000..=0x200a | 0x2028..=0x2029 | 0x202f | 0x205f | 0x3000)
+}
+
+fn blank_hash(hash: &str) -> bool {
+    hash.encode_utf16().all(blank_hash_unit)
+}
+
 fn queue_set(
     store: &ProtocolStore,
     action: &'static str,
@@ -127,7 +139,7 @@ fn queue_set(
     let phone = chat.to_non_ad();
     let lid = super::inbox::lid_for(store, &phone)?;
     let wire_jid = lid.clone().unwrap_or_else(|| phone.clone());
-    let dhash = saved_dhash(store)?;
+    let dhash = saved_dhash(store)?.filter(|hash| !blank_hash(hash));
     let mut item = Node::new("item")
         .attr("action", action)
         .attr("jid", wire_jid.clone());
@@ -162,9 +174,9 @@ pub fn queue_unblock(store: &ProtocolStore, chat: &Jid) -> Result<String> {
     queue_set(store, "unblock", chat, "unblock contact")
 }
 
-/// Durably queue a blocklist fetch. Carries the saved `dhash` when one exists.
+/// Durably queue a blocklist fetch. Carries a nonempty saved `dhash` verbatim.
 pub fn queue_fetch(store: &ProtocolStore) -> Result<String> {
-    let dhash = saved_dhash(store)?;
+    let dhash = saved_dhash(store)?.filter(|hash| !hash.is_empty());
     super::actions::queue(store, "blocklist", "fetch blocklist", move |id| {
         let children = match dhash {
             Some(dhash) => vec![Node::new("item").attr("dhash", dhash)],
@@ -597,6 +609,69 @@ mod tests {
             item.get_attr("pn_jid").and_then(|v| v.as_jid()),
             Some(&phone())
         );
+    }
+
+    #[test]
+    fn blank_hash_units_match_executed_java_reference_for_every_utf16_unit() {
+        let expected: Vec<u16> = serde_json::from_str(include_str!(
+            "../../../../docs/protocol/apk/2.26.43.72-blocklist-outbound-hash/blank-units.json"
+        ))
+        .unwrap();
+        assert!(expected.windows(2).all(|pair| pair[0] < pair[1]));
+        for unit in 0..=u16::MAX {
+            assert_eq!(
+                blank_hash_unit(unit),
+                expected.binary_search(&unit).is_ok(),
+                "UTF16 unit {unit:04x}"
+            );
+        }
+        assert!(blank_hash(""));
+        assert!(!blank_hash("😀"));
+    }
+
+    #[test]
+    fn outbound_hash_presence_matches_distinct_get_and_set_predicates() {
+        for (hash, get_present, set_present) in [
+            (None, false, false),
+            (Some(""), false, false),
+            (Some(" \t\n"), true, false),
+            (Some("\u{a0}"), true, false),
+            (Some("\u{1c}"), true, false),
+            (Some("\u{85}"), true, true),
+            (Some("\u{200b}"), true, true),
+            (Some("😀"), true, true),
+            (Some(" hash "), true, true),
+            (Some("abc"), true, true),
+        ] {
+            let (_dir, s) = store();
+            if let Some(hash) = hash {
+                s.write(|tx| tx.put_json(Table::Checkpoints, DHASH_KEY.as_bytes(), 1, &hash))
+                    .unwrap();
+            }
+            let fetch = queue_fetch(&s).unwrap();
+            let block = queue_block(&s, &phone()).unwrap();
+            let unblock = queue_unblock(&s, &phone()).unwrap();
+            let queued = super::super::actions::reserve_pending(&s).unwrap();
+            let get = queued
+                .iter()
+                .find(|n| attr_text(n, "id") == Some(fetch.as_str()))
+                .unwrap();
+            assert_eq!(get.child("item").is_some(), get_present);
+            if get_present {
+                assert_eq!(attr_text(get.child("item").unwrap(), "dhash"), hash);
+            }
+            for id in [&block, &unblock] {
+                let set = queued
+                    .iter()
+                    .find(|n| attr_text(n, "id") == Some(id.as_str()))
+                    .unwrap();
+                assert_eq!(
+                    attr_text(set.child("item").unwrap(), "dhash"),
+                    if set_present { hash } else { None }
+                );
+            }
+            assert_eq!(saved_dhash(&s).unwrap().as_deref(), hash);
+        }
     }
 
     #[test]

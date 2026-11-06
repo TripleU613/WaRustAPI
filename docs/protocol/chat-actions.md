@@ -1418,3 +1418,27 @@ all-feature Clippy, formatting, CLI reference regeneration, OpenAPI library
 coverage, APK coverage freshness and repository hygiene pass. Four DEX exports,
 README extraction, bundle checksums and subject APK hash match. Android null
 removal is attributed to its API contract, not a device execution result.
+
+## Blocklist outbound hash omission (2026-11-06)
+
+**Confirmed pinned mismatch/correction:** [reused builders/predicates, authored
+Java oracle and complete BMP reference](apk/2.26.43.72-blocklist-outbound-hash/README.md)
+show distinct rules: get omits only null/empty; block/unblock omit null/blank
+under Java UTF16 Character.isWhitespace OR isSpaceChar. Rust now preserves that
+distinction and sends nonblank values unchanged, without changing saved hashes.
+A Rust trim substitute would be wrong at U+001C..001F and U+0085.
+
+The independent Java21 oracle measures every UTF16 unit; the Rust predicate is
+checked against its entire true/false domain. Synthetic request/store controls
+cover ten hash cases for get/block/unblock and unchanged saved bytes. The old
+code fails the empty-hash get case. Host-Java reference is not Android/OEM
+execution; full runtime Unicode-version parity remains unobserved. No new
+sender, automatic request, state reset or live account operation added.
+
+Validation:1,521 workspace tests pass (9 result suites, four test threads).
+The two new regressions cover every UTF16 unit against the executed Java21
+reference and ten get/block/unblock hash cases; the old builder fails empty get.
+Strict workspace/all-target/all-feature Clippy, formatting, CLI reference
+regeneration, OpenAPI library coverage, APK coverage freshness and repository
+hygiene pass. Four reused DEX exports, regenerated oracle output, bundle
+checksums and subject APK hash match. No live result is claimed.
