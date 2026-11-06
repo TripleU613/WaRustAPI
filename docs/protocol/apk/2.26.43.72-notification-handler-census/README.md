@@ -65,10 +65,13 @@ then typed metadata, delete_all_data and0..20 collection entries. The
 return of the delete_all_data parser is not assigned here; its parsing alone
 is not proof of data deletion. Collection/version metadata is accumulated in
 maps; selected companion bootstrap state permits0l8.A07(name,version) and
-0aS.A0P calls. Full helper semantics, monotonicity and atomic persistence
-are not established by these names/calls. C6N schedules2JI selector6 on the
-base executor, while C6L/C6M return. That callback and its ACK ownership still
-need tracing. No generic server_sync ACK was added.
+0aS.A0P calls. The existing [server-sync lifecycle audit](../../server-sync-lifecycle.md)
+already establishes transactional dirty-version assignment (not max), bootstrap
+and pending-mutation gates, single-flight scheduling and ACK-before-async-result
+behavior. These are not newly unknown because this census retains a shorter
+trace. C6N schedules2JI selector6 on the base executor, while C6L/C6M return.
+The follow-up below identifies that callback as metrics. No generic server_sync
+ACK was added.
 
 15I.A09 checks code235 and first child only. Its selected branches handle log,
 abprops and push-config. The abprops path checks readiness and calls HBE.A00
@@ -90,3 +93,27 @@ server waits, outbound request or live account. Constructor counts do not prove
 ban causes or complete notification coverage.
 
 Checksums record every other file's bytes and SHA-256.
+
+## C6N completion callback is metrics, not ACK ownership — 2026-11-05
+
+**Confirmed static:**2JI.run discriminator6 selects1202. It reads14l.A03,
+returns via shared001c when empty, otherwise sums each Number.longValue minus1.
+The loop exit at123c jumps by0xf66 DEX code units to3108. It obtains0fz,
+constructs28R, stores the sum in28R.A00 and submits it to0NX.CSW, then clears
+the map and returns. No base notification ACK/deferral or sync dispatch occurs
+in these selected blocks. This is a bounded call-body result, not proof about
+all metrics-provider initialization effects or all other2JI discriminator arms.
+
+**Research reconciliation:** dirty-version persistence,0aS.A0P/A0Q and0gG.A00
+were rechecked against the current APK, but are already retained in the earlier
+lifecycle/versioned-fetch audits.0gG.A00's direct body is a provider lookup;
+transitive initialization is not known to be a no-op. The earlier full lifecycle
+trace proves14l does not defer ordinary ACKs: writes/scheduling precede normal
+base return, asynchronous results follow. C6N does not add a new gate to that
+ordering. The remaining implementation prerequisite is mapping actual Rust
+role/recovery/bootstrap/ready-mutation state and durable notification work,
+not waiting for this metrics callback. No dirty metadata should become an
+applied collection version or fabricate native preference defaults.
+
+No runtime change or live operation. This follow-up avoids duplicating existing
+bulk scheduler/version-store exports and retains only the newly traced callback.

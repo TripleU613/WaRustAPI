@@ -160,3 +160,14 @@ to14l (typed collection/bootstrap work), server235 to15I (log/abprops/push-confi
 follow-ups). Rust has no dedicated handler/ACK for either. Full state/helper/job
 and ACK ordering remain unported; no generic ACK, token fabrication or runtime
 change was added. [Census and complete selected handlers](apk/2.26.43.72-notification-handler-census/README.md).
+
+
+### Server-sync callback ownership reconciliation (2026-11-05)
+
+**Confirmed static:**14l.C6N ->2JI selector6 emits count-minus-one aggregate
+metrics and clears its counter map; it is not an ACK completion gate. The
+existing lifecycle audit already proves dirty-version assignment and normal
+ACK-before-async-result ordering. The constructor census now links that evidence
+instead of presenting it as newly unknown. Rust role/recovery/bootstrap and
+durable notification scheduling remain unported. No runtime change.
+[Callback evidence and limits](apk/2.26.43.72-notification-handler-census/README.md).

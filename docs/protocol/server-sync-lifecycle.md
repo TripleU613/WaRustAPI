@@ -169,3 +169,12 @@ The follow-up [fetch completion audit](app-state-fetch-completion.md) traces
 response categories, authenticated external data, error classification and
 per-collection commit/release boundaries. It retains the remaining downloader
 and recovery gaps without treating a captured result as completed sync.
+
+
+## Notification completion metrics follow-up (2026-11-05)
+
+**Confirmed static:**14l.C6N schedules2JI selector6. Its selected body sums
+`count - 1` across14l.A03 values, emits28R.A00 through0NX.CSW and clears the
+map. It does not claim/send an ACK or gate sync work. This closes that callback
+edge while leaving the role/recovery/durable-scheduler prerequisites above
+intact. [Checked bounded callback and census reconciliation](apk/2.26.43.72-notification-handler-census/README.md).

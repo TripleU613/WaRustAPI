@@ -1,3 +1,8 @@
+Server-sync completion callback identified as metrics/counter cleanup, not
+an ACK gate. Census reconciled with existing dirty-version/scheduling evidence;
+Rust lifecycle state mapping remains unported.
+[Evidence](docs/protocol/apk/2.26.43.72-notification-handler-census/README.md).
+
 Current notification census retains34 base-handler constructor bindings.
 Selected server_sync/server handlers expose collection/bootstrap/configuration
 obligations still absent from Rust; no generic ACK inferred.
