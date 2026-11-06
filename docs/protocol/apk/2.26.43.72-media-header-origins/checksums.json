@@ -1,0 +1,38 @@
+{
+  "README.md": {
+    "bytes": 4505,
+    "sha256": "4665c19bc6d8fa7417edf670932b8521718e0c209c72f859a2e08e6fef23ee26"
+  },
+  "descriptor-copy.txt": {
+    "bytes": 3843,
+    "sha256": "eb188a9c0e9b978c67cea84cffed9c540dab17e35b0757d62ed7e78724faef89"
+  },
+  "descriptor-factory.txt": {
+    "bytes": 3885,
+    "sha256": "c880ed9dc0b9b89116272d1c62a4209ae84161a2cc14900c5d622dac831e5b2e"
+  },
+  "descriptor-holder-callers.txt": {
+    "bytes": 474,
+    "sha256": "49ef676f3157e743b8a11fdb576a3f090325d8cd08bedd34f6af9ebfde931e5f"
+  },
+  "descriptor-holder.txt": {
+    "bytes": 609,
+    "sha256": "b944774bca82f4519825eb34df06543665c23dd06aaf294fa40b15fa92a93875"
+  },
+  "descriptor-writes.txt": {
+    "bytes": 86,
+    "sha256": "9b9de2faaf1501dbb7732684e5814ffe98d62498842e00b372efbf83929068ef"
+  },
+  "upload-alternate.txt": {
+    "bytes": 24149,
+    "sha256": "2801e8821d185bd75000b6ad2e0b1309db946d5241b2239b5a1a8d28f8c79d4b"
+  },
+  "upload-assembly.txt": {
+    "bytes": 23794,
+    "sha256": "0fdf1e8813905b9d58bd529074f40387a322e305fccb99f9bb5a850e8a31e47d"
+  },
+  "upload-dispatch.txt": {
+    "bytes": 10297,
+    "sha256": "9cd39dbfb5a0ac179c0ddcd51e6cd4ccc2c8567a04ff657e37370dbb9fd400d2"
+  }
+}

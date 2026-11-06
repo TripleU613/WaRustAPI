@@ -1,0 +1,147 @@
+{
+  "evidence_id": "ev_71530378a4035d7fef03d39a828ed6d84666285a1f505cbe4ae0b073b80e86e9",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "../android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.ACp",
+    "method_name": "A01",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-AbCJDw/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "load_apk",
+        "input": {
+          "path": "/tmp/rea-android-AbCJDw/target.apk",
+          "threads": 1,
+          "resources": "full"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-AbCJDw/target.apk\",\"class_count\":106897,\"raw_class_count\":106897,\"resource_count\":15728,\"load_duration_ms\":13622,\"decompile_timeout_ms\":90000,\"threads\":1,\"code_cache_size\":64,\"resources\":\"full\"}"
+            }
+          ]
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.ACp"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[],\"field_count\":0,\"full_name\":\"X.ACp\",\"name\":\"ACp\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":6,\"methods\":[{\"dex_descriptor\":\"()V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(): void\"},{\"dex_descriptor\":\"(Landroid/net/Uri;LX/MUS;LX/0jS;LX/ABC;LX/M2p;LX/MO0;Ljava/lang/Integer;Ljava/lang/String;IIZZZZ)LX/MJe;\",\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(android.net.Uri, X.MUS, X.0jS, X.ABC, X.M2p, X.MO0, java.lang.Integer, java.lang.String, int, int, boolean, boolean, boolean, boolean): X.MJe\"},{\"dex_descriptor\":\"(LX/0Vy;LX/09F;LX/8vK;LX/MO0;LX/GKI;LX/Ewh;LX/0jR;LX/Nc7;Ljava/lang/Long;Z)LX/MJe;\",\"is_constructor\":false,\"name\":\"A01\",\"def_pos\":0,\"signature\":\"A01(X.0Vy, X.09F, X.8vK, X.MO0, X.GKI, X.Ewh, X.0jR, X.Nc7, java.lang.Long, boolean): X.MJe\"},{\"dex_descriptor\":\"(LX/MUS;LX/0jS;LX/ABC;LX/M2p;LX/MO0;Ljava/io/File;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZZ)LX/MJe;\",\"is_constructor\":false,\"name\":\"A02\",\"def_pos\":0,\"signature\":\"A02(X.MUS, X.0jS, X.ABC, X.M2p, X.MO0, java.io.File, java.lang.Integer, java.lang.String, java.lang.String, java.lang.String, int, boolean, boolean): X.MJe\"},{\"dex_descriptor\":\"(LX/0jS;LX/M2p;LX/MO0;Ljava/io/File;Ljava/lang/String;IJJZ)LX/MJe;\",\"is_constructor\":false,\"name\":\"A03\",\"def_pos\":0,\"signature\":\"A03(X.0jS, X.M2p, X.MO0, java.io.File, java.lang.String, int, long, long, boolean): X.MJe\"},{\"dex_descriptor\":\"(Landroid/net/Uri;LX/MUS;LX/0jS;LX/M2p;LX/MO0;Ljava/lang/String;IZZZZ)LX/MJe;\",\"is_constructor\":false,\"name\":\"A04\",\"def_pos\":0,\"signature\":\"A04(android.net.Uri, X.MUS, X.0jS, X.M2p, X.MO0, java.lang.String, int, boolean, boolean, boolean, boolean): X.MJe\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.ACp",
+          "method_name": "A01",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_name\":\"A01\",\"overload_count\":1,\"body\":\"    /* JADX WARN: Code duplicated, block: B:33:0x00f7  */\\n    /* JADX WARN: Code duplicated, block: B:89:0x0231  */\\n    /* JADX WARN: Code duplicated, block: B:98:0x0276  */\\n    /* JADX WARN: Multi-variable type inference failed */\\n    public static final MJe A01(C0Vy c0Vy, C09F c09f, C8vK c8vK, MO0 mo0, GKI gki, Ewh ewh, C0jR c0jR, Nc7 nc7, Long l, boolean z) {\\n        C1cO c1cO;\\n        boolean z2;\\n        boolean z3;\\n        ABC abc;\\n        Integer numValueOf;\\n        boolean zA16;\\n        boolean z4;\\n        boolean zA01;\\n        boolean z5;\\n        String str;\\n        C2IU c2iu;\\n        C8tC c8tC;\\n        C2IU c2iu2;\\n        C2LE.A17(c8vK, c09f, c0Vy, 0);\\n        C2L9.A1E(c0jR, 5, ewh);\\n        C00l.A09(gki, 8);\\n        AhC ahC \\u003d (AhC) nc7;\\n        String str2 \\u003d C8t5.A0d(ahC.Asa()).A0a;\\n        Integer num \\u003d mo0.A05;\\n        Iterator it \\u003d nc7.Ak7().iterator();\\n        while (true) {\\n            c1cO \\u003d null;\\n            if (!it.hasNext()) {\\n                break;\\n            }\\n            C0DY c0dy \\u003d C8t3.A0Q(it).A00;\\n            if ((c0dy instanceof C1cO) \\u0026\\u0026 (c1cO \\u003d (C1cO) c0dy) !\\u003d null) {\\n                break;\\n            }\\n        }\\n        CopyOnWriteArrayList copyOnWriteArrayList \\u003d ahC.A07;\\n        boolean z6 \\u003d copyOnWriteArrayList instanceof Collection;\\n        if (!z6 || !copyOnWriteArrayList.isEmpty()) {\\n            Iterator it2 \\u003d copyOnWriteArrayList.iterator();\\n            while (true) {\\n                if (!it2.hasNext()) {\\n                    z2 \\u003d false;\\n                    break;\\n                }\\n                Object next \\u003d it2.next();\\n                C00l.A08(next);\\n                C1eP c1eP \\u003d (C1eP) next;\\n                C00l.A09(c1eP, 1);\\n                if (c0jR.A00(c1eP)) {\\n                    z2 \\u003d true;\\n                    break;\\n                }\\n            }\\n        } else {\\n            z2 \\u003d false;\\n            break;\\n        }\\n        C1eP c1ePAsa \\u003d nc7.Asa();\\n        boolean zBNg \\u003d nc7.BNg();\\n        boolean zBN7 \\u003d nc7.BN7();\\n        if (!z6 || !copyOnWriteArrayList.isEmpty()) {\\n            Iterator it3 \\u003d copyOnWriteArrayList.iterator();\\n            while (true) {\\n                if (!it3.hasNext()) {\\n                    z3 \\u003d false;\\n                    break;\\n                }\\n                if (C8t1.A0o(it3).Ail() \\u003d\\u003d 81) {\\n                    z3 \\u003d true;\\n                    break;\\n                }\\n            }\\n        } else {\\n            z3 \\u003d false;\\n            break;\\n        }\\n        C18J c18jAlF \\u003d nc7.AlF();\\n        String strA0F \\u003d null;\\n        if (c18jAlF !\\u003d null) {\\n            if (!(c18jAlF instanceof C9L3) || (c2iu2 \\u003d (C2IU) c18jAlF) \\u003d\\u003d null) {\\n                strA0F \\u003d gki.A0F(c18jAlF);\\n            } else {\\n                Dwc dwc \\u003d c2iu2.A09;\\n                strA0F \\u003d gki.A0E(((F1A) dwc).A00, ((F1A) dwc).A01);\\n            }\\n        }\\n        C8tC c8tCA0d \\u003d C8t5.A0d(c1ePAsa);\\n        c8tCA0d.A06();\\n        if (c1ePAsa instanceof C9JS) {\\n            C9JS c9js \\u003d (C9JS) c1ePAsa;\\n            abc \\u003d c9js.A07;\\n            zA16 \\u003d c9js.A16();\\n            numValueOf \\u003d Integer.valueOf(JXf.A00(c9js));\\n        } else {\\n            abc \\u003d null;\\n            numValueOf \\u003d null;\\n            zA16 \\u003d false;\\n        }\\n        M2p m2pA01 \\u003d c8vK.A01(num, Integer.valueOf(c8tCA0d.A0A), c1ePAsa.Ail(), zBNg);\\n        String str3 \\u003d c8tCA0d.A0W;\\n        File fileA06 \\u003d c8tCA0d.A06();\\n        String strAt0 \\u003d c1ePAsa.At0();\\n        String strAsq \\u003d c1ePAsa.Asq();\\n        String strAsz \\u003d c1ePAsa.Asz();\\n        C0jS c0jSA01 \\u003d MTk.A01(c1ePAsa);\\n        int i \\u003d c8tCA0d.A06;\\n        int iAt1 \\u003d c1ePAsa.At1();\\n        long j \\u003d c8tCA0d.A0L;\\n        long j2 \\u003d c8tCA0d.A0M;\\n        KmN kmN \\u003d c8tCA0d.A0N;\\n        boolean z7 \\u003d !c8tCA0d.A0s;\\n        boolean z8 \\u003d c8tCA0d.A0r;\\n        int i2 \\u003d c8tCA0d.A0A;\\n        if (!ADg.A06(c1ePAsa)) {\\n            z4 \\u003d c8tCA0d.A0P !\\u003d null;\\n        }\\n        MMR mmr \\u003d new MMR(c1cO, (!(c1ePAsa instanceof C9L3) || (c2iu \\u003d (C2IU) c1ePAsa) \\u003d\\u003d null || (c8tC \\u003d c2iu.A07) \\u003d\\u003d null || c8tC.A0A !\\u003d 8) ? null : ((F1A) c2iu.A09).A01, c1ePAsa.Apw(), kmN, c0jSA01, c8tCA0d.A0P, abc, m2pA01, fileA06, numValueOf, str3, strAt0, strAsq, strAsz, strA0F, i, iAt1, i2, j, j2, zBNg, zBN7, z3, z2, z7, z, z8, zA16, z4, c8tCA0d.A0q);\\n        C0DY c0dyA0d \\u003d C8t1.A0d(nc7.Asa());\\n        C8tB c8tBA01 \\u003d c0dyA0d !\\u003d null ? ewh.A01(c0dyA0d) : C8tB.A02;\\n        if (c8tBA01 \\u003d\\u003d C8tB.A04) {\\n            c8tBA01 \\u003d C8tB.A02;\\n        }\\n        boolean zBNW \\u003d nc7.BNW(c0Vy, c09f);\\n        C1eP c1ePAsa2 \\u003d nc7.Asa();\\n        C8tC c8tCA0d2 \\u003d C8t5.A0d(c1ePAsa2);\\n        MUS musA00 \\u003d MUS.A00(c8tCA0d2, c1ePAsa2.BCW());\\n        C1fV c1fVAtA \\u003d c1ePAsa2.AtA();\\n        boolean zA0a \\u003d C0Dn.A0a(C8t1.A0d(c1ePAsa2));\\n        boolean z9 \\u003d !zA0a;\\n        C0jS c0jSA02 \\u003d MTk.A01(c1ePAsa2);\\n        File fileA07 \\u003d c8tCA0d2.A06();\\n        long jAt7 \\u003d c1ePAsa2.At7();\\n        String strAsq2 \\u003d c1ePAsa2.Asq();\\n        String strAsm \\u003d c1ePAsa2.Asm();\\n        int iAt2 \\u003d c1ePAsa2.At1();\\n        String str4 \\u003d zA0a ? \\\"newsletter\\\" : \\\"mms\\\";\\n        int[] iArrAbZ \\u003d c1fVAtA !\\u003d null ? c1fVAtA.AbZ() : null;\\n        int i3 \\u003d c8tCA0d2.A05;\\n        List listA1H \\u003d C07Z.A1H(copyOnWriteArrayList);\\n        ArrayList arrayListA19 \\u003d C1Xl.A19(listA1H);\\n        Iterator it4 \\u003d listA1H.iterator();\\n        while (it4.hasNext()) {\\n            arrayListA19.add(C8t5.A0c(it4).A01);\\n        }\\n        C0jd c0jd \\u003d MWH.A0A;\\n        if (c1ePAsa2 instanceof C18U) {\\n            zA01 \\u003d Exc.A01((C18U) c1ePAsa2);\\n        } else if (c1ePAsa2 instanceof AQ5) {\\n            int i4 \\u003d ((AQ5) c1ePAsa2).A00;\\n            if (i4 !\\u003d 3) {\\n                zA01 \\u003d false;\\n                if (i4 \\u003d\\u003d 74) {\\n                    zA01 \\u003d true;\\n                }\\n            } else {\\n                zA01 \\u003d true;\\n            }\\n        } else {\\n            zA01 \\u003d false;\\n        }\\n        int iA00 \\u003d Lfy.A00(nc7);\\n        boolean z10 \\u003d ahC.A04;\\n        C8tC c8tCAsi \\u003d c1ePAsa2.Asi();\\n        String str5 \\u003d c8tCAsi !\\u003d null ? c8tCAsi.A0l : null;\\n        C8tC c8tCAsi2 \\u003d c1ePAsa2.Asi();\\n        if (c8tCAsi2 !\\u003d null \\u0026\\u0026 (str \\u003d c8tCAsi2.A0l) !\\u003d null) {\\n            z5 \\u003d str.length() \\u003d\\u003d 0;\\n        }\\n        return new MJe(mo0, new M5T(C8t1.A0d(c1ePAsa2), musA00, c8tBA01, c0jSA02, null, fileA07, l, strAsq2, strAsm, str4, null, str5, arrayListA19, null, iArrAbZ, iAt2, i3, iA00, jAt7, zBNW, true, z9, false, zA01, z10, !z5, false), mmr, str2, ahC.A00);\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.ACp\",\"full_name\":\"X.ACp.A01\",\"mode\":\"java\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.ACp",
+    "method": {
+      "name": "A01",
+      "reported_signature": "A01(X.0Vy, X.09F, X.8vK, X.MO0, X.GKI, X.Ewh, X.0jR, X.Nc7, java.lang.Long, boolean): X.MJe",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/0Vy;LX/09F;LX/8vK;LX/MO0;LX/GKI;LX/Ewh;LX/0jR;LX/Nc7;Ljava/lang/Long;Z)LX/MJe;"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:33:0x00f7  */\n    /* JADX WARN: Code duplicated, block: B:89:0x0231  */\n    /* JADX WARN: Code duplicated, block: B:98:0x0276  */\n    /* JADX WARN: Multi-variable type inference failed */\n    public static final MJe A01(C0Vy c0Vy, C09F c09f, C8vK c8vK, MO0 mo0, GKI gki, Ewh ewh, C0jR c0jR, Nc7 nc7, Long l, boolean z) {\n        C1cO c1cO;\n        boolean z2;\n        boolean z3;\n        ABC abc;\n        Integer numValueOf;\n        boolean zA16;\n        boolean z4;\n        boolean zA01;\n        boolean z5;\n        String str;\n        C2IU c2iu;\n        C8tC c8tC;\n        C2IU c2iu2;\n        C2LE.A17(c8vK, c09f, c0Vy, 0);\n        C2L9.A1E(c0jR, 5, ewh);\n        C00l.A09(gki, 8);\n        AhC ahC = (AhC) nc7;\n        String str2 = C8t5.A0d(ahC.Asa()).A0a;\n        Integer num = mo0.A05;\n        Iterator it = nc7.Ak7().iterator();\n        while (true) {\n            c1cO = null;\n            if (!it.hasNext()) {\n                break;\n            }\n            C0DY c0dy = C8t3.A0Q(it).A00;\n            if ((c0dy instanceof C1cO) && (c1cO = (C1cO) c0dy) != null) {\n                break;\n            }\n        }\n        CopyOnWriteArrayList copyOnWriteArrayList = ahC.A07;\n        boolean z6 = copyOnWriteArrayList instanceof Collection;\n        if (!z6 || !copyOnWriteArrayList.isEmpty()) {\n            Iterator it2 = copyOnWriteArrayList.iterator();\n            while (true) {\n                if (!it2.hasNext()) {\n                    z2 = false;\n                    break;\n                }\n                Object next = it2.next();\n                C00l.A08(next);\n                C1eP c1eP = (C1eP) next;\n                C00l.A09(c1eP, 1);\n                if (c0jR.A00(c1eP)) {\n                    z2 = true;\n                    break;\n                }\n            }\n        } else {\n            z2 = false;\n            break;\n        }\n        C1eP c1ePAsa = nc7.Asa();\n        boolean zBNg = nc7.BNg();\n        boolean zBN7 = nc7.BN7();\n        if (!z6 || !copyOnWriteArrayList.isEmpty()) {\n            Iterator it3 = copyOnWriteArrayList.iterator();\n            while (true) {\n                if (!it3.hasNext()) {\n                    z3 = false;\n                    break;\n                }\n                if (C8t1.A0o(it3).Ail() == 81) {\n                    z3 = true;\n                    break;\n                }\n            }\n        } else {\n            z3 = false;\n            break;\n        }\n        C18J c18jAlF = nc7.AlF();\n        String strA0F = null;\n        if (c18jAlF != null) {\n            if (!(c18jAlF instanceof C9L3) || (c2iu2 = (C2IU) c18jAlF) == null) {\n                strA0F = gki.A0F(c18jAlF);\n            } else {\n                Dwc dwc = c2iu2.A09;\n                strA0F = gki.A0E(((F1A) dwc).A00, ((F1A) dwc).A01);\n            }\n        }\n        C8tC c8tCA0d = C8t5.A0d(c1ePAsa);\n        c8tCA0d.A06();\n        if (c1ePAsa instanceof C9JS) {\n            C9JS c9js = (C9JS) c1ePAsa;\n            abc = c9js.A07;\n            zA16 = c9js.A16();\n            numValueOf = Integer.valueOf(JXf.A00(c9js));\n        } else {\n            abc = null;\n            numValueOf = null;\n            zA16 = false;\n        }\n        M2p m2pA01 = c8vK.A01(num, Integer.valueOf(c8tCA0d.A0A), c1ePAsa.Ail(), zBNg);\n        String str3 = c8tCA0d.A0W;\n        File fileA06 = c8tCA0d.A06();\n        String strAt0 = c1ePAsa.At0();\n        String strAsq = c1ePAsa.Asq();\n        String strAsz = c1ePAsa.Asz();\n        C0jS c0jSA01 = MTk.A01(c1ePAsa);\n        int i = c8tCA0d.A06;\n        int iAt1 = c1ePAsa.At1();\n        long j = c8tCA0d.A0L;\n        long j2 = c8tCA0d.A0M;\n        KmN kmN = c8tCA0d.A0N;\n        boolean z7 = !c8tCA0d.A0s;\n        boolean z8 = c8tCA0d.A0r;\n        int i2 = c8tCA0d.A0A;\n        if (!ADg.A06(c1ePAsa)) {\n            z4 = c8tCA0d.A0P != null;\n        }\n        MMR mmr = new MMR(c1cO, (!(c1ePAsa instanceof C9L3) || (c2iu = (C2IU) c1ePAsa) == null || (c8tC = c2iu.A07) == null || c8tC.A0A != 8) ? null : ((F1A) c2iu.A09).A01, c1ePAsa.Apw(), kmN, c0jSA01, c8tCA0d.A0P, abc, m2pA01, fileA06, numValueOf, str3, strAt0, strAsq, strAsz, strA0F, i, iAt1, i2, j, j2, zBNg, zBN7, z3, z2, z7, z, z8, zA16, z4, c8tCA0d.A0q);\n        C0DY c0dyA0d = C8t1.A0d(nc7.Asa());\n        C8tB c8tBA01 = c0dyA0d != null ? ewh.A01(c0dyA0d) : C8tB.A02;\n        if (c8tBA01 == C8tB.A04) {\n            c8tBA01 = C8tB.A02;\n        }\n        boolean zBNW = nc7.BNW(c0Vy, c09f);\n        C1eP c1ePAsa2 = nc7.Asa();\n        C8tC c8tCA0d2 = C8t5.A0d(c1ePAsa2);\n        MUS musA00 = MUS.A00(c8tCA0d2, c1ePAsa2.BCW());\n        C1fV c1fVAtA = c1ePAsa2.AtA();\n        boolean zA0a = C0Dn.A0a(C8t1.A0d(c1ePAsa2));\n        boolean z9 = !zA0a;\n        C0jS c0jSA02 = MTk.A01(c1ePAsa2);\n        File fileA07 = c8tCA0d2.A06();\n        long jAt7 = c1ePAsa2.At7();\n        String strAsq2 = c1ePAsa2.Asq();\n        String strAsm = c1ePAsa2.Asm();\n        int iAt2 = c1ePAsa2.At1();\n        String str4 = zA0a ? \"newsletter\" : \"mms\";\n        int[] iArrAbZ = c1fVAtA != null ? c1fVAtA.AbZ() : null;\n        int i3 = c8tCA0d2.A05;\n        List listA1H = C07Z.A1H(copyOnWriteArrayList);\n        ArrayList arrayListA19 = C1Xl.A19(listA1H);\n        Iterator it4 = listA1H.iterator();\n        while (it4.hasNext()) {\n            arrayListA19.add(C8t5.A0c(it4).A01);\n        }\n        C0jd c0jd = MWH.A0A;\n        if (c1ePAsa2 instanceof C18U) {\n            zA01 = Exc.A01((C18U) c1ePAsa2);\n        } else if (c1ePAsa2 instanceof AQ5) {\n            int i4 = ((AQ5) c1ePAsa2).A00;\n            if (i4 != 3) {\n                zA01 = false;\n                if (i4 == 74) {\n                    zA01 = true;\n                }\n            } else {\n                zA01 = true;\n            }\n        } else {\n            zA01 = false;\n        }\n        int iA00 = Lfy.A00(nc7);\n        boolean z10 = ahC.A04;\n        C8tC c8tCAsi = c1ePAsa2.Asi();\n        String str5 = c8tCAsi != null ? c8tCAsi.A0l : null;\n        C8tC c8tCAsi2 = c1ePAsa2.Asi();\n        if (c8tCAsi2 != null && (str = c8tCAsi2.A0l) != null) {\n            z5 = str.length() == 0;\n        }\n        return new MJe(mo0, new M5T(C8t1.A0d(c1ePAsa2), musA00, c8tBA01, c0jSA02, null, fileA07, l, strAsq2, strAsm, str4, null, str5, arrayListA19, null, iArrAbZ, iAt2, i3, iA00, jAt7, zBNW, true, z9, false, zA01, z10, !z5, false), mmr, str2, ahC.A00);\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

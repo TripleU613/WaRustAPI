@@ -1,0 +1,80 @@
+
+# class: LX/M5T;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLLLJ)  # .registers 50
+    # full signature: LX/M5T;->A00(LX/M83;Ljava/io/File;Ljava/lang/String;J)LX/M5T;
+    0000..0004  move-object/from16  v14, v44
+    0004..0008  move-object/from16  v12, v45
+    0008..000c  if-eqz  v45, +0x8
+    000c..0010  iget-object  v0, v12, LX/M83;->A01:LX/M8D;
+    0010..0014  iget-object  v11, v0, LX/M8D;->A00:LX/MUS;
+    0014..0018  if-nez  v11, +0x4
+    0018..001c  iget-object  v11, v14, LX/M5T;->A07:LX/MUS;
+    001c..0020  iget-object  v0, v14, LX/M5T;->A09:LX/0jS;
+    0020..0024  move-object/from16  v25, v0
+    0024..0028  iget-object  v0, v14, LX/M5T;->A08:LX/8tB;
+    0028..002c  move-object/from16  v43, v0
+    002c..0030  iget  v0, v14, LX/M5T;->A03:I
+    0030..0034  move/from16  v24, v0
+    0034..0038  iget-boolean  v0, v14, LX/M5T;->A0L:Z
+    0038..003c  move/from16  v21, v0
+    003c..0040  iget-boolean  v0, v14, LX/M5T;->A0J:Z
+    0040..0044  move/from16  v19, v0
+    0044..0048  iget-boolean  v0, v14, LX/M5T;->A0K:Z
+    0048..004c  move/from16  v18, v0
+    004c..0050  iget-boolean  v0, v14, LX/M5T;->A0O:Z
+    0050..0054  move/from16  v17, v0
+    0054..0058  iget-object  v0, v14, LX/M5T;->A0R:[I
+    0058..005c  move-object/from16  v16, v0
+    005c..0060  iget  v13, v14, LX/M5T;->A02:I
+    0060..0064  iget-boolean  v10, v14, LX/M5T;->A0M:Z
+    0064..0068  iget-object  v9, v14, LX/M5T;->A0H:Ljava/util/List;
+    0068..006c  iget  v8, v14, LX/M5T;->A04:I
+    006c..0070  iget-boolean  v7, v14, LX/M5T;->A0P:Z
+    0070..0074  iget-object  v6, v14, LX/M5T;->A0D:Ljava/lang/String;
+    0074..0078  iget-object  v5, v14, LX/M5T;->A00:Ljava/lang/String;
+    0078..007c  iget-boolean  v4, v14, LX/M5T;->A01:Z
+    007c..0080  iget-object  v3, v14, LX/M5T;->A0I:Ljava/util/Map;
+    0080..0084  iget-boolean  v2, v14, LX/M5T;->A0N:Z
+    0084..0088  iget-object  v1, v14, LX/M5T;->A06:LX/0DY;
+    0088..008c  iget-object  v0, v14, LX/M5T;->A0C:Ljava/lang/Long;
+    008c..0090  iget-object  v15, v14, LX/M5T;->A0G:Ljava/lang/String;
+    0090..0094  move-object/from16  v26, v47
+    0094..0098  move-object/from16  v14, v26
+    0098..009e  invoke-static  {v14, v15}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    009e..00a0  move-result  v14
+    00a0..00a4  if-nez  v14, +0x3
+    00a4..00a6  const/4  v0, #0x0
+    00a6..00aa  const/16  v22, #0x0
+    00aa..00ae  new-instance  v14, LX/M5T;
+    00ae..00b2  move-object/from16  v20, v46
+    00b2..00b6  move-wide/from16  v33, v48
+    00b6..00ba  move-object/from16  v23, v22
+    00ba..00be  move/from16  v30, v24
+    00be..00c2  move/from16  v31, v13
+    00c2..00c6  move/from16  v32, v8
+    00c6..00ca  move/from16  v35, v21
+    00ca..00ce  move/from16  v36, v19
+    00ce..00d2  move/from16  v37, v18
+    00d2..00d6  move/from16  v38, v17
+    00d6..00da  move/from16  v39, v10
+    00da..00de  move/from16  v40, v7
+    00de..00e2  move/from16  v41, v4
+    00e2..00e6  move/from16  v42, v2
+    00e6..00ea  move-object/from16  v18, v25
+    00ea..00ee  move-object/from16  v19, v12
+    00ee..00f2  move-object/from16  v21, v0
+    00f2..00f6  move-object/from16  v24, v26
+    00f6..00fa  move-object/from16  v25, v6
+    00fa..00fe  move-object/from16  v26, v5
+    00fe..0102  move-object/from16  v27, v9
+    0102..0106  move-object/from16  v28, v3
+    0106..010a  move-object/from16  v29, v16
+    010a..010c  move-object  v15, v1
+    010c..0110  move-object/from16  v16, v11
+    0110..0114  move-object/from16  v17, v43
+    0114..011a  invoke-direct/range  {v14..v42}, LX/M5T;-><init>(LX/0DY;LX/MUS;LX/8tB;LX/0jS;LX/M83;Ljava/io/File;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;[IIIIJZZZZZZZZ)V
+    011a..011c  return-object  v14
+    # exception table: 0 try range(s)
+.end method

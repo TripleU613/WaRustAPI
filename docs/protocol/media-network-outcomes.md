@@ -669,3 +669,18 @@ MetaAI branches do not prove standard uploads omit extra headers.
 providers, all constructor paths and JAT platform defaults. No demonstrated
 missing universal header, Rust behavior change or live acceptance claim. Next:
 trace the original MJe.A02 descriptor upstream without assuming it is empty.
+
+## Original media extra headers traced 2026-11-06
+
+**Confirmed selected static:** ordinary-message ACp.A01 passes a null header map
+to M5T, then wraps it in MJe. The other selected MJe factories use MFB.A00 with
+null maps; MFB.A01 also supplies null. M5T.A00 and Mtt.A05 copies preserve the
+map. With the earlier newsletter-only defaults, this establishes no missing
+extra header on the traced ordinary upload descriptor chain. Separate M5I.A00
+builds backup authorization/metadata headers under kind backup; do not add them
+to ordinary uploads. [Full origin censuses, methods, argument binding and REA](apk/2.26.43.72-media-header-origins/README.md).
+
+**Unknown:** native default headers, effective transport and complete body-mode
+binding, newsletter callbacks, backup subsystem and server mandatory checks.
+No runtime behavior changed, new sender or live validation. Next trace is the
+one-shot fixed-length/body-mode selector, which extra-map absence cannot prove.

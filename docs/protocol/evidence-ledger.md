@@ -1,3 +1,10 @@
+2026-11-06 — **Original ordinary-upload extra-header map traced.**
+
+Ordinary message assembly supplies null; selected factories do likewise and
+copies preserve it. Nonempty authorization/metadata map belongs to backup.
+[Complete pinned origins and remaining transport/body-mode scope](media-network-outcomes.md#original-media-extra-headers-traced-2026-11-06).
+No Rust header change or live operation.
+
 2026-11-06 — **Media header producer scope narrowed.**
 
 Provider aggregation keys only newsletter; descriptor maps override defaults.

@@ -1,0 +1,91 @@
+
+# class: LX/MFB;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLLLLIZZ)  # .registers 38
+    # full signature: LX/MFB;->A00(LX/MUS;LX/8tB;LX/0jS;Ljava/lang/String;IZZ)LX/M5T;
+    0000..0004  move-object/from16  v6, v33
+    0004..000a  invoke-static  {v6}, LX/MYf;->A06(LX/0jS;)Z
+    000a..000c  move-result  v0
+    000c..0010  if-eqz  v0, +0x43
+    0010..0014  const-string  v12, "newsletter"
+    0014..0018  xor-int/lit8  v25, v0, #0x1
+    0018..001a  const/4  v0, #0x3
+    001a..001e  move/from16  v1, v35
+    001e..0022  if-eq  v1, v0, +0xc
+    0022..0026  const/16  v0, #0x31
+    0026..002a  if-eq  v1, v0, +0x8
+    002a..002e  const/16  v0, #0x4a
+    002e..0032  const/16  v27, #0x0
+    0032..0036  if-ne  v1, v0, +0x4
+    0036..003a  const/16  v27, #0x1
+    003a..003c  const/4  v3, #0x0
+    003c..0040  const-wide/16  v21, #0x0
+    0040..0044  const/16  v20, #0x1
+    0044..0048  const/16  v19, #0x0
+    0048..004c  new-instance  v2, LX/M5T;
+    004c..004e  move-object  v8, v3
+    004e..0050  move-object  v9, v3
+    0050..0052  move-object  v10, v3
+    0052..0054  move-object  v11, v3
+    0054..0056  move-object  v14, v3
+    0056..0058  move-object  v15, v3
+    0058..005c  move-object/from16  v16, v3
+    005c..0060  move-object/from16  v17, v3
+    0060..0064  move/from16  v28, v19
+    0064..0068  move/from16  v29, v19
+    0068..006c  move/from16  v30, v19
+    006c..0070  move-object/from16  v4, v31
+    0070..0074  move-object/from16  v5, v32
+    0074..0078  move-object/from16  v13, v34
+    0078..007c  move/from16  v24, v36
+    007c..0080  move/from16  v23, v37
+    0080..0082  move-object  v7, v3
+    0082..0086  move/from16  v18, v1
+    0086..008a  move/from16  v26, v19
+    008a..0090  invoke-direct/range  {v2..v30}, LX/M5T;-><init>(LX/0DY;LX/MUS;LX/8tB;LX/0jS;LX/M83;Ljava/io/File;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;[IIIIJZZZZZZZZ)V
+    0090..0092  return-object  v2
+    0092..0096  const-string  v12, "optimistic"
+    0096..0098  goto  -0x41
+    # exception table: 0 try range(s)
+.end method
+
+.method public A01(LLLLLI)  # .registers 34
+    # full signature: LX/MFB;->A01(LX/8tB;LX/0jS;LX/M83;Ljava/io/File;I)LX/M5T;
+    0000..0004  move-object/from16  v4, v30
+    0004..000a  invoke-static  {v4}, LX/MYf;->A06(LX/0jS;)Z
+    000a..000c  move-result  v0
+    000c..0010  xor-int/lit8  v23, v0, #0x1
+    0010..0014  if-eqz  v0, +0x30
+    0014..0018  const-string  v10, "newsletter"
+    0018..001a  const/4  v1, #0x0
+    001a..001e  const/16  v21, #0x1
+    001e..0022  const-wide/16  v19, #0x0
+    0022..0026  const/16  v16, #0x0
+    0026..002a  new-instance  v0, LX/M5T;
+    002a..002c  move-object  v7, v1
+    002c..002e  move-object  v8, v1
+    002e..0030  move-object  v9, v1
+    0030..0032  move-object  v11, v1
+    0032..0034  move-object  v12, v1
+    0034..0036  move-object  v13, v1
+    0036..0038  move-object  v14, v1
+    0038..003a  move-object  v15, v1
+    003a..003e  move/from16  v24, v16
+    003e..0042  move/from16  v25, v16
+    0042..0046  move/from16  v26, v16
+    0046..004a  move/from16  v27, v16
+    004a..004e  move/from16  v28, v21
+    004e..0052  move-object/from16  v3, v29
+    0052..0056  move-object/from16  v5, v31
+    0056..005a  move-object/from16  v6, v32
+    005a..005e  move/from16  v18, v33
+    005e..0060  move-object  v2, v1
+    0060..0064  move/from16  v17, v16
+    0064..0068  move/from16  v22, v21
+    0068..006e  invoke-direct/range  {v0..v28}, LX/M5T;-><init>(LX/0DY;LX/MUS;LX/8tB;LX/0jS;LX/M83;Ljava/io/File;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;[IIIIJZZZZZZZZ)V
+    006e..0070  return-object  v0
+    0070..0074  const-string  v10, "mms"
+    0074..0076  goto  -0x2e
+    # exception table: 0 try range(s)
+.end method

@@ -18440,5 +18440,13 @@
     "x-library": [],
     "description": "Static inspection only: newsletter-key provider aggregation, descriptor-over-default merge precedence and standard voice descriptor map preservation. No new product route, mandatory header, runtime behavior or live validation. Original standard map producer and JAT defaults remain unknown.",
     "evidence": "docs/protocol/media-network-outcomes.md#media-header-producer-scope-2026-11-06"
+},
+  "x-media-header-origin-research": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Static xtask and REA evidence: ordinary-message descriptor map is null; selected factories also null and copies preserve maps. Separate backup factory constructs backup authorization/metadata headers. No new product command, HTTP route, request header, response recognizer or runtime behavior. Native default headers and effective body-mode selection remain unverified.",
+    "evidence": "docs/protocol/media-network-outcomes.md#original-media-extra-headers-traced-2026-11-06"
 }
 }
