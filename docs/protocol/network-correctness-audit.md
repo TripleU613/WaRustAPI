@@ -4027,3 +4027,15 @@ without a transaction. Cache removal alone is not universal commit proof.
 [Exact methods,975-ID batches and backend/rollback/helper limits](apk/2.26.43.72-count-completion-retirement/README.md).
 This is stanza-row retirement, distinct from confirmed pre-ACK watermark
 deletion. No Rust deletion, replay, retry or live operation added.
+
+### Queue transaction and retirement share a memoized database provider (2026-11-05)
+
+**Confirmed static,43.72:** manager transaction supplier and stanza retirement
+supplier both resolve provider0xc3e, then0Xd.A00. Global provider-ID caching
+and owner lazy caching support the same memoized0Xp within a stable cache
+lifetime. Its646a backend choice occurs once per owner, not per operation.
+[Seventeen exact methods and stable-lifetime/configuration limits](apk/2.26.43.72-count-database-provider/README.md).
+0Xp.A07 can construct0aq or0ar; effective branch, connection ownership,
+provider reset and crash/disk ambiguity still need tracing. Shared helper
+identity alone is not full atomicity proof. No Rust backend switch, ACK,
+replay or live account operation changed.

@@ -1,0 +1,28 @@
+
+# class: LX/0Xp;
+# extends: Landroid/database/sqlite/SQLiteOpenHelper;
+
+.method public A07(L)  # .registers 7
+    # full signature: LX/0Xp;->A07()LX/0aq;
+    0000..0002  move-object  v2, v6
+    0002..0006  iget-object  v0, v6, LX/0Xp;->A03:LX/05a;
+    0006..000a  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    000a..0010  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0010..0012  move-result-object  v1
+    0012..0016  check-cast  v1, LX/0Gz;
+    0016..001a  iget-object  v0, v6, LX/0Xp;->A08:Ljava/util/concurrent/locks/ReentrantReadWriteLock;
+    001a..0020  invoke-virtual  {v0}, Ljava/util/concurrent/locks/ReentrantReadWriteLock;->readLock()Ljava/util/concurrent/locks/ReentrantReadWriteLock$ReadLock;
+    0020..0022  move-result-object  v4
+    0022..0024  const/4  v5, #0x1
+    0024..0028  iget-object  v3, v1, LX/0Gz;->A01:LX/0H0;
+    0028..002c  iget-boolean  v0, v3, LX/0H0;->A03:Z
+    002c..0030  if-eqz  v0, +0xa
+    0030..0034  iget-object  v1, v1, LX/0Gz;->A00:LX/08q;
+    0034..0038  new-instance  v0, LX/0ar;
+    0038..003e  invoke-direct/range  {v0..v5}, LX/0ar;-><init>(LX/08q;LX/0HH;LX/0H0;Ljava/util/concurrent/locks/ReentrantReadWriteLock$ReadLock;Z)V
+    003e..0040  return-object  v0
+    0040..0044  new-instance  v0, LX/0aq;
+    0044..004a  invoke-direct  {v0, v6, v4, v5}, LX/0aq;-><init>(LX/0HH;Ljava/util/concurrent/locks/ReentrantReadWriteLock$ReadLock;Z)V
+    004a..004c  return-object  v0
+    # exception table: 0 try range(s)
+.end method

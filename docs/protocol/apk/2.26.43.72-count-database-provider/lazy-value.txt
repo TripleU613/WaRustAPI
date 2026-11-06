@@ -1,0 +1,29 @@
+
+# class: LX/00q;
+# extends: Ljava/lang/Object;
+
+.method public getValue(L)  # .registers 4
+    # full signature: LX/00q;->getValue()Ljava/lang/Object;
+    0000..0004  iget-object  v1, v3, LX/00q;->_value:Ljava/lang/Object;
+    0004..0008  sget-object  v0, LX/00r;->A00:LX/00r;
+    0008..000c  if-ne  v1, v0, +0x1c
+    000c..0010  iget-object  v2, v3, LX/00q;->lock:Ljava/lang/Object;
+    0010..0012  monitor-enter
+    0012..0016  iget-object  v1, v3, LX/00q;->_value:Ljava/lang/Object;
+    0016..001a  if-ne  v1, v0, +0x10
+    001a..001e  iget-object  v0, v3, LX/00q;->initializer:Lkotlin/jvm/functions/Function0;
+    001e..0024  invoke-static  {v0}, LX/00l;->A08(Ljava/lang/Object;)V
+    0024..002a  invoke-interface  {v0}, Lkotlin/jvm/functions/Function0;->invoke()Ljava/lang/Object;
+    002a..002c  move-result-object  v1
+    002c..0030  iput-object  v1, v3, LX/00q;->_value:Ljava/lang/Object;
+    0030..0032  const/4  v0, #0x0
+    0032..0036  iput-object  v0, v3, LX/00q;->initializer:Lkotlin/jvm/functions/Function0;
+    0036..0038  monitor-exit
+    0038..003a  return-object  v1
+    003a..003c  move-exception  v0
+    003c..003e  monitor-exit
+    003e..0040  throw  v0
+    0040..0042  return-object  v1
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0009..001b -> 001d
+.end method

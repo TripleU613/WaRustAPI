@@ -1,3 +1,9 @@
+Queue transaction and stanza-retirement suppliers now share a traced
+provider-ID/global-cache/memoized-owner chain. Stable-lifetime helper identity
+is established conditionally;0aq/0ar connection and crash semantics remain open.
+[Evidence](docs/protocol/apk/2.26.43.72-count-database-provider/README.md).
+Offline research; Rust backend/queue behavior unchanged.
+
 Native failed completion now has a retained disk/cache retirement trace:
 transaction work deletes explicit stanza row IDs; Feh(46) separately removes
 cache entries. The no-work callback path is not disk-commit proof.

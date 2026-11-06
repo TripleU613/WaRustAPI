@@ -1,0 +1,43 @@
+
+# class: LX/1ih;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 3
+    # full signature: LX/1ih;-><init>()V
+    0000..0006  invoke-direct  {v2}, Ljava/lang/Object;-><init>()V
+    0006..000a  const/16  v0, #0xc3e
+    000a..0010  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0010..0012  move-result-object  v0
+    0012..0016  iput-object  v0, v2, LX/1ih;->A02:LX/05a;
+    0016..001a  const/16  v1, #0x20
+    001a..001e  new-instance  v0, LX/2Jd;
+    001e..0024  invoke-direct  {v0, v2, v1}, LX/2Jd;-><init>(Ljava/lang/Object;I)V
+    0024..002a  invoke-static  {v0}, LX/00o;->A01(Lkotlin/jvm/functions/Function0;)LX/00q;
+    002a..002c  move-result-object  v0
+    002c..0030  iput-object  v0, v2, LX/1ih;->A08:LX/00p;
+    0030..0034  const/16  v0, #0x42
+    0034..003a  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    003a..003c  move-result-object  v0
+    003c..0040  iput-object  v0, v2, LX/1ih;->A01:LX/05a;
+    0040..0044  new-instance  v0, LX/122;
+    0044..004a  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    004a..004e  iput-object  v0, v2, LX/1ih;->A07:LX/122;
+    004e..0052  const/16  v0, #0x114
+    0052..0058  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0058..005a  move-result-object  v0
+    005a..005e  iput-object  v0, v2, LX/1ih;->A04:LX/05a;
+    005e..0062  const/16  v0, #0xa2
+    0062..0068  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0068..006a  move-result-object  v0
+    006a..006e  iput-object  v0, v2, LX/1ih;->A06:LX/05a;
+    006e..0072  const/16  v0, #0x8bb
+    0072..0078  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0078..007a  move-result-object  v0
+    007a..007e  iput-object  v0, v2, LX/1ih;->A05:LX/05a;
+    007e..0082  const/16  v0, #0xdc4
+    0082..0088  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0088..008a  move-result-object  v0
+    008a..008e  iput-object  v0, v2, LX/1ih;->A03:LX/05a;
+    008e..0090  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,12 @@
+
+# class: LX/05a;
+# extends: Ljava/lang/Object;
+
+.method public A03(LL)  # .registers 1
+    # full signature: LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0000..0004  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0004..000a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    000a..000c  move-result-object  v0
+    000c..000e  return-object  v0
+    # exception table: 0 try range(s)
+.end method

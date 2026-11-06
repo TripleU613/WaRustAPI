@@ -1,0 +1,74 @@
+{
+  "README.md": {
+    "bytes": 4515,
+    "sha256": "4e37eafec40c1c2f46bb60cdd1213b64aa8bd564874f37108825e834576ce967"
+  },
+  "database-acquire.txt": {
+    "bytes": 1484,
+    "sha256": "46fb6efde91f6d70150bb738658920b553ac4842cde6a2663a25987b3d67cccb"
+  },
+  "database-choice-supplier.txt": {
+    "bytes": 30116,
+    "sha256": "4b8e4195403c5ca7072089492e18dc2fdb962cf8b5155f84538913bc8b6014bd"
+  },
+  "database-owner-access.txt": {
+    "bytes": 438,
+    "sha256": "c1026df211b676889ca890e6b5b523c5490f3b109cb9a9b00716d39fd3d0603e"
+  },
+  "database-owner-constructor.txt": {
+    "bytes": 818,
+    "sha256": "0f23ca95487f4cafa3349c9151abac71f1bbbb30510fa7331a7495820964b232"
+  },
+  "database-suppliers.txt": {
+    "bytes": 50326,
+    "sha256": "4e6ed17776c9ceda9b1481aa5f8683c49a8998c9b96348c0040f0e331085c995"
+  },
+  "lazy-factory.txt": {
+    "bytes": 548,
+    "sha256": "79dfe547bf7cf612b35d0c61d18163b480839de98cce57583cbfc4e3700379fe"
+  },
+  "lazy-value.txt": {
+    "bytes": 1308,
+    "sha256": "f141fe099787fa44c1a49f41a342748ee2cdcf4cc33d6f85e63096cf35021b92"
+  },
+  "provider-global-cache.txt": {
+    "bytes": 3003,
+    "sha256": "c341b1ddb648a4214d7424c37940e96fb49defa16f827a93a33e935d7ceded9a"
+  },
+  "provider-handle-cache.txt": {
+    "bytes": 948,
+    "sha256": "74797a5d573d18c5f5c6c6bee0876dbe60726fb2132abfed7189045f7438ce75"
+  },
+  "provider-handle-factory.txt": {
+    "bytes": 320,
+    "sha256": "05ef4106d14c39c4c5450ec6f1711550676dca2555af38455d30ace66a4a217c"
+  },
+  "provider-lock.txt": {
+    "bytes": 704,
+    "sha256": "2b0c427835b7b1b57642985930dfa8e819944b22614dba3ff9fc3392ff816061"
+  },
+  "provider-resolve.txt": {
+    "bytes": 445,
+    "sha256": "61ca1ae2033c7f40604569ffa0ea628b4aa09c36bba7a9826086157e739f557a"
+  },
+  "provider-root.txt": {
+    "bytes": 1099,
+    "sha256": "17a74bca1ff011e16db9f874decc88364df72d50db2a3c3ef33e79632a08bd64"
+  },
+  "provider-unbox.txt": {
+    "bytes": 404,
+    "sha256": "40a8ac4d81482ee6e3688f336bb021d80d2aa1739ff42de1806d2629028a3a13"
+  },
+  "provider-wrapper-factory.txt": {
+    "bytes": 496,
+    "sha256": "633dc105d252067adbdcc3e1d921cc4fe1dc002c07aaac41600dfb446c763e83"
+  },
+  "queue-manager-constructor.txt": {
+    "bytes": 6304,
+    "sha256": "8ef53d64d33136aadb1873150ee7e66037065295f4c6901317b4bca9ee73e53a"
+  },
+  "stanza-store-constructor.txt": {
+    "bytes": 1954,
+    "sha256": "8b43e583214c2dbfa25af4086d7d8dc9b0ec1635de883b585ca6ebae35d33822"
+  }
+}

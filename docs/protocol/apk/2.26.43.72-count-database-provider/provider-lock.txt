@@ -1,0 +1,16 @@
+
+# class: LX/07N;
+# extends: Ljava/lang/Object;
+
+.method public A00(LI)  # .registers 2
+    # full signature: LX/07N;->A00(I)Ljava/lang/Object;
+    0000..0006  invoke-static  {v1}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0006..0008  move-result-object  v1
+    0008..000c  sget-object  v0, LX/07N;->A01:Ljava/util/concurrent/ConcurrentHashMap;
+    000c..0012  invoke-virtual  {v0, v1, v1}, Ljava/util/concurrent/ConcurrentHashMap;->putIfAbsent(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0012..0014  move-result-object  v0
+    0014..0018  if-eqz  v0, +0x3
+    0018..001a  return-object  v0
+    001a..001c  return-object  v1
+    # exception table: 0 try range(s)
+.end method

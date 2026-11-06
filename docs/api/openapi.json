@@ -17310,5 +17310,12 @@
     "x-live": false,
     "description": "Static current APK failed completion separates explicit stanza row-ID deletion from Feh46 cache retirement. Direct transaction success callback and no-work callback differ. Membership filter is key-only, not account/content/row ownership. Shared backend transaction identity and crash/rollback recovery remain unproven; no Rust deletion or replay implementation.",
     "evidence": "docs/protocol/apk/2.26.43.72-count-completion-retirement/README.md"
+  },
+  "x-count-database-provider-audit": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Static current APK queue transaction and stanza retirement resolve provider0xc3e through global provider cache and owner-memoized0Xp. Shared helper identity is conditional on stable cache lifetime; acquisition has0aq/0ar branches and reset/connection/crash semantics remain unproven. No Rust database selection or queue behavior change.",
+    "evidence": "docs/protocol/apk/2.26.43.72-count-database-provider/README.md"
   }
 }

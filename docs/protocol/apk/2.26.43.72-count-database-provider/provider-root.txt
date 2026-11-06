@@ -1,0 +1,29 @@
+
+# class: LX/06o;
+# extends: LX/06n;
+
+.method public A00(L)  # .registers 3
+    # full signature: LX/06o;->A00()LX/06o;
+    0000..0004  sget-object  v0, LX/06o;->A00:LX/06o;
+    0004..0008  if-nez  v0, +0x1d
+    0008..000c  const-class  v2, LX/06o;
+    000c..000e  monitor-enter
+    000e..0012  sget-object  v0, LX/06o;->A00:LX/06o;
+    0012..0016  if-nez  v0, +0x11
+    0016..001c  invoke-static  {}, LX/00J;->A00()Landroid/app/Application;
+    001c..001e  move-result-object  v0
+    001e..0024  invoke-static  {v0}, LX/06i;->get(Landroid/content/Context;)LX/06i;
+    0024..0026  move-result-object  v1
+    0026..002a  new-instance  v0, LX/06o;
+    002a..0030  invoke-direct  {v0, v1}, LX/06n;-><init>(LX/06i;)V
+    0030..0034  sput-object  v0, LX/06o;->A00:LX/06o;
+    0034..0036  monitor-exit
+    0036..0038  goto  +0x4
+    0038..003a  move-exception  v0
+    003a..003c  monitor-exit
+    003c..003e  throw  v0
+    003e..0042  sget-object  v0, LX/06o;->A00:LX/06o;
+    0042..0044  return-object  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0007..001e -> 001c
+.end method
