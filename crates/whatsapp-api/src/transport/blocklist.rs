@@ -31,7 +31,7 @@ use crate::{
     store::{ProtocolStore, Table},
 };
 use serde::{Deserialize, Serialize};
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 
 const BLOCKED_PREFIX: &str = "blocked:";
 const DHASH_KEY: &str = "blocklist-dhash";
@@ -267,7 +267,7 @@ fn apply_fetch_in(tx: &mut crate::store::WriteTx<'_>, reply: &Node) -> Result<()
     }
     let dhash = text_attr(list, "dhash")?;
     let mut current = BTreeSet::new();
-    let mut new_rows = Vec::new();
+    let mut new_rows = BTreeMap::new();
     for item in list.child_nodes() {
         // APK43.72 6qD.A02 requires each child to be item via 0Tp.A01.
         // Ignoring unknown tags can turn a malformed list into a cache wipe.
@@ -275,18 +275,21 @@ fn apply_fetch_in(tx: &mut crate::store::WriteTx<'_>, reply: &Node) -> Result<()
             return Err(invalid("unexpected blocklist snapshot child"));
         }
         let action = text_attr(item, "action")?.unwrap_or("block");
-        if action != "block" {
-            continue;
-        }
         let jid = match user_attr(item, "jid")? {
             Some(jid) => jid,
             None => user_attr(item, "pn_jid")?
                 .ok_or_else(|| invalid("blocked snapshot item has no identity"))?,
         }
         .to_string();
-        if !current.insert(jid.clone()) {
-            return Err(invalid("duplicate identity in blocklist snapshot"));
+        // APK43.72 6qD.A02 writes every item's action==block Boolean with
+        // Map.put; 80Z derives membership from the final values. A later
+        // non-block item therefore cancels an earlier block in this snapshot.
+        if action != "block" {
+            current.remove(&jid);
+            new_rows.remove(&jid);
+            continue;
         }
+        current.insert(jid.clone());
         let metadata = |name| -> Result<Option<String>> {
             if item.get_attr(name).is_none() {
                 return Ok(None);
@@ -295,7 +298,7 @@ fn apply_fetch_in(tx: &mut crate::store::WriteTx<'_>, reply: &Node) -> Result<()
                 .map(Some)
                 .ok_or_else(|| invalid("invalid blocklist contact metadata"))
         };
-        new_rows.push((
+        new_rows.insert(
             jid.clone(),
             BlockedRow {
                 jid,
@@ -303,7 +306,7 @@ fn apply_fetch_in(tx: &mut crate::store::WriteTx<'_>, reply: &Node) -> Result<()
                 username: metadata("username")?,
                 since: Timestamp::now(),
             },
-        ));
+        );
     }
     if let Some(dhash) = dhash {
         tx.put_json(Table::Checkpoints, DHASH_KEY.as_bytes(), 1, &dhash)?;
@@ -1161,39 +1164,57 @@ mod tests {
     }
 
     #[test]
-    fn duplicate_snapshot_identity_is_refused_before_projection() {
-        let (_dir, s) = store();
-        let id = queue_fetch(&s).unwrap();
-        super::super::actions::reserve_pending(&s).unwrap();
-        super::super::actions::record_reply(
-            &s,
-            &fetch_reply(
-                &id,
-                "duplicate",
-                vec![
-                    Node::new("item")
-                        .attr("jid", phone())
-                        .attr("display_name", "first"),
+    fn repeated_snapshot_identity_uses_last_membership_after_reopen() {
+        for (actions, expected) in [
+            (vec!["block", "unblock"], false),
+            (vec!["block", "block"], true),
+            (vec!["unblock", "block"], true),
+            (vec!["block", "other"], false),
+            (vec!["block", "unblock", "block"], true),
+        ] {
+            let (dir, s) = store();
+            let id = queue_fetch(&s).unwrap();
+            super::super::actions::reserve_pending(&s).unwrap();
+            let items = actions
+                .iter()
+                .enumerate()
+                .map(|(index, action)| {
                     Node::new("item")
                         .attr("jid", phone().to_string())
-                        .attr("display_name", "last"),
-                ],
-            ),
-        )
-        .unwrap();
-        assert!(
-            ingest(&s)
-                .unwrap_err()
-                .to_string()
-                .contains("duplicate identity")
-        );
-        assert!(blocked(&s).unwrap().is_empty());
-        assert!(saved_dhash(&s).unwrap().is_none());
-        assert!(
-            s.read(|tx| tx.get(Table::Checkpoints, ingested_key(&id).as_bytes(), 1))
-                .unwrap()
-                .is_none()
-        );
+                        .attr("action", *action)
+                        .attr("display_name", format!("synthetic-{index}"))
+                })
+                .collect();
+            super::super::actions::record_reply(&s, &fetch_reply(&id, "last-write", items))
+                .unwrap();
+            let journal = s.journal_head().unwrap();
+            assert_eq!(ingest(&s).unwrap(), 1);
+            assert_eq!(blocked(&s).unwrap().len(), usize::from(expected));
+            assert_eq!(saved_dhash(&s).unwrap().as_deref(), Some("last-write"));
+            assert_eq!(ingest(&s).unwrap(), 0);
+            drop(s);
+            let s = ProtocolStore::open(OpenOptions {
+                path: dir.path().join("p.redb"),
+                account_id: AccountId::new("a").unwrap(),
+                key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9u8; 32]))),
+                create: false,
+            })
+            .unwrap();
+            assert_eq!(blocked(&s).unwrap().len(), usize::from(expected));
+            if expected {
+                assert_eq!(
+                    blocked(&s).unwrap()[0].display_name.as_deref(),
+                    Some(format!("synthetic-{}", actions.len() - 1).as_str())
+                );
+            }
+            assert_eq!(ingest(&s).unwrap(), 0);
+            assert_eq!(s.journal_head().unwrap(), journal);
+            assert!(
+                super::super::actions::reserve_pending(&s)
+                    .unwrap()
+                    .is_empty()
+            );
+        }
     }
 
     #[test]

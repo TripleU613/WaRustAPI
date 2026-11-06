@@ -21,7 +21,8 @@ to block produces the stored Boolean.80Z's constructor stores that map and
 buildsA03 from nonnull keys with true values, with checked2L6.A1b Boolean
 unboxing. No children therefore produces a legitimate empty set. Duplicate
 map-key writes use ordinary put, so native last-write behavior is distinct
-from this adapter's explicit duplicate refusal; no broader parity is claimed.
+from this adapter's former explicit duplicate refusal; the correction below
+now follows final membership. No broader parity is claimed.
 
 Conditional display-name/username and PN-to-LID association maps are visible in
 the full method. Their classifier domains, migration/adoption and alias loading
@@ -74,3 +75,15 @@ target/debug/xtask apk-smali "$APK" --class 'LX/2L6;' --method 'A1b' --signature
 
 checksums.json binds every other bundle file by bytes/SHA256. Static evidence
 and local tests do not prove live server behavior or zero account restrictions.
+
+## Later membership correction (2026-11-06)
+
+Fresh parser/result exports reproduce the retained files byte-for-byte. In
+6qD.A02,00a4..00ac compares action to block;00e8..00f6 puts its Boolean for
+every resolved key, including non-block actions.80Z buildsA03 from final true
+values. Rust now follows this last-item membership instead of skipping later
+unblocks/refusing duplicate blocks. The earlier admission guard remains.
+[Implementation, regression and limits](../../chat-actions.md#blocklist-snapshot-repeated-identity-membership-2026-11-06).
+Separate native conditional metadata maps, typed-null fallback/skip and alias
+adoption are not implemented by this correction. No new APK/REA evidence or
+runtime/device/server result is claimed from reusing these methods.

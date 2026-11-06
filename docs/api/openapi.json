@@ -329,6 +329,12 @@
       "description": "Compile six hash-pinned, unchanged AOSP Android16 JSON sources with annotation-only compatibility stubs and execute four synthetic migration-shaped map cases. --fetch only obtains missing public source files; no account or APK/device is opened. --check compares complete emitted JSON/UTF8 fixtures and binds queryId to the pinned MigrateBlocklistLid export. This is controlled reference behavior, not live device/Pando serialization, sender capability or account acceptance. Evidence docs/protocol/chat-actions.md#migration-json-controlled-reference-2026-11-06."
     }
   ],
+  "x-blocklist-snapshot-last-membership": {
+    "x-cli": "blocklist",
+    "x-transport": "library durable projection; existing experimental CLI inspection",
+    "x-live": false,
+    "description": "APK43.72 6qD.A02 Map.put / 80Z final Boolean membership: repeated supported primary snapshot identities follow the last action, with absent action default block and every non-block action clearing prior snapshot membership. Duplicate block rows replace rather than refuse. Cache/hash/inspection remain atomic and once-only; malformed-child/identity guards remain. Metadata retains adapter last-block-row semantics, not full native conditional metadata/alias parity. No new request, retry, repair of already projected history or live acceptance. docs/protocol/chat-actions.md#blocklist-snapshot-repeated-identity-membership-2026-11-06"
+  },
   "x-library-capabilities": [
     {
       "symbol": "whatsapp_api::transport::app_state_sync::binding::bind_inline_fetch_plan",

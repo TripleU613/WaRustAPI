@@ -1113,8 +1113,9 @@ preserves all checkpoint bytes and journal across reopen; valid snapshots still
 replace state. No pending request is recreated and no live operation occurs.
 
 Malformed saved snapshots remain unprojected and ingest continues to refuse
-rather than quarantine/skip them. Native duplicates use map put while this
-adapter refuses duplicates; full typed fallback, conditional metadata/alias,
+rather than quarantine/skip them. At this checkpoint native duplicates used map put while this
+adapter refused duplicates; the later repeated-identity correction below
+supersedes that refusal. Full typed fallback, conditional metadata/alias,
 migration and previously projected bad-cache repair are separate gaps. No
 complete native blocklist/played-policy equivalence or ban-rate claim follows.
 
@@ -1212,3 +1213,37 @@ text/charset DEX exports reproduce byte-for-byte and the APK hash matches.
 Bundle checksums, formatting, CLI reference regeneration, OpenAPI library
 coverage and APK coverage freshness pass. No Rust runtime behavior changed;
 workspace runtime tests were not rerun for this research-only chunk.
+
+## Blocklist snapshot repeated-identity membership (2026-11-06)
+
+**Confirmed pinned mismatch / correction:** the retained
+[6qD.A02 and80Z methods](apk/2.26.43.72-blocklist-snapshot-children/README.md)
+write every parsed item's action==block Boolean with Map.put and derive the
+blocked set from final true values. A later unblock (or other non-block action)
+for the same primary identity therefore removes an earlier block. Rust skipped
+all non-block items before identity resolution and refused repeated block items.
+It could retain the wrong blocked membership or stall a valid snapshot.
+
+The projector now resolves supported primary identities for every item, replaces
+repeated block rows, and removes prior snapshot membership/rows for a later
+non-block action. Final cache/hash/inspection writes remain transactional. The
+existing strict identity, unknown-child and malformed-list guards remain;
+metadata continues the adapter's last-block-row policy, not full native separate
+conditional metadata-map/alias parity. No sender, automatic fetch or replay added.
+
+The synthetic repeated_snapshot_identity_uses_last_membership_after_reopen
+regression covers block/unblock, block/block, unblock/block, block/other and
+block/unblock/block. The old projector fails the first case by retaining a block.
+The corrected projector checks final membership and supplied last-block metadata,
+hash, once-only projection, unchanged journal and no recreated pending request,
+including reopening the encrypted store. Missing/invalid identity admission,
+conditional metadata merging, alias/migration state, malformed-history recovery
+and repair of already projected histories remain separate gaps. No live result
+or ban-rate claim follows.
+
+Validation:1,517 workspace tests pass (9 result suites, four test threads),
+including the five-case ordering/reopen regression. The old projector fails
+block/unblock with actual blocked count1 instead of0. Strict workspace/all-target/
+all-feature Clippy, formatting, CLI regeneration, OpenAPI library coverage,
+APK coverage freshness and repository hygiene pass. The retained parser/result
+exports reproduce byte-for-byte, bundle checksums and subject APK hash match.

@@ -1,3 +1,10 @@
+2026-11-06 — **Blocklist snapshot membership follows the last repeated item.**
+Corrected the confirmed APK Map.put mismatch: later non-block actions remove
+earlier blocks and duplicate blocks no longer stall projection. Synthetic
+ordering/reopen regression and retained pinned parser evidence;
+[scope and limits](chat-actions.md#blocklist-snapshot-repeated-identity-membership-2026-11-06).
+No automatic request or live account operation.
+
 2026-11-06 — **Migration JSON null/escaping reference executed offline.**
 
 Reused existing shared envelope/AOSP inspection and added a hash-pinned,
