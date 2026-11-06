@@ -18275,5 +18275,13 @@
     "x-library": [],
     "description": "Pinned static xtask research bindsChatConnectionRequirement to0AI.A04==2 and selected jobqueue requirement/handoff checks. State is not complete writer/account readiness;30000ms is ProducerPutSlow logging, not network timeout. Exact constructor-caller absence is refuted by optimized new-instance plusObject init. Existing bulk completion evidence reused byte-identically. Provider/wake, persistence/dedup and full generation ordering remain open; no runtime, retry or live operation.",
     "evidence": "docs/protocol/message-ack.md#job-connection-requirement-is-local-admission-not-replay-authority-2026-11-06"
+  },
+  "x-jobqueue-wake-research": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Pinned static xtask research bindsRNL state observer to conditionalNhR association andQnY33 selector-condition wake. Wake submission may refuse; wake does not run a job or send a packet. Distinct group release, front requeue, persistent admission/injection/list and restore wake boundaries retained. Full provider list, lifecycle/dedup/restore and operation generation authority remain open. Existing durable owner/partial-write controls unchanged; no runtime retry or live operation.",
+    "evidence": "docs/protocol/message-ack.md#connection-observers-wake-the-selector-without-granting-send-authority-2026-11-06"
   }
 }

@@ -1,0 +1,50 @@
+{
+  "README.md": {
+    "bytes": 6734,
+    "sha256": "dbf78332dd398ca32cb0279899163c018bc8273ee2edf521d08761bd5aaf99c2"
+  },
+  "injector.txt": {
+    "bytes": 1452,
+    "sha256": "1468a6f17ab82ebfdf301f3b66b6b60e51dbfec55b700d5ed60944f0ecadc471"
+  },
+  "loader.txt": {
+    "bytes": 17489,
+    "sha256": "1421fe699ae13522d6890de9f2d0c6179d5dd4ab40a4e7077eb19fb92000a7c8"
+  },
+  "manager.txt": {
+    "bytes": 16843,
+    "sha256": "e2e0e8af2da9772d012f610d8c3f98bb9293943f098d6e77f87c48123cc2ab89"
+  },
+  "observer-callers.txt": {
+    "bytes": 69,
+    "sha256": "5ebe1af9e551d751ffee602a8fd8e422d921f9a1eabefe22575b68b716c874cb"
+  },
+  "observer.txt": {
+    "bytes": 1883,
+    "sha256": "8a548e4615bcb0ce144887d4332c72b6886bb4f351a23df2a6a9f4dcaf6f6cdf"
+  },
+  "owner.txt": {
+    "bytes": 4870,
+    "sha256": "ad310e351590e6fa2cb9768ba82ec7325a5b3f41dbc00173d5360dd7617fa0d3"
+  },
+  "requeue-callers.txt": {
+    "bytes": 148,
+    "sha256": "7721ab9c40df75276e5fac65affdb5632b007151f1b0865cb3efcaed3b1b8e16"
+  },
+  "wake-callers.txt": {
+    "bytes": 1063,
+    "sha256": "6fdd7f04d61d13cb9e6054c98f177e2f97ead7d630b241b9bcb19573bbbfe8ae"
+  },
+  "wake-constructor.txt": {
+    "bytes": 795,
+    "sha256": "ba6530e237f2fd219050b20f052a8b26f4d428c679b05efaaba05ff539ec9613"
+  },
+  "wake-refs.txt": {
+    "bytes": 549,
+    "sha256": "280901e6de83f93e770697e9f389214aa27d69e11d54bd16188c1e3bc178d2d2"
+  },
+  "wake-worker.txt": {
+    "bytes": 32801,
+    "sha256": "6368705169888a74dc86f870235c8a3a7715334d700c27c6005fad57a656dc47"
+  }
+}

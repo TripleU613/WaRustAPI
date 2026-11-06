@@ -1,0 +1,22 @@
+
+# class: LX/QnY;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VL)  # .registers 3
+    # full signature: LX/QnY;-><init>(LX/Pke;)V
+    0000..0004  const/16  v0, #0x1f
+    0004..0008  iput  v0, v1, LX/QnY;->$t:I
+    0008..000e  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    000e..0012  iput-object  v2, v1, LX/QnY;->A00:Ljava/lang/Object;
+    0012..0014  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VLI)  # .registers 3
+    # full signature: LX/QnY;-><init>(Ljava/lang/Object;I)V
+    0000..0004  iput  v2, v0, LX/QnY;->$t:I
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000a..000e  iput-object  v1, v0, LX/QnY;->A00:Ljava/lang/Object;
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,104 @@
+
+# class: LX/NhN;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VL)  # .registers 5
+    # full signature: LX/NhN;-><init>(LX/NhU;)V
+    0000..0002  const/4  v2, #0x1
+    0002..0008  invoke-direct  {v3}, Ljava/lang/Object;-><init>()V
+    0008..000e  invoke-static  {}, LX/2L6;->A1F()Ljava/util/HashSet;
+    000e..0010  move-result-object  v0
+    0010..0014  iput-object  v0, v3, LX/NhN;->A03:Ljava/util/Set;
+    0014..001a  invoke-static  {}, LX/NhA;->A0y()Ljava/util/LinkedList;
+    001a..001c  move-result-object  v0
+    001c..0020  iput-object  v0, v3, LX/NhN;->A01:Ljava/util/LinkedList;
+    0020..0024  new-instance  v0, Ljava/util/concurrent/SynchronousQueue;
+    0024..002a  invoke-direct  {v0}, Ljava/util/concurrent/SynchronousQueue;-><init>()V
+    002a..002e  iput-object  v0, v3, LX/NhN;->A04:Ljava/util/concurrent/SynchronousQueue;
+    002e..0032  new-instance  v1, LX/NhM;
+    0032..0038  invoke-direct  {v1, v3}, LX/NhM;-><init>(LX/NhN;)V
+    0038..003c  iput-object  v1, v3, LX/NhN;->A05:LX/NhM;
+    003c..0042  invoke-static  {}, LX/2L6;->A1E()Ljava/util/HashMap;
+    0042..0044  move-result-object  v0
+    0044..0048  iput-object  v0, v3, LX/NhN;->A02:Ljava/util/Map;
+    0048..004c  iput-boolean  v2, v3, LX/NhN;->A06:Z
+    004c..0050  iput-object  v4, v3, LX/NhN;->A00:LX/NhU;
+    0050..0056  invoke-virtual  {v1}, Ljava/lang/Thread;->start()V
+    0056..0058  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(VLL)  # .registers 4
+    # full signature: LX/NhN;->A00(Lorg/whispersystems/jobqueue/Job;LX/NhN;)V
+    0000..0004  iget-object  v0, v2, Lorg/whispersystems/jobqueue/Job;->parameters:Lorg/whispersystems/jobqueue/JobParameters;
+    0004..0008  iget-object  v2, v0, Lorg/whispersystems/jobqueue/JobParameters;->groupId:Ljava/lang/String;
+    0008..000c  if-eqz  v2, +0xd
+    000c..0010  iget-object  v1, v3, LX/NhN;->A02:Ljava/util/Map;
+    0010..0016  invoke-virtual  {v3, v2}, LX/NhN;->A01(Ljava/lang/String;)I
+    0016..0018  move-result  v0
+    0018..001c  add-int/lit8  v0, v0, #0x1
+    001c..0022  invoke-static  {v2, v1, v0}, LX/1Xl;->A1T(Ljava/lang/Object;Ljava/util/Map;I)V
+    0022..0024  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A01(IL)  # .registers 3
+    # full signature: LX/NhN;->A01(Ljava/lang/String;)I
+    0000..0002  monitor-enter
+    0002..0006  if-eqz  v2, +0x15
+    0006..000a  iget-object  v0, v1, LX/NhN;->A02:Ljava/util/Map;
+    000a..0010  invoke-interface  {v0, v2}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    0010..0012  move-result-object  v0
+    0012..0016  check-cast  v0, Ljava/lang/Integer;
+    0016..001a  if-eqz  v0, +0xb
+    001a..0020  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    0020..0022  move-result  v0
+    0022..0024  monitor-exit
+    0024..0026  return  v0
+    0026..0028  move-exception  v0
+    0028..002a  monitor-exit
+    002a..002c  throw  v0
+    002c..002e  monitor-exit
+    002e..0030  const/4  v0, #0x0
+    0030..0032  return  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0003..0011 -> 0013
+    # catch <all> code_units 0014..0015 -> 0013
+.end method
+
+.method public A02(VL)  # .registers 3
+    # full signature: LX/NhN;->A02(Ljava/lang/String;)V
+    0000..0002  monitor-enter
+    0002..0006  iget-object  v0, v1, LX/NhN;->A03:Ljava/util/Set;
+    0006..000c  invoke-interface  {v0, v2}, Ljava/util/Set;->remove(Ljava/lang/Object;)Z
+    000c..0010  iget-object  v0, v1, LX/NhN;->A05:LX/NhM;
+    0010..0014  iget-object  v0, v0, LX/NhM;->A02:Landroid/os/ConditionVariable;
+    0014..001a  invoke-virtual  {v0}, Landroid/os/ConditionVariable;->open()V
+    001a..001c  monitor-exit
+    001c..001e  return-void
+    001e..0020  move-exception  v0
+    0020..0022  monitor-exit
+    0022..0024  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0001..000d -> 000f
+    # catch <all> code_units 000f..0011 -> 000f
+.end method
+
+.method public A03(VL)  # .registers 3
+    # full signature: LX/NhN;->A03(Lorg/whispersystems/jobqueue/Job;)V
+    0000..0002  monitor-enter
+    0002..0006  iget-object  v0, v1, LX/NhN;->A01:Ljava/util/LinkedList;
+    0006..000c  invoke-virtual  {v0, v2}, Ljava/util/LinkedList;->addFirst(Ljava/lang/Object;)V
+    000c..0012  invoke-static  {v2, v1}, LX/NhN;->A00(Lorg/whispersystems/jobqueue/Job;LX/NhN;)V
+    0012..0016  iget-object  v0, v1, LX/NhN;->A05:LX/NhM;
+    0016..001a  iget-object  v0, v0, LX/NhM;->A02:Landroid/os/ConditionVariable;
+    001a..0020  invoke-virtual  {v0}, Landroid/os/ConditionVariable;->open()V
+    0020..0022  monitor-exit
+    0022..0024  return-void
+    0024..0026  move-exception  v0
+    0026..0028  monitor-exit
+    0028..002a  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0001..0010 -> 0012
+    # catch <all> code_units 0013..0014 -> 0012
+.end method

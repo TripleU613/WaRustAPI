@@ -1,0 +1,29 @@
+
+# class: LX/Nhf;
+# extends: Ljava/lang/Object;
+
+.method public A00(VLL)  # .registers 5
+    # full signature: LX/Nhf;->A00(Landroid/content/Context;Lorg/whispersystems/jobqueue/Job;)V
+    0000..0004  instance-of  v0, v4, LX/RF0;
+    0004..0008  if-eqz  v0, +0x8
+    0008..000a  move-object  v0, v4
+    000a..000e  check-cast  v0, LX/RF0;
+    000e..0014  invoke-interface  {v0, v3}, LX/RF0;->Cf0(Landroid/content/Context;)V
+    0014..0018  iget-object  v0, v4, Lorg/whispersystems/jobqueue/Job;->parameters:Lorg/whispersystems/jobqueue/JobParameters;
+    0018..001c  iget-object  v0, v0, Lorg/whispersystems/jobqueue/JobParameters;->requirements:Ljava/util/List;
+    001c..0022  invoke-interface  {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0022..0024  move-result-object  v2
+    0024..002a  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    002a..002c  move-result  v0
+    002c..0030  if-eqz  v0, +0x12
+    0030..0036  invoke-interface  {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0036..0038  move-result-object  v1
+    0038..003c  check-cast  v1, Lorg/whispersystems/jobqueue/requirements/Requirement;
+    003c..0040  instance-of  v0, v1, LX/RF0;
+    0040..0044  if-eqz  v0, -0xe
+    0044..0048  check-cast  v1, LX/RF0;
+    0048..004e  invoke-interface  {v1, v3}, LX/RF0;->Cf0(Landroid/content/Context;)V
+    004e..0050  goto  -0x15
+    0050..0052  return-void
+    # exception table: 0 try range(s)
+.end method

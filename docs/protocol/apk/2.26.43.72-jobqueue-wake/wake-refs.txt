@@ -1,0 +1,14 @@
+classes12.dex  LX/NhM;-><init>(VL)
+  write opcode 0x5b, dex byte offset: 0x38e2da
+classes12.dex  LX/NhM;->run(V)
+  read opcode 0x54, dex byte offset: 0x38e300
+classes12.dex  LX/NhN;->A02(VL)
+  read opcode 0x54, dex byte offset: 0x38e878
+classes12.dex  LX/NhN;->A03(VL)
+  read opcode 0x54, dex byte offset: 0x38e8c6
+classes12.dex  LX/NhR;->A04(ZLLZ)
+  read opcode 0x54, dex byte offset: 0x38eea2
+classes12.dex  LX/NhS;->run(V)
+  read opcode 0x54, dex byte offset: 0x38f310
+classes12.dex  LX/QnY;->run(V)
+  read opcode 0x54, dex byte offset: 0x758adc

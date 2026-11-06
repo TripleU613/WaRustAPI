@@ -1,0 +1,595 @@
+
+# class: LX/QnY;
+# extends: Ljava/lang/Object;
+
+.method public run(V)  # .registers 13
+    # full signature: LX/QnY;->run()V
+    0000..0004  iget  v0, v12, LX/QnY;->$t:I
+    0004..000a  packed-switch  v0, payload@0x85c, cases=[0:@0x816, 1:@0x6a6, 2:@0x806, 3:@0x7f4, 4:@0x7da, 5:@0x7c6, 6:@0x7c6, 7:@0x4d4, 8:@0x7b6, 9:@0x420, 10:@0x3d6, 11:@0x360, 12:@0x7a6, 13:@0x316, 14:@0x2d2, 15:@0x2b8, 16:@0x2a8, 17:@0x26, 18:@0x220, 19:@0x2a8, 20:@0x1ca, 21:@0x2a8, 22:@0x2a8, 23:@0xa, 24:@0x1bc, 25:@0x1ac, 26:@0x26, 27:@0xa, 28:@0xa, 29:@0xa, 30:@0x19e, 31:@0x28, 32:@0x704, 33:@0x6de], default@0xa
+    000a..000e  iget-object  v0, v12, LX/QnY;->A00:Ljava/lang/Object;
+    000e..0012  check-cast  v0, LX/QBP;
+    0012..0016  iget-object  v0, v0, LX/QBP;->A00:Lcom/whatsapp/videoplayback/WaFbHeroPlayer;
+    0016..001a  iget-object  v1, v0, LX/I6W;->A09:LX/IT3;
+    001a..001e  if-eqz  v1, +0x6
+    001e..0020  const/4  v0, #0x0
+    0020..0026  invoke-interface  {v1, v0}, LX/IT3;->C0l(Z)V
+    0026..0028  return-void
+    0028..002c  iget-object  v4, v12, LX/QnY;->A00:Ljava/lang/Object;
+    002c..0030  check-cast  v4, LX/Pke;
+    0030..0034  iget-object  v3, v4, LX/Pke;->A01:Ljava/util/concurrent/ConcurrentLinkedQueue;
+    0034..003a  invoke-virtual  {v3}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+    003a..003c  move-result-object  v11
+    003c..0042  invoke-interface  {v11}, Ljava/util/Iterator;->hasNext()Z
+    0042..0044  move-result  v0
+    0044..0048  if-eqz  v0, -0xf
+    0048..004e  invoke-interface  {v11}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    004e..0050  move-result-object  v6
+    0050..0054  check-cast  v6, LX/Owi;
+    0054..0056  const/4  v10, #0x0
+    0056..0058  const/4  v5, #0x1
+    0058..005c  iget-boolean  v0, v6, LX/Owi;->A05:Z
+    005c..0060  if-eqz  v0, +0x5d
+    0060..0064  iget-object  v7, v4, LX/Pke;->A02:LX/Quy;
+    0064..006a  invoke-static  {}, Landroid/os/SystemClock;->elapsedRealtime()J
+    006a..006c  move-result-wide  v1
+    006c..0070  sget-object  v0, LX/Quy;->A0C:LX/Quy;
+    0070..0074  iput-wide  v1, v7, LX/Quy;->A06:J
+    0074..0078  iget-object  v9, v6, LX/Owi;->A02:LX/RN8;
+    0078..007e  invoke-interface  {v9}, LX/RN8;->reset()V
+    007e..0080  goto  +0xa
+    0080..0084  iget-object  v0, v6, LX/Owi;->A01:Ljava/lang/String;
+    0084..0088  iget-object  v9, v6, LX/Owi;->A02:LX/RN8;
+    0088..008e  invoke-static  {v0, v9, v4}, LX/Pke;->A02(Ljava/lang/String;LX/RN8;LX/Pke;)V
+    008e..0092  iget-object  v7, v4, LX/Pke;->A02:LX/Quy;
+    0092..0096  const-wide/16  v1, #0xffff (-1)
+    0096..009a  sget-object  v0, LX/Quy;->A0C:LX/Quy;
+    009a..009e  iput-wide  v1, v7, LX/Quy;->A06:J
+    009e..00a2  iget-boolean  v0, v6, LX/Owi;->A03:Z
+    00a2..00a6  if-eqz  v0, +0x47
+    00a6..00aa  iget-object  v8, v7, LX/Quy;->A07:Ljava/util/Map;
+    00aa..00ac  monitor-enter
+    00ac..00b0  iget-object  v0, v7, LX/Quy;->A07:Ljava/util/Map;
+    00b0..00b4  iget-object  v2, v6, LX/Owi;->A01:Ljava/lang/String;
+    00b4..00ba  invoke-interface  {v0, v2}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    00ba..00bc  move-result-object  v1
+    00bc..00c0  check-cast  v1, Ljava/util/Set;
+    00c0..00c2  monitor-exit
+    00c2..00c6  if-eqz  v1, +0x37
+    00c6..00c8  monitor-enter
+    00c8..00ce  invoke-interface  {v1, v9}, Ljava/util/Set;->add(Ljava/lang/Object;)Z
+    00ce..00d2  iget  v0, v7, LX/Quy;->A00:I
+    00d2..00d6  add-int/lit8  v0, v0, #0x1
+    00d6..00da  iput  v0, v7, LX/Quy;->A00:I
+    00da..00dc  monitor-exit
+    00dc..00e0  iget-boolean  v0, v6, LX/Owi;->A04:Z
+    00e0..00e4  if-eqz  v0, +0x8
+    00e4..00e8  iget-object  v0, v7, LX/Quy;->A04:Ljava/util/Set;
+    00e8..00ee  invoke-interface  {v0, v2}, Ljava/util/Set;->remove(Ljava/lang/Object;)Z
+    00ee..00f0  goto  +0x21
+    00f0..00f4  iget-object  v0, v7, LX/Quy;->A03:Ljava/util/Set;
+    00f4..00f6  goto  -0x6
+    00f6..00f8  move-exception  v0
+    00f8..00fa  monitor-exit
+    00fa..00fc  goto  +0x3
+    00fc..00fe  move-exception  v0
+    00fe..0100  monitor-exit
+    0100..0102  throw  v0
+    0102..0104  move-exception  v8
+    0104..0108  iget-object  v7, v4, LX/Pke;->A02:LX/Quy;
+    0108..010c  const-wide/16  v1, #0xffff (-1)
+    010c..0110  sget-object  v0, LX/Quy;->A0C:LX/Quy;
+    0110..0114  iput-wide  v1, v7, LX/Quy;->A06:J
+    0114..0116  throw  v8
+    0116..011a  iget-object  v2, v6, LX/Owi;->A00:LX/PZt;
+    011a..011e  iget-boolean  v0, v6, LX/Owi;->A04:Z
+    011e..0124  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0124..0126  move-result-object  v1
+    0126..012a  iget-object  v0, v6, LX/Owi;->A02:LX/RN8;
+    012a..0130  invoke-static  {v2, v1, v0, v4}, LX/Pke;->A01(LX/PZt;Ljava/lang/Boolean;LX/RN8;LX/Pke;)V
+    0130..0132  monitor-enter
+    0132..0138  invoke-virtual  {v3, v6}, Ljava/util/AbstractCollection;->remove(Ljava/lang/Object;)Z
+    0138..013a  monitor-exit
+    013a..013c  goto  -0x7f
+    013c..013e  move-exception  v0
+    013e..0140  monitor-exit
+    0140..0142  throw  v0
+    0142..0144  move-exception  v0
+    0144..0148  const-string  v7, "MediaCodecPoolOptimized"
+    0148..014a  goto  +0x1c
+    014a..014c  move-exception  v0
+    014c..0150  const-string  v7, "MediaCodecPoolOptimized"
+    0150..0154  const-string  v2, "error-while-release-codec-from-set: %s"
+    0154..015a  invoke-virtual  {v0}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    015a..015c  move-result-object  v1
+    015c..0160  new-array  v0, v5, [Ljava/lang/Object;
+    0160..0164  aput-object  v1, v0, v10
+    0164..016a  invoke-static  {v2, v7, v0}, LX/NhC;->A1F(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+    016a..016c  monitor-enter
+    016c..0172  invoke-virtual  {v3, v6}, Ljava/util/AbstractCollection;->remove(Ljava/lang/Object;)Z
+    0172..0174  monitor-exit
+    0174..0178  goto/16  -0x9c
+    0178..017a  move-exception  v0
+    017a..017c  monitor-exit
+    017c..017e  throw  v0
+    017e..0180  move-exception  v0
+    0180..0184  const-string  v2, "error-while-release-codec-from-set-finally: %s"
+    0184..018a  invoke-virtual  {v0}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    018a..018c  move-result-object  v1
+    018c..0190  new-array  v0, v5, [Ljava/lang/Object;
+    0190..0194  aput-object  v1, v0, v10
+    0194..019a  invoke-static  {v2, v7, v0}, LX/NhC;->A1F(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+    019a..019e  goto/16  -0xaf
+    019e..01a2  iget-object  v0, v12, LX/QnY;->A00:Ljava/lang/Object;
+    01a2..01a6  check-cast  v0, LX/QBP;
+    01a6..01aa  iget-object  v2, v0, LX/QBP;->A00:Lcom/whatsapp/videoplayback/WaFbHeroPlayer;
+    01aa..01ac  goto  +0x41
+    01ac..01b0  iget-object  v0, v12, LX/QnY;->A00:Ljava/lang/Object;
+    01b0..01b4  check-cast  v0, LX/QBP;
+    01b4..01b8  iget-object  v0, v0, LX/QBP;->A00:Lcom/whatsapp/videoplayback/WaFbHeroPlayer;
+    01b8..01bc  goto/16  +0x86
+    01bc..01c0  iget-object  v0, v12, LX/QnY;->A00:Ljava/lang/Object;
+    01c0..01c4  check-cast  v0, LX/QBP;
+    01c4..01c8  iget-object  v2, v0, LX/QBP;->A00:Lcom/whatsapp/videoplayback/WaFbHeroPlayer;
+    01c8..01ca  goto  +0x7
+    01ca..01ce  iget-object  v0, v12, LX/QnY;->A00:Ljava/lang/Object;
+    01ce..01d2  check-cast  v0, LX/QBG;
+    01d2..01d6  iget-object  v2, v0, LX/QBG;->A00:Lcom/whatsapp/videoplayback/WaFbHeroPlayer;
+    01d6..01dc  invoke-static  {v2}, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A05(Lcom/whatsapp/videoplayback/WaFbHeroPlayer;)V
+    01dc..01de  const/4  v1, #0x1
+    01de..01e2  iput-boolean  v1, v2, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0Q:Z
+    01e2..01e4  const/4  v0, #0x0
+    01e4..01e8  iput-boolean  v0, v2, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0S:Z
+    01e8..01ec  iget-object  v0, v2, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0D:LX/REm;
+    01ec..01f0  if-eqz  v0, +0x5
+    01f0..01f6  invoke-interface  {v0}, LX/REm;->COO()V
+    01f6..01fa  iget-boolean  v0, v2, LX/I6W;->A0J:Z
+    01fa..01fe  if-eqz  v0, +0xb
+    01fe..0202  iget-boolean  v0, v2, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0Z:Z
+    0202..0206  if-nez  v0, +0x7
+    0206..020a  iput-boolean  v1, v2, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0Z:Z
+    020a..0210  invoke-virtual  {v2}, LX/I6W;->A0B()V
+    0210..0214  iget-object  v0, v2, LX/I6W;->A09:LX/IT3;
+    0214..0218  if-eqz  v0, -0xf7
+    0218..021e  invoke-interface  {v0, v1}, LX/IT3;->C0l(Z)V
+    021e..0220  return-void
+    0220..0224  iget-object  v0, v12, LX/QnY;->A00:Ljava/lang/Object;
+    0224..0228  check-cast  v0, LX/QBG;
+    0228..022c  iget-object  v2, v0, LX/QBG;->A00:Lcom/whatsapp/videoplayback/WaFbHeroPlayer;
+    022c..0230  iget-boolean  v0, v2, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0X:Z
+    0230..0234  if-eqz  v0, +0xc
+    0234..0236  const/4  v0, #0x0
+    0236..023a  iput-boolean  v0, v2, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0X:Z
+    023a..023e  iget-object  v1, v2, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0s:LX/0Js;
+    023e..0242  iget-object  v0, v2, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0v:Ljava/lang/Runnable;
+    0242..0248  invoke-virtual  {v1, v0}, LX/0Js;->A0N(Ljava/lang/Runnable;)V
+    0248..024c  iget-boolean  v0, v2, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0W:Z
+    024c..0250  if-eqz  v0, +0xa
+    0250..0252  const/4  v0, #0x0
+    0252..0256  iput-boolean  v0, v2, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0W:Z
+    0256..025a  iget-object  v0, v2, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0u:LX/RMO;
+    025a..0260  invoke-interface  {v0}, LX/RMO;->pause()V
+    0260..0264  iget-boolean  v0, v2, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0V:Z
+    0264..0268  if-eqz  v0, +0xe
+    0268..026c  iget-object  v0, v2, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0t:LX/OXI;
+    026c..0270  iget-object  v1, v0, LX/Nkt;->A08:Landroid/view/View;
+    0270..0274  const/16  v0, #0x8
+    0274..027a  invoke-virtual  {v1, v0}, Landroid/view/View;->setVisibility(I)V
+    027a..0280  invoke-static  {v2}, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A05(Lcom/whatsapp/videoplayback/WaFbHeroPlayer;)V
+    0280..0282  const/4  v0, #0x1
+    0282..0286  iput-boolean  v0, v2, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0T:Z
+    0286..028a  iput-boolean  v0, v2, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0N:Z
+    028a..028e  iget-object  v0, v2, LX/I6W;->A06:LX/REk;
+    028e..0292  if-eqz  v0, +0x5
+    0292..0298  invoke-interface  {v0}, LX/REk;->By1()V
+    0298..029c  iget-object  v0, v2, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0B:LX/HCd;
+    029c..02a0  if-eqz  v0, -0x13b
+    02a0..02a6  invoke-virtual  {v0}, LX/HCd;->A00()V
+    02a6..02a8  return-void
+    02a8..02ac  iget-object  v0, v12, LX/QnY;->A00:Ljava/lang/Object;
+    02ac..02b0  check-cast  v0, LX/QBG;
+    02b0..02b4  iget-object  v0, v0, LX/QBG;->A00:Lcom/whatsapp/videoplayback/WaFbHeroPlayer;
+    02b4..02b8  goto/16  -0x14f
+    02b8..02bc  iget-object  v0, v12, LX/QnY;->A00:Ljava/lang/Object;
+    02bc..02c0  check-cast  v0, LX/QBG;
+    02c0..02c4  iget-object  v0, v0, LX/QBG;->A00:Lcom/whatsapp/videoplayback/WaFbHeroPlayer;
+    02c4..02c8  iget-object  v1, v0, LX/I6W;->A09:LX/IT3;
+    02c8..02cc  if-eqz  v1, -0x151
+    02cc..02ce  const/4  v0, #0x1
+    02ce..02d2  goto/16  -0x157
+    02d2..02d6  iget-object  v0, v12, LX/QnY;->A00:Ljava/lang/Object;
+    02d6..02da  check-cast  v0, LX/QBG;
+    02da..02de  iget-object  v2, v0, LX/QBG;->A00:Lcom/whatsapp/videoplayback/WaFbHeroPlayer;
+    02de..02e2  iget-object  v0, v2, LX/I6W;->A09:LX/IT3;
+    02e2..02e4  const/4  v1, #0x0
+    02e4..02e8  if-eqz  v0, +0x5
+    02e8..02ee  invoke-interface  {v0, v1}, LX/IT3;->C0l(Z)V
+    02ee..02f2  iget-object  v0, v2, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0w:Ljava/util/concurrent/atomic/AtomicBoolean;
+    02f2..02f8  invoke-virtual  {v0, v1}, Ljava/util/concurrent/atomic/AtomicBoolean;->getAndSet(Z)Z
+    02f8..02fa  move-result  v0
+    02fa..02fe  if-eqz  v0, -0x16a
+    02fe..0302  iget-object  v1, v2, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0u:LX/RMO;
+    0302..0308  invoke-interface  {v1}, LX/RMO;->isInitialized()Z
+    0308..030a  move-result  v0
+    030a..030e  if-eqz  v0, -0x172
+    030e..0314  invoke-interface  {v1}, LX/RMO;->CRo()V
+    0314..0316  return-void
+    0316..031a  iget-object  v1, v12, LX/QnY;->A00:Ljava/lang/Object;
+    031a..031e  check-cast  v1, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;
+    031e..0322  iget-boolean  v0, v1, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0X:Z
+    0322..0326  if-eqz  v0, -0x17e
+    0326..032a  iget-object  v5, v1, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0u:LX/RMO;
+    032a..0330  invoke-interface  {v5}, LX/RMO;->isInitialized()Z
+    0330..0332  move-result  v0
+    0332..0336  if-eqz  v0, -0x186
+    0336..0338  const/4  v0, #0x0
+    0338..033c  iput-boolean  v0, v1, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0X:Z
+    033c..0342  invoke-interface  {v5}, LX/RIC;->Aeu()J
+    0342..0344  move-result-wide  v3
+    0344..0348  const-wide/16  v1, #0x0
+    0348..034c  cmp-long  v0, v3, v1
+    034c..0350  if-ltz  v0, -0x193
+    0350..0356  invoke-static  {v3, v4}, LX/PhW;->A01(J)LX/PhW;
+    0356..0358  move-result-object  v0
+    0358..035e  invoke-interface  {v5, v0}, LX/RMO;->CcZ(LX/PhW;)V
+    035e..0360  return-void
+    0360..0364  iget-object  v3, v12, LX/QnY;->A00:Ljava/lang/Object;
+    0364..0368  check-cast  v3, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;
+    0368..036c  iget-object  v1, v3, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0u:LX/RMO;
+    036c..0372  invoke-interface  {v1}, LX/RMO;->isInitialized()Z
+    0372..0374  move-result  v0
+    0374..0378  if-eqz  v0, -0x1a7
+    0378..037c  iget-object  v0, v3, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0C:LX/Jtl;
+    037c..0380  if-eqz  v0, +0x5
+    0380..0386  invoke-virtual  {v0}, LX/Jtl;->A01()V
+    0386..038a  iget-boolean  v0, v3, LX/I6W;->A0I:Z
+    038a..038e  xor-int/lit8  v0, v0, #0x1
+    038e..0394  invoke-interface  {v1, v0}, LX/RMO;->CjY(Z)V
+    0394..0398  iget-boolean  v0, v3, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0e:Z
+    0398..039c  if-eqz  v0, +0x8
+    039c..03a2  invoke-static  {v3}, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0A(Lcom/whatsapp/videoplayback/WaFbHeroPlayer;)Z
+    03a2..03a4  move-result  v0
+    03a4..03a8  if-nez  v0, +0x9
+    03a8..03ae  invoke-static  {v3}, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0A(Lcom/whatsapp/videoplayback/WaFbHeroPlayer;)Z
+    03ae..03b0  move-result  v0
+    03b0..03b6  invoke-interface  {v1, v0}, LX/RMO;->Cgs(Z)V
+    03b6..03bc  invoke-interface  {v1}, LX/RMO;->CRo()V
+    03bc..03c0  iget-object  v2, v3, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0r:LX/08Z;
+    03c0..03c4  const/16  v1, #0xa
+    03c4..03c8  new-instance  v0, LX/QnY;
+    03c8..03ce  invoke-direct  {v0, v3, v1}, LX/QnY;-><init>(Ljava/lang/Object;I)V
+    03ce..03d4  invoke-interface  {v2, v0}, LX/08Z;->CbD(Ljava/lang/Runnable;)V
+    03d4..03d6  return-void
+    03d6..03da  iget-object  v1, v12, LX/QnY;->A00:Ljava/lang/Object;
+    03da..03de  check-cast  v1, LX/I6W;
+    03de..03e2  iget-boolean  v0, v1, LX/I6W;->A0F:Z
+    03e2..03e6  if-nez  v0, -0x1de
+    03e6..03ea  iget-object  v0, v1, LX/I6W;->A04:LX/0B8;
+    03ea..03f0  invoke-static  {v0}, LX/00L;->A05(Ljava/lang/Object;)V
+    03f0..03f6  invoke-virtual  {v0}, LX/0B8;->A0D()Landroid/media/AudioManager;
+    03f6..03f8  move-result-object  v3
+    03f8..03fc  if-eqz  v3, -0x1e9
+    03fc..0400  iget-object  v2, v1, LX/I6W;->A03:Landroid/media/AudioManager$OnAudioFocusChangeListener;
+    0400..0404  if-nez  v2, +0xa
+    0404..0406  const/4  v0, #0x4
+    0406..040a  new-instance  v2, LX/Hgk;
+    040a..0410  invoke-direct  {v2, v0}, LX/Hgk;-><init>(I)V
+    0410..0414  iput-object  v2, v1, LX/I6W;->A03:Landroid/media/AudioManager$OnAudioFocusChangeListener;
+    0414..0416  const/4  v1, #0x3
+    0416..0418  const/4  v0, #0x2
+    0418..041e  invoke-virtual  {v3, v2, v1, v0}, Landroid/media/AudioManager;->requestAudioFocus(Landroid/media/AudioManager$OnAudioFocusChangeListener;II)I
+    041e..0420  return-void
+    0420..0424  iget-object  v4, v12, LX/QnY;->A00:Ljava/lang/Object;
+    0424..0428  check-cast  v4, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;
+    0428..042c  iget-object  v2, v4, LX/I6W;->A0D:LX/TXr;
+    042c..0430  if-eqz  v2, +0x7
+    0430..0432  const/4  v1, #0x0
+    0432..0434  const/4  v0, #0x1
+    0434..043a  invoke-interface  {v2, v1, v0}, LX/TXr;->C8o(ZI)V
+    043a..043e  iget-object  v3, v4, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0t:LX/OXI;
+    043e..0442  iget-object  v0, v3, LX/Nkt;->A02:LX/HX2;
+    0442..0446  if-eqz  v0, +0x5
+    0446..044c  invoke-virtual  {v0}, LX/HX2;->A00()V
+    044c..0452  invoke-static  {v3}, LX/OXI;->A02(LX/OXI;)V
+    0452..0456  iget-object  v1, v3, LX/OXI;->A07:Ljava/lang/Runnable;
+    0456..0458  const/4  v2, #0x0
+    0458..045c  if-eqz  v1, +0x9
+    045c..0460  iget-object  v0, v3, LX/OXI;->A0D:LX/0Js;
+    0460..0466  invoke-virtual  {v0, v1}, LX/0Js;->A0N(Ljava/lang/Runnable;)V
+    0466..046a  iput-object  v2, v3, LX/OXI;->A07:Ljava/lang/Runnable;
+    046a..046e  iput-object  v2, v3, LX/OXI;->A02:LX/Nkv;
+    046e..0472  iput-object  v2, v3, LX/OXI;->A01:LX/QBk;
+    0472..0476  iput-object  v2, v3, LX/OXI;->A04:LX/QBO;
+    0476..047a  iput-object  v2, v3, LX/OXI;->A03:LX/QBl;
+    047a..047e  iget-object  v0, v3, LX/OXI;->A0E:LX/Pbe;
+    047e..0484  invoke-virtual  {v0}, LX/Pbe;->A01()V
+    0484..0488  iput-object  v2, v3, LX/OXI;->A05:LX/RMO;
+    0488..048c  iget-object  v1, v3, LX/OXI;->A06:LX/PjB;
+    048c..0490  if-eqz  v1, +0x10
+    0490..0494  iget-boolean  v0, v3, LX/OXI;->A0F:Z
+    0494..0498  if-eqz  v0, +0xc
+    0498..049e  invoke-virtual  {v1}, Ljava/lang/Object;->hashCode()I
+    049e..04a2  iget-object  v0, v3, LX/OXI;->A06:LX/PjB;
+    04a2..04a8  invoke-virtual  {v0}, LX/PjB;->A03()V
+    04a8..04ac  iput-object  v2, v3, LX/OXI;->A06:LX/PjB;
+    04ac..04b0  iget-object  v0, v4, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0F:LX/8y4;
+    04b0..04b4  if-eqz  v0, -0x245
+    04b4..04ba  invoke-virtual  {v0, v2}, LX/8y4;->setPlayer(Ljava/lang/Object;)V
+    04ba..04be  iget-object  v1, v4, Lcom/whatsapp/videoplayback/WaFbHeroPlayer;->A0F:LX/8y4;
+    04be..04c2  iget-object  v0, v1, LX/8y4;->A0L:Ljava/lang/Runnable;
+    04c2..04c8  invoke-virtual  {v1, v0}, Landroid/view/View;->removeCallbacks(Ljava/lang/Runnable;)Z
+    04c8..04cc  iget-object  v0, v1, LX/8y4;->A0M:Ljava/lang/Runnable;
+    04cc..04d2  invoke-virtual  {v1, v0}, Landroid/view/View;->removeCallbacks(Ljava/lang/Runnable;)Z
+    04d2..04d4  return-void
+    04d4..04d8  iget-object  v4, v12, LX/QnY;->A00:Ljava/lang/Object;
+    04d8..04dc  check-cast  v4, LX/OXI;
+    04dc..04e0  iget-object  v2, v4, LX/OXI;->A02:LX/Nkv;
+    04e0..04e4  if-eqz  v2, +0xd7
+    04e4..04e8  iget-object  v0, v4, LX/OXI;->A05:LX/RMO;
+    04e8..04ec  if-eqz  v0, +0xd3
+    04ec..04f2  invoke-interface  {v0}, LX/RMO;->Azz()J
+    04f2..04f4  move-result-wide  v0
+    04f4..04fa  invoke-static  {v0, v1}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+    04fa..04fc  move-result-object  v0
+    04fc..0502  invoke-virtual  {v2, v0}, LX/Nkv;->setPlayerId(Ljava/lang/String;)V
+    0502..0506  iget-object  v0, v4, LX/OXI;->A05:LX/RMO;
+    0506..050c  invoke-interface  {v0}, LX/RMO;->BGD()LX/Qh4;
+    050c..050e  move-result-object  v5
+    050e..0512  if-eqz  v5, +0x9
+    0512..0516  iget-object  v1, v4, LX/OXI;->A02:LX/Nkv;
+    0516..051a  iget-object  v0, v5, LX/Qh4;->A04:LX/Pnw;
+    051a..0520  invoke-virtual  {v1, v0}, LX/Nkv;->setVideoSource(LX/Pnw;)V
+    0520..0524  iget-object  v8, v4, LX/OXI;->A02:LX/Nkv;
+    0524..0528  iget-object  v0, v4, LX/OXI;->A05:LX/RMO;
+    0528..052e  invoke-interface  {v0}, LX/RIC;->Aeu()J
+    052e..0530  move-result-wide  v6
+    0530..0534  iget-object  v0, v4, LX/OXI;->A05:LX/RMO;
+    0534..053a  invoke-interface  {v0}, LX/RIC;->AZM()J
+    053a..053c  move-result-wide  v2
+    053c..0540  const-wide/16  v0, #0x0
+    0540..0544  iput-wide  v6, v8, LX/Nkv;->A08:J
+    0544..0548  iput-wide  v2, v8, LX/Nkv;->A06:J
+    0548..054c  iput-wide  v0, v8, LX/Nkv;->A09:J
+    054c..0550  iget-object  v1, v4, LX/OXI;->A02:LX/Nkv;
+    0550..0554  iget-object  v0, v4, LX/OXI;->A05:LX/RMO;
+    0554..055a  invoke-interface  {v0}, LX/RMO;->CyO()Z
+    055a..055c  move-result  v0
+    055c..0560  iput-boolean  v0, v1, LX/Nkv;->A0P:Z
+    0560..0564  if-eqz  v5, +0x1b
+    0564..0568  iget-object  v0, v5, LX/Qh4;->A04:LX/Pnw;
+    0568..056c  if-eqz  v0, +0x17
+    056c..0572  invoke-virtual  {v0}, LX/Pnw;->A08()Z
+    0572..0574  move-result  v1
+    0574..0576  const/4  v0, #0x1
+    0576..057a  if-ne  v1, v0, +0x10
+    057a..057e  iget-object  v3, v4, LX/OXI;->A02:LX/Nkv;
+    057e..0582  iget-object  v0, v4, LX/OXI;->A05:LX/RMO;
+    0582..0588  invoke-interface  {v0}, LX/RMO;->AZK()J
+    0588..058a  move-result-wide  v1
+    058a..058e  const/high16  v0, #0x3f800000
+    058e..0592  iput  v0, v3, LX/Nkv;->A00:F
+    0592..0596  iput-wide  v1, v3, LX/Nkv;->A05:J
+    0596..059a  iget-object  v3, v4, LX/OXI;->A02:LX/Nkv;
+    059a..059e  iget-object  v0, v4, LX/OXI;->A05:LX/RMO;
+    059e..05a4  invoke-interface  {v0}, LX/RIC;->AhQ()J
+    05a4..05a6  move-result-wide  v1
+    05a6..05a8  long-to-int  v0, v1
+    05a8..05ac  iput  v0, v3, LX/Nkv;->A04:I
+    05ac..05b0  if-eqz  v5, +0x59
+    05b0..05b4  iget-object  v0, v5, LX/Qh4;->A04:LX/Pnw;
+    05b4..05b8  if-eqz  v0, +0x55
+    05b8..05be  invoke-static  {}, LX/Q6m;->A01()LX/Q6m;
+    05be..05c0  move-result-object  v1
+    05c0..05c4  iget-object  v6, v4, LX/OXI;->A02:LX/Nkv;
+    05c4..05c8  if-eqz  v1, +0x49
+    05c8..05cc  iget-object  v0, v5, LX/Qh4;->A04:LX/Pnw;
+    05cc..05d0  iget-object  v2, v0, LX/Pnw;->A0Q:Ljava/lang/String;
+    05d0..05d4  iget-object  v0, v1, LX/Q6m;->A09:LX/Pj1;
+    05d4..05d8  if-eqz  v0, +0x3e
+    05d8..05dc  iget-object  v1, v0, LX/Pj1;->A04:LX/Q9n;
+    05dc..05e0  if-eqz  v1, +0x3a
+    05e0..05e4  iget-boolean  v0, v1, LX/Q9n;->A03:Z
+    05e4..05e8  if-eqz  v0, +0x39
+    05e8..05ec  if-eqz  v2, +0x34
+    05ec..05f0  iget-object  v0, v1, LX/Q9n;->A02:Ljava/util/concurrent/ConcurrentHashMap;
+    05f0..05f6  invoke-virtual  {v0, v2}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    05f6..05f8  move-result-object  v0
+    05f8..05fc  check-cast  v0, LX/PCn;
+    05fc..0600  if-eqz  v0, +0x2a
+    0600..0604  iget-object  v0, v0, LX/PCn;->A01:Ljava/util/concurrent/ConcurrentHashMap;
+    0604..060a  invoke-virtual  {v0}, Ljava/util/AbstractMap;->values()Ljava/util/Collection;
+    060a..060c  move-result-object  v0
+    060c..0612  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    0612..0618  invoke-interface  {v0}, Ljava/util/Collection;->iterator()Ljava/util/Iterator;
+    0618..061a  move-result-object  v5
+    061a..061e  const-wide/16  v2, #0x0
+    061e..0624  invoke-interface  {v5}, Ljava/util/Iterator;->hasNext()Z
+    0624..0626  move-result  v0
+    0626..062a  if-eqz  v0, +0xe
+    062a..0630  invoke-interface  {v5}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0630..0632  move-result-object  v0
+    0632..0636  check-cast  v0, Ljava/util/concurrent/atomic/AtomicLong;
+    0636..063c  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicLong;->get()J
+    063c..063e  move-result-wide  v0
+    063e..0640  add-long/2addr  v2, v0
+    0640..0642  goto  -0x11
+    0642..0648  invoke-static  {v2, v3}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0648..064a  move-result-object  v0
+    064a..064e  if-eqz  v0, +0x3
+    064e..0650  goto  +0x6
+    0650..0654  const-wide/16  v2, #0x0
+    0654..0656  goto  +0x3
+    0656..065a  const-wide/16  v2, #0xffff (-1)
+    065a..065e  iput-wide  v2, v6, LX/Nkv;->A07:J
+    065e..0662  iget-object  v3, v4, LX/OXI;->A02:LX/Nkv;
+    0662..0666  iget-object  v0, v4, LX/Nkt;->A09:Landroid/view/View;
+    0666..066c  invoke-virtual  {v0}, Landroid/view/View;->getWidth()I
+    066c..066e  move-result  v2
+    066e..0674  invoke-virtual  {v0}, Landroid/view/View;->getHeight()I
+    0674..0676  move-result  v1
+    0676..067a  new-instance  v0, Landroid/graphics/Point;
+    067a..0680  invoke-direct  {v0, v2, v1}, Landroid/graphics/Point;-><init>(II)V
+    0680..0684  iput-object  v0, v3, LX/Nkv;->A0A:Landroid/graphics/Point;
+    0684..0688  iget-object  v0, v4, LX/OXI;->A02:LX/Nkv;
+    0688..068e  invoke-virtual  {v0}, LX/Nkv;->A00()V
+    068e..0692  iget-object  v3, v4, LX/OXI;->A07:Ljava/lang/Runnable;
+    0692..0696  if-eqz  v3, -0x336
+    0696..069a  iget-object  v2, v4, LX/OXI;->A0D:LX/0Js;
+    069a..069e  const-wide/16  v0, #0x3e8
+    069e..06a4  invoke-virtual  {v2, v3, v0, v1}, LX/0Js;->CbQ(Ljava/lang/Runnable;J)V
+    06a4..06a6  return-void
+    06a6..06aa  iget-object  v3, v12, LX/QnY;->A00:Ljava/lang/Object;
+    06aa..06ae  check-cast  v3, LX/Ppo;
+    06ae..06b2  iget-object  v2, v3, LX/Ppo;->A08:LX/PK0;
+    06b2..06b6  if-eqz  v2, -0x346
+    06b6..06ba  iget-boolean  v0, v2, LX/PK0;->A0D:Z
+    06ba..06be  if-eqz  v0, -0x34a
+    06be..06c2  const-string  v0, "MusicHeroPlayer/pauseInternal"
+    06c2..06c8  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    06c8..06cc  iget-object  v1, v2, LX/PK0;->A08:LX/PrE;
+    06cc..06ce  const/4  v0, #0x0
+    06ce..06d4  invoke-virtual  {v1, v0}, LX/PrE;->A0R(Ljava/lang/String;)V
+    06d4..06d6  const/4  v0, #0x0
+    06d6..06dc  invoke-static  {v2, v3, v0}, LX/Ppo;->A07(LX/PK0;LX/Ppo;Z)V
+    06dc..06de  return-void
+    06de..06e2  iget-object  v0, v12, LX/QnY;->A00:Ljava/lang/Object;
+    06e2..06e6  check-cast  v0, LX/NhR;
+    06e6..06ea  iget-object  v1, v0, LX/NhR;->A05:LX/NhN;
+    06ea..06ec  monitor-enter
+    06ec..06f0  iget-object  v0, v1, LX/NhN;->A05:LX/NhM;
+    06f0..06f4  iget-object  v0, v0, LX/NhM;->A02:Landroid/os/ConditionVariable;
+    06f4..06fa  invoke-virtual  {v0}, Landroid/os/ConditionVariable;->open()V
+    06fa..06fc  monitor-exit
+    06fc..06fe  return-void
+    06fe..0700  move-exception  v0
+    0700..0702  monitor-exit
+    0702..0704  throw  v0
+    0704..0708  iget-object  v4, v12, LX/QnY;->A00:Ljava/lang/Object;
+    0708..070c  check-cast  v4, LX/Quz;
+    070c..0712  invoke-static  {}, Landroid/os/SystemClock;->uptimeMillis()J
+    0712..0714  move-result-wide  v7
+    0714..071a  invoke-static  {}, LX/1Xl;->A18()Ljava/util/ArrayList;
+    071a..071c  move-result-object  v5
+    071c..0720  iget-object  v3, v4, LX/Quz;->A05:Ljava/lang/Object;
+    0720..0722  monitor-enter
+    0722..0726  iget-wide  v9, v4, LX/Quz;->A02:J
+    0726..072a  const-wide/16  v1, #0x0
+    072a..072e  cmp-long  v0, v9, v1
+    072e..0732  if-lez  v0, +0x18
+    0732..0736  iget  v1, v4, LX/Quz;->A00:I
+    0736..073a  iget-object  v6, v4, LX/Quz;->A07:Ljava/util/Map;
+    073a..0740  invoke-static/range  {v5..v10}, LX/Quz;->A00(Ljava/util/List;Ljava/util/Map;JJ)I
+    0740..0742  move-result  v0
+    0742..0744  sub-int/2addr  v1, v0
+    0744..0748  iput  v1, v4, LX/Quz;->A00:I
+    0748..074c  iget  v1, v4, LX/Quz;->A01:I
+    074c..0750  iget-object  v6, v4, LX/Quz;->A08:Ljava/util/Map;
+    0750..0756  invoke-static/range  {v5..v10}, LX/Quz;->A00(Ljava/util/List;Ljava/util/Map;JJ)I
+    0756..0758  move-result  v0
+    0758..075a  sub-int/2addr  v1, v0
+    075a..075e  iput  v1, v4, LX/Quz;->A01:I
+    075e..0762  iget  v0, v4, LX/Quz;->A00:I
+    0762..0766  if-nez  v0, +0x1a
+    0766..076a  iget  v0, v4, LX/Quz;->A01:I
+    076a..076e  if-nez  v0, +0x16
+    076e..0772  iget-object  v2, v4, LX/Quz;->A04:Ljava/util/concurrent/ScheduledFuture;
+    0772..0774  const/4  v1, #0x0
+    0774..0778  if-eqz  v2, +0x8
+    0778..077a  const/4  v0, #0x0
+    077a..0780  invoke-interface  {v2, v0}, Ljava/util/concurrent/Future;->cancel(Z)Z
+    0780..0784  iput-object  v1, v4, LX/Quz;->A04:Ljava/util/concurrent/ScheduledFuture;
+    0784..0788  iget-object  v0, v4, LX/Quz;->A03:Ljava/util/concurrent/ScheduledExecutorService;
+    0788..078c  if-eqz  v0, +0x7
+    078c..0792  invoke-interface  {v0}, Ljava/util/concurrent/ExecutorService;->shutdown()V
+    0792..0796  iput-object  v1, v4, LX/Quz;->A03:Ljava/util/concurrent/ScheduledExecutorService;
+    0796..0798  monitor-exit
+    0798..079e  invoke-static  {v5}, LX/Quz;->A04(Ljava/util/List;)V
+    079e..07a0  return-void
+    07a0..07a2  move-exception  v0
+    07a2..07a4  monitor-exit
+    07a4..07a6  throw  v0
+    07a6..07aa  iget-object  v0, v12, LX/QnY;->A00:Ljava/lang/Object;
+    07aa..07ae  check-cast  v0, LX/RMO;
+    07ae..07b4  invoke-interface  {v0}, LX/RMO;->release()V
+    07b4..07b6  return-void
+    07b6..07ba  iget-object  v0, v12, LX/QnY;->A00:Ljava/lang/Object;
+    07ba..07be  check-cast  v0, LX/RMO;
+    07be..07c4  invoke-interface  {v0}, LX/RMO;->CX1()V
+    07c4..07c6  return-void
+    07c6..07ca  iget-object  v0, v12, LX/QnY;->A00:Ljava/lang/Object;
+    07ca..07ce  check-cast  v0, LX/PxA;
+    07ce..07d2  iget-object  v0, v0, LX/PxA;->A01:Lcom/whatsapp/videoplayback/FbHeroPlaybackControlView;
+    07d2..07d8  invoke-virtual  {v0}, LX/8y4;->A0C()V
+    07d8..07da  goto  +0xa
+    07da..07de  iget-object  v0, v12, LX/QnY;->A00:Ljava/lang/Object;
+    07de..07e2  check-cast  v0, LX/PxA;
+    07e2..07e6  iget-object  v0, v0, LX/PxA;->A01:Lcom/whatsapp/videoplayback/FbHeroPlaybackControlView;
+    07e6..07ec  invoke-virtual  {v0}, LX/8y4;->A0D()V
+    07ec..07f2  invoke-virtual  {v0}, LX/8y4;->A0E()V
+    07f2..07f4  return-void
+    07f4..07f8  iget-object  v1, v12, LX/QnY;->A00:Ljava/lang/Object;
+    07f8..07fc  check-cast  v1, LX/PpA;
+    07fc..07fe  const/4  v0, #0x0
+    07fe..0804  invoke-static  {v1, v0, v0}, LX/PpA;->A05(LX/PpA;LX/5fR;Ljava/util/Map;)V
+    0804..0806  return-void
+    0806..080a  iget-object  v0, v12, LX/QnY;->A00:Ljava/lang/Object;
+    080a..080e  check-cast  v0, LX/RHT;
+    080e..0814  invoke-interface  {v0}, LX/RHT;->C8W()V
+    0814..0816  return-void
+    0816..081a  iget-object  v0, v12, LX/QnY;->A00:Ljava/lang/Object;
+    081a..081e  check-cast  v0, LX/Ppo;
+    081e..0824  invoke-static  {v0}, LX/Ppo;->A09(LX/Ppo;)V
+    0824..0826  return-void
+    0826..0828  move-exception  v4
+    0828..082a  monitor-enter
+    082a..0830  invoke-virtual  {v3, v6}, Ljava/util/AbstractCollection;->remove(Ljava/lang/Object;)Z
+    0830..0832  monitor-exit
+    0832..0834  throw  v4
+    0834..0836  move-exception  v0
+    0836..0838  monitor-exit
+    0838..083a  throw  v0
+    083a..083c  move-exception  v0
+    083c..0840  const-string  v3, "MediaCodecPoolOptimized"
+    0840..0844  const-string  v2, "error-while-release-codec-from-set-finally: %s"
+    0844..084a  invoke-virtual  {v0}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    084a..084c  move-result-object  v1
+    084c..0850  new-array  v0, v5, [Ljava/lang/Object;
+    0850..0854  aput-object  v1, v0, v10
+    0854..085a  invoke-static  {v2, v3, v0}, LX/NhC;->A1F(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+    085a..085c  throw  v4
+    085c..08ec  packed-switch-payload  size=34
+    # exception table: 27 try range(s)
+    # catch Ljava/lang/Exception; code_units 002c..0030 -> 00a5
+    # catch <all> code_units 002c..0030 -> 0413
+    # catch Ljava/lang/IllegalStateException; code_units 0030..0040 -> 0040
+    # catch <all> code_units 0030..0040 -> 0081
+    # catch <all> code_units 0040..0047 -> 0081
+    # catch Ljava/lang/Exception; code_units 0047..0056 -> 00a5
+    # catch <all> code_units 0047..0056 -> 0413
+    # catch <all> code_units 0056..0063 -> 007e
+    # catch Ljava/lang/Exception; code_units 0063..0064 -> 00a5
+    # catch <all> code_units 0063..0064 -> 0413
+    # catch <all> code_units 0064..006e -> 007b
+    # catch Ljava/lang/Exception; code_units 006e..007b -> 00a5
+    # catch <all> code_units 006e..007b -> 0413
+    # catch <all> code_units 007c..007e -> 007b
+    # catch <all> code_units 007f..0080 -> 007e
+    # catch Ljava/lang/Exception; code_units 0080..0081 -> 00a5
+    # catch <all> code_units 0080..0081 -> 0413
+    # catch Ljava/lang/Exception; code_units 0082..0098 -> 00a5
+    # catch <all> code_units 0082..0098 -> 0413
+    # catch Ljava/lang/Exception; code_units 0098..0099 -> 00a1
+    # catch <all> code_units 0099..00a0 -> 009e
+    # catch Ljava/lang/Exception; code_units 00a0..00a1 -> 00a1
+    # catch <all> code_units 00a6..00b5 -> 0413
+    # catch Ljava/lang/Exception; code_units 00b5..00b6 -> 00bf
+    # catch <all> code_units 00b6..00be -> 00bc
+    # catch Ljava/lang/Exception; code_units 00be..00bf -> 00bf
+    # catch <all> code_units 0376..037d -> 037f
+    # catch <all> code_units 0380..0381 -> 037f
+    # catch <all> code_units 0391..03cc -> 03d0
+    # catch <all> code_units 03d1..03d2 -> 03d0
+    # catch Ljava/lang/Exception; code_units 0414..0415 -> 041d
+    # catch <all> code_units 0415..0419 -> 041a
+    # catch <all> code_units 041a..041c -> 041a
+    # catch Ljava/lang/Exception; code_units 041c..041d -> 041d
+.end method

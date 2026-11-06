@@ -1174,3 +1174,20 @@ future/retry audit is reused, not treated as new wire behavior.
 Rust durable original-owner regression passes unchanged. A connected predicate
 is not key acceptance, complete write readiness or permission to replay an
 uncertain reservation. No runtime, timing, retry or live-account change added.
+
+## Connection observers wake the selector without granting send authority (2026-11-06)
+
+**Confirmed selected static, APK2.26.43.72:**
+[CompleteRNL observer, manager/wake worker, owner, injector and loader exports](apk/2.26.43.72-jobqueue-wake/README.md)
+show registration with0AI and conditionalmanager association. SelectedBzL/BzN
+callNhR.A05, whoseQnY case33 opens the selector condition; selection still
+rechecks job requirements. Wake executor rejection ormanager flag can return
+false from submission, andA05 discards it. No direct job or packet execution
+is established by a wake call.
+
+Other wakes come from group release, explicit front requeue, new-job admission
+and saved-job loading. Selectedpersistent admission insertsqueue row before
+injection/on-added/list insertion/wake; that is not a transaction across durable
+queue and wire. Provider-list identity, all persistence failures/dedup/restore
+and complete rejection/defer lifecycle remain open. Rust original-owner and
+partial-write controls pass unchanged; no runtime/replay or live change added.
