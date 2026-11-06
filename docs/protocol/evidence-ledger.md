@@ -1,3 +1,11 @@
+2026-11-06 — **Receipt dispatch drop/exception boundaries confirmed.**
+
+Pinned APK dispatch can return without sending or completing its registered
+callback. Selected played preparation preserves the original Message. Failure
+censuses separate local future exception, size failure and disconnect cleanup;
+none proves non-delivery or safe replay. No Rust behavior change or live action.
+[Evidence and open boundaries](receipt-ack-special.md#receipt-dispatch-drop-and-failure-boundaries-2026-11-06).
+
 2026-11-06 — **Pinned receipt callback registration/completion traced.**
 
 Current APK played job registers a full-key callback before dispatch and waits

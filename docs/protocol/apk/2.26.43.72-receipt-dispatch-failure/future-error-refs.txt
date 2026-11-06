@@ -1,0 +1,6 @@
+classes8.dex  LX/FfK;->BsR(VL)
+  write opcode 0x5b, dex byte offset: 0x850f88
+classes8.dex  LX/FfK;->get(L)
+  read opcode 0x54, dex byte offset: 0x850ffc
+classes8.dex  LX/FfK;->get(LJL)
+  read opcode 0x54, dex byte offset: 0x85103a

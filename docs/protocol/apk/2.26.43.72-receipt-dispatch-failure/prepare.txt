@@ -1,0 +1,128 @@
+
+# class: LX/0Sf;
+# extends: Ljava/lang/Object;
+
+.method private A00(LL)  # .registers 9
+    # full signature: LX/0Sf;->A00(Landroid/os/Message;)Landroid/os/Message;
+    0000..0006  invoke-static  {v8}, LX/1i8;->A07(Landroid/os/Message;)LX/1vZ;
+    0006..0008  move-result-object  v3
+    0008..000c  if-nez  v3, +0x4
+    000c..000e  const/4  v0, #0x0
+    000e..0010  return-object  v0
+    0010..0014  iget-wide  v1, v3, LX/1vZ;->A00:J
+    0014..0018  const-wide/16  v4, #0xfffe (-2)
+    0018..001c  cmp-long  v0, v1, v4
+    001c..0020  if-eqz  v0, +0x20
+    0020..0024  iget-object  v0, v7, LX/0Sf;->A0D:LX/0Td;
+    0024..002a  invoke-virtual  {v0, v1, v2}, LX/0Td;->A01(J)LX/F0K;
+    002a..002c  move-result-object  v4
+    002c..0030  if-nez  v4, +0x41
+    0030..0034  const-string  v0, "MessageClient/markProcessedAndAddToPreacksQueue loggableStanza for "
+    0034..0038  new-instance  v1, Ljava/lang/StringBuilder;
+    0038..003e  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    003e..0044  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0044..0048  const-string  v0, " not found, possibly the cache is cleared or we're seeing double ack/receipts sends"
+    0048..004e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    004e..0054  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0054..0056  move-result-object  v0
+    0056..005c  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    005c..0060  iget-object  v0, v7, LX/0Sf;->A01:LX/05a;
+    0060..0064  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0064..006a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    006a..006c  move-result-object  v5
+    006c..0070  check-cast  v5, LX/1iV;
+    0070..0072  const/4  v4, #0x0
+    0072..0076  iget-object  v0, v3, LX/1vZ;->A01:LX/0Tp;
+    0076..007a  iget-object  v1, v0, LX/0Tp;->A00:Ljava/lang/String;
+    007a..007e  const-string  v0, "ack"
+    007e..0084  invoke-static  {v1, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    0084..0086  move-result  v0
+    0086..0088  const/4  v6, #0x1
+    0088..008c  if-nez  v0, +0xb
+    008c..0090  const-string  v0, "receipt"
+    0090..0096  invoke-static  {v1, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    0096..0098  move-result  v0
+    0098..009a  const/4  v1, #0x0
+    009a..009e  if-eqz  v0, +0x3
+    009e..00a0  const/4  v1, #0x1
+    00a0..00a4  const-string  v0, "Only ack/receipt can be pre-acked."
+    00a4..00aa  invoke-static  {v1, v0}, LX/00L;->A0D(ZLjava/lang/String;)V
+    00aa..00ac  monitor-enter
+    00ac..00ae  goto  +0x57
+    00ae..00b4  const-string/jumbo  v6, "tag="
+    00b4..00b8  const-string  v1, "LoggableStanza/beginStanzaAckStage id="
+    00b8..00ba  monitor-enter
+    00ba..00be  iget  v0, v4, LX/F0K;->A0L:I
+    00be..00c2  if-nez  v0, +0x20
+    00c2..00c6  iget-object  v5, v4, LX/F0K;->A06:LX/0B0;
+    00c6..00ca  const-string  v2, "loggable_stanza_already_acked"
+    00ca..00ce  new-instance  v1, Ljava/lang/StringBuilder;
+    00ce..00d4  invoke-direct  {v1, v6}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00d4..00da  invoke-virtual  {v4}, LX/F0K;->A06()Ljava/lang/String;
+    00da..00dc  move-result-object  v0
+    00dc..00e2  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00e2..00e6  const-string  v0, " method=onStanzaProcessed"
+    00e6..00ec  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00ec..00f2  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00f2..00f4  move-result-object  v1
+    00f4..00f6  const/4  v0, #0x1
+    00f6..00fc  invoke-virtual  {v5, v2, v1, v0}, LX/0B0;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+    00fc..00fe  goto  +0x2d
+    00fe..0102  new-instance  v2, Ljava/lang/StringBuilder;
+    0102..0108  invoke-direct  {v2, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0108..010c  iget-wide  v0, v4, LX/F0K;->A03:J
+    010c..0112  invoke-virtual  {v2, v0, v1}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    0112..0116  const-string  v0, "/"
+    0116..011c  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    011c..0120  iget-object  v0, v4, LX/F0K;->A09:Ljava/lang/String;
+    0120..0126  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0126..012a  const-string  v0, " currentStage="
+    012a..0130  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0130..0134  iget  v0, v4, LX/F0K;->A0L:I
+    0134..013a  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    013a..0140  invoke-virtual  {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0140..0142  move-result-object  v0
+    0142..0148  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0148..014e  invoke-virtual  {v4}, LX/F0K;->A02()I
+    014e..0150  move-result  v0
+    0150..0156  invoke-virtual  {v4, v0}, LX/F0K;->A09(I)V
+    0156..0158  monitor-exit
+    0158..015a  goto  -0x7e
+    015a..015e  iget-object  v0, v5, LX/1iV;->A0I:LX/0Ll;
+    015e..0164  invoke-virtual  {v0, v3}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0164..016a  invoke-virtual  {v0}, Ljava/util/AbstractCollection;->size()I
+    016a..016c  move-result  v2
+    016c..0170  const/16  v1, #0xc8
+    0170..0172  const/4  v0, #0x0
+    0172..0176  if-lt  v2, v1, +0x3
+    0176..0178  const/4  v0, #0x1
+    0178..017a  monitor-exit
+    017a..017e  if-eqz  v0, +0x1c
+    017e..0184  invoke-static  {v5}, LX/1iV;->A01(LX/1iV;)I
+    0184..0186  move-result  v0
+    0186..018a  if-lez  v0, +0x16
+    018a..018e  iget-object  v0, v5, LX/1iV;->A0D:Ljava/util/concurrent/atomic/AtomicBoolean;
+    018e..0194  invoke-virtual  {v0, v4, v6}, Ljava/util/concurrent/atomic/AtomicBoolean;->compareAndSet(ZZ)Z
+    0194..0196  move-result  v0
+    0196..019a  if-eqz  v0, +0xe
+    019a..019e  iget-object  v2, v5, LX/1iV;->A0B:LX/098;
+    019e..01a2  const/16  v1, #0x8
+    01a2..01a6  new-instance  v0, LX/TB4;
+    01a6..01ac  invoke-direct  {v0, v5, v1}, LX/TB4;-><init>(Ljava/lang/Object;I)V
+    01ac..01b2  invoke-virtual  {v2, v0}, LX/098;->execute(Ljava/lang/Runnable;)V
+    01b2..01b6  const/16  v1, #0x2b
+    01b6..01b8  const/4  v0, #0x0
+    01b8..01be  invoke-static  {v0, v4, v1, v4, v3}, Landroid/os/Message;->obtain(Landroid/os/Handler;IIILjava/lang/Object;)Landroid/os/Message;
+    01be..01c0  move-result-object  v0
+    01c0..01c2  return-object  v0
+    01c2..01c4  move-exception  v0
+    01c4..01c6  monitor-exit
+    01c6..01c8  throw  v0
+    01c8..01ca  move-exception  v0
+    01ca..01cc  monitor-exit
+    01cc..01ce  throw  v0
+    # exception table: 3 try range(s)
+    # catch <all> code_units 005d..00ab -> 00e4
+    # catch <all> code_units 00ad..00bc -> 00e1
+    # catch <all> code_units 00e5..00e6 -> 00e4
+.end method

@@ -229,3 +229,22 @@ producers, all dispatch failure paths and native retry policy remain unknown.
 This closes the selected current callback path, not older N12 state consumers.
 No runtime/account operation or new capability. Bundle hash/checksums and
 repository documentation gates verified; no new Rust test result claimed.
+
+## Receipt dispatch drop and failure boundaries (2026-11-06)
+
+**Confirmed selected static, current pinned APK:**
+[DEX exports, REA cross-check and direct censuses](apk/2.26.43.72-receipt-dispatch-failure/README.md)
+close0Sf.A05's initial absent-channel return/throw, selected played38 preparation,
+and later channel reread. The initial drop branch has no explicit completion
+of the callback registered before dispatch. No observed runtime race is claimed.
+The FfK exception field has one direct writer; its failure method releases the
+latch for ExecutionException. Existing size/disconnect exports remain linked,
+with normalizedA0T failure treated separately from exact-key0ln.A0B removal.
+
+No confirmed Rust mismatch: local dispatch return, callback completion, socket
+write and server acceptance are distinct. Keep durable original ownership and
+uncertainty on errors; no retry/reset follows from native callback cleanup.
+A05 provider side effects, all failure producers, native job retry and full
+shutdown/generation ordering remain open. No runtime code or account operation.
+Fresh source exports reproduce byte-for-byte; REA retains complete source and
+limitations, with coverage/docs/hygiene checks. No new Rust tests claimed.
