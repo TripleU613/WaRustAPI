@@ -50,7 +50,8 @@ These are conservative Rust admission rules, not claims that the APK rejects
 every broader form: server-only `s.whatsapp.net` source; nonempty bounded ID;
 nonnegative signed-64-bit decimal timestamp; root attributes from/id/type/t
 only; first outer event must be privacy (later siblings are not applied);
-1..64 category children; plain supported
+1..64 total children in the selected event, with at least one named category;
+plain supported
 category attributes and empty category bodies. Duplicate/unknown attributes,
 nontext metadata, mixed/unsupported categories and malformed values refuse
 before any state write. An invalid earlier duplicate is refused even if a later
@@ -159,3 +160,30 @@ snapshot. The existing negative sibling fixture now puts devices first to keep
 testing unsupported-first admission. Existing redelivery/reopen/pending-intent
 and actor capture/adoption/ACK-order regressions remain. No new category, device
 operation, query, identity policy or live account activity was introduced.
+
+
+## Named category filtering (2026-11-05)
+
+**Confirmed static / locally fixed:**19N.A09 uses0Tp.A0N(category) at
+09d6..09e2 and09fe..0a06, then builds its category map from that selection.
+The [complete handler](rea/2.26.43.72-notification-sync-obligations/account-sync-dex.txt)
+and [exact named-child filter](apk/2.26.43.72-group-event-selection/named-child-filter.txt)
+establish that non-category metadata is skipped by name, not parsed as a value.
+Rust previously rejected any non-category child alongside valid readreceipts.
+It now filters before validating category attributes/content/name/value. A
+non-category with readreceipts-like attributes cannot change preference state.
+
+The existing64-total-child local bound remains, including metadata. All selected
+categories still must be supported readreceipts with valid values and empty body;
+unknown actual categories do not gain an ACK. Metadata-only/empty supported work
+returns the existing category-count refusal, without reaching state adoption or
+panicking. Root/action/envelope, pending setter and transactional processed-ID
+guards remain unchanged. Native empty-map ACK behavior is not ported here.
+
+The expanded first-event test fails on the old unsupported-category guard. It
+now prepends metadata with invalid readreceipts-like fields and opaque text to
+a valid selected category; All is adopted/ACKed while later event siblings remain
+unapplied. Metadata-only first privacy is refused with exact checkpoints
+unchanged, alongside existing invalid/unsupported first-event controls. Existing
+mixed selected-category/refusal/reopen/pending tests remain. No new category,
+refresh/device operation, query, identity policy or live account was introduced.

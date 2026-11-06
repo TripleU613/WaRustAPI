@@ -1,3 +1,8 @@
+Account privacy now filters named category children like the APK, allowing
+unrelated metadata beside supported readreceipts. Actual unsupported categories
+and metadata-only events remain refused; regression preserves prior state.
+[Evidence](docs/protocol/account-privacy-notifications.md#named-category-filtering-2026-11-05).
+
 Account privacy now selects the first supported event with later siblings,
 matching current APK dispatch. Later events cannot override or rescue invalid
 first data; existing category/transaction/pending guards remain.

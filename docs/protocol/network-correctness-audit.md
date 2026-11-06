@@ -3834,3 +3834,14 @@ later event siblings; unsupported/malformed first events cannot be rescued or
 overridden. New red/green regression preserves prior state for those refusals.
 Category/envelope/pending-intent/transaction guards remain.
 [Evidence and boundary](account-privacy-notifications.md#first-event-selection-with-later-siblings-2026-11-05).
+
+
+### Account privacy named-category selection (2026-11-05)
+
+**Confirmed static / locally fixed:**19N.A09 uses0Tp.A0N(category). Rust's
+whole-child parsing rejected unrelated metadata beside supported readreceipts.
+It now filters named categories before validation, retaining64-total-child,
+selected category/value/body, envelope/pending/transaction guards. Metadata-only
+remains refused. Red/green regression ensures metadata cannot adopt preference
+state and does not suppress the selected valid category.
+[Source and limits](account-privacy-notifications.md#named-category-filtering-2026-11-05).

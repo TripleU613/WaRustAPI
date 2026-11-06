@@ -17219,5 +17219,12 @@
     "x-live": false,
     "description": "Supported account_sync privacy admission selects first outer event like APK43.72 19N.A09/0Tp.A0D instead of requiring exactly one sibling. Later privacy/devices events are not applied or merged; they cannot override valid first data or rescue invalid/unsupported first data. Existing server/envelope/time, selected category/action, pending-intent and atomic adoption/processed-ID guards remain. Red/green regression verifies first All versus later None/devices and unchanged state on refused first events. No new category, device operation, query or HTTP route.",
     "evidence": "docs/protocol/account-privacy-notifications.md#first-event-selection-with-later-siblings-2026-11-05"
+  },
+  "x-account-privacy-named-category-selection": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Supported account_sync privacy admission filters category-tagged children before validating attributes/content/name/value, matching APK43.72 19N.A09/0Tp.A0N. Unrelated metadata cannot adopt state or suppress valid readreceipts. Existing64-total-child bound, selected readreceipts-only/value/body, root/action/envelope, pending-intent and transaction guards remain. Empty/metadata-only and actual unsupported categories remain refused. Red/green regression uses invalid readreceipts-like metadata plus valid category and verifies metadata-only refusal preserves checkpoints. No new category, query or HTTP route.",
+    "evidence": "docs/protocol/account-privacy-notifications.md#named-category-filtering-2026-11-05"
   }
 }

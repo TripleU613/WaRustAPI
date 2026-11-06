@@ -135,10 +135,14 @@ fn parse(node: &Node) -> Result<Option<Update>> {
         return Err(invalid("unsupported privacy category count"));
     }
     let mut value = None;
-    for category in categories {
+    // APK43.72 19N.A09 uses0Tp.A0N("category"). Unrelated child
+    // metadata is not a category and cannot adopt a preference.
+    for category in categories
+        .iter()
+        .filter(|child| child.description == "category")
+    {
         attributes(category, &["name", "value"])?;
-        if category.description != "category"
-            || category.get_attr("name").and_then(|v| v.as_text()) != Some("readreceipts")
+        if category.get_attr("name").and_then(|v| v.as_text()) != Some("readreceipts")
             || category.content != NodeContent::Empty
         {
             return Err(invalid("unsupported privacy category"));
@@ -153,7 +157,7 @@ fn parse(node: &Node) -> Result<Option<Update>> {
     // 19N builds a HashMap with put: repeated supported names use the last value.
     Ok(Some(Update {
         id: id.to_owned(),
-        value: value.expect("nonempty categories"),
+        value: value.ok_or_else(|| invalid("unsupported privacy category count"))?,
         ack: Node::new("ack")
             .attr("id", id)
             .attr("to", super::receipts::ack_address(from))
@@ -332,6 +336,15 @@ mod tests {
         let store = open(&dir.path().join("first.redb"));
         let node = notification("first", vec![category("all")]);
         let mut children = node.child_nodes().to_vec();
+        let mut categories = children[0].child_nodes().to_vec();
+        categories.insert(
+            0,
+            Node::new("metadata")
+                .attr("name", "readreceipts")
+                .attr("value", "invalid")
+                .text("opaque"),
+        );
+        children[0] = children[0].clone().children(categories);
         children.push(Node::new("privacy").children(vec![category("none")]));
         children.push(Node::new("devices"));
         let selected = node.children(children);
@@ -343,6 +356,7 @@ mod tests {
         );
         let before = snapshot(&store);
         for children in [
+            vec![Node::new("privacy").children(vec![Node::new("metadata")])],
             vec![
                 Node::new("devices"),
                 Node::new("privacy").children(vec![category("none")]),
