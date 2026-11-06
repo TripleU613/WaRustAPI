@@ -1,0 +1,18 @@
+{
+  "README.md": {
+    "bytes": 4374,
+    "sha256": "0990cf31eba3aaf56b4c391ad222063f908390d451f15001937842ba3cc89c62"
+  },
+  "get-error.txt": {
+    "bytes": 1751,
+    "sha256": "0fe5a8538c7499801e7f60ccced8bf48a29d2f9e579b476bdbe7b09597b240af"
+  },
+  "lookup-code-wrapper.txt": {
+    "bytes": 412,
+    "sha256": "3aa7c2b1b2fa2eadfdb4ac5a26fc451f5549d506dd8207a8339b981e4f26a3d7"
+  },
+  "set-error.txt": {
+    "bytes": 555,
+    "sha256": "6c337d3192dbc287681944a85db346e2ff99181dfcc098bce9fc355f0d43030d"
+  }
+}

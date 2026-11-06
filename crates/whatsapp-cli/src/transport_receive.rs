@@ -1183,7 +1183,7 @@ pub(super) async fn actions_status(
     println!("actions: {} queued so far", outcomes.len());
     for a in &outcomes {
         println!(
-            "  id={} kind={} label={} status={:?} settlement_sequence={}{}{}{}{}{}{}{}{}",
+            "  id={} kind={} label={} status={:?} settlement_sequence={}{}{}{}{}{}{}{}{}{}",
             a.id,
             a.kind,
             a.label,
@@ -1214,6 +1214,9 @@ pub(super) async fn actions_status(
                 .unwrap_or_default(),
             a.blocklist_error_code
                 .map(|code| format!(" blocklist_error_code={code}"))
+                .unwrap_or_default(),
+            a.photo_error
+                .map(|outcome| format!(" photo_error={outcome:?}"))
                 .unwrap_or_default(),
             match (a.error_code, a.error_text.as_deref()) {
                 (None, None) => String::new(),

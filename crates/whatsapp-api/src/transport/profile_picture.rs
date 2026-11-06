@@ -37,6 +37,60 @@ fn invalid(reason: &'static str) -> Error {
     Error::invalid("profile_picture", reason)
 }
 
+/// Native photo error callback outcome; separate from outer IQ Error status.
+/// This diagnostic does not apply photo/cache state or authorize another request.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+pub struct PhotoErrorOutcome {
+    /// Native signed32 code; zero includes missing/invalid-code fallback.
+    pub code: i32,
+    /// Lookup404/410 calls the empty-metadata callback, not its refusal callback.
+    pub empty_lookup: bool,
+}
+
+pub(super) fn error_outcome(kind: &str, request: &Node, reply: &Node) -> Option<PhotoErrorOutcome> {
+    if reply.get_attr("type").and_then(|v| v.as_text()) != Some("error")
+        || request.get_attr("xmlns").and_then(|v| v.as_text()) != Some("w:profile:picture")
+    {
+        return None;
+    }
+    let upload = kind == SET_KIND
+        && request.get_attr("type").and_then(|v| v.as_text()) == Some("set")
+        && matches!(request.child_nodes(), [picture]
+            if picture.description == "picture"
+                && picture.get_attr("type").and_then(|v| v.as_text()) == Some("image")
+                && matches!(&picture.content, crate::binary::NodeContent::Bytes(_)));
+    let lookup = kind == GET_KIND
+        && request.get_attr("type").and_then(|v| v.as_text()) == Some("get")
+        && request.get_attr("target").is_some()
+        && matches!(request.child_nodes(), [picture]
+            if picture.description == "picture"
+                && picture.get_attr("type").and_then(|v| v.as_text()) == Some("image")
+                && picture.get_attr("query").and_then(|v| v.as_text()) == Some("url"));
+    if !upload && !lookup {
+        return None;
+    }
+    // APK43.72 Hyd.Bvj -> 1ud.A00 and 6p1.Bvj -> 6oj.A05 -> 1ud.A00.
+    // The first direct coded error wins, even when its code parses to fallback0.
+    // 6p1 maps404/410 to CAe(empty H5d), all other codes to CAd.
+    // Evidence: docs/protocol/apk/2.26.43.72-photo-error-callbacks/README.md.
+    let code = reply
+        .child_nodes()
+        .iter()
+        .find(|child| {
+            child.description == "error"
+                && child.get_attr("code").and_then(|v| v.as_text()).is_some()
+        })
+        .and_then(|child| child.get_attr("code"))
+        .and_then(|v| v.as_text())
+        .and_then(super::mex::java_decimal_long)
+        .and_then(|code| i32::try_from(code).ok())
+        .unwrap_or(0);
+    Some(PhotoErrorOutcome {
+        code,
+        empty_lookup: lookup && matches!(code, 404 | 410),
+    })
+}
+
 /// Build the set request for our own photo.
 pub fn set_request(id: &str, jpeg: &[u8]) -> Result<Node> {
     if id.is_empty() || id.len() > 128 {

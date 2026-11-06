@@ -1,3 +1,10 @@
+2026-11-06 — **Corrected photo outer-error selection and retained callback outcome.**
+Upload and lookup now select the first direct coded error, matching the pinned
+APK, instead of a competing nested error. Optional durable photo_error keeps
+signed code and lookup404/410 empty-metadata classification; status remains the
+outer IQ Error. No cache mutation, retry or live operation.
+[Evidence, regression and limits](chat-actions.md#photo-error-callback-outcomes-2026-11-06).
+
 2026-11-06 — **Held MEX privacy setter intent before notification ACK.**
 The pinned mutation serializes as w:mex IQ/get, so the classic-only guard missed
 it. Exact direct query_id recognition now preserves the hold across queued,

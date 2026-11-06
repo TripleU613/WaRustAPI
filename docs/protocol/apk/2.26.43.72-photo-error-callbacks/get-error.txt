@@ -1,0 +1,38 @@
+
+# class: LX/6p1;
+# extends: Ljava/lang/Object;
+
+.method public Bvj(VLL)  # .registers 14
+    # full signature: LX/6p1;->Bvj(LX/0Tp;Ljava/lang/String;)V
+    0000..0006  invoke-static  {v12}, LX/6oj;->A05(LX/0Tp;)I
+    0006..0008  move-result  v3
+    0008..000c  const/16  v0, #0x194
+    000c..0010  if-eq  v3, v0, +0x12
+    0010..0014  const/16  v0, #0x19a
+    0014..0018  if-eq  v3, v0, +0xe
+    0018..001c  iget-object  v0, v11, LX/6p1;->A07:LX/8pX;
+    001c..0020  iget-object  v1, v11, LX/6p1;->A02:LX/0DY;
+    0020..0024  iget-object  v2, v11, LX/6p1;->A05:Ljava/lang/String;
+    0024..0028  iget-wide  v4, v11, LX/6p1;->A06:J
+    0028..002e  invoke-interface/range  {v0..v5}, LX/8pX;->CAd(LX/0DY;Ljava/lang/String;IJ)V
+    002e..0030  return-void
+    0030..0034  iget-object  v2, v11, LX/6p1;->A07:LX/8pX;
+    0034..0038  iget-object  v4, v11, LX/6p1;->A02:LX/0DY;
+    0038..003c  iget-object  v1, v11, LX/6p1;->A05:Ljava/lang/String;
+    003c..0040  const-string  v0, "preview"
+    0040..0046  invoke-virtual  {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0046..0048  move-result  v0
+    0048..004e  invoke-static  {v0}, LX/6oe;->A00(I)I
+    004e..0050  move-result  v10
+    0050..0052  const/4  v5, #0x0
+    0052..0054  const/4  v9, #0xff (-1)
+    0054..0058  new-instance  v3, LX/H5d;
+    0058..005a  move-object  v7, v5
+    005a..005c  move-object  v8, v5
+    005c..005e  move-object  v6, v5
+    005e..0064  invoke-direct/range  {v3..v10}, LX/H5d;-><init>(LX/0DY;Ljava/lang/String;Ljava/lang/String;Ljava/net/URL;[BII)V
+    0064..0068  iget-wide  v0, v11, LX/6p1;->A06:J
+    0068..006e  invoke-interface  {v2, v3, v0, v1}, LX/8pX;->CAe(LX/H5d;J)V
+    006e..0070  return-void
+    # exception table: 0 try range(s)
+.end method

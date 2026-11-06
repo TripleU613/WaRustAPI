@@ -90,3 +90,11 @@ Hyd.A00/CK4/BsS (set/set-result/set-failure),6p1.A00/CK4/BsS
 log searches did not locate these paths; the namespace anchor did. Full methods
 retain alternate branches without claiming coverage of all photo operations.
 checksums.json covers every other file. No APK/media/bulk tree is committed.
+
+## Error callback follow-up (2026-11-06)
+
+The previously open Bvj callbacks are now retained in the
+[error callback bundle](../2.26.43.72-photo-error-callbacks/README.md).
+Both select1ud.A00; lookup404/410 routes to empty metadata while upload still
+calls onError. Rust now preserves this diagnostic and correct direct-code
+selection; downstream ITY/8pX effects remain unported/untraced.

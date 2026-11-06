@@ -108,6 +108,8 @@ struct Row {
     about_refusal: Option<super::about::AboutRefusal>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     blocklist_error_code: Option<i32>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    photo_error: Option<super::profile_picture::PhotoErrorOutcome>,
     #[serde(default)]
     sent_at: Option<Timestamp>,
     #[serde(default)]
@@ -157,6 +159,10 @@ pub struct ActionOutcome {
     /// Absent for other producers/results and legacy rows; no retry authority.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub blocklist_error_code: Option<i32>,
+    /// Native photo error callback diagnostic; legacy absence remains unknown.
+    /// Empty lookup metadata is not a cache adoption or retry authorization.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub photo_error: Option<super::profile_picture::PhotoErrorOutcome>,
     /// Server error code when refused.
     pub error_code: Option<u16>,
     /// Server error text when refused.
@@ -216,6 +222,7 @@ fn queue_prepared_in(
         contact_protocol_refusal: None,
         about_refusal: None,
         blocklist_error_code: None,
+        photo_error: None,
         sent_at: None,
         settled_at: None,
         settlement_sequence: None,
@@ -279,6 +286,7 @@ pub(crate) fn view_in_write(
             contact_protocol_refusal: row.contact_protocol_refusal,
             about_refusal: row.about_refusal,
             blocklist_error_code: row.blocklist_error_code,
+            photo_error: row.photo_error,
             error_code: row.error_code,
             error_text: row.error_text,
         },
@@ -316,6 +324,7 @@ pub(crate) fn view_in(
             contact_protocol_refusal: row.contact_protocol_refusal,
             about_refusal: row.about_refusal,
             blocklist_error_code: row.blocklist_error_code,
+            photo_error: row.photo_error,
             error_code: row.error_code,
             error_text: row.error_text,
         },
@@ -834,6 +843,7 @@ fn record_reply_inner(
         // because the incoming ID matches that row's key.
         let request = decode_owned(id, &row.wire)?;
         let kind = node.get_attr("type").and_then(|v| v.as_text());
+        let photo_error = super::profile_picture::error_outcome(&row.kind, &request, node);
         // APK43.72 1rA.A03 selects result -> JAj.A02; that About callback
         // ignores the response payload. Do not reinterpret an extension child
         // as a refusal, or extend this producer-specific rule to app-state.
@@ -905,10 +915,11 @@ fn record_reply_inner(
             || (blocklist_reply && kind == Some("result"))
         {
             None
-        } else if blocklist_reply && kind == Some("error") {
+        } else if (blocklist_reply || photo_error.is_some()) && kind == Some("error") {
             // APK43.72 1ud.A01 scans direct error children, skipping
             // missing code. It returns the first coded error, not a nested
             // user error or an earlier uncoded extension (8R7/6p9.Bvj).
+            // Hyd.Bvj and 6p1.Bvj select the same 1ud parser for photos.
             node.child_nodes().iter().find(|child| {
                 child.description == "error"
                     && child.get_attr("code").and_then(|v| v.as_text()).is_some()
@@ -985,6 +996,7 @@ fn record_reply_inner(
                 .and_then(|value| i32::try_from(value).ok())
                 .unwrap_or(0)
         });
+        row.photo_error = photo_error;
         row.about_refusal = (row.kind == super::about::ACTION_KIND)
             .then(|| super::about::refusal(&request, node))
             .flatten();
@@ -1072,6 +1084,7 @@ pub fn outcomes(store: &ProtocolStore) -> Result<Vec<ActionOutcome>> {
                     contact_protocol_refusal: row.contact_protocol_refusal,
                     about_refusal: row.about_refusal,
                     blocklist_error_code: row.blocklist_error_code,
+                    photo_error: row.photo_error,
                     error_code: row.error_code,
                     error_text: row.error_text,
                 });
@@ -1114,6 +1127,7 @@ pub(crate) fn outcomes_in_write(tx: &crate::store::WriteTx<'_>) -> Result<Vec<Ac
                 contact_protocol_refusal: row.contact_protocol_refusal,
                 about_refusal: row.about_refusal,
                 blocklist_error_code: row.blocklist_error_code,
+                photo_error: row.photo_error,
                 error_code: row.error_code,
                 error_text: row.error_text,
             });
@@ -1226,6 +1240,7 @@ pub fn settled_for_kinds(
                     contact_protocol_refusal: row.contact_protocol_refusal,
                     about_refusal: row.about_refusal,
                     blocklist_error_code: row.blocklist_error_code,
+                    photo_error: row.photo_error,
                     error_code: row.error_code,
                     error_text: row.error_text,
                 };
@@ -2473,6 +2488,144 @@ mod tests {
                 );
             }
         }
+    }
+
+    #[test]
+    fn photo_error_selects_first_direct_coded_child() {
+        use super::super::profile_picture;
+        for upload in [false, true] {
+            let (_dir, store) = store();
+            let id = if upload {
+                profile_picture::queue_set(&store, vec![0xff, 0xd8, 0xff, 0xe0, 1, 2, 0xff, 0xd9])
+            } else {
+                profile_picture::queue_get(
+                    &store,
+                    &crate::model::jid::Jid::parse("15555550101@s.whatsapp.net").unwrap(),
+                )
+            }
+            .unwrap();
+            reserve_next(&store).unwrap().unwrap();
+            let reply = Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "error")
+                .children(vec![
+                    Node::new("list").children(vec![
+                        Node::new("user").children(vec![Node::new("error").attr("code", "401")]),
+                    ]),
+                    Node::new("error"),
+                    Node::new("error").attr("code", "404"),
+                    Node::new("error").attr("code", "410"),
+                ]);
+            assert!(record_reply(&store, &reply).unwrap());
+            let saved = outcomes(&store).unwrap().remove(0);
+            assert_eq!(saved.status, ActionStatus::Error);
+            assert_eq!(saved.error_code, Some(404));
+            assert_eq!(
+                saved.photo_error,
+                Some(profile_picture::PhotoErrorOutcome {
+                    code: 404,
+                    empty_lookup: !upload
+                })
+            );
+        }
+    }
+
+    #[test]
+    fn photo_error_metadata_preserves_native_codes_and_reopen_without_replay() {
+        use super::super::profile_picture::{self, PhotoErrorOutcome};
+        for upload in [false, true] {
+            for (text, code) in [
+                (Some("404"), 404),
+                (Some("410"), 410),
+                (Some("403"), 403),
+                (Some("٤٠٤"), 404),
+                (Some("-1"), -1),
+                (Some("65536"), 65536),
+                (Some("-2147483648"), i32::MIN),
+                (Some("2147483647"), i32::MAX),
+                (Some("2147483648"), 0),
+                (Some(" 404"), 0),
+                (Some(""), 0),
+                (None, 0),
+            ] {
+                let (dir, store) = store();
+                let id = if upload {
+                    profile_picture::queue_set(
+                        &store,
+                        vec![0xff, 0xd8, 0xff, 0xe0, 1, 2, 0xff, 0xd9],
+                    )
+                } else {
+                    profile_picture::queue_get(
+                        &store,
+                        &crate::model::jid::Jid::parse("15555550101@s.whatsapp.net").unwrap(),
+                    )
+                }
+                .unwrap();
+                reserve_next(&store).unwrap().unwrap();
+                let mut children = vec![Node::new("error")];
+                if let Some(text) = text {
+                    children.push(Node::new("error").attr("code", text));
+                    children.push(Node::new("error").attr("code", "410"));
+                }
+                let reply = Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", "error")
+                    .children(children);
+                assert!(record_reply(&store, &reply).unwrap());
+                assert!(!record_reply(&store, &reply).unwrap());
+                let before = outcomes(&store).unwrap();
+                assert_eq!(
+                    before[0].photo_error,
+                    Some(PhotoErrorOutcome {
+                        code,
+                        empty_lookup: !upload && matches!(code, 404 | 410)
+                    })
+                );
+                assert_eq!(before[0].status, ActionStatus::Error);
+                let raw: serde_json::Value = store
+                    .read(|tx| tx.get_json(Table::Checkpoints, key(&id).as_bytes(), 1))
+                    .unwrap()
+                    .unwrap();
+                let mut legacy = raw.clone();
+                legacy.as_object_mut().unwrap().remove("photo_error");
+                let legacy: Row = serde_json::from_value(legacy).unwrap();
+                assert!(legacy.photo_error.is_none());
+                assert!(
+                    serde_json::to_value(legacy)
+                        .unwrap()
+                        .get("photo_error")
+                        .is_none()
+                );
+                drop(store);
+                let reopened = ProtocolStore::open(OpenOptions {
+                    path: dir.path().join("p.redb"),
+                    account_id: AccountId::new("a").unwrap(),
+                    key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([7; 32]))),
+                    create: false,
+                })
+                .unwrap();
+                assert_eq!(outcomes(&reopened).unwrap(), before);
+                assert!(reserve_pending(&reopened).unwrap().is_empty());
+                let after: serde_json::Value = reopened
+                    .read(|tx| tx.get_json(Table::Checkpoints, key(&id).as_bytes(), 1))
+                    .unwrap()
+                    .unwrap();
+                assert_eq!(raw, after);
+            }
+        }
+        // A kind label alone cannot borrow photo error interpretation.
+        let (_dir, store) = store();
+        let id = queue(&store, profile_picture::GET_KIND, "wrong producer", ping).unwrap();
+        reserve_next(&store).unwrap().unwrap();
+        record_reply(
+            &store,
+            &Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "error")
+                .children(vec![Node::new("error").attr("code", "404")]),
+        )
+        .unwrap();
+        assert!(outcomes(&store).unwrap()[0].photo_error.is_none());
     }
 
     #[tokio::test(start_paused = true)]

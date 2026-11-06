@@ -1,4 +1,11 @@
 {
+  "x-photo-error-callback-outcomes": {
+    "x-cli": "whatsapp-cli actions (text and JSON); xtask apk-smali <apk> --class <class> --method Bvj --signatures --exceptions",
+    "x-transport": "experimental saved photo action error settlement",
+    "x-live": false,
+    "description": "APK43.72 Hyd.Bvj and6p1.Bvj use1ud.A00, selecting the first direct coded error and Java signed32/default0 parsing. Matching saved upload/set/image/bytes and lookup/get/picture/image/query=url requests now avoid competing nested/uncoded error selection. ActionOutcome.photo_error persists code plus empty_lookup for lookup404/410 (native empty-metadata callback); uploads and other lookup codes remain refusal callbacks. Outer IQ Error status and generic u16 error_code remain distinct. Legacy absence unknown, no backfill. Diagnostic only: no native cache adoption, request/retry/timer change, HTTP route or live validation.",
+    "evidence": "docs/protocol/apk/2.26.43.72-photo-error-callbacks/README.md"
+  },
   "x-account-privacy-mex-intent-guard": {
     "x-cli": "whatsapp-cli listen; whatsapp-cli actions; account-privacy-inspect; xtask apk-smali; xtask apk-field-refs",
     "x-transport": "experimental account_sync notification guard; offline tested",
@@ -1301,6 +1308,30 @@
           "contact_projection": {
             "$ref": "#/components/schemas/ContactProjection",
             "description": "Optional local contact-status projection result, distinct from outer IQ status. Saved atomically with status/once-only marker; omitted for legacy/unrelated/not-yet-projected rows. No raw phone/time."
+          },
+          "photo_error": {
+            "type": "object",
+            "readOnly": true,
+            "required": [
+              "code",
+              "empty_lookup"
+            ],
+            "properties": {
+              "code": {
+                "type": "integer",
+                "minimum": -2147483648,
+                "maximum": 2147483647,
+                "description": "Native signed32 first-direct-coded-error result; zero includes absent/malformed/overflow fallback."
+              },
+              "empty_lookup": {
+                "type": "boolean",
+                "description": "True only for supported lookup404/410 empty-metadata callback. Not cache adoption or a retry instruction."
+              }
+            },
+            "description": "Optional durable photo callback error diagnostic. Outer status remains Error; generic error_code is separate u16 compatibility data. Omitted for legacy/unrelated/results; no historical backfill. No native photo/cache state mutation.",
+            "x-cli": "whatsapp-cli actions",
+            "x-transport": "experimental",
+            "x-live": false
           },
           "blocklist_error_code": {
           "type": "integer",

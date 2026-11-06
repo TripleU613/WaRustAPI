@@ -4681,3 +4681,30 @@ adoption or resend. Full workspace:1534 tests, nine suites including doc tests.
 No new sender, replay, timer, automatic refresh or live-account operation.
 Native category-keyed owner, effective protocol selection and success recovery
 remain unported; this conservative recognition is broader than native ownership.
+
+## Photo error callback outcomes (2026-11-06)
+
+**Confirmed static / implemented offline:** [pinned APK43.72 callbacks](apk/2.26.43.72-photo-error-callbacks/README.md)
+Hyd.Bvj and6p1.Bvj use1ud.A00 (lookup through6oj.A05), selecting the first
+direct error with a present code, skipping uncoded children. A present invalid
+code yields0 rather than searching later codes. Rust's generic nested-error
+search could instead select nested401 ahead of actual direct404; the regression
+failed before correction and now passes for the actual upload/lookup producers.
+Only matching saved set/image/bytes or get/picture/image/query=url wire forms
+receive this rule; a mislabeled ping does not.
+
+Optional ActionOutcome.photo_error contains native signed32 code and
+empty_lookup. The latter is true only for supported lookup404/410, which calls
+8pX.CAe with empty H5d metadata in the APK; other lookup codes callCAd, and
+upload codes callITY.onError without this special branch. The outer action
+status stays Error and generic error_code remains the u16 compatibility field.
+This diagnostic is visible through actions text/JSON and persists atomically
+with the original reply. Legacy absence remains unknown and is not backfilled.
+
+Tests cover competing nested/direct/uncoded errors, first-invalid-code precedence,
+missing/empty/overflow/signed/BMP-digit conversion, upload versus lookup404/410,
+duplicate settlement, legacy serde and encrypted-store reopen with no resend.
+No native photo/cache adoption, image transformation, request construction,
+source/callback lifetime, retry, timer or HTTP-route behavior was added. Downstream
+ITY/8pX state effects and the meaning of the saved callback long remain unknown.
+No live account operation or claim that these codes cause account restrictions.
