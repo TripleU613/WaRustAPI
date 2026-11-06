@@ -124,6 +124,9 @@ pub const UNSENT_TARGET: usize = 812;
 pub const GENERATE_PER_CALL: usize = 50;
 /// Follow-up uploads accepted per session after `count_low`.
 pub const MAX_ROUNDS_PER_SESSION: u32 = 20;
+// Dedicated local error context lets the actor ignore expiry without hiding
+// storage or ownership failures that occur during a settlement attempt.
+pub(crate) const DEADLINE_FIELD: &str = "prekey_upload_deadline";
 const ID_MODULUS: u32 = 0x00FF_FFFE;
 const NEXT_ID_KEY: &[u8] = b"comparison-next-prekey-id";
 const RECORD_PREFIX: &str = "comparison-prekey:";
@@ -849,6 +852,7 @@ fn begin_upload_selected(
 impl PendingUpload {
     /// Recheck local ownership after queue handoff and before writer encoding.
     pub(crate) fn check_write_authority(&self, store: &ProtocolStore) -> Result<()> {
+        self.check_deadline()?;
         store.read(|tx| {
             let current = AccountRecord::load(tx)?
                 .ok_or_else(|| invalid("publication account unavailable before write"))?;
@@ -901,8 +905,18 @@ impl PendingUpload {
                     return Err(invalid("reserved KEM public material changed before write"));
                 }
             }
-            Ok(())
+            // Validation may take time; do not renew a queued callback's claim.
+            self.check_deadline()
         })
+    }
+    fn check_deadline(&self) -> Result<()> {
+        if tokio::time::Instant::now() >= self.deadline {
+            return Err(Error::invalid(
+                DEADLINE_FIELD,
+                "prekey upload deadline elapsed",
+            ));
+        }
+        Ok(())
     }
 
     /// Only the exact `iq` result/error for this batch can settle it.
@@ -922,6 +936,7 @@ impl PendingUpload {
                 "requires a matching IQ result/error for this upload",
             ));
         }
+        self.check_deadline()?;
         let accepted = node.get_attr("type").and_then(|v| v.as_text()) == Some("result");
         // APK 43.72 1rA.A03 selects result -> 1ru.A02 or error ->
         // 1ud.A01. Fields from the other callback must not affect settlement.
@@ -1008,6 +1023,8 @@ impl PendingUpload {
                     return Err(invalid("reserved key ownership changed"));
                 }
             }
+            // Admission is a live callback claim, including direct library use.
+            self.check_deadline()?;
             batch.status = if accepted {
                 "server_acknowledged".into()
             } else {
@@ -1681,9 +1698,49 @@ mod tests {
         );
     }
 
-    /// 13c.A03: Kyber keys ride with the upload only while property 21198 is
-    /// on, and only with an unsent last-resort key; once that is acknowledged
-    /// the next upload carries none.
+    #[tokio::test(start_paused = true)]
+    async fn direct_upload_settlement_requires_an_unexpired_callback_claim() {
+        let dir = tempfile::tempdir().unwrap();
+        for kind in ["result", "error"] {
+            for delay_ms in [29_999, 30_000, 30_001] {
+                let path = dir.path().join(format!("claim-{kind}-{delay_ms}.db"));
+                let store = open(&path);
+                let (account, signed) = account_and_signed(&store);
+                generate(&store).unwrap();
+                let (pending, _) = begin_upload(&store, &account, &signed).unwrap().unwrap();
+                let snapshot = |store: &ProtocolStore| {
+                    store
+                        .read(|tx| {
+                            [Table::Prekeys, Table::Checkpoints]
+                                .into_iter()
+                                .map(|t| tx.scan(t, 1, 10000))
+                                .collect::<Result<Vec<_>>>()
+                        })
+                        .unwrap()
+                };
+                let before = snapshot(&store);
+                tokio::time::advance(std::time::Duration::from_millis(delay_ms)).await;
+                let reply = Node::new("iq")
+                    .attr("id", pending.iq_id.as_str())
+                    .attr("type", kind);
+                let result = pending.settle(&store, &reply);
+                if delay_ms < 30_000 {
+                    assert_eq!(result.unwrap().accepted, kind == "result");
+                } else {
+                    assert!(
+                        result.is_err(),
+                        "expired direct {kind} claim {delay_ms} must refuse"
+                    );
+                    assert_eq!(snapshot(&store), before);
+                    drop(store);
+                    let store = open(&path);
+                    assert!(pending.settle(&store, &reply).is_err());
+                    assert_eq!(snapshot(&store), before);
+                }
+            }
+        }
+    }
+
     #[test]
     fn settlement_rejects_changed_publication_authority_without_writes() {
         for change in 0..9 {
@@ -1927,6 +1984,9 @@ mod tests {
         assert!(pending.settle(&store, &reply).unwrap().accepted);
     }
 
+    /// 13c.A03: Kyber keys ride with the upload only while property 21198 is
+    /// on, and only with an unsent last-resort key; once that is acknowledged
+    /// the next upload carries none.
     #[test]
     fn kyber_keys_upload_only_behind_the_server_property() {
         let dir = tempfile::tempdir().unwrap();

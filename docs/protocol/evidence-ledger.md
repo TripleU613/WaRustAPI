@@ -8074,3 +8074,46 @@ not prove arbitrary KEM private algebraic consistency or bind every signature,
 role/status metadata byte to the original row. Same-identity signed-key rotation,
 custom direct I/O and whole-store rollback remain outside this guard. No APK
 wire change, replay authority or live account operation.
+
+### Upload deadline fences writer and direct settlement admission (2026-11-06)
+
+**Confirmed local defects, fixed offline:** a reserved upload could wait in the
+outbound queue until its30-second reply deadline, then still reach encoding and
+transmission. Separately, PendingUpload.settle itself did not check that deadline;
+only the actor's reply dispatch did, so direct library callers could adopt an
+expired result/error. These are local claim-lifetime gaps, not newly inferred
+APK timeout values or observed server restriction causes.
+
+A shared check_deadline rejects Instant::now() >= the original pending deadline.
+Writer preflight checks before store/material inspection and again at its end,
+so validation cannot deliberately renew the claim or admit an already expired
+request. Direct settle checks after exact IQ matching and again in the write
+transaction after ownership/material validation, before status writes. Deadline
+failure leaves the uncertain batch/key ownership untouched. The existing writer
+envelope reports its local error and stops the epoch before encoding that node.
+No fresh deadline, metadata release, replacement upload or automatic replay.
+Expiry uses the dedicated local InvalidInput field prekey_upload_deadline.
+The actor maps only that context to a captured late reply and continues receive
+if the deadline crosses during settlement; storage/ownership errors still
+propagate. The queued-expiry regression also exercises this dispatch helper.
+
+queued_prekey_upload_cannot_start_at_or_after_reply_deadline holds a real
+injected outbound envelope and uses paused monotonic time:29,999ms admits one
+encoding;30,000ms and30,001ms refuse without encoding. It preserves exact
+Account/Prekeys/Checkpoints, pending/round consumption and50 uncertain keys,
+including after reopen; there is no replacement write. The old writer failed
+at exactly30,000ms.
+
+Direct regression direct_upload_settlement_requires_an_unexpired_callback_claim
+covers result and error at the same three boundaries. Before the deadline both
+retain their normal meaning; at/after it neither changes keys/checkpoints,
+including on a repeated held callback after reopening. Old direct settlement
+failed on the exactly-expired result. Existing actor late-reply capture and
+consume-before-ACK controls remain separate tests.
+
+This uses the existing session's monotonic deadline, not reserved_at wall time,
+server timestamps or inferred historical age. It does not restore callbacks on
+reconnect/restart or guarantee the deadline stays unexpired across later encoding,
+socket I/O or transaction commit. Those operations are not atomic with the clock.
+No APK wire field, configured timeout length, native hold delay, retry authority
+or live account behavior changed. Tests use synthetic stores/injected channels.

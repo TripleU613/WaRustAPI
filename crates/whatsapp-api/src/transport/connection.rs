@@ -855,7 +855,7 @@ pub(crate) async fn drive(
                         continue;
                     }
                     if upload.as_ref().is_some_and(|u| tokio::time::Instant::now() < u.deadline && u.matches(&node)) {
-                        let outcome = upload.take().expect("matched pending upload").settle(&store, &node)?;
+                        let Some(outcome) = settle_upload_reply(&store, upload.take().expect("matched pending upload"), &node)? else { continue; };
                         // 43.72 Fcj3/Fc8(7): success demand enters migrated ADD admission.
                         if outcome.accepted && (outcome.count_low || outcome.pq_count_low) {
                             maybe_upload(&store, &account, &link, &mut upload, &mut upload_rounds, PrekeyUploadTrigger::Success { legacy: outcome.count_low, pq: outcome.pq_count_low }).await?;
@@ -1205,6 +1205,24 @@ fn incoming_line(
         marked_read,
         "incoming"
     );
+}
+
+fn settle_upload_reply(
+    store: &ProtocolStore,
+    pending: super::prekeys::PendingUpload,
+    node: &Node,
+) -> Result<Option<super::prekeys::UploadOutcome>> {
+    match pending.settle(store, node) {
+        Ok(outcome) => Ok(Some(outcome)),
+        Err(Error::InvalidInput {
+            field: super::prekeys::DEADLINE_FIELD,
+            ..
+        }) => {
+            tracing::info!("prekey reply expired during settlement; uncertainty retained");
+            Ok(None)
+        }
+        Err(error) => Err(error),
+    }
 }
 
 /// Entry reason is preserved so count notifications and successful replies
@@ -4921,6 +4939,90 @@ mod tests {
         crate::registration::factory::install_test_material(&store, &config()).unwrap();
         Arc::new(store)
     }
+    #[tokio::test(start_paused = true)]
+    async fn queued_prekey_upload_cannot_start_at_or_after_reply_deadline() {
+        let dir = tempfile::tempdir().unwrap();
+        for delay_ms in [29_999, 30_000, 30_001] {
+            let path = dir.path().join(format!("queued-deadline-{delay_ms}.db"));
+            let store = registered_store(&path);
+            let account = store.read(AccountRecord::load).unwrap().unwrap();
+            let (_incoming, incoming) = mpsc::channel(1);
+            let (outgoing, mut writes) = mpsc::channel(1);
+            let link = NodeLink::new(incoming, outgoing);
+            let worker_store = store.clone();
+            let task = tokio::spawn(async move {
+                let mut pending = None;
+                let mut rounds = 0;
+                let result = maybe_upload(
+                    &worker_store,
+                    &account,
+                    &link,
+                    &mut pending,
+                    &mut rounds,
+                    PrekeyUploadTrigger::Startup,
+                )
+                .await;
+                (result, pending.is_some(), rounds)
+            });
+            let queued = writes.recv().await.unwrap();
+            let pending_reply = queued.prekey_guard.as_ref().unwrap().1.clone();
+            let reply = Node::new("iq")
+                .attr("id", queued.node.get_attr("id").unwrap().as_text().unwrap())
+                .attr("type", "result");
+            let deadline = pending_reply.deadline;
+            let now = tokio::time::Instant::now();
+            assert_eq!(deadline.duration_since(now), Duration::from_secs(30));
+            let snapshot = |store: &ProtocolStore| {
+                store
+                    .read(|tx| {
+                        [Table::Account, Table::Prekeys, Table::Checkpoints]
+                            .into_iter()
+                            .map(|t| tx.scan(t, 1, 10000))
+                            .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot(&store);
+            tokio::time::advance(Duration::from_millis(delay_ms)).await;
+            assert_eq!(tokio::time::Instant::now() >= deadline, delay_ms >= 30_000);
+            let mut encoded = 0;
+            if let Some((node, outcome)) = queued.prepare() {
+                encode(&node).unwrap();
+                encoded += 1;
+                outcome.send(Ok(())).unwrap();
+            }
+            let (result, held, rounds) = task.await.unwrap();
+            assert!(held);
+            assert_eq!(rounds, 1);
+            assert!(writes.recv().await.is_none(), "no replacement write");
+            if delay_ms < 30_000 {
+                assert!(result.is_ok());
+                assert_eq!(encoded, 1);
+            } else {
+                assert!(
+                    result.is_err(),
+                    "expired queued upload {delay_ms} must refuse"
+                );
+                assert_eq!(encoded, 0);
+            }
+            if delay_ms >= 30_000 {
+                assert!(
+                    settle_upload_reply(&store, pending_reply, &reply)
+                        .unwrap()
+                        .is_none()
+                );
+            }
+            assert_eq!(snapshot(&store), before);
+            assert_eq!(
+                super::super::prekeys::summary(&store).unwrap().uncertain,
+                50
+            );
+            drop(store);
+            let store = identity_store(&path);
+            assert_eq!(snapshot(&store), before);
+        }
+    }
+
     #[tokio::test]
     async fn queued_prekey_upload_rechecks_authority_before_writer_encoding() {
         let dir = tempfile::tempdir().unwrap();

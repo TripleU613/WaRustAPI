@@ -17436,5 +17436,12 @@
     "x-live": false,
     "description": "Writer dequeue now requires live selected legacy/KEM rows with original public fingerprints, existing material consistency validation and no consumption conflict. Legacy per-key metadata must remain outcome_unknown under the original IQ. Valid consumption markers can settle late ACKs but cannot authorize publishing spent keys. Refusal preserves reservations/state without repair or replay. Snapshot-to-write races, full row/signature/role identity and arbitrary KEM private algebraic consistency remain outside this guard.",
     "evidence": "docs/protocol/prekey-count-notifications.md#queued-publication-requires-live-original-key-material-2026-11-06"
+  },
+  "x-prekey-upload-deadline-admission": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Writer preflight and PendingUpload.settle now reject at or after the original monotonic pending deadline, with rechecks after ownership/material validation. Writer refusal occurs before encoding; direct expired result/error cannot release or acknowledge keys. Dedicated local InvalidInput field prekey_upload_deadline lets the actor ignore settlement expiry while preserving storage/ownership errors. Uncertainty remains held without renewed deadlines, replacement writes or replay. No configured timeout/wire change or clock atomicity across later I/O/commit is claimed.",
+    "evidence": "docs/protocol/prekey-count-notifications.md#upload-deadline-fences-writer-and-direct-settlement-admission-2026-11-06"
   }
 }

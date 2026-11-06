@@ -1,3 +1,8 @@
+Prekey upload expiry now fences both writer dequeue and direct result/error
+settlement, using the original monotonic deadline with an exact >= boundary.
+Expired claims preserve uncertainty without encoding, release or replay.
+[Audit](docs/protocol/prekey-count-notifications.md#upload-deadline-fences-writer-and-direct-settlement-admission-2026-11-06).
+
 Queued prekey publication now requires live original legacy/KEM material and
 legacy per-key ownership at writer dequeue. Missing, consumed or substituted
 keys refuse before encoding; valid consume-before-ACK settlement remains intact.
