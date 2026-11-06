@@ -1259,7 +1259,7 @@ pub(super) use super::messaging::is_auth_challenge_ack;
 // APK43.72 1rH.A03 0294..02c2 selects a typed UserJid recipient
 // before normalizing from; 0Dn.A00 unwraps DeviceJid.userJid. Plain PN/LID
 // types0/18 bypass A00's special bot type26/27 conversion.
-fn message_ack_chat(node: &Node) -> Option<crate::model::jid::Jid> {
+pub(crate) fn message_ack_chat(node: &Node) -> Option<crate::model::jid::Jid> {
     if let Some(recipient) = super::receipts::jid(node, "recipient")
         && !recipient.is_ad()
         && !matches!(

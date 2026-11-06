@@ -900,3 +900,14 @@ helper's30-second initializer calculation is discarded, not timer evidence.
 Rust's classic group IQ remains an inferred separate shape; neither its
 30-second local preparation limit nor all group-info deadlines gain native
 parity from this MEX trace. No runtime policy or live operation changed.
+
+## Distribution ACK destination binding (2026-11-06)
+
+**Confirmed pinned static / Rust correction:** each connection-local distribution
+wait now binds both generated ID and the actual outgoing destination. Shared
+message ACK selected-chat classification rejects wrong/missing addresses before
+releasing any dependent ciphertext or recording a refusal. Pending work remains
+uncertain on timeout; no replay/resume is introduced. The real-crypto group
+reference test covers conflicting recipient success/refusal controls and later
+valid-address continuation. [Pinned message-key evidence, public comparison
+helper and limits](message-ack.md#bind-distribution-and-comparison-acks-to-the-expected-chat-2026-11-06).

@@ -393,3 +393,49 @@ No identity namespace merge, generated request or automatic replay is added.
 Validation: 1,459 workspace/all-feature tests passed. Strict workspace/all-target/
 all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
 validation, APK coverage freshness and repository hygiene passed. Offline only.
+
+## Bind distribution and comparison ACKs to the expected chat (2026-11-06)
+
+**Confirmed pinned static / Rust correction:** the preceding
+[message-key selection exports](apk/2.26.43.72-message-ack-chat/README.md)
+also apply to the direct message stanzas carrying out-of-band sender-key
+distributions. Native message keys contain selected chat plus id. The Rust
+normal outbox path now checked chat, but Pending's distribution branch still
+matched only id/class/integral-error and the CLI comparison send paths classified
+that returned ACK without comparing its selected address. An unrelated chat's
+ACK could release dependent group ciphertext or become a terminal CLI result.
+
+Public messaging::message_ack_outcome_for now combines existing numeric/class/
+challenge classification with the shared selected-chat adapter. Expected PN/LID
+device addresses compare as their user. It is pure: no capture, request-ID
+binding, durable ownership, write, reconnect or replay. Callers still own these
+independent checks and must capture/validate received ACK admission first.
+
+Each Pending distribution now retains the actual outgoing to address beside
+its generated id in connection-local waiting state. Its matcher requires an
+ordinary accepted/refused ACK for that expected chat as well as the original
+id. Wrong/missing selected chat cannot finish the distribution, release the
+next one/group stanza, or choose DistributionRefused. Existing timeout leaves
+work uncertain and does not resume it. The CLI direct, group/status and child
+sender-key distribution result writers use the same helper with their reserved
+destination. Their captured exact-ID waits remain unchanged: a wrong-chat ACK
+returns outcome_unknown rather than granting permission to resend or continue.
+
+The real-crypto group reference regression injects conflicting recipient ACKs
+with success and refusal errors while distribution is outstanding. Both fail
+the actual matcher and preserve the preparation row; the original matching
+address ACK then continues the crypto/decrypt/reopen checks. Synthetic original
+ACK fixtures now include the actual contacted to address. A shared classifier
+regression covers user/device normalization, recipient precedence, conflicting
+chat for success/refusal/challenge/malformed errors, missing address and the
+outcome_unknown status used by CLI result writers.
+
+Limits: the selected-chat adapter's numeric PN/LID recipient subset and other
+family/generic-callback gaps remain as documented above. This adds no new
+participant-specific acceptance rule or complete envelope/identity equivalence.
+The independent saved-action/write-guard authorities remain required. No live
+traffic or server acceptance is claimed.
+
+Validation: 1,460 workspace/all-feature tests passed. Strict workspace/all-target/
+all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
+validation, APK coverage freshness and repository hygiene passed. Offline only.

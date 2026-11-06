@@ -278,7 +278,24 @@ pub(super) mod tests {
                                     )
                                 );
                             }
-                            Node::new("ack").attr("class", "message").attr("id", id)
+                            let from = query.get_attr("to").unwrap().clone();
+                            let valid = Node::new("ack")
+                                .attr("class", "message")
+                                .attr("id", id)
+                                .attr("from", from);
+                            for refused in [false, true] {
+                                let mut wrong =
+                                    valid.clone().attr("recipient", "999999999999999@lid");
+                                if refused {
+                                    wrong = wrong.attr("error", "500");
+                                }
+                                assert!(!pending.matches(&wrong));
+                                assert_eq!(
+                                    preparation(&store, pending.entry.local_id).unwrap(),
+                                    before
+                                );
+                            }
+                            valid
                         }
                         Some("w:g2") => membership(&query, &own, std::slice::from_ref(&peer)),
                         Some("usync") => device_reply(&query),
@@ -521,7 +538,8 @@ pub(super) mod tests {
             for _ in 0..accepted_before_change {
                 let ack = Node::new("ack")
                     .attr("class", "message")
-                    .attr("id", query.get_attr("id").unwrap().clone());
+                    .attr("id", query.get_attr("id").unwrap().clone())
+                    .attr("from", query.get_attr("to").unwrap().clone());
                 let step = pending
                     .settle(&store, &f.alice, &ack, ConnectionEpoch(29), &mut cursor)
                     .await
@@ -664,7 +682,8 @@ pub(super) mod tests {
             let before = rows(&store);
             let ack = Node::new("ack")
                 .attr("class", "message")
-                .attr("id", query.get_attr("id").unwrap().clone());
+                .attr("id", query.get_attr("id").unwrap().clone())
+                .attr("from", query.get_attr("to").unwrap().clone());
             let step = pending
                 .settle(&store, &f.alice, &ack, ConnectionEpoch(29), &mut cursor)
                 .await
@@ -1721,6 +1740,7 @@ enum Waiting {
     /// each ACKed before the next; the group stanza follows the last.
     Distribution {
         id: String,
+        chat: Jid,
         rest: Vec<Node>,
         group: Box<Node>,
     },
@@ -2006,13 +2026,13 @@ impl Pending {
                     && matches!(node.get_attr("type").and_then(|v| v.as_text()), Some("result" | "error"))
             }
             Waiting::Devices(query) => query.matches(node),
-            Waiting::Distribution { id, .. } => {
+            Waiting::Distribution { id, chat, .. } => {
                 node.description == "ack"
                     // APK43.72 1rH.A03 0282..0292 routes message ACKs
                     // separately from receipt/call/notification families.
                     && node.get_attr("class").and_then(|v| v.as_text()) == Some("message")
-                    && super::messaging::ack_error_is_valid(node)
-                    && !super::outgoing::is_auth_challenge_ack(node)
+                    && matches!(super::messaging::message_ack_outcome_for(node, chat),
+                        super::messaging::MessageAckOutcome::Accepted | super::messaging::MessageAckOutcome::Refused)
                     && node.get_attr("id").and_then(|v| v.as_text()) == Some(id)
             }
         }
@@ -2549,8 +2569,11 @@ impl Pending {
             .and_then(|v| v.as_text())
             .ok_or_else(|| invalid("distribution message id missing"))?
             .to_owned();
+        let chat = super::receipts::jid(&next, "to")
+            .ok_or_else(|| invalid("distribution recipient missing"))?;
         self.waiting = Waiting::Distribution {
             id,
+            chat,
             rest,
             group: Box::new(group),
         };

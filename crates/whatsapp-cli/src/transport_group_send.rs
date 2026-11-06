@@ -450,7 +450,8 @@ async fn transmit(
                 write_and_wait_captured(store, channel, &distribution, "ack", &id).await?;
             keep(store, &pending)?;
             inbox::preserve(store, &ack)?;
-            let outcome = whatsapp_api::transport::messaging::message_ack_outcome(&ack);
+            let outcome =
+                whatsapp_api::transport::messaging::message_ack_outcome_for(&ack, &target.device);
             let accepted =
                 outcome == whatsapp_api::transport::messaging::MessageAckOutcome::Accepted;
             let mut child_result = child.clone();
@@ -484,7 +485,7 @@ async fn transmit(
     }
 
     let (ack, pending) = write_and_wait_captured(store, channel, &node, "ack", &wire_id).await?;
-    let outcome = whatsapp_api::transport::messaging::message_ack_outcome(&ack);
+    let outcome = whatsapp_api::transport::messaging::message_ack_outcome_for(&ack, chat);
     let accepted = outcome == whatsapp_api::transport::messaging::MessageAckOutcome::Accepted;
     let code = ack
         .get_attr("error")

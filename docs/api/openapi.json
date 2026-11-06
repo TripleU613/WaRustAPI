@@ -17974,5 +17974,11 @@
     "x-library": ["whatsapp_api::transport::outgoing::acknowledge"],
     "description": "Ordinary saved-outbox ACK settlement prefers a supported plain numeric PN/LID recipient (1..15 ASCII digits), otherwise normalizes PN/LID device from when no user recipient applies. Conflicting supported recipient leaves the entry uncertain. Known non-user/device recipients fall back to from; other parsed recipient families/forms remain unsupported and uncertain. Unique wire reservation, exact saved-chat equality, InFlight and once-only settlement remain required. This is not full native JID grammar, generic callback or comparison CLI/distribution-wait equivalence. No identity merge, retry or live operation.",
     "evidence": "docs/protocol/message-ack.md#select-the-message-ack-chat-before-outbox-correlation-2026-11-06"
+  },
+  "x-expected-chat-message-ack-outcome": {
+    "x-cli": true, "x-transport": true, "x-live": false,
+    "x-library": ["whatsapp_api::transport::messaging::message_ack_outcome_for"],
+    "description": "Pure message ACK classification with shared selected-chat matching against an expected destination. Expected PN/LID device JIDs compare as their user address. Caller separately owns wire-ID binding, capture, admission and durable reservation checks. Normal out-of-band distribution Pending retains actual to alongside id and cannot release dependent ciphertext on wrong/missing chat. CLI direct/group/status/child-distribution results stay outcome_unknown on mismatch, with no automatic resend or continuation. Numeric recipient subset and other address-family/generic-callback gaps remain documented; no full envelope or native recovery equivalence, live operation or new request.",
+    "evidence": "docs/protocol/message-ack.md#bind-distribution-and-comparison-acks-to-the-expected-chat-2026-11-06"
   }
 }

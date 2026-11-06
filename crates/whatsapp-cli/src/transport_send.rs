@@ -179,7 +179,7 @@ pub(super) async fn send(
         }
     );
     let (ack, pending) = write_and_wait_captured(store, channel, &node, "ack", &wire_id).await?;
-    let outcome = whatsapp_api::transport::messaging::message_ack_outcome(&ack);
+    let outcome = whatsapp_api::transport::messaging::message_ack_outcome_for(&ack, &recipient);
     let accepted = outcome == whatsapp_api::transport::messaging::MessageAckOutcome::Accepted;
     let code = ack
         .get_attr("error")

@@ -1068,6 +1068,25 @@ impl MessageAckOutcome {
     }
 }
 
+/// Classify an ordinary message ACK only for its selected expected chat.
+/// The caller must separately bind the original wire ID and request ownership.
+/// This performs no capture, persistence, full envelope validation or replay.
+/// Expected PN/LID device addresses compare as their user address.
+pub fn message_ack_outcome_for(node: &Node, expected: &Jid) -> MessageAckOutcome {
+    let expected = if matches!(
+        expected.server,
+        crate::model::jid::Server::User | crate::model::jid::Server::Lid
+    ) {
+        expected.to_non_ad()
+    } else {
+        expected.clone()
+    };
+    if super::outgoing::message_ack_chat(node).as_ref() != Some(&expected) {
+        return MessageAckOutcome::Unrelated;
+    }
+    message_ack_outcome(node)
+}
+
 // APK43.72 1rH.A03 calls0Tp.A05(error,0) before class dispatch.
 // A06 uses Integer.parseInt; malformed/out-of-i32 values throw LIL rather
 // than becoming an ordinary ACK outcome. Nontext decoded values are outside
@@ -2789,6 +2808,41 @@ mod tests {
 #[cfg(test)]
 mod message_ack_outcome_tests {
     use super::*;
+    #[test]
+    fn expected_chat_controls_comparison_ack_outcomes_without_replay() {
+        let expected = Jid::parse("12345:7@lid").unwrap();
+        let base = Node::new("ack")
+            .attr("class", "message")
+            .attr("id", "fixture");
+        for (raw, outcome) in [
+            (None, MessageAckOutcome::Accepted),
+            (Some("500"), MessageAckOutcome::Refused),
+            (Some("459"), MessageAckOutcome::AuthChallenge),
+            (Some("bad"), MessageAckOutcome::Unrelated),
+        ] {
+            let mut ack = base.clone().attr("from", "12345:9@lid");
+            if let Some(raw) = raw {
+                ack = ack.attr("error", raw);
+            }
+            assert_eq!(message_ack_outcome_for(&ack, &expected), outcome);
+            let wrong = ack.clone().attr("recipient", "67890@lid");
+            assert_eq!(
+                message_ack_outcome_for(&wrong, &expected),
+                MessageAckOutcome::Unrelated
+            );
+            assert_eq!(
+                message_ack_outcome_for(&wrong, &expected).status(),
+                "outcome_unknown"
+            );
+            let preferred = ack.attr("from", "67890@lid").attr("recipient", "12345@lid");
+            assert_eq!(message_ack_outcome_for(&preferred, &expected), outcome);
+        }
+        assert_eq!(
+            message_ack_outcome_for(&base, &expected),
+            MessageAckOutcome::Unrelated
+        );
+    }
+
     #[test]
     fn integer_error_admission_precedes_ordinary_ack_classification() {
         let message = Node::new("ack").attr("class", "message");
