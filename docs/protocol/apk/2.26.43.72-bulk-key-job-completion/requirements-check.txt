@@ -1,0 +1,25 @@
+
+# class: Lorg/whispersystems/jobqueue/Job;
+# extends: Ljava/lang/Object;
+
+.method public A0M(Z)  # .registers 3
+    # full signature: Lorg/whispersystems/jobqueue/Job;->A0M()Z
+    0000..0004  iget-object  v0, v2, Lorg/whispersystems/jobqueue/Job;->parameters:Lorg/whispersystems/jobqueue/JobParameters;
+    0004..0008  iget-object  v0, v0, Lorg/whispersystems/jobqueue/JobParameters;->requirements:Ljava/util/List;
+    0008..000e  invoke-interface  {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    000e..0010  move-result-object  v1
+    0010..0016  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    0016..0018  move-result  v0
+    0018..001c  if-eqz  v0, +0x10
+    001c..0022  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0022..0024  move-result-object  v0
+    0024..0028  check-cast  v0, Lorg/whispersystems/jobqueue/requirements/Requirement;
+    0028..002e  invoke-interface  {v0}, Lorg/whispersystems/jobqueue/requirements/Requirement;->BWq()Z
+    002e..0030  move-result  v0
+    0030..0034  if-nez  v0, -0x10
+    0034..0036  const/4  v0, #0x0
+    0036..0038  return  v0
+    0038..003a  const/4  v0, #0x1
+    003a..003c  return  v0
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,18 @@
+
+# class: Lorg/whispersystems/jobqueue/JobParameters;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLIZ)  # .registers 8
+    # full signature: Lorg/whispersystems/jobqueue/JobParameters;-><init>(Ljava/lang/String;Ljava/util/List;IZ)V
+    0000..0002  const/4  v2, #0x0
+    0002..0006  const-wide/16  v0, #0x0
+    0006..000c  invoke-direct  {v3}, Ljava/lang/Object;-><init>()V
+    000c..0010  iput-object  v5, v3, Lorg/whispersystems/jobqueue/JobParameters;->requirements:Ljava/util/List;
+    0010..0014  iput-boolean  v7, v3, Lorg/whispersystems/jobqueue/JobParameters;->isPersistent:Z
+    0014..0018  iput-object  v4, v3, Lorg/whispersystems/jobqueue/JobParameters;->groupId:Ljava/lang/String;
+    0018..001c  iput  v6, v3, Lorg/whispersystems/jobqueue/JobParameters;->retryCount:I
+    001c..0020  iput-boolean  v2, v3, Lorg/whispersystems/jobqueue/JobParameters;->wakeLock:Z
+    0020..0024  iput-wide  v0, v3, Lorg/whispersystems/jobqueue/JobParameters;->wakeLockTimeout:J
+    0024..0026  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,13 @@
+
+# class: LX/0YU;
+# extends: Landroid/os/Handler;
+
+.method public C0f(VL)  # .registers 3
+    # full signature: LX/0YU;->C0f(Ljava/lang/String;)V
+    0000..0004  const/16  v0, #0x8
+    0004..000a  invoke-virtual  {v1, v0, v2}, Landroid/os/Handler;->obtainMessage(ILjava/lang/Object;)Landroid/os/Message;
+    000a..000c  move-result-object  v0
+    000c..0012  invoke-virtual  {v0}, Landroid/os/Message;->sendToTarget()V
+    0012..0014  return-void
+    # exception table: 0 try range(s)
+.end method

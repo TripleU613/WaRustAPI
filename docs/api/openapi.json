@@ -17548,5 +17548,12 @@
     "x-live": false,
     "description": "Research-only APK43.72 identity fetch-manager trace: ordinary and gated PQ fetch use fromIdentityChange=true and upgrade=false. In-flight equality includes device, category, request mode and session scope; strict60-second uptime cleanup during admission does not authorize replay of a durable uncertain Rust request. Effective metadata/config gates, downstream job dedup/retry and wire sends remain incomplete. No new runtime PQ request, timer, retry or API command implemented.",
     "evidence": "docs/protocol/bulk-prekey-refresh.md#current-notification-fetch-flags-and-manager-suppression-2026-11-06"
+  },
+  "x-bulk-key-job-completion-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Research-only APK43.72 bulk-key job completion trace: concrete FfK/1ue success can come from the IQ result/error response fallback and does not establish key/server acceptance. Native exception handling distinguishes runtime rethrow, non-upgrade eligibility, requirement-gated looping/defer and attempt budget. Untimed get, cancellation and constructor flags are retained facts, not a Rust timeout/retry recipe. No runtime behavior, request, retry or adoption authority added.",
+    "evidence": "docs/protocol/bulk-prekey-refresh.md#bulk-job-completion-is-not-fetched-key-acceptance-2026-11-06"
   }
 }

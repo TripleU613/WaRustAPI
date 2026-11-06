@@ -1,0 +1,100 @@
+
+# class: LX/FfK;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 3
+    # full signature: LX/FfK;-><init>()V
+    0000..0006  invoke-direct  {v2}, Ljava/lang/Object;-><init>()V
+    0006..0008  const/4  v1, #0x1
+    0008..000c  new-instance  v0, Ljava/util/concurrent/CountDownLatch;
+    000c..0012  invoke-direct  {v0, v1}, Ljava/util/concurrent/CountDownLatch;-><init>(I)V
+    0012..0016  iput-object  v0, v2, LX/FfK;->A03:Ljava/util/concurrent/CountDownLatch;
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public BsR(VL)  # .registers 3
+    # full signature: LX/FfK;->BsR(Ljava/lang/Exception;)V
+    0000..0002  const/4  v0, #0x0
+    0002..0006  iput-object  v0, v1, LX/FfK;->A01:Ljava/lang/Object;
+    0006..0008  const/4  v0, #0x0
+    0008..000c  iput-boolean  v0, v1, LX/FfK;->A02:Z
+    000c..0010  iput-object  v2, v1, LX/FfK;->A00:Ljava/lang/Exception;
+    0010..0014  iget-object  v0, v1, LX/FfK;->A03:Ljava/util/concurrent/CountDownLatch;
+    0014..001a  invoke-virtual  {v0}, Ljava/util/concurrent/CountDownLatch;->countDown()V
+    001a..001c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public BsT(VL)  # .registers 3
+    # full signature: LX/FfK;->BsT(Ljava/lang/Object;)V
+    0000..0004  iput-object  v2, v1, LX/FfK;->A01:Ljava/lang/Object;
+    0004..0006  const/4  v0, #0x1
+    0006..000a  iput-boolean  v0, v1, LX/FfK;->A02:Z
+    000a..000e  iget-object  v0, v1, LX/FfK;->A03:Ljava/util/concurrent/CountDownLatch;
+    000e..0014  invoke-virtual  {v0}, Ljava/util/concurrent/CountDownLatch;->countDown()V
+    0014..0016  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public cancel(ZZ)  # .registers 3
+    # full signature: LX/FfK;->cancel(Z)Z
+    0000..0002  const/4  v0, #0x0
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public get(L)  # .registers 3
+    # full signature: LX/FfK;->get()Ljava/lang/Object;
+    0000..0004  iget-object  v0, v2, LX/FfK;->A03:Ljava/util/concurrent/CountDownLatch;
+    0004..000a  invoke-virtual  {v0}, Ljava/util/concurrent/CountDownLatch;->await()V
+    000a..000e  iget-boolean  v0, v2, LX/FfK;->A02:Z
+    000e..0012  if-eqz  v0, +0x5
+    0012..0016  iget-object  v0, v2, LX/FfK;->A01:Ljava/lang/Object;
+    0016..0018  return-object  v0
+    0018..001c  iget-object  v1, v2, LX/FfK;->A00:Ljava/lang/Exception;
+    001c..0020  new-instance  v0, Ljava/util/concurrent/ExecutionException;
+    0020..0026  invoke-direct  {v0, v1}, Ljava/util/concurrent/ExecutionException;-><init>(Ljava/lang/Throwable;)V
+    0026..0028  throw  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public get(LJL)  # .registers 6
+    # full signature: LX/FfK;->get(JLjava/util/concurrent/TimeUnit;)Ljava/lang/Object;
+    0000..0004  iget-object  v0, v2, LX/FfK;->A03:Ljava/util/concurrent/CountDownLatch;
+    0004..000a  invoke-virtual  {v0, v3, v4, v5}, Ljava/util/concurrent/CountDownLatch;->await(JLjava/util/concurrent/TimeUnit;)Z
+    000a..000c  move-result  v0
+    000c..0010  if-eqz  v0, +0x11
+    0010..0014  iget-boolean  v0, v2, LX/FfK;->A02:Z
+    0014..0018  if-eqz  v0, +0x5
+    0018..001c  iget-object  v0, v2, LX/FfK;->A01:Ljava/lang/Object;
+    001c..001e  return-object  v0
+    001e..0022  iget-object  v1, v2, LX/FfK;->A00:Ljava/lang/Exception;
+    0022..0026  new-instance  v0, Ljava/util/concurrent/ExecutionException;
+    0026..002c  invoke-direct  {v0, v1}, Ljava/util/concurrent/ExecutionException;-><init>(Ljava/lang/Throwable;)V
+    002c..002e  throw  v0
+    002e..0032  new-instance  v0, Ljava/util/concurrent/TimeoutException;
+    0032..0038  invoke-direct  {v0}, Ljava/util/concurrent/TimeoutException;-><init>()V
+    0038..003a  throw  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public isCancelled(Z)  # .registers 2
+    # full signature: LX/FfK;->isCancelled()Z
+    0000..0002  const/4  v0, #0x0
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public isDone(Z)  # .registers 6
+    # full signature: LX/FfK;->isDone()Z
+    0000..0004  iget-object  v0, v5, LX/FfK;->A03:Ljava/util/concurrent/CountDownLatch;
+    0004..000a  invoke-virtual  {v0}, Ljava/util/concurrent/CountDownLatch;->getCount()J
+    000a..000c  move-result-wide  v3
+    000c..0010  const-wide/16  v1, #0x0
+    0010..0014  cmp-long  v0, v3, v1
+    0014..001a  invoke-static  {v0}, LX/2LD;->A1I(I)Z
+    001a..001c  move-result  v0
+    001c..001e  return  v0
+    # exception table: 0 try range(s)
+.end method

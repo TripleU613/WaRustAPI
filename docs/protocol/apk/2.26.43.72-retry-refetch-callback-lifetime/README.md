@@ -79,3 +79,7 @@ Reproduce with `target/debug/xtask apk-smali <pinned-apk> --class 'LX/0ln;'
 same tool with exact classLX/0Th; and no method filter for its five methods.
 Prior linked bundles retain insertion/disconnection/completion callsites.
 Checksums cover every other file here.
+
+## Concrete bulk future follow-up (2026-11-06)
+
+The [bulk job completion trace](../2.26.43.72-bulk-key-job-completion/README.md) now verifies the pending bulk job value as FfK implementing1ue, retaining BsT/BsR/get effects and runner exception/requirement policy. This closes that concrete future-effects gap; full provider binding, deferred scheduling and native recovery/retry parity remain separate. No automatic Rust resend is added.

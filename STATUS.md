@@ -1,3 +1,8 @@
+Bulk-key job completion now has a concrete future/runner trace: an IQ error
+can finish the job normally while separate callbacks report refusal. Runtime
+exceptions are rethrown; exception retry/defer is not server-error acceptance.
+[Completion evidence and limits](docs/protocol/bulk-prekey-refresh.md#bulk-job-completion-is-not-fetched-key-acceptance-2026-11-06).
+
 Current APK tracing separates ordinary and conditional PQ identity fetches:
 both are identity-change reads, neither is a PQ session upgrade. Their native
 in-flight keys include mode; 60-second cleanup does not authorize durable replay.

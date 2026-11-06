@@ -78,3 +78,7 @@ fallback ownership. Complete root/provider admission, lower-level/fallback
 callback effects, concurrent/generation binding and durable recovery remain
 open. No Rust sender, retry, route or live account operation is added.
 Existing IQ grammar, uncertainty and no-replay behavior remain unchanged.
+
+## Concrete bulk future follow-up (2026-11-06)
+
+The [bulk job completion trace](../2.26.43.72-bulk-key-job-completion/README.md) now verifies the pending bulk job value as FfK implementing1ue, retaining BsT/BsR/get effects and runner exception/requirement policy. This closes that concrete future-effects gap; full provider binding, deferred scheduling and native recovery/retry parity remain separate. No automatic Rust resend is added.

@@ -1,0 +1,8 @@
+classes.dex  LX/0Th;-><init>(V)
+  write opcode 0x5b, dex byte offset: 0x5b3822
+classes.dex  LX/0Th;->A03(VL)
+  read opcode 0x54, dex byte offset: 0x5b3ab4
+classes.dex  LX/0YU;->handleMessage(VL)
+  read opcode 0x54, dex byte offset: 0x5e44fe
+classes8.dex  Lcom/whatsapp/infra/messaging/jobqueue/job/BulkGetPreKeyJob;->A0L(V)
+  read opcode 0x54, dex byte offset: 0x8cee40
