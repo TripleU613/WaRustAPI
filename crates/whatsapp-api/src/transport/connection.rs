@@ -4052,6 +4052,113 @@ mod tests {
         }
     }
 
+    #[tokio::test]
+    async fn cancelled_direct_key_reply_keeps_receive_and_original_reservation() {
+        use crate::{
+            model::{ids::ClientRequestId, message::MessageContent, send::SendRequest},
+            outbox::Outbox,
+            profile::Limits,
+        };
+        for outcome in ["result", "error"] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("cancelled-direct.redb");
+            let store = open(&path);
+            let outbox = Outbox::new("comparison-driver", Limits::default());
+            let ticket = store
+                .write(|tx| {
+                    Ok(outbox
+                        .enqueue(
+                            tx,
+                            &SendRequest {
+                                client_request_id: ClientRequestId::new("cancelled-direct")?,
+                                chat: ChatId::from_jid(&peer())?,
+                                content: MessageContent::Text {
+                                    body: "offline fixture".into(),
+                                    quoted: None,
+                                    style: Default::default(),
+                                },
+                            },
+                        )?
+                        .0
+                        .local_id)
+                })
+                .unwrap();
+            let mut fake = start(&store, true, Some(ticket));
+            fake.activate().await;
+            let (query, written) = fake.written().await;
+            assert_eq!(
+                query.get_attr("xmlns").and_then(|v| v.as_text()),
+                Some("encrypt")
+            );
+            written.send(Ok(())).unwrap();
+            let key = format!("outbox-key-query:{ticket}");
+            let reserved = store
+                .read(|tx| tx.get(Table::Checkpoints, key.as_bytes(), 1))
+                .unwrap()
+                .unwrap();
+            assert!(store.write(|tx| outbox.cancel(tx, ticket)).unwrap());
+            let cancelled = store.read(|tx| outbox.get(tx, ticket)).unwrap().unwrap();
+            // Even an unusable result is ignored before directory parsing once
+            // the intent is cancelled. Cancellation does not adopt its keys.
+            let reply = Node::new("iq")
+                .attr("type", outcome)
+                .attr("id", query.get_attr("id").unwrap().clone());
+            fake.deliver(reply.clone()).await;
+            fake.deliver(reply).await;
+            fake.deliver(
+                Node::new("iq")
+                    .attr("type", "get")
+                    .attr("xmlns", "urn:xmpp:ping"),
+            )
+            .await;
+            let (pong, written) = fake.written().await;
+            assert_eq!(
+                pong.get_attr("type").and_then(|v| v.as_text()),
+                Some("result")
+            );
+            written.send(Ok(())).unwrap();
+            fake.nothing_written(Duration::from_millis(20)).await;
+            fake.stop_cleanly().await;
+            assert_eq!(
+                store.read(|tx| outbox.get(tx, ticket)).unwrap().unwrap(),
+                cancelled
+            );
+            assert!(cancelled.attempts.is_empty());
+            assert_eq!(
+                store
+                    .read(|tx| tx.get(Table::Checkpoints, key.as_bytes(), 1))
+                    .unwrap()
+                    .unwrap(),
+                reserved
+            );
+            for table in [
+                Table::SignalSessions,
+                Table::PeerIdentities,
+                Table::SenderKeys,
+            ] {
+                assert!(store.read(|tx| tx.scan(table, 1, 100)).unwrap().is_empty());
+            }
+            drop(store);
+            let reopened = identity_store(&path);
+            assert_eq!(
+                reopened.read(|tx| outbox.get(tx, ticket)).unwrap().unwrap(),
+                cancelled
+            );
+            assert_eq!(
+                reopened
+                    .read(|tx| tx.get(Table::Checkpoints, key.as_bytes(), 1))
+                    .unwrap()
+                    .unwrap(),
+                reserved
+            );
+            assert!(
+                super::super::outgoing::begin_selected(&reopened, Some(ticket))
+                    .unwrap()
+                    .is_none()
+            );
+        }
+    }
+
     #[tokio::test(start_paused = true)]
     async fn key_query_write_cut_keeps_the_reservation_and_is_not_reselected() {
         use crate::{

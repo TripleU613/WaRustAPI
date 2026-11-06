@@ -7187,3 +7187,12 @@ without another query, crypto adoption or actor disconnect. Cancellation after
 InFlight remains rejected by the existing API.
 [Actor red/green test, reply history, reopen and boundaries](normal-group-outbox.md#cancellation-while-a-preparation-query-is-pending-2026-11-05).
 No reset, replay or live account operation.
+
+### Direct cancellation reply boundary (2026-11-05)
+
+**Confirmed local / actor regression:** matching result/error replies and their
+redelivery after direct intent cancellation emit no ciphertext, adopt no keys,
+and preserve receive service. Original cancelled intent/query reservation stay
+held across reopen. This was already correct; no production code changed.
+[Actor proof, diagnostic distinction and remaining malformed-input scope](messaging-transport.md#direct-send-cancellation-reply-audit-2026-11-05).
+No live operation or replay authority.

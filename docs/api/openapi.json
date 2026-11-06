@@ -15837,6 +15837,17 @@
     "evidence": "docs/protocol/apk/2.26.43.72-sender-key-ack-confirmation/README.md",
     "description": "Traces native message ACK callback registration and wait, successful normal sender-key marking and conditional one-time-key reset. Connects registration-time pre-ACK marker snapshot to matched callback retirement after wrapped result. Rust per-distribution durable confirmation and native address ownership remain incomplete. Evidence only; no command, HTTP route or production behavior change."
   },
+  "x-direct-cancelled-key-reply-audit": {
+    "x-cli": {
+      "command": "whatsapp-cli cancel"
+    },
+    "x-transport": [
+      "experimental-transport direct preparation; existing behavior regression"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/messaging-transport.md#direct-send-cancellation-reply-audit-2026-11-05",
+    "description": "Cancelled direct intents ignore matching result/error key replies before directory parsing and keep receive active, without key adoption or dependent send. Original cancelled intent and held key-query reservation remain unchanged across reopen. Actor regression only; no new runtime policy, checkpoint settlement status, route or replay authority."
+  },
   "x-group-cancelled-preparation-replies": {
     "x-cli": {
       "commands": [

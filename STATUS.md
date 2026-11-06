@@ -1,3 +1,14 @@
+2026-11-05 — **Direct cancellation reply behavior verified through the actor.**
+
+Matching result/error replies and redelivery after cancellation already stop
+before directory parsing. New actor regression verifies no key adoption or
+follow-up send, continued ping service and byte-preserved reservations on reopen.
+[Evidence and diagnostic boundary](docs/protocol/messaging-transport.md#direct-send-cancellation-reply-audit-2026-11-05).
+Validation: targeted actor regression, all 1385 workspace/all-feature tests,
+fmt, strict Clippy, CLI/OpenAPI, APK coverage, pinned artifact identity and
+staged checksum/link hygiene passed. Regression/documentation only; no
+production behavior or live account operation.
+
 2026-11-05 — **Cancelled group preparation settles its reply and stops cleanly.**
 
 Cancellation during membership/device/key waits no longer progresses to another

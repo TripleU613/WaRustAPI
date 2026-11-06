@@ -2268,3 +2268,34 @@ without another query, crypto adoption or actor disconnect. Cancellation after
 InFlight remains rejected by the existing API.
 [Actor red/green test, reply history, reopen and boundaries](normal-group-outbox.md#cancellation-while-a-preparation-query-is-pending-2026-11-05).
 No reset, replay or live account operation.
+
+### Direct-send cancellation reply audit (2026-11-05)
+
+**Confirmed local behavior, regression added:** outgoing::Pending checks the
+original outbox progress before directory parsing. A cancelled direct intent
+returns no stanza for its matching result/error reply. Unlike the earlier group
+defect, this path already avoided follow-up work and actor disconnection.
+No production behavior was changed by this audit.
+
+`cancelled_direct_key_reply_keeps_receive_and_original_reservation` exercises
+the actual connection actor for both result and error replies after cancelling
+a written key query. The result deliberately lacks a usable directory bundle,
+proving cancellation is observed before that parser. Each reply is also
+redelivered. The actor answers a subsequent server ping, writes no dependent
+stanza, adopts no pins/sessions/sender keys and preserves the cancelled original
+intent with zero attempts. Reopening retains both intent and query reservation
+byte-for-byte and cannot select a new send for the same ticket.
+
+**Diagnostic boundary:** the direct key-query checkpoint remains in its original
+held state (normally outcome_unknown). That status describes the existing
+reservation/replay guard; this audit does not reinterpret it as proof no reply
+arrived. Authenticated inbound capture remains separate. The group cancellation
+fix uses its existing action/device/key-batch settlement handlers; it does not
+imply the direct path shares that checkpoint schema or must adopt cancelled
+reply contents. Native job cancellation equivalence remains unproven.
+
+**Next review boundary:** non-cancelled malformed classic directory input still
+passes through prekey_user_for/prekey_bundle fallible calls in prepare_with_policy;
+this cancellation regression does not establish their receive-failure handling.
+No live operation, reservation reset, cancellation-after-InFlight capability
+or automatic replay was added.
