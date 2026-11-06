@@ -18220,5 +18220,15 @@
     "x-library": [],
     "description": "Pinned static xtask research connects status logicaltype8 through existing handler binding to prepared message construction, uncompressed codec path, transport counter consumed before encrypted output, three-byte framing/flush and size-failure callback routing. Local notification is not server acceptance; IOException queued copy is not replay proof. Existing Rust uncertain-write/channel-consumption controls unchanged. Full serializer, stream/disconnect and ciphertext-store authority remain open. No live operation or runtime capability added.",
     "evidence": "docs/protocol/message-ack.md#status-final-writer-consumes-the-transport-counter-before-output-2026-11-06"
+  },
+  "x-node-serializer-empty-children": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [
+      "whatsapp_api::binary::Encoder"
+    ],
+    "description": "Binary-node encoder now follows pinned APK1r2.A01: empty child collections omit the content slot and empty-list suffix, including nested nodes; empty bytes and nonempty children retain their distinct encodings. Offline literal fixtures failed before the fix. Research also separates conditional pre-encryption serialization budget failures from post-encryption framing limits; no universal server cap, retry, settlement or live verification claim. Optional colon packing and full codec parity remain open.",
+    "evidence": "docs/protocol/node-serializer.md"
   }
 }

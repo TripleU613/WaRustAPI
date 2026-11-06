@@ -183,7 +183,14 @@ impl<'a> Encoder<'a> {
         // 1Qe.A05 -> A06 serializes a zero-length value instead of omitting it.
         // Dropping them changed Hgb.A00's initial AB-property hash request.
         let attrs = &node.attributes;
-        let has_content = !matches!(node.content, NodeContent::Empty);
+        // APK 43.72 1r2.A01 0000..0026 / 00c4..00f2: an empty child
+        // array adds no content slot; a nonnull byte array still does.
+        // Evidence: docs/protocol/apk/2.26.43.72-node-serializer/README.md.
+        let has_content = match &node.content {
+            NodeContent::Empty => false,
+            NodeContent::Children(children) => !children.is_empty(),
+            _ => true,
+        };
         self.list_start(1 + 2 * attrs.len() + usize::from(has_content))?;
         self.write_string(&node.description)?;
         for a in attrs {
@@ -195,6 +202,7 @@ impl<'a> Encoder<'a> {
             NodeContent::Bytes(b) => self.write_len_prefixed(b)?,
             NodeContent::Text(t) => self.write_string(t)?,
             NodeContent::Jid(j) => self.write_jid(j)?,
+            NodeContent::Children(c) if c.is_empty() => {}
             NodeContent::Children(c) => {
                 self.list_start(c.len())?;
                 for child in c {
@@ -239,6 +247,27 @@ mod tests {
         Decoder::new(&payload, dict(), &limits)
             .decode_node()
             .unwrap()
+    }
+
+    #[test]
+    fn apk_empty_children_omit_content_but_empty_bytes_remain_present() {
+        // APK 43.72 1r2.A01 0000..0026 counts only nonempty children,
+        // but counts every nonnull byte array, including zero bytes.
+        // Literal LIST_8 sizes distinguish omission from LIST_EMPTY content.
+        let encode = |node: Node| Encoder::new(dict()).encode(&node).unwrap();
+        assert_eq!(encode(Node::new("iq").children(vec![])), [0, 0xF8, 1, 25]);
+        assert_eq!(
+            encode(Node::new("iq").bytes(Vec::new())),
+            [0, 0xF8, 2, 25, 0xFC, 0]
+        );
+        assert_eq!(
+            encode(Node::new("iq").children(vec![Node::new("ping").children(vec![])])),
+            [0, 0xF8, 2, 25, 0xF8, 1, 0xF8, 1, 86]
+        );
+        assert_eq!(
+            encode(Node::new("iq").attr("type", "get").children(vec![])),
+            [0, 0xF8, 3, 25, 4, 41]
+        );
     }
 
     #[test]

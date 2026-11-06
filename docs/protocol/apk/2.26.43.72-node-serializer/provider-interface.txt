@@ -1,0 +1,9 @@
+
+# class: LX/1r3;
+# extends: Ljava/lang/Object;
+
+.method public AsL(L)  # .registers 0
+    # full signature: LX/1r3;->AsL()Ljava/lang/Integer;
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method

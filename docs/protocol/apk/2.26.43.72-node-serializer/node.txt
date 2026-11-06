@@ -1,0 +1,72 @@
+
+# class: LX/1r2;
+# extends: Ljava/lang/Object;
+
+.method public A01(VLL)  # .registers 12
+    # full signature: LX/1r2;->A01(LX/0Tp;Ljava/io/OutputStream;)V
+    0000..0004  iget-object  v7, v10, LX/0Tp;->A02:[LX/0Tp;
+    0004..0006  const/4  v9, #0x1
+    0006..0008  const/4  v6, #0x0
+    0008..000c  if-eqz  v7, +0x6
+    000c..000e  array-length  v0, v7
+    000e..0010  const/4  v2, #0x1
+    0010..0014  if-gtz  v0, +0x3
+    0014..0016  const/4  v2, #0x0
+    0016..001a  iget-object  v8, v10, LX/0Tp;->A01:[B
+    001a..001e  if-eqz  v8, +0x1a
+    001e..0022  add-int/lit8  v2, v2, #0x1
+    0022..0026  if-le  v2, v9, +0x16
+    0026..002a  const-string  v1, "more than one source of inner data for node; countValues="
+    002a..002e  new-instance  v0, Ljava/lang/StringBuilder;
+    002e..0034  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0034..003a  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    003a..0040  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0040..0042  move-result-object  v1
+    0042..0046  new-instance  v0, Ljava/io/IOException;
+    0046..004c  invoke-direct  {v0, v1}, Ljava/io/IOException;-><init>(Ljava/lang/String;)V
+    004c..004e  throw  v0
+    004e..0054  invoke-virtual  {v10}, LX/0Tp;->A0Q()[LX/0Tl;
+    0054..0056  move-result-object  v5
+    0056..005a  if-nez  v5, +0x33
+    005a..005c  const/4  v0, #0x0
+    005c..0060  add-int/lit8  v0, v0, #0x1
+    0060..0062  add-int/2addr  v0, v2
+    0062..0068  invoke-static  {v11, v0}, LX/1r2;->A04(Ljava/io/OutputStream;I)V
+    0068..006c  iget-object  v0, v10, LX/0Tp;->A00:Ljava/lang/String;
+    006c..0072  invoke-static  {v11, v0, v6, v9}, LX/1r2;->A05(Ljava/io/OutputStream;Ljava/lang/String;ZZ)V
+    0072..0076  if-eqz  v5, +0x29
+    0076..0078  array-length  v4, v5
+    0078..007a  const/4  v3, #0x0
+    007a..007e  if-ge  v3, v4, +0x25
+    007e..0082  aget-object  v2, v5, v3
+    0082..0086  iget-object  v0, v2, LX/0Tl;->A02:Ljava/lang/String;
+    0086..008c  invoke-static  {v11, v0, v6, v6}, LX/1r2;->A05(Ljava/io/OutputStream;Ljava/lang/String;ZZ)V
+    008c..0090  iget-object  v1, v2, LX/0Tl;->A01:Lcom/whatsapp/infra/core/jid/Jid;
+    0090..0094  iget-byte  v0, v2, LX/0Tl;->A00:B
+    0094..0098  if-ne  v9, v0, +0xe
+    0098..009e  invoke-static  {v1}, LX/0Dn;->A0e(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    009e..00a0  move-result  v0
+    00a0..00a4  if-eqz  v0, +0x8
+    00a4..00aa  invoke-static  {v1, v11}, LX/1r2;->A00(Lcom/whatsapp/infra/core/jid/Jid;Ljava/io/OutputStream;)V
+    00aa..00ae  add-int/lit8  v3, v3, #0x1
+    00ae..00b0  goto  -0x1a
+    00b0..00b4  iget-object  v0, v2, LX/0Tl;->A03:Ljava/lang/String;
+    00b4..00ba  invoke-static  {v11, v0, v9, v9}, LX/1r2;->A05(Ljava/io/OutputStream;Ljava/lang/String;ZZ)V
+    00ba..00bc  goto  -0x8
+    00bc..00be  array-length  v0, v5
+    00be..00c2  mul-int/lit8  v0, v0, #0x2
+    00c2..00c4  goto  -0x33
+    00c4..00c8  if-eqz  v8, +0x6
+    00c8..00ce  invoke-static  {v11, v8, v6}, LX/1r2;->A06(Ljava/io/OutputStream;[BZ)V
+    00ce..00d0  return-void
+    00d0..00d4  if-eqz  v7, -0x1
+    00d4..00d6  array-length  v1, v7
+    00d6..00da  if-lez  v1, -0x4
+    00da..00e0  invoke-static  {v11, v1}, LX/1r2;->A04(Ljava/io/OutputStream;I)V
+    00e0..00e4  aget-object  v0, v7, v6
+    00e4..00ea  invoke-static  {v0, v11}, LX/1r2;->A01(LX/0Tp;Ljava/io/OutputStream;)V
+    00ea..00ee  add-int/lit8  v6, v6, #0x1
+    00ee..00f2  if-ge  v6, v1, -0x10
+    00f2..00f4  goto  -0x9
+    # exception table: 0 try range(s)
+.end method

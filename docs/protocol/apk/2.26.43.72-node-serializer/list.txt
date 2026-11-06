@@ -1,0 +1,33 @@
+
+# class: LX/1r2;
+# extends: Ljava/lang/Object;
+
+.method public A04(VLI)  # .registers 3
+    # full signature: LX/1r2;->A04(Ljava/io/OutputStream;I)V
+    0000..0004  if-nez  v2, +0x7
+    0004..0006  const/4  v0, #0x0
+    0006..000c  invoke-virtual  {v1, v0}, Ljava/io/OutputStream;->write(I)V
+    000c..000e  return-void
+    000e..0012  const/16  v0, #0x100
+    0012..0016  if-ge  v2, v0, +0xb
+    0016..001a  const/16  v0, #0xf8
+    001a..0020  invoke-virtual  {v1, v0}, Ljava/io/OutputStream;->write(I)V
+    0020..0026  invoke-static  {v1, v2}, LX/1r2;->A03(Ljava/io/OutputStream;I)V
+    0026..0028  return-void
+    0028..002c  const/high16  v0, #0x10000
+    002c..0030  if-ge  v2, v0, +0xb
+    0030..0034  const/16  v0, #0xf9
+    0034..003a  invoke-virtual  {v1, v0}, Ljava/io/OutputStream;->write(I)V
+    003a..0040  invoke-static  {v1, v2}, LX/1r2;->A02(Ljava/io/OutputStream;I)V
+    0040..0042  return-void
+    0042..0046  const-string  v1, "list too long; count="
+    0046..004a  new-instance  v0, Ljava/lang/StringBuilder;
+    004a..0050  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0050..0056  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0056..005c  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    005c..005e  move-result-object  v1
+    005e..0062  new-instance  v0, Ljava/io/IOException;
+    0062..0068  invoke-direct  {v0, v1}, Ljava/io/IOException;-><init>(Ljava/lang/String;)V
+    0068..006a  throw  v0
+    # exception table: 0 try range(s)
+.end method

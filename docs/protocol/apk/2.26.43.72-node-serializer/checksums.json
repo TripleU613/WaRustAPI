@@ -1,0 +1,54 @@
+{
+  "README.md": {
+    "bytes": 6654,
+    "sha256": "3780110d76fa36dd9a142b114a40071f415ca75abe735252366f6f27874c398c"
+  },
+  "buffer.txt": {
+    "bytes": 2620,
+    "sha256": "61268fd015d6303c917fba90d0cbec586c21f69fa0223fbfcd5666879d2ea921"
+  },
+  "bytes.txt": {
+    "bytes": 5085,
+    "sha256": "69d4540c5cdd666f674d013a2e0625d5aa0ce8164bc55e7e59c293d56cdf6176"
+  },
+  "list.txt": {
+    "bytes": 1581,
+    "sha256": "5c6a6d47560386f0ca393000b95bfe7d8e6cf42258ae09087b91d17ffcde5c5a"
+  },
+  "node.txt": {
+    "bytes": 3579,
+    "sha256": "b5e0aa29811be3387e571e5727d284b07fcdf8d27ee0e2a1d4c909a2707dd54d"
+  },
+  "provider-default.txt": {
+    "bytes": 653,
+    "sha256": "8dac1c53e0a6fc8798745b94567ca5742d4909f23ab34e8770182481eae2690e"
+  },
+  "provider-install.txt": {
+    "bytes": 1661,
+    "sha256": "43e46435a73dd7ec0e9f6fb032809e27c8c7cb19352f3e5925b02af1ddfc5ed8"
+  },
+  "provider-installed.txt": {
+    "bytes": 4964,
+    "sha256": "ccfe4d456692f84d8beb999171545928c1def1e1a72c7f55f13c4c0fa1560736"
+  },
+  "provider-interface.txt": {
+    "bytes": 219,
+    "sha256": "1ce53a11bf2e2dd48b3c641ba0356119cd108012676b59b2111e991cf5abf497"
+  },
+  "provider-refs.txt": {
+    "bytes": 237,
+    "sha256": "8c62f3abc576e0690ed17ebb5b6fb3060e979879deaaecbbf7a3bffae3f0957e"
+  },
+  "provider.txt": {
+    "bytes": 489,
+    "sha256": "a2b518b2b6fbda55c9033ac7492e114edbddfd1feb293f577edb98de9b0a2bdc"
+  },
+  "size-exception.txt": {
+    "bytes": 2139,
+    "sha256": "17cbeb9948d41bae936a65dd67d21ee5f0811194bd7117f4115debbd03f2e081"
+  },
+  "string.txt": {
+    "bytes": 6131,
+    "sha256": "04ad95939bdcac272b28c027fb23309906d222befbfe42d7dc129a442ec97eb5"
+  }
+}

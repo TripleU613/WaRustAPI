@@ -1,0 +1,30 @@
+
+# class: LX/T3d;
+# extends: Ljava/lang/Object;
+
+.method public Bk4(V)  # .registers 4
+    # full signature: LX/T3d;->Bk4()V
+    0000..0004  iget-object  v0, v3, LX/T3d;->A03:Ljava/util/concurrent/atomic/AtomicBoolean;
+    0004..000a  invoke-static  {v0}, LX/2L9;->A1Z(Ljava/util/concurrent/atomic/AtomicBoolean;)Z
+    000a..000c  move-result  v0
+    000c..0010  if-nez  v0, +0x8
+    0010..0014  const-string  v0, "FrameTreeNodeWriterBootstrap/install/already-installed"
+    0014..001a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    001a..001c  return-void
+    001c..0020  const-string  v0, "FrameTreeNodeWriterBootstrap/install"
+    0020..0026  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0026..002a  new-instance  v1, LX/RPU;
+    002a..0030  invoke-direct  {v1, v3}, LX/RPU;-><init>(LX/T3d;)V
+    0030..0034  sget-object  v0, LX/1r2;->A03:Ljava/util/concurrent/atomic/AtomicReference;
+    0034..003a  invoke-virtual  {v0, v1}, Ljava/util/concurrent/atomic/AtomicReference;->set(Ljava/lang/Object;)V
+    003a..003e  iget-object  v0, v3, LX/T3d;->A01:LX/05a;
+    003e..0044  invoke-static  {v0}, LX/2L8;->A0x(LX/05a;)LX/07o;
+    0044..0046  move-result-object  v2
+    0046..004c  invoke-static  {v3}, LX/3q0;->A0y(Ljava/lang/Object;)Ljava/lang/ref/WeakReference;
+    004c..004e  move-result-object  v1
+    004e..0052  new-instance  v0, LX/T4C;
+    0052..0058  invoke-direct  {v0, v1}, LX/T4C;-><init>(Ljava/lang/ref/WeakReference;)V
+    0058..005e  invoke-virtual  {v2, v0}, LX/07o;->A0K(Ljava/lang/Object;)Z
+    005e..0060  return-void
+    # exception table: 0 try range(s)
+.end method

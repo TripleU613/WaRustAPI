@@ -1,0 +1,15 @@
+
+# class: LX/1r2;
+# extends: Ljava/lang/Object;
+
+.method public <clinit>(V)  # .registers 2
+    # full signature: LX/1r2;-><clinit>()V
+    0000..0004  new-instance  v1, LX/1r4;
+    0004..000a  invoke-direct  {v1}, LX/1r4;-><init>()V
+    000a..000e  sput-object  v1, LX/1r2;->A02:LX/1r3;
+    000e..0012  new-instance  v0, Ljava/util/concurrent/atomic/AtomicReference;
+    0012..0018  invoke-direct  {v0, v1}, Ljava/util/concurrent/atomic/AtomicReference;-><init>(Ljava/lang/Object;)V
+    0018..001c  sput-object  v0, LX/1r2;->A03:Ljava/util/concurrent/atomic/AtomicReference;
+    001c..001e  return-void
+    # exception table: 0 try range(s)
+.end method

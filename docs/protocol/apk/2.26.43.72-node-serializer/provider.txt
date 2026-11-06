@@ -1,0 +1,17 @@
+
+# class: LX/1r4;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 1
+    # full signature: LX/1r4;-><init>()V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..0008  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public AsL(L)  # .registers 2
+    # full signature: LX/1r4;->AsL()Ljava/lang/Integer;
+    0000..0002  const/4  v0, #0x0
+    0002..0004  return-object  v0
+    # exception table: 0 try range(s)
+.end method

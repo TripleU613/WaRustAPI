@@ -1111,3 +1111,5 @@ write and interrupted socket regressions cover those Rust controls. Complete
 serializer/size attribution, underlying socket, post-write metadata, disconnect
 callback lifetime and ciphertext-store authority remain unresolved. No live
 operation, new retry or nonce rollback is authorized by this finding.
+
+- **2026-11-06 serializer follow-through:** fixed empty-child content omission; separated conditional pre-encryptionE5X from post-encryption framingE5W. [Pinned serializer evidence and remaining authority](node-serializer.md). No retry/settlement change.

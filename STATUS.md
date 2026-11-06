@@ -1,3 +1,5 @@
+Fixed APK-confirmed binary-node encoding mismatch: empty child arrays now omit content instead of adding LIST_EMPTY; empty bytes remain present. [Literal fixtures, conditional serializer budget and remaining codec gaps](docs/protocol/node-serializer.md). No live operation, new retry or settlement change.
+
 Status final writer now traced through prepared message construction, counter-before-output, three-byte framing/flush and size-failure callback routing. [Pinned evidence and Rust uncertainty controls](docs/protocol/message-ack.md#status-final-writer-consumes-the-transport-counter-before-output-2026-11-06). No runtime/replay change; full serializer, underlying socket and disconnect ownership remain open.
 
 Status submit callback research now separates registration, queue submission, null-valued future completion and ordinary ACK outcomes. Device0 normalization/duplicate replacement/timeout removal are retained with ownership limits. [Pinned sources and concrete writer gap](docs/protocol/message-ack.md#status-submit-future-completes-callbacks-without-carrying-acceptance-2026-11-06). No runtime/replay change; final writer/ciphertext lifecycle remains open.
