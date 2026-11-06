@@ -61,3 +61,25 @@ sibling. It fails at missing dedicated ACK on the original code, then checks
 one queued refresh, no generic ACK, and dedup/original reservation retention
 after reopen. Changed-content same-ID refusal remains. No live request,
 identity change, automatic replay or additional query family was introduced.
+
+## Dirty list named-child filtering — 2026-11-05
+
+**Confirmed static:**0w9.A09's dirty branch at2882..288e invokes0Tp.A0N(group)
+on the selected event. The complete A0N helper is now retained: it iterates
+children, adds only exact TextUtils.equals(tag,name) matches and otherwise
+continues. Null child-array returns EMPTY_LIST. A non-group child is not an
+invalid group entry in that selected path.
+
+**Confirmed local defect/fix:** Rust rejected the entire list on any non-group
+child. A metadata sibling inside groups_dirty could suppress a valid group's
+queued refresh and ACK. The helper now selects only group children for group
+parsing, while keeping the256-total-child local resource bound and all selected
+entry checks (group identity, duplicate, device, missing/empty supported list),
+envelope, persistence and ACK-ownership checks. This is not a blanket valid
+result for every arbitrary/empty list: unknown-only still has no supported work.
+
+The queue-before-ACK/reopen test now prepends metadata with an unusable jid to
+its valid group list. It fails on the previous missing-ACK path, then confirms
+exactly one intended refresh and the same post-reopen reservation/dedup guards.
+The malformed selected-group matrix remains unchanged. No new query family,
+identity policy, live operation or native all-error-ACK parity is claimed.

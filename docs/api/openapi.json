@@ -17177,5 +17177,12 @@
     "x-live": false,
     "description": "First-child groups_dirty retains dedicated durable refresh scheduling and ACK ownership even with outer metadata siblings. Generic group ACK returns None for that first event, preventing fallback ACK after dirty validation refusal or duplicate ACK after accepted scheduling. Existing envelope/list/dedup/original reservation guards remain. Queue-before-ACK test now includes missing_participant_identification sibling and reopen without another reservation. This does not implement that marker lifecycle, secondary events, new query family or HTTP route.",
     "evidence": "docs/protocol/apk/2.26.43.72-group-event-selection/README.md"
+  },
+  "x-group-dirty-named-child-filter": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Dirty-group handling selects named group children like APK43.72 0w9.A09/0Tp.A0N, so unrelated inner children do not suppress otherwise valid refresh work and ACK. Existing selected-entry identity/device/duplicate, empty-supported-work, envelope,256-total-child, durable queue/dedup and sole-ACK guards remain. Red/green regression prepends metadata with unusable jid beside valid groups and retains reopen/original reservation controls. Unknown-only remains unsupported. No new query family or HTTP route.",
+    "evidence": "docs/protocol/apk/2.26.43.72-group-event-selection/README.md"
   }
 }

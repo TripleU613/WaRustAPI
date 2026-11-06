@@ -472,14 +472,14 @@ pub fn handle_dirty_notification(store: &ProtocolStore, node: &Node) -> Result<O
             None
         };
         let children = node.child_nodes()[0].child_nodes();
-        if children.len() > 256 || children.iter().any(|g| g.description != "group") {
-            return Err(invalid(
-                "dirty notification list is excessive or unsupported",
-            ));
+        if children.len() > 256 {
+            return Err(invalid("dirty notification list is excessive"));
         }
         let mut unique = std::collections::BTreeSet::new();
         let mut inputs = Vec::new();
-        for group in children {
+        // APK43.72 0w9.A09 calls0Tp.A0N("group"), ignoring unrelated
+        // child names while preserving validation of selected group entries.
+        for group in children.iter().filter(|child| child.description == "group") {
             if group.get_attr("jid").is_none() {
                 continue;
             }
@@ -2691,6 +2691,9 @@ mod tests {
         let (dir, s) = store();
         let base = dirty_fixture();
         let mut children = base.child_nodes().to_vec();
+        let mut entries = children[0].child_nodes().to_vec();
+        entries.insert(0, Node::new("metadata").attr("jid", "not-a-group"));
+        children[0] = children[0].clone().children(entries);
         children.push(Node::new("missing_participant_identification"));
         let node = base.children(children);
         let ack = handle_dirty_notification(&s, &node).unwrap().unwrap();

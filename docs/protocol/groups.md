@@ -3356,3 +3356,14 @@ Existing durable queue/dedup/envelope/inner-list guards remain. The expanded
 queue-before-ACK regression covers metadata sibling, sole ACK ownership and
 reopen without another reservation. Missing-identification state remains unported.
 [Evidence and limits](apk/2.26.43.72-group-event-selection/README.md).
+
+
+### Dirty list filters named group entries (2026-11-05)
+
+**Confirmed static / locally fixed:**0w9.A09 calls0Tp.A0N(group), which selects
+matching children and skips others. Rust's whole-list rejection on unrelated
+children suppressed valid refresh/ACK. It now filters group entries; selected
+identity/duplicate/device, empty-work, envelope and256-total-child guards remain.
+Red/green queue-before-ACK/reopen regression includes metadata with an unusable
+jid beside a valid group. Unknown-only remains unsupported.
+[Exact helper and limits](apk/2.26.43.72-group-event-selection/README.md).

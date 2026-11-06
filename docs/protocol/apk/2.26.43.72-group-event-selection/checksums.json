@@ -1,7 +1,7 @@
 {
   "README.md": {
-    "bytes": 3934,
-    "sha256": "098c58f90781ce3b51cba1de94a358361159c4d86e5599f5283d42202aa879f9"
+    "bytes": 5277,
+    "sha256": "28bf0a00d5535497dda8904290f1080b6b15d38006fd6a5abf8164f0215be88b"
   },
   "dirty-event-selection-excerpt.txt": {
     "bytes": 2065,
@@ -14,5 +14,9 @@
   "group-dispatch-selection-excerpt.txt": {
     "bytes": 5309,
     "sha256": "4e869b5ae49fea21096e502b0fa1441e0d73aeaf28d1835ac381e56c90986e24"
+  },
+  "named-child-filter.txt": {
+    "bytes": 1158,
+    "sha256": "b9ee01b61256b09f08390a6409439efa366a843bbb78df8e29de255363d113f5"
   }
 }

@@ -1,3 +1,8 @@
+Fixed unrelated children inside groups_dirty suppressing valid refresh/ACK.
+Only named group entries are parsed; existing selected-entry and total-list
+guards remain. Queue/dedup/reopen regression expanded.
+[Evidence](docs/protocol/apk/2.26.43.72-group-event-selection/README.md).
+
 Fixed groups_dirty plus metadata siblings being ACKed without refresh work.
 Dedicated first-event dirty handling now retains scheduling before ACK; generic
 ACK stays suppressed. Queue/dedup/reopen regression expanded.
