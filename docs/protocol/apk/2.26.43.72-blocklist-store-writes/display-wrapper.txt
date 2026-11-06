@@ -1,0 +1,33 @@
+
+# class: LX/12d;
+# extends: Ljava/lang/Object;
+
+.method public BPw(LL)  # .registers 5
+    # full signature: LX/12d;->BPw(Ljava/util/Map;)Ljava/util/List;
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v4, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-interface  {v4}, Ljava/util/Map;->entrySet()Ljava/util/Set;
+    000e..0010  move-result-object  v0
+    0010..0016  invoke-interface  {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    0016..0018  move-result-object  v2
+    0018..001e  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    001e..0020  move-result  v0
+    0020..0024  if-eqz  v0, +0x18
+    0024..002a  invoke-interface  {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    002a..002c  move-result-object  v0
+    002c..0030  check-cast  v0, Ljava/util/Map$Entry;
+    0030..0036  invoke-interface  {v0}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+    0036..0038  move-result-object  v1
+    0038..003c  check-cast  v1, LX/0Dw;
+    003c..0042  invoke-interface  {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+    0042..0044  move-result-object  v0
+    0044..0048  check-cast  v0, Ljava/lang/String;
+    0048..004e  invoke-virtual  {v3, v1, v0}, LX/12d;->BPx(LX/0Dw;Ljava/lang/String;)Z
+    004e..0050  goto  -0x1b
+    0050..0056  invoke-interface  {v4}, Ljava/util/Map;->keySet()Ljava/util/Set;
+    0056..0058  move-result-object  v0
+    0058..005e  invoke-static  {v0}, LX/07Z;->A1H(Ljava/lang/Iterable;)Ljava/util/List;
+    005e..0060  move-result-object  v0
+    0060..0062  return-object  v0
+    # exception table: 0 try range(s)
+.end method

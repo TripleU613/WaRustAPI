@@ -347,6 +347,12 @@
     "x-live": false,
     "description": "APK43.72 blocklist metadata task reaches 7to.A00 independently of membership difference. 878 binds associations/usernames/display names. Associations prefer active then lexical user; existing choice may be retained, with selected last in submission. Username proposals require absence in two consulted maps; display-name proposals preserve existing nonblank values using Android Character whitespace/space-char predicate. Concrete backend commits, alias writer semantics and Rust contact-store ownership remain open. No production behavior/request added. docs/protocol/chat-actions.md#blocklist-metadata-adoption-authority-2026-11-06"
   },
+  "x-blocklist-metadata-write-evidence": {
+    "x-cli": "xtask apk-smali <apk> --class <class> --method <method> --signatures --exceptions; xtask apk-virtual-overrides <apk> --class <class> --method <method> --signature <descriptor>",
+    "x-transport": "offline static APK evidence only",
+    "x-live": false,
+    "description": "APK43.72 bounded metadata-writer declaration census and selected concrete methods: Android whitespace trim then leading-@ stripping, changed-value/empty handling, database readiness, delegation and separate notification stages. Per-entry Boolean setter results are ignored in one wrapper; returned keys do not prove durable write success. Superclass override query excludes interface dispatch; active binding and complete backend/alias effects remain open. REA writer body unavailable; DEX instructions retained. No production behavior or request added. docs/protocol/chat-actions.md#blocklist-metadata-concrete-write-boundaries-2026-11-06"
+  },
   "x-library-capabilities": [
     {
       "symbol": "whatsapp_api::transport::app_state_sync::binding::bind_inline_fetch_plan",

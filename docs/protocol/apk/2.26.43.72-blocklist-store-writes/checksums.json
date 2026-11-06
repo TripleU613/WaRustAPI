@@ -1,0 +1,54 @@
+{
+  "README.md": {
+    "bytes": 6542,
+    "sha256": "a202c374da2570aba66702dc6d7cb3349d487cb76fac21789ea0c385ec4940a7"
+  },
+  "display-store.txt": {
+    "bytes": 7184,
+    "sha256": "8a70568467ea65d81e432913e7324454b4a3ebe80d75c063a43af01fb7b701bc"
+  },
+  "display-values.txt": {
+    "bytes": 1895,
+    "sha256": "45ccd20eae5dd963e301624b7a016a091c1ae273b155b1df7fee713b06523cb6"
+  },
+  "display-wrapper.txt": {
+    "bytes": 1631,
+    "sha256": "b88e33ab2f9abe213b5a2dbac149847d5171fe7eebbde75f96d5215dcb45f33e"
+  },
+  "empty-username.txt": {
+    "bytes": 424,
+    "sha256": "4fd02035c49dc8cdf5c0bcf08d4ea474d9a1ca4974a18e25facff714dbebb759"
+  },
+  "leading-at.txt": {
+    "bytes": 1154,
+    "sha256": "5b19781aec83332232e8dbadf28affac83bd92f004cf7783fc820ed66e5623c8"
+  },
+  "superclass-only.txt": {
+    "bytes": 417,
+    "sha256": "9339a6f663037825ea770ef4863eaa44f45577c6b1281a00ab5ae2028bcd85fc"
+  },
+  "trim-bounds.txt": {
+    "bytes": 1436,
+    "sha256": "889536e9b767869f610a44c88e1c49ec2c54c8e6828a830fc54eb53a08e304ca"
+  },
+  "trim-bridge.txt": {
+    "bytes": 516,
+    "sha256": "92ed824f3191d32504f7f24c0cb57969a193d6a151537e525b376b3c00da5e38"
+  },
+  "username-definitions.txt": {
+    "bytes": 23511,
+    "sha256": "2a631b3cfb7df469b564db75f2d1c141023c92b9a95843f18e6b0e1fac6619ba"
+  },
+  "username-model.txt": {
+    "bytes": 474,
+    "sha256": "330c67f01d5d3628e984cc5138f10e35f5d74ff217cda673d485fbdadca42103"
+  },
+  "username-normalize.txt": {
+    "bytes": 1056,
+    "sha256": "35c43f0aba9cc6e4b93723e121cbf27af2988510847365d8c39a686c0518896a"
+  },
+  "username-values.txt": {
+    "bytes": 2101,
+    "sha256": "15a509eac96e5368e50258a9f70de4f1db702a04472ce47abe001eb52b654390"
+  }
+}

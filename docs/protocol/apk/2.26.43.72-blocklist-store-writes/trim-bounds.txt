@@ -1,0 +1,37 @@
+
+# class: LX/0Cf;
+# extends: LX/0Ce;
+
+.method public A0R(LL)  # .registers 5
+    # full signature: LX/0Cf;->A0R(Ljava/lang/CharSequence;)Ljava/lang/CharSequence;
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v4, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-interface  {v4}, Ljava/lang/CharSequence;->length()I
+    000e..0010  move-result  v3
+    0010..0012  const/4  v0, #0x1
+    0012..0014  sub-int/2addr  v3, v0
+    0014..0016  const/4  v2, #0x0
+    0016..0018  const/4  v1, #0x0
+    0018..001c  if-gt  v2, v3, +0x1c
+    001c..001e  move  v0, v3
+    001e..0022  if-nez  v1, +0x3
+    0022..0024  move  v0, v2
+    0024..002a  invoke-interface  {v4, v0}, Ljava/lang/CharSequence;->charAt(I)C
+    002a..002c  move-result  v0
+    002c..0032  invoke-static  {v0}, LX/0Fv;->A01(C)Z
+    0032..0034  move-result  v0
+    0034..0038  if-nez  v1, +0x9
+    0038..003c  if-nez  v0, +0x4
+    003c..003e  const/4  v1, #0x1
+    003e..0040  goto  -0x13
+    0040..0044  add-int/lit8  v2, v2, #0x1
+    0044..0046  goto  -0x16
+    0046..004a  if-eqz  v0, +0x5
+    004a..004e  add-int/lit8  v3, v3, #0xff (-1)
+    004e..0050  goto  -0x1b
+    0050..0054  add-int/lit8  v0, v3, #0x1
+    0054..005a  invoke-interface  {v4, v2, v0}, Ljava/lang/CharSequence;->subSequence(II)Ljava/lang/CharSequence;
+    005a..005c  move-result-object  v0
+    005c..005e  return-object  v0
+    # exception table: 0 try range(s)
+.end method

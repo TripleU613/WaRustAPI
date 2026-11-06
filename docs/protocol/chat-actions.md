@@ -1306,3 +1306,37 @@ coverage and APK coverage freshness pass (965 distinct REA records,0 duplicate
 copies,72 explicitly mapped). No Rust behavior changed; workspace runtime tests
 were not rerun for this research-only chunk.
 Repository hygiene passes (422 APK checksum bundles).
+
+## Blocklist metadata concrete write boundaries (2026-11-06)
+
+**Confirmed selected static:** [declaration census, complete writer/normalizer/
+value methods and REA negative](apk/2.26.43.72-blocklist-store-writes/README.md)
+find0bY abstract plus0bZ/12d concrete BQ1 declarations. The superclass-only
+query cannot resolve interface dispatch; active provider binding remains open.
+12d wrappers call per-entry Boolean setters without checking their results;
+returned input keys are not evidence of every backend write succeeding.
+
+0bZ normalizes usernames by Android-whitespace trim then all leading @ removal,
+with no lowercasing in that selected function; null/empty maps to an empty
+singleton string. It compares changed values, treats empty values separately,
+filters selected unresolved row IDs and performs database, delegated writer,
+invalidation-related and notification operations across separate stages. The
+display writer has a DB-not-ready empty-result branch and conditional delegation.
+12g's username fallback supplies an empty display_name on its insert-style
+call; its positive affected-count branch does not clear the existing name.
+No all-stages atomic success guarantee follows from these wrappers.
+
+REA returned a method-exists/no-body comment for0bZ.BQ1 despite concrete DEX
+instructions. The full Evidence is retained as body unavailable, not a complete
+source port. Active binding,0Ws/3LI/0KU concrete effects and Rust contact metadata
+ownership remain open. No production code, metadata erase, retry, sender,
+automatic request or live account operation changed.
+
+Validation: twelve selected export commands reproduce byte-for-byte, including
+the three-declaration BQ1 census and the explicitly superclass-only negative.
+Bundle checksums, retained REA unavailable-body data and APK digest match.
+Formatting, CLI reference regeneration, OpenAPI library coverage and APK
+coverage freshness pass (966 distinct REA records,0 duplicate copies,72 mapped).
+No Rust behavior changed; workspace runtime tests were not rerun for this
+research-only chunk.
+Repository hygiene passes (423 APK checksum bundles).

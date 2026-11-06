@@ -1,0 +1,28 @@
+
+# class: LX/0Cf;
+# extends: LX/0Ce;
+
+.method public A0j(LLL)  # .registers 5
+    # full signature: LX/0Cf;->A0j(Ljava/lang/String;[C)Ljava/lang/String;
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-virtual  {v3}, Ljava/lang/String;->length()I
+    000e..0010  move-result  v2
+    0010..0012  const/4  v1, #0x0
+    0012..0016  if-ge  v1, v2, +0x18
+    0016..001c  invoke-virtual  {v3, v1}, Ljava/lang/String;->charAt(I)C
+    001c..001e  move-result  v0
+    001e..0024  invoke-static  {v4, v0}, LX/08w;->A0k([CC)Z
+    0024..0026  move-result  v0
+    0026..002a  if-nez  v0, +0xb
+    002a..0030  invoke-virtual  {v3, v1, v2}, Ljava/lang/String;->subSequence(II)Ljava/lang/CharSequence;
+    0030..0032  move-result-object  v0
+    0032..0038  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0038..003a  move-result-object  v0
+    003a..003c  return-object  v0
+    003c..0040  add-int/lit8  v1, v1, #0x1
+    0040..0042  goto  -0x17
+    0042..0046  const-string  v0, ""
+    0046..0048  goto  -0xa
+    # exception table: 0 try range(s)
+.end method

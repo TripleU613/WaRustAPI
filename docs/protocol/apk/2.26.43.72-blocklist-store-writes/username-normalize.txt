@@ -1,0 +1,26 @@
+
+# class: LX/7k8;
+# extends: Ljava/lang/Object;
+
+.method public A00(LL)  # .registers 4
+    # full signature: LX/7k8;->A00(Ljava/lang/String;)LX/87n;
+    0000..0004  if-eqz  v3, +0x1e
+    0004..000a  invoke-virtual  {v3}, Ljava/lang/String;->length()I
+    000a..000c  move-result  v0
+    000c..0010  if-eqz  v0, +0x18
+    0010..0016  invoke-static  {v3}, LX/2LC;->A0z(Ljava/lang/CharSequence;)Ljava/lang/String;
+    0016..0018  move-result-object  v3
+    0018..001a  const/4  v0, #0x1
+    001a..001e  new-array  v2, v0, [C
+    001e..0022  const/16  v1, #0x40
+    0022..0024  const/4  v0, #0x0
+    0024..0028  aput-char  v1, v2, v0
+    0028..002e  invoke-static  {v3, v2}, LX/0Cf;->A0j(Ljava/lang/String;[C)Ljava/lang/String;
+    002e..0030  move-result-object  v1
+    0030..0034  new-instance  v0, LX/87n;
+    0034..003a  invoke-direct  {v0, v1}, LX/87n;-><init>(Ljava/lang/String;)V
+    003a..003c  return-object  v0
+    003c..0040  sget-object  v0, LX/87n;->A01:LX/87n;
+    0040..0042  return-object  v0
+    # exception table: 0 try range(s)
+.end method

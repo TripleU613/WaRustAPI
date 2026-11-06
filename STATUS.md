@@ -1,3 +1,11 @@
+2026-11-06 — **Blocklist metadata concrete writer boundaries retained.**
+Traced candidate store declarations, username trim/leading-@ normalization,
+database-readiness/delegation and separate write/notification stages. Active
+interface binding and atomic backend outcomes remain unproven; REA writer
+body was unavailable while DEX instructions were retained.
+[Findings and limits](docs/protocol/chat-actions.md#blocklist-metadata-concrete-write-boundaries-2026-11-06).
+No Rust runtime or live account change.
+
 2026-11-06 — **Blocklist metadata worker and existing-value authority traced.**
 Native metadata updates are separately scheduled. Username proposals require
 absence in two consulted maps; display names preserve an existing nonblank

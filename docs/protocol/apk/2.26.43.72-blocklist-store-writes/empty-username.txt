@@ -1,0 +1,13 @@
+
+# class: LX/87n;
+# extends: Ljava/lang/Object;
+
+.method public <clinit>(V)  # .registers 2
+    # full signature: LX/87n;-><clinit>()V
+    0000..0004  const-string  v1, ""
+    0004..0008  new-instance  v0, LX/87n;
+    0008..000e  invoke-direct  {v0, v1}, LX/87n;-><init>(Ljava/lang/String;)V
+    000e..0012  sput-object  v0, LX/87n;->A01:LX/87n;
+    0012..0014  return-void
+    # exception table: 0 try range(s)
+.end method

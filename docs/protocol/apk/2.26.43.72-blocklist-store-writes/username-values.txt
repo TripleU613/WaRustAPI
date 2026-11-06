@@ -1,0 +1,38 @@
+
+# class: LX/12g;
+# extends: Ljava/lang/Object;
+
+.method public A02(VLLJ)  # .registers 11
+    # full signature: LX/12g;->A02(LX/0aq;Ljava/lang/String;J)V
+    0000..0004  new-instance  v6, Landroid/content/ContentValues;
+    0004..000a  invoke-direct  {v6}, Landroid/content/ContentValues;-><init>()V
+    000a..000e  const-string  v1, "lid_row_id"
+    000e..0014  invoke-static  {v9, v10}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0014..0016  move-result-object  v0
+    0016..001c  invoke-virtual  {v6, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+    001c..0022  const-string/jumbo  v0, "username"
+    0022..0028  invoke-virtual  {v6, v0, v8}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+    0028..002c  iget-object  v5, v7, LX/0aq;->A02:LX/0KU;
+    002c..0032  invoke-static  {v9, v10}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+    0032..0034  move-result-object  v1
+    0034..0036  const/4  v0, #0x1
+    0036..003a  new-array  v10, v0, [Ljava/lang/String;
+    003a..003c  const/4  v0, #0x0
+    003c..0040  aput-object  v1, v10, v0
+    0040..0044  const-string  v9, "LidDisplayNameStore/INSERT_USERNAME"
+    0044..0048  const-string  v7, "lid_display_name"
+    0048..004c  const-string  v8, "lid_row_id = ?"
+    004c..0052  invoke-virtual/range  {v5..v10}, LX/0KU;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+    0052..0054  move-result  v0
+    0054..0056  int-to-long  v1, v0
+    0056..005a  const-wide/16  v3, #0x0
+    005a..005e  cmp-long  v0, v1, v3
+    005e..0062  if-gtz  v0, +0xd
+    0062..0066  const-string  v1, "display_name"
+    0066..006a  const-string  v0, ""
+    006a..0070  invoke-virtual  {v6, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+    0070..0072  const/4  v0, #0x5
+    0072..0078  invoke-virtual  {v5, v7, v9, v6, v0}, LX/0KU;->A09(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;I)J
+    0078..007a  return-void
+    # exception table: 0 try range(s)
+.end method

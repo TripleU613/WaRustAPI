@@ -18,7 +18,7 @@
       "Bundle-topic and REA-record counts can overlap and must not be added into a completion percentage."
     ],
     "ownership_source": "explicit ownership.json sidecars only; prose, directory names and classes do not imply Rust ownership",
-    "records": 965,
+    "records": 966,
     "records_with_explicit_ownership": 72,
     "releases": [
       {
@@ -41,16 +41,16 @@
         "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
         "method_bodies": {
           "complete_export": 506,
-          "unavailable": 14
+          "unavailable": 15
         },
         "operations": {
           "inspect_analysis_view": 1,
           "inspect_android_class": 45,
-          "inspect_android_method": 520,
+          "inspect_android_method": 521,
           "search_android_classes": 5,
           "trace_android_references": 38
         },
-        "records": 609,
+        "records": 610,
         "rust_files": {
           "crates/whatsapp-api/src/registration/mod.rs": 9,
           "crates/whatsapp-api/src/registration/wire.rs": 7,
