@@ -507,3 +507,37 @@ Original complete response is stored before refusal, and no replay is enabled.
 preserves the old usable route and complete pending refresh across reopen.
 A later valid result applies once; its identical duplicate is idempotent.
 [Source boundary, pinned evidence and limits](network-correctness-audit.md#media-refresh-settlement-admission-review-2026-11-04).
+
+### Malformed refresh replies preserve route and wait together (2026-11-05)
+
+**Confirmed local / regression added:** the prospective media coordinator
+already isolates unsupported result bodies while retaining its current route
+and server wait. The new combined test installs a real local route, reserves
+a refresh against it, then records a separate 507/60-second wait before the
+reserved result arrives. Six invalid result cases cover missing/duplicate
+media_conn, missing auth, malformed ttl, overflowing auth_ttl and overflowing
+is_new. Each settles Unsupported without changing the installed CURRENT bytes
+or throttle deadline; the raw reply remains retained.
+
+The test unsupported_results_preserve_installed_route_and_server_wait_across_reopen
+also verifies exact duplicates do not change any checkpoint or receipt counter,
+a conflicting late valid reply is refused without mutation, reopening preserves
+all rows, and a further prepare remains throttled without reserving anything.
+The valid result control still replaces routing and clears the saved wait, so
+this is not a blanket refusal to adopt fresh routing. No production behavior
+was changed by this audit.
+
+**Confirmed static evidence retained:** APK43.72 1xY.CK4 requires media_conn,
+auth and long lifetimes; 0VM.A0A selects new/prior hosts; Bvj selects throttle
+directives. See [media lifetime evidence](rea/2.26.43.72-media-route-lifetimes/README.md).
+The Rust conn selector additionally rejects duplicate children as a local
+admission policy. Stale-prior, outer result/error/ID admission and orphaned-owner
+checks remain separate existing tests; this new test does not stand in for them.
+
+**Bounded negative findings / limits:** has_context_rows refuses a 10,000-row
+checkpoint scan rather than silently treating truncated history as absent.
+Throttle recovery pages checkpoints but separately caps media records at 10,000.
+Those local resource limits can refuse large histories; they were not removed
+or claimed as native limits. Full upload/download HTTP interoperability, every
+host choice, native lifecycle parity and live acceptance remain outside this
+coordinator audit. No new refresh, retry, wait reset or live account operation.

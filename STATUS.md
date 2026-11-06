@@ -1,3 +1,14 @@
+2026-11-05 — **Media refresh route and throttle preservation verified together.**
+
+Six malformed results retain installed route bytes and the saved 507 wait;
+duplicate/conflicting receipts and reopening do not bypass either. A valid
+result control still applies routing and the existing reset transition.
+[Regression, evidence and history bounds](docs/protocol/media-network-outcomes.md#malformed-refresh-replies-preserve-route-and-wait-together-2026-11-05).
+Validation: combined coordinator regression, all 1388 workspace/all-feature
+tests, fmt, strict Clippy, CLI/OpenAPI, APK coverage, pinned APK identity and
+staged checksum/link hygiene passed. Regression/documentation only; no runtime
+policy or live account operation.
+
 2026-11-05 — **Unusable group-info identity no longer consumes pending projection.**
 
 Missing/nontext group ID now leaves queued group-info unapplied instead of

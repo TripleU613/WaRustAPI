@@ -872,6 +872,140 @@ mod tests {
         assert_eq!(current_summary(&store).unwrap(), None);
     }
     #[test]
+    fn unsupported_results_preserve_installed_route_and_server_wait_across_reopen() {
+        for case in [
+            "missing_conn",
+            "duplicate_conn",
+            "missing_auth",
+            "invalid_ttl",
+            "invalid_auth_ttl",
+            "invalid_is_new",
+            "valid",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("unsupported-retains-authority.redb");
+            let store = open(&path);
+            prepare(&store, "seed").unwrap();
+            assert_eq!(
+                settle(
+                    &store,
+                    "seed",
+                    &reply("seed", "1", "old", "old-auth", "old.whatsapp.net")
+                ),
+                Settlement::Applied
+            );
+            prepare(&store, "held").unwrap();
+            prepare(&store, "wait").unwrap();
+            assert_eq!(
+                settle(&store, "wait", &error("wait", "507", "60")),
+                Settlement::Refused
+            );
+            let until = throttle_until(&store).unwrap().unwrap();
+            let prior = store
+                .read(|tx| tx.get(Table::Checkpoints, CURRENT, 1))
+                .unwrap()
+                .unwrap();
+            let base = reply("held", "1", "new", "new-auth", "new.whatsapp.net");
+            let mut incoming = base.child("media_conn").unwrap().clone();
+            incoming = match case {
+                "missing_auth" => {
+                    incoming.attributes.retain(|attr| attr.name != "auth");
+                    incoming
+                }
+                "invalid_ttl" => incoming.attr("ttl", "not-a-long"),
+                "invalid_auth_ttl" => incoming.attr("auth_ttl", "9223372036854775808"),
+                "invalid_is_new" => incoming.attr("is_new", "2147483648"),
+                _ => incoming,
+            };
+            let children = match case {
+                "missing_conn" => vec![],
+                "duplicate_conn" => vec![incoming.clone(), incoming],
+                _ => vec![incoming],
+            };
+            let candidate = base.children(children);
+            let expected = if case == "valid" {
+                Settlement::Applied
+            } else {
+                Settlement::Unsupported
+            };
+            assert_eq!(settle(&store, "held", &candidate), expected, "{case}");
+            assert_eq!(
+                saved(&store, "held")["wire"],
+                serde_json::json!(encode(&candidate).unwrap())
+            );
+            let before_duplicate = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 1000))
+                .unwrap();
+            assert_eq!(settle(&store, "held", &candidate), expected);
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 1000))
+                    .unwrap(),
+                before_duplicate
+            );
+            if case == "valid" {
+                assert_eq!(throttle_until(&store).unwrap(), None);
+                assert_ne!(
+                    store
+                        .read(|tx| tx.get(Table::Checkpoints, CURRENT, 1))
+                        .unwrap()
+                        .unwrap(),
+                    prior
+                );
+            } else {
+                assert_eq!(throttle_until(&store).unwrap(), Some(until));
+                assert_eq!(
+                    store
+                        .read(|tx| tx.get(Table::Checkpoints, CURRENT, 1))
+                        .unwrap()
+                        .unwrap(),
+                    prior
+                );
+                assert!(
+                    store
+                        .write(|tx| settle_in(
+                            tx,
+                            "held",
+                            &reply("held", "1", "late", "late-auth", "late.whatsapp.net")
+                        ))
+                        .is_err()
+                );
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 1000))
+                        .unwrap(),
+                    before_duplicate
+                );
+            }
+            drop(store);
+            let reopened = open(&path);
+            assert_eq!(
+                reopened
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 1000))
+                    .unwrap(),
+                before_duplicate
+            );
+            if case != "valid" {
+                assert_eq!(throttle_until(&reopened).unwrap(), Some(until));
+                assert_eq!(
+                    reopened
+                        .read(|tx| tx.get(Table::Checkpoints, CURRENT, 1))
+                        .unwrap()
+                        .unwrap(),
+                    prior
+                );
+                assert!(prepare(&reopened, "blocked-next").is_err());
+                assert_eq!(
+                    reopened
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 1000))
+                        .unwrap(),
+                    before_duplicate
+                );
+            }
+        }
+    }
+
+    #[test]
     fn errors_unsupported_and_conflicting_settlement_preserve_authority() {
         let dir = tempfile::tempdir().unwrap();
         let store = open(&dir.path().join("refusal.redb"));

@@ -7231,3 +7231,12 @@ group-info element no longer consumes its pending projection as a successful
 no-op. Recovery preserves reply, prior snapshot, checkpoints and journal.
 [Red/green cases and bookkeeping boundary](normal-group-outbox.md#unusable-group-info-identity-preserves-pending-projection-2026-11-05).
 No network retry, cache fallback or live account operation.
+
+### Combined media route/wait preservation (2026-11-05)
+
+**Confirmed local / regression:** six malformed refresh results preserve the
+installed route and saved 507 wait together, with raw reply retained. Exact
+duplicates and late conflicts cannot mutate them; reopening stays throttled.
+A valid-result control still applies routing and the existing wait reset.
+[Combined matrix, native evidence and history-scan limits](media-network-outcomes.md#malformed-refresh-replies-preserve-route-and-wait-together-2026-11-05).
+No runtime policy change, new query or live operation.
