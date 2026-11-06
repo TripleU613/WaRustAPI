@@ -17191,5 +17191,12 @@
     "x-live": false,
     "description": "Privacy-token handle/parse require agent0 and device0 for supported PN/LID primary from and explicit LID alias. Invalid from skips token/ACK; invalid explicit sender_lid retains existing InvalidInput policy. LID domain bits remain represented by namespace, not legacy agent. Red/green regression covers typed/text qualified PN/LID and alias, preserving checkpoints/pins/sessions across reopen. Native UserJid evidence does not claim full special-subtype/fallback parity. Reachout envelope check was already present and unchanged. No token synthesis, mapping adoption, query or HTTP route.",
     "evidence": "docs/protocol/apk/2.26.43.72-privacy-token-primary-address/README.md"
+  },
+  "x-privacy-token-first-container-selection": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Privacy-token parser selects the first named tokens container like APK43.72 10G.A09/0Tp.A0G/A0F. Later containers do not suppress valid selected data/ACK, replace state, merge entries or rescue malformed first data. Leading unrelated metadata is ignored by name. Existing selected-list256 bound, timestamp/token size/primary-address, envelope and atomic storage policies remain. Red/green regression covers later newer/malformed containers and malformed-first/valid-second with prior state preserved. No new token synthesis, alias adoption or HTTP route.",
+    "evidence": "docs/protocol/apk/2.26.43.72-privacy-token-primary-address/README.md"
   }
 }

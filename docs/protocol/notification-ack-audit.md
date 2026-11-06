@@ -281,3 +281,14 @@ domain bit is not its legacy agent field. Red/green typed/text PN/LID and alias
 regression preserves checkpoint/pin/session snapshots across reopen. Reach-out
 restriction envelope admission was separately rechecked and already guarded.
 [Complete current source and limits](apk/2.26.43.72-privacy-token-primary-address/README.md).
+
+
+### First named privacy-token container (2026-11-05)
+
+**Confirmed static / locally fixed:**10G.A09 ->0Tp.A0G/A0F selects the first
+named tokens container. Rust's uniqueness guard suppressed valid first data/ACK
+when another container followed. Selection now matches the APK; later containers
+cannot replace state or rescue a malformed first. Existing selected-list/time/
+size/address/atomic guards remain. Red/green regression includes leading metadata,
+later newer/malformed data and invalid-first/valid-second.
+[Complete helper evidence and limits](apk/2.26.43.72-privacy-token-primary-address/README.md).

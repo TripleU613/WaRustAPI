@@ -41,3 +41,29 @@ live account operation occurred.
 audit. record_reachout_timelock already invokes base_ack immediately before its
 store write, and its invalid-envelope restriction-preservation test covers the
 case. No new restriction-envelope defect or change is claimed.
+
+## First named tokens container — 2026-11-05
+
+**Confirmed static:**10G.A09 calls0Tp.A0G(tokens) at001a..0028. Complete
+A0G/A0F helpers are now retained: A0F scans children in order and returns the
+first matching name; A0G returns it or throws for absence. It does not reject
+later containers or search for a later structurally valid one. The subsequent
+A0N(token) operates only on the selected container. Commands are apk-smali APK
+--class LX/0Tp; --method A0G (and A0F) --signatures --exceptions.
+
+**Confirmed local defect/fix:** Rust collected all tokens containers and required
+exactly one. Extra containers suppressed valid first-container token processing
+and ACK. It now selects node.child(tokens), which returns the first named child.
+Unrelated leading metadata is skipped by name; later token containers are not
+combined, adopted or used as fallback. The256-child bound applies to the selected
+container; selected token/time/size/primary-address and atomic-write guards remain.
+Missing container remains a local wire refusal; native all-error ACK semantics
+and partial-write behavior are not claimed identical.
+
+The mixed-token regression failed at the old duplicate-container guard. It now
+checks first valid plus later newer token, first valid plus later malformed
+container, leading metadata, and malformed first plus later valid: accepted
+cases ACK without changing the selected stored token; malformed-first remains
+refused with prior state preserved. Existing repeat, invalid envelope, malformed
+selected token and encrypted-store reopen controls remain. No new token producer,
+identity alias, retry, network request family or live account activity.

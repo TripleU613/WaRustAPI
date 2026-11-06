@@ -1,3 +1,8 @@
+Fixed extra privacy-token containers suppressing valid first-container data
+and ACK. First named selection now matches current APK; later containers cannot
+replace state or rescue malformed selected data. Red/green regression expanded.
+[Evidence](docs/protocol/apk/2.26.43.72-privacy-token-primary-address/README.md).
+
 Privacy-token primary filters now exclude nonzero legacy agent qualifiers
 before token storage/ACK. Existing PN/LID primaries remain supported; explicit
 alias errors preserve prior state. Red/green/reopen regression expanded.

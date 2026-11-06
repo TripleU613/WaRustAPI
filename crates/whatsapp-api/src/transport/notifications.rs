@@ -358,12 +358,12 @@ fn parse(node: &Node) -> Result<Option<TokenUpdates<'_>>> {
     } else {
         from
     };
-    let tokens: Vec<_> = node
-        .child_nodes()
-        .iter()
-        .filter(|v| v.description == "tokens")
-        .collect();
-    if tokens.len() != 1 || tokens[0].child_nodes().len() > 256 {
+    // APK43.72 10G.A09 uses0Tp.A0G/A0F: first named container,
+    // not a uniqueness scan and not a fallback to a later valid container.
+    let tokens = node
+        .child("tokens")
+        .ok_or_else(|| Error::invalid("notification", "missing or excessive token list"))?;
+    if tokens.child_nodes().len() > 256 {
         return Err(Error::invalid(
             "notification",
             "missing or excessive token list",
@@ -380,7 +380,7 @@ fn parse(node: &Node) -> Result<Option<TokenUpdates<'_>>> {
     let parent_time = timestamp(node)
         .ok_or_else(|| Error::invalid("notification", "invalid notification timestamp"))?;
     let mut updates = Vec::new();
-    for token in tokens[0].child_nodes() {
+    for token in tokens.child_nodes() {
         if token.description != "token"
             || token.get_attr("type").and_then(|v| v.as_text()) != Some("trusted_contact")
         {
@@ -1033,11 +1033,33 @@ mod tests {
         };
         children.push(Node::new("future_extension"));
         assert!(handle(&store, &extra).unwrap().is_some());
+        for later in [
+            Node::new("tokens").children(vec![supported().attr("t", "30").bytes(vec![9])]),
+            Node::new("tokens").children(vec![Node::new("token").attr("type", "trusted_contact")]),
+        ] {
+            let mut children = node.child_nodes().to_vec();
+            children.insert(0, Node::new("future_extension"));
+            children.push(later);
+            let extended = node.clone().children(children);
+            validate(&extended).unwrap();
+            assert!(handle(&store, &extended).unwrap().is_some());
+            assert_eq!(
+                saved(&store),
+                expected,
+                "later token containers cannot replace selected state"
+            );
+        }
         // A malformed supported entry still refuses before any partial commit.
         let malformed = notification(vec![
             supported(),
             Node::new("token").attr("type", "trusted_contact"),
         ]);
+        let mut children = malformed.child_nodes().to_vec();
+        children.push(Node::new("tokens").children(vec![supported().attr("t", "30")]));
+        assert!(
+            handle(&store, &malformed.clone().children(children)).is_err(),
+            "a later valid container cannot rescue a malformed first one"
+        );
         assert!(validate(&malformed).is_err());
         assert!(handle(&store, &malformed).is_err());
         assert_eq!(saved(&store), expected);
