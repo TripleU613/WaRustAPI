@@ -8214,3 +8214,5 @@ Current43.72 device-hash bodies/input selection reanchored; no Rust mismatch fou
 Current43.72 self-device hash helper gap narrowed with source filtering and own-account address conversions; not a generic alias rewrite. [Own-account source filtering, device-preserving mapping and limits](cross-device-sync.md#current-self-device-hash-input-normalization-2026-11-06). No live operation.
 
 APK43.72 hosted LID device99 distinction retained; current Rust domain guard avoids unsupported normalization. [Hosted LID device99 boundary and remaining dispatch/authority limits](cross-device-sync.md#hosted-lid-device99-hash-boundary-2026-11-06). No live operation.
+
+MEX map-constructor null behavior narrowed using pinned AOSP sources and APK call site; put(null) removal is a different API. [MEX null serialization platform boundary](bulk-prekey-refresh.md#missing-lid-mex-null-serialization-platform-boundary-2026-11-06). No live operation.

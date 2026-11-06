@@ -1,0 +1,22 @@
+{
+  "JSONArray.java": {
+    "bytes": 20699,
+    "sha256": "24f10dbe57a9228b8aec8a891355c26285e7fc4e070a2f826a080300e3ca4180"
+  },
+  "JSONObject.java": {
+    "bytes": 30531,
+    "sha256": "b7770e43fdad8415e8f5c37a7dc06a7c1ffb3a16c557887ded1479f3116c868f"
+  },
+  "JSONStringer.java": {
+    "bytes": 13540,
+    "sha256": "8772ac80610cd62e906330152b09864c471a0921f199f4b9d670d98050e3d86c"
+  },
+  "README.md": {
+    "bytes": 4255,
+    "sha256": "afdcba464a4bb4de086f6c60ca0756a306fe8e826d84fde47daef04d65f725c9"
+  },
+  "provenance.json": {
+    "bytes": 1077,
+    "sha256": "3dba0ee3570853e2168423eb1934977acf3b8ff5b22c8cc0cb778ab67c2579e8"
+  }
+}

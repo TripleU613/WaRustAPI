@@ -1,3 +1,5 @@
+Pinned Android16 JSONObject(Map) preserves MEX cached-device nulls; APK call site supports a platform-qualified explicit-null prediction. [MEX null serialization platform boundary](docs/protocol/bulk-prekey-refresh.md#missing-lid-mex-null-serialization-platform-boundary-2026-11-06). Pando/runtime identity remain unverified; research only.
+
 Pinned device99 LID constructor uses a distinct hosted.lid domain; Rust hash/reconciliation remains restricted to ordinary PN/LID. [Hosted LID device99 boundary and remaining dispatch/authority limits](docs/protocol/cross-device-sync.md#hosted-lid-device99-hash-boundary-2026-11-06). Research only; no runtime widening or live operation.
 
 Pinned self-PN/LID hash input helpers now traced through record filtering and account-specific device-number-preserving normalization. [Own-account source filtering, device-preserving mapping and limits](docs/protocol/cross-device-sync.md#current-self-device-hash-input-normalization-2026-11-06). Research only; general alias/identity authority unchanged.

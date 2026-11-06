@@ -221,3 +221,9 @@ A00 waits using inherited FfK.get() without a timeout for this null-timeout call
 **Confirmed static APK43.72:** [cache getters, field chain and scalar helper](apk/2.26.43.72-usync-mex-device-cache/README.md) show per-user devices cache input requires enabled devices and a nonempty real hash. Positive timestamp and strictly newer expected timestamp are separate gates; supplied values are decimal Strings through String.valueOf(long), not numeric JSON scalars. Hash formatting has a0x415b configuration switch. Initialized null fields are distinct from omitted flags at the intermediate map stage.
 
 **Unknown / unported:** complete hash format/config, cache/alias authority and timestamp units, coherent snapshots, final null/Pando serialization and response adoption. No clock/hash/cache values were invented and no Rust preflight/request or live operation added.
+
+## Missing-LID MEX null serialization platform boundary (2026-11-06)
+
+**Confirmed APK call site and pinned platform source / inferred platform-qualified wire behavior:** [0mF map constructor and unmodified Android16 JSON sources](apk/2.26.43.72-mex-null-serialization/README.md) show JSONObject(Map) recursively preserves stored null entries as explicit JSON nulls. Its separate put(key,null) removal rule must not be applied to this constructor. Thus the selected devices object predicts timestamp:null when cached timestamp<=0, and expected_timestamp:null unless cached>0 and expected>cached; non-null timestamps remain decimal strings. A skipped include_* setter still produces no map entry.
+
+**Unknown / unchanged:** actual handset platform/classloader identity, Pando serialization, full cache/alias authority and response adoption. This is not runtime observation or a universal wire-null requirement. No Rust behavior or live operation changed.
