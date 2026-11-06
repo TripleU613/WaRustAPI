@@ -1,0 +1,58 @@
+
+# class: LX/JOT;
+# extends: Ljava/io/OutputStream;
+
+.method public <init>(VL)  # .registers 2
+    # full signature: LX/JOT;-><init>(Lcom/facebook/tigon/TigonBodyStream;)V
+    0000..0006  invoke-direct  {v0}, Ljava/io/OutputStream;-><init>()V
+    0006..000a  iput-object  v1, v0, LX/JOT;->A00:Lcom/facebook/tigon/TigonBodyStream;
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public write(VI)  # .registers 5
+    # full signature: LX/JOT;->write(I)V
+    0000..0002  int-to-byte  v2, v4
+    0002..0004  const/4  v0, #0x1
+    0004..0008  new-array  v1, v0, [B
+    0008..000a  const/4  v0, #0x0
+    000a..000e  aput-byte  v2, v1, v0
+    000e..0014  invoke-virtual  {v3, v1}, Ljava/io/OutputStream;->write([B)V
+    0014..0016  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public write(VL)  # .registers 4
+    # full signature: LX/JOT;->write([B)V
+    0000..0002  const/4  v1, #0x0
+    0002..0008  invoke-static  {v3, v1}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  array-length  v0, v3
+    000a..0010  invoke-virtual  {v2, v3, v1, v0}, Ljava/io/OutputStream;->write([BII)V
+    0010..0012  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public write(VLII)  # .registers 6
+    # full signature: LX/JOT;->write([BII)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  if-eqz  v5, +0x1f
+    000c..0010  add-int  v1, v4, v5
+    0010..0012  array-length  v0, v3
+    0012..0016  if-gt  v1, v0, +0x12
+    0016..001a  iget-object  v0, v2, LX/JOT;->A00:Lcom/facebook/tigon/TigonBodyStream;
+    001a..0020  invoke-interface  {v0, v3, v4, v5}, Lcom/facebook/tigon/TigonBodyStream;->transferBytes([BII)I
+    0020..0022  move-result  v1
+    0022..0024  const/4  v0, #0x1
+    0024..0028  if-ne  v1, v0, +0x11
+    0028..002c  const-string  v0, "Stream was cancelled"
+    002c..0032  invoke-static  {v0}, LX/8t1;->A1G(Ljava/lang/String;)Ljava/io/IOException;
+    0032..0034  move-result-object  v1
+    0034..0036  throw  v1
+    0036..003a  const-string  v0, "offset + length > buffer.size"
+    003a..003e  new-instance  v1, Ljava/lang/IndexOutOfBoundsException;
+    003e..0044  invoke-direct  {v1, v0}, Ljava/lang/IndexOutOfBoundsException;-><init>(Ljava/lang/String;)V
+    0044..0046  throw  v1
+    0046..0048  return-void
+    # exception table: 0 try range(s)
+.end method

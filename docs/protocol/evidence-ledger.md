@@ -1,3 +1,10 @@
+2026-11-06 — **Upload body provider traced to native length forwarding.**
+
+Declared length reporting is separate from callback/EOF bytes; selected provider
+compression is disabled. Native JNI wrapper reaches unresolved virtual slot0x30.
+[Complete methods, pinned ELF tuples and limits](media-network-outcomes.md#native-upload-length-handoff-2026-11-06).
+No inferred truncation, Rust behavior change or live traffic.
+
 2026-11-06 — **Media raw-body and fixed-length gates distinguished.**
 
 Both transport gates derive from0x666; disabling them does not select multipart.

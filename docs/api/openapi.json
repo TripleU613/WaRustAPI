@@ -18456,5 +18456,13 @@
     "x-library": [],
     "description": "Static xtask and complete REA: shared0x666 fixed-length gate is independent of raw-stream versus multipart body selection. Disabled gate does not require multipart. JAT downstream transfer framing and effective configuration remain unproven. No new product route, command, request mode, runtime behavior or live validation.",
     "evidence": "docs/protocol/media-network-outcomes.md#raw-body-and-fixed-length-gates-are-separate-2026-11-06"
+},
+  "x-media-body-provider-research": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Static DEX/REA/ELF research: selected JAT provider reports clamped declared length separately from writer/EOF callbacks, with gzip and worker flags disabled. Native JNI length wrapper invokes unresolved vtable slot0x30. Wire framing remains unproven; no product route, runtime request mode, retries or live validation changed. Native REA provider unavailable; diagnostic retained.",
+    "evidence": "docs/protocol/media-network-outcomes.md#native-upload-length-handoff-2026-11-06"
 }
 }

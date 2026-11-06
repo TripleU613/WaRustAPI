@@ -1,0 +1,27 @@
+
+# class: Lcom/facebook/tigon/TigonXplatBodyProvider;
+# extends: Lcom/facebook/tigon/TigonBodyProvider;
+
+.method public <clinit>(V)  # .registers 1
+    # full signature: Lcom/facebook/tigon/TigonXplatBodyProvider;-><clinit>()V
+    0000..0006  const-string/jumbo  v0, "tigonjni"
+    0006..000c  invoke-static  {v0}, LX/0DG;->A07(Ljava/lang/String;)Z
+    000c..000e  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(V)  # .registers 2
+    # full signature: Lcom/facebook/tigon/TigonXplatBodyProvider;-><init>()V
+    0000..0006  invoke-direct  {v1}, Lcom/facebook/tigon/TigonBodyProvider;-><init>()V
+    0006..000c  invoke-direct  {v1}, Lcom/facebook/tigon/TigonXplatBodyProvider;->initHybrid()Lcom/facebook/jni/HybridData;
+    000c..000e  move-result-object  v0
+    000e..0012  iput-object  v0, v1, Lcom/facebook/tigon/TigonBodyProvider;->mHybridData:Lcom/facebook/jni/HybridData;
+    0012..0014  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method private initHybrid(L)  # .registers 0
+    # full signature: Lcom/facebook/tigon/TigonXplatBodyProvider;->initHybrid()Lcom/facebook/jni/HybridData;
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method

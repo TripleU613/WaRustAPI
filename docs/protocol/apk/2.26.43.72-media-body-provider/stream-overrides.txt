@@ -1,0 +1,12 @@
+# Declared overrides: Lcom/facebook/tigon/TigonBodyStream;->reportBodyLength(I)V
+# Coverage: 114178 APK classes; superclass ancestry only; external/runtime/interface dispatch unverified
+# ancestry: Lcom/facebook/tigon/TigonBodyStream; -> Ljava/lang/Object;
+
+# class: Lcom/facebook/tigon/TigonBodyStream;
+# extends: Ljava/lang/Object;
+
+.method public reportBodyLength(VI)  # .registers 0
+    # full signature: Lcom/facebook/tigon/TigonBodyStream;->reportBodyLength(I)V
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method

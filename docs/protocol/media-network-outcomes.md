@@ -701,3 +701,21 @@ Rust's known byte-body POST matches a supported raw shape. Effective0x666 and
 native provider length/framing remain unknown, so complete transfer-mode parity
 is unproven. No guessed multipart/range, Rust behavior change or live operation.
 Next: downstream JAT provider and effective configuration/stream lengths.
+
+## Native upload length handoff 2026-11-06
+
+**Confirmed selected static:** JAT's IxI provider reports min(declared length,
+INT_MAX), then separately invokes the body callback; selected gzip/worker flags
+are false. KXB selector1 calls the existing K2k writer, including optional EOF
+processing. JOT forwards writes and treats native return1 as cancellation, not a
+partial-byte count. Xplat wrapper forwards declared length to native code.
+Exact relocated JNI tuple maps reportBodyLengthNative to64fe3c in the verified
+reconstructed ARM64 libwhatsappmerged; it sign-extends the integer and invokes
+vtable slot0x30. Concrete target and wire framing remain unknown.
+[Complete DEX/REA, tuple resolver, hashed assembly and reproduction](apk/2.26.43.72-media-body-provider/README.md).
+
+REA native search was unavailable; full diagnostic retained separately from
+successful Android Evidence. ELF/LLVM inspection continued without executing the
+library. No Rust behavior change: declared length is not proof of body truncation,
+server acceptance or authority to replay. Next resolve native slot0x30/length
+handling and effective0x666; no live operation.

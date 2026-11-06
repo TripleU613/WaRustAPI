@@ -1,0 +1,147 @@
+{
+  "evidence_id": "ev_7b2f72ed240ee5dfa55c89543c2d3c660e1a112d061947d58b911527630e7a35",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "../android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.IxI",
+    "method_name": "A00",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-44J0yQ/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312,\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "load_apk",
+        "input": {
+          "path": "/tmp/rea-android-44J0yQ/target.apk",
+          "threads": 1,
+          "resources": "full"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-44J0yQ/target.apk\",\"class_count\":106897,\"raw_class_count\":106897,\"resource_count\":15728,\"load_duration_ms\":13124,\"decompile_timeout_ms\":90000,\"threads\":1,\"code_cache_size\":64,\"resources\":\"full\"}"
+            }
+          ]
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.IxI"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"methods\":[{\"signature\":\"\\u003cinit\\u003e(X.0Ze, java.lang.Integer, kotlin.jvm.functions.Function1, int, long, boolean, boolean): void\",\"def_pos\":0,\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"(LX/0Ze;Ljava/lang/Integer;Lkotlin/jvm/functions/Function1;IJZZ)V\"},{\"signature\":\"A00(com.facebook.tigon.TigonBodyStream, X.IxI): void\",\"def_pos\":0,\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/facebook/tigon/TigonBodyStream;LX/IxI;)V\"},{\"signature\":\"beginStream(com.facebook.tigon.TigonBodyStream): void\",\"def_pos\":0,\"name\":\"beginStream\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/facebook/tigon/TigonBodyStream;)V\"},{\"signature\":\"getContentLength(): long\",\"def_pos\":0,\"name\":\"getContentLength\",\"is_constructor\":false,\"dex_descriptor\":\"()J\"},{\"signature\":\"getName(): java.lang.String\",\"def_pos\":0,\"name\":\"getName\",\"is_constructor\":false,\"dex_descriptor\":\"()Ljava/lang/String;\"}],\"method_count\":5,\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"IxI\",\"full_name\":\"X.IxI\",\"field_count\":8,\"fields\":[{\"type\":\"X.05a\",\"def_pos\":0,\"name\":\"A00\"},{\"type\":\"int\",\"def_pos\":0,\"name\":\"A01\"},{\"type\":\"long\",\"def_pos\":0,\"name\":\"A02\"},{\"type\":\"X.0Ze\",\"def_pos\":0,\"name\":\"A03\"},{\"type\":\"java.lang.Integer\",\"def_pos\":0,\"name\":\"A04\"},{\"type\":\"kotlin.jvm.functions.Function1\",\"def_pos\":0,\"name\":\"A05\"},{\"type\":\"boolean\",\"def_pos\":0,\"name\":\"A06\"},{\"type\":\"boolean\",\"def_pos\":0,\"name\":\"A07\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.IxI",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.IxI.A00\",\"class_name\":\"X.IxI\",\"overload_index\":0,\"fell_back\":false,\"body\":\"    public static final void A00(TigonBodyStream tigonBodyStream, IxI ixI) {\\n        TigonErrorCode tigonErrorCode;\\n        String strA04;\\n        int i;\\n        TigonError tigonError;\\n        TigonErrorCode tigonErrorCode2;\\n        int i2;\\n        String str;\\n        try {\\n            tigonBodyStream.reportBodyLength((int) ixI.getContentLength());\\n            BufferedOutputStream bufferedOutputStream \\u003d new BufferedOutputStream(new C1lT(ixI.A03, new JOT(tigonBodyStream), ixI.A04, ixI.A01));\\n            if (ixI.A06) {\\n                GZIPOutputStream gZIPOutputStream \\u003d new GZIPOutputStream(bufferedOutputStream);\\n                try {\\n                    ixI.A05.invoke(gZIPOutputStream);\\n                    gZIPOutputStream.close();\\n                } catch (Throwable th) {\\n                    try {\\n                        throw th;\\n                    } catch (Throwable th2) {\\n                        C08N.A00(gZIPOutputStream, th);\\n                        throw th2;\\n                    }\\n                }\\n            } else {\\n                try {\\n                    ixI.A05.invoke(bufferedOutputStream);\\n                    bufferedOutputStream.close();\\n                } catch (Throwable th3) {\\n                    try {\\n                        throw th3;\\n                    } catch (Throwable th4) {\\n                        C08N.A00(bufferedOutputStream, th3);\\n                        throw th4;\\n                    }\\n                }\\n            }\\n            tigonBodyStream.writeEOM();\\n        } catch (JOI unused) {\\n            tigonErrorCode2 \\u003d TigonErrorCode.A05;\\n            i2 \\u003d 7;\\n            str \\u003d \\\"Streaming upload aborted during stream write\\\";\\n            tigonError \\u003d new TigonError(tigonErrorCode2, \\\"WATigonBodyProvider\\\", str, i2);\\n            tigonBodyStream.reportError(tigonError);\\n        } catch (JOJ unused2) {\\n            tigonErrorCode2 \\u003d TigonErrorCode.A05;\\n            i2 \\u003d 6;\\n            str \\u003d \\\"Streaming upload metadata too large during stream write\\\";\\n            tigonError \\u003d new TigonError(tigonErrorCode2, \\\"WATigonBodyProvider\\\", str, i2);\\n            tigonBodyStream.reportError(tigonError);\\n        } catch (JOK unused3) {\\n            tigonErrorCode2 \\u003d TigonErrorCode.A05;\\n            i2 \\u003d 5;\\n            str \\u003d \\\"Streaming upload not finalized during stream write\\\";\\n            tigonError \\u003d new TigonError(tigonErrorCode2, \\\"WATigonBodyProvider\\\", str, i2);\\n            tigonBodyStream.reportError(tigonError);\\n        } catch (JOM e) {\\n            tigonErrorCode \\u003d TigonErrorCode.A05;\\n            strA04 \\u003d AnonymousClass000.A04(\\\"UploadCancelledIOException during stream write: \\\", e.getMessage());\\n            i \\u003d 4;\\n            tigonError \\u003d new TigonError(tigonErrorCode, \\\"WATigonBodyProvider\\\", strA04, i);\\n            tigonBodyStream.reportError(tigonError);\\n        } catch (InterruptedIOException e2) {\\n            tigonErrorCode \\u003d TigonErrorCode.A05;\\n            strA04 \\u003d AnonymousClass000.A04(\\\"InterruptedIOException during stream write: \\\", e2.getMessage());\\n            i \\u003d 3;\\n            tigonError \\u003d new TigonError(tigonErrorCode, \\\"WATigonBodyProvider\\\", strA04, i);\\n            tigonBodyStream.reportError(tigonError);\\n        } catch (IOException e3) {\\n            tigonErrorCode \\u003d TigonErrorCode.A05;\\n            strA04 \\u003d AnonymousClass000.A04(\\\"IOException during stream write: \\\", e3.getMessage());\\n            i \\u003d 2;\\n            tigonError \\u003d new TigonError(tigonErrorCode, \\\"WATigonBodyProvider\\\", strA04, i);\\n            tigonBodyStream.reportError(tigonError);\\n        } catch (Exception e4) {\\n            tigonErrorCode \\u003d TigonErrorCode.A05;\\n            strA04 \\u003d AnonymousClass000.A04(\\\"Unknown exception during stream write: \\\", e4.getMessage());\\n            i \\u003d 1;\\n            tigonError \\u003d new TigonError(tigonErrorCode, \\\"WATigonBodyProvider\\\", strA04, i);\\n            tigonBodyStream.reportError(tigonError);\\n        }\\n    }\",\"overload_count\":1,\"method_name\":\"A00\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.IxI",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(com.facebook.tigon.TigonBodyStream, X.IxI): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(Lcom/facebook/tigon/TigonBodyStream;LX/IxI;)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public static final void A00(TigonBodyStream tigonBodyStream, IxI ixI) {\n        TigonErrorCode tigonErrorCode;\n        String strA04;\n        int i;\n        TigonError tigonError;\n        TigonErrorCode tigonErrorCode2;\n        int i2;\n        String str;\n        try {\n            tigonBodyStream.reportBodyLength((int) ixI.getContentLength());\n            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new C1lT(ixI.A03, new JOT(tigonBodyStream), ixI.A04, ixI.A01));\n            if (ixI.A06) {\n                GZIPOutputStream gZIPOutputStream = new GZIPOutputStream(bufferedOutputStream);\n                try {\n                    ixI.A05.invoke(gZIPOutputStream);\n                    gZIPOutputStream.close();\n                } catch (Throwable th) {\n                    try {\n                        throw th;\n                    } catch (Throwable th2) {\n                        C08N.A00(gZIPOutputStream, th);\n                        throw th2;\n                    }\n                }\n            } else {\n                try {\n                    ixI.A05.invoke(bufferedOutputStream);\n                    bufferedOutputStream.close();\n                } catch (Throwable th3) {\n                    try {\n                        throw th3;\n                    } catch (Throwable th4) {\n                        C08N.A00(bufferedOutputStream, th3);\n                        throw th4;\n                    }\n                }\n            }\n            tigonBodyStream.writeEOM();\n        } catch (JOI unused) {\n            tigonErrorCode2 = TigonErrorCode.A05;\n            i2 = 7;\n            str = \"Streaming upload aborted during stream write\";\n            tigonError = new TigonError(tigonErrorCode2, \"WATigonBodyProvider\", str, i2);\n            tigonBodyStream.reportError(tigonError);\n        } catch (JOJ unused2) {\n            tigonErrorCode2 = TigonErrorCode.A05;\n            i2 = 6;\n            str = \"Streaming upload metadata too large during stream write\";\n            tigonError = new TigonError(tigonErrorCode2, \"WATigonBodyProvider\", str, i2);\n            tigonBodyStream.reportError(tigonError);\n        } catch (JOK unused3) {\n            tigonErrorCode2 = TigonErrorCode.A05;\n            i2 = 5;\n            str = \"Streaming upload not finalized during stream write\";\n            tigonError = new TigonError(tigonErrorCode2, \"WATigonBodyProvider\", str, i2);\n            tigonBodyStream.reportError(tigonError);\n        } catch (JOM e) {\n            tigonErrorCode = TigonErrorCode.A05;\n            strA04 = AnonymousClass000.A04(\"UploadCancelledIOException during stream write: \", e.getMessage());\n            i = 4;\n            tigonError = new TigonError(tigonErrorCode, \"WATigonBodyProvider\", strA04, i);\n            tigonBodyStream.reportError(tigonError);\n        } catch (InterruptedIOException e2) {\n            tigonErrorCode = TigonErrorCode.A05;\n            strA04 = AnonymousClass000.A04(\"InterruptedIOException during stream write: \", e2.getMessage());\n            i = 3;\n            tigonError = new TigonError(tigonErrorCode, \"WATigonBodyProvider\", strA04, i);\n            tigonBodyStream.reportError(tigonError);\n        } catch (IOException e3) {\n            tigonErrorCode = TigonErrorCode.A05;\n            strA04 = AnonymousClass000.A04(\"IOException during stream write: \", e3.getMessage());\n            i = 2;\n            tigonError = new TigonError(tigonErrorCode, \"WATigonBodyProvider\", strA04, i);\n            tigonBodyStream.reportError(tigonError);\n        } catch (Exception e4) {\n            tigonErrorCode = TigonErrorCode.A05;\n            strA04 = AnonymousClass000.A04(\"Unknown exception during stream write: \", e4.getMessage());\n            i = 1;\n            tigonError = new TigonError(tigonErrorCode, \"WATigonBodyProvider\", strA04, i);\n            tigonBodyStream.reportError(tigonError);\n        }\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

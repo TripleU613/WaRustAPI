@@ -1,0 +1,184 @@
+
+# class: LX/IxI;
+# extends: Lcom/facebook/tigon/TigonXplatBodyProvider;
+
+.method public <init>(VLLLIJZZ)  # .registers 10
+    # full signature: LX/IxI;-><init>(LX/0Ze;Ljava/lang/Integer;Lkotlin/jvm/functions/Function1;IJZZ)V
+    0000..0002  const/4  v0, #0x2
+    0002..0008  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-direct  {v1}, Lcom/facebook/tigon/TigonXplatBodyProvider;-><init>()V
+    000e..0012  iput-wide  v6, v1, LX/IxI;->A02:J
+    0012..0016  iput-object  v4, v1, LX/IxI;->A05:Lkotlin/jvm/functions/Function1;
+    0016..001a  iput-object  v2, v1, LX/IxI;->A03:LX/0Ze;
+    001a..001e  iput-object  v3, v1, LX/IxI;->A04:Ljava/lang/Integer;
+    001e..0022  iput  v5, v1, LX/IxI;->A01:I
+    0022..0026  iput-boolean  v8, v1, LX/IxI;->A06:Z
+    0026..002a  iput-boolean  v9, v1, LX/IxI;->A07:Z
+    002a..0030  invoke-static  {}, LX/2L7;->A08()LX/05a;
+    0030..0032  move-result-object  v0
+    0032..0036  iput-object  v0, v1, LX/IxI;->A00:LX/05a;
+    0036..0038  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(VLL)  # .registers 8
+    # full signature: LX/IxI;->A00(Lcom/facebook/tigon/TigonBodyStream;LX/IxI;)V
+    0000..0004  const-string  v4, "WATigonBodyProvider"
+    0004..000a  invoke-virtual  {v7}, Lcom/facebook/tigon/TigonBodyProvider;->getContentLength()J
+    000a..000c  move-result-wide  v1
+    000c..000e  long-to-int  v0, v1
+    000e..0014  invoke-interface  {v6, v0}, Lcom/facebook/tigon/TigonBodyStream;->reportBodyLength(I)V
+    0014..0018  new-instance  v5, LX/JOT;
+    0018..001e  invoke-direct  {v5, v6}, LX/JOT;-><init>(Lcom/facebook/tigon/TigonBodyStream;)V
+    001e..0022  iget-object  v3, v7, LX/IxI;->A03:LX/0Ze;
+    0022..0026  iget-object  v2, v7, LX/IxI;->A04:Ljava/lang/Integer;
+    0026..002a  iget  v1, v7, LX/IxI;->A01:I
+    002a..002e  new-instance  v0, LX/1lT;
+    002e..0034  invoke-direct  {v0, v3, v5, v2, v1}, LX/1lT;-><init>(LX/0Ze;Ljava/io/OutputStream;Ljava/lang/Integer;I)V
+    0034..0038  new-instance  v3, Ljava/io/BufferedOutputStream;
+    0038..003e  invoke-direct  {v3, v0}, Ljava/io/BufferedOutputStream;-><init>(Ljava/io/OutputStream;)V
+    003e..0042  iget-boolean  v0, v7, LX/IxI;->A06:Z
+    0042..0046  if-eqz  v0, +0x14
+    0046..004a  new-instance  v2, Ljava/util/zip/GZIPOutputStream;
+    004a..0050  invoke-direct  {v2, v3}, Ljava/util/zip/GZIPOutputStream;-><init>(Ljava/io/OutputStream;)V
+    0050..0054  iget-object  v0, v7, LX/IxI;->A05:Lkotlin/jvm/functions/Function1;
+    0054..005a  invoke-interface  {v0, v2}, Lkotlin/jvm/functions/Function1;->invoke(Ljava/lang/Object;)Ljava/lang/Object;
+    005a..005c  goto  +0x11
+    005c..005e  move-exception  v0
+    005e..0060  throw  v0
+    0060..0062  move-exception  v1
+    0062..0068  invoke-static  {v2, v0}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    0068..006a  goto  +0x17
+    006a..006e  iget-object  v0, v7, LX/IxI;->A05:Lkotlin/jvm/functions/Function1;
+    006e..0074  invoke-interface  {v0, v3}, Lkotlin/jvm/functions/Function1;->invoke(Ljava/lang/Object;)Ljava/lang/Object;
+    0074..007a  invoke-interface  {v3}, Ljava/io/Closeable;->close()V
+    007a..007c  goto  +0x4
+    007c..0082  invoke-interface  {v2}, Ljava/io/Closeable;->close()V
+    0082..0088  invoke-interface  {v6}, Lcom/facebook/tigon/TigonBodyStream;->writeEOM()V
+    0088..008a  return-void
+    008a..008c  move-exception  v0
+    008c..008e  throw  v0
+    008e..0090  move-exception  v1
+    0090..0096  invoke-static  {v3, v0}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    0096..0098  throw  v1
+    0098..009a  move-exception  v0
+    009a..009e  sget-object  v3, Lcom/facebook/tigon/iface/TigonErrorCode;->A05:Lcom/facebook/tigon/iface/TigonErrorCode;
+    009e..00a4  invoke-virtual  {v0}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    00a4..00a6  move-result-object  v1
+    00a6..00aa  const-string  v0, "Unknown exception during stream write: "
+    00aa..00b0  invoke-static  {v0, v1}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    00b0..00b2  move-result-object  v2
+    00b2..00b4  const/4  v1, #0x1
+    00b4..00b6  goto  +0x44
+    00b6..00ba  sget-object  v3, Lcom/facebook/tigon/iface/TigonErrorCode;->A05:Lcom/facebook/tigon/iface/TigonErrorCode;
+    00ba..00bc  const/4  v2, #0x6
+    00bc..00c0  const-string  v1, "Streaming upload metadata too large during stream write"
+    00c0..00c2  goto  +0xc
+    00c2..00c6  sget-object  v3, Lcom/facebook/tigon/iface/TigonErrorCode;->A05:Lcom/facebook/tigon/iface/TigonErrorCode;
+    00c6..00c8  const/4  v2, #0x7
+    00c8..00cc  const-string  v1, "Streaming upload aborted during stream write"
+    00cc..00ce  goto  +0x6
+    00ce..00d2  sget-object  v3, Lcom/facebook/tigon/iface/TigonErrorCode;->A05:Lcom/facebook/tigon/iface/TigonErrorCode;
+    00d2..00d4  const/4  v2, #0x5
+    00d4..00d8  const-string  v1, "Streaming upload not finalized during stream write"
+    00d8..00dc  new-instance  v0, Lcom/facebook/tigon/TigonError;
+    00dc..00e2  invoke-direct  {v0, v3, v4, v1, v2}, Lcom/facebook/tigon/TigonError;-><init>(Lcom/facebook/tigon/iface/TigonErrorCode;Ljava/lang/String;Ljava/lang/String;I)V
+    00e2..00e4  goto  +0x32
+    00e4..00e6  move-exception  v0
+    00e6..00ea  sget-object  v3, Lcom/facebook/tigon/iface/TigonErrorCode;->A05:Lcom/facebook/tigon/iface/TigonErrorCode;
+    00ea..00f0  invoke-virtual  {v0}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    00f0..00f2  move-result-object  v1
+    00f2..00f6  const-string  v0, "InterruptedIOException during stream write: "
+    00f6..00fc  invoke-static  {v0, v1}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    00fc..00fe  move-result-object  v2
+    00fe..0100  const/4  v1, #0x3
+    0100..0102  goto  +0x1e
+    0102..0104  move-exception  v0
+    0104..0108  sget-object  v3, Lcom/facebook/tigon/iface/TigonErrorCode;->A05:Lcom/facebook/tigon/iface/TigonErrorCode;
+    0108..010e  invoke-virtual  {v0}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    010e..0110  move-result-object  v1
+    0110..0114  const-string  v0, "UploadCancelledIOException during stream write: "
+    0114..011a  invoke-static  {v0, v1}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    011a..011c  move-result-object  v2
+    011c..011e  const/4  v1, #0x4
+    011e..0120  goto  +0xf
+    0120..0122  move-exception  v0
+    0122..0126  sget-object  v3, Lcom/facebook/tigon/iface/TigonErrorCode;->A05:Lcom/facebook/tigon/iface/TigonErrorCode;
+    0126..012c  invoke-virtual  {v0}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    012c..012e  move-result-object  v1
+    012e..0132  const-string  v0, "IOException during stream write: "
+    0132..0138  invoke-static  {v0, v1}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0138..013a  move-result-object  v2
+    013a..013c  const/4  v1, #0x2
+    013c..0140  new-instance  v0, Lcom/facebook/tigon/TigonError;
+    0140..0146  invoke-direct  {v0, v3, v4, v2, v1}, Lcom/facebook/tigon/TigonError;-><init>(Lcom/facebook/tigon/iface/TigonErrorCode;Ljava/lang/String;Ljava/lang/String;I)V
+    0146..014c  invoke-interface  {v6, v0}, Lcom/facebook/tigon/TigonBodyStream;->reportError(Lcom/facebook/tigon/TigonError;)V
+    014c..014e  return-void
+    # exception table: 8 try range(s)
+    # catch LX/JOM; code_units 0002..0028 -> 0081
+    # catch Ljava/io/InterruptedIOException; code_units 0002..0028 -> 0072
+    # catch LX/JOI; code_units 0002..0028 -> 0061
+    # catch LX/JOK; code_units 0002..0028 -> 0067
+    # catch LX/JOJ; code_units 0002..0028 -> 005b
+    # catch Ljava/io/IOException; code_units 0002..0028 -> 0090
+    # catch Ljava/lang/Exception; code_units 0002..0028 -> 004c
+    # catch <all> code_units 0028..002e -> 002e
+    # catch <all> code_units 002f..0030 -> 0030
+    # catch LX/JOM; code_units 0031..0035 -> 0081
+    # catch Ljava/io/InterruptedIOException; code_units 0031..0035 -> 0072
+    # catch LX/JOI; code_units 0031..0035 -> 0061
+    # catch LX/JOK; code_units 0031..0035 -> 0067
+    # catch LX/JOJ; code_units 0031..0035 -> 005b
+    # catch Ljava/io/IOException; code_units 0031..0035 -> 0090
+    # catch Ljava/lang/Exception; code_units 0031..0035 -> 004c
+    # catch <all> code_units 0035..003a -> 0045
+    # catch LX/JOM; code_units 003a..0045 -> 0081
+    # catch Ljava/io/InterruptedIOException; code_units 003a..0045 -> 0072
+    # catch LX/JOI; code_units 003a..0045 -> 0061
+    # catch LX/JOK; code_units 003a..0045 -> 0067
+    # catch LX/JOJ; code_units 003a..0045 -> 005b
+    # catch Ljava/io/IOException; code_units 003a..0045 -> 0090
+    # catch Ljava/lang/Exception; code_units 003a..0045 -> 004c
+    # catch <all> code_units 0046..0047 -> 0047
+    # catch LX/JOM; code_units 0048..004c -> 0081
+    # catch Ljava/io/InterruptedIOException; code_units 0048..004c -> 0072
+    # catch LX/JOI; code_units 0048..004c -> 0061
+    # catch LX/JOK; code_units 0048..004c -> 0067
+    # catch LX/JOJ; code_units 0048..004c -> 005b
+    # catch Ljava/io/IOException; code_units 0048..004c -> 0090
+    # catch Ljava/lang/Exception; code_units 0048..004c -> 004c
+.end method
+
+.method public beginStream(VL)  # .registers 4
+    # full signature: LX/IxI;->beginStream(Lcom/facebook/tigon/TigonBodyStream;)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  iget-boolean  v0, v2, LX/IxI;->A07:Z
+    000c..0010  if-eqz  v0, +0xe
+    0010..0014  iget-object  v0, v2, LX/IxI;->A00:LX/05a;
+    0014..001a  invoke-static  {v0}, LX/2L8;->A10(LX/05a;)LX/08Z;
+    001a..001c  move-result-object  v1
+    001c..0020  const/16  v0, #0x26
+    0020..0026  invoke-static  {v1, v3, v2, v0}, LX/KVI;->A01(LX/08Z;Ljava/lang/Object;Ljava/lang/Object;I)V
+    0026..0028  return-void
+    0028..002e  invoke-static  {v3, v2}, LX/IxI;->A00(Lcom/facebook/tigon/TigonBodyStream;LX/IxI;)V
+    002e..0030  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public getContentLength(J)  # .registers 5
+    # full signature: LX/IxI;->getContentLength()J
+    0000..0004  iget-wide  v2, v4, LX/IxI;->A02:J
+    0004..000a  const-wide/32  v0, #0x7fffffff
+    000a..0010  invoke-static  {v2, v3, v0, v1}, Ljava/lang/Math;->min(JJ)J
+    0010..0012  move-result-wide  v0
+    0012..0014  return-wide  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getName(L)  # .registers 2
+    # full signature: LX/IxI;->getName()Ljava/lang/String;
+    0000..0004  const-string  v0, "WATigonBodyProvider"
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method

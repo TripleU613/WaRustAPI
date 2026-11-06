@@ -1,0 +1,33 @@
+
+# class: Lcom/facebook/tigon/TigonBodyStream;
+# extends: Ljava/lang/Object;
+
+.method public reportBodyLength(VI)  # .registers 0
+    # full signature: Lcom/facebook/tigon/TigonBodyStream;->reportBodyLength(I)V
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+.method public reportError(VL)  # .registers 0
+    # full signature: Lcom/facebook/tigon/TigonBodyStream;->reportError(Lcom/facebook/tigon/TigonError;)V
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+.method public transferBytes(ILI)  # .registers 0
+    # full signature: Lcom/facebook/tigon/TigonBodyStream;->transferBytes([BI)I
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+.method public transferBytes(ILII)  # .registers 0
+    # full signature: Lcom/facebook/tigon/TigonBodyStream;->transferBytes([BII)I
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+.method public writeEOM(V)  # .registers 0
+    # full signature: Lcom/facebook/tigon/TigonBodyStream;->writeEOM()V
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,62 @@
+{
+  "README.md": {
+    "bytes": 6687,
+    "sha256": "d35934e6ff2011a78405796b69a30e3df33b8e098f5aeb6b2159b34faa0be71b"
+  },
+  "base.txt": {
+    "bytes": 1225,
+    "sha256": "b92275b0b10b5b94f67603c72e7e6bdc70208a2e085528adac8753d10160f4ed"
+  },
+  "implementation.txt": {
+    "bytes": 10650,
+    "sha256": "fefc99f071aedc14c98086dba6e8191b6ba441d750f97effe8899a6fe01d7d65"
+  },
+  "inspect-native-tuples.py": {
+    "bytes": 1715,
+    "sha256": "26e70cea54e61c8a7d6e3aa99391f24e0dabdbf08ca1b9ea6cc3823112fa0464"
+  },
+  "native-length-disassembly.txt": {
+    "bytes": 2783,
+    "sha256": "21357d1568da5f3a71f41f40d6e50808da4cd86831b92b8f33c2251c25bce564"
+  },
+  "native-transfer-eom-disassembly.txt": {
+    "bytes": 7978,
+    "sha256": "ba9e38afe485ca806b08c4c671c51c2301dc1493bc70fe3e1a62ab784e2bc2cd"
+  },
+  "native-tuple-relocations.txt": {
+    "bytes": 1004,
+    "sha256": "60dd451994c224b1437900deb5e96a41545eece2faf9a6414bcd135b408aa1da"
+  },
+  "native-tuples.json": {
+    "bytes": 1538,
+    "sha256": "44cd588039f896d278f07c6575117be3b1b9cdbf6349c6fda8a7a57edcfa4bac"
+  },
+  "native-vcall-disassembly.txt": {
+    "bytes": 271,
+    "sha256": "12adc845053e3d015da6b82f2f12eb7b423e22f4a718670f4d8087dfc666a064"
+  },
+  "output-adapter.txt": {
+    "bytes": 2428,
+    "sha256": "21960de78386998c8dd602d77e317f2c06f8c44113fd0f22221580c57e28927a"
+  },
+  "rea-native-provider-error.txt": {
+    "bytes": 2664,
+    "sha256": "a02f0583674ddcd8add3dd1a7dbd7be1fbbda10d05a47916a0e9569e98590fbd"
+  },
+  "stream-interface.txt": {
+    "bytes": 1125,
+    "sha256": "3ee9564ddb666a52c135c63572292485f8f26086e1b39e7c712c491f91537621"
+  },
+  "stream-overrides.txt": {
+    "bytes": 544,
+    "sha256": "35b695c6ef2d57e56d7cdee08cc302e24fe966da670188db45083e9e262c381c"
+  },
+  "writer-callback.txt": {
+    "bytes": 6204,
+    "sha256": "4c148fea99ab1dc629361d233558385858d7d5dd556d8d485692e19aa0fc925d"
+  },
+  "xplat-stream.txt": {
+    "bytes": 4423,
+    "sha256": "9a877449218bb9d2d63ac69ea23cccdba35e69c73897a05e101456d1ee9c73a8"
+  }
+}

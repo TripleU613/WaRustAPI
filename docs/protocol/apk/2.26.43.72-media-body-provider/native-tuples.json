@@ -1,0 +1,57 @@
+{
+  "windows": [
+    {
+      "start_va": "0x64fe3c",
+      "end_va": "0x64ff08",
+      "file_offset": "0x64be3c",
+      "bytes": 204,
+      "sha256": "05f292440feb6c9b32121b0910029c29eae11ae3c2051dee577df3e35a94a210"
+    },
+    {
+      "start_va": "0x72921c",
+      "end_va": "0x729228",
+      "file_offset": "0x72521c",
+      "bytes": 12,
+      "sha256": "5348cb171e0c9d17970435661c914147fb57c62fdab67f0fe4f4535a1762b27b"
+    },
+    {
+      "start_va": "0x64fbe0",
+      "end_va": "0x64fe3c",
+      "file_offset": "0x64bbe0",
+      "bytes": 604,
+      "sha256": "5683e526b6b47706b2b55a0daefb01867df187fd8efe9b4b9212add7b7438634"
+    }
+  ],
+  "library_sha256": "d0ab3f2237e92a76ac3519c3577b5836b9e6f65a186c2016cefd43c4923f4b0d",
+  "scope": "Static relocated JNI tuples; no registration or target execution",
+  "methods": [
+    {
+      "slot_va": "0x756048",
+      "name": "transferBytesNative",
+      "signature": "(Ljava/nio/ByteBuffer;I)I",
+      "function_va": "0x64faa4",
+      "file_offset": "0x64baa4"
+    },
+    {
+      "slot_va": "0x756060",
+      "name": "transferBytesArrayNative",
+      "signature": "([BII)I",
+      "function_va": "0x64fbe0",
+      "file_offset": "0x64bbe0"
+    },
+    {
+      "slot_va": "0x756078",
+      "name": "writeEOMNative",
+      "signature": "()V",
+      "function_va": "0x64fd80",
+      "file_offset": "0x64bd80"
+    },
+    {
+      "slot_va": "0x756090",
+      "name": "reportBodyLengthNative",
+      "signature": "(I)V",
+      "function_va": "0x64fe3c",
+      "file_offset": "0x64be3c"
+    }
+  ]
+}
