@@ -1,0 +1,14 @@
+{
+  "README.md": {
+    "bytes": 3390,
+    "sha256": "df8acf45f97c70a1964cb50e0f3a3a1144a9598485dda6d0b853ec75aeb3f610"
+  },
+  "sender-types.txt": {
+    "bytes": 1167,
+    "sha256": "eda14277af0401c34f4873a8a15f1a26780856e55bdcf329f0ddad14c0ffd838"
+  },
+  "value-constructor.txt": {
+    "bytes": 1182,
+    "sha256": "efac099c1a70850a7719ad8fee1b19003d333eebfeea68240906a26db00eb93b"
+  }
+}

@@ -476,3 +476,40 @@ ID and durable reservation checks independently. No live traffic or replay.
 Validation: 1,460 workspace/all-feature tests passed. Strict workspace/all-target/
 all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
 validation, APK coverage freshness and repository hygiene passed. Offline only.
+
+## Ordinary call ACK text fields and known sender rejection (2026-11-06)
+
+**Confirmed pinned selected static / Rust correction:** [call-ACK constructor,
+sender predicate and exact caller re-export](apk/2.26.43.72-call-ack-admission/README.md)
+show additional ordinary class=call admission: id and type must be nonempty;
+known group/newsletter sender types are rejected by EW4's constructor. These
+LIL routes reach the selected ACK reader exit, not an ACK-to-ACK response.
+Rust previously enforced required id presence/numeric parsing but kept receiving
+for these call-specific malformed inputs.
+
+Shared validate_received_ack now adds empty textual id, absent/empty textual
+type and known group/newsletter sender checks for ordinary call ACKs. Numeric459
+still diverts before class-specific rules; missing id remains rejected before459.
+Other ACK classes retain their preceding semantics. Whitespace/non-whitelisted
+but nonempty text is not trimmed or rejected by these selected string checks.
+Nontext id/type conversion and remaining sender/payload checks remain unported.
+
+Normal actor/CLI stateful receive already captures before this shared validator;
+a failure ends that epoch without answering a queued ping or settling/releasing
+pending work. Captured waits stop before matching/another read. The actor's
+existing preserve/reopen regression now covers these call cases with a nonnull
+supported from, including a rejected group sender. Unit controls cover459
+spellings and ordering, ordinary numeric errors, other classes, accepted
+nonempty types and known sender rejection. A captured-wait case covers empty
+call type with only one node read and the original intent still unknown.
+
+Limits: native missing-from IllegalStateException and child conversion have
+different/untraced exception paths; full call-state/VoIP, other address families,
+nontext coercion and concrete listener recovery remain incomplete. This is
+bounded receive admission, not implemented call features or account-restriction
+policy. No new request, generated error response, reset, retry or live operation.
+
+Validation: 1,464 workspace/all-feature tests passed. Strict workspace/all-target/
+all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
+validation, APK coverage freshness and repository hygiene passed. Pinned APK
+hash and exact complete parser re-export were verified. Offline only.

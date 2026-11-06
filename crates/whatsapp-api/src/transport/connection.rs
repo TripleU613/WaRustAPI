@@ -2226,8 +2226,19 @@ mod tests {
     #[tokio::test(start_paused = true)]
     async fn malformed_ack_stops_epoch_after_capture_and_keeps_reserved_action() {
         use sha2::Digest;
-        for class in ["message", "receipt", "notification"] {
-            for raw in [Some(""), Some("2147483648"), None] {
+        for class in ["message", "receipt", "notification", "call"] {
+            for raw in [
+                Some(""),
+                Some("2147483648"),
+                None,
+                Some("call-empty-id"),
+                Some("call-missing-type"),
+                Some("call-empty-type"),
+                Some("call-group-sender"),
+            ] {
+                if class != "call" && raw.is_some_and(|raw| raw.starts_with("call-")) {
+                    continue;
+                }
                 let dir = tempfile::tempdir().unwrap();
                 let path = dir.path().join("ack-reader-error.redb");
                 let store = open(&path);
@@ -2268,6 +2279,25 @@ mod tests {
                 };
                 let before = snapshot(&store);
                 let bad = match raw {
+                    Some("call-group-sender") => Node::new("ack")
+                        .attr("class", "call")
+                        .attr("id", "fixture")
+                        .attr("type", "offer")
+                        .attr("from", "123456-7@g.us"),
+                    Some("call-empty-id") => Node::new("ack")
+                        .attr("class", "call")
+                        .attr("id", "")
+                        .attr("type", "offer")
+                        .attr("from", peer()),
+                    Some("call-missing-type") => Node::new("ack")
+                        .attr("class", "call")
+                        .attr("id", "fixture")
+                        .attr("from", peer()),
+                    Some("call-empty-type") => Node::new("ack")
+                        .attr("class", "call")
+                        .attr("id", "fixture")
+                        .attr("type", "")
+                        .attr("from", peer()),
                     Some(raw) => Node::new("ack")
                         .attr("class", class)
                         .attr("id", "bad-ack-fixture")

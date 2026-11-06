@@ -18016,5 +18016,11 @@
     "x-library": ["whatsapp_api::transport::receipts::record_ack"],
     "description": "Durable callback settlement validates 1..16 unique receipt-outbox members (existing local reservation bound), original outcome_unknown state, callback_owner/account binding, receipt-root wire and id/batch-root/address/type/nullable-participant ACK correlation before exact current-row comparison and atomic settlement. Inconsistent callback metadata returns a redacted local receipt error without changing statuses or owner. Equal bytes alone cannot authorize unrelated or rebound checkpoint updates. No new schema/wire field, command, native-format rule, retry/recovery policy or live operation; legitimate partial-write/reconnect late ACK remains supported.",
     "evidence": "docs/protocol/replay-safety-audit.md#validate-durable-callback-member-semantics-before-settlement-2026-11-06"
+  },
+  "x-call-ack-receive-admission": {
+    "x-cli": true, "x-transport": true, "x-live": false,
+    "x-library": ["whatsapp_api::transport::messaging::validate_received_ack"],
+    "description": "Shared received-ACK admission rejects ordinary call-class ACK empty textual id, missing/empty textual type and confirmed group/newsletter sender types after numeric459 diversion. Required id presence still precedes459. Normal actor/CLI captures then stops the epoch; captured waits stop before matching or next read, without settling/releasing pending work or sending an ACK error reply. Other classes retain prior rules. Nonempty strings are not trimmed/whitelisted. Nontext id/type, other sender families, missing-sender exception recovery, child payloads and full call-state handling remain unported. Local non-reconnectable error is conservative policy, not native account recovery equivalence. No call feature, new request, retry or live operation.",
+    "evidence": "docs/protocol/message-ack.md#ordinary-call-ack-text-fields-and-known-sender-rejection-2026-11-06"
   }
 }

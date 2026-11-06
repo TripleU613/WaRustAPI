@@ -1125,7 +1125,7 @@ pub(crate) fn ack_error_is_valid(node: &Node) -> bool {
     parsed_ack_error(node).is_ok()
 }
 
-/// Validate ACK required-ID and numeric admission. Stateful receivers must first capture the Node.
+/// Validate ACK required-ID, numeric and supported call-field admission. Stateful receivers must first capture the Node.
 /// A malformed ACK ends the receiving epoch (APK43.72 1rg.A04 excludes ack;
 /// the selected 1s2.run outer catch reports onError(2) and returns).
 /// This performs no capture/I/O; callers must stop and discard their channel
@@ -1145,6 +1145,24 @@ pub fn validate_received_ack(node: &Node) -> crate::Result<()> {
             "malformed ACK error; receive epoch consumed; preserve uncertainty and do not reconnect automatically",
         ));
     }
+    // APK43.72 1rH.A03 0518..053c -> 05f8/0608: call ACKs
+    // require nonempty textual id/type. Numeric459 returns before this branch.
+    if node.description == "ack"
+        && node.get_attr("class").and_then(|v| v.as_text()) == Some("call")
+        && !is_auth_challenge_ack(node)
+        && (node.get_attr("id").and_then(|v| v.as_text()) == Some("")
+            || node.get_attr("type").is_none()
+            || node.get_attr("type").and_then(|v| v.as_text()) == Some("")
+            // EW4.<init> -> 0Dn.A0R rejects known group/newsletter types1/21.
+            || super::receipts::jid(node, "from").is_some_and(|jid|
+                matches!(jid.server, crate::model::jid::Server::Group | crate::model::jid::Server::Newsletter)))
+    {
+        return Err(crate::Error::invalid(
+            "ack",
+            "invalid call ACK id/type or unsupported sender; receive epoch consumed; preserve uncertainty and do not reconnect automatically",
+        ));
+    }
+
     Ok(())
 }
 
@@ -3031,6 +3049,50 @@ mod captured_wait_tests {
     use crate::store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource, Table};
 
     #[test]
+    fn call_ack_requires_nonempty_text_fields_after_auth_challenge_diversion() {
+        let base = Node::new("ack")
+            .attr("class", "call")
+            .attr("from", "15555550100@s.whatsapp.net");
+        for node in [
+            base.clone().attr("id", "").attr("type", "offer"),
+            base.clone().attr("id", "fixture"),
+            base.clone().attr("id", "fixture").attr("type", ""),
+        ] {
+            let error = validate_received_ack(&node).unwrap_err();
+            assert!(!error.is_recoverable_by_reconnect());
+            for raw in ["459", "+459", "４５９"] {
+                assert!(validate_received_ack(&node.clone().attr("error", raw)).is_ok());
+            }
+            for raw in ["0", "500", "-1"] {
+                assert!(validate_received_ack(&node.clone().attr("error", raw)).is_err());
+            }
+            for class in ["message", "receipt", "notification", "Call", "unknown"] {
+                assert!(validate_received_ack(&node.clone().attr("class", class)).is_ok());
+            }
+        }
+        for from in ["123456-7@g.us", "123456@newsletter"] {
+            let ack = base
+                .clone()
+                .attr("id", "fixture")
+                .attr("type", "offer")
+                .attr("from", from);
+            assert!(validate_received_ack(&ack).is_err());
+            assert!(validate_received_ack(&ack.attr("error", "459")).is_ok());
+        }
+        // Native String.length, not trim/semantic call-type recognition.
+        for kind in ["offer", "accept", " ", "unknown"] {
+            assert!(
+                validate_received_ack(&base.clone().attr("id", "fixture").attr("type", kind))
+                    .is_ok()
+            );
+        }
+        assert!(
+            validate_received_ack(&base.attr("error", "459")).is_err(),
+            "required id still precedes459"
+        );
+    }
+
+    #[test]
     fn ack_required_id_precedes_challenge_and_class_routing() {
         for class in [None, Some("message"), Some("receipt"), Some("unknown")] {
             for error in [None, Some("459"), Some("bad")] {
@@ -3056,7 +3118,12 @@ mod captured_wait_tests {
     #[tokio::test]
     async fn captured_wait_stops_on_malformed_ack_before_matching_or_next_read() {
         use sha2::Digest;
-        for (matched, missing_id) in [(false, false), (true, false), (false, true)] {
+        for (matched, missing_id, call_type) in [
+            (false, false, false),
+            (true, false, false),
+            (false, true, false),
+            (true, false, true),
+        ] {
             let dir = tempfile::tempdir().unwrap();
             let path = dir.path().join("bad-ack-wait.redb");
             let open = || {
@@ -3075,7 +3142,13 @@ mod captured_wait_tests {
             store
                 .write(|tx| tx.put_json(Table::Checkpoints, b"send-fixture", 1, &intent))
                 .unwrap();
-            let bad = if missing_id {
+            let bad = if call_type {
+                Node::new("ack")
+                    .attr("class", "call")
+                    .attr("id", "held")
+                    .attr("from", "15555550100@s.whatsapp.net")
+                    .attr("type", "")
+            } else if missing_id {
                 Node::new("ack")
                     .attr("class", "message")
                     .attr("error", "459")
