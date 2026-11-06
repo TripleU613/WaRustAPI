@@ -7924,3 +7924,20 @@ Nine changed/missing authority cases refuse result/error across reopen; unrelate
 authentication-time updates still settle. [Scope and remaining write/rotation
 limits](prekey-count-notifications.md#upload-settlement-retains-publication-account-authority-2026-11-05).
 No live traffic, replay or inferred historical binding.
+
+### Count completion key removal and conditional rescheduling (2026-11-05)
+
+**Confirmed static, APK 2.26.43.72:** FgR selector8 removes every cached stanza
+whose 2DG key is in the completion set; only removed non-QUEUED entries increment
+its delta counter. 07W.A0S/A0T/A0R prove remove-if semantics on RandomAccess and
+iterator paths. 1iq.A03 sends the negated nonzero count to its optional callback.
+These are memory/counter effects, not SQL retirement or server confirmation.
+
+1id.A0J later calls 1im.CHt with remaining noncompleted cache count. Physical CHt
+census finds the abstract interface and 1il/1in/1iw implementations. Base1il
+ignores the integer and conditionally calls its existing scheduler through A06:
+1iz uses config0x6f06; other selected kinds use1kB.A00. Effective DI/configuration,
+counter storage, key lifetime and complete rejection/recovery policy remain
+open. Completion is a scheduling stimulus, not eventual work or ACK ordering.
+[Complete exports, commands, checksum manifest and boundaries](apk/2.26.43.72-count-completion-rescheduling/README.md).
+No Rust runtime or live account operation changed.

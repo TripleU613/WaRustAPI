@@ -1,3 +1,8 @@
+Native count completion now has traced key-based cache removal, non-QUEUED
+count adjustment and conditional consumer rescheduling. These remain separate
+from disk retirement and server confirmation; effective DI/config is still open.
+[Evidence](docs/protocol/apk/2.26.43.72-count-completion-rescheduling/README.md).
+
 Upload reply settlement now rechecks the originally reserved account authority
 inside the settlement transaction. Changed/missing/revoked authority refuses
 without altering key or batch status; authentication-time updates still work.

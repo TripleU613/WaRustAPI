@@ -1,0 +1,14 @@
+
+# class: LX/1iz;
+# extends: LX/1il;
+
+.method public <init>(V)  # .registers 2
+    # full signature: LX/1iz;-><init>()V
+    0000..0006  invoke-direct  {v1}, LX/1il;-><init>()V
+    0006..000a  const/16  v0, #0xd09
+    000a..0010  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0010..0012  move-result-object  v0
+    0012..0016  iput-object  v0, v1, LX/1iz;->A00:LX/05a;
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,26 @@
+
+# class: LX/07W;
+# extends: LX/07V;
+
+.method public A0R(ZLLZ)  # .registers 5
+    # full signature: LX/07W;->A0R(Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;Z)Z
+    0000..0006  invoke-interface  {v2}, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+    0006..0008  move-result-object  v2
+    0008..000a  const/4  v1, #0x0
+    000a..0010  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    0010..0012  move-result  v0
+    0012..0016  if-eqz  v0, +0x17
+    0016..001c  invoke-interface  {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    001c..001e  move-result-object  v0
+    001e..0024  invoke-interface  {v3, v0}, Lkotlin/jvm/functions/Function1;->invoke(Ljava/lang/Object;)Ljava/lang/Object;
+    0024..0026  move-result-object  v0
+    0026..002a  check-cast  v0, Ljava/lang/Boolean;
+    002a..0030  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue()Z
+    0030..0032  move-result  v0
+    0032..0036  if-ne  v0, v4, -0x14
+    0036..003c  invoke-interface  {v2}, Ljava/util/Iterator;->remove()V
+    003c..003e  const/4  v1, #0x1
+    003e..0040  goto  -0x1a
+    0040..0042  return  v1
+    # exception table: 0 try range(s)
+.end method

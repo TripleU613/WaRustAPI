@@ -1,0 +1,56 @@
+
+# class: LX/07W;
+# extends: LX/07V;
+
+.method public A0T(ZLLZ)  # .registers 9
+    # full signature: LX/07W;->A0T(Ljava/util/List;Lkotlin/jvm/functions/Function1;Z)Z
+    0000..0004  instance-of  v0, v6, Ljava/util/RandomAccess;
+    0004..0008  if-nez  v0, +0x16
+    0008..000c  instance-of  v0, v6, LX/01j;
+    000c..0010  if-eqz  v0, +0xd
+    0010..0014  instance-of  v0, v6, LX/0EH;
+    0014..0018  if-nez  v0, +0x9
+    0018..001c  const-string  v0, "kotlin.collections.MutableIterable"
+    001c..0022  invoke-static  {v6, v0}, LX/0e6;->A05(Ljava/lang/Object;Ljava/lang/String;)V
+    0022..0024  const/4  v0, #0x0
+    0024..0026  throw  v0
+    0026..002c  invoke-static  {v6, v7, v8}, LX/07W;->A0R(Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;Z)Z
+    002c..002e  move-result  v0
+    002e..0030  return  v0
+    0030..0036  invoke-interface  {v6}, Ljava/util/List;->size()I
+    0036..0038  move-result  v0
+    0038..003c  add-int/lit8  v5, v0, #0xff (-1)
+    003c..003e  const/4  v4, #0x0
+    003e..0040  const/4  v3, #0x0
+    0040..0044  if-ltz  v5, +0x1f
+    0044..0046  const/4  v2, #0x0
+    0046..004c  invoke-interface  {v6, v2}, Ljava/util/List;->get(I)Ljava/lang/Object;
+    004c..004e  move-result-object  v1
+    004e..0054  invoke-interface  {v7, v1}, Lkotlin/jvm/functions/Function1;->invoke(Ljava/lang/Object;)Ljava/lang/Object;
+    0054..0056  move-result-object  v0
+    0056..005a  check-cast  v0, Ljava/lang/Boolean;
+    005a..0060  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue()Z
+    0060..0062  move-result  v0
+    0062..0066  if-eq  v0, v8, +0x9
+    0066..006a  if-eq  v3, v2, +0x5
+    006a..0070  invoke-interface  {v6, v3, v1}, Ljava/util/List;->set(ILjava/lang/Object;)Ljava/lang/Object;
+    0070..0074  add-int/lit8  v3, v3, #0x1
+    0074..0078  if-eq  v2, v5, +0x5
+    0078..007c  add-int/lit8  v2, v2, #0x1
+    007c..007e  goto  -0x1b
+    007e..0084  invoke-interface  {v6}, Ljava/util/List;->size()I
+    0084..0086  move-result  v0
+    0086..008a  if-ge  v3, v0, +0x14
+    008a..0090  invoke-interface  {v6}, Ljava/util/List;->size()I
+    0090..0092  move-result  v0
+    0092..0096  add-int/lit8  v1, v0, #0xff (-1)
+    0096..009a  if-gt  v3, v1, +0xa
+    009a..00a0  invoke-interface  {v6, v1}, Ljava/util/List;->remove(I)Ljava/lang/Object;
+    00a0..00a2  move  v0, v1
+    00a2..00a6  add-int/lit8  v1, v1, #0xff (-1)
+    00a6..00aa  if-ne  v0, v3, -0x6
+    00aa..00ac  const/4  v0, #0x1
+    00ac..00ae  return  v0
+    00ae..00b0  return  v4
+    # exception table: 0 try range(s)
+.end method

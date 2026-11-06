@@ -1,0 +1,46 @@
+{
+  "README.md": {
+    "bytes": 5469,
+    "sha256": "e6187807e7f6db0050f80ac93ce3c9dea2803e974ce1a3dfec0d86b82d81a885"
+  },
+  "completion-declarations.txt": {
+    "bytes": 3085,
+    "sha256": "527417fd31b45ebd781b1810e102fed39edf4b023267dba06a223675328f2ef3"
+  },
+  "consumer-completion.txt": {
+    "bytes": 384,
+    "sha256": "d4dae42bbc190b7a73ce77cd7372d85edf56665c3a1ba0575207e30fe7a32547"
+  },
+  "count-delta.txt": {
+    "bytes": 601,
+    "sha256": "7a357ab3015dee8fdae8c66069dd49c635986fd4bb34bce32a8a0950a3cb5ead"
+  },
+  "predicate-constructor.txt": {
+    "bytes": 586,
+    "sha256": "faf75e3b9d457e1502ed6fb87a344b8cb449f9f4dc9951aec9d86d20e07023a2"
+  },
+  "removal-predicate.txt": {
+    "bytes": 36156,
+    "sha256": "5bfa6f49888db47342fb443d35ebbf2f0129e891472b9effc2378da06ab6a20e"
+  },
+  "removeif-bridge.txt": {
+    "bytes": 603,
+    "sha256": "567261bac9cb255165c4fe71f06984f054a94a2c4029b0464296dead4c7e1797"
+  },
+  "removeif-iterator.txt": {
+    "bytes": 1170,
+    "sha256": "38cc89287d7d8f0f66ea5fd1adf3b155af57395e0e4946fdc18fb9bf2403ee4b"
+  },
+  "removeif-list.txt": {
+    "bytes": 2536,
+    "sha256": "fd27d2c2213b1454d5dc1a38973348111ad21364b267bef73da1d3806f53ac46"
+  },
+  "resume-gate.txt": {
+    "bytes": 1144,
+    "sha256": "8e4820bdbe2b5fc09487de695b481f9c17426d96a555a174a3b3b25f5108f175"
+  },
+  "unordered-consumer-constructor.txt": {
+    "bytes": 448,
+    "sha256": "7794e03f29fcd784c8d13e7b6d7c76d5192b793332feede9807b036baef04000"
+  }
+}

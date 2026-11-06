@@ -17394,5 +17394,12 @@
     "x-live": false,
     "description": "New Batch.account_authority_sha256 is an optional 32-byte publication-ownership fingerprint retained by PendingUpload. Settlement rereads registered account authority and transaction generation and requires the durable binding to match before result/error status writes. Phone/JID, registration, generation and Signal identity changes refuse; unrelated authentication time, credentials and Noise metadata are excluded. Historical field defaults null without reconstruction, inference or replay. Reservation-to-write and signed-key rotation remain separate limits.",
     "evidence": "docs/protocol/prekey-count-notifications.md#upload-settlement-retains-publication-account-authority-2026-11-05"
+  },
+  "x-apk-count-completion-rescheduling": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Static 2.26.43.72 evidence: FgR selector8 removes cache entries by completion-key membership, counting non-QUEUED removals for a negative optional callback delta. Base 1il.CHt ignores the remaining-count argument and schedules only through A06 configuration; selected 1in/1iw overrides differ. Physical declaration census does not resolve effective DI/configuration. No Rust queue port, ACK-order guarantee or replay authority is added.",
+    "evidence": "docs/protocol/apk/2.26.43.72-count-completion-rescheduling/README.md"
   }
 }

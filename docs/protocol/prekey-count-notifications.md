@@ -1421,3 +1421,27 @@ Validation: the changed-generation regression reproduced settlement under stale
 authority before the fix. All 1,402 workspace/all-feature tests, strict Clippy,
 CLI reference, OpenAPI library, formatting and APK coverage checks passed.
 Offline synthetic stores only.
+
+### Count completion key removal and conditional rescheduling (2026-11-05)
+
+**Confirmed static, APK 2.26.43.72:** FgR selector8 removes every cached stanza
+whose 2DG key is in the completion set; only removed non-QUEUED entries increment
+its delta counter. 07W.A0S/A0T/A0R prove remove-if semantics on RandomAccess and
+iterator paths. 1iq.A03 sends the negated nonzero count to its optional callback.
+These are memory/counter effects, not SQL retirement or server confirmation.
+
+1id.A0J later calls 1im.CHt with remaining noncompleted cache count. Physical CHt
+census finds the abstract interface and 1il/1in/1iw implementations. Base1il
+ignores the integer and conditionally calls its existing scheduler through A06:
+1iz uses config0x6f06; other selected kinds use1kB.A00. Effective DI/configuration,
+counter storage, key lifetime and complete rejection/recovery policy remain
+open. Completion is a scheduling stimulus, not eventual work or ACK ordering.
+[Complete exports, commands, checksum manifest and boundaries](apk/2.26.43.72-count-completion-rescheduling/README.md).
+No Rust runtime or live account operation changed.
+
+Source negative check at8bc3a843: the suspected direct-upload identity private/
+public mismatch is already rejected. begin_upload_selected always invokes
+kem_upload_children inside its reservation transaction, even with no selected
+KEM rows; that helper derives private.public and compares the identity public.
+This pass added no redundant guard or new private-key policy. Existing factory
+and direct signed-key validation remain distinct from this check.

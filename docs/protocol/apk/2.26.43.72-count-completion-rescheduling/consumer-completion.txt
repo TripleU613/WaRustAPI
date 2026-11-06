@@ -1,0 +1,13 @@
+
+# class: LX/1il;
+# extends: Ljava/lang/Object;
+
+.method public CHt(VI)  # .registers 3
+    # full signature: LX/1il;->CHt(I)V
+    0000..0006  invoke-virtual  {v1}, LX/1il;->A06()Z
+    0006..0008  move-result  v0
+    0008..000c  if-eqz  v0, +0x5
+    000c..0012  invoke-static  {v1}, LX/1il;->A01(LX/1il;)V
+    0012..0014  return-void
+    # exception table: 0 try range(s)
+.end method
