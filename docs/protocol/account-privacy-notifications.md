@@ -49,7 +49,8 @@ introduced. ACK-write failure leaves both original capture and adoption intact.
 These are conservative Rust admission rules, not claims that the APK rejects
 every broader form: server-only `s.whatsapp.net` source; nonempty bounded ID;
 nonnegative signed-64-bit decimal timestamp; root attributes from/id/type/t
-only; exactly one privacy child; 1..64 category children; plain supported
+only; first outer event must be privacy (later siblings are not applied);
+1..64 category children; plain supported
 category attributes and empty category bodies. Duplicate/unknown attributes,
 nontext metadata, mixed/unsupported categories and malformed values refuse
 before any state write. An invalid earlier duplicate is refused even if a later
@@ -128,3 +129,33 @@ conservative pending guard; an old misclassified unknown-type Error stays blocke
 
 An additional regression keeps legacy unknown-type errors from discharging
 the setter guard; only a real outer IQ error permits this local guard to clear.
+
+
+## First-event selection with later siblings (2026-11-05)
+
+**Confirmed static / locally fixed:** current19N.A09 selects0Tp.A0D at
+0038..0040, then dispatches that event. The [retained complete checked handler](rea/2.26.43.72-notification-sync-obligations/account-sync-dex.txt)
+and [first-child primitive](apk/2.26.43.72-group-event-selection/first-child-helper.txt)
+cover the selection; current APK was rechecked through xtask apk-smali --class
+LX/19N; --method A09 --signatures --exceptions. This is existing evidence
+corroborated, not a new REA record or a port of all account-sync events.
+
+Rust's exactly-one outer child guard refused supported first privacy events
+when later privacy/devices siblings followed. It now selects the first child
+and requires that event to be privacy; it does not search later siblings, merge
+categories across events, or apply later device changes. Root attribute/source/
+ID/time checks, selected privacy action/category bounds/values, pending-intent
+protection and transactional adoption/processed-ID markers remain unchanged.
+Unsupported first events and malformed selected categories remain unacknowledged.
+This supersedes earlier exactly-one/unknown-sibling descriptions only for outer
+event selection; mixed unsupported categories within selected privacy remain
+unported and refused.
+
+The new first_account_sync_event_owns_supported_privacy_adoption test fails on
+the original child-count guard. It verifies first readreceipts=all plus later
+privacy=none/devices adopts All and returns ACK; unsupported first and invalid
+first category plus later valid privacy preserve the complete prior checkpoint
+snapshot. The existing negative sibling fixture now puts devices first to keep
+testing unsupported-first admission. Existing redelivery/reopen/pending-intent
+and actor capture/adoption/ACK-order regressions remain. No new category, device
+operation, query, identity policy or live account activity was introduced.

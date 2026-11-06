@@ -313,3 +313,14 @@ now returns no updates before alias/time resolution when no supported entries
 exist. Supported alias/time/primary/atomic guards remain. Red/green regression
 combines ignored lists with malformed or agent-qualified unused alias and time,
 preserving prior token state. [Evidence and limits](apk/2.26.43.72-privacy-token-primary-address/README.md).
+
+
+### Account privacy first-event admission (2026-11-05)
+
+**Confirmed static / locally fixed:**19N.A09 selects the first event. Rust's
+exact-one outer child guard suppressed supported privacy adoption/ACK with later
+siblings. It now requires the first event to be supported privacy and ignores
+later event siblings; unsupported/malformed first events cannot be rescued or
+overridden. New red/green regression preserves prior state for those refusals.
+Category/envelope/pending-intent/transaction guards remain.
+[Evidence and boundary](account-privacy-notifications.md#first-event-selection-with-later-siblings-2026-11-05).

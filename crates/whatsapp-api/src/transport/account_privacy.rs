@@ -95,8 +95,8 @@ fn parse(node: &Node) -> Result<Option<Update>> {
     {
         return Ok(None);
     }
-    // Local supported route: server-only envelope, exactly one privacy child.
-    // Native 19N reads the first child; unknown siblings are never ACKed here.
+    // Local supported route: server-only envelope, first event is privacy.
+    // APK43.72 19N.A09 selects0Tp.A0D; later event siblings are not applied.
     attributes(node, &["from", "id", "type", "t"])?;
     let from =
         super::receipts::jid(node, "from").ok_or_else(|| invalid("invalid account-sync source"))?;
@@ -116,11 +116,11 @@ fn parse(node: &Node) -> Result<Option<Update>> {
     if time.is_none() {
         return Err(invalid("invalid notification timestamp"));
     }
-    let children = node.child_nodes();
-    if children.len() != 1 || children[0].description != "privacy" {
-        return Err(invalid("unsupported account-sync child set"));
-    }
-    let privacy = &children[0];
+    let privacy = node
+        .child_nodes()
+        .first()
+        .filter(|child| child.description == "privacy")
+        .ok_or_else(|| invalid("unsupported account-sync child set"))?;
     attributes(privacy, &["action"])?;
     if let Some(action) = privacy.get_attr("action") {
         let action = action
@@ -327,6 +327,39 @@ mod tests {
     }
 
     #[test]
+    fn first_account_sync_event_owns_supported_privacy_adoption() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("first.redb"));
+        let node = notification("first", vec![category("all")]);
+        let mut children = node.child_nodes().to_vec();
+        children.push(Node::new("privacy").children(vec![category("none")]));
+        children.push(Node::new("devices"));
+        let selected = node.children(children);
+        validate(&selected).unwrap();
+        assert!(handle(&store, &selected).unwrap().is_some());
+        assert_eq!(
+            read_receipts(&store).unwrap().unwrap().value,
+            ReadReceiptValue::All
+        );
+        let before = snapshot(&store);
+        for children in [
+            vec![
+                Node::new("devices"),
+                Node::new("privacy").children(vec![category("none")]),
+            ],
+            vec![
+                Node::new("privacy").children(vec![category("invalid")]),
+                Node::new("privacy").children(vec![category("none")]),
+            ],
+        ] {
+            let bad = notification("bad-first", vec![]).children(children);
+            assert!(validate(&bad).is_err());
+            assert!(handle(&store, &bad).is_err());
+            assert_eq!(snapshot(&store), before);
+        }
+    }
+
+    #[test]
     fn malformed_or_mixed_batches_leave_every_checkpoint_unchanged() {
         let dir = tempfile::tempdir().unwrap();
         let store = open(&dir.path().join("invalid.redb"));
@@ -377,8 +410,8 @@ mod tests {
                     .children(vec![category("all")]),
             ]),
             good.children(vec![
-                Node::new("privacy").children(vec![category("all")]),
                 Node::new("devices"),
+                Node::new("privacy").children(vec![category("all")]),
             ]),
         ];
         let before = snapshot(&store);

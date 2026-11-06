@@ -17212,5 +17212,12 @@
     "x-live": false,
     "description": "Privacy-token parser selects trusted_contact entries before resolving sender_lid. Empty/unknown-only lists with admitted from/envelope and bounded first container now ACK despite malformed unused alias/time metadata, returning no updates without token write transaction. Supported entries retain primary/explicit-alias, timestamp, size and atomic guards. Native10G.A09 branch order corroborates selected-field consumption; local explicit-alias fallback policy remains stricter. Red/green regression preserves prior token state. No alias adoption, token synthesis, query or HTTP route.",
     "evidence": "docs/protocol/apk/2.26.43.72-privacy-token-primary-address/README.md"
+  },
+  "x-account-privacy-first-event-selection": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Supported account_sync privacy admission selects first outer event like APK43.72 19N.A09/0Tp.A0D instead of requiring exactly one sibling. Later privacy/devices events are not applied or merged; they cannot override valid first data or rescue invalid/unsupported first data. Existing server/envelope/time, selected category/action, pending-intent and atomic adoption/processed-ID guards remain. Red/green regression verifies first All versus later None/devices and unchanged state on refused first events. No new category, device operation, query or HTTP route.",
+    "evidence": "docs/protocol/account-privacy-notifications.md#first-event-selection-with-later-siblings-2026-11-05"
   }
 }

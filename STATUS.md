@@ -1,3 +1,8 @@
+Account privacy now selects the first supported event with later siblings,
+matching current APK dispatch. Later events cannot override or rescue invalid
+first data; existing category/transaction/pending guards remain.
+[Evidence and regression](docs/protocol/account-privacy-notifications.md#first-event-selection-with-later-siblings-2026-11-05).
+
 Fixed unused sender_lid validation suppressing privacy-token ACKs for empty
 or ignored-only lists. No supported data now means no token-target resolution
 or write transaction. Supported-data alias/primary/time checks remain.
