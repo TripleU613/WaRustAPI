@@ -1,3 +1,5 @@
+Fixed stale-preflight login reservation: current account/material must match the prepared snapshot atomically before outcome_unknown is written. [Login reservation binds its preflight snapshot](docs/protocol/authkey-lifecycle.md#login-reservation-binds-its-preflight-snapshot-2026-11-06). Reopen and fresh/duplicate reservation controls pass; no live operation.
+
 Fixed local login preflight gap: with Signal enabled, a valid account Noise pair cannot silently disagree with present registration material. [Registration-copy consistency before login](docs/protocol/authkey-lifecycle.md#registration-copy-consistency-before-login-2026-11-06). Regression covers unchanged state and reopen; no rotation or live operation.
 
 Auth-key/token audit reconciled with earlier retained evidence: selected token grammar/reply/failure paths are already traced; lost-result recovery and atomic Rust login-material installation remain open. [Canonical auth-key implementation boundary](docs/protocol/authkey-lifecycle.md#current-implementation-boundary-reconciled-2026-11-06). Documentation correction only.

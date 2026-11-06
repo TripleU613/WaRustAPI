@@ -133,3 +133,33 @@ valid replacement pair. It checks no login checkpoint, unchanged account rows
 and journal, and repeated refusal after reopening. No live operation. This does
 not lock the snapshot through a future handshake or solve concurrent credential
 replacement: generation ownership and accepted rotation remain separate work.
+
+## Login reservation binds its preflight snapshot (2026-11-06)
+
+**Confirmed local gap / fixed offline:** connect previously validated saved
+credentials, awaited socket/server-handshake work, then reserved login by checking
+only the prior login status. Account or registration-material replacement during
+those awaits did not invalidate the stale key/payload. Reservation now compares
+the current serialized account and, with Signal enabled, optional registration
+record bytes against the same read snapshot used for preflight. The comparison
+and outcome_unknown write share one transaction. A mismatch returns a fixed
+redacted error with no checkpoint or state repair.
+
+Snapshots are in-memory Zeroizing buffers, not persisted copies or diagnostics.
+Any account-record change invalidates the snapshot conservatively, including
+non-key metadata; the caller must inspect/reprepare rather than bypass the check.
+Optional missing registration material and reduced Signal-free builds retain
+their existing boundaries. The original Noise-half and present-material
+consistency checks still apply before all network setup.
+
+Regression login_reservation_refuses_account_or_material_replacement_after_preflight
+prepares a valid snapshot, changes account state or removes material, and checks
+refusal without a login checkpoint/journal mutation, including after reopening.
+A fresh snapshot reserves once and a second reservation refuses. This models the
+await interleaving directly without opening a socket or live account.
+
+**Limits:** this reservation occurs after the initial server handshake but before
+VerifiedHandshake.finish publishes the client login/key payload. It does not
+prevent initial TCP/ephemeral traffic, mutations after reservation, concurrent
+late replies or stale-result installation. Those require broader generation
+ownership; this is not a completed rotation or reconnect lifecycle.

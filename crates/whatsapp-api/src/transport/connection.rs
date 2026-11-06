@@ -28,7 +28,7 @@ pub async fn connect(
     epoch: ConnectionEpoch,
 ) -> Result<EncryptedConnection<tokio::net::TcpStream>> {
     // Validate every local login fact before DNS, TCP or Noise work.
-    let (local, payload) = login_material(store, config)?;
+    let (local, payload, snapshot) = login_material(store, config)?;
     let endpoint = ComparisonEndpoint::built_in(ComparisonGateway::Primary, 443)
         .map_err(|_| Error::invalid("connection", "invalid built-in endpoint"))?;
     let socket = connect_comparison(
@@ -50,7 +50,49 @@ pub async fn connect(
         &crate::signal::crypto::SignalSignatureVerifier,
     )
     .await?;
+    reserve_login(store, &snapshot)?;
+    let mut channel = verified.finish(&payload).await?;
+    let reply = super::messaging::read_node(&mut channel).await?;
+    super::inbox::preserve_in_epoch(store, &reply, epoch)?;
+    record_login_reply(store, &reply)?;
+    Ok(channel)
+}
+
+// Kept only in memory and zeroized; never logged or persisted as another key copy.
+struct LoginSnapshot {
+    account: zeroize::Zeroizing<Vec<u8>>,
+    #[cfg(feature = "experimental-signal-crypto")]
+    material: Option<zeroize::Zeroizing<Vec<u8>>>,
+}
+
+fn login_account_bytes(account: &AccountRecord) -> Result<zeroize::Zeroizing<Vec<u8>>> {
+    serde_json::to_vec(account)
+        .map(zeroize::Zeroizing::new)
+        .map_err(|_| Error::invalid("connection", "cannot encode login account snapshot"))
+}
+
+fn reserve_login(store: &ProtocolStore, snapshot: &LoginSnapshot) -> Result<()> {
     store.write(|tx| {
+        let account = AccountRecord::load_in_write(tx)?.ok_or(Error::NotRegistered)?;
+        if login_account_bytes(&account)? != snapshot.account {
+            return Err(Error::invalid(
+                "connection",
+                "login account changed after preflight",
+            ));
+        }
+        #[cfg(feature = "experimental-signal-crypto")]
+        {
+            use crate::registration::factory::{MATERIAL_KEY, RECORD_VERSION};
+            let material = tx
+                .get(Table::Account, MATERIAL_KEY, RECORD_VERSION)?
+                .map(zeroize::Zeroizing::new);
+            if material != snapshot.material {
+                return Err(Error::invalid(
+                    "connection",
+                    "registration material changed after preflight",
+                ));
+            }
+        }
         let previous: Option<serde_json::Value> = tx.get_json(Table::Checkpoints, LOGIN_KEY, 1)?;
         if previous.is_some_and(|v| v["status"] != "success") {
             return Err(Error::invalid("connection", "login already reserved"));
@@ -61,12 +103,7 @@ pub async fn connect(
             1,
             &serde_json::json!({"status":"outcome_unknown", "at":Timestamp::now()}),
         )
-    })?;
-    let mut channel = verified.finish(&payload).await?;
-    let reply = super::messaging::read_node(&mut channel).await?;
-    super::inbox::preserve_in_epoch(store, &reply, epoch)?;
-    record_login_reply(store, &reply)?;
-    Ok(channel)
+    })
 }
 
 // This seam performs only configuration/store reads and payload construction.
@@ -75,16 +112,27 @@ pub async fn connect(
 fn login_material(
     store: &ProtocolStore,
     config: &LabRegistrationConfig,
-) -> Result<(StaticKeypair, zeroize::Zeroizing<Vec<u8>>)> {
+) -> Result<(StaticKeypair, zeroize::Zeroizing<Vec<u8>>, LoginSnapshot)> {
     config.validate()?;
-    let account = store.read(|tx| {
+    let (account, snapshot) = store.read(|tx| {
         let account = AccountRecord::load(tx)?.ok_or(Error::NotRegistered)?;
         // A consistent pair can still be a different account key. Check the
         // existing registration copy before a socket or login reservation exists.
         // Local invariant, not an APK requirement for Android storage layout.
         #[cfg(feature = "experimental-signal-crypto")]
         crate::registration::factory::check_login_account_in(tx, &account)?;
-        Ok(account)
+        let snapshot = LoginSnapshot {
+            account: login_account_bytes(&account)?,
+            #[cfg(feature = "experimental-signal-crypto")]
+            material: tx
+                .get(
+                    Table::Account,
+                    crate::registration::factory::MATERIAL_KEY,
+                    crate::registration::factory::RECORD_VERSION,
+                )?
+                .map(zeroize::Zeroizing::new),
+        };
+        Ok((account, snapshot))
     })?;
     if !account.is_registered() || account.phone.as_ref() != Some(&config.phone) {
         return Err(Error::NotRegistered);
@@ -104,7 +152,7 @@ fn login_material(
         .ok_or_else(|| Error::invalid("connection", "missing saved Noise identity"))?;
     let local = StaticKeypair::from_parts(key.0.private, key.0.public);
     local.validate_curve25519()?;
-    Ok((local, payload))
+    Ok((local, payload, snapshot))
 }
 
 // One transaction commits the login result, clock sample and own identity.
@@ -1522,6 +1570,67 @@ mod tests {
             store.read(|tx| tx.scan(Table::Account, 1, 20)).unwrap(),
             before
         );
+    }
+
+    #[cfg(feature = "experimental-signal-crypto")]
+    #[test]
+    fn login_reservation_refuses_account_or_material_replacement_after_preflight() {
+        for material_change in [false, true] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("login-snapshot.redb");
+            let store = identity_store(&path);
+            let config = config();
+            crate::registration::factory::install_test_material(&store, &config).unwrap();
+            store
+                .write(|tx| {
+                    let mut account = AccountRecord::load_in_write(tx)?.unwrap();
+                    account.credentials.push(ObservedCredential {
+                        name: "login".into(),
+                        value: zeroize::Zeroizing::new(config.phone.protocol_digits().into_bytes()),
+                        observed_at: Timestamp(0),
+                        source_step: None,
+                    });
+                    account.save(tx)
+                })
+                .unwrap();
+            let (_, _, snapshot) = login_material(&store, &config).unwrap();
+            store
+                .write(|tx| {
+                    if material_change {
+                        use crate::registration::factory::MATERIAL_KEY;
+                        tx.delete(Table::Account, MATERIAL_KEY)?;
+                        Ok(())
+                    } else {
+                        let mut account = AccountRecord::load_in_write(tx)?.unwrap();
+                        account.last_authenticated_at = Some(Timestamp(123));
+                        account.save(tx)
+                    }
+                })
+                .unwrap();
+            let rows = store.read(|tx| tx.scan(Table::Account, 1, 20)).unwrap();
+            let journal = store.journal_head().unwrap();
+            assert!(
+                reserve_login(&store, &snapshot)
+                    .unwrap_err()
+                    .to_string()
+                    .contains("changed after preflight")
+            );
+            assert!(last_login_status(&store).unwrap().is_none());
+            assert_eq!(store.journal_head().unwrap(), journal);
+            drop(store);
+            let store = identity_store(&path);
+            assert!(reserve_login(&store, &snapshot).is_err());
+            assert!(last_login_status(&store).unwrap().is_none());
+            assert_eq!(
+                store.read(|tx| tx.scan(Table::Account, 1, 20)).unwrap(),
+                rows
+            );
+            // A fresh, valid snapshot still reserves once; deletion of optional
+            // lab material does not become an unconditional import prohibition.
+            let (_, _, current) = login_material(&store, &config).unwrap();
+            reserve_login(&store, &current).unwrap();
+            assert!(reserve_login(&store, &current).is_err());
+        }
     }
 
     #[test]

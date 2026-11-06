@@ -17751,5 +17751,12 @@
     "x-live": false,
     "description": "Existing login preflight with Signal crypto now checks any present saved registration material against the account in one read snapshot, rejecting malformed/mismatched copies before socket setup or login reservation. Optional absent lab material and reduced builds retain prior behavior. No key repair, rotation or live verification.",
     "evidence": "docs/protocol/authkey-lifecycle.md#registration-copy-consistency-before-login-2026-11-06"
+},
+  "x-login-preflight-snapshot-reservation": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Existing login reservation now atomically compares account and optional Signal registration-material bytes to preflight snapshot before reserving outcome_unknown and publishing the client login payload. Mismatch refuses without repair. Initial server handshake precedes this guard; post-reservation generation ownership remains unresolved. No live verification.",
+    "evidence": "docs/protocol/authkey-lifecycle.md#login-reservation-binds-its-preflight-snapshot-2026-11-06"
 }
 }

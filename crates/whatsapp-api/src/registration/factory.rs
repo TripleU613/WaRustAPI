@@ -20,8 +20,8 @@ use crate::store::{ProtocolStore, Table, WriteTx};
 use crate::{Error, Result};
 
 pub use super::request::{LAB_PROFILE_ID, LabRegistrationConfig};
-const MATERIAL_KEY: &[u8] = b"registration-lab-material";
-const RECORD_VERSION: u16 = 1;
+pub(crate) const MATERIAL_KEY: &[u8] = b"registration-lab-material";
+pub(crate) const RECORD_VERSION: u16 = 1;
 
 /// Compare an existing registration record with the login account in the
 /// same read snapshot. Absence supports accounts imported without lab material;

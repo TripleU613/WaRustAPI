@@ -8234,3 +8234,5 @@ APK43.72 rotation trigger inventory and saved-token send ordering retained; exac
 Auth-key/token evidence chains reconciled; earlier token findings replace globally stale unknowns in recent scope notes. [Canonical auth-key implementation boundary](authkey-lifecycle.md#current-implementation-boundary-reconciled-2026-11-06). No runtime change or live operation.
 
 Confirmed local login material-copy mismatch now refuses before network/reservation; existing optional-record and feature boundaries retained. [Registration-copy consistency before login](authkey-lifecycle.md#registration-copy-consistency-before-login-2026-11-06). No native wire or live claim.
+
+Confirmed local await-interleaving gap closed at login reservation using zeroized account/material snapshot comparison. [Login reservation binds its preflight snapshot](authkey-lifecycle.md#login-reservation-binds-its-preflight-snapshot-2026-11-06). Post-reservation generation ownership remains open; no live operation.
