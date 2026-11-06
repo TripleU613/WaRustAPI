@@ -1,0 +1,13 @@
+
+# class: LX/Fwv;
+# extends: Ljava/lang/Object;
+
+.method public A05(JL)  # .registers 4
+    # full signature: LX/Fwv;->A05(Ljava/lang/Number;)J
+    0000..0006  invoke-virtual  {v3}, Ljava/lang/Number;->longValue()J
+    0006..0008  move-result-wide  v2
+    0008..000c  const-wide/16  v0, #0x3e8
+    000c..000e  mul-long/2addr  v2, v0
+    000e..0010  return-wide  v2
+    # exception table: 0 try range(s)
+.end method

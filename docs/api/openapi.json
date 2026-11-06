@@ -17583,5 +17583,12 @@
     "x-live": false,
     "description": "Research-only APK43.72 LID field/mask chain and conditional MEX UsyncQuery/include_lid selection. Devices has a separate flag. The classic usync writer and128-second send argument are branch-specific, not universal lookup parity. Effective configuration, final MEX envelope/query ID, callback/send timer and mapping adoption remain unported. No runtime request added.",
     "evidence": "docs/protocol/bulk-prekey-refresh.md#missing-lid-field-mapping-and-mex-selection-2026-11-06"
+},
+  "x-prekey-lid-mex-callback-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Research-only APK43.72 MEX callback trace: request refusal can call BLg and release future normally while suppressing data continuation; scoped575/599 errors differ from exceptional BsR. Selected success calls BLh before future completion. Full parsing/adoption, shared response lifecycle, durable waits and MEX envelope remain unported. No runtime behavior added.",
+    "evidence": "docs/protocol/bulk-prekey-refresh.md#missing-lid-mex-callback-completion-and-error-scope-2026-11-06"
 }
 }

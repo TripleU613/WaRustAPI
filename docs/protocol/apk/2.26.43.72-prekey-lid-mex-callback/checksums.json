@@ -1,0 +1,54 @@
+{
+  "README.md": {
+    "bytes": 6195,
+    "sha256": "84b857f21dc719ed770dd86d81774ead83517d32875a9ce26895584b866bb645"
+  },
+  "backoff-units.txt": {
+    "bytes": 415,
+    "sha256": "09eb14bd358060d5bf83a85e248db959af3d611a21fff14957d9cdb7055e4cfd"
+  },
+  "base-callback.txt": {
+    "bytes": 10037,
+    "sha256": "0ab8416606f761581a25bbfb816a8ad07ed8a3f7ab2b8d43bcc81305adae2867"
+  },
+  "binding.txt": {
+    "bytes": 1806,
+    "sha256": "91150a717f000f46ce6b63d1fa1c7ea9c2570089263809dd4fdf78b96c4f54d2"
+  },
+  "callback-constructor.txt": {
+    "bytes": 1027,
+    "sha256": "9ee68dcb26c814b62c6f401b0309bbfe6bf26c26fcfb230fc67acc01a06d2e51"
+  },
+  "callback.txt": {
+    "bytes": 5827,
+    "sha256": "afb828d339366119431719a41d1cbb6b53c0b8195235c769d75dfa7dfab659dd"
+  },
+  "error-predicate-a.txt": {
+    "bytes": 1067,
+    "sha256": "5da2f2f0b5554e26cd0f0e2b623f4502175c54a390e4d9fb39eb85cead8544b6"
+  },
+  "error-predicate-b.txt": {
+    "bytes": 1067,
+    "sha256": "2edbe8924526d48f785268b432bdc75ca6bed475df7ab2e543384348b491058d"
+  },
+  "handler-constructor.txt": {
+    "bytes": 938,
+    "sha256": "8a88cd98f05aaa18c8defda09fd391033b72f388fa43f5c03153fae1f0418a2a"
+  },
+  "handlers.txt": {
+    "bytes": 56755,
+    "sha256": "dac51025c086fd3b536555d87028450e9d68be61bc4bf63867a8f57dd2d23030"
+  },
+  "observer-interface.txt": {
+    "bytes": 588,
+    "sha256": "dd86977c996d740820dcdcabb4df0161b496396dff071d583e3ae653dbda5aa5"
+  },
+  "observer-result.txt": {
+    "bytes": 24059,
+    "sha256": "59df7d41acf245a9575d5808842b35dc810be363607eb4260e1f218501802712"
+  },
+  "scoped-errors.txt": {
+    "bytes": 4374,
+    "sha256": "76bdad403010ebfb2247f73e9245da0248fcd532c34d0856e7c463db34b025dc"
+  }
+}

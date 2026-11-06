@@ -1,0 +1,78 @@
+
+# class: LX/HSo;
+# extends: Ljava/lang/Object;
+
+.method public A00(VLL)  # .registers 13
+    # full signature: LX/HSo;->A00(LX/Hxy;Ljava/util/HashMap;)V
+    0000..0006  invoke-virtual  {v11}, LX/Hxy;->A01()Lorg/json/JSONArray;
+    0006..0008  move-result-object  v1
+    0008..000a  const/4  v0, #0x2
+    000a..0010  invoke-virtual  {v1, v0}, Lorg/json/JSONArray;->get(I)Ljava/lang/Object;
+    0010..0012  move-result-object  v0
+    0012..0018  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0018..001a  move-result-object  v5
+    001a..0020  invoke-virtual  {v11}, LX/Hxy;->A00()Ljava/lang/String;
+    0020..0022  move-result-object  v0
+    0022..0026  if-eqz  v0, +0x78
+    0026..002c  invoke-static  {v0}, LX/0Cd;->A08(Ljava/lang/String;)Ljava/lang/Long;
+    002c..002e  move-result-object  v0
+    002e..0032  if-eqz  v0, +0x72
+    0032..0038  invoke-static  {v0}, LX/Fwv;->A05(Ljava/lang/Number;)J
+    0038..003a  move-result-wide  v3
+    003a..0040  const-wide/32  v1, #0x36ee80
+    0040..0044  cmp-long  v0, v3, v1
+    0044..0048  if-lez  v0, +0x5
+    0048..004e  const-wide/32  v3, #0x36ee80
+    004e..0052  const-string  v1, "_info"
+    0052..0054  const/4  v6, #0x0
+    0054..0056  const/4  v10, #0x0
+    0056..005c  invoke-static  {v5, v1, v10}, LX/0Ce;->A0G(Ljava/lang/String;Ljava/lang/String;Z)Z
+    005c..005e  move-result  v0
+    005e..0062  if-eqz  v0, +0x54
+    0062..0068  invoke-static  {v5, v1, v10, v10}, LX/0Cf;->A0O(Ljava/lang/CharSequence;Ljava/lang/String;IZ)I
+    0068..006a  move-result  v0
+    006a..0070  invoke-static  {v10, v0, v5}, LX/2LB;->A11(IILjava/lang/String;)Ljava/lang/String;
+    0070..0072  move-result-object  v1
+    0072..0078  invoke-static  {v3, v4}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0078..007a  move-result-object  v8
+    007a..0080  invoke-virtual  {v11}, LX/Hxy;->Aby()I
+    0080..0082  move-result  v0
+    0082..0088  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0088..008a  move-result-object  v5
+    008a..008c  const/4  v9, #0x1
+    008c..0090  new-instance  v4, LX/HLG;
+    0090..0092  move-object  v7, v6
+    0092..0098  invoke-direct/range  {v4..v10}, LX/HLG;-><init>(Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Long;Ljava/lang/Long;IZ)V
+    0098..009e  invoke-virtual  {v12, v1, v4}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    009e..00a4  invoke-virtual  {v11}, LX/Hxy;->Aby()I
+    00a4..00a6  move-result  v5
+    00a6..00ac  invoke-virtual  {v11}, LX/Hxy;->A01()Lorg/json/JSONArray;
+    00ac..00ae  move-result-object  v4
+    00ae..00b2  iget-object  v1, v11, LX/Hxy;->A00:Lorg/json/JSONObject;
+    00b2..00b6  if-eqz  v1, +0x28
+    00b6..00ba  const-string  v0, "description"
+    00ba..00c0  invoke-virtual  {v1, v0}, Lorg/json/JSONObject;->optString(Ljava/lang/String;)Ljava/lang/String;
+    00c0..00c2  move-result-object  v3
+    00c2..00c8  invoke-virtual  {v11}, LX/Hxy;->A00()Ljava/lang/String;
+    00c8..00ca  move-result-object  v2
+    00ca..00ce  const-string  v0, "MexUsyncQueryHelper error code "
+    00ce..00d4  invoke-static  {v5, v0}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    00d4..00d6  move-result-object  v1
+    00d6..00da  const-string  v0, " path "
+    00da..00e0  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00e0..00e6  invoke-virtual  {v1, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    00e6..00ea  const-string  v0, " desc "
+    00ea..00f0  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00f0..00f6  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00f6..00fa  const-string  v0, " backoff "
+    00fa..0100  invoke-static  {v0, v2, v1}, LX/DBb;->A1J(Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    0100..0102  return-void
+    0102..0104  const/4  v3, #0x0
+    0104..0106  goto  -0x21
+    0106..010a  const-string  v0, "Error without a protocol info field"
+    010a..0110  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0110..0112  goto  -0x39
+    0112..0116  const-wide/16  v3, #0x1c20
+    0116..0118  goto  -0x64
+    # exception table: 0 try range(s)
+.end method

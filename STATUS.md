@@ -1,3 +1,5 @@
+Missing-LID MEX callbacks now traced through request/scoped/exception outcomes and response-state-before-future completion. [MEX request/scoped/exception outcomes and remaining lifecycle limits](docs/protocol/bulk-prekey-refresh.md#missing-lid-mex-callback-completion-and-error-scope-2026-11-06). Research only; no mapping acceptance or runtime parity claim.
+
 Pinned APK tracing now shows a LID-only multi-query branch selects MEX UsyncQuery/include_lid, while devices uses a separate flag. [LID field chain, conditional MEX selection and remaining serializer/callback limits](docs/protocol/bulk-prekey-refresh.md#missing-lid-field-mapping-and-mex-selection-2026-11-06). Research only; no runtime request added.
 
 Contact projection and LID repair now withhold LID on duplicate protocol metadata/user fields; duplicate contact fields cannot choose status by order. [Nested duplicate-field controls and native-policy limits](docs/protocol/contact-projection-correlation.md#duplicate-field-authority-is-not-selected-by-order-2026-11-06). Local ambiguity policy, offline only.

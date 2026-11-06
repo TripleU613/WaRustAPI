@@ -1,0 +1,21 @@
+
+# class: LX/0p9;
+# extends: Ljava/lang/Object;
+
+.method public BLg(VLLIJ)  # .registers 0
+    # full signature: LX/0p9;->BLg(LX/0vC;Ljava/lang/String;IJ)V
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+.method public BLh(VLL)  # .registers 0
+    # full signature: LX/0p9;->BLh(LX/Gzg;Ljava/lang/String;)V
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+.method public BLi(VILJ)  # .registers 0
+    # full signature: LX/0p9;->BLi(ILjava/lang/String;J)V
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
