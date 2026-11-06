@@ -1,0 +1,29 @@
+
+# class: LX/0vY;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VZZZZZZZZZZZZZZ)  # .registers 16
+    # full signature: LX/0vY;-><init>(ZZZZZZZZZZZZZZ)V
+    0000..0006  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-boolean  v2, v1, LX/0vY;->A01:Z
+    000a..000e  iput-boolean  v3, v1, LX/0vY;->A0A:Z
+    000e..0012  iput-boolean  v4, v1, LX/0vY;->A0B:Z
+    0012..0016  iput-boolean  v5, v1, LX/0vY;->A08:Z
+    0016..001a  iput-boolean  v6, v1, LX/0vY;->A00:Z
+    001a..001e  iput-boolean  v7, v1, LX/0vY;->A02:Z
+    001e..0022  iput-boolean  v8, v1, LX/0vY;->A07:Z
+    0022..0026  iput-boolean  v9, v1, LX/0vY;->A03:Z
+    0026..002a  iput-boolean  v11, v1, LX/0vY;->A0D:Z
+    002a..002e  iput-boolean  v12, v1, LX/0vY;->A0C:Z
+    002e..0032  iput-boolean  v13, v1, LX/0vY;->A06:Z
+    0032..0036  iput-boolean  v14, v1, LX/0vY;->A05:Z
+    0036..003a  iput-boolean  v15, v1, LX/0vY;->A09:Z
+    003a..003e  if-nez  v10, +0x7
+    003e..0042  if-nez  v2, +0x5
+    0042..0044  const/4  v0, #0x0
+    0044..0048  if-eqz  v3, +0x3
+    0048..004a  const/4  v0, #0x1
+    004a..004e  iput-boolean  v0, v1, LX/0vY;->A04:Z
+    004e..0050  return-void
+    # exception table: 0 try range(s)
+.end method

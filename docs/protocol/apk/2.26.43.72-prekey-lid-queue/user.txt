@@ -1,0 +1,12 @@
+
+# class: LX/0vW;
+# extends: Ljava/lang/Object;
+
+.method public A01(VL)  # .registers 3
+    # full signature: LX/0vW;->A01(Lcom/whatsapp/infra/core/jid/UserJid;)V
+    0000..0004  if-eqz  v2, +0x7
+    0004..0008  iget-object  v0, v1, LX/0vW;->A0F:Ljava/util/HashSet;
+    0008..000e  invoke-virtual  {v0, v2}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,82 @@
+
+# class: LX/0vt;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VL)  # .registers 4
+    # full signature: LX/0vt;-><init>(LX/0vW;)V
+    0000..0006  invoke-direct  {v2}, Ljava/lang/Object;-><init>()V
+    0006..000a  iget-object  v0, v3, LX/0vW;->A0C:LX/0vC;
+    000a..000e  iput-object  v0, v2, LX/0vt;->A09:LX/0vC;
+    000e..0012  iget-boolean  v0, v3, LX/0vW;->A07:Z
+    0012..0016  iput-boolean  v0, v2, LX/0vt;->A05:Z
+    0016..001a  iget  v0, v3, LX/0vW;->A00:I
+    001a..001e  iput  v0, v2, LX/0vt;->A06:I
+    001e..0022  iget-boolean  v0, v3, LX/0vW;->A08:Z
+    0022..0026  iput-boolean  v0, v2, LX/0vt;->A0G:Z
+    0026..002a  iget-boolean  v0, v3, LX/0vW;->A09:Z
+    002a..002e  iput-boolean  v0, v2, LX/0vt;->A0H:Z
+    002e..0032  iget-boolean  v0, v3, LX/0vW;->A06:Z
+    0032..0036  iput-boolean  v0, v2, LX/0vt;->A0F:Z
+    0036..003a  new-instance  v0, Ljava/util/ArrayList;
+    003a..0040  invoke-direct  {v0}, Ljava/util/ArrayList;-><init>()V
+    0040..0044  iput-object  v0, v2, LX/0vt;->A0B:Ljava/util/ArrayList;
+    0044..0048  iget  v0, v3, LX/0vW;->A01:I
+    0048..004c  iput  v0, v2, LX/0vt;->A01:I
+    004c..0050  const/16  v0, #0xa2
+    0050..0056  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0056..0058  move-result-object  v0
+    0058..005c  check-cast  v0, LX/08q;
+    005c..0062  invoke-static  {v0}, LX/08q;->A00(LX/08q;)J
+    0062..0064  move-result-wide  v0
+    0064..0068  iput-wide  v0, v2, LX/0vt;->A03:J
+    0068..006c  iget-wide  v0, v3, LX/0vW;->A03:J
+    006c..0070  iput-wide  v0, v2, LX/0vt;->A04:J
+    0070..0074  iget-object  v0, v3, LX/0vW;->A0B:LX/0vJ;
+    0074..0078  iput-object  v0, v2, LX/0vt;->A08:LX/0vJ;
+    0078..007c  iget-object  v0, v3, LX/0vW;->A05:Ljava/lang/Runnable;
+    007c..0080  iput-object  v0, v2, LX/0vt;->A0A:Ljava/lang/Runnable;
+    0080..0084  iget-object  v0, v3, LX/0vW;->A0D:Ljava/util/ArrayList;
+    0084..0088  iput-object  v0, v2, LX/0vt;->A0C:Ljava/util/List;
+    0088..008c  iget-object  v0, v3, LX/0vW;->A0E:Ljava/util/ArrayList;
+    008c..0090  iput-object  v0, v2, LX/0vt;->A0D:Ljava/util/List;
+    0090..0094  iget-object  v0, v3, LX/0vW;->A0F:Ljava/util/HashSet;
+    0094..0098  iput-object  v0, v2, LX/0vt;->A0E:Ljava/util/Set;
+    0098..009c  iget-object  v1, v3, LX/0vW;->A04:LX/0vY;
+    009c..00a0  const-string  v0, "none of the syncs protocols enabled"
+    00a0..00a6  invoke-static  {v1, v0}, LX/00L;->A06(Ljava/lang/Object;Ljava/lang/String;)V
+    00a6..00ac  invoke-static  {v1}, LX/00l;->A05(Ljava/lang/Object;)V
+    00ac..00b0  iget-boolean  v0, v1, LX/0vY;->A01:Z
+    00b0..00b4  iput-boolean  v0, v2, LX/0vt;->A0K:Z
+    00b4..00b8  iget-boolean  v0, v1, LX/0vY;->A0A:Z
+    00b8..00bc  iput-boolean  v0, v2, LX/0vt;->A0T:Z
+    00bc..00c0  iget-boolean  v0, v1, LX/0vY;->A0B:Z
+    00c0..00c4  iput-boolean  v0, v2, LX/0vt;->A0U:Z
+    00c4..00c8  iget-boolean  v0, v1, LX/0vY;->A08:Z
+    00c8..00cc  iput-boolean  v0, v2, LX/0vt;->A0R:Z
+    00cc..00d0  iget-boolean  v0, v1, LX/0vY;->A00:Z
+    00d0..00d4  iput-boolean  v0, v2, LX/0vt;->A0J:Z
+    00d4..00d8  iget-boolean  v0, v1, LX/0vY;->A02:Z
+    00d8..00dc  iput-boolean  v0, v2, LX/0vt;->A0L:Z
+    00dc..00e0  iget-boolean  v0, v1, LX/0vY;->A07:Z
+    00e0..00e4  iput-boolean  v0, v2, LX/0vt;->A0Q:Z
+    00e4..00e8  iget-boolean  v0, v1, LX/0vY;->A03:Z
+    00e8..00ec  iput-boolean  v0, v2, LX/0vt;->A0M:Z
+    00ec..00f0  iget-boolean  v0, v1, LX/0vY;->A04:Z
+    00f0..00f4  iput-boolean  v0, v2, LX/0vt;->A0N:Z
+    00f4..00f8  iget-boolean  v0, v1, LX/0vY;->A0D:Z
+    00f8..00fc  iput-boolean  v0, v2, LX/0vt;->A0W:Z
+    00fc..0100  iget-boolean  v0, v1, LX/0vY;->A0C:Z
+    0100..0104  iput-boolean  v0, v2, LX/0vt;->A0V:Z
+    0104..0108  iget-boolean  v0, v1, LX/0vY;->A06:Z
+    0108..010c  iput-boolean  v0, v2, LX/0vt;->A0P:Z
+    010c..0110  iget-boolean  v0, v1, LX/0vY;->A05:Z
+    0110..0114  iput-boolean  v0, v2, LX/0vt;->A0O:Z
+    0114..0118  iget-boolean  v0, v1, LX/0vY;->A09:Z
+    0118..011c  iput-boolean  v0, v2, LX/0vt;->A0S:Z
+    011c..0120  iget-boolean  v0, v3, LX/0vW;->A0A:Z
+    0120..0124  iput-boolean  v0, v2, LX/0vt;->A0I:Z
+    0124..0128  iget  v0, v3, LX/0vW;->A02:I
+    0128..012c  iput  v0, v2, LX/0vt;->A07:I
+    012c..012e  return-void
+    # exception table: 0 try range(s)
+.end method

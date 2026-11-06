@@ -1,0 +1,652 @@
+
+# class: LX/0vJ;
+# extends: Ljava/lang/Enum;
+
+.method public <clinit>(V)  # .registers 82
+    # full signature: LX/0vJ;-><clinit>()V
+    0000..0004  const-string  v2, "UNKNOWN"
+    0004..0006  const/4  v1, #0x0
+    0006..000a  new-instance  v30, LX/0vJ;
+    000a..000e  move-object/from16  v0, v30
+    000e..0014  invoke-direct  {v0, v2, v1, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0014..0018  sput-object  v30, LX/0vJ;->A1C:LX/0vJ;
+    0018..001c  const-string  v2, "DEVICE_ADDRESS_BOOK_CHANGE"
+    001c..001e  const/4  v1, #0x1
+    001e..0022  new-instance  v29, LX/0vJ;
+    0022..0026  move-object/from16  v0, v29
+    0026..002c  invoke-direct  {v0, v2, v1, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    002c..0030  sput-object  v29, LX/0vJ;->A0V:LX/0vJ;
+    0030..0034  const-string  v2, "DEVICE_PERMISSION_CHANGE"
+    0034..0036  const/4  v1, #0x2
+    0036..003a  new-instance  v28, LX/0vJ;
+    003a..003e  move-object/from16  v0, v28
+    003e..0044  invoke-direct  {v0, v2, v1, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0044..0048  sput-object  v28, LX/0vJ;->A0W:LX/0vJ;
+    0048..004c  const-string  v2, "PERIODIC_BACKGROUND_FULL"
+    004c..004e  const/4  v1, #0x3
+    004e..0052  new-instance  v27, LX/0vJ;
+    0052..0056  move-object/from16  v0, v27
+    0056..005c  invoke-direct  {v0, v2, v1, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    005c..0060  sput-object  v27, LX/0vJ;->A0x:LX/0vJ;
+    0060..0064  const-string  v2, "NOTIFICATION_CONTACT"
+    0064..0066  const/4  v1, #0x4
+    0066..006a  new-instance  v26, LX/0vJ;
+    006a..006e  move-object/from16  v0, v26
+    006e..0074  invoke-direct  {v0, v2, v1, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0074..0078  sput-object  v26, LX/0vJ;->A0n:LX/0vJ;
+    0078..007c  const-string  v2, "NC_ONBOARDING"
+    007c..007e  const/4  v1, #0x5
+    007e..0082  new-instance  v25, LX/0vJ;
+    0082..0086  move-object/from16  v0, v25
+    0086..008c  invoke-direct  {v0, v2, v1, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    008c..0090  sput-object  v25, LX/0vJ;->A0l:LX/0vJ;
+    0090..0094  const-string  v2, "PERIODIC_SYNC"
+    0094..0096  const/4  v1, #0x6
+    0096..009a  new-instance  v24, LX/0vJ;
+    009a..009e  move-object/from16  v0, v24
+    009e..00a4  invoke-direct  {v0, v2, v1, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    00a4..00a8  sput-object  v24, LX/0vJ;->A0z:LX/0vJ;
+    00a8..00ac  const-string  v2, "CONTACT_SAVE"
+    00ac..00ae  const/4  v1, #0x7
+    00ae..00b2  new-instance  v23, LX/0vJ;
+    00b2..00b6  move-object/from16  v0, v23
+    00b6..00bc  invoke-direct  {v0, v2, v1, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    00bc..00c0  sput-object  v23, LX/0vJ;->A0O:LX/0vJ;
+    00c0..00c4  const-string  v2, "GROUP_CHAT_CONTACT_ADD"
+    00c4..00c8  const/16  v1, #0x8
+    00c8..00cc  new-instance  v22, LX/0vJ;
+    00cc..00d0  move-object/from16  v0, v22
+    00d0..00d6  invoke-direct  {v0, v2, v1, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    00d6..00da  sput-object  v22, LX/0vJ;->A0c:LX/0vJ;
+    00da..00de  const-string  v2, "VOIP_CALL_CONTACT_ADD"
+    00de..00e2  const/16  v1, #0x9
+    00e2..00e6  new-instance  v21, LX/0vJ;
+    00e6..00ea  move-object/from16  v0, v21
+    00ea..00f0  invoke-direct  {v0, v2, v1, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    00f0..00f4  sput-object  v21, LX/0vJ;->A1F:LX/0vJ;
+    00f4..00f8  const-string  v2, "CALL_DIAL_CONTACT_ADD"
+    00f8..00fc  const/16  v1, #0xa
+    00fc..0100  new-instance  v20, LX/0vJ;
+    0100..0104  move-object/from16  v0, v20
+    0104..010a  invoke-direct  {v0, v2, v1, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    010a..010e  sput-object  v20, LX/0vJ;->A05:LX/0vJ;
+    010e..0112  const-string  v2, "LIST_CHAT_CONTACT_ADD"
+    0112..0116  const/16  v1, #0xb
+    0116..011a  new-instance  v19, LX/0vJ;
+    011a..011e  move-object/from16  v0, v19
+    011e..0124  invoke-direct  {v0, v2, v1, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0124..0128  sput-object  v19, LX/0vJ;->A0i:LX/0vJ;
+    0128..012c  const-string  v2, "USERNAME_UPSELL_CONTACT_ADD"
+    012c..0130  const/16  v1, #0xc
+    0130..0134  new-instance  v18, LX/0vJ;
+    0134..0138  move-object/from16  v0, v18
+    0138..013e  invoke-direct  {v0, v2, v1, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    013e..0142  sput-object  v18, LX/0vJ;->A1E:LX/0vJ;
+    0142..0146  const-string  v2, "CONTACT_PICKER_CONTACT_ADD"
+    0146..014a  const/16  v1, #0xd
+    014a..014e  new-instance  v17, LX/0vJ;
+    014e..0152  move-object/from16  v0, v17
+    0152..0158  invoke-direct  {v0, v2, v1, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0158..015c  sput-object  v17, LX/0vJ;->A0L:LX/0vJ;
+    015c..0160  const-string  v2, "CONVERSATION_CONTACT_ADD"
+    0160..0164  const/16  v1, #0xe
+    0164..0168  new-instance  v31, LX/0vJ;
+    0168..016c  move-object/from16  v0, v31
+    016c..0172  invoke-direct  {v0, v2, v1, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0172..0176  sput-object  v31, LX/0vJ;->A0Q:LX/0vJ;
+    0176..017a  const-string  v2, "HYPERLINK_CONTACT_ADD"
+    017a..017e  const/16  v1, #0xf
+    017e..0182  new-instance  v32, LX/0vJ;
+    0182..0186  move-object/from16  v0, v32
+    0186..018c  invoke-direct  {v0, v2, v1, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    018c..0190  sput-object  v32, LX/0vJ;->A0f:LX/0vJ;
+    0190..0194  const-string  v2, "SCAN_CODE_CONTACT_ADD"
+    0194..0198  const/16  v1, #0x10
+    0198..019c  new-instance  v33, LX/0vJ;
+    019c..01a0  move-object/from16  v0, v33
+    01a0..01a6  invoke-direct  {v0, v2, v1, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    01a6..01aa  sput-object  v33, LX/0vJ;->A14:LX/0vJ;
+    01aa..01ae  const-string  v2, "CONTACT_MUTATION_CONTACT_ADD"
+    01ae..01b2  const/16  v1, #0x11
+    01b2..01b6  new-instance  v35, LX/0vJ;
+    01b6..01ba  move-object/from16  v0, v35
+    01ba..01c0  invoke-direct  {v0, v2, v1, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    01c0..01c4  sput-object  v35, LX/0vJ;->A0G:LX/0vJ;
+    01c4..01c8  const-string  v2, "CALL_HISTORY_CONTACT_ADD"
+    01c8..01cc  const/16  v1, #0x12
+    01cc..01d0  new-instance  v37, LX/0vJ;
+    01d0..01d4  move-object/from16  v0, v37
+    01d4..01da  invoke-direct  {v0, v2, v1, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    01da..01de  sput-object  v37, LX/0vJ;->A06:LX/0vJ;
+    01de..01e2  const-string  v2, "CONTACT_INFO_CONTACT_ADD"
+    01e2..01e6  const/16  v1, #0x13
+    01e6..01ea  new-instance  v39, LX/0vJ;
+    01ea..01ee  move-object/from16  v0, v39
+    01ee..01f4  invoke-direct  {v0, v2, v1, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    01f4..01f8  sput-object  v39, LX/0vJ;->A0F:LX/0vJ;
+    01f8..01fc  const-string  v2, "CONTACT_FORM_CONTACT_ADD"
+    01fc..0200  const/16  v1, #0x14
+    0200..0204  new-instance  v41, LX/0vJ;
+    0204..0208  move-object/from16  v0, v41
+    0208..020e  invoke-direct  {v0, v2, v1, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    020e..0212  sput-object  v41, LX/0vJ;->A0C:LX/0vJ;
+    0212..0216  const-string  v2, "CONTACT_BOTTOM_SHEET_CONTACT_ADD"
+    0216..021a  const/16  v1, #0x15
+    021a..021e  new-instance  v43, LX/0vJ;
+    021e..0222  move-object/from16  v0, v43
+    0222..0228  invoke-direct  {v0, v2, v1, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0228..022c  sput-object  v43, LX/0vJ;->A0B:LX/0vJ;
+    022c..0230  const/16  v2, #0x16
+    0230..0234  const-string  v1, "COMMUNITY_MEMBER_CONTACT_ADD"
+    0234..0238  new-instance  v45, LX/0vJ;
+    0238..023c  move-object/from16  v0, v45
+    023c..0242  invoke-direct  {v0, v1, v2, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0242..0246  sput-object  v45, LX/0vJ;->A07:LX/0vJ;
+    0246..024a  const/16  v2, #0x17
+    024a..024e  const-string  v1, "CONTACT_BACKUP_OFF"
+    024e..0252  new-instance  v47, LX/0vJ;
+    0252..0256  move-object/from16  v0, v47
+    0256..025c  invoke-direct  {v0, v1, v2, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    025c..0260  sput-object  v47, LX/0vJ;->A0A:LX/0vJ;
+    0260..0264  const/16  v2, #0x18
+    0264..0268  const-string  v1, "HSM_KEY_AVAILABLE"
+    0268..026c  new-instance  v49, LX/0vJ;
+    026c..0270  move-object/from16  v0, v49
+    0270..0276  invoke-direct  {v0, v1, v2, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0276..027a  sput-object  v49, LX/0vJ;->A0e:LX/0vJ;
+    027a..027e  const/16  v2, #0x19
+    027e..0282  const-string  v1, "CONTACT_FORM_CONTACT_DELETE"
+    0282..0286  new-instance  v51, LX/0vJ;
+    0286..028a  move-object/from16  v0, v51
+    028a..0290  invoke-direct  {v0, v1, v2, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0290..0294  sput-object  v51, LX/0vJ;->A0D:LX/0vJ;
+    0294..0298  const/16  v2, #0x1a
+    0298..029c  const-string  v1, "CONTACT_MUTATION_CONTACT_DELETE"
+    029c..02a0  new-instance  v53, LX/0vJ;
+    02a0..02a4  move-object/from16  v0, v53
+    02a4..02aa  invoke-direct  {v0, v1, v2, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    02aa..02ae  sput-object  v53, LX/0vJ;->A0H:LX/0vJ;
+    02ae..02b2  const/16  v2, #0x1b
+    02b2..02b6  const-string  v1, "CONTACT_ON_BOARD"
+    02b6..02ba  new-instance  v55, LX/0vJ;
+    02ba..02be  move-object/from16  v0, v55
+    02be..02c4  invoke-direct  {v0, v1, v2, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    02c4..02c8  sput-object  v55, LX/0vJ;->A0I:LX/0vJ;
+    02c8..02cc  const/16  v2, #0x1c
+    02cc..02d0  const-string  v1, "CONTACT_UPLOAD"
+    02d0..02d4  new-instance  v57, LX/0vJ;
+    02d4..02d8  move-object/from16  v0, v57
+    02d8..02de  invoke-direct  {v0, v1, v2, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    02de..02e2  sput-object  v57, LX/0vJ;->A0P:LX/0vJ;
+    02e2..02e6  const/16  v2, #0x1d
+    02e6..02ea  const-string  v1, "CONTACT_PERIODIC_UPLOAD"
+    02ea..02ee  new-instance  v59, LX/0vJ;
+    02ee..02f2  move-object/from16  v0, v59
+    02f2..02f8  invoke-direct  {v0, v1, v2, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    02f8..02fc  sput-object  v59, LX/0vJ;->A0J:LX/0vJ;
+    02fc..0300  const/16  v2, #0x1e
+    0300..0304  const-string  v1, "PERIOD_FULL_SYNC"
+    0304..0308  new-instance  v61, LX/0vJ;
+    0308..030c  move-object/from16  v0, v61
+    030c..0312  invoke-direct  {v0, v1, v2, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0312..0316  sput-object  v61, LX/0vJ;->A10:LX/0vJ;
+    0316..031a  const/16  v2, #0x1f
+    031a..031e  const-string  v1, "CONTACT_PICKER_FULL_SYNC"
+    031e..0322  new-instance  v63, LX/0vJ;
+    0322..0326  move-object/from16  v0, v63
+    0326..032c  invoke-direct  {v0, v1, v2, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    032c..0330  sput-object  v63, LX/0vJ;->A0M:LX/0vJ;
+    0330..0334  const/16  v2, #0x20
+    0334..0338  const-string  v1, "ON_BOARD_FULL_SYNC"
+    0338..033c  new-instance  v65, LX/0vJ;
+    033c..0340  move-object/from16  v0, v65
+    0340..0346  invoke-direct  {v0, v1, v2, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0346..034a  sput-object  v65, LX/0vJ;->A0s:LX/0vJ;
+    034a..034e  const/16  v2, #0x21
+    034e..0352  const-string  v1, "FORCE_SYNC"
+    0352..0356  new-instance  v67, LX/0vJ;
+    0356..035a  move-object/from16  v0, v67
+    035a..0360  invoke-direct  {v0, v1, v2, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0360..0364  sput-object  v67, LX/0vJ;->A0a:LX/0vJ;
+    0364..0368  const/16  v2, #0x22
+    0368..036c  const-string  v1, "CONTACT_PICKER_USYNC_RETRY"
+    036c..0370  new-instance  v69, LX/0vJ;
+    0370..0374  move-object/from16  v0, v69
+    0374..037a  invoke-direct  {v0, v1, v2, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    037a..037e  sput-object  v69, LX/0vJ;->A0N:LX/0vJ;
+    037e..0382  const/16  v2, #0x23
+    0382..0386  const-string  v1, "RESTORE_COMPLETE_FULL"
+    0386..038a  new-instance  v71, LX/0vJ;
+    038a..038e  move-object/from16  v0, v71
+    038e..0394  invoke-direct  {v0, v1, v2, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0394..0398  sput-object  v71, LX/0vJ;->A13:LX/0vJ;
+    0398..039c  const/16  v2, #0x24
+    039c..03a0  const-string  v1, "REGISTRATION_FULL"
+    03a0..03a4  new-instance  v73, LX/0vJ;
+    03a4..03a8  move-object/from16  v0, v73
+    03a8..03ae  invoke-direct  {v0, v1, v2, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    03ae..03b2  sput-object  v73, LX/0vJ;->A12:LX/0vJ;
+    03b2..03b6  const/16  v2, #0x25
+    03b6..03ba  const-string  v1, "USERNAME_UPDATE_NOTIFICATION"
+    03ba..03be  new-instance  v75, LX/0vJ;
+    03be..03c2  move-object/from16  v0, v75
+    03c2..03c8  invoke-direct  {v0, v1, v2, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    03c8..03cc  sput-object  v75, LX/0vJ;->A1D:LX/0vJ;
+    03cc..03d0  const/16  v2, #0x26
+    03d0..03d4  const-string  v1, "PAYMENT_NOTIFICATION"
+    03d4..03d8  new-instance  v77, LX/0vJ;
+    03d8..03dc  move-object/from16  v0, v77
+    03dc..03e2  invoke-direct  {v0, v1, v2, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    03e2..03e6  sput-object  v77, LX/0vJ;->A0w:LX/0vJ;
+    03e6..03ea  const/16  v2, #0x27
+    03ea..03ee  const-string  v1, "PAYMENT_FORCE_REFRESH_REFRESH"
+    03ee..03f2  new-instance  v79, LX/0vJ;
+    03f2..03f6  move-object/from16  v0, v79
+    03f6..03fc  invoke-direct  {v0, v1, v2, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    03fc..0400  sput-object  v79, LX/0vJ;->A0v:LX/0vJ;
+    0400..0404  const/16  v2, #0x28
+    0404..0408  const-string  v1, "ACCOUNT_SWITCH_REFRESH"
+    0408..040c  new-instance  v81, LX/0vJ;
+    040c..0410  move-object/from16  v0, v81
+    0410..0416  invoke-direct  {v0, v1, v2, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0416..041a  sput-object  v81, LX/0vJ;->A02:LX/0vJ;
+    041a..041e  const/16  v2, #0x29
+    041e..0422  const-string  v1, "DM_FORCE_REFRESH"
+    0422..0426  new-instance  v80, LX/0vJ;
+    0426..042a  move-object/from16  v0, v80
+    042a..0430  invoke-direct  {v0, v1, v2, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0430..0434  sput-object  v80, LX/0vJ;->A0Y:LX/0vJ;
+    0434..0438  const/16  v2, #0x2a
+    0438..043c  const-string  v1, "STATUS_FORCE_REFRESH"
+    043c..0440  new-instance  v78, LX/0vJ;
+    0440..0444  move-object/from16  v0, v78
+    0444..044a  invoke-direct  {v0, v1, v2, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    044a..044e  sput-object  v78, LX/0vJ;->A1A:LX/0vJ;
+    044e..0452  const/16  v2, #0x2b
+    0452..0456  const-string  v1, "TEXT_STATUS_FORCE_REFRESH"
+    0456..045a  new-instance  v76, LX/0vJ;
+    045a..045e  move-object/from16  v0, v76
+    045e..0464  invoke-direct  {v0, v1, v2, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0464..0468  sput-object  v76, LX/0vJ;->A1B:LX/0vJ;
+    0468..046c  const/16  v2, #0x2c
+    046c..0470  const-string  v1, "SCHEDULED_CONTACT_SYNC"
+    0470..0474  new-instance  v74, LX/0vJ;
+    0474..0478  move-object/from16  v0, v74
+    0478..047e  invoke-direct  {v0, v1, v2, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    047e..0482  sput-object  v74, LX/0vJ;->A15:LX/0vJ;
+    0482..0486  const/16  v2, #0x2d
+    0486..048a  const-string  v1, "DOWNLOAD_REQUEST"
+    048a..048e  new-instance  v72, LX/0vJ;
+    048e..0492  move-object/from16  v0, v72
+    0492..0498  invoke-direct  {v0, v1, v2, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0498..049c  sput-object  v72, LX/0vJ;->A0Z:LX/0vJ;
+    049c..04a0  const/16  v2, #0x2e
+    04a0..04a4  const-string  v1, "SIDELIST_REQUEST"
+    04a4..04a8  new-instance  v70, LX/0vJ;
+    04a8..04ac  move-object/from16  v0, v70
+    04ac..04b2  invoke-direct  {v0, v1, v2, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    04b2..04b6  sput-object  v70, LX/0vJ;->A18:LX/0vJ;
+    04b6..04ba  const/16  v2, #0x2f
+    04ba..04be  const-string  v1, "LID_REQUEST"
+    04be..04c2  new-instance  v68, LX/0vJ;
+    04c2..04c6  move-object/from16  v0, v68
+    04c6..04cc  invoke-direct  {v0, v1, v2, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    04cc..04d0  sput-object  v68, LX/0vJ;->A0h:LX/0vJ;
+    04d0..04d4  const/16  v2, #0x30
+    04d4..04d8  const-string  v1, "DEVICE_REQUEST"
+    04d8..04dc  new-instance  v66, LX/0vJ;
+    04dc..04e0  move-object/from16  v0, v66
+    04e0..04e6  invoke-direct  {v0, v1, v2, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    04e6..04ea  sput-object  v66, LX/0vJ;->A0X:LX/0vJ;
+    04ea..04ee  const/16  v3, #0x31
+    04ee..04f2  const/16  v2, #0x32
+    04f2..04f6  const-string  v1, "COMPANION_BOOTSTRAP_REQUEST"
+    04f6..04fa  new-instance  v64, LX/0vJ;
+    04fa..04fe  move-object/from16  v0, v64
+    04fe..0504  invoke-direct  {v0, v1, v3, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0504..0508  sput-object  v64, LX/0vJ;->A08:LX/0vJ;
+    0508..050c  const/16  v3, #0x32
+    050c..0510  const/16  v2, #0x33
+    0510..0514  const-string  v1, "PAYMENT_CONTACT_SYNC"
+    0514..0518  new-instance  v62, LX/0vJ;
+    0518..051c  move-object/from16  v0, v62
+    051c..0522  invoke-direct  {v0, v1, v3, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0522..0526  sput-object  v62, LX/0vJ;->A0u:LX/0vJ;
+    0526..052a  const/16  v3, #0x33
+    052a..052e  const/16  v2, #0x34
+    052e..0532  const-string  v1, "PRIVACY_TOKEN_REFRESH"
+    0532..0536  new-instance  v60, LX/0vJ;
+    0536..053a  move-object/from16  v0, v60
+    053a..0540  invoke-direct  {v0, v1, v3, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0540..0544  sput-object  v60, LX/0vJ;->A11:LX/0vJ;
+    0544..0548  const/16  v3, #0x34
+    0548..054c  const/16  v2, #0x35
+    054c..0550  const-string  v1, "NOTIFICATION_STATUS"
+    0550..0554  new-instance  v58, LX/0vJ;
+    0554..0558  move-object/from16  v0, v58
+    0558..055e  invoke-direct  {v0, v1, v3, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    055e..0562  sput-object  v58, LX/0vJ;->A0p:LX/0vJ;
+    0562..0566  const/16  v3, #0x35
+    0566..056a  const/16  v2, #0x36
+    056a..056e  const-string  v1, "NOTIFICATION_BUSINESS"
+    056e..0572  new-instance  v56, LX/0vJ;
+    0572..0576  move-object/from16  v0, v56
+    0576..057c  invoke-direct  {v0, v1, v3, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    057c..0580  sput-object  v56, LX/0vJ;->A0m:LX/0vJ;
+    0580..0584  const/16  v3, #0x36
+    0584..0588  const/16  v2, #0x37
+    0588..058c  const-string  v1, "NOTIFICATION_PICTURE"
+    058c..0590  new-instance  v54, LX/0vJ;
+    0590..0594  move-object/from16  v0, v54
+    0594..059a  invoke-direct  {v0, v1, v3, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    059a..059e  sput-object  v54, LX/0vJ;->A0o:LX/0vJ;
+    059e..05a2  const/16  v3, #0x37
+    05a2..05a6  const/16  v2, #0x38
+    05a6..05aa  const-string  v1, "BUSINESS_CONTACT_CHAT"
+    05aa..05ae  new-instance  v52, LX/0vJ;
+    05ae..05b2  move-object/from16  v0, v52
+    05b2..05b8  invoke-direct  {v0, v1, v3, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    05b8..05bc  sput-object  v52, LX/0vJ;->A04:LX/0vJ;
+    05bc..05c0  const/16  v3, #0x38
+    05c0..05c4  const/16  v2, #0x39
+    05c4..05c8  const-string  v1, "CONVERSATION_SIDE_CONTACT"
+    05c8..05cc  new-instance  v50, LX/0vJ;
+    05cc..05d0  move-object/from16  v0, v50
+    05d0..05d6  invoke-direct  {v0, v1, v3, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    05d6..05da  sput-object  v50, LX/0vJ;->A0R:LX/0vJ;
+    05da..05de  const/16  v3, #0x39
+    05de..05e2  const/16  v2, #0x3a
+    05e2..05e6  const-string  v1, "SHARED_CONTACT_ADD"
+    05e6..05ea  new-instance  v48, LX/0vJ;
+    05ea..05ee  move-object/from16  v0, v48
+    05ee..05f4  invoke-direct  {v0, v1, v3, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    05f4..05f8  sput-object  v48, LX/0vJ;->A17:LX/0vJ;
+    05f8..05fc  const/16  v3, #0x3a
+    05fc..0600  const/16  v2, #0x3b
+    0600..0604  const-string  v1, "NOTIFICATION_TEXT_STATUS"
+    0604..0608  new-instance  v46, LX/0vJ;
+    0608..060c  move-object/from16  v0, v46
+    060c..0612  invoke-direct  {v0, v1, v3, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0612..0616  sput-object  v46, LX/0vJ;->A0q:LX/0vJ;
+    0616..061a  const/16  v3, #0x3b
+    061a..061e  const/16  v2, #0x3c
+    061e..0622  const-string  v1, "JEST_TEST"
+    0622..0626  new-instance  v44, LX/0vJ;
+    0626..062a  move-object/from16  v0, v44
+    062a..0630  invoke-direct  {v0, v1, v3, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0630..0634  sput-object  v44, LX/0vJ;->A0g:LX/0vJ;
+    0634..0638  const/16  v3, #0x3c
+    0638..063c  const/16  v2, #0x3d
+    063c..0640  const-string  v1, "DEBUG_TOOL"
+    0640..0644  new-instance  v42, LX/0vJ;
+    0644..0648  move-object/from16  v0, v42
+    0648..064e  invoke-direct  {v0, v1, v3, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    064e..0652  sput-object  v42, LX/0vJ;->A0T:LX/0vJ;
+    0652..0656  const/16  v3, #0x3d
+    0656..065a  const/16  v2, #0x3e
+    065a..065e  const-string  v1, "DEBUG_FULL"
+    065e..0662  new-instance  v40, LX/0vJ;
+    0662..0666  move-object/from16  v0, v40
+    0666..066c  invoke-direct  {v0, v1, v3, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    066c..0670  sput-object  v40, LX/0vJ;->A0S:LX/0vJ;
+    0670..0674  const/16  v3, #0x3e
+    0674..0678  const/16  v2, #0x3f
+    0678..067c  const-string  v1, "DELTA_SYNC_FOR_CONTACTS_REQUIRING_SYNC"
+    067c..0680  new-instance  v38, LX/0vJ;
+    0680..0684  move-object/from16  v0, v38
+    0684..068a  invoke-direct  {v0, v1, v3, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    068a..068e  sput-object  v38, LX/0vJ;->A0U:LX/0vJ;
+    068e..0692  const/16  v3, #0x3f
+    0692..0696  const/16  v2, #0x40
+    0696..069a  const-string  v1, "NULLIFY_SIDE_CONTACTS"
+    069a..069e  new-instance  v36, LX/0vJ;
+    069e..06a2  move-object/from16  v0, v36
+    06a2..06a8  invoke-direct  {v0, v1, v3, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    06a8..06ac  sput-object  v36, LX/0vJ;->A0r:LX/0vJ;
+    06ac..06b0  const/16  v3, #0x40
+    06b0..06b4  const/16  v2, #0x41
+    06b4..06b8  const-string  v1, "SNAPSHOT_RECOVERY"
+    06b8..06bc  new-instance  v34, LX/0vJ;
+    06bc..06c0  move-object/from16  v0, v34
+    06c0..06c6  invoke-direct  {v0, v1, v3, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    06c6..06ca  sput-object  v34, LX/0vJ;->A19:LX/0vJ;
+    06ca..06ce  const/16  v1, #0x42
+    06ce..06d2  const-string  v0, "PERIODIC_FORCE_SYNC"
+    06d2..06d6  new-instance  v15, LX/0vJ;
+    06d6..06dc  invoke-direct  {v15, v0, v2, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    06dc..06e0  sput-object  v15, LX/0vJ;->A0y:LX/0vJ;
+    06e0..06e4  const/16  v2, #0x42
+    06e4..06e8  const/16  v1, #0x43
+    06e8..06ec  const-string  v0, "SERVER_FORACE_SYNC"
+    06ec..06f0  new-instance  v14, LX/0vJ;
+    06f0..06f6  invoke-direct  {v14, v0, v2, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    06f6..06fa  sput-object  v14, LX/0vJ;->A16:LX/0vJ;
+    06fa..06fe  const/16  v2, #0x43
+    06fe..0702  const/16  v1, #0x44
+    0702..0706  const-string  v0, "NATIVE_CONTACT_DELTA_SYNC"
+    0706..070a  new-instance  v13, LX/0vJ;
+    070a..0710  invoke-direct  {v13, v0, v2, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0710..0714  sput-object  v13, LX/0vJ;->A0k:LX/0vJ;
+    0714..0718  const/16  v2, #0x44
+    0718..071c  const/16  v1, #0x45
+    071c..0720  const-string  v0, "COMPANION_LID_MAPPING_QUERY"
+    0720..0724  new-instance  v12, LX/0vJ;
+    0724..072a  invoke-direct  {v12, v0, v2, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    072a..072e  sput-object  v12, LX/0vJ;->A09:LX/0vJ;
+    072e..0732  const/16  v2, #0x45
+    0732..0736  const/16  v1, #0x46
+    0736..073a  const-string  v0, "GROUP_CHAT_BULK_CONTACT_ADD"
+    073a..073e  new-instance  v11, LX/0vJ;
+    073e..0744  invoke-direct  {v11, v0, v2, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0744..0748  sput-object  v11, LX/0vJ;->A0b:LX/0vJ;
+    0748..074c  const/16  v2, #0x46
+    074c..0750  const/16  v1, #0x47
+    0750..0754  const-string  v0, "WA_ONLY_CONTACT_ADD"
+    0754..0758  new-instance  v10, LX/0vJ;
+    0758..075e  invoke-direct  {v10, v0, v2, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    075e..0762  sput-object  v10, LX/0vJ;->A1G:LX/0vJ;
+    0762..0766  const/16  v2, #0x47
+    0766..076a  const/16  v1, #0x48
+    076a..076e  const-string  v0, "GROUP_MEMBER_CONTACT_ADD"
+    076e..0772  new-instance  v9, LX/0vJ;
+    0772..0778  invoke-direct  {v9, v0, v2, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0778..077c  sput-object  v9, LX/0vJ;->A0d:LX/0vJ;
+    077c..0780  const/16  v2, #0x48
+    0780..0784  const/16  v1, #0x49
+    0784..0788  const-string  v0, "CONTACT_HUD_CONTACT_ADD"
+    0788..078c  new-instance  v8, LX/0vJ;
+    078c..0792  invoke-direct  {v8, v0, v2, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0792..0796  sput-object  v8, LX/0vJ;->A0E:LX/0vJ;
+    0796..079a  const/16  v2, #0x49
+    079a..079e  const/16  v1, #0x4a
+    079e..07a2  const-string  v0, "AEA_USYNC"
+    07a2..07a6  new-instance  v7, LX/0vJ;
+    07a6..07ac  invoke-direct  {v7, v0, v2, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    07ac..07b0  sput-object  v7, LX/0vJ;->A03:LX/0vJ;
+    07b0..07b4  const/16  v2, #0x4a
+    07b4..07b8  const/16  v1, #0x4b
+    07b8..07bc  const-string  v0, "CONTACT_PERMISSION_CHANGE"
+    07bc..07c0  new-instance  v6, LX/0vJ;
+    07c0..07c6  invoke-direct  {v6, v0, v2, v1}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    07c6..07ca  sput-object  v6, LX/0vJ;->A0K:LX/0vJ;
+    07ca..07ce  const/16  v0, #0x4c
+    07ce..07d2  const-string  v2, "ORG_MEMBER_SIDE_CONTACT"
+    07d2..07d6  new-instance  v5, LX/0vJ;
+    07d6..07dc  invoke-direct  {v5, v2, v1, v0}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    07dc..07e0  sput-object  v5, LX/0vJ;->A0t:LX/0vJ;
+    07e0..07e4  const-string  v1, "MUSE_UPSELL_CONTACT_PERMISSION"
+    07e4..07e8  const/16  v2, #0x4d
+    07e8..07ec  new-instance  v4, LX/0vJ;
+    07ec..07f2  invoke-direct  {v4, v1, v0, v2}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    07f2..07f6  sput-object  v4, LX/0vJ;->A0j:LX/0vJ;
+    07f6..07fa  const/16  v16, #0x4d
+    07fa..07fe  const-string  v1, "UNDEFINED"
+    07fe..0802  const/16  v0, #0x3e7
+    0802..0806  new-instance  v3, LX/0vJ;
+    0806..0808  move-object  v2, v1
+    0808..080c  move/from16  v1, v16
+    080c..0812  invoke-direct  {v3, v2, v1, v0}, LX/0vJ;-><init>(Ljava/lang/String;II)V
+    0812..0816  const/16  v0, #0x4e
+    0816..081a  new-array  v1, v0, [LX/0vJ;
+    081a..081c  const/4  v0, #0x0
+    081c..0820  aput-object  v30, v1, v0
+    0820..0822  const/4  v0, #0x1
+    0822..0826  aput-object  v29, v1, v0
+    0826..0828  const/4  v0, #0x2
+    0828..082c  aput-object  v28, v1, v0
+    082c..082e  const/4  v0, #0x3
+    082e..0832  aput-object  v27, v1, v0
+    0832..0834  const/4  v0, #0x4
+    0834..0838  aput-object  v26, v1, v0
+    0838..083a  const/4  v0, #0x5
+    083a..083e  aput-object  v25, v1, v0
+    083e..0840  const/4  v0, #0x6
+    0840..0844  aput-object  v24, v1, v0
+    0844..0846  const/4  v0, #0x7
+    0846..084a  aput-object  v23, v1, v0
+    084a..084e  const/16  v0, #0x8
+    084e..0852  aput-object  v22, v1, v0
+    0852..0856  const/16  v0, #0x9
+    0856..085a  aput-object  v21, v1, v0
+    085a..085e  const/16  v0, #0xa
+    085e..0862  aput-object  v20, v1, v0
+    0862..0866  const/16  v0, #0xb
+    0866..086a  aput-object  v19, v1, v0
+    086a..086e  const/16  v0, #0xc
+    086e..0872  aput-object  v18, v1, v0
+    0872..0876  const/16  v0, #0xd
+    0876..087a  aput-object  v17, v1, v0
+    087a..087e  const/16  v0, #0xe
+    087e..0882  aput-object  v31, v1, v0
+    0882..0886  const/16  v0, #0xf
+    0886..088a  aput-object  v32, v1, v0
+    088a..088e  const/16  v0, #0x10
+    088e..0892  aput-object  v33, v1, v0
+    0892..0896  const/16  v0, #0x11
+    0896..089a  aput-object  v35, v1, v0
+    089a..089e  const/16  v0, #0x12
+    089e..08a2  aput-object  v37, v1, v0
+    08a2..08a6  const/16  v0, #0x13
+    08a6..08aa  aput-object  v39, v1, v0
+    08aa..08ae  const/16  v0, #0x14
+    08ae..08b2  aput-object  v41, v1, v0
+    08b2..08b6  const/16  v0, #0x15
+    08b6..08ba  aput-object  v43, v1, v0
+    08ba..08be  const/16  v0, #0x16
+    08be..08c2  aput-object  v45, v1, v0
+    08c2..08c6  const/16  v0, #0x17
+    08c6..08ca  aput-object  v47, v1, v0
+    08ca..08ce  const/16  v0, #0x18
+    08ce..08d2  aput-object  v49, v1, v0
+    08d2..08d6  const/16  v0, #0x19
+    08d6..08da  aput-object  v51, v1, v0
+    08da..08de  const/16  v0, #0x1a
+    08de..08e2  aput-object  v53, v1, v0
+    08e2..08e6  const/16  v0, #0x1b
+    08e6..08ea  aput-object  v55, v1, v0
+    08ea..08ee  const/16  v0, #0x1c
+    08ee..08f2  aput-object  v57, v1, v0
+    08f2..08f6  const/16  v0, #0x1d
+    08f6..08fa  aput-object  v59, v1, v0
+    08fa..08fe  const/16  v0, #0x1e
+    08fe..0902  aput-object  v61, v1, v0
+    0902..0906  const/16  v0, #0x1f
+    0906..090a  aput-object  v63, v1, v0
+    090a..090e  const/16  v0, #0x20
+    090e..0912  aput-object  v65, v1, v0
+    0912..0916  const/16  v0, #0x21
+    0916..091a  aput-object  v67, v1, v0
+    091a..091e  const/16  v0, #0x22
+    091e..0922  aput-object  v69, v1, v0
+    0922..0926  const/16  v0, #0x23
+    0926..092a  aput-object  v71, v1, v0
+    092a..092e  const/16  v0, #0x24
+    092e..0932  aput-object  v73, v1, v0
+    0932..0936  const/16  v0, #0x25
+    0936..093a  aput-object  v75, v1, v0
+    093a..093e  const/16  v0, #0x26
+    093e..0942  aput-object  v77, v1, v0
+    0942..0946  const/16  v0, #0x27
+    0946..094a  aput-object  v79, v1, v0
+    094a..094e  const/16  v0, #0x28
+    094e..0952  aput-object  v81, v1, v0
+    0952..0956  const/16  v0, #0x29
+    0956..095a  aput-object  v80, v1, v0
+    095a..095e  const/16  v0, #0x2a
+    095e..0962  aput-object  v78, v1, v0
+    0962..0966  const/16  v0, #0x2b
+    0966..096a  aput-object  v76, v1, v0
+    096a..096e  const/16  v0, #0x2c
+    096e..0972  aput-object  v74, v1, v0
+    0972..0976  const/16  v0, #0x2d
+    0976..097a  aput-object  v72, v1, v0
+    097a..097e  const/16  v0, #0x2e
+    097e..0982  aput-object  v70, v1, v0
+    0982..0986  const/16  v0, #0x2f
+    0986..098a  aput-object  v68, v1, v0
+    098a..098e  const/16  v0, #0x30
+    098e..0992  aput-object  v66, v1, v0
+    0992..0996  const/16  v0, #0x31
+    0996..099a  aput-object  v64, v1, v0
+    099a..099e  const/16  v0, #0x32
+    099e..09a2  aput-object  v62, v1, v0
+    09a2..09a6  const/16  v0, #0x33
+    09a6..09aa  aput-object  v60, v1, v0
+    09aa..09ae  const/16  v0, #0x34
+    09ae..09b2  aput-object  v58, v1, v0
+    09b2..09b6  const/16  v0, #0x35
+    09b6..09ba  aput-object  v56, v1, v0
+    09ba..09be  const/16  v0, #0x36
+    09be..09c2  aput-object  v54, v1, v0
+    09c2..09c6  const/16  v0, #0x37
+    09c6..09ca  aput-object  v52, v1, v0
+    09ca..09ce  const/16  v0, #0x38
+    09ce..09d2  aput-object  v50, v1, v0
+    09d2..09d6  const/16  v0, #0x39
+    09d6..09da  aput-object  v48, v1, v0
+    09da..09de  const/16  v0, #0x3a
+    09de..09e2  aput-object  v46, v1, v0
+    09e2..09e6  const/16  v0, #0x3b
+    09e6..09ea  aput-object  v44, v1, v0
+    09ea..09ee  const/16  v0, #0x3c
+    09ee..09f2  aput-object  v42, v1, v0
+    09f2..09f6  const/16  v0, #0x3d
+    09f6..09fa  aput-object  v40, v1, v0
+    09fa..09fe  const/16  v0, #0x3e
+    09fe..0a02  aput-object  v38, v1, v0
+    0a02..0a06  const/16  v0, #0x3f
+    0a06..0a0a  aput-object  v36, v1, v0
+    0a0a..0a0e  const/16  v0, #0x40
+    0a0e..0a12  aput-object  v34, v1, v0
+    0a12..0a16  const/16  v0, #0x41
+    0a16..0a1a  aput-object  v15, v1, v0
+    0a1a..0a1e  const/16  v0, #0x42
+    0a1e..0a22  aput-object  v14, v1, v0
+    0a22..0a26  const/16  v0, #0x43
+    0a26..0a2a  aput-object  v13, v1, v0
+    0a2a..0a2e  const/16  v0, #0x44
+    0a2e..0a32  aput-object  v12, v1, v0
+    0a32..0a36  const/16  v0, #0x45
+    0a36..0a3a  aput-object  v11, v1, v0
+    0a3a..0a3e  const/16  v0, #0x46
+    0a3e..0a42  aput-object  v10, v1, v0
+    0a42..0a46  const/16  v0, #0x47
+    0a46..0a4a  aput-object  v9, v1, v0
+    0a4a..0a4e  const/16  v0, #0x48
+    0a4e..0a52  aput-object  v8, v1, v0
+    0a52..0a56  const/16  v0, #0x49
+    0a56..0a5a  aput-object  v7, v1, v0
+    0a5a..0a5e  const/16  v0, #0x4a
+    0a5e..0a62  aput-object  v6, v1, v0
+    0a62..0a66  const/16  v0, #0x4b
+    0a66..0a6a  aput-object  v5, v1, v0
+    0a6a..0a6e  const/16  v0, #0x4c
+    0a6e..0a72  aput-object  v4, v1, v0
+    0a72..0a76  aput-object  v3, v1, v16
+    0a76..0a7a  sput-object  v1, LX/0vJ;->A01:[LX/0vJ;
+    0a7a..0a80  invoke-static  {v1}, LX/068;->A00([Ljava/lang/Enum;)LX/06C;
+    0a80..0a82  move-result-object  v0
+    0a82..0a86  sput-object  v0, LX/0vJ;->A00:LX/06B;
+    0a86..0a88  return-void
+    # exception table: 0 try range(s)
+.end method

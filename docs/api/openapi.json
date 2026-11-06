@@ -17562,5 +17562,12 @@
     "x-live": false,
     "description": "Research-only APK43.72 conditional missing-LID preflight: target filters, request-object sync queue submission and untimed wait precede bulk-key dispatch. Wire rendering, response acceptance and mapping adoption remain untraced. No Rust lookup or retry added.",
     "evidence": "docs/protocol/bulk-prekey-refresh.md#bulk-pre-key-missing-lid-preflight-2026-11-06"
+},
+  "x-prekey-lid-queue-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Research-only APK43.72 missing-LID preflight preset and queue trace. LID_REQUEST/message query initially enables LID alone, while native queue combination can merge targets and protocols. Final post-combination wire, producer-specific timing and authenticated mapping adoption remain unported. No new runtime capability.",
+    "evidence": "docs/protocol/bulk-prekey-refresh.md#missing-lid-preset-and-queue-combination-2026-11-06"
 }
 }

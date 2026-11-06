@@ -161,3 +161,9 @@ For nonempty remaining candidates A00 calls0ob.A0A(0vC.A0M,set). A0A selects0vJ.
 A00 waits using inherited FfK.get() without a timeout for this null-timeout caller (the separate non-null path uses milliseconds). It casts the returned value to1xM; Bulk ignores the return and proceeds only after the call returns normally. Exceptions can instead enter the already retained job-runner handling. This establishes preflight call/wait ordering; it does not establish successful mapping adoption or that every key fetch emits another network request.
 
 **Unknown / unported:** sync queue coalescing, actual wire selector/body and callback lifetime, response refusal semantics, mapping authentication/adoption and effective per-account filters. No new Rust lookup, automatic retry, timeout or namespace conversion is justified by this partial trace. No live operation or ban-prevention guarantee.
+
+## Missing-LID preset and queue combination (2026-11-06)
+
+**Confirmed static:** [full preset/constructor/queue exports and register mapping](apk/2.26.43.72-prekey-lid-queue/README.md) identify the preflight as LID_REQUEST in MESSAGE_MULTI_PROTOCOL_QUERY context. The selected0vY.A0N initially enables LID only; contact and sidelist flags are false. The helper's diagnostic name is not evidence that it requests both devices and LID. Native0p4/1Wa queue handling can combine target sets and protocol flags before execution, so the original object is not a complete final-IQ oracle. The LID flag reaches the executor's lid_sync_backoff block; full producer-specific reachability/clock authority remain unresolved.
+
+**Unknown / unported:** final post-combination wire, effective gates, callback timer, refusal handling and authenticated mapping adoption. The complete large executor is retained for focused follow-up, not claimed fully reconstructed. No runtime or API capability added; no live account operation.
