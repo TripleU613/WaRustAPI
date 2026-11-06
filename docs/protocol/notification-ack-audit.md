@@ -171,3 +171,29 @@ ACK-before-async-result ordering. The constructor census now links that evidence
 instead of presenting it as newly unknown. Rust role/recovery/bootstrap and
 durable notification scheduling remain unported. No runtime change.
 [Callback evidence and limits](apk/2.26.43.72-notification-handler-census/README.md).
+
+
+### Group notification storage failures stop before ACK (2026-11-05)
+
+**Confirmed local defect/fix:** connection dispatch previously logged every
+error from groups::apply_change_notification and then sent the normal w:gp2
+ACK. A corrupt saved GroupSnapshot therefore looked acknowledged even though
+the membership change could not be committed. The actor now propagates that
+helper's store/transaction errors before ACK construction. Its current wire
+path filters unsupported/non-group/malformed participant inputs without returning
+errors; no new wire-input rejection policy is introduced.
+
+The actor regression corrupt_group_snapshot_is_not_acknowledged_as_applied
+failed on the previous path at the emitted-ACK assertion, then passed after
+the correction. It delivers a valid group/add notification over a corrupt saved
+snapshot, checks no outbound success ACK, observes Error::Storage and verifies
+unchanged original bytes plus durable inbound capture before and after reopen.
+The capture supports later local investigation; this does not implement automatic
+notification replay or state repair. Existing valid membership/ACK behavior
+continues through the same functions.
+
+This is a local storage-integrity correction. APK43.72 0v6.A01 separately
+rethrows SQLiteFullException/SQLiteDatabaseCorruptException at020c..0210 in the
+[retained base handler](apk/2.26.43.72-group-missing-identification/ingress-base.txt);
+Rust serialization faults are not claimed to be identical native exceptions.
+No live account, automatic query, identity adoption or resend occurred.

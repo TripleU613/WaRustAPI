@@ -3289,3 +3289,12 @@ again. Photo updates and missing-ID lifecycle remain unported, with no automatic
 queries or live validation. Actor regression verifies capture-before-write, exact
 participant routing, redelivery, ping after refusal and reopen persistence.
 [Source and limits](apk/2.26.43.72-group-missing-identification/README.md).
+
+
+### Group notification storage failures stop before ACK (2026-11-05)
+
+**Confirmed local defect/fix:** the actor no longer logs a failed group snapshot
+update then emits w:gp2 ACK. Store/transaction errors now surface first; wire
+skip behavior is unchanged. Red/green actor regression proves no ACK after a
+corrupt-snapshot read, unchanged saved bytes and durable capture across reopen.
+No automatic replay/repair or live operation. [Full correction and APK boundary](notification-ack-audit.md#group-notification-storage-failures-stop-before-ack-2026-11-05).

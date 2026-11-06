@@ -940,9 +940,10 @@ pub(crate) async fn drive(
                     Err(error) => return Err(error),
                 }
                 // Captured already; the snapshot follows the change (0yv.A09).
-                if let Err(error) = super::groups::apply_change_notification(&store, &node) {
-                    tracing::warn!(%error, "group change notification not applied to the saved snapshot");
-                }
+                // This helper skips unsupported/malformed wire shapes without error.
+                // Its errors are local store/transaction failures; do not turn
+                // a failed membership update into a successful notification ACK.
+                super::groups::apply_change_notification(&store, &node)?;
                 match super::groups::notification_ack(&node) {
                     Ok(Some(ack)) => link.send(&ack).await?,
                     Ok(None) => {}
@@ -2318,6 +2319,75 @@ mod tests {
             );
         }
         fake.stop_cleanly().await;
+    }
+
+    #[tokio::test]
+    async fn corrupt_group_snapshot_is_not_acknowledged_as_applied() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("corrupt-group-notification.redb");
+        let store = open(&path);
+        let key = super::super::groups::key("123456-789@g.us");
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    key.as_bytes(),
+                    1,
+                    &serde_json::json!({"jid":"123456-789@g.us","members":"corrupt"}),
+                )
+            })
+            .unwrap();
+        let before = store
+            .read(|tx| tx.get(Table::Checkpoints, key.as_bytes(), 1))
+            .unwrap();
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        (&mut fake.ready).await.unwrap();
+        let participants = vec![Node::new("participant").attr("jid", "15551234567@s.whatsapp.net")];
+        let notification = Node::new("notification")
+            .attr("type", "w:gp2")
+            .attr("from", "123456-789@g.us")
+            .attr("id", "GROUP-CHANGE")
+            .children(vec![Node::new("add").children(participants)]);
+        let capture = format!(
+            "inbound:sha256:{}",
+            hex::encode(sha2::Sha256::digest(encode(&notification).unwrap()))
+        );
+        fake.deliver(notification).await;
+        let outbound = tokio::time::timeout(Duration::from_secs(5), fake.from_worker.recv())
+            .await
+            .unwrap();
+        assert!(
+            outbound.is_none(),
+            "stored snapshot failure must not produce a success ACK"
+        );
+        assert!(matches!(fake.finished().await, Err(Error::Storage(_))));
+        assert_eq!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, key.as_bytes(), 1))
+                .unwrap(),
+            before
+        );
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                .unwrap()
+                .is_some()
+        );
+        drop(store);
+        let reopened = open(&path);
+        assert_eq!(
+            reopened
+                .read(|tx| tx.get(Table::Checkpoints, key.as_bytes(), 1))
+                .unwrap(),
+            before
+        );
+        assert!(
+            reopened
+                .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                .unwrap()
+                .is_some()
+        );
     }
 
     #[tokio::test]

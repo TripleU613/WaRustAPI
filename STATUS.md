@@ -1,3 +1,8 @@
+Fixed group notification storage failures being logged then ACKed. The actor
+now surfaces the fault before ACK; regression preserves corrupt snapshot bytes
+and durable capture across reopen. No live validation.
+[Details](docs/protocol/notification-ack-audit.md).
+
 Saved role-ID reference census retained: pairing device-JID value writes,
 zero resets and selected-account readers are distinguished. Existing role/Me
 audits linked; full Rust migration/account authority remains unported.

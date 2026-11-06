@@ -3715,3 +3715,12 @@ Selected107.BLn device-JID getter feeds the saved value/cache;09O.A01 and
 G0j.A02 have zero resets;0Qq.A0a reads selected-account state. Existing role/
 Me-ingress audits qualify the newer mapping's unknowns. Full Rust role migration
 and producer/account binding remain unported. [Writer/reader census and limits](apk/2.26.43.72-notification-handler-census/README.md). No runtime reset, query or live operation.
+
+
+### Group notification storage failures stop before ACK (2026-11-05)
+
+**Confirmed local defect/fix:** the actor no longer logs a failed group snapshot
+update then emits w:gp2 ACK. Store/transaction errors now surface first; wire
+skip behavior is unchanged. Red/green actor regression proves no ACK after a
+corrupt-snapshot read, unchanged saved bytes and durable capture across reopen.
+No automatic replay/repair or live operation. [Full correction and APK boundary](notification-ack-audit.md#group-notification-storage-failures-stop-before-ack-2026-11-05).

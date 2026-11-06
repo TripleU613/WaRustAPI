@@ -17142,5 +17142,12 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-notification-handler-census/README.md",
     "description": "Static APK census of34 physical base-handler constructor bindings; differs from38 type-map entries and is not a parity percentage. Selected server_sync/server collection/bootstrap/configuration obligations remain unported. C6N/2JI selector6 is metrics and counter cleanup, not an ACK gate. Existing lifecycle evidence already proves dirty-version assignment and ordinary ACK-before-async-result ordering; Rust source mapping is documented in docs/protocol/server-sync-rust-state-mapping.md: primary login, held admission, pending exclusion and timed server waits are separate authorities; native bootstrap/recovery/ready-mutation and scheduler ownership remain unimplemented. Selected BU7 body now binds to registration_device_id >0 after initialization; Exact saved-ID string census now distinguishes pairing DeviceJid-derived write, zero resets and selected-account readers; earlier initialization/role audits are linked. Full Rust native-device-ID authority/migration and producer/account binding remain unclosed. No new generic ACK, runtime request, token, command or route. Reproduce with existing xtask apk-callers/apk-smali."
+  },
+  "x-group-notification-storage-failure-before-ack": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Receive dispatch propagates group-change snapshot storage/transaction failures before w:gp2 ACK. Unsupported wire shapes retain existing skip behavior; no new wire guard, replay, repair, query, identity adoption or route. Actor regression fails on prior ACK-after-fault behavior and verifies no outbound ACK, visible storage error, unchanged original snapshot and durable capture across reopen. Local integrity policy, not a claim that Rust serialization faults equal native SQLite exceptions.",
+    "evidence": "docs/protocol/notification-ack-audit.md#group-notification-storage-failures-stop-before-ack-2026-11-05"
   }
 }
