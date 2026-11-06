@@ -1081,3 +1081,14 @@ is a feature-gated status-privacy job, not every IQ. **Unported/unknown:** calle
 callback eligibility, full job-queue/cancellation ordering and durable recovery.
 [Complete callback/budget bodies, caller census and boundaries](apk/2.26.43.72-iq-retry-job-cancellation/README.md).
 No runtime retry, replay, timer, account or persistence policy changed.
+
+### 2026-11-05: status-privacy callback distinguishes root and nested errors
+
+**Confirmed static, APK 2.26.43.72:** original 8RJ17 permits bounded wrapper retry,
+but T56 reads root IQ code/backoff while the original reads nested error code.
+Nested 500 alone reaches original code/future handling and the job's exception;
+404 logs no settings without success adoption. Successful parser requires privacy
+child/type before conditional audience persistence. **Open:** effective flags,
+store transactions, scheduler limits and durable recovery. Rust has no matching
+status-audience fetch/adoption path; no runtime retry or settings change added.
+[Exact callback binding, branch table and limits](apk/2.26.43.72-status-privacy-fetch-callback/README.md).

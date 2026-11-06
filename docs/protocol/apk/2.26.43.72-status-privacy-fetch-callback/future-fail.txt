@@ -1,0 +1,12 @@
+
+# class: LX/6oh;
+# extends: Ljava/lang/Object;
+
+.method public A1L(VLL)  # .registers 3
+    # full signature: LX/6oh;->A1L(Lcom/google/common/util/concurrent/AbstractFuture;Ljava/lang/String;)V
+    0000..0004  new-instance  v0, Ljava/lang/RuntimeException;
+    0004..000a  invoke-direct  {v0, v2}, Ljava/lang/RuntimeException;-><init>(Ljava/lang/String;)V
+    000a..0010  invoke-virtual  {v1, v0}, Lcom/google/common/util/concurrent/AbstractFuture;->setException(Ljava/lang/Throwable;)Z
+    0010..0012  return-void
+    # exception table: 0 try range(s)
+.end method

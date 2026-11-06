@@ -1,0 +1,20 @@
+# Selected ranges, end exclusive, within BsS; other switch branches omitted.
+# Full-class export SHA256: 7c56709f7d0a5230fae159f94509ab59b20f5c2ce1222ff561a3dec8aa57a91c
+
+# Range 0000..000a
+    0000..0004  iget  v0, v4, LX/8RJ;->$t:I
+    0004..000a  packed-switch  v0, payload@0x228, cases=[1:@0x3e, 2:@0x6a, 3:@0x86, 4:@0xa2, 5:@0xa, 6:@0xae, 7:@0xc4, 8:@0xca, 9:@0xf0, 10:@0xc, 11:@0xfe, 12:@0x112, 13:@0x136, 14:@0x15a, 15:@0x184, 16:@0x196, 17:@0x1d2, 18:@0x1f6], default@0xa
+
+# Range 01d2..01f6
+    01d2..01d4  const/4  v0, #0x0
+    01d4..01da  invoke-static  {v5, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    01da..01de  iget-object  v1, v4, LX/8RJ;->A00:Ljava/lang/Object;
+    01de..01e2  check-cast  v1, Lcom/google/common/util/concurrent/AbstractFuture;
+    01e2..01e6  const-string  v0, "Failed deliver: iq="
+    01e6..01ec  invoke-static  {v0, v5}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    01ec..01ee  move-result-object  v0
+    01ee..01f4  invoke-static  {v1, v0}, LX/6oh;->A1L(Lcom/google/common/util/concurrent/AbstractFuture;Ljava/lang/String;)V
+    01f4..01f6  return-void
+
+# Original full-method exception metadata (code units):
+    # exception table: 0 try range(s)

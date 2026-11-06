@@ -1,0 +1,12 @@
+# Full-class export SHA256: 7c56709f7d0a5230fae159f94509ab59b20f5c2ce1222ff561a3dec8aa57a91c
+
+
+.method public <init>(VLLI)  # .registers 4
+    # full signature: LX/8RJ;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V
+    0000..0004  iput  v3, v0, LX/8RJ;->$t:I
+    0004..0008  iput-object  v2, v0, LX/8RJ;->A00:Ljava/lang/Object;
+    0008..000c  iput-object  v1, v0, LX/8RJ;->A01:Ljava/lang/Object;
+    000c..0012  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0012..0014  return-void
+    # exception table: 0 try range(s)
+.end method

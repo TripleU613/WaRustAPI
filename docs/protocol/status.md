@@ -585,6 +585,16 @@ confirmed for the `readreceipts` category, with property 23639 choosing MEX vs
 SMAX; see [read-setting-sync](read-setting-sync.md). The status-privacy setter
 callers remain untraced, so this client still sends no privacy request.)
 
+### Pinned 43.72 fetch follow-up (2026-11-05)
+
+**Confirmed static:** GetStatusPrivacyJob builds `iq type=get xmlns=status` with
+`privacy` child. This establishes a distinct native fetch, not a classic
+`xmlns=privacy` setter. Its callback requires the privacy child on success;
+404 logs absent settings without invoking successful settings adoption. The
+bounded wrapper reads root IQ code/backoff, while the original callback reads
+nested error code. Rust does not implement this fetch/adoption path.
+[Source, error table and remaining setter/persistence limits](apk/2.26.43.72-status-privacy-fetch-callback/README.md).
+
 ## Likes: status reactions (implemented on receive)
 
 A status like is an ordinary `Message.reactionMessage` (field 46) whose key

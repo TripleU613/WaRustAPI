@@ -16941,5 +16941,12 @@
     "x-live": false,
     "description": "Static APK43.72 disconnect cancellation map owns delayed retriable-IQ jobs. T56 requires shared budget/remaining window and original CmQ eligibility; selected errors additionally require allowed 500..599 code. Cancellation forwards original delivery failure. Status-privacy caller literals are scoped; no generic retry or uncertain-write replay is implemented.",
     "evidence": "docs/protocol/apk/2.26.43.72-iq-retry-job-cancellation/README.md"
+  },
+  "x-status-privacy-fetch-callback-research": {
+    "x-cli": false,
+    "x-transport": "experimental",
+    "x-live": false,
+    "description": "Static APK43.72 status privacy fetch callback: original CmQ permits bounded retry, wrapper reads root IQ code/backoff while original callback reads nested error code. 404 does not run success adoption; required privacy child/type precedes conditional settings writes. Job exception hook returns true, scheduler limits unknown. Rust fetch/adoption unimplemented; no runtime policy change.",
+    "evidence": "docs/protocol/apk/2.26.43.72-status-privacy-fetch-callback/README.md"
   }
 }

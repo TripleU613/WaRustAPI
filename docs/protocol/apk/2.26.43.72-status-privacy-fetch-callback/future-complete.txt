@@ -1,0 +1,12 @@
+
+# class: LX/6oh;
+# extends: Ljava/lang/Object;
+
+.method public A1R(VL)  # .registers 2
+    # full signature: LX/6oh;->A1R(Ljava/lang/Object;)V
+    0000..0004  check-cast  v1, Lcom/google/common/util/concurrent/AbstractFuture;
+    0004..0006  const/4  v0, #0x0
+    0006..000c  invoke-virtual  {v1, v0}, Lcom/google/common/util/concurrent/AbstractFuture;->set(Ljava/lang/Object;)Z
+    000c..000e  return-void
+    # exception table: 0 try range(s)
+.end method

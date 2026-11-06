@@ -1,3 +1,14 @@
+2026-11-05 — **Status-privacy retry eligibility and error nesting traced.**
+
+The wrapper's root IQ code/backoff lookup differs from its original callback's
+nested error parser. A 404 does not adopt a fallback audience; success requires
+privacy child/type before conditional persistence. Rust fetch/adoption is absent.
+[Evidence, branch table and unported boundaries](docs/protocol/apk/2.26.43.72-status-privacy-fetch-callback/README.md).
+Research only; no runtime or live-account operation changed.
+Validation: pinned APK identity, fmt, strict Clippy, CLI/OpenAPI, coverage and
+staged checksum/link hygiene passed. No new full workspace run; shared Rust
+remains unchanged from the preceding 1374-test validated commit.
+
 2026-11-05 — **Disconnect cancellation-map owner and bounded IQ retry path traced.**
 
 The adjacent map holds delayed retriable-IQ jobs, not queued callback ownership.

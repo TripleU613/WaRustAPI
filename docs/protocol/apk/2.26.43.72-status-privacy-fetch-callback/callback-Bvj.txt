@@ -1,0 +1,42 @@
+# Selected ranges, end exclusive, within Bvj; other switch branches omitted.
+# Full-class export SHA256: 7c56709f7d0a5230fae159f94509ab59b20f5c2ce1222ff561a3dec8aa57a91c
+
+# Range 0000..000a
+    0000..0004  iget  v0, v8, LX/8RJ;->$t:I
+    0004..000a  packed-switch  v0, payload@0x4f8, cases=[0:@0x22, 1:@0x128, 2:@0x272, 3:@0x29c, 4:@0x2c6, 5:@0xa, 6:@0x2d2, 7:@0xa, 8:@0xa, 9:@0x318, 10:@0x330, 11:@0x348, 12:@0x360, 13:@0x378, 14:@0x390, 15:@0x3a8, 16:@0x3ba, 17:@0x470, 18:@0x4d6], default@0xa
+
+# Range 0470..04d6
+    0470..0476  invoke-static  {v9}, LX/6oj;->A05(LX/0Tp;)I
+    0476..0478  move-result  v4
+    0478..047c  iget-object  v3, v8, LX/8RJ;->A01:Ljava/lang/Object;
+    047c..0480  check-cast  v3, LX/7pl;
+    0480..0484  iget-object  v0, v3, LX/7pl;->A00:Lcom/whatsapp/status/privacy/jobqueue/job/GetStatusPrivacyJob;
+    0484..0488  iget-wide  v1, v0, Lorg/whispersystems/jobqueue/Job;->A01:J
+    0488..048c  const-string  v0, "; persistentId="
+    048c..0492  invoke-static  {v1, v2, v0}, LX/2LA;->A0o(JLjava/lang/String;)Ljava/lang/String;
+    0492..0494  move-result-object  v1
+    0494..0498  const/16  v0, #0x194
+    0498..049c  if-eq  v4, v0, +0x19
+    049c..04a0  const-string  v0, "error in response while running get status privacy job"
+    04a0..04a6  invoke-static  {v0, v1}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    04a6..04a8  move-result-object  v1
+    04a8..04ac  const-string  v0, " ; code="
+    04ac..04b2  invoke-static  {v0, v1, v4}, LX/1Xl;->A11(Ljava/lang/String;Ljava/lang/StringBuilder;I)Ljava/lang/String;
+    04b2..04b4  move-result-object  v0
+    04b4..04ba  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    04ba..04be  iget-object  v0, v3, LX/7pl;->A01:Ljava/util/concurrent/atomic/AtomicInteger;
+    04be..04c4  invoke-virtual  {v0, v4}, Ljava/util/concurrent/atomic/AtomicInteger;->set(I)V
+    04c4..04c8  iget-object  v0, v8, LX/8RJ;->A00:Ljava/lang/Object;
+    04c8..04ca  goto  +0x13
+    04ca..04ce  const-string  v0, "get status privacy job response is 'no settings found on server'"
+    04ce..04d4  invoke-static  {v0, v1}, LX/2LA;->A1N(Ljava/lang/String;Ljava/lang/String;)V
+    04d4..04d6  goto  -0xd
+
+# Range 04ee..04f4
+    04ee..04f4  invoke-static  {v0}, LX/6oh;->A1R(Ljava/lang/Object;)V
+
+# Original full-method exception metadata (code units):
+    # exception table: 3 try range(s)
+    # catch LX/LIL; code_units 0017..008f -> 008f
+    # catch Ljava/lang/Exception; code_units 009b..009d -> 0127
+    # catch Ljava/lang/Exception; code_units 009f..0127 -> 0127

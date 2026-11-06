@@ -1,0 +1,18 @@
+
+# class: LX/1ud;
+# extends: Ljava/lang/Object;
+
+.method public A00(IL)  # .registers 1
+    # full signature: LX/1ud;->A00(LX/0Tp;)I
+    0000..0006  invoke-static  {v0}, LX/1ud;->A01(LX/0Tp;)Landroid/util/Pair;
+    0006..0008  move-result-object  v0
+    0008..000c  if-eqz  v0, +0xb
+    000c..0010  iget-object  v0, v0, Landroid/util/Pair;->first:Ljava/lang/Object;
+    0010..0014  check-cast  v0, Ljava/lang/Number;
+    0014..001a  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    001a..001c  move-result  v0
+    001c..001e  return  v0
+    001e..0020  const/4  v0, #0x0
+    0020..0022  return  v0
+    # exception table: 0 try range(s)
+.end method

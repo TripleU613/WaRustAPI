@@ -1,0 +1,290 @@
+# Selected ranges, end exclusive, within CK4; other switch branches omitted.
+# Full-class export SHA256: 7c56709f7d0a5230fae159f94509ab59b20f5c2ce1222ff561a3dec8aa57a91c
+
+# Range 0000..0016
+    0000..0004  move-object/from16  v0, v25
+    0004..0008  iget  v1, v0, LX/8RJ;->$t:I
+    0008..000c  move-object/from16  v13, v26
+    000c..0010  move-object/from16  v6, v27
+    0010..0016  packed-switch  v1, payload@0x10b0, cases=[0:@0xf62, 1:@0xd06, 2:@0xb96, 3:@0xa28, 4:@0x97a, 5:@0x85c, 6:@0x86c, 7:@0x768, 8:@0x6a0, 9:@0x688, 10:@0x670, 11:@0x658, 12:@0x640, 13:@0x628, 14:@0x610, 15:@0x46a, 16:@0x452, 17:@0x36], default@0x16
+
+# Range 0036..0452
+    0036..0038  const/4  v5, #0x0
+    0038..003e  invoke-static  {v6, v13, v5}, LX/1Xl;->A1Y(Ljava/lang/Object;Ljava/lang/Object;I)Z
+    003e..0040  move-result  v4
+    0040..0046  invoke-static  {}, LX/1Xl;->A18()Ljava/util/ArrayList;
+    0046..0048  move-result-object  v7
+    0048..004e  invoke-static  {}, LX/2L6;->A1G()Ljava/util/LinkedHashSet;
+    004e..0050  move-result-object  v3
+    0050..0054  const-string  v1, "privacy"
+    0054..005a  invoke-virtual  {v13, v1}, LX/0Tp;->A0G(Ljava/lang/String;)LX/0Tp;
+    005a..005c  move-result-object  v2
+    005c..0060  const-string  v1, "list"
+    0060..0066  invoke-static  {v2, v1}, LX/6ok;->A0f(LX/0Tp;Ljava/lang/String;)Ljava/util/Iterator;
+    0066..0068  move-result-object  v14
+    0068..006a  const/4  v6, #0x0
+    006a..006c  move-object  v2, v6
+    006c..006e  move-object  v1, v6
+    006e..0074  invoke-interface  {v14}, Ljava/util/Iterator;->hasNext()Z
+    0074..0076  move-result  v8
+    0076..007a  if-eqz  v8, +0xc9
+    007a..0080  invoke-static  {v14}, LX/6oe;->A0q(Ljava/util/Iterator;)LX/0Tp;
+    0080..0082  move-result-object  v11
+    0082..0086  const-string  v8, "user"
+    0086..008c  invoke-virtual  {v11, v8}, LX/0Tp;->A0N(Ljava/lang/String;)Ljava/util/List;
+    008c..008e  move-result-object  v8
+    008e..0094  invoke-static  {v8}, LX/2LC;->A14(Ljava/lang/Object;)Ljava/util/ArrayList;
+    0094..0096  move-result-object  v9
+    0096..009c  invoke-interface  {v8}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    009c..009e  move-result-object  v13
+    009e..00a4  invoke-interface  {v13}, Ljava/util/Iterator;->hasNext()Z
+    00a4..00a6  move-result  v8
+    00a6..00aa  if-eqz  v8, +0x14
+    00aa..00b0  invoke-static  {v13}, LX/6oe;->A0q(Ljava/util/Iterator;)LX/0Tp;
+    00b0..00b2  move-result-object  v12
+    00b2..00b6  const-class  v10, LX/0DY;
+    00b6..00ba  const-string  v8, "jid"
+    00ba..00c0  invoke-virtual  {v12, v10, v8}, LX/0Tp;->A0A(Ljava/lang/Class;Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    00c0..00c2  move-result-object  v8
+    00c2..00c6  if-eqz  v8, -0x12
+    00c6..00cc  invoke-virtual  {v9, v8}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    00cc..00ce  goto  -0x17
+    00ce..00d2  const-string  v8, "type"
+    00d2..00d8  invoke-virtual  {v11, v8, v6}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    00d8..00da  move-result-object  v12
+    00da..00de  const-string  v8, "default"
+    00de..00e4  invoke-virtual  {v11, v8, v6}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    00e4..00e6  move-result-object  v8
+    00e6..00ea  const-string  v10, "true"
+    00ea..00f0  invoke-virtual  {v10, v8}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    00f0..00f2  move-result  v22
+    00f2..00f6  if-eqz  v12, +0x84
+    00f6..00fc  invoke-virtual  {v12}, Ljava/lang/String;->hashCode()I
+    00fc..00fe  move-result  v8
+    00fe..0104  sparse-switch  v8, payload@0x1100, cases=[-1653850041:@0x1da, -1580983409:@0x142, -567451565:@0x126, 1333012765:@0x106], default@0x104
+    0104..0106  goto  -0x4b
+    0106..010a  const-string  v8, "blacklist"
+    010a..0110  invoke-virtual  {v12, v8}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0110..0112  move-result  v8
+    0112..0116  if-eqz  v8, -0x52
+    0116..011a  if-eqz  v22, +0x6
+    011a..011c  const/4  v1, #0x2
+    011c..0122  invoke-static  {v3, v1}, LX/2L8;->A1Z(Ljava/util/AbstractCollection;I)V
+    0122..0124  move-object  v1, v9
+    0124..0126  goto  -0x5b
+    0126..012a  const-string  v8, "contacts"
+    012a..0130  invoke-virtual  {v12, v8}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0130..0132  move-result  v8
+    0132..0136  if-eqz  v8, -0x62
+    0136..013a  if-eqz  v22, -0x64
+    013a..0140  invoke-static  {v3, v5}, LX/2L8;->A1Z(Ljava/util/AbstractCollection;I)V
+    0140..0142  goto  -0x69
+    0142..0146  const-string  v8, "customlist"
+    0146..014c  invoke-virtual  {v12, v8}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    014c..014e  move-result  v8
+    014e..0152  if-eqz  v8, -0x70
+    0152..0156  const-string  v8, "id"
+    0156..015c  invoke-virtual  {v11, v8, v6}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    015c..015e  move-result-object  v16
+    015e..0162  if-nez  v16, +0x4
+    0162..0166  const-string  v16, ""
+    0166..016a  const-string  v8, "listname"
+    016a..0170  invoke-virtual  {v11, v8, v6}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0170..0172  move-result-object  v17
+    0172..0176  const-string  v8, "emoji"
+    0176..017c  invoke-virtual  {v11, v8, v6}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    017c..017e  move-result-object  v18
+    017e..0182  const-string  v8, "deleted"
+    0182..0188  invoke-virtual  {v11, v8, v6}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0188..018a  move-result-object  v8
+    018a..0190  invoke-static  {v8, v10}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    0190..0192  move-result  v23
+    0192..0196  const-string  v10, ","
+    0196..019a  const/16  v8, #0x1f
+    019a..01a0  invoke-static  {v10, v9, v8}, LX/8db;->A01(Ljava/lang/CharSequence;Ljava/lang/Iterable;I)Ljava/lang/String;
+    01a0..01a2  move-result-object  v19
+    01a2..01a8  invoke-virtual/range  {v19..v19}, Ljava/lang/String;->length()I
+    01a8..01aa  move-result  v8
+    01aa..01ae  if-nez  v8, +0x4
+    01ae..01b2  move-object/from16  v19, v6
+    01b2..01b6  const-wide/16  v20, #0x0
+    01b6..01ba  new-instance  v15, LX/8DN;
+    01ba..01be  move/from16  v24, v5
+    01be..01c4  invoke-direct/range  {v15..v24}, LX/8DN;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JZZZ)V
+    01c4..01ca  invoke-virtual  {v7, v15}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    01ca..01ce  if-eqz  v22, -0xae
+    01ce..01d0  const/4  v8, #0x4
+    01d0..01d6  invoke-static  {v3, v8}, LX/2L8;->A1Z(Ljava/util/AbstractCollection;I)V
+    01d6..01da  goto/16  -0xb4
+    01da..01de  const-string  v8, "whitelist"
+    01de..01e4  invoke-virtual  {v12, v8}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    01e4..01e6  move-result  v8
+    01e6..01ea  if-eqz  v8, -0xbc
+    01ea..01ee  if-eqz  v22, +0x5
+    01ee..01f4  invoke-static  {v3, v4}, LX/2L8;->A1Z(Ljava/util/AbstractCollection;I)V
+    01f4..01f6  move-object  v2, v9
+    01f6..01fa  goto/16  -0xc4
+    01fa..01fe  const-string  v0, "status list type is null"
+    01fe..0204  invoke-static  {v0}, LX/6oe;->A0r(Ljava/lang/String;)LX/LIL;
+    0204..0206  move-result-object  v0
+    0206..0208  throw  v0
+    0208..020e  invoke-virtual  {v3}, Ljava/util/AbstractCollection;->isEmpty()Z
+    020e..0210  move-result  v8
+    0210..0214  if-eqz  v8, +0xa
+    0214..021a  invoke-static  {v5}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    021a..021c  move-result-object  v3
+    021c..0222  invoke-static  {v3, v4}, LX/6oh;->A1D(Ljava/lang/Object;I)Ljava/util/LinkedHashSet;
+    0222..0224  move-result-object  v3
+    0224..0228  iget-object  v11, v0, LX/8RJ;->A01:Ljava/lang/Object;
+    0228..022c  check-cast  v11, LX/7pl;
+    022c..0230  const-string  v9, ","
+    0230..0234  const-string  v12, "null"
+    0234..0238  if-eqz  v2, +0x8
+    0238..023e  invoke-static  {v9, v2, v6}, LX/2LB;->A17(Ljava/lang/CharSequence;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
+    023e..0240  move-result-object  v10
+    0240..0244  if-nez  v10, +0x3
+    0244..0246  move-object  v10, v12
+    0246..024a  if-eqz  v1, +0x9
+    024a..0250  invoke-static  {v9, v1, v6}, LX/2LB;->A17(Ljava/lang/CharSequence;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
+    0250..0252  move-result-object  v4
+    0252..0256  if-eqz  v4, +0x3
+    0256..0258  move-object  v12, v4
+    0258..025e  invoke-virtual  {v7}, Ljava/util/AbstractCollection;->size()I
+    025e..0260  move-result  v8
+    0260..0264  const-string  v4, "get status privacy job response distributionModes="
+    0264..026a  invoke-static  {v3, v4}, LX/1Xl;->A15(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    026a..026c  move-result-object  v5
+    026c..0270  const-string  v4, "; allowList="
+    0270..0276  invoke-virtual  {v5, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0276..027c  invoke-virtual  {v5, v10}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    027c..0280  const-string  v4, "; denyList="
+    0280..0286  invoke-virtual  {v5, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0286..028c  invoke-virtual  {v5, v12}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    028c..0290  const-string  v4, "; customListsCount="
+    0290..0296  invoke-static  {v4, v5, v8}, LX/1Xl;->A1U(Ljava/lang/String;Ljava/lang/StringBuilder;I)V
+    0296..029a  iget-object  v5, v11, LX/7pl;->A00:Lcom/whatsapp/status/privacy/jobqueue/job/GetStatusPrivacyJob;
+    029a..029e  iget-object  v4, v5, Lcom/whatsapp/status/privacy/jobqueue/job/GetStatusPrivacyJob;->A00:LX/0bd;
+    029e..02a2  if-eqz  v4, +0xd2
+    02a2..02a8  invoke-virtual  {v4}, LX/0bd;->A0Q()Z
+    02a8..02aa  move-result  v4
+    02aa..02ae  if-nez  v4, +0xcc
+    02ae..02b2  const-string  v4, "save status privacy"
+    02b2..02b8  invoke-static  {v4}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    02b8..02bc  iget-object  v5, v5, Lcom/whatsapp/status/privacy/jobqueue/job/GetStatusPrivacyJob;->A00:LX/0bd;
+    02bc..02c0  if-eqz  v5, +0xc3
+    02c0..02c6  invoke-static  {v3}, LX/07Z;->A0n(Ljava/lang/Iterable;)Ljava/lang/Object;
+    02c6..02c8  move-result-object  v4
+    02c8..02cc  check-cast  v4, Ljava/lang/Number;
+    02cc..02d2  invoke-static  {v4}, LX/3q5;->A0J(Ljava/lang/Number;)I
+    02d2..02d4  move-result  v4
+    02d4..02da  invoke-virtual  {v5, v4}, LX/0bd;->A0K(I)V
+    02da..02e0  invoke-static  {v5}, LX/0bd;->A00(LX/0bd;)LX/0c7;
+    02e0..02e2  move-result-object  v4
+    02e2..02e8  invoke-virtual  {v4}, LX/0c7;->A0G()Z
+    02e8..02ea  move-result  v4
+    02ea..02ee  if-eqz  v4, +0xd
+    02ee..02f2  iget-object  v8, v5, LX/0bd;->A0C:LX/0Zs;
+    02f2..02f8  invoke-static  {v9, v3, v6}, LX/2LB;->A17(Ljava/lang/CharSequence;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
+    02f8..02fa  move-result-object  v4
+    02fa..02fe  const-string  v3, "status_distribution_modes"
+    02fe..0304  invoke-virtual  {v8, v3, v4}, LX/0Zs;->A07(Ljava/lang/String;Ljava/lang/String;)V
+    0304..0308  iget-object  v3, v5, LX/0bd;->A04:LX/05a;
+    0308..030c  iget-object  v4, v3, LX/05a;->A00:LX/00x;
+    030c..0312  invoke-interface  {v4}, LX/00x;->get()Ljava/lang/Object;
+    0312..0314  move-result-object  v3
+    0314..0318  check-cast  v3, LX/EoC;
+    0318..031e  invoke-virtual  {v3, v1}, LX/EoC;->A02(Ljava/util/Collection;)Ljava/util/LinkedHashSet;
+    031e..0320  move-result-object  v8
+    0320..0326  invoke-interface  {v4}, LX/00x;->get()Ljava/lang/Object;
+    0326..0328  move-result-object  v1
+    0328..032c  check-cast  v1, LX/EoC;
+    032c..0332  invoke-virtual  {v1, v2}, LX/EoC;->A02(Ljava/util/Collection;)Ljava/util/LinkedHashSet;
+    0332..0334  move-result-object  v4
+    0334..0338  const-string  v3, ""
+    0338..033c  if-nez  v8, +0x49
+    033c..033e  move-object  v2, v3
+    033e..0342  const-string  v1, "status_black_list"
+    0342..0348  invoke-static  {v5, v1, v2}, LX/0bd;->A02(LX/0bd;Ljava/lang/String;Ljava/lang/String;)V
+    0348..034c  if-eqz  v4, +0xd
+    034c..0352  invoke-static  {v4}, LX/0Dn;->A0q(Ljava/util/Collection;)[Ljava/lang/String;
+    0352..0354  move-result-object  v1
+    0354..035a  invoke-static  {v1}, LX/00l;->A05(Ljava/lang/Object;)V
+    035a..0360  invoke-static  {v9, v3, v3, v6, v1}, LX/08w;->A0L(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Lkotlin/jvm/functions/Function1;[Ljava/lang/Object;)Ljava/lang/String;
+    0360..0362  move-result-object  v3
+    0362..0366  const-string  v1, "status_white_list"
+    0366..036c  invoke-static  {v5, v1, v3}, LX/0bd;->A02(LX/0bd;Ljava/lang/String;Ljava/lang/String;)V
+    036c..0372  invoke-virtual  {v7}, Ljava/util/AbstractCollection;->isEmpty()Z
+    0372..0374  move-result  v1
+    0374..0378  if-nez  v1, +0x67
+    0378..037e  invoke-static  {v5}, LX/0bd;->A00(LX/0bd;)LX/0c7;
+    037e..0380  move-result-object  v1
+    0380..0386  invoke-virtual  {v1}, LX/0c7;->A0I()Z
+    0386..0388  move-result  v1
+    0388..038c  if-eqz  v1, +0x5d
+    038c..0392  invoke-static  {}, LX/1Xl;->A18()Ljava/util/ArrayList;
+    0392..0394  move-result-object  v9
+    0394..039a  invoke-static  {}, LX/1Xl;->A18()Ljava/util/ArrayList;
+    039a..039c  move-result-object  v8
+    039c..03a2  invoke-virtual  {v7}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+    03a2..03a4  move-result-object  v3
+    03a4..03aa  invoke-interface  {v3}, Ljava/util/Iterator;->hasNext()Z
+    03aa..03ac  move-result  v1
+    03ac..03b0  if-eqz  v1, +0x1b
+    03b0..03b6  invoke-interface  {v3}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    03b6..03b8  move-result-object  v2
+    03b8..03ba  move-object  v1, v2
+    03ba..03be  check-cast  v1, LX/8DN;
+    03be..03c2  iget-boolean  v1, v1, LX/8DN;->A07:Z
+    03c2..03c8  invoke-static  {v2, v9, v8, v1}, LX/6oi;->A1R(Ljava/lang/Object;Ljava/util/AbstractCollection;Ljava/util/AbstractCollection;I)V
+    03c8..03ca  goto  -0x12
+    03ca..03d0  invoke-static  {v8}, LX/0Dn;->A0q(Ljava/util/Collection;)[Ljava/lang/String;
+    03d0..03d2  move-result-object  v1
+    03d2..03d8  invoke-static  {v1}, LX/00l;->A05(Ljava/lang/Object;)V
+    03d8..03de  invoke-static  {v9, v3, v3, v6, v1}, LX/08w;->A0L(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Lkotlin/jvm/functions/Function1;[Ljava/lang/Object;)Ljava/lang/String;
+    03de..03e0  move-result-object  v2
+    03e0..03e2  goto  -0x51
+    03e2..03e8  invoke-interface  {v9}, Ljava/util/List;->isEmpty()Z
+    03e8..03ea  move-result  v1
+    03ea..03ee  if-nez  v1, +0x1d
+    03ee..03f2  iget-object  v1, v5, LX/0bd;->A05:LX/05a;
+    03f2..03f8  invoke-static  {v1}, LX/6oh;->A0l(LX/05a;)LX/8UH;
+    03f8..03fa  move-result-object  v4
+    03fa..0400  invoke-static  {v9}, LX/1Xl;->A19(Ljava/lang/Iterable;)Ljava/util/ArrayList;
+    0400..0402  move-result-object  v3
+    0402..0408  invoke-interface  {v9}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0408..040a  move-result-object  v2
+    040a..0410  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    0410..0412  move-result  v1
+    0412..0416  if-eqz  v1, +0x6
+    0416..041c  invoke-static  {v3, v2}, LX/6ok;->A1D(Ljava/util/AbstractCollection;Ljava/util/Iterator;)V
+    041c..041e  goto  -0x9
+    041e..0424  invoke-virtual  {v4, v3}, LX/8UH;->A0C(Ljava/util/List;)V
+    0424..042a  invoke-interface  {v8}, Ljava/util/List;->isEmpty()Z
+    042a..042c  move-result  v1
+    042c..0430  if-nez  v1, +0xb
+    0430..0434  iget-object  v1, v5, LX/0bd;->A05:LX/05a;
+    0434..043a  invoke-static  {v1}, LX/6oh;->A0l(LX/05a;)LX/8UH;
+    043a..043c  move-result-object  v1
+    043c..0442  invoke-virtual  {v1, v8}, LX/8UH;->A0D(Ljava/util/List;)V
+    0442..0446  iget-object  v0, v0, LX/8RJ;->A00:Ljava/lang/Object;
+    0446..044a  check-cast  v0, Lcom/google/common/util/concurrent/AbstractFuture;
+    044a..0450  invoke-virtual  {v0, v6}, Lcom/google/common/util/concurrent/AbstractFuture;->set(Ljava/lang/Object;)Z
+    0450..0452  return-void
+
+# Original full-method exception metadata (code units):
+    # exception table: 12 try range(s)
+    # catch LX/LIL; code_units 051e..0520 -> 05b3
+    # catch LX/LIL; code_units 0523..057f -> 05b3
+    # catch LX/LIL; code_units 0583..05b3 -> 05b3
+    # catch LX/LIL; code_units 05d7..0645 -> 066b
+    # catch LX/LIL; code_units 064c..066b -> 066b
+    # catch Ljava/lang/Exception; code_units 068f..0691 -> 07a4
+    # catch Ljava/lang/Exception; code_units 0694..06fe -> 07a4
+    # catch Ljava/net/MalformedURLException; code_units 06fe..0707 -> 079d
+    # catch Ljava/lang/Exception; code_units 06fe..0707 -> 07a4
+    # catch Ljava/lang/Exception; code_units 0707..073b -> 07a4
+    # catch Ljava/lang/NumberFormatException; code_units 073b..0744 -> 0762
+    # catch Ljava/lang/Exception; code_units 073b..0744 -> 07a4
+    # catch Ljava/lang/NumberFormatException; code_units 074a..0756 -> 0762
+    # catch Ljava/lang/Exception; code_units 074a..0756 -> 07a4
+    # catch Ljava/lang/Exception; code_units 0756..07a4 -> 07a4
