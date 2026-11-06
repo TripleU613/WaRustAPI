@@ -370,6 +370,7 @@ mod tests {
         CancelRead,
         PartialWrite,
         StreamEnd,
+        EmptyRecord { direct: bool, timeout: bool },
         InvalidFrame { fragmented: bool, direct: bool },
     }
 
@@ -468,7 +469,19 @@ mod tests {
             let incoming = reader.read_frame(&mut server).await.unwrap().unwrap();
             let plain = transport.decrypt(&incoming).unwrap();
             assert_eq!(plain.as_slice(), b"local record fixture");
+            if matches!(record_case, RecordCase::EmptyRecord { .. }) {
+                let empty = transport.encrypt(&[]).unwrap();
+                server
+                    .write_all(&codec.encode(&empty, None).unwrap())
+                    .await
+                    .unwrap();
+            }
+            if matches!(record_case, RecordCase::EmptyRecord { timeout: true, .. }) {
+                assert!(reader.read_frame(&mut server).await.unwrap().is_none());
+                return;
+            }
             let reply: &[u8] = match record_case {
+                RecordCase::EmptyRecord { .. } => &[0, 0xF8, 1, 25],
                 RecordCase::StreamEnd => &[0, 0xF8, 1, 2],
                 RecordCase::InvalidFrame {
                     fragmented: true, ..
@@ -520,6 +533,53 @@ mod tests {
                     writer.write(b"closed").await,
                     Err(TransportError::Closed)
                 ));
+            } else if let RecordCase::EmptyRecord {
+                timeout: true,
+                direct,
+            } = record_case
+            {
+                channel.write(b"local record fixture").await.unwrap();
+                let deadline = std::time::Duration::from_millis(10);
+                if direct {
+                    assert!(
+                        tokio::time::timeout(
+                            deadline,
+                            super::super::messaging::read_node(&mut channel)
+                        )
+                        .await
+                        .is_err()
+                    );
+                } else {
+                    assert!(
+                        tokio::time::timeout(
+                            deadline,
+                            super::super::messaging::read_frame(&mut channel)
+                        )
+                        .await
+                        .is_err()
+                    );
+                }
+                assert!(matches!(
+                    channel.write(b"after cancellation").await,
+                    Err(TransportError::Closed)
+                ));
+            } else if let RecordCase::EmptyRecord { direct, .. } = record_case {
+                channel.write(b"local record fixture").await.unwrap();
+                let node = if direct {
+                    super::super::messaging::read_node(&mut channel)
+                        .await
+                        .unwrap()
+                } else {
+                    match super::super::messaging::read_frame(&mut channel)
+                        .await
+                        .unwrap()
+                    {
+                        super::super::messaging::FrameRead::Node(node) => node,
+                        other => panic!("empty record must not become a diagnostic: {other:?}"),
+                    }
+                };
+                assert_eq!(node.description, "iq");
+                assert!(channel.read().await.unwrap().is_none());
             } else if let RecordCase::InvalidFrame { direct, .. } = record_case {
                 channel.write(b"local record fixture").await.unwrap();
                 if direct {
@@ -635,6 +695,36 @@ mod tests {
             }
         }
         peer.await.unwrap();
+    }
+
+    #[tokio::test]
+    async fn encrypted_empty_record_is_skipped_by_both_receive_apis() {
+        for direct in [false, true] {
+            exchange(
+                false,
+                false,
+                RecordCase::EmptyRecord {
+                    direct,
+                    timeout: false,
+                },
+            )
+            .await;
+        }
+    }
+
+    #[tokio::test]
+    async fn empty_records_do_not_complete_or_restart_bounded_reads() {
+        for direct in [false, true] {
+            exchange(
+                false,
+                false,
+                RecordCase::EmptyRecord {
+                    direct,
+                    timeout: true,
+                },
+            )
+            .await;
+        }
     }
 
     #[tokio::test]

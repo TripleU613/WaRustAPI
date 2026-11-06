@@ -440,14 +440,29 @@ pub fn new_message_id() -> crate::Result<String> {
     Ok(hex::encode_upper(bytes))
 }
 
+// APK 2.26.43.72 123.A08 loops after authenticated zero-length plaintext.
+// Keep this inside the caller's existing timeout; no record restarts a deadline.
+async fn read_nonempty_record<S: AsyncRead + AsyncWrite + Unpin>(
+    channel: &mut EncryptedConnection<S>,
+) -> Result<zeroize::Zeroizing<Vec<u8>>, TransportError> {
+    loop {
+        let frame = channel
+            .read()
+            .await?
+            .ok_or_else(|| error("EOF awaiting stanza"))?;
+        if !frame.is_empty() {
+            return Ok(frame);
+        }
+        // Buffered empty records must still allow cancellation and deadline polling.
+        tokio::task::yield_now().await;
+    }
+}
+
 /// Read one bounded encrypted binary stanza with the comparison dictionary.
 pub async fn read_node<S: AsyncRead + AsyncWrite + Unpin>(
     channel: &mut EncryptedConnection<S>,
 ) -> Result<Node, TransportError> {
-    let frame = channel
-        .read()
-        .await?
-        .ok_or_else(|| error("EOF awaiting stanza"))?;
+    let frame = read_nonempty_record(channel).await?;
     let limits = Limits::default();
     let data = unpack_frame_payload(&frame, &limits).map_err(|codec| {
         if let Some(terminal) = terminal_frame_error(codec.class()) {
@@ -519,10 +534,7 @@ impl std::fmt::Debug for FrameRead {
 pub async fn read_frame<S: AsyncRead + AsyncWrite + Unpin>(
     channel: &mut EncryptedConnection<S>,
 ) -> Result<FrameRead, TransportError> {
-    let frame = channel
-        .read()
-        .await?
-        .ok_or_else(|| error("EOF awaiting stanza"))?;
+    let frame = read_nonempty_record(channel).await?;
     Ok(match super::inbox::decode_frame(&frame) {
         Ok(node) => FrameRead::Node(node),
         Err(codec) => {

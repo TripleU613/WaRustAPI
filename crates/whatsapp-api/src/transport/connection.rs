@@ -525,6 +525,12 @@ fn link_from(
     let reader_task = tokio::spawn(async move {
         loop {
             let mut next = match reader.read().await {
+                // APK 2.26.43.72 123.A08 skips authenticated empty plaintext;
+                // it has no stanza to capture, route or acknowledge.
+                Ok(Some(bytes)) if bytes.is_empty() => {
+                    tokio::task::yield_now().await;
+                    continue;
+                }
                 Ok(Some(bytes)) => Ok(inbound_from_frame(&bytes)),
                 // Classified as recoverable: the actor may reconnect within its bounds.
                 Ok(None) => Err(Error::Transport(super::TransportError::PeerClosed)),

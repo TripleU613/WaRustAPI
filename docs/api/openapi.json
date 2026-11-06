@@ -18338,7 +18338,18 @@
       "whatsapp_api::transport::messaging::read_node",
       "whatsapp_api::transport::messaging::read_frame"
     ],
-    "description": "Pinned123.A08 corroborates0x02 compression and rejects header-only/mask0x01 fragmented inbound frames. Codec classesheader_only_frame/fragmented_frame now map throughterminal_frame_error toPeerProtocol; actor captures before queue publication and consumes epoch, captured waits/CLI loops preserve then stop, low-level channels reject later reads/writes. Existing transport recovery category retained, not native global backoff/replay authority. Failing-before ping fixture, compressed captures and both encrypted receive APIs tested. Empty authenticated-record skipping remains open. No live verification, retry loop, NACK or settlement change.",
+    "description": "Pinned123.A08 corroborates0x02 compression and rejects header-only/mask0x01 fragmented inbound frames. Codec classesheader_only_frame/fragmented_frame now map throughterminal_frame_error toPeerProtocol; actor captures before queue publication and consumes epoch, captured waits/CLI loops preserve then stop, low-level channels reject later reads/writes. Existing transport recovery category retained, not native global backoff/replay authority. Failing-before ping fixture, compressed captures and both encrypted receive APIs tested. Empty authenticated-record skipping is covered by x-empty-record-admission. No live verification, retry loop, NACK or settlement change.",
     "evidence": "docs/protocol/frame-admission.md"
+  },
+  "x-empty-record-admission": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [
+      "whatsapp_api::transport::messaging::read_node",
+      "whatsapp_api::transport::messaging::read_frame"
+    ],
+    "description": "Pinned123.A08 skips authenticated zero-length plaintext. Normal split reader and both stanza receive APIs now skip before decoding/capture/routing, retaining crypto counter consumption and caller-owned deadlines with cooperative cancellation. Raw encrypted read and pure offline decoder semantics unchanged. Failing-before local encrypted IQ fixture and bounded pending-read cancellation controls retained; no new send, retry, settlement or live operation. New encrypted fixtures cover low-level APIs, not an end-to-end actor/socket empty-record test.",
+    "evidence": "docs/protocol/frame-admission.md#authenticated-empty-records-are-skipped-2026-11-06"
   }
 }

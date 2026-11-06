@@ -79,12 +79,37 @@ frame families through BOTH read_node and read_frame, verifying later reads and
 writes returnClosed. These tests perform no WhatsApp account operation. Existing
 workspace/property tests retain ordinary-frame, root-control and failure rules.
 
-**Remaining known difference:** nativeA08 skips authenticated zero-length
-plaintext records and loops to the next encrypted record. Rust still exposes
-that as its existing undecodable/EOF diagnostic path; this chunk does not claim
-to fix it or invent a keepalive meaning. Full fragmentation/reassembly support,
-native feature-dependent compression internals, nested controls, all corruption
-routing and complete retry/lifecycle parity remain outside this correction.
+## Authenticated empty records are skipped (2026-11-06)
+
+**Confirmed pinned static / implemented offline:** the same complete123.A08
+checks decrypted length0 and loops to the next encrypted record. This does not
+establish a keepalive meaning or permission to transmit empty records.
+
+Rust now skips zero-length authenticated plaintext before node decoding in the
+normal split reader and both low-level stanza receive APIs. The raw encrypted
+record API still returns the authenticated plaintext, including empty records;
+pure offline decode_frame([]) still reports unexpected_eof. This distinction
+keeps authentication/counter consumption in the cryptographic layer and stanza
+admission in its caller. Empty records create no stanza capture, ACK, callback
+settlement or new retry. The skip yields cooperatively so buffered records do
+not prevent cancellation/deadline polling. It introduces no timeout of its own
+and stays within the caller's existing reply deadline.
+
+The certificate-verified in-memory encrypted fixture first failed with
+Undecodable { bytes:0, class:unexpected_eof }. It now receives the following
+literal IQ through BOTH read_node and read_frame, demonstrating consecutive
+record decryption with correct counters. A second fixture supplies an empty
+record and no stanza: both bounded reads expire instead of returning a false
+diagnostic; cancellation during the following pending read consumes the channel
+and later writes refuse. Existing request-deadline regression also remains.
+These encrypted fixtures exercise low-level APIs; the normal split-reader guard
+is code-reviewed and covered by the broader workspace suite, not claimed as a
+new end-to-end actor/socket empty-record test.
+
+Full fragmentation/reassembly support, native feature-dependent compression
+internals, nested controls, all corruption routing and complete retry/lifecycle
+parity remain outside these corrections. No live account operation or
+ban-prevention guarantee is established.
 
 ## Reproduce the evidence
 
