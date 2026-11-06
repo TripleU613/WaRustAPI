@@ -16920,5 +16920,12 @@
     "x-live": false,
     "description": "Static APK43.72 accepted-channel ping initialization resets counter and outstanding state; identical connected callback does not reset. Scheduler mode depends on stored push-registration state, logins_with_messages and effective property 6493. Configuration cache lifetime remains distinct and unported; no runtime timing change.",
     "evidence": "docs/protocol/apk/2.26.43.72-client-ping-channel-lifecycle/README.md"
+  },
+  "x-client-ping-producer-families-research": {
+    "x-cli": false,
+    "x-transport": "experimental",
+    "x-live": false,
+    "description": "Static APK43.72 ping producer census separates normal A08/A04 pending state from direct A0B pre-ACK confirmation continuations and A0A arbitrary callbacks. Bound Fef14/Feq9 retirement requests require validated success; IQ error liveness does not execute optional success completion. Async ordering, replacement ownership and durable replay remain explicit limits. No runtime change.",
+    "evidence": "docs/protocol/apk/2.26.43.72-client-ping-producer-families/README.md"
   }
 }

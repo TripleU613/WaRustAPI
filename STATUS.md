@@ -1,3 +1,15 @@
+2026-11-05 — **Ping producer and durable-ACK completion authority separated.**
+
+Normal on-demand pings use the existing pending guard; direct confirmation pings
+have success-only retirement continuations. Bound offline-resume/coroutine paths
+must not retire markers on IQ error or delivery failure. Arbitrary calling callbacks
+remain separate from normal keepalive behavior.
+[Source, caller census and unresolved replacement/cancellation boundaries](docs/protocol/apk/2.26.43.72-client-ping-producer-families/README.md).
+Research only; no runtime policy or live account operation changed.
+Validation: pinned APK hash, fresh callback export equality, fmt, strict Clippy,
+CLI/OpenAPI, coverage and staged checksum/link hygiene passed. No new full
+workspace run for research only; shared Rust retains its preceding 1373-test result.
+
 2026-11-05 — **Ping channel startup and scheduler-mode authority traced.**
 
 A new accepted channel resets the ping counter; duplicate same-channel callback

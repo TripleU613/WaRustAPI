@@ -1,0 +1,19 @@
+# Selected byte-PC ranges, end exclusive; not complete method/control-flow coverage.
+# Full export SHA256: a4b7dda79fb51ca0b2c321c478ff1d10386e1016908adac5de07d1995b01cf65
+
+# Range 0000..000e
+    0000..0004  move-object/from16  v3, v24
+    0004..0008  iget  v0, v3, LX/Fef;->$t:I
+    0008..000e  packed-switch  v0, payload@0x1a98, cases=[0:@0x196c, 1:@0x1922, 2:@0x18e6, 3:@0x1894, 4:@0x1880, 5:@0x1868, 6:@0x1868, 7:@0x592, 8:@0x183a, 9:@0x17fa, 10:@0x176e, 11:@0x16d2, 12:@0x15ac, 13:@0x364, 14:@0x1584, 15:@0x155c, 16:@0xff6, 17:@0xf08, 18:@0xeec, 19:@0xed6, 20:@0xe12, 21:@0xd60, 22:@0x2dc, 23:@0x2b2, 24:@0x5d2, 25:@0xd40, 26:@0x290, 27:@0x1d4, 28:@0x164, 29:@0xa54, 30:@0xa2c, 31:@0x886, 32:@0x86e, 33:@0x856, 34:@0xe, 35:@0xe, 36:@0x7e6, 37:@0xe, 38:@0xe, 39:@0x6ae, 40:@0x67e, 41:@0xe, 42:@0xe, 43:@0xe, 44:@0xe, 45:@0xe2, 46:@0x666, 47:@0x96, 48:@0x36, 49:@0x62c], default@0xe
+
+# Range 1584..15ac
+    1584..1588  iget-object  v0, v3, LX/Fef;->A00:Ljava/lang/Object;
+    1588..158c  check-cast  v0, LX/1us;
+    158c..1590  iget-object  v1, v3, LX/Fef;->A01:Ljava/lang/Object;
+    1590..1594  check-cast  v1, LX/1vZ;
+    1594..1598  iget-object  v0, v0, LX/1us;->A01:LX/05a;
+    1598..159e  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    159e..15a0  move-result-object  v0
+    15a0..15a4  check-cast  v0, LX/1iV;
+    15a4..15aa  invoke-virtual  {v0, v1}, LX/1iV;->A0J(LX/1vZ;)V
+    15aa..15ac  return-void

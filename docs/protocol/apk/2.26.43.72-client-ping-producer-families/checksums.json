@@ -1,0 +1,66 @@
+{
+  "README.md": {
+    "bytes": 6839,
+    "sha256": "1b7dde1d11fed4df016d4e663f4a9ede0da9e94946499164345128fbde72e93d"
+  },
+  "availability-producer.txt": {
+    "bytes": 2693,
+    "sha256": "ee32012f71d0e9fbfbff69c55ece371fe5ed65381492012ac2871c78e2fc0280"
+  },
+  "concrete-policy-callers.txt": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "connectivity-producer.txt": {
+    "bytes": 693,
+    "sha256": "3ba1f6bd89141742c83d824774216276ded680fc2d10a9f50d3b0194bffa6ce1"
+  },
+  "coroutine-completion-constructors.txt": {
+    "bytes": 3193,
+    "sha256": "6fbee535a8cabaed349a2e7e88692a76f42b33a29b8a529550632cccba19382f"
+  },
+  "coroutine-completion.txt": {
+    "bytes": 1700,
+    "sha256": "4e3763043de187ec3dcbd29fd452de17e9de2e52e3847011e420bbf59f38462b"
+  },
+  "coroutine-producer.txt": {
+    "bytes": 2104,
+    "sha256": "2b2f2707c8ebf6ee6252f43dfd318c88cdac6c4367059efdd93224722009f0ce"
+  },
+  "custom-callback-callers.txt": {
+    "bytes": 267,
+    "sha256": "bb86ca32330fdeb27189042ae6f3f8cdef502dcff5e8d9e037585c99a2e1fb50"
+  },
+  "demand-callers.txt": {
+    "bytes": 208,
+    "sha256": "7ce80824b030d29c3532d8b48880f35f1be9c5131f308dba5b77cc0bb01078fc"
+  },
+  "interface-policy-callers.txt": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "logout-producer.txt": {
+    "bytes": 4224,
+    "sha256": "4c62d649b4f8a79199ff5a239d7f7d06b219aa9e55623f43d2f04529307784b5"
+  },
+  "manager-workers.txt": {
+    "bytes": 2110,
+    "sha256": "b1afd03e0ee59c114e91f0c00847dae445df0610bc8feaab3488d2dbb7a05e3f"
+  },
+  "offline-completion-constructor.txt": {
+    "bytes": 498,
+    "sha256": "f42dbfd0294b3d718a118c07a03c5b859f7259a155e7f965f717b951d9fd8bea"
+  },
+  "offline-resume-completion.txt": {
+    "bytes": 1431,
+    "sha256": "3785b2921b153b16a3250a7035abc1544560c285d1f454cc3d32bea20087f56c"
+  },
+  "offline-resume-producer.txt": {
+    "bytes": 2106,
+    "sha256": "16578f2087f30b2e7785683b3321acbb3e534d4f4e6dd59d230d1a95118728ec"
+  },
+  "submit-callers.txt": {
+    "bytes": 206,
+    "sha256": "c5ea11caf54d20f8e5fdeced9c2204accb72f1418a1734eb4e5ad435ae648e37"
+  }
+}

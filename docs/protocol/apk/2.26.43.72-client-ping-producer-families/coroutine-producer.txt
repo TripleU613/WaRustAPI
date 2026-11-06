@@ -1,0 +1,38 @@
+# Selected byte-PC ranges, end exclusive; not complete method/control-flow coverage.
+# Full export SHA256: 7d6f25038063354e736c4f38862b5ab28aedf455671f9622a86bba494f6e1894
+
+# Range 0000..0012
+    0000..0004  move-object/from16  v13, v40
+    0004..0008  move-object/from16  v0, v39
+    0008..000c  iget  v1, v0, LX/FmU;->$t:I
+    000c..0012  packed-switch  v1, payload@0x23b4, cases=[0:@0x2d2, 1:@0x1888, 2:@0x1936, 3:@0x1b3c, 4:@0x1be2, 5:@0x3cc, 6:@0x57c, 7:@0x1804, 8:@0x666, 9:@0x7e6, 10:@0x87a, 11:@0x1c68, 12:@0x8d4, 13:@0x946, 14:@0x9f6, 15:@0x154e], default@0x12
+
+# Range 08d4..0946
+    08d4..08d8  sget-object  v1, LX/0dd;->A02:LX/0dd;
+    08d8..08dc  iget  v3, v0, LX/FmU;->A00:I
+    08dc..08de  const/4  v2, #0x1
+    08de..08e2  if-eqz  v3, +0xe
+    08e2..08e6  if-eq  v3, v2, +0x7
+    08e6..08ec  invoke-static  {}, LX/000;->A03()Ljava/lang/IllegalStateException;
+    08ec..08ee  move-result-object  v0
+    08ee..08f0  throw  v0
+    08f0..08f6  invoke-static  {v13}, LX/0dg;->A01(Ljava/lang/Object;)V
+    08f6..08fa  goto/16  -0x443
+    08fa..0900  invoke-static  {v13}, LX/0dg;->A01(Ljava/lang/Object;)V
+    0900..0904  iget-object  v6, v0, LX/FmU;->A04:Ljava/lang/Object;
+    0904..0908  check-cast  v6, LX/1t2;
+    0908..090c  iget-object  v5, v0, LX/FmU;->A01:Ljava/lang/Object;
+    090c..0910  iput-object  v6, v0, LX/FmU;->A02:Ljava/lang/Object;
+    0910..0914  iput-object  v5, v0, LX/FmU;->A03:Ljava/lang/Object;
+    0914..0918  iput  v2, v0, LX/FmU;->A00:I
+    0918..091e  invoke-static  {v0}, LX/8t4;->A0t(LX/0cf;)LX/KmF;
+    091e..0920  move-result-object  v4
+    0920..0924  iget-object  v3, v6, LX/1t2;->A05:LX/1A7;
+    0924..0928  const/16  v2, #0x9
+    0928..092c  new-instance  v0, LX/Feq;
+    092c..0932  invoke-direct  {v0, v5, v6, v4, v2}, LX/Feq;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+    0932..0938  invoke-virtual  {v3, v0}, LX/1A7;->A0B(Ljava/lang/Runnable;)V
+    0938..093e  invoke-virtual  {v4}, LX/KmF;->A00()Ljava/lang/Object;
+    093e..0940  move-result-object  v0
+    0940..0944  if-ne  v0, v1, -0x468
+    0944..0946  return-object  v1

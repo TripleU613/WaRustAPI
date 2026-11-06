@@ -1,0 +1,12 @@
+# Selected byte-PC ranges, end exclusive; not complete method/control-flow coverage.
+# Full export SHA256: 04c5b35f3e23e06d6b10a98f39879a10616244af2ff9edcf89026e6746c8ee2e
+
+# Range 011c..0140
+    011c..0120  if-eqz  v26, +0x12
+    0120..0124  const-string  v0, "MessageHandler/reconnectIfNecessary/not_disconnected/check_connectivity"
+    0124..012a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    012a..012e  iget-object  v0, v7, LX/0YB;->A0O:LX/00x;
+    012e..0134  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0134..0136  move-result-object  v0
+    0136..013a  check-cast  v0, LX/1A7;
+    013a..0140  invoke-virtual  {v0}, LX/1A7;->A08()V

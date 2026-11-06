@@ -1,0 +1,29 @@
+# Selected byte-PC ranges, end exclusive; not complete method/control-flow coverage.
+# Full export SHA256: 1f2028887956226083d0595ed98d5c118d82ed2b419d4a7f39353a3d8e4d5c0a
+
+# Range 0000..000e
+    0000..0004  move-object/from16  v1, v24
+    0004..0008  iget  v0, v1, LX/2JI;->$t:I
+    0008..000e  packed-switch  v0, payload@0x31d0, cases=[0:@0x18dc, 1:@0x1710, 2:@0x1376, 3:@0xe, 4:@0x2fd8, 5:@0x125a, 6:@0x1202, 7:@0x1e, 8:@0x11ca, 9:@0x2f14, 10:@0xff4, 11:@0x2e38, 12:@0x2e20, 13:@0x2e00, 14:@0x2de0, 15:@0xfaa, 16:@0xf38, 17:@0xeee, 18:@0xe74, 19:@0xdfe, 20:@0x26fa, 21:@0xdbe, 22:@0x718, 23:@0x26ea, 24:@0x1a32, 25:@0x6c2, 26:@0x26d8, 27:@0x26cc, 28:@0x670, 29:@0x26b2, 30:@0x26a2, 31:@0x2696, 32:@0x33c, 33:@0x2686, 34:@0x2676, 35:@0x29e, 36:@0xe, 37:@0x23d8, 38:@0x2396, 39:@0x1b8, 40:@0x2384, 41:@0x1fac, 42:@0x1d76, 43:@0x1d66, 44:@0x164, 45:@0x1c96, 46:@0x1ab0, 47:@0x1a94, 48:@0x4a, 49:@0x1a82], default@0xe
+
+# Range 0164..01b8
+    0164..0168  iget-object  v4, v1, LX/2JI;->A00:Ljava/lang/Object;
+    0168..016c  check-cast  v4, LX/1us;
+    016c..0170  iget-object  v0, v4, LX/1us;->A01:LX/05a;
+    0170..0176  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0176..0178  move-result-object  v0
+    0178..017c  check-cast  v0, LX/1iV;
+    017c..0182  invoke-virtual  {v0}, LX/1iV;->A0C()LX/1vZ;
+    0182..0184  move-result-object  v3
+    0184..0188  if-eqz  v3, -0xb4
+    0188..018c  const-string  v0, "PreacksQueueOfflineResume/onOfflineResumeCompleted/confirm-pending-acks-received"
+    018c..0192  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0192..0196  iget-object  v0, v4, LX/1us;->A00:LX/05a;
+    0196..019c  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    019c..019e  move-result-object  v2
+    019e..01a2  check-cast  v2, LX/1A7;
+    01a2..01a6  const/16  v1, #0xe
+    01a6..01aa  new-instance  v0, LX/Fef;
+    01aa..01b0  invoke-direct  {v0, v3, v4, v1}, LX/Fef;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V
+    01b0..01b6  invoke-virtual  {v2, v0}, LX/1A7;->A0B(Ljava/lang/Runnable;)V
+    01b6..01b8  return-void

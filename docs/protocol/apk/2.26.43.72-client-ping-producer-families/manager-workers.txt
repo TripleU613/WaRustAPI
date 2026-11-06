@@ -1,0 +1,31 @@
+# Selected byte-PC ranges, end exclusive; not complete method/control-flow coverage.
+# Full export SHA256: fb2b39ffc5c0f6be036a15ed005c1f2c73f0dcbc70ae087c3d3c29e8a7490909
+
+# Range 0000..000e
+    0000..0004  move-object/from16  v1, v25
+    0004..0008  iget  v0, v1, LX/Fea;->$t:I
+    0008..000e  packed-switch  v0, payload@0x1a2c, cases=[0:@0x19b4, 1:@0x197c, 2:@0x12ec, 3:@0x127e, 4:@0x126e, 5:@0x1258, 6:@0xb30, 7:@0x1226, 8:@0x11d2, 9:@0x11ba, 10:@0x119c, 11:@0x119c, 12:@0xbc6, 13:@0x1174, 14:@0x1154, 15:@0x9f8, 16:@0x1130, 17:@0xf74, 18:@0xf48, 19:@0xf38, 20:@0xf20, 21:@0xf20, 22:@0x26a, 23:@0xb9c, 24:@0xee4, 25:@0xed4, 26:@0xec4, 27:@0xeb4, 28:@0xe4e, 29:@0xe06, 30:@0xdf6, 31:@0xdce, 32:@0xdba, 33:@0xda8, 34:@0xd92, 35:@0xd32, 36:@0xd20, 37:@0x22a, 38:@0xd10, 39:@0x20e, 40:@0xd00, 41:@0x1f2, 42:@0x192, 43:@0xcbe, 44:@0xbec, 45:@0x144, 46:@0xe, 47:@0xf6, 48:@0xe, 49:@0xe8], default@0xe
+
+# Range 0ec4..0f20
+    0ec4..0ec8  iget-object  v0, v1, LX/Fea;->A00:Ljava/lang/Object;
+    0ec8..0ecc  check-cast  v0, LX/1A7;
+    0ecc..0ed2  invoke-static  {v0}, LX/1A7;->A04(LX/1A7;)V
+    0ed2..0ed4  return-void
+    0ed4..0ed8  iget-object  v0, v1, LX/Fea;->A00:Ljava/lang/Object;
+    0ed8..0edc  check-cast  v0, LX/1A7;
+    0edc..0ee2  invoke-static  {v0}, LX/1A7;->A03(LX/1A7;)V
+    0ee2..0ee4  return-void
+    0ee4..0ee8  iget-object  v2, v1, LX/Fea;->A00:Ljava/lang/Object;
+    0ee8..0eec  check-cast  v2, LX/1A7;
+    0eec..0ef0  const-string  v0, "ClientPingManager/ping-response"
+    0ef0..0ef6  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0ef6..0efa  iget-object  v0, v2, LX/1A7;->A0H:LX/098;
+    0efa..0f00  invoke-virtual  {v0}, LX/098;->A02()V
+    0f00..0f04  iget-boolean  v0, v2, LX/1A7;->A06:Z
+    0f04..0f08  if-eqz  v0, +0x6
+    0f08..0f0c  const-string  v0, "ClientPingManager/ping-response; ping already timed out, ping response is ignored"
+    0f0c..0f10  goto/16  +0x10c
+    0f10..0f14  const-wide/16  v0, #0x0
+    0f14..0f18  iput-wide  v0, v2, LX/1A7;->A0J:J
+    0f18..0f1e  invoke-static  {v2}, LX/1A7;->A05(LX/1A7;)V
+    0f1e..0f20  return-void

@@ -1,0 +1,85 @@
+
+# class: LX/1A5;
+# extends: Ljava/lang/Object;
+
+.method public A03(VLL)  # .registers 8
+    # full signature: LX/1A5;->A03(LX/1A5;Ljava/lang/String;)V
+    0000..0004  iget-object  v0, v6, LX/1A5;->A01:LX/0YB;
+    0004..000a  invoke-static  {v0}, LX/00L;->A05(Ljava/lang/Object;)V
+    000a..000e  iget-object  v0, v6, LX/1A5;->A09:LX/0Z8;
+    000e..0014  invoke-virtual  {v0}, LX/0Z8;->A03()Z
+    0014..0016  move-result  v0
+    0016..001a  if-nez  v0, +0xb
+    001a..0020  invoke-static  {v6, v7}, LX/1A5;->A02(LX/1A5;Ljava/lang/String;)V
+    0020..0024  iget-object  v0, v6, LX/1A5;->A01:LX/0YB;
+    0024..002a  invoke-static  {v0}, LX/0YB;->A03(LX/0YB;)V
+    002a..002c  return-void
+    002c..0030  iget-object  v0, v6, LX/1A5;->A01:LX/0YB;
+    0030..0034  iget-object  v0, v0, LX/0YB;->A0k:LX/00x;
+    0034..003a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    003a..003c  move-result-object  v0
+    003c..0040  check-cast  v0, LX/1Cl;
+    0040..0046  invoke-static  {v0}, LX/1Cl;->A00(LX/1Cl;)Lcom/whatsapp/calling/infra/voipcalling/CallState;
+    0046..0048  move-result-object  v0
+    0048..004e  invoke-static  {v0}, LX/1Cp;->A01(Lcom/whatsapp/calling/infra/voipcalling/CallState;)Z
+    004e..0050  move-result  v0
+    0050..0054  if-nez  v0, +0x6a
+    0054..0058  iget-object  v0, v6, LX/1A5;->A07:LX/0BD;
+    0058..005c  iget-boolean  v0, v0, LX/0BD;->A02:Z
+    005c..0060  if-nez  v0, +0x64
+    0060..0064  iget-object  v1, v6, LX/1A5;->A06:LX/08Y;
+    0064..0068  const/16  v0, #0x22dc
+    0068..006e  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    006e..0070  move-result  v0
+    0070..0074  if-eqz  v0, +0x27
+    0074..0078  iget-object  v0, v6, LX/1A5;->A05:LX/00x;
+    0078..007e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    007e..0080  move-result-object  v0
+    0080..0084  check-cast  v0, LX/0V4;
+    0084..008a  invoke-virtual  {v0}, LX/0V4;->A0E()Z
+    008a..008c  move-result  v0
+    008c..0090  if-eqz  v0, +0x19
+    0090..0094  iget-object  v5, v6, LX/1A5;->A03:Landroid/os/Handler;
+    0094..0098  const/16  v0, #0xe
+    0098..009c  new-instance  v4, LX/3dG;
+    009c..00a2  invoke-direct  {v4, v7, v0, v6}, LX/3dG;-><init>(Ljava/lang/String;ILjava/lang/Object;)V
+    00a2..00a6  const/16  v0, #0xdcc
+    00a6..00ac  invoke-virtual  {v1, v0}, LX/00E;->A0a(I)I
+    00ac..00ae  move-result  v0
+    00ae..00b0  int-to-long  v2, v0
+    00b0..00b4  const-wide/16  v0, #0x3e8
+    00b4..00b6  mul-long/2addr  v2, v0
+    00b6..00bc  invoke-virtual  {v5, v4, v2, v3}, Landroid/os/Handler;->postDelayed(Ljava/lang/Runnable;J)Z
+    00bc..00be  return-void
+    00be..00c2  iget-object  v1, v6, LX/1A5;->A01:LX/0YB;
+    00c2..00c8  invoke-static  {v1}, LX/00L;->A05(Ljava/lang/Object;)V
+    00c8..00cc  iget-object  v0, v1, LX/0YB;->A1B:LX/1A0;
+    00cc..00d0  if-eqz  v0, +0x26
+    00d0..00d4  iget-object  v2, v1, LX/0YB;->A1B:LX/1A0;
+    00d4..00d6  const/4  v1, #0x0
+    00d6..00d8  const/4  v0, #0x7
+    00d8..00de  invoke-interface  {v2, v1, v0}, LX/1A0;->Cd3(ZI)V
+    00de..00e2  iget-object  v0, v6, LX/1A5;->A05:LX/00x;
+    00e2..00e8  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    00e8..00ea  move-result-object  v1
+    00ea..00ee  check-cast  v1, LX/0V4;
+    00ee..00f2  iget-boolean  v0, v1, LX/0V4;->A08:Z
+    00f2..00f6  if-nez  v0, +0xe
+    00f6..00fc  const-string/jumbo  v0, "xmpp-bg-to-logout"
+    00fc..0102  invoke-static  {v1, v0}, LX/0V4;->A05(LX/0V4;Ljava/lang/String;)Z
+    0102..0104  move-result  v0
+    0104..0108  if-eqz  v0, +0x5
+    0108..010a  const/4  v0, #0x1
+    010a..010e  iput-boolean  v0, v1, LX/0V4;->A08:Z
+    010e..0110  const/4  v0, #0x3
+    0110..0116  invoke-static  {v6, v0}, LX/1A5;->A01(LX/1A5;I)V
+    0116..0118  return-void
+    0118..011c  const-string  v0, "MessageHandler/onDoLogout ignoring due to null sending channel"
+    011c..0122  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0122..0124  goto  -0x22
+    0124..012a  invoke-static  {v6, v7}, LX/1A5;->A04(LX/1A5;Ljava/lang/String;)V
+    012a..012e  iget-object  v0, v6, LX/1A5;->A08:LX/1A7;
+    012e..0134  invoke-virtual  {v0}, LX/1A7;->A08()V
+    0134..0136  return-void
+    # exception table: 0 try range(s)
+.end method

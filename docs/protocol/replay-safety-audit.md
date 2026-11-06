@@ -1044,3 +1044,16 @@ logins_with_messages < 3, then effective property 6493 for Runnable selection.
 on-demand/channel-replacement callback interactions and receiver failure paths.
 [Source, exact field census and transition table](apk/2.26.43.72-client-ping-channel-lifecycle/README.md).
 No runtime policy or live-account behavior changed.
+
+### 2026-11-05: normal pings and ACK-confirmation callbacks differ
+
+**Confirmed static, APK 2.26.43.72:** A08 uses normal A04 pending guards; direct
+A0B callers also include offline-resume and coroutine pre-ACK confirmation.
+Bound Fef14 and Feq9 continuations request A0J(marker) only after 1xa's validated
+success, not IQ error or delivery failure. Enqueued manager-liveness work and
+synchronous success completion have no join establishing a fixed execution order.
+A0A additionally serves arbitrary calling/signaling callback families; shared
+request shape does not establish shared response policy. **Still open:** registry
+cleanup across channel replacement, coroutine cancellation and complete durable
+replay/retirement parity. No Rust timing, retry, replay or account behavior changed.
+[Producer census, constructor bindings and limitations](apk/2.26.43.72-client-ping-producer-families/README.md).

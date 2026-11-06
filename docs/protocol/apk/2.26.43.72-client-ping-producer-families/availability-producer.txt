@@ -1,0 +1,42 @@
+# Selected byte-PC ranges, end exclusive; not complete method/control-flow coverage.
+# Full export SHA256: 76e4d710c781be5935fb76b7841afdc5ae4aa46a6b214407309ee967d74ba536
+
+# Range 0000..000e
+    0000..0004  iget  v0, v13, LX/FeK;->$t:I
+    0004..000a  packed-switch  v0, payload@0xc78, cases=[0:@0xba6, 1:@0x3e6, 2:@0xb96, 3:@0xb86, 4:@0xb5e, 5:@0xb48, 6:@0xb38, 7:@0xb1c, 8:@0xb08, 9:@0xacc, 10:@0x9c4, 11:@0x39c, 12:@0x336, 13:@0x9b4, 14:@0x98e, 15:@0xa, 16:@0x94a, 17:@0x924, 18:@0x908, 19:@0x8ea, 20:@0x8d6, 21:@0x8b4, 22:@0x72c, 23:@0x6fe, 24:@0x6e0, 25:@0x6d2, 26:@0x6be, 27:@0x6ae, 28:@0x69e, 29:@0x64e, 30:@0x2e2, 31:@0x5e8, 32:@0x294, 33:@0x5d8, 34:@0x5b2, 35:@0x5a2, 36:@0x572, 37:@0x564, 38:@0x204, 39:@0x53e, 40:@0x150, 41:@0x52e, 42:@0xc4, 43:@0x16, 44:@0x512, 45:@0xa, 46:@0x502, 47:@0x4de, 48:@0xbd4, 49:@0x4c0], default@0xa
+    000a..000e  iget-object  v0, v13, LX/FeK;->A00:Ljava/lang/Object;
+
+# Range 00c4..0150
+    00c4..00c8  iget-object  v1, v13, LX/FeK;->A00:Ljava/lang/Object;
+    00c8..00cc  check-cast  v1, LX/0m5;
+    00cc..00ce  const/4  v0, #0x1
+    00ce..00d2  iput-boolean  v0, v1, LX/0m5;->A00:Z
+    00d2..00d6  iget-object  v0, v1, LX/0m5;->A04:LX/0AI;
+    00d6..00da  iget-boolean  v0, v0, LX/0AI;->A06:Z
+    00da..00de  if-nez  v0, +0x6
+    00de..00e2  iget-boolean  v0, v1, LX/0m5;->A00:Z
+    00e2..00e6  if-nez  v0, -0x67
+    00e6..00ea  iget-object  v0, v1, LX/0m5;->A01:LX/00x;
+    00ea..00f0  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    00f0..00f2  move-result-object  v2
+    00f2..00f6  check-cast  v2, LX/0YB;
+    00f6..00fa  const-string  v0, "MessageHandler/sendAvailableForChat"
+    00fa..0100  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0100..0104  iget-object  v0, v2, LX/0YB;->A1B:LX/1A0;
+    0104..010a  invoke-static  {v0}, LX/00L;->A05(Ljava/lang/Object;)V
+    010a..0110  invoke-interface  {v0}, LX/1A0;->Ccu()V
+    0110..0114  iget-object  v0, v2, LX/0YB;->A0q:LX/00x;
+    0114..011a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    011a..011c  move-result-object  v1
+    011c..0120  check-cast  v1, LX/1A5;
+    0120..0122  const/4  v0, #0x4
+    0122..0128  invoke-static  {v1, v0}, LX/1A5;->A01(LX/1A5;I)V
+    0128..012c  iget-object  v0, v2, LX/0YB;->A0y:LX/0Vf;
+    012c..0132  invoke-virtual  {v0}, LX/0Vf;->A02()V
+    0132..0138  invoke-static  {v2}, LX/0YB;->A02(LX/0YB;)V
+    0138..013c  iget-object  v0, v2, LX/0YB;->A0O:LX/00x;
+    013c..0142  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0142..0144  move-result-object  v0
+    0144..0148  check-cast  v0, LX/1A7;
+    0148..014e  invoke-virtual  {v0}, LX/1A7;->A08()V
+    014e..0150  return-void
