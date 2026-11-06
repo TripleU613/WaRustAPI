@@ -17492,5 +17492,12 @@
     "x-live": false,
     "description": "Typed peer_keys full-directory result settlement attributes nested refusals only to the primary peer in its original single-user key request, sharing the inspector unique-list/user guard. Foreign errors do not poison selected completion. Ambiguous list/user context supplies no attributed server refusal; generic Ok never establishes signed bundle validity. Explicit refresh retains existing valid bundle and saved outcome requirements; historical Error rows unchanged. No automatic retry or live validation.",
     "evidence": "docs/protocol/peer-identity.md#full-directory-action-errors-belong-to-the-original-peer-2026-11-06"
+  },
+  "x-peer-directory-refresh-ownership": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Explicit peer directory refresh validates saved peer_keys action kind and Ok status, the original single-peer IQ/get/encrypt request ID/destination/address, correlated reply ID, and existing bundle/signature guards in one write transaction. Read-only inspection validates original request ownership too. Failure preserves stored evidence and does not authorize repair/retry. Normal repeated query remains original-marker lookup. This is a local integrity guard; no new server wire requirement or live acceptance claim.",
+    "evidence": "docs/protocol/peer-identity.md#explicit-directory-refresh-retains-request-ownership-2026-11-06"
   }
 }

@@ -75,6 +75,33 @@ pub fn identity_change_preview(peer: &Jid) -> Result<IdentityChangePreview> {
     })
 }
 
+// Local durable ownership, not an additional server wire requirement. Keep
+// the original single-peer producer separate from batched/identity-only reads.
+fn owns_request(request: &crate::binary::Node, id: &str, peer: &Jid) -> bool {
+    if request.description != "iq"
+        || request.get_attr("id").and_then(|value| value.as_text()) != Some(id)
+        || request.get_attr("type").and_then(|value| value.as_text()) != Some("get")
+        || request.get_attr("xmlns").and_then(|value| value.as_text()) != Some("encrypt")
+        || !super::receipts::jid(request, "to").is_some_and(|jid| {
+            jid.user.is_empty() && jid.server == Server::User && jid.agent == 0 && jid.device == 0
+        })
+    {
+        return false;
+    }
+    let [key] = request.child_nodes() else {
+        return false;
+    };
+    if key.description != "key" {
+        return false;
+    }
+    let [user] = key.child_nodes() else {
+        return false;
+    };
+    user.description == "user"
+        && super::receipts::jid(user, "jid")
+            .is_some_and(|jid| super::identity_query::same_primary_address(&jid, peer))
+}
+
 /// Queue one peer directory query. Repeats return its existing ID locally.
 /// An explicit refresh requires a previously successful, valid signed bundle;
 /// refused, invalid or uncertain queries cannot be reset or automatically retried.
@@ -92,12 +119,35 @@ pub fn queue(store: &ProtocolStore, peer: &Jid, refresh: bool) -> Result<String>
             if !refresh {
                 return Ok(id);
             }
-            let reply = actions::completed_reply_in(tx, &id)?.ok_or_else(|| {
+            let (action, reply, request) = actions::view_in_write(tx, &id)?.ok_or_else(|| {
                 Error::invalid(
                     "peer_keys",
-                    "prior directory query is refused, incomplete or uncertain; no refresh",
+                    "directory marker has no saved action; no refresh",
                 )
             })?;
+            if action.kind != "peer_keys" || !owns_request(&request, &id, peer) {
+                return Err(Error::invalid(
+                    "peer_keys",
+                    "prior action does not own this directory request; no refresh",
+                ));
+            }
+            if action.status != actions::ActionStatus::Ok {
+                return Err(Error::invalid(
+                    "peer_keys",
+                    "prior directory query is refused, incomplete or uncertain; no refresh",
+                ));
+            }
+            let reply = reply.ok_or_else(|| {
+                Error::invalid("peer_keys", "prior directory reply is missing; no refresh")
+            })?;
+            if reply.description != "iq"
+                || reply.get_attr("id").and_then(|value| value.as_text()) != Some(id.as_str())
+            {
+                return Err(Error::invalid(
+                    "peer_keys",
+                    "prior directory reply does not match its request; no refresh",
+                ));
+            }
             let bundle = crate::signal::direct::prekey_bundle(&reply, peer).map_err(|_| {
                 Error::invalid("peer_keys", "prior reply has no usable bundle; no refresh")
             })?;
@@ -227,6 +277,14 @@ pub fn inspect(store: &ProtocolStore, peer: &Jid) -> Result<Option<DirectoryInsp
             return Err(Error::invalid(
                 "peer_keys",
                 "directory marker references another action kind",
+            ));
+        }
+        let request = actions::request_in(tx, &id)?
+            .ok_or_else(|| Error::invalid("peer_keys", "directory request is missing"))?;
+        if !owns_request(&request, &id, peer) {
+            return Err(Error::invalid(
+                "peer_keys",
+                "directory request does not match selected peer",
             ));
         }
         let mut result = DirectoryInspection {
@@ -594,6 +652,90 @@ mod tests {
         );
         assert!(queue(&store, &peer, true).is_err());
         assert_eq!(queue(&store, &peer, false).unwrap(), refreshed);
+    }
+
+    #[test]
+    fn refresh_requires_original_action_request_and_reply_ownership() {
+        for case in [
+            "kind",
+            "request_id",
+            "request_peer",
+            "request_type",
+            "namespace",
+            "destination",
+            "request_width",
+            "reply_id",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("ownership.redb");
+            let store = open(&path);
+            let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+            let foreign = Jid::parse("15555550102@s.whatsapp.net").unwrap();
+            let identity = IdentityKeyPair::generate(&mut rand::rng());
+            let id = queue(&store, &peer, false).unwrap();
+            actions::reserve_pending(&store).unwrap();
+            let reply = signed_reply(&peer, &id, &identity, true);
+            actions::record_reply(&store, &reply).unwrap();
+            let mut request = actions::request(&store, &id).unwrap().unwrap();
+            let mut reply = reply;
+            match case {
+                "request_id" => request = request.attr("id", "00000000000000000000000000000000"),
+                "request_peer" => request = messaging::key_request(&foreign, &id),
+                "request_type" => request = request.attr("type", "set"),
+                "namespace" => request = request.attr("xmlns", "foreign"),
+                "destination" => request = request.attr("to", foreign.clone()),
+                "request_width" => {
+                    request = messaging::key_request_many(&[peer.clone(), foreign], &id).unwrap()
+                }
+                "reply_id" => reply = reply.attr("id", "00000000000000000000000000000000"),
+                _ => {}
+            }
+            let encode = |node: &Node| {
+                crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
+                    .encode(node)
+                    .unwrap()
+            };
+            store
+                .write(|tx| {
+                    let key = format!("action-outbox:{id}");
+                    let mut row: serde_json::Value =
+                        tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?.unwrap();
+                    row["wire"] = serde_json::to_value(encode(&request)).unwrap();
+                    row["reply"] = serde_json::to_value(encode(&reply)).unwrap();
+                    if case == "kind" {
+                        row["kind"] = serde_json::json!("foreign");
+                    }
+                    tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &row)
+                })
+                .unwrap();
+            drop(store);
+            let store = open(&path);
+            let snapshot = || {
+                store
+                    .read(|tx| {
+                        Ok((
+                            tx.scan_after(Table::Checkpoints, 1, None, 256)?,
+                            tx.scan_after(Table::PeerIdentities, 1, None, 256)?,
+                            tx.scan_after(Table::SignalSessions, 1, None, 256)?,
+                            tx.scan_after(Table::Outbox, 1, None, 256)?,
+                        ))
+                    })
+                    .unwrap()
+            };
+            let before = snapshot();
+            let head = store.journal_head().unwrap();
+            assert!(queue(&store, &peer, true).is_err(), "{case}");
+            assert!(
+                !inspect(&store, &peer).is_ok_and(
+                    |view| view.is_some_and(|v| v.status == DirectoryStatus::VerifiedBundle)
+                ),
+                "{case}"
+            );
+            assert_eq!(before, snapshot(), "{case}");
+            assert_eq!(head, store.journal_head().unwrap());
+            assert_eq!(queue(&store, &peer, false).unwrap(), id);
+            assert!(actions::reserve_pending(&store).unwrap().is_empty());
+        }
     }
 
     #[test]

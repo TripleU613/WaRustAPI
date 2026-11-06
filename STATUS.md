@@ -1,3 +1,8 @@
+Explicit directory refresh now requires matching saved action kind, original
+request/peer and correlated reply ID before signed success can authorize work.
+Inspection checks the original request too; damaged evidence remains unchanged.
+[Local ownership audit](docs/protocol/peer-identity.md#explicit-directory-refresh-retains-request-ownership-2026-11-06).
+
 Full-directory action refusal attribution now follows the original peer.
 Foreign user errors cannot poison a valid selected bundle or its explicit
 refresh gate. Duplicate result lists were verified already blocked.

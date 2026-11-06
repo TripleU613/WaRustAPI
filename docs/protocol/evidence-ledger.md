@@ -8154,3 +8154,5 @@ Peer directory result/error attribution now follows saved outer type and selecte
 Identity-only reply context and signed error codes now match the pinned43.72 FeM/FUP/0ln path. [Trace, regression, API type widening and remaining timer/adoption limits](peer-identity.md#identity-only-reply-context-and-signed-codes-2026-11-06). Offline only.
 
 Full-directory action refusal now binds to the original selected peer instead of first foreign nested error. Shared context guard, ordering/reopen tests and negative duplicate-list refresh check: [audit](peer-identity.md#full-directory-action-errors-belong-to-the-original-peer-2026-11-06). Historical Error and other-family semantics unchanged; offline only.
+
+Local directory refresh and inspection now validate original single-peer request ownership, action kind and reply correlation before relying on signed success. [Eight corruption/reopen cases, unchanged state and limits](peer-identity.md#explicit-directory-refresh-retains-request-ownership-2026-11-06). Offline integrity guard, not an added server requirement.
