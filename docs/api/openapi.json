@@ -17709,5 +17709,12 @@
     "x-live": false,
     "description": "Research-only APK43.72 authkey_rotation lifecycle: reset bounded attempts, time-gated w:auth:key set publication, non-deferred notification ACK, distinct delivery/error/local-replacement outcomes. Candidate generation, durable ownership/restart, helper persistence and response correlation remain unported. No runtime rotation or ACK added.",
     "evidence": "docs/protocol/notification-ack-audit.md#auth-key-rotation-is-a-state-lifecycle-2026-11-06"
+},
+  "x-authkey-candidate-storage-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Research-only APK43.72 authentication-key candidate: public-only publication versus private/public local serialization; password-backed storage verifies byte-equal readback and retries once on false. Crypto provider details, commit durability, uncertain publication and login coordination remain unported. No runtime rotation or network retry added.",
+    "evidence": "docs/protocol/notification-ack-audit.md#auth-key-candidate-and-storage-verification-2026-11-06"
 }
 }

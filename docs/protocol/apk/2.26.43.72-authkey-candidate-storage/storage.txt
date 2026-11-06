@@ -1,0 +1,19 @@
+
+# class: LX/144;
+# extends: Ljava/lang/Object;
+
+.method public A06(VLLL)  # .registers 4
+    # full signature: LX/144;->A06(Landroid/content/SharedPreferences;LX/144;[B)V
+    0000..0006  invoke-direct  {v2, v1, v3}, LX/144;->A09(Landroid/content/SharedPreferences;[B)Z
+    0006..0008  move-result  v0
+    0008..000c  if-nez  v0, +0x11
+    000c..0012  invoke-direct  {v2, v1, v3}, LX/144;->A09(Landroid/content/SharedPreferences;[B)Z
+    0012..0014  move-result  v0
+    0014..0018  if-nez  v0, +0xb
+    0018..001e  const-string/jumbo  v1, "unable to write client static keypair"
+    001e..0022  new-instance  v0, Ljava/lang/IllegalStateException;
+    0022..0028  invoke-direct  {v0, v1}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+    0028..002a  throw  v0
+    002a..002c  return-void
+    # exception table: 0 try range(s)
+.end method

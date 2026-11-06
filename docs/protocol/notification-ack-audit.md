@@ -472,3 +472,9 @@ and crash recovery remain open. No Rust backend, ACK, replay or live operation c
 **Confirmed static APK43.72:** [19h handler, gated w:auth:key request, callback and clock](apk/2.26.43.72-authkey-rotation/README.md) show a counter reset to5 followed by a gated candidate-key publication. Normal non-deferred base ACK follows handler return, independently of the later IQ outcome. Delivery failure only logs; error reply records failed time/decrements; success callback still requires local replacement to qualify before zeroing attempts and recording success. Bvj’s literal500 diagnostic is not parsed response-code evidence.
 
 **Missing Rust obligation:** no authkey_rotation consumer, publication/replacement lifecycle or ACK exists. Candidate generation, helper storage/atomicity, retry triggers, coherent time/state, correlation and restart uncertainty remain unported. ACK-only handling would not complete this behavior. No runtime change or live operation.
+
+### Auth-key candidate and storage verification (2026-11-06)
+
+**Confirmed static APK43.72:** [candidate generation, private/public serialization and storage readback](apk/2.26.43.72-authkey-candidate-storage/README.md) bind the request bytes to the public component, while local keypair encoding is private then public. The password-backed replacement helper verifies a readback byte match, retries once only after a false result, then throws on a second false result. Exceptions are not automatically retried there. This local storage retry is separate from IQ publication/retry authority.
+
+**Unknown / unchanged:** concrete crypto provider, encryption/commit/decryption helpers, all keystore branches, pre-send candidate durability, uncertain-result recovery and login coordination. No runtime port or live operation.

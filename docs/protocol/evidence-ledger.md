@@ -8222,3 +8222,5 @@ APK43.72 MEX IQ error matchers/wrappers traced; ignored backoff read does not es
 APK43.72 MEX error telemetry/product dispatch gap closed; exact raw-error field inventories bounded without claiming global nonuse. [MEX error delivery versus telemetry](mex.md#current-mex-error-delivery-versus-telemetry-2026-11-06). No live operation.
 
 APK43.72 authkey_rotation request/ACK ordering and response/local-key replacement boundaries retained. [Auth-key rotation lifecycle and missing Rust obligations](notification-ack-audit.md#auth-key-rotation-is-a-state-lifecycle-2026-11-06). No Rust runtime change.
+
+APK43.72 auth-key public-wire/private-public-storage distinction and bounded readback retry retained. [Auth-key candidate and storage verification](notification-ack-audit.md#auth-key-candidate-and-storage-verification-2026-11-06). No live operation.

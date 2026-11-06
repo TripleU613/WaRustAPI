@@ -1,0 +1,34 @@
+{
+  "README.md": {
+    "bytes": 3842,
+    "sha256": "87e5348203b2384eb7e873cd69549842c7e3e87a362e265e1aa0db4b25c59aa6"
+  },
+  "candidate.txt": {
+    "bytes": 3802,
+    "sha256": "9d3486149996dda179ee9e29f4b378daf0e7ea19cf7a1dd9f5130400780c0ec8"
+  },
+  "concat.txt": {
+    "bytes": 1063,
+    "sha256": "cfb807747e1d8863eb21387ce87bf187290966dbe3b48212a3de6fbb3def3a1e"
+  },
+  "provider.txt": {
+    "bytes": 3195,
+    "sha256": "daa2173536a3fda0fc8ab287945a36674b3a0f953dd39590549ade68344e666d"
+  },
+  "readback.txt": {
+    "bytes": 2235,
+    "sha256": "e1bd585bffa820980ff8cd21401e4f244fcc0151301ab04da0fc4c62c8221d4d"
+  },
+  "replacement.txt": {
+    "bytes": 1588,
+    "sha256": "2b3c173d9f40d8fd800dfabd7c366e3a0dac1aa0c920a2225c79bc67e7ab4304"
+  },
+  "split.txt": {
+    "bytes": 765,
+    "sha256": "e1b29e8a6ffbc6e22a7b33231f827189e3c4375f7c29e6dcf6ee57d1ef540ffa"
+  },
+  "storage.txt": {
+    "bytes": 855,
+    "sha256": "ffb6c73f93e94c54c9b8e32338f27da4387738470ebd67a0c3dfdb6eb77a88ea"
+  }
+}

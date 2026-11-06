@@ -1,0 +1,40 @@
+
+# class: LX/144;
+# extends: Ljava/lang/Object;
+
+.method private A09(ZLL)  # .registers 7
+    # full signature: LX/144;->A09(Landroid/content/SharedPreferences;[B)Z
+    0000..0004  iget-object  v0, v4, LX/144;->A0F:LX/149;
+    0004..000a  invoke-virtual  {v0, v6}, LX/149;->A03([B)LX/1np;
+    000a..000c  move-result-object  v1
+    000c..0010  const-string  v0, "client_static_keypair_pwd_enc"
+    0010..0016  invoke-direct  {v4, v1, v0}, LX/144;->A0A(LX/1np;Ljava/lang/String;)Z
+    0016..0018  move-result  v0
+    0018..001c  if-eqz  v0, +0x19
+    001c..0022  invoke-direct  {v4, v5}, LX/144;->A01(Landroid/content/SharedPreferences;)LX/1nq;
+    0022..0024  move-result-object  v0
+    0024..0028  if-eqz  v0, +0x13
+    0028..002e  invoke-virtual  {v0}, LX/1nq;->A02()[B
+    002e..0030  move-result-object  v0
+    0030..0036  invoke-static  {v6, v0}, Ljava/util/Arrays;->equals([B[B)Z
+    0036..0038  move-result  v0
+    0038..003c  if-eqz  v0, +0x9
+    003c..0040  const-string  v0, "AuthKeyStore/storedAndCanRead/3"
+    0040..0046  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0046..0048  const/4  v0, #0x1
+    0048..004a  return  v0
+    004a..004e  const-string  v0, "AuthKeyStore/storedAndCanReadPWD/read back a different key"
+    004e..0052  new-instance  v3, Ljava/lang/IllegalStateException;
+    0052..0058  invoke-direct  {v3, v0}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+    0058..005c  const-string  v2, "failed to store and read correct key"
+    005c..0060  const-string  v1, "EncryptedKeyHelper/reportEncryptedKeyHelperProblem/"
+    0060..0064  new-instance  v0, Ljava/lang/StringBuilder;
+    0064..006a  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    006a..0070  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0070..0076  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0076..0078  move-result-object  v0
+    0078..007e  invoke-static  {v0, v3}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    007e..0080  const/4  v0, #0x0
+    0080..0082  return  v0
+    # exception table: 0 try range(s)
+.end method

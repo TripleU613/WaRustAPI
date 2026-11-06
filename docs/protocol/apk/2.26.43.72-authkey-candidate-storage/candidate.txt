@@ -1,0 +1,95 @@
+
+# class: LX/1nq;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLL)  # .registers 3
+    # full signature: LX/1nq;-><init>(LX/1ns;LX/1nk;)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v2, v0, LX/1nq;->A02:LX/1nk;
+    000a..000e  iput-object  v1, v0, LX/1nq;->A01:LX/1ns;
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(L)  # .registers 4
+    # full signature: LX/1nq;->A00()LX/1nq;
+    0000..0004  const-string  v0, "best"
+    0004..000a  invoke-static  {v0}, LX/1oA;->A00(Ljava/lang/String;)LX/1oA;
+    000a..000c  move-result-object  v0
+    000c..0010  iget-object  v0, v0, LX/1oA;->A00:LX/1oB;
+    0010..0016  invoke-interface  {v0}, LX/1oB;->generatePrivateKey()[B
+    0016..0018  move-result-object  v3
+    0018..001e  invoke-interface  {v0, v3}, LX/1oB;->generatePublicKey([B)[B
+    001e..0020  move-result-object  v0
+    0020..0024  new-instance  v2, LX/1nk;
+    0024..002a  invoke-direct  {v2, v0}, LX/1nk;-><init>([B)V
+    002a..002e  new-instance  v1, LX/1ns;
+    002e..0034  invoke-direct  {v1, v3}, LX/1ns;-><init>([B)V
+    0034..0038  new-instance  v0, LX/1nq;
+    0038..003e  invoke-direct  {v0, v1, v2}, LX/1nq;-><init>(LX/1ns;LX/1nk;)V
+    003e..0040  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A01(LL)  # .registers 3
+    # full signature: LX/1nq;->A01([B)LX/1nq;
+    0000..0002  array-length  v1, v2
+    0002..0006  const/16  v0, #0x40
+    0006..000a  if-eq  v1, v0, +0x4
+    000a..000c  const/4  v0, #0x0
+    000c..000e  return-object  v0
+    000e..0012  const/16  v0, #0x20
+    0012..0018  invoke-static  {v2, v0, v0}, LX/1nr;->A06([BII)[[B
+    0018..001a  move-result-object  v1
+    001a..001c  const/4  v0, #0x1
+    001c..0020  aget-object  v0, v1, v0
+    0020..0024  new-instance  v2, LX/1nk;
+    0024..002a  invoke-direct  {v2, v0}, LX/1nk;-><init>([B)V
+    002a..002c  const/4  v0, #0x0
+    002c..0030  aget-object  v0, v1, v0
+    0030..0034  new-instance  v1, LX/1ns;
+    0034..003a  invoke-direct  {v1, v0}, LX/1ns;-><init>([B)V
+    003a..003e  new-instance  v0, LX/1nq;
+    003e..0044  invoke-direct  {v0, v1, v2}, LX/1nq;-><init>(LX/1ns;LX/1nk;)V
+    0044..0046  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A02(L)  # .registers 5
+    # full signature: LX/1nq;->A02()[B
+    0000..0004  iget-object  v0, v4, LX/1nq;->A01:LX/1ns;
+    0004..0008  iget-object  v3, v0, LX/1ns;->A01:[B
+    0008..000c  iget-object  v0, v4, LX/1nq;->A02:LX/1nk;
+    000c..0010  iget-object  v2, v0, LX/1nk;->A01:[B
+    0010..0012  const/4  v0, #0x2
+    0012..0016  new-array  v1, v0, [[B
+    0016..0018  const/4  v0, #0x0
+    0018..001c  aput-object  v3, v1, v0
+    001c..001e  const/4  v0, #0x1
+    001e..0022  aput-object  v2, v1, v0
+    0022..0028  invoke-static  {v1}, LX/1nr;->A05([[B)[B
+    0028..002a  move-result-object  v0
+    002a..002c  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public destroy(V)  # .registers 2
+    # full signature: LX/1nq;->destroy()V
+    0000..0004  iget-boolean  v0, v1, LX/1nq;->A00:Z
+    0004..0008  if-nez  v0, +0xf
+    0008..000c  iget-object  v0, v1, LX/1nq;->A01:LX/1ns;
+    000c..0012  invoke-virtual  {v0}, LX/1ns;->destroy()V
+    0012..0016  iget-object  v0, v1, LX/1nq;->A02:LX/1nk;
+    0016..001c  invoke-virtual  {v0}, LX/1nk;->destroy()V
+    001c..001e  const/4  v0, #0x1
+    001e..0022  iput-boolean  v0, v1, LX/1nq;->A00:Z
+    0022..0024  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public isDestroyed(Z)  # .registers 2
+    # full signature: LX/1nq;->isDestroyed()Z
+    0000..0004  iget-boolean  v0, v1, LX/1nq;->A00:Z
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,19 @@
+
+# class: LX/1nr;
+# extends: Ljava/lang/Object;
+
+.method public A06(LLII)  # .registers 7
+    # full signature: LX/1nr;->A06([BII)[[B
+    0000..0002  const/4  v0, #0x2
+    0002..0006  new-array  v3, v0, [[B
+    0006..000a  new-array  v0, v5, [B
+    000a..000c  const/4  v2, #0x0
+    000c..0010  aput-object  v0, v3, v2
+    0010..0016  invoke-static  {v4, v2, v0, v2, v5}, Ljava/lang/System;->arraycopy(Ljava/lang/Object;ILjava/lang/Object;II)V
+    0016..001a  new-array  v1, v6, [B
+    001a..001c  const/4  v0, #0x1
+    001c..0020  aput-object  v1, v3, v0
+    0020..0026  invoke-static  {v4, v5, v1, v2, v6}, Ljava/lang/System;->arraycopy(Ljava/lang/Object;ILjava/lang/Object;II)V
+    0026..0028  return-object  v3
+    # exception table: 0 try range(s)
+.end method
