@@ -1,3 +1,10 @@
+2026-11-06 — **Conditional blocklist observer identity query traced.**
+DC3's selected job can call the existing missing-LID pipeline before location
+state updates; per-chat state and helper filtering gate it. Network-unavailable
+sentinel skips the updates; downstream location wire effects remain open.
+[Evidence and limits](docs/protocol/chat-actions.md#blocklist-location-observer-query-boundary-2026-11-06).
+No production protocol change or live account operation.
+
 2026-11-06 — **Offline interface census closes blocklist observer handoff.**
 Added apk-virtual-overrides --include-interfaces with checked DEX type lists and
 transitive ancestry. Pinned callback routes to0d0.Blg;37 declared bodies retained,

@@ -1,0 +1,22 @@
+{
+  "README.md": {
+    "bytes": 4490,
+    "sha256": "3e1f18d3da6a533aa85de3e6a2c99ee22177b136f36a71aebe43c2454783aae9"
+  },
+  "contact-change.txt": {
+    "bytes": 4643,
+    "sha256": "30cb74a6cfa2cc3f50fdf29324defdbcb0d3b08db03d0cdc4892e918bd81119a"
+  },
+  "finalize.txt": {
+    "bytes": 2068,
+    "sha256": "c6c3198107f3b436c0ed7b59df42dc1efb810f90c739754d5abd5b1ea8c58f1c"
+  },
+  "job-selected.txt": {
+    "bytes": 5094,
+    "sha256": "0e5351fdd0a9cf3a5320492724879db1e15f71214a99f4fd99810f96eb142b86"
+  },
+  "updates.txt": {
+    "bytes": 758,
+    "sha256": "014477134acbcd122a76b7ba7736c318620e327b6df3ee97aab541c6d0f5ba7c"
+  }
+}

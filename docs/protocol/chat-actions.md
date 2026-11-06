@@ -1602,3 +1602,24 @@ README extraction, checksum bundle and subject APK digest match. Default
 superclass-only output matches the retained negative byte-for-byte. No live
 account, production protocol change or complete runtime dispatch claim.
 Repository hygiene passes (433 APK checksum bundles).
+
+## Blocklist location observer query boundary (2026-11-06)
+
+**Confirmed selected static:** [Fef selector39 and complete location helper methods](apk/2.26.43.72-blocklist-location-obligation/README.md)
+connect DC3.Blg to a conditional3KB.A01(all_changed,false) missing-LID
+preflight. Existing per-chat EVN participant state gates the call; helper
+filtering can still avoid a query. A specific network-unavailable sentinel
+returns before later updates. Otherwise local location-state helpers/listeners
+and a posted job run; their complete wire effects remain unknown. This is not
+an unconditional request on block/unblock or proof every observer is UI-only.
+
+Reuses retained pre-key identity-query construction/queue/MEX evidence rather
+than inventing another IQ. Active registrations, runtime state, downstream
+location effects and durable notification/ACK ownership remain open. Rust
+continues capturing unsupported blocklist notifications without ACK; no new
+production request, location feature or live account operation.
+
+Validation: four fresh APK exports and selected-case extraction match; branch
+targets, checksums and pinned APK digest verified. Formatting, OpenAPI library
+coverage, APK coverage freshness and repository hygiene pass (434 bundles).
+This evidence-only chunk changes no Rust behavior; no live test was performed.

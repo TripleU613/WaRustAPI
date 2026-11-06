@@ -1,0 +1,46 @@
+
+# class: LX/0zB;
+# extends: Ljava/lang/Object;
+
+.method public A0C(VLL)  # .registers 5
+    # full signature: LX/0zB;->A0C(LX/ESC;LX/0zB;)V
+    0000..0004  if-eqz  v3, +0x34
+    0004..0008  iget-object  v0, v4, LX/0zB;->A0p:LX/00x;
+    0008..000e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    000e..0010  move-result-object  v1
+    0010..0014  check-cast  v1, LX/EPb;
+    0014..0018  iget-object  v4, v3, LX/ESC;->A00:Ljava/lang/Integer;
+    0018..001c  iget-object  v3, v3, LX/ESC;->A01:Ljava/lang/Long;
+    001c..001e  const/4  v0, #0x0
+    001e..0024  invoke-static  {v4, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0024..0028  iget-object  v0, v1, LX/EPb;->A00:LX/05a;
+    0028..002c  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    002c..0032  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0032..0034  move-result-object  v2
+    0034..0038  check-cast  v2, LX/0NX;
+    0038..003c  new-instance  v1, LX/J6g;
+    003c..0042  invoke-direct  {v1}, LX/J6g;-><init>()V
+    0042..0048  invoke-virtual  {v4}, Ljava/lang/Number;->intValue()I
+    0048..004a  move-result  v0
+    004a..0050  packed-switch  v0, payload@0x80, cases=[0:@0x6a, 1:@0x6e, 2:@0x6e, 3:@0x50, 4:@0x50, 5:@0x50, 6:@0x72, 7:@0x76, 8:@0x7a], default@0x50
+    0050..0052  const/4  v0, #0x3
+    0052..0058  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0058..005a  move-result-object  v0
+    005a..005e  iput-object  v0, v1, LX/J6g;->A00:Ljava/lang/Integer;
+    005e..0062  iput-object  v3, v1, LX/J6g;->A01:Ljava/lang/Long;
+    0062..0068  invoke-interface  {v2, v1}, LX/0NX;->CSW(LX/0FP;)V
+    0068..006a  return-void
+    006a..006c  const/4  v0, #0x1
+    006c..006e  goto  -0xd
+    006e..0070  const/4  v0, #0x2
+    0070..0072  goto  -0xf
+    0072..0074  const/4  v0, #0x4
+    0074..0076  goto  -0x11
+    0076..0078  const/4  v0, #0x5
+    0078..007a  goto  -0x13
+    007a..007c  const/4  v0, #0x6
+    007c..007e  goto  -0x15
+    007e..0080  nop
+    0080..00ac  packed-switch-payload  size=9
+    # exception table: 0 try range(s)
+.end method

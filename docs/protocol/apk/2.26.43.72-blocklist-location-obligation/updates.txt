@@ -1,0 +1,19 @@
+
+# class: LX/0zB;
+# extends: Ljava/lang/Object;
+
+.method public A0I(VLL)  # .registers 4
+    # full signature: LX/0zB;->A0I(LX/0zB;Ljava/util/List;)V
+    0000..0006  invoke-interface  {v3}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0006..0008  move-result-object  v1
+    0008..000e  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    000e..0010  move-result  v0
+    0010..0014  if-eqz  v0, +0xc
+    0014..001a  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    001a..001c  move-result-object  v0
+    001c..0020  check-cast  v0, LX/ESC;
+    0020..0026  invoke-static  {v0, v2}, LX/0zB;->A0C(LX/ESC;LX/0zB;)V
+    0026..0028  goto  -0xf
+    0028..002a  return-void
+    # exception table: 0 try range(s)
+.end method
