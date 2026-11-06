@@ -1599,3 +1599,14 @@ This is an unported recovery request, not ordinary blocklist/set replay or a
 new runtime route. Its asset differs from the historical37.71 group queries
 above. Final wire envelope/transport, effective mode, identifier provenance,
 callback/deadline and safe adoption remain open. No new request was sent.
+
+## Migration null values and scoped callback lifetime (2026-11-06)
+
+[Current pinned GraphQL node/map and coroutine trace](chat-actions.md#migration-values-and-coroutine-completion-2026-11-06)
+confirms direct null setter values survive intermediate TreeMap export, while
+0i1 primitive wrappers omit null arguments. This does not yet close the final
+serialized wire representation. The migration coroutine's selected error policy
+returnsfalse and forwardsGiw failure. Its fresh default reaches the32-second
+non-Pando send branch, not a universal Pando/outer-wait deadline. No dedicated
+sender, request retries or migration state adoption are implemented by this
+research; final serialization/provider and writer/account authority remain open.

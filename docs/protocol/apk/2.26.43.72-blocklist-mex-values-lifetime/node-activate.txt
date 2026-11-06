@@ -1,0 +1,31 @@
+
+# class: LX/NhZ;
+# extends: Ljava/lang/Object;
+
+.method public A06(VL)  # .registers 5
+    # full signature: LX/NhZ;->A06(LX/0iH;)V
+    0000..0004  iget-object  v0, v3, LX/NhZ;->A05:Ljava/util/concurrent/atomic/AtomicInteger;
+    0004..000a  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicInteger;->incrementAndGet()I
+    000a..000c  move-result  v2
+    000c..000e  const/4  v1, #0x1
+    000e..0012  if-ne  v2, v1, +0x13
+    0012..0016  iput-object  v4, v3, LX/NhZ;->A01:LX/0iH;
+    0016..001a  iget-boolean  v0, v3, LX/NhZ;->A03:Z
+    001a..001e  if-nez  v0, +0x5
+    001e..0022  iput-boolean  v1, v3, LX/NhZ;->A03:Z
+    0022..0024  return-void
+    0024..0028  const-string  v1, "Internal bug, expected object to be immutable"
+    0028..002c  new-instance  v0, Ljava/lang/IllegalStateException;
+    002c..0032  invoke-direct  {v0, v1}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+    0032..0034  throw  v0
+    0034..0038  const-string  v1, "Acquired object with non-zero initial refCount current = "
+    0038..003c  new-instance  v0, Ljava/lang/StringBuilder;
+    003c..0042  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0042..0048  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0048..004e  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    004e..0050  move-result-object  v1
+    0050..0054  new-instance  v0, Ljava/lang/IllegalStateException;
+    0054..005a  invoke-direct  {v0, v1}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+    005a..005c  throw  v0
+    # exception table: 0 try range(s)
+.end method

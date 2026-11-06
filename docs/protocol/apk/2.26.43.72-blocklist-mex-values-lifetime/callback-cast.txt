@@ -1,0 +1,12 @@
+
+# class: LX/6oh;
+# extends: Ljava/lang/Object;
+
+.method public A0d(LL)  # .registers 2
+    # full signature: LX/6oh;->A0d(Ljava/lang/Object;)LX/0id;
+    0000..0004  check-cast  v1, LX/0id;
+    0004..0006  const/4  v0, #0x0
+    0006..000c  invoke-static  {v1, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000c..000e  return-object  v1
+    # exception table: 0 try range(s)
+.end method

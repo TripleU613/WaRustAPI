@@ -1,3 +1,12 @@
+2026-11-06 — **Migration intermediate values and coroutine lifetime narrowed.**
+
+Direct GraphQL setters retain null through TreeMap export; wrapper omission
+rules differ. Selected error policy is literal false and forwards Giw failure
+to the waiting coroutine. Fresh operation supplies32s only to its non-Pando
+send branch; final wire null encoding/Pando lifetime remain open.
+[Evidence and limits](chat-actions.md#migration-values-and-coroutine-completion-2026-11-06).
+No Rust behavior change or live account operation.
+
 2026-11-06 — **Blocklist migration request and state authority traced.**
 
 Pinned MigrateBlocklistLid MEX operation has a distinct input/hash/list/dirty-ack

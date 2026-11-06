@@ -1,0 +1,113 @@
+
+# class: LX/Nha;
+# extends: LX/NhZ;
+
+.method public <init>(V)  # .registers 2
+    # full signature: LX/Nha;-><init>()V
+    0000..0006  invoke-direct  {v1}, LX/NhZ;-><init>()V
+    0006..000a  const/16  v0, #0x20
+    000a..0010  invoke-static  {v0}, LX/3q0;->A10(I)Ljava/util/ArrayList;
+    0010..0012  move-result-object  v0
+    0012..0016  iput-object  v0, v1, LX/Nha;->A01:Ljava/util/ArrayList;
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(VLLL)  # .registers 4
+    # full signature: LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    0000..0006  invoke-direct  {v1, v3}, LX/Nha;->A01(Ljava/lang/String;)V
+    0006..000a  iget-object  v0, v1, LX/Nha;->A01:Ljava/util/ArrayList;
+    000a..0010  invoke-virtual  {v0, v3}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0010..0016  invoke-virtual  {v0, v2}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0016..001a  iget  v0, v1, LX/Nha;->A00:I
+    001a..001e  add-int/lit8  v0, v0, #0x1
+    001e..0022  iput  v0, v1, LX/Nha;->A00:I
+    0022..0024  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method private A01(VL)  # .registers 4
+    # full signature: LX/Nha;->A01(Ljava/lang/String;)V
+    0000..0004  iget-boolean  v0, v2, LX/NhZ;->A03:Z
+    0004..0008  if-eqz  v0, +0x1f
+    0008..000c  if-eqz  v3, +0x9
+    000c..0012  invoke-virtual  {v3}, Ljava/lang/String;->isEmpty()Z
+    0012..0014  move-result  v0
+    0014..0018  if-nez  v0, +0x3
+    0018..001a  return-void
+    001a..001e  const-string  v1, "key="
+    001e..0022  new-instance  v0, Ljava/lang/StringBuilder;
+    0022..0028  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0028..002e  invoke-virtual  {v0, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    002e..0034  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0034..0036  move-result-object  v0
+    0036..003a  new-instance  v1, Ljava/lang/IllegalArgumentException;
+    003a..0040  invoke-direct  {v1, v0}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;)V
+    0040..0042  throw  v1
+    0042..0046  const-string  v0, "Expected object to be mutable"
+    0046..004a  new-instance  v1, Ljava/lang/IllegalStateException;
+    004a..0050  invoke-direct  {v1, v0}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+    0050..0052  throw  v1
+    # exception table: 0 try range(s)
+.end method
+
+.method public A07(LL)  # .registers 4
+    # full signature: LX/Nha;->A07(Ljava/lang/String;)LX/Nhb;
+    0000..0004  iget-object  v1, v2, LX/NhZ;->A01:LX/0iH;
+    0004..0008  iget-object  v0, v1, LX/0iH;->A00:LX/0iL;
+    0008..000e  invoke-virtual  {v0}, LX/0iK;->A8D()Ljava/lang/Object;
+    000e..0010  move-result-object  v0
+    0010..0014  check-cast  v0, LX/Nhb;
+    0014..0018  if-nez  v0, +0x7
+    0018..001c  new-instance  v0, LX/Nhb;
+    001c..0022  invoke-direct  {v0}, LX/Nhb;-><init>()V
+    0022..0028  invoke-virtual  {v0, v1}, LX/NhZ;->A06(LX/0iH;)V
+    0028..002e  invoke-virtual  {v2, v0, v3}, LX/Nha;->A0A(LX/NhZ;Ljava/lang/String;)V
+    002e..0030  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A08(LI)  # .registers 4
+    # full signature: LX/Nha;->A08(I)Ljava/lang/Object;
+    0000..0004  if-ltz  v3, +0x11
+    0004..0008  iget  v0, v2, LX/Nha;->A00:I
+    0008..000c  if-ge  v3, v0, +0xd
+    000c..0010  iget-object  v1, v2, LX/Nha;->A01:Ljava/util/ArrayList;
+    0010..0014  mul-int/lit8  v0, v3, #0x2
+    0014..0018  add-int/lit8  v0, v0, #0x1
+    0018..001e  invoke-virtual  {v1, v0}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+    001e..0020  move-result-object  v0
+    0020..0022  return-object  v0
+    0022..0026  new-instance  v0, Ljava/lang/ArrayIndexOutOfBoundsException;
+    0026..002c  invoke-direct  {v0, v3}, Ljava/lang/ArrayIndexOutOfBoundsException;-><init>(I)V
+    002c..002e  throw  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A09(LI)  # .registers 4
+    # full signature: LX/Nha;->A09(I)Ljava/lang/String;
+    0000..0004  if-ltz  v3, +0x11
+    0004..0008  iget  v0, v2, LX/Nha;->A00:I
+    0008..000c  if-ge  v3, v0, +0xd
+    000c..0010  iget-object  v1, v2, LX/Nha;->A01:Ljava/util/ArrayList;
+    0010..0014  mul-int/lit8  v0, v3, #0x2
+    0014..001a  invoke-virtual  {v1, v0}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+    001a..001c  move-result-object  v0
+    001c..0020  check-cast  v0, Ljava/lang/String;
+    0020..0022  return-object  v0
+    0022..0026  new-instance  v0, Ljava/lang/ArrayIndexOutOfBoundsException;
+    0026..002c  invoke-direct  {v0, v3}, Ljava/lang/ArrayIndexOutOfBoundsException;-><init>(I)V
+    002c..002e  throw  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A0A(VLL)  # .registers 3
+    # full signature: LX/Nha;->A0A(LX/NhZ;Ljava/lang/String;)V
+    0000..0006  invoke-direct  {v0, v2}, LX/Nha;->A01(Ljava/lang/String;)V
+    0006..000c  invoke-virtual  {v1}, LX/NhZ;->A03()V
+    000c..0012  invoke-static  {v0, v1, v2}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    0012..0018  invoke-virtual  {v1}, LX/NhZ;->A03()V
+    0018..001c  iput-object  v0, v1, LX/NhZ;->A00:LX/NhZ;
+    001c..001e  return-void
+    # exception table: 0 try range(s)
+.end method

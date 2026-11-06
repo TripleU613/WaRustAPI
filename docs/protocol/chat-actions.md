@@ -1154,3 +1154,35 @@ MEX extractor's provenance check, APK subject hash, complete REA manager source
 and bundle checksums match. Formatting, CLI reference regeneration, OpenAPI
 library coverage, APK coverage freshness and repository hygiene pass. No Rust
 behavior changed, so no new runtime-test or live-result claim is made.
+
+## Migration values and coroutine completion (2026-11-06)
+
+**Confirmed selected pinned static:** [complete input/object conversion,
+callback discriminators/constructors and shared-operation comparison](apk/2.26.43.72-blocklist-mex-values-lifetime/README.md)
+close several previously open intermediate boundaries. Direct String/Boolean
+GraphQlCallInput setters append null values; A03/private conversion retains
+those named values in TreeMap, with last-pair overwrite for duplicate names.
+The0i1 primitive wrappers instead skip null. Final wire JSON null/omission
+semantics remain unverified, so neither layer alone dictates transmitted bytes.
+
+Migration2LE.A0Q selectsIE8 case3 through0iq.ARv. CxG case16 installs success
+CxE case43 and errorCxG case15; constructors/casts bind their captures.
+The policy helper2L8.A1A boxesfalse. The error wrapper therefore resumes
+Giw(Hbw) failure to the waiting continuation; it is not evidence for an
+intentional indefinite error wait. That matches the prior8ht catch/7Db/7gZ
+path rather than7Da mode/cache adoption. All native callback races, account
+ownership and lower error admission remain separate.
+
+The current factory/constructor and direct producer path bind32000ms to the
+selected non-Pando MEX send branch. The callback initializer does not alter
+that default. Pando effective timeout, outer wait/cancellation and write lifetime
+are not inferred as32s. The operation handle is discarded byAQY; no new retained
+cancel authority is shown. Existing shared factory/adapter exports were checked
+against fresh selected methods. No Rust behavior or live account operation.
+
+Validation:15 selected DEX exports reproduce byte-for-byte; APK subject hash,
+complete REA map-export source and bundle checksums match. Shared operation
+constructor/ARv and callback adapter match the retained methods. Formatting,
+CLI reference regeneration, OpenAPI library coverage, APK coverage freshness
+and repository hygiene pass. No Rust behavior changed; runtime tests were not
+rerun and no new runtime/live result is claimed for this research-only chunk.

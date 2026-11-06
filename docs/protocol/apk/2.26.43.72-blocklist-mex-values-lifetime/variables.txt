@@ -1,0 +1,58 @@
+
+# class: LX/0i1;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 2
+    # full signature: LX/0i1;-><init>()V
+    0000..0006  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    0006..000a  new-instance  v0, LX/0iG;
+    000a..0010  invoke-direct  {v0}, Lcom/facebook/graphql/calls/GraphQlCallInput;-><init>()V
+    0010..0014  iput-object  v0, v1, LX/0i1;->A00:LX/0iG;
+    0014..0016  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(VLL)  # .registers 4
+    # full signature: LX/0i1;->A00(Lcom/facebook/graphql/calls/GraphQlCallInput;Ljava/lang/String;)V
+    0000..0004  if-eqz  v2, +0x7
+    0004..0008  iget-object  v0, v1, LX/0i1;->A00:LX/0iG;
+    0008..000e  invoke-virtual  {v0, v2, v3}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A05(Lcom/facebook/graphql/calls/GraphQlCallInput;Ljava/lang/String;)V
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A01(VLL)  # .registers 4
+    # full signature: LX/0i1;->A01(Ljava/lang/Number;Ljava/lang/String;)V
+    0000..0004  if-eqz  v2, +0x7
+    0004..0008  iget-object  v0, v1, LX/0i1;->A00:LX/0iG;
+    0008..000e  invoke-virtual  {v0, v2, v3}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A06(Ljava/lang/Number;Ljava/lang/String;)V
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A02(VLL)  # .registers 4
+    # full signature: LX/0i1;->A02(Ljava/lang/String;Ljava/lang/Boolean;)V
+    0000..0004  if-eqz  v3, +0x7
+    0004..0008  iget-object  v0, v1, LX/0i1;->A00:LX/0iG;
+    0008..000e  invoke-virtual  {v0, v2, v3}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A08(Ljava/lang/String;Ljava/lang/Boolean;)V
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A03(VLL)  # .registers 4
+    # full signature: LX/0i1;->A03(Ljava/lang/String;Ljava/lang/String;)V
+    0000..0004  if-eqz  v3, +0x7
+    0004..0008  iget-object  v0, v1, LX/0i1;->A00:LX/0iG;
+    0008..000e  invoke-virtual  {v0, v2, v3}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A0A(Ljava/lang/String;Ljava/lang/String;)V
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public Axc(L)  # .registers 2
+    # full signature: LX/0i1;->Axc()Ljava/util/Map;
+    0000..0004  iget-object  v0, v1, LX/0i1;->A00:LX/0iG;
+    0004..000a  invoke-virtual  {v0}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A03()Ljava/util/TreeMap;
+    000a..000c  move-result-object  v0
+    000c..000e  return-object  v0
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,17 @@
+
+# class: LX/0iH;
+# extends: Ljava/lang/Object;
+
+.method public A01(L)  # .registers 2
+    # full signature: LX/0iH;->A01()LX/Nha;
+    0000..0004  iget-object  v0, v1, LX/0iH;->A01:LX/0iL;
+    0004..000a  invoke-virtual  {v0}, LX/0iK;->A8D()Ljava/lang/Object;
+    000a..000c  move-result-object  v0
+    000c..0010  check-cast  v0, LX/Nha;
+    0010..0014  if-nez  v0, +0x7
+    0014..0018  new-instance  v0, LX/Nha;
+    0018..001e  invoke-direct  {v0}, LX/Nha;-><init>()V
+    001e..0024  invoke-virtual  {v0, v1}, LX/NhZ;->A06(LX/0iH;)V
+    0024..0026  return-object  v0
+    # exception table: 0 try range(s)
+.end method

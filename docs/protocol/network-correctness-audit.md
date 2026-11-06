@@ -4573,3 +4573,12 @@ complete mode/identifier/callback authority. Native isRollback completion can
 log without either mode or cache writes. Do not replay the original set or
 promote a current cached mapping into migration permission. No runtime change,
 new timer, automatic fetch or live operation.
+
+## MigrateBlocklistLid values and error/timeout boundaries (2026-11-06)
+
+[Selected value/coroutine audit](chat-actions.md#migration-values-and-coroutine-completion-2026-11-06)
+separates null-retaining intermediate GraphQL maps from null-skipping primitive
+wrappers and untraced final serialization. Literal-false error policy forwards
+failure; selected non-Pando send inherits32000ms, while Pando/outer wait and
+writer/account authority remain open. No universal retry timer, cancellation,
+new Rust request or live result is inferred. No runtime behavior changed.
