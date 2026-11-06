@@ -18040,5 +18040,11 @@
     "x-library": ["whatsapp_api::transport::messaging::validate_received_ack", "whatsapp_api::transport::messaging::message_ack_outcome_for", "whatsapp_api::transport::outgoing::acknowledge"],
     "description": "Plain lid/hosted.lid ACK text follows the pinned0Dx constructor:1..15 ASCII digits, no leading zero; hosted.lid uses the same canonical lid server. Invalid plain LID call sender follows the known-null recoverable route before later call fields. Message ACK invalid recipient becomes null/falls back to from; invalid from cannot establish chat without a valid selected recipient. Valid text alias canonicalizes before exact saved-chat correlation. Numeric ACK error Unicode parsing remains separate. Explicit agent/device syntax, opaque typed JIDs, other families/receipt parser routes and full recovery remain unported. No global JID rewrite, PN/LID merge, call feature, request, retry or live operation.",
     "evidence": "docs/protocol/message-ack.md#plain-lid-text-uses-constructor-grammar-and-canonical-server-2026-11-06"
+  },
+  "x-lid-device-ack-text-classification": {
+    "x-cli": true, "x-transport": true, "x-live": false,
+    "x-library": ["whatsapp_api::transport::messaging::validate_received_ack", "whatsapp_api::transport::messaging::message_ack_outcome_for", "whatsapp_api::transport::outgoing::acknowledge"],
+    "description": "LID/hosted.lid ACK text adapter preserves native null/user/device class and canonical base user. Device suffix uses Java signed-i32 parsing then signed-byte0..99 admission; hosted device additionally requires original integer99. Dot suffix is not parsed as agent; explicit device0 remains DeviceJid. Invalid construction follows null-sender call recovery, valid device recipient falls back to from, and valid device from unwraps to user for exact chat correlation. Ordinary success participant guard uses the same class/null result, including hosted aliases; refusal/challenge rules remain separate. No global JID rewrite, emitted device value, opaque binary-JID equivalence, identity merge, call feature, request, retry or live operation.",
+    "evidence": "docs/protocol/message-ack.md#explicit-lid-device-ack-text-preserves-native-class-and-narrowing-2026-11-06"
   }
 }

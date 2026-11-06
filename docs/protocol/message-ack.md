@@ -636,3 +636,42 @@ Validation: 1,468 workspace/all-feature tests passed. Strict workspace/all-targe
 all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
 validation, APK coverage freshness and repository hygiene passed. Exact pinned
 0Dx class re-export and APK hash verified. Offline only.
+
+## Explicit LID device ACK text preserves native class and narrowing (2026-11-06)
+
+**Confirmed selected pinned static / Rust correction:** [new0EM/Dv6/base
+constructor exports and exact parser re-export](apk/2.26.43.72-lid-device-ack-text/README.md)
+resolve explicit LID device/agent text for this ACK adapter. Native parsing uses
+last delimiters and a Java signed-i32 device suffix, ignores the dot suffix as
+an agent number, then narrows to signed byte before checking0..99. Hosted LID
+adds original-int==99. Explicit device0 is still a DeviceJid. These semantics
+differ from Rust generic unsigned-u16/device-zero representation.
+
+Shared LID ACK text parsing now retains null versus user versus device class
+and base user without changing the global Jid model. It supplies call sender
+recovery, selected message chat and the ordinary participant-success guard.
+Invalid device construction is null; a device recipient cannot pass the native
+UserJid accessor and falls back to from. A valid device from unwraps to its
+canonical LID user. Valid plain/device hosted LID participants now retain the
+ordinary success guard, while constructor-null participants do not. Error-
+present refusal and459 challenge handling remain separate.
+
+Real outbox selection/reopen controls now cover zero devices, dot-only/ignored
+agent strings, signed and Unicode device suffixes, byte-wrap boundary values,
+i32 overflow and hosted99 versus355. Participant success/refusal tests verify
+once-only terminal/uncertain facts across reopen. Call field-ordering controls
+cross valid/null native device constructions and preserve global numeric/459
+precedence; actor continuation includes invalid device senders with captured
+frames followed by normal receipt barriers. Existing valid and malformed ACK,
+privacy, account/member/callback ownership and late-ACK tests remain unchanged.
+
+Limits: this handles LID/hosted.lid text ACK attributes, not opaque typed/binary
+JIDs or a global routing/serialization model. Other families, all receipt JID
+parsers, full native cache/provider behavior and account recovery remain open.
+The parser emits no network device values and authorizes no retry or identity
+merge. No call feature, new request/response or live account operation.
+
+Validation: 1,470 workspace/all-feature tests passed. Strict workspace/all-target/
+all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
+validation, APK coverage freshness and repository hygiene passed. Exact pinned
+parser re-export and APK hash verified. Offline only.

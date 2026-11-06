@@ -1,0 +1,18 @@
+{
+  "README.md": {
+    "bytes": 4380,
+    "sha256": "9f5b9f6c1a99def9cba75b1126e7fe5cd4579fef3e93b205b1dfc9d7e0f561f9"
+  },
+  "device-constructor.txt": {
+    "bytes": 1718,
+    "sha256": "aeeb6523d16134888e9eebe3032aac265706b8ca2e8a2b3c3e3dd77fffa843f7"
+  },
+  "hosted-device.txt": {
+    "bytes": 3236,
+    "sha256": "a06d969d506c7699732a8279c086cae9c44696b9a586c290ef1141d854a7c81e"
+  },
+  "lid-device.txt": {
+    "bytes": 2648,
+    "sha256": "d91c1c7a28ff525e4e3bcb100080e2652b94706144b896db00729805091d515e"
+  }
+}

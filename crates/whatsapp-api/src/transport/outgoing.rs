@@ -1259,15 +1259,18 @@ pub(super) use super::messaging::is_auth_challenge_ack;
 // The optional ACK JID accessor returns null on failed plain LID text
 // construction. Both native text aliases use 0Dx.getServer() == lid.
 fn message_ack_address(node: &Node, name: &str) -> Option<crate::model::jid::Jid> {
-    if let Some(text) = node.get_attr(name).and_then(|value| value.as_text())
-        && let Some(user) = super::messaging::plain_lid_text_user(text)
+    if let Some(parsed) = node
+        .get_attr(name)
+        .and_then(|value| value.as_text())
+        .and_then(super::messaging::ack_lid_text)
     {
-        if !super::messaging::native_plain_lid_user_valid(user) {
-            return None;
-        }
-        let mut jid = super::receipts::jid(node, name)?;
-        jid.server = Server::Lid;
-        return Some(jid);
+        use super::messaging::AckLidText;
+        let user = match parsed {
+            AckLidText::Null => return None,
+            AckLidText::Device(_) if name == "recipient" => return None,
+            AckLidText::User(user) | AckLidText::Device(user) => user,
+        };
+        return crate::model::jid::Jid::parse(&format!("{user}@lid")).ok();
     }
     super::receipts::jid(node, name)
 }
@@ -3038,6 +3041,25 @@ mod tests {
                 ("15555550100:7@s.whatsapp.net", None, true),
                 ("99999@lid", Some("12345@lid"), true),
                 ("12345:7@lid", None, true),
+                ("12345.foo@lid", None, true),
+                ("12345.:7@lid", None, true),
+                ("12345.9:7@lid", None, true),
+                ("12345:0@lid", None, true),
+                ("12345:100@lid", None, false),
+                ("12345:128@lid", None, false),
+                ("12345:255@lid", None, false),
+                ("12345:256@lid", None, true),
+                ("12345:-256@lid", None, true),
+                ("12345:355@lid", None, true),
+                ("12345:356@lid", None, false),
+                ("12345:2147483648@lid", None, false),
+                ("12345:２５６@lid", None, true),
+                ("12345:99@hosted.lid", None, true),
+                ("12345:355@hosted.lid", None, false),
+                ("12345:7@hosted.lid", None, false),
+                ("15555550100@s.whatsapp.net", Some("99999:0@lid"), true),
+                ("15555550100@s.whatsapp.net", Some("99999.0@lid"), true),
+                ("15555550100@s.whatsapp.net", Some("99999.foo@lid"), true),
                 ("99999@lid", Some("12345@hosted.lid"), true),
                 ("12345@hosted.lid", None, true),
                 ("0@lid", None, false),
@@ -3067,7 +3089,10 @@ mod tests {
                 store
                     .write(|tx| {
                         let mut entry = outbox().get_mut(tx, local_id)?.unwrap();
-                        if matches!(from, "99999@lid" | "12345:7@lid" | "12345@hosted.lid") {
+                        if from == "99999@lid"
+                            || (from.starts_with("12345")
+                                && (from.ends_with("@lid") || from.ends_with("@hosted.lid")))
+                        {
                             entry.intent.chat = ChatId::from_jid(&Jid::parse("12345@lid")?)?;
                         }
                         entry.wire_id = Some(MessageId::new("fixture")?);
@@ -3299,6 +3324,69 @@ mod tests {
             store.read(|tx| outbox().get(tx, local_id)).unwrap(),
             Some(original)
         );
+    }
+
+    #[test]
+    fn lid_text_participant_guard_uses_native_device_constructor() {
+        for error in [None, Some("500")] {
+            for (participant, blocks_success) in [
+                ("12345:0@lid", true),
+                ("12345.foo@lid", true),
+                ("12345:-256@lid", true),
+                ("12345:99@hosted.lid", true),
+                ("12345@hosted.lid", true),
+                ("12345:100@lid", false),
+                ("12345:355@hosted.lid", false),
+                ("0:7@lid", false),
+            ] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("participant-lid-device.redb");
+                let store = open(&path);
+                let local_id = enqueue(&store);
+                store
+                    .write(|tx| {
+                        let mut entry = outbox().get_mut(tx, local_id)?.unwrap();
+                        entry.wire_id = Some(MessageId::new("fixture")?);
+                        outbox().set_progress(tx, &mut entry, AttemptProgress::InFlight)
+                    })
+                    .unwrap();
+                let before = store.read(|tx| outbox().get(tx, local_id)).unwrap();
+                let mut ack = Node::new("ack")
+                    .attr("class", "message")
+                    .attr("id", "fixture")
+                    .attr("from", "15555550100@s.whatsapp.net")
+                    .attr("participant", participant);
+                if let Some(error) = error {
+                    ack = ack.attr("error", error);
+                }
+                let settles = error.is_some() || !blocks_success;
+                assert_eq!(
+                    acknowledge(&store, &ack).unwrap(),
+                    settles,
+                    "{participant}/{error:?}"
+                );
+                assert!(!acknowledge(&store, &ack).unwrap());
+                let after = store.read(|tx| outbox().get(tx, local_id)).unwrap();
+                if !settles {
+                    assert_eq!(after, before);
+                } else {
+                    let facts = &after.as_ref().unwrap().facts;
+                    assert_eq!(facts.len(), 1);
+                    assert_eq!(
+                        facts[0].kind,
+                        if error.is_some() {
+                            DeliveryFactKind::Failed
+                        } else {
+                            DeliveryFactKind::ServerAccepted
+                        }
+                    );
+                }
+                drop(store);
+                let store = open(&path);
+                assert_eq!(store.read(|tx| outbox().get(tx, local_id)).unwrap(), after);
+                assert!(begin_selected(&store, Some(local_id)).unwrap().is_none());
+            }
+        }
     }
 
     #[test]

@@ -1097,6 +1097,14 @@ pub fn message_ack_outcome_for(node: &Node, expected: &Jid) -> MessageAckOutcome
 // ordinary success ignores a converted participant. Plain PN/LID and their
 // devices convert too. Special bot-feedback handling is not implemented here.
 pub(crate) fn ordinary_ack_has_participant(node: &Node) -> bool {
+    if let Some(parsed) = node
+        .get_attr("participant")
+        .and_then(|value| value.as_text())
+        .and_then(ack_lid_text)
+    {
+        return !matches!(parsed, AckLidText::Null);
+    }
+
     super::receipts::jid(node, "participant").is_some_and(|jid| {
         matches!(
             jid.server,
@@ -1133,9 +1141,54 @@ pub(crate) fn native_plain_lid_user_valid(user: &str) -> bool {
         && !user.starts_with('0')
         && user.bytes().all(|byte| byte.is_ascii_digit())
 }
-pub(crate) fn plain_lid_text_user(text: &str) -> Option<&str> {
-    let (user, domain) = text.rsplit_once('@')?;
-    (matches!(domain, "lid" | "hosted.lid") && !user.contains([':', '.'])).then_some(user)
+pub(crate) enum AckLidText<'a> {
+    Null,
+    User(&'a str),
+    Device(&'a str),
+}
+// Pinned 0Dd.A00 uses last dot/colon, ignores the dot suffix, parses
+// device with Integer.parseInt, then DeviceJid narrows to byte before range
+// checking. Dv6 adds original-int == 99 for hosted.lid devices.
+pub(crate) fn ack_lid_text(text: &str) -> Option<AckLidText<'_>> {
+    let (local, domain) = text.rsplit_once('@')?;
+    if !matches!(domain, "lid" | "hosted.lid") {
+        return None;
+    }
+    let dot = local.rfind('.');
+    let colon = local.rfind(':');
+    let prefix_end = match (dot, colon) {
+        (None, None) => {
+            return Some(if native_plain_lid_user_valid(local) {
+                AckLidText::User(local)
+            } else {
+                AckLidText::Null
+            });
+        }
+        (Some(dot), Some(colon)) => dot.min(colon),
+        (Some(index), None) | (None, Some(index)) => index,
+    };
+    if local.ends_with(['.', ':']) {
+        return Some(AckLidText::Null);
+    }
+    let user = &local[..prefix_end];
+    if !native_plain_lid_user_valid(user) {
+        return Some(AckLidText::Null);
+    }
+    let device = match colon {
+        None => 0,
+        Some(colon) => {
+            let Some(device) = super::mex::java_decimal_long(&local[colon + 1..])
+                .and_then(|v| i32::try_from(v).ok())
+            else {
+                return Some(AckLidText::Null);
+            };
+            device
+        }
+    };
+    if !(0..=99).contains(&(device as i8)) || (domain == "hosted.lid" && device != 99) {
+        return Some(AckLidText::Null);
+    }
+    Some(AckLidText::Device(user))
 }
 
 // APK43.72 0Tp.A0A -> 0Dd.A02/A00: definite null results for
@@ -1176,9 +1229,7 @@ fn call_ack_sender_known_null(node: &Node) -> bool {
     };
     // Empty-user cache keys omit @ (0Dd.A01); unknown domains cannot be
     // inserted by the selected parser or user/newsletter cache factories.
-    user.is_empty()
-        || !recognized(domain)
-        || plain_lid_text_user(text).is_some_and(|user| !native_plain_lid_user_valid(user))
+    user.is_empty() || !recognized(domain) || matches!(ack_lid_text(text), Some(AckLidText::Null))
 }
 
 /// Validate ACK required-ID, numeric and supported call-field admission. Stateful receivers must first capture the Node.
@@ -3147,6 +3198,48 @@ mod captured_wait_tests {
                     }
                 }
             }
+        }
+    }
+
+    #[test]
+    fn lid_device_constructor_controls_call_field_ordering_without_u16_guessing() {
+        for (sender, nonnull) in [
+            ("12345:0@lid", true),
+            ("12345.foo@lid", true),
+            ("12345.:7@lid", true),
+            ("12345:99@lid", true),
+            ("12345:100@lid", false),
+            ("12345:128@lid", false),
+            ("12345:255@lid", false),
+            ("12345:256@lid", true),
+            ("12345:355@lid", true),
+            ("12345:356@lid", false),
+            ("12345:-256@lid", true),
+            ("12345:-1@lid", false),
+            ("12345:+7@lid", true),
+            ("12345:２５６@lid", true),
+            ("12345:2147483647@lid", false),
+            ("12345:-2147483648@lid", true),
+            ("12345:2147483648@lid", false),
+            ("12345:99@hosted.lid", true),
+            ("12345:355@hosted.lid", false),
+            ("12345:7@hosted.lid", false),
+            ("12345.foo@hosted.lid", false),
+            ("12345:7.foo@lid", false),
+            ("12345..foo@lid", false),
+            ("0:7@lid", false),
+            ("0123:7@lid", false),
+            ("12345:@lid", false),
+            ("12345.@lid", false),
+            ("12345:bad@lid", false),
+        ] {
+            let ack = Node::new("ack")
+                .attr("class", "call")
+                .attr("id", "")
+                .attr("from", sender);
+            assert_eq!(validate_received_ack(&ack).is_ok(), !nonnull, "{sender}");
+            assert!(validate_received_ack(&ack.clone().attr("error", "459")).is_ok());
+            assert!(validate_received_ack(&ack.attr("error", "bad")).is_err());
         }
     }
 

@@ -2376,6 +2376,11 @@ mod tests {
             Some("1234567890123456@lid"),
             Some("１２３@lid"),
             Some("-1@hosted.lid"),
+            Some("12345:100@lid"),
+            Some("12345:128@lid"),
+            Some("12345:7@hosted.lid"),
+            Some("12345:355@hosted.lid"),
+            Some("0:7@lid"),
         ]
         .into_iter()
         .enumerate()
