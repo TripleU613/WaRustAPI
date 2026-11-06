@@ -1,0 +1,46 @@
+{
+  "client-constructors": [
+    "Lcom/crossapp/tigonhttp/TigonHttpClient;",
+    "<init>"
+  ],
+  "service-holder": [
+    "Lcom/crossapp/tigonhttp/TigonHttpClient$TigonHttpClientServiceHolder;",
+    null
+  ],
+  "category-enum": [
+    "LX/1FF;",
+    null
+  ],
+  "upload-category": [
+    "LX/K1R;",
+    "A02"
+  ],
+  "upload-purpose": [
+    "LX/K1R;",
+    "A03"
+  ],
+  "category-source": [
+    "LX/K1R;",
+    "A00"
+  ],
+  "purpose-source": [
+    "LX/K1R;",
+    "A01"
+  ],
+  "purpose-enum": [
+    "LX/1FH;",
+    null
+  ],
+  "metadata-constructor": [
+    "LX/K1R;",
+    "<init>"
+  ],
+  "standard-upload-metadata": [
+    "LX/MOu;",
+    "A03"
+  ],
+  "config-constructors": [
+    "Lcom/crossapp/tigonhttp/TigonHttpClientConfig;",
+    "<init>"
+  ]
+}

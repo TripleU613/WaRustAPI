@@ -1,0 +1,36 @@
+
+# class: LX/MOu;
+# extends: Ljava/lang/Object;
+
+.method public A03(LL)  # .registers 15
+    # full signature: LX/MOu;->A03(Ljava/lang/Integer;)LX/K1R;
+    0000..0004  iget-object  v0, v13, LX/MOu;->A01:LX/05a;
+    0004..000a  invoke-static  {v0}, LX/6oi;->A0K(LX/05a;)LX/08Y;
+    000a..000c  move-result-object  v3
+    000c..0010  iget-object  v0, v13, LX/MOu;->A06:LX/05a;
+    0010..0016  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0016..0018  move-result-object  v4
+    0018..001c  check-cast  v4, Lcom/whatsapp/wamsys/JniBridge;
+    001c..0020  iget-object  v2, v13, LX/MOu;->A0K:LX/MvM;
+    0020..0024  iget-object  v1, v2, LX/MvM;->A07:LX/M5T;
+    0024..0028  iget  v0, v1, LX/M5T;->A04:I
+    0028..002e  invoke-static  {v0}, LX/0gh;->A03(I)Ljava/lang/String;
+    002e..0030  move-result-object  v6
+    0030..0034  iget-object  v0, v1, LX/M5T;->A09:LX/0jS;
+    0034..0038  iget-object  v7, v0, LX/0jS;->A02:Ljava/lang/String;
+    0038..003e  invoke-virtual  {v2}, LX/MvM;->Ass()LX/Mtt;
+    003e..0040  move-result-object  v0
+    0040..0044  if-eqz  v0, +0xf
+    0044..0048  iget-object  v10, v0, LX/Mtt;->A0e:Ljava/lang/String;
+    0048..004a  const/4  v8, #0x0
+    004a..004c  const/4  v11, #0x1
+    004c..004e  const/4  v12, #0x0
+    004e..0052  new-instance  v2, LX/K1R;
+    0052..0054  move-object  v5, v14
+    0054..0056  move-object  v9, v8
+    0056..005c  invoke-direct/range  {v2..v12}, LX/K1R;-><init>(LX/08Y;Lcom/whatsapp/wamsys/JniBridge;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZ)V
+    005c..005e  return-object  v2
+    005e..0060  const/4  v10, #0x0
+    0060..0062  goto  -0xc
+    # exception table: 0 try range(s)
+.end method

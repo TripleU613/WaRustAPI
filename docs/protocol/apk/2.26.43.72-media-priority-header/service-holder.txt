@@ -1,0 +1,123 @@
+
+# class: Lcom/crossapp/tigonhttp/TigonHttpClient$TigonHttpClientServiceHolder;
+# extends: Lcom/facebook/tigon/TigonXplatService;
+
+.method public <clinit>(V)  # .registers 1
+    # full signature: Lcom/crossapp/tigonhttp/TigonHttpClient$TigonHttpClientServiceHolder;-><clinit>()V
+    0000..0004  new-instance  v0, Lcom/crossapp/tigonhttp/TigonHttpClient$TigonHttpClientServiceHolder$Companion;
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000a..000e  sput-object  v0, Lcom/crossapp/tigonhttp/TigonHttpClient$TigonHttpClientServiceHolder;->Companion:Lcom/crossapp/tigonhttp/TigonHttpClient$TigonHttpClientServiceHolder$Companion;
+    000e..0014  const-string/jumbo  v0, "tigonhttpclient-jni"
+    0014..001a  invoke-static  {v0}, LX/0DG;->A07(Ljava/lang/String;)Z
+    001a..001e  const-string  v0, "mnscertificateverifier"
+    001e..0024  invoke-static  {v0}, LX/0DG;->A07(Ljava/lang/String;)Z
+    0024..0026  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VLLLLLLLLLLLL)  # .registers 26
+    # full signature: Lcom/crossapp/tigonhttp/TigonHttpClient$TigonHttpClientServiceHolder;-><init>(Lcom/crossapp/tigonhttp/TigonHttpClientConfig;Ljava/lang/String;Ljava/lang/String;Ljava/util/concurrent/ScheduledExecutorService;Ljava/util/concurrent/ExecutorService;Lcom/facebook/tigon/tigonhuc/HucClient;Lcom/facebook/xanalytics/XAnalyticsHolder;Lcom/facebook/tigon/interceptors/TigonXplatInterceptorsHolder;Lcom/facebook/tigon/requestprioritization/calculatorprovider/HttpPriorityCalculatorProvider;Lcom/crossapp/tigonhttp/TigonRetryRulesHolder;Lcom/crossapp/tigonhttp/TigonQueuePolicyHolder;Lkotlin/jvm/functions/Function0;)V
+    0000..0002  const/4  v0, #0x0
+    0002..0004  move-object  v1, v14
+    0004..000a  invoke-static  {v14, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000a..000c  const/4  v0, #0x1
+    000c..000e  move-object  v2, v15
+    000e..0014  invoke-static  {v15, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0014..0016  const/4  v0, #0x2
+    0016..001a  move-object/from16  v3, v16
+    001a..0020  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0020..0022  const/4  v0, #0x3
+    0022..0026  move-object/from16  v4, v17
+    0026..002c  invoke-static  {v4, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    002c..0030  move-object/from16  v5, v18
+    0030..0034  move-object/from16  v6, v19
+    0034..0038  move-object/from16  v7, v20
+    0038..003c  move-object/from16  v8, v21
+    003c..0040  move-object/from16  v9, v22
+    0040..0044  move-object/from16  v10, v23
+    0044..0048  move-object/from16  v11, v24
+    0048..004c  move-object/from16  v12, v25
+    004c..0052  invoke-static/range  {v1..v12}, Lcom/crossapp/tigonhttp/TigonHttpClient$TigonHttpClientServiceHolder;->initHybrid(Lcom/crossapp/tigonhttp/TigonHttpClientConfig;Ljava/lang/String;Ljava/lang/String;Ljava/util/concurrent/ScheduledExecutorService;Ljava/util/concurrent/ExecutorService;Lcom/facebook/tigon/tigonhuc/HucClient;Lcom/facebook/xanalytics/XAnalyticsHolder;Lcom/facebook/tigon/interceptors/TigonXplatInterceptorsHolder;Lcom/facebook/tigon/requestprioritization/calculatorprovider/HttpPriorityCalculatorProvider;Lcom/crossapp/tigonhttp/TigonRetryRulesHolder;Lcom/crossapp/tigonhttp/TigonQueuePolicyHolder;Lkotlin/jvm/functions/Function0;)Lcom/facebook/jni/HybridData;
+    0052..0054  move-result-object  v0
+    0054..005a  invoke-direct  {v13, v0}, Lcom/crossapp/tigonhttp/TigonHttpClient$TigonHttpClientServiceHolder;-><init>(Lcom/facebook/jni/HybridData;)V
+    005a..005c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VL)  # .registers 3
+    # full signature: Lcom/crossapp/tigonhttp/TigonHttpClient$TigonHttpClientServiceHolder;-><init>(Lcom/facebook/jni/HybridData;)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  const/4  v0, #0x0
+    000a..0010  invoke-direct  {v1, v2, v0, v0}, Lcom/facebook/tigon/TigonXplatService;-><init>(Lcom/facebook/jni/HybridData;Lcom/facebook/tigon/TigonErrorReporter;LX/TU6;)V
+    0010..0012  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public access$initHybrid(LLLLLLLLLLLLL)  # .registers 12
+    # full signature: Lcom/crossapp/tigonhttp/TigonHttpClient$TigonHttpClientServiceHolder;->access$initHybrid(Lcom/crossapp/tigonhttp/TigonHttpClientConfig;Ljava/lang/String;Ljava/lang/String;Ljava/util/concurrent/ScheduledExecutorService;Ljava/util/concurrent/ExecutorService;Lcom/facebook/tigon/tigonhuc/HucClient;Lcom/facebook/xanalytics/XAnalyticsHolder;Lcom/facebook/tigon/interceptors/TigonXplatInterceptorsHolder;Lcom/facebook/tigon/requestprioritization/calculatorprovider/HttpPriorityCalculatorProvider;Lcom/crossapp/tigonhttp/TigonRetryRulesHolder;Lcom/crossapp/tigonhttp/TigonQueuePolicyHolder;Lkotlin/jvm/functions/Function0;)Lcom/facebook/jni/HybridData;
+    0000..0006  invoke-static/range  {v0..v11}, Lcom/crossapp/tigonhttp/TigonHttpClient$TigonHttpClientServiceHolder;->initHybrid(Lcom/crossapp/tigonhttp/TigonHttpClientConfig;Ljava/lang/String;Ljava/lang/String;Ljava/util/concurrent/ScheduledExecutorService;Ljava/util/concurrent/ExecutorService;Lcom/facebook/tigon/tigonhuc/HucClient;Lcom/facebook/xanalytics/XAnalyticsHolder;Lcom/facebook/tigon/interceptors/TigonXplatInterceptorsHolder;Lcom/facebook/tigon/requestprioritization/calculatorprovider/HttpPriorityCalculatorProvider;Lcom/crossapp/tigonhttp/TigonRetryRulesHolder;Lcom/crossapp/tigonhttp/TigonQueuePolicyHolder;Lkotlin/jvm/functions/Function0;)Lcom/facebook/jni/HybridData;
+    0006..0008  move-result-object  v0
+    0008..000a  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public initHybrid(LLLLLLLLLLLLL)  # .registers 0
+    # full signature: Lcom/crossapp/tigonhttp/TigonHttpClient$TigonHttpClientServiceHolder;->initHybrid(Lcom/crossapp/tigonhttp/TigonHttpClientConfig;Ljava/lang/String;Ljava/lang/String;Ljava/util/concurrent/ScheduledExecutorService;Ljava/util/concurrent/ExecutorService;Lcom/facebook/tigon/tigonhuc/HucClient;Lcom/facebook/xanalytics/XAnalyticsHolder;Lcom/facebook/tigon/interceptors/TigonXplatInterceptorsHolder;Lcom/facebook/tigon/requestprioritization/calculatorprovider/HttpPriorityCalculatorProvider;Lcom/crossapp/tigonhttp/TigonRetryRulesHolder;Lcom/crossapp/tigonhttp/TigonQueuePolicyHolder;Lkotlin/jvm/functions/Function0;)Lcom/facebook/jni/HybridData;
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+.method public cancelWebSocketPreconnect(V)  # .registers 0
+    # full signature: Lcom/crossapp/tigonhttp/TigonHttpClient$TigonHttpClientServiceHolder;->cancelWebSocketPreconnect()V
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+.method public generateBugReport(L)  # .registers 0
+    # full signature: Lcom/crossapp/tigonhttp/TigonHttpClient$TigonHttpClientServiceHolder;->generateBugReport()Ljava/lang/String;
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+.method public onAppStateChange(VZ)  # .registers 0
+    # full signature: Lcom/crossapp/tigonhttp/TigonHttpClient$TigonHttpClientServiceHolder;->onAppStateChange(Z)V
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+.method public preconnect(VL)  # .registers 0
+    # full signature: Lcom/crossapp/tigonhttp/TigonHttpClient$TigonHttpClientServiceHolder;->preconnect(Ljava/lang/String;)V
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+.method public preconnectWebSocket(ZLZ)  # .registers 0
+    # full signature: Lcom/crossapp/tigonhttp/TigonHttpClient$TigonHttpClientServiceHolder;->preconnectWebSocket(Ljava/lang/String;Z)Z
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+.method public runEventLoop(V)  # .registers 0
+    # full signature: Lcom/crossapp/tigonhttp/TigonHttpClient$TigonHttpClientServiceHolder;->runEventLoop()V
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+.method public setProxyClientIPAddress(VLIL)  # .registers 0
+    # full signature: Lcom/crossapp/tigonhttp/TigonHttpClient$TigonHttpClientServiceHolder;->setProxyClientIPAddress(Ljava/lang/String;ILjava/lang/String;)V
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+.method public setProxyHostAndPort(VLIZ)  # .registers 0
+    # full signature: Lcom/crossapp/tigonhttp/TigonHttpClient$TigonHttpClientServiceHolder;->setProxyHostAndPort(Ljava/lang/String;IZ)V
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+.method public syncDiskCachesForTest(V)  # .registers 0
+    # full signature: Lcom/crossapp/tigonhttp/TigonHttpClient$TigonHttpClientServiceHolder;->syncDiskCachesForTest()V
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method

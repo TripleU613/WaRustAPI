@@ -919,3 +919,37 @@ failed; the discovered alias X.C1Wv succeeded. No Rust behavior change, invented
 header/gate value, replay or live account operation. Next unresolved boundary:
 where the selected calculator result is consumed for actual request scheduling
 and HTTP/2/3 serialization, including any conditional wire priority fields.
+
+## Native Priority header producer and standard upload prefix (2026-11-06)
+
+**Confirmed static:** downstream TigonHttpPrioritizationService, rather than the
+WA context interceptor itself, calls the calculator and upserts a `Priority`
+request header. It clamps urgency to0..7 and formats `u=N`, conditional `, i`
+and `, p`, plus `, r=N` for an engaged positive integer. The r input is read
+from typed property key3 and overwrites the calculator optional members before
+formatting; it is not proven absent on uploads. Header construction is confirmed,
+actual wire transmission/acceptance is not observed.
+
+[Full checked Java/native routines, JNI candidate, RTTI bindings, literals and
+reproduction](apk/2.26.43.72-media-priority-header/README.md) connect provider
+creation, shared ownership and two stack-building closures to the service.
+One closure suppresses DefaultHttpPriorityContextInterceptor when a calculator
+is supplied; another creates the prioritization service when its next service
+exists. Named JNI class/table registration and effective graph activation are
+still untraced, so the generic chain is not claimed as observed app execution.
+
+**Confirmed standard Java upload input:** MOu.A03 sets K1R.A06=true/A05=false;
+K1R yields MEDIA_UPLOAD(value8) and NONE(value0), corroborated by
+[complete REA category Evidence](rea/2.26.43.72-media-priority-header/README.md).
+Given category8 in the WA native context, either flag38178 result returns(3,1,0):
+header prefix `u=3, i`, with possible property-driven r suffix. Existing non-WA
+contexts/other metadata factories remain separate. The exported native category
+setter identifies+0x1e0 independently from the HttpPriority field+0x158; full
+native serialized-enum conversion is not newly established here.
+
+Rust uploads have no explicit Priority header: a concrete mismatch candidate,
+not yet a justified unconditional correction. Close the named JNI registration,
+service graph activation and key3 producer/presence before selecting a final
+Rust policy. No Rust request/header/timing/retry/persistence change or live
+account operation in this turn. The prior bounded negative concerned only the
+interceptor; this downstream producer resolves that broader header question.

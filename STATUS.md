@@ -1,3 +1,11 @@
+2026-11-06 — **Downstream native Priority header construction found.**
+
+Prioritization service calls calculator and builds u/i/p plus optional positive
+property-driven r. Standard MOu metadata yields category8/purpose0; its WA
+calculator prefix is u=3, i. Graph activation/key3 presence remain open before
+Rust policy changes. [Complete evidence and boundaries](docs/protocol/media-network-outcomes.md#native-priority-header-producer-and-standard-upload-prefix-2026-11-06).
+No Rust behavior change or live account operation.
+
 2026-11-06 — **App priority calculator selection and enable-key source traced.**
 
 0eA.A0z lazily constructs the holder from configuration key38178; the default

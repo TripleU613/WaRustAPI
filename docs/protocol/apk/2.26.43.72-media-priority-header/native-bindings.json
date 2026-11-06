@@ -1,0 +1,164 @@
+{
+  "library_sha256": "d0ab3f2237e92a76ac3519c3577b5836b9e6f65a186c2016cefd43c4923f4b0d",
+  "jni_slot": "0x74d260",
+  "jni_signature": "(Lcom/crossapp/tigonhttp/TigonHttpClientConfig;Ljava/lang/String;Ljava/lang/String;Ljava/util/concurrent/ScheduledExecutorService;Ljava/util/concurrent/ExecutorService;Lcom/facebook/tigon/tigonhuc/HucClient;Lcom/facebook/xanalytics/XAnalyticsHolder;Lcom/facebook/tigon/interceptors/TigonXplatInterceptorsHolder;Lcom/facebook/tigon/requestprioritization/calculatorprovider/HttpPriorityCalculatorProvider;Lcom/crossapp/tigonhttp/TigonRetryRulesHolder;Lcom/crossapp/tigonhttp/TigonQueuePolicyHolder;Lkotlin/jvm/functions/Function0;)Lcom/facebook/jni/HybridData;",
+  "vtable_bindings": [
+    {
+      "vtable_va": "0x76c430",
+      "type_name": "NSt6__ndk110__function6__funcIZN8crossapp9tigonhttp15TigonHttpClient29buildFullTigonHTTPClientStackENS_10shared_ptrIN8facebook5tigon12TigonServiceEEERKNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEESH_RKNS3_21TigonHttpClientConfigENS5_INS6_16structuredlogger17IStructuredLoggerEEENS7_17TigonInterceptorsENS5_INS7_22HttpPriorityCalculatorEEENS5_INS7_16TigonRetryPolicyEEES9_NS_6vectorINS5_INS7_16TigonQueuePolicyEEENSD_ISV_EEEERKNS5_INS6_6mobile5xplat8executor26SerialAsyncExecutorFactoryEEEE3$_6NSD_IS15_EEFNS7_10TigonStack11ServiceInfoEvEEE",
+      "slot": "0x30",
+      "function_va": "0x4f6864"
+    },
+    {
+      "vtable_va": "0x76c970",
+      "type_name": "NSt6__ndk110__function6__funcIZN8crossapp9tigonhttp15TigonHttpClient29buildFullTigonHTTPClientStackENS_10shared_ptrIN8facebook5tigon12TigonServiceEEERKNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEESH_RKNS3_21TigonHttpClientConfigENS5_INS6_16structuredlogger17IStructuredLoggerEEENS7_17TigonInterceptorsENS5_INS7_22HttpPriorityCalculatorEEENS5_INS7_16TigonRetryPolicyEEES9_NS_6vectorINS5_INS7_16TigonQueuePolicyEEENSD_ISV_EEEERKNS5_INS6_6mobile5xplat8executor26SerialAsyncExecutorFactoryEEEE4$_13NSD_IS15_EEFNS7_10TigonStack11ServiceInfoEvEEE",
+      "slot": "0x30",
+      "function_va": "0x4f4aa8"
+    },
+    {
+      "vtable_va": "0x77a3a0",
+      "type_name": "N8facebook5tigon30TigonHttpPrioritizationServiceE",
+      "slot": "0x10",
+      "function_va": "0x661408"
+    }
+  ],
+  "literals": {
+    "0xcbdf5": "Priority",
+    "0xf5308": "u=",
+    "0xe0154": ", i",
+    "0xdaf4e": ", p",
+    "0xf5351": ", r=",
+    "0xd6f87": "DefaultHttpPriorityContextInterceptor"
+  },
+  "windows": [
+    {
+      "name": "jni-trampoline",
+      "start_va": "0x4d6344",
+      "end_va": "0x4d64a0",
+      "file_offset": "0x4d2344",
+      "bytes": 348,
+      "sha256": "3ed58da28871c67fd507891f49be22a850dd536da2cb9b04e850021978231087"
+    },
+    {
+      "name": "hybrid-client-construction",
+      "start_va": "0x4d71ec",
+      "end_va": "0x4d80a4",
+      "file_offset": "0x4d31ec",
+      "bytes": 3768,
+      "sha256": "e0422f74a87c3e79b241bec28acd0fabecd0db1b641ae6238039fc069b3524a2"
+    },
+    {
+      "name": "provider-unwrapper",
+      "start_va": "0x4d81a8",
+      "end_va": "0x4d8300",
+      "file_offset": "0x4d41a8",
+      "bytes": 344,
+      "sha256": "d707650e6e7b1922a267eba46a37ee0eb4d64dccce1a15e1eb71ad449f6d0a88"
+    },
+    {
+      "name": "client-stack-composition",
+      "start_va": "0x4f157c",
+      "end_va": "0x4f3098",
+      "file_offset": "0x4ed57c",
+      "bytes": 6940,
+      "sha256": "f908ca1650c1ce019374df7535c5e8d6eff3c3c7e613868a8d5289a5378e88f2"
+    },
+    {
+      "name": "context-stage",
+      "start_va": "0x4f6864",
+      "end_va": "0x4f6c64",
+      "file_offset": "0x4f2864",
+      "bytes": 1024,
+      "sha256": "af56d365d2e1edfdc6d5b51b9de5215e76968935e6d5ad6358c4616c1450caa1"
+    },
+    {
+      "name": "prioritization-stage",
+      "start_va": "0x4f4aa8",
+      "end_va": "0x4f4cb4",
+      "file_offset": "0x4f0aa8",
+      "bytes": 524,
+      "sha256": "60624c12fba9609e0cef4fa7462ae7f1299437d912c3ecad999f19488814018c"
+    },
+    {
+      "name": "prioritization-service",
+      "start_va": "0x661408",
+      "end_va": "0x661a08",
+      "file_offset": "0x65d408",
+      "bytes": 1536,
+      "sha256": "01338807bd4ff37facb43355925489e83ca087dd5233474d5892499e82e1c897"
+    },
+    {
+      "name": "default-calculator",
+      "start_va": "0x660434",
+      "end_va": "0x660744",
+      "file_offset": "0x65c434",
+      "bytes": 784,
+      "sha256": "aaa869bff3994f3730387def26189045a52880ed898e7f29f4760998a81307ce"
+    },
+    {
+      "name": "header-upsert",
+      "start_va": "0x663a9c",
+      "end_va": "0x663ae4",
+      "file_offset": "0x65fa9c",
+      "bytes": 72,
+      "sha256": "130da63fc6aa760ddd24d0cd8bca057aa233c6bc2d50a431fb48885f930d87f0"
+    },
+    {
+      "name": "category-setter",
+      "start_va": "0x663d88",
+      "end_va": "0x663d94",
+      "file_offset": "0x65fd88",
+      "bytes": 12,
+      "sha256": "55bb13f2699606e547171cb2c1dd6c2bce482d016379faa19f2a43fa106f5333"
+    },
+    {
+      "name": "provider-slot-helper",
+      "start_va": "0x72995c",
+      "end_va": "0x729968",
+      "file_offset": "0x72595c",
+      "bytes": 12,
+      "sha256": "498fbe46fbc891a6d220578f70cf8fb9369c6b8bcdd7ef04aae037cd64929a00"
+    },
+    {
+      "name": "context-stage-register-helper",
+      "start_va": "0x72f908",
+      "end_va": "0x72f914",
+      "file_offset": "0x72b908",
+      "bytes": 12,
+      "sha256": "72f2516a3cca8ff9af3f351476947905ddb9b98e46dbec518455086948d852a2"
+    },
+    {
+      "name": "frame-setup",
+      "start_va": "0x2dade8",
+      "end_va": "0x2dae04",
+      "file_offset": "0x2d6de8",
+      "bytes": 28,
+      "sha256": "d59541946da99fb404289175a2b7fe56dbe658885c30d85a2a1ab1029b38dcdb"
+    },
+    {
+      "name": "jni-argument-setup",
+      "start_va": "0x72634c",
+      "end_va": "0x72635c",
+      "file_offset": "0x72234c",
+      "bytes": 16,
+      "sha256": "fb79b8d01d5f9652d3022a1529fd4eef38e08e5a0f869d11c08ea8a2274a8b04"
+    },
+    {
+      "name": "optional-integer-property",
+      "start_va": "0x3ef220",
+      "end_va": "0x3ef260",
+      "file_offset": "0x3eb220",
+      "bytes": 64,
+      "sha256": "722b3dddc560dd86a14cc56ba1e1028b84eb8087a256a197491ae7f800ae8339"
+    },
+    {
+      "name": "header-map-insertion",
+      "start_va": "0x66387c",
+      "end_va": "0x663a70",
+      "file_offset": "0x65f87c",
+      "bytes": 500,
+      "sha256": "1e0a33c54291c3745f297365cdffc41492f98d0f296c8e3432b03f88be45b927"
+    }
+  ],
+  "scope": "Static header construction; registration, graph activation and actual wire observation remain separate"
+}

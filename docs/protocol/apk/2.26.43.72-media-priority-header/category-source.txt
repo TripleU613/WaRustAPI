@@ -1,0 +1,68 @@
+
+# class: LX/K1R;
+# extends: Ljava/lang/Object;
+
+.method private A00(I)  # .registers 5
+    # full signature: LX/K1R;->A00()I
+    0000..0004  iget-boolean  v0, v4, LX/K1R;->A05:Z
+    0004..0008  if-eqz  v0, +0x4
+    0008..000a  const/4  v0, #0x3
+    000a..000c  return  v0
+    000c..0010  iget-boolean  v0, v4, LX/K1R;->A06:Z
+    0010..0014  if-eqz  v0, +0x4
+    0014..0016  const/4  v0, #0x5
+    0016..0018  return  v0
+    0018..001c  iget-object  v2, v4, LX/K1R;->A02:Ljava/lang/String;
+    001c..001e  const/4  v1, #0x0
+    001e..0022  if-eqz  v2, +0x5a
+    0022..0026  const-string  v0, "image"
+    0026..0028  const/4  v3, #0x2
+    0028..002e  invoke-static  {v2, v0, v1}, LX/0Cf;->A0z(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Z)Z
+    002e..0030  move-result  v0
+    0030..0034  if-nez  v0, +0x4f
+    0034..0038  const-string  v0, "photo"
+    0038..003e  invoke-static  {v2, v0, v1}, LX/0Cf;->A0z(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Z)Z
+    003e..0040  move-result  v0
+    0040..0044  if-nez  v0, +0x47
+    0044..0048  const-string  v0, "sticker"
+    0048..004e  invoke-static  {v2, v0, v1}, LX/0Cf;->A0z(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Z)Z
+    004e..0050  move-result  v0
+    0050..0054  if-nez  v0, +0x3f
+    0054..0058  const-string  v0, "ppic"
+    0058..005e  invoke-static  {v2, v0, v1}, LX/0Cf;->A0z(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Z)Z
+    005e..0060  move-result  v0
+    0060..0064  if-nez  v0, +0x37
+    0064..0068  const-string  v0, "video"
+    0068..006e  invoke-static  {v2, v0, v1}, LX/0Cf;->A0z(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Z)Z
+    006e..0070  move-result  v0
+    0070..0074  if-nez  v0, +0x2e
+    0074..0078  const-string  v0, "gif"
+    0078..007e  invoke-static  {v2, v0, v1}, LX/0Cf;->A0z(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Z)Z
+    007e..0080  move-result  v0
+    0080..0084  if-nez  v0, +0x26
+    0084..0088  const-string  v0, "ptv"
+    0088..008e  invoke-static  {v2, v0, v1}, LX/0Cf;->A0z(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Z)Z
+    008e..0090  move-result  v0
+    0090..0094  if-nez  v0, +0x1e
+    0094..0098  const-string  v0, "ptt"
+    0098..009e  invoke-static  {v2, v0, v1}, LX/0Cf;->A0z(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Z)Z
+    009e..00a0  move-result  v0
+    00a0..00a4  if-nez  v0, +0x14
+    00a4..00a8  const-string  v0, "audio"
+    00a8..00ae  invoke-static  {v2, v0, v1}, LX/0Cf;->A0z(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Z)Z
+    00ae..00b0  move-result  v0
+    00b0..00b4  if-nez  v0, +0xc
+    00b4..00b8  const-string  v0, "document"
+    00b8..00be  invoke-static  {v2, v0, v1}, LX/0Cf;->A0z(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Z)Z
+    00be..00c0  move-result  v0
+    00c0..00c4  if-eqz  v0, +0x9
+    00c4..00c6  const/4  v0, #0x7
+    00c6..00c8  return  v0
+    00c8..00ca  const/4  v0, #0x6
+    00ca..00cc  return  v0
+    00cc..00ce  return  v3
+    00ce..00d0  const/4  v0, #0x1
+    00d0..00d2  return  v0
+    00d2..00d4  return  v1
+    # exception table: 0 try range(s)
+.end method

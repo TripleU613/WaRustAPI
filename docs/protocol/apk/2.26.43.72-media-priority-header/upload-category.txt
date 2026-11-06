@@ -1,0 +1,40 @@
+
+# class: LX/K1R;
+# extends: Ljava/lang/Object;
+
+.method public A02(L)  # .registers 3
+    # full signature: LX/K1R;->A02()LX/1FF;
+    0000..0004  iget-boolean  v0, v2, LX/K1R;->A05:Z
+    0004..0008  if-eqz  v0, +0x5
+    0008..000c  sget-object  v0, LX/1FF;->A09:LX/1FF;
+    000c..000e  return-object  v0
+    000e..0014  invoke-direct  {v2}, LX/K1R;->A00()I
+    0014..0016  move-result  v1
+    0016..0018  const/4  v0, #0x1
+    0018..001c  if-eq  v1, v0, +0x23
+    001c..001e  const/4  v0, #0x2
+    001e..0022  if-eq  v1, v0, +0x1d
+    0022..0024  const/4  v0, #0x3
+    0024..0028  if-eq  v1, v0, +0x17
+    0028..002a  const/4  v0, #0x5
+    002a..002e  if-eq  v1, v0, +0x11
+    002e..0030  const/4  v0, #0x6
+    0030..0034  if-eq  v1, v0, +0xb
+    0034..0036  const/4  v0, #0x7
+    0036..003a  if-eq  v1, v0, +0x5
+    003a..003e  sget-object  v0, LX/1FF;->A0E:LX/1FF;
+    003e..0040  return-object  v0
+    0040..0044  sget-object  v0, LX/1FF;->A07:LX/1FF;
+    0044..0046  return-object  v0
+    0046..004a  sget-object  v0, LX/1FF;->A05:LX/1FF;
+    004a..004c  return-object  v0
+    004c..0050  sget-object  v0, LX/1FF;->A0C:LX/1FF;
+    0050..0052  return-object  v0
+    0052..0056  sget-object  v0, LX/1FF;->A04:LX/1FF;
+    0056..0058  return-object  v0
+    0058..005c  sget-object  v0, LX/1FF;->A0G:LX/1FF;
+    005c..005e  return-object  v0
+    005e..0062  sget-object  v0, LX/1FF;->A0A:LX/1FF;
+    0062..0064  return-object  v0
+    # exception table: 0 try range(s)
+.end method

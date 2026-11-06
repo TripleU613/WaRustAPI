@@ -1,0 +1,390 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000065d11c <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE>:
+  661408:      	paciasp
+  66140c:      	stp	x29, x30, [sp, #-0x60]!
+  661410:      	bl	0x2dade8 <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0xcf0c>
+  661414:      	sub	sp, sp, #0x350
+  661418:      	str	x2, [sp, #0x18]
+  66141c:      	mov	x25, x8
+  661420:      	mov	x26, x4
+  661424:      	str	x0, [sp, #0x40]
+  661428:      	mrs	x20, TPIDR_EL0
+  66142c:      	mov	w0, #0x98               // =152
+  661430:      	ldr	x8, [x20, #0x28]
+  661434:      	mov	x27, x3
+  661438:      	mov	x22, x1
+  66143c:      	stur	x8, [x29, #-0x10]
+  661440:      	bl	0x737430 <__wrap__Znwm@plt>
+  661444:      	movi	v0.2d, #0000000000000000
+  661448:      	adrp	x8, 0x77a000 <_ZTVN6google8protobuf11MessageLiteE+0x1ee18>
+  66144c:      	add	x8, x8, #0x3e0
+  661450:      	bl	0x72b728 <MCFSetGetCount+0x7670>
+  661454:      	bl	0x732ac0 <MCFSetGetCount+0xea08>
+  661458:      	mov	x28, x0
+  66145c:      	str	xzr, [x24, #0x8]!
+  661460:      	bl	0x727014 <MCFSetGetCount+0x2f5c>
+  661464:      	stur	q0, [x0, #0x68]
+  661468:      	stur	q0, [x0, #0x78]
+  66146c:      	stur	q0, [x0, #0x88]
+  661470:      	mov	x0, xzr
+  661474:      	str	q0, [x28, #0x18]!
+  661478:      	bl	0x3de220 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x2cf30>
+  66147c:      	ldp	x21, x23, [x22, #0x170]
+  661480:      	cbz	x23, 0x66148c <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x4370>
+  661484:      	bl	0x729378 <MCFSetGetCount+0x52c0>
+  661488:      	bl	0x39def0 <_RNvYINtNtNtCsd0h5sCe2hTT_4core5slice4iter7IterMutmENtNtNtNtB9_4iter8adapters3zip27TrustedRandomAccessNoCoerce4sizeB9_+0x4f30>
+  66148c:      	add	x8, sp, #0xa8
+  661490:      	stp	xzr, xzr, [sp, #0xb0]
+  661494:      	add	x8, x8, #0x8
+  661498:      	stp	xzr, xzr, [x29, #-0x28]
+  66149c:      	str	x8, [sp, #0xa8]
+  6614a0:      	ldr	x8, [sp, #0x40]
+  6614a4:      	stur	xzr, [x29, #-0x18]
+  6614a8:      	ldr	x0, [x8, #0x18]
+  6614ac:      	bl	0x72995c <MCFSetGetCount+0x58a4>
+  6614b0:      	sub	x8, x29, #0x28
+  6614b4:      	add	x2, sp, #0xa8
+  6614b8:      	mov	x1, x21
+  6614bc:      	stp	x23, x20, [sp, #0x20]
+  6614c0:      	blr	x9
+  6614c4:      	add	x1, sp, #0xa8
+  6614c8:      	mov	x0, x28
+  6614cc:      	bl	0x660744 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x3628>
+  6614d0:      	mov	w0, #0x40               // =64
+  6614d4:      	bl	0x737430 <__wrap__Znwm@plt>
+  6614d8:      	adrp	x8, 0x77a000 <_ZTVN6google8protobuf11MessageLiteE+0x1ee18>
+  6614dc:      	add	x8, x8, #0x420
+  6614e0:      	bl	0x72c030 <MCFSetGetCount+0x7f78>
+  6614e4:      	ldr	x8, [x27]
+  6614e8:      	add	x1, x19, #0x8
+  6614ec:      	stp	xzr, xzr, [x0, #0x8]
+  6614f0:      	mov	w0, #0x1                // =1
+  6614f4:      	str	xzr, [x27]
+  6614f8:      	str	x8, [sp, #0xd8]
+  6614fc:      	bl	0x39def0 <_RNvYINtNtNtCsd0h5sCe2hTT_4core5slice4iter7IterMutmENtNtNtNtB9_4iter8adapters3zip27TrustedRandomAccessNoCoerce4sizeB9_+0x4f30>
+  661500:      	add	x0, sp, #0x110
+  661504:      	add	x1, sp, #0xd8
+  661508:      	bl	0x3e6730 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x35440>
+  66150c:      	fmov	d0, x28
+  661510:      	ldp	x8, x27, [sp, #0x110]
+  661514:      	adrp	x9, 0x77b000 <_ZTVN6google8protobuf11MessageLiteE+0x1fe18>
+  661518:      	add	x9, x9, #0x160
+  66151c:      	mov	v0.d[1], x19
+  661520:      	stp	x9, x8, [x21, #0x18]
+  661524:      	str	x27, [x21, #0x28]
+  661528:      	str	q0, [sp, #0x30]
+  66152c:      	cbz	x27, 0x66153c <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x4420>
+  661530:      	add	x1, x27, #0x8
+  661534:      	mov	w0, #0x1                // =1
+  661538:      	bl	0x39def0 <_RNvYINtNtNtCsd0h5sCe2hTT_4core5slice4iter7IterMutmENtNtNtNtB9_4iter8adapters3zip27TrustedRandomAccessNoCoerce4sizeB9_+0x4f30>
+  66153c:      	mov	x0, x27
+  661540:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  661544:      	ldr	q0, [sp, #0x30]
+  661548:      	adrp	x8, 0x77a000 <_ZTVN6google8protobuf11MessageLiteE+0x1ee18>
+  66154c:      	add	x8, x8, #0x290
+  661550:      	mov	x0, xzr
+  661554:      	str	x8, [x21, #0x18]
+  661558:      	str	q0, [x21, #0x30]
+  66155c:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  661560:      	ldr	x0, [sp, #0xd8]
+  661564:      	cbz	x0, 0x661570 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x4454>
+  661568:      	bl	0x728b50 <MCFSetGetCount+0x4a98>
+  66156c:      	blr	x8
+  661570:      	mov	x0, xzr
+  661574:      	str	x25, [sp, #0x10]
+  661578:      	bl	0x3de220 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x2cf30>
+  66157c:      	ldp	x0, x1, [x22, #0x28]
+  661580:      	mov	w2, #0x3                // =3
+  661584:      	bl	0x3ef220 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x3df30>
+  661588:      	ldursb	w8, [x29, #-0x28]
+  66158c:      	mov	w9, #0x7                // =7
+  661590:      	mov	w2, #0x218              // =536
+  661594:      	add	x23, sp, #0x110
+  661598:      	cmp	w8, #0x7
+  66159c:      	csel	w8, w8, w9, lt
+  6615a0:      	bic	w8, w8, w8, asr #31
+  6615a4:      	sturb	w8, [x29, #-0x28]
+  6615a8:      	and	x8, x1, #0xff
+  6615ac:      	mov	w1, wzr
+  6615b0:      	stp	x8, x0, [sp]
+  6615b4:      	stp	x0, x8, [x29, #-0x20]
+  6615b8:      	add	x0, sp, #0x110
+  6615bc:      	bl	0x734d20 <memset@plt>
+  6615c0:      	add	x0, sp, #0x110
+  6615c4:      	mov	x1, x22
+  6615c8:      	bl	0x3ea2c0 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38fd0>
+  6615cc:      	ldur	q0, [x29, #-0x28]
+  6615d0:      	ldur	x8, [x29, #-0x18]
+  6615d4:      	mov	x20, x26
+  6615d8:      	add	x25, x23, #0x158
+  6615dc:      	str	q0, [x25]
+  6615e0:      	str	x8, [sp, #0x278]
+  6615e4:      	adrp	x1, 0xcb000
+  6615e8:      	add	x1, x1, #0xdf5
+  6615ec:      	add	x0, sp, #0x90
+  6615f0:      	bl	0x3a2c00 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x45c0>
+  6615f4:      	ldrsb	w0, [sp, #0x268]
+  6615f8:      	ldrb	w23, [sp, #0x269]
+  6615fc:      	ldrb	w27, [sp, #0x26a]
+  661600:      	ldr	x22, [sp, #0x270]
+  661604:      	ldr	x26, [sp, #0x278]
+  661608:      	bl	0x73290c <MCFSetGetCount+0xe854>
+  66160c:      	add	x8, sp, #0xd8
+  661610:      	bl	0x735020 <_ZNSt6__ndk19to_stringEi@plt>
+  661614:      	adrp	x1, 0xf5000
+  661618:      	add	x1, x1, #0x308
+  66161c:      	add	x0, sp, #0x78
+  661620:      	add	x2, sp, #0xd8
+  661624:      	bl	0x3aa9b8 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0xc378>
+  661628:      	add	x0, sp, #0xd8
+  66162c:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  661630:      	tbz	w23, #0x0, 0x661644 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x4528>
+  661634:      	adrp	x1, 0xe0000
+  661638:      	add	x1, x1, #0x154
+  66163c:      	add	x0, sp, #0x78
+  661640:      	bl	0x734ee0 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6appendEPKc@plt>
+  661644:      	tbz	w27, #0x0, 0x661658 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x453c>
+  661648:      	adrp	x1, 0xda000
+  66164c:      	add	x1, x1, #0xf4e
+  661650:      	add	x0, sp, #0x78
+  661654:      	bl	0x734ee0 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6appendEPKc@plt>
+  661658:      	tbz	w26, #0x0, 0x6616a0 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x4584>
+  66165c:      	cmp	x22, #0x1
+  661660:      	b.lt	0x6616a0 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x4584>
+  661664:      	add	x8, sp, #0xc0
+  661668:      	mov	x0, x22
+  66166c:      	bl	0x7357e0 <_ZNSt6__ndk19to_stringEl@plt>
+  661670:      	adrp	x1, 0xf5000
+  661674:      	add	x1, x1, #0x351
+  661678:      	add	x0, sp, #0xd8
+  66167c:      	add	x2, sp, #0xc0
+  661680:      	bl	0x3aa9b8 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0xc378>
+  661684:      	add	x0, sp, #0x78
+  661688:      	add	x1, sp, #0xd8
+  66168c:      	bl	0x3a6fc4 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x8984>
+  661690:      	add	x0, sp, #0xd8
+  661694:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  661698:      	add	x0, sp, #0xc0
+  66169c:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  6616a0:      	add	x8, sp, #0x110
+  6616a4:      	add	x0, x8, #0x130
+  6616a8:      	add	x1, sp, #0x90
+  6616ac:      	add	x2, sp, #0x78
+  6616b0:      	bl	0x663a9c <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk14pairINS2_12basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEES9_EE+0x2c>
+  6616b4:      	add	x0, sp, #0x78
+  6616b8:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  6616bc:      	add	x0, sp, #0x90
+  6616c0:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  6616c4:      	ldr	q0, [x25]
+  6616c8:      	ldr	x8, [x25, #0x10]
+  6616cc:      	str	q0, [sp, #0xf0]
+  6616d0:      	str	x8, [sp, #0x100]
+  6616d4:      	add	x1, sp, #0xf0
+  6616d8:      	mov	x0, x28
+  6616dc:      	bl	0x6609cc <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x38b0>
+  6616e0:      	ldr	x8, [sp, #0x18]
+  6616e4:      	ldr	x10, [sp, #0x40]
+  6616e8:      	str	xzr, [sp, #0xc0]
+  6616ec:      	ldp	x9, x8, [x8]
+  6616f0:      	ldr	x22, [x10, #0x8]
+  6616f4:      	stp	x9, x8, [sp, #0x68]
+  6616f8:      	cbz	x8, 0x661704 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x45e8>
+  6616fc:      	bl	0x728b44 <MCFSetGetCount+0x4a8c>
+  661700:      	bl	0x39def0 <_RNvYINtNtNtCsd0h5sCe2hTT_4core5slice4iter7IterMutmENtNtNtNtB9_4iter8adapters3zip27TrustedRandomAccessNoCoerce4sizeB9_+0x4f30>
+  661704:      	mov	w0, #0x18               // =24
+  661708:      	bl	0x737430 <__wrap__Znwm@plt>
+  66170c:      	mov	x26, x0
+  661710:      	bl	0x728e80 <MCFSetGetCount+0x4dc8>
+  661714:      	add	x23, x21, #0x18
+  661718:      	bl	0x39def0 <_RNvYINtNtNtCsd0h5sCe2hTT_4core5slice4iter7IterMutmENtNtNtNtB9_4iter8adapters3zip27TrustedRandomAccessNoCoerce4sizeB9_+0x4f30>
+  66171c:      	bl	0x72e044 <MCFSetGetCount+0x9f8c>
+  661720:      	bl	0x728e80 <MCFSetGetCount+0x4dc8>
+  661724:      	stp	x8, x23, [x26]
+  661728:      	str	x21, [x26, #0x10]
+  66172c:      	bl	0x39def0 <_RNvYINtNtNtCsd0h5sCe2hTT_4core5slice4iter7IterMutmENtNtNtNtB9_4iter8adapters3zip27TrustedRandomAccessNoCoerce4sizeB9_+0x4f30>
+  661730:      	mov	x0, x21
+  661734:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  661738:      	ldp	x9, x8, [x20]
+  66173c:      	stp	x8, x26, [sp, #0x58]
+  661740:      	str	x9, [sp, #0x50]
+  661744:      	cbz	x8, 0x661750 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x4634>
+  661748:      	bl	0x728b44 <MCFSetGetCount+0x4a8c>
+  66174c:      	bl	0x39def0 <_RNvYINtNtNtCsd0h5sCe2hTT_4core5slice4iter7IterMutmENtNtNtNtB9_4iter8adapters3zip27TrustedRandomAccessNoCoerce4sizeB9_+0x4f30>
+  661750:      	bl	0x72e200 <MCFSetGetCount+0xa148>
+  661754:      	add	x8, sp, #0xc0
+  661758:      	add	x1, sp, #0x110
+  66175c:      	add	x2, sp, #0x68
+  661760:      	add	x3, sp, #0x60
+  661764:      	add	x4, sp, #0x50
+  661768:      	mov	x0, x22
+  66176c:      	blr	x9
+  661770:      	ldr	x0, [sp, #0x58]
+  661774:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  661778:      	bl	0x72fb28 <MCFSetGetCount+0xba70>
+  66177c:      	cbz	x0, 0x661788 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x466c>
+  661780:      	bl	0x728b50 <MCFSetGetCount+0x4a98>
+  661784:      	blr	x8
+  661788:      	ldr	x0, [sp, #0x70]
+  66178c:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  661790:      	mov	w0, #0xa8               // =168
+  661794:      	bl	0x737430 <__wrap__Znwm@plt>
+  661798:      	mov	x25, x0
+  66179c:      	ldr	x22, [sp, #0xc0]
+  6617a0:      	mov	w0, #0x1                // =1
+  6617a4:      	mov	x1, x24
+  6617a8:      	str	xzr, [sp, #0xc0]
+  6617ac:      	bl	0x39def0 <_RNvYINtNtNtCsd0h5sCe2hTT_4core5slice4iter7IterMutmENtNtNtNtB9_4iter8adapters3zip27TrustedRandomAccessNoCoerce4sizeB9_+0x4f30>
+  6617b0:      	ldr	x8, [sp, #0x40]
+  6617b4:      	ldur	q0, [x8, #0x18]
+  6617b8:      	mov	x23, v0.d[1]
+  6617bc:      	str	q0, [sp, #0x40]
+  6617c0:      	cbz	x23, 0x6617cc <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x46b0>
+  6617c4:      	bl	0x729378 <MCFSetGetCount+0x52c0>
+  6617c8:      	bl	0x39def0 <_RNvYINtNtNtCsd0h5sCe2hTT_4core5slice4iter7IterMutmENtNtNtNtB9_4iter8adapters3zip27TrustedRandomAccessNoCoerce4sizeB9_+0x4f30>
+  6617cc:      	movi	v0.2d, #0000000000000000
+  6617d0:      	adrp	x8, 0x77a000 <_ZTVN6google8protobuf11MessageLiteE+0x1ee18>
+  6617d4:      	add	x8, x8, #0xf40
+  6617d8:      	str	x22, [sp, #0xd8]
+  6617dc:      	strb	wzr, [x25, #0x60]
+  6617e0:      	strb	wzr, [x25, #0x48]
+  6617e4:      	stur	q0, [x25, #0x8]
+  6617e8:      	stur	q0, [x25, #0x18]
+  6617ec:      	stur	q0, [x25, #0x28]
+  6617f0:      	stur	q0, [x25, #0x38]
+  6617f4:      	str	x8, [x25]
+  6617f8:      	add	x0, x25, #0x68
+  6617fc:      	add	x1, sp, #0xd8
+  661800:      	bl	0x666a68 <_ZN8facebook5tigon36TigonRepeatingForwardingRequestToken16updateChildTokenENSt6__ndk18functionIFNS2_10unique_ptrINS0_17TigonRequestTokenENS2_14default_deleteIS5_EEEEvEEE+0x24c>
+  661804:      	ldr	x0, [sp, #0xd8]
+  661808:      	cbz	x0, 0x661814 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x46f8>
+  66180c:      	bl	0x728b50 <MCFSetGetCount+0x4a98>
+  661810:      	blr	x8
+  661814:      	adrp	x8, 0x77a000 <_ZTVN6google8protobuf11MessageLiteE+0x1ee18>
+  661818:      	add	x8, x8, #0x330
+  66181c:      	mov	x0, xzr
+  661820:      	str	x8, [x25]
+  661824:      	ldp	q1, q0, [sp, #0x30]
+  661828:      	ldp	x8, x9, [sp]
+  66182c:      	stur	q1, [x25, #0x78]
+  661830:      	stur	q0, [x25, #0x88]
+  661834:      	stp	x9, x8, [x25, #0x98]
+  661838:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  66183c:      	mov	x0, xzr
+  661840:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  661844:      	ldr	x0, [sp, #0xc0]
+  661848:      	ldr	x8, [sp, #0x10]
+  66184c:      	str	xzr, [sp, #0xc0]
+  661850:      	str	x25, [x8]
+  661854:      	cbz	x0, 0x661860 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x4744>
+  661858:      	bl	0x728b50 <MCFSetGetCount+0x4a98>
+  66185c:      	blr	x8
+  661860:      	add	x0, sp, #0x110
+  661864:      	bl	0x3e922c <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x37f3c>
+  661868:      	mov	x0, x21
+  66186c:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  661870:      	ldr	x0, [sp, #0xb0]
+  661874:      	bl	0x3e9498 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x381a8>
+  661878:      	ldr	x0, [sp, #0x20]
+  66187c:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  661880:      	mov	x0, x19
+  661884:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  661888:      	ldr	x8, [sp, #0x28]
+  66188c:      	bl	0x725bcc <MCFSetGetCount+0x1b14>
+  661890:      	b.ne	0x6619c4 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x48a8>
+  661894:      	add	sp, sp, #0x350
+  661898:      	bl	0x2dae34 <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0xcf58>
+  66189c:      	ldp	x29, x30, [sp], #0x60
+  6618a0:      	autiasp
+  6618a4:      	ret
+  6618a8:      	mov	x22, x0
+  6618ac:      	add	x0, sp, #0xd8
+  6618b0:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  6618b4:      	b	0x6618bc <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x47a0>
+  6618b8:      	mov	x22, x0
+  6618bc:      	add	x0, sp, #0xc0
+  6618c0:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  6618c4:      	b	0x66195c <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x4840>
+  6618c8:      	b	0x661958 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x483c>
+  6618cc:      	mov	x22, x0
+  6618d0:      	mov	x0, x25
+  6618d4:      	bl	0x513950 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x4b54>
+  6618d8:      	ldr	x0, [sp, #0xd8]
+  6618dc:      	cbz	x0, 0x6618e8 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x47cc>
+  6618e0:      	bl	0x728b50 <MCFSetGetCount+0x4a98>
+  6618e4:      	blr	x8
+  6618e8:      	mov	x0, x23
+  6618ec:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  6618f0:      	mov	x0, x19
+  6618f4:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  6618f8:      	mov	x0, x25
+  6618fc:      	bl	0x7373a0 <__wrap__ZdlPv@plt>
+  661900:      	b	0x661908 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x47ec>
+  661904:      	mov	x22, x0
+  661908:      	ldr	x0, [sp, #0xc0]
+  66190c:      	str	xzr, [sp, #0xc0]
+  661910:      	cbz	x0, 0x661988 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x486c>
+  661914:      	bl	0x728b50 <MCFSetGetCount+0x4a98>
+  661918:      	blr	x8
+  66191c:      	b	0x661988 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x486c>
+  661920:      	ldr	x8, [sp, #0x58]
+  661924:      	bl	0x72e2a0 <MCFSetGetCount+0xa1e8>
+  661928:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  66192c:      	bl	0x72fb28 <MCFSetGetCount+0xba70>
+  661930:      	cbz	x0, 0x661944 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x4828>
+  661934:      	bl	0x728b50 <MCFSetGetCount+0x4a98>
+  661938:      	blr	x8
+  66193c:      	b	0x661944 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x4828>
+  661940:      	mov	x22, x0
+  661944:      	ldr	x0, [sp, #0x70]
+  661948:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  66194c:      	b	0x661988 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x486c>
+  661950:      	b	0x661984 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x4868>
+  661954:      	b	0x661958 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x483c>
+  661958:      	mov	x22, x0
+  66195c:      	add	x0, sp, #0x78
+  661960:      	b	0x66196c <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x4850>
+  661964:      	mov	x22, x0
+  661968:      	add	x0, sp, #0xd8
+  66196c:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  661970:      	add	x0, sp, #0x90
+  661974:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  661978:      	b	0x661988 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x486c>
+  66197c:      	mov	x22, x0
+  661980:      	b	0x661970 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x4854>
+  661984:      	mov	x22, x0
+  661988:      	add	x0, sp, #0x110
+  66198c:      	bl	0x3e922c <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x37f3c>
+  661990:      	mov	x0, x21
+  661994:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  661998:      	ldr	x0, [sp, #0xb0]
+  66199c:      	bl	0x3e9498 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x381a8>
+  6619a0:      	ldr	x0, [sp, #0x20]
+  6619a4:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  6619a8:      	mov	x0, x19
+  6619ac:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  6619b0:      	ldr	x8, [sp, #0x28]
+  6619b4:      	bl	0x725bcc <MCFSetGetCount+0x1b14>
+  6619b8:      	b.ne	0x6619c4 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x48a8>
+  6619bc:      	mov	x0, x22
+  6619c0:      	bl	0x7373e0 <__wrap__Unwind_Resume@plt>
+  6619c4:      	bl	0x7378f0 <__stack_chk_fail@plt>
+  6619c8:      	mov	x22, x0
+  6619cc:      	b	0x661990 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x4874>
+  6619d0:      	bl	0x72c478 <MCFSetGetCount+0x83c0>
+  6619d4:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  6619d8:      	ldr	x0, [sp, #0xd8]
+  6619dc:      	cbz	x0, 0x6619e8 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x48cc>
+  6619e0:      	bl	0x728b50 <MCFSetGetCount+0x4a98>
+  6619e4:      	blr	x8
+  6619e8:      	mov	x0, x21
+  6619ec:      	bl	0x7350e0 <_ZNSt6__ndk119__shared_weak_countD2Ev@plt>
+  6619f0:      	mov	x0, x21
+  6619f4:      	bl	0x3de220 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x2cf30>
+  6619f8:      	b	0x661998 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x487c>
+  6619fc:      	b	0x661a00 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x48e4>
+  661a00:      	mov	x22, x0
+  661a04:      	b	0x661998 <_ZN8facebook10executor4a21AndroidSerialExecutorC1EPKcNS_3jni9alias_refINS0_9JExecutorEEE+0x487c>

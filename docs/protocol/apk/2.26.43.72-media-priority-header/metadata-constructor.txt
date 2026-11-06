@@ -1,0 +1,21 @@
+
+# class: LX/K1R;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLLLLZZ)  # .registers 11
+    # full signature: LX/K1R;-><init>(LX/08Y;Lcom/whatsapp/wamsys/JniBridge;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZ)V
+    0000..0006  invoke-static  {v1, v2}, LX/00l;->A0A(Ljava/lang/Object;Ljava/lang/Object;)V
+    0006..000c  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000c..0010  iput-object  v1, v0, LX/K1R;->A07:LX/08Y;
+    0010..0014  iput-object  v2, v0, LX/K1R;->A08:Lcom/whatsapp/wamsys/JniBridge;
+    0014..0018  iput-object  v4, v0, LX/K1R;->A04:Ljava/lang/String;
+    0018..001c  iput-boolean  v9, v0, LX/K1R;->A06:Z
+    001c..0020  iput-object  v5, v0, LX/K1R;->A02:Ljava/lang/String;
+    0020..0024  iput-object  v6, v0, LX/K1R;->A01:Ljava/lang/String;
+    0024..0028  iput-object  v3, v0, LX/K1R;->A00:Ljava/lang/Integer;
+    0028..002c  iput-object  v7, v0, LX/K1R;->A09:Ljava/lang/String;
+    002c..0030  iput-object  v8, v0, LX/K1R;->A03:Ljava/lang/String;
+    0030..0034  iput-boolean  v10, v0, LX/K1R;->A05:Z
+    0034..0036  return-void
+    # exception table: 0 try range(s)
+.end method

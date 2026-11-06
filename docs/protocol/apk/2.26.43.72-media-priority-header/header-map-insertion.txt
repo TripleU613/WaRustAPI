@@ -1,0 +1,131 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+0000000000663844 <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_>:
+  66387c:      	paciasp
+  663880:      	sub	sp, sp, #0x90
+  663884:      	stp	x29, x30, [sp, #0x30]
+  663888:      	bl	0x72460c <MCFSetGetCount+0x554>
+  66388c:      	add	x29, sp, #0x30
+  663890:      	mrs	x25, TPIDR_EL0
+  663894:      	bl	0x2f62d0 <MCISessionedNetworkerUnregisterObserver+0x57cc>
+  663898:      	ldr	x8, [x25, #0x28]
+  66389c:      	bl	0x72c3f4 <MCFSetGetCount+0x833c>
+  6638a0:      	mov	x24, x1
+  6638a4:      	stur	x8, [x29, #-0x8]
+  6638a8:      	bl	0x3eafc8 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x39cd8>
+  6638ac:      	ldr	x26, [x19, #0x8]
+  6638b0:      	mov	x21, x0
+  6638b4:      	cbz	x26, 0x6638d4 <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0x90>
+  6638b8:      	bl	0x727884 <MCFSetGetCount+0x37cc>
+  6638bc:      	fmov	w28, s0
+  6638c0:      	cmp	x28, #0x1
+  6638c4:      	b.hi	0x6638dc <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0x98>
+  6638c8:      	sub	x8, x26, #0x1
+  6638cc:      	and	x27, x8, x21
+  6638d0:      	b	0x6638f0 <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0xac>
+  6638d4:      	mov	x27, xzr
+  6638d8:      	b	0x663950 <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0x10c>
+  6638dc:      	cmp	x21, x26
+  6638e0:      	mov	x27, x21
+  6638e4:      	b.lo	0x6638f0 <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0xac>
+  6638e8:      	udiv	x8, x21, x26
+  6638ec:      	msub	x27, x8, x26, x21
+  6638f0:      	ldr	x8, [x19]
+  6638f4:      	ldr	x20, [x8, x27, lsl #3]
+  6638f8:      	cbz	x20, 0x663950 <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0x10c>
+  6638fc:      	str	x25, [sp, #0x8]
+  663900:      	sub	x25, x26, #0x1
+  663904:      	ldr	x20, [x20]
+  663908:      	cbz	x20, 0x66394c <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0x108>
+  66390c:      	bl	0x72e1c4 <MCFSetGetCount+0xa10c>
+  663910:      	b.ne	0x663928 <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0xe4>
+  663914:      	add	x0, x20, #0x10
+  663918:      	mov	x1, x24
+  66391c:      	bl	0x3eafe8 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x39cf8>
+  663920:      	tbz	w0, #0x0, 0x663904 <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0xc0>
+  663924:      	b	0x663a48 <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0x204>
+  663928:      	cmp	x28, #0x1
+  66392c:      	b.hi	0x663938 <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0xf4>
+  663930:      	and	x8, x8, x25
+  663934:      	b	0x663944 <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0x100>
+  663938:      	cmp	x8, x26
+  66393c:      	b.lo	0x663944 <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0x100>
+  663940:      	bl	0x72af2c <MCFSetGetCount+0x6e74>
+  663944:      	cmp	x8, x27
+  663948:      	b.eq	0x663904 <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0xc0>
+  66394c:      	ldr	x25, [sp, #0x8]
+  663950:      	mov	w0, #0x40               // =64
+  663954:      	add	x24, x19, #0x10
+  663958:      	str	xzr, [sp, #0x20]
+  66395c:      	bl	0x737430 <__wrap__Znwm@plt>
+  663960:      	bl	0x729980 <MCFSetGetCount+0x58c8>
+  663964:      	mov	x20, x0
+  663968:      	stp	x0, x24, [sp, #0x10]
+  66396c:      	stp	xzr, x21, [x0], #0x10
+  663970:      	bl	0x4a61c4 <_ZNK5pando7graphql10Parameters11deepCopyPtrEv+0x528>
+  663974:      	bl	0x726520 <MCFSetGetCount+0x2468>
+  663978:      	strb	w8, [sp, #0x20]
+  66397c:      	cbz	x26, 0x663988 <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0x144>
+  663980:      	bl	0x7277e0 <MCFSetGetCount+0x3728>
+  663984:      	b.pl	0x6639d0 <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0x18c>
+  663988:      	bl	0x72915c <MCFSetGetCount+0x50a4>
+  66398c:      	cset	w11, ne
+  663990:      	cmp	x26, #0x3
+  663994:      	csel	x10, x10, x11, lo
+  663998:      	bl	0x7252d0 <MCFSetGetCount+0x1218>
+  66399c:      	mov	x0, x19
+  6639a0:      	bl	0x48c3b8 <MCIAccountSessionCreate+0x1cf38>
+  6639a4:      	ldr	x26, [x19, #0x8]
+  6639a8:      	bl	0x72af38 <MCFSetGetCount+0x6e80>
+  6639ac:      	b.ne	0x6639b8 <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0x174>
+  6639b0:      	and	x27, x8, x21
+  6639b4:      	b	0x6639d0 <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0x18c>
+  6639b8:      	cmp	x21, x26
+  6639bc:      	b.hs	0x6639c8 <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0x184>
+  6639c0:      	mov	x27, x21
+  6639c4:      	b	0x6639d0 <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0x18c>
+  6639c8:      	udiv	x8, x21, x26
+  6639cc:      	msub	x27, x8, x26, x21
+  6639d0:      	bl	0x73313c <MCFSetGetCount+0xf084>
+  6639d4:      	cbz	x8, 0x6639e0 <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0x19c>
+  6639d8:      	bl	0x72a73c <MCFSetGetCount+0x6684>
+  6639dc:      	b	0x663a18 <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0x1d4>
+  6639e0:      	ldr	x8, [x24]
+  6639e4:      	str	x20, [x24]
+  6639e8:      	str	x8, [x20]
+  6639ec:      	str	x24, [x9, x27, lsl #3]
+  6639f0:      	ldr	x8, [x20]
+  6639f4:      	cbz	x8, 0x663a1c <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0x1d8>
+  6639f8:      	bl	0x727b54 <MCFSetGetCount+0x3a9c>
+  6639fc:      	b.ne	0x663a08 <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0x1c4>
+  663a00:      	and	x8, x8, x9
+  663a04:      	b	0x663a14 <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0x1d0>
+  663a08:      	cmp	x8, x26
+  663a0c:      	b.lo	0x663a14 <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0x1d0>
+  663a10:      	bl	0x72af2c <MCFSetGetCount+0x6e74>
+  663a14:      	bl	0x729da4 <MCFSetGetCount+0x5cec>
+  663a18:      	str	x20, [x8]
+  663a1c:      	bl	0x727568 <MCFSetGetCount+0x34b0>
+  663a20:      	bl	0x3eb028 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x39d38>
+  663a24:      	mov	w1, #0x1                // =1
+  663a28:      	bl	0x725ac8 <MCFSetGetCount+0x1a10>
+  663a2c:      	b.ne	0x663a6c <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0x228>
+  663a30:      	mov	x0, x20
+  663a34:      	bl	0x3990c8 <_RNvYINtNtNtCsd0h5sCe2hTT_4core5slice4iter7IterMutmENtNtNtNtB9_4iter8adapters3zip27TrustedRandomAccessNoCoerce4sizeB9_+0x108>
+  663a38:      	ldp	x29, x30, [sp, #0x30]
+  663a3c:      	add	sp, sp, #0x90
+  663a40:      	autiasp
+  663a44:      	ret
+  663a48:      	ldr	x25, [sp, #0x8]
+  663a4c:      	mov	x1, xzr
+  663a50:      	b	0x663a28 <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0x1e4>
+  663a54:      	bl	0x728f4c <MCFSetGetCount+0x4e94>
+  663a58:      	bl	0x3eb028 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x39d38>
+  663a5c:      	bl	0x725ac8 <MCFSetGetCount+0x1a10>
+  663a60:      	b.ne	0x663a6c <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0x228>
+  663a64:      	mov	x0, x19
+  663a68:      	bl	0x7373e0 <__wrap__Unwind_Resume@plt>
+  663a6c:      	bl	0x7378f0 <__stack_chk_fail@plt>

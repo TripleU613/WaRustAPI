@@ -1,0 +1,138 @@
+{
+  "README.md": {
+    "bytes": 9577,
+    "sha256": "daf9ba1d8a33ba9412b316cfd986f051ac7660622009eabc925b09b515dc1637"
+  },
+  "category-enum.txt": {
+    "bytes": 8165,
+    "sha256": "119f89237f799e5d33b7d67e4ebdf2cc8ad6195a5ad49c8369823cf8351cc9fe"
+  },
+  "category-setter.txt": {
+    "bytes": 331,
+    "sha256": "ffc1992b5faeae82583e398170f345a7652b1e9a3f7e18b522522a401f3da408"
+  },
+  "category-source.txt": {
+    "bytes": 3054,
+    "sha256": "7696f2e380101022fe3e574f9b040db54787d8eb42a2e728cb7e7255c802cfd3"
+  },
+  "client-constructors.txt": {
+    "bytes": 41155,
+    "sha256": "fb4f704afe38f1774dcc5b25f1ddf041e3a24f427b4d9590ee9a9937911ff27e"
+  },
+  "client-stack-composition.txt": {
+    "bytes": 90987,
+    "sha256": "2c6533a3d1b82dcf7e3dbd8645e95f4e4c1eabe2b685be7fb1a88d8ebdec78bd"
+  },
+  "config-constructors.txt": {
+    "bytes": 42498,
+    "sha256": "a7e456ad6848202e0456496f121f130b0ae0a4fbe30467423fdb1e6627f35861"
+  },
+  "context-stage-register-helper.txt": {
+    "bytes": 271,
+    "sha256": "950d7d1614a6b3fd76dca272e7ac8f8f16f602137531df9dfd9d9d3b729a4938"
+  },
+  "context-stage.txt": {
+    "bytes": 15089,
+    "sha256": "0344c42421ac2316cfdee38f1ff2971af44f6b281bfe2e720032b3016c2e5993"
+  },
+  "default-calculator.txt": {
+    "bytes": 11662,
+    "sha256": "0320ab99e1323e91a04269f03251e04be50e3acbe4ebdd21c2e4789cc43e6081"
+  },
+  "dex-selectors.json": {
+    "bytes": 740,
+    "sha256": "317e9f1abb8f3103a4f3649a087c05f77bad1e952d55d00903d829d3863465ee"
+  },
+  "frame-setup.txt": {
+    "bytes": 504,
+    "sha256": "b5e3e768ac18cfd5e5eca38f16cff17f0c79d4a64e5159004ca5dba1f14ba777"
+  },
+  "header-map-insertion.txt": {
+    "bytes": 8780,
+    "sha256": "84e0d3d9769acbc6698fb12df34b56cc9ea5a70fe1ed3a1b1f46d813cdba151c"
+  },
+  "header-upsert.txt": {
+    "bytes": 1284,
+    "sha256": "5076901bff58d64e9d0ef43c25107b43eade0008107e021513999f2800dfc0f5"
+  },
+  "hybrid-client-construction.txt": {
+    "bytes": 49620,
+    "sha256": "34f2293a39aff2693191f5d03c28c877528959cc6212a63181f2b5feac2d03c7"
+  },
+  "inspect-native.py": {
+    "bytes": 1995,
+    "sha256": "a154f468dc99e36e55cfd46548e9e7b7ec3b224155cea513529d36e8e9b95494"
+  },
+  "jni-argument-setup.txt": {
+    "bytes": 335,
+    "sha256": "231bea2344abde92fb0fe047eff9673715d4161fbf47126722ee0827f6d7f0ef"
+  },
+  "jni-trampoline.txt": {
+    "bytes": 4749,
+    "sha256": "a35a7b2e218415d3613fc4beff7cab46443c9cc1308d853643eb51c2229684c8"
+  },
+  "metadata-callers.txt": {
+    "bytes": 1142,
+    "sha256": "fe6a6566b8633ead5f7c4020dfca2550a7ed4a0591603e712ac22938dd4e3d90"
+  },
+  "metadata-constructor.txt": {
+    "bytes": 1191,
+    "sha256": "1d125a5bf5ca4eb87aa282a1cc6ddbc6f7d62ba672a7f108b515a88174e22b26"
+  },
+  "native-bindings.json": {
+    "bytes": 6472,
+    "sha256": "e72530f78d7d08fe473478150fa542238e5ab545bd437f7bc743c9f499e6ec82"
+  },
+  "native-windows.json": {
+    "bytes": 1013,
+    "sha256": "0f68699ddcef6c0a5ea9032f64de54e6516429b628cb34f32e88e509515c1498"
+  },
+  "optional-integer-property.txt": {
+    "bytes": 879,
+    "sha256": "d7e65a2a4c4eaa459d7d24fe67ded84388923d38f9530bd9bc1547a84a4fbbdc"
+  },
+  "prioritization-service.txt": {
+    "bytes": 22211,
+    "sha256": "2cf9a0a9df867481fbde1247d4fe785d5e505f2b154e489b25dc16f072f79ec0"
+  },
+  "prioritization-stage.txt": {
+    "bytes": 7632,
+    "sha256": "522fc19b398abd579dd4e813c3265865ef35a33d9baa60fd279fb01c8f905078"
+  },
+  "priority-strings.txt": {
+    "bytes": 36712,
+    "sha256": "f9a7bc25fca69657bf5d552aaf3d04c43bd634b98cc47072d59e14046a2bd561"
+  },
+  "provider-slot-helper.txt": {
+    "bytes": 271,
+    "sha256": "b76312e08e9f9b39842dd4cb6f5927b473f7930e232996e86d4e35d225d04143"
+  },
+  "provider-unwrapper.txt": {
+    "bytes": 5770,
+    "sha256": "916e5522905878c93ff76e25bc12784ba84f985736cfd74a4bf606779854ee44"
+  },
+  "purpose-enum.txt": {
+    "bytes": 5035,
+    "sha256": "aeefc9d0f87208016613e0e278ff7b1e446770396db4f52e647ab6955e797cfb"
+  },
+  "purpose-source.txt": {
+    "bytes": 1463,
+    "sha256": "12ba408db2f73fcce86a26ea91545e8db3bdd70266eb53fc8572fc3f303811f5"
+  },
+  "service-holder.txt": {
+    "bytes": 8836,
+    "sha256": "4f59cbd6a4c0336029ac26d6fb3e9bab4292cd44080b2ab6e372617dd4cb307e"
+  },
+  "standard-upload-metadata.txt": {
+    "bytes": 1737,
+    "sha256": "04248ed6f4abf10daa8c6ff8433ef9bacdbc4b51477b5b56386656076221bde0"
+  },
+  "upload-category.txt": {
+    "bytes": 1480,
+    "sha256": "9aeaea0bfd73ca9f5fb2c33c41eaaa8a5cb4334a4821d3e9018b69a840ea5eba"
+  },
+  "upload-purpose.txt": {
+    "bytes": 670,
+    "sha256": "0876e22e80d56c0291d710b9353f4bb5e0f186f84cba842c8001db90febeaf05"
+  }
+}

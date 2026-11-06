@@ -1,0 +1,35 @@
+
+# class: LX/K1R;
+# extends: Ljava/lang/Object;
+
+.method private A01(I)  # .registers 5
+    # full signature: LX/K1R;->A01()I
+    0000..0004  iget-boolean  v0, v4, LX/K1R;->A06:Z
+    0004..0006  const/4  v3, #0x0
+    0006..000a  if-nez  v0, +0x2c
+    000a..000e  iget-object  v2, v4, LX/K1R;->A01:Ljava/lang/String;
+    000e..0012  if-eqz  v2, +0x28
+    0012..0016  iget-object  v1, v4, LX/K1R;->A04:Ljava/lang/String;
+    0016..001a  const-string  v0, "status_user"
+    001a..0020  invoke-static  {v1, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    0020..0022  move-result  v0
+    0022..0024  const/4  v1, #0x2
+    0024..0028  if-eqz  v0, +0xb
+    0028..002c  const-string  v0, "aggressive_prefetch_manual"
+    002c..0032  invoke-virtual  {v2, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0032..0034  move-result  v0
+    0034..0038  if-eqz  v0, +0x3
+    0038..003a  return  v1
+    003a..003e  const-string  v0, "prefetch"
+    003e..0044  invoke-static  {v2, v0, v3}, LX/0Cf;->A0z(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Z)Z
+    0044..0046  move-result  v0
+    0046..004a  if-nez  v0, +0xa
+    004a..004e  const-string  v0, "full"
+    004e..0054  invoke-virtual  {v2, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0054..0056  move-result  v0
+    0056..005a  if-eqz  v0, -0xf
+    005a..005c  const/4  v0, #0x1
+    005c..005e  return  v0
+    005e..0060  return  v3
+    # exception table: 0 try range(s)
+.end method

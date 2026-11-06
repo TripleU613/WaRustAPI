@@ -1,0 +1,826 @@
+
+# class: Lcom/crossapp/tigonhttp/TigonHttpClientConfig;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VL)  # .registers 110
+    # full signature: Lcom/crossapp/tigonhttp/TigonHttpClientConfig;-><init>(Ljava/lang/String;)V
+    0000..0002  const/4  v3, #0x0
+    0002..0006  move-object/from16  v1, v109
+    0006..000c  invoke-static  {v1, v3}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000c..000e  const/4  v0, #0x1
+    000e..0012  new-array  v7, v0, [Ljava/lang/String;
+    0012..0016  const-string  v0, "Set-Cookie"
+    0016..001a  aput-object  v0, v7, v3
+    001a..001e  const/16  v106, #0x3
+    001e..0020  const/4  v2, #0x0
+    0020..0024  const-wide/16  v24, #0x0
+    0024..0028  const/16  v103, #0xffbe (-66)
+    0028..002c  const/16  v104, #0xffff (-1)
+    002c..0030  move-object/from16  v0, v108
+    0030..0032  move  v4, v3
+    0032..0034  move  v5, v3
+    0034..0036  move  v6, v3
+    0036..0038  move  v8, v3
+    0038..003a  move  v9, v3
+    003a..003c  move  v10, v3
+    003c..003e  move  v11, v3
+    003e..0040  move  v12, v3
+    0040..0042  move  v13, v3
+    0042..0044  move  v14, v3
+    0044..0046  move-object  v15, v2
+    0046..004a  move/from16  v16, v3
+    004a..004e  move-object/from16  v17, v2
+    004e..0052  move-object/from16  v18, v2
+    0052..0056  move-object/from16  v19, v2
+    0056..005a  move/from16  v20, v3
+    005a..005e  move/from16  v21, v3
+    005e..0062  move/from16  v22, v3
+    0062..0066  move-object/from16  v23, v2
+    0066..006a  move/from16  v26, v3
+    006a..006e  move/from16  v27, v3
+    006e..0072  move/from16  v28, v3
+    0072..0076  move/from16  v29, v3
+    0076..007a  move/from16  v30, v3
+    007a..007e  move-object/from16  v31, v2
+    007e..0082  move/from16  v32, v3
+    0082..0086  move/from16  v33, v3
+    0086..008a  move/from16  v34, v3
+    008a..008e  move/from16  v35, v3
+    008e..0092  move/from16  v36, v3
+    0092..0096  move/from16  v37, v3
+    0096..009a  move/from16  v38, v3
+    009a..009e  move/from16  v39, v3
+    009e..00a2  move/from16  v40, v3
+    00a2..00a6  move-object/from16  v41, v2
+    00a6..00aa  move/from16  v42, v3
+    00aa..00ae  move/from16  v43, v3
+    00ae..00b2  move/from16  v44, v3
+    00b2..00b6  move/from16  v45, v3
+    00b6..00ba  move/from16  v46, v3
+    00ba..00be  move/from16  v47, v3
+    00be..00c2  move-object/from16  v48, v2
+    00c2..00c6  move-wide/from16  v49, v24
+    00c6..00ca  move/from16  v51, v3
+    00ca..00ce  move/from16  v52, v3
+    00ce..00d2  move/from16  v53, v3
+    00d2..00d6  move/from16  v54, v3
+    00d6..00da  move/from16  v55, v3
+    00da..00de  move/from16  v56, v3
+    00de..00e2  move/from16  v57, v3
+    00e2..00e6  move/from16  v58, v3
+    00e6..00ea  move/from16  v59, v3
+    00ea..00ee  move/from16  v60, v3
+    00ee..00f2  move/from16  v61, v3
+    00f2..00f6  move/from16  v62, v3
+    00f6..00fa  move/from16  v63, v3
+    00fa..00fe  move-object/from16  v64, v2
+    00fe..0102  move/from16  v65, v3
+    0102..0106  move/from16  v66, v3
+    0106..010a  move/from16  v67, v3
+    010a..010e  move-object/from16  v68, v2
+    010e..0112  move-object/from16  v69, v2
+    0112..0116  move/from16  v70, v3
+    0116..011a  move/from16  v71, v3
+    011a..011e  move/from16  v72, v3
+    011e..0122  move-object/from16  v73, v2
+    0122..0126  move/from16  v74, v3
+    0126..012a  move/from16  v75, v3
+    012a..012e  move/from16  v76, v3
+    012e..0132  move/from16  v77, v3
+    0132..0136  move/from16  v78, v3
+    0136..013a  move-wide/from16  v79, v24
+    013a..013e  move-wide/from16  v81, v24
+    013e..0142  move/from16  v83, v3
+    0142..0146  move-object/from16  v84, v2
+    0146..014a  move/from16  v85, v3
+    014a..014e  move-object/from16  v86, v2
+    014e..0152  move-object/from16  v87, v2
+    0152..0156  move/from16  v88, v3
+    0156..015a  move/from16  v89, v3
+    015a..015e  move/from16  v90, v3
+    015e..0162  move-object/from16  v91, v2
+    0162..0166  move/from16  v92, v3
+    0166..016a  move/from16  v93, v3
+    016a..016e  move/from16  v94, v3
+    016e..0172  move/from16  v95, v3
+    0172..0176  move/from16  v96, v3
+    0176..017a  move/from16  v97, v3
+    017a..017e  move/from16  v98, v3
+    017e..0182  move/from16  v99, v3
+    0182..0186  move/from16  v100, v3
+    0186..018a  move/from16  v101, v3
+    018a..018e  move/from16  v102, v3
+    018e..0192  move/from16  v105, v104
+    0192..0196  move-object/from16  v107, v2
+    0196..019c  invoke-direct/range  {v0..v107}, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;-><init>(Ljava/lang/String;[Ljava/lang/String;ZZII[Ljava/lang/String;IZZZZZZLjava/lang/String;I[Ljava/lang/String;[Ljava/lang/String;[Ljava/lang/String;ZZZLjava/lang/String;JIZZIILjava/lang/String;IZZIIIZIILjava/lang/String;IIIIZZ[Ljava/lang/String;JZIZZZZIZZZZIZLjava/lang/String;ZZZLjava/lang/String;Ljava/lang/String;ZZZLjava/lang/String;IIIIIJJILjava/lang/String;Z[Ljava/lang/String;[Ljava/lang/String;IIZ[Ljava/lang/Integer;IIIIIIIZZZZIIIILX/2yy;)V
+    019c..019e  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VLLZZIILIZZZZZZLILLLZZZLJIZZIILIZZIIIZIILIIIIZZLJZIZZZZIZZZZIZLZZZLLZZZLIIIIIJJILZLLIIZLIIIIIIIZZZZ)  # .registers 123
+    # full signature: Lcom/crossapp/tigonhttp/TigonHttpClientConfig;-><init>(Ljava/lang/String;[Ljava/lang/String;ZZII[Ljava/lang/String;IZZZZZZLjava/lang/String;I[Ljava/lang/String;[Ljava/lang/String;[Ljava/lang/String;ZZZLjava/lang/String;JIZZIILjava/lang/String;IZZIIIZIILjava/lang/String;IIIIZZ[Ljava/lang/String;JZIZZZZIZZZZIZLjava/lang/String;ZZZLjava/lang/String;Ljava/lang/String;ZZZLjava/lang/String;IIIIIJJILjava/lang/String;Z[Ljava/lang/String;[Ljava/lang/String;IIZ[Ljava/lang/Integer;IIIIIIIZZZZ)V
+    0000..0002  const/4  v0, #0x0
+    0002..0006  move-object/from16  v15, v21
+    0006..000c  invoke-static  {v15, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000c..000e  const/4  v0, #0x1
+    000e..0012  move-object/from16  v14, v22
+    0012..0018  invoke-static  {v14, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0018..001a  const/4  v0, #0x6
+    001a..001e  move-object/from16  v13, v27
+    001e..0024  invoke-static  {v13, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0024..0028  const/16  v0, #0xe
+    0028..002c  move-object/from16  v12, v35
+    002c..0032  invoke-static  {v12, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0032..0036  const/16  v1, #0x10
+    0036..003a  move-object/from16  v19, v37
+    003a..003e  move-object/from16  v0, v19
+    003e..0044  invoke-static  {v0, v1}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0044..0048  const/16  v0, #0x11
+    0048..004c  move-object/from16  v11, v38
+    004c..0052  invoke-static  {v11, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0052..0056  const/16  v0, #0x12
+    0056..005a  move-object/from16  v7, v39
+    005a..0060  invoke-static  {v7, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0060..0064  const/16  v0, #0x16
+    0064..0068  move-object/from16  v6, v43
+    0068..006e  invoke-static  {v6, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    006e..0072  const/16  v0, #0x1d
+    0072..0076  move-object/from16  v10, v51
+    0076..007c  invoke-static  {v10, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    007c..0080  const/16  v0, #0x27
+    0080..0084  move-object/from16  v9, v61
+    0084..008a  invoke-static  {v9, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    008a..008e  const/16  v1, #0x2e
+    008e..0092  move-object/from16  v0, v68
+    0092..0098  invoke-static  {v0, v1}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0098..009c  const/16  v2, #0x3d
+    009c..00a0  move-object/from16  v18, v84
+    00a0..00a4  move-object/from16  v1, v18
+    00a4..00aa  invoke-static  {v1, v2}, LX/00l;->A09(Ljava/lang/Object;I)V
+    00aa..00ae  const/16  v2, #0x41
+    00ae..00b2  move-object/from16  v17, v88
+    00b2..00b6  move-object/from16  v1, v17
+    00b6..00bc  invoke-static  {v1, v2}, LX/00l;->A09(Ljava/lang/Object;I)V
+    00bc..00c0  const/16  v2, #0x42
+    00c0..00c4  move-object/from16  v16, v89
+    00c4..00c8  move-object/from16  v1, v16
+    00c8..00ce  invoke-static  {v1, v2}, LX/00l;->A09(Ljava/lang/Object;I)V
+    00ce..00d2  const/16  v1, #0x46
+    00d2..00d6  move-object/from16  v8, v93
+    00d6..00dc  invoke-static  {v8, v1}, LX/00l;->A09(Ljava/lang/Object;I)V
+    00dc..00e0  const/16  v1, #0x4f
+    00e0..00e4  move-object/from16  v5, v104
+    00e4..00ea  invoke-static  {v5, v1}, LX/00l;->A09(Ljava/lang/Object;I)V
+    00ea..00ee  const/16  v1, #0x51
+    00ee..00f2  move-object/from16  v4, v106
+    00f2..00f8  invoke-static  {v4, v1}, LX/00l;->A09(Ljava/lang/Object;I)V
+    00f8..00fc  const/16  v1, #0x52
+    00fc..0100  move-object/from16  v3, v107
+    0100..0106  invoke-static  {v3, v1}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0106..010a  const/16  v1, #0x56
+    010a..010e  move-object/from16  v2, v111
+    010e..0114  invoke-static  {v2, v1}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0114..0118  move-object/from16  v1, v20
+    0118..011e  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    011e..0122  iput-object  v15, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->cacheDirectory:Ljava/lang/String;
+    0122..0126  iput-object  v14, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->additionalRedirectHeaders:[Ljava/lang/String;
+    0126..012a  move/from16  v14, v23
+    012a..012e  iput-boolean  v14, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->autotuneReceiveConnFlowControl:Z
+    012e..0132  move/from16  v14, v24
+    0132..0136  iput-boolean  v14, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->autotuneReceiveStreamFlowControl:Z
+    0136..013a  move/from16  v14, v25
+    013a..013e  iput  v14, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->bugReportAnalyticsRequestSampleWeight:I
+    013e..0142  move/from16  v14, v26
+    0142..0146  iput  v14, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->bugReportMaxLastTelemetryEvents:I
+    0146..014a  iput-object  v13, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->combinableResponseHeaders:[Ljava/lang/String;
+    014a..014e  move/from16  v13, v28
+    014e..0152  iput  v13, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->connectionExpiryTimeoutMs:I
+    0152..0156  move/from16  v13, v29
+    0156..015a  iput-boolean  v13, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->disableZstd:Z
+    015a..015e  move/from16  v13, v30
+    015e..0162  iput-boolean  v13, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->enableBugReport:Z
+    0162..0166  move/from16  v13, v31
+    0166..016a  iput-boolean  v13, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->enableCertificateVerificationWithProofOfPossession:Z
+    016a..016e  move/from16  v13, v32
+    016e..0172  iput-boolean  v13, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->enableGiphyOverMNS:Z
+    0172..0176  move/from16  v13, v33
+    0176..017a  iput-boolean  v13, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->enableMNSQPL:Z
+    017a..017e  move/from16  v13, v34
+    017e..0182  iput-boolean  v13, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->enableMnsWebSocketConnectionQpl:Z
+    0182..0186  iput-object  v12, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->eventLoopThreadName:Ljava/lang/String;
+    0186..018a  move/from16  v12, v36
+    018a..018e  iput  v12, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->eventLoopThreadPriority:I
+    018e..0192  move-object/from16  v12, v19
+    0192..0196  iput-object  v12, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->externalRequestInterceptorAdditionalPlaintextAllowlist:[Ljava/lang/String;
+    0196..019a  iput-object  v11, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->externalRequestInterceptorAdditionalThirdPartyAllowlist:[Ljava/lang/String;
+    019a..019e  iput-object  v7, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->externalRequestInterceptorCredentialDomainAllowlist:[Ljava/lang/String;
+    019e..01a2  move/from16  v7, v40
+    01a2..01a6  iput-boolean  v7, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->externalRequestInterceptorEnforceSanitization:Z
+    01a6..01aa  move/from16  v7, v41
+    01aa..01ae  iput-boolean  v7, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->fizzMobileEnabled:Z
+    01ae..01b2  move/from16  v7, v42
+    01b2..01b6  iput-boolean  v7, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->forceHttp2:Z
+    01b6..01ba  iput-object  v6, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->forceHttp2HostsRegex:Ljava/lang/String;
+    01ba..01be  move-wide/from16  v6, v44
+    01be..01c2  iput-wide  v6, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->giphyRaceHedgeDelayMs:J
+    01c2..01c6  move/from16  v6, v46
+    01c6..01ca  iput  v6, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->headerValidationSampleWeight:I
+    01ca..01ce  move/from16  v6, v47
+    01ce..01d2  iput-boolean  v6, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->http2BackPressureEnabled:Z
+    01d2..01d6  move/from16  v6, v48
+    01d6..01da  iput-boolean  v6, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->http2ManualFlowControlEnabled:Z
+    01da..01de  move/from16  v6, v49
+    01de..01e2  iput  v6, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->http2MaxInFlightRequestsPerConnection:I
+    01e2..01e6  move/from16  v6, v50
+    01e6..01ea  iput  v6, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->http2MaxInFlightRequestsPerConnectionForHosts:I
+    01ea..01ee  iput-object  v10, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->http2MaxInFlightRequestsPerConnectionHostsRegex:Ljava/lang/String;
+    01ee..01f2  move/from16  v6, v52
+    01f2..01f6  iput  v6, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->http2StreamFlowControlWindow:I
+    01f6..01fa  move/from16  v6, v53
+    01fa..01fe  iput-boolean  v6, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->http3EnableExtendedConnect:Z
+    01fe..0202  move/from16  v6, v54
+    0202..0206  iput-boolean  v6, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->isRunningEndToEndTest:Z
+    0206..020a  move/from16  v6, v55
+    020a..020e  iput  v6, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->longLivedHostsEstablishTimeoutMs:I
+    020e..0212  move/from16  v6, v56
+    0212..0216  iput  v6, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->longLivedHostsHttp2PingIntervalMs:I
+    0216..021a  move/from16  v6, v57
+    021a..021e  iput  v6, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->longLivedHostsHttp2PingTimeoutMs:I
+    021e..0222  move/from16  v6, v58
+    0222..0226  iput-boolean  v6, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->longLivedHostsHttp2PingTimeoutRestartsOnAnyFrame:Z
+    0226..022a  move/from16  v6, v59
+    022a..022e  iput  v6, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->longLivedHostsHttp2StreamOpenPingTimeoutMs:I
+    022e..0232  move/from16  v6, v60
+    0232..0236  iput  v6, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->longLivedHostsHttp3PingIntervalMs:I
+    0236..023a  iput-object  v9, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->longLivedHostsRegex:Ljava/lang/String;
+    023a..023e  move/from16  v6, v62
+    023e..0242  iput  v6, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->longLivedHostsTcpKeepAliveIdleTimeSeconds:I
+    0242..0246  move/from16  v6, v63
+    0246..024a  iput  v6, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->longLivedHostsTcpKeepAliveIntervalSeconds:I
+    024a..024e  move/from16  v6, v64
+    024e..0252  iput  v6, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->longLivedHostsTcpKeepAliveRetryCount:I
+    0252..0256  move/from16  v6, v65
+    0256..025a  iput  v6, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->mhrSampleWeight:I
+    025a..025e  move/from16  v6, v66
+    025e..0262  iput-boolean  v6, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->mnsGateTelemetryOnQplSampling:Z
+    0262..0266  move/from16  v6, v67
+    0266..026a  iput-boolean  v6, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->mnsHttpTransactionEarlySetFailState:Z
+    026a..026e  iput-object  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->mnsQplFilteredUrlSubstrings:[Ljava/lang/String;
+    026e..0272  move-wide/from16  v6, v69
+    0272..0276  iput-wide  v6, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->mnsRequestBodyBackpressureMaxBufferSize:J
+    0276..027a  move/from16  v0, v71
+    027a..027e  iput-boolean  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->mvfstAdditiveIncreaseAfterHystart:Z
+    027e..0282  move/from16  v0, v72
+    0282..0286  iput  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->mvfstBatchingMode:I
+    0286..028a  move/from16  v0, v73
+    028a..028e  iput-boolean  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->mvfstCoalesceStreamReads:Z
+    028e..0292  move/from16  v0, v74
+    0292..0296  iput-boolean  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->mvfstEnablePacing:Z
+    0296..029a  move/from16  v0, v75
+    029a..029e  iput-boolean  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->mvfstEnableSpuriousLossRecovery:Z
+    029e..02a2  move/from16  v0, v76
+    02a2..02a6  iput-boolean  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->mvfstPrioritizeExpiredIdleTimeout:Z
+    02a6..02aa  move/from16  v0, v77
+    02aa..02ae  iput  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->mvfstUDPSendBufferSizeBytes:I
+    02ae..02b2  move/from16  v0, v78
+    02b2..02b6  iput-boolean  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->mvfstUseAdaptiveLossReorderingThresholds:Z
+    02b6..02ba  move/from16  v0, v79
+    02ba..02be  iput-boolean  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->mvfstUseContinuousMemory:Z
+    02be..02c2  move/from16  v0, v80
+    02c2..02c6  iput-boolean  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->mvfstUseHandshakeTimeout:Z
+    02c6..02ca  move/from16  v0, v81
+    02ca..02ce  iput-boolean  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->mvfstUseSocketWritableEvents:Z
+    02ce..02d2  move/from16  v0, v82
+    02d2..02d6  iput  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->nonTransientErrorRetryLimit:I
+    02d6..02da  move/from16  v0, v83
+    02da..02de  iput-boolean  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->ohaiAllowDevserverProxyUrl:Z
+    02de..02e2  move-object/from16  v0, v18
+    02e2..02e6  iput-object  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->ohaiAllowedGraphQLQueries:Ljava/lang/String;
+    02e6..02ea  move/from16  v0, v85
+    02ea..02ee  iput-boolean  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->ohaiConfigProviderEnabled:Z
+    02ee..02f2  move/from16  v0, v86
+    02f2..02f6  iput-boolean  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->ohaiEnabled:Z
+    02f6..02fa  move/from16  v0, v87
+    02fa..02fe  iput-boolean  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->ohaiOhttpTargetNewVip:Z
+    02fe..0302  move-object/from16  v0, v17
+    0302..0306  iput-object  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->ohaiProxyChunkedUrl:Ljava/lang/String;
+    0306..030a  move-object/from16  v0, v16
+    030a..030e  iput-object  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->ohaiProxyUrl:Ljava/lang/String;
+    030e..0312  move/from16  v0, v90
+    0312..0316  iput-boolean  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->omitClientIpAddressesFromTelemetry:Z
+    0316..031a  move/from16  v0, v91
+    031a..031e  iput-boolean  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->pqcEnabled:Z
+    031e..0322  move/from16  v0, v92
+    0322..0326  iput-boolean  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->preferIPv6ForBothTCPAndQUIC:Z
+    0326..032a  iput-object  v8, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->proxyHostAndPortForE2ETest:Ljava/lang/String;
+    032a..032e  move/from16  v0, v94
+    032e..0332  iput  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->quicEgressDscp:I
+    0332..0336  move/from16  v0, v95
+    0336..033a  iput  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->quicEgressSoPriority:I
+    033a..033e  move/from16  v0, v96
+    033e..0342  iput  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->quicExperimentId:I
+    0342..0346  move/from16  v0, v97
+    0346..034a  iput  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->quicHandshakeTimeoutMs:I
+    034a..034e  move/from16  v0, v98
+    034e..0352  iput  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->quicIdleTimeoutMs:I
+    0352..0356  move-wide/from16  v6, v99
+    0356..035a  iput-wide  v6, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->quicInitialMaxData:J
+    035a..035e  move-wide/from16  v6, v101
+    035e..0362  iput-wide  v6, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->quicInitialMaxStreamDataBidiLocal:J
+    0362..0366  move/from16  v0, v103
+    0366..036a  iput  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->quicKeepAliveTimeoutMs:I
+    036a..036e  iput-object  v5, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->quicKnobsJson:Ljava/lang/String;
+    036e..0372  move/from16  v0, v105
+    0372..0376  iput-boolean  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->quicUseMvfstMobile:Z
+    0376..037a  iput-object  v4, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->requestInterceptorsOrder:[Ljava/lang/String;
+    037a..037e  iput-object  v3, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->responseInterceptorsOrder:[Ljava/lang/String;
+    037e..0382  move/from16  v0, v108
+    0382..0386  iput  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->retryDelayMaxMs:I
+    0386..038a  move/from16  v0, v109
+    038a..038e  iput  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->retryDelayMinMs:I
+    038e..0392  move/from16  v0, v110
+    0392..0396  iput-boolean  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->retryOnTimeout:Z
+    0396..039a  iput-object  v2, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->retryStatusCodes:[Ljava/lang/Integer;
+    039a..039e  move/from16  v0, v112
+    039e..03a2  iput  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->secureTcpEstablishTimeoutMs:I
+    03a2..03a6  move/from16  v0, v113
+    03a6..03aa  iput  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->statusCodeRetryLimit:I
+    03aa..03ae  move/from16  v0, v114
+    03ae..03b2  iput  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->tcpDelayMs:I
+    03b2..03b6  move/from16  v0, v115
+    03b6..03ba  iput  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->tcpEgressDscp:I
+    03ba..03be  move/from16  v0, v116
+    03be..03c2  iput  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->tcpEgressSoPriority:I
+    03c2..03c6  move/from16  v0, v117
+    03c6..03ca  iput  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->transactionReceiveTimeoutMs:I
+    03ca..03ce  move/from16  v0, v118
+    03ce..03d2  iput  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->transientErrorRetryLimit:I
+    03d2..03d6  move/from16  v0, v119
+    03d6..03da  iput-boolean  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->trustSandboxCertificates:Z
+    03da..03de  move/from16  v0, v120
+    03de..03e2  iput-boolean  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->useALPNProtocolsFromMNSTLSContext:Z
+    03e2..03e6  move/from16  v0, v121
+    03e6..03ea  iput-boolean  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->useDiskCacheV2:Z
+    03ea..03ee  move/from16  v0, v122
+    03ee..03f2  iput-boolean  v0, v1, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;->useDiskCacheV2EventLoopExecutor:Z
+    03f2..03f4  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VLLZZIILIZZZZZZLILLLZZZLJIZZIILIZZIIIZIILIIIIZZLJZIZZZZIZZZZIZLZZZLLZZZLIIIIIJJILZLLIIZLIIIIIIIZZZZIIIIL)  # .registers 226
+    # full signature: Lcom/crossapp/tigonhttp/TigonHttpClientConfig;-><init>(Ljava/lang/String;[Ljava/lang/String;ZZII[Ljava/lang/String;IZZZZZZLjava/lang/String;I[Ljava/lang/String;[Ljava/lang/String;[Ljava/lang/String;ZZZLjava/lang/String;JIZZIILjava/lang/String;IZZIIIZIILjava/lang/String;IIIIZZ[Ljava/lang/String;JZIZZZZIZZZZIZLjava/lang/String;ZZZLjava/lang/String;Ljava/lang/String;ZZZLjava/lang/String;IIIIIJJILjava/lang/String;Z[Ljava/lang/String;[Ljava/lang/String;IIZ[Ljava/lang/Integer;IIIIIIIZZZZIIIILX/2yy;)V
+    0000..0004  move/from16  v117, v220
+    0004..0008  move/from16  v116, v219
+    0008..000c  move/from16  v115, v218
+    000c..0010  move/from16  v0, v223
+    0010..0014  move/from16  v114, v217
+    0014..0018  move/from16  v113, v216
+    0018..001c  move/from16  v112, v215
+    001c..0020  move/from16  v111, v214
+    0020..0024  move/from16  v110, v213
+    0024..0028  move/from16  v109, v212
+    0028..002c  move/from16  v108, v211
+    002c..0030  move/from16  v107, v210
+    0030..0034  move-object/from16  v7, v209
+    0034..0038  move/from16  v105, v208
+    0038..003c  move/from16  v104, v207
+    003c..0040  move/from16  v103, v206
+    0040..0044  move-object/from16  v8, v205
+    0044..0048  move-object/from16  v9, v204
+    0048..004c  move/from16  v100, v203
+    004c..0050  move/from16  v98, v201
+    0050..0054  move-wide/from16  v94, v197
+    0054..0058  move/from16  v93, v196
+    0058..005c  move/from16  v92, v195
+    005c..0060  move/from16  v91, v194
+    0060..0064  move/from16  v90, v193
+    0064..0068  move/from16  v89, v192
+    0068..006c  move-object/from16  v88, v191
+    006c..0070  move/from16  v87, v190
+    0070..0074  move/from16  v86, v189
+    0074..0078  move/from16  v85, v188
+    0078..007c  move-object/from16  v84, v187
+    007c..0080  move-object/from16  v83, v186
+    0080..0084  move/from16  v82, v185
+    0084..0088  move/from16  v81, v184
+    0088..008c  move/from16  v1, v222
+    008c..0090  move/from16  v80, v183
+    0090..0094  move-object/from16  v79, v182
+    0094..0098  move/from16  v78, v181
+    0098..009c  move/from16  v77, v180
+    009c..00a0  move/from16  v45, v148
+    00a0..00a4  move/from16  v44, v147
+    00a4..00a8  move/from16  v43, v146
+    00a8..00ac  move/from16  v42, v145
+    00ac..00b0  move/from16  v41, v144
+    00b0..00b4  move-wide/from16  v39, v142
+    00b4..00b8  move-object/from16  v38, v141
+    00b8..00bc  move/from16  v37, v140
+    00bc..00c0  move/from16  v36, v139
+    00c0..00c4  move/from16  v35, v138
+    00c4..00c8  move-object/from16  v10, v137
+    00c8..00cc  move-object/from16  v11, v136
+    00cc..00d0  move-object/from16  v12, v135
+    00d0..00d4  move/from16  v31, v134
+    00d4..00d8  move-object/from16  v30, v133
+    00d8..00dc  move-object/from16  v46, v149
+    00dc..00e0  move-object/from16  v13, v120
+    00e0..00e4  move/from16  v76, v179
+    00e4..00e8  move/from16  v18, v121
+    00e8..00ec  move/from16  v19, v122
+    00ec..00f0  move/from16  v20, v123
+    00f0..00f4  move/from16  v21, v124
+    00f4..00f8  move-object/from16  v5, v125
+    00f8..00fc  move/from16  v23, v126
+    00fc..0100  move/from16  v24, v127
+    0100..0104  move/from16  v25, v128
+    0104..0108  move/from16  v26, v129
+    0108..010c  move/from16  v27, v130
+    010c..0110  move/from16  v28, v131
+    0110..0114  move/from16  v29, v132
+    0114..0118  move/from16  v47, v150
+    0118..011c  move/from16  v2, v221
+    011c..0120  move/from16  v59, v162
+    0120..0124  move/from16  v48, v151
+    0124..0128  move/from16  v49, v152
+    0128..012c  move/from16  v50, v153
+    012c..0130  move/from16  v51, v154
+    0130..0134  move/from16  v52, v155
+    0134..0138  move/from16  v53, v156
+    0138..013c  move/from16  v54, v157
+    013c..0140  move/from16  v55, v158
+    0140..0144  move-object/from16  v56, v159
+    0144..0148  move/from16  v57, v160
+    0148..014c  move/from16  v58, v161
+    014c..0150  move/from16  v60, v163
+    0150..0154  move/from16  v61, v164
+    0154..0158  move/from16  v62, v165
+    0158..015c  move-object/from16  v6, v166
+    015c..0160  move-wide/from16  v64, v167
+    0160..0164  move/from16  v66, v169
+    0164..0168  move/from16  v67, v170
+    0168..016c  move/from16  v68, v171
+    016c..0170  move/from16  v69, v172
+    0170..0174  move/from16  v70, v173
+    0174..0178  move/from16  v71, v174
+    0178..017c  move/from16  v72, v175
+    017c..0180  move/from16  v73, v176
+    0180..0184  move/from16  v74, v177
+    0184..0188  move/from16  v75, v178
+    0188..018c  and-int/lit8  v4, v221, #0x2
+    018c..018e  const/4  v3, #0x0
+    018e..0192  if-eqz  v4, +0x4
+    0192..0196  new-array  v13, v3, [Ljava/lang/String;
+    0196..019a  and-int/lit8  v4, v221, #0x4
+    019a..019e  if-eqz  v4, +0x4
+    019e..01a2  const/16  v18, #0x0
+    01a2..01a6  and-int/lit8  v4, v221, #0x8
+    01a6..01aa  if-eqz  v4, +0x4
+    01aa..01ae  const/16  v19, #0x0
+    01ae..01b2  and-int/lit8  v4, v221, #0x10
+    01b2..01b6  if-eqz  v4, +0x4
+    01b6..01ba  const/16  v20, #0x64
+    01ba..01be  and-int/lit8  v4, v221, #0x20
+    01be..01c2  if-eqz  v4, +0x4
+    01c2..01c6  const/16  v21, #0x3e8
+    01c6..01ca  and-int/lit8  v14, v221, #0x40
+    01ca..01cc  const/4  v4, #0x1
+    01cc..01d0  if-eqz  v14, +0x8
+    01d0..01d4  new-array  v5, v4, [Ljava/lang/String;
+    01d4..01d8  const-string  v4, "Set-Cookie"
+    01d8..01dc  aput-object  v4, v5, v3
+    01dc..01e0  and-int/lit16  v3, v2, #0x80
+    01e0..01e4  if-eqz  v3, +0x4
+    01e4..01e8  const/16  v23, #0x0
+    01e8..01ec  and-int/lit16  v3, v2, #0x100
+    01ec..01f0  if-eqz  v3, +0x4
+    01f0..01f4  const/16  v24, #0x0
+    01f4..01f8  and-int/lit16  v3, v2, #0x200
+    01f8..01fc  if-eqz  v3, +0x4
+    01fc..0200  const/16  v25, #0x0
+    0200..0204  and-int/lit16  v3, v2, #0x400
+    0204..0208  if-eqz  v3, +0x4
+    0208..020c  const/16  v26, #0x0
+    020c..0210  and-int/lit16  v3, v2, #0x800
+    0210..0214  if-eqz  v3, +0x4
+    0214..0218  const/16  v27, #0x0
+    0218..021c  and-int/lit16  v3, v2, #0x1000
+    021c..0220  if-eqz  v3, +0x4
+    0220..0224  const/16  v28, #0x1
+    0224..0228  and-int/lit16  v3, v2, #0x2000
+    0228..022c  if-eqz  v3, +0x4
+    022c..0230  const/16  v29, #0x0
+    0230..0234  and-int/lit16  v3, v2, #0x4000
+    0234..0238  if-eqz  v3, +0x4
+    0238..023c  const-string  v30, "TigonHttpClientEventLoop"
+    023c..0242  const  v17, #0x8000
+    0242..0246  and-int  v3, v221, v17
+    0246..024a  if-eqz  v3, +0x4
+    024a..024e  const/16  v31, #0x0
+    024e..0252  const/high16  v16, #0x10000
+    0252..0256  and-int  v4, v221, v16
+    0256..0258  const/4  v3, #0x0
+    0258..025c  if-eqz  v4, +0x4
+    025c..0260  new-array  v12, v3, [Ljava/lang/String;
+    0260..0264  const/high16  v15, #0x20000
+    0264..0268  and-int  v4, v221, v15
+    0268..026c  if-eqz  v4, +0x4
+    026c..0270  new-array  v11, v3, [Ljava/lang/String;
+    0270..0274  const/high16  v14, #0x40000
+    0274..0278  and-int  v4, v221, v14
+    0278..027c  if-eqz  v4, +0x4
+    027c..0280  new-array  v10, v3, [Ljava/lang/String;
+    0280..0284  const/high16  v3, #0x80000
+    0284..0288  and-int  v3, v221, v3
+    0288..028c  if-eqz  v3, +0x4
+    028c..0290  const/16  v35, #0x1
+    0290..0294  const/high16  v3, #0x100000
+    0294..0298  and-int  v3, v221, v3
+    0298..029c  if-eqz  v3, +0x4
+    029c..02a0  const/16  v36, #0x0
+    02a0..02a4  const/high16  v3, #0x200000
+    02a4..02a8  and-int  v3, v221, v3
+    02a8..02ac  if-eqz  v3, +0x4
+    02ac..02b0  const/16  v37, #0x0
+    02b0..02b4  const/high16  v3, #0x400000
+    02b4..02b8  and-int  v3, v221, v3
+    02b8..02bc  const-string  v99, ""
+    02bc..02c0  if-eqz  v3, +0x4
+    02c0..02c4  move-object/from16  v38, v99
+    02c4..02c8  const/high16  v3, #0x800000
+    02c8..02cc  and-int  v3, v221, v3
+    02cc..02d0  const-wide/16  v96, #0x0
+    02d0..02d4  if-eqz  v3, +0x4
+    02d4..02d8  const-wide/16  v39, #0x0
+    02d8..02dc  const/high16  v3, #0x1000000
+    02dc..02e0  and-int  v3, v221, v3
+    02e0..02e4  if-eqz  v3, +0x4
+    02e4..02e8  const/16  v41, #0x0
+    02e8..02ec  const/high16  v3, #0x2000000
+    02ec..02f0  and-int  v3, v221, v3
+    02f0..02f4  if-eqz  v3, +0x4
+    02f4..02f8  const/16  v42, #0x0
+    02f8..02fc  const/high16  v3, #0x4000000
+    02fc..0300  and-int  v3, v221, v3
+    0300..0304  if-eqz  v3, +0x4
+    0304..0308  const/16  v43, #0x0
+    0308..030c  const/high16  v3, #0x8000000
+    030c..0310  and-int  v3, v221, v3
+    0310..0314  if-eqz  v3, +0x4
+    0314..0318  const/16  v44, #0x0
+    0318..031c  const/high16  v3, #0x10000000
+    031c..0320  and-int  v3, v221, v3
+    0320..0324  if-eqz  v3, +0x4
+    0324..0328  const/16  v45, #0x0
+    0328..032c  const/high16  v3, #0x20000000
+    032c..0330  and-int  v3, v221, v3
+    0330..0334  if-eqz  v3, +0x4
+    0334..0338  move-object/from16  v46, v99
+    0338..033c  const/high16  v3, #0x40000000
+    033c..0340  and-int  v3, v221, v3
+    0340..0344  if-eqz  v3, +0x4
+    0344..0348  const/16  v47, #0x0
+    0348..034c  const/high16  v3, #0x80000000
+    034c..0350  and-int  v2, v221, v3
+    0350..0354  if-eqz  v2, +0x4
+    0354..0358  const/16  v48, #0x0
+    0358..035c  and-int/lit8  v2, v222, #0x1
+    035c..0360  if-eqz  v2, +0x4
+    0360..0364  const/16  v49, #0x0
+    0364..0368  and-int/lit8  v2, v222, #0x2
+    0368..036c  if-eqz  v2, +0x4
+    036c..0370  const/16  v50, #0x0
+    0370..0374  and-int/lit8  v2, v222, #0x4
+    0374..0378  if-eqz  v2, +0x4
+    0378..037c  const/16  v51, #0x0
+    037c..0380  and-int/lit8  v2, v222, #0x8
+    0380..0384  if-eqz  v2, +0x4
+    0384..0388  const/16  v52, #0x0
+    0388..038c  and-int/lit8  v2, v222, #0x10
+    038c..0390  if-eqz  v2, +0x4
+    0390..0394  const/16  v53, #0x0
+    0394..0398  and-int/lit8  v2, v222, #0x20
+    0398..039c  if-eqz  v2, +0x4
+    039c..03a0  const/16  v54, #0x0
+    03a0..03a4  and-int/lit8  v2, v222, #0x40
+    03a4..03a8  if-eqz  v2, +0x4
+    03a8..03ac  const/16  v55, #0x0
+    03ac..03b0  and-int/lit16  v2, v1, #0x80
+    03b0..03b4  if-eqz  v2, +0x4
+    03b4..03b8  move-object/from16  v56, v99
+    03b8..03bc  and-int/lit16  v2, v1, #0x100
+    03bc..03c0  if-eqz  v2, +0x4
+    03c0..03c4  const/16  v57, #0x0
+    03c4..03c8  and-int/lit16  v2, v1, #0x200
+    03c8..03cc  if-eqz  v2, +0x4
+    03cc..03d0  const/16  v58, #0x0
+    03d0..03d4  and-int/lit16  v2, v1, #0x400
+    03d4..03d8  if-eqz  v2, +0x4
+    03d8..03dc  const/16  v59, #0x0
+    03dc..03e0  and-int/lit16  v2, v1, #0x800
+    03e0..03e4  if-eqz  v2, +0x4
+    03e4..03e8  const/16  v60, #0x2710
+    03e8..03ec  and-int/lit16  v2, v1, #0x1000
+    03ec..03f0  if-eqz  v2, +0x4
+    03f0..03f4  const/16  v61, #0x0
+    03f4..03f8  and-int/lit16  v2, v1, #0x2000
+    03f8..03fc  if-eqz  v2, +0x4
+    03fc..0400  const/16  v62, #0x0
+    0400..0404  and-int/lit16  v2, v1, #0x4000
+    0404..0408  if-eqz  v2, +0x5
+    0408..040a  const/4  v2, #0x0
+    040a..040e  new-array  v6, v2, [Ljava/lang/String;
+    040e..0412  and-int  v2, v222, v17
+    0412..0416  if-eqz  v2, +0x4
+    0416..041a  const-wide/16  v64, #0x0
+    041a..041e  and-int  v2, v222, v16
+    041e..0422  if-eqz  v2, +0x4
+    0422..0426  const/16  v66, #0x0
+    0426..042a  and-int  v2, v222, v15
+    042a..042e  if-eqz  v2, +0x4
+    042e..0432  const/16  v67, #0x0
+    0432..0436  and-int  v2, v222, v14
+    0436..043a  if-eqz  v2, +0x4
+    043a..043e  const/16  v68, #0x0
+    043e..0442  const/high16  v2, #0x80000
+    0442..0446  and-int  v2, v222, v2
+    0446..044a  if-eqz  v2, +0x4
+    044a..044e  const/16  v69, #0x0
+    044e..0452  const/high16  v2, #0x100000
+    0452..0456  and-int  v2, v222, v2
+    0456..045a  if-eqz  v2, +0x4
+    045a..045e  const/16  v70, #0x0
+    045e..0462  const/high16  v2, #0x200000
+    0462..0466  and-int  v2, v222, v2
+    0466..046a  if-eqz  v2, +0x4
+    046a..046e  const/16  v71, #0x0
+    046e..0472  const/high16  v2, #0x400000
+    0472..0476  and-int  v2, v222, v2
+    0476..047a  if-eqz  v2, +0x4
+    047a..047e  const/16  v72, #0x0
+    047e..0482  const/high16  v2, #0x800000
+    0482..0486  and-int  v2, v222, v2
+    0486..048a  if-eqz  v2, +0x4
+    048a..048e  const/16  v73, #0x0
+    048e..0492  const/high16  v2, #0x1000000
+    0492..0496  and-int  v2, v222, v2
+    0496..049a  if-eqz  v2, +0x4
+    049a..049e  const/16  v74, #0x0
+    049e..04a2  const/high16  v2, #0x2000000
+    04a2..04a6  and-int  v2, v222, v2
+    04a6..04aa  if-eqz  v2, +0x4
+    04aa..04ae  const/16  v75, #0x0
+    04ae..04b2  const/high16  v2, #0x4000000
+    04b2..04b6  and-int  v2, v222, v2
+    04b6..04ba  if-eqz  v2, +0x4
+    04ba..04be  const/16  v76, #0x0
+    04be..04c2  const/high16  v2, #0x8000000
+    04c2..04c6  and-int  v2, v222, v2
+    04c6..04ca  if-eqz  v2, +0x4
+    04ca..04ce  const/16  v77, #0x2
+    04ce..04d2  const/high16  v2, #0x10000000
+    04d2..04d6  and-int  v2, v222, v2
+    04d6..04da  if-eqz  v2, +0x4
+    04da..04de  const/16  v78, #0x0
+    04de..04e2  const/high16  v2, #0x20000000
+    04e2..04e6  and-int  v2, v222, v2
+    04e6..04ea  if-eqz  v2, +0x4
+    04ea..04ee  move-object/from16  v79, v99
+    04ee..04f2  const/high16  v2, #0x40000000
+    04f2..04f6  and-int  v2, v222, v2
+    04f6..04fa  if-eqz  v2, +0x4
+    04fa..04fe  const/16  v80, #0x0
+    04fe..0502  and-int  v1, v222, v3
+    0502..0506  if-eqz  v1, +0x4
+    0506..050a  const/16  v81, #0x0
+    050a..050e  and-int/lit8  v1, v223, #0x1
+    050e..0512  if-eqz  v1, +0x4
+    0512..0516  const/16  v82, #0x0
+    0516..051a  and-int/lit8  v1, v223, #0x2
+    051a..051e  if-eqz  v1, +0x4
+    051e..0522  move-object/from16  v83, v99
+    0522..0526  and-int/lit8  v1, v223, #0x4
+    0526..052a  if-eqz  v1, +0x4
+    052a..052e  move-object/from16  v84, v99
+    052e..0532  and-int/lit8  v1, v223, #0x8
+    0532..0536  if-eqz  v1, +0x4
+    0536..053a  const/16  v85, #0x0
+    053a..053e  and-int/lit8  v1, v223, #0x10
+    053e..0542  if-eqz  v1, +0x4
+    0542..0546  const/16  v86, #0x0
+    0546..054a  and-int/lit8  v1, v223, #0x20
+    054a..054e  if-eqz  v1, +0x4
+    054e..0552  const/16  v87, #0x0
+    0552..0556  and-int/lit8  v1, v223, #0x40
+    0556..055a  if-eqz  v1, +0x4
+    055a..055e  move-object/from16  v88, v99
+    055e..0562  and-int/lit16  v1, v0, #0x80
+    0562..0566  if-eqz  v1, +0x4
+    0566..056a  const/16  v89, #0x0
+    056a..056e  and-int/lit16  v1, v0, #0x100
+    056e..0572  if-eqz  v1, +0x4
+    0572..0576  const/16  v90, #0x0
+    0576..057a  and-int/lit16  v1, v0, #0x200
+    057a..057e  if-eqz  v1, +0x4
+    057e..0582  const/16  v91, #0x0
+    0582..0586  and-int/lit16  v1, v0, #0x400
+    0586..058a  if-eqz  v1, +0x4
+    058a..058e  const/16  v92, #0x0
+    058e..0592  and-int/lit16  v1, v0, #0x800
+    0592..0596  if-eqz  v1, +0x4
+    0596..059a  const/16  v93, #0x0
+    059a..059e  and-int/lit16  v1, v0, #0x1000
+    059e..05a2  if-eqz  v1, +0x4
+    05a2..05a6  const-wide/16  v94, #0x0
+    05a6..05aa  and-int/lit16  v1, v0, #0x2000
+    05aa..05ae  if-nez  v1, +0x4
+    05ae..05b2  move-wide/from16  v96, v199
+    05b2..05b6  and-int/lit16  v1, v0, #0x4000
+    05b6..05ba  if-eqz  v1, +0x4
+    05ba..05be  const/16  v98, #0x0
+    05be..05c2  and-int  v1, v223, v17
+    05c2..05c6  if-nez  v1, +0x4
+    05c6..05ca  move-object/from16  v99, v202
+    05ca..05ce  and-int  v1, v223, v16
+    05ce..05d2  if-eqz  v1, +0x4
+    05d2..05d6  const/16  v100, #0x1
+    05d6..05da  and-int  v2, v223, v15
+    05da..05dc  const/4  v1, #0x0
+    05dc..05e0  if-eqz  v2, +0x4
+    05e0..05e4  new-array  v9, v1, [Ljava/lang/String;
+    05e4..05e8  and-int  v2, v223, v14
+    05e8..05ec  if-eqz  v2, +0x4
+    05ec..05f0  new-array  v8, v1, [Ljava/lang/String;
+    05f0..05f4  const/high16  v1, #0x80000
+    05f4..05f8  and-int  v1, v1, v223
+    05f8..05fc  if-eqz  v1, +0x5
+    05fc..0602  const  v103, #0x927c0
+    0602..0606  const/high16  v1, #0x100000
+    0606..060a  and-int  v1, v223, v1
+    060a..060e  if-eqz  v1, +0x4
+    060e..0612  const/16  v104, #0x7d0
+    0612..0616  const/high16  v1, #0x200000
+    0616..061a  and-int  v1, v223, v1
+    061a..061e  if-eqz  v1, +0x4
+    061e..0622  const/16  v105, #0x1
+    0622..0626  const/high16  v1, #0x400000
+    0626..062a  and-int  v2, v223, v1
+    062a..062c  const/4  v1, #0x0
+    062c..0630  if-eqz  v2, +0x4
+    0630..0634  new-array  v7, v1, [Ljava/lang/Integer;
+    0634..0638  const/high16  v1, #0x800000
+    0638..063c  and-int  v1, v223, v1
+    063c..0640  if-eqz  v1, +0x4
+    0640..0644  const/16  v107, #0x0
+    0644..0648  const/high16  v1, #0x1000000
+    0648..064c  and-int  v1, v223, v1
+    064c..0650  if-eqz  v1, +0x4
+    0650..0654  const/16  v108, #0x0
+    0654..0658  const/high16  v1, #0x2000000
+    0658..065c  and-int  v1, v223, v1
+    065c..0660  if-eqz  v1, +0x4
+    0660..0664  const/16  v109, #0x0
+    0664..0668  const/high16  v1, #0x4000000
+    0668..066c  and-int  v1, v223, v1
+    066c..0670  if-eqz  v1, +0x4
+    0670..0674  const/16  v110, #0x0
+    0674..0678  const/high16  v1, #0x8000000
+    0678..067c  and-int  v1, v223, v1
+    067c..0680  if-eqz  v1, +0x4
+    0680..0684  const/16  v111, #0x0
+    0684..0688  const/high16  v1, #0x10000000
+    0688..068c  and-int  v1, v223, v1
+    068c..0690  if-eqz  v1, +0x4
+    0690..0694  const/16  v112, #0x0
+    0694..0698  const/high16  v1, #0x20000000
+    0698..069c  and-int  v1, v223, v1
+    069c..06a0  if-eqz  v1, +0x4
+    06a0..06a4  const/16  v113, #0xf
+    06a4..06a8  const/high16  v1, #0x40000000
+    06a8..06ac  and-int  v1, v223, v1
+    06ac..06b0  if-eqz  v1, +0x4
+    06b0..06b4  const/16  v114, #0x0
+    06b4..06b8  and-int  v0, v223, v3
+    06b8..06bc  if-eqz  v0, +0x4
+    06bc..06c0  const/16  v115, #0x0
+    06c0..06c4  and-int/lit8  v0, v224, #0x1
+    06c4..06c8  if-eqz  v0, +0x4
+    06c8..06cc  const/16  v116, #0x0
+    06cc..06d0  and-int/lit8  v0, v224, #0x2
+    06d0..06d4  if-eqz  v0, +0x4
+    06d4..06d8  const/16  v117, #0x0
+    06d8..06dc  move-object/from16  v15, v118
+    06dc..06e0  move-object/from16  v16, v119
+    06e0..06e4  move-object/from16  v32, v12
+    06e4..06e8  move-object/from16  v33, v11
+    06e8..06ec  move-object/from16  v34, v10
+    06ec..06f0  move-object/from16  v63, v6
+    06f0..06f4  move-object/from16  v101, v9
+    06f4..06f8  move-object/from16  v102, v8
+    06f8..06fc  move-object/from16  v106, v7
+    06fc..0700  move-object/from16  v17, v13
+    0700..0704  move-object/from16  v22, v5
+    0704..070a  invoke-direct/range  {v15..v117}, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;-><init>(Ljava/lang/String;[Ljava/lang/String;ZZII[Ljava/lang/String;IZZZZZZLjava/lang/String;I[Ljava/lang/String;[Ljava/lang/String;[Ljava/lang/String;ZZZLjava/lang/String;JIZZIILjava/lang/String;IZZIIIZIILjava/lang/String;IIIIZZ[Ljava/lang/String;JZIZZZZIZZZZIZLjava/lang/String;ZZZLjava/lang/String;Ljava/lang/String;ZZZLjava/lang/String;IIIIIJJILjava/lang/String;Z[Ljava/lang/String;[Ljava/lang/String;IIZ[Ljava/lang/Integer;IIIIIIIZZZZ)V
+    070a..070c  return-void
+    # exception table: 0 try range(s)
+.end method

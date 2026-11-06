@@ -1,0 +1,24 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+0000000000663a70 <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk14pairINS2_12basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEES9_EE>:
+  663a9c:      	paciasp
+  663aa0:      	stp	x29, x30, [sp, #-0x20]!
+  663aa4:      	str	x19, [sp, #0x10]
+  663aa8:      	mov	x29, sp
+  663aac:      	mov	x19, x2
+  663ab0:      	mov	x2, x1
+  663ab4:      	mov	x3, x19
+  663ab8:      	bl	0x66387c <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0x38>
+  663abc:      	tbz	w1, #0x0, 0x663ad0 <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk14pairINS2_12basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEES9_EE+0x60>
+  663ac0:      	ldr	x19, [sp, #0x10]
+  663ac4:      	ldp	x29, x30, [sp], #0x20
+  663ac8:      	autiasp
+  663acc:      	ret
+  663ad0:      	bl	0x2f06cc <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0x227f0>
+  663ad4:      	add	x0, x0, #0x28
+  663ad8:      	ldp	x29, x30, [sp], #0x20
+  663adc:      	autiasp
+  663ae0:      	b	0x734ca0 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEaSERKS5_@plt>

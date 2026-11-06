@@ -1,0 +1,66 @@
+{
+  "jni-trampoline": [
+    "0x4d6344",
+    "0x4d64a0"
+  ],
+  "hybrid-client-construction": [
+    "0x4d71ec",
+    "0x4d80a4"
+  ],
+  "provider-unwrapper": [
+    "0x4d81a8",
+    "0x4d8300"
+  ],
+  "client-stack-composition": [
+    "0x4f157c",
+    "0x4f3098"
+  ],
+  "context-stage": [
+    "0x4f6864",
+    "0x4f6c64"
+  ],
+  "prioritization-stage": [
+    "0x4f4aa8",
+    "0x4f4cb4"
+  ],
+  "prioritization-service": [
+    "0x661408",
+    "0x661a08"
+  ],
+  "default-calculator": [
+    "0x660434",
+    "0x660744"
+  ],
+  "header-upsert": [
+    "0x663a9c",
+    "0x663ae4"
+  ],
+  "category-setter": [
+    "0x663d88",
+    "0x663d94"
+  ],
+  "provider-slot-helper": [
+    "0x72995c",
+    "0x729968"
+  ],
+  "context-stage-register-helper": [
+    "0x72f908",
+    "0x72f914"
+  ],
+  "frame-setup": [
+    "0x2dade8",
+    "0x2dae04"
+  ],
+  "jni-argument-setup": [
+    "0x72634c",
+    "0x72635c"
+  ],
+  "optional-integer-property": [
+    "0x3ef220",
+    "0x3ef260"
+  ],
+  "header-map-insertion": [
+    "0x66387c",
+    "0x663a70"
+  ]
+}
