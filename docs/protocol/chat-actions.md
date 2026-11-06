@@ -1623,3 +1623,34 @@ Validation: four fresh APK exports and selected-case extraction match; branch
 targets, checksums and pinned APK digest verified. Formatting, OpenAPI library
 coverage, APK coverage freshness and repository hygiene pass (434 bundles).
 This evidence-only chunk changes no Rust behavior; no live test was performed.
+
+## Blocklist observer location-disable obligation (2026-11-06)
+
+**Confirmed selected static:** [complete cancellation, sequence, stale-job check
+and outbound job methods](apk/2.26.43.72-blocklist-location-disable/README.md)
+close the prior A02 boundary. No existing EVN means no cancellation/job; the
+observer's null message key takes the matching-record path when an EVN exists.
+Selected destination mapping may fall back to the original phone identity.
+Cancellation removes the record and allocates a saved sequence, then queues
+SendDisableLiveLocationJob. Local helper failures can still prevent enqueue.
+
+The job rechecks current sharing, suppressing a stale disable when a live share
+exists; an expired record can instead trigger cleanup. Admitted execution builds
+notification/type=location/to=destination with a disable child whose id is the
+saved decimal sequence. Its outer request ID is generated separately. A0C with
+discriminator81 registers the ACK-backed future; get waits and discards the
+reply object using the already-retained A01/2Gc0 result contract. Neither the
+normal return nor apply-based sequence storage proves remote success/durability.
+
+**Unknown/unported:** active observer/state authority, clock and crash recovery,
+all sequence writers, downstream local helpers, job retry/dedup, complete
+producer-specific ACK failure handling. Rust has no corresponding transport
+share/sequence owner; adding the packet alone would invent its prerequisites.
+Unsupported account_sync/blocklist remains captured without ACK. No runtime,
+automatic lookup/retry, location feature or live account change.
+
+Validation: six fresh selected-method exports reproduce byte-for-byte; bundle
+checksums and selected cancellation, stale-job and sequence branch targets
+match. Formatting, OpenAPI library coverage, APK coverage freshness, diff
+whitespace and repository hygiene pass (435 bundles). No Rust code changed;
+no APK execution or live account test was performed.

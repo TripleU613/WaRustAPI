@@ -1,0 +1,84 @@
+
+# class: Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;
+# extends: Lorg/whispersystems/jobqueue/Job;
+
+.method public A0L(V)  # .registers 13
+    # full signature: Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;->A0L()V
+    0000..0004  iget-object  v0, v12, Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;->rawJid:Ljava/lang/String;
+    0004..000a  invoke-static  {v0}, LX/2L6;->A0j(Ljava/lang/String;)LX/0DY;
+    000a..000c  move-result-object  v11
+    000c..0010  if-nez  v11, +0xe
+    0010..0014  const-string  v0, "skip disable live location job; invalid jid: "
+    0014..001a  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    001a..001c  move-result-object  v1
+    001c..0020  iget-object  v0, v12, Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;->rawJid:Ljava/lang/String;
+    0020..0026  invoke-static  {v1, v0}, LX/2L9;->A1J(Ljava/lang/StringBuilder;Ljava/lang/String;)V
+    0026..0028  return-void
+    0028..002c  iget-object  v0, v12, Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;->A00:LX/0zB;
+    002c..0032  invoke-virtual  {v0, v11}, LX/0zB;->A0l(LX/0DY;)Z
+    0032..0034  move-result  v0
+    0034..0038  if-eqz  v0, +0x10
+    0038..003c  const-string  v0, "skip disable live location job; sharing is currently enabled"
+    003c..0042  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0042..0044  move-result-object  v1
+    0044..004a  invoke-direct  {v12}, Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;->A00()Ljava/lang/String;
+    004a..004c  move-result-object  v0
+    004c..0052  invoke-static  {v1, v0}, LX/2L9;->A1K(Ljava/lang/StringBuilder;Ljava/lang/String;)V
+    0052..0054  return-void
+    0054..0058  const-string  v0, "starting disable live location job"
+    0058..005e  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    005e..0060  move-result-object  v1
+    0060..0066  invoke-direct  {v12}, Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;->A00()Ljava/lang/String;
+    0066..0068  move-result-object  v0
+    0068..006e  invoke-static  {v1, v0}, LX/2L9;->A1K(Ljava/lang/StringBuilder;Ljava/lang/String;)V
+    006e..0072  iget-object  v0, v12, Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;->A01:LX/137;
+    0072..0076  iget-wide  v2, v12, Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;->sequenceNumber:J
+    0076..007a  iget-object  v8, v0, LX/137;->A02:LX/00x;
+    007a..0080  invoke-static  {v8}, LX/6oe;->A0u(LX/00x;)LX/0Sf;
+    0080..0082  move-result-object  v0
+    0082..0088  invoke-virtual  {v0}, LX/0Sf;->A0H()Ljava/lang/String;
+    0088..008a  move-result-object  v4
+    008a..008e  new-instance  v0, LX/Efa;
+    008e..0094  invoke-direct  {v0}, LX/Efa;-><init>()V
+    0094..0098  iput-object  v11, v0, LX/Efa;->A02:Lcom/whatsapp/infra/core/jid/Jid;
+    0098..009c  const-string  v7, "notification"
+    009c..00a0  iput-object  v7, v0, LX/Efa;->A06:Ljava/lang/String;
+    00a0..00a4  const-string  v1, "location"
+    00a4..00a8  iput-object  v1, v0, LX/Efa;->A09:Ljava/lang/String;
+    00a8..00ac  iput-object  v4, v0, LX/Efa;->A08:Ljava/lang/String;
+    00ac..00b2  invoke-virtual  {v0}, LX/Efa;->A00()LX/Eoh;
+    00b2..00b4  move-result-object  v6
+    00b4..00b6  const/4  v0, #0x3
+    00b6..00ba  new-array  v5, v0, [LX/0Tl;
+    00ba..00be  const-string  v10, "id"
+    00be..00c4  invoke-static  {v10, v4, v5}, LX/B1w;->A1a(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)Z
+    00c4..00c6  move-result  v9
+    00c6..00cc  const-string/jumbo  v0, "type"
+    00cc..00d2  invoke-static  {v0, v1}, LX/B1w;->A0X(Ljava/lang/String;Ljava/lang/String;)LX/0Tl;
+    00d2..00d4  move-result-object  v0
+    00d4..00d6  const/4  v4, #0x1
+    00d6..00da  aput-object  v0, v5, v4
+    00da..00e0  const-string/jumbo  v0, "to"
+    00e0..00e4  new-instance  v1, LX/0Tl;
+    00e4..00ea  invoke-direct  {v1, v11, v0}, LX/0Tl;-><init>(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;)V
+    00ea..00ec  const/4  v0, #0x2
+    00ec..00f0  aput-object  v1, v5, v0
+    00f0..00f4  new-array  v1, v4, [LX/0Tl;
+    00f4..00fa  invoke-static  {v2, v3}, Ljava/lang/Long;->toString(J)Ljava/lang/String;
+    00fa..00fc  move-result-object  v0
+    00fc..0102  invoke-static  {v10, v0, v1, v9}, LX/3q1;->A1T(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;I)V
+    0102..0106  const-string  v0, "disable"
+    0106..010c  invoke-static  {v0, v1}, LX/B1w;->A0Z(Ljava/lang/String;[LX/0Tl;)LX/0Tp;
+    010c..010e  move-result-object  v0
+    010e..0112  new-instance  v2, LX/0Tp;
+    0112..0118  invoke-direct  {v2, v0, v7, v5}, LX/0Tp;-><init>(LX/0Tp;Ljava/lang/String;[LX/0Tl;)V
+    0118..011e  invoke-static  {v8}, LX/6oe;->A0u(LX/00x;)LX/0Sf;
+    011e..0120  move-result-object  v1
+    0120..0124  const/16  v0, #0x51
+    0124..012a  invoke-virtual  {v1, v2, v6, v0}, LX/0Sf;->A0C(LX/0Tp;LX/Eoh;I)LX/FfK;
+    012a..012c  move-result-object  v0
+    012c..0132  invoke-virtual  {v0}, LX/FfK;->get()Ljava/lang/Object;
+    0132..0136  const-string  v0, "done disable live location job"
+    0136..0138  goto  -0x7d
+    # exception table: 0 try range(s)
+.end method

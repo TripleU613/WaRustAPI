@@ -1,0 +1,16 @@
+
+# class: LX/0zB;
+# extends: Ljava/lang/Object;
+
+.method public A0K(ZJJ)  # .registers 7
+    # full signature: LX/0zB;->A0K(JJ)Z
+    0000..0004  const-wide/16  v1, #0x0
+    0004..0008  cmp-long  v0, v3, v1
+    0008..000c  if-eqz  v0, +0x7
+    000c..0010  cmp-long  v1, v3, v5
+    0010..0012  const/4  v0, #0x0
+    0012..0016  if-lez  v1, +0x3
+    0016..0018  const/4  v0, #0x1
+    0018..001a  return  v0
+    # exception table: 0 try range(s)
+.end method

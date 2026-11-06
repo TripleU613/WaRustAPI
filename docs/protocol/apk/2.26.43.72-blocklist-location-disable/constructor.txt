@@ -1,0 +1,25 @@
+
+# class: Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;
+# extends: Lorg/whispersystems/jobqueue/Job;
+
+.method public <init>(VLJ)  # .registers 7
+    # full signature: Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;-><init>(LX/0DY;J)V
+    0000..0006  invoke-static  {}, LX/DCZ;->A00()LX/DCZ;
+    0006..0008  move-result-object  v2
+    0008..000e  invoke-virtual  {v4}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+    000e..0010  move-result-object  v0
+    0010..0014  iput-object  v0, v2, LX/DCZ;->A01:Ljava/lang/String;
+    0014..0016  const/4  v1, #0x1
+    0016..001a  iput-boolean  v1, v2, LX/DCZ;->A03:Z
+    001a..0020  invoke-static  {v2}, LX/DCZ;->A02(LX/DCZ;)V
+    0020..0026  invoke-virtual  {v2}, LX/DCZ;->A03()Lorg/whispersystems/jobqueue/JobParameters;
+    0026..0028  move-result-object  v0
+    0028..002e  invoke-direct  {v3, v0}, Lorg/whispersystems/jobqueue/Job;-><init>(Lorg/whispersystems/jobqueue/JobParameters;)V
+    002e..0034  invoke-static  {v1}, LX/00L;->A0A(Z)V
+    0034..003a  invoke-virtual  {v4}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+    003a..003c  move-result-object  v0
+    003c..0040  iput-object  v0, v3, Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;->rawJid:Ljava/lang/String;
+    0040..0044  iput-wide  v5, v3, Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;->sequenceNumber:J
+    0044..0046  return-void
+    # exception table: 0 try range(s)
+.end method

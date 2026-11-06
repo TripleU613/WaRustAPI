@@ -419,6 +419,12 @@
     "x-live": false,
     "description": "APK43.72 DC3 blocklist observer queues Fef selector39: per-chat EVN participant predicate gates3KB.A01(all_changed,false), reusing retained missing-LID filtering/queue/wire selection. Reference-equal network-unavailable sentinel exits before location updates. Selected location helpers retained; active registrations, A02 gates and downstream location wire effects remain open. No unconditional lookup, production behavior or ACK-only shortcut. docs/protocol/chat-actions.md#blocklist-location-observer-query-boundary-2026-11-06"
   },
+  "x-blocklist-location-disable-evidence": {
+    "x-cli": "xtask apk-smali <apk> --class <class> --method <method> --signatures --exceptions",
+    "x-transport": "offline static APK evidence only",
+    "x-live": false,
+    "description": "APK43.72 blocklist observer cancellation requires existing EVN, selects mapping/original destination, saves sequence and queues SendDisableLiveLocationJob. Job rechecks current share, can perform expiry cleanup, suppresses enabled-share stale job, then constructs notification/type=location with child disable.id=saved decimal sequence and independent fresh outer ID. A0C/81 ACK-backed future discards result per retained A01 wrapper. Native sequence apply is not crash durability proof; job retry/recovery and Rust share/sequence ownership remain open. No production send or ACK behavior added. docs/protocol/chat-actions.md#blocklist-observer-location-disable-obligation-2026-11-06"
+  },
   "x-library-capabilities": [
     {
       "symbol": "whatsapp_api::transport::app_state_sync::binding::bind_inline_fetch_plan",

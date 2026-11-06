@@ -1,0 +1,59 @@
+
+# class: LX/0zB;
+# extends: Ljava/lang/Object;
+
+.method public A00(JL)  # .registers 12
+    # full signature: LX/0zB;->A00(LX/0zB;)J
+    0000..0004  const-string  v10, "LocationSharingManager/getNextSequenceNumber; got a new sequence number; currentSequenceNumber="
+    0004..0008  iget-object  v5, v11, LX/0zB;->A0c:Ljava/lang/Object;
+    0008..000a  monitor-enter
+    000a..000e  iget-object  v9, v11, LX/0zB;->A0r:LX/00x;
+    000e..0014  invoke-interface  {v9}, LX/00x;->get()Ljava/lang/Object;
+    0014..0016  move-result-object  v0
+    0016..001a  check-cast  v0, LX/09S;
+    001a..001e  iget-object  v0, v0, LX/09S;->A0r:LX/00x;
+    001e..0024  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0024..0026  move-result-object  v0
+    0026..002a  check-cast  v0, LX/J9K;
+    002a..0030  invoke-virtual  {v0}, LX/0FZ;->A03()Landroid/content/SharedPreferences;
+    0030..0032  move-result-object  v2
+    0032..0036  const-string  v6, "live_location_sequence_number"
+    0036..003a  const-wide/16  v0, #0xffff (-1)
+    003a..0040  invoke-interface  {v2, v6, v0, v1}, Landroid/content/SharedPreferences;->getLong(Ljava/lang/String;J)J
+    0040..0042  move-result-wide  v1
+    0042..0046  iget-object  v0, v11, LX/0zB;->A0W:LX/08q;
+    0046..004c  invoke-virtual  {v0}, LX/08q;->A04()J
+    004c..004e  move-result-wide  v3
+    004e..0052  const-wide/16  v7, #0x3e8
+    0052..0054  mul-long/2addr  v3, v7
+    0054..0058  cmp-long  v0, v3, v1
+    0058..005c  if-lez  v0, +0x12
+    005c..0060  new-instance  v0, Ljava/lang/StringBuilder;
+    0060..0066  invoke-direct  {v0, v10}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0066..006c  invoke-virtual  {v0, v3, v4}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    006c..0072  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0072..0074  move-result-object  v0
+    0074..007a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    007a..007c  move-wide  v1, v3
+    007c..0080  const-wide/16  v3, #0x1
+    0080..0082  add-long/2addr  v1, v3
+    0082..0088  invoke-interface  {v9}, LX/00x;->get()Ljava/lang/Object;
+    0088..008a  move-result-object  v0
+    008a..008e  check-cast  v0, LX/09S;
+    008e..0092  iget-object  v0, v0, LX/09S;->A0r:LX/00x;
+    0092..0098  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0098..009a  move-result-object  v0
+    009a..009e  check-cast  v0, LX/J9K;
+    009e..00a4  invoke-virtual  {v0}, LX/0FZ;->A02()Landroid/content/SharedPreferences$Editor;
+    00a4..00a6  move-result-object  v0
+    00a6..00ac  invoke-interface  {v0, v6, v1, v2}, Landroid/content/SharedPreferences$Editor;->putLong(Ljava/lang/String;J)Landroid/content/SharedPreferences$Editor;
+    00ac..00ae  move-result-object  v0
+    00ae..00b4  invoke-interface  {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
+    00b4..00b6  monitor-exit
+    00b6..00b8  return-wide  v1
+    00b8..00ba  move-exception  v0
+    00ba..00bc  monitor-exit
+    00bc..00be  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0005..005e -> 005c
+.end method

@@ -158,3 +158,14 @@ Neither this handoff nor the subsequent3XP task proves every downstream
 network/listener effect. No automatic wire send or ACK support is introduced.
 Rust remains captured-without-ACK for this unsupported account child; durable
 admission/work/dedup and complete scheduler/follow-up effects remain open.
+
+### Blocklist observer can queue location-disable work (2026-11-06)
+
+**Confirmed selected static:** [cancellation and outbound job](apk/2.26.43.72-blocklist-location-disable/README.md)
+show an existing share record can lead to a separately queued location-disable
+notification, after the prior conditional identity-query boundary. The job
+rechecks current sharing and uses its saved sequence, not the outer request ID,
+for disable.id. Its ACK-backed future is separate from the original incoming
+account_sync notification. No claim that incoming ACK must wait for this job
+follows; durable ownership and crash recovery are still unported. This further
+rules out treating blocklist as a cache-only ACK-and-discard notification.

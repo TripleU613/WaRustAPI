@@ -4582,3 +4582,13 @@ wrappers and untraced final serialization. Literal-false error policy forwards
 failure; selected non-Pando send inherits32000ms, while Pando/outer wait and
 writer/account authority remain open. No universal retry timer, cancellation,
 new Rust request or live result is inferred. No runtime behavior changed.
+
+### Blocklist location-disable producer boundary (2026-11-06)
+
+**Confirmed selected static:** [full selected methods](apk/2.26.43.72-blocklist-location-disable/README.md)
+connect changed-contact observers to a conditional live-location cancellation
+and queued outbound notification. Admission requires an existing share record;
+the job rechecks sharing before using its saved sequence as disable.id and a
+fresh independent outer request ID. A0C/81 future completion follows the retained
+reply-discarding contract. Full retry, persisted work recovery and native state
+authority remain open. No speculative Rust packet or live operation added.

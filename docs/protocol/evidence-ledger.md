@@ -1,3 +1,10 @@
+2026-11-06 — **Blocklist location-disable wire and stale-job gate traced.**
+Existing share state gates cancellation; the queued job rechecks current sharing
+before sending notification/location with a saved sequence in disable.id.
+Outer request ID, destination mapping and ACK future contract remain distinct.
+[Evidence and unported state/recovery](chat-actions.md#blocklist-observer-location-disable-obligation-2026-11-06).
+No production protocol or live account change.
+
 2026-11-06 — **Conditional blocklist observer identity query traced.**
 DC3's selected job can call the existing missing-LID pipeline before location
 state updates; per-chat state and helper filtering gate it. Network-unavailable
