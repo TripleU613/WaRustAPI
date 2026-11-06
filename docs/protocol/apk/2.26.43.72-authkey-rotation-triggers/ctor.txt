@@ -1,0 +1,19 @@
+
+# class: LX/19i;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 2
+    # full signature: LX/19i;-><init>()V
+    0000..0006  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    0006..000a  const/16  v0, #0x1a3f
+    000a..0010  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0010..0012  move-result-object  v0
+    0012..0016  check-cast  v0, LX/144;
+    0016..001a  iput-object  v0, v1, LX/19i;->A01:LX/144;
+    001a..001e  const/16  v0, #0x8d
+    001e..0024  invoke-static  {v0}, LX/00D;->A00(I)LX/05h;
+    0024..0026  move-result-object  v0
+    0026..002a  iput-object  v0, v1, LX/19i;->A02:LX/00x;
+    002a..002c  return-void
+    # exception table: 0 try range(s)
+.end method

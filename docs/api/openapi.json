@@ -17730,5 +17730,12 @@
     "x-live": false,
     "description": "Research-only APK43.72 auth-key storage provider slot0x1a3e resolves14A/14C; concrete type2 local encryption and record roles retained. This Android local format is not a Rust wire requirement. Platform crypto, other branches, publication uncertainty and login coordination remain unresolved. No runtime rotation or migration added.",
     "evidence": "docs/protocol/notification-ack-audit.md#auth-key-concrete-storage-provider-2026-11-06"
+},
+  "x-authkey-rotation-trigger-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Research-only APK43.72 authentication-key rotation direct triggers: notification, connection after saved-token ib/cat send, and typed token-response callback. Candidate field census supports in-process reuse only; token persistence, broader lifecycle and durable uncertain-publication recovery remain unresolved. No runtime rotation or retry added.",
+    "evidence": "docs/protocol/notification-ack-audit.md#auth-key-rotation-triggers-and-candidate-ownership-2026-11-06"
 }
 }

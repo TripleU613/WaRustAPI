@@ -1,0 +1,47 @@
+
+# class: LX/1rj;
+# extends: Ljava/lang/Object;
+
+.method public A05(Z)  # .registers 8
+    # full signature: LX/1rj;->A05()Z
+    0000..0004  iget-object  v0, v7, LX/1rj;->A09:LX/09S;
+    0004..000a  invoke-virtual  {v0}, LX/09S;->A0U()LX/1rs;
+    000a..000c  move-result-object  v0
+    000c..0012  invoke-virtual  {v0}, LX/0FZ;->A03()Landroid/content/SharedPreferences;
+    0012..0014  move-result-object  v2
+    0014..0018  const-string  v1, "pref_client_auth_token"
+    0018..001a  const/4  v0, #0x0
+    001a..0020  invoke-interface  {v2, v1, v0}, Landroid/content/SharedPreferences;->getString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0020..0022  move-result-object  v1
+    0022..0026  if-eqz  v1, +0x3a
+    0026..002c  invoke-virtual  {v1}, Ljava/lang/String;->length()I
+    002c..002e  move-result  v0
+    002e..0032  if-eqz  v0, +0x34
+    0032..0034  const/4  v0, #0x3
+    0034..003a  invoke-static  {v1, v0}, Landroid/util/Base64;->decode(Ljava/lang/String;I)[B
+    003a..003c  move-result-object  v6
+    003c..0040  if-eqz  v6, +0x2d
+    0040..0044  const-string  v0, "ib"
+    0044..0048  new-instance  v5, LX/0Tj;
+    0048..004e  invoke-direct  {v5, v0}, LX/0Tj;-><init>(Ljava/lang/String;)V
+    004e..0052  const-string  v0, "cat"
+    0052..0056  new-instance  v4, LX/0Tj;
+    0056..005c  invoke-direct  {v4, v0}, LX/0Tj;-><init>(Ljava/lang/String;)V
+    005c..0060  const-wide/16  v2, #0x1
+    0060..0064  const-wide/16  v0, #0x400
+    0064..006a  invoke-static  {v6, v2, v3, v0, v1}, LX/0Tk;->A04([BJJ)V
+    006a..006e  iput-object  v6, v4, LX/0Tj;->A01:[B
+    006e..0074  invoke-virtual  {v4}, LX/0Tj;->A01()LX/0Tp;
+    0074..0076  move-result-object  v0
+    0076..007c  invoke-virtual  {v5, v0}, LX/0Tj;->A03(LX/0Tp;)V
+    007c..0082  invoke-virtual  {v5}, LX/0Tj;->A01()LX/0Tp;
+    0082..0084  move-result-object  v1
+    0084..0088  iget-object  v0, v7, LX/1rj;->A06:LX/1r0;
+    0088..008c  check-cast  v0, LX/1r2;
+    008c..008e  const/4  v2, #0x1
+    008e..0094  invoke-virtual  {v0, v1, v2}, LX/1r2;->Cyu(LX/0Tp;I)V
+    0094..0096  return  v2
+    0096..0098  const/4  v2, #0x0
+    0098..009a  return  v2
+    # exception table: 0 try range(s)
+.end method

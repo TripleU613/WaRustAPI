@@ -8228,3 +8228,5 @@ APK43.72 auth-key public-wire/private-public-storage distinction and bounded rea
 APK43.72 auth-key commit versus counter apply, record parser and reload gates retained; abstract provider declarations explicitly unresolved. [Auth-key commit and reload boundary](notification-ack-audit.md#auth-key-commit-and-reload-boundary-2026-11-06). No live operation.
 
 APK43.72 auth-key slot0x1a3e concrete provider and local crypto record field roles retained, without claiming platform execution or wire-format necessity. [Auth-key concrete storage provider](notification-ack-audit.md#auth-key-concrete-storage-provider-2026-11-06). No live operation.
+
+APK43.72 rotation trigger inventory and saved-token send ordering retained; exact candidate-field census does not establish restart recovery. [Auth-key rotation triggers and candidate ownership](notification-ack-audit.md#auth-key-rotation-triggers-and-candidate-ownership-2026-11-06). No live operation.

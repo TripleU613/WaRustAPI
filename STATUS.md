@@ -1,3 +1,5 @@
+Pinned rotation now linked to saved-token connection send and token-response callback, with bounded candidate reuse evidence. [Auth-key rotation triggers and candidate ownership](docs/protocol/notification-ack-audit.md#auth-key-rotation-triggers-and-candidate-ownership-2026-11-06). Durable recovery remains unverified; no runtime change.
+
 Pinned auth-key concrete provider binding and type2 encrypted-record roles now traced. [Auth-key concrete storage provider](docs/protocol/notification-ack-audit.md#auth-key-concrete-storage-provider-2026-11-06). Android storage format remains separate from Rust protocol requirements; runtime lifecycle unfinished.
 
 Pinned auth-key replacement uses checked commit before readback; reload/type/length gates retained. [Auth-key commit and reload boundary](docs/protocol/notification-ack-audit.md#auth-key-commit-and-reload-boundary-2026-11-06). Concrete encryption provider and recovery remain incomplete; research only.

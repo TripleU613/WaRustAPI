@@ -1,0 +1,8 @@
+classes.dex  LX/19i;->A00(V)
+  read opcode 0x54, dex byte offset: 0x838b06
+classes.dex  LX/19i;->A00(V)
+  write opcode 0x5b, dex byte offset: 0x838b16
+classes.dex  LX/19i;->A00(V)
+  read opcode 0x54, dex byte offset: 0x838b32
+classes.dex  LX/19i;->A00(V)
+  read opcode 0x54, dex byte offset: 0x838c08

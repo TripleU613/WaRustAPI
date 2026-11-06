@@ -490,3 +490,9 @@ and crash recovery remain open. No Rust backend, ACK, replay or live operation c
 **Confirmed static APK43.72:** [dependency binding and complete concrete crypto helpers](apk/2.26.43.72-authkey-provider-binding/README.md) resolve144.A0F via slot0x1a3e to14A ->14C. The selected type2 local record uses AES/OFB/NoPadding and PBKDF2WithHmacSHA1And8BIT; constructor data flow binds ciphertext/IV/salt/string-suffix fields. The read-mode selector affects failure diagnostics only in14A. Neither complete14C encrypt/decrypt body performs explicit MAC/tag operations.
 
 **Unknown / unchanged:** runtime platform crypto, random source/string initialization, other keystore branches, publication uncertainty and login coordination. This local ciphertext format is not a Rust wire requirement. No runtime change or live operation.
+
+### Auth-key rotation triggers and candidate ownership (2026-11-06)
+
+**Confirmed static APK43.72:** [three direct triggers, token-send side effect and candidate field census](apk/2.26.43.72-authkey-rotation-triggers/README.md) bind rotation to notification, selected connection and token-response paths. The connection Boolean comes from sending ib/cat using a saved client-auth token, not a pure readiness predicate. The token callback stores its parsed bytes before invoking rotation. Exact candidate-field references stay within19i.A00 and support in-process reuse, not durable restart recovery.
+
+**Unknown / unchanged:** complete token response/writer semantics, broader scheduler/connection lifecycle, durable candidate recovery and uncertain-publication policy. No runtime change or live operation.

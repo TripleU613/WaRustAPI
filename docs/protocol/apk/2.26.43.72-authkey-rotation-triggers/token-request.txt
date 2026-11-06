@@ -1,0 +1,40 @@
+
+# class: LX/1jA;
+# extends: Ljava/lang/Object;
+
+.method public A01(VL)  # .registers 11
+    # full signature: LX/1jA;->A01(Ljava/lang/String;)V
+    0000..0004  iget-object  v0, v9, LX/1jA;->A04:LX/0AI;
+    0004..000a  invoke-virtual  {v0}, LX/0AI;->A0O()Z
+    000a..000c  move-result  v0
+    000c..0010  if-nez  v0, +0x8
+    0010..0014  iget-object  v0, v9, LX/1jA;->A03:Ljava/util/concurrent/atomic/AtomicReference;
+    0014..001a  invoke-virtual  {v0, v10}, Ljava/util/concurrent/atomic/AtomicReference;->set(Ljava/lang/Object;)V
+    001a..001c  return-void
+    001c..0020  iget-object  v2, v9, LX/1jA;->A00:LX/00x;
+    0020..0026  invoke-interface  {v2}, LX/00x;->get()Ljava/lang/Object;
+    0026..0028  move-result-object  v0
+    0028..002c  check-cast  v0, LX/0Sf;
+    002c..0032  invoke-virtual  {v0}, LX/0Sf;->A0G()Ljava/lang/String;
+    0032..0034  move-result-object  v5
+    0034..0038  const/16  v0, #0x1c
+    0038..003c  new-instance  v1, LX/Dzb;
+    003c..0042  invoke-direct  {v1, v5, v10, v0}, LX/Dzb;-><init>(Ljava/lang/String;Ljava/lang/String;I)V
+    0042..0048  invoke-interface  {v2}, LX/00x;->get()Ljava/lang/Object;
+    0048..004a  move-result-object  v2
+    004a..004e  check-cast  v2, LX/0Sf;
+    004e..0052  iget-object  v4, v1, LX/Dzb;->A00:Ljava/lang/Object;
+    0052..0056  check-cast  v4, LX/0Tp;
+    0056..0058  const/4  v0, #0x1
+    0058..005c  new-instance  v3, LX/FUT;
+    005c..0062  invoke-direct  {v3, v9, v1, v10, v0}, LX/FUT;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;I)V
+    0062..0066  const-wide/16  v7, #0x7d00
+    0066..006a  const/16  v6, #0x13a
+    006a..0070  invoke-virtual/range  {v2..v8}, LX/0Sf;->A0Q(LX/0lG;LX/0Tp;Ljava/lang/String;IJ)V
+    0070..0072  return-void
+    0072..0076  const-string  v0, "ClientAuthTokenManager/failed to create request for auth_token"
+    0076..007c  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    007c..007e  return-void
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/IllegalArgumentException; code_units 001a..0021 -> 0039
+.end method

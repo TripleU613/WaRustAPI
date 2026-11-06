@@ -1,0 +1,66 @@
+
+# class: LX/FUT;
+# extends: Ljava/lang/Object;
+
+.method public CK4(VLL)  # .registers 8
+    # full signature: LX/FUT;->CK4(LX/0Tp;Ljava/lang/String;)V
+    0000..0004  iget  v0, v5, LX/FUT;->$t:I
+    0004..0008  if-eqz  v0, +0x62
+    0008..000c  iget-object  v1, v5, LX/FUT;->A01:Ljava/lang/Object;
+    000c..0010  check-cast  v1, LX/Dzb;
+    0010..0012  const/4  v0, #0x0
+    0012..0018  invoke-static  {v6, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0018..001e  invoke-static  {v6}, LX/6oe;->A1M(LX/0Tp;)V
+    001e..0022  iget-object  v4, v1, LX/Dzb;->A00:Ljava/lang/Object;
+    0022..0026  new-instance  v3, LX/8B6;
+    0026..002c  invoke-direct  {v3}, Ljava/lang/Object;-><init>()V
+    002c..0030  sget-object  v2, LX/EqZ;->A00:LX/EqZ;
+    0030..0034  const/16  v1, #0xc
+    0034..0038  new-instance  v0, LX/Cgu;
+    0038..003e  invoke-direct  {v0, v4, v2, v1}, LX/Cgu;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V
+    003e..0044  invoke-static  {v6, v3, v0}, LX/B1w;->A17(LX/0Tp;LX/8B6;LX/8oe;)Ljava/lang/Object;
+    0044..0046  move-result-object  v0
+    0046..004a  if-eqz  v0, +0x50
+    004a..004c  const/4  v1, #0x5
+    004c..0050  new-instance  v0, LX/Cgr;
+    0050..0056  invoke-direct  {v0, v2, v1}, LX/Cgr;-><init>(Ljava/lang/Object;I)V
+    0056..005c  invoke-static  {v6, v3, v0}, LX/B1w;->A17(LX/0Tp;LX/8B6;LX/8oe;)Ljava/lang/Object;
+    005c..005e  move-result-object  v1
+    005e..0062  check-cast  v1, LX/BVZ;
+    0062..0066  if-eqz  v1, +0x32
+    0066..006a  iget-object  v4, v5, LX/FUT;->A00:Ljava/lang/Object;
+    006a..006e  check-cast  v4, LX/1jA;
+    006e..0072  iget-object  v0, v4, LX/1jA;->A01:LX/09S;
+    0072..0078  invoke-virtual  {v0}, LX/09S;->A0U()LX/1rs;
+    0078..007a  move-result-object  v3
+    007a..007e  iget-object  v1, v1, LX/BVZ;->A00:Ljava/lang/Object;
+    007e..0082  check-cast  v1, [B
+    0082..0086  const-string  v2, "pref_client_auth_token"
+    0086..0088  const/4  v0, #0x3
+    0088..008e  invoke-static  {v1, v0}, Landroid/util/Base64;->encodeToString([BI)Ljava/lang/String;
+    008e..0090  move-result-object  v1
+    0090..0096  invoke-virtual  {v3}, LX/0FZ;->A02()Landroid/content/SharedPreferences$Editor;
+    0096..0098  move-result-object  v0
+    0098..009e  invoke-static  {v0, v2, v1}, LX/2L8;->A1U(Landroid/content/SharedPreferences$Editor;Ljava/lang/String;Ljava/lang/String;)V
+    009e..00a2  iget-object  v0, v4, LX/1jA;->A02:LX/19i;
+    00a2..00a8  invoke-virtual  {v0}, LX/19i;->A00()V
+    00a8..00ac  iget-object  v0, v4, LX/1jA;->A00:LX/00x;
+    00ac..00b2  invoke-static  {v0}, LX/6oe;->A0u(LX/00x;)LX/0Sf;
+    00b2..00b4  move-result-object  v1
+    00b4..00b8  iget-object  v0, v1, LX/0Sf;->A0C:LX/0TV;
+    00b8..00be  invoke-virtual  {v0}, LX/0TV;->A03()Ljava/util/LinkedHashMap;
+    00be..00c0  move-result-object  v0
+    00c0..00c6  invoke-static  {v1, v0}, LX/0Sf;->A08(LX/0Sf;Ljava/util/Map;)V
+    00c6..00c8  return-void
+    00c8..00cc  const-string  v0, "PushXmppMethod/read/client_config_set"
+    00cc..00d2  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    00d2..00d6  iget-object  v0, v5, LX/FUT;->A00:Ljava/lang/Object;
+    00d6..00da  check-cast  v0, LX/Fuc;
+    00da..00de  if-eqz  v0, -0xa
+    00de..00e4  invoke-interface  {v0}, LX/Fuc;->onSuccess()V
+    00e4..00e6  return-void
+    00e6..00ec  invoke-static  {v3}, LX/8B6;->A00(LX/8B6;)LX/LIL;
+    00ec..00ee  move-result-object  v0
+    00ee..00f0  throw  v0
+    # exception table: 0 try range(s)
+.end method
