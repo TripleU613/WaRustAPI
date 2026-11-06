@@ -337,6 +337,21 @@ fn legacy_record_in(tx: &impl Lookup, id: u32) -> Result<Option<PreKeyRecord>> {
     {
         return Err(invalid("prekey record id does not match store key"));
     }
+    // Parsing a stored record does not verify that its private half can
+    // perform operations for the public key we are about to publish/hash.
+    let public = record
+        .public_key()
+        .map_err(|_| invalid("prekey public key"))?;
+    let private = record
+        .private_key()
+        .map_err(|_| invalid("prekey private key"))?;
+    if private
+        .public_key()
+        .map_err(|_| invalid("prekey private key"))?
+        != public
+    {
+        return Err(invalid("prekey pair mismatch"));
+    }
     Ok(Some(record))
 }
 
@@ -1164,6 +1179,62 @@ mod tests {
                 );
             }
         }
+    }
+
+    #[test]
+    fn mismatched_last_prekey_pair_rolls_back_complete_upload_reservation() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("prekey-pair.redb");
+        let store = open(&path);
+        let (account, signed) = account_and_signed(&store);
+        generate(&store).unwrap();
+        let good = KeyPair::generate(&mut rand::rng());
+        let other = KeyPair::generate(&mut rand::rng());
+        let inconsistent = KeyPair {
+            public_key: good.public_key,
+            private_key: other.private_key,
+        };
+        let raw = PreKeyRecord::new(50.into(), &inconsistent)
+            .serialize()
+            .unwrap();
+        store
+            .write(|tx| tx.put_json(Table::Prekeys, record_key(50).as_bytes(), 1, &raw))
+            .unwrap();
+        let snapshot = store
+            .read(|tx| {
+                Ok((
+                    tx.scan(Table::Prekeys, 1, 1000)?,
+                    tx.scan(Table::Checkpoints, 1, 1000)?,
+                ))
+            })
+            .unwrap();
+        let error = begin_upload(&store, &account, &signed)
+            .expect_err("private half must match advertised public key");
+        assert!(
+            matches!(&error, Error::InvalidInput { reason, .. } if reason == "prekey pair mismatch"),
+            "{error}"
+        );
+        assert_eq!(
+            store
+                .read(|tx| Ok((
+                    tx.scan(Table::Prekeys, 1, 1000)?,
+                    tx.scan(Table::Checkpoints, 1, 1000)?
+                )))
+                .unwrap(),
+            snapshot
+        );
+        drop(store);
+        let store = open(&path);
+        assert!(begin_upload(&store, &account, &signed).is_err());
+        assert_eq!(
+            store
+                .read(|tx| Ok((
+                    tx.scan(Table::Prekeys, 1, 1000)?,
+                    tx.scan(Table::Checkpoints, 1, 1000)?
+                )))
+                .unwrap(),
+            snapshot
+        );
     }
 
     #[test]

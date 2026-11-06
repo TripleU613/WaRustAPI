@@ -1,3 +1,8 @@
+One-time prekey lookup now rejects mismatched public/private halves before
+upload reservation or local digest use. A corrupted last key in a50-key batch
+refuses the entire transaction without changing earlier metadata or key rows,
+including after reopen. [Audit](docs/protocol/prekey-count-notifications.md#legacy-one-time-prekey-privatepublic-consistency-2026-11-05).
+
 Owned prekey inventory scans now reject malformed/noncanonical ID keys rather
 than ignoring them or merging numeric aliases. Inventory, generation and upload
 admission refuse corruption without repairing records, including after reopen.

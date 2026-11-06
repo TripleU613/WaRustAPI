@@ -17331,5 +17331,12 @@
     "x-live": false,
     "description": "Owned prekey inventory prefixes reject invalid UTF-8; record and metadata IDs require canonical decimal u32 suffixes. Malformed/overflowing/aliased names refuse inventory, generation and upload admission rather than being ignored or merged. No repair, retry or wire-ID policy change; local storage-integrity guard.",
     "evidence": "docs/protocol/prekey-count-notifications.md#owned-prekey-inventory-keys-cannot-be-ignored-or-alias-an-id-2026-11-05"
+  },
+  "x-legacy-prekey-pair-consistency": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Legacy one-time prekey lookup derives public from saved private and refuses pair mismatch or unusable private material. Upload admission rolls back tentative earlier reservations when a later selected key is corrupt; digest lookup shares the guard. Local integrity check, no wire-field change, key repair or retry.",
+    "evidence": "docs/protocol/prekey-count-notifications.md#legacy-one-time-prekey-privatepublic-consistency-2026-11-05"
   }
 }

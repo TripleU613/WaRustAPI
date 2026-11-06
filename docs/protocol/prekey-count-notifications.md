@@ -1162,3 +1162,30 @@ No live operation, new retry, reservation reset or key regeneration was added.
 Validation: red alias regression reproduced acceptance; all 1,395 workspace/
 all-feature tests, strict Clippy, CLI reference and OpenAPI library checks
 passed. Tests use only local stores; no account traffic.
+
+### Legacy one-time prekey private/public consistency (2026-11-05)
+
+**Confirmed local defect, fixed offline:** legacy_record_in checked the
+serialized ID against its store key, and upload construction decoded the
+public key, but neither derived public from the saved private half. The
+inspected locked wacore-libsignal0.7.0 PreKeyRecord deserializer parses the
+record/normalizes stored public encoding; its getters do not establish pair
+consistency. A well-formed record could therefore publish a public key whose
+saved private key cannot perform the corresponding private operation.
+
+The shared legacy record lookup now derives and compares the public key,
+returning fixed InvalidInput on mismatch or unusable private data. Upload
+selection and local digest inspection use that lookup. This is local crypto
+integrity, not an APK wire-field change or a claim about native corrupt-row
+recovery. No key repair, replacement, rotation or retry is authorized.
+
+Regression corrupts record50 in a generated50-key batch while retaining its
+valid ID/public key. Old code returned a reserved upload. Corrected admission
+returns the exact pair-mismatch error; all prekey and checkpoint bytes remain
+unchanged, including rollback of earlier keys' tentative reservations. Reopen
+still refuses with identical rows. Existing normal upload and independent
+digest controls remain. No live account or network operation ran.
+
+Validation: red late-batch corruption regression reproduced reserved upload;
+all 1,396 workspace/all-feature tests, strict Clippy, CLI reference and
+OpenAPI library checks passed. Offline local stores only.
