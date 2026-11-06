@@ -8232,3 +8232,5 @@ APK43.72 auth-key slot0x1a3e concrete provider and local crypto record field rol
 APK43.72 rotation trigger inventory and saved-token send ordering retained; exact candidate-field census does not establish restart recovery. [Auth-key rotation triggers and candidate ownership](notification-ack-audit.md#auth-key-rotation-triggers-and-candidate-ownership-2026-11-06). No live operation.
 
 Auth-key/token evidence chains reconciled; earlier token findings replace globally stale unknowns in recent scope notes. [Canonical auth-key implementation boundary](authkey-lifecycle.md#current-implementation-boundary-reconciled-2026-11-06). No runtime change or live operation.
+
+Confirmed local login material-copy mismatch now refuses before network/reservation; existing optional-record and feature boundaries retained. [Registration-copy consistency before login](authkey-lifecycle.md#registration-copy-consistency-before-login-2026-11-06). No native wire or live claim.

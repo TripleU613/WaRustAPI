@@ -17744,5 +17744,12 @@
     "x-live": false,
     "description": "Documentation reconciliation: selected auth-key/token writer, correlated reply, readiness/failure and held-request paths already have retained evidence. Canonical requirement table distinguishes those from unresolved restart acceptance and atomic Rust login-material integration. No runtime maintenance capability added.",
     "evidence": "docs/protocol/authkey-lifecycle.md#current-implementation-boundary-reconciled-2026-11-06"
+},
+  "x-login-registration-copy-consistency": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Existing login preflight with Signal crypto now checks any present saved registration material against the account in one read snapshot, rejecting malformed/mismatched copies before socket setup or login reservation. Optional absent lab material and reduced builds retain prior behavior. No key repair, rotation or live verification.",
+    "evidence": "docs/protocol/authkey-lifecycle.md#registration-copy-consistency-before-login-2026-11-06"
 }
 }

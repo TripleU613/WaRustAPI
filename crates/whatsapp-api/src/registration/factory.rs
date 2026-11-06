@@ -23,6 +23,20 @@ pub use super::request::{LAB_PROFILE_ID, LabRegistrationConfig};
 const MATERIAL_KEY: &[u8] = b"registration-lab-material";
 const RECORD_VERSION: u16 = 1;
 
+/// Compare an existing registration record with the login account in the
+/// same read snapshot. Absence supports accounts imported without lab material;
+/// present malformed/mismatched material is never silently ignored or repaired.
+#[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+pub(crate) fn check_login_account_in(
+    tx: &crate::store::ReadTx<'_>,
+    account: &AccountRecord,
+) -> Result<()> {
+    if let Some(record) = tx.get_json::<Material>(Table::Account, MATERIAL_KEY, RECORD_VERSION)? {
+        record.check_account(Some(account.clone()))?;
+    }
+    Ok(())
+}
+
 /// Load the signed prekey actually registered for this account. Never generates
 /// or rotates identity; serialized key material must remain encrypted at rest.
 pub fn registered_signed_prekey(store: &ProtocolStore) -> Result<Zeroizing<Vec<u8>>> {

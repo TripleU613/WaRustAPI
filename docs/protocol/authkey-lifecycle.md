@@ -108,3 +108,28 @@ check and reduced-feature tests verify this boundary.
 [Outcome/startup continuation](authkey-outcomes.md) now distinguishes local
 queue acceptance, delivery timeout, definite error and result, and traces
 conditional CAT/pending-token triggers. Lost-result reconciliation remains open.
+
+## Registration-copy consistency before login (2026-11-06)
+
+**Confirmed local defect / fixed offline:** a mathematically valid replacement
+account Noise pair passed login_material even when the existing registration
+record still named the original public key. The regression's valid baseline
+passed; replacing both account halves with another generated pair then failed
+its expected-refusal assertion before the fix. This differs from mismatched
+private/public halves, which the earlier preflight already rejected.
+
+With experimental-signal-crypto enabled, login_material now loads the account
+and checks any present registration material in the same read snapshot through
+the existing Material.check_account invariant. Present malformed or mismatched
+material propagates an error before socket setup/reservation. Accounts without
+that optional lab record keep their prior path; reduced builds without Signal
+retain existing Noise pair validation. The guard neither repairs records nor
+rotates keys. This is a local consistency rule, not an Android storage-layout
+requirement or a completed rotation port.
+
+The regression registration_noise_copy_mismatch_refuses_login_before_reservation
+uses an independent registration key producer, a valid control, and a distinct
+valid replacement pair. It checks no login checkpoint, unchanged account rows
+and journal, and repeated refusal after reopening. No live operation. This does
+not lock the snapshot through a future handshake or solve concurrent credential
+replacement: generation ownership and accepted rotation remain separate work.

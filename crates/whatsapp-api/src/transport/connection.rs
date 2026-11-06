@@ -77,9 +77,15 @@ fn login_material(
     config: &LabRegistrationConfig,
 ) -> Result<(StaticKeypair, zeroize::Zeroizing<Vec<u8>>)> {
     config.validate()?;
-    let account = store
-        .read(AccountRecord::load)?
-        .ok_or(Error::NotRegistered)?;
+    let account = store.read(|tx| {
+        let account = AccountRecord::load(tx)?.ok_or(Error::NotRegistered)?;
+        // A consistent pair can still be a different account key. Check the
+        // existing registration copy before a socket or login reservation exists.
+        // Local invariant, not an APK requirement for Android storage layout.
+        #[cfg(feature = "experimental-signal-crypto")]
+        crate::registration::factory::check_login_account_in(tx, &account)?;
+        Ok(account)
+    })?;
     if !account.is_registered() || account.phone.as_ref() != Some(&config.phone) {
         return Err(Error::NotRegistered);
     }
@@ -1461,6 +1467,61 @@ mod tests {
         let store = identity_store(&path);
         assert!(login_material(&store, &config).is_err());
         assert!(last_login_status(&store).unwrap().is_none());
+    }
+
+    #[cfg(feature = "experimental-signal-crypto")]
+    #[test]
+    fn registration_noise_copy_mismatch_refuses_login_before_reservation() {
+        use crate::session::{KeyMaterial, NoiseStaticKey};
+        use wacore_libsignal::core::curve::KeyPair;
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("noise-copies.redb");
+        let store = identity_store(&path);
+        let config = config();
+        crate::registration::factory::install_test_material(&store, &config).unwrap();
+        store
+            .write(|tx| {
+                let mut account = AccountRecord::load_in_write(tx)?.unwrap();
+                account.credentials.push(ObservedCredential {
+                    name: "login".into(),
+                    value: zeroize::Zeroizing::new(config.phone.protocol_digits().into_bytes()),
+                    observed_at: Timestamp(0),
+                    source_step: None,
+                });
+                account.save(tx)
+            })
+            .unwrap();
+        assert!(login_material(&store, &config).is_ok());
+        // Both halves remain mathematically valid, but this is not the key
+        // recorded as published by registration. Pair validation alone misses it.
+        let other = KeyPair::generate(&mut rand::rng());
+        store
+            .write(|tx| {
+                let mut account = AccountRecord::load_in_write(tx)?.unwrap();
+                account.noise_static = Some(NoiseStaticKey(KeyMaterial {
+                    public: other.public_key.public_key_bytes().try_into().unwrap(),
+                    private: *other.private_key.serialize(),
+                }));
+                account.save(tx)
+            })
+            .unwrap();
+        let before = store.read(|tx| tx.scan(Table::Account, 1, 20)).unwrap();
+        let journal = store.journal_head().unwrap();
+        assert!(login_material(&store, &config).is_err());
+        assert!(last_login_status(&store).unwrap().is_none());
+        assert_eq!(store.journal_head().unwrap(), journal);
+        assert_eq!(
+            store.read(|tx| tx.scan(Table::Account, 1, 20)).unwrap(),
+            before
+        );
+        drop(store);
+        let store = identity_store(&path);
+        assert!(login_material(&store, &config).is_err());
+        assert!(last_login_status(&store).unwrap().is_none());
+        assert_eq!(
+            store.read(|tx| tx.scan(Table::Account, 1, 20)).unwrap(),
+            before
+        );
     }
 
     #[test]
