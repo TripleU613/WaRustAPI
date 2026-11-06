@@ -328,3 +328,31 @@ rotation, replacement keys, new retry, live account or network operation.
 Validation: red malformed-row regression reproduced partial migration result;
 all 1,398 workspace/all-feature tests, strict Clippy, CLI reference and
 OpenAPI library checks passed. Local stores/injected links only.
+
+### Restored KEM rows cannot override consumption markers (2026-11-05)
+
+**Confirmed local defect, fixed offline:** consume_in atomically deletes an
+ordinary KEM row and records authenticated consumption. Generation already
+refuses IDs with a marker, and a missing consumed row may settle a late upload
+ACK. But a stale row restored beside its consumption marker could still load,
+enter batch inventory, be consumed again or be marked sent. Row presence was
+incorrectly sufficient to bypass the durable marker's one-time meaning.
+
+A live-row/marker conflict now refuses point lookup, batch inventory, repeated
+consumption and present-row upload settlement. Any marker bytes beside a live
+row hold that ID; malformed marker contents do not grant authority. Missing-row
+late-ACK validation remains unchanged and still checks the saved marker. No
+marker is erased, no key is repaired and last-resort retention policy remains.
+This protects against conflicting local restore/corruption, not wholesale
+rollback of both row and marker or proof of native recovery parity.
+
+Regression installs and consumes a real KEM row, verifies missing-row late ACK
+succeeds without restoring it, then restores the original row under its correct
+key. Lookup, repeated consumption, migration, SET/ADD selection and present-row
+settlement all refuse. Exact row/checkpoint bytes survive the refusals and
+reopen. Old code failed by returning the restored row. Existing consume-before-
+ACK and last-resort controls remain. No live operation or new retry authority.
+
+Validation: red restoration regression reproduced row lookup after consumption;
+all 1,399 workspace/all-feature tests, strict Clippy, CLI reference and
+OpenAPI library checks passed. Offline local stores/injected links only.

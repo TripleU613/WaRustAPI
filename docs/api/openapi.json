@@ -17352,5 +17352,12 @@
     "x-live": false,
     "description": "KEM write-side inventory scans now reject malformed owned JSON, noncanonical or mismatched row keys and existing material-integrity failures before migration detection, SET upload selection or ADD replenishment. Whole selected inventory refuses instead of silently skipping corruption; diagnostic counts remain diagnostic. No regeneration around corrupt rows or retry authority.",
     "evidence": "docs/protocol/kem-prekey-inventory.md#kem-batch-scans-refuse-corrupt-owned-inventory-2026-11-05"
+  },
+  "x-kem-consumption-marker-authority": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "KEM live-row/consumption-marker conflict refuses receive lookup, batch selection, repeated consumption and present-row upload ACK settlement. Missing consumed row may still settle its legitimate late ACK. No marker deletion or key repair; conflicting local restoration guard does not claim protection against wholesale store rollback.",
+    "evidence": "docs/protocol/kem-prekey-inventory.md#restored-kem-rows-cannot-override-consumption-markers-2026-11-05"
   }
 }

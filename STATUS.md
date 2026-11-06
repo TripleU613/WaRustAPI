@@ -1,3 +1,8 @@
+Live KEM rows now conflict with durable consumption markers: lookup, batch
+selection, repeated consumption and present-row ACK settlement refuse a stale
+restored row. Legitimate missing-row late ACK still settles without restoration.
+[Audit](docs/protocol/kem-prekey-inventory.md#restored-kem-rows-cannot-override-consumption-markers-2026-11-05).
+
 KEM write-side batch scans now refuse malformed, aliased, key/ID-mismatched
 or invalid owned records before migration/SET/ADD decisions. Existing strict
 point validation is reused; diagnostic counts remain diagnostic.

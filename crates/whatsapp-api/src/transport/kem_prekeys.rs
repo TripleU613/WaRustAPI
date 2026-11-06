@@ -115,6 +115,13 @@ pub(crate) fn load(tx: &ReadTx<'_>, id: u32) -> Result<Option<StoredKemPrekey>> 
     let Some(bytes) = tx.get(Table::Prekeys, record_key(id).as_bytes(), 1)? else {
         return Ok(None);
     };
+    // Restoring a stale row must not override authenticated consumption.
+    if tx
+        .get(Table::Checkpoints, consumed_key(id).as_bytes(), 1)?
+        .is_some()
+    {
+        return Err(invalid("live row conflicts with consumption marker"));
+    }
     let row: StoredKemPrekey =
         serde_json::from_slice(&bytes).map_err(|_| invalid("row does not parse"))?;
     row.validate(id)?;
@@ -132,6 +139,12 @@ pub(crate) fn consume_in(tx: &mut WriteTx<'_>, id: u32, original: &StoredKemPrek
             "inbox",
             "KEM prekey changed before commit; not consumed",
         ));
+    }
+    if tx
+        .get(Table::Checkpoints, consumed_key(id).as_bytes(), 1)?
+        .is_some()
+    {
+        return Err(invalid("live row conflicts with consumption marker"));
     }
     // The inbox commits this marker with authenticated consumption. It carries
     // no private material and distinguishes use-before-upload-ACK from loss.
@@ -197,6 +210,12 @@ fn all_rows(tx: &WriteTx<'_>) -> Result<Vec<StoredKemPrekey>> {
                     serde_json::from_slice(&bytes).map_err(|_| invalid("row does not parse"))?;
                 if key != record_key(row.id).as_bytes() {
                     return Err(invalid("row ID does not match its key"));
+                }
+                if tx
+                    .get(Table::Checkpoints, consumed_key(row.id).as_bytes(), 1)?
+                    .is_some()
+                {
+                    return Err(invalid("live row conflicts with consumption marker"));
                 }
                 row.validate(row.id)?;
                 out.push(row);
@@ -356,6 +375,12 @@ pub(crate) fn mark_sent_in(tx: &mut WriteTx<'_>, ids: &[u32]) -> Result<()> {
                 "reserved KEM prekey disappeared before acknowledgement",
             ));
         };
+        if tx
+            .get(Table::Checkpoints, consumed_key(*id).as_bytes(), 1)?
+            .is_some()
+        {
+            return Err(invalid("live row conflicts with consumption marker"));
+        }
         row.validate(*id)?;
         row.sent = true;
         tx.put_json(Table::Prekeys, key.as_bytes(), 1, &row)?;
@@ -393,6 +418,74 @@ mod tests {
         signal::kem,
         store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource},
     };
+
+    #[test]
+    fn consumed_kem_row_restoration_cannot_restore_receive_or_publication_authority() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("kem-consumed-restoration.redb");
+        let reopen = || {
+            ProtocolStore::open(OpenOptions {
+                path: path.clone(),
+                account_id: AccountId::new("kem-inventory").unwrap(),
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [9; 32],
+                ))),
+                create: true,
+            })
+            .unwrap()
+        };
+        let store = reopen();
+        let (public, secret) = kem::generate_key_pair().unwrap();
+        let original = store
+            .write(|tx| install_for_test(tx, 5, &public, secret.as_bytes(), false))
+            .unwrap();
+        store.write(|tx| consume_in(tx, 5, &original)).unwrap();
+        assert!(store.read(|tx| load(tx, 5)).unwrap().is_none());
+        // Normal use-before-upload-result remains settleable without restoring a key.
+        store.write(|tx| mark_sent_in(tx, &[5])).unwrap();
+        store
+            .write(|tx| tx.put_json(Table::Prekeys, record_key(5).as_bytes(), 1, &original))
+            .unwrap();
+        let snapshot = store
+            .read(|tx| {
+                Ok((
+                    tx.scan(Table::Prekeys, 1, 100)?,
+                    tx.scan(Table::Checkpoints, 1, 100)?,
+                ))
+            })
+            .unwrap();
+        assert!(
+            store.read(|tx| load(tx, 5)).is_err(),
+            "restored row cannot erase consumption"
+        );
+        assert!(store.write(|tx| consume_in(tx, 5, &original)).is_err());
+        assert!(store.write(|tx| migrated_in(tx)).is_err());
+        assert!(store.write(|tx| upload_rows_in(tx, 10)).is_err());
+        assert!(store.write(|tx| add_rows_in(tx, 20, 10)).is_err());
+        assert!(store.write(|tx| mark_sent_in(tx, &[5])).is_err());
+        assert_eq!(
+            store
+                .read(|tx| Ok((
+                    tx.scan(Table::Prekeys, 1, 100)?,
+                    tx.scan(Table::Checkpoints, 1, 100)?
+                )))
+                .unwrap(),
+            snapshot
+        );
+        drop(store);
+        let store = reopen();
+        assert!(store.read(|tx| load(tx, 5)).is_err());
+        assert!(store.write(|tx| mark_sent_in(tx, &[5])).is_err());
+        assert_eq!(
+            store
+                .read(|tx| Ok((
+                    tx.scan(Table::Prekeys, 1, 100)?,
+                    tx.scan(Table::Checkpoints, 1, 100)?
+                )))
+                .unwrap(),
+            snapshot
+        );
+    }
 
     #[test]
     fn batch_inventory_refuses_corrupt_owned_rows_before_generation_or_migration() {
