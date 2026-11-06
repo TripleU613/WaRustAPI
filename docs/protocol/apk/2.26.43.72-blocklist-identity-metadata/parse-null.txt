@@ -1,0 +1,25 @@
+
+# class: LX/0Dd;
+# extends: Ljava/lang/Object;
+
+.method public A02(LL)  # .registers 5
+    # full signature: LX/0Dd;->A02(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    0000..0002  const/4  v2, #0x0
+    0002..0006  if-eqz  v4, +0x1a
+    0006..000c  invoke-virtual  {v4}, Ljava/lang/String;->length()I
+    000c..000e  move-result  v0
+    000e..0012  if-eqz  v0, +0x14
+    0012..0018  invoke-static  {v4}, LX/0Dd;->A00(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    0018..001a  move-result-object  v1
+    001a..001c  goto  +0x7
+    001c..001e  move-exception  v0
+    001e..0022  new-instance  v1, LX/0Dt;
+    0022..0028  invoke-direct  {v1, v0}, LX/0Dt;-><init>(Ljava/lang/Throwable;)V
+    0028..002c  instance-of  v0, v1, LX/0Dt;
+    002c..0030  if-nez  v0, +0x3
+    0030..0032  move-object  v2, v1
+    0032..0036  check-cast  v2, Lcom/whatsapp/infra/core/jid/Jid;
+    0036..0038  return-object  v2
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0009..000e -> 000e
+.end method

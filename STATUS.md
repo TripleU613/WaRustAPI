@@ -1,3 +1,11 @@
+2026-11-06 — **Blocklist typed fallback and metadata priority traced.**
+Pinned helpers show nullable requested-class conversion and type18-only
+name -> PN association -> username priority, independent of block membership.
+Retained six DEX helpers and complete REA Evidence; current strict Rust identity
+admission and unified metadata rows remain identified gaps.
+[Details and boundaries](docs/protocol/chat-actions.md#blocklist-typed-identity-and-metadata-priority-2026-11-06).
+No Rust runtime or live account change.
+
 2026-11-06 — **Blocklist snapshot membership follows the last repeated item.**
 Corrected the confirmed APK Map.put mismatch: later non-block actions remove
 earlier blocks and duplicate blocks no longer stall projection. Synthetic

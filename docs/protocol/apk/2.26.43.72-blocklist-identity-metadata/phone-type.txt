@@ -1,0 +1,10 @@
+
+# class: Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+# extends: Lcom/whatsapp/infra/core/jid/UserJid;
+
+.method public getType(I)  # .registers 2
+    # full signature: Lcom/whatsapp/infra/core/jid/PhoneUserJid;->getType()I
+    0000..0002  const/4  v0, #0x0
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method

@@ -335,6 +335,12 @@
     "x-live": false,
     "description": "APK43.72 6qD.A02 Map.put / 80Z final Boolean membership: repeated supported primary snapshot identities follow the last action, with absent action default block and every non-block action clearing prior snapshot membership. Duplicate block rows replace rather than refuse. Cache/hash/inspection remain atomic and once-only; malformed-child/identity guards remain. Metadata retains adapter last-block-row semantics, not full native conditional metadata/alias parity. No new request, retry, repair of already projected history or live acceptance. docs/protocol/chat-actions.md#blocklist-snapshot-repeated-identity-membership-2026-11-06"
   },
+  "x-blocklist-typed-metadata-evidence": {
+    "x-cli": "xtask apk-smali <apk> --class <class> --method <method> --signatures --exceptions",
+    "x-transport": "offline static APK evidence only",
+    "x-live": false,
+    "description": "APK43.72 selected blocklist parser/helper trace: nullable requested-class jid conversion, PhoneUserJid fallback and skip on no identity; non-compliance log is not rejection. Metadata is type18-gated with display_name, then PN association, then username priority, independent of membership Boolean. Strict Rust admission and unified metadata row policy are not claimed equivalent. Full JID grammar/subclass mapping and durable native metadata/alias adoption remain open. No request or production behavior added. docs/protocol/chat-actions.md#blocklist-typed-identity-and-metadata-priority-2026-11-06"
+  },
   "x-library-capabilities": [
     {
       "symbol": "whatsapp_api::transport::app_state_sync::binding::bind_inline_fetch_plan",

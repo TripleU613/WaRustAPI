@@ -1,0 +1,10 @@
+
+# class: LX/0Dx;
+# extends: LX/0Dw;
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/0Dx;->getType()I
+    0000..0004  const/16  v0, #0x12
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method

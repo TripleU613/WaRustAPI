@@ -1,0 +1,30 @@
+{
+  "README.md": {
+    "bytes": 4916,
+    "sha256": "39c0da99742a973e801ad8c5357a17cc71a0fdaa124070a5a2082632e85385cb"
+  },
+  "lid-predicate.txt": {
+    "bytes": 525,
+    "sha256": "89b6d8dde9cfc793154eb3ccd944c2c9eb1646d86375dd02449d39330b284b21"
+  },
+  "lid-type.txt": {
+    "bytes": 235,
+    "sha256": "30d00ddb67ca9b00cf141223b5219e5ad8e8234402f2698b51678bde80bfba35"
+  },
+  "parse-null.txt": {
+    "bytes": 1017,
+    "sha256": "d153de3994b006bbd5e24fb449fda9a921854cea331acdc53face43836e0906a"
+  },
+  "phone-type.txt": {
+    "bytes": 333,
+    "sha256": "b1772e096c5cc334dae7bc10562650ac322621e5132ea64d6b1512d27cb4bf3f"
+  },
+  "string-attribute.txt": {
+    "bytes": 521,
+    "sha256": "0f7f8b6e917bc82de76f519fa589a46762a7e89e1f0fa76acd7754a75c48a7b8"
+  },
+  "typed-attribute.txt": {
+    "bytes": 4444,
+    "sha256": "0e1523de412bd1c3e33fecc249ec1ed222f1656cb875b02634893a0b574fbee8"
+  }
+}

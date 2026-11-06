@@ -1247,3 +1247,30 @@ block/unblock with actual blocked count1 instead of0. Strict workspace/all-targe
 all-feature Clippy, formatting, CLI regeneration, OpenAPI library coverage,
 APK coverage freshness and repository hygiene pass. The retained parser/result
 exports reproduce byte-for-byte, bundle checksums and subject APK hash match.
+
+## Blocklist typed identity and metadata priority (2026-11-06)
+
+**Confirmed selected static:** [six complete DEX helpers, retained parser,
+branch analysis and complete REA Evidence](apk/2.26.43.72-blocklist-identity-metadata/README.md)
+resolve two previously open parser details.0Tp.A0A returns null after a failed
+requested-class cast;0Dd.A02 returns null for absent/empty or caught parse
+failure. Non-compliance logging inA0A is not itself rejection.6qD.A02 then
+falls back from UserJid jid to PhoneUserJid pn_jid, and logs/skips when neither
+resolves. Rust currently refuses invalid/missing identities and does not model
+that fallback's exact requested PhoneUserJid class.
+
+Metadata uses a type18 gate (0Dn.A0Z; concrete0Dx getter18, PhoneUserJid getter0).
+Present display_name has priority, including empty suppressing later branches;
+only null name reaches PN association, and only null typed PN reaches username.
+These operations precede the separate action Boolean map put, so membership
+last-write semantics do not prove last-row metadata semantics. All-class/type
+mapping, full JID grammar and durable downstream metadata/alias adoption remain
+open. Focused0Dw.getType had no body; inherited methods are not disproved.
+No Rust behavior, snapshot skip policy, sender, account or live request changed.
+
+Validation: six complete helper DEX exports reproduce byte-for-byte; APK digest,
+bundle checksums and complete retained REA data match. Formatting, CLI reference
+regeneration, OpenAPI library coverage and APK coverage freshness pass. Coverage
+now retains964 distinct REA records,0 duplicate copies,72 explicitly mapped.
+No Rust behavior changed; workspace runtime tests were not rerun for this
+research-only chunk. Repository hygiene passes (421 checksum bundles).
