@@ -4592,3 +4592,14 @@ the job rechecks sharing before using its saved sequence as disable.id and a
 fresh independent outer request ID. A0C/81 future completion follows the retained
 reply-discarding contract. Full retry, persisted work recovery and native state
 authority remain open. No speculative Rust packet or live operation added.
+
+### Blocklist result dispatch and direct error attribution (2026-11-06)
+
+**Confirmed APK mismatch / fixed offline:** [callbacks and regressions](apk/2.26.43.72-blocklist-reply-dispatch/README.md)
+keep owned fetch/block/unblock outer results on their list-processing path,
+ignoring unrelated error extensions for settlement. Invalid list admission is
+still refused separately. Outer errors select the first direct coded child,
+skipping uncoded children and nested user failures. Native set-only400 plus
+failed migration admission can clear preferences and queue a full fetch;
+missing Rust authority means no such automatic recovery is invented here.
+All three action kinds have encrypted-store reopen regressions. No live test.

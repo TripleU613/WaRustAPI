@@ -1,0 +1,34 @@
+
+# class: LX/8R7;
+# extends: Ljava/lang/Object;
+
+.method public Bvj(VLL)  # .registers 8
+    # full signature: LX/8R7;->Bvj(LX/0Tp;Ljava/lang/String;)V
+    0000..0006  invoke-static  {v7, v6}, LX/00l;->A0A(Ljava/lang/Object;Ljava/lang/Object;)V
+    0006..000c  invoke-static  {v6}, LX/1ud;->A00(LX/0Tp;)I
+    000c..000e  move-result  v4
+    000e..0012  iget-object  v1, v5, LX/8R7;->A00:LX/6pA;
+    0012..0016  const-string  v0, "update"
+    0016..001c  invoke-virtual  {v1, v7, v0}, LX/6pA;->A03(Ljava/lang/String;Ljava/lang/String;)Z
+    001c..001e  move-result  v1
+    001e..0022  const/16  v0, #0x190
+    0022..0026  if-ne  v4, v0, +0xa
+    0026..002a  if-nez  v1, +0x8
+    002a..002e  iget-object  v0, v5, LX/8R7;->A03:LX/7vW;
+    002e..0034  invoke-virtual  {v0}, LX/7vW;->A00()V
+    0034..0036  return-void
+    0036..003a  iget-object  v0, v5, LX/8R7;->A03:LX/7vW;
+    003a..003e  iget-object  v3, v0, LX/7vW;->A00:LX/7vV;
+    003e..0042  iget-object  v0, v3, LX/7vV;->A0A:LX/2Cl;
+    0042..0046  iget-object  v2, v0, LX/2Cl;->A04:Lcom/whatsapp/infra/core/jid/UserJid;
+    0046..004a  const-string  v0, "BlockListResponseHandler/general_request_failed "
+    004a..0050  invoke-static  {v4, v0}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    0050..0052  move-result-object  v1
+    0052..0056  const-string  v0, " | "
+    0056..005c  invoke-static  {v2, v0, v1}, LX/2LA;->A1J(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    005c..0060  iget-object  v1, v3, LX/7vV;->A0D:LX/0Js;
+    0060..0064  iget-object  v0, v3, LX/7vV;->A0F:Ljava/lang/Runnable;
+    0064..006a  invoke-virtual  {v1, v0}, LX/0Js;->CbR(Ljava/lang/Runnable;)V
+    006a..006c  return-void
+    # exception table: 0 try range(s)
+.end method

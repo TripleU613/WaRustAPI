@@ -1,0 +1,26 @@
+
+# class: LX/1dH;
+# extends: Ljava/lang/Object;
+
+.method public A0F(V)  # .registers 4
+    # full signature: LX/1dH;->A0F()V
+    0000..0006  invoke-static  {v3}, LX/1dH;->A02(LX/1dH;)LX/09S;
+    0006..0008  move-result-object  v0
+    0008..000a  const/4  v2, #0x0
+    000a..0010  invoke-static  {v0}, LX/09S;->A00(LX/09S;)Landroid/content/SharedPreferences$Editor;
+    0010..0012  move-result-object  v1
+    0012..0016  const-string  v0, "block_list_v2_dhash"
+    0016..001c  invoke-interface  {v1, v0, v2}, Landroid/content/SharedPreferences$Editor;->putString(Ljava/lang/String;Ljava/lang/String;)Landroid/content/SharedPreferences$Editor;
+    001c..001e  move-result-object  v0
+    001e..0024  invoke-interface  {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
+    0024..002a  invoke-static  {v3}, LX/1dH;->A02(LX/1dH;)LX/09S;
+    002a..002c  move-result-object  v0
+    002c..0032  invoke-static  {v0}, LX/09S;->A00(LX/09S;)Landroid/content/SharedPreferences$Editor;
+    0032..0034  move-result-object  v1
+    0034..0038  const-string  v0, "block_list_receive_time"
+    0038..003e  invoke-interface  {v1, v0}, Landroid/content/SharedPreferences$Editor;->remove(Ljava/lang/String;)Landroid/content/SharedPreferences$Editor;
+    003e..0040  move-result-object  v0
+    0040..0046  invoke-interface  {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
+    0046..0048  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1674,3 +1674,40 @@ extraction match; four builder methods match reused evidence. Bundle checksums
 and selected runner branch targets verified. Formatting, OpenAPI library test,
 APK coverage freshness, diff whitespace and hygiene pass (435 bundles).
 Evidence-only change; Rust tests beyond document coverage were not rerun.
+
+## Blocklist outer-result and coded-error settlement (2026-11-06)
+
+**Confirmed APK mismatch / fixed offline:** [complete error callbacks, direct
+child selector, reconciliation helper and reused CK4/parser evidence](apk/2.26.43.72-blocklist-reply-dispatch/README.md)
+show outer result dispatch is separate from Bvj. Rust's generic nested-refusal
+search could mark a valid selected list as Error because a later extension
+contained an error, then skip its projection. Owned fetch/block/unblock results
+now retain Ok for the existing list validator/projector. Malformed lists still
+refuse without committing cache/hash/marker changes.
+
+On outer error the native callbacks use the first direct error with a present
+code, skipping uncoded children. Rust now selects that textual coded child for
+its existing u16/text diagnostics, without borrowing nested user failures.
+The correction requires the typed action kind and the existing saved request
+ID/type/namespace/destination check. Other producers, including app-state
+collection refusals and directory per-user errors, retain their own rules.
+
+Native set code400 plus failed6pA.A03 admission calls7vW.A00: clear dhash and
+receive-time preferences, fetch through1dH.A0M(null,null), then schedule failure
+completion. Other codes/admitted400 use generic failure. Fetch Bvj instead can
+fail its migration future. Equivalent migration authority and complete recovery
+remain unported; no automatic400 retry/refetch, hash reset or action replay is
+introduced. Numeric parser grammar/range and full native metadata are separate.
+
+The first two regressions failed with old settlement code (Error vs Ok; nested
+401 vs direct400). They pass with the correction; a third checks invalid lists
+still preserve all checkpoints/journal after reopen. Tests cover all three
+kinds, direct/nested extensions, uncoded-prefix and multiple coded children,
+once-only projection, saved diagnostic/status and no duplicate settlement/send.
+
+Validation:1,528 workspace tests pass (9 result suites, four threads), including
+all three new regressions and existing app-state/directory refusal controls.
+Strict workspace/all-target/all-feature Clippy, formatting, CLI reference,
+OpenAPI library coverage, APK coverage freshness and diff whitespace pass.
+Five fresh exports, two reused parsers, branch targets, checksum bundle and
+pinned APK digest match. Hygiene passes (436 bundles). No live account test.

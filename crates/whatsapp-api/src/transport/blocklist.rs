@@ -227,7 +227,7 @@ fn user_attr(node: &Node, name: &str) -> Result<Option<Jid>> {
     Ok(Some(jid))
 }
 
-fn require_request(request: &Node, id: &str, kind: &str) -> Result<()> {
+pub(super) fn require_request(request: &Node, id: &str, kind: &str) -> Result<()> {
     let request_type = if kind == "blocklist" { "get" } else { "set" };
     let recipient = request.get_attr("to").and_then(|value| {
         value
@@ -1805,5 +1805,152 @@ mod tests {
                 .unwrap()
                 .is_empty()
         );
+    }
+    #[test]
+    fn blocklist_reply_outer_result_extensions_do_not_override_callbacks_after_reopen() {
+        use super::super::actions;
+        for kind in ["blocklist", "block", "unblock"] {
+            for nested in [false, true] {
+                let (dir, s) = store();
+                let id = match kind {
+                    "blocklist" => queue_fetch(&s),
+                    "block" => queue_block(&s, &phone()),
+                    _ => queue_unblock(&s, &phone()),
+                }
+                .unwrap();
+                actions::reserve_pending(&s).unwrap();
+                let error = Node::new("error").attr("code", "401");
+                let extension = if nested {
+                    Node::new("extension").children(vec![Node::new("user").children(vec![error])])
+                } else {
+                    error
+                };
+                let reply = Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", "result")
+                    .children(vec![
+                        Node::new("list")
+                            .attr("dhash", "accepted")
+                            .children(vec![Node::new("item").attr("jid", phone())]),
+                        extension,
+                    ]);
+                assert!(actions::record_reply(&s, &reply).unwrap());
+                assert_eq!(
+                    actions::outcomes(&s).unwrap()[0].status,
+                    actions::ActionStatus::Ok
+                );
+                drop(s);
+                let s = reopen(dir.path());
+                assert_eq!(ingest(&s).unwrap(), 1);
+                assert_eq!(blocked(&s).unwrap().len(), usize::from(kind != "unblock"));
+                assert_eq!(ingest(&s).unwrap(), 0);
+                assert!(actions::reserve_pending(&s).unwrap().is_empty());
+                assert!(!actions::record_reply(&s, &reply).unwrap());
+                assert!(actions::reply(&s, &id).unwrap().is_some());
+            }
+        }
+    }
+
+    #[test]
+    fn blocklist_reply_outer_error_uses_first_direct_coded_child_without_projection() {
+        use super::super::actions;
+        for kind in ["blocklist", "block", "unblock"] {
+            let (dir, s) = store();
+            let seed = queue_fetch(&s).unwrap();
+            actions::reserve_pending(&s).unwrap();
+            actions::record_reply(
+                &s,
+                &fetch_reply(
+                    &seed,
+                    "before",
+                    vec![Node::new("item").attr("jid", phone())],
+                ),
+            )
+            .unwrap();
+            assert_eq!(ingest(&s).unwrap(), 1);
+            let id = match kind {
+                "blocklist" => queue_fetch(&s),
+                "block" => queue_block(&s, &phone()),
+                _ => queue_unblock(&s, &phone()),
+            }
+            .unwrap();
+            actions::reserve_pending(&s).unwrap();
+            let reply = Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "error")
+                .children(vec![
+                    Node::new("error").attr("text", "uncoded"),
+                    Node::new("extension").children(vec![Node::new("user").children(vec![
+                        Node::new("error").attr("code", "401").attr("text", "nested")
+                    ])]),
+                    Node::new("error")
+                        .attr("code", "400")
+                        .attr("text", "selected"),
+                    Node::new("error").attr("code", "500").attr("text", "later"),
+                ]);
+            assert!(actions::record_reply(&s, &reply).unwrap());
+            drop(s);
+            let s = reopen(dir.path());
+            let outcome = actions::outcomes(&s)
+                .unwrap()
+                .into_iter()
+                .find(|v| v.id == id)
+                .unwrap();
+            assert_eq!(outcome.status, actions::ActionStatus::Error);
+            assert_eq!(outcome.error_code, Some(400));
+            assert_eq!(outcome.error_text.as_deref(), Some("selected"));
+            assert_eq!(ingest(&s).unwrap(), 0);
+            assert_eq!(blocked(&s).unwrap().len(), 1);
+            assert_eq!(saved_dhash(&s).unwrap().as_deref(), Some("before"));
+            assert_eq!(ingest(&s).unwrap(), 0);
+            assert!(actions::reserve_pending(&s).unwrap().is_empty());
+            assert!(!actions::record_reply(&s, &reply).unwrap());
+        }
+    }
+    #[test]
+    fn blocklist_reply_result_extensions_do_not_bypass_snapshot_validation() {
+        use super::super::actions;
+        for kind in ["blocklist", "block", "unblock"] {
+            let (dir, s) = store();
+            let id = match kind {
+                "blocklist" => queue_fetch(&s),
+                "block" => queue_block(&s, &phone()),
+                _ => queue_unblock(&s, &phone()),
+            }
+            .unwrap();
+            actions::reserve_pending(&s).unwrap();
+            let reply = Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "result")
+                .children(vec![
+                    Node::new("list")
+                        .attr("dhash", "must-not-save")
+                        .children(vec![Node::new("unexpected")]),
+                    Node::new("error").attr("code", "401"),
+                ]);
+            assert!(actions::record_reply(&s, &reply).unwrap());
+            assert_eq!(
+                actions::outcomes(&s).unwrap()[0].status,
+                actions::ActionStatus::Ok
+            );
+            let before = s.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap();
+            let head = s.journal_head().unwrap();
+            assert!(ingest(&s).is_err());
+            assert_eq!(
+                s.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap(),
+                before
+            );
+            assert_eq!(s.journal_head().unwrap(), head);
+            drop(s);
+            let s = reopen(dir.path());
+            assert!(ingest(&s).is_err());
+            assert_eq!(
+                s.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap(),
+                before
+            );
+            assert!(blocked(&s).unwrap().is_empty());
+            assert!(saved_dhash(&s).unwrap().is_none());
+            assert!(actions::reserve_pending(&s).unwrap().is_empty());
+        }
     }
 }

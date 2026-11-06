@@ -857,6 +857,10 @@ fn record_reply_inner(
         let privacy_token_result = kind == Some("result")
             && row.kind == super::token_issue::ACTION_KIND
             && super::token_issue::is_issue_request(&request);
+        // APK43.72 8R7/6p9 select CK4 from the outer result, then parse
+        // their list. Unrelated error extensions cannot select Bvj instead.
+        let blocklist_reply = matches!(row.kind.as_str(), "blocklist" | "block" | "unblock")
+            && super::blocklist::require_request(&request, id, &row.kind).is_ok();
         // APK43.72 1rA.A03 dispatches result to Dxh.A02, which reads
         // per-user errors under list, not root extensions. Keep this scoped to
         // the typed peer directory producer; app-state has different semantics.
@@ -885,51 +889,63 @@ fn record_reply_inner(
         // code="409" text="conflict"/>`, observed live 2026-09-24. Reading only
         // the outer type recorded that as success, which is worse than an error
         // — it is an error the caller is told is fine.
-        let inner_error =
-            if about_result || photo_set_result || two_factor_result || privacy_token_result {
-                None
-            } else if kind == Some("error")
-                && (peer_directory_reply || identity_only_reply || identity_refresh_peer.is_some())
-            {
-                // APK43.72 1rA.A03 and 0ln.A01 select outer-error
-                // callbacks. Nested device errors are not this query's code.
-                let mut errors = node
-                    .child_nodes()
-                    .iter()
-                    .filter(|child| child.description == "error");
-                let error = errors.next();
-                errors.next().is_none().then_some(error).flatten()
-            } else if peer_directory_reply {
-                // Bind refusal to the original single-peer request. A foreign
-                // user's error must not poison this peer's completion/refresh.
-                crate::signal::direct::child(&request, "key")
-                    .ok()
-                    .and_then(|key| crate::signal::direct::child(key, "user").ok())
-                    .and_then(|user| super::receipts::jid(user, "jid"))
-                    .and_then(|peer| super::peer_keys::selected_user(node, &peer).ok())
-                    .and_then(|user| user.child("error"))
-            } else if let Some(peer) = identity_refresh_peer.as_ref() {
-                super::peer_keys::selected_user(node, peer)
-                    .ok()
-                    .and_then(|user| user.child("error"))
-            } else {
-                node.child_nodes()
-                    .iter()
-                    .flat_map(|child| child.child_nodes())
-                    .find_map(|child| {
-                        // An encrypt directory result can carry <list><user><error/>
-                        // without type=error on user. Preserve that refusal too.
-                        (child.description == "user"
-                            || child.get_attr("type").and_then(|v| v.as_text()) == Some("error"))
-                        .then(|| child.child("error"))
+        let inner_error = if about_result
+            || photo_set_result
+            || two_factor_result
+            || privacy_token_result
+            || (blocklist_reply && kind == Some("result"))
+        {
+            None
+        } else if blocklist_reply && kind == Some("error") {
+            // APK43.72 1ud.A01 scans direct error children, skipping
+            // missing code. It returns the first coded error, not a nested
+            // user error or an earlier uncoded extension (8R7/6p9.Bvj).
+            node.child_nodes().iter().find(|child| {
+                child.description == "error"
+                    && child.get_attr("code").and_then(|v| v.as_text()).is_some()
+            })
+        } else if kind == Some("error")
+            && (peer_directory_reply || identity_only_reply || identity_refresh_peer.is_some())
+        {
+            // APK43.72 1rA.A03 and 0ln.A01 select outer-error
+            // callbacks. Nested device errors are not this query's code.
+            let mut errors = node
+                .child_nodes()
+                .iter()
+                .filter(|child| child.description == "error");
+            let error = errors.next();
+            errors.next().is_none().then_some(error).flatten()
+        } else if peer_directory_reply {
+            // Bind refusal to the original single-peer request. A foreign
+            // user's error must not poison this peer's completion/refresh.
+            crate::signal::direct::child(&request, "key")
+                .ok()
+                .and_then(|key| crate::signal::direct::child(key, "user").ok())
+                .and_then(|user| super::receipts::jid(user, "jid"))
+                .and_then(|peer| super::peer_keys::selected_user(node, &peer).ok())
+                .and_then(|user| user.child("error"))
+        } else if let Some(peer) = identity_refresh_peer.as_ref() {
+            super::peer_keys::selected_user(node, peer)
+                .ok()
+                .and_then(|user| user.child("error"))
+        } else {
+            node.child_nodes()
+                .iter()
+                .flat_map(|child| child.child_nodes())
+                .find_map(|child| {
+                    // An encrypt directory result can carry <list><user><error/>
+                    // without type=error on user. Preserve that refusal too.
+                    (child.description == "user"
+                        || child.get_attr("type").and_then(|v| v.as_text()) == Some("error"))
+                    .then(|| child.child("error"))
+                    .flatten()
+                })
+                .or_else(|| {
+                    (!peer_directory_reply && !identity_only_reply)
+                        .then(|| node.child("error"))
                         .flatten()
-                    })
-                    .or_else(|| {
-                        (!peer_directory_reply && !identity_only_reply)
-                            .then(|| node.child("error"))
-                            .flatten()
-                    })
-            };
+                })
+        };
         if kind == Some("result") && inner_error.is_none() {
             if privacy_token_result {
                 row.token_issue_completion =

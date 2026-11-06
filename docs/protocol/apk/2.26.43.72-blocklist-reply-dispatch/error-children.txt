@@ -1,0 +1,26 @@
+
+# class: LX/0Tp;
+# extends: Ljava/lang/Object;
+
+.method public A0N(LL)  # .registers 8
+    # full signature: LX/0Tp;->A0N(Ljava/lang/String;)Ljava/util/List;
+    0000..0004  iget-object  v5, v6, LX/0Tp;->A02:[LX/0Tp;
+    0004..0008  if-nez  v5, +0x5
+    0008..000c  sget-object  v0, Ljava/util/Collections;->EMPTY_LIST:Ljava/util/List;
+    000c..000e  return-object  v0
+    000e..0012  new-instance  v4, Ljava/util/ArrayList;
+    0012..0018  invoke-direct  {v4}, Ljava/util/ArrayList;-><init>()V
+    0018..001a  array-length  v3, v5
+    001a..001c  const/4  v2, #0x0
+    001c..0020  if-ge  v2, v3, +0x12
+    0020..0024  aget-object  v1, v5, v2
+    0024..0028  iget-object  v0, v1, LX/0Tp;->A00:Ljava/lang/String;
+    0028..002e  invoke-static  {v7, v0}, Landroid/text/TextUtils;->equals(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Z
+    002e..0030  move-result  v0
+    0030..0034  if-eqz  v0, +0x5
+    0034..003a  invoke-virtual  {v4, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    003a..003e  add-int/lit8  v2, v2, #0x1
+    003e..0040  goto  -0x11
+    0040..0042  return-object  v4
+    # exception table: 0 try range(s)
+.end method

@@ -1,3 +1,10 @@
+2026-11-06 — **Fixed blocklist reply dispatch and error attribution.**
+Owned outer results cannot be turned into failures by unrelated error
+extensions; the separate snapshot validator still applies. Outer errors use
+the first direct coded child rather than nested or uncoded errors.
+[Regression and native400 reconciliation limits](chat-actions.md#blocklist-outer-result-and-coded-error-settlement-2026-11-06).
+No automatic retry, hash reset or live account operation.
+
 2026-11-06 — **Location-disable lifecycle and retry eligibility resolved.**
 Persistent job retains its sequence, rechecks sharing on each execution, and
 uses ChatConnectionRequirement. Runtime exceptions bypass its retry decision;
