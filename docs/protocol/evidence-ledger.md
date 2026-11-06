@@ -8188,3 +8188,5 @@ Confirmed local nested-field ambiguity corrected for contact projection/repair, 
 APK43.72 LID Boolean/mask mapping and conditional MEX final dispatcher retained; classic usync writer alone is not this producer's wire oracle. [LID field chain, conditional MEX selection and remaining serializer/callback limits](bulk-prekey-refresh.md#missing-lid-field-mapping-and-mex-selection-2026-11-06). Offline research only.
 
 Current43.72 missing-LID MEX handlers bound by constructors: request refusal can release a future normally; result-state installation and scoped errors remain separate. [MEX request/scoped/exception outcomes and remaining lifecycle limits](bulk-prekey-refresh.md#missing-lid-mex-callback-completion-and-error-scope-2026-11-06). Offline only.
+
+Current43.72 response-state lifecycle narrowed: selected nonempty-read reset and drained/exception cleanup exist; per-batch and late-callback guarantees remain unknown. [Explicit resets/cleanup and remaining late-callback limits](bulk-prekey-refresh.md#missing-lid-shared-response-state-resets-2026-11-06). No native race or live-operation claim.

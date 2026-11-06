@@ -1,3 +1,5 @@
+Native missing-LID response-state reset/cleanup now retained with exact field/caller census; late callback fencing remains unverified. [Explicit resets/cleanup and remaining late-callback limits](docs/protocol/bulk-prekey-refresh.md#missing-lid-shared-response-state-resets-2026-11-06). Research only, no runtime change.
+
 Missing-LID MEX callbacks now traced through request/scoped/exception outcomes and response-state-before-future completion. [MEX request/scoped/exception outcomes and remaining lifecycle limits](docs/protocol/bulk-prekey-refresh.md#missing-lid-mex-callback-completion-and-error-scope-2026-11-06). Research only; no mapping acceptance or runtime parity claim.
 
 Pinned APK tracing now shows a LID-only multi-query branch selects MEX UsyncQuery/include_lid, while devices uses a separate flag. [LID field chain, conditional MEX selection and remaining serializer/callback limits](docs/protocol/bulk-prekey-refresh.md#missing-lid-field-mapping-and-mex-selection-2026-11-06). Research only; no runtime request added.

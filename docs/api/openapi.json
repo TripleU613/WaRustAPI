@@ -17590,5 +17590,12 @@
     "x-live": false,
     "description": "Research-only APK43.72 MEX callback trace: request refusal can call BLg and release future normally while suppressing data continuation; scoped575/599 errors differ from exceptional BsR. Selected success calls BLh before future completion. Full parsing/adoption, shared response lifecycle, durable waits and MEX envelope remain unported. No runtime behavior added.",
     "evidence": "docs/protocol/bulk-prekey-refresh.md#missing-lid-mex-callback-completion-and-error-scope-2026-11-06"
+},
+  "x-prekey-lid-response-lifecycle-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Research-only APK43.72 lookup response-state census and explicit nonempty-read reset/drained cleanup. Empty follow-up reads do not clear state. Per-batch lifecycle, serialization, aliases and late callback cancellation/correlation remain unknown; no native race proven. No runtime shared-state or retry behavior added.",
+    "evidence": "docs/protocol/bulk-prekey-refresh.md#missing-lid-shared-response-state-resets-2026-11-06"
 }
 }

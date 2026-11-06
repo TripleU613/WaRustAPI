@@ -1,0 +1,37 @@
+
+# class: LX/0p7;
+# extends: Ljava/lang/Object;
+
+.method private A0G(ZLLLZ)  # .registers 16
+    # full signature: LX/0p7;->A0G(LX/1w4;LX/0vC;Ljava/util/List;Z)Z
+    0000..0002  move-object  v6, v14
+    0002..0008  invoke-interface  {v14}, Ljava/util/List;->isEmpty()Z
+    0008..000a  move-result  v1
+    000a..000c  const/4  v0, #0x1
+    000c..0010  if-nez  v1, +0x2d
+    0010..0012  const/4  v0, #0x0
+    0012..0014  move-object  v1, v11
+    0014..0018  iput-object  v0, v11, LX/0p7;->A00:LX/Gzg;
+    0018..001c  iput-object  v0, v11, LX/0p7;->A01:Ljava/lang/Long;
+    001c..0020  iget-object  v0, v11, LX/0p7;->A0e:Ljava/util/Map;
+    0020..0026  invoke-interface  {v0}, Ljava/util/Map;->clear()V
+    0026..002a  iget-object  v0, v11, LX/0p7;->A0f:Ljava/util/Map;
+    002a..0030  invoke-interface  {v0}, Ljava/util/Map;->clear()V
+    0030..0034  iget-object  v0, v11, LX/0p7;->A0i:LX/00x;
+    0034..003a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    003a..003c  move-result-object  v0
+    003c..0040  check-cast  v0, LX/H7L;
+    0040..0046  invoke-virtual  {v0}, LX/H7L;->A00()I
+    0046..0048  move-result  v7
+    0048..004c  const-string  v5, "read_protocols"
+    004c..0052  invoke-static  {}, Landroid/os/SystemClock;->elapsedRealtime()J
+    0052..0054  move-result-wide  v8
+    0054..0058  const-string  v4, "ContactSyncHelper/read_protocols"
+    0058..005a  move-object  v2, v12
+    005a..005c  move-object  v3, v13
+    005c..005e  move  v10, v15
+    005e..0064  invoke-direct/range  {v1..v10}, LX/0p7;->A0F(LX/1w4;LX/0vC;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;IJZ)Z
+    0064..0066  move-result  v0
+    0066..0068  return  v0
+    # exception table: 0 try range(s)
+.end method
