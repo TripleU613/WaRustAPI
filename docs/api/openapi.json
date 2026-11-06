@@ -1149,6 +1149,30 @@
             "$ref": "#/components/schemas/ContactProjection",
             "description": "Optional local contact-status projection result, distinct from outer IQ status. Saved atomically with status/once-only marker; omitted for legacy/unrelated/not-yet-projected rows. No raw phone/time."
           },
+          "about_refusal": {
+            "type": "object",
+            "required": [
+              "codes",
+              "malformed_code"
+            ],
+            "properties": {
+              "codes": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": -2147483648,
+                  "maximum": 2147483647
+                }
+              },
+              "malformed_code": {
+                "type": "boolean"
+              }
+            },
+            "description": "Optional typed About outer-error diagnostic. Ordered direct-child Java Integer codes before first malformed present code. Legacy absence unknown; no backfill or retry authority. Generic error_code remains compatibility u16.",
+            "x-cli": "whatsapp-cli actions",
+            "x-transport": "experimental",
+            "x-live": false
+          },
           "contact_protocol_refusal": {
             "$ref": "#/components/schemas/UsyncRefusal",
             "description": "Optional contact-protocol error inside an owned outer usync result for requested contact protocol. Backoff parsed before code; absent wait is3600000ms and code-1. Separate from outer status, per-user type and outer-IQ refusal. Legacy absence is unknown; no backfill, wait enforcement or retry authorization."

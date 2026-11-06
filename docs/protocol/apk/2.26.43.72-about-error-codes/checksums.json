@@ -1,0 +1,22 @@
+{
+  "IntegerOracle.java": {
+    "bytes": 699,
+    "sha256": "52417dc85c94b88e93f12b9162232ea3024ace624bb881d0b48d9e4ceb8cc95e"
+  },
+  "README.md": {
+    "bytes": 3074,
+    "sha256": "9c78c51afeea60c9078b970e631dc8c924337dad63fe7a43e9d9d9ea668679d5"
+  },
+  "error-dispatch.txt": {
+    "bytes": 2998,
+    "sha256": "aaf1da0338e3655cc25fe9357144464d1df3cc7396b1b9c40c42390f12c8fb50"
+  },
+  "integer-oracle.json": {
+    "bytes": 519,
+    "sha256": "0f15156dd788051d69d50011bc92540f70d94fcedbb4ff179c4f8cc3ac2ccfa0"
+  },
+  "java-version.txt": {
+    "bytes": 118,
+    "sha256": "43b31e5502e462239d440423af453f5c58230345ed4d36618a7f17747a1d7fa5"
+  }
+}

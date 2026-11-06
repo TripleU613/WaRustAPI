@@ -1092,3 +1092,14 @@ child/type before conditional audience persistence. **Open:** effective flags,
 store transactions, scheduler limits and durable recovery. Rust has no matching
 status-audience fetch/adoption path; no runtime retry or settings change added.
 [Exact callback binding, branch table and limits](apk/2.26.43.72-status-privacy-fetch-callback/README.md).
+
+### 2026-11-05: preserve About refusal callback codes
+
+**Confirmed static / implemented offline, APK 2.26.43.72:** the ordinary About
+error path processes signed Java Integer codes for each direct error child in
+order, stopping on malformed present input. Existing generic u16 metadata lost
+signed/large/subsequent values. Optional ActionOutcome.about_refusal now retains
+the codes and malformed boundary atomically with settlement, exposed by actions
+plain/JSON. Legacy absence remains unknown. Duplicate/reopen/no-replay and JVM
+oracle tests cover the correction. No retry, cooldown or saved About adoption.
+[Exact source, oracle and limits](apk/2.26.43.72-about-error-codes/README.md).

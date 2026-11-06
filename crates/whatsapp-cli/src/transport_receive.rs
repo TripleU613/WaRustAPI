@@ -1183,7 +1183,7 @@ pub(super) async fn actions_status(
     println!("actions: {} queued so far", outcomes.len());
     for a in &outcomes {
         println!(
-            "  id={} kind={} label={} status={:?} settlement_sequence={}{}{}{}{}{}{}",
+            "  id={} kind={} label={} status={:?} settlement_sequence={}{}{}{}{}{}{}{}",
             a.id,
             a.kind,
             a.label,
@@ -1207,6 +1207,10 @@ pub(super) async fn actions_status(
             a.contact_protocol_refusal
                 .as_ref()
                 .map(|metadata| format!(" contact_protocol_refusal={metadata:?}"))
+                .unwrap_or_default(),
+            a.about_refusal
+                .as_ref()
+                .map(|metadata| format!(" about_refusal={metadata:?}"))
                 .unwrap_or_default(),
             match (a.error_code, a.error_text.as_deref()) {
                 (None, None) => String::new(),

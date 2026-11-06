@@ -1,3 +1,13 @@
+2026-11-05 — **About refusals retain native signed and ordered codes.**
+
+Optional about_refusal metadata preserves direct-child Java integer codes and
+malformed-input boundary, atomically with settlement. Existing actions plain/JSON
+shows it. Generic compatibility fields and runtime retry policy are unchanged.
+[Evidence, executed JVM oracle and durable regression](docs/protocol/apk/2.26.43.72-about-error-codes/README.md).
+Validation: all 1376 workspace/all-feature tests, executed 13-case JVM oracle,
+fmt, strict Clippy, CLI/OpenAPI, coverage and staged checksum/link hygiene passed.
+No live account request.
+
 2026-11-05 — **Status-privacy retry eligibility and error nesting traced.**
 
 The wrapper's root IQ code/backoff lookup differs from its original callback's

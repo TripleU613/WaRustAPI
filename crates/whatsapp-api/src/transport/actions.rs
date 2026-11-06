@@ -104,6 +104,8 @@ struct Row {
     usync_refusal: Option<super::contacts::UsyncRefusal>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     contact_protocol_refusal: Option<super::contacts::UsyncRefusal>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    about_refusal: Option<super::about::AboutRefusal>,
     #[serde(default)]
     sent_at: Option<Timestamp>,
     #[serde(default)]
@@ -146,6 +148,9 @@ pub struct ActionOutcome {
     /// Contact protocol error inside an outer result; separate from per-user contact type.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub contact_protocol_refusal: Option<super::contacts::UsyncRefusal>,
+    /// Ordered native About error codes; legacy absent metadata remains unknown.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub about_refusal: Option<super::about::AboutRefusal>,
     /// Server error code when refused.
     pub error_code: Option<u16>,
     /// Server error text when refused.
@@ -203,6 +208,7 @@ fn queue_prepared_in(
         contact_projection: None,
         usync_refusal: None,
         contact_protocol_refusal: None,
+        about_refusal: None,
         sent_at: None,
         settled_at: None,
         settlement_sequence: None,
@@ -273,6 +279,7 @@ pub(crate) fn view_in_write(
             contact_projection: row.contact_projection,
             usync_refusal: row.usync_refusal,
             contact_protocol_refusal: row.contact_protocol_refusal,
+            about_refusal: row.about_refusal,
             error_code: row.error_code,
             error_text: row.error_text,
         },
@@ -308,6 +315,7 @@ pub(crate) fn view_in(
             contact_projection: row.contact_projection,
             usync_refusal: row.usync_refusal,
             contact_protocol_refusal: row.contact_protocol_refusal,
+            about_refusal: row.about_refusal,
             error_code: row.error_code,
             error_text: row.error_text,
         },
@@ -684,9 +692,7 @@ pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
         // as a refusal, or extend this producer-specific rule to app-state.
         let about_result = kind == Some("result")
             && row.kind == super::about::ACTION_KIND
-            && request.get_attr("xmlns").and_then(|v| v.as_text()) == Some("status")
-            && request.get_attr("type").and_then(|v| v.as_text()) == Some("set")
-            && matches!(request.child_nodes(), [status] if status.description == "status");
+            && super::about::is_set_request(&request);
         // APK43.72 Hyd.CK4 for a nonnull upload validates the first child
         // as picture, reads its attributes and ignores subsequent extensions.
         // Missing/wrong first child and lookup/removal policies remain separate.
@@ -754,6 +760,9 @@ pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
                     .map(str::to_owned);
             }
         }
+        row.about_refusal = (row.kind == super::about::ACTION_KIND)
+            .then(|| super::about::refusal(&request, node))
+            .flatten();
         row.usync_refusal = super::contacts::outer_usync_refusal(&request, node);
         row.contact_protocol_refusal = super::contacts::contact_protocol_refusal(&request, node);
         row.settlement_sequence = Some(next_settlement_sequence_in(tx)?);
@@ -836,6 +845,7 @@ pub fn outcomes(store: &ProtocolStore) -> Result<Vec<ActionOutcome>> {
                     contact_projection: row.contact_projection,
                     usync_refusal: row.usync_refusal,
                     contact_protocol_refusal: row.contact_protocol_refusal,
+                    about_refusal: row.about_refusal,
                     error_code: row.error_code,
                     error_text: row.error_text,
                 });
@@ -876,6 +886,7 @@ pub(crate) fn outcomes_in_write(tx: &crate::store::WriteTx<'_>) -> Result<Vec<Ac
                 contact_projection: row.contact_projection,
                 usync_refusal: row.usync_refusal,
                 contact_protocol_refusal: row.contact_protocol_refusal,
+                about_refusal: row.about_refusal,
                 error_code: row.error_code,
                 error_text: row.error_text,
             });
@@ -986,6 +997,7 @@ pub fn settled_for_kinds(
                     contact_projection: row.contact_projection,
                     usync_refusal: row.usync_refusal,
                     contact_protocol_refusal: row.contact_protocol_refusal,
+                    about_refusal: row.about_refusal,
                     error_code: row.error_code,
                     error_text: row.error_text,
                 };
@@ -1875,6 +1887,52 @@ mod tests {
             Instant::now(),
         );
         assert!(live.deadline().is_none());
+    }
+
+    #[test]
+    fn about_refusal_preserves_signed_order_and_malformed_boundary_across_reopen() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("about-refusal.redb");
+        let open = || {
+            ProtocolStore::open(OpenOptions {
+                path: path.clone(),
+                account_id: AccountId::new("a").unwrap(),
+                key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([7u8; 32]))),
+                create: true,
+            })
+            .unwrap()
+        };
+        let store = open();
+        let id = super::super::about::queue_set(&store, "Available").unwrap();
+        reserve_pending(&store).unwrap();
+        let reply = Node::new("iq")
+            .attr("id", id.as_str())
+            .attr("type", "error")
+            .children(vec![
+                Node::new("error"),
+                Node::new("extension").children(vec![Node::new("error").attr("code", "403")]),
+                Node::new("error").attr("code", "-1"),
+                Node::new("error").attr("code", "٦٥٥٣٦"),
+                Node::new("error").attr("code", "+2147483647"),
+                Node::new("error").attr("code", "-2147483648"),
+                Node::new("error").attr("code", "2147483648"),
+                Node::new("error").attr("code", "500"),
+            ]);
+        assert!(record_reply(&store, &reply).unwrap());
+        assert!(!record_reply(&store, &reply).unwrap());
+        let expected = super::super::about::AboutRefusal {
+            codes: vec![-1, 65536, i32::MAX, i32::MIN],
+            malformed_code: true,
+        };
+        let before = outcomes(&store).unwrap();
+        assert_eq!(before[0].status, ActionStatus::Error);
+        assert_eq!(before[0].about_refusal, Some(expected.clone()));
+        drop(store);
+        let store = open();
+        assert_eq!(outcomes(&store).unwrap(), before);
+        assert!(reserve_pending(&store).unwrap().is_empty());
+        let view = serde_json::to_value(&before[0]).unwrap();
+        assert_eq!(view["about_refusal"]["codes"][1], 65536);
     }
 
     #[test]

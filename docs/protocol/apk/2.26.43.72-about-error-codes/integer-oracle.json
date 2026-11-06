@@ -1,0 +1,15 @@
+[
+  {"text": "-1", "integer": -1},
+  {"text": "٦٥٥٣٦", "integer": 65536},
+  {"text": "+2147483647", "integer": 2147483647},
+  {"text": "-2147483648", "integer": -2147483648},
+  {"text": "2147483648", "integer": null},
+  {"text": "", "integer": null},
+  {"text": " 403", "integer": null},
+  {"text": "0x193", "integer": null},
+  {"text": "-2147483649", "integer": null},
+  {"text": "４０３", "integer": 403},
+  {"text": "+000403", "integer": 403},
+  {"text": "0", "integer": 0},
+  {"text": "-0", "integer": 0}
+]

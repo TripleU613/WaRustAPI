@@ -66,10 +66,109 @@ pub fn queue_set(store: &ProtocolStore, text: &str) -> Result<String> {
     })
 }
 
+/// Native About error callbacks observed before a malformed code stops dispatch.
+/// Separate from the generic action's compatibility u16 error-code field.
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+pub struct AboutRefusal {
+    /// Signed Java Integer codes, in direct-child callback order.
+    pub codes: Vec<i32>,
+    /// A present code failed Integer.parseInt; later children were not processed.
+    pub malformed_code: bool,
+}
+
+pub(crate) fn is_set_request(request: &Node) -> bool {
+    request.description == "iq"
+        && request.get_attr("xmlns").and_then(|v| v.as_text()) == Some("status")
+        && request.get_attr("type").and_then(|v| v.as_text()) == Some("set")
+        && matches!(request.child_nodes(), [status] if status.description == "status")
+}
+
+pub(crate) fn refusal(request: &Node, reply: &Node) -> Option<AboutRefusal> {
+    if !is_set_request(request)
+        || reply.description != "iq"
+        || reply.get_attr("type").and_then(|v| v.as_text()) != Some("error")
+    {
+        return None;
+    }
+    // APK43.72 1rA.A03 ordinary 1ru path: direct error children, skip
+    // absent code, parse signed Java Integer and dispatch each before the next.
+    let mut result = AboutRefusal {
+        codes: Vec::new(),
+        malformed_code: false,
+    };
+    for error in reply
+        .child_nodes()
+        .iter()
+        .filter(|n| n.description == "error")
+    {
+        let Some(value) = error.get_attr("code") else {
+            continue;
+        };
+        let parsed = value
+            .as_text()
+            .and_then(super::mex::java_decimal_long)
+            .and_then(|n| i32::try_from(n).ok());
+        match parsed {
+            Some(code) => result.codes.push(code),
+            None => {
+                result.malformed_code = true;
+                break;
+            }
+        }
+    }
+    Some(result)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::binary::{Decoder, Encoder, NodeContent, TokenDictionary};
+
+    #[test]
+    fn refusal_is_outer_error_and_typed_request_scoped() {
+        let request = set_request("id", "Available").unwrap();
+        let error = |text: &str| {
+            Node::new("iq")
+                .attr("type", "error")
+                .children(vec![Node::new("error").attr("code", text)])
+        };
+        let oracle: serde_json::Value = serde_json::from_str(include_str!(
+            "../../../../docs/protocol/apk/2.26.43.72-about-error-codes/integer-oracle.json"
+        ))
+        .unwrap();
+        for case in oracle.as_array().unwrap() {
+            let text = case["text"].as_str().unwrap();
+            let expected = case["integer"].as_i64();
+            let parsed = refusal(&request, &error(text)).unwrap();
+            assert_eq!(
+                parsed.codes,
+                expected.into_iter().map(|n| n as i32).collect::<Vec<_>>(),
+                "{text}"
+            );
+            assert_eq!(parsed.malformed_code, expected.is_none(), "{text}");
+        }
+        for code in ["", " 403", "0x193", "-2147483649", "2147483648"] {
+            assert_eq!(
+                refusal(&request, &error(code)),
+                Some(AboutRefusal {
+                    codes: vec![],
+                    malformed_code: true,
+                })
+            );
+        }
+        let result = Node::new("iq")
+            .attr("type", "result")
+            .children(vec![Node::new("error").attr("code", "403")]);
+        assert_eq!(refusal(&request, &result), None);
+        assert_eq!(refusal(&Node::new("iq"), &error("403")), None);
+        assert_eq!(
+            refusal(&request, &Node::new("iq").attr("type", "error")),
+            Some(AboutRefusal {
+                codes: vec![],
+                malformed_code: false
+            })
+        );
+    }
 
     /// `LX/0y0->A00` case 29: four attributes and one `status` child whose
     /// content is the text.
