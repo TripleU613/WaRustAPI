@@ -258,6 +258,11 @@ fn record_ids(tx: &impl Lookup) -> Result<Vec<u32>> {
         .map(|(key, _)| inventory_id(&key, RECORD_PREFIX))
         .collect::<Result<_>>()?;
     ids.sort_unstable();
+    // Validate the entire owned inventory before status filtering or generation.
+    // A sent/unselected corrupt row is still local authority, not spare capacity.
+    for id in &ids {
+        legacy_record_in(tx, *id)?.ok_or_else(|| invalid("inventory prekey disappeared"))?;
+    }
     Ok(ids)
 }
 fn unsent_in(tx: &impl Lookup) -> Result<Vec<u32>> {
@@ -1363,6 +1368,95 @@ mod tests {
     }
 
     #[test]
+    fn legacy_inventory_refuses_corrupt_unselected_uploaded_rows() {
+        let dir = tempfile::tempdir().unwrap();
+        for damage in 0..4 {
+            let path = dir.path().join(format!("legacy-inventory-{damage}.db"));
+            let store = open(&path);
+            let (account, signed) = account_and_signed(&store);
+            generate(&store).unwrap();
+            store
+                .write(|tx| {
+                    tx.put_json(
+                        Table::Checkpoints,
+                        meta_key(50).as_bytes(),
+                        1,
+                        &Meta {
+                            status: KeyStatus::Uploaded,
+                            batch: Some("old-upload".into()),
+                        },
+                    )?;
+                    let good = KeyPair::generate(&mut rand::rng());
+                    let other = KeyPair::generate(&mut rand::rng());
+                    match damage {
+                        0 => tx.put_json(
+                            Table::Prekeys,
+                            record_key(50).as_bytes(),
+                            1,
+                            &vec![0xffu8],
+                        )?,
+                        1 => tx.put_json(
+                            Table::Prekeys,
+                            record_key(50).as_bytes(),
+                            1,
+                            &PreKeyRecord::new(49.into(), &good).serialize().unwrap(),
+                        )?,
+                        2 => tx.put_json(
+                            Table::Prekeys,
+                            record_key(50).as_bytes(),
+                            1,
+                            &PreKeyRecord::new(
+                                50.into(),
+                                &KeyPair {
+                                    public_key: good.public_key,
+                                    private_key: other.private_key,
+                                },
+                            )
+                            .serialize()
+                            .unwrap(),
+                        )?,
+                        _ => tx.put_json(
+                            Table::Checkpoints,
+                            consumed_key(50).as_bytes(),
+                            1,
+                            &ConsumedPrekey {
+                                id: 50,
+                                public_sha256: [0; 32],
+                            },
+                        )?,
+                    }
+                    Ok(())
+                })
+                .unwrap();
+            let snapshot = |store: &ProtocolStore| {
+                store
+                    .read(|tx| {
+                        [Table::Prekeys, Table::Checkpoints]
+                            .into_iter()
+                            .map(|t| tx.scan(t, 1, 10000))
+                            .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot(&store);
+            assert!(
+                unsent_ids(&store).is_err(),
+                "unselected damaged row {damage} must invalidate inventory"
+            );
+            assert!(wants_upload(&store).is_err());
+            assert!(generate(&store).is_err());
+            assert!(begin_upload(&store, &account, &signed).is_err());
+            assert_eq!(snapshot(&store), before);
+            drop(store);
+            let store = open(&path);
+            assert!(unsent_ids(&store).is_err());
+            assert!(generate(&store).is_err());
+            assert!(begin_upload(&store, &account, &signed).is_err());
+            assert_eq!(snapshot(&store), before);
+        }
+    }
+
+    #[test]
     fn mismatched_last_prekey_pair_rolls_back_complete_upload_reservation() {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("prekey-pair.redb");
@@ -1442,8 +1536,10 @@ mod tests {
         // Near the target only the remainder is generated, then nothing.
         store
             .write(|tx| {
+                let pair = KeyPair::generate(&mut rand::rng());
                 for id in 10_000..=(10_000 + 811 - 59 - 1) {
-                    tx.put_json(Table::Prekeys, record_key(id).as_bytes(), 1, &vec![0u8])?;
+                    let raw = PreKeyRecord::new(id.into(), &pair).serialize().unwrap();
+                    tx.put_json(Table::Prekeys, record_key(id).as_bytes(), 1, &raw)?;
                 }
                 Ok(())
             })

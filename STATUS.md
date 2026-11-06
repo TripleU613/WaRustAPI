@@ -1,3 +1,8 @@
+Legacy inventory now validates every owned record before status filtering or
+replenishment. Corrupt uploaded/unselected rows and restored-consumption conflicts
+refuse inventory-driven writes without changing key/checkpoint state.
+[Audit](docs/protocol/prekey-count-notifications.md#legacy-inventory-validates-uploaded-and-unselected-rows-2026-11-05).
+
 Legacy upload ACKs now bind original public material through durable reservation
 fingerprints and atomic direct/group consumption markers. Replaced/missing keys
 and restored-marker conflicts refuse; legitimate consume-before-ACK remains.

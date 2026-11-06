@@ -7875,3 +7875,33 @@ Restored conflicts, unexplained loss and altered fingerprints refuse without
 settlement writes; legitimate missing-row session continuation remains supported.
 Historical state is not inferred or replayed. [Implementation and regression
 scope](legacy-prekey-publication-binding.md#implemented-public-binding-and-atomic-consumption-2026-11-05).
+
+### Legacy inventory validates uploaded and unselected rows (2026-11-05)
+
+**Confirmed local defect, fixed offline:** record_ids decoded JSON byte arrays
+and checked canonical store names, but did not validate the serialized prekey.
+unsent_in then filtered Uploaded/OutcomeUnknown rows before strict point lookup.
+A malformed, wrong-ID, private/public-inconsistent or restored-consumed row
+marked Uploaded could therefore be ignored while inventory counted available
+keys, generation replenished, or another upload reserved different rows.
+
+record_ids now applies legacy_record_in to every owned row before returning IDs.
+This reuses three-byte ID, stored ID, serialized-record, private/public pair and
+consumption-marker conflict validation. No row is skipped or repaired. Inventory,
+replenishment and upload decisions that consult it refuse the complete snapshot;
+summary also refuses invalid legacy material rather than reporting normal counts.
+An earlier saved-refusal hold may return without consulting inventory, as before;
+it grants no reservation or retry authority. KEM diagnostic counts retain their
+separate existing behavior. Valid uploaded/uncertain rows remain excluded from
+unsent capacity only after validation. There is no new APK wire-field claim.
+
+Regression legacy_inventory_refuses_corrupt_unselected_uploaded_rows marks row50
+Uploaded, leaving49 valid unsent rows. Four independent fixtures inject malformed
+serialized bytes, a different stored ID, a validly encoded mismatched private
+half, or a consumption marker beside the live row. Inventory, wants_upload,
+generation and upload all refuse without changing exact key/checkpoint rows,
+including after reopen. Old code failed the first inventory refusal assertion.
+The existing target-count generation test now uses valid serialized records in
+its synthetic bulk inventory instead of one-byte placeholders, preserving its
+count/target/wrap assertions. No production regeneration around corrupt rows or
+live account operation was added. Whole-store rollback remains outside the guard.

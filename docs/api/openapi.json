@@ -17373,5 +17373,12 @@
     "x-live": false,
     "description": "Initial audit reproduced legacy upload settlement accepting a different valid public key under a reserved ID. The fix now stores Batch.public_sha256 aligned with ids, binds callback settlement to the unchanged list, and checks live public identity or an atomically committed consumed ID/hash. Direct/group receive record legacy-prekey-consumed:v1 markers; live restored conflicts and unexplained loss refuse. Historical fields default empty for inspection without callback reconstruction, backfill or replay.",
     "evidence": "docs/protocol/legacy-prekey-publication-binding.md"
+  },
+  "x-legacy-prekey-whole-inventory-validation": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Owned legacy inventory now validates all serialized rows, IDs, private/public pairs and live-row/consumption-marker conflicts before status filtering. Uploaded or unselected corruption refuses inventory-driven generation/upload instead of being ignored. Local summary also refuses invalid legacy material. Earlier refusal holds remain non-writing; no repair, regeneration around corruption or retry authority is added.",
+    "evidence": "docs/protocol/prekey-count-notifications.md#legacy-inventory-validates-uploaded-and-unselected-rows-2026-11-05"
   }
 }
