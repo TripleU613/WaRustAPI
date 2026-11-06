@@ -1,3 +1,8 @@
+Identity-only reads now use the APK43.72 producer-specific32-second callback
+timer from the pre-send timestamp. Expiry preserves uncertain reservation;
+late post-expiry replies and restart cannot recreate callback/replay authority.
+[Timing audit and writer limits](docs/protocol/peer-identity.md#identity-only-callback-lifetime-2026-11-06).
+
 Outer full-directory and identity-only refusals now retain whole-query error
 context in action diagnostics. Nested device codes/text cannot replace a root
 refusal or fill an absent/ambiguous root; Error still blocks replay/refresh.

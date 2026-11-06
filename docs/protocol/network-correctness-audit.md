@@ -4517,3 +4517,5 @@ Prior identity-notification success gate now validates action kind, original req
 Identity-refresh typed action/inspection now follow pinned43.72 outer-type and exact-device error context; signed codes retained as i32. [Verified writer/callback hashes, end-to-end guarded adoption controls and limits](identity-refresh-application.md#identity-refresh-resulterror-context-2026-11-06). Offline only.
 
 Outer typed directory refusals now take generic action diagnostics only from one enclosing root error, never nested device errors. [Pinned callback sources, missing/duplicate-root matrix, reopen and no-replay controls](peer-identity.md#outer-directory-errors-cannot-inherit-nested-refusal-diagnostics-2026-11-06). Scope is diagnostic; no request/retry changes.
+
+Identity-only callback now has its pinned32-second session timer, anchored before send; expiry preserves uncertain Sent and never recreates retry authority. [Producer/registration evidence, PN/LID paused-clock cases, competing claims and writer limits](peer-identity.md#identity-only-callback-lifetime-2026-11-06). Offline only.

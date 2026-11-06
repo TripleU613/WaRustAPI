@@ -17483,7 +17483,7 @@
     "x-cli": true,
     "x-transport": true,
     "x-live": false,
-    "description": "Identity-only results follow APK43.72 0ln.A01 outer-type dispatch and FeM case16/FUP case0 per-user errors. Root extensions cannot override valid identity or selected refusal. Signed i32 inspection code replaces u16; existing JSON positive values remain compatible. Generic Ok does not prove usable identity; no adoption, callback timer port or replay.",
+    "description": "Identity-only results follow APK43.72 0ln.A01 outer-type dispatch and FeM case16/FUP case0 per-user errors. Root extensions cannot override valid identity or selected refusal. Signed i32 inspection code replaces u16; existing JSON positive values remain compatible. Generic Ok does not prove usable identity; no adoption or replay. Single-primary callback timing is covered by x-identity-only-callback-lifetime.",
     "evidence": "docs/protocol/peer-identity.md#identity-only-reply-context-and-signed-codes-2026-11-06"
   },
   "x-peer-directory-selected-error": {
@@ -17527,5 +17527,12 @@
     "x-live": false,
     "description": "Typed peer_keys and peer_identity_query outer errors share identity_refresh unique-root action diagnostic extraction. Nested user errors cannot supply a whole-query code/text; absent or multiple root errors remain Error with no attributed code/text. Generic u16 parsing unchanged. Existing inspectors and no-replay/refresh guards remain; result and unrelated action semantics unchanged. Static APK evidence and offline regression only.",
     "evidence": "docs/protocol/peer-identity.md#outer-directory-errors-cannot-inherit-nested-refusal-diagnostics-2026-11-06"
+  },
+  "x-identity-only-callback-lifetime": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Implemented single-primary PN/LID encrypt/identity/user callbacks use APK43.72 FeM case16 32000ms duration from the existing pre-send monotonic timestamp. Actor expiry removes live callback authority only; durable Sent remains uncertain, post-expiry replies cannot settle and repeats/restart cannot reserve a retry or revive ownership. Existing timer/response competing-claim ordering remains, including overdue response before expiry dispatch. No full-key timeout, native Handler/suspend parity, multi-user coverage or general writer deadline fence is inferred.",
+    "evidence": "docs/protocol/peer-identity.md#identity-only-callback-lifetime-2026-11-06"
   }
 }

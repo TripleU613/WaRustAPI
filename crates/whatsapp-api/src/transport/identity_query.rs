@@ -54,6 +54,31 @@ fn marker(peer: &Jid) -> String {
     )
 }
 
+// Recognize only this implemented single-primary producer for its callback timer.
+// APK43.72 FeM.run case16: identity/user, selector0x99, timeout32000ms.
+pub(super) fn is_request(node: &Node) -> bool {
+    if node.description != "iq"
+        || node.get_attr("type").and_then(|value| value.as_text()) != Some("get")
+        || node.get_attr("xmlns").and_then(|value| value.as_text()) != Some("encrypt")
+        || !super::receipts::jid(node, "to").is_some_and(|jid| {
+            jid.user.is_empty() && jid.server == Server::User && jid.agent == 0 && jid.device == 0
+        })
+    {
+        return false;
+    }
+    let [identity] = node.child_nodes() else {
+        return false;
+    };
+    if identity.description != "identity" {
+        return false;
+    }
+    let [user] = identity.child_nodes() else {
+        return false;
+    };
+    user.description == "user"
+        && super::receipts::jid(user, "jid").is_some_and(|peer| validate(&peer).is_ok())
+}
+
 /// Queue a single identity-only read. Every repeat returns the original ID,
 /// including refused, invalid or uncertain outcomes; there is no reset/refresh.
 pub fn queue(store: &ProtocolStore, peer: &Jid) -> Result<String> {

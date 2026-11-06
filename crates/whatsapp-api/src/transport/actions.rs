@@ -588,6 +588,10 @@ impl LiveReplies {
                 // APK43.72 1HL.A07 017c..018a -> 0Sf.A0W: 32000ms
                 // from registration, not the registration HTTP PIN flow.
                 Some(32)
+            } else if super::identity_query::is_request(node) {
+                // APK43.72 FeM.run case16 187a..1888 -> 0Sf.A0W:
+                // identity-only callback uses32000ms, not a universal key timer.
+                Some(32)
             } else if super::token_issue::is_issue_request(node) {
                 // APK43.72 GeneratePrivacyTokenJob.A0L 0144..015c:
                 // trusted-contact request299 has its own32000ms timer.
@@ -1523,6 +1527,106 @@ mod tests {
                     );
                     assert_eq!(db.journal_head().unwrap(), head);
                 }
+            }
+        }
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn identity_only_callback_expires_at_native_thirty_two_seconds_without_replay() {
+        use std::time::Duration;
+        use tokio::time::{Instant, advance};
+        for address in ["15555550100@s.whatsapp.net", "222222222222222@lid"] {
+            for outcome in [
+                "expire_result",
+                "expire_error",
+                "result",
+                "error",
+                "overdue_response",
+            ] {
+                let (dir, db) = store();
+                let peer = crate::model::jid::Jid::parse(address).unwrap();
+                let id = super::super::identity_query::queue(&db, &peer).unwrap();
+                let request = reserve_next(&db).unwrap().unwrap();
+                let key_peer = crate::model::jid::Jid::parse("15555550100@s.whatsapp.net").unwrap();
+                let keys = super::super::peer_keys::queue(&db, &key_peer, false).unwrap();
+                let key_request = reserve_next(&db).unwrap().unwrap();
+                let started = Instant::now();
+                advance(Duration::from_secs(5)).await;
+                let mut live = LiveReplies::default();
+                live.record_written(&request, started);
+                live.record_written(&key_request, started);
+                assert_eq!(live.deadline(), Some(started + Duration::from_secs(32)));
+                advance(Duration::from_secs(26)).await;
+                live.expire();
+                assert!(live.0.contains(&id));
+                let incoming = Node::new("iq").attr("id", id.as_str()).attr(
+                    "type",
+                    if outcome.ends_with("error") {
+                        "error"
+                    } else {
+                        "result"
+                    },
+                );
+                if outcome.starts_with("expire") {
+                    let before = db
+                        .read(|tx| tx.scan_after(Table::Checkpoints, 1, None, 512))
+                        .unwrap();
+                    advance(Duration::from_secs(1)).await;
+                    live.expire();
+                    assert!(!live.record_reply(&db, &incoming).unwrap());
+                    assert_eq!(
+                        db.read(|tx| tx.scan_after(Table::Checkpoints, 1, None, 512))
+                            .unwrap(),
+                        before
+                    );
+                    assert_eq!(
+                        outcomes(&db)
+                            .unwrap()
+                            .into_iter()
+                            .find(|row| row.id == id)
+                            .unwrap()
+                            .status,
+                        ActionStatus::Sent
+                    );
+                } else {
+                    if outcome == "overdue_response" {
+                        advance(Duration::from_secs(2)).await;
+                    }
+                    assert!(live.record_reply(&db, &incoming).unwrap());
+                    assert!(!live.record_reply(&db, &incoming).unwrap());
+                }
+                assert!(live.deadline().is_none());
+                assert!(!live.0.contains(&id));
+                // Full-key producer remains unmapped; no universal encrypt timeout.
+                assert!(
+                    live.record_reply(
+                        &db,
+                        &Node::new("iq")
+                            .attr("id", keys.as_str())
+                            .attr("type", "error")
+                    )
+                    .unwrap()
+                );
+                assert_eq!(super::super::identity_query::queue(&db, &peer).unwrap(), id);
+                assert!(reserve_pending(&db).unwrap().is_empty());
+                let before = db
+                    .read(|tx| tx.scan_after(Table::Checkpoints, 1, None, 512))
+                    .unwrap();
+                drop(db);
+                let db = ProtocolStore::open(OpenOptions {
+                    path: dir.path().join("p.redb"),
+                    account_id: AccountId::new("a").unwrap(),
+                    key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([7; 32]))),
+                    create: false,
+                })
+                .unwrap();
+                assert!(!LiveReplies::default().record_reply(&db, &incoming).unwrap());
+                assert!(reserve_pending(&db).unwrap().is_empty());
+                assert_eq!(
+                    db.read(|tx| tx.scan_after(Table::Checkpoints, 1, None, 512))
+                        .unwrap(),
+                    before
+                );
             }
         }
     }
