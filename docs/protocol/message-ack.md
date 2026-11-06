@@ -900,3 +900,33 @@ separate. Existing bare-call tables verify valid-field type11 rejection.
 Qualified self-domain aliases are cache-dependent and remain unclassified;
 opaque binary paths, self-chat application behavior, full generic callback/
 payload recovery and server policy remain open. No live operations.
+
+
+## Direct group-status message ACK diversion precedes terminal outcomes (2026-11-06)
+
+**Confirmed selected pinned static / Rust correction.**
+[Complete family predicates and handler offsets](apk/2.26.43.72-message-ack-diversions/README.md)
+show exactis_group_status=true diverts before ordinary error/success. The
+selected-chat handler permits only status/type5, ordinarygroup/type1 and
+newsletter/type21 before schedulingFcQ; PN/type0 and LID/type18 return without
+terminal dispatch. Selected recipient still has precedence overfrom. This is
+not a blanket unsupported-attribute rejection or an all-status-ACK discard.
+
+Shared outbox and expected-chat classification now retain uncertainty for this
+proved ignored direct PN/LID case on both success/refusal. Numeric459 remains
+its earlier challenge route; absent/false/TRUE/empty flag retain ordinary logic.
+Distribution and CLI reuse expected-chat classification. No capture, reconnect,
+retry, generic receipt or global Jid behavior changes.
+
+**Offline regression:** PN/LID selected recipients with groupfrom cross five
+flag spellings/absence and success/error500/459, verifying actual in-flight
+outbox settlement/uncertainty, once-only facts, shared classification, reopen
+and no reselection. Status/group/newsletter asyncFcQ and scheduled-newsletter
+17f/0TX state/callback effects remain untraced. The bundle records exact
+scheduled branch conditions and both keys without inventing state4 semantics.
+No live operations or replay authority.
+
+The ignored-chat branch returns through00dc ->1lZ.A1D(node,Eoh), the separate
+generic ACK callback path. It skips ordinaryA10/A0z; this does not establish
+absence of all native callbacks/side effects or authorize generic ID matching.
+Generic callback ownership remains its separate unresolved audit.

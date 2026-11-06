@@ -1,0 +1,18 @@
+{
+  "README.md": {
+    "bytes": 3578,
+    "sha256": "272f2e49bc86f368d8b7c14b45734e74aa30264f38d37629a10567344c666156"
+  },
+  "group-type.txt": {
+    "bytes": 516,
+    "sha256": "b4dcee28b45758839c6138a4cc18591993f724812e8863940c8c1a88ffe194b7"
+  },
+  "newsletter-type.txt": {
+    "bytes": 525,
+    "sha256": "f8c4e8db31f941ca1a58c040894c2d35a0cf477d09c1562a969f6d48b195d5c2"
+  },
+  "status-type.txt": {
+    "bytes": 523,
+    "sha256": "c4f856326e5291e7c22cb89681cb46b88dee9efabe56c0b0cef355427ebe907e"
+  }
+}

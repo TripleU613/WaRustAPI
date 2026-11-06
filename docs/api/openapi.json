@@ -18142,5 +18142,16 @@
     ],
     "description": "Barestatus_me/lid_me self UserJid type11 primary-device conversion throws. Shared ordinary message ACK classification/outbox settlement retains uncertainty for participant or originalfrom on success and refusal, even with matching ordinary recipient. Unsupported selected self recipient retains precedence without fallback.459 keeps earlier challenge outcome; call sender type11 rejects. Qualified cache-dependent aliases, opaque binary/self-chat/full callback recovery remain open. No new fatal message gate, live operation or replay authority.",
     "evidence": "docs/protocol/message-ack.md#self-user-ack-conversion-failure-is-not-an-ordinary-participant-result-2026-11-06"
+  },
+  "x-direct-group-status-ack-diversion": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [
+      "whatsapp_api::transport::messaging::message_ack_outcome_for",
+      "whatsapp_api::transport::outgoing::acknowledge"
+    ],
+    "description": "Exactis_group_status=true diverts message ACKs before ordinary success/refusal. Native diversion admission ignores selected ordinary PN/LID chats; shared outbox/expected-chat classification now retains uncertainty for those outcomes. Selected recipient precedesfrom. Numeric459 remains earlier challenge; absent/false/TRUE/empty flag retains existing ordinary handling. Status/group/newsletter async and scheduled-newsletter state/callback semantics remain untraced and unchanged. No live operation, blanket status rejection, retry or replay authority.",
+    "evidence": "docs/protocol/message-ack.md#direct-group-status-message-ack-diversion-precedes-terminal-outcomes-2026-11-06"
   }
 }

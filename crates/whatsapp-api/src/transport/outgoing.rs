@@ -1386,6 +1386,10 @@ pub fn acknowledge(store: &ProtocolStore, node: &Node) -> Result<bool> {
     let Some(chat) = message_ack_chat(node) else {
         return Ok(false);
     };
+    if super::messaging::message_ack_is_ignored_group_status(node, &chat) {
+        return Ok(false);
+    }
+
     if node.get_attr("error").is_none() && super::messaging::ordinary_ack_has_participant(node) {
         return Ok(false);
     }
@@ -3086,6 +3090,72 @@ mod tests {
         assert!(!status.is_uncertain());
         assert_eq!(status.facts.len(), 2);
     }
+    #[test]
+    fn direct_group_status_ack_diversion_keeps_original_reservation() {
+        use super::super::messaging::{MessageAckOutcome, message_ack_outcome_for};
+        for chat in ["15555550100@s.whatsapp.net", "12345@lid"] {
+            for flag in [None, Some("true"), Some("false"), Some("TRUE"), Some("")] {
+                for error in [None, Some("500"), Some("459")] {
+                    let dir = tempfile::tempdir().unwrap();
+                    let path = dir.path().join("group-status-ack.redb");
+                    let store = open(&path);
+                    let expected = Jid::parse(chat).unwrap();
+                    let local_id = enqueue(&store);
+                    store
+                        .write(|tx| {
+                            let mut entry = outbox().get_mut(tx, local_id)?.unwrap();
+                            entry.intent.chat = ChatId::from_jid(&expected)?;
+                            entry.wire_id = Some(MessageId::new("fixture")?);
+                            outbox().set_progress(tx, &mut entry, AttemptProgress::InFlight)
+                        })
+                        .unwrap();
+                    let before = store.read(|tx| outbox().get(tx, local_id)).unwrap();
+                    let mut ack = Node::new("ack")
+                        .attr("class", "message")
+                        .attr("id", "fixture")
+                        .attr("from", "123456789@g.us")
+                        .attr("recipient", chat);
+                    if let Some(flag) = flag {
+                        ack = ack.attr("is_group_status", flag);
+                    }
+                    if let Some(error) = error {
+                        ack = ack.attr("error", error);
+                    }
+                    let outcome = if error == Some("459") {
+                        MessageAckOutcome::AuthChallenge
+                    } else if flag == Some("true") {
+                        MessageAckOutcome::Unrelated
+                    } else if error.is_some() {
+                        MessageAckOutcome::Refused
+                    } else {
+                        MessageAckOutcome::Accepted
+                    };
+                    assert_eq!(
+                        message_ack_outcome_for(&ack, &expected),
+                        outcome,
+                        "{chat}/{flag:?}/{error:?}"
+                    );
+                    let settles = matches!(
+                        outcome,
+                        MessageAckOutcome::Accepted | MessageAckOutcome::Refused
+                    );
+                    assert_eq!(acknowledge(&store, &ack).unwrap(), settles);
+                    assert!(!acknowledge(&store, &ack).unwrap());
+                    let after = store.read(|tx| outbox().get(tx, local_id)).unwrap();
+                    if !settles {
+                        assert_eq!(after, before);
+                    } else {
+                        assert_eq!(after.as_ref().unwrap().facts.len(), 1);
+                    }
+                    drop(store);
+                    let store = open(&path);
+                    assert_eq!(store.read(|tx| outbox().get(tx, local_id)).unwrap(), after);
+                    assert!(begin_selected(&store, Some(local_id)).unwrap().is_none());
+                }
+            }
+        }
+    }
+
     #[test]
     fn self_user_ack_conversion_or_selected_recipient_retains_uncertainty() {
         use super::super::messaging::{MessageAckOutcome, message_ack_outcome_for};

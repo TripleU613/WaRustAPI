@@ -1090,7 +1090,8 @@ pub fn message_ack_outcome_for(node: &Node, expected: &Jid) -> MessageAckOutcome
     if matches!(
         outcome,
         MessageAckOutcome::Accepted | MessageAckOutcome::Refused
-    ) && message_ack_device_conversion_fails(node)
+    ) && (message_ack_device_conversion_fails(node)
+        || message_ack_is_ignored_group_status(node, &expected))
     {
         return MessageAckOutcome::Unrelated;
     }
@@ -1230,6 +1231,17 @@ pub(crate) fn ack_user_text(text: &str) -> Option<AckUserText<'_>> {
         return Some(AckUserText::Null);
     }
     Some(AckUserText::Device(user))
+}
+
+// APK43.72 1rH.A03 02ce..02ee diverts exact is_group_status=true;
+// 058c..05b4 only schedules status/type5, group/type1, newsletter/type21.
+// Ordinary PN/LID selected chats are ignored, not terminal ACK outcomes.
+pub(crate) fn message_ack_is_ignored_group_status(node: &Node, chat: &Jid) -> bool {
+    node.get_attr("is_group_status").and_then(|v| v.as_text()) == Some("true")
+        && matches!(
+            chat.server,
+            crate::model::jid::Server::User | crate::model::jid::Server::Lid
+        )
 }
 
 // APK43.72 bare parser returns0EG/2LK; both type11 UserJid singletons
