@@ -1,0 +1,21 @@
+
+# class: LX/F1y;
+# extends: Ljava/lang/Object;
+
+.method public A03(ZL)  # .registers 6
+    # full signature: LX/F1y;->A03(LX/EwQ;)Z
+    0000..0004  iget-object  v1, v5, LX/EwQ;->A02:LX/E8T;
+    0004..0008  sget-object  v0, LX/E8T;->A06:LX/E8T;
+    0008..000c  if-ne  v1, v0, +0x11
+    000c..0010  iget-object  v0, v5, LX/EwQ;->A03:Ljava/lang/Long;
+    0010..0014  const-wide/16  v4, #0x0
+    0014..0018  if-eqz  v0, +0xb
+    0018..001e  invoke-virtual  {v0}, Ljava/lang/Number;->longValue()J
+    001e..0020  move-result-wide  v2
+    0020..0024  cmp-long  v1, v2, v4
+    0024..0026  const/4  v0, #0x1
+    0026..002a  if-gtz  v1, +0x3
+    002a..002c  const/4  v0, #0x0
+    002c..002e  return  v0
+    # exception table: 0 try range(s)
+.end method

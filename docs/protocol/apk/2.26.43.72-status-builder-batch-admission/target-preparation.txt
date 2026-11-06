@@ -1,0 +1,497 @@
+
+# class: LX/EsK;
+# extends: Ljava/lang/Object;
+
+.method public A00(VLLLL)  # .registers 27
+    # full signature: LX/EsK;->A00(LX/0y2;Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;LX/EsK;LX/DyI;)V
+    0000..0004  move-object/from16  v7, v26
+    0004..0008  iget  v1, v7, LX/DyI;->A00:I
+    0008..000a  const/4  v0, #0x7
+    000a..000c  const/4  v10, #0x0
+    000c..0010  if-eq  v1, v0, +0x7
+    0010..0014  const/16  v0, #0x8
+    0014..0016  const/4  v2, #0x0
+    0016..001a  if-ne  v1, v0, +0x3
+    001a..001c  const/4  v2, #0x1
+    001c..0022  invoke-virtual  {v7}, LX/DyI;->A05()Ljava/lang/Integer;
+    0022..0024  move-result-object  v0
+    0024..0028  if-eqz  v0, +0x38e
+    0028..002e  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    002e..0030  move-result  v1
+    0030..0032  const/4  v0, #0x5
+    0032..0036  if-ne  v1, v0, +0x387
+    0036..003a  iget-object  v1, v7, LX/DyI;->A03:LX/E7S;
+    003a..003e  sget-object  v0, LX/E7S;->A02:LX/E7S;
+    003e..0042  if-ne  v1, v0, +0x381
+    0042..0046  if-nez  v2, +0x37f
+    0046..004a  move-object/from16  v6, v24
+    004a..004e  iget-object  v0, v6, Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;->A02:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    004e..0052  if-eqz  v0, +0x29
+    0052..0058  invoke-static  {v0}, LX/2L7;->A1O(Ljava/lang/Object;)Ljava/util/Set;
+    0058..005a  move-result-object  v12
+    005a..0060  invoke-static  {}, LX/2L6;->A1F()Ljava/util/HashSet;
+    0060..0062  move-result-object  v3
+    0062..0068  invoke-interface  {v12}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    0068..006a  move-result-object  v5
+    006a..0070  invoke-interface  {v5}, Ljava/util/Iterator;->hasNext()Z
+    0070..0072  move-result  v0
+    0072..0076  move-object/from16  v8, v25
+    0076..007a  if-eqz  v0, +0xa3
+    007a..0080  invoke-interface  {v5}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0080..0082  move-result-object  v4
+    0082..0084  move-object  v2, v4
+    0084..0088  check-cast  v2, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0088..008c  iget-object  v0, v8, LX/EsK;->A00:LX/05a;
+    008c..0092  invoke-static  {v0}, LX/2L9;->A0b(LX/05a;)LX/09F;
+    0092..0094  move-result-object  v1
+    0094..0098  iget-object  v0, v2, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    0098..009e  invoke-static  {v0, v1, v4, v3}, LX/DBf;->A16(LX/0DY;LX/09F;Ljava/lang/Object;Ljava/util/AbstractCollection;)V
+    009e..00a0  goto  -0x1a
+    00a0..00a6  invoke-static  {v6}, Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;->A04(Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;)Z
+    00a6..00a8  move-result  v0
+    00a8..00ac  if-eqz  v0, +0x74
+    00ac..00b2  invoke-virtual  {v6}, Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;->A0D()Z
+    00b2..00b4  move-result  v0
+    00b4..00b8  if-nez  v0, +0x6e
+    00b8..00be  invoke-virtual  {v7}, LX/FVD;->BI8()LX/18O;
+    00be..00c0  move-result-object  v1
+    00c0..00c4  instance-of  v0, v1, LX/AQ5;
+    00c4..00c8  if-eqz  v0, +0x91
+    00c8..00cc  check-cast  v1, LX/AQ5;
+    00cc..00d0  if-eqz  v1, +0x8d
+    00d0..00d4  iget-object  v0, v1, LX/AQ5;->A0I:Ljava/lang/Long;
+    00d4..00d8  if-eqz  v0, +0x89
+    00d8..00de  invoke-virtual  {v0}, Ljava/lang/Number;->longValue()J
+    00de..00e0  move-result-wide  v3
+    00e0..00e4  const-wide/16  v1, #0x0
+    00e4..00e8  cmp-long  v0, v3, v1
+    00e8..00ec  if-lez  v0, +0x7f
+    00ec..00f2  invoke-static  {v6}, Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;->A04(Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;)Z
+    00f2..00f4  move-result  v0
+    00f4..00f8  if-eqz  v0, +0x76
+    00f8..00fe  invoke-virtual  {v6}, Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;->A0D()Z
+    00fe..0100  move-result  v0
+    0100..0104  if-nez  v0, +0x70
+    0104..0106  const/4  v5, #0x0
+    0106..010a  iget-object  v0, v6, Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;->statusUUID:Ljava/lang/String;
+    010a..0110  invoke-static  {v0}, LX/F2a;->A00(Ljava/lang/String;)Ljava/lang/String;
+    0110..0112  move-result-object  v2
+    0112..0116  if-eqz  v2, +0x67
+    0116..011a  iget-object  v0, v6, Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;->A09:LX/1uS;
+    011a..011e  if-nez  v0, +0x8
+    011e..0122  const-string  v0, "statusSendPartStore"
+    0122..0128  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    0128..012a  throw  v5
+    012a..0130  invoke-virtual  {v0, v2, v3, v4}, LX/1uS;->A07(Ljava/lang/String;J)LX/EwQ;
+    0130..0132  move-result-object  v4
+    0132..0136  if-eqz  v4, +0x57
+    0136..013a  iget-object  v1, v6, Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;->A08:LX/Dto;
+    013a..013e  if-nez  v1, +0x5
+    013e..0142  const-string  v0, "statusReceiptStore"
+    0142..0144  goto  -0x10
+    0144..014a  invoke-virtual  {v6}, Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;->A06()LX/Dwc;
+    014a..014c  move-result-object  v0
+    014c..0152  invoke-static  {v1}, LX/Dto;->A02(LX/Dto;)LX/1tk;
+    0152..0154  move-result-object  v1
+    0154..0158  iget-object  v0, v0, LX/Dwc;->A02:Ljava/lang/String;
+    0158..015e  invoke-static  {v1, v0, v2}, LX/F2t;->A02(LX/1tk;Ljava/lang/String;Ljava/lang/String;)Ljava/util/LinkedHashSet;
+    015e..0160  move-result-object  v3
+    0160..0164  iget-boolean  v2, v4, LX/EwQ;->A07:Z
+    0164..0168  iget  v1, v4, LX/EwQ;->A00:I
+    0168..016e  invoke-interface  {v3}, Ljava/util/Collection;->size()I
+    016e..0170  move-result  v0
+    0170..0174  if-eqz  v2, +0x8
+    0174..0178  if-lez  v1, +0x36
+    0178..017c  if-eq  v1, v0, +0x6
+    017c..0180  add-int/lit8  v0, v0, #0x1
+    0180..0184  if-ne  v1, v0, +0x30
+    0184..018a  invoke-static  {v6, v3}, Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;->A03(Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;Ljava/util/Set;)Ljava/util/Set;
+    018a..018c  move-result-object  v12
+    018c..0190  goto/16  -0x99
+    0190..0196  invoke-static  {v6}, LX/DBc;->A1X(Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;)Z
+    0196..0198  move-result  v0
+    0198..019c  if-eqz  v0, +0x8
+    019c..01a2  invoke-virtual  {v6}, Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;->A08()Ljava/util/Set;
+    01a2..01a4  move-result-object  v12
+    01a4..01a8  goto/16  -0xa5
+    01a8..01ae  invoke-virtual  {v6}, Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;->A09()Ljava/util/Set;
+    01ae..01b0  move-result-object  v0
+    01b0..01b6  invoke-static  {v0}, LX/07Z;->A1S(Ljava/lang/Iterable;)Ljava/util/Set;
+    01b6..01b8  move-result-object  v12
+    01b8..01bc  goto/16  -0xaf
+    01bc..01c2  invoke-static  {}, LX/2L6;->A1F()Ljava/util/HashSet;
+    01c2..01c4  move-result-object  v4
+    01c4..01ca  invoke-virtual  {v3}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+    01ca..01cc  move-result-object  v1
+    01cc..01d2  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    01d2..01d4  move-result  v0
+    01d4..01d8  if-eqz  v0, +0xc
+    01d8..01de  invoke-static  {v4, v1}, LX/DBg;->A1C(Ljava/util/AbstractCollection;Ljava/util/Iterator;)V
+    01de..01e0  goto  -0x9
+    01e0..01e4  const-string  v3, "Network Status part targets are unresolved"
+    01e4..01e6  goto  +0x1b
+    01e6..01ea  const-string  v3, "Network Status row identity is unavailable"
+    01ea..01ec  goto  +0x18
+    01ec..01f0  iget-object  v0, v6, Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;->A02:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    01f0..01f4  if-nez  v0, +0xa
+    01f4..01f8  iget-object  v0, v6, Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;->A0E:Ljava/util/Set;
+    01f8..01fe  invoke-static  {v0}, LX/8t1;->A1a(Ljava/util/Set;)Z
+    01fe..0200  move-result  v0
+    0200..0204  if-eqz  v0, +0x3
+    0204..0206  const/4  v10, #0x1
+    0206..020c  invoke-virtual  {v4}, Ljava/util/AbstractCollection;->isEmpty()Z
+    020c..020e  move-result  v0
+    020e..0212  if-eqz  v0, +0xf
+    0212..0216  if-nez  v10, +0x297
+    0216..021a  const-string  v3, "Network Status has no durable recipient users"
+    021a..021e  sget-object  v1, Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildFailureReason;->A09:Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildFailureReason;
+    021e..0220  const/4  v0, #0x0
+    0220..0224  new-instance  v2, Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildException;
+    0224..022a  invoke-direct  {v2, v1, v3, v0, v0}, Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildException;-><init>(Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildFailureReason;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+    022a..022c  throw  v2
+    022c..0230  move-object/from16  v5, v23
+    0230..0234  iget-object  v0, v5, LX/0y2;->A0D:LX/05a;
+    0234..023a  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    023a..023c  move-result-object  v2
+    023c..0240  check-cast  v2, LX/EaE;
+    0240..0244  const/16  v0, #0x27
+    0244..024a  invoke-static  {v5, v0}, LX/DBb;->A13(Ljava/lang/Object;I)LX/Fn2;
+    024a..024c  move-result-object  v1
+    024c..0250  const/16  v0, #0x28
+    0250..0256  invoke-static  {v5, v0}, LX/DBb;->A13(Ljava/lang/Object;I)LX/Fn2;
+    0256..0258  move-result-object  v0
+    0258..025e  invoke-virtual  {v2, v4, v0}, LX/EaE;->A00(Ljava/util/Set;Lkotlin/jvm/functions/Function1;)Z
+    025e..0260  move-result  v0
+    0260..0264  if-eqz  v0, +0x248
+    0264..026a  invoke-virtual  {v1, v4}, LX/Fn2;->invoke(Ljava/lang/Object;)Ljava/lang/Object;
+    026a..026c  move-result-object  v9
+    026c..0270  check-cast  v9, Ljava/util/Set;
+    0270..0274  if-eqz  v9, +0x240
+    0274..027a  invoke-static  {}, LX/2L6;->A1F()Ljava/util/HashSet;
+    027a..027c  move-result-object  v2
+    027c..0282  invoke-interface  {v9}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    0282..0284  move-result-object  v1
+    0284..028a  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    028a..028c  move-result  v0
+    028c..0290  if-eqz  v0, +0x6
+    0290..0296  invoke-static  {v2, v1}, LX/DBg;->A1C(Ljava/util/AbstractCollection;Ljava/util/Iterator;)V
+    0296..0298  goto  -0x9
+    0298..029e  invoke-virtual  {v2, v4}, Ljava/util/AbstractCollection;->containsAll(Ljava/util/Collection;)Z
+    029e..02a0  move-result  v0
+    02a0..02a4  if-eqz  v0, +0x224
+    02a4..02a8  if-eqz  v10, +0xb
+    02a8..02ae  invoke-interface  {v9, v3}, Ljava/util/Set;->containsAll(Ljava/util/Collection;)Z
+    02ae..02b0  move-result  v0
+    02b0..02b4  if-nez  v0, +0x248
+    02b4..02b8  const-string  v3, "Network Status explicit targets are no longer valid"
+    02b8..02ba  goto  -0x4f
+    02ba..02c0  invoke-static  {}, LX/2L6;->A1F()Ljava/util/HashSet;
+    02c0..02c2  move-result-object  v5
+    02c2..02c8  invoke-interface  {v12}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    02c8..02ca  move-result-object  v4
+    02ca..02d0  invoke-interface  {v4}, Ljava/util/Iterator;->hasNext()Z
+    02d0..02d2  move-result  v0
+    02d2..02d6  if-eqz  v0, +0x1b
+    02d6..02dc  invoke-interface  {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    02dc..02de  move-result-object  v3
+    02de..02e0  move-object  v2, v3
+    02e0..02e4  check-cast  v2, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    02e4..02e8  iget-object  v0, v8, LX/EsK;->A00:LX/05a;
+    02e8..02ee  invoke-static  {v0}, LX/2L9;->A0b(LX/05a;)LX/09F;
+    02ee..02f0  move-result-object  v1
+    02f0..02f4  iget-object  v0, v2, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    02f4..02fa  invoke-interface  {v1, v0}, LX/09F;->BVC(LX/0DY;)Z
+    02fa..02fc  move-result  v0
+    02fc..0300  if-eqz  v0, -0x19
+    0300..0306  invoke-virtual  {v5, v3}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0306..0308  goto  -0x1e
+    0308..030e  invoke-static  {v5, v9}, LX/0Ef;->A06(Ljava/lang/Iterable;Ljava/util/Set;)Ljava/util/LinkedHashSet;
+    030e..0310  move-result-object  v5
+    0310..0314  iget-object  v0, v8, LX/EsK;->A03:LX/05a;
+    0314..031a  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    031a..031c  move-result-object  v10
+    031c..0320  check-cast  v10, LX/ESU;
+    0320..0322  const/4  v9, #0x0
+    0322..0324  const/4  v8, #0x1
+    0324..032a  invoke-static  {v12, v5}, LX/0Ef;->A08(Ljava/lang/Iterable;Ljava/util/Set;)Ljava/util/Set;
+    032a..032c  move-result-object  v0
+    032c..0332  invoke-static  {}, LX/2L6;->A1F()Ljava/util/HashSet;
+    0332..0334  move-result-object  v4
+    0334..033a  invoke-interface  {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    033a..033c  move-result-object  v11
+    033c..0342  invoke-interface  {v11}, Ljava/util/Iterator;->hasNext()Z
+    0342..0344  move-result  v0
+    0344..0348  if-eqz  v0, +0x15
+    0348..034e  invoke-interface  {v11}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    034e..0350  move-result-object  v3
+    0350..0352  move-object  v2, v3
+    0352..0356  check-cast  v2, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0356..035a  iget-object  v0, v10, LX/ESU;->A00:LX/05a;
+    035a..0360  invoke-static  {v0}, LX/2L9;->A0b(LX/05a;)LX/09F;
+    0360..0362  move-result-object  v1
+    0362..0366  iget-object  v0, v2, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    0366..036c  invoke-static  {v0, v1, v3, v4}, LX/DBf;->A16(LX/0DY;LX/09F;Ljava/lang/Object;Ljava/util/AbstractCollection;)V
+    036c..036e  goto  -0x18
+    036e..0374  invoke-static  {v5, v12}, LX/0Ef;->A08(Ljava/lang/Iterable;Ljava/util/Set;)Ljava/util/Set;
+    0374..0376  move-result-object  v0
+    0376..037c  invoke-static  {}, LX/2L6;->A1F()Ljava/util/HashSet;
+    037c..037e  move-result-object  v13
+    037e..0384  invoke-interface  {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    0384..0386  move-result-object  v11
+    0386..038c  invoke-interface  {v11}, Ljava/util/Iterator;->hasNext()Z
+    038c..038e  move-result  v0
+    038e..0392  if-eqz  v0, +0x15
+    0392..0398  invoke-interface  {v11}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0398..039a  move-result-object  v3
+    039a..039c  move-object  v2, v3
+    039c..03a0  check-cast  v2, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    03a0..03a4  iget-object  v0, v10, LX/ESU;->A00:LX/05a;
+    03a4..03aa  invoke-static  {v0}, LX/2L9;->A0b(LX/05a;)LX/09F;
+    03aa..03ac  move-result-object  v1
+    03ac..03b0  iget-object  v0, v2, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    03b0..03b6  invoke-static  {v0, v1, v3, v13}, LX/DBf;->A16(LX/0DY;LX/09F;Ljava/lang/Object;Ljava/util/AbstractCollection;)V
+    03b6..03b8  goto  -0x18
+    03b8..03be  invoke-virtual  {v4}, Ljava/util/AbstractCollection;->isEmpty()Z
+    03be..03c0  move-result  v0
+    03c0..03c4  if-eqz  v0, +0xb
+    03c4..03ca  invoke-virtual  {v13}, Ljava/util/AbstractCollection;->isEmpty()Z
+    03ca..03cc  move-result  v0
+    03cc..03d0  if-eqz  v0, +0x5
+    03d0..03d2  monitor-enter
+    03d2..03d6  goto/16  +0x193
+    03d6..03dc  invoke-virtual  {v6}, Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;->A06()LX/Dwc;
+    03dc..03de  move-result-object  v3
+    03de..03e4  invoke-virtual  {v7}, LX/FVD;->BI8()LX/18O;
+    03e4..03e6  move-result-object  v1
+    03e6..03ea  instance-of  v0, v1, LX/AQ5;
+    03ea..03ee  if-eqz  v0, +0x17b
+    03ee..03f2  check-cast  v1, LX/AQ5;
+    03f2..03f6  if-eqz  v1, +0x177
+    03f6..03fa  iget-object  v0, v1, LX/AQ5;->A0I:Ljava/lang/Long;
+    03fa..03fe  if-eqz  v0, +0x173
+    03fe..0404  invoke-virtual  {v0}, Ljava/lang/Number;->longValue()J
+    0404..0406  move-result-wide  v0
+    0406..040a  const-wide/16  v11, #0x0
+    040a..040e  cmp-long  v2, v0, v11
+    040e..0412  if-lez  v2, +0x169
+    0412..0418  invoke-virtual  {v13}, Ljava/util/AbstractCollection;->isEmpty()Z
+    0418..041a  move-result  v2
+    041a..041e  if-nez  v2, +0xfa
+    041e..0422  iget-object  v2, v10, LX/ESU;->A01:LX/05a;
+    0422..0428  invoke-static  {v2}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0428..042a  move-result-object  v11
+    042a..042e  check-cast  v11, LX/Dto;
+    042e..0434  invoke-static  {v11}, LX/Dto;->A02(LX/Dto;)LX/1tk;
+    0434..0436  move-result-object  v7
+    0436..043a  const/16  v2, #0x1b
+    043a..0440  invoke-static  {v11, v2}, LX/DBc;->A1A(Ljava/lang/Object;I)LX/Fmt;
+    0440..0442  move-result-object  v20
+    0442..0448  invoke-virtual  {v13}, Ljava/util/AbstractCollection;->isEmpty()Z
+    0448..044a  move-result  v2
+    044a..044e  if-nez  v2, +0xe2
+    044e..0454  invoke-virtual  {v7}, LX/0Xp;->A07()LX/0aq;
+    0454..0456  move-result-object  v11
+    0456..045a  iget-object  v12, v11, LX/0aq;->A02:LX/0KU;
+    045a..0460  invoke-static  {v12}, LX/DBc;->A1U(LX/0KU;)Z
+    0460..0462  move-result  v2
+    0462..0466  if-nez  v2, +0x15d
+    0466..046c  invoke-virtual  {v11}, LX/0aq;->A00()LX/1hk;
+    046c..046e  move-result-object  v7
+    046e..0474  invoke-static  {v11, v3, v0, v1}, LX/F2t;->A05(LX/0aq;LX/Dwc;J)Z
+    0474..0476  move-result  v2
+    0476..047a  if-eqz  v2, +0x12f
+    047a..047e  const/16  v2, #0x3cd
+    047e..0484  invoke-static  {v13, v2}, LX/2LC;->A17(Ljava/lang/Iterable;I)Ljava/util/Iterator;
+    0484..0486  move-result-object  v19
+    0486..048a  const/16  v18, #0x0
+    048a..0490  invoke-interface/range  {v19..v19}, Ljava/util/Iterator;->hasNext()Z
+    0490..0492  move-result  v2
+    0492..0496  if-eqz  v2, +0xa6
+    0496..049c  invoke-static/range  {v19..v19}, LX/6of;->A15(Ljava/util/Iterator;)Ljava/util/List;
+    049c..049e  move-result-object  v2
+    049e..04a4  invoke-static  {v2}, LX/2L9;->A11(Ljava/lang/Iterable;)Ljava/util/ArrayList;
+    04a4..04a6  move-result-object  v15
+    04a6..04ac  invoke-interface  {v2}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    04ac..04ae  move-result-object  v14
+    04ae..04b4  invoke-interface  {v14}, Ljava/util/Iterator;->hasNext()Z
+    04b4..04b6  move-result  v13
+    04b6..04ba  if-eqz  v13, +0x6
+    04ba..04c0  invoke-static  {v15, v14}, LX/DBh;->A1N(Ljava/util/AbstractCollection;Ljava/util/Iterator;)V
+    04c0..04c2  goto  -0x9
+    04c2..04c8  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    04c8..04ca  move-result-object  v14
+    04ca..04ce  const-string  v13, "StatusReceiptStore/GET_PARTS_AFFECTED_BY_ORG_DEVICE_REMOVAL"
+    04ce..04d4  invoke-static  {v11, v3, v14, v13, v15}, LX/F2t;->A04(LX/0aq;LX/Dwc;Ljava/lang/Long;Ljava/lang/String;Ljava/util/Collection;)LX/16f;
+    04d4..04d6  move-result-object  v17
+    04d6..04da  const-string  v14, ","
+    04da..04dc  const/4  v13, #0x5
+    04dc..04e2  invoke-static  {v13}, LX/FgZ;->A00(I)LX/FgZ;
+    04e2..04e4  move-result-object  v13
+    04e4..04ea  invoke-static  {v14, v2, v13}, LX/2LB;->A17(Ljava/lang/CharSequence;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
+    04ea..04ec  move-result-object  v13
+    04ec..04f0  iget-object  v14, v3, LX/Dwc;->A02:Ljava/lang/String;
+    04f0..04f4  new-array  v15, v8, [Ljava/lang/String;
+    04f4..04f8  aput-object  v14, v15, v9
+    04f8..04fe  invoke-static  {v2}, LX/2L9;->A11(Ljava/lang/Iterable;)Ljava/util/ArrayList;
+    04fe..0500  move-result-object  v14
+    0500..0506  invoke-interface  {v2}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0506..0508  move-result-object  v2
+    0508..050e  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    050e..0510  move-result  v16
+    0510..0514  if-eqz  v16, +0x6
+    0514..051a  invoke-static  {v14, v2}, LX/DBh;->A1N(Ljava/util/AbstractCollection;Ljava/util/Iterator;)V
+    051a..051c  goto  -0x9
+    051c..0522  invoke-static  {v14, v15}, LX/DBg;->A1b(Ljava/util/AbstractCollection;[Ljava/lang/Object;)[Ljava/lang/String;
+    0522..0524  move-result-object  v15
+    0524..052a  const-string/jumbo  v2, "uuid = ? AND receipt_device_jid IN ("
+    052a..0530  invoke-static  {v2, v13}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0530..0532  move-result-object  v13
+    0532..0536  const-string  v2, ") AND (receipt_device_timestamp <= 0 OR receipt_device_timestamp IS NULL)"
+    0536..053c  invoke-static  {v2, v13}, LX/1Xl;->A0z(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    053c..053e  move-result-object  v14
+    053e..0542  const-string  v13, "StatusReceiptStore/DELETE_REMOVED_ORG_DEVICES"
+    0542..0546  const-string  v2, "status_receipt_device"
+    0546..054c  invoke-virtual  {v12, v2, v14, v13, v15}, LX/0KU;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+    054c..054e  move-result  v2
+    054e..0552  add-int  v18, v18, v2
+    0552..0558  invoke-virtual/range  {v17..v17}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+    0558..055a  move-result-object  v16
+    055a..0560  invoke-interface/range  {v16..v16}, Ljava/util/Iterator;->hasNext()Z
+    0560..0562  move-result  v2
+    0562..0566  if-eqz  v2, -0x6c
+    0566..056c  invoke-interface/range  {v16..v16}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    056c..056e  move-result-object  v15
+    056e..0572  check-cast  v15, LX/ElI;
+    0572..0576  iget  v14, v15, LX/ElI;->A00:I
+    0576..057a  iget  v2, v15, LX/ElI;->A01:I
+    057a..057c  sub-int/2addr  v14, v2
+    057c..0580  if-gez  v14, +0x9
+    0580..0584  const-string  v0, "StatusReceiptStore/repairPartCountsAfterOrgDeviceRemoval negative count"
+    0584..058a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    058a..058e  goto/16  +0xa5
+    058e..0594  invoke-static  {v8}, LX/DBb;->A04(I)Landroid/content/ContentValues;
+    0594..0596  move-result-object  v2
+    0596..059a  const-string  v13, "device_count"
+    059a..05a0  invoke-static  {v2, v13, v14}, LX/2LB;->A1H(Landroid/content/ContentValues;Ljava/lang/String;I)V
+    05a0..05a4  iget-wide  v13, v15, LX/ElI;->A02:J
+    05a4..05aa  invoke-static  {v13, v14}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+    05aa..05ac  move-result-object  v14
+    05ac..05b0  iget-object  v13, v15, LX/ElI;->A03:Ljava/lang/String;
+    05b0..05b6  invoke-static  {v14, v13, v8}, LX/8t4;->A1b(Ljava/lang/Object;Ljava/lang/Object;I)[Ljava/lang/String;
+    05b6..05b8  move-result-object  v26
+    05b8..05bc  const-string  v25, "StatusReceiptStore/UPDATE_PART_COUNT_AFTER_ORG_DEVICE_REMOVAL"
+    05bc..05c0  const-string  v23, "status_send_part"
+    05c0..05c4  const-string  v24, "status_row_id = ? AND part_code = ?"
+    05c4..05c8  move-object/from16  v21, v12
+    05c8..05cc  move-object/from16  v22, v2
+    05cc..05d2  invoke-virtual/range  {v21..v26}, LX/0KU;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+    05d2..05d4  move-result  v2
+    05d4..05d8  if-eq  v2, v8, -0x3d
+    05d8..05dc  const-string  v0, "StatusReceiptStore/repairPartCountsAfterOrgDeviceRemoval update failed"
+    05dc..05de  goto  -0x2c
+    05de..05e4  invoke-static/range  {v18..v18}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    05e4..05e6  move-result-object  v2
+    05e6..05ea  if-eqz  v2, +0x77
+    05ea..05f0  invoke-virtual  {v2}, Ljava/lang/Number;->intValue()I
+    05f0..05f2  move-result  v2
+    05f2..05f8  invoke-virtual  {v7}, LX/1hk;->A00()V
+    05f8..05fe  invoke-virtual  {v7}, LX/1hk;->close()V
+    05fe..0604  invoke-virtual  {v11}, LX/0aq;->close()V
+    0604..0608  if-lez  v2, +0x5
+    0608..060e  invoke-virtual/range  {v20..v20}, LX/Fmt;->invoke()Ljava/lang/Object;
+    060e..0614  invoke-virtual  {v4}, Ljava/util/AbstractCollection;->isEmpty()Z
+    0614..0616  move-result  v2
+    0616..061a  if-nez  v2, -0x123
+    061a..0620  invoke-static  {v6}, LX/DBc;->A1X(Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;)Z
+    0620..0622  move-result  v2
+    0622..0626  if-nez  v2, +0x15
+    0626..062a  iget-object  v0, v10, LX/ESU;->A01:LX/05a;
+    062a..0630  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0630..0632  move-result-object  v1
+    0632..0636  check-cast  v1, LX/Dto;
+    0636..063c  invoke-virtual  {v4}, Ljava/util/AbstractCollection;->isEmpty()Z
+    063c..063e  move-result  v0
+    063e..0642  if-nez  v0, -0x137
+    0642..0648  invoke-static  {v3, v1, v4, v9, v8}, LX/Dto;->A03(LX/Dwc;LX/Dto;Ljava/util/Set;ZZ)Ljava/util/Set;
+    0648..064c  goto/16  -0x13c
+    064c..0650  iget-object  v2, v6, Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;->statusUUID:Ljava/lang/String;
+    0650..0656  invoke-static  {v2}, LX/F2a;->A00(Ljava/lang/String;)Ljava/lang/String;
+    0656..0658  move-result-object  v11
+    0658..065c  if-eqz  v11, +0x44
+    065c..0660  iget-object  v2, v10, LX/ESU;->A01:LX/05a;
+    0660..0664  iget-object  v7, v2, LX/05a;->A00:LX/00x;
+    0664..066a  invoke-interface  {v7}, LX/00x;->get()Ljava/lang/Object;
+    066a..066c  move-result-object  v10
+    066c..0670  check-cast  v10, LX/Dto;
+    0670..0676  invoke-virtual  {v4}, Ljava/util/AbstractCollection;->isEmpty()Z
+    0676..0678  move-result  v2
+    0678..067c  if-eqz  v2, +0x29
+    067c..0680  sget-object  v8, LX/06e;->A00:LX/06e;
+    0680..0686  invoke-interface  {v7}, LX/00x;->get()Ljava/lang/Object;
+    0686..0688  move-result-object  v9
+    0688..068c  check-cast  v9, LX/Dto;
+    068c..0692  invoke-static  {v9}, LX/Dto;->A02(LX/Dto;)LX/1tk;
+    0692..0694  move-result-object  v10
+    0694..0698  const/16  v2, #0x18
+    0698..069e  invoke-static  {v9, v2}, LX/DBc;->A1A(Ljava/lang/Object;I)LX/Fmt;
+    069e..06a0  move-result-object  v13
+    06a0..06a4  const-wide/16  v16, #0x0
+    06a4..06a6  move-object  v12, v4
+    06a6..06a8  move-wide  v14, v0
+    06a8..06aa  move-object  v9, v3
+    06aa..06b0  invoke-static/range  {v9..v17}, LX/F2t;->A06(LX/Dwc;LX/1tk;Ljava/lang/String;Ljava/util/Set;Lkotlin/jvm/functions/Function0;JJ)Z
+    06b0..06b2  move-result  v0
+    06b2..06b6  if-nez  v0, -0x171
+    06b6..06bc  invoke-interface  {v7}, LX/00x;->get()Ljava/lang/Object;
+    06bc..06be  move-result-object  v0
+    06be..06c2  check-cast  v0, LX/Dto;
+    06c2..06c8  invoke-virtual  {v0, v3, v8}, LX/Dto;->A0Q(LX/Dwc;Ljava/util/Set;)V
+    06c8..06ca  goto  +0xc
+    06ca..06d0  invoke-static  {v3, v10, v4, v9, v8}, LX/Dto;->A03(LX/Dwc;LX/Dto;Ljava/util/Set;ZZ)Ljava/util/Set;
+    06d0..06d2  move-result-object  v8
+    06d2..06d4  goto  -0x29
+    06d4..06da  invoke-virtual  {v7}, LX/1hk;->close()V
+    06da..06e0  invoke-virtual  {v11}, LX/0aq;->close()V
+    06e0..06e4  const-string  v3, "Network Status refreshed targets could not be persisted"
+    06e4..06e8  goto/16  -0x265
+    06e8..06ec  const-string  v3, "Network Status devices are incomplete"
+    06ec..06f0  goto/16  -0x269
+    06f0..06f4  const-string  v3, "Network Status device lists are unresolved"
+    06f4..06f8  goto/16  -0x26d
+    06f8..06fe  invoke-static  {v5}, LX/07Z;->A1S(Ljava/lang/Iterable;)Ljava/util/Set;
+    06fe..0700  move-result-object  v0
+    0700..0704  iput-object  v0, v6, Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;->A0N:Ljava/util/Set;
+    0704..0706  const/4  v0, #0x1
+    0706..070a  iput-boolean  v0, v6, Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;->A0Q:Z
+    070a..070c  monitor-exit
+    070c..070e  return-void
+    070e..0710  move-exception  v2
+    0710..0712  monitor-exit
+    0712..0714  throw  v2
+    0714..0716  move-exception  v1
+    0716..0718  throw  v1
+    0718..071a  move-exception  v0
+    071a..071c  goto  +0x8
+    071c..0720  const-string  v0, "deleteUndeliveredReceiptDevicesAndRepairPartCounts must own the outer transaction"
+    0720..0726  invoke-static  {v0}, LX/1Xl;->A0g(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+    0726..0728  move-result-object  v0
+    0728..072a  goto  +0x4
+    072a..0730  invoke-static  {v7, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    0730..0732  throw  v0
+    0732..0734  move-exception  v1
+    0734..0736  throw  v1
+    0736..0738  move-exception  v0
+    0738..073e  invoke-static  {v11, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    073e..0740  throw  v0
+    0740..0742  return-void
+    # exception table: 9 try range(s)
+    # catch <all> code_units 022b..0237 -> 0399
+    # catch <all> code_units 0237..02fc -> 038a
+    # catch <all> code_units 02fc..02ff -> 0399
+    # catch <all> code_units 036a..036d -> 0399
+    # catch <all> code_units 037c..0385 -> 0387
+    # catch <all> code_units 0388..0389 -> 0387
+    # catch <all> code_units 038b..038c -> 038c
+    # catch <all> code_units 038e..0399 -> 0399
+    # catch <all> code_units 039a..039b -> 039b
+.end method

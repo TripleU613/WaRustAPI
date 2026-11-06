@@ -1,0 +1,46 @@
+{
+  "README.md": {
+    "bytes": 6355,
+    "sha256": "2b34902b4cefbe406ff0c0bb898a60bc330ca2d1cc2a9cf3f9718a2cb8c8833a"
+  },
+  "batch-eligibility.txt": {
+    "bytes": 1428,
+    "sha256": "af5d61df083247d8cd991f3883d67a6ac16585bb465e43c2ba1973733616055e"
+  },
+  "batch-states.txt": {
+    "bytes": 1476,
+    "sha256": "d2790858de0fcd565a530a0b517593c6872ee70a191818b437c5e535f6b24e34"
+  },
+  "build-exception.txt": {
+    "bytes": 930,
+    "sha256": "119df572f86c3410c20783af204eac3787ab800004950bc4f8c9e02fab8af0ec"
+  },
+  "build-result.txt": {
+    "bytes": 7445,
+    "sha256": "3573b4cde514d65002f544fdcfdaffed9a8e5f1059eff9e142791c9156d2c117"
+  },
+  "canonical-part-predicate.txt": {
+    "bytes": 745,
+    "sha256": "77a718667495f6c68068a5547dc826554a8df29df9ec9137e33e77fa9a25f57f"
+  },
+  "exception-callers.txt": {
+    "bytes": 2240,
+    "sha256": "ab321d21242703bcca7929a366775eeb1c59bc9c39ed718513fb21896a034211"
+  },
+  "noncurrent-reason-fields.txt": {
+    "bytes": 356,
+    "sha256": "5462dd183d52a83f4293617a9d143b430cd2b76f9a65f3c3c61735f5d1a68265"
+  },
+  "pending-reason-fields.txt": {
+    "bytes": 558,
+    "sha256": "ffae643fd7b738b83f6ca7127bbcf8c70fb5219e53c73128941717aab5024b4c"
+  },
+  "send-status-runnable.txt": {
+    "bytes": 194997,
+    "sha256": "d4ad093a26210d828a7018948f63434424b86e4f5fa77f27cbe2d8f169dc122c"
+  },
+  "target-preparation.txt": {
+    "bytes": 28669,
+    "sha256": "69b2c86c0eda829a75008767a6c48539b62f3ebc0cb3dfa1ff98e6ffd0795116"
+  }
+}

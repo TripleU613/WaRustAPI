@@ -1,0 +1,12 @@
+
+# class: Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildException;
+# extends: Ljava/lang/Exception;
+
+.method public <init>(VLLLL)  # .registers 5
+    # full signature: Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildException;-><init>(Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildFailureReason;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+    0000..0006  invoke-direct  {v0, v2, v4}, Ljava/lang/Exception;-><init>(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0006..000a  iput-object  v1, v0, Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildException;->reason:Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildFailureReason;
+    000a..000e  iput-object  v3, v0, Lcom/whatsapp/productinfra/status/sendflow/StatusStanzaBuildException;->canonicalAckPartCode:Ljava/lang/String;
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method

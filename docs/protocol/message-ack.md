@@ -1036,3 +1036,27 @@ Next gaps are exception/current-batch producers, full update-caller identities,
 serialized restart/clock domains and sync/sender construction. Existing local
 status regressions are controls, not tests of native job callbacks or DB.
 No live operations.
+
+
+## Status builder distinguishes canonical part ACK from possible transmission (2026-11-06)
+
+**Confirmed selected pinned static / research / unknown authority.**
+[Complete producer/census, result/exception, batch selection and target-preparation exports](apk/2.26.43.72-status-builder-batch-admission/README.md)
+show CANONICAL_ACK_PENDING is produced during stored-part backfill selection.
+F1y.A03 requires SENT plus positiveackTimestamp. Existing noncanonical assigned
+part can yield a part-specific wait; empty/noncurrent batch paths return a
+separate reason. Exact direct counts and22 constructor sites are retained with
+indirect/dynamic coverage limitations.
+
+Before selected-part continuation, the builder validates parentrow_id+UUID
+inside a transaction and marks a previously unmarked part possibly transmitted
+under prior-state conditions. No-row updates trigger a reread. Durable enqueue
+failure can yieldPART_ATTEMPT_PERSISTENCE_FAILED. These are uncertainty/ownership
+boundaries, not proof of actual transport or authority to recreate ciphertext.
+Complete SendStatusRunnable is upstream of the actual SendE2eStatusJob renderer.
+
+Existing Rust group distribution already checks membership/frozen routing across
+ACK waits; the corresponding synthetic regression remains a gate. Native batch
+selection/ciphertext stores, enqueue atomicity/current generation, restart/clock
+and final renderer/writer authority remain open. No runtime change or replay
+expansion in this evidence chunk; no live operations.

@@ -18188,5 +18188,13 @@
     "x-library": [],
     "description": "Pinned static xtask research: CANONICAL_ACK_PENDING wait and NON_CURRENT_BATCH no-retry, process-local full1dW revoke dedup, exact row/nullable-part wait key, owner-checked callback/deadline, SQL prior-state/statusUUID guards and commit-before-terminal notification. Completion readiness and scheduler wake are distinct. Full exception/current-batch producer, update-caller, restart/clock and sync/sender authority remain unported. No runtime change, raw-ID ACK wake, live operation or replay authority.",
     "evidence": "docs/protocol/message-ack.md#canonical-status-ack-waits-require-committed-part-and-callback-ownership-2026-11-06"
+  },
+  "x-status-builder-batch-admission-research": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Pinned static xtask research links canonical-pending/noncurrent reasons to status batch/backfill producers. Canonical part readiness requires SENT plus positive ACK timestamp; selected part possible-transmission marker validates parent row/UUID and prior state transactionally. Durable enqueue failure is separate. Complete result/exception/census/preparation exports retained; existing Rust membership/routing wait guards unchanged. Native ciphertext stores, full current-generation/enqueue/restart and actual renderer/writer authority remain unported. No runtime change, live operation or replay authority.",
+    "evidence": "docs/protocol/message-ack.md#status-builder-distinguishes-canonical-part-ack-from-possible-transmission-2026-11-06"
   }
 }

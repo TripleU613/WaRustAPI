@@ -1,0 +1,34 @@
+
+# class: LX/2Am;
+# extends: Ljava/lang/Object;
+
+.method public A00(ZLL)  # .registers 6
+    # full signature: LX/2Am;->A00(LX/AQ5;LX/1uS;)Z
+    0000..0002  const/4  v3, #0x0
+    0002..0008  invoke-static  {v5, v3}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  const/4  v2, #0x1
+    000a..0010  invoke-virtual  {v4}, LX/AQ5;->A0U()Z
+    0010..0012  move-result  v0
+    0012..0016  if-nez  v0, +0x28
+    0016..001c  invoke-virtual  {v4}, LX/AQ5;->A0G()LX/Dwc;
+    001c..001e  move-result-object  v0
+    001e..0024  invoke-static  {v0, v3}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0024..002a  invoke-virtual  {v0}, LX/Dwc;->A00()LX/0DY;
+    002a..002c  move-result-object  v0
+    002c..0032  invoke-static  {v0}, LX/0Dn;->A0b(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0032..0034  move-result  v0
+    0034..0038  if-nez  v0, +0x17
+    0038..003c  iget-boolean  v0, v4, LX/AQ5;->A0L:Z
+    003c..0040  if-nez  v0, +0x12
+    0040..0044  iget-object  v0, v4, LX/AQ5;->A0I:Ljava/lang/Long;
+    0044..0048  if-eqz  v0, +0xf
+    0048..004e  invoke-virtual  {v0}, Ljava/lang/Number;->longValue()J
+    004e..0050  move-result-wide  v0
+    0050..0056  invoke-virtual  {v5, v0, v1}, LX/1uS;->A06(J)LX/2A1;
+    0056..0058  move-result-object  v1
+    0058..005c  sget-object  v0, LX/2A1;->A04:LX/2A1;
+    005c..0060  if-eq  v1, v0, +0x3
+    0060..0062  return  v2
+    0062..0064  return  v3
+    # exception table: 0 try range(s)
+.end method
