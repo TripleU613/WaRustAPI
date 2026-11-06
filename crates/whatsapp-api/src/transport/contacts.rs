@@ -770,22 +770,28 @@ pub fn ingest(store: &ProtocolStore) -> Result<usize> {
 /// This is a local migration for the former AD_JID-zero rejection, not APK behavior.
 pub fn repair_lid(store: &ProtocolStore, id: &str) -> Result<bool> {
     let refuse = |reason: &str| Error::invalid("contacts.lid_repair", reason);
-    let reply = super::actions::reply(store, id)?.ok_or_else(|| refuse("saved_reply_missing"))?;
-    let usync = reply
-        .child("usync")
-        .ok_or_else(|| refuse("reply_usync_missing"))?;
-    let users = usync
-        .child("list")
-        .ok_or_else(|| refuse("reply_list_missing"))?;
     store.write(|tx| {
-        let outcomes = super::actions::outcomes_in_write(tx)?;
-        let selected = outcomes
-            .iter()
-            .find(|o| o.id == id && o.kind == ACTION_KIND)
-            .ok_or_else(|| refuse("action_missing_or_not_contact_check"))?;
+        // Read all authority under the same transaction as the mapping update.
+        // A previously decoded reply cannot authorize a changed saved request.
+        let (selected, reply, request) =
+            super::actions::view_in_write(tx, id)?.ok_or_else(|| refuse("saved_reply_missing"))?;
+        let reply = reply.ok_or_else(|| refuse("saved_reply_missing"))?;
+        if selected.kind != ACTION_KIND {
+            return Err(refuse("action_missing_or_not_contact_check"));
+        }
         if selected.status != super::actions::ActionStatus::Ok {
             return Err(refuse("action_not_successful"));
         }
+        if !check_correlation_in(tx, id, &request)? {
+            return Err(refuse("original_request_phone_missing"));
+        }
+        if reply.description != "iq"
+            || reply.get_attr("id").and_then(|v| v.as_text()) != Some(id)
+            || reply.get_attr("type").and_then(|v| v.as_text()) != Some("result")
+        {
+            return Err(refuse("reply_not_correlated_result"));
+        }
+        let outcomes = super::actions::outcomes_in_write(tx)?;
 
         let digits: String = tx
             .get_json(Table::Checkpoints, check_request_key(id).as_bytes(), 1)?
@@ -807,17 +813,8 @@ pub fn repair_lid(store: &ProtocolStore, id: &str) -> Result<bool> {
         if tx.get_json::<bool>(Table::Checkpoints, ingested_key(id).as_bytes(), 1)? != Some(true) {
             return Err(refuse("ingestion_marker_missing"));
         }
-        let candidates: Vec<_> = users
-            .child_nodes()
-            .iter()
-            .filter(|n| n.description == "user")
-            .filter_map(|n| parse_user(n, lid_protocol_succeeded(usync)))
-            .filter(|(phone, _)| phone == &digits)
-            .collect();
-        if candidates.len() != 1 {
-            return Err(refuse("matching_user_ambiguous"));
-        }
-        let parsed = &candidates[0].1;
+        let parsed = select_contact_reply(Some(&reply), &digits)
+            .map_err(|_| refuse("matching_user_ambiguous_or_malformed"))?;
         let lid = parsed
             .lid
             .clone()
@@ -1984,6 +1981,144 @@ mod tests {
             "a second check blocks ambiguous attribution"
         );
         assert_eq!(status(&s, phone).unwrap().unwrap(), updated);
+    }
+
+    #[test]
+    fn lid_repair_revalidates_saved_request_and_reply_without_mutation_after_reopen() {
+        use super::super::actions;
+        use crate::binary::{Encoder, TokenDictionary};
+        for case in [
+            "request_target",
+            "request_id",
+            "reply_id",
+            "reply_type",
+            "reply_root",
+            "duplicate_usync",
+            "duplicate_list",
+            "kind",
+            "status",
+        ] {
+            let (dir, store) = store();
+            let phone = "+15551234567";
+            let id = queue_check(&store, phone).unwrap();
+            let request = actions::reserve_pending(&store).unwrap().pop().unwrap();
+            let user = user_node(
+                phone,
+                Some("15551234567@s.whatsapp.net"),
+                Some("999999999999@lid"),
+            );
+            let sync = Node::new("usync").children(vec![
+                Node::new("result").children(vec![Node::new("lid")]),
+                Node::new("list").children(vec![user.clone()]),
+            ]);
+            let reply = Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "result")
+                .children(vec![sync.clone()]);
+            actions::record_reply(&store, &reply).unwrap();
+            assert_eq!(ingest(&store).unwrap(), 1);
+            let mut old = status(&store, phone).unwrap().unwrap();
+            old.lid = None;
+            store
+                .write(|tx| {
+                    tx.put_json(
+                        Table::Checkpoints,
+                        status_key("15551234567").as_bytes(),
+                        1,
+                        &old,
+                    )?;
+                    let key = format!("action-outbox:{id}");
+                    let mut row: serde_json::Value =
+                        tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?.unwrap();
+                    let wire = |node: &Node| {
+                        Encoder::new(TokenDictionary::comparison_2_26_37_71())
+                            .encode(node)
+                            .unwrap()
+                    };
+                    match case {
+                        "request_target" => {
+                            let changed =
+                                request
+                                    .clone()
+                                    .children(vec![Node::new("usync").children(vec![
+                                        Node::new("list").children(vec![
+                                            Node::new("user").children(vec![
+                                                Node::new("contact").text("+15559999999"),
+                                            ]),
+                                        ]),
+                                    ])]);
+                            row["wire"] = serde_json::json!(wire(&changed));
+                        }
+                        "request_id" => {
+                            row["wire"] =
+                                serde_json::json!(wire(&request.clone().attr("id", "foreign")))
+                        }
+                        "reply_id" => {
+                            row["reply"] =
+                                serde_json::json!(wire(&reply.clone().attr("id", "foreign")))
+                        }
+                        "reply_type" => {
+                            row["reply"] =
+                                serde_json::json!(wire(&reply.clone().attr("type", "error")))
+                        }
+                        "reply_root" => {
+                            let mut changed = reply.clone();
+                            changed.description = "message".into();
+                            row["reply"] = serde_json::json!(wire(&changed));
+                        }
+                        "duplicate_usync" => {
+                            row["reply"] = serde_json::json!(wire(
+                                &reply.clone().children(vec![sync.clone(), sync.clone()])
+                            ))
+                        }
+                        "duplicate_list" => {
+                            row["reply"] = serde_json::json!(wire(&reply.clone().children(vec![
+                                Node::new("usync").children(vec![
+                                    Node::new("result").children(vec![Node::new("lid")]),
+                                    Node::new("list").children(vec![user.clone()]),
+                                    Node::new("list").children(vec![user.clone()])
+                                ])
+                            ])))
+                        }
+                        "kind" => row["kind"] = serde_json::json!("peer_keys"),
+                        "status" => row["status"] = serde_json::json!("sent"),
+                        _ => unreachable!(),
+                    }
+                    tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &row)
+                })
+                .unwrap();
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            {
+                let error = repair_lid(&store, &id).unwrap_err().to_string();
+                for private in [id.as_str(), "15551234567", "15559999999", "999999999999"] {
+                    assert!(!error.contains(private), "{case}");
+                }
+                assert_eq!(
+                    before,
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    "{case}"
+                );
+            }
+            drop(store);
+            let store = ProtocolStore::open(OpenOptions {
+                path: dir.path().join("c.redb"),
+                account_id: AccountId::new("a").unwrap(),
+                key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([11u8; 32]))),
+                create: false,
+            })
+            .unwrap();
+            assert!(repair_lid(&store, &id).is_err(), "{case} after reopen");
+            assert_eq!(
+                before,
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap()
+            );
+        }
     }
 
     #[test]

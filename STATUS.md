@@ -1,3 +1,5 @@
+Local contact LID repair now reads and validates action, original request and correlated result inside its mapping update transaction, rejecting ambiguous containers. [Original request authority, nine corruption/reopen cases and limits](docs/protocol/chat-actions.md#lid-repair-retains-original-request-authority-2026-11-06). Offline only; no lookup/replay added.
+
 Missing-LID preflight now bound to the native multi-query handler, with separate128-second send/wait arguments on its selected dispatch. [Multi-query route and nested timing limits](docs/protocol/bulk-prekey-refresh.md#missing-lid-multi-query-route-and-nested-timing-2026-11-06). Research only; final wire and adoption still incomplete.
 
 Missing-LID preflight preset is now bound to LID_REQUEST/message query; initial LID-only flags can be combined by the native queue. [Preset, queue combination and remaining wire limits](docs/protocol/bulk-prekey-refresh.md#missing-lid-preset-and-queue-combination-2026-11-06). Research only, no runtime request change.

@@ -8178,3 +8178,5 @@ Current43.72 bulk-key preflight is conditional on filtered candidates and waits 
 APK43.72 missing-LID preflight initial flags and actual queue combination retained. [Preset, queue combination and remaining wire limits](bulk-prekey-refresh.md#missing-lid-preset-and-queue-combination-2026-11-06). Final wire/adoption remains unknown; no live operation.
 
 Current43.72 missing-LID preset-to-multi-query route and nested128-second send/wait boundaries retained. [Multi-query route and nested timing limits](bulk-prekey-refresh.md#missing-lid-multi-query-route-and-nested-timing-2026-11-06). No universal timeout or runtime parity claim; offline only.
+
+Confirmed local LID-repair authority gap corrected: original request and current correlated result must qualify atomically before metadata repair. [Original request authority, nine corruption/reopen cases and limits](chat-actions.md#lid-repair-retains-original-request-authority-2026-11-06). No native wire or live-operation claim.

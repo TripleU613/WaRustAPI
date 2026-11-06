@@ -1041,3 +1041,11 @@ duplicates cannot settle again. Legacy absent fields remain unknown.
 [Source readers, JVM oracle, tests and unported adoption/wait policy](apk/2.26.43.72-contact-protocol-refusal/README.md).
 Outer action status/per-user projection remain separate; no automatic retry,
 wait enforcement, live operations or complete native integrity-policy claim.
+
+## LID repair retains original request authority (2026-11-06)
+
+**Confirmed local integrity correction:** repair_lid previously decoded its reply before opening the update transaction and checked saved phone/history without revalidating the encoded producer request. An altered request target could therefore coexist with a previously qualifying reply/status and still permit repair. It also used first-child usync/list selection rather than ordinary projection's ambiguity checks.
+
+Repair now uses actions::view_in_write to read current action, request and reply in the same transaction as history/status writes. It requires contact-check kind, Ok status, the existing canonical single-phone request correlation validator, and an IQ result with matching ID. It reuses select_contact_reply to require unique usync/list and exactly one qualifying original-number user. Existing consumed-marker, history, protocol success, matching status, conflict and once-only rules remain. Invalid state refuses before any write; no unknown write is replayed.
+
+Regression lid_repair_revalidates_saved_request_and_reply_without_mutation_after_reopen exercises nine saved-state mutations: request target/ID, reply ID/type/root, duplicate usync/list, kind and status. Every refusal preserves the complete checkpoint snapshot before and after reopen and emits no tested private identifiers. The prior successful AD_JID-zero repair test still verifies one repair, repeat false, history, timestamp and conflict controls. This is offline contact metadata integrity, not a new native wire requirement or authenticated alias/adoption capability. No account operation, request, retry or deadline change. The preceding APK missing-LID route research remains incomplete at final wire/profile and mapping authority; those gaps do not justify widening this local repair.
