@@ -1,0 +1,28 @@
+# Selected DEX excerpt; not a complete method.
+
+# class: LX/8c3;
+# extends: Ljava/lang/Object;
+
+.method public compare(ILL)  # .registers 9
+    # full signature: LX/8c3;->compare(Ljava/lang/Object;Ljava/lang/Object;)I
+    0000..0004  iget  v0, v6, LX/8c3;->$t:I
+    0004..000a  packed-switch  v0, payload@0x814, cases=[0:@0x7d4, 1:@0x1ec, 2:@0x7ba, 3:@0x1d0, 4:@0x1b4, 5:@0x1d0, 6:@0x768, 7:@0x768, 8:@0x74e, 9:@0x74e, 10:@0x724, 11:@0x186, 12:@0x6e8, 13:@0x16a, 14:@0x146, 15:@0x122, 16:@0x6ba, 17:@0x108, 18:@0x690, 19:@0x690, 20:@0x66c, 21:@0x66c, 22:@0x61e, 23:@0x586, 24:@0x56a, 25:@0x550, 26:@0x52e, 27:@0xee, 28:@0x45a, 29:@0xa, 30:@0xa, 31:@0xd4, 32:@0xba, 33:@0x41a, 34:@0x3e6, 35:@0x3cc, 36:@0x90, 37:@0x3a8, 38:@0x384, 39:@0x4e, 40:@0x33e, 41:@0x31a, 42:@0x2f8, 43:@0x2d4, 44:@0x2b0, 45:@0x284, 46:@0x250, 47:@0x34, 48:@0x22c, 49:@0x208], default@0xa
+    07d4..07d8  check-cast  v7, LX/7xy;
+    07d8..07dc  check-cast  v8, LX/7xy;
+    07dc..07e0  iget-boolean  v1, v7, LX/7xy;->A01:Z
+    07e0..07e4  iget-boolean  v0, v8, LX/7xy;->A01:Z
+    07e4..07e8  if-eqz  v1, +0x6
+    07e8..07ec  if-nez  v0, +0x8
+    07ec..07ee  const/4  v0, #0xff (-1)
+    07ee..07f0  return  v0
+    07f0..07f4  if-eqz  v0, +0x4
+    07f4..07f6  const/4  v0, #0x1
+    07f6..07f8  return  v0
+    07f8..07fc  iget-object  v0, v7, LX/7xy;->A00:LX/0Dw;
+    07fc..0800  iget-object  v1, v0, Lcom/whatsapp/infra/core/jid/Jid;->user:Ljava/lang/String;
+    0800..0804  iget-object  v0, v8, LX/7xy;->A00:LX/0Dw;
+    0804..0808  iget-object  v0, v0, Lcom/whatsapp/infra/core/jid/Jid;->user:Ljava/lang/String;
+    0808..080e  invoke-virtual  {v1, v0}, Ljava/lang/String;->compareTo(Ljava/lang/String;)I
+    080e..0810  move-result  v0
+    0810..0812  return  v0
+    0812..0814  nop

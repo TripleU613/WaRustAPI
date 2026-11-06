@@ -1,0 +1,26 @@
+
+# class: LX/878;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 4
+    # full signature: LX/878;-><init>()V
+    0000..0006  invoke-static  {}, LX/05p;->A0K()LX/05q;
+    0006..0008  move-result-object  v2
+    0008..000e  invoke-static  {}, LX/05p;->A0K()LX/05q;
+    000e..0010  move-result-object  v1
+    0010..0016  invoke-static  {}, LX/05p;->A0K()LX/05q;
+    0016..0018  move-result-object  v0
+    0018..001e  invoke-direct  {v3, v2, v1, v0}, LX/878;-><init>(Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;)V
+    001e..0020  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VLLL)  # .registers 4
+    # full signature: LX/878;-><init>(Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v1, v0, LX/878;->A01:Ljava/util/Map;
+    000a..000e  iput-object  v2, v0, LX/878;->A02:Ljava/util/Map;
+    000e..0012  iput-object  v3, v0, LX/878;->A00:Ljava/util/Map;
+    0012..0014  return-void
+    # exception table: 0 try range(s)
+.end method

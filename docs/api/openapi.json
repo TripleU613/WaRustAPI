@@ -341,6 +341,12 @@
     "x-live": false,
     "description": "APK43.72 selected blocklist parser/helper trace: nullable requested-class jid conversion, PhoneUserJid fallback and skip on no identity; non-compliance log is not rejection. Metadata is type18-gated with display_name, then PN association, then username priority, independent of membership Boolean. Strict Rust admission and unified metadata row policy are not claimed equivalent. Full JID grammar/subclass mapping and durable native metadata/alias adoption remain open. No request or production behavior added. docs/protocol/chat-actions.md#blocklist-typed-identity-and-metadata-priority-2026-11-06"
   },
+  "x-blocklist-metadata-adoption-evidence": {
+    "x-cli": "xtask apk-smali <apk> --class <class> --method <method> --signatures --exceptions",
+    "x-transport": "offline static APK evidence only",
+    "x-live": false,
+    "description": "APK43.72 blocklist metadata task reaches 7to.A00 independently of membership difference. 878 binds associations/usernames/display names. Associations prefer active then lexical user; existing choice may be retained, with selected last in submission. Username proposals require absence in two consulted maps; display-name proposals preserve existing nonblank values using Android Character whitespace/space-char predicate. Concrete backend commits, alias writer semantics and Rust contact-store ownership remain open. No production behavior/request added. docs/protocol/chat-actions.md#blocklist-metadata-adoption-authority-2026-11-06"
+  },
   "x-library-capabilities": [
     {
       "symbol": "whatsapp_api::transport::app_state_sync::binding::bind_inline_fetch_plan",

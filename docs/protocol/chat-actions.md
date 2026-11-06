@@ -1274,3 +1274,35 @@ regeneration, OpenAPI library coverage and APK coverage freshness pass. Coverage
 now retains964 distinct REA records,0 duplicate copies,72 explicitly mapped.
 No Rust behavior changed; workspace runtime tests were not rerun for this
 research-only chunk. Repository hygiene passes (421 checksum bundles).
+
+## Blocklist metadata adoption authority (2026-11-06)
+
+**Confirmed selected static:** [complete7to worker, map constructor, blank
+predicates, selected task/comparator branches and REA Evidence](apk/2.26.43.72-blocklist-metadata-adoption/README.md)
+connect the parsed metadata to a separately scheduled update task. Fresh1dH.A0O
+matches the retained replacement method; it schedules8be case5 ->7to.A00 before
+the membership no-difference branch.878 binds A01 associations, A02 usernames,
+A00 display names. No cross-store atomicity follows from scheduling.
+
+Associations sort active first, then lexical Jid.user. Active candidate or no
+existing association selects the candidate; otherwise the existing choice is
+retained. Non-chosen candidates are submitted before chosen to0Ws.A0Q; writer
+semantics remain open. Username proposals go to0bY.BQ1 only if neither of the
+two consulted result maps contains the key. Display-name proposals go toBPw
+only if the existing12f/A00 is missing/null/blank. Blank is empty or all UTF16
+chars satisfying Character.isWhitespace OR isSpaceChar, not an unverified Rust
+trim equivalence. Empty maps skip; no broad metadata-clear operation is shown.
+
+This differs from Rust's unified last-block-row metadata replacement/deletion.
+Concrete0bY/0Ws backend selection, durable commits, contact-store ownership and
+alias side effects are still needed for a correct adapter. No guessed merge,
+production code, sender, retry, automatic fetch or live account operation added.
+
+Validation: eight selected exports reproduce; the five complete helper files,
+retained replacement method and both labelled partial-case excerpts match.
+The README extraction runs exactly; bundle checksums, complete REA data and
+APK digest match. Formatting, CLI reference regeneration, OpenAPI library
+coverage and APK coverage freshness pass (965 distinct REA records,0 duplicate
+copies,72 explicitly mapped). No Rust behavior changed; workspace runtime tests
+were not rerun for this research-only chunk.
+Repository hygiene passes (422 APK checksum bundles).

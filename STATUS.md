@@ -1,3 +1,10 @@
+2026-11-06 — **Blocklist metadata worker and existing-value authority traced.**
+Native metadata updates are separately scheduled. Username proposals require
+absence in two consulted maps; display names preserve an existing nonblank
+value. Associations sort active first, then lexical user, before ordered
+submission. [Evidence and backend limits](docs/protocol/chat-actions.md#blocklist-metadata-adoption-authority-2026-11-06).
+No Rust runtime or live account change.
+
 2026-11-06 — **Blocklist typed fallback and metadata priority traced.**
 Pinned helpers show nullable requested-class conversion and type18-only
 name -> PN association -> username priority, independent of block membership.

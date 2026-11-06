@@ -1,0 +1,17 @@
+
+# class: LX/0Fv;
+# extends: Ljava/lang/Object;
+
+.method public A01(ZC)  # .registers 2
+    # full signature: LX/0Fv;->A01(C)Z
+    0000..0006  invoke-static  {v1}, Ljava/lang/Character;->isWhitespace(C)Z
+    0006..0008  move-result  v0
+    0008..000c  if-nez  v0, +0x9
+    000c..0012  invoke-static  {v1}, Ljava/lang/Character;->isSpaceChar(C)Z
+    0012..0014  move-result  v1
+    0014..0016  const/4  v0, #0x0
+    0016..001a  if-eqz  v1, +0x3
+    001a..001c  const/4  v0, #0x1
+    001c..001e  return  v0
+    # exception table: 0 try range(s)
+.end method

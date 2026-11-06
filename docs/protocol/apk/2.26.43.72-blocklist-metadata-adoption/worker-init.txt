@@ -1,0 +1,21 @@
+
+# class: LX/7to;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 3
+    # full signature: LX/7to;-><init>()V
+    0000..0006  invoke-direct  {v2}, Ljava/lang/Object;-><init>()V
+    0006..000c  invoke-static  {}, LX/2L7;->A0T()LX/05a;
+    000c..000e  move-result-object  v0
+    000e..0012  iput-object  v0, v2, LX/7to;->A01:LX/05a;
+    0012..0016  const/16  v0, #0xb43
+    0016..001c  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    001c..001e  move-result-object  v0
+    001e..0022  iput-object  v0, v2, LX/7to;->A00:LX/05a;
+    0022..0024  const/4  v1, #0x0
+    0024..0028  new-instance  v0, LX/8c3;
+    0028..002e  invoke-direct  {v0, v1}, LX/8c3;-><init>(I)V
+    002e..0032  iput-object  v0, v2, LX/7to;->A02:Ljava/util/Comparator;
+    0032..0034  return-void
+    # exception table: 0 try range(s)
+.end method

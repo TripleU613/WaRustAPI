@@ -1,0 +1,147 @@
+{
+  "evidence_id": "ev_98a936b3382a8d651f55fd2ca220a8b460ce673682072b496f040614dcce8014",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "../android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C7to",
+    "method_name": "A00",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-hDnPhQ/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\",\"engine_reported_version\":\"0.7.1\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "load_apk",
+        "input": {
+          "path": "/tmp/rea-android-hDnPhQ/target.apk",
+          "threads": 1,
+          "resources": "full"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-hDnPhQ/target.apk\",\"class_count\":106897,\"raw_class_count\":106897,\"resource_count\":15728,\"load_duration_ms\":14546,\"decompile_timeout_ms\":90000,\"threads\":1,\"code_cache_size\":64,\"resources\":\"full\"}"
+            }
+          ]
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C7to"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"name\":\"C7to\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":2,\"methods\":[{\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(): void\",\"dex_descriptor\":\"()V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\"},{\"def_pos\":0,\"signature\":\"A00(X.878): void\",\"dex_descriptor\":\"(LX/878;)V\",\"is_constructor\":false,\"name\":\"A00\"}],\"fields\":[{\"type\":\"X.05a\",\"name\":\"A00\",\"def_pos\":0},{\"type\":\"X.05a\",\"name\":\"A01\",\"def_pos\":0},{\"type\":\"java.util.Comparator\",\"name\":\"A02\",\"def_pos\":0}],\"field_count\":3,\"full_name\":\"X.C7to\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C7to",
+          "method_name": "A00",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fell_back\":false,\"overload_index\":0,\"class_name\":\"X.C7to\",\"full_name\":\"X.7to.A00\",\"mode\":\"java\",\"markers\":[],\"method_name\":\"A00\",\"overload_count\":1,\"body\":\"    public final void A00(AnonymousClass878 anonymousClass878) {\\n        String str;\\n        java.util.Map map \\u003d anonymousClass878.A01;\\n        if (!map.isEmpty()) {\\n            C00x c00x \\u003d this.A01.A00;\\n            java.util.Map mapA0S \\u003d C2L6.A0y(c00x).A0S(map.keySet());\\n            ArrayList arrayListA18 \\u003d C1Xl.A18();\\n            Iterator itA18 \\u003d C2LC.A18(map);\\n            while (itA18.hasNext()) {\\n                java.util.Map.Entry entryA1E \\u003d C1Xl.A1E(itA18);\\n                Object key \\u003d entryA1E.getKey();\\n                List listA1O \\u003d C07Z.A1O((Iterable) entryA1E.getValue(), this.A02);\\n                if (listA1O.isEmpty()) {\\n                    C2LE.A1A(\\\"Unexpected empty AccountUserJid entry. pnJid \\u003d \\\", key);\\n                } else {\\n                    C7xy c7xy \\u003d (C7xy) listA1O.get(0);\\n                    Object obj \\u003d mapA0S.get(key);\\n                    if (c7xy.A01 || obj \\u003d\\u003d null) {\\n                        obj \\u003d c7xy.A00;\\n                    }\\n                    Iterator it \\u003d listA1O.iterator();\\n                    while (it.hasNext()) {\\n                        C0Dw c0Dw \\u003d ((C7xy) it.next()).A00;\\n                        if (!C00l.areEqual(c0Dw, obj)) {\\n                            arrayListA18.add(new C1bW(c0Dw, key));\\n                        }\\n                    }\\n                    arrayListA18.add(new C1bW(obj, key));\\n                }\\n            }\\n            C2L6.A0y(c00x).A0Q(arrayListA18);\\n        }\\n        java.util.Map map2 \\u003d anonymousClass878.A02;\\n        if (!map2.isEmpty()) {\\n            LinkedHashMap linkedHashMapA1D \\u003d C1Xl.A1D();\\n            java.util.Map mapA0V \\u003d C2L8.A15(this.A01).A0V(map2.keySet());\\n            C00x c00x2 \\u003d this.A00.A00;\\n            java.util.Map mapAZT \\u003d ((C0bY) c00x2.get()).AZT(map2.keySet());\\n            Iterator itA19 \\u003d C2LC.A18(map2);\\n            while (itA19.hasNext()) {\\n                java.util.Map.Entry entryA1E2 \\u003d C1Xl.A1E(itA19);\\n                Object key2 \\u003d entryA1E2.getKey();\\n                Object value \\u003d entryA1E2.getValue();\\n                if (!mapA0V.containsKey(key2) \\u0026\\u0026 !mapAZT.containsKey(key2)) {\\n                    linkedHashMapA1D.put(key2, value);\\n                }\\n            }\\n            ((C0bY) c00x2.get()).BQ1(linkedHashMapA1D);\\n        }\\n        java.util.Map map3 \\u003d anonymousClass878.A00;\\n        if (map3.isEmpty()) {\\n            return;\\n        }\\n        LinkedHashMap linkedHashMapA1D2 \\u003d C1Xl.A1D();\\n        C00x c00x3 \\u003d this.A00.A00;\\n        java.util.Map mapAZS \\u003d ((C0bY) c00x3.get()).AZS(map3.keySet());\\n        Iterator itA110 \\u003d C2LC.A18(map3);\\n        while (itA110.hasNext()) {\\n            java.util.Map.Entry entryA1E3 \\u003d C1Xl.A1E(itA110);\\n            Object key3 \\u003d entryA1E3.getKey();\\n            Object value2 \\u003d entryA1E3.getValue();\\n            C12f c12f \\u003d (C12f) mapAZS.get(key3);\\n            if (c12f \\u003d\\u003d null || (str \\u003d c12f.A00) \\u003d\\u003d null || C0Cf.A0q(str)) {\\n                linkedHashMapA1D2.put(key3, value2);\\n            }\\n        }\\n        ((C0bY) c00x3.get()).BPw(linkedHashMapA1D2);\\n    }\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C7to",
+    "method": {
+      "name": "A00",
+      "reported_signature": "A00(X.878): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "(LX/878;)V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public final void A00(AnonymousClass878 anonymousClass878) {\n        String str;\n        java.util.Map map = anonymousClass878.A01;\n        if (!map.isEmpty()) {\n            C00x c00x = this.A01.A00;\n            java.util.Map mapA0S = C2L6.A0y(c00x).A0S(map.keySet());\n            ArrayList arrayListA18 = C1Xl.A18();\n            Iterator itA18 = C2LC.A18(map);\n            while (itA18.hasNext()) {\n                java.util.Map.Entry entryA1E = C1Xl.A1E(itA18);\n                Object key = entryA1E.getKey();\n                List listA1O = C07Z.A1O((Iterable) entryA1E.getValue(), this.A02);\n                if (listA1O.isEmpty()) {\n                    C2LE.A1A(\"Unexpected empty AccountUserJid entry. pnJid = \", key);\n                } else {\n                    C7xy c7xy = (C7xy) listA1O.get(0);\n                    Object obj = mapA0S.get(key);\n                    if (c7xy.A01 || obj == null) {\n                        obj = c7xy.A00;\n                    }\n                    Iterator it = listA1O.iterator();\n                    while (it.hasNext()) {\n                        C0Dw c0Dw = ((C7xy) it.next()).A00;\n                        if (!C00l.areEqual(c0Dw, obj)) {\n                            arrayListA18.add(new C1bW(c0Dw, key));\n                        }\n                    }\n                    arrayListA18.add(new C1bW(obj, key));\n                }\n            }\n            C2L6.A0y(c00x).A0Q(arrayListA18);\n        }\n        java.util.Map map2 = anonymousClass878.A02;\n        if (!map2.isEmpty()) {\n            LinkedHashMap linkedHashMapA1D = C1Xl.A1D();\n            java.util.Map mapA0V = C2L8.A15(this.A01).A0V(map2.keySet());\n            C00x c00x2 = this.A00.A00;\n            java.util.Map mapAZT = ((C0bY) c00x2.get()).AZT(map2.keySet());\n            Iterator itA19 = C2LC.A18(map2);\n            while (itA19.hasNext()) {\n                java.util.Map.Entry entryA1E2 = C1Xl.A1E(itA19);\n                Object key2 = entryA1E2.getKey();\n                Object value = entryA1E2.getValue();\n                if (!mapA0V.containsKey(key2) && !mapAZT.containsKey(key2)) {\n                    linkedHashMapA1D.put(key2, value);\n                }\n            }\n            ((C0bY) c00x2.get()).BQ1(linkedHashMapA1D);\n        }\n        java.util.Map map3 = anonymousClass878.A00;\n        if (map3.isEmpty()) {\n            return;\n        }\n        LinkedHashMap linkedHashMapA1D2 = C1Xl.A1D();\n        C00x c00x3 = this.A00.A00;\n        java.util.Map mapAZS = ((C0bY) c00x3.get()).AZS(map3.keySet());\n        Iterator itA110 = C2LC.A18(map3);\n        while (itA110.hasNext()) {\n            java.util.Map.Entry entryA1E3 = C1Xl.A1E(itA110);\n            Object key3 = entryA1E3.getKey();\n            Object value2 = entryA1E3.getValue();\n            C12f c12f = (C12f) mapAZS.get(key3);\n            if (c12f == null || (str = c12f.A00) == null || C0Cf.A0q(str)) {\n                linkedHashMapA1D2.put(key3, value2);\n            }\n        }\n        ((C0bY) c00x3.get()).BPw(linkedHashMapA1D2);\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

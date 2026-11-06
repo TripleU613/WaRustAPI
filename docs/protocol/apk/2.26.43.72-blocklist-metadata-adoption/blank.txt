@@ -1,0 +1,24 @@
+
+# class: LX/0Cf;
+# extends: LX/0Ce;
+
+.method public A0q(ZL)  # .registers 4
+    # full signature: LX/0Cf;->A0q(Ljava/lang/CharSequence;)Z
+    0000..0002  const/4  v2, #0x0
+    0002..0008  invoke-static  {v3, v2}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  const/4  v1, #0x0
+    000a..0010  invoke-interface  {v3}, Ljava/lang/CharSequence;->length()I
+    0010..0012  move-result  v0
+    0012..0016  if-ge  v1, v0, +0x10
+    0016..001c  invoke-interface  {v3, v1}, Ljava/lang/CharSequence;->charAt(I)C
+    001c..001e  move-result  v0
+    001e..0024  invoke-static  {v0}, LX/0Fv;->A01(C)Z
+    0024..0026  move-result  v0
+    0026..002a  if-nez  v0, +0x3
+    002a..002c  return  v2
+    002c..0030  add-int/lit8  v1, v1, #0x1
+    0030..0032  goto  -0x13
+    0032..0034  const/4  v0, #0x1
+    0034..0036  return  v0
+    # exception table: 0 try range(s)
+.end method

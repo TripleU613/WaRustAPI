@@ -1,0 +1,20 @@
+# Selected DEX excerpt; not a complete method.
+
+# class: LX/8be;
+# extends: Ljava/lang/Object;
+
+.method public run(V)  # .registers 13
+    # full signature: LX/8be;->run()V
+    0000..0004  iget  v0, v12, LX/8be;->$t:I
+    0004..000a  packed-switch  v0, payload@0xdf0, cases=[0:@0xbb8, 1:@0xba0, 2:@0xb36, 3:@0xa, 4:@0x60a, 5:@0xb0a, 6:@0xa, 7:@0xa, 8:@0xa, 9:@0x58e, 10:@0xad8, 11:@0xad8, 12:@0x55e, 13:@0x520, 14:@0x4f4, 15:@0xa4a, 16:@0x9f6, 17:@0x980, 18:@0x956, 19:@0x4a8, 20:@0x454, 21:@0x418, 22:@0x92a, 23:@0xd38, 24:@0xcf6, 25:@0x8be, 26:@0x3d0, 27:@0x38a, 28:@0x35a, 29:@0x88a, 30:@0x868, 31:@0xc7e, 32:@0x302, 33:@0x626, 34:@0x840, 35:@0x2bc, 36:@0x270, 37:@0x820, 38:@0x808, 39:@0x7ec, 40:@0x230, 41:@0x754, 42:@0xce, 43:@0x6d2, 44:@0x69e, 45:@0x64a, 46:@0xc4a, 47:@0x92, 48:@0x56, 49:@0x22], default@0xa
+    0b0a..0b0e  iget-object  v2, v12, LX/8be;->A00:Ljava/lang/Object;
+    0b0e..0b12  check-cast  v2, LX/1dH;
+    0b12..0b16  iget-object  v1, v12, LX/8be;->A01:Ljava/lang/Object;
+    0b16..0b1a  check-cast  v1, LX/878;
+    0b1a..0b1e  sget-object  v0, LX/1dH;->A0c:Ljava/util/Set;
+    0b1e..0b22  iget-object  v0, v2, LX/1dH;->A06:LX/05a;
+    0b22..0b28  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0b28..0b2a  move-result-object  v0
+    0b2a..0b2e  check-cast  v0, LX/7to;
+    0b2e..0b34  invoke-virtual  {v0, v1}, LX/7to;->A00(LX/878;)V
+    0b34..0b36  return-void
