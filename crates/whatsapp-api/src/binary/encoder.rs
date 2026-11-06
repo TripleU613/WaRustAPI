@@ -259,6 +259,33 @@ mod tests {
     }
 
     #[test]
+    fn legacy_interop_integrator_cannot_be_silently_erased() {
+        // This literal exercises the existing reference tag245, not APK's
+        // different tag244 tuple. Nonzero integrator is identity-bearing in
+        // APK 43.72 123.A03/2p3, and Jid has no independent integrator field.
+        let decode = |integrator: u16| {
+            let mut wire = vec![0xF8, 3, 25, 8, 245, 0xFC, 3, b'1', b'2', b'3', 0, 3];
+            wire.extend_from_slice(&integrator.to_be_bytes());
+            wire.extend_from_slice(&[0xFC, 7, b'i', b'n', b't', b'e', b'r', b'o', b'p']);
+            Decoder::new(&wire, dict(), &Limits::default()).decode_node()
+        };
+        for integrator in [1, 2, u16::MAX] {
+            assert!(matches!(
+                decode(integrator),
+                Err(CodecError::InvalidJid { .. })
+            ));
+        }
+        let zero = decode(0).unwrap();
+        let jid = zero
+            .get_attr("id")
+            .and_then(AttributeValue::as_jid)
+            .unwrap();
+        assert_eq!(jid.user, "123");
+        assert_eq!(jid.device, 3);
+        assert_eq!(jid.kind, JidKind::Interop);
+    }
+
+    #[test]
     fn apk_string_positions_use_distinct_wire_rules() {
         // APK 43.72 1r2.A01 passes packing=false for names;
         // 0Tp(String,String,attrs) stores content bytes before A01/A06.

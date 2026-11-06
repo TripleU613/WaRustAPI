@@ -269,7 +269,17 @@ impl<'a> Decoder<'a> {
         let offset = self.pos;
         let user = self.read_string_value()?.unwrap_or_default();
         let device = self.u16be()?;
-        let _integrator = self.u16be()?;
+        let integrator = self.u16be()?;
+        // APK 43.72 123.A03 preserves the integrator in the address, and
+        // 2p3 stores it separately. This legacy tag245 model cannot retain it;
+        // accepting it would silently re-encode a different identity (zero).
+        // Evidence: docs/protocol/apk/2.26.43.72-interop-identity/README.md.
+        if integrator != 0 {
+            return Err(CodecError::InvalidJid {
+                offset,
+                reason: "nonzero interop integrator is not representable".into(),
+            });
+        }
         let server = self.read_server()?;
         if server != Server::Interop {
             return Err(CodecError::InvalidJid {

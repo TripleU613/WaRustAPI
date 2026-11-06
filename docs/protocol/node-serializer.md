@@ -67,3 +67,19 @@ text-to-JID conversion or persistence/settlement/retry change is included.
 **Unknown:** A05's context-sensitive automatic JID conversion, full special
 class tuples, native default charset outside ASCII and parser fault routing
 remain separate evidence gaps. No live operation or complete codec parity claim.
+
+## Legacy interop tuples cannot erase a nonzero integrator (2026-11-06)
+
+**Confirmed selected static / local identity correction, APK2.26.43.72:**
+[Complete native244 reader and interop identity class](apk/2.26.43.72-interop-identity/README.md)
+show integrator is an address component. Rust's existing reference245 decoder
+previously discarded its integrator and encoder always wrotezero. That could
+collapse distinct wire identities. The decoder now explicitly refuses nonzero
+integrators it cannot represent; zero preserves its prior reference behavior.
+
+The literal legacy-schema regression failed before correction and covers
+integrators1/2/65535 plus zero control. This is not native244 support or a
+claim that the APK accepts reference245/246. Native244 has different fields/
+domain discriminator and remains unported. No identity adoption, durable-row
+migration, resend or live operation is added; old persisted identity ambiguity
+and full native conversion require separate evidence.

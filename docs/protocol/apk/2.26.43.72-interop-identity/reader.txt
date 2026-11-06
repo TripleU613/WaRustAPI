@@ -1,0 +1,81 @@
+
+# class: LX/123;
+# extends: Ljava/lang/Object;
+
+.method private A03(LL)  # .registers 9
+    # full signature: LX/123;->A03(Ljava/io/InputStream;)Ljava/lang/String;
+    0000..0006  invoke-virtual  {v8}, Ljava/io/InputStream;->read()I
+    0006..0008  move-result  v0
+    0008..000e  invoke-virtual  {v7, v8, v0}, LX/123;->A0A(Ljava/io/InputStream;I)Ljava/lang/String;
+    000e..0010  move-result-object  v6
+    0010..0016  invoke-virtual  {v8}, Ljava/io/InputStream;->read()I
+    0016..0018  move-result  v1
+    0018..001e  invoke-virtual  {v8}, Ljava/io/InputStream;->read()I
+    001e..0020  move-result  v0
+    0020..0024  shl-int/lit8  v5, v1, #0x8
+    0024..0026  add-int/2addr  v5, v0
+    0026..002c  invoke-virtual  {v8}, Ljava/io/InputStream;->read()I
+    002c..002e  move-result  v1
+    002e..0034  invoke-virtual  {v8}, Ljava/io/InputStream;->read()I
+    0034..0036  move-result  v0
+    0036..003a  shl-int/lit8  v4, v1, #0x8
+    003a..003c  add-int/2addr  v4, v0
+    003c..0042  invoke-virtual  {v8}, Ljava/io/InputStream;->read()I
+    0042..0044  move-result  v2
+    0044..0048  if-eqz  v2, +0x41
+    0048..004a  const/4  v0, #0x2
+    004a..004e  if-ne  v2, v0, +0x2a
+    004e..0052  if-nez  v5, +0xc
+    0052..0056  if-nez  v4, +0xa
+    0056..005a  const-string  v1, "interop.g.us"
+    005a..005c  const/4  v0, #0x0
+    005c..0062  invoke-static  {v6, v1, v0}, LX/123;->A04(Ljava/lang/String;Ljava/lang/String;I)Ljava/lang/String;
+    0062..0064  move-result-object  v0
+    0064..0066  return-object  v0
+    0066..006a  const-string  v0, "invalid interop group jid, invalid device or integrator ID, device="
+    006a..006e  new-instance  v1, Ljava/lang/StringBuilder;
+    006e..0074  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0074..007a  invoke-virtual  {v1, v5}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    007a..007e  const-string  v0, ", integrator="
+    007e..0084  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0084..008a  invoke-virtual  {v1, v4}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    008a..0090  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0090..0092  move-result-object  v1
+    0092..0096  new-instance  v0, LX/LIL;
+    0096..009c  invoke-direct  {v0, v1}, LX/LIL;-><init>(Ljava/lang/String;)V
+    009c..009e  throw  v0
+    009e..00a2  const-string  v1, "invalid domain received for JID_INTEROP tuple: "
+    00a2..00a6  new-instance  v0, Ljava/lang/StringBuilder;
+    00a6..00ac  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00ac..00b2  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00b2..00b8  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00b8..00ba  move-result-object  v1
+    00ba..00be  new-instance  v0, LX/LIL;
+    00be..00c4  invoke-direct  {v0, v1}, LX/LIL;-><init>(Ljava/lang/String;)V
+    00c4..00c6  throw  v0
+    00c6..00ca  const-string  v3, "interop"
+    00ca..00ce  new-instance  v2, Ljava/lang/StringBuilder;
+    00ce..00d4  invoke-direct  {v2}, Ljava/lang/StringBuilder;-><init>()V
+    00d4..00da  invoke-virtual  {v2, v4}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00da..00de  const-string  v0, "-"
+    00de..00e4  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00e4..00ea  invoke-static  {v6}, LX/00L;->A04(Ljava/lang/CharSequence;)V
+    00ea..00f0  invoke-virtual  {v2, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00f0..00f4  if-nez  v5, +0x14
+    00f4..00f8  const-string  v0, ""
+    00f8..00fe  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00fe..0102  const/16  v0, #0x40
+    0102..0108  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(C)Ljava/lang/StringBuilder;
+    0108..010e  invoke-virtual  {v2, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    010e..0114  invoke-virtual  {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0114..0116  move-result-object  v0
+    0116..0118  return-object  v0
+    0118..011c  const-string  v1, ":"
+    011c..0120  new-instance  v0, Ljava/lang/StringBuilder;
+    0120..0126  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0126..012c  invoke-virtual  {v0, v5}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    012c..0132  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0132..0134  move-result-object  v0
+    0134..0136  goto  -0x1e
+    # exception table: 0 try range(s)
+.end method

@@ -18283,5 +18283,15 @@
     "x-library": [],
     "description": "Pinned static xtask research bindsRNL state observer to conditionalNhR association andQnY33 selector-condition wake. Wake submission may refuse; wake does not run a job or send a packet. Distinct group release, front requeue, persistent admission/injection/list and restore wake boundaries retained. Full provider list, lifecycle/dedup/restore and operation generation authority remain open. Existing durable owner/partial-write controls unchanged; no runtime retry or live operation.",
     "evidence": "docs/protocol/message-ack.md#connection-observers-wake-the-selector-without-granting-send-authority-2026-11-06"
+  },
+  "x-interop-integrator-loss-refusal": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [
+      "whatsapp_api::binary::Decoder"
+    ],
+    "description": "Legacy reference tag245 decoder now refuses nonzero integrator IDs that cannot be represented in Jid, preventing distinct inputs from collapsing and silently re-encodingzero. Literal fixture failed before correction; zero legacy control retained. Pinned APK123.A03/2p3 preserve integrator identity in a different native244 tuple; native244 support remains unported. No identity adoption, persisted-state migration, resend or live verification.",
+    "evidence": "docs/protocol/node-serializer.md#legacy-interop-tuples-cannot-erase-a-nonzero-integrator-2026-11-06"
   }
 }
