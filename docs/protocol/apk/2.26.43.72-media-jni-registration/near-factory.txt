@@ -1,0 +1,49 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000064987c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv>:
+  64f790:      	bl	0x2db514 <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0xd638>
+  64f794:      	ldr	x16, [x8, #0x8]
+  64f798:      	ldp	x29, x30, [sp], #0x20
+  64f79c:      	autiasp
+  64f7a0:      	br	x16
+  64f7a4:      	ldr	x19, [sp, #0x10]
+  64f7a8:      	ldp	x29, x30, [sp], #0x20
+  64f7ac:      	autiasp
+  64f7b0:      	ret
+  64f7b4:      	bl	0x2db514 <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0xd638>
+  64f7b8:      	ldp	x29, x30, [sp], #0x20
+  64f7bc:      	autiasp
+  64f7c0:      	b	0x736f70 <_ZN5folly6detail24MergingCancellationState7destroyEv@plt>
+  64f7c4:      	bti	c
+  64f7c8:      	adrp	x8, 0x778000 <_ZTVN6google8protobuf11MessageLiteE+0x1ce18>
+  64f7cc:      	add	x8, x8, #0x7d0
+  64f7d0:      	str	x8, [x0]
+  64f7d4:      	b	0x7350e0 <_ZNSt6__ndk119__shared_weak_countD2Ev@plt>
+  64f7d8:      	paciasp
+  64f7dc:      	stp	x29, x30, [sp, #-0x20]!
+  64f7e0:      	str	x19, [sp, #0x10]
+  64f7e4:      	mov	x29, sp
+  64f7e8:      	mov	x19, x0
+  64f7ec:      	bl	0x64f7c4 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x5f48>
+  64f7f0:      	bl	0x2db514 <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0xd638>
+  64f7f4:      	ldp	x29, x30, [sp], #0x20
+  64f7f8:      	autiasp
+  64f7fc:      	b	0x7373a0 <__wrap__ZdlPv@plt>
+  64f800:      	bti	c
+  64f804:      	adrp	x8, 0x778000 <_ZTVN6google8protobuf11MessageLiteE+0x1ce18>
+  64f808:      	add	x8, x8, #0x970
+  64f80c:      	str	x8, [x0], #0x8
+  64f810:      	b	0x421718 <_ZNK8facebook9stash_jni10JFileStash9removeAllEv+0x1b7cc>
+  64f814:      	paciasp
+  64f818:      	stp	x29, x30, [sp, #-0x20]!
+  64f81c:      	str	x19, [sp, #0x10]
+  64f820:      	mov	x29, sp
+  64f824:      	mov	x19, x0
+  64f828:      	bl	0x64f800 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x5f84>
+  64f82c:      	bl	0x2db514 <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0xd638>
+  64f830:      	ldp	x29, x30, [sp], #0x20
+  64f834:      	autiasp
+  64f838:      	b	0x7373a0 <__wrap__ZdlPv@plt>

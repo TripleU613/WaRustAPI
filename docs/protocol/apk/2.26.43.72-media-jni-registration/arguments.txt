@@ -1,0 +1,9 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000007240b8 <MCFSetGetCount>:
+  72e7fc:      	sub	x1, x29, #0x20
+  72e800:      	mov	w2, #0x1                // =1
+  72e804:      	ret

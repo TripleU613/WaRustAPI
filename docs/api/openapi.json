@@ -18512,5 +18512,13 @@
     "x-library": [],
     "description": "Static JNI tuples/factories/vtables identify a conditional upload-provider chain to TigonJavaBodyProvider stream start; class-to-table registration remains untraced; request header bytes decode separately. Effective wrapper gate, full native conversion/middleware and automatic wire headers remain unproven. No runtime product command, route, behavior, retry or live validation changed.",
     "evidence": "docs/protocol/media-network-outcomes.md#selected-jni-upload-provider-adapter-connected-2026-11-06"
+},
+  "x-media-jni-registration-research": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Static named JNI class/table registration closes previous provider-factory binding uncertainty. RegisterNatives dispatch slot independently checked against installed JNI.h. Actual runtime loading/registration success, effective wrapper gate and native header middleware remain unproven. No product route, request/header change, saved-state mutation, retry or live operation.",
+    "evidence": "docs/protocol/media-network-outcomes.md#upload-jni-class-to-table-registration-closed-statically-2026-11-06"
 }
 }

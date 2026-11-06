@@ -1,3 +1,9 @@
+2026-11-06 — **Upload provider JNI class/table binding confirmed statically.**
+
+Named registration binds inherited factory and stream/service methods; JNI ABI
+slot independently checked. [Complete routine, tuple and source checks](docs/protocol/media-network-outcomes.md#upload-jni-class-to-table-registration-closed-statically-2026-11-06).
+Runtime registration success unobserved; no Rust behavior change or live traffic.
+
 2026-11-06 — **Selected JNI submission connected to native Java-body adapter.**
 
 Exact tuples/factories/vtables identify a conditional upload-provider chain to previously

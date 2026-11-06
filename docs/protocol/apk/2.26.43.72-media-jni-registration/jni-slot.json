@@ -1,0 +1,10 @@
+{
+  "scope": "JNI ABI slot identification using independent local JDK header; not Android execution",
+  "source": "Temurin21.0.13 JNI.h",
+  "source_sha256": "99e64ebbe749e6df284f852f11b3c73f6ea97baf15120428f40f887fe0616e61",
+  "table_fields": 235,
+  "method": "RegisterNatives",
+  "index": 215,
+  "arm64_pointer_bytes": 8,
+  "arm64_slot_offset": "0x6b8"
+}

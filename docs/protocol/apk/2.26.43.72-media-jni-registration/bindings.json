@@ -1,0 +1,175 @@
+{
+  "scope": "Static registration bindings, not observed loading or successful JNI registration",
+  "library_sha256": "d0ab3f2237e92a76ac3519c3577b5836b9e6f65a186c2016cefd43c4923f4b0d",
+  "bindings": [
+    {
+      "class_name": "com/facebook/tigon/TigonXplatBodyProvider",
+      "literal_va": "0xf5dd3",
+      "literal_bytes": 41,
+      "table_va": "0x755fd0",
+      "count": 1,
+      "methods": [
+        {
+          "name": "initHybrid",
+          "signature": "()Lcom/facebook/jni/HybridData;",
+          "entry_va": "0x64f83c"
+        }
+      ]
+    },
+    {
+      "class_name": "com/facebook/tigon/TigonXplatBodyStream",
+      "literal_va": "0xf5f8f",
+      "literal_bytes": 39,
+      "table_va": "0x756048",
+      "count": 5,
+      "methods": [
+        {
+          "name": "transferBytesNative",
+          "signature": "(Ljava/nio/ByteBuffer;I)I",
+          "entry_va": "0x64faa4"
+        },
+        {
+          "name": "transferBytesArrayNative",
+          "signature": "([BII)I",
+          "entry_va": "0x64fbe0"
+        },
+        {
+          "name": "writeEOMNative",
+          "signature": "()V",
+          "entry_va": "0x64fd80"
+        },
+        {
+          "name": "reportBodyLengthNative",
+          "signature": "(I)V",
+          "entry_va": "0x64fe3c"
+        },
+        {
+          "name": "reportErrorNativeByteBuffer",
+          "signature": "([BI)V",
+          "entry_va": "0x64ff08"
+        }
+      ]
+    },
+    {
+      "class_name": "com/facebook/tigon/TigonXplatRequestToken",
+      "literal_va": "0xf5f43",
+      "literal_bytes": 41,
+      "table_va": "0x7560f0",
+      "count": 5,
+      "methods": [
+        {
+          "name": "cancel",
+          "signature": "()V",
+          "entry_va": "0x650140"
+        },
+        {
+          "name": "changeHttpPriority",
+          "signature": "(IZZ)V",
+          "entry_va": "0x650150"
+        },
+        {
+          "name": "updateHttpPriorityContext",
+          "signature": "(Lcom/facebook/tigon/iface/HttpPriorityContext;)V",
+          "entry_va": "0x65025c"
+        },
+        {
+          "name": "pauseBody",
+          "signature": "()V",
+          "entry_va": "0x65035c"
+        },
+        {
+          "name": "resumeBody",
+          "signature": "()V",
+          "entry_va": "0x65036c"
+        }
+      ]
+    },
+    {
+      "class_name": "com/facebook/tigon/TigonXplatService",
+      "literal_va": "0xf6520",
+      "literal_bytes": 36,
+      "table_va": "0x756198",
+      "count": 4,
+      "methods": [
+        {
+          "name": "isObservable",
+          "signature": "()Z",
+          "entry_va": "0x65080c"
+        },
+        {
+          "name": "releaseBodyBuffer",
+          "signature": "(Ljava/nio/ByteBuffer;)V",
+          "entry_va": "0x6508dc"
+        },
+        {
+          "name": "sendRequestIntegerBuffer",
+          "signature": "(Lcom/facebook/tigon/iface/TigonRequest;[BI[Ljava/nio/ByteBuffer;ILcom/facebook/tigon/TigonCallbacks;Ljava/util/concurrent/Executor;)Lcom/facebook/tigon/TigonXplatRequestToken;",
+          "entry_va": "0x650ad8"
+        },
+        {
+          "name": "sendRequestBodyBufferIntegerBuffer",
+          "signature": "(Lcom/facebook/tigon/iface/TigonRequest;[BILcom/facebook/tigon/TigonBodyProvider;[BILcom/facebook/tigon/TigonCallbacks;Ljava/util/concurrent/Executor;)Lcom/facebook/tigon/TigonXplatRequestToken;",
+          "entry_va": "0x650ff0"
+        }
+      ]
+    }
+  ],
+  "windows": [
+    {
+      "name": "registration",
+      "start_va": "0x64cf40",
+      "end_va": "0x64d11c",
+      "bytes": 476,
+      "file_offset": "0x648f40",
+      "sha256": "b8ba68bc188b03a168788bbe5d35ab661c8c9031e3cf0d09cdc7103ad3698b55"
+    },
+    {
+      "name": "dispatch",
+      "start_va": "0x39fbe0",
+      "end_va": "0x39fc30",
+      "bytes": 80,
+      "file_offset": "0x39bbe0",
+      "sha256": "0b69936e186a91ae80c6197d9fe4f8436a52bb9b961a207cde8c83700c8e0386"
+    },
+    {
+      "name": "dispatch-arguments",
+      "start_va": "0x310600",
+      "end_va": "0x310610",
+      "bytes": 16,
+      "file_offset": "0x30c600",
+      "sha256": "7ce7b60814a292a5150a9819e2cce1e4fbbeca27cb985612d5d7115cc1a7aa0e"
+    },
+    {
+      "name": "table-copy",
+      "start_va": "0x728a90",
+      "end_va": "0x728aa0",
+      "bytes": 16,
+      "file_offset": "0x724a90",
+      "sha256": "cd1d5e9f9f3682a8d4c8048ce516485f6f7af82c1e15ba142be696db23dc8777"
+    },
+    {
+      "name": "single-method-args",
+      "start_va": "0x72e7fc",
+      "end_va": "0x72e808",
+      "bytes": 12,
+      "file_offset": "0x72a7fc",
+      "sha256": "f0d9f80f6a1adeb7323c0c941f5b16c0f51f5f5f88b5e9fb8b1464f54fd8f36c"
+    },
+    {
+      "name": "array-method-args",
+      "start_va": "0x72baf4",
+      "end_va": "0x72bb00",
+      "bytes": 12,
+      "file_offset": "0x727af4",
+      "sha256": "00c447765e8013c791f9df81b8bc0d2980dac3a3c3983c0fc1061690139fb43d"
+    },
+    {
+      "name": "near-factory-exclusion",
+      "start_va": "0x64f790",
+      "end_va": "0x64f83c",
+      "bytes": 172,
+      "file_offset": "0x64b790",
+      "sha256": "bebdfeea770be06648d0d658e17e2570e01cdd30884764591a374c631c195a37"
+    }
+  ]
+}

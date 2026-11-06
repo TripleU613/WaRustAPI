@@ -1,0 +1,125 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000064987c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv>:
+  64cf40:      	paciasp
+  64cf44:      	sub	sp, sp, #0xc0
+  64cf48:      	stp	x29, x30, [sp, #0xa0]
+  64cf4c:      	stp	x20, x19, [sp, #0xb0]
+  64cf50:      	add	x29, sp, #0xa0
+  64cf54:      	mrs	x20, TPIDR_EL0
+  64cf58:      	adrp	x9, 0x755000 <kMCIURLRequestHTTPMethodPOST+0xc270>
+  64cf5c:      	add	x9, x9, #0xfd0
+  64cf60:      	bl	0x728a90 <MCFSetGetCount+0x49d8>
+  64cf64:      	adrp	x1, 0xf5000
+  64cf68:      	add	x1, x1, #0xdd3
+  64cf6c:      	mov	x0, sp
+  64cf70:      	mov	w2, #0x29               // =41
+  64cf74:      	stur	x8, [x29, #-0x8]
+  64cf78:      	mov	x19, sp
+  64cf7c:      	stur	q0, [x29, #-0x20]
+  64cf80:      	stur	x9, [x29, #-0x10]
+  64cf84:      	bl	0x728c38 <MCFSetGetCount+0x4b80>
+  64cf88:      	bl	0x734f60 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6__initEPKcm@plt>
+  64cf8c:      	bl	0x7261f4 <MCFSetGetCount+0x213c>
+  64cf90:      	sub	x8, x29, #0x28
+  64cf94:      	bl	0x734d70 <_ZN8facebook3jni14findClassLocalEPKc@plt>
+  64cf98:      	mov	x0, sp
+  64cf9c:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  64cfa0:      	sub	x0, x29, #0x28
+  64cfa4:      	bl	0x72e7fc <MCFSetGetCount+0xa744>
+  64cfa8:      	sub	x19, x29, #0x20
+  64cfac:      	bl	0x39fbe0 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x15a0>
+  64cfb0:      	sub	x0, x29, #0x28
+  64cfb4:      	bl	0x41e188 <_ZNK8facebook9stash_jni10JFileStash9removeAllEv+0x1823c>
+  64cfb8:      	adrp	x1, 0x756000 <kMCIHexStringEmptyDelimiter+0x8c0>
+  64cfbc:      	add	x1, x1, #0x48
+  64cfc0:      	mov	x0, sp
+  64cfc4:      	mov	w2, #0x78               // =120
+  64cfc8:      	bl	0x734d00 <memcpy@plt>
+  64cfcc:      	adrp	x1, 0xf5000
+  64cfd0:      	add	x1, x1, #0xf8f
+  64cfd4:      	sub	x0, x29, #0x20
+  64cfd8:      	mov	w2, #0x27               // =39
+  64cfdc:      	bl	0x7299d4 <MCFSetGetCount+0x591c>
+  64cfe0:      	bl	0x734f60 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6__initEPKcm@plt>
+  64cfe4:      	bl	0x7255a8 <MCFSetGetCount+0x14f0>
+  64cfe8:      	sub	x8, x29, #0x28
+  64cfec:      	bl	0x734d70 <_ZN8facebook3jni14findClassLocalEPKc@plt>
+  64cff0:      	sub	x0, x29, #0x20
+  64cff4:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  64cff8:      	bl	0x72baf4 <MCFSetGetCount+0x7a3c>
+  64cffc:      	mov	w2, #0x5                // =5
+  64d000:      	bl	0x39fbe0 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x15a0>
+  64d004:      	sub	x0, x29, #0x28
+  64d008:      	bl	0x41e188 <_ZNK8facebook9stash_jni10JFileStash9removeAllEv+0x1823c>
+  64d00c:      	adrp	x1, 0x756000 <kMCIHexStringEmptyDelimiter+0x8c0>
+  64d010:      	add	x1, x1, #0xf0
+  64d014:      	mov	x0, sp
+  64d018:      	mov	w2, #0x78               // =120
+  64d01c:      	bl	0x734d00 <memcpy@plt>
+  64d020:      	adrp	x1, 0xf5000
+  64d024:      	add	x1, x1, #0xf43
+  64d028:      	sub	x0, x29, #0x20
+  64d02c:      	mov	w2, #0x29               // =41
+  64d030:      	bl	0x7299d4 <MCFSetGetCount+0x591c>
+  64d034:      	bl	0x734f60 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6__initEPKcm@plt>
+  64d038:      	bl	0x7255a8 <MCFSetGetCount+0x14f0>
+  64d03c:      	sub	x8, x29, #0x28
+  64d040:      	bl	0x734d70 <_ZN8facebook3jni14findClassLocalEPKc@plt>
+  64d044:      	sub	x0, x29, #0x20
+  64d048:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  64d04c:      	bl	0x72baf4 <MCFSetGetCount+0x7a3c>
+  64d050:      	mov	w2, #0x5                // =5
+  64d054:      	bl	0x39fbe0 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x15a0>
+  64d058:      	sub	x0, x29, #0x28
+  64d05c:      	bl	0x41e188 <_ZNK8facebook9stash_jni10JFileStash9removeAllEv+0x1823c>
+  64d060:      	adrp	x1, 0x756000 <kMCIHexStringEmptyDelimiter+0x8c0>
+  64d064:      	add	x1, x1, #0x198
+  64d068:      	mov	x0, sp
+  64d06c:      	mov	w2, #0x60               // =96
+  64d070:      	bl	0x734d00 <memcpy@plt>
+  64d074:      	adrp	x1, 0xf6000
+  64d078:      	add	x1, x1, #0x520
+  64d07c:      	sub	x0, x29, #0x20
+  64d080:      	mov	w2, #0x24               // =36
+  64d084:      	bl	0x7299d4 <MCFSetGetCount+0x591c>
+  64d088:      	bl	0x734f60 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6__initEPKcm@plt>
+  64d08c:      	bl	0x7255a8 <MCFSetGetCount+0x14f0>
+  64d090:      	sub	x8, x29, #0x28
+  64d094:      	bl	0x734d70 <_ZN8facebook3jni14findClassLocalEPKc@plt>
+  64d098:      	sub	x0, x29, #0x20
+  64d09c:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  64d0a0:      	bl	0x72baf4 <MCFSetGetCount+0x7a3c>
+  64d0a4:      	mov	w2, #0x4                // =4
+  64d0a8:      	bl	0x39fbe0 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x15a0>
+  64d0ac:      	sub	x0, x29, #0x28
+  64d0b0:      	bl	0x41199c <_ZNK8facebook9stash_jni10JFileStash9removeAllEv+0xba50>
+  64d0b4:      	bl	0x725e44 <MCFSetGetCount+0x1d8c>
+  64d0b8:      	b.ne	0x64d118 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x389c>
+  64d0bc:      	ldp	x20, x19, [sp, #0xb0]
+  64d0c0:      	ldp	x29, x30, [sp, #0xa0]
+  64d0c4:      	add	sp, sp, #0xc0
+  64d0c8:      	autiasp
+  64d0cc:      	ret
+  64d0d0:      	bl	0x72b740 <MCFSetGetCount+0x7688>
+  64d0d4:      	bl	0x41199c <_ZNK8facebook9stash_jni10JFileStash9removeAllEv+0xba50>
+  64d0d8:      	b	0x64d108 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x388c>
+  64d0dc:      	b	0x64d0ec <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x3870>
+  64d0e0:      	b	0x64d0f4 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x3878>
+  64d0e4:      	b	0x64d0ec <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x3870>
+  64d0e8:      	b	0x64d0f4 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x3878>
+  64d0ec:      	bl	0x72a324 <MCFSetGetCount+0x626c>
+  64d0f0:      	b	0x64d104 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x3888>
+  64d0f4:      	bl	0x72b740 <MCFSetGetCount+0x7688>
+  64d0f8:      	bl	0x41e188 <_ZNK8facebook9stash_jni10JFileStash9removeAllEv+0x1823c>
+  64d0fc:      	b	0x64d108 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x388c>
+  64d100:      	bl	0x7292ac <MCFSetGetCount+0x51f4>
+  64d104:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  64d108:      	bl	0x725e44 <MCFSetGetCount+0x1d8c>
+  64d10c:      	b.ne	0x64d118 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x389c>
+  64d110:      	mov	x0, x19
+  64d114:      	bl	0x7373e0 <__wrap__Unwind_Resume@plt>
+  64d118:      	bl	0x7378f0 <__stack_chk_fail@plt>

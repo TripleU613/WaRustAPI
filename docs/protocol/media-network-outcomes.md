@@ -808,3 +808,16 @@ vtable checks, factories and full selected submit entry](apk/2.26.43.72-media-na
 Request buffer is decoded separately by651860; retained prefix reads method/URL
 and header pairs. Remaining conversion/native middleware and automatic headers
 are unproven. No Rust behavior change, acceptance, retry or live operation.
+
+## Upload JNI class-to-table registration closed statically 2026-11-06
+
+**Confirmed selected static:** complete registration routine64cf40 names
+TigonXplatBodyProvider and binds its initHybrid table755fd0 to factory64f83c.
+It also binds stream/token/service tables, including submit650ff0. Dispatcher
+calls JNI slot0x6b8; independent installed JNI.h identifies RegisterNatives
+index215. [Exact class slices, tuples, complete registration and ABI check](apk/2.26.43.72-media-jni-registration/README.md).
+
+This closes the prior static registration uncertainty in the provider chain.
+Actual loading/invocation/success remain unobserved. Effective wrapper gate,
+remaining native request conversion and header synthesis remain open. No Rust
+behavior change, registration execution, account mutation or live traffic.

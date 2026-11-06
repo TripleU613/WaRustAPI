@@ -1,0 +1,50 @@
+{
+  "README.md": {
+    "bytes": 5678,
+    "sha256": "1258ca5570f54571d36803e15f0881bf17e4547ca03a450852fd97acc5511be3"
+  },
+  "arguments.txt": {
+    "bytes": 291,
+    "sha256": "b0edeabf14c5cd60b4ffbc9fd1ca2e58615a2fa7a67e79c3c39176a80be4418c"
+  },
+  "array-arguments.txt": {
+    "bytes": 268,
+    "sha256": "23389d79194e77f881830d474464a98b431385dd47b8783af978e0ef5ff7eece"
+  },
+  "bindings.json": {
+    "bytes": 5087,
+    "sha256": "ae940c5672fac0cfc3a02cc5fb44deea77a41b246df09a12ace53baf88876447"
+  },
+  "body-provider.txt": {
+    "bytes": 7035,
+    "sha256": "242246d760ffaa2275cadcaddff8d48ccbe03935a5df6bd6a9b70f91530b7cf1"
+  },
+  "dispatch-arguments.txt": {
+    "bytes": 317,
+    "sha256": "99698e1957a6ce6e85a7f77c8bcd7e1dfac8e47fe44fdbba144c9492fec22972"
+  },
+  "dispatch-helper.txt": {
+    "bytes": 1049,
+    "sha256": "e43ec2e98cd8f44e490dcb28973432789fe7f7d2906679231561f6867aeb4559"
+  },
+  "inspect-jni-slot.py": {
+    "bytes": 978,
+    "sha256": "ac84d499032991a4872000767caac0fa9e1bbc775a53f2d8107800284e5249d7"
+  },
+  "jni-slot.json": {
+    "bytes": 356,
+    "sha256": "f0d6ff33c52709377fd6fe5c857d0e39d1dcc9da65b73cdacb4b490e55ac293c"
+  },
+  "near-factory.txt": {
+    "bytes": 2300,
+    "sha256": "c54f64607844be58ba77990b5418a449979d2fc5f4ad0934efc9c88bfac32801"
+  },
+  "resolve-registration.py": {
+    "bytes": 2002,
+    "sha256": "e64b12157d42d5ed5322d3a0790984056d318282351adf465a48eeaa670b12d4"
+  },
+  "table-helper.txt": {
+    "bytes": 308,
+    "sha256": "8c8afac87e3b110ea2f68b8a5067421246be6d782c123351d4e133e6f95f3932"
+  }
+}

@@ -1,0 +1,26 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000039e640 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll>:
+  39fbe0:      	paciasp
+  39fbe4:      	stp	x29, x30, [sp, #-0x30]!
+  39fbe8:      	str	x21, [sp, #0x10]
+  39fbec:      	stp	x20, x19, [sp, #0x20]
+  39fbf0:      	mov	x29, sp
+  39fbf4:      	bl	0x310600 <MCIJSONCreateDeserializedObjectFromString+0xdc64>
+  39fbf8:      	bl	0x734d90 <_ZN8facebook3jni11Environment7currentEv@plt>
+  39fbfc:      	ldr	x8, [x0]
+  39fc00:      	ldr	x1, [x21]
+  39fc04:      	mov	x2, x20
+  39fc08:      	mov	w3, w19
+  39fc0c:      	ldr	x8, [x8, #0x6b8]
+  39fc10:      	blr	x8
+  39fc14:      	ldp	x20, x19, [sp, #0x20]
+  39fc18:      	cmp	w0, #0x0
+  39fc1c:      	ldr	x21, [sp, #0x10]
+  39fc20:      	cset	w0, ne
+  39fc24:      	ldp	x29, x30, [sp], #0x30
+  39fc28:      	autiasp
+  39fc2c:      	b	0x734da0 <_ZN8facebook3jni19throwCppExceptionIfEb@plt>
