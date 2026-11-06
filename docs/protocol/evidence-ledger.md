@@ -7150,3 +7150,13 @@ is a saved-state observation before returning a node, not an atomic transaction
 with a remote socket write; the entire snapshot digest also conservatively
 includes non-membership group fields under the existing policy. Native direct
 SKDM producer/address ownership remains unresolved. No live account operation.
+
+### Authority guard across distribution ACK waits (2026-11-05)
+
+**Confirmed local defect / corrected offline:** distribution continuations now
+revalidate post-reservation routing and identity authority, preserving accepted
+pin replacements from the original transaction. Changed saved device lists,
+peer pins or own authority block with `routing_changed`; ratchets are excluded.
+[Red/green regression, exact scope and native/local limits](normal-group-outbox.md#authority-guard-across-distribution-ack-waits-2026-11-05).
+Original ciphertext, keys and uncertainty remain reserved; reopen cannot replay.
+No live operation.

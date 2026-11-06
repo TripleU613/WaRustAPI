@@ -682,3 +682,40 @@ is a saved-state observation before returning a node, not an atomic transaction
 with a remote socket write; the entire snapshot digest also conservatively
 includes non-membership group fields under the existing policy. Native direct
 SKDM producer/address ownership remains unresolved. No live account operation.
+
+### Authority guard across distribution ACK waits (2026-11-05)
+
+**Confirmed local defect / corrected offline:** device-list, own-login identity
+and peer pin rows could change after crypto reservation while a distribution
+ACK was pending. The reservation transaction validated the original inputs,
+but later continuations used held ciphertext without revisiting that authority.
+
+The reservation transaction now also captures its resulting authority rows:
+the original routing keys (group snapshot, own login/LID, recipient device
+lists and primary pins) plus the encrypted targets' exact device pins. Taking
+this snapshot after reservation avoids rejecting the same transaction's own
+accepted signed pin replacement. Before returning another distribution or the
+final group stanza, the connection-local guard compares those saved bytes in
+a read transaction. A change records fixed `routing_changed` and emits no
+further ciphertext. The existing membership guard retains its distinct reason.
+Ratchets are excluded: receive-side session progression is not alone proof
+that already reserved ciphertext has lost identity authority.
+
+The red/green regression
+`authority_change_during_distribution_cannot_release_more_ciphertext` covers
+changed device-list authority metadata, a different valid peer identity pin,
+and own-login authority, each while the first or second of two distributions
+awaits its ACK. Old code released stale ciphertext. The corrected path retains
+all post-change crypto/outbox rows and non-preparation checkpoints, blocks
+reselection, and preserves exactly that state after reopen. The prior real
+remove-notification regression shares setup and remains separate. Existing
+unchanged-authority tests still cover successful decrypt and continuation.
+
+**Evidence / limits:** this extends the local routing OCC policy already grounded
+in APK37.71 group device hash and primary identity invalidation evidence in
+[group fanout](group-fanout.md). It does not claim a native per-ACK scheduler
+contract. Exact row comparison conservatively includes metadata-only changes.
+It is not atomic with socket write, does not freeze every store row or pending
+work marker, and does not establish native direct-SKDM ACK ownership. The guard
+is connection-local; interruption continues to preserve existing non-replayable
+reservations. No automatic refresh, key reset, resend or live operation.

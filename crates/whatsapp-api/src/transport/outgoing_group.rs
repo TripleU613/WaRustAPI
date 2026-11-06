@@ -428,6 +428,15 @@ pub(super) mod tests {
     }
     #[tokio::test]
     async fn membership_change_during_distribution_cannot_release_more_ciphertext() {
+        assert_distribution_change_stops("membership").await;
+    }
+    #[tokio::test]
+    async fn authority_change_during_distribution_cannot_release_more_ciphertext() {
+        for change in ["device_list", "identity", "own_identity"] {
+            assert_distribution_change_stops(change).await;
+        }
+    }
+    async fn assert_distribution_change_stops(change_kind: &str) {
         use super::super::group_references::tests::{reference, save_parent};
         for accepted_before_change in [0, 1] {
             let dir = tempfile::tempdir().unwrap();
@@ -504,7 +513,51 @@ pub(super) mod tests {
                 .attr("type", "w:gp2")
                 .attr("from", f.plan.chat.clone())
                 .children(changes);
-            assert!(groups::apply_change_notification(&store, &change).unwrap());
+            match change_kind {
+                "membership" => {
+                    assert!(groups::apply_change_notification(&store, &change).unwrap())
+                }
+                "device_list" => store
+                    .write(|tx| {
+                        let k = devices::list_key(peer);
+                        let mut list: devices::DeviceList =
+                            tx.get_json(Table::Checkpoints, k.as_bytes(), 1)?.unwrap();
+                        list.expected_timestamp = Some(123456789);
+                        tx.put_json(Table::Checkpoints, k.as_bytes(), 1, &list)
+                    })
+                    .unwrap(),
+                "identity" => {
+                    let replacement = group_fanout::tests::fixture();
+                    let pin =
+                        direct::prekey_bundle_for(&replacement.reply, &replacement.plan.devices[0])
+                            .unwrap()
+                            .identity_key()
+                            .unwrap()
+                            .serialize()
+                            .to_vec();
+                    store
+                        .write(|tx| {
+                            tx.put_json(
+                                Table::PeerIdentities,
+                                format!("comparison-direct:{peer}").as_bytes(),
+                                1,
+                                &pin,
+                            )
+                        })
+                        .unwrap();
+                }
+                "own_identity" => store
+                    .write(|tx| {
+                        tx.put_json(
+                            Table::Checkpoints,
+                            b"login-identity",
+                            1,
+                            &serde_json::json!({"lid":"111111111111111@lid"}),
+                        )
+                    })
+                    .unwrap(),
+                _ => unreachable!(),
+            }
             let reserved = store.read(|tx| outbox().get(tx, id)).unwrap().unwrap();
             assert_eq!(reserved.attempts.len(), 1);
             assert!(reserved.status().is_uncertain());
@@ -518,7 +571,7 @@ pub(super) mod tests {
                 .unwrap();
             assert!(
                 step.node.is_none(),
-                "membership change released stale ciphertext"
+                "{change_kind} change released stale ciphertext"
             );
             assert!(step.pending.is_none());
             assert_eq!(
@@ -527,7 +580,11 @@ pub(super) mod tests {
                     .unwrap()
                     .blocking_reason
                     .as_deref(),
-                Some("membership_changed")
+                Some(if change_kind == "membership" {
+                    "membership_changed"
+                } else {
+                    "routing_changed"
+                })
             );
             assert_eq!(
                 store.read(|tx| outbox().get(tx, id)).unwrap().unwrap(),
@@ -1348,6 +1405,7 @@ enum Block {
     OwnIdentityMissing,
     RoutingRefused,
     MembershipChanged,
+    RoutingChanged,
     DevicesIncomplete,
     KeysRefused,
     KeysInvalid,
@@ -1502,6 +1560,7 @@ pub(crate) struct Pending {
     membership: Option<[u8; 32]>,
     completed_users: usize,
     snapshot: Option<group_fanout::Snapshot>,
+    routing_guard: Option<group_fanout::RoutingGuard>,
     plan: Option<group_send::FanoutPlan>,
     needed: Vec<Jid>,
     pub deadline: tokio::time::Instant,
@@ -1739,6 +1798,7 @@ pub(crate) fn begin_selected(
                 membership: None,
                 completed_users: 0,
                 snapshot: None,
+                routing_guard: None,
                 plan: None,
                 needed: vec![],
                 deadline: deadline(),
@@ -2206,21 +2266,26 @@ impl Pending {
                         key(self.entry.local_id).as_bytes(),
                         1,
                         &reserved,
-                    )
+                    )?;
+                    prepared.routing_guard_in(tx)
                 });
-                if let Err(error) = result {
-                    // Storage failures are not a local protocol refusal. Preserve
-                    // the transaction error rather than claiming a saved block.
-                    if let Error::InvalidInput { field, .. } = error {
-                        let block = if field == "group_reference" {
-                            Block::ReferenceChanged
-                        } else {
-                            Block::PreparationChanged
-                        };
-                        return self.block(store, block);
+                let routing_guard = match result {
+                    Ok(guard) => guard,
+                    Err(error) => {
+                        // Storage failures are not a local protocol refusal. Preserve
+                        // the transaction error rather than claiming a saved block.
+                        if let Error::InvalidInput { field, .. } = error {
+                            let block = if field == "group_reference" {
+                                Block::ReferenceChanged
+                            } else {
+                                Block::PreparationChanged
+                            };
+                            return self.block(store, block);
+                        }
+                        return Err(error);
                     }
-                    return Err(error);
-                }
+                };
+                self.routing_guard = Some(routing_guard);
                 self.row = reserved;
                 self.next_distribution(store, distributions, node)
             }
@@ -2240,6 +2305,13 @@ impl Pending {
         // changed participant hash; this local stop does not port its scheduler.
         if membership_digest(store, self.entry.intent.chat.jid())? != self.membership {
             return self.block(store, Block::MembershipChanged);
+        }
+        let guard = self
+            .routing_guard
+            .as_ref()
+            .ok_or_else(|| invalid("reserved routing guard missing"))?;
+        if !guard.unchanged(store)? {
+            return self.block(store, Block::RoutingChanged);
         }
         if rest.is_empty() {
             return Ok(Step {

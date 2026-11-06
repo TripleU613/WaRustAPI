@@ -1,3 +1,14 @@
+2026-11-05 — **Changed routing authority stops distribution continuation.**
+
+Post-reservation device-list, primary/device pin and own identity authority is
+rechecked before subsequent distributions or final group ciphertext. The fixed
+routing_changed diagnostic preserves all original reservations and uncertainty.
+[Defect, red/green cases and scope](docs/protocol/normal-group-outbox.md#authority-guard-across-distribution-ack-waits-2026-11-05).
+Validation: new regression failed before the guard; both continuation tests
+pass afterward. All 1380 workspace/all-feature tests, fmt, strict Clippy,
+CLI/OpenAPI, APK coverage, pinned APK identity and staged checksum/link hygiene
+passed. No live account operation.
+
 2026-11-05 — **Membership changes stop ACK-driven distribution continuation.**
 
 The existing frozen-snapshot guard now covers every distribution continuation,

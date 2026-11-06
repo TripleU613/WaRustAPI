@@ -35,6 +35,23 @@ struct RoutingRow {
     value: Option<Zeroizing<Vec<u8>>>,
 }
 
+/// Post-reservation authority only, held for one connection's dependent sends.
+/// Ratchets may advance on receive and are deliberately excluded.
+pub(super) struct RoutingGuard(Vec<RoutingRow>);
+impl RoutingGuard {
+    pub(super) fn unchanged(&self, store: &ProtocolStore) -> Result<bool> {
+        store.read(|tx| {
+            for row in &self.0 {
+                let held = tx.get(row.table, &row.key, 1)?;
+                if held.as_deref() != row.value.as_deref().map(|v| v.as_slice()) {
+                    return Ok(false);
+                }
+            }
+            Ok(true)
+        })
+    }
+}
+
 /// Private original state for optimistic concurrency. Does not adopt keys,
 /// change a ratchet, queue a query or reserve a send. Fresh mode affects only
 /// encryption input; it never discards the original concurrency snapshot.
@@ -398,6 +415,32 @@ impl Prepared {
                 .map(|t| t.device.clone())
                 .collect::<Vec<_>>(),
         )
+    }
+    /// Capture authority after reserve_in, in the same transaction, so our own
+    /// accepted pin replacements do not invalidate this continuation. APK37.71
+    /// D4x.A00 invalidates exposed sender keys after primary identity changes;
+    /// extending frozen routing over ACK waits is a local concurrency policy.
+    pub(super) fn routing_guard_in(&self, tx: &WriteTx<'_>) -> Result<RoutingGuard> {
+        let keys = self
+            .original
+            .routing
+            .iter()
+            .map(|r| (r.table, r.key.clone()))
+            .chain(
+                self.original
+                    .targets
+                    .iter()
+                    .map(|t| (Table::PeerIdentities, session_key(&t.device).into_bytes())),
+            );
+        let mut rows = Vec::new();
+        for (table, key) in keys {
+            rows.push(RoutingRow {
+                table,
+                value: tx.get(table, &key, 1)?.map(Zeroizing::new),
+                key,
+            });
+        }
+        Ok(RoutingGuard(rows))
     }
     /// Validate every captured ratchet/pin/own-key/exposure snapshot and reserve
     /// all next state in the caller's send transaction. Fresh mode has the same
