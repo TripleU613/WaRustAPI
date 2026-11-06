@@ -690,79 +690,105 @@ fn select_contact_reply(
 /// Returns the number of status rows newly recorded.
 pub fn ingest(store: &ProtocolStore) -> Result<usize> {
     let mut recorded = 0usize;
-    for (outcome, reply) in super::actions::settled_for_kinds(store, &[ACTION_KIND])? {
-        let marker = ingested_key(&outcome.id);
-        let newly = store.write(|tx| {
-            if tx
-                .get_json::<bool>(Table::Checkpoints, marker.as_bytes(), 1)?
-                .is_some()
-            {
-                return Ok(0usize);
-            }
-            let (_, _, request) = super::actions::view_in_write(tx, &outcome.id)?
-                .ok_or_else(|| invalid("settled contact action is missing"))?;
-            let mut count = 0usize;
-            let projection = if !check_correlation_in(tx, &outcome.id, &request)? {
-                ContactProjection::MissingRequestCorrelation
-            } else {
-                // The preflight also validates canonical stored digits against
-                // the frozen single-user request. Never derive the target from
-                // an unsolicited result row or from the current address book.
-                let digits: String = tx
-                    .get_json(
-                        Table::Checkpoints,
-                        check_request_key(&outcome.id).as_bytes(),
-                        1,
-                    )?
-                    .ok_or_else(|| invalid("contact correlation disappeared"))?;
-                match outcome.status {
-                    super::actions::ActionStatus::Ok => {
-                        match select_contact_reply(reply.as_ref(), &digits) {
-                            Ok(status) => {
-                                tx.put_json(
-                                    Table::Checkpoints,
-                                    status_key(&digits).as_bytes(),
-                                    1,
-                                    &status,
-                                )?;
-                                count = 1;
-                                ContactProjection::Applied
-                            }
-                            Err(reason) => reason,
-                        }
-                    }
-                    super::actions::ActionStatus::Error => {
-                        let error = outcome
-                            .error_text
-                            .clone()
-                            .or_else(|| outcome.error_code.map(|code| code.to_string()))
-                            .unwrap_or_else(|| "refused".to_owned());
+    for (listed, _) in super::actions::settled_for_kinds(store, &[ACTION_KIND])? {
+        recorded += store.write(|tx| ingest_in(tx, &listed))?;
+    }
+    Ok(recorded)
+}
+
+fn ingest_in(
+    tx: &mut crate::store::WriteTx<'_>,
+    listed: &super::actions::ActionOutcome,
+) -> Result<usize> {
+    let marker = ingested_key(&listed.id);
+    if tx
+        .get_json::<bool>(Table::Checkpoints, marker.as_bytes(), 1)?
+        .is_some()
+    {
+        return Ok(0usize);
+    }
+    // Enumeration supplies order only. Projection authority is current
+    // action/request/reply state held by this write transaction.
+    let (outcome, reply, request) = super::actions::view_in_write(tx, &listed.id)?
+        .ok_or_else(|| invalid("settled contact action is missing"))?;
+    if outcome.kind != ACTION_KIND
+        || !matches!(
+            outcome.status,
+            super::actions::ActionStatus::Ok | super::actions::ActionStatus::Error
+        )
+        || outcome.settlement_sequence != listed.settlement_sequence
+    {
+        return Err(invalid("contact settlement changed before projection"));
+    }
+    let response = reply
+        .as_ref()
+        .ok_or_else(|| invalid("contact projection reply is missing"))?;
+    let response_type = response.get_attr("type").and_then(|v| v.as_text());
+    if response.description != "iq"
+        || response.get_attr("id").and_then(|v| v.as_text()) != Some(listed.id.as_str())
+        || !matches!(response_type, Some("result" | "error"))
+        || (outcome.status == super::actions::ActionStatus::Ok && response_type != Some("result"))
+    {
+        return Err(invalid("contact projection reply is not correlated"));
+    }
+    let mut count = 0usize;
+    let projection = if !check_correlation_in(tx, &outcome.id, &request)? {
+        ContactProjection::MissingRequestCorrelation
+    } else {
+        // The preflight also validates canonical stored digits against
+        // the frozen single-user request. Never derive the target from
+        // an unsolicited result row or from the current address book.
+        let digits: String = tx
+            .get_json(
+                Table::Checkpoints,
+                check_request_key(&outcome.id).as_bytes(),
+                1,
+            )?
+            .ok_or_else(|| invalid("contact correlation disappeared"))?;
+        match outcome.status {
+            super::actions::ActionStatus::Ok => {
+                match select_contact_reply(reply.as_ref(), &digits) {
+                    Ok(status) => {
                         tx.put_json(
                             Table::Checkpoints,
                             status_key(&digits).as_bytes(),
                             1,
-                            &ContactStatus {
-                                on_whatsapp: false,
-                                contact_type: None,
-                                jid: None,
-                                lid: None,
-                                checked_at: Timestamp::now(),
-                                error: Some(error),
-                            },
+                            &status,
                         )?;
                         count = 1;
-                        ContactProjection::ServerRefused
+                        ContactProjection::Applied
                     }
-                    _ => return Err(invalid("contact projection requires a settled action")),
+                    Err(reason) => reason,
                 }
-            };
-            super::actions::record_contact_projection_in(tx, &outcome.id, projection)?;
-            tx.put_json(Table::Checkpoints, marker.as_bytes(), 1, &true)?;
-            Ok(count)
-        })?;
-        recorded += newly;
-    }
-    Ok(recorded)
+            }
+            super::actions::ActionStatus::Error => {
+                let error = outcome
+                    .error_text
+                    .clone()
+                    .or_else(|| outcome.error_code.map(|code| code.to_string()))
+                    .unwrap_or_else(|| "refused".to_owned());
+                tx.put_json(
+                    Table::Checkpoints,
+                    status_key(&digits).as_bytes(),
+                    1,
+                    &ContactStatus {
+                        on_whatsapp: false,
+                        contact_type: None,
+                        jid: None,
+                        lid: None,
+                        checked_at: Timestamp::now(),
+                        error: Some(error),
+                    },
+                )?;
+                count = 1;
+                ContactProjection::ServerRefused
+            }
+            _ => return Err(invalid("contact projection requires a settled action")),
+        }
+    };
+    super::actions::record_contact_projection_in(tx, &outcome.id, projection)?;
+    tx.put_json(Table::Checkpoints, marker.as_bytes(), 1, &true)?;
+    Ok(count)
 }
 
 /// Repair only the missing LID of an already-ingested, uniquely attributable
@@ -1981,6 +2007,130 @@ mod tests {
             "a second check blocks ambiguous attribution"
         );
         assert_eq!(status(&s, phone).unwrap().unwrap(), updated);
+    }
+
+    #[test]
+    fn contact_projection_uses_current_transaction_state_after_enumeration() {
+        use super::super::actions;
+        use crate::binary::{Encoder, TokenDictionary};
+        for case in [
+            "replacement",
+            "kind",
+            "status",
+            "sequence",
+            "reply_id",
+            "reply_type",
+            "reply_missing",
+        ] {
+            let (dir, store) = store();
+            let phone = "+15551234567";
+            let id = queue_check(&store, phone).unwrap();
+            actions::reserve_pending(&store).unwrap();
+            let reply = Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "result")
+                .children(vec![Node::new("usync").children(vec![
+                    Node::new("list").children(vec![user_node(
+                        phone,
+                        Some("15551234567@s.whatsapp.net"),
+                        None,
+                    )]),
+                ])]);
+            actions::record_reply(&store, &reply).unwrap();
+            let listed = actions::settled_for_kinds(&store, &[ACTION_KIND])
+                .unwrap()
+                .pop()
+                .unwrap()
+                .0;
+            store
+                .write(|tx| {
+                    let key = format!("action-outbox:{id}");
+                    let mut row: serde_json::Value =
+                        tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?.unwrap();
+                    let wire = |node: &Node| {
+                        Encoder::new(TokenDictionary::comparison_2_26_37_71())
+                            .encode(node)
+                            .unwrap()
+                    };
+                    match case {
+                        "replacement" => {
+                            let current =
+                                reply
+                                    .clone()
+                                    .children(vec![Node::new("usync").children(vec![
+                            Node::new("list").children(vec![Node::new("user").children(vec![
+                                Node::new("contact").attr("type", "out").text(phone)])])])]);
+                            row["reply"] = serde_json::json!(wire(&current));
+                        }
+                        "kind" => row["kind"] = serde_json::json!("peer_keys"),
+                        "status" => row["status"] = serde_json::json!("sent"),
+                        "sequence" => {
+                            row["settlement_sequence"] =
+                                serde_json::json!(listed.settlement_sequence.unwrap() + 1)
+                        }
+                        "reply_id" => {
+                            row["reply"] =
+                                serde_json::json!(wire(&reply.clone().attr("id", "foreign")))
+                        }
+                        "reply_type" => {
+                            row["reply"] =
+                                serde_json::json!(wire(&reply.clone().attr("type", "error")))
+                        }
+                        "reply_missing" => row["reply"] = serde_json::Value::Null,
+                        _ => unreachable!(),
+                    }
+                    tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &row)
+                })
+                .unwrap();
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let result = store.write(|tx| ingest_in(tx, &listed));
+            if case == "replacement" {
+                assert_eq!(result.unwrap(), 1);
+                let saved = status(&store, phone).unwrap().unwrap();
+                assert!(
+                    !saved.on_whatsapp,
+                    "must use current out result, not enumerated in result"
+                );
+                assert!(saved.jid.is_none());
+                assert_eq!(ingest(&store).unwrap(), 0);
+            } else {
+                let error = result.unwrap_err().to_string();
+                assert!(!error.contains(&id));
+                assert!(!error.contains("15551234567"));
+                assert_eq!(
+                    before,
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    "{case}"
+                );
+            }
+            let after = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            drop(store);
+            let store = ProtocolStore::open(OpenOptions {
+                path: dir.path().join("c.redb"),
+                account_id: AccountId::new("a").unwrap(),
+                key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([11u8; 32]))),
+                create: false,
+            })
+            .unwrap();
+            if case == "replacement" {
+                assert_eq!(ingest(&store).unwrap(), 0);
+            } else {
+                assert!(store.write(|tx| ingest_in(tx, &listed)).is_err());
+            }
+            assert_eq!(
+                after,
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                "{case} after reopen"
+            );
+        }
     }
 
     #[test]

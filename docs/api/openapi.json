@@ -17000,7 +17000,7 @@
     "x-cli": true,
     "x-transport": "experimental",
     "x-live": false,
-    "description": "Single-contact settled replies project only the uniquely matching original target after validating frozen request/correlation. Unrelated rows never update other contacts. Missing/ambiguous/malformed results preserve data. Optional ActionOutcome.contact_projection appears in existing actions plain/JSON. Status/diagnostic/once-only marker are atomic; outer IQ status, request bytes and historical consumed markers remain unchanged. Disk recovery reprojects retained replies without a network query. Native integrity/backoff/factory/deadline policy remains unfinished.",
+    "description": "Single-contact settled replies project only the uniquely matching original target after validating frozen request/correlation. Projection reloads current action, request and reply atomically, retaining enumerated settlement sequence/order and validating IQ reply correlation. Missing replies, changed settlement kind/status/order and uncorrelated replies refuse before writes with fixed local errors. A scoped contact-protocol refusal may retain an outer result on an Error action. Unrelated rows never update other contacts. Missing/ambiguous/malformed results preserve data. Optional ActionOutcome.contact_projection appears in existing actions plain/JSON. Status/diagnostic/once-only marker are atomic; outer IQ status, request bytes and historical consumed markers remain unchanged. Disk recovery reprojects retained replies without a network query. Native integrity/backoff/factory/deadline policy remains unfinished.",
     "evidence": "docs/protocol/contact-projection-correlation.md",
     "x-library": [
       "whatsapp_api::transport::contacts::ContactProjection"

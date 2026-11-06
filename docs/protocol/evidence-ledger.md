@@ -8180,3 +8180,5 @@ APK43.72 missing-LID preflight initial flags and actual queue combination retain
 Current43.72 missing-LID preset-to-multi-query route and nested128-second send/wait boundaries retained. [Multi-query route and nested timing limits](bulk-prekey-refresh.md#missing-lid-multi-query-route-and-nested-timing-2026-11-06). No universal timeout or runtime parity claim; offline only.
 
 Confirmed local LID-repair authority gap corrected: original request and current correlated result must qualify atomically before metadata repair. [Original request authority, nine corruption/reopen cases and limits](chat-actions.md#lid-repair-retains-original-request-authority-2026-11-06). No native wire or live-operation claim.
+
+Local contact projection split-read gap corrected: enumeration no longer supplies stale reply/status authority across a later write transaction. [Transaction snapshot fix, stale-enumeration controls and limits](contact-projection-correlation.md#transaction-bound-settlement-projection-2026-11-06). No native wire or live-operation claim.

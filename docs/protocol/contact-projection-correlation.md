@@ -81,3 +81,13 @@ receive/startup projection paths. No new command or HTTP route is introduced.
 Native factory selection, usync request-specific timeout, protocol integrity/
 backoff adoption, per-scope deadline checks and complete partial-result policy
 remain unfinished. This local correction neither invents nor bypasses those waits.
+
+## Transaction-bound settlement projection (2026-11-06)
+
+**Confirmed local source gap:** ingest enumerated settled outcomes/replies before opening each write transaction. It reloaded only the request inside that transaction. A saved row changed between enumeration and projection could therefore contribute current request authority but stale reply/status/diagnostics. The earlier atomic status/marker commit did not make those reads atomic.
+
+Enumeration now supplies candidate ID and settlement ordering only. A private ingest_in operation reads current action, request and reply through actions::view_in_write under the same write transaction that stores projection/status/marker. It requires contact-check kind, current settled status and the same settlement sequence as the enumeration. Changed kind/status/order refuses without writes. It also requires a present IQ reply with the original ID and result/error outer type; current Ok requires result. Current Error can retain an IQ result because a scoped contact-protocol refusal may settle an outer result as Error. No generic result-to-success reinterpretation is added.
+
+The existing request/correlation, unique target/container and consumed-marker rules remain. A consumed historical marker remains once-only; it is not deleted to force reprocessing. Fixed local errors identify missing/uncorrelated replies or settlement changes without echoing phone/ID. Existing native parser/backoff evidence remains separate: these are local saved-state integrity requirements, not new server fields or proof of final native lookup parity.
+
+Regression contact_projection_uses_current_transaction_state_after_enumeration freezes an enumeration, then changes saved state before invoking the production transaction operation. A valid replacement out reply is projected instead of the enumerated in reply. Six negative controls change kind, status, settlement sequence, reply ID, reply type or remove the reply; each refuses with unchanged complete checkpoints before and after reopen. The positive control remains consumed after reopen. Existing ordinary result, outer-error and result-with-protocol-refusal tests cover the supported settlement distinctions. No live account operations, deadline changes, replay or extra requests.
