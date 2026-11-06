@@ -1,0 +1,147 @@
+{
+  "evidence_id": "ev_3b296b353101cdaae0890c863c8d92743a1a1fabdbed1b100df489fcdd8dc182",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "../android-lab/apks/WhatsApp.1.apk",
+    "class_name": "X.C0f5",
+    "method_name": "A0H",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-YRgXk2/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"java_version\":\"21.0.13\",\"available_processors\":24,\"engine_reported_version\":\"0.7.1\",\"metadata_scope\":\"parsed_members\",\"max_heap_bytes\":16684941312}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "load_apk",
+        "input": {
+          "path": "/tmp/rea-android-YRgXk2/target.apk",
+          "threads": 1,
+          "resources": "full"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-YRgXk2/target.apk\",\"class_count\":106897,\"raw_class_count\":106897,\"resource_count\":15728,\"load_duration_ms\":12841,\"decompile_timeout_ms\":90000,\"threads\":1,\"code_cache_size\":64,\"resources\":\"full\"}"
+            }
+          ]
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "X.C0f5"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"inner_class_count\":0,\"inner_classes\":[],\"name\":\"C0f5\",\"full_name\":\"X.C0f5\",\"field_count\":11,\"fields\":[{\"def_pos\":0,\"name\":\"A00\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A01\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A02\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A03\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A04\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A05\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A06\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A07\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A08\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A09\",\"type\":\"X.05a\"},{\"def_pos\":0,\"name\":\"A0A\",\"type\":\"X.05a\"}],\"methods\":[{\"name\":\"\\u003cinit\\u003e\",\"is_constructor\":true,\"dex_descriptor\":\"()V\",\"signature\":\"\\u003cinit\\u003e(): void\",\"def_pos\":0},{\"name\":\"A00\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0f5;)LX/0Ws;\",\"signature\":\"A00(X.0f5): X.0Ws\",\"def_pos\":0},{\"name\":\"A01\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0DY;Ljava/lang/String;)LX/07f;\",\"signature\":\"A01(X.0DY, java.lang.String): X.07f\",\"def_pos\":0},{\"name\":\"A02\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0DY;)LX/0DY;\",\"signature\":\"A02(X.0DY): X.0DY\",\"def_pos\":0},{\"name\":\"A03\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0DY;)LX/0DY;\",\"signature\":\"A03(X.0DY): X.0DY\",\"def_pos\":0},{\"name\":\"A04\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0DY;)LX/0DY;\",\"signature\":\"A04(X.0DY): X.0DY\",\"def_pos\":0},{\"name\":\"A05\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0DY;)LX/0DY;\",\"signature\":\"A05(X.0DY): X.0DY\",\"def_pos\":0},{\"name\":\"A06\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0DY;)LX/0DY;\",\"signature\":\"A06(X.0DY): X.0DY\",\"def_pos\":0},{\"name\":\"A07\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0DY;)LX/0DY;\",\"signature\":\"A07(X.0DY): X.0DY\",\"def_pos\":0},{\"name\":\"A08\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0DY;)LX/0DY;\",\"signature\":\"A08(X.0DY): X.0DY\",\"def_pos\":0},{\"name\":\"A09\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0DY;LX/0Dx;Lcom/whatsapp/infra/core/jid/PhoneUserJid;)LX/0DY;\",\"signature\":\"A09(X.0DY, X.0Dx, com.whatsapp.infra.core.jid.PhoneUserJid): X.0DY\",\"def_pos\":0},{\"name\":\"A0A\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0DY;Ljava/lang/String;)LX/0DY;\",\"signature\":\"A0A(X.0DY, java.lang.String): X.0DY\",\"def_pos\":0},{\"name\":\"A0B\",\"is_constructor\":false,\"dex_descriptor\":\"(LX/0DY;Z)LX/0DY;\",\"signature\":\"A0B(X.0DY, boolean): X.0DY\",\"def_pos\":0},{\"name\":\"A0C\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/UserJid;\",\"signature\":\"A0C(com.whatsapp.infra.core.jid.UserJid, java.lang.String): com.whatsapp.infra.core.jid.UserJid\",\"def_pos\":0},{\"name\":\"A0D\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/UserJid;\",\"signature\":\"A0D(com.whatsapp.infra.core.jid.UserJid, java.lang.String): com.whatsapp.infra.core.jid.UserJid\",\"def_pos\":0},{\"name\":\"A0E\",\"is_constructor\":false,\"dex_descriptor\":\"()Ljava/lang/Long;\",\"signature\":\"A0E(): java.lang.Long\",\"def_pos\":0},{\"name\":\"A0F\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/util/List;Ljava/lang/String;)Ljava/util/List;\",\"signature\":\"A0F(java.util.List, java.lang.String): java.util.List\",\"def_pos\":0},{\"name\":\"A0G\",\"is_constructor\":false,\"dex_descriptor\":\"(Ljava/util/Set;)Ljava/util/Map;\",\"signature\":\"A0G(java.util.Set): java.util.Map\",\"def_pos\":0},{\"name\":\"A0H\",\"is_constructor\":false,\"dex_descriptor\":\"()Z\",\"signature\":\"A0H(): boolean\",\"def_pos\":0},{\"name\":\"A0I\",\"is_constructor\":false,\"dex_descriptor\":\"(Lcom/whatsapp/infra/core/jid/UserJid;)Z\",\"signature\":\"A0I(com.whatsapp.infra.core.jid.UserJid): boolean\",\"def_pos\":0}],\"method_count\":20}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "X.C0f5",
+          "method_name": "A0H",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"overload_index\":0,\"fell_back\":false,\"body\":\"    public boolean A0H() {\\n        C00x c00x \\u003d this.A02.A00;\\n        if (((C0HP) c00x.get()).A00 \\u003d\\u003d null) {\\n            C00x c00x2 \\u003d this.A07.A00;\\n            boolean zA0E \\u003d ((C0Gs) c00x2.get()).A0E();\\n            if (!((C0Gs) c00x2.get()).A0D()) {\\n                return true;\\n            }\\n            if (!zA0E \\u0026\\u0026 C0LG.A04()) {\\n                Log.e(\\\"ChatLidMigrationHelperImpl/isGlobalLidMigrationDoneForOneToOneChats\\\", new IllegalStateException(\\\"ChatLidMigrationHelper msgStore was not ready, main thread was blocked to load the DB\\\"));\\n            }\\n        }\\n        return ((C0HP) c00x.get()).A01();\\n    }\",\"overload_count\":1,\"method_name\":\"A0H\",\"markers\":[],\"mode\":\"java\",\"full_name\":\"X.0f5.A0H\",\"class_name\":\"X.C0f5\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "X.C0f5",
+    "method": {
+      "name": "A0H",
+      "reported_signature": "A0H(): boolean",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "()Z"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    public boolean A0H() {\n        C00x c00x = this.A02.A00;\n        if (((C0HP) c00x.get()).A00 == null) {\n            C00x c00x2 = this.A07.A00;\n            boolean zA0E = ((C0Gs) c00x2.get()).A0E();\n            if (!((C0Gs) c00x2.get()).A0D()) {\n                return true;\n            }\n            if (!zA0E && C0LG.A04()) {\n                Log.e(\"ChatLidMigrationHelperImpl/isGlobalLidMigrationDoneForOneToOneChats\", new IllegalStateException(\"ChatLidMigrationHelper msgStore was not ready, main thread was blocked to load the DB\"));\n            }\n        }\n        return ((C0HP) c00x.get()).A01();\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

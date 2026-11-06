@@ -1496,3 +1496,32 @@ workspace/all-target/all-feature Clippy, formatting, CLI reference regeneration,
 OpenAPI library coverage, APK coverage freshness and repository hygiene pass.
 Fresh selector/callback exports, bundle checksums and subject APK hash match.
 No live result is claimed.
+
+## Blocklist dirty fetch role and admission (2026-11-06)
+
+**Confirmed selected static:** [manager/provider bridges, complete migration
+predicate/state, reused role/callback and branch table](apk/2.26.43.72-blocklist-dirty-role-admission/README.md)
+resolve the post-dirty gate as account role09F.BU7, not a remote feature flag.
+Its existing concrete implementations test registered device index >0 for
+companion mode. After selected snapshot adoption, exact dirty=true and BU7=false
+queue8bU selector1's mapping/MEX migration work. Companion mode skips that task;
+this is post-adoption work, not a reason to resend the original request.
+
+The earlier migration check uses0f5.A0H ->cached0HP.A00/A01, with readiness and
+diagnostic/assertion fallback boundaries. The callback's readiness false branch
+at00a2 jumps directly to00f4 adoption, bypassing mode/migration checks. With
+readiness true, existing3BU mode admits; otherwise trueA0H writes mode then
+admits, while false takes the invalid/unmigrated delivery path. No-list exits
+before these gates. Cache writers/effective runtime authorities remain open.
+Rust lacks equivalent role/migration providers and dirty post-adoption work;
+this trace does not justify an unconditional mode/warning change or fabricated
+state. No production sender, retry, automatic request or live operation added.
+
+Validation: nine selected DEX exports reproduce byte-for-byte; six decisive
+relative branch destinations are independently calculated by the executed
+README verifier. Complete retained REA data, bundle checksums and APK digest
+match. Formatting, CLI reference regeneration, OpenAPI library coverage and
+APK coverage freshness pass (967 distinct REA records,0 duplicate copies,72
+explicitly mapped). No Rust behavior changed; workspace runtime tests were
+not rerun for this research-only chunk.
+Repository hygiene passes (430 APK checksum bundles).

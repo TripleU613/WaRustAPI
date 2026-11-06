@@ -1,3 +1,10 @@
+2026-11-06 — **Dirty blocklist fetch role/admission gates resolved.**
+Post-adoption dirty reconciliation is primary-role-only;09F.BU7 is companion
+mode, not a feature flag. Readiness false bypasses mode checks; otherwise
+blocklist mode/global chat-migration authority controls the selected path.
+[Exact branches and missing Rust authority](chat-actions.md#blocklist-dirty-fetch-role-and-admission-2026-11-06).
+No Rust runtime or live account change.
+
 2026-11-06 — **Fetch results use the first direct named list.**
 Removed the non-native duplicate-list veto; later children cannot stall the
 selected valid snapshot. Malformed first matches still refuse without fallback,

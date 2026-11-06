@@ -1,0 +1,45 @@
+
+# class: LX/0f5;
+# extends: Ljava/lang/Object;
+
+.method public A0H(Z)  # .registers 5
+    # full signature: LX/0f5;->A0H()Z
+    0000..0004  iget-object  v0, v4, LX/0f5;->A02:LX/05a;
+    0004..0008  iget-object  v3, v0, LX/05a;->A00:LX/00x;
+    0008..000e  invoke-interface  {v3}, LX/00x;->get()Ljava/lang/Object;
+    000e..0010  move-result-object  v0
+    0010..0014  check-cast  v0, LX/0HP;
+    0014..0018  iget-object  v0, v0, LX/0HP;->A00:Ljava/lang/Boolean;
+    0018..001c  if-nez  v0, +0x32
+    001c..0020  iget-object  v0, v4, LX/0f5;->A07:LX/05a;
+    0020..0024  iget-object  v2, v0, LX/05a;->A00:LX/00x;
+    0024..002a  invoke-interface  {v2}, LX/00x;->get()Ljava/lang/Object;
+    002a..002c  move-result-object  v0
+    002c..0030  check-cast  v0, LX/0Gs;
+    0030..0036  invoke-virtual  {v0}, LX/0Gs;->A0E()Z
+    0036..0038  move-result  v1
+    0038..003e  invoke-interface  {v2}, LX/00x;->get()Ljava/lang/Object;
+    003e..0040  move-result-object  v0
+    0040..0044  check-cast  v0, LX/0Gs;
+    0044..004a  invoke-virtual  {v0}, LX/0Gs;->A0D()Z
+    004a..004c  move-result  v0
+    004c..0050  if-nez  v0, +0x4
+    0050..0052  const/4  v0, #0x1
+    0052..0054  return  v0
+    0054..0058  if-nez  v1, +0x14
+    0058..005e  invoke-static  {}, LX/0LG;->A04()Z
+    005e..0060  move-result  v0
+    0060..0064  if-eqz  v0, +0xe
+    0064..0068  const-string  v0, "ChatLidMigrationHelper msgStore was not ready, main thread was blocked to load the DB"
+    0068..006c  new-instance  v1, Ljava/lang/IllegalStateException;
+    006c..0072  invoke-direct  {v1, v0}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+    0072..0076  const-string  v0, "ChatLidMigrationHelperImpl/isGlobalLidMigrationDoneForOneToOneChats"
+    0076..007c  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    007c..0082  invoke-interface  {v3}, LX/00x;->get()Ljava/lang/Object;
+    0082..0084  move-result-object  v0
+    0084..0088  check-cast  v0, LX/0HP;
+    0088..008e  invoke-virtual  {v0}, LX/0HP;->A01()Z
+    008e..0090  move-result  v0
+    0090..0092  return  v0
+    # exception table: 0 try range(s)
+.end method

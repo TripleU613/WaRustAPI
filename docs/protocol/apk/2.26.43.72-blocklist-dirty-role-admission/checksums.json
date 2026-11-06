@@ -1,0 +1,30 @@
+{
+  "README.md": {
+    "bytes": 7400,
+    "sha256": "53281642c0aa49cca5f1f9f78b67805bd4ffad95641d1455a21f4d23434e4d18"
+  },
+  "manager-init.txt": {
+    "bytes": 1865,
+    "sha256": "fc7beda3c9b13435d49fab7420a9dcd58e86a1711654728cff9c81fbd4409e74"
+  },
+  "migration-admission.txt": {
+    "bytes": 2165,
+    "sha256": "e5165242001964e876f8f3f054ecb4fd9afcb3498a57434cbf5b86f23d2e6ab7"
+  },
+  "migration-bridge.txt": {
+    "bytes": 506,
+    "sha256": "e4d18a83d2a2e58cf71026ffd2a2548aeeaf3f7b5491e5996ab981d0f6aede7e"
+  },
+  "migration-state.txt": {
+    "bytes": 1959,
+    "sha256": "407a1ceb9267dc18d44cfa256cb5a89a8ed31a3ff88af63bfd4106aae040a319"
+  },
+  "role-bridge.txt": {
+    "bytes": 508,
+    "sha256": "bb0a14f3f1970b19d727a1f213d2a323017cdd2824128a27f35d03382695b258"
+  },
+  "role-provider.txt": {
+    "bytes": 350,
+    "sha256": "3ba72145ffe8ff470fa73dc99175e626295bd24a84c69f60a4cd8f1ebaec5645"
+  }
+}
