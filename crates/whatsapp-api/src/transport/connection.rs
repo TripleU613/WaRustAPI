@@ -532,10 +532,8 @@ fn link_from(
             };
             let ended = matches!(
                 &next,
-                Ok(Inbound::Undecodable {
-                    class: "stream_end",
-                    ..
-                })
+                Ok(Inbound::Undecodable { class, .. })
+                    if super::messaging::terminal_frame_error(class).is_some()
             );
             if ended {
                 // Consume both halves before publishing the terminal capture;
@@ -549,7 +547,7 @@ fn link_from(
                     && let Err(error) =
                         super::inbox::preserve_undecodable(&store, frame, class, Some(epoch))
                 {
-                    tracing::warn!("stream-end capture failed; epoch remains closed");
+                    tracing::warn!("terminal frame capture failed; epoch remains closed");
                     next = Err(error);
                 }
             }
@@ -903,10 +901,10 @@ pub(crate) async fn drive(
                     // decode error is not traced.
                     Inbound::Undecodable { frame, class, description } => {
                         super::inbox::preserve_undecodable(&store, &frame, class, Some(epoch))?;
-                        if class == "stream_end" {
-                            // Native 1s2 exits via C2o(-1). Keep existing peer-
-                            // close recovery classification; no replay authority.
-                            return Err(Error::Transport(super::TransportError::PeerClosed));
+                        if let Some(terminal) = super::messaging::terminal_frame_error(class) {
+                            // Native 1s2 exits on stream-end or corrupt framing.
+                            // Existing transport recovery category grants no replay.
+                            return Err(Error::Transport(terminal));
                         }
                         match description.as_deref() {
                             // The server ended the session, as with a decodable
@@ -3894,6 +3892,52 @@ mod tests {
         .await;
         let err = fake.finished().await.unwrap_err();
         assert!(!err.is_recoverable_by_reconnect(), "{err:?}");
+    }
+
+    #[tokio::test]
+    async fn invalid_frame_header_cannot_release_its_ping_or_following_response() {
+        let mut fragmented = encode(
+            &Node::new("iq")
+                .attr("id", "fragment-ping")
+                .attr("type", "get")
+                .attr("xmlns", "urn:xmpp:ping"),
+        )
+        .unwrap();
+        fragmented[0] |= 1;
+        for (frame, class) in [
+            (fragmented, "fragmented_frame"),
+            (vec![0], "header_only_frame"),
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("frame-admission.redb"));
+            let mut fake = start(&store, false, None);
+            fake.activate().await;
+            fake.to_worker
+                .try_send(Ok(inbound_from_frame(&frame)))
+                .unwrap();
+            fake.to_worker
+                .try_send(Ok(Inbound::Node(
+                    Node::new("iq")
+                        .attr("id", "following")
+                        .attr("type", "get")
+                        .attr("xmlns", "urn:xmpp:ping"),
+                )))
+                .unwrap();
+            let error = tokio::time::timeout(Duration::from_secs(1), &mut fake.task)
+                .await
+                .expect("invalid frame must terminate")
+                .unwrap()
+                .unwrap_err();
+            assert!(matches!(error, Error::Transport(_)));
+            assert!(matches!(
+                fake.from_worker.try_recv(),
+                Err(mpsc::error::TryRecvError::Disconnected)
+            ));
+            let captured = super::super::inbox::undecodable_frames(&store).unwrap();
+            assert_eq!(captured.len(), 1);
+            assert_eq!(captured[0].class, class);
+            assert_eq!(captured[0].bytes, frame.len());
+        }
     }
 
     #[tokio::test]

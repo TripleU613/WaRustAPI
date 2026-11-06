@@ -175,3 +175,5 @@ not claim no reconnect forever or complete native close/recovery parity.
 Remaining: native global reconnect/backoff/provider ordering, already-in-flight
 write races, nested control semantics and full protocol coverage. This closes
 the specifically identified coordinated root-end gap, not the overall goal.
+
+- **2026-11-06 frame-envelope follow-through:** header-only andmask0x01 fragmented records now capture and consume the epoch before semantic node routing. [Pinned admission checks, shared terminal classifier and regressions](frame-admission.md). Empty authenticated-record skipping remains a separate known difference.

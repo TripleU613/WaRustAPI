@@ -30,6 +30,12 @@ pub use tokens::{TokenDictionary, tags};
 #[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
 #[non_exhaustive]
 pub enum CodecError {
+    /// A decrypted frame contains its flags byte but no stanza payload.
+    #[error("header-only stanza frame")]
+    HeaderOnlyFrame,
+    /// Fragmented server-to-client stanzas are unsupported by the pinned APK.
+    #[error("fragmented server-to-client stanza frame")]
+    UnsupportedFragment,
     /// A root stream-end control token, rather than a stanza node.
     #[error("peer ended the binary node stream")]
     StreamEnd,
@@ -127,6 +133,8 @@ impl CodecError {
     /// never carries input text (attribute names, JID fragments) or offsets.
     pub fn class(&self) -> &'static str {
         match self {
+            Self::HeaderOnlyFrame => "header_only_frame",
+            Self::UnsupportedFragment => "fragmented_frame",
             Self::StreamEnd => "stream_end",
             Self::UnexpectedEof { .. } => "unexpected_eof",
             Self::UnknownTag { .. } => "unknown_tag",

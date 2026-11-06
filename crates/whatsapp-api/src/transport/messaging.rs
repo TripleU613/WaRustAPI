@@ -449,18 +449,37 @@ pub async fn read_node<S: AsyncRead + AsyncWrite + Unpin>(
         .await?
         .ok_or_else(|| error("EOF awaiting stanza"))?;
     let limits = Limits::default();
-    let data =
-        unpack_frame_payload(&frame, &limits).map_err(|_| error("invalid stanza compression"))?;
+    let data = unpack_frame_payload(&frame, &limits).map_err(|codec| {
+        if let Some(terminal) = terminal_frame_error(codec.class()) {
+            channel.close();
+            terminal
+        } else {
+            error("invalid stanza compression")
+        }
+    })?;
     Decoder::new(&data, TokenDictionary::comparison_2_26_37_71(), &limits)
         .decode_node()
         .map_err(|codec| {
-            if codec == crate::binary::CodecError::StreamEnd {
+            if let Some(terminal) = terminal_frame_error(codec.class()) {
                 channel.close();
-                TransportError::PeerClosed
+                terminal
             } else {
                 error("invalid comparison stanza")
             }
         })
+}
+
+/// Classify known terminal frame diagnostics. Unknown classes retain their
+/// existing capture policy. This does not grant retry or settlement authority.
+pub fn terminal_frame_error(class: &str) -> Option<TransportError> {
+    match class {
+        "stream_end" => Some(TransportError::PeerClosed),
+        "header_only_frame" => Some(TransportError::PeerProtocol("header-only stanza frame")),
+        "fragmented_frame" => Some(TransportError::PeerProtocol(
+            "unsupported fragmented stanza",
+        )),
+        _ => None,
+    }
 }
 
 /// One frame read in a lab window.
@@ -468,12 +487,12 @@ pub enum FrameRead {
     /// A decoded stanza.
     Node(Node),
     /// A frame that decrypted but is not an ordinary node; for
-    /// [`super::inbox::preserve_undecodable`]. `stream_end` is a known control
-    /// signal and consumes the channel before this result is returned.
+    /// [`super::inbox::preserve_undecodable`]. Known terminal classes consume
+    /// the channel: stream-end, header-only and fragmented frames.
     Undecodable {
         /// The decrypted frame.
         frame: Vec<u8>,
-        /// Fixed class (`CodecError::class`), including `stream_end` control.
+        /// Fixed class (`CodecError::class`); see [`terminal_frame_error`].
         class: &'static str,
     },
 }
@@ -507,7 +526,7 @@ pub async fn read_frame<S: AsyncRead + AsyncWrite + Unpin>(
     Ok(match super::inbox::decode_frame(&frame) {
         Ok(node) => FrameRead::Node(node),
         Err(codec) => {
-            if codec == crate::binary::CodecError::StreamEnd {
+            if terminal_frame_error(codec.class()).is_some() {
                 channel.close();
             }
             FrameRead::Undecodable {
@@ -1715,8 +1734,8 @@ fn captured_wait_node(
         FrameRead::Node(node) => Ok(node),
         FrameRead::Undecodable { frame, class } => {
             super::inbox::preserve_undecodable(store, &frame, class, None)?;
-            if class == "stream_end" {
-                return Err(TransportError::PeerClosed.into());
+            if let Some(terminal) = terminal_frame_error(class) {
+                return Err(terminal.into());
             }
             Err(crate::Error::invalid(
                 "comparison_wait",
@@ -3328,8 +3347,15 @@ mod captured_wait_tests {
     use crate::store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource, Table};
 
     #[tokio::test]
-    async fn captured_stream_end_stops_before_matching_reply_and_preserves_uncertainty() {
-        for compressed in [false, true] {
+    async fn captured_terminal_frame_stops_before_matching_reply_and_preserves_uncertainty() {
+        for (kind, compressed) in [
+            ("stream_end", false),
+            ("stream_end", true),
+            ("fragmented_frame", false),
+            ("fragmented_frame", true),
+            ("header_only_frame", false),
+            ("header_only_frame", true),
+        ] {
             let dir = tempfile::tempdir().unwrap();
             let path = dir.path().join("stream-end.redb");
             let open = || {
@@ -3349,15 +3375,20 @@ mod captured_wait_tests {
             store
                 .write(|tx| tx.put_json(Table::Checkpoints, b"held", 1, &held))
                 .unwrap();
-            let frame = if compressed {
+            let mut frame = if compressed {
                 let mut bytes = vec![2];
                 bytes.extend(miniz_oxide::deflate::compress_to_vec_zlib(&[0xF8, 1, 2], 6));
                 bytes
             } else {
                 vec![0, 0xF8, 1, 2]
             };
+            if kind == "header_only_frame" {
+                frame = vec![if compressed { 2 } else { 0 }];
+            } else if kind == "fragmented_frame" {
+                frame[0] |= 1;
+            }
             let error = super::super::inbox::decode_frame(&frame).unwrap_err();
-            assert_eq!(error.class(), "stream_end");
+            assert_eq!(error.class(), kind);
             let mut frames = std::collections::VecDeque::from([
                 FrameRead::Undecodable {
                     frame: frame.clone(),
@@ -3377,15 +3408,16 @@ mod captured_wait_tests {
                 tokio::time::Instant::now() + Duration::from_secs(1),
             )
             .await;
-            assert!(matches!(
-                result,
-                Err(crate::Error::Transport(TransportError::PeerClosed))
-            ));
+            match (kind, result) {
+                ("stream_end", Err(crate::Error::Transport(TransportError::PeerClosed))) => {}
+                (_, Err(crate::Error::Transport(TransportError::PeerProtocol(_)))) => {}
+                (_, other) => panic!("unexpected terminal outcome: {other:?}"),
+            }
             assert_eq!(reads.get(), 1);
             assert_eq!(frames.len(), 1);
             let captures = super::super::inbox::undecodable_frames(&store).unwrap();
             assert_eq!(captures.len(), 1);
-            assert_eq!(captures[0].class, "stream_end");
+            assert_eq!(captures[0].class, kind);
             let key = captures[0].capture.clone();
             drop(store);
             let reopened = open();

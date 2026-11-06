@@ -370,6 +370,7 @@ mod tests {
         CancelRead,
         PartialWrite,
         StreamEnd,
+        InvalidFrame { fragmented: bool, direct: bool },
     }
 
     async fn exchange(wrong_root: bool, split: bool, record_case: RecordCase) {
@@ -467,10 +468,15 @@ mod tests {
             let incoming = reader.read_frame(&mut server).await.unwrap().unwrap();
             let plain = transport.decrypt(&incoming).unwrap();
             assert_eq!(plain.as_slice(), b"local record fixture");
-            let reply: &[u8] = if matches!(record_case, RecordCase::StreamEnd) {
-                &[0, 0xF8, 1, 2]
-            } else {
-                b"reply"
+            let reply: &[u8] = match record_case {
+                RecordCase::StreamEnd => &[0, 0xF8, 1, 2],
+                RecordCase::InvalidFrame {
+                    fragmented: true, ..
+                } => &[1, 0xF8, 1, 25],
+                RecordCase::InvalidFrame {
+                    fragmented: false, ..
+                } => &[0],
+                _ => b"reply",
             };
             let buf = transport.encrypt(reply).unwrap();
             server
@@ -514,6 +520,30 @@ mod tests {
                     writer.write(b"closed").await,
                     Err(TransportError::Closed)
                 ));
+            } else if let RecordCase::InvalidFrame { direct, .. } = record_case {
+                channel.write(b"local record fixture").await.unwrap();
+                if direct {
+                    assert!(matches!(
+                        super::super::messaging::read_node(&mut channel).await,
+                        Err(TransportError::PeerProtocol(_))
+                    ));
+                } else {
+                    let frame = super::super::messaging::read_frame(&mut channel)
+                        .await
+                        .unwrap();
+                    assert!(matches!(
+                        frame,
+                        super::super::messaging::FrameRead::Undecodable {
+                            class: "header_only_frame" | "fragmented_frame",
+                            ..
+                        }
+                    ));
+                }
+                assert!(matches!(
+                    channel.write(b"after invalid frame").await,
+                    Err(TransportError::Closed)
+                ));
+                assert!(matches!(channel.read().await, Err(TransportError::Closed)));
             } else if matches!(record_case, RecordCase::StreamEnd) {
                 channel.write(b"local record fixture").await.unwrap();
                 let frame = super::super::messaging::read_frame(&mut channel)
@@ -605,6 +635,20 @@ mod tests {
             }
         }
         peer.await.unwrap();
+    }
+
+    #[tokio::test]
+    async fn encrypted_invalid_frame_consumes_both_low_level_receive_apis() {
+        for fragmented in [false, true] {
+            for direct in [false, true] {
+                exchange(
+                    false,
+                    false,
+                    RecordCase::InvalidFrame { fragmented, direct },
+                )
+                .await;
+            }
+        }
     }
 
     #[tokio::test]

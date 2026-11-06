@@ -18325,5 +18325,20 @@
     ],
     "description": "Rawroot LIST_EMPTY/LIST_8/LIST_16 descriptiontoken2 is publicCodecError::StreamEnd, classstream_end. Reader consumes split epoch and preserves exact authenticated frame before queue publication, surviving an actor exit on an earlier write failure; actor capture is idempotent. This stops further reads/later writes; captured waits and CLI windows preserve then stop. read_frame consumes channel and returns legacyUndecodable carrier withstream_end class; no-store read_node returnsPeerClosed without persistence. Existing peer-close reconnect classification retained, with no replay/settlement authority. Literal failing-before, compressed capture, real receipt uncertainty/reopen and local encrypted-record controls retained. Already-started writes remain uncertain; native full reconnect/backoff/nested control parity unverified. No live account operation.",
     "evidence": "docs/protocol/node-serializer.md#root-stream-end-captures-and-consumes-the-receive-epoch-2026-11-06"
+  },
+  "x-frame-admission-refusal": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [
+      "whatsapp_api::binary::CodecError",
+      "whatsapp_api::binary::unpack_frame_payload",
+      "whatsapp_api::transport::TransportError",
+      "whatsapp_api::transport::messaging::terminal_frame_error",
+      "whatsapp_api::transport::messaging::read_node",
+      "whatsapp_api::transport::messaging::read_frame"
+    ],
+    "description": "Pinned123.A08 corroborates0x02 compression and rejects header-only/mask0x01 fragmented inbound frames. Codec classesheader_only_frame/fragmented_frame now map throughterminal_frame_error toPeerProtocol; actor captures before queue publication and consumes epoch, captured waits/CLI loops preserve then stop, low-level channels reject later reads/writes. Existing transport recovery category retained, not native global backoff/replay authority. Failing-before ping fixture, compressed captures and both encrypted receive APIs tested. Empty authenticated-record skipping remains open. No live verification, retry loop, NACK or settlement change.",
+    "evidence": "docs/protocol/frame-admission.md"
   }
 }

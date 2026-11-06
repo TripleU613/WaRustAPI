@@ -331,6 +331,9 @@ pub enum TransportError {
         /// Configured bound.
         limit: usize,
     },
+    /// A recognized peer framing violation consumed the connection.
+    #[error("peer framing rejected: {0}")]
+    PeerProtocol(&'static str),
     /// The peer closed the stream cleanly at a frame boundary. A reconnect
     /// with a fresh handshake may recover; nothing uncertain is replayed.
     #[error("peer closed the connection")]

@@ -259,6 +259,33 @@ mod tests {
     }
 
     #[test]
+    fn apk_frame_admission_rejects_fragment_and_header_only_before_nodes() {
+        let limits = Limits::default();
+        for flag in [0, 1, 2, 3, 255] {
+            assert_eq!(
+                unpack_frame_payload(&[flag], &limits).unwrap_err().class(),
+                "header_only_frame"
+            );
+        }
+        for flag in [1, 3, 5, 255] {
+            let frame = [flag, 0xF8, 1, 25];
+            assert_eq!(
+                unpack_frame_payload(&frame, &limits).unwrap_err().class(),
+                "fragmented_frame"
+            );
+        }
+        // Other high bits are not mistaken for the fragmentation bit.
+        let raw = unpack_frame_payload(&[4, 0xF8, 1, 25], &limits).unwrap();
+        assert_eq!(
+            Decoder::new(&raw, dict(), &limits)
+                .decode_node()
+                .unwrap()
+                .description,
+            "iq"
+        );
+    }
+
+    #[test]
     fn apk_root_stream_end_is_control_not_a_textual_node() {
         let limits = Limits::default();
         for wire in [

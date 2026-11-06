@@ -9,7 +9,7 @@ use crate::model::jid::{Jid, JidKind, Server};
 use crate::profile::Limits;
 
 /// Frame-payload flag bit indicating zlib compression of the remainder
-/// (`ReferenceOnly`, ledger `binary.frame_flags`).
+/// APK 2.26.43.72 `123.A08` masks `0x02` before selecting inflation.
 pub const FLAG_COMPRESSED: u8 = 0x02;
 
 /// Strip the leading flag byte and inflate if the compression flag is set.
@@ -21,6 +21,15 @@ pub fn unpack_frame_payload(payload: &[u8], limits: &Limits) -> Result<Bytes, Co
             needed: 1,
         });
     };
+    // APK 43.72 123.A08 rejects header-only records and mask0x01 fragmentation;
+    // a fragment must never reach ordinary node/ACK/notification processing.
+    // Evidence: docs/protocol/apk/2.26.43.72-stream-end/frame-reader.txt.
+    if rest.is_empty() {
+        return Err(CodecError::HeaderOnlyFrame);
+    }
+    if flags & 0x01 != 0 {
+        return Err(CodecError::UnsupportedFragment);
+    }
     if flags & FLAG_COMPRESSED == 0 {
         return Ok(Bytes::copy_from_slice(rest));
     }

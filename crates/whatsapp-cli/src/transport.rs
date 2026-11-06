@@ -213,8 +213,10 @@ async fn after_send_window(
                 let key = whatsapp_api::transport::inbox::preserve_undecodable(
                     store, &frame, class, None,
                 )?;
-                if class == "stream_end" {
-                    eprintln!("transport: peer ended stream; captured as {key}; window ended");
+                if whatsapp_api::transport::messaging::terminal_frame_error(class).is_some() {
+                    eprintln!(
+                        "transport: terminal frame ({class}); captured as {key}; window ended"
+                    );
                     break;
                 }
                 eprintln!("transport: a frame did not decode ({class}); captured as {key}");
@@ -631,9 +633,10 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                         let key = whatsapp_api::transport::inbox::preserve_undecodable(
                             &store, &frame, class, None,
                         )?;
-                        if class == "stream_end" {
+                        if whatsapp_api::transport::messaging::terminal_frame_error(class).is_some()
+                        {
                             eprintln!(
-                                "transport: peer ended stream; captured as {key}; receive ended"
+                                "transport: terminal frame ({class}); captured as {key}; receive ended"
                             );
                             break;
                         }

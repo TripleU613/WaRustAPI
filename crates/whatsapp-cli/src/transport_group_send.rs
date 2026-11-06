@@ -624,9 +624,11 @@ async fn answer_retries(
                     Ok(Ok(FrameRead::Undecodable { frame, class })) => {
                         match inbox::preserve_undecodable(store, &frame, class, None) {
                             Ok(key) => {
-                                if class == "stream_end" {
+                                if whatsapp_api::transport::messaging::terminal_frame_error(class)
+                                    .is_some()
+                                {
                                     eprintln!(
-                                        "group-send: peer ended stream; captured as {key}; window ended"
+                                        "group-send: terminal frame ({class}); captured as {key}; window ended"
                                     );
                                     break;
                                 }
