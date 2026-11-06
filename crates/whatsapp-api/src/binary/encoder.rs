@@ -259,6 +259,35 @@ mod tests {
     }
 
     #[test]
+    fn apk_null_attribute_is_not_an_explicit_empty_string() {
+        // APK 43.72 123.A01 -> 0Tl(String,String) checks value nonnull.
+        let limits = Limits::default();
+        let null = [0xF8, 3, 25, 8, 0];
+        assert!(matches!(
+            Decoder::new(&null, dict(), &limits).decode_node(),
+            Err(CodecError::InvalidNode {
+                reason: "null attribute value",
+                ..
+            })
+        ));
+        let empty = [0xF8, 3, 25, 8, 0xFC, 0];
+        let node = Decoder::new(&empty, dict(), &limits).decode_node().unwrap();
+        assert_eq!(
+            node.get_attr("id").and_then(AttributeValue::as_text),
+            Some("")
+        );
+        // LIST_EMPTY in an absent body remains a distinct existing case.
+        let body = [0xF8, 2, 25, 0];
+        assert!(matches!(
+            Decoder::new(&body, dict(), &limits)
+                .decode_node()
+                .unwrap()
+                .content,
+            NodeContent::Empty
+        ));
+    }
+
+    #[test]
     fn legacy_interop_integrator_cannot_be_silently_erased() {
         // This literal exercises the existing reference tag245, not APK's
         // different tag244 tuple. Nonzero integrator is identity-bearing in

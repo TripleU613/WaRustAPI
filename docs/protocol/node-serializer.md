@@ -83,3 +83,18 @@ claim that the APK accepts reference245/246. Native244 has different fields/
 domain discriminator and remains unported. No identity adoption, durable-row
 migration, resend or live operation is added; old persisted identity ambiguity
 and full native conversion require separate evidence.
+
+## Null attribute values cannot become empty text (2026-11-06)
+
+**Confirmed selected static / implemented, APK2.26.43.72:**
+[Complete0Tl constructors, nonnull helper and accessor with linked reader](apk/2.26.43.72-null-attribute/README.md)
+show LIST_EMPTY value reads asnull, then fails the checked attribute constructor.
+An explicitly encoded zero-length string remains nonnull and is permitted.
+Rust previously converted the null marker to present empty text; it now refuses
+with `null attribute value`, preserving explicit empty text and empty bodies.
+
+The literal null-id fixture failed before correction; explicitempty-id/body
+controls pass. No semantic ACK/notification rule, retry/NACK, persistence migration
+or live operation is added. Complete native failure routing and older stored
+empty/null ambiguity remain separate. This does not make all empty values
+invalid or establish complete node-constructor/parser parity.

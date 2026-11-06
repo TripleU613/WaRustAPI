@@ -1191,3 +1191,5 @@ injection/on-added/list insertion/wake; that is not a transaction across durable
 queue and wire. Provider-list identity, all persistence failures/dedup/restore
 and complete rejection/defer lifecycle remain open. Rust original-owner and
 partial-write controls pass unchanged; no runtime/replay or live change added.
+
+- **2026-11-06 decoder presence follow-through:** null attribute markers now fail before semantic routing instead of becoming present empty text. Explicit emptyid remains distinct and retains existing accessor behavior. [Pinned constructor/non-null proof and literal controls](node-serializer.md#null-attribute-values-cannot-become-empty-text-2026-11-06).

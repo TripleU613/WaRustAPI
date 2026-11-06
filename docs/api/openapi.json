@@ -18293,5 +18293,15 @@
     ],
     "description": "Legacy reference tag245 decoder now refuses nonzero integrator IDs that cannot be represented in Jid, preventing distinct inputs from collapsing and silently re-encodingzero. Literal fixture failed before correction; zero legacy control retained. Pinned APK123.A03/2p3 preserve integrator identity in a different native244 tuple; native244 support remains unported. No identity adoption, persisted-state migration, resend or live verification.",
     "evidence": "docs/protocol/node-serializer.md#legacy-interop-tuples-cannot-erase-a-nonzero-integrator-2026-11-06"
+  },
+  "x-null-attribute-value-refusal": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [
+      "whatsapp_api::binary::Decoder"
+    ],
+    "description": "Pinned APK123.A01/A0A passes null attribute markers into checked0Tl constructors, which refuse them. Decoder now returnsInvalidNode null attribute value instead of manufacturing present empty text. Explicit rawempty strings and empty bodies remain distinct. Literal fixture failed before correction. No new ACK/notification settlement, retry/NACK, persistence migration or live verification; full native failure routing remains open.",
+    "evidence": "docs/protocol/node-serializer.md#null-attribute-values-cannot-become-empty-text-2026-11-06"
   }
 }

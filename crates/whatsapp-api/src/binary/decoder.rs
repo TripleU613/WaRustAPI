@@ -427,7 +427,15 @@ impl<'a> Decoder<'a> {
                 return Err(CodecError::DuplicateAttribute { name });
             }
             let value = match self.read_value(true)? {
-                Value::Absent => AttributeValue::Text(String::new()),
+                // APK 43.72 123.A01 passes this value to 0Tl's checked
+                // String constructor. A null marker is not explicit empty text.
+                // Evidence: docs/protocol/apk/2.26.43.72-null-attribute/README.md.
+                Value::Absent => {
+                    return Err(CodecError::InvalidNode {
+                        offset: self.pos - 1,
+                        reason: "null attribute value",
+                    });
+                }
                 Value::Text(s) => AttributeValue::Text(s),
                 Value::Bytes(b) => AttributeValue::Bytes(Bytes::from(b)),
                 Value::Jid(j) => AttributeValue::Jid(j),
