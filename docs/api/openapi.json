@@ -18118,5 +18118,17 @@
     ],
     "description": "Call ACK JID text requires18..32 ASCII hex; temp text requires a hyphen anywhere. Invalid construction follows null sender ordering. Validcall/type10 passes sender-type predicate; temp/type2 rejects after459 diversion. CallDv5 is neither0DY chat norUserJid recipient, so it cannot establish selected message from and recipient falls back. Temp selected from retains plain original user within Rust limits; recipient cast fails. Binary/bare/cache equivalence, generic receipt routes, full payload/recovery and server policy remain open. No live operations or replay authority.",
     "evidence": "docs/protocol/message-ack.md#call-and-temporary-ack-jid-text-keep-distinct-native-types-2026-11-06"
+  },
+  "x-bare-server-ack-types": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [
+      "whatsapp_api::transport::messaging::validate_received_ack",
+      "whatsapp_api::transport::messaging::message_ack_outcome_for",
+      "whatsapp_api::transport::outgoing::acknowledge"
+    ],
+    "description": "Bare s.whatsapp.net/g.us/call text follows selected singleton types13/16/20 after bounded cache-producer analysis. NonnullPN/group reject ordinary call sender admission; barecall passes sender predicate. All three are neither0DY chat norUserJid recipient: selected from is null and recipient falls back. Global required-id/numeric and459 precedence remain unchanged. status_me/lid_me cache aliases, binary equivalence, reflection/native mutation, generic receipt routes and full payload/recovery remain open. No live operations or replay authority.",
+    "evidence": "docs/protocol/message-ack.md#bare-server-ack-identities-follow-bounded-native-subtypes-2026-11-06"
   }
 }

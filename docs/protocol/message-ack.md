@@ -848,3 +848,27 @@ Unicode/suffix cases, temp hyphen position and absence, call-field ordering,
 Actual capture-and-continue actor coverage includes invalid call/temp text.
 Binary typed JIDs, bare/cache aliases, generic receipt routes, full recovery
 and server acceptance remain open. No live operations or replay authority.
+
+
+## Bare server ACK identities follow bounded native subtypes (2026-11-06)
+
+**Confirmed selected pinned static / Rust correction.**
+[Complete0mL/7Ks/J9P classes and bounded cache-producer proof](apk/2.26.43.72-bare-server-ack-types/README.md)
+resolve the earlier deferred bare subtype question for s.whatsapp.net/g.us/call.
+They are empty-user Jid singletons of types13/16/20. A03/A04 cannot insert
+replacement bare keys for these names under the retained initializer/key/
+factory paths; status_me/lid_me remain deliberately separate cache-capable
+UserJid aliases. Reflection/native/alias completeness is not claimed.
+
+With valid fields, call sender predicate rejects barePN/group and permits barecall.
+These are nonnull, so null-sender continuation does not apply;459 and global
+id/numeric checks retain precedence. None is0DY orUserJid: message ACK selected
+from is null and recipient falls back to from. The generic Rust parser's empty
+server-only Jid cannot now substitute a message chat for these text forms.
+
+**Offline regression:** existing bare-sender table now checks all three native
+sender outcomes with valid fields and459 controls. Actual captured fatal-ACK
+actor cases include barePN/group and verify stop, no later write, unchanged
+reserved action and durable capture. Selected-chat tests cover all three from
+casts and recipient fallback. No global Jid, opaque binary path, user cache
+alias, generic receipt, payload/recovery or replay expansion. No live traffic.

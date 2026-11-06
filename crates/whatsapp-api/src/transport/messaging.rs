@@ -1225,6 +1225,17 @@ pub(crate) fn ack_user_text(text: &str) -> Option<AckUserText<'_>> {
     Some(AckUserText::Device(user))
 }
 
+// Selected0De.A00 bare factory:0mL/7Ks/J9P extend Jid directly.
+// A03/A04 cannot cache an empty-user replacement for these three names.
+// 0Dn.A0R admits J9P/type20, excludes0mL/type13 and7Ks/type16.
+pub(crate) fn ack_bare_server_call_allowed(text: &str) -> Option<bool> {
+    match text {
+        "s.whatsapp.net" | "g.us" => Some(false),
+        "call" => Some(true),
+        _ => None,
+    }
+}
+
 // APK43.72 Dv5.<init>:18..32 ASCII hex characters; type10 is
 // accepted by call sender predicate, but the class is not0DY/UserJid.
 pub(crate) fn ack_call_text_valid(text: &str) -> Option<bool> {
@@ -1340,6 +1351,7 @@ pub fn validate_received_ack(node: &Node) -> crate::Result<()> {
         && (node.get_attr("id").and_then(|v| v.as_text()) == Some("")
             || node.get_attr("type").is_none()
             || node.get_attr("type").and_then(|v| v.as_text()) == Some("")
+            || node.get_attr("from").and_then(|v| v.as_text()).and_then(ack_bare_server_call_allowed) == Some(false)
             // DCF/Dv7/J9O types7/8/9 are nonnull but excluded by0Dn.A0R.
             || matches!(node.get_attr("from").and_then(|v| v.as_text()).and_then(ack_user_text),
                 Some(AckUserText::User("0") | AckUserText::ServiceUser(_) | AckUserText::NonUser(_)))
@@ -3595,10 +3607,10 @@ mod captured_wait_tests {
                 "nonnull sender requires type"
             );
             let ack = ack.attr("type", "offer");
-            // Cache-dependent bare sender subtypes are not classified here.
-            if sender == "call" {
-                assert!(validate_received_ack(&ack).is_ok());
+            if let Some(allowed) = ack_bare_server_call_allowed(sender) {
+                assert_eq!(validate_received_ack(&ack).is_ok(), allowed, "{sender}");
             }
+            // status_me/lid_me cache aliases remain separate UserJid families.
             assert!(validate_received_ack(&ack.attr("error", "459")).is_ok());
         }
     }

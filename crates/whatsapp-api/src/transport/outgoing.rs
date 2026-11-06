@@ -1259,6 +1259,16 @@ pub(super) use super::messaging::is_auth_challenge_ack;
 // Optional ACK JID text follows selected pinned constructors and class cast.
 // Hosted aliases unwrap to the canonical base user server.
 fn message_ack_address(node: &Node, name: &str) -> Option<crate::model::jid::Jid> {
+    if node
+        .get_attr(name)
+        .and_then(|v| v.as_text())
+        .and_then(super::messaging::ack_bare_server_call_allowed)
+        .is_some()
+    {
+        // Bare server singletons are neither0DY message chats norUserJid.
+        return None;
+    }
+
     if let Some(text) = node.get_attr(name).and_then(|v| v.as_text())
         && let Some(valid) = super::messaging::ack_non_user_text_valid(text)
     {
@@ -3063,7 +3073,13 @@ mod tests {
     }
     #[test]
     fn native_call_jid_is_not_a_selected_message_chat() {
-        for text in ["0123456789abcdefAB@call", "bad@call"] {
+        for text in [
+            "0123456789abcdefAB@call",
+            "bad@call",
+            "s.whatsapp.net",
+            "g.us",
+            "call",
+        ] {
             assert!(message_ack_chat(&Node::new("ack").attr("from", text)).is_none());
             let ack = Node::new("ack")
                 .attr("from", "15555550100@s.whatsapp.net")

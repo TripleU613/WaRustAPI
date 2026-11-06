@@ -2235,6 +2235,8 @@ mod tests {
                 Some("call-missing-type"),
                 Some("call-empty-type"),
                 Some("call-group-sender"),
+                Some("call-bare-pn"),
+                Some("call-bare-group"),
             ] {
                 if class != "call" && raw.is_some_and(|raw| raw.starts_with("call-")) {
                     continue;
@@ -2279,6 +2281,18 @@ mod tests {
                 };
                 let before = snapshot(&store);
                 let bad = match raw {
+                    Some("call-bare-pn" | "call-bare-group") => Node::new("ack")
+                        .attr("class", "call")
+                        .attr("id", "fixture")
+                        .attr("type", "offer")
+                        .attr(
+                            "from",
+                            if raw == Some("call-bare-pn") {
+                                "s.whatsapp.net"
+                            } else {
+                                "g.us"
+                            },
+                        ),
                     Some("call-group-sender") => Node::new("ack")
                         .attr("class", "call")
                         .attr("id", "fixture")
