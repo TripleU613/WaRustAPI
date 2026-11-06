@@ -115,6 +115,13 @@ impl Snapshot {
             }
             for recipient in &plan.recipients {
                 keys.push((Table::Checkpoints, super::devices::list_key(recipient)));
+                // APK37.71 11Q.A09/101.A02 queues device synchronization before
+                // the replacement list exists. Freeze our durable work revision
+                // too, so an intervening notification cannot leave routing stale.
+                keys.push((
+                    Table::Checkpoints,
+                    super::devices::sync_revision_key(recipient),
+                ));
                 // Companion authority depends on the primary pin even if the
                 // saved device list does not address that primary itself.
                 keys.push((Table::PeerIdentities, session_key(recipient)));
@@ -1688,6 +1695,7 @@ pub(super) mod tests {
                 "missing_group",
                 "missing_list",
                 "primary_pin",
+                "refresh",
             ] {
                 let d = tempfile::tempdir().unwrap();
                 let store = open(&d.path().join("routing-race.redb"));
@@ -1704,6 +1712,12 @@ pub(super) mod tests {
                 let list_key = super::super::devices::list_key(member);
                 store
                     .write(|tx| match changed {
+                        "refresh" => super::super::devices::request_sync_in(
+                            tx,
+                            member,
+                            Some("2:new"),
+                            "notification",
+                        ),
                         "membership" => {
                             let mut group: super::super::groups::GroupSnapshot = tx
                                 .get_json(Table::Checkpoints, group_key.as_bytes(), 1)?

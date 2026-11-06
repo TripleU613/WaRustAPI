@@ -15837,6 +15837,17 @@
     "evidence": "docs/protocol/apk/2.26.43.72-sender-key-ack-confirmation/README.md",
     "description": "Traces native message ACK callback registration and wait, successful normal sender-key marking and conditional one-time-key reset. Connects registration-time pre-ACK marker snapshot to matched callback retirement after wrapped result. Rust per-distribution durable confirmation and native address ownership remain incomplete. Evidence only; no command, HTTP route or production behavior change."
   },
+  "x-group-device-refresh-revision-guard": {
+    "x-cli": {
+      "command": "whatsapp-cli outbox-group-preparations"
+    },
+    "x-transport": [
+      "experimental-transport group fanout reservation and continuation"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/normal-group-outbox.md#device-refresh-revisions-across-preparation-and-ack-waits-2026-11-05",
+    "description": "Recipient local device-sync revisions are frozen with routing. New recipient refresh work rejects stale reservation or blocks dependent distribution/group ciphertext with routing_changed after reservation, even while saved lists are unchanged. Unrelated contacts do not block. No server counter meaning, reset, replay, route or native scheduler parity claimed."
+  },
   "x-group-distribution-chain-guard": {
     "x-cli": {
       "command": "whatsapp-cli outbox-group-preparations"

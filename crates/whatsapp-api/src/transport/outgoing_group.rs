@@ -446,6 +446,12 @@ pub(super) mod tests {
     async fn same_chain_ack_metadata_does_not_block_distribution_continuation() {
         assert_distribution_change_stops("same_chain_ack").await;
     }
+    #[tokio::test]
+    async fn device_refresh_during_distribution_blocks_only_affected_recipients() {
+        for change in ["device_refresh", "unrelated_refresh"] {
+            assert_distribution_change_stops(change).await;
+        }
+    }
     async fn assert_distribution_change_stops(change_kind: &str) {
         use super::super::group_references::tests::{reference, save_parent};
         for accepted_before_change in [0, 1] {
@@ -591,6 +597,37 @@ pub(super) mod tests {
                             .unwrap();
                     }
                 }
+                "device_refresh" | "unrelated_refresh" => {
+                    let owner = if change_kind == "device_refresh" {
+                        peer.clone()
+                    } else {
+                        Jid::parse("15555550999@s.whatsapp.net").unwrap()
+                    };
+                    let notification = Node::new("notification")
+                        .attr("type", "devices")
+                        .attr("id", "DEVICE-CHANGE")
+                        .attr("from", owner.clone())
+                        .children(vec![
+                            Node::new("add")
+                                .attr("device_hash", "2:changed")
+                                .children(vec![
+                                    Node::new("device")
+                                        .attr("jid", owner.with_device(7))
+                                        .attr("key-index", "1"),
+                                ]),
+                        ]);
+                    let change = devices::notification(&notification).unwrap();
+                    let before_list = devices::device_list(&store, peer).unwrap();
+                    devices::request_sync(
+                        &store,
+                        None,
+                        &change.owner,
+                        change.device_hash.as_deref(),
+                        "notification",
+                    )
+                    .unwrap();
+                    assert_eq!(devices::device_list(&store, peer).unwrap(), before_list);
+                }
                 "same_chain_ack" => {
                     store
                         .write(|tx| {
@@ -621,7 +658,7 @@ pub(super) mod tests {
                 .settle(&store, &f.alice, &ack, ConnectionEpoch(29), &mut cursor)
                 .await
                 .unwrap();
-            if change_kind == "same_chain_ack" {
+            if matches!(change_kind, "same_chain_ack" | "unrelated_refresh") {
                 assert!(step.node.is_some());
                 assert_eq!(step.pending.is_some(), accepted_before_change == 0);
                 assert_eq!(

@@ -1,3 +1,15 @@
+2026-11-05 — **Fresh recipient device-sync work stops stale group continuation.**
+
+Recipient sync revisions now guard fanout reservation and later ACK-driven
+stanzas, closing the interval before a new device list arrives. An unrelated
+contact refresh still permits continuation. Original pending work, ciphertext
+and uncertain reservations remain held.
+[Defect, red/green test and scope](docs/protocol/normal-group-outbox.md#device-refresh-revisions-across-preparation-and-ack-waits-2026-11-05).
+Validation: the new regression failed before the guard and passes afterward;
+all 1383 workspace/all-feature tests, fmt, strict Clippy, CLI/OpenAPI, APK
+coverage, pinned APK identity and staged checksum/link hygiene passed. No live
+account operation.
+
 2026-11-05 — **Invalidated sender-key chains stop ACK-driven continuation.**
 
 The reservation captures chain identity; later distribution ACKs cannot release

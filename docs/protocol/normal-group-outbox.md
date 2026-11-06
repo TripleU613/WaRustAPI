@@ -755,3 +755,39 @@ local frozen-state policy; native per-ACK revalidation/scheduler equivalence is
 not proven. The guard does not make validation atomic with socket write or
 resolve the native direct-SKDM producer/address tuple. Corrupt store data remains
 an error. No live account operation or recovery reset.
+
+### Device-refresh revisions across preparation and ACK waits (2026-11-05)
+
+**Confirmed local defect / corrected offline:** a parsed contact device-change
+notification queues synchronization before its new list exists. The old saved
+list stays byte-identical, so checking that list/pins alone allowed a dependent
+distribution or final group stanza after a newer notification. The regression
+failed on this stale release before the revision guard.
+
+Fanout snapshots now include each recipient's existing durable device-sync
+revision. This monotonic local work counter is already raised by request_sync_in;
+it is not a server device hash, ADV timestamp or delivery version. The original
+reservation transaction validates it alongside routing, then captures its
+post-reservation value for the connection-local continuation guard. A later
+affected-recipient refresh blocks with routing_changed; a revision raised during
+crypto staging rejects that reservation through the existing OCC error path.
+No counter reset, pending-work deletion or automatic replay is introduced.
+
+`device_refresh_during_distribution_blocks_only_affected_recipients` parses a
+real-shaped devices/add notification, invokes the same durable request_sync sink
+as the actor, and verifies the saved list has not changed. While either of two
+distributions waits for its ACK, a recipient's refresh stops dependent output;
+an unrelated contact's refresh still permits continuation. Both retain all
+post-change rows except the explicit preparation block, and remain nonselectable
+after reopening. The shared fresh/cached reservation race test also includes a
+refresh raised after staging and proves rollback/preservation.
+
+**Evidence / limits:** APK37.71 11Q.A09 ->101.A02 records pending device-sync
+work before SyncDevicesJob obtains replacement lists, as retained in devices.rs
+and [cross-device synchronization](cross-device-sync.md). Extending the local
+monotonic revision guard is a concurrency policy, not claimed native per-ACK
+scheduler parity. Any new local refresh reason advances this counter, so the
+guard conservatively stops even without proof the remote inventory changed.
+It does not reject every pre-existing pending marker, implement own-account
+companion synchronization, or make state validation atomic with socket write.
+Already exposed ciphertext, keys and uncertainty stay reserved; no live request.

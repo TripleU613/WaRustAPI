@@ -68,6 +68,10 @@ fn pending_key(user: &Jid) -> String {
 pub(crate) fn list_key(user: &Jid) -> String {
     format!("{LIST_PREFIX}{user}")
 }
+// Local monotonic work revision, not the server's device hash or ADV timestamp.
+pub(crate) fn sync_revision_key(user: &Jid) -> String {
+    format!("{GENERATION_PREFIX}{user}")
+}
 fn query_key(iq_id: &str) -> String {
     format!("{QUERY_PREFIX}{iq_id}")
 }
@@ -356,7 +360,7 @@ pub(crate) fn request_sync_in(
 ) -> Result<()> {
     let previous: Option<Pending> =
         tx.get_json(Table::Checkpoints, pending_key(user).as_bytes(), 1)?;
-    let generation_key = format!("{GENERATION_PREFIX}{user}");
+    let generation_key = sync_revision_key(user);
     let prior: Option<u64> = tx.get_json(Table::Checkpoints, generation_key.as_bytes(), 1)?;
     let generation = prior
         .unwrap_or(0)
