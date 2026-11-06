@@ -1,0 +1,86 @@
+{
+  "README.md": {
+    "bytes": 9098,
+    "sha256": "155c019725eecd22a0b138376e0fd4c6c152b5ba610053e6cdf490d3d406e683"
+  },
+  "binding-callers.txt": {
+    "bytes": 68,
+    "sha256": "2dac608722772aa6d7a2e8c7973fd287569a68e05059ecfaeab3ae68e2fe9080"
+  },
+  "codec-constructor.txt": {
+    "bytes": 408,
+    "sha256": "f67c23342525117122bd13530fc3f85af7a5c122ac2d2f910d4a403662c9b3bb"
+  },
+  "codec-entry.txt": {
+    "bytes": 315,
+    "sha256": "978a510c6903d4b30c5fc13f65a9cf47956324969048b48ce92d6aaf8e7cdaac"
+  },
+  "codec-write.txt": {
+    "bytes": 4774,
+    "sha256": "d636f5b939a99fba6eaf8d34fb6aad41c70d5f12be8be9ee2b46974b04f451b5"
+  },
+  "connection-constructor.txt": {
+    "bytes": 1910,
+    "sha256": "aeac1dc101f1c77ec63588d3f0375f2eee8f81feff44e9ebabbfebcdf90db401"
+  },
+  "encrypted-delegate.txt": {
+    "bytes": 353,
+    "sha256": "2caf520cb011bc991f697a96f689edd097fb0ee14bb01a112b40a9befd31eb20"
+  },
+  "final-render.txt": {
+    "bytes": 9158,
+    "sha256": "9aa4881ccf2c9e0e5d9229baaaf9836caedbcea4a3c2815ecc5671f329b5af7c"
+  },
+  "frame-length.txt": {
+    "bytes": 695,
+    "sha256": "56c82fe43c2043ccfc64976d164df83b9f415f23dbb9eaf51a01780395316fdc"
+  },
+  "framing.txt": {
+    "bytes": 2447,
+    "sha256": "9384d0b8edeb597ae9e6b49746407c7d75f3d96729c3aa5b5b4d4e47e5f1d9d2"
+  },
+  "interface.txt": {
+    "bytes": 1972,
+    "sha256": "66916536f8c07d24c702e893a1e3ecb6e2df43fe5f4b957f7ea7a81f090c0006"
+  },
+  "output-binding.txt": {
+    "bytes": 552,
+    "sha256": "5534c6f0a2f62193ef44cb90ac5daaaaa21487b8eb758af6400ba5e7183e6693"
+  },
+  "output-constructor.txt": {
+    "bytes": 438,
+    "sha256": "eb17052c496bcf1b6c6c8cb8b10675f0666b39fad6a0769dad069f6f6b8fc5b0"
+  },
+  "preack-selection.txt": {
+    "bytes": 11526,
+    "sha256": "eb41c1a8e70420f09881e13784678553df2d77898588ecc7f2c2bc90f6a11fac"
+  },
+  "prepare.txt": {
+    "bytes": 7191,
+    "sha256": "6bf3bbd4a8cda9691971e0a5003066c0c2e41086e8451c72acad294f06571bb0"
+  },
+  "record-encrypt.txt": {
+    "bytes": 2092,
+    "sha256": "048c24b0a015bd2f6c298297dfb5859ab0e219ecfd901b75a897c1e65abd2d76"
+  },
+  "size-failure-registry.txt": {
+    "bytes": 1973,
+    "sha256": "4eb5c5cb8422d7b01ec9f224879c3cf6b7c8495eff435808254f8411c79e140e"
+  },
+  "size-failure.txt": {
+    "bytes": 640,
+    "sha256": "f1f8333dec54c8a73d1e4304daf7f027b4292d7dd7da7ed7a3ec18432a6970b8"
+  },
+  "superclass-overrides.txt": {
+    "bytes": 427,
+    "sha256": "c45ccb453dab294ab32c1e1c9fbd80988856b6d2bedf36498f482e2e42e86d60"
+  },
+  "write-notify-handler.txt": {
+    "bytes": 1692,
+    "sha256": "5ed074bff9332c4f917d4699ec94d2e1288ac736227a6e8c013fda11619917d5"
+  },
+  "write-notify.txt": {
+    "bytes": 485,
+    "sha256": "0b5000c04a8ea90e7a6a2d67b669e5fe3c178600a9bf55b4a655424a1a5348a6"
+  }
+}

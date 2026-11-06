@@ -1,0 +1,12 @@
+
+# class: LX/1r2;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLL)  # .registers 3
+    # full signature: LX/1r2;-><init>(LX/122;LX/1r1;)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v2, v0, LX/1r2;->A01:LX/1r1;
+    000a..000e  iput-object  v1, v0, LX/1r2;->A00:LX/122;
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method

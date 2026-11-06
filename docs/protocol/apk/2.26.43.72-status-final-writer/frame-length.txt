@@ -1,0 +1,22 @@
+
+# class: LX/1nr;
+# extends: Ljava/lang/Object;
+
+.method public A04(LI)  # .registers 5
+    # full signature: LX/1nr;->A04(I)[B
+    0000..0002  const/4  v0, #0x3
+    0002..0006  new-array  v3, v0, [B
+    0006..0008  const/4  v2, #0x0
+    0008..000a  const/4  v1, #0x2
+    000a..000c  int-to-byte  v0, v4
+    000c..0010  aput-byte  v0, v3, v1
+    0010..0012  const/4  v1, #0x1
+    0012..0016  shr-int/lit8  v0, v4, #0x8
+    0016..0018  int-to-byte  v0, v0
+    0018..001c  aput-byte  v0, v3, v1
+    001c..0020  shr-int/lit8  v0, v4, #0x10
+    0020..0022  int-to-byte  v0, v0
+    0022..0026  aput-byte  v0, v3, v2
+    0026..0028  return-object  v3
+    # exception table: 0 try range(s)
+.end method

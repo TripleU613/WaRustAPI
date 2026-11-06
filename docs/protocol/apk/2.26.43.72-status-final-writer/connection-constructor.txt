@@ -1,0 +1,36 @@
+
+# class: LX/1rj;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLLL)  # .registers 10
+    # full signature: LX/1rj;-><init>(LX/09S;LX/08Z;LX/1r0;LX/0Td;LX/1ri;LX/1lZ;Ljava/util/Map;)V
+    0000..0006  invoke-direct  {v2}, Ljava/lang/Object;-><init>()V
+    0006..0008  const/4  v0, #0x5
+    0008..000e  invoke-static  {v0}, LX/00D;->A00(I)LX/05h;
+    000e..0010  move-result-object  v0
+    0010..0014  iput-object  v0, v2, LX/1rj;->A05:LX/00x;
+    0014..0016  const/4  v1, #0x0
+    0016..001a  new-instance  v0, Ljava/util/concurrent/atomic/AtomicBoolean;
+    001a..0020  invoke-direct  {v0, v1}, Ljava/util/concurrent/atomic/AtomicBoolean;-><init>(Z)V
+    0020..0024  iput-object  v0, v2, LX/1rj;->A08:Ljava/util/concurrent/atomic/AtomicBoolean;
+    0024..0028  const/16  v0, #0x42
+    0028..002e  invoke-static  {v0}, LX/00D;->A00(I)LX/05h;
+    002e..0030  move-result-object  v0
+    0030..0034  iput-object  v0, v2, LX/1rj;->A04:LX/00x;
+    0034..0038  const/16  v0, #0x10
+    0038..003e  invoke-static  {v0}, LX/00D;->A05(I)Ljava/util/Set;
+    003e..0040  move-result-object  v1
+    0040..0044  new-instance  v0, Ljava/util/concurrent/CopyOnWriteArrayList;
+    0044..004a  invoke-direct  {v0, v1}, Ljava/util/concurrent/CopyOnWriteArrayList;-><init>(Ljava/util/Collection;)V
+    004a..004e  iput-object  v0, v2, LX/1rj;->A0C:Ljava/util/List;
+    004e..0052  iput-object  v6, v2, LX/1rj;->A0B:LX/0Td;
+    0052..0056  iput-object  v3, v2, LX/1rj;->A09:LX/09S;
+    0056..005a  iput-object  v8, v2, LX/1rj;->A07:LX/1lZ;
+    005a..005e  iput-object  v9, v2, LX/1rj;->A03:Ljava/util/Map;
+    005e..0062  new-instance  v0, LX/1rk;
+    0062..0068  invoke-direct  {v0, v4, v7}, LX/1rk;-><init>(LX/08Z;LX/1ri;)V
+    0068..006c  iput-object  v0, v2, LX/1rj;->A0A:LX/1rk;
+    006c..0070  iput-object  v5, v2, LX/1rj;->A06:LX/1r0;
+    0070..0072  return-void
+    # exception table: 0 try range(s)
+.end method

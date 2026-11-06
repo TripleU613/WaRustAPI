@@ -1,0 +1,11 @@
+
+# class: LX/1r2;
+# extends: Ljava/lang/Object;
+
+.method public Cyt(VL)  # .registers 3
+    # full signature: LX/1r2;->Cyt(LX/0Tp;)V
+    0000..0002  const/4  v0, #0x1
+    0002..0008  invoke-virtual  {v1, v2, v0}, LX/1r2;->Cyu(LX/0Tp;I)V
+    0008..000a  return-void
+    # exception table: 0 try range(s)
+.end method

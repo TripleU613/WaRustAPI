@@ -1,0 +1,188 @@
+
+# class: LX/1i8;
+# extends: Ljava/lang/Object;
+
+.method public A07(LL)  # .registers 12
+    # full signature: LX/1i8;->A07(Landroid/os/Message;)LX/1vZ;
+    0000..0004  iget  v3, v11, Landroid/os/Message;->arg1:I
+    0004..0008  const/16  v0, #0x9
+    0008..000c  if-eq  v3, v0, +0x153
+    000c..0010  const/16  v0, #0xb
+    0010..0014  if-eq  v3, v0, +0x109
+    0014..0018  const/16  v0, #0x4c
+    0018..001c  if-eq  v3, v0, +0xf5
+    001c..0020  const/16  v0, #0x81
+    0020..0024  if-eq  v3, v0, +0xf1
+    0024..0028  const/16  v0, #0x9d
+    0028..002c  const-string  v2, "loggableStanzaId"
+    002c..0030  const-string  v4, "callId"
+    0030..0034  const-string  v8, "callCreatorJid"
+    0034..0038  const-string  v5, "jid"
+    0038..003c  const-string  v1, "id"
+    003c..0040  if-eq  v3, v0, +0xa1
+    0040..0044  const/16  v0, #0x1a3
+    0044..0048  if-eq  v3, v0, +0x8e
+    0048..004c  const/16  v0, #0x1af
+    004c..0050  if-eq  v3, v0, +0x70
+    0050..0054  const/16  v0, #0x1db
+    0054..0058  if-eq  v3, v0, +0x5d
+    0058..005e  packed-switch  v3, payload@0x2dc, cases=[71:@0x62, 72:@0xb8, 73:@0x23e], default@0x5e
+    005e..0060  const/4  v5, #0x0
+    0060..0062  return-object  v5
+    0062..0068  invoke-static  {v11}, LX/1i8;->A00(Landroid/os/Message;)Landroid/os/Bundle;
+    0068..006a  move-result-object  v7
+    006a..0070  invoke-static  {v7}, LX/00L;->A05(Ljava/lang/Object;)V
+    0070..0076  invoke-virtual  {v7, v1}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    0076..0078  move-result-object  v6
+    0078..007e  invoke-virtual  {v7, v5}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    007e..0080  move-result-object  v0
+    0080..0084  sget-object  v1, Lcom/whatsapp/infra/core/jid/DeviceJid;->Companion:LX/0EB;
+    0084..008a  invoke-virtual  {v1, v0}, LX/0EB;->A04(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    008a..008c  move-result-object  v5
+    008c..0092  invoke-static  {v5}, LX/00L;->A05(Ljava/lang/Object;)V
+    0092..0098  invoke-virtual  {v7, v8}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    0098..009a  move-result-object  v0
+    009a..00a0  invoke-virtual  {v1, v0}, LX/0EB;->A04(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    00a0..00a2  move-result-object  v3
+    00a2..00a8  invoke-static  {v3}, LX/00L;->A05(Ljava/lang/Object;)V
+    00a8..00ae  invoke-virtual  {v7, v4}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    00ae..00b0  move-result-object  v1
+    00b0..00b4  const-string  v0, "offer"
+    00b4..00b8  goto/16  +0xee
+    00b8..00be  invoke-static  {v11}, LX/1i8;->A00(Landroid/os/Message;)Landroid/os/Bundle;
+    00be..00c0  move-result-object  v7
+    00c0..00c6  invoke-static  {v7}, LX/00L;->A05(Ljava/lang/Object;)V
+    00c6..00cc  invoke-virtual  {v7, v1}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    00cc..00ce  move-result-object  v6
+    00ce..00d4  invoke-virtual  {v7, v5}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    00d4..00d6  move-result-object  v0
+    00d6..00da  sget-object  v1, Lcom/whatsapp/infra/core/jid/DeviceJid;->Companion:LX/0EB;
+    00da..00e0  invoke-virtual  {v1, v0}, LX/0EB;->A04(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    00e0..00e2  move-result-object  v5
+    00e2..00e8  invoke-static  {v5}, LX/00L;->A05(Ljava/lang/Object;)V
+    00e8..00ee  invoke-virtual  {v7, v8}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    00ee..00f0  move-result-object  v0
+    00f0..00f6  invoke-virtual  {v1, v0}, LX/0EB;->A04(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    00f6..00f8  move-result-object  v3
+    00f8..00fe  invoke-static  {v3}, LX/00L;->A05(Ljava/lang/Object;)V
+    00fe..0104  invoke-virtual  {v7, v4}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    0104..0106  move-result-object  v1
+    0106..010a  const-string  v0, "accept"
+    010a..010e  goto/16  +0xc3
+    010e..0112  iget-object  v0, v11, Landroid/os/Message;->obj:Ljava/lang/Object;
+    0112..0118  invoke-static  {v0}, LX/00L;->A05(Ljava/lang/Object;)V
+    0118..011c  check-cast  v0, LX/Dxr;
+    011c..0122  invoke-static  {v0}, LX/F3e;->A06(LX/Dxr;)LX/0Tp;
+    0122..0124  move-result-object  v4
+    0124..0128  iget-wide  v1, v0, LX/F1Z;->A01:J
+    0128..012c  goto/16  +0xbc
+    012c..0130  iget-object  v0, v11, Landroid/os/Message;->obj:Ljava/lang/Object;
+    0130..0136  invoke-static  {v0}, LX/00L;->A05(Ljava/lang/Object;)V
+    0136..013a  check-cast  v0, LX/2CX;
+    013a..013e  iget-object  v1, v0, LX/2CX;->A01:LX/0DY;
+    013e..0142  iget-object  v4, v0, LX/2CX;->A04:Ljava/lang/String;
+    0142..0146  iget-object  v2, v0, LX/2CX;->A02:LX/0DY;
+    0146..0148  const/4  v3, #0x0
+    0148..014c  iget-object  v6, v0, LX/2CX;->A03:Ljava/lang/String;
+    014c..014e  move-object  v7, v3
+    014e..0150  move-object  v5, v3
+    0150..0156  invoke-static/range  {v1..v7}, LX/F3e;->A01(LX/0DY;LX/0DY;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)LX/0Tp;
+    0156..0158  move-result-object  v4
+    0158..015c  iget-wide  v1, v0, LX/2CX;->A00:J
+    015c..0160  goto/16  +0xa2
+    0160..0164  iget-object  v0, v11, Landroid/os/Message;->obj:Ljava/lang/Object;
+    0164..016a  invoke-static  {v0}, LX/00L;->A05(Ljava/lang/Object;)V
+    016a..016e  check-cast  v0, LX/EXu;
+    016e..0174  invoke-static  {v0}, LX/F3e;->A07(LX/EXu;)LX/0Tp;
+    0174..0176  move-result-object  v4
+    0176..017a  iget-wide  v1, v0, LX/EXu;->A00:J
+    017a..017e  goto/16  +0x93
+    017e..0184  invoke-static  {v11}, LX/1i8;->A00(Landroid/os/Message;)Landroid/os/Bundle;
+    0184..0186  move-result-object  v3
+    0186..018c  invoke-static  {v3}, LX/00L;->A05(Ljava/lang/Object;)V
+    018c..0192  invoke-virtual  {v3, v1}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    0192..0194  move-result-object  v7
+    0194..019a  invoke-virtual  {v3, v5}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    019a..019c  move-result-object  v0
+    019c..01a0  sget-object  v1, Lcom/whatsapp/infra/core/jid/DeviceJid;->Companion:LX/0EB;
+    01a0..01a6  invoke-virtual  {v1, v0}, LX/0EB;->A04(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    01a6..01a8  move-result-object  v5
+    01a8..01ae  invoke-static  {v5}, LX/00L;->A05(Ljava/lang/Object;)V
+    01ae..01b4  invoke-virtual  {v3, v8}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    01b4..01b6  move-result-object  v0
+    01b6..01bc  invoke-virtual  {v1, v0}, LX/0EB;->A04(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    01bc..01be  move-result-object  v6
+    01be..01c4  invoke-static  {v6}, LX/00L;->A05(Ljava/lang/Object;)V
+    01c4..01ca  invoke-virtual  {v3, v4}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    01ca..01cc  move-result-object  v8
+    01cc..01d0  const-string  v0, "type"
+    01d0..01d6  invoke-virtual  {v3, v0}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    01d6..01d8  move-result-object  v9
+    01d8..01dc  const-string  v0, "registrationId"
+    01dc..01e2  invoke-virtual  {v3, v0}, Landroid/os/Bundle;->getByteArray(Ljava/lang/String;)[B
+    01e2..01e4  move-result-object  v10
+    01e4..01e8  const-string  v0, "retry"
+    01e8..01ee  invoke-virtual  {v3, v0}, Landroid/os/Bundle;->getByte(Ljava/lang/String;)B
+    01ee..01f0  move-result  v11
+    01f0..01f6  invoke-static/range  {v5..v11}, LX/F3e;->A03(Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/DeviceJid;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[BB)LX/0Tp;
+    01f6..01f8  move-result-object  v4
+    01f8..01fe  invoke-virtual  {v3, v2}, Landroid/os/BaseBundle;->getLong(Ljava/lang/String;)J
+    01fe..0200  move-result-wide  v1
+    0200..0202  goto  +0x50
+    0202..0206  iget-object  v1, v11, Landroid/os/Message;->obj:Ljava/lang/Object;
+    0206..020c  invoke-static  {v1}, LX/00L;->A05(Ljava/lang/Object;)V
+    020c..0210  check-cast  v1, LX/Eoh;
+    0210..0214  iget-object  v0, v1, LX/Eoh;->A04:LX/0Tp;
+    0214..021a  invoke-static  {v0, v1}, LX/F3e;->A05(LX/0Tp;LX/Eoh;)LX/0Tp;
+    021a..021c  move-result-object  v4
+    021c..0220  iget-wide  v1, v1, LX/Eoh;->A00:J
+    0220..0222  goto  +0x40
+    0222..0226  iget-object  v0, v11, Landroid/os/Message;->obj:Ljava/lang/Object;
+    0226..022c  invoke-static  {v0}, LX/00L;->A05(Ljava/lang/Object;)V
+    022c..0230  check-cast  v0, LX/EYI;
+    0230..0236  invoke-static  {v0}, LX/F3e;->A08(LX/EYI;)LX/0Tp;
+    0236..0238  move-result-object  v4
+    0238..023c  iget-wide  v1, v0, LX/EYI;->A05:J
+    023c..023e  goto  +0x32
+    023e..0244  invoke-static  {v11}, LX/1i8;->A00(Landroid/os/Message;)Landroid/os/Bundle;
+    0244..0246  move-result-object  v7
+    0246..024c  invoke-static  {v7}, LX/00L;->A05(Ljava/lang/Object;)V
+    024c..0252  invoke-virtual  {v7, v1}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    0252..0254  move-result-object  v6
+    0254..025a  invoke-virtual  {v7, v5}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    025a..025c  move-result-object  v0
+    025c..0260  sget-object  v1, Lcom/whatsapp/infra/core/jid/DeviceJid;->Companion:LX/0EB;
+    0260..0266  invoke-virtual  {v1, v0}, LX/0EB;->A04(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0266..0268  move-result-object  v5
+    0268..026e  invoke-static  {v5}, LX/00L;->A05(Ljava/lang/Object;)V
+    026e..0274  invoke-virtual  {v7, v8}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    0274..0276  move-result-object  v0
+    0276..027c  invoke-virtual  {v1, v0}, LX/0EB;->A04(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    027c..027e  move-result-object  v3
+    027e..0284  invoke-static  {v3}, LX/00L;->A05(Ljava/lang/Object;)V
+    0284..028a  invoke-virtual  {v7, v4}, Landroid/os/BaseBundle;->getString(Ljava/lang/String;)Ljava/lang/String;
+    028a..028c  move-result-object  v1
+    028c..0290  const-string  v0, "reject"
+    0290..0296  invoke-static  {v5, v3, v6, v1, v0}, LX/F3e;->A02(Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/DeviceJid;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)LX/0Tp;
+    0296..0298  move-result-object  v4
+    0298..029e  invoke-virtual  {v7, v2}, Landroid/os/BaseBundle;->getLong(Ljava/lang/String;)J
+    029e..02a0  move-result-wide  v1
+    02a0..02a2  const/4  v0, #0x0
+    02a2..02a6  new-instance  v5, LX/1vZ;
+    02a6..02ac  invoke-direct  {v5, v4, v0, v1, v2}, LX/1vZ;-><init>(LX/0Tp;Ljava/lang/Long;J)V
+    02ac..02ae  return-object  v5
+    02ae..02b2  iget-object  v1, v11, Landroid/os/Message;->obj:Ljava/lang/Object;
+    02b2..02b8  invoke-static  {v1}, LX/00L;->A05(Ljava/lang/Object;)V
+    02b8..02bc  check-cast  v1, LX/18U;
+    02bc..02c0  iget  v0, v11, Landroid/os/Message;->arg2:I
+    02c0..02c6  invoke-static  {v1, v0}, LX/F3e;->A04(LX/18U;I)LX/0Tp;
+    02c6..02c8  move-result-object  v3
+    02c8..02cc  iget-wide  v1, v1, LX/18U;->A0n:J
+    02cc..02ce  const/4  v0, #0x0
+    02ce..02d2  new-instance  v5, LX/1vZ;
+    02d2..02d8  invoke-direct  {v5, v3, v0, v1, v2}, LX/1vZ;-><init>(LX/0Tp;Ljava/lang/Long;J)V
+    02d8..02da  return-object  v5
+    02da..02dc  nop
+    02dc..02f0  packed-switch-payload  size=3
+    # exception table: 0 try range(s)
+.end method

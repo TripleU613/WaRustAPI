@@ -1,0 +1,47 @@
+
+# class: LX/1oU;
+# extends: Ljava/lang/Object;
+
+.method public A01(LLLIJ)  # .registers 16
+    # full signature: LX/1oU;->A01([B[BIJ)[B
+    0000..0002  const/4  v6, #0x0
+    0002..0004  const/4  v3, #0x1
+    0004..0008  new-instance  v0, LX/1pQ;
+    0008..000e  invoke-direct  {v0}, LX/1pQ;-><init>()V
+    000e..0012  new-instance  v4, LX/1pT;
+    0012..0018  invoke-direct  {v4, v0}, LX/1pT;-><init>(LX/1pO;)V
+    0018..001c  const/16  v0, #0xc
+    001c..0020  new-array  v2, v0, [B
+    0020..0022  const/4  v0, #0x4
+    0022..0028  invoke-static  {v2, v0, v14, v15}, LX/1nr;->A02([BIJ)V
+    0028..002c  iget-object  v0, v10, LX/1oU;->A00:[B
+    002c..0030  new-instance  v1, LX/1pW;
+    0030..0036  invoke-direct  {v1, v0}, LX/1pW;-><init>([B)V
+    0036..003a  new-instance  v0, LX/1pX;
+    003a..0040  invoke-direct  {v0, v1, v2}, LX/1pX;-><init>(LX/1pV;[B)V
+    0040..0046  invoke-virtual  {v4, v0, v3}, LX/1pT;->BPF(LX/1pV;Z)V
+    0046..0048  array-length  v0, v11
+    0048..004e  invoke-virtual  {v4, v11, v6, v0}, LX/1pT;->CTf([BII)V
+    004e..0050  move  v7, v13
+    0050..0056  invoke-virtual  {v4, v13}, LX/1pT;->Ax6(I)I
+    0056..0058  move-result  v2
+    0058..005c  new-array  v8, v2, [B
+    005c..005e  move-object  v5, v12
+    005e..0060  move  v9, v6
+    0060..0066  invoke-virtual/range  {v4..v9}, LX/1pT;->CTl([BII[BI)I
+    0066..0068  move-result  v1
+    0068..006e  invoke-virtual  {v4, v8, v1}, LX/1pT;->AOL([BI)I
+    006e..0070  move-result  v0
+    0070..0072  add-int/2addr  v1, v0
+    0072..0076  if-ge  v1, v2, +0x8
+    0076..007a  new-array  v0, v1, [B
+    007a..0080  invoke-static  {v8, v6, v0, v6, v1}, Ljava/lang/System;->arraycopy(Ljava/lang/Object;ILjava/lang/Object;II)V
+    0080..0082  return-object  v0
+    0082..0084  return-object  v8
+    0084..0086  move-exception  v1
+    0086..008a  new-instance  v0, Ljava/lang/AssertionError;
+    008a..0090  invoke-direct  {v0, v1}, Ljava/lang/AssertionError;-><init>(Ljava/lang/Object;)V
+    0090..0092  throw  v0
+    # exception table: 1 try range(s)
+    # catch LX/TRb; code_units 0001..0042 -> 0042
+.end method

@@ -1086,3 +1086,28 @@ callback ownership remain separate local controls, verified by targeted tests.
 No Rust runtime change, generic ordinary-receipt producer claim, timeout/default
 change, reconnect or replay expansion. Next source is concrete1A0.CdY/writer and
 last encode/prewrite admission. No live operations.
+
+## Status final writer consumes the transport counter before output (2026-11-06)
+
+**Confirmed selected static, APK2.26.43.72:**
+[Complete final handler, codec, output binding, framing and callback exports](apk/2.26.43.72-status-final-writer/README.md)
+connect status logicaltype8 through the existing two-handler channel to0uz/0ux.
+Pre-ACK preparation returnsnull forarg1=8, preserving the originalEng message.
+The final handler constructs rootmessage from prepared attribute-map values and
+children, invokesCyt, then performs local bookkeeping and write notification.
+No extra required wire field or final owner revalidation is shown there.
+
+The selected1r2 binding sends uncompressed flag0, serializes the node, advances
+the transport counter before record encryption, writes a three-byte big-endian
+length plus ciphertext and flushes. Partial output remains possible. A local
+notification/future or a queued Message copy does not prove remote acceptance
+or safe replay. Size failures forward the exactEng callback key; IOException
+uses a separate queued/offline path whose full reconnect ownership remains open.
+
+**Rust comparison / negative finding:** existing encrypted and split writers
+consume failed channels and preserve original durable uncertainty; no confirmed
+runtime mismatch is fixed in this research chunk. Offline partial encrypted
+write and interrupted socket regressions cover those Rust controls. Complete
+serializer/size attribution, underlying socket, post-write metadata, disconnect
+callback lifetime and ciphertext-store authority remain unresolved. No live
+operation, new retry or nonce rollback is authorized by this finding.
