@@ -8176,3 +8176,5 @@ Concrete bulk future/runner trace closes a prior1ue-effects gap: IQ result/error
 Current43.72 bulk-key preflight is conditional on filtered candidates and waits before dispatch; queue submission is not wire success or mapping adoption. [Conditional missing-LID preflight and remaining wire/adoption limits](bulk-prekey-refresh.md#bulk-pre-key-missing-lid-preflight-2026-11-06). Research only; no live operation.
 
 APK43.72 missing-LID preflight initial flags and actual queue combination retained. [Preset, queue combination and remaining wire limits](bulk-prekey-refresh.md#missing-lid-preset-and-queue-combination-2026-11-06). Final wire/adoption remains unknown; no live operation.
+
+Current43.72 missing-LID preset-to-multi-query route and nested128-second send/wait boundaries retained. [Multi-query route and nested timing limits](bulk-prekey-refresh.md#missing-lid-multi-query-route-and-nested-timing-2026-11-06). No universal timeout or runtime parity claim; offline only.

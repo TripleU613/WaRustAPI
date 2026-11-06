@@ -1,0 +1,83 @@
+
+# class: LX/0p7;
+# extends: Ljava/lang/Object;
+
+.method public A0W(ZLLL)  # .registers 11
+    # full signature: LX/0p7;->A0W(LX/1w4;Ljava/lang/String;Ljava/util/concurrent/Future;)Z
+    0000..0004  const-string  v4, "/exception"
+    0004..0008  iget-object  v0, v7, LX/0p7;->A0Z:LX/00x;
+    0008..000e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    000e..0010  move-result-object  v0
+    0010..0014  check-cast  v0, LX/00X;
+    0014..001a  invoke-virtual  {v0}, LX/00X;->A01()LX/00Y;
+    001a..001c  move-result-object  v1
+    001c..0020  const/16  v0, #0x4e3
+    0020..0026  invoke-static  {v1, v0}, LX/09H;->A03(LX/00Y;I)Ljava/lang/Object;
+    0026..0028  move-result-object  v3
+    0028..002c  check-cast  v3, LX/0B0;
+    002c..002e  const/4  v6, #0x0
+    002e..0030  const/4  v2, #0x1
+    0030..0034  sget-object  v5, Ljava/util/concurrent/TimeUnit;->MILLISECONDS:Ljava/util/concurrent/TimeUnit;
+    0034..003a  const-wide/32  v0, #0x1f400
+    003a..0040  invoke-interface  {v10, v0, v1, v5}, Ljava/util/concurrent/Future;->get(JLjava/util/concurrent/TimeUnit;)Ljava/lang/Object;
+    0040..0044  iget-object  v0, v7, LX/0p7;->A00:LX/Gzg;
+    0044..0048  if-nez  v0, +0x1d
+    0048..004c  new-instance  v1, Ljava/lang/StringBuilder;
+    004c..0052  invoke-direct  {v1}, Ljava/lang/StringBuilder;-><init>()V
+    0052..0058  invoke-virtual  {v1, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0058..005c  const-string  v0, "/no result"
+    005c..0062  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0062..0068  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0068..006a  move-result-object  v0
+    006a..0070  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0070..0074  iget-object  v0, v7, LX/0p7;->A01:Ljava/lang/Long;
+    0074..0078  if-eqz  v0, +0x5b
+    0078..007c  iput-object  v0, v8, LX/1w4;->A0F:Ljava/lang/Long;
+    007c..007e  return  v6
+    007e..0080  return  v2
+    0080..0082  move-exception  v1
+    0082..0086  new-instance  v0, Ljava/lang/StringBuilder;
+    0086..008c  invoke-direct  {v0}, Ljava/lang/StringBuilder;-><init>()V
+    008c..0092  invoke-virtual  {v0, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0092..0098  invoke-virtual  {v0, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0098..009e  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    009e..00a0  move-result-object  v0
+    00a0..00a6  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    00a6..00ac  invoke-virtual  {v1}, Ljava/lang/Throwable;->getCause()Ljava/lang/Throwable;
+    00ac..00ae  move-result-object  v0
+    00ae..00b2  instance-of  v0, v0, Ljava/lang/RuntimeException;
+    00b2..00b6  if-nez  v0, +0x1a
+    00b6..00bc  invoke-virtual  {v1}, Ljava/lang/Throwable;->getCause()Ljava/lang/Throwable;
+    00bc..00be  move-result-object  v0
+    00be..00c2  instance-of  v0, v0, Ljava/lang/Error;
+    00c2..00c6  if-eqz  v0, +0x34
+    00c6..00cc  invoke-virtual  {v1}, Ljava/lang/Throwable;->getCause()Ljava/lang/Throwable;
+    00cc..00ce  move-result-object  v0
+    00ce..00d2  instance-of  v0, v0, Ljava/lang/AssertionError;
+    00d2..00d6  if-nez  v0, +0x2c
+    00d6..00dc  invoke-virtual  {v1}, Ljava/lang/Throwable;->getCause()Ljava/lang/Throwable;
+    00dc..00de  move-result-object  v0
+    00de..00e2  instance-of  v0, v0, Ljava/lang/OutOfMemoryError;
+    00e2..00e6  if-nez  v0, +0x24
+    00e6..00ec  invoke-virtual  {v1}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    00ec..00ee  move-result-object  v0
+    00ee..00f4  invoke-virtual  {v3, v9, v0, v2}, LX/0B0;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+    00f4..00f6  return  v6
+    00f6..00f8  move-exception  v1
+    00f8..00fc  new-instance  v0, Ljava/lang/StringBuilder;
+    00fc..0102  invoke-direct  {v0}, Ljava/lang/StringBuilder;-><init>()V
+    0102..0108  invoke-virtual  {v0, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0108..010e  invoke-virtual  {v0, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    010e..0114  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0114..0116  move-result-object  v0
+    0116..011c  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    011c..0122  invoke-virtual  {v1}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    0122..0124  move-result-object  v0
+    0124..012a  invoke-virtual  {v3, v9, v0, v2}, LX/0B0;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+    012a..012c  return  v6
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/RuntimeException; code_units 0018..0040 -> 007b
+    # catch Ljava/util/concurrent/ExecutionException; code_units 0018..0040 -> 0040
+    # catch Ljava/lang/InterruptedException; code_units 0018..0040 -> 0095
+    # catch Ljava/util/concurrent/TimeoutException; code_units 0018..0040 -> 0095
+.end method

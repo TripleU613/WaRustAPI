@@ -1,3 +1,5 @@
+Missing-LID preflight now bound to the native multi-query handler, with separate128-second send/wait arguments on its selected dispatch. [Multi-query route and nested timing limits](docs/protocol/bulk-prekey-refresh.md#missing-lid-multi-query-route-and-nested-timing-2026-11-06). Research only; final wire and adoption still incomplete.
+
 Missing-LID preflight preset is now bound to LID_REQUEST/message query; initial LID-only flags can be combined by the native queue. [Preset, queue combination and remaining wire limits](docs/protocol/bulk-prekey-refresh.md#missing-lid-preset-and-queue-combination-2026-11-06). Research only, no runtime request change.
 
 Bulk-key missing-LID preflight now traced through filtering, sync queue submission and untimed wait before key dispatch. [Conditional missing-LID preflight and remaining wire/adoption limits](docs/protocol/bulk-prekey-refresh.md#bulk-pre-key-missing-lid-preflight-2026-11-06). Research only; no extra lookup or retry added.

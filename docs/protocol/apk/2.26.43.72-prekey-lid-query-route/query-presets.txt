@@ -1,0 +1,21 @@
+
+# class: LX/0vF;
+# extends: Ljava/lang/Object;
+
+.method public <clinit>(V)  # .registers 2
+    # full signature: LX/0vF;-><clinit>()V
+    0000..0004  const/16  v1, #0x19
+    0004..0008  new-instance  v0, LX/1X5;
+    0008..000e  invoke-direct  {v0, v1}, LX/1X5;-><init>(I)V
+    000e..0014  invoke-static  {v0}, LX/00o;->A01(Lkotlin/jvm/functions/Function0;)LX/00q;
+    0014..0016  move-result-object  v0
+    0016..001a  sput-object  v0, LX/0vF;->A00:LX/00p;
+    001a..001e  const/16  v1, #0x1a
+    001e..0022  new-instance  v0, LX/1X5;
+    0022..0028  invoke-direct  {v0, v1}, LX/1X5;-><init>(I)V
+    0028..002e  invoke-static  {v0}, LX/00o;->A01(Lkotlin/jvm/functions/Function0;)LX/00q;
+    002e..0030  move-result-object  v0
+    0030..0034  sput-object  v0, LX/0vF;->A01:LX/00p;
+    0034..0036  return-void
+    # exception table: 0 try range(s)
+.end method

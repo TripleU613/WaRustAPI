@@ -1,0 +1,43 @@
+
+# class: LX/0p7;
+# extends: Ljava/lang/Object;
+
+.method public A0Q(LLLI)  # .registers 11
+    # full signature: LX/0p7;->A0Q(LX/0vC;Ljava/util/List;I)LX/HcZ;
+    0000..0002  move-object  v2, v8
+    0002..0008  invoke-virtual  {v8}, LX/0vC;->A01()Z
+    0008..000a  move-result  v0
+    000a..000c  move-object  v3, v9
+    000c..000e  move  v4, v10
+    000e..0012  if-nez  v0, +0x26
+    0012..0018  invoke-virtual  {v8}, LX/0vC;->A00()Z
+    0018..001a  move-result  v0
+    001a..001e  if-nez  v0, +0x20
+    001e..0024  invoke-interface  {v9}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0024..0026  move-result-object  v1
+    0026..002c  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    002c..002e  move-result  v0
+    002e..0032  if-eqz  v0, +0x14
+    0032..0038  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0038..003a  move-result-object  v0
+    003a..003e  check-cast  v0, LX/H6w;
+    003e..0042  iget-boolean  v0, v0, LX/H6w;->A0G:Z
+    0042..0046  if-eqz  v0, -0xe
+    0046..0048  const/4  v6, #0x1
+    0048..004a  const/4  v5, #0x0
+    004a..004e  new-instance  v1, LX/HcZ;
+    004e..0054  invoke-direct/range  {v1..v6}, LX/HcZ;-><init>(LX/0vC;Ljava/util/List;IZZ)V
+    0054..0056  return-object  v1
+    0056..0058  const/4  v6, #0x0
+    0058..005a  goto  -0x8
+    005a..005e  iget-object  v0, v7, LX/0p7;->A0P:LX/00x;
+    005e..0064  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0064..0066  move-result-object  v0
+    0066..006a  check-cast  v0, LX/0eE;
+    006a..0070  invoke-virtual  {v0}, LX/0eE;->A0G()Z
+    0070..0072  move-result  v0
+    0072..0078  invoke-static  {v8, v9, v10, v0}, LX/HcZ;->A01(LX/0vC;Ljava/util/List;IZ)LX/HcZ;
+    0078..007a  move-result-object  v1
+    007a..007c  return-object  v1
+    # exception table: 0 try range(s)
+.end method

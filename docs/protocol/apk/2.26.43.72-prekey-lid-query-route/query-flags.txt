@@ -1,0 +1,23 @@
+
+# class: LX/3GQ;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VZZZZZZZZZZZZZ)  # .registers 14
+    # full signature: LX/3GQ;-><init>(ZZZZZZZZZZZZZ)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-boolean  v1, v0, LX/3GQ;->A01:Z
+    000a..000e  iput-boolean  v2, v0, LX/3GQ;->A09:Z
+    000e..0012  iput-boolean  v3, v0, LX/3GQ;->A0A:Z
+    0012..0016  iput-boolean  v4, v0, LX/3GQ;->A07:Z
+    0016..001a  iput-boolean  v5, v0, LX/3GQ;->A00:Z
+    001a..001e  iput-boolean  v6, v0, LX/3GQ;->A02:Z
+    001e..0022  iput-boolean  v7, v0, LX/3GQ;->A03:Z
+    0022..0026  iput-boolean  v8, v0, LX/3GQ;->A04:Z
+    0026..002a  iput-boolean  v9, v0, LX/3GQ;->A0C:Z
+    002a..002e  iput-boolean  v10, v0, LX/3GQ;->A0B:Z
+    002e..0032  iput-boolean  v11, v0, LX/3GQ;->A06:Z
+    0032..0036  iput-boolean  v12, v0, LX/3GQ;->A05:Z
+    0036..003a  iput-boolean  v13, v0, LX/3GQ;->A08:Z
+    003a..003c  return-void
+    # exception table: 0 try range(s)
+.end method
