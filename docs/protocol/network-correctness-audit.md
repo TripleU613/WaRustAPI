@@ -3466,3 +3466,38 @@ The exact native ordinary direct-SKDM producer is still unlocated; the status
 requester and include flag do not establish it.
 [Methods, offsets, search scope and unknowns](apk/2.26.43.72-sender-key-session-requirement/README.md).
 No Rust runtime, replay or live account behavior changed.
+
+### Membership guard across distribution ACK waits (2026-11-05)
+
+**Confirmed local defect / corrected offline:** after reserving a reaction's
+pairwise distributions and group ciphertext, a saved membership change while
+waiting for a distribution ACK did not stop the next distribution or final
+group stanza. Query/key preparation had a frozen-membership digest guard, but
+the ACK-driven continuation omitted it.
+
+Every continuation now compares the saved group snapshot digest before returning
+another stanza, including the initial distribution return and final group return.
+A mismatch persists the existing `membership_changed` preparation block and
+returns no dependent ciphertext. Already exposed keys, pairwise sessions,
+original encrypted attempt, uncertainty and reservations stay held; no replay,
+rollback, fresh IDs, automatic membership query or rotation is authorized.
+
+The regression `membership_change_during_distribution_cannot_release_more_ciphertext`
+prepares two real pairwise distributions, applies the real remove-notification
+snapshot handler while either the first or second ACK is pending, then supplies
+the matching successful ACK. Old code failed by releasing stale ciphertext.
+The corrected path stops before the remaining distribution or final group send,
+preserves all crypto/outbox state and all non-preparation checkpoints, and stays
+nonselectable after reopen. Existing unchanged-membership crypto/decrypt tests
+continue to cover successful release.
+
+**APK corroboration, not scheduler parity:** APK43.72's session requirement
+A01 01de..0206 distinguishes a changed participant hash from equal-hash
+sent-key filtering, as retained in
+[the requirement bundle](apk/2.26.43.72-sender-key-session-requirement/README.md).
+This fix extends the existing local frozen-snapshot policy; native per-ACK
+revalidation or identical blocking semantics have not been proven. The check
+is a saved-state observation before returning a node, not an atomic transaction
+with a remote socket write; the entire snapshot digest also conservatively
+includes non-membership group fields under the existing policy. Native direct
+SKDM producer/address ownership remains unresolved. No live account operation.

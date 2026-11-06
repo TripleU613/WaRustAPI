@@ -1,3 +1,15 @@
+2026-11-05 — **Membership changes stop ACK-driven distribution continuation.**
+
+The existing frozen-snapshot guard now covers every distribution continuation,
+including the final group stanza. Changes observed while waiting for an ACK
+persist membership_changed without releasing more ciphertext, resetting keys
+or replaying the reserved intent.
+[Defect, red/green regression and native/local boundary](docs/protocol/normal-group-outbox.md#membership-guard-across-distribution-ack-waits-2026-11-05).
+Validation: the regression failed before the guard and passes afterward; all
+1379 workspace/all-feature tests, fmt, strict Clippy, CLI/OpenAPI, APK coverage,
+pinned artifact identity and staged checksum/link hygiene passed. No live
+account operation.
+
 2026-11-05 — **Sender-key prerequisite selection separated from delivery ACKs.**
 
 Native selected hash mismatch retains original session candidates; inherited

@@ -427,6 +427,132 @@ pub(super) mod tests {
         }
     }
     #[tokio::test]
+    async fn membership_change_during_distribution_cannot_release_more_ciphertext() {
+        use super::super::group_references::tests::{reference, save_parent};
+        for accepted_before_change in [0, 1] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("distribution-membership.redb");
+            let store = group_fanout::tests::open(&path);
+            let f = group_fanout::tests::fixture();
+            let peer = &f.plan.recipients[0];
+            let target = reference(&f.plan.chat, peer, false);
+            save_parent(
+                &store,
+                &f.plan.chat,
+                peer,
+                &super::super::quotes::conversation("retained parent"),
+            )
+            .unwrap();
+            let id = store
+                .write(|tx| {
+                    Ok(outbox()
+                        .enqueue(
+                            tx,
+                            &SendRequest {
+                                client_request_id: ClientRequestId::new(
+                                    "distribution-membership-change",
+                                )?,
+                                chat: ChatId::from_jid(&f.plan.chat)?,
+                                content: MessageContent::Reaction {
+                                    target,
+                                    emoji: Some("👍".into()),
+                                },
+                            },
+                        )?
+                        .0
+                        .local_id)
+                })
+                .unwrap();
+            let (mut pending, mut query) = begin_selected(&store, id).unwrap().unwrap();
+            let mut cursor = devices::DeviceSyncCursor::default();
+            for _ in 0..3 {
+                let reply = match query.get_attr("xmlns").and_then(|v| v.as_text()) {
+                    Some("w:g2") => membership(&query, &f.plan.own, &f.plan.recipients),
+                    Some("usync") => device_reply(&query),
+                    Some("encrypt") => key_reply(&query, &f),
+                    _ => panic!("unexpected preparation query"),
+                };
+                let step = pending
+                    .settle(&store, &f.alice, &reply, ConnectionEpoch(29), &mut cursor)
+                    .await
+                    .unwrap();
+                pending = step.pending.expect("distribution still pending");
+                query = step.node.unwrap();
+            }
+            assert_eq!(query.description, "message");
+            assert!(
+                matches!(&pending.waiting, Waiting::Distribution { rest, .. } if rest.len() == 1)
+            );
+            for _ in 0..accepted_before_change {
+                let ack = Node::new("ack")
+                    .attr("class", "message")
+                    .attr("id", query.get_attr("id").unwrap().clone());
+                let step = pending
+                    .settle(&store, &f.alice, &ack, ConnectionEpoch(29), &mut cursor)
+                    .await
+                    .unwrap();
+                pending = step.pending.expect("second distribution pending");
+                query = step.node.unwrap();
+            }
+            // Apply the real saved-snapshot notification path after reservation,
+            // while a distribution ACK is outstanding.
+            let changes = vec![
+                Node::new("remove")
+                    .children(vec![Node::new("participant").attr("jid", peer.clone())]),
+            ];
+            let change = Node::new("notification")
+                .attr("type", "w:gp2")
+                .attr("from", f.plan.chat.clone())
+                .children(changes);
+            assert!(groups::apply_change_notification(&store, &change).unwrap());
+            let reserved = store.read(|tx| outbox().get(tx, id)).unwrap().unwrap();
+            assert_eq!(reserved.attempts.len(), 1);
+            assert!(reserved.status().is_uncertain());
+            let before = rows(&store);
+            let ack = Node::new("ack")
+                .attr("class", "message")
+                .attr("id", query.get_attr("id").unwrap().clone());
+            let step = pending
+                .settle(&store, &f.alice, &ack, ConnectionEpoch(29), &mut cursor)
+                .await
+                .unwrap();
+            assert!(
+                step.node.is_none(),
+                "membership change released stale ciphertext"
+            );
+            assert!(step.pending.is_none());
+            assert_eq!(
+                preparation(&store, id)
+                    .unwrap()
+                    .unwrap()
+                    .blocking_reason
+                    .as_deref(),
+                Some("membership_changed")
+            );
+            assert_eq!(
+                store.read(|tx| outbox().get(tx, id)).unwrap().unwrap(),
+                reserved
+            );
+            let after = rows(&store);
+            assert_eq!(&after[..4], &before[..4]);
+            let without_preparation = |mut checkpoints: Vec<(Vec<u8>, Vec<u8>)>| {
+                checkpoints.retain(|(k, _)| k.as_slice() != key(id).as_bytes());
+                checkpoints
+            };
+            assert_eq!(
+                without_preparation(after[4].clone()),
+                without_preparation(before[4].clone())
+            );
+            assert!(begin_selected(&store, id).unwrap().is_none());
+            let held = rows(&store);
+            drop(store);
+            let reopened = group_fanout::tests::open(&path);
+            assert_eq!(rows(&reopened), held);
+            assert!(begin_selected(&reopened, id).unwrap().is_none());
+            assert_eq!(rows(&reopened), held);
+        }
+    }
+    #[tokio::test]
     async fn normal_actor_uses_only_explicit_signed_remote_replacement_policy() {
         for mode in ["accept", "pinned", "own_alias", "bad_signature"] {
             let dir = tempfile::tempdir().unwrap();
@@ -1859,7 +1985,7 @@ impl Pending {
                 else {
                     unreachable!()
                 };
-                self.next_distribution(rest, *group)
+                self.next_distribution(store, rest, *group)
             }
         }
     }
@@ -2096,14 +2222,25 @@ impl Pending {
                     return Err(error);
                 }
                 self.row = reserved;
-                self.next_distribution(distributions, node)
+                self.next_distribution(store, distributions, node)
             }
         }
     }
 
     /// Send the next out-of-band distribution and wait for its ACK, or, when
     /// none remain, the reserved group stanza itself.
-    fn next_distribution(mut self, mut rest: Vec<Node>, group: Node) -> Result<Step> {
+    fn next_distribution(
+        mut self,
+        store: &ProtocolStore,
+        mut rest: Vec<Node>,
+        group: Node,
+    ) -> Result<Step> {
+        // Extend the existing frozen-membership guard across ACK waits. Native
+        // APK43.72 session requirement A01 01de..0206 also distinguishes a
+        // changed participant hash; this local stop does not port its scheduler.
+        if membership_digest(store, self.entry.intent.chat.jid())? != self.membership {
+            return self.block(store, Block::MembershipChanged);
+        }
         if rest.is_empty() {
             return Ok(Step {
                 pending: None,

@@ -15837,6 +15837,17 @@
     "evidence": "docs/protocol/apk/2.26.43.72-sender-key-ack-confirmation/README.md",
     "description": "Traces native message ACK callback registration and wait, successful normal sender-key marking and conditional one-time-key reset. Connects registration-time pre-ACK marker snapshot to matched callback retirement after wrapped result. Rust per-distribution durable confirmation and native address ownership remain incomplete. Evidence only; no command, HTTP route or production behavior change."
   },
+  "x-group-distribution-membership-guard": {
+    "x-cli": {
+      "command": "whatsapp-cli outbox-group-preparations"
+    },
+    "x-transport": [
+      "experimental-transport group distribution continuation"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/normal-group-outbox.md#membership-guard-across-distribution-ack-waits-2026-11-05",
+    "description": "Before returning each reserved reaction distribution or final dependent group stanza, compare the current saved group snapshot with the frozen digest. A mismatch persists membership_changed and emits no further ciphertext. Preserves original attempt, keys and uncertainty; no replay or automatic refresh. Extends local frozen-snapshot policy, not a claim of native per-ACK scheduler parity."
+  },
   "x-sender-key-session-requirement-evidence": {
     "x-cli": false,
     "x-transport": [
