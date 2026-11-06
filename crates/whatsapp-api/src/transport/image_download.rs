@@ -146,16 +146,29 @@ pub fn consume_view_once_with_ticket(
                     "multiple view-once images; explicit selection needed",
                 ));
             }
-            candidate = Some((key, image));
+            candidate = Some((key, image, Zeroizing::new(bytes)));
         }
     }
-    let (key, image) = candidate
+    let (key, image, source) = candidate
         .ok_or_else(|| invalid("no unopened view-once image; consumed images cannot reopen"))?;
-    let state_key = format!("view-once-download:{}", hex::encode(Sha256::digest(&key)));
+    consume_selected(store, &key, image, &source)
+}
+
+fn consume_selected(
+    store: &ProtocolStore,
+    key: &[u8],
+    image: Image,
+    source: &[u8],
+) -> Result<(String, Zeroizing<Vec<u8>>)> {
+    let state_key = format!("view-once-download:{}", hex::encode(Sha256::digest(key)));
     store.write(|tx| {
+        // Bind consumption to the descriptor selected from this exact row,
+        // before decrypting or replacing either checkpoint. See the view-once
+        // consumption audit in docs/protocol/media-network-outcomes.md.
+        ensure_view_once_source(tx, key, source)?;
         let mut state: serde_json::Value = tx.get_json(Table::Checkpoints, state_key.as_bytes(), 1)?.ok_or_else(|| invalid("image must be downloaded first"))?;
         state_size(&state)?;
-        let saved: serde_json::Value = tx.get_json(Table::Checkpoints, &key, 1)?.ok_or_else(|| invalid("inbox record disappeared"))?;
+        let saved: serde_json::Value = tx.get_json(Table::Checkpoints, key, 1)?.ok_or_else(|| invalid("inbox record disappeared"))?;
         if saved["status"] != "decrypted" { return Err(invalid("image already consumed")); }
         let body: Zeroizing<Vec<u8>> = serde_json::from_value(state["body"].take()).map_err(|_| invalid("invalid saved ciphertext"))?;
         let plaintext = crate::signal::image::decrypt(
@@ -169,8 +182,8 @@ pub fn consume_view_once_with_ticket(
         // Database-page secure erasure is not claimed.
         let consumed = serde_json::json!({"status":"consumed", "at":Timestamp::now(), "opened_receipt":"awaiting_viewer", "route":saved["route"], "capture":saved["capture"]});
         tx.put_json(Table::Checkpoints, state_key.as_bytes(), 1, &consumed)?;
-        tx.put_json(Table::Checkpoints, &key, 1, &consumed)?;
-        Ok((hex::encode(Sha256::digest(&key)), plaintext))
+        tx.put_json(Table::Checkpoints, key, 1, &consumed)?;
+        Ok((hex::encode(Sha256::digest(key)), plaintext))
     })
 }
 
@@ -306,7 +319,7 @@ fn reserve_download(
         {
             return Err(invalid("download already reserved"));
         }
-        ensure_download_source(tx, source_key, source)?;
+        ensure_view_once_source(tx, source_key, source)?;
         tx.put_json(Table::Checkpoints, state_key.as_bytes(), 1, &reservation)
     })?;
     Ok(reservation)
@@ -336,12 +349,12 @@ fn settle_download(
                 "view-once download reservation changed before settlement",
             ));
         }
-        ensure_download_source(tx, source_key, source)?;
+        ensure_view_once_source(tx, source_key, source)?;
         tx.put_json(Table::Checkpoints, state_key.as_bytes(), 1, result)
     })
 }
 
-fn ensure_download_source(
+fn ensure_view_once_source(
     tx: &crate::store::WriteTx<'_>,
     source_key: &[u8],
     source: &[u8],
@@ -350,9 +363,7 @@ fn ensure_download_source(
         .get(Table::Checkpoints, source_key, 1)?
         .map(Zeroizing::new);
     if current.as_ref().map(|row| row.as_slice()) != Some(source) {
-        return Err(invalid(
-            "view-once source changed before reservation or settlement",
-        ));
+        return Err(invalid("view-once source changed before state transition"));
     }
     Ok(())
 }
@@ -360,6 +371,131 @@ fn ensure_download_source(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn consumption_refuses_changed_source_without_consuming_either_record_after_reopen() {
+        use crate::{
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        for change in [
+            "replacement",
+            "metadata",
+            "missing",
+            "consumed",
+            "ciphertext",
+            "valid",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("consume-source.redb");
+            let open = |create| {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: AccountId::new("fixture").unwrap(),
+                    create,
+                    key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                        [7; 32],
+                    ))),
+                })
+                .unwrap()
+            };
+            let store = open(true);
+            let encrypted = crate::signal::image::encrypt(b"synthetic view-once fixture").unwrap();
+            let image = Image {
+                url: "https://mmg.whatsapp.net/offline".into(),
+                mime: "image/png".into(),
+                plaintext_hash: encrypted.plaintext_hash.to_vec(),
+                length: encrypted.plaintext_len,
+                key: encrypted.media_key.to_vec(),
+                encrypted_hash: encrypted.encrypted_hash.to_vec(),
+                view_once: true,
+            };
+            let protobuf = Envelope {
+                image: Some(image),
+                once: None,
+                once_v2: None,
+                once_ext: None,
+            }
+            .encode_to_vec();
+            // Select exactly as the public entry point does, before a later mutation.
+            let selected = descriptor(&protobuf, 0, false).unwrap().unwrap();
+            let key = b"received:offline:once";
+            let state_key = format!("view-once-download:{}", hex::encode(Sha256::digest(key)));
+            let inbox = serde_json::json!({"status":"decrypted","protobuf":protobuf,"route":{"id":"original"},"capture":"original"});
+            store.write(|tx| {
+                tx.put_json(Table::Checkpoints,key,1,&inbox)?;
+                tx.put_json(Table::Checkpoints,state_key.as_bytes(),1,&serde_json::json!({"status":"downloaded_unopened","body":encrypted.body,"encrypted_bytes":encrypted.body.len()}))
+            }).unwrap();
+            let source = Zeroizing::new(
+                store
+                    .read(|tx| tx.get(Table::Checkpoints, key, 1))
+                    .unwrap()
+                    .unwrap(),
+            );
+            store.write(|tx| {
+                match change {
+                    "replacement" => {
+                        tx.put_json(Table::Checkpoints,key,1,&serde_json::json!({"status":"decrypted","protobuf":[26,0],"sentinel":"replacement"}))?;
+                    }
+                    "metadata" => {
+                        let mut updated = inbox.clone();updated["route"] = serde_json::json!({"id":"changed"});
+                        tx.put_json(Table::Checkpoints,key,1,&updated)?;
+                    }
+                    "missing" => { tx.delete(Table::Checkpoints,key)?; }
+                    "consumed" => { tx.put_json(Table::Checkpoints,key,1,&serde_json::json!({"status":"consumed"}))?; }
+                    "ciphertext" => {
+                        tx.put_json(Table::Checkpoints,state_key.as_bytes(),1,&serde_json::json!({"status":"downloaded_unopened","body":[1,2,3],"encrypted_bytes":3}))?;
+                    }
+                    _ => {}
+                }
+                Ok(())
+            }).unwrap();
+            drop(store);
+            let store = open(false);
+            let rows = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let journal = store.journal_head().unwrap();
+            let result = consume_selected(&store, key, selected, &source);
+            if change == "valid" {
+                let (ticket, plaintext) = result.unwrap();
+                assert_eq!(ticket, hex::encode(Sha256::digest(key)));
+                assert_eq!(&*plaintext, b"synthetic view-once fixture");
+                for record_key in [key.as_slice(), state_key.as_bytes()] {
+                    let saved: serde_json::Value = store
+                        .read(|tx| tx.get_json(Table::Checkpoints, record_key, 1))
+                        .unwrap()
+                        .unwrap();
+                    assert_eq!(saved["status"], "consumed");
+                    assert_eq!(saved["opened_receipt"], "awaiting_viewer");
+                    assert_eq!(saved["route"], inbox["route"]);
+                    assert_eq!(saved["capture"], inbox["capture"]);
+                    assert!(saved.get("body").is_none() && saved.get("protobuf").is_none());
+                }
+                drop(store);
+                let reopened = open(false);
+                assert!(consume_view_once(&reopened).is_err());
+            } else {
+                assert!(result.is_err(), "{change}");
+                assert_eq!(store.journal_head().unwrap(), journal);
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    rows
+                );
+                drop(store);
+                let reopened = open(false);
+                assert_eq!(reopened.journal_head().unwrap(), journal);
+                assert_eq!(
+                    reopened
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    rows
+                );
+            }
+        }
+    }
+
     #[test]
     fn late_view_once_results_preserve_reservations_and_source_after_reopen() {
         use crate::{

@@ -272,3 +272,9 @@ View-once ciphertext prefetch binds new requests to their saved inbox source
 and local reservation. A source or attempt that changes before settlement
 causes a local refusal; it does not reset an uncertain download or open content.
 [Ownership and concurrency limits](../protocol/media-network-outcomes.md#view-once-download-result-ownership-2026-11-06).
+
+Local view-once consumption also checks that the inbox row still matches the
+selected descriptor before decryption or consumed writes. A changed source
+refuses without consuming either record. Consumption keeps display confirmation
+separate from the returned ticket.
+[Source identity and limits](../protocol/media-network-outcomes.md#view-once-consumption-source-identity-2026-11-06).

@@ -1061,3 +1061,42 @@ source bytes deliberately refuse even a metadata-only rewrite rather than guess
 that it is equivalent. No generic retry, checkpoint reset, stale-body recovery,
 identity rotation or broader account/session-generation race guarantee is added.
 The native Priority optional-property uncertainty remains open independently.
+
+## View-once consumption source identity (2026-11-06)
+
+**Confirmed local defect / fixed offline:** consumption selected an image
+descriptor before opening its write transaction, but inside that transaction
+checked only that the current inbox status was decrypted. A replacement source
+row could keep that status, causing the old descriptor/ciphertext to be used
+while overwriting the replacement row and taking its route/capture metadata.
+The earlier GET settlement guard did not cover this independent local handoff.
+
+Selection now retains the original inbox bytes in zeroizing memory. The
+consumption transaction compares that exact source before ciphertext inspection,
+decryption or either consumed-checkpoint write, using the same source guard as
+reservation/settlement. Missing or changed bytes return local
+InvalidInput(image_download), preserving both records. Valid input still
+atomically removes accessible body/protobuf records, returns the same opaque
+ticket only after commit, and leaves opened_receipt=awaiting_viewer. This does
+not assert that consumption displayed an image or sent an opened receipt.
+
+Regression `consumption_refuses_changed_source_without_consuming_either_record_after_reopen`
+failed on the replacement case while the old status-only transaction was
+retained in the extracted private consume helper. After the guard it covers
+replacement protobuf, metadata-only route rewrite, missing source, consumed
+source, corrupted ciphertext and a valid control. All use synthetic encrypted
+images and real encrypted stores. Refusals preserve checkpoint bytes and journal
+across reopen; valid consumption preserves original route/capture, returns
+expected plaintext/ticket, removes accessible body/protobuf and refuses reopening.
+Existing public opening/GET ownership tests also pass. No user content was
+opened, viewer launched or live account operation performed.
+
+Validation:1,512 workspace tests pass (9 result suites); strict workspace/
+all-target/all-feature Clippy and formatting pass.
+
+**Limits:** exact bytes intentionally refuse metadata-only rewrites. The guard
+binds the selected source, not a transaction-wide snapshot of every inbox
+candidate or every account/session-generation race. Database-page secure erasure,
+viewer success and server-open synchronization remain separate. No repeat GET,
+consumption reset, retry or new opened receipt is introduced. This is a Rust
+state-identity correction; no new APK policy or ban-cause claim is made.

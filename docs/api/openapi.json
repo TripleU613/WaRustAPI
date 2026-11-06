@@ -8387,7 +8387,7 @@
           "Media"
         ],
         "summary": "Display a downloaded view-once picture locally for 30 seconds, consuming it",
-        "description": "Display one downloaded view-once picture locally for 30 seconds, consuming it. Cannot be reopened; returns 409 if already consumed.",
+        "description": "Display one downloaded view-once picture locally for 30 seconds, consuming it. Cannot be reopened; returns 409 if already consumed. Consumption compares the exact selected inbox row inside its write transaction before decryption or either consumed checkpoint write. Missing or changed source (including a metadata-only rewrite) refuses locally without consuming either record. Ciphertext authentication and valid one-time consumption retain their existing behavior; the consumption ticket alone does not prove viewer display or a server opened receipt. Offline regression tested. See docs/protocol/media-network-outcomes.md#view-once-consumption-source-identity-2026-11-06.",
         "operationId": "openViewOnce",
         "x-cli": "whatsapp-cli lab-open-view-once",
         "x-transport": [

@@ -1,3 +1,12 @@
+2026-11-06 — **View-once consumption now verifies the selected source identity.**
+
+A still-decrypted replacement inbox row can no longer be overwritten while the
+old image is consumed. Exact source check precedes decrypt/consumed writes;
+valid one-time consumption and awaiting-viewer state remain intact.
+[Regression, source and limits](docs/protocol/media-network-outcomes.md#view-once-consumption-source-identity-2026-11-06).
+1,512 workspace tests and strict Clippy pass; no user content opened or live
+account operation.
+
 2026-11-06 — **View-once GET settlement now binds its reservation and inbox source.**
 
 Late success/refusal cannot recreate removed state or overwrite changed outcomes;
