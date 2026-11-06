@@ -260,11 +260,21 @@ fn login_user(
     .then(|| jid.to_non_ad())
 }
 
-fn update_login_identity(
+/// Apply supplied PN/LID fields from an authenticated login success in the
+/// caller's settlement transaction. Omitted fields preserve known namespaces;
+/// malformed supplied/history fields refuse. The caller owns authentication,
+/// capture and reservation checks; this helper sends nothing.
+pub fn update_login_identity(
     tx: &mut crate::store::WriteTx<'_>,
     reply: &Node,
 ) -> Result<Option<crate::model::jid::Jid>> {
     use crate::model::jid::{Jid, Server};
+    if reply.description != "success" {
+        return Err(Error::invalid(
+            "connection",
+            "identity update requires login success",
+        ));
+    }
     // Authenticated success fields are observed live, not a guarantee that both
     // appear every time. Native 08i keeps typed own PN/LID separately; our local
     // partial-update contract is documented in login-identity-updates.md.

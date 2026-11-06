@@ -110,3 +110,30 @@ API/library-symbol checks, formatting, whitespace and repository hygiene passed
 (2,186 links/108 APK bundles). One bounded live receive run completed; no fresh
 workspace runtime suite was rerun for this evidence-only change. The preceding
 840-test implementation validation remains separate.
+
+## CLI shares the authenticated identity update (2026-11-06)
+
+**Confirmed local gap / fixed offline:** CLI lab-login separately parsed lid with
+an Option chain. A present malformed value became None, so its success row and
+authenticated account timestamp could commit as if the field were omitted. It
+also recorded only the legacy group LID checkpoint, bypassing canonical PN/LID
+partial-update handling. The legacy writer already rejected invalid parsed LID
+domains; the defect was not a universal absence of LID validation.
+
+connection.update_login_identity is now a public transaction helper requiring a
+success root. Its existing supplied-field/history rules remain. CLI invokes it
+inside the owned result transaction, initializes a missing account own_jid from
+a validated PN, and updates its legacy group LID from the validated canonical
+checkpoint only when LID was supplied. PN-only success preserves the known LID;
+malformed supplied fields roll back result/account/identity writes. Earlier reply
+capture remains durable. Failure output does not claim a supplied LID was recorded.
+The helper does not authenticate its input or authorize login; callers retain
+capture and reservation checks. This is local persistence consistency, not a new
+native malformed-success policy claim.
+
+Regression cli_login_identity_preserves_partial_fields_and_refuses_malformed_success_atomically
+covers LID-with-device normalization, PN-only continuation, canonical/legacy LID
+agreement, malformed/wrong-domain LID, empty PN and non-success root. Negative
+cases preserve account/checkpoint rows and journal with fixed diagnostics; the
+valid LID survives reopening. Existing API identity corruption/partial-update
+controls still exercise the same helper. No live operation or key rotation.

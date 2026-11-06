@@ -36,6 +36,37 @@ fn load_transport_account(
     })
 }
 
+fn apply_cli_login_success(
+    tx: &mut whatsapp_api::store::WriteTx<'_>,
+    reply: &whatsapp_api::binary::Node,
+) -> Result<(), Error> {
+    let pn = whatsapp_api::transport::connection::update_login_identity(tx, reply)?;
+    let mut account = AccountRecord::load_in_write(tx)?
+        .ok_or_else(|| Error::invalid("transport", "account disappeared"))?;
+    account.last_authenticated_at = Some(Timestamp::now());
+    if account.own_jid.is_none() {
+        account.own_jid = pn;
+    }
+    account.save(tx)?;
+    if reply.get_attr("lid").is_some() {
+        // The shared handler has already validated this supplied field and
+        // committed its canonical primary form inside this transaction.
+        let identity: serde_json::Value = tx
+            .get_json(
+                whatsapp_api::store::Table::Checkpoints,
+                b"login-identity",
+                1,
+            )?
+            .ok_or_else(|| Error::invalid("transport", "missing validated login identity"))?;
+        let lid = identity["lid"]
+            .as_str()
+            .and_then(|v| whatsapp_api::model::jid::Jid::parse(v).ok())
+            .ok_or_else(|| Error::invalid("transport", "missing validated login LID"))?;
+        whatsapp_api::transport::group_send::record_own_lid(tx, &lid)?;
+    }
+    Ok(())
+}
+
 fn reserve_cli_login(
     store: &ProtocolStore,
     snapshot: &whatsapp_api::transport::connection::LoginSnapshot,
@@ -434,11 +465,7 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
         // `lid` attribute and reports `reg-lid-chatd-lid-expected-but-null`
         // when it is missing). A LID-addressed group names us by it, so a
         // sender-key fan-out cannot be built without recording it here.
-        let own_lid = node.get_attr("lid").and_then(|v| {
-            v.as_jid()
-                .cloned()
-                .or_else(|| whatsapp_api::model::jid::Jid::parse(v.as_text()?).ok())
-        });
+        let supplied_lid = node.get_attr("lid").is_some();
         let result = serde_json::json!({"status":status,"reason":reason,"at":Timestamp::now(),"message_sent":false});
         // Preserve the raw login result. A `<failure>` can carry an appeal
         // token, and saving only the status code throws that away at exactly
@@ -459,19 +486,15 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                 )?;
             }
             if status == "success" {
-                let mut account = AccountRecord::load_in_write(tx)?
-                    .ok_or_else(|| Error::invalid("transport", "account disappeared"))?;
-                account.last_authenticated_at = Some(Timestamp::now());
-                account.save(tx)?;
-                if let Some(lid) = &own_lid {
-                    whatsapp_api::transport::group_send::record_own_lid(tx, lid)?;
-                }
+                apply_cli_login_success(tx, &node)?;
             }
             Ok(())
         })?;
         println!(
             "transport: own LID {} by the login result",
-            if own_lid.is_some() {
+            if status != "success" {
+                "not updated"
+            } else if supplied_lid {
                 "recorded"
             } else {
                 "not provided"
@@ -969,6 +992,82 @@ mod tests {
         model::jid::Jid,
         store::{MasterKey, StaticKeySource},
     };
+
+    #[test]
+    fn cli_login_identity_preserves_partial_fields_and_refuses_malformed_success_atomically() {
+        use whatsapp_api::store::Table;
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("cli-identity.redb");
+        let open = |create| {
+            ProtocolStore::open(OpenOptions {
+                path: path.clone(),
+                account_id: AccountId::new("fixture").unwrap(),
+                create,
+                key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+            })
+            .unwrap()
+        };
+        let store = open(true);
+        store.write(|tx| AccountRecord::default().save(tx)).unwrap();
+        store
+            .write(|tx| apply_cli_login_success(tx, &Node::new("success").attr("lid", "100:2@lid")))
+            .unwrap();
+        store
+            .write(|tx| {
+                apply_cli_login_success(
+                    tx,
+                    &Node::new("success").attr("pn", "15555550100@s.whatsapp.net"),
+                )
+            })
+            .unwrap();
+        let (pn, lid) = whatsapp_api::transport::inbox::own_identities(&store).unwrap();
+        assert_eq!(pn.unwrap().to_string(), "15555550100@s.whatsapp.net");
+        assert_eq!(lid.unwrap().to_string(), "100@lid");
+        assert_eq!(
+            whatsapp_api::transport::group_send::own_lid(&store)
+                .unwrap()
+                .unwrap()
+                .to_string(),
+            "100@lid"
+        );
+        for reply in [
+            Node::new("success").attr("lid", "private-malformed"),
+            Node::new("success").attr("lid", "123@s.whatsapp.net"),
+            Node::new("success").attr("pn", ""),
+            Node::new("failure").attr("lid", "200@lid"),
+        ] {
+            let account = store.read(|tx| tx.scan(Table::Account, 1, 20)).unwrap();
+            let rows = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let journal = store.journal_head().unwrap();
+            let error = store
+                .write(|tx| apply_cli_login_success(tx, &reply))
+                .unwrap_err()
+                .to_string();
+            assert!(!error.contains("private-malformed"));
+            assert_eq!(store.journal_head().unwrap(), journal);
+            assert_eq!(
+                store.read(|tx| tx.scan(Table::Account, 1, 20)).unwrap(),
+                account
+            );
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                rows
+            );
+        }
+        drop(store);
+        let store = open(false);
+        assert_eq!(
+            whatsapp_api::transport::group_send::own_lid(&store)
+                .unwrap()
+                .unwrap()
+                .to_string(),
+            "100@lid"
+        );
+    }
 
     #[test]
     fn cli_login_reservation_and_reply_refuse_stale_credentials_or_owner_after_reopen() {

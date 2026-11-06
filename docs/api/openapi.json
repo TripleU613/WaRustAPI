@@ -17793,5 +17793,12 @@
     "x-live": false,
     "description": "Existing lab-transport login captures shared zeroized LoginSnapshot, validates account/material at reservation, and requires exact unknown owner plus same snapshot before settlement/account writes. Decoded reply capture commits first. LoginSnapshot.capture_in/validate_in_write expose local validation only. Network/session-wide locking and lost rotation recovery remain outside scope; no live verification.",
     "evidence": "docs/protocol/authkey-lifecycle.md#cli-login-snapshot-and-reservation-ownership-2026-11-06"
+},
+  "x-cli-login-identity-validation": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Existing lab-login success uses public transaction helper connection.update_login_identity for supplied PN/LID validation and partial updates. Malformed fields roll back owned settlement/account writes; canonical and legacy LID agree after supplied LID. Helper requires success root but caller owns authentication/capture/reservation. No live verification or new route.",
+    "evidence": "docs/protocol/login-identity-updates.md#cli-shares-the-authenticated-identity-update-2026-11-06"
 }
 }

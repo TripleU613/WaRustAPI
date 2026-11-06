@@ -8246,3 +8246,5 @@ Local CLI Noise-half consistency now checked before side effects; fixed diagnost
 CLI account preflight now validates present registration material through the existing shared invariant, preserving optional absence and refusing malformed state before side effects. [CLI registration-copy preflight](authkey-lifecycle.md#cli-account-load-checks-the-registration-copy-2026-11-06). Offline only.
 
 CLI reservation/result await gaps closed using shared redacted LoginSnapshot and local owner ID, retaining durable capture before stale refusal. [CLI login snapshot and reservation ownership](authkey-lifecycle.md#cli-login-snapshot-and-reservation-ownership-2026-11-06). Not a session-wide lock or rotation recovery claim.
+
+Local CLI malformed-present LID omission closed via shared success identity helper, keeping canonical/legacy LID coherent and partial fields intact. [Shared CLI login identity validation](login-identity-updates.md#cli-shares-the-authenticated-identity-update-2026-11-06). No native or live acceptance claim.
