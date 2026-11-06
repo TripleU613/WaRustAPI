@@ -1,0 +1,31 @@
+
+# class: LX/E7N;
+# extends: Ljava/lang/Enum;
+
+.method public <clinit>(V)  # .registers 5
+    # full signature: LX/E7N;-><clinit>()V
+    0000..0004  const-string  v1, "REGULAR"
+    0004..0006  const/4  v0, #0x0
+    0006..000a  new-instance  v4, LX/E7N;
+    000a..0010  invoke-direct  {v4, v1, v0, v0}, LX/E7N;-><init>(Ljava/lang/String;II)V
+    0010..0014  sput-object  v4, LX/E7N;->A03:LX/E7N;
+    0014..0018  const-string  v1, "PQ"
+    0018..001a  const/4  v0, #0x1
+    001a..001e  new-instance  v3, LX/E7N;
+    001e..0024  invoke-direct  {v3, v1, v0, v0}, LX/E7N;-><init>(Ljava/lang/String;II)V
+    0024..0028  sput-object  v3, LX/E7N;->A02:LX/E7N;
+    0028..002c  const-string  v2, "STATELESS"
+    002c..002e  const/4  v0, #0x2
+    002e..0032  new-instance  v1, LX/E7N;
+    0032..0038  invoke-direct  {v1, v2, v0, v0}, LX/E7N;-><init>(Ljava/lang/String;II)V
+    0038..003c  sput-object  v1, LX/E7N;->A04:LX/E7N;
+    003c..003e  const/4  v0, #0x3
+    003e..0042  new-array  v0, v0, [LX/E7N;
+    0042..0048  invoke-static  {v4, v3, v1, v0}, LX/2LA;->A1G(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;)V
+    0048..004c  sput-object  v0, LX/E7N;->A01:[LX/E7N;
+    004c..0052  invoke-static  {v0}, LX/068;->A00([Ljava/lang/Enum;)LX/06C;
+    0052..0054  move-result-object  v0
+    0054..0058  sput-object  v0, LX/E7N;->A00:LX/06B;
+    0058..005a  return-void
+    # exception table: 0 try range(s)
+.end method

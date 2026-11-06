@@ -1,3 +1,8 @@
+Current APK tracing separates ordinary and conditional PQ identity fetches:
+both are identity-change reads, neither is a PQ session upgrade. Their native
+in-flight keys include mode; 60-second cleanup does not authorize durable replay.
+[Manager evidence and remaining gates](docs/protocol/bulk-prekey-refresh.md#current-notification-fetch-flags-and-manager-suppression-2026-11-06).
+
 Fresh APK43.72 tracing finds no explicit fetched-key/adoption dependency
 in normal identity notification ACK dispatch. General failure handling
 differs from parser LIL; no ACK widening was justified or implemented.

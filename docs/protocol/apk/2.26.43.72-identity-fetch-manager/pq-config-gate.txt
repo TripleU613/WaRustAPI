@@ -1,0 +1,21 @@
+
+# class: LX/Ex8;
+# extends: Ljava/lang/Object;
+
+.method public A02(Z)  # .registers 3
+    # full signature: LX/Ex8;->A02()Z
+    0000..0006  invoke-virtual  {v2}, LX/Ex8;->A03()Z
+    0006..0008  move-result  v0
+    0008..000c  if-eqz  v0, +0x11
+    000c..0010  iget-object  v0, v2, LX/Ex8;->A01:LX/05a;
+    0010..0016  invoke-static  {v0}, LX/6oi;->A0K(LX/05a;)LX/08Y;
+    0016..0018  move-result-object  v1
+    0018..001c  const/16  v0, #0x5e60
+    001c..0022  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    0022..0024  move-result  v1
+    0024..0026  const/4  v0, #0x1
+    0026..002a  if-nez  v1, +0x3
+    002a..002c  const/4  v0, #0x0
+    002c..002e  return  v0
+    # exception table: 0 try range(s)
+.end method

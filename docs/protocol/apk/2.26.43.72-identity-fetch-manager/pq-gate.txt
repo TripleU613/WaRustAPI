@@ -1,0 +1,22 @@
+
+# class: LX/Ex8;
+# extends: Ljava/lang/Object;
+
+.method public A06(ZL)  # .registers 4
+    # full signature: LX/Ex8;->A06(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0000..0002  const/4  v1, #0x0
+    0002..0008  invoke-static  {v3, v1}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-static  {v3}, LX/0Dn;->A0k(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    000e..0010  move-result  v0
+    0010..0014  if-nez  v0, +0x8
+    0014..001a  invoke-static  {v3}, LX/0Dn;->A0S(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    001a..001c  move-result  v0
+    001c..0020  if-eqz  v0, +0xa
+    0020..0026  invoke-virtual  {v2}, LX/Ex8;->A02()Z
+    0026..0028  move-result  v0
+    0028..002c  if-eqz  v0, +0x4
+    002c..002e  const/4  v0, #0x1
+    002e..0030  return  v0
+    0030..0032  return  v1
+    # exception table: 0 try range(s)
+.end method

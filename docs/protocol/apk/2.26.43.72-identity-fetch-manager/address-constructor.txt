@@ -1,0 +1,15 @@
+
+# class: LX/EoY;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLII)  # .registers 6
+    # full signature: LX/EoY;-><init>(LX/E78;LX/E7N;Ljava/lang/String;II)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v3, v0, LX/EoY;->A04:Ljava/lang/String;
+    000a..000e  iput  v4, v0, LX/EoY;->A01:I
+    000e..0012  iput  v5, v0, LX/EoY;->A00:I
+    0012..0016  iput-object  v2, v0, LX/EoY;->A03:LX/E7N;
+    0016..001a  iput-object  v1, v0, LX/EoY;->A02:LX/E78;
+    001a..001c  return-void
+    # exception table: 0 try range(s)
+.end method

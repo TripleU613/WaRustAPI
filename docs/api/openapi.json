@@ -17541,5 +17541,12 @@
     "x-live": false,
     "description": "Current APK43.72 static15v/Fc1/17o/0YM/0v6 trace finds no explicit fetched-key/adoption dependency in normal identity notification ACK dispatch. General exception/SQLite failure is distinct from LIL continuation, so ACK support is not widened. Existing supported identity ACK builder/actor behavior unchanged. Executor ordering, current descriptor routing/rendering, native fetch scheduling and live ACK acceptance remain separate. Research evidence only, not a new command or runtime behavior change.",
     "evidence": "docs/protocol/identity-notification-ack.md#current-apk-identity-dispatch-and-ack-independence-2026-11-06"
+  },
+  "x-identity-fetch-manager-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Research-only APK43.72 identity fetch-manager trace: ordinary and gated PQ fetch use fromIdentityChange=true and upgrade=false. In-flight equality includes device, category, request mode and session scope; strict60-second uptime cleanup during admission does not authorize replay of a durable uncertain Rust request. Effective metadata/config gates, downstream job dedup/retry and wire sends remain incomplete. No new runtime PQ request, timer, retry or API command implemented.",
+    "evidence": "docs/protocol/bulk-prekey-refresh.md#current-notification-fetch-flags-and-manager-suppression-2026-11-06"
   }
 }

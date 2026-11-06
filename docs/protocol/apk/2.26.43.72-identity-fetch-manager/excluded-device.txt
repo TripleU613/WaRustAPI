@@ -1,0 +1,22 @@
+
+# class: LX/14t;
+# extends: Ljava/lang/Object;
+
+.method private A02(ZL)  # .registers 6
+    # full signature: LX/14t;->A02(Lcom/whatsapp/infra/core/jid/DeviceJid;)Z
+    0000..0004  iget-object  v0, v5, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    0004..000a  invoke-static  {v0}, LX/EqK;->A00(Lcom/whatsapp/infra/core/jid/UserJid;)Z
+    000a..000c  move-result  v0
+    000c..0010  if-eqz  v0, +0x11
+    0010..0014  iget-object  v3, v4, LX/14t;->A04:LX/08Y;
+    0014..0018  sget-object  v2, LX/00G;->A02:LX/00G;
+    0018..001e  const  v1, #0x808c
+    001e..0020  const/4  v0, #0x0
+    0020..0026  invoke-static  {v2, v3, v0, v1}, LX/00E;->A0D(LX/00G;LX/00E;Ljava/lang/Boolean;I)Z
+    0026..0028  move-result  v1
+    0028..002a  const/4  v0, #0x1
+    002a..002e  if-nez  v1, +0x3
+    002e..0030  const/4  v0, #0x0
+    0030..0032  return  v0
+    # exception table: 0 try range(s)
+.end method

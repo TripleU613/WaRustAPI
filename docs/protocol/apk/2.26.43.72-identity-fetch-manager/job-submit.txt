@@ -1,0 +1,128 @@
+
+# class: LX/14t;
+# extends: Ljava/lang/Object;
+
+.method public A05(VLLLLIZZ)  # .registers 21
+    # full signature: LX/14t;->A05(LX/0DY;LX/E78;Ljava/util/List;Ljava/util/List;IZZ)V
+    0000..0006  invoke-interface/range  {v16..v16}, Ljava/util/List;->isEmpty()Z
+    0006..0008  move-result  v0
+    0008..000c  move/from16  v11, v19
+    000c..0010  if-eqz  v0, +0x14
+    0010..0014  const-string  v1, "PreKeysRequestManager/startPrekeyFetchJobs jids list is empty, fetchPqPrekey="
+    0014..0018  new-instance  v0, Ljava/lang/StringBuilder;
+    0018..001e  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    001e..0024  invoke-virtual  {v0, v11}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    0024..002a  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    002a..002c  move-result-object  v0
+    002c..0032  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0032..0034  return-void
+    0034..003a  invoke-interface/range  {v16..v16}, Ljava/util/List;->size()I
+    003a..003c  move-result  v0
+    003c..0040  new-instance  v5, Ljava/util/ArrayList;
+    0040..0046  invoke-direct  {v5, v0}, Ljava/util/ArrayList;-><init>(I)V
+    0046..004c  invoke-interface/range  {v16..v16}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    004c..004e  move-result-object  v2
+    004e..0054  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    0054..0056  move-result  v0
+    0056..005a  if-eqz  v0, +0x18
+    005a..0060  invoke-interface  {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0060..0062  move-result-object  v1
+    0062..0066  check-cast  v1, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0066..006c  invoke-direct  {v13, v1}, LX/14t;->A02(Lcom/whatsapp/infra/core/jid/DeviceJid;)Z
+    006c..006e  move-result  v0
+    006e..0072  if-eqz  v0, +0x8
+    0072..0076  const-string  v0, "PreKeysRequestManager/startPrekeyFetchJobs: unexpected TEE bot JID reached fetch, skipping"
+    0076..007c  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    007c..007e  goto  -0x17
+    007e..0084  invoke-virtual  {v5, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0084..0086  goto  -0x1b
+    0086..008c  invoke-virtual  {v5}, Ljava/util/AbstractCollection;->isEmpty()Z
+    008c..008e  move-result  v0
+    008e..0092  if-eqz  v0, +0x5
+    0092..0096  const-string  v0, "PreKeysRequestManager/startPrekeyFetchJobs jids list empty after TEE filter"
+    0096..0098  goto  -0x35
+    0098..009e  invoke-interface/range  {v17..v17}, Ljava/util/List;->size()I
+    009e..00a0  move-result  v0
+    00a0..00a4  new-instance  v3, Ljava/util/ArrayList;
+    00a4..00aa  invoke-direct  {v3, v0}, Ljava/util/ArrayList;-><init>(I)V
+    00aa..00b0  invoke-interface/range  {v17..v17}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    00b0..00b2  move-result-object  v2
+    00b2..00b8  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    00b8..00ba  move-result  v0
+    00ba..00be  if-eqz  v0, +0x12
+    00be..00c4  invoke-interface  {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    00c4..00c6  move-result-object  v1
+    00c6..00ca  check-cast  v1, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    00ca..00d0  invoke-direct  {v13, v1}, LX/14t;->A02(Lcom/whatsapp/infra/core/jid/DeviceJid;)Z
+    00d0..00d2  move-result  v0
+    00d2..00d6  if-nez  v0, -0x10
+    00d6..00dc  invoke-virtual  {v3, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    00dc..00de  goto  -0x15
+    00de..00e2  const-string  v0, "PreKeysRequestManager/startPrekeyFetchJobs creating BulkGetPreKeyJob for "
+    00e2..00e6  new-instance  v1, Ljava/lang/StringBuilder;
+    00e6..00ec  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00ec..00f2  invoke-virtual  {v5}, Ljava/util/AbstractCollection;->size()I
+    00f2..00f4  move-result  v0
+    00f4..00fa  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00fa..00fe  const-string  v0, " jids, fetchPqPrekey="
+    00fe..0104  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0104..010a  invoke-virtual  {v1, v11}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    010a..0110  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0110..0112  move-result-object  v0
+    0112..0118  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0118..011e  invoke-virtual  {v3}, Ljava/util/AbstractCollection;->isEmpty()Z
+    011e..0120  move-result  v0
+    0120..0122  const/4  v4, #0x0
+    0122..0126  if-eqz  v0, +0x46
+    0126..0128  const/4  v9, #0x0
+    0128..012a  move-object  v0, v13
+    012a..012c  monitor-enter
+    012c..012e  monitor-exit
+    012e..0132  const/16  v0, #0x80
+    0132..0138  invoke-virtual  {v5}, Ljava/util/AbstractCollection;->size()I
+    0138..013a  move-result  v3
+    013a..013c  move-object  v6, v14
+    013c..013e  move-object  v7, v15
+    013e..0142  move/from16  v10, v18
+    0142..0146  move/from16  v12, v20
+    0146..014a  if-lt  v3, v0, +0x3d
+    014a..014e  iget-object  v1, v13, LX/14t;->A04:LX/08Y;
+    014e..0152  const/16  v0, #0x399
+    0152..0158  invoke-virtual  {v1, v0}, LX/00E;->A0a(I)I
+    0158..015a  move-result  v2
+    015a..015e  if-lez  v2, +0x33
+    015e..0162  if-le  v3, v2, +0x31
+    0162..0166  new-array  v0, v4, [Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0166..016c  invoke-virtual  {v5, v0}, Ljava/util/AbstractCollection;->toArray([Ljava/lang/Object;)[Ljava/lang/Object;
+    016c..016e  move-result-object  v1
+    016e..0172  new-instance  v0, LX/0so;
+    0172..0178  invoke-direct  {v0, v1, v2}, LX/0so;-><init>([Ljava/lang/Object;I)V
+    0178..017e  invoke-virtual  {v0}, LX/0so;->iterator()Ljava/util/Iterator;
+    017e..0180  move-result-object  v1
+    0180..0186  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    0186..0188  move-result  v0
+    0188..018c  if-eqz  v0, -0xab
+    018c..0190  iget-object  v0, v13, LX/14t;->A09:LX/0fW;
+    0190..0196  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0196..0198  move-result-object  v8
+    0198..019c  check-cast  v8, [Lcom/whatsapp/infra/core/jid/DeviceJid;
+    019c..01a0  new-instance  v5, Lcom/whatsapp/infra/messaging/jobqueue/job/BulkGetPreKeyJob;
+    01a0..01a6  invoke-direct/range  {v5..v12}, Lcom/whatsapp/infra/messaging/jobqueue/job/BulkGetPreKeyJob;-><init>(LX/0DY;LX/E78;[Lcom/whatsapp/infra/core/jid/DeviceJid;[Lcom/whatsapp/infra/core/jid/DeviceJid;IZZ)V
+    01a6..01ac  invoke-virtual  {v0, v5}, LX/0fW;->A01(Lorg/whispersystems/jobqueue/Job;)V
+    01ac..01ae  goto  -0x16
+    01ae..01b2  new-array  v0, v4, [Lcom/whatsapp/infra/core/jid/DeviceJid;
+    01b2..01b8  invoke-virtual  {v3, v0}, Ljava/util/AbstractCollection;->toArray([Ljava/lang/Object;)[Ljava/lang/Object;
+    01b8..01ba  move-result-object  v9
+    01ba..01be  check-cast  v9, [Lcom/whatsapp/infra/core/jid/DeviceJid;
+    01be..01c0  goto  -0x4b
+    01c0..01c4  iget-object  v1, v13, LX/14t;->A09:LX/0fW;
+    01c4..01c8  new-array  v0, v4, [Lcom/whatsapp/infra/core/jid/DeviceJid;
+    01c8..01ce  invoke-virtual  {v5, v0}, Ljava/util/AbstractCollection;->toArray([Ljava/lang/Object;)[Ljava/lang/Object;
+    01ce..01d0  move-result-object  v8
+    01d0..01d4  check-cast  v8, [Lcom/whatsapp/infra/core/jid/DeviceJid;
+    01d4..01d8  new-instance  v5, Lcom/whatsapp/infra/messaging/jobqueue/job/BulkGetPreKeyJob;
+    01d8..01de  invoke-direct/range  {v5..v12}, Lcom/whatsapp/infra/messaging/jobqueue/job/BulkGetPreKeyJob;-><init>(LX/0DY;LX/E78;[Lcom/whatsapp/infra/core/jid/DeviceJid;[Lcom/whatsapp/infra/core/jid/DeviceJid;IZZ)V
+    01de..01e4  invoke-virtual  {v1, v5}, LX/0fW;->A01(Lorg/whispersystems/jobqueue/Job;)V
+    01e4..01e6  return-void
+    # exception table: 0 try range(s)
+.end method

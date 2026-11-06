@@ -1,0 +1,23 @@
+
+# class: LX/F3k;
+# extends: Ljava/lang/Object;
+
+.method public A06(LLLL)  # .registers 8
+    # full signature: LX/F3k;->A06(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/E78;LX/E7N;)LX/EoY;
+    0000..0002  move-object  v1, v6
+    0002..0008  invoke-static  {v5, v6}, LX/00l;->A0A(Ljava/lang/Object;Ljava/lang/Object;)V
+    0008..000c  iget-object  v3, v5, Lcom/whatsapp/infra/core/jid/Jid;->user:Ljava/lang/String;
+    000c..0010  const-string  v0, "SessionAddress/User part of provided jid must not be null"
+    0010..0016  invoke-static  {v3, v0}, LX/00L;->A06(Ljava/lang/Object;Ljava/lang/String;)V
+    0016..001c  invoke-static  {v3}, LX/00l;->A05(Ljava/lang/Object;)V
+    001c..0020  iget-object  v0, v5, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    0020..0026  invoke-static  {v0}, LX/EHs;->A00(Lcom/whatsapp/infra/core/jid/UserJid;)I
+    0026..0028  move-result  v4
+    0028..002e  invoke-virtual  {v5}, Lcom/whatsapp/infra/core/jid/Jid;->getDevice()I
+    002e..0030  move-result  v5
+    0030..0034  new-instance  v0, LX/EoY;
+    0034..0036  move-object  v2, v7
+    0036..003c  invoke-direct/range  {v0..v5}, LX/EoY;-><init>(LX/E78;LX/E7N;Ljava/lang/String;II)V
+    003c..003e  return-object  v0
+    # exception table: 0 try range(s)
+.end method

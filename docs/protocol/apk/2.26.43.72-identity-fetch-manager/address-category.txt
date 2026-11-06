@@ -1,0 +1,26 @@
+
+# class: LX/EHs;
+# extends: Ljava/lang/Object;
+
+.method public A00(IL)  # .registers 3
+    # full signature: LX/EHs;->A00(Lcom/whatsapp/infra/core/jid/UserJid;)I
+    0000..0002  const/4  v1, #0x0
+    0002..0008  invoke-static  {v2, v1}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-static  {v2}, LX/0Dn;->A0Z(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    000e..0010  move-result  v0
+    0010..0014  if-eqz  v0, +0x4
+    0014..0016  const/4  v0, #0x1
+    0016..0018  return  v0
+    0018..001e  invoke-static  {v2}, LX/0Dn;->A0W(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    001e..0020  move-result  v0
+    0020..0024  if-eqz  v0, +0x4
+    0024..0026  const/4  v0, #0x2
+    0026..0028  return  v0
+    0028..002e  invoke-static  {v2}, LX/0Dn;->A0O(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    002e..0030  move-result  v0
+    0030..0034  if-eqz  v0, +0x4
+    0034..0036  const/4  v0, #0x3
+    0036..0038  return  v0
+    0038..003a  return  v1
+    # exception table: 0 try range(s)
+.end method

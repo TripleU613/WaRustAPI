@@ -1,0 +1,30 @@
+
+# class: LX/0Fy;
+# extends: Ljava/lang/Object;
+
+.method public A0W(ZL)  # .registers 6
+    # full signature: LX/0Fy;->A0W(LX/0DY;)Z
+    0000..0006  invoke-static  {v4, v5}, LX/0Fy;->A02(LX/0Fy;LX/0DY;)Ljava/util/Map;
+    0006..0008  move-result-object  v0
+    0008..000e  invoke-interface  {v0, v5}, Ljava/util/Map;->containsKey(Ljava/lang/Object;)Z
+    000e..0010  move-result  v0
+    0010..0012  const/4  v3, #0x0
+    0012..0016  if-eqz  v0, +0x1e
+    0016..001c  invoke-virtual  {v4, v5}, LX/0Fy;->A0G(LX/0DY;)LX/0i4;
+    001c..001e  move-result-object  v2
+    001e..0024  invoke-virtual  {v4, v5}, LX/0Fy;->A0d(LX/0DY;)Z
+    0024..0026  move-result  v0
+    0026..002a  if-eqz  v0, +0x12
+    002a..002e  if-eqz  v2, +0x12
+    002e..0032  iget-object  v1, v4, LX/0Fy;->A05:LX/08Y;
+    0032..0036  const/16  v0, #0x480b
+    0036..003c  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    003c..003e  move-result  v0
+    003e..0042  if-eqz  v0, +0x8
+    0042..0046  iget-object  v0, v2, LX/0i4;->A16:LX/1fL;
+    0046..004a  if-eqz  v0, +0x4
+    004a..004c  const/4  v0, #0x1
+    004c..004e  return  v0
+    004e..0050  return  v3
+    # exception table: 0 try range(s)
+.end method

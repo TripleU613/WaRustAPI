@@ -1,0 +1,32 @@
+
+# class: LX/EoY;
+# extends: Ljava/lang/Object;
+
+.method public equals(ZL)  # .registers 5
+    # full signature: LX/EoY;->equals(Ljava/lang/Object;)Z
+    0000..0004  instance-of  v0, v4, LX/EoY;
+    0004..0006  const/4  v2, #0x0
+    0006..000a  if-eqz  v0, +0x28
+    000a..000e  iget-object  v1, v3, LX/EoY;->A04:Ljava/lang/String;
+    000e..0012  check-cast  v4, LX/EoY;
+    0012..0016  iget-object  v0, v4, LX/EoY;->A04:Ljava/lang/String;
+    0016..001c  invoke-static  {v1, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    001c..001e  move-result  v0
+    001e..0022  if-eqz  v0, +0x1c
+    0022..0026  iget  v1, v3, LX/EoY;->A01:I
+    0026..002a  iget  v0, v4, LX/EoY;->A01:I
+    002a..002e  if-ne  v1, v0, +0x16
+    002e..0032  iget  v1, v3, LX/EoY;->A00:I
+    0032..0036  iget  v0, v4, LX/EoY;->A00:I
+    0036..003a  if-ne  v1, v0, +0x10
+    003a..003e  iget-object  v1, v3, LX/EoY;->A03:LX/E7N;
+    003e..0042  iget-object  v0, v4, LX/EoY;->A03:LX/E7N;
+    0042..0046  if-ne  v1, v0, +0xa
+    0046..004a  iget-object  v1, v3, LX/EoY;->A02:LX/E78;
+    004a..004e  iget-object  v0, v4, LX/EoY;->A02:LX/E78;
+    004e..0052  if-ne  v1, v0, +0x4
+    0052..0054  const/4  v0, #0x1
+    0054..0056  return  v0
+    0056..0058  return  v2
+    # exception table: 0 try range(s)
+.end method

@@ -129,3 +129,13 @@ cargo test -p whatsapp-api --all-features identity_change_
 
 Use `apk-research-diff` on retained release bundles for topic/file changes. A
 same-bundle self-diff verifies checksums and retention, not release equivalence.
+
+## Current notification fetch flags and manager suppression (2026-11-06)
+
+**Confirmed static APK43.72:** [17 complete manager/gate/address exports with commands and checksums](apk/2.26.43.72-identity-fetch-manager/README.md), continuing [Fc1 case15](apk/2.26.43.72-identity-ack-dispatch/identity-worker.txt). The first14t.A0A and gated second14t.A07 calls both use null context, default E78.A02 scope, internal reason8 and fromIdentityChange=true. The first has fetchPqPrekey=false; second=true. Both have isPqSessionUpgrade=false. The call flags therefore bypass only the manager's early upgrade-specific backoff branch, not every downstream policy. Internal reason8 is not a new wire attribute.
+
+0Fy.A0W requires a map/cache entry, optional metadata objects/fields and flag0x480b; this was not established as an own-account check. Ex8.A06 additionally gates categories and Ex8.A02/0x5e60; effective runtime values remain unknown. No synthetic capability or conditional PQ request was added to Rust.
+
+**Confirmed suppression scope:** manager14t.A00 removes an in-flight entry only when stored uptime+60000 is strictly less than current uptime, during another invocation. Its non-upgrade duplicate key is EoY; constructor/equality/hash include user/category/device plus request mode and session scope. E7N initializer constructs distinct REGULAR/PQ values; fetchPQ chooses between them. Thus the two modes do not collapse into one key in this map. Later BulkGetPreKeyJob queue deduplication/persistence and actual wire transmission are not proved here.
+
+**Negative result:** this is neither an unconditional second network request nor a 60-second retry authorization. Rust's durable uncertain reservations remain blocked and its conditional PQ metadata path remains unported. Native map lifecycle, completion cleanup, job retry/backoff, guarded address normalization and effective configuration require further evidence before any behavior change. No runtime code change, live account operation or APK execution.
