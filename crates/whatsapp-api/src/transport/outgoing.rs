@@ -1386,7 +1386,9 @@ pub fn acknowledge(store: &ProtocolStore, node: &Node) -> Result<bool> {
     let Some(chat) = message_ack_chat(node) else {
         return Ok(false);
     };
-    if super::messaging::message_ack_is_ignored_group_status(node, &chat) {
+    if super::messaging::message_ack_is_ignored_group_status(node, &chat)
+        || super::messaging::message_ack_status_edit_is_invalid(node, &chat)
+    {
         return Ok(false);
     }
 
@@ -3090,6 +3092,129 @@ mod tests {
         assert!(!status.is_uncertain());
         assert_eq!(status.facts.len(), 2);
     }
+    #[test]
+    fn newsletter_status_edit_admission_uses_shared_classifier_without_outbox_chat() {
+        use super::super::messaging::{MessageAckOutcome, message_ack_outcome_for};
+        let expected = Jid::parse("12345@newsletter").unwrap();
+        assert!(
+            ChatId::from_jid(&expected).is_err(),
+            "newsletter is outside ordinary outbox chat model"
+        );
+        for (edit, valid) in [
+            ("0", true),
+            ("+7", true),
+            ("７", true),
+            ("", false),
+            ("bad", false),
+            ("2147483648", false),
+        ] {
+            for error in [None, Some("500"), Some("459")] {
+                let mut ack = Node::new("ack")
+                    .attr("class", "message")
+                    .attr("id", "fixture")
+                    .attr("from", "12345@newsletter")
+                    .attr("is_group_status", "true")
+                    .attr("edit", edit);
+                if let Some(error) = error {
+                    ack = ack.attr("error", error);
+                }
+                assert!(super::super::messaging::validate_received_ack(&ack).is_ok());
+                let outcome = if error == Some("459") {
+                    MessageAckOutcome::AuthChallenge
+                } else if !valid {
+                    MessageAckOutcome::Unrelated
+                } else if error.is_some() {
+                    MessageAckOutcome::Refused
+                } else {
+                    MessageAckOutcome::Accepted
+                };
+                assert_eq!(
+                    message_ack_outcome_for(&ack, &expected),
+                    outcome,
+                    "{edit}/{error:?}"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn async_status_edit_parse_failure_cannot_settle_success_or_refusal() {
+        use super::super::messaging::{MessageAckOutcome, message_ack_outcome_for};
+        for (chat, group_status) in [("status@broadcast", false), ("123456789@g.us", true)] {
+            for (edit, valid) in [
+                (None, true),
+                (Some("0"), true),
+                (Some("+7"), true),
+                (Some("-1"), true),
+                (Some("７"), true),
+                (Some("2147483647"), true),
+                (Some("-2147483648"), true),
+                (Some(""), false),
+                (Some("bad"), false),
+                (Some("2147483648"), false),
+                (Some("-2147483649"), false),
+            ] {
+                for error in [None, Some("500"), Some("459")] {
+                    let dir = tempfile::tempdir().unwrap();
+                    let path = dir.path().join("status-edit-ack.redb");
+                    let store = open(&path);
+                    let expected = Jid::parse(chat).unwrap();
+                    let local_id = enqueue(&store);
+                    store
+                        .write(|tx| {
+                            let mut entry = outbox().get_mut(tx, local_id)?.unwrap();
+                            entry.intent.chat = ChatId::from_jid(&expected)?;
+                            entry.wire_id = Some(MessageId::new("fixture")?);
+                            outbox().set_progress(tx, &mut entry, AttemptProgress::InFlight)
+                        })
+                        .unwrap();
+                    let before = store.read(|tx| outbox().get(tx, local_id)).unwrap();
+                    let mut ack = Node::new("ack")
+                        .attr("class", "message")
+                        .attr("id", "fixture")
+                        .attr("from", chat);
+                    if group_status {
+                        ack = ack.attr("is_group_status", "true");
+                    }
+                    if let Some(edit) = edit {
+                        ack = ack.attr("edit", edit);
+                    }
+                    if let Some(error) = error {
+                        ack = ack.attr("error", error);
+                    }
+                    // Reader validation remains nonfatal; failure is inside the
+                    // scheduled status runnable, not the ACK reader epoch.
+                    assert!(super::super::messaging::validate_received_ack(&ack).is_ok());
+                    let outcome = if error == Some("459") {
+                        MessageAckOutcome::AuthChallenge
+                    } else if !valid {
+                        MessageAckOutcome::Unrelated
+                    } else if error.is_some() {
+                        MessageAckOutcome::Refused
+                    } else {
+                        MessageAckOutcome::Accepted
+                    };
+                    assert_eq!(
+                        message_ack_outcome_for(&ack, &expected),
+                        outcome,
+                        "{chat}/{edit:?}/{error:?}"
+                    );
+                    let settles = valid && error != Some("459");
+                    assert_eq!(acknowledge(&store, &ack).unwrap(), settles);
+                    assert!(!acknowledge(&store, &ack).unwrap());
+                    let after = store.read(|tx| outbox().get(tx, local_id)).unwrap();
+                    if !settles {
+                        assert_eq!(after, before);
+                    }
+                    drop(store);
+                    let store = open(&path);
+                    assert_eq!(store.read(|tx| outbox().get(tx, local_id)).unwrap(), after);
+                    assert!(begin_selected(&store, Some(local_id)).unwrap().is_none());
+                }
+            }
+        }
+    }
+
     #[test]
     fn direct_group_status_ack_diversion_keeps_original_reservation() {
         use super::super::messaging::{MessageAckOutcome, message_ack_outcome_for};

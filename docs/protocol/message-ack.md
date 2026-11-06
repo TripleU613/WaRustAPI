@@ -930,3 +930,35 @@ The ignored-chat branch returns through00dc ->1lZ.A1D(node,Eoh), the separate
 generic ACK callback path. It skips ordinaryA10/A0z; this does not establish
 absence of all native callbacks/side effects or authorize generic ID matching.
 Generic callback ownership remains its separate unresolved audit.
+
+
+## Async status ACK edit parsing precedes persistence (2026-11-06)
+
+**Confirmed selected pinned static / Rust correction.**
+[CompleteFcQ runnable, status handlers, key helpers and edit predicate](apk/2.26.43.72-status-ack-async-edit/README.md)
+show the diverted status route parses nonnullEoh.edit with Integer.parseInt;
+absence defaults0. Malformed/out-of-i32 text throws before either success or
+refusal dispatch. Shared outbox and expected-chat classification now retain
+uncertainty for that confirmed boundary on selected status@broadcast or
+exactflagged group/newsletter routes. This is an async outcome gate, not fatal
+reader validation;459 remains earlier and valid signed/BMP-Unicode edit passes.
+
+**Additional confirmed static / unknown authority:** F2a splits first__part__
+only at index>0; stateful multipartA03 usesDyI/F1x and nullpart privateA01.
+Newsletter/error404 with edit7/8 takes an explicit success path, not ordinary
+refusal. Refusal handler can preserve already-terminal state. These findings
+are retained without globally mapping404 to success or guessing state/part/key
+ownership. Full privateA01, part-store transactions, callbacks and scheduled
+newsletter17f/0TX semantics remain open.
+
+**Offline regression:** selected status/group/newsletter routes crossed with
+absent/zero/signed/Unicode/i32-boundary/empty/bad/overflow edit and noerror/500/459
+exercise supported status/group in-flight outbox and newsletter shared classification, nonfatal reader gate,
+once-only handling, retained/reopened uncertainty and no reselection. Valid
+controls preserve existing behavior, not full native status-parity proof.
+No live operation, new retry or replay authority.
+
+The initial regression attempted to construct a newsletter ordinary outbox chat
+and correctly failedContactId validation: ChatId supports direct/group/broadcast,
+not newsletters. Tests preserve that boundary and cover newsletter through the
+public expected-chat classifier rather than extending the model for a fixture.

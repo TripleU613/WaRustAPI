@@ -18153,5 +18153,16 @@
     ],
     "description": "Exactis_group_status=true diverts message ACKs before ordinary success/refusal. Native diversion admission ignores selected ordinary PN/LID chats; shared outbox/expected-chat classification now retains uncertainty for those outcomes. Selected recipient precedesfrom. Numeric459 remains earlier challenge; absent/false/TRUE/empty flag retains existing ordinary handling. Status/group/newsletter async and scheduled-newsletter state/callback semantics remain untraced and unchanged. No live operation, blanket status rejection, retry or replay authority.",
     "evidence": "docs/protocol/message-ack.md#direct-group-status-message-ack-diversion-precedes-terminal-outcomes-2026-11-06"
+  },
+  "x-async-status-ack-edit-admission": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [
+      "whatsapp_api::transport::messaging::message_ack_outcome_for",
+      "whatsapp_api::transport::outgoing::acknowledge"
+    ],
+    "description": "Selected async status ACK routes parse nonnull edit as signed Javai32; absence defaults0. Malformed/out-of-range text now retains outbox/expected-chat uncertainty on success and refusal without ending reader epoch. Applies to status@broadcast and exactflagged group/newsletter selected chats;459 remains earlier, signed/BMP decimal controls pass. Complete native part-key/status handlers and newsletter404/edit7/8 success exception are retained research; private persistence/callback authority remains unported. No blanket404 success, live operation, retry or replay authority.",
+    "evidence": "docs/protocol/message-ack.md#async-status-ack-edit-parsing-precedes-persistence-2026-11-06"
   }
 }

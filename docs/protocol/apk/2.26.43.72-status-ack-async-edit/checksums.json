@@ -1,0 +1,26 @@
+{
+  "README.md": {
+    "bytes": 4242,
+    "sha256": "51a7d79deaf514226d888fb747409b0e73738c25220fdbbc355f3e08e2943c96"
+  },
+  "refusal-handler.txt": {
+    "bytes": 6691,
+    "sha256": "ba29f2273aec2cb2bd8c4e893f23b8d909aa9d833e5c51d6d0e279d49294e6ae"
+  },
+  "revoke-edit.txt": {
+    "bytes": 413,
+    "sha256": "126cc197507e898220e544f3df37fc1c9c24a2cd9a98eff629588c60f7ee0641"
+  },
+  "runnable.txt": {
+    "bytes": 27403,
+    "sha256": "97e8d4871131bfec05ba6eb55efb15801139d11ff484e2e6a402ad0aad6f3398"
+  },
+  "success-handler.txt": {
+    "bytes": 19996,
+    "sha256": "9e4f3640f1e32f1536c5456f4420104376cc6fefd773d3d97776076899024f3b"
+  },
+  "wire-key.txt": {
+    "bytes": 6047,
+    "sha256": "d94d2d3c17b3af6df34c1c17667f34584c4e3cec587cc4472f3c8538198af264"
+  }
+}

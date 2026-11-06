@@ -1091,7 +1091,8 @@ pub fn message_ack_outcome_for(node: &Node, expected: &Jid) -> MessageAckOutcome
         outcome,
         MessageAckOutcome::Accepted | MessageAckOutcome::Refused
     ) && (message_ack_device_conversion_fails(node)
-        || message_ack_is_ignored_group_status(node, &expected))
+        || message_ack_is_ignored_group_status(node, &expected)
+        || message_ack_status_edit_is_invalid(node, &expected))
     {
         return MessageAckOutcome::Unrelated;
     }
@@ -1231,6 +1232,28 @@ pub(crate) fn ack_user_text(text: &str) -> Option<AckUserText<'_>> {
         return Some(AckUserText::Null);
     }
     Some(AckUserText::Device(user))
+}
+
+// APK43.72 FcQ.run case0 044c..045c parses Eoh.edit with
+// Integer.parseInt before async status success/refusal dispatch. This is
+// outcome admission only: an async parse failure is not a fatal reader gate.
+pub(crate) fn message_ack_status_edit_is_invalid(node: &Node, chat: &Jid) -> bool {
+    let status_route = (chat.server == crate::model::jid::Server::Broadcast
+        && chat.user == "status")
+        || (node.get_attr("is_group_status").and_then(|v| v.as_text()) == Some("true")
+            && matches!(
+                chat.server,
+                crate::model::jid::Server::Group | crate::model::jid::Server::Newsletter
+            ));
+    status_route
+        && node
+            .get_attr("edit")
+            .and_then(|v| v.as_text())
+            .is_some_and(|edit| {
+                super::mex::java_decimal_long(edit)
+                    .and_then(|v| i32::try_from(v).ok())
+                    .is_none()
+            })
 }
 
 // APK43.72 1rH.A03 02ce..02ee diverts exact is_group_status=true;
