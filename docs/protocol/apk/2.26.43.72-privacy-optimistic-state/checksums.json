@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "bytes": 6814,
+    "sha256": "58bbcff69f09aa167f497362e82f1bbe06f8663e8f970eb5d0a548cfeb291d7a"
+  },
+  "dialog-result.txt": {
+    "bytes": 6338,
+    "sha256": "f094b3272cd9caebe5cf47dbacb7fc3217158455c9ce58f2ea20870a5fa5c276"
+  },
+  "integer-view.txt": {
+    "bytes": 5592,
+    "sha256": "ea05a8f08fe6e181a75b78fa1a1160c1419377fbadc7e42aa50c745cf4f549f2"
+  },
+  "navigation-selected.txt": {
+    "bytes": 2800,
+    "sha256": "937fd578097f40b13f4022200f564340d2bf1251bd370d4aeb1416505c0f5212"
+  },
+  "notify.txt": {
+    "bytes": 485,
+    "sha256": "a081061c5cda5c9608e8623a5ff474e9afbaef598e6492235c7e930a4c9f87a4"
+  },
+  "observer-constructor.txt": {
+    "bytes": 410,
+    "sha256": "b9d81750fd454e33aa616464b6ec08d997ea2aefdc04e14604ba87cde259cad8"
+  },
+  "observer-selected.txt": {
+    "bytes": 912,
+    "sha256": "c6837886bd08477b2e56868a72be9c64f17a78af0a24b36fd19735f122eb736f"
+  },
+  "pending-query.txt": {
+    "bytes": 854,
+    "sha256": "6f36a95eb5aa512e79431ac9a906aae831129a63f01fea5a2e1c971d3ab99505"
+  },
+  "preference-refs.txt": {
+    "bytes": 1849,
+    "sha256": "0bdfe795b26d6d273f324562a8fd60441a33e51170b3d45306d8e053eddfd787"
+  },
+  "receipt-pref.txt": {
+    "bytes": 670,
+    "sha256": "d56541b4a9e42226d8b57c2c5b315f5b57bf1a1b377ca2edb9ad31dbe3242413"
+  }
+}

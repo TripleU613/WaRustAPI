@@ -1,0 +1,42 @@
+# Selected DEX excerpt; not a complete method.
+
+# class: LX/Bm1;
+# extends: LX/1RO;
+
+.method public A02(VL)  # .registers 7
+    # full signature: LX/Bm1;->A02(Landroid/view/View;)V
+    0000..0004  iget  v0, v5, LX/Bm1;->$t:I
+    0004..000a  packed-switch  v0, payload@0x4fc, cases=[0:@0x6a, 1:@0xee, 2:@0x13a, 3:@0x182, 4:@0x1d6, 5:@0x22e, 6:@0x276, 7:@0x286, 8:@0x296, 9:@0x2a6, 10:@0x2fc, 11:@0x35c, 12:@0x3a0, 13:@0x3fc, 14:@0x446, 15:@0x4bc], default@0xa
+    0062..0068  invoke-static  {v4, v6}, LX/B22;->A0q(Landroid/content/Intent;Landroid/view/View;)V
+    0068..006a  return-void
+    006a..0070  invoke-static  {v5, v6}, LX/Bm1;->A00(LX/Bm1;Ljava/lang/Object;)Lcom/whatsapp/privacy/checkup/PrivacyCheckupBaseFragment;
+    0070..0072  move-result-object  v1
+    0072..0076  iget  v3, v5, LX/Bm1;->A00:I
+    0076..007c  invoke-static  {}, LX/2L7;->A1C()Ljava/lang/Integer;
+    007c..007e  move-result-object  v0
+    007e..0084  invoke-virtual  {v1, v3, v0}, Lcom/whatsapp/privacy/checkup/PrivacyCheckupBaseFragment;->A2F(ILjava/lang/Integer;)V
+    0084..0086  const/4  v0, #0x5
+    0086..008c  invoke-virtual  {v1, v0, v3}, Lcom/whatsapp/privacy/checkup/PrivacyCheckupBaseFragment;->A2E(II)V
+    008c..0090  iget-object  v0, v1, Lcom/whatsapp/privacy/checkup/PrivacyCheckupBaseFragment;->A02:LX/00x;
+    0090..0096  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0096..0098  move-result-object  v0
+    0098..009c  check-cast  v0, LX/Fzm;
+    009c..00a2  invoke-static  {v6}, LX/2L8;->A05(Landroid/view/View;)Landroid/content/Context;
+    00a2..00a4  move-result-object  v1
+    00a4..00a8  const-string  v2, "read_receipts_enabled"
+    00a8..00ac  iget-object  v0, v0, LX/Fzm;->A01:LX/00x;
+    00ac..00b2  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    00b2..00b4  move-result-object  v0
+    00b4..00b8  check-cast  v0, LX/0yY;
+    00b8..00be  invoke-static  {v0}, LX/0yY;->A0J(LX/0yY;)V
+    00be..00c4  invoke-static  {}, LX/2L6;->A00()Landroid/content/Intent;
+    00c4..00c6  move-result-object  v4
+    00c6..00cc  invoke-virtual  {v1}, Landroid/content/Context;->getPackageName()Ljava/lang/String;
+    00cc..00ce  move-result-object  v1
+    00ce..00d2  const-string  v0, "com.whatsapp.settings.ui.privacy.SettingsPrivacy"
+    00d2..00d8  invoke-virtual  {v4, v1, v0}, Landroid/content/Intent;->setClassName(Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;
+    00d8..00dc  const-string  v0, "target_setting"
+    00dc..00e2  invoke-virtual  {v4, v0, v2}, Landroid/content/Intent;->putExtra(Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;
+    00e2..00e6  const-string  v0, "entry_point"
+    00e6..00ec  invoke-virtual  {v4, v0, v3}, Landroid/content/Intent;->putExtra(Ljava/lang/String;I)Landroid/content/Intent;
+    00ec..00ee  goto  -0x45

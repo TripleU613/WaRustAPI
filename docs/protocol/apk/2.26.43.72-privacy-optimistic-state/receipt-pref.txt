@@ -1,0 +1,17 @@
+
+# class: LX/09S;
+# extends: Ljava/lang/Object;
+
+.method public A1H(Z)  # .registers 4
+    # full signature: LX/09S;->A1H()Z
+    0000..0006  invoke-virtual  {v3}, LX/09S;->A0R()LX/2on;
+    0006..0008  move-result-object  v0
+    0008..000e  invoke-virtual  {v0}, LX/0FZ;->A03()Landroid/content/SharedPreferences;
+    000e..0010  move-result-object  v2
+    0010..0014  const-string  v1, "read_receipts_enabled"
+    0014..0016  const/4  v0, #0x1
+    0016..001c  invoke-interface  {v2, v1, v0}, Landroid/content/SharedPreferences;->getBoolean(Ljava/lang/String;Z)Z
+    001c..001e  move-result  v0
+    001e..0020  return  v0
+    # exception table: 0 try range(s)
+.end method

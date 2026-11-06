@@ -4632,3 +4632,12 @@ longer releases its unowned generic setter guard just because a saved outer
 IQ refusal exists. Fresh notifications remain captured/held, receive continues,
 and the refusal/status/reply survive. Typed category-specific lifecycle and
 full reconciliation remain open; no broader runtime setter or retry added.
+
+### Privacy optimistic display does not confirm a request (2026-11-06)
+
+**Confirmed selected static:** [observer/value and receipt-preference boundary](apk/2.26.43.72-privacy-optimistic-state/README.md)
+separates category-list notification, pending integer overlay and stored
+read-receipt Boolean. A setter can notify before confirmation; neither the
+selected observer nor getter establishes successful remote adoption.23 literal
+references are not23 writers; analytics/navigation/comparison hits are bounded
+negatives. Remaining listeners/writers/recovery stay open. No runtime change.

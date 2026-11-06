@@ -1,0 +1,17 @@
+# Selected DEX excerpt; not a complete method.
+
+# class: LX/8OL;
+# extends: Ljava/lang/Object;
+
+.method public CbC(VL)  # .registers 6
+    # full signature: LX/8OL;->CbC(Ljava/lang/Object;)V
+    0000..0004  iget  v0, v4, LX/8OL;->$t:I
+    0004..000a  packed-switch  v0, payload@0x250, cases=[0:@0xb2, 1:@0xc4, 2:@0xde, 3:@0xf8, 4:@0x112, 5:@0x12c, 6:@0x66, 7:@0x146, 8:@0x160, 9:@0x17a, 10:@0x194, 11:@0x1ae, 12:@0x1c8, 13:@0x1e2, 14:@0x1fc, 15:@0x21c, 16:@0x236], default@0xa
+    01fc..0200  iget-object  v1, v4, LX/8OL;->A00:Ljava/lang/Object;
+    0200..0204  check-cast  v1, Ljava/util/List;
+    0204..0208  check-cast  v5, LX/8pp;
+    0208..020c  sget-object  v0, LX/0oe;->A0G:Ljava/util/List;
+    020c..020e  const/4  v0, #0x1
+    020e..0214  invoke-static  {v5, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0214..021a  invoke-interface  {v5, v1}, LX/8pp;->CGi(Ljava/util/List;)V
+    021a..021c  return-void

@@ -1,3 +1,10 @@
+2026-11-06 — **Separated optimistic privacy views from confirmation.**
+Setter follow-up routes an observer; pending integer overlays and existence
+checks are distinct from the stored receipt Boolean. Literal/UI references
+are not preference-write proof; listener/writer/recovery gaps remain explicit.
+[Evidence and limits](account-privacy-notifications.md#optimistic-privacy-views-are-not-server-confirmation-2026-11-06).
+No production or live account change.
+
 2026-11-06 — **Fixed privacy intent release after IQ refusal.**
 Native setter failure does not retire its pending category. Rust now preserves
 its unowned-setter hold after a real refusal rather than adopting/ACKing a

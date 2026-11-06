@@ -299,3 +299,31 @@ coverage freshness and diff whitespace pass. Seven fresh exports, reused
 callback, branch targets, bundle checksums and pinned APK digest match. Flag
 field census has only its constructor writer among four direct references.
 Hygiene passes (437 bundles). No live account or APK runtime operation.
+
+## Optimistic privacy views are not server confirmation (2026-11-06)
+
+**Confirmed selected static:** [complete observer helper, integer view,
+pending query, receipt Boolean and bounded UI/reference checks](apk/2.26.43.72-privacy-optimistic-state/README.md)
+show A0P's post-dispatch A0Q only routes a category-list observer through
+8OL14 to8pp.CGi. Its shown bodies do not write preferences or wait for a reply;
+active listeners/downstream effects remain open.0oe.A0L can overlay a pending
+7wp desired value on a stored integer and clamp its result to0, but that is
+an optimistic view, not confirmed server adoption.
+
+09S.A1H separately reads the stored read_receipts_enabled Boolean; the retained
+current outgoing selector uses that preference branch plus other gates. No new
+bridge from the optimistic getter/pending UI query to outgoing receipt admission
+has been proved. The literal census has23 physical references, including
+analytics/navigation/shared comparisons; it is not a writer count. A guessed
+A0M getter is actually the already-retained refresh selector, matched exactly.
+
+This evidence does not justify changing Rust read/read-self policy or treating
+an observer notification as confirmed setting. Full category callers/listeners,
+all preference writers, pending adoption and durable typed setter recovery remain
+unported. No production behavior, new request, refresh or live operation changed.
+
+Validation: ten fresh exports, two exact selected-case extraction recipes,
+selected branch targets, full bundle checksums and pinned APK digest match.
+Formatting, OpenAPI library test, APK coverage freshness and diff whitespace
+pass; hygiene checks438 APK bundles. This evidence-only chunk changes no Rust
+source, so the workspace/Clippy suite was not rerun. No live account operation.

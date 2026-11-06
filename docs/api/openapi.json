@@ -452,6 +452,12 @@
     "x-live": false,
     "description": "APK43.72 0oe.A0P inserts pending7wp before selecting MEX/classic; classic8R5 binds6pB false continuation flag. Error and delivery-failure callbacks do not retire pending category ownership. Rust removes its erroneous outer-IQ-refusal bypass: all recognized unowned privacy category setters continue holding fresh readreceipts adoption/ACK, including Error rows. Original refusal/status/reply remain inspectable; processed redeliveries still re-ACK without reapplying. Unit and session/reopen tests cover capture, no ACK/state replacement/replay and continued ping handling. Guard remains broader than native category-keyed ownership; typed setter/lifecycle and reconciliation remain unported. No retry/reset/refresh or live operation. docs/protocol/account-privacy-notifications.md#setter-refusal-does-not-retire-pending-category-ownership-2026-11-06"
   },
+  "x-account-privacy-optimistic-state-evidence": {
+    "x-cli": "xtask apk-smali <apk> --class <class> --method <method> --signatures --exceptions; xtask apk-xref <apk> --anchor read_receipts_enabled",
+    "x-transport": "offline static APK evidence only",
+    "x-live": false,
+    "description": "APK43.72 setter post-dispatch0oe.A0Q invokes/schedules8OL14 ->8pp.CGi(category list), without preference writes or response admission in the selected bodies. Integer getter0oe.A0L overlays pending desired7wp values then clamps nonnegative;8Y1.BWP only checks pending entry existence.09S.A1H separately reads stored read_receipts_enabled Boolean for the retained current outgoing preference branch. Full caller/listener domains, downstream effects, all preference writers and durable recovery remain open.23 physical literal references include analytics/navigation/shared comparisons, not23 writers. Guessed A0M is refresh selector, reused byte-for-byte. No production receipt rule, setter, request or live operation added. docs/protocol/account-privacy-notifications.md#optimistic-privacy-views-are-not-server-confirmation-2026-11-06"
+  },
   "x-library-capabilities": [
     {
       "symbol": "whatsapp_api::transport::app_state_sync::binding::bind_inline_fetch_plan",

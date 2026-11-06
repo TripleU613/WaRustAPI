@@ -1,0 +1,131 @@
+
+# class: Lcom/whatsapp/settings/ui/privacy/SettingsPrivacy;
+# extends: LX/BoD;
+
+.method public CHI(VII)  # .registers 7
+    # full signature: Lcom/whatsapp/settings/ui/privacy/SettingsPrivacy;->CHI(II)V
+    0000..0002  const/4  v0, #0x2
+    0002..0006  if-eq  v5, v0, +0xde
+    0006..0008  const/4  v0, #0x3
+    0008..000c  if-ne  v5, v0, +0x2e
+    000c..0010  const-string  v1, "privacy_status"
+    0010..0014  const-string  v0, "privacy_last_seen"
+    0014..001a  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    001a..001c  move-result  v0
+    001c..0020  if-eqz  v0, +0x25
+    0020..0024  const-string  v3, "last"
+    0024..0026  const/4  v0, #0x0
+    0026..002c  invoke-static  {v0, v6}, Ljava/lang/Math;->max(II)I
+    002c..002e  move-result  v0
+    002e..0034  invoke-static  {v3, v0}, LX/8AX;->A02(Ljava/lang/String;I)Ljava/lang/String;
+    0034..0036  move-result-object  v2
+    0036..003a  iget-object  v0, v4, Lcom/whatsapp/settings/ui/privacy/SettingsPrivacy;->A0l:LX/00x;
+    003a..0040  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0040..0042  move-result-object  v1
+    0042..0046  check-cast  v1, LX/0m3;
+    0046..0048  const/4  v0, #0x1
+    0048..004e  invoke-static  {v1, v0}, LX/0m3;->A00(LX/0m3;Z)V
+    004e..0052  iget-object  v0, v4, Lcom/whatsapp/settings/ui/privacy/SettingsPrivacy;->A0p:LX/00x;
+    0052..0058  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0058..005a  move-result-object  v0
+    005a..005e  check-cast  v0, LX/0oe;
+    005e..0064  invoke-virtual  {v0, v3, v2}, LX/0oe;->A0S(Ljava/lang/String;Ljava/lang/String;)Z
+    0064..0066  return-void
+    0066..006a  const-string  v0, "privacy_profile_photo"
+    006a..0070  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0070..0072  move-result  v0
+    0072..0076  if-eqz  v0, +0x5
+    0076..007a  const-string  v3, "profile"
+    007a..007c  goto  -0x2b
+    007c..0080  const-string  v0, "privacy_cover_photo"
+    0080..0086  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0086..0088  move-result  v0
+    0088..008c  if-eqz  v0, +0x5
+    008c..0090  const-string  v3, "cover_photo"
+    0090..0092  goto  -0x36
+    0092..0096  const-string  v0, "privacy_status"
+    0096..009c  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    009c..009e  move-result  v0
+    009e..00a2  if-eqz  v0, +0x5
+    00a2..00a6  const-string  v3, "status"
+    00a6..00a8  goto  -0x41
+    00a8..00ac  const-string  v0, "read_receipts_enabled"
+    00ac..00b2  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    00b2..00b4  move-result  v0
+    00b4..00b8  if-eqz  v0, +0x5
+    00b8..00bc  const-string  v3, "readreceipts"
+    00bc..00be  goto  -0x4c
+    00be..00c2  const-string  v0, "privacy_groupadd"
+    00c2..00c8  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    00c8..00ca  move-result  v0
+    00ca..00ce  if-eqz  v0, +0x5
+    00ce..00d2  const-string  v3, "groupadd"
+    00d2..00d4  goto  -0x57
+    00d4..00d8  const-string  v0, "privacy_statusview"
+    00d8..00de  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    00de..00e0  move-result  v0
+    00e0..00e4  if-eqz  v0, +0x5
+    00e4..00e8  const-string  v3, "statusview"
+    00e8..00ea  goto  -0x62
+    00ea..00ee  const-string  v0, "privacy_channelcreation"
+    00ee..00f4  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    00f4..00f6  move-result  v0
+    00f6..00fa  if-eqz  v0, +0x5
+    00fa..00fe  const-string  v3, "channelcreation"
+    00fe..0100  goto  -0x6d
+    0100..0104  const-string  v0, "privacy_channelview"
+    0104..010a  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    010a..010c  move-result  v0
+    010c..0110  if-eqz  v0, +0x5
+    0110..0114  const-string  v3, "channelview"
+    0114..0116  goto  -0x78
+    0116..011a  const-string  v0, "privacy_online"
+    011a..0120  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0120..0122  move-result  v0
+    0122..0126  if-eqz  v0, +0x6
+    0126..012a  const-string  v3, "online"
+    012a..012e  goto/16  -0x83
+    012e..0132  const-string  v0, "privacy_calladd"
+    0132..0138  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0138..013a  move-result  v0
+    013a..013e  if-eqz  v0, +0x6
+    013e..0142  const-string  v3, "calladd"
+    0142..0146  goto/16  -0x8f
+    0146..014a  const-string  v0, "privacy_stickers"
+    014a..0150  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0150..0152  move-result  v0
+    0152..0156  if-eqz  v0, +0x6
+    0156..015a  const-string  v3, "stickers"
+    015a..015e  goto/16  -0x9b
+    015e..0162  const-string  v0, "privacy_setting_messages_brigading"
+    0162..0168  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0168..016a  move-result  v0
+    016a..016e  if-eqz  v0, +0x6
+    016e..0172  const-string  v3, "messages"
+    0172..0176  goto/16  -0xa7
+    0176..017a  const-string  v0, "privacy_pix"
+    017a..0180  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0180..0182  move-result  v0
+    0182..0186  if-eqz  v0, +0x6
+    0186..018a  const-string  v3, "pix"
+    018a..018e  goto/16  -0xb3
+    018e..0192  const-string  v0, "privacy_profile_links"
+    0192..0198  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0198..019a  move-result  v0
+    019a..019e  if-eqz  v0, +0x6
+    019e..01a2  const-string  v3, "linked_profiles"
+    01a2..01a6  goto/16  -0xbf
+    01a6..01aa  const-string  v0, "defense_mode_server_enabled"
+    01aa..01b0  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    01b0..01b2  move-result  v0
+    01b2..01b6  if-eqz  v0, +0xa
+    01b6..01ba  const-string  v3, "defense"
+    01ba..01be  goto/16  -0xcb
+    01be..01c2  const-string  v1, "privacy_profile_photo"
+    01c2..01c6  goto/16  -0xd9
+    01c6..01ca  const-string  v0, "Unrecognized preference: "
+    01ca..01d0  invoke-static  {v0, v1}, LX/2LF;->A0H(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    01d0..01d2  move-result-object  v0
+    01d2..01d4  throw  v0
+    # exception table: 0 try range(s)
+.end method

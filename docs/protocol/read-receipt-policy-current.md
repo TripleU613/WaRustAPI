@@ -159,3 +159,12 @@ reference regeneration, OpenAPI library coverage, APK coverage freshness and
 repository hygiene pass. Three selected DEX exports reproduce byte-for-byte.
 REA subject hash and complete source are retained with its duplicated-code
 warning; checked DEX determines the selection branches.
+
+## Pending UI views versus the receipt Boolean (2026-11-06)
+
+**Confirmed selected static:** [separate getter/observer paths](apk/2.26.43.72-privacy-optimistic-state/README.md)
+show0oe.A0L's optimistic integer overlay and8Y1's pending-entry test are not the
+same operation as09S.A1H reading read_receipts_enabled. The latter's stored
+Boolean branch remains the retained current0xW.A05 input. Downstream observer
+callbacks, every writer and full caller domains remain open; no receipt policy
+or inferred local-setting default is changed from this trace. No live operation.

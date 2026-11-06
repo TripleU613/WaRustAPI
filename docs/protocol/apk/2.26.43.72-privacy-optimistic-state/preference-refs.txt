@@ -1,0 +1,47 @@
+["read_receipts_enabled"]  (23 reference(s))
+  classes.dex  LX/09S;->A1H(Z)
+    dex byte offset: 0x471400
+  classes.dex  LX/0oe;->A0R(VL)
+    dex byte offset: 0x6f93b0
+  classes.dex  LX/15E;->BLn(ZLI)
+    dex byte offset: 0x7fd216
+  classes13.dex  LX/RpJ;->getFieldsMapForFalco(L)
+    dex byte offset: 0x3e5ac4
+  classes13.dex  LX/Rpa;->getFieldsMapForFalco(L)
+    dex byte offset: 0x3e7d1a
+  classes13.dex  LX/Rpm;->getFieldsMapForFalco(L)
+    dex byte offset: 0x3e9926
+  classes13.dex  LX/Rps;->getFieldsMapForFalco(L)
+    dex byte offset: 0x3eab1c
+  classes13.dex  LX/Rpt;->getFieldsMapForFalco(L)
+    dex byte offset: 0x3eae74
+  classes13.dex  LX/Rpw;->getFieldsMapForFalco(L)
+    dex byte offset: 0x3eb87a
+  classes13.dex  LX/RqF;->getFieldsMapForFalco(L)
+    dex byte offset: 0x3f12d6
+  classes13.dex  LX/RqG;->getFieldsMapForFalco(L)
+    dex byte offset: 0x3f19c4
+  classes13.dex  LX/RqI;->getFieldsMapForFalco(L)
+    dex byte offset: 0x3f28ba
+  classes13.dex  LX/RqK;->getFieldsMapForFalco(L)
+    dex byte offset: 0x3f3e36
+  classes13.dex  LX/RqL;->getFieldsMapForFalco(L)
+    dex byte offset: 0x3f47ec
+  classes13.dex  LX/RqM;->getFieldsMapForFalco(L)
+    dex byte offset: 0x3f524c
+  classes13.dex  LX/RqN;->getFieldsMapForFalco(L)
+    dex byte offset: 0x3f5da0
+  classes13.dex  LX/RqO;->getFieldsMapForFalco(L)
+    dex byte offset: 0x3f6910
+  classes13.dex  LX/RqU;->getFieldsMapForFalco(L)
+    dex byte offset: 0x3f99b4
+  classes5.dex  LX/8AX;->A01(LL)
+    dex byte offset: 0x437996
+  classes7.dex  LX/Bm1;->A02(VL)
+    dex byte offset: 0x3ba3a8
+  classes9.dex  LX/GJb;->getFieldsMapForFalco(L)
+    dex byte offset: 0x404b7e
+  classes9.dex  Lcom/whatsapp/settings/ui/privacy/SettingsPrivacy;->A0i(VL)
+    dex byte offset: 0x4f80e4
+  classes9.dex  Lcom/whatsapp/settings/ui/privacy/SettingsPrivacy;->CHI(VII)
+    dex byte offset: 0x4f88a0
