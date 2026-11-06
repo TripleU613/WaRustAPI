@@ -1,3 +1,10 @@
+2026-11-06 — **Priority property-origin search expanded across Java/native boundaries.**
+
+All24 physical key allocations include a dynamic decoder; request bridging also
+uses it. Checked83 native members and direct setter calls; no original key3
+producer proven. [Evidence, typed lookup and bounded negatives](docs/protocol/media-network-outcomes.md#priority-property-origin-java-and-cross-library-boundary-2026-11-06).
+No Rust behavior change or live account operation.
+
 2026-11-06 — **Priority service registration and normal graph invocation confirmed.**
 
 Named JNI binding and16-stage reverse walk close two previous boundaries;

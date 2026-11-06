@@ -1,0 +1,46 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+0000000000667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>:
+  667fb0:      	bti	c
+  667fb4:      	cbz	x1, 0x668048 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x2b4>
+  667fb8:      	fmov	d0, x1
+  667fbc:      	sxtw	x9, w2
+  667fc0:      	mov	x3, x30
+  667fc4:      	bl	0x724ff8 <MCFSetGetCount+0xf40>
+  667fc8:      	mov	x30, x3
+  667fcc:      	b.hi	0x667fdc <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x248>
+  667fd0:      	sub	x10, x1, #0x1
+  667fd4:      	and	x10, x10, x9
+  667fd8:      	b	0x667ff0 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x25c>
+  667fdc:      	cmp	x9, x1
+  667fe0:      	mov	x10, x9
+  667fe4:      	b.lo	0x667ff0 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x25c>
+  667fe8:      	udiv	x10, x9, x1
+  667fec:      	msub	x10, x10, x1, x9
+  667ff0:      	ldr	x0, [x0, x10, lsl #3]
+  667ff4:      	cbz	x0, 0x66804c <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x2b8>
+  667ff8:      	sub	x11, x1, #0x1
+  667ffc:      	ldr	x0, [x0]
+  668000:      	cbz	x0, 0x66804c <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x2b8>
+  668004:      	ldr	x12, [x0, #0x8]
+  668008:      	cmp	x12, x9
+  66800c:      	b.ne	0x668020 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x28c>
+  668010:      	ldr	w12, [x0, #0x10]
+  668014:      	cmp	w12, w2
+  668018:      	b.ne	0x667ffc <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x268>
+  66801c:      	b	0x66804c <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x2b8>
+  668020:      	cmp	x8, #0x1
+  668024:      	b.hi	0x668030 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x29c>
+  668028:      	and	x12, x12, x11
+  66802c:      	b	0x668040 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x2ac>
+  668030:      	cmp	x12, x1
+  668034:      	b.lo	0x668040 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x2ac>
+  668038:      	udiv	x13, x12, x1
+  66803c:      	msub	x12, x13, x1, x12
+  668040:      	cmp	x12, x10
+  668044:      	b.eq	0x667ffc <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x268>
+  668048:      	mov	x0, xzr
+  66804c:      	ret

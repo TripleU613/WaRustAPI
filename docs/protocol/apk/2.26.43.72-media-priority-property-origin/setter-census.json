@@ -1,0 +1,988 @@
+{
+  "scope": "Direct numeric B/BL or symbol-labelled PLT branches only; no inlining, indirect, outlined-key, dynamic-loading or runtime absence proof",
+  "libraries": {
+    "libwhatsappmerged.so": {
+      "0x667d94": [
+        {
+          "call": "4427c8:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>",
+          "context": [
+            "  4427b0:      \tmov\tw8, #0x1                // =1",
+            "  4427b4:      \tadd\tx0, x26, #0x28",
+            "  4427b8:      \tadd\tx2, sp, #0x290",
+            "  4427bc:      \tmov\tw1, #0x2b               // =43",
+            "  4427c0:      \tstrb\tw8, [sp, #0x290]",
+            "  4427c4:      \tstr\twzr, [sp, #0x2a8]",
+            "  4427c8:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "4430dc:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>",
+          "context": [
+            "  4430c4:      \tmov\tw9, #0x1                // =1",
+            "  4430c8:      \tstr\tx8, [sp, #0x270]",
+            "  4430cc:      \tstr\tw9, [sp, #0x288]",
+            "  4430d0:      \tadd\tx0, x24, #0x28",
+            "  4430d4:      \tadd\tx2, sp, #0x270",
+            "  4430d8:      \tmov\tw1, #0x24               // =36",
+            "  4430dc:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "443144:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>",
+          "context": [
+            "  44312c:      \tb.ne\t0x443150 <_ZNK8facebook9stash_jni10JFileStash9removeAllEv+0x3d204>",
+            "  443130:      \tstrb\tw8, [sp, #0x238]",
+            "  443134:      \tstr\twzr, [sp, #0x250]",
+            "  443138:      \tadd\tx0, x24, #0x28",
+            "  44313c:      \tadd\tx2, sp, #0x238",
+            "  443140:      \tmov\tw1, #0x2e               // =46",
+            "  443144:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "4f3618:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>",
+          "context": [
+            "  4f3600:      \tmov\tw8, #0x1                // =1",
+            "  4f3604:      \tstr\twzr, [sp, #0x20]",
+            "  4f3608:      \tstrb\tw8, [sp, #0x8]",
+            "  4f360c:      \tadd\tx2, sp, #0x8",
+            "  4f3610:      \tmov\tx0, x21",
+            "  4f3614:      \tmov\tw1, #0x15               // =21",
+            "  4f3618:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "4fa37c:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>",
+          "context": [
+            "  4fa364:      \tstr\tx9, [sp]",
+            "  4fa368:      \tbl\t0x7341d8 <MCFSetGetCount+0x10120>",
+            "  4fa36c:      \tbl\t0x4fa4a4 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x290f0>",
+            "  4fa370:      \tadd\tx2, sp, #0x48",
+            "  4fa374:      \tmov\tx0, x19",
+            "  4fa378:      \tmov\tw1, #0x23               // =35",
+            "  4fa37c:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "50445c:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>",
+          "context": [
+            "  504444:      \tbl\t0x3a6fc4 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x8984>",
+            "  504448:      \tbl\t0x72d468 <MCFSetGetCount+0x93b0>",
+            "  50444c:      \tbl\t0x3ea1f4 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38f04>",
+            "  504450:      \tadd\tx2, sp, #0x18",
+            "  504454:      \tmov\tx0, x20",
+            "  504458:      \tmov\tw1, #0x1d               // =29",
+            "  50445c:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "505e20:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>",
+          "context": [
+            "  505e08:      \tmov\tw9, #0x1                // =1",
+            "  505e0c:      \tstr\tw9, [sp, #0x20]",
+            "  505e10:      \tstr\tx8, [sp, #0x8]",
+            "  505e14:      \tadd\tx0, x19, #0x28",
+            "  505e18:      \tadd\tx2, sp, #0x8",
+            "  505e1c:      \tmov\tw1, #0x22               // =34",
+            "  505e20:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "505ebc:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>",
+          "context": [
+            "  505ea4:      \tmov\tw9, #0x1                // =1",
+            "  505ea8:      \tstr\tw9, [sp, #0x20]",
+            "  505eac:      \tstr\tx8, [sp, #0x8]",
+            "  505eb0:      \tadd\tx0, x19, #0x28",
+            "  505eb4:      \tadd\tx2, sp, #0x8",
+            "  505eb8:      \tmov\tw1, #0x22               // =34",
+            "  505ebc:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "50766c:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>",
+          "context": [
+            "  507654:      \tb.ne\t0x507678 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x362c4>",
+            "  507658:      \tstrb\tw8, [sp, #0xc0]",
+            "  50765c:      \tstr\twzr, [sp, #0xd8]",
+            "  507660:      \tadd\tx0, x22, #0x28",
+            "  507664:      \tadd\tx2, sp, #0xc0",
+            "  507668:      \tmov\tw1, #0x28               // =40",
+            "  50766c:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "509010:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>",
+          "context": [
+            "  508ff8:      \tmov\tw8, w0",
+            "  508ffc:      \tstr\tw23, [sp, #0x40]",
+            "  509000:      \tstr\tx8, [sp, #0x28]",
+            "  509004:      \tadd\tx2, sp, #0x28",
+            "  509008:      \tmov\tx0, x20",
+            "  50900c:      \tmov\tw1, #0x21               // =33",
+            "  509010:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "509040:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>",
+          "context": [
+            "  509028:      \tbl\t0x3ba0dc <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x8dec>",
+            "  50902c:      \tand\tw8, w0, #0x1",
+            "  509030:      \tstr\twzr, [sp, #0x20]",
+            "  509034:      \tstrb\tw8, [sp, #0x8]",
+            "  509038:      \tbl\t0x38b7c0 <_RNvYNtNtCsi1jv7X85TMU_3std2fs4FileNtNtNtCsd0h5sCe2hTT_4core2io5write5Write9write_allB6_+0x74c>",
+            "  50903c:      \tmov\tw1, #0x16               // =22",
+            "  509040:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "50f814:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>",
+          "context": [
+            "  50f7fc:      \tadd\tx0, sp, #0x28",
+            "  50f800:      \tmov\tx1, sp",
+            "  50f804:      \tbl\t0x3ea1f4 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38f04>",
+            "  50f808:      \tadd\tx0, x21, #0x28",
+            "  50f80c:      \tadd\tx2, sp, #0x28",
+            "  50f810:      \tmov\tw1, #0x25               // =37",
+            "  50f814:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "523da0:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>",
+          "context": [
+            "  523d88:      \tstr\tw8, [sp, #0x568]",
+            "  523d8c:      \tbl\t0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>",
+            "  523d90:      \tadd\tx24, sp, #0x550",
+            "  523d94:      \tadd\tx0, x26, #0x28",
+            "  523d98:      \tadd\tx2, sp, #0x550",
+            "  523d9c:      \tmov\tw1, #0x17               // =23",
+            "  523da0:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "523dfc:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>",
+          "context": [
+            "  523de4:      \tstr\tw8, [sp, #0x518]",
+            "  523de8:      \tbl\t0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>",
+            "  523dec:      \tadd\tx24, sp, #0x500",
+            "  523df0:      \tadd\tx0, x26, #0x28",
+            "  523df4:      \tadd\tx2, sp, #0x500",
+            "  523df8:      \tmov\tw1, #0x17               // =23",
+            "  523dfc:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "523ef4:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>",
+          "context": [
+            "  523edc:      \tstur\tw8, [x29, #-0x28]",
+            "  523ee0:      \tbl\t0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>",
+            "  523ee4:      \tsub\tx24, x29, #0x40",
+            "  523ee8:      \tadd\tx0, x26, #0x28",
+            "  523eec:      \tsub\tx2, x29, #0x40",
+            "  523ef0:      \tmov\tw1, #0x17               // =23",
+            "  523ef4:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "523ff4:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>",
+          "context": [
+            "  523fdc:      \tstr\tw8, [sp, #0x4f8]",
+            "  523fe0:      \tbl\t0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>",
+            "  523fe4:      \tadd\tx24, sp, #0x4e0",
+            "  523fe8:      \tadd\tx0, x26, #0x28",
+            "  523fec:      \tadd\tx2, sp, #0x4e0",
+            "  523ff0:      \tmov\tw1, #0x17               // =23",
+            "  523ff4:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "524454:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>",
+          "context": [
+            "  52443c:      \tadd\tx1, sp, #0x30",
+            "  524440:      \tstur\txzr, [x29, #-0x10]",
+            "  524444:      \tbl\t0x3ea1f4 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38f04>",
+            "  524448:      \tsub\tx0, x29, #0x80",
+            "  52444c:      \tsub\tx2, x29, #0xa0",
+            "  524450:      \tmov\tw1, #0x8                // =8",
+            "  524454:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "524478:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>",
+          "context": [
+            "  524460:      \tldr\tx8, [x19, #0x8]",
+            "  524464:      \tsub\tx0, x29, #0x80",
+            "  524468:      \tsub\tx2, x29, #0xc0",
+            "  52446c:      \tmov\tw1, #0x9                // =9",
+            "  524470:      \tstur\tw22, [x29, #-0xa8]",
+            "  524474:      \tstur\tx8, [x29, #-0xc0]",
+            "  524478:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "5249c8:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>",
+          "context": [
+            "  5249b0:      \tmov\tw9, #0x1                // =1",
+            "  5249b4:      \tsub\tx0, x29, #0x80",
+            "  5249b8:      \tadd\tx2, sp, #0xc0",
+            "  5249bc:      \tmov\tw1, #0xb1               // =177",
+            "  5249c0:      \tstr\tw9, [sp, #0xd8]",
+            "  5249c4:      \tstr\tx8, [sp, #0xc0]",
+            "  5249c8:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "6540b8:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>",
+          "context": [
+            "  6540a0:      \tbl\t0x6537f8 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x9f7c>",
+            "  6540a4:      \tadd\tx0, sp, #0x30",
+            "  6540a8:      \tsub\tx1, x29, #0x50",
+            "  6540ac:      \tbl\t0x3e9b60 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38870>",
+            "  6540b0:      \tadd\tx2, sp, #0x30",
+            "  6540b4:      \tbl\t0x72a664 <MCFSetGetCount+0x65ac>",
+            "  6540b8:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "65583c:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>",
+          "context": [
+            "  655824:      \tldr\tx8, [x0, #0x18]",
+            "  655828:      \tstr\tw9, [sp, #0x20]",
+            "  65582c:      \tstr\tx8, [sp, #0x8]",
+            "  655830:      \tadd\tx0, x1, #0x28",
+            "  655834:      \tadd\tx2, sp, #0x8",
+            "  655838:      \tmov\tw1, #0x4                // =4",
+            "  65583c:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "6558cc:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>",
+          "context": [
+            "  6558b4:      \tldr\tx8, [x0, #0x18]",
+            "  6558b8:      \tstr\tw9, [sp, #0x20]",
+            "  6558bc:      \tstr\tx8, [sp, #0x8]",
+            "  6558c0:      \tadd\tx0, x2, #0x28",
+            "  6558c4:      \tadd\tx2, sp, #0x8",
+            "  6558c8:      \tmov\tw1, #0x4                // =4",
+            "  6558cc:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "6570e0:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>",
+          "context": [
+            "  6570c8:      \tstr\tw8, [sp, #0x20]",
+            "  6570cc:      \tcmp\tx9, x20",
+            "  6570d0:      \tcsel\tx9, x9, x20, gt",
+            "  6570d4:      \tstr\tx9, [sp, #0x8]",
+            "  6570d8:      \tbl\t0x72b7a0 <MCFSetGetCount+0x76e8>",
+            "  6570dc:      \tmov\tw1, #0x4                // =4",
+            "  6570e0:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "660d54:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>",
+          "context": [
+            "  660d3c:      \tbl\t0x734fd0 <_ZNSt6__ndk15mutex6unlockEv@plt>",
+            "  660d40:      \tbl\t0x72baf4 <MCFSetGetCount+0x7a3c>",
+            "  660d44:      \tbl\t0x3ea1f4 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38f04>",
+            "  660d48:      \tadd\tx0, x20, #0x28",
+            "  660d4c:      \tsub\tx2, x29, #0x28",
+            "  660d50:      \tmov\tw1, #0x1f               // =31",
+            "  660d54:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "664250:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>",
+          "context": [
+            "  664238:      \tsub\tx0, x29, #0x28",
+            "  66423c:      \tadd\tx1, sp, #0x20",
+            "  664240:      \tbl\t0x4fa4a4 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x290f0>",
+            "  664244:      \tsub\tx2, x29, #0x28",
+            "  664248:      \tmov\tx0, x20",
+            "  66424c:      \tmov\tw1, #0x23               // =35",
+            "  664250:      \tbl\t0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>"
+          ]
+        }
+      ],
+      "0x667d8c": [
+        {
+          "call": "507474:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  50745c:      \tbl\t0x6681cc <_ZNK8facebook5tigon22TigonPropertyContainer27getPropertyGroupCopyOrEmptyENS1_3KeyE>",
+            "  507460:      \tstrb\tw23, [sp, #0x80]",
+            "  507464:      \tstr\twzr, [sp, #0x98]",
+            "  507468:      \tadd\tx0, sp, #0xc0",
+            "  50746c:      \tadd\tx2, sp, #0x80",
+            "  507470:      \tmov\tw1, #0x10a              // =266",
+            "  507474:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "507498:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  507480:      \tldrb\tw8, [sp, #0xa0]",
+            "  507484:      \tstr\twzr, [sp, #0x98]",
+            "  507488:      \tstrb\tw8, [sp, #0x80]",
+            "  50748c:      \tadd\tx0, sp, #0xc0",
+            "  507490:      \tadd\tx2, sp, #0x80",
+            "  507494:      \tmov\tw1, #0x109              // =265",
+            "  507498:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "5074bc:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  5074a4:      \tadd\tx0, sp, #0x80",
+            "  5074a8:      \torr\tx1, x26, #0x8",
+            "  5074ac:      \tbl\t0x3ea1f4 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38f04>",
+            "  5074b0:      \tadd\tx0, sp, #0xc0",
+            "  5074b4:      \tadd\tx2, sp, #0x80",
+            "  5074b8:      \tmov\tw1, #0x10b              // =267",
+            "  5074bc:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "5074e0:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  5074c8:      \tldrb\tw8, [sp, #0xa1]",
+            "  5074cc:      \tstr\twzr, [sp, #0x98]",
+            "  5074d0:      \tstrb\tw8, [sp, #0x80]",
+            "  5074d4:      \tadd\tx0, sp, #0xc0",
+            "  5074d8:      \tadd\tx2, sp, #0x80",
+            "  5074dc:      \tmov\tw1, #0x10c              // =268",
+            "  5074e0:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "507608:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  5075f0:      \tmov\tw20, #0x1               // =1",
+            "  5075f4:      \tstr\twzr, [sp, #0xb8]",
+            "  5075f8:      \tstrb\tw20, [sp, #0xa0]",
+            "  5075fc:      \tadd\tx0, sp, #0xc0",
+            "  507600:      \tadd\tx2, sp, #0xa0",
+            "  507604:      \tmov\tw1, #0x103              // =259",
+            "  507608:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "507628:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  507610:      \tbl\t0x3e93b0 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x380c0>",
+            "  507614:      \tstr\tx20, [sp, #0xa0]",
+            "  507618:      \tstr\tw20, [sp, #0xb8]",
+            "  50761c:      \tadd\tx0, sp, #0xc0",
+            "  507620:      \tadd\tx2, sp, #0xa0",
+            "  507624:      \tmov\tw1, #0x104              // =260",
+            "  507628:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "510d3c:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  510d24:      \tstr\tx8, [sp]",
+            "  510d28:      \tmov\tw8, #0x1                // =1",
+            "  510d2c:      \tstp\tq0, q0, [sp, #0x20]",
+            "  510d30:      \tstr\tw8, [sp, #0x18]",
+            "  510d34:      \tbl\t0x734788 <MCFSetGetCount+0x106d0>",
+            "  510d38:      \tmov\tw1, #0xf7               // =247",
+            "  510d3c:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "510d5c:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  510d44:      \tbl\t0x3e93b0 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x380c0>",
+            "  510d48:      \tand\tw8, w22, #0x1",
+            "  510d4c:      \tstr\twzr, [sp, #0x18]",
+            "  510d50:      \tstrb\tw8, [sp]",
+            "  510d54:      \tbl\t0x734788 <MCFSetGetCount+0x106d0>",
+            "  510d58:      \tmov\tw1, #0xf8               // =248",
+            "  510d5c:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "510d78:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  510d60:      \tmov\tx0, sp",
+            "  510d64:      \tbl\t0x3e93b0 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x380c0>",
+            "  510d68:      \tbl\t0x729c7c <MCFSetGetCount+0x5bc4>",
+            "  510d6c:      \tbl\t0x3ea1f4 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38f04>",
+            "  510d70:      \tbl\t0x734788 <MCFSetGetCount+0x106d0>",
+            "  510d74:      \tmov\tw1, #0xf9               // =249",
+            "  510d78:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "510da0:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  510d88:      \ttbnz\tx8, #0x3f, 0x510dac <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x1fb0>",
+            "  510d8c:      \tstr\tx8, [sp]",
+            "  510d90:      \tmov\tw8, #0x1                // =1",
+            "  510d94:      \tstr\tw8, [sp, #0x18]",
+            "  510d98:      \tbl\t0x734788 <MCFSetGetCount+0x106d0>",
+            "  510d9c:      \tmov\tw1, #0xfa               // =250",
+            "  510da0:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "510dc0:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  510da8:      \tbl\t0x3e93b0 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x380c0>",
+            "  510dac:      \tmov\tx0, sp",
+            "  510db0:      \tadd\tx1, x20, #0x2b0",
+            "  510db4:      \tbl\t0x3ea1f4 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38f04>",
+            "  510db8:      \tbl\t0x734788 <MCFSetGetCount+0x106d0>",
+            "  510dbc:      \tmov\tw1, #0xfb               // =251",
+            "  510dc0:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "659214:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  6591fc:      \tadd\tx0, sp, #0x20",
+            "  659200:      \tbl\t0x3a6608 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x7fc8>",
+            "  659204:      \tbl\t0x72e730 <MCFSetGetCount+0xa678>",
+            "  659208:      \tbl\t0x3ea1f4 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38f04>",
+            "  65920c:      \tbl\t0x72cea4 <MCFSetGetCount+0x8dec>",
+            "  659210:      \tmov\tw1, #0xda               // =218",
+            "  659214:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "65923c:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  659224:      \tbl\t0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>",
+            "  659228:      \tadd\tx0, sp, #0x40",
+            "  65922c:      \tadd\tx1, x20, #0x2f8",
+            "  659230:      \tbl\t0x3ea1f4 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38f04>",
+            "  659234:      \tbl\t0x72cea4 <MCFSetGetCount+0x8dec>",
+            "  659238:      \tmov\tw1, #0xdb               // =219",
+            "  65923c:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "6592b0:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  659298:      \tadd\tx0, sp, #0x20",
+            "  65929c:      \tbl\t0x3a2c00 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x45c0>",
+            "  6592a0:      \tbl\t0x72e730 <MCFSetGetCount+0xa678>",
+            "  6592a4:      \tbl\t0x3ea1f4 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38f04>",
+            "  6592a8:      \tbl\t0x72cea4 <MCFSetGetCount+0x8dec>",
+            "  6592ac:      \tmov\tw1, #0xda               // =218",
+            "  6592b0:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "6592d8:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  6592c0:      \tbl\t0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>",
+            "  6592c4:      \tbl\t0x72936c <MCFSetGetCount+0x52b4>",
+            "  6592c8:      \tbl\t0x72e730 <MCFSetGetCount+0xa678>",
+            "  6592cc:      \tbl\t0x3ea1f4 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38f04>",
+            "  6592d0:      \tbl\t0x72cea4 <MCFSetGetCount+0x8dec>",
+            "  6592d4:      \tmov\tw1, #0xdb               // =219",
+            "  6592d8:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "659300:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  6592e8:      \tbl\t0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>",
+            "  6592ec:      \tbl\t0x72936c <MCFSetGetCount+0x52b4>",
+            "  6592f0:      \tbl\t0x72e730 <MCFSetGetCount+0xa678>",
+            "  6592f4:      \tbl\t0x3ea1f4 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38f04>",
+            "  6592f8:      \tbl\t0x72cea4 <MCFSetGetCount+0x8dec>",
+            "  6592fc:      \tmov\tw1, #0xdc               // =220",
+            "  659300:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "659328:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  659310:      \tbl\t0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>",
+            "  659314:      \tbl\t0x72936c <MCFSetGetCount+0x52b4>",
+            "  659318:      \tbl\t0x72e730 <MCFSetGetCount+0xa678>",
+            "  65931c:      \tbl\t0x3ea1f4 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38f04>",
+            "  659320:      \tbl\t0x72cea4 <MCFSetGetCount+0x8dec>",
+            "  659324:      \tmov\tw1, #0xdd               // =221",
+            "  659328:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "659350:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  659338:      \tbl\t0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>",
+            "  65933c:      \tbl\t0x72936c <MCFSetGetCount+0x52b4>",
+            "  659340:      \tbl\t0x72e730 <MCFSetGetCount+0xa678>",
+            "  659344:      \tbl\t0x3ea1f4 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38f04>",
+            "  659348:      \tbl\t0x72cea4 <MCFSetGetCount+0x8dec>",
+            "  65934c:      \tmov\tw1, #0xde               // =222",
+            "  659350:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "659374:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  65935c:      \tadd\tx0, sp, #0x20",
+            "  659360:      \tbl\t0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>",
+            "  659364:      \tstrb\twzr, [sp, #0x40]",
+            "  659368:      \tstr\twzr, [sp, #0x58]",
+            "  65936c:      \tbl\t0x72cea4 <MCFSetGetCount+0x8dec>",
+            "  659370:      \tmov\tw1, #0xe3               // =227",
+            "  659374:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "659394:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  65937c:      \tbl\t0x3e93b0 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x380c0>",
+            "  659380:      \tbl\t0x72936c <MCFSetGetCount+0x52b4>",
+            "  659384:      \tbl\t0x72e730 <MCFSetGetCount+0xa678>",
+            "  659388:      \tbl\t0x3ea1f4 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38f04>",
+            "  65938c:      \tbl\t0x72cea4 <MCFSetGetCount+0x8dec>",
+            "  659390:      \tmov\tw1, #0xe0               // =224",
+            "  659394:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "6593bc:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  6593a4:      \tbl\t0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>",
+            "  6593a8:      \tbl\t0x72936c <MCFSetGetCount+0x52b4>",
+            "  6593ac:      \tbl\t0x72e730 <MCFSetGetCount+0xa678>",
+            "  6593b0:      \tbl\t0x3ea1f4 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38f04>",
+            "  6593b4:      \tbl\t0x72cea4 <MCFSetGetCount+0x8dec>",
+            "  6593b8:      \tmov\tw1, #0xe1               // =225",
+            "  6593bc:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "6593e4:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  6593cc:      \tbl\t0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>",
+            "  6593d0:      \tbl\t0x72936c <MCFSetGetCount+0x52b4>",
+            "  6593d4:      \tbl\t0x72e730 <MCFSetGetCount+0xa678>",
+            "  6593d8:      \tbl\t0x3ea1f4 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38f04>",
+            "  6593dc:      \tbl\t0x72cea4 <MCFSetGetCount+0x8dec>",
+            "  6593e0:      \tmov\tw1, #0xe2               // =226",
+            "  6593e4:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "659490:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  659478:      \tbl\t0x734fd0 <_ZNSt6__ndk15mutex6unlockEv@plt>",
+            "  65947c:      \tadd\tx21, sp, #0x40",
+            "  659480:      \tbl\t0x7302f8 <MCFSetGetCount+0xc240>",
+            "  659484:      \tbl\t0x3ea1f4 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38f04>",
+            "  659488:      \tbl\t0x72a610 <MCFSetGetCount+0x6558>",
+            "  65948c:      \tmov\tw1, #0xdc               // =220",
+            "  659490:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "6594b0:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  659498:      \tbl\t0x3e93b0 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x380c0>",
+            "  65949c:      \tadd\tx0, sp, #0x20",
+            "  6594a0:      \tadd\tx1, x21, #0x18",
+            "  6594a4:      \tbl\t0x3ea1f4 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38f04>",
+            "  6594a8:      \tbl\t0x72a610 <MCFSetGetCount+0x6558>",
+            "  6594ac:      \tmov\tw1, #0xdd               // =221",
+            "  6594b0:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "6594d0:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  6594b8:      \tbl\t0x3e93b0 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x380c0>",
+            "  6594bc:      \tadd\tx0, sp, #0x20",
+            "  6594c0:      \tadd\tx1, x20, #0x310",
+            "  6594c4:      \tbl\t0x3ea1f4 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38f04>",
+            "  6594c8:      \tbl\t0x72a610 <MCFSetGetCount+0x6558>",
+            "  6594cc:      \tmov\tw1, #0xde               // =222",
+            "  6594d0:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "6594f0:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  6594d8:      \tbl\t0x3e93b0 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x380c0>",
+            "  6594dc:      \tldrb\tw8, [x20, #0x340]",
+            "  6594e0:      \tstr\twzr, [sp, #0x38]",
+            "  6594e4:      \tstrb\tw8, [sp, #0x20]",
+            "  6594e8:      \tbl\t0x72a610 <MCFSetGetCount+0x6558>",
+            "  6594ec:      \tmov\tw1, #0xe3               // =227",
+            "  6594f0:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "659534:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  65951c:      \ttbz\tw25, #0x0, 0x659540 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xfcc4>",
+            "  659520:      \tmov\tw8, #0x1                // =1",
+            "  659524:      \tstr\tx24, [sp, #0x20]",
+            "  659528:      \tstr\tw8, [sp, #0x38]",
+            "  65952c:      \tbl\t0x72a610 <MCFSetGetCount+0x6558>",
+            "  659530:      \tmov\tw1, #0xdf               // =223",
+            "  659534:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "659554:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  65953c:      \tbl\t0x3e93b0 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x380c0>",
+            "  659540:      \tadd\tx0, sp, #0x20",
+            "  659544:      \tadd\tx1, x20, #0x360",
+            "  659548:      \tbl\t0x3ea1f4 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38f04>",
+            "  65954c:      \tbl\t0x72a610 <MCFSetGetCount+0x6558>",
+            "  659550:      \tmov\tw1, #0xe0               // =224",
+            "  659554:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "659574:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  65955c:      \tbl\t0x3e93b0 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x380c0>",
+            "  659560:      \tadd\tx0, sp, #0x20",
+            "  659564:      \tadd\tx1, x20, #0x348",
+            "  659568:      \tbl\t0x3ea1f4 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38f04>",
+            "  65956c:      \tbl\t0x72a610 <MCFSetGetCount+0x6558>",
+            "  659570:      \tmov\tw1, #0xe1               // =225",
+            "  659574:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "659594:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  65957c:      \tbl\t0x3e93b0 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x380c0>",
+            "  659580:      \tadd\tx0, sp, #0x20",
+            "  659584:      \tadd\tx1, x20, #0x328",
+            "  659588:      \tbl\t0x3ea1f4 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38f04>",
+            "  65958c:      \tbl\t0x72a610 <MCFSetGetCount+0x6558>",
+            "  659590:      \tmov\tw1, #0xe2               // =226",
+            "  659594:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "6595bc:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  6595a4:      \tcmp\tw8, #0x1",
+            "  6595a8:      \tb.ne\t0x659690 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xfe14>",
+            "  6595ac:      \tldrsw\tx8, [x20, #0x3a4]",
+            "  6595b0:      \tbl\t0x732044 <MCFSetGetCount+0xdf8c>",
+            "  6595b4:      \tbl\t0x72a610 <MCFSetGetCount+0x6558>",
+            "  6595b8:      \tmov\tw1, #0xe5               // =229",
+            "  6595bc:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "6595e0:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  6595c8:      \tldrb\tw8, [x20, #0x3b8]",
+            "  6595cc:      \ttbz\tw8, #0x0, 0x6596e8 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xfe6c>",
+            "  6595d0:      \tldrsw\tx8, [x20, #0x3a8]",
+            "  6595d4:      \tbl\t0x732044 <MCFSetGetCount+0xdf8c>",
+            "  6595d8:      \tbl\t0x72a610 <MCFSetGetCount+0x6558>",
+            "  6595dc:      \tmov\tw1, #0xe6               // =230",
+            "  6595e0:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "659604:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  6595ec:      \tldrb\tw8, [x20, #0x3b8]",
+            "  6595f0:      \ttbz\tw8, #0x0, 0x6596e8 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xfe6c>",
+            "  6595f4:      \tldr\tw8, [x20, #0x3ac]",
+            "  6595f8:      \tbl\t0x732044 <MCFSetGetCount+0xdf8c>",
+            "  6595fc:      \tbl\t0x72a610 <MCFSetGetCount+0x6558>",
+            "  659600:      \tmov\tw1, #0xe7               // =231",
+            "  659604:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "659660:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  659648:      \tstr\tq0, [sp, #0x20]",
+            "  65964c:      \tstr\txzr, [sp, #0x8]",
+            "  659650:      \tstr\tw8, [sp, #0x38]",
+            "  659654:      \tbl\t0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>",
+            "  659658:      \tbl\t0x72a610 <MCFSetGetCount+0x6558>",
+            "  65965c:      \tmov\tw1, #0xe8               // =232",
+            "  659660:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "659684:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  65966c:      \tldrb\tw8, [x20, #0x3b8]",
+            "  659670:      \ttbz\tw8, #0x0, 0x6596e8 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xfe6c>",
+            "  659674:      \tldrsw\tx8, [x20, #0x3b4]",
+            "  659678:      \tbl\t0x732044 <MCFSetGetCount+0xdf8c>",
+            "  65967c:      \tbl\t0x72a610 <MCFSetGetCount+0x6558>",
+            "  659680:      \tmov\tw1, #0xe9               // =233",
+            "  659684:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "6596a8:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  659690:      \ttbz\tw23, #0x0, 0x6596b4 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xfe38>",
+            "  659694:      \tmov\tw8, #0x1                // =1",
+            "  659698:      \tstr\tx21, [sp, #0x20]",
+            "  65969c:      \tstr\tw8, [sp, #0x38]",
+            "  6596a0:      \tbl\t0x72a610 <MCFSetGetCount+0x6558>",
+            "  6596a4:      \tmov\tw1, #0xe4               // =228",
+            "  6596a8:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        },
+        {
+          "call": "66410c:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>",
+          "context": [
+            "  6640f4:      \tadd\tx0, sp, #0x50",
+            "  6640f8:      \tadd\tx1, sp, #0x8",
+            "  6640fc:      \tbl\t0x4fa4a4 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x290f0>",
+            "  664100:      \tsub\tx0, x29, #0x30",
+            "  664104:      \tadd\tx2, sp, #0x50",
+            "  664108:      \tmov\tw1, #0x108              // =264",
+            "  66410c:      \tbl\t0x667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>"
+          ]
+        }
+      ],
+      "0x667ba8": [
+        {
+          "call": "667d90:      \tb\t0x667ba8 <_ZN8facebook5tigon6detail22findHeaderByNameHelperERKNSt6__ndk113unordered_mapINS2_12basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEES9_NS0_19CaseInsensitiveHashENS0_20CaseInsensitiveEqualENS7_INS2_4pairIKS9_S9_EEEEEERSD_+0xec>",
+          "context": [
+            "  667d80:      \tmov\tx0, x19",
+            "  667d84:      \tbl\t0x7373e0 <__wrap__Unwind_Resume@plt>",
+            "  667d88:      \tbl\t0x7378f0 <__stack_chk_fail@plt>",
+            "",
+            "0000000000667d8c <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE>:",
+            "  667d8c:      \tbti\tc",
+            "  667d90:      \tb\t0x667ba8 <_ZN8facebook5tigon6detail22findHeaderByNameHelperERKNSt6__ndk113unordered_mapINS2_12basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEES9_NS0_19CaseInsensitiveHashENS0_20CaseInsensitiveEqualENS7_INS2_4pairIKS9_S9_EEEEEERSD_+0xec>"
+          ]
+        },
+        {
+          "call": "6680f4:      \tbl\t0x667ba8 <_ZN8facebook5tigon6detail22findHeaderByNameHelperERKNSt6__ndk113unordered_mapINS2_12basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEES9_NS0_19CaseInsensitiveHashENS0_20CaseInsensitiveEqualENS7_INS2_4pairIKS9_S9_EEEEEERSD_+0xec>",
+          "context": [
+            "  6680dc:      \tstr\tw8, [x0, #0x38]",
+            "  6680e0:      \tcmp\tx23, x24",
+            "  6680e4:      \tb.eq\t0x668100 <_ZN8facebook5tigon22TigonPropertyContainer16setPropertyGroupENS1_3KeyEONSt6__ndk16vectorINS3_4pairIS2_NS1_5ValueEEENS3_9allocatorIS7_EEEE+0x7c>",
+            "  6680e8:      \tldr\tw1, [x23], #0x8",
+            "  6680ec:      \tmov\tx0, x22",
+            "  6680f0:      \tmov\tx2, x23",
+            "  6680f4:      \tbl\t0x667ba8 <_ZN8facebook5tigon6detail22findHeaderByNameHelperERKNSt6__ndk113unordered_mapINS2_12basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEES9_NS0_19CaseInsensitiveHashENS0_20CaseInsensitiveEqualENS7_INS2_4pairIKS9_S9_EEEEEERSD_+0xec>"
+          ]
+        }
+      ],
+      "0x507c9c": [
+        {
+          "call": "507c18:      \tbl\t0x507c9c <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x368e8>",
+          "context": [
+            "  507c00:      \tstp\txzr, xzr, [x10]",
+            "  507c04:      \tstp\tx8, x0, [sp, #0x8]",
+            "  507c08:      \tmov\tx0, xzr",
+            "  507c0c:      \tbl\t0x3de220 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x2cf30>",
+            "  507c10:      \tbl\t0x38b7c0 <_RNvYNtNtCsi1jv7X85TMU_3std2fs4FileNtNtNtCsd0h5sCe2hTT_4core2io5write5Write9write_allB6_+0x74c>",
+            "  507c14:      \tmov\tw1, w19",
+            "  507c18:      \tbl\t0x507c9c <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x368e8>"
+          ]
+        },
+        {
+          "call": "65913c:      \tbl\t0x507c9c <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x368e8>",
+          "context": [
+            "  659124:      \tmov\tx0, xzr",
+            "  659128:      \tstp\tx22, x20, [sp, #0x10]",
+            "  65912c:      \tbl\t0x3de220 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x2cf30>",
+            "  659130:      \tadd\tx0, x19, #0x28",
+            "  659134:      \tadd\tx2, sp, #0x10",
+            "  659138:      \tmov\tw1, #0x3f               // =63",
+            "  65913c:      \tbl\t0x507c9c <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x368e8>"
+          ]
+        },
+        {
+          "call": "668114:      \tbl\t0x507c9c <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x368e8>",
+          "context": [
+            "  6680fc:      \tb\t0x6680e0 <_ZN8facebook5tigon22TigonPropertyContainer16setPropertyGroupENS1_3KeyEONSt6__ndk16vectorINS3_4pairIS2_NS1_5ValueEEENS3_9allocatorIS7_EEEE+0x5c>",
+            "  668100:      \tmov\tx0, xzr",
+            "  668104:      \tstp\tx22, x21, [sp, #0x8]",
+            "  668108:      \tbl\t0x3de220 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x2cf30>",
+            "  66810c:      \tbl\t0x38b7c0 <_RNvYNtNtCsi1jv7X85TMU_3std2fs4FileNtNtNtCsd0h5sCe2hTT_4core2io5write5Write9write_allB6_+0x74c>",
+            "  668110:      \tmov\tw1, w19",
+            "  668114:      \tbl\t0x507c9c <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x368e8>"
+          ]
+        }
+      ]
+    },
+    "libffsingletonmerged.so": {
+      "TigonPropertyContainer11setProperty": [
+        {
+          "call": "f23a4:      \tbl\t0x217360 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE@plt>",
+          "context": [
+            "   f2384:      \tadd\tx0, sp, #0x3e0",
+            "   f2388:      \tbl\t0x216990 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>",
+            "   f238c:      \tmov\tw8, #0x1                // =1",
+            "   f2390:      \tstr\twzr, [sp, #0x120]",
+            "   f2394:      \tstrb\tw8, [sp, #0x108]",
+            "   f2398:      \tadd\tx0, x22, #0x28",
+            "   f239c:      \tadd\tx2, sp, #0x108",
+            "   f23a0:      \tmov\tw1, #0x2c               // =44",
+            "   f23a4:      \tbl\t0x217360 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE@plt>"
+          ]
+        },
+        {
+          "call": "158474:      \tbl\t0x217360 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE@plt>",
+          "context": [
+            "  158454:      \tbl\t0xd842c <JNI_OnLoad+0x6a0c>",
+            "  158458:      \tsub\tx0, x29, #0xb0",
+            "  15845c:      \tsub\tx1, x29, #0x38",
+            "  158460:      \tbl\t0x159e14 <JNI_OnLoad+0x883f4>",
+            "  158464:      \tadd\tx8, sp, #0x1a0",
+            "  158468:      \tadd\tx0, x8, #0x28",
+            "  15846c:      \tsub\tx2, x29, #0xb0",
+            "  158470:      \tmov\tw1, #0x14               // =20",
+            "  158474:      \tbl\t0x217360 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE@plt>"
+          ]
+        },
+        {
+          "call": "158730:      \tbl\t0x217360 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE@plt>",
+          "context": [
+            "  158710:      \tmov\tw8, #0x2                // =2",
+            "  158714:      \tstur\tq0, [x29, #-0xd0]",
+            "  158718:      \tstur\txzr, [x29, #-0xf0]",
+            "  15871c:      \tstur\tw8, [x29, #-0xb8]",
+            "  158720:      \tbl\t0x216990 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>",
+            "  158724:      \tadd\tx0, x19, #0x28",
+            "  158728:      \tsub\tx2, x29, #0xd0",
+            "  15872c:      \tmov\tw1, #0x14               // =20",
+            "  158730:      \tbl\t0x217360 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE@plt>"
+          ]
+        }
+      ],
+      "TigonPropertyContainer5Group11setProperty": [
+        {
+          "call": "15b1dc:      \tbl\t0x217a80 <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE@plt>",
+          "context": [
+            "  15b1bc:      \tadd\tx1, sp, #0x30",
+            "  15b1c0:      \tbl\t0x15b764 <JNI_OnLoad+0x89d44>",
+            "  15b1c4:      \tadd\tx0, sp, #0x50",
+            "  15b1c8:      \tadd\tx1, sp, #0x18",
+            "  15b1cc:      \tbl\t0x159e14 <JNI_OnLoad+0x883f4>",
+            "  15b1d0:      \tsub\tx0, x29, #0x30",
+            "  15b1d4:      \tadd\tx2, sp, #0x50",
+            "  15b1d8:      \tmov\tw1, #0x10d              // =269",
+            "  15b1dc:      \tbl\t0x217a80 <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE@plt>"
+          ]
+        },
+        {
+          "call": "15b244:      \tbl\t0x217a80 <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE@plt>",
+          "context": [
+            "  15b224:      \tmov\tw8, wzr",
+            "  15b228:      \tmov\tw9, wzr",
+            "  15b22c:      \tand\tw8, w8, w9",
+            "  15b230:      \tstr\twzr, [sp, #0x68]",
+            "  15b234:      \tstrb\tw8, [sp, #0x50]",
+            "  15b238:      \tsub\tx0, x29, #0x30",
+            "  15b23c:      \tadd\tx2, sp, #0x50",
+            "  15b240:      \tmov\tw1, #0x110              // =272",
+            "  15b244:      \tbl\t0x217a80 <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE@plt>"
+          ]
+        },
+        {
+          "call": "15b268:      \tbl\t0x217a80 <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE@plt>",
+          "context": [
+            "  15b248:      \tadd\tx0, sp, #0x50",
+            "  15b24c:      \tbl\t0xf3358 <JNI_OnLoad+0x21938>",
+            "  15b250:      \tmov\tw8, #0x1                // =1",
+            "  15b254:      \tstr\twzr, [sp, #0x68]",
+            "  15b258:      \tstrb\tw8, [sp, #0x50]",
+            "  15b25c:      \tsub\tx0, x29, #0x30",
+            "  15b260:      \tadd\tx2, sp, #0x50",
+            "  15b264:      \tmov\tw1, #0x10e              // =270",
+            "  15b268:      \tbl\t0x217a80 <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE@plt>"
+          ]
+        },
+        {
+          "call": "15b288:      \tbl\t0x217a80 <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE@plt>",
+          "context": [
+            "  15b268:      \tbl\t0x217a80 <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE@plt>",
+            "  15b26c:      \tadd\tx0, sp, #0x50",
+            "  15b270:      \tbl\t0xf3358 <JNI_OnLoad+0x21938>",
+            "  15b274:      \tstrb\twzr, [sp, #0x50]",
+            "  15b278:      \tstr\twzr, [sp, #0x68]",
+            "  15b27c:      \tsub\tx0, x29, #0x30",
+            "  15b280:      \tadd\tx2, sp, #0x50",
+            "  15b284:      \tmov\tw1, #0x10f              // =271",
+            "  15b288:      \tbl\t0x217a80 <_ZN8facebook5tigon22TigonPropertyContainer5Group11setPropertyENS1_3KeyEONS1_5ValueE@plt>"
+          ]
+        }
+      ],
+      "TigonPropertyContainer16setPropertyGroup": [
+        {
+          "call": "15910c:      \tbl\t0x217a20 <_ZN8facebook5tigon22TigonPropertyContainer16setPropertyGroupENS1_3KeyEONSt6__ndk16vectorINS3_4pairIS2_NS1_5ValueEEENS3_9allocatorIS7_EEEE@plt>",
+          "context": [
+            "  1590ec:      \tstur\twzr, [x29, #-0x40]",
+            "  1590f0:      \tsub\tx0, x29, #0xf0",
+            "  1590f4:      \tsub\tx1, x29, #0xb0",
+            "  1590f8:      \tmov\tw2, #0x3                // =3",
+            "  1590fc:      \tbl\t0x15a144 <JNI_OnLoad+0x88724>",
+            "  159100:      \tadd\tx0, x27, #0x30",
+            "  159104:      \tsub\tx2, x29, #0xf0",
+            "  159108:      \tmov\tw1, #0x41               // =65",
+            "  15910c:      \tbl\t0x217a20 <_ZN8facebook5tigon22TigonPropertyContainer16setPropertyGroupENS1_3KeyEONSt6__ndk16vectorINS3_4pairIS2_NS1_5ValueEEENS3_9allocatorIS7_EEEE@plt>"
+          ]
+        },
+        {
+          "call": "15f290:      \tbl\t0x217a20 <_ZN8facebook5tigon22TigonPropertyContainer16setPropertyGroupENS1_3KeyEONSt6__ndk16vectorINS3_4pairIS2_NS1_5ValueEEENS3_9allocatorIS7_EEEE@plt>",
+          "context": [
+            "  15f270:      \tadd\tx0, sp, #0x118",
+            "  15f274:      \tsub\tx1, x29, #0x90",
+            "  15f278:      \tmov\tw2, #0x3                // =3",
+            "  15f27c:      \tstr\tx21, [sp, #0x10]",
+            "  15f280:      \tbl\t0x15a144 <JNI_OnLoad+0x88724>",
+            "  15f284:      \tadd\tx0, x20, #0x30",
+            "  15f288:      \tadd\tx2, sp, #0x118",
+            "  15f28c:      \tmov\tw1, #0x41               // =65",
+            "  15f290:      \tbl\t0x217a20 <_ZN8facebook5tigon22TigonPropertyContainer16setPropertyGroupENS1_3KeyEONSt6__ndk16vectorINS3_4pairIS2_NS1_5ValueEEENS3_9allocatorIS7_EEEE@plt>"
+          ]
+        }
+      ]
+    },
+    "libmobileconfig-jni.so": {
+      "TigonPropertyContainer11setProperty": [
+        {
+          "call": "6f8a4:      \tbl\t0xcd040 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE@plt>",
+          "context": [
+            "   6f884:      \tadd\tx21, sp, #0x1b0",
+            "   6f888:      \tbl\t0xcd030 <_ZN8facebook5tigon12TigonRequest22setFriendlyNameAndTagsERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_SA_@plt>",
+            "   6f88c:      \tmov\tw8, #0x1                // =1",
+            "   6f890:      \tstr\twzr, [sp, #0x1a8]",
+            "   6f894:      \tstrb\tw8, [sp, #0x190]",
+            "   6f898:      \tadd\tx0, x21, #0x28",
+            "   6f89c:      \tadd\tx2, sp, #0x190",
+            "   6f8a0:      \tmov\tw1, #0x2e               // =46",
+            "   6f8a4:      \tbl\t0xcd040 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE@plt>"
+          ]
+        }
+      ],
+      "TigonPropertyContainer5Group11setProperty": [],
+      "TigonPropertyContainer16setPropertyGroup": [
+        {
+          "call": "6fb94:      \tbl\t0xcd050 <_ZN8facebook5tigon22TigonPropertyContainer16setPropertyGroupENS1_3KeyEONSt6__ndk16vectorINS3_4pairIS2_NS1_5ValueEEENS3_9allocatorIS7_EEEE@plt>",
+          "context": [
+            "   6fb74:      \tadd\tx0, sp, #0x3f8",
+            "   6fb78:      \tstr\tx19, [sp, #0x478]",
+            "   6fb7c:      \tstrb\tw20, [sp, #0x400]",
+            "   6fb80:      \tbl\t0x71a78 <JNI_OnLoad+0x28d8>",
+            "   6fb84:      \tadd\tx8, sp, #0x1b0",
+            "   6fb88:      \tadd\tx2, sp, #0x470",
+            "   6fb8c:      \tmov\tw1, #0x30               // =48",
+            "   6fb90:      \tadd\tx0, x8, #0x28",
+            "   6fb94:      \tbl\t0xcd050 <_ZN8facebook5tigon22TigonPropertyContainer16setPropertyGroupENS1_3KeyEONSt6__ndk16vectorINS3_4pairIS2_NS1_5ValueEEENS3_9allocatorIS7_EEEE@plt>"
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,113 @@
+
+# class: LX/1GV;
+# extends: Ljava/lang/Object;
+
+.method public A05(VLL)  # .registers 12
+    # full signature: LX/1GV;->A05(LX/1GT;Lcom/facebook/tigon/iface/TigonPropertyContainer;)V
+    0000..0002  const/4  v5, #0x1
+    0002..0008  invoke-static  {v10}, LX/1GV;->A00(LX/1GT;)I
+    0008..000a  move-result  v4
+    000a..000c  const/4  v3, #0x0
+    000c..0010  if-ge  v3, v4, +0xd1
+    0010..0016  invoke-static  {v10}, LX/1GV;->A00(LX/1GT;)I
+    0016..0018  move-result  v0
+    0018..001c  new-instance  v2, LX/1FK;
+    001c..0022  invoke-direct  {v2, v0}, LX/1FK;-><init>(I)V
+    0022..0028  invoke-virtual  {v10}, LX/1GT;->A00()B
+    0028..002a  move-result  v6
+    002a..002e  if-nez  v6, +0x20
+    002e..0034  invoke-static  {v10}, LX/1GV;->A00(LX/1GT;)I
+    0034..0036  move-result  v8
+    0036..003a  new-instance  v7, Ljava/util/LinkedHashMap;
+    003a..0040  invoke-direct  {v7}, Ljava/util/LinkedHashMap;-><init>()V
+    0040..0042  const/4  v6, #0x0
+    0042..0046  if-ge  v6, v8, +0x82
+    0046..004c  invoke-static  {v10}, LX/1GV;->A00(LX/1GT;)I
+    004c..004e  move-result  v0
+    004e..0054  invoke-virtual  {v9, v10}, LX/1GV;->A02(LX/1GT;)LX/1FO;
+    0054..0056  move-result-object  v1
+    0056..005c  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    005c..005e  move-result-object  v0
+    005e..0064  invoke-interface  {v7, v0, v1}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0064..0068  add-int/lit8  v6, v6, #0x1
+    0068..006a  goto  -0x13
+    006a..006e  if-ne  v6, v5, +0x8e
+    006e..0074  invoke-virtual  {v9, v10}, LX/1GV;->A02(LX/1GT;)LX/1FO;
+    0074..0076  move-result-object  v1
+    0076..007a  iget-byte  v6, v1, LX/1FO;->A00:B
+    007a..007e  if-nez  v6, +0x13
+    007e..0082  iget-object  v1, v1, LX/1FO;->A01:Ljava/lang/Object;
+    0082..0086  const-string  v0, "null cannot be cast to non-null type kotlin.Boolean"
+    0086..008c  invoke-static  {v1, v0}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    008c..0090  check-cast  v1, Ljava/lang/Boolean;
+    0090..0096  invoke-virtual  {v1}, Ljava/lang/Boolean;->booleanValue()Z
+    0096..0098  move-result  v0
+    0098..009e  invoke-virtual  {v11, v2, v0}, Lcom/facebook/tigon/iface/TigonPropertyContainer;->setProperty(LX/1FK;Z)V
+    009e..00a0  goto  +0x5c
+    00a0..00a4  if-ne  v6, v5, +0x13
+    00a4..00a8  iget-object  v1, v1, LX/1FO;->A01:Ljava/lang/Object;
+    00a8..00ac  const-string  v0, "null cannot be cast to non-null type kotlin.Long"
+    00ac..00b2  invoke-static  {v1, v0}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    00b2..00b6  check-cast  v1, Ljava/lang/Number;
+    00b6..00bc  invoke-virtual  {v1}, Ljava/lang/Number;->longValue()J
+    00bc..00be  move-result-wide  v0
+    00be..00c4  invoke-virtual  {v11, v2, v0, v1}, Lcom/facebook/tigon/iface/TigonPropertyContainer;->setProperty(LX/1FK;J)V
+    00c4..00c6  goto  +0x49
+    00c6..00c8  const/4  v0, #0x2
+    00c8..00cc  if-ne  v6, v0, +0xf
+    00cc..00d0  iget-object  v1, v1, LX/1FO;->A01:Ljava/lang/Object;
+    00d0..00d4  const-string  v0, "null cannot be cast to non-null type kotlin.String"
+    00d4..00da  invoke-static  {v1, v0}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    00da..00de  check-cast  v1, Ljava/lang/String;
+    00de..00e4  invoke-virtual  {v11, v2, v1}, Lcom/facebook/tigon/iface/TigonPropertyContainer;->setProperty(LX/1FK;Ljava/lang/String;)V
+    00e4..00e6  goto  +0x39
+    00e6..00e8  const/4  v0, #0x3
+    00e8..00ec  if-ne  v6, v0, +0xf
+    00ec..00f0  iget-object  v1, v1, LX/1FO;->A01:Ljava/lang/Object;
+    00f0..00f4  const-string  v0, "null cannot be cast to non-null type kotlin.collections.Map<kotlin.String, kotlin.String>"
+    00f4..00fa  invoke-static  {v1, v0}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    00fa..00fe  check-cast  v1, Ljava/util/Map;
+    00fe..0104  invoke-virtual  {v11, v2, v1}, Lcom/facebook/tigon/iface/TigonPropertyContainer;->setProperty(LX/1FK;Ljava/util/Map;)V
+    0104..0106  goto  +0x29
+    0106..0108  const/4  v0, #0x4
+    0108..010c  if-ne  v6, v0, +0xf
+    010c..0110  iget-object  v1, v1, LX/1FO;->A01:Ljava/lang/Object;
+    0110..0114  const-string  v0, "null cannot be cast to non-null type kotlin.collections.Map<kotlin.String, kotlin.Boolean>"
+    0114..011a  invoke-static  {v1, v0}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    011a..011e  check-cast  v1, Ljava/util/Map;
+    011e..0124  invoke-virtual  {v11, v2, v1}, Lcom/facebook/tigon/iface/TigonPropertyContainer;->setBooleanMapProperty(LX/1FK;Ljava/util/Map;)V
+    0124..0126  goto  +0x19
+    0126..0128  const/4  v0, #0x5
+    0128..012c  if-ne  v6, v0, +0x1b
+    012c..0130  iget-object  v1, v1, LX/1FO;->A01:Ljava/lang/Object;
+    0130..0134  const-string  v0, "null cannot be cast to non-null type kotlin.collections.Map<kotlin.String, kotlin.Long>"
+    0134..013a  invoke-static  {v1, v0}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    013a..013e  check-cast  v1, Ljava/util/Map;
+    013e..0144  invoke-virtual  {v11, v2, v1}, Lcom/facebook/tigon/iface/TigonPropertyContainer;->setLongMapProperty(LX/1FK;Ljava/util/Map;)V
+    0144..0146  goto  +0x9
+    0146..014a  new-instance  v0, Lcom/facebook/tigon/iface/TigonPropertyContainer$Group;
+    014a..0150  invoke-direct  {v0, v7}, Lcom/facebook/tigon/iface/TigonPropertyContainer$Group;-><init>(Ljava/util/Map;)V
+    0150..0156  invoke-virtual  {v11, v2, v0}, Lcom/facebook/tigon/iface/TigonPropertyContainer;->setPropertyGroup(LX/1FK;Lcom/facebook/tigon/iface/TigonPropertyContainer$Group;)V
+    0156..015a  add-int/lit8  v3, v3, #0x1
+    015a..015e  goto/16  -0xa7
+    015e..0162  const-string  v1, "Unexpected property value index: "
+    0162..0166  new-instance  v0, Ljava/lang/StringBuilder;
+    0166..016c  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    016c..0172  invoke-virtual  {v0, v6}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0172..0178  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0178..017a  move-result-object  v1
+    017a..017e  new-instance  v0, Ljava/lang/IllegalStateException;
+    017e..0184  invoke-direct  {v0, v1}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+    0184..0186  throw  v0
+    0186..018a  const-string  v1, "Unexpected top-level property type: "
+    018a..018e  new-instance  v0, Ljava/lang/StringBuilder;
+    018e..0194  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0194..019a  invoke-virtual  {v0, v6}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    019a..01a0  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    01a0..01a2  move-result-object  v1
+    01a2..01a6  new-instance  v0, Ljava/lang/IllegalStateException;
+    01a6..01ac  invoke-direct  {v0, v1}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+    01ac..01ae  throw  v0
+    01ae..01b0  return-void
+    # exception table: 0 try range(s)
+.end method

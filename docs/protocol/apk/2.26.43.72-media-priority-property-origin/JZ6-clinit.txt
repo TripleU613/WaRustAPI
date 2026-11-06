@@ -1,0 +1,17 @@
+
+# class: LX/JZ6;
+# extends: Ljava/lang/Object;
+
+.method public <clinit>(V)  # .registers 2
+    # full signature: LX/JZ6;-><clinit>()V
+    0000..0004  const/16  v1, #0x105
+    0004..0008  new-instance  v0, LX/1FK;
+    0008..000e  invoke-direct  {v0, v1}, LX/1FK;-><init>(I)V
+    000e..0012  sput-object  v0, LX/JZ6;->A00:LX/1FK;
+    0012..0016  const/16  v1, #0x107
+    0016..001a  new-instance  v0, LX/1FK;
+    001a..0020  invoke-direct  {v0, v1}, LX/1FK;-><init>(I)V
+    0020..0024  sput-object  v0, LX/JZ6;->A01:LX/1FK;
+    0024..0026  return-void
+    # exception table: 0 try range(s)
+.end method

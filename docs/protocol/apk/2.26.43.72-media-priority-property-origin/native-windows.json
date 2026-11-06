@@ -1,0 +1,57 @@
+{
+  "typed-value-filter": [
+    "libwhatsappmerged.so",
+    "0x668250",
+    "0x668280"
+  ],
+  "property-find": [
+    "libwhatsappmerged.so",
+    "0x667fb0",
+    "0x668050"
+  ],
+  "root-setter": [
+    "libwhatsappmerged.so",
+    "0x667d94",
+    "0x667fb0"
+  ],
+  "group-alias": [
+    "libwhatsappmerged.so",
+    "0x667d8c",
+    "0x667d94"
+  ],
+  "native-dynamic-write-prefix": [
+    "libwhatsappmerged.so",
+    "0x654000",
+    "0x654120"
+  ],
+  "dynamic-key-helper": [
+    "libwhatsappmerged.so",
+    "0x72a664",
+    "0x72a670"
+  ],
+  "rejected-immediate-candidate": [
+    "libwhatsappmerged.so",
+    "0x4fe2f0",
+    "0x4fe370"
+  ],
+  "ff-key44": [
+    "libffsingletonmerged.so",
+    "0xf238c",
+    "0xf23ac"
+  ],
+  "ff-key20-a": [
+    "libffsingletonmerged.so",
+    "0x158458",
+    "0x15847c"
+  ],
+  "ff-key20-b": [
+    "libffsingletonmerged.so",
+    "0x158710",
+    "0x158738"
+  ],
+  "mobileconfig-key46": [
+    "libmobileconfig-jni.so",
+    "0x6f88c",
+    "0x6f8ac"
+  ]
+}

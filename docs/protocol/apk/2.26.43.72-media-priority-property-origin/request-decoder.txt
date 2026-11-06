@@ -1,0 +1,130 @@
+
+# class: LX/1GS;
+# extends: Ljava/lang/Object;
+
+.method public A01(LL)  # .registers 27
+    # full signature: LX/1GS;->A01(LX/1GT;)Lcom/facebook/tigon/iface/TigonRequest;
+    0000..0004  sget-object  v9, LX/1GU;->A00:LX/1GV;
+    0004..0008  move-object/from16  v10, v26
+    0008..000e  invoke-virtual  {v9, v10}, LX/1GV;->A03(LX/1GT;)Ljava/lang/String;
+    000e..0010  move-result-object  v26
+    0010..0016  invoke-virtual  {v9, v10}, LX/1GV;->A03(LX/1GT;)Ljava/lang/String;
+    0016..0018  move-result-object  v25
+    0018..001e  invoke-virtual  {v9, v10}, LX/1GV;->A04(LX/1GT;)Ljava/util/HashMap;
+    001e..0020  move-result-object  v24
+    0020..0026  invoke-virtual  {v10}, LX/1GT;->A00()B
+    0026..0028  move-result  v2
+    0028..002e  invoke-virtual  {v10}, LX/1GT;->A00()B
+    002e..0030  move-result  v1
+    0030..0032  const/4  v0, #0x0
+    0032..0036  if-eqz  v1, +0x3
+    0036..0038  const/4  v0, #0x1
+    0038..003c  new-instance  v14, LX/1FD;
+    003c..0042  invoke-direct  {v14, v2, v0}, LX/1FD;-><init>(BZ)V
+    0042..0048  invoke-virtual  {v10}, LX/1GT;->A00()B
+    0048..004a  move-result  v0
+    004a..004c  const/4  v13, #0x0
+    004c..0050  if-eqz  v0, +0x3
+    0050..0052  const/4  v13, #0x1
+    0052..0058  invoke-virtual  {v10}, LX/1GT;->A00()B
+    0058..005a  move-result  v0
+    005a..005c  const/4  v12, #0x0
+    005c..0060  if-eqz  v0, +0x3
+    0060..0062  const/4  v12, #0x1
+    0062..0068  invoke-static  {v10}, LX/1GV;->A01(LX/1GT;)J
+    0068..006a  move-result-wide  v22
+    006a..0070  invoke-static  {v10}, LX/1GV;->A01(LX/1GT;)J
+    0070..0072  move-result-wide  v20
+    0072..0078  invoke-static  {v10}, LX/1GV;->A01(LX/1GT;)J
+    0078..007a  move-result-wide  v6
+    007a..0080  invoke-static  {v10}, LX/1GV;->A01(LX/1GT;)J
+    0080..0082  move-result-wide  v4
+    0082..0088  invoke-static  {v10}, LX/1GV;->A00(LX/1GT;)I
+    0088..008a  move-result  v0
+    008a..008e  sget-object  v1, LX/1FF;->A00:Ljava/util/Map;
+    008e..0094  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0094..0096  move-result-object  v0
+    0096..009c  invoke-interface  {v1, v0}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    009c..009e  move-result-object  v11
+    009e..00a2  check-cast  v11, LX/1FF;
+    00a2..00a6  if-nez  v11, +0x4
+    00a6..00aa  sget-object  v11, LX/1FF;->A0F:LX/1FF;
+    00aa..00b0  invoke-static  {v10}, LX/1GV;->A00(LX/1GT;)I
+    00b0..00b2  move-result  v0
+    00b2..00b6  sget-object  v1, LX/1FH;->A00:Ljava/util/Map;
+    00b6..00bc  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    00bc..00be  move-result-object  v0
+    00be..00c4  invoke-interface  {v1, v0}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    00c4..00c6  move-result-object  v1
+    00c6..00ca  check-cast  v1, LX/1FH;
+    00ca..00ce  if-nez  v1, +0x4
+    00ce..00d2  sget-object  v1, LX/1FH;->A04:LX/1FH;
+    00d2..00d8  invoke-virtual  {v9, v10}, LX/1GV;->A03(LX/1GT;)Ljava/lang/String;
+    00d8..00da  move-result-object  v19
+    00da..00e0  invoke-static  {v10}, LX/1GV;->A00(LX/1GT;)I
+    00e0..00e2  move-result  v18
+    00e2..00e8  invoke-static  {v10}, LX/1GV;->A01(LX/1GT;)J
+    00e8..00ea  move-result-wide  v2
+    00ea..00ee  new-instance  v17, Ljava/util/LinkedHashMap;
+    00ee..00f4  invoke-direct/range  {v17..v17}, Ljava/util/LinkedHashMap;-><init>()V
+    00f4..00fa  invoke-virtual  {v10}, LX/1GT;->A00()B
+    00fa..00fc  move-result  v0
+    00fc..0100  if-eqz  v0, +0x1a
+    0100..0104  sget-object  v16, LX/1Fc;->A00:LX/1Fd;
+    0104..010a  invoke-virtual  {v9, v10}, LX/1GV;->A04(LX/1GT;)Ljava/util/HashMap;
+    010a..010c  move-result-object  v0
+    010c..0110  new-instance  v15, LX/1Fe;
+    0110..0116  invoke-direct  {v15}, LX/1Fe;-><init>()V
+    0116..011c  invoke-static  {v0}, LX/05p;->A07(Ljava/util/Map;)Ljava/util/LinkedHashMap;
+    011c..011e  move-result-object  v0
+    011e..0122  iput-object  v0, v15, LX/1Fe;->A00:Ljava/util/Map;
+    0122..0126  move-object/from16  v8, v17
+    0126..012a  move-object/from16  v0, v16
+    012a..0130  invoke-interface  {v8, v0, v15}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0130..0134  new-instance  v8, Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0134..0138  move-object/from16  v15, v26
+    0138..013c  move-object/from16  v0, v25
+    013c..0142  invoke-direct  {v8, v15, v0}, Lcom/facebook/tigon/iface/TigonRequestBuilder;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    0142..0146  move-object/from16  v0, v24
+    0146..014c  invoke-virtual  {v8, v0}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->addHeaders(Ljava/util/Map;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    014c..0150  iput-object  v14, v8, Lcom/facebook/tigon/iface/TigonRequestBuilder;->httpPriority:LX/1FD;
+    0150..0154  iput-boolean  v13, v8, Lcom/facebook/tigon/iface/TigonRequestBuilder;->retryable:Z
+    0154..0158  iput-boolean  v12, v8, Lcom/facebook/tigon/iface/TigonRequestBuilder;->replaySafe:Z
+    0158..015c  iput-object  v11, v8, Lcom/facebook/tigon/iface/TigonRequestBuilder;->requestCategory:LX/1FF;
+    015c..0160  iput-object  v1, v8, Lcom/facebook/tigon/iface/TigonRequestBuilder;->purpose:LX/1FH;
+    0160..0164  move-wide/from16  v0, v22
+    0164..016a  invoke-virtual  {v8, v0, v1}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->setConnectionTimeoutMS(J)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    016a..016e  move-wide/from16  v0, v20
+    016e..0174  invoke-virtual  {v8, v0, v1}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->setIdleTimeoutMS(J)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0174..017a  invoke-virtual  {v8, v6, v7}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->setRequestTimeoutMS(J)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    017a..0180  invoke-virtual  {v8, v4, v5}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->setResponseTimeoutMS(J)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0180..0184  move-object/from16  v0, v19
+    0184..018a  invoke-virtual  {v8, v0}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->setLoggingId(Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    018a..018e  move/from16  v0, v18
+    018e..0192  iput  v0, v8, Lcom/facebook/tigon/iface/TigonRequestBuilder;->startupStatusOnAdded:I
+    0192..0196  iput-wide  v2, v8, Lcom/facebook/tigon/iface/TigonRequestBuilder;->addedToMiddlewareSinceEpochMS:J
+    0196..019c  invoke-interface/range  {v17..v17}, Ljava/util/Map;->entrySet()Ljava/util/Set;
+    019c..019e  move-result-object  v0
+    019e..01a4  invoke-interface  {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    01a4..01a6  move-result-object  v3
+    01a6..01ac  invoke-interface  {v3}, Ljava/util/Iterator;->hasNext()Z
+    01ac..01ae  move-result  v0
+    01ae..01b2  if-eqz  v0, +0x1b
+    01b2..01b8  invoke-interface  {v3}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    01b8..01ba  move-result-object  v0
+    01ba..01be  check-cast  v0, Ljava/util/Map$Entry;
+    01be..01c4  invoke-interface  {v0}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+    01c4..01c6  move-result-object  v2
+    01c6..01ca  check-cast  v2, LX/1Fd;
+    01ca..01d0  invoke-interface  {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+    01d0..01d2  move-result-object  v1
+    01d2..01d6  const-string  v0, "null cannot be cast to non-null type com.facebook.tigon.iface.TigonRequestLayers.LayerInfo<kotlin.Any>"
+    01d6..01dc  invoke-static  {v2, v0}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    01dc..01e2  invoke-virtual  {v8, v2, v1}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->addLayerInformation(LX/1Fd;Ljava/lang/Object;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    01e2..01e4  goto  -0x1e
+    01e4..01ea  invoke-virtual  {v9, v10, v8}, LX/1GV;->A05(LX/1GT;Lcom/facebook/tigon/iface/TigonPropertyContainer;)V
+    01ea..01f0  invoke-virtual  {v8}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->build()Lcom/facebook/tigon/iface/TigonRequest;
+    01f0..01f2  move-result-object  v0
+    01f2..01f4  return-object  v0
+    # exception table: 0 try range(s)
+.end method

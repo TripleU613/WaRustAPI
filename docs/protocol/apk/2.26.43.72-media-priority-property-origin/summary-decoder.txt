@@ -1,0 +1,29 @@
+
+# class: LX/1GW;
+# extends: LX/1GU;
+
+.method public A00(LLI)  # .registers 7
+    # full signature: LX/1GW;->A00([BI)LX/1Gf;
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v5, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  new-instance  v4, LX/1GT;
+    000c..0012  invoke-direct  {v4, v5, v6}, LX/1GT;-><init>([BI)V
+    0012..0016  sget-object  v3, LX/1GU;->A00:LX/1GV;
+    0016..001c  invoke-virtual  {v3, v4}, LX/1GV;->A03(LX/1GT;)Ljava/lang/String;
+    001c..0022  invoke-static  {v4}, LX/1GS;->A01(LX/1GT;)Lcom/facebook/tigon/iface/TigonRequest;
+    0022..0024  move-result-object  v2
+    0024..002a  invoke-virtual  {v4}, LX/1GT;->A00()B
+    002a..002c  move-result  v0
+    002c..0030  if-eqz  v0, +0x14
+    0030..0036  invoke-virtual  {v3, v4}, LX/1GV;->A04(LX/1GT;)Ljava/util/HashMap;
+    0036..0038  move-result-object  v0
+    0038..003c  new-instance  v1, LX/1Ge;
+    003c..0042  invoke-direct  {v1, v0}, LX/1Ge;-><init>(Ljava/util/Map;)V
+    0042..0046  new-instance  v0, LX/1Gf;
+    0046..004c  invoke-direct  {v0, v1, v2}, LX/1Gf;-><init>(LX/1Ge;Lcom/facebook/tigon/iface/TigonRequest;)V
+    004c..0052  invoke-virtual  {v3, v4, v0}, LX/1GV;->A05(LX/1GT;Lcom/facebook/tigon/iface/TigonPropertyContainer;)V
+    0052..0054  return-object  v0
+    0054..0056  const/4  v1, #0x0
+    0056..0058  goto  -0xa
+    # exception table: 0 try range(s)
+.end method

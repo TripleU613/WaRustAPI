@@ -1,0 +1,122 @@
+{
+  "1FN-clinit.txt": {
+    "bytes": 792,
+    "sha256": "8f65db70c1688785369673e77460ee95ec29568984597ad9f420368b73669acc"
+  },
+  "1GV-A05.txt": {
+    "bytes": 7025,
+    "sha256": "b1baf32482d43b3c339c8746075cda1c60a3d7fa0e5b5d9812ebfb09a486dbec"
+  },
+  "1gM-clinit.txt": {
+    "bytes": 406,
+    "sha256": "0d7c19e374c34eff5e9b8c826e0d88a50aac549665a1b13c69724984d83e0db1"
+  },
+  "JY4-clinit.txt": {
+    "bytes": 406,
+    "sha256": "b19ea4fab2a90d17eab386c3ee0d04a0d17115f057708933837964e422a442fb"
+  },
+  "JY5-clinit.txt": {
+    "bytes": 406,
+    "sha256": "61b679f673eba0b6f9761b1e561819810cea5da9bcb203a8da729e60348ad8c1"
+  },
+  "JZ6-clinit.txt": {
+    "bytes": 601,
+    "sha256": "ebc1961dd940e266f4f235adb87c20d64e73610ebb05f7da40963d764cba49a3"
+  },
+  "README.md": {
+    "bytes": 7980,
+    "sha256": "9b96c99cdb77b487b1b37d10e87d3204abc40322ffa85da610ca3249cc5cc02f"
+  },
+  "dex-selectors.json": {
+    "bytes": 419,
+    "sha256": "ee9843f2e20c33b449e7ceeddb2b1e1638d40a645f0e77f78d8671b9faa82f53"
+  },
+  "dynamic-key-helper.txt": {
+    "bytes": 262,
+    "sha256": "dfeb86616617a91eb990f1694260bce5704fcb244b118b6f497d0cd79446ea3a"
+  },
+  "ff-key20-a.txt": {
+    "bytes": 605,
+    "sha256": "f3beddf7d4735a37103748e53f4af8da56ddf586a568c384e4a64ab5a3c2d900"
+  },
+  "ff-key20-b.txt": {
+    "bytes": 725,
+    "sha256": "c94ec606e0de9d1ff3be331be04e387d3fc9cec52649434d69e75e20ab4bd298"
+  },
+  "ff-key44.txt": {
+    "bytes": 578,
+    "sha256": "f8d5d8314fe11a5998dc0e856239cc32bdded8e7fb97e05e6066153b6794710b"
+  },
+  "group-alias.txt": {
+    "bytes": 539,
+    "sha256": "340b0305b287f248e6f83b3ac3712a63bc8e74d0e61a6301102a29a43e0e6d20"
+  },
+  "inspect-sources.py": {
+    "bytes": 1852,
+    "sha256": "6006c4c43c5dabb125a20e8e360ea425eaa80ca5f7ca28023cfbb61fcfd5ba7f"
+  },
+  "java-key-callers.txt": {
+    "bytes": 1662,
+    "sha256": "d7a2d81446239eb70ab943a015cf27af98ccb62ab8ba2f7cc1190de9411949a1"
+  },
+  "mobileconfig-key46.txt": {
+    "bytes": 576,
+    "sha256": "d4fdd935a9a8061cf2ec44801786bf3649912dffc80dcd99f31e5ce7ac347ff4"
+  },
+  "native-dynamic-write-prefix.txt": {
+    "bytes": 4200,
+    "sha256": "86aee9ba3cd418d033e1859d1bc8542b305dc4c7434d6eeb61ca6874bb0109fe"
+  },
+  "native-windows.json": {
+    "bytes": 974,
+    "sha256": "0b7c04dedbd7eba9c6401aae86e54117e13e4b3a17d6dc48bb24868d9a9276cd"
+  },
+  "property-decoder-callers.txt": {
+    "bytes": 131,
+    "sha256": "be5a61690aa6cf68613a1f2f022c0b8f6c368a7e31302e4997e7d107c3c0e70b"
+  },
+  "property-find.txt": {
+    "bytes": 2596,
+    "sha256": "9484258222498200a1edaa86619e712373104b8912bb2fea70b94374d9203b4c"
+  },
+  "rejected-immediate-candidate.txt": {
+    "bytes": 1745,
+    "sha256": "54597ebe471957d3bfc05dc802f070bb6f524654509fbc9c7ec50a175d17d60a"
+  },
+  "request-decoder-callers.txt": {
+    "bytes": 646,
+    "sha256": "1579d887a6e464e41e90b2ff1bfaa75f52f016a673fe6f7713d2bf47fbda5e85"
+  },
+  "request-decoder.txt": {
+    "bytes": 8119,
+    "sha256": "cb2afed06a5f8cae20761227bfde54a773cf9e49dcc12e7799a2a31f8c7e4d4b"
+  },
+  "root-setter.txt": {
+    "bytes": 8201,
+    "sha256": "dbd3cb8e5f5ceff0a1267f2c11cbb8267ad830807c7a899c30038287343c385f"
+  },
+  "scan-setters.py": {
+    "bytes": 1129,
+    "sha256": "09663855ec49b44ff1f12fc8f41f2a3b4d69a8ff89c789545e680d452f2cc252"
+  },
+  "setter-census.json": {
+    "bytes": 59007,
+    "sha256": "90d8593a3f782e1c9ea2606ee9158901a333bdfb830027b1af109fdc9304b8a0"
+  },
+  "source-checks.json": {
+    "bytes": 18619,
+    "sha256": "427afdc34819dc9bfba41951c360219ebd61a148ef4488f43722987d2d7c563b"
+  },
+  "summary-decoder-callers.txt": {
+    "bytes": 604,
+    "sha256": "04fb45c6c2ebbd3b7005b6d5e65a4a45f7f4462e3833e7c4bd6a535b6d790329"
+  },
+  "summary-decoder.txt": {
+    "bytes": 1391,
+    "sha256": "ac2122b3f5edbb86e90151c135f60b0f64240882e14d85b548848787cfa64453"
+  },
+  "typed-value-filter.txt": {
+    "bytes": 808,
+    "sha256": "0148e92d1a2f9a0ca020d97edc635f2b872f8526540c232974bd303766ef0d65"
+  }
+}

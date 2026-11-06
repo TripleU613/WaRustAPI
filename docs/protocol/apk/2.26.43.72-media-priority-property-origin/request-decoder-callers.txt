@@ -1,0 +1,12 @@
+classes.dex  Lcom/facebook/tigon/TigonCallbacksIntegerBufferJavaHelper;->onStarted(VLLI)
+  invoke dex byte offset: 0x873a6a
+classes.dex  LX/1GW;->A00(LLI)
+  invoke dex byte offset: 0x874250
+classes.dex  Lcom/facebook/tigon/tigonobserver/TigonObserverData;-><init>(VJLLI)
+  invoke dex byte offset: 0x8742d4
+classes.dex  Lcom/facebook/tigon/tigonobserver/TigonObserverData;->onStarted(VILIJ)
+  invoke dex byte offset: 0x874514
+classes10.dex  Lcom/whatsapp/infra/tigon/WAHucClient;->startRequest(LLILL)
+  invoke dex byte offset: 0x3b482a
+classes10.dex  Lcom/facebook/tigon/tigonhuc/HucClient;->startRequest(LLILL)
+  invoke dex byte offset: 0x5626e0

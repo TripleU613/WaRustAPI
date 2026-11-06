@@ -1,0 +1,16 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libffsingletonmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000000d1a20 <JNI_OnLoad>:
+  158710:      	mov	w8, #0x2                // =2
+  158714:      	stur	q0, [x29, #-0xd0]
+  158718:      	stur	xzr, [x29, #-0xf0]
+  15871c:      	stur	w8, [x29, #-0xb8]
+  158720:      	bl	0x216990 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  158724:      	add	x0, x19, #0x28
+  158728:      	sub	x2, x29, #0xd0
+  15872c:      	mov	w1, #0x14               // =20
+  158730:      	bl	0x217360 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE@plt>
+  158734:      	sub	x0, x29, #0xd0

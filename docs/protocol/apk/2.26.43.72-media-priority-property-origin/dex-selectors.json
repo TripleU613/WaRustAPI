@@ -1,0 +1,34 @@
+{
+  "1FN-clinit": [
+    "LX/1FN;",
+    "<clinit>"
+  ],
+  "1GV-A05": [
+    "LX/1GV;",
+    "A05"
+  ],
+  "1gM-clinit": [
+    "LX/1gM;",
+    "<clinit>"
+  ],
+  "JY4-clinit": [
+    "LX/JY4;",
+    "<clinit>"
+  ],
+  "JY5-clinit": [
+    "LX/JY5;",
+    "<clinit>"
+  ],
+  "JZ6-clinit": [
+    "LX/JZ6;",
+    "<clinit>"
+  ],
+  "request-decoder": [
+    "LX/1GS;",
+    "A01"
+  ],
+  "summary-decoder": [
+    "LX/1GW;",
+    "A00"
+  ]
+}

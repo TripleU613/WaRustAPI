@@ -1,0 +1,10 @@
+classes.dex  Lcom/facebook/tigon/TigonCallbacksIntegerBufferJavaHelper;->onEOM(VLLI)
+  invoke dex byte offset: 0x873938
+classes.dex  Lcom/facebook/tigon/TigonCallbacksIntegerBufferJavaHelper;->onError(VLLILI)
+  invoke dex byte offset: 0x8739f0
+classes.dex  Lcom/facebook/tigon/TigonCallbacksIntegerBufferJavaHelper;->onWillRetry(VLLILI)
+  invoke dex byte offset: 0x873a94
+classes.dex  Lcom/facebook/tigon/tigonobserver/TigonObserverData;->onEom(VLIJ)
+  invoke dex byte offset: 0x8743fc
+classes.dex  Lcom/facebook/tigon/tigonobserver/TigonObserverData;->onError(VLILIJ)
+  invoke dex byte offset: 0x874458

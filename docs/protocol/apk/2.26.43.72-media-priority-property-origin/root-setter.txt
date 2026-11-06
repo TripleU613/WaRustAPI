@@ -1,0 +1,141 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+0000000000667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>:
+  667d94:      	paciasp
+  667d98:      	sub	sp, sp, #0x80
+  667d9c:      	stp	x29, x30, [sp, #0x20]
+  667da0:      	str	x27, [sp, #0x30]
+  667da4:      	bl	0x3161fc <MCIJSONCreateDeserializedObjectFromString+0x13860>
+  667da8:      	add	x29, sp, #0x20
+  667dac:      	mrs	x23, TPIDR_EL0
+  667db0:      	sxtw	x25, w1
+  667db4:      	mov	x22, x1
+  667db8:      	bl	0x72abd8 <MCFSetGetCount+0x6b20>
+  667dbc:      	bl	0x729a70 <MCFSetGetCount+0x59b8>
+  667dc0:      	ldr	x24, [x0, #0x8]
+  667dc4:      	cbz	x24, 0x667de0 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x4c>
+  667dc8:      	fmov	d0, x24
+  667dcc:      	bl	0x724ff8 <MCFSetGetCount+0xf40>
+  667dd0:      	b.hi	0x667de8 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x54>
+  667dd4:      	sub	x9, x24, #0x1
+  667dd8:      	and	x26, x9, x25
+  667ddc:      	b	0x667dfc <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x68>
+  667de0:      	mov	x26, xzr
+  667de4:      	b	0x667e50 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0xbc>
+  667de8:      	cmp	x24, x25
+  667dec:      	mov	x26, x25
+  667df0:      	b.hi	0x667dfc <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x68>
+  667df4:      	udiv	x9, x25, x24
+  667df8:      	msub	x26, x9, x24, x25
+  667dfc:      	ldr	x9, [x19]
+  667e00:      	ldr	x9, [x9, x26, lsl #3]
+  667e04:      	cbz	x9, 0x667e50 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0xbc>
+  667e08:      	sub	x10, x24, #0x1
+  667e0c:      	ldr	x9, [x9]
+  667e10:      	cbz	x9, 0x667e50 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0xbc>
+  667e14:      	bl	0x730eb8 <MCFSetGetCount+0xce00>
+  667e18:      	b.ne	0x667e2c <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x98>
+  667e1c:      	ldr	w11, [x9, #0x10]
+  667e20:      	cmp	w11, w22
+  667e24:      	b.ne	0x667e0c <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x78>
+  667e28:      	b	0x667f38 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x1a4>
+  667e2c:      	cmp	x8, #0x1
+  667e30:      	b.hi	0x667e3c <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0xa8>
+  667e34:      	and	x11, x11, x10
+  667e38:      	b	0x667e48 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0xb4>
+  667e3c:      	cmp	x11, x24
+  667e40:      	b.lo	0x667e48 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0xb4>
+  667e44:      	bl	0x731128 <MCFSetGetCount+0xd070>
+  667e48:      	cmp	x11, x26
+  667e4c:      	b.eq	0x667e0c <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x78>
+  667e50:      	mov	w0, #0x48               // =72
+  667e54:      	add	x27, x19, #0x10
+  667e58:      	str	xzr, [sp, #0x10]
+  667e5c:      	bl	0x737430 <__wrap__Znwm@plt>
+  667e60:      	mov	x20, x0
+  667e64:      	stp	x0, x27, [sp]
+  667e68:      	mov	x1, x21
+  667e6c:      	stp	xzr, x25, [x0]
+  667e70:      	str	w22, [x0, #0x10]
+  667e74:      	add	x0, x0, #0x20
+  667e78:      	bl	0x3e9b60 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38870>
+  667e7c:      	bl	0x726520 <MCFSetGetCount+0x2468>
+  667e80:      	str	w8, [x20, #0x40]
+  667e84:      	strb	w8, [sp, #0x10]
+  667e88:      	cbz	x24, 0x667e94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x100>
+  667e8c:      	bl	0x727070 <MCFSetGetCount+0x2fb8>
+  667e90:      	b.pl	0x667ed8 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x144>
+  667e94:      	bl	0x726580 <MCFSetGetCount+0x24c8>
+  667e98:      	cset	w11, ne
+  667e9c:      	cmp	x24, #0x3
+  667ea0:      	csel	x10, x10, x11, lo
+  667ea4:      	bl	0x7252d0 <MCFSetGetCount+0x1218>
+  667ea8:      	mov	x0, x19
+  667eac:      	bl	0x410cbc <_ZNK8facebook9stash_jni10JFileStash9removeAllEv+0xad70>
+  667eb0:      	bl	0x727b94 <MCFSetGetCount+0x3adc>
+  667eb4:      	b.ne	0x667ec0 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x12c>
+  667eb8:      	and	x26, x8, x25
+  667ebc:      	b	0x667ed8 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x144>
+  667ec0:      	cmp	x24, x25
+  667ec4:      	b.ls	0x667ed0 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x13c>
+  667ec8:      	mov	x26, x25
+  667ecc:      	b	0x667ed8 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x144>
+  667ed0:      	udiv	x8, x25, x24
+  667ed4:      	msub	x26, x8, x24, x25
+  667ed8:      	bl	0x72eafc <MCFSetGetCount+0xaa44>
+  667edc:      	cbz	x8, 0x667ee8 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x154>
+  667ee0:      	bl	0x72a73c <MCFSetGetCount+0x6684>
+  667ee4:      	b	0x667f10 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x17c>
+  667ee8:      	bl	0x729144 <MCFSetGetCount+0x508c>
+  667eec:      	cbz	x8, 0x667f14 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x180>
+  667ef0:      	bl	0x727230 <MCFSetGetCount+0x3178>
+  667ef4:      	b.ne	0x667f00 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x16c>
+  667ef8:      	and	x8, x8, x9
+  667efc:      	b	0x667f0c <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x178>
+  667f00:      	cmp	x8, x24
+  667f04:      	b.lo	0x667f0c <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x178>
+  667f08:      	bl	0x72a350 <MCFSetGetCount+0x6298>
+  667f0c:      	bl	0x729da4 <MCFSetGetCount+0x5cec>
+  667f10:      	str	x20, [x8]
+  667f14:      	bl	0x7246e4 <MCFSetGetCount+0x62c>
+  667f18:      	bl	0x3eb0a8 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x39db8>
+  667f1c:      	bl	0x7259e4 <MCFSetGetCount+0x192c>
+  667f20:      	b.ne	0x667fac <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x218>
+  667f24:      	bl	0x30281c <MCIHexStringCreateFromDataWithDelimiterChar+0x323c>
+  667f28:      	ldp	x29, x30, [sp, #0x20]
+  667f2c:      	add	sp, sp, #0x80
+  667f30:      	autiasp
+  667f34:      	ret
+  667f38:      	ldr	w8, [x9, #0x40]
+  667f3c:      	cmp	w8, #0x1
+  667f40:      	b.ne	0x667f6c <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x1d8>
+  667f44:      	bl	0x731c30 <MCFSetGetCount+0xdb78>
+  667f48:      	b.ne	0x667fac <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x218>
+  667f4c:      	mov	x1, x21
+  667f50:      	bl	0x310708 <MCIJSONCreateDeserializedObjectFromString+0xdd6c>
+  667f54:      	add	x0, x9, #0x20
+  667f58:      	bl	0x732130 <MCFSetGetCount+0xe078>
+  667f5c:      	ldp	x29, x30, [sp, #0x20]
+  667f60:      	add	sp, sp, #0x80
+  667f64:      	autiasp
+  667f68:      	b	0x653b94 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xa318>
+  667f6c:      	bl	0x731c30 <MCFSetGetCount+0xdb78>
+  667f70:      	b.ne	0x667fac <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x218>
+  667f74:      	mov	x1, x21
+  667f78:      	bl	0x310708 <MCIJSONCreateDeserializedObjectFromString+0xdd6c>
+  667f7c:      	add	x0, x9, #0x20
+  667f80:      	bl	0x732130 <MCFSetGetCount+0xe078>
+  667f84:      	ldp	x29, x30, [sp, #0x20]
+  667f88:      	add	sp, sp, #0x80
+  667f8c:      	autiasp
+  667f90:      	b	0x50df20 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x3cb6c>
+  667f94:      	bl	0x7292ac <MCFSetGetCount+0x51f4>
+  667f98:      	bl	0x3eb0a8 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x39db8>
+  667f9c:      	bl	0x7259e4 <MCFSetGetCount+0x192c>
+  667fa0:      	b.ne	0x667fac <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE+0x218>
+  667fa4:      	mov	x0, x19
+  667fa8:      	bl	0x7373e0 <__wrap__Unwind_Resume@plt>
+  667fac:      	bl	0x7378f0 <__stack_chk_fail@plt>

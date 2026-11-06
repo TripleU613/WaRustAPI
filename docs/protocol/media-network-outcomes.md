@@ -974,3 +974,24 @@ category binding. No inferred retry-count label, fixed r value or unconditional
 Rust Priority policy was added. No Rust runtime/header/deadline/retry/persistence
 change or live account request. The earlier named-registration and independent
 stage-selection uncertainties are resolved to the static scope above.
+
+## Priority property origin: Java and cross-library boundary (2026-11-06)
+
+**Confirmed bounded:** all24 physical1FK constructor sites across7 classes
+include23 fixed keys (none3) and one dynamic property decoder1GV.A05. That
+decoder reconstructs arbitrary typed properties and is used by request and
+summary decoders; direct callers include callbacks/observers and HUC request
+bridging. It cannot be dismissed as response-only, nor does it identify the
+original writer of key3. Two native tag checks qualify the root integer consumed
+by the Priority formatter; a nested group key3 alone is not equivalent.
+
+[Complete checked methods, caller censuses, source hashes and repro](apk/2.26.43.72-media-priority-property-origin/README.md)
+extend the native search to all83 pinned reconstructed ARM64 members by symbol
+substring. Main-library25 root and37 Group direct setter sites, plus importing
+ffsingleton/mobileconfig libraries, are retained with explicit scope. Their four
+external root setters use44/20/20/46, not3; the main decoder has a dynamic-key
+write. No inlining/indirect/dynamic-code absence proof is claimed. Property3's
+original producer/first-upload value and native category conversion remain
+unknown. No Rust request/header/retry/deadline/persistence change or live account
+operation. These negative results prevent a false fixed-header correction;
+previous static Priority header construction/activation proofs still stand.

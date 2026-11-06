@@ -1,0 +1,78 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000064987c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv>:
+  654000:      	udiv	x8, x25, x20
+  654004:      	msub	x21, x8, x20, x25
+  654008:      	ldur	x9, [x29, #-0x50]
+  65400c:      	ldr	x8, [x9, x21, lsl #3]
+  654010:      	cbz	x8, 0x65401c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xa7a0>
+  654014:      	bl	0x72d60c <MCFSetGetCount+0x9554>
+  654018:      	b	0x654058 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xa7dc>
+  65401c:      	ldur	x8, [x29, #-0x40]
+  654020:      	stur	x22, [x29, #-0x40]
+  654024:      	str	x8, [x22]
+  654028:      	str	x26, [x9, x21, lsl #3]
+  65402c:      	ldr	x8, [x22]
+  654030:      	cbz	x8, 0x65405c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xa7e0>
+  654034:      	bl	0x72f004 <MCFSetGetCount+0xaf4c>
+  654038:      	b.ne	0x654044 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xa7c8>
+  65403c:      	and	x8, x8, x9
+  654040:      	b	0x654050 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xa7d4>
+  654044:      	cmp	x8, x20
+  654048:      	b.lo	0x654050 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xa7d4>
+  65404c:      	bl	0x72f3b0 <MCFSetGetCount+0xb2f8>
+  654050:      	ldur	x9, [x29, #-0x50]
+  654054:      	add	x8, x9, x8, lsl #3
+  654058:      	str	x22, [x8]
+  65405c:      	ldur	x8, [x29, #-0x38]
+  654060:      	bl	0x72e0b0 <MCFSetGetCount+0x9ff8>
+  654064:      	add	x8, x8, #0x1
+  654068:      	stur	x8, [x29, #-0x38]
+  65406c:      	bl	0x653d7c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xa500>
+  654070:      	sub	x0, x29, #0x70
+  654074:      	bl	0x3e93b0 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x380c0>
+  654078:      	add	w28, w28, #0x1
+  65407c:      	b	0x653ea4 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xa628>
+  654080:      	add	x0, x9, #0x18
+  654084:      	sub	x1, x29, #0x70
+  654088:      	bl	0x653b94 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xa318>
+  65408c:      	b	0x654070 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xa7f4>
+  654090:      	movi	v0.2d, #0000000000000000
+  654094:      	sub	x0, x29, #0x50
+  654098:      	mov	x1, x19
+  65409c:      	stp	q0, q0, [x29, #-0x50]
+  6540a0:      	bl	0x6537f8 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x9f7c>
+  6540a4:      	add	x0, sp, #0x30
+  6540a8:      	sub	x1, x29, #0x50
+  6540ac:      	bl	0x3e9b60 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x38870>
+  6540b0:      	add	x2, sp, #0x30
+  6540b4:      	bl	0x72a664 <MCFSetGetCount+0x65ac>
+  6540b8:      	bl	0x667d94 <_ZN8facebook5tigon22TigonPropertyContainer11setPropertyENS1_3KeyENS1_5ValueE>
+  6540bc:      	add	x0, sp, #0x30
+  6540c0:      	bl	0x3e93b0 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x380c0>
+  6540c4:      	sub	x0, x29, #0x50
+  6540c8:      	bl	0x3e93b0 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x380c0>
+  6540cc:      	b	0x654108 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xa88c>
+  6540d0:      	add	x0, sp, #0x50
+  6540d4:      	sub	x1, x29, #0x50
+  6540d8:      	bl	0x4d96e8 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x8334>
+  6540dc:      	sub	x0, x29, #0x50
+  6540e0:      	bl	0x507c58 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x368a4>
+  6540e4:      	ldr	x20, [sp, #0x18]
+  6540e8:      	ldr	x1, [sp, #0x28]
+  6540ec:      	add	x2, sp, #0x50
+  6540f0:      	mov	x0, x20
+  6540f4:      	bl	0x507b60 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x367ac>
+  6540f8:      	add	x0, sp, #0x50
+  6540fc:      	bl	0x507c58 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x368a4>
+  654100:      	ldr	w21, [sp, #0x24]
+  654104:      	ldr	w22, [sp, #0x14]
+  654108:      	add	w21, w21, #0x1
+  65410c:      	b	0x653e20 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xa5a4>
+  654110:      	bl	0x724d1c <MCFSetGetCount+0xc64>
+  654114:      	b.ne	0x6541c8 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xa94c>
+  654118:      	bl	0x310eb0 <MCIJSONCreateDeserializedObjectFromString+0xe514>
+  65411c:      	ldp	x29, x30, [sp, #0xf0]

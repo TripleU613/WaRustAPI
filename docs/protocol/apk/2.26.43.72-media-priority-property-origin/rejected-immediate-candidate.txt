@@ -1,0 +1,38 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000004d13b4 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv>:
+  4fe2f0:      	csel	x10, x12, x11, eq
+  4fe2f4:      	add	x8, sp, #0x78
+  4fe2f8:      	add	x2, x1, x10
+  4fe2fc:      	blr	x9
+  4fe300:      	ldrb	w8, [sp, #0x78]
+  4fe304:      	ldr	x9, [sp, #0x80]
+  4fe308:      	bl	0x729fcc <MCFSetGetCount+0x5f14>
+  4fe30c:      	cmp	x9, #0x1
+  4fe310:      	b.eq	0x4fe5e8 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x2d234>
+  4fe314:      	cmp	x9, #0xc
+  4fe318:      	b.ne	0x4fe4b0 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x2d0fc>
+  4fe31c:      	add	x0, sp, #0x78
+  4fe320:      	mov	w1, #0x3                // =3
+  4fe324:      	bl	0x3b1ec0 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0xbd0>
+  4fe328:      	ldrb	w23, [x0]
+  4fe32c:      	add	x0, sp, #0x78
+  4fe330:      	mov	w1, #0xb                // =11
+  4fe334:      	bl	0x3b1ec0 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0xbd0>
+  4fe338:      	strb	w23, [x0]
+  4fe33c:      	b	0x4fe5e8 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x2d234>
+  4fe340:      	mov	w8, #0x5d3a             // =23866
+  4fe344:      	add	x0, x23, #0x1
+  4fe348:      	sub	x2, x29, #0x28
+  4fe34c:      	sturh	w8, [x29, #-0x28]
+  4fe350:      	sub	x8, x29, #0x28
+  4fe354:      	mov	x1, x19
+  4fe358:      	orr	x3, x8, #0x2
+  4fe35c:      	bl	0x4ffa94 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x2e6e0>
+  4fe360:      	cmp	x0, x19
+  4fe364:      	b.eq	0x4fe9e8 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x2d634>
+  4fe368:      	ldr	w27, [x20, #0x18]
+  4fe36c:      	mov	x22, x0
