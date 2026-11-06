@@ -224,3 +224,30 @@ No network operation is used by these tests.
 it does not yet route the CLI's socket/login reservation/result code through the
 actor's credential and owner checks. It does not make image preparation, handshake
 or login settlement one transaction. No live operation or refusal reset ran.
+
+## CLI validates Noise halves before side effects (2026-11-06)
+
+**Confirmed local gap / fixed offline:** CLI lab-transport reconstructed saved
+Noise halves without calling the comparison Curve25519 relationship validator.
+It also loaded them after image preparation and after explicit refusal-recheck
+history changes. A malformed key could therefore reach those operations before
+being discovered by the handshake.
+
+The existing StaticKeypair.validate_curve25519 method is now public under its
+existing Signal/transport feature gate, so CLI and actor share one backend check.
+CLI saved_noise_identity runs immediately after registered-account/phone checks,
+before login payload preparation, refusal-history mutation, image preparation,
+endpoint/socket or handshake work. It refuses missing or inconsistent halves
+without repair. The low-level from_parts constructor remains unchanged.
+
+Regression cli_noise_preflight_refuses_unrelated_halves_without_repair_or_key_echo
+checks a generated valid control, changed public bytes, a different private key,
+zero public bytes and absent identity. It verifies fixed diagnostics omit private
+and public byte encodings and preserves serialized account data. This pure seam
+opens no socket; ordering is established by the production call site, not a live
+trace. Existing API actor regressions use the independent registration producer.
+
+**Limits:** this checks the pair relationship, not registration-copy equality,
+server acceptance or atomic reservation/result ownership. Those actor guards
+are not yet shared by the CLI lab-login path. No live operation, key rotation,
+new flag or credential migration.

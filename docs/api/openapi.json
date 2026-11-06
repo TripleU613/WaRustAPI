@@ -17772,5 +17772,12 @@
     "x-live": false,
     "description": "Existing lab-transport --recheck-refusal archive/delete requires exact inspected failure to remain current and timestamp archive to be absent or identical. Changed/unknown/missing login or conflicting history refuses without mutation. Existing explicit flag/no-message prerequisites remain; separate CLI login ownership still under audit. No live recheck performed.",
     "evidence": "docs/protocol/authkey-lifecycle.md#cli-refusal-recheck-retains-current-authority-2026-11-06"
+},
+  "x-cli-noise-key-preflight": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Existing lab-transport validates saved Noise halves before refusal-history mutation, image preparation and socket/handshake operations. Shared StaticKeypair.validate_curve25519 is public under its existing Signal/transport gate. Invalid/missing keys refuse without repair or key echo. Registration-copy equality and CLI reservation/result ownership remain separate audit gaps; no live verification.",
+    "evidence": "docs/protocol/authkey-lifecycle.md#cli-validates-noise-halves-before-side-effects-2026-11-06"
 }
 }

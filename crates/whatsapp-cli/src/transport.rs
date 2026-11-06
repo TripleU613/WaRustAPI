@@ -17,6 +17,17 @@ use whatsapp_api::{
     },
 };
 
+/// Pure preflight: run before uploads, refusal-history mutation or sockets.
+fn saved_noise_identity(account: &AccountRecord) -> Result<StaticKeypair, Error> {
+    let key = account
+        .noise_static
+        .as_ref()
+        .ok_or_else(|| Error::invalid("transport", "missing saved Noise key"))?;
+    let local = StaticKeypair::from_parts(key.0.private, key.0.public);
+    local.validate_curve25519()?;
+    Ok(local)
+}
+
 /// Preserve exactly the refusal inspected by the explicit recheck path.
 /// A stale read must never clear a newer uncertain login reservation.
 fn archive_refusal_for_recheck(
@@ -243,6 +254,7 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
             "requires matching registered account",
         ));
     }
+    let local = saved_noise_identity(&account)?;
     let payload = login
         .then(|| whatsapp_api::transport::login::primary_login(&account, &config))
         .transpose()?;
@@ -288,11 +300,6 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
     } else {
         None
     };
-    let key = account
-        .noise_static
-        .as_ref()
-        .ok_or_else(|| Error::invalid("transport", "missing saved Noise key"))?;
-    let local = StaticKeypair::from_parts(key.0.private, key.0.public);
     let endpoint = ComparisonEndpoint::built_in(ComparisonGateway::Primary, 443)
         .map_err(|_| Error::invalid("transport", "invalid endpoint"))?;
     let limits = SocketLimits {
@@ -904,6 +911,45 @@ mod tests {
         model::jid::Jid,
         store::{MasterKey, StaticKeySource},
     };
+
+    #[test]
+    fn cli_noise_preflight_refuses_unrelated_halves_without_repair_or_key_echo() {
+        use whatsapp_api::{
+            session::{KeyMaterial, NoiseStaticKey},
+            transport::noise::NoiseConfig,
+        };
+        let noise = NoiseConfig {
+            pattern: "Noise_XX_25519_AESGCM_SHA256".into(),
+            prologue: vec![],
+        };
+        let pair = StaticKeypair::generate(&noise).unwrap();
+        let other = StaticKeypair::generate(&noise).unwrap();
+        let mut account = AccountRecord {
+            noise_static: Some(NoiseStaticKey(KeyMaterial {
+                private: *pair.private(),
+                public: *pair.public(),
+            })),
+            ..Default::default()
+        };
+        assert!(saved_noise_identity(&account).is_ok());
+        let mut changed = *pair.public();
+        changed[10] ^= 1;
+        for (private, public) in [
+            (*pair.private(), changed),
+            (*other.private(), *pair.public()),
+            (*pair.private(), [0; 32]),
+        ] {
+            account.noise_static = Some(NoiseStaticKey(KeyMaterial { private, public }));
+            let before = serde_json::to_vec(&account).unwrap();
+            let error = saved_noise_identity(&account).unwrap_err().to_string();
+            assert!(error.contains("saved Noise keypair is inconsistent"));
+            assert!(!error.contains(&hex::encode(private)));
+            assert!(!error.contains(&hex::encode(public)));
+            assert_eq!(serde_json::to_vec(&account).unwrap(), before);
+        }
+        account.noise_static = None;
+        assert!(saved_noise_identity(&account).is_err());
+    }
 
     #[test]
     fn refusal_recheck_preserves_newer_login_and_conflicting_history_after_reopen() {

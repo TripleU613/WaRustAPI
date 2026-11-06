@@ -8240,3 +8240,5 @@ Confirmed local await-interleaving gap closed at login reservation using zeroize
 Local login result now requires current credential snapshot and exact unknown reservation owner before atomic settlement. [Login reply reservation and credential ownership](authkey-lifecycle.md#login-reply-owns-its-reservation-and-credentials-2026-11-06). Success/failure, stale/duplicate and reopen regressions; no live operation.
 
 CLI explicit refusal recheck now checks exact current row/history in its archive-delete transaction; stale reads cannot clear uncertainty. [CLI refusal recheck authority](authkey-lifecycle.md#cli-refusal-recheck-retains-current-authority-2026-11-06). No live operation or server-policy claim.
+
+Local CLI Noise-half consistency now checked before side effects; fixed diagnostics and valid/mutated/absent controls retained. [CLI Noise preflight before side effects](authkey-lifecycle.md#cli-validates-noise-halves-before-side-effects-2026-11-06). No wire or live acceptance claim.

@@ -1,3 +1,5 @@
+Fixed CLI Noise preflight omission: saved halves are checked before refusal-history writes, image preparation and sockets using the shared Curve25519 validator. [CLI Noise preflight before side effects](docs/protocol/authkey-lifecycle.md#cli-validates-noise-halves-before-side-effects-2026-11-06). CLI registration-copy/ownership gaps remain separate.
+
 Fixed CLI refusal-recheck stale deletion and history collision: archive/delete requires the exact current failure and absent/identical archive. [CLI refusal recheck authority](docs/protocol/authkey-lifecycle.md#cli-refusal-recheck-retains-current-authority-2026-11-06). Unknown/newer login state stays intact; offline regression only.
 
 Fixed comparison connection login-result ownership: stale success/failure cannot settle another reservation or apply clock/account state after credentials change. [Login reply reservation and credential ownership](docs/protocol/authkey-lifecycle.md#login-reply-owns-its-reservation-and-credentials-2026-11-06). Capture remains first; separate CLI lab path remains outside this helper.

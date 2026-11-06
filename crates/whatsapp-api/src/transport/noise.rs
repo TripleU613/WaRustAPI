@@ -69,7 +69,7 @@ impl StaticKeypair {
         feature = "experimental-signal-crypto",
         feature = "experimental-transport"
     ))]
-    pub(crate) fn validate_curve25519(&self) -> Result<(), TransportError> {
+    pub fn validate_curve25519(&self) -> Result<(), TransportError> {
         use snow::{
             params::DHChoice,
             resolvers::{CryptoResolver, DefaultResolver},
