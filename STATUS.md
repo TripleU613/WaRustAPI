@@ -1,3 +1,10 @@
+2026-11-06 — **Full blocklist snapshots clear an absent hash.**
+Corrected stale checkpoint retention after an admitted no-hash full snapshot.
+No-list/malformed controls preserve prior state; offline get/block construction
+controls and reopen regression retain evidence.
+[Native/API authority and set-result limits](docs/protocol/chat-actions.md#blocklist-full-snapshot-nullable-hash-2026-11-06).
+No automatic request or live account operation.
+
 2026-11-06 — **Blocklist set results require the native first list.**
 Corrected unsupported empty-result acceptance and root/trailing hash/branch
 selection. The selected list is validated before cache/hash/reconciliation

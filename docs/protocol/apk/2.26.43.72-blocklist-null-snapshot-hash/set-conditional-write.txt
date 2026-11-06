@@ -1,0 +1,32 @@
+
+# class: LX/1dH;
+# extends: Ljava/lang/Object;
+
+.method public A08(VLLLZ)  # .registers 7
+    # full signature: LX/1dH;->A08(LX/1dH;Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;Z)V
+    0000..0006  invoke-virtual  {v3, v4, v6}, LX/1dH;->A0Q(Lcom/whatsapp/infra/core/jid/UserJid;Z)V
+    0006..000a  iget-object  v0, v3, LX/1dH;->A02:LX/05a;
+    000a..000e  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    000e..0014  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0014..0016  move-result-object  v0
+    0016..001a  check-cast  v0, LX/7PB;
+    001a..0020  invoke-virtual  {v0, v4, v6}, LX/7PB;->A0Q(Lcom/whatsapp/infra/core/jid/UserJid;Z)Z
+    0020..0022  move-result  v0
+    0022..0026  if-eqz  v0, +0x13
+    0026..002c  invoke-static  {v3}, LX/1dH;->A02(LX/1dH;)LX/09S;
+    002c..002e  move-result-object  v0
+    002e..0034  invoke-static  {v0}, LX/09S;->A00(LX/09S;)Landroid/content/SharedPreferences$Editor;
+    0034..0036  move-result-object  v1
+    0036..003a  const-string  v0, "block_list_v2_dhash"
+    003a..0040  invoke-interface  {v1, v0, v5}, Landroid/content/SharedPreferences$Editor;->putString(Ljava/lang/String;Ljava/lang/String;)Landroid/content/SharedPreferences$Editor;
+    0040..0042  move-result-object  v0
+    0042..0048  invoke-interface  {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
+    0048..004e  invoke-static  {v3}, LX/1dH;->A03(LX/1dH;)LX/0Js;
+    004e..0050  move-result-object  v2
+    0050..0052  const/4  v1, #0x4
+    0052..0056  new-instance  v0, LX/8be;
+    0056..005c  invoke-direct  {v0, v3, v4, v1}, LX/8be;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V
+    005c..0062  invoke-virtual  {v2, v0}, LX/0Js;->CbP(Ljava/lang/Runnable;)V
+    0062..0064  return-void
+    # exception table: 0 try range(s)
+.end method

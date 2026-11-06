@@ -365,6 +365,12 @@
     "x-live": false,
     "description": "APK43.72 8R7.CK4 / 0Tp.A0D: block/unblock set-result projection requires the first child to be list and validates it through the shared snapshot parser before matched handling. Only selected-list dhash/matched count; root/trailing values cannot supply hash or redirect branch. Malformed replies retain settlement/reply and refuse without cache/hash/inspection/reconciliation writes or resend. Valid matched=false remains held for reconciliation. Fetch unchanged/no-list compatibility remains. Existing strict identity/metadata admission is not complete native fallback/alias/migration parity; no automatic old-history repair. docs/protocol/chat-actions.md#blocklist-set-first-list-admission-2026-11-06"
   },
+  "x-blocklist-full-snapshot-null-hash": {
+    "x-cli": "blocklist; block",
+    "x-transport": "durable library projection and existing experimental CLI queue/inspection",
+    "x-live": false,
+    "description": "APK43.72 admitted full blocklist snapshot replaces nullable dhash: missing hash deletes old checkpoint atomically with membership/inspection/reconciliation. Subsequent explicitly queued get/set construction no longer reuses stale hash. No-list unchanged fetch preserves hash; malformed input preserves all state. Android putString(null) removal contract plus selected native replacement paths retained. Native set-result hash writes have separate memory/backend-change gates and remain outside this correction. No automatic request, old-history rewrite or live acceptance. docs/protocol/chat-actions.md#blocklist-full-snapshot-nullable-hash-2026-11-06"
+  },
   "x-library-capabilities": [
     {
       "symbol": "whatsapp_api::transport::app_state_sync::binding::bind_inline_fetch_plan",

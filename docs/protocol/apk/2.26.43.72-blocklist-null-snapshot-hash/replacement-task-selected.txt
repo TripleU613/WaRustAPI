@@ -1,0 +1,50 @@
+# Selected DEX excerpt; not a complete method.
+
+# class: LX/8al;
+# extends: Ljava/lang/Object;
+
+.method public run(V)  # .registers 26
+    # full signature: LX/8al;->run()V
+    0000..0004  move-object/from16  v1, v25
+    0004..0008  iget  v0, v1, LX/8al;->$t:I
+    0008..000e  packed-switch  v0, payload@0x948, cases=[0:@0x8a0, 1:@0x804, 2:@0x78a, 3:@0x692, 4:@0x3ec, 5:@0x3b4, 6:@0x32c], default@0xe
+    08a0..08a4  iget-object  v4, v1, LX/8al;->A00:Ljava/lang/Object;
+    08a4..08a8  check-cast  v4, LX/1dH;
+    08a8..08ac  iget-object  v2, v1, LX/8al;->A01:Ljava/lang/Object;
+    08ac..08b0  check-cast  v2, Ljava/util/Set;
+    08b0..08b4  iget-object  v7, v1, LX/8al;->A04:Ljava/lang/String;
+    08b4..08b8  iget-object  v6, v1, LX/8al;->A02:Ljava/lang/Object;
+    08b8..08bc  check-cast  v6, LX/7sa;
+    08bc..08c0  iget-object  v5, v1, LX/8al;->A03:Ljava/lang/Object;
+    08c0..08c4  sget-object  v0, LX/1dH;->A0c:Ljava/util/Set;
+    08c4..08c8  iget-object  v0, v4, LX/1dH;->A02:LX/05a;
+    08c8..08ce  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    08ce..08d0  move-result-object  v0
+    08d0..08d4  check-cast  v0, LX/7PB;
+    08d4..08da  invoke-virtual  {v0, v2}, LX/7PB;->A0P(Ljava/util/Set;)V
+    08da..08e0  invoke-static  {v4}, LX/1dH;->A02(LX/1dH;)LX/09S;
+    08e0..08e2  move-result-object  v1
+    08e2..08e6  iget-object  v0, v4, LX/1dH;->A0P:LX/05a;
+    08e6..08ec  invoke-static  {v0}, LX/2LE;->A02(LX/05a;)J
+    08ec..08ee  move-result-wide  v2
+    08ee..08f4  invoke-static  {v1}, LX/09S;->A00(LX/09S;)Landroid/content/SharedPreferences$Editor;
+    08f4..08f6  move-result-object  v1
+    08f6..08fa  const-string  v0, "block_list_receive_time"
+    08fa..0900  invoke-static  {v1, v0, v2, v3}, LX/2LB;->A1K(Landroid/content/SharedPreferences$Editor;Ljava/lang/String;J)V
+    0900..0906  invoke-static  {v4}, LX/1dH;->A02(LX/1dH;)LX/09S;
+    0906..0908  move-result-object  v0
+    0908..090e  invoke-static  {v0}, LX/09S;->A00(LX/09S;)Landroid/content/SharedPreferences$Editor;
+    090e..0910  move-result-object  v1
+    0910..0914  const-string  v0, "block_list_v2_dhash"
+    0914..091a  invoke-interface  {v1, v0, v7}, Landroid/content/SharedPreferences$Editor;->putString(Ljava/lang/String;Ljava/lang/String;)Landroid/content/SharedPreferences$Editor;
+    091a..091c  move-result-object  v0
+    091c..0922  invoke-interface  {v0}, Landroid/content/SharedPreferences$Editor;->commit()Z
+    0922..0926  if-eqz  v6, +0x5
+    0926..092c  invoke-virtual  {v6}, LX/7sa;->A00()V
+    092c..0932  invoke-static  {v4}, LX/1dH;->A03(LX/1dH;)LX/0Js;
+    0932..0934  move-result-object  v3
+    0934..0936  const/4  v0, #0x3
+    0936..093a  new-instance  v2, LX/8be;
+    093a..0940  invoke-direct  {v2, v4, v5, v0}, LX/8be;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V
+    0940..0946  invoke-virtual  {v3, v2}, LX/0Js;->CbP(Ljava/lang/Runnable;)V
+    0946..0948  return-void

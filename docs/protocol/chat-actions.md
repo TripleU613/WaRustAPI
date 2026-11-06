@@ -1393,3 +1393,28 @@ The old projector fails the missing-list case with Ok(1). Strict workspace/
 all-target/all-feature Clippy, formatting, CLI reference regeneration, OpenAPI
 library coverage, APK coverage freshness and repository hygiene pass. Fresh
 callback/first-child exports reproduce and subject hash/bundle checksums match.
+
+## Blocklist full-snapshot nullable hash (2026-11-06)
+
+**Confirmed mismatch/correction:** [nullable accessor, replacement-task binding,
+selected write case, set gating and Android API contract](apk/2.26.43.72-blocklist-null-snapshot-hash/README.md)
+show admitted full snapshots replace even a missing hash: native nullputString
+removes the saved key. Rust now deletes its hash checkpoint in the same snapshot
+transaction. A no-list unchanged fetch still preserves it; malformed input
+preserves every checkpoint and the journal. No automatic request is added.
+
+The four-case encrypted-store regression covers same/empty membership no-hash
+snapshots, no-list and malformed controls, reopen/idempotency/reconciliation,
+and explicitly queued offline get/block controls proving subsequent construction
+omits the stale hash only after admitted replacement. The old projector fails
+by retaining Some(stale). Set-result hash mutation has a separate native memory/
+backend-change gate; this fix does not guess its complete parity or rewrite old
+projected histories. Native metadata/alias/migration and live behavior remain open.
+
+Validation:1,519 workspace tests pass (9 result suites, four test threads),
+including four snapshot/reopen and offline request-construction cases. The old
+projector fails with Some(stale) instead ofNone. Strict workspace/all-target/
+all-feature Clippy, formatting, CLI reference regeneration, OpenAPI library
+coverage, APK coverage freshness and repository hygiene pass. Four DEX exports,
+README extraction, bundle checksums and subject APK hash match. Android null
+removal is attributed to its API contract, not a device execution result.

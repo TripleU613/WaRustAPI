@@ -314,8 +314,12 @@ fn apply_fetch_in(tx: &mut crate::store::WriteTx<'_>, reply: &Node) -> Result<()
         current,
         rows: new_rows,
     } = parse_snapshot(list)?;
+    // APK43.72 1dH.A0O / 8al.run case0 write the admitted snapshot
+    // hash even when null. Android putString(null) removes the old value.
     if let Some(dhash) = dhash {
         tx.put_json(Table::Checkpoints, DHASH_KEY.as_bytes(), 1, &dhash)?;
+    } else {
+        tx.delete(Table::Checkpoints, DHASH_KEY.as_bytes())?;
     }
     for (jid, row) in new_rows {
         tx.put_json(Table::Checkpoints, blocked_key(&jid).as_bytes(), 1, &row)?;
@@ -1099,6 +1103,93 @@ mod tests {
                 .unwrap()
                 .is_empty()
         );
+    }
+
+    #[test]
+    fn full_snapshot_without_hash_clears_stale_request_hash_after_reopen() {
+        for mode in ["same", "empty", "no_list", "malformed"] {
+            let (dir, s) = store();
+            let seed = queue_fetch(&s).unwrap();
+            super::super::actions::reserve_pending(&s).unwrap();
+            super::super::actions::record_reply(
+                &s,
+                &fetch_reply(&seed, "stale", vec![Node::new("item").attr("jid", phone())]),
+            )
+            .unwrap();
+            assert_eq!(ingest(&s).unwrap(), 1);
+            s.write(|tx| tx.put_json(Table::Checkpoints, RECONCILIATION_KEY, 1, &true))
+                .unwrap();
+            let id = queue_fetch(&s).unwrap();
+            super::super::actions::reserve_pending(&s).unwrap();
+            let children = match mode {
+                "same" => {
+                    vec![Node::new("list").children(vec![Node::new("item").attr("jid", phone())])]
+                }
+                "empty" => vec![Node::new("list")],
+                "no_list" => vec![],
+                "malformed" => {
+                    vec![Node::new("list").children(vec![Node::new("PRIVATE-INVALID-TAG")])]
+                }
+                _ => unreachable!(),
+            };
+            super::super::actions::record_reply(
+                &s,
+                &Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", "result")
+                    .children(children),
+            )
+            .unwrap();
+            let before = s.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap();
+            let head = s.journal_head().unwrap();
+            if mode == "malformed" {
+                assert!(ingest(&s).is_err());
+                assert_eq!(
+                    s.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap(),
+                    before
+                );
+            } else {
+                assert_eq!(ingest(&s).unwrap(), 1);
+            }
+            drop(s);
+            let s = reopen(dir.path());
+            let cleared = matches!(mode, "same" | "empty");
+            assert_eq!(
+                saved_dhash(&s).unwrap().as_deref(),
+                if cleared { None } else { Some("stale") }
+            );
+            assert_eq!(reconciliation_required(&s).unwrap(), !cleared);
+            assert_eq!(blocked(&s).unwrap().len(), usize::from(mode != "empty"));
+            assert_eq!(s.journal_head().unwrap(), head);
+            if mode == "malformed" {
+                assert!(ingest(&s).is_err());
+            } else {
+                assert_eq!(ingest(&s).unwrap(), 0);
+            }
+            assert!(
+                super::super::actions::reserve_pending(&s)
+                    .unwrap()
+                    .is_empty()
+            );
+            // Explicit offline queue controls prove future construction uses
+            // the committed checkpoint, without transmitting either request.
+            let fetch = queue_fetch(&s).unwrap();
+            let block = queue_block(&s, &phone()).unwrap();
+            let queued = super::super::actions::reserve_pending(&s).unwrap();
+            let fetch = queued
+                .iter()
+                .find(|n| attr_text(n, "id") == Some(fetch.as_str()))
+                .unwrap();
+            assert_eq!(fetch.child("item").is_none(), cleared);
+            let block = queued
+                .iter()
+                .find(|n| attr_text(n, "id") == Some(block.as_str()))
+                .unwrap();
+            assert_eq!(
+                attr_text(block.child("item").unwrap(), "dhash"),
+                if cleared { None } else { Some("stale") }
+            );
+        }
     }
 
     #[test]

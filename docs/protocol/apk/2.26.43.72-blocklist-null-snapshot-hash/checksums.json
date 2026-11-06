@@ -1,0 +1,22 @@
+{
+  "README.md": {
+    "bytes": 5020,
+    "sha256": "19ef1ecf0b823d4e966850f49c3eb9e0966e1beef821c4df86519d1e91f36bbb"
+  },
+  "nullable-attribute.txt": {
+    "bytes": 441,
+    "sha256": "e73ef0aa7bf37ff48f58b489c034d485ae6a86d939434e570c0797d1253cbd43"
+  },
+  "replacement-task-init.txt": {
+    "bytes": 762,
+    "sha256": "4c5f9a4672e8d050d122d306f22fbe572292170074e873255c64fab471fc1398"
+  },
+  "replacement-task-selected.txt": {
+    "bytes": 2904,
+    "sha256": "37e23ec54f617c5dfa0f2fb9e8c63b3f165e705eb02e96a9622834d5dd8bf118"
+  },
+  "set-conditional-write.txt": {
+    "bytes": 1783,
+    "sha256": "c063fe2f1b01185f1a4d383a1c25cac0ab5eb9c4680abcb619fb988d6e40ded9"
+  }
+}
