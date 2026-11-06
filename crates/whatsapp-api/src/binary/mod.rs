@@ -26,10 +26,13 @@ pub use encoder::Encoder;
 pub use node::{Attribute, AttributeValue, Node, NodeContent};
 pub use tokens::{TokenDictionary, tags};
 
-/// Decoding/encoding failures. Positions are byte offsets into the input.
+/// Decoding/encoding failures and root control signals. Positions are byte offsets.
 #[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
 #[non_exhaustive]
 pub enum CodecError {
+    /// A root stream-end control token, rather than a stanza node.
+    #[error("peer ended the binary node stream")]
+    StreamEnd,
     /// Input ended before a complete structure was read.
     #[error("unexpected end of input at offset {offset} (needed {needed} more bytes)")]
     UnexpectedEof {
@@ -124,6 +127,7 @@ impl CodecError {
     /// never carries input text (attribute names, JID fragments) or offsets.
     pub fn class(&self) -> &'static str {
         match self {
+            Self::StreamEnd => "stream_end",
             Self::UnexpectedEof { .. } => "unexpected_eof",
             Self::UnknownTag { .. } => "unknown_tag",
             Self::UnknownToken { .. } => "unknown_token",

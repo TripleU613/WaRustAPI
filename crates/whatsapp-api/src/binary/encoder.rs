@@ -259,6 +259,35 @@ mod tests {
     }
 
     #[test]
+    fn apk_root_stream_end_is_control_not_a_textual_node() {
+        let limits = Limits::default();
+        for wire in [
+            vec![0, 2],
+            vec![0xF8, 0, 2],
+            vec![0xF8, 1, 2],
+            vec![0xF9, 0, 1, 2],
+            vec![0xF8, 3, 2, 8, 0],
+        ] {
+            let error = Decoder::new(&wire, dict(), &limits)
+                .decode_node()
+                .unwrap_err();
+            assert_eq!(error.class(), "stream_end");
+        }
+        // Raw text with the same spelling is not the native control token.
+        let mut raw = vec![0xF8, 1, 0xFC, 12];
+        raw.extend_from_slice(b"xmlstreamend");
+        assert_eq!(
+            Decoder::new(&raw, dict(), &limits)
+                .decode_node()
+                .unwrap()
+                .description,
+            "xmlstreamend"
+        );
+        let nested = [0xF8, 2, 25, 0xF8, 1, 0xF8, 1, 2];
+        assert!(Decoder::new(&nested, dict(), &limits).decode_node().is_ok());
+    }
+
+    #[test]
     fn apk_null_attribute_is_not_an_explicit_empty_string() {
         // APK 43.72 123.A01 -> 0Tl(String,String) checks value nonnull.
         let limits = Limits::default();
@@ -611,18 +640,18 @@ mod tests {
             Decoder::new(&unknown_tag, dict(), &limits).decode_node(),
             Err(CodecError::UnknownTag { tag: 0xF0, .. })
         ));
-        // A dictionary with a hole: index 2 is undefined.
+        // A dictionary with a hole: index 3 is undefined; 2 is a control token.
         let small = TokenDictionary::from_fixture_json(
             r#"{"provenance":{"evidence":"Unknown","source":"","source_revision":"","ledger_ref":""},
                 "dictionary_version":0,"single_byte":["","iq"],"double_byte":[["a"]]}"#,
         )
         .unwrap();
-        let unknown_token = [0xF8, 0x01, 0x02];
+        let unknown_token = [0xF8, 0x01, 0x03];
         assert!(matches!(
             Decoder::new(&unknown_token, &small, &limits).decode_node(),
             Err(CodecError::UnknownToken {
                 dictionary: 0,
-                index: 2,
+                index: 3,
                 ..
             })
         ));

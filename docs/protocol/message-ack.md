@@ -1193,3 +1193,5 @@ and complete rejection/defer lifecycle remain open. Rust original-owner and
 partial-write controls pass unchanged; no runtime/replay or live change added.
 
 - **2026-11-06 decoder presence follow-through:** null attribute markers now fail before semantic routing instead of becoming present empty text. Explicit emptyid remains distinct and retains existing accessor behavior. [Pinned constructor/non-null proof and literal controls](node-serializer.md#null-attribute-values-cannot-become-empty-text-2026-11-06).
+
+- **2026-11-06 root-end follow-through:** rawroot stream-end now captures and consumes the receive epoch before ACK/reply processing; pending receipt uncertainty survives reopen without replay. [Implementation, coordinated API/CLI behavior and remaining policy limits](node-serializer.md#root-stream-end-captures-and-consumes-the-receive-epoch-2026-11-06).

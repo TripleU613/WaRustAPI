@@ -1,5 +1,9 @@
 # Root stream-end token and native logout reporting — APK 2.26.43.72
 
+Historical research snapshot at570bca74. The identified Rust gap is now
+[implemented with coordinated capture/termination tests](../../node-serializer.md#root-stream-end-captures-and-consumes-the-receive-epoch-2026-11-06).
+Statements below about outstanding implementation describe that earlier snapshot.
+
 **Confirmed selected static**, build264307238, APK SHA256
 `887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e`.
 Complete selected xtask DEX exports, not REA Evidence/runtime observations.

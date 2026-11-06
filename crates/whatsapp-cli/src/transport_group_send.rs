@@ -624,6 +624,12 @@ async fn answer_retries(
                     Ok(Ok(FrameRead::Undecodable { frame, class })) => {
                         match inbox::preserve_undecodable(store, &frame, class, None) {
                             Ok(key) => {
+                                if class == "stream_end" {
+                                    eprintln!(
+                                        "group-send: peer ended stream; captured as {key}; window ended"
+                                    );
+                                    break;
+                                }
                                 eprintln!(
                                     "group-send: a frame did not decode ({class}); captured as {key}"
                                 );

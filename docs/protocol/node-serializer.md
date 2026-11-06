@@ -114,3 +114,64 @@ in this research chunk. Existing terminal-error control passes but does not
 cover token2. Required follow-through preserves capture/uncertainty, prevents
 later reads/ACKs/settlement and distinguishes raw text/nested context without
 inventing refusal/reconnect policy. No live account operation performed.
+
+## Root stream-end captures and consumes the receive epoch (2026-11-06)
+
+**Implemented/offline; pinned native evidence:**
+[Complete123.A01/A08 and concrete reader/logout chain](apk/2.26.43.72-stream-end/README.md)
+now drive coordinated Rust handling. Decoder.decode_node recognizes rawroot
+LIST_EMPTY/LIST_8/LIST_16 followed by descriptiontoken2 before ordinary node
+validation, returning publicCodecError::StreamEnd (fixed classstream_end).
+This is based on the control byte, independent of dictionary text lookup.
+A raw-string description spelledxmlstreamend remains an ordinary node;
+nested occurrences retain prior behavior because native nested-null/child
+semantics have not been established. The native root branch ignores remaining
+node fields; the original authenticated frame, including any trailing bytes,
+is retained by capture-owning paths. Compression/inflation/resource checks
+still happen before control classification.
+
+The normal reader task recognizes the class, poisons the shared split epoch
+and captures the exact frame with epoch metadata before queue publication,
+then stops its read loop. Source capture survives an actor exiting on an earlier
+write failure; failed capture reports an error and leaves the epoch closed.
+The actor idempotently preserves it again, then returnsPeerClosed before semantic
+routing, ACK generation or later queued responses. Poisoning rejects later
+write calls; it cannot retract bytes from a write that was already in flight.
+Existing pending work remains uncertain. No delivery fact, key rollback,
+reservation reset, identifier rotation or automatic resend is authorized.
+
+Low-levelmessaging::read_frame consumes its channel on this control and returns
+the existingFrameRead::Undecodable carrier with classstream_end so the caller
+can preserve original bytes. This legacy carrier now includes a known control,
+not just malformed frames. Captured waits preserve it and returnPeerClosed;
+all three CLI comparison capture loops preserve then end their window. The
+public no-store read_node helper consumes the channel and returnsPeerClosed
+but cannot itself persist bytes; callers needing captures use read_frame or
+captured waits. Undecodable inspection remains read-only, listsstream_end and
+never processes the control as a delivered message.
+
+**Local policy versus native proof:** PeerClosed retains the existing bounded
+actor reconnect category. Native selectedC2o(-1) reports logout/disconnect,
+but full native reconnect/backoff is still untraced. This change neither adds
+a refusal/ban classification nor authorizes replay during reconnect. It does
+not claim no reconnect forever or complete native close/recovery parity.
+
+**Regression evidence:**
+- Both initial literal/actor tests failed before implementation. Literal matrix
+  covers all three list-prefix forms, unusual counts/trailing fields, and raw
+  text/nested controls. Dictionary-entry and generated codec tests explicitly
+  check root token2 as control rather than dropping that case from coverage.
+- Actor fixture writes a real read receipt, then queuesend, a matching ACK and
+  a ping. It capturesend, exits withPeerClosed, emits no following response,
+  leaves the receiptoutcome_unknown across reopen, and does not resend it on
+  a new activated epoch. It does not simulate every ciphertext/outbox family.
+- Captured waits use compressed/uncompressed frames, leave the following
+  matching reply unread, preserve exact raw capture and an uncertain checkpoint
+  across reopen. That checkpoint fixture is not a complete outbox proof.
+- A synthetic certificate-verified local encrypted-record exchange verifies
+  low-levelread_frame returns the capture and rejects subsequent reads/writes
+  on the consumed channel. No live WhatsApp/account operation is involved.
+
+Remaining: native global reconnect/backoff/provider ordering, already-in-flight
+write races, nested control semantics and full protocol coverage. This closes
+the specifically identified coordinated root-end gap, not the overall goal.

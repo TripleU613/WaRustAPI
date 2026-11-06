@@ -453,19 +453,27 @@ pub async fn read_node<S: AsyncRead + AsyncWrite + Unpin>(
         unpack_frame_payload(&frame, &limits).map_err(|_| error("invalid stanza compression"))?;
     Decoder::new(&data, TokenDictionary::comparison_2_26_37_71(), &limits)
         .decode_node()
-        .map_err(|_| error("invalid comparison stanza"))
+        .map_err(|codec| {
+            if codec == crate::binary::CodecError::StreamEnd {
+                channel.close();
+                TransportError::PeerClosed
+            } else {
+                error("invalid comparison stanza")
+            }
+        })
 }
 
 /// One frame read in a lab window.
 pub enum FrameRead {
     /// A decoded stanza.
     Node(Node),
-    /// A frame that decrypted, so the stream is intact, but did not unpack or
-    /// decode; for [`super::inbox::preserve_undecodable`].
+    /// A frame that decrypted but is not an ordinary node; for
+    /// [`super::inbox::preserve_undecodable`]. `stream_end` is a known control
+    /// signal and consumes the channel before this result is returned.
     Undecodable {
         /// The decrypted frame.
         frame: Vec<u8>,
-        /// Fixed error class (`CodecError::class`).
+        /// Fixed class (`CodecError::class`), including `stream_end` control.
         class: &'static str,
     },
 }
@@ -486,7 +494,9 @@ impl std::fmt::Debug for FrameRead {
 
 /// Like [`read_node`], but a frame that decrypts and does not decode is
 /// returned for capture instead of ending the caller's window, as `listen`
-/// does. Login and handshake keep [`read_node`]: their reply must decode.
+/// does. A `stream_end` control consumes the channel and is returned for capture;
+/// callers must end their window. Login/handshake keep [`read_node`], which
+/// reports that control as peer closure because no store is supplied here.
 pub async fn read_frame<S: AsyncRead + AsyncWrite + Unpin>(
     channel: &mut EncryptedConnection<S>,
 ) -> Result<FrameRead, TransportError> {
@@ -496,10 +506,15 @@ pub async fn read_frame<S: AsyncRead + AsyncWrite + Unpin>(
         .ok_or_else(|| error("EOF awaiting stanza"))?;
     Ok(match super::inbox::decode_frame(&frame) {
         Ok(node) => FrameRead::Node(node),
-        Err(codec) => FrameRead::Undecodable {
-            frame: frame.to_vec(),
-            class: codec.class(),
-        },
+        Err(codec) => {
+            if codec == crate::binary::CodecError::StreamEnd {
+                channel.close();
+            }
+            FrameRead::Undecodable {
+                frame: frame.to_vec(),
+                class: codec.class(),
+            }
+        }
     })
 }
 
@@ -1700,6 +1715,9 @@ fn captured_wait_node(
         FrameRead::Node(node) => Ok(node),
         FrameRead::Undecodable { frame, class } => {
             super::inbox::preserve_undecodable(store, &frame, class, None)?;
+            if class == "stream_end" {
+                return Err(TransportError::PeerClosed.into());
+            }
             Err(crate::Error::invalid(
                 "comparison_wait",
                 "undecodable decrypted frame captured; response outcome unknown; no automatic retry",
@@ -3308,6 +3326,81 @@ mod waited_reply_tests {
 mod captured_wait_tests {
     use super::*;
     use crate::store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource, Table};
+
+    #[tokio::test]
+    async fn captured_stream_end_stops_before_matching_reply_and_preserves_uncertainty() {
+        for compressed in [false, true] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("stream-end.redb");
+            let open = || {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: crate::model::ids::AccountId::new("fixture").unwrap(),
+                    key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                        [9; 32],
+                    ))),
+                    create: true,
+                })
+                .unwrap()
+            };
+            let store = open();
+            let held =
+                serde_json::json!({"status":"outcome_unknown","wire_id":"held","wire":[1,2,3]});
+            store
+                .write(|tx| tx.put_json(Table::Checkpoints, b"held", 1, &held))
+                .unwrap();
+            let frame = if compressed {
+                let mut bytes = vec![2];
+                bytes.extend(miniz_oxide::deflate::compress_to_vec_zlib(&[0xF8, 1, 2], 6));
+                bytes
+            } else {
+                vec![0, 0xF8, 1, 2]
+            };
+            let error = super::super::inbox::decode_frame(&frame).unwrap_err();
+            assert_eq!(error.class(), "stream_end");
+            let mut frames = std::collections::VecDeque::from([
+                FrameRead::Undecodable {
+                    frame: frame.clone(),
+                    class: error.class(),
+                },
+                FrameRead::Node(Node::new("ack").attr("id", "held")),
+            ]);
+            let reads = std::cell::Cell::new(0);
+            let result = wait_for_observed(
+                async || {
+                    reads.set(reads.get() + 1);
+                    captured_wait_node(&store, frames.pop_front().unwrap())
+                },
+                |node| preserve_waited_node(&store, node),
+                "ack",
+                "held",
+                tokio::time::Instant::now() + Duration::from_secs(1),
+            )
+            .await;
+            assert!(matches!(
+                result,
+                Err(crate::Error::Transport(TransportError::PeerClosed))
+            ));
+            assert_eq!(reads.get(), 1);
+            assert_eq!(frames.len(), 1);
+            let captures = super::super::inbox::undecodable_frames(&store).unwrap();
+            assert_eq!(captures.len(), 1);
+            assert_eq!(captures[0].class, "stream_end");
+            let key = captures[0].capture.clone();
+            drop(store);
+            let reopened = open();
+            let saved: serde_json::Value = reopened
+                .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
+                .unwrap()
+                .unwrap();
+            assert_eq!(saved["frame"], serde_json::json!(frame));
+            let unchanged: serde_json::Value = reopened
+                .read(|tx| tx.get_json(Table::Checkpoints, b"held", 1))
+                .unwrap()
+                .unwrap();
+            assert_eq!(unchanged, held);
+        }
+    }
 
     #[test]
     fn call_ack_known_null_sender_precedes_class_field_checks() {

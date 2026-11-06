@@ -373,8 +373,8 @@ pub(crate) struct NodeLink {
 /// One item from the reader task.
 pub(crate) enum Inbound {
     Node(Node),
-    /// A frame that decrypted, so the stream is intact, but whose payload did
-    /// not unpack or decode. It carries the decrypted frame for capture, a
+    /// A decrypted frame that is not an ordinary node. It carries the raw
+    /// frame for capture (including known `stream_end` control), a
     /// fixed error class and, when readable, the stanza's description, so a
     /// terminal stanza still ends the session; there is no ID to acknowledge.
     Undecodable {
@@ -515,18 +515,45 @@ impl Drop for LinkTasks {
 fn encode(node: &Node) -> Result<Vec<u8>> {
     Ok(Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(node)?)
 }
-fn link_from(channel: EncryptedConnection<tokio::net::TcpStream>) -> Result<(NodeLink, LinkTasks)> {
+fn link_from(
+    channel: EncryptedConnection<tokio::net::TcpStream>,
+    store: Arc<ProtocolStore>,
+    epoch: ConnectionEpoch,
+) -> Result<(NodeLink, LinkTasks)> {
     let (mut reader, mut writer) = channel.into_split()?;
     let (incoming_tx, incoming_rx) = mpsc::channel(64);
     let reader_task = tokio::spawn(async move {
         loop {
-            let next = match reader.read().await {
+            let mut next = match reader.read().await {
                 Ok(Some(bytes)) => Ok(inbound_from_frame(&bytes)),
                 // Classified as recoverable: the actor may reconnect within its bounds.
                 Ok(None) => Err(Error::Transport(super::TransportError::PeerClosed)),
                 Err(e) => Err(e.into()),
             };
-            let failed = next.is_err();
+            let ended = matches!(
+                &next,
+                Ok(Inbound::Undecodable {
+                    class: "stream_end",
+                    ..
+                })
+            );
+            if ended {
+                // Consume both halves before publishing the terminal capture;
+                // stop further reads and reject later writes. An already-started
+                // write remains uncertain; closure cannot retract its bytes.
+                reader.close();
+                // The actor may already be returning from a failed earlier
+                // write. Preserve this control before queue publication so it
+                // cannot be lost with the receiver. The actor capture is idempotent.
+                if let Ok(Inbound::Undecodable { frame, class, .. }) = &next
+                    && let Err(error) =
+                        super::inbox::preserve_undecodable(&store, frame, class, Some(epoch))
+                {
+                    tracing::warn!("stream-end capture failed; epoch remains closed");
+                    next = Err(error);
+                }
+            }
+            let failed = next.is_err() || ended;
             if incoming_tx.send(next).await.is_err() || failed {
                 break;
             }
@@ -579,7 +606,7 @@ pub async fn run(
 ) -> Result<()> {
     let channel = connect(&store, &config, epoch).await?;
     // Abort-on-drop also covers callers cancelling this whole future.
-    let (link, _tasks) = link_from(channel)?;
+    let (link, _tasks) = link_from(channel, store.clone(), epoch)?;
     drive(
         Session {
             store,
@@ -876,6 +903,11 @@ pub(crate) async fn drive(
                     // decode error is not traced.
                     Inbound::Undecodable { frame, class, description } => {
                         super::inbox::preserve_undecodable(&store, &frame, class, Some(epoch))?;
+                        if class == "stream_end" {
+                            // Native 1s2 exits via C2o(-1). Keep existing peer-
+                            // close recovery classification; no replay authority.
+                            return Err(Error::Transport(super::TransportError::PeerClosed));
+                        }
                         match description.as_deref() {
                             // The server ended the session, as with a decodable
                             // one below: never reconnect into a refusal.
@@ -3862,6 +3894,73 @@ mod tests {
         .await;
         let err = fake.finished().await.unwrap_err();
         assert!(!err.is_recoverable_by_reconnect(), "{err:?}");
+    }
+
+    #[tokio::test]
+    async fn root_stream_end_is_captured_before_following_ping_without_ack() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("stream-end.redb");
+        let store = open(&path);
+        queue_read_receipt(&store, "held-before-end");
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let (receipt, written) = fake.written().await;
+        let root = receipt
+            .get_attr("id")
+            .and_then(|v| v.as_text())
+            .unwrap()
+            .to_owned();
+        written.send(Ok(())).unwrap();
+        assert_eq!(receipt_status(&store, "held-before-end"), "outcome_unknown");
+        let frame = [0, 0xF8, 1, 2];
+        fake.to_worker
+            .try_send(Ok(inbound_from_frame(&frame)))
+            .unwrap();
+        fake.to_worker
+            .try_send(Ok(Inbound::Node(
+                Node::new("ack")
+                    .attr("id", root)
+                    .attr("class", "receipt")
+                    .attr("type", "read")
+                    .attr("from", peer()),
+            )))
+            .unwrap();
+        fake.to_worker
+            .try_send(Ok(Inbound::Node(
+                Node::new("iq")
+                    .attr("id", "following-ping")
+                    .attr("type", "get")
+                    .attr("xmlns", "urn:xmpp:ping"),
+            )))
+            .unwrap();
+        let result = tokio::time::timeout(Duration::from_secs(1), &mut fake.task)
+            .await
+            .expect("stream end must stop without another response")
+            .unwrap();
+        assert!(matches!(
+            result,
+            Err(Error::Transport(TransportError::PeerClosed))
+        ));
+        assert!(matches!(
+            fake.from_worker.try_recv(),
+            Err(mpsc::error::TryRecvError::Disconnected)
+        ));
+        let captures = super::super::inbox::undecodable_frames(&store).unwrap();
+        assert_eq!(captures.len(), 1);
+        assert_eq!(captures[0].class, "stream_end");
+        assert_eq!(captures[0].bytes, frame.len());
+        assert_eq!(receipt_status(&store, "held-before-end"), "outcome_unknown");
+        drop(fake);
+        drop(store);
+        let reopened = open(&path);
+        assert_eq!(
+            receipt_status(&reopened, "held-before-end"),
+            "outcome_unknown"
+        );
+        let mut next = start(&reopened, false, None);
+        next.activate().await;
+        next.nothing_written(Duration::from_millis(100)).await;
+        next.stop_cleanly().await;
     }
 
     #[tokio::test]

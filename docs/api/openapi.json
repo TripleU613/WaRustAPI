@@ -18309,7 +18309,21 @@
     "x-transport": false,
     "x-live": false,
     "x-library": [],
-    "description": "Pinned static xtask research identifies native root descriptiontoken2 -> null -> readerC2o(-1)/return, with concrete1lY/0ZJ logout/disconnect reporting. Coordinated Rust actor/low-level/CLI termination remains unimplemented; textual name checks and existing terminal-error tests do not establish parity. Capture/uncertainty/no-following-I/O regressions required; full reconnect/backoff authority untraced. No runtime fix, new refusal policy or live operation claimed.",
+    "description": "Pinned static xtask research identifies native root descriptiontoken2 -> null -> readerC2o(-1)/return, with concrete1lY/0ZJ logout/disconnect reporting. Historical implementation gap is now followed by x-stream-end-runtime capture/termination handling; textual name checks alone do not establish parity. Capture/uncertainty/no-following-I/O regressions required; full reconnect/backoff authority untraced. No runtime fix, new refusal policy or live operation claimed.",
     "evidence": "docs/protocol/node-serializer.md#root-stream-end-token-requires-coordinated-receive-termination-2026-11-06"
+  },
+  "x-stream-end-runtime": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [
+      "whatsapp_api::binary::CodecError",
+      "whatsapp_api::binary::Decoder",
+      "whatsapp_api::transport::messaging::read_frame",
+      "whatsapp_api::transport::messaging::read_node",
+      "whatsapp_api::transport::inbox::undecodable_frames"
+    ],
+    "description": "Rawroot LIST_EMPTY/LIST_8/LIST_16 descriptiontoken2 is publicCodecError::StreamEnd, classstream_end. Reader consumes split epoch and preserves exact authenticated frame before queue publication, surviving an actor exit on an earlier write failure; actor capture is idempotent. This stops further reads/later writes; captured waits and CLI windows preserve then stop. read_frame consumes channel and returns legacyUndecodable carrier withstream_end class; no-store read_node returnsPeerClosed without persistence. Existing peer-close reconnect classification retained, with no replay/settlement authority. Literal failing-before, compressed capture, real receipt uncertainty/reopen and local encrypted-record controls retained. Already-started writes remain uncertain; native full reconnect/backoff/nested control parity unverified. No live account operation.",
+    "evidence": "docs/protocol/node-serializer.md#root-stream-end-captures-and-consumes-the-receive-epoch-2026-11-06"
   }
 }

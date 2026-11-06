@@ -177,6 +177,10 @@ impl<S: AsyncRead + AsyncWrite + Unpin> EncryptedConnection<S> {
             },
         ))
     }
+    pub(crate) fn close(&mut self) {
+        self.inner = None;
+    }
+
     /// Send one encrypted binary record. An error permanently consumes the channel.
     pub async fn write(&mut self, plaintext: &[u8]) -> Result<(), TransportError> {
         let (mut socket, mut noise) = self.inner.take().ok_or(TransportError::Closed)?;
@@ -251,6 +255,12 @@ impl<S> std::fmt::Debug for EncryptedWriter<S> {
     }
 }
 impl<S: AsyncRead + AsyncWrite + Unpin> EncryptedReader<S> {
+    pub(crate) fn close(&mut self) {
+        self.shared
+            .failed
+            .store(true, std::sync::atomic::Ordering::Release);
+    }
+
     /// Read one record. Cancellation closes the epoch, including its writer.
     pub async fn read(&mut self) -> Result<Option<Zeroizing<Vec<u8>>>, TransportError> {
         let mut guard = InFlight::new(&self.shared)?;
@@ -359,6 +369,7 @@ mod tests {
         Exchange,
         CancelRead,
         PartialWrite,
+        StreamEnd,
     }
 
     async fn exchange(wrong_root: bool, split: bool, record_case: RecordCase) {
@@ -456,7 +467,12 @@ mod tests {
             let incoming = reader.read_frame(&mut server).await.unwrap().unwrap();
             let plain = transport.decrypt(&incoming).unwrap();
             assert_eq!(plain.as_slice(), b"local record fixture");
-            let buf = transport.encrypt(b"reply").unwrap();
+            let reply: &[u8] = if matches!(record_case, RecordCase::StreamEnd) {
+                &[0, 0xF8, 1, 2]
+            } else {
+                b"reply"
+            };
+            let buf = transport.encrypt(reply).unwrap();
             server
                 .write_all(&codec.encode(&buf, None).unwrap())
                 .await
@@ -498,6 +514,23 @@ mod tests {
                     writer.write(b"closed").await,
                     Err(TransportError::Closed)
                 ));
+            } else if matches!(record_case, RecordCase::StreamEnd) {
+                channel.write(b"local record fixture").await.unwrap();
+                let frame = super::super::messaging::read_frame(&mut channel)
+                    .await
+                    .unwrap();
+                assert!(matches!(
+                    frame,
+                    super::super::messaging::FrameRead::Undecodable {
+                        class: "stream_end",
+                        ..
+                    }
+                ));
+                assert!(matches!(
+                    channel.write(b"after end").await,
+                    Err(TransportError::Closed)
+                ));
+                assert!(matches!(channel.read().await, Err(TransportError::Closed)));
             } else if matches!(record_case, RecordCase::PartialWrite) {
                 use crate::store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource, Table};
                 let dir = tempfile::tempdir().unwrap();
@@ -572,6 +605,11 @@ mod tests {
             }
         }
         peer.await.unwrap();
+    }
+
+    #[tokio::test]
+    async fn encrypted_root_stream_end_consumes_low_level_channel() {
+        exchange(false, false, RecordCase::StreamEnd).await;
     }
 
     #[tokio::test]

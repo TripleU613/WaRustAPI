@@ -275,6 +275,19 @@ mod tests {
         }
         assert_eq!(entries.len(), 235 + 4 * 256);
         for (wire, token) in entries {
+            if wire == [248, 1, 2] {
+                // APK 43.72 123.A01: root token2 is control, not a node.
+                assert_eq!(
+                    Decoder::new(&wire, dictionary, &Limits::default()).decode_node(),
+                    Err(crate::binary::CodecError::StreamEnd)
+                );
+                assert_eq!(token, "xmlstreamend");
+                assert_eq!(
+                    Encoder::new(dictionary).encode(&Node::new(token)).unwrap(),
+                    [vec![0], wire].concat()
+                );
+                continue;
+            }
             let node = Decoder::new(&wire, dictionary, &Limits::default())
                 .decode_node()
                 .unwrap_or_else(|error| panic!("{wire:?}: {error}"));

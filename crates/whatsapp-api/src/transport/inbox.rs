@@ -581,14 +581,15 @@ struct StoredUndecodable {
     observed_at: crate::model::time::Timestamp,
 }
 
-/// One captured frame the receive loop could not decode. Redacted: the
+/// One captured frame that is not an ordinary decoded node, including the
+/// `stream_end` control class. Redacted: the
 /// capture key is a digest of the frame; no frame bytes, stanza content or
 /// address are returned.
 #[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct UndecodableFrame {
     /// `inbound-undecodable:sha256:<digest of the decrypted frame>`.
     pub capture: String,
-    /// Fixed error class when it was captured (`CodecError::class`).
+    /// Fixed class when captured (`CodecError::class`), including `stream_end`.
     pub class: String,
     /// Decrypted frame length in bytes, before inflation.
     pub bytes: usize,

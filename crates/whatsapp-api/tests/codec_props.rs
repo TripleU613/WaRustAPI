@@ -119,12 +119,17 @@ proptest! {
         let limits = Limits::default();
         let encoded = Encoder::new(dict()).encode(&node).unwrap();
         let payload = unpack_frame_payload(&encoded, &limits).unwrap();
-        let decoded = Decoder::new(&payload, dict(), &limits).decode_node().unwrap();
-        // Token/packed text content decodes as Text; raw text as Bytes. Both
-        // are equivalent on the wire, so compare after normalising to bytes.
-        let lhs = normalise(&node);
-        let rhs = normalise(&decoded);
-        prop_assert_eq!(lhs, rhs);
+        let decoded = Decoder::new(&payload, dict(), &limits).decode_node();
+        if node.description == "xmlstreamend" {
+            // Root token2 terminates the stream; it is not an ordinary node.
+            prop_assert_eq!(decoded, Err(whatsapp_api::binary::CodecError::StreamEnd));
+        } else {
+            let decoded = decoded.unwrap();
+            // The text model canonically serializes as byte content.
+            let lhs = normalise(&node);
+            let rhs = normalise(&decoded);
+            prop_assert_eq!(lhs, rhs);
+        }
     }
 
     #[test]

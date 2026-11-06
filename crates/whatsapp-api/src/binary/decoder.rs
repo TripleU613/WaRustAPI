@@ -66,6 +66,12 @@ impl<'a> Decoder<'a> {
 
     /// Decode exactly one node, rejecting trailing bytes.
     pub fn decode_node(mut self) -> Result<Node, CodecError> {
+        // APK 43.72 123.A01 0018..0022 returns null for root token2,
+        // before ordinary count validation. 1s2.run then exits the reader.
+        // Evidence: docs/protocol/apk/2.26.43.72-stream-end/README.md.
+        if matches!(self.data, [0, 2, ..] | [248, _, 2, ..] | [249, _, _, 2, ..]) {
+            return Err(CodecError::StreamEnd);
+        }
         let node = self.read_node(0)?;
         let remaining = self.data.len() - self.pos;
         if remaining != 0 {
