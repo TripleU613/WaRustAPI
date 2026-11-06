@@ -4207,3 +4207,12 @@ tampering for result/error and a wrong consumed-public hash. Existing missing-ro
 refusal, consumed-before-ACK success, reopen and uncertain-no-replay controls
 remain. Synthetic fixture restoration only continues independent controls;
 production does not repair reservations to make replies pass. No live operation.
+
+### Legacy upload public identity gap (2026-11-05)
+
+**Confirmed local, open:** a synthetic same-ID valid legacy key replacement
+was accepted by upload settlement at 9b26f558. Direct and group receive delete
+legacy rows atomically but retain no consumed-public fingerprint. Full
+reproducer, source path analysis and required fix matrix are retained in
+[the audit](legacy-prekey-publication-binding.md). KEM binding does not cover
+legacy keys. No live operation or new runtime guarantee.

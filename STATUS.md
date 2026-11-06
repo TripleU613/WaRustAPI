@@ -1,3 +1,8 @@
+Open legacy upload binding defect: a synthetic same-ID valid replacement was
+acknowledged. Direct/group consume-before-ACK requires atomic public-identity
+evidence; the existing KEM fix does not cover legacy keys.
+[Reproducer and fix requirements](docs/protocol/legacy-prekey-publication-binding.md).
+
 KEM upload settlement now binds accepted replies to reserved public-key
 fingerprints, including consumed-before-ACK markers. Same IDs with replacement
 keys or changed durable bindings cannot mark material uploaded. Historical
