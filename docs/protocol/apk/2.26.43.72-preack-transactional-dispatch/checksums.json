@@ -1,0 +1,26 @@
+{
+  "README.md": {
+    "bytes": 3957,
+    "sha256": "bca9442b571723cc0178583168530b71d61bee44f5f25710ba3c5446056dc5a7"
+  },
+  "ack-dispatch.txt": {
+    "bytes": 3043,
+    "sha256": "e597f6e52c5a10f4e2c2fa9a256c9deca63ba03aa46660ff4094d66b321d43d5"
+  },
+  "ack-key-selection.txt": {
+    "bytes": 1466,
+    "sha256": "2562f8a27b570822e80e843c083dc05fe8eb61f5b2075e7dfe31707e344c9c3f"
+  },
+  "disk-write-coroutine.txt": {
+    "bytes": 38775,
+    "sha256": "7beffd046ecd142cc4367ec828a0ddb08790b25f17f578a3462ace080471ea90"
+  },
+  "preack-conversion.txt": {
+    "bytes": 1982,
+    "sha256": "90a35e8c655856191b784ce3f6ec3d98d668a517f60c77c409f6b7bfbf120706"
+  },
+  "stanza-persistence.txt": {
+    "bytes": 33495,
+    "sha256": "a46969fca45e587691b25251878be673800acf95cd530796c7df696654c0d8b4"
+  }
+}

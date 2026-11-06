@@ -17233,5 +17233,12 @@
     "x-live": false,
     "description": "low_count_ack omits to when from is absent, matching selected native frozen-key/final-writer path; parsed source keeps existing ack_address routing. Explicit source parse failure returns InvalidInput and actor captures without ACK/upload while receive continues. This replaces fabricated server fallback. Red/green actor regression checks omitted to on PQ-first with no legacy upload; malformed-source and valid legacy upload controls remain. Native ACK-after-work ordering remains unported; no retry or new source authority is introduced.",
     "evidence": "docs/protocol/apk/2.26.43.72-prekey-count-ack-source/README.md"
+  },
+  "x-preack-transactional-dispatch-audit": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Static APK2.26.43.72 Flr selector7 trace establishes conditional selected-stanza and pre-ACK persistence before ACK admission. Alternate path lacks explicit outer pre-ACK insertion. Count-specific branch selection, crash replay and Rust queue port remain unimplemented.",
+    "evidence": "docs/protocol/apk/2.26.43.72-preack-transactional-dispatch/README.md"
   }
 }

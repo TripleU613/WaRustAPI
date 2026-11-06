@@ -7506,3 +7506,16 @@ invalid source before ACK/upload. Red/green actor coverage checks source-less
 PQ no-upload and malformed-source capture/receive continuation; valid legacy
 upload controls remain. Native ACK-after-work timing remains unported.
 [Complete deferred chain, wire proof and limits](apk/2.26.43.72-prekey-count-ack-source/README.md).
+
+### Transactional stanza-to-ACK dispatch (2026-11-05)
+
+**Confirmed static, APK2.26.43.72:** Flr selector7 has a conditional outer
+transaction that persists selected stanzas and computed pre-ACKs before
+Euj.A02 send admission. A thrown outer close propagates before that send call.
+The alternate branch persists stanzas without this explicit outer pre-ACK
+insertion. Both operate on a filtered return list, not all captured input;
+A0I is set after send admission returns, not after server confirmation.
+[Five exact methods, offsets and limitations](apk/2.26.43.72-preack-transactional-dispatch/README.md).
+This closes the Flr insertion-caller gap, not effective configuration,
+count-specific bulk membership, crash replay or upload/socket ordering.
+No Rust runtime behavior or live account operation changed.

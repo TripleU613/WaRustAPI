@@ -1,0 +1,30 @@
+
+# class: LX/Euj;
+# extends: Ljava/lang/Object;
+
+.method private A00(LLJ)  # .registers 11
+    # full signature: LX/Euj;->A00(LX/ElB;J)LX/Eoh;
+    0000..0004  iget-object  v1, v8, LX/ElB;->A01:LX/1k3;
+    0004..0008  iget-object  v3, v8, LX/ElB;->A02:Ljava/lang/Integer;
+    0008..000c  iget-object  v4, v8, LX/ElB;->A03:Ljava/lang/Integer;
+    000c..0010  iget-object  v2, v1, LX/1k3;->A09:LX/0Tp;
+    0010..0014  if-nez  v2, +0x4
+    0014..0016  const/4  v0, #0x0
+    0016..0018  return-object  v0
+    0018..001c  iget-object  v0, v7, LX/Euj;->A02:Ljava/util/Map;
+    001c..0020  iget-object  v1, v1, LX/1k3;->A06:LX/1kz;
+    0020..0026  invoke-interface  {v0, v1}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    0026..0028  move-result-object  v0
+    0028..002c  check-cast  v0, LX/FuW;
+    002c..0030  if-eqz  v0, +0xa
+    0030..0034  iget-object  v1, v8, LX/ElB;->A00:Landroid/os/Bundle;
+    0034..0036  move-wide  v5, v9
+    0036..003c  invoke-interface/range  {v0..v6}, LX/FuW;->B8b(Landroid/os/Bundle;LX/0Tp;Ljava/lang/Integer;Ljava/lang/Integer;J)LX/Eoh;
+    003c..003e  move-result-object  v0
+    003e..0040  return-object  v0
+    0040..0044  const-string  v0, "StanzaAckGenerator not found for "
+    0044..004a  invoke-static  {v1, v0}, LX/DBh;->A0U(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    004a..004c  move-result-object  v0
+    004c..004e  throw  v0
+    # exception table: 0 try range(s)
+.end method

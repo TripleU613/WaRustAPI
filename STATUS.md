@@ -1,3 +1,9 @@
+Confirmed another native ACK persistence boundary: Flr selector7 can persist
+selected stanzas and pre-ACKs before ACK send admission, propagating outer-close
+failures before send. The alternate branch and selection limits are retained in
+[the audit](docs/protocol/apk/2.26.43.72-preack-transactional-dispatch/README.md).
+Count-specific branch selection and Rust queue parity remain open; offline research only.
+
 Count ACKs no longer invent a server destination: missing from omits to;
 explicit parse failure is refused before ACK/upload. Actor regression covers
 source-less PQ and malformed source; native ACK timing remains unported.

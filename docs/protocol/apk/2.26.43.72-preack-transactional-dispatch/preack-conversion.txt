@@ -1,0 +1,41 @@
+
+# class: LX/Euj;
+# extends: Ljava/lang/Object;
+
+.method public A01(LL)  # .registers 10
+    # full signature: LX/Euj;->A01(Ljava/util/List;)Ljava/util/List;
+    0000..0006  invoke-static  {}, LX/1Xl;->A18()Ljava/util/ArrayList;
+    0006..0008  move-result-object  v6
+    0008..000e  invoke-interface  {v9}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    000e..0010  move-result-object  v7
+    0010..0016  invoke-interface  {v7}, Ljava/util/Iterator;->hasNext()Z
+    0016..0018  move-result  v0
+    0018..001c  if-eqz  v0, +0x2f
+    001c..0022  invoke-interface  {v7}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0022..0024  move-result-object  v5
+    0024..0028  check-cast  v5, LX/ElB;
+    0028..002c  const-wide/16  v0, #0xfffe (-2)
+    002c..002e  const/4  v4, #0x0
+    002e..0034  invoke-direct  {v8, v5, v0, v1}, LX/Euj;->A00(LX/ElB;J)LX/Eoh;
+    0034..0036  move-result-object  v1
+    0036..003a  if-eqz  v1, +0x1a
+    003a..003e  iget-object  v0, v1, LX/Eoh;->A04:LX/0Tp;
+    003e..0044  invoke-static  {v0, v1}, LX/F3e;->A05(LX/0Tp;LX/Eoh;)LX/0Tp;
+    0044..0046  move-result-object  v3
+    0046..004a  iget-object  v0, v5, LX/ElB;->A01:LX/1k3;
+    004a..004e  iget-wide  v1, v0, LX/1k3;->A0C:J
+    004e..0052  new-instance  v0, LX/1vZ;
+    0052..0058  invoke-direct  {v0, v3, v4, v1, v2}, LX/1vZ;-><init>(LX/0Tp;Ljava/lang/Long;J)V
+    0058..005a  goto  +0x8
+    005a..005c  move-exception  v1
+    005c..0060  const-string  v0, "StanzaAckSender/computePreacks/corrupt-stream-error "
+    0060..0066  invoke-static  {v5, v0, v1}, LX/DBh;->A1D(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/Throwable;)V
+    0066..0068  goto  +0x2
+    0068..006a  move-object  v4, v0
+    006a..006e  if-eqz  v4, -0x2d
+    006e..0074  invoke-virtual  {v6, v4}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0074..0076  goto  -0x32
+    0076..0078  return-object  v6
+    # exception table: 1 try range(s)
+    # catch LX/LIL; code_units 0017..002d -> 002d
+.end method

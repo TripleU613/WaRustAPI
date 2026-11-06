@@ -1,0 +1,58 @@
+
+# class: LX/Euj;
+# extends: Ljava/lang/Object;
+
+.method public A02(VLZZ)  # .registers 12
+    # full signature: LX/Euj;->A02(Ljava/util/List;ZZ)V
+    0000..0002  const/4  v4, #0x0
+    0002..0006  const/16  v1, #0x4e3
+    0006..000a  iget-object  v0, v8, LX/Euj;->A01:LX/05a;
+    000a..0010  invoke-static  {v0, v1}, LX/2LA;->A0G(LX/05a;I)LX/05a;
+    0010..0012  move-result-object  v7
+    0012..0018  invoke-interface  {v9}, Ljava/util/List;->size()I
+    0018..001e  invoke-interface  {v9}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    001e..0020  move-result-object  v6
+    0020..0026  invoke-interface  {v6}, Ljava/util/Iterator;->hasNext()Z
+    0026..0028  move-result  v0
+    0028..002c  if-eqz  v0, +0x4a
+    002c..0032  invoke-interface  {v6}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0032..0034  move-result-object  v2
+    0034..0038  check-cast  v2, LX/ElB;
+    0038..003c  iget-object  v5, v2, LX/ElB;->A01:LX/1k3;
+    003c..0040  if-eqz  v10, +0x3
+    0040..0042  goto  +0x4
+    0042..0046  const-wide/16  v0, #0xfffe (-2)
+    0046..0048  goto  +0x3
+    0048..004c  iget-wide  v0, v5, LX/1k3;->A0C:J
+    004c..0052  invoke-direct  {v8, v2, v0, v1}, LX/Euj;->A00(LX/ElB;J)LX/Eoh;
+    0052..0054  move-result-object  v3
+    0054..0058  if-eqz  v3, -0x1a
+    0058..005c  iget-object  v0, v8, LX/Euj;->A00:LX/05a;
+    005c..0062  invoke-static  {v0}, LX/B1y;->A0N(LX/05a;)LX/0Sf;
+    0062..0064  move-result-object  v2
+    0064..0068  iget-object  v1, v2, LX/0Sf;->A04:LX/08Y;
+    0068..006c  iget-object  v0, v2, LX/0Sf;->A05:LX/0B0;
+    006c..0072  invoke-static  {v1, v0, v3}, LX/1i8;->A03(LX/08Y;LX/0B0;LX/Eoh;)Landroid/os/Message;
+    0072..0074  move-result-object  v1
+    0074..007a  invoke-static  {v1}, LX/00l;->A05(Ljava/lang/Object;)V
+    007a..007c  const/4  v0, #0x1
+    007c..0082  invoke-static  {v1, v2, v0, v11}, LX/0Sf;->A09(Landroid/os/Message;LX/0Sf;ZZ)Z
+    0082..0084  goto  -0x31
+    0084..0086  move-exception  v1
+    0086..008a  const-string  v0, "StanzaAckSender/sendAcks/corrupt-stream-error/invalid stanza="
+    008a..0090  invoke-static  {v5, v0, v1}, LX/DBh;->A1D(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/Throwable;)V
+    0090..0096  invoke-static  {v7}, LX/2L9;->A0V(LX/05a;)LX/0B0;
+    0096..0098  move-result-object  v3
+    0098..009e  invoke-virtual  {v1}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    009e..00a0  move-result-object  v1
+    00a0..00a4  const-string  v0, "source=StanzaAckSender stanzaKey generation fails, msg="
+    00a4..00aa  invoke-static  {v0, v1}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    00aa..00ac  move-result-object  v2
+    00ac..00b0  const-string  v1, "origin=CCQ"
+    00b0..00b4  const-string  v0, "CorruptStreamException"
+    00b4..00ba  invoke-virtual  {v3, v0, v2, v4, v1}, LX/0B0;->A0i(Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;)V
+    00ba..00bc  goto  -0x4d
+    00bc..00be  return-void
+    # exception table: 1 try range(s)
+    # catch LX/LIL; code_units 0024..0042 -> 0042
+.end method
