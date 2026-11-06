@@ -1,3 +1,9 @@
+2026-11-06 — **Media raw-body and fixed-length gates distinguished.**
+
+Both transport gates derive from0x666; disabling them does not select multipart.
+[Exact branches, constructors, complete REA and remaining provider inputs](media-network-outcomes.md#raw-body-and-fixed-length-gates-are-separate-2026-11-06).
+No proven mandatory framing mismatch or Rust behavior change; no live operation.
+
 2026-11-06 — **Original ordinary-upload extra-header map traced.**
 
 Ordinary message assembly supplies null; selected factories do likewise and

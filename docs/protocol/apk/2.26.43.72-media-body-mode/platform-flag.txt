@@ -1,0 +1,18 @@
+
+# class: LX/0VW;
+# extends: Ljava/lang/Object;
+
+.method public A01(Z)  # .registers 2
+    # full signature: LX/0VW;->A01()Z
+    0000..0002  monitor-enter
+    0002..0006  iget-boolean  v0, v1, LX/0VW;->A01:Z
+    0006..000a  xor-int/lit8  v0, v0, #0x1
+    000a..000c  monitor-exit
+    000c..000e  return  v0
+    000e..0010  move-exception  v0
+    0010..0012  monitor-exit
+    0012..0014  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0001..0003 -> 0007
+    # catch <all> code_units 0008..0009 -> 0007
+.end method

@@ -1,0 +1,30 @@
+{
+  "README.md": {
+    "bytes": 5332,
+    "sha256": "8d2feeeb1d21d42b5eec50be2f00446b63ffa50231fe4b280d11446a34d5a887"
+  },
+  "factory-ctor.txt": {
+    "bytes": 2909,
+    "sha256": "5a850e7dd5cd3f740fabe67554204737458ad49569c41d9b49f31e0ccdb0ff51"
+  },
+  "fixed-flag-writes.txt": {
+    "bytes": 79,
+    "sha256": "ccdd5b9b171c4c7a91e0c3c1358529bbbc7394a3a037edef5d7257982cdfa187"
+  },
+  "flag-reader.txt": {
+    "bytes": 423,
+    "sha256": "b8825622a32d0d749d2758c26d10c6271b9c8026c55a6f936af7225b617baa4f"
+  },
+  "platform-flag.txt": {
+    "bytes": 543,
+    "sha256": "fae9a0938fb01212640148b1c045290357aa78c8987233ed9d8b8fea290f6e84"
+  },
+  "tigon-ctor.txt": {
+    "bytes": 3872,
+    "sha256": "d45d9bfaeccbdc803590bf1289ce90ae3f2dbc2a843fe97fb797954385094c3f"
+  },
+  "url-ctor.txt": {
+    "bytes": 1997,
+    "sha256": "82b8fdfe6329c71a445ce331812b80294761cb85f7ed306b5e179a92b8978230"
+  }
+}

@@ -1,0 +1,77 @@
+
+# class: LX/JAT;
+# extends: LX/K2k;
+
+.method public <init>(VLLLLLLLLLLLIZZZ)  # .registers 26
+    # full signature: LX/JAT;-><init>(LX/0Ze;LX/Kif;LX/KjC;LX/K1R;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;IZZZ)V
+    0000..0002  move-object  v3, v11
+    0002..0006  move-object/from16  v7, v17
+    0006..000a  move-object/from16  v8, v18
+    000a..0010  invoke-static  {v7, v8, v11}, LX/1Xm;->A0A(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+    0010..0012  move-object  v5, v13
+    0012..0016  move/from16  v0, v24
+    0016..001a  if-eqz  v24, +0x3
+    001a..001c  const/4  v5, #0x0
+    001c..001e  move-object  v2, v10
+    001e..0020  move-object  v4, v12
+    0020..0022  move-object  v6, v15
+    0022..0026  move/from16  v9, v22
+    0026..002c  invoke-direct/range  {v2..v9}, LX/K2k;-><init>(LX/0Ze;LX/Kif;LX/KjC;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;I)V
+    002c..0030  iput-object  v13, v10, LX/JAT;->A08:LX/KjC;
+    0030..0034  iput-object  v11, v10, LX/JAT;->A07:LX/0Ze;
+    0034..0038  iput-object  v15, v10, LX/JAT;->A0B:Ljava/lang/Integer;
+    0038..003c  iput  v9, v10, LX/JAT;->A00:I
+    003c..0040  move/from16  v1, v23
+    0040..0044  iput-boolean  v1, v10, LX/JAT;->A0G:Z
+    0044..0048  move-object/from16  v1, v19
+    0048..004c  iput-object  v1, v10, LX/JAT;->A0C:Ljava/lang/String;
+    004c..0050  iput-object  v14, v10, LX/JAT;->A09:LX/K1R;
+    0050..0054  iput-boolean  v0, v10, LX/JAT;->A0H:Z
+    0054..0058  move-object/from16  v0, v21
+    0058..005c  iput-object  v0, v10, LX/JAT;->A0E:Ljava/util/Map;
+    005c..0060  move/from16  v0, v25
+    0060..0064  iput-boolean  v0, v10, LX/JAT;->A0J:Z
+    0064..0068  move-object/from16  v0, v16
+    0068..006c  iput-object  v0, v10, LX/JAT;->A0A:Ljava/lang/Integer;
+    006c..0070  move-object/from16  v0, v20
+    0070..0074  iput-object  v0, v10, LX/JAT;->A0D:Ljava/lang/String;
+    0074..007a  invoke-static  {}, LX/1Xl;->A0N()LX/05a;
+    007a..007c  move-result-object  v0
+    007c..0080  iput-object  v0, v10, LX/JAT;->A06:LX/05a;
+    0080..0086  invoke-static  {}, LX/1Xl;->A0O()LX/05a;
+    0086..0088  move-result-object  v0
+    0088..008c  iput-object  v0, v10, LX/JAT;->A02:LX/05a;
+    008c..0092  invoke-static  {v0}, LX/05a;->A00(LX/05a;)LX/00E;
+    0092..0094  move-result-object  v1
+    0094..0098  const/16  v0, #0x5543
+    0098..009e  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    009e..00a0  move-result  v0
+    00a0..00a4  iput-boolean  v0, v10, LX/JAT;->A0I:Z
+    00a4..00a8  iget-object  v0, v10, LX/JAT;->A02:LX/05a;
+    00a8..00ae  invoke-static  {v0}, LX/05a;->A00(LX/05a;)LX/00E;
+    00ae..00b0  move-result-object  v1
+    00b0..00b4  const/16  v0, #0x5e14
+    00b4..00ba  invoke-virtual  {v1, v0}, LX/00E;->A0a(I)I
+    00ba..00bc  move-result  v0
+    00bc..00be  int-to-long  v0, v0
+    00be..00c2  iput-wide  v0, v10, LX/JAT;->A01:J
+    00c2..00c6  const/16  v0, #0xfe0
+    00c6..00cc  invoke-static  {v0}, LX/05W;->A00(I)LX/05a;
+    00cc..00ce  move-result-object  v0
+    00ce..00d2  iput-object  v0, v10, LX/JAT;->A04:LX/05a;
+    00d2..00d6  const/16  v0, #0x21
+    00d6..00dc  invoke-static  {v10, v0}, LX/KWt;->A01(Ljava/lang/Object;I)LX/00q;
+    00dc..00de  move-result-object  v0
+    00de..00e2  iput-object  v0, v10, LX/JAT;->A0F:LX/00p;
+    00e2..00e6  const/16  v0, #0x41de
+    00e6..00ec  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    00ec..00f2  invoke-static  {}, LX/2L7;->A0A()LX/05a;
+    00f2..00f4  move-result-object  v0
+    00f4..00f8  iput-object  v0, v10, LX/JAT;->A05:LX/05a;
+    00f8..00fc  const/16  v0, #0x19e0
+    00fc..0102  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0102..0104  move-result-object  v0
+    0104..0108  iput-object  v0, v10, LX/JAT;->A03:LX/05a;
+    0108..010a  return-void
+    # exception table: 0 try range(s)
+.end method

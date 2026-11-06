@@ -684,3 +684,20 @@ to ordinary uploads. [Full origin censuses, methods, argument binding and REA](a
 binding, newsletter callbacks, backup subsystem and server mandatory checks.
 No runtime behavior changed, new sender or live validation. Next trace is the
 one-shot fixed-length/body-mode selector, which extra-map absence cannot prove.
+
+## Raw body and fixed-length gates are separate 2026-11-06
+
+**Confirmed selected static:** factory15Q snapshots00E.A14(0x666) intoA09,
+then supplies JAS.A0A/JAT.A0G, both controlling their positive-length,
+nonpositive-offset fixed-length setup. Route-bound single-stream raw-body
+selection remains separate. A disabled fixed-length gate does not select
+multipart: exact DEX branches bypass its Content-Type block. JAS uses chunked
+streaming on that raw path; JAT carries offset/length onward without explicitly
+adding Content-Length in this branch. Absence of an explicit header is not
+proof of native-stack framing. [Complete constructors, branch table, REA and
+reproduction](apk/2.26.43.72-media-body-mode/README.md).
+
+Rust's known byte-body POST matches a supported raw shape. Effective0x666 and
+native provider length/framing remain unknown, so complete transfer-mode parity
+is unproven. No guessed multipart/range, Rust behavior change or live operation.
+Next: downstream JAT provider and effective configuration/stream lengths.

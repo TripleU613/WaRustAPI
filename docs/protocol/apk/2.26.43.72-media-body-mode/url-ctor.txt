@@ -1,0 +1,41 @@
+
+# class: LX/JAS;
+# extends: LX/K2k;
+
+.method public <init>(VLLLLLLLLLLLIZZZ)  # .registers 25
+    # full signature: LX/JAS;-><init>(LX/0Ze;LX/Kif;LX/KjC;LX/0lS;LX/K1R;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;IZZZ)V
+    0000..0002  move-object  v1, v9
+    0002..0004  move-object  v2, v10
+    0004..0006  move-object  v3, v11
+    0006..0008  move-object  v4, v12
+    0008..000a  move-object  v5, v15
+    000a..000e  move-object/from16  v6, v16
+    000e..0012  move-object/from16  v7, v17
+    0012..0016  move/from16  v8, v21
+    0016..001c  invoke-direct/range  {v1..v8}, LX/K2k;-><init>(LX/0Ze;LX/Kif;LX/KjC;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;I)V
+    001c..0022  invoke-static  {}, LX/2L9;->A0K()LX/08Y;
+    0022..0024  move-result-object  v0
+    0024..0028  iput-object  v0, v9, LX/JAS;->A02:LX/08Y;
+    0028..002e  invoke-static  {}, LX/IWT;->A0i()LX/1o4;
+    002e..0030  move-result-object  v0
+    0030..0034  iput-object  v0, v9, LX/JAS;->A03:LX/1o4;
+    0034..003a  invoke-static  {}, LX/2L9;->A0f()LX/08q;
+    003a..003c  move-result-object  v0
+    003c..0040  iput-object  v0, v9, LX/JAS;->A04:LX/08q;
+    0040..0044  iput-object  v13, v9, LX/JAS;->A00:LX/0lS;
+    0044..0048  move/from16  v0, v22
+    0048..004c  iput-boolean  v0, v9, LX/JAS;->A01:Z
+    004c..0050  move/from16  v0, v23
+    0050..0054  iput-boolean  v0, v9, LX/JAS;->A09:Z
+    0054..0058  move/from16  v0, v24
+    0058..005c  iput-boolean  v0, v9, LX/JAS;->A0A:Z
+    005c..0060  iput-object  v14, v9, LX/JAS;->A05:LX/K1R;
+    0060..0064  move-object/from16  v0, v18
+    0064..0068  iput-object  v0, v9, LX/JAS;->A06:Ljava/lang/String;
+    0068..006c  move-object/from16  v0, v20
+    006c..0070  iput-object  v0, v9, LX/JAS;->A08:Ljava/util/Map;
+    0070..0074  move-object/from16  v0, v19
+    0074..0078  iput-object  v0, v9, LX/JAS;->A07:Ljava/lang/String;
+    0078..007a  return-void
+    # exception table: 0 try range(s)
+.end method
