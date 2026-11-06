@@ -1,0 +1,26 @@
+
+# class: LX/6pB;
+# extends: Ljava/lang/Object;
+
+.method public A01(VL)  # .registers 5
+    # full signature: LX/6pB;->A01(Ljava/util/Map;)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v4, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  iget-object  v1, v3, LX/6pB;->A02:LX/278;
+    000c..0010  if-eqz  v1, +0x6
+    0010..0012  const/4  v0, #0x3
+    0012..0018  invoke-virtual  {v1, v0}, LX/278;->A00(I)V
+    0018..001c  iget-object  v0, v3, LX/6pB;->A03:LX/0oe;
+    001c..0022  invoke-virtual  {v0, v4}, LX/0oe;->A0R(Ljava/util/Map;)V
+    0022..0026  iget-boolean  v0, v3, LX/6pB;->A01:Z
+    0026..002a  if-eqz  v0, +0x12
+    002a..0030  invoke-interface  {v4}, Ljava/util/Map;->size()I
+    0030..0034  iget-object  v2, v3, LX/6pB;->A00:LX/0iX;
+    0034..0038  if-eqz  v2, +0xb
+    0038..003a  const/4  v1, #0x0
+    003a..003e  new-instance  v0, LX/86y;
+    003e..0044  invoke-direct  {v0, v1, v4}, LX/86y;-><init>(Ljava/lang/Integer;Ljava/util/Map;)V
+    0044..004a  invoke-interface  {v2, v0}, LX/0iX;->AHs(Ljava/lang/Object;)Z
+    004a..004c  return-void
+    # exception table: 0 try range(s)
+.end method

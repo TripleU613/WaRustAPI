@@ -3033,6 +3033,105 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn refused_privacy_setter_holds_fresh_notification_without_ack_after_reopen() {
+        use super::super::{account_privacy, actions};
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("privacy-refused-setter.redb");
+        let store = open(&path);
+        let id = actions::queue(&store, "fixture", "privacy setter", |id| {
+            Ok(Node::new("iq")
+                .attr("id", id)
+                .attr("type", "set")
+                .attr("xmlns", "privacy")
+                .children(vec![Node::new("privacy").children(vec![
+                        Node::new("category")
+                            .attr("name", "readreceipts")
+                            .attr("value", "none"),
+                    ])]))
+        })
+        .unwrap();
+        actions::reserve_pending(&store).unwrap();
+        actions::record_reply(
+            &store,
+            &Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "error")
+                .children(vec![Node::new("error").attr("code", "503")]),
+        )
+        .unwrap();
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        (&mut fake.ready).await.unwrap();
+        let notification = Node::new("notification")
+            .attr("type", "account_sync")
+            .attr("from", "s.whatsapp.net")
+            .attr("id", "HELD-AFTER-REFUSAL")
+            .attr("t", "1700000000")
+            .children(vec![Node::new("privacy").children(vec![
+                    Node::new("category")
+                        .attr("name", "readreceipts")
+                        .attr("value", "all"),
+                ])]);
+        let capture = format!(
+            "inbound:sha256:{}",
+            hex::encode(sha2::Sha256::digest(encode(&notification).unwrap()))
+        );
+        fake.deliver(notification.clone()).await;
+        fake.nothing_written(Duration::from_millis(30)).await;
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                .unwrap()
+                .is_some()
+        );
+        assert!(account_privacy::read_receipts(&store).unwrap().is_none());
+        fake.deliver(
+            Node::new("iq")
+                .attr("id", "AFTER-HELD")
+                .attr("type", "get")
+                .attr("xmlns", "urn:xmpp:ping"),
+        )
+        .await;
+        let (pong, written) = fake.written().await;
+        assert_eq!(pong.description, "iq");
+        // The traced server-ping response omits the request ID.
+        assert!(pong.get_attr("id").is_none());
+        assert_eq!(
+            pong.get_attr("type").and_then(|v| v.as_text()),
+            Some("result")
+        );
+        written.send(Ok(())).unwrap();
+        fake.stop_cleanly().await;
+        drop(store);
+        let store = Arc::new(identity_store(&path));
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        let head = store.journal_head().unwrap();
+        assert!(
+            account_privacy::handle(&store, &notification)
+                .unwrap()
+                .is_none()
+        );
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap(),
+            before
+        );
+        assert_eq!(store.journal_head().unwrap(), head);
+        assert!(account_privacy::read_receipts(&store).unwrap().is_none());
+        assert!(actions::reserve_pending(&store).unwrap().is_empty());
+        let outcome = actions::outcomes(&store)
+            .unwrap()
+            .into_iter()
+            .find(|a| a.id == id)
+            .unwrap();
+        assert_eq!(outcome.status, actions::ActionStatus::Error);
+        assert_eq!(outcome.error_code, Some(503));
+    }
+
+    #[tokio::test]
     async fn unsupported_account_privacy_is_captured_without_ack_or_session_loss() {
         let dir = tempfile::tempdir().unwrap();
         let store = open(&dir.path().join("privacy-unsupported.redb"));

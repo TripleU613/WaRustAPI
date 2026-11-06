@@ -214,17 +214,10 @@ pub(crate) fn handle(store: &ProtocolStore, node: &Node) -> Result<Option<Node>>
                 && request.get_attr("type").and_then(|v| v.as_text()) == Some("set")
                 && request.child("privacy").is_some()
             {
-                // Older generic rows could label an unexpected IQ type as
-                // Error. Only an actual outer refusal discharges this guard.
-                if action.status == super::actions::ActionStatus::Error
-                    && super::actions::view_in_write(tx, &action.id)?
-                        .and_then(|(_, reply, _)| reply)
-                        .is_some_and(|reply| {
-                            reply.get_attr("type").and_then(|v| v.as_text()) == Some("error")
-                        })
-                {
-                    continue;
-                }
+                // APK43.72 0oe.A0P inserts pending 7wp before dispatch and
+                // binds 6pB.A01=false. 8R5.Bvj -> 6pB.A00 then leaves that
+                // pending ownership intact even on a real IQ refusal.
+                // Generic action status alone cannot retire the unowned intent.
                 tracing::warn!(
                     "privacy category retained without ACK: setter reconciliation is unowned"
                 );
@@ -483,10 +476,11 @@ mod tests {
     }
 
     #[test]
-    fn only_a_real_outer_refusal_clears_the_unowned_setter_guard() {
+    fn outer_refusals_do_not_retire_unowned_privacy_setter_intent() {
         for legacy_misclassification in [false, true] {
             let dir = tempfile::tempdir().unwrap();
-            let store = open(&dir.path().join("legacy-setter.redb"));
+            let path = dir.path().join("legacy-setter.redb");
+            let store = open(&path);
             let id = super::super::actions::queue(&store, "fixture", "setter", |id| {
                 Ok(Node::new("iq")
                     .attr("id", id)
@@ -528,15 +522,25 @@ mod tests {
             }
             let before = snapshot(&store);
             let ack = handle(&store, &notification("guard", vec![category("none")])).unwrap();
-            assert_eq!(ack.is_none(), legacy_misclassification);
-            if legacy_misclassification {
-                assert_eq!(snapshot(&store), before);
-            } else {
-                assert_eq!(
-                    read_receipts(&store).unwrap().unwrap().value,
-                    ReadReceiptValue::None
-                );
-            }
+            assert!(ack.is_none());
+            assert_eq!(snapshot(&store), before);
+            assert_eq!(read_receipts(&store).unwrap(), None);
+            let head = store.journal_head().unwrap();
+            drop(store);
+            let store = open(&path);
+            assert!(
+                handle(&store, &notification("guard", vec![category("none")]))
+                    .unwrap()
+                    .is_none()
+            );
+            assert_eq!(snapshot(&store), before);
+            assert_eq!(store.journal_head().unwrap(), head);
+
+            assert!(
+                super::super::actions::reserve_pending(&store)
+                    .unwrap()
+                    .is_empty()
+            );
         }
     }
     #[test]

@@ -1,0 +1,34 @@
+{
+  "README.md": {
+    "bytes": 6784,
+    "sha256": "6781c8e2928ecfd57f8ad270198dafaf3dd031254ca0900cb1a090a5e1fbfd82"
+  },
+  "consumer-error.txt": {
+    "bytes": 652,
+    "sha256": "4e30867e7514ff81c36c083a7b868f52ee4fa3fc5c83c976c6a01e43da262795"
+  },
+  "consumer-flag-refs.txt": {
+    "bytes": 315,
+    "sha256": "8b916e572262f1051450b60380df92cd136db4a9909cae9dbc15c6a73e4a08c2"
+  },
+  "consumer-init.txt": {
+    "bytes": 529,
+    "sha256": "e66c65aacba01eb63e05ac4790e576bfe53b15128c84eed4f018ef5770cc6bdc"
+  },
+  "consumer-success.txt": {
+    "bytes": 1139,
+    "sha256": "41ae1da89851c218c0e7952511f6ba990d06a2eb65d7b86e50e69d25c13e5ec0"
+  },
+  "pending-field-refs.txt": {
+    "bytes": 1178,
+    "sha256": "27c1476bb1682fa1f0f7bbf76c8f696f7a02c03b8acb17124d6fa931d1c7ca84"
+  },
+  "pending-value.txt": {
+    "bytes": 364,
+    "sha256": "a7f2aa86e78223f53801dbbf7edbf73e3234eef8769771049f66ea6791230fc4"
+  },
+  "setter.txt": {
+    "bytes": 6769,
+    "sha256": "edd2b6e10b15c5b48b455853aa06f0312429991beddf231d53971abafabc282c"
+  }
+}

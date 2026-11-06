@@ -1,0 +1,123 @@
+
+# class: LX/0oe;
+# extends: LX/07o;
+
+.method public A0P(VLL)  # .registers 24
+    # full signature: LX/0oe;->A0P(Ljava/lang/String;Ljava/lang/String;)V
+    0000..0004  move-object/from16  v10, v21
+    0004..0008  iget-object  v1, v10, LX/0oe;->A0E:Ljava/util/Map;
+    0008..000c  new-instance  v0, LX/7wp;
+    000c..0010  move-object/from16  v12, v23
+    0010..0016  invoke-direct  {v0, v12}, LX/7wp;-><init>(Ljava/lang/String;)V
+    0016..001a  move-object/from16  v13, v22
+    001a..0020  invoke-interface  {v1, v13, v0}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0020..0024  const/16  v0, #0x42
+    0024..002a  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    002a..002c  move-result-object  v1
+    002c..0030  check-cast  v1, LX/00E;
+    0030..0034  const/16  v0, #0x5c57
+    0034..003a  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    003a..003c  move-result  v0
+    003c..0040  if-eqz  v0, +0x43
+    0040..0044  const-string  v0, "PrivacySettingManager/sendSetPrivacySetting: Using MEX protocol"
+    0044..004a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    004a..004c  const/4  v14, #0x0
+    004c..004e  const/4  v0, #0x0
+    004e..0052  new-instance  v11, LX/6pB;
+    0052..0058  invoke-direct  {v11, v14, v10, v14, v0}, LX/6pB;-><init>(LX/278;LX/0oe;LX/0iX;Z)V
+    0058..005c  iget-object  v0, v10, LX/0oe;->A01:LX/05a;
+    005c..0060  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0060..0066  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0066..0068  move-result-object  v2
+    0068..006c  check-cast  v2, LX/0TR;
+    006c..0070  iget-object  v0, v10, LX/0oe;->A02:LX/05a;
+    0070..0074  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0074..007a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    007a..007c  move-result-object  v1
+    007c..0080  check-cast  v1, LX/021;
+    0080..0082  const/4  v15, #0x5
+    0082..0086  new-instance  v9, LX/8ho;
+    0086..008c  invoke-direct/range  {v9..v15}, LX/8ho;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;LX/0cf;I)V
+    008c..0090  sget-object  v0, LX/02X;->A00:Ljava/lang/Integer;
+    0090..0096  invoke-static  {v0, v1, v9, v2}, LX/0cl;->A02(Ljava/lang/Integer;LX/01z;LX/0AW;LX/0TR;)LX/0dB;
+    0096..009c  invoke-static  {v13}, Ljava/util/Collections;->singletonList(Ljava/lang/Object;)Ljava/util/List;
+    009c..009e  move-result-object  v0
+    009e..00a4  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    00a4..00aa  invoke-virtual  {v10, v0}, LX/0oe;->A0Q(Ljava/util/List;)V
+    00aa..00ae  sget-object  v2, LX/0Kl;->A02:LX/0Kl;
+    00ae..00b0  const/4  v1, #0x2
+    00b0..00b4  new-instance  v0, LX/8OA;
+    00b4..00ba  invoke-direct  {v0, v1}, LX/8OA;-><init>(I)V
+    00ba..00c0  invoke-static  {v10, v2, v0}, LX/07o;->A00(LX/07o;LX/0Kl;LX/0Km;)V
+    00c0..00c2  return-void
+    00c2..00c6  const-string  v0, "PrivacySettingManager/sendSetPrivacySetting: Using SMAX protocol"
+    00c6..00cc  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    00cc..00d0  iget-object  v1, v10, LX/0oe;->A0C:LX/0of;
+    00d0..00d2  const/4  v5, #0x0
+    00d2..00d4  const/4  v9, #0x0
+    00d4..00d8  new-instance  v0, LX/6pB;
+    00d8..00de  invoke-direct  {v0, v5, v10, v5, v9}, LX/6pB;-><init>(LX/278;LX/0oe;LX/0iX;Z)V
+    00de..00e4  invoke-static  {v1}, LX/00T;->A07(LX/06h;)V
+    00e4..00e8  new-instance  v15, LX/8R5;
+    00e8..00ee  invoke-direct  {v15, v0}, LX/8R5;-><init>(LX/6pB;)V
+    00ee..00f4  invoke-static  {}, LX/00T;->A06()V
+    00f4..00f8  const-string  v0, "PrivacySettingsProtocolHelper/sendSetPrivacySettingsRequest"
+    00f8..00fe  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    00fe..0102  iget-object  v14, v15, LX/8R5;->A00:LX/0Sf;
+    0102..0108  invoke-virtual  {v14}, LX/0Sf;->A0G()Ljava/lang/String;
+    0108..010a  move-result-object  v2
+    010a..010c  const/4  v7, #0x2
+    010c..0110  new-array  v4, v7, [LX/0Tl;
+    0110..0114  const-string  v1, "name"
+    0114..0118  new-instance  v0, LX/0Tl;
+    0118..011e  invoke-direct  {v0, v1, v13}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    011e..0122  aput-object  v0, v4, v9
+    0122..0128  const-string/jumbo  v1, "value"
+    0128..012c  new-instance  v0, LX/0Tl;
+    012c..0132  invoke-direct  {v0, v1, v12}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    0132..0134  const/4  v8, #0x1
+    0134..0138  aput-object  v0, v4, v8
+    0138..013c  new-array  v3, v8, [LX/0Tp;
+    013c..0140  const-string  v1, "category"
+    0140..0144  new-instance  v0, LX/0Tp;
+    0144..014a  invoke-direct  {v0, v1, v4}, LX/0Tp;-><init>(Ljava/lang/String;[LX/0Tl;)V
+    014a..014e  aput-object  v0, v3, v9
+    014e..0152  const-string  v6, "privacy"
+    0152..0156  new-instance  v4, LX/0Tp;
+    0156..015c  invoke-direct  {v4, v6, v5, v3}, LX/0Tp;-><init>(Ljava/lang/String;[LX/0Tl;[LX/0Tp;)V
+    015c..015e  const/4  v0, #0x4
+    015e..0162  new-array  v3, v0, [LX/0Tl;
+    0162..0166  sget-object  v5, LX/0mL;->A00:LX/0mL;
+    0166..016c  const-string/jumbo  v1, "to"
+    016c..0170  new-instance  v0, LX/0Tl;
+    0170..0176  invoke-direct  {v0, v5, v1}, LX/0Tl;-><init>(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;)V
+    0176..017a  aput-object  v0, v3, v9
+    017a..0180  const-string/jumbo  v5, "type"
+    0180..0184  const-string  v1, "set"
+    0184..0188  new-instance  v0, LX/0Tl;
+    0188..018e  invoke-direct  {v0, v5, v1}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    018e..0192  aput-object  v0, v3, v8
+    0192..0196  const-string  v1, "id"
+    0196..019a  new-instance  v0, LX/0Tl;
+    019a..01a0  invoke-direct  {v0, v1, v2}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    01a0..01a4  aput-object  v0, v3, v7
+    01a4..01aa  const-string/jumbo  v0, "xmlns"
+    01aa..01ae  new-instance  v1, LX/0Tl;
+    01ae..01b4  invoke-direct  {v1, v0, v6}, LX/0Tl;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    01b4..01b6  const/4  v0, #0x3
+    01b6..01ba  aput-object  v1, v3, v0
+    01ba..01be  const-string  v1, "iq"
+    01be..01c2  new-instance  v0, LX/0Tp;
+    01c2..01c8  invoke-direct  {v0, v4, v1, v3}, LX/0Tp;-><init>(LX/0Tp;Ljava/lang/String;[LX/0Tl;)V
+    01c8..01cc  const-wide/16  v19, #0x0
+    01cc..01d0  const/16  v18, #0x45
+    01d0..01d4  move-object/from16  v17, v2
+    01d4..01d8  move-object/from16  v16, v0
+    01d8..01de  invoke-virtual/range  {v14..v20}, LX/0Sf;->A0W(LX/0lG;LX/0Tp;Ljava/lang/String;IJ)Z
+    01de..01e2  goto/16  -0xa4
+    01e2..01e4  move-exception  v0
+    01e4..01ea  invoke-static  {}, LX/00T;->A06()V
+    01ea..01ec  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0072..0077 -> 00f1
+.end method

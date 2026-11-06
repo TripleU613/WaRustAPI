@@ -4622,3 +4622,13 @@ longer rejects an overwritten unsupported textual readreceipts value before its
 supported replacement. Required metadata/body/envelope/category-name guards,
 final enum admission, pending setter checks and atomic state-before-ACK remain.
 No refresh, broader category or generic account-sync ACK is introduced.
+
+### Privacy setter error is not pending ownership completion (2026-11-06)
+
+**Confirmed selected static / bounded Rust fix:** [setter and callback binding](apk/2.26.43.72-privacy-setter-pending-lifecycle/README.md)
+show0oe.A0P inserts pending desired category before dispatch and binds a false
+continuation flag;8R5 failure returns through6pB without retiring it. Rust no
+longer releases its unowned generic setter guard just because a saved outer
+IQ refusal exists. Fresh notifications remain captured/held, receive continues,
+and the refusal/status/reply survive. Typed category-specific lifecycle and
+full reconciliation remain open; no broader runtime setter or retry added.

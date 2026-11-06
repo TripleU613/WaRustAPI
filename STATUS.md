@@ -1,3 +1,10 @@
+2026-11-06 — **Fixed privacy intent release after IQ refusal.**
+Native setter failure does not retire its pending category. Rust now preserves
+its unowned-setter hold after a real refusal rather than adopting/ACKing a
+later notification solely from that error. Saved refusal remains inspectable.
+[Evidence, session/reopen regression and remaining ownership](docs/protocol/account-privacy-notifications.md#setter-refusal-does-not-retire-pending-category-ownership-2026-11-06).
+No action retry, state reset or live account operation.
+
 2026-11-06 — **Fixed privacy duplicate-value validation order.**
 Supported readreceipts notifications now select the last raw value before enum
 validation, matching the native map producer. An overwritten unsupported text

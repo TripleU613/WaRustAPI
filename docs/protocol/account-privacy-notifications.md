@@ -67,10 +67,13 @@ typed account-privacy setter or native pending-category map; searches of the
 current transport/model sources establish that boundary, not absence of all
 possible generic requests. Public `actions::queue` can still hold a privacy
 category setter. The handler therefore checks decoded requests and outcomes in
-the same write transaction before adoption. Any queued/sent/successful
-`xmlns=privacy,type=set` action with a privacy child blocks fresh adoption/ACK;
+the same write transaction before adoption. Any recognized
+`xmlns=privacy,type=set` action with a privacy child blocks fresh adoption/ACK,
+including queued/sent/successful/refused rows;
 a successful generic setter remains unowned until proper reconciliation exists.
-Only preserved outer IQ refusals discharge this guard; old misclassified unknown-type errors still block. This is a conservative local guard, not the exact
+A saved outer IQ refusal does not establish that the native pending intent
+retired; refused and legacy misclassified rows keep the guard. This is a
+conservative local guard, not the exact
 native pending-map lifecycle. Existing processed redeliveries do not reapply
 state and may re-ACK while such an action is pending. Trusted-contact token
 issue uses a tokens child and is not mistaken for a category setter.
@@ -251,3 +254,48 @@ coverage, APK coverage freshness and diff whitespace pass. Three fresh selected
 methods match retained exports; map branch targets and pinned APK digest verify.
 Hygiene passes (436 APK bundles); reused evidence adds no duplicate REA record.
 No live account or APK runtime test.
+
+## Setter refusal does not retire pending category ownership (2026-11-06)
+
+**Confirmed APK mismatch / bounded correction:** [setter producer, constructor
+bindings, failure/success consumers and field census](apk/2.26.43.72-privacy-setter-pending-lifecycle/README.md)
+close the error branch that the old local guard treated as discharged.0oe.A0P
+puts7wp(desired value) under the category before choosing MEX/classic transport.
+Classic8R5 is bound to6pB with A01=false and no continuation. Its Bvj calls
+6pB.A00, which returns without removing pending state or adopting server data.
+BsS has the same false gate. Success separately reaches0oe.A0R for
+category/value reconciliation; outer refusal is not that ownership boundary.
+
+Rust previously allowed any actual saved outer IQ error to release its generic
+setter hold, despite missing a native pending-category owner. Fresh readreceipts
+notifications could then adopt/ACK using only that error as authority. Refused
+recognized setters now retain the same hold as queued/uncertain/successful
+unowned setters. The action's Error/status/code/reply remains inspectable;
+no retry, rollback, refresh or invented native pending entry is added. Already
+processed redeliveries retain the existing re-ACK/no-reapply rule.
+
+The guard remains broader than native per-category state. Complete typed
+setter/pending ownership, matching success/admission, unrelated-category
+independence and restart reconciliation remain unported. The change removes a
+false release condition, not completes those features. Previously adopted/ACKed
+historical notifications are not undone.
+
+The updated refusal/legacy regression fails against the old release condition
+because it returned an ACK. It now checks retained checkpoints/state, no replay
+and reopen behavior. New session regression feeds an actual preserved503
+refusal, then a fresh contradictory notification: original capture commits,
+no preference/ACK is emitted, a later server ping still gets a response,
+and reopened handling keeps the same hold without mutation or retransmission.
+Existing matching processed redelivery and ACK-write-cut tests remain controls.
+
+Reproduction commands and selected static evidence are in the linked bundle.
+No new REA records, APK execution or live account operation.
+
+Validation:1,532 workspace tests pass (9 result suites, four threads), including
+refusal/reopen and new production-session hold coverage. The updated unit
+regression fails against the old release condition. Strict workspace/all-target/
+all-feature Clippy, formatting, CLI reference, OpenAPI library coverage, APK
+coverage freshness and diff whitespace pass. Seven fresh exports, reused
+callback, branch targets, bundle checksums and pinned APK digest match. Flag
+field census has only its constructor writer among four direct references.
+Hygiene passes (437 bundles). No live account or APK runtime operation.

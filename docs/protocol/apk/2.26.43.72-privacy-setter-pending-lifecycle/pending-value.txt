@@ -1,0 +1,11 @@
+
+# class: LX/7wp;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VL)  # .registers 2
+    # full signature: LX/7wp;-><init>(Ljava/lang/String;)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v1, v0, LX/7wp;->A00:Ljava/lang/String;
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,14 @@
+
+# class: LX/6pB;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLZ)  # .registers 5
+    # full signature: LX/6pB;-><init>(LX/278;LX/0oe;LX/0iX;Z)V
+    0000..0004  iput-object  v2, v0, LX/6pB;->A03:LX/0oe;
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000a..000e  iput-object  v1, v0, LX/6pB;->A02:LX/278;
+    000e..0012  iput-boolean  v4, v0, LX/6pB;->A01:Z
+    0012..0016  iput-object  v3, v0, LX/6pB;->A00:LX/0iX;
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,26 @@
+classes.dex  LX/0oe;-><init>(V)
+  write opcode 0x5b, dex byte offset: 0x6f88ec
+classes.dex  LX/0oe;->A0L(IL)
+  read opcode 0x54, dex byte offset: 0x6f8ace
+classes.dex  LX/0oe;->A0P(VLL)
+  read opcode 0x54, dex byte offset: 0x6f8f20
+classes.dex  LX/0oe;->A0R(VL)
+  read opcode 0x54, dex byte offset: 0x6f91ca
+classes10.dex  Lcom/whatsapp/settings/ui/privacy/SettingsCallingPrivacyActivity;->A03(VL)
+  read opcode 0x54, dex byte offset: 0x4a6b38
+classes5.dex  LX/7cp;->A5i(V)
+  read opcode 0x54, dex byte offset: 0x39880e
+classes5.dex  LX/7cp;->A5i(V)
+  read opcode 0x54, dex byte offset: 0x398914
+classes5.dex  Lcom/whatsapp/lastseen/PresencePrivacyActivity;->A0c(VL)
+  read opcode 0x54, dex byte offset: 0x399d4a
+classes5.dex  Lcom/whatsapp/lastseen/PresencePrivacyActivity;->A0c(VL)
+  read opcode 0x54, dex byte offset: 0x399e08
+classes5.dex  LX/8Y1;->BWP(ZL)
+  read opcode 0x54, dex byte offset: 0x4d651c
+classes8.dex  LX/DGu;->A0w(V)
+  read opcode 0x54, dex byte offset: 0x431ea8
+classes9.dex  Lcom/whatsapp/settings/ui/privacy/SettingsPrivacy;->A5f(V)
+  read opcode 0x54, dex byte offset: 0x4f8698
+classes9.dex  LX/IBk;->run(V)
+  read opcode 0x54, dex byte offset: 0x763478
