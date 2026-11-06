@@ -2283,7 +2283,7 @@ mod tests {
                         .attr("class", "call")
                         .attr("id", "fixture")
                         .attr("type", "offer")
-                        .attr("from", "123456-7@g.us"),
+                        .attr("from", "123456-1234567890@g.us"),
                     Some("call-empty-id") => Node::new("ack")
                         .attr("class", "call")
                         .attr("id", "")
@@ -2381,6 +2381,11 @@ mod tests {
             Some("12345:7@hosted.lid"),
             Some("12345:355@hosted.lid"),
             Some("0:7@lid"),
+            Some("123456-7@g.us"),
+            Some("0@g.us"),
+            Some("letters@g.us"),
+            Some("0@newsletter"),
+            Some(" 0 @newsletter"),
         ]
         .into_iter()
         .enumerate()

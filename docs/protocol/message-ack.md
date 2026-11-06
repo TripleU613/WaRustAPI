@@ -762,3 +762,39 @@ recipient fallback, participant success/refusal, once-only facts, reopen and no
 reselection. Binary/cache equivalence, actual device serialization, service-chat
 application behavior, other families and server policy remain open. No live
 traffic or replay authority.
+
+
+## Group and newsletter ACK text uses native construction (2026-11-06)
+
+**Confirmed selected pinned static / Rust correction.**
+[Complete group/newsletter classes, numeric helper and linked factory](apk/2.26.43.72-group-newsletter-ack-text/README.md)
+show group construction requires1..20 nonzero-leading ASCII digits or a native
+PN-valid prefix, hyphen and10 nonzero-leading ASCII timestamp digits.
+Newsletter0De.A03 instead checks Java-trimmed nonempty/nonzero-leading text,
+with no digit test; the original user is retained. The numeric wording of its
+exception is not a numeric predicate. This corrects that tempting interpretation.
+
+Shared call ACK admission now recognizes invalid group/newsletter text as null
+before later call checks. Conversely constructor-valid newsletter text reaches
+known unsupported type21 even when generic Rust Jid parsing fails.459 and global
+required-id/numeric precedence remain unchanged. Message ACK recipient cast
+fails for these nonUser families; valid selected from uses original plain user,
+so newsletter dot suffix is not converted into agent syntax. Invalid from
+cannot establish the selected chat. Values outside existing Jid model limits
+remain uncertain; no global group validation or generic receipt parser change.
+
+**Offline regression:** call tables exercise modern lengths, leading zero,
+ASCII versus Unicode group digits, legacy prefix/10-digit boundaries, newsletter
+letters/minus/Unicode/ASCII-trim/NBSP/colon and459/malformed-error controls.
+Selected-chat tests cover invalid construction, nonUser recipient fallback and
+newsletter dot preservation. Existing outbox once-only/reopen/uncertainty
+regressions remain gates. Binary/cache-wide equivalence, unrepresentable native
+users, generic receipt routes, full recovery and server policy remain open.
+No live operations or replay authority.
+
+The pre-existing fatal call-ACK unit/actor fixtures used123456-7@g.us, which
+is invalid under the now-traced legacy timestamp grammar. Those fixtures now
+use123456-1234567890@g.us to retain actual nonnull/type1 rejection coverage;
+the original malformed group and zero/letter group/newsletter controls join
+the capture-and-continue actor regression. The initial full-suite failures
+exposed stale fixture assumptions, rather than authorizing a broader fatal gate.

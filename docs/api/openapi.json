@@ -18082,5 +18082,17 @@
     ],
     "description": "Explicit0/Server PN/hosted device text uses native signed-i32/byte-range/hosted99 construction. Valid devices preserve DeviceJid class, pass known call sender-type predicate and block ordinary participant-qualified success, includingServer devices. Invalid construction follows null admission. Recipient device0 fails UserJid cast and falls back to from; selected device from unwraps canonical PN base. Plain special behavior remains distinct. Binary/cache equivalence, actual device serialization, service-chat behavior and other families remain open. No live operations or replay authority.",
     "evidence": "docs/protocol/message-ack.md#explicit-special-pn-devices-preserve-device-class-2026-11-06"
+  },
+  "x-group-newsletter-ack-text": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [
+      "whatsapp_api::transport::messaging::validate_received_ack",
+      "whatsapp_api::transport::messaging::message_ack_outcome_for",
+      "whatsapp_api::transport::outgoing::acknowledge"
+    ],
+    "description": "Group/newsletter ACK text uses pinned construction. Group requires1..20 nonzero-leading ASCII digits or PN-valid prefix plus hyphen and10 nonzero-leading ASCII digits. Newsletter requires Java-trimmed nonempty/nonzero-leading text, not numeric grammar, retaining original user. Invalid sender follows null ordering; valid group/newsletter types reject ordinary call sender admission after459 diversion. Recipient UserJid cast fails. Selected from keeps plain original user within existing Rust model limits, without interpreting newsletter dot/colon as agent/device. Binary/cache equivalence, unrepresentable users, generic receipt routes and full recovery remain open. No live operations or replay authority.",
+    "evidence": "docs/protocol/message-ack.md#group-and-newsletter-ack-text-uses-native-construction-2026-11-06"
   }
 }

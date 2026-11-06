@@ -1225,6 +1225,34 @@ pub(crate) fn ack_user_text(text: &str) -> Option<AckUserText<'_>> {
     Some(AckUserText::Device(user))
 }
 
+// Pinned1bc/0nW.A02 group constructor and0De.A03 newsletter factory.
+// Newsletter's error text says number, but its actual predicate only checks
+// Java-trimmed nonempty/nonzero-leading text; original user is preserved.
+pub(crate) fn ack_non_user_text_valid(text: &str) -> Option<bool> {
+    let (user, domain) = text.rsplit_once('@')?;
+    let decimal_nonzero = |value: &str, max: usize| {
+        !value.is_empty()
+            && value.len() <= max
+            && !value.starts_with('0')
+            && value.bytes().all(|b| b.is_ascii_digit())
+    };
+    match domain {
+        "g.us" => Some(
+            decimal_nonzero(user, 20)
+                || user.split_once('-').is_some_and(|(phone, time)| {
+                    native_plain_pn_user_valid(phone)
+                        && time.len() == 10
+                        && decimal_nonzero(time, 10)
+                }),
+        ),
+        "newsletter" => {
+            let trimmed = user.trim_matches(|c: char| c <= '\u{20}');
+            Some(!trimmed.is_empty() && !trimmed.starts_with('0'))
+        }
+        _ => None,
+    }
+}
+
 // APK43.72 0Tp.A0A -> 0Dd.A02/A00: definite null results for
 // the text parse path only. Do not substitute Rust's wider/narrower JID grammar.
 fn call_ack_sender_known_null(node: &Node) -> bool {
@@ -1263,7 +1291,10 @@ fn call_ack_sender_known_null(node: &Node) -> bool {
     };
     // Empty-user cache keys omit @ (0Dd.A01); unknown domains cannot be
     // inserted by the selected parser or user/newsletter cache factories.
-    user.is_empty() || !recognized(domain) || matches!(ack_user_text(text), Some(AckUserText::Null))
+    user.is_empty()
+        || !recognized(domain)
+        || matches!(ack_user_text(text), Some(AckUserText::Null))
+        || ack_non_user_text_valid(text) == Some(false)
 }
 
 /// Validate ACK required-ID, numeric and supported call-field admission. Stateful receivers must first capture the Node.
@@ -1300,6 +1331,9 @@ pub fn validate_received_ack(node: &Node) -> crate::Result<()> {
             // DCF/Dv7/J9O types7/8/9 are nonnull but excluded by0Dn.A0R.
             || matches!(node.get_attr("from").and_then(|v| v.as_text()).and_then(ack_user_text),
                 Some(AckUserText::User("0") | AckUserText::ServiceUser(_) | AckUserText::NonUser(_)))
+            // Text constructor success establishes type1/21 even if Rust's
+            // generic JID parser cannot represent the native newsletter user.
+            || node.get_attr("from").and_then(|v| v.as_text()).and_then(ack_non_user_text_valid) == Some(true)
             // EW4.<init> -> 0Dn.A0R rejects known group/newsletter types1/21.
             || super::receipts::jid(node, "from").is_some_and(|jid|
                 matches!(jid.server, crate::model::jid::Server::Group | crate::model::jid::Server::Newsletter)))
@@ -3321,6 +3355,49 @@ mod captured_wait_tests {
     }
 
     #[test]
+    fn group_and_newsletter_call_sender_constructors_precede_later_fields() {
+        for (text, valid) in [
+            ("1@g.us", true),
+            ("12345678901234567890@g.us", true),
+            ("123456789012345678901@g.us", false),
+            ("0@g.us", false),
+            ("01@g.us", false),
+            ("abc@g.us", false),
+            ("１２３@g.us", false),
+            ("12345-1234567890@g.us", true),
+            ("10080-1234567890@g.us", true),
+            ("10123-1234567890@g.us", false),
+            ("1234-1234567890@g.us", false),
+            ("12345-0234567890@g.us", false),
+            ("12345-123456789@g.us", false),
+            ("12345-1234567890-1@g.us", false),
+            ("123:0@g.us", false),
+            ("1@newsletter", true),
+            ("letters@newsletter", true),
+            ("-1@newsletter", true),
+            ("１２３@newsletter", true),
+            (" 1 @newsletter", true),
+            ("\u{a0}@newsletter", true),
+            ("@newsletter", false),
+            ("0@newsletter", false),
+            ("01@newsletter", false),
+            (" 0 @newsletter", false),
+            ("\t\n@newsletter", false),
+            ("1:0@newsletter", true),
+        ] {
+            let ack = Node::new("ack")
+                .attr("class", "call")
+                .attr("id", "fixture")
+                .attr("type", "offer")
+                .attr("from", text);
+            assert_eq!(validate_received_ack(&ack).is_err(), valid, "{text:?}");
+            assert_eq!(call_ack_sender_known_null(&ack), !valid, "{text:?}");
+            assert!(validate_received_ack(&ack.clone().attr("error", "459")).is_ok());
+            assert!(validate_received_ack(&ack.attr("error", "bad")).is_err());
+        }
+    }
+
+    #[test]
     fn special_pn_devices_preserve_constructor_class_and_call_ordering() {
         for user in ["0", "Server"] {
             for domain in ["s.whatsapp.net", "hosted"] {
@@ -3469,7 +3546,7 @@ mod captured_wait_tests {
                 assert!(validate_received_ack(&node.clone().attr("class", class)).is_ok());
             }
         }
-        for from in ["123456-7@g.us", "123456@newsletter"] {
+        for from in ["123456-1234567890@g.us", "123456@newsletter"] {
             let ack = base
                 .clone()
                 .attr("id", "fixture")

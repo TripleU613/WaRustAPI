@@ -1256,9 +1256,28 @@ impl Pending {
 
 pub(super) use super::messaging::is_auth_challenge_ack;
 
-// Optional ACK JID text follows pinned PN/LID construction and class cast.
+// Optional ACK JID text follows selected pinned constructors and class cast.
 // Hosted aliases unwrap to the canonical base user server.
 fn message_ack_address(node: &Node, name: &str) -> Option<crate::model::jid::Jid> {
+    if let Some(text) = node.get_attr(name).and_then(|v| v.as_text())
+        && let Some(valid) = super::messaging::ack_non_user_text_valid(text)
+    {
+        // These constructors keep their full user text: dot/colon is not
+        // device syntax. Native group/newsletter fail UserJid recipient cast.
+        if !valid || name == "recipient" {
+            return None;
+        }
+        let (user, domain) = text.rsplit_once('@')?;
+        return crate::model::jid::Jid::new(
+            user,
+            if domain == "g.us" {
+                Server::Group
+            } else {
+                Server::Newsletter
+            },
+        )
+        .ok();
+    }
     if let Some(parsed) = node
         .get_attr(name)
         .and_then(|value| value.as_text())
@@ -3041,6 +3060,40 @@ mod tests {
         assert!(!status.is_uncertain());
         assert_eq!(status.facts.len(), 2);
     }
+    #[test]
+    fn group_newsletter_ack_text_cast_and_original_user_are_preserved() {
+        for (text, valid) in [
+            ("1@g.us", true),
+            ("12345-1234567890@g.us", true),
+            ("12345-123@g.us", false),
+            ("0@g.us", false),
+            ("abc@g.us", false),
+            ("letters@newsletter", true),
+            ("1.2@newsletter", true),
+            ("-1@newsletter", true),
+            ("0@newsletter", false),
+            ("01@newsletter", false),
+        ] {
+            let from = Node::new("ack").attr("from", text);
+            assert_eq!(
+                message_ack_chat(&from),
+                valid.then(|| {
+                    let (u, d) = text.rsplit_once('@').unwrap();
+                    Jid::new(u, Server::parse(d).unwrap()).unwrap()
+                }),
+                "{text}"
+            );
+            let recipient = Node::new("ack")
+                .attr("from", "15555550100@s.whatsapp.net")
+                .attr("recipient", text);
+            assert_eq!(
+                message_ack_chat(&recipient),
+                Some(Jid::parse("15555550100@s.whatsapp.net").unwrap()),
+                "{text}"
+            );
+        }
+    }
+
     #[test]
     fn special_device_ack_from_unwraps_base_but_recipient_cast_falls_back() {
         for (text, canonical) in [
