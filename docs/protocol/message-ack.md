@@ -872,3 +872,31 @@ actor cases include barePN/group and verify stop, no later write, unchanged
 reserved action and durable capture. Selected-chat tests cover all three from
 casts and recipient fallback. No global Jid, opaque binary path, user cache
 alias, generic receipt, payload/recovery or replay expansion. No live traffic.
+
+
+## Self-user ACK conversion failure is not an ordinary participant result (2026-11-06)
+
+**Confirmed selected pinned static / Rust correction.**
+[Complete0EG/2LK classes and linked conversion/dispatch](apk/2.26.43.72-self-user-ack-conversion/README.md)
+show barestatus_me/lid_me are type11 UserJid with getPrimaryDevice overrides
+that throw UnsupportedOperationException.0EB.A00 reaches that override. Both
+ordinary success AND refusal paths convert participant and originalfrom before
+dispatch; a valid selected recipient does not replace originalfrom there.
+
+A shared message conversion-failure guard now retains uncertainty for those bare
+participant/from cases across outbox, distribution and CLI expected-chat paths.
+It blocks both Accepted and Refused classification, not just participant-qualified
+success. Challenge459 remains its distinct earlier outcome. Self UserJid recipient
+has precedence but unsupported self-chat selection now retains uncertainty instead
+of falling back to matching ordinaryfrom. Bare self call senders also reject
+through native type11 admission; no new fatal message-ACK gate/reconnect/replay.
+
+**Offline regression:** both bare self names crossed with participant/from/
+recipient and absenterror/500/459 exercise actual in-flight outbox plus shared
+expected-chat classification. From tests deliberately supply matching ordinary
+recipient to expose the separate originalfrom conversion. All retained rows
+survive reopen unchanged and cannot be selected again; challenge controls remain
+separate. Existing bare-call tables verify valid-field type11 rejection.
+Qualified self-domain aliases are cache-dependent and remain unclassified;
+opaque binary paths, self-chat application behavior, full generic callback/
+payload recovery and server policy remain open. No live operations.

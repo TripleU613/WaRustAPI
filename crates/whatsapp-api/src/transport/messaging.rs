@@ -1087,6 +1087,13 @@ pub fn message_ack_outcome_for(node: &Node, expected: &Jid) -> MessageAckOutcome
         return MessageAckOutcome::Unrelated;
     }
     let outcome = message_ack_outcome(node);
+    if matches!(
+        outcome,
+        MessageAckOutcome::Accepted | MessageAckOutcome::Refused
+    ) && message_ack_device_conversion_fails(node)
+    {
+        return MessageAckOutcome::Unrelated;
+    }
     if outcome == MessageAckOutcome::Accepted && ordinary_ack_has_participant(node) {
         return MessageAckOutcome::Unrelated;
     }
@@ -1225,6 +1232,19 @@ pub(crate) fn ack_user_text(text: &str) -> Option<AckUserText<'_>> {
     Some(AckUserText::Device(user))
 }
 
+// APK43.72 bare parser returns0EG/2LK; both type11 UserJid singletons
+// explicitly throw UnsupportedOperationException in getPrimaryDevice().
+pub(crate) fn ack_self_user_text(text: &str) -> bool {
+    matches!(text, "status_me" | "lid_me")
+}
+pub(crate) fn message_ack_device_conversion_fails(node: &Node) -> bool {
+    ["participant", "from"].into_iter().any(|name| {
+        node.get_attr(name)
+            .and_then(|v| v.as_text())
+            .is_some_and(ack_self_user_text)
+    })
+}
+
 // Selected0De.A00 bare factory:0mL/7Ks/J9P extend Jid directly.
 // A03/A04 cannot cache an empty-user replacement for these three names.
 // 0Dn.A0R admits J9P/type20, excludes0mL/type13 and7Ks/type16.
@@ -1352,6 +1372,7 @@ pub fn validate_received_ack(node: &Node) -> crate::Result<()> {
             || node.get_attr("type").is_none()
             || node.get_attr("type").and_then(|v| v.as_text()) == Some("")
             || node.get_attr("from").and_then(|v| v.as_text()).and_then(ack_bare_server_call_allowed) == Some(false)
+            || node.get_attr("from").and_then(|v| v.as_text()).is_some_and(ack_self_user_text)
             // DCF/Dv7/J9O types7/8/9 are nonnull but excluded by0Dn.A0R.
             || matches!(node.get_attr("from").and_then(|v| v.as_text()).and_then(ack_user_text),
                 Some(AckUserText::User("0") | AckUserText::ServiceUser(_) | AckUserText::NonUser(_)))
@@ -3610,7 +3631,9 @@ mod captured_wait_tests {
             if let Some(allowed) = ack_bare_server_call_allowed(sender) {
                 assert_eq!(validate_received_ack(&ack).is_ok(), allowed, "{sender}");
             }
-            // status_me/lid_me cache aliases remain separate UserJid families.
+            if ack_self_user_text(sender) {
+                assert!(validate_received_ack(&ack).is_err(), "type11 {sender}");
+            }
             assert!(validate_received_ack(&ack.attr("error", "459")).is_ok());
         }
     }

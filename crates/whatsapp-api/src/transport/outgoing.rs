@@ -1319,6 +1319,16 @@ fn message_ack_address(node: &Node, name: &str) -> Option<crate::model::jid::Jid
 // before normalizing from; 0Dn.A00 unwraps DeviceJid.userJid. Plain PN/LID
 // types0/18 bypass A00's special bot type26/27 conversion.
 pub(crate) fn message_ack_chat(node: &Node) -> Option<crate::model::jid::Jid> {
+    if node
+        .get_attr("recipient")
+        .and_then(|v| v.as_text())
+        .is_some_and(super::messaging::ack_self_user_text)
+    {
+        // Native UserJid recipient takes precedence, but self-chat handling is
+        // unsupported here. Do not fall back to an unrelated ordinary from.
+        return None;
+    }
+
     if let Some(recipient) = message_ack_address(node, "recipient")
         && !recipient.is_ad()
         && !matches!(
@@ -1363,6 +1373,11 @@ pub fn acknowledge(store: &ProtocolStore, node: &Node) -> Result<bool> {
         || node.description != "ack"
         || node.get_attr("class").and_then(|v| v.as_text()) != Some("message")
     {
+        return Ok(false);
+    }
+    if super::messaging::message_ack_device_conversion_fails(node) {
+        // 1rH.A03 converts participant AND original from on success/refusal;
+        // self UserJid overrides throw before either dispatch, not null.
         return Ok(false);
     }
     let Some(id) = node.get_attr("id").and_then(|v| v.as_text()) else {
@@ -3071,6 +3086,58 @@ mod tests {
         assert!(!status.is_uncertain());
         assert_eq!(status.facts.len(), 2);
     }
+    #[test]
+    fn self_user_ack_conversion_or_selected_recipient_retains_uncertainty() {
+        use super::super::messaging::{MessageAckOutcome, message_ack_outcome_for};
+        for text in ["status_me", "lid_me"] {
+            for field in ["participant", "from", "recipient"] {
+                for error in [None, Some("500"), Some("459")] {
+                    let dir = tempfile::tempdir().unwrap();
+                    let path = dir.path().join("self-ack.redb");
+                    let store = open(&path);
+                    let local_id = enqueue(&store);
+                    store
+                        .write(|tx| {
+                            let mut entry = outbox().get_mut(tx, local_id)?.unwrap();
+                            entry.wire_id = Some(MessageId::new("fixture")?);
+                            outbox().set_progress(tx, &mut entry, AttemptProgress::InFlight)
+                        })
+                        .unwrap();
+                    let before = store.read(|tx| outbox().get(tx, local_id)).unwrap();
+                    let expected = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+                    let mut ack = Node::new("ack")
+                        .attr("class", "message")
+                        .attr("id", "fixture")
+                        .attr("from", "15555550100@s.whatsapp.net");
+                    if field == "from" {
+                        ack = ack.attr("recipient", "15555550100@s.whatsapp.net");
+                    }
+                    ack = ack.attr(field, text);
+                    if let Some(error) = error {
+                        ack = ack.attr("error", error);
+                    }
+                    assert!(
+                        !acknowledge(&store, &ack).unwrap(),
+                        "{field}/{text}/{error:?}"
+                    );
+                    assert_eq!(
+                        message_ack_outcome_for(&ack, &expected),
+                        if error == Some("459") && field != "recipient" {
+                            MessageAckOutcome::AuthChallenge
+                        } else {
+                            MessageAckOutcome::Unrelated
+                        }
+                    );
+                    assert_eq!(store.read(|tx| outbox().get(tx, local_id)).unwrap(), before);
+                    drop(store);
+                    let store = open(&path);
+                    assert_eq!(store.read(|tx| outbox().get(tx, local_id)).unwrap(), before);
+                    assert!(begin_selected(&store, Some(local_id)).unwrap().is_none());
+                }
+            }
+        }
+    }
+
     #[test]
     fn native_call_jid_is_not_a_selected_message_chat() {
         for text in [

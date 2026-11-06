@@ -18130,5 +18130,17 @@
     ],
     "description": "Bare s.whatsapp.net/g.us/call text follows selected singleton types13/16/20 after bounded cache-producer analysis. NonnullPN/group reject ordinary call sender admission; barecall passes sender predicate. All three are neither0DY chat norUserJid recipient: selected from is null and recipient falls back. Global required-id/numeric and459 precedence remain unchanged. status_me/lid_me cache aliases, binary equivalence, reflection/native mutation, generic receipt routes and full payload/recovery remain open. No live operations or replay authority.",
     "evidence": "docs/protocol/message-ack.md#bare-server-ack-identities-follow-bounded-native-subtypes-2026-11-06"
+  },
+  "x-self-user-ack-conversion": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [
+      "whatsapp_api::transport::messaging::validate_received_ack",
+      "whatsapp_api::transport::messaging::message_ack_outcome_for",
+      "whatsapp_api::transport::outgoing::acknowledge"
+    ],
+    "description": "Barestatus_me/lid_me self UserJid type11 primary-device conversion throws. Shared ordinary message ACK classification/outbox settlement retains uncertainty for participant or originalfrom on success and refusal, even with matching ordinary recipient. Unsupported selected self recipient retains precedence without fallback.459 keeps earlier challenge outcome; call sender type11 rejects. Qualified cache-dependent aliases, opaque binary/self-chat/full callback recovery remain open. No new fatal message gate, live operation or replay authority.",
+    "evidence": "docs/protocol/message-ack.md#self-user-ack-conversion-failure-is-not-an-ordinary-participant-result-2026-11-06"
   }
 }

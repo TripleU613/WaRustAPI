@@ -1,0 +1,14 @@
+{
+  "README.md": {
+    "bytes": 3302,
+    "sha256": "5dd529e79372e4bcbd94b28540e8ad6d4c089bae94d7439b6511f9588852d241"
+  },
+  "lid-self.txt": {
+    "bytes": 2785,
+    "sha256": "270d33fdc50c33a2cf4c84c9b7dd0412100abfc5922b28cd9d50d7f7c9092942"
+  },
+  "status-self.txt": {
+    "bytes": 2791,
+    "sha256": "93d728320d0c645262ae7d06236333906352754fd8fed53cb755f9fe92c052d7"
+  }
+}
