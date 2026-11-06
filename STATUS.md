@@ -1,3 +1,11 @@
+2026-11-06 — **Priority service registration and normal graph invocation confirmed.**
+
+Named JNI binding and16-stage reverse walk close two previous boundaries;
+priority stage wraps an existing chain, with no separate selection flag found.
+Optional r property's producer/first-upload value remains unknown.
+[Evidence and bounded negative searches](docs/protocol/media-network-outcomes.md#priority-jni-registration-and-normal-graph-activation-resolved-2026-11-06).
+No Rust behavior change or live account operation.
+
 2026-11-06 — **Downstream native Priority header construction found.**
 
 Prioritization service calls calculator and builds u/i/p plus optional positive

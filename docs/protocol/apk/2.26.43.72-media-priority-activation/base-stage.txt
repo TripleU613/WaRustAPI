@@ -1,0 +1,39 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000004d13b4 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv>:
+  4f385c:      	paciasp
+  4f3860:      	sub	sp, sp, #0x50
+  4f3864:      	stp	x29, x30, [sp, #0x20]
+  4f3868:      	str	x21, [sp, #0x30]
+  4f386c:      	stp	x20, x19, [sp, #0x40]
+  4f3870:      	add	x29, sp, #0x20
+  4f3874:      	bl	0x729f80 <MCFSetGetCount+0x5ec8>
+  4f3878:      	bl	0x728c04 <MCFSetGetCount+0x4b4c>
+  4f387c:      	ldp	x20, x8, [x0, #0x8]
+  4f3880:      	ldp	x9, x8, [x8]
+  4f3884:      	stp	x9, x8, [sp, #0x8]
+  4f3888:      	cbz	x8, 0x4f3894 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x224e0>
+  4f388c:      	bl	0x728b44 <MCFSetGetCount+0x4a8c>
+  4f3890:      	bl	0x39def0 <_RNvYINtNtNtCsd0h5sCe2hTT_4core5slice4iter7IterMutmENtNtNtNtB9_4iter8adapters3zip27TrustedRandomAccessNoCoerce4sizeB9_+0x4f30>
+  4f3894:      	add	x2, sp, #0x8
+  4f3898:      	bl	0x2e2cd0 <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0x14df4>
+  4f389c:      	bl	0x4d8768 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x73b4>
+  4f38a0:      	bl	0x725120 <MCFSetGetCount+0x1068>
+  4f38a4:      	b.ne	0x4f38dc <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x22528>
+  4f38a8:      	bl	0x2dba20 <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0xdb44>
+  4f38ac:      	ldp	x29, x30, [sp, #0x20]
+  4f38b0:      	add	sp, sp, #0x50
+  4f38b4:      	autiasp
+  4f38b8:      	b	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  4f38bc:      	ldr	x8, [sp, #0x10]
+  4f38c0:      	ldr	x9, [x21, #0x28]
+  4f38c4:      	bl	0x729360 <MCFSetGetCount+0x52a8>
+  4f38c8:      	b.ne	0x4f38dc <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x22528>
+  4f38cc:      	bl	0x728b98 <MCFSetGetCount+0x4ae0>
+  4f38d0:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  4f38d4:      	mov	x0, x19
+  4f38d8:      	bl	0x7373e0 <__wrap__Unwind_Resume@plt>
+  4f38dc:      	bl	0x7378f0 <__stack_chk_fail@plt>

@@ -1,0 +1,56 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000004d13b4 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv>:
+  4d6234:      	paciasp
+  4d6238:      	sub	sp, sp, #0x150
+  4d623c:      	stp	x29, x30, [sp, #0x120]
+  4d6240:      	str	x28, [sp, #0x130]
+  4d6244:      	stp	x20, x19, [sp, #0x140]
+  4d6248:      	add	x29, sp, #0x120
+  4d624c:      	mrs	x20, TPIDR_EL0
+  4d6250:      	adrp	x1, 0x74d000 <kMCIURLRequestHTTPMethodPOST+0x4270>
+  4d6254:      	add	x1, x1, #0x260
+  4d6258:      	ldr	x8, [x20, #0x28]
+  4d625c:      	add	x0, sp, #0x20
+  4d6260:      	mov	w2, #0xf0               // =240
+  4d6264:      	stur	x8, [x29, #-0x8]
+  4d6268:      	bl	0x734d00 <memcpy@plt>
+  4d626c:      	adrp	x1, 0xf5000
+  4d6270:      	add	x1, x1, #0xd26
+  4d6274:      	add	x0, sp, #0x8
+  4d6278:      	mov	w2, #0x43               // =67
+  4d627c:      	stp	xzr, xzr, [sp, #0x8]
+  4d6280:      	add	x19, sp, #0x8
+  4d6284:      	str	xzr, [sp, #0x18]
+  4d6288:      	bl	0x734f60 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6__initEPKcm@plt>
+  4d628c:      	bl	0x7263ec <MCFSetGetCount+0x2334>
+  4d6290:      	sub	x8, x29, #0x10
+  4d6294:      	bl	0x734d70 <_ZN8facebook3jni14findClassLocalEPKc@plt>
+  4d6298:      	add	x0, sp, #0x8
+  4d629c:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  4d62a0:      	bl	0x72b6d4 <MCFSetGetCount+0x761c>
+  4d62a4:      	mov	w2, #0xa                // =10
+  4d62a8:      	bl	0x39fbe0 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x15a0>
+  4d62ac:      	sub	x0, x29, #0x10
+  4d62b0:      	bl	0x41e188 <_ZNK8facebook9stash_jni10JFileStash9removeAllEv+0x1823c>
+  4d62b4:      	bl	0x725e44 <MCFSetGetCount+0x1d8c>
+  4d62b8:      	b.ne	0x4d62f8 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x4f44>
+  4d62bc:      	ldp	x20, x19, [sp, #0x140]
+  4d62c0:      	ldr	x28, [sp, #0x130]
+  4d62c4:      	ldp	x29, x30, [sp, #0x120]
+  4d62c8:      	add	sp, sp, #0x150
+  4d62cc:      	autiasp
+  4d62d0:      	ret
+  4d62d4:      	bl	0x729aa4 <MCFSetGetCount+0x59ec>
+  4d62d8:      	bl	0x41e188 <_ZNK8facebook9stash_jni10JFileStash9removeAllEv+0x1823c>
+  4d62dc:      	b	0x4d62e8 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x4f34>
+  4d62e0:      	bl	0x38b608 <_RNvYNtNtCsi1jv7X85TMU_3std2fs4FileNtNtNtCsd0h5sCe2hTT_4core2io5write5Write9write_allB6_+0x594>
+  4d62e4:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  4d62e8:      	bl	0x725e44 <MCFSetGetCount+0x1d8c>
+  4d62ec:      	b.ne	0x4d62f8 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x4f44>
+  4d62f0:      	mov	x0, x19
+  4d62f4:      	bl	0x7373e0 <__wrap__Unwind_Resume@plt>
+  4d62f8:      	bl	0x7378f0 <__stack_chk_fail@plt>

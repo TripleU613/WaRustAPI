@@ -1,0 +1,26 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000004a5c9c <_ZNK5pando7graphql10Parameters11deepCopyPtrEv>:
+  4adf44:      	paciasp
+  4adf48:      	stp	x29, x30, [sp, #-0x30]!
+  4adf4c:      	str	x21, [sp, #0x10]
+  4adf50:      	stp	x20, x19, [sp, #0x20]
+  4adf54:      	mov	x29, sp
+  4adf58:      	mov	x21, x0
+  4adf5c:      	mov	x0, x1
+  4adf60:      	mov	x20, x1
+  4adf64:      	bl	0x735540 <_ZNSt6__ndk112__get_sp_mutEPKv@plt>
+  4adf68:      	mov	x19, x0
+  4adf6c:      	bl	0x735550 <_ZNSt6__ndk18__sp_mut4lockEv@plt>
+  4adf70:      	ldp	x9, x8, [x20]
+  4adf74:      	stp	x9, x8, [x21]
+  4adf78:      	cbz	x8, 0x4adf84 <_ZNK5pando7graphql10Parameters11deepCopyPtrEv+0x82e8>
+  4adf7c:      	bl	0x728b44 <MCFSetGetCount+0x4a8c>
+  4adf80:      	bl	0x39def0 <_RNvYINtNtNtCsd0h5sCe2hTT_4core5slice4iter7IterMutmENtNtNtNtB9_4iter8adapters3zip27TrustedRandomAccessNoCoerce4sizeB9_+0x4f30>
+  4adf84:      	bl	0x72601c <MCFSetGetCount+0x1f64>
+  4adf88:      	ldp	x29, x30, [sp], #0x30
+  4adf8c:      	autiasp
+  4adf90:      	b	0x735560 <_ZNSt6__ndk18__sp_mut6unlockEv@plt>

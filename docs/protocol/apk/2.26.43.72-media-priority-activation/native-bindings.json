@@ -1,0 +1,147 @@
+{
+  "library_sha256": "d0ab3f2237e92a76ac3519c3577b5836b9e6f65a186c2016cefd43c4923f4b0d",
+  "registered_class": "com/crossapp/tigonhttp/TigonHttpClient$TigonHttpClientServiceHolder",
+  "registration_class_va": "0xf5d26",
+  "methods": [
+    {
+      "slot_va": "0x74d260",
+      "name": "initHybrid",
+      "signature": "(Lcom/crossapp/tigonhttp/TigonHttpClientConfig;Ljava/lang/String;Ljava/lang/String;Ljava/util/concurrent/ScheduledExecutorService;Ljava/util/concurrent/ExecutorService;Lcom/facebook/tigon/tigonhuc/HucClient;Lcom/facebook/xanalytics/XAnalyticsHolder;Lcom/facebook/tigon/interceptors/TigonXplatInterceptorsHolder;Lcom/facebook/tigon/requestprioritization/calculatorprovider/HttpPriorityCalculatorProvider;Lcom/crossapp/tigonhttp/TigonRetryRulesHolder;Lcom/crossapp/tigonhttp/TigonQueuePolicyHolder;Lkotlin/jvm/functions/Function0;)Lcom/facebook/jni/HybridData;",
+      "function_va": "0x4d6344"
+    },
+    {
+      "slot_va": "0x74d278",
+      "name": "runEventLoop",
+      "signature": "()V",
+      "function_va": "0x4d64a0"
+    },
+    {
+      "slot_va": "0x74d290",
+      "name": "setProxyHostAndPort",
+      "signature": "(Ljava/lang/String;IZ)V",
+      "function_va": "0x4d64b0"
+    },
+    {
+      "slot_va": "0x74d2a8",
+      "name": "setProxyClientIPAddress",
+      "signature": "(Ljava/lang/String;ILjava/lang/String;)V",
+      "function_va": "0x4d65dc"
+    },
+    {
+      "slot_va": "0x74d2c0",
+      "name": "onAppStateChange",
+      "signature": "(Z)V",
+      "function_va": "0x4d671c"
+    },
+    {
+      "slot_va": "0x74d2d8",
+      "name": "generateBugReport",
+      "signature": "()Ljava/lang/String;",
+      "function_va": "0x4d6828"
+    },
+    {
+      "slot_va": "0x74d2f0",
+      "name": "syncDiskCachesForTest",
+      "signature": "()V",
+      "function_va": "0x4d6908"
+    },
+    {
+      "slot_va": "0x74d308",
+      "name": "preconnect",
+      "signature": "(Ljava/lang/String;)V",
+      "function_va": "0x4d6918"
+    },
+    {
+      "slot_va": "0x74d320",
+      "name": "preconnectWebSocket",
+      "signature": "(Ljava/lang/String;Z)Z",
+      "function_va": "0x4d6a24"
+    },
+    {
+      "slot_va": "0x74d338",
+      "name": "cancelWebSocketPreconnect",
+      "signature": "()V",
+      "function_va": "0x4d6e08"
+    }
+  ],
+  "stage_indices": {
+    "priority": 13,
+    "preceding": 14,
+    "base": 15
+  },
+  "windows": [
+    {
+      "name": "registration",
+      "start_va": "0x4d6234",
+      "end_va": "0x4d62fc",
+      "file_offset": "0x4d2234",
+      "bytes": 200,
+      "sha256": "51b151a212137d44f84a4699d91167a2edb7f74ba369ce9f31e3fad47f8da263"
+    },
+    {
+      "name": "stack-walk",
+      "start_va": "0x65f998",
+      "end_va": "0x65fbf4",
+      "file_offset": "0x65b998",
+      "bytes": 604,
+      "sha256": "c723d8cf23052825b5ee52bd8d9b42d5ea53b0d52abc5226c9020bbe96c9d73f"
+    },
+    {
+      "name": "shared-service-load",
+      "start_va": "0x4adf44",
+      "end_va": "0x4adf94",
+      "file_offset": "0x4a9f44",
+      "bytes": 80,
+      "sha256": "765ce0525310673d8f748517d320dc8f4f35742c11fda6aa41a6d4882bad03f7"
+    },
+    {
+      "name": "stage-count-helper",
+      "start_va": "0x72fa88",
+      "end_va": "0x72fa94",
+      "file_offset": "0x72ba88",
+      "bytes": 12,
+      "sha256": "3c7f2dc57374b40ff4e6fb5da0c820f352df80e9d6844016510420e5e928c38b"
+    },
+    {
+      "name": "closure-invoke-helper",
+      "start_va": "0x72aecc",
+      "end_va": "0x72aed8",
+      "file_offset": "0x726ecc",
+      "bytes": 12,
+      "sha256": "b830a6db27c73bea1f730038060fe38cd78d1d649c7549e1d93c1bb0422cabee"
+    },
+    {
+      "name": "base-stage",
+      "start_va": "0x4f385c",
+      "end_va": "0x4f38e0",
+      "file_offset": "0x4ef85c",
+      "bytes": 132,
+      "sha256": "ba5c050792eef5495fd7480f1d05984ec496187d86a2617ab061d1799199aca1"
+    },
+    {
+      "name": "preceding-stage-prefix",
+      "start_va": "0x4f39a8",
+      "end_va": "0x4f3c80",
+      "file_offset": "0x4ef9a8",
+      "bytes": 728,
+      "sha256": "ffb59ff9dcf6515b2bdc8e970ddb04b0df4a16b8d1534bb0025ef7c699637c50"
+    },
+    {
+      "name": "base-result-prefix",
+      "start_va": "0x4d8768",
+      "end_va": "0x4d8794",
+      "file_offset": "0x4d4768",
+      "bytes": 44,
+      "sha256": "7248ba3dae8a90c53a292c505876bd3e4a69da6a05cb07a7780053f68dbdd118"
+    },
+    {
+      "name": "property-group-prefix",
+      "start_va": "0x668084",
+      "end_va": "0x66811c",
+      "file_offset": "0x664084",
+      "bytes": 152,
+      "sha256": "db4027435d1bdd4c162fb2ae2ebc2f0bbbcc86e7f156e1fac075048b97f1f583"
+    }
+  ],
+  "scope": "Static registration and unconditional stage invocation; actual loaded runtime and property3 producer unobserved"
+}

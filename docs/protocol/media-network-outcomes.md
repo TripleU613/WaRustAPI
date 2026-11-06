@@ -953,3 +953,24 @@ service graph activation and key3 producer/presence before selecting a final
 Rust policy. No Rust request/header/timing/retry/persistence change or live
 account operation in this turn. The prior bounded negative concerned only the
 interceptor; this downstream producer resolves that broader header question.
+
+## Priority JNI registration and normal graph activation resolved (2026-11-06)
+
+**Confirmed static:** named service-holder registration copies the10-entry
+native table containing the exact initHybrid ->0x4d6344 and registers it against
+the service-holder class. The provisional prototype-only binding is now closed.
+The normal composition routine invokes all16 closures backwards, including
+priority slot13. Its condition reads the current shared service pointer through
+an atomic load, rather than a separate priority-enable flag. A non-null current
+chain is wrapped by TigonHttpPrioritizationService; null/zero results preserve
+the chain. Runtime loading/execution and base/backend policy remain unobserved.
+
+[Complete registration, full walk, pointer load, bounded searches and repro](apk/2.26.43.72-media-priority-activation/README.md)
+retain the result. Java1FJ keys used by JAT contain no numeric3, and1FK stores
+its integer directly; this is not a full native-property absence proof. Native
+getter call and nearby-immediate searches did not identify the key3 producer.
+**Still unknown:** first-upload key3 engagement/value and full serialized native
+category binding. No inferred retry-count label, fixed r value or unconditional
+Rust Priority policy was added. No Rust runtime/header/deadline/retry/persistence
+change or live account request. The earlier named-registration and independent
+stage-selection uncertainties are resolved to the static scope above.

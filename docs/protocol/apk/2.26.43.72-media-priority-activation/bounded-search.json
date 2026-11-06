@@ -1,0 +1,378 @@
+{
+  "scope": "Direct numeric BL and bounded nearby immediate patterns only; no producer or absence proof",
+  "integer_getter_direct_calls": [
+    {
+      "call": "3eee74:      \tbl\t0x3ef220 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x3df30>",
+      "context": [
+        "  3eee64:      \tbl\t0x3ba0dc <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x8dec>",
+        "  3eee68:      \ttbz\tw0, #0x0, 0x3eeeac <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x3dbbc>",
+        "  3eee6c:      \tldp\tx0, x1, [x19, #0x28]",
+        "  3eee70:      \tmov\tw2, #0x1b               // =27",
+        "  3eee74:      \tbl\t0x3ef220 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x3df30>",
+        "  3eee78:      \tbl\t0x733fb4 <MCFSetGetCount+0xfefc>"
+      ]
+    },
+    {
+      "call": "4f8678:      \tbl\t0x3ef220 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x3df30>",
+      "context": [
+        "  4f8668:      \tmov\tx29, sp",
+        "  4f866c:      \tldr\tx8, [x1]",
+        "  4f8670:      \tmov\tw2, #0x24               // =36",
+        "  4f8674:      \tldp\tx0, x1, [x8, #0x28]",
+        "  4f8678:      \tbl\t0x3ef220 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x3df30>",
+        "  4f867c:      \tand\tx8, x0, #0xffff"
+      ]
+    },
+    {
+      "call": "508fdc:      \tbl\t0x3ef220 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x3df30>",
+      "context": [
+        "  508fcc:      \tbl\t0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>",
+        "  508fd0:      \tmov\tx20, x19",
+        "  508fd4:      \tmov\tw2, #0x21               // =33",
+        "  508fd8:      \tldp\tx0, x1, [x20, #0x28]!",
+        "  508fdc:      \tbl\t0x3ef220 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x3df30>",
+        "  508fe0:      \ttbnz\tw1, #0x0, 0x50901c <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x37c68>"
+      ]
+    },
+    {
+      "call": "50feb4:      \tbl\t0x3ef220 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x3df30>",
+      "context": [
+        "  50fea4:      \tcmp\tw9, #0x1",
+        "  50fea8:      \tb.ne\t0x50fee4 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x10e8>",
+        "  50feac:      \tldp\tx0, x1, [x26, #0x28]",
+        "  50feb0:      \tmov\tw2, #0x24               // =36",
+        "  50feb4:      \tbl\t0x3ef220 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x3df30>",
+        "  50feb8:      \tstp\tx21, x19, [sp, #0x8]"
+      ]
+    },
+    {
+      "call": "51463c:      \tbl\t0x3ef220 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x3df30>",
+      "context": [
+        "  51462c:      \tpaciasp",
+        "  514630:      \tstp\tx29, x30, [sp, #-0x10]!",
+        "  514634:      \tmov\tx29, sp",
+        "  514638:      \tmov\tw2, #0x21               // =33",
+        "  51463c:      \tbl\t0x3ef220 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x3df30>",
+        "  514640:      \ttbz\tw1, #0x0, 0x514650 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x5854>"
+      ]
+    },
+    {
+      "call": "515e78:      \tbl\t0x3ef220 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x3df30>",
+      "context": [
+        "  515e68:      \tsub\tx0, x29, #0x60",
+        "  515e6c:      \tbl\t0x3ae550 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0xff10>",
+        "  515e70:      \tldp\tx0, x1, [x20, #0x28]",
+        "  515e74:      \tmov\tw2, #0x22               // =34",
+        "  515e78:      \tbl\t0x3ef220 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x3df30>",
+        "  515e7c:      \ttbz\tw1, #0x0, 0x515ebc <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x70c0>"
+      ]
+    },
+    {
+      "call": "654ce8:      \tbl\t0x3ef220 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x3df30>",
+      "context": [
+        "  654cd8:      \tmov\tx19, x3",
+        "  654cdc:      \tmov\tx24, x8",
+        "  654ce0:      \tstur\tx9, [x29, #-0x10]",
+        "  654ce4:      \tldp\tx0, x1, [x1, #0x28]",
+        "  654ce8:      \tbl\t0x3ef220 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x3df30>",
+        "  654cec:      \ttbz\tw1, #0x0, 0x654d44 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xb4c8>"
+      ]
+    },
+    {
+      "call": "6570b8:      \tbl\t0x3ef220 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x3df30>",
+      "context": [
+        "  6570a8:      \tmov\tw2, #0x4                // =4",
+        "  6570ac:      \tstur\tx8, [x29, #-0x8]",
+        "  6570b0:      \tldp\tx0, x8, [x19, #0x28]!",
+        "  6570b4:      \tmov\tx1, x8",
+        "  6570b8:      \tbl\t0x3ef220 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x3df30>",
+        "  6570bc:      \ttst\tw1, #0x1"
+      ]
+    },
+    {
+      "call": "661584:      \tbl\t0x3ef220 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x3df30>",
+      "context": [
+        "  661574:      \tstr\tx25, [sp, #0x10]",
+        "  661578:      \tbl\t0x3de220 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x2cf30>",
+        "  66157c:      \tldp\tx0, x1, [x22, #0x28]",
+        "  661580:      \tmov\tw2, #0x3                // =3",
+        "  661584:      \tbl\t0x3ef220 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x3df30>",
+        "  661588:      \tldursb\tw8, [x29, #-0x28]"
+      ]
+    }
+  ],
+  "w1_3_first_bl_within8": {
+    "0x2ea4ac": [
+      "351638"
+    ],
+    "0x314b4c": [
+      "315510"
+    ],
+    "0x32f3b8": [
+      "32f75c"
+    ],
+    "0x345dec": [
+      "34624c"
+    ],
+    "0x351844": [
+      "351184",
+      "351218"
+    ],
+    "0x36a55c": [
+      "36a608",
+      "36a714"
+    ],
+    "0x376a4c": [
+      "375e70"
+    ],
+    "0x37eaec": [
+      "338748",
+      "35cbb0",
+      "35cc10"
+    ],
+    "0x39293c": [
+      "2e3528",
+      "2e7c90",
+      "306a8c"
+    ],
+    "0x393e18": [
+      "396a98",
+      "396de0"
+    ],
+    "0x3a8b00": [
+      "4b6d90",
+      "53a9cc",
+      "53ac6c",
+      "54acc8",
+      "54cc34"
+    ],
+    "0x3a9144": [
+      "552768"
+    ],
+    "0x3a9180": [
+      "70fb44"
+    ],
+    "0x3b1ec0": [
+      "4fe320",
+      "5003fc",
+      "70fa40",
+      "713580"
+    ],
+    "0x3b3b88": [
+      "615fa0"
+    ],
+    "0x3f8780": [
+      "3dfdd8",
+      "3dfee8"
+    ],
+    "0x3f8d2c": [
+      "3dffec"
+    ],
+    "0x403380": [
+      "402fbc"
+    ],
+    "0x45085c": [
+      "450634"
+    ],
+    "0x4c6cd4": [
+      "4ca134"
+    ],
+    "0x575b6c": [
+      "5763b0",
+      "57756c"
+    ],
+    "0x5907b4": [
+      "58e408",
+      "58f368",
+      "58ff50"
+    ],
+    "0x590d84": [
+      "58e49c"
+    ],
+    "0x5befd8": [
+      "5bd54c",
+      "5bdbe4"
+    ],
+    "0x5febf4": [
+      "56aac4",
+      "5cd3e4",
+      "5ce484"
+    ],
+    "0x5fefa8": [
+      "566440"
+    ],
+    "0x615028": [
+      "60311c"
+    ],
+    "0x6215b8": [
+      "62198c"
+    ],
+    "0x62d72c": [
+      "62c358"
+    ],
+    "0x62d890": [
+      "623d10",
+      "62c424"
+    ],
+    "0x63dfc8": [
+      "546508",
+      "5500c8",
+      "55586c",
+      "55608c"
+    ],
+    "0x63e020": [
+      "553b3c",
+      "555904"
+    ],
+    "0x640110": [
+      "618cd8",
+      "61990c",
+      "634c90"
+    ],
+    "0x641f80": [
+      "45cbf4"
+    ],
+    "0x645908": [
+      "6321d8",
+      "6321fc"
+    ],
+    "0x645b74": [
+      "46e734",
+      "537bf8",
+      "56fc58",
+      "63237c"
+    ],
+    "0x67ec50": [
+      "6776a0"
+    ],
+    "0x67f784": [
+      "681630"
+    ],
+    "0x688430": [
+      "67750c",
+      "677d34",
+      "6781ec",
+      "678874"
+    ],
+    "0x6a1e74": [
+      "6a33e8",
+      "6a3610"
+    ],
+    "0x6a4ab0": [
+      "6a35ac"
+    ],
+    "0x6ac6d8": [
+      "6aa560",
+      "6aa618",
+      "6aa62c",
+      "6aa640"
+    ],
+    "0x6b8128": [
+      "6bacfc"
+    ],
+    "0x6e8820": [
+      "6e7a18"
+    ],
+    "0x6f7ec4": [
+      "5bf584"
+    ],
+    "0x704d78": [
+      "6ffd40",
+      "70707c"
+    ],
+    "0x70e0e8": [
+      "70789c"
+    ],
+    "0x728f1c": [
+      "6a3bd0"
+    ],
+    "0x72a338": [
+      "58f248"
+    ],
+    "0x72f3f8": [
+      "6740a8"
+    ],
+    "0x730654": [
+      "6d4580"
+    ],
+    "0x734e50": [
+      "677474",
+      "677ca0",
+      "678154",
+      "6787e0",
+      "678c0c"
+    ],
+    "0x735d20": [
+      "507080",
+      "718af4",
+      "718bb0"
+    ],
+    "0x7363d0": [
+      "4ff458"
+    ],
+    "0x736520": [
+      "53c34c"
+    ],
+    "0x736590": [
+      "554978",
+      "556d20"
+    ],
+    "0x736cb0": [
+      "6297d0"
+    ],
+    "0x7378f0": [
+      "57bfd8"
+    ]
+  },
+  "w2_3_in_4f0000_to_530000": [
+    [
+      "  503954:      \tadrp\tx0, 0x7a4000 <_ZN6google8protobuf8internal26fixed_address_empty_stringE+0x47b0>",
+      "  503958:      \tadd\tx0, x0, #0x108",
+      "  50395c:      \tadd\tx1, sp, #0x60",
+      "  503960:      \tmov\tw2, #0x3                // =3",
+      "  503964:      \tadd\tx22, sp, #0x60",
+      "  503968:      \tbl\t0x502c2c <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x31878>",
+      "  50396c:      \tmov\tw21, #0x30              // =48",
+      "  503970:      \tadd\tx0, x22, x21",
+      "  503974:      \tbl\t0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>",
+      "  503978:      \tbl\t0x734458 <MCFSetGetCount+0x103a0>"
+    ],
+    [
+      "  503f94:      \tbl\t0x5041f4 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x32e40>",
+      "  503f98:      \tadd\tx0, sp, #0x8",
+      "  503f9c:      \tadd\tx1, sp, #0x38",
+      "  503fa0:      \tmov\tw2, #0x3                // =3",
+      "  503fa4:      \tbl\t0x4f9b8c <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x287d8>",
+      "  503fa8:      \tmov\tw0, #0x27c8             // =10184",
+      "  503fac:      \tadd\tx1, sp, #0x20",
+      "  503fb0:      \tadd\tx2, sp, #0x8",
+      "  503fb4:      \tmovk\tw0, #0x386d, lsl #16",
+      "  503fb8:      \tbl\t0x669ba0 <_ZN8facebook5tigon26reportTigonUnexpectedEventEiRKNSt6__ndk112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEERKNS1_3mapIS7_S7_NS1_4lessIS7_EENS5_INS1_4pairIS8_S7_EEEEEE>"
+    ],
+    [
+      "  510fec:      \tadd\tx10, x1, #0x79",
+      "  510ff0:      \tadrp\tx0, 0xf3000",
+      "  510ff4:      \tadd\tx0, x0, #0x424",
+      "  510ff8:      \tmov\tw2, #0x3                // =3",
+      "  510ffc:      \ttst\tw8, #0x1",
+      "  511000:      \tcsel\tx20, x10, x9, eq",
+      "  511004:      \tmov\tx1, x20",
+      "  511008:      \tbl\t0x736440 <strncasecmp@plt>",
+      "  51100c:      \tcbz\tw0, 0x511028 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x222c>",
+      "  511010:      \tadrp\tx0, 0xf4000"
+    ],
+    [
+      "  511dd4:      \tmov\tw1, #0xd9               // =217",
+      "  511dd8:      \tbl\t0x5121cc <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x33d0>",
+      "  511ddc:      \tbl\t0x732f2c <MCFSetGetCount+0xee74>",
+      "  511de0:      \tmov\tw2, #0x3                // =3",
+      "  511de4:      \tbl\t0x3e96a4 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x383b4>",
+      "  511de8:      \tadd\tx0, x20, #0x28",
+      "  511dec:      \tadd\tx2, sp, #0x20",
+      "  511df0:      \tmov\tw1, #0x3b               // =59",
+      "  511df4:      \tbl\t0x668084 <_ZN8facebook5tigon22TigonPropertyContainer16setPropertyGroupENS1_3KeyEONSt6__ndk16vectorINS3_4pairIS2_NS1_5ValueEEENS3_9allocatorIS7_EEEE>",
+      "  511df8:      \tadd\tx0, sp, #0x20"
+    ]
+  ],
+  "group_setter_with_w1_3_within12": []
+}

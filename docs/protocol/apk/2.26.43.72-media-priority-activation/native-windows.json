@@ -1,0 +1,38 @@
+{
+  "registration": [
+    "0x4d6234",
+    "0x4d62fc"
+  ],
+  "stack-walk": [
+    "0x65f998",
+    "0x65fbf4"
+  ],
+  "shared-service-load": [
+    "0x4adf44",
+    "0x4adf94"
+  ],
+  "stage-count-helper": [
+    "0x72fa88",
+    "0x72fa94"
+  ],
+  "closure-invoke-helper": [
+    "0x72aecc",
+    "0x72aed8"
+  ],
+  "base-stage": [
+    "0x4f385c",
+    "0x4f38e0"
+  ],
+  "preceding-stage-prefix": [
+    "0x4f39a8",
+    "0x4f3c80"
+  ],
+  "base-result-prefix": [
+    "0x4d8768",
+    "0x4d8794"
+  ],
+  "property-group-prefix": [
+    "0x668084",
+    "0x66811c"
+  ]
+}
