@@ -884,6 +884,14 @@ pub fn reserve_pending_owned(store: &ProtocolStore) -> Result<Vec<ReservedReceip
 /// 37.71 1Qy.A02 -> CSu.A00 -> Cb1.equals distinguishes nullable participants;
 /// recipient/edit routes remain unsupported by this queue.
 pub fn record_ack(store: &ProtocolStore, node: &Node) -> Result<bool> {
+    // APK43.72 1rH.A03 diverts numeric459 before ACK class dispatch;
+    // a challenged receipt must not become an ordinary terminal refusal.
+    if super::messaging::is_auth_challenge_ack(node) {
+        if node.get_attr("class").and_then(|v| v.as_text()) == Some("receipt") {
+            tracing::warn!(target: "whatsapp_api::receipts", "auth-challenge receipt ACK needs unimplemented handling; ordinary settlement skipped");
+        }
+        return Ok(false);
+    }
     if node.description != "ack"
         || node.get_attr("class").and_then(|v| v.as_text()) != Some("receipt")
         || ["recipient", "edit"]
@@ -2743,6 +2751,79 @@ mod tests {
             kind: ReceiptKind::Read,
             server_timestamp: None,
             code: None,
+        }
+    }
+
+    #[test]
+    fn challenged_receipt_acks_preserve_single_and_batched_reservations_across_reopen() {
+        for group in [false, true] {
+            for count in [1, 2] {
+                for ordinary_error in [None, Some("403")] {
+                    let dir = tempfile::tempdir().unwrap();
+                    let path = dir.path().join("receipt-challenge.redb");
+                    let db = open(&path, true);
+                    for i in 0..count {
+                        let message =
+                            automatic_text_fixture(&db, &format!("challenge-fixture-{i}"), group);
+                        queue_read(&db, &explicit_read_for(&message)).unwrap();
+                    }
+                    let receipts = reserve_pending_owned(&db).unwrap();
+                    assert_eq!(receipts.len(), 1);
+                    let sent = receipts[0].node();
+                    let mut ack = Node::new("ack")
+                        .attr("class", "receipt")
+                        .attr("type", sent.get_attr("type").unwrap().clone())
+                        .attr("id", sent.get_attr("id").unwrap().clone())
+                        .attr("from", sent.get_attr("to").unwrap().clone());
+                    if let Some(participant) = sent.get_attr("participant") {
+                        ack = ack.attr("participant", participant.clone());
+                    }
+                    let before = db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap();
+                    let head = db.journal_head().unwrap();
+                    for error in ["459", "+459", "000459", "４５９", "٤٥٩"] {
+                        assert!(
+                            !record_ack(&db, &ack.clone().attr("error", error)).unwrap(),
+                            "{group}/{count}/{error}"
+                        );
+                        assert_eq!(
+                            db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap(),
+                            before
+                        );
+                        assert_eq!(db.journal_head().unwrap(), head);
+                        assert!(reserve_pending_owned(&db).unwrap().is_empty());
+                    }
+                    drop(db);
+                    let reopened = open(&path, false);
+                    assert_eq!(
+                        reopened
+                            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                            .unwrap(),
+                        before
+                    );
+                    assert_eq!(reopened.journal_head().unwrap(), head);
+                    assert!(
+                        outcomes(&reopened)
+                            .unwrap()
+                            .iter()
+                            .all(|row| row.status == "outcome_unknown")
+                    );
+                    let ordinary = match ordinary_error {
+                        Some(error) => ack.attr("error", error),
+                        None => ack,
+                    };
+                    assert!(record_ack(&reopened, &ordinary).unwrap());
+                    assert!(!record_ack(&reopened, &ordinary).unwrap());
+                    let rows = outcomes(&reopened).unwrap();
+                    assert_eq!(rows.len(), count);
+                    assert!(rows.iter().all(|row| row.status
+                        == if ordinary_error.is_some() {
+                            "refused"
+                        } else {
+                            "server_acknowledged"
+                        }));
+                    assert!(reserve_pending_owned(&reopened).unwrap().is_empty());
+                }
+            }
         }
     }
 

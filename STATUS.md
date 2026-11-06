@@ -1,3 +1,5 @@
+Receipt ACK numeric459 now preserves single/batched reservations instead of recording an ordinary refusal, matching the pinned pre-class auth-challenge branch. [Regression, source and open recovery boundary](docs/protocol/receipt-ack-special.md#current-auth-challenge-diversion-precedes-receipt-settlement-2026-11-06). Offline only; no challenge bypass or replay.
+
 Actor and CLI receipt writes now retain every reserved batch member and recheck ownership plus the existing automatic direct-read privacy gate before encoding. Refusals preserve unknown reservations without replay. [Owned receipt handoff and limits](docs/protocol/replay-safety-audit.md#receipt-writer-owns-every-reserved-batch-member-2026-11-06). Offline only.
 
 Queued normal actions now recheck late-recorded reach-out restrictions for group creation and server backoff for app-state fetch/patch/held-fetch before encoding. Refusals preserve intent and waits without replay. [Writer admission and limits](docs/protocol/action-settlement-ordering.md#writer-rechecks-recorded-restrictions-and-explicit-backoff-2026-11-06). Offline only.

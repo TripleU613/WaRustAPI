@@ -60,3 +60,14 @@ remain separate audit work. No new command/route or live account operation.
 - [integer.txt](integer.txt): `71844beba60f9b9c35aa7c483d0f497598195ff5f6b14728e5f5117cdb72db35`
 - [lookup.txt](lookup.txt): `298ec9ae0c5d136625ceec4319bf8600cd2dec77e999977f5391353488b337be`
 - [manager.txt](manager.txt): `04ed8b379869e4e4ee8d40b1ebd13ff809ede5ebe5aba8d566a48a956a7ee648`
+
+## Receipt-class coverage follow-up (2026-11-06)
+
+The pre-class459 branch also excludes ordinary receipt ACK settlement. Rust's
+receipt helper had remained error-presence based after the message/distribution
+fix above. It now shares the same challenge classifier and leaves matching
+single/batched reservations held. A failing-before/passing-after regression
+covers direct/group and Java decimal spellings, reopen, journal preservation
+and later normal success/refusal controls.
+[Receipt interpretation and remaining gaps](../../receipt-ack-special.md#current-auth-challenge-diversion-precedes-receipt-settlement-2026-11-06).
+No new static trace or challenge recovery capability is claimed.

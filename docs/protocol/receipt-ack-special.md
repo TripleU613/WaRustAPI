@@ -97,3 +97,39 @@ library-symbol verification, formatting and whitespace checks passed. Repository
 hygiene checked 1,726 local links and 63 checksum bundles / 12,666,281 bytes.
 No fresh runtime or live result is claimed; the prior functional ACK guard
 passed 812 workspace/all-feature tests.
+
+## Current auth-challenge diversion precedes receipt settlement (2026-11-06)
+
+**Confirmed static, APK2.26.43.72 / Rust defect fixed offline:**
+[1rH.A03 and its shared challenge route](apk/2.26.43.72-ack-auth-challenge/README.md)
+parse numeric error459 and return through1lZ.A1F before ACK class dispatch.
+Earlier local correction covered message/distribution ACKs, but
+receipts::record_ack still marked a matching error-present receipt as refused.
+The new regression reproduced that incorrect transition on the old code.
+
+Receipt ACK settlement now uses the existing Java-decimal/i32 challenge
+classifier before ordinary mutation. Numeric459 returns false without marking
+any reserved receipt refused or acknowledged, including all members correlated
+by a batched root. A redacted warning identifies the unimplemented branch. The
+normal actor already preserves the inbound Node in its encrypted inbox before
+calling this helper; the public helper itself does not claim to perform capture.
+
+Regression `challenged_receipt_acks_preserve_single_and_batched_reservations_across_reopen`
+covers direct/group, single/batched read intents and plain/plus/zero-padded/
+full-width/Arabic decimal459. Checkpoint bytes and journal head stay unchanged;
+reservations remain outcome_unknown and are not selectable again after reopen.
+Later ordinary success and403 refusal controls settle the same correlated
+reservations once, proving the exclusion did not merely break matching.
+
+CLI direct/group send source already calls shared message_ack_outcome and needs
+no separate459 change. Specialized legacy read/played/server-error message
+consumers described above remain a different, partial port. **Open:** native
+challenge producer/map ownership/recovery, complete sender admission, malformed/
+out-of-range numeric ACK error admission and native exception handling. This
+exclusion does not implement or bypass a challenge, create another request,
+retry uncertain traffic, clear history or claim restriction prevention. No new
+APK trace or live account operation.
+
+Validation:1,454 workspace/all-feature tests passed. Strict workspace/all-target/
+all-feature Clippy, formatting, CLI reference regeneration, OpenAPI symbol
+validation, APK coverage freshness and repository hygiene passed. Offline only.

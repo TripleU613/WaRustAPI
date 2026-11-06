@@ -17917,5 +17917,16 @@
   ],
   "description": "Opaque ReservedReceipt handoff exposes node() and check_write_authority(store). Actor writer and both CLI lab receipt loops require exact snapshots of every reserved batch member and recheck the existing negative automatic direct-read privacy gate before encoding. Changed/missing/settled/origin/correlation members refuse whole batches; disabled automatic reads block mixed batches. Manual/group policy and wire batching/ACK grammar stay unchanged. Legacy reserve_pending remains low-level. No socket lock, replay or live verification.",
   "evidence": "docs/protocol/replay-safety-audit.md#receipt-writer-owns-every-reserved-batch-member-2026-11-06"
+},
+  "x-receipt-ack-auth-challenge-diversion": {
+  "x-cli": false,
+  "x-transport": true,
+  "x-live": false,
+  "x-library": [
+    "whatsapp_api::transport::receipts::record_ack",
+    "whatsapp_api::transport::messaging::*"
+  ],
+  "description": "Receipt ACK settlement excludes numeric error459 before ordinary mutation, using the shared Java-decimal/i32 auth-challenge classifier. Single/batched direct/group reservations remain outcome_unknown without journal changes or replay. A redacted diagnostic identifies unimplemented challenge handling; normal actor captures inbound evidence separately. Ordinary success and403 controls still settle once. No challenge recovery/bypass, malformed-error parity, new request or live verification.",
+  "evidence": "docs/protocol/receipt-ack-special.md#current-auth-challenge-diversion-precedes-receipt-settlement-2026-11-06"
 }
 }
