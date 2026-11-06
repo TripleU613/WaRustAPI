@@ -148,3 +148,13 @@ API/library symbols, formatting, whitespace and hygiene passed (2,401 local
 links / 120 bundles). No Rust changes in this follow-up; workspace tests were
 not repeated after the implementation chunk. Private logs/config/state stay
 ignored and outside the commit.
+
+## Current APK identity dispatch and ACK independence (2026-11-06)
+
+**Confirmed static APK43.72**, same pinned887a6f94 APK digest freshly verified: [seven complete method exports, commands and checksums](apk/2.26.43.72-identity-ack-dispatch/README.md). 15v.A09 identity case00d4..01d2 schedules Fc1 discriminator15 through17o.A00 and returns without baseA07 deferral. Native worker case15 reads the held-identity lookup and conditionally invokes14t.A0A([device],8,true), with further14t work behind0Fy/Ex8 gates; those downstream effects remain untraced. It does not directly complete/defer the base ACK. Base0v6.A01 normal return at020a joins0298 and ACKs the retained descriptor only when absent from deferred map. This separately anchors the earlier37.71 conclusion in the current pinned build: key-fetch/adoption completion is not the normal identity-ACK prerequisite.
+
+The scheduler forwards decrypt_order to0YM.A02, which wraps and calls ThreadPoolExecutor.execute. Executor rejection/caller-run policy and actual execution ordering are not established. This does not prove ACK reaches the socket before the worker or key query. Rust's supported ACK-before-draining-key-read ordering remains local behavior. Current descriptor-address construction and wire renderer are not re-anchored by this dispatch trace.
+
+**Failure boundary:** base catches LIL into its non-deferred ACK continuation, but SQLiteFull/Corrupt rethrow; general Exception has a separate tracked-completion500 branch rather than that normal ACK continuation. No justification was found to turn every local saved-state failure or unsupported malformed route into a success ACK. No ACK widening or Rust change was made. The worker's additional0Fy/Ex8 gates,14t scheduling, identity-lookup cleanup and metadata/alias effects remain bounded unknowns, retained in the research bundle.
+
+**Verified negative:** freshly exported15v.A09 exactly matches the previous43.72 prekey dispatch export byte-for-byte; the new work is focused identity analysis and full current worker/scheduler/base/lookup evidence, not a claimed release difference. No live account action or ACK acceptance observation.

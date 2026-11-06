@@ -4519,3 +4519,5 @@ Identity-refresh typed action/inspection now follow pinned43.72 outer-type and e
 Outer typed directory refusals now take generic action diagnostics only from one enclosing root error, never nested device errors. [Pinned callback sources, missing/duplicate-root matrix, reopen and no-replay controls](peer-identity.md#outer-directory-errors-cannot-inherit-nested-refusal-diagnostics-2026-11-06). Scope is diagnostic; no request/retry changes.
 
 Identity-only callback now has its pinned32-second session timer, anchored before send; expiry preserves uncertain Sent and never recreates retry authority. [Producer/registration evidence, PN/LID paused-clock cases, competing claims and writer limits](peer-identity.md#identity-only-callback-lifetime-2026-11-06). Offline only.
+
+Current43.72 identity ACK dispatch re-anchored through15v/Fc1/17o/0YM/0v6 plus held-key lookup: normal ACK does not require bundle adoption, and general exceptions differ from LIL. [Complete methods, negative comparison and scheduling/routing limits](identity-notification-ack.md#current-apk-identity-dispatch-and-ack-independence-2026-11-06). Research only; no ACK widening or live operation.

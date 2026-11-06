@@ -17534,5 +17534,12 @@
     "x-live": false,
     "description": "Implemented single-primary PN/LID encrypt/identity/user callbacks use APK43.72 FeM case16 32000ms duration from the existing pre-send monotonic timestamp. Actor expiry removes live callback authority only; durable Sent remains uncertain, post-expiry replies cannot settle and repeats/restart cannot reserve a retry or revive ownership. Existing timer/response competing-claim ordering remains, including overdue response before expiry dispatch. No full-key timeout, native Handler/suspend parity, multi-user coverage or general writer deadline fence is inferred.",
     "evidence": "docs/protocol/peer-identity.md#identity-only-callback-lifetime-2026-11-06"
+  },
+  "x-identity-ack-current-dispatch-evidence": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Current APK43.72 static15v/Fc1/17o/0YM/0v6 trace finds no explicit fetched-key/adoption dependency in normal identity notification ACK dispatch. General exception/SQLite failure is distinct from LIL continuation, so ACK support is not widened. Existing supported identity ACK builder/actor behavior unchanged. Executor ordering, current descriptor routing/rendering, native fetch scheduling and live ACK acceptance remain separate. Research evidence only, not a new command or runtime behavior change.",
+    "evidence": "docs/protocol/identity-notification-ack.md#current-apk-identity-dispatch-and-ack-independence-2026-11-06"
   }
 }

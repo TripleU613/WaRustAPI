@@ -1,0 +1,47 @@
+
+# class: LX/0WJ;
+# extends: Ljava/lang/Object;
+
+.method public A0W(LL)  # .registers 7
+    # full signature: LX/0WJ;->A0W(LX/EoY;)LX/Ee1;
+    0000..0004  const-string  v0, "getIdentityKey"
+    0004..000a  invoke-static  {v5, v6, v0}, LX/0WJ;->A04(LX/0WJ;LX/EoY;Ljava/lang/String;)LX/EoY;
+    000a..000c  move-result-object  v4
+    000c..000e  const/4  v3, #0x0
+    000e..0012  if-eqz  v4, +0x3b
+    0012..0016  iget-object  v0, v5, LX/0WJ;->A0I:LX/0Wk;
+    0016..001c  invoke-static  {v4, v0}, LX/0Wk;->A00(LX/EoY;LX/0Wk;)LX/FjI;
+    001c..001e  move-result-object  v2
+    001e..0024  invoke-virtual  {v2}, Ljava/util/concurrent/locks/ReentrantLock;->lock()V
+    0024..0028  iget-object  v0, v5, LX/0WJ;->A0J:LX/0YT;
+    0028..002e  invoke-virtual  {v0, v4}, LX/0YT;->A0K(LX/EoY;)[B
+    002e..0030  move-result-object  v0
+    0030..0034  if-eqz  v0, +0x1c
+    0034..003a  invoke-static  {v0}, LX/F3k;->A02([B)LX/Ehd;
+    003a..003c  move-result-object  v1
+    003c..0040  new-instance  v0, LX/Ee1;
+    0040..0046  invoke-direct  {v0, v1}, LX/Ee1;-><init>(LX/Ehd;)V
+    0046..004c  invoke-virtual  {v2}, LX/FjI;->close()V
+    004c..004e  return-object  v0
+    004e..0050  move-exception  v1
+    0050..0054  const-string  v0, "SignalCoordinator/getIdentityKey for [REDACTED_PII] is invalid"
+    0054..005a  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    005a..0060  invoke-static  {v4}, Ljava/util/Collections;->singletonList(Ljava/lang/Object;)Ljava/util/List;
+    0060..0062  move-result-object  v0
+    0062..0068  invoke-direct  {v5, v0}, LX/0WJ;->A0G(Ljava/util/List;)V
+    0068..006e  invoke-virtual  {v2}, LX/FjI;->close()V
+    006e..0070  return-object  v3
+    0070..0072  move-exception  v1
+    0072..0078  invoke-virtual  {v2}, LX/FjI;->close()V
+    0078..007a  throw  v1
+    007a..007c  move-exception  v0
+    007c..0082  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    0082..0084  throw  v1
+    0084..0086  return-object  v3
+    # exception table: 4 try range(s)
+    # catch <all> code_units 0012..001a -> 0038
+    # catch LX/ECt; code_units 001a..0023 -> 0027
+    # catch <all> code_units 001a..0023 -> 0038
+    # catch <all> code_units 0028..0034 -> 0038
+    # catch <all> code_units 0039..003c -> 003d
+.end method

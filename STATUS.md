@@ -1,3 +1,8 @@
+Fresh APK43.72 tracing finds no explicit fetched-key/adoption dependency
+in normal identity notification ACK dispatch. General failure handling
+differs from parser LIL; no ACK widening was justified or implemented.
+[Current dispatch evidence and limits](docs/protocol/identity-notification-ack.md#current-apk-identity-dispatch-and-ack-independence-2026-11-06).
+
 Identity-only reads now use the APK43.72 producer-specific32-second callback
 timer from the pre-send timestamp. Expiry preserves uncertain reservation;
 late post-expiry replies and restart cannot recreate callback/replay authority.

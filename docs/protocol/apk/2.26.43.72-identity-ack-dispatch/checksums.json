@@ -1,0 +1,34 @@
+{
+  "README.md": {
+    "bytes": 5267,
+    "sha256": "8c2e466ccb727904cd6c0998f1847483bf82c65e6f2c1f8e5fb3140dbe889202"
+  },
+  "base-handler.txt": {
+    "bytes": 13989,
+    "sha256": "9527dd697ff8e0341a263ba6fd73ffadf213f40d8b996b170663b15e3f981c7c"
+  },
+  "executor-submit.txt": {
+    "bytes": 915,
+    "sha256": "f2cf98d26b2455b1b56e45fc198801260d13e77f3131c645199b70b28ddc7040"
+  },
+  "identity-dispatch.txt": {
+    "bytes": 8047,
+    "sha256": "c0fd293b063f5afd47e4b68c4f8d2db48c18e8cd0a508cf617a7546d365a2a8a"
+  },
+  "identity-lookup.txt": {
+    "bytes": 2326,
+    "sha256": "de818c5691d7561277e0a8d862de3cf0c025f3d2ea5ac2755cc535a99d28dfa5"
+  },
+  "identity-worker.txt": {
+    "bytes": 72278,
+    "sha256": "af6c9f602be2972cb9e95cce8986242dc8b0285a7f852cb8c5fcbe2bbe1c3241"
+  },
+  "worker-constructor.txt": {
+    "bytes": 498,
+    "sha256": "3634e5b43fbb9c651d3f03cd25da8f323b2dbbe45048237731df4818e646e479"
+  },
+  "worker-scheduler.txt": {
+    "bytes": 584,
+    "sha256": "ba09f70a4579f117b9f97b055be42e5a325642b31bf8f69c5aa58c7eec265330"
+  }
+}
