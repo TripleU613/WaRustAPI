@@ -2370,6 +2370,12 @@ mod tests {
             Some("1555@S.WHATSAPP.NET"),
             Some("1555@c.us"),
             Some("1555@msgr"),
+            Some("0@lid"),
+            Some("0123@lid"),
+            Some("letters@lid"),
+            Some("1234567890123456@lid"),
+            Some("１２３@lid"),
+            Some("-1@hosted.lid"),
         ]
         .into_iter()
         .enumerate()

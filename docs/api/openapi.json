@@ -17972,7 +17972,7 @@
   "x-message-ack-selected-chat": {
     "x-cli": false, "x-transport": true, "x-live": false,
     "x-library": ["whatsapp_api::transport::outgoing::acknowledge"],
-    "description": "Ordinary saved-outbox ACK settlement prefers a supported plain numeric PN/LID recipient (1..15 ASCII digits), otherwise normalizes PN/LID device from when no user recipient applies. Conflicting supported recipient leaves the entry uncertain. Known non-user/device recipients fall back to from; other parsed recipient families/forms remain unsupported and uncertain. Unique wire reservation, exact saved-chat equality, InFlight and once-only settlement remain required. This is not full native JID grammar, generic callback or comparison CLI/distribution-wait equivalence. No identity merge, retry or live operation.",
+    "description": "Ordinary saved-outbox ACK settlement prefers a supported plain numeric PN/LID recipient (1..15 ASCII digits, additionally nonzero-leading for LID), otherwise normalizes PN/LID device from when no user recipient applies. Conflicting supported recipient leaves the entry uncertain. Known non-user/device recipients fall back to from; other parsed recipient families/forms remain unsupported and uncertain except confirmed plain LID constructor-null text falls back to from and valid hosted.lid text canonicalizes to lid. Unique wire reservation, exact saved-chat equality, InFlight and once-only settlement remain required. This is not full native JID grammar, generic callback or comparison CLI/distribution-wait equivalence. No identity merge, retry or live operation.",
     "evidence": "docs/protocol/message-ack.md#select-the-message-ack-chat-before-outbox-correlation-2026-11-06"
   },
   "x-expected-chat-message-ack-outcome": {
@@ -18034,5 +18034,11 @@
     "x-library": ["whatsapp_api::transport::messaging::validate_received_ack"],
     "description": "Extends known-null call sender ordering to definite text-path null results: empty user, unknown qualified domain and unknown bare name outside native parser/factory/cache names. Captured receive continues before later call-field checks, preserving global required-id/numeric precedence and459 diversion. Native bare singleton names and cache aliases are not classified null solely from Rust generic JID parsing. Actor continuation controls include uppercase/unknown/c.us/msgr text domains and bare/empty-user cases. Recognized-family constructor failures, cache-dependent subtype decisions, nontext JIDs, child payloads, telemetry and native recovery remain open. No call feature, identity merge, request, error reply, retry or live operation.",
     "evidence": "docs/protocol/message-ack.md#definite-null-call-sender-text-versus-native-bare-cache-values-2026-11-06"
+  },
+  "x-plain-lid-ack-text-constructor": {
+    "x-cli": true, "x-transport": true, "x-live": false,
+    "x-library": ["whatsapp_api::transport::messaging::validate_received_ack", "whatsapp_api::transport::messaging::message_ack_outcome_for", "whatsapp_api::transport::outgoing::acknowledge"],
+    "description": "Plain lid/hosted.lid ACK text follows the pinned0Dx constructor:1..15 ASCII digits, no leading zero; hosted.lid uses the same canonical lid server. Invalid plain LID call sender follows the known-null recoverable route before later call fields. Message ACK invalid recipient becomes null/falls back to from; invalid from cannot establish chat without a valid selected recipient. Valid text alias canonicalizes before exact saved-chat correlation. Numeric ACK error Unicode parsing remains separate. Explicit agent/device syntax, opaque typed JIDs, other families/receipt parser routes and full recovery remain unported. No global JID rewrite, PN/LID merge, call feature, request, retry or live operation.",
+    "evidence": "docs/protocol/message-ack.md#plain-lid-text-uses-constructor-grammar-and-canonical-server-2026-11-06"
   }
 }

@@ -1256,11 +1256,27 @@ impl Pending {
 
 pub(super) use super::messaging::is_auth_challenge_ack;
 
+// The optional ACK JID accessor returns null on failed plain LID text
+// construction. Both native text aliases use 0Dx.getServer() == lid.
+fn message_ack_address(node: &Node, name: &str) -> Option<crate::model::jid::Jid> {
+    if let Some(text) = node.get_attr(name).and_then(|value| value.as_text())
+        && let Some(user) = super::messaging::plain_lid_text_user(text)
+    {
+        if !super::messaging::native_plain_lid_user_valid(user) {
+            return None;
+        }
+        let mut jid = super::receipts::jid(node, name)?;
+        jid.server = Server::Lid;
+        return Some(jid);
+    }
+    super::receipts::jid(node, name)
+}
+
 // APK43.72 1rH.A03 0294..02c2 selects a typed UserJid recipient
 // before normalizing from; 0Dn.A00 unwraps DeviceJid.userJid. Plain PN/LID
 // types0/18 bypass A00's special bot type26/27 conversion.
 pub(crate) fn message_ack_chat(node: &Node) -> Option<crate::model::jid::Jid> {
-    if let Some(recipient) = super::receipts::jid(node, "recipient")
+    if let Some(recipient) = message_ack_address(node, "recipient")
         && !recipient.is_ad()
         && !matches!(
             recipient.server,
@@ -1275,7 +1291,7 @@ pub(crate) fn message_ack_chat(node: &Node) -> Option<crate::model::jid::Jid> {
             && recipient.user.bytes().all(|b| b.is_ascii_digit()))
         .then_some(recipient);
     }
-    let from = super::receipts::jid(node, "from")?;
+    let from = message_ack_address(node, "from")?;
     if matches!(from.server, Server::User | Server::Lid) {
         Some(from.to_non_ad())
     } else {
@@ -3022,13 +3038,20 @@ mod tests {
                 ("15555550100:7@s.whatsapp.net", None, true),
                 ("99999@lid", Some("12345@lid"), true),
                 ("12345:7@lid", None, true),
+                ("99999@lid", Some("12345@hosted.lid"), true),
+                ("12345@hosted.lid", None, true),
+                ("0@lid", None, false),
+                ("0123@hosted.lid", None, false),
+                ("15555550100@s.whatsapp.net", Some("0@lid"), true),
+                ("15555550100@s.whatsapp.net", Some("0123@lid"), true),
+                ("15555550100@s.whatsapp.net", Some("１２３@lid"), true),
                 ("15555550100@s.whatsapp.net", Some("12345@lid"), false),
                 ("15555550100@s.whatsapp.net", Some("12345@hosted"), false),
-                ("15555550100@s.whatsapp.net", Some("letters@lid"), false),
+                ("15555550100@s.whatsapp.net", Some("letters@lid"), true),
                 (
                     "15555550100@s.whatsapp.net",
                     Some("1234567890123456@lid"),
-                    false,
+                    true,
                 ),
                 ("15555550100@s.whatsapp.net", Some("12345-6@g.us"), true),
                 (
@@ -3044,7 +3067,7 @@ mod tests {
                 store
                     .write(|tx| {
                         let mut entry = outbox().get_mut(tx, local_id)?.unwrap();
-                        if matches!(from, "99999@lid" | "12345:7@lid") {
+                        if matches!(from, "99999@lid" | "12345:7@lid" | "12345@hosted.lid") {
                             entry.intent.chat = ChatId::from_jid(&Jid::parse("12345@lid")?)?;
                         }
                         entry.wire_id = Some(MessageId::new("fixture")?);

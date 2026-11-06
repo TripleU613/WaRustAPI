@@ -1125,6 +1125,19 @@ pub(crate) fn ack_error_is_valid(node: &Node) -> bool {
     parsed_ack_error(node).is_ok()
 }
 
+// APK43.72 0De.A02 maps plain lid/hosted.lid to 0Dx. Its constructor
+// requires 1..15 ASCII digits and rejects leading zero; this is not Java's
+// Unicode-capable Integer.parseInt grammar used for numeric ACK errors.
+pub(crate) fn native_plain_lid_user_valid(user: &str) -> bool {
+    (1..=15).contains(&user.len())
+        && !user.starts_with('0')
+        && user.bytes().all(|byte| byte.is_ascii_digit())
+}
+pub(crate) fn plain_lid_text_user(text: &str) -> Option<&str> {
+    let (user, domain) = text.rsplit_once('@')?;
+    (matches!(domain, "lid" | "hosted.lid") && !user.contains([':', '.'])).then_some(user)
+}
+
 // APK43.72 0Tp.A0A -> 0Dd.A02/A00: definite null results for
 // the text parse path only. Do not substitute Rust's wider/narrower JID grammar.
 fn call_ack_sender_known_null(node: &Node) -> bool {
@@ -1163,7 +1176,9 @@ fn call_ack_sender_known_null(node: &Node) -> bool {
     };
     // Empty-user cache keys omit @ (0Dd.A01); unknown domains cannot be
     // inserted by the selected parser or user/newsletter cache factories.
-    user.is_empty() || !recognized(domain)
+    user.is_empty()
+        || !recognized(domain)
+        || plain_lid_text_user(text).is_some_and(|user| !native_plain_lid_user_valid(user))
 }
 
 /// Validate ACK required-ID, numeric and supported call-field admission. Stateful receivers must first capture the Node.
@@ -3104,6 +3119,12 @@ mod captured_wait_tests {
             Some("1555@S.WHATSAPP.NET"),
             Some("1555@c.us"),
             Some("1555@msgr"),
+            Some("0@lid"),
+            Some("0123@lid"),
+            Some("letters@lid"),
+            Some("1234567890123456@lid"),
+            Some("１２３@lid"),
+            Some("-1@hosted.lid"),
         ] {
             for id in ["", "fixture"] {
                 for kind in [None, Some(""), Some("offer")] {
@@ -3125,6 +3146,38 @@ mod captured_wait_tests {
                         assert!(validate_received_ack(&ack.attr("error", "bad")).is_err());
                     }
                 }
+            }
+        }
+    }
+
+    #[test]
+    fn plain_lid_sender_constructor_controls_call_field_ordering() {
+        for domain in ["lid", "hosted.lid"] {
+            for (user, valid) in [
+                ("", false),
+                ("0", false),
+                ("0123", false),
+                ("1", true),
+                ("12345", true),
+                ("123456789012345", true),
+                ("1234567890123456", false),
+                ("-1", false),
+                ("１２３", false),
+                ("١٢٣", false),
+                (" 1", false),
+                ("1 ", false),
+            ] {
+                let ack = Node::new("ack")
+                    .attr("class", "call")
+                    .attr("id", "")
+                    .attr("from", format!("{user}@{domain}"));
+                assert_eq!(
+                    validate_received_ack(&ack).is_ok(),
+                    !valid,
+                    "{user}@{domain}"
+                );
+                assert!(validate_received_ack(&ack.clone().attr("error", "459")).is_ok());
+                assert!(validate_received_ack(&ack.attr("error", "bad")).is_err());
             }
         }
     }

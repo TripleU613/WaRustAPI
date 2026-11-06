@@ -582,3 +582,57 @@ Validation: 1,467 workspace/all-feature tests passed. Strict workspace/all-targe
 all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
 validation, APK coverage freshness and repository hygiene passed. Exact pinned
 parser re-export and APK hash verified. Offline only.
+
+## Plain LID text uses constructor grammar and canonical server (2026-11-06)
+
+**Confirmed selected pinned static / Rust correction:** the retained
+[0Dx constructor and getServer](apk/2.26.43.72-message-ack-chat/lid-user.txt)
+were re-exported and matched exactly against APK2.26.43.72, SHA256
+`887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e`.
+Constructor0012..0108 requires1..15 characters, rejects leading ASCII0, then
+compares every char against ASCII0..9. This is distinct from the Unicode-digit
+Integer.parseInt grammar used by numeric ACK error admission. All accepted LID
+characters are ASCII, so Rust byte length equals Java UTF16 length for valid
+values; non-ASCII inputs fail either implementation's digit check.
+
+[0De.A02](apk/2.26.43.72-message-ack-chat/user-factory.txt) maps plain lid and
+hosted.lid to the same0Dx constructor, whose getServer returns lid. The optional
+[0Dd.A02 accessor](apk/2.26.43.72-ack-address-accessors/optional-parser.txt)
+turns constructor failure into null. Selected cache factories also construct
+this type, rather than caching invalid plain LID users as valid0Dx values.
+Explicit device/agent syntax takes different parser branches and is not
+classified by this new plain-text adapter.
+
+Two Rust corrections follow. Invalid plain lid/hosted.lid sender text is now
+known-null for call ACK ordering, so the already traced recoverable sender route
+precedes later call-field failures. Message ACK address selection also applies
+the constructor: an invalid plain LID recipient is null and falls back to from;
+an invalid plain LID from cannot establish the chat when no valid recipient
+was selected. Valid plain hosted.lid text canonicalizes to lid before exact
+saved-chat comparison. This is the native alias of one constructor, not PN/LID
+identity merging or a global Jid model rewrite. The actor, outbox, distribution
+and CLI expected-chat classification share the selected-address path.
+
+The previous outbox adapter wrongly treated invalid LID recipient text as an
+unsupported nonnull user, and did not canonicalize the valid text alias. Its
+real reservation/reopen regression now covers leading-zero, overlength,
+letters/full-width digits, invalid from and valid hosted.lid recipient/from.
+Success and ordinary refusal remain once-only and cannot re-reserve. The actor
+continuation test includes invalid LID sender text; boundary controls cover both
+domains, lengths1/15/16, zero/leading-zero, negative, Arabic/full-width digits
+and spaces, with459 and malformed-error precedence unchanged.
+
+Limits: explicit agent/device forms, opaque typed JIDs, other user families,
+cache-dependent aliases, all receipt parser routes and full native recovery
+remain separate. Generic Rust Jid parsing is unchanged; this is a bounded ACK
+text adapter. No call feature, new request/response, identity merge, retry or
+live account operation. The APK hash and complete class re-export were checked.
+
+Reproduction: `xtask apk-smali APK --class 'LX/0Dx;' --signatures --exceptions`
+compares exactly with the linked complete class; factory/parser/cache methods
+are retained in the preceding linked bundles under the same pinned build.
+
+Validation: 1,468 workspace/all-feature tests passed. Strict workspace/all-target/
+all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
+validation, APK coverage freshness and repository hygiene passed. Exact pinned
+0Dx class re-export and APK hash verified. Offline only.

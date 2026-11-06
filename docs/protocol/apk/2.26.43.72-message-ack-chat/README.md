@@ -77,3 +77,12 @@ target/debug/xtask apk-smali "$APK" --class 'LX/0EG;' --signatures --exceptions
 
 checksums.json covers every other file in this bundle. No account-restriction
 outcome or actual server acceptance is proven by static construction.
+
+## Plain LID constructor follow-up
+
+[Constructor grammar/canonical-server correction](../../message-ack.md#plain-lid-text-uses-constructor-grammar-and-canonical-server-2026-11-06)
+now applies this retained0Dx evidence to plain ACK text. Invalid plain LID
+recipient becomes null/falls back; invalid from cannot establish chat. Valid
+hosted.lid text uses the same lid-valued constructor. The earlier numeric-only
+adapter limit is superseded for these confirmed cases; explicit device/agent,
+opaque typed values and other-family normalization remain unported.
