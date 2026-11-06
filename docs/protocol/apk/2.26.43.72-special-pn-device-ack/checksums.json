@@ -1,0 +1,14 @@
+{
+  "README.md": {
+    "bytes": 3327,
+    "sha256": "88f800c34afa70a7b967b05629e3e3228d059780c94b74fc6bb99e41a3fce7f4"
+  },
+  "hosted-device.txt": {
+    "bytes": 3751,
+    "sha256": "5cbe4456769e139b550ef97afaebe538f183ba5a48067448ec88069d29d4fe3e"
+  },
+  "pn-device.txt": {
+    "bytes": 2493,
+    "sha256": "1048951acc39e5c90892e225a3232c7479bf63e259c54d45cca822b002cd4686"
+  }
+}

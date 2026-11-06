@@ -1169,7 +1169,6 @@ pub(crate) fn ack_user_text(text: &str) -> Option<AckUserText<'_>> {
     let dot = local.rfind('.');
     let colon = local.rfind(':');
     let lid = matches!(domain, "lid" | "hosted.lid");
-    let base_end = dot.into_iter().chain(colon).min().unwrap_or(local.len());
     // APK43.72 DCF/Dv7/J9O bypass PhoneUserJid. Preserve their native
     // class rather than applying its numeric constructor to special names.
     if !lid && dot.is_none() && colon.is_none() {
@@ -1180,15 +1179,13 @@ pub(crate) fn ack_user_text(text: &str) -> Option<AckUserText<'_>> {
             _ => {}
         }
     }
-    // Explicit special-user devices still need their separate class trace.
-    if !lid && matches!(&local[..base_end], "0" | "Server") {
-        return None;
-    }
     let valid_user = |user: &str| {
         if lid {
             native_plain_lid_user_valid(user)
         } else {
-            native_plain_pn_user_valid(user)
+            // 0De.A04 -> A02 accepts DCF/Dv7 as UserJid bases too;
+            // 0EE/Dv4 do not require PhoneUserJid specifically.
+            matches!(user, "0" | "Server") || native_plain_pn_user_valid(user)
         }
     };
     let prefix_end = match (dot, colon) {
@@ -3321,11 +3318,55 @@ mod captured_wait_tests {
                 assert!(validate_received_ack(&ack.attr("error", "bad")).is_err());
             }
         }
-        for text in ["0:7@s.whatsapp.net", "Server:99@hosted"] {
-            assert!(ack_user_text(text).is_none(), "special {text}");
-            assert!(!call_ack_sender_known_null(
-                &Node::new("ack").attr("from", text)
-            ));
+    }
+
+    #[test]
+    fn special_pn_devices_preserve_constructor_class_and_call_ordering() {
+        for user in ["0", "Server"] {
+            for domain in ["s.whatsapp.net", "hosted"] {
+                for (suffix, native_device) in [
+                    (":0", domain != "hosted"),
+                    (".foo", domain != "hosted"),
+                    (":99", true),
+                    (":100", false),
+                    (":255", false),
+                    (":256", domain != "hosted"),
+                    (":355", domain != "hosted"),
+                    (":-256", domain != "hosted"),
+                    (":２５６", domain != "hosted"),
+                    (":2147483648", false),
+                    (":", false),
+                    (".", false),
+                    (":7.foo", false),
+                    (".foo:99", true),
+                ] {
+                    let text = format!("{user}{suffix}@{domain}");
+                    let ack = Node::new("ack")
+                        .attr("class", "call")
+                        .attr("id", "fixture")
+                        .attr("type", "offer")
+                        .attr("from", text.clone());
+                    assert_eq!(
+                        ordinary_ack_has_participant(
+                            &Node::new("ack").attr("participant", text.clone())
+                        ),
+                        native_device,
+                        "{text}"
+                    );
+                    assert!(validate_received_ack(&ack).is_ok(), "valid fields {text}");
+                    let mut empty_id = ack.clone();
+                    empty_id.attributes.retain(|a| a.name != "id");
+                    empty_id = empty_id.attr("id", "");
+                    assert_eq!(
+                        validate_received_ack(&empty_id).is_ok(),
+                        !native_device,
+                        "{text}"
+                    );
+                    assert!(validate_received_ack(&empty_id.clone().attr("error", "459")).is_ok());
+                    assert!(validate_received_ack(&empty_id.attr("error", "bad")).is_err());
+                    assert_eq!(call_ack_sender_known_null(&ack), !native_device, "{text}");
+                }
+            }
         }
     }
 

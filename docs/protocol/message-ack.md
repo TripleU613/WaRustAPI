@@ -735,3 +735,30 @@ recipient fallback, special-recipient precedence, participant success/refusal,
 once-only facts, reopening and no reselection. Full binary/cache equivalence,
 special-device cases, service-chat application behavior and server policy remain
 unknown. No live traffic, requests or replay authorization.
+
+
+## Explicit special PN devices preserve device class (2026-11-06)
+
+**Confirmed selected pinned static / Rust correction.**
+[Complete0EE/Dv4 exports and linked factory/base-constructor path](apk/2.26.43.72-special-pn-device-ack/README.md)
+establish that0/Server can be explicit PN/hosted device bases. The classifier
+now applies the same signed-i32/byte-range/hosted99 construction to these bases.
+This resolves the previous explicit-special-device gap for these text forms.
+Plain gdpr is a separate nonUser special; gdpr device syntax does not inherit
+that plain singleton route and remains an ordinary constructor failure.
+
+Native device types17/24 pass call sender predicate, unlike plain types7/8;
+invalid construction follows the known-null route before later call fields.
+Participant conversion preserves DeviceJid, so validServer devices now block
+ordinary success, while plainServer still does not. Invalid devices do not
+block it. Recipient UserJid cast fails even for explicit device0 and falls back
+to from; selected device from unwraps to canonical PN base0/Server.
+
+**Offline regression:** both bases and domains cover device0/99/100/255/256/355,
+negative/Unicode/i32-overflow suffixes, dot-only/trailing/combined forms, call
+field ordering,459 and malformed-error precedence. Pure selected-chat tests
+verify base unwrapping and recipient cast; actual in-flight tables verify
+recipient fallback, participant success/refusal, once-only facts, reopen and no
+reselection. Binary/cache equivalence, actual device serialization, service-chat
+application behavior, other families and server policy remain open. No live
+traffic or replay authority.

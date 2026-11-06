@@ -3042,6 +3042,47 @@ mod tests {
         assert_eq!(status.facts.len(), 2);
     }
     #[test]
+    fn special_device_ack_from_unwraps_base_but_recipient_cast_falls_back() {
+        for (text, canonical) in [
+            ("0:0@s.whatsapp.net", "0@s.whatsapp.net"),
+            ("0:-256@s.whatsapp.net", "0@s.whatsapp.net"),
+            ("0:99@hosted", "0@s.whatsapp.net"),
+            ("Server.foo@s.whatsapp.net", "Server@s.whatsapp.net"),
+            ("Server:99@hosted", "Server@s.whatsapp.net"),
+        ] {
+            let ack = Node::new("ack")
+                .attr("class", "message")
+                .attr("id", "fixture")
+                .attr("from", text);
+            assert_eq!(
+                message_ack_chat(&ack),
+                Some(Jid::parse(canonical).unwrap()),
+                "{text}"
+            );
+            let fallback = Node::new("ack")
+                .attr("class", "message")
+                .attr("id", "fixture")
+                .attr("from", "15555550100@s.whatsapp.net")
+                .attr("recipient", text);
+            assert_eq!(
+                message_ack_chat(&fallback),
+                Some(Jid::parse("15555550100@s.whatsapp.net").unwrap()),
+                "recipient {text}"
+            );
+        }
+        for text in [
+            "0:100@s.whatsapp.net",
+            "Server:355@hosted",
+            "Server:@s.whatsapp.net",
+        ] {
+            assert!(
+                message_ack_chat(&Node::new("ack").attr("from", text)).is_none(),
+                "{text}"
+            );
+        }
+    }
+
+    #[test]
     fn message_ack_recipient_precedes_from_and_device_from_normalizes() {
         for error in [None, Some("500")] {
             for (from, recipient, settles) in [
@@ -3056,6 +3097,22 @@ mod tests {
                     false,
                 ),
                 ("15555550100:7@s.whatsapp.net", None, true),
+                (
+                    "15555550100@s.whatsapp.net",
+                    Some("0:0@s.whatsapp.net"),
+                    true,
+                ),
+                ("15555550100@s.whatsapp.net", Some("Server:99@hosted"), true),
+                (
+                    "15555550100@s.whatsapp.net",
+                    Some("Server:355@hosted"),
+                    true,
+                ),
+                (
+                    "15555550100@s.whatsapp.net",
+                    Some("0.foo@s.whatsapp.net"),
+                    true,
+                ),
                 (
                     "15555550100@s.whatsapp.net",
                     Some("gdpr@s.whatsapp.net"),
@@ -3389,6 +3446,15 @@ mod tests {
         for error in [None, Some("500")] {
             for (participant, blocks_success) in [
                 ("12345:0@lid", true),
+                ("Server:0@s.whatsapp.net", true),
+                ("Server.foo@s.whatsapp.net", true),
+                ("Server:99@hosted", true),
+                ("Server:355@hosted", false),
+                ("Server:100@s.whatsapp.net", false),
+                ("0:-256@s.whatsapp.net", true),
+                ("0:２５６@s.whatsapp.net", true),
+                ("0:100@s.whatsapp.net", false),
+                ("0:@s.whatsapp.net", false),
                 ("0@s.whatsapp.net", true),
                 ("0@hosted", true),
                 ("Server@s.whatsapp.net", false),
