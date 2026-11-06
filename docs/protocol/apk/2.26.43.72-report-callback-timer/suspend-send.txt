@@ -1,0 +1,64 @@
+
+# class: LX/0Sf;
+# extends: Ljava/lang/Object;
+
+.method public A0F(LLLLIJZ)  # .registers 29
+    # full signature: LX/0Sf;->A0F(LX/0Tp;Ljava/lang/String;LX/0cf;IJZ)Ljava/lang/Object;
+    0000..0004  sget-object  v0, LX/0eh;->A02:Ljava/util/concurrent/atomic/AtomicIntegerFieldUpdater;
+    0004..000a  invoke-static/range  {v24..v24}, LX/0dE;->A02(LX/0cf;)LX/0cf;
+    000a..000c  move-result-object  v0
+    000c..000e  const/4  v5, #0x1
+    000e..0012  new-instance  v4, LX/0eh;
+    0012..0018  invoke-direct  {v4, v5, v0}, LX/0eh;-><init>(ILX/0cf;)V
+    0018..001e  invoke-virtual  {v4}, LX/0eh;->A0H()V
+    001e..0020  const/4  v0, #0x2
+    0020..0024  new-instance  v6, LX/Cgd;
+    0024..002a  invoke-direct  {v6, v4, v0}, LX/Cgd;-><init>(Ljava/lang/Object;I)V
+    002a..002c  const/4  v13, #0x0
+    002c..0030  move-object/from16  v8, v21
+    0030..0034  move-object/from16  v7, v22
+    0034..0038  move-object/from16  v9, v23
+    0038..003c  move/from16  v10, v25
+    003c..0040  move-wide/from16  v11, v26
+    0040..0044  if-eqz  v28, +0xa
+    0044..004a  invoke-static/range  {v6..v13}, LX/0Sf;->A06(LX/0lG;LX/0Tp;LX/0Sf;Ljava/lang/String;IJZ)V
+    004a..0050  invoke-virtual  {v4}, LX/0eh;->A0E()Ljava/lang/Object;
+    0050..0052  move-result-object  v0
+    0052..0054  return-object  v0
+    0054..0056  move  v14, v13
+    0056..005c  invoke-static/range  {v6..v14}, LX/0Sf;->A0A(LX/0lG;LX/0Tp;LX/0Sf;Ljava/lang/String;IJZZ)Z
+    005c..005e  move-result  v0
+    005e..0062  if-nez  v0, -0xa
+    0062..0066  const-string  v0, "MessageClient/sendIq/add-to-pending type="
+    0066..006a  new-instance  v1, Ljava/lang/StringBuilder;
+    006a..0070  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0070..0076  invoke-virtual  {v1, v10}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0076..007a  const-string  v0, " id="
+    007a..0080  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0080..0086  invoke-virtual  {v1, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0086..008c  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    008c..008e  move-result-object  v0
+    008e..0094  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0094..009a  invoke-static  {v8}, LX/0Sf;->A03(LX/0Sf;)LX/0ln;
+    009a..009c  move-result-object  v14
+    009c..009e  move-object  v15, v6
+    009e..00a2  move-object/from16  v16, v9
+    00a2..00a6  move/from16  v17, v10
+    00a6..00aa  move-wide/from16  v18, v11
+    00aa..00ae  move/from16  v20, v5
+    00ae..00b4  invoke-virtual/range  {v14..v20}, LX/0ln;->A08(LX/0lG;Ljava/lang/String;IJZ)V
+    00b4..00b8  iget-object  v3, v8, LX/0Sf;->A09:LX/0TX;
+    00b8..00bc  const-wide/16  v1, #0x0
+    00bc..00c0  cmp-long  v0, v26, v1
+    00c0..00c4  if-gtz  v0, +0x3
+    00c4..00c6  const/4  v5, #0x0
+    00c6..00cc  invoke-static  {v5}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    00cc..00ce  move-result-object  v8
+    00ce..00d0  move  v12, v13
+    00d0..00d2  move  v11, v13
+    00d2..00d8  invoke-static/range  {v7..v12}, LX/0Sf;->A01(LX/0Tp;Ljava/lang/Boolean;Ljava/lang/String;IZZ)Landroid/os/Message;
+    00d8..00da  move-result-object  v0
+    00da..00e0  invoke-virtual  {v3, v0, v9}, LX/0TX;->A02(Landroid/os/Message;Ljava/lang/String;)V
+    00e0..00e2  goto  -0x4b
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,72 @@
+
+# class: Lcom/whatsapp/infra/xmpp/messaging/MessageClientSmaxWrapper;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLLLI)  # .registers 16
+    # full signature: Lcom/whatsapp/infra/xmpp/messaging/MessageClientSmaxWrapper;->A00(LX/0Tp;Ljava/lang/String;LX/0cf;I)Ljava/lang/Object;
+    0000..0002  const/4  v3, #0x2
+    0002..0006  instance-of  v0, v14, LX/CzD;
+    0006..000a  if-eqz  v0, +0x4c
+    000a..000c  move-object  v6, v14
+    000c..0010  check-cast  v6, LX/CzD;
+    0010..0014  iget  v0, v6, LX/CzD;->$t:I
+    0014..0018  if-ne  v0, v3, +0x45
+    0018..001c  iget  v2, v6, LX/CzD;->A01:I
+    001c..0020  const/high16  v1, #0x80000000
+    0020..0024  and-int  v0, v2, v1
+    0024..0028  if-eqz  v0, +0x3d
+    0028..002a  sub-int/2addr  v2, v1
+    002a..002e  iput  v2, v6, LX/CzD;->A01:I
+    002e..0032  iget-object  v3, v6, LX/CzD;->A04:Ljava/lang/Object;
+    0032..0036  sget-object  v2, LX/0dd;->A02:LX/0dd;
+    0036..003a  iget  v0, v6, LX/CzD;->A01:I
+    003a..003c  const/4  v1, #0x1
+    003c..0040  if-eqz  v0, +0x12
+    0040..0044  if-ne  v0, v1, +0x4d
+    0044..004a  invoke-static  {v3}, LX/0dg;->A01(Ljava/lang/Object;)V
+    004a..004e  check-cast  v3, LX/BuD;
+    004e..0052  instance-of  v0, v3, LX/BWL;
+    0052..0056  if-eqz  v0, +0x2c
+    0056..005a  check-cast  v3, LX/BWL;
+    005a..005e  iget-object  v0, v3, LX/BWL;->A00:LX/0Tp;
+    005e..0060  return-object  v0
+    0060..0066  invoke-static  {v3}, LX/0dg;->A01(Ljava/lang/Object;)V
+    0066..006a  iget-object  v0, v11, Lcom/whatsapp/infra/xmpp/messaging/MessageClientSmaxWrapper;->A00:LX/05a;
+    006a..0070  invoke-static  {v0}, LX/B1y;->A0N(LX/05a;)LX/0Sf;
+    0070..0072  move-result-object  v3
+    0072..0074  const/4  v0, #0x0
+    0074..0078  iput-object  v0, v6, LX/CzD;->A02:Ljava/lang/Object;
+    0078..007c  iput-object  v0, v6, LX/CzD;->A03:Ljava/lang/Object;
+    007c..007e  move  v7, v15
+    007e..0082  iput  v15, v6, LX/CzD;->A00:I
+    0082..0086  iput  v1, v6, LX/CzD;->A01:I
+    0086..008a  const-wide/16  v8, #0x7d00
+    008a..008c  const/4  v10, #0x0
+    008c..008e  move-object  v4, v12
+    008e..0090  move-object  v5, v13
+    0090..0096  invoke-virtual/range  {v3..v10}, LX/0Sf;->A0F(LX/0Tp;Ljava/lang/String;LX/0cf;IJZ)Ljava/lang/Object;
+    0096..0098  move-result-object  v3
+    0098..009c  if-ne  v3, v2, -0x27
+    009c..009e  return-object  v2
+    009e..00a2  new-instance  v6, LX/CzD;
+    00a2..00a8  invoke-direct  {v6, v11, v14, v3}, LX/CzD;-><init>(Ljava/lang/Object;LX/0cf;I)V
+    00a8..00aa  goto  -0x3d
+    00aa..00ae  instance-of  v0, v3, LX/BWK;
+    00ae..00b2  if-eqz  v0, +0x7
+    00b2..00b6  check-cast  v3, LX/BWK;
+    00b6..00ba  iget-object  v0, v3, LX/BWK;->A00:LX/0Tp;
+    00ba..00bc  return-object  v0
+    00bc..00c0  sget-object  v0, LX/BWM;->A00:LX/BWM;
+    00c0..00c6  invoke-static  {v3, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    00c6..00c8  move-result  v0
+    00c8..00cc  if-eqz  v0, +0x4
+    00cc..00ce  const/4  v0, #0x0
+    00ce..00d0  return-object  v0
+    00d0..00d6  invoke-static  {}, LX/2L6;->A1N()LX/2K2;
+    00d6..00d8  move-result-object  v0
+    00d8..00da  throw  v0
+    00da..00e0  invoke-static  {}, LX/000;->A03()Ljava/lang/IllegalStateException;
+    00e0..00e2  move-result-object  v0
+    00e2..00e4  throw  v0
+    # exception table: 0 try range(s)
+.end method

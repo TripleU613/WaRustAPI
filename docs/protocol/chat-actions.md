@@ -126,8 +126,10 @@ placement for a set reply is inferred, not traced.
   `scam_or_fraud` (confirmed strings; where they attach is **unknown**, likely
   the `LX/9QG` fragment merged into `spam_list`).
 - Reply: `IndividualReportResponseSuccess` carries a report id
-  (`LX/9V2` `SuccessWithData(reportId=…)`), element name **unknown**; treat any
-  `type=result` as accepted.
+  (`LX/9V2` `SuccessWithData(reportId=…)`), element name initially **unknown**. The current
+  [callback follow-up](#individual-report-callback-timer-2026-11-06) locates
+  `report/id`; generic `type=result` settlement is only an envelope outcome,
+  not native response admission or moderation acceptance.
 
 Observed 2026-09-20: a full block-list fetch reply item carried `jid` (LID),
 `pn_jid` and one attribute our decoder rendered as `B3b=true`; the comparison
@@ -1790,3 +1792,27 @@ ActionStatus.Ok is an envelope/recognized-refusal outcome, not a claim native
 URL/id validation, cache adoption or photo publication succeeded. That admission
 and downstream state port remain unfinished. No timer, ACK, refresh, retry,
 query or live operation was added.
+
+## Individual report callback timer (2026-11-06)
+
+**Confirmed static / implemented offline:** [current RPC-to-timer chain](apk/2.26.43.72-report-callback-timer/README.md)
+binds IndividualSpamReportRpc -> SpamRPCManager.A01 -> MessageClientSmaxWrapper.A00,
+which supplies32000 to0Sf.A0F. Cgd selector2 maps delivery failure/expiry through
+BWM to null. Shared0ln registration requires positive duration to post message4.
+Rust previously left this report callback claim untimed. Supported individual
+spam/set/spam_list requests now use the existing32s monotonic callback deadline.
+At expiry only the live claim ends: durable Sent/uncertainty stays, late replies
+cannot settle through that expired owner, and restart does not requeue the report.
+No inferred native offline queue/retry/coroutine-cancellation policy was added.
+
+The regression was red with no deadline, green with result/error at31,999ms and
+expiry at32,000ms, unchanged saved state on late reply, reopen and no resend.
+A report label on a ping cannot borrow the timer. No live operation.
+
+The current generated response path locates report/id via Shk.A00 ->7NL,
+optionally null; manager tries typed success before its error model. Full native
+schema/correlation/source/error adoption and report-ID projection remain unported.
+Generic Ok does not prove native report acceptance or moderation outcome.
+The current flow fragment has100 schema entries; Rust's seven flows are a local
+subset, not the complete native list. List lower bounds and effective optional
+metadata were not newly reconstructed, and no message/trace field is invented.

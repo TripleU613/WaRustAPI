@@ -692,6 +692,12 @@ fn callback_seconds(node: &Node) -> Option<u64> {
         // APK43.72 1HL.A07 017c..018a -> 0Sf.A0W: 32000ms
         // from registration, not the registration HTTP PIN flow.
         Some(32)
+    } else if super::report::is_request(node) {
+        // APK43.72 SpamRPCManager.A01 -> MessageClientSmaxWrapper.A00
+        // passes32000ms to0Sf.A0F; Cgd selector2 resumes timeout as BWM.
+        // docs/protocol/apk/2.26.43.72-report-callback-timer/README.md.
+        // Expiry drops the live claim, never the durable uncertain intent.
+        Some(32)
     } else if super::identity_query::is_request(node) {
         // APK43.72 FeM.run case16 187a..1888 -> 0Sf.A0W:
         // identity-only callback uses32000ms, not a universal key timer.
@@ -2496,6 +2502,75 @@ mod tests {
                 );
             }
         }
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn report_callback_expires_at_native_timeout_without_replay() {
+        use super::super::report;
+        use std::time::Duration;
+        use tokio::time::{Instant, advance};
+        for outcome in ["result", "error", "expire"] {
+            let (dir, store) = store();
+            let id = report::queue_report(
+                &store,
+                &crate::model::jid::Jid::parse("15555550101@s.whatsapp.net").unwrap(),
+                "chat",
+                Some(true),
+            )
+            .unwrap();
+            let request = reserve_next(&store).unwrap().unwrap();
+            let mut live = LiveReplies::default();
+            let started = Instant::now();
+            register_written(&mut live, &store, &request, started);
+            assert_eq!(live.deadline(), Some(started + Duration::from_secs(32)));
+            advance(Duration::from_millis(31999)).await;
+            live.expire();
+            let reply = Node::new("iq").attr("id", id.as_str()).attr(
+                "type",
+                if outcome == "error" {
+                    "error"
+                } else {
+                    "result"
+                },
+            );
+            if outcome == "expire" {
+                advance(Duration::from_millis(1)).await;
+                let before = outcomes(&store).unwrap();
+                live.expire();
+                assert!(live.deadline().is_none());
+                assert!(!live.record_reply(&store, &reply).unwrap());
+                assert_eq!(outcomes(&store).unwrap(), before);
+                assert!(super::reply(&store, &id).unwrap().is_none());
+            } else {
+                assert!(live.record_reply(&store, &reply).unwrap());
+                assert!(!live.record_reply(&store, &reply).unwrap());
+            }
+            let before = outcomes(&store).unwrap();
+            assert_eq!(
+                before[0].status,
+                match outcome {
+                    "result" => ActionStatus::Ok,
+                    "error" => ActionStatus::Error,
+                    _ => ActionStatus::Sent,
+                }
+            );
+            drop(store);
+            let reopened = ProtocolStore::open(OpenOptions {
+                path: dir.path().join("p.redb"),
+                account_id: AccountId::new("a").unwrap(),
+                key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([7; 32]))),
+                create: false,
+            })
+            .unwrap();
+            assert_eq!(outcomes(&reopened).unwrap(), before);
+            assert!(reserve_pending(&reopened).unwrap().is_empty());
+        }
+        let (_dir, store) = store();
+        queue(&store, "report", "wrong producer", ping).unwrap();
+        let request = reserve_next(&store).unwrap().unwrap();
+        let mut live = LiveReplies::default();
+        register_written(&mut live, &store, &request, Instant::now());
+        assert!(live.deadline().is_none());
     }
 
     #[tokio::test(start_paused = true)]

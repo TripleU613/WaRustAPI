@@ -1,0 +1,112 @@
+
+# class: Lcom/whatsapp/infra/smax/generated/spam/outgoing/SpamRPCManager;
+# extends: Ljava/lang/Object;
+
+.method public A01(LLLLLLLLLI)  # .registers 28
+    # full signature: Lcom/whatsapp/infra/smax/generated/spam/outgoing/SpamRPCManager;->A01(Lcom/whatsapp/infra/core/jid/Jid;LX/Dz0;LX/Dyx;LX/Dyx;Ljava/util/List;Ljava/util/List;Ljava/util/List;LX/0cf;I)Ljava/lang/Object;
+    0000..0002  const/4  v3, #0x0
+    0002..0004  const/4  v8, #0x1
+    0004..0008  move-object/from16  v5, v26
+    0008..000c  instance-of  v0, v5, LX/3hT;
+    000c..0010  if-eqz  v0, +0xa
+    0010..0012  move-object  v0, v5
+    0012..0016  check-cast  v0, LX/3hT;
+    0016..001a  iget  v1, v0, LX/3hT;->$t:I
+    001a..001c  const/4  v0, #0x1
+    001c..0020  if-eq  v1, v8, +0x3
+    0020..0022  const/4  v0, #0x0
+    0022..0026  move-object/from16  v7, v18
+    0026..002a  if-eqz  v0, +0x71
+    002a..002c  move-object  v4, v5
+    002c..0030  check-cast  v4, LX/3hT;
+    0030..0034  iget  v2, v4, LX/3hT;->A01:I
+    0034..0038  const/high16  v1, #0x80000000
+    0038..003c  and-int  v0, v2, v1
+    003c..0040  if-eqz  v0, +0x66
+    0040..0042  sub-int/2addr  v2, v1
+    0042..0046  iput  v2, v4, LX/3hT;->A01:I
+    0046..004a  iget-object  v6, v4, LX/3hT;->A08:Ljava/lang/Object;
+    004a..004e  sget-object  v5, LX/0dd;->A02:LX/0dd;
+    004e..0052  iget  v0, v4, LX/3hT;->A01:I
+    0052..0056  if-eqz  v0, +0x15
+    0056..005a  if-ne  v0, v8, +0x95
+    005a..005e  iget-object  v9, v4, LX/3hT;->A0C:Ljava/lang/Object;
+    005e..0062  check-cast  v9, LX/Dzb;
+    0062..0068  invoke-static  {v6}, LX/0dg;->A01(Ljava/lang/Object;)V
+    0068..006c  check-cast  v6, LX/0Tp;
+    006c..0070  if-nez  v6, +0x54
+    0070..0074  new-instance  v5, LX/Erf;
+    0074..007a  invoke-direct  {v5, v3, v3, v8}, LX/Erf;-><init>(Ljava/lang/Object;Ljava/util/List;Z)V
+    007a..007c  return-object  v5
+    007c..0082  invoke-static  {v7, v6}, Lcom/whatsapp/infra/smax/generated/spam/outgoing/SpamRPCManager;->A00(Lcom/whatsapp/infra/smax/generated/spam/outgoing/SpamRPCManager;Ljava/lang/Object;)Lcom/whatsapp/infra/xmpp/messaging/MessageClientSmaxWrapper;
+    0082..0084  move-result-object  v1
+    0084..008a  invoke-virtual  {v1}, Lcom/whatsapp/infra/xmpp/messaging/MessageClientSmaxWrapper;->A01()Ljava/lang/String;
+    008a..008c  move-result-object  v14
+    008c..0090  new-instance  v9, LX/Dzb;
+    0090..0094  move-object/from16  v10, v19
+    0094..0098  move-object/from16  v11, v20
+    0098..009c  move-object/from16  v12, v21
+    009c..00a0  move-object/from16  v13, v22
+    00a0..00a4  move-object/from16  v15, v23
+    00a4..00a8  move-object/from16  v16, v24
+    00a8..00ac  move-object/from16  v17, v25
+    00ac..00b2  invoke-direct/range  {v9..v17}, LX/Dzb;-><init>(Lcom/whatsapp/infra/core/jid/Jid;LX/Dz0;LX/Dyx;LX/Dyx;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;)V
+    00b2..00b6  iget-object  v0, v9, LX/Dzb;->A00:Ljava/lang/Object;
+    00b6..00ba  check-cast  v0, LX/0Tp;
+    00ba..00be  iput-object  v3, v4, LX/3hT;->A02:Ljava/lang/Object;
+    00be..00c2  iput-object  v3, v4, LX/3hT;->A03:Ljava/lang/Object;
+    00c2..00c6  iput-object  v3, v4, LX/3hT;->A0D:Ljava/lang/Object;
+    00c6..00ca  iput-object  v3, v4, LX/3hT;->A0E:Ljava/lang/Object;
+    00ca..00ce  iput-object  v3, v4, LX/3hT;->A0F:Ljava/lang/Object;
+    00ce..00d2  iput-object  v3, v4, LX/3hT;->A04:Ljava/lang/Object;
+    00d2..00d6  iput-object  v3, v4, LX/3hT;->A05:Ljava/lang/Object;
+    00d6..00da  iput-object  v3, v4, LX/3hT;->A06:Ljava/lang/Object;
+    00da..00de  iput-object  v3, v4, LX/3hT;->A07:Ljava/lang/Object;
+    00de..00e2  iput-object  v3, v4, LX/3hT;->A09:Ljava/lang/Object;
+    00e2..00e6  iput-object  v3, v4, LX/3hT;->A0A:Ljava/lang/Object;
+    00e6..00ea  iput-object  v3, v4, LX/3hT;->A0B:Ljava/lang/Object;
+    00ea..00ee  iput-object  v9, v4, LX/3hT;->A0C:Ljava/lang/Object;
+    00ee..00f2  move/from16  v2, v27
+    00f2..00f6  iput  v2, v4, LX/3hT;->A00:I
+    00f6..00fa  iput  v8, v4, LX/3hT;->A01:I
+    00fa..0100  invoke-virtual  {v1, v0, v14, v4, v2}, Lcom/whatsapp/infra/xmpp/messaging/MessageClientSmaxWrapper;->A00(LX/0Tp;Ljava/lang/String;LX/0cf;I)Ljava/lang/Object;
+    0100..0102  move-result-object  v6
+    0102..0106  if-ne  v6, v5, -0x4d
+    0106..0108  return-object  v5
+    0108..010c  new-instance  v4, LX/3hT;
+    010c..0112  invoke-direct  {v4, v7, v5, v8}, LX/3hT;-><init>(Ljava/lang/Object;LX/0cf;I)V
+    0112..0114  goto  -0x66
+    0114..011a  invoke-static  {}, LX/1Xl;->A18()Ljava/util/ArrayList;
+    011a..011c  move-result-object  v4
+    011c..0120  new-instance  v1, LX/Rv2;
+    0120..0126  invoke-direct  {v1, v6, v9, v8}, LX/Rv2;-><init>(LX/0Tp;LX/Dzb;I)V
+    0126..0128  const/4  v0, #0x0
+    0128..012c  new-instance  v5, LX/Erf;
+    012c..0132  invoke-direct  {v5, v1, v3, v0}, LX/Erf;-><init>(Ljava/lang/Object;Ljava/util/List;Z)V
+    0132..0134  return-object  v5
+    0134..0136  move-exception  v0
+    0136..013c  invoke-virtual  {v0}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    013c..013e  move-result-object  v1
+    013e..0142  const-string  v0, "IndividualReportResponseSuccess: "
+    0142..0148  invoke-static  {v0, v1, v4}, LX/6ol;->A1N(Ljava/lang/String;Ljava/lang/String;Ljava/util/AbstractCollection;)V
+    0148..014a  const/4  v2, #0x0
+    014a..014e  new-instance  v0, LX/Rv2;
+    014e..0154  invoke-direct  {v0, v6, v9, v2}, LX/Rv2;-><init>(LX/0Tp;LX/Dzb;I)V
+    0154..0158  new-instance  v5, LX/Erf;
+    0158..015e  invoke-direct  {v5, v0, v3, v2}, LX/Erf;-><init>(Ljava/lang/Object;Ljava/util/List;Z)V
+    015e..0160  return-object  v5
+    0160..0162  move-exception  v0
+    0162..0168  invoke-virtual  {v0}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    0168..016a  move-result-object  v1
+    016a..016e  const-string  v0, "IndividualReportResponseError: "
+    016e..0174  invoke-static  {v0, v1, v4}, LX/6ol;->A1N(Ljava/lang/String;Ljava/lang/String;Ljava/util/AbstractCollection;)V
+    0174..0178  new-instance  v0, LX/Erf;
+    0178..017e  invoke-direct  {v0, v3, v4, v2}, LX/Erf;-><init>(Ljava/lang/Object;Ljava/util/List;Z)V
+    017e..0180  return-object  v0
+    0180..0186  invoke-static  {}, LX/000;->A03()Ljava/lang/IllegalStateException;
+    0186..0188  move-result-object  v0
+    0188..018a  throw  v0
+    # exception table: 2 try range(s)
+    # catch LX/LIL; code_units 008e..009a -> 009a
+    # catch LX/LIL; code_units 00a4..00b0 -> 00b0
+.end method

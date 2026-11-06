@@ -1,0 +1,78 @@
+# Selected complete DEX method; other overloads remain local.
+.method public <init>(VLLLLLLLL)  # .registers 18
+    # full signature: LX/Dzb;-><init>(Lcom/whatsapp/infra/core/jid/Jid;LX/Dz0;LX/Dyx;LX/Dyx;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;)V
+    0000..0004  const/16  v0, #0x15
+    0004..0008  iput  v0, v9, LX/Dzb;->$t:I
+    0008..000a  const/4  v8, #0x0
+    000a..000c  const/4  v1, #0x2
+    000c..0010  move-object/from16  v5, v17
+    0010..0014  move-object/from16  v6, v16
+    0014..001a  invoke-static  {v15, v6, v5, v1}, LX/2LE;->A17(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+    001a..001e  const/16  v0, #0x9
+    001e..0024  invoke-static  {v12, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0024..002a  invoke-direct  {v9}, Ljava/lang/Object;-><init>()V
+    002a..0030  invoke-static  {}, LX/B1x;->A0c()LX/0Tj;
+    0030..0032  move-result-object  v4
+    0032..0038  const-string/jumbo  v2, "type"
+    0038..003c  const-string  v0, "set"
+    003c..0042  invoke-static  {v4, v2, v0}, LX/B1y;->A1J(LX/0Tj;Ljava/lang/String;Ljava/lang/String;)V
+    0042..0048  invoke-static  {v4, v14, v8}, LX/B23;->A03(LX/0Tj;Ljava/lang/String;Z)J
+    0048..004a  move-result-wide  v2
+    004a..004e  const-string  v0, "spam_list"
+    004e..0054  invoke-static  {v0}, LX/B1w;->A0a(Ljava/lang/String;)LX/0Tj;
+    0054..0056  move-result-object  v7
+    0056..005a  if-eqz  v10, +0x18
+    005a..005e  new-array  v1, v1, [Ljava/lang/Class;
+    005e..0062  const-class  v0, LX/2p3;
+    0062..0066  aput-object  v0, v1, v8
+    0066..006a  const-class  v0, Lcom/whatsapp/infra/core/jid/UserJid;
+    006a..0070  invoke-static  {v0, v1}, LX/B1z;->A0w(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/util/List;
+    0070..0072  move-result-object  v1
+    0072..0076  const-string  v0, "spam_list->jid"
+    0076..007c  invoke-static  {v10, v0, v1}, LX/0Tk;->A03(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;Ljava/util/List;)V
+    007c..0080  const-string  v0, "jid"
+    0080..0086  invoke-static  {v10, v7, v0}, LX/B1y;->A1F(Lcom/whatsapp/infra/core/jid/Jid;LX/0Tj;Ljava/lang/String;)V
+    0086..008a  const-wide/16  v0, #0xd2
+    008a..0090  invoke-static  {v15, v2, v3, v0, v1}, LX/0Tk;->A07(Ljava/util/List;JJ)Z
+    0090..0092  move-result  v0
+    0092..0096  if-eqz  v0, +0x10
+    0096..009c  invoke-interface  {v15}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    009c..009e  move-result-object  v1
+    009e..00a4  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    00a4..00a6  move-result  v0
+    00a6..00aa  if-eqz  v0, +0x6
+    00aa..00b0  invoke-static  {v7, v1}, LX/Dyv;->A00(LX/0Tj;Ljava/util/Iterator;)V
+    00b0..00b2  goto  -0x9
+    00b2..00b6  const-wide/16  v0, #0x5
+    00b6..00bc  invoke-static  {v6, v2, v3, v0, v1}, LX/0Tk;->A07(Ljava/util/List;JJ)Z
+    00bc..00be  move-result  v8
+    00be..00c2  if-eqz  v8, +0x10
+    00c2..00c8  invoke-interface  {v6}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    00c8..00ca  move-result-object  v8
+    00ca..00d0  invoke-interface  {v8}, Ljava/util/Iterator;->hasNext()Z
+    00d0..00d2  move-result  v6
+    00d2..00d6  if-eqz  v6, +0x6
+    00d6..00dc  invoke-static  {v7, v8}, LX/Dyv;->A00(LX/0Tj;Ljava/util/Iterator;)V
+    00dc..00de  goto  -0x9
+    00de..00e4  invoke-static  {v5, v2, v3, v0, v1}, LX/0Tk;->A07(Ljava/util/List;JJ)Z
+    00e4..00e6  move-result  v0
+    00e6..00ea  if-eqz  v0, +0x10
+    00ea..00f0  invoke-interface  {v5}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    00f0..00f2  move-result-object  v1
+    00f2..00f8  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    00f8..00fa  move-result  v0
+    00fa..00fe  if-eqz  v0, +0x6
+    00fe..0104  invoke-static  {v7, v1}, LX/Dyv;->A00(LX/0Tj;Ljava/util/Iterator;)V
+    0104..0106  goto  -0x9
+    0106..010a  if-eqz  v11, +0x5
+    010a..0110  invoke-static  {v7, v11}, LX/B1x;->A1M(LX/0Tj;LX/Dz0;)V
+    0110..0116  invoke-static  {v7, v4}, LX/B1x;->A1L(LX/0Tj;LX/0Tj;)V
+    0116..011c  invoke-static  {v4, v12}, LX/DzW;->A03(LX/0Tj;LX/Dyx;)V
+    011c..0120  if-eqz  v13, +0x5
+    0120..0126  invoke-static  {v4, v13}, LX/DzW;->A03(LX/0Tj;LX/Dyx;)V
+    0126..012c  invoke-virtual  {v4}, LX/0Tj;->A01()LX/0Tp;
+    012c..012e  move-result-object  v0
+    012e..0132  iput-object  v0, v9, LX/Dzb;->A00:Ljava/lang/Object;
+    0132..0134  return-void
+    # exception table: 0 try range(s)
+.end method

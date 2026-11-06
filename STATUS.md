@@ -1,3 +1,10 @@
+2026-11-06 — **Bound individual report callback ownership to native32s.**
+Pinned RPC/wrapper evidence supplies32000 to the shared IQ registration path.
+Expiry now drops the live claim while preserving uncertain Sent state and no
+resend after reopen. Located report/id and current flow-schema limits without
+inventing response adoption or optional metadata. No live operation.
+[Evidence and boundary regression](docs/protocol/chat-actions.md#individual-report-callback-timer-2026-11-06).
+
 2026-11-06 — **Corrected photo lookup result dispatch.**
 Unrelated root/nested error extensions no longer turn a matching lookup result
 into a refusal. Retained first-named-child and constructor proof; result

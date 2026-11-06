@@ -1,0 +1,12 @@
+
+# class: LX/Cgd;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLI)  # .registers 3
+    # full signature: LX/Cgd;-><init>(Ljava/lang/Object;I)V
+    0000..0004  iput  v2, v0, LX/Cgd;->$t:I
+    0004..0008  iput-object  v1, v0, LX/Cgd;->A00:Ljava/lang/Object;
+    0008..000e  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method

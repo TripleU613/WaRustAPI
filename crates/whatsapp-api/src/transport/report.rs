@@ -40,6 +40,15 @@ fn validate_flow(flow: &str) -> Result<&str> {
     }
 }
 
+pub(super) fn is_request(node: &Node) -> bool {
+    node.get_attr("type").and_then(|v| v.as_text()) == Some("set")
+        && node.get_attr("xmlns").and_then(|v| v.as_text()) == Some("spam")
+        && matches!(node.child_nodes(), [list]
+            if list.description == "spam_list"
+                && list.get_attr("jid").and_then(|v| v.as_jid()).is_some_and(Jid::is_user_like)
+                && list.get_attr("spam_flow").and_then(|v| v.as_text()).is_some())
+}
+
 /// Durably queue a spam report against `chat`, with zero reported-message
 /// children (see module docs). `flow` must be one of [`SPAM_FLOWS`] or empty,
 /// which defaults to `"chat"`.

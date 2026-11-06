@@ -1,0 +1,13 @@
+["spam_flow"]  (6 reference(s))
+  classes3.dex  LX/2mZ;->getFieldsMapForFalco(L)
+    dex byte offset: 0x27ac86
+  classes5.dex  Lcom/whatsapp/chatinfo/community/CommunityExitAndDeleteDialogFragment;-><init>(V)
+    dex byte offset: 0x3349d0
+  classes5.dex  Lcom/whatsapp/chatinfo/community/CommunityExitDialogFragment;-><init>(V)
+    dex byte offset: 0x33670a
+  classes5.dex  LX/82x;->A00(LLLLLIZZ)
+    dex byte offset: 0x3f3a62
+  classes5.dex  LX/8BP;->onClick(VLI)
+    dex byte offset: 0x44e728
+  classes8.dex  LX/Dyx;-><init>(VLLI)
+    dex byte offset: 0x516b7a

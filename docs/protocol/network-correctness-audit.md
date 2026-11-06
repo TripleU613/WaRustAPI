@@ -21,6 +21,7 @@ A field or URL existing in an APK does not establish a mandatory request.
 | Devices/identity/prekeys/key queries | transport/{devices,peer_keys,identity_query,prekeys,device_key_batches} | Existing signed baseline and bounded query machinery; conditional fields, teardown and all negative responses require continuing current-build review. |
 | Media upload/download and connection metadata | transport/{media,image_upload,image_download,voice_note} | [Media outcome persistence and pinned lifetime readers](media-network-outcomes.md) corrected/traced offline; both lifetimes are required Java longs, while full deadline/refresh policy remains open; authenticate metadata, URL/host selection, headers, expiry, hashes, bounded errors and request replay remain in the current-build queue. No endpoint-literal scan can establish required traffic. |
 | Groups/status/presence | transport/{groups,group_send,status_receipts,presence} | Existing ports are partial. Queue full notification-to-refresh ordering and response obligations, not feature expansion. |
+| Account/profile/contact actions | transport/{actions,about,profile_picture,blocklist,two_factor,report,contacts} | [Producer-specific action callbacks](chat-actions.md); photo outer/error selection and report32s callback ownership corrected offline. Full payload/native-state adoption, report list lower bounds/optional metadata and complete per-producer response matrices remain open. Generic Ok is not feature acceptance. |
 | App state/MEX/settings/history | transport/{app_state_sync,mex,chat_settings,history_notice} | Queue conditional startup dependencies, sync cursors, mutation acknowledgements and persistence. Mandatory startup status remains unproven. |
 | Optional services/telemetry/third parties | versioned APK evidence, ownership not yet complete | Queue trace callers and runtime gates before classifying required/conditional/optional. Never invent events, device provenance or values. |
 
@@ -4731,3 +4732,27 @@ ActionStatus.Ok is an envelope/recognized-refusal outcome, not a claim native
 URL/id validation, cache adoption or photo publication succeeded. That admission
 and downstream state port remain unfinished. No timer, ACK, refresh, retry,
 query or live operation was added.
+
+## Individual report callback timer (2026-11-06)
+
+**Confirmed static / implemented offline:** [current RPC-to-timer chain](apk/2.26.43.72-report-callback-timer/README.md)
+binds IndividualSpamReportRpc -> SpamRPCManager.A01 -> MessageClientSmaxWrapper.A00,
+which supplies32000 to0Sf.A0F. Cgd selector2 maps delivery failure/expiry through
+BWM to null. Shared0ln registration requires positive duration to post message4.
+Rust previously left this report callback claim untimed. Supported individual
+spam/set/spam_list requests now use the existing32s monotonic callback deadline.
+At expiry only the live claim ends: durable Sent/uncertainty stays, late replies
+cannot settle through that expired owner, and restart does not requeue the report.
+No inferred native offline queue/retry/coroutine-cancellation policy was added.
+
+The regression was red with no deadline, green with result/error at31,999ms and
+expiry at32,000ms, unchanged saved state on late reply, reopen and no resend.
+A report label on a ping cannot borrow the timer. No live operation.
+
+The current generated response path locates report/id via Shk.A00 ->7NL,
+optionally null; manager tries typed success before its error model. Full native
+schema/correlation/source/error adoption and report-ID projection remain unported.
+Generic Ok does not prove native report acceptance or moderation outcome.
+The current flow fragment has100 schema entries; Rust's seven flows are a local
+subset, not the complete native list. List lower bounds and effective optional
+metadata were not newly reconstructed, and no message/trace field is invented.

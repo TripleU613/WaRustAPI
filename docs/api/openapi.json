@@ -1,4 +1,11 @@
 {
+  "x-report-callback-timer": {
+    "x-cli": "whatsapp-cli report (offline queue); whatsapp-cli actions; xtask apk-smali <apk> --class <class> --method <method> --signatures --exceptions",
+    "x-transport": "experimental individual spam report callback ownership",
+    "x-live": false,
+    "description": "Pinned APK43.72 IndividualSpamReportRpc -> SpamRPCManager.A01 -> MessageClientSmaxWrapper.A00 supplies32000 to0Sf.A0F; Cgd selector2 resumes BWM on delivery failure/expiry. Matching spam/set with one spam_list carrying user-like jid and textual spam_flow now uses existing32s reservation-time monotonic callback deadline. Expiry removes live authority only, retains uncertain Sent row, refuses late settlement through expired owner and never requeues on reopen. Kind-only ping remains untimed. Native pending/coroutine lifecycle, complete response/source/schema/error admission and report-ID projection remain unported. Current report/id and100-entry flow schema are evidence only; existing7 flow subset, wire fields and no-live policy unchanged. No resend, fabricated error or HTTP route.",
+    "evidence": "docs/protocol/apk/2.26.43.72-report-callback-timer/README.md"
+  },
   "x-photo-lookup-result-dispatch": {
     "x-cli": "whatsapp-cli actions; xtask apk-smali <apk> --class <class> --method <method> --signatures --exceptions",
     "x-transport": "experimental photo lookup action result settlement",
