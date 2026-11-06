@@ -1,0 +1,22 @@
+
+# class: LX/1dH;
+# extends: Ljava/lang/Object;
+
+.method public A09(VLL)  # .registers 5
+    # full signature: LX/1dH;->A09(LX/1dH;Ljava/util/Collection;)V
+    0000..0006  invoke-interface  {v4}, Ljava/util/Collection;->isEmpty()Z
+    0006..0008  move-result  v0
+    0008..000c  if-nez  v0, +0x17
+    000c..0010  iget-object  v0, v3, LX/1dH;->A09:LX/05a;
+    0010..0014  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0014..001a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    001a..001c  move-result-object  v3
+    001c..0020  check-cast  v3, LX/07o;
+    0020..0024  sget-object  v2, LX/0Kl;->A03:LX/0Kl;
+    0024..0026  const/4  v1, #0x7
+    0026..002a  new-instance  v0, LX/3XP;
+    002a..0030  invoke-direct  {v0, v4, v1}, LX/3XP;-><init>(Ljava/lang/Object;I)V
+    0030..0036  invoke-static  {v3, v2, v0}, LX/07o;->A00(LX/07o;LX/0Kl;LX/0Km;)V
+    0036..0038  return-void
+    # exception table: 0 try range(s)
+.end method

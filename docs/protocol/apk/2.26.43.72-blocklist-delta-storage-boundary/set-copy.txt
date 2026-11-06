@@ -1,0 +1,54 @@
+
+# class: LX/07Z;
+# extends: LX/07Y;
+
+.method public A1S(LL)  # .registers 5
+    # full signature: LX/07Z;->A1S(Ljava/lang/Iterable;)Ljava/util/Set;
+    0000..0002  const/4  v3, #0x0
+    0002..0008  invoke-static  {v4, v3}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  instance-of  v0, v4, Ljava/util/Collection;
+    000c..0010  if-eqz  v0, +0x1f
+    0010..0012  move-object  v2, v4
+    0012..0016  check-cast  v2, Ljava/util/Collection;
+    0016..001c  invoke-interface  {v2}, Ljava/util/Collection;->size()I
+    001c..001e  move-result  v1
+    001e..0022  if-eqz  v1, +0x47
+    0022..0024  const/4  v0, #0x1
+    0024..0028  if-eq  v1, v0, +0x32
+    0028..002e  invoke-interface  {v2}, Ljava/util/Collection;->size()I
+    002e..0030  move-result  v0
+    0030..0036  invoke-static  {v0}, LX/05o;->A02(I)I
+    0036..0038  move-result  v0
+    0038..003c  new-instance  v2, Ljava/util/LinkedHashSet;
+    003c..0042  invoke-direct  {v2, v0}, Ljava/util/LinkedHashSet;-><init>(I)V
+    0042..0048  invoke-static  {v4, v2}, LX/07Z;->A1V(Ljava/lang/Iterable;Ljava/util/Collection;)V
+    0048..004a  return-object  v2
+    004a..004e  new-instance  v2, Ljava/util/LinkedHashSet;
+    004e..0054  invoke-direct  {v2}, Ljava/util/LinkedHashSet;-><init>()V
+    0054..005a  invoke-static  {v4, v2}, LX/07Z;->A1V(Ljava/lang/Iterable;Ljava/util/Collection;)V
+    005a..0060  invoke-interface  {v2}, Ljava/util/Set;->size()I
+    0060..0062  move-result  v1
+    0062..0066  if-eqz  v1, +0x25
+    0066..0068  const/4  v0, #0x1
+    0068..006c  if-ne  v1, v0, -0x10
+    006c..0072  invoke-interface  {v2}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    0072..0074  move-result-object  v0
+    0074..0076  goto  +0x5
+    0076..007c  invoke-interface  {v2}, Ljava/util/Collection;->iterator()Ljava/util/Iterator;
+    007c..007e  move-result-object  v0
+    007e..0084  invoke-interface  {v0}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0084..0086  move-result-object  v0
+    0086..0088  goto  +0xb
+    0088..008c  instance-of  v0, v4, Ljava/util/List;
+    008c..0090  if-eqz  v0, -0xb
+    0090..0094  check-cast  v4, Ljava/util/List;
+    0094..009a  invoke-interface  {v4, v3}, Ljava/util/List;->get(I)Ljava/lang/Object;
+    009a..009c  move-result-object  v0
+    009c..00a2  invoke-static  {v0}, Ljava/util/Collections;->singleton(Ljava/lang/Object;)Ljava/util/Set;
+    00a2..00a4  move-result-object  v2
+    00a4..00aa  invoke-static  {v2}, LX/00l;->A05(Ljava/lang/Object;)V
+    00aa..00ac  return-object  v2
+    00ac..00b0  sget-object  v2, LX/06e;->A00:LX/06e;
+    00b0..00b2  return-object  v2
+    # exception table: 0 try range(s)
+.end method

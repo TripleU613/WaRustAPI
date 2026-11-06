@@ -1,0 +1,51 @@
+
+# class: LX/1dH;
+# extends: Ljava/lang/Object;
+
+.method public A0Q(VLZ)  # .registers 7
+    # full signature: LX/1dH;->A0Q(Lcom/whatsapp/infra/core/jid/UserJid;Z)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v5, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  iget-object  v0, v4, LX/1dH;->A0I:LX/05a;
+    000c..0010  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0010..0016  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0016..0018  move-result-object  v0
+    0018..001c  check-cast  v0, LX/0hb;
+    001c..0022  invoke-virtual  {v0, v5}, LX/0hb;->A06(LX/0DY;)LX/18U;
+    0022..0024  move-result-object  v1
+    0024..0028  if-eqz  v1, +0xd
+    0028..002c  instance-of  v0, v1, LX/1ym;
+    002c..0030  if-eqz  v0, +0x9
+    0030..0034  check-cast  v1, LX/1ym;
+    0034..0038  iget-boolean  v0, v1, LX/1ym;->A00:Z
+    0038..003c  if-ne  v0, v6, +0x3
+    003c..003e  return-void
+    003e..0042  iget-object  v0, v4, LX/1dH;->A0O:LX/05a;
+    0042..0046  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0046..004c  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    004c..004e  move-result-object  v3
+    004e..0052  check-cast  v3, LX/0yt;
+    0052..0056  iget-object  v0, v4, LX/1dH;->A0P:LX/05a;
+    0056..005a  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    005a..0060  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0060..0062  move-result-object  v0
+    0062..0066  check-cast  v0, LX/08q;
+    0066..006c  invoke-static  {v0}, LX/08q;->A00(LX/08q;)J
+    006c..006e  move-result-wide  v1
+    006e..0072  const/16  v0, #0x3a
+    0072..0078  invoke-virtual  {v3, v5, v0, v1, v2}, LX/0yt;->A00(LX/0DY;IJ)LX/1bX;
+    0078..007a  move-result-object  v2
+    007a..007e  const-string  v0, "null cannot be cast to non-null type com.whatsapp.infra.fmessage.systemmessage.protocol.message.FMessageSystemBlockContact"
+    007e..0084  invoke-static  {v2, v0}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    0084..0088  check-cast  v2, LX/1ym;
+    0088..008c  iput-boolean  v6, v2, LX/1ym;->A00:Z
+    008c..0090  iget-object  v0, v4, LX/1dH;->A0B:LX/05a;
+    0090..0094  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0094..009a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    009a..009c  move-result-object  v1
+    009c..00a0  check-cast  v1, LX/0wZ;
+    00a0..00a2  const/4  v0, #0xff (-1)
+    00a2..00a8  invoke-virtual  {v1, v2, v0}, LX/0wZ;->A0C(LX/18U;I)LX/EVA;
+    00a8..00aa  return-void
+    # exception table: 0 try range(s)
+.end method

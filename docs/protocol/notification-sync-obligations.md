@@ -139,3 +139,22 @@ A0A/A0C/backend effects, retries and durable Rust ACK/work mapping remain open.
 Rust still captures this unsupported child without ACK; no production behavior
 or automatic request is introduced by the trace. Do not replace it with ACK-only
 handling or treat advertised delta as a full snapshot.
+
+## Blocklist delta storage continuation (2026-11-06)
+
+**Confirmed selected static:** [execution-time copy, table transaction,
+preference apply and local-message/follow-up handoffs](apk/2.26.43.72-blocklist-delta-storage-boundary/README.md)
+close the selected delta worker's7PB.A0P and1dH.A0A/A0C calls. The worker
+copies currentA0U when it executes, not an immutable notification snapshot;
+its hash remains the captured argument. Without executor ordering, this does
+not establish a same-generation binding or prove a race occurs.
+
+Whole-set table replacement deletes/inserts under a transaction wrapper and
+rethrows selected write/close failures; individual long results are discarded.
+Hash preferences use apply, then metadata and a changed-union follow-up are
+scheduled separately. The earlier per-target path can construct a block-state
+system-message model unless its latest equivalent model already matches.
+Neither this handoff nor the subsequent3XP task proves every downstream
+network/listener effect. No automatic wire send or ACK support is introduced.
+Rust remains captured-without-ACK for this unsupported account child; durable
+admission/work/dedup and complete scheduler/follow-up effects remain open.

@@ -1551,3 +1551,29 @@ APK hash match. Formatting, CLI reference regeneration, OpenAPI library coverage
 and APK coverage freshness pass. No new REA record or Rust behavior; workspace
 runtime tests were not rerun for this research-only chunk.
 Repository hygiene passes (431 APK checksum bundles).
+
+## Blocklist delta storage and side-effect boundaries (2026-11-06)
+
+**Confirmed selected static:** [whole-set store, current-set copy, transaction,
+preference and system-message/follow-up methods](apk/2.26.43.72-blocklist-delta-storage-boundary/README.md)
+show the async delta worker copies current membership at execution, then
+replaces wa_block_list under its transaction wrapper. The captured hash is
+written afterward via preferences apply, followed by metadata/follow-up work.
+There is no established all-stages atomicity or hash/set generation binding
+without executor-order evidence; no actual race or successful commit observed.
+
+Individual insert/delete results are discarded, while selected thrown write/
+close failures propagate. Per-targetA0A delegatesA0Q, which suppresses an
+equivalent latest block-state system-message model or constructs and hands off
+a new one.8be selector6 closes the changed-union scheduling handoff toA09 ->3XP;
+consumer effects remain untraced. This is not authority to fabricate a user
+message, replay a request, ACK unsupported notifications, or weaken Rust's
+atomic projection. No production behavior or live account operation changed.
+
+Validation: twelve selected DEX export commands reproduce byte-for-byte;
+README selected-task extraction executes exactly. Complete retained REA data,
+bundle checksums and subject APK hash match. Formatting, CLI reference
+regeneration, OpenAPI library coverage and APK coverage freshness pass (968
+distinct REA records,0 duplicate copies,72 explicitly mapped). No Rust behavior
+changed; workspace runtime tests were not rerun for this research-only chunk.
+Repository hygiene passes (432 APK checksum bundles).

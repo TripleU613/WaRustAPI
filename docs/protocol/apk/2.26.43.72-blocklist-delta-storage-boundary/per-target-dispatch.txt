@@ -1,0 +1,19 @@
+
+# class: LX/1dH;
+# extends: Ljava/lang/Object;
+
+.method public A0A(VLLZ)  # .registers 5
+    # full signature: LX/1dH;->A0A(LX/1dH;Ljava/util/Set;Z)V
+    0000..0006  invoke-interface  {v3}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    0006..0008  move-result-object  v1
+    0008..000e  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    000e..0010  move-result  v0
+    0010..0014  if-eqz  v0, +0xc
+    0014..001a  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    001a..001c  move-result-object  v0
+    001c..0020  check-cast  v0, Lcom/whatsapp/infra/core/jid/UserJid;
+    0020..0026  invoke-virtual  {v2, v0, v4}, LX/1dH;->A0Q(Lcom/whatsapp/infra/core/jid/UserJid;Z)V
+    0026..0028  goto  -0xf
+    0028..002a  return-void
+    # exception table: 0 try range(s)
+.end method

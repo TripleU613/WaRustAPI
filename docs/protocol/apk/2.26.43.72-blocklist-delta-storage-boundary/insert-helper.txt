@@ -1,0 +1,15 @@
+
+# class: LX/0ai;
+# extends: Ljava/lang/Object;
+
+.method public A00(JLLL)  # .registers 5
+    # full signature: LX/0ai;->A00(Landroid/content/ContentValues;LX/0aq;Ljava/lang/String;)J
+    0000..0004  iget-object  v1, v3, LX/0aq;->A02:LX/0KU;
+    0004..0008  const-string  v0, "ContactProvider/insertOrReplace/INSERT_"
+    0008..000e  invoke-static  {v0, v4}, LX/0ai;->A06(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    000e..0010  move-result-object  v0
+    0010..0016  invoke-virtual  {v1, v4, v0, v2}, LX/0KU;->A06(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J
+    0016..0018  move-result-wide  v0
+    0018..001a  return-wide  v0
+    # exception table: 0 try range(s)
+.end method

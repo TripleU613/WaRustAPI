@@ -401,6 +401,12 @@
     "x-live": false,
     "description": "APK43.72 account_sync first-child blocklist processing: parse before action/admission, matching nullable prev_dhash and admitted effective delta; modify/hash mismatch/failed admission selects kind4 refresh through 1sv to1dH.A0M. Empty/no-effective-change path does not advance hash. Delta worker persists current set/hash/metadata separately from normal nondeferred ACK. Refresh flags/suppression/retry bookkeeping traced without inventing three sends. Rust unsupported child remains captured without ACK or processing; full admission/backend/durable ACK-work mapping remains open. No new request/production behavior. docs/protocol/chat-actions.md#blocklist-account-sync-notification-obligation-2026-11-06"
   },
+  "x-blocklist-delta-storage-evidence": {
+    "x-cli": "xtask apk-smali <apk> --class <class> --method <method> --signatures --exceptions",
+    "x-transport": "offline static APK evidence only",
+    "x-live": false,
+    "description": "APK43.72 account blocklist delta worker copies current manager membership at execution, rewrites wa_block_list through transaction wrapper, then separately applies captured hash preferences/metadata/follow-up work. Individual row results are ignored; selected thrown write/close failures propagate. Per-target system-block-message and changed-union scheduling handoffs traced, not complete listener/network policy. Same-generation set/hash and all-store atomicity are unproven without scheduler evidence. Rust captured-without-ACK behavior and atomic projection remain unchanged; no production request or fabricated message. docs/protocol/chat-actions.md#blocklist-delta-storage-and-side-effect-boundaries-2026-11-06"
+  },
   "x-library-capabilities": [
     {
       "symbol": "whatsapp_api::transport::app_state_sync::binding::bind_inline_fetch_plan",

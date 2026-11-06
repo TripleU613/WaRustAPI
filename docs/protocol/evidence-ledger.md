@@ -1,3 +1,10 @@
+2026-11-06 — **Blocklist delta storage and side-effect boundaries retained.**
+The async worker copies current membership, rewrites its table, then separately
+applies hash preferences/metadata/follow-up work. Transaction failures and ignored
+row results are distinguished; local system-message handoffs are traced.
+[Evidence and concurrency limits](chat-actions.md#blocklist-delta-storage-and-side-effect-boundaries-2026-11-06).
+No Rust runtime or live account change.
+
 2026-11-06 — **Blocklist account-sync delta/refresh obligations traced.**
 Matching previous hash/admission permits effective deltas; modify/mismatch or
 failed admission queues kind4 refresh. Async persistence is separate from the

@@ -1,0 +1,19 @@
+
+# class: LX/1dH;
+# extends: Ljava/lang/Object;
+
+.method public A0C(L)  # .registers 2
+    # full signature: LX/1dH;->A0C()Ljava/util/Set;
+    0000..0002  monitor-enter
+    0002..0006  iget-object  v0, v1, LX/1dH;->A0U:Ljava/util/Set;
+    0006..000c  invoke-static  {v0}, LX/07Z;->A1S(Ljava/lang/Iterable;)Ljava/util/Set;
+    000c..000e  move-result-object  v0
+    000e..0010  monitor-exit
+    0010..0012  return-object  v0
+    0012..0014  move-exception  v0
+    0014..0016  monitor-exit
+    0016..0018  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0001..0007 -> 0009
+    # catch <all> code_units 000a..000b -> 0009
+.end method

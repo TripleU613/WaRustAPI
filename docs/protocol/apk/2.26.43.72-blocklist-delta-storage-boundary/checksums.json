@@ -1,0 +1,54 @@
+{
+  "README.md": {
+    "bytes": 7318,
+    "sha256": "42c985486b898f2f96ecbbac90388942e86c357cf8daa40cb651df195863908d"
+  },
+  "current-set.txt": {
+    "bytes": 660,
+    "sha256": "ca7a1b49a3ab5926e00e8b3593fcd7b92f2bc121ae530d194cf98d44eb0915df"
+  },
+  "follow-up-dispatch.txt": {
+    "bytes": 938,
+    "sha256": "b2418173f35c6ee3210efb652a2c5e12b74474d61f7b79ba539b24d8c4bc9f38"
+  },
+  "follow-up-init.txt": {
+    "bytes": 498,
+    "sha256": "5c86a3a37c688da3587bd7fea2fcba3ffbcb5ecbadfa933d12491134f4188c62"
+  },
+  "follow-up-task-selected.txt": {
+    "bytes": 1165,
+    "sha256": "a1b69f63bd033eae993f53cd956f53308831154a2972ac1a8c007166c32c02da"
+  },
+  "insert-helper.txt": {
+    "bytes": 719,
+    "sha256": "e23263447b1a02cdf18de65a53e71c2d9f9fb8071886aac1b3b777d5143283f3"
+  },
+  "per-target-dispatch.txt": {
+    "bytes": 817,
+    "sha256": "570f998ee322d3c87f887368e501f51c21522bfe61b10f2374a274675101c51f"
+  },
+  "preference-apply.txt": {
+    "bytes": 598,
+    "sha256": "fc8fa270b47b7b64fe1fe0ccdabc8667edb4c24085c2eb3746d12c1104209dda"
+  },
+  "set-copy.txt": {
+    "bytes": 2642,
+    "sha256": "e5d2d135cbd65dcd32ec3302a9fbdeb3e40049bafd78b9158a61772bff81c0f6"
+  },
+  "store-replace.txt": {
+    "bytes": 2761,
+    "sha256": "409e740e40c0a0d2ff190c6c2ac365121ee2fa0586ee6ffa469ba29f12f63cb5"
+  },
+  "system-message.txt": {
+    "bytes": 2521,
+    "sha256": "20eeefc8d091164ef6bce1a60584a8a31ca59a9e7e28744100b1b55c3d79f7ca"
+  },
+  "transaction-close.txt": {
+    "bytes": 3404,
+    "sha256": "7e639790c9f027e259583516944941eb69ab0e1586f7bcaf071e7b5424370402"
+  },
+  "transaction-success.txt": {
+    "bytes": 402,
+    "sha256": "00ac7bb171f8f0137d3fba8bf80e98894c90031fda43f95190d6f27a00eb49f6"
+  }
+}
