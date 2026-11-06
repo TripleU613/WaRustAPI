@@ -1,0 +1,38 @@
+{
+  "README.md": {
+    "bytes": 6206,
+    "sha256": "4ccda45ed29c1b06c17e22f1b6597b983bac0b80cbe7b51df37af4688f179ecf"
+  },
+  "ack-wait.txt": {
+    "bytes": 5699,
+    "sha256": "ed87f6f1bd4cf4c88de5869d021589221c81f69a2133ff0e55a31c1115d3123c"
+  },
+  "attribute-values.txt": {
+    "bytes": 845,
+    "sha256": "0290a1c02c8a725040da50460ceea10f80fba3c6c948303ba7bf102bbdc01d4c"
+  },
+  "child-metadata.txt": {
+    "bytes": 3391,
+    "sha256": "ba4aabd23c1f097e90655a10c836a262cb5f6b95a29db52625d1e268dff08fb3"
+  },
+  "disable-fanout-predicate.txt": {
+    "bytes": 1070,
+    "sha256": "e06eb52af6b627da47c956c56229ea83b861de2bc21317e52848d1962a07003c"
+  },
+  "final-envelope.txt": {
+    "bytes": 4538,
+    "sha256": "1f714824a8f1e7d2287bf48a3ca0f8538c34c2c2e28886da0d0ecaaec2efd619"
+  },
+  "marker-zero.txt": {
+    "bytes": 389,
+    "sha256": "97974172f115514b9f8c857f1b091d424621f94e7ad1812a6d4ff144d7b9c81f"
+  },
+  "pre-submit-marker.txt": {
+    "bytes": 7232,
+    "sha256": "5214f0227194c8fd754ec25c615e31950950f9a8583fb9fd153647df63717882"
+  },
+  "send-job.txt": {
+    "bytes": 258626,
+    "sha256": "8c32daf6fb75bb2d903b46ddde5378386b01195aa4ed6c53a919ab50184e7fe2"
+  }
+}

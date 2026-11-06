@@ -1,0 +1,93 @@
+
+# class: Lcom/whatsapp/productinfra/status/sendflow/SendE2eStatusJob;
+# extends: Lorg/whispersystems/jobqueue/Job;
+
+.method public A0P(LLL)  # .registers 15
+    # full signature: Lcom/whatsapp/productinfra/status/sendflow/SendE2eStatusJob;->A0P(LX/Eoh;Ljava/util/concurrent/Future;)Ljava/lang/Object;
+    0000..0002  const/4  v3, #0x1
+    0002..0006  iget-object  v0, v12, Lcom/whatsapp/productinfra/status/sendflow/SendE2eStatusJob;->A0F:LX/0cM;
+    0006..000a  if-nez  v0, +0x9
+    000a..000e  const-string  v0, "statusInfraConfig"
+    000e..0014  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    0014..0016  const/4  v0, #0x0
+    0016..0018  throw  v0
+    0018..001e  invoke-static  {v0}, LX/0cM;->A00(LX/0cM;)LX/08Y;
+    001e..0020  move-result-object  v1
+    0020..0024  sget-object  v0, LX/16j;->A0U:LX/00f;
+    0024..002a  invoke-static  {v1, v0}, LX/00E;->A0F(LX/00E;LX/00f;)Z
+    002a..002c  move-result  v0
+    002c..0030  if-eqz  v0, +0xc
+    0030..0034  sget-object  v2, Ljava/util/concurrent/TimeUnit;->MILLISECONDS:Ljava/util/concurrent/TimeUnit;
+    0034..003a  const-wide/32  v0, #0x493e0
+    003a..0040  invoke-interface  {v14, v0, v1, v2}, Ljava/util/concurrent/Future;->get(JLjava/util/concurrent/TimeUnit;)Ljava/lang/Object;
+    0040..0042  move-result-object  v0
+    0042..0044  return-object  v0
+    0044..004a  invoke-interface  {v14}, Ljava/util/concurrent/Future;->get()Ljava/lang/Object;
+    004a..004c  move-result-object  v0
+    004c..004e  return-object  v0
+    004e..0050  move-exception  v2
+    0050..0054  iget-object  v1, v12, Lcom/whatsapp/productinfra/status/sendflow/SendE2eStatusJob;->A0Q:LX/EsB;
+    0054..005a  invoke-virtual  {v2}, Ljava/lang/Throwable;->getCause()Ljava/lang/Throwable;
+    005a..005c  move-result-object  v0
+    005c..0060  instance-of  v0, v0, LX/E5W;
+    0060..0064  if-nez  v0, +0xd
+    0064..006a  invoke-virtual  {v2}, Ljava/lang/Throwable;->getCause()Ljava/lang/Throwable;
+    006a..006c  move-result-object  v0
+    006c..0070  instance-of  v0, v0, LX/E5X;
+    0070..0074  if-nez  v0, +0x5
+    0074..0078  iput-boolean  v3, v1, LX/EsB;->A04:Z
+    0078..007a  throw  v2
+    007a..007c  const/4  v3, #0x0
+    007c..007e  goto  -0x4
+    007e..0080  move-exception  v4
+    0080..0084  iget-object  v0, v12, Lcom/whatsapp/productinfra/status/sendflow/SendE2eStatusJob;->A0L:LX/0Sf;
+    0084..0088  if-nez  v0, +0x9
+    0088..008c  const-string  v0, "messageClient"
+    008c..0092  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    0092..0094  const/4  v0, #0x0
+    0094..0096  throw  v0
+    0096..009c  invoke-virtual  {v0, v13, v4}, LX/0Sf;->A0T(LX/Eoh;Ljava/lang/Exception;)V
+    009c..00a0  iget-object  v0, v12, Lcom/whatsapp/productinfra/status/sendflow/SendE2eStatusJob;->A0Q:LX/EsB;
+    00a0..00a4  iput-boolean  v3, v0, LX/EsB;->A04:Z
+    00a4..00aa  invoke-direct  {v12}, Lcom/whatsapp/productinfra/status/sendflow/SendE2eStatusJob;->A03()Ljava/lang/String;
+    00aa..00ac  move-result-object  v1
+    00ac..00b0  iget-object  v5, v13, LX/Eoh;->A06:Ljava/lang/String;
+    00b0..00b4  const-string  v0, "SendE2eStatusJob/no ack within 300000ms "
+    00b4..00ba  invoke-static  {v0, v1}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00ba..00bc  move-result-object  v1
+    00bc..00c0  const-string  v0, " cls="
+    00c0..00c6  invoke-static  {v0, v5, v1}, LX/DBb;->A1J(Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    00c6..00ca  iget-object  v6, v12, Lcom/whatsapp/productinfra/status/sendflow/SendE2eStatusJob;->A06:LX/0B0;
+    00ca..00ce  if-nez  v6, +0x9
+    00ce..00d2  const-string  v0, "crashLogs"
+    00d2..00d8  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    00d8..00da  const/4  v0, #0x0
+    00da..00dc  throw  v0
+    00dc..00e0  iget-object  v0, v12, Lcom/whatsapp/productinfra/status/sendflow/SendE2eStatusJob;->params:Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;
+    00e0..00e4  iget  v3, v0, Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;->retryCount:I
+    00e4..00e8  iget  v2, v12, Lcom/whatsapp/productinfra/status/sendflow/SendE2eStatusJob;->A01:I
+    00e8..00ee  const-string/jumbo  v0, "timeoutMs=300000 cls="
+    00ee..00f4  invoke-static  {v0, v5}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00f4..00f6  move-result-object  v1
+    00f6..00fa  const-string  v0, " retryCount="
+    00fa..0100  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0100..0106  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0106..010a  const-string  v0, " distType="
+    010a..0110  invoke-static  {v0, v1, v2}, LX/1Xl;->A11(Ljava/lang/String;Ljava/lang/StringBuilder;I)Ljava/lang/String;
+    0110..0112  move-result-object  v9
+    0112..0116  iget-object  v0, v12, Lcom/whatsapp/productinfra/status/sendflow/SendE2eStatusJob;->A0J:LX/00X;
+    0116..011a  if-nez  v0, +0x6
+    011a..0120  const-string/jumbo  v0, "waUserSessionManager"
+    0120..0122  goto  -0x27
+    0122..0128  invoke-virtual  {v0}, LX/00X;->A01()LX/00Y;
+    0128..012a  move-result-object  v7
+    012a..012e  check-cast  v7, LX/00Z;
+    012e..0132  const-string  v8, "SendE2eStatusJob/ack-wait-timeout"
+    0132..0134  const/4  v11, #0x0
+    0134..0136  const/4  v10, #0x2
+    0136..013c  invoke-virtual/range  {v6..v11}, LX/0B0;->A0S(LX/00Z;Ljava/lang/String;Ljava/lang/String;IZ)V
+    013c..013e  throw  v4
+    # exception table: 1 try range(s)
+    # catch Ljava/util/concurrent/TimeoutException; code_units 0001..0027 -> 003f
+    # catch Ljava/lang/Exception; code_units 0001..0027 -> 0027
+.end method

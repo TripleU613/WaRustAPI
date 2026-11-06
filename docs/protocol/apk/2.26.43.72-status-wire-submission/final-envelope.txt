@@ -1,0 +1,83 @@
+
+# class: LX/Ewq;
+# extends: Ljava/lang/Object;
+
+.method public A01(L)  # .registers 13
+    # full signature: LX/Ewq;->A01()LX/Eng;
+    0000..0004  iget  v1, v12, LX/Ewq;->A00:I
+    0004..0008  const/high16  v0, #0x1000000
+    0008..000c  if-lt  v1, v0, +0x49
+    000c..0010  iget-object  v0, v12, LX/Ewq;->A0D:Ljava/util/List;
+    0010..0016  invoke-interface  {v0}, Ljava/util/List;->size()I
+    0016..0018  move-result  v4
+    0018..001c  if-gtz  v4, +0x6e
+    001c..001e  const/4  v4, #0x0
+    001e..0022  iget  v5, v12, LX/Ewq;->A00:I
+    0022..0026  if-gtz  v5, +0x58
+    0026..0028  const/4  v5, #0x0
+    0028..002c  iget  v1, v12, LX/Ewq;->A04:I
+    002c..0030  iget-object  v3, v12, LX/Ewq;->A0C:Ljava/lang/String;
+    0030..0034  iget-object  v0, v12, LX/Ewq;->A0B:Ljava/lang/String;
+    0034..003a  invoke-static  {v0}, LX/2L9;->A1W(Ljava/lang/Object;)Z
+    003a..003c  move-result  v2
+    003c..0042  const-string/jumbo  v0, "xmpp/writer/build/large-stanza; msgType="
+    0042..0048  invoke-static  {v1, v0}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    0048..004a  move-result-object  v1
+    004a..004e  const-string  v0, " mediaType="
+    004e..0054  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0054..005a  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    005a..005e  const-string  v0, " isBroadcast="
+    005e..0064  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0064..006a  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    006a..006e  const-string  v0, " childrenCountScale="
+    006e..0074  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0074..007a  invoke-virtual  {v1, v4}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    007a..007e  const-string  v0, " dataSizeScale="
+    007e..0084  invoke-static  {v0, v1, v5}, LX/1Xl;->A11(Ljava/lang/String;Ljava/lang/StringBuilder;I)Ljava/lang/String;
+    0084..0086  move-result-object  v2
+    0086..008a  const-string  v1, "Large Stanza"
+    008a..008e  new-instance  v0, Ljava/lang/Exception;
+    008e..0094  invoke-direct  {v0, v1}, Ljava/lang/Exception;-><init>(Ljava/lang/String;)V
+    0094..009a  invoke-static  {v2, v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;Ljava/lang/Throwable;)V
+    009a..009e  iget-object  v5, v12, LX/Ewq;->A01:LX/Eoh;
+    009e..00a2  iget-object  v4, v12, LX/Ewq;->A0A:LX/1dW;
+    00a2..00a6  iget-object  v2, v12, LX/Ewq;->A08:Lcom/whatsapp/infra/core/jid/Jid;
+    00a6..00aa  iget  v10, v12, LX/Ewq;->A05:I
+    00aa..00ae  iget-object  v1, v12, LX/Ewq;->A07:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    00ae..00b2  iget-object  v3, v12, LX/Ewq;->A09:Lcom/whatsapp/infra/core/jid/UserJid;
+    00b2..00b6  iget-object  v6, v12, LX/Ewq;->A0C:Ljava/lang/String;
+    00b6..00ba  iget-object  v7, v12, LX/Ewq;->A0D:Ljava/util/List;
+    00ba..00be  iget  v11, v12, LX/Ewq;->A03:I
+    00be..00c2  iget-object  v8, v12, LX/Ewq;->A0E:Ljava/util/Map;
+    00c2..00c6  iget-object  v9, v12, LX/Ewq;->A0F:Ljava/util/Set;
+    00c6..00ca  new-instance  v0, LX/Eng;
+    00ca..00d0  invoke-direct/range  {v0..v11}, LX/Eng;-><init>(Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/UserJid;LX/1dW;LX/Eoh;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;Ljava/util/Set;II)V
+    00d0..00d2  return-object  v0
+    00d2..00d4  const/4  v3, #0x1
+    00d4..00d6  move  v2, v5
+    00d6..00d8  const/4  v1, #0x1
+    00d8..00dc  const/16  v0, #0xa
+    00dc..00e0  if-lt  v2, v0, +0x7
+    00e0..00e4  div-int/lit8  v2, v2, #0xa
+    00e4..00e8  mul-int/lit8  v1, v1, #0xa
+    00e8..00ea  goto  -0x8
+    00ea..00ec  add-int/2addr  v5, v1
+    00ec..00ee  sub-int/2addr  v5, v3
+    00ee..00f0  ??(0xb3)  v5, v1
+    00f0..00f2  mul-int/2addr  v5, v1
+    00f2..00f4  goto  -0x65
+    00f4..00f6  const/4  v3, #0x1
+    00f6..00f8  move  v2, v4
+    00f8..00fa  const/4  v1, #0x1
+    00fa..00fe  const/16  v0, #0xa
+    00fe..0102  if-lt  v2, v0, +0x7
+    0102..0106  div-int/lit8  v2, v2, #0xa
+    0106..010a  mul-int/lit8  v1, v1, #0xa
+    010a..010c  goto  -0x8
+    010c..010e  add-int/2addr  v4, v1
+    010e..0110  sub-int/2addr  v4, v3
+    0110..0112  ??(0xb3)  v4, v1
+    0112..0114  mul-int/2addr  v4, v1
+    0114..0116  goto  -0x7b
+    # exception table: 0 try range(s)
+.end method

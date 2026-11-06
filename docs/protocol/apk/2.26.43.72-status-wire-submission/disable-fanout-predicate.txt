@@ -1,0 +1,22 @@
+
+# class: Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;
+# extends: Ljava/lang/Object;
+
+.method public A0B(Z)  # .registers 2
+    # full signature: Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;->A0B()Z
+    0000..0004  iget-object  v0, v1, Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;->A0E:Ljava/util/Set;
+    0004..000a  invoke-static  {v0}, LX/8t1;->A1a(Ljava/util/Set;)Z
+    000a..000c  move-result  v0
+    000c..0010  if-nez  v0, +0xe
+    0010..0016  invoke-static  {v1}, Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;->A04(Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;)Z
+    0016..0018  move-result  v0
+    0018..001c  if-eqz  v0, +0xa
+    001c..0022  invoke-virtual  {v1}, Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;->A0D()Z
+    0022..0024  move-result  v0
+    0024..0028  if-eqz  v0, +0x4
+    0028..002a  const/4  v0, #0x1
+    002a..002c  return  v0
+    002c..002e  const/4  v0, #0x0
+    002e..0030  return  v0
+    # exception table: 0 try range(s)
+.end method

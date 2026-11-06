@@ -3367,3 +3367,27 @@ identity/duplicate/device, empty-work, envelope and256-total-child guards remain
 Red/green queue-before-ACK/reopen regression includes metadata with an unusable
 jid beside a valid group. Unknown-only remains unsupported.
 [Exact helper and limits](apk/2.26.43.72-group-event-selection/README.md).
+
+
+## Current status job wire rendering and pre-submit markers (2026-11-06)
+
+**Confirmed selected pinned static / research / unknown authority.**
+[Complete43.72 SendE2eStatusJob paths and selected attribute/envelope helpers](apk/2.26.43.72-status-wire-submission/README.md)
+bind persisted part stanza hash, pre-submit per-device wire-attempt marker,
+root attribute conditions, optional child metadata andEng/Eoh submission.
+The wire marker writes literal0 for exactuuid/part/device rows with NULL/negative
+receipt-device timestamp before submission; it is not delivery evidence.
+
+The renderer selects to/from from key ownership/edit8, emits nonzeroedit and
+presence-dependentphash/bucketing/addressing fields, and conditionally emits
+device_fanout=false. Its flag/metadata producers remain incomplete, so no new
+Rust field/default is added. Optionalmeta session_scope/status_h/status_ots are
+child attributes, with feature/value selection still open. Large-stanza code
+logs and builds an envelope; it does not establish a hard native payload limit.
+
+The job submits Messagewhat0/arg1=8/Eng with expectedEoh via0Sf.A0B. Feature-controlled
+A0P waits300000ms or uses unboundedFuture.get, with explicit timeout cleanup and
+rethrow. Actual writer/ciphertext transactions, callback authority and full
+postwrite effects remain untraced. Existing Rust stanza limits/timeouts and
+reservations stay intact. Current emitter tests remain local controls, not full
+43.72 status rendering proof. No live operation or replay expansion.

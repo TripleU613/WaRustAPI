@@ -1060,3 +1060,5 @@ ACK waits; the corresponding synthetic regression remains a gate. Native batch
 selection/ciphertext stores, enqueue atomicity/current generation, restart/clock
 and final renderer/writer authority remain open. No runtime change or replay
 expansion in this evidence chunk; no live operations.
+
+- **2026-11-06 outbound follow-through:** current status job now traced through pre-submit marker, Eng/Eoh submission and feature-controlled ACK wait. [Wire/render evidence and remaining authority](groups.md#current-status-job-wire-rendering-and-pre-submit-markers-2026-11-06). Runtime unchanged.

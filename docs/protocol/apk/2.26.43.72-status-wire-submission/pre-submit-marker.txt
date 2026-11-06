@@ -1,0 +1,124 @@
+
+# class: Lcom/whatsapp/productinfra/status/sendflow/SendE2eStatusJob;
+# extends: Lorg/whispersystems/jobqueue/Job;
+
+.method private A0E(VL)  # .registers 22
+    # full signature: Lcom/whatsapp/productinfra/status/sendflow/SendE2eStatusJob;->A0E(Ljava/util/Set;)V
+    0000..0004  move-object/from16  v0, v20
+    0004..0008  iget-object  v1, v0, Lcom/whatsapp/productinfra/status/sendflow/SendE2eStatusJob;->A0O:LX/EVU;
+    0008..000c  if-nez  v1, +0x9
+    000c..0010  const-string  v0, "batchedStatusJobBehavior"
+    0010..0016  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    0016..0018  const/4  v0, #0x0
+    0018..001a  throw  v0
+    001a..001e  iget-object  v2, v1, LX/EVU;->A00:Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;
+    001e..0024  invoke-virtual  {v2}, Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;->A0E()Z
+    0024..0026  move-result  v0
+    0026..002a  if-eqz  v0, +0xc0
+    002a..002e  iget-object  v0, v2, Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;->statusUUID:Ljava/lang/String;
+    002e..0034  invoke-static  {v0}, LX/F2a;->A00(Ljava/lang/String;)Ljava/lang/String;
+    0034..0036  move-result-object  v6
+    0036..003a  if-eqz  v6, +0xb8
+    003a..003e  iget-object  v0, v1, LX/EVU;->A02:Lkotlin/jvm/functions/Function0;
+    003e..0044  invoke-interface  {v0}, Lkotlin/jvm/functions/Function0;->invoke()Ljava/lang/Object;
+    0044..0046  move-result-object  v1
+    0046..004a  check-cast  v1, LX/Dto;
+    004a..0050  invoke-virtual  {v2}, Lcom/whatsapp/productinfra/status/sendflow/E2eStatusJobParams;->A06()LX/Dwc;
+    0050..0052  move-result-object  v5
+    0052..0058  invoke-static  {v1}, LX/Dto;->A02(LX/Dto;)LX/1tk;
+    0058..005a  move-result-object  v2
+    005a..005e  const/16  v0, #0x1d
+    005e..0064  invoke-static  {v1, v0}, LX/DBc;->A1A(Ljava/lang/Object;I)LX/Fmt;
+    0064..0066  move-result-object  v13
+    0066..006a  move-object/from16  v7, v21
+    006a..0070  invoke-interface  {v7}, Ljava/util/Set;->isEmpty()Z
+    0070..0072  move-result  v0
+    0072..0076  if-nez  v0, +0x9a
+    0076..0078  const/4  v4, #0x1
+    0078..007e  invoke-static  {v4}, LX/DBb;->A04(I)Landroid/content/ContentValues;
+    007e..0080  move-result-object  v15
+    0080..0086  invoke-static  {}, LX/3q4;->A0d()Ljava/lang/Long;
+    0086..0088  move-result-object  v1
+    0088..008c  const-string  v0, "receipt_device_timestamp"
+    008c..0092  invoke-virtual  {v15, v0, v1}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+    0092..0098  invoke-virtual  {v2}, LX/0Xp;->A07()LX/0aq;
+    0098..009a  move-result-object  v2
+    009a..009e  iget-object  v14, v2, LX/0aq;->A02:LX/0KU;
+    009e..00a4  invoke-static  {v14}, LX/DBc;->A1U(LX/0KU;)Z
+    00a4..00a6  move-result  v0
+    00a6..00aa  if-nez  v0, +0x6e
+    00aa..00b0  invoke-virtual  {v2}, LX/0aq;->A00()LX/1hk;
+    00b0..00b2  move-result-object  v3
+    00b2..00b6  const/16  v0, #0x3cd
+    00b6..00bc  invoke-static  {v7, v0}, LX/2LC;->A17(Ljava/lang/Iterable;I)Ljava/util/Iterator;
+    00bc..00be  move-result-object  v12
+    00be..00c0  const/4  v11, #0x0
+    00c0..00c6  invoke-interface  {v12}, Ljava/util/Iterator;->hasNext()Z
+    00c6..00c8  move-result  v0
+    00c8..00cc  if-eqz  v0, +0x4a
+    00cc..00d2  invoke-static  {v12}, LX/6of;->A15(Ljava/util/Iterator;)Ljava/util/List;
+    00d2..00d4  move-result-object  v10
+    00d4..00d8  const-string  v7, ","
+    00d8..00da  const/4  v1, #0x2
+    00da..00e0  invoke-static  {v1}, LX/FgZ;->A00(I)LX/FgZ;
+    00e0..00e2  move-result-object  v0
+    00e2..00e8  invoke-static  {v7, v10, v0}, LX/2LB;->A17(Ljava/lang/CharSequence;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
+    00e8..00ea  move-result-object  v9
+    00ea..00ee  iget-object  v0, v5, LX/Dwc;->A02:Ljava/lang/String;
+    00ee..00f4  invoke-static  {v0, v6, v1, v4}, LX/6oe;->A1b(Ljava/lang/Object;Ljava/lang/Object;II)[Ljava/lang/String;
+    00f4..00f6  move-result-object  v8
+    00f6..00fc  invoke-static  {v10}, LX/1Xl;->A19(Ljava/lang/Iterable;)Ljava/util/ArrayList;
+    00fc..00fe  move-result-object  v7
+    00fe..0104  invoke-interface  {v10}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0104..0106  move-result-object  v1
+    0106..010c  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    010c..010e  move-result  v0
+    010e..0112  if-eqz  v0, +0x6
+    0112..0118  invoke-static  {v7, v1}, LX/DBh;->A1N(Ljava/util/AbstractCollection;Ljava/util/Iterator;)V
+    0118..011a  goto  -0x9
+    011a..0120  invoke-static  {v7, v8}, LX/DBg;->A1b(Ljava/util/AbstractCollection;[Ljava/lang/Object;)[Ljava/lang/String;
+    0120..0122  move-result-object  v19
+    0122..0126  const-string  v16, "status_receipt_device"
+    0126..012c  invoke-static  {}, LX/1Xl;->A13()Ljava/lang/StringBuilder;
+    012c..012e  move-result-object  v1
+    012e..0134  const-string/jumbo  v0, "uuid = ? AND part_code = ? AND receipt_device_jid IN ("
+    0134..013a  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    013a..0140  invoke-virtual  {v1, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0140..0144  const-string  v0, ") AND (receipt_device_timestamp < 0 OR receipt_device_timestamp IS NULL)"
+    0144..014a  invoke-static  {v0, v1}, LX/1Xl;->A0z(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    014a..014c  move-result-object  v17
+    014c..0150  const-string  v18, "StatusReceiptStore/MARK_BACKFILL_WIRE_ATTEMPTED"
+    0150..0156  invoke-virtual/range  {v14..v19}, LX/0KU;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+    0156..0158  move-result  v0
+    0158..015a  add-int/2addr  v11, v0
+    015a..015c  goto  -0x4d
+    015c..0162  invoke-virtual  {v3}, LX/1hk;->A00()V
+    0162..0168  invoke-virtual  {v3}, LX/1hk;->close()V
+    0168..016e  invoke-virtual  {v2}, LX/0aq;->close()V
+    016e..0172  if-lez  v11, +0x1c
+    0172..0178  invoke-virtual  {v13}, LX/Fmt;->invoke()Ljava/lang/Object;
+    0178..017a  return-void
+    017a..017c  move-exception  v1
+    017c..017e  throw  v1
+    017e..0180  move-exception  v0
+    0180..0182  goto  +0x8
+    0182..0186  const-string  v0, "markReceiptDevicesAssignedToPartAsWireAttempted must own the outer transaction"
+    0186..018c  invoke-static  {v0}, LX/1Xl;->A0g(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+    018c..018e  move-result-object  v0
+    018e..0190  goto  +0x4
+    0190..0196  invoke-static  {v3, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    0196..0198  throw  v0
+    0198..019a  move-exception  v1
+    019a..019c  throw  v1
+    019c..019e  move-exception  v0
+    019e..01a4  invoke-static  {v2, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    01a4..01a6  throw  v0
+    01a6..01a8  return-void
+    # exception table: 6 try range(s)
+    # catch <all> code_units 004d..0059 -> 00cc
+    # catch <all> code_units 0059..00b1 -> 00bd
+    # catch <all> code_units 00b1..00b4 -> 00cc
+    # catch <all> code_units 00be..00bf -> 00bf
+    # catch <all> code_units 00c1..00cc -> 00cc
+    # catch <all> code_units 00cd..00ce -> 00ce
+.end method
