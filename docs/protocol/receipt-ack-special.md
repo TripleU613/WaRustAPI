@@ -142,3 +142,33 @@ terminal refusal; snapshots and uncertain reservations remain held. The existing
 459 direct/group/single/batched test now includes malformed cases.
 [Parser, selected reader catch path, cross-family tests and limits](message-ack.md#integral-error-admission-before-ordinary-ack-outcomes-2026-11-06).
 Native error-handler/recovery and typed error-code projection remain separate.
+
+## Current generic callback key and separate ID maps (2026-11-06)
+
+**Confirmed selected pinned static / negative finding:** [new43.72 generic
+bridge, queue and Eoh.equals exports](apk/2.26.43.72-receipt-callback-key/README.md)
+connect1rH's generic route through1lZ.A1D/1lY.Big/0ln.A09 to handler what6.
+The re-exported complete0m2.handleMessage matches the retained file exactly.
+Its0Th.A04 callback lookup removes a full key including nullable participant,
+type, recipient and edit alongside class/from/id; extra list/node/string
+members are also compared, with full producer meaning still untraced. The
+edited-message fallback requires class=message and does not extend to receipts.
+A found callback receives BsT(node) even when an error is present. This method
+name alone cannot establish business success or convert a refusal to acceptance.
+
+**Important limit:** the same handler subsequently removes timeout and0TV
+entries by id independently of full-key callback lookup. A returned Eo7 can
+invoke another callback with the id. Full-key mismatch is therefore not proof
+that every native record is preserved. Those independent map producers and
+receipt-family membership remain untraced. Do not remove strict Rust receipt
+correlation based only on their existence, or claim universal native full-key
+ownership from0Th alone.
+
+The current Rust receipt adapter already checks class, original/batch id,
+logical address, exact type and nullable participant, refusing unsupported
+recipient/edit shapes. This bounded audit establishes no confirmed local
+mismatch; it retains these rules without claiming complete native map parity.
+Callback delivery, local diagnostic refused/server_acknowledged status and
+specialized receipt state remain separate. No code change or live account
+traffic. APK hash, exact handler re-export, bundle checksums, links and coverage
+freshness were verified; Rust tests were not rerun for this evidence-only chunk.

@@ -1,0 +1,22 @@
+{
+  "README.md": {
+    "bytes": 4315,
+    "sha256": "d7935ed7f841a91ea22602516abc122ecaedb9e649afbf97a75c50d71eea016c"
+  },
+  "bridge.txt": {
+    "bytes": 612,
+    "sha256": "f8a13cfaa19178a442ef6a18e594f4c2e518924cd8e91ec7bd975d5e6651f671"
+  },
+  "generic-dispatch.txt": {
+    "bytes": 943,
+    "sha256": "37ce6e21831661d8c3e8d35c56f4ad5af1fd61f99853ac70586cf5cbe362400d"
+  },
+  "key-equality.txt": {
+    "bytes": 4770,
+    "sha256": "06740cb4d370d788240a7d71ce0549d2f767811a20a73914575a03686070c174"
+  },
+  "manager.txt": {
+    "bytes": 669,
+    "sha256": "df562e3811df46aa95c9fa1da42e06df89dd7064238e590602c7d75be6e877c7"
+  }
+}
