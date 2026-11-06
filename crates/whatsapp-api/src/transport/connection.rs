@@ -2227,7 +2227,7 @@ mod tests {
     async fn malformed_ack_stops_epoch_after_capture_and_keeps_reserved_action() {
         use sha2::Digest;
         for class in ["message", "receipt", "notification"] {
-            for raw in ["", "2147483648"] {
+            for raw in [Some(""), Some("2147483648"), None] {
                 let dir = tempfile::tempdir().unwrap();
                 let path = dir.path().join("ack-reader-error.redb");
                 let store = open(&path);
@@ -2267,10 +2267,13 @@ mod tests {
                         .unwrap()
                 };
                 let before = snapshot(&store);
-                let bad = Node::new("ack")
-                    .attr("class", class)
-                    .attr("id", "bad-ack-fixture")
-                    .attr("error", raw);
+                let bad = match raw {
+                    Some(raw) => Node::new("ack")
+                        .attr("class", class)
+                        .attr("id", "bad-ack-fixture")
+                        .attr("error", raw),
+                    None => Node::new("ack").attr("class", class).attr("error", "459"),
+                };
                 let capture = format!(
                     "inbound:sha256:{}",
                     hex::encode(sha2::Sha256::digest(encode(&bad).unwrap()))

@@ -1,3 +1,5 @@
+Missing ACK id now stops stateful reception after capture, before error459/class dispatch, matching the pinned required accessor. Pending work remains uncertain; empty textual id retains native null-check behavior. [Evidence and limits](docs/protocol/message-ack.md#required-ack-id-before-error-and-class-routing-2026-11-06). Offline only.
+
 Valid signed/Unicode ACK errors now retain their numeric delivery-fact code across reopen, using the same pinned parser as admission. Historical unsigned JSON facts remain readable; public DeliveryFact.code widens to Option<i64>. [Evidence and compatibility](docs/protocol/message-ack.md#preserve-admitted-signed-ack-error-codes-2026-11-06). Offline only.
 
 Malformed ACK numeric errors now stop normal actor/CLI stateful receive and captured waits after preserving evidence, matching the selected pinned reader exit. Pending work stays uncertain; no generated ACK response or automatic reconnect. [Native routing and limits](docs/protocol/message-ack.md#malformed-ack-consumes-the-receive-epoch-after-capture-2026-11-06). Offline only.

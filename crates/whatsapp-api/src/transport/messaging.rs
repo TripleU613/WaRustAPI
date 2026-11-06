@@ -1088,12 +1088,20 @@ pub(crate) fn ack_error_is_valid(node: &Node) -> bool {
     parsed_ack_error(node).is_ok()
 }
 
-/// Validate ACK numeric admission. Stateful receivers must first capture the Node.
+/// Validate ACK required-ID and numeric admission. Stateful receivers must first capture the Node.
 /// A malformed ACK ends the receiving epoch (APK43.72 1rg.A04 excludes ack;
 /// the selected 1s2.run outer catch reports onError(2) and returns).
 /// This performs no capture/I/O; callers must stop and discard their channel
 /// on failure. It never settles an intent or authorizes reconnection/replay.
 pub fn validate_received_ack(node: &Node) -> crate::Result<()> {
+    // APK43.72 1rH.A03 0054..0064 calls required 0Tp.A0L(id)
+    // before numeric459/class routing; missing id throws LIL.
+    if node.description == "ack" && node.get_attr("id").is_none() {
+        return Err(crate::Error::invalid(
+            "ack",
+            "missing ACK id; receive epoch consumed; preserve uncertainty and do not reconnect automatically",
+        ));
+    }
     if node.description == "ack" && !ack_error_is_valid(node) {
         return Err(crate::Error::invalid(
             "ack",
@@ -1300,8 +1308,9 @@ pub async fn wait_for<S: AsyncRead + AsyncWrite + Unpin>(
     wait_for_observed(
         async || read_node(channel).await,
         |node| {
-            validate_received_ack(node)
-                .map_err(|_| error("malformed ACK error; receive epoch consumed; discard channel"))
+            validate_received_ack(node).map_err(|_| {
+                error("invalid ACK admission; receive epoch consumed; discard channel")
+            })
         },
         description,
         id,
@@ -2799,7 +2808,10 @@ mod message_ack_outcome_tests {
                 MessageAckOutcome::Refused,
                 "{error}"
             );
-            assert!(validate_received_ack(&message.clone().attr("error", error)).is_ok());
+            assert!(
+                validate_received_ack(&message.clone().attr("id", "fixture").attr("error", error))
+                    .is_ok()
+            );
         }
         for error in [
             "",
@@ -2843,7 +2855,10 @@ mod message_ack_outcome_tests {
                 let outcome = message_ack_outcome(&ack.clone().attr("error", error));
                 assert_eq!(outcome, MessageAckOutcome::AuthChallenge);
                 assert_eq!(outcome.status(), "outcome_unknown");
-                assert!(validate_received_ack(&ack.clone().attr("error", error)).is_ok());
+                assert!(
+                    validate_received_ack(&ack.clone().attr("id", "fixture").attr("error", error))
+                        .is_ok()
+                );
             }
             if class != "message" {
                 assert_eq!(message_ack_outcome(&ack), MessageAckOutcome::Unrelated);
@@ -2906,10 +2921,33 @@ mod captured_wait_tests {
     use super::*;
     use crate::store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource, Table};
 
+    #[test]
+    fn ack_required_id_precedes_challenge_and_class_routing() {
+        for class in [None, Some("message"), Some("receipt"), Some("unknown")] {
+            for error in [None, Some("459"), Some("bad")] {
+                let mut ack = Node::new("ack");
+                if let Some(class) = class {
+                    ack = ack.attr("class", class);
+                }
+                if let Some(error) = error {
+                    ack = ack.attr("error", error);
+                }
+                let failure = validate_received_ack(&ack).unwrap_err();
+                assert!(failure.to_string().contains("missing ACK id"));
+                assert!(!failure.is_recoverable_by_reconnect());
+                if error != Some("bad") {
+                    // A0L rejects null, not the empty string.
+                    assert!(validate_received_ack(&ack.attr("id", "")).is_ok());
+                }
+            }
+        }
+        assert!(validate_received_ack(&Node::new("notification")).is_ok());
+    }
+
     #[tokio::test]
     async fn captured_wait_stops_on_malformed_ack_before_matching_or_next_read() {
         use sha2::Digest;
-        for matched in [false, true] {
+        for (matched, missing_id) in [(false, false), (true, false), (false, true)] {
             let dir = tempfile::tempdir().unwrap();
             let path = dir.path().join("bad-ack-wait.redb");
             let open = || {
@@ -2928,10 +2966,16 @@ mod captured_wait_tests {
             store
                 .write(|tx| tx.put_json(Table::Checkpoints, b"send-fixture", 1, &intent))
                 .unwrap();
-            let bad = Node::new("ack")
-                .attr("class", "message")
-                .attr("id", if matched { "held" } else { "unrelated" })
-                .attr("error", "bad");
+            let bad = if missing_id {
+                Node::new("ack")
+                    .attr("class", "message")
+                    .attr("error", "459")
+            } else {
+                Node::new("ack")
+                    .attr("class", "message")
+                    .attr("id", if matched { "held" } else { "unrelated" })
+                    .attr("error", "bad")
+            };
             let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71())
                 .encode(&bad)
                 .unwrap();

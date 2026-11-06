@@ -309,3 +309,34 @@ listener recovery remain incomplete.
 Validation: 1,457 workspace/all-feature tests, strict workspace/all-target/
 all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
 validation, APK coverage freshness and repository hygiene passed. Offline only.
+
+## Required ACK ID before error and class routing (2026-11-06)
+
+**Confirmed pinned static / Rust correction:** [required-text accessor and
+selected handler](apk/2.26.43.72-ack-required-id/README.md) show that absent id
+throws LIL before numeric459 diversion or any class routing. The same selected
+corruption route rethrows for root ack and exits the reader. Rust previously
+kept reading after this malformed envelope when its numeric error was valid.
+
+The shared validate_received_ack now rejects absent id before numeric checks.
+Normal actor, captured waits and CLI stateful receive capture first and stop,
+retaining reservations; legacy uncaptured wait stops under its existing error
+contract. Empty textual id passes this accessor, as in the native null check.
+Missing-id error is redacted and non-reconnectable in stateful paths. This is
+a conservative local recovery policy, not a native account-wide policy claim.
+
+Regression controls cover missing class, unknown/message/receipt class, error
+absence,459 and malformed numeric input, checking ID precedence and empty-id
+admission. Actual actor tests include missing-id459 for message/receipt/
+notification classes, durable captures, no later ping response, preserved
+pending action/account state and reopen. Captured waits include missing-id459,
+stop after one read and retain the following valid response unread. No live
+traffic, ACK-to-ACK response, replay or challenge recovery.
+
+Limits: complete sender/participant/recipient validation, nontext ID coercion,
+duplicate attributes and Efa/Eoh construction remain unverified. Pure outcome
+helpers and raw read primitives still do not replace stateful admission.
+
+Validation: 1,458 workspace/all-feature tests passed. Strict workspace/all-target/
+all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
+validation, APK coverage freshness and repository hygiene passed. Offline only.

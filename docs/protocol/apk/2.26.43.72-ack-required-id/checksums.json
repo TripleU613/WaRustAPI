@@ -1,0 +1,14 @@
+{
+  "README.md": {
+    "bytes": 1872,
+    "sha256": "7ad12805d44b3203caa2b7fdaf56cc56181e33c18e75b207c19fa0b7d8744558"
+  },
+  "optional-text.txt": {
+    "bytes": 521,
+    "sha256": "0f7f8b6e917bc82de76f519fa589a46762a7e89e1f0fa76acd7754a75c48a7b8"
+  },
+  "required-text.txt": {
+    "bytes": 1438,
+    "sha256": "eff6d1b171e5de4446d9680c816777d3f479af777668c7ad0fc9a97b6909092a"
+  }
+}
