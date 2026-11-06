@@ -1,0 +1,20 @@
+# Selected byte-PC ranges, end exclusive; not a complete worker method.
+# Full export SHA256: a19263185d577b5f199c76239976a4b82ec971c4cae74c047869d5b3db031f77
+
+# Range 0876..08b8
+    0876..087a  iget-object  v0, v7, LX/0YB;->A0O:LX/00x;
+    087a..0880  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0880..0882  move-result-object  v4
+    0882..0886  check-cast  v4, LX/1A7;
+    0886..088a  iget-object  v3, v7, LX/0YB;->A1B:LX/1A0;
+    088a..0890  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    0890..0892  move-result-object  v0
+    0892..0896  check-cast  v0, LX/0Z8;
+    0896..089c  invoke-virtual  {v0}, LX/0Z8;->A03()Z
+    089c..089e  move-result  v0
+    089e..08a2  iput-boolean  v0, v4, LX/1A7;->A04:Z
+    08a2..08a6  iget-object  v2, v4, LX/1A7;->A0H:LX/098;
+    08a6..08a8  const/4  v1, #0x2
+    08a8..08ac  new-instance  v0, LX/2JJ;
+    08ac..08b2  invoke-direct  {v0, v3, v4, v1}, LX/2JJ;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V
+    08b2..08b8  invoke-virtual  {v2, v0}, LX/098;->execute(Ljava/lang/Runnable;)V

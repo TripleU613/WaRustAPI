@@ -1,0 +1,16 @@
+classes.dex  LX/0YB;->A05(VLIZ)
+  read opcode 0x53, dex byte offset: 0x5df9cc
+classes.dex  LX/1A7;->A02(VL)
+  read opcode 0x53, dex byte offset: 0x83db1c
+classes.dex  LX/1A7;->A04(VL)
+  read opcode 0x53, dex byte offset: 0x83dc58
+classes.dex  LX/1A7;->A04(VL)
+  read opcode 0x53, dex byte offset: 0x83dc72
+classes.dex  LX/1A7;->A04(VL)
+  read opcode 0x53, dex byte offset: 0x83dc86
+classes.dex  LX/1A7;->A04(VL)
+  write opcode 0x5a, dex byte offset: 0x83dcb2
+classes2.dex  LX/2JJ;->run(V)
+  write opcode 0x5a, dex byte offset: 0x2eacf4
+classes8.dex  LX/Fea;->run(V)
+  write opcode 0x5a, dex byte offset: 0x829e10

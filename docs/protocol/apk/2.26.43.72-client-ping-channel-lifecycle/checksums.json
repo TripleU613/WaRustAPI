@@ -1,0 +1,46 @@
+{
+  "README.md": {
+    "bytes": 5281,
+    "sha256": "210dbd2472ca4b2b4adf8b2c109e6ac5843ac2c871b80b848978a42b6d5a57ef"
+  },
+  "SHA256SUMS": {
+    "bytes": 839,
+    "sha256": "a4c0e528376cda95559bc53afd34e51f67dc12c52fd4f71c545aba13eae19480"
+  },
+  "connected-refs.txt": {
+    "bytes": 458,
+    "sha256": "42dd32b71fb7cbf28a1cc7e33f22b6daf8e7d7a93252f1a3b5f8e71c40e7c99d"
+  },
+  "connected-worker.txt": {
+    "bytes": 5561,
+    "sha256": "ad6ea5f9d69125723713aca3014fe31846cf8d39a3657cb7a3540865501aa792"
+  },
+  "counter-refs.txt": {
+    "bytes": 382,
+    "sha256": "ca781503bcca7ca2c7860a1888eaa9ac0daacd4c16f5e408fc23b1d543dffb5f"
+  },
+  "dispatch-binding.txt": {
+    "bytes": 1059,
+    "sha256": "d56113b08338a7dcc97798287a0f7054fd43acfe3a89f401ca615deb1a463d8d"
+  },
+  "mode-refs.txt": {
+    "bytes": 310,
+    "sha256": "47413c00256af355414ed4be8f4df03015fb29e14e7169603ac78092d035750f"
+  },
+  "outstanding-refs.txt": {
+    "bytes": 613,
+    "sha256": "e806fd3ba726883694587390206650b9ed4685a64e021593585ddace003064f5"
+  },
+  "short-mode.txt": {
+    "bytes": 1973,
+    "sha256": "80d5b4461a31adeafacbc119cc84a76f02b4dcccdf4f8885f45e8590d52c0db7"
+  },
+  "thread-check.txt": {
+    "bytes": 436,
+    "sha256": "a698dbd2cd57a2988cbb36c297e30d4cf606bdf7d1fd6a074872db6cf16fc77f"
+  },
+  "worker-constructors.txt": {
+    "bytes": 498,
+    "sha256": "ceeb2253c5d6ccad7f15101e18b9f3d748abe61a0d300659a7b124cb9fb794c0"
+  }
+}

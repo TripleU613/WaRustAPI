@@ -16913,5 +16913,12 @@
     "x-live": false,
     "description": "Static APK43.72 whole integer-default-builder proof confirms unique writes 15103=32000, 15183=240000 and 15270=15000 through final this.A02 snapshot. Effective account configuration and owner lifetime remain unported. No runtime timing change.",
     "evidence": "docs/protocol/apk/2.26.43.72-client-ping-final-defaults/README.md"
+  },
+  "x-client-ping-channel-lifecycle-research": {
+    "x-cli": false,
+    "x-transport": "experimental",
+    "x-live": false,
+    "description": "Static APK43.72 accepted-channel ping initialization resets counter and outstanding state; identical connected callback does not reset. Scheduler mode depends on stored push-registration state, logins_with_messages and effective property 6493. Configuration cache lifetime remains distinct and unported; no runtime timing change.",
+    "evidence": "docs/protocol/apk/2.26.43.72-client-ping-channel-lifecycle/README.md"
   }
 }

@@ -1,0 +1,92 @@
+# Selected byte-PC ranges, end exclusive; not a complete worker method.
+# Full export SHA256: c4c9ea3440a1786739e985f41977b10d7060bc813eb5fcd986aa80914a6b282f
+
+# Range 0000..000e
+    0000..0004  move-object/from16  v2, v16
+    0004..0008  iget  v0, v2, LX/2JJ;->$t:I
+    0008..000e  packed-switch  v0, payload@0x718, cases=[0:@0x67c, 1:@0x31e, 2:@0x36, 3:@0x59a, 4:@0x540, 5:@0xce, 6:@0xb6, 7:@0x9e, 8:@0x86], default@0xe
+
+# Range 0036..0086
+    0036..003a  iget-object  v1, v2, LX/2JJ;->A00:Ljava/lang/Object;
+    003a..003e  check-cast  v1, LX/1A7;
+    003e..0042  iget-object  v3, v2, LX/2JJ;->A01:Ljava/lang/Object;
+    0042..0046  check-cast  v3, LX/1A0;
+    0046..004a  const-string  v0, "ClientPingManager/on-connected, can use short: "
+    004a..004e  new-instance  v2, Ljava/lang/StringBuilder;
+    004e..0054  invoke-direct  {v2, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0054..0058  iget-boolean  v0, v1, LX/1A7;->A04:Z
+    0058..005e  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    005e..0064  invoke-static  {v2}, LX/1Xl;->A1N(Ljava/lang/Object;)V
+    0064..0068  iget-object  v2, v1, LX/1A7;->A0H:LX/098;
+    0068..006e  invoke-virtual  {v2}, LX/098;->A02()V
+    006e..0072  iget-boolean  v0, v1, LX/1A7;->A05:Z
+    0072..0076  if-eqz  v0, +0x1f2
+    0076..007a  iget-object  v0, v1, LX/1A7;->A01:LX/1A0;
+    007a..007e  if-ne  v3, v0, +0x1e6
+    007e..0082  const-string  v0, "ClientPingManager/on-connected; already connected, ignoring."
+    0082..0086  goto/16  +0x1a2
+
+# Range 03c6..03ce
+    03c6..03cc  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    03cc..03ce  return-void
+
+# Range 0446..0540
+    0446..044a  const-string  v0, "ClientPingManager/on-connected; new channel, forcing disconnect."
+    044a..0450  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0450..0456  invoke-static  {v1}, LX/1A7;->A02(LX/1A7;)V
+    0456..045a  iput-object  v3, v1, LX/1A7;->A01:LX/1A0;
+    045a..045c  const/4  v8, #0x0
+    045c..0460  iput  v8, v1, LX/1A7;->A00:I
+    0460..0464  const-wide/16  v3, #0x0
+    0464..0468  iput-wide  v3, v1, LX/1A7;->A0J:J
+    0468..046c  iput-boolean  v8, v1, LX/1A7;->A06:Z
+    046c..046e  const/4  v0, #0x1
+    046e..0472  iput-boolean  v0, v1, LX/1A7;->A05:Z
+    0472..0478  invoke-static  {v1}, LX/1A7;->A06(LX/1A7;)Z
+    0478..047a  move-result  v0
+    047a..047e  if-nez  v0, +0x1a
+    047e..0484  invoke-virtual  {v2}, LX/098;->A02()V
+    0484..0488  iget-object  v0, v1, LX/1A7;->A02:LX/1t4;
+    0488..048c  if-eqz  v0, +0x39
+    048c..0490  const-string  v0, "ClientPingManager/periodic/register-receiver; duplicate receiver registration."
+    0490..0496  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0496..049c  invoke-virtual  {v2}, LX/098;->A02()V
+    049c..04a0  iget-object  v0, v1, LX/1A7;->A03:LX/1tB;
+    04a0..04a4  if-eqz  v0, +0xb
+    04a4..04a8  const-string  v0, "ClientPingManager/timeout/register-receiver; duplicate receiver registration."
+    04a8..04ae  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    04ae..04b4  invoke-static  {v1}, LX/1A7;->A05(LX/1A7;)V
+    04b4..04b6  return-void
+    04b6..04ba  new-instance  v0, LX/1tB;
+    04ba..04c0  invoke-direct  {v0, v1}, LX/1tB;-><init>(LX/1A7;)V
+    04c0..04c4  iput-object  v0, v1, LX/1A7;->A03:LX/1tB;
+    04c4..04c8  iget-object  v3, v1, LX/1A7;->A07:Landroid/content/Context;
+    04c8..04cc  iget-object  v0, v1, LX/1A7;->A09:LX/00x;
+    04cc..04d2  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    04d2..04d4  move-result-object  v2
+    04d4..04d8  check-cast  v2, LX/1t6;
+    04d8..04dc  iget-object  v4, v1, LX/1A7;->A03:LX/1tB;
+    04dc..04e0  const-string  v0, "com.whatsapp.alarm.CLIENT_PING_TIMEOUT"
+    04e0..04e4  new-instance  v5, Landroid/content/IntentFilter;
+    04e4..04ea  invoke-direct  {v5, v0}, Landroid/content/IntentFilter;-><init>(Ljava/lang/String;)V
+    04ea..04ee  sget-object  v6, LX/08u;->A0D:Ljava/lang/String;
+    04ee..04f2  iget-object  v7, v1, LX/1A7;->A08:Landroid/os/Handler;
+    04f2..04f8  invoke-virtual/range  {v2..v8}, LX/1t6;->A01(Landroid/content/Context;Landroid/content/BroadcastReceiver;Landroid/content/IntentFilter;Ljava/lang/String;Landroid/os/Handler;Z)Landroid/content/Intent;
+    04f8..04fa  goto  -0x25
+    04fa..04fe  new-instance  v0, LX/1t4;
+    04fe..0504  invoke-direct  {v0, v1}, LX/1t4;-><init>(LX/1A7;)V
+    0504..0508  iput-object  v0, v1, LX/1A7;->A02:LX/1t4;
+    0508..050c  iget-object  v0, v1, LX/1A7;->A09:LX/00x;
+    050c..0512  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0512..0514  move-result-object  v9
+    0514..0518  check-cast  v9, LX/1t6;
+    0518..051c  iget-object  v10, v1, LX/1A7;->A07:Landroid/content/Context;
+    051c..0520  iget-object  v11, v1, LX/1A7;->A02:LX/1t4;
+    0520..0524  const-string  v0, "com.whatsapp.alarm.CLIENT_PING_PERIODIC"
+    0524..0528  new-instance  v12, Landroid/content/IntentFilter;
+    0528..052e  invoke-direct  {v12, v0}, Landroid/content/IntentFilter;-><init>(Ljava/lang/String;)V
+    052e..0532  sget-object  v13, LX/08u;->A0D:Ljava/lang/String;
+    0532..0536  iget-object  v14, v1, LX/1A7;->A08:Landroid/os/Handler;
+    0536..0538  move  v15, v8
+    0538..053e  invoke-virtual/range  {v9..v15}, LX/1t6;->A01(Landroid/content/Context;Landroid/content/BroadcastReceiver;Landroid/content/IntentFilter;Ljava/lang/String;Landroid/os/Handler;Z)Landroid/content/Intent;
+    053e..0540  goto  -0x54

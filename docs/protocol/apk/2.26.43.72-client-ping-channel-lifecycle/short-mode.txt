@@ -1,0 +1,41 @@
+
+# class: LX/0Z8;
+# extends: Ljava/lang/Object;
+
+.method public A03(Z)  # .registers 5
+    # full signature: LX/0Z8;->A03()Z
+    0000..0004  iget-object  v3, v4, LX/0Z8;->A01:LX/09S;
+    0004..000a  invoke-virtual  {v3}, LX/09S;->A0S()LX/1nA;
+    000a..000c  move-result-object  v0
+    000c..0012  invoke-virtual  {v0}, LX/0FZ;->A03()Landroid/content/SharedPreferences;
+    0012..0014  move-result-object  v1
+    0014..0018  const-string  v0, "c2dm_reg_id"
+    0018..001e  invoke-interface  {v1, v0}, Landroid/content/SharedPreferences;->contains(Ljava/lang/String;)Z
+    001e..0020  move-result  v0
+    0020..0024  if-nez  v0, +0x17
+    0024..002a  invoke-virtual  {v3}, LX/09S;->A0S()LX/1nA;
+    002a..002c  move-result-object  v0
+    002c..0032  invoke-virtual  {v0}, LX/0FZ;->A03()Landroid/content/SharedPreferences;
+    0032..0034  move-result-object  v2
+    0034..0038  const-string  v1, "fbns_token"
+    0038..003a  const/4  v0, #0x0
+    003a..0040  invoke-interface  {v2, v1, v0}, Landroid/content/SharedPreferences;->getString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0040..0042  move-result-object  v0
+    0042..0048  invoke-static  {v0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+    0048..004a  move-result  v0
+    004a..004e  if-nez  v0, +0x15
+    004e..0054  invoke-virtual  {v3}, LX/09S;->A0U()LX/1rs;
+    0054..0056  move-result-object  v0
+    0056..005c  invoke-virtual  {v0}, LX/0FZ;->A03()Landroid/content/SharedPreferences;
+    005c..005e  move-result-object  v2
+    005e..0062  const-string  v1, "logins_with_messages"
+    0062..0064  const/4  v0, #0x0
+    0064..006a  invoke-interface  {v2, v1, v0}, Landroid/content/SharedPreferences;->getInt(Ljava/lang/String;I)I
+    006a..006c  move-result  v2
+    006c..006e  const/4  v1, #0x3
+    006e..0070  const/4  v0, #0x1
+    0070..0074  if-lt  v2, v1, +0x3
+    0074..0076  const/4  v0, #0x0
+    0076..0078  return  v0
+    # exception table: 0 try range(s)
+.end method

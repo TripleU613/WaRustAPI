@@ -1,3 +1,14 @@
+2026-11-05 — **Ping channel startup and scheduler-mode authority traced.**
+
+A new accepted channel resets the ping counter; duplicate same-channel callback
+leaves it alone. Push-registration preferences and login count determine the
+native short-mode input, distinct from effective interval values and cache lifetime.
+[Transition table, field census and remaining gaps](docs/protocol/apk/2.26.43.72-client-ping-channel-lifecycle/README.md).
+Research only; runtime timing and live-account behavior unchanged.
+Validation: pinned APK hash and exact prior-export comparisons, fmt, strict Clippy,
+CLI/OpenAPI, APK coverage and staged hygiene passed. No new full workspace test
+run for this research-only chunk; shared Rust retains its preceding 1373-test result.
+
 2026-11-05 — **Final compiled ping defaults verified across the complete integer builder.**
 
 The three selected timing keys occur once each and survive into the final map:

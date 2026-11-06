@@ -989,3 +989,16 @@ replaces those entries. This closes the selected-assignment-only caveat for
 these three keys. **Unknown/unported:** effective account values and configuration
 owner lifetime. No runtime timer, retry, replay or live-account behavior changes.
 [Reproducible bounded proof and limits](apk/2.26.43.72-client-ping-final-defaults/README.md).
+
+### 2026-11-05: ping channel lifecycle and scheduler-mode authority
+
+**Confirmed static, APK 2.26.43.72:** 0YB.A01 -> 2JJ selector 2 binds startup.
+Same connected callback identity returns without resetting; new accepted channel
+resets the ping counter/outstanding timestamp/timeout flag and schedules the
+initial interval. Counter reset does not reset the configuration first-access
+cache. Scheduler mode derives from push-registration preference presence and
+logins_with_messages < 3, then effective property 6493 for Runnable selection.
+**Unknown/unported:** actual preference/config values, complete owner lifetime,
+on-demand/channel-replacement callback interactions and receiver failure paths.
+[Source, exact field census and transition table](apk/2.26.43.72-client-ping-channel-lifecycle/README.md).
+No runtime policy or live-account behavior changed.
