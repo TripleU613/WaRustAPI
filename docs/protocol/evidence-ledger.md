@@ -7461,3 +7461,14 @@ or ignored-only lists. Parent time is now parsed only for supported entries;
 supported-token Java/range/atomic checks remain. Red/green empty/unknown-only
 regression covers absent, malformed, negative and overflowing unused t without
 changing prior state. [Retained branch proof and limits](apk/2.26.43.72-privacy-token-primary-address/README.md).
+
+
+### Ignored privacy tokens do not consume sender alias (2026-11-05)
+
+**Confirmed static / locally fixed:**10G.A09 reads sender_lid only after selecting
+trusted_contact. Rust's eager alias resolution suppressed ACK for empty/ignored
+lists with invalid unused metadata. After the existing container/list checks it
+now returns no updates before alias/time resolution when no supported entries
+exist. Supported alias/time/primary/atomic guards remain. Red/green regression
+combines ignored lists with malformed or agent-qualified unused alias and time,
+preserving prior token state. [Evidence and limits](apk/2.26.43.72-privacy-token-primary-address/README.md).

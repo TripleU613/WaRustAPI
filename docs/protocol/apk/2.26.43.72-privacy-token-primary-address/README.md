@@ -91,3 +91,27 @@ prior token state; selected supported-token malformed-time tests remain. This
 extends the earlier ignored-kind ACK fix rather than relaxing supported data
 validation. Existing local address/list/size policies and native fallback/error
 parity limits remain. No live account or outbound query was used.
+
+## Ignored token lists do not consume alias metadata — 2026-11-05
+
+**Confirmed static:**10G.A09 skips non-trusted_contact entries at005c..008e
+before reading UserJid from/sender_lid at008e..00bc or parent/child time at
+00c4..00e2. Thus no selected supported token means no sender_lid consumption.
+The already retained complete handler is the evidence; no new APK trace ID.
+
+**Confirmed local defect/fix:** Rust resolved explicit sender_lid before filtering
+token entries. Unknown-only and empty lists with invalid unused alias metadata
+lost their known-type ACK. After selecting the first named container and checking
+its existing256-child bound, the parser now filters trusted_contact and returns
+no updates immediately when none are selected. It resolves the token target only
+when supported data exists, then uses existing alias/time/data checks. Primary
+from/outer-envelope guards remain; this does not globally accept every sender or
+change native alias fallback versus the local strict explicit-alias policy.
+
+The mixed-list regression failed on the previous invalid-sender-LID guard.
+Empty/unknown-only lists now cover missing and malformed unused timestamps plus
+malformed and agent-qualified unused sender_lid. ACKs preserve the prior saved
+token. Selected supported-data bad-alias cases remain refusals; existing primary,
+malformed-body, atomic-write and reopen checks remain. The no-update path does
+not open a token write transaction. No token, alias mapping, query, credentials
+or live account action was created.

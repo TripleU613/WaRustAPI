@@ -349,15 +349,6 @@ fn parse(node: &Node) -> Result<Option<TokenUpdates<'_>>> {
     }) else {
         return Ok(None);
     };
-    let target = if node.get_attr("sender_lid").is_some() {
-        jid(node, "sender_lid")
-            .filter(|v| {
-                !v.user.is_empty() && v.server == Server::Lid && v.agent == 0 && v.device == 0
-            })
-            .ok_or_else(|| Error::invalid("notification", "invalid sender LID"))?
-    } else {
-        from
-    };
     // APK43.72 10G.A09 uses0Tp.A0G/A0F: first named container,
     // not a uniqueness scan and not a fallback to a later valid container.
     let tokens = node
@@ -369,6 +360,28 @@ fn parse(node: &Node) -> Result<Option<TokenUpdates<'_>>> {
             "missing or excessive token list",
         ));
     }
+    let mut supported = tokens
+        .child_nodes()
+        .iter()
+        .filter(|token| {
+            token.description == "token"
+                && token.get_attr("type").and_then(|v| v.as_text()) == Some("trusted_contact")
+        })
+        .peekable();
+    // APK43.72 10G.A09 consumes sender_lid/time only for trusted_contact.
+    // No selected data means no token target or store access is needed.
+    if supported.peek().is_none() {
+        return Ok(None);
+    }
+    let target = if node.get_attr("sender_lid").is_some() {
+        jid(node, "sender_lid")
+            .filter(|v| {
+                !v.user.is_empty() && v.server == Server::Lid && v.agent == 0 && v.device == 0
+            })
+            .ok_or_else(|| Error::invalid("notification", "invalid sender LID"))?
+    } else {
+        from
+    };
     let timestamp = |node: &Node| {
         node.get_attr("t")
             .and_then(|v| v.as_text())
@@ -378,12 +391,7 @@ fn parse(node: &Node) -> Result<Option<TokenUpdates<'_>>> {
             .and_then(|v| u64::try_from(v).ok())
     };
     let mut updates = Vec::new();
-    for token in tokens.child_nodes() {
-        if token.description != "token"
-            || token.get_attr("type").and_then(|v| v.as_text()) != Some("trusted_contact")
-        {
-            continue;
-        }
+    for token in supported {
         let NodeContent::Bytes(bytes) = &token.content else {
             return Err(Error::invalid("notification", "token data missing"));
         };
@@ -1028,13 +1036,19 @@ mod tests {
                 if let Some(time) = unused_time {
                     skipped = skipped.attr("t", time);
                 }
-                validate(&skipped).unwrap();
-                assert!(handle(&store, &skipped).unwrap().is_some());
-                assert_eq!(
-                    saved(&store),
-                    expected,
-                    "ignored kinds must not consume unused time or create state"
-                );
+                for unused_alias in [None, Some("1:invalid@lid"), Some("15555550101.1:0@lid")] {
+                    let mut ignored = skipped.clone();
+                    if let Some(alias) = unused_alias {
+                        ignored = ignored.attr("sender_lid", alias);
+                    }
+                    validate(&ignored).unwrap();
+                    assert!(handle(&store, &ignored).unwrap().is_some());
+                    assert_eq!(
+                        saved(&store),
+                        expected,
+                        "ignored kinds must not consume unused metadata or create state"
+                    );
+                }
             }
         }
         let mut extra = node.clone();

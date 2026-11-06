@@ -1,3 +1,8 @@
+Fixed unused sender_lid validation suppressing privacy-token ACKs for empty
+or ignored-only lists. No supported data now means no token-target resolution
+or write transaction. Supported-data alias/primary/time checks remain.
+[Evidence](docs/protocol/apk/2.26.43.72-privacy-token-primary-address/README.md).
+
 Fixed unused parent timestamps suppressing privacy-token ACKs for empty or
 ignored-only lists. Supported entries still require valid parent time and retain
 all existing data guards. Red/green regression expanded.
