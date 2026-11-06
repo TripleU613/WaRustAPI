@@ -2299,3 +2299,44 @@ passes through prekey_user_for/prekey_bundle fallible calls in prepare_with_poli
 this cancellation regression does not establish their receive-failure handling.
 No live operation, reservation reset, cancellation-after-InFlight capability
 or automatic replay was added.
+
+### Malformed direct directory replies stay intent-local (2026-11-05)
+
+**Confirmed local defect / corrected offline:** matching result replies with
+missing/foreign/duplicate selected users or malformed classic key fields escaped
+prekey_user_for/prekey_bundle into the connection actor as errors, ending
+receive. A bad signed prekey on a new classic session could likewise reach
+connection-fatal crypto preparation. The actor regression reproduced closure.
+
+Only the pure wire selector/classic-bundle parser failures are now converted to
+the fixed invalid_directory_reply suspension reason. A new classic session's
+signed prekey is verified before encryption; refusal uses existing
+invalid_signed_bundle. The existing suspension transaction preserves the exact
+authenticated reply encrypted at rest, original query ID/time, current pin
+fingerprint and queued intent; it adopts no keys, reserves no ciphertext and
+returns no outgoing node. outbox-suspended and the identity_suspension library inspector expose fixed
+reason metadata. Neither reason satisfies identity_query_resumable, even under
+ApkAuthenticated policy, and existing reservation/reopen guards prohibit a new
+query for that ticket. No malformed bundle is retried classically or auto-resumed.
+
+The actor regression malformed_direct_directory_reply_suspends_only_its_intent
+covers missing list, foreign exact device, missing identity, short signature,
+duplicate selected user, an error child under result, and a width-correct bad
+signature. Matching redelivery produces no second send; an inbound ping proves
+receive remains active. Original intent/zero attempts and empty pin/session/own
+key tables remain unchanged. Suspension and exact query row survive reopening.
+A stored pin with the wrong saved JSON type is a separate control: its read error
+still terminates the actor, preserves the damaged row and is not converted to
+a wire suspension. Store reads occur outside parser error handling; suspension
+OCC/commit errors and later payload/crypto failures also remain visible.
+
+**Evidence / limits:** classic field widths, exact selected-device matching and
+new-session signed-prekey authentication reuse the existing APK-derived
+signal::direct contracts (37.71 Bot.A03/CQc.A00). Current43.72 Dxh callback
+parsing remains separately retained in
+[wire attribution](apk/2.26.43.72-prekey-wire-error-attribution/README.md).
+This is local intent/connection failure isolation, not proof of native callback
+exception or job-scheduler equivalence. Outer IQ error behavior is unchanged;
+error-under-result is not manufactured into a terminal server refusal. Existing
+session signature policy, every later crypto failure and all other request
+families are outside this correction. No live account operation or replay.

@@ -1,3 +1,16 @@
+2026-11-05 — **Malformed direct key replies suspend one intent, preserving receive.**
+
+Pure directory parser errors now produce non-resumable invalid_directory_reply;
+a new classic session's invalid signature uses existing invalid_signed_bundle.
+The reply stays encrypted, no keys/send are adopted, and store faults remain
+visible rather than being swallowed as bad wire input.
+[Actor red/green cases and limits](docs/protocol/messaging-transport.md#malformed-direct-directory-replies-stay-intent-local-2026-11-05).
+Validation: red/green actor regression covers seven wire cases and a stored
+corruption control. All 1386 workspace/all-feature tests, fmt, strict Clippy,
+CLI/OpenAPI, APK coverage, pinned APK identity and staged checksum/link hygiene
+passed. Existing foreign-device fixture now checks the intent-local refusal
+contract. No live account operation.
+
 2026-11-05 — **Direct cancellation reply behavior verified through the actor.**
 
 Matching result/error replies and redelivery after cancellation already stop

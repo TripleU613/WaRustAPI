@@ -3087,9 +3087,10 @@
               "invalid_signed_bundle",
               "own_identity_pinned",
               "hybrid_admission_unsupported",
-              "invalid_hybrid_bundle"
+              "invalid_hybrid_bundle",
+              "invalid_directory_reply"
             ],
-            "description": "Static local suspension reason. Old saved records default to identity_changed. Invalid signatures never resume. hybrid_admission_unsupported and invalid_hybrid_bundle (2026-10-13) record a verified PQ reply this client cannot use and an invalid PQ bundle; neither resumes."
+            "description": "invalid_directory_reply records malformed selected-user/classic bundle input and never resumes. Static local suspension reason. Old saved records default to identity_changed. Invalid signatures never resume. hybrid_admission_unsupported and invalid_hybrid_bundle (2026-10-13) record a verified PQ reply this client cannot use and an invalid PQ bundle; neither resumes."
           }
         }
       },
@@ -15836,6 +15837,19 @@
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-sender-key-ack-confirmation/README.md",
     "description": "Traces native message ACK callback registration and wait, successful normal sender-key marking and conditional one-time-key reset. Connects registration-time pre-ACK marker snapshot to matched callback retirement after wrapped result. Rust per-distribution durable confirmation and native address ownership remain incomplete. Evidence only; no command, HTTP route or production behavior change."
+  },
+  "x-direct-directory-refusal-isolation": {
+    "x-cli": {
+      "commands": [
+        "whatsapp-cli outbox-suspended"
+      ]
+    },
+    "x-transport": [
+      "experimental-transport direct key preparation"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/messaging-transport.md#malformed-direct-directory-replies-stay-intent-local-2026-11-05",
+    "description": "Pure directory selection/classic parsing errors suspend the queued intent with invalid_directory_reply; new classic session bad signatures use invalid_signed_bundle. Reply retained encrypted; no automatic resume/query/send or key adoption. Store/OCC errors remain visible. Local failure isolation, not native scheduler parity or a new route."
   },
   "x-direct-cancelled-key-reply-audit": {
     "x-cli": {

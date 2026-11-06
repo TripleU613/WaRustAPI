@@ -4053,6 +4053,221 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn malformed_direct_directory_reply_suspends_only_its_intent() {
+        use super::super::{group_fanout, outgoing_group};
+        use crate::{
+            model::{ids::ClientRequestId, message::MessageContent, send::SendRequest},
+            outbox::Outbox,
+            profile::Limits,
+        };
+        for case in [
+            "missing_list",
+            "foreign_user",
+            "missing_identity",
+            "short_signature",
+            "duplicate_user",
+            "root_error",
+            "invalid_signature",
+            "corrupt_saved_pin",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("malformed-direct.redb");
+            let store = open(&path);
+            let f = group_fanout::tests::fixture();
+            store.write(|tx| f.alice.save(tx)).unwrap();
+            let outbox = Outbox::new("comparison-driver", Limits::default());
+            let ticket = store
+                .write(|tx| {
+                    Ok(outbox
+                        .enqueue(
+                            tx,
+                            &SendRequest {
+                                client_request_id: ClientRequestId::new("malformed-direct")?,
+                                chat: ChatId::from_jid(&peer())?,
+                                content: MessageContent::Text {
+                                    body: "offline fixture".into(),
+                                    quoted: None,
+                                    style: Default::default(),
+                                },
+                            },
+                        )?
+                        .0
+                        .local_id)
+                })
+                .unwrap();
+            let mut fake = start(&store, true, Some(ticket));
+            fake.activate().await;
+            let (query, written) = fake.written().await;
+            written.send(Ok(())).unwrap();
+            let original = store.read(|tx| outbox.get(tx, ticket)).unwrap().unwrap();
+            let valid = outgoing_group::tests::key_reply(&query, &f);
+            let mut user = valid.child("list").unwrap().child_nodes()[0].clone();
+            if case == "foreign_user" {
+                user = user.attr("jid", peer().with_device(9));
+            }
+            if case == "missing_identity" {
+                user = user.clone().children(
+                    user.child_nodes()
+                        .iter()
+                        .filter(|n| n.description != "identity")
+                        .cloned()
+                        .collect(),
+                );
+            }
+            if matches!(case, "short_signature" | "invalid_signature") {
+                let skey = Node::new("skey").children(
+                    user.child("skey")
+                        .unwrap()
+                        .child_nodes()
+                        .iter()
+                        .map(|n| {
+                            if n.description == "signature" {
+                                Node::new("signature").bytes(vec![
+                                    0;
+                                    if case == "short_signature" {
+                                        63
+                                    } else {
+                                        64
+                                    }
+                                ])
+                            } else {
+                                n.clone()
+                            }
+                        })
+                        .collect(),
+                );
+                user = user.clone().children(
+                    user.child_nodes()
+                        .iter()
+                        .map(|n| {
+                            if n.description == "skey" {
+                                skey.clone()
+                            } else {
+                                n.clone()
+                            }
+                        })
+                        .collect(),
+                );
+            }
+            let users = if case == "duplicate_user" {
+                vec![user.clone(), user]
+            } else {
+                vec![user]
+            };
+            let reply = Node::new("iq")
+                .attr("type", "result")
+                .attr("id", query.get_attr("id").unwrap().clone());
+            let reply = if case == "missing_list" {
+                reply
+            } else if case == "root_error" {
+                reply.children(vec![Node::new("error").attr("code", "500")])
+            } else {
+                reply.children(vec![Node::new("list").children(users)])
+            };
+            if case == "corrupt_saved_pin" {
+                store
+                    .write(|tx| {
+                        tx.put_json(
+                            Table::PeerIdentities,
+                            format!("comparison-direct:{}", peer()).as_bytes(),
+                            1,
+                            &serde_json::json!({"invalid_saved_pin":true}),
+                        )
+                    })
+                    .unwrap();
+            }
+            fake.deliver(reply.clone()).await;
+            if case == "corrupt_saved_pin" {
+                assert!(fake.finished().await.is_err());
+                assert!(
+                    super::super::outgoing::identity_suspension(&store, ticket)
+                        .unwrap()
+                        .is_none()
+                );
+                assert_eq!(
+                    store.read(|tx| outbox.get(tx, ticket)).unwrap().unwrap(),
+                    original
+                );
+                let pin: serde_json::Value = store
+                    .read(|tx| {
+                        tx.get_json(
+                            Table::PeerIdentities,
+                            format!("comparison-direct:{}", peer()).as_bytes(),
+                            1,
+                        )
+                    })
+                    .unwrap()
+                    .unwrap();
+                assert_eq!(pin, serde_json::json!({"invalid_saved_pin":true}));
+                continue;
+            }
+            fake.deliver(reply).await;
+            fake.deliver(
+                Node::new("iq")
+                    .attr("type", "get")
+                    .attr("xmlns", "urn:xmpp:ping"),
+            )
+            .await;
+            let (pong, written) = fake.written().await;
+            assert_eq!(
+                pong.get_attr("type").and_then(|v| v.as_text()),
+                Some("result"),
+                "{case}"
+            );
+            written.send(Ok(())).unwrap();
+            fake.nothing_written(Duration::from_millis(20)).await;
+            fake.stop_cleanly().await;
+            let held = super::super::outgoing::identity_suspension(&store, ticket)
+                .unwrap()
+                .unwrap();
+            assert_eq!(
+                held.reason,
+                if case == "invalid_signature" {
+                    "invalid_signed_bundle"
+                } else {
+                    "invalid_directory_reply"
+                }
+            );
+            assert_eq!(
+                store.read(|tx| outbox.get(tx, ticket)).unwrap().unwrap(),
+                original
+            );
+            for table in [
+                Table::SignalSessions,
+                Table::PeerIdentities,
+                Table::SenderKeys,
+            ] {
+                assert!(store.read(|tx| tx.scan(table, 1, 100)).unwrap().is_empty());
+            }
+            let key = format!("outbox-key-query:{ticket}");
+            let reservation = store
+                .read(|tx| tx.get(Table::Checkpoints, key.as_bytes(), 1))
+                .unwrap()
+                .unwrap();
+            drop(store);
+            let reopened = identity_store(&path);
+            assert_eq!(
+                super::super::outgoing::identity_suspension(&reopened, ticket)
+                    .unwrap()
+                    .unwrap(),
+                held
+            );
+            assert_eq!(
+                reopened
+                    .read(|tx| tx.get(Table::Checkpoints, key.as_bytes(), 1))
+                    .unwrap()
+                    .unwrap(),
+                reservation
+            );
+            assert!(
+                super::super::outgoing::begin_selected(&reopened, Some(ticket))
+                    .unwrap()
+                    .is_none()
+            );
+        }
+    }
+
+    #[tokio::test]
     async fn cancelled_direct_key_reply_keeps_receive_and_original_reservation() {
         use crate::{
             model::{ids::ClientRequestId, message::MessageContent, send::SendRequest},

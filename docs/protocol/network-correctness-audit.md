@@ -3547,3 +3547,12 @@ and preserve receive service. Original cancelled intent/query reservation stay
 held across reopen. This was already correct; no production code changed.
 [Actor proof, diagnostic distinction and remaining malformed-input scope](messaging-transport.md#direct-send-cancellation-reply-audit-2026-11-05).
 No live operation or replay authority.
+
+### Direct directory wire refusal isolation (2026-11-05)
+
+**Confirmed local defect / corrected offline:** selected-user/classic-bundle
+parser failures suspend the original direct intent with invalid_directory_reply
+instead of ending receive. New-session classic signature refusal uses existing
+invalid_signed_bundle. Neither permits resume; no keys/ciphertext are adopted.
+[Actor red/green matrix, reopen and stored-corruption control](messaging-transport.md#malformed-direct-directory-replies-stay-intent-local-2026-11-05).
+No live operation, server-refusal fabrication or replay authority.

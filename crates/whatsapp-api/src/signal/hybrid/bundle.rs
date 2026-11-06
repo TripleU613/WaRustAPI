@@ -655,14 +655,7 @@ mod tests {
                         assert_eq!(entry.attempts.len(), 1);
                         continue;
                     }
-                    if scenario == 4 {
-                        // No row for the requested device: still a reply error.
-                        assert!(result.is_err(), "scenario {scenario}");
-                        assert_eq!(snapshot(), before);
-                        assert_eq!(store.journal_head().unwrap(), head);
-                        continue;
-                    }
-                    if matches!(scenario, 1 | 2 | 3 | 8 | 10) {
+                    if matches!(scenario, 1 | 2 | 3 | 4 | 8 | 10) {
                         // A local refusal suspends only this intent, with a
                         // durable reason and the reply kept; nothing is sent,
                         // no session or pin changes, and it is not resumable.
@@ -672,7 +665,9 @@ mod tests {
                             .unwrap_or_else(|| panic!("no suspension scenario {scenario}"));
                         assert_eq!(
                             suspension.reason,
-                            if scenario == 10 {
+                            if scenario == 4 {
+                                "invalid_directory_reply"
+                            } else if scenario == 10 {
                                 "invalid_hybrid_bundle"
                             } else {
                                 "hybrid_admission_unsupported"

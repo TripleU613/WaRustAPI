@@ -50,7 +50,8 @@ pub(super) fn with_edit_attribute(stanza: Node, content: &MessageContent) -> Nod
 
 /// Redacted queued intent suspended by a fetched directory reply: a peer
 /// identity mismatch, or PQ material this client cannot use
-/// (`hybrid_admission_unsupported`, `invalid_hybrid_bundle`). Only the
+/// (`hybrid_admission_unsupported`, `invalid_hybrid_bundle`), or malformed
+/// directory input (`invalid_directory_reply`). Only the
 /// `identity_changed` reason is resumable.
 #[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct IdentitySuspension {
@@ -801,7 +802,34 @@ impl Pending {
             return Ok(None);
         }
         let peer = entry.intent.chat.jid();
-        let user = crate::signal::direct::prekey_user_for(node, peer)?;
+        let peer_key = format!("comparison-direct:{peer}");
+        let (session, identity, reservation): (
+            Option<Vec<u8>>,
+            Option<Vec<u8>>,
+            serde_json::Value,
+        ) = store.read(|tx| {
+            Ok((
+                tx.get_json(Table::SignalSessions, peer_key.as_bytes(), 1)?,
+                tx.get_json(Table::PeerIdentities, peer_key.as_bytes(), 1)?,
+                tx.get_json(Table::Checkpoints, query_key(self.local_id).as_bytes(), 1)?
+                    .ok_or_else(|| Error::invalid("outbox", "missing key-query reservation"))?,
+            ))
+        })?;
+        // These parsers read only authenticated wire nodes. Catch their failures
+        // here, not errors from the store/OCC or later encryption path.
+        let user = match crate::signal::direct::prekey_user_for(node, peer) {
+            Ok(user) => user,
+            Err(_) => {
+                self.suspend_identity(
+                    store,
+                    peer,
+                    (session.as_deref(), identity.as_deref()),
+                    node,
+                    "invalid_directory_reply",
+                )?;
+                return Ok(None);
+            }
+        };
         // A PQ reply this client cannot use is a local refusal of this one
         // intent, not a connection failure: it is suspended below with a
         // durable reason and its reply preserved, never sent classically.
@@ -837,23 +865,38 @@ impl Pending {
             None
         };
         let classic = if hybrid.is_none() && hybrid_refusal.is_none() {
-            Some(crate::signal::direct::prekey_bundle(node, peer)?)
+            match crate::signal::direct::prekey_bundle(node, peer) {
+                Ok(bundle) => Some(bundle),
+                Err(_) => {
+                    self.suspend_identity(
+                        store,
+                        peer,
+                        (session.as_deref(), identity.as_deref()),
+                        node,
+                        "invalid_directory_reply",
+                    )?;
+                    return Ok(None);
+                }
+            }
         } else {
             None
         };
-        let peer_key = format!("comparison-direct:{peer}");
-        let (session, identity, reservation): (
-            Option<Vec<u8>>,
-            Option<Vec<u8>>,
-            serde_json::Value,
-        ) = store.read(|tx| {
-            Ok((
-                tx.get_json(Table::SignalSessions, peer_key.as_bytes(), 1)?,
-                tx.get_json(Table::PeerIdentities, peer_key.as_bytes(), 1)?,
-                tx.get_json(Table::Checkpoints, query_key(self.local_id).as_bytes(), 1)?
-                    .ok_or_else(|| Error::invalid("outbox", "missing key-query reservation"))?,
-            ))
-        })?;
+        // A new classic session must authenticate the signed prekey. Keep a
+        // wire signature refusal out of the connection-fatal crypto path.
+        if session.is_none()
+            && classic.as_ref().is_some_and(|bundle| {
+                crate::signal::direct::validate_bundle_signature(bundle).is_err()
+            })
+        {
+            self.suspend_identity(
+                store,
+                peer,
+                (None, identity.as_deref()),
+                node,
+                "invalid_signed_bundle",
+            )?;
+            return Ok(None);
+        }
         if let Some(reason) = hybrid_refusal {
             // Not resumable: identity_query_resumable accepts only the
             // identity_changed reason. outbox-suspended lists it with this reason.
