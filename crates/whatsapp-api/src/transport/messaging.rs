@@ -1072,7 +1072,7 @@ impl MessageAckOutcome {
 // A06 uses Integer.parseInt; malformed/out-of-i32 values throw LIL rather
 // than becoming an ordinary ACK outcome. Nontext decoded values are outside
 // this supported Rust adapter. No reader recovery policy is inferred here.
-fn parsed_ack_error(node: &Node) -> Result<Option<i32>, ()> {
+pub(crate) fn parsed_ack_error(node: &Node) -> Result<Option<i32>, ()> {
     match node.get_attr("error") {
         None => Ok(None),
         Some(value) => value

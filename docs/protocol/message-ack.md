@@ -278,3 +278,34 @@ error response, reset, challenge recovery or live account operation is added.
 Validation: 1,457 workspace/all-feature tests passed. Strict workspace/all-target/
 all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
 validation, APK coverage freshness and repository hygiene passed. Offline only.
+
+## Preserve admitted signed ACK error codes (2026-11-06)
+
+**Confirmed pinned static / Rust projection correction:** the retained
+[1rH.A03 and 0Tp integer parser](apk/2.26.43.72-ack-auth-challenge/README.md)
+admit signed Java i32 errors before ordinary ACK dispatch. Rust already uses
+that parser for admission, but outgoing::acknowledge reparsed the same text
+as ASCII u32 when creating DeliveryFact. Thus a valid negative or Unicode-digit
+refusal became Failed with code=None. This lost diagnostic information even
+though the encrypted capture retained the original frame.
+
+The fact writer now reuses messaging::parsed_ack_error. DeliveryFact.code is
+Option<i64>: new ACK facts contain only admitted i32 values, while the wider
+JSON storage type preserves historical u32 values (including u32::MAX) without
+rewriting old facts. This is a public Rust type change from Option<u32>;
+consumers with explicitly typed u32 values must convert them. JSON field names
+and ordinary positive values remain unchanged. Receipt.code and generic error
+codes are separate models and remain unchanged.
+
+The real outbox regression covers ASCII signed/positive errors, Unicode zero
+and full-width digits, negative Unicode i32::MIN and i32::MAX. It acknowledges
+once, rejects duplicate settlement, reopens the encrypted store, verifies the
+exact Failed code and refuses re-reservation. A historical u32::MAX JSON fact
+remains deserializable. Existing malformed/error459 guards still run before
+fact construction. No new settlement, replay, challenge handling, request or
+live account operation is authorized. Full ACK envelope validation and native
+listener recovery remain incomplete.
+
+Validation: 1,457 workspace/all-feature tests, strict workspace/all-target/
+all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
+validation, APK coverage freshness and repository hygiene passed. Offline only.

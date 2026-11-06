@@ -82,8 +82,9 @@ pub struct DeliveryFact {
     /// the key form defaults only absent time to the receipt parser clock.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub server_timestamp: Option<Timestamp>,
-    /// Sanitized code, if any.
-    pub code: Option<u32>,
+    /// Parsed signed ACK error code, if any. The wider storage type also
+    /// preserves historical unsigned-u32 facts without a lossy migration.
+    pub code: Option<i64>,
 }
 
 /// Aggregate and per-device status of a send.

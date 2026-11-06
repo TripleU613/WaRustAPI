@@ -913,9 +913,8 @@
               "integer",
               "null"
             ],
-            "minimum": 0,
-            "maximum": 4294967295,
-            "description": "Sanitized error code where present."
+            "format": "int64",
+            "description": "Signed ACK error code where present. New ACK facts preserve the admitted Java i32 value including Unicode digits; historical unsigned-u32 values remain readable in this wider storage type. A code alone grants no retry or account-policy authority."
           }
         },
         "description": "Actual serialized durable DeliveryFact; inspect using status."
@@ -17955,5 +17954,13 @@
   ],
   "description": "After durable capture, normal actor, CLI lab receive and captured comparison waits reject malformed ACK numeric admission with a non-reconnectable local error before matching/state processing or later reads/writes. Captures and unknown reservations survive reopen. Legacy uncaptured wait also stops under its existing TransportError contract. Validator is pure; direct callers must discard borrowed channels on failure. Pinned1rg tag set excludes ACK and selected outer reader reports2/returns; no generic NACK, full native listener recovery, reset or live verification.",
   "evidence": "docs/protocol/message-ack.md#malformed-ack-consumes-the-receive-epoch-after-capture-2026-11-06"
-}
+},
+  "x-signed-ack-delivery-fact-code": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": ["whatsapp_api::model::send::DeliveryFact", "whatsapp_api::transport::outgoing::acknowledge"],
+    "description": "DeliveryFact.code changes from Option<u32> to Option<i64>. New ordinary ACK refusal facts preserve the admitted Java signed-i32 value, including Unicode decimal digits. Historical unsigned-u32 JSON facts remain readable without migration. This diagnostic projection grants no replay, challenge recovery or live-server acceptance authority. Receipt.code and generic error-code models are unchanged.",
+    "evidence": "docs/protocol/message-ack.md#preserve-admitted-signed-ack-error-codes-2026-11-06"
+  }
 }

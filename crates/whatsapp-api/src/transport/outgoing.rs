@@ -1330,10 +1330,12 @@ pub fn acknowledge(store: &ProtocolStore, node: &Node) -> Result<bool> {
                     now_seconds,
                 )?;
             }
-            let code = node
-                .get_attr("error")
-                .and_then(|v| v.as_text())
-                .and_then(|v| v.parse::<u32>().ok());
+            // APK43.72 1rH.A03 -> 0Tp.A05/A06: preserve the same signed
+            // Java integer already admitted before ordinary ACK settlement.
+            let code = super::messaging::parsed_ack_error(node)
+                .ok()
+                .flatten()
+                .map(i64::from);
             outbox().record_fact(
                 tx,
                 &mut entry,
@@ -3177,36 +3179,51 @@ mod tests {
 
     #[test]
     fn participant_success_guard_does_not_discard_error_acks() {
-        let dir = tempfile::tempdir().unwrap();
-        let path = dir.path().join("error-ack.redb");
-        let store = open(&path);
-        let local_id = enqueue(&store);
-        store
-            .write(|tx| {
-                let mut entry = outbox().get_mut(tx, local_id)?.unwrap();
-                entry.wire_id = Some(MessageId::new("fixture")?);
-                outbox().set_progress(tx, &mut entry, AttemptProgress::InFlight)
-            })
-            .unwrap();
-        let ack = Node::new("ack")
-            .attr("class", "message")
-            .attr("id", "fixture")
-            .attr("from", "15555550100@s.whatsapp.net")
-            .attr("participant", Jid::parse("123456789:3@lid").unwrap())
-            .attr("error", "500");
-        assert!(acknowledge(&store, &ack).unwrap());
-        assert!(!acknowledge(&store, &ack).unwrap());
-        drop(store);
-        let store = open(&path);
-        let status = store
-            .read(|tx| outbox().status(tx, local_id))
-            .unwrap()
-            .unwrap();
-        assert!(!status.server_accepted());
-        assert_eq!(status.facts.len(), 1);
-        assert_eq!(status.facts[0].kind, DeliveryFactKind::Failed);
-        assert_eq!(status.facts[0].code, Some(500));
-        assert!(begin_selected(&store, Some(local_id)).unwrap().is_none());
+        for (raw, expected) in [
+            ("500", 500),
+            ("+500", 500),
+            ("-1", -1),
+            ("٠", 0),
+            ("５００", 500),
+            ("-٢١٤٧٤٨٣٦٤٨", i64::from(i32::MIN)),
+            ("2147483647", i64::from(i32::MAX)),
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("error-ack.redb");
+            let store = open(&path);
+            let local_id = enqueue(&store);
+            store
+                .write(|tx| {
+                    let mut entry = outbox().get_mut(tx, local_id)?.unwrap();
+                    entry.wire_id = Some(MessageId::new("fixture")?);
+                    outbox().set_progress(tx, &mut entry, AttemptProgress::InFlight)
+                })
+                .unwrap();
+            let ack = Node::new("ack")
+                .attr("class", "message")
+                .attr("id", "fixture")
+                .attr("from", "15555550100@s.whatsapp.net")
+                .attr("participant", Jid::parse("123456789:3@lid").unwrap())
+                .attr("error", raw);
+            assert!(acknowledge(&store, &ack).unwrap());
+            assert!(!acknowledge(&store, &ack).unwrap());
+            drop(store);
+            let store = open(&path);
+            let status = store
+                .read(|tx| outbox().status(tx, local_id))
+                .unwrap()
+                .unwrap();
+            assert!(!status.server_accepted());
+            assert_eq!(status.facts.len(), 1);
+            assert_eq!(status.facts[0].kind, DeliveryFactKind::Failed);
+            assert_eq!(status.facts[0].code, Some(expected), "{raw}");
+            // Old u32 JSON facts remain readable, including values outside i32.
+            let mut historical = serde_json::to_value(&status.facts[0]).unwrap();
+            historical["code"] = serde_json::json!(u32::MAX);
+            let old: DeliveryFact = serde_json::from_value(historical).unwrap();
+            assert_eq!(old.code, Some(i64::from(u32::MAX)));
+            assert!(begin_selected(&store, Some(local_id)).unwrap().is_none());
+        }
     }
 }
 
