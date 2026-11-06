@@ -1,0 +1,12 @@
+# Selected DEX excerpt; not a complete method.
+
+# class: LX/1Uw;
+# extends: Ljava/lang/Object;
+
+.method public A0S(LILL)  # .registers 5
+    # full signature: LX/1Uw;->A0S(ILX/06h;Ljava/lang/Object;)Ljava/lang/Object;
+# Selected packed-switch entry: key3033 -> byte0x0a5c; other entries omitted.
+    0000..0004  and-int/lit16  v0, v2, #0x3fff
+    0a5c..0a60  new-instance  v0, LX/15E;
+    0a60..0a66  invoke-direct  {v0}, LX/15E;-><init>()V
+    0a66..0a68  return-object  v0

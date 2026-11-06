@@ -327,3 +327,13 @@ selected branch targets, full bundle checksums and pinned APK digest match.
 Formatting, OpenAPI library test, APK coverage freshness and diff whitespace
 pass; hygiene checks438 APK bundles. This evidence-only chunk changes no Rust
 source, so the workspace/Clippy suite was not rerun. No live account operation.
+
+## Read-self ACK synchronization is a different policy (2026-11-06)
+
+**Confirmed current static:** [event227 producer/consumer and enabled binding](apk/2.26.43.72-read-setting-sync/README.md)
+show root readreceipts on selected read-self receipt ACKs can disable a local
+true setting from none, but all cannot enable a local false value; that mismatch
+queues a corrective setter instead. This is not the account_sync category-map
+path and admits only all/none. Neither policy is a universal server-setting
+rule. Mode/DI/legacy dispatch and full durable corrective ownership remain open;
+Rust's category adoption stays unchanged and no ACK-side mutation/send is added.

@@ -1,0 +1,109 @@
+# Selected DEX excerpt; not a complete method.
+
+# class: LX/15E;
+# extends: Ljava/lang/Object;
+
+.method public BLn(ZLI)  # .registers 13
+    # full signature: LX/15E;->BLn(Landroid/os/Message;I)Z
+    0000..0002  const/4  v2, #0x1
+    0002..0008  invoke-static  {v11, v2}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  const/16  v0, #0xf
+    000c..0010  if-eq  v12, v0, +0x1c6
+    0010..0014  const/16  v0, #0x56
+    0014..0018  const-string  v3, "null cannot be cast to non-null type android.os.Bundle"
+    0018..001a  const/4  v8, #0x0
+    001a..001e  if-eq  v12, v0, +0xd7
+    001e..0022  const/16  v0, #0xd7
+    0022..0026  if-eq  v12, v0, +0xc0
+    0026..002a  const/16  v0, #0xe3
+    002a..002e  if-eq  v12, v0, +0x7
+    002e..0032  const/16  v0, #0x103
+    0032..0036  if-eq  v12, v0, +0x11e
+    0036..0038  return  v8
+    0038..003c  iget-object  v4, v11, Landroid/os/Message;->obj:Ljava/lang/Object;
+    003c..0040  const-string  v0, "null cannot be cast to non-null type com.whatsapp.infra.protocol.ProtocolTreeNode"
+    0040..0046  invoke-static  {v4, v0}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    0046..004a  check-cast  v4, LX/0Tp;
+    004a..004e  const/16  v1, #0x4e3
+    004e..0052  iget-object  v0, v10, LX/15E;->A05:LX/05a;
+    0052..0056  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0056..005c  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    005c..005e  move-result-object  v0
+    005e..0062  check-cast  v0, LX/00X;
+    0062..0068  invoke-virtual  {v0}, LX/00X;->A01()LX/00Y;
+    0068..006a  move-result-object  v0
+    006a..0070  invoke-static  {v0, v1}, LX/09H;->A00(LX/00Y;I)LX/05a;
+    0070..0072  move-result-object  v1
+    0072..0076  const-string  v3, "readreceipts"
+    0076..0078  const/4  v0, #0x0
+    0078..007e  invoke-virtual  {v4, v3, v0}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    007e..0080  move-result-object  v4
+    0080..0084  const-string  v0, "all"
+    0084..008a  invoke-virtual  {v0, v4}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    008a..008c  move-result  v6
+    008c..0090  const-string  v7, "none"
+    0090..0094  if-nez  v6, +0x1a
+    0094..009a  invoke-virtual  {v7, v4}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    009a..009c  move-result  v0
+    009c..00a0  if-nez  v0, +0x14
+    00a0..00a4  const-string  v1, "MessagingXmppHandler/onSyncPrivacySetting unknown readreceipts setting: "
+    00a4..00a8  new-instance  v0, Ljava/lang/StringBuilder;
+    00a8..00ae  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00ae..00b4  invoke-virtual  {v0, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00b4..00ba  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00ba..00bc  move-result-object  v0
+    00bc..00c2  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    00c2..00c4  return  v2
+    00c4..00c8  iget-object  v0, v10, LX/15E;->A04:LX/05a;
+    00c8..00cc  iget-object  v9, v0, LX/05a;->A00:LX/00x;
+    00cc..00d2  invoke-interface  {v9}, LX/00x;->get()Ljava/lang/Object;
+    00d2..00d4  move-result-object  v0
+    00d4..00d8  check-cast  v0, LX/09S;
+    00d8..00de  invoke-virtual  {v0}, LX/09S;->A1H()Z
+    00de..00e0  move-result  v5
+    00e0..00e4  if-eq  v6, v5, +0x153
+    00e4..00e8  iget-object  v0, v1, LX/05a;->A00:LX/00x;
+    00e8..00ee  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    00ee..00f0  move-result-object  v4
+    00f0..00f4  check-cast  v4, LX/0B0;
+    00f4..00f8  const-string  v0, "server="
+    00f8..00fc  new-instance  v1, Ljava/lang/StringBuilder;
+    00fc..0102  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0102..0108  invoke-virtual  {v1, v6}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    0108..010c  const-string  v0, "; client="
+    010c..0112  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0112..0118  invoke-virtual  {v1, v5}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    0118..011e  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    011e..0120  move-result-object  v1
+    0120..0124  const-string  v0, "readReceipt-setting-inconsistency"
+    0124..012a  invoke-virtual  {v4, v0, v1, v8}, LX/0B0;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+    012a..012e  if-eqz  v5, +0x2e
+    012e..0134  invoke-interface  {v9}, LX/00x;->get()Ljava/lang/Object;
+    0134..0136  move-result-object  v0
+    0136..013a  check-cast  v0, LX/09S;
+    013a..0140  invoke-virtual  {v0}, LX/09S;->A0R()LX/2on;
+    0140..0142  move-result-object  v0
+    0142..0148  invoke-virtual  {v0}, LX/0FZ;->A02()Landroid/content/SharedPreferences$Editor;
+    0148..014a  move-result-object  v1
+    014a..014e  const-string  v0, "read_receipts_enabled"
+    014e..0154  invoke-interface  {v1, v0, v6}, Landroid/content/SharedPreferences$Editor;->putBoolean(Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;
+    0154..0156  move-result-object  v0
+    0156..015c  invoke-interface  {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
+    015c..0160  iget-object  v0, v10, LX/15E;->A02:LX/05a;
+    0160..0164  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0164..016a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    016a..016c  move-result-object  v1
+    016c..0170  check-cast  v1, LX/0oe;
+    0170..0176  invoke-static  {v3}, Ljava/util/Collections;->singletonList(Ljava/lang/Object;)Ljava/util/List;
+    0176..0178  move-result-object  v0
+    0178..017e  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    017e..0184  invoke-virtual  {v1, v0}, LX/0oe;->A0Q(Ljava/util/List;)V
+    0184..0186  return  v2
+    0186..018a  iget-object  v0, v10, LX/15E;->A02:LX/05a;
+    018a..018e  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    018e..0194  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0194..0196  move-result-object  v0
+    0196..019a  check-cast  v0, LX/0oe;
+    019a..01a0  invoke-virtual  {v0, v3, v7}, LX/0oe;->A0P(Ljava/lang/String;Ljava/lang/String;)V
+    01a0..01a2  return  v2
+    0386..0388  return  v2

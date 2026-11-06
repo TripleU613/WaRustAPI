@@ -1,0 +1,27 @@
+["readreceipts"]  (13 reference(s))
+  classes.dex  LX/0oe;->A0O(VLI)
+    dex byte offset: 0x6f8df8
+  classes.dex  LX/0oe;->A0R(VL)
+    dex byte offset: 0x6f9384
+  classes.dex  LX/0xW;->A03(LL)
+    dex byte offset: 0x7811d0
+  classes.dex  LX/15E;->BLn(ZLI)
+    dex byte offset: 0x7fd13e
+  classes2.dex  LX/1rH;->A03(VL)
+    dex byte offset: 0x240fc0
+  classes2.dex  LX/1ro;-><clinit>(V)
+    dex byte offset: 0x15f21e
+  classes5.dex  Lcom/whatsapp/privacy/MexSetPrivacySettingsHandler;->A01(LLLL)
+    dex byte offset: 0x3c9a84
+  classes5.dex  LX/83S;->A01(LL)
+    dex byte offset: 0x3f511c
+  classes5.dex  LX/8AX;->A01(LL)
+    dex byte offset: 0x437986
+  classes8.dex  LX/Fa0;->C2Q(VLL)
+    dex byte offset: 0x7e6f1c
+  classes9.dex  Lcom/whatsapp/settings/ui/privacy/SettingsPrivacy;->A5f(V)
+    dex byte offset: 0x4f8694
+  classes9.dex  Lcom/whatsapp/settings/ui/privacy/SettingsPrivacy;->CHI(VII)
+    dex byte offset: 0x4f88b0
+  classes9.dex  LX/HkG;->onClick(VL)
+    dex byte offset: 0x68c038

@@ -1,0 +1,60 @@
+# Selected DEX excerpt; not a complete method.
+
+# class: LX/1Uw;
+# extends: Ljava/lang/Object;
+
+.method public A01(LILL)  # .registers 5
+    # full signature: LX/1Uw;->A01(ILX/06h;Ljava/lang/Object;)Ljava/lang/Object;
+    0000..0004  and-int/lit16  v1, v2, #0x3fff
+    0004..0008  const/16  v0, #0x117
+    0008..000c  if-gt  v1, v0, +0x665
+    0cd2..0cd6  const/16  v0, #0x230
+    0cd6..0cda  if-gt  v1, v0, +0x7
+    0cda..0ce0  invoke-static  {v2, v3, v4}, LX/1Uw;->A02(ILX/06h;Ljava/lang/Object;)Ljava/lang/Object;
+    0ce0..0ce2  move-result-object  v0
+    0ce2..0ce4  return-object  v0
+    0ce4..0ce8  const/16  v0, #0x349
+    0ce8..0cec  if-gt  v1, v0, +0x7
+    0cec..0cf2  invoke-static  {v2, v3, v4}, LX/1Uw;->A03(ILX/06h;Ljava/lang/Object;)Ljava/lang/Object;
+    0cf2..0cf4  move-result-object  v0
+    0cf4..0cf6  return-object  v0
+    0cf6..0cfa  const/16  v0, #0x462
+    0cfa..0cfe  if-gt  v1, v0, +0x7
+    0cfe..0d04  invoke-static  {v2, v3, v4}, LX/1Uw;->A04(ILX/06h;Ljava/lang/Object;)Ljava/lang/Object;
+    0d04..0d06  move-result-object  v0
+    0d06..0d08  return-object  v0
+    0d08..0d0c  const/16  v0, #0x57b
+    0d0c..0d10  if-gt  v1, v0, +0x7
+    0d10..0d16  invoke-static  {v2, v3, v4}, LX/1Uw;->A0F(ILX/06h;Ljava/lang/Object;)Ljava/lang/Object;
+    0d16..0d18  move-result-object  v0
+    0d18..0d1a  return-object  v0
+    0d1a..0d1e  const/16  v0, #0x694
+    0d1e..0d22  if-gt  v1, v0, +0x7
+    0d22..0d28  invoke-static  {v2, v3, v4}, LX/1Uw;->A0N(ILX/06h;Ljava/lang/Object;)Ljava/lang/Object;
+    0d28..0d2a  move-result-object  v0
+    0d2a..0d2c  return-object  v0
+    0d2c..0d30  const/16  v0, #0x7ad
+    0d30..0d34  if-gt  v1, v0, +0x7
+    0d34..0d3a  invoke-static  {v2, v3, v4}, LX/1Uw;->A0O(ILX/06h;Ljava/lang/Object;)Ljava/lang/Object;
+    0d3a..0d3c  move-result-object  v0
+    0d3c..0d3e  return-object  v0
+    0d3e..0d42  const/16  v0, #0x8c6
+    0d42..0d46  if-gt  v1, v0, +0x7
+    0d46..0d4c  invoke-static  {v2, v3, v4}, LX/1Uw;->A0P(ILX/06h;Ljava/lang/Object;)Ljava/lang/Object;
+    0d4c..0d4e  move-result-object  v0
+    0d4e..0d50  return-object  v0
+    0d50..0d54  const/16  v0, #0x9df
+    0d54..0d58  if-gt  v1, v0, +0x7
+    0d58..0d5e  invoke-static  {v2, v3, v4}, LX/1Uw;->A0Q(ILX/06h;Ljava/lang/Object;)Ljava/lang/Object;
+    0d5e..0d60  move-result-object  v0
+    0d60..0d62  return-object  v0
+    0d62..0d66  const/16  v0, #0xaf7
+    0d66..0d6a  if-gt  v1, v0, +0x7
+    0d6a..0d70  invoke-static  {v2, v3, v4}, LX/1Uw;->A0R(ILX/06h;Ljava/lang/Object;)Ljava/lang/Object;
+    0d70..0d72  move-result-object  v0
+    0d72..0d74  return-object  v0
+    0d74..0d78  const/16  v0, #0xc10
+    0d78..0d7c  if-gt  v1, v0, +0x7
+    0d7c..0d82  invoke-static  {v2, v3, v4}, LX/1Uw;->A0S(ILX/06h;Ljava/lang/Object;)Ljava/lang/Object;
+    0d82..0d84  move-result-object  v0
+    0d84..0d86  return-object  v0

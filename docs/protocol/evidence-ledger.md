@@ -1,3 +1,10 @@
+2026-11-06 — **Re-anchored read-self ACK privacy synchronization.**
+Current227 handler can disable reads from none, preserves localfalse on all,
+and can queue a corrective setter. Producer/message, interface dispatch and
+normal enabled provider binding are retained; runtime/recovery gaps stay explicit.
+[Current evidence and Rust boundary](read-setting-sync.md#current-build-read-self-ack-setting-synchronization-2026-11-06).
+No production or live account change.
+
 2026-11-06 — **Separated optimistic privacy views from confirmation.**
 Setter follow-up routes an observer; pending integer overlays and existence
 checks are distinct from the stored receipt Boolean. Literal/UI references

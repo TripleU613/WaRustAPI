@@ -1,0 +1,169 @@
+# Selected DEX excerpt; not a complete method.
+
+# class: LX/0m2;
+# extends: Landroid/os/Handler;
+
+.method public handleMessage(VL)  # .registers 16
+    # full signature: LX/0m2;->handleMessage(Landroid/os/Message;)V
+    021c..0220  iget-object  v5, v14, LX/0m2;->A01:LX/0ln;
+    0220..0224  iget  v4, v15, Landroid/os/Message;->arg1:I
+    0224..0228  iget-object  v0, v5, LX/0ln;->A03:LX/00x;
+    0228..022e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    022e..0230  move-result-object  v0
+    0230..0234  check-cast  v0, LX/00X;
+    0234..023a  invoke-virtual  {v0}, LX/00X;->A01()LX/00Y;
+    023a..023c  move-result-object  v1
+    023c..0240  const/16  v0, #0xd24
+    0240..0246  invoke-static  {v1, v0}, LX/09H;->A00(LX/00Y;I)LX/05a;
+    0246..0248  move-result-object  v0
+    0248..024c  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    024c..0252  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0252..0254  move-result-object  v1
+    0254..0258  check-cast  v1, LX/1iC;
+    0258..025c  iget-object  v0, v1, LX/1iC;->A00:Ljava/util/concurrent/atomic/AtomicBoolean;
+    025c..0262  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->get()Z
+    0262..0264  move-result  v0
+    0264..0268  if-eqz  v0, +0x3e
+    0268..026e  invoke-static  {v1}, LX/1iC;->A00(LX/1iC;)LX/0BX;
+    026e..0270  move-result-object  v6
+    0270..0274  if-eqz  v4, +0xc5
+    0274..0278  if-eq  v4, v2, +0xbf
+    0278..027e  sparse-switch  v4, payload@0x834, cases=[8:@0x38e, 15:@0x394, 19:@0x39a, 27:@0x3a2, 74:@0x3aa, 77:@0x3b2, 203:@0x3ba, 210:@0x3c2, 221:@0x3ca, 234:@0x3d2, 257:@0x3da, 259:@0x3e2, 265:@0x3ea], default@0x27e
+    027e..0284  packed-switch  v4, payload@0x8a0, cases=[241:@0x370, 242:@0x376, 243:@0x37c, 244:@0x382, 245:@0x388], default@0x284
+    0284..0288  new-instance  v0, Ljava/lang/StringBuilder;
+    0288..028e  invoke-direct  {v0}, Ljava/lang/StringBuilder;-><init>()V
+    028e..0294  invoke-virtual  {v0, v4}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0294..029a  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    029a..029c  move-result-object  v3
+    029c..02a0  iget-object  v0, v1, LX/1iC;->A06:Ljava/util/concurrent/atomic/AtomicInteger;
+    02a0..02a6  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicInteger;->getAndIncrement()I
+    02a6..02a8  move-result  v2
+    02a8..02ac  const-string  v0, "in_"
+    02ac..02b0  new-instance  v1, Ljava/lang/StringBuilder;
+    02b0..02b6  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    02b6..02bc  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    02bc..02c0  const-string  v0, "_"
+    02c0..02c6  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    02c6..02cc  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    02cc..02d2  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    02d2..02d4  move-result-object  v1
+    02d4..02da  const  v0, #0x10d0116c
+    02da..02e0  invoke-interface  {v6, v0, v1}, LX/0BX;->markerPoint(ILjava/lang/String;)V
+    02e0..02e4  iget-object  v1, v5, LX/0ln;->A05:Lcom/google/common/base/Optional;
+    02e4..02ea  invoke-virtual  {v1}, Lcom/google/common/base/Optional;->isPresent()Z
+    02ea..02ec  move-result  v0
+    02ec..02f0  if-eqz  v0, +0x2e
+    02f0..02f6  invoke-virtual  {v1}, Lcom/google/common/base/Optional;->get()Ljava/lang/Object;
+    02f6..02f8  move-result-object  v1
+    02f8..02fc  check-cast  v1, LX/1uX;
+    02fc..0300  iget-object  v0, v1, LX/1uX;->A01:Ljava/util/concurrent/atomic/AtomicBoolean;
+    0300..0306  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->get()Z
+    0306..0308  move-result  v0
+    0308..030c  if-eqz  v0, +0x20
+    030c..0310  iget-object  v3, v1, LX/1uX;->A00:Ljava/util/concurrent/ConcurrentHashMap;
+    0310..0316  invoke-static  {v4}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0316..0318  move-result-object  v2
+    0318..031e  invoke-virtual  {v3, v2}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    031e..0320  move-result-object  v1
+    0320..0324  if-nez  v1, +0xf
+    0324..0326  const/4  v0, #0x0
+    0326..032a  new-instance  v1, Ljava/util/concurrent/atomic/AtomicInteger;
+    032a..0330  invoke-direct  {v1, v0}, Ljava/util/concurrent/atomic/AtomicInteger;-><init>(I)V
+    0330..0336  invoke-virtual  {v3, v2, v1}, Ljava/util/concurrent/ConcurrentHashMap;->putIfAbsent(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0336..0338  move-result-object  v0
+    0338..033c  if-eqz  v0, +0x3
+    033c..033e  move-object  v1, v0
+    033e..0342  check-cast  v1, Ljava/util/concurrent/atomic/AtomicInteger;
+    0342..0348  invoke-virtual  {v1}, Ljava/util/concurrent/atomic/AtomicInteger;->incrementAndGet()I
+    0348..034c  iget-object  v1, v5, LX/0ln;->A04:Lcom/google/common/base/Optional;
+    034c..0352  invoke-virtual  {v1}, Lcom/google/common/base/Optional;->isPresent()Z
+    0352..0354  move-result  v0
+    0354..0358  if-eqz  v0, +0x252
+    0358..035e  invoke-virtual  {v1}, Lcom/google/common/base/Optional;->get()Ljava/lang/Object;
+    035e..0364  invoke-static  {v15}, LX/0m2;->A00(Landroid/os/Message;)LX/1k2;
+    0364..0366  move-result-object  v0
+    0366..036a  instance-of  v0, v0, LX/1k3;
+    036a..036e  if-eqz  v0, +0x247
+    036e..0370  goto  +0x4a
+    0370..0374  const-string  v3, "ENCRYPT_NOTIFICATION"
+    0374..0376  goto  -0x6c
+    0376..037a  const-string  v3, "COMPANION_REG_REFS"
+    037a..037c  goto  -0x6f
+    037c..0380  const-string  v3, "COMPANION_PAIR_SUCCESS"
+    0380..0382  goto  -0x72
+    0382..0386  const-string  v3, "COMPANION_STREAM_ERROR_SUCCESS"
+    0386..0388  goto  -0x75
+    0388..038c  const-string  v3, "COMPANION_STREAM_ERROR_FAILURE"
+    038c..038e  goto  -0x78
+    038e..0392  const-string  v3, "ON_DIRTY"
+    0392..0394  goto  -0x7b
+    0394..0398  const-string  v3, "OFFLINE_COMPLETE"
+    0398..039a  goto  -0x7e
+    039a..039e  const-string  v3, "MESSAGE_RECEIVED_BY_SERVER"
+    039e..03a2  goto/16  -0x81
+    03a2..03a6  const-string  v3, "CLIENT_CONFIG_ERROR"
+    03a6..03aa  goto/16  -0x85
+    03aa..03ae  const-string  v3, "GET_PRE_KEY_SUCCESS"
+    03ae..03b2  goto/16  -0x89
+    03b2..03b6  const-string  v3, "SET_PRE_KEY_SUCCESS"
+    03b6..03ba  goto/16  -0x8d
+    03ba..03be  const-string  v3, "ACCOUNT_SYNC_NOTIFICATION"
+    03be..03c2  goto/16  -0x91
+    03c2..03c6  const-string  v3, "SYNCD_NOTIFICATION"
+    03c6..03ca  goto/16  -0x95
+    03ca..03ce  const-string  v3, "PEER_MESSAGE_RECEIPT"
+    03ce..03d2  goto/16  -0x99
+    03d2..03d6  const-string  v3, "PRIVACY_TOKEN"
+    03d6..03da  goto/16  -0x9d
+    03da..03de  const-string  v3, "OFFLINE_THREAD_METADATA"
+    03de..03e2  goto/16  -0xa1
+    03e2..03e6  const-string  v3, "OFFLINE_PREVIEW"
+    03e6..03ea  goto/16  -0xa5
+    03ea..03ee  const-string  v3, "CRSC_CONTINUATION"
+    03ee..03f2  goto/16  -0xa9
+    03f2..03f6  const-string  v3, "MESSAGE_STATE_UPDATE_RECEIPT"
+    03f6..03fa  goto/16  -0xad
+    03fa..03fe  const-string  v3, "MESSAGE_FOR_ME"
+    03fe..0402  goto/16  -0xb1
+    0402..0408  invoke-static  {v15, v5, v4}, LX/0ln;->A00(Landroid/os/Message;LX/0ln;I)V
+    0408..040c  goto/16  +0x1f7
+    040c..040e  move-exception  v3
+    040e..0414  invoke-static  {v5, v3, v4}, LX/0ln;->A04(LX/0ln;Ljava/lang/Throwable;I)V
+    0414..041a  invoke-virtual  {v1}, Lcom/google/common/base/Optional;->get()Ljava/lang/Object;
+    041a..041c  move-result-object  v2
+    041c..0420  check-cast  v2, LX/1uZ;
+    0420..0426  invoke-static  {v15}, LX/0m2;->A00(Landroid/os/Message;)LX/1k2;
+    0426..0428  move-result-object  v1
+    0428..042c  instance-of  v0, v1, LX/1k3;
+    042c..0430  if-eqz  v0, -0x210
+    0430..0434  check-cast  v1, LX/1k3;
+    0434..0438  if-eqz  v1, -0x214
+    0438..043c  iget-object  v0, v2, LX/1uZ;->A00:LX/05a;
+    043c..0440  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0440..0446  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0446..0448  move-result-object  v0
+    0448..044c  check-cast  v0, LX/1ic;
+    044c..0452  invoke-virtual  {v0, v1, v3}, LX/1ic;->A0E(LX/1k3;Ljava/lang/Throwable;)V
+    0452..0454  return-void
+    07e0..07e2  move-exception  v0
+    07e2..07e4  monitor-exit
+    07e4..07e6  throw  v0
+    07e6..07ec  invoke-virtual  {v1, v2, v0}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    07ec..07ee  monitor-exit
+    07ee..07f0  return-void
+    07f0..07f2  move-exception  v0
+    07f2..07f4  monitor-exit
+    07f4..07f6  throw  v0
+    07f6..07f8  return-void
+    07f8..07fe  invoke-static  {v15, v5, v4}, LX/0ln;->A00(Landroid/os/Message;LX/0ln;I)V
+    07fe..0800  return-void
+    0800..0802  move-exception  v0
+    0802..0808  invoke-static  {v5, v0, v4}, LX/0ln;->A04(LX/0ln;Ljava/lang/Throwable;I)V
+    0808..080a  return-void
+    080a..080c  nop
+    # catch LX/LV5; code_units 0201..0206 -> 0206
+    # catch Ljava/lang/RuntimeException; code_units 0201..0206 -> 0206
+    # catch Ljava/lang/StackOverflowError; code_units 0201..0206 -> 0206
+    # catch <all> code_units 03f1..03f2 -> 03f0
+    # catch <all> code_units 03f3..03f6 -> 03f8
+    # catch LX/LV5; code_units 03fc..0400 -> 0400

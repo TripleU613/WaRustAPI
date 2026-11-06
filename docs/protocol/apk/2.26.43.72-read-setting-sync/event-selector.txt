@@ -1,0 +1,12 @@
+
+# class: LX/1uW;
+# extends: Ljava/lang/Object;
+
+.method public A00(IL)  # .registers 2
+    # full signature: LX/1uW;->A00(Landroid/os/Message;)I
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v1, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  iget  v0, v1, Landroid/os/Message;->arg1:I
+    000c..000e  return  v0
+    # exception table: 0 try range(s)
+.end method

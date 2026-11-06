@@ -1,0 +1,11 @@
+# Selected DEX excerpt; not a complete method.
+
+# class: LX/SQ0;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 2
+    # full signature: LX/SQ0;-><init>()V
+    0406..040a  const/16  v0, #0xbd9
+    040a..0410  invoke-static  {v0}, LX/00D;->A00(I)LX/05h;
+    0410..0412  move-result-object  v0
+    0412..0416  iput-object  v0, v1, LX/SQ0;->A0d:LX/00x;

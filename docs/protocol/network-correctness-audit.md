@@ -4641,3 +4641,13 @@ read-receipt Boolean. A setter can notify before confirmation; neither the
 selected observer nor getter establishes successful remote adoption.23 literal
 references are not23 writers; analytics/navigation/comparison hits are bounded
 negatives. Remaining listeners/writers/recovery stay open. No runtime change.
+
+### Current read-self ACK privacy side effect and corrective request (2026-11-06)
+
+**Confirmed selected static:** [twenty exports/excerpts and two reused methods](apk/2.26.43.72-read-setting-sync/README.md)
+connect root readreceipts on selected read-self ACKs to Android arg1 event227,
+normal enabled provider3033/15E and a local-off-preserving truth table. Mismatched
+localfalse/serverall calls the separate classic-or-MEX setter with none;
+localtrue/servernone writes false. This is not ACK-of-ACK, ordinary receipt
+callback completion or generic category-map adoption. Runtime mode/DI/legacy
+registrations and durable corrective ownership remain open. No Rust send added.

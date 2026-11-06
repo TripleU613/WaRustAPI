@@ -168,3 +168,13 @@ same operation as09S.A1H reading read_receipts_enabled. The latter's stored
 Boolean branch remains the retained current0xW.A05 input. Downstream observer
 callbacks, every writer and full caller domains remain open; no receipt policy
 or inferred local-setting default is changed from this trace. No live operation.
+
+## Current ACK-triggered preference writer (2026-11-06)
+
+**Confirmed selected static:** [current227 synchronization](apk/2.26.43.72-read-setting-sync/README.md)
+re-anchors another real read_receipts_enabled writer in15E.BLn. Its read-self
+ACK path preserves localfalse on receivedall and can queue0oe.A0P(none), unlike
+category-map adoption. The outgoing preference getter is unchanged; full mode,
+legacy registration, dispatch/order and corrective-send recovery are unported.
+No new Rust preference or read/read-self selection rule follows from this
+bounded source trace, and no missing preference is replaced with compiledtrue.

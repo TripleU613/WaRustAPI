@@ -1,0 +1,90 @@
+{
+  "README.md": {
+    "bytes": 6209,
+    "sha256": "873710c91e11e76c1311f5521f738e7033260740c3cf63b214f66d3edc9bdca1"
+  },
+  "consumer-callers.txt": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "consumer-constructor-callers.txt": {
+    "bytes": 67,
+    "sha256": "cbe7530641e6f7b9935de5490b9a5a9ecb5d08e338f66fc2364e13927a1504ff"
+  },
+  "consumer-selected.txt": {
+    "bytes": 6207,
+    "sha256": "4ae637bd9122fd3c28c0b3bb1ef68ce569f8485e6f2827d41bfa9823b776296a"
+  },
+  "event-builder.txt": {
+    "bytes": 490,
+    "sha256": "5958b0ec99b8be7d6dbd509274b570d483f6943ceaebac0369149aeea1344734"
+  },
+  "event-dispatchers.txt": {
+    "bytes": 1962,
+    "sha256": "2334545fea6fac56346a1674c808e223b65a6764a271fbcde87817543b07ac1b"
+  },
+  "event-forward.txt": {
+    "bytes": 1109,
+    "sha256": "fbeb58d2a73efa083641f026330d870bc79c9a7f6a6c67625d4a66a7b5ee34ec"
+  },
+  "event-selector.txt": {
+    "bytes": 392,
+    "sha256": "ad3a61d949a35c31be5a9712e3ccca005469657bc4fc9746360efc5cfbaedc89"
+  },
+  "factory-low-selected.txt": {
+    "bytes": 2840,
+    "sha256": "8c2bb3d32345fa1fb69dc29b1e397bf85ac466877a2ffaacd8943c32bb30e569"
+  },
+  "factory-selected.txt": {
+    "bytes": 475,
+    "sha256": "5eac6987713935874cb857c43835708dd3b319e8285399a5dc0d72eca8aa3551"
+  },
+  "handler-admission.txt": {
+    "bytes": 7960,
+    "sha256": "98886db83a86a8ddd55b360ab8de162d4782ca574921f766115d13564fdfb9ad"
+  },
+  "handler-message-selected.txt": {
+    "bytes": 9330,
+    "sha256": "f6ade032a92389d2cae72cd1368685eca57a7533f06e2f28d804821a0443712c"
+  },
+  "handler-post.txt": {
+    "bytes": 535,
+    "sha256": "adea7a52ca16dee2b65b2eb01528b78ff20290ffb85829cde2c4304984cb140f"
+  },
+  "handler-select.txt": {
+    "bytes": 16541,
+    "sha256": "e7d9526bf0da728750f11810f974ac6d31f8c856425eb29224dfe691f128a77c"
+  },
+  "provider-dispatch.txt": {
+    "bytes": 3003,
+    "sha256": "c341b1ddb648a4214d7424c37940e96fb49defa16f827a93a33e935d7ceded9a"
+  },
+  "provider-entry.txt": {
+    "bytes": 445,
+    "sha256": "61ca1ae2033c7f40604569ffa0ea628b4aa09c36bba7a9826086157e739f557a"
+  },
+  "provider-get.txt": {
+    "bytes": 948,
+    "sha256": "74797a5d573d18c5f5c6c6bee0876dbe60726fb2132abfed7189045f7438ce75"
+  },
+  "provider-init.txt": {
+    "bytes": 323,
+    "sha256": "54e4e9380731428ec7f6f8152419cfb60f33ebaa8ef817548a35473dc854fb02"
+  },
+  "provider-lazy.txt": {
+    "bytes": 320,
+    "sha256": "05ef4106d14c39c4c5450ec6f1711550676dca2555af38455d30ace66a4a217c"
+  },
+  "providers-selected.txt": {
+    "bytes": 372,
+    "sha256": "336d0dbdf00af21e202c36d96fa696232c9ae0bdaef86b789c27ffe8f1217c23"
+  },
+  "readreceipts-refs.txt": {
+    "bytes": 994,
+    "sha256": "e61fd17e4c41f62d1f79101e117c5ea45ac0dc2fdc52e14cb1ec900647b96b4e"
+  },
+  "verify.py": {
+    "bytes": 3999,
+    "sha256": "57645c7987ff61aa91404a7d022e2006afbf21fb1eb2d13fcfadb2a8d70096bd"
+  }
+}

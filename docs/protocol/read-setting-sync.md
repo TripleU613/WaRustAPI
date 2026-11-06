@@ -183,3 +183,34 @@ Follow-up: [fetch/callback and observer boundaries](read-setting-bootstrap.md)
 now identifies separate fetch-mode property 23463, SMAX request code 70,
 category-map parsing and the played-receipt observer side effect. Full bootstrap,
 effective settings and observer registration remain unknown.
+
+## Current-build read-self ACK setting synchronization (2026-11-06)
+
+**Confirmed selected static, APK2.26.43.72:** [current producer, event message,
+interface dispatch, enabled registry/provider and consumer](apk/2.26.43.72-read-setting-sync/README.md)
+re-anchor the historical227 path.1rH.A03's read-self receipt-ACK branch forwards
+the original node when root readreceipts is nonnull; required chat/key/ID and
+earlier auth-challenge handling still apply.1lZ.A0R uses what0/arg1=227/arg2=0,
+not a wire227 field. The selected1lY route reads arg1; enabled0ln registry maps
+227 through SQ0.A0d/provider3033 to the normal15E factory.
+
+15E.BLn accepts only all/none. Equal Booleans are unchanged; localtrue/servernone
+writes false, applies and notifies. Localfalse/serverall retains false and calls
+0oe.A0P(readreceipts,none), whose classic/MEX selection and pending ownership
+remain separate dependencies. Unknown strings log/return handled without these
+writes. Handled=true is a dispatch return, not a wire ACK or ACK-of-ACK.
+
+This current source confirms the older local-off-preserving behavior, rather
+than authorizing category-map adoption to inherit it. Native mode, DI overrides,
+legacy registrations, complete callback/work ordering and durable corrective
+setter/recovery remain open. Event scheduling before generic ACK forwarding
+does not prove side-effect completion before settlement. Rust captures incoming
+frames but has no corresponding227 handler; no preference mutation/correction,
+automatic retry, replay or generic ACK is added from this static trace.
+
+Validation: the authored verifier reproduces twenty exports/excerpts and two
+reused complete methods, checks selected branch/provider arithmetic, every
+bundle checksum and the pinned APK digest. Formatting, OpenAPI library test,
+APK coverage freshness and diff whitespace pass; hygiene checks439 APK bundles.
+No Rust source changed, so workspace tests/Clippy were not rerun for this
+evidence-only chunk. No live operation or duplicate REA record.

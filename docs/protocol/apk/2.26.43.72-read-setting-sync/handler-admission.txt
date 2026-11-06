@@ -1,0 +1,215 @@
+
+# class: LX/0ln;
+# extends: Ljava/lang/Object;
+
+.method public A0G(ZI)  # .registers 4
+    # full signature: LX/0ln;->A0G(I)Z
+    0000..0004  iget-boolean  v0, v2, LX/0ln;->A0Q:Z
+    0004..0008  if-eqz  v0, +0x180
+    0008..000c  iget-object  v0, v2, LX/0ln;->A0N:LX/00x;
+    000c..0012  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0012..0016  const/16  v0, #0xcb
+    0016..0018  const/4  v1, #0x1
+    0018..001c  if-eq  v3, v0, +0x174
+    001c..0020  const/16  v0, #0x11b
+    0020..0024  if-eq  v3, v0, +0x170
+    0024..0028  const/16  v0, #0xca
+    0028..002c  if-eq  v3, v0, +0x16c
+    002c..0030  const/16  v0, #0x117
+    0030..0034  if-eq  v3, v0, +0x168
+    0034..0038  const/16  v0, #0x11d
+    0038..003c  if-eq  v3, v0, +0x164
+    003c..0040  const/16  v0, #0x96
+    0040..0044  if-eq  v3, v0, +0x160
+    0044..0048  const/16  v0, #0xc0
+    0048..004c  if-eq  v3, v0, +0x15c
+    004c..0050  const/16  v0, #0xc1
+    0050..0054  if-eq  v3, v0, +0x158
+    0054..0058  const/16  v0, #0xc5
+    0058..005c  if-eq  v3, v0, +0x154
+    005c..0060  const/16  v0, #0x109
+    0060..0064  if-eq  v3, v0, +0x150
+    0064..0068  const/16  v0, #0xfc
+    0068..006c  if-eq  v3, v0, +0x14c
+    006c..0070  const/16  v0, #0x122
+    0070..0074  if-eq  v3, v0, +0x148
+    0074..0078  const/16  v0, #0xd5
+    0078..007c  if-eq  v3, v0, +0x144
+    007c..0080  const/16  v0, #0xdd
+    0080..0084  if-eq  v3, v0, +0x140
+    0084..0088  const/16  v0, #0xf2
+    0088..008c  if-eq  v3, v0, +0x13c
+    008c..0090  const/16  v0, #0xf3
+    0090..0094  if-eq  v3, v0, +0x138
+    0094..0098  const/16  v0, #0xf4
+    0098..009c  if-eq  v3, v0, +0x134
+    009c..00a0  const/16  v0, #0xf5
+    00a0..00a4  if-eq  v3, v0, +0x130
+    00a4..00a8  const/16  v0, #0x116
+    00a8..00ac  if-eq  v3, v0, +0x12c
+    00ac..00b0  const/16  v0, #0xd4
+    00b0..00b4  if-eq  v3, v0, +0x128
+    00b4..00b8  const/16  v0, #0xd2
+    00b8..00bc  if-eq  v3, v0, +0x124
+    00bc..00c0  const/16  v0, #0x19
+    00c0..00c4  if-eq  v3, v0, +0x120
+    00c4..00c8  const/16  v0, #0xe5
+    00c8..00cc  if-eq  v3, v0, +0x11c
+    00cc..00d0  const/16  v0, #0xd1
+    00d0..00d4  if-eq  v3, v0, +0x118
+    00d4..00d8  const/16  v0, #0xf8
+    00d8..00dc  if-eq  v3, v0, +0x114
+    00dc..00e0  const/16  v0, #0xe4
+    00e0..00e4  if-eq  v3, v0, +0x110
+    00e4..00e8  const/16  v0, #0x102
+    00e8..00ec  if-eq  v3, v0, +0x10c
+    00ec..00f0  if-eqz  v3, +0x10a
+    00f0..00f4  const/16  v0, #0x65
+    00f4..00f8  if-eq  v3, v0, +0x106
+    00f8..00fc  const/16  v0, #0x101
+    00fc..0100  if-eq  v3, v0, +0x102
+    0100..0104  const/16  v0, #0xb3
+    0104..0108  if-eq  v3, v0, +0xfe
+    0108..010c  const/16  v0, #0xfe
+    010c..0110  if-eq  v3, v0, +0xfa
+    0110..0114  const/16  v0, #0x10e
+    0114..0118  if-eq  v3, v0, +0xf6
+    0118..011c  const/16  v0, #0xf0
+    011c..0120  if-eq  v3, v0, +0xf2
+    0120..0124  const/16  v0, #0x75
+    0124..0128  if-eq  v3, v0, +0xee
+    0128..012c  const/16  v0, #0xce
+    012c..0130  if-eq  v3, v0, +0xea
+    0130..0134  const/16  v0, #0x11c
+    0134..0138  if-eq  v3, v0, +0xe6
+    0138..013c  const/16  v0, #0x61
+    013c..0140  if-eq  v3, v0, +0xe2
+    0140..0144  const/16  v0, #0x4a
+    0144..0148  if-eq  v3, v0, +0xde
+    0148..014c  const/16  v0, #0x4b
+    014c..0150  if-eq  v3, v0, +0xda
+    0150..0154  const/16  v0, #0x4c
+    0154..0158  if-eq  v3, v0, +0xd6
+    0158..015c  const/16  v0, #0x4d
+    015c..0160  if-eq  v3, v0, +0xd2
+    0160..0164  const/16  v0, #0x4e
+    0164..0168  if-eq  v3, v0, +0xce
+    0168..016c  const/16  v0, #0x52
+    016c..0170  if-eq  v3, v0, +0xca
+    0170..0174  const/16  v0, #0x53
+    0174..0178  if-eq  v3, v0, +0xc6
+    0178..017c  const/16  v0, #0x54
+    017c..0180  if-eq  v3, v0, +0xc2
+    0180..0184  const/16  v0, #0x100
+    0184..0188  if-eq  v3, v0, +0xbe
+    0188..018c  const/16  v0, #0xcc
+    018c..0190  if-eq  v3, v0, +0xba
+    0190..0194  const/16  v0, #0x105
+    0194..0198  if-eq  v3, v0, +0xb6
+    0198..019c  const/16  v0, #0x126
+    019c..01a0  if-eq  v3, v0, +0xb2
+    01a0..01a4  const/16  v0, #0x11f
+    01a4..01a8  if-eq  v3, v0, +0xae
+    01a8..01ac  const/16  v0, #0xf7
+    01ac..01b0  if-eq  v3, v0, +0xaa
+    01b0..01b4  const/16  v0, #0xea
+    01b4..01b8  if-eq  v3, v0, +0xa6
+    01b8..01bc  const/16  v0, #0xd8
+    01bc..01c0  if-eq  v3, v0, +0xa2
+    01c0..01c4  const/16  v0, #0xbd
+    01c4..01c8  if-eq  v3, v0, +0x9e
+    01c8..01cc  const/16  v0, #0x68
+    01cc..01d0  if-eq  v3, v0, +0x9a
+    01d0..01d4  const/16  v0, #0x114
+    01d4..01d8  if-eq  v3, v0, +0x96
+    01d8..01dc  const/16  v0, #0x121
+    01dc..01e0  if-eq  v3, v0, +0x92
+    01e0..01e4  const/16  v0, #0xfb
+    01e4..01e8  if-eq  v3, v0, +0x8e
+    01e8..01ec  const/16  v0, #0xc6
+    01ec..01f0  if-eq  v3, v0, +0x8a
+    01f0..01f4  const/16  v0, #0xc7
+    01f4..01f8  if-eq  v3, v0, +0x86
+    01f8..01fc  const/16  v0, #0xc8
+    01fc..0200  if-eq  v3, v0, +0x82
+    0200..0204  const/16  v0, #0xc9
+    0204..0208  if-eq  v3, v0, +0x7e
+    0208..020c  const/16  v0, #0xee
+    020c..0210  if-eq  v3, v0, +0x7a
+    0210..0214  const/16  v0, #0x113
+    0214..0218  if-eq  v3, v0, +0x76
+    0218..021c  const/16  v0, #0xec
+    021c..0220  if-eq  v3, v0, +0x72
+    0220..0224  const/16  v0, #0x115
+    0224..0228  if-eq  v3, v0, +0x6e
+    0228..022c  const/16  v0, #0x112
+    022c..0230  if-eq  v3, v0, +0x6a
+    0230..0234  const/16  v0, #0xf9
+    0234..0238  if-eq  v3, v0, +0x66
+    0238..023c  const/16  v0, #0xf6
+    023c..0240  if-eq  v3, v0, +0x62
+    0240..0244  const/16  v0, #0x11a
+    0244..0248  if-eq  v3, v0, +0x5e
+    0248..024c  const/16  v0, #0x123
+    024c..0250  if-eq  v3, v0, +0x5a
+    0250..0254  const/16  v0, #0x11e
+    0254..0258  if-eq  v3, v0, +0x56
+    0258..025a  const/4  v0, #0x6
+    025a..025e  if-eq  v3, v0, +0x53
+    025e..0262  const/16  v0, #0x1b
+    0262..0266  if-eq  v3, v0, +0x4f
+    0266..026a  const/16  v0, #0xfa
+    026a..026e  if-eq  v3, v0, +0x4b
+    026e..0272  const/16  v0, #0x9f
+    0272..0276  if-eq  v3, v0, +0x47
+    0276..027a  const/16  v0, #0x12
+    027a..027e  if-eq  v3, v0, +0x43
+    027e..0282  const/16  v0, #0x8
+    0282..0286  if-eq  v3, v0, +0x3f
+    0286..028a  const/16  v0, #0xf1
+    028a..028e  if-eq  v3, v0, +0x3b
+    028e..0292  const/16  v0, #0xeb
+    0292..0296  if-eq  v3, v0, +0x37
+    0296..029a  const/16  v0, #0x107
+    029a..029e  if-eq  v3, v0, +0x33
+    029e..02a2  const/16  v0, #0x106
+    02a2..02a6  if-eq  v3, v0, +0x2f
+    02a6..02aa  const/16  v0, #0x13
+    02aa..02ae  if-eq  v3, v0, +0x2b
+    02ae..02b2  const/16  v0, #0x10
+    02b2..02b6  if-eq  v3, v0, +0x27
+    02b6..02b8  const/4  v0, #0x2
+    02b8..02bc  if-eq  v3, v0, +0x24
+    02bc..02c0  const/16  v0, #0x45
+    02c0..02c4  if-eq  v3, v0, +0x20
+    02c4..02c8  if-eq  v3, v1, +0x1e
+    02c8..02cc  const/16  v0, #0x56
+    02cc..02d0  if-eq  v3, v0, +0x1a
+    02d0..02d4  const/16  v0, #0xf
+    02d4..02d8  if-eq  v3, v0, +0x16
+    02d8..02dc  const/16  v0, #0xd7
+    02dc..02e0  if-eq  v3, v0, +0x12
+    02e0..02e4  const/16  v0, #0xe3
+    02e4..02e8  if-eq  v3, v0, +0xe
+    02e8..02ec  const/16  v0, #0x103
+    02ec..02f0  if-eq  v3, v0, +0xa
+    02f0..02f4  const/16  v0, #0x118
+    02f4..02f8  if-eq  v3, v0, +0x6
+    02f8..02fc  const/16  v0, #0x119
+    02fc..0300  if-ne  v3, v0, +0x16
+    0300..0302  const/4  v0, #0x1
+    0302..0304  return  v0
+    0304..0308  iget-object  v1, v2, LX/0ln;->A02:Landroid/util/SparseIntArray;
+    0308..030a  const/4  v0, #0xff (-1)
+    030a..0310  invoke-virtual  {v1, v3, v0}, Landroid/util/SparseIntArray;->get(II)I
+    0310..0312  move-result  v1
+    0312..0316  if-ltz  v1, +0xb
+    0316..031a  iget-object  v0, v2, LX/0ln;->A0G:Ljava/util/List;
+    031a..0320  invoke-interface  {v0}, Ljava/util/List;->size()I
+    0320..0322  move-result  v0
+    0322..0326  if-ge  v1, v0, +0x3
+    0326..0328  goto  -0x13
+    0328..032a  const/4  v0, #0x0
+    032a..032c  return  v0
+    # exception table: 0 try range(s)
+.end method

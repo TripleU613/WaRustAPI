@@ -458,6 +458,12 @@
     "x-live": false,
     "description": "APK43.72 setter post-dispatch0oe.A0Q invokes/schedules8OL14 ->8pp.CGi(category list), without preference writes or response admission in the selected bodies. Integer getter0oe.A0L overlays pending desired7wp values then clamps nonnegative;8Y1.BWP only checks pending entry existence.09S.A1H separately reads stored read_receipts_enabled Boolean for the retained current outgoing preference branch. Full caller/listener domains, downstream effects, all preference writers and durable recovery remain open.23 physical literal references include analytics/navigation/shared comparisons, not23 writers. Guessed A0M is refresh selector, reused byte-for-byte. No production receipt rule, setter, request or live operation added. docs/protocol/account-privacy-notifications.md#optimistic-privacy-views-are-not-server-confirmation-2026-11-06"
   },
+  "x-current-read-setting-sync-evidence": {
+    "x-cli": "python3 docs/protocol/apk/2.26.43.72-read-setting-sync/verify.py <pinned-apk>; xtask apk-smali <apk> --class <class> --method <method> --signatures --exceptions; xtask apk-virtual-overrides <apk> --class 'LX/1lW;' --method CPm --signature '(Landroid/os/Message;)V' --include-interfaces",
+    "x-transport": "offline static APK evidence only",
+    "x-live": false,
+    "description": "APK43.72 specialized read-self receipt ACK root readreceipts forwards original node as Android what0/arg1=227/arg2=0. Selected1lY dispatch and enabled0ln registry select SQ0.A0d/provider3033 normal factory15E. Mode/DI overrides and legacy registration remain open.15E accepts all/none; equal state unchanged, localtrue/servernone writes false/apply/observer, localfalse/serverall retains false and invokes the separate classic-or-MEX corrective setter(none). Not category-map server-wins policy, ordinary callback completion or ACK-of-ACK. Twenty reproducible exports/excerpts, two reused methods, branch/provider arithmetic and bundle checksum verifier. Rust has no227 preference/corrective handler; no mutation, request, retry or live operation added. Full ownership/order/recovery remains unported. docs/protocol/read-setting-sync.md#current-build-read-self-ack-setting-synchronization-2026-11-06"
+  },
   "x-library-capabilities": [
     {
       "symbol": "whatsapp_api::transport::app_state_sync::binding::bind_inline_fetch_plan",
