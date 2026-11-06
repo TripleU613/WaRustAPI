@@ -2360,7 +2360,20 @@ mod tests {
         let store = open(&dir.path().join("call-ack-null-sender.redb"));
         let mut fake = start(&store, false, None);
         fake.activate().await;
-        for (index, sender) in [None, Some("")].into_iter().enumerate() {
+        for (index, sender) in [
+            None,
+            Some(""),
+            Some("not-a-jid"),
+            Some("@lid"),
+            Some("1555@"),
+            Some("1555@unknown.invalid"),
+            Some("1555@S.WHATSAPP.NET"),
+            Some("1555@c.us"),
+            Some("1555@msgr"),
+        ]
+        .into_iter()
+        .enumerate()
+        {
             for (kind_index, kind) in [None, Some("")].into_iter().enumerate() {
                 let mut call = Node::new("ack").attr("class", "call").attr("id", "");
                 if let Some(sender) = sender {

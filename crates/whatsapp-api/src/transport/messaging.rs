@@ -1125,6 +1125,47 @@ pub(crate) fn ack_error_is_valid(node: &Node) -> bool {
     parsed_ack_error(node).is_ok()
 }
 
+// APK43.72 0Tp.A0A -> 0Dd.A02/A00: definite null results for
+// the text parse path only. Do not substitute Rust's wider/narrower JID grammar.
+fn call_ack_sender_known_null(node: &Node) -> bool {
+    let Some(value) = node.get_attr("from") else {
+        return true;
+    };
+    let Some(text) = value.as_text() else {
+        return false;
+    };
+    if text.is_empty() {
+        return true;
+    }
+    // A00's domain switch plus A02/A04 factory/cache aliases. Recognized
+    // domains/bare names remain unclassified here: constructors/cache may matter.
+    let recognized = |name: &str| {
+        matches!(
+            name,
+            "s.whatsapp.net"
+                | "broadcast"
+                | "hosted"
+                | "hosted.lid"
+                | "bot"
+                | "lid"
+                | "call"
+                | "g.us"
+                | "temp"
+                | "newsletter"
+                | "interop"
+                | "interop.g.us"
+                | "status_me"
+                | "lid_me"
+        )
+    };
+    let Some((user, domain)) = text.rsplit_once('@') else {
+        return !recognized(text);
+    };
+    // Empty-user cache keys omit @ (0Dd.A01); unknown domains cannot be
+    // inserted by the selected parser or user/newsletter cache factories.
+    user.is_empty() || !recognized(domain)
+}
+
 /// Validate ACK required-ID, numeric and supported call-field admission. Stateful receivers must first capture the Node.
 /// A malformed ACK ends the receiving epoch (APK43.72 1rg.A04 excludes ack;
 /// the selected 1s2.run outer catch reports onError(2) and returns).
@@ -1152,8 +1193,7 @@ pub fn validate_received_ack(node: &Node) -> crate::Result<()> {
         && !is_auth_challenge_ack(node)
         // 04c2 null from throws IllegalStateException before call fields;
         // 1s2.run's Exception -> 1rg.A00 path returns to reading instead.
-        && node.get_attr("from").is_some()
-        && node.get_attr("from").and_then(|v| v.as_text()) != Some("")
+        && !call_ack_sender_known_null(node)
         && (node.get_attr("id").and_then(|v| v.as_text()) == Some("")
             || node.get_attr("type").is_none()
             || node.get_attr("type").and_then(|v| v.as_text()) == Some("")
@@ -3054,7 +3094,17 @@ mod captured_wait_tests {
 
     #[test]
     fn call_ack_known_null_sender_precedes_class_field_checks() {
-        for sender in [None, Some("")] {
+        for sender in [
+            None,
+            Some(""),
+            Some("not-a-jid"),
+            Some("@lid"),
+            Some("1555@"),
+            Some("1555@unknown.invalid"),
+            Some("1555@S.WHATSAPP.NET"),
+            Some("1555@c.us"),
+            Some("1555@msgr"),
+        ] {
             for id in ["", "fixture"] {
                 for kind in [None, Some(""), Some("offer")] {
                     for error in [None, Some("0"), Some("500"), Some("459")] {
@@ -3076,6 +3126,27 @@ mod captured_wait_tests {
                     }
                 }
             }
+        }
+    }
+
+    #[test]
+    fn call_ack_bare_sender_factory_results_are_not_null_guesses() {
+        for sender in ["s.whatsapp.net", "g.us", "call", "status_me", "lid_me"] {
+            let ack = Node::new("ack")
+                .attr("class", "call")
+                .attr("from", sender)
+                .attr("id", "fixture");
+            assert!(!call_ack_sender_known_null(&ack));
+            assert!(
+                validate_received_ack(&ack).is_err(),
+                "nonnull sender requires type"
+            );
+            let ack = ack.attr("type", "offer");
+            // Cache-dependent bare sender subtypes are not classified here.
+            if sender == "call" {
+                assert!(validate_received_ack(&ack).is_ok());
+            }
+            assert!(validate_received_ack(&ack.attr("error", "459")).is_ok());
         }
     }
 

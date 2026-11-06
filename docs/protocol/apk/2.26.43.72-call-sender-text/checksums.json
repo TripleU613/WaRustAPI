@@ -1,0 +1,38 @@
+{
+  "README.md": {
+    "bytes": 4961,
+    "sha256": "04e70feb0d901093ad49682383f0cbd5fa1dff55e0edefec05491a1204c8a8cc"
+  },
+  "bare-factory.txt": {
+    "bytes": 1156,
+    "sha256": "a10cfd8f9d425262a40cc92b2d9b7264a6e66c747b94f55b22f878cc9c1c23bc"
+  },
+  "cache-fields.txt": {
+    "bytes": 309,
+    "sha256": "a714b144b369cc2d80396b03da0fea1329f6273ca0322c2a4dea30011fabf968"
+  },
+  "cache-key.txt": {
+    "bytes": 1312,
+    "sha256": "87c9b632ebf36c50e7c330c40ee08331f04e8d00b77cbd016f75ddc4ef859082"
+  },
+  "cache.txt": {
+    "bytes": 16128,
+    "sha256": "91df352c6b6cad6354993c1ead068f430e42e2869daddc3880772f29b1aaa87d"
+  },
+  "factory-init.txt": {
+    "bytes": 474,
+    "sha256": "1a8c9a67fc3c27bf826aeba2026aef10289ec0dcfe7ca2049c342c1b14202e6c"
+  },
+  "generic-cache-put-callers.txt": {
+    "bytes": 9353,
+    "sha256": "d8d6f8407eb1c64072ea3495805e54cb3ae4a296931d9f99e7d88ad166bab563"
+  },
+  "newsletter-cache.txt": {
+    "bytes": 2400,
+    "sha256": "5a36325aa1e566fdfa7a8816e4cc880bbe7ec20fa4afb103f18188d98c785c63"
+  },
+  "user-cache.txt": {
+    "bytes": 1312,
+    "sha256": "45511348ed8c9205d8771efd13fb6c641ff08f131f8b97b095a25f60055af374"
+  }
+}

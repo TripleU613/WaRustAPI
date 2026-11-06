@@ -547,3 +547,38 @@ Validation: 1,466 workspace/all-feature tests passed. Strict workspace/all-targe
 all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
 validation, APK coverage freshness and repository hygiene passed. Exact pinned
 reader re-export and APK hash verified. Offline only.
+
+## Definite null call-sender text versus native bare/cache values (2026-11-06)
+
+**Confirmed selected pinned static / Rust correction:** [new bare factory,
+JID-cache access/key methods and exact parser re-export](apk/2.26.43.72-call-sender-text/README.md)
+extend the preceding null-sender ordering finding beyond absent/empty text.
+Leading@/empty user and unrecognized qualified domains throw into the optional
+parser's null result. Unknown bare names outside native parser/factory/cache
+names also return null. These are not fatal call-field failures; the selected
+generic Exception route continues before inspecting those later fields.
+
+Rust now recognizes these definite-null text forms without substituting its
+generic Jid::parse result for native grammar. The domain/name exclusions include
+native cache aliases, because factory methods can populate the JID cache before
+text parsing. Recognized-family constructor failures and cache-dependent subtypes
+remain unclassified here. No broad rejection of native bare singletons is added.
+
+The actor continuation regression now includes unknown bare name, leading@,
+empty domain, unknown/uppercase domain and c.us/msgr text examples, alongside
+absent/empty sender. Every frame is captured; a following receipt barrier gets
+its normal ACK, with no extra error response or receipt outbox intent. Unit
+controls preserve required-id/numeric precedence. New bare-factory controls keep
+all five nonnull selected factory names subject to the later type requirement,
+while bare call with nonempty fields passes this bounded validator and459 keeps
+its diversion. Previously confirmed fatal nonnull-sender cases still apply.
+
+Limits: this is not full JID construction/cache/runtime equivalence. Recognized
+user-family malformed values, nontext representations, arbitrary cache mutation,
+child payloads, telemetry and concrete account recovery remain open. No call
+feature, identity merge, new request, resend or live account operation.
+
+Validation: 1,467 workspace/all-feature tests passed. Strict workspace/all-target/
+all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
+validation, APK coverage freshness and repository hygiene passed. Exact pinned
+parser re-export and APK hash verified. Offline only.

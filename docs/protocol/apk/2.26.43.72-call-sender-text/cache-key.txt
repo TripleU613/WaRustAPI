@@ -1,0 +1,25 @@
+
+# class: LX/0Dd;
+# extends: Ljava/lang/Object;
+
+.method public A01(LLL)  # .registers 4
+    # full signature: LX/0Dd;->A01(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  const/4  v0, #0x1
+    000a..0010  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0010..0016  invoke-virtual  {v2}, Ljava/lang/String;->length()I
+    0016..0018  move-result  v0
+    0018..001c  if-nez  v0, +0x3
+    001c..001e  return-object  v3
+    001e..0022  new-instance  v1, Ljava/lang/StringBuilder;
+    0022..0028  invoke-direct  {v1}, Ljava/lang/StringBuilder;-><init>()V
+    0028..002e  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    002e..0032  const-string  v0, "@"
+    0032..0038  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0038..003e  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    003e..0044  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0044..0046  move-result-object  v0
+    0046..0048  return-object  v0
+    # exception table: 0 try range(s)
+.end method

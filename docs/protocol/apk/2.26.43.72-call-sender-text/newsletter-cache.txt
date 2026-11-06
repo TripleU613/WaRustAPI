@@ -1,0 +1,47 @@
+
+# class: LX/0De;
+# extends: Ljava/lang/Object;
+
+.method public A03(LLL)  # .registers 7
+    # full signature: LX/0De;->A03(Ljava/lang/String;Ljava/lang/String;)LX/1cO;
+    0000..0006  invoke-virtual  {v5}, Ljava/lang/String;->trim()Ljava/lang/String;
+    0006..0008  move-result-object  v2
+    0008..000e  invoke-virtual  {v2}, Ljava/lang/String;->isEmpty()Z
+    000e..0010  move-result  v0
+    0010..0014  if-nez  v0, +0x3e
+    0014..0018  const-string  v1, "0"
+    0018..001e  invoke-virtual  {v1, v2}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    001e..0020  move-result  v0
+    0020..0024  if-nez  v0, +0x36
+    0024..002a  invoke-virtual  {v2, v1}, Ljava/lang/String;->indexOf(Ljava/lang/String;)I
+    002a..002c  move-result  v0
+    002c..0030  if-eqz  v0, +0x30
+    0030..0034  sget-object  v0, Lcom/whatsapp/infra/core/jid/Jid;->Companion:LX/0Dd;
+    0034..003a  invoke-static  {v5, v6}, LX/0Dd;->A01(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    003a..003c  move-result-object  v3
+    003c..0040  const-string  v0, "newsletter"
+    0040..0046  invoke-virtual  {v0, v6}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0046..0048  move-result  v0
+    0048..004c  if-eqz  v0, +0x1c
+    004c..0050  iget-object  v2, v4, LX/0De;->A00:LX/0Df;
+    0050..0056  invoke-virtual  {v2, v3}, LX/0Df;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    0056..0058  move-result-object  v1
+    0058..005c  check-cast  v1, Lcom/whatsapp/infra/core/jid/Jid;
+    005c..0062  invoke-static  {v1}, LX/0Dn;->A0a(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0062..0064  move-result  v0
+    0064..0068  if-eqz  v0, +0x5
+    0068..006c  check-cast  v1, LX/1cO;
+    006c..006e  return-object  v1
+    006e..0072  new-instance  v1, LX/1cO;
+    0072..0078  invoke-direct  {v1, v5}, LX/1cO;-><init>(Ljava/lang/String;)V
+    0078..007e  invoke-virtual  {v2, v3, v1}, LX/0Df;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    007e..0080  return-object  v1
+    0080..0084  new-instance  v0, LX/09P;
+    0084..008a  invoke-direct  {v0, v3}, LX/09P;-><init>(Ljava/lang/String;)V
+    008a..008c  throw  v0
+    008c..0090  const-string  v1, "Identifier must be a valid number starting with non-zero"
+    0090..0094  new-instance  v0, LX/09P;
+    0094..009a  invoke-direct  {v0, v1}, LX/09P;-><init>(Ljava/lang/String;)V
+    009a..009c  throw  v0
+    # exception table: 0 try range(s)
+.end method

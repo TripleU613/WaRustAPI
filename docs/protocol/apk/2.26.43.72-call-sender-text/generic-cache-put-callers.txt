@@ -1,0 +1,248 @@
+classes.dex  LX/0Dd;->A00(LL)
+  invoke dex byte offset: 0x4ae13e
+classes.dex  LX/0De;->A03(LLL)
+  invoke dex byte offset: 0x4ae568
+classes.dex  LX/0De;->A04(LLL)
+  invoke dex byte offset: 0x4ae5d2
+classes.dex  LX/0KM;->A00(LLI)
+  invoke dex byte offset: 0x56ed6c
+classes.dex  LX/0fd;->A00(LL)
+  invoke dex byte offset: 0x64ba44
+classes.dex  LX/0fd;->A01(LL)
+  invoke dex byte offset: 0x64bcae
+classes.dex  LX/0fi;->A02(ZLLLL)
+  invoke dex byte offset: 0x64c6d2
+classes.dex  LX/0fi;->A0N(VLL)
+  invoke dex byte offset: 0x64cb64
+classes.dex  LX/0hf;->A0E(LL)
+  invoke dex byte offset: 0x668374
+classes.dex  LX/0hf;->A0I(VLL)
+  invoke dex byte offset: 0x668448
+classes.dex  LX/0jp;->A03(LLI)
+  invoke dex byte offset: 0x6c5a44
+classes.dex  LX/0jp;->A04(VL)
+  invoke dex byte offset: 0x6c5b60
+classes.dex  LX/0kb;->A00(VL)
+  invoke dex byte offset: 0x6cb7ae
+classes.dex  LX/0kb;->A00(VL)
+  invoke dex byte offset: 0x6cb7c0
+classes.dex  LX/0mm;->A00(LL)
+  invoke dex byte offset: 0x6e4694
+classes.dex  LX/10r;->A04(LLLLIIZZ)
+  invoke dex byte offset: 0x7b6166
+classes.dex  LX/10r;->A04(LLLLIIZZ)
+  invoke dex byte offset: 0x7b61a6
+classes.dex  LX/12d;->BPx(ZLL)
+  invoke dex byte offset: 0x7d90a6
+classes.dex  LX/12d;->BPy(VLLL)
+  invoke dex byte offset: 0x7d90ce
+classes.dex  LX/12d;->BPz(ZLL)
+  invoke dex byte offset: 0x7d9126
+classes.dex  Lcom/whatsapp/ui/wds/components/textview/WDSTextView;->setLineHeightOptimized(VI)
+  invoke dex byte offset: 0x8ed6a4
+classes.dex  LX/1Ro;->A04(LLLIZ)
+  invoke dex byte offset: 0x8f1b72
+classes.dex  LX/1Rz;->A01(LLZ)
+  invoke dex byte offset: 0x8f2b22
+classes.dex  LX/1Un;->A0B(VLL)
+  invoke dex byte offset: 0x907ae4
+classes10.dex  LX/IcO;->run(V)
+  invoke dex byte offset: 0x2e0d3e
+classes10.dex  Lcom/whatsapp/conversation/ui/conversationrow/businessmessaging/interactive/InteractiveMessageView;->A0B(VLL)
+  invoke dex byte offset: 0x33812e
+classes10.dex  Lcom/whatsapp/conversation/ui/conversationrow/businessmessaging/interactive/InteractiveMessageView;->A0D(VL)
+  invoke dex byte offset: 0x338512
+classes10.dex  LX/J4M;->A04(VLL)
+  invoke dex byte offset: 0x3e0028
+classes10.dex  LX/J4S;->A0D(V)
+  invoke dex byte offset: 0x3e679a
+classes10.dex  LX/J4T;->A1Y(VLZ)
+  invoke dex byte offset: 0x3eb4f2
+classes10.dex  LX/JXj;->A00(LL)
+  invoke dex byte offset: 0x4be1b0
+classes10.dex  LX/Jvh;->A00(VLLLL)
+  invoke dex byte offset: 0x503c78
+classes10.dex  LX/Jy4;->A00(LLLL)
+  invoke dex byte offset: 0x510dce
+classes10.dex  LX/K3v;->A0A(VLL)
+  invoke dex byte offset: 0x55ce1e
+classes10.dex  LX/K3v;->A0A(VLL)
+  invoke dex byte offset: 0x55ce3a
+classes10.dex  LX/K3v;->A0A(VLL)
+  invoke dex byte offset: 0x55ce5a
+classes10.dex  LX/KLh;->A01(VLL)
+  invoke dex byte offset: 0x5dd40e
+classes10.dex  LX/KV6;->run(V)
+  invoke dex byte offset: 0x62feac
+classes11.dex  LX/LzJ;-><init>(VLLZZZ)
+  invoke dex byte offset: 0x458b9c
+classes11.dex  LX/MHz;->A00(LLLLI)
+  invoke dex byte offset: 0x4bf6e2
+classes11.dex  LX/MVU;->A00(ILL)
+  invoke dex byte offset: 0x55a3b6
+classes11.dex  Landroidx/compose/ui/text/font/FontFamilyResolverImpl;->A00(LLL)
+  invoke dex byte offset: 0x6420ae
+classes11.dex  LX/NOA;->invoke(LL)
+  invoke dex byte offset: 0x7ba77a
+classes12.dex  LX/PpQ;->A02(LLLL)
+  invoke dex byte offset: 0x5a3254
+classes12.dex  LX/PpQ;->A03(LLLZ)
+  invoke dex byte offset: 0x5a3936
+classes12.dex  LX/QqB;->call(L)
+  invoke dex byte offset: 0x76a366
+classes13.dex  Lio/requery/android/database/sqlite/SQLiteConnection;->acquirePreparedStatement(LL)
+  invoke dex byte offset: 0x593676
+classes13.dex  LX/T8G;->CUX(VLLZ)
+  invoke dex byte offset: 0x5fd86c
+classes13.dex  LX/T8G;->CUX(VLLZ)
+  invoke dex byte offset: 0x5fd8a6
+classes2.dex  LX/1cA;->A01(LL)
+  invoke dex byte offset: 0x1b9374
+classes2.dex  LX/1d3;->A00(LL)
+  invoke dex byte offset: 0x1bf676
+classes2.dex  LX/1dr;->A0B(LLLL)
+  invoke dex byte offset: 0x1c807c
+classes2.dex  LX/1dr;->A0B(LLLL)
+  invoke dex byte offset: 0x1c80c2
+classes2.dex  LX/1oo;->A00(LLLLI)
+  invoke dex byte offset: 0x22a5ec
+classes2.dex  LX/1pD;->A00(LLL)
+  invoke dex byte offset: 0x22fb5c
+classes2.dex  LX/1ve;->A01(ILZ)
+  invoke dex byte offset: 0x271682
+classes3.dex  LX/2P5;->A01(VLL)
+  invoke dex byte offset: 0x201752
+classes3.dex  LX/2P5;->A01(VLL)
+  invoke dex byte offset: 0x20176a
+classes3.dex  LX/2XU;-><init>(VLLLLLII)
+  invoke dex byte offset: 0x24f740
+classes3.dex  LX/2oF;->A00(LLL)
+  invoke dex byte offset: 0x28843e
+classes3.dex  LX/2oF;->A00(LLL)
+  invoke dex byte offset: 0x2884ec
+classes3.dex  LX/2oF;->A0E(VLL)
+  invoke dex byte offset: 0x2885c6
+classes3.dex  Lcom/whatsapp/bot/agentspaces/icons/HatchSpaceIconLoader$loadRoute$2$2$1;->invokeSuspend(LL)
+  invoke dex byte offset: 0x3fe1ae
+classes3.dex  LX/3ih;->invokeSuspend(LL)
+  invoke dex byte offset: 0x401254
+classes4.dex  LX/4QF;->A0k(VL)
+  invoke dex byte offset: 0x4545e4
+classes4.dex  LX/5dV;->A00(LLL)
+  invoke dex byte offset: 0x53e1fc
+classes4.dex  LX/5gr;->A00(LL)
+  invoke dex byte offset: 0x553848
+classes4.dex  LX/5gr;->A03(VLLL)
+  invoke dex byte offset: 0x553950
+classes4.dex  LX/5gv;->A00(L)
+  invoke dex byte offset: 0x554614
+classes4.dex  LX/5lS;->A01(LLI)
+  invoke dex byte offset: 0x584856
+classes4.dex  LX/5nP;->A0G(LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLFZZZZ)
+  invoke dex byte offset: 0x5c6dea
+classes4.dex  LX/6aY;->A00(ILI)
+  invoke dex byte offset: 0x748e36
+classes6.dex  LX/8t7;->A0Y(VLLL)
+  invoke dex byte offset: 0x2673b8
+classes6.dex  LX/9Hy;->A01(LLLL)
+  invoke dex byte offset: 0x330e6a
+classes6.dex  LX/9Hy;->A01(LLLL)
+  invoke dex byte offset: 0x330ea8
+classes6.dex  LX/9Hy;->A03(LLLLLJ)
+  invoke dex byte offset: 0x33102a
+classes6.dex  LX/9Hy;->A03(LLLLLJ)
+  invoke dex byte offset: 0x331034
+classes6.dex  LX/9Hy;->A04(LLL)
+  invoke dex byte offset: 0x331160
+classes6.dex  Lcom/whatsapp/music/productinfra/consumption/MusicChatsConsumptionRefresher;->A00(LLLLLLLL)
+  invoke dex byte offset: 0x331afa
+classes6.dex  Lcom/whatsapp/music/productinfra/consumption/MusicChatsConsumptionRefresher;->A00(LLLLLLLL)
+  invoke dex byte offset: 0x331bc0
+classes6.dex  Lcom/whatsapp/music/productinfra/consumption/MusicChatsConsumptionRefresher;->A06(VLL)
+  invoke dex byte offset: 0x332618
+classes6.dex  LX/AB0;->A02(VL)
+  invoke dex byte offset: 0x487932
+classes6.dex  LX/ABT;->A04(LL)
+  invoke dex byte offset: 0x4932d8
+classes6.dex  LX/ABT;->A04(LL)
+  invoke dex byte offset: 0x493394
+classes6.dex  LX/ACs;->A02(ZLLLZ)
+  invoke dex byte offset: 0x4a9a6a
+classes6.dex  LX/APg;->accept(VL)
+  invoke dex byte offset: 0x540a8c
+classes6.dex  LX/ASE;->CTr(LI)
+  invoke dex byte offset: 0x55033a
+classes6.dex  LX/ASH;->A00(LI)
+  invoke dex byte offset: 0x550bd4
+classes6.dex  LX/ASH;->A00(LI)
+  invoke dex byte offset: 0x550c88
+classes6.dex  LX/ASK;->A02(LI)
+  invoke dex byte offset: 0x552888
+classes6.dex  LX/AeG;->A04(VL)
+  invoke dex byte offset: 0x59438a
+classes6.dex  Lcom/whatsapp/hatch/ideas/HatchIdeasIconLoader$read$1;->invokeSuspend(LL)
+  invoke dex byte offset: 0x6325d4
+classes8.dex  LX/Dto;->A0F(LL)
+  invoke dex byte offset: 0x4f59ca
+classes8.dex  LX/Dto;->A0H(LL)
+  invoke dex byte offset: 0x4f5bcc
+classes8.dex  LX/Dto;->A0M(LL)
+  invoke dex byte offset: 0x4f5f6a
+classes8.dex  LX/Dto;->A0N(LLL)
+  invoke dex byte offset: 0x4f6000
+classes8.dex  LX/Dtp;->A09(ZLLL)
+  invoke dex byte offset: 0x4f71f4
+classes8.dex  LX/Dzv;->A09(VLL)
+  invoke dex byte offset: 0x51d3fe
+classes8.dex  LX/Dzv;->A0C(ZLL)
+  invoke dex byte offset: 0x51d4ee
+classes8.dex  LX/Ean;->A00(ZIL)
+  invoke dex byte offset: 0x57d9a4
+classes8.dex  LX/EdP;->A00(VLLLIJ)
+  invoke dex byte offset: 0x58e08c
+classes8.dex  LX/EdP;->A00(VLLLIJ)
+  invoke dex byte offset: 0x58e2fc
+classes8.dex  LX/EzE;->A02(ZLL)
+  invoke dex byte offset: 0x624efe
+classes8.dex  Lcom/whatsapp/infra/stores/data/LruUserCountryCodeRepository;->Cf1(LLL)
+  invoke dex byte offset: 0x7cb7be
+classes8.dex  Lcom/whatsapp/infra/stores/data/LruUserCountryCodeRepository;->Cf2(LLLL)
+  invoke dex byte offset: 0x7cb7f6
+classes8.dex  LX/FXm;->A03(LL)
+  invoke dex byte offset: 0x7cf1ac
+classes8.dex  LX/FXm;->A04(LL)
+  invoke dex byte offset: 0x7cf2a4
+classes8.dex  LX/FZK;->A00(LLL)
+  invoke dex byte offset: 0x7de860
+classes8.dex  LX/FZK;->A01(VLLLJZ)
+  invoke dex byte offset: 0x7de9a6
+classes8.dex  LX/Fef;->run(V)
+  invoke dex byte offset: 0x833c3c
+classes8.dex  LX/Feq;->run(V)
+  invoke dex byte offset: 0x844e34
+classes8.dex  LX/Ff4;->call(L)
+  invoke dex byte offset: 0x84f058
+classes8.dex  LX/FgU;->invoke(LL)
+  invoke dex byte offset: 0x866ab0
+classes9.dex  Lcom/whatsapp/status/playback/fragment/WamoStatusPlaybackFragment;->A2A(VLL)
+  invoke dex byte offset: 0x4503da
+classes9.dex  Lcom/whatsapp/status/playback/fragment/StatusPlaybackContactFragment;->A2b(LL)
+  invoke dex byte offset: 0x459046
+classes9.dex  LX/HlM;->onDataSetChanged(V)
+  invoke dex byte offset: 0x698c3c
+classes9.dex  LX/HlM;->onDataSetChanged(V)
+  invoke dex byte offset: 0x698daa
+classes9.dex  LX/HuS;->CAe(VLJ)
+  invoke dex byte offset: 0x6d9684
+classes9.dex  LX/HvY;->A05(LL)
+  invoke dex byte offset: 0x6ddcde
+classes9.dex  LX/HvY;->A0C(LL)
+  invoke dex byte offset: 0x6de158
+classes9.dex  LX/IBZ;->run(V)
+  invoke dex byte offset: 0x75cff0
+classes9.dex  LX/IC4;->run(V)
+  invoke dex byte offset: 0x782efc
+classes9.dex  LX/IDz;->invoke(LL)
+  invoke dex byte offset: 0x7a9ab6
+classes9.dex  LX/IO7;->invokeSuspend(LL)
+  invoke dex byte offset: 0x8299ea
