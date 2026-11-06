@@ -17198,5 +17198,12 @@
     "x-live": false,
     "description": "Privacy-token parser selects the first named tokens container like APK43.72 10G.A09/0Tp.A0G/A0F. Later containers do not suppress valid selected data/ACK, replace state, merge entries or rescue malformed first data. Leading unrelated metadata is ignored by name. Existing selected-list256 bound, timestamp/token size/primary-address, envelope and atomic storage policies remain. Red/green regression covers later newer/malformed containers and malformed-first/valid-second with prior state preserved. No new token synthesis, alias adoption or HTTP route.",
     "evidence": "docs/protocol/apk/2.26.43.72-privacy-token-primary-address/README.md"
+  },
+  "x-privacy-token-supported-time-consumption": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Privacy-token parser consumes parent t only when processing supported trusted_contact data, matching selected APK43.72 10G.A09 branch. Empty/unknown-only lists with otherwise admitted envelopes no longer lose ACK because unused t is absent/malformed/negative/overflowing; no timestamp or token is stored. Supported entries still require valid parent time even with child override, with existing Java/range/size/address/atomic guards. Red/green regression preserves prior token state. No new default time, query, identity or HTTP route.",
+    "evidence": "docs/protocol/apk/2.26.43.72-privacy-token-primary-address/README.md"
   }
 }

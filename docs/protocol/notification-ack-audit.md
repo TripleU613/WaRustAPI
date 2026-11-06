@@ -292,3 +292,13 @@ cannot replace state or rescue a malformed first. Existing selected-list/time/
 size/address/atomic guards remain. Red/green regression includes leading metadata,
 later newer/malformed data and invalid-first/valid-second.
 [Complete helper evidence and limits](apk/2.26.43.72-privacy-token-primary-address/README.md).
+
+
+### Consume token time only for supported data (2026-11-05)
+
+**Confirmed static / locally fixed:**10G.A09 reads parent t only inside the
+trusted_contact branch. Rust's eager timestamp parse suppressed ACK for empty
+or ignored-only lists. Parent time is now parsed only for supported entries;
+supported-token Java/range/atomic checks remain. Red/green empty/unknown-only
+regression covers absent, malformed, negative and overflowing unused t without
+changing prior state. [Retained branch proof and limits](apk/2.26.43.72-privacy-token-primary-address/README.md).

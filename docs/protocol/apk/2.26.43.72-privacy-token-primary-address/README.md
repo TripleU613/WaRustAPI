@@ -67,3 +67,27 @@ cases ACK without changing the selected stored token; malformed-first remains
 refused with prior state preserved. Existing repeat, invalid envelope, malformed
 selected token and encrypted-store reopen controls remain. No new token producer,
 identity alias, retry, network request family or live account activity.
+
+## Timestamp consumption follows supported token branch — 2026-11-05
+
+**Confirmed static:** retained10G.A09 tests token type at005c..008e, skips
+unsupported kinds back to the loop, and only reads parent t at00c4..00d8
+inside the supported trusted_contact branch. Child t is then parsed with that
+parent fallback at00da..00e2. Empty or entirely ignored lists never reach those
+timestamp instructions. The normal base ACK follows handler return; absence of
+supported entries is not itself a timestamp-validation requirement.
+
+**Confirmed local defect/fix:** Rust parsed parent t before iterating the
+selected list. Missing or malformed unused timestamps suppressed ACK for empty
+and unknown-only lists. Parent parsing now occurs only inside supported-token
+processing. It is still required for a supported token even when that token
+has an explicit timestamp; existing Java/nonnegative/overflow and atomic refusal
+checks remain. No invalid timestamp is stored or used as a default.
+
+The mixed-token regression fails on the old eager timestamp guard, then covers
+empty and unknown-only selected lists with absent, malformed, negative and
+signed-long-overflow parent t. Each admitted envelope receives ACK and preserves
+prior token state; selected supported-token malformed-time tests remain. This
+extends the earlier ignored-kind ACK fix rather than relaxing supported data
+validation. Existing local address/list/size policies and native fallback/error
+parity limits remain. No live account or outbound query was used.

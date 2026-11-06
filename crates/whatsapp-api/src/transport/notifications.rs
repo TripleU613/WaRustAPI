@@ -377,8 +377,6 @@ fn parse(node: &Node) -> Result<Option<TokenUpdates<'_>>> {
             .and_then(super::mex::java_decimal_long)
             .and_then(|v| u64::try_from(v).ok())
     };
-    let parent_time = timestamp(node)
-        .ok_or_else(|| Error::invalid("notification", "invalid notification timestamp"))?;
     let mut updates = Vec::new();
     for token in tokens.child_nodes() {
         if token.description != "token"
@@ -395,6 +393,10 @@ fn parse(node: &Node) -> Result<Option<TokenUpdates<'_>>> {
                 "token size outside local bound",
             ));
         }
+        // APK43.72 10G.A09 reads parent time only inside the supported
+        // trusted_contact branch. Empty/ignored lists need no timestamp.
+        let parent_time = timestamp(node)
+            .ok_or_else(|| Error::invalid("notification", "invalid notification timestamp"))?;
         let time = if token.get_attr("t").is_some() {
             timestamp(token)
                 .ok_or_else(|| Error::invalid("notification", "invalid token timestamp"))?
@@ -1020,12 +1022,20 @@ mod tests {
         let expected = Some(serde_json::json!({"timestamp":20,"token":[4,5]}));
         assert_eq!(saved(&store), expected);
         for tokens in [vec![Node::new("token").attr("type", "future_kind")], vec![]] {
-            assert!(handle(&store, &notification(tokens)).unwrap().is_some());
-            assert_eq!(
-                saved(&store),
-                expected,
-                "unknown kinds do not create token state"
-            );
+            for unused_time in [None, Some("bad"), Some("-1"), Some("9223372036854775808")] {
+                let mut skipped = notification(tokens.clone());
+                skipped.attributes.retain(|attribute| attribute.name != "t");
+                if let Some(time) = unused_time {
+                    skipped = skipped.attr("t", time);
+                }
+                validate(&skipped).unwrap();
+                assert!(handle(&store, &skipped).unwrap().is_some());
+                assert_eq!(
+                    saved(&store),
+                    expected,
+                    "ignored kinds must not consume unused time or create state"
+                );
+            }
         }
         let mut extra = node.clone();
         let NodeContent::Children(children) = &mut extra.content else {
