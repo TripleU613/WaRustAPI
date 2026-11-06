@@ -1,0 +1,44 @@
+classes.dex  LX/0eB;->A00(LLLLZ)
+  invoke dex byte offset: 0x63d936
+classes.dex  Lcom/whatsapp/infra/tee/connection/TeeTigonHttpClient;-><init>(V)
+  invoke dex byte offset: 0x854540
+classes.dex  Lcom/crossapp/tigonhttp/TigonHttpClient;-><init>(VLLLLL)
+  invoke dex byte offset: 0x85aba4
+classes.dex  Lcom/crossapp/tigonhttp/TigonHttpClient;-><init>(VLLLLLL)
+  invoke dex byte offset: 0x85ac06
+classes.dex  Lcom/crossapp/tigonhttp/TigonHttpClient;-><init>(VLLLLLLL)
+  invoke dex byte offset: 0x85ac6c
+classes.dex  Lcom/crossapp/tigonhttp/TigonHttpClient;-><init>(VLLLLLLLL)
+  invoke dex byte offset: 0x85acd2
+classes.dex  Lcom/crossapp/tigonhttp/TigonHttpClient;-><init>(VLLLLLLLLL)
+  invoke dex byte offset: 0x85ad3c
+classes.dex  Lcom/crossapp/tigonhttp/TigonHttpClient;-><init>(VLLLLLLLLLL)
+  invoke dex byte offset: 0x85ada6
+classes.dex  Lcom/crossapp/tigonhttp/TigonHttpClient;-><init>(VLLLLLLLLLLL)
+  invoke dex byte offset: 0x85ae14
+classes.dex  Lcom/crossapp/tigonhttp/TigonHttpClient;-><init>(VLLLLLLLLLLLL)
+  invoke dex byte offset: 0x85ae88
+classes.dex  Lcom/crossapp/tigonhttp/TigonHttpClient;-><init>(VLLLLLLLLLLLLIL)
+  invoke dex byte offset: 0x85af2c
+classes.dex  Lcom/crossapp/tigonhttp/TigonHttpClient;-><init>(VLLLLL)
+  invoke dex byte offset: 0x85af88
+classes.dex  Lcom/crossapp/tigonhttp/TigonHttpClient;-><init>(VLLLLLL)
+  invoke dex byte offset: 0x85afe6
+classes.dex  Lcom/crossapp/tigonhttp/TigonHttpClient;-><init>(VLLLLLLL)
+  invoke dex byte offset: 0x85b048
+classes.dex  Lcom/crossapp/tigonhttp/TigonHttpClient;-><init>(VLLLLLLLL)
+  invoke dex byte offset: 0x85b0aa
+classes.dex  Lcom/crossapp/tigonhttp/TigonHttpClient;-><init>(VLLLLLLLLL)
+  invoke dex byte offset: 0x85b110
+classes.dex  Lcom/crossapp/tigonhttp/TigonHttpClient;-><init>(VLLLLLLLLLL)
+  invoke dex byte offset: 0x85b176
+classes.dex  Lcom/crossapp/tigonhttp/TigonHttpClient;-><init>(VLLLLLLLLLLL)
+  invoke dex byte offset: 0x85b1ea
+classes.dex  Lcom/crossapp/tigonhttp/TigonHttpClient;-><init>(VLLLLLLLLLLLIL)
+  invoke dex byte offset: 0x85b27c
+classes13.dex  Lcom/crossapp/tigonhttp/noise/TigonHttpClientNoiseSupport$BindableTigonHttpClient;-><init>(VLL)
+  invoke dex byte offset: 0x39c0c6
+classes13.dex  Lcom/crossapp/tigonhttp/noise/TigonHttpClientWithNoise;-><init>(VLLLLLLLLLLLLL)
+  invoke dex byte offset: 0x39c35e
+classes13.dex  Lcom/crossapp/tigonhttp/noise/TigonHttpClientWithNoise;-><init>(VLLLLLLLLLLLL)
+  invoke dex byte offset: 0x39c62c

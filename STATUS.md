@@ -1,3 +1,10 @@
+2026-11-06 — **New media uploads require an explicit configured User-Agent.**
+
+APK native HTTPS interceptor fills a missing header; Rust now refuses missing
+client.user_agent before new upload state or transmission. Saved outcomes remain
+unchanged. [Evidence, regression and boundaries](docs/protocol/media-network-outcomes.md#new-media-upload-user-agent-preflight-2026-11-06).
+1,509 workspace tests and strict Clippy pass; no live operation or ban guarantee.
+
 2026-11-06 — **Native request header member and timeout conversion traced.**
 
 Decoded header map moves to request+0x130; four native timeout inputs pass through

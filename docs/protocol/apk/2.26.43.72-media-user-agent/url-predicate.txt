@@ -1,0 +1,30 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000066888c <_ZNK8facebook5tigon3url8TigonUrl7getHostEv>:
+  6689e8:      	bti	c
+  6689ec:      	adrp	x1, 0xd3000
+  6689f0:      	add	x1, x1, #0xb39
+  6689f4:      	b	0x3ca51c <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x1922c>
+
+00000000006689f8 <_ZN8facebook5tigon3url15TigonUrlBuilderC1ERKNS1_8TigonUrlE>:
+  6689f8:      	paciasp
+  6689fc:      	stp	x29, x30, [sp, #-0x40]!
+  668a00:      	str	x23, [sp, #0x10]
+  668a04:      	bl	0x2db8b4 <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0xd9d8>
+  668a08:      	mov	x29, sp
+  668a0c:      	mov	x21, x1
+  668a10:      	adrp	x1, 0xd3000
+  668a14:      	add	x1, x1, #0xb39
+  668a18:      	mov	x19, x0
+  668a1c:      	bl	0x3a2c00 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x45c0>
+  668a20:      	movi	v0.2d, #0000000000000000
+  668a24:      	mov	x20, x19
+  668a28:      	mov	x22, x19
+  668a2c:      	mov	x23, x19
+  668a30:      	strh	wzr, [x19, #0x30]
+  668a34:      	str	xzr, [x20, #0x18]!
+  668a38:      	stp	xzr, xzr, [x19, #0x20]
+  668a3c:      	str	q0, [x22, #0x38]!

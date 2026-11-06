@@ -1,0 +1,70 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000004d13b4 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv>:
+  4d54c0:      	paciasp
+  4d54c4:      	stp	x29, x30, [sp, #-0x20]!
+  4d54c8:      	stp	x20, x19, [sp, #0x10]
+  4d54cc:      	mov	x29, sp
+  4d54d0:      	bl	0x31652c <MCIJSONCreateDeserializedObjectFromString+0x13b90>
+  4d54d4:      	bl	0x734f40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2ERKS5_@plt>
+  4d54d8:      	bl	0x72b6bc <MCFSetGetCount+0x7604>
+  4d54dc:      	bl	0x734f40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2ERKS5_@plt>
+  4d54e0:      	ldp	x20, x19, [sp, #0x10]
+  4d54e4:      	ldp	x29, x30, [sp], #0x20
+  4d54e8:      	autiasp
+  4d54ec:      	ret
+  4d54f0:      	bl	0x2fa530 <MCIURLResponseGetTypeID+0x24c4>
+  4d54f4:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  4d54f8:      	mov	x0, x20
+  4d54fc:      	bl	0x7373e0 <__wrap__Unwind_Resume@plt>
+  4d5500:      	paciasp
+  4d5504:      	stp	x29, x30, [sp, #-0x20]!
+  4d5508:      	stp	x20, x19, [sp, #0x10]
+  4d550c:      	mov	x29, sp
+  4d5510:      	bl	0x310a90 <MCIJSONCreateDeserializedObjectFromString+0xe0f4>
+  4d5514:      	bl	0x734f40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2ERKS5_@plt>
+  4d5518:      	add	x0, x20, #0x20
+  4d551c:      	bl	0x2f6294 <MCISessionedNetworkerUnregisterObserver+0x5790>
+  4d5520:      	ldp	x29, x30, [sp], #0x20
+  4d5524:      	autiasp
+  4d5528:      	b	0x43ee4c <_ZNK8facebook9stash_jni10JFileStash9removeAllEv+0x38f00>
+  4d552c:      	bti	c
+  4d5530:      	adrp	x8, 0x769000 <_ZTVN6google8protobuf11MessageLiteE+0xde18>
+  4d5534:      	add	x8, x8, #0xd60
+  4d5538:      	str	x8, [x0], #0x8
+  4d553c:      	b	0x3a23fc <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x3dbc>
+  4d5540:      	paciasp
+  4d5544:      	stp	x29, x30, [sp, #-0x20]!
+  4d5548:      	str	x19, [sp, #0x10]
+  4d554c:      	mov	x29, sp
+  4d5550:      	mov	x19, x0
+  4d5554:      	bl	0x4d552c <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x4178>
+  4d5558:      	bl	0x2db514 <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0xd638>
+  4d555c:      	ldp	x29, x30, [sp], #0x20
+  4d5560:      	autiasp
+  4d5564:      	b	0x7373a0 <__wrap__ZdlPv@plt>
+  4d5568:      	paciasp
+  4d556c:      	sub	sp, sp, #0x60
+  4d5570:      	stp	x29, x30, [sp, #0x30]
+  4d5574:      	str	x21, [sp, #0x40]
+  4d5578:      	stp	x20, x19, [sp, #0x50]
+  4d557c:      	add	x29, sp, #0x30
+  4d5580:      	bl	0x728b80 <MCFSetGetCount+0x4ac8>
+  4d5584:      	mov	w0, #0x38               // =56
+  4d5588:      	bl	0x728c04 <MCFSetGetCount+0x4b4c>
+  4d558c:      	sturb	wzr, [x29, #-0xc]
+  4d5590:      	bl	0x737430 <__wrap__Znwm@plt>
+  4d5594:      	bl	0x724aa4 <MCFSetGetCount+0x9ec>
+  4d5598:      	adrp	x8, 0x769000 <_ZTVN6google8protobuf11MessageLiteE+0xde18>
+  4d559c:      	add	x8, x8, #0xd60
+  4d55a0:      	bl	0x729d14 <MCFSetGetCount+0x5c5c>
+  4d55a4:      	add	x1, x20, #0x8
+  4d55a8:      	bl	0x4d54c0 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x410c>
+  4d55ac:      	bl	0x728c4c <MCFSetGetCount+0x4b94>
+  4d55b0:      	bl	0x4f36d0 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x2231c>
+  4d55b4:      	bl	0x725a98 <MCFSetGetCount+0x19e0>
+  4d55b8:      	b.ne	0x4d55ec <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x4238>
+  4d55bc:      	bl	0x728ba4 <MCFSetGetCount+0x4aec>

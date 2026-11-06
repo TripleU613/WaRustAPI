@@ -1,0 +1,38 @@
+{
+  "native-registration": [
+    "0x4d5004",
+    "0x4d50b8"
+  ],
+  "native-factory": [
+    "0x4d50b8",
+    "0x4d52c4"
+  ],
+  "native-interceptor": [
+    "0x4d5320",
+    "0x4d54c0"
+  ],
+  "native-lambda-factory": [
+    "0x4d54c0",
+    "0x4d55c0"
+  ],
+  "native-invoke": [
+    "0x4d5644",
+    "0x4d5750"
+  ],
+  "url-predicate": [
+    "0x6689e8",
+    "0x668a40"
+  ],
+  "url-comparison": [
+    "0x3ca51c",
+    "0x3ca56c"
+  ],
+  "string-equality": [
+    "0x3a8b00",
+    "0x3a8b70"
+  ],
+  "key-helper": [
+    "0x7307e8",
+    "0x7307f8"
+  ]
+}

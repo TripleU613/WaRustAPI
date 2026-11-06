@@ -261,3 +261,9 @@ remaining scheduler work are in [the versioned-fetch note](../protocol/app-state
 read/read-self policy or transmitting traffic. [Notification adoption and bounds](../protocol/account-privacy-notifications.md).
 App-state patches now bind their original wire, prepared result and baseline in
 one transaction, with [atomic settlement and persisted explicit backoff](../protocol/app-state-patch-atomicity.md).
+
+New comparison media uploads require the existing `client.user_agent` setting.
+A missing value returns local `InvalidInput(client.user_agent)` before upload
+state allocation or transmission; stored outcomes remain readable. This does
+not provide a User-Agent value or claim server acceptance. See
+[APK evidence and scope](../protocol/media-network-outcomes.md#new-media-upload-user-agent-preflight-2026-11-06).

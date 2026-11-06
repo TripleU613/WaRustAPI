@@ -18528,5 +18528,13 @@
     "x-library": [],
     "description": "Static native request conversion identifies moved header member and normalization of four timeout fields. Zero or at least1000 remains; other signed values report soft error and return1000 on normal path. Separate Rust local total/connect bounds remain unchanged. Downstream middleware/automatic wire headers unproven; no route, runtime behavior, retry or live validation changed.",
     "evidence": "docs/protocol/media-network-outcomes.md#native-header-transfer-and-timeout-normalization-2026-11-06"
+},
+  "x-media-upload-user-agent-preflight": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [],
+    "description": "New comparison media uploads require existing client.user_agent before route lookup, encryption checkpoint allocation, reservation or HTTP transmission. Missing value is local InvalidInput(client.user_agent). Saved uploaded/refused/uncertain outcomes keep their existing behavior. Configured header already applied by shared HTTP client; no invented identity, HTTP route, download behavior change, live validation or ban guarantee.",
+    "evidence": "docs/protocol/media-network-outcomes.md#new-media-upload-user-agent-preflight-2026-11-06"
 }
 }

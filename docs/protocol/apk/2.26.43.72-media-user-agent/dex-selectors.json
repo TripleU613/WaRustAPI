@@ -1,0 +1,77 @@
+{
+  "interceptor-class": [
+    "class",
+    "Lcom/whatsapp/infra/tigon/WAUserAgentInterceptor;",
+    null
+  ],
+  "interceptor-callers": [
+    "callers",
+    "Lcom/whatsapp/infra/tigon/WAUserAgentInterceptor;",
+    "<init>"
+  ],
+  "hybrid-callers": [
+    "callers",
+    "Lcom/whatsapp/infra/tigon/WAUserAgentInterceptor;",
+    "initHybrid"
+  ],
+  "factory": [
+    "class",
+    "LX/SZl;",
+    null
+  ],
+  "interceptor-inputs": [
+    "method",
+    "LX/RlW;",
+    "<init>"
+  ],
+  "holder-callers": [
+    "callers",
+    "LX/RlW;",
+    "<init>"
+  ],
+  "holder-binding": [
+    "method",
+    "LX/RNH;",
+    "A00"
+  ],
+  "registry-dispatch-callers": [
+    "callers",
+    "LX/RNH;",
+    "A00"
+  ],
+  "registry-dispatch": [
+    "method",
+    "LX/1Uw;",
+    "A00"
+  ],
+  "provider-key": [
+    "method",
+    "LX/0eA;",
+    "<clinit>"
+  ],
+  "client-factory": [
+    "method",
+    "LX/0eB;",
+    "A00"
+  ],
+  "client-construction": [
+    "method",
+    "LX/0eA;",
+    "A00"
+  ],
+  "client-callers": [
+    "callers",
+    "Lcom/crossapp/tigonhttp/TigonHttpClient;",
+    "<init>"
+  ],
+  "primary-value": [
+    "method",
+    "LX/0lR;",
+    "A02"
+  ],
+  "secondary-value": [
+    "method",
+    "LX/0lR;",
+    "A04"
+  ]
+}

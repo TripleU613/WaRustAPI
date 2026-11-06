@@ -1,0 +1,83 @@
+{
+  "library_sha256": "d0ab3f2237e92a76ac3519c3577b5836b9e6f65a186c2016cefd43c4923f4b0d",
+  "jni": {
+    "name": "initHybrid",
+    "signature": "(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/jni/HybridData;",
+    "function_va": "0x4d50b8"
+  },
+  "windows": [
+    {
+      "name": "native-registration",
+      "start_va": "0x4d5004",
+      "end_va": "0x4d50b8",
+      "file_offset": "0x4d1004",
+      "bytes": 180,
+      "sha256": "9a42d17f5856fa68981b9c04f829246fda2cd406a19acfecc1d1e96fa088364e"
+    },
+    {
+      "name": "native-factory",
+      "start_va": "0x4d50b8",
+      "end_va": "0x4d52c4",
+      "file_offset": "0x4d10b8",
+      "bytes": 524,
+      "sha256": "909fd1601369643c274a43d9c588ab0202911646314372dda8673750d94d3fe1"
+    },
+    {
+      "name": "native-interceptor",
+      "start_va": "0x4d5320",
+      "end_va": "0x4d54c0",
+      "file_offset": "0x4d1320",
+      "bytes": 416,
+      "sha256": "3473e85c05c7ffd3a37faef375e4991a64113b94f293a0446ea725147a0a9f33"
+    },
+    {
+      "name": "native-lambda-factory",
+      "start_va": "0x4d54c0",
+      "end_va": "0x4d55c0",
+      "file_offset": "0x4d14c0",
+      "bytes": 256,
+      "sha256": "4f4fd8e1b0efc1f964902f0eb989e31bcc6c3c6cae0ca7d5dbb6b3b413f31161"
+    },
+    {
+      "name": "native-invoke",
+      "start_va": "0x4d5644",
+      "end_va": "0x4d5750",
+      "file_offset": "0x4d1644",
+      "bytes": 268,
+      "sha256": "109081416b137687ee9a46db38aca7881cdbf2a145fc2a613aac4842ba583451"
+    },
+    {
+      "name": "url-predicate",
+      "start_va": "0x6689e8",
+      "end_va": "0x668a40",
+      "file_offset": "0x6649e8",
+      "bytes": 88,
+      "sha256": "6dc4fc4b39970c4ac2f7fed240e36cf65d265eac240b962fab1d7cb02d0c61ac"
+    },
+    {
+      "name": "url-comparison",
+      "start_va": "0x3ca51c",
+      "end_va": "0x3ca56c",
+      "file_offset": "0x3c651c",
+      "bytes": 80,
+      "sha256": "395e242b95005298b51fb5983ed69f0e825d845125264c2f9cb6bef16fe5a4f5"
+    },
+    {
+      "name": "string-equality",
+      "start_va": "0x3a8b00",
+      "end_va": "0x3a8b70",
+      "file_offset": "0x3a4b00",
+      "bytes": 112,
+      "sha256": "8a749ebd1e75edbdb92466a7bcb191e27d2321e61579d24e931c92bb3a362dc2"
+    },
+    {
+      "name": "key-helper",
+      "start_va": "0x7307e8",
+      "end_va": "0x7307f8",
+      "file_offset": "0x72c7e8",
+      "bytes": 16,
+      "sha256": "720934f07a2e27e3ef9932696814d06e98067462ad09bd6e55509d82cd287812"
+    }
+  ],
+  "scope": "Static bindings, not observed runtime activation"
+}

@@ -102,6 +102,7 @@ pub struct ClientSettings {
     /// Must match the explicit lab profile.
     pub profile_id: String,
     /// Optional HTTP User-Agent, absent unless explicitly provided.
+    /// New comparison media uploads require it; saved outcomes remain readable.
     pub user_agent: Option<Zeroizing<String>>,
 }
 impl Default for ClientSettings {

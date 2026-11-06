@@ -1,0 +1,40 @@
+
+# class: LX/0eA;
+# extends: Ljava/lang/Object;
+
+.method public A00(L)  # .registers 6
+    # full signature: LX/0eA;->A00()Lcom/crossapp/tigonhttp/TigonHttpClient;
+    0000..0004  iget-boolean  v4, v5, LX/0eA;->A00:Z
+    0004..0008  if-eqz  v4, +0x40
+    0008..000c  sget-object  v3, LX/0eA;->A0r:LX/00p;
+    000c..0012  invoke-interface  {v3}, LX/00p;->isInitialized()Z
+    0012..0014  move-result  v0
+    0014..0018  if-nez  v0, +0x31
+    0018..001e  invoke-static  {}, LX/0LG;->A04()Z
+    001e..0020  move-result  v0
+    0020..0024  if-eqz  v0, +0x2b
+    0024..0028  const-string  v0, "WATigonService/Tigon client initialized on main thread"
+    0028..002e  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    002e..0032  sget-object  v0, LX/0eA;->A0v:LX/00p;
+    0032..0038  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    0038..003a  move-result-object  v2
+    003a..003e  check-cast  v2, LX/NYE;
+    003e..0044  const  v1, #0x1121023
+    0044..004a  const-string/jumbo  v0, "wa_tigon_client_init_main_thread"
+    004a..0050  invoke-interface  {v2, v0, v1}, LX/NYE;->AEb(Ljava/lang/String;I)LX/NbW;
+    0050..0052  move-result-object  v2
+    0052..0056  const-string  v0, "force_http2"
+    0056..005c  invoke-interface  {v2, v0, v4}, LX/NbW;->AB7(Ljava/lang/String;Z)V
+    005c..0060  const-string  v1, "WATigonService client initialized on main thread"
+    0060..0064  new-instance  v0, Ljava/lang/Throwable;
+    0064..006a  invoke-direct  {v0, v1}, Ljava/lang/Throwable;-><init>(Ljava/lang/String;)V
+    006a..0070  invoke-interface  {v2, v0}, LX/NbW;->Cee(Ljava/lang/Throwable;)V
+    0070..0076  invoke-interface  {v2}, LX/NbW;->report()V
+    0076..007c  invoke-interface  {v3}, LX/00p;->getValue()Ljava/lang/Object;
+    007c..007e  move-result-object  v0
+    007e..0082  check-cast  v0, Lcom/crossapp/tigonhttp/TigonHttpClient;
+    0082..0084  return-object  v0
+    0084..0088  sget-object  v3, LX/0eA;->A0q:LX/00p;
+    0088..008a  goto  -0x3e
+    # exception table: 0 try range(s)
+.end method

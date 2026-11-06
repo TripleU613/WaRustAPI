@@ -1,0 +1,402 @@
+
+# class: LX/0eB;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLLLZ)  # .registers 119
+    # full signature: LX/0eB;->A00(Lcom/whatsapp/infra/tigon/WAQueuePolicyHolder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Z)Lcom/crossapp/tigonhttp/TigonHttpClient;
+    0000..0004  sget-object  v0, LX/0eA;->A01:Landroid/app/Application;
+    0004..000a  invoke-virtual  {v0}, Landroid/content/Context;->getCacheDir()Ljava/io/File;
+    000a..000c  move-result-object  v0
+    000c..0010  new-instance  v1, Ljava/io/File;
+    0010..0014  move-object/from16  v2, v116
+    0014..001a  invoke-direct  {v1, v0, v2}, Ljava/io/File;-><init>(Ljava/io/File;Ljava/lang/String;)V
+    001a..0020  invoke-virtual  {v1}, Ljava/io/File;->exists()Z
+    0020..0022  move-result  v0
+    0022..0026  if-nez  v0, +0xd
+    0026..002c  invoke-virtual  {v1}, Ljava/io/File;->mkdir()Z
+    002c..002e  move-result  v0
+    002e..0032  if-nez  v0, +0x7
+    0032..0036  const-string  v0, "WATigonService Unable to create tigon cache dir"
+    0036..003c  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    003c..0042  invoke-virtual  {v1}, Ljava/io/File;->getCanonicalPath()Ljava/lang/String;
+    0042..0044  move-result-object  v8
+    0044..004a  invoke-static  {v8}, LX/00l;->A05(Ljava/lang/Object;)V
+    004a..004e  sget-object  v0, LX/0eA;->A0N:LX/00p;
+    004e..0054  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    0054..0056  move-result-object  v0
+    0056..005a  check-cast  v0, Ljava/lang/Boolean;
+    005a..0060  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue()Z
+    0060..0062  move-result  v17
+    0062..0066  sget-object  v0, LX/0eA;->A0E:LX/00p;
+    0066..006c  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    006c..006e  move-result-object  v0
+    006e..0072  check-cast  v0, Ljava/lang/Number;
+    0072..0078  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    0078..007a  move-result  v13
+    007a..007e  sget-object  v0, LX/0eA;->A0e:LX/00p;
+    007e..0084  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    0084..0086  move-result-object  v0
+    0086..008a  check-cast  v0, Ljava/lang/Number;
+    008a..0090  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    0090..0092  move-result  v83
+    0092..0096  sget-object  v1, LX/0eA;->A0f:LX/00p;
+    0096..009c  invoke-interface  {v1}, LX/00p;->getValue()Ljava/lang/Object;
+    009c..009e  move-result-object  v0
+    009e..00a2  check-cast  v0, Ljava/lang/Number;
+    00a2..00a8  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    00a8..00aa  move-result  v84
+    00aa..00ae  sget-object  v0, LX/0eA;->A0g:LX/00p;
+    00ae..00b4  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    00b4..00b6  move-result-object  v0
+    00b6..00ba  check-cast  v0, Ljava/lang/Number;
+    00ba..00c0  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    00c0..00c2  move-result  v85
+    00c2..00c6  sget-object  v0, LX/0eA;->A0h:LX/00p;
+    00c6..00cc  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    00cc..00ce  move-result-object  v0
+    00ce..00d2  check-cast  v0, Ljava/lang/Number;
+    00d2..00d8  invoke-virtual  {v0}, Ljava/lang/Number;->longValue()J
+    00d8..00da  move-result-wide  v86
+    00da..00de  sget-object  v0, LX/0eA;->A0i:LX/00p;
+    00de..00e4  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    00e4..00e6  move-result-object  v0
+    00e6..00ea  check-cast  v0, Ljava/lang/Number;
+    00ea..00f0  invoke-virtual  {v0}, Ljava/lang/Number;->longValue()J
+    00f0..00f2  move-result-wide  v88
+    00f2..00f6  sget-object  v0, LX/0eA;->A0C:LX/00p;
+    00f6..00fc  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    00fc..00fe  move-result-object  v0
+    00fe..0102  check-cast  v0, Ljava/lang/Boolean;
+    0102..0108  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue()Z
+    0108..010a  move-result  v10
+    010a..010e  sget-object  v0, LX/0eA;->A0D:LX/00p;
+    010e..0114  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    0114..0116  move-result-object  v0
+    0116..011a  check-cast  v0, Ljava/lang/Boolean;
+    011a..0120  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue()Z
+    0120..0122  move-result  v11
+    0122..0126  sget-object  v0, LX/0eA;->A0t:LX/00p;
+    0126..012c  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    012c..012e  move-result-object  v0
+    012e..0132  check-cast  v0, Ljava/lang/Number;
+    0132..0138  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    0138..013a  move-result  v104
+    013a..013e  sget-object  v0, LX/0eA;->A0n:LX/00p;
+    013e..0144  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    0144..0146  move-result-object  v0
+    0146..014a  check-cast  v0, Ljava/lang/Number;
+    014a..0150  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    0150..0152  move-result  v99
+    0152..0158  invoke-interface  {v1}, LX/00p;->getValue()Ljava/lang/Object;
+    0158..015a  move-result-object  v0
+    015a..015e  check-cast  v0, Ljava/lang/Number;
+    015e..0164  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    0164..0166  move-result  v0
+    0166..0168  const/4  v12, #0x0
+    0168..016c  const/16  v20, #0x1
+    016c..0170  const/16  v67, #0x0
+    0170..0174  if-eqz  v0, +0x4
+    0174..0178  const/16  v67, #0x1
+    0178..017c  if-nez  v118, +0x15
+    017c..0180  sget-object  v0, LX/0eA;->A0M:LX/00p;
+    0180..0186  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    0186..0188  move-result-object  v0
+    0188..018e  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    018e..0192  check-cast  v0, Ljava/lang/String;
+    0192..0198  invoke-virtual  {v0}, Ljava/lang/String;->length()I
+    0198..019a  move-result  v0
+    019a..019e  const/16  v29, #0x0
+    019e..01a2  if-lez  v0, +0x4
+    01a2..01a6  const/16  v29, #0x1
+    01a6..01aa  sget-object  v0, LX/0eA;->A0P:LX/00p;
+    01aa..01b0  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    01b0..01b2  move-result-object  v0
+    01b2..01b6  check-cast  v0, Ljava/lang/Boolean;
+    01b6..01bc  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue()Z
+    01bc..01be  move-result  v0
+    01be..01c2  xor-int/lit8  v16, v0, #0x1
+    01c2..01c6  sget-object  v0, LX/0eA;->A0X:LX/00p;
+    01c6..01cc  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    01cc..01ce  move-result-object  v0
+    01ce..01d2  check-cast  v0, Ljava/lang/Boolean;
+    01d2..01d8  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue()Z
+    01d8..01da  move-result  v54
+    01da..01de  sget-object  v0, LX/0eA;->A0Q:LX/00p;
+    01de..01e4  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    01e4..01e6  move-result-object  v0
+    01e6..01ea  check-cast  v0, Ljava/lang/Number;
+    01ea..01f0  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    01f0..01f2  move-result  v23
+    01f2..01f6  sget-object  v0, LX/0eA;->A0Y:LX/00p;
+    01f6..01fc  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    01fc..01fe  move-result-object  v0
+    01fe..0202  check-cast  v0, Ljava/lang/Number;
+    0202..0208  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    0208..020a  move-result  v59
+    020a..020e  sget-object  v0, LX/0eA;->A0j:LX/00p;
+    020e..0214  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    0214..0216  move-result-object  v0
+    0216..021a  check-cast  v0, Ljava/lang/Number;
+    021a..0220  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    0220..0222  move-result  v90
+    0222..0226  sget-object  v0, LX/0eA;->A0k:LX/00p;
+    0226..022c  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    022c..022e  move-result-object  v5
+    022e..0232  check-cast  v5, Ljava/lang/String;
+    0232..0236  sget-object  v0, LX/0eA;->A0a:LX/00p;
+    0236..023c  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    023c..023e  move-result-object  v0
+    023e..0242  check-cast  v0, Ljava/lang/Boolean;
+    0242..0248  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue()Z
+    0248..024a  move-result  v66
+    024a..024e  sget-object  v0, LX/0eA;->A0Z:LX/00p;
+    024e..0254  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    0254..0256  move-result-object  v0
+    0256..025a  check-cast  v0, Ljava/lang/Boolean;
+    025a..0260  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue()Z
+    0260..0262  move-result  v60
+    0262..0266  sget-object  v0, LX/0eA;->A0c:LX/00p;
+    0266..026c  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    026c..026e  move-result-object  v0
+    026e..0272  check-cast  v0, Ljava/lang/Boolean;
+    0272..0278  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue()Z
+    0278..027a  move-result  v78
+    027a..027e  sget-object  v0, LX/0eA;->A0O:LX/00p;
+    027e..0284  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    0284..0286  move-result-object  v0
+    0286..028a  check-cast  v0, Ljava/lang/Boolean;
+    028a..0290  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue()Z
+    0290..0292  move-result  v19
+    0292..0296  sget-object  v0, LX/0eA;->A0p:LX/00p;
+    0296..029c  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    029c..029e  move-result-object  v0
+    029e..02a2  check-cast  v0, Ljava/lang/Number;
+    02a2..02a8  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    02a8..02aa  move-result  v101
+    02aa..02ae  sget-object  v0, LX/0eA;->A0T:LX/00p;
+    02ae..02b4  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    02b4..02b6  move-result-object  v0
+    02b6..02ba  check-cast  v0, Ljava/lang/Number;
+    02ba..02c0  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    02c0..02c2  move-result  v36
+    02c2..02c6  sget-object  v0, LX/0eA;->A0U:LX/00p;
+    02c6..02cc  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    02cc..02ce  move-result-object  v0
+    02ce..02d2  check-cast  v0, Ljava/lang/Number;
+    02d2..02d8  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    02d8..02da  move-result  v39
+    02da..02de  sget-object  v0, LX/0eA;->A0R:LX/00p;
+    02de..02e4  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    02e4..02e6  move-result-object  v0
+    02e6..02ea  check-cast  v0, Ljava/lang/Boolean;
+    02ea..02f0  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue()Z
+    02f0..02f2  move-result  v34
+    02f2..02f6  sget-object  v0, LX/0eA;->A0S:LX/00p;
+    02f6..02fc  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    02fc..02fe  move-result-object  v0
+    02fe..0302  check-cast  v0, Ljava/lang/Boolean;
+    0302..0308  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue()Z
+    0308..030a  move-result  v35
+    030a..030e  sget-object  v0, LX/0eA;->A0F:LX/00p;
+    030e..0314  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    0314..0316  move-result-object  v0
+    0316..031a  check-cast  v0, Ljava/lang/Number;
+    031a..0320  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    0320..0322  move-result  v15
+    0322..0326  sget-object  v0, LX/0eA;->A0l:LX/00p;
+    0326..032c  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    032c..032e  move-result-object  v4
+    032e..0332  check-cast  v4, [Ljava/lang/Integer;
+    0332..0336  sget-object  v0, LX/0eA;->A0o:LX/00p;
+    0336..033c  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    033c..033e  move-result-object  v0
+    033e..0342  check-cast  v0, Ljava/lang/Number;
+    0342..0348  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    0348..034a  move-result  v100
+    034a..034e  sget-object  v0, LX/0eA;->A0u:LX/00p;
+    034e..0354  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    0354..0356  move-result-object  v0
+    0356..035a  check-cast  v0, Ljava/lang/Number;
+    035a..0360  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    0360..0362  move-result  v105
+    0362..0366  sget-object  v0, LX/0eA;->A0b:LX/00p;
+    0366..036c  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    036c..036e  move-result-object  v0
+    036e..0372  check-cast  v0, Ljava/lang/Number;
+    0372..0378  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    0378..037a  move-result  v69
+    037a..0380  invoke-static  {}, LX/0Fj;->A02()Z
+    0380..0382  move-result  v41
+    0382..0386  sget-object  v0, LX/0eA;->A0M:LX/00p;
+    0386..038c  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    038c..038e  move-result-object  v3
+    038e..0394  invoke-static  {v3}, LX/00l;->A05(Ljava/lang/Object;)V
+    0394..0398  check-cast  v3, Ljava/lang/String;
+    0398..039c  const/high16  v64, #0x100000
+    039c..03a0  sget-object  v0, LX/0eA;->A0G:LX/00p;
+    03a0..03a6  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    03a6..03a8  move-result-object  v2
+    03a8..03ac  check-cast  v2, [Ljava/lang/String;
+    03ac..03b0  sget-object  v0, LX/0eA;->A0w:LX/00p;
+    03b0..03b6  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    03b6..03b8  move-result-object  v0
+    03b8..03bc  check-cast  v0, Ljava/lang/Boolean;
+    03bc..03c2  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue()Z
+    03c2..03c4  move-result  v107
+    03c4..03c8  sget-object  v0, LX/0eA;->A0x:LX/00p;
+    03c8..03ce  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    03ce..03d0  move-result-object  v0
+    03d0..03d4  check-cast  v0, Ljava/lang/Boolean;
+    03d4..03da  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue()Z
+    03da..03dc  move-result  v108
+    03dc..03e0  sget-object  v0, LX/0eA;->A0y:LX/00p;
+    03e0..03e6  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    03e6..03e8  move-result-object  v0
+    03e8..03ec  check-cast  v0, Ljava/lang/Boolean;
+    03ec..03f2  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue()Z
+    03f2..03f4  move-result  v109
+    03f4..03f6  const/4  v0, #0x2
+    03f6..03fa  new-array  v1, v0, [Ljava/lang/String;
+    03fa..03fe  const-string  v0, "WAUserAgentInterceptor"
+    03fe..0402  aput-object  v0, v1, v12
+    0402..0406  const-string  v0, "WAHttpPriorityContextInterceptor"
+    0406..040a  aput-object  v0, v1, v20
+    040a..040e  sget-object  v0, LX/0eA;->A0W:LX/00p;
+    040e..0414  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    0414..0416  move-result-object  v0
+    0416..041a  check-cast  v0, Ljava/lang/Boolean;
+    041a..0420  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue()Z
+    0420..0422  move-result  v53
+    0422..0424  const/4  v9, #0x0
+    0424..0428  const-wide/16  v31, #0x7d0
+    0428..042e  const-wide/32  v56, #0x100000
+    042e..0434  const  v110, #0xb1436452
+    0434..043a  const  v111, #0xf0284ffe
+    043a..0440  const  v112, #0xc3d01a7
+    0440..0444  new-instance  v7, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;
+    0444..0448  move/from16  v21, v12
+    0448..044c  move-object/from16  v22, v9
+    044c..0450  move-object/from16  v24, v9
+    0450..0454  move-object/from16  v25, v9
+    0454..0458  move/from16  v28, v20
+    0458..045c  move-object/from16  v30, v9
+    045c..0460  move/from16  v33, v12
+    0460..0464  move/from16  v37, v12
+    0464..0468  move-object/from16  v38, v9
+    0468..046c  move/from16  v40, v12
+    046c..0470  move/from16  v42, v12
+    0470..0474  move/from16  v43, v12
+    0474..0478  move/from16  v44, v12
+    0478..047c  move/from16  v45, v12
+    047c..0480  move/from16  v46, v12
+    0480..0484  move/from16  v47, v12
+    0484..0488  move-object/from16  v48, v9
+    0488..048c  move/from16  v49, v12
+    048c..0490  move/from16  v50, v12
+    0490..0494  move/from16  v51, v12
+    0494..0498  move/from16  v52, v12
+    0498..049c  move-object/from16  v55, v9
+    049c..04a0  move/from16  v58, v20
+    04a0..04a4  move/from16  v61, v12
+    04a4..04a8  move/from16  v62, v20
+    04a8..04ac  move/from16  v63, v12
+    04ac..04b0  move/from16  v65, v20
+    04b0..04b4  move/from16  v68, v20
+    04b4..04b8  move/from16  v70, v12
+    04b8..04bc  move-object/from16  v71, v9
+    04bc..04c0  move/from16  v72, v12
+    04c0..04c4  move/from16  v73, v12
+    04c4..04c8  move/from16  v74, v12
+    04c8..04cc  move-object/from16  v75, v9
+    04cc..04d0  move-object/from16  v76, v9
+    04d0..04d4  move/from16  v77, v20
+    04d4..04d8  move/from16  v79, v12
+    04d8..04dc  move/from16  v81, v12
+    04dc..04e0  move/from16  v82, v12
+    04e0..04e4  move/from16  v92, v12
+    04e4..04e8  move-object/from16  v94, v9
+    04e8..04ec  move/from16  v95, v12
+    04ec..04f0  move/from16  v96, v12
+    04f0..04f4  move/from16  v97, v12
+    04f4..04f8  move/from16  v102, v12
+    04f8..04fc  move/from16  v103, v12
+    04fc..0500  move/from16  v106, v12
+    0500..0504  move/from16  v113, v12
+    0504..0508  move-object/from16  v114, v9
+    0508..050a  move-object  v14, v9
+    050a..050e  move/from16  v18, v12
+    050e..0512  move-object/from16  v26, v2
+    0512..0516  move/from16  v27, v20
+    0516..051a  move-object/from16  v80, v3
+    051a..051e  move-object/from16  v91, v5
+    051e..0522  move-object/from16  v93, v1
+    0522..0526  move-object/from16  v98, v4
+    0526..052c  invoke-direct/range  {v7..v114}, Lcom/crossapp/tigonhttp/TigonHttpClientConfig;-><init>(Ljava/lang/String;[Ljava/lang/String;ZZII[Ljava/lang/String;IZZZZZZLjava/lang/String;I[Ljava/lang/String;[Ljava/lang/String;[Ljava/lang/String;ZZZLjava/lang/String;JIZZIILjava/lang/String;IZZIIIZIILjava/lang/String;IIIIZZ[Ljava/lang/String;JZIZZZZIZZZZIZLjava/lang/String;ZZZLjava/lang/String;Ljava/lang/String;ZZZLjava/lang/String;IIIIIJJILjava/lang/String;Z[Ljava/lang/String;[Ljava/lang/String;IIZ[Ljava/lang/Integer;IIIIIIIZZZZIIIILX/2yy;)V
+    052c..0530  move-object/from16  v0, v117
+    0530..0536  invoke-interface  {v0, v7}, Lkotlin/jvm/functions/Function1;->invoke(Ljava/lang/Object;)Ljava/lang/Object;
+    0536..053a  sget-object  v108, LX/0cJ;->A0G:Ljava/lang/String;
+    053a..0540  invoke-static/range  {v108..v108}, LX/00l;->A06(Ljava/lang/Object;)V
+    0540..0544  sget-object  v0, LX/0eA;->A0m:LX/00p;
+    0544..054a  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    054a..054c  move-result-object  v6
+    054c..0550  check-cast  v6, LX/N49;
+    0550..0556  invoke-static  {v6}, LX/00l;->A08(Ljava/lang/Object;)V
+    0556..055a  sget  v0, Lcom/whatsapp/infra/tigon/WAHucClient;->BODY_UPLOAD_TIMEOUT_SECONDS:I
+    055a..055e  sget-object  v0, LX/0eA;->A0V:LX/00p;
+    055e..0564  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    0564..0566  move-result-object  v1
+    0566..056a  check-cast  v1, Ljava/util/concurrent/ExecutorService;
+    056a..056e  sget-object  v0, LX/0eA;->A03:LX/05a;
+    056e..0572  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0572..0578  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0578..057a  move-result-object  v0
+    057a..057e  check-cast  v0, LX/0jV;
+    057e..0582  new-instance  v5, Lcom/whatsapp/infra/tigon/WAHucClient;
+    0582..0588  invoke-direct  {v5, v1, v0}, Lcom/whatsapp/infra/tigon/WAHucClient;-><init>(Ljava/util/concurrent/ExecutorService;LX/0jV;)V
+    0588..058c  sget-object  v0, LX/0eA;->A04:LX/05a;
+    058c..0590  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0590..0596  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0596..0598  move-result-object  v4
+    0598..059c  check-cast  v4, Lcom/facebook/tigon/interceptors/TigonXplatInterceptorsHolder;
+    059c..05a0  sget-object  v0, LX/0eA;->A0z:LX/00p;
+    05a0..05a6  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    05a6..05a8  move-result-object  v3
+    05a8..05ac  check-cast  v3, Lcom/facebook/tigon/requestprioritization/calculatorprovider/HttpPriorityCalculatorProvider;
+    05ac..05b0  const/16  v0, #0x14
+    05b0..05b4  new-instance  v1, LX/KWW;
+    05b4..05ba  invoke-direct  {v1, v0}, LX/KWW;-><init>(I)V
+    05ba..05be  sget-object  v0, LX/0eA;->A0s:LX/00p;
+    05be..05c4  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    05c4..05c6  move-result-object  v0
+    05c6..05ca  check-cast  v0, LX/TU7;
+    05ca..05ce  const-string  v107, ""
+    05ce..05d2  new-instance  v2, Lcom/crossapp/tigonhttp/TigonHttpClient;
+    05d2..05d6  move-object/from16  v105, v2
+    05d6..05da  move-object/from16  v106, v7
+    05da..05de  move-object/from16  v109, v6
+    05de..05e2  move-object/from16  v110, v5
+    05e2..05e6  move-object/from16  v111, v9
+    05e6..05ea  move-object/from16  v112, v4
+    05ea..05ee  move-object/from16  v113, v3
+    05ee..05f2  move-object/from16  v116, v1
+    05f2..05f6  move-object/from16  v117, v0
+    05f6..05fc  invoke-direct/range  {v105..v117}, Lcom/crossapp/tigonhttp/TigonHttpClient;-><init>(Lcom/crossapp/tigonhttp/TigonHttpClientConfig;Ljava/lang/String;Ljava/lang/String;Ljava/util/concurrent/ScheduledExecutorService;Lcom/facebook/tigon/tigonhuc/HucClient;Lcom/facebook/xanalytics/XAnalyticsHolder;Lcom/facebook/tigon/interceptors/TigonXplatInterceptorsHolder;Lcom/facebook/tigon/requestprioritization/calculatorprovider/HttpPriorityCalculatorProvider;Lcom/crossapp/tigonhttp/TigonRetryRulesHolder;Lcom/crossapp/tigonhttp/TigonQueuePolicyHolder;Lkotlin/jvm/functions/Function0;LX/TU7;)V
+    05fc..0600  const/16  v1, #0x15
+    0600..0604  new-instance  v0, LX/KWW;
+    0604..060a  invoke-direct  {v0, v1}, LX/KWW;-><init>(I)V
+    060a..0610  invoke-virtual  {v2, v0}, Lcom/crossapp/tigonhttp/TigonHttpClientBase;->setSystemProxyDirectFallbackEnabled(Lkotlin/jvm/functions/Function0;)V
+    0610..0614  sget-object  v1, LX/0eA;->A05:Lcom/google/common/base/Optional;
+    0614..061a  invoke-virtual  {v1}, Lcom/google/common/base/Optional;->isPresent()Z
+    061a..061c  move-result  v0
+    061c..0620  if-eqz  v0, +0x16
+    0620..0624  sget-object  v0, LX/F6h;->A02:[B
+    0624..062a  invoke-virtual  {v1}, Lcom/google/common/base/Optional;->get()Ljava/lang/Object;
+    062a..062c  move-result-object  v0
+    062c..0632  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    0632..0636  new-instance  v0, LX/F6h;
+    0636..063c  invoke-direct  {v0}, LX/F6h;-><init>()V
+    063c..0642  invoke-virtual  {v2, v0}, Lcom/crossapp/tigonhttp/TigonHttpClient;->addTigonObserver(LX/1ET;)V
+    0642..0648  invoke-virtual  {v2, v0}, Lcom/crossapp/tigonhttp/TigonHttpClient;->addTigonDebugObserver(LX/1EV;)V
+    0648..064a  return-object  v2
+    # exception table: 0 try range(s)
+.end method

@@ -787,6 +787,16 @@ async fn upload_prepared(
     if let Some(old) = old {
         return saved_payload(&old, &hash, &recipient);
     }
+    // APK43.72 RlW installs WAUserAgentInterceptor: HTTPS requests without
+    // User-Agent get the configured nonempty value. Require an explicit value
+    // before allocating upload state; do not invent Android identification.
+    // Evidence: docs/protocol/apk/2.26.43.72-media-user-agent/README.md.
+    if config.client.user_agent.is_none() {
+        return Err(Error::invalid(
+            "client.user_agent",
+            "must be configured for a new media upload",
+        ));
+    }
     let (host, auth) = route(store)?;
     let encrypted = if video.is_some() {
         image::encrypt_video(&bytes)?
@@ -976,6 +986,113 @@ async fn upload_prepared(
 
 #[cfg(test)]
 mod tests {
+    #[tokio::test]
+    async fn missing_upload_user_agent_refuses_new_work_and_preserves_saved_outcomes() {
+        use crate::session::{AccountRecord, RegistrationStatus};
+        for prior in [
+            None,
+            Some("outcome_unknown"),
+            Some("refused"),
+            Some("uploaded"),
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("upload-user-agent.redb");
+            let store = super::super::group_fanout::tests::open(&path);
+            let source = dir.path().join("fixture.png");
+            let mut png = b"\x89PNG\r\n\x1a\n\0\0\0\rIHDR".to_vec();
+            png.extend_from_slice(&1u32.to_be_bytes());
+            png.extend_from_slice(&1u32.to_be_bytes());
+            png.resize(33, 0);
+            std::fs::write(&source, &png).unwrap();
+            let message: MessageRequest = serde_json::from_value(serde_json::json!({
+                "to":"15555550100@s.whatsapp.net", "request_id":"ua-preflight", "image":source
+            }))
+            .unwrap();
+            let mut config: LabRegistrationConfig =
+                serde_json::from_str(crate::registration::request::TEMPLATE_JSON).unwrap();
+            config.token = Zeroizing::new("offline-fixture".into());
+            config.client.user_agent = None;
+            store
+                .write(|tx| {
+                    AccountRecord {
+                        phone: Some(config.phone.clone()),
+                        registration: RegistrationStatus::Registered,
+                        ..Default::default()
+                    }
+                    .save(tx)?;
+                    tx.put_json(
+                        Table::Checkpoints,
+                        b"unrelated",
+                        1,
+                        &serde_json::json!({"keep":true}),
+                    )?;
+                    if let Some(status) = prior {
+                        tx.put_json(
+                            Table::Checkpoints,
+                            b"message:ua-preflight:upload",
+                            1,
+                            &serde_json::json!({"status":status,"hash":input_hash(&message,&png),
+                            "to":message.to.to_string(),"protobuf":[26,0]}),
+                        )?;
+                    }
+                    Ok(())
+                })
+                .unwrap();
+            let rows = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let journal = store.journal_head().unwrap();
+            for outbox in [false, true] {
+                let result = if outbox {
+                    prepare_outbox(&store, &message, &config).await
+                } else {
+                    prepare(&store, &message, &config).await
+                };
+                match prior {
+                    None => assert!(
+                        matches!(result, Err(Error::InvalidInput { field, .. }) if field == "client.user_agent")
+                    ),
+                    Some("uploaded") => assert_eq!(&*result.unwrap().unwrap(), &[26, 0]),
+                    _ => assert!(
+                        matches!(result, Err(Error::InvalidInput { field, .. }) if field == "image_upload")
+                    ),
+                }
+                assert_eq!(store.journal_head().unwrap(), journal);
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    rows
+                );
+            }
+            if prior.is_none() {
+                config.client.user_agent = Some(Zeroizing::new("offline-fixture-agent".into()));
+                // A configured value clears this guard; the deliberately absent
+                // route still prevents any network or upload-state allocation.
+                assert!(matches!(
+                    prepare(&store, &message, &config).await,
+                    Err(Error::InvalidInput { field, .. }) if field == "image_upload"
+                ));
+                assert_eq!(store.journal_head().unwrap(), journal);
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    rows
+                );
+            }
+            drop(store);
+            let reopened = super::super::group_fanout::tests::open(&path);
+            assert_eq!(reopened.journal_head().unwrap(), journal);
+            assert_eq!(
+                reopened
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                rows
+            );
+        }
+    }
+
     #[tokio::test]
     async fn upload_preflight_precedes_cached_success_and_preserves_state_on_refusal() {
         use crate::session::{AccountRecord, RegistrationStatus};

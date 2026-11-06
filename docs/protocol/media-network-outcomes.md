@@ -835,3 +835,38 @@ This is separate from Rust's configured total/connect bounds and callback
 windows; no silent extension of shorter local bounds is introduced. Later native
 properties/middleware, automatic headers and wire framing remain unproven.
 No Rust behavior, reservation, account or live operation changed.
+
+## New media upload User-Agent preflight (2026-11-06)
+
+**Confirmed static APK behavior:** the app's selected Tigon factory installs
+WAUserAgentInterceptor. Its native invocation fills an absent User-Agent for
+HTTPS when the selected configured string is nonempty. Java inputs, encoded
+provider dispatch, native registration, factory/vtables, complete invocation and
+helper checks are retained in [the evidence bundle](apk/2.26.43.72-media-user-agent/README.md)
+and [complete REA holder evidence](rea/2.26.43.72-media-user-agent/README.md).
+This closes the previously open native automatic User-Agent branch for this
+factory, not all middleware or every runtime client/configuration.
+
+**Confirmed Rust gap/fixed offline:** client.user_agent defaulted to None;
+new comparison media uploads could therefore proceed without the APK's header
+fill. `image_upload::upload_prepared` now refuses missing client.user_agent
+before route lookup, encryption/entropy checkpoint allocation, reservation or
+network transmission. The shared HTTP builder already applies a configured
+value; validation rejects empty/invalid values. This is a deliberate local
+compatibility preflight, not a claim that WhatsApp requires the header. No UA
+or device identity is synthesized, and the shared download client is unchanged.
+The guard covers new image/voice/document/video uploads through this path.
+
+Existing uploaded outcomes remain reusable; saved refusal and uncertain states
+retain their existing errors and cannot be replayed. The regression exercises
+all four states, encrypted-store reopen and byte-identical journal/checkpoint
+rows, plus a configured-UA case that reaches the independent route check.
+It failed before the guard and passed afterwards; 1,509 workspace tests and
+strict all-target/all-feature Clippy passed. No live account operations.
+
+**Unknown:** category meanings (native request values 3/5 choose second string),
+full primary/secondary UA formatting, full lazy client selection and effective
+runtime activation, server acceptance/requirements and account restriction
+causes. Static compatibility work cannot establish zero bans. A zero physical
+constructor census was not absence proof: optimized allocation uses Object.init
+and explicit initHybrid, corroborated by checked DEX and complete REA output.

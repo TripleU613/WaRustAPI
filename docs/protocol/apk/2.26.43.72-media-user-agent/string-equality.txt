@@ -1,0 +1,34 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000039e640 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll>:
+  3a8b00:      	bti	c
+  3a8b04:      	cmp	x1, x3
+  3a8b08:      	b.ne	0x3a8b2c <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0xa4ec>
+  3a8b0c:      	paciasp
+  3a8b10:      	stp	x29, x30, [sp, #-0x10]!
+  3a8b14:      	mov	x29, sp
+  3a8b18:      	bl	0x3a36c4 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x5084>
+  3a8b1c:      	bl	0x34ae28 <_RNvXsp_NtCsUHwbHsI1a0_5alloc3vecINtB5_3VecmENtNtNtCsd0h5sCe2hTT_4core3ops4drop4Drop4dropCs83ZMWuwgNvG_3cxx+0x16000>
+  3a8b20:      	ldp	x29, x30, [sp], #0x10
+  3a8b24:      	autiasp
+  3a8b28:      	ret
+  3a8b2c:      	b	0x2f5d50 <MCISessionedNetworkerUnregisterObserver+0x524c>
+  3a8b30:      	paciasp
+  3a8b34:      	sub	sp, sp, #0x40
+  3a8b38:      	stp	x29, x30, [sp, #0x20]
+  3a8b3c:      	stp	x20, x19, [sp, #0x30]
+  3a8b40:      	add	x29, sp, #0x20
+  3a8b44:      	mrs	x20, TPIDR_EL0
+  3a8b48:      	mov	x19, x1
+  3a8b4c:      	mov	x3, x2
+  3a8b50:      	ldr	x8, [x20, #0x28]
+  3a8b54:      	bl	0x729d50 <MCFSetGetCount+0x5c98>
+  3a8b58:      	mov	x2, x19
+  3a8b5c:      	stur	x8, [x29, #-0x8]
+  3a8b60:      	bl	0x3a7334 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x8cf4>
+  3a8b64:      	bl	0x399624 <_RNvYINtNtNtCsd0h5sCe2hTT_4core5slice4iter7IterMutmENtNtNtNtB9_4iter8adapters3zip27TrustedRandomAccessNoCoerce4sizeB9_+0x664>
+  3a8b68:      	bl	0x3a5474 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x6e34>
+  3a8b6c:      	bl	0x72de44 <MCFSetGetCount+0x9d8c>

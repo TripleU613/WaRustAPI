@@ -1,0 +1,73 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000004d13b4 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv>:
+  4d5644:      	paciasp
+  4d5648:      	sub	sp, sp, #0x80
+  4d564c:      	stp	x29, x30, [sp, #0x40]
+  4d5650:      	str	x23, [sp, #0x50]
+  4d5654:      	bl	0x2e72f0 <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0x19414>
+  4d5658:      	add	x29, sp, #0x40
+  4d565c:      	bl	0x72ad40 <MCFSetGetCount+0x6c88>
+  4d5660:      	bl	0x729ec0 <MCFSetGetCount+0x5e08>
+  4d5664:      	ldr	x20, [x1]
+  4d5668:      	add	x0, x20, #0xa8
+  4d566c:      	bl	0x6689e8 <_ZNK8facebook5tigon3url8TigonUrl7getHostEv+0x15c>
+  4d5670:      	tbz	w0, #0x0, 0x4d5704 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x4350>
+  4d5674:      	bl	0x7307e8 <MCFSetGetCount+0xc730>
+  4d5678:      	mov	x0, sp
+  4d567c:      	bl	0x3a2c00 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x45c0>
+  4d5680:      	bl	0x72ab6c <MCFSetGetCount+0x6ab4>
+  4d5684:      	mov	x1, x20
+  4d5688:      	bl	0x664338 <_ZNK8facebook5tigon12TigonRequest11getTigonUrlEv+0x6c>
+  4d568c:      	ldrb	w23, [sp, #0x30]
+  4d5690:      	add	x0, sp, #0x18
+  4d5694:      	bl	0x3a7278 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x8c38>
+  4d5698:      	mov	x0, sp
+  4d569c:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  4d56a0:      	tbnz	w23, #0x0, 0x4d56f0 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x433c>
+  4d56a4:      	ldr	w8, [x20, #0x1e0]
+  4d56a8:      	add	x9, x21, #0x8
+  4d56ac:      	cmp	w8, #0x5
+  4d56b0:      	ccmp	w8, #0x3, #0x4, ne
+  4d56b4:      	mov	w8, #0x18               // =24
+  4d56b8:      	csel	x8, x8, xzr, eq
+  4d56bc:      	add	x21, x9, x8
+  4d56c0:      	bl	0x7329c0 <MCFSetGetCount+0xe908>
+  4d56c4:      	bl	0x725ea4 <MCFSetGetCount+0x1dec>
+  4d56c8:      	cbz	x8, 0x4d56f0 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x433c>
+  4d56cc:      	bl	0x7307e8 <MCFSetGetCount+0xc730>
+  4d56d0:      	add	x0, sp, #0x18
+  4d56d4:      	bl	0x3a2c00 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x45c0>
+  4d56d8:      	add	x0, x20, #0x130
+  4d56dc:      	add	x1, sp, #0x18
+  4d56e0:      	mov	x2, x21
+  4d56e4:      	bl	0x66386c <_ZN8facebook5tigon12TigonRequest9addHeaderERKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEESA_+0x28>
+  4d56e8:      	add	x0, sp, #0x18
+  4d56ec:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  4d56f0:      	mov	w8, #0x1                // =1
+  4d56f4:      	bl	0x7274c8 <MCFSetGetCount+0x3410>
+  4d56f8:      	bl	0x7259d4 <MCFSetGetCount+0x191c>
+  4d56fc:      	b.eq	0x4d5720 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x436c>
+  4d5700:      	b	0x4d574c <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x4398>
+  4d5704:      	mov	w8, #0x1                // =1
+  4d5708:      	strb	w8, [x19], #0x4
+  4d570c:      	bl	0x7259d4 <MCFSetGetCount+0x191c>
+  4d5710:      	b.ne	0x4d574c <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x4398>
+  4d5714:      	stp	xzr, xzr, [x19]
+  4d5718:      	str	wzr, [x19, #0x18]
+  4d571c:      	str	xzr, [x19, #0x10]
+  4d5720:      	bl	0x377d94 <_RNvXsp_NtCsUHwbHsI1a0_5alloc3vecINtB5_3VecmENtNtNtCsd0h5sCe2hTT_4core3ops4drop4Drop4dropCs83ZMWuwgNvG_3cxx+0x42f6c>
+  4d5724:      	ldp	x29, x30, [sp, #0x40]
+  4d5728:      	add	sp, sp, #0x80
+  4d572c:      	autiasp
+  4d5730:      	ret
+  4d5734:      	bl	0x729dbc <MCFSetGetCount+0x5d04>
+  4d5738:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  4d573c:      	bl	0x7259d4 <MCFSetGetCount+0x191c>
+  4d5740:      	b.ne	0x4d574c <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x4398>
+  4d5744:      	mov	x0, x19
+  4d5748:      	bl	0x7373e0 <__wrap__Unwind_Resume@plt>
+  4d574c:      	bl	0x7378f0 <__stack_chk_fail@plt>

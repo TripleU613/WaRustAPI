@@ -1,0 +1,51 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000004d13b4 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv>:
+  4d5004:      	paciasp
+  4d5008:      	sub	sp, sp, #0x70
+  4d500c:      	stp	x29, x30, [sp, #0x50]
+  4d5010:      	stp	x20, x19, [sp, #0x60]
+  4d5014:      	add	x29, sp, #0x50
+  4d5018:      	mrs	x20, TPIDR_EL0
+  4d501c:      	adrp	x9, 0x74d000 <kMCIURLRequestHTTPMethodPOST+0x4270>
+  4d5020:      	add	x9, x9, #0xa8
+  4d5024:      	bl	0x728a90 <MCFSetGetCount+0x49d8>
+  4d5028:      	adrp	x1, 0xf5000
+  4d502c:      	add	x1, x1, #0x75c
+  4d5030:      	add	x0, sp, #0x8
+  4d5034:      	mov	w2, #0x2f               // =47
+  4d5038:      	stur	x8, [x29, #-0x8]
+  4d503c:      	add	x19, sp, #0x8
+  4d5040:      	bl	0x72e11c <MCFSetGetCount+0xa064>
+  4d5044:      	bl	0x728c70 <MCFSetGetCount+0x4bb8>
+  4d5048:      	bl	0x734f60 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6__initEPKcm@plt>
+  4d504c:      	bl	0x7263ec <MCFSetGetCount+0x2334>
+  4d5050:      	sub	x8, x29, #0x10
+  4d5054:      	bl	0x734d70 <_ZN8facebook3jni14findClassLocalEPKc@plt>
+  4d5058:      	add	x0, sp, #0x8
+  4d505c:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  4d5060:      	bl	0x72b6d4 <MCFSetGetCount+0x761c>
+  4d5064:      	mov	w2, #0x1                // =1
+  4d5068:      	bl	0x39fbe0 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x15a0>
+  4d506c:      	sub	x0, x29, #0x10
+  4d5070:      	bl	0x41e188 <_ZNK8facebook9stash_jni10JFileStash9removeAllEv+0x1823c>
+  4d5074:      	bl	0x725e44 <MCFSetGetCount+0x1d8c>
+  4d5078:      	b.ne	0x4d50b4 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x3d00>
+  4d507c:      	ldp	x20, x19, [sp, #0x60]
+  4d5080:      	ldp	x29, x30, [sp, #0x50]
+  4d5084:      	add	sp, sp, #0x70
+  4d5088:      	autiasp
+  4d508c:      	ret
+  4d5090:      	bl	0x729aa4 <MCFSetGetCount+0x59ec>
+  4d5094:      	bl	0x41e188 <_ZNK8facebook9stash_jni10JFileStash9removeAllEv+0x1823c>
+  4d5098:      	b	0x4d50a4 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x3cf0>
+  4d509c:      	bl	0x38b608 <_RNvYNtNtCsi1jv7X85TMU_3std2fs4FileNtNtNtCsd0h5sCe2hTT_4core2io5write5Write9write_allB6_+0x594>
+  4d50a0:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  4d50a4:      	bl	0x725e44 <MCFSetGetCount+0x1d8c>
+  4d50a8:      	b.ne	0x4d50b4 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x3d00>
+  4d50ac:      	mov	x0, x19
+  4d50b0:      	bl	0x7373e0 <__wrap__Unwind_Resume@plt>
+  4d50b4:      	bl	0x7378f0 <__stack_chk_fail@plt>

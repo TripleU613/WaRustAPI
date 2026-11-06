@@ -1,0 +1,118 @@
+{
+  "README.md": {
+    "bytes": 4048,
+    "sha256": "d729d3af00207680adc24d90f77a0718e6e1a48da1361fb0c1067e7da3577010"
+  },
+  "client-callers.txt": {
+    "bytes": 2438,
+    "sha256": "97bbc6245353e0e75055198ece22a6db6d72d0ad79dd3267cceddd2ddeba5367"
+  },
+  "client-construction.txt": {
+    "bytes": 2051,
+    "sha256": "f07108b1ecb880e5d3461204a93631d4180c525bde9cc751448ba9b853d8b7bd"
+  },
+  "client-factory.txt": {
+    "bytes": 22393,
+    "sha256": "5a38930786a94d142c65006945cc46c91887cd6386c584fccae7b6d604de579b"
+  },
+  "dex-selectors.json": {
+    "bytes": 1199,
+    "sha256": "7deddfa9690feabce9b607d942e5ca98170f2196d110ee045747b596878dabcf"
+  },
+  "factory.txt": {
+    "bytes": 727,
+    "sha256": "3b4388468630bbdfde74aa7db6e87e097cb761d8b7b7589f0ff17ad2164811a8"
+  },
+  "holder-binding.txt": {
+    "bytes": 58345,
+    "sha256": "3ccc96e1f9780cb983132e6bab004e24dedb0b8fe4bdded4ba8755641bc2bb37"
+  },
+  "holder-callers.txt": {
+    "bytes": 69,
+    "sha256": "29509d07d25a8adf01fa8b33b05d25805e13526f961a7f7dc78938700a41b05c"
+  },
+  "hybrid-callers.txt": {
+    "bytes": 144,
+    "sha256": "25866abead6dc347103436a0142b93f40b276af3802c3d1fb80bc1dc29bc7be1"
+  },
+  "inspect-native.py": {
+    "bytes": 1591,
+    "sha256": "b4bc427eb43a3cc87089e541ad540af2fd630e041e846a42fb2fa5cf88ee7e79"
+  },
+  "interceptor-callers.txt": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "interceptor-class.txt": {
+    "bytes": 947,
+    "sha256": "486e43cc6ddf239082ef3dbef677f81e8551b06aeb408144abcf00722d0223a4"
+  },
+  "interceptor-inputs.txt": {
+    "bytes": 2079,
+    "sha256": "0c9c5adf5e0d131d59ed8a6152e7e11511c7ef2434828ad8cc32b1a051311bc8"
+  },
+  "key-helper.txt": {
+    "bytes": 307,
+    "sha256": "3541b95eb5386229e3efb19a2960a5f8d1af5bc59b68e7a60f70f9929d0792d6"
+  },
+  "native-bindings.json": {
+    "bytes": 2492,
+    "sha256": "589a0435484479157dcd0a3c07af60b94083865fad850ed0256050d46632cd28"
+  },
+  "native-factory.txt": {
+    "bytes": 7661,
+    "sha256": "9541dc869c996a65112dbff6140b440d7a71cccb5913ac14d78fbc5fe62ba68a"
+  },
+  "native-interceptor.txt": {
+    "bytes": 6077,
+    "sha256": "5fb6867758da6a94bfeed30148a30a0845030bee98caffecbdb4bd48be3f8f35"
+  },
+  "native-invoke.txt": {
+    "bytes": 4157,
+    "sha256": "98b31368b2b186361c2caaddd318e6a3ed21935dc0b6eaf0d0f289274e0242f7"
+  },
+  "native-lambda-factory.txt": {
+    "bytes": 3613,
+    "sha256": "7c64c293e20c8fd8241360a9942fa8a8bd8fd79e0be11b4c6c25cb4740a1e3e8"
+  },
+  "native-registration.txt": {
+    "bytes": 2745,
+    "sha256": "424a3049cee8e1c9e05c173a3ef995aaee66b599819a213c30a9a6300d1924e7"
+  },
+  "native-windows.json": {
+    "bytes": 536,
+    "sha256": "8a98ee147720f8769202bbaf4e0d7f6447008a0089d9ac1a8e4ed1039e7cff57"
+  },
+  "primary-value.txt": {
+    "bytes": 827,
+    "sha256": "5cbd52f61a92eabcb2c7237a7bf2fdc6ac91d8f9031f5bf7c791c1834b46ffa6"
+  },
+  "provider-key.txt": {
+    "bytes": 18791,
+    "sha256": "d76bfde0a7091b948d6d5cfa4f93ed8604c47c929401601f919a9d7837442be6"
+  },
+  "registry-dispatch-callers.txt": {
+    "bytes": 67,
+    "sha256": "8a597544695ebd498802556bb8cc88eb052bf7aed8b9d8b6c9526a8dd8f369eb"
+  },
+  "registry-dispatch.txt": {
+    "bytes": 3374,
+    "sha256": "f852095f305051f8344d087a0efeb3f6742c3538d9cdde11fe11f74e2f7dda7e"
+  },
+  "secondary-value.txt": {
+    "bytes": 804,
+    "sha256": "b9ba012133c017736335624055d1ae4a74b2a8f006f1d6c1613b100cd92eabc6"
+  },
+  "string-equality.txt": {
+    "bytes": 1903,
+    "sha256": "d3e627e4a4256e6af1b45e47569361d2993513fd492528b68c9fa0f556f2070d"
+  },
+  "url-comparison.txt": {
+    "bytes": 1173,
+    "sha256": "6586e8d41efec90c6839ba5d550a34e06c2dc81435a03f27e988e4e4d1c003fa"
+  },
+  "url-predicate.txt": {
+    "bytes": 1257,
+    "sha256": "548068ee0816b14ee178383f7cc193140930dd98e6076488d4b4d8b28e98b8d4"
+  }
+}
