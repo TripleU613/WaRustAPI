@@ -1,0 +1,10 @@
+
+# class: Lcom/facebook/pando/primaryexecution/tigon/PandoTigonConfig;
+# extends: Ljava/lang/Object;
+
+.method public getDisableContentLengthHeader(Z)  # .registers 2
+    # full signature: Lcom/facebook/pando/primaryexecution/tigon/PandoTigonConfig;->getDisableContentLengthHeader()Z
+    0000..0004  iget-boolean  v0, v1, Lcom/facebook/pando/primaryexecution/tigon/PandoTigonConfig;->disableContentLengthHeader:Z
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method

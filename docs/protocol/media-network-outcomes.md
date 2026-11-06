@@ -750,3 +750,17 @@ The207 exact-offset textual matches include unrelated/stack objects and do not
 constitute a field-alias census. Other consumers, effective configuration and
 wire framing remain unproven. No Rust behavior change, truncation, replay or live
 operation. This consumer does not establish length enforcement.
+
+## Native queue bound and disable-header namespace 2026-11-06
+
+**Confirmed selected static:** native5432b8 rejects cumulative queued bytes above
+expectedBytes except expected-1, rolls back this increment and creates local
+body-size-exceeds-content-length error. This is separate from the previously
+traced progress total; expected-size producer and actual upload binding remain
+unknown. A local failure does not prove earlier bytes stayed local or authorize
+replay. [Complete branch, literals, callers and limitations](apk/2.26.43.72-media-queue-length-check/README.md).
+
+The getDisableContentLengthHeader getter resolves toPandoTigonConfig, not the
+inspected TigonHttpClientConfig. Its existence is not an ordinary-upload header
+setting. No Rust body/header change or live operation. Next: queue expectedBytes
+producer and its relationship to actual headers/provider length.

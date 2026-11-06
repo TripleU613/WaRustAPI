@@ -1,0 +1,22 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000003b12f0 <_ZN10tokenizers16Llama2cTokenizerC1Ev>:
+  3fa81c:      	adrp	x0, 0x79f000 <_ZN3fLI49FLAGS_thrift_cpp2_protocol_reader_container_limitE+0xae94>
+  3fa820:      	add	x0, x0, #0xf50
+  3fa824:      	bl	0x737480 <__wrap___cxa_guard_acquire@plt>
+  3fa828:      	cbz	w0, 0x3fa4e8 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x491f8>
+  3fa82c:      	sub	x0, x29, #0x90
+  3fa830:      	bl	0x3fa09c <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x48dac>
+  3fa834:      	adrp	x1, 0xd9000
+  3fa838:      	add	x1, x1, #0x7d3
+  3fa83c:      	sub	x0, x29, #0x90
+  3fa840:      	bl	0x3fa174 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x48e84>
+  3fa844:      	adrp	x8, 0x79f000 <_ZN3fLI49FLAGS_thrift_cpp2_protocol_reader_container_limitE+0xae94>
+  3fa848:      	add	x8, x8, #0xf48
+  3fa84c:      	str	x0, [x8], #0x8
+  3fa850:      	mov	x0, x8
+  3fa854:      	bl	0x737390 <__wrap___cxa_guard_release@plt>
+  3fa858:      	b	0x3fa4e8 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x491f8>

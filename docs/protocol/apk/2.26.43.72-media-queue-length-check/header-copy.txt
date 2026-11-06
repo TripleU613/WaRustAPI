@@ -1,0 +1,152 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000050edfc <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv>:
+  542fa0:      	bl	0x2db4bc <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0xd5e0>
+  542fa4:      	ldr	x8, [x8, #0x20]
+  542fa8:      	blr	x8
+  542fac:      	tst	w0, #0xff
+  542fb0:      	b.ne	0x543008 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x3420c>
+  542fb4:      	mov	w2, #0x100              // =256
+  542fb8:      	adrp	x0, 0xe2000
+  542fbc:      	add	x0, x0, #0x1d1
+  542fc0:      	mov	w1, #0x16               // =22
+  542fc4:      	movk	w2, #0x800, lsl #16
+  542fc8:      	bl	0x646ccc <_MCFStringCreateWithConstCStringAndLenNoCopy>
+  542fcc:      	ldr	x8, [x21]
+  542fd0:      	mov	x22, x0
+  542fd4:      	bl	0x2db4d0 <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0xd5f4>
+  542fd8:      	mov	x2, xzr
+  542fdc:      	mov	w3, #0x20               // =32
+  542fe0:      	ldr	x8, [x8, #0x78]
+  542fe4:      	blr	x8
+  542fe8:      	bl	0x72a2d0 <MCFSetGetCount+0x6218>
+  542fec:      	bl	0x643e0c <MCFRelease>
+  542ff0:      	ldr	x8, [x19, #0x240]
+  542ff4:      	ldr	x0, [x19, #0x2b8]
+  542ff8:      	bl	0x2ea44c <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0x1c570>
+  542ffc:      	blr	x8
+  543000:      	mov	x0, x21
+  543004:      	bl	0x643e0c <MCFRelease>
+  543008:      	ldr	x8, [x19, #0x248]
+  54300c:      	cbz	x8, 0x54301c <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x34220>
+  543010:      	ldr	x0, [x19, #0x2b8]
+  543014:      	mov	x1, x20
+  543018:      	blr	x8
+  54301c:      	ldr	x0, [sp, #0x10]
+  543020:      	cbz	x0, 0x543034 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x34238>
+  543024:      	bl	0x728cc4 <MCFSetGetCount+0x4c0c>
+  543028:      	blr	x8
+  54302c:      	bl	0x72967c <MCFSetGetCount+0x55c4>
+  543030:      	b.eq	0x543184 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x34388>
+  543034:      	ldrb	w8, [x19, #0x50]
+  543038:      	ldr	x9, [x19, #0x60]
+  54303c:      	add	x10, x19, #0x51
+  543040:      	bl	0x729e74 <MCFSetGetCount+0x5dbc>
+  543044:      	csel	x0, x10, x9, eq
+  543048:      	bl	0x646c6c <MCFStringCreateWithCString>
+  54304c:      	cbz	x0, 0x5431c0 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x343c4>
+  543050:      	mov	x21, x0
+  543054:      	adrp	x1, 0x788000 <g_tripwireLogPtr+0x2a88>
+  543058:      	add	x1, x1, #0xfa8
+  54305c:      	bl	0x310914 <MCIJSONCreateDeserializedObjectFromString+0xdf78>
+  543060:      	bl	0x6451d0 <MCFDictionarySetValue>
+  543064:      	mov	x0, x21
+  543068:      	bl	0x643e0c <MCFRelease>
+  54306c:      	ldr	x2, [x19, #0x70]
+  543070:      	cbz	x2, 0x5431c4 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x343c8>
+  543074:      	adrp	x21, 0x788000 <g_tripwireLogPtr+0x2a88>
+  543078:      	add	x21, x21, #0xee8
+  54307c:      	mov	x0, x20
+  543080:      	add	x1, x21, #0x1e0
+  543084:      	bl	0x6451d0 <MCFDictionarySetValue>
+  543088:      	add	x0, x19, #0x50
+  54308c:      	mov	x1, x21
+  543090:      	bl	0x540018 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x3121c>
+  543094:      	cbnz	x0, 0x5430bc <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x342c0>
+  543098:      	add	x0, x19, #0x68
+  54309c:      	bl	0x54ee7c <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x40080>
+  5430a0:      	mov	x21, x0
+  5430a4:      	adrp	x1, 0x788000 <g_tripwireLogPtr+0x2a88>
+  5430a8:      	add	x1, x1, #0xdc8
+  5430ac:      	bl	0x310914 <MCIJSONCreateDeserializedObjectFromString+0xdf78>
+  5430b0:      	bl	0x6451d0 <MCFDictionarySetValue>
+  5430b4:      	mov	x0, x21
+  5430b8:      	bl	0x643e0c <MCFRelease>
+  5430bc:      	add	x0, x19, #0x68
+  5430c0:      	bl	0x54efc8 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x401cc>
+  5430c4:      	mov	x21, x0
+  5430c8:      	adrp	x22, 0x788000 <g_tripwireLogPtr+0x2a88>
+  5430cc:      	add	x22, x22, #0xfd8
+  5430d0:      	mov	x0, x20
+  5430d4:      	bl	0x355b6c <_RNvXsp_NtCsUHwbHsI1a0_5alloc3vecINtB5_3VecmENtNtNtCsd0h5sCe2hTT_4core3ops4drop4Drop4dropCs83ZMWuwgNvG_3cxx+0x20d44>
+  5430d8:      	bl	0x6451d0 <MCFDictionarySetValue>
+  5430dc:      	mov	x0, x21
+  5430e0:      	bl	0x643e0c <MCFRelease>
+  5430e4:      	add	x1, x22, #0x60
+  5430e8:      	mov	x0, x20
+  5430ec:      	bl	0x5431e8 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x343ec>
+  5430f0:      	movi	v0.2d, #0000000000000000
+  5430f4:      	add	x0, x19, #0x50
+  5430f8:      	stp	q0, q0, [sp, #0x30]
+  5430fc:      	bl	0x3df9e0 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x2e6f0>
+  543100:      	bl	0x2db2a4 <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0xd3c8>
+  543104:      	bl	0x72d498 <MCFSetGetCount+0x93e0>
+  543108:      	mov	w1, #0x7                // =7
+  54310c:      	bl	0x3a8b00 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0xa4c0>
+  543110:      	tbz	w0, #0x0, 0x543164 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x34368>
+  543114:      	add	x0, sp, #0x30
+  543118:      	add	x1, x19, #0x50
+  54311c:      	add	x21, sp, #0x30
+  543120:      	bl	0x540198 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x3139c>
+  543124:      	ldrb	w8, [sp, #0x48]
+  543128:      	tbz	w8, #0x0, 0x54316c <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x34370>
+  54312c:      	ldrb	w8, [sp, #0x30]
+  543130:      	ldr	x9, [sp, #0x40]
+  543134:      	bl	0x72798c <MCFSetGetCount+0x38d4>
+  543138:      	csinc	x0, x9, x21, ne
+  54313c:      	bl	0x646c6c <MCFStringCreateWithCString>
+  543140:      	cbz	x0, 0x5431e4 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x343e8>
+  543144:      	mov	x21, x0
+  543148:      	adrp	x1, 0x789000 <g_tripwireLogPtr+0x3a88>
+  54314c:      	add	x1, x1, #0x38
+  543150:      	bl	0x310914 <MCIJSONCreateDeserializedObjectFromString+0xdf78>
+  543154:      	bl	0x6451d0 <MCFDictionarySetValue>
+  543158:      	mov	x0, x21
+  54315c:      	bl	0x643e0c <MCFRelease>
+  543160:      	b	0x54316c <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x34370>
+  543164:      	strb	wzr, [sp, #0x30]
+  543168:      	strb	wzr, [sp, #0x48]
+  54316c:      	nop
+  543170:      	adr	x1, 0x543224 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x34428>
+  543174:      	bl	0x355acc <_RNvXsp_NtCsUHwbHsI1a0_5alloc3vecINtB5_3VecmENtNtNtCsd0h5sCe2hTT_4core3ops4drop4Drop4dropCs83ZMWuwgNvG_3cxx+0x20ca4>
+  543178:      	bl	0x645480 <MCFDictionaryApplyFunction>
+  54317c:      	add	x0, sp, #0x30
+  543180:      	bl	0x3a7278 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x8c38>
+  543184:      	ldr	x0, [sp, #0x18]
+  543188:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  54318c:      	ldr	x0, [sp, #0x28]
+  543190:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  543194:      	bl	0x725ac8 <MCFSetGetCount+0x1a10>
+  543198:      	b.ne	0x5431bc <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x343c0>
+  54319c:      	mov	x0, x20
+  5431a0:      	bl	0x726a54 <MCFSetGetCount+0x299c>
+  5431a4:      	ldp	x28, x25, [sp, #0xf0]
+  5431a8:      	ldp	x29, x30, [sp, #0xe0]
+  5431ac:      	add	sp, sp, #0x130
+  5431b0:      	autiasp
+  5431b4:      	ret
+  5431b8:      	bl	0x734c50 <abort@plt>
+  5431bc:      	bl	0x7378f0 <__stack_chk_fail@plt>
+  5431c0:      	bl	0x734c50 <abort@plt>
+  5431c4:      	bl	0x734c50 <abort@plt>
+  5431c8:      	adrp	x1, 0xf7000
+  5431cc:      	add	x1, x1, #0xbfc
+  5431d0:      	adrp	x2, 0xef000
+  5431d4:      	add	x2, x2, #0x215
+  5431d8:      	mov	w0, #0x6                // =6
+  5431dc:      	bl	0x734ce0 <__android_log_print@plt>
+  5431e0:      	bl	0x734c50 <abort@plt>
+  5431e4:      	bl	0x734c50 <abort@plt>

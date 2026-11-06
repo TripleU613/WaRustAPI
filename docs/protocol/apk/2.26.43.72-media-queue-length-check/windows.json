@@ -1,0 +1,68 @@
+{
+  "scope": "Static queue branch and namespace lookup; no target execution or dynamic upload binding",
+  "library_sha256": "d0ab3f2237e92a76ac3519c3577b5836b9e6f65a186c2016cefd43c4923f4b0d",
+  "windows": [
+    {
+      "name": "overflow",
+      "start_va": "0x5432b8",
+      "end_va": "0x54339c",
+      "file_offset": "0x53f2b8",
+      "bytes": 228,
+      "sha256": "6d8fe03608c8933ef7c72a7270e754cc7fa7bab1cb8b678ad2c30bd49154f01e"
+    },
+    {
+      "name": "header-copy",
+      "start_va": "0x542fa0",
+      "end_va": "0x5431e8",
+      "file_offset": "0x53efa0",
+      "bytes": 584,
+      "sha256": "732062bbb84baf8c54466ecfc156eebbe2730f0185c16e676a13d5bbc00f6aae"
+    },
+    {
+      "name": "disable-native-lookup",
+      "start_va": "0x3fa81c",
+      "end_va": "0x3fa85c",
+      "file_offset": "0x3f681c",
+      "bytes": 64,
+      "sha256": "bc81132c5dc02db2f56049927c477b35ef4967f965c4b6b106fe41954cdebe53"
+    },
+    {
+      "name": "queue-caller",
+      "start_va": "0x53c288",
+      "end_va": "0x53c2c4",
+      "file_offset": "0x538288",
+      "bytes": 60,
+      "sha256": "53068d71e0cee62b3361322f2b53fd00ac3eed9f2508598fe5d2a55015f9cdcc"
+    },
+    {
+      "name": "queue-late-caller",
+      "start_va": "0x53c530",
+      "end_va": "0x53c554",
+      "file_offset": "0x538530",
+      "bytes": 36,
+      "sha256": "279e647be6b2a808fe259492d0dda9daf8052f1950d72a8b3d365ef4b918a127"
+    },
+    {
+      "name": "queue-arguments",
+      "start_va": "0x2e2bc0",
+      "end_va": "0x2e2bcc",
+      "file_offset": "0x2debc0",
+      "bytes": 12,
+      "sha256": "19a1cdae337beef9e465be460a0d6cd02a58a58f26c900681ab629f4778169de"
+    }
+  ],
+  "literals": [
+    {
+      "va": "0xffed2",
+      "value": "MNSBufferQueueAppendBytes: body exceeds content-length. cumulativeQueuedBytes=%d expectedBytes=%d\n"
+    },
+    {
+      "va": "0xe0226",
+      "value": "Request body size exceeds content-length"
+    },
+    {
+      "va": "0xd97d3",
+      "value": "getDisableContentLengthHeader"
+    }
+  ]
+}

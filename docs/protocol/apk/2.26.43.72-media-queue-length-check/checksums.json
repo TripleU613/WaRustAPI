@@ -1,0 +1,54 @@
+{
+  "README.md": {
+    "bytes": 6133,
+    "sha256": "8360848a493cd150ef5750d21f958d45246ed8ae1bfe98356f4458e1d13640b9"
+  },
+  "client-config-inventory.txt": {
+    "bytes": 32116,
+    "sha256": "f4e14c0c631361b0cf0994a022d0f18df1792ef2eeb21c5b54d7656935b4fe4a"
+  },
+  "disable-getter.txt": {
+    "bytes": 489,
+    "sha256": "966e2728ce0a6033ee3331ab11c786a19c545a9ce7442df367397c4ff1737595"
+  },
+  "disable-native-lookup.txt": {
+    "bytes": 1115,
+    "sha256": "48008b9bd9a1ff1b61a7d9cd748892366b00eabb0bb5a9467c1187c30fe5bcc3"
+  },
+  "header-copy.txt": {
+    "bytes": 8091,
+    "sha256": "e3190c6dda4c10443904b5163061831d64db3da8d8d32b5ef0eb254a76c2e69b"
+  },
+  "inspect-length-check.py": {
+    "bytes": 1157,
+    "sha256": "747b2683dd0d17a2d05d778366991b2abdd1d0345b3b37bdb91ae79f0f2a2da5"
+  },
+  "length-apk-strings.txt": {
+    "bytes": 30,
+    "sha256": "72d2c5f3dc1964f99f29db691ef89f3e3f2867d3ddcfbd388088588d3a8a4bc1"
+  },
+  "overflow.txt": {
+    "bytes": 3050,
+    "sha256": "64cf1b00f6b6f040aef80de1c9e91ae0cec6511c03742b1107463f724e4bdc8f"
+  },
+  "queue-arguments.txt": {
+    "bytes": 323,
+    "sha256": "72e94c5e8e7e404b771bac886991a43e584104324c62a664f623ae1fa1fd456e"
+  },
+  "queue-caller.txt": {
+    "bytes": 1241,
+    "sha256": "5c9c417e556fd26674b5588684eabd87d6257320318da8fb4b280104abf1f44f"
+  },
+  "queue-late-caller.txt": {
+    "bytes": 767,
+    "sha256": "bd6d0d4775156248e3d8eb2ec7e3f7db170056d8b74ff437308e101b3ea71ade"
+  },
+  "windows.json": {
+    "bytes": 1992,
+    "sha256": "90aefc2b508babacc8f1c76cffe45d74ea720b68b82c674e0341f3184fa89331"
+  },
+  "wrong-config-lookup.txt": {
+    "bytes": 119,
+    "sha256": "2d02719e3c2ad408590ae48e5430f2858b313788dd51ba96e55e8d55ee3eeb9a"
+  }
+}

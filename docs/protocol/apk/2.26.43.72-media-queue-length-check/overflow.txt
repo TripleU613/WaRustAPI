@@ -1,0 +1,63 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000050edfc <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv>:
+  5432b8:      	paciasp
+  5432bc:      	stp	x29, x30, [sp, #-0x30]!
+  5432c0:      	str	x21, [sp, #0x10]
+  5432c4:      	stp	x20, x19, [sp, #0x20]
+  5432c8:      	mov	x29, sp
+  5432cc:      	bl	0x2e2bc0 <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0x14ce4>
+  5432d0:      	ldr	x20, [x8]
+  5432d4:      	cbz	x1, 0x5432e0 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x344e4>
+  5432d8:      	ldr	w21, [x1, #0x18]
+  5432dc:      	b	0x5432e4 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x344e8>
+  5432e0:      	mov	w21, wzr
+  5432e4:      	ldp	w9, w8, [x20, #0x74]
+  5432e8:      	add	w8, w8, w21
+  5432ec:      	cmp	w8, w9
+  5432f0:      	str	w8, [x20, #0x78]
+  5432f4:      	ccmn	w9, #0x1, #0x4, gt
+  5432f8:      	b.ne	0x54330c <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x34510>
+  5432fc:      	mov	x0, x20
+  543300:      	bl	0x633d08 <_ZN8crossapp9tigonhttp3mns11DNSResolver27setSecondaryResolverEnabledEh+0x14e1c>
+  543304:      	mov	w0, #0x1                // =1
+  543308:      	b	0x54338c <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x34590>
+  54330c:      	bl	0x729664 <MCFSetGetCount+0x55ac>
+  543310:      	bl	0x63f654 <MCILogRegistryGlobalsIsLoggingEnabled>
+  543314:      	tst	w0, #0xff
+  543318:      	b.eq	0x543348 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x3454c>
+  54331c:      	bl	0x729418 <MCFSetGetCount+0x5360>
+  543320:      	bl	0x737350 <__emutls_get_address@plt>
+  543324:      	ldp	w7, w6, [x20, #0x74]
+  543328:      	mov	x2, x0
+  54332c:      	adrp	x3, 0xd4000
+  543330:      	add	x3, x3, #0xff0
+  543334:      	adrp	x5, 0xff000
+  543338:      	add	x5, x5, #0xed2
+  54333c:      	bl	0x729664 <MCFSetGetCount+0x55ac>
+  543340:      	mov	w4, #0x80               // =128
+  543344:      	bl	0x63efd8 <MCIWriteLog+0x760>
+  543348:      	ldr	w8, [x20, #0x78]
+  54334c:      	adrp	x9, 0x7a2000 <_ZN6google8protobuf8internal26fixed_address_empty_stringE+0x27b0>
+  543350:      	adrp	x2, 0xe0000
+  543354:      	add	x2, x2, #0x226
+  543358:      	ldr	x0, [x9, #0xc98]
+  54335c:      	mov	w1, wzr
+  543360:      	sub	w8, w8, w21
+  543364:      	str	w8, [x20, #0x78]
+  543368:      	bl	0x63e020 <MNSUtilCreateMCFErrorWithFormat>
+  54336c:      	ldr	x8, [x19, #0x8]
+  543370:      	mov	x19, x0
+  543374:      	mov	x1, x19
+  543378:      	bl	0x734b70 <MCFSetGetCount+0x10ab8>
+  54337c:      	bl	0x5406b0 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x318b4>
+  543380:      	mov	x0, x19
+  543384:      	bl	0x643e0c <MCFRelease>
+  543388:      	mov	w0, wzr
+  54338c:      	bl	0x2dbea4 <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0xdfc8>
+  543390:      	ldp	x29, x30, [sp], #0x30
+  543394:      	autiasp
+  543398:      	ret

@@ -1,3 +1,10 @@
+2026-11-06 — **Native upload queue bound found; Pando flag scope separated.**
+
+Selected queue rejects bytes above declared bound except-1 and rolls back this
+increment. Disable-header getter belongs to Pando configuration. [Evidence and
+unresolved expected-size producer](docs/protocol/media-network-outcomes.md#native-queue-bound-and-disable-header-namespace-2026-11-06).
+No Rust behavior change or live operation; local error never authorizes replay.
+
 2026-11-06 — **Native stored upload length reaches count/total callback.**
 
 Selected consumer pairs declared length with accumulated count; progress semantics
