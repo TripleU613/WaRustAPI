@@ -1,0 +1,18 @@
+{
+  "README.md": {
+    "bytes": 3964,
+    "sha256": "d080728e1e4021dc01263fae3020756ed0bae418d93510eb9401a95269e63aae"
+  },
+  "admission.txt": {
+    "bytes": 1348,
+    "sha256": "e876f7ee66d280598c98b1229a63071ef94bfdb6f3eb47e5ec27554e65bd4747"
+  },
+  "block-check.txt": {
+    "bytes": 5110,
+    "sha256": "fe76697fe7b663bda611dd840b50dfe72ac1347da6fb43249fed4258cca71932"
+  },
+  "block-wrapper.txt": {
+    "bytes": 635,
+    "sha256": "58fac7a5cad08cb6ba196ebd2621ca7541ade71e4871eb7e9b53a5dd763691a8"
+  }
+}

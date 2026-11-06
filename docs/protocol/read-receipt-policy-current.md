@@ -113,3 +113,49 @@ late disabled preference blocks a mixed batch containing an automatic direct
 read; explicit manual/group policy remains unchanged. Refused unknown rows are
 held, not requeued. [Owned API, batch/journal/reopen controls and limits](replay-safety-audit.md#receipt-writer-owns-every-reserved-batch-member-2026-11-06).
 No full native classifier/read-self or live claim.
+
+## Automatic played privacy correction (2026-11-06)
+
+**Confirmed pinned mismatch / Rust correction:** [complete current played job,
+checked DEX policy branches and REA limitations](apk/2.26.43.72-played-privacy/README.md)
+show normal direct played requires enabled read-receipt privacy; otherwise the
+native job selects played-self. Rust queue_opened had always emitted played,
+including when a validated server preference was known disabled. The private
+contact/block/addon gates are additional conditions, not overridden by a true
+preference. Full played-self/companion routing remains unported.
+
+Viewer completion now creates automatic=true provenance. The shared negative
+automatic privacy gate applies to direct read/played at queue, reservation and
+the owned writer. Known-disabled played stays pending under the original wire,
+selector and consumed inbox marker with server_read_receipts_disabled. It does
+not consume a reservation slot. Enabling privacy can reserve the same pending
+wire once and clear deferral. If privacy changes after reservation, the writer
+refuses before encoding without releasing outcome_unknown. Reopen never
+reconsumes the image or resets/retries that reservation. CLI completion now
+says privacy policy may defer sending; receipts/outcomes expose the fixed reason.
+
+Two new encrypted-store regressions failed before the fix, including the real
+NodeLink -> Outbound.prepare handoff admitting late-disabled played. They cover
+PN/LID queue-time and reservation-time holds, reopen, later release with identical
+wire, unknown preference, legacy unknown provenance, group controls, late writer
+refusal preserving every checkpoint and journal, and consumed ticket refusal.
+Only synthetic consumed fixtures are used; no image/viewer/account is opened.
+Existing read and callback ownership regressions remain applicable.
+
+Compatibility: unknown preference retains existing behavior; old unclassified
+played rows are not relabeled. Explicit read override and group behavior stay
+separate. This is a necessary negative privacy gate, not full positive native
+admission, blocklist synchronization, played-self implementation, cross-device
+opened synchronization or safe native retry. No server acceptance or ban-rate
+claim. The first parallel workspace run hit an unrelated handshake cancellation
+test failure; it passed alone and in the four-thread API rerun. That failure's
+scheduling cause remains unproven. The subsequent workspace run passed API/CLI
+suites but found the coverage report stale after adding new retained evidence;
+the report was then regenerated before the final full check.
+
+Final validation:1,515 workspace tests pass in9 result suites with four test
+threads; strict workspace/all-target/all-feature Clippy, formatting, CLI
+reference regeneration, OpenAPI library coverage, APK coverage freshness and
+repository hygiene pass. Three selected DEX exports reproduce byte-for-byte.
+REA subject hash and complete source are retained with its duplicated-code
+warning; checked DEX determines the selection branches.

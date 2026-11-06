@@ -1619,7 +1619,7 @@ pub(super) fn open_view_once(cli: &super::Cli) -> Result<(), Error> {
                 return if status.success() {
                     whatsapp_api::transport::receipts::queue_opened(&store, &ticket)?;
                     println!(
-                        "image: viewer completed; opened receipt queued for the next authenticated connection"
+                        "image: viewer completed; opened receipt queued; privacy policy may defer sending"
                     );
                     Ok(())
                 } else {

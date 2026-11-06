@@ -1,0 +1,147 @@
+{
+  "evidence_id": "ev_831497abab3bb133769c234ee10756b389478e460a11998920967658b51bb527",
+  "subject": {
+    "name": "WhatsApp.1.apk",
+    "digest": {
+      "sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/apks/WhatsApp.1.apk",
+    "format": "apk",
+    "architecture": null
+  },
+  "provider": {
+    "id": "jadx",
+    "name": "JADX headless",
+    "version": "0.7.1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_android_method",
+  "parameters": {
+    "path": "../android-lab/apks/WhatsApp.1.apk",
+    "class_name": "com.whatsapp.messaging.receipts.jobqueue.job.SendPlayedReceiptJobV2",
+    "method_name": "A0L",
+    "overload_index": 0
+  },
+  "raw_result": {
+    "server": {
+      "name": "rea-jadx-bridge",
+      "version": "1"
+    },
+    "bridge_sha256": "40c6972bc7e1689e09979b64ba49ba04b9c05e49976b838315d63d6415e762ba",
+    "jar_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+    "loaded": {
+      "state": "LOADED",
+      "apk_path": "/tmp/rea-android-szq0c4/target.apk",
+      "class_count": 106897,
+      "resource_count": 15728,
+      "threads": 1,
+      "resources": "full"
+    },
+    "calls": [
+      {
+        "operation": "rea_jvm_status",
+        "input": {},
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"engine_reported_version\":\"0.7.1\",\"available_processors\":24,\"java_version\":\"21.0.13\",\"max_heap_bytes\":16684941312,\"metadata_scope\":\"parsed_members\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "load_apk",
+        "input": {
+          "path": "/tmp/rea-android-szq0c4/target.apk",
+          "threads": 1,
+          "resources": "full"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"state\":\"LOADED\",\"apk_path\":\"/tmp/rea-android-szq0c4/target.apk\",\"class_count\":106897,\"raw_class_count\":106897,\"resource_count\":15728,\"load_duration_ms\":20082,\"decompile_timeout_ms\":90000,\"threads\":1,\"code_cache_size\":64,\"resources\":\"full\"}"
+            }
+          ]
+        }
+      },
+      {
+        "operation": "get_class_summary",
+        "input": {
+          "class_name": "com.whatsapp.messaging.receipts.jobqueue.job.SendPlayedReceiptJobV2"
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"fields\":[{\"name\":\"A00\",\"def_pos\":0,\"type\":\"X.1dI\"},{\"name\":\"A01\",\"def_pos\":0,\"type\":\"X.0Sf\"},{\"name\":\"A02\",\"def_pos\":0,\"type\":\"X.0xW\"},{\"name\":\"A03\",\"def_pos\":0,\"type\":\"X.FXW\"},{\"name\":\"isCoExV2\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"messageIds\",\"def_pos\":0,\"type\":\"java.lang.String[]\"},{\"name\":\"messageRowIds\",\"def_pos\":0,\"type\":\"java.lang.Long[]\"},{\"name\":\"participantRawJid\",\"def_pos\":0,\"type\":\"java.lang.String\"},{\"name\":\"playedSelfFromPeer\",\"def_pos\":0,\"type\":\"boolean\"},{\"name\":\"serialVersionUID\",\"def_pos\":0,\"type\":\"long\"},{\"name\":\"toRawJid\",\"def_pos\":0,\"type\":\"java.lang.String\"}],\"field_count\":11,\"full_name\":\"com.whatsapp.messaging.receipts.jobqueue.job.SendPlayedReceiptJobV2\",\"name\":\"SendPlayedReceiptJobV2\",\"inner_classes\":[],\"inner_class_count\":0,\"method_count\":8,\"methods\":[{\"dex_descriptor\":\"(LX/EcR;Z)V\",\"is_constructor\":true,\"name\":\"\\u003cinit\\u003e\",\"def_pos\":0,\"signature\":\"\\u003cinit\\u003e(X.EcR, boolean): void\"},{\"dex_descriptor\":\"()Ljava/lang/String;\",\"is_constructor\":false,\"name\":\"A00\",\"def_pos\":0,\"signature\":\"A00(): java.lang.String\"},{\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"A0J\",\"def_pos\":0,\"signature\":\"A0J(): void\"},{\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"A0K\",\"def_pos\":0,\"signature\":\"A0K(): void\"},{\"dex_descriptor\":\"()V\",\"is_constructor\":false,\"name\":\"A0L\",\"def_pos\":0,\"signature\":\"A0L(): void\"},{\"dex_descriptor\":\"(Ljava/lang/Exception;)Z\",\"is_constructor\":false,\"name\":\"A0N\",\"def_pos\":0,\"signature\":\"A0N(java.lang.Exception): boolean\"},{\"dex_descriptor\":\"(Landroid/content/Context;)V\",\"is_constructor\":false,\"name\":\"Cf0\",\"def_pos\":0,\"signature\":\"Cf0(android.content.Context): void\"},{\"dex_descriptor\":\"(Ljava/io/ObjectInputStream;)V\",\"is_constructor\":false,\"name\":\"readObject\",\"def_pos\":0,\"signature\":\"readObject(java.io.ObjectInputStream): void\"}]}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "operation": "get_method_body",
+        "input": {
+          "class_name": "com.whatsapp.messaging.receipts.jobqueue.job.SendPlayedReceiptJobV2",
+          "method_name": "A0L",
+          "overload_index": 0,
+          "smali_fallback": true
+        },
+        "response": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"method_name\":\"A0L\",\"overload_count\":1,\"body\":\"    /* JADX WARN: Code duplicated, block: B:6:0x0035  */\\n    @Override // org.whispersystems.jobqueue.Job\\n    public void A0L() throws ExecutionException, InterruptedException {\\n        boolean z;\\n        C0DY c0dyA0R \\u003d B1w.A0R(this.toRawJid);\\n        String str \\u003d this.participantRawJid;\\n        C0Di c0Di \\u003d C0DY.A00;\\n        Pair pairA05 \\u003d Exf.A05(null, c0dyA0R, c0Di.A02(str));\\n        if (this.A02.A08(C0Di.A00((Jid) pairA05.first))) {\\n            z \\u003d C0Dn.A0a(C0Di.A00((Jid) pairA05.first)) ? false : true;\\n        }\\n        C1dI c1dI \\u003d this.A00;\\n        Object obj \\u003d pairA05.second;\\n        if (obj \\u003d\\u003d null) {\\n            obj \\u003d pairA05.first;\\n        }\\n        String str2 \\u003d (!z || c1dI.A00(C2L6.A0n((Jid) obj))) ? \\\"played-self\\\" : \\\"played\\\";\\n        A00();\\n        if (!z) {\\n            FXW fxw \\u003d this.A03;\\n            EcR ecR \\u003d new EcR(C0Di.A01(this.toRawJid), c0Di.A02(this.participantRawJid), this.messageRowIds, this.messageIds, this.isCoExV2);\\n            C2LA.A1L(\\\"PlayedSelfReceiptStore/insertPlayedSelfReceipt/toJid \\u003d \\\", ecR);\\n            ContentValues contentValuesA06 \\u003d C2LA.A06();\\n            String[] strArr \\u003d ecR.A04;\\n            int length \\u003d strArr.length;\\n            for (int i \\u003d 0; i \\u003c length; i++) {\\n                contentValuesA06.clear();\\n                C00x c00x \\u003d fxw.A00.A00;\\n                contentValuesA06.put(\\\"to_jid_row_id\\\", Long.valueOf(C2L6.A0x(c00x).A07(ecR.A01)));\\n                C0DY c0dy \\u003d ecR.A00;\\n                if (c0dy !\\u003d null) {\\n                    contentValuesA06.put(\\\"participant_jid_row_id\\\", Long.valueOf(DBb.A03(c00x, c0dy)));\\n                }\\n                contentValuesA06.put(\\\"message_row_id\\\", ecR.A03[i]);\\n                contentValuesA06.put(\\\"message_id\\\", strArr[i]);\\n                C0aq c0aqA0a \\u003d C1Xl.A0a(fxw.A01);\\n                try {\\n                    C1hk c1hkA00 \\u003d c0aqA0a.A00();\\n                    try {\\n                        if (c0aqA0a.A02.A05(\\\"played_self_receipt\\\", \\\"PlayedSelfReceiptStore/INSERT_PLAYED_SELF_RECEIPT\\\", contentValuesA06) \\u003d\\u003d -1) {\\n                            Log.w(\\\"PlayedSelfReceiptStore/insertPlayedSelfReceipt fail to insert\\\");\\n                        }\\n                        c1hkA00.A00();\\n                        c1hkA00.close();\\n                        c0aqA0a.close();\\n                    } catch (Throwable th) {\\n                        try {\\n                            throw th;\\n                        } catch (Throwable th2) {\\n                            C08N.A00(c1hkA00, th);\\n                            throw th2;\\n                        }\\n                    }\\n                } catch (Throwable th3) {\\n                    try {\\n                        throw th3;\\n                    } catch (Throwable th4) {\\n                        C08N.A00(c0aqA0a, th3);\\n                        throw th4;\\n                    }\\n                }\\n            }\\n        }\\n        if (\\\"played-self\\\".equals(str2) \\u0026\\u0026 this.playedSelfFromPeer) {\\n            return;\\n        }\\n        C0DY c0dyA00 \\u003d C0Di.A00((Jid) pairA05.first);\\n        if (c0dyA00 \\u003d\\u003d null) {\\n            Log.w(\\\"SendPlayedReceiptJobV2/onRun invalid remote jid\\\");\\n            return;\\n        }\\n        Pair pairA04 \\u003d Exf.A04(c0dyA00, null, this.isCoExV2);\\n        Efa efa \\u003d new Efa();\\n        efa.A02 \\u003d (Jid) pairA04.first;\\n        efa.A06 \\u003d \\\"receipt\\\";\\n        efa.A09 \\u003d str2;\\n        efa.A08 \\u003d this.messageIds[0];\\n        efa.A01 \\u003d (Jid) pairA05.second;\\n        efa.A03 \\u003d (UserJid) pairA04.second;\\n        this.A01.A0B(Message.obtain(null, 0, 38, 0, new EW7((C0DY) pairA04.first, C0Di.A00((Jid) pairA05.second), (UserJid) pairA04.second, str2, this.messageIds)), efa.A00()).get();\\n    }\",\"fell_back\":false,\"overload_index\":0,\"class_name\":\"com.whatsapp.messaging.receipts.jobqueue.job.SendPlayedReceiptJobV2\",\"full_name\":\"com.whatsapp.messaging.receipts.jobqueue.job.SendPlayedReceiptJobV2.A0L\",\"mode\":\"java\",\"markers\":[]}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "engine": {
+      "name": "jadx-headless-mcp",
+      "version": "0.7.1",
+      "artifact_sha256": "6e5eacf500b64292bfb73c49797c1958f6ee44646e43e868039ae7feb573ff75",
+      "source_revision": "5844800a486d2248fa949b74c9896285f5b54de2",
+      "worker_count": 1,
+      "heap_limit_mib": 15912
+    },
+    "class_name": "com.whatsapp.messaging.receipts.jobqueue.job.SendPlayedReceiptJobV2",
+    "method": {
+      "name": "A0L",
+      "reported_signature": "A0L(): void",
+      "overload_index": 0,
+      "is_constructor": false,
+      "dex_descriptor": "()V"
+    },
+    "overload_count": 1,
+    "representation": "java",
+    "body_status": "available",
+    "fell_back": false,
+    "markers": [],
+    "source": {
+      "status": "complete",
+      "text": "    /* JADX WARN: Code duplicated, block: B:6:0x0035  */\n    @Override // org.whispersystems.jobqueue.Job\n    public void A0L() throws ExecutionException, InterruptedException {\n        boolean z;\n        C0DY c0dyA0R = B1w.A0R(this.toRawJid);\n        String str = this.participantRawJid;\n        C0Di c0Di = C0DY.A00;\n        Pair pairA05 = Exf.A05(null, c0dyA0R, c0Di.A02(str));\n        if (this.A02.A08(C0Di.A00((Jid) pairA05.first))) {\n            z = C0Dn.A0a(C0Di.A00((Jid) pairA05.first)) ? false : true;\n        }\n        C1dI c1dI = this.A00;\n        Object obj = pairA05.second;\n        if (obj == null) {\n            obj = pairA05.first;\n        }\n        String str2 = (!z || c1dI.A00(C2L6.A0n((Jid) obj))) ? \"played-self\" : \"played\";\n        A00();\n        if (!z) {\n            FXW fxw = this.A03;\n            EcR ecR = new EcR(C0Di.A01(this.toRawJid), c0Di.A02(this.participantRawJid), this.messageRowIds, this.messageIds, this.isCoExV2);\n            C2LA.A1L(\"PlayedSelfReceiptStore/insertPlayedSelfReceipt/toJid = \", ecR);\n            ContentValues contentValuesA06 = C2LA.A06();\n            String[] strArr = ecR.A04;\n            int length = strArr.length;\n            for (int i = 0; i < length; i++) {\n                contentValuesA06.clear();\n                C00x c00x = fxw.A00.A00;\n                contentValuesA06.put(\"to_jid_row_id\", Long.valueOf(C2L6.A0x(c00x).A07(ecR.A01)));\n                C0DY c0dy = ecR.A00;\n                if (c0dy != null) {\n                    contentValuesA06.put(\"participant_jid_row_id\", Long.valueOf(DBb.A03(c00x, c0dy)));\n                }\n                contentValuesA06.put(\"message_row_id\", ecR.A03[i]);\n                contentValuesA06.put(\"message_id\", strArr[i]);\n                C0aq c0aqA0a = C1Xl.A0a(fxw.A01);\n                try {\n                    C1hk c1hkA00 = c0aqA0a.A00();\n                    try {\n                        if (c0aqA0a.A02.A05(\"played_self_receipt\", \"PlayedSelfReceiptStore/INSERT_PLAYED_SELF_RECEIPT\", contentValuesA06) == -1) {\n                            Log.w(\"PlayedSelfReceiptStore/insertPlayedSelfReceipt fail to insert\");\n                        }\n                        c1hkA00.A00();\n                        c1hkA00.close();\n                        c0aqA0a.close();\n                    } catch (Throwable th) {\n                        try {\n                            throw th;\n                        } catch (Throwable th2) {\n                            C08N.A00(c1hkA00, th);\n                            throw th2;\n                        }\n                    }\n                } catch (Throwable th3) {\n                    try {\n                        throw th3;\n                    } catch (Throwable th4) {\n                        C08N.A00(c0aqA0a, th3);\n                        throw th4;\n                    }\n                }\n            }\n        }\n        if (\"played-self\".equals(str2) && this.playedSelfFromPeer) {\n            return;\n        }\n        C0DY c0dyA00 = C0Di.A00((Jid) pairA05.first);\n        if (c0dyA00 == null) {\n            Log.w(\"SendPlayedReceiptJobV2/onRun invalid remote jid\");\n            return;\n        }\n        Pair pairA04 = Exf.A04(c0dyA00, null, this.isCoExV2);\n        Efa efa = new Efa();\n        efa.A02 = (Jid) pairA04.first;\n        efa.A06 = \"receipt\";\n        efa.A09 = str2;\n        efa.A08 = this.messageIds[0];\n        efa.A01 = (Jid) pairA05.second;\n        efa.A03 = (UserJid) pairA04.second;\n        this.A01.A0B(Message.obtain(null, 0, 38, 0, new EW7((C0DY) pairA04.first, C0Di.A00((Jid) pairA05.second), (UserJid) pairA04.second, str2, this.messageIds)), efa.A00()).get();\n    }",
+      "reported_total_bytes": null
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Static decompiler observations do not establish runtime behavior; the APK is never executed.",
+    "Method signatures use provider display types; DEX prototypes come from frozen JADX metadata. Display names may be aliases, and overload indices are local to this engine and artifact.",
+    "Class inventories use parsed metadata before code generation, including synthetic members that may be omitted from decompiled source. Source positions remain unknown.",
+    "Incoming reference totals count JADX using nodes. Direct invoke entries within a using method report raw DEX code-unit offsets and method indexes, but coverage is limited to those nodes and directly matched invokes; it does not establish every possible dynamic or reflective call site.",
+    "Manifest summary fields are extracted by the upstream engine; decoded XML is retained for verification. APK signatures, split APKs, native libraries and Android runtime capture are not verified by this provider."
+  ],
+  "relationship_coverage": null,
+  "locations": [],
+  "evidence_links": []
+}

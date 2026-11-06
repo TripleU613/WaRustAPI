@@ -1127,3 +1127,12 @@ operation was used. No new APK or ban-cause claim is made.
 Validation: 1,513 workspace tests (9 result suites), strict all-target/all-feature
 Clippy, formatting, OpenAPI library coverage, CLI reference regeneration, APK
 coverage freshness and repository hygiene pass.
+
+## Viewer-completion privacy hold (2026-11-06)
+
+Local viewer completion now queues automatic played provenance and can leave
+that original pending intent held by known-disabled read-receipt privacy.
+Consumption remains irreversible; neither a hold nor writer refusal permits
+reopening. [Pinned policy, regression and limitations](read-receipt-policy-current.md#automatic-played-privacy-correction-2026-11-06).
+Queued intent remains distinct from transmission/server acceptance; no live
+image or account operation was performed for this correction.

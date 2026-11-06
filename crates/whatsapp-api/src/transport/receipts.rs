@@ -39,6 +39,8 @@ fn retry_selector(chat: &Jid, participant: &Option<Jid>, id: &str) -> Result<Str
 /// Record successful display of the consumed image and durably queue `played`.
 /// APK SendPlayedReceiptJobV2.A0G -> LX/0y0 (0x0c1e) -> LX/Cns.A09.
 /// No action for merely downloaded media or historical unknown viewer outcomes.
+/// New automatic direct intents remain pending when known server privacy is disabled;
+/// consumption is not undone and played-self routing is not synthesized.
 pub fn queue_opened(store: &ProtocolStore, ticket: &str) -> Result<()> {
     store.write(|tx| {
         let mut cursor = None;
@@ -81,12 +83,14 @@ pub fn queue_opened(store: &ProtocolStore, ticket: &str) -> Result<()> {
         {
             return Err(Error::invalid("receipt", "opened receipt already queued"));
         }
-        tx.put_json(
-            Table::Checkpoints,
-            receipt_key.as_bytes(),
-            1,
-            &serde_json::json!({"status":"pending","wire":wire}),
-        )?;
+        // Viewer completion is an automatic played intent. APK43.72
+        // SendPlayedReceiptJobV2.A0L -> 0xW.A08 requires enabled privacy for
+        // ordinary direct played; played-self routing remains unported.
+        let mut intent = serde_json::json!({"status":"pending","wire":wire,"automatic":true});
+        if automatic_direct_receipt_disabled(tx, &receipt)? {
+            intent["deferred_reason"] = serde_json::json!(READ_DISABLED);
+        }
+        tx.put_json(Table::Checkpoints, receipt_key.as_bytes(), 1, &intent)?;
         saved["opened_receipt"] = serde_json::json!("queued");
         tx.put_json(Table::Checkpoints, &key, 1, &saved)
     })
@@ -227,7 +231,7 @@ fn queue_read_with_origin(
                 crate::binary::TokenDictionary::comparison_2_26_37_71(),
             )
             .encode(&node)?;
-            let deferred = automatic && automatic_direct_read_disabled(tx, &node)?;
+            let deferred = automatic && automatic_direct_receipt_disabled(tx, &node)?;
             let mut row = serde_json::json!({"status":"pending","wire":wire,"automatic":automatic});
             if deferred {
                 row["deferred_reason"] = serde_json::json!(READ_DISABLED);
@@ -353,16 +357,20 @@ fn deferred_reason(row: &serde_json::Value) -> Result<Option<&'static str>> {
     }
 }
 
-fn is_direct_read(node: &Node) -> bool {
+fn is_direct_privacy_receipt(node: &Node) -> bool {
     node.description == "receipt"
-        && node.get_attr("type").and_then(|v| v.as_text()) == Some("read")
+        && matches!(
+            node.get_attr("type").and_then(|v| v.as_text()),
+            Some("read" | "played")
+        )
         && jid(node, "to").is_some_and(|j| matches!(j.server, Server::User | Server::Lid))
 }
 
-fn automatic_direct_read_disabled(tx: &crate::store::WriteTx<'_>, node: &Node) -> Result<bool> {
-    // APK43.72 0xW.A05: non-group normal read requires A1H true.
-    // Read-self/own companion routing remains unported. Proven negative gate only.
-    if !is_direct_read(node) {
+fn automatic_direct_receipt_disabled(tx: &crate::store::WriteTx<'_>, node: &Node) -> Result<bool> {
+    // APK43.72 0xW.A05/A08 and SendPlayedReceiptJobV2.A0L:
+    // ordinary direct normal read/played requires A1H true. Self/companion
+    // routing and full contact/block policy remain unported. Negative gate only.
+    if !is_direct_privacy_receipt(node) {
         return Ok(false);
     }
     Ok(super::account_privacy::read_receipts_in_write(tx)?.is_some_and(|p| !p.value.enabled()))
@@ -747,7 +755,7 @@ pub(crate) struct ReceiptWriteGuard {
     account_authority: [u8; 32],
     callback_owner: (Vec<u8>, zeroize::Zeroizing<Vec<u8>>),
     members: Vec<(Vec<u8>, zeroize::Zeroizing<Vec<u8>>)>,
-    automatic_direct_read: bool,
+    automatic_direct_receipt: bool,
 }
 impl ReceiptWriteGuard {
     pub(crate) fn check_write_authority(&self, store: &ProtocolStore) -> Result<()> {
@@ -790,12 +798,12 @@ impl ReceiptWriteGuard {
                     ));
                 }
             }
-            if self.automatic_direct_read
+            if self.automatic_direct_receipt
                 && super::account_privacy::read_receipts_in(tx)?.is_some_and(|p| !p.value.enabled())
             {
                 return Err(Error::invalid(
                     "receipt",
-                    "automatic direct-read disabled before write",
+                    "automatic direct receipt disabled before write",
                 ));
             }
             Ok(())
@@ -854,7 +862,7 @@ pub fn reserve_pending_owned(store: &ProtocolStore) -> Result<Vec<ReservedReceip
                 let node = decode(&wire)?;
                 let origin = automatic_origin(&row)?;
                 let _ = deferred_reason(&row)?;
-                if origin == Some(true) && automatic_direct_read_disabled(tx, &node)? {
+                if origin == Some(true) && automatic_direct_receipt_disabled(tx, &node)? {
                     if row.get("deferred_reason").is_none() {
                         row["deferred_reason"] = serde_json::json!(READ_DISABLED);
                         tx.put_json(Table::Checkpoints, key, 1, &row)?;
@@ -935,7 +943,7 @@ pub fn reserve_pending_owned(store: &ProtocolStore) -> Result<Vec<ReservedReceip
                 ));
             }
             let mut members = Vec::new();
-            let mut automatic_direct_read = false;
+            let mut automatic_direct_receipt = false;
             for (key, mut row) in reserved {
                 row["status"] = serde_json::json!("outcome_unknown");
                 // Local reservation owner, not a native stanza/key field.
@@ -946,8 +954,8 @@ pub fn reserve_pending_owned(store: &ProtocolStore) -> Result<Vec<ReservedReceip
                         serde_json::json!(node.get_attr("id").unwrap().as_text().unwrap());
                 }
                 // Preserve the original per-message wire for inspection/deduplication.
-                automatic_direct_read |=
-                    automatic_origin(&row)? == Some(true) && is_direct_read(&node);
+                automatic_direct_receipt |=
+                    automatic_origin(&row)? == Some(true) && is_direct_privacy_receipt(&node);
                 tx.put_json(Table::Checkpoints, &key, 1, &row)?;
                 let saved = tx
                     .get(Table::Checkpoints, &key, 1)?
@@ -980,7 +988,7 @@ pub fn reserve_pending_owned(store: &ProtocolStore) -> Result<Vec<ReservedReceip
                         zeroize::Zeroizing::new(callback_raw),
                     ),
                     members,
-                    automatic_direct_read,
+                    automatic_direct_receipt,
                 },
             });
         }
@@ -3680,6 +3688,146 @@ mod tests {
                     assert!(reserve_pending_owned(&db).unwrap().is_empty());
                 }
             }
+        }
+    }
+
+    fn opened_fixture(store: &ProtocolStore, from: &str) -> String {
+        let key = format!("received:{from}:opened-fixture");
+        let ticket = hex::encode(Sha256::digest(key.as_bytes()));
+        let mut node = Node::new("message")
+            .attr("id", "opened-fixture")
+            .attr("from", Jid::parse(from).unwrap());
+        if from.ends_with("@g.us") {
+            node = node.attr(
+                "participant",
+                Jid::parse("15555550100@s.whatsapp.net").unwrap(),
+            );
+        }
+        let route =
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
+                .encode(&node)
+                .unwrap();
+        store.write(|tx| tx.put_json(Table::Checkpoints, key.as_bytes(), 1,
+            &serde_json::json!({"status":"consumed", "opened_receipt":"awaiting_viewer", "route":route}))).unwrap();
+        ticket
+    }
+
+    #[test]
+    fn automatic_played_privacy_holds_original_intent_across_reopen() {
+        for from in [
+            "15555550100@s.whatsapp.net",
+            "15555550100@lid",
+            "120363000000000000@g.us",
+        ] {
+            for phase in ["queue", "reservation", "unknown", "legacy"] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("played-privacy.redb");
+                let store = open(&path, true);
+                let ticket = opened_fixture(&store, from);
+                if phase == "queue" {
+                    server_read_preference(&store, "disabled-before-queue", "none");
+                }
+                queue_opened(&store, &ticket).unwrap();
+                let key = format!("receipt-outbox:{ticket}:played");
+                let original: serde_json::Value = store
+                    .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
+                    .unwrap()
+                    .unwrap();
+                assert_eq!(original["automatic"], true);
+                if phase == "legacy" {
+                    store
+                        .write(|tx| {
+                            let mut row = original.clone();
+                            row.as_object_mut().unwrap().remove("automatic");
+                            tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &row)
+                        })
+                        .unwrap();
+                }
+                if phase != "unknown" && phase != "queue" {
+                    server_read_preference(&store, "disabled-before-reservation", "off");
+                }
+                drop(store);
+                let store = open(&path, false);
+                let blocked = !from.ends_with("@g.us") && matches!(phase, "queue" | "reservation");
+                let reserved = reserve_pending_owned(&store).unwrap();
+                assert_eq!(reserved.is_empty(), blocked, "{from} {phase}");
+                let row: serde_json::Value = store
+                    .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
+                    .unwrap()
+                    .unwrap();
+                assert_eq!(row["wire"], original["wire"]);
+                if blocked {
+                    assert_eq!(row["status"], "pending");
+                    assert_eq!(row["deferred_reason"], READ_DISABLED);
+                    assert_eq!(
+                        outcomes(&store).unwrap()[0].deferred_reason,
+                        Some(READ_DISABLED)
+                    );
+                    assert!(queue_opened(&store, &ticket).is_err());
+                    assert!(reserve_pending_owned(&store).unwrap().is_empty());
+                    server_read_preference(&store, "enabled-again", "all");
+                    let ready = reserve_pending_owned(&store).unwrap();
+                    assert_eq!(ready.len(), 1);
+                    assert_eq!(
+                        ready[0].node().get_attr("type").and_then(|v| v.as_text()),
+                        Some("played")
+                    );
+                    assert_eq!(
+                        ready[0].node().get_attr("id").and_then(|v| v.as_text()),
+                        Some("opened-fixture")
+                    );
+                    assert_eq!(outcomes(&store).unwrap()[0].deferred_reason, None);
+                }
+                server_read_preference(&store, "disabled-after-reservation", "none");
+                assert!(reserve_pending_owned(&store).unwrap().is_empty());
+                drop(reserved);
+                drop(store);
+                let store = open(&path, false);
+                assert!(reserve_pending_owned(&store).unwrap().is_empty());
+                let row: serde_json::Value = store
+                    .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
+                    .unwrap()
+                    .unwrap();
+                assert_eq!(row["status"], "outcome_unknown");
+                assert_eq!(row["wire"], original["wire"]);
+            }
+        }
+    }
+
+    #[tokio::test]
+    async fn automatic_played_writer_rechecks_late_privacy_without_releasing_uncertainty() {
+        for from in ["15555550100@s.whatsapp.net", "15555550100@lid"] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("played-late-privacy.redb");
+            let store = std::sync::Arc::new(open(&path, true));
+            let ticket = opened_fixture(&store, from);
+            queue_opened(&store, &ticket).unwrap();
+            let receipt = reserve_pending_owned(&store).unwrap().pop().unwrap();
+            let (_incoming, incoming) = tokio::sync::mpsc::channel(1);
+            let (outgoing, mut writes) = tokio::sync::mpsc::channel(1);
+            let link = super::super::connection::NodeLink::new(incoming, outgoing);
+            let worker = store.clone();
+            let task = tokio::spawn(async move { link.send_receipt(&worker, &receipt).await });
+            let queued = writes.recv().await.unwrap();
+            server_read_preference(&store, "disabled-at-writer", "none");
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let head = store.journal_head().unwrap();
+            assert!(queued.prepare().is_none());
+            assert!(task.await.unwrap().is_err());
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                before
+            );
+            assert_eq!(store.journal_head().unwrap(), head);
+            drop(store);
+            let store = open(&path, false);
+            assert!(reserve_pending_owned(&store).unwrap().is_empty());
+            assert_eq!(outcomes(&store).unwrap()[0].status, "outcome_unknown");
+            assert!(queue_opened(&store, &ticket).is_err());
         }
     }
 

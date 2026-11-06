@@ -1,3 +1,13 @@
+2026-11-06 — **Automatic direct played receipts now honor known-disabled privacy.**
+
+Pinned played/played-self selection exposed an unconditional Rust played queue.
+New viewer-completion intents retain automatic provenance and the original wire;
+known-disabled server preference holds them at queue/reservation and refuses a
+late writer handoff. Consumption and uncertain reservations never reset.
+Unknown/legacy provenance and group/explicit-read behavior remain unchanged.
+[Evidence, regression and limits](docs/protocol/read-receipt-policy-current.md#automatic-played-privacy-correction-2026-11-06).
+1,515 workspace tests (four threads), strict Clippy and repository gates pass.
+
 2026-11-06 — **Native played-receipt exception retry eligibility established.**
 
 Pinned constructor binds persistence, per-chat group, chat requirement and100

@@ -1224,15 +1224,15 @@
           },
           "automatic": {
             "type": ["boolean", "null"],
-            "description": "True for a newly automatic read intent, false for an explicit read, null for legacy/other unknown provenance. No provenance is fabricated for historical rows."
+            "description": "True for a newly automatic read or viewer-completion played intent, false for an explicit read, null for historical/other unknown provenance. No provenance is fabricated for old rows."
           },
           "deferred_reason": {
             "type": ["string", "null"],
             "enum": ["server_read_receipts_disabled", null],
-            "description": "Fixed reason a pending automatic direct read is retained without reservation after a known disabled server preference. Read-self remains unported. Cleared on eligible reservation or explicit promotion; no automatic reset of an uncertain send."
+            "description": "Fixed reason a pending automatic direct read or played is retained after known-disabled server privacy. Read-self/played-self routing remains unported. Cleared on eligible reservation; explicit promotion applies only to pending reads. Never resets an uncertain send."
           }
         },
-        "description": "Outcome of a queued read, played or automatic once-only retry receipt transmission. Native-derived negative privacy guard applies only to newly automatic direct reads at queue and reservation; explicit reads and existing group behavior remain unchanged. Pending deferred work is retained under its original selector. Full read-self/companion/contact policy remains unported; no fresh live validation. Evidence docs/protocol/read-receipt-policy-current.md.",
+        "description": "Outcome of a queued read, played or automatic once-only retry receipt. Known-disabled server privacy holds newly automatic direct read/played at queue and reservation and is rechecked at owned writer handoff. Pending work keeps its original wire/selector; late refusal never releases uncertainty. Unknown preferences/provenance, explicit reads and groups retain existing behavior. Full contact/block/self/companion policy remains unported. Offline regression only. Evidence docs/protocol/read-receipt-policy-current.md#automatic-played-privacy-correction-2026-11-06.",
         "x-cli": "whatsapp-cli receipts",
         "x-transport": ["cli", "http"],
         "x-live": false
@@ -8387,7 +8387,7 @@
           "Media"
         ],
         "summary": "Display a downloaded view-once picture locally for 30 seconds, consuming it",
-        "description": "Display one downloaded view-once picture locally for 30 seconds, consuming it. Cannot be reopened; returns 409 if already consumed. Consumption compares the exact selected inbox row inside its write transaction before decryption or either consumed checkpoint write. Missing or changed source (including a metadata-only rewrite) refuses locally without consuming either record. Ciphertext authentication and valid one-time consumption retain their existing behavior; the consumption ticket alone does not prove viewer display or a server opened receipt. Offline regression tested. See docs/protocol/media-network-outcomes.md#view-once-consumption-source-identity-2026-11-06. Viewer completion queues a played receipt atomically only while the consumed source awaits viewer completion. Existing receipt intents block replacement regardless of pending, uncertain, acknowledged or refused outcome. Offline collision/replay regressions verify unchanged checkpoint bytes and journal after refusal and store reopen; queued intent does not establish transmission or server acceptance.",
+        "description": "Display one downloaded view-once picture locally for 30 seconds, consuming it. Cannot be reopened; returns 409 if already consumed. Consumption compares the exact selected inbox row inside its write transaction before decryption or either consumed checkpoint write. Missing or changed source (including a metadata-only rewrite) refuses locally without consuming either record. Ciphertext authentication and valid one-time consumption retain their existing behavior; the consumption ticket alone does not prove viewer display or a server opened receipt. Offline regression tested. See docs/protocol/media-network-outcomes.md#view-once-consumption-source-identity-2026-11-06. Viewer completion queues a played receipt atomically only while the consumed source awaits viewer completion. Existing receipt intents block replacement regardless of pending, uncertain, acknowledged or refused outcome. Offline collision/replay regressions verify unchanged checkpoint bytes and journal after refusal and store reopen; queued intent does not establish transmission or server acceptance. Viewer completion now queues automatic=true played provenance. A known-disabled validated server read-receipt preference holds new direct played pending under its original selector/wire; reservation and owned writer recheck privacy. Late writer refusal preserves uncertainty and never restores consumed content. No played-self substitute; unknown preferences and historical unknown provenance retain existing behavior. CLI completion reports that privacy may defer sending. Evidence docs/protocol/read-receipt-policy-current.md#automatic-played-privacy-correction-2026-11-06.",
         "operationId": "openViewOnce",
         "x-cli": "whatsapp-cli lab-open-view-once",
         "x-transport": [
@@ -17914,7 +17914,7 @@
     "whatsapp_api::transport::receipts::ReservedReceipt",
     "whatsapp_cli::transport"
   ],
-  "description": "Opaque ReservedReceipt handoff exposes node() and check_write_authority(store). Actor writer and both CLI lab receipt loops require exact snapshots of every reserved batch member and recheck the existing negative automatic direct-read privacy gate before encoding. Changed/missing/settled/origin/correlation members refuse whole batches; disabled automatic reads block mixed batches. Manual/group policy and wire batching/ACK grammar stay unchanged. Legacy reserve_pending remains low-level. No socket lock, replay or live verification.",
+  "description": "Opaque ReservedReceipt handoff exposes node() and check_write_authority(store). Actor writer and both CLI lab receipt loops require exact snapshots of every reserved batch member and recheck the existing negative automatic direct-read/played privacy gate before encoding. Changed/missing/settled/origin/correlation members refuse whole batches; disabled automatic reads block mixed batches. Manual/group policy and wire batching/ACK grammar stay unchanged. Legacy reserve_pending remains low-level. No socket lock, replay or live verification.",
   "evidence": "docs/protocol/replay-safety-audit.md#receipt-writer-owns-every-reserved-batch-member-2026-11-06"
 },
   "x-receipt-ack-auth-challenge-diversion": {

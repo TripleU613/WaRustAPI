@@ -268,3 +268,12 @@ replacement, restart deduplication and safe partial-write recovery remain open
 before any reconstruction of retry authority. No code or live account change.
 Selected exports reproduce exactly; subject/checksums, coverage, OpenAPI/CLI
 reference and repository hygiene verified. No new Rust runtime test claimed.
+
+## Played/played-self policy correction (2026-11-06)
+
+The [current privacy trace and Rust correction](read-receipt-policy-current.md#automatic-played-privacy-correction-2026-11-06)
+close the known-disabled direct privacy boundary. Native A0L uses0xW.A08 and
+1dI.A00 ->1dH.A0T before type selection. New automatic played intents are held
+instead of emitting normal played when supported server privacy is disabled;
+no played-self route or uncertain retry is invented. Full positive contact/block
+policy, own companions and source/retry lifecycle remain unported.
