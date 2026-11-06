@@ -8137,3 +8137,12 @@ Changed/missing bindings refuse before encoding or application; historical
 missing revisions are not inferred. Newer pending notifications remain distinct
 from the original query binding. [Regression matrix, snapshot scope and limits](device-query-deadlines.md#durable-userrevision-ownership-2026-11-06).
 No repair, new retry policy or live operation.
+
+### Key-batch continuation validates saved answered evidence (2026-11-06)
+
+**Confirmed local fix:** reserve_next now re-decodes and validates every saved
+Answered reply before reserving another page or returning completion. It shares
+exact reply/query/target/bundle checks with assembled. Corrupt earlier wire can
+no longer authorize an extra query from its status flag alone. Stored summary
+counts remain diagnostic. [Regression matrix and scope](device-key-batches.md#saved-answered-pages-cannot-authorize-continuation-by-status-alone-2026-11-06).
+No retry, pin replacement, wire change or live operation.

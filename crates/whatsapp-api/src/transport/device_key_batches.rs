@@ -150,6 +150,26 @@ impl Batch {
         }
         Ok(())
     }
+    // A saved status is not evidence that its reply bytes still authorize use.
+    // Share this admission between page continuation and final composition.
+    fn answered_reply(&self, index: usize) -> Result<Node> {
+        let page = &self.pages[index];
+        if page.status != Status::Answered {
+            return Err(blocked(page.status));
+        }
+        let reply = decode(
+            page.reply
+                .as_deref()
+                .ok_or_else(|| invalid("missing saved key-batch reply"))?,
+        )?;
+        if reply.description != "iq"
+            || reply.get_attr("id").and_then(|v| v.as_text()) != page.query_id.as_deref()
+            || classify(&reply, self.expected(index)).is_err()
+        {
+            return Err(invalid("invalid saved answered key-batch reply"));
+        }
+        Ok(reply)
+    }
     fn expected(&self, index: usize) -> &[Jid] {
         &self.devices[index * QUERY_WIDTH..((index + 1) * QUERY_WIDTH).min(self.devices.len())]
     }
@@ -213,6 +233,10 @@ pub fn reserve_next(
             },
         };
         batch.validate()?;batch.matches_devices(&input)?;
+        // Recheck saved answered evidence before another query or completion.
+        for (index, page) in batch.pages.iter().enumerate() {
+            if page.status == Status::Answered { batch.answered_reply(index)?; }
+        }
         let Some(index)=batch.pages.iter().position(|p|p.status!=Status::Answered) else { return Ok(None); };
         if batch.pages[index].status!=Status::Ready { return Err(blocked(batch.pages[index].status)); }
         let query_id=super::messaging::new_message_id()?;
@@ -365,17 +389,7 @@ pub fn assembled(
             if page.status != Status::Answered {
                 return Err(blocked(page.status));
             }
-            let reply = decode(
-                page.reply
-                    .as_deref()
-                    .ok_or_else(|| invalid("missing saved key-batch reply"))?,
-            )?;
-            if reply.description != "iq"
-                || reply.get_attr("id").and_then(|v| v.as_text()) != page.query_id.as_deref()
-                || classify(&reply, batch.expected(index)).is_err()
-            {
-                return Err(invalid("invalid saved answered key-batch reply"));
-            }
+            let reply = batch.answered_reply(index)?;
             users.extend_from_slice(
                 reply
                     .child("list")
@@ -402,13 +416,13 @@ pub struct Summary {
     pub unreserved: usize,
     /// Queries reserved before write without a saved response.
     pub outcome_unknown: usize,
-    /// Queries with all expected valid signed bundles.
+    /// Saved Answered statuses; admission revalidates the retained reply bytes.
     pub answered: usize,
     /// Server/per-device refusals.
     pub refused: usize,
     /// Invalid, ambiguous, foreign or incomplete replies.
     pub invalid_replies: usize,
-    /// Whether every page answered; not permission to send or trust changed pins.
+    /// Whether all saved statuses are Answered; not current cryptographic authority.
     pub complete: bool,
     /// Fixed first failure classification; no server text or identifiers.
     pub blocking_reason: Option<String>,
@@ -894,6 +908,75 @@ mod tests {
         assert!(assembled(&store, &id(), &[]).is_err());
         assert_eq!(legacy, state(&store));
     }
+    #[test]
+    fn corrupt_answered_pages_cannot_authorize_continuation_or_completion() {
+        let dir = tempfile::tempdir().unwrap();
+        for count in [QUERY_WIDTH + 1, 1] {
+            for damage in 0..5 {
+                let path = dir
+                    .path()
+                    .join(format!("answered-admission-{count}-{damage}.db"));
+                let store = open(&path);
+                let targets = (0..count).map(target).collect::<Vec<_>>();
+                let query = reserve_next(&store, &id(), &targets).unwrap().unwrap();
+                let template = user_template();
+                assert!(settle(&store, &id(), &reply(&query, &template)).unwrap());
+                let changed = match damage {
+                    0 => vec![255],
+                    1 => Encoder::new(TokenDictionary::comparison_2_26_37_71())
+                        .encode(&reply(&query, &template).attr("id", "other-query"))
+                        .unwrap(),
+                    2 => Encoder::new(TokenDictionary::comparison_2_26_37_71())
+                        .encode(&reply(&query, &template).attr("type", "get"))
+                        .unwrap(),
+                    3 => Encoder::new(TokenDictionary::comparison_2_26_37_71())
+                        .encode(
+                            &reply(&query, &template)
+                                .children(vec![Node::new("list").children(vec![])]),
+                        )
+                        .unwrap(),
+                    _ => {
+                        let mut children = template.child_nodes().to_vec();
+                        let index = children
+                            .iter()
+                            .position(|n| n.description == "skey")
+                            .unwrap();
+                        let mut signed = children[index].child_nodes().to_vec();
+                        let sig = signed
+                            .iter()
+                            .position(|n| n.description == "signature")
+                            .unwrap();
+                        signed[sig] = Node::new("signature").bytes(vec![0; 64]);
+                        children[index] = children[index].clone().children(signed);
+                        Encoder::new(TokenDictionary::comparison_2_26_37_71())
+                            .encode(&reply(&query, &template.children(children)))
+                            .unwrap()
+                    }
+                };
+                store
+                    .write(|tx| {
+                        let mut batch: Batch =
+                            tx.get_json(Table::Checkpoints, &key(&id()), 1)?.unwrap();
+                        batch.pages[0].reply = Some(changed);
+                        tx.put_json(Table::Checkpoints, &key(&id()), 1, &batch)
+                    })
+                    .unwrap();
+                let before = state(&store);
+                assert!(
+                    reserve_next(&store, &id(), &targets).is_err(),
+                    "damaged answered page {count}/{damage} cannot grant another query or completion"
+                );
+                assert_eq!(state(&store), before);
+                assert!(assembled(&store, &id(), &targets).is_err());
+                assert_eq!(state(&store), before);
+                drop(store);
+                let store = open(&path);
+                assert!(reserve_next(&store, &id(), &targets).is_err());
+                assert_eq!(state(&store), before);
+            }
+        }
+    }
+
     #[test]
     fn corrupted_saved_results_remain_intact_with_redacted_diagnostics() {
         let dir = tempfile::tempdir().unwrap();

@@ -1,3 +1,8 @@
+Directory-key batches now revalidate saved Answered replies before reserving a
+later page or reporting completion. Corrupt evidence refuses without changing
+outcomes; summary flags remain diagnostic rather than cryptographic authority.
+[Audit](docs/protocol/device-key-batches.md#saved-answered-pages-cannot-authorize-continuation-by-status-alone-2026-11-06).
+
 Device-query writer/ingestion admission now checks exact durable users and
 revision bindings against the original callback, not just uncertain status.
 Changed or missing ownership refuses without encoding/application or repair.

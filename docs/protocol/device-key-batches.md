@@ -197,3 +197,52 @@ store fixtures do not establish native execution, server acceptance, full key
 policy parity or restriction prevention. No timeout, retry, reset, new command
 or HTTP write route is added. Full native durable backoff, device/session
 installation and callback lifetime remain separate unresolved requirements.
+
+## Saved answered pages cannot authorize continuation by status alone (2026-11-06)
+
+**Confirmed local defect, fixed offline:** reserve_next checked the saved batch
+shape and target set, then skipped Answered pages without decoding their retained
+replies. A corrupted earlier page could authorize reserving another network query;
+an all-Answered corrupt plan could return None as if complete. Final assembled
+already refused those bytes, but that check happened too late to stop an extra
+query from being reserved. No actual socket transmission or ban cause was observed.
+
+Batch.answered_reply is now shared by continuation and final assembly. It requires
+an Answered page, decodes the retained bytes, checks exact IQ/query-ID ownership
+and runs existing classify against that page's frozen target slice: result type,
+complete/unambiguous device coverage, bundle parsing and classic/PQ signatures
+and supported metadata. reserve_next revalidates every Answered page before
+allocating a new query or returning completion. Failure preserves the original
+batch, private wire and all other state without repair, reclassification or replay.
+assembled uses the same helper instead of maintaining a second validation body.
+
+Regression corrupt_answered_pages_cannot_authorize_continuation_or_completion
+covers a33-target plan with another page still Ready and a single-page plan.
+It injects malformed wire, a different query ID, non-result type, missing device
+coverage or invalid signed-key signatures in the saved first Answered reply.
+Continuation/completion and assembly refuse without changing checkpoints, pins,
+sessions or outbox-related state; continuation also refuses after reopening.
+The old code failed the33-target malformed-wire case by reserving page2.
+Existing130-device32/32/32/32/2 continuation and frozen-reply reuse controls remain.
+
+Summary.answered/complete continue to count structurally valid saved status flags.
+They are diagnostic metadata, not proof that the retained wire still passes
+cryptographic admission; their Rust field documentation now states this explicitly.
+No operator inspection rewrites a damaged outcome to make it usable.
+
+This is a local consistency guard over the existing versioned parser/builders,
+not a new2.26.43.72 field requirement or native retry/scheduler parity claim.
+It does not authenticate arbitrary coordinated local replacement, adopt changed
+peer pins, bind account generation or add directory deadlines/retry authority.
+Full callback, queued-write and target provenance remain separate audit work.
+No live account operation or wire-construction change.
+
+Validation: the33-target corrupt first-page regression reproduced another query
+reservation before the fix. All 1,411 workspace/all-feature tests, strict Clippy,
+CLI reference, OpenAPI library, formatting and coverage freshness checks passed.
+Offline stores/fixtures only; no live account traffic.
+
+Source follow-through: outgoing_group::Pending.next_keys already maps local
+reserve_next InvalidInput failures to KeysInvalid, separately from saved server
+refusal counts. This new corruption refusal therefore does not invent a server
+refusal reason or require another group-path classification change.

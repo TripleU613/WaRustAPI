@@ -4061,7 +4061,7 @@
           "answered": {
             "type": "integer",
             "minimum": 0,
-            "description": "Queries recorded with complete valid signed bundles."
+            "description": "Saved Answered statuses; retained reply bytes are revalidated for continuation and assembly."
           },
           "refused": {
             "type": "integer",
@@ -4075,7 +4075,7 @@
           },
           "complete": {
             "type": "boolean",
-            "description": "Every page answered; not send permission or peer trust."
+            "description": "All saved statuses are Answered; not current cryptographic admission, send permission or peer trust."
           },
           "blocking_reason": {
             "type": [
@@ -17457,5 +17457,12 @@
     "x-live": false,
     "description": "DeviceQuery ingestion and writer dequeue now require outcome_unknown, exact original ordered users and Some(revisions) with matching cardinality. Device outbound guards retain the original callback/store instead of only a deadline. Missing/changed ownership refuses without encoding, list/pending application or repair; old absent revisions are not inferred. Newer pending notification revisions remain independently protected. Full account/context/SID/wire binding and post-snapshot mutation remain outside this guard.",
     "evidence": "docs/protocol/device-query-deadlines.md#durable-userrevision-ownership-2026-11-06"
+  },
+  "x-device-key-batch-continuation-evidence": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Directory-key reserve_next revalidates all saved Answered reply bytes before another page or completion. Shared answered_reply enforces IQ/query ownership and the existing frozen-target/bundle/signature classifier used by assembled. Corruption refuses without changing saved outcomes or granting repair/retry. Summary answered/complete count stored statuses and are not current cryptographic authority. No wire, pin-replacement, callback-deadline or account-generation claim is added.",
+    "evidence": "docs/protocol/device-key-batches.md#saved-answered-pages-cannot-authorize-continuation-by-status-alone-2026-11-06"
   }
 }
