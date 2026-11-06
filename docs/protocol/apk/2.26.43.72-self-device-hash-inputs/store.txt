@@ -1,0 +1,38 @@
+
+# class: LX/1nG;
+# extends: Ljava/lang/Object;
+
+.method public A08(L)  # .registers 6
+    # full signature: LX/1nG;->A08()Lcom/google/common/collect/ImmutableMap;
+    0000..0004  iget-object  v0, v5, LX/1nG;->A07:LX/1nH;
+    0004..000a  invoke-virtual  {v0}, LX/1nH;->A06()Lcom/google/common/collect/ImmutableMap;
+    000a..000c  move-result-object  v0
+    000c..0012  invoke-virtual  {v0}, Lcom/google/common/collect/ImmutableMap;->entrySet()Lcom/google/common/collect/ImmutableSet;
+    0012..0014  move-result-object  v0
+    0014..001a  invoke-virtual  {v0}, Lcom/google/common/collect/ImmutableCollection;->iterator()LX/0LD;
+    001a..001c  move-result-object  v4
+    001c..0020  new-instance  v3, Lcom/google/common/collect/ImmutableMap$Builder;
+    0020..0026  invoke-direct  {v3}, Lcom/google/common/collect/ImmutableMap$Builder;-><init>()V
+    0026..002c  invoke-interface  {v4}, Ljava/util/Iterator;->hasNext()Z
+    002c..002e  move-result  v0
+    002e..0032  if-eqz  v0, +0x20
+    0032..0038  invoke-interface  {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0038..003a  move-result-object  v2
+    003a..003e  check-cast  v2, Ljava/util/Map$Entry;
+    003e..0044  invoke-interface  {v2}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+    0044..0046  move-result-object  v0
+    0046..004a  check-cast  v0, LX/F0I;
+    004a..0050  invoke-virtual  {v0}, LX/F0I;->A04()Z
+    0050..0052  move-result  v0
+    0052..0056  if-nez  v0, -0x16
+    0056..005c  invoke-interface  {v2}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+    005c..005e  move-result-object  v1
+    005e..0064  invoke-interface  {v2}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+    0064..0066  move-result-object  v0
+    0066..006c  invoke-virtual  {v3, v1, v0}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    006c..006e  goto  -0x23
+    006e..0074  invoke-virtual  {v3}, Lcom/google/common/collect/ImmutableMap$Builder;->build()Lcom/google/common/collect/ImmutableMap;
+    0074..0076  move-result-object  v0
+    0076..0078  return-object  v0
+    # exception table: 0 try range(s)
+.end method

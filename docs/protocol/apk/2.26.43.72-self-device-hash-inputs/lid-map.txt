@@ -1,0 +1,16 @@
+
+# class: LX/0Dn;
+# extends: Ljava/lang/Object;
+
+.method public A04(LLI)  # .registers 3
+    # full signature: LX/0Dn;->A04(LX/0Dx;I)LX/0EM;
+    0000..0004  const/16  v0, #0x63
+    0004..0008  if-ne  v2, v0, +0x8
+    0008..000c  new-instance  v0, LX/Dv6;
+    000c..0012  invoke-direct  {v0, v1, v2}, LX/Dv6;-><init>(LX/0Dx;I)V
+    0012..0014  return-object  v0
+    0014..0018  new-instance  v0, LX/0EM;
+    0018..001e  invoke-direct  {v0, v1, v2}, LX/0EM;-><init>(Lcom/whatsapp/infra/core/jid/UserJid;I)V
+    001e..0020  return-object  v0
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,14 @@
+
+# class: LX/F0I;
+# extends: Ljava/lang/Object;
+
+.method public A04(Z)  # .registers 6
+    # full signature: LX/F0I;->A04()Z
+    0000..0004  iget-wide  v3, v5, LX/F0I;->A02:J
+    0004..0008  const-wide/16  v1, #0x0
+    0008..000c  cmp-long  v0, v3, v1
+    000c..0012  invoke-static  {v0}, LX/2L9;->A1N(I)Z
+    0012..0014  move-result  v0
+    0014..0016  return  v0
+    # exception table: 0 try range(s)
+.end method

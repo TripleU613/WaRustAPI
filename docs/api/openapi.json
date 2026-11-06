@@ -17667,5 +17667,12 @@
     "x-live": false,
     "description": "Research-only current APK43.72 explicit device-hash formats match existing Rust2:/3: implementations in admitted ASCII other-user scope; sorted address SHA-256 truncated6bytes with Base64 flag2. Existing independent vectors pass. Effective version, self-device/cache/alias authority remain incomplete; no runtime default or query added.",
     "evidence": "docs/protocol/cross-device-sync.md#current-apk-device-hash-format-comparison-2026-11-06"
+},
+  "x-self-device-hash-input-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Research-only APK43.72 self-PN/LID hash input filtering and device-number-preserving own-account normalization. Current own-device addition differs from non-self primary inclusion. Source authentication, BUx/BVC, record semantics and subtype/device99 lifecycle remain incomplete; no generic alias rewrite or runtime change added.",
+    "evidence": "docs/protocol/cross-device-sync.md#current-self-device-hash-input-normalization-2026-11-06"
 }
 }

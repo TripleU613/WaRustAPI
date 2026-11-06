@@ -1,0 +1,50 @@
+{
+  "README.md": {
+    "bytes": 4242,
+    "sha256": "e546a6fdc0ca229eca29bbc98b2f024b0ce55eadf8a0f3d02f7ae548fa9e2a1e"
+  },
+  "device-map.txt": {
+    "bytes": 991,
+    "sha256": "8af4038638061cfa2e2c41bc54e3da39b5049acb39fa1f75e51cb92f5350fbfe"
+  },
+  "excluded-sign.txt": {
+    "bytes": 305,
+    "sha256": "6930979732973fcba2a3916a92f2d50bc81f92dc6a1c7e771231cd2647e4629b"
+  },
+  "excluded.txt": {
+    "bytes": 415,
+    "sha256": "dc05503ae7f0adb450dfbc9e1a48c557393cf5a9199e97e43d5c90fddb756676"
+  },
+  "lid-map.txt": {
+    "bytes": 589,
+    "sha256": "314ced2ee4fa7634dfbd0510efbb59bee967aace40cf7230b7f8ceec0bd240b9"
+  },
+  "lid-predicate.txt": {
+    "bytes": 697,
+    "sha256": "1c50ac0ff34f3256e807ebe2b87af734f2956d1530b8cc1161ca12d769b82ad1"
+  },
+  "lid.txt": {
+    "bytes": 2364,
+    "sha256": "9d5f74f6844b06f4c89de35083a1f425cb5a4a48587f6b8ba6f7886e749d11b4"
+  },
+  "phone-type.txt": {
+    "bytes": 333,
+    "sha256": "b1772e096c5cc334dae7bc10562650ac322621e5132ea64d6b1512d27cb4bf3f"
+  },
+  "pn-predicate.txt": {
+    "bytes": 486,
+    "sha256": "145e0c7cc0b3caf1186683230829207b176ebb35f90b06749b5aeb0f7ea9a98a"
+  },
+  "pn.txt": {
+    "bytes": 2299,
+    "sha256": "f10be7dcb86a3a4c6bafdfed0da8ab5d3b08e4cad73babf1df4efc057cfc2d11"
+  },
+  "source.txt": {
+    "bytes": 1429,
+    "sha256": "bfb9adb53ca85aab56ac10361633147819bb3b98f5b86dddabb8ad8b24996637"
+  },
+  "store.txt": {
+    "bytes": 2191,
+    "sha256": "79bc90e402087296fb4e5fa64f87b9413ae044bd83d93c90eff4d9aa8fefd402"
+  }
+}

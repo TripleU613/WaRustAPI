@@ -1,0 +1,30 @@
+
+# class: LX/0jD;
+# extends: Ljava/lang/Object;
+
+.method public A02(L)  # .registers 3
+    # full signature: LX/0jD;->A02()Lcom/google/common/collect/ImmutableSet;
+    0000..0004  iget-object  v0, v2, LX/0jD;->A01:LX/00x;
+    0004..000a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    000a..000c  move-result-object  v0
+    000c..0010  check-cast  v0, LX/00X;
+    0010..0016  invoke-virtual  {v0}, LX/00X;->A01()LX/00Y;
+    0016..0018  move-result-object  v1
+    0018..001c  const/16  v0, #0xa16
+    001c..0022  invoke-static  {v1, v0}, LX/09H;->A03(LX/00Y;I)Ljava/lang/Object;
+    0022..0024  move-result-object  v1
+    0024..0028  check-cast  v1, LX/1nG;
+    0028..002c  iget-object  v0, v2, LX/0jD;->A02:LX/09F;
+    002c..0032  invoke-interface  {v0}, LX/09F;->BUx()Z
+    0032..0034  move-result  v0
+    0034..0038  if-nez  v0, +0x7
+    0038..003e  invoke-static  {}, Lcom/google/common/collect/ImmutableSet;->of()Lcom/google/common/collect/ImmutableSet;
+    003e..0040  move-result-object  v0
+    0040..0042  return-object  v0
+    0042..0048  invoke-virtual  {v1}, LX/1nG;->A08()Lcom/google/common/collect/ImmutableMap;
+    0048..004a  move-result-object  v0
+    004a..0050  invoke-virtual  {v0}, Lcom/google/common/collect/ImmutableMap;->keySet()Lcom/google/common/collect/ImmutableSet;
+    0050..0052  move-result-object  v0
+    0052..0054  return-object  v0
+    # exception table: 0 try range(s)
+.end method

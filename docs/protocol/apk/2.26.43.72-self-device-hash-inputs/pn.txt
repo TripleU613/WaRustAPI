@@ -1,0 +1,43 @@
+
+# class: LX/0jD;
+# extends: Ljava/lang/Object;
+
+.method public A0B(L)  # .registers 8
+    # full signature: LX/0jD;->A0B()Ljava/util/HashSet;
+    0000..0004  new-instance  v6, Ljava/util/HashSet;
+    0004..000a  invoke-direct  {v6}, Ljava/util/HashSet;-><init>()V
+    000a..000e  iget-object  v5, v7, LX/0jD;->A02:LX/09F;
+    000e..0014  invoke-interface  {v5}, LX/09F;->Aum()Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    0014..0016  move-result-object  v4
+    0016..001c  invoke-virtual  {v7}, LX/0jD;->A02()Lcom/google/common/collect/ImmutableSet;
+    001c..001e  move-result-object  v0
+    001e..0024  invoke-virtual  {v0}, Lcom/google/common/collect/ImmutableCollection;->iterator()LX/0LD;
+    0024..0026  move-result-object  v3
+    0026..002c  invoke-interface  {v3}, Ljava/util/Iterator;->hasNext()Z
+    002c..002e  move-result  v0
+    002e..0032  if-eqz  v0, +0x2e
+    0032..0038  invoke-interface  {v3}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0038..003a  move-result-object  v2
+    003a..003e  check-cast  v2, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    003e..0042  iget-object  v1, v2, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    0042..0048  invoke-static  {v1}, LX/0Dn;->A0d(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0048..004a  move-result  v0
+    004a..004e  if-nez  v0, +0x1c
+    004e..0054  invoke-static  {v1}, LX/0Dn;->A0Y(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0054..0056  move-result  v0
+    0056..005a  if-eqz  v0, -0x18
+    005a..005e  if-eqz  v4, -0x1a
+    005e..0064  invoke-interface  {v5, v1}, LX/09F;->BVC(LX/0DY;)Z
+    0064..0066  move-result  v0
+    0066..006a  if-eqz  v0, -0x20
+    006a..0070  invoke-virtual  {v2}, Lcom/whatsapp/infra/core/jid/Jid;->getDevice()I
+    0070..0072  move-result  v1
+    0072..0076  sget-object  v0, Lcom/whatsapp/infra/core/jid/DeviceJid;->Companion:LX/0EB;
+    0076..007c  invoke-virtual  {v0, v4, v1}, LX/0EB;->A02(Lcom/whatsapp/infra/core/jid/UserJid;I)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    007c..007e  move-result-object  v2
+    007e..0082  if-eqz  v2, -0x2c
+    0082..0088  invoke-virtual  {v6, v2}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0088..008a  goto  -0x31
+    008a..008c  return-object  v6
+    # exception table: 0 try range(s)
+.end method
