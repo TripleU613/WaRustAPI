@@ -155,3 +155,37 @@ exclude interface dispatch. Six w:gp2 string references were found; inspected
 1ro is a token array, E88 an enum,2ER a type list,T3n a registry constructor,
 and8B8.A0I a typed converter. These alone do not bind209/189; positive proof
 is the retained complete EL2 map and1rN consumer. Unrelated tables are omitted.
+
+## Picture base ACK integration — 2026-11-05
+
+**Confirmed static:**8aj.run with nonzero selector (selector1 scheduled by8bl)
+unpacks the captured handler/IncomingStanza/Eoh/child/code and calls0v6.A01
+at0028..002e. This closes that deferred call edge. Complete19k declared method
+inventory contains only constructor and A09; no ACK override exists there.
+The exact0v6.A07 caller census contains45 physical calls and none in19k.
+A07 is the selected base deferral helper: it removes the current atomic stanza
+and inserts it into A0A. Exact A0A field references are retained; they identify
+base initialization/processing/deferral and89Y/8bZ consumers. Reflection and
+untraced indirect mutation are not disproved. Ordinary return from A09 reaches
+base A01's atomic claim, A0A membership test and A00 ACK dispatch.
+
+For non-BX2 stanzas, A00 calls0Sf.A0O ->private A07 ->1i8.A03 and queues its
+Message through0Sf.A0V.1i8.A03 puts the Eoh into Message code76. BX2 has its
+separate1ic/2Dx path; neither is a new Rust CCQ implementation. Final wire
+serialization remains the existing shared-base evidence, not newly traced by
+these selected methods. Scheduling latency and native database failure/error
+ACK behavior are not ported from this trace.
+
+**Implemented locally:** notifications::picture_ack uses the existing base_ack
+for exact notification/type=picture. Connection dispatch invokes it after the
+existing durable capture. Envelope guards retain the shared nonempty bounded ID,
+valid sender and optional valid participant rules. InvalidInput is logged and
+leaves receive running, with no ACK. Redelivery is ACKed again; no photo update,
+query, marker persistence, identity adoption or outbound message is triggered.
+This supersedes the previous no-picture-ACK source-review finding. Photo and
+missing-identification state application remain unported; ACK support does not
+claim their parity or any live server acceptance.
+
+The actor regression checks exact ACK and participant routing, capture existence
+before completing the write, repeated notification, malformed envelope followed
+by a ping barrier, no extra output, and durable capture after store reopen.

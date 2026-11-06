@@ -1,0 +1,4 @@
+# Complete class export SHA-256: ad1e872666a786c287ee4c1ecc456ced0b2ccbba51de7f26a0fa55406e1783a3
+# Declared method inventory from complete export; bodies already retained separately.
+.method public <init>(V)  # .registers 3
+.method public A09(VLI)  # .registers 36

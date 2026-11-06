@@ -1,7 +1,7 @@
 {
   "README.md": {
-    "bytes": 9589,
-    "sha256": "c0c9338637f988a65af8b844bfc21aee9bb4927c5ff925db5b95195c06983d73"
+    "bytes": 11752,
+    "sha256": "8123e127e46a2e6a525d37ec953f9303093e618f82979bb1167e4f7f70a35657"
   },
   "adjacent-flag-negative.txt": {
     "bytes": 119,
@@ -11,9 +11,17 @@
     "bytes": 39385,
     "sha256": "aee41162788c93d67d5e0fa5f89bb7bc976421e38681b2b8d7c04016dba1ed13"
   },
+  "base-ack-deferral-field-refs.txt": {
+    "bytes": 393,
+    "sha256": "15a92e09999a120081ae168402193090181a3dcb4073cf506768dfb5dd7cd813"
+  },
   "base-callers.txt": {
     "bytes": 130,
     "sha256": "f3e9aae17bac112e62a39ced85e36f71283663234bb59ec0acec8b9732ba024f"
+  },
+  "base-defer-callers.txt": {
+    "bytes": 2974,
+    "sha256": "1df3b54bdf2a2faa6d856ba93f78dad7b735c551aaadcc6353ee728ba9fb87c8"
   },
   "base-registration-callers-negative.txt": {
     "bytes": 0,
@@ -94,6 +102,26 @@
   "notification-type-map.txt": {
     "bytes": 12875,
     "sha256": "0b4d28e2cc291529803ea15fcc136e0824cd05a6c01458c8627c68abc1bf467a"
+  },
+  "picture-ack-envelope.txt": {
+    "bytes": 1136,
+    "sha256": "501a406d4fe003738f86ed40035ba3106fe5b285a06b214330894f1354876504"
+  },
+  "picture-base-ack-dispatch.txt": {
+    "bytes": 376,
+    "sha256": "8ccfc367b2b56d5f10ae18f600e9c3af3548864f65fe35c74b3b723e5daccb37"
+  },
+  "picture-base-ack-message.txt": {
+    "bytes": 2060,
+    "sha256": "2fd03f7e1badafae636dcb81508843c130e4f0bf5236ba70b127e04dc2242903"
+  },
+  "picture-deferred-run.txt": {
+    "bytes": 1340,
+    "sha256": "833b7aee149ebd574a2679fe14e0e510fc597d5f98f0cfa1976a55d046a0e817"
+  },
+  "picture-method-inventory.txt": {
+    "bytes": 266,
+    "sha256": "ac61f64ff4b1eca78ac663dec7309757a7dbb3fda7f6a2537275a679c390e614"
   },
   "preference-readers.txt": {
     "bytes": 236,

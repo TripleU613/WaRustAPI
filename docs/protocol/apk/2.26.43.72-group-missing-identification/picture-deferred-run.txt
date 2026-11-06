@@ -1,0 +1,29 @@
+
+# class: LX/8aj;
+# extends: Ljava/lang/Object;
+
+.method public run(V)  # .registers 6
+    # full signature: LX/8aj;->run()V
+    0000..0004  iget  v0, v5, LX/8aj;->$t:I
+    0004..0008  iget-object  v4, v5, LX/8aj;->A01:Ljava/lang/Object;
+    0008..000c  if-eqz  v0, +0x14
+    000c..0010  check-cast  v4, LX/0v6;
+    0010..0014  iget  v3, v5, LX/8aj;->A00:I
+    0014..0018  iget-object  v2, v5, LX/8aj;->A04:Ljava/lang/String;
+    0018..001c  iget-object  v1, v5, LX/8aj;->A02:Ljava/lang/Object;
+    001c..0020  check-cast  v1, LX/1k2;
+    0020..0024  iget-object  v0, v5, LX/8aj;->A03:Ljava/lang/Object;
+    0024..0028  check-cast  v0, LX/Eoh;
+    0028..002e  invoke-static  {v4, v1, v0, v2, v3}, LX/0v6;->A01(LX/0v6;LX/1k2;LX/Eoh;Ljava/lang/String;I)V
+    002e..0030  return-void
+    0030..0034  check-cast  v4, LX/893;
+    0034..0038  iget  v3, v5, LX/8aj;->A00:I
+    0038..003c  iget-object  v2, v5, LX/8aj;->A02:Ljava/lang/Object;
+    003c..0040  check-cast  v2, LX/0wj;
+    0040..0044  iget-object  v1, v5, LX/8aj;->A04:Ljava/lang/String;
+    0044..0048  iget-object  v0, v5, LX/8aj;->A03:Ljava/lang/Object;
+    0048..004c  check-cast  v0, LX/1bc;
+    004c..0052  invoke-static  {v4, v2, v0, v1, v3}, LX/893;->A01(LX/893;LX/0wj;LX/1bc;Ljava/lang/String;I)V
+    0052..0054  return-void
+    # exception table: 0 try range(s)
+.end method

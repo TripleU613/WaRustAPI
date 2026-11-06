@@ -3632,3 +3632,15 @@ operation. [Retained constructors, base handler, factory excerpts and limits](ap
 set/delete. Rust has w:gp2 ACK handling but no picture consumer/ACK or automatic
 missing-identification lifecycle. Native deferral and state ordering still need
 reconciliation before porting. [Retained map, consumer and limits](apk/2.26.43.72-group-missing-identification/README.md).
+
+
+### Picture notification base ACK (2026-11-05)
+
+**Confirmed static / locally implemented:** current19k picture handler has only
+constructor/A09 and no base A07 deferral calls;8aj selector1 returns processing
+to0v6.A01. Rust now emits the shared base ACK for picture after durable capture.
+Malformed envelopes log/no-ACK and leave receive running; redelivery is ACKed
+again. Photo updates and missing-ID lifecycle remain unported, with no automatic
+queries or live validation. Actor regression verifies capture-before-write, exact
+participant routing, redelivery, ping after refusal and reopen persistence.
+[Source and limits](apk/2.26.43.72-group-missing-identification/README.md).

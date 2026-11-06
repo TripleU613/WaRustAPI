@@ -913,6 +913,16 @@ pub(crate) async fn drive(
                     }
                     Err(error) => return Err(error),
                 }
+                // APK43.72 picture handler19k returns to the base ACK;
+                // preserve the already committed capture before acknowledging.
+                match super::notifications::picture_ack(&node) {
+                    Ok(Some(ack)) => link.send(&ack).await?,
+                    Ok(None) => {}
+                    Err(Error::InvalidInput { field, reason }) => {
+                        tracing::warn!(field, reason, "picture notification refused locally; captured without ACK; session continues");
+                    }
+                    Err(error) => return Err(error),
+                }
                 match super::notifications::business_ack(&node) {
                     Ok(Some(ack)) => link.send(&ack).await?,
                     Ok(None) => {}
@@ -2308,6 +2318,82 @@ mod tests {
             );
         }
         fake.stop_cleanly().await;
+    }
+
+    #[tokio::test]
+    async fn picture_notification_ack_follows_capture_and_survives_redelivery() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("picture-ack.redb");
+        let store = open(&path);
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        (&mut fake.ready).await.unwrap();
+        let children = vec![
+            Node::new("set")
+                .attr("jid", "123456-789@g.us")
+                .attr("id", "7"),
+        ];
+        let notification = Node::new("notification")
+            .attr("type", "picture")
+            .attr("from", "123456-789@g.us")
+            .attr("participant", "15551234567@s.whatsapp.net")
+            .attr("id", "PICTURE")
+            .children(children);
+        let capture = format!(
+            "inbound:sha256:{}",
+            hex::encode(sha2::Sha256::digest(encode(&notification).unwrap()))
+        );
+        let expected = Node::new("ack")
+            .attr("id", "PICTURE")
+            .attr("to", Jid::parse("123456-789@g.us").unwrap())
+            .attr("class", "notification")
+            .attr("type", "picture")
+            .attr(
+                "participant",
+                Jid::parse("15551234567@s.whatsapp.net").unwrap(),
+            );
+        for _ in 0..2 {
+            fake.deliver(notification.clone()).await;
+            let (ack, written) = fake.written().await;
+            assert_eq!(ack, expected);
+            assert!(
+                store
+                    .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                    .unwrap()
+                    .is_some()
+            );
+            written.send(Ok(())).unwrap();
+        }
+        // An unusable ACK envelope must not terminate receive or fabricate a peer.
+        fake.deliver(
+            Node::new("notification")
+                .attr("type", "picture")
+                .attr("id", "BAD"),
+        )
+        .await;
+        fake.deliver(
+            Node::new("iq")
+                .attr("type", "get")
+                .attr("xmlns", "urn:xmpp:ping"),
+        )
+        .await;
+        let (pong, written) = fake.written().await;
+        assert_eq!(pong.description, "iq");
+        assert_eq!(
+            pong.get_attr("type").and_then(|v| v.as_text()),
+            Some("result")
+        );
+        written.send(Ok(())).unwrap();
+        fake.nothing_written(Duration::from_millis(30)).await;
+        fake.stop_cleanly().await;
+        drop(store);
+        let reopened = open(&path);
+        assert!(
+            reopened
+                .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                .unwrap()
+                .is_some()
+        );
     }
 
     #[tokio::test]

@@ -17128,5 +17128,12 @@
     "x-live": false,
     "description": "Reusable device_key_batches::settle accepts only IQ result/error before durable claim. Missing/get/set/unsupported/nontext type returns false without mutation even with matching ID/error child. Normal group driver already filters these types. Pending reservation remains held; no new query, callback restoration, retry or HTTP write route.",
     "evidence": "docs/protocol/device-key-batches.md#key-batch-reply-admission-correction-2026-11-05"
+  },
+  "x-picture-notification-base-ack": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-group-missing-identification/README.md",
+    "description": "The receive actor ACKs exact picture notifications after durable capture using existing base envelope guards and participant routing. Malformed envelopes log without ACK and receive continues; redelivery is ACKed again. Photo updates, automatic missing-identification lifecycle, native scheduling/CCQ parity and live acceptance remain unverified or unported. No new command or HTTP route. Offline actor regression covers capture before write, redelivery, malformed envelope plus ping and store reopen."
   }
 }

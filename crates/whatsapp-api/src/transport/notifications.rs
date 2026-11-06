@@ -62,6 +62,15 @@ pub fn business_ack(node: &Node) -> Result<Option<Node>> {
     base_ack(node, "business")
 }
 
+/// Acknowledge a captured `picture` notification without applying photo state.
+/// APK 2.26.43.72 EL2 maps picture to189;19k extends0v6, has no ACK
+/// override and does not call its A07 deferral helper. Normal return reaches
+/// the base ACK. See the group-missing-identification evidence bundle.
+/// Missing-identification context and photo updates remain unported.
+pub fn picture_ack(node: &Node) -> Result<Option<Node>> {
+    base_ack(node, "picture")
+}
+
 /// Acknowledge a `mex` notification. **Confirmed, 2.26.37.71:** the MEX
 /// notification router is `0yP` (logs `mexnotificationrouter/onhandlernotfound`
 /// and `…/onoperationnotfound`); it extends `0yO`, neither defers nor adds
