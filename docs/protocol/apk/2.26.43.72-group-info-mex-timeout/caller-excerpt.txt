@@ -1,0 +1,24 @@
+# Selected excerpt only, LX/8iq;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+# Full export SHA-256: ef9529e77fd0af9d8abb1bea5e61dfd469a83f47bc28b19d6400d0c63d0a40f2
+# Packed dispatcher identifies selector7 at method-relative byte03d6.
+# Not a complete control-flow or caller-lifetime export.
+    03d6..03da  sget-object  v1, LX/0dd;->A02:LX/0dd;
+    03da..03de  iget  v2, v0, LX/8iq;->A01:I
+    03de..03e0  const/4  v6, #0x1
+    03e0..03e4  if-eqz  v2, +0x9
+    03e4..03e8  if-eq  v2, v6, +0xa59
+    03e8..03ee  invoke-static  {}, LX/000;->A03()Ljava/lang/IllegalStateException;
+    03ee..03f0  move-result-object  v0
+    03f0..03f2  throw  v0
+    03f2..03f8  invoke-static  {v15}, LX/0dg;->A01(Ljava/lang/Object;)V
+    03f8..03fc  iget-object  v5, v0, LX/8iq;->A04:Ljava/lang/Object;
+    03fc..0400  check-cast  v5, Lcom/whatsapp/group/iq/GetGroupInfoProtocolHelper;
+    0400..0404  iget-object  v4, v0, LX/8iq;->A03:Ljava/lang/Object;
+    0404..0408  check-cast  v4, LX/1bc;
+    0408..040c  iget  v3, v0, LX/8iq;->A00:I
+    040c..0410  iget-object  v2, v0, LX/8iq;->A02:Ljava/lang/Object;
+    0410..0414  check-cast  v2, LX/8pR;
+    0414..0418  iput  v6, v0, LX/8iq;->A01:I
+    0418..041e  invoke-static  {v2, v5, v4, v0, v3}, Lcom/whatsapp/group/iq/GetGroupInfoProtocolHelper;->A00(LX/8pR;Lcom/whatsapp/group/iq/GetGroupInfoProtocolHelper;LX/1bc;LX/0cf;I)Ljava/lang/Object;
+    041e..0420  move-result-object  v0
+    0420..0424  goto/16  +0xaa8

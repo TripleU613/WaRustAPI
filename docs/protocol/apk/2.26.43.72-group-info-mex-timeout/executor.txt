@@ -1,0 +1,32 @@
+
+# class: LX/0ig;
+# extends: Ljava/lang/Object;
+
+.method public A01(LL)  # .registers 14
+    # full signature: LX/0ig;->A01(LX/0iQ;)LX/0iq;
+    0000..0002  const/4  v0, #0x0
+    0002..0004  move-object  v1, v13
+    0004..000a  invoke-static  {v13, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000a..000e  iget-object  v11, v12, LX/0ig;->A09:LX/0ih;
+    000e..0012  iget-object  v2, v12, LX/0ig;->A04:LX/00x;
+    0012..0016  iget-object  v3, v12, LX/0ig;->A02:LX/00x;
+    0016..001a  iget-object  v4, v12, LX/0ig;->A01:LX/00x;
+    001a..001e  iget-object  v5, v12, LX/0ig;->A03:LX/00x;
+    001e..0022  iget-object  v6, v12, LX/0ig;->A00:LX/00x;
+    0022..0026  iget-object  v7, v12, LX/0ig;->A05:LX/00x;
+    0026..002a  iget-object  v10, v12, LX/0ig;->A08:LX/0io;
+    002a..002e  iget-object  v0, v12, LX/0ig;->A06:LX/05a;
+    002e..0032  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0032..0038  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0038..003a  move-result-object  v8
+    003a..003e  check-cast  v8, LX/07p;
+    003e..0042  iget-object  v0, v12, LX/0ig;->A07:LX/05a;
+    0042..0046  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0046..004c  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    004c..004e  move-result-object  v9
+    004e..0052  check-cast  v9, LX/08Z;
+    0052..0056  new-instance  v0, LX/0iq;
+    0056..005c  invoke-direct/range  {v0..v11}, LX/0iq;-><init>(LX/0iQ;LX/00x;LX/00x;LX/00x;LX/00x;LX/00x;LX/00x;LX/07p;LX/08Z;LX/0io;LX/0ih;)V
+    005c..005e  return-object  v0
+    # exception table: 0 try range(s)
+.end method

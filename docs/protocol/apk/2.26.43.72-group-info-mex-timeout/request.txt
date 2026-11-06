@@ -1,0 +1,104 @@
+
+# class: LX/0co;
+# extends: Ljava/lang/Object;
+
+.method public A02(LLL)  # .registers 11
+    # full signature: LX/0co;->A02(LX/1bc;Ljava/lang/String;)LX/0iT;
+    0000..0002  const/4  v7, #0x0
+    0002..0008  invoke-static  {v9, v7}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  iget-object  v0, v8, LX/0co;->A01:LX/0cv;
+    000c..0012  invoke-static  {v0}, LX/0cv;->A00(LX/0cv;)Ljava/util/Set;
+    0012..0014  move-result-object  v0
+    0014..001a  invoke-interface  {v0, v9}, Ljava/util/Set;->contains(Ljava/lang/Object;)Z
+    001a..001c  move-result  v0
+    001c..0020  if-eqz  v0, +0x30
+    0020..0024  const-string  v3, "MISSING_PARTICIPANT_IDENTIFICATION"
+    0024..0028  new-instance  v2, LX/6zi;
+    0028..002e  invoke-direct  {v2}, LX/6zi;-><init>()V
+    002e..0034  invoke-virtual  {v9}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+    0034..0036  move-result-object  v1
+    0036..003a  const-string  v0, "group_jid"
+    003a..0040  invoke-virtual  {v2, v0, v1}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A0A(Ljava/lang/String;Ljava/lang/String;)V
+    0040..0044  const-string  v0, "query_context"
+    0044..004a  invoke-virtual  {v2, v0, v3}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A0A(Ljava/lang/String;Ljava/lang/String;)V
+    004a..004e  new-instance  v1, LX/0i1;
+    004e..0054  invoke-direct  {v1}, LX/0i1;-><init>()V
+    0054..0058  const-string  v0, "input"
+    0058..005e  invoke-virtual  {v1, v2, v0}, LX/0i1;->A00(Lcom/facebook/graphql/calls/GraphQlCallInput;Ljava/lang/String;)V
+    005e..0062  const-class  v2, LX/72N;
+    0062..0068  const-string/jumbo  v5, "whatsapp-android-mex"
+    0068..006c  const-string  v4, "QueryGroupInfo"
+    006c..006e  const/4  v3, #0x0
+    006e..0072  new-instance  v0, LX/0iT;
+    0072..0074  move-object  v6, v3
+    0074..007a  invoke-direct/range  {v0..v7}, LX/0iT;-><init>(LX/0i1;Ljava/lang/Class;Ljava/lang/Class;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Z)V
+    007a..007c  return-object  v0
+    007c..0080  const-string  v3, "INTERACTIVE"
+    0080..0086  invoke-virtual  {v10}, Ljava/lang/String;->hashCode()I
+    0086..0088  move-result  v0
+    0088..008e  sparse-switch  v0, payload@0x178, cases=[-1288666633:@0x15e, -1079492040:@0x146, 106629502:@0x12e, 376410371:@0x116, 905628002:@0xfe, 1629331411:@0xe8, 1673354756:@0xd2, 1682441613:@0xbc, 1693488150:@0xa6, 1844104930:@0x94], default@0x8e
+    008e..0092  const-string  v3, "UNKNOWN"
+    0092..0094  goto  -0x37
+    0094..0098  const-string  v0, "interactive"
+    0098..009e  invoke-virtual  {v10, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    009e..00a0  move-result  v0
+    00a0..00a4  if-nez  v0, -0x3e
+    00a4..00a6  goto  -0xb
+    00a6..00aa  const-string  v0, "lid_migration"
+    00aa..00b0  invoke-virtual  {v10, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    00b0..00b2  move-result  v0
+    00b2..00b6  if-eqz  v0, -0x12
+    00b6..00ba  const-string  v3, "LID_MIGRATION"
+    00ba..00bc  goto  -0x4b
+    00bc..00c0  const-string  v0, "new_subject"
+    00c0..00c6  invoke-virtual  {v10, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    00c6..00c8  move-result  v0
+    00c8..00cc  if-eqz  v0, -0x1d
+    00cc..00d0  const-string  v3, "NEW_SUBJECT"
+    00d0..00d2  goto  -0x56
+    00d2..00d6  const-string  v0, "ack_group_mismatch"
+    00d6..00dc  invoke-virtual  {v10, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    00dc..00de  move-result  v0
+    00de..00e2  if-eqz  v0, -0x28
+    00e2..00e6  const-string  v3, "ACK_GROUP_MISMATCH"
+    00e6..00e8  goto  -0x61
+    00e8..00ec  const-string  v0, "send_failure"
+    00ec..00f2  invoke-virtual  {v10, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    00f2..00f4  move-result  v0
+    00f4..00f8  if-eqz  v0, -0x33
+    00f8..00fc  const-string  v3, "SEND_FAILURE"
+    00fc..00fe  goto  -0x6c
+    00fe..0104  const-string/jumbo  v0, "subgroup_conflict_recovery"
+    0104..010a  invoke-virtual  {v10, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    010a..010c  move-result  v0
+    010c..0110  if-eqz  v0, -0x3f
+    0110..0114  const-string  v3, "SUB_GROUP_CONFLICT_RECOVERY"
+    0114..0116  goto  -0x78
+    0116..011a  const-string  v0, "accept_invite_conflict_recovery"
+    011a..0120  invoke-virtual  {v10, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0120..0122  move-result  v0
+    0122..0126  if-eqz  v0, -0x4a
+    0126..012a  const-string  v3, "INVITE_CODE"
+    012a..012e  goto/16  -0x83
+    012e..0132  const-string  v0, "phash"
+    0132..0138  invoke-virtual  {v10, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0138..013a  move-result  v0
+    013a..013e  if-eqz  v0, -0x56
+    013e..0142  const-string  v3, "PHASH"
+    0142..0146  goto/16  -0x8f
+    0146..014a  const-string  v0, "participant_change_recovery"
+    014a..0150  invoke-virtual  {v10, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0150..0152  move-result  v0
+    0152..0156  if-eqz  v0, -0x62
+    0156..015a  const-string  v3, "PARTICIPANT_CHANGE_RECOVERY"
+    015a..015e  goto/16  -0x9b
+    015e..0162  const-string  v0, "prefetch"
+    0162..0168  invoke-virtual  {v10, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0168..016a  move-result  v0
+    016a..016e  if-eqz  v0, -0x6e
+    016e..0172  const-string  v3, "PRE_FETCH"
+    0172..0176  goto/16  -0xa7
+    0176..0178  nop
+    0178..01cc  sparse-switch-payload  size=10
+    # exception table: 0 try range(s)
+.end method

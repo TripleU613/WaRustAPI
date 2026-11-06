@@ -15838,6 +15838,15 @@
     "evidence": "docs/protocol/apk/2.26.43.72-sender-key-ack-confirmation/README.md",
     "description": "Traces native message ACK callback registration and wait, successful normal sender-key marking and conditional one-time-key reset. Connects registration-time pre-ACK marker snapshot to matched callback retirement after wrapped result. Rust per-distribution durable confirmation and native address ownership remain incomplete. Evidence only; no command, HTTP route or production behavior change."
   },
+  "x-group-info-mex-timeout-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK writer/timeout evidence"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-group-info-mex-timeout/README.md",
+    "description": "Current group-info helper builds QueryGroupInfo GraphQL input. Selected non-Pando dispatch builds w:mex IQ and forwards newly constructed operation default32000ms. Helper30s initializer result is discarded. Classic group IQ, Pando timing, query identifier resolution and scheduler parity remain unproven; no new route, timer policy or live operation."
+  },
   "x-media-malformed-route-wait-preservation": {
     "x-cli": false,
     "x-transport": [

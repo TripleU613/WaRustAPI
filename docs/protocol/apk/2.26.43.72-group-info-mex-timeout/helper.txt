@@ -1,0 +1,128 @@
+
+# class: Lcom/whatsapp/group/iq/GetGroupInfoProtocolHelper;
+# extends: Ljava/lang/Object;
+
+.method public <clinit>(V)  # .registers 3
+    # full signature: Lcom/whatsapp/group/iq/GetGroupInfoProtocolHelper;-><clinit>()V
+    0000..0004  sget-object  v2, Ljava/util/concurrent/TimeUnit;->SECONDS:Ljava/util/concurrent/TimeUnit;
+    0004..0008  const-wide/16  v0, #0x1e
+    0008..000e  invoke-virtual  {v2, v0, v1}, Ljava/util/concurrent/TimeUnit;->toMillis(J)J
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(V)  # .registers 5
+    # full signature: Lcom/whatsapp/group/iq/GetGroupInfoProtocolHelper;-><init>()V
+    0000..0004  const/16  v0, #0x88c
+    0004..000a  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    000a..000c  move-result-object  v3
+    000c..0010  check-cast  v3, LX/0TR;
+    0010..0014  const/16  v0, #0xf97
+    0014..001a  invoke-static  {v0}, LX/00T;->A03(I)Ljava/lang/Object;
+    001a..001c  move-result-object  v2
+    001c..0020  check-cast  v2, LX/0co;
+    0020..0024  const/16  v0, #0xe39
+    0024..002a  invoke-static  {v0}, LX/05W;->A00(I)LX/05a;
+    002a..002c  move-result-object  v1
+    002c..0032  invoke-static  {}, LX/2L7;->A0o()LX/05a;
+    0032..0034  move-result-object  v0
+    0034..003a  invoke-static  {v3, v2}, LX/00l;->A0A(Ljava/lang/Object;Ljava/lang/Object;)V
+    003a..0040  invoke-direct  {v4}, Ljava/lang/Object;-><init>()V
+    0040..0044  iput-object  v3, v4, Lcom/whatsapp/group/iq/GetGroupInfoProtocolHelper;->A03:LX/0TR;
+    0044..0048  iput-object  v2, v4, Lcom/whatsapp/group/iq/GetGroupInfoProtocolHelper;->A02:LX/0co;
+    0048..004c  iput-object  v1, v4, Lcom/whatsapp/group/iq/GetGroupInfoProtocolHelper;->A00:LX/00x;
+    004c..0050  iput-object  v0, v4, Lcom/whatsapp/group/iq/GetGroupInfoProtocolHelper;->A01:LX/00x;
+    0050..0052  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(LLLLLI)  # .registers 13
+    # full signature: Lcom/whatsapp/group/iq/GetGroupInfoProtocolHelper;->A00(LX/8pR;Lcom/whatsapp/group/iq/GetGroupInfoProtocolHelper;LX/1bc;LX/0cf;I)Ljava/lang/Object;
+    0000..0002  const/4  v4, #0x0
+    0002..0006  instance-of  v0, v11, LX/8fK;
+    0006..000a  if-eqz  v0, +0xa
+    000a..000c  move-object  v0, v11
+    000c..0010  check-cast  v0, LX/8fK;
+    0010..0014  iget  v1, v0, LX/8fK;->$t:I
+    0014..0016  const/4  v0, #0x1
+    0016..001a  if-eq  v1, v4, +0x3
+    001a..001c  const/4  v0, #0x0
+    001c..0020  if-eqz  v0, +0x22
+    0020..0022  move-object  v6, v11
+    0022..0026  check-cast  v6, LX/8fK;
+    0026..002a  iget  v2, v6, LX/8fK;->A01:I
+    002a..002e  const/high16  v1, #0x80000000
+    002e..0032  and-int  v0, v2, v1
+    0032..0036  if-eqz  v0, +0x17
+    0036..0038  sub-int/2addr  v2, v1
+    0038..003c  iput  v2, v6, LX/8fK;->A01:I
+    003c..0040  iget-object  v7, v6, LX/8fK;->A03:Ljava/lang/Object;
+    0040..0044  sget-object  v5, LX/0dd;->A02:LX/0dd;
+    0044..0048  iget  v0, v6, LX/8fK;->A01:I
+    0048..004a  const/4  v3, #0x1
+    004a..004e  if-eqz  v0, +0x16
+    004e..0052  if-ne  v0, v3, +0xf
+    0052..0056  iget  v12, v6, LX/8fK;->A00:I
+    0056..005a  iget-object  v8, v6, LX/8fK;->A02:Ljava/lang/Object;
+    005a..005e  check-cast  v8, LX/8pR;
+    005e..0060  goto  +0x30
+    0060..0064  new-instance  v6, LX/8fK;
+    0064..006a  invoke-direct  {v6, v9, v11, v4}, LX/8fK;-><init>(Ljava/lang/Object;LX/0cf;I)V
+    006a..006c  goto  -0x17
+    006c..0072  invoke-static  {}, LX/000;->A03()Ljava/lang/IllegalStateException;
+    0072..0074  move-result-object  v0
+    0074..0076  throw  v0
+    0076..007c  invoke-static  {v7}, LX/0dg;->A01(Ljava/lang/Object;)V
+    007c..0080  iget-object  v0, v9, Lcom/whatsapp/group/iq/GetGroupInfoProtocolHelper;->A01:LX/00x;
+    0080..0086  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0086..0088  move-result-object  v2
+    0088..008c  check-cast  v2, LX/0if;
+    008c..0090  iget-object  v1, v9, Lcom/whatsapp/group/iq/GetGroupInfoProtocolHelper;->A02:LX/0co;
+    0090..0094  const-string  v0, "interactive"
+    0094..009a  invoke-virtual  {v1, v10, v0}, LX/0co;->A02(LX/1bc;Ljava/lang/String;)LX/0iT;
+    009a..009c  move-result-object  v0
+    009c..00a2  invoke-static  {v0, v2}, LX/2LA;->A0Y(LX/0iQ;Ljava/lang/Object;)LX/0iq;
+    00a2..00a4  move-result-object  v0
+    00a4..00a8  iput-object  v8, v6, LX/8fK;->A02:Ljava/lang/Object;
+    00a8..00ac  iput  v12, v6, LX/8fK;->A00:I
+    00ac..00b0  iput  v3, v6, LX/8fK;->A01:I
+    00b0..00b6  invoke-static  {v0, v6}, LX/2LE;->A0Q(LX/0iq;LX/0cf;)Ljava/lang/Object;
+    00b6..00b8  move-result-object  v7
+    00b8..00bc  if-ne  v7, v5, +0x6
+    00bc..00be  return-object  v5
+    00be..00c4  invoke-static  {v7}, LX/0dg;->A01(Ljava/lang/Object;)V
+    00c4..00c8  check-cast  v7, LX/72N;
+    00c8..00cc  iget-object  v2, v9, Lcom/whatsapp/group/iq/GetGroupInfoProtocolHelper;->A02:LX/0co;
+    00cc..00d0  const-string  v1, "group_response"
+    00d0..00d4  new-instance  v0, LX/87J;
+    00d4..00da  invoke-direct  {v0, v12, v1, v4, v4}, LX/87J;-><init>(ILjava/lang/String;ZZ)V
+    00da..00e0  invoke-virtual  {v2, v0, v7}, LX/0co;->A03(LX/87J;LX/72N;)LX/82U;
+    00e0..00e2  move-result-object  v1
+    00e2..00e6  iget-object  v0, v9, Lcom/whatsapp/group/iq/GetGroupInfoProtocolHelper;->A00:LX/00x;
+    00e6..00ec  invoke-static  {v0}, LX/2L7;->A1H(LX/00x;)Ljava/lang/Object;
+    00ec..00ee  move-result-object  v0
+    00ee..00f2  check-cast  v0, LX/0wE;
+    00f2..00f8  invoke-static  {v0, v3}, LX/00l;->A09(Ljava/lang/Object;I)V
+    00f8..00fe  invoke-virtual  {v0, v1}, LX/0wE;->A0e(LX/82U;)V
+    00fe..0104  invoke-interface  {v8}, LX/8pR;->onSuccess()V
+    0104..0106  return-object  v1
+    0106..0108  move-exception  v1
+    0108..010c  instance-of  v0, v1, LX/Giw;
+    010c..0110  if-eqz  v0, +0x19
+    0110..0112  move-object  v0, v1
+    0112..0116  check-cast  v0, LX/Giw;
+    0116..011a  iget-object  v0, v0, LX/Giw;->error:LX/Hbw;
+    011a..011e  iget-object  v0, v0, LX/Hbw;->A01:Ljava/util/List;
+    011e..0124  invoke-static  {v0}, LX/2LC;->A05(Ljava/util/List;)I
+    0124..0126  move-result  v0
+    0126..012c  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    012c..012e  move-result-object  v0
+    012e..0134  invoke-interface  {v8, v0}, LX/8pR;->BvV(Ljava/lang/Integer;)V
+    0134..013a  invoke-static  {v1}, LX/6oe;->A1D(Ljava/lang/Throwable;)LX/0Dt;
+    013a..013c  move-result-object  v0
+    013c..013e  return-object  v0
+    013e..0140  const/4  v0, #0x0
+    0140..0142  goto  -0x9
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/Exception; code_units 003e..0083 -> 0083
+.end method

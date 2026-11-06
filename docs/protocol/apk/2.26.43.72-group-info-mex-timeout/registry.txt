@@ -1,0 +1,31 @@
+
+# class: LX/0ih;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLL)  # .registers 5
+    # full signature: LX/0ih;->A00(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  const/4  v0, #0x1
+    000a..0010  invoke-static  {v4, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0010..0016  invoke-static  {v4}, LX/0ik;->A00(Ljava/lang/String;)LX/0il;
+    0016..0018  move-result-object  v0
+    0018..001e  invoke-interface  {v0, v3}, LX/0il;->CRh(Ljava/lang/String;)Ljava/lang/String;
+    001e..0020  move-result-object  v0
+    0020..0022  return-object  v0
+    0022..0024  move-exception  v2
+    0024..0028  const-string  v0, "Failed to get persisted ID for query "
+    0028..002c  new-instance  v1, Ljava/lang/StringBuilder;
+    002c..0032  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0032..0038  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0038..003c  const-string  v0, " in config "
+    003c..0042  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0042..0048  invoke-virtual  {v1, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0048..004e  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    004e..0050  move-result-object  v0
+    0050..0056  invoke-static  {v0, v2}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0056..0058  const/4  v0, #0x0
+    0058..005a  return-object  v0
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/Exception; code_units 0008..0011 -> 0011
+.end method

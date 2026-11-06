@@ -3236,3 +3236,14 @@ group-info element no longer consumes its pending projection as a successful
 no-op. Recovery preserves reply, prior snapshot, checkpoints and journal.
 [Red/green cases and bookkeeping boundary](normal-group-outbox.md#unusable-group-info-identity-preserves-pending-projection-2026-11-05).
 No network retry, cache fallback or live account operation.
+
+### Current group-info MEX timer boundary (2026-11-05)
+
+**Confirmed static, APK43.72:** GetGroupInfoProtocolHelper.A00 builds
+QueryGroupInfo GraphQL input; the selected non-Pando dispatch serializes a
+w:mex IQ and forwards the new operation's32000ms default to0Sf.A0W. The
+helper's30-second initializer calculation is discarded, not timer evidence.
+[Complete selected writer/dispatcher methods, branch gates and unknowns](apk/2.26.43.72-group-info-mex-timeout/README.md).
+Rust's classic group IQ remains an inferred separate shape; neither its
+30-second local preparation limit nor all group-info deadlines gain native
+parity from this MEX trace. No runtime policy or live operation changed.

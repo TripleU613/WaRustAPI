@@ -1,3 +1,14 @@
+2026-11-05 — **Current group-info MEX writer and selected timeout connected.**
+
+The current helper builds QueryGroupInfo GraphQL input, not Rust's classic
+query shape. Its selected non-Pando MEX path carries the operation's32000ms
+default; the helper's30-second calculation is discarded. Classic wire/timer
+parity remains unproven and no speculative policy was ported.
+[Writer, dispatch, physical writer census and limits](docs/protocol/apk/2.26.43.72-group-info-mex-timeout/README.md).
+Validation: fmt, strict Clippy, CLI reference, OpenAPI, APK coverage, pinned
+APK identity and staged checksum/link hygiene passed. No new workspace test
+run for this research-only chunk. No runtime or live account operation changed.
+
 2026-11-05 — **Media refresh route and throttle preservation verified together.**
 
 Six malformed results retain installed route bytes and the saved 507 wait;
