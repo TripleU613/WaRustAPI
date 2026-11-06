@@ -1,0 +1,14 @@
+classes8.dex  Lcom/whatsapp/messaging/jobqueue/job/SendOrderStatusUpdateFailureReceiptJob;->A0L(V)
+  invoke dex byte offset: 0x8ca988
+classes8.dex  Lcom/whatsapp/jobqueue/job/SendMediaErrorReceiptJob;->A0L(V)
+  invoke dex byte offset: 0x8cde7c
+classes8.dex  Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->A0L(V)
+  invoke dex byte offset: 0x8ce3d6
+classes8.dex  Lcom/whatsapp/messaging/receipts/jobqueue/job/SendReadReceiptJob;->A0L(V)
+  invoke dex byte offset: 0x8cf828
+classes8.dex  Lcom/whatsapp/jobqueue/job/SendRetryReceiptJob;->A0L(V)
+  invoke dex byte offset: 0x8d0168
+classes8.dex  Lcom/whatsapp/companiondevice/devices/jobqueue/job/SendPeerMessageJob;->A0L(V)
+  invoke dex byte offset: 0x8d39f6
+classes8.dex  Lcom/whatsapp/productinfra/status/sendflow/SendE2eStatusJob;->A0L(V)
+  invoke dex byte offset: 0x8e3ece

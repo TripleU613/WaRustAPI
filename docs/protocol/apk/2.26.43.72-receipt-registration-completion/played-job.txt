@@ -1,0 +1,201 @@
+
+# class: Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;
+# extends: Lorg/whispersystems/jobqueue/Job;
+
+.method public A0L(V)  # .registers 26
+    # full signature: Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->A0L()V
+    0000..0004  move-object/from16  v1, v25
+    0004..0008  iget-object  v0, v1, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->toRawJid:Ljava/lang/String;
+    0008..000e  invoke-static  {v0}, LX/B1w;->A0R(Ljava/lang/String;)LX/0DY;
+    000e..0010  move-result-object  v2
+    0010..0014  iget-object  v0, v1, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->participantRawJid:Ljava/lang/String;
+    0014..0018  sget-object  v8, LX/0DY;->A00:LX/0Di;
+    0018..001e  invoke-virtual  {v8, v0}, LX/0Di;->A02(Ljava/lang/String;)LX/0DY;
+    001e..0020  move-result-object  v0
+    0020..0022  const/4  v4, #0x0
+    0022..0028  invoke-static  {v4, v2, v0}, LX/Exf;->A05(Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/Jid;)Landroid/util/Pair;
+    0028..002a  move-result-object  v2
+    002a..002e  iget-object  v3, v1, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->A02:LX/0xW;
+    002e..0032  iget-object  v0, v2, Landroid/util/Pair;->first:Ljava/lang/Object;
+    0032..0036  check-cast  v0, Lcom/whatsapp/infra/core/jid/Jid;
+    0036..003c  invoke-static  {v0}, LX/0Di;->A00(Lcom/whatsapp/infra/core/jid/Jid;)LX/0DY;
+    003c..003e  move-result-object  v0
+    003e..0044  invoke-virtual  {v3, v0}, LX/0xW;->A08(LX/0DY;)Z
+    0044..0046  move-result  v0
+    0046..0048  const/4  v5, #0x0
+    0048..004c  if-eqz  v0, +0x11
+    004c..0050  iget-object  v0, v2, Landroid/util/Pair;->first:Ljava/lang/Object;
+    0050..0054  check-cast  v0, Lcom/whatsapp/infra/core/jid/Jid;
+    0054..005a  invoke-static  {v0}, LX/0Di;->A00(Lcom/whatsapp/infra/core/jid/Jid;)LX/0DY;
+    005a..005c  move-result-object  v0
+    005c..0062  invoke-static  {v0}, LX/0Dn;->A0a(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0062..0064  move-result  v0
+    0064..0066  const/4  v7, #0x1
+    0066..006a  if-eqz  v0, +0x3
+    006a..006c  const/4  v7, #0x0
+    006c..0070  iget-object  v3, v1, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->A00:LX/1dI;
+    0070..0074  iget-object  v0, v2, Landroid/util/Pair;->second:Ljava/lang/Object;
+    0074..0078  if-nez  v0, +0x4
+    0078..007c  iget-object  v0, v2, Landroid/util/Pair;->first:Ljava/lang/Object;
+    007c..0080  check-cast  v0, Lcom/whatsapp/infra/core/jid/Jid;
+    0080..0086  invoke-static  {v0}, LX/2L6;->A0n(Lcom/whatsapp/infra/core/jid/Jid;)Lcom/whatsapp/infra/core/jid/UserJid;
+    0086..0088  move-result-object  v0
+    0088..008e  invoke-virtual  {v3, v0}, LX/1dI;->A00(Lcom/whatsapp/infra/core/jid/UserJid;)Z
+    008e..0090  move-result  v0
+    0090..0094  const-string  v18, "played-self"
+    0094..0098  if-eqz  v7, +0xa2
+    0098..009c  if-nez  v0, +0xa0
+    009c..00a0  const-string  v6, "played"
+    00a0..00a6  invoke-direct  {v1}, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->A00()Ljava/lang/String;
+    00a6..00aa  if-nez  v7, +0xab
+    00aa..00ae  iget-object  v12, v1, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->A03:LX/FXW;
+    00ae..00b2  iget-object  v0, v1, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->toRawJid:Ljava/lang/String;
+    00b2..00b8  invoke-static  {v0}, LX/0Di;->A01(Ljava/lang/String;)LX/0DY;
+    00b8..00ba  move-result-object  v20
+    00ba..00be  iget-object  v0, v1, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->participantRawJid:Ljava/lang/String;
+    00be..00c4  invoke-virtual  {v8, v0}, LX/0Di;->A02(Ljava/lang/String;)LX/0DY;
+    00c4..00c6  move-result-object  v21
+    00c6..00ca  iget-object  v7, v1, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->messageRowIds:[Ljava/lang/Long;
+    00ca..00ce  iget-object  v3, v1, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->messageIds:[Ljava/lang/String;
+    00ce..00d2  iget-boolean  v0, v1, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->isCoExV2:Z
+    00d2..00d6  new-instance  v11, LX/EcR;
+    00d6..00da  move-object/from16  v19, v11
+    00da..00de  move-object/from16  v22, v7
+    00de..00e2  move-object/from16  v23, v3
+    00e2..00e6  move/from16  v24, v0
+    00e6..00ec  invoke-direct/range  {v19..v24}, LX/EcR;-><init>(LX/0DY;LX/0DY;[Ljava/lang/Long;[Ljava/lang/String;Z)V
+    00ec..00f0  const-string  v0, "PlayedSelfReceiptStore/insertPlayedSelfReceipt/toJid = "
+    00f0..00f6  invoke-static  {v0, v11}, LX/2LA;->A1L(Ljava/lang/String;Ljava/lang/Object;)V
+    00f6..00fc  invoke-static  {}, LX/2LA;->A06()Landroid/content/ContentValues;
+    00fc..00fe  move-result-object  v13
+    00fe..0102  iget-object  v10, v11, LX/EcR;->A04:[Ljava/lang/String;
+    0102..0104  array-length  v9, v10
+    0104..0106  const/4  v8, #0x0
+    0106..010a  if-ge  v8, v9, +0x7b
+    010a..0110  invoke-virtual  {v13}, Landroid/content/ContentValues;->clear()V
+    0110..0114  iget-object  v0, v12, LX/FXW;->A00:LX/05a;
+    0114..0118  iget-object  v7, v0, LX/05a;->A00:LX/00x;
+    0118..011e  invoke-static  {v7}, LX/2L6;->A0x(LX/00x;)LX/0Wv;
+    011e..0120  move-result-object  v3
+    0120..0124  iget-object  v0, v11, LX/EcR;->A01:LX/0DY;
+    0124..012a  invoke-virtual  {v3, v0}, LX/0Wv;->A07(Lcom/whatsapp/infra/core/jid/Jid;)J
+    012a..012c  move-result-wide  v14
+    012c..0132  invoke-static  {v14, v15}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0132..0134  move-result-object  v3
+    0134..013a  const-string/jumbo  v0, "to_jid_row_id"
+    013a..0140  invoke-virtual  {v13, v0, v3}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+    0140..0144  iget-object  v0, v11, LX/EcR;->A00:LX/0DY;
+    0144..0148  if-eqz  v0, +0xf
+    0148..014e  invoke-static  {v7, v0}, LX/DBb;->A03(LX/00x;Lcom/whatsapp/infra/core/jid/Jid;)J
+    014e..0150  move-result-wide  v14
+    0150..0156  invoke-static  {v14, v15}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0156..0158  move-result-object  v3
+    0158..015c  const-string  v0, "participant_jid_row_id"
+    015c..0162  invoke-virtual  {v13, v0, v3}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+    0162..0166  iget-object  v0, v11, LX/EcR;->A03:[Ljava/lang/Long;
+    0166..016a  aget-object  v3, v0, v8
+    016a..016e  const-string  v0, "message_row_id"
+    016e..0174  invoke-virtual  {v13, v0, v3}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+    0174..0178  aget-object  v3, v10, v8
+    0178..017c  const-string  v0, "message_id"
+    017c..0182  invoke-virtual  {v13, v0, v3}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+    0182..0186  iget-object  v0, v12, LX/FXW;->A01:LX/05a;
+    0186..018c  invoke-static  {v0}, LX/1Xl;->A0a(LX/05a;)LX/0aq;
+    018c..018e  move-result-object  v7
+    018e..0194  invoke-virtual  {v7}, LX/0aq;->A00()LX/1hk;
+    0194..0196  move-result-object  v3
+    0196..019a  iget-object  v15, v7, LX/0aq;->A02:LX/0KU;
+    019a..019e  const-string  v14, "played_self_receipt"
+    019e..01a2  const-string  v0, "PlayedSelfReceiptStore/INSERT_PLAYED_SELF_RECEIPT"
+    01a2..01a8  invoke-virtual  {v15, v14, v0, v13}, LX/0KU;->A05(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J
+    01a8..01aa  move-result-wide  v16
+    01aa..01ae  const-wide/16  v14, #0xffff (-1)
+    01ae..01b2  cmp-long  v0, v16, v14
+    01b2..01b6  if-nez  v0, +0x7
+    01b6..01ba  const-string  v0, "PlayedSelfReceiptStore/insertPlayedSelfReceipt fail to insert"
+    01ba..01c0  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    01c0..01c6  invoke-virtual  {v3}, LX/1hk;->A00()V
+    01c6..01cc  invoke-virtual  {v3}, LX/1hk;->close()V
+    01cc..01d2  invoke-virtual  {v7}, LX/0aq;->close()V
+    01d2..01d6  add-int/lit8  v8, v8, #0x1
+    01d6..01d8  goto  -0x68
+    01d8..01dc  move-object/from16  v6, v18
+    01dc..01e0  goto/16  -0x9e
+    01e0..01e2  move-exception  v1
+    01e2..01e4  throw  v1
+    01e4..01e6  move-exception  v0
+    01e6..01ec  invoke-static  {v3, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    01ec..01ee  throw  v0
+    01ee..01f0  move-exception  v1
+    01f0..01f2  throw  v1
+    01f2..01f4  move-exception  v0
+    01f4..01fa  invoke-static  {v7, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    01fa..01fc  throw  v0
+    01fc..0200  move-object/from16  v0, v18
+    0200..0206  invoke-virtual  {v0, v6}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0206..0208  move-result  v0
+    0208..020c  if-eqz  v0, +0x7
+    020c..0210  iget-boolean  v0, v1, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->playedSelfFromPeer:Z
+    0210..0214  if-eqz  v0, +0x3
+    0214..0216  return-void
+    0216..021a  iget-object  v0, v2, Landroid/util/Pair;->first:Ljava/lang/Object;
+    021a..021e  check-cast  v0, Lcom/whatsapp/infra/core/jid/Jid;
+    021e..0224  invoke-static  {v0}, LX/0Di;->A00(Lcom/whatsapp/infra/core/jid/Jid;)LX/0DY;
+    0224..0226  move-result-object  v3
+    0226..022a  if-nez  v3, +0x8
+    022a..022e  const-string  v0, "SendPlayedReceiptJobV2/onRun invalid remote jid"
+    022e..0234  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0234..0236  return-void
+    0236..023a  iget-boolean  v0, v1, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->isCoExV2:Z
+    023a..0240  invoke-static  {v3, v4, v0}, LX/Exf;->A04(LX/0DY;Lcom/whatsapp/infra/core/jid/UserJid;Z)Landroid/util/Pair;
+    0240..0242  move-result-object  v7
+    0242..0246  new-instance  v3, LX/Efa;
+    0246..024c  invoke-direct  {v3}, LX/Efa;-><init>()V
+    024c..0250  iget-object  v0, v7, Landroid/util/Pair;->first:Ljava/lang/Object;
+    0250..0254  check-cast  v0, Lcom/whatsapp/infra/core/jid/Jid;
+    0254..0258  iput-object  v0, v3, LX/Efa;->A02:Lcom/whatsapp/infra/core/jid/Jid;
+    0258..025c  const-string  v0, "receipt"
+    025c..0260  iput-object  v0, v3, LX/Efa;->A06:Ljava/lang/String;
+    0260..0264  iput-object  v6, v3, LX/Efa;->A09:Ljava/lang/String;
+    0264..0268  iget-object  v0, v1, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->messageIds:[Ljava/lang/String;
+    0268..026c  aget-object  v0, v0, v5
+    026c..0270  iput-object  v0, v3, LX/Efa;->A08:Ljava/lang/String;
+    0270..0274  iget-object  v0, v2, Landroid/util/Pair;->second:Ljava/lang/Object;
+    0274..0278  check-cast  v0, Lcom/whatsapp/infra/core/jid/Jid;
+    0278..027c  iput-object  v0, v3, LX/Efa;->A01:Lcom/whatsapp/infra/core/jid/Jid;
+    027c..0280  iget-object  v0, v7, Landroid/util/Pair;->second:Ljava/lang/Object;
+    0280..0284  check-cast  v0, Lcom/whatsapp/infra/core/jid/UserJid;
+    0284..0288  iput-object  v0, v3, LX/Efa;->A03:Lcom/whatsapp/infra/core/jid/UserJid;
+    0288..028e  invoke-virtual  {v3}, LX/Efa;->A00()LX/Eoh;
+    028e..0290  move-result-object  v4
+    0290..0294  iget-object  v3, v1, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->A01:LX/0Sf;
+    0294..0298  iget-object  v8, v7, Landroid/util/Pair;->first:Ljava/lang/Object;
+    0298..029c  check-cast  v8, LX/0DY;
+    029c..02a0  iget-object  v0, v2, Landroid/util/Pair;->second:Ljava/lang/Object;
+    02a0..02a4  check-cast  v0, Lcom/whatsapp/infra/core/jid/Jid;
+    02a4..02aa  invoke-static  {v0}, LX/0Di;->A00(Lcom/whatsapp/infra/core/jid/Jid;)LX/0DY;
+    02aa..02ac  move-result-object  v9
+    02ac..02b0  iget-object  v2, v7, Landroid/util/Pair;->second:Ljava/lang/Object;
+    02b0..02b4  check-cast  v2, Lcom/whatsapp/infra/core/jid/UserJid;
+    02b4..02b8  iget-object  v0, v1, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->messageIds:[Ljava/lang/String;
+    02b8..02ba  const/4  v1, #0x0
+    02ba..02be  new-instance  v7, LX/EW7;
+    02be..02c0  move-object  v10, v2
+    02c0..02c2  move-object  v11, v6
+    02c2..02c4  move-object  v12, v0
+    02c4..02ca  invoke-direct/range  {v7..v12}, LX/EW7;-><init>(LX/0DY;LX/0DY;Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;[Ljava/lang/String;)V
+    02ca..02ce  const/16  v0, #0x26
+    02ce..02d4  invoke-static  {v1, v5, v0, v5, v7}, Landroid/os/Message;->obtain(Landroid/os/Handler;IIILjava/lang/Object;)Landroid/os/Message;
+    02d4..02d6  move-result-object  v0
+    02d6..02dc  invoke-virtual  {v3, v0, v4}, LX/0Sf;->A0B(Landroid/os/Message;LX/Eoh;)LX/FfK;
+    02dc..02de  move-result-object  v0
+    02de..02e4  invoke-virtual  {v0}, LX/FfK;->get()Ljava/lang/Object;
+    02e4..02e6  return-void
+    # exception table: 6 try range(s)
+    # catch <all> code_units 00c7..00cb -> 00f7
+    # catch <all> code_units 00cb..00e3 -> 00f0
+    # catch <all> code_units 00e3..00e6 -> 00f7
+    # catch <all> code_units 00f1..00f2 -> 00f2
+    # catch <all> code_units 00f3..00f7 -> 00f7
+    # catch <all> code_units 00f8..00f9 -> 00f9
+.end method

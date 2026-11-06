@@ -1,3 +1,10 @@
+2026-11-06 — **Pinned receipt callback registration/completion traced.**
+
+Current APK played job registers a full-key callback before dispatch and waits
+on a future completed with null by the selected wrapper. This is local completion,
+not server acceptance. No Rust behavior change or live operation.
+[Selected methods, callers, reproduction and limits](docs/protocol/receipt-ack-special.md#current-receipt-registration-and-future-completion-2026-11-06).
+
 2026-11-06 — **Opened-receipt collision and replay protections verified offline.**
 
 New encrypted-store regression covers missing/unready sources, malformed routes,

@@ -212,3 +212,20 @@ replaced members and unbound history stay uncertain. The original partial-write/
 reconnect late-ACK behavior is preserved; no receipt is resent. Native full-key
 and ID-only callback maps remain separate evidence, not a new Rust recovery
 implementation. [Durable ownership, regression and compatibility](replay-safety-audit.md#durable-original-receipt-callback-members-2026-11-06).
+
+## Current receipt registration and future completion (2026-11-06)
+
+[Current pinned static bundle](apk/2.26.43.72-receipt-registration-completion/README.md)
+connects played A0L to0Sf.A0B, registration through0Th.A01 before A05 dispatch,
+and discriminator0 callback completion through2Gc.BsT -> FfK.BsT/get.
+The future completes with null; the job waits on its no-argument get. Current
+read/retry/media-error receipt jobs also appear in the direct wrapper caller
+census, but their complete policy is not newly traced here.
+
+Callback completion remains distinct from server acceptance and specialized
+receipt state. No Rust behavior change is warranted; acknowledged/refused
+outcomes, durable ownership and no uncertain replay remain intact. Failure
+producers, all dispatch failure paths and native retry policy remain unknown.
+This closes the selected current callback path, not older N12 state consumers.
+No runtime/account operation or new capability. Bundle hash/checksums and
+repository documentation gates verified; no new Rust test result claimed.

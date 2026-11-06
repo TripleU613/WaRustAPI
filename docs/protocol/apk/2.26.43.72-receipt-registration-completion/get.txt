@@ -1,0 +1,38 @@
+
+# class: LX/FfK;
+# extends: Ljava/lang/Object;
+
+.method public get(L)  # .registers 3
+    # full signature: LX/FfK;->get()Ljava/lang/Object;
+    0000..0004  iget-object  v0, v2, LX/FfK;->A03:Ljava/util/concurrent/CountDownLatch;
+    0004..000a  invoke-virtual  {v0}, Ljava/util/concurrent/CountDownLatch;->await()V
+    000a..000e  iget-boolean  v0, v2, LX/FfK;->A02:Z
+    000e..0012  if-eqz  v0, +0x5
+    0012..0016  iget-object  v0, v2, LX/FfK;->A01:Ljava/lang/Object;
+    0016..0018  return-object  v0
+    0018..001c  iget-object  v1, v2, LX/FfK;->A00:Ljava/lang/Exception;
+    001c..0020  new-instance  v0, Ljava/util/concurrent/ExecutionException;
+    0020..0026  invoke-direct  {v0, v1}, Ljava/util/concurrent/ExecutionException;-><init>(Ljava/lang/Throwable;)V
+    0026..0028  throw  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public get(LJL)  # .registers 6
+    # full signature: LX/FfK;->get(JLjava/util/concurrent/TimeUnit;)Ljava/lang/Object;
+    0000..0004  iget-object  v0, v2, LX/FfK;->A03:Ljava/util/concurrent/CountDownLatch;
+    0004..000a  invoke-virtual  {v0, v3, v4, v5}, Ljava/util/concurrent/CountDownLatch;->await(JLjava/util/concurrent/TimeUnit;)Z
+    000a..000c  move-result  v0
+    000c..0010  if-eqz  v0, +0x11
+    0010..0014  iget-boolean  v0, v2, LX/FfK;->A02:Z
+    0014..0018  if-eqz  v0, +0x5
+    0018..001c  iget-object  v0, v2, LX/FfK;->A01:Ljava/lang/Object;
+    001c..001e  return-object  v0
+    001e..0022  iget-object  v1, v2, LX/FfK;->A00:Ljava/lang/Exception;
+    0022..0026  new-instance  v0, Ljava/util/concurrent/ExecutionException;
+    0026..002c  invoke-direct  {v0, v1}, Ljava/util/concurrent/ExecutionException;-><init>(Ljava/lang/Throwable;)V
+    002c..002e  throw  v0
+    002e..0032  new-instance  v0, Ljava/util/concurrent/TimeoutException;
+    0032..0038  invoke-direct  {v0}, Ljava/util/concurrent/TimeoutException;-><init>()V
+    0038..003a  throw  v0
+    # exception table: 0 try range(s)
+.end method
