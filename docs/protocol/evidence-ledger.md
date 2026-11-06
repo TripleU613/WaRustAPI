@@ -8196,3 +8196,5 @@ Current43.72 MEX lookup operation ownership/default and conditional non-Pando se
 APK43.72 non-Pando MEX expiry removes ordinary pending ownership before scheduling delivery failure; local471 reaches exceptional future completion. [Registry expiry, typed delivery failure and late-reply limits](bulk-prekey-refresh.md#missing-lid-non-pando-mex-expiry-outcome-2026-11-06). No runtime or live operations.
 
 APK43.72 explicit exactly-one MEX result check closes a Rust first-child ambiguity; duplicate result cannot fall back to update. [Pinned cardinality evidence, both-order regression and limits](mex.md#duplicate-result-payload-rejection-2026-11-06). No live operation.
+
+Current43.72 MEX envelope expected values are checked, not defaults: original request ID and typed to/from equality precede selected model parsing. [Request ID/from equality evidence and payload-only Rust boundary](mex.md#original-request-mex-envelope-correlation-2026-11-06). No live operation or complete Rust admission claim.

@@ -1,3 +1,5 @@
+Pinned MEX constructors now traced through original-ID and typed reply-from/request-to equality; Rust JSON payload parsing remains separate from live envelope admission. [Request ID/from equality evidence and payload-only Rust boundary](docs/protocol/mex.md#original-request-mex-envelope-correlation-2026-11-06). Research only; no guessed sender policy added.
+
 MEX JSON parser now rejects duplicate result payloads instead of choosing the first, matching the pinned non-Pando success constructor cardinality. [Pinned cardinality evidence, both-order regression and limits](docs/protocol/mex.md#duplicate-result-payload-rejection-2026-11-06). Offline only; no query/retry added.
 
 Non-Pando MEX expiry now traced from registry removal through typed local delivery failure to exceptional future completion. [Registry expiry, typed delivery failure and late-reply limits](docs/protocol/bulk-prekey-refresh.md#missing-lid-non-pando-mex-expiry-outcome-2026-11-06). Research only; no server471/retry or complete late-reply guarantee.

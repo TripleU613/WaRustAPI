@@ -17618,5 +17618,12 @@
     "x-live": false,
     "description": "MEX JSON response parser rejects multiple result payloads with a fixed local diagnostic before JSON parsing/update fallback, matching selected APK43.72 non-Pando success constructor exact-one cardinality. Result/update priority and update-only behavior remain. Root/request correlation, streaming and full MEX adoption are separate boundaries. No request or retry added.",
     "evidence": "docs/protocol/mex.md#duplicate-result-payload-rejection-2026-11-06"
+},
+  "x-mex-envelope-correlation-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Research-only APK43.72 selected MEX constructors validate reply ID against saved request ID and typed reply from against request to. Expected values are checks, not defaults. Rust JSON payload inspection does not provide this live envelope authority; typed Jid normalization, streaming and authenticated adoption remain incomplete. No sender policy/API/runtime behavior added.",
+    "evidence": "docs/protocol/mex.md#original-request-mex-envelope-correlation-2026-11-06"
 }
 }
