@@ -1,3 +1,14 @@
+2026-11-05 — **Current prekey error backoff re-anchored and scoped.**
+
+Non-PQ 5xx moves affected in-flight requests to pending; mode and posted flags
+have distinct lifetimes. The native local delay sequence starts at zero, and
+normal admission/reset does not prove a blanket server cooldown for all queries.
+[Source, derived delays and unported ingress/recovery](docs/protocol/apk/2.26.43.72-prekey-error-backoff/README.md).
+Research only; no runtime or live account operation changed.
+Validation: pinned APK identity, fmt, strict Clippy, CLI/OpenAPI, APK coverage and
+staged checksum/link hygiene passed. No new full workspace run; shared Rust
+remains unchanged from the preceding 1376-test validated commit.
+
 2026-11-05 — **About refusals retain native signed and ordered codes.**
 
 Optional about_refusal metadata preserves direct-child Java integer codes and

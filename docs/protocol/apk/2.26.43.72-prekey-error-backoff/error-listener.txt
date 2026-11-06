@@ -1,0 +1,159 @@
+# Selected byte-PC ranges, end exclusive; other switch branches omitted.
+# Full export SHA256: dd9fec9235588808024e9e1b0a39ce1dab2c16bb9c345b9367d3e1e612e8a8f1
+# Range 0000..0018
+    0000..0004  const-string  v2, "errorCode"
+    0004..0006  const/4  v11, #0x0
+    0006..0008  const/4  v13, #0x1
+    0008..000c  move-object/from16  v6, v24
+    000c..0010  move-object/from16  v3, v25
+    0010..0016  packed-switch  v26, payload@0x9c8, cases=[74:@0x5fa, 75:@0x5b6, 76:@0x74c, 77:@0x184, 78:@0xea, 79:@0x16, 80:@0x16, 81:@0x16, 82:@0x18, 83:@0x998, 84:@0x7d6], default@0x16
+    0016..0018  return  v11
+# Range 074c..07d6
+    074c..0750  iget-object  v4, v3, Landroid/os/Message;->obj:Ljava/lang/Object;
+    0750..0754  check-cast  v4, [LX/EoY;
+    0754..075a  invoke-virtual  {v3}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    075a..075c  move-result-object  v0
+    075c..0762  invoke-virtual  {v0, v2}, Landroid/os/BaseBundle;->getInt(Ljava/lang/String;)I
+    0762..0764  move-result  v7
+    0764..076a  invoke-virtual  {v3}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    076a..076c  move-result-object  v1
+    076c..0770  const-string  v0, "isPqSessionUpgrade"
+    0770..0776  invoke-virtual  {v1, v0, v11}, Landroid/os/BaseBundle;->getBoolean(Ljava/lang/String;Z)Z
+    0776..0778  move-result  v0
+    0778..077c  if-eqz  v0, +0x3a
+    077c..0780  const-string  v1, "RecvPreKeyMessageListener/onGetPreKeyError ignoring, PQ session upgrade; errorCode="
+    0780..0784  new-instance  v0, Ljava/lang/StringBuilder;
+    0784..078a  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    078a..0790  invoke-virtual  {v0, v7}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0790..0796  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0796..0798  move-result-object  v0
+    0798..079e  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    079e..07a4  invoke-virtual  {v3}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    07a4..07a6  move-result-object  v1
+    07a6..07aa  const-string  v0, "pqUpgradeDevicesRequested"
+    07aa..07b0  invoke-virtual  {v1, v0, v11}, Landroid/os/BaseBundle;->getInt(Ljava/lang/String;I)I
+    07b0..07b2  move-result  v4
+    07b2..07b6  if-lez  v4, +0x1c
+    07b6..07ba  iget-object  v0, v6, LX/14o;->A01:LX/00x;
+    07ba..07c0  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    07c0..07c2  move-result-object  v1
+    07c2..07c6  check-cast  v1, LX/EZL;
+    07c6..07cc  invoke-static  {v7}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    07cc..07ce  move-result-object  v0
+    07ce..07d4  invoke-virtual  {v1, v0, v4, v11, v11}, LX/EZL;->A00(Ljava/lang/Integer;III)V
+    07d4..07d6  return  v13
+# Range 07ec..0998
+    07ec..07f0  iget-object  v5, v6, LX/14o;->A03:LX/14q;
+    07f0..07f6  invoke-static  {v4, v11}, LX/00l;->A09(Ljava/lang/Object;I)V
+    07f6..07fc  invoke-static  {v4}, Ljava/util/Arrays;->toString([Ljava/lang/Object;)Ljava/lang/String;
+    07fc..07fe  move-result-object  v2
+    07fe..0804  invoke-static  {v2}, LX/00l;->A05(Ljava/lang/Object;)V
+    0804..0808  const-string  v0, "prekey request failed; signalAddresses="
+    0808..080c  new-instance  v1, Ljava/lang/StringBuilder;
+    080c..0812  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0812..0818  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0818..081c  const-string  v0, "; errorCode="
+    081c..0822  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0822..0828  invoke-virtual  {v1, v7}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0828..082e  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    082e..0830  move-result-object  v0
+    0830..0836  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0836..083a  iget-object  v0, v5, LX/14q;->A09:LX/05a;
+    083a..083e  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    083e..0844  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0844..0846  move-result-object  v8
+    0846..084a  check-cast  v8, LX/14t;
+    084a..084e  const-string  v0, "PreKeysRequestManager/onGetPreKeyError errorCode="
+    084e..0850  monitor-enter
+    0850..0854  new-instance  v1, Ljava/lang/StringBuilder;
+    0854..085a  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    085a..0860  invoke-virtual  {v1, v7}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0860..0864  const-string  v0, " for jids: "
+    0864..086a  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    086a..0870  invoke-static  {v4}, Ljava/util/Arrays;->toString([Ljava/lang/Object;)Ljava/lang/String;
+    0870..0872  move-result-object  v0
+    0872..0878  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0878..087e  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    087e..0880  move-result-object  v0
+    0880..0886  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0886..0888  array-length  v10, v4
+    0888..088a  const/4  v9, #0x0
+    088a..088e  const/16  v6, #0x258
+    088e..0892  const/16  v3, #0x1f4
+    0892..0896  if-ge  v9, v10, +0x1a
+    0896..089a  aget-object  v2, v4, v9
+    089a..089e  iget-object  v0, v8, LX/14t;->A0B:Ljava/util/Map;
+    089e..08a4  invoke-interface  {v0, v2}, Ljava/util/Map;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+    08a4..08a6  move-result-object  v1
+    08a6..08aa  check-cast  v1, LX/EX8;
+    08aa..08ae  if-gt  v3, v7, +0xb
+    08ae..08b2  if-ge  v7, v6, +0x9
+    08b2..08b6  if-eqz  v1, +0x7
+    08b6..08ba  iget-object  v0, v8, LX/14t;->A0C:Ljava/util/Map;
+    08ba..08c0  invoke-interface  {v0, v2, v1}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    08c0..08c4  add-int/lit8  v9, v9, #0x1
+    08c4..08c6  goto  -0x1d
+    08c6..08ca  if-gt  v3, v7, +0x41
+    08ca..08ce  if-ge  v7, v6, +0x3f
+    08ce..08d2  iget-boolean  v0, v8, LX/14t;->A01:Z
+    08d2..08d6  if-eqz  v0, +0xe
+    08d6..08da  iget-boolean  v0, v8, LX/14t;->A00:Z
+    08da..08de  if-nez  v0, +0x37
+    08de..08e2  iget-object  v0, v8, LX/14t;->A0B:Ljava/util/Map;
+    08e2..08e8  invoke-interface  {v0}, Ljava/util/Map;->isEmpty()Z
+    08e8..08ea  move-result  v0
+    08ea..08ee  if-eqz  v0, +0x2f
+    08ee..08f2  iput-boolean  v13, v8, LX/14t;->A01:Z
+    08f2..08f6  iput-boolean  v13, v8, LX/14t;->A00:Z
+    08f6..08fa  iget-object  v0, v8, LX/14t;->A08:LX/0Vf;
+    08fa..0900  invoke-virtual  {v0}, LX/0Vf;->A01()J
+    0900..0902  move-result-wide  v2
+    0902..0906  const-wide/16  v0, #0x3e8
+    0906..0908  mul-long/2addr  v2, v0
+    0908..090c  new-instance  v1, Ljava/lang/StringBuilder;
+    090c..0912  invoke-direct  {v1}, Ljava/lang/StringBuilder;-><init>()V
+    0912..0916  const-string  v0, "PreKeysRequestManager/onGetPreKeyError entering backoff, delayMs="
+    0916..091c  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    091c..0922  invoke-virtual  {v1, v2, v3}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    0922..0928  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0928..092a  move-result-object  v0
+    092a..0930  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0930..0934  iget-object  v6, v8, LX/14t;->A02:Landroid/os/Handler;
+    0934..0938  const/16  v1, #0x13
+    0938..093c  new-instance  v0, LX/Fea;
+    093c..0942  invoke-direct  {v0, v8, v1}, LX/Fea;-><init>(Ljava/lang/Object;I)V
+    0942..0948  invoke-virtual  {v6, v0, v2, v3}, Landroid/os/Handler;->postDelayed(Ljava/lang/Runnable;J)Z
+    0948..094e  invoke-static  {v4}, Ljava/util/Arrays;->asList([Ljava/lang/Object;)Ljava/util/List;
+    094e..0950  move-result-object  v1
+    0950..0954  new-instance  v0, Ljava/util/HashSet;
+    0954..095a  invoke-direct  {v0, v1}, Ljava/util/HashSet;-><init>(Ljava/util/Collection;)V
+    095a..0960  invoke-static  {v8, v0}, LX/14t;->A01(LX/14t;Ljava/util/Set;)V
+    0960..0962  monitor-exit
+    0962..0966  const/16  v0, #0x196
+    0966..0968  const/4  v2, #0x0
+    0968..096c  if-ne  v7, v0, +0x3
+    096c..096e  const/4  v2, #0x1
+    096e..0972  iget-object  v0, v5, LX/14q;->A0C:LX/05a;
+    0972..0976  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0976..097c  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    097c..097e  move-result-object  v1
+    097e..0982  check-cast  v1, LX/08Z;
+    0982..0986  const/16  v0, #0x15
+    0986..098a  new-instance  v3, LX/FeR;
+    098a..0990  invoke-direct  {v3, v5, v4, v0, v2}, LX/FeR;-><init>(Ljava/lang/Object;Ljava/lang/Object;IZ)V
+    0990..0992  goto  +0x17
+    0992..0994  move-exception  v0
+    0994..0996  monitor-exit
+    0996..0998  throw  v0
+# Original full-method exception metadata (code units):
+    # exception table: 10 try range(s)
+    # catch <all> code_units 009e..00bf -> 00bf
+    # catch <all> code_units 00c0..00c1 -> 00bf
+    # catch <all> code_units 00e4..0105 -> 02d8
+    # catch <all> code_units 01aa..01da -> 022f
+    # catch <all> code_units 0230..0231 -> 022f
+    # catch <all> code_units 0266..026d -> 02d5
+    # catch <all> code_units 02d6..02d7 -> 02d5
+    # catch <all> code_units 02d9..02da -> 02d8
+    # catch <all> code_units 0428..04b0 -> 04c9
+    # catch <all> code_units 04ca..04cb -> 04c9

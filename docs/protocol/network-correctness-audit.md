@@ -3409,3 +3409,14 @@ the codes and malformed boundary atomically with settlement, exposed by actions
 plain/JSON. Legacy absence remains unknown. Duplicate/reopen/no-replay and JVM
 oracle tests cover the correction. No retry, cooldown or saved About adoption.
 [Exact source, oracle and limits](apk/2.26.43.72-about-error-codes/README.md).
+
+### 2026-11-05: current prekey error backoff has scoped state
+
+**Confirmed static, APK 2.26.43.72:** non-PQ error selector 76 moves affected
+existing in-flight entries to pending only for 500..599. A01 mode and A00 posted
+flag control scheduling; the 10/610 generator starts at zero delay. Delayed drain
+clears posted flag but retains mode; explicit reset differs. Complete normal
+admission does not establish a blanket stop of all key queries. **Unknown:**
+network-to-listener attribution, external reset authority and durable job/write
+recovery. No Rust retry, admission or reservation policy changed.
+[Exact anchors, source transitions and delay derivation](apk/2.26.43.72-prekey-error-backoff/README.md).

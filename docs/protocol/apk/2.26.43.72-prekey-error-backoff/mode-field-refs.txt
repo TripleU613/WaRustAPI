@@ -1,0 +1,10 @@
+classes.dex  LX/14o;->BLn(ZLI)
+  read opcode 0x55, dex byte offset: 0x7f8fce
+classes.dex  LX/14o;->BLn(ZLI)
+  write opcode 0x5c, dex byte offset: 0x7f8fee
+classes.dex  LX/14t;->A00(VLLLLIIIZZZ)
+  read opcode 0x55, dex byte offset: 0x7f99f6
+classes.dex  LX/14t;->A03(V)
+  read opcode 0x55, dex byte offset: 0x7f9f2a
+classes.dex  LX/14t;->A03(V)
+  write opcode 0x5c, dex byte offset: 0x7f9f3e

@@ -1,0 +1,28 @@
+
+# class: LX/14t;
+# extends: Ljava/lang/Object;
+
+.method public A01(VLL)  # .registers 3
+    # full signature: LX/14t;->A01(LX/14t;Ljava/util/Set;)V
+    0000..0004  iget-object  v1, v1, LX/14t;->A0A:Ljava/util/List;
+    0004..000a  invoke-interface  {v1}, Ljava/util/List;->isEmpty()Z
+    000a..000c  move-result  v0
+    000c..0010  if-nez  v0, +0x21
+    0010..0016  invoke-interface  {v2}, Ljava/util/Set;->isEmpty()Z
+    0016..0018  move-result  v0
+    0018..001c  if-nez  v0, +0x1b
+    001c..0020  new-instance  v0, Ljava/util/ArrayList;
+    0020..0026  invoke-direct  {v0, v1}, Ljava/util/ArrayList;-><init>(Ljava/util/Collection;)V
+    0026..002c  invoke-virtual  {v0}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+    002c..002e  move-result-object  v1
+    002e..0034  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    0034..0036  move-result  v0
+    0036..003a  if-eqz  v0, +0xc
+    003a..0040  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0040..0042  move-result-object  v0
+    0042..0046  check-cast  v0, LX/FtW;
+    0046..004c  invoke-interface  {v0, v2}, LX/FtW;->C9b(Ljava/util/Set;)V
+    004c..004e  goto  -0xf
+    004e..0050  return-void
+    # exception table: 0 try range(s)
+.end method

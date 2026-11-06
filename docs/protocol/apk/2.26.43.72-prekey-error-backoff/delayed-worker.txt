@@ -1,0 +1,101 @@
+# Selected byte-PC ranges, end exclusive; other switch branches omitted.
+# Full export SHA256: fb2b39ffc5c0f6be036a15ed005c1f2c73f0dcbc70ae087c3d3c29e8a7490909
+# Range 0000..000e
+    0000..0004  move-object/from16  v1, v25
+    0004..0008  iget  v0, v1, LX/Fea;->$t:I
+    0008..000e  packed-switch  v0, payload@0x1a2c, cases=[0:@0x19b4, 1:@0x197c, 2:@0x12ec, 3:@0x127e, 4:@0x126e, 5:@0x1258, 6:@0xb30, 7:@0x1226, 8:@0x11d2, 9:@0x11ba, 10:@0x119c, 11:@0x119c, 12:@0xbc6, 13:@0x1174, 14:@0x1154, 15:@0x9f8, 16:@0x1130, 17:@0xf74, 18:@0xf48, 19:@0xf38, 20:@0xf20, 21:@0xf20, 22:@0x26a, 23:@0xb9c, 24:@0xee4, 25:@0xed4, 26:@0xec4, 27:@0xeb4, 28:@0xe4e, 29:@0xe06, 30:@0xdf6, 31:@0xdce, 32:@0xdba, 33:@0xda8, 34:@0xd92, 35:@0xd32, 36:@0xd20, 37:@0x22a, 38:@0xd10, 39:@0x20e, 40:@0xd00, 41:@0x1f2, 42:@0x192, 43:@0xcbe, 44:@0xbec, 45:@0x144, 46:@0xe, 47:@0xf6, 48:@0xe, 49:@0xe8], default@0xe
+# Range 0f38..0f48
+    0f38..0f3c  iget-object  v0, v1, LX/Fea;->A00:Ljava/lang/Object;
+    0f3c..0f40  check-cast  v0, LX/14t;
+    0f40..0f46  invoke-virtual  {v0}, LX/14t;->A04()V
+    0f46..0f48  return-void
+# Original full-method exception metadata (code units):
+    # exception table: 87 try range(s)
+    # catch Ljava/lang/SecurityException; code_units 00cd..00f9 -> 0ce3
+    # catch <all> code_units 013e..01de -> 0ced
+    # catch <all> code_units 01de..0216 -> 0cea
+    # catch <all> code_units 0216..049b -> 0ced
+    # catch <all> code_units 049e..04a4 -> 0cf7
+    # catch <all> code_units 0519..051f -> 0d08
+    # catch <all> code_units 05a4..05c5 -> 0d0b
+    # catch Ljava/lang/Exception; code_units 05fa..0605 -> 065a
+    # catch Ljava/lang/Exception; code_units 0605..0636 -> 0643
+    # catch Ljava/lang/Exception; code_units 0605..0636 -> 065a
+    # catch Ljava/lang/Exception; code_units 0636..065a -> 065a
+    # catch <all> code_units 069e..06c4 -> 06c6
+    # catch Ljava/lang/Exception; code_units 0838..087d -> 087d
+    # catch <all> code_units 08f0..08f5 -> 0910
+    # catch <all> code_units 0911..0912 -> 0910
+    # catch <all> code_units 094f..096b -> 096f
+    # catch <all> code_units 0970..0971 -> 0971
+    # catch <all> code_units 098c..0997 -> 0cb7
+    # catch <all> code_units 0997..09b5 -> 0cad
+    # catch <all> code_units 09b5..09c8 -> 0ca3
+    # catch <all> code_units 09c8..09d3 -> 0cad
+    # catch <all> code_units 09d3..09e6 -> 0ca3
+    # catch <all> code_units 09e6..09f7 -> 0c97
+    # catch <all> code_units 09f7..09fa -> 0ca3
+    # catch <all> code_units 09fa..0a50 -> 0cad
+    # catch <all> code_units 0a50..0a54 -> 0ab4
+    # catch <all> code_units 0a54..0a58 -> 0aaa
+    # catch <all> code_units 0a58..0a6a -> 0aa0
+    # catch <all> code_units 0a6a..0a71 -> 0aaa
+    # catch <all> code_units 0a71..0a82 -> 0aa0
+    # catch <all> code_units 0a82..0a99 -> 0aaa
+    # catch <all> code_units 0a99..0a9c -> 0ab4
+    # catch <all> code_units 0a9c..0aa0 -> 0cad
+    # catch <all> code_units 0aa1..0aa5 -> 0aa5
+    # catch <all> code_units 0aa5..0aaa -> 0aaa
+    # catch <all> code_units 0aab..0aaf -> 0aaf
+    # catch <all> code_units 0ab0..0ab4 -> 0ab4
+    # catch <all> code_units 0ab5..0aba -> 0ca8
+    # catch <all> code_units 0aba..0aca -> 0cad
+    # catch <all> code_units 0aca..0ae2 -> 0cb7
+    # catch <all> code_units 0ae2..0afb -> 0c8e
+    # catch <all> code_units 0afb..0b18 -> 0c82
+    # catch <all> code_units 0b18..0b23 -> 0c8e
+    # catch <all> code_units 0b23..0b33 -> 0c82
+    # catch <all> code_units 0b33..0b41 -> 0c77
+    # catch <all> code_units 0b41..0b44 -> 0c82
+    # catch <all> code_units 0b44..0b8a -> 0c8e
+    # catch <all> code_units 0b8a..0ba9 -> 0c82
+    # catch <all> code_units 0ba9..0bb8 -> 0c77
+    # catch <all> code_units 0bb8..0bbb -> 0c82
+    # catch <all> code_units 0bbb..0bd7 -> 0c8e
+    # catch <all> code_units 0bd7..0bdb -> 0c82
+    # catch <all> code_units 0bdb..0bdf -> 0c73
+    # catch <all> code_units 0bdf..0bf4 -> 0c6c
+    # catch <all> code_units 0bf4..0bfb -> 0c73
+    # catch <all> code_units 0bfb..0c0f -> 0c65
+    # catch <all> code_units 0c0f..0c26 -> 0c73
+    # catch <all> code_units 0c26..0c29 -> 0c82
+    # catch <all> code_units 0c29..0c2e -> 0c8e
+    # catch <all> code_units 0c2e..0c32 -> 0c63
+    # catch <all> code_units 0c32..0c52 -> 0c5c
+    # catch <all> code_units 0c52..0c55 -> 0c63
+    # catch <all> code_units 0c55..0c58 -> 0c8e
+    # catch <all> code_units 0c58..0c5c -> 0cb7
+    # catch <all> code_units 0c5d..0c5e -> 0c5e
+    # catch <all> code_units 0c5f..0c63 -> 0c63
+    # catch <all> code_units 0c64..0c65 -> 0c89
+    # catch <all> code_units 0c66..0c67 -> 0c67
+    # catch <all> code_units 0c67..0c6c -> 0c73
+    # catch <all> code_units 0c6d..0c6e -> 0c6e
+    # catch <all> code_units 0c6e..0c73 -> 0c73
+    # catch <all> code_units 0c74..0c75 -> 0c75
+    # catch <all> code_units 0c78..0c79 -> 0c79
+    # catch <all> code_units 0c7a..0c82 -> 0c82
+    # catch <all> code_units 0c83..0c84 -> 0c84
+    # catch <all> code_units 0c84..0c8e -> 0c8e
+    # catch <all> code_units 0c8f..0c93 -> 0cb2
+    # catch <all> code_units 0c9a..0c9e -> 0c9e
+    # catch <all> code_units 0c9f..0ca3 -> 0ca3
+    # catch <all> code_units 0ca4..0ca8 -> 0ca8
+    # catch <all> code_units 0ca8..0cad -> 0cad
+    # catch <all> code_units 0cae..0cb2 -> 0cb2
+    # catch <all> code_units 0cb2..0cb7 -> 0cb7
+    # catch <all> code_units 0cb8..0cb9 -> 0cb9
+    # catch <all> code_units 0cea..0ced -> 0ced
+    # catch <all> code_units 0cf1..0cf5 -> 0cf7
+    # catch <all> code_units 0d09..0d0a -> 0d08
+    # catch <all> code_units 0d0c..0d0f -> 0d10

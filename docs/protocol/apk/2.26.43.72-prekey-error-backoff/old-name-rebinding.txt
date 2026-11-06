@@ -1,0 +1,10 @@
+# Pinned current APK, class-name check only; animation behavior is out of scope.
+# Command: xtask apk-smali APK --class LX/DF6; --signatures --exceptions
+# Full export SHA256: fb86f8cc5bc776200ae35a52e62dc56b5b88498d57ce5cc95575e47663caee4e
+# class: LX/DF6;
+# extends: Landroid/animation/AnimatorListenerAdapter;
+.method public <init>(VLLLF)  # .registers 5
+.method public onAnimationRepeat(VL)  # .registers 5
+.method public onAnimationStart(VL)  # .registers 8
+# Command with class LX/DFC; returned: no method bodies match class filter "LX/DFC;"
+# No equivalence to older DF6/DFC callback names inferred.

@@ -16972,5 +16972,12 @@
     "x-live": false,
     "description": "Static APK43.72 status privacy fetch callback: original CmQ permits bounded retry, wrapper reads root IQ code/backoff while original callback reads nested error code. 404 does not run success adoption; required privacy child/type precedes conditional settings writes. Job exception hook returns true, scheduler limits unknown. Rust fetch/adoption unimplemented; no runtime policy change.",
     "evidence": "docs/protocol/apk/2.26.43.72-status-privacy-fetch-callback/README.md"
+  },
+  "x-prekey-error-backoff-research": {
+    "x-cli": false,
+    "x-transport": "experimental",
+    "x-live": false,
+    "description": "Static APK43.72 prekey error manager retains affected non-PQ 5xx requests in pending map with separate mode/posted flags. Delay starts at zero; delayed drain and explicit reset differ. Does not prove global server cooldown or safe uncertain-write replay. Network ingress, job policy and durable lifetime remain unported; no runtime change.",
+    "evidence": "docs/protocol/apk/2.26.43.72-prekey-error-backoff/README.md"
   }
 }

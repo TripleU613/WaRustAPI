@@ -1,0 +1,58 @@
+{
+  "README.md": {
+    "bytes": 5572,
+    "sha256": "ce3817da5ab11799ae0b99786f4c861aa34aa23db4989f37cfd69ff0129e5100"
+  },
+  "anchor-xrefs.txt": {
+    "bytes": 434,
+    "sha256": "604399aef2ae13fc442d50b8a9a757407b4f854419dbc31bedfb4fda1546a225"
+  },
+  "delay-generator.txt": {
+    "bytes": 3980,
+    "sha256": "1fe16d57e0cbacb6707834a4af954e76f64f78658cf9ef133e04ff3801352aeb"
+  },
+  "delayed-worker.txt": {
+    "bytes": 5519,
+    "sha256": "2d8f58f00bf0a39bbba6042f88eb91dee5ab57d3f708b54b14f6fcf5499e1762"
+  },
+  "derived-delays.json": {
+    "bytes": 1255,
+    "sha256": "bf0486c8821c11d7e5579ed0f244c20f652122732c292626c9b38af46ed8ff7d"
+  },
+  "error-listener.txt": {
+    "bytes": 9618,
+    "sha256": "ba7e38dd75b7d469296da674257ad42cd30176bbf22909caf75e73eb208ba4eb"
+  },
+  "listener-notification.txt": {
+    "bytes": 1261,
+    "sha256": "874523522887b8cf9aca940274ee3c7e08bcbbb920a06812c02c870f0597907c"
+  },
+  "manager-A00.txt": {
+    "bytes": 17085,
+    "sha256": "c1fe652e4b66fd19511ce116c39909f13f97de768731b202304a9d025f58d32c"
+  },
+  "manager-A03.txt": {
+    "bytes": 1113,
+    "sha256": "6c1f2052f3e81921fbe10300b1994f899150062b620a9fd53e6e1603a59dfd6b"
+  },
+  "manager-A04.txt": {
+    "bytes": 6800,
+    "sha256": "a209225b49b26e565989bf8705d7e223bbbf6b840957d8659b81edf1ef129ebc"
+  },
+  "manager-constructor.txt": {
+    "bytes": 3003,
+    "sha256": "42a168a07a9b7106fd59024f86f20385725664c7e83c70bc1e0fabceec255500"
+  },
+  "mode-field-refs.txt": {
+    "bytes": 391,
+    "sha256": "979a8454bd5ee2a772cd62e91f1c31477f05a1040367d2a97feef9b3555abee4"
+  },
+  "old-name-rebinding.txt": {
+    "bytes": 607,
+    "sha256": "2b209d195d77f13729d2463df08bfb7fc41964898e61cdd38f74162e219d1969"
+  },
+  "reset-callers.txt": {
+    "bytes": 425,
+    "sha256": "e4374368cca97507a30c147b47861ee038956a7a9506b3684d979bbea1ed8012"
+  }
+}

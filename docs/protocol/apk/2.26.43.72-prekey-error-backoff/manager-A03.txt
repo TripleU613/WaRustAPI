@@ -1,0 +1,25 @@
+# Complete method extracted from full-class export SHA256: 8daa1003caf59b9699f550a174fe74687ff789a6962a5540b40362633e109f6d
+
+
+.method public A03(V)  # .registers 2
+    # full signature: LX/14t;->A03()V
+    0000..0002  monitor-enter
+    0002..0006  iget-boolean  v0, v1, LX/14t;->A01:Z
+    0006..000a  if-eqz  v0, +0x14
+    000a..000e  const-string  v0, "PreKeysRequestManager/resetGetPreKeyBackoff exiting backoff mode"
+    000e..0014  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0014..0016  const/4  v0, #0x0
+    0016..001a  iput-boolean  v0, v1, LX/14t;->A01:Z
+    001a..001e  iput-boolean  v0, v1, LX/14t;->A00:Z
+    001e..0022  iget-object  v0, v1, LX/14t;->A08:LX/0Vf;
+    0022..0028  invoke-virtual  {v0}, LX/0Vf;->A02()V
+    0028..002e  invoke-virtual  {v1}, LX/14t;->A04()V
+    002e..0030  monitor-exit
+    0030..0032  return-void
+    0032..0034  move-exception  v0
+    0034..0036  monitor-exit
+    0036..0038  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0001..0017 -> 0019
+    # catch <all> code_units 001a..001b -> 0019
+.end method
