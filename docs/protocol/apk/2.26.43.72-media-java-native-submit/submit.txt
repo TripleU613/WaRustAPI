@@ -1,0 +1,57 @@
+
+# class: LX/0eA;
+# extends: Ljava/lang/Object;
+
+.method public A01(LLLLZ)  # .registers 14
+    # full signature: LX/0eA;->A01(Lcom/facebook/tigon/TigonBodyProvider;Lcom/facebook/tigon/TigonCallbacks;Lcom/facebook/tigon/iface/TigonRequest;Z)Lcom/crossapp/tigonhttp/TigonResult;
+    0000..0006  invoke-static  {}, LX/0LG;->A04()Z
+    0006..0008  move-result  v0
+    0008..000e  const  v2, #0x1122b7f
+    000e..0012  if-eqz  v0, +0x33
+    0012..0016  sget-object  v0, LX/0eA;->A0v:LX/00p;
+    0016..001c  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    001c..001e  move-result-object  v1
+    001e..0022  check-cast  v1, LX/NYE;
+    0022..0028  const-string/jumbo  v0, "wa_tigon_client_send_request_main_thread"
+    0028..002e  invoke-interface  {v1, v0, v2}, LX/NYE;->AEb(Ljava/lang/String;I)LX/NbW;
+    002e..0030  move-result-object  v2
+    0030..0034  const-string  v1, "WATigonService sendRequestSync on main thread"
+    0034..0038  new-instance  v0, Ljava/lang/Throwable;
+    0038..003e  invoke-direct  {v0, v1}, Ljava/lang/Throwable;-><init>(Ljava/lang/String;)V
+    003e..0044  invoke-interface  {v2, v0}, LX/NbW;->Cee(Ljava/lang/Throwable;)V
+    0044..004a  invoke-interface  {v2}, LX/NbW;->report()V
+    004a..004c  const/4  v6, #0x0
+    004c..004e  const/4  v7, #0x2
+    004e..0052  new-instance  v1, LX/Kag;
+    0052..0054  move-object  v5, v9
+    0054..0056  move-object  v3, v10
+    0056..0058  move-object  v2, v11
+    0058..005a  move-object  v4, v12
+    005a..005c  move  v8, v13
+    005c..0062  invoke-direct/range  {v1..v8}, LX/Kag;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;LX/0cf;IZ)V
+    0062..0066  sget-object  v0, LX/0TL;->A00:LX/0TL;
+    0066..006c  invoke-static  {v0, v1}, LX/1sK;->A00(LX/01z;LX/0AW;)Ljava/lang/Object;
+    006c..006e  move-result-object  v0
+    006e..0072  check-cast  v0, Lcom/crossapp/tigonhttp/TigonResult;
+    0072..0074  return-object  v0
+    0074..0078  sget-object  v0, LX/0mC;->A00:LX/098;
+    0078..007c  if-eqz  v0, -0x17
+    007c..0082  invoke-virtual  {v0}, LX/098;->A06()Z
+    0082..0084  move-result  v1
+    0084..0086  const/4  v0, #0x1
+    0086..008a  if-ne  v1, v0, -0x1e
+    008a..008e  sget-object  v0, LX/0eA;->A0v:LX/00p;
+    008e..0094  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    0094..0096  move-result-object  v1
+    0096..009a  check-cast  v1, LX/NYE;
+    009a..00a0  const-string/jumbo  v0, "wa_tigon_client_send_request_iq_executor"
+    00a0..00a6  invoke-interface  {v1, v0, v2}, LX/NYE;->AEb(Ljava/lang/String;I)LX/NbW;
+    00a6..00a8  move-result-object  v2
+    00a8..00ac  const-string  v1, "WATigonService sendRequestSync on IQ executor"
+    00ac..00b0  new-instance  v0, Ljava/lang/Throwable;
+    00b0..00b6  invoke-direct  {v0, v1}, Ljava/lang/Throwable;-><init>(Ljava/lang/String;)V
+    00b6..00bc  invoke-interface  {v2, v0}, LX/NbW;->Cee(Ljava/lang/Throwable;)V
+    00bc..00c2  invoke-interface  {v2}, LX/NbW;->report()V
+    00c2..00c4  goto  -0x3c
+    # exception table: 0 try range(s)
+.end method

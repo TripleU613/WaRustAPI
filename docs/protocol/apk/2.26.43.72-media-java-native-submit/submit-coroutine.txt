@@ -1,0 +1,251 @@
+
+# class: LX/Kag;
+# extends: LX/0cj;
+
+.method public invokeSuspend(LL)  # .registers 18
+    # full signature: LX/Kag;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+    0000..0004  move-object/from16  v3, v17
+    0004..0008  move-object/from16  v0, v16
+    0008..000c  iget  v1, v0, LX/Kag;->$t:I
+    000c..0012  packed-switch  v1, payload@0x3b4, cases=[0:@0x50, 1:@0xc6, 2:@0x240, 3:@0x1b6], default@0x12
+    0012..0016  iget  v1, v0, LX/Kag;->A00:I
+    0016..001a  if-nez  v1, +0x110
+    001a..0020  invoke-static  {v3}, LX/0dg;->A01(Ljava/lang/Object;)V
+    0020..0024  iget-object  v4, v0, LX/Kag;->A04:Ljava/lang/Object;
+    0024..0028  check-cast  v4, LX/K2c;
+    0028..002c  iget-object  v3, v0, LX/Kag;->A02:Ljava/lang/Object;
+    002c..0030  check-cast  v3, LX/0DY;
+    0030..0034  iget-object  v2, v0, LX/Kag;->A03:Ljava/lang/Object;
+    0034..0038  check-cast  v2, Landroid/location/Location;
+    0038..003c  iget-object  v1, v0, LX/Kag;->A01:Ljava/lang/Object;
+    003c..0040  check-cast  v1, LX/18U;
+    0040..0044  iget-boolean  v0, v0, LX/Kag;->A05:Z
+    0044..004a  invoke-virtual  {v4, v2, v3, v1, v0}, LX/K2c;->A05(Landroid/location/Location;LX/0DY;LX/18U;Z)V
+    004a..004e  sget-object  v1, LX/05u;->A00:LX/05u;
+    004e..0050  return-object  v1
+    0050..0054  sget-object  v1, LX/0dd;->A02:LX/0dd;
+    0054..0058  iget  v2, v0, LX/Kag;->A00:I
+    0058..005a  const/4  v8, #0x1
+    005a..005e  if-eqz  v2, +0x6
+    005e..0064  invoke-static  {v3}, LX/0dg;->A01(Ljava/lang/Object;)V
+    0064..0066  goto  -0xd
+    0066..006c  invoke-static  {v3}, LX/0dg;->A01(Ljava/lang/Object;)V
+    006c..0070  iget-object  v2, v0, LX/Kag;->A03:Ljava/lang/Object;
+    0070..0076  invoke-static  {v2}, LX/2LC;->A0v(Ljava/lang/Object;)Ljava/lang/Object;
+    0076..0078  move-result-object  v2
+    0078..007c  check-cast  v2, LX/Ibr;
+    007c..0080  iget-object  v6, v0, LX/Kag;->A02:Ljava/lang/Object;
+    0080..0084  check-cast  v6, LX/1eQ;
+    0084..008a  invoke-virtual  {v2, v6}, LX/Ibr;->A01(LX/1eQ;)LX/KgO;
+    008a..008c  move-result-object  v5
+    008c..0090  iget-object  v4, v0, LX/Kag;->A04:Ljava/lang/Object;
+    0090..0094  check-cast  v4, LX/IcA;
+    0094..0098  iget-object  v2, v4, LX/IcA;->A08:LX/05a;
+    0098..009e  invoke-static  {v2}, LX/2L8;->A1Q(LX/05a;)LX/021;
+    009e..00a0  move-result-object  v2
+    00a0..00a4  iget-boolean  v9, v0, LX/Kag;->A05:Z
+    00a4..00a6  const/4  v7, #0x0
+    00a6..00aa  new-instance  v3, LX/Kau;
+    00aa..00b0  invoke-direct/range  {v3..v9}, LX/Kau;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;LX/0cf;IZ)V
+    00b0..00b4  iput-object  v7, v0, LX/Kag;->A01:Ljava/lang/Object;
+    00b4..00b8  iput  v8, v0, LX/Kag;->A00:I
+    00b8..00be  invoke-static  {v0, v2, v3}, LX/0cl;->A00(LX/0cf;LX/01z;LX/0AW;)Ljava/lang/Object;
+    00be..00c0  move-result-object  v0
+    00c0..00c4  if-ne  v0, v1, -0x3b
+    00c4..00c6  return-object  v1
+    00c6..00ca  sget-object  v1, LX/0dd;->A02:LX/0dd;
+    00ca..00ce  iget  v2, v0, LX/Kag;->A00:I
+    00ce..00d0  const/4  v7, #0x1
+    00d0..00d4  if-eqz  v2, +0x3d
+    00d4..00da  invoke-static  {v3}, LX/0dg;->A01(Ljava/lang/Object;)V
+    00da..00de  check-cast  v3, Ljava/lang/String;
+    00de..00e2  iget-object  v4, v0, LX/Kag;->A04:Ljava/lang/Object;
+    00e2..00e6  check-cast  v4, LX/KGy;
+    00e6..00ea  iget-object  v2, v4, LX/KGy;->A01:LX/1dW;
+    00ea..00ee  iget-object  v1, v0, LX/Kag;->A03:Ljava/lang/Object;
+    00ee..00f4  invoke-static  {v2, v1}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    00f4..00f6  move-result  v1
+    00f6..00fa  if-eqz  v1, -0x56
+    00fa..00fe  iget-object  v2, v0, LX/Kag;->A02:Ljava/lang/Object;
+    00fe..0102  check-cast  v2, Landroid/widget/TextView;
+    0102..0106  iget-boolean  v0, v0, LX/Kag;->A05:Z
+    0106..010a  if-eqz  v0, +0x1e
+    010a..010e  iget-object  v0, v4, LX/KGy;->A0L:LX/15i;
+    010e..0114  invoke-static  {v0}, LX/6of;->A07(LX/15i;)Landroid/view/View;
+    0114..0116  move-result-object  v0
+    0116..011a  check-cast  v0, Lcom/whatsapp/conversationrow/video/VideoControlFrameView;
+    011a..011e  iget-object  v0, v0, Lcom/whatsapp/conversationrow/video/VideoControlFrameView;->A00:LX/00p;
+    011e..0124  invoke-static  {v0}, LX/6oe;->A11(LX/00p;)Lcom/whatsapp/ui/coreui/base/WaTextView;
+    0124..0126  move-result-object  v0
+    0126..012c  invoke-virtual  {v0}, Landroid/view/View;->getContext()Landroid/content/Context;
+    012c..012e  move-result-object  v1
+    012e..0134  const  v0, #0x7f122307
+    0134..013a  invoke-static  {v1, v3, v0}, LX/2LE;->A0V(Landroid/content/Context;Ljava/lang/Object;I)Ljava/lang/String;
+    013a..013c  move-result-object  v3
+    013c..0142  invoke-static  {v3}, LX/00l;->A08(Ljava/lang/Object;)V
+    0142..0148  invoke-virtual  {v2, v3}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+    0148..014a  goto  -0x7f
+    014a..0150  invoke-static  {v3}, LX/0dg;->A01(Ljava/lang/Object;)V
+    0150..0154  iget-object  v2, v0, LX/Kag;->A04:Ljava/lang/Object;
+    0154..0158  check-cast  v2, LX/KGy;
+    0158..015c  iget-object  v2, v2, LX/KGy;->A0B:LX/05a;
+    015c..0162  invoke-static  {v2}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0162..0164  move-result-object  v6
+    0164..0168  check-cast  v6, Lcom/whatsapp/conversationrow/media/component/DownloadSizeLoader;
+    0168..016c  iget-object  v2, v0, LX/Kag;->A01:Ljava/lang/Object;
+    016c..0170  check-cast  v2, Ljava/util/List;
+    0170..0176  invoke-static  {}, LX/1Xl;->A18()Ljava/util/ArrayList;
+    0176..0178  move-result-object  v5
+    0178..017e  invoke-interface  {v2}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    017e..0180  move-result-object  v4
+    0180..0186  invoke-interface  {v4}, Ljava/util/Iterator;->hasNext()Z
+    0186..0188  move-result  v2
+    0188..018c  if-eqz  v2, +0xe
+    018c..0192  invoke-interface  {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0192..0194  move-result-object  v3
+    0194..0198  instance-of  v2, v3, LX/1eQ;
+    0198..019c  if-eqz  v2, -0xc
+    019c..01a2  invoke-virtual  {v5, v3}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    01a2..01a4  goto  -0x11
+    01a4..01a8  iput  v7, v0, LX/Kag;->A00:I
+    01a8..01ae  invoke-virtual  {v6, v5, v0}, Lcom/whatsapp/conversationrow/media/component/DownloadSizeLoader;->A00(Ljava/util/List;LX/0cf;)Ljava/lang/Object;
+    01ae..01b0  move-result-object  v3
+    01b0..01b4  if-ne  v3, v1, -0x6b
+    01b4..01b6  return-object  v1
+    01b6..01ba  sget-object  v1, LX/0dd;->A02:LX/0dd;
+    01ba..01be  iget  v2, v0, LX/Kag;->A00:I
+    01be..01c0  const/4  v4, #0x1
+    01c0..01c4  if-eqz  v2, +0x3
+    01c4..01c6  goto  +0x29
+    01c6..01cc  invoke-static  {v3}, LX/0dg;->A01(Ljava/lang/Object;)V
+    01cc..01d0  iget-object  v9, v0, LX/Kag;->A04:Ljava/lang/Object;
+    01d0..01d4  check-cast  v9, Lcom/whatsapp/location/ui/LocationPickerViewModel;
+    01d4..01d8  iget-object  v2, v9, Lcom/whatsapp/location/ui/LocationPickerViewModel;->A09:LX/023;
+    01d8..01dc  iget-object  v7, v0, LX/Kag;->A02:Ljava/lang/Object;
+    01dc..01e0  check-cast  v7, Lcom/whatsapp/infra/core/jid/UserJid;
+    01e0..01e4  iget-object  v8, v0, LX/Kag;->A01:Ljava/lang/Object;
+    01e4..01e8  check-cast  v8, LX/HFj;
+    01e8..01ec  iget-object  v6, v0, LX/Kag;->A03:Ljava/lang/Object;
+    01ec..01f0  check-cast  v6, LX/1bc;
+    01f0..01f4  iget-boolean  v12, v0, LX/Kag;->A05:Z
+    01f4..01f6  const/4  v10, #0x0
+    01f6..01f8  const/4  v11, #0x0
+    01f8..01fc  new-instance  v5, LX/KZz;
+    01fc..0202  invoke-direct/range  {v5..v12}, LX/KZz;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;LX/0cf;IZ)V
+    0202..0206  iput  v4, v0, LX/Kag;->A00:I
+    0206..020c  invoke-static  {v0, v2, v5}, LX/0cl;->A00(LX/0cf;LX/01z;LX/0AW;)Ljava/lang/Object;
+    020c..020e  move-result-object  v3
+    020e..0212  if-ne  v3, v1, +0x7
+    0212..0216  goto/16  +0xc4
+    0216..021c  invoke-static  {v3}, LX/0dg;->A01(Ljava/lang/Object;)V
+    021c..0220  check-cast  v3, LX/JP6;
+    0220..0224  iget-object  v0, v0, LX/Kag;->A04:Ljava/lang/Object;
+    0224..0228  check-cast  v0, Lcom/whatsapp/location/ui/LocationPickerViewModel;
+    0228..022c  iget-object  v0, v0, Lcom/whatsapp/location/ui/LocationPickerViewModel;->A03:LX/07f;
+    022c..0232  invoke-virtual  {v0, v3}, LX/07e;->A0D(Ljava/lang/Object;)V
+    0232..0236  goto/16  -0xf4
+    0236..023c  invoke-static  {}, LX/000;->A03()Ljava/lang/IllegalStateException;
+    023c..023e  move-result-object  v0
+    023e..0240  throw  v0
+    0240..0244  sget-object  v1, LX/0dd;->A02:LX/0dd;
+    0244..0248  iget  v2, v0, LX/Kag;->A00:I
+    0248..024a  const/4  v4, #0x1
+    024a..024e  if-eqz  v2, +0x6
+    024e..0254  invoke-static  {v3}, LX/0dg;->A01(Ljava/lang/Object;)V
+    0254..0256  return-object  v3
+    0256..025c  invoke-static  {v3}, LX/0dg;->A01(Ljava/lang/Object;)V
+    025c..0260  iget-object  v7, v0, LX/Kag;->A04:Ljava/lang/Object;
+    0260..0264  check-cast  v7, LX/0eA;
+    0264..0268  iget-object  v6, v0, LX/Kag;->A01:Ljava/lang/Object;
+    0268..026c  check-cast  v6, Lcom/facebook/tigon/iface/TigonRequest;
+    026c..0270  iget-object  v5, v0, LX/Kag;->A02:Ljava/lang/Object;
+    0270..0274  check-cast  v5, Lcom/facebook/tigon/TigonBodyProvider;
+    0274..0278  iget-boolean  v15, v0, LX/Kag;->A05:Z
+    0278..027c  iget-object  v11, v0, LX/Kag;->A03:Ljava/lang/Object;
+    027c..0280  check-cast  v11, Lcom/facebook/tigon/TigonCallbacks;
+    0280..0284  iput  v4, v0, LX/Kag;->A00:I
+    0284..0288  sget-object  v2, LX/0eA;->A07:LX/0BD;
+    0288..028e  invoke-static  {v0, v4}, LX/2LE;->A0g(LX/0cf;I)LX/0eh;
+    028e..0290  move-result-object  v13
+    0290..0294  sget-object  v2, LX/1FJ;->A09:LX/1FK;
+    0294..0298  sget-object  v0, Ljava/lang/Long;->TYPE:Ljava/lang/Class;
+    0298..029e  invoke-static  {v0}, LX/2LA;->A0u(Ljava/lang/Class;)LX/0Ae;
+    029e..02a0  move-result-object  v0
+    02a0..02a6  invoke-virtual  {v6, v2, v0}, Lcom/facebook/tigon/iface/TigonPropertyContainer;->getProperty(LX/1FK;LX/0Ac;)Ljava/lang/Object;
+    02a6..02a8  move-result-object  v0
+    02a8..02ac  check-cast  v0, Ljava/lang/Number;
+    02ac..02ae  const/4  v4, #0x0
+    02ae..02b2  if-eqz  v0, +0x46
+    02b2..02b8  invoke-virtual  {v0}, Ljava/lang/Number;->longValue()J
+    02b8..02ba  move-result-wide  v2
+    02ba..02bc  long-to-int  v0, v2
+    02bc..02c2  invoke-static  {v0}, LX/2LA;->A0g(I)Ljava/lang/Integer;
+    02c2..02c4  move-result-object  v12
+    02c4..02c8  sget-object  v2, LX/1FJ;->A01:LX/1FK;
+    02c8..02cc  sget-object  v0, Ljava/lang/Boolean;->TYPE:Ljava/lang/Class;
+    02cc..02d2  invoke-static  {v0}, LX/2LA;->A0u(Ljava/lang/Class;)LX/0Ae;
+    02d2..02d4  move-result-object  v0
+    02d4..02da  invoke-virtual  {v6, v2, v0}, Lcom/facebook/tigon/iface/TigonPropertyContainer;->getProperty(LX/1FK;LX/0Ac;)Ljava/lang/Object;
+    02da..02dc  move-result-object  v0
+    02dc..02e0  check-cast  v0, Ljava/lang/Boolean;
+    02e0..02e6  invoke-static  {v0}, LX/B20;->A1V(Ljava/lang/Boolean;)Z
+    02e6..02e8  move-result  v14
+    02e8..02ec  new-instance  v10, LX/IxE;
+    02ec..02f2  invoke-direct/range  {v10..v15}, LX/IxE;-><init>(Lcom/facebook/tigon/TigonCallbacks;Ljava/lang/Integer;LX/0ef;ZZ)V
+    02f2..02f6  sget-object  v0, LX/0eA;->A0B:Ljava/util/concurrent/atomic/AtomicInteger;
+    02f6..02fc  invoke-virtual  {v0}, Ljava/util/concurrent/atomic/AtomicInteger;->incrementAndGet()I
+    02fc..02fe  move-result  v9
+    02fe..0302  if-eqz  v12, +0x10
+    0302..0308  invoke-virtual  {v12}, Ljava/lang/Number;->intValue()I
+    0308..030a  move-result  v8
+    030a..030e  sget-object  v3, LX/0eA;->A09:LX/0BZ;
+    030e..0314  const  v2, #0x37390569
+    0314..0318  const-string  v0, "num_inflight_requests"
+    0318..031e  invoke-virtual  {v3, v2, v8, v0, v9}, LX/0BZ;->markerAnnotate(IILjava/lang/String;I)V
+    031e..0324  invoke-virtual  {v7}, LX/0eA;->A00()Lcom/crossapp/tigonhttp/TigonHttpClient;
+    0324..0326  move-result-object  v0
+    0326..032c  invoke-virtual  {v0, v6, v5, v10, v4}, Lcom/crossapp/tigonhttp/TigonHttpClientBase;->sendRequest(Lcom/facebook/tigon/iface/TigonRequest;Lcom/facebook/tigon/TigonBodyProvider;Lcom/facebook/tigon/TigonCallbacks;Ljava/util/concurrent/Executor;)Lcom/facebook/tigon/TigonRequestToken;
+    032c..032e  move-result-object  v8
+    032e..0332  if-eqz  v15, +0x22
+    0332..0336  iget-object  v2, v10, LX/IxE;->A02:Ljava/lang/Object;
+    0336..0338  monitor-enter
+    0338..033a  goto  +0x3
+    033a..033c  move-object  v12, v4
+    033c..033e  goto  -0x3c
+    033e..0342  iget-object  v3, v10, LX/IxE;->A03:Lcom/crossapp/tigonhttp/TigonResult;
+    0342..0346  iget-object  v4, v3, Lcom/crossapp/tigonhttp/TigonResult;->response:LX/1gK;
+    0346..034a  iget-object  v5, v3, Lcom/crossapp/tigonhttp/TigonResult;->body:Ljava/io/InputStream;
+    034a..034e  iget-object  v6, v3, Lcom/crossapp/tigonhttp/TigonResult;->summary:LX/1Gf;
+    034e..0352  iget-object  v7, v3, Lcom/crossapp/tigonhttp/TigonResult;->error:Lcom/facebook/tigon/TigonError;
+    0352..0358  invoke-virtual/range  {v3..v8}, Lcom/crossapp/tigonhttp/TigonResult;->copy(LX/1gK;Ljava/io/InputStream;LX/1Gf;Lcom/facebook/tigon/TigonError;Lcom/facebook/tigon/TigonRequestToken;)Lcom/crossapp/tigonhttp/TigonResult;
+    0358..035a  move-result-object  v0
+    035a..035e  iput-object  v0, v10, LX/IxE;->A03:Lcom/crossapp/tigonhttp/TigonResult;
+    035e..0362  iget-object  v0, v10, LX/IxE;->A03:Lcom/crossapp/tigonhttp/TigonResult;
+    0362..0366  iget-object  v0, v0, Lcom/crossapp/tigonhttp/TigonResult;->response:LX/1gK;
+    0366..036a  if-eqz  v0, +0x5
+    036a..0370  invoke-static  {v10}, LX/IxE;->A00(LX/IxE;)V
+    0370..0372  monitor-exit
+    0372..0376  const/16  v2, #0x24
+    0376..037a  new-instance  v0, LX/KXS;
+    037a..0380  invoke-direct  {v0, v8, v2}, LX/KXS;-><init>(Ljava/lang/Object;I)V
+    0380..0386  invoke-virtual  {v13, v0}, LX/0eh;->BQX(Lkotlin/jvm/functions/Function1;)V
+    0386..038c  invoke-virtual  {v13}, LX/0eh;->A0E()Ljava/lang/Object;
+    038c..038e  move-result-object  v3
+    038e..0392  if-ne  v3, v1, -0x9d
+    0392..0394  return-object  v1
+    0394..0396  move-exception  v0
+    0396..0398  monitor-exit
+    0398..039a  throw  v0
+    039a..039c  return-object  v1
+    039c..039e  move-exception  v2
+    039e..03a2  iget-object  v0, v0, LX/Kag;->A04:Ljava/lang/Object;
+    03a2..03a6  check-cast  v0, Lcom/whatsapp/location/ui/LocationPickerViewModel;
+    03a6..03aa  iget-object  v1, v0, Lcom/whatsapp/location/ui/LocationPickerViewModel;->A03:LX/07f;
+    03aa..03ac  const/4  v0, #0x0
+    03ac..03b2  invoke-virtual  {v1, v0}, LX/07e;->A0D(Ljava/lang/Object;)V
+    03b2..03b4  throw  v2
+    03b4..03cc  packed-switch-payload  size=4
+    # exception table: 2 try range(s)
+    # catch <all> code_units 00e6..0110 -> 01ce
+    # catch <all> code_units 019f..01b8 -> 01ca
+.end method

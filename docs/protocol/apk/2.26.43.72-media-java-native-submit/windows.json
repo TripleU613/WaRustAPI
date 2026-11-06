@@ -1,0 +1,27 @@
+{
+  "scope": "Selected native internal dictionary writes, not ordinary-media upload or final wire header",
+  "library_sha256": "d0ab3f2237e92a76ac3519c3577b5836b9e6f65a186c2016cefd43c4923f4b0d",
+  "windows": [
+    {
+      "name": "synthesis-candidate",
+      "start_va": "0x4e6230",
+      "end_va": "0x4e62d4",
+      "file_offset": "0x4e2230",
+      "bytes": 164,
+      "sha256": "c40babbb6762e594c9f551692434be192f2025c09107999be9fcfd128aac6d70"
+    },
+    {
+      "name": "dictionary-helper",
+      "start_va": "0x310914",
+      "end_va": "0x310920",
+      "file_offset": "0x30c914",
+      "bytes": 12,
+      "sha256": "5ac9f3ea6197ff80c72f83073c8e9947dca2ea5ca3799b72cf96ec547aef937d"
+    }
+  ],
+  "literals": {
+    "0xe0240": "content-length",
+    "0xf7c89": "-1",
+    "0xdeef7": "sec-websocket-protocol"
+  }
+}

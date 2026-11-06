@@ -1,0 +1,64 @@
+
+# class: LX/1Fb;
+# extends: Ljava/lang/Object;
+
+.method public A01(VLL)  # .registers 7
+    # full signature: LX/1Fb;->A01(LX/1FX;Lcom/facebook/tigon/iface/TigonRequest;)V
+    0000..0002  const/4  v3, #0x1
+    0002..0008  invoke-static  {v6, v3}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  sget-object  v2, LX/1FY;->A00:LX/1Fa;
+    000c..0010  iget-object  v0, v6, Lcom/facebook/tigon/iface/TigonRequest;->method:Ljava/lang/String;
+    0010..0016  invoke-virtual  {v2, v5, v0}, LX/1Fa;->A04(LX/1FX;Ljava/lang/String;)V
+    0016..001a  iget-object  v0, v6, Lcom/facebook/tigon/iface/TigonRequest;->url:Ljava/lang/String;
+    001a..0020  invoke-virtual  {v2, v5, v0}, LX/1Fa;->A04(LX/1FX;Ljava/lang/String;)V
+    0020..0024  iget-object  v0, v6, Lcom/facebook/tigon/iface/TigonRequest;->headers:Ljava/util/Map;
+    0024..002a  invoke-virtual  {v2, v5, v0}, LX/1Fa;->A05(LX/1FX;Ljava/util/Map;)V
+    002a..002e  iget-object  v1, v6, Lcom/facebook/tigon/iface/TigonRequest;->httpPriority:LX/1FD;
+    002e..0032  iget-byte  v0, v1, LX/1FD;->A00:B
+    0032..0038  invoke-virtual  {v5, v0}, LX/1FX;->A00(B)V
+    0038..003c  iget-boolean  v0, v1, LX/1FD;->A01:Z
+    003c..0042  invoke-virtual  {v5, v0}, LX/1FX;->A00(B)V
+    0042..0046  iget-boolean  v0, v6, Lcom/facebook/tigon/iface/TigonRequest;->retryable:Z
+    0046..004c  invoke-virtual  {v5, v0}, LX/1FX;->A00(B)V
+    004c..0050  iget-boolean  v0, v6, Lcom/facebook/tigon/iface/TigonRequest;->replaySafe:Z
+    0050..0056  invoke-virtual  {v5, v0}, LX/1FX;->A00(B)V
+    0056..005a  iget-wide  v0, v6, Lcom/facebook/tigon/iface/TigonRequest;->connectionTimeoutMS:J
+    005a..0060  invoke-static  {v5, v0, v1}, LX/1Fa;->A01(LX/1FX;J)V
+    0060..0064  iget-wide  v0, v6, Lcom/facebook/tigon/iface/TigonRequest;->idleTimeoutMS:J
+    0064..006a  invoke-static  {v5, v0, v1}, LX/1Fa;->A01(LX/1FX;J)V
+    006a..006e  iget-wide  v0, v6, Lcom/facebook/tigon/iface/TigonRequest;->requestTimeoutMS:J
+    006e..0074  invoke-static  {v5, v0, v1}, LX/1Fa;->A01(LX/1FX;J)V
+    0074..0078  iget-wide  v0, v6, Lcom/facebook/tigon/iface/TigonRequest;->responseTimeoutMS:J
+    0078..007e  invoke-static  {v5, v0, v1}, LX/1Fa;->A01(LX/1FX;J)V
+    007e..0082  iget-object  v0, v6, Lcom/facebook/tigon/iface/TigonRequest;->requestCategory:LX/1FF;
+    0082..0088  invoke-static  {v0, v3}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0088..008c  iget  v0, v0, LX/1FF;->value:I
+    008c..0092  invoke-static  {v5, v0}, LX/1Fa;->A00(LX/1FX;I)V
+    0092..0096  iget-object  v0, v6, Lcom/facebook/tigon/iface/TigonRequest;->purpose:LX/1FH;
+    0096..009c  invoke-static  {v0, v3}, LX/00l;->A09(Ljava/lang/Object;I)V
+    009c..00a0  iget  v0, v0, LX/1FH;->value:I
+    00a0..00a6  invoke-static  {v5, v0}, LX/1Fa;->A00(LX/1FX;I)V
+    00a6..00aa  iget-object  v0, v6, Lcom/facebook/tigon/iface/TigonRequest;->loggingId:Ljava/lang/String;
+    00aa..00b0  invoke-virtual  {v2, v5, v0}, LX/1Fa;->A04(LX/1FX;Ljava/lang/String;)V
+    00b0..00b4  iget  v0, v6, Lcom/facebook/tigon/iface/TigonRequest;->startupStatusOnAdded:I
+    00b4..00ba  invoke-static  {v5, v0}, LX/1Fa;->A00(LX/1FX;I)V
+    00ba..00be  iget-wide  v0, v6, Lcom/facebook/tigon/iface/TigonRequest;->addedToMiddlewareSinceEpochMS:J
+    00be..00c4  invoke-static  {v5, v0, v1}, LX/1Fa;->A01(LX/1FX;J)V
+    00c4..00c8  sget-object  v0, LX/1Fc;->A00:LX/1Fd;
+    00c8..00ce  invoke-virtual  {v6, v0}, Lcom/facebook/tigon/iface/TigonRequest;->getLayerInformation(LX/1Fd;)Ljava/lang/Object;
+    00ce..00d0  move-result-object  v0
+    00d0..00d4  check-cast  v0, LX/1Fe;
+    00d4..00d8  if-eqz  v0, +0x15
+    00d8..00de  invoke-virtual  {v5, v3}, LX/1FX;->A00(B)V
+    00de..00e2  iget-object  v0, v0, LX/1Fe;->A00:Ljava/util/Map;
+    00e2..00e8  invoke-static  {v0}, Ljava/util/Collections;->unmodifiableMap(Ljava/util/Map;)Ljava/util/Map;
+    00e8..00ea  move-result-object  v0
+    00ea..00f0  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    00f0..00f6  invoke-virtual  {v2, v5, v0}, LX/1Fa;->A05(LX/1FX;Ljava/util/Map;)V
+    00f6..00fc  invoke-virtual  {v2, v5, v6}, LX/1Fa;->A03(LX/1FX;Lcom/facebook/tigon/iface/TigonPropertyContainer;)V
+    00fc..00fe  return-void
+    00fe..0100  const/4  v0, #0x0
+    0100..0106  invoke-virtual  {v5, v0}, LX/1FX;->A00(B)V
+    0106..0108  goto  -0x8
+    # exception table: 0 try range(s)
+.end method

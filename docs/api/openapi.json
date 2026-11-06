@@ -18496,5 +18496,13 @@
     "x-library": [],
     "description": "Static ELF/LLVM resolves native expectedBytes initialization from request content-length via nullable header lookup, bounded conversion and paired store. Selected queue allocation admits positive lengths or-1. Actual upload transport/predicate and absent-header synthesis remain unproven. No product route, runtime header/body change, retries or live validation.",
     "evidence": "docs/protocol/media-network-outcomes.md#queue-expected-size-is-initialized-from-content-length-2026-11-06"
+},
+  "x-media-java-native-header-boundary-research": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Static checked DEX traces selected upload request/provider handoff to JNI; selected request/map serializers copy existing headers without body-provider length synthesis. Native internal-1 dictionary write near WebSocket metadata is not established as an ordinary-upload or wire header. Middleware/property effects and full framing remain unproven. No runtime product behavior, route, retry or live operation changed.",
+    "evidence": "docs/protocol/media-network-outcomes.md#java-upload-header-submission-boundary-2026-11-06"
 }
 }

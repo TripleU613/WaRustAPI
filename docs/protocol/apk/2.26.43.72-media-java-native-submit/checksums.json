@@ -1,0 +1,54 @@
+{
+  "README.md": {
+    "bytes": 5831,
+    "sha256": "7e17fd1bd293207b43771e8cb72cd00605aaefcc756567aa072a1e1f1a3d70cb"
+  },
+  "dictionary-helper.txt": {
+    "bytes": 289,
+    "sha256": "ef623212d5270b7c66bac01dd48f925adbe3a35f18fdaf3dd657e180c341fdea"
+  },
+  "header-serializer.txt": {
+    "bytes": 1653,
+    "sha256": "11450b763c3e598b00573d1053a2177ef2a831135ca29b0114e7b152e62d1c2f"
+  },
+  "inspect-submit-boundary.py": {
+    "bytes": 1016,
+    "sha256": "004b92c46cb6e5590a2fbbb5922f38e1f138965fa3e9649435c3e9d3204d0e88"
+  },
+  "java-callers.txt": {
+    "bytes": 68,
+    "sha256": "971ae91e46e07da5638d5043b76b549c0a8fc64b94b4c22f5de5815a551085d1"
+  },
+  "native-strings.txt": {
+    "bytes": 375,
+    "sha256": "a99f6e07ddcefb007b3b7415c89eec8ceb437350a6e4da9d642e5e5da57891fc"
+  },
+  "native-submit.txt": {
+    "bytes": 5813,
+    "sha256": "b1e2da275db4e4f2022937ff7722d3446384acee335310c69f6ef74454358250"
+  },
+  "request-serializer.txt": {
+    "bytes": 4324,
+    "sha256": "655422878b58092b24a28744973b6df9ee464107fbdb1f05838225891bdc71f1"
+  },
+  "submit-coroutine.txt": {
+    "bytes": 14846,
+    "sha256": "1fb93d603136a8ea4d35524ef5a22adf18ebd0b5810e3701bca304a76db280f8"
+  },
+  "submit.txt": {
+    "bytes": 3058,
+    "sha256": "964b6fa59267133f83cb8ded97d4e163093d2c1e78cd64def11622c6b95d76d2"
+  },
+  "synthesis-candidate.txt": {
+    "bytes": 2449,
+    "sha256": "6efb9ad404646c0cfe38acdaef746416f845cacdc67922ae92622049731eacd6"
+  },
+  "windows.json": {
+    "bytes": 815,
+    "sha256": "7506f46c436aba2841686fe284d041ea56a3ef0636e586925b2402a3c1032162"
+  },
+  "xplat-submit.txt": {
+    "bytes": 4499,
+    "sha256": "0120a3e54c0aa2e86fa6e3fab4b8e195d8c38f750b8158d30145b28de969cd8d"
+  }
+}

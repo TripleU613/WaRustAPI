@@ -1,0 +1,71 @@
+
+# class: Lcom/facebook/tigon/TigonXplatService;
+# extends: Lcom/facebook/tigon/iface/TigonServiceHolder;
+
+.method private sendRequestBodyBufferIntegerBuffer(LLLILLILL)  # .registers 0
+    # full signature: Lcom/facebook/tigon/TigonXplatService;->sendRequestBodyBufferIntegerBuffer(Lcom/facebook/tigon/iface/TigonRequest;[BILcom/facebook/tigon/TigonBodyProvider;[BILcom/facebook/tigon/TigonCallbacks;Ljava/util/concurrent/Executor;)Lcom/facebook/tigon/TigonXplatRequestToken;
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+.method private sendRequestIntegerBuffer(LLLILILL)  # .registers 0
+    # full signature: Lcom/facebook/tigon/TigonXplatService;->sendRequestIntegerBuffer(Lcom/facebook/tigon/iface/TigonRequest;[BI[Ljava/nio/ByteBuffer;ILcom/facebook/tigon/TigonCallbacks;Ljava/util/concurrent/Executor;)Lcom/facebook/tigon/TigonXplatRequestToken;
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+.method public sendRequest(LLLLL)  # .registers 17
+    # full signature: Lcom/facebook/tigon/TigonXplatService;->sendRequest(Lcom/facebook/tigon/iface/TigonRequest;Lcom/facebook/tigon/TigonBodyProvider;Lcom/facebook/tigon/TigonCallbacks;Ljava/util/concurrent/Executor;)Lcom/facebook/tigon/TigonRequestToken;
+    0000..0004  const/16  v0, #0x400
+    0004..0008  new-instance  v3, LX/1FX;
+    0008..000e  invoke-direct  {v3}, Ljava/lang/Object;-><init>()V
+    000e..0012  new-array  v0, v0, [B
+    0012..0016  iput-object  v0, v3, LX/1FX;->A01:[B
+    0016..001a  sget-object  v0, LX/1FZ;->A00:LX/1Fb;
+    001a..001c  move-object  v4, v13
+    001c..0022  invoke-virtual  {v0, v3, v13}, LX/1Fb;->A01(LX/1FX;Lcom/facebook/tigon/iface/TigonRequest;)V
+    0022..0026  const/16  v0, #0x400
+    0026..002a  new-instance  v2, LX/1FX;
+    002a..0030  invoke-direct  {v2}, Ljava/lang/Object;-><init>()V
+    0030..0034  new-array  v0, v0, [B
+    0034..0038  iput-object  v0, v2, LX/1FX;->A01:[B
+    0038..003a  move-object  v7, v14
+    003a..003e  if-eqz  v14, +0x9
+    003e..0042  iget-object  v1, v14, Lcom/facebook/tigon/TigonBodyProvider;->mProperties:Lcom/facebook/tigon/iface/TigonPropertyContainer;
+    0042..0046  sget-object  v0, LX/1FY;->A00:LX/1Fa;
+    0046..004c  invoke-virtual  {v0, v2, v1}, LX/1Fa;->A03(LX/1FX;Lcom/facebook/tigon/iface/TigonPropertyContainer;)V
+    004c..0050  iget-object  v5, v3, LX/1FX;->A01:[B
+    0050..0054  iget  v6, v3, LX/1FX;->A00:I
+    0054..0058  iget-object  v8, v2, LX/1FX;->A01:[B
+    0058..005c  iget  v9, v2, LX/1FX;->A00:I
+    005c..005e  move-object  v3, v12
+    005e..0060  move-object  v10, v15
+    0060..0064  move-object/from16  v11, v16
+    0064..006a  invoke-direct/range  {v3..v11}, Lcom/facebook/tigon/TigonXplatService;->sendRequestBodyBufferIntegerBuffer(Lcom/facebook/tigon/iface/TigonRequest;[BILcom/facebook/tigon/TigonBodyProvider;[BILcom/facebook/tigon/TigonCallbacks;Ljava/util/concurrent/Executor;)Lcom/facebook/tigon/TigonXplatRequestToken;
+    006a..006c  move-result-object  v0
+    006c..006e  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public sendRequest(LLLILL)  # .registers 15
+    # full signature: Lcom/facebook/tigon/TigonXplatService;->sendRequest(Lcom/facebook/tigon/iface/TigonRequest;[Ljava/nio/ByteBuffer;ILcom/facebook/tigon/TigonCallbacks;Ljava/util/concurrent/Executor;)Lcom/facebook/tigon/TigonRequestToken;
+    0000..0004  const/16  v0, #0x400
+    0004..0008  new-instance  v1, LX/1FX;
+    0008..000e  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    000e..0012  new-array  v0, v0, [B
+    0012..0016  iput-object  v0, v1, LX/1FX;->A01:[B
+    0016..001a  sget-object  v0, LX/1FZ;->A00:LX/1Fb;
+    001a..001c  move-object  v2, v10
+    001c..0022  invoke-virtual  {v0, v1, v10}, LX/1Fb;->A01(LX/1FX;Lcom/facebook/tigon/iface/TigonRequest;)V
+    0022..0026  iget-object  v3, v1, LX/1FX;->A01:[B
+    0026..002a  iget  v4, v1, LX/1FX;->A00:I
+    002a..002c  move-object  v1, v9
+    002c..002e  move-object  v5, v11
+    002e..0030  move  v6, v12
+    0030..0032  move-object  v7, v13
+    0032..0034  move-object  v8, v14
+    0034..003a  invoke-direct/range  {v1..v8}, Lcom/facebook/tigon/TigonXplatService;->sendRequestIntegerBuffer(Lcom/facebook/tigon/iface/TigonRequest;[BI[Ljava/nio/ByteBuffer;ILcom/facebook/tigon/TigonCallbacks;Ljava/util/concurrent/Executor;)Lcom/facebook/tigon/TigonXplatRequestToken;
+    003a..003c  move-result-object  v0
+    003c..003e  return-object  v0
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,34 @@
+
+# class: LX/1Fa;
+# extends: Ljava/lang/Object;
+
+.method public A05(VLL)  # .registers 6
+    # full signature: LX/1Fa;->A05(LX/1FX;Ljava/util/Map;)V
+    0000..0002  const/4  v0, #0x0
+    0002..0006  if-nez  v5, +0x6
+    0006..000c  invoke-static  {v4, v0}, LX/1Fa;->A00(LX/1FX;I)V
+    000c..000e  return-void
+    000e..0014  invoke-interface  {v5}, Ljava/util/Map;->size()I
+    0014..0016  move-result  v0
+    0016..001c  invoke-static  {v4, v0}, LX/1Fa;->A00(LX/1FX;I)V
+    001c..0022  invoke-interface  {v5}, Ljava/util/Map;->entrySet()Ljava/util/Set;
+    0022..0024  move-result-object  v0
+    0024..002a  invoke-interface  {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    002a..002c  move-result-object  v2
+    002c..0032  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    0032..0034  move-result  v0
+    0034..0038  if-eqz  v0, -0x14
+    0038..003e  invoke-interface  {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    003e..0040  move-result-object  v0
+    0040..0044  check-cast  v0, Ljava/util/Map$Entry;
+    0044..004a  invoke-interface  {v0}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+    004a..004c  move-result-object  v1
+    004c..0050  check-cast  v1, Ljava/lang/String;
+    0050..0056  invoke-interface  {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+    0056..0058  move-result-object  v0
+    0058..005c  check-cast  v0, Ljava/lang/String;
+    005c..0062  invoke-virtual  {v3, v4, v1}, LX/1Fa;->A04(LX/1FX;Ljava/lang/String;)V
+    0062..0068  invoke-virtual  {v3, v4, v0}, LX/1Fa;->A04(LX/1FX;Ljava/lang/String;)V
+    0068..006a  goto  -0x1e
+    # exception table: 0 try range(s)
+.end method

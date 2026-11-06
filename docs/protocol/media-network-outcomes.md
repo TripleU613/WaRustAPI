@@ -779,3 +779,17 @@ total or inferred JNI length. Rust's known body includes the voice seal; preserv
 its actual length rather than substituting hash-input length. No Rust behavior
 change, live operation or replay. Native synthesis of absent explicit JAT length
 and full ordinary-upload transport binding remain open.
+
+## Java upload header submission boundary 2026-11-06
+
+**Confirmed selected static:** JAT's request/provider pass through0eA.A01,
+Kag selector2 andTigonHttpClientBase toTigonXplatService. Request serializer1Fb.A01
+passes existing headers to1Fa.A05, which writes size/key/value strings; these
+selected serializers have no body-provider input or added length entry. Exact
+physical provider-length getter caller census finds onlyIxI's length report.
+[Complete DEX chain, census and native candidate exclusions](apk/2.26.43.72-media-java-native-submit/README.md).
+
+A native internal content-length=-1 write sits near sec-websocket-protocol setup;
+no ordinary-upload binding or final wire-header claim established. Native
+middleware/property effects and absent-explicit-header synthesis remain open.
+No Rust behavior/header change, replay or live operation.

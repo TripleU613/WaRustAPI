@@ -1,0 +1,9 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000030299c <MCIJSONCreateDeserializedObjectFromString>:
+  310914:      	mov	x0, x20
+  310918:      	mov	x2, x21
+  31091c:      	ret

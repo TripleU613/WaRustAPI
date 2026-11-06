@@ -1,0 +1,47 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000004d13b4 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv>:
+  4e6230:      	ldrb	w8, [sp, #0x340]
+  4e6234:      	ldr	x9, [sp, #0x348]
+  4e6238:      	bl	0x725ea4 <MCFSetGetCount+0x1dec>
+  4e623c:      	cbz	x8, 0x4e624c <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x14e98>
+  4e6240:      	add	x0, sp, #0x340
+  4e6244:      	mov	x1, x22
+  4e6248:      	bl	0x734ee0 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6appendEPKc@plt>
+  4e624c:      	add	x0, sp, #0x340
+  4e6250:      	mov	x1, x21
+  4e6254:      	bl	0x3a6fc4 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x8984>
+  4e6258:      	add	x21, x21, #0x18
+  4e625c:      	b	0x4e6228 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x14e74>
+  4e6260:      	adrp	x1, 0xde000
+  4e6264:      	add	x1, x1, #0xef7
+  4e6268:      	add	x0, sp, #0x1b0
+  4e626c:      	bl	0x3a2c00 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x45c0>
+  4e6270:      	add	x0, sp, #0x198
+  4e6274:      	add	x1, sp, #0x1b0
+  4e6278:      	add	x2, sp, #0x340
+  4e627c:      	bl	0x4e664c <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x15298>
+  4e6280:      	add	x0, sp, #0x1b0
+  4e6284:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  4e6288:      	add	x0, sp, #0x340
+  4e628c:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  4e6290:      	mov	w2, #0x100              // =256
+  4e6294:      	adrp	x0, 0xf7000
+  4e6298:      	add	x0, x0, #0xc89
+  4e629c:      	mov	w1, #0x2                // =2
+  4e62a0:      	movk	w2, #0x800, lsl #16
+  4e62a4:      	bl	0x646ccc <_MCFStringCreateWithConstCStringAndLenNoCopy>
+  4e62a8:      	mov	x21, x0
+  4e62ac:      	adrp	x1, 0x788000 <g_tripwireLogPtr+0x2a88>
+  4e62b0:      	add	x1, x1, #0xe58
+  4e62b4:      	bl	0x310914 <MCIJSONCreateDeserializedObjectFromString+0xdf78>
+  4e62b8:      	bl	0x6451d0 <MCFDictionarySetValue>
+  4e62bc:      	mov	x0, x21
+  4e62c0:      	bl	0x643e0c <MCFRelease>
+  4e62c4:      	add	x0, sp, #0x340
+  4e62c8:      	bl	0x72f9c8 <MCFSetGetCount+0xb910>
+  4e62cc:      	add	x19, sp, #0x340
+  4e62d0:      	bl	0x734d20 <memset@plt>

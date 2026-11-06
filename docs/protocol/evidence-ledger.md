@@ -1,3 +1,9 @@
+2026-11-06 — **Selected Java upload header serialization traced to JNI.**
+
+Existing header map is serialized separately from body provider; native internal
+-1 candidate is not bound to ordinary uploads. [Full handoff/census and limits](media-network-outcomes.md#java-upload-header-submission-boundary-2026-11-06).
+No mandatory-header mismatch, Rust behavior change or live operation established.
+
 2026-11-06 — **Native queue expected size traced to Content-Length.**
 
 Header key verified by relocation; paired store initializes expected/queued
