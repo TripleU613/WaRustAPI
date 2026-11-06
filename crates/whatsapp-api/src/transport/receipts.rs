@@ -711,6 +711,14 @@ fn receipt_account_authority(
     Ok(hash.finalize().into())
 }
 
+// Durable original callback ownership survives an uncertain write/reconnect.
+// This is local encrypted metadata, not a native stanza field or resend queue.
+#[derive(Serialize, Deserialize)]
+struct ReceiptCallbackOwner {
+    members: Vec<(Vec<u8>, Vec<u8>)>,
+    consumed: bool,
+}
+
 /// One frozen receipt batch and its exact durable reservation members.
 /// A successful check is not permission to repeat a write after uncertainty.
 pub struct ReservedReceipt {
@@ -896,12 +904,30 @@ pub fn reserve_pending_owned(store: &ProtocolStore) -> Result<Vec<ReservedReceip
                 node.content =
                     crate::binary::NodeContent::Children(vec![Node::new("list").children(extras)]);
             }
+            let callback_wire = crate::binary::Encoder::new(
+                crate::binary::TokenDictionary::comparison_2_26_37_71(),
+            )
+            .encode(&node)?;
+            let callback_key = format!(
+                "receipt-callback:{}",
+                hex::encode(Sha256::digest(callback_wire))
+            );
+            if tx
+                .get(Table::Checkpoints, callback_key.as_bytes(), 1)?
+                .is_some()
+            {
+                return Err(Error::invalid(
+                    "receipt",
+                    "original receipt callback already reserved",
+                ));
+            }
             let mut members = Vec::new();
             let mut automatic_direct_read = false;
             for (key, mut row) in reserved {
                 row["status"] = serde_json::json!("outcome_unknown");
                 // Local reservation owner, not a native stanza/key field.
                 row["account_authority_sha256"] = serde_json::json!(hex::encode(account_authority));
+                row["callback_owner"] = serde_json::json!(callback_key);
                 if batched {
                     row["batch_ack_id"] =
                         serde_json::json!(node.get_attr("id").unwrap().as_text().unwrap());
@@ -915,6 +941,20 @@ pub fn reserve_pending_owned(store: &ProtocolStore) -> Result<Vec<ReservedReceip
                     .ok_or_else(|| Error::invalid("receipt", "reserved receipt member missing"))?;
                 members.push((key, zeroize::Zeroizing::new(saved)));
             }
+            tx.put_json(
+                Table::Checkpoints,
+                callback_key.as_bytes(),
+                1,
+                &ReceiptCallbackOwner {
+                    members: members
+                        .iter()
+                        .map(|(key, raw): &(Vec<u8>, zeroize::Zeroizing<Vec<u8>>)| {
+                            (key.clone(), raw.to_vec())
+                        })
+                        .collect(),
+                    consumed: false,
+                },
+            )?;
             out.push(ReservedReceipt {
                 node,
                 guard: ReceiptWriteGuard {
@@ -932,7 +972,8 @@ pub fn reserve_pending_owned(store: &ProtocolStore) -> Result<Vec<ReservedReceip
 /// Direct and group receipts retain their exact participant presence. APK
 /// 37.71 1Qy.A02 -> CSu.A00 -> Cb1.equals distinguishes nullable participants;
 /// recipient/edit routes remain unsupported by this queue. Settlement also
-/// requires the reservation's persisted local account authority to match.
+/// requires persisted local account authority and the durable original batch
+/// callback snapshot to match all members atomically.
 /// Legacy uncertain rows without that binding remain uncertain, never replayed.
 pub fn record_ack(store: &ProtocolStore, node: &Node) -> Result<bool> {
     if !super::messaging::ack_error_is_valid(node) {
@@ -974,7 +1015,7 @@ pub fn record_ack(store: &ProtocolStore, node: &Node) -> Result<bool> {
                 .iter()
                 .filter(|(key, _)| key.starts_with(b"receipt-outbox:"))
             {
-                let Some(mut row): Option<serde_json::Value> =
+                let Some(row): Option<serde_json::Value> =
                     tx.get_json(Table::Checkpoints, key, 1)?
                 else {
                     continue;
@@ -1009,12 +1050,29 @@ pub fn record_ack(store: &ProtocolStore, node: &Node) -> Result<bool> {
                     tracing::warn!(target: "whatsapp_api::receipts", "receipt ACK has no matching reservation account authority; uncertainty retained");
                     continue;
                 }
-                row["status"] = serde_json::json!(if node.get_attr("error").is_some() {
-                    "refused"
-                } else {
-                    "server_acknowledged"
-                });
-                tx.put_json(Table::Checkpoints, key, 1, &row)?;
+                let Some(owner_key) = row["callback_owner"].as_str().filter(|key| key.starts_with("receipt-callback:")) else {
+                    tracing::warn!(target: "whatsapp_api::receipts", "receipt ACK has no original callback owner; uncertainty retained");
+                    continue;
+                };
+                let Some(mut owner): Option<ReceiptCallbackOwner> = tx.get_json(Table::Checkpoints, owner_key.as_bytes(), 1)? else { continue; };
+                if owner.consumed || owner.members.is_empty() || !owner.members.iter().any(|(member,_)| member == key) { continue; }
+                let mut unchanged = true;
+                for (member, expected) in &owner.members {
+                    let current = zeroize::Zeroizing::new(tx.get(Table::Checkpoints, member, 1)?.unwrap_or_default());
+                    unchanged &= *current == *expected;
+                }
+                if !unchanged {
+                    tracing::warn!(target: "whatsapp_api::receipts", "original receipt callback members changed; uncertainty retained");
+                    continue;
+                }
+                for (member, expected) in &owner.members {
+                    let mut original: serde_json::Value = serde_json::from_slice(expected)
+                        .map_err(|_| Error::invalid("receipt", "invalid callback owner member"))?;
+                    original["status"] = serde_json::json!(if node.get_attr("error").is_some() { "refused" } else { "server_acknowledged" });
+                    tx.put_json(Table::Checkpoints, member, 1, &original)?;
+                }
+                owner.consumed = true;
+                tx.put_json(Table::Checkpoints, owner_key.as_bytes(), 1, &owner)?;
                 matched = true;
             }
         }
@@ -3081,6 +3139,142 @@ mod tests {
                     before
                 );
                 assert_eq!(reopened.journal_head().unwrap(), head);
+            }
+        }
+    }
+
+    #[test]
+    fn durable_receipt_callback_owns_all_original_members_after_reopen() {
+        for group in [false, true] {
+            for refused in [false, true] {
+                for change in [
+                    "same",
+                    "missing_first",
+                    "changed_last",
+                    "foreign",
+                    "missing_owner",
+                    "consumed_owner",
+                    "legacy",
+                ] {
+                    let dir = tempfile::tempdir().unwrap();
+                    let path = dir.path().join("durable-receipt-owner.redb");
+                    let db = open(&path, true);
+                    for id in ["original-first", "original-last"] {
+                        let incoming = automatic_text_fixture(&db, id, group);
+                        queue_read_for_incoming(&db, &incoming).unwrap();
+                    }
+                    let receipts = reserve_pending_owned(&db).unwrap();
+                    assert_eq!(receipts.len(), 1);
+                    let receipt = &receipts[0];
+                    let node = receipt.node();
+                    let mut ack = Node::new("ack")
+                        .attr("class", "receipt")
+                        .attr("id", node.get_attr("id").unwrap().clone())
+                        .attr("from", node.get_attr("to").unwrap().clone());
+                    for name in ["type", "participant"] {
+                        if let Some(value) = node.get_attr(name) {
+                            ack = ack.attr(name, value.clone());
+                        }
+                    }
+                    if refused {
+                        ack = ack.attr("error", "500");
+                    }
+                    let first = receipt.guard.members[0].0.clone();
+                    let last = receipt.guard.members[1].0.clone();
+                    db.write(|tx| {
+                        let original: serde_json::Value =
+                            tx.get_json(Table::Checkpoints, &first, 1)?.unwrap();
+                        let owner_key = original["callback_owner"].as_str().unwrap();
+                        match change {
+                            "missing_first" => {
+                                tx.delete(Table::Checkpoints, &first)?;
+                            }
+                            "changed_last" => {
+                                let mut row: serde_json::Value =
+                                    tx.get_json(Table::Checkpoints, &last, 1)?.unwrap();
+                                row["replacement"] = true.into();
+                                tx.put_json(Table::Checkpoints, &last, 1, &row)?;
+                            }
+                            "foreign" => {
+                                tx.put_json(
+                                    Table::Checkpoints,
+                                    b"receipt-outbox:foreign:read",
+                                    1,
+                                    &original,
+                                )?;
+                            }
+                            "missing_owner" => {
+                                tx.delete(Table::Checkpoints, owner_key.as_bytes())?;
+                            }
+                            "consumed_owner" => {
+                                let mut owner: ReceiptCallbackOwner = tx
+                                    .get_json(Table::Checkpoints, owner_key.as_bytes(), 1)?
+                                    .unwrap();
+                                owner.consumed = true;
+                                tx.put_json(Table::Checkpoints, owner_key.as_bytes(), 1, &owner)?;
+                            }
+                            "legacy" => {
+                                for key in [&first, &last] {
+                                    let mut row: serde_json::Value =
+                                        tx.get_json(Table::Checkpoints, key, 1)?.unwrap();
+                                    row.as_object_mut().unwrap().remove("callback_owner");
+                                    tx.put_json(Table::Checkpoints, key, 1, &row)?;
+                                }
+                            }
+                            _ => {}
+                        }
+                        Ok(())
+                    })
+                    .unwrap();
+                    drop(receipts);
+                    drop(db);
+                    let db = open(&path, false);
+                    let before = db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap();
+                    let head = db.journal_head().unwrap();
+                    let admitted = matches!(change, "same" | "foreign");
+                    assert_eq!(
+                        record_ack(&db, &ack).unwrap(),
+                        admitted,
+                        "{group}/{refused}/{change}"
+                    );
+                    assert!(!record_ack(&db, &ack).unwrap());
+                    if !admitted {
+                        assert_eq!(
+                            db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap(),
+                            before
+                        );
+                        assert_eq!(db.journal_head().unwrap(), head);
+                    } else {
+                        for key in [&first, &last] {
+                            let row: serde_json::Value = db
+                                .read(|tx| tx.get_json(Table::Checkpoints, key, 1))
+                                .unwrap()
+                                .unwrap();
+                            assert_eq!(
+                                row["status"],
+                                if refused {
+                                    "refused"
+                                } else {
+                                    "server_acknowledged"
+                                }
+                            );
+                        }
+                        if change == "foreign" {
+                            let row: serde_json::Value = db
+                                .read(|tx| {
+                                    tx.get_json(
+                                        Table::Checkpoints,
+                                        b"receipt-outbox:foreign:read",
+                                        1,
+                                    )
+                                })
+                                .unwrap()
+                                .unwrap();
+                            assert_eq!(row["status"], "outcome_unknown");
+                        }
+                    }
+                    assert!(reserve_pending_owned(&db).unwrap().is_empty());
+                }
             }
         }
     }

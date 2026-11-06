@@ -202,3 +202,13 @@ binding leaves that row uncertain; no received ACK is used to invent missing
 ownership. This is separate from native full-key/ID-map semantics above, and
 is not proof of a socket write or complete callback parity. [Durability,
 compatibility and reopen regression](replay-safety-audit.md#persist-receipt-reservation-authority-through-ack-settlement-2026-11-06).
+
+## Durable original batch callback ownership (2026-11-06)
+
+**Confirmed Rust correction:** new receipt reservations retain encrypted original
+member snapshots behind callback_owner. ACK settlement compares every member,
+settles only the original keys and consumes that owner atomically. Missing or
+replaced members and unbound history stay uncertain. The original partial-write/
+reconnect late-ACK behavior is preserved; no receipt is resent. Native full-key
+and ID-only callback maps remain separate evidence, not a new Rust recovery
+implementation. [Durable ownership, regression and compatibility](replay-safety-audit.md#durable-original-receipt-callback-members-2026-11-06).

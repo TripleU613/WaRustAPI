@@ -17998,5 +17998,11 @@
     "x-library": ["whatsapp_api::transport::receipts::reserve_pending_owned", "whatsapp_api::transport::receipts::record_ack"],
     "description": "New receipt reservation rows persist internal account_authority_sha256 lowercase hex in encrypted storage alongside outcome_unknown. ACK settlement requires the same current account/Signal authority after existing routing checks. Account/key mutation or absent/malformed/different binding preserves uncertainty for that row with redacted warning. Historical unbound outcome_unknown rows are not guessed, migrated or reselected; already terminal history remains. This supersedes the earlier connection-local-only digest scope. No native wire field or public inspection digest, proof of actual write, full callback-row ownership, reset or retry is added. Pending historical queue origin and Noise/channel rotation remain separate.",
     "evidence": "docs/protocol/replay-safety-audit.md#persist-receipt-reservation-authority-through-ack-settlement-2026-11-06"
+  },
+  "x-durable-receipt-callback-ownership": {
+    "x-cli": true, "x-transport": true, "x-live": false,
+    "x-library": ["whatsapp_api::transport::receipts::reserve_pending_owned", "whatsapp_api::transport::receipts::record_ack"],
+    "description": "Reservation atomically persists an encrypted original callback snapshot at receipt-callback:<batch-wire-sha256> with member keys/raw values and consumed=false. Receipt member callback_owner references it. After existing routing/account checks, ACK settlement requires every original row unchanged, transitions only original keys and consumes owner atomically. Foreign same-wire rows are excluded; missing/replaced members or missing/consumed owner retain uncertainty. Existing owner cannot be overwritten by re-reservation. Unchanged original reservations can still settle from late authenticated ACK after partial write/reconnect without resend. Historical unbound uncertainty is not guessed or migrated. Internal metadata only, not native wire fields or independent proof of write; no compaction, new recovery, replay or live operation.",
+    "evidence": "docs/protocol/replay-safety-audit.md#durable-original-receipt-callback-members-2026-11-06"
   }
 }

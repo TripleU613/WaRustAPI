@@ -1406,3 +1406,58 @@ or live account operation is added.
 Validation: 1,461 workspace/all-feature tests passed. Strict workspace/all-target/
 all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
 validation, APK coverage freshness and repository hygiene passed. Offline only.
+
+## Durable original receipt callback members (2026-11-06)
+
+**Confirmed Rust ownership gap / local correction:** account-bound receipt ACK
+settlement still searched current rows without a durable original batch snapshot.
+A replacement under the same account/correlation could therefore be treated as
+the original callback's work. The [native full-key callback evidence](apk/2.26.43.72-receipt-callback-key/README.md)
+keeps callback ownership separate from its independent ID-based queues; this
+correction is local durable ownership, not native queue/recovery emulation.
+
+Reservation now atomically writes an encrypted receipt-callback record with
+all original member keys/raw values and consumed=false. Each member retains a
+callback_owner reference alongside its existing account authority. The callback
+key hashes the original complete batch wire; an existing owner refuses a second
+reservation instead of overwriting history. It contains no new wire attribute.
+
+After existing ACK routing/account checks, settlement requires the referenced
+owner to exist, be unconsumed, contain this matched member and match every
+original member's current raw row. Any changed/missing member leaves the whole
+original callback uncertain. Only its original keys can transition; a foreign
+same-wire row cannot be swept into that callback. All original statuses and
+owner consumed=true commit in one transaction. Duplicate ACKs cannot consume
+or rewrite it again. Missing owner/reference or unbound historical uncertainty
+is not reconstructed or migrated from incoming ACKs.
+
+**Preserved late-ACK behavior:** the original snapshot is durable at reservation,
+not limited to a connection's successful-write registry. A partial local write
+may have reached the server, so its matching late ACK after reconnect can settle
+the unchanged original reservation without resending it. The existing actual
+actor test explicit_receipt_write_cut_is_reserved_once_and_settled_by_a_later_ack
+remains the regression for this behavior. Requiring a new connection-local
+written callback would break it and was rejected during verification. No
+resend, callback reconstruction from mutable rows or native reconnect queue
+was added.
+
+The new durable-owner regression covers28 cases across direct/group batches,
+success/refusal and unchanged/member deletion/member replacement/foreign row/
+missing owner/consumed owner/legacy reference states. It reopens before ACK,
+checks whole-batch refusal on member conflict, terminal once-only original
+members, unchanged foreign row, unchanged rows/journal on refusal and no
+re-reservation. Existing account-binding and actual writer guards still apply.
+
+Limits: the owner record is trusted encrypted local metadata and is not proof
+of actual bytes written or server delivery independent of the authenticated ACK.
+It preserves reservation-time ownership, not every pending row's earlier origin.
+Historical uncertain rows without the new owner stay uncertain. Original owner
+records remain retained after consumption; no compaction/resume/replay policy
+is invented. Full native callback registration, ID queues, special receipt
+families, Noise/key rotation and account recovery remain incomplete. No live
+account traffic or new request/response.
+
+Validation: 1,462 workspace/all-feature tests passed, including the existing
+actual actor partial-write/reconnect late-ACK regression. Strict workspace/
+all-target/all-feature Clippy, formatting, regenerated CLI reference, OpenAPI
+symbol validation, APK coverage freshness and repository hygiene passed. Offline only.
