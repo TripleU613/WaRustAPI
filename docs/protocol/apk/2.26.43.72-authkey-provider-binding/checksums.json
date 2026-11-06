@@ -1,0 +1,38 @@
+{
+  "README.md": {
+    "bytes": 4890,
+    "sha256": "84fe31316e10400224b1312d3c4a0540a7255b1e7e52db7377383b87840fce50"
+  },
+  "crypto.txt": {
+    "bytes": 9177,
+    "sha256": "8c7a84804dc0607efc4679cbd21f6dafae2a6680bc54defd52cc58e05f4e0746"
+  },
+  "factory-provider.txt": {
+    "bytes": 43883,
+    "sha256": "f09f0f8fc6dff6d8b8f4046bf29e8043fd75b3d62c062976226feddfc0275e9d"
+  },
+  "factory-ranges.txt": {
+    "bytes": 51778,
+    "sha256": "7c697c7e3e1c45ccef430c1ca605953a5a17fc0bab323e1a2e42bbe9d00df77e"
+  },
+  "factory-root.txt": {
+    "bytes": 3374,
+    "sha256": "f852095f305051f8344d087a0efeb3f6742c3538d9cdde11fe11f74e2f7dda7e"
+  },
+  "provider.txt": {
+    "bytes": 3488,
+    "sha256": "e14edb00bab9222fd5fe53b6b675a1fa14608bd244bb1d326404966ae7828cd6"
+  },
+  "resolver-context.txt": {
+    "bytes": 2129,
+    "sha256": "fc9a20b159051d888307fd8622f4a206ce3e7dcb4ffdb210593e424f08f7f914"
+  },
+  "resolver-entry.txt": {
+    "bytes": 508,
+    "sha256": "8cc29796b0942f0a6f0ba9dec689ff8d475e3e6ff02f76b2712a162930099d98"
+  },
+  "store-constructor.txt": {
+    "bytes": 3804,
+    "sha256": "48e4a2435740a01736eccc160a8349f4f30c4394f160e80ce3ebd49b52b476b5"
+  }
+}

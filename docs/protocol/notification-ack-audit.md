@@ -484,3 +484,9 @@ and crash recovery remain open. No Rust backend, ACK, replay or live operation c
 **Confirmed static APK43.72:** [commit result, record parsing and reload](apk/2.26.43.72-authkey-commit-reload/README.md) show the password-backed key writer checks SharedPreferences.commit before readback, unlike counter/timestamp apply. Reload requires record type2 and a64-byte keypair. Record parsing checks nonempty fields without establishing their cryptographic roles or exact cipher sizes. Encryption/decryption declarations have no exported bodies.
 
 **Unknown / unchanged:** concrete provider, platform disk durability, cross-record atomicity and uncertain-publication recovery. Rust does not need Android storage-format compatibility. No runtime rotation or live operation.
+
+### Auth-key concrete storage provider (2026-11-06)
+
+**Confirmed static APK43.72:** [dependency binding and complete concrete crypto helpers](apk/2.26.43.72-authkey-provider-binding/README.md) resolve144.A0F via slot0x1a3e to14A ->14C. The selected type2 local record uses AES/OFB/NoPadding and PBKDF2WithHmacSHA1And8BIT; constructor data flow binds ciphertext/IV/salt/string-suffix fields. The read-mode selector affects failure diagnostics only in14A. Neither complete14C encrypt/decrypt body performs explicit MAC/tag operations.
+
+**Unknown / unchanged:** runtime platform crypto, random source/string initialization, other keystore branches, publication uncertainty and login coordination. This local ciphertext format is not a Rust wire requirement. No runtime change or live operation.

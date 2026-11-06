@@ -8226,3 +8226,5 @@ APK43.72 authkey_rotation request/ACK ordering and response/local-key replacemen
 APK43.72 auth-key public-wire/private-public-storage distinction and bounded readback retry retained. [Auth-key candidate and storage verification](notification-ack-audit.md#auth-key-candidate-and-storage-verification-2026-11-06). No live operation.
 
 APK43.72 auth-key commit versus counter apply, record parser and reload gates retained; abstract provider declarations explicitly unresolved. [Auth-key commit and reload boundary](notification-ack-audit.md#auth-key-commit-and-reload-boundary-2026-11-06). No live operation.
+
+APK43.72 auth-key slot0x1a3e concrete provider and local crypto record field roles retained, without claiming platform execution or wire-format necessity. [Auth-key concrete storage provider](notification-ack-audit.md#auth-key-concrete-storage-provider-2026-11-06). No live operation.
