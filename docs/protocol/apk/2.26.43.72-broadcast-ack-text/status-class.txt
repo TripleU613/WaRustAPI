@@ -1,0 +1,83 @@
+
+# class: LX/2p4;
+# extends: LX/2p5;
+
+.method public <clinit>(V)  # .registers 1
+    # full signature: LX/2p4;-><clinit>()V
+    0000..0004  new-instance  v0, LX/2p4;
+    0004..000a  invoke-direct  {v0}, LX/2p4;-><init>()V
+    000a..000e  sput-object  v0, LX/2p4;->A00:LX/2p4;
+    000e..0012  new-instance  v0, LX/3N1;
+    0012..0018  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0018..001c  sput-object  v0, LX/2p4;->CREATOR:Landroid/os/Parcelable$Creator;
+    001c..001e  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(V)  # .registers 2
+    # full signature: LX/2p4;-><init>()V
+    0000..0004  const-string  v0, "status"
+    0004..000a  invoke-direct  {v1, v0}, Lcom/whatsapp/infra/core/jid/Jid;-><init>(Ljava/lang/String;)V
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(LL)  # .registers 4
+    # full signature: LX/2p4;->A00(Ljava/lang/String;)LX/2p4;
+    0000..0002  const/4  v2, #0x0
+    0002..0006  if-eqz  v3, +0x28
+    0006..000c  invoke-virtual  {v3}, Ljava/lang/String;->length()I
+    000c..000e  move-result  v0
+    000e..0012  if-eqz  v0, +0x22
+    0012..0018  invoke-static  {v3}, LX/0Dd;->A00(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    0018..001a  move-result-object  v1
+    001a..001e  instance-of  v0, v1, LX/2p4;
+    001e..0022  if-eqz  v0, +0x7
+    0022..0026  check-cast  v1, LX/2p4;
+    0026..002a  if-eqz  v1, +0x3
+    002a..002c  goto  +0xd
+    002c..0030  new-instance  v0, LX/09P;
+    0030..0036  invoke-direct  {v0, v3}, LX/09P;-><init>(Ljava/lang/String;)V
+    0036..0038  throw  v0
+    0038..003a  move-exception  v0
+    003a..003e  new-instance  v1, LX/0Dt;
+    003e..0044  invoke-direct  {v1, v0}, LX/0Dt;-><init>(Ljava/lang/Throwable;)V
+    0044..0048  instance-of  v0, v1, LX/0Dt;
+    0048..004c  if-nez  v0, +0x3
+    004c..004e  move-object  v2, v1
+    004e..0052  check-cast  v2, LX/2p4;
+    0052..0054  return-object  v2
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0009..001c -> 001c
+.end method
+
+.method public describeContents(I)  # .registers 2
+    # full signature: LX/2p4;->describeContents()I
+    0000..0002  const/4  v0, #0x0
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getServer(L)  # .registers 2
+    # full signature: LX/2p4;->getServer()Ljava/lang/String;
+    0000..0004  const-string  v0, "broadcast"
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/2p4;->getType()I
+    0000..0002  const/4  v0, #0x5
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public writeToParcel(VLI)  # .registers 4
+    # full signature: LX/2p4;->writeToParcel(Landroid/os/Parcel;I)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  const/4  v0, #0x1
+    000a..0010  invoke-virtual  {v2, v0}, Landroid/os/Parcel;->writeInt(I)V
+    0010..0012  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1263,7 +1263,7 @@ fn message_ack_address(node: &Node, name: &str) -> Option<crate::model::jid::Jid
         && let Some(valid) = super::messaging::ack_non_user_text_valid(text)
     {
         // These constructors keep their full user text: dot/colon is not
-        // device syntax. Native group/newsletter fail UserJid recipient cast.
+        // device syntax. Native group/newsletter/broadcast fail UserJid recipient cast.
         if !valid || name == "recipient" {
             return None;
         }
@@ -1272,6 +1272,8 @@ fn message_ack_address(node: &Node, name: &str) -> Option<crate::model::jid::Jid
             user,
             if domain == "g.us" {
                 Server::Group
+            } else if domain == "broadcast" {
+                Server::Broadcast
             } else {
                 Server::Newsletter
             },
@@ -3061,9 +3063,15 @@ mod tests {
         assert_eq!(status.facts.len(), 2);
     }
     #[test]
-    fn group_newsletter_ack_text_cast_and_original_user_are_preserved() {
+    fn non_user_ack_text_cast_and_original_user_are_preserved() {
         for (text, valid) in [
             ("1@g.us", true),
+            ("1@broadcast", true),
+            ("status@broadcast", true),
+            ("location@broadcast", true),
+            ("0@broadcast", false),
+            ("letters@broadcast", false),
+            ("1:0@broadcast", false),
             ("12345-1234567890@g.us", true),
             ("12345-123@g.us", false),
             ("0@g.us", false),

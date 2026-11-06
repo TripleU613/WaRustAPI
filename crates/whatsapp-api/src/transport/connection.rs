@@ -2386,6 +2386,9 @@ mod tests {
             Some("letters@g.us"),
             Some("0@newsletter"),
             Some(" 0 @newsletter"),
+            Some("0@broadcast"),
+            Some("letters@broadcast"),
+            Some("1:0@broadcast"),
         ]
         .into_iter()
         .enumerate()

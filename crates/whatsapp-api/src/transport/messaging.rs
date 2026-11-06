@@ -1225,7 +1225,7 @@ pub(crate) fn ack_user_text(text: &str) -> Option<AckUserText<'_>> {
     Some(AckUserText::Device(user))
 }
 
-// Pinned1bc/0nW.A02 group constructor and0De.A03 newsletter factory.
+// Pinned1bc/0nW.A02 group,2U8 broadcast constructors and0De.A03 newsletter factory.
 // Newsletter's error text says number, but its actual predicate only checks
 // Java-trimmed nonempty/nonzero-leading text; original user is preserved.
 pub(crate) fn ack_non_user_text_valid(text: &str) -> Option<bool> {
@@ -1237,6 +1237,7 @@ pub(crate) fn ack_non_user_text_valid(text: &str) -> Option<bool> {
             && value.bytes().all(|b| b.is_ascii_digit())
     };
     match domain {
+        "broadcast" => Some(matches!(user, "status" | "location") || decimal_nonzero(user, 20)),
         "g.us" => Some(
             decimal_nonzero(user, 20)
                 || user.split_once('-').is_some_and(|(phone, time)| {
@@ -1331,7 +1332,7 @@ pub fn validate_received_ack(node: &Node) -> crate::Result<()> {
             // DCF/Dv7/J9O types7/8/9 are nonnull but excluded by0Dn.A0R.
             || matches!(node.get_attr("from").and_then(|v| v.as_text()).and_then(ack_user_text),
                 Some(AckUserText::User("0") | AckUserText::ServiceUser(_) | AckUserText::NonUser(_)))
-            // Text constructor success establishes type1/21 even if Rust's
+            // Text constructor success establishes excluded types1/21/3/5/6 even if Rust's
             // generic JID parser cannot represent the native newsletter user.
             || node.get_attr("from").and_then(|v| v.as_text()).and_then(ack_non_user_text_valid) == Some(true)
             // EW4.<init> -> 0Dn.A0R rejects known group/newsletter types1/21.
@@ -3351,6 +3352,37 @@ mod captured_wait_tests {
                 assert!(validate_received_ack(&ack.clone().attr("error", "459")).is_ok());
                 assert!(validate_received_ack(&ack.attr("error", "bad")).is_err());
             }
+        }
+    }
+
+    #[test]
+    fn broadcast_call_sender_constructor_and_subtypes_control_ordering() {
+        for (text, valid) in [
+            ("1@broadcast", true),
+            ("12345678901234567890@broadcast", true),
+            ("123456789012345678901@broadcast", false),
+            ("0@broadcast", false),
+            ("01@broadcast", false),
+            ("letters@broadcast", false),
+            ("status@broadcast", true),
+            ("location@broadcast", true),
+            ("Status@broadcast", false),
+            ("location:0@broadcast", false),
+            ("1.2@broadcast", false),
+            ("1:0@broadcast", false),
+            ("１２３@broadcast", false),
+            (" 1@broadcast", false),
+            ("@broadcast", false),
+        ] {
+            let ack = Node::new("ack")
+                .attr("class", "call")
+                .attr("id", "fixture")
+                .attr("type", "offer")
+                .attr("from", text);
+            assert_eq!(validate_received_ack(&ack).is_err(), valid, "{text}");
+            assert_eq!(call_ack_sender_known_null(&ack), !valid, "{text}");
+            assert!(validate_received_ack(&ack.clone().attr("error", "459")).is_ok());
+            assert!(validate_received_ack(&ack.attr("error", "bad")).is_err());
         }
     }
 

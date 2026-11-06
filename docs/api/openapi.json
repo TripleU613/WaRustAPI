@@ -18094,5 +18094,17 @@
     ],
     "description": "Group/newsletter ACK text uses pinned construction. Group requires1..20 nonzero-leading ASCII digits or PN-valid prefix plus hyphen and10 nonzero-leading ASCII digits. Newsletter requires Java-trimmed nonempty/nonzero-leading text, not numeric grammar, retaining original user. Invalid sender follows null ordering; valid group/newsletter types reject ordinary call sender admission after459 diversion. Recipient UserJid cast fails. Selected from keeps plain original user within existing Rust model limits, without interpreting newsletter dot/colon as agent/device. Binary/cache equivalence, unrepresentable users, generic receipt routes and full recovery remain open. No live operations or replay authority.",
     "evidence": "docs/protocol/message-ack.md#group-and-newsletter-ack-text-uses-native-construction-2026-11-06"
+  },
+  "x-broadcast-ack-text": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [
+      "whatsapp_api::transport::messaging::validate_received_ack",
+      "whatsapp_api::transport::messaging::message_ack_outcome_for",
+      "whatsapp_api::transport::outgoing::acknowledge"
+    ],
+    "description": "Broadcast ACK text preserves numeric-list grammar1..20 nonzero-leading ASCII digits and exactstatus/location special types. Invalid construction follows null sender ordering; valid native types3/5/6 reject ordinary call sender admission after459 diversion. Broadcast recipient fails UserJid cast; selected from keeps original plain user. Dot/colon is not device syntax. Participant exclusion remains unchanged. Binary/cache equivalence, generic receipt routes and full recovery remain open. No live operations or replay authority.",
+    "evidence": "docs/protocol/message-ack.md#broadcast-ack-text-preserves-constructor-and-special-subtypes-2026-11-06"
   }
 }

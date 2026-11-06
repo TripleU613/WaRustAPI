@@ -798,3 +798,28 @@ use123456-1234567890@g.us to retain actual nonnull/type1 rejection coverage;
 the original malformed group and zero/letter group/newsletter controls join
 the capture-and-continue actor regression. The initial full-suite failures
 exposed stale fixture assumptions, rather than authorizing a broader fatal gate.
+
+
+## Broadcast ACK text preserves constructor and special subtypes (2026-11-06)
+
+**Confirmed selected pinned static / Rust correction.**
+[Complete2U8/Dv3/2p4 exports and linked parser/type ancestry](apk/2.26.43.72-broadcast-ack-text/README.md)
+show numeric broadcast lists require1..20 nonzero-leading ASCII digits;
+exactstatus/location use special types5/6 while lists use3. All are nonUser
+and excluded by the call sender predicate. The2p5 method-body query yielded no
+matches; retained ancestry metadata establishes hierarchy without guessing bodies.
+
+Shared text classification now preserves null construction before call fields
+and fatal rejection of valid broadcast sender types, after459 diversion.
+Message ACK invalid from cannot establish chat; valid broadcast recipient fails
+UserJid cast and falls back to from. Valid selected from retains original plain
+user; dot/colon is not device syntax. Existing ordinary participant exclusion
+is unchanged. Global Jid and generic receipt parsing remain separate.
+
+**Offline regression:** numeric length1/20/21, leading zero, exact special names,
+case sensitivity, Unicode, whitespace and dot/colon forms exercise null versus
+fatal call ordering with459/malformed-error controls. Selected-chat tests cover
+numeric/status/location from and nonUser recipient fallback. The actual actor
+capture-and-continue test now includes invalid broadcast senders. Binary typed
+JIDs, generic receipt routes, full cache/recovery and server policy remain open.
+No live traffic or replay authority.

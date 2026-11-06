@@ -1,0 +1,51 @@
+
+# class: LX/Dv3;
+# extends: LX/2p5;
+
+.method public <clinit>(V)  # .registers 1
+    # full signature: LX/Dv3;-><clinit>()V
+    0000..0004  new-instance  v0, LX/Dv3;
+    0004..000a  invoke-direct  {v0}, LX/Dv3;-><init>()V
+    000a..000e  sput-object  v0, LX/Dv3;->A00:LX/Dv3;
+    000e..0012  new-instance  v0, LX/F52;
+    0012..0018  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0018..001c  sput-object  v0, LX/Dv3;->CREATOR:Landroid/os/Parcelable$Creator;
+    001c..001e  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(V)  # .registers 2
+    # full signature: LX/Dv3;-><init>()V
+    0000..0004  const-string  v0, "location"
+    0004..000a  invoke-direct  {v1, v0}, Lcom/whatsapp/infra/core/jid/Jid;-><init>(Ljava/lang/String;)V
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public describeContents(I)  # .registers 2
+    # full signature: LX/Dv3;->describeContents()I
+    0000..0002  const/4  v0, #0x0
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getServer(L)  # .registers 2
+    # full signature: LX/Dv3;->getServer()Ljava/lang/String;
+    0000..0004  const-string  v0, "broadcast"
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/Dv3;->getType()I
+    0000..0002  const/4  v0, #0x6
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public writeToParcel(VLI)  # .registers 3
+    # full signature: LX/Dv3;->writeToParcel(Landroid/os/Parcel;I)V
+    0000..0006  invoke-static  {v1}, LX/6ok;->A0m(Landroid/os/Parcel;)V
+    0006..0008  return-void
+    # exception table: 0 try range(s)
+.end method
