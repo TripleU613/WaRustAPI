@@ -256,7 +256,10 @@ pub fn handle(store: &ProtocolStore, node: &Node) -> Result<Option<Node>> {
         return Ok(None);
     }
     let Some(from) = jid(node, "from").filter(|v| {
-        !v.user.is_empty() && matches!(v.server, Server::User | Server::Lid) && v.device == 0
+        !v.user.is_empty()
+            && matches!(v.server, Server::User | Server::Lid)
+            && v.agent == 0
+            && v.device == 0
     }) else {
         return Ok(None);
     };
@@ -335,14 +338,22 @@ fn parse(node: &Node) -> Result<Option<TokenUpdates<'_>>> {
     if node.get_attr("participant").is_some() || node.get_attr("recipient").is_some() {
         return Ok(None);
     }
+    // APK43.72 10G.A09 requests UserJid for from/sender_lid. Rust's
+    // generic parser can also carry a legacy agent qualifier; that is not
+    // primary token authority (the LID domain bit is Server::Lid, not agent).
     let Some(from) = jid(node, "from").filter(|v| {
-        !v.user.is_empty() && matches!(v.server, Server::User | Server::Lid) && v.device == 0
+        !v.user.is_empty()
+            && matches!(v.server, Server::User | Server::Lid)
+            && v.agent == 0
+            && v.device == 0
     }) else {
         return Ok(None);
     };
     let target = if node.get_attr("sender_lid").is_some() {
         jid(node, "sender_lid")
-            .filter(|v| !v.user.is_empty() && v.server == Server::Lid && v.device == 0)
+            .filter(|v| {
+                !v.user.is_empty() && v.server == Server::Lid && v.agent == 0 && v.device == 0
+            })
             .ok_or_else(|| Error::invalid("notification", "invalid sender LID"))?
     } else {
         from
@@ -892,6 +903,20 @@ mod tests {
             let text = notification().attr("from", server.as_str());
             assert_eq!(record(&store, &text).unwrap(), 0);
             assert!(handle(&store, &text).unwrap().is_none());
+            let qualified = Jid {
+                user: "15555550100".into(),
+                server: server.clone(),
+                agent: 1,
+                device: 0,
+                kind: JidKind::AgentDevice,
+            };
+            for node in [
+                notification().attr("from", qualified.clone()),
+                notification().attr("from", qualified.to_string()),
+            ] {
+                assert_eq!(record(&store, &node).unwrap(), 0);
+                assert!(handle(&store, &node).unwrap().is_none());
+            }
             for kind in [JidKind::Plain, JidKind::AgentDevice] {
                 let peer = Jid {
                     user: String::new(),
@@ -907,6 +932,13 @@ mod tests {
         }
         for value in [
             Jid::parse("lid").unwrap(),
+            Jid {
+                user: "15555550100".into(),
+                server: Server::Lid,
+                agent: 1,
+                device: 0,
+                kind: JidKind::AgentDevice,
+            },
             Jid {
                 user: String::new(),
                 server: Server::Lid,

@@ -3779,3 +3779,15 @@ identity/duplicate/device, empty-work, envelope and256-total-child guards remain
 Red/green queue-before-ACK/reopen regression includes metadata with an unusable
 jid beside a valid group. Unknown-only remains unsupported.
 [Exact helper and limits](apk/2.26.43.72-group-event-selection/README.md).
+
+
+### Privacy-token legacy agent qualifier (2026-11-05)
+
+**Confirmed local defect/fix:** supported primary from/sender_lid admission
+checked device0 but not agent0; a qualified address could write token state.
+Those guards now require both zero, retaining PN/LID namespace handling and
+existing invalid-alias policy. Native10G.A09 uses UserJid getters; Rust's LID
+domain bit is not its legacy agent field. Red/green typed/text PN/LID and alias
+regression preserves checkpoint/pin/session snapshots across reopen. Reach-out
+restriction envelope admission was separately rechecked and already guarded.
+[Complete current source and limits](apk/2.26.43.72-privacy-token-primary-address/README.md).

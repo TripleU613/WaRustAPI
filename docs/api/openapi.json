@@ -17184,5 +17184,12 @@
     "x-live": false,
     "description": "Dirty-group handling selects named group children like APK43.72 0w9.A09/0Tp.A0N, so unrelated inner children do not suppress otherwise valid refresh work and ACK. Existing selected-entry identity/device/duplicate, empty-supported-work, envelope,256-total-child, durable queue/dedup and sole-ACK guards remain. Red/green regression prepends metadata with unusable jid beside valid groups and retains reopen/original reservation controls. Unknown-only remains unsupported. No new query family or HTTP route.",
     "evidence": "docs/protocol/apk/2.26.43.72-group-event-selection/README.md"
+  },
+  "x-privacy-token-primary-agent-admission": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Privacy-token handle/parse require agent0 and device0 for supported PN/LID primary from and explicit LID alias. Invalid from skips token/ACK; invalid explicit sender_lid retains existing InvalidInput policy. LID domain bits remain represented by namespace, not legacy agent. Red/green regression covers typed/text qualified PN/LID and alias, preserving checkpoints/pins/sessions across reopen. Native UserJid evidence does not claim full special-subtype/fallback parity. Reachout envelope check was already present and unchanged. No token synthesis, mapping adoption, query or HTTP route.",
+    "evidence": "docs/protocol/apk/2.26.43.72-privacy-token-primary-address/README.md"
   }
 }

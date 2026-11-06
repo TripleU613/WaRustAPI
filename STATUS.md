@@ -1,3 +1,8 @@
+Privacy-token primary filters now exclude nonzero legacy agent qualifiers
+before token storage/ACK. Existing PN/LID primaries remain supported; explicit
+alias errors preserve prior state. Red/green/reopen regression expanded.
+[Evidence](docs/protocol/apk/2.26.43.72-privacy-token-primary-address/README.md).
+
 Fixed unrelated children inside groups_dirty suppressing valid refresh/ACK.
 Only named group entries are parsed; existing selected-entry and total-list
 guards remain. Queue/dedup/reopen regression expanded.
