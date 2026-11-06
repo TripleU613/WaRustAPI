@@ -213,6 +213,28 @@ impl Material {
                 "persisted account does not match registration material",
             ));
         }
+        // Public equality alone cannot prove that either persisted copy can
+        // perform the private operation for the advertised registration key.
+        for (key, reason) in [
+            (&self.noise, "stored Noise key pair mismatch"),
+            (&self.identity, "stored identity key pair mismatch"),
+            (&self.signed_pre_key, "signed prekey pair mismatch"),
+            (
+                &account.noise_static.as_ref().expect("checked above").0,
+                "account Noise key pair mismatch",
+            ),
+            (
+                &account.signal_identity.as_ref().expect("checked above").0,
+                "account identity key pair mismatch",
+            ),
+        ] {
+            let private = wacore_libsignal::protocol::PrivateKey::deserialize(&key.private)
+                .map_err(|_| invalid(reason))?;
+            let derived = private.public_key().map_err(|_| invalid(reason))?;
+            if derived.public_key_bytes() != key.public {
+                return Err(invalid(reason));
+            }
+        }
         Ok(())
     }
 
@@ -626,6 +648,85 @@ mod tests {
             created_at: Timestamp::now(),
             updated_at: Timestamp::now(),
             history: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn inconsistent_saved_key_pairs_cannot_construct_or_reprepare_registration_requests() {
+        for case in [
+            "noise",
+            "identity",
+            "signed",
+            "account-noise",
+            "account-identity",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(dir.path());
+            let factory = StoredComparisonRequestFactory::new(store.clone(), config()).unwrap();
+            let a = attempt(&store);
+            store.write(|tx| factory.prepare(tx, &a)).unwrap();
+            assert!(factory.code_request(&a).is_ok());
+            let mut account = store.read(AccountRecord::load).unwrap().unwrap();
+            store
+                .write(|tx| {
+                    let mut record: Material = tx
+                        .get_json(Table::Account, MATERIAL_KEY, RECORD_VERSION)?
+                        .unwrap();
+                    let other = *KeyPair::generate(&mut rand::rng()).private_key.serialize();
+                    match case {
+                        "noise" => record.noise.private = other,
+                        "identity" => record.identity.private = other,
+                        "signed" => record.signed_pre_key.private = other,
+                        "account-noise" => account.noise_static.as_mut().unwrap().0.private = other,
+                        "account-identity" => {
+                            account.signal_identity.as_mut().unwrap().0.private = other
+                        }
+                        _ => unreachable!(),
+                    }
+                    account.save(tx)?;
+                    tx.put_json(Table::Account, MATERIAL_KEY, RECORD_VERSION, &record)
+                })
+                .unwrap();
+            let snapshot = store.read(|tx| tx.scan(Table::Account, 1, 100)).unwrap();
+            let head = store.journal_head().unwrap();
+            assert!(
+                factory.code_request(&a).is_err(),
+                "{case}: corrupt pair must not build request"
+            );
+            assert!(factory.exist_request(&a).is_err(), "{case}");
+            assert!(
+                factory
+                    .complete_request(&a, &Zeroizing::new("654321".into()))
+                    .is_err(),
+                "{case}"
+            );
+            assert!(
+                factory
+                    .security_request(&a, &Zeroizing::new("123456".into()))
+                    .is_err(),
+                "{case}"
+            );
+            assert!(
+                store.write(|tx| factory.prepare(tx, &a)).is_err(),
+                "{case}: no silent repair"
+            );
+            assert_eq!(
+                store.read(|tx| tx.scan(Table::Account, 1, 100)).unwrap(),
+                snapshot
+            );
+            assert_eq!(store.journal_head().unwrap(), head);
+            drop(factory);
+            drop(store);
+            let store = open(dir.path());
+            let factory = StoredComparisonRequestFactory::new(store.clone(), config()).unwrap();
+            assert!(
+                factory.code_request(&a).is_err(),
+                "{case}: reopening cannot repair corruption"
+            );
+            assert_eq!(
+                store.read(|tx| tx.scan(Table::Account, 1, 100)).unwrap(),
+                snapshot
+            );
         }
     }
 

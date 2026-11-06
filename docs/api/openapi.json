@@ -17268,5 +17268,12 @@
     "x-live": false,
     "description": "Registered signed-prekey lookup derives public from saved private and refuses pair mismatch even when public signature is valid. Shared required/optional lookup protects upload admission and digest lookup; no key regeneration or replacement. Local integrity check, not native corrupt-store handling parity.",
     "evidence": "docs/protocol/prekey-count-notifications.md#signed-prekey-publicprivate-consistency-before-upload-2026-11-05"
+  },
+  "x-registration-material-pair-integrity": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Comparison registration factory validates material Noise/identity/signed public-private pairs and account Noise/identity pairs before saved request construction or repeated preparation. Corruption is refused with fixed secret-free errors, without rewriting material or changing generation. Local integrity guard, not native corrupt-store parity.",
+    "evidence": "docs/protocol/registration-safety-audit.md#registration-material-key-pair-integrity-before-request-construction-2026-11-05"
   }
 }

@@ -427,3 +427,34 @@ and neither a parsed answer's `Debug` nor an error's text echoes a value
 planted in any secret field (`login`, `code`, `wipe_token`,
 `passkey_credential`, `appeal_token`, `edge_routing_info`, `email`). Waits
 saturate when added to the clock (`Timestamp::saturating_add`).
+
+### Registration material key-pair integrity before request construction (2026-11-05)
+
+**Confirmed local defect, fixed offline:** StoredComparisonRequestFactory.load
+checked frozen attempt/configuration, account public metadata and the signed
+public-key signature, but did not prove the saved private halves matched the
+advertised Noise, Signal identity or signed-prekey public keys. Its account
+comparison also ignored private-half corruption in the separate AccountRecord.
+A request could therefore be constructed from material unusable for the later
+private-key operation, even with a valid signed public-key signature.
+
+Material.check_account now derives/checks all three material key pairs plus
+the account Noise and Signal identity pairs after its existing account/public
+metadata check. It reports only a fixed pair-specific InvalidInput reason.
+Both normal request loading and repeated/corrected preparation use this guard.
+The registered-signed-prekey lookup also shares check_account. Derivation
+compares effective public keys, not raw private-byte identity; no new key,
+request field, registration retry or account generation is manufactured.
+
+Regression: for each of five stored private-half substitutions (material Noise,
+identity, signed; account Noise, identity), retain public keys/signature/config,
+then require code/exist/complete/security request construction and repeated
+prepare to fail. Exact Account table bytes and journal head remain unchanged;
+reopen still refuses and retains bytes. Clean construction is a control in
+each case. Old code failed the Noise case because it built the request.
+This is local cryptographic integrity, not an APK wire-field requirement or
+proof of native corrupt-store behavior. No HTTP/account operation ran.
+
+Validation: red corruption regression reproduced request construction; all
+1,394 workspace/all-feature tests, strict Clippy, CLI reference and OpenAPI
+library checks passed after the guard. Offline request construction only.

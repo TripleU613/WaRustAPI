@@ -1,3 +1,9 @@
+Registration request construction and repeated preparation now reject
+inconsistent saved Noise/identity/signed key pairs, including private-half
+corruption in the separate account record. Five substitution cases preserve
+public keys/signature and verify refusal without repair across reopen.
+[Audit](docs/protocol/registration-safety-audit.md#registration-material-key-pair-integrity-before-request-construction-2026-11-05).
+
 Registered signed-prekey lookup now rejects public/private pair mismatches,
 even when the saved public key still has a valid identity signature. The actor
 surfaces the error before upload generation/reservation/write and preserves
