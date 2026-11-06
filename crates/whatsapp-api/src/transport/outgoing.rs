@@ -1267,8 +1267,11 @@ fn message_ack_address(node: &Node, name: &str) -> Option<crate::model::jid::Jid
         use super::messaging::AckUserText;
         let user = match parsed {
             AckUserText::Null => return None,
-            AckUserText::Device(_) if name == "recipient" => return None,
-            AckUserText::User(user) | AckUserText::Device(user) => user,
+            AckUserText::Device(_) | AckUserText::NonUser(_) if name == "recipient" => return None,
+            AckUserText::User(user)
+            | AckUserText::Device(user)
+            | AckUserText::ServiceUser(user)
+            | AckUserText::NonUser(user) => user,
         };
         let domain = if node.get_attr(name)?.as_text()?.ends_with("@lid")
             || node.get_attr(name)?.as_text()?.ends_with("@hosted.lid")
@@ -3053,6 +3056,13 @@ mod tests {
                     false,
                 ),
                 ("15555550100:7@s.whatsapp.net", None, true),
+                (
+                    "15555550100@s.whatsapp.net",
+                    Some("gdpr@s.whatsapp.net"),
+                    true,
+                ),
+                ("15555550100@s.whatsapp.net", Some("Server@hosted"), false),
+                ("15555550100@s.whatsapp.net", Some("0@hosted"), false),
                 ("12345678901234567890@hosted", None, true),
                 (
                     "12345678901234567890@s.whatsapp.net",
@@ -3379,6 +3389,11 @@ mod tests {
         for error in [None, Some("500")] {
             for (participant, blocks_success) in [
                 ("12345:0@lid", true),
+                ("0@s.whatsapp.net", true),
+                ("0@hosted", true),
+                ("Server@s.whatsapp.net", false),
+                ("Server@hosted", false),
+                ("gdpr@s.whatsapp.net", false),
                 ("1234@s.whatsapp.net", false),
                 ("10123@s.whatsapp.net", false),
                 ("01234@s.whatsapp.net", false),

@@ -1102,7 +1102,7 @@ pub(crate) fn ordinary_ack_has_participant(node: &Node) -> bool {
         .and_then(|value| value.as_text())
         .and_then(ack_user_text)
     {
-        return !matches!(parsed, AckUserText::Null);
+        return matches!(parsed, AckUserText::User(_) | AckUserText::Device(_));
     }
 
     super::receipts::jid(node, "participant").is_some_and(|jid| {
@@ -1153,6 +1153,10 @@ pub(crate) enum AckUserText<'a> {
     Null,
     User(&'a str),
     Device(&'a str),
+    // Dv7/type8 is a UserJid but not an ordinary participant-device user.
+    ServiceUser(&'a str),
+    // J9O/type9 extends0DY, so a UserJid recipient cast fails.
+    NonUser(&'a str),
 }
 // Pinned 0Dd.A00 uses last dot/colon, ignores the dot suffix, parses
 // device with Integer.parseInt, then DeviceJid narrows to byte before range
@@ -1166,12 +1170,18 @@ pub(crate) fn ack_user_text(text: &str) -> Option<AckUserText<'_>> {
     let colon = local.rfind(':');
     let lid = matches!(domain, "lid" | "hosted.lid");
     let base_end = dot.into_iter().chain(colon).min().unwrap_or(local.len());
-    // 0De.A02 has 0/Server singleton users; 0Dd.A00 additionally handles
-    // plain gdpr@s.whatsapp.net. Their conversion/selection is not ported.
-    if !lid
-        && (matches!(&local[..base_end], "0" | "Server")
-            || (local == "gdpr" && domain == "s.whatsapp.net"))
-    {
+    // APK43.72 DCF/Dv7/J9O bypass PhoneUserJid. Preserve their native
+    // class rather than applying its numeric constructor to special names.
+    if !lid && dot.is_none() && colon.is_none() {
+        match local {
+            "0" => return Some(AckUserText::User(local)),
+            "Server" => return Some(AckUserText::ServiceUser(local)),
+            "gdpr" if domain == "s.whatsapp.net" => return Some(AckUserText::NonUser(local)),
+            _ => {}
+        }
+    }
+    // Explicit special-user devices still need their separate class trace.
+    if !lid && matches!(&local[..base_end], "0" | "Server") {
         return None;
     }
     let valid_user = |user: &str| {
@@ -1290,6 +1300,9 @@ pub fn validate_received_ack(node: &Node) -> crate::Result<()> {
         && (node.get_attr("id").and_then(|v| v.as_text()) == Some("")
             || node.get_attr("type").is_none()
             || node.get_attr("type").and_then(|v| v.as_text()) == Some("")
+            // DCF/Dv7/J9O types7/8/9 are nonnull but excluded by0Dn.A0R.
+            || matches!(node.get_attr("from").and_then(|v| v.as_text()).and_then(ack_user_text),
+                Some(AckUserText::User("0") | AckUserText::ServiceUser(_) | AckUserText::NonUser(_)))
             // EW4.<init> -> 0Dn.A0R rejects known group/newsletter types1/21.
             || super::receipts::jid(node, "from").is_some_and(|jid|
                 matches!(jid.server, crate::model::jid::Server::Group | crate::model::jid::Server::Newsletter)))
@@ -3271,7 +3284,7 @@ mod captured_wait_tests {
     }
 
     #[test]
-    fn pn_text_constructor_controls_call_ordering_and_specials_remain_unclassified() {
+    fn pn_text_constructor_controls_call_ordering_and_specials_bypass_numeric_grammar() {
         for domain in ["s.whatsapp.net", "hosted"] {
             for (local, valid) in [
                 ("1234", false),
@@ -3308,16 +3321,35 @@ mod captured_wait_tests {
                 assert!(validate_received_ack(&ack.attr("error", "bad")).is_err());
             }
         }
-        for text in [
-            "0@s.whatsapp.net",
-            "Server@hosted",
-            "0:7@s.whatsapp.net",
-            "gdpr@s.whatsapp.net",
-        ] {
+        for text in ["0:7@s.whatsapp.net", "Server:99@hosted"] {
             assert!(ack_user_text(text).is_none(), "special {text}");
             assert!(!call_ack_sender_known_null(
                 &Node::new("ack").attr("from", text)
             ));
+        }
+    }
+
+    #[test]
+    fn plain_special_pn_call_sender_types_are_rejected_after_challenge_diversion() {
+        for sender in [
+            "0@s.whatsapp.net",
+            "0@hosted",
+            "Server@s.whatsapp.net",
+            "Server@hosted",
+            "gdpr@s.whatsapp.net",
+        ] {
+            let ack = Node::new("ack")
+                .attr("class", "call")
+                .attr("id", "fixture")
+                .attr("type", "offer")
+                .attr("from", sender);
+            assert!(!call_ack_sender_known_null(&ack));
+            assert!(validate_received_ack(&ack).is_err(), "{sender}");
+            assert!(validate_received_ack(&ack.clone().attr("error", "459")).is_ok());
+            assert!(validate_received_ack(&ack.clone().attr("error", "500")).is_err());
+            let mut ack = ack;
+            ack.attributes.retain(|a| a.name != "class");
+            assert!(validate_received_ack(&ack.attr("class", "message")).is_ok());
         }
     }
 

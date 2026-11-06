@@ -1,0 +1,26 @@
+{
+  "README.md": {
+    "bytes": 3303,
+    "sha256": "6a641feb96198becfc83f4a2e92a1aab83724eda341efede84cb19824e272484"
+  },
+  "device-factory.txt": {
+    "bytes": 2564,
+    "sha256": "6aed8a7897ee978ac5fea0afd732f63fac25d42070a038370480c2c21d29254f"
+  },
+  "gdpr-jid.txt": {
+    "bytes": 1772,
+    "sha256": "311b86c62db95b7aa63c200910af7579529dc6c91e90c0903310f05166dba70d"
+  },
+  "primary-device.txt": {
+    "bytes": 625,
+    "sha256": "5dba6f7f420de70655f08673960844a475a32908e50f95d0ea8c95206d90c132"
+  },
+  "server-user.txt": {
+    "bytes": 2159,
+    "sha256": "f189204fcb4156e9be4203f117e58c7854f0af8c0af63674267f446319d1ed3e"
+  },
+  "zero-user.txt": {
+    "bytes": 2153,
+    "sha256": "c47e87aa8ccb453f3723dfb254f3b25dae253b78013b52874930e478d6133391"
+  }
+}

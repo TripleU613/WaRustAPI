@@ -710,3 +710,28 @@ outside null guesses. Actual in-flight outbox tables cover invalid-recipient
 fallback, device0 class, canonical hosted/device from,20-digit selected chat,
 wrong chat, participant success/refusal distinction, once-only facts, reopen
 and no reselection. These are local correctness checks, not zero-ban proof.
+
+
+## Plain special PN ACK identities preserve native class (2026-11-06)
+
+**Confirmed selected pinned static / Rust correction.**
+[Complete DCF/Dv7/J9O classes and primary-device path](apk/2.26.43.72-special-pn-ack/README.md)
+resolve the previously unclassified plain0/Server/gdpr cases:0 and Server are
+UserJid types7/8 with canonical PN server, while gdpr is0DY/type9 and fails
+the UserJid recipient cast. The shared classifier now preserves those class
+results independently of ordinary PN numeric grammar. Explicit special-user
+devices remain unclassified; no global JID model rewrite.
+
+All three plain types are excluded by0Dn.A0R, so ordinary call ACKs with valid
+id/type now follow the captured fatal admission path;459 still diverts first.
+Ordinary participant conversion admits0/type7 but excludesServer/type8 and
+gdpr/type9, correcting false suppression of normal success. A gdpr recipient
+now falls back to from; selected0/Server cannot be replaced by from just because
+Rust cannot fully handle a special chat. Hosted0/Server canonicalize to PN.
+
+**Offline regressions:** call type rejection covers both plain aliases, error500,
+459 diversion and noncall controls. Actual in-flight outbox tables cover gdpr
+recipient fallback, special-recipient precedence, participant success/refusal,
+once-only facts, reopening and no reselection. Full binary/cache equivalence,
+special-device cases, service-chat application behavior and server policy remain
+unknown. No live traffic, requests or replay authorization.
