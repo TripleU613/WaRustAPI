@@ -17597,5 +17597,12 @@
     "x-live": false,
     "description": "Research-only APK43.72 lookup response-state census and explicit nonempty-read reset/drained cleanup. Empty follow-up reads do not clear state. Per-batch lifecycle, serialization, aliases and late callback cancellation/correlation remain unknown; no native race proven. No runtime shared-state or retry behavior added.",
     "evidence": "docs/protocol/bulk-prekey-refresh.md#missing-lid-shared-response-state-resets-2026-11-06"
+},
+  "x-prekey-lid-mex-operation-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Research-only APK43.72 HSo MEX operation factory/default/handle trace. Fresh operation selects0j3 with32000ms copied timeout; non-Pando send uses that value, Pando branches separately, outer wait uses128000ms. AQY discards the returned start handle. Effective Pando deadlines/cancellation and late callback cleanup remain unverified. No runtime timeout or retry added.",
+    "evidence": "docs/protocol/bulk-prekey-refresh.md#missing-lid-mex-operation-ownership-and-nested-send-timeout-2026-11-06"
 }
 }

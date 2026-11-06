@@ -1,3 +1,5 @@
+Missing-LID MEX lookup now traced through fresh operation/default timeout and discarded start handle; non-Pando send uses32seconds while outer wait uses128seconds. [Operation handle ownership, conditional32-second send and remaining transport limits](docs/protocol/bulk-prekey-refresh.md#missing-lid-mex-operation-ownership-and-nested-send-timeout-2026-11-06). Research only; Pando/late-callback limits remain.
+
 Native missing-LID response-state reset/cleanup now retained with exact field/caller census; late callback fencing remains unverified. [Explicit resets/cleanup and remaining late-callback limits](docs/protocol/bulk-prekey-refresh.md#missing-lid-shared-response-state-resets-2026-11-06). Research only, no runtime change.
 
 Missing-LID MEX callbacks now traced through request/scoped/exception outcomes and response-state-before-future completion. [MEX request/scoped/exception outcomes and remaining lifecycle limits](docs/protocol/bulk-prekey-refresh.md#missing-lid-mex-callback-completion-and-error-scope-2026-11-06). Research only; no mapping acceptance or runtime parity claim.

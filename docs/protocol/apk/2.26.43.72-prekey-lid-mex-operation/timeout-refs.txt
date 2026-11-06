@@ -1,0 +1,20 @@
+classes.dex  LX/0iq;-><init>(VLLLLLLLLLLL)
+  write opcode 0x5a, dex byte offset: 0x6aae00
+classes.dex  LX/0iq;->A00(LLL)
+  read opcode 0x53, dex byte offset: 0x6aae9c
+classes.dex  LX/0iq;->A00(LLL)
+  read opcode 0x53, dex byte offset: 0x6aaf5c
+classes.dex  LX/0wE;->A08(V)
+  write opcode 0x5a, dex byte offset: 0x757a5c
+classes.dex  LX/1XG;->invoke(LL)
+  write opcode 0x5a, dex byte offset: 0x942332
+classes9.dex  Lcom/whatsapp/bizintegritysignals/BizIntegritySignalsGraphQLFetcher;->A03(LLLLLZ)
+  write opcode 0x5a, dex byte offset: 0x5feb92
+classes9.dex  Lcom/whatsapp/bizintegritysignals/BizIntegritySignalsGraphQLFetcher;->A03(LLLLLZ)
+  write opcode 0x5a, dex byte offset: 0x5fed4e
+classes9.dex  Lcom/whatsapp/bizintegritysignals/BizIntegritySignalsGraphQLFetcher;->A03(LLLLLZ)
+  write opcode 0x5a, dex byte offset: 0x5fee66
+classes9.dex  Lcom/whatsapp/suggestions/networking/SuggestedContactsFetcher;->ARt(LLL)
+  write opcode 0x5a, dex byte offset: 0x725aaa
+classes9.dex  Lcom/whatsapp/suggestions/networking/SuggestedContactsFetcherV2;->ARt(LLL)
+  write opcode 0x5a, dex byte offset: 0x725cfe

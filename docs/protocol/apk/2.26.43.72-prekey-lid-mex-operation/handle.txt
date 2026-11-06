@@ -1,0 +1,96 @@
+
+# class: LX/0j2;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLLLL)  # .registers 9
+    # full signature: LX/0j2;-><init>(LX/0iQ;LX/00x;LX/08Y;LX/0ia;LX/0is;LX/0io;LX/0j1;LX/0ih;)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v1, v0, LX/0j2;->A00:LX/0iQ;
+    000a..000e  iput-object  v4, v0, LX/0j2;->A03:LX/0ia;
+    000e..0012  iput-object  v5, v0, LX/0j2;->A04:LX/0is;
+    0012..0016  iput-object  v8, v0, LX/0j2;->A07:LX/0ih;
+    0016..001a  iput-object  v7, v0, LX/0j2;->A06:LX/0j1;
+    001a..001e  iput-object  v2, v0, LX/0j2;->A01:LX/00x;
+    001e..0022  iput-object  v3, v0, LX/0j2;->A02:LX/08Y;
+    0022..0026  iput-object  v6, v0, LX/0j2;->A05:LX/0io;
+    0026..0028  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A03(L)  # .registers 4
+    # full signature: LX/0j2;->A03()Ljava/lang/String;
+    0000..0004  iget-object  v0, v3, LX/0j2;->A00:LX/0iQ;
+    0004..000a  invoke-interface  {v0}, LX/0iQ;->getCallName()Ljava/lang/String;
+    000a..000c  move-result-object  v1
+    000c..0012  invoke-static  {v1}, LX/00l;->A05(Ljava/lang/Object;)V
+    0012..0018  invoke-interface  {v0}, LX/0iQ;->getResolvedBuildConfigName()Ljava/lang/String;
+    0018..001a  move-result-object  v0
+    001a..0020  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    0020..0026  invoke-static  {v1, v0}, LX/0ih;->A00(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0026..0028  move-result-object  v2
+    0028..002a  const/4  v1, #0x0
+    002a..002e  if-eqz  v2, +0x9
+    002e..0034  invoke-virtual  {v2}, Ljava/lang/String;->length()I
+    0034..0036  move-result  v0
+    0036..003a  if-eqz  v0, +0x3
+    003a..003c  return-object  v2
+    003c..003e  return-object  v1
+    # exception table: 0 try range(s)
+.end method
+
+.method public A04(V)  # .registers 6
+    # full signature: LX/0j2;->A04()V
+    0000..0004  iget-object  v4, v5, LX/0j2;->A03:LX/0ia;
+    0004..0008  instance-of  v0, v4, Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;
+    0008..000c  if-eqz  v0, +0x25
+    000c..0012  invoke-virtual  {v5}, LX/0j2;->A07()Z
+    0012..0014  move-result  v0
+    0014..0018  if-eqz  v0, +0x1f
+    0018..001a  move-object  v3, v4
+    001a..001e  check-cast  v3, Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;
+    001e..0024  invoke-virtual  {v5}, LX/0j2;->A05()LX/0mE;
+    0024..0026  move-result-object  v2
+    0026..002a  iget-object  v1, v5, LX/0j2;->A06:LX/0j1;
+    002a..002c  const/4  v0, #0x0
+    002c..0032  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0032..0036  iput-object  v2, v3, Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;->A00:LX/0mE;
+    0036..003a  iput-object  v1, v3, Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;->A01:LX/0j1;
+    003a..003e  iget-object  v0, v1, LX/0j1;->A01:LX/08q;
+    003e..0044  invoke-static  {v0}, LX/08q;->A00(LX/08q;)J
+    0044..0046  move-result-wide  v0
+    0046..004c  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    004c..004e  move-result-object  v0
+    004e..0052  iput-object  v0, v3, Lcom/whatsapp/infra/graphql/pando/BaseMexCallback;->A02:Ljava/lang/Long;
+    0052..0056  iget-object  v1, v5, LX/0j2;->A00:LX/0iQ;
+    0056..005c  invoke-virtual  {v5}, LX/0j2;->A05()LX/0mE;
+    005c..005e  move-result-object  v0
+    005e..0064  invoke-virtual  {v0}, LX/0mE;->A02()Ljava/lang/String;
+    0064..0066  move-result-object  v0
+    0066..006a  if-nez  v0, +0xb
+    006a..006e  new-instance  v0, LX/LI6;
+    006e..0074  invoke-direct  {v0, v1}, LX/LI6;-><init>(LX/0iQ;)V
+    0074..007a  invoke-interface  {v4, v0}, LX/0iZ;->Bx5(Ljava/lang/Throwable;)V
+    007a..007c  return-void
+    007c..0082  invoke-virtual  {v5}, LX/0j2;->A06()V
+    0082..0084  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A05(L)  # .registers 0
+    # full signature: LX/0j2;->A05()LX/0mE;
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+.method public A06(V)  # .registers 0
+    # full signature: LX/0j2;->A06()V
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+.method public A07(Z)  # .registers 2
+    # full signature: LX/0j2;->A07()Z
+    0000..0002  const/4  v0, #0x1
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method

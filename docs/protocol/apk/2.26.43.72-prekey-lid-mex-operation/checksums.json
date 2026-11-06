@@ -1,0 +1,34 @@
+{
+  "README.md": {
+    "bytes": 4473,
+    "sha256": "55d7030a15d464f0bc0c93d9e860a7535b66d68f3f8bb6a0c9667c9aa6bf33d6"
+  },
+  "alternate-handle.txt": {
+    "bytes": 18347,
+    "sha256": "de2cfba96d516546dfb1c31388ee0ef0a73a03425f7f9da83eaebc44b7941f1f"
+  },
+  "concrete-factory.txt": {
+    "bytes": 1570,
+    "sha256": "f07dc9882fd13038aef5f91410eb523869bcff8ccab7bc8b142f5fa21808018a"
+  },
+  "handle.txt": {
+    "bytes": 4325,
+    "sha256": "6b41b7023cbcfe4b1f320488decbd0703a86a79708df2a8ddcba6e09214b1f30"
+  },
+  "iq-handle.txt": {
+    "bytes": 8374,
+    "sha256": "d2ca1854ee74c858eb889aea4d607fff427d3802d35391941ed9a10e66d90ecd"
+  },
+  "operation-factory.txt": {
+    "bytes": 392,
+    "sha256": "e225e5f8cb5a763ce389c9b9224f30d4ee43d6806efe6a1f3c6cc552d161fa3b"
+  },
+  "operation.txt": {
+    "bytes": 10188,
+    "sha256": "08b8bade078ae0138b2e9ade8d94db935c7b6273274c9ecd1835de9a54ce29ae"
+  },
+  "timeout-refs.txt": {
+    "bytes": 1099,
+    "sha256": "70fed017f4850802ae18b91d137bfc4c2a369950c9c99e65c8764730901e2ec4"
+  }
+}

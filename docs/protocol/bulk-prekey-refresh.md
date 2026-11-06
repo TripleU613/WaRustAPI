@@ -191,3 +191,9 @@ A00 waits using inherited FfK.get() without a timeout for this null-timeout call
 **Confirmed static:** [exact field/caller census and full reset/cleanup methods](apk/2.26.43.72-prekey-lid-response-lifecycle/README.md) establish29 physical0p7.A00 references. Nonempty A0G follow-up reads clear response/error/maps before dispatch; empty reads return without clearing. A0U clears response/error/maps at executor drained/exception boundaries. Other identified writes install actual Gzg results. This closes the prior untraced existence of reset/cleanup, not a guarantee of clearing before every batch/request.
 
 **Unknown / unported:** effective serialization/aliases, per-batch lifecycle, late callback cancellation and correlation. No real stale-state race or restriction is established. Rust request-owned callback and uncertain-outcome rules remain; no shared response slot, retry or runtime behavior was added. No live operation.
+
+## Missing-LID MEX operation ownership and nested send timeout (2026-11-06)
+
+**Confirmed static:** [factory/default/handle and transport selection exports](apk/2.26.43.72-prekey-lid-mex-operation/README.md) show HSo creates a fresh0iq with32000ms timeout and defaultA03=false, selecting0j3. Its start-and-returnAQY API discards the operation handle; the selected outer wait does not cancel it.0j3 then branches on transport: non-Pando calls0Sf.A0W with the copied32000ms, while Pando dispatches separately. The outer128000ms future wait and the separate classic usync128000ms send argument do not define this MEX transport's universal lifetime.
+
+**Unknown / unported:** effective Pando choice/deadline/cancellation, IQ callback expiry/removal, late callback suppression and mapping adoption. No native race or restriction is proven; no Rust deadline, callback or retry change was made. Offline research only.
