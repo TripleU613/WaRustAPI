@@ -1,0 +1,11 @@
+
+# class: LX/1rB;
+# extends: LX/1rA;
+
+.method public <init>(VL)  # .registers 2
+    # full signature: LX/1rB;-><init>(LX/1lZ;)V
+    0000..0006  invoke-direct  {v0}, LX/1rA;-><init>()V
+    0006..000a  iput-object  v1, v0, LX/1rB;->A00:LX/1lZ;
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,51 @@
+# Selected DEX excerpt; not a complete method.
+
+# class: LX/1rA;
+# extends: Ljava/lang/Object;
+
+.method public A03(VL)  # .registers 13
+    # full signature: LX/1rA;->A03(LX/1k2;)V
+    0576..057a  instance-of  v0, v11, LX/1rB;
+    057a..057e  if-eqz  v0, -0x281
+    057e..0580  move-object  v5, v11
+    0580..0584  check-cast  v5, LX/1rB;
+    0584..058a  invoke-interface  {v12}, LX/1k2;->Ay8()LX/0Tp;
+    058a..058c  move-result-object  v3
+    058c..058e  const/4  v0, #0x0
+    058e..0594  invoke-virtual  {v3, v0}, LX/0Tp;->A0E(I)LX/0Tp;
+    0594..0596  move-result-object  v2
+    0596..059a  const-class  v1, Lcom/whatsapp/infra/core/jid/Jid;
+    059a..059e  const-string  v0, "from"
+    059e..05a4  invoke-virtual  {v3, v1, v0}, LX/0Tp;->A0A(Ljava/lang/Class;Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    05a4..05a6  move-result-object  v0
+    05a6..05ac  invoke-static  {v0}, LX/0Dn;->A00(Lcom/whatsapp/infra/core/jid/Jid;)LX/0DY;
+    05ac..05ae  move-result-object  v4
+    05ae..05b2  const-string  v0, "participant"
+    05b2..05b8  invoke-virtual  {v3, v1, v0}, LX/0Tp;->A0A(Ljava/lang/Class;Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    05b8..05ba  move-result-object  v0
+    05ba..05c0  invoke-static  {v0}, LX/0Dn;->A00(Lcom/whatsapp/infra/core/jid/Jid;)LX/0DY;
+    05c0..05c2  move-result-object  v3
+    05c2..05c6  const-string  v0, "composing"
+    05c6..05cc  invoke-static  {v2, v0}, LX/0Tp;->A02(LX/0Tp;Ljava/lang/String;)Z
+    05cc..05ce  move-result  v0
+    05ce..05d2  if-eqz  v0, +0x15
+    05d2..05d6  const-string  v1, "media"
+    05d6..05d8  const/4  v0, #0x0
+    05d8..05de  invoke-virtual  {v2, v1, v0}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    05de..05e0  move-result-object  v2
+    05e0..05e4  iget-object  v1, v5, LX/1rB;->A00:LX/1lZ;
+    05e4..05e8  sget-object  v0, Lcom/whatsapp/infra/core/jid/UserJid;->Companion:LX/0Dj;
+    05e8..05ee  invoke-static  {v3}, LX/0Dj;->A00(Lcom/whatsapp/infra/core/jid/Jid;)Lcom/whatsapp/infra/core/jid/UserJid;
+    05ee..05f0  move-result-object  v0
+    05f0..05f6  invoke-virtual  {v1, v4, v0, v2}, LX/1lZ;->A0w(LX/0DY;Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;)V
+    05f6..05f8  return-void
+    05f8..05fc  const-string  v0, "paused"
+    05fc..0602  invoke-static  {v2, v0}, LX/0Tp;->A02(LX/0Tp;Ljava/lang/String;)Z
+    0602..0604  move-result  v0
+    0604..0608  if-eqz  v0, -0x2c6
+    0608..060c  iget-object  v1, v5, LX/1rB;->A00:LX/1lZ;
+    060c..0610  sget-object  v0, Lcom/whatsapp/infra/core/jid/UserJid;->Companion:LX/0Dj;
+    0610..0616  invoke-static  {v3}, LX/0Dj;->A00(Lcom/whatsapp/infra/core/jid/Jid;)Lcom/whatsapp/infra/core/jid/UserJid;
+    0616..0618  move-result-object  v0
+    0618..061e  invoke-virtual  {v1, v4, v0}, LX/1lZ;->A0v(LX/0DY;Lcom/whatsapp/infra/core/jid/UserJid;)V
+    061e..0620  return-void

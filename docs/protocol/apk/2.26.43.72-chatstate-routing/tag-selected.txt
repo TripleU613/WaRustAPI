@@ -1,0 +1,13 @@
+# Selected DEX excerpt; not a complete method.
+
+# class: LX/1rA;
+# extends: Ljava/lang/Object;
+
+.method public A02(L)  # .registers 4
+    # full signature: LX/1rA;->A02()[Ljava/lang/String;
+    0102..0106  instance-of  v0, v3, LX/1rB;
+    0106..010a  if-eqz  v0, +0x9
+    010a..010c  const/4  v0, #0x1
+    010c..0110  new-array  v2, v0, [Ljava/lang/String;
+    0110..0114  const-string  v1, "chatstate"
+    0114..0118  goto/16  -0x81

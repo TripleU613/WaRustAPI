@@ -1,0 +1,22 @@
+
+# class: LX/1lZ;
+# extends: Ljava/lang/Object;
+
+.method public A0D(LLLI)  # .registers 7
+    # full signature: LX/1lZ;->A0D(LX/0DY;Lcom/whatsapp/infra/core/jid/UserJid;I)Landroid/os/Message;
+    0000..0004  new-instance  v3, Landroid/os/Bundle;
+    0004..000a  invoke-direct  {v3}, Landroid/os/Bundle;-><init>()V
+    000a..000e  const-string  v0, "jid"
+    000e..0014  invoke-static  {v3, v4, v0}, LX/1lZ;->A0g(Landroid/os/Bundle;Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;)V
+    0014..0018  const-string  v0, "author"
+    0018..001e  invoke-static  {v3, v5, v0}, LX/1lZ;->A0g(Landroid/os/Bundle;Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;)V
+    001e..0022  const-string  v0, "media"
+    0022..0028  invoke-virtual  {v3, v0, v6}, Landroid/os/BaseBundle;->putInt(Ljava/lang/String;I)V
+    0028..002a  const/4  v2, #0x0
+    002a..002e  const/16  v1, #0x14
+    002e..0030  const/4  v0, #0x0
+    0030..0036  invoke-static  {v0, v2, v1, v2, v3}, Landroid/os/Message;->obtain(Landroid/os/Handler;IIILjava/lang/Object;)Landroid/os/Message;
+    0036..0038  move-result-object  v0
+    0038..003a  return-object  v0
+    # exception table: 0 try range(s)
+.end method

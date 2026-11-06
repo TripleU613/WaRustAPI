@@ -234,3 +234,23 @@ No extra network request, ACK, automatic timer traffic or live operation.
 Current0Tj.A03/A04 additionally confirm smax:any token wrappers merge into a
 plain tctoken byte child. The existing Rust subscription wire form needs no
 change; other merge branches and complete token-issuance policy remain separate.
+
+## Incoming chatstate routing (2026-11-06)
+
+**Confirmed static / implemented offline:** [current1rB reader and dispatch](apk/2.26.43.72-chatstate-routing/README.md)
+select child0, unwrap device addresses through0Dn.A00, cast participant to
+UserJid and enqueue Android messages20/21. Reused current device/type evidence
+binds ordinary PN/LID devices17/19; class/factory mapping is not inferred from
+arbitrary suffixes. Rust previously retained these device-qualified addresses
+and known non-user participants in ephemeral metadata. Supported PN/LID now
+unwrap to plain user metadata; group/server-only PN/LID authors become None,
+and a supported server-only from is omitted because the metadata needs a chat.
+Original Node and stored identities are unchanged. Incoming unwrapping does not
+loosen the outbound device-target refusal.
+
+Red/green regression covers PN/LID device/agent/AD0/0, group/server authors,
+valid group chat, untouched input and first-child refusal despite later
+composing. Other JID domains retain their prior metadata behavior pending full
+class mapping; this is not a complete native admission/trust validator. Native
+null-chat downstream handling and event consumer policy remain untraced.
+No journal/state adoption, ACK, refresh, request, replay or live operation.

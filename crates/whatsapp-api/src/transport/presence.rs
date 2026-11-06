@@ -311,10 +311,27 @@ pub fn held_tctoken(store: &crate::store::ProtocolStore, peer: &Jid) -> Result<O
 pub struct IncomingChatState {
     /// The chat it happened in: a person, or a group.
     pub chat: Jid,
-    /// Who is typing, in a group; `None` in a direct chat, where it is `chat`.
+    /// Supplied user participant, with supported PN/LID devices unwrapped.
+    /// Missing/known non-user authors become None; it is not inferred from chat.
     pub participant: Option<Jid>,
     /// What they are doing.
     pub state: ChatState,
+}
+
+// APK43.72 1rA.A03 ->0Dn.A00 unwraps device.userJid before dispatch.
+// The reused type census binds PN/LID devices17/19. Other JID families keep
+// their existing metadata representation pending complete class mapping.
+// docs/protocol/apk/2.26.43.72-chatstate-routing/README.md.
+fn incoming_chatstate_identity(jid: Jid) -> Option<Jid> {
+    if matches!(jid.server, Server::User | Server::Lid) {
+        if jid.user.is_empty() {
+            return None;
+        }
+        if jid.is_ad() {
+            return Some(jid.to_non_ad());
+        }
+    }
+    Some(jid)
 }
 
 /// Read a `<chatstate>`; `None` for anything else, including a child this
@@ -331,7 +348,7 @@ pub fn parse_chatstate(node: &Node) -> Option<IncomingChatState> {
                 .or_else(|| Jid::parse(v.as_text()?).ok())
         })
     };
-    let chat = jid("from")?;
+    let chat = incoming_chatstate_identity(jid("from")?)?;
     let child = node.child_nodes().first()?;
     let state = match child.description.as_str() {
         "composing" => match child.get_attr("media").and_then(|v| v.as_text()) {
@@ -343,7 +360,15 @@ pub fn parse_chatstate(node: &Node) -> Option<IncomingChatState> {
     };
     Some(IncomingChatState {
         chat,
-        participant: jid("participant"),
+        // 0Dj.A00 retains UserJid only after device-to-chat conversion.
+        // Known group and server-only PN/LID authors cannot pass that cast.
+        participant: jid("participant").and_then(|author| {
+            if author.server == Server::Group {
+                None
+            } else {
+                incoming_chatstate_identity(author)
+            }
+        }),
         state,
     })
 }
@@ -401,6 +426,48 @@ mod tests {
         }
         assert!(subscribe(&peer, Some(&Jid::new("", Server::Group).unwrap()), None).is_err());
         assert!(subscribe(&peer, None, Some(&[7; 20])).is_ok());
+    }
+
+    #[test]
+    fn incoming_chatstate_unwraps_pn_lid_devices_and_excludes_nonuser_authors() {
+        let group = Jid::parse("120363000000000001@g.us").unwrap();
+        for server in [Server::User, Server::Lid] {
+            for (agent, device) in [(0, 2), (1, 0), (0, 0)] {
+                let peer = Jid::new_ad("15551234567", agent, device, server.clone()).unwrap();
+                let node = Node::new("chatstate")
+                    .attr("from", peer.clone())
+                    .children(vec![Node::new("composing").attr("media", "audio")]);
+                let parsed = parse_chatstate(&node).unwrap();
+                assert_eq!(parsed.chat, peer.to_non_ad());
+                assert_eq!(node.get_attr("from").and_then(|v| v.as_jid()), Some(&peer));
+                assert_eq!(parsed.state, ChatState::Recording);
+                let node = Node::new("chatstate")
+                    .attr("from", group.clone())
+                    .attr("participant", peer.clone())
+                    .children(vec![Node::new("paused")]);
+                let parsed = parse_chatstate(&node).unwrap();
+                assert_eq!(parsed.chat, group);
+                assert_eq!(parsed.participant, Some(peer.to_non_ad()));
+            }
+        }
+        for author in [group.clone(), Jid::parse("s.whatsapp.net").unwrap()] {
+            let node = Node::new("chatstate")
+                .attr("from", group.clone())
+                .attr("participant", author)
+                .children(vec![Node::new("composing")]);
+            assert_eq!(parse_chatstate(&node).unwrap().participant, None);
+        }
+        let node = Node::new("chatstate")
+            .attr("from", Jid::parse("s.whatsapp.net").unwrap())
+            .children(vec![Node::new("paused")]);
+        assert!(parse_chatstate(&node).is_none());
+        let node = Node::new("chatstate")
+            .attr("from", group)
+            .children(vec![Node::new("metadata"), Node::new("composing")]);
+        assert!(
+            parse_chatstate(&node).is_none(),
+            "native first-child selection remains"
+        );
     }
 
     /// `LX/0y0->A00` case 3: `name` then `type="available"`, nothing else.

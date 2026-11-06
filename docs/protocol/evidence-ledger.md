@@ -1,3 +1,10 @@
+2026-11-06 — **Corrected incoming PN/LID typing address projection.**
+Device-qualified from/participant now unwrap to user metadata; known group and
+server-only authors cannot appear as the supplied user. Original frames and
+saved identities stay unchanged. Other families remain an explicit open audit.
+[Current reader, regression and limits](presence.md#incoming-chatstate-routing-2026-11-06).
+No ACK, automatic traffic or live account operation.
+
 2026-11-06 — **Refused unsupported presence/typing targets before construction.**
 Empty-user server addresses, agent/device metadata (including explicit AD0/0)
 and malformed group contexts no longer pass the supported outbound APIs.

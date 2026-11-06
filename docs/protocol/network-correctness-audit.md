@@ -20,7 +20,7 @@ A field or URL existing in an APK does not establish a mandatory request.
 | Direct/group message, server ACK, receipts and retry | transport/{messaging,receipts,retry_answer,group_receipts,outgoing} | Existing durable reservations; retry counts 1/2 corrected in previous batch. Higher counts, base-key checks and complete routing remain open; see retry-enc-count.md. |
 | Devices/identity/prekeys/key queries | transport/{devices,peer_keys,identity_query,prekeys,device_key_batches} | Existing signed baseline and bounded query machinery; conditional fields, teardown and all negative responses require continuing current-build review. |
 | Media upload/download and connection metadata | transport/{media,image_upload,image_download,voice_note} | [Media outcome persistence and pinned lifetime readers](media-network-outcomes.md) corrected/traced offline; both lifetimes are required Java longs, while full deadline/refresh policy remains open; authenticate metadata, URL/host selection, headers, expiry, hashes, bounded errors and request replay remain in the current-build queue. No endpoint-literal scan can establish required traffic. |
-| Groups/status/presence | transport/{groups,group_send,status_receipts,presence} | [Current presence targets and token merge](presence.md#current-target-types-and-outbound-guard-2026-11-06) verified; unsupported target bypass fixed. Upstream typing activity/cancel, effective producer gates and full notification-to-refresh ordering remain open. Existing group/status ports are partial. |
+| Groups/status/presence | transport/{groups,group_send,status_receipts,presence} | [Current presence targets and token merge](presence.md#current-target-types-and-outbound-guard-2026-11-06) verified; unsupported target bypass and incoming PN/LID metadata projection fixed. Other incoming JID families and upstream typing activity/cancel, effective producer gates and full notification-to-refresh ordering remain open. Existing group/status ports are partial. |
 | Account/profile/contact actions | transport/{actions,about,profile_picture,blocklist,two_factor,report,contacts} | [Producer-specific action callbacks](chat-actions.md); photo outer/error selection and report32s callback ownership corrected offline. Full payload/native-state adoption, report optional metadata and complete per-producer response matrices remain open. Generic Ok is not feature acceptance. |
 | App state/MEX/settings/history | transport/{app_state_sync,mex,chat_settings,history_notice} | Queue conditional startup dependencies, sync cursors, mutation acknowledgements and persistence. Mandatory startup status remains unproven. |
 | Optional services/telemetry/third parties | versioned APK evidence, ownership not yet complete | Queue trace callers and runtime gates before classifying required/conditional/optional. Never invent events, device provenance or values. |
@@ -4809,3 +4809,23 @@ No extra network request, ACK, automatic timer traffic or live operation.
 Current0Tj.A03/A04 additionally confirm smax:any token wrappers merge into a
 plain tctoken byte child. The existing Rust subscription wire form needs no
 change; other merge branches and complete token-issuance policy remain separate.
+
+## Incoming chatstate routing (2026-11-06)
+
+**Confirmed static / implemented offline:** [current1rB reader and dispatch](apk/2.26.43.72-chatstate-routing/README.md)
+select child0, unwrap device addresses through0Dn.A00, cast participant to
+UserJid and enqueue Android messages20/21. Reused current device/type evidence
+binds ordinary PN/LID devices17/19; class/factory mapping is not inferred from
+arbitrary suffixes. Rust previously retained these device-qualified addresses
+and known non-user participants in ephemeral metadata. Supported PN/LID now
+unwrap to plain user metadata; group/server-only PN/LID authors become None,
+and a supported server-only from is omitted because the metadata needs a chat.
+Original Node and stored identities are unchanged. Incoming unwrapping does not
+loosen the outbound device-target refusal.
+
+Red/green regression covers PN/LID device/agent/AD0/0, group/server authors,
+valid group chat, untouched input and first-child refusal despite later
+composing. Other JID domains retain their prior metadata behavior pending full
+class mapping; this is not a complete native admission/trust validator. Native
+null-chat downstream handling and event consumer policy remain untraced.
+No journal/state adoption, ACK, refresh, request, replay or live operation.

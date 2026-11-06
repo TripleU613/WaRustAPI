@@ -1,0 +1,38 @@
+{
+  "README.md": {
+    "bytes": 6855,
+    "sha256": "462485b7ca920fc8b6382e6f203f6479f21349b0ac0b5b75f5aa8a903ca63b1a"
+  },
+  "composing-dispatch.txt": {
+    "bytes": 1837,
+    "sha256": "1d0363024fa93b926b07fed4eaf6dcd0996b15b84f1053a853ed8b217c409546"
+  },
+  "composing-event.txt": {
+    "bytes": 1173,
+    "sha256": "a83d0225fcd0827f1e7195d21a0566fb18479b699f7e4724dd3e4701c3f61677"
+  },
+  "paused-dispatch.txt": {
+    "bytes": 1415,
+    "sha256": "fbf7481f8829aee9a37abe8980925b405c6bf23c02979c67be72a769597ebb6d"
+  },
+  "paused-event.txt": {
+    "bytes": 1029,
+    "sha256": "91dc398e0e259c66c461eb7f1f38be19c2b1bc28dd6798a635d38caa2b5aa714"
+  },
+  "reader-init.txt": {
+    "bytes": 320,
+    "sha256": "b9720317a2719f171cd7f3fb5e3f130f9959aee69c9c9478a6f80cbdf9b2968a"
+  },
+  "reader-selected.txt": {
+    "bytes": 2857,
+    "sha256": "73eb10921800795e0f1b5e41aaae2b43f6266834b2693b763cb71ee6bf6258ac"
+  },
+  "tag-selected.txt": {
+    "bytes": 434,
+    "sha256": "858be486530f18b84365e9cf39df3e9a3622763529d324714a916d6ecca4e6f5"
+  },
+  "user-cast.txt": {
+    "bytes": 525,
+    "sha256": "d1f31deb8d5de5bbaa4b414c5e8ef4ad1ce524ada34c1ba94d359814088ea4d5"
+  }
+}

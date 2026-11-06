@@ -1,6 +1,13 @@
 {
+  "x-incoming-chatstate-address-projection": {
+    "x-cli": "whatsapp-cli lab-transport --receive ephemeral display; xtask apk-smali <apk> --class <class> --method <method> --signatures --exceptions",
+    "x-transport": "library presence::parse_chatstate; comparison CLI metadata only",
+    "x-live": false,
+    "description": "Pinned APK43.72 1rA/1rB selects child0, applies0Dn.A00 device.userJid projection to from/participant, then0Dj UserJid cast to author.1lZ queues Android messages20/21. Supported PN/LID device/agent/AD0/0 addresses now unwrap in incoming metadata; group and empty-user PN/LID authors become None, empty-user PN/LID from cannot form required chat metadata. Original Node/stored identities unchanged. Other domains retain prior metadata representation pending complete class mapping; no full trust/admission validator, native null-chat consumer policy or state projection is claimed. First-child/audio mapping and outbound device refusal remain. No ACK, request, automatic typing, journal adoption, retry/HTTP route or live operation.",
+    "evidence": "docs/protocol/apk/2.26.43.72-chatstate-routing/README.md"
+  },
   "x-presence-primary-target-validation": {
-    "x-cli": "whatsapp-cli listen --typing / --subscribe (validated before connecting); xtask apk-smali <apk> --class <class> --method <method> --signatures --exceptions",
+    "x-cli": "whatsapp-cli lab-transport --typing / --subscribe (validated before connecting); xtask apk-smali <apk> --class <class> --method <method> --signatures --exceptions",
     "x-transport": "experimental outbound presence/chatstate builder validation",
     "x-live": false,
     "description": "Pinned APK43.72 DEc/DEd writers use UserJid/1bc/2p3 target classes;1bc is GroupJid/g.us and DeviceJid/server-only0mL extend Jid separately. Supported chat_target/chatstate/subscribe and group context now require nonempty user and !is_ad alongside existing server restrictions, rejecting agent-only/device-only and explicit AD0/0 before node construction. CLI validation occurs before transport::run. No stripping/global JID parse or saved-state change. Native type assertion is diagnostic, not a proven server refusal or ban rule. Current subscription and2500/>10000 event-driven pause/suppression gates retained as evidence; effective gate/upstream activity/bot/interop/scheduler recovery remain unported. Existing people-only subscribe subset and wire/token behavior preserved. No heartbeat, extra request/ACK/timer, HTTP route or live operation.",
