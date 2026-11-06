@@ -1,0 +1,16 @@
+classes11.dex  LX/M5I;->A00(LLLLLLLLLLLLLLL)
+  invoke dex byte offset: 0x47724e
+classes11.dex  LX/M5T;->A00(LLLLJ)
+  invoke dex byte offset: 0x479494
+classes11.dex  LX/MFB;->A00(LLLLLIZZ)
+  invoke dex byte offset: 0x4b0046
+classes11.dex  LX/MFB;->A01(LLLLLI)
+  invoke dex byte offset: 0x4b00cc
+classes11.dex  LX/Mtt;->A05(L)
+  invoke dex byte offset: 0x6ba9e2
+classes11.dex  Lcom/whatsapp/media/upload/newinfra/plugin/BaseMediaUploadPlugin;->A09(LL)
+  invoke dex byte offset: 0x6d03ec
+classes11.dex  Lcom/whatsapp/media/upload/newinfra/plugin/BaseMediaUploadPlugin;->A09(LL)
+  invoke dex byte offset: 0x6d056a
+classes6.dex  LX/ACp;->A01(LLLLLLLLLLZ)
+  invoke dex byte offset: 0x4a8e08

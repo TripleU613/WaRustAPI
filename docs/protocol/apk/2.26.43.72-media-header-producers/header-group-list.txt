@@ -1,0 +1,15 @@
+
+# class: LX/2LF;
+# extends: Ljava/lang/Object;
+
+.method public A0I(LLL)  # .registers 3
+    # full signature: LX/2LF;->A0I(Ljava/lang/Object;Ljava/util/AbstractMap;)Ljava/lang/Object;
+    0000..0006  invoke-virtual  {v2, v1}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    0006..0008  move-result-object  v0
+    0008..000c  if-nez  v0, +0xa
+    000c..0010  new-instance  v0, Ljava/util/ArrayList;
+    0010..0016  invoke-direct  {v0}, Ljava/util/ArrayList;-><init>()V
+    0016..001c  invoke-interface  {v2, v1, v0}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    001c..001e  return-object  v0
+    # exception table: 0 try range(s)
+.end method

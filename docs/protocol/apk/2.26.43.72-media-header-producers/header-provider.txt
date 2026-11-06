@@ -1,0 +1,81 @@
+
+# class: LX/845;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 4
+    # full signature: LX/845;-><init>()V
+    0000..0006  invoke-direct  {v3}, Ljava/lang/Object;-><init>()V
+    0006..000a  const/16  v0, #0x1da8
+    000a..0010  invoke-static  {v0}, LX/05W;->A02(I)Ljava/util/Set;
+    0010..0012  move-result-object  v2
+    0012..0016  const/16  v1, #0x8
+    0016..001a  new-instance  v0, LX/3ff;
+    001a..0020  invoke-direct  {v0, v1}, LX/3ff;-><init>(I)V
+    0020..0026  invoke-static  {v2, v0}, LX/845;->A00(Ljava/util/Set;Lkotlin/jvm/functions/Function1;)Lcom/google/common/collect/ImmutableMap;
+    0026..0028  move-result-object  v0
+    0028..002c  iput-object  v0, v3, LX/845;->A00:Lcom/google/common/collect/ImmutableMap;
+    002c..0030  const/16  v1, #0x9
+    0030..0034  new-instance  v0, LX/3ff;
+    0034..003a  invoke-direct  {v0, v1}, LX/3ff;-><init>(I)V
+    003a..0040  invoke-static  {v2, v0}, LX/845;->A00(Ljava/util/Set;Lkotlin/jvm/functions/Function1;)Lcom/google/common/collect/ImmutableMap;
+    0040..0042  move-result-object  v0
+    0042..0046  iput-object  v0, v3, LX/845;->A01:Lcom/google/common/collect/ImmutableMap;
+    0046..0048  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(LLL)  # .registers 7
+    # full signature: LX/845;->A00(Ljava/util/Set;Lkotlin/jvm/functions/Function1;)Lcom/google/common/collect/ImmutableMap;
+    0000..0006  invoke-static  {}, LX/1Xl;->A1D()Ljava/util/LinkedHashMap;
+    0006..0008  move-result-object  v3
+    0008..000e  invoke-interface  {v5}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    000e..0010  move-result-object  v2
+    0010..0016  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    0016..0018  move-result  v0
+    0018..001c  if-eqz  v0, +0x10
+    001c..0022  invoke-interface  {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0022..0024  move-result-object  v1
+    0024..0028  const-string  v0, "newsletter"
+    0028..002e  invoke-static  {v0, v3}, LX/2LF;->A0I(Ljava/lang/Object;Ljava/util/AbstractMap;)Ljava/lang/Object;
+    002e..0030  move-result-object  v0
+    0030..0036  invoke-static  {v0, v1}, LX/6oe;->A1Q(Ljava/lang/Object;Ljava/lang/Object;)V
+    0036..0038  goto  -0x13
+    0038..003e  invoke-static  {v3}, LX/2LE;->A0d(Ljava/util/Map;)Ljava/util/LinkedHashMap;
+    003e..0040  move-result-object  v5
+    0040..0046  invoke-static  {v3}, LX/2LC;->A18(Ljava/util/Map;)Ljava/util/Iterator;
+    0046..0048  move-result-object  v4
+    0048..004e  invoke-interface  {v4}, Ljava/util/Iterator;->hasNext()Z
+    004e..0050  move-result  v0
+    0050..0054  if-eqz  v0, +0x35
+    0054..005a  invoke-static  {v4}, LX/1Xl;->A1E(Ljava/util/Iterator;)Ljava/util/Map$Entry;
+    005a..005c  move-result-object  v0
+    005c..0062  invoke-interface  {v0}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+    0062..0064  move-result-object  v3
+    0064..006a  invoke-interface  {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+    006a..006c  move-result-object  v0
+    006c..0070  check-cast  v0, Ljava/util/List;
+    0070..0076  invoke-static  {}, LX/05p;->A0K()LX/05q;
+    0076..0078  move-result-object  v2
+    0078..007e  invoke-interface  {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    007e..0080  move-result-object  v1
+    0080..0086  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    0086..0088  move-result  v0
+    0088..008c  if-eqz  v0, +0x11
+    008c..0092  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0092..0094  move-result-object  v0
+    0094..009a  invoke-interface  {v6, v0}, Lkotlin/jvm/functions/Function1;->invoke(Ljava/lang/Object;)Ljava/lang/Object;
+    009a..009c  move-result-object  v0
+    009c..00a0  check-cast  v0, Ljava/util/Map;
+    00a0..00a6  invoke-static  {v2, v0}, LX/05p;->A08(Ljava/util/Map;Ljava/util/Map;)Ljava/util/LinkedHashMap;
+    00a6..00a8  move-result-object  v2
+    00a8..00aa  goto  -0x14
+    00aa..00b0  invoke-static  {v2}, Lcom/google/common/collect/ImmutableMap;->copyOf(Ljava/util/Map;)Lcom/google/common/collect/ImmutableMap;
+    00b0..00b2  move-result-object  v0
+    00b2..00b8  invoke-interface  {v5, v3, v0}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    00b8..00ba  goto  -0x38
+    00ba..00c0  invoke-static  {v5}, Lcom/google/common/collect/ImmutableMap;->copyOf(Ljava/util/Map;)Lcom/google/common/collect/ImmutableMap;
+    00c0..00c2  move-result-object  v0
+    00c2..00c8  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    00c8..00ca  return-object  v0
+    # exception table: 0 try range(s)
+.end method

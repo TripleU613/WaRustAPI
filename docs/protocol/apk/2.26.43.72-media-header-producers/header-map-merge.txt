@@ -1,0 +1,16 @@
+
+# class: LX/05p;
+# extends: LX/05o;
+
+.method public A08(LLL)  # .registers 3
+    # full signature: LX/05p;->A08(Ljava/util/Map;Ljava/util/Map;)Ljava/util/LinkedHashMap;
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v1, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  const/4  v0, #0x1
+    000a..0010  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0010..0014  new-instance  v0, Ljava/util/LinkedHashMap;
+    0014..001a  invoke-direct  {v0, v1}, Ljava/util/LinkedHashMap;-><init>(Ljava/util/Map;)V
+    001a..0020  invoke-virtual  {v0, v2}, Ljava/util/AbstractMap;->putAll(Ljava/util/Map;)V
+    0020..0022  return-object  v0
+    # exception table: 0 try range(s)
+.end method

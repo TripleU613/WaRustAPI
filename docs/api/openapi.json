@@ -18432,5 +18432,13 @@
     "x-library": [],
     "description": "Local tooling repair and static research only: persisted Codex REA JAVA_HOME now selects already installed Temurin21, after private backup and unchanged-other-settings comparison. Fresh REA6.5.0 CLI with existing JADX0.7.1 JAR successfully returns complete pinned constructor, exact class search and provider resolver Evidence. Current MCP connection still uses old environment; no restart or live reload claimed. Provider-cache field/accessor follow-through shows selected optional initialization, not proof of reset/account switch or all concurrency. No product command, HTTP route, protocol request, runtime timer, retry, durable reset or live operation changed.",
     "evidence": "docs/protocol/apk-analysis.md#rea-android-java-path-repair-and-cli-proof-2026-11-06"
-  }
+  },
+  "x-media-header-producer-research": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Static inspection only: newsletter-key provider aggregation, descriptor-over-default merge precedence and standard voice descriptor map preservation. No new product route, mandatory header, runtime behavior or live validation. Original standard map producer and JAT defaults remain unknown.",
+    "evidence": "docs/protocol/media-network-outcomes.md#media-header-producer-scope-2026-11-06"
+}
 }

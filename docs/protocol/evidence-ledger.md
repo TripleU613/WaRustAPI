@@ -1,3 +1,10 @@
+2026-11-06 — **Media header producer scope narrowed.**
+
+Provider aggregation keys only newsletter; descriptor maps override defaults.
+Standard voice descriptor copying preserves its prior map, so MetaAI null maps
+are not ordinary-upload proof. [Evidence, exact provenance and open producers](media-network-outcomes.md#media-header-producer-scope-2026-11-06).
+Static research only; no Rust header change or live operation.
+
 2026-11-05 — **Outgoing retry error domains/eligibility mapped.**
 
 Crypto status, internal failure kind and wire error are distinct; selected

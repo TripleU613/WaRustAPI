@@ -1,3 +1,10 @@
+2026-11-06 — **Media header producer scope narrowed.**
+
+Provider aggregation keys only newsletter; descriptor maps override defaults.
+Standard voice descriptor copying preserves its prior map, so MetaAI null maps
+are not ordinary-upload proof. [Evidence, exact provenance and open producers](docs/protocol/media-network-outcomes.md#media-header-producer-scope-2026-11-06).
+Static research only; no Rust header change or live operation.
+
 REA Android works in a fresh CLI after a backed-up, REA-only Java-path correction to the installed Temurin21 runtime. [Complete pinned-APK Evidence and provider-cache initialization trace](docs/protocol/apk-analysis.md#rea-android-java-path-repair-and-cli-proof-2026-11-06). The running MCP session still retains the old environment; no shared process was restarted. No Rust protocol, timer, retry or live-account behavior changed.
 
 Full-key lifecycle trace now separates Dxh no-op reader cleanup from bulk FfK completion/failure, with exact failure callers and conditional shared-provider0x90 binding. [Pinned sources and cache/account-switch limits](docs/protocol/retry-answers.md#full-key-cleanup-and-future-failure-are-separate-2026-11-06). Research only: no inferred32s full-key timer, retry or live operation. REA Android call remains blocked by its configured missing Java21 executable; DEX fallback used.

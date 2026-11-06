@@ -1,0 +1,38 @@
+{
+  "README.md": {
+    "bytes": 3366,
+    "sha256": "a7a8f6cb1b82071378109ab66a9db6acaf175968fe9c7d9e257ad9714a7f3810"
+  },
+  "header-descriptor-callers.txt": {
+    "bytes": 685,
+    "sha256": "970114fe7aec03e73331c9b76badbac1473400de5fcaa90153e3fedd61c58f71"
+  },
+  "header-descriptor-constructor.txt": {
+    "bytes": 2950,
+    "sha256": "589c87ed88e0bd77c73eb6b04dac82d672e28593c67624a3cdcb7e4408231ebd"
+  },
+  "header-group-add.txt": {
+    "bytes": 377,
+    "sha256": "d7a74172ca2584f44a707094139138dae50fde77c0c9049783598b49d7e84b01"
+  },
+  "header-group-list.txt": {
+    "bytes": 701,
+    "sha256": "7d94d9676a2c97d8778b1831c801992e55dcd64e8a6a4aadeeb0f498ae9d717f"
+  },
+  "header-map-merge.txt": {
+    "bytes": 719,
+    "sha256": "23652a333142ba3c9eeb0d427795575014010114b36376a0911e1d9a198dc602"
+  },
+  "header-map-writes.txt": {
+    "bytes": 108,
+    "sha256": "56a334a5826b1840895116b2a1cbd253caba8ce6f8b2a4ba9179da59ff6bf453"
+  },
+  "header-provider.txt": {
+    "bytes": 4622,
+    "sha256": "ff31fd9518eaa4f9176489737257486726f332c3473f98443981a0b2f6bbba6c"
+  },
+  "standard-descriptor.txt": {
+    "bytes": 7143,
+    "sha256": "73f89089c2136b078b4ee5dd729d262c8fdcb689efad5bf19ee0449ec4084007"
+  }
+}

@@ -654,3 +654,18 @@ An expired-before-write control makes the peer observe EOF without a request
 record. Existing prewrite-deadline controls cover no timer restart after write.
 These are synthetic encrypted exchanges, not live WhatsApp account traffic.
 No durable reset, throttle bypass, upload, automatic query or replay is added.
+
+## Media header producer scope 2026-11-06
+
+**Confirmed selected static:** pinned43.72 MvM.A02 merges provider defaults
+before descriptor headers; descriptor entries override matching keys.845.A00
+aggregates its injected providers exclusively under newsletter, so these defaults
+are not established as ordinary image/PTT requirements. Standard voice-path
+Mtt.A05 copies the existing descriptor map even when updating its kind; null-map
+MetaAI branches do not prove standard uploads omit extra headers.
+[Complete checked DEX, two complete REA records and reproduction](apk/2.26.43.72-media-header-producers/README.md).
+
+**Unknown:** original standard descriptor's map producer, effective newsletter
+providers, all constructor paths and JAT platform defaults. No demonstrated
+missing universal header, Rust behavior change or live acceptance claim. Next:
+trace the original MJe.A02 descriptor upstream without assuming it is empty.
