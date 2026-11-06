@@ -1,3 +1,5 @@
+Malformed ACK numeric errors now stop normal actor/CLI stateful receive and captured waits after preserving evidence, matching the selected pinned reader exit. Pending work stays uncertain; no generated ACK response or automatic reconnect. [Native routing and limits](docs/protocol/message-ack.md#malformed-ack-consumes-the-receive-epoch-after-capture-2026-11-06). Offline only.
+
 Malformed/out-of-i32 root ACK errors now preserve uncertain state across direct, distribution, receipt and CLI classification instead of becoming ordinary failures. Valid signed/Unicode errors retain prior behavior. [Pinned parser/catch evidence, tests and remaining scope](docs/protocol/message-ack.md#integral-error-admission-before-ordinary-ack-outcomes-2026-11-06). Offline only.
 
 Receipt ACK numeric459 now preserves single/batched reservations instead of recording an ordinary refusal, matching the pinned pre-class auth-challenge branch. [Regression, source and open recovery boundary](docs/protocol/receipt-ack-special.md#current-auth-challenge-diversion-precedes-receipt-settlement-2026-11-06). Offline only; no challenge bypass or replay.

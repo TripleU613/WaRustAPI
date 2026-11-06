@@ -17941,5 +17941,19 @@
   ],
   "description": "Root ACK errors require supported signed32-bit Java decimal grammar before ordinary outcome classification. Malformed/nontext/out-of-range errors return Unrelated/outcome_unknown for message classification and cannot settle direct sends, distribution waits or receipt reservations. Valid present signed/zero/Unicode errors keep prior refusal behavior; absent error keeps ordinary success and459 keeps challenge diversion. Actor capture stays separate. No native error-response/recovery parity, typed-code storage widening, retry or live verification.",
   "evidence": "docs/protocol/message-ack.md#integral-error-admission-before-ordinary-ack-outcomes-2026-11-06"
+},
+  "x-malformed-ack-receive-epoch-consumption": {
+  "x-cli": true,
+  "x-transport": true,
+  "x-live": false,
+  "x-library": [
+    "whatsapp_api::transport::messaging::validate_received_ack",
+    "whatsapp_api::transport::messaging::wait_for_captured",
+    "whatsapp_api::transport::messaging::wait_for",
+    "whatsapp_api::transport::connection::*",
+    "whatsapp_cli::transport"
+  ],
+  "description": "After durable capture, normal actor, CLI lab receive and captured comparison waits reject malformed ACK numeric admission with a non-reconnectable local error before matching/state processing or later reads/writes. Captures and unknown reservations survive reopen. Legacy uncaptured wait also stops under its existing TransportError contract. Validator is pure; direct callers must discard borrowed channels on failure. Pinned1rg tag set excludes ACK and selected outer reader reports2/returns; no generic NACK, full native listener recovery, reset or live verification.",
+  "evidence": "docs/protocol/message-ack.md#malformed-ack-consumes-the-receive-epoch-after-capture-2026-11-06"
 }
 }

@@ -81,3 +81,12 @@ settlement now preserves uncertainty for these values.
 interpret the existing1s2.run export's selected LIL catch to1rg.A04, without
 claiming complete error traffic or connection recovery. No new static export
 or target execution.
+
+## Malformed ACK reader exit follow-up (2026-11-06)
+
+[New concrete corruption handler and outer catch](../2.26.43.72-stanza-corruption-routing/README.md)
+now distinguish recoverable root tags from ACK. The selected malformed ACK
+rethrows, reports reader error2 and exits instead of choosing a NACK/continuing.
+Normal Rust stateful receive/waits now capture then stop that epoch, preserving
+uncertainty. Native connection-manager recovery and other stanza responses
+remain unported; no automatic retry or live claim.

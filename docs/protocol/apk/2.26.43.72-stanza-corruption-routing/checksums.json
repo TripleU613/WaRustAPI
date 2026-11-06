@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "bytes": 4495,
+    "sha256": "2141d002e323c7978a7c87f22ee925cc2e4701b0fe40b8012dc578d60ef22b85"
+  },
+  "corruption-handler.txt": {
+    "bytes": 5257,
+    "sha256": "f7d33038a6bfca315a4c288abfe7c00d062891ff418b108b3c7d667fe1bbf551"
+  },
+  "message-diagnostic.txt": {
+    "bytes": 6789,
+    "sha256": "8b62143dec601b7b7316d024de92c43a4224b8ff8a40ed2008be8349bb64f115"
+  },
+  "nack-dispatch.txt": {
+    "bytes": 3436,
+    "sha256": "9c08e4a31285d47f6da32159d51f9b2c981e0f138e1080fe4b0657cf34162d05"
+  },
+  "reader-listener.txt": {
+    "bytes": 366,
+    "sha256": "af574340bac4f9d97d6e37b6bf819fa366a04f5b9e16c9dc2a91b3b35f960605"
+  },
+  "set-contains.txt": {
+    "bytes": 867,
+    "sha256": "a3af01d8ee65b86a83ade791a1754cb40c5ac12e991cdbbb63b6669f0916d629"
+  },
+  "set-factory.txt": {
+    "bytes": 1185,
+    "sha256": "003521fbf2c2bdaf920c08fd484bcc2ef1917f6a33742aa531dabd98a3a7c9d9"
+  },
+  "set-fill.txt": {
+    "bytes": 545,
+    "sha256": "8fb90ca15eb54d5408cc8f41fdba22c8f37a489c1ccf36adb70f7388ad198402"
+  },
+  "tag-set-references.txt": {
+    "bytes": 238,
+    "sha256": "c83adf6665714fabbd2f8701c109005447a0cc5c8fadf5cef9e5ca7b5df1ac6d"
+  },
+  "tag-set.txt": {
+    "bytes": 1080,
+    "sha256": "9991685f78564079f8dc28391467a614fdf718ca9b13b0b44c262ae0792427eb"
+  }
+}

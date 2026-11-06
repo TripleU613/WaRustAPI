@@ -890,6 +890,7 @@ pub(crate) async fn drive(
                     }
                 };
                 let capture = super::inbox::preserve_in_epoch(&store, &node, epoch)?;
+                super::messaging::validate_received_ack(&node)?;
                 super::clock::observe(&store, &node)?;
                 // APK 43.72 1rA.A03 -> 1lZ.A0t -> 0ZJ.A0q handles
                 // get/urn:xmpp:ping even without an id or usable timestamp.
@@ -2222,6 +2223,103 @@ mod tests {
             assert!(self.finished().await.is_ok());
         }
     }
+    #[tokio::test(start_paused = true)]
+    async fn malformed_ack_stops_epoch_after_capture_and_keeps_reserved_action() {
+        use sha2::Digest;
+        for class in ["message", "receipt", "notification"] {
+            for raw in ["", "2147483648"] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("ack-reader-error.redb");
+                let store = open(&path);
+                let action = super::super::actions::queue(&store, "fixture", "fixture", |id| {
+                    Ok(Node::new("iq").attr("id", id).attr("type", "get"))
+                })
+                .unwrap();
+                let mut fake = start(&store, false, None);
+                fake.activate().await;
+                (&mut fake.ready).await.unwrap();
+                let (query, written) = fake.written().await;
+                assert_eq!(
+                    query.get_attr("id").and_then(|v| v.as_text()),
+                    Some(action.as_str())
+                );
+                written.send(Ok(())).unwrap();
+                let snapshot = |store: &ProtocolStore| {
+                    store
+                        .read(|tx| {
+                            [
+                                Table::Account,
+                                Table::Outbox,
+                                Table::SignalSessions,
+                                Table::PeerIdentities,
+                                Table::Checkpoints,
+                            ]
+                            .into_iter()
+                            .map(|table| {
+                                Ok(tx
+                                    .scan(table, 1, 100)?
+                                    .into_iter()
+                                    .filter(|(key, _)| !key.starts_with(b"inbound:"))
+                                    .collect::<Vec<_>>())
+                            })
+                            .collect::<Result<Vec<_>>>()
+                        })
+                        .unwrap()
+                };
+                let before = snapshot(&store);
+                let bad = Node::new("ack")
+                    .attr("class", class)
+                    .attr("id", "bad-ack-fixture")
+                    .attr("error", raw);
+                let capture = format!(
+                    "inbound:sha256:{}",
+                    hex::encode(sha2::Sha256::digest(encode(&bad).unwrap()))
+                );
+                fake.to_worker.try_send(Ok(Inbound::Node(bad))).unwrap();
+                fake.to_worker
+                    .try_send(Ok(Inbound::Node(
+                        Node::new("iq")
+                            .attr("type", "get")
+                            .attr("xmlns", "urn:xmpp:ping"),
+                    )))
+                    .unwrap();
+                let error = tokio::time::timeout(Duration::from_secs(1), &mut fake.task)
+                    .await
+                    .expect("malformed ACK ends promptly")
+                    .unwrap()
+                    .unwrap_err();
+                assert!(matches!(error, Error::InvalidInput { field: "ack", .. }));
+                assert!(!error.is_recoverable_by_reconnect());
+                assert!(
+                    fake.from_worker.recv().await.is_none(),
+                    "no pong or later write"
+                );
+                assert!(
+                    store
+                        .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                        .unwrap()
+                        .is_some()
+                );
+                assert_eq!(snapshot(&store), before);
+                drop(fake);
+                drop(store);
+                let reopened = identity_store(&path);
+                assert_eq!(snapshot(&reopened), before);
+                assert!(
+                    super::super::actions::reserve_pending(&reopened)
+                        .unwrap()
+                        .is_empty()
+                );
+                assert!(
+                    reopened
+                        .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                        .unwrap()
+                        .is_some()
+                );
+            }
+        }
+    }
+
     #[tokio::test(start_paused = true)]
     async fn about_result_extensions_do_not_become_refusals_in_receive() {
         use super::super::actions::{self, ActionStatus};

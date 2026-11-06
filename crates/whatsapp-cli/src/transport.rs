@@ -645,6 +645,7 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                         &bytes,
                     )
                 })?;
+                whatsapp_api::transport::messaging::validate_received_ack(&node)?;
                 // Persist every frame before correlating, including messages arriving
                 // before the IQ result. Timeout must not discard these frames.
                 if tokio::time::Instant::now() < deadline

@@ -1,0 +1,16 @@
+
+# class: LX/08w;
+# extends: LX/02C;
+
+.method public A0i(VLL)  # .registers 5
+    # full signature: LX/08w;->A0i(Ljava/util/Collection;[Ljava/lang/Object;)V
+    0000..0002  array-length  v2, v4
+    0002..0004  const/4  v1, #0x0
+    0004..0008  if-ge  v1, v2, +0xa
+    0008..000c  aget-object  v0, v4, v1
+    000c..0012  invoke-interface  {v3, v0}, Ljava/util/Collection;->add(Ljava/lang/Object;)Z
+    0012..0016  add-int/lit8  v1, v1, #0x1
+    0016..0018  goto  -0x9
+    0018..001a  return-void
+    # exception table: 0 try range(s)
+.end method

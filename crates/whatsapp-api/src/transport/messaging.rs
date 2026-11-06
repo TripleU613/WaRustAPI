@@ -1088,6 +1088,21 @@ pub(crate) fn ack_error_is_valid(node: &Node) -> bool {
     parsed_ack_error(node).is_ok()
 }
 
+/// Validate ACK numeric admission. Stateful receivers must first capture the Node.
+/// A malformed ACK ends the receiving epoch (APK43.72 1rg.A04 excludes ack;
+/// the selected 1s2.run outer catch reports onError(2) and returns).
+/// This performs no capture/I/O; callers must stop and discard their channel
+/// on failure. It never settles an intent or authorizes reconnection/replay.
+pub fn validate_received_ack(node: &Node) -> crate::Result<()> {
+    if node.description == "ack" && !ack_error_is_valid(node) {
+        return Err(crate::Error::invalid(
+            "ack",
+            "malformed ACK error; receive epoch consumed; preserve uncertainty and do not reconnect automatically",
+        ));
+    }
+    Ok(())
+}
+
 /// APK43.72 1rH.A03 diverts numeric459 to1lZ.A1F before class dispatch.
 /// This unsupported challenge is not an ordinary terminal send refusal.
 pub(crate) fn is_auth_challenge_ack(node: &Node) -> bool {
@@ -1275,7 +1290,8 @@ fn waited_reply_matches(node: &Node, description: &str, id: &str) -> bool {
 /// Wait for an exact stanza/id pair (IQ requires result/error), with a
 /// whole-operation deadline and count bound. No resend. Nonmatching frames are
 /// returned for persistence on success; error paths do not return them. Durable
-/// operations should use [`wait_for_captured`] instead.
+/// operations should use [`wait_for_captured`] instead. Malformed ACK errors
+/// stop the wait; callers must discard the borrowed channel on failure.
 pub async fn wait_for<S: AsyncRead + AsyncWrite + Unpin>(
     channel: &mut EncryptedConnection<S>,
     description: &str,
@@ -1283,7 +1299,10 @@ pub async fn wait_for<S: AsyncRead + AsyncWrite + Unpin>(
 ) -> Result<(Node, Vec<Node>), TransportError> {
     wait_for_observed(
         async || read_node(channel).await,
-        |_| Ok(()),
+        |node| {
+            validate_received_ack(node)
+                .map_err(|_| error("malformed ACK error; receive epoch consumed; discard channel"))
+        },
         description,
         id,
         tokio::time::Instant::now() + Duration::from_secs(30),
@@ -1335,12 +1354,17 @@ async fn wait_for_captured_until<S: AsyncRead + AsyncWrite + Unpin>(
 ) -> crate::Result<(Node, Vec<Node>)> {
     wait_for_observed(
         async || captured_wait_node(store, read_frame(channel).await?),
-        |node| super::inbox::preserve(store, node).map(|_| ()),
+        |node| preserve_waited_node(store, node),
         description,
         id,
         deadline,
     )
     .await
+}
+
+fn preserve_waited_node(store: &crate::store::ProtocolStore, node: &Node) -> crate::Result<()> {
+    super::inbox::preserve(store, node)?;
+    validate_received_ack(node)
 }
 
 fn captured_wait_node(
@@ -2775,6 +2799,7 @@ mod message_ack_outcome_tests {
                 MessageAckOutcome::Refused,
                 "{error}"
             );
+            assert!(validate_received_ack(&message.clone().attr("error", error)).is_ok());
         }
         for error in [
             "",
@@ -2818,6 +2843,7 @@ mod message_ack_outcome_tests {
                 let outcome = message_ack_outcome(&ack.clone().attr("error", error));
                 assert_eq!(outcome, MessageAckOutcome::AuthChallenge);
                 assert_eq!(outcome.status(), "outcome_unknown");
+                assert!(validate_received_ack(&ack.clone().attr("error", error)).is_ok());
             }
             if class != "message" {
                 assert_eq!(message_ack_outcome(&ack), MessageAckOutcome::Unrelated);
@@ -2879,6 +2905,101 @@ mod waited_reply_tests {
 mod captured_wait_tests {
     use super::*;
     use crate::store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource, Table};
+
+    #[tokio::test]
+    async fn captured_wait_stops_on_malformed_ack_before_matching_or_next_read() {
+        use sha2::Digest;
+        for matched in [false, true] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("bad-ack-wait.redb");
+            let open = || {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: crate::model::ids::AccountId::new("fixture").unwrap(),
+                    key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                        [9; 32],
+                    ))),
+                    create: true,
+                })
+                .unwrap()
+            };
+            let store = open();
+            let intent = serde_json::json!({"status":"outcome_unknown","wire_id":"held"});
+            store
+                .write(|tx| tx.put_json(Table::Checkpoints, b"send-fixture", 1, &intent))
+                .unwrap();
+            let bad = Node::new("ack")
+                .attr("class", "message")
+                .attr("id", if matched { "held" } else { "unrelated" })
+                .attr("error", "bad");
+            let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71())
+                .encode(&bad)
+                .unwrap();
+            let key = format!(
+                "inbound:sha256:{}",
+                hex::encode(sha2::Sha256::digest(&wire))
+            );
+            let mut nodes: std::collections::VecDeque<_> = [
+                bad,
+                Node::new("ack").attr("class", "message").attr("id", "held"),
+            ]
+            .into();
+            let reads = std::cell::Cell::new(0);
+            let result: crate::Result<_> = wait_for_observed(
+                async || {
+                    reads.set(reads.get() + 1);
+                    Ok(nodes.pop_front().unwrap())
+                },
+                |node| preserve_waited_node(&store, node),
+                "ack",
+                "held",
+                tokio::time::Instant::now() + Duration::from_secs(1),
+            )
+            .await;
+            let error = result.unwrap_err();
+            assert!(matches!(
+                error,
+                crate::Error::InvalidInput { field: "ack", .. }
+            ));
+            assert!(!error.is_recoverable_by_reconnect());
+            assert_eq!(reads.get(), 1);
+            assert_eq!(nodes.len(), 1);
+            assert!(
+                store
+                    .read(|tx| tx.get(Table::Checkpoints, key.as_bytes(), 1))
+                    .unwrap()
+                    .is_some()
+            );
+            assert_eq!(
+                store
+                    .read(|tx| tx.get_json::<serde_json::Value>(
+                        Table::Checkpoints,
+                        b"send-fixture",
+                        1
+                    ))
+                    .unwrap(),
+                Some(intent.clone())
+            );
+            drop(store);
+            let reopened = open();
+            assert!(
+                reopened
+                    .read(|tx| tx.get(Table::Checkpoints, key.as_bytes(), 1))
+                    .unwrap()
+                    .is_some()
+            );
+            assert_eq!(
+                reopened
+                    .read(|tx| tx.get_json::<serde_json::Value>(
+                        Table::Checkpoints,
+                        b"send-fixture",
+                        1
+                    ))
+                    .unwrap(),
+                Some(intent)
+            );
+        }
+    }
 
     #[tokio::test(start_paused = true)]
     async fn decoded_wait_captures_survive_each_exit_and_reopen_without_settlement() {

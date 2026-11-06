@@ -205,9 +205,10 @@ The already retained [1s2.run](apk/2.26.43.72-about-callback-lifetime/reply-disp
 dispatches the selected mapped handler through1rA.A03 at106c..1072. That call's
 code-unit offset0836 lies in the exported060f..085c range with an LIL handler
 listed at0873 (byte10e6). The selected handler10e6..10f6 calls1rg.A04(node,LIL),
-then branches back toward the reader loop if that call returns. Full nested
-outer-catch policy, concrete A04 effects, any generated error traffic and native
-connection recovery remain untraced. This proves a parse-error route distinct
+then branches back toward the reader loop if that call returns. At that tracing stage, full nested outer-catch policy, concrete A04 effects,
+generated error traffic and native connection recovery were untraced. The
+malformed-ACK epoch follow-up below now binds the selected A04/outer-catch exit;
+complete listener/recovery and other stanza policies remain open. This proves a parse-error route distinct
 from the ordinary ACK branch; it does not justify a new Rust error response,
 forced reconnect, callback reset or complete native loop-parity claim. No new
 APK export or execution is claimed.
@@ -227,4 +228,53 @@ challenge recovery or live account operation.
 
 Validation:1,455 workspace/all-feature tests passed. Strict workspace/all-target/
 all-feature Clippy, formatting, CLI reference regeneration, OpenAPI symbol
+validation, APK coverage freshness and repository hygiene passed. Offline only.
+
+## Malformed ACK consumes the receive epoch after capture (2026-11-06)
+
+**Confirmed pinned static / Rust correction:**
+[new1rg methods, recoverable-tag set/census and selected outer catch](apk/2.26.43.72-stanza-corruption-routing/README.md)
+show that malformed root ack is outside the recoverable stanza set. A04 rethrows
+LIL; the selected1s2.run outer catch reports1lX.onError(2) and returns. It does
+not construct a487 NACK for an ACK, even for class=receipt. Root receipt and ACK
+class receipt are different routing inputs. Concrete native listener recovery
+remains untraced, so no account-wide logout/ban or automatic retry is inferred.
+
+Rust previously excluded the malformed ACK from ordinary settlement but kept
+its receiving epoch alive. Public `messaging::validate_received_ack` now returns
+a redacted non-reconnectable local error for malformed ACK numeric admission.
+It performs no capture or I/O itself. Normal drive invokes it immediately after
+encrypted capture, before clock/state processing; ending drive drops the live
+callback registry and its owned link tasks. The CLI lab receive loop validates
+after its durable inbound write too.
+
+Captured comparison waits call the same validator after preserving the Node,
+before matching or reading another response. Their original unknown send
+reservations remain untouched on failure. The legacy uncaptured wait_for also
+stops on malformed ACKs under its existing TransportError contract; stateful
+callers should use the captured APIs. Valid numeric errors and459 remain
+accepted by numeric validation and retain the preceding outcome rules.
+
+Regressions: `malformed_ack_stops_epoch_after_capture_and_keeps_reserved_action`
+uses the actual actor with a written pending action. Malformed ACKs across
+message/receipt/notification classes end promptly, do not answer a queued ping
+or emit later writes, return an error that is not reconnectable, preserve
+account/outbox/session/pin/non-capture checkpoints and retain capture/Sent state
+across reopen. `captured_wait_stops_on_malformed_ack_before_matching_or_next_read`
+checks matching and unrelated malformed ACKs: only one Node is read/captured,
+the following valid response remains unread and the unknown intent survives
+reopen. Valid signed error and challenge controls still pass numeric validation.
+
+**Limits:** the validator does not mechanically poison a borrowed raw transport;
+direct callers must discard it after failure. Normal actor/CLI owned paths stop
+and drop their channel. Raw read_frame/read_node remain low-level primitives.
+This is numeric-error admission, not complete validation of ACK id/from/class/
+participant fields. Full native listener/map cleanup/reconnect policy, generated
+NACKs for other root tags, diagnostic/provider semantics and nontext A0M coercion remain open.
+Rust's non-reconnectable stateful error is an explicit conservative local
+policy, not a claimed mapping of all native onError(2) outcomes. No outgoing
+error response, reset, challenge recovery or live account operation is added.
+
+Validation: 1,457 workspace/all-feature tests passed. Strict workspace/all-target/
+all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
 validation, APK coverage freshness and repository hygiene passed. Offline only.

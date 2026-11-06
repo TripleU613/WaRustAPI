@@ -1,0 +1,22 @@
+
+# class: LX/07Z;
+# extends: LX/07Y;
+
+.method public A1W(ZLL)  # .registers 4
+    # full signature: LX/07Z;->A1W(Ljava/lang/Iterable;Ljava/lang/Object;)Z
+    0000..0002  const/4  v1, #0x0
+    0002..0008  invoke-static  {v2, v1}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  instance-of  v0, v2, Ljava/util/Collection;
+    000c..0010  if-eqz  v0, +0x9
+    0010..0014  check-cast  v2, Ljava/util/Collection;
+    0014..001a  invoke-interface  {v2, v3}, Ljava/util/Collection;->contains(Ljava/lang/Object;)Z
+    001a..001c  move-result  v0
+    001c..001e  return  v0
+    001e..0024  invoke-static  {v2, v3}, LX/07Z;->A0e(Ljava/lang/Iterable;Ljava/lang/Object;)I
+    0024..0026  move-result  v0
+    0026..002a  if-ltz  v0, +0x4
+    002a..002c  const/4  v0, #0x1
+    002c..002e  return  v0
+    002e..0030  return  v1
+    # exception table: 0 try range(s)
+.end method

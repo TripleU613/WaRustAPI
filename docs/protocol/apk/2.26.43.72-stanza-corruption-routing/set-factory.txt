@@ -1,0 +1,27 @@
+
+# class: LX/08w;
+# extends: LX/02C;
+
+.method public A0h(LL)  # .registers 4
+    # full signature: LX/08w;->A0h([Ljava/lang/Object;)Ljava/util/Set;
+    0000..0002  const/4  v2, #0x0
+    0002..0008  invoke-static  {v3, v2}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  array-length  v1, v3
+    000a..000e  if-eqz  v1, +0x1c
+    000e..0010  const/4  v0, #0x1
+    0010..0014  if-eq  v1, v0, +0xf
+    0014..001a  invoke-static  {v1}, LX/05o;->A02(I)I
+    001a..001c  move-result  v1
+    001c..0020  new-instance  v0, Ljava/util/LinkedHashSet;
+    0020..0026  invoke-direct  {v0, v1}, Ljava/util/LinkedHashSet;-><init>(I)V
+    0026..002c  invoke-static  {v0, v3}, LX/08w;->A0i(Ljava/util/Collection;[Ljava/lang/Object;)V
+    002c..002e  return-object  v0
+    002e..0032  aget-object  v0, v3, v2
+    0032..0038  invoke-static  {v0}, Ljava/util/Collections;->singleton(Ljava/lang/Object;)Ljava/util/Set;
+    0038..003a  move-result-object  v0
+    003a..0040  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    0040..0042  return-object  v0
+    0042..0046  sget-object  v0, LX/06e;->A00:LX/06e;
+    0046..0048  return-object  v0
+    # exception table: 0 try range(s)
+.end method
