@@ -884,6 +884,14 @@ pub fn reserve_pending_owned(store: &ProtocolStore) -> Result<Vec<ReservedReceip
 /// 37.71 1Qy.A02 -> CSu.A00 -> Cb1.equals distinguishes nullable participants;
 /// recipient/edit routes remain unsupported by this queue.
 pub fn record_ack(store: &ProtocolStore, node: &Node) -> Result<bool> {
+    if !super::messaging::ack_error_is_valid(node) {
+        if node.description == "ack"
+            && node.get_attr("class").and_then(|v| v.as_text()) == Some("receipt")
+        {
+            tracing::warn!(target: "whatsapp_api::receipts", "malformed receipt ACK error; ordinary settlement skipped");
+        }
+        return Ok(false);
+    }
     // APK43.72 1rH.A03 diverts numeric459 before ACK class dispatch;
     // a challenged receipt must not become an ordinary terminal refusal.
     if super::messaging::is_auth_challenge_ack(node) {
@@ -2780,7 +2788,18 @@ mod tests {
                     }
                     let before = db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap();
                     let head = db.journal_head().unwrap();
-                    for error in ["459", "+459", "000459", "４５９", "٤٥٩"] {
+                    for error in [
+                        "459",
+                        "+459",
+                        "000459",
+                        "４５９",
+                        "٤٥٩",
+                        "",
+                        "bad",
+                        " 403",
+                        "2147483648",
+                        "-2147483649",
+                    ] {
                         assert!(
                             !record_ack(&db, &ack.clone().attr("error", error)).unwrap(),
                             "{group}/{count}/{error}"

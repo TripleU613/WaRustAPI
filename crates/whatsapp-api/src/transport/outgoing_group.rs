@@ -258,7 +258,17 @@ pub(super) mod tests {
                                 preparation(&store, pending.entry.local_id).unwrap(),
                                 before
                             );
-                            for error in ["459", "+459", "000459", "４５９"] {
+                            for error in [
+                                "459",
+                                "+459",
+                                "000459",
+                                "４５９",
+                                "",
+                                "bad",
+                                " 403",
+                                "2147483648",
+                                "-2147483649",
+                            ] {
                                 assert!(
                                     !pending.matches(
                                         &Node::new("ack")
@@ -2001,6 +2011,7 @@ impl Pending {
                     // APK43.72 1rH.A03 0282..0292 routes message ACKs
                     // separately from receipt/call/notification families.
                     && node.get_attr("class").and_then(|v| v.as_text()) == Some("message")
+                    && super::messaging::ack_error_is_valid(node)
                     && !super::outgoing::is_auth_challenge_ack(node)
                     && node.get_attr("id").and_then(|v| v.as_text()) == Some(id)
             }

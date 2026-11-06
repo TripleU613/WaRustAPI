@@ -71,3 +71,13 @@ covers direct/group and Java decimal spellings, reopen, journal preservation
 and later normal success/refusal controls.
 [Receipt interpretation and remaining gaps](../../receipt-ack-special.md#current-auth-challenge-diversion-precedes-receipt-settlement-2026-11-06).
 No new static trace or challenge recovery capability is claimed.
+
+## Integral admission and selected catch follow-up (2026-11-06)
+
+The retained A05/A06 parser also excludes malformed/out-of-i32 errors from
+ordinary ACK callbacks. Shared Rust classification/direct/distribution/receipt
+settlement now preserves uncertainty for these values.
+[Reader-call/catch offsets and regression scope](../../message-ack.md#integral-error-admission-before-ordinary-ack-outcomes-2026-11-06)
+interpret the existing1s2.run export's selected LIL catch to1rg.A04, without
+claiming complete error traffic or connection recovery. No new static export
+or target execution.

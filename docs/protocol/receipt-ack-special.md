@@ -133,3 +133,12 @@ APK trace or live account operation.
 Validation:1,454 workspace/all-feature tests passed. Strict workspace/all-target/
 all-feature Clippy, formatting, CLI reference regeneration, OpenAPI symbol
 validation, APK coverage freshness and repository hygiene passed. Offline only.
+
+## Malformed numeric ACK admission follow-up (2026-11-06)
+
+Receipt settlement now also excludes malformed/out-of-i32 root error values
+using shared current-build ACK admission. These cannot become an ordinary
+terminal refusal; snapshots and uncertain reservations remain held. The existing
+459 direct/group/single/batched test now includes malformed cases.
+[Parser, selected reader catch path, cross-family tests and limits](message-ack.md#integral-error-admission-before-ordinary-ack-outcomes-2026-11-06).
+Native error-handler/recovery and typed error-code projection remain separate.

@@ -1258,6 +1258,14 @@ pub(super) use super::messaging::is_auth_challenge_ack;
 
 /// Correlate message ACKs to an existing in-flight intent by ID and recipient.
 pub fn acknowledge(store: &ProtocolStore, node: &Node) -> Result<bool> {
+    if !super::messaging::ack_error_is_valid(node) {
+        if node.description == "ack"
+            && node.get_attr("class").and_then(|v| v.as_text()) == Some("message")
+        {
+            tracing::warn!(target: "whatsapp_api::outgoing", "malformed message ACK error; ordinary settlement skipped");
+        }
+        return Ok(false);
+    }
     if is_auth_challenge_ack(node)
         || node.description != "ack"
         || node.get_attr("class").and_then(|v| v.as_text()) != Some("message")
@@ -2903,9 +2911,20 @@ mod tests {
         );
         let ack = ack.attr("from", "15555550100@s.whatsapp.net");
         // APK43.72 dispatches459 to auth-challenge handling, not ordinary
-        // terminal ACK settlement. Preserve the complete original reservation.
+        // terminal ACK settlement. Malformed/out-of-i32 errors also cannot
+        // pass native integer admission. Preserve the complete reservation.
         let before_challenge = store.read(|tx| outbox().get(tx, local_id)).unwrap();
-        for error in ["459", "+459", "000459", "４５９"] {
+        for error in [
+            "459",
+            "+459",
+            "000459",
+            "４５９",
+            "",
+            "bad",
+            " 403",
+            "2147483648",
+            "-2147483649",
+        ] {
             assert!(!acknowledge(&store, &ack.clone().attr("error", error)).unwrap());
             assert_eq!(
                 store.read(|tx| outbox().get(tx, local_id)).unwrap(),

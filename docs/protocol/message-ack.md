@@ -171,3 +171,60 @@ destination rewrite helper inspected here is FBID-migration-specific; Efa's
 null type default does not prove the out-of-band producer leaves type unset.
 [Exact offsets, retained exports and remaining producer gap](apk/2.26.43.72-message-ack-forwarding/README.md).
 No runtime guard, replay policy or live account operation changed.
+
+## Integral error admission before ordinary ACK outcomes (2026-11-06)
+
+**Confirmed static, APK2.26.43.72 / Rust defect fixed offline:**
+[1rH.A03,0Tp.A05/A06](apk/2.26.43.72-ack-auth-challenge/README.md)
+parse root error with Integer.parseInt before special459 and ACK class dispatch.
+Malformed strings and values outside signed32-bit range throw LIL; they do not
+reach the ordinary message/receipt callback branch. Rust's error-presence checks
+could instead create terminal failures from these values. A new classifier
+regression failed on that old Refused behavior.
+
+Shared ACK admission now distinguishes absent error, valid signed Java decimal
+error, and malformed/unsupported error. It reuses the existing Java-long parser
+with i32 range checking. Missing error preserves ordinary success semantics;
+valid present errors preserve ordinary refusal semantics, including signed,
+zero and Unicode decimal forms. Valid numeric459 retains its special challenge
+diversion. Invalid/nontext values cannot become ordinary acceptance or refusal.
+Nontext decoded attributes are a local unsupported boundary, not claimed native
+A0M coercion parity.
+
+The shared message_ack_outcome returns Unrelated/outcome_unknown for malformed
+errors, so CLI direct/group comparison status remains uncertain. Normal direct
+ACK settlement, group out-of-band distribution admission and receipt ACK
+settlement use the same validity gate. They retain in-flight/preparation/receipt
+reservations without recording failure, promoting sender-key recipients or
+authorizing replay. Direct/receipt helpers emit redacted malformed-error
+diagnostics. The actor's existing encrypted capture precedes handling.
+
+### Selected reader exception path
+
+The already retained [1s2.run](apk/2.26.43.72-about-callback-lifetime/reply-dispatch.txt)
+dispatches the selected mapped handler through1rA.A03 at106c..1072. That call's
+code-unit offset0836 lies in the exported060f..085c range with an LIL handler
+listed at0873 (byte10e6). The selected handler10e6..10f6 calls1rg.A04(node,LIL),
+then branches back toward the reader loop if that call returns. Full nested
+outer-catch policy, concrete A04 effects, any generated error traffic and native
+connection recovery remain untraced. This proves a parse-error route distinct
+from the ordinary ACK branch; it does not justify a new Rust error response,
+forced reconnect, callback reset or complete native loop-parity claim. No new
+APK export or execution is claimed.
+
+Regressions: new `integer_error_admission_precedes_ordinary_ack_classification`
+covers absent, zero/signed/i32 extrema and Unicode valid controls; empty/junk/
+whitespace/sign-only/hex/fraction/NUL/overflow inputs and a nontext boundary.
+Existing direct in-flight reservation, real-crypto group distribution and
+single/batched direct/group receipt challenge controls now also exercise
+malformed and out-of-i32 errors. Normal later success/refusal controls remain.
+
+**Limits:** this is root ACK error admission. Sender/address/duplicate-attribute
+policy, typed error-code storage, receipt-user state and full native error
+handler/recovery are unchanged or incomplete. Low-level callers still own
+correlation authority. No new request, receipt, automatic retry, identity reset,
+challenge recovery or live account operation.
+
+Validation:1,455 workspace/all-feature tests passed. Strict workspace/all-target/
+all-feature Clippy, formatting, CLI reference regeneration, OpenAPI symbol
+validation, APK coverage freshness and repository hygiene passed. Offline only.

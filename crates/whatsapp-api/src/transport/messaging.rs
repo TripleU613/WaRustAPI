@@ -1050,11 +1050,11 @@ pub fn media_route_request(id: &str) -> Node {
 pub enum MessageAckOutcome {
     /// Message-class ACK without an error; correlation is the caller's duty.
     Accepted,
-    /// Ordinary message-class error, excluding the special auth challenge.
+    /// Ordinary message-class integral error, excluding the special auth challenge.
     Refused,
     /// Numeric459 diverted by the APK before ordinary ACK dispatch.
     AuthChallenge,
-    /// Other tags or ACK classes cannot settle a message request.
+    /// Other tags/classes or unsupported malformed error attributes cannot settle it.
     Unrelated,
 }
 impl MessageAckOutcome {
@@ -1068,28 +1068,47 @@ impl MessageAckOutcome {
     }
 }
 
+// APK43.72 1rH.A03 calls0Tp.A05(error,0) before class dispatch.
+// A06 uses Integer.parseInt; malformed/out-of-i32 values throw LIL rather
+// than becoming an ordinary ACK outcome. Nontext decoded values are outside
+// this supported Rust adapter. No reader recovery policy is inferred here.
+fn parsed_ack_error(node: &Node) -> Result<Option<i32>, ()> {
+    match node.get_attr("error") {
+        None => Ok(None),
+        Some(value) => value
+            .as_text()
+            .and_then(super::mex::java_decimal_long)
+            .and_then(|value| i32::try_from(value).ok())
+            .map(Some)
+            .ok_or(()),
+    }
+}
+
+pub(crate) fn ack_error_is_valid(node: &Node) -> bool {
+    parsed_ack_error(node).is_ok()
+}
+
 /// APK43.72 1rH.A03 diverts numeric459 to1lZ.A1F before class dispatch.
 /// This unsupported challenge is not an ordinary terminal send refusal.
 pub(crate) fn is_auth_challenge_ack(node: &Node) -> bool {
-    node.description == "ack"
-        && node
-            .get_attr("error")
-            .and_then(|v| v.as_text())
-            .and_then(super::mex::java_decimal_long)
-            .and_then(|v| i32::try_from(v).ok())
-            == Some(459)
+    node.description == "ack" && matches!(parsed_ack_error(node), Ok(Some(459)))
 }
 
-/// APK43.72 1rH.A03: challenge459 precedes ordinary message-class dispatch.
-/// This does not implement native challenge recovery or address normalization.
+/// APK43.72 1rH.A03: integral error admission and challenge459 precede class
+/// dispatch. Unsupported malformed errors cannot settle an ordinary ACK.
+/// This does not implement native reader error recovery or address normalization.
 pub fn message_ack_outcome(node: &Node) -> MessageAckOutcome {
-    if is_auth_challenge_ack(node) {
+    if node.description != "ack" {
+        return MessageAckOutcome::Unrelated;
+    }
+    let Ok(error) = parsed_ack_error(node) else {
+        return MessageAckOutcome::Unrelated;
+    };
+    if error == Some(459) {
         MessageAckOutcome::AuthChallenge
-    } else if node.description != "ack"
-        || node.get_attr("class").and_then(|v| v.as_text()) != Some("message")
-    {
+    } else if node.get_attr("class").and_then(|v| v.as_text()) != Some("message") {
         MessageAckOutcome::Unrelated
-    } else if node.get_attr("error").is_some() {
+    } else if error.is_some() {
         MessageAckOutcome::Refused
     } else {
         MessageAckOutcome::Accepted
@@ -2737,6 +2756,54 @@ mod tests {
 #[cfg(test)]
 mod message_ack_outcome_tests {
     use super::*;
+    #[test]
+    fn integer_error_admission_precedes_ordinary_ack_classification() {
+        let message = Node::new("ack").attr("class", "message");
+        assert_eq!(message_ack_outcome(&message), MessageAckOutcome::Accepted);
+        for error in [
+            "0",
+            "+0",
+            "-0",
+            "-1",
+            "2147483647",
+            "-2147483648",
+            "+４０３",
+            "٤٠٣",
+        ] {
+            assert_eq!(
+                message_ack_outcome(&message.clone().attr("error", error)),
+                MessageAckOutcome::Refused,
+                "{error}"
+            );
+        }
+        for error in [
+            "",
+            "bad",
+            " 403",
+            "403 ",
+            "+",
+            "-",
+            "++403",
+            "0x193",
+            "403.0",
+            "2147483648",
+            "-2147483649",
+            "9223372036854775808",
+            "-9223372036854775809",
+            "403\0",
+        ] {
+            let outcome = message_ack_outcome(&message.clone().attr("error", error));
+            assert_eq!(outcome, MessageAckOutcome::Unrelated, "{error}");
+            assert_eq!(outcome.status(), "outcome_unknown");
+        }
+        assert_eq!(
+            message_ack_outcome(
+                &message.attr("error", Jid::parse("15555550100@s.whatsapp.net").unwrap())
+            ),
+            MessageAckOutcome::Unrelated
+        );
+    }
+
     #[test]
     fn native_ack_family_and_challenge_diversion_control_comparison_status() {
         let message = Node::new("ack").attr("class", "message");

@@ -17928,5 +17928,18 @@
   ],
   "description": "Receipt ACK settlement excludes numeric error459 before ordinary mutation, using the shared Java-decimal/i32 auth-challenge classifier. Single/batched direct/group reservations remain outcome_unknown without journal changes or replay. A redacted diagnostic identifies unimplemented challenge handling; normal actor captures inbound evidence separately. Ordinary success and403 controls still settle once. No challenge recovery/bypass, malformed-error parity, new request or live verification.",
   "evidence": "docs/protocol/receipt-ack-special.md#current-auth-challenge-diversion-precedes-receipt-settlement-2026-11-06"
+},
+  "x-ack-integral-error-admission": {
+  "x-cli": true,
+  "x-transport": true,
+  "x-live": false,
+  "x-library": [
+    "whatsapp_api::transport::messaging::message_ack_outcome",
+    "whatsapp_api::transport::outgoing::acknowledge",
+    "whatsapp_api::transport::outgoing_group::*",
+    "whatsapp_api::transport::receipts::record_ack"
+  ],
+  "description": "Root ACK errors require supported signed32-bit Java decimal grammar before ordinary outcome classification. Malformed/nontext/out-of-range errors return Unrelated/outcome_unknown for message classification and cannot settle direct sends, distribution waits or receipt reservations. Valid present signed/zero/Unicode errors keep prior refusal behavior; absent error keeps ordinary success and459 keeps challenge diversion. Actor capture stays separate. No native error-response/recovery parity, typed-code storage widening, retry or live verification.",
+  "evidence": "docs/protocol/message-ack.md#integral-error-admission-before-ordinary-ack-outcomes-2026-11-06"
 }
 }
