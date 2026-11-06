@@ -17905,5 +17905,17 @@
   "x-live": false,
   "description": "Normal action writer admission rechecks recorded active reach-out restriction for group-create and stored explicit backoff for app-state fetch/patch/held-fetch, in the same read snapshot as row ownership. Active/malformed waits refuse without changing intent, journal or wait; unrelated kinds stay independent. Expired app-state deadlines and explicit inactive reach-out state preserve existing admission. No lock across socket I/O, universal restriction policy, replay or live verification.",
   "evidence": "docs/protocol/action-settlement-ordering.md#writer-rechecks-recorded-restrictions-and-explicit-backoff-2026-11-06"
+},
+  "x-receipt-owned-writer-handoff": {
+  "x-cli": true,
+  "x-transport": true,
+  "x-live": false,
+  "x-library": [
+    "whatsapp_api::transport::receipts::reserve_pending_owned",
+    "whatsapp_api::transport::receipts::ReservedReceipt",
+    "whatsapp_cli::transport"
+  ],
+  "description": "Opaque ReservedReceipt handoff exposes node() and check_write_authority(store). Actor writer and both CLI lab receipt loops require exact snapshots of every reserved batch member and recheck the existing negative automatic direct-read privacy gate before encoding. Changed/missing/settled/origin/correlation members refuse whole batches; disabled automatic reads block mixed batches. Manual/group policy and wire batching/ACK grammar stay unchanged. Legacy reserve_pending remains low-level. No socket lock, replay or live verification.",
+  "evidence": "docs/protocol/replay-safety-audit.md#receipt-writer-owns-every-reserved-batch-member-2026-11-06"
 }
 }

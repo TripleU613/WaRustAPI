@@ -58,7 +58,13 @@ pub struct ReadReceiptPreference {
 
 /// Inspect the durable server preference; absent remains unknown.
 pub fn read_receipts(store: &ProtocolStore) -> Result<Option<ReadReceiptPreference>> {
-    store.read(|tx| tx.get_json(Table::Checkpoints, STATE, 1))
+    store.read(read_receipts_in)
+}
+
+pub(crate) fn read_receipts_in(
+    tx: &crate::store::ReadTx<'_>,
+) -> Result<Option<ReadReceiptPreference>> {
+    tx.get_json(Table::Checkpoints, STATE, 1)
 }
 
 /// Keep automatic receipt reservation and its preference gate atomic.

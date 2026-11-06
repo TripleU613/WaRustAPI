@@ -780,11 +780,12 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                         Ok(0) => println!("transport: retry already recorded; no repeat"),
                         Ok(_) => {
                             for receipt in
-                                whatsapp_api::transport::receipts::reserve_pending(&store)?
+                                whatsapp_api::transport::receipts::reserve_pending_owned(&store)?
                             {
+                                receipt.check_write_authority(&store)?;
                                 whatsapp_api::transport::messaging::write_node(
                                     &mut channel,
-                                    &receipt,
+                                    receipt.node(),
                                 )
                                 .await?;
                             }
@@ -847,11 +848,12 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                         Ok(0) => {}
                         Ok(_) => {
                             for receipt in
-                                whatsapp_api::transport::receipts::reserve_pending(&store)?
+                                whatsapp_api::transport::receipts::reserve_pending_owned(&store)?
                             {
+                                receipt.check_write_authority(&store)?;
                                 whatsapp_api::transport::messaging::write_node(
                                     &mut channel,
-                                    &receipt,
+                                    receipt.node(),
                                 )
                                 .await?;
                             }

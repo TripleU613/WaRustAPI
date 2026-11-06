@@ -104,3 +104,12 @@ explicit promotion, privacy changes between queue/reservation with reopen,
 group/explicit exemption, later release without replay, legacy provenance and
 malformed-flag rollback. All39 receipt-module tests passed; the existing actor
 automatic-read write-cut regression also passed.
+
+## Writer-bound preference recheck (2026-11-06)
+
+The normal actor and CLI now retain all members of a reserved receipt batch and
+recheck the existing automatic direct-read negative gate at writer admission. A
+late disabled preference blocks a mixed batch containing an automatic direct
+read; explicit manual/group policy remains unchanged. Refused unknown rows are
+held, not requeued. [Owned API, batch/journal/reopen controls and limits](replay-safety-audit.md#receipt-writer-owns-every-reserved-batch-member-2026-11-06).
+No full native classifier/read-self or live claim.

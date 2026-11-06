@@ -1255,3 +1255,63 @@ No HTTP request or account operation ran in these tests.
 operations or proof of successful server adoption. This is not a new Android
 upload schema or ban-prevention guarantee. The added observation artifacts do not
 permit retransmission or clearing an uncertain upload.
+
+## Receipt writer owns every reserved batch member (2026-11-06)
+
+**Confirmed Rust defect fixed offline:** receipt reservation durably marked each
+member outcome_unknown, preserving its own wire and optional batch ACK root.
+Normal actor and CLI then sent plain Nodes without retaining that reservation
+snapshot. A changed/deleted/settled non-root member did not stop the already
+assembled batch. The automatic direct-read preference was checked at reservation
+but not again after waiting for the writer.
+
+`receipts::reserve_pending_owned` now returns opaque `ReservedReceipt` batches.
+Each carries the immutable original Node plus zeroized snapshots of every
+reserved member row. `node()` provides the original wire shape;
+`check_write_authority(store)` requires all current rows to match those snapshots
+in one read transaction and repeats the existing negative automatic direct-read
+privacy gate. Changing status, wire, origin or batch ACK correlation, or deleting
+any member, refuses the whole batch. Missing preference remains unknown under
+the existing supported-path rule; no native default is invented.
+
+All four normal actor flush sites pass the owned guard to the actual writer
+before encoding. Both CLI lab receipt loops check the same public API directly
+before `messaging::write_node`. No live command was invoked. Exact searches for
+CLI actions::reserve_pending/reserve_one_in/record_reply found no direct queued-IQ
+action path; the separate receipt call sites were the concrete findings. This
+is a bounded source inventory, not proof about every possible external caller.
+
+If privacy disables automatic direct reads after reservation, a mixed manual/
+automatic batch containing such a read is refused as a whole. Its manual member
+is not extracted/requeued and no unknown outcome is cleared. Explicit manual
+reads and group reads retain their existing supported policy. Standalone retry/
+opened/read receipts get the same member ownership check; batching, IDs, ACK
+matching and retry grammar are unchanged.
+
+**Existing native references:** [read receipt batching](read-receipt-batching.md)
+and [current43.72 negative privacy gate](read-receipt-policy-current.md) remain
+the evidence. This is a local writer/persistence correction, not a new native
+storage format, full classifier/read-self port or callback/ACK lifetime claim.
+No new APK trace, receipt timer or network operation is introduced.
+
+Regression: `queued_receipt_batch_owns_every_member_and_rechecks_late_privacy`
+holds the actual NodeLink writer and exercises the public direct-writer check.
+It covers singleton, automatic/manual/mixed direct and group batches; changed
+first/non-root members, terminal status, wire, batch root and origin; late
+disabled preference; and unchanged exact-wire controls. Refusals emit no next
+write, keep checkpoint bytes/journal head, do not return unknown rows to the
+pending queue, and survive reopen. ReservedReceipt Debug is redacted. Existing
+receipt queue, batching, ACK and retry workflows remain positive controls.
+
+**Limits:** checking is admission to one write, not replay authority; direct
+writers must check immediately before encoding and never repeat after uncertain
+or partial writes. No lock spans encoding/socket I/O. A refused reserved row
+stays outcome_unknown even if the privacy preference later changes. The public
+legacy reserve_pending still returns Nodes for explicit low-level callers; it
+does not supply the new handoff automatically. Full native route/classifier,
+receipt ACK lifecycle and all family-specific admission remain open. No live
+account operation, automatic replay or state reset.
+
+Validation:1,453 workspace/all-feature tests passed. Strict workspace/all-target/
+all-feature Clippy, formatting, CLI reference regeneration, OpenAPI symbol
+validation, APK coverage freshness and repository hygiene passed. Offline only.

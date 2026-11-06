@@ -336,6 +336,7 @@ enum WriteGuard {
     Devices(Arc<ProtocolStore>, super::devices::DeviceQuery),
     RetryRefetch(Arc<ProtocolStore>, super::retry_answer::RefetchWriteGuard),
     Action(Arc<ProtocolStore>, super::actions::ActionWriteGuard),
+    Receipt(Arc<ProtocolStore>, super::receipts::ReceiptWriteGuard),
 }
 pub(crate) struct Outbound {
     node: Node,
@@ -351,6 +352,7 @@ impl Outbound {
             Some(WriteGuard::Devices(store, query)) => query.check_write_authority(&store),
             Some(WriteGuard::RetryRefetch(store, pending)) => pending.check_write_authority(&store),
             Some(WriteGuard::Action(store, action)) => action.check_write_authority(&store),
+            Some(WriteGuard::Receipt(store, receipt)) => receipt.check_write_authority(&store),
             None => Ok(()),
         };
         if let Err(error) = admission {
@@ -430,6 +432,18 @@ impl NodeLink {
     async fn send(&self, node: &Node) -> Result<()> {
         self.send_guarded(node, None).await
     }
+    pub(crate) async fn send_receipt(
+        &self,
+        store: &Arc<ProtocolStore>,
+        receipt: &super::receipts::ReservedReceipt,
+    ) -> Result<()> {
+        self.send_guarded(
+            receipt.node(),
+            Some(WriteGuard::Receipt(store.clone(), receipt.guard.clone())),
+        )
+        .await
+    }
+
     pub(crate) async fn send_action(
         &self,
         store: &Arc<ProtocolStore>,
@@ -830,7 +844,7 @@ pub(crate) async fn drive(
                         device_query=Some(query);
                         link.send_device_query(&store, device_query.as_ref().expect("reserved device query"), &node).await?;
                     }
-                    for receipt in super::receipts::reserve_pending(&store)? { link.send(&receipt).await?; }
+                    for receipt in super::receipts::reserve_pending_owned(&store)? { link.send_receipt(&store,&receipt).await?; }
                     action_drain.trigger();
                 }
                 // A maintenance write can delay a due ping. Its response window
@@ -964,7 +978,7 @@ pub(crate) async fn drive(
                         if let Some(name) = super::presence::take_push_name(&store)? {
                             link.send(&name).await?;
                         }
-                        for receipt in super::receipts::reserve_pending(&store)? { link.send(&receipt).await?; }
+                        for receipt in super::receipts::reserve_pending_owned(&store)? { link.send_receipt(&store,&receipt).await?; }
                         action_drain.trigger();
                         if let Some(ready) = ready.take() { let _ = ready.send(()); }
                         // LX/DNq.run: unsent prekeys (or a store that never generated any) upload at start.
@@ -1298,8 +1312,8 @@ pub(crate) async fn drive(
                     match super::receipts::queue_retry_for_incoming_with_cause(&store, &account, &node, retry_cause) {
                         Ok(0) => tracing::info!(target: "whatsapp_api::incoming", "retry already recorded; no repeat"),
                         Ok(_) => {
-                            for receipt in super::receipts::reserve_pending(&store)? {
-                                link.send(&receipt).await?;
+                            for receipt in super::receipts::reserve_pending_owned(&store)? {
+                                link.send_receipt(&store,&receipt).await?;
                             }
                             tracing::info!(target: "whatsapp_api::incoming", "retry queued; reserved receipt batch written; delivery remains unconfirmed");
                         }
@@ -1321,7 +1335,7 @@ pub(crate) async fn drive(
                     match super::receipts::queue_read_for_incoming(&store, &node) {
                         Ok(0) => {}
                         Ok(_) => {
-                            for receipt in super::receipts::reserve_pending(&store)? { link.send(&receipt).await?; }
+                            for receipt in super::receipts::reserve_pending_owned(&store)? { link.send_receipt(&store,&receipt).await?; }
                             marked_read = true;
                         }
                         Err(error) => tracing::warn!(%error, "automatic read receipt may not be queued"),

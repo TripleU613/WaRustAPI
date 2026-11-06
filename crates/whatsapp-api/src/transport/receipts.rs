@@ -353,14 +353,16 @@ fn deferred_reason(row: &serde_json::Value) -> Result<Option<&'static str>> {
     }
 }
 
+fn is_direct_read(node: &Node) -> bool {
+    node.description == "receipt"
+        && node.get_attr("type").and_then(|v| v.as_text()) == Some("read")
+        && jid(node, "to").is_some_and(|j| matches!(j.server, Server::User | Server::Lid))
+}
+
 fn automatic_direct_read_disabled(tx: &crate::store::WriteTx<'_>, node: &Node) -> Result<bool> {
-    // Current 43.72 0xW.A05: a non-group normal read requires A1H true.
-    // Read-self needs the own companion set/route, still unported; retain work.
-    // This is only a proven negative gate, not the complete native classifier.
-    if node.description != "receipt"
-        || node.get_attr("type").and_then(|v| v.as_text()) != Some("read")
-        || jid(node, "to").is_none_or(|j| !matches!(j.server, Server::User | Server::Lid))
-    {
+    // APK43.72 0xW.A05: non-group normal read requires A1H true.
+    // Read-self/own companion routing remains unported. Proven negative gate only.
+    if !is_direct_read(node) {
         return Ok(false);
     }
     Ok(super::account_privacy::read_receipts_in_write(tx)?.is_some_and(|p| !p.value.enabled()))
@@ -675,9 +677,81 @@ pub fn outcomes(store: &ProtocolStore) -> Result<Vec<ReceiptOutcome>> {
     })
 }
 
-/// Reserve at most sixteen pending per-message receipts before any socket write.
-/// Matching read routes share the APK extra-ID list; unknown outcomes never replay.
+/// One frozen receipt batch and its exact durable reservation members.
+/// A successful check is not permission to repeat a write after uncertainty.
+pub struct ReservedReceipt {
+    node: Node,
+    pub(crate) guard: ReceiptWriteGuard,
+}
+impl std::fmt::Debug for ReservedReceipt {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ReservedReceipt").finish_non_exhaustive()
+    }
+}
+impl ReservedReceipt {
+    /// Original immutable batch to encode once after checking write authority.
+    pub fn node(&self) -> &Node {
+        &self.node
+    }
+    /// Recheck reservation members and the existing automatic-read privacy gate.
+    /// Normal actor uses this at its writer; direct writers must check just
+    /// before encoding and preserve uncertainty on any failed/partial write.
+    pub fn check_write_authority(&self, store: &ProtocolStore) -> Result<()> {
+        self.guard.check_write_authority(store)
+    }
+}
+#[derive(Clone)]
+pub(crate) struct ReceiptWriteGuard {
+    members: Vec<(Vec<u8>, zeroize::Zeroizing<Vec<u8>>)>,
+    automatic_direct_read: bool,
+}
+impl ReceiptWriteGuard {
+    pub(crate) fn check_write_authority(&self, store: &ProtocolStore) -> Result<()> {
+        store.read(|tx| {
+            if self.members.is_empty() {
+                return Err(Error::invalid(
+                    "receipt",
+                    "receipt reservation has no members",
+                ));
+            }
+            for (key, expected) in &self.members {
+                let current = zeroize::Zeroizing::new(
+                    tx.get(Table::Checkpoints, key, 1)?.unwrap_or_default(),
+                );
+                if *current != **expected {
+                    return Err(Error::invalid(
+                        "receipt",
+                        "receipt reservation changed before write",
+                    ));
+                }
+            }
+            if self.automatic_direct_read
+                && super::account_privacy::read_receipts_in(tx)?.is_some_and(|p| !p.value.enabled())
+            {
+                return Err(Error::invalid(
+                    "receipt",
+                    "automatic direct-read disabled before write",
+                ));
+            }
+            Ok(())
+        })
+    }
+}
+
+/// Reserve up to sixteen receipt intents as Nodes for low-level callers.
+/// Callers retain responsibility for writer authority and uncertainty; normal
+/// runtime and CLI use reserve_pending_owned instead.
 pub fn reserve_pending(store: &ProtocolStore) -> Result<Vec<Node>> {
+    Ok(reserve_pending_owned(store)?
+        .into_iter()
+        .map(|receipt| receipt.node)
+        .collect())
+}
+
+/// Reserve at most sixteen per-message intents for guarded writer handoffs.
+/// Matching read routes retain the APK extra-ID list. No replay or
+/// live acceptance is implied; all original uncertain rows stay reserved.
+pub fn reserve_pending_owned(store: &ProtocolStore) -> Result<Vec<ReservedReceipt>> {
     store.write(|tx| {
         let mut pending = Vec::new();
         let mut cursor = None;
@@ -776,6 +850,8 @@ pub fn reserve_pending(store: &ProtocolStore) -> Result<Vec<Node>> {
                 node.content =
                     crate::binary::NodeContent::Children(vec![Node::new("list").children(extras)]);
             }
+            let mut members = Vec::new();
+            let mut automatic_direct_read = false;
             for (key, mut row) in reserved {
                 row["status"] = serde_json::json!("outcome_unknown");
                 if batched {
@@ -783,9 +859,21 @@ pub fn reserve_pending(store: &ProtocolStore) -> Result<Vec<Node>> {
                         serde_json::json!(node.get_attr("id").unwrap().as_text().unwrap());
                 }
                 // Preserve the original per-message wire for inspection/deduplication.
+                automatic_direct_read |=
+                    automatic_origin(&row)? == Some(true) && is_direct_read(&node);
                 tx.put_json(Table::Checkpoints, &key, 1, &row)?;
+                let saved = tx
+                    .get(Table::Checkpoints, &key, 1)?
+                    .ok_or_else(|| Error::invalid("receipt", "reserved receipt member missing"))?;
+                members.push((key, zeroize::Zeroizing::new(saved)));
             }
-            out.push(node);
+            out.push(ReservedReceipt {
+                node,
+                guard: ReceiptWriteGuard {
+                    members,
+                    automatic_direct_read,
+                },
+            });
         }
         Ok(out)
     })
@@ -2655,6 +2743,119 @@ mod tests {
             kind: ReceiptKind::Read,
             server_timestamp: None,
             code: None,
+        }
+    }
+
+    #[tokio::test]
+    async fn queued_receipt_batch_owns_every_member_and_rechecks_late_privacy() {
+        use std::sync::Arc;
+        for mode in ["automatic", "manual", "mixed", "group", "singleton"] {
+            for change in [
+                "same",
+                "missing_first",
+                "missing_last",
+                "settled_first",
+                "wire_last",
+                "batch_id_last",
+                "origin_last",
+                "privacy_disabled",
+            ] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("receipt-write.redb");
+                let db = Arc::new(open(&path, true));
+                let count = if mode == "singleton" { 1 } else { 2 };
+                for i in 0..count {
+                    let node =
+                        automatic_text_fixture(&db, &format!("fixture-{i}"), mode == "group");
+                    if mode == "manual" || (mode == "mixed" && i == 1) {
+                        queue_read(&db, &explicit_read_for(&node)).unwrap();
+                    } else {
+                        queue_read_for_incoming(&db, &node).unwrap();
+                    }
+                }
+                let mut batch = reserve_pending_owned(&db).unwrap();
+                assert_eq!(batch.len(), 1);
+                let receipt = batch.pop().unwrap();
+                assert_eq!(receipt.guard.members.len(), count);
+                let expected_node = receipt.node().clone();
+                let cli_view = ReservedReceipt {
+                    node: expected_node.clone(),
+                    guard: receipt.guard.clone(),
+                };
+                assert!(!format!("{receipt:?}").contains("15555550101"));
+                let keys: Vec<_> = receipt
+                    .guard
+                    .members
+                    .iter()
+                    .map(|(key, _)| key.clone())
+                    .collect();
+                let (_incoming, incoming) = tokio::sync::mpsc::channel(1);
+                let (outgoing, mut writes) = tokio::sync::mpsc::channel(1);
+                let link = super::super::connection::NodeLink::new(incoming, outgoing);
+                let worker = db.clone();
+                let task = tokio::spawn(async move { link.send_receipt(&worker, &receipt).await });
+                let queued = writes.recv().await.unwrap();
+                if change == "privacy_disabled" {
+                    server_read_preference(&db, "late-disabled", "none");
+                } else if change != "same" {
+                    let key = if change.ends_with("last") {
+                        keys.last().unwrap()
+                    } else {
+                        &keys[0]
+                    };
+                    db.write(|tx| {
+                        if change.starts_with("missing") {
+                            tx.delete(Table::Checkpoints, key)?;
+                            return Ok(());
+                        }
+                        let mut row: serde_json::Value =
+                            tx.get_json(Table::Checkpoints, key, 1)?.unwrap();
+                        if change == "settled_first" {
+                            row["status"] = "server_acknowledged".into();
+                        } else if change == "batch_id_last" {
+                            row["batch_ack_id"] = "changed-fixture".into();
+                        } else if change == "origin_last" {
+                            row["automatic"] = (!row["automatic"].as_bool().unwrap()).into();
+                        } else {
+                            row["wire"] = serde_json::json!(vec![1u8, 2, 3]);
+                        }
+                        tx.put_json(Table::Checkpoints, key, 1, &row)
+                    })
+                    .unwrap();
+                }
+                let before = db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap();
+                let head = db.journal_head().unwrap();
+                let admitted = change == "same"
+                    || (change == "privacy_disabled" && matches!(mode, "manual" | "group"));
+                assert_eq!(
+                    cli_view.check_write_authority(&db).is_ok(),
+                    admitted,
+                    "CLI {mode}/{change}"
+                );
+                let prepared = queued.prepare();
+                assert_eq!(prepared.is_some(), admitted, "actor {mode}/{change}");
+                if let Some((node, written)) = prepared {
+                    assert_eq!(node, expected_node);
+                    written.send(Ok(())).unwrap();
+                }
+                assert_eq!(task.await.unwrap().is_ok(), admitted);
+                assert!(writes.recv().await.is_none());
+                assert_eq!(
+                    db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap(),
+                    before
+                );
+                assert_eq!(db.journal_head().unwrap(), head);
+                assert!(reserve_pending_owned(&db).unwrap().is_empty());
+                drop(db);
+                let reopened = open(&path, false);
+                assert_eq!(
+                    reopened
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    before
+                );
+                assert_eq!(reopened.journal_head().unwrap(), head);
+            }
         }
     }
 
