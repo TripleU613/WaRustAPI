@@ -1,0 +1,184 @@
+
+# class: LX/123;
+# extends: Ljava/lang/Object;
+
+.method public A0A(LLI)  # .registers 8
+    # full signature: LX/123;->A0A(Ljava/io/InputStream;I)Ljava/lang/String;
+    0000..0002  const/4  v0, #0xff (-1)
+    0002..0006  if-eq  v7, v0, +0x135
+    0006..0008  const/4  v0, #0x2
+    0008..000c  if-le  v7, v0, +0x44
+    000c..0010  const/16  v0, #0xec
+    0010..0014  if-ge  v7, v0, +0x44
+    0014..0018  const-string  v1, "Token was null for singlebyte idx: "
+    0018..001a  const/4  v3, #0x0
+    001a..001e  sget-object  v0, LX/1ro;->A00:[Ljava/lang/String;
+    001e..0022  aget-object  v4, v0, v7
+    0022..0026  new-instance  v0, Ljava/lang/StringBuilder;
+    0026..002c  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    002c..0032  invoke-virtual  {v0, v7}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0032..0038  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0038..003a  move-result-object  v0
+    003a..0040  invoke-static  {v4, v0}, LX/00L;->A06(Ljava/lang/Object;Ljava/lang/String;)V
+    0040..0042  return-object  v4
+    0042..0044  move-exception  v2
+    0044..0048  const-string  v0, "Fail while trying to access WapDict, dictNum="
+    0048..004c  new-instance  v1, Ljava/lang/StringBuilder;
+    004c..0052  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0052..0058  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0058..005c  const-string  v0, ", dictIdx="
+    005c..0062  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0062..0068  invoke-virtual  {v1, v7}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0068..006e  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    006e..0070  move-result-object  v0
+    0070..0076  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0076..0078  throw  v2
+    0078..007c  const-string  v2, "invalid token index in getToken()"
+    007c..0082  invoke-virtual  {v5}, LX/123;->A09()Ljava/lang/String;
+    0082..0084  move-result-object  v1
+    0084..0088  new-instance  v0, LX/LIL;
+    0088..008e  invoke-direct  {v0, v2, v1}, LX/LIL;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    008e..0090  throw  v0
+    0090..0094  if-nez  v7, +0x12
+    0094..0096  const/4  v4, #0x0
+    0096..0098  return-object  v4
+    0098..009c  const/16  v0, #0xf4
+    009c..00a0  if-eq  v7, v0, +0xe3
+    00a0..00a4  const/16  v0, #0xf7
+    00a4..00a8  if-eq  v7, v0, +0xda
+    00a8..00ae  packed-switch  v7, payload@0x284, cases=[236:@0x1be, 237:@0x1be, 238:@0x1be, 239:@0x1be], default@0xae
+    00ae..00b4  packed-switch  v7, payload@0x29c, cases=[250:@0xcc, 251:@0x180, 252:@0x198, 253:@0x156, 254:@0x11e, 255:@0x180], default@0xb4
+    00b4..00b8  const-string  v2, "readString couldn't match token"
+    00b8..00be  invoke-virtual  {v5}, LX/123;->A09()Ljava/lang/String;
+    00be..00c0  move-result-object  v1
+    00c0..00c4  new-instance  v0, LX/LIL;
+    00c4..00ca  invoke-direct  {v0, v2, v1}, LX/LIL;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    00ca..00cc  throw  v0
+    00cc..00d0  const-string  v0, "Unexpected ReadString for token JID_PAIR"
+    00d0..00d6  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    00d6..00dc  invoke-virtual  {v6}, Ljava/io/InputStream;->read()I
+    00dc..00de  move-result  v0
+    00de..00e4  invoke-virtual  {v5, v6, v0}, LX/123;->A0A(Ljava/io/InputStream;I)Ljava/lang/String;
+    00e4..00e6  move-result-object  v2
+    00e6..00ec  invoke-virtual  {v6}, Ljava/io/InputStream;->read()I
+    00ec..00ee  move-result  v0
+    00ee..00f4  invoke-virtual  {v5, v6, v0}, LX/123;->A0A(Ljava/io/InputStream;I)Ljava/lang/String;
+    00f4..00f6  move-result-object  v1
+    00f6..00fa  if-eqz  v1, +0x8
+    00fa..00fc  const/4  v0, #0x0
+    00fc..0102  invoke-static  {v2, v1, v0}, LX/123;->A04(Ljava/lang/String;Ljava/lang/String;I)Ljava/lang/String;
+    0102..0104  move-result-object  v4
+    0104..0106  return-object  v4
+    0106..010a  const-string  v2, "null server in JID_PAIR"
+    010a..0110  invoke-virtual  {v5}, LX/123;->A09()Ljava/lang/String;
+    0110..0112  move-result-object  v1
+    0112..0116  new-instance  v0, LX/LIL;
+    0116..011c  invoke-direct  {v0, v2, v1}, LX/LIL;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    011c..011e  throw  v0
+    011e..0124  invoke-virtual  {v6}, Ljava/io/InputStream;->read()I
+    0124..0126  move-result  v0
+    0126..012a  and-int/lit8  v1, v0, #0x7f
+    012a..0130  invoke-virtual  {v6}, Ljava/io/InputStream;->read()I
+    0130..0132  move-result  v0
+    0132..0138  invoke-virtual  {v6}, Ljava/io/InputStream;->read()I
+    0138..013a  move-result  v2
+    013a..0140  invoke-virtual  {v6}, Ljava/io/InputStream;->read()I
+    0140..0142  move-result  v3
+    0142..0146  shl-int/lit8  v1, v1, #0x18
+    0146..014a  shl-int/lit8  v0, v0, #0x10
+    014a..014c  or-int/2addr  v1, v0
+    014c..0150  shl-int/lit8  v0, v2, #0x8
+    0150..0152  or-int/2addr  v1, v0
+    0152..0154  or-int/2addr  v3, v1
+    0154..0156  goto  +0x26
+    0156..015c  invoke-virtual  {v6}, Ljava/io/InputStream;->read()I
+    015c..015e  move-result  v0
+    015e..0162  and-int/lit8  v2, v0, #0xf
+    0162..0168  invoke-virtual  {v6}, Ljava/io/InputStream;->read()I
+    0168..016a  move-result  v0
+    016a..0170  invoke-virtual  {v6}, Ljava/io/InputStream;->read()I
+    0170..0172  move-result  v1
+    0172..0176  shl-int/lit8  v3, v2, #0x10
+    0176..017a  shl-int/lit8  v0, v0, #0x8
+    017a..017c  add-int/2addr  v3, v0
+    017c..017e  add-int/2addr  v3, v1
+    017e..0180  goto  +0x11
+    0180..0186  invoke-static  {v6, v7}, LX/123;->A07(Ljava/io/InputStream;I)[B
+    0186..0188  move-result-object  v1
+    0188..018c  sget-object  v0, LX/08u;->A0C:Ljava/lang/String;
+    018c..0190  new-instance  v4, Ljava/lang/String;
+    0190..0196  invoke-direct  {v4, v1, v0}, Ljava/lang/String;-><init>([BLjava/lang/String;)V
+    0196..0198  return-object  v4
+    0198..019e  invoke-virtual  {v6}, Ljava/io/InputStream;->read()I
+    019e..01a0  move-result  v3
+    01a0..01a4  new-array  v1, v3, [B
+    01a4..01aa  invoke-static  {v6, v1}, LX/123;->A06(Ljava/io/InputStream;[B)V
+    01aa..01ae  sget-object  v0, LX/08u;->A0C:Ljava/lang/String;
+    01ae..01b2  new-instance  v4, Ljava/lang/String;
+    01b2..01b8  invoke-direct  {v4, v1, v0}, Ljava/lang/String;-><init>([BLjava/lang/String;)V
+    01b8..01ba  return-object  v4
+    01ba..01bc  const/4  v4, #0x0
+    01bc..01be  return-object  v4
+    01be..01c4  invoke-virtual  {v6}, Ljava/io/InputStream;->read()I
+    01c4..01c6  move-result  v3
+    01c6..01ca  const-string  v2, "Token was null for doublebyte dictNum="
+    01ca..01ce  sget-object  v1, LX/1ro;->A01:[[Ljava/lang/String;
+    01ce..01d2  add-int/lit16  v0, v7, #0xff14 (-236)
+    01d2..01d6  aget-object  v0, v1, v0
+    01d6..01da  aget-object  v4, v0, v3
+    01da..01de  new-instance  v1, Ljava/lang/StringBuilder;
+    01de..01e4  invoke-direct  {v1, v2}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    01e4..01ea  invoke-virtual  {v1, v7}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    01ea..01ee  const-string  v0, ", dictIdx="
+    01ee..01f4  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    01f4..01fa  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    01fa..0200  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0200..0202  move-result-object  v0
+    0202..0208  invoke-static  {v4, v0}, LX/00L;->A06(Ljava/lang/Object;Ljava/lang/String;)V
+    0208..020a  return-object  v4
+    020a..020c  move-exception  v2
+    020c..0210  const-string  v0, "Fail while trying to access WapDict, dictNum="
+    0210..0214  new-instance  v1, Ljava/lang/StringBuilder;
+    0214..021a  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    021a..0220  invoke-virtual  {v1, v7}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0220..0224  const-string  v0, ", dictIdx="
+    0224..022a  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    022a..0230  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0230..0236  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0236..0238  move-result-object  v0
+    0238..023e  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    023e..0240  throw  v2
+    0240..0244  const-string  v2, "invalid token index in getToken()"
+    0244..024a  invoke-virtual  {v5}, LX/123;->A09()Ljava/lang/String;
+    024a..024c  move-result-object  v1
+    024c..0250  new-instance  v0, LX/LIL;
+    0250..0256  invoke-direct  {v0, v2, v1}, LX/LIL;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    0256..0258  throw  v0
+    0258..025e  invoke-direct  {v5, v6}, LX/123;->A02(Ljava/io/InputStream;)Ljava/lang/String;
+    025e..0260  move-result-object  v4
+    0260..0262  return-object  v4
+    0262..0268  invoke-direct  {v5, v6}, LX/123;->A03(Ljava/io/InputStream;)Ljava/lang/String;
+    0268..026a  move-result-object  v4
+    026a..026c  return-object  v4
+    026c..0270  const-string  v2, "-1 token in readString"
+    0270..0276  invoke-virtual  {v5}, LX/123;->A09()Ljava/lang/String;
+    0276..0278  move-result-object  v1
+    0278..027c  new-instance  v0, LX/LIL;
+    027c..0282  invoke-direct  {v0, v2, v1}, LX/LIL;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    0282..0284  throw  v0
+    0284..029c  packed-switch-payload  size=4
+    029c..02bc  packed-switch-payload  size=6
+    # exception table: 6 try range(s)
+    # catch Ljava/lang/ArrayIndexOutOfBoundsException; code_units 000d..0011 -> 0021
+    # catch Ljava/lang/ArrayIndexOutOfBoundsException; code_units 000d..0011 -> 003c
+    # catch Ljava/lang/NullPointerException; code_units 000d..0011 -> 003c
+    # catch Ljava/lang/ArrayIndexOutOfBoundsException; code_units 0011..003c -> 003c
+    # catch Ljava/lang/NullPointerException; code_units 0011..003c -> 003c
+    # catch Ljava/io/UnsupportedEncodingException; code_units 00c4..00cc -> 00dd
+    # catch Ljava/io/UnsupportedEncodingException; code_units 00d5..00dd -> 00dd
+    # catch Ljava/lang/ArrayIndexOutOfBoundsException; code_units 00e5..00ed -> 0105
+    # catch Ljava/lang/ArrayIndexOutOfBoundsException; code_units 00e5..00ed -> 0120
+    # catch Ljava/lang/NullPointerException; code_units 00e5..00ed -> 0120
+    # catch Ljava/lang/ArrayIndexOutOfBoundsException; code_units 00ed..0120 -> 0120
+    # catch Ljava/lang/NullPointerException; code_units 00ed..0120 -> 0120
+.end method

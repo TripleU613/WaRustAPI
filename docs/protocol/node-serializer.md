@@ -28,3 +28,22 @@ size producers and disconnect callback authority stay open.
 Rust does not currently select it. Native inbound decoding, actual producers,
 complete string/token context and full codec parity remain unverified. No live
 account operation or decoder behavior change is included here.
+
+## Packed nibble colon and padding match the APK (2026-11-06)
+
+**Confirmed selected static / implemented, APK2.26.43.72:**
+[Complete123.A07/A0A reader exports and existing writer context](apk/2.26.43.72-packed-nibble/README.md)
+close the colon-alphabet follow-through above. NIBBLE_8 digit12 is colon;
+actual13..15 are invalid. Odd strings contain2*pairs-1 actual digits, so the
+last low nibble is ignored, regardless of its value. Oddzero-pair headers
+are invalid; empty even values are admitted. HEX_8 retains all16 hex digits.
+
+Rust now packs colon in its existing nibble contexts, accepts packed colon,
+rejects invalid actual data instead of emitting NUL, ignores padding before
+validation and rejects negative digit counts. Two independent literal fixtures
+failed before the fixes and pass afterward; the reader matrix separates actual
+invalid digits from ignored padding and valid hex. No new request, retry,
+response-settlement authority or live account operation is introduced.
+
+This resolves the specifically named colon/alphabet/count gap, not complete
+context-dependent serializer parity or the effects of every native parser fault.

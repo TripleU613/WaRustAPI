@@ -98,6 +98,7 @@ impl<'a> Encoder<'a> {
                 tags::NIBBLE_8 => match c {
                     b'-' => 10,
                     b'.' => 11,
+                    b':' => 12, // APK 43.72 1r2.A06 0116: colon nibble.
                     0 => 15,
                     d => d - b'0',
                 },
@@ -218,7 +219,7 @@ fn is_nibble(s: &str) -> bool {
     !s.is_empty()
         && s.len() <= tags::PACKED_MAX
         && s.bytes()
-            .all(|b| b.is_ascii_digit() || b == b'-' || b == b'.')
+            .all(|b| b.is_ascii_digit() || matches!(b, b'-' | b'.' | b':'))
 }
 
 fn is_hex(s: &str) -> bool {
@@ -247,6 +248,52 @@ mod tests {
         Decoder::new(&payload, dict(), &limits)
             .decode_node()
             .unwrap()
+    }
+
+    #[test]
+    fn apk_colon_nibble_outbound_literal() {
+        // APK 43.72 1r2.A06: ':' is NIBBLE_8 digit 12.
+        let encoded = Encoder::new(dict())
+            .encode(&Node::new("iq").attr("id", ":1"))
+            .unwrap();
+        assert_eq!(encoded, [0, 0xF8, 3, 25, 8, 0xFF, 1, 0xC1]);
+    }
+
+    #[test]
+    fn apk_packed_reader_colon_data_and_padding_literals() {
+        // APK 43.72 123.A07 processes only 2*pairs-odd digits.
+        // Nibble 12 is ':', while 13..15 are invalid actual data.
+        let decode = |tag, header, body: &[u8]| {
+            let mut payload = vec![0xF8, 3, 25, 8, tag, header];
+            payload.extend_from_slice(body);
+            Decoder::new(&payload, dict(), &Limits::default()).decode_node()
+        };
+        for (header, body, expected) in [
+            (1, vec![0xC1], ":1"),
+            (0x81, vec![0xCF], ":"),
+            (0x81, vec![0x8D], "8"),
+            (0, vec![], ""),
+        ] {
+            let node = decode(0xFF, header, &body).unwrap();
+            assert_eq!(
+                node.get_attr("id").and_then(AttributeValue::as_text),
+                Some(expected)
+            );
+        }
+        for digit in 13..=15 {
+            assert!(matches!(
+                decode(0xFF, 1, &[0x10 | digit]),
+                Err(CodecError::InvalidPackedDigit { value, .. }) if value == digit
+            ));
+        }
+        assert!(decode(0xFF, 0x80, &[]).is_err());
+        assert_eq!(
+            decode(0xFB, 1, &[0xCF])
+                .unwrap()
+                .get_attr("id")
+                .and_then(AttributeValue::as_text),
+            Some("CF")
+        );
     }
 
     #[test]

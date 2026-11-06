@@ -1,0 +1,83 @@
+
+# class: LX/123;
+# extends: Ljava/lang/Object;
+
+.method public A07(LLI)  # .registers 9
+    # full signature: LX/123;->A07(Ljava/io/InputStream;I)[B
+    0000..0006  invoke-virtual  {v7}, Ljava/io/InputStream;->read()I
+    0006..0008  move-result  v2
+    0008..000c  and-int/lit16  v0, v2, #0x80
+    000c..000e  const/4  v6, #0x0
+    000e..0010  const/4  v1, #0x0
+    0010..0014  if-eqz  v0, +0x3
+    0014..0016  const/4  v1, #0x1
+    0016..001a  and-int/lit8  v0, v2, #0x7f
+    001a..001e  new-array  v5, v0, [B
+    001e..0024  invoke-static  {v7, v5}, LX/123;->A06(Ljava/io/InputStream;[B)V
+    0024..0028  mul-int/lit8  v4, v0, #0x2
+    0028..002a  sub-int/2addr  v4, v1
+    002a..002e  if-ltz  v4, +0x71
+    002e..0032  new-array  v3, v4, [B
+    0032..0036  if-ge  v6, v4, +0x6c
+    0036..003a  rem-int/lit8  v0, v6, #0x2
+    003a..003e  rsub-int/lit8  v0, v0, #0x1
+    003e..0042  mul-int/lit8  v1, v0, #0x4
+    0042..0046  div-int/lit8  v0, v6, #0x2
+    0046..004a  aget-byte  v2, v5, v0
+    004a..004e  const/16  v0, #0xf
+    004e..0050  shl-int/2addr  v0, v1
+    0050..0052  and-int/2addr  v2, v0
+    0052..0054  ??(0xb9)  v2, v1
+    0054..0058  const/16  v0, #0xfb
+    0058..005c  if-eq  v8, v0, +0x20
+    005c..0060  const/16  v0, #0xff
+    0060..0064  if-ne  v8, v0, +0x41
+    0064..006a  packed-switch  v2, payload@0x11c, cases=[0:@0xc6, 1:@0xc6, 2:@0xc6, 3:@0xc6, 4:@0xc6, 5:@0xc6, 6:@0xc6, 7:@0xc6, 8:@0xc6, 9:@0xc6, 10:@0x92, 11:@0x92, 12:@0xd2], default@0x6a
+    006a..006e  const-string  v1, "bad nibble "
+    006e..0072  new-instance  v0, Ljava/lang/StringBuilder;
+    0072..0078  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0078..007e  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    007e..0084  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0084..0086  move-result-object  v1
+    0086..008a  new-instance  v0, LX/LIL;
+    008a..0090  invoke-direct  {v0, v1}, LX/LIL;-><init>(Ljava/lang/String;)V
+    0090..0092  throw  v0
+    0092..0096  add-int/lit8  v0, v2, #0x23
+    0096..0098  goto  +0x20
+    0098..009e  packed-switch  v2, payload@0x158, cases=[0:@0xc6, 1:@0xc6, 2:@0xc6, 3:@0xc6, 4:@0xc6, 5:@0xc6, 6:@0xc6, 7:@0xc6, 8:@0xc6, 9:@0xc6, 10:@0xcc, 11:@0xcc, 12:@0xcc, 13:@0xcc, 14:@0xcc, 15:@0xcc], default@0x9e
+    009e..00a2  const-string  v1, "bad hex "
+    00a2..00a6  new-instance  v0, Ljava/lang/StringBuilder;
+    00a6..00ac  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00ac..00b2  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00b2..00b8  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00b8..00ba  move-result-object  v1
+    00ba..00be  new-instance  v0, LX/LIL;
+    00be..00c4  invoke-direct  {v0, v1}, LX/LIL;-><init>(Ljava/lang/String;)V
+    00c4..00c6  throw  v0
+    00c6..00ca  add-int/lit8  v0, v2, #0x30
+    00ca..00cc  goto  +0x6
+    00cc..00d0  add-int/lit8  v0, v2, #0x37
+    00d0..00d2  goto  +0x3
+    00d2..00d6  const/16  v0, #0x3a
+    00d6..00d8  int-to-byte  v0, v0
+    00d8..00dc  aput-byte  v0, v3, v6
+    00dc..00e0  add-int/lit8  v6, v6, #0x1
+    00e0..00e2  goto  -0x57
+    00e2..00e6  const-string  v1, "bad packed type "
+    00e6..00ea  new-instance  v0, Ljava/lang/StringBuilder;
+    00ea..00f0  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00f0..00f6  invoke-virtual  {v0, v8}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00f6..00fc  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00fc..00fe  move-result-object  v1
+    00fe..0102  new-instance  v0, LX/LIL;
+    0102..0108  invoke-direct  {v0, v1}, LX/LIL;-><init>(Ljava/lang/String;)V
+    0108..010a  throw  v0
+    010a..010c  return-object  v3
+    010c..0110  const-string  v1, "readPacked8 negative nibble count"
+    0110..0114  new-instance  v0, LX/LIL;
+    0114..011a  invoke-direct  {v0, v1}, LX/LIL;-><init>(Ljava/lang/String;)V
+    011a..011c  throw  v0
+    011c..0158  packed-switch-payload  size=13
+    0158..01a0  packed-switch-payload  size=16
+    # exception table: 0 try range(s)
+.end method

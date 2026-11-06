@@ -1,0 +1,22 @@
+{
+  "README.md": {
+    "bytes": 4310,
+    "sha256": "51e567e50b6cf6431a97e2c9f29bad90d067c4dcdcce69415e6a3e9946ea83b5"
+  },
+  "record-context-constructor.txt": {
+    "bytes": 408,
+    "sha256": "81a001af6bc0d34bb3448f3c8ba30dbb4fb9ab0271b0f0ceb0207f41e5c84e91"
+  },
+  "string-reader.txt": {
+    "bytes": 10804,
+    "sha256": "cc96c041eb5c0669671d963c9504789eab72a8542486ac7dd06fd17062c58847"
+  },
+  "unpack-callers.txt": {
+    "bytes": 132,
+    "sha256": "b105891bcb8394bd2659061a2085d00c677694839ba7f6a03cd9fd2c9a1d9ed5"
+  },
+  "unpack.txt": {
+    "bytes": 4227,
+    "sha256": "7609cc569e951a2b662d9d637b44e010d1ae26460524e71fddc7ee15f494f99d"
+  }
+}

@@ -18230,5 +18230,16 @@
     ],
     "description": "Binary-node encoder now follows pinned APK1r2.A01: empty child collections omit the content slot and empty-list suffix, including nested nodes; empty bytes and nonempty children retain their distinct encodings. Offline literal fixtures failed before the fix. Research also separates conditional pre-encryption serialization budget failures from post-encryption framing limits; no universal server cap, retry, settlement or live verification claim. Optional colon packing and full codec parity remain open.",
     "evidence": "docs/protocol/node-serializer.md"
+  },
+  "x-packed-nibble-compatibility": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [
+      "whatsapp_api::binary::Encoder",
+      "whatsapp_api::binary::Decoder"
+    ],
+    "description": "Pinned APK123.A07 and1r2.A06 agree on NIBBLE_8 colon12, invalid actual13..15 and2*pairs-odd digit count. Rust now packs/accepts colon, rejects invalid actual nibble data and oddzero-pair headers, and skips trailing odd padding before validation. HEX_8 alphabet unchanged. Independent literal fixtures failed before correction. No live verification, new retry, response settlement or complete context-specific codec parity claim.",
+    "evidence": "docs/protocol/node-serializer.md#packed-nibble-colon-and-padding-match-the-apk-2026-11-06"
   }
 }

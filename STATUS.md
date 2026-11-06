@@ -1,3 +1,5 @@
+Fixed APK-confirmed packed-string mismatches: colon nibble12 now encodes/decodes, invalid actual13..15 reject, odd padding is ignored before validation, and negative digit counts reject. [Literal fixtures and native reader/writer evidence](docs/protocol/node-serializer.md#packed-nibble-colon-and-padding-match-the-apk-2026-11-06). No live operation or retry/settlement change.
+
 Fixed APK-confirmed binary-node encoding mismatch: empty child arrays now omit content instead of adding LIST_EMPTY; empty bytes remain present. [Literal fixtures, conditional serializer budget and remaining codec gaps](docs/protocol/node-serializer.md). No live operation, new retry or settlement change.
 
 Status final writer now traced through prepared message construction, counter-before-output, three-byte framing/flush and size-failure callback routing. [Pinned evidence and Rust uncertainty controls](docs/protocol/message-ack.md#status-final-writer-consumes-the-transport-counter-before-output-2026-11-06). No runtime/replay change; full serializer, underlying socket and disconnect ownership remain open.

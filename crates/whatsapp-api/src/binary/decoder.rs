@@ -139,15 +139,23 @@ impl<'a> Decoder<'a> {
         let start = self.byte()?;
         let pairs = (start & 0x7F) as usize;
         let odd = start & 0x80 != 0;
+        // APK 43.72 123.A07 counts 2*pairs-odd actual digits. The
+        // final low nibble is padding, not a digit to validate then discard.
+        // Evidence: docs/protocol/apk/2.26.43.72-packed-nibble/README.md.
+        if odd && pairs == 0 {
+            return Err(CodecError::InvalidNode {
+                offset: self.pos - 1,
+                reason: "negative packed digit count",
+            });
+        }
         let mut out = String::with_capacity(pairs * 2);
-        for _ in 0..pairs {
+        for index in 0..pairs {
             let offset = self.pos;
             let b = self.byte()?;
             out.push(unpack_digit(tag, b >> 4, offset)?);
-            out.push(unpack_digit(tag, b & 0x0F, offset)?);
-        }
-        if odd {
-            out.pop();
+            if !odd || index + 1 < pairs {
+                out.push(unpack_digit(tag, b & 0x0F, offset)?);
+            }
         }
         Ok(out)
     }
@@ -446,7 +454,8 @@ fn unpack_digit(tag: u8, v: u8, offset: usize) -> Result<char, CodecError> {
             0..=9 => Ok((b'0' + v) as char),
             10 => Ok('-'),
             11 => Ok('.'),
-            15 => Ok('\0'),
+            // APK 43.72 123.A07: 12 is colon; 13..15 are bad data.
+            12 => Ok(':'),
             _ => Err(CodecError::InvalidPackedDigit { value: v, offset }),
         },
         tags::HEX_8 => match v {
