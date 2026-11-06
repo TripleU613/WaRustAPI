@@ -17226,5 +17226,12 @@
     "x-live": false,
     "description": "Supported account_sync privacy admission filters category-tagged children before validating attributes/content/name/value, matching APK43.72 19N.A09/0Tp.A0N. Unrelated metadata cannot adopt state or suppress valid readreceipts. Existing64-total-child bound, selected readreceipts-only/value/body, root/action/envelope, pending-intent and transaction guards remain. Empty/metadata-only and actual unsupported categories remain refused. Red/green regression uses invalid readreceipts-like metadata plus valid category and verifies metadata-only refusal preserves checkpoints. No new category, query or HTTP route.",
     "evidence": "docs/protocol/account-privacy-notifications.md#named-category-filtering-2026-11-05"
+  },
+  "x-prekey-count-ack-optional-source": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "low_count_ack omits to when from is absent, matching selected native frozen-key/final-writer path; parsed source keeps existing ack_address routing. Explicit source parse failure returns InvalidInput and actor captures without ACK/upload while receive continues. This replaces fabricated server fallback. Red/green actor regression checks omitted to on PQ-first with no legacy upload; malformed-source and valid legacy upload controls remain. Native ACK-after-work ordering remains unported; no retry or new source authority is introduced.",
+    "evidence": "docs/protocol/apk/2.26.43.72-prekey-count-ack-source/README.md"
   }
 }

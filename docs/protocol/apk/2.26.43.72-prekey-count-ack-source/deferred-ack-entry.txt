@@ -1,0 +1,12 @@
+
+# class: LX/89Y;
+# extends: Ljava/lang/Object;
+
+.method public A01(V)  # .registers 3
+    # full signature: LX/89Y;->A01()V
+    0000..0002  const/4  v1, #0x0
+    0002..0006  iget-object  v0, v2, LX/89Y;->A04:LX/1k2;
+    0006..000c  invoke-static  {v0, v1, v2, v1}, LX/89Y;->A00(LX/1k2;LX/0Tp;LX/89Y;Ljava/util/List;)V
+    000c..000e  return-void
+    # exception table: 0 try range(s)
+.end method

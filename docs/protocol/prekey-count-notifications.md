@@ -939,3 +939,15 @@ and passed afterward. All 1,302 workspace/all-feature tests passed with two
 test threads; strict Clippy, CLI reference, fmt, JSON and coverage freshness
 passed. Staged whitespace and repository hygiene passed. Capture/reopen checks used
 synthetic stores and injected links only.
+
+
+### Count ACK optional source and malformed-source refusal (2026-11-05)
+
+**Confirmed static / locally fixed:** deferred89Y preserves original Eoh; the
+common final builder omits absent to. Rust's server fallback fabricated explicit
+to for absent source and redirected explicit parse failure. Count ACK now omits
+to for absence, retains normal parsed routing and locally refuses explicit
+invalid source before ACK/upload. Red/green actor coverage checks source-less
+PQ no-upload and malformed-source capture/receive continuation; valid legacy
+upload controls remain. Native ACK-after-work timing remains unported.
+[Complete deferred chain, wire proof and limits](apk/2.26.43.72-prekey-count-ack-source/README.md).

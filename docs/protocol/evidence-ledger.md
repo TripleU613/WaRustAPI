@@ -7494,3 +7494,15 @@ selected category/value/body, envelope/pending/transaction guards. Metadata-only
 remains refused. Red/green regression ensures metadata cannot adopt preference
 state and does not suppress the selected valid category.
 [Source and limits](account-privacy-notifications.md#named-category-filtering-2026-11-05).
+
+
+### Count ACK optional source and malformed-source refusal (2026-11-05)
+
+**Confirmed static / locally fixed:** deferred89Y preserves original Eoh; the
+common final builder omits absent to. Rust's server fallback fabricated explicit
+to for absent source and redirected explicit parse failure. Count ACK now omits
+to for absence, retains normal parsed routing and locally refuses explicit
+invalid source before ACK/upload. Red/green actor coverage checks source-less
+PQ no-upload and malformed-source capture/receive continuation; valid legacy
+upload controls remain. Native ACK-after-work timing remains unported.
+[Complete deferred chain, wire proof and limits](apk/2.26.43.72-prekey-count-ack-source/README.md).

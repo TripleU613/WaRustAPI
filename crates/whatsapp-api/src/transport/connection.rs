@@ -3811,6 +3811,12 @@ mod tests {
                 .attr("from", Jid::parse("s.whatsapp.net").unwrap())
                 .attr("type", "encrypt")
                 .children(vec![Node::new("count").attr("value", "5")]),
+            // A count envelope cannot invent an ACK destination.
+            Node::new("notification")
+                .attr("from", "1:invalid@s.whatsapp.net")
+                .attr("id", "COUNT-BAD-SOURCE")
+                .attr("type", "encrypt")
+                .children(vec![Node::new("count").attr("value", "5")]),
         ];
         for node in refused {
             let wire = encode(&node).unwrap();
@@ -5275,13 +5281,18 @@ mod tests {
         .await;
         fake.nothing_written(Duration::from_millis(100)).await;
         // PQ-first dispatch ignores a later legacy child and never uploads.
-        fake.deliver(count_notification("pq", "pq_count", "٢").children(vec![
+        let mut pq = count_notification("pq", "pq_count", "٢").children(vec![
             Node::new("pq_count"),
             Node::new("count").attr("value", "7"),
-        ]))
-        .await;
+        ]);
+        pq.attributes.retain(|attribute| attribute.name != "from");
+        fake.deliver(pq).await;
         let (ack, write) = fake.written().await;
         assert_eq!(ack.get_attr("id").and_then(|v| v.as_text()), Some("pq"));
+        assert!(
+            ack.get_attr("to").is_none(),
+            "absent source must not fabricate an ACK destination"
+        );
         write.send(Ok(())).unwrap();
         fake.nothing_written(Duration::from_millis(100)).await;
         assert_eq!(summary(&store).unwrap().uploaded, 50);

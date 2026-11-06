@@ -1,3 +1,8 @@
+Count ACKs no longer invent a server destination: missing from omits to;
+explicit parse failure is refused before ACK/upload. Actor regression covers
+source-less PQ and malformed source; native ACK timing remains unported.
+[Evidence](docs/protocol/apk/2.26.43.72-prekey-count-ack-source/README.md).
+
 Account privacy now filters named category children like the APK, allowing
 unrelated metadata beside supported readreceipts. Actual unsupported categories
 and metadata-only events remain refused; regression preserves prior state.

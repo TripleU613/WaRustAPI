@@ -1,0 +1,14 @@
+{
+  "README.md": {
+    "bytes": 2768,
+    "sha256": "48de9a343be2aaef10b0425e7ed3bd8cf4d23d01c64542dd2e770a1a136763cf"
+  },
+  "deferred-ack-dispatch.txt": {
+    "bytes": 2701,
+    "sha256": "2f929170ac3ebeadd015dff89c02d526e2fc274ca90f18e1452b4f8b17a6f4eb"
+  },
+  "deferred-ack-entry.txt": {
+    "bytes": 397,
+    "sha256": "5c33d76b2c14d5f7f04251bfa3abe865bcbd9b14fb45564d65664f6f46f25cbd"
+  }
+}

@@ -849,12 +849,21 @@ pub fn low_count_ack(node: &Node) -> Result<Node> {
         .and_then(|v| v.as_text())
         .filter(|v| !v.is_empty() && v.len() <= 128)
         .ok_or_else(|| invalid("count notification without id"))?;
-    let to = super::receipts::jid(node, "from").unwrap_or(Jid::parse("s.whatsapp.net")?);
-    Ok(Node::new("ack")
-        .attr("to", super::receipts::ack_address(to))
-        .attr("id", id)
-        .attr("class", "notification")
-        .attr("type", "encrypt"))
+    // APK43.72 F0R.A02/A00 preserves an optional source in Eoh;
+    // deferred89Y.A01/A00 reaches F3e.A05, which omits absent `to`.
+    // Do not convert an explicit parse failure into an invented server peer.
+    let to = node
+        .get_attr("from")
+        .map(|_| {
+            super::receipts::jid(node, "from")
+                .ok_or_else(|| invalid("count notification has invalid source"))
+        })
+        .transpose()?;
+    let mut ack = Node::new("ack").attr("id", id);
+    if let Some(to) = to {
+        ack = ack.attr("to", super::receipts::ack_address(to));
+    }
+    Ok(ack.attr("class", "notification").attr("type", "encrypt"))
 }
 
 fn refused_upload_in(tx: &impl Lookup) -> Result<bool> {
