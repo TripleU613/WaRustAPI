@@ -1,0 +1,14 @@
+
+# class: LX/FfK;
+# extends: Ljava/lang/Object;
+
+.method public BsT(VL)  # .registers 3
+    # full signature: LX/FfK;->BsT(Ljava/lang/Object;)V
+    0000..0004  iput-object  v2, v1, LX/FfK;->A01:Ljava/lang/Object;
+    0004..0006  const/4  v0, #0x1
+    0006..000a  iput-boolean  v0, v1, LX/FfK;->A02:Z
+    000a..000e  iget-object  v0, v1, LX/FfK;->A03:Ljava/util/concurrent/CountDownLatch;
+    000e..0014  invoke-virtual  {v0}, Ljava/util/concurrent/CountDownLatch;->countDown()V
+    0014..0016  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -3391,3 +3391,5 @@ rethrow. Actual writer/ciphertext transactions, callback authority and full
 postwrite effects remain untraced. Existing Rust stanza limits/timeouts and
 reservations stay intact. Current emitter tests remain local controls, not full
 43.72 status rendering proof. No live operation or replay expansion.
+
+- **2026-11-06 submit follow-through:** status future registration, original-device0 key normalization and null-valued callback completion are now retained. [Callback meaning and writer gap](message-ack.md#status-submit-future-completes-callbacks-without-carrying-acceptance-2026-11-06). No emitter/runtime change.

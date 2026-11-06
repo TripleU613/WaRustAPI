@@ -1,0 +1,54 @@
+{
+  "README.md": {
+    "bytes": 6057,
+    "sha256": "83fefb6730bd66046fd662789d3bd3b7b2f08bf0455a80887a0eacae9f6ea8ef"
+  },
+  "callback-failure.txt": {
+    "bytes": 415,
+    "sha256": "e399bf9184ae6c9788ffb5405bd578bb747806a8244858cc955595391c8c2c1b"
+  },
+  "callback-insert.txt": {
+    "bytes": 3420,
+    "sha256": "77e00a8bdd26d93c4d6f8c29561149da59f6c962becb07dc8f74e3fb3c60ed1d"
+  },
+  "callback-success.txt": {
+    "bytes": 1868,
+    "sha256": "3236c6386ccc2b03bda3973a0a0052b3199b22f541584b6655a0e129b6f2f488"
+  },
+  "future-failure.txt": {
+    "bytes": 665,
+    "sha256": "ace7eb2d57ed96f4b032c56a33dd0b8e68ff0b1eeee3258c827f0f573e3b3100"
+  },
+  "future-get.txt": {
+    "bytes": 1972,
+    "sha256": "091faa9c4f140b1bbec4506445a48e011feb9728b176621fcc2e1aae077b8b1e"
+  },
+  "future-success.txt": {
+    "bytes": 556,
+    "sha256": "a4a15f41565eebad6dca1c00b5ca229d4c324ac29f1965f591d603f5dfe5aa20"
+  },
+  "key-normalize.txt": {
+    "bytes": 2292,
+    "sha256": "2f6edfd0a23db41930c28f6296426a37fba049c334d95e85e9550cb2347dcad1"
+  },
+  "message-code.txt": {
+    "bytes": 730,
+    "sha256": "ecb66e7eb17c60a5cd71bfd34b7fa3797197af6f2142436f84b1b17eca915914"
+  },
+  "queue.txt": {
+    "bytes": 2823,
+    "sha256": "e195fd133b5cd248d2b1c933a4e80979026779b34e4672b2bb70dd2e8bc5087c"
+  },
+  "register.txt": {
+    "bytes": 1567,
+    "sha256": "a30c11a369d8e45a318fcc5015d3ad4a01888d8342b223d07c9537da2e996cc9"
+  },
+  "timeout.txt": {
+    "bytes": 1476,
+    "sha256": "0762de0f2fd8f6cd33d1f0d9a92f748aebb17d9c086cf5d519dc0be5272a378c"
+  },
+  "wrapper-constructor.txt": {
+    "bytes": 639,
+    "sha256": "3dd2809e29bed83711ad22bb7d8d90fb4b1d6947346da50afbdb9ea67bdaa019"
+  }
+}

@@ -18204,5 +18204,13 @@
     "x-library": [],
     "description": "Pinned static xtask research reaches SendE2eStatusJob part-hash persistence, exact uuid/part/device zero wire-attempt marker, conditional root attributes and child metadata, Eng/Eoh submission via0Sf and feature-controlled300000ms ACK wait. Optional field value/operation producers, extensions, final writer/ciphertext transaction and callback ownership remain unported. Large-stanza diagnostic is not an established rejection cap. No runtime change, invented fields/timeouts, live operation or replay authority.",
     "evidence": "docs/protocol/groups.md#current-status-job-wire-rendering-and-pre-submit-markers-2026-11-06"
+  },
+  "x-status-submit-callback-research": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Pinned static xtask research separates status full-key callback registration before queueing, original-device0 callback-key normalization, null-valued future completion, duplicate-key replacement and timeout key removal. Normal future return is not acceptance/delivery data. Queue readiness may return before writer submission. Concrete writer/prewrite/ciphertext/disconnect lifetime remains unported. Current Rust expected-chat/owner/no-replay boundaries unchanged; no generic receipt producer, live operation or replay authority.",
+    "evidence": "docs/protocol/message-ack.md#status-submit-future-completes-callbacks-without-carrying-acceptance-2026-11-06"
   }
 }

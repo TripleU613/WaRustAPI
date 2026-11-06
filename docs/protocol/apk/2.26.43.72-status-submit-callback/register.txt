@@ -1,0 +1,28 @@
+
+# class: LX/0Sf;
+# extends: Ljava/lang/Object;
+
+.method public A0B(LLL)  # .registers 7
+    # full signature: LX/0Sf;->A0B(Landroid/os/Message;LX/Eoh;)LX/FfK;
+    0000..0002  const/4  v0, #0x1
+    0002..0008  invoke-static  {v5, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  const-string  v0, "MessageClient/sendAckableMessage: stanzaKey is null"
+    000c..0012  invoke-static  {v6, v0}, LX/00L;->A06(Ljava/lang/Object;Ljava/lang/String;)V
+    0012..0018  invoke-static  {v6}, LX/0Sf;->A02(LX/Eoh;)LX/Eoh;
+    0018..001a  move-result-object  v3
+    001a..001e  new-instance  v2, LX/FfK;
+    001e..0024  invoke-direct  {v2}, LX/FfK;-><init>()V
+    0024..0028  iget-object  v0, v4, LX/0Sf;->A0B:LX/0Th;
+    0028..002e  invoke-virtual  {v0, v2, v3}, LX/0Th;->A01(LX/1ue;LX/Eoh;)V
+    002e..0032  const-string  v1, "MessageClient/sendAckableMessage "
+    0032..0036  new-instance  v0, Ljava/lang/StringBuilder;
+    0036..003c  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    003c..0042  invoke-virtual  {v0, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0042..0048  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0048..004a  move-result-object  v0
+    004a..0050  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0050..0052  const/4  v0, #0x0
+    0052..0058  invoke-static  {v5, v4, v0, v0}, LX/0Sf;->A05(Landroid/os/Message;LX/0Sf;ZZ)V
+    0058..005a  return-object  v2
+    # exception table: 0 try range(s)
+.end method

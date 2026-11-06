@@ -1062,3 +1062,27 @@ and final renderer/writer authority remain open. No runtime change or replay
 expansion in this evidence chunk; no live operations.
 
 - **2026-11-06 outbound follow-through:** current status job now traced through pre-submit marker, Eng/Eoh submission and feature-controlled ACK wait. [Wire/render evidence and remaining authority](groups.md#current-status-job-wire-rendering-and-pre-submit-markers-2026-11-06). Runtime unchanged.
+
+
+## Status submit future completes callbacks without carrying acceptance (2026-11-06)
+
+**Confirmed selected pinned static / research / unknown authority.**
+[Complete0Sf registration/timeout/queue, key normalization, callback wrapper andfuture](apk/2.26.43.72-status-submit-callback/README.md)
+show status submit registers a full-key callback before queueing. Nativekey
+normalization unwraps only original device0 from/converted participant; it is
+separate from ordinary selected-chat device normalization. Callback-map duplicate
+logs then replaces, so native uniqueness/original-owner lifetime is not proved.
+
+The discriminator0 wrapper completesFfK withnull even when its callback receives
+an object. NormalFuture.get return proves callback completion, not accepted/
+refused/delivered outcome. Native state dispatch remains separate. Timeout
+removes by normalizedkey and invokes failure outside lock without comparing
+callback object; no durable Rust owner/replay rule is relaxed from this path.
+Queue readiness can also return before submission while registration already
+exists; the concrete writer/global cleanup contract remains open.
+
+Existing Rust expected-chat/challenge classification and durable original receipt
+callback ownership remain separate local controls, verified by targeted tests.
+No Rust runtime change, generic ordinary-receipt producer claim, timeout/default
+change, reconnect or replay expansion. Next source is concrete1A0.CdY/writer and
+last encode/prewrite admission. No live operations.

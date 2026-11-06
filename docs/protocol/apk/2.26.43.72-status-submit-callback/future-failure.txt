@@ -1,0 +1,16 @@
+
+# class: LX/FfK;
+# extends: Ljava/lang/Object;
+
+.method public BsR(VL)  # .registers 3
+    # full signature: LX/FfK;->BsR(Ljava/lang/Exception;)V
+    0000..0002  const/4  v0, #0x0
+    0002..0006  iput-object  v0, v1, LX/FfK;->A01:Ljava/lang/Object;
+    0006..0008  const/4  v0, #0x0
+    0008..000c  iput-boolean  v0, v1, LX/FfK;->A02:Z
+    000c..0010  iput-object  v2, v1, LX/FfK;->A00:Ljava/lang/Exception;
+    0010..0014  iget-object  v0, v1, LX/FfK;->A03:Ljava/util/concurrent/CountDownLatch;
+    0014..001a  invoke-virtual  {v0}, Ljava/util/concurrent/CountDownLatch;->countDown()V
+    001a..001c  return-void
+    # exception table: 0 try range(s)
+.end method
