@@ -356,3 +356,38 @@ ACK and last-resort controls remain. No live operation or new retry authority.
 Validation: red restoration regression reproduced row lookup after consumption;
 all 1,399 workspace/all-feature tests, strict Clippy, CLI reference and
 OpenAPI library checks passed. Offline local stores/injected links only.
+
+### KEM upload settlement is bound to reserved public material (2026-11-05)
+
+**Confirmed local defect, fixed offline:** PendingUpload.settle bound durable
+KEM ID lists to the callback, but mark_sent_in loaded whichever valid rows
+occupied those IDs. An accepted reply could mark a substituted public key as
+uploaded. A missing-row consumption marker was checked by ID alone even though
+it already retained a public fingerprint. IDs are not exact publication evidence.
+
+New Batch.kem_public_sha256 stores SHA256 of every selected KEM public key,
+in kem_ids wire order, in the same reservation transaction as frozen request
+bytes. PendingUpload retains the identical list. All settlement first requires
+list equality and matching cardinality; an accepted result then checks each
+current row's validated public fingerprint or the consumed marker's ID/hash
+before writing batch/key status. Existing live-row/marker conflict guards
+remain. Any mismatch aborts the full transaction and preserves uncertainty.
+Refusals still do not adopt current KEM public material or retry uploads.
+
+The additive field defaults empty when reading historical Batch records.
+Historical batches remain inspection/hold evidence; no callback reconstruction,
+missing-hash inference, automatic migration or replay is added. Binding is
+public-key identity, not a new signature/private-key equality claim or APK
+wire-field requirement. Whole-store rollback remains outside this local guard.
+
+Expanded existing uncertainty regression replaces a live KEM row with a different
+well-formed pair under the same ID: old code accepted the reply. New code refuses
+with exact row/checkpoint preservation. It also rejects durable fingerprint-list
+tampering for result/error and a wrong consumed-public hash. Existing missing-row
+refusal, consumed-before-ACK success, reopen and uncertain-no-replay controls
+remain. Synthetic fixture restoration only continues independent controls;
+production does not repair reservations to make replies pass. No live operation.
+
+Validation: the replacement-public regression failed against the previous
+implementation. All 1,399 workspace/all-feature tests, strict Clippy, CLI
+reference and OpenAPI library checks passed. Offline synthetic stores only.

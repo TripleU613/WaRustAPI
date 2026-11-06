@@ -17359,5 +17359,12 @@
     "x-live": false,
     "description": "KEM live-row/consumption-marker conflict refuses receive lookup, batch selection, repeated consumption and present-row upload ACK settlement. Missing consumed row may still settle its legitimate late ACK. No marker deletion or key repair; conflicting local restoration guard does not claim protection against wholesale store rollback.",
     "evidence": "docs/protocol/kem-prekey-inventory.md#restored-kem-rows-cannot-override-consumption-markers-2026-11-05"
+  },
+  "x-kem-upload-public-material-binding": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Batch.kem_public_sha256 is an additive array of 32-byte SHA256 public-key fingerprints aligned with kem_ids. New reservations persist it and PendingUpload retains it. Settlement rejects changed/misaligned durable bindings; accepted results require current live public material or consumed ID/hash to match before status updates. Historical field defaults empty without callback reconstruction or replay. No wire change or signature/private equality claim.",
+    "evidence": "docs/protocol/kem-prekey-inventory.md#kem-upload-settlement-is-bound-to-reserved-public-material-2026-11-05"
   }
 }

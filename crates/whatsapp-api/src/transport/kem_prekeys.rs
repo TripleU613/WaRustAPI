@@ -356,6 +356,34 @@ pub(crate) fn retain_signature_in(
     tx.put_json(Table::Prekeys, key.as_bytes(), 1, &bound)
 }
 
+/// Bind accepted upload settlement to the public material frozen at reservation.
+/// Consumption before ACK is valid only for the same original public key.
+pub(crate) fn verify_upload_public_in(
+    tx: &WriteTx<'_>,
+    id: u32,
+    expected: &[u8; 32],
+) -> Result<()> {
+    use sha2::{Digest, Sha256};
+    let actual = if let Some(row) =
+        tx.get_json::<StoredKemPrekey>(Table::Prekeys, record_key(id).as_bytes(), 1)?
+    {
+        row.validate(id)?;
+        <[u8; 32]>::from(Sha256::digest(&row.public))
+    } else {
+        let consumed: ConsumedKem = tx
+            .get_json(Table::Checkpoints, consumed_key(id).as_bytes(), 1)?
+            .ok_or_else(|| invalid("reserved KEM prekey disappeared before acknowledgement"))?;
+        if consumed.id != id {
+            return Err(invalid("consumed KEM marker ID changed"));
+        }
+        consumed.public_sha256
+    };
+    if &actual != expected {
+        return Err(invalid("reserved KEM public material changed"));
+    }
+    Ok(())
+}
+
 /// `sent_to_server = 1` for the rows of an acknowledged batch.
 pub(crate) fn mark_sent_in(tx: &mut WriteTx<'_>, ids: &[u32]) -> Result<()> {
     for id in ids {

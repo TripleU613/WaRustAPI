@@ -176,6 +176,10 @@ pub struct Batch {
     /// Kyber prekey ids carried in the same IQ (`pq_list`/`pq_last_resort_key`).
     #[serde(default)]
     pub kem_ids: Vec<u32>,
+    /// SHA-256 of each reserved KEM public key, in kem_ids order. Historical
+    /// batches lack this evidence and are never reconstructed for replay.
+    #[serde(default)]
+    pub kem_public_sha256: Vec<[u8; 32]>,
 }
 /// Redacted local summary for operators.
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize)]
@@ -449,6 +453,7 @@ pub struct PendingUpload {
     iq_id: String,
     ids: Vec<u32>,
     kem_ids: Vec<u32>,
+    kem_public_sha256: Vec<[u8; 32]>,
     /// After this instant the outcome is treated as unknown for this session.
     pub deadline: tokio::time::Instant,
 }
@@ -687,6 +692,8 @@ fn begin_upload_selected(
             tx.put_json(Table::Checkpoints, request_key(&iq_id).as_bytes(), 1,
             &serde_json::json!({"mode":if add { "add" } else { "set" }, "dictionary":"comparison_2_26_37_71", "wire":wire}))?;
             let kem_ids: Vec<u32> = kem_rows.iter().map(|r| r.id).collect();
+            use sha2::{Digest, Sha256};
+            let kem_public_sha256: Vec<[u8; 32]> = kem_rows.iter().map(|r| Sha256::digest(&r.public).into()).collect();
             tx.put_json(
                 Table::Checkpoints,
                 batch_key(&iq_id).as_bytes(),
@@ -699,11 +706,12 @@ fn begin_upload_selected(
                     pq_count_low: None,
                     reserved_at: Timestamp::now(),
                     kem_ids: kem_ids.clone(),
+                    kem_public_sha256: kem_public_sha256.clone(),
                 },
             )?;
-            Ok(Some((ids, kem_ids, node)))
+            Ok(Some((ids, kem_ids, kem_public_sha256, node)))
         })?;
-    let Some((ids, kem_ids, node)) = reserved else {
+    let Some((ids, kem_ids, kem_public_sha256, node)) = reserved else {
         return Ok(None);
     };
     Ok(Some((
@@ -711,6 +719,7 @@ fn begin_upload_selected(
             iq_id,
             ids,
             kem_ids,
+            kem_public_sha256,
             deadline: tokio::time::Instant::now() + std::time::Duration::from_secs(30),
         },
         node,
@@ -782,6 +791,16 @@ impl PendingUpload {
             }
             if batch.kem_ids != self.kem_ids {
                 return Err(invalid("reserved batch KEM key IDs changed"));
+            }
+            if batch.kem_public_sha256 != self.kem_public_sha256
+                || batch.kem_ids.len() != batch.kem_public_sha256.len()
+            {
+                return Err(invalid("reserved KEM public bindings changed"));
+            }
+            if accepted {
+                for (id, expected) in batch.kem_ids.iter().zip(&batch.kem_public_sha256) {
+                    super::kem_prekeys::verify_upload_public_in(tx, *id, expected)?;
+                }
             }
             for id in &batch.ids {
                 let meta: Meta = tx
@@ -1810,6 +1829,29 @@ mod tests {
             ),
             (50, 50)
         );
+        let mut changed_binding = original.clone();
+        changed_binding.kem_public_sha256[0][0] ^= 1;
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    reserved_key.as_bytes(),
+                    1,
+                    &changed_binding,
+                )
+            })
+            .unwrap();
+        let damaged_binding = snapshot(&store);
+        for kind in ["result", "error"] {
+            let reply = Node::new("iq")
+                .attr("id", pending.iq_id.as_str())
+                .attr("type", kind);
+            assert!(pending.settle(&store, &reply).is_err());
+            assert_eq!(snapshot(&store), damaged_binding);
+        }
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, reserved_key.as_bytes(), 1, &original))
+            .unwrap();
         // A local missing key is a store fault, not a successful settlement.
         // Remove the second KEM row so an earlier mark-sent write must roll back.
         let batch: Batch = store
@@ -1821,6 +1863,27 @@ mod tests {
         let row: super::super::kem_prekeys::StoredKemPrekey = store
             .read(|tx| tx.get_json(Table::Prekeys, missing_key.as_bytes(), 1))
             .unwrap()
+            .unwrap();
+        let (replacement_public, replacement_secret) =
+            crate::signal::kem::generate_key_pair().unwrap();
+        let mut replacement = row.clone();
+        replacement.public = replacement_public;
+        replacement.secret = replacement_secret.as_bytes().to_vec();
+        store
+            .write(|tx| tx.put_json(Table::Prekeys, missing_key.as_bytes(), 1, &replacement))
+            .unwrap();
+        let replaced = snapshot(&store);
+        let replaced_reply = Node::new("iq")
+            .attr("id", pending.iq_id.as_str())
+            .attr("type", "result");
+        assert!(
+            pending.settle(&store, &replaced_reply).is_err(),
+            "same ID must not acknowledge replacement KEM public material"
+        );
+        assert_eq!(snapshot(&store), replaced);
+        // Restore only synthetic test material to continue the original loss/consumption cases.
+        store
+            .write(|tx| tx.put_json(Table::Prekeys, missing_key.as_bytes(), 1, &row))
             .unwrap();
         store
             .write(|tx| tx.delete(Table::Prekeys, missing_key.as_bytes()))
@@ -1854,6 +1917,34 @@ mod tests {
         );
         drop(store);
         let store = open(&path);
+        let consumed_key = format!("kem-prekey-consumed:v1:{missing_id}");
+        let marker: serde_json::Value = store
+            .read(|tx| tx.get_json(Table::Checkpoints, consumed_key.as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        let mut changed_marker = marker.clone();
+        let byte = changed_marker["public_sha256"][0].as_u64().unwrap();
+        changed_marker["public_sha256"][0] = serde_json::json!(byte ^ 1);
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    consumed_key.as_bytes(),
+                    1,
+                    &changed_marker,
+                )
+            })
+            .unwrap();
+        let damaged_marker = snapshot(&store);
+        assert!(
+            pending.settle(&store, &result).is_err(),
+            "consumed ID alone is insufficient publication evidence"
+        );
+        assert_eq!(snapshot(&store), damaged_marker);
+        // Restore only the synthetic marker, preserving the original valid late-ACK control.
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, consumed_key.as_bytes(), 1, &marker))
+            .unwrap();
         // Only the original correlated result releases that uncertainty.
         pending
             .settle(

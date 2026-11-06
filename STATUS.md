@@ -1,3 +1,9 @@
+KEM upload settlement now binds accepted replies to reserved public-key
+fingerprints, including consumed-before-ACK markers. Same IDs with replacement
+keys or changed durable bindings cannot mark material uploaded. Historical
+batches remain held/inspectable without invented fingerprints or replay.
+[Audit](docs/protocol/kem-prekey-inventory.md#kem-upload-settlement-is-bound-to-reserved-public-material-2026-11-05).
+
 Live KEM rows now conflict with durable consumption markers: lookup, batch
 selection, repeated consumption and present-row ACK settlement refuse a stale
 restored row. Legitimate missing-row late ACK still settles without restoration.
