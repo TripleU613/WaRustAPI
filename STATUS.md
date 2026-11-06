@@ -1,3 +1,8 @@
+Identity-refresh adoption now rechecks original request bytes and action kind
+after asynchronous derivation. Inspection, preview and staging validate the
+original typed IQ first; changed authority cannot commit a new pin/session.
+[Race fix and limits](docs/protocol/identity-refresh-application.md#original-request-authority-across-staging-and-commit-2026-11-06).
+
 Explicit directory refresh now requires matching saved action kind, original
 request/peer and correlated reply ID before signed success can authorize work.
 Inspection checks the original request too; damaged evidence remains unchanged.

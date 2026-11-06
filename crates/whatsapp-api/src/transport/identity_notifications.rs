@@ -224,6 +224,48 @@ pub fn inspect(store: &ProtocolStore, id: &str) -> Result<Option<Inspection>> {
     store.read(|tx| inspect_in(tx, id))
 }
 
+// Local ownership for the request produced by queue(), not a server requirement.
+fn request_peer(request: &Node, id: &str) -> Result<crate::model::jid::Jid> {
+    let invalid = || {
+        Error::invalid(
+            "identity_notification",
+            "invalid original identity refresh request",
+        )
+    };
+    if request.description != "iq"
+        || request.get_attr("id").and_then(|value| value.as_text()) != Some(id)
+        || request.get_attr("type").and_then(|value| value.as_text()) != Some("get")
+        || request.get_attr("xmlns").and_then(|value| value.as_text()) != Some("encrypt")
+        || !super::receipts::jid(request, "to").is_some_and(|jid| {
+            jid.user.is_empty() && jid.server == Server::User && jid.agent == 0 && jid.device == 0
+        })
+    {
+        return Err(invalid());
+    }
+    let [key] = request.child_nodes() else {
+        return Err(invalid());
+    };
+    if key.description != "key" {
+        return Err(invalid());
+    }
+    let [user] = key.child_nodes() else {
+        return Err(invalid());
+    };
+    if user.description != "user"
+        || user.get_attr("reason").and_then(|value| value.as_text()) != Some("identity")
+    {
+        return Err(invalid());
+    }
+    super::receipts::jid(user, "jid")
+        .filter(|jid| {
+            !jid.user.is_empty()
+                && jid.agent == 0
+                && matches!(jid.server, Server::User | Server::Lid)
+                && matches!(jid.kind, JidKind::Plain | JidKind::AgentDevice)
+        })
+        .ok_or_else(invalid)
+}
+
 fn inspect_in(tx: &crate::store::ReadTx<'_>, id: &str) -> Result<Option<Inspection>> {
     use super::peer_keys::DirectoryStatus;
 
@@ -235,19 +277,7 @@ fn inspect_in(tx: &crate::store::ReadTx<'_>, id: &str) -> Result<Option<Inspecti
     }
     let request = actions::request_in(tx, id)?
         .ok_or_else(|| Error::invalid("identity_notification", "missing saved key request"))?;
-    let users = request
-        .child("key")
-        .map(Node::child_nodes)
-        .unwrap_or_default();
-    let peer = (users.len() == 1)
-        .then(|| super::receipts::jid(&users[0], "jid"))
-        .flatten()
-        .filter(|v| {
-            !v.user.is_empty() && v.agent == 0 && matches!(v.server, Server::User | Server::Lid)
-        })
-        .ok_or_else(|| {
-            Error::invalid("identity_notification", "invalid saved key request target")
-        })?;
+    let peer = request_peer(&request, id)?;
     let pin: Option<Vec<u8>> = tx.get_json(
         Table::PeerIdentities,
         format!("comparison-direct:{peer}").as_bytes(),
@@ -447,13 +477,7 @@ pub async fn preview_session(store: &ProtocolStore, id: &str) -> Result<SessionP
         })?;
         let request = actions::request_in(tx, id)?
             .ok_or_else(|| Error::invalid("identity_notification", "missing saved key request"))?;
-        let peer = request
-            .child("key")
-            .and_then(|key| key.child_nodes().first())
-            .and_then(|user| super::receipts::jid(user, "jid"))
-            .ok_or_else(|| {
-                Error::invalid("identity_notification", "invalid saved key request target")
-            })?;
+        let peer = request_peer(&request, id)?;
         let key = format!("comparison-direct:{peer}");
         let pin: Option<Vec<u8>> = tx.get_json(Table::PeerIdentities, key.as_bytes(), 1)?;
         let session: Option<Vec<u8>> = tx.get_json(Table::SignalSessions, key.as_bytes(), 1)?;

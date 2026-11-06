@@ -17499,5 +17499,12 @@
     "x-live": false,
     "description": "Explicit peer directory refresh validates saved peer_keys action kind and Ok status, the original single-peer IQ/get/encrypt request ID/destination/address, correlated reply ID, and existing bundle/signature guards in one write transaction. Read-only inspection validates original request ownership too. Failure preserves stored evidence and does not authorize repair/retry. Normal repeated query remains original-marker lookup. This is a local integrity guard; no new server wire requirement or live acceptance claim.",
     "evidence": "docs/protocol/peer-identity.md#explicit-directory-refresh-retains-request-ownership-2026-11-06"
+  },
+  "x-identity-refresh-request-authority": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Identity-refresh inspection/preview/staging validate the original typed single-user IQ/get/encrypt request, ID, server destination and identity reason. Unapplied adoption requires byte-identical original request and identity_refresh kind plus existing Ok/reply, pin/session/account/companion guards in the final transaction. Changed request or action defers locally without repair/replay or writes. Already-applied marker remains historical. Prior-notification queue gate remains separate. No new server field or live acceptance claim.",
+    "evidence": "docs/protocol/identity-refresh-application.md#original-request-authority-across-staging-and-commit-2026-11-06"
   }
 }

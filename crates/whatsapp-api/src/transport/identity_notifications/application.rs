@@ -57,6 +57,7 @@ struct Staged {
     id: String,
     peer: Jid,
     reply: Node,
+    request_wire: Vec<u8>,
     pin: Vec<u8>,
     previous_session: Option<Zeroizing<Vec<u8>>>,
     identity: Vec<u8>,
@@ -85,11 +86,9 @@ async fn stage(
             actions::view_in(tx, id)?.ok_or_else(|| invalid("missing saved action"))?;
         let request =
             actions::request_in(tx, id)?.ok_or_else(|| invalid("missing saved key request"))?;
-        let peer = request
-            .child("key")
-            .and_then(|key| key.child_nodes().first())
-            .and_then(|user| super::super::receipts::jid(user, "jid"))
-            .ok_or_else(|| invalid("invalid saved key request target"))?;
+        let peer = super::request_peer(&request, id)?;
+        let request_wire = actions::request_wire_in(tx, id)?
+            .ok_or_else(|| invalid("missing saved key request"))?;
         let peer_key = format!("comparison-direct:{peer}");
         let pin: Option<Vec<u8>> = tx.get_json(Table::PeerIdentities, peer_key.as_bytes(), 1)?;
         let session: Option<Vec<u8>> =
@@ -102,9 +101,12 @@ async fn stage(
             session.map(Zeroizing::new),
             AccountRecord::load(tx)?,
             reply,
+            request_wire,
         )))
     })?;
-    let Some((inspection, status, peer, pin, previous_session, account, reply)) = snapshot else {
+    let Some((inspection, status, peer, pin, previous_session, account, reply, request_wire)) =
+        snapshot
+    else {
         return Ok(Preparation::Finished(Application::Unrelated));
     };
     if inspection.applied {
@@ -259,6 +261,7 @@ async fn stage(
         id: id.to_owned(),
         peer,
         reply,
+        request_wire,
         pin,
         previous_session,
         identity,
@@ -275,7 +278,20 @@ fn commit(store: &ProtocolStore, staged: &Staged) -> Result<Application> {
         )? {
             return Ok(Application::AlreadyApplied);
         }
-        if actions::completed_reply_in(tx, &staged.id)?.as_ref() != Some(&staged.reply) {
+        // Derivation awaited outside this transaction. Keep the exact original
+        // request and action family as well as the response it authorized.
+        if actions::request_wire_in_write(tx, &staged.id)?.as_deref()
+            != Some(staged.request_wire.as_slice())
+        {
+            return Ok(Application::Deferred("request_changed_before_commit"));
+        }
+        let Some((action, reply, _)) = actions::view_in_write(tx, &staged.id)? else {
+            return Ok(Application::Deferred("action_changed_before_commit"));
+        };
+        if action.kind != "identity_refresh" {
+            return Ok(Application::Deferred("action_changed_before_commit"));
+        }
+        if action.status != actions::ActionStatus::Ok || reply.as_ref() != Some(&staged.reply) {
             return Ok(Application::Deferred("reply_changed_before_commit"));
         }
         let peer_key = format!("comparison-direct:{}", staged.peer);
@@ -3119,6 +3135,119 @@ mod tests {
             );
             assert_eq!(snapshot(&f.store), before, "{case}");
             assert_eq!(f.store.journal_head().unwrap(), head);
+        }
+    }
+
+    #[tokio::test]
+    async fn staged_refresh_cannot_adopt_after_original_action_changes() {
+        for case in ["kind", "request", "malformed_request"] {
+            let f = fixture("222222222222222@lid").await;
+            settle(&f, &f.response);
+            let Preparation::Ready(staged) =
+                stage(&f.store, &f.id, IdentityChangePolicy::ApkAuthenticated)
+                    .await
+                    .unwrap()
+            else {
+                panic!("stage")
+            };
+            f.store
+                .write(|tx| {
+                    let key = format!("action-outbox:{}", f.id);
+                    let mut row: serde_json::Value =
+                        tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?.unwrap();
+                    if case == "kind" {
+                        row["kind"] = serde_json::json!("foreign");
+                    } else if case == "malformed_request" {
+                        row["wire"] = serde_json::json!([255]);
+                    } else {
+                        let request = actions::request_in_write(tx, &f.id)?
+                            .unwrap()
+                            .attr("type", "set");
+                        let wire = crate::binary::Encoder::new(
+                            crate::binary::TokenDictionary::comparison_2_26_37_71(),
+                        )
+                        .encode(&request)?;
+                        row["wire"] = serde_json::to_value(wire).unwrap();
+                    }
+                    tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &row)
+                })
+                .unwrap();
+            let before = snapshot(&f.store);
+            let head = f.store.journal_head().unwrap();
+            assert!(
+                matches!(commit(&f.store, &staged).unwrap(), Application::Deferred(_)),
+                "{case}"
+            );
+            assert_eq!(before, snapshot(&f.store));
+            assert_eq!(head, f.store.journal_head().unwrap());
+            drop(staged);
+            drop(f.store);
+            let store = open(&f.dir.path().join("application.redb"));
+            assert_eq!(before, snapshot(&store));
+        }
+    }
+
+    #[tokio::test]
+    async fn refresh_stage_requires_owned_original_iq_request() {
+        for case in [
+            "id",
+            "type",
+            "namespace",
+            "destination",
+            "reason",
+            "width",
+            "tag",
+        ] {
+            let f = fixture("222222222222222@lid").await;
+            settle(&f, &f.response);
+            f.store
+                .write(|tx| {
+                    let mut request = actions::request_in_write(tx, &f.id)?.unwrap();
+                    request = match case {
+                        "id" => request.attr("id", "00000000000000000000000000000000"),
+                        "type" => request.attr("type", "set"),
+                        "namespace" => request.attr("xmlns", "foreign"),
+                        "destination" => request.attr("to", f.peer.clone()),
+                        "tag" => {
+                            request.description = "message".into();
+                            request
+                        }
+                        "reason" | "width" => {
+                            let user = Node::new("user").attr("jid", f.peer.clone());
+                            let users = if case == "reason" {
+                                vec![user]
+                            } else {
+                                vec![
+                                    user.clone().attr("reason", "identity"),
+                                    user.attr("reason", "identity"),
+                                ]
+                            };
+                            request.children(vec![Node::new("key").children(users)])
+                        }
+                        _ => unreachable!(),
+                    };
+                    let wire = crate::binary::Encoder::new(
+                        crate::binary::TokenDictionary::comparison_2_26_37_71(),
+                    )
+                    .encode(&request)?;
+                    let key = format!("action-outbox:{}", f.id);
+                    let mut row: serde_json::Value =
+                        tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?.unwrap();
+                    row["wire"] = serde_json::to_value(wire).unwrap();
+                    tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &row)
+                })
+                .unwrap();
+            let before = snapshot(&f.store);
+            let head = f.store.journal_head().unwrap();
+            assert!(
+                !matches!(
+                    stage(&f.store, &f.id, IdentityChangePolicy::ApkAuthenticated).await,
+                    Ok(Preparation::Ready(_))
+                ),
+                "{case}"
+            );
+            assert_eq!(before, snapshot(&f.store));
+            assert_eq!(head, f.store.journal_head().unwrap());
         }
     }
 

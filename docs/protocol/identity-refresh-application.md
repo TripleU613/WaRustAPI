@@ -226,3 +226,15 @@ and unsupported metadata admission still remain deferred.
 Follow-up: [identity_auth inspection](identity-auth.md) now exposes only metadata
 shape, separate from the classic prekey signature result. Certificate policy and
 identity-auth verification remain unported; present metadata still defers.
+
+## Original request authority across staging and commit (2026-11-06)
+
+**Confirmed local race:** a regression staged a legitimate identity_refresh response, changed the saved action kind to another family while preserving status/reply/pin/session/account, and the old commit still adopted the candidate. Existing completed_reply_in comparison checked only saved Ok reply equality. Original request headers were also not validated before deriving a candidate: the inspector selected key/user without checking IQ ID/type/namespace/destination. These are local authority bugs, not an added server requirement or live-observed incident.
+
+**Fixed:** shared identity-refresh request parsing requires the existing producer's IQ/get/encrypt ID, server destination, exactly one key/user, reason=identity, nonempty PN/LID address, zero agent and supported ordinary/AD wire kind. Companion device IDs remain supported. Inspection, cryptographic preview and application staging use the same guard in their read snapshot. Request ownership errors remain fixed local InvalidInput diagnoses with original bytes preserved. No request is rebuilt or repaired.
+
+Staging retains exact original encoded request bytes in its private in-memory candidate. Inside the final write transaction, an unapplied candidate requires byte-identical request, identity_refresh action kind, saved Ok status and unchanged reply before existing pin/ratchet/original guard/account/companion checks. Changed/missing request defers as request_changed_before_commit; changed kind defers as action_changed_before_commit; response/status changes retain reply_changed_before_commit. These are returned local diagnostics, not newly persisted server reasons. An already-applied marker remains historical and returns AlreadyApplied without new adoption.
+
+Regressions cover saved kind, different request bytes and malformed wire after staging, preserving every table and journal and reopening unchanged. Separate pre-stage cases alter ID, type, namespace, destination, reason, width and IQ tag; none may produce Ready or change state. Existing identity-notification tests retain primary/companion, same-key, attestation and PQ positive paths. No live account activity or APK execution.
+
+**Limits:** the prior-notification queue gate still uses completed_reply_in and remains a separate ownership audit. This does not cryptographically seal an entire store against coordinated rewriting, port all native callback timers, change request bytes/ACKs or prove server acceptance. It keeps local request authority intact during the existing asynchronous derivation/atomic adoption boundary.
