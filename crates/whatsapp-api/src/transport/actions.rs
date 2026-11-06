@@ -247,15 +247,6 @@ pub(crate) fn record_contact_projection_in(
     tx.put_json(Table::Checkpoints, selector.as_bytes(), 1, &row)
 }
 
-/// Successful reply for validating an explicit refresh in the same transaction.
-pub(crate) fn completed_reply_in(tx: &crate::store::WriteTx<'_>, id: &str) -> Result<Option<Node>> {
-    let row: Option<Row> = tx.get_json(Table::Checkpoints, key(id).as_bytes(), 1)?;
-    row.filter(|row| row.status == ActionStatus::Ok)
-        .and_then(|row| row.reply)
-        .map(|wire| decode(&wire))
-        .transpose()
-}
-
 /// Original action plus reply within a feature's atomic settlement transaction.
 pub(crate) fn view_in_write(
     tx: &crate::store::WriteTx<'_>,

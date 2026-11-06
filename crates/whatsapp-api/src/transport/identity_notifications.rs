@@ -688,7 +688,23 @@ pub fn queue(store: &ProtocolStore, account: &AccountRecord, node: &Node) -> Res
             // Local no-retry guard, not the full native 14L in-flight/job policy.
             // A genuinely new notification may follow a successful signed read;
             // a refusal/invalid/uncertain read is never reset by another event ID.
-            let Some(reply) = actions::completed_reply_in(tx, &previous)? else {
+            // Signed key data alone does not prove which original request succeeded.
+            let Some((action, reply, request)) = actions::view_in_write(tx, &previous)? else {
+                return Ok(Refresh::BlockedPrior);
+            };
+            if action.kind != "identity_refresh"
+                || action.status != actions::ActionStatus::Ok
+                || !request_peer(&request, &previous).is_ok_and(|original| {
+                    super::identity_query::same_primary_address(&original, &peer)
+                })
+            {
+                return Ok(Refresh::BlockedPrior);
+            }
+            let Some(reply) = reply.filter(|reply| {
+                reply.description == "iq"
+                    && reply.get_attr("id").and_then(|value| value.as_text())
+                        == Some(previous.as_str())
+            }) else {
                 return Ok(Refresh::BlockedPrior);
             };
             let verified = crate::signal::direct::classic_bundle_metadata_for(&reply, &peer)
@@ -1894,6 +1910,105 @@ pub(super) mod tests {
             inspect(&store, &id).unwrap().unwrap().refresh_guard,
             RefreshGuard::Matches
         );
+    }
+
+    #[test]
+    fn new_notification_requires_owned_previous_success_without_repair_or_replay() {
+        for case in [
+            "kind",
+            "request_id",
+            "request_peer",
+            "reason",
+            "reply_id",
+            "missing_reply",
+            "malformed_request",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("prior-ownership.redb");
+            let store = open(&path);
+            let peer = Jid::parse("222222222222222:4@lid").unwrap();
+            let original = notification(&peer.to_string(), "original-event");
+            install_pin(&store, &peer);
+            let Refresh::Queued(id) = queue(&store, &account(), &original).unwrap() else {
+                panic!("queued")
+            };
+            actions::reserve_pending(&store).unwrap();
+            let identity = IdentityKeyPair::generate(&mut rand::rng());
+            let mut response = reply(&peer, &id, &identity, true);
+            actions::record_reply(&store, &response).unwrap();
+            let mut request = actions::request(&store, &id).unwrap().unwrap();
+            match case {
+                "request_id" => request = request.attr("id", "00000000000000000000000000000000"),
+                "request_peer" => {
+                    let foreign = Jid::parse("222222222222223:4@lid").unwrap();
+                    request = messaging::key_request_many_with_identity_changes(
+                        std::slice::from_ref(&foreign),
+                        std::slice::from_ref(&foreign),
+                        &id,
+                    )
+                    .unwrap();
+                }
+                "reason" => request = messaging::key_request(&peer, &id),
+                "reply_id" => response = response.attr("id", "00000000000000000000000000000000"),
+                _ => {}
+            }
+            let encode = |node: &Node| {
+                crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
+                    .encode(node)
+                    .unwrap()
+            };
+            store
+                .write(|tx| {
+                    let key = format!("action-outbox:{id}");
+                    let mut row: serde_json::Value =
+                        tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?.unwrap();
+                    row["wire"] = serde_json::to_value(encode(&request)).unwrap();
+                    row["reply"] = serde_json::to_value(encode(&response)).unwrap();
+                    if case == "kind" {
+                        row["kind"] = serde_json::json!("foreign");
+                    }
+                    if case == "missing_reply" {
+                        row["reply"] = serde_json::Value::Null;
+                    }
+                    if case == "malformed_request" {
+                        row["wire"] = serde_json::json!([255]);
+                    }
+                    tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &row)
+                })
+                .unwrap();
+            drop(store);
+            let store = open(&path);
+            let snapshot = || {
+                store
+                    .read(|tx| {
+                        Table::ALL
+                            .iter()
+                            .map(|table| tx.scan_after(*table, 1, None, 512))
+                            .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot();
+            let head = store.journal_head().unwrap();
+            let result = queue(
+                &store,
+                &account(),
+                &notification(&peer.to_string(), "new-event"),
+            );
+            if case == "malformed_request" {
+                assert!(result.is_err());
+            } else {
+                assert_eq!(result.unwrap(), Refresh::BlockedPrior, "{case}");
+            }
+            assert_eq!(before, snapshot(), "{case}");
+            assert_eq!(head, store.journal_head().unwrap());
+            assert_eq!(
+                queue(&store, &account(), &original).unwrap(),
+                Refresh::Queued(id.clone())
+            );
+            assert!(actions::reserve_pending(&store).unwrap().is_empty());
+            assert_eq!(before, snapshot());
+        }
     }
 
     #[test]

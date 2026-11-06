@@ -17504,7 +17504,14 @@
     "x-cli": true,
     "x-transport": true,
     "x-live": false,
-    "description": "Identity-refresh inspection/preview/staging validate the original typed single-user IQ/get/encrypt request, ID, server destination and identity reason. Unapplied adoption requires byte-identical original request and identity_refresh kind plus existing Ok/reply, pin/session/account/companion guards in the final transaction. Changed request or action defers locally without repair/replay or writes. Already-applied marker remains historical. Prior-notification queue gate remains separate. No new server field or live acceptance claim.",
+    "description": "Identity-refresh inspection/preview/staging validate the original typed single-user IQ/get/encrypt request, ID, server destination and identity reason. Unapplied adoption requires byte-identical original request and identity_refresh kind plus existing Ok/reply, pin/session/account/companion guards in the final transaction. Changed request or action defers locally without repair/replay or writes. Already-applied marker remains historical. Prior-notification ownership is covered by x-identity-refresh-prior-ownership. No new server field or live acceptance claim.",
     "evidence": "docs/protocol/identity-refresh-application.md#original-request-authority-across-staging-and-commit-2026-11-06"
+  },
+  "x-identity-refresh-prior-ownership": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "A new identity notification may queue a subsequent read only after saved identity_refresh Ok evidence retains original typed IQ request ID/destination/reason, exact selected device and correlated reply ID, plus existing bundle/signature checks. Ownership mismatch returns existing BlockedPrior; malformed encoded saved wire faults locally without repair. Duplicate event returns its original ID without a reservation. Reply-only private helper removed after caller migration. No native retry-scheduler parity, key adoption or live acceptance claim.",
+    "evidence": "docs/protocol/identity-notification-key-read.md#prior-notification-success-retains-request-ownership-2026-11-06"
   }
 }

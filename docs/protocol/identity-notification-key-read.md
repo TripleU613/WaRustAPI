@@ -201,3 +201,15 @@ snapshot in addition to the original action/event/device markers.
 responses and primary/companion A->B->A transitions. `actions --show` exposes
 fixed redacted `refresh_guard` labels; matching is not admission or commit
 permission. Older live reads above remain untracked, without backfill or replay.
+
+## Prior-notification success retains request ownership (2026-11-06)
+
+**Confirmed local persistence bug:** a synthetic prior identity-refresh action was legitimately settled with signed selected-device data, then its saved kind was changed. A new notification still queued another key read because the prior gate used completed_reply_in, which checked only Ok status and decoded reply. It did not establish prior action kind, original request/device, or reply ID. This does not establish a live incident or a native retry rule.
+
+**Fixed:** the new-event gate reads the prior action, request and reply together inside the queue write transaction. It requires identity_refresh kind and Ok status; the shared original request parser requires the existing typed IQ/get/encrypt ID/destination, single key/user and identity reason. That original PN/LID user/agent/device must match the newly selected device, allowing supported equivalent ordinary/AD encodings. Reply must be an IQ correlated to the previous ID; existing selected classic metadata and signature checks remain before reserving work. Ownership mismatch, missing reply or missing prior action returns existing BlockedPrior. Malformed encoded saved wire propagates a local decode error, preserving the row rather than treating corruption as an ordinary refusal.
+
+Regression covers wrong kind, request ID, requested device, missing identity reason, reply ID, missing reply and malformed request bytes. After reopen, a new event is blocked or faults locally without changes to any table or journal. The original event still returns its original action ID, no new query is reserved, and damaged evidence stays intact. Existing valid signed companion read permits a genuinely new notification's query; invalid, refused and uncertain reads remain blocked. Missing reply was already safely blocked before this change and remains a retained control.
+
+The unscoped private actions::completed_reply_in helper was removed after its last caller migrated; other consumers now use original-request-aware views. No public command or server field was removed. Historical/untyped rows are not repaired or upgraded into typed success. Snapshot guard Matches or prior key adoption is not newly required for a fresh notification read: this preserves the distinction between requesting data and adopting a key.
+
+**Limits:** this is a local once-only policy, not a port of the full native14L job/in-flight scheduler. Notification ACK construction/timing, identity-refresh result/error callback semantics, and effective native retry scheduling remain separate audits. No traffic, pin adoption, session derivation or live validation was performed.

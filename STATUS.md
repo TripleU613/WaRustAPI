@@ -1,3 +1,8 @@
+A new identity notification now requires an owned, correlated prior success
+before it can reserve another key read. Wrong kind/request/device/reply cannot
+reuse signed data as permission; duplicate events still return the original ID.
+[Gate audit](docs/protocol/identity-notification-key-read.md#prior-notification-success-retains-request-ownership-2026-11-06).
+
 Identity-refresh adoption now rechecks original request bytes and action kind
 after asynchronous derivation. Inspection, preview and staging validate the
 original typed IQ first; changed authority cannot commit a new pin/session.
