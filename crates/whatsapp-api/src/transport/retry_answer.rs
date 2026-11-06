@@ -326,9 +326,12 @@ async fn answer_inner(
             let reserved = reserve_refetch(
                 store,
                 &entry,
-                &peer_key,
-                identity.as_deref(),
-                session.as_deref(),
+                account,
+                RetryPeerSnapshot {
+                    key: &peer_key,
+                    identity: identity.as_deref(),
+                    session: session.as_deref(),
+                },
                 &query,
                 &job,
             )?;
@@ -360,6 +363,7 @@ async fn answer_inner(
     let resend = replace_enc(original, prepared.kind, prepared.ciphertext, retry.count)?;
     let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(&resend)?;
     store.write(|tx| {
+        ensure_retry_account(tx, account)?;
         let mut current = outbox
             .by_wire_id_in_write(tx, &wire_id)?
             .ok_or_else(|| Error::invalid("retry", "original send vanished"))?;
@@ -446,20 +450,26 @@ fn ensure_refetch_owned(tx: &mut WriteTx<'_>, query: &str, job: &Refetch) -> Res
     Ok(())
 }
 
+struct RetryPeerSnapshot<'a> {
+    key: &'a str,
+    identity: Option<&'a [u8]>,
+    session: Option<&'a [u8]>,
+}
+
 // Reserving a key query must use the same eligibility snapshot as the retry
 // decision. Another transaction can update delivery or peer state even before
 // crypto begins (docs/protocol/retry-answers.md).
 fn reserve_refetch(
     store: &ProtocolStore,
     prepared_from: &OutboxEntry,
-    peer_key: &str,
-    identity: Option<&[u8]>,
-    session: Option<&[u8]>,
+    account: &AccountRecord,
+    peer: RetryPeerSnapshot<'_>,
     query: &str,
     job: &Refetch,
 ) -> Result<bool> {
     let wire_id = MessageId::new(job.wire_id.clone())?;
     store.write(|tx| {
+        ensure_retry_account(tx, account)?;
         if tx
             .get_json::<serde_json::Value>(Table::Checkpoints, job.answer_key.as_bytes(), 1)?
             .is_some()
@@ -472,7 +482,7 @@ fn reserve_refetch(
                 Error::invalid("retry", "original send vanished before refetch query")
             })?;
         ensure_original_unchanged(&current, prepared_from, Timestamp::now())?;
-        ensure_retry_peer_unchanged(tx, peer_key, identity, session)?;
+        ensure_retry_peer_unchanged(tx, peer.key, peer.identity, peer.session)?;
         tx.put_json(
             Table::Checkpoints,
             job.answer_key.as_bytes(),
@@ -641,6 +651,7 @@ async fn complete_refetch_inner(
     let resend = replace_enc(&original, prepared.kind, prepared.ciphertext, job.count)?;
     let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(&resend)?;
     store.write(|tx| {
+        ensure_retry_account(tx, account)?;
         ensure_refetch_owned(tx, query, &job)?;
         ensure_retry_peer_unchanged(tx, &peer_key, identity.as_deref(), previous_session.as_deref())?;
         // The consumed job, replacement session and reserved same-ID resend
@@ -691,6 +702,37 @@ fn ensure_original_unchanged(
         return Err(Error::invalid(
             "retry",
             "original expired before retry reservation",
+        ));
+    }
+    Ok(())
+}
+
+// Retry crypto uses the drive's cached account. Compare the authority it
+// actually consumes, not mutable authentication timestamps/observed credentials.
+// Local commit guard, not a native storage-format or key-rotation requirement.
+fn ensure_retry_account(tx: &WriteTx<'_>, prepared_from: &AccountRecord) -> Result<()> {
+    let current = AccountRecord::load_in_write(tx)?
+        .ok_or_else(|| Error::invalid("retry", "local account missing before retry reservation"))?;
+    let same_identity = current
+        .signal_identity
+        .as_ref()
+        .zip(prepared_from.signal_identity.as_ref())
+        .is_some_and(|(current, prior)| {
+            current.0.public == prior.0.public && current.0.private == prior.0.private
+        });
+    if !current.is_registered()
+        || !prepared_from.is_registered()
+        || current.generation != tx.generation()
+        || current.generation != prepared_from.generation
+        || current.phone != prepared_from.phone
+        || current.own_jid != prepared_from.own_jid
+        || current.signal_registration_id.is_none()
+        || current.signal_registration_id != prepared_from.signal_registration_id
+        || !same_identity
+    {
+        return Err(Error::invalid(
+            "retry",
+            "local account changed before retry reservation",
         ));
     }
     Ok(())
@@ -867,6 +909,118 @@ mod tests {
     }
 
     #[test]
+    fn retry_account_authority_refuses_changed_keys_and_allows_observation_updates() {
+        for change in [
+            "same",
+            "timestamp",
+            "credential",
+            "missing",
+            "unregistered",
+            "revoked",
+            "generation",
+            "store_generation",
+            "phone",
+            "own_jid",
+            "registration_id",
+            "missing_registration",
+            "public",
+            "private",
+            "missing_identity",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("retry-account.redb");
+            let open = || {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: AccountId::new("test").unwrap(),
+                    key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                        [7; 32],
+                    ))),
+                    create: true,
+                })
+                .unwrap()
+            };
+            let store = open();
+            let mut expected = AccountRecord {
+                generation: store.generation(),
+                registration: RegistrationStatus::Registered,
+                signal_registration_id: Some(31),
+                signal_identity: Some(SignalIdentityKey(KeyMaterial {
+                    public: [1; 32],
+                    private: [2; 32],
+                })),
+                ..Default::default()
+            };
+            let mut current = expected.clone();
+            match change {
+                "timestamp" => current.last_authenticated_at = Some(Timestamp(123)),
+                "credential" => current
+                    .credentials
+                    .push(crate::session::ObservedCredential {
+                        name: "offline-observation".into(),
+                        value: zeroize::Zeroizing::new(vec![3]),
+                        observed_at: Timestamp(123),
+                        source_step: None,
+                    }),
+                "unregistered" => current.registration = RegistrationStatus::Unregistered,
+                "revoked" => current.registration = RegistrationStatus::Revoked,
+                "generation" => current.generation.0 += 1,
+                "store_generation" => {
+                    current.generation.0 += 1;
+                    expected.generation = current.generation;
+                }
+                "phone" => {
+                    current.phone =
+                        Some(crate::model::phone::PhoneNumber::new(1, "5555550123").unwrap())
+                }
+                "own_jid" => {
+                    current.own_jid = Some(Jid::parse("15555550123@s.whatsapp.net").unwrap())
+                }
+                "registration_id" => current.signal_registration_id = Some(32),
+                "missing_registration" => current.signal_registration_id = None,
+                "public" => current.signal_identity.as_mut().unwrap().0.public[0] ^= 1,
+                "private" => current.signal_identity.as_mut().unwrap().0.private[0] ^= 1,
+                "missing_identity" => current.signal_identity = None,
+                _ => {}
+            }
+            if change != "missing" {
+                store.write(|tx| current.save(tx)).unwrap();
+            }
+            let snapshot = |store: &ProtocolStore| {
+                store
+                    .read(|tx| {
+                        [
+                            Table::Account,
+                            Table::Checkpoints,
+                            Table::Outbox,
+                            Table::SignalSessions,
+                            Table::PeerIdentities,
+                        ]
+                        .into_iter()
+                        .map(|table| tx.scan(table, 1, 100))
+                        .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot(&store);
+            let result = store.write(|tx| {
+                ensure_retry_account(tx, &expected)?;
+                tx.put_json(Table::Checkpoints, b"synthetic-retry-reservation", 1, &true)
+            });
+            if matches!(change, "same" | "timestamp" | "credential") {
+                result.unwrap();
+            } else {
+                assert!(result.is_err(), "{change}");
+                assert_eq!(snapshot(&store), before, "{change}");
+            }
+            let after = snapshot(&store);
+            drop(store);
+            let reopened = open();
+            assert_eq!(snapshot(&reopened), after, "{change}");
+        }
+    }
+
+    #[test]
     fn refetch_query_reservation_rechecks_inputs_and_commits_once() {
         for change in [
             "unchanged",
@@ -889,6 +1043,17 @@ mod tests {
                 create: true,
             })
             .unwrap();
+            let account = AccountRecord {
+                registration: RegistrationStatus::Registered,
+                signal_registration_id: Some(31),
+                signal_identity: Some(SignalIdentityKey(KeyMaterial {
+                    public: [1; 32],
+                    private: [2; 32],
+                })),
+                generation: store.generation(),
+                ..Default::default()
+            };
+            store.write(|tx| account.save(tx)).unwrap();
             let outbox = super::super::outgoing::outbox();
             let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
             let peer_key = format!("comparison-direct:{peer}");
@@ -1005,9 +1170,12 @@ mod tests {
             let result = reserve_refetch(
                 &store,
                 &prepared_from,
-                &peer_key,
-                Some(&[1]),
-                expected_session.as_ref().map(|s| s.as_slice()),
+                &account,
+                RetryPeerSnapshot {
+                    key: &peer_key,
+                    identity: Some(&[1]),
+                    session: expected_session.as_ref().map(|s| s.as_slice()),
+                },
                 "Q1",
                 &job,
             );
@@ -1018,9 +1186,12 @@ mod tests {
                     !reserve_refetch(
                         &store,
                         &prepared_from,
-                        &peer_key,
-                        Some(&[1]),
-                        expected_session.as_ref().map(|s| s.as_slice()),
+                        &account,
+                        RetryPeerSnapshot {
+                            key: &peer_key,
+                            identity: Some(&[1]),
+                            session: expected_session.as_ref().map(|s| s.as_slice())
+                        },
                         "Q2",
                         &job
                     )
@@ -2081,6 +2252,7 @@ mod tests {
             KeyPair::generate(&mut rng),
         );
         let account = AccountRecord {
+            generation: store.generation(),
             registration: RegistrationStatus::Registered,
             signal_registration_id: Some(31),
             signal_identity: Some(SignalIdentityKey(KeyMaterial {
@@ -2089,6 +2261,7 @@ mod tests {
             })),
             ..Default::default()
         };
+        store.write(|tx| account.save(tx)).unwrap();
         let signature = remote
             .private_key()
             .calculate_signature(&signed.public_key.serialize(), &mut rng)
@@ -2366,6 +2539,18 @@ mod tests {
             }
         }
         // A later supported receipt without keys still follows normal policy.
+        // A cached drive account may remain valid for crypto after local
+        // account replacement. The commit must still refuse, without ratchet
+        // advancement, retry markers or another directory query.
+        let mut changed_account = account.clone();
+        changed_account.signal_registration_id = Some(32);
+        store.write(|tx| changed_account.save(tx)).unwrap();
+        let before_stale_account = all_retry_state();
+        assert!(
+            matches!(ask(1,42).await, Err(Error::InvalidInput { field:"retry", reason }) if reason == "local account changed before retry reservation")
+        );
+        assert_eq!(all_retry_state(), before_stale_account);
+        store.write(|tx| account.save(tx)).unwrap(); // synthetic control only
         let default_count = receipt(&peer, 1, 42)
             .attr("id", "ROOT-RECEIPT")
             .attr("recipient", retry_alias.clone())
@@ -2449,6 +2634,13 @@ mod tests {
 
         // 151.A00: a changed registration asks the directory for a fresh
         // bundle, once; its reply completes the answer with a new session.
+        store.write(|tx| changed_account.save(tx)).unwrap();
+        let before_stale_query = all_retry_state();
+        assert!(
+            matches!(ask(2,43).await, Err(Error::InvalidInput { field:"retry", reason }) if reason == "local account changed before retry reservation")
+        );
+        assert_eq!(all_retry_state(), before_stale_query);
+        store.write(|tx| account.save(tx)).unwrap(); // synthetic control only
         let query = ask(2, 43).await.unwrap().expect("key query");
         assert_eq!(
             query.get_attr("xmlns").and_then(|v| v.as_text()),
@@ -2534,6 +2726,13 @@ mod tests {
                 .unwrap()
                 .is_none()
         );
+        store.write(|tx| changed_account.save(tx)).unwrap();
+        let before_stale_completion = all_retry_state();
+        assert!(
+            matches!(complete_refetch(&store,&account,&reply,ConnectionEpoch(2)).await, Err(Error::InvalidInput {field:"retry",reason}) if reason == "local account changed before retry reservation")
+        );
+        assert_eq!(all_retry_state(), before_stale_completion);
+        store.write(|tx| account.save(tx)).unwrap(); // synthetic control only
         if pending_outcome == "delivered" {
             store
                 .write(|tx| {

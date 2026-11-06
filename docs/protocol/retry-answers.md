@@ -453,3 +453,50 @@ query, automatic resend, guessed timer or live account operation.
 Validation:1,447 workspace/all-feature tests passed. Strict workspace/all-target/
 all-feature Clippy, formatting, CLI reference regeneration, OpenAPI symbol
 validation, APK coverage freshness and repository hygiene passed.
+
+## Retry reservations recheck local account authority (2026-11-06)
+
+**Confirmed Rust defect fixed offline:** retry preparation uses the account
+cached by the drive. The saved-session answer and fresh-bundle answer rechecked
+original-message and peer/session state at commit, but neither rechecked the
+local account used for crypto. Fresh-key query reservation had the same account
+omission. A changed/revoked account or replaced Signal key could therefore leave
+a retry reservation/session prepared from stale local authority.
+
+All three reservation transactions now require both cached and current accounts
+to be registered, generation to match each other and the store, unchanged phone
+and own JID, a present matching Signal registration ID, and matching public and
+private Signal identity bytes. Missing current account or changed authority
+refuses before retry/checkpoint/session/outbox changes commit. Authentication
+timestamps and observed credentials are excluded: those observations do not
+change the Signal identity used to prepare this retry. No keys are logged,
+rotated, repaired or adopted.
+
+**Confirmed existing guards:** original-message equality/age and peer pin/ratchet
+comparisons remain in these transactions; they were verified rather than
+reimplemented. **Native reference:** the APK2.26.37.71 DNP/150 eligibility documented above
+should not be read as evidence for this Rust storage projection. This is a local
+commit-ownership correction, not a newly traced native account-format or
+key-rotation requirement. No new APK evidence is claimed.
+
+The real-crypto retry workflow now changes the saved registration ID before each
+of the three production entrypoints, checks the precise local-account refusal
+and compares unchanged checkpoint/outbox/session/pin state. Synthetic account
+restoration then exercises existing valid controls; that is test setup, not a
+recovery feature. The isolated account-authority regression covers missing,
+unregistered/revoked accounts, generation/store-generation mismatch, phone/JID,
+missing/changed registration and public/private/missing identity; refused
+transactions preserve snapshots across reopen. Timestamp/credential-only controls
+remain admitted. Test account fixtures now use the actual store generation and
+persist their registered account rather than relying on absent-account state.
+
+**Limits:** this is commit-time authority. No account lock spans later writer
+queue/socket I/O, no complete registration-material-copy check is added, and
+error/non-sending refusal handling retains its existing ownership contract.
+Public and normal-runtime retry reservations use this guard. Full native sender,
+callback deadline/recovery and all later account transitions remain open. No new
+wire field, timer, retry/reset policy or live account operation.
+
+Validation:1,448 workspace/all-feature tests passed. Strict workspace/all-target/
+all-feature Clippy, formatting, CLI reference regeneration, OpenAPI symbol
+validation, APK coverage freshness and repository hygiene passed. Offline only.
