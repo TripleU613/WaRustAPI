@@ -4098,3 +4098,28 @@ returns the exact pair-mismatch error; all prekey and checkpoint bytes remain
 unchanged, including rollback of earlier keys' tentative reservations. Reopen
 still refuses with identical rows. Existing normal upload and independent
 digest controls remain. No live account or network operation ran.
+
+### Direct upload API validates the supplied signed private half (2026-11-05)
+
+**Confirmed local defect, fixed offline:** begin_upload and its shared selected
+upload implementation accept a caller-supplied serialized registered signed
+prekey. They checked wire ID, public key and identity signature but did not
+validate the private half. The earlier factory lookup guard did not protect
+callers using this API directly. A valid public signature therefore allowed a
+record with a mismatched private key to reserve an upload.
+
+The shared upload entry now decodes signed.private_key, derives public and
+compares it with signed_public before allocating the IQ ID or entering the
+reservation transaction. Unusable private data and pair mismatch produce fixed
+InvalidInput reasons. Signature and account/store ownership checks remain.
+No key is repaired or replaced, and no alternative identity or request is
+created. This is local input integrity, not a new APK wire requirement or a
+claim about native corrupt-store fallback.
+
+Regression preserves the signed ID/public/signature/timestamp while substituting
+an independently generated private key. It explicitly confirms the public
+signature still verifies. Old code returned a reserved upload. Corrected code
+returns pair-mismatch, preserves exact prekey/checkpoint bytes and still refuses
+after reopen; the original valid signed record then reserves successfully.
+This direct-API boundary is separate from factory loading and does not claim
+every other raw serialized-key API was audited. No live account operation.

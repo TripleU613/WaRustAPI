@@ -1,3 +1,8 @@
+Direct prekey upload API now validates the supplied signed private/public
+pair before IQ ID allocation or reservation, closing the path around factory
+validation. A valid public signature no longer admits a mismatched private half.
+[Local audit](docs/protocol/prekey-count-notifications.md#direct-upload-api-validates-the-supplied-signed-private-half-2026-11-05).
+
 One-time prekey lookup now rejects mismatched public/private halves before
 upload reservation or local digest use. A corrupted last key in a50-key batch
 refuses the entire transaction without changing earlier metadata or key rows,

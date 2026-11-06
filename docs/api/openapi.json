@@ -17338,5 +17338,12 @@
     "x-live": false,
     "description": "Legacy one-time prekey lookup derives public from saved private and refuses pair mismatch or unusable private material. Upload admission rolls back tentative earlier reservations when a later selected key is corrupt; digest lookup shares the guard. Local integrity check, no wire-field change, key repair or retry.",
     "evidence": "docs/protocol/prekey-count-notifications.md#legacy-one-time-prekey-privatepublic-consistency-2026-11-05"
+  },
+  "x-direct-upload-signed-pair-integrity": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Shared direct upload admission derives public from caller-supplied signed-prekey private material before IQ ID allocation/reservation. Valid public signature alone no longer admits pair mismatch. Factory guard remains separate; no repair, alternative identity or wire-field change.",
+    "evidence": "docs/protocol/prekey-count-notifications.md#direct-upload-api-validates-the-supplied-signed-private-half-2026-11-05"
   }
 }

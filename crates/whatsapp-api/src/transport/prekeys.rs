@@ -522,6 +522,18 @@ fn begin_upload_selected(
     let signed_public = signed
         .public_key()
         .map_err(|_| invalid("signed prekey public key"))?;
+    // Public API callers may bypass the registration material factory. A
+    // valid public signature does not authenticate the supplied private half.
+    let signed_private = signed
+        .private_key()
+        .map_err(|_| invalid("signed prekey private key"))?;
+    if signed_private
+        .public_key()
+        .map_err(|_| invalid("signed prekey private key"))?
+        != signed_public
+    {
+        return Err(invalid("signed prekey pair mismatch"));
+    }
     let signed_signature = signed
         .signature()
         .map_err(|_| invalid("signed prekey signature"))?;
@@ -1179,6 +1191,75 @@ mod tests {
                 );
             }
         }
+    }
+
+    #[test]
+    fn direct_upload_refuses_signed_private_mismatch_without_reserving_keys() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("direct-signed-pair.redb");
+        let store = open(&path);
+        let (account, signed) = account_and_signed(&store);
+        generate(&store).unwrap();
+        let original = SignedPreKeyRecord::deserialize(&signed).unwrap();
+        let pair = KeyPair {
+            public_key: original.public_key().unwrap(),
+            private_key: KeyPair::generate(&mut rand::rng()).private_key,
+        };
+        let bad = SignedPreKeyRecord::new(
+            original.id().unwrap(),
+            original.timestamp().unwrap(),
+            &pair,
+            &original.signature().unwrap(),
+        )
+        .serialize()
+        .unwrap();
+        // The public signature remains valid; only the supplied private half changed.
+        let public = wacore_libsignal::protocol::PublicKey::from_djb_public_key_bytes(
+            &account.signal_identity.as_ref().unwrap().0.public,
+        )
+        .unwrap();
+        assert!(
+            public.verify_signature(&pair.public_key.serialize(), &original.signature().unwrap())
+        );
+        let snapshot = store
+            .read(|tx| {
+                Ok((
+                    tx.scan(Table::Prekeys, 1, 1000)?,
+                    tx.scan(Table::Checkpoints, 1, 1000)?,
+                ))
+            })
+            .unwrap();
+        let error = begin_upload(&store, &account, &bad)
+            .expect_err("signed pair must match at public upload boundary");
+        assert!(
+            matches!(&error, Error::InvalidInput { reason, .. } if reason == "signed prekey pair mismatch"),
+            "{error}"
+        );
+        assert_eq!(
+            store
+                .read(|tx| Ok((
+                    tx.scan(Table::Prekeys, 1, 1000)?,
+                    tx.scan(Table::Checkpoints, 1, 1000)?
+                )))
+                .unwrap(),
+            snapshot
+        );
+        drop(store);
+        let store = open(&path);
+        assert!(begin_upload(&store, &account, &bad).is_err());
+        assert_eq!(
+            store
+                .read(|tx| Ok((
+                    tx.scan(Table::Prekeys, 1, 1000)?,
+                    tx.scan(Table::Checkpoints, 1, 1000)?
+                )))
+                .unwrap(),
+            snapshot
+        );
+        assert!(
+            begin_upload(&store, &account, &signed).unwrap().is_some(),
+            "original valid material still works"
+        );
     }
 
     #[test]
