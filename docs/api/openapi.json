@@ -17828,5 +17828,12 @@
     "x-live": false,
     "description": "Existing media uploads require exact reservation/header/response snapshots at each authority transition. HTTP status and complete bounded response bodies are independently retained encrypted before settlement; changed state refuses without retransmission. Existing one-POST, body bounds and upload location validation remain; no live verification or new retry capability.",
     "evidence": "docs/protocol/replay-safety-audit.md#media-upload-response-transitions-retain-reservation-ownership-2026-11-06"
+},
+  "x-media-download-reservation-ownership": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Existing ordinary media GET reserves a local owner ID and requires exact expected reservation before success or HTTP refusal settlement. Changed/missing/settled state refuses without overwriting or returning newly decrypted media. Cached success and old unknown no-retry behavior remain. Shared HTTP no-redirect/no-retry configuration unchanged; no live verification.",
+    "evidence": "docs/protocol/media-network-outcomes.md#download-result-reservation-ownership-2026-11-06"
 }
 }

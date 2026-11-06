@@ -1,3 +1,5 @@
+Ordinary media GET success/refusal now require the exact initiating reservation; late results cannot overwrite changed or settled state. [Media GET result reservation ownership](docs/protocol/media-network-outcomes.md#download-result-reservation-ownership-2026-11-06). Shared HTTP client already disables redirects/retries; offline verification only.
+
 Media upload headers/body/protobuf transitions now require exact expected reservation state; independent encrypted HTTP observations survive stale settlement refusal. [Media-upload response reservation ownership](docs/protocol/replay-safety-audit.md#media-upload-response-transitions-retain-reservation-ownership-2026-11-06). Existing one-POST/no-retry behavior retained; offline only.
 
 Separate CLI group distributions now reserve frozen child wire/ID before write and require exact parent/child authority at settlement. [Separate distribution reservation ownership](docs/protocol/replay-safety-audit.md#cli-separate-distributions-reserve-before-write-2026-11-06). Duplicate/changed/reopen paths refuse; no live operation.

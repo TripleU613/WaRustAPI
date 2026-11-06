@@ -541,3 +541,36 @@ Those local resource limits can refuse large histories; they were not removed
 or claimed as native limits. Full upload/download HTTP interoperability, every
 host choice, native lifecycle parity and live acceptance remain outside this
 coordinator audit. No new refresh, retry, wait reset or live account operation.
+
+## Download result reservation ownership (2026-11-06)
+
+**Confirmed local gap / fixed offline:** ordinary media GET success wrote its
+authenticated ciphertext checkpoint unconditionally after network awaits. Refusal
+checked only outcome_unknown. A late result was not bound to the download attempt
+that initiated it.
+
+New downloads persist outcome_unknown with a fresh local reservation ID. Both
+success and definite HTTP refusal compare the exact expected record inside their
+settlement transaction before replacing it. Missing, changed or already-settled
+state refuses without returning the newly decrypted media or overwriting the
+current checkpoint. Existing cached completed media, old uncertain no-retry
+records, preflight/hash checks and final availability checks retain their paths.
+The local ID is not sent on the wire and does not authorize retry.
+
+Regression late_download_result_cannot_replace_changed_or_settled_reservation_after_reopen
+covers missing, differently owned unknown, consumed/refused/downloaded records,
+unchanged checkpoints/journal and refusal after reopen. Exact success progresses
+once; duplicate success or later refusal cannot replace it. Existing numeric HTTP
+refusal tests still cover status retention and no-replay behavior.
+
+**Bounded negative client audit:** image_upload.client, shared by ordinary media
+GET and POST, already selects https_only, redirect Policy::none, retry::never,
+no_proxy, referer(false), disabled transparent compression and explicit total/
+connect timeouts. No mismatch was found in that local one-request configuration;
+it is not evidence of native timeout equivalence or server policy. No network
+capture/live operation was performed.
+
+**Limits:** transaction checks do not lock HTTP and storage together. This change
+does not add independent capture of every stale/partial GET body, alter view-once
+consumption or solve all descriptor/session-generation races. No deletion,
+identity rotation or automatic repeat request is introduced.

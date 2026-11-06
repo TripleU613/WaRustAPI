@@ -8256,3 +8256,5 @@ CLI group ACK cached-intent overwrite/promotion gap closed using shared direct-s
 Local out-of-band sender-key child write/settlement ownership now durable before network write and bound to current parent intent. [Separate distribution reservation ownership](replay-safety-audit.md#cli-separate-distributions-reserve-before-write-2026-11-06). No retry, wire grammar or native-policy claim.
 
 Local media-upload cached-state overwrite gaps corrected across header/response/uploaded transitions with independent HTTP evidence capture. [Media-upload response reservation ownership](replay-safety-audit.md#media-upload-response-transitions-retain-reservation-ownership-2026-11-06). No wire-schema or live acceptance claim.
+
+Ordinary media GET settlement now binds success and HTTP refusal to a unique local reservation; client no-redirect/no-retry settings verified unchanged. [Media GET result reservation ownership](media-network-outcomes.md#download-result-reservation-ownership-2026-11-06). No native timeout or live claim.
