@@ -1,3 +1,10 @@
+2026-11-06 — **Traced privacy MEX setter input and response admission.**
+SetPrivacySettingMutation uses nested enum-valued setting input and a distinct
+persisted document. Null-response fallback and enum-translation failure stay
+separate; successful maps return to category/pending reconciliation.
+[Evidence, SDK limits and Rust boundary](docs/protocol/privacy-mex-config.md#privacy-setting-mutation-input-and-response-rules-2026-11-06).
+No production request or live account change.
+
 2026-11-06 — **Re-anchored read-self ACK privacy synchronization.**
 Current227 handler can disable reads from none, preserves localfalse on all,
 and can queue a corrective setter. Producer/message, interface dispatch and

@@ -1,0 +1,41 @@
+# Selected DEX excerpt; not a complete method.
+
+# class: LX/8ho;
+# extends: LX/0cj;
+
+.method public invokeSuspend(LL)  # .registers 20
+    # full signature: LX/8ho;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+    0000..0004  move-object/from16  v13, v19
+    0004..0008  move-object/from16  v11, v18
+    0008..000c  iget  v0, v11, LX/8ho;->$t:I
+    000c..0012  packed-switch  v0, payload@0x554, cases=[0:@0x4d8, 1:@0x458, 2:@0x3a0, 3:@0x33a, 4:@0x2a8, 5:@0x24c, 6:@0x1d6, 7:@0x136, 8:@0x5c], default@0x12
+    024c..0250  sget-object  v0, LX/0dd;->A02:LX/0dd;
+    0250..0254  iget  v1, v11, LX/8ho;->A00:I
+    0254..0256  const/4  v5, #0x1
+    0256..025a  if-eqz  v1, +0x9
+    025a..025e  if-eq  v1, v5, +0x6b
+    025e..0264  invoke-static  {}, LX/000;->A03()Ljava/lang/IllegalStateException;
+    0264..0266  move-result-object  v0
+    0266..0268  throw  v0
+    0268..026e  invoke-static  {v13}, LX/0dg;->A01(Ljava/lang/Object;)V
+    026e..0272  iget-object  v2, v11, LX/8ho;->A02:Ljava/lang/Object;
+    0272..0276  check-cast  v2, LX/0oe;
+    0276..027a  sget-object  v1, LX/0oe;->A0G:Ljava/util/List;
+    027a..027e  iget-object  v1, v2, LX/0oe;->A04:LX/05a;
+    027e..0284  invoke-static  {v1}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0284..0286  move-result-object  v4
+    0286..028a  check-cast  v4, Lcom/whatsapp/privacy/MexSetPrivacySettingsHandler;
+    028a..028e  iget-object  v3, v11, LX/8ho;->A03:Ljava/lang/String;
+    028e..0292  iget-object  v2, v11, LX/8ho;->A04:Ljava/lang/String;
+    0292..0296  iget-object  v1, v11, LX/8ho;->A01:Ljava/lang/Object;
+    0296..029a  check-cast  v1, LX/6pB;
+    029a..029e  iput  v5, v11, LX/8ho;->A00:I
+    029e..02a4  invoke-virtual  {v4, v1, v3, v2, v11}, Lcom/whatsapp/privacy/MexSetPrivacySettingsHandler;->A00(LX/6pB;Ljava/lang/String;Ljava/lang/String;LX/0cf;)Ljava/lang/Object;
+    02a4..02a6  move-result-object  v1
+    02a6..02a8  goto  +0x28
+    02f6..02fa  if-ne  v1, v0, +0x108
+    02fa..02fc  return-object  v0
+    0330..0336  invoke-static  {v13}, LX/0dg;->A01(Ljava/lang/Object;)V
+    0336..033a  goto/16  +0xe8
+    0506..050a  sget-object  v0, LX/05u;->A00:LX/05u;
+    050a..050c  return-object  v0

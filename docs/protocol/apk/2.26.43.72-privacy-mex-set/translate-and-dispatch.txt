@@ -1,0 +1,280 @@
+
+# class: Lcom/whatsapp/privacy/MexSetPrivacySettingsHandler;
+# extends: Ljava/lang/Object;
+
+.method public A01(LLLL)  # .registers 15
+    # full signature: Lcom/whatsapp/privacy/MexSetPrivacySettingsHandler;->A01(Ljava/lang/String;Ljava/lang/String;LX/0cf;)Ljava/lang/Object;
+    0000..0002  const/4  v4, #0x6
+    0002..0006  instance-of  v0, v14, LX/8fv;
+    0006..000a  if-eqz  v0, +0xa
+    000a..000c  move-object  v0, v14
+    000c..0010  check-cast  v0, LX/8fv;
+    0010..0014  iget  v1, v0, LX/8fv;->$t:I
+    0014..0016  const/4  v0, #0x1
+    0016..001a  if-eq  v1, v4, +0x3
+    001a..001c  const/4  v0, #0x0
+    001c..001e  move-object  v6, v11
+    001e..0022  if-eqz  v0, +0x1d
+    0022..0024  move-object  v1, v14
+    0024..0028  check-cast  v1, LX/8fv;
+    0028..002c  iget  v3, v1, LX/8fv;->A00:I
+    002c..0030  const/high16  v2, #0x80000000
+    0030..0034  and-int  v0, v3, v2
+    0034..0038  if-eqz  v0, +0x12
+    0038..003a  sub-int/2addr  v3, v2
+    003a..003e  iput  v3, v1, LX/8fv;->A00:I
+    003e..0042  iget-object  v3, v1, LX/8fv;->A05:Ljava/lang/Object;
+    0042..0046  sget-object  v2, LX/0dd;->A02:LX/0dd;
+    0046..004a  iget  v0, v1, LX/8fv;->A00:I
+    004a..004c  const/4  v10, #0x1
+    004c..0050  if-eqz  v0, +0x11
+    0050..0054  if-ne  v0, v10, +0xa
+    0054..0058  goto/16  +0x1b6
+    0058..005c  new-instance  v1, LX/8fv;
+    005c..0062  invoke-direct  {v1, v11, v14, v4}, LX/8fv;-><init>(Ljava/lang/Object;LX/0cf;I)V
+    0062..0064  goto  -0x12
+    0064..006a  invoke-static  {}, LX/000;->A03()Ljava/lang/IllegalStateException;
+    006a..006c  move-result-object  v0
+    006c..006e  throw  v0
+    006e..0074  invoke-static  {v3}, LX/0dg;->A01(Ljava/lang/Object;)V
+    0074..0078  const-string  v0, "MexSetPrivacySettingsHandler/setPrivacySetting: category="
+    0078..007a  move-object  v7, v12
+    007a..0080  invoke-static  {v0, v12}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0080..0082  move-result-object  v3
+    0082..0086  const-string  v0, ", setting="
+    0086..008c  invoke-virtual  {v3, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    008c..008e  move-object  v8, v13
+    008e..0094  invoke-static  {v3, v13}, LX/2L9;->A1K(Ljava/lang/StringBuilder;Ljava/lang/String;)V
+    0094..0096  const/4  v0, #0x0
+    0096..009c  invoke-static  {v12, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    009c..00a2  invoke-virtual  {v12}, Ljava/lang/String;->hashCode()I
+    00a2..00a4  move-result  v0
+    00a4..00aa  sparse-switch  v0, payload@0x3f8, cases=[-2071119646:@0x25c, -1012222381:@0x244, -892481550:@0x22c, -487963238:@0x214, -486574498:@0x1fc, -462094004:@0x1e4, -309425751:@0x1cc, 111007:@0x1b4, 3314326:@0x19e, 178851754:@0x188, 249020823:@0x172, 275152424:@0x15c, 506363330:@0x146, 548632963:@0x130, 883426128:@0x11a, 1531715286:@0x104, 1544916544:@0xee, 1974548689:@0xd8], default@0xaa
+    00aa..00ae  const-string  v0, "MexPrivacySettingsTranslator/translateCategoryToFeature: Unknown category: "
+    00ae..00b4  invoke-static  {v0, v12}, LX/2LE;->A1B(Ljava/lang/String;Ljava/lang/String;)V
+    00b4..00b6  const/4  v5, #0x0
+    00b6..00ba  if-nez  v5, +0xdf
+    00ba..00be  const-string  v0, "MexSetPrivacySettingsHandler/setPrivacySetting: Unknown category: "
+    00be..00c4  invoke-static  {v0, v12}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    00c4..00c6  move-result-object  v0
+    00c6..00cc  invoke-static  {v0}, LX/1Xl;->A0f(Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    00cc..00ce  move-result-object  v0
+    00ce..00d4  invoke-static  {v0}, LX/0dg;->A00(Ljava/lang/Throwable;)LX/0Dt;
+    00d4..00d6  move-result-object  v0
+    00d6..00d8  return-object  v0
+    00d8..00dc  const-string  v0, "readreceipts"
+    00dc..00e2  invoke-virtual  {v12, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    00e2..00e4  move-result  v0
+    00e4..00e8  if-eqz  v0, -0x1d
+    00e8..00ec  sget-object  v5, LX/7gM;->A0K:LX/7gM;
+    00ec..00ee  goto  -0x1b
+    00ee..00f2  const-string  v0, "defense"
+    00f2..00f8  invoke-virtual  {v12, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    00f8..00fa  move-result  v0
+    00fa..00fe  if-eqz  v0, -0x28
+    00fe..0102  sget-object  v5, LX/7gM;->A08:LX/7gM;
+    0102..0104  goto  -0x26
+    0104..0108  const-string  v0, "stickers"
+    0108..010e  invoke-virtual  {v12, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    010e..0110  move-result  v0
+    0110..0114  if-eqz  v0, -0x33
+    0114..0118  sget-object  v5, LX/7gM;->A0N:LX/7gM;
+    0118..011a  goto  -0x31
+    011a..011e  const-string  v0, "linked_profiles"
+    011e..0124  invoke-virtual  {v12, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0124..0126  move-result  v0
+    0126..012a  if-eqz  v0, -0x3e
+    012a..012e  sget-object  v5, LX/7gM;->A0E:LX/7gM;
+    012e..0130  goto  -0x3c
+    0130..0134  const-string  v0, "calladd"
+    0134..013a  invoke-virtual  {v12, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    013a..013c  move-result  v0
+    013c..0140  if-eqz  v0, -0x49
+    0140..0144  sget-object  v5, LX/7gM;->A04:LX/7gM;
+    0144..0146  goto  -0x47
+    0146..014a  const-string  v0, "groupadd"
+    014a..0150  invoke-virtual  {v12, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0150..0152  move-result  v0
+    0152..0156  if-eqz  v0, -0x54
+    0156..015a  sget-object  v5, LX/7gM;->A0B:LX/7gM;
+    015a..015c  goto  -0x52
+    015c..0160  const-string  v0, "channelview"
+    0160..0166  invoke-virtual  {v12, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0166..0168  move-result  v0
+    0168..016c  if-eqz  v0, -0x5f
+    016c..0170  sget-object  v5, LX/7gM;->A06:LX/7gM;
+    0170..0172  goto  -0x5d
+    0172..0176  const-string  v0, "statusview"
+    0176..017c  invoke-virtual  {v12, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    017c..017e  move-result  v0
+    017e..0182  if-eqz  v0, -0x6a
+    0182..0186  sget-object  v5, LX/7gM;->A0M:LX/7gM;
+    0186..0188  goto  -0x68
+    0188..018c  const-string  v0, "cover_photo"
+    018c..0192  invoke-virtual  {v12, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0192..0194  move-result  v0
+    0194..0198  if-eqz  v0, -0x75
+    0198..019c  sget-object  v5, LX/7gM;->A07:LX/7gM;
+    019c..019e  goto  -0x73
+    019e..01a2  const-string  v0, "last"
+    01a2..01a8  invoke-virtual  {v12, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    01a8..01aa  move-result  v0
+    01aa..01ae  if-eqz  v0, -0x80
+    01ae..01b2  sget-object  v5, LX/7gM;->A0D:LX/7gM;
+    01b2..01b4  goto  -0x7e
+    01b4..01b8  const-string  v0, "pix"
+    01b8..01be  invoke-virtual  {v12, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    01be..01c0  move-result  v0
+    01c0..01c4  if-eqz  v0, -0x8b
+    01c4..01c8  sget-object  v5, LX/7gM;->A0I:LX/7gM;
+    01c8..01cc  goto/16  -0x89
+    01cc..01d0  const-string  v0, "profile"
+    01d0..01d6  invoke-virtual  {v12, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    01d6..01d8  move-result  v0
+    01d8..01dc  if-eqz  v0, -0x97
+    01dc..01e0  sget-object  v5, LX/7gM;->A0J:LX/7gM;
+    01e0..01e4  goto/16  -0x95
+    01e4..01e8  const-string  v0, "messages"
+    01e8..01ee  invoke-virtual  {v12, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    01ee..01f0  move-result  v0
+    01f0..01f4  if-eqz  v0, -0xa3
+    01f4..01f8  sget-object  v5, LX/7gM;->A0F:LX/7gM;
+    01f8..01fc  goto/16  -0xa1
+    01fc..0200  const-string  v0, "groupcreation"
+    0200..0206  invoke-virtual  {v12, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0206..0208  move-result  v0
+    0208..020c  if-eqz  v0, -0xaf
+    020c..0210  sget-object  v5, LX/7gM;->A0C:LX/7gM;
+    0210..0214  goto/16  -0xad
+    0214..0218  const-string  v0, "dependentaccountmessages"
+    0218..021e  invoke-virtual  {v12, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    021e..0220  move-result  v0
+    0220..0224  if-eqz  v0, -0xbb
+    0224..0228  sget-object  v5, LX/7gM;->A0A:LX/7gM;
+    0228..022c  goto/16  -0xb9
+    022c..0230  const-string  v0, "status"
+    0230..0236  invoke-virtual  {v12, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0236..0238  move-result  v0
+    0238..023c  if-eqz  v0, -0xc7
+    023c..0240  sget-object  v5, LX/7gM;->A02:LX/7gM;
+    0240..0244  goto/16  -0xc5
+    0244..0248  const-string  v0, "online"
+    0248..024e  invoke-virtual  {v12, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    024e..0250  move-result  v0
+    0250..0254  if-eqz  v0, -0xd3
+    0254..0258  sget-object  v5, LX/7gM;->A0G:LX/7gM;
+    0258..025c  goto/16  -0xd1
+    025c..0260  const-string  v0, "channelcreation"
+    0260..0266  invoke-virtual  {v12, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0266..0268  move-result  v0
+    0268..026c  if-eqz  v0, -0xdf
+    026c..0270  sget-object  v5, LX/7gM;->A05:LX/7gM;
+    0270..0274  goto/16  -0xdd
+    0274..0276  const/4  v0, #0x0
+    0276..027c  invoke-static  {v13, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    027c..0282  invoke-virtual  {v13}, Ljava/lang/String;->hashCode()I
+    0282..0284  move-result  v0
+    0284..028a  sparse-switch  v0, payload@0x48c, cases=[-2135866230:@0x37e, -2094465528:@0x368, -1134190658:@0x352, -940392804:@0x33c, -631608035:@0x326, -567451565:@0x310, 96673:@0x2fa, 109935:@0x2e4, 3387192:@0x2ce, 102204227:@0x2b8], default@0x28a
+    028a..028e  const-string  v0, "MexPrivacySettingsTranslator/translateValueToConfiguration: Unknown value: "
+    028e..0294  invoke-static  {v0, v13}, LX/2LE;->A1B(Ljava/lang/String;Ljava/lang/String;)V
+    0294..0296  const/4  v4, #0x0
+    0296..029a  if-nez  v4, +0x7f
+    029a..029e  const-string  v0, "MexSetPrivacySettingsHandler/setPrivacySetting: Unknown setting: "
+    029e..02a4  invoke-static  {v0, v13}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    02a4..02a6  move-result-object  v0
+    02a6..02ac  invoke-static  {v0}, LX/1Xl;->A0f(Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    02ac..02ae  move-result-object  v0
+    02ae..02b4  invoke-static  {v0}, LX/0dg;->A00(Ljava/lang/Throwable;)LX/0Dt;
+    02b4..02b6  move-result-object  v0
+    02b6..02b8  return-object  v0
+    02b8..02bc  const-string  v0, "known"
+    02bc..02c2  invoke-virtual  {v13, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    02c2..02c4  move-result  v0
+    02c4..02c8  if-eqz  v0, -0x1d
+    02c8..02cc  sget-object  v4, LX/7gK;->A05:LX/7gK;
+    02cc..02ce  goto  -0x1b
+    02ce..02d2  const-string  v0, "none"
+    02d2..02d8  invoke-virtual  {v13, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    02d8..02da  move-result  v0
+    02da..02de  if-eqz  v0, -0x28
+    02de..02e2  sget-object  v4, LX/7gK;->A09:LX/7gK;
+    02e2..02e4  goto  -0x26
+    02e4..02e8  const-string  v0, "off"
+    02e8..02ee  invoke-virtual  {v13, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    02ee..02f0  move-result  v0
+    02f0..02f4  if-eqz  v0, -0x33
+    02f4..02f8  sget-object  v4, LX/7gK;->A0A:LX/7gK;
+    02f8..02fa  goto  -0x31
+    02fa..02fe  const-string  v0, "all"
+    02fe..0304  invoke-virtual  {v13, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0304..0306  move-result  v0
+    0306..030a  if-eqz  v0, -0x3e
+    030a..030e  sget-object  v4, LX/7gK;->A02:LX/7gK;
+    030e..0310  goto  -0x3c
+    0310..0314  const-string  v0, "contacts"
+    0314..031a  invoke-virtual  {v13, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    031a..031c  move-result  v0
+    031c..0320  if-eqz  v0, -0x49
+    0320..0324  sget-object  v4, LX/7gK;->A07:LX/7gK;
+    0324..0326  goto  -0x47
+    0326..032a  const-string  v0, "on_standard"
+    032a..0330  invoke-virtual  {v13, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0330..0332  move-result  v0
+    0332..0336  if-eqz  v0, -0x54
+    0336..033a  sget-object  v4, LX/7gK;->A0B:LX/7gK;
+    033a..033c  goto  -0x52
+    033c..0340  const-string  v0, "with_pin"
+    0340..0346  invoke-virtual  {v13, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0346..0348  move-result  v0
+    0348..034c  if-eqz  v0, -0x5f
+    034c..0350  sget-object  v4, LX/7gK;->A0D:LX/7gK;
+    0350..0352  goto  -0x5d
+    0352..0356  const-string  v0, "contact_blacklist"
+    0356..035c  invoke-virtual  {v13, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    035c..035e  move-result  v0
+    035e..0362  if-eqz  v0, -0x6a
+    0362..0366  sget-object  v4, LX/7gK;->A08:LX/7gK;
+    0366..0368  goto  -0x68
+    0368..036c  const-string  v0, "contact_allowlist"
+    036c..0372  invoke-virtual  {v13, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0372..0374  move-result  v0
+    0374..0378  if-eqz  v0, -0x75
+    0378..037c  sget-object  v4, LX/7gK;->A03:LX/7gK;
+    037c..037e  goto  -0x73
+    037e..0382  const-string  v0, "match_last_seen"
+    0382..0388  invoke-virtual  {v13, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0388..038a  move-result  v0
+    038a..038e  if-eqz  v0, -0x80
+    038e..0392  sget-object  v4, LX/7gK;->A06:LX/7gK;
+    0392..0394  goto  -0x7e
+    0394..0398  iget-object  v0, v11, Lcom/whatsapp/privacy/MexSetPrivacySettingsHandler;->A00:LX/05a;
+    0398..039e  invoke-static  {v0}, LX/2L8;->A1Q(LX/05a;)LX/021;
+    039e..03a0  move-result-object  v0
+    03a0..03a2  const/4  v9, #0x0
+    03a2..03a6  new-instance  v3, LX/8gk;
+    03a6..03ac  invoke-direct/range  {v3..v10}, LX/8gk;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;LX/0cf;I)V
+    03ac..03b2  invoke-static  {v1, v10}, LX/8fv;->A02(LX/8fv;I)V
+    03b2..03b8  invoke-static  {v1, v0, v3}, LX/0cl;->A00(LX/0cf;LX/01z;LX/0AW;)Ljava/lang/Object;
+    03b8..03ba  move-result-object  v3
+    03ba..03be  if-ne  v3, v2, +0x6
+    03be..03c0  return-object  v2
+    03c0..03c6  invoke-static  {v3}, LX/0dg;->A01(Ljava/lang/Object;)V
+    03c6..03ca  check-cast  v3, LX/0Dr;
+    03ca..03ce  iget-object  v0, v3, LX/0Dr;->value:Ljava/lang/Object;
+    03ce..03d0  return-object  v0
+    03d0..03d2  move-exception  v2
+    03d2..03d6  iget-object  v0, v2, LX/Giw;->error:LX/Hbw;
+    03d6..03da  iget-object  v0, v0, LX/Hbw;->A01:Ljava/util/List;
+    03da..03e0  invoke-static  {v0}, LX/6oe;->A19(Ljava/util/List;)Ljava/lang/String;
+    03e0..03e2  move-result-object  v1
+    03e2..03e6  const-string  v0, "MexSetPrivacySettingsHandler/setPrivacySetting: "
+    03e6..03ec  invoke-static  {v0, v1}, LX/2LA;->A1M(Ljava/lang/String;Ljava/lang/String;)V
+    03ec..03f2  invoke-static  {v2}, LX/6oe;->A1D(Ljava/lang/Throwable;)LX/0Dt;
+    03f2..03f4  move-result-object  v0
+    03f4..03f6  return-object  v0
+    03f6..03f8  nop
+    03f8..048c  sparse-switch-payload  size=18
+    048c..04e0  sparse-switch-payload  size=10
+    # exception table: 1 try range(s)
+    # catch LX/Giw; code_units 01ca..01e8 -> 01e8
+.end method

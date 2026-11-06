@@ -1,0 +1,46 @@
+{
+  "README.md": {
+    "bytes": 8817,
+    "sha256": "c9629e13b377150bceba38a715a2e6891681c421172d9a906d2b68e2df867cd9"
+  },
+  "builder-lifecycle.txt": {
+    "bytes": 2714,
+    "sha256": "f9550f4e3044980d5555ffa812c070a0c1f81a5c4e690677f0f2d7cf881afccb"
+  },
+  "builder-selected.txt": {
+    "bytes": 7473,
+    "sha256": "d29ba4538051d5523b0d5e699446eab6176414b9940f8920d6204bd585d041ee"
+  },
+  "completion-owner.txt": {
+    "bytes": 2949,
+    "sha256": "b3b17d8c05323c38947d354ef4d9d9ffe082822d99cead2862553d494f743985"
+  },
+  "enum-parse.txt": {
+    "bytes": 1051,
+    "sha256": "41b175f1c47e87125003a6273d4c0e6a51b089a692e5dbae8ba0845c17b819e0"
+  },
+  "enum-reader.txt": {
+    "bytes": 855,
+    "sha256": "e549e054774c16f93f6bac8c8a2034f848ec0f4174c72817af247ec8acbc5b57"
+  },
+  "input-attach.txt": {
+    "bytes": 520,
+    "sha256": "7c5f270ff48cde4f802e26b6a59d2fecca4489caa1bbebc069d821c152c22624"
+  },
+  "owner-constructors.txt": {
+    "bytes": 1295,
+    "sha256": "09a2e05e4b4168a037108d076c6a7001b1e6cca0b62b789c68693f33cee1dbbe"
+  },
+  "owner-selected.txt": {
+    "bytes": 2176,
+    "sha256": "26b2b1b183db3998f02fc490e33ec74dd692de4cfe684692792ad2212d5885ff"
+  },
+  "persisted-query.json": {
+    "bytes": 673,
+    "sha256": "6aefb6251d7d377e8de21c53100eda90ae80e68a13d3076494de2e97e7d4d6dc"
+  },
+  "translate-and-dispatch.txt": {
+    "bytes": 14810,
+    "sha256": "5ac940d15d55969a99eb840eadd099eeadfe55cffd25c24c725a3cd4773e1ed8"
+  }
+}

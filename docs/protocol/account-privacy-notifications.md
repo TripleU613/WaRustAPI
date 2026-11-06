@@ -337,3 +337,13 @@ queues a corrective setter instead. This is not the account_sync category-map
 path and admits only all/none. Neither policy is a universal server-setting
 rule. Mode/DI/legacy dispatch and full durable corrective ownership remain open;
 Rust's category adoption stays unchanged and no ACK-side mutation/send is added.
+
+## MEX setter completion still uses category reconciliation (2026-11-06)
+
+**Confirmed selected static:** [mutation and callback mapping](apk/2.26.43.72-privacy-mex-set/README.md)
+show successful result maps feed6pB.A01/0oe.A0R; selected failures feedA00(null)
+and do not retire the setter's false-flag pending intent. A successful response
+may use translated server category/value or the original pair on the explicit
+null-enum branch. Outer IQ or success Boolean alone is not full pending-category
+reconciliation. Rust's classic generic-setter guard is unchanged; arbitrary MEX
+mutation ownership and the typed setter remain unported. No live operation.

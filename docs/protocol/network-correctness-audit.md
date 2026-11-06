@@ -4651,3 +4651,14 @@ localfalse/serverall calls the separate classic-or-MEX setter with none;
 localtrue/servernone writes false. This is not ACK-of-ACK, ordinary receipt
 callback completion or generic category-map adoption. Runtime mode/DI/legacy
 registrations and durable corrective ownership remain open. No Rust send added.
+
+### Privacy MEX mutation has its own input and success contract (2026-11-06)
+
+**Confirmed selected static:** [setter input/response and exact persisted IDs](apk/2.26.43.72-privacy-mex-set/README.md)
+identify SetPrivacySettingMutation with setting:{feature,setting} Enum.name
+input, distinct from the GET query_input/own-LID model. A response needs the
+successful mutation model and its separate null/translation rules before a map
+reaches pending reconciliation. Failures do not turn into native classic error
+codes. No Rust request, receipt preference or automatic correction is added;
+full SDK/mode/recovery remains open. Typed receipt ACK settlement does not own
+the unimplemented global read-self setting side effect.

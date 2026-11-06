@@ -1,0 +1,122 @@
+# Selected DEX excerpt; not a complete method.
+
+# class: LX/8gk;
+# extends: LX/0cj;
+
+.method public invokeSuspend(LL)  # .registers 14
+    # full signature: LX/8gk;->invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+    0000..0002  move-object  v5, v13
+    0002..0006  iget  v2, v12, LX/8gk;->$t:I
+    0006..000a  sget-object  v0, LX/0dd;->A02:LX/0dd;
+    000a..000e  iget  v1, v12, LX/8gk;->A00:I
+    000e..0012  if-eqz  v2, +0xe1
+    0012..0014  const/4  v11, #0x1
+    0014..0018  if-eqz  v1, +0x8f
+    0018..001c  if-ne  v1, v11, +0xd7
+    001c..0022  invoke-static  {v13}, LX/0dg;->A01(Ljava/lang/Object;)V
+    0022..0026  check-cast  v5, LX/0iM;
+    0026..002a  const-string  v1, "xwa2_privacy_feature_update"
+    002a..002e  const-class  v0, LX/74T;
+    002e..0034  invoke-virtual  {v5, v0, v1}, LX/0iM;->A04(Ljava/lang/Class;Ljava/lang/String;)LX/0iM;
+    0034..0036  move-result-object  v2
+    0036..003a  if-eqz  v2, +0x6e
+    003a..003e  const-string  v0, "success"
+    003e..0044  invoke-virtual  {v2, v0}, LX/0iM;->A0G(Ljava/lang/String;)Z
+    0044..0046  move-result  v0
+    0046..004a  if-ne  v0, v11, +0x66
+    004a..004e  sget-object  v1, LX/7gM;->A0O:LX/7gM;
+    004e..0052  const-string  v0, "feature"
+    0052..0058  invoke-virtual  {v2, v0, v1}, LX/0iM;->A0D(Ljava/lang/String;Ljava/lang/Enum;)Ljava/lang/Enum;
+    0058..005a  move-result-object  v5
+    005a..005e  check-cast  v5, LX/7gM;
+    005e..0062  sget-object  v1, LX/7gK;->A0C:LX/7gK;
+    0062..0066  const-string  v0, "setting"
+    0066..006c  invoke-virtual  {v2, v0, v1}, LX/0iM;->A0D(Ljava/lang/String;Ljava/lang/Enum;)Ljava/lang/Enum;
+    006c..006e  move-result-object  v4
+    006e..0072  check-cast  v4, LX/7gK;
+    0072..0076  if-eqz  v5, +0x42
+    0076..007a  if-eqz  v4, +0x40
+    007a..0080  invoke-static  {v5}, LX/83S;->A01(LX/7gM;)Ljava/lang/String;
+    0080..0082  move-result-object  v3
+    0082..0088  invoke-static  {v4}, LX/83S;->A00(LX/7gK;)Ljava/lang/String;
+    0088..008a  move-result-object  v2
+    008a..008e  if-eqz  v3, +0x20
+    008e..0092  if-eqz  v2, +0x1e
+    0092..0096  const-string  v0, "MexSetPrivacySettingsHandler/setPrivacySetting: Success, responseCategory="
+    0096..009c  invoke-static  {v0, v3}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    009c..009e  move-result-object  v1
+    009e..00a2  const-string  v0, ", responseValue="
+    00a2..00a8  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00a8..00ae  invoke-static  {v1, v2}, LX/2L9;->A1K(Ljava/lang/StringBuilder;Ljava/lang/String;)V
+    00ae..00b4  invoke-static  {v3, v2}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    00b4..00b6  move-result-object  v0
+    00b6..00bc  invoke-static  {v0}, LX/05o;->A03(LX/08T;)Ljava/util/Map;
+    00bc..00be  move-result-object  v1
+    00be..00c2  new-instance  v0, LX/0Dr;
+    00c2..00c8  invoke-direct  {v0, v1}, LX/0Dr;-><init>(Ljava/lang/Object;)V
+    00c8..00ca  return-object  v0
+    00ca..00ce  const-string  v0, "MexSetPrivacySettingsHandler/setPrivacySetting: Failed to translate response: feature="
+    00ce..00d4  invoke-static  {v5, v0}, LX/1Xl;->A15(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00d4..00d6  move-result-object  v1
+    00d6..00da  const-string  v0, ", configuration="
+    00da..00e0  invoke-static  {v4, v0, v1}, LX/6ok;->A16(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    00e0..00e4  const-string  v0, "Failed to translate response fields"
+    00e4..00ea  invoke-static  {v0}, LX/1Xl;->A0g(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+    00ea..00ec  move-result-object  v0
+    00ec..00f2  invoke-static  {v0}, LX/0dg;->A00(Ljava/lang/Throwable;)LX/0Dt;
+    00f2..00f4  move-result-object  v1
+    00f4..00f6  goto  -0x1b
+    00f6..00fa  iget-object  v1, v12, LX/8gk;->A04:Ljava/lang/String;
+    00fa..00fe  const-string  v0, "MexSetPrivacySettingsHandler/setPrivacySetting: Success with null response fields, using request values: category="
+    00fe..0104  invoke-static  {v0, v1}, LX/2LA;->A1N(Ljava/lang/String;Ljava/lang/String;)V
+    0104..0108  iget-object  v0, v12, LX/8gk;->A05:Ljava/lang/String;
+    0108..010e  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    010e..0110  move-result-object  v0
+    0110..0112  goto  -0x2d
+    0112..0116  const-string  v0, "MexSetPrivacySettingsHandler/setPrivacySetting: Mutation returned success=false"
+    0116..011c  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    011c..0120  const-string  v0, "Mutation returned success=false"
+    0120..0126  invoke-static  {v0}, LX/1Xl;->A0g(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+    0126..0128  move-result-object  v0
+    0128..012e  invoke-static  {v0}, LX/0dg;->A00(Ljava/lang/Throwable;)LX/0Dt;
+    012e..0130  move-result-object  v1
+    0130..0132  goto  -0x39
+    0132..0138  invoke-static  {v13}, LX/6og;->A0E(Ljava/lang/Object;)LX/0i1;
+    0138..013a  move-result-object  v5
+    013a..013c  const/4  v7, #0x0
+    013c..0140  sget-object  v1, Lcom/facebook/graphql/calls/GraphQlCallInput;->A02:LX/0iH;
+    0140..0144  const-string  v4, "feature"
+    0144..014a  invoke-static  {v1, v7, v4}, LX/6og;->A0D(LX/0iH;Ljava/lang/Object;Ljava/lang/String;)LX/Nha;
+    014a..014c  move-result-object  v3
+    014c..0150  const-string  v2, "setting"
+    0150..0156  invoke-static  {v3, v7, v2}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    0156..015a  iget-object  v1, v12, LX/8gk;->A02:Ljava/lang/Object;
+    015a..015e  check-cast  v1, LX/7gM;
+    015e..0164  invoke-virtual  {v1}, Ljava/lang/Enum;->name()Ljava/lang/String;
+    0164..0166  move-result-object  v1
+    0166..016c  invoke-static  {v3, v1, v4}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    016c..0170  iget-object  v1, v12, LX/8gk;->A01:Ljava/lang/Object;
+    0170..0174  check-cast  v1, LX/7gK;
+    0174..017a  invoke-virtual  {v1}, Ljava/lang/Enum;->name()Ljava/lang/String;
+    017a..017c  move-result-object  v1
+    017c..0182  invoke-static  {v3, v1, v2}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    0182..0188  invoke-static  {v3, v5, v2}, LX/3q4;->A16(LX/NhZ;LX/0i1;Ljava/lang/String;)V
+    0188..018c  const-class  v6, LX/74U;
+    018c..0190  const-string  v9, "whatsapp-android-mex"
+    0190..0194  const-string  v8, "SetPrivacySettingMutation"
+    0194..0198  new-instance  v4, LX/0iT;
+    0198..019a  move-object  v10, v7
+    019a..01a0  invoke-direct/range  {v4..v11}, LX/0iT;-><init>(LX/0i1;Ljava/lang/Class;Ljava/lang/Class;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Z)V
+    01a0..01a4  iget-object  v1, v12, LX/8gk;->A03:Ljava/lang/Object;
+    01a4..01a8  check-cast  v1, Lcom/whatsapp/privacy/MexSetPrivacySettingsHandler;
+    01a8..01ac  iget-object  v1, v1, Lcom/whatsapp/privacy/MexSetPrivacySettingsHandler;->A01:LX/05a;
+    01ac..01b2  invoke-static  {v4, v1}, LX/2LE;->A0L(LX/0iQ;LX/05a;)LX/0iq;
+    01b2..01b4  move-result-object  v1
+    01b4..01b8  iput  v11, v12, LX/8gk;->A00:I
+    01b8..01be  invoke-static  {v1, v12}, LX/2LE;->A0Q(LX/0iq;LX/0cf;)Ljava/lang/Object;
+    01be..01c0  move-result-object  v5
+    01c0..01c4  if-ne  v5, v0, -0xcf
+    01c4..01c6  return-object  v0
+    01c6..01cc  invoke-static  {}, LX/000;->A03()Ljava/lang/IllegalStateException;
+    01cc..01ce  move-result-object  v0
+    01ce..01d0  throw  v0

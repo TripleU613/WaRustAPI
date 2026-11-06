@@ -166,3 +166,37 @@ One producer is closed, not the complete initialization or override lifecycle.
 [Exact specifiers, full methods, derivation and binary-asset boundary](apk/2.26.43.72-token-mobileconfig-binding/README.md).
 Effective account integers, parameter-map defaults and configured token policy
 remain unported. No send policy changed and no live account traffic occurred.
+
+## Privacy setting mutation input and response rules (2026-11-06)
+
+**Confirmed selected static:** [MEX setter, coroutine bindings, input builder,
+response enum readers and persisted IDs](apk/2.26.43.72-privacy-mex-set/README.md)
+close0oe.A0P's selected MEX handoff through8ho5 and8gk1. The operation is
+SetPrivacySettingMutation, namespace whatsapp-android-mex, server doc_id
+26887749497493182. Selected input nests feature/setting Enum.name values under
+setting; the corrective pair is READRECEIPTS/NONE. No own-JID field is built in
+this selected input; complete SDK authentication/envelope is separate authority.
+Do not reuse GetPrivacySettingsQuery's own-LID/query_input structure.
+
+A successful nonnull xwa2_privacy_feature_update model uses translated response
+feature/setting when both enum objects/translations are nonnull. Either enum
+object null selects the original requested pair; this is not a partial merge.
+Present untranslatable enums fail, as do missing model/success=false branches.
+The enum reader uses JSONObject.isNull then optString/Locale.US uppercase and
+Enum.valueOf with unrecognized defaults; null and unknown-present values are
+not interchangeable. Complete framework coercion remains outside this trace.
+
+Normal result maps reach6pB.A01 ->0oe.A0R; selected failures call6pB.A00(null),
+not a synthetic classic numeric error. This setter's false continuation flag
+still leaves pending desired ownership on failure. Full effective transport
+mode, SDK final wire/deadline/refusal policy and durable recovery remain open.
+No typed Rust setter, arbitrary MEX-action pending guard or correction request
+is introduced. Exact large persisted IDs remain strings; no new REA record.
+
+Validation: README commands reproduce nine exports and three extraction
+outputs byte-for-byte; selected branch targets, full bundle checksums and
+pinned APK digest verify. Enum field bindings reuse retained complete REA
+initializers without duplicate records. Formatting, OpenAPI library test,
+APK coverage freshness and diff whitespace pass; hygiene checks440 bundles.
+No Rust source changed, so workspace tests/Clippy were not rerun for this
+evidence-only chunk. No live account or APK runtime operation.

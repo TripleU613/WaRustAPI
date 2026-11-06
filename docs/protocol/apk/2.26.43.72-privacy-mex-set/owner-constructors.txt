@@ -1,0 +1,28 @@
+
+# class: LX/8ho;
+# extends: LX/0cj;
+
+.method public <init>(VLLLLLI)  # .registers 8
+    # full signature: LX/8ho;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;LX/0cf;I)V
+    0000..0004  iput  v7, v1, LX/8ho;->$t:I
+    0004..0008  iput-object  v3, v1, LX/8ho;->A01:Ljava/lang/Object;
+    0008..000c  iput-object  v2, v1, LX/8ho;->A02:Ljava/lang/Object;
+    000c..0010  iput-object  v4, v1, LX/8ho;->A04:Ljava/lang/String;
+    0010..0014  iput-object  v5, v1, LX/8ho;->A03:Ljava/lang/String;
+    0014..0016  const/4  v0, #0x2
+    0016..001c  invoke-direct  {v1, v0, v6}, LX/0cj;-><init>(ILX/0cf;)V
+    001c..001e  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VLLLLI)  # .registers 7
+    # full signature: LX/8ho;-><init>(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;LX/0cf;I)V
+    0000..0004  iput  v6, v1, LX/8ho;->$t:I
+    0004..0008  iput-object  v3, v1, LX/8ho;->A04:Ljava/lang/String;
+    0008..000c  iput-object  v4, v1, LX/8ho;->A03:Ljava/lang/String;
+    000c..0010  iput-object  v2, v1, LX/8ho;->A02:Ljava/lang/Object;
+    0010..0012  const/4  v0, #0x2
+    0012..0018  invoke-direct  {v1, v0, v5}, LX/0cj;-><init>(ILX/0cf;)V
+    0018..001a  return-void
+    # exception table: 0 try range(s)
+.end method

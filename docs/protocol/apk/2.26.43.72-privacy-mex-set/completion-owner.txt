@@ -1,0 +1,60 @@
+
+# class: Lcom/whatsapp/privacy/MexSetPrivacySettingsHandler;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLLLL)  # .registers 10
+    # full signature: Lcom/whatsapp/privacy/MexSetPrivacySettingsHandler;->A00(LX/6pB;Ljava/lang/String;Ljava/lang/String;LX/0cf;)Ljava/lang/Object;
+    0000..0004  const/16  v3, #0x14
+    0004..0008  instance-of  v0, v9, LX/8fu;
+    0008..000c  if-eqz  v0, +0x53
+    000c..000e  move-object  v4, v9
+    000e..0012  check-cast  v4, LX/8fu;
+    0012..0016  iget  v0, v4, LX/8fu;->$t:I
+    0016..001a  if-ne  v0, v3, +0x4c
+    001a..001e  iget  v2, v4, LX/8fu;->A00:I
+    001e..0022  const/high16  v1, #0x80000000
+    0022..0026  and-int  v0, v2, v1
+    0026..002a  if-eqz  v0, +0x44
+    002a..002c  sub-int/2addr  v2, v1
+    002c..0030  iput  v2, v4, LX/8fu;->A00:I
+    0030..0034  iget-object  v3, v4, LX/8fu;->A04:Ljava/lang/Object;
+    0034..0038  sget-object  v2, LX/0dd;->A02:LX/0dd;
+    0038..003c  iget  v0, v4, LX/8fu;->A00:I
+    003c..003e  const/4  v1, #0x1
+    003e..0042  if-eqz  v0, +0x25
+    0042..0046  if-ne  v0, v1, +0x3c
+    0046..004a  iget-object  v6, v4, LX/8fu;->A03:Ljava/lang/Object;
+    004a..004e  check-cast  v6, LX/6pB;
+    004e..0054  invoke-static  {v3}, LX/6oe;->A15(Ljava/lang/Object;)Ljava/lang/Object;
+    0054..0056  move-result-object  v1
+    0056..005a  instance-of  v0, v1, LX/0Dt;
+    005a..005e  xor-int/lit8  v0, v0, #0x1
+    005e..0062  if-eqz  v0, +0x8
+    0062..0064  move-object  v0, v1
+    0064..0068  check-cast  v0, Ljava/util/Map;
+    0068..006e  invoke-virtual  {v6, v0}, LX/6pB;->A01(Ljava/util/Map;)V
+    006e..0074  invoke-static  {v1}, LX/0Dr;->A02(Ljava/lang/Object;)Ljava/lang/Throwable;
+    0074..0076  move-result-object  v0
+    0076..007a  if-eqz  v0, +0x6
+    007a..007c  const/4  v0, #0x0
+    007c..0082  invoke-virtual  {v6, v0}, LX/6pB;->A00(Ljava/lang/Integer;)V
+    0082..0086  sget-object  v0, LX/05u;->A00:LX/05u;
+    0086..0088  return-object  v0
+    0088..008e  invoke-static  {v3}, LX/0dg;->A01(Ljava/lang/Object;)V
+    008e..0090  const/4  v0, #0x0
+    0090..0094  iput-object  v0, v4, LX/8fu;->A01:Ljava/lang/Object;
+    0094..0098  iput-object  v0, v4, LX/8fu;->A02:Ljava/lang/Object;
+    0098..009c  iput-object  v6, v4, LX/8fu;->A03:Ljava/lang/Object;
+    009c..00a0  iput  v1, v4, LX/8fu;->A00:I
+    00a0..00a6  invoke-virtual  {v5, v7, v8, v4}, Lcom/whatsapp/privacy/MexSetPrivacySettingsHandler;->A01(Ljava/lang/String;Ljava/lang/String;LX/0cf;)Ljava/lang/Object;
+    00a6..00a8  move-result-object  v1
+    00a8..00ac  if-ne  v1, v2, -0x29
+    00ac..00ae  return-object  v2
+    00ae..00b2  new-instance  v4, LX/8fu;
+    00b2..00b8  invoke-direct  {v4, v5, v9, v3}, LX/8fu;-><init>(Ljava/lang/Object;LX/0cf;I)V
+    00b8..00ba  goto  -0x44
+    00ba..00c0  invoke-static  {}, LX/000;->A03()Ljava/lang/IllegalStateException;
+    00c0..00c2  move-result-object  v0
+    00c2..00c4  throw  v0
+    # exception table: 0 try range(s)
+.end method

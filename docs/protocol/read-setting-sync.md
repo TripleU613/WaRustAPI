@@ -214,3 +214,13 @@ bundle checksum and the pinned APK digest. Formatting, OpenAPI library test,
 APK coverage freshness and diff whitespace pass; hygiene checks439 APK bundles.
 No Rust source changed, so workspace tests/Clippy were not rerun for this
 evidence-only chunk. No live operation or duplicate REA record.
+
+## Corrective setter MEX branch traced (2026-11-06)
+
+**Confirmed selected static:** [SetPrivacySettingMutation construction/admission](apk/2.26.43.72-privacy-mex-set/README.md)
+identifies the selected READRECEIPTS/NONE input and independent persisted doc_id.
+Null-field success fallback, untranslatable-enum failure and pending-map callback
+ownership are retained separately from ordinary receipt ACK completion. A bounded
+Rust source check confirms typed queue_read only emits Read, and ACK matching
+requires the same type; it does not process the global read-self setting event.
+Full mode/SDK/durable correction ownership remains open; no runtime change.

@@ -1,0 +1,22 @@
+
+# class: LX/4gY;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLL)  # .registers 4
+    # full signature: LX/4gY;->A00(Ljava/lang/String;Ljava/lang/Enum;)Ljava/lang/Enum;
+    0000..0004  if-eqz  v2, +0x17
+    0004..000a  invoke-virtual  {v2}, Ljava/lang/String;->length()I
+    000a..000c  move-result  v0
+    000c..0010  if-eqz  v0, +0x11
+    0010..0016  invoke-virtual  {v3}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+    0016..0018  move-result-object  v1
+    0018..001c  sget-object  v0, Ljava/util/Locale;->US:Ljava/util/Locale;
+    001c..0022  invoke-virtual  {v2, v0}, Ljava/lang/String;->toUpperCase(Ljava/util/Locale;)Ljava/lang/String;
+    0022..0024  move-result-object  v0
+    0024..002a  invoke-static  {v1, v0}, Ljava/lang/Enum;->valueOf(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;
+    002a..002c  move-result-object  v0
+    002c..002e  return-object  v0
+    002e..0030  return-object  v3
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/IllegalArgumentException; code_units 0008..0017 -> 0017
+.end method

@@ -464,6 +464,12 @@
     "x-live": false,
     "description": "APK43.72 specialized read-self receipt ACK root readreceipts forwards original node as Android what0/arg1=227/arg2=0. Selected1lY dispatch and enabled0ln registry select SQ0.A0d/provider3033 normal factory15E. Mode/DI overrides and legacy registration remain open.15E accepts all/none; equal state unchanged, localtrue/servernone writes false/apply/observer, localfalse/serverall retains false and invokes the separate classic-or-MEX corrective setter(none). Not category-map server-wins policy, ordinary callback completion or ACK-of-ACK. Twenty reproducible exports/excerpts, two reused methods, branch/provider arithmetic and bundle checksum verifier. Rust has no227 preference/corrective handler; no mutation, request, retry or live operation added. Full ownership/order/recovery remains unported. docs/protocol/read-setting-sync.md#current-build-read-self-ack-setting-synchronization-2026-11-06"
   },
+  "x-privacy-mex-set-evidence": {
+    "x-cli": "xtask apk-mex-queries <apk> --operation SetPrivacySettingMutation; xtask apk-smali <apk> --class <class> --method <method> --signatures --exceptions",
+    "x-transport": "offline static APK evidence only",
+    "x-live": false,
+    "description": "APK43.72 0oe.A0P MEX branch ->8ho5 ->MexSetPrivacySettingsHandler.A00/A01 ->8gk1. SetPrivacySettingMutation uses nested setting feature/setting Enum.name strings; corrective pair READRECEIPTS/NONE. Persisted server doc_id26887749497493182 retained as decimal string with client/asset provenance. Successful nonnull mutation model uses translated nonnull response enums, falls back to original pair when either enum object null, and fails on untranslatable present enums or missing model/success=false. Enum reader uses JSONObject.isNull/optString and Locale.US uppercase before Enum.valueOf/default. Success maps feed6pB.A01/0oe.A0R; failures feedA00(null), not guessed classic codes. Full mode/SDK envelope/deadline/coercion/durable ownership remain open. Existing classic setter guard is not extended to arbitrary MEX actions. No production request, preference or retry change. docs/protocol/privacy-mex-config.md#privacy-setting-mutation-input-and-response-rules-2026-11-06"
+  },
   "x-library-capabilities": [
     {
       "symbol": "whatsapp_api::transport::app_state_sync::binding::bind_inline_fetch_plan",
