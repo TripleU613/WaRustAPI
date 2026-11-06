@@ -1,6 +1,6 @@
 # Legacy prekey publication binding audit
 
-## Confirmed local defect, still open (2026-11-05)
+## Initial audit: confirmed local defect (2026-11-05)
 
 Audited revision: `9b26f558fbdc8c2d670e64f921e840bce1a3197f`.
 This is a synthetic local-store defect, not APK parity or observed server behavior.
@@ -63,7 +63,52 @@ must remain unknown rather than gain inferred hashes or replay authority.
 Required regression coverage: same-ID well-formed replacement, missing row
 without consumption evidence, mismatched consumed fingerprint, conflicting
 restored row, legitimate direct and group consumption before ACK, transaction
-rollback, reopen, and unchanged uncertainty/refusal holds. None of those new
-legacy guarantees is implemented by this audit. Whole-store rollback remains
+rollback, reopen, and unchanged uncertainty/refusal holds. Those new legacy guarantees were not implemented at the initial audit revision. Whole-store rollback remains
 outside the local consistency model. This finding does not establish a ban
 cause or server acceptance requirement.
+
+## Implemented public binding and atomic consumption (2026-11-05)
+
+**Confirmed local implementation:** new reservations persist `Batch.public_sha256`
+aligned with `ids`, hashing the same 32 public bytes used for the wire key value.
+The in-memory callback retains the same list. Result/error settlement first
+requires unchanged durable bindings and cardinality. An accepted result then
+requires each validated live row's public hash or its consumed marker's ID/hash
+to match before any batch or key status write. Unexplained absence refuses.
+
+Both direct and group member pairwise receive now call `prekeys::consume_in`
+inside their existing authenticated message commit transaction. It compares the
+original bytes, validates stored ID/private/public consistency, refuses existing
+consumption evidence, writes `legacy-prekey-consumed:v1:{id}` containing only ID
+and public hash, and deletes the row atomically with session/message state.
+Live restored rows conflict with any marker at receive admission, publication
+lookup and reconsumption. Generation also refuses a marker at its next ID rather
+than reusing a consumed ID or removing evidence. Marker retention/wrap policy is
+not ported; this local hold does not claim native lifetime parity.
+
+Receive only checks the marker conflict when a live row is present. An absent
+row still reaches the Signal session logic: a repeated pkmsg can use an already
+established session without consuming a key again. Existing direct/hybrid tests
+exercise those continuation cases. Marker checks are repeated inside consumption
+commit, so the earlier admission check is not the sole concurrency guard.
+
+`legacy_upload_binds_public_material_and_authenticated_consumption` covers
+well-formed same-ID replacement, durable binding tampering for result/error,
+missing row without marker, wrong consumed-public hash, restored row conflict,
+consumption transaction rollback, exact checkpoint/row preservation on refusal,
+and legitimate consumed-key ACK after reopen. Existing direct and group hybrid
+receive tests now explicitly assert the consumption marker was committed.
+These compose receive marker production with settlement verification; they are
+not a claim of a new live end-to-end upload/receive observation.
+
+Historical Batch fields default empty for inspection; no callbacks are rebuilt,
+old missing keys assigned inferred hashes, markers backfilled or requests replayed.
+Refusal/uncertainty holds remain. Binding proves public identity, not protection
+against wholesale store rollback or coordinated replacement of all evidence.
+No APK wire fields change and no live account operation was performed.
+
+Validation: the initial replacement-public probe reproduced the old defect.
+All 1,400 workspace/all-feature tests passed after the implementation, including
+existing direct/hybrid repeated-prekey continuation and group consumption.
+Strict Clippy, CLI reference, OpenAPI library, formatting, coverage freshness
+and staged repository hygiene checks passed.

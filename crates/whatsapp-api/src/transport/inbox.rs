@@ -1077,6 +1077,9 @@ async fn process_direct(
                     )
                 })?
                 .map(Zeroizing::new);
+            if original_prekey.is_some() {
+                store.read(|tx| super::prekeys::ensure_unconsumed_in(tx, id))?;
+            }
         }
         let previous = (
             session.as_deref().map(|v| v.as_slice()),
@@ -1252,7 +1255,14 @@ async fn process_direct(
                     "one-time prekey changed before commit",
                 ));
             }
-            tx.delete(Table::Prekeys, prekey_key.as_bytes())?;
+            super::prekeys::consume_in(
+                tx,
+                id,
+                original_prekey
+                    .as_deref()
+                    .map(|v| v.as_slice())
+                    .ok_or_else(|| Error::invalid("inbox", "consumed prekey missing"))?,
+            )?;
         }
         if let Some((id, original)) = &used_kem {
             super::kem_prekeys::consume_in(tx, *id, original)?;
@@ -1767,6 +1777,9 @@ async fn process_group_inner(
                         )
                     })?
                     .map(Zeroizing::new);
+                if original_prekey.is_some() {
+                    store.read(|tx| super::prekeys::ensure_unconsumed_in(tx, pid))?;
+                }
             }
             let previous = (
                 session.as_deref(),
@@ -1974,7 +1987,14 @@ async fn process_group_inner(
                         "one-time prekey changed before commit",
                     ));
                 }
-                tx.delete(Table::Prekeys, prekey_key.as_bytes())?;
+                super::prekeys::consume_in(
+                    tx,
+                    pid,
+                    original_prekey
+                        .as_deref()
+                        .map(|v| v.as_slice())
+                        .ok_or_else(|| Error::invalid("inbox", "consumed prekey missing"))?,
+                )?;
             }
             if let Some((id, original)) = &used_kem {
                 super::kem_prekeys::consume_in(tx, *id, original)?;
@@ -3697,6 +3717,11 @@ mod tests {
                 .read(|tx| tx.get_json::<Vec<u8>>(Table::Prekeys, b"comparison-prekey:11", 1))
                 .unwrap()
                 .is_none()
+        );
+        assert!(
+            store
+                .read(|tx| super::super::prekeys::ensure_unconsumed_in(tx, 11))
+                .is_err()
         );
         let sessions = store
             .read(|tx| tx.scan(Table::SignalSessions, 1, 10))
@@ -5912,6 +5937,11 @@ mod tests {
                 .read(|tx| tx.get_json::<Vec<u8>>(Table::Prekeys, b"comparison-prekey:14", 1))
                 .unwrap()
                 .is_none()
+        );
+        assert!(
+            store
+                .read(|tx| prekeys::ensure_unconsumed_in(tx, 14))
+                .is_err()
         );
         assert_eq!(
             held(&store, member).1.as_deref(),

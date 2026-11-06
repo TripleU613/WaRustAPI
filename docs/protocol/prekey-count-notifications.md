@@ -1302,3 +1302,13 @@ tampering for result/error and a wrong consumed-public hash. Existing missing-ro
 refusal, consumed-before-ACK success, reopen and uncertain-no-replay controls
 remain. Synthetic fixture restoration only continues independent controls;
 production does not repair reservations to make replies pass. No live operation.
+
+### Legacy upload public binding and atomic consumption (2026-11-05)
+
+**Confirmed local fix:** reservations now retain legacy public fingerprints;
+accepted settlement checks live rows or authenticated consumed ID/hash evidence.
+Direct/group receive commit consumption evidence atomically with row deletion.
+Restored conflicts, unexplained loss and altered fingerprints refuse without
+settlement writes; legitimate missing-row session continuation remains supported.
+Historical state is not inferred or replayed. [Implementation and regression
+scope](legacy-prekey-publication-binding.md#implemented-public-binding-and-atomic-consumption-2026-11-05).

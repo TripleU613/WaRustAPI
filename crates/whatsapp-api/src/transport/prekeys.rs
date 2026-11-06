@@ -52,7 +52,7 @@ use crate::{
 };
 
 /// Read access shared by read and write transactions.
-trait Lookup {
+pub(crate) trait Lookup {
     fn scan_after(
         &self,
         table: Table,
@@ -161,6 +161,9 @@ struct Meta {
 pub struct Batch {
     /// Key ids in wire order.
     pub ids: Vec<u32>,
+    /// Public fingerprints aligned with ids; historical records default empty.
+    #[serde(default)]
+    pub public_sha256: Vec<[u8; 32]>,
     /// `outcome_unknown`, `server_acknowledged` or `refused`.
     pub status: String,
     /// Canonical signed 32-bit server code for a refusal (invalid/missing -> 0).
@@ -294,6 +297,7 @@ fn generate_in(tx: &mut WriteTx<'_>) -> Result<usize> {
         {
             return Err(invalid("prekey id collision; refusing to overwrite"));
         }
+        ensure_unconsumed_in(&*tx, id)?;
         let pair = KeyPair::generate(&mut rng);
         let record = PreKeyRecord::new(id.into(), &pair)
             .serialize()
@@ -327,11 +331,75 @@ fn check_wire_id(id: u32) -> Result<()> {
     Ok(())
 }
 
+fn consumed_key(id: u32) -> String {
+    format!("legacy-prekey-consumed:v1:{id}")
+}
+#[derive(Serialize, Deserialize)]
+struct ConsumedPrekey {
+    id: u32,
+    public_sha256: [u8; 32],
+}
+/// A restored row cannot override authenticated one-time consumption.
+pub(crate) fn ensure_unconsumed_in(tx: &impl Lookup, id: u32) -> Result<()> {
+    if tx
+        .get_json::<serde_json::Value>(Table::Checkpoints, consumed_key(id).as_bytes(), 1)?
+        .is_some()
+    {
+        return Err(invalid("legacy prekey conflicts with consumption marker"));
+    }
+    Ok(())
+}
+fn public_fingerprint(record: &PreKeyRecord) -> Result<[u8; 32]> {
+    use sha2::{Digest, Sha256};
+    let public = record
+        .public_key()
+        .map_err(|_| invalid("prekey public key"))?;
+    Ok(Sha256::digest(public.public_key_bytes()).into())
+}
+/// Called only inside the authenticated inbox transaction, before deleting the row.
+pub(crate) fn consume_in(tx: &mut WriteTx<'_>, id: u32, original: &[u8]) -> Result<()> {
+    let current: Option<Vec<u8>> = tx.get_json(Table::Prekeys, record_key(id).as_bytes(), 1)?;
+    if current.as_deref() != Some(original) {
+        return Err(invalid("one-time prekey changed before commit"));
+    }
+    let record =
+        legacy_record_in(&*tx, id)?.ok_or_else(|| invalid("consumed prekey disappeared"))?;
+    tx.put_json(
+        Table::Checkpoints,
+        consumed_key(id).as_bytes(),
+        1,
+        &ConsumedPrekey {
+            id,
+            public_sha256: public_fingerprint(&record)?,
+        },
+    )?;
+    tx.delete(Table::Prekeys, record_key(id).as_bytes())?;
+    Ok(())
+}
+fn verify_upload_public_in(tx: &impl Lookup, id: u32, expected: &[u8; 32]) -> Result<()> {
+    let actual = if let Some(record) = legacy_record_in(tx, id)? {
+        public_fingerprint(&record)?
+    } else {
+        let marker: ConsumedPrekey = tx
+            .get_json(Table::Checkpoints, consumed_key(id).as_bytes(), 1)?
+            .ok_or_else(|| invalid("reserved legacy prekey disappeared before acknowledgement"))?;
+        if marker.id != id {
+            return Err(invalid("consumed legacy prekey ID changed"));
+        }
+        marker.public_sha256
+    };
+    if &actual != expected {
+        return Err(invalid("reserved legacy public material changed"));
+    }
+    Ok(())
+}
+
 fn legacy_record_in(tx: &impl Lookup, id: u32) -> Result<Option<PreKeyRecord>> {
     check_wire_id(id)?;
     let Some(raw) = tx.get_json::<Vec<u8>>(Table::Prekeys, record_key(id).as_bytes(), 1)? else {
         return Ok(None);
     };
+    ensure_unconsumed_in(tx, id)?;
     let record = PreKeyRecord::deserialize(&raw).map_err(|_| invalid("invalid prekey record"))?;
     if u32::from(
         record
@@ -452,6 +520,7 @@ pub(crate) fn kem_upload_children(
 pub struct PendingUpload {
     iq_id: String,
     ids: Vec<u32>,
+    public_sha256: Vec<[u8; 32]>,
     kem_ids: Vec<u32>,
     kem_public_sha256: Vec<[u8; 32]>,
     /// After this instant the outcome is treated as unknown for this session.
@@ -617,12 +686,14 @@ fn begin_upload_selected(
             };
             if ids.is_empty() && kem_rows.is_empty() { return Ok(None); }
             let mut keys = Vec::with_capacity(ids.len());
+            let mut public_sha256 = Vec::with_capacity(ids.len());
             for id in &ids {
                 let record = legacy_record_in(&*tx, *id)?
                     .ok_or_else(|| invalid("unsent prekey record disappeared"))?;
                 let public = record
                     .public_key()
                     .map_err(|_| invalid("prekey public key"))?;
+                public_sha256.push(public_fingerprint(&record)?);
                 keys.push(key_node(*id, public.public_key_bytes(), None));
                 tx.put_json(
                     Table::Checkpoints,
@@ -700,6 +771,7 @@ fn begin_upload_selected(
                 1,
                 &Batch {
                     ids: ids.clone(),
+                    public_sha256: public_sha256.clone(),
                     status: "outcome_unknown".into(),
                     code: None,
                     count_low: None,
@@ -709,15 +781,16 @@ fn begin_upload_selected(
                     kem_public_sha256: kem_public_sha256.clone(),
                 },
             )?;
-            Ok(Some((ids, kem_ids, kem_public_sha256, node)))
+            Ok(Some((ids, public_sha256, kem_ids, kem_public_sha256, node)))
         })?;
-    let Some((ids, kem_ids, kem_public_sha256, node)) = reserved else {
+    let Some((ids, public_sha256, kem_ids, kem_public_sha256, node)) = reserved else {
         return Ok(None);
     };
     Ok(Some((
         PendingUpload {
             iq_id,
             ids,
+            public_sha256,
             kem_ids,
             kem_public_sha256,
             deadline: tokio::time::Instant::now() + std::time::Duration::from_secs(30),
@@ -797,7 +870,15 @@ impl PendingUpload {
             {
                 return Err(invalid("reserved KEM public bindings changed"));
             }
+            if batch.public_sha256 != self.public_sha256
+                || batch.ids.len() != batch.public_sha256.len()
+            {
+                return Err(invalid("reserved legacy public bindings changed"));
+            }
             if accepted {
+                for (id, expected) in batch.ids.iter().zip(&batch.public_sha256) {
+                    verify_upload_public_in(&*tx, *id, expected)?;
+                }
                 for (id, expected) in batch.kem_ids.iter().zip(&batch.kem_public_sha256) {
                     super::kem_prekeys::verify_upload_public_in(tx, *id, expected)?;
                 }
@@ -1746,6 +1827,147 @@ mod tests {
                 .attr("type", "result");
             assert!(pending.settle(&store, &result).unwrap().accepted);
         }
+    }
+
+    #[test]
+    fn legacy_upload_binds_public_material_and_authenticated_consumption() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("legacy-binding.db");
+        let store = open(&path);
+        let (account, signed) = account_and_signed(&store);
+        generate(&store).unwrap();
+        let (pending, _) = begin_upload(&store, &account, &signed).unwrap().unwrap();
+        let id = pending.ids[0];
+        let original: Vec<u8> = store
+            .read(|tx| tx.get_json(Table::Prekeys, record_key(id).as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        let snapshot = |store: &ProtocolStore| {
+            store
+                .read(|tx| {
+                    [Table::Prekeys, Table::Checkpoints]
+                        .into_iter()
+                        .map(|t| tx.scan(t, 1, 10000))
+                        .collect::<Result<Vec<_>>>()
+                })
+                .unwrap()
+        };
+        let reply = Node::new("iq")
+            .attr("id", pending.iq_id.as_str())
+            .attr("type", "result");
+        let reserved: Batch = store
+            .read(|tx| tx.get_json(Table::Checkpoints, batch_key(&pending.iq_id).as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        let mut tampered = reserved.clone();
+        tampered.public_sha256[0][0] ^= 1;
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    batch_key(&pending.iq_id).as_bytes(),
+                    1,
+                    &tampered,
+                )
+            })
+            .unwrap();
+        let before = snapshot(&store);
+        for kind in ["result", "error"] {
+            assert!(
+                pending
+                    .settle(
+                        &store,
+                        &Node::new("iq")
+                            .attr("id", pending.iq_id.as_str())
+                            .attr("type", kind)
+                    )
+                    .is_err()
+            );
+            assert_eq!(snapshot(&store), before);
+        }
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    batch_key(&pending.iq_id).as_bytes(),
+                    1,
+                    &reserved,
+                )
+            })
+            .unwrap();
+        let before = snapshot(&store);
+        let rolled_back: Result<()> = store.write(|tx| {
+            consume_in(tx, id, &original)?;
+            Err(invalid("injected after consumption"))
+        });
+        assert!(rolled_back.is_err());
+        assert_eq!(snapshot(&store), before);
+        let replacement = PreKeyRecord::new(id.into(), &KeyPair::generate(&mut rand::rng()))
+            .serialize()
+            .unwrap();
+        store
+            .write(|tx| tx.put_json(Table::Prekeys, record_key(id).as_bytes(), 1, &replacement))
+            .unwrap();
+        let before = snapshot(&store);
+        assert!(pending.settle(&store, &reply).is_err());
+        assert_eq!(snapshot(&store), before);
+        store
+            .write(|tx| tx.delete(Table::Prekeys, record_key(id).as_bytes()))
+            .unwrap();
+        let before = snapshot(&store);
+        assert!(pending.settle(&store, &reply).is_err());
+        assert_eq!(snapshot(&store), before);
+        // Restore only synthetic fixture material to exercise legitimate consumption.
+        store
+            .write(|tx| tx.put_json(Table::Prekeys, record_key(id).as_bytes(), 1, &original))
+            .unwrap();
+        store.write(|tx| consume_in(tx, id, &original)).unwrap();
+        let fingerprint = pending.public_sha256[0];
+        let mut wrong = fingerprint;
+        wrong[0] ^= 1;
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    consumed_key(id).as_bytes(),
+                    1,
+                    &ConsumedPrekey {
+                        id,
+                        public_sha256: wrong,
+                    },
+                )
+            })
+            .unwrap();
+        let before = snapshot(&store);
+        assert!(pending.settle(&store, &reply).is_err());
+        assert_eq!(snapshot(&store), before);
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    consumed_key(id).as_bytes(),
+                    1,
+                    &ConsumedPrekey {
+                        id,
+                        public_sha256: fingerprint,
+                    },
+                )
+            })
+            .unwrap();
+        store
+            .write(|tx| tx.put_json(Table::Prekeys, record_key(id).as_bytes(), 1, &original))
+            .unwrap();
+        let before = snapshot(&store);
+        assert!(store.read(|tx| legacy_record_in(tx, id)).is_err());
+        assert!(store.write(|tx| consume_in(tx, id, &original)).is_err());
+        assert!(pending.settle(&store, &reply).is_err());
+        assert_eq!(snapshot(&store), before);
+        store
+            .write(|tx| tx.delete(Table::Prekeys, record_key(id).as_bytes()))
+            .unwrap();
+        drop(store);
+        let store = open(&path);
+        assert!(pending.settle(&store, &reply).unwrap().accepted);
     }
 
     #[test]

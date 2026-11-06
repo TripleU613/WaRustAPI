@@ -17369,9 +17369,9 @@
   },
   "x-legacy-prekey-publication-binding-audit": {
     "x-cli": false,
-    "x-transport": false,
+    "x-transport": true,
     "x-live": false,
-    "description": "Open local defect: legacy upload settlement checks IDs and metadata ownership but not original public identity. A synthetic same-ID valid replacement was acknowledged. Direct/group receive consumption lacks a dedicated public fingerprint marker; new legacy binding guarantees are not implemented.",
+    "description": "Initial audit reproduced legacy upload settlement accepting a different valid public key under a reserved ID. The fix now stores Batch.public_sha256 aligned with ids, binds callback settlement to the unchanged list, and checks live public identity or an atomically committed consumed ID/hash. Direct/group receive record legacy-prekey-consumed:v1 markers; live restored conflicts and unexplained loss refuse. Historical fields default empty for inspection without callback reconstruction, backfill or replay.",
     "evidence": "docs/protocol/legacy-prekey-publication-binding.md"
   }
 }

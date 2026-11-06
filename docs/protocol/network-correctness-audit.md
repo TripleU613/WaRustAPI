@@ -4210,9 +4210,19 @@ production does not repair reservations to make replies pass. No live operation.
 
 ### Legacy upload public identity gap (2026-11-05)
 
-**Confirmed local, open:** a synthetic same-ID valid legacy key replacement
+**Initial finding, fixed below:** a synthetic same-ID valid legacy key replacement
 was accepted by upload settlement at 9b26f558. Direct and group receive delete
 legacy rows atomically but retain no consumed-public fingerprint. Full
 reproducer, source path analysis and required fix matrix are retained in
 [the audit](legacy-prekey-publication-binding.md). KEM binding does not cover
 legacy keys. No live operation or new runtime guarantee.
+
+### Legacy upload public binding and atomic consumption (2026-11-05)
+
+**Confirmed local fix:** reservations now retain legacy public fingerprints;
+accepted settlement checks live rows or authenticated consumed ID/hash evidence.
+Direct/group receive commit consumption evidence atomically with row deletion.
+Restored conflicts, unexplained loss and altered fingerprints refuse without
+settlement writes; legitimate missing-row session continuation remains supported.
+Historical state is not inferred or replayed. [Implementation and regression
+scope](legacy-prekey-publication-binding.md#implemented-public-binding-and-atomic-consumption-2026-11-05).
