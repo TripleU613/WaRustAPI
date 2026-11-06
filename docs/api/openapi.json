@@ -18424,5 +18424,13 @@
     "x-library": [],
     "description": "Static xtask full-prekey lifecycle research: concreteDxh inherits bare-return1ru.A00, so selected reader-map cleanup does not release bulkFfK in separate0Th.A05. Exact physical failure callers0YB.A05 and selected0YU login-back branch retained. Message-client direct and disconnect lazy access select provider0x90; global cache gives conditional object identity while entry unchanged, not account-switch/reset proof. Untimed future completion/failure is not usable-key adoption, a32s full-query timer or replay authority. New REA Android call failed on configured missing Java21; full tool error retained, not REA Evidence. No runtime behavior, sender, deadline, request or retry changed.",
     "evidence": "docs/protocol/retry-answers.md#full-key-cleanup-and-future-failure-are-separate-2026-11-06"
+  },
+  "x-rea-java-runtime-repair-research": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Local tooling repair and static research only: persisted Codex REA JAVA_HOME now selects already installed Temurin21, after private backup and unchanged-other-settings comparison. Fresh REA6.5.0 CLI with existing JADX0.7.1 JAR successfully returns complete pinned constructor, exact class search and provider resolver Evidence. Current MCP connection still uses old environment; no restart or live reload claimed. Provider-cache field/accessor follow-through shows selected optional initialization, not proof of reset/account switch or all concurrency. No product command, HTTP route, protocol request, runtime timer, retry, durable reset or live operation changed.",
+    "evidence": "docs/protocol/apk-analysis.md#rea-android-java-path-repair-and-cli-proof-2026-11-06"
   }
 }

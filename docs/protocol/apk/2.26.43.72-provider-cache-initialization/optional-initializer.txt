@@ -1,0 +1,50 @@
+
+# class: LX/0BM;
+# extends: LX/0BL;
+
+.method public A01(L)  # .registers 6
+    # full signature: LX/0BM;->A01()Ljava/lang/Object;
+    0000..0004  iget-object  v0, v5, LX/0BM;->mNullableSupplier:LX/0BJ;
+    0004..0006  const/4  v4, #0x0
+    0006..000a  if-eqz  v0, +0x41
+    000a..000e  iget-object  v0, v5, LX/0BM;->mInstance:Ljava/lang/Object;
+    000e..0012  if-nez  v0, +0xe
+    0012..0016  iget-object  v3, v5, LX/0BM;->mScopeCacheChecker:LX/0BG;
+    0016..001a  if-nez  v3, +0x13
+    001a..001e  iget-object  v0, v5, LX/0BM;->mNullableSupplier:LX/0BJ;
+    001e..0024  invoke-virtual  {v0}, LX/0BJ;->A01()Ljava/lang/Object;
+    0024..0026  move-result-object  v0
+    0026..002a  iput-object  v0, v5, LX/0BM;->mInstance:Ljava/lang/Object;
+    002a..002e  iget-object  v1, v5, LX/0BM;->mInstance:Ljava/lang/Object;
+    002e..0032  sget-object  v0, LX/0BM;->A00:Ljava/lang/Object;
+    0032..0036  if-eq  v1, v0, +0x2b
+    0036..003a  iget-object  v0, v5, LX/0BM;->mInstance:Ljava/lang/Object;
+    003a..003c  return-object  v0
+    003c..0040  iget-object  v2, v3, LX/0BG;->A00:Ljava/lang/Object;
+    0040..0046  invoke-virtual  {v3}, LX/0BG;->A00()Ljava/lang/Object;
+    0046..0048  move-result-object  v1
+    0048..004c  if-nez  v1, +0x1a
+    004c..004e  monitor-enter
+    004e..0054  invoke-virtual  {v3}, LX/0BG;->A00()Ljava/lang/Object;
+    0054..0056  move-result-object  v1
+    0056..005a  if-nez  v1, +0xf
+    005a..005e  iget-object  v0, v5, LX/0BM;->mNullableSupplier:LX/0BJ;
+    005e..0064  invoke-virtual  {v0}, LX/0BJ;->A01()Ljava/lang/Object;
+    0064..0066  move-result-object  v1
+    0066..006a  if-nez  v1, +0x9
+    006a..006e  sget-object  v0, LX/0BM;->A00:Ljava/lang/Object;
+    006e..0074  invoke-virtual  {v3, v0}, LX/0BG;->A01(Ljava/lang/Object;)V
+    0074..0076  monitor-exit
+    0076..0078  goto  +0x3
+    0078..007a  move-object  v0, v1
+    007a..007c  goto  -0x6
+    007c..0080  iput-object  v1, v5, LX/0BM;->mInstance:Ljava/lang/Object;
+    0080..0082  goto  -0x2b
+    0082..0084  move-exception  v0
+    0084..0086  monitor-exit
+    0086..0088  throw  v0
+    0088..008a  return-object  v4
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0027..003e -> 0041
+    # catch <all> code_units 0041..0043 -> 0041
+.end method

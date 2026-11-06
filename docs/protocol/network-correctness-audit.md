@@ -4553,3 +4553,12 @@ failure map. Exact0Th.A03 failure callers and conditional shared provider0x90
 are retained. This narrows lifecycle ownership without inventing a32s full-key
 callback timer, clearing durable reservations or copying native retry loops.
 Global provider-reset/account-switch and complete watchdog policy remain open.
+
+## Android analysis runtime recovered for fresh CLI (2026-11-06)
+
+[Scoped Java-path correction and successful REA evidence](apk-analysis.md#rea-android-java-path-repair-and-cli-proof-2026-11-06)
+restore a working fresh CLI using already installed Java/JADX. Current MCP remains
+on its old environment until reconnected; no client-wide restart was attempted.
+The provider-cache accessor audit narrows the prior reset uncertainty to selected
+initialization paths without inventing account-switch or replay authority.
+No protocol or live-account behavior changed.

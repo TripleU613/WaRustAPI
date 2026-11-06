@@ -1,0 +1,26 @@
+{
+  "README.md": {
+    "bytes": 3647,
+    "sha256": "560c4bd1f2d5ce4ae4bf6e4f3f2d00438d4a8aa14d7c9d353de6906470dd56bf"
+  },
+  "cache-abstraction.txt": {
+    "bytes": 706,
+    "sha256": "b8425e2542d57f3136ee998fea66d65bc6aa20b23d709286fbcbd64bfdcf2357"
+  },
+  "cache-accessor.txt": {
+    "bytes": 1330,
+    "sha256": "add997ad58e108a314c56fb7dae078a833d3149e497891bdd7bfef1f3cf1725c"
+  },
+  "cache-field-refs.txt": {
+    "bytes": 309,
+    "sha256": "dec4cdaec3ce8d873be669ce5bd3d061e5f450da3b184caf2f30647f6608d517"
+  },
+  "optional-factory.txt": {
+    "bytes": 2042,
+    "sha256": "bf63caafaf5ef1740f91324e24fe03ddf9f49b6eb8c5a5c54903468261f92b79"
+  },
+  "optional-initializer.txt": {
+    "bytes": 2263,
+    "sha256": "9aa902f5ea35e8b0011bf053c6da598cd88105de546f53074d5bdb7aa380604f"
+  }
+}

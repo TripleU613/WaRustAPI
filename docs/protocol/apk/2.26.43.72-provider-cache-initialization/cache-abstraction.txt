@@ -1,0 +1,23 @@
+
+# class: LX/0BG;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VL)  # .registers 2
+    # full signature: LX/0BG;-><init>(Ljava/lang/Object;)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v1, v0, LX/0BG;->A00:Ljava/lang/Object;
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(L)  # .registers 0
+    # full signature: LX/0BG;->A00()Ljava/lang/Object;
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+.method public A01(VL)  # .registers 0
+    # full signature: LX/0BG;->A01(Ljava/lang/Object;)V
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method

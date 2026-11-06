@@ -569,3 +569,17 @@ research changes no timeout, callback, retry, sender or account policy. Generic
 captured30s and configured I/O caps remain local bounds, not APK full-key timers.
 The renewed REA Android call failed on its configured missing Java21 path;
 complete error retained and xtask fallback used without configuration mutation.
+
+### Provider cache accessor follow-through (2026-11-06)
+
+**Confirmed selected static:** the fresh REA Java resolver corroborates the
+previous checked DEX. Exact00D.A03 cache-field census adds0BH get/put accessors
+to initializer/resolver sites. Following00D.A01's selected0BF descriptor branch
+through0BG/0BM shows optional initialization: own cache reads must find null
+before invoking the nullable supplier and storing a value/sentinel. These sites
+alone do not prove provider replacement, a reset or an account switch. Per-key
+lock-factory concurrency, effective descriptors (including optional0x90 selection),
+external mutation and lifecycle remain open; previous conditional full-key manager
+identity is not promoted into unconditional identity across generations.
+[Complete DEX, fresh REA proof and tool-repair scope](apk/2.26.43.72-provider-cache-initialization/README.md).
+No full-key timer, safe replay or runtime behavior changed.

@@ -1,0 +1,30 @@
+
+# class: LX/0BH;
+# extends: LX/0BG;
+
+.method public <init>(VLL)  # .registers 3
+    # full signature: LX/0BH;-><init>(Ljava/lang/Integer;Ljava/lang/Object;)V
+    0000..0004  iput-object  v1, v0, LX/0BH;->A00:Ljava/lang/Integer;
+    0004..000a  invoke-direct  {v0, v2}, LX/0BG;-><init>(Ljava/lang/Object;)V
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(L)  # .registers 3
+    # full signature: LX/0BH;->A00()Ljava/lang/Object;
+    0000..0004  sget-object  v1, LX/00D;->A03:Ljava/util/concurrent/ConcurrentHashMap;
+    0004..0008  iget-object  v0, v2, LX/0BH;->A00:Ljava/lang/Integer;
+    0008..000e  invoke-virtual  {v1, v0}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    000e..0010  move-result-object  v0
+    0010..0012  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A01(VL)  # .registers 4
+    # full signature: LX/0BH;->A01(Ljava/lang/Object;)V
+    0000..0004  sget-object  v1, LX/00D;->A03:Ljava/util/concurrent/ConcurrentHashMap;
+    0004..0008  iget-object  v0, v2, LX/0BH;->A00:Ljava/lang/Integer;
+    0008..000e  invoke-virtual  {v1, v0, v3}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method

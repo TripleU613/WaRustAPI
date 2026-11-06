@@ -1,0 +1,43 @@
+
+# class: LX/00D;
+# extends: Ljava/lang/Object;
+
+.method public A01(LI)  # .registers 6
+    # full signature: LX/00D;->A01(I)Lcom/google/common/base/Optional;
+    0000..0006  invoke-static  {}, LX/06o;->A00()LX/06o;
+    0006..0008  move-result-object  v0
+    0008..000a  const/4  v4, #0x0
+    000a..0010  invoke-static  {v5, v0, v4}, LX/1Uw;->A00(ILX/06h;Ljava/lang/Object;)Ljava/lang/Object;
+    0010..0012  move-result-object  v2
+    0012..0016  check-cast  v2, LX/0BF;
+    0016..001a  iget-object  v1, v2, LX/0BF;->A00:Ljava/lang/Integer;
+    001a..0020  invoke-virtual  {v1}, Ljava/lang/Number;->intValue()I
+    0020..0022  move-result  v3
+    0022..0024  const/4  v0, #0xff (-1)
+    0024..0028  if-ne  v3, v0, +0x8
+    0028..002c  new-instance  v1, LX/0Bh;
+    002c..0032  invoke-direct  {v1, v4}, LX/0Bh;-><init>(LX/00x;)V
+    0032..0034  return-object  v1
+    0034..0038  iget-boolean  v0, v2, LX/0BF;->A01:Z
+    0038..003c  if-eqz  v0, +0x1f
+    003c..0042  invoke-static  {v3}, LX/07N;->A00(I)Ljava/lang/Object;
+    0042..0044  move-result-object  v0
+    0044..0048  new-instance  v2, LX/0BH;
+    0048..004e  invoke-direct  {v2, v1, v0}, LX/0BH;-><init>(Ljava/lang/Integer;Ljava/lang/Object;)V
+    004e..0054  invoke-static  {}, LX/06o;->A00()LX/06o;
+    0054..0056  move-result-object  v1
+    0056..005c  invoke-static  {}, LX/00J;->A00()Landroid/app/Application;
+    005c..005e  move-result-object  v0
+    005e..0064  invoke-static  {v3, v1, v0}, LX/1Uw;->A00(ILX/06h;Ljava/lang/Object;)Ljava/lang/Object;
+    0064..0066  move-result-object  v0
+    0066..006a  check-cast  v0, LX/0BJ;
+    006a..006e  new-instance  v1, LX/0BM;
+    006e..0074  invoke-direct  {v1, v2, v0}, LX/0BM;-><init>(LX/0BG;LX/0BJ;)V
+    0074..0076  return-object  v1
+    0076..007c  invoke-static  {v3}, LX/00D;->A00(I)LX/05h;
+    007c..007e  move-result-object  v0
+    007e..0082  new-instance  v1, LX/0Bh;
+    0082..0088  invoke-direct  {v1, v0}, LX/0Bh;-><init>(LX/00x;)V
+    0088..008a  return-object  v1
+    # exception table: 0 try range(s)
+.end method

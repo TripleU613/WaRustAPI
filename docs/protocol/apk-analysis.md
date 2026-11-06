@@ -384,3 +384,29 @@ Cns is a stale 37.70 anchor. Full dump files and negative searches stay local.
 FetchTruncatedGroupsJob.A0G. The literal bytes at classes6.dex 0x673e42 plus
 high-register/truncated fixtures verify formatting; mnemonic coverage is unchanged.
 [Job partition and bounded round evidence](groups.md#batch-partition-and-bounded-follow-up-rounds-2026-10-07).
+
+## REA Android Java-path repair and CLI proof (2026-11-06)
+
+**Observed local setup / confirmed static target evidence:** Codex's REA entry
+pointed JAVA_HOME at a missing /usr/lib/jvm/java-21-openjdk. Installed mise
+Temurin21.0.13+9.0.LTS was verified directly. A private0600 config backup preceded
+an atomic update of only mcp_servers.rea.env.JAVA_HOME; all other parsed settings
+were checked equal. Existing JADX0.7.1 JAR and pinned REA6.5.0 were reused.
+No system Java installation, global shell activation, identity/account mutation
+or unrelated configuration change was performed. Config and backup stay outside
+Git; credentials were not exported.
+
+[Three complete successful REA records and exact invocation](rea/2.26.43.72-provider-java-repair/README.md)
+verify a fresh CLI constructor inspection, exact alias search and complete
+provider-resolver Java body against the pinned APK. The initial fresh CLI lacked
+the JAR environment and refused; supplying the already configured JAR fixed
+that separate launch context. The existing connected MCP still reports its old
+Java path after the file edit. Persisted next-launch configuration and a working
+fresh CLI are proven; live MCP reload/reconnect is NOT. No shared process/app
+was killed. Subsequent Android research can use the verified CLI now.
+
+The restored tool also corroborates the provider cache resolver. [Four physical
+cache references and the optional cache-initializer follow-through](apk/2.26.43.72-provider-cache-initialization/README.md)
+show selected get/fill paths, not proof of a cache reset or account switch.
+Static decompilation does not establish runtime behavior, complete ownership,
+APK signature validity, clock/lifecycle parity or restriction prevention.
