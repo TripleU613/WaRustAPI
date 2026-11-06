@@ -16927,5 +16927,12 @@
     "x-live": false,
     "description": "Static APK43.72 ping producer census separates normal A08/A04 pending state from direct A0B pre-ACK confirmation continuations and A0A arbitrary callbacks. Bound Fef14/Feq9 retirement requests require validated success; IQ error liveness does not execute optional success completion. Async ordering, replacement ownership and durable replay remain explicit limits. No runtime change.",
     "evidence": "docs/protocol/apk/2.26.43.72-client-ping-producer-families/README.md"
+  },
+  "x-client-ping-registry-lifecycle-research": {
+    "x-cli": false,
+    "x-transport": "experimental",
+    "x-live": false,
+    "description": "Static APK43.72 callback dispatch uses 1xZ.BVv and an effective feature gate; asynchronous reset clears awaiting-response map and schedules delivery failure, without proving cancellation of already-claimed workers or pre-send queued ownership. Local paused-time regression covers stale result/error across store reopen and driver restart. No runtime policy change.",
+    "evidence": "docs/protocol/apk/2.26.43.72-client-ping-registry-lifecycle/README.md"
   }
 }

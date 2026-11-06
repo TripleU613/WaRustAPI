@@ -1,0 +1,31 @@
+# Selected byte-PC ranges, end exclusive; not complete control-flow coverage.
+# Full export SHA256: fd46dcdf65ee927c926a377ea4aee916218b30fc5978c4c4d570982e21c661b6
+
+# Range 01fa..0268
+    01fa..01fe  iget-object  v0, v8, LX/0YB;->A0p:LX/00x;
+    01fe..0204  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0204..0206  move-result-object  v10
+    0206..020a  check-cast  v10, LX/0ln;
+    020a..020e  iget-object  v0, v8, LX/0YB;->A1B:LX/1A0;
+    020e..0210  const/4  v5, #0x0
+    0210..0214  if-eqz  v0, +0xb
+    0214..0218  iget-object  v0, v8, LX/0YB;->A1B:LX/1A0;
+    0218..021e  invoke-interface  {v0}, LX/1A0;->BNJ()Z
+    021e..0220  move-result  v2
+    0220..0222  const/4  v0, #0x1
+    0222..0226  if-nez  v2, +0x3
+    0226..0228  const/4  v0, #0x0
+    0228..022e  invoke-virtual  {v10, v0, v1}, LX/0ln;->A0F(ZI)V
+    022e..0232  iget-object  v0, v8, LX/0YB;->A0X:LX/00x;
+    0232..0238  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0238..023a  move-result-object  v0
+    023a..023e  check-cast  v0, LX/0Sf;
+    023e..0244  invoke-virtual  {v0}, LX/0Sf;->A0J()V
+    0244..024a  invoke-interface  {v11}, LX/00x;->get()Ljava/lang/Object;
+    024a..024c  move-result-object  v11
+    024c..0250  check-cast  v11, LX/1A7;
+    0250..0254  iget-object  v10, v11, LX/1A7;->A0H:LX/098;
+    0254..0258  const/16  v2, #0x1b
+    0258..025c  new-instance  v0, LX/Fea;
+    025c..0262  invoke-direct  {v0, v11, v2}, LX/Fea;-><init>(Ljava/lang/Object;I)V
+    0262..0268  invoke-virtual  {v10, v0}, LX/098;->execute(Ljava/lang/Runnable;)V

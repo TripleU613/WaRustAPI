@@ -1,0 +1,13 @@
+# Selected byte-PC ranges, end exclusive; not complete control-flow coverage.
+# Full export SHA256: 7dd5e2a054b2132ffcd6ef497c3c50e18e14f6689db85674fab7e7dcaac3f27e
+
+# Range 0000..000a
+    0000..0004  iget  v0, v14, LX/8bj;->$t:I
+    0004..000a  packed-switch  v0, payload@0xadc, cases=[0:@0xab6, 1:@0xa9c, 2:@0xa4e, 3:@0x954, 4:@0x924, 5:@0x8da, 6:@0x8c6, 7:@0x898, 8:@0x7d8, 9:@0x798, 10:@0x772, 11:@0x722, 12:@0x70e, 13:@0x6fa, 14:@0x6c6, 15:@0x692, 16:@0x296, 17:@0x66c, 18:@0x5d2, 19:@0x54c, 20:@0x470, 21:@0x45c, 22:@0x43c, 23:@0x428, 24:@0x3e2, 25:@0x17c, 26:@0x394, 27:@0x34c, 28:@0x338, 29:@0x324, 30:@0x9e, 31:@0x4e, 32:@0x30e], default@0xa
+
+# Range 045c..0470
+    045c..0460  iget-object  v1, v14, LX/8bj;->A00:Ljava/lang/Object;
+    0460..0464  check-cast  v1, LX/0lG;
+    0464..0468  iget-object  v0, v14, LX/8bj;->A01:Ljava/lang/String;
+    0468..046e  invoke-interface  {v1, v0}, LX/0lG;->BsS(Ljava/lang/String;)V
+    046e..0470  return-void

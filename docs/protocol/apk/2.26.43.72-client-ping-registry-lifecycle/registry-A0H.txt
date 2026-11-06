@@ -1,0 +1,113 @@
+# Extracted complete method from full-class export SHA256: a83e885ccf73fab30b6634538dcae4dc00885957c6a649b01906ce2aa63c91db
+
+
+.method public A0H(ZLL)  # .registers 10
+    # full signature: LX/0ln;->A0H(LX/0Tp;Ljava/lang/String;)Z
+    0000..0006  const-string/jumbo  v1, "type"
+    0006..0008  const/4  v0, #0x0
+    0008..000e  invoke-virtual  {v8, v1, v0}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    000e..0010  move-result-object  v1
+    0010..0014  const-string  v0, "result"
+    0014..001a  invoke-virtual  {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    001a..001c  move-result  v0
+    001c..0020  if-eqz  v0, +0x36
+    0020..0024  iget-object  v6, v7, LX/0ln;->A0B:LX/0TT;
+    0024..0028  iget-object  v0, v6, LX/0TT;->A02:Ljava/util/concurrent/ConcurrentHashMap;
+    0028..002e  invoke-virtual  {v0, v9}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    002e..0030  move-result-object  v5
+    0030..0034  check-cast  v5, LX/1i0;
+    0034..0038  if-eqz  v5, +0x26
+    0038..003c  iget-wide  v3, v5, LX/1i0;->A07:J
+    003c..0040  const-wide/16  v1, #0x0
+    0040..0044  cmp-long  v0, v3, v1
+    0044..0048  if-nez  v0, +0x1e
+    0048..004e  invoke-static  {}, Landroid/os/SystemClock;->uptimeMillis()J
+    004e..0050  move-result-wide  v0
+    0050..0054  iput-wide  v0, v5, LX/1i0;->A07:J
+    0054..005a  invoke-static  {v6}, LX/0TT;->A00(LX/0TT;)LX/0BW;
+    005a..005c  move-result-object  v1
+    005c..0062  invoke-virtual  {v9}, Ljava/lang/String;->hashCode()I
+    0062..0064  move-result  v2
+    0064..0068  const-string  v0, "iq_send"
+    0068..006e  invoke-virtual  {v1, v2, v0}, LX/0BW;->A03(ILjava/lang/String;)V
+    006e..0074  invoke-static  {v6}, LX/0TT;->A00(LX/0TT;)LX/0BW;
+    0074..0076  move-result-object  v1
+    0076..007a  const-string  v0, "iq_processing_queue"
+    007a..0080  invoke-virtual  {v1, v2, v0}, LX/0BW;->A04(ILjava/lang/String;)V
+    0080..0084  iget-object  v2, v7, LX/0ln;->A0F:Ljava/lang/Object;
+    0084..0086  monitor-enter
+    0086..0088  goto  +0x19
+    0088..008c  const-string  v0, "error"
+    008c..0092  invoke-virtual  {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0092..0094  move-result  v0
+    0094..0098  if-eqz  v0, -0xa
+    0098..009c  iget-object  v2, v7, LX/0ln;->A0B:LX/0TT;
+    009c..00a0  sget-object  v1, LX/02X;->A0C:Ljava/lang/Integer;
+    00a0..00a6  invoke-static  {v8}, LX/1ud;->A00(LX/0Tp;)I
+    00a6..00a8  move-result  v0
+    00a8..00ae  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    00ae..00b0  move-result-object  v0
+    00b0..00b6  invoke-virtual  {v2, v1, v0, v9}, LX/0TT;->A01(Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;)V
+    00b6..00b8  goto  -0x1b
+    00b8..00bc  iget-object  v5, v7, LX/0ln;->A0E:LX/0m2;
+    00bc..00c0  iget-object  v0, v5, LX/0m2;->A00:Ljava/util/concurrent/ConcurrentMap;
+    00c0..00c6  invoke-interface  {v0, v9}, Ljava/util/Map;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+    00c6..00c8  move-result-object  v1
+    00c8..00cc  if-eqz  v1, +0x6
+    00cc..00ce  const/4  v0, #0x4
+    00ce..00d4  invoke-virtual  {v5, v0, v1}, Landroid/os/Handler;->removeMessages(ILjava/lang/Object;)V
+    00d4..00d8  iget-object  v0, v7, LX/0ln;->A0H:Ljava/util/Map;
+    00d8..00de  invoke-interface  {v0, v9}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    00de..00e0  move-result-object  v0
+    00e0..00e4  check-cast  v0, LX/1bW;
+    00e4..00e6  monitor-exit
+    00e6..00e8  const/4  v4, #0x0
+    00e8..00ec  if-nez  v0, +0x15
+    00ec..00f2  const-string/jumbo  v1, "xmppIncomingMessageRouter/handleIqResponse no callback found for id="
+    00f2..00f6  new-instance  v0, Ljava/lang/StringBuilder;
+    00f6..00fc  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00fc..0102  invoke-virtual  {v0, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0102..0108  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0108..010a  move-result-object  v0
+    010a..0110  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0110..0112  return  v4
+    0112..0116  iget-object  v2, v0, LX/1bW;->A00:Ljava/lang/Object;
+    0116..011a  check-cast  v2, LX/0lG;
+    011a..011e  instance-of  v0, v2, LX/1xZ;
+    011e..0122  if-eqz  v0, +0x16
+    0122..0124  move-object  v0, v2
+    0124..0128  check-cast  v0, LX/1xZ;
+    0128..012e  invoke-interface  {v0}, LX/1xZ;->BVv()Z
+    012e..0130  move-result  v0
+    0130..0134  if-eqz  v0, +0xd
+    0134..0138  iget-object  v1, v7, LX/0ln;->A06:LX/08Y;
+    0138..013c  sget-object  v0, LX/1hy;->A01:LX/00f;
+    013c..0142  invoke-virtual  {v1, v0}, LX/00E;->A17(LX/00f;)Z
+    0142..0144  move-result  v1
+    0144..0146  const/4  v0, #0x1
+    0146..014a  if-nez  v1, +0x3
+    014a..014c  const/4  v0, #0x0
+    014c..014e  const/4  v3, #0x1
+    014e..0152  if-eqz  v0, +0x6
+    0152..0158  invoke-static  {v8, v7, v9, v3}, LX/0ln;->A02(LX/0Tp;LX/0ln;Ljava/lang/String;Z)V
+    0158..015a  return  v3
+    015a..015e  instance-of  v0, v2, LX/1xa;
+    015e..0162  if-eqz  v0, +0x6
+    0162..0168  invoke-static  {v8, v7, v9, v4}, LX/0ln;->A02(LX/0Tp;LX/0ln;Ljava/lang/String;Z)V
+    0168..016a  return  v3
+    016a..016c  const/4  v0, #0x2
+    016c..0172  invoke-virtual  {v5, v0, v8}, Landroid/os/Handler;->obtainMessage(ILjava/lang/Object;)Landroid/os/Message;
+    0172..0174  move-result-object  v2
+    0174..017a  invoke-virtual  {v2}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    017a..017c  move-result-object  v1
+    017c..0180  const-string  v0, "iqId"
+    0180..0186  invoke-virtual  {v1, v0, v9}, Landroid/os/BaseBundle;->putString(Ljava/lang/String;Ljava/lang/String;)V
+    0186..018c  invoke-virtual  {v2}, Landroid/os/Message;->sendToTarget()V
+    018c..018e  return  v3
+    018e..0190  move-exception  v0
+    0190..0192  monitor-exit
+    0192..0194  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 005c..0076 -> 00c7
+    # catch <all> code_units 00c8..00c9 -> 00c7
+.end method

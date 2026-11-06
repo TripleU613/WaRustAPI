@@ -1,0 +1,47 @@
+# Selected byte-PC ranges, end exclusive; not complete control-flow coverage.
+# Full export SHA256: 4c8a65dfb8084a0e069c95bf190c90cf19c93a0dd6c6c362f198bacae16bc94f
+
+# Range 0000..000c
+    0000..0004  iget  v0, v15, Landroid/os/Message;->what:I
+    0004..0006  const/4  v2, #0x1
+    0006..000c  packed-switch  v0, payload@0x80c, cases=[1:@0x21c, 2:@0x530, 3:@0x55a, 4:@0x7a2, 5:@0x7ca, 6:@0xe, 7:@0x1ea, 8:@0x454], default@0xc
+
+# Range 055a..05f8
+    055a..055e  iget-object  v8, v14, LX/0m2;->A01:LX/0ln;
+    055e..0562  iget  v12, v15, Landroid/os/Message;->arg2:I
+    0562..0566  iget-object  v3, v8, LX/0ln;->A0F:Ljava/lang/Object;
+    0566..0568  monitor-enter
+    0568..056c  iget-object  v2, v8, LX/0ln;->A0H:Ljava/util/Map;
+    056c..0572  invoke-interface  {v2}, Ljava/util/Map;->entrySet()Ljava/util/Set;
+    0572..0574  move-result-object  v1
+    0574..0578  new-instance  v0, Ljava/util/ArrayList;
+    0578..057e  invoke-direct  {v0, v1}, Ljava/util/ArrayList;-><init>(Ljava/util/Collection;)V
+    057e..0584  invoke-interface  {v2}, Ljava/util/Map;->clear()V
+    0584..0586  monitor-exit
+    0586..058c  invoke-virtual  {v0}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+    058c..058e  move-result-object  v7
+    058e..0594  invoke-interface  {v7}, Ljava/util/Iterator;->hasNext()Z
+    0594..0596  move-result  v0
+    0596..059a  if-eqz  v0, +0x31
+    059a..05a0  invoke-interface  {v7}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    05a0..05a2  move-result-object  v1
+    05a2..05a6  check-cast  v1, Ljava/util/Map$Entry;
+    05a6..05ac  invoke-interface  {v1}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+    05ac..05ae  move-result-object  v6
+    05ae..05b2  check-cast  v6, Ljava/lang/String;
+    05b2..05b6  iget-object  v5, v8, LX/0ln;->A0B:LX/0TT;
+    05b6..05ba  sget-object  v0, LX/02X;->A0N:Ljava/lang/Integer;
+    05ba..05bc  const/4  v4, #0x0
+    05bc..05c2  invoke-virtual  {v5, v0, v4, v6}, LX/0TT;->A01(Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;)V
+    05c2..05c8  invoke-virtual  {v5, v6}, LX/0TT;->A02(Ljava/lang/String;)V
+    05c8..05ce  invoke-interface  {v1}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+    05ce..05d0  move-result-object  v0
+    05d0..05d4  check-cast  v0, LX/1bW;
+    05d4..05d8  iget-object  v3, v0, LX/1bW;->A00:Ljava/lang/Object;
+    05d8..05dc  iget-object  v2, v8, LX/0ln;->A08:LX/098;
+    05dc..05e0  const/16  v1, #0x15
+    05e0..05e4  new-instance  v0, LX/8bj;
+    05e4..05ea  invoke-direct  {v0, v6, v1, v3}, LX/8bj;-><init>(Ljava/lang/String;ILjava/lang/Object;)V
+    05ea..05f0  invoke-virtual  {v2, v0}, LX/098;->execute(Ljava/lang/Runnable;)V
+    05f0..05f6  invoke-virtual  {v5, v6, v4}, LX/0TT;->A03(Ljava/lang/String;Ljava/lang/Integer;)V
+    05f6..05f8  goto  -0x34

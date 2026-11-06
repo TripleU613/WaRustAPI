@@ -2213,3 +2213,15 @@ request shape does not establish shared response policy. **Still open:** registr
 cleanup across channel replacement, coroutine cancellation and complete durable
 replay/retirement parity. No Rust timing, retry, replay or account behavior changed.
 [Producer census, constructor bindings and limitations](apk/2.26.43.72-client-ping-producer-families/README.md).
+
+### 2026-11-05: ping registry reset and already-claimed callbacks
+
+**Confirmed static, APK 2.26.43.72:** 1xZ.BVv selects gated alternate dispatch;
+nonnull success continuations use 1xa's serial path. Reset A0F posts handler 3,
+which snapshots/clears awaiting-response map A0H and schedules delivery failure.
+Queued A0I and already-claimed worker ownership are distinct; no synchronous
+all-callback cancellation follows. **Verified locally:** stale result/error from
+a prior closed link cannot settle or extend the restarted link's ping after store
+reopen. **Open:** complete queued disposal, native executor/registration ordering
+and claimed-worker cancellation. No production timing/retry policy changed.
+[Evidence, regression and limits](apk/2.26.43.72-client-ping-registry-lifecycle/README.md).

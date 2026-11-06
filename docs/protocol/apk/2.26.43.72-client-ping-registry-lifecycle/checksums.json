@@ -1,0 +1,50 @@
+{
+  "README.md": {
+    "bytes": 5886,
+    "sha256": "f68dd9e270f1464e4a5e8e8aac6d4a612a5a98680495268f38404edf9cfa1823"
+  },
+  "alternate-reset-binding.txt": {
+    "bytes": 1158,
+    "sha256": "f226b5635bd35934a28b8a2e1057fbe7ef012a5c6be91a2fb1b28a202aa07f5c"
+  },
+  "disconnect-binding.txt": {
+    "bytes": 1558,
+    "sha256": "298abb6727c3912f37078e6f087cab012be66560d93da0665c1692ce5be89d2d"
+  },
+  "dispatch-policy-callers.txt": {
+    "bytes": 66,
+    "sha256": "876f3f8256ab43a33c96938b5fc49942ddb0c7c98abfb6e20304653937f2bf5f"
+  },
+  "dispatch-policy-interface.txt": {
+    "bytes": 201,
+    "sha256": "aad7fa0d6f6bfc267bb1599b728085cb9aa756f4b5d42836f34d6271239fb7d5"
+  },
+  "failure-callback-worker.txt": {
+    "bytes": 957,
+    "sha256": "54404ebcc03e986e3494bb840afbe49c4cda2a48b86e9d7432976c882cbcb1bb"
+  },
+  "handler-reset.txt": {
+    "bytes": 2786,
+    "sha256": "8531175b69e7356c1e18f5fe6e97fd279d1ef80ffae117e587e53fbc64e24437"
+  },
+  "pool-callback-worker.txt": {
+    "bytes": 1069,
+    "sha256": "3e0f6343671115981fcccaee40756a3c683a256c6cc22c78130463246113cd0b"
+  },
+  "registry-A0C.txt": {
+    "bytes": 3525,
+    "sha256": "da9dd32b51d507834ceb8f3ce6637039de78ff4e3c8e513fa862de8c6d3b5220"
+  },
+  "registry-A0F.txt": {
+    "bytes": 2181,
+    "sha256": "d255f8c9b4ce958fe9a63b1d2425cb43d01c0a52203786c8bb35e2117cbb1d42"
+  },
+  "registry-A0H.txt": {
+    "bytes": 6107,
+    "sha256": "d4c95d413d0c8e0a8a878e556638e74709c10c34ba85a282077715c4c2be6465"
+  },
+  "reset-callers.txt": {
+    "bytes": 142,
+    "sha256": "1c206d46495d9e6c68733bc44397ce744a01dd9c5e8469f7a69c25c3133ab665"
+  }
+}

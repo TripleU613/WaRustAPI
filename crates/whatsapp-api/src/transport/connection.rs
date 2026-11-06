@@ -5576,6 +5576,71 @@ mod tests {
     }
 
     #[tokio::test(start_paused = true)]
+    async fn previous_link_ping_replies_cannot_settle_or_extend_restarted_ping() {
+        // APK43.72 0m2 case 3 clears the awaiting-response IQ registry on
+        // disconnect. Rust owns claims per drive, independently of saved state.
+        for outcome in ["result", "error"] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("ping-restart.redb");
+            let store = open(&path);
+            let mut first = start(&store, false, None);
+            first.activate().await;
+            let (old_ping, written) = first.written_within(Duration::from_secs(60)).await;
+            let old_id = old_ping.get_attr("id").unwrap().clone();
+            written.send(Ok(())).unwrap();
+            first
+                .cut(Error::Transport(TransportError::PeerClosed))
+                .await;
+            assert!(
+                first
+                    .finished()
+                    .await
+                    .unwrap_err()
+                    .is_recoverable_by_reconnect()
+            );
+            drop(store);
+
+            let store = open(&path);
+            let mut restarted = start(&store, false, None);
+            restarted.activate().await;
+            let (current, written) = restarted.written_within(Duration::from_secs(60)).await;
+            assert_ne!(current.get_attr("id"), Some(&old_id));
+            let admitted_at = tokio::time::Instant::now();
+            written.send(Ok(())).unwrap();
+            restarted.nothing_written(Duration::from_secs(19)).await;
+            let stale = if outcome == "result" {
+                valid_keepalive_reply(old_id)
+            } else {
+                Node::new("iq").attr("id", old_id).attr("type", "error")
+            };
+            restarted.deliver(stale).await;
+            // A separate server ping proves receive processed the stale reply.
+            restarted
+                .deliver(
+                    Node::new("iq")
+                        .attr("type", "get")
+                        .attr("xmlns", "urn:xmpp:ping"),
+                )
+                .await;
+            let (pong, written) = restarted.written().await;
+            assert_eq!(
+                pong.get_attr("type").and_then(|v| v.as_text()),
+                Some("result")
+            );
+            written.send(Ok(())).unwrap();
+            let error = restarted
+                .finished_within(Duration::from_secs(2))
+                .await
+                .unwrap_err();
+            assert!(matches!(error, Error::Timeout(_)), "{error:?}");
+            assert_eq!(
+                tokio::time::Instant::now() - admitted_at,
+                Duration::from_secs(20)
+            );
+        }
+    }
+
+    #[tokio::test(start_paused = true)]
     async fn malformed_keepalive_result_consumes_callback_without_clearing_timer() {
         let dir = tempfile::tempdir().unwrap();
         let store = open(&dir.path().join("ping-malformed.redb"));

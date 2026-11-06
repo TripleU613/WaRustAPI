@@ -1,3 +1,14 @@
+2026-11-05 — **Ping registry reset scope and stale-link ownership verified.**
+
+The native reset clears awaiting-response callbacks asynchronously; it does not
+prove cancellation of already-claimed workers. 1xZ.BVv's dispatch role is traced.
+A new regression verifies stale result/error cannot clear or extend a restarted
+Rust link's ping after store reopen. Production policy remains unchanged.
+[Source, regression and unresolved queue/ordering boundaries](docs/protocol/apk/2.26.43.72-client-ping-registry-lifecycle/README.md).
+Validation: all 1374 workspace/all-feature tests passed, including both stale-reply
+cases; removing ID ownership makes the new regression fail. Guard restored.
+Pinned APK identity, fmt, strict Clippy, CLI/OpenAPI, coverage and staged hygiene passed.
+
 2026-11-05 — **Ping producer and durable-ACK completion authority separated.**
 
 Normal on-demand pings use the existing pending guard; direct confirmation pings

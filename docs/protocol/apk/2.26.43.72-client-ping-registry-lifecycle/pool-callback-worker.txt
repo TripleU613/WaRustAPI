@@ -1,0 +1,20 @@
+# Selected byte-PC ranges, end exclusive; not complete control-flow coverage.
+# Full export SHA256: 3087fc04ae0f021f7991ac1352a700e33cb286a9f2b33e23479f143e4d22b07d
+
+# Range 0000..000e
+    0000..0004  move-object/from16  v1, v30
+    0004..0008  iget  v0, v1, LX/FcV;->$t:I
+    0008..000e  packed-switch  v0, payload@0x804, cases=[0:@0x792, 1:@0x76a, 2:@0x42c, 3:@0x32, 4:@0x406, 5:@0x394, 6:@0x350], default@0xe
+
+# Range 0394..03c0
+    0394..0398  iget-object  v3, v1, LX/FcV;->A00:Ljava/lang/Object;
+    0398..039c  check-cast  v3, LX/0ln;
+    039c..03a0  iget-object  v0, v1, LX/FcV;->A01:Ljava/lang/Object;
+    03a0..03a4  check-cast  v0, LX/1bW;
+    03a4..03a8  iget-object  v2, v1, LX/FcV;->A03:Ljava/lang/String;
+    03a8..03ac  iget-object  v1, v1, LX/FcV;->A02:Ljava/lang/Object;
+    03ac..03b0  check-cast  v1, LX/0Tp;
+    03b0..03b4  iget-object  v0, v0, LX/1bW;->A00:Ljava/lang/Object;
+    03b4..03b8  check-cast  v0, LX/0lG;
+    03b8..03be  invoke-static  {v0, v1, v3, v2}, LX/0ln;->A01(LX/0lG;LX/0Tp;LX/0ln;Ljava/lang/String;)V
+    03be..03c0  return-void
