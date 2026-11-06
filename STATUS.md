@@ -1,3 +1,9 @@
+Tracked count ingress now connects to native1ix queue admission and its
+Flr disk-write scheduler. Admission is initially in memory; A0D=false requires
+a backend and1ix disables the generic inline-state promotion.
+[Evidence and remaining processing gate](docs/protocol/apk/2.26.43.72-count-queue-admission/README.md).
+Static/offline research; Rust queue/ACK behavior unchanged.
+
 Count-notification ingress now has an evidence-backed conditional routing
 map: unmatched-provider fallback can create tracked encrypt wrappers under
 flag3992; its false branch reaches direct handling. Effective configuration

@@ -1,0 +1,28 @@
+
+# class: LX/1id;
+# extends: Ljava/lang/Object;
+
+.method public A0L(Z)  # .registers 2
+    # full signature: LX/1id;->A0L()Z
+    0000..0004  instance-of  v0, v1, LX/1ix;
+    0004..0008  if-eqz  v0, +0x4
+    0008..000a  const/4  v0, #0x0
+    000a..000c  return  v0
+    000c..0010  instance-of  v0, v1, LX/1if;
+    0010..0014  if-eqz  v0, +0x14
+    0014..0016  move-object  v0, v1
+    0016..001a  check-cast  v0, LX/1if;
+    001a..001e  iget-object  v0, v0, LX/1if;->A00:LX/05a;
+    001e..0022  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0022..0028  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0028..002a  move-result-object  v0
+    002a..002e  check-cast  v0, LX/0av;
+    002e..0032  iget-boolean  v0, v0, LX/0av;->A0J:Z
+    0032..0036  xor-int/lit8  v0, v0, #0x1
+    0036..0038  return  v0
+    0038..003a  move-object  v0, v1
+    003a..003e  check-cast  v0, LX/1iu;
+    003e..0042  iget-object  v0, v0, LX/1iu;->A00:LX/05a;
+    0042..0044  goto  -0x12
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,51 @@
+
+# class: LX/1k3;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLLLLLIJJJJZZ)  # .registers 24
+    # full signature: LX/1k3;-><init>(LX/E6e;LX/2DG;LX/1kz;Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/Jid;LX/0Tp;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/String;IJJJJZZ)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-direct  {v3}, Ljava/lang/Object;-><init>()V
+    0008..000c  iput-object  v10, v3, LX/1k3;->A0B:Ljava/lang/Long;
+    000c..0010  iput-object  v12, v3, LX/1k3;->A0A:Ljava/lang/String;
+    0010..0014  iput-object  v5, v3, LX/1k3;->A05:LX/2DG;
+    0014..0018  iput-object  v6, v3, LX/1k3;->A06:LX/1kz;
+    0018..001c  iput-object  v4, v3, LX/1k3;->A04:LX/E6e;
+    001c..0020  iput-object  v7, v3, LX/1k3;->A07:Lcom/whatsapp/infra/core/jid/Jid;
+    0020..0024  iput-object  v8, v3, LX/1k3;->A08:Lcom/whatsapp/infra/core/jid/Jid;
+    0024..0028  iput-object  v9, v3, LX/1k3;->A09:LX/0Tp;
+    0028..002c  iput-wide  v14, v3, LX/1k3;->A03:J
+    002c..0030  move-wide/from16  v1, v16
+    0030..0034  iput-wide  v1, v3, LX/1k3;->A01:J
+    0034..0038  move-wide/from16  v1, v18
+    0038..003c  iput-wide  v1, v3, LX/1k3;->A02:J
+    003c..0040  iput  v13, v3, LX/1k3;->A00:I
+    0040..0044  iput-boolean  v0, v3, LX/1k3;->A0I:Z
+    0044..0048  move/from16  v0, v23
+    0048..004c  iput-boolean  v0, v3, LX/1k3;->A0G:Z
+    004c..0050  iput-object  v11, v3, LX/1k3;->A0E:Ljava/lang/Long;
+    0050..0054  move-wide/from16  v0, v20
+    0054..0058  iput-wide  v0, v3, LX/1k3;->A0F:J
+    0058..005c  sget-object  v0, LX/2A3;->A05:LX/2A3;
+    005c..0060  iput-object  v0, v3, LX/1k3;->A0H:LX/2A3;
+    0060..0064  move/from16  v0, v22
+    0064..0068  iput-boolean  v0, v3, LX/1k3;->A0D:Z
+    0068..006c  const-wide/16  v0, #0xffff (-1)
+    006c..0070  iput-wide  v0, v3, LX/1k3;->A0C:J
+    0070..0076  invoke-virtual  {v3}, LX/1k3;->BUp()Z
+    0076..0078  move-result  v0
+    0078..007c  if-eqz  v0, +0x18
+    007c..0080  iget-object  v0, v3, LX/1k3;->A0B:Ljava/lang/Long;
+    0080..0084  const-string  v1, "Failed requirement."
+    0084..0088  if-eqz  v0, +0xc
+    0088..008c  iget-boolean  v0, v3, LX/1k3;->A0D:Z
+    008c..0090  if-eqz  v0, +0xe
+    0090..0094  new-instance  v0, Ljava/lang/IllegalArgumentException;
+    0094..009a  invoke-direct  {v0, v1}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;)V
+    009a..009c  throw  v0
+    009c..00a0  new-instance  v0, Ljava/lang/IllegalArgumentException;
+    00a0..00a6  invoke-direct  {v0, v1}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;)V
+    00a6..00a8  throw  v0
+    00a8..00aa  return-void
+    # exception table: 0 try range(s)
+.end method

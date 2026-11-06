@@ -1061,3 +1061,15 @@ encrypt entry, but does not establish the full effective injected set.
 The reader inverts buffering-policy output for a wrapper Boolean; its durable
 meaning and count-specific bulk ownership remain unproven. No Rust routing,
 ACK order, default flag or replay changed; no live operations.
+
+### Tracked count queue admission is separate from disk commit (2026-11-05)
+
+**Confirmed static,43.72:** reader buffering-policy inversion becomes wrapper
+A0D;1k4 selects1ix. A0D=false requires a storage backend, but1id.A0P first
+adds the stanza to memory. Its successful return is not commit proof.1ix
+A0L=false disables the generic inline-state promotion. A conditional500ms
+disk schedule cancels/replaces a prior job and launches the already-traced
+Flr selector7 transactional writer.
+[Seven complete methods, Boolean mapping and processing-gate limits](apk/2.26.43.72-count-queue-admission/README.md).
+The arrival hook reaches1il/2Ek processing helpers, still untraced here. No
+Rust timer, ACK ordering, replay or live account behavior changed.

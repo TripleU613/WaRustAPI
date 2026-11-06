@@ -1,0 +1,36 @@
+
+# class: LX/1ic;
+# extends: Ljava/lang/Object;
+
+.method public A01(LLL)  # .registers 4
+    # full signature: LX/1ic;->A01(LX/1k3;LX/1ic;)LX/1id;
+    0000..0004  instance-of  v0, v2, LX/1kA;
+    0004..0008  const-string  v1, "null cannot be cast to non-null type com.whatsapp.infra.connectionqueue.ConnectionQueue<T of com.whatsapp.infra.connectionqueue.StanzaQueueImpl.getConnectionQueue>"
+    0008..000c  if-eqz  v0, +0xa
+    000c..0012  invoke-static  {v3}, LX/1ic;->A04(LX/1ic;)LX/1if;
+    0012..0014  move-result-object  v0
+    0014..001a  invoke-static  {v0, v1}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    001a..001c  return-object  v0
+    001c..0020  instance-of  v0, v2, LX/1k8;
+    0020..0024  if-eqz  v0, +0x7
+    0024..002a  invoke-static  {v3}, LX/1ic;->A02(LX/1ic;)LX/1iu;
+    002a..002c  move-result-object  v0
+    002c..002e  goto  -0xc
+    002e..0032  instance-of  v0, v2, LX/1k4;
+    0032..0036  if-eqz  v0, +0x7
+    0036..003c  invoke-static  {v3}, LX/1ic;->A05(LX/1ic;)LX/1ix;
+    003c..003e  move-result-object  v0
+    003e..0040  goto  -0x15
+    0040..0046  invoke-virtual  {v2}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+    0046..0048  move-result-object  v2
+    0048..004c  const-string  v1, "Unknown stanza:"
+    004c..0050  new-instance  v0, Ljava/lang/StringBuilder;
+    0050..0056  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0056..005c  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    005c..0062  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0062..0064  move-result-object  v1
+    0064..0068  new-instance  v0, Ljava/lang/IllegalArgumentException;
+    0068..006e  invoke-direct  {v0, v1}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;)V
+    006e..0070  throw  v0
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,86 @@
+
+# class: LX/1ic;
+# extends: Ljava/lang/Object;
+
+.method public A0J(ZLZZ)  # .registers 9
+    # full signature: LX/1ic;->A0J(LX/1k3;ZZ)Z
+    0000..0002  const/4  v4, #0x0
+    0002..0006  iget-object  v1, v6, LX/1k3;->A06:LX/1kz;
+    0006..000a  sget-object  v0, LX/1kz;->A06:LX/1kz;
+    000a..000e  if-ne  v1, v0, +0x6e
+    000e..0012  instance-of  v0, v6, LX/1k8;
+    0012..0016  if-eqz  v0, +0x28
+    0016..001a  iget-object  v1, v6, LX/1k3;->A09:LX/0Tp;
+    001a..001e  if-eqz  v1, +0x14
+    001e..0022  sget-object  v0, LX/2ER;->A01:Ljava/util/List;
+    0022..0026  iget-object  v0, v5, LX/1ic;->A00:LX/05a;
+    0026..002a  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    002a..0030  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0030..0032  move-result-object  v0
+    0032..0036  check-cast  v0, LX/08Y;
+    0036..003c  invoke-static  {v0, v1}, LX/2ER;->A00(LX/08Y;LX/0Tp;)Z
+    003c..003e  move-result  v0
+    003e..0042  if-nez  v0, +0x12
+    0042..0048  invoke-static  {v5}, LX/1ic;->A03(LX/1ic;)LX/0av;
+    0048..004a  move-result-object  v0
+    004a..004e  iget-boolean  v0, v0, LX/0av;->A0F:Z
+    004e..0052  if-nez  v0, +0xa
+    0052..0056  const-string  v1, "Cannot add message stanza to chat queue"
+    0056..005a  new-instance  v0, Ljava/lang/IllegalArgumentException;
+    005a..0060  invoke-direct  {v0, v1}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;)V
+    0060..0062  throw  v0
+    0062..0068  invoke-static  {v5}, LX/1ic;->A02(LX/1ic;)LX/1iu;
+    0068..006a  move-result-object  v0
+    006a..006e  iget-object  v2, v6, LX/1k3;->A05:LX/2DG;
+    006e..0072  iget-object  v0, v0, LX/1id;->A0C:LX/1iq;
+    0072..0076  iget-object  v1, v0, LX/1iq;->A07:Ljava/util/HashMap;
+    0076..0078  monitor-enter
+    0078..007e  invoke-virtual  {v1, v2}, Ljava/util/AbstractMap;->containsKey(Ljava/lang/Object;)Z
+    007e..0080  move-result  v0
+    0080..0082  monitor-exit
+    0082..0086  if-eqz  v0, +0x32
+    0086..008a  iget-object  v0, v5, LX/1ic;->A06:LX/05a;
+    008a..008e  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    008e..0094  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0094..0096  move-result-object  v3
+    0096..009a  check-cast  v3, LX/1k1;
+    009a..00a0  invoke-static  {v6}, LX/2Ab;->A00(LX/1k3;)LX/2E0;
+    00a0..00a2  move-result-object  v2
+    00a2..00a4  const/4  v1, #0x0
+    00a4..00a6  const/4  v0, #0x3
+    00a6..00ac  invoke-virtual  {v3, v2, v1, v1, v0}, LX/1k1;->A01(LX/2E0;Ljava/lang/Integer;Ljava/lang/Integer;I)V
+    00ac..00b2  invoke-static  {v5}, LX/1ic;->A02(LX/1ic;)LX/1iu;
+    00b2..00b4  move-result-object  v0
+    00b4..00ba  invoke-virtual  {v0, v6}, LX/1id;->A0G(LX/1k3;)V
+    00ba..00be  iget-object  v0, v5, LX/1ic;->A0B:Ljava/util/List;
+    00be..00c4  invoke-interface  {v0}, Ljava/util/List;->isEmpty()Z
+    00c4..00c6  move-result  v0
+    00c6..00ca  if-nez  v0, +0xc
+    00ca..00d0  invoke-static  {v6}, Ljava/util/Collections;->singletonList(Ljava/lang/Object;)Ljava/util/List;
+    00d0..00d2  move-result-object  v0
+    00d2..00d8  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    00d8..00de  invoke-static  {v5, v0}, LX/1ic;->A0B(LX/1ic;Ljava/util/List;)V
+    00de..00e0  return  v4
+    00e0..00e2  move-exception  v0
+    00e2..00e4  monitor-exit
+    00e4..00e6  throw  v0
+    00e6..00ec  invoke-static  {v6, v5}, LX/1ic;->A01(LX/1k3;LX/1ic;)LX/1id;
+    00ec..00ee  move-result-object  v0
+    00ee..00f4  invoke-virtual  {v0, v6, v7, v8}, LX/1id;->A0P(LX/1k3;ZZ)Z
+    00f4..00f6  move-result  v1
+    00f6..00fa  if-eqz  v1, +0x15
+    00fa..00fe  if-eqz  v8, +0x13
+    00fe..0102  instance-of  v0, v6, LX/1k6;
+    0102..0106  if-eqz  v0, +0xf
+    0106..010a  iget-object  v0, v5, LX/1ic;->A0H:LX/00p;
+    010a..0110  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    0110..0112  move-result-object  v0
+    0112..0116  check-cast  v0, LX/EuB;
+    0116..011a  if-eqz  v0, +0x5
+    011a..0120  invoke-virtual  {v0}, LX/EuB;->A01()V
+    0120..0124  sget-object  v0, LX/02X;->A00:Ljava/lang/Integer;
+    0124..012a  invoke-static  {v5, v0}, LX/1ic;->A08(LX/1ic;Ljava/lang/Integer;)V
+    012a..012c  return  v1
+    # exception table: 1 try range(s)
+    # catch <all> code_units 003c..0040 -> 0070
+.end method

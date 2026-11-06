@@ -17282,5 +17282,12 @@
     "x-live": false,
     "description": "Static current APK notification reader has unmatched-provider fallback: flag3992 true can construct tracked 1k4 for encrypt, false reaches direct handling. Provider census and persistence-policy methods retained; effective injected set, configuration and durable ownership remain unproven. No Rust routing/default changes.",
     "evidence": "docs/protocol/apk/2.26.43.72-count-ingress-routing/README.md"
+  },
+  "x-count-queue-admission-audit": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Static current APK trace maps tracked count wrapper A0D to 1ix admission: false requires backend, initial insertion is in memory, A0L false prevents generic inline-state promotion. Conditional resettable 500ms disk job reaches Flr selector7. Effective processing gate and full count ACK provenance remain open; no Rust queue/timer implementation.",
+    "evidence": "docs/protocol/apk/2.26.43.72-count-queue-admission/README.md"
   }
 }
