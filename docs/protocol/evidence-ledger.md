@@ -7214,3 +7214,12 @@ table or journal mutation. CLI suspension wording now includes directory
 validation failures; fixed reason fields are unchanged.
 [API-entry regression and boundaries](messaging-transport.md#explicit-resume-refusal-for-invalid-directory-suspensions-2026-11-05).
 No runtime resume policy, live operation or replay authority changed.
+
+### Unique group-info recovery projection (2026-11-05)
+
+**Confirmed local defect / corrected offline:** ambiguous queued group-info
+replies can no longer bypass normal-send validation through restart recovery.
+Shared projection rejects multiple group elements; missing queued group data
+stays unapplied. Prior snapshot, pending marker and reply remain preserved.
+[Red/green recovery, direct-recorder control and native/local scope](normal-group-outbox.md#unique-group-info-projection-across-recovery-2026-11-05).
+Valid single groups still apply once. No query replay or live account operation.

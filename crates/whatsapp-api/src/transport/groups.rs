@@ -867,16 +867,31 @@ pub fn parse_group(node: &Node) -> Option<GroupSnapshot> {
     })
 }
 
+fn unique_info_group(reply: &Node) -> Result<Option<&Node>> {
+    // Local correlation rule, shared with normal group preparation: one IQ
+    // cannot authorize choosing one of several membership snapshots. APK37.71
+    // ADs parses a selected group node, not proof of an outer first-child policy.
+    let mut groups = reply
+        .child_nodes()
+        .iter()
+        .filter(|node| node.description == "group");
+    let group = groups.next();
+    if groups.next().is_some() {
+        return Err(invalid("group info reply carries multiple group elements"));
+    }
+    Ok(group)
+}
+
 /// Save the snapshot from a `w:g2` info reply obtained outside the durable
 /// action queue, emitting the same `GroupCreated`/`GroupUpdated` events the
 /// queued path does. Returns false when the reply carries no `group` element.
-/// Truncated replies return an error and preserve the current snapshot.
+/// Truncated or multiple-group replies return an error and preserve the snapshot.
 ///
 /// A fan-out needs the membership inside the one connection it is allowed, so
 /// it issues [`info_request`] itself; the result must still land in the same
 /// snapshot the rest of the client reads.
 pub fn record_info_reply(store: &ProtocolStore, reply: &Node) -> Result<bool> {
-    let Some(node) = reply.child("group") else {
+    let Some(node) = unique_info_group(reply)? else {
         return Ok(false);
     };
     require_complete_group(node)?;
@@ -962,7 +977,15 @@ fn apply_reply_in(
     if kind == "group-refresh" {
         return apply_refresh_in(tx, request, reply);
     }
-    if let Some(node) = reply.child("group") {
+    let group_node = if kind == "group-info" {
+        Some(
+            unique_info_group(reply)?
+                .ok_or_else(|| invalid("group info reply has no group element"))?,
+        )
+    } else {
+        reply.child("group")
+    };
+    if let Some(node) = group_node {
         require_complete_group(node)?;
         if let Some(group) = parse_group(node) {
             if kind == "group-info" {
@@ -2920,6 +2943,75 @@ mod tests {
                 );
                 assert_eq!(recover_pending(&s).unwrap(), 0);
             }
+            assert!(
+                super::super::actions::reserve_pending(&s)
+                    .unwrap()
+                    .is_empty()
+            );
+        }
+    }
+
+    #[test]
+    fn ambiguous_group_info_cannot_replace_membership_on_recovery() {
+        for case in ["duplicate", "foreign_second", "missing", "single"] {
+            let (dir, s) = store();
+            let group = Jid::parse("12345-67890@g.us").unwrap();
+            let old = Node::new("group")
+                .attr("id", group.clone())
+                .attr("subject", "Before");
+            assert!(record_info_reply(&s, &Node::new("iq").children(vec![old])).unwrap());
+            let original = get(&s, &group).unwrap().unwrap();
+            let id = queue_info(&s, &group).unwrap();
+            super::super::actions::reserve_pending(&s).unwrap();
+            let updated = Node::new("group")
+                .attr("id", group.clone())
+                .attr("subject", "After");
+            let nodes = match case {
+                "duplicate" => vec![updated.clone(), updated],
+                "foreign_second" => {
+                    vec![updated, Node::new("group").attr("id", "99999-12345@g.us")]
+                }
+                "missing" => vec![],
+                _ => vec![updated],
+            };
+            let reply = Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "result")
+                .children(nodes);
+            assert!(super::super::actions::record_reply(&s, &reply).unwrap());
+            drop(s);
+            let s = ProtocolStore::open(OpenOptions {
+                path: dir.path().join("p.redb"),
+                account_id: AccountId::new("a").unwrap(),
+                key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+                create: false,
+            })
+            .unwrap();
+            let before = s.read(|tx| tx.scan(Table::Checkpoints, 1, 1000)).unwrap();
+            let head = s.journal_head().unwrap();
+            assert_eq!(recover_pending(&s).unwrap(), usize::from(case == "single"));
+            if case == "single" {
+                assert_eq!(
+                    get(&s, &group).unwrap().unwrap().subject.as_deref(),
+                    Some("After")
+                );
+            } else {
+                assert_eq!(get(&s, &group).unwrap().unwrap(), original);
+                assert_eq!(
+                    s.read(|tx| tx.scan(Table::Checkpoints, 1, 1000)).unwrap(),
+                    before
+                );
+                assert_eq!(s.journal_head().unwrap(), head);
+                assert!(super::super::actions::reply(&s, &id).unwrap().is_some());
+            }
+            if matches!(case, "duplicate" | "foreign_second") {
+                assert!(
+                    record_info_reply(&s, &reply).is_err(),
+                    "ambiguous direct projection accepted"
+                );
+                assert_eq!(get(&s, &group).unwrap().unwrap(), original);
+            }
+            assert_eq!(recover_pending(&s).unwrap(), 0);
             assert!(
                 super::super::actions::reserve_pending(&s)
                     .unwrap()

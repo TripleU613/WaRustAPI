@@ -826,3 +826,38 @@ concurrent mutation atomic with socket write, port native job cancellation,
 authorize revocation, delete uncertain history or replay cancelled work. APK43.72
 result/error callback admission remains the existing prerequisite. No live
 account operation or new APK-runtime observation.
+
+### Unique group-info projection across recovery (2026-11-05)
+
+**Confirmed local defect / corrected offline:** normal group preparation
+required one group child, but shared queued projection/recovery selected the
+first group child from the same reply. A rejected ambiguous result could later
+replace the saved snapshot when recover_pending processed its retained action.
+The offline regression reproduced recovery reporting one applied projection
+for such an ambiguous reply; the direct record_info_reply entry also accepted it.
+
+A shared unique-group selector now rejects multiple outer group elements before
+projection. Queued group-info additionally requires a group to be present.
+Those fixed group-field wire refusals remain unapplied through the existing
+transaction/catch boundary: saved action reply, pending marker, prior snapshot
+and journal are preserved. Repeated recovery does not choose the first group
+or transmit another query. A valid single correlated group still projects once.
+The direct recorder preserves its no-group=false contract and rejects multiple
+groups before any write. Other group action families are not given this new
+outer cardinality rule.
+
+`ambiguous_group_info_cannot_replace_membership_on_recovery` settles and reopens
+queued replies containing duplicate expected groups, expected plus foreign
+group, no group, or a valid single group. Invalid recovery preserves all
+checkpoints/journal, snapshot and retained reply; repeated recovery applies
+nothing and reserve_pending remains empty. The single-group control updates
+the snapshot once. Duplicate direct projection is also refused.
+
+**Evidence / limits:** this aligns shared projection with the existing local
+normal-group exact-one correlation guard. APK37.71 ADs parses selected group
+nodes; that alone does not prove a native outer-IQ cardinality rule. Existing
+participant null-skip/duplicate-map semantics are deliberately retained: an
+initial review found these are supported by ADs.A05 evidence in parse_group,
+so no speculative stricter member parser was added. Native exception/recovery
+parity, every group action and a guarantee against all stale snapshots remain
+unproven. No query replay, live account operation or cache fallback.

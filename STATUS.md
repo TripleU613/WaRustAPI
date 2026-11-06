@@ -1,3 +1,15 @@
+2026-11-05 — **Ambiguous group-info replies stay unapplied across recovery.**
+
+Shared projection now rejects multiple outer group children and missing queued
+group-info data, closing a first-child fallback after normal send validation.
+Invalid recovery preserves saved replies, markers, prior snapshots and journal;
+a valid single correlated group still applies once.
+[Defect, red/green test and scope](docs/protocol/normal-group-outbox.md#unique-group-info-projection-across-recovery-2026-11-05).
+Validation: recovery/direct projection regressions failed before the fix and
+pass afterward. All 1387 workspace/all-feature tests, fmt, strict Clippy,
+CLI/OpenAPI, APK coverage, pinned APK identity and staged checksum/link hygiene
+passed. No live account operation or query replay.
+
 2026-11-05 — **Invalid-directory resume refusal verified through the actual API.**
 
 After reopen, all seven bad-reply/signature cases return no stanza under both
