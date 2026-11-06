@@ -1,0 +1,65 @@
+
+# class: LX/8R7;
+# extends: Ljava/lang/Object;
+
+.method public CK4(VLL)  # .registers 11
+    # full signature: LX/8R7;->CK4(LX/0Tp;Ljava/lang/String;)V
+    0000..0002  const/4  v6, #0x0
+    0002..0008  invoke-static  {v10, v9, v6}, LX/1Xl;->A1Y(Ljava/lang/Object;Ljava/lang/Object;I)Z
+    0008..000a  move-result  v5
+    000a..0010  invoke-virtual  {v9}, LX/0Tp;->A0D()LX/0Tp;
+    0010..0012  move-result-object  v2
+    0012..0018  invoke-static  {v2}, LX/00l;->A05(Ljava/lang/Object;)V
+    0018..001c  const-string  v0, "list"
+    001c..0022  invoke-static  {v2, v0}, LX/0Tp;->A01(LX/0Tp;Ljava/lang/String;)V
+    0022..0028  invoke-static  {v2}, LX/6qD;->A02(LX/0Tp;)LX/80Z;
+    0028..002a  move-result-object  v4
+    002a..002e  const-string  v0, "matched"
+    002e..0034  invoke-virtual  {v2, v0}, LX/0Tp;->A0L(Ljava/lang/String;)Ljava/lang/String;
+    0034..0036  move-result-object  v1
+    0036..003a  const-string  v0, "false"
+    003a..0040  invoke-static  {v1, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    0040..0042  move-result  v0
+    0042..0046  if-eqz  v0, +0x43
+    0046..004a  const-string  v0, "c_dhash"
+    004a..0050  invoke-static  {v2, v0}, LX/6oe;->A18(LX/0Tp;Ljava/lang/String;)Ljava/lang/String;
+    0050..0052  move-result-object  v7
+    0052..0056  iget-object  v0, v8, LX/8R7;->A01:LX/09S;
+    0056..005c  invoke-virtual  {v0}, LX/09S;->A0c()Ljava/lang/String;
+    005c..005e  move-result-object  v2
+    005e..0062  iget-object  v3, v4, LX/80Z;->A03:Ljava/util/Set;
+    0062..0066  iget-object  v1, v8, LX/8R7;->A00:LX/6pA;
+    0066..006a  const-string  v0, "update"
+    006a..0070  invoke-virtual  {v1, v10, v0}, LX/6pA;->A03(Ljava/lang/String;Ljava/lang/String;)Z
+    0070..0072  move-result  v0
+    0072..0076  if-nez  v0, +0x8
+    0076..007a  iget-object  v0, v8, LX/8R7;->A03:LX/7vW;
+    007a..0080  invoke-virtual  {v0}, LX/7vW;->A00()V
+    0080..0082  return-void
+    0082..0088  invoke-static  {v7, v2}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    0088..008a  move-result  v0
+    008a..008e  if-eqz  v0, +0x11
+    008e..0092  const-string  v0, "BlocklistV2SetProtocolHelper/onSuccess/only dhash mis-match."
+    0092..0098  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0098..009c  iget-object  v2, v8, LX/8R7;->A03:LX/7vW;
+    009c..00a0  iget-object  v1, v4, LX/80Z;->A00:LX/878;
+    00a0..00a4  iget-object  v0, v4, LX/80Z;->A01:Ljava/lang/String;
+    00a4..00aa  invoke-virtual  {v2, v1, v0, v3, v6}, LX/7vW;->A01(LX/878;Ljava/lang/String;Ljava/util/Set;Z)V
+    00aa..00ac  return-void
+    00ac..00b0  const-string  v0, "BlocklistV2SetProtocolHelper/onSuccess/dhash and c_dhash mis-match."
+    00b0..00b6  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    00b6..00ba  iget-object  v2, v8, LX/8R7;->A03:LX/7vW;
+    00ba..00be  iget-object  v1, v4, LX/80Z;->A00:LX/878;
+    00be..00c0  const/4  v0, #0x0
+    00c0..00c6  invoke-virtual  {v2, v1, v0, v3, v5}, LX/7vW;->A01(LX/878;Ljava/lang/String;Ljava/util/Set;Z)V
+    00c6..00c8  return-void
+    00c8..00cc  iget-object  v0, v8, LX/8R7;->A00:LX/6pA;
+    00cc..00d2  invoke-virtual  {v0}, LX/6pA;->A02()Z
+    00d2..00d4  move-result  v2
+    00d4..00d8  iget-object  v0, v8, LX/8R7;->A03:LX/7vW;
+    00d8..00dc  iget-object  v1, v4, LX/80Z;->A01:Ljava/lang/String;
+    00dc..00e0  iget-object  v0, v0, LX/7vW;->A00:LX/7vV;
+    00e0..00e6  invoke-virtual  {v0, v1, v2}, LX/7vV;->A00(Ljava/lang/String;Z)V
+    00e6..00e8  return-void
+    # exception table: 0 try range(s)
+.end method

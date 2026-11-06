@@ -1,0 +1,96 @@
+
+# class: LX/7vV;
+# extends: Ljava/lang/Object;
+
+.method public A00(VLZ)  # .registers 10
+    # full signature: LX/7vV;->A00(Ljava/lang/String;Z)V
+    0000..0004  iget-object  v3, v7, LX/7vV;->A0A:LX/2Cl;
+    0004..0008  iget-object  v5, v3, LX/2Cl;->A04:Lcom/whatsapp/infra/core/jid/UserJid;
+    0008..000c  iget-boolean  v2, v3, LX/2Cl;->A0C:Z
+    000c..0010  iget-object  v0, v7, LX/7vV;->A03:LX/05a;
+    0010..0014  iget-object  v1, v0, LX/05a;->A00:LX/00x;
+    0014..001a  invoke-static  {v1}, LX/2L6;->A09(LX/00x;)LX/1dH;
+    001a..001c  move-result-object  v0
+    001c..0022  invoke-virtual  {v0, v3}, LX/1dH;->A0N(LX/2Cl;)V
+    0022..0026  const-string  v0, "BlockListResponseHandler/general_request_success jid="
+    0026..002c  invoke-static  {v0, v5}, LX/2LA;->A1L(Ljava/lang/String;Ljava/lang/Object;)V
+    002c..002e  const/4  v0, #0x1
+    002e..0032  iput-boolean  v0, v7, LX/7vV;->A00:Z
+    0032..0038  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    0038..003a  move-result-object  v6
+    003a..003c  move-object  v4, v6
+    003c..0040  check-cast  v4, LX/1dH;
+    0040..0044  if-eqz  v2, +0x3d
+    0044..0048  if-nez  v9, +0x16
+    0048..004c  iget-object  v0, v4, LX/1dH;->A0G:LX/05a;
+    004c..0052  invoke-static  {v0}, LX/2L8;->A15(LX/05a;)LX/0Ws;
+    0052..0054  move-result-object  v0
+    0054..005a  invoke-virtual  {v0, v5}, LX/0Ws;->A0P(Lcom/whatsapp/infra/core/jid/UserJid;)Ljava/util/List;
+    005a..005c  move-result-object  v0
+    005c..0062  invoke-static  {v0}, LX/07Z;->A1R(Ljava/lang/Iterable;)Ljava/util/Set;
+    0062..0064  move-result-object  v0
+    0064..006a  invoke-static  {v5, v0}, LX/0Ef;->A09(Ljava/lang/Object;Ljava/util/Set;)Ljava/util/Set;
+    006a..006c  move-result-object  v3
+    006c..006e  monitor-enter
+    006e..0070  goto  +0x4
+    0070..0074  sget-object  v3, LX/06e;->A00:LX/06e;
+    0074..0076  goto  -0x4
+    0076..007a  iget-object  v1, v4, LX/1dH;->A0U:Ljava/util/Set;
+    007a..0080  invoke-interface  {v1, v5}, Ljava/util/Set;->add(Ljava/lang/Object;)Z
+    0080..0082  move-result  v0
+    0082..0088  invoke-interface  {v1, v3}, Ljava/util/Set;->addAll(Ljava/util/Collection;)Z
+    0088..008a  monitor-exit
+    008a..008e  if-eqz  v0, +0x53
+    008e..0090  const/4  v2, #0x1
+    0090..0096  invoke-static  {v4, v5, v8, v2}, LX/1dH;->A08(LX/1dH;Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;Z)V
+    0096..009c  invoke-interface  {v3}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    009c..009e  move-result-object  v1
+    009e..00a4  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    00a4..00a6  move-result  v0
+    00a6..00aa  if-eqz  v0, +0x45
+    00aa..00b0  invoke-static  {v1}, LX/6of;->A0e(Ljava/util/Iterator;)Lcom/whatsapp/infra/core/jid/UserJid;
+    00b0..00b2  move-result-object  v0
+    00b2..00b8  invoke-static  {v4, v0, v8, v2}, LX/1dH;->A08(LX/1dH;Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;Z)V
+    00b8..00ba  goto  -0xd
+    00ba..00bc  const/4  v3, #0x0
+    00bc..00c0  if-nez  v9, +0x16
+    00c0..00c4  iget-object  v0, v4, LX/1dH;->A0G:LX/05a;
+    00c4..00ca  invoke-static  {v0}, LX/2L8;->A15(LX/05a;)LX/0Ws;
+    00ca..00cc  move-result-object  v0
+    00cc..00d2  invoke-virtual  {v0, v5}, LX/0Ws;->A0P(Lcom/whatsapp/infra/core/jid/UserJid;)Ljava/util/List;
+    00d2..00d4  move-result-object  v0
+    00d4..00da  invoke-static  {v0}, LX/07Z;->A1R(Ljava/lang/Iterable;)Ljava/util/Set;
+    00da..00dc  move-result-object  v0
+    00dc..00e2  invoke-static  {v5, v0}, LX/0Ef;->A09(Ljava/lang/Object;Ljava/util/Set;)Ljava/util/Set;
+    00e2..00e4  move-result-object  v2
+    00e4..00e6  monitor-enter
+    00e6..00e8  goto  +0x4
+    00e8..00ec  sget-object  v2, LX/06e;->A00:LX/06e;
+    00ec..00ee  goto  -0x4
+    00ee..00f2  iget-object  v1, v4, LX/1dH;->A0U:Ljava/util/Set;
+    00f2..00f8  invoke-interface  {v1, v5}, Ljava/util/Set;->remove(Ljava/lang/Object;)Z
+    00f8..00fa  move-result  v0
+    00fa..0100  invoke-interface  {v1, v2}, Ljava/util/Set;->removeAll(Ljava/util/Collection;)Z
+    0100..0102  monitor-exit
+    0102..0106  if-eqz  v0, +0x17
+    0106..010c  invoke-static  {v4, v5, v8, v3}, LX/1dH;->A08(LX/1dH;Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;Z)V
+    010c..0112  invoke-interface  {v2}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    0112..0114  move-result-object  v1
+    0114..011a  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    011a..011c  move-result  v0
+    011c..0120  if-eqz  v0, +0xa
+    0120..0126  invoke-static  {v1}, LX/6of;->A0e(Ljava/util/Iterator;)Lcom/whatsapp/infra/core/jid/UserJid;
+    0126..0128  move-result-object  v0
+    0128..012e  invoke-static  {v4, v0, v8, v3}, LX/1dH;->A08(LX/1dH;Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;Z)V
+    012e..0130  goto  -0xd
+    0130..0134  iget-object  v1, v7, LX/7vV;->A0D:LX/0Js;
+    0134..0138  iget-object  v0, v7, LX/7vV;->A0F:Ljava/lang/Runnable;
+    0138..013e  invoke-virtual  {v1, v0}, LX/0Js;->CbR(Ljava/lang/Runnable;)V
+    013e..0140  return-void
+    0140..0142  move-exception  v0
+    0142..0144  monitor-exit
+    0144..0146  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 003b..0044 -> 00a0
+    # catch <all> code_units 0077..0080 -> 00a0
+.end method

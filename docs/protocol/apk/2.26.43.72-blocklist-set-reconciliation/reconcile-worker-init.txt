@@ -1,0 +1,16 @@
+
+# class: LX/8ak;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLIZ)  # .registers 7
+    # full signature: LX/8ak;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;IZ)V
+    0000..0004  iput  v5, v0, LX/8ak;->$t:I
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000a..000e  iput-object  v3, v0, LX/8ak;->A00:Ljava/lang/Object;
+    000e..0012  iput-object  v4, v0, LX/8ak;->A03:Ljava/lang/String;
+    0012..0016  iput-boolean  v6, v0, LX/8ak;->A04:Z
+    0016..001a  iput-object  v1, v0, LX/8ak;->A01:Ljava/lang/Object;
+    001a..001e  iput-object  v2, v0, LX/8ak;->A02:Ljava/lang/Object;
+    001e..0020  return-void
+    # exception table: 0 try range(s)
+.end method

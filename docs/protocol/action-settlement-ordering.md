@@ -253,3 +253,13 @@ account operation, automatic retry, checkpoint reset or new outgoing request.
 Validation:1,452 workspace/all-feature tests passed. Strict workspace/all-target/
 all-feature Clippy, formatting, CLI reference regeneration, OpenAPI symbol
 validation, APK coverage freshness and repository hygiene passed. Offline only.
+
+## Unmatched set result projection is not requested-change confirmation (2026-11-06)
+
+[Current blocklist correction](chat-actions.md#unmatched-blocklist-set-results-2026-11-06)
+keeps matched=false set results from mutating the cache/hash. A reconciliation
+warning and inspection marker commit together, count as zero applied changes,
+and do not alter the generic network Ok outcome. No-list fetches retain the
+warning; a later admitted full snapshot clears it atomically. Older inspected
+unmatched replies cannot overwrite that snapshot. Native migration/reconciliation
+and already projected historical cache repair remain explicit limitations.

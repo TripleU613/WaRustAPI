@@ -1,0 +1,32 @@
+
+# class: LX/7vW;
+# extends: Ljava/lang/Object;
+
+.method public A01(VLLLZ)  # .registers 13
+    # full signature: LX/7vW;->A01(LX/878;Ljava/lang/String;Ljava/util/Set;Z)V
+    0000..0002  const/4  v6, #0x1
+    0002..0004  move-object  v3, v9
+    0004..0006  move-object  v2, v11
+    0006..000c  invoke-static  {v11, v6, v9}, LX/1Xl;->A1P(Ljava/lang/Object;ILjava/lang/Object;)V
+    000c..0010  iget-object  v4, v8, LX/7vW;->A00:LX/7vV;
+    0010..0014  iget-object  v0, v4, LX/7vV;->A0A:LX/2Cl;
+    0014..0018  iget-boolean  v1, v0, LX/2Cl;->A0C:Z
+    0018..001c  iget-object  v0, v0, LX/2Cl;->A04:Lcom/whatsapp/infra/core/jid/UserJid;
+    001c..0022  invoke-interface  {v11, v0}, Ljava/util/Set;->contains(Ljava/lang/Object;)Z
+    0022..0024  move-result  v0
+    0024..0028  if-eqz  v1, +0x14
+    0028..002c  if-nez  v0, +0x14
+    002c..002e  const/4  v0, #0x0
+    002e..0032  iput-boolean  v0, v4, LX/7vV;->A00:Z
+    0032..0036  iget-object  v0, v4, LX/7vV;->A0D:LX/0Js;
+    0036..003a  new-instance  v1, LX/8ak;
+    003a..003c  move-object  v5, v10
+    003c..003e  move  v7, v12
+    003e..0044  invoke-direct/range  {v1..v7}, LX/8ak;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;IZ)V
+    0044..004a  invoke-virtual  {v0, v1}, LX/0Js;->CbR(Ljava/lang/Runnable;)V
+    004a..004c  return-void
+    004c..0050  if-nez  v0, -0x10
+    0050..0052  const/4  v0, #0x1
+    0052..0054  goto  -0x12
+    # exception table: 0 try range(s)
+.end method

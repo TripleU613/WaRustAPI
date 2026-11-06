@@ -1,0 +1,28 @@
+classes.dex  LX/19N;->A09(VLI)
+  read opcode 0x54, dex byte offset: 0x833256
+classes2.dex  LX/1dH;-><init>(V)
+  write opcode 0x5b, dex byte offset: 0x1c2bc6
+classes2.dex  LX/1dH;->A01(LL)
+  read opcode 0x54, dex byte offset: 0x1c2c5e
+classes2.dex  LX/1dH;->A0C(L)
+  read opcode 0x54, dex byte offset: 0x1c4152
+classes2.dex  LX/1dH;->A0D(L)
+  read opcode 0x54, dex byte offset: 0x1c418e
+classes2.dex  LX/1dH;->A0E(V)
+  read opcode 0x54, dex byte offset: 0x1c424a
+classes2.dex  LX/1dH;->A0O(VLLLL)
+  read opcode 0x54, dex byte offset: 0x1c4b2a
+classes2.dex  LX/1dH;->A0P(VLL)
+  read opcode 0x54, dex byte offset: 0x1c4e9a
+classes2.dex  LX/1dH;->A0T(ZL)
+  read opcode 0x54, dex byte offset: 0x1c506a
+classes5.dex  LX/7LA;->A0k(VL)
+  read opcode 0x54, dex byte offset: 0x2e59e4
+classes5.dex  LX/7vV;->A00(VLZ)
+  read opcode 0x54, dex byte offset: 0x3c7efe
+classes5.dex  LX/7vV;->A00(VLZ)
+  read opcode 0x54, dex byte offset: 0x3c7f76
+classes5.dex  LX/8be;->run(V)
+  read opcode 0x54, dex byte offset: 0x4fa560
+classes5.dex  LX/8be;->run(V)
+  read opcode 0x54, dex byte offset: 0x4fa56c

@@ -1,0 +1,30 @@
+
+# class: LX/1dH;
+# extends: Ljava/lang/Object;
+
+.method public A0E(V)  # .registers 5
+    # full signature: LX/1dH;->A0E()V
+    0000..0002  monitor-enter
+    0002..0006  iget-object  v0, v4, LX/1dH;->A0U:Ljava/util/Set;
+    0006..000c  invoke-static  {v0}, LX/07Z;->A1S(Ljava/lang/Iterable;)Ljava/util/Set;
+    000c..000e  move-result-object  v3
+    000e..0014  invoke-interface  {v0}, Ljava/util/Set;->clear()V
+    0014..001a  invoke-virtual  {v4}, LX/1dH;->A0F()V
+    001a..001e  iget-object  v0, v4, LX/1dH;->A0D:LX/05a;
+    001e..0022  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0022..0028  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0028..002a  move-result-object  v2
+    002a..002e  check-cast  v2, LX/EeV;
+    002e..0030  const/4  v1, #0x1
+    0030..0034  new-instance  v0, LX/8bc;
+    0034..003a  invoke-direct  {v0, v4, v1}, LX/8bc;-><init>(Ljava/lang/Object;I)V
+    003a..0040  invoke-virtual  {v2, v0}, LX/EeV;->A01(Ljava/lang/Runnable;)V
+    0040..0042  monitor-exit
+    0042..0048  invoke-static  {v4, v3}, LX/1dH;->A09(LX/1dH;Ljava/util/Collection;)V
+    0048..004a  return-void
+    004a..004c  move-exception  v0
+    004c..004e  monitor-exit
+    004e..0050  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0001..0020 -> 0025
+.end method

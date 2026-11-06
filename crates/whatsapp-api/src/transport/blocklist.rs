@@ -16,10 +16,11 @@
 //! `dhash`; each `item` child has `jid` (fallback `pn_jid`), `action` (default
 //! `block`), `active` (default `false`), optional `display_name` and
 //! `username`. The client replaces its list with the `action=block` items and
-//! saves the new `dhash`. A set reply is not traced past `type=result` plus a
-//! possibly-updated `dhash` (`LX/1ep.A08`); this module tolerates the `dhash`
-//! attribute on the `iq` itself or on any of its immediate children, since the
-//! exact placement is **unknown**.
+//! saves the new `dhash`. Current43.72 `8R7.CK4` requires a `list` and routes
+//! literal `matched=false` into reconciliation rather than the requested change.
+//! This adapter holds those results without cache/hash mutation and exposes a
+//! reconciliation warning. Historical root/immediate-child `dhash` compatibility
+//! is retained; full current first-list admission and migration remain unported.
 //!
 //! None of this is live-verified; nothing here has been exercised against a
 //! live session.
@@ -34,6 +35,7 @@ use std::collections::BTreeSet;
 
 const BLOCKED_PREFIX: &str = "blocked:";
 const DHASH_KEY: &str = "blocklist-dhash";
+const RECONCILIATION_KEY: &[u8] = b"blocklist-reconciliation-required";
 const INGESTED_PREFIX: &str = "blocklist-ingested:";
 
 fn invalid(reason: &'static str) -> Error {
@@ -67,6 +69,15 @@ pub fn forget_dhash(store: &ProtocolStore) -> Result<()> {
 
 fn saved_dhash(store: &ProtocolStore) -> Result<Option<String>> {
     store.read(|tx| tx.get_json(Table::Checkpoints, DHASH_KEY.as_bytes(), 1))
+}
+
+/// Whether a set result needs reconciliation before the cache can be current.
+/// This is local projection state, not a server refusal or permission to resend.
+pub fn reconciliation_required(store: &ProtocolStore) -> Result<bool> {
+    store
+        .read(|tx| tx.get_json(Table::Checkpoints, RECONCILIATION_KEY, 1))
+        .map(|saved: Option<bool>| saved.unwrap_or(false))
+        .map_err(redact_projection_error)
 }
 
 /// Persisted row for one blocked contact.
@@ -320,6 +331,9 @@ fn apply_fetch_in(tx: &mut crate::store::WriteTx<'_>, reply: &Node) -> Result<()
     for key in stale {
         tx.delete(Table::Checkpoints, &key)?;
     }
+    // Only an admitted full snapshot repairs an unresolved set reconciliation.
+    // A no-list/unchanged reply returned above must retain the warning.
+    tx.delete(Table::Checkpoints, RECONCILIATION_KEY)?;
     Ok(())
 }
 
@@ -328,7 +342,7 @@ fn apply_block_result_in(
     request: &Node,
     action: &str,
     reply: &Node,
-) -> Result<()> {
+) -> Result<bool> {
     let mut items = request
         .child_nodes()
         .iter()
@@ -341,6 +355,19 @@ fn apply_block_result_in(
     }
     let target =
         user_attr(item, "jid")?.ok_or_else(|| invalid("saved block request has no target"))?;
+    // APK43.72 8R7.CK4 routes literal matched=false through 7vW.A01,
+    // not the ordinary requested-change success path. Its full migration/hash
+    // reconciliation is unported: preserve this cache and never replay the set.
+    for list in reply
+        .child_nodes()
+        .iter()
+        .filter(|node| node.description == "list")
+    {
+        if text_attr(list, "matched")? == Some("false") {
+            tx.put_json(Table::Checkpoints, RECONCILIATION_KEY, 1, &true)?;
+            return Ok(false);
+        }
+    }
     let key = blocked_key(&target.to_string());
     let dhash = extract_dhash(reply)?;
     if action == "block" {
@@ -364,7 +391,7 @@ fn apply_block_result_in(
     if let Some(dhash) = dhash {
         tx.put_json(Table::Checkpoints, DHASH_KEY.as_bytes(), 1, &dhash)?;
     }
-    Ok(())
+    Ok(true)
 }
 
 fn ingest_action_in(tx: &mut crate::store::WriteTx<'_>, id: &str, sequence: u64) -> Result<usize> {
@@ -403,10 +430,10 @@ fn ingest_action_in(tx: &mut crate::store::WriteTx<'_>, id: &str, sequence: u64)
         }
         if outcome.kind == "blocklist" {
             apply_fetch_in(tx, &reply)?;
+            1
         } else {
-            apply_block_result_in(tx, &request, &outcome.kind, &reply)?;
+            usize::from(apply_block_result_in(tx, &request, &outcome.kind, &reply)?)
         }
-        1
     } else {
         0
     };
@@ -417,6 +444,8 @@ fn ingest_action_in(tx: &mut crate::store::WriteTx<'_>, id: &str, sequence: u64)
 /// Apply newly sequenced settled fetch/block/unblock replies in receive order.
 /// Projection and once-only marker commit together. Legacy unsequenced replies
 /// remain inspectable but are not replayed or marked; chronology is unknown.
+/// Unmatched set results are marked inspected without applying the requested
+/// change/hash, and retain a reconciliation warning until a later full snapshot.
 pub fn ingest(store: &ProtocolStore) -> Result<usize> {
     let mut applied = 0;
     for (outcome, _) in super::actions::settled_for_kinds(store, &["blocklist", "block", "unblock"])
@@ -627,6 +656,141 @@ mod tests {
         super::super::actions::record_reply(&s, &reply2).unwrap();
         ingest(&s).unwrap();
         assert!(blocked(&s).unwrap().is_empty());
+    }
+
+    #[test]
+    fn unmatched_set_results_never_apply_the_requested_change_or_hash_after_reopen() {
+        for action in ["block", "unblock"] {
+            for client_hash in [Some("before"), Some("different"), None] {
+                let (dir, s) = store();
+                let other = Jid::parse("15555550199@s.whatsapp.net").unwrap();
+                let initial = queue_fetch(&s).unwrap();
+                super::super::actions::reserve_pending(&s).unwrap();
+                let mut items = vec![Node::new("item").attr("jid", other.clone())];
+                if action == "unblock" {
+                    items.push(Node::new("item").attr("jid", phone()));
+                }
+                super::super::actions::record_reply(&s, &fetch_reply(&initial, "before", items))
+                    .unwrap();
+                assert_eq!(ingest(&s).unwrap(), 1);
+                let before = blocked(&s).unwrap();
+                let cache_bytes = |store: &ProtocolStore| {
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap()
+                        .into_iter()
+                        .filter(|(key, _)| {
+                            key.starts_with(BLOCKED_PREFIX.as_bytes())
+                                || key == DHASH_KEY.as_bytes()
+                        })
+                        .collect::<Vec<_>>()
+                };
+                let before_cache = cache_bytes(&s);
+                let id = if action == "block" {
+                    queue_block(&s, &phone())
+                } else {
+                    queue_unblock(&s, &phone())
+                }
+                .unwrap();
+                super::super::actions::reserve_pending(&s).unwrap();
+                let mut list = Node::new("list")
+                    .attr("matched", "false")
+                    .attr("dhash", "PRIVATE-UNADOPTED-HASH");
+                if let Some(hash) = client_hash {
+                    list = list.attr("c_dhash", hash);
+                }
+                if action == "unblock" {
+                    list = list.children(vec![Node::new("item").attr("jid", phone())]);
+                }
+                let reply = Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", "result")
+                    .children(vec![list]);
+                assert!(super::super::actions::record_reply(&s, &reply).unwrap());
+                let outcome = super::super::actions::outcomes(&s)
+                    .unwrap()
+                    .into_iter()
+                    .find(|o| o.id == id)
+                    .unwrap();
+                assert_eq!(outcome.status, super::super::actions::ActionStatus::Ok);
+                let head = s.journal_head().unwrap();
+                let cut: Result<()> = s.write(|tx| {
+                    assert_eq!(
+                        ingest_action_in(tx, &id, outcome.settlement_sequence.unwrap())?,
+                        0
+                    );
+                    Err(Error::Cancelled)
+                });
+                assert!(cut.is_err());
+                assert!(!reconciliation_required(&s).unwrap());
+                assert_eq!(s.journal_head().unwrap(), head);
+                assert!(
+                    s.read(|tx| tx.get(Table::Checkpoints, ingested_key(&id).as_bytes(), 1))
+                        .unwrap()
+                        .is_none()
+                );
+                assert_eq!(ingest(&s).unwrap(), 0);
+                assert!(reconciliation_required(&s).unwrap());
+                assert_eq!(blocked(&s).unwrap(), before);
+                assert_eq!(cache_bytes(&s), before_cache);
+                assert_eq!(saved_dhash(&s).unwrap().as_deref(), Some("before"));
+                let head = s.journal_head().unwrap();
+                assert_eq!(ingest(&s).unwrap(), 0);
+                assert_eq!(s.journal_head().unwrap(), head);
+                drop(s);
+                let s = reopen(dir.path());
+                assert_eq!(cache_bytes(&s), before_cache);
+                assert!(reconciliation_required(&s).unwrap());
+                assert_eq!(ingest(&s).unwrap(), 0);
+                assert!(
+                    super::super::actions::reserve_pending(&s)
+                        .unwrap()
+                        .is_empty()
+                );
+                // An unchanged/no-list fetch cannot repair an unresolved cache.
+                let unchanged = queue_fetch(&s).unwrap();
+                super::super::actions::reserve_pending(&s).unwrap();
+                super::super::actions::record_reply(
+                    &s,
+                    &Node::new("iq").attr("id", unchanged).attr("type", "result"),
+                )
+                .unwrap();
+                assert_eq!(ingest(&s).unwrap(), 1);
+                assert!(reconciliation_required(&s).unwrap());
+                // A later explicit supported snapshot replaces the cache and clears the hold.
+                let refresh = queue_fetch(&s).unwrap();
+                super::super::actions::reserve_pending(&s).unwrap();
+                super::super::actions::record_reply(
+                    &s,
+                    &fetch_reply(
+                        &refresh,
+                        "reconciled",
+                        vec![Node::new("item").attr("jid", other.clone())],
+                    ),
+                )
+                .unwrap();
+                assert_eq!(ingest(&s).unwrap(), 1);
+                assert!(!reconciliation_required(&s).unwrap());
+                assert_eq!(
+                    blocked(&s)
+                        .unwrap()
+                        .iter()
+                        .map(|row| row.jid.clone())
+                        .collect::<Vec<_>>(),
+                    vec![other.to_string()]
+                );
+                assert_eq!(saved_dhash(&s).unwrap().as_deref(), Some("reconciled"));
+                drop(s);
+                let s = reopen(dir.path());
+                assert_eq!(ingest(&s).unwrap(), 0);
+                assert!(!reconciliation_required(&s).unwrap());
+                assert!(
+                    super::super::actions::reserve_pending(&s)
+                        .unwrap()
+                        .is_empty()
+                );
+            }
+        }
     }
 
     #[test]

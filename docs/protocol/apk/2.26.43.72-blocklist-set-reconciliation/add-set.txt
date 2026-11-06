@@ -1,0 +1,21 @@
+
+# class: LX/1dH;
+# extends: Ljava/lang/Object;
+
+.method public A0P(VLL)  # .registers 4
+    # full signature: LX/1dH;->A0P(Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;)V
+    0000..0002  monitor-enter
+    0002..0006  iget-object  v0, v1, LX/1dH;->A0U:Ljava/util/Set;
+    0006..000c  invoke-interface  {v0, v2}, Ljava/util/Set;->add(Ljava/lang/Object;)Z
+    000c..000e  move-result  v0
+    000e..0010  monitor-exit
+    0010..0014  if-eqz  v0, +0x6
+    0014..0016  const/4  v0, #0x1
+    0016..001c  invoke-static  {v1, v2, v3, v0}, LX/1dH;->A08(LX/1dH;Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;Z)V
+    001c..001e  return-void
+    001e..0020  move-exception  v0
+    0020..0022  monitor-exit
+    0022..0024  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0001..0007 -> 000f
+.end method

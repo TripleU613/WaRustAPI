@@ -2416,29 +2416,68 @@
       "BlockList": {
         "type": "object",
         "required": [
-          "entries"
+          "ingested",
+          "reconciliation_required",
+          "fetch_queued_id",
+          "fetch_note",
+          "blocked"
         ],
         "properties": {
-          "hash": {
+          "ingested": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of settled actions projected in this local inspection. Unmatched set results count zero."
+          },
+          "reconciliation_required": {
+            "type": "boolean",
+            "description": "A newly inspected matched=false block/unblock result left the cache unresolved. Cleared only by a later admitted full snapshot, not no-list/unchanged replies. False is not proof of global native freshness or repair of historical already-inspected results."
+          },
+          "fetch_queued_id": {
             "type": [
               "string",
               "null"
             ],
-            "description": "Server hash of the block list for change detection"
+            "description": "ID of an explicitly queued refresh; queueing is not transmission."
           },
-          "entries": {
+          "fetch_note": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Existing queued-operation note, absent when no refresh was requested."
+          },
+          "blocked": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "object",
+              "required": [
+                "jid",
+                "display_name",
+                "username"
+              ],
+              "properties": {
+                "jid": {
+                  "type": "string",
+                  "description": "Masked cached contact JID."
+                },
+                "display_name": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "username": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
             },
-            "description": "Blocked contact JIDs (masked for privacy)"
-          },
-          "refresh_queued": {
-            "type": "boolean",
-            "description": "Whether a block list refresh has been queued"
+            "description": "Cached rows, not a confirmation of the last requested change."
           }
         },
-        "description": "Local copy of the server block list"
+        "description": "Actual CLI blocklist JSON shape. Corrects the previous entries/hash/refresh_queued schema, which did not describe this command output. CLI-only local projection/inspection, no HTTP serving or live validation."
       },
       "BanAppealResult": {
         "type": "object",
@@ -5430,7 +5469,7 @@
           "Chat Actions"
         ],
         "summary": "Show the saved block list, optionally queuing a fetch",
-        "description": "Show the saved block list (offline, numbers masked), optionally queuing a fetch via a query refresh parameter.",
+        "description": "Show the saved block list (offline, numbers masked), optionally queuing a fetch via a query refresh parameter. A settled block/unblock result with list matched=false is inspected without applying the requested target or reply hash. JSON reconciliation_required and a text warning expose this local cache uncertainty; only a later admitted full fetch snapshot clears it. No-list replies retain the warning. No automatic request, resend or native migration reconciliation is added. Historical already-projected caches require an explicit full refresh. Evidence docs/protocol/chat-actions.md#unmatched-blocklist-set-results-2026-11-06.",
         "operationId": "blocklist",
         "x-cli": "whatsapp-cli blocklist",
         "x-transport": [
@@ -5487,7 +5526,8 @@
         },
         "x-library": [
           "whatsapp_api::transport::blocklist::ingest",
-          "whatsapp_api::transport::blocklist::blocked"
+          "whatsapp_api::transport::blocklist::blocked",
+        "whatsapp_api::transport::blocklist::reconciliation_required"
         ]
       }
     },

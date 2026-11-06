@@ -1049,3 +1049,50 @@ wait enforcement, live operations or complete native integrity-policy claim.
 Repair now uses actions::view_in_write to read current action, request and reply in the same transaction as history/status writes. It requires contact-check kind, Ok status, the existing canonical single-phone request correlation validator, and an IQ result with matching ID. It reuses select_contact_reply to require unique usync/list and exactly one qualifying original-number user. Existing consumed-marker, history, protocol success, matching status, conflict and once-only rules remain. Invalid state refuses before any write; no unknown write is replayed.
 
 Regression lid_repair_revalidates_saved_request_and_reply_without_mutation_after_reopen exercises nine saved-state mutations: request target/ID, reply ID/type/root, duplicate usync/list, kind and status. Every refusal preserves the complete checkpoint snapshot before and after reopen and emits no tested private identifiers. The prior successful AD_JID-zero repair test still verifies one repair, repeat false, history, timestamp and conflict controls. This is offline contact metadata integrity, not a new native wire requirement or authenticated alias/adoption capability. No account operation, request, retry or deadline change. The preceding APK missing-LID route research remains incomplete at final wire/profile and mapping authority; those gaps do not justify widening this local repair.
+
+## Unmatched blocklist set results (2026-11-06)
+
+**Confirmed current pinned mismatch / correction:** [complete set-success,
+reconciliation worker/constructor, shared set sources and REA Evidence](apk/2.26.43.72-blocklist-set-reconciliation/README.md)
+show8R7.CK4 routes list matched=false through migration admission and hash/set
+reconciliation. It does not unconditionally apply the requested block/unblock.
+Rust had applied every settled result to its immutable requested target and
+adopted the reply hash, potentially fabricating a blocked/unblocked cache state.
+
+The projector now preserves rows/hash for literal matched=false and atomically
+records reconciliation_required=true plus its once-only inspection marker. It
+returns zero applied changes for that action, while the generic action outcome
+stays Ok for the received IQ result. Business projection, server result and
+network/refusal status remain distinct. No old request is reset or resent.
+CLI blocklist JSON adds reconciliation_required; text warns that the cached
+list needs reconciliation. Existing --refresh --full can explicitly queue a
+full fetch. The read-only library helper exposes the same Boolean.
+
+A later admitted full fetch snapshot replaces rows/hash and clears the warning
+in the same transaction. No-list/unchanged fetches, merely queuing a fetch or
+forgetting the hash cannot clear it. Inspection markers prevent an old unmatched
+set result being projected after that repair. A cut before commit leaves both
+warning and marker absent. Stored source action/reply remain inspectable.
+
+Regression unmatched_set_results_never_apply_the_requested_change_or_hash_after_reopen
+failed before the guard (projector returned1 instead of0). It covers block and
+unblock with equal/different/missing c_dhash, unchanged cache/hash, transaction
+abort and journal preservation, once-only inspection, reopen, no-list warning
+retention, later snapshot repair, and no resend. All actions and replies are
+synthetic local fixtures; no real block, account fetch or network operation.
+
+**Limits:** full native conditional snapshot/migration/alias reconciliation and
+automatic fetch policy remain unported. Already inspected historical bad
+projections are not rewound; a fresh admitted full fetch is needed to correct
+such a cache. Historical root-hash/no-list set compatibility is retained; full
+current first-list admission is still a separate gap. The shared native A0U
+source has multiple writers/alias paths, so no new played-receipt block guard
+is inferred from an unproven globally equivalent Rust cache. Source census
+and positive set-success/replacement paths are retained, not called optimistic
+pre-send state without evidence. Zero bans/live correctness remain unproven.
+
+Validation:1,516 workspace tests pass (9 result suites, four test threads);
+strict workspace/all-target/all-feature Clippy, formatting, CLI reference
+regeneration, OpenAPI library-symbol coverage, APK coverage freshness and
+repository hygiene pass. Thirteen selected DEX methods/censuses reproduce
+byte-for-byte; APK subject hash, complete REA source and bundle checksums match.

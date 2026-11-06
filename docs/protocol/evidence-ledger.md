@@ -1,3 +1,12 @@
+2026-11-06 — **Unmatched blocklist results no longer falsely change the cache.**
+
+Pinned set callback diverts list matched=false into reconciliation. Rust now
+preserves blocked rows/hash, records a visible durable reconciliation warning,
+and marks the result inspected atomically without replaying the set. An admitted
+later full fetch repairs the cache; no-list replies cannot clear the warning.
+[Evidence, regression and limits](chat-actions.md#unmatched-blocklist-set-results-2026-11-06).
+1,516 workspace tests (four threads), strict Clippy and repository gates pass.
+
 2026-11-06 — **Automatic direct played receipts now honor known-disabled privacy.**
 
 Pinned played/played-self selection exposed an unconditional Rust played queue.

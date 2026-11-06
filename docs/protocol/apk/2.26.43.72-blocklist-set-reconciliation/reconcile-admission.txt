@@ -1,0 +1,28 @@
+
+# class: LX/6pA;
+# extends: Ljava/lang/Object;
+
+.method public A03(ZLL)  # .registers 5
+    # full signature: LX/6pA;->A03(Ljava/lang/String;Ljava/lang/String;)Z
+    0000..0002  const/4  v1, #0x1
+    0002..0006  iget-object  v0, v2, LX/6pA;->A00:LX/05a;
+    0006..000c  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    000c..000e  move-result-object  v0
+    000e..0012  check-cast  v0, LX/3BU;
+    0012..0018  invoke-virtual  {v0}, LX/3BU;->A01()Z
+    0018..001a  move-result  v0
+    001a..001e  if-ne  v0, v1, +0x3
+    001e..0020  return  v1
+    0020..0024  if-eqz  v0, +0x9
+    0024..0028  const-string  v0, "LidBlocklist/unexpected_pn_blocklist"
+    0028..002e  invoke-static  {v2, v0, v3, v4}, LX/6pA;->A00(LX/6pA;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+    002e..0030  const/4  v0, #0x0
+    0030..0032  return  v0
+    0032..0036  iget-object  v0, v2, LX/6pA;->A03:LX/05a;
+    0036..003c  invoke-static  {v0}, LX/2LA;->A1S(LX/05a;)Z
+    003c..003e  move-result  v0
+    003e..0042  if-nez  v0, -0x8
+    0042..0046  const-string  v0, "LidBlocklist/unmigrated_chat_db"
+    0046..0048  goto  -0xf
+    # exception table: 0 try range(s)
+.end method

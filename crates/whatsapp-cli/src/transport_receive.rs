@@ -1292,6 +1292,8 @@ pub(super) fn blocklist_status(cli: &super::Cli, refresh: bool, full: bool) -> R
         create: false,
     })?;
     let applied = whatsapp_api::transport::blocklist::ingest(&store)?;
+    let reconciliation_required =
+        whatsapp_api::transport::blocklist::reconciliation_required(&store)?;
     if full {
         whatsapp_api::transport::blocklist::forget_dhash(&store)?;
     }
@@ -1316,6 +1318,7 @@ pub(super) fn blocklist_status(cli: &super::Cli, refresh: bool, full: bool) -> R
             "{}",
             serde_json::to_string_pretty(&serde_json::json!({
                 "ingested": applied,
+                "reconciliation_required": reconciliation_required,
                 "fetch_queued_id": fetch_id,
                 "fetch_note": fetch_id.as_ref().map(|_| QUEUED_NOTE),
                 "blocked": masked,
@@ -1328,6 +1331,11 @@ pub(super) fn blocklist_status(cli: &super::Cli, refresh: bool, full: bool) -> R
         "blocklist: {applied} settled action(s) applied; {} blocked contact(s)",
         contacts.len()
     );
+    if reconciliation_required {
+        println!(
+            "blocklist: cached list needs reconciliation; --refresh --full queues a full fetch"
+        );
+    }
     if let Some(id) = &fetch_id {
         println!("blocklist: fetch id={id}; {QUEUED_NOTE}");
     }
