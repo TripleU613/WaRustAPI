@@ -224,7 +224,9 @@ pub fn inspect(store: &ProtocolStore, peer: &Jid) -> Result<Option<DirectoryInsp
             result.failure = Some(DirectoryReplyFailure::Envelope);
             return Ok(Some(result));
         }
-        if action.status == actions::ActionStatus::Error {
+        // Parse original evidence independently of the generic action status:
+        // older records classified root/foreign errors as whole-query failure.
+        {
             let root_errors: Vec<_> = reply
                 .child_nodes()
                 .iter()
@@ -236,13 +238,11 @@ pub fn inspect(store: &ProtocolStore, peer: &Jid) -> Result<Option<DirectoryInsp
                     .and_then(super::mex::java_decimal_long)
                     .and_then(|code| i32::try_from(code).ok())
             };
-            if root_errors.len() > 1 {
-                result.failure = Some(DirectoryReplyFailure::ErrorNode);
-                return Ok(Some(result));
-            }
-            if reply.get_attr("type").and_then(|v| v.as_text()) == Some("error")
-                || !root_errors.is_empty()
-            {
+            if reply.get_attr("type").and_then(|v| v.as_text()) == Some("error") {
+                if root_errors.len() > 1 {
+                    result.failure = Some(DirectoryReplyFailure::ErrorNode);
+                    return Ok(Some(result));
+                }
                 result.status = DirectoryStatus::ServerRefused;
                 result.server_error_code = root_errors.first().and_then(|error| code(error));
                 return Ok(Some(result));
@@ -282,13 +282,15 @@ pub fn inspect(store: &ProtocolStore, peer: &Jid) -> Result<Option<DirectoryInsp
                 .iter()
                 .filter(|node| node.description == "error")
                 .collect();
-            if errors.len() != 1 {
+            if errors.len() > 1 {
                 result.failure = Some(DirectoryReplyFailure::ErrorNode);
                 return Ok(Some(result));
             }
-            result.status = DirectoryStatus::ServerRefused;
-            result.server_error_code = code(errors[0]);
-            return Ok(Some(result));
+            if let Some(error) = errors.first() {
+                result.status = DirectoryStatus::ServerRefused;
+                result.server_error_code = code(error);
+                return Ok(Some(result));
+            }
         }
         let Ok(bundle) = crate::signal::direct::prekey_bundle(&reply, peer) else {
             result.failure = Some(DirectoryReplyFailure::Bundle);
@@ -582,6 +584,82 @@ mod tests {
     }
 
     #[test]
+    fn mixed_root_errors_preserve_selected_bundle_and_read_only_inspection() {
+        for historical in [false, true] {
+            for first in [false, true] {
+                for valid in [false, true] {
+                    let dir = tempfile::tempdir().unwrap();
+                    let path = dir.path().join("mixed-root.redb");
+                    let store = open(&path);
+                    let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+                    let identity = IdentityKeyPair::generate(&mut rand::rng());
+                    let id = queue(&store, &peer, false).unwrap();
+                    actions::reserve_pending(&store).unwrap();
+                    let reply = signed_reply(&peer, &id, &identity, valid);
+                    let list = reply.child("list").unwrap().clone();
+                    let error = Node::new("error").attr("code", "503");
+                    let reply = reply.children(if first {
+                        vec![error, list]
+                    } else {
+                        vec![list, error]
+                    });
+                    assert!(actions::record_reply(&store, &reply).unwrap());
+                    assert_eq!(
+                        actions::outcomes(&store).unwrap()[0].status,
+                        actions::ActionStatus::Ok
+                    );
+                    if historical {
+                        // Reproduce old persisted classification without changing saved reply bytes.
+                        store
+                            .write(|tx| {
+                                let key = format!("action-outbox:{id}");
+                                let mut row: serde_json::Value =
+                                    tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?.unwrap();
+                                row["status"] = serde_json::json!("error");
+                                row["error_code"] = serde_json::json!(503);
+                                tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &row)
+                            })
+                            .unwrap();
+                    }
+                    drop(store);
+                    let store = open(&path);
+                    let snapshot = || {
+                        store
+                            .read(|tx| {
+                                Ok((
+                                    tx.scan_after(Table::Checkpoints, 1, None, 256)?,
+                                    tx.scan_after(Table::PeerIdentities, 1, None, 256)?,
+                                    tx.scan_after(Table::SignalSessions, 1, None, 256)?,
+                                ))
+                            })
+                            .unwrap()
+                    };
+                    let before = snapshot();
+                    let head = store.journal_head().unwrap();
+                    let view = inspect(&store, &peer).unwrap().unwrap();
+                    assert_eq!(
+                        view.status,
+                        if valid {
+                            DirectoryStatus::VerifiedBundle
+                        } else {
+                            DirectoryStatus::InvalidSignature
+                        }
+                    );
+                    assert_eq!(view.signature_valid, Some(valid));
+                    assert_eq!(view.server_error_code, None);
+                    assert_eq!(view.failure, None);
+                    assert_eq!(before, snapshot());
+                    assert_eq!(head, store.journal_head().unwrap());
+                    assert!(!serde_json::to_string(&view).unwrap().contains(&peer.user));
+                    assert!(actions::reserve_pending(&store).unwrap().is_empty());
+                    assert_eq!(actions::reply(&store, &id).unwrap(), Some(reply));
+                    assert_eq!(queue(&store, &peer, true).is_ok(), valid && !historical);
+                }
+            }
+        }
+    }
+
+    #[test]
     fn ambiguous_directory_bundle_stays_invalid_across_reopen_without_refresh_or_pin_changes() {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("ambiguous.redb");
@@ -859,6 +937,11 @@ mod tests {
         encoded.kind = JidKind::AgentDevice;
         let cases = vec![
             (
+                vec![error("503"), list(vec![selected.clone()]), error("500")],
+                None,
+                Some(480),
+            ),
+            (
                 vec![list(vec![other.clone(), selected.clone()])],
                 None,
                 Some(480),
@@ -902,12 +985,12 @@ mod tests {
                     other,
                     Node::new("user").attr("jid", peer.clone()),
                 ])],
-                Some(DirectoryReplyFailure::ErrorNode),
+                Some(DirectoryReplyFailure::Bundle),
                 None,
             ),
             (
                 vec![error("480"), error("503")],
-                Some(DirectoryReplyFailure::ErrorNode),
+                Some(DirectoryReplyFailure::UserSet),
                 None,
             ),
         ];

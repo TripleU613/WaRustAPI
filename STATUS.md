@@ -1,3 +1,9 @@
+Peer directory diagnostics now classify saved reply context independently of
+generic action status. Typed peer-key results ignore root extension errors;
+selected-user refusals and signature verdicts remain distinct. Historical
+Error records stay unchanged and do not gain refresh authority.
+[Audit](docs/protocol/peer-identity.md#peer-directory-inspection-uses-reply-context-2026-11-06).
+
 Directory-key adoption now follows APK outer IQ type: a stray root error does
 not override a valid result list. Per-user refusal and crypto guards remain.
 Diagnostic mixed-result attribution is a separate open gap.

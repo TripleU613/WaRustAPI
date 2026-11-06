@@ -719,6 +719,14 @@ pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
         let privacy_token_result = kind == Some("result")
             && row.kind == super::token_issue::ACTION_KIND
             && super::token_issue::is_issue_request(&request);
+        // APK43.72 1rA.A03 dispatches result to Dxh.A02, which reads
+        // per-user errors under list, not root extensions. Keep this scoped to
+        // the typed peer directory producer; app-state has different semantics.
+        let peer_directory_result = kind == Some("result")
+            && row.kind == "peer_keys"
+            && request.get_attr("xmlns").and_then(|v| v.as_text()) == Some("encrypt")
+            && request.get_attr("type").and_then(|v| v.as_text()) == Some("get")
+            && request.child("key").is_some();
         // An `iq type=result` can still carry a refusal further in. App-state
         // answers per collection: `<sync><collection type="error"><error
         // code="409" text="conflict"/>`, observed live 2026-09-24. Reading only
@@ -739,7 +747,11 @@ pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
                         .then(|| child.child("error"))
                         .flatten()
                     })
-                    .or_else(|| node.child("error"))
+                    .or_else(|| {
+                        (!peer_directory_result)
+                            .then(|| node.child("error"))
+                            .flatten()
+                    })
             };
         if kind == Some("result") && inner_error.is_none() {
             if privacy_token_result {

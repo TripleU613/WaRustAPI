@@ -2802,3 +2802,15 @@ JVM-case regressions cover root/user attribution, redaction, reopen and no refre
 or resend. Other inspectors/generic action fields remain unchanged. Full native
 registration, duplicate/missing-device and durable retry ownership remain open.
 [Source, API consequence and limits](apk/2.26.43.72-prekey-wire-error-attribution/README.md).
+
+## Peer directory inspection uses reply context (2026-11-06)
+
+**Confirmed static, APK43.72:** `1rA.A03` result dispatch at0040..007a in [retained base callback](apk/2.26.43.72-about-callback-lifetime/legacy-iq-base.txt) returns before outer error handling. `Dxh.A02` [retained complete callback](apk/2.26.43.72-prekey-wire-error-attribution/callback.txt) selects list at0000..000e, user error at0084..008e; requested-device error grouping at037a..0416 does not attribute another device's error to the selected device. This is static evidence, not a mixed server response observed live.
+
+Typed `peer_keys` encrypt/get/key action settlement now excludes root extension errors from inner-refusal fallback. Other action kinds, including app-state collection refusals, retain their existing interpretation; per-user errors still make generic action outcomes Error. Generic Ok means outer result without recognized refusal, never proof of a complete or valid signed bundle.
+
+The read-only peer directory inspector now derives outer refusal, uniquely selected user refusal, and bundle validation from saved reply bytes regardless of generic action status. Duplicate root errors are ambiguous only in the outer-error branch. Root errors in results cannot hide a selected user's480 or a valid/invalid signed bundle. Missing selected-user errors fall through to bundle validation instead of being mislabeled as an ambiguous error node. Missing lists/users and duplicate selected contexts remain invalid.
+
+Regression covers root503 before/after valid and invalid signed lists, new settlement and synthetic historical Error rows, reopen, signature verdict, no false server error code, unchanged checkpoints/pins/sessions and journal, redaction, retained original reply, and no automatic replay. New verified results permit the existing explicit refresh; historical Error rows remain unchanged and **do not** gain refresh authority. Existing per-user refusal matrix now includes two root errors surrounding the selected user's480.
+
+**Limits:** generic action error attribution can still select a foreign user refusal; original typed request correlation is not redesigned here. Identity-only queries use a different callback and remain a separate pending audit. This does not alter pins, derive sessions, send traffic or establish server acceptance or ban prevention.

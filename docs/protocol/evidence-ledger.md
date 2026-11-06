@@ -8148,3 +8148,5 @@ counts remain diagnostic. [Regression matrix and scope](device-key-batches.md#sa
 No retry, pin replacement, wire change or live operation.
 
 Directory key mixed-result parsing: shared bundle and batch adoption now follow APK43.72 outer-type dispatch; retained offsets, regression and separate diagnostic limits in [device-key-batches](device-key-batches.md#directory-result-and-error-branch-selection-2026-11-06). Offline only.
+
+Peer directory result/error attribution now follows saved outer type and selected user independently of generic action status. Typed peer-key root-error fallback corrected; historical outcomes retained without refresh/replay authority. [APK offsets, tests and remaining identity-only/foreign-action limits](peer-identity.md#peer-directory-inspection-uses-reply-context-2026-11-06). Offline only.

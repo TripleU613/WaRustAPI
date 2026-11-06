@@ -4501,3 +4501,5 @@ No retry, pin replacement, wire change or live operation.
 ## Directory result dispatch (2026-11-06)
 
 Confirmed static APK43.72 outer-type dispatch now governs shared bundle and frozen-page adoption. A root error inside a result no longer overrides its validated device list. Per-user refusals and cryptographic checks remain. [Evidence, regression and remaining diagnostic attribution gap](device-key-batches.md#directory-result-and-error-branch-selection-2026-11-06). No live requests.
+
+Peer directory result/error attribution now follows saved outer type and selected user independently of generic action status. Typed peer-key root-error fallback corrected; historical outcomes retained without refresh/replay authority. [APK offsets, tests and remaining identity-only/foreign-action limits](peer-identity.md#peer-directory-inspection-uses-reply-context-2026-11-06). Offline only.
