@@ -2308,3 +2308,9 @@ identical instead of storing a late503 refusal.
 and unrelated maintenance remain on their existing cadence. Outgoing/group
 waits and other request families are not converted by this chunk; no full
 network/timing or ban-prevention guarantee is claimed. No live operations.
+
+## Current APK device-hash format comparison (2026-11-06)
+
+**Confirmed static APK43.72:** [complete formatter/digest/Base64/input methods](apk/2.26.43.72-device-hash-formats/README.md) reanchor both existing Rust formats:2: uses user.0:device@server,3: uses user:device@server including:0; sorted strings are concatenated into SHA-256, truncated to6bytes and Base64 flag2 encoded. The selected non-self input set explicitly adds primary. Existing independent device_hash_vectors test passes; no implementation mismatch was found in this bounded scope.
+
+**Unknown / unchanged:** effective0x415b version choice, self-PN/LID own-device collection policy, full cache/alias authentication and coherent snapshot authority. No runtime default/hash/request was changed; membership hash equality remains separate from identity authentication. No live operation.

@@ -8208,3 +8208,5 @@ Current43.72 UsyncQuery packaged server ID and resolver chain retained with exac
 Current43.72 UsyncQuery variable spine retained: raw typed JID, nested uppercase context, conditional flags without automatic false defaults. [Raw-JID targets, MESSAGE telemetry and omitted-flag semantics](bulk-prekey-refresh.md#missing-lid-usyncquery-variables-spine-2026-11-06). No live operation.
 
 Current43.72 MEX cached device scalar types/gates retained; null initialization differs from omitted include flags, with final null serialization unresolved. [Device cache gates, decimal-string timestamps and unresolved authority](bulk-prekey-refresh.md#missing-lid-mex-device-cache-fields-2026-11-06). No live operations.
+
+Current43.72 device-hash bodies/input selection reanchored; no Rust mismatch found for explicit formats and other-user primary inclusion. [Current formatter comparison, existing vectors and scope limits](cross-device-sync.md#current-apk-device-hash-format-comparison-2026-11-06). Offline only.

@@ -1,3 +1,5 @@
+Pinned43.72 device-hash format bodies now match both existing Rust versions in the selected other-user scope; existing vectors pass. [Current formatter comparison, existing vectors and scope limits](docs/protocol/cross-device-sync.md#current-apk-device-hash-format-comparison-2026-11-06). Effective version/self-device/cache authority remain incomplete.
+
 Pinned MEX per-user device cache fields now traced: nonempty hash gate, decimal-string timestamp fields and strict expected-timestamp comparison. [Device cache gates, decimal-string timestamps and unresolved authority](docs/protocol/bulk-prekey-refresh.md#missing-lid-mex-device-cache-fields-2026-11-06). Research only; cache/hash/null serialization remain incomplete.
 
 Pinned UsyncQuery variables now traced through raw-JID targets, nested MESSAGE telemetry and conditionally omitted include flags. [Raw-JID targets, MESSAGE telemetry and omitted-flag semantics](docs/protocol/bulk-prekey-refresh.md#missing-lid-usyncquery-variables-spine-2026-11-06). Research only; complete per-user variables remain unfinished.

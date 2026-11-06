@@ -1,0 +1,69 @@
+
+# class: LX/F2N;
+# extends: Ljava/lang/Object;
+
+.method public A04(LL)  # .registers 6
+    # full signature: LX/F2N;->A04(Ljava/util/Collection;)Ljava/lang/String;
+    0000..0006  invoke-interface  {v5}, Ljava/util/Collection;->size()I
+    0006..0008  move-result  v0
+    0008..000e  invoke-static  {v0}, LX/3q0;->A10(I)Ljava/util/ArrayList;
+    000e..0010  move-result-object  v4
+    0010..0016  invoke-interface  {v5}, Ljava/util/Collection;->iterator()Ljava/util/Iterator;
+    0016..0018  move-result-object  v3
+    0018..001e  invoke-interface  {v3}, Ljava/util/Iterator;->hasNext()Z
+    001e..0020  move-result  v0
+    0020..0024  if-eqz  v0, +0x2c
+    0024..002a  invoke-static  {v3}, LX/2LB;->A0i(Ljava/util/Iterator;)Lcom/whatsapp/infra/core/jid/Jid;
+    002a..002c  move-result-object  v2
+    002c..0032  invoke-static  {}, LX/1Xl;->A13()Ljava/lang/StringBuilder;
+    0032..0034  move-result-object  v1
+    0034..0038  iget-object  v0, v2, Lcom/whatsapp/infra/core/jid/Jid;->user:Ljava/lang/String;
+    0038..003e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    003e..0042  const-string  v0, ".0:"
+    0042..0048  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0048..004e  invoke-virtual  {v2}, Lcom/whatsapp/infra/core/jid/Jid;->getDevice()I
+    004e..0050  move-result  v0
+    0050..0056  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0056..005a  const-string  v0, "@"
+    005a..0060  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0060..0066  invoke-virtual  {v2}, Lcom/whatsapp/infra/core/jid/Jid;->getServer()Ljava/lang/String;
+    0066..0068  move-result-object  v0
+    0068..006e  invoke-static  {v0, v1}, LX/1Xl;->A0z(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    006e..0070  move-result-object  v0
+    0070..0076  invoke-virtual  {v4, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0076..0078  goto  -0x2f
+    0078..007e  invoke-static  {v4}, Ljava/util/Collections;->sort(Ljava/util/List;)V
+    007e..0084  invoke-static  {}, LX/DBb;->A0x()Ljava/security/MessageDigest;
+    0084..0086  move-result-object  v2
+    0086..008c  invoke-virtual  {v4}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+    008c..008e  move-result-object  v1
+    008e..0094  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    0094..0096  move-result  v0
+    0096..009a  if-eqz  v0, +0xe
+    009a..00a0  invoke-static  {v1}, LX/2LB;->A1A(Ljava/util/Iterator;)Ljava/lang/String;
+    00a0..00a2  move-result-object  v0
+    00a2..00a8  invoke-virtual  {v0}, Ljava/lang/String;->getBytes()[B
+    00a8..00aa  move-result-object  v0
+    00aa..00b0  invoke-virtual  {v2, v0}, Ljava/security/MessageDigest;->update([B)V
+    00b0..00b2  goto  -0x11
+    00b2..00b8  invoke-virtual  {v2}, Ljava/security/MessageDigest;->digest()[B
+    00b8..00ba  move-result-object  v3
+    00ba..00bc  const/4  v1, #0x6
+    00bc..00c0  new-array  v2, v1, [B
+    00c0..00c2  const/4  v0, #0x0
+    00c2..00c8  invoke-static  {v3, v0, v2, v0, v1}, Ljava/lang/System;->arraycopy(Ljava/lang/Object;ILjava/lang/Object;II)V
+    00c8..00cc  const-string  v0, "2:"
+    00cc..00d2  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00d2..00d4  move-result-object  v1
+    00d4..00da  invoke-static  {v2}, LX/8t2;->A1D([B)Ljava/lang/String;
+    00da..00dc  move-result-object  v0
+    00dc..00e2  invoke-static  {v0, v1}, LX/1Xl;->A0z(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    00e2..00e4  move-result-object  v0
+    00e4..00e6  return-object  v0
+    00e6..00e8  move-exception  v1
+    00e8..00ec  new-instance  v0, Ljava/lang/RuntimeException;
+    00ec..00f2  invoke-direct  {v0, v1}, Ljava/lang/RuntimeException;-><init>(Ljava/lang/Throwable;)V
+    00f2..00f4  throw  v0
+    # exception table: 1 try range(s)
+    # catch Ljava/security/NoSuchAlgorithmException; code_units 003f..0043 -> 0073
+.end method

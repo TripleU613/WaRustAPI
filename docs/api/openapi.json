@@ -17660,5 +17660,12 @@
     "x-live": false,
     "description": "Research-only APK43.72 MEX per-user devices cache: enabled-device/nonempty-hash gate; positive timestamps and strictly newer expected timestamps become decimal strings. Hash configuration, cache/alias authority, units, coherent snapshots and final null/Pando serialization remain unported. No request/cache fabrication/runtime capability added.",
     "evidence": "docs/protocol/bulk-prekey-refresh.md#missing-lid-mex-device-cache-fields-2026-11-06"
+},
+  "x-device-hash-current-format-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Research-only current APK43.72 explicit device-hash formats match existing Rust2:/3: implementations in admitted ASCII other-user scope; sorted address SHA-256 truncated6bytes with Base64 flag2. Existing independent vectors pass. Effective version, self-device/cache/alias authority remain incomplete; no runtime default or query added.",
+    "evidence": "docs/protocol/cross-device-sync.md#current-apk-device-hash-format-comparison-2026-11-06"
 }
 }

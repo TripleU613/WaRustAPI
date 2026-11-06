@@ -1,0 +1,56 @@
+
+# class: LX/F2N;
+# extends: Ljava/lang/Object;
+
+.method public A05(LL)  # .registers 5
+    # full signature: LX/F2N;->A05(Ljava/util/Collection;)Ljava/lang/String;
+    0000..0006  invoke-interface  {v4}, Ljava/util/Collection;->size()I
+    0006..0008  move-result  v0
+    0008..000e  invoke-static  {v0}, LX/3q0;->A10(I)Ljava/util/ArrayList;
+    000e..0010  move-result-object  v3
+    0010..0016  invoke-interface  {v4}, Ljava/util/Collection;->iterator()Ljava/util/Iterator;
+    0016..0018  move-result-object  v1
+    0018..001e  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    001e..0020  move-result  v0
+    0020..0024  if-eqz  v0, +0xe
+    0024..002a  invoke-static  {v1}, LX/DBc;->A0b(Ljava/util/Iterator;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    002a..002c  move-result-object  v0
+    002c..0032  invoke-virtual  {v0}, Lcom/whatsapp/infra/core/jid/DeviceJid;->getRawStringWithNoAgent()Ljava/lang/String;
+    0032..0034  move-result-object  v0
+    0034..003a  invoke-virtual  {v3, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    003a..003c  goto  -0x11
+    003c..0042  invoke-static  {v3}, Ljava/util/Collections;->sort(Ljava/util/List;)V
+    0042..0048  invoke-static  {}, LX/DBb;->A0x()Ljava/security/MessageDigest;
+    0048..004a  move-result-object  v2
+    004a..0050  invoke-virtual  {v3}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+    0050..0052  move-result-object  v1
+    0052..0058  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    0058..005a  move-result  v0
+    005a..005e  if-eqz  v0, +0xe
+    005e..0064  invoke-static  {v1}, LX/2LB;->A1A(Ljava/util/Iterator;)Ljava/lang/String;
+    0064..0066  move-result-object  v0
+    0066..006c  invoke-virtual  {v0}, Ljava/lang/String;->getBytes()[B
+    006c..006e  move-result-object  v0
+    006e..0074  invoke-virtual  {v2, v0}, Ljava/security/MessageDigest;->update([B)V
+    0074..0076  goto  -0x11
+    0076..007c  invoke-virtual  {v2}, Ljava/security/MessageDigest;->digest()[B
+    007c..007e  move-result-object  v3
+    007e..0080  const/4  v1, #0x6
+    0080..0084  new-array  v2, v1, [B
+    0084..0086  const/4  v0, #0x0
+    0086..008c  invoke-static  {v3, v0, v2, v0, v1}, Ljava/lang/System;->arraycopy(Ljava/lang/Object;ILjava/lang/Object;II)V
+    008c..0090  const-string  v0, "3:"
+    0090..0096  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0096..0098  move-result-object  v1
+    0098..009e  invoke-static  {v2}, LX/8t2;->A1D([B)Ljava/lang/String;
+    009e..00a0  move-result-object  v0
+    00a0..00a6  invoke-static  {v0, v1}, LX/1Xl;->A0z(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    00a6..00a8  move-result-object  v0
+    00a8..00aa  return-object  v0
+    00aa..00ac  move-exception  v1
+    00ac..00b0  new-instance  v0, Ljava/lang/RuntimeException;
+    00b0..00b6  invoke-direct  {v0, v1}, Ljava/lang/RuntimeException;-><init>(Ljava/lang/Throwable;)V
+    00b6..00b8  throw  v0
+    # exception table: 1 try range(s)
+    # catch Ljava/security/NoSuchAlgorithmException; code_units 0021..0025 -> 0055
+.end method
