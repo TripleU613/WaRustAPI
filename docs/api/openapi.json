@@ -17415,5 +17415,12 @@
     "x-live": false,
     "description": "Static 2.26.43.72 hold trace separates arm identity, release-change counter, hold atomic and one-batch bypass. Ordered completion can release the hold; an arm-checked timer permits a batch when either saved nonnull ordered head remains unchanged or both head pairs are null, otherwise rearming for changed heads. Pending uses loaded-cache metadata size, not SQL. Effective gates/delay, executor/timer failure and ACK ordering remain open. No Rust queue port or replay authority.",
     "evidence": "docs/protocol/apk/2.26.43.72-count-hold-release/README.md"
+  },
+  "x-apk-count-hold-config-inputs": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Static 2.26.43.72 constructor trace: hold gate 0x9952 has descriptor false inputs; disabled gate stores delay0, enabled gate reads signed-int key0x9953 with descriptor60000 inputs. Selected registry entries corroborate false/60000 and show false for separate scheduler gate0x6f06. Registry and preferences can override descriptor inputs on the selected fallback path. Effective config, full map collision/value-flow and refresh/scheduler semantics remain open. Bounded excerpts have full-source hashes/ranges; no Rust timer or replay authority is added.",
+    "evidence": "docs/protocol/apk/2.26.43.72-count-hold-config/README.md"
   }
 }

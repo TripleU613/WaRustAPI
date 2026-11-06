@@ -1,3 +1,8 @@
+Native hold configuration now has traced descriptor and selected registry inputs:
+gatefalse, delay60000 when enabled, and stored delay0 when disabled. These are
+constructor/default facts, not effective runtime values or Rust timing changes.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-count-hold-config/README.md).
+
 Native unordered hold/release now has traced ordered-pending checks, arm and
 change counters, conditional completion release and a timer-driven one-batch
 bypass. Effective gates/delay, failure recovery and wire ordering remain open.

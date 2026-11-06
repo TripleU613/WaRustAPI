@@ -1,0 +1,18 @@
+
+# class: LX/00E;
+# extends: Ljava/lang/Object;
+
+.method public A18(ZL)  # .registers 5
+    # full signature: LX/00E;->A18(LX/00f;)Z
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v4, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  iget  v2, v4, LX/00f;->A00:I
+    000c..0010  sget-object  v1, LX/00G;->A02:LX/00G;
+    0010..0014  iget-boolean  v0, v4, LX/00f;->A01:Z
+    0014..001a  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    001a..001c  move-result-object  v0
+    001c..0022  invoke-static  {v1, v3, v0, v2}, LX/00E;->A0D(LX/00G;LX/00E;Ljava/lang/Boolean;I)Z
+    0022..0024  move-result  v0
+    0024..0026  return  v0
+    # exception table: 0 try range(s)
+.end method

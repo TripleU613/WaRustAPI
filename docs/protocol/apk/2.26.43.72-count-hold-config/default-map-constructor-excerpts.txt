@@ -1,0 +1,136 @@
+# class: LX/08Y;
+# extends: LX/00E;
+.method public <init>(V)  # .registers 304
+    # full signature: LX/08Y;-><init>()V
+# BOUNDED EXCERPTS: omitted instructions are not reproduced.
+# byte offsets [0000,0160)
+    0000..0004  const/16  v0, #0x6f
+    0004..000a  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    000a..000c  move-result-object  v6
+    000c..0010  check-cast  v6, LX/08Z;
+    0010..0014  const/16  v0, #0x43
+    0014..001a  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    001a..001c  move-result-object  v5
+    001c..0020  check-cast  v5, LX/08j;
+    0020..0024  const/16  v0, #0x3bd
+    0024..002a  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    002a..002c  move-result-object  v8
+    002c..0030  const/16  v0, #0x72
+    0030..0036  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0036..0038  move-result-object  v4
+    0038..003c  check-cast  v4, LX/00S;
+    003c..0040  const/16  v0, #0x87
+    0040..0046  invoke-static  {v0}, LX/00T;->A03(I)Ljava/lang/Object;
+    0046..0048  move-result-object  v3
+    0048..004c  check-cast  v3, LX/08p;
+    004c..0050  const/16  v0, #0x44
+    0050..0056  invoke-static  {v0}, LX/05W;->A00(I)LX/05a;
+    0056..0058  move-result-object  v9
+    0058..005c  const/16  v0, #0x45
+    005c..0062  invoke-static  {v0}, LX/05W;->A00(I)LX/05a;
+    0062..0064  move-result-object  v10
+    0064..0068  const/16  v0, #0xe9
+    0068..006e  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    006e..0070  move-result-object  v2
+    0070..0074  check-cast  v2, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+    0074..0078  const/16  v0, #0x46
+    0078..007e  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    007e..0080  move-result-object  v11
+    0080..0084  const/16  v0, #0xfc
+    0084..008a  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    008a..008c  move-result-object  v1
+    008c..0090  check-cast  v1, LX/0A7;
+    0090..0092  const/4  v0, #0x0
+    0092..0098  invoke-static  {v6, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0098..009a  const/4  v0, #0x1
+    009a..00a0  invoke-static  {v5, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    00a0..00a2  const/4  v0, #0x3
+    00a2..00a8  invoke-static  {v4, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    00a8..00aa  const/4  v0, #0x4
+    00aa..00b0  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    00b0..00b4  const-string  v18, "ab-props"
+    00b4..00ba  move-object/16  v302, v303
+    00ba..00be  move-object/from16  v7, v302
+    00be..00c0  move-object  v12, v2
+    00c0..00c2  move-object  v13, v5
+    00c2..00c4  move-object  v14, v4
+    00c4..00c6  move-object  v15, v6
+    00c6..00ca  move-object/from16  v16, v1
+    00ca..00ce  move-object/from16  v17, v3
+    00ce..00d4  invoke-direct/range  {v7..v18}, LX/00E;-><init>(LX/00x;LX/00x;LX/00x;LX/00x;Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;LX/08j;LX/00S;LX/08Z;LX/0A7;LX/08p;Ljava/lang/String;)V
+    00d4..00da  invoke-static  {}, Lcom/google/common/collect/ImmutableMap;->builder()Lcom/google/common/collect/ImmutableMap$Builder;
+    00da..00dc  move-result-object  v14
+    00dc..00e2  invoke-static  {}, Lcom/google/common/collect/ImmutableMap;->builder()Lcom/google/common/collect/ImmutableMap$Builder;
+    00e2..00e4  move-result-object  v13
+    00e4..00ea  invoke-static  {}, Lcom/google/common/collect/ImmutableMap;->builder()Lcom/google/common/collect/ImmutableMap$Builder;
+    00ea..00ec  move-result-object  v12
+    00ec..00f2  invoke-static  {}, Lcom/google/common/collect/ImmutableMap;->builder()Lcom/google/common/collect/ImmutableMap$Builder;
+    00f2..00f4  move-result-object  v11
+    00f4..00fa  invoke-static  {}, Lcom/google/common/collect/ImmutableMap;->builder()Lcom/google/common/collect/ImmutableMap$Builder;
+    00fa..00fc  move-result-object  v10
+    00fc..0102  invoke-static  {v14}, LX/08Y;->A08(Lcom/google/common/collect/ImmutableMap$Builder;)V
+    0102..0108  invoke-static  {v14}, LX/08Y;->A0H(Lcom/google/common/collect/ImmutableMap$Builder;)V
+    0108..010e  invoke-static  {v14}, LX/08Y;->A0P(Lcom/google/common/collect/ImmutableMap$Builder;)V
+    010e..0114  invoke-static  {v14}, LX/08Y;->A0R(Lcom/google/common/collect/ImmutableMap$Builder;)V
+    0114..011a  invoke-static  {v14}, LX/08Y;->A0S(Lcom/google/common/collect/ImmutableMap$Builder;)V
+    011a..0120  invoke-static  {v14}, LX/08Y;->A0T(Lcom/google/common/collect/ImmutableMap$Builder;)V
+    0120..0126  invoke-static  {v14}, LX/08Y;->A0U(Lcom/google/common/collect/ImmutableMap$Builder;)V
+    0126..012c  invoke-static  {v14}, LX/08Y;->A0V(Lcom/google/common/collect/ImmutableMap$Builder;)V
+    012c..0132  invoke-static  {v14}, LX/08Y;->A0W(Lcom/google/common/collect/ImmutableMap$Builder;)V
+    0132..0138  invoke-static  {v14}, LX/08Y;->A0X(Lcom/google/common/collect/ImmutableMap$Builder;)V
+    0138..013e  invoke-static  {v14}, LX/08Y;->A0J(Lcom/google/common/collect/ImmutableMap$Builder;)V
+    013e..0144  invoke-static  {v14}, LX/08Y;->A0K(Lcom/google/common/collect/ImmutableMap$Builder;)V
+    0144..014a  invoke-static  {v14}, LX/08Y;->A0L(Lcom/google/common/collect/ImmutableMap$Builder;)V
+    014a..0150  invoke-static  {v14}, LX/08Y;->A0M(Lcom/google/common/collect/ImmutableMap$Builder;)V
+    0150..0156  invoke-static  {v14}, LX/08Y;->A0N(Lcom/google/common/collect/ImmutableMap$Builder;)V
+    0156..015c  invoke-static  {v14}, LX/08Y;->A0O(Lcom/google/common/collect/ImmutableMap$Builder;)V
+    015c..015e  const/4  v1, #0x0
+    015e..0164  const  v0, #0x8267
+# byte offsets [43a0,43c0)
+    43a0..43a4  const/16  v0, #0x13a
+    43a4..43aa  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    43aa..43ac  move-result-object  v0
+    43ac..43b2  invoke-virtual  {v14, v0, v1}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    43b2..43b8  invoke-static  {v13}, LX/08Y;->A0B(Lcom/google/common/collect/ImmutableMap$Builder;)V
+    43b8..43be  invoke-static  {v13}, LX/08Y;->A0I(Lcom/google/common/collect/ImmutableMap$Builder;)V
+    43be..43c4  invoke-static  {v13}, LX/08Y;->A0Q(Lcom/google/common/collect/ImmutableMap$Builder;)V
+# byte offsets [44ce,44f4)
+    44ce..44d2  const/16  v0, #0x26ea
+    44d2..44d8  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    44d8..44da  move-result-object  v1
+    44da..44e0  const  v0, #0xea60
+    44e0..44e6  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    44e6..44e8  move-result-object  v0
+    44e8..44ee  move-object/16  v298, v0
+    44ee..44f4  invoke-virtual  {v13, v1, v0}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+# byte offsets [99b0,99d0)
+    99b0..99b6  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    99b6..99b8  move-result-object  v0
+    99b8..99be  const-string/jumbo  v15, "{\"surfaces\":[]}"
+    99be..99c4  invoke-virtual  {v10, v0, v15}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    99c4..99ca  invoke-static  {v14}, LX/08Y;->A07(Lcom/google/common/collect/ImmutableMap$Builder;)V
+    99ca..99ce  const/16  v0, #0x1e98
+    99ce..99d4  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+# byte offsets [be10,be40)
+    be10..be16  const  v0, #0x9937
+    be16..be1c  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    be1c..be1e  move-result-object  v0
+    be1e..be24  invoke-virtual  {v13, v0, v9}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    be24..be2a  const  v0, #0x9953
+    be2a..be30  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    be30..be32  move-result-object  v15
+    be32..be36  move-object/from16  v0, v298
+    be36..be3c  invoke-virtual  {v13, v15, v0}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    be3c..be42  const  v0, #0x9958
+# byte offsets [cc00,cc28)
+    cc00..cc06  invoke-virtual  {v14}, Lcom/google/common/collect/ImmutableMap$Builder;->buildKeepingLast()Lcom/google/common/collect/ImmutableMap;
+    cc06..cc08  move-result-object  v1
+    cc08..cc0e  invoke-static  {v1}, LX/00l;->A05(Ljava/lang/Object;)V
+    cc0e..cc12  move-object/from16  v0, v302
+    cc12..cc16  iput-object  v1, v0, LX/08Y;->A00:Lcom/google/common/collect/ImmutableMap;
+    cc16..cc1c  invoke-virtual  {v13}, Lcom/google/common/collect/ImmutableMap$Builder;->buildKeepingLast()Lcom/google/common/collect/ImmutableMap;
+    cc1c..cc1e  move-result-object  v1
+    cc1e..cc24  invoke-static  {v1}, LX/00l;->A05(Ljava/lang/Object;)V
+    cc24..cc28  iput-object  v1, v0, LX/08Y;->A02:Lcom/google/common/collect/ImmutableMap;
+# Complete const/move destination census for v298 in full source (not a semantic value-flow engine):
+    44e8..44ee  move-object/16  v298, v0

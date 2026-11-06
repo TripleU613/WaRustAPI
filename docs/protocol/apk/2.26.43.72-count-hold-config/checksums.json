@@ -1,0 +1,86 @@
+{
+  "README.md": {
+    "bytes": 6691,
+    "sha256": "d00919e85b214e0d94c85ed5cc39fead305274759b8cb8ec94bbc9105fee2521"
+  },
+  "boolean-default-helper-excerpts.txt": {
+    "bytes": 2744,
+    "sha256": "2fce7aa687b647c6c73408787d649ffbb99e97fd7bf2f23c5ebeccb74f7bf4fe"
+  },
+  "boolean-descriptor-constructor.txt": {
+    "bytes": 433,
+    "sha256": "258d18240e271a83b1f8616b1004dd9381bd66637e4908651965deee9ed0f75a"
+  },
+  "boolean-descriptor-reader.txt": {
+    "bytes": 730,
+    "sha256": "18e908113ec6b147dd800c022c53d7a4444b23e77f00abedf9657d970120e065"
+  },
+  "boolean-fallback.txt": {
+    "bytes": 4209,
+    "sha256": "5402d3fcf138b02267fc0b044b4a14f2b0a127245fea628b40ddb99827deead5"
+  },
+  "boolean-late-helper-excerpts.txt": {
+    "bytes": 1969,
+    "sha256": "2bd5e56600f0270c8ef7b2ec7908ed3bc0c9f2c733918ef977a624299e5abd14"
+  },
+  "boolean-map-reader.txt": {
+    "bytes": 328,
+    "sha256": "9854a61a90f1c248ac0c232890337d7ed4463b068372c3519aefefc25447caf5"
+  },
+  "config-constructor.txt": {
+    "bytes": 13530,
+    "sha256": "545d38ccfe23d7460717b07a7182549402d07aeba359543c7321a669ebe99a32"
+  },
+  "default-map-constructor-excerpts.txt": {
+    "bytes": 9132,
+    "sha256": "517f8240df371734e1a4d227d2979d52df9b9a2224cbf3fdff3dc91df601c21d"
+  },
+  "delay-field-writes.txt": {
+    "bytes": 79,
+    "sha256": "1bb2fb54842e6f8bbfac46aed2af275599707407eca2134f80e1a2b20473ed5b"
+  },
+  "descriptor-declarations.txt": {
+    "bytes": 4265,
+    "sha256": "446d579a303bac34fd5fa6610d19a7287a8751163d7b5d4be026fd31aa241066"
+  },
+  "excerpt-provenance.json": {
+    "bytes": 1976,
+    "sha256": "0c2f1a8264803c3f8b059d7fdd0e00c663e4ee736d9aa6d2cbb59d22f881c980"
+  },
+  "fallback-constructor.txt": {
+    "bytes": 498,
+    "sha256": "e972147412bb22142e05ad6c4b2741477ea94b585432eb6577bb3bd23217ea42"
+  },
+  "fallback-selector.txt": {
+    "bytes": 5294,
+    "sha256": "addde51eeba21784a63c0e458dc139c30505f0e07f7e5a4ce3ccd8a460fd0a2f"
+  },
+  "gate-field-writes.txt": {
+    "bytes": 79,
+    "sha256": "860664eda5707dff860fb3e570f067e1b44aea63f705261b813794ead5c9b474"
+  },
+  "integer-default-helper-excerpts.txt": {
+    "bytes": 1782,
+    "sha256": "32d8b8bed9daa3cafdbffa332fb0960a0f563b101cd1b23bb1dbab84fe3f3e0c"
+  },
+  "integer-descriptor-constructor.txt": {
+    "bytes": 417,
+    "sha256": "c623b65006a69f2533bd7b32b452c053c82bad33d65980b6981c8505be51d3b9"
+  },
+  "integer-descriptor-reader.txt": {
+    "bytes": 612,
+    "sha256": "2d64ac70bcb6ed7b76b6e2c20dca07ea1bc5eab0d4d3764fad474d1c85a9acef"
+  },
+  "integer-fallback.txt": {
+    "bytes": 4185,
+    "sha256": "4763fe4ee4e2f2645d47a461ff413ecb60ff4b4972487844fcdc2f2e7788d1fb"
+  },
+  "integer-map-reader.txt": {
+    "bytes": 328,
+    "sha256": "28431a488eda631d995c96fb8c33e4576d83b660d1e0f2f765e08eec6daa121a"
+  },
+  "integer-resolver.txt": {
+    "bytes": 1035,
+    "sha256": "e81cc7504f15b4fc1672b42029cbd1a67e4aaa6642e81a3fa2f2864f975f373d"
+  }
+}

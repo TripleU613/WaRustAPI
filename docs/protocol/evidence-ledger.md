@@ -7976,3 +7976,22 @@ No fixed hold delay/default is inferred from0av.A06, and full executor/timer
 failure semantics and ACK ordering remain open.
 [Full exports, exact predicates, direct field census and limits](apk/2.26.43.72-count-hold-release/README.md).
 No Rust queue change, retry/replay authority or live account operation.
+
+### Hold gate/delay descriptor and registry inputs (2026-11-05)
+
+**Confirmed static, APK2.26.43.72:**0av constructor samples hold gateA0U from
+0ax.A0C(key0x9952), whose descriptor Boolean inputs are false/false. When false,
+it stores delayA06=0; when true, it reads0ax.A0G(key0x9953), widens the signed
+int and stores it, without a local clamp. That descriptor's inputs are60000/
+60000; the timer log labels the value milliseconds. Scheduler gate0x6f06 is
+separate. Direct write censuses find one constructor write forA0U andA06 each.
+
+Selected08Y default-map entries showfalse for0x9952/0x6f06 and60000 for0x9953.
+The selected fallback resolver checks cached values, registry defaults before
+descriptor fallback, then saved preferences. These declared inputs/entries do
+not establish effective runtime configuration or enable a fixed Rust timer.
+Full outer MobileConfig precedence, refresh/provider lifetime, complete map
+collision/value-flow and scheduler handling remain open. Large source methods
+are retained as explicit bounded excerpts with full-source hashes/ranges.
+[Exports, selected data flow and coverage limits](apk/2.26.43.72-count-hold-config/README.md).
+No Rust network change, replay permission or live operation.

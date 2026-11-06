@@ -1,0 +1,10 @@
+
+# class: LX/08Y;
+# extends: LX/00E;
+
+.method public A1B(L)  # .registers 2
+    # full signature: LX/08Y;->A1B()Lcom/google/common/collect/ImmutableMap;
+    0000..0004  iget-object  v0, v1, LX/08Y;->A02:Lcom/google/common/collect/ImmutableMap;
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method

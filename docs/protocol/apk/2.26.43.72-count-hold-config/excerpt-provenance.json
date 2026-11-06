@@ -1,0 +1,82 @@
+{
+  "default-map-constructor-excerpts.txt": {
+    "full_source_bytes": 965755,
+    "full_source_sha256": "009d605b135aedae3c507b09f88bafd2f847eab8bbb7db29f2785e6d014b138d",
+    "byte_ranges_half_open": [
+      [
+        "0x0",
+        "0x160"
+      ],
+      [
+        "0x43a0",
+        "0x43c0"
+      ],
+      [
+        "0x44ce",
+        "0x44f4"
+      ],
+      [
+        "0x99b0",
+        "0x99d0"
+      ],
+      [
+        "0xbe10",
+        "0xbe40"
+      ],
+      [
+        "0xcc00",
+        "0xcc28"
+      ]
+    ],
+    "destination_census": "v298",
+    "destination_census_kind": "const and move opcode destinations only; not semantic value-flow"
+  },
+  "boolean-default-helper-excerpts.txt": {
+    "full_source_bytes": 350440,
+    "full_source_sha256": "241ec9b7d0252fbff69f27a0712a446d53ab65cd078b45803674e8a961039eaa",
+    "byte_ranges_half_open": [
+      [
+        "0x0",
+        "0x22"
+      ],
+      [
+        "0x1900",
+        "0x195e"
+      ]
+    ],
+    "destination_census": "v1",
+    "destination_census_kind": "const and move opcode destinations only; not semantic value-flow"
+  },
+  "boolean-late-helper-excerpts.txt": {
+    "full_source_bytes": 894487,
+    "full_source_sha256": "34cc364dd4e2cc913e3c54d8c299e3ace6eea98a2476b836b9319b38ca9fd9c6",
+    "byte_ranges_half_open": [
+      [
+        "0x0",
+        "0x1c"
+      ],
+      [
+        "0xa592",
+        "0xa5ce"
+      ]
+    ],
+    "destination_census": "v2",
+    "destination_census_kind": "const and move opcode destinations only; not semantic value-flow"
+  },
+  "integer-default-helper-excerpts.txt": {
+    "full_source_bytes": 377564,
+    "full_source_sha256": "105798ee6f76957aed0e6e515f9ac6ddbe778dcc3e48c549a2881662d54f3380",
+    "byte_ranges_half_open": [
+      [
+        "0x0",
+        "0x22"
+      ],
+      [
+        "0x1948",
+        "0x1982"
+      ]
+    ],
+    "destination_census": null,
+    "destination_census_kind": "const and move opcode destinations only; not semantic value-flow"
+  }
+}

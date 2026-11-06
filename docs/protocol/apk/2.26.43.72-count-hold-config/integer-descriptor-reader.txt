@@ -1,0 +1,16 @@
+
+# class: LX/00E;
+# extends: Ljava/lang/Object;
+
+.method public A0d(IL)  # .registers 5
+    # full signature: LX/00E;->A0d(LX/0AB;)I
+    0000..0004  iget  v2, v4, LX/0AB;->A00:I
+    0004..0008  sget-object  v1, LX/00G;->A02:LX/00G;
+    0008..000c  iget  v0, v4, LX/0AB;->A01:I
+    000c..0012  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0012..0014  move-result-object  v0
+    0014..001a  invoke-static  {v1, v3, v0, v2}, LX/00E;->A02(LX/00G;LX/00E;Ljava/lang/Integer;I)I
+    001a..001c  move-result  v0
+    001c..001e  return  v0
+    # exception table: 0 try range(s)
+.end method

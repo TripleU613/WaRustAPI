@@ -1,0 +1,38 @@
+# class: LX/08Y;
+# extends: LX/00E;
+.method public A0H(VL)  # .registers 5
+    # full signature: LX/08Y;->A0H(Lcom/google/common/collect/ImmutableMap$Builder;)V
+# BOUNDED EXCERPTS: omitted instructions are not reproduced.
+# byte offsets [0000,0022)
+    0000..0002  const/4  v1, #0x0
+    0002..0008  const  v0, #0x9f7a
+    0008..000e  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    000e..0010  move-result-object  v0
+    0010..0016  invoke-static  {v1}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0016..0018  move-result-object  v1
+    0018..001e  invoke-virtual  {v4, v0, v1}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    001e..0022  const/16  v0, #0x674e
+# byte offsets [1900,195e)
+    1900..1906  const  v0, #0x9501
+    1906..190c  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    190c..190e  move-result-object  v0
+    190e..1914  invoke-virtual  {v4, v0, v1}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    1914..191a  const  v0, #0x9952
+    191a..1920  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    1920..1922  move-result-object  v0
+    1922..1928  invoke-virtual  {v4, v0, v1}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    1928..192c  const/16  v0, #0x62af
+    192c..1932  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    1932..1934  move-result-object  v0
+    1934..193a  invoke-virtual  {v4, v0, v1}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    193a..193e  const/16  v0, #0x6f06
+    193e..1944  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    1944..1946  move-result-object  v0
+    1946..194c  invoke-virtual  {v4, v0, v1}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    194c..1950  const/16  v0, #0x780b
+    1950..1956  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    1956..1958  move-result-object  v0
+    1958..195e  invoke-virtual  {v4, v0, v1}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+# Complete const/move destination census for v1 in full source (not a semantic value-flow engine):
+    0000..0002  const/4  v1, #0x0
+    0016..0018  move-result-object  v1
