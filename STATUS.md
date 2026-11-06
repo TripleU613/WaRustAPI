@@ -1,3 +1,8 @@
+Picture ACK final builder and fresh notification-key fields now traced in
+current APK; regression rejects accidental copying of incoming recipient/edit/
+error/offline attributes. No runtime change or live validation.
+[Evidence](docs/protocol/apk/2.26.43.72-group-missing-identification/README.md).
+
 Picture notifications now receive the shared base ACK after durable capture.
 Actor regression covers redelivery, participant routing, malformed envelope
 continuation and reopen. Photo state/missing-ID lifecycle remain unported;

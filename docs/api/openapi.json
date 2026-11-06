@@ -17134,6 +17134,6 @@
     "x-transport": true,
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-group-missing-identification/README.md",
-    "description": "The receive actor ACKs exact picture notifications after durable capture using existing base envelope guards and participant routing. Malformed envelopes log without ACK and receive continues; redelivery is ACKed again. Photo updates, automatic missing-identification lifecycle, native scheduling/CCQ parity and live acceptance remain unverified or unported. No new command or HTTP route. Offline actor regression covers capture before write, redelivery, malformed envelope plus ping and store reopen."
+    "description": "The receive actor ACKs exact picture notifications after durable capture using existing base envelope guards and participant routing. Malformed envelopes log without ACK and receive continues; redelivery is ACKed again. Photo updates, automatic missing-identification lifecycle, native scheduling/CCQ parity and live acceptance remain unverified or unported. No new command or HTTP route. Offline actor regression covers capture before write, redelivery, malformed envelope plus ping, store reopen and omission of incoming recipient/edit/error/offline attributes. Current F0R fresh-key and F3e final-builder evidence confirms those omitted fields in the selected path."
   }
 }

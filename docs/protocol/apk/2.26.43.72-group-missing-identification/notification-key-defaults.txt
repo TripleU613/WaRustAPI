@@ -1,0 +1,13 @@
+
+# class: LX/Efa;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 2
+    # full signature: LX/Efa;-><init>()V
+    0000..0006  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    0006..000c  invoke-static  {}, LX/2L6;->A1E()Ljava/util/HashMap;
+    000c..000e  move-result-object  v0
+    000e..0012  iput-object  v0, v1, LX/Efa;->A0A:Ljava/util/Map;
+    0012..0014  return-void
+    # exception table: 0 try range(s)
+.end method

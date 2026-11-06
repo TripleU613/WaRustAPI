@@ -1,7 +1,15 @@
 {
   "README.md": {
-    "bytes": 11752,
-    "sha256": "8123e127e46a2e6a525d37ec953f9303093e618f82979bb1167e4f7f70a35657"
+    "bytes": 14131,
+    "sha256": "b01b3af21c144833122b631df7ec2708612020568172ccc5d827691bd04897c2"
+  },
+  "ack-class-field-refs.txt": {
+    "bytes": 2112,
+    "sha256": "d6a04398388cf4110b7913ec3d94cfdbda123815603437f4f565deab5b242409"
+  },
+  "ack-envelope-callers.txt": {
+    "bytes": 134,
+    "sha256": "c78e798c351eb700a865f5397467a7f92bd3331d9e6cd091e6b1c7ce37462bc0"
   },
   "adjacent-flag-negative.txt": {
     "bytes": 119,
@@ -91,6 +99,26 @@
     "bytes": 900,
     "sha256": "4e527236b06320d8fed6565d84a7a3ae98345ab17b2b7907b46a9739138e0903"
   },
+  "notification-key-constructor.txt": {
+    "bytes": 1283,
+    "sha256": "ef5655aede1d50217f2ab6dbfae846d2fa89b6dd7b530d82bba49f49e6bc9bd9"
+  },
+  "notification-key-defaults.txt": {
+    "bytes": 450,
+    "sha256": "cbfc86952e18fda50789c6cec7b8c3cece45bf6fc365f663c3e60e87cef8f80b"
+  },
+  "notification-key-entry.txt": {
+    "bytes": 829,
+    "sha256": "afa81c7188ad2612b602f2939a06d189d13254218c1aaf324db214547c5c8daa"
+  },
+  "notification-key-fields.txt": {
+    "bytes": 2696,
+    "sha256": "1a89b64630f046e797b8f7285da65653696b35d66ae50f180afbc17a084b0114"
+  },
+  "notification-key-freeze.txt": {
+    "bytes": 1859,
+    "sha256": "349587fd5020bce518c36f486e5cfd40069338df46bbbbdcceb8f02195a1bc57"
+  },
   "notification-type-consumer.txt": {
     "bytes": 18722,
     "sha256": "de79d68032919efc6a0ee7bd3a6c2aa16b28878fa6a42af337cf6780b167b8a1"
@@ -119,9 +147,21 @@
     "bytes": 1340,
     "sha256": "833b7aee149ebd574a2679fe14e0e510fc597d5f98f0cfa1976a55d046a0e817"
   },
+  "picture-final-wire-builder.txt": {
+    "bytes": 4405,
+    "sha256": "9b174be1661356e1de1b0aefc721272b152193f8ebc010c3f4dab168007757e0"
+  },
   "picture-method-inventory.txt": {
     "bytes": 266,
     "sha256": "ac61f64ff4b1eca78ac663dec7309757a7dbb3fda7f6a2537275a679c390e614"
+  },
+  "picture-send-code-76-excerpt.txt": {
+    "bytes": 1515,
+    "sha256": "0dde56f2b1d967edfb6f3b44f97c97302a5c97604ae9b4986458f07699c82721"
+  },
+  "picture-writer-forward.txt": {
+    "bytes": 1210,
+    "sha256": "fe18318954e371d556d39749bf721e1b55e6ccb22434841700af43bead6618b4"
   },
   "preference-readers.txt": {
     "bytes": 236,

@@ -1,0 +1,20 @@
+
+# class: LX/F0R;
+# extends: Ljava/lang/Object;
+
+.method public A02(LLLJ)  # .registers 10
+    # full signature: LX/F0R;->A02(LX/0Tp;Ljava/lang/Integer;J)LX/Eoh;
+    0000..0002  const/4  v0, #0x0
+    0002..0006  const-string  v4, "notification"
+    0006..0008  move-object  v1, v6
+    0008..000a  move-object  v2, v7
+    000a..000c  move-wide  v6, v8
+    000c..000e  move-object  v3, v0
+    000e..0010  move-object  v5, v0
+    0010..0016  invoke-static/range  {v0..v7}, LX/F0R;->A00(Lcom/whatsapp/infra/core/jid/Jid;LX/0Tp;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;J)LX/Efa;
+    0016..0018  move-result-object  v0
+    0018..001e  invoke-virtual  {v0}, LX/Efa;->A00()LX/Eoh;
+    001e..0020  move-result-object  v0
+    0020..0022  return-object  v0
+    # exception table: 0 try range(s)
+.end method

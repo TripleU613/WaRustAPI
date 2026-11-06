@@ -189,3 +189,39 @@ claim their parity or any live server acceptance.
 The actor regression checks exact ACK and participant routing, capture existence
 before completing the write, repeated notification, malformed envelope followed
 by a ping barrier, no extra output, and durable capture after store reopen.
+
+## Picture ACK final wire construction — 2026-11-05
+
+**Confirmed static:**0v0.A00 dispatch integer76 selects11b8, casts Message.obj
+to Eoh and calls0v2.A02. That reads Eoh.A04, calls F3e.A05(child,key), then
+1rj.A04(node,loggable-id). Bounded dispatcher excerpt retains complete-source
+SHA-256, the switch and selected arm; unrelated message cases are omitted.
+F3e.A05 builds ack attributes in order: id, optional to, class, optional type,
+participant, recipient, nonempty/nonzero edit, extra attribute list. A supplied
+child becomes the sole child. Receipt/delivery has a special type omission;
+notification/picture follows the ordinary type path011a ->002e with picture.
+
+F0R.A02 supplies class notification and null optional integers/extra type to
+F0R.A00, then freezes Efa through A00. A00 reads from (when no explicit peer),
+id, participant and type; it does not copy incoming recipient/edit/error/offline
+attributes. Efa constructor initializes only an empty extra-attribute map;
+other reference fields default null. Its freeze and Eoh constructor preserve
+those fields, so the fresh selected notification key has no recipient, edit,
+extra attribute list or child. Optional error/failure metadata construction in
+F0R.A00 is not selected because the integers are null. No photo-specific wire
+fields appear in this path. This is a selected fresh-key proof, not proof that
+no other producer can mutate a key or that every native failure yields plain ACK.
+
+The existing picture actor regression now supplies incoming recipient, edit,
+error and offline attributes but still expects the exact base ACK with only
+id/to/class/type/participant. It catches accidental attribute copying without
+inventing a new photo-state policy. Earlier ACK routing/capture/reopen checks
+remain. Native ACK address helper behavior for every JID subtype, transport
+serialization, CCQ and malformed photo handler exception semantics remain outside
+this selected trace. No runtime policy changed in this follow-up.
+
+**Bounded rejected candidates:** Eoh.A06 reader census led to0Th.A01 and
+0ln.A0B; inspected bodies manage callbacks/message-too-large errors, rather than
+constructing this ACK.0m2.handleMessage manages callback completion; final wire
+construction is the positive0v0 ->0v2 ->F3e path retained here. This records
+negative search direction without retaining unrelated bulk dispatchers.

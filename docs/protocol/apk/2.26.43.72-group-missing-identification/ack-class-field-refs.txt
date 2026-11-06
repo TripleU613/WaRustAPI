@@ -1,0 +1,52 @@
+classes.dex  LX/0Sf;->A07(VLZ)
+  read opcode 0x54, dex byte offset: 0x5ac8c0
+classes.dex  LX/0Sf;->A0S(VL)
+  read opcode 0x54, dex byte offset: 0x5ad37c
+classes.dex  LX/0Sf;->A0T(VLL)
+  read opcode 0x54, dex byte offset: 0x5ad4c6
+classes.dex  LX/0Th;->A01(VLL)
+  read opcode 0x54, dex byte offset: 0x5b396e
+classes.dex  LX/0Th;->A02(VLL)
+  read opcode 0x54, dex byte offset: 0x5b3a66
+classes.dex  LX/0ln;->A0B(VLL)
+  read opcode 0x54, dex byte offset: 0x6dd020
+classes.dex  LX/0m2;->handleMessage(VL)
+  read opcode 0x54, dex byte offset: 0x6ddfae
+classes.dex  LX/0m2;->handleMessage(VL)
+  read opcode 0x54, dex byte offset: 0x6de084
+classes.dex  LX/0m2;->handleMessage(VL)
+  read opcode 0x54, dex byte offset: 0x6de592
+classes.dex  LX/0v0;->A00(VL)
+  read opcode 0x54, dex byte offset: 0x73825c
+classes.dex  LX/0v0;->A00(VL)
+  read opcode 0x54, dex byte offset: 0x73a1d4
+classes.dex  LX/0xW;->A03(LL)
+  read opcode 0x54, dex byte offset: 0x78117c
+classes2.dex  LX/1i8;->A02(LLLL)
+  read opcode 0x54, dex byte offset: 0x1e7e88
+classes2.dex  LX/1i8;->A03(LLLL)
+  read opcode 0x54, dex byte offset: 0x1e7ed0
+classes2.dex  LX/1rH;->A03(VL)
+  read opcode 0x54, dex byte offset: 0x240e8a
+classes2.dex  LX/1rL;->A03(VL)
+  read opcode 0x54, dex byte offset: 0x242344
+classes8.dex  LX/Eoh;-><init>(VLLLLLLLLLLJ)
+  write opcode 0x5b, dex byte offset: 0x5d678a
+classes8.dex  LX/Eoh;->A00(L)
+  read opcode 0x54, dex byte offset: 0x5d67d6
+classes8.dex  LX/Eoh;->A02(Z)
+  read opcode 0x54, dex byte offset: 0x5d68c8
+classes8.dex  LX/Eoh;->equals(ZL)
+  read opcode 0x54, dex byte offset: 0x5d6956
+classes8.dex  LX/Eoh;->equals(ZL)
+  read opcode 0x54, dex byte offset: 0x5d695a
+classes8.dex  LX/Eoh;->hashCode(I)
+  read opcode 0x54, dex byte offset: 0x5d6a98
+classes8.dex  LX/Eoh;->toString(L)
+  read opcode 0x54, dex byte offset: 0x5d6b84
+classes8.dex  LX/F3e;->A05(LLL)
+  read opcode 0x54, dex byte offset: 0x6af548
+classes8.dex  LX/FTr;->ATZ(VLLL)
+  read opcode 0x54, dex byte offset: 0x7ae032
+classes8.dex  Lcom/whatsapp/productinfra/status/sendflow/SendE2eStatusJob;->A0P(LLL)
+  read opcode 0x54, dex byte offset: 0x8e4fac

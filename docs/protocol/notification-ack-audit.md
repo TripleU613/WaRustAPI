@@ -118,3 +118,13 @@ again. Photo updates and missing-ID lifecycle remain unported, with no automatic
 queries or live validation. Actor regression verifies capture-before-write, exact
 participant routing, redelivery, ping after refusal and reopen persistence.
 [Source and limits](apk/2.26.43.72-group-missing-identification/README.md).
+
+
+### Picture ACK wire-field provenance (2026-11-05)
+
+**Confirmed static, APK2.26.43.72:** integer76 dispatches0v0 ->0v2.A02 ->
+F3e.A05, which builds the final ACK. F0R's fresh notification key populates
+from/id/participant/type/class; recipient/edit/error/offline are not copied.
+The existing picture actor regression now supplies those attributes and requires
+the same exact base ACK. Native photo exception/CCQ/full address parity remains
+unverified. [Retained final builder, key fields and limits](apk/2.26.43.72-group-missing-identification/README.md).

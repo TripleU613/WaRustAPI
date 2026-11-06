@@ -1,0 +1,79 @@
+
+# class: LX/F3e;
+# extends: Ljava/lang/Object;
+
+.method public A05(LLL)  # .registers 9
+    # full signature: LX/F3e;->A05(LX/0Tp;LX/Eoh;)LX/0Tp;
+    0000..0004  iget-object  v6, v8, LX/Eoh;->A02:Lcom/whatsapp/infra/core/jid/Jid;
+    0004..0008  const-string  v0, "receipt"
+    0008..000c  iget-object  v5, v8, LX/Eoh;->A06:Ljava/lang/String;
+    000c..0012  invoke-virtual  {v0, v5}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0012..0014  move-result  v0
+    0014..0018  if-eqz  v0, +0x83
+    0018..001c  const-string  v1, "delivery"
+    001c..0020  iget-object  v0, v8, LX/Eoh;->A09:Ljava/lang/String;
+    0020..0026  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0026..0028  move-result  v0
+    0028..002c  if-eqz  v0, +0x79
+    002c..002e  const/4  v4, #0x0
+    002e..0034  invoke-static  {}, LX/1Xl;->A18()Ljava/util/ArrayList;
+    0034..0036  move-result-object  v2
+    0036..003a  iget-object  v1, v8, LX/Eoh;->A08:Ljava/lang/String;
+    003a..003c  const/4  v3, #0x0
+    003c..0040  if-eqz  v1, +0x69
+    0040..0044  const-string  v0, "id"
+    0044..004a  invoke-static  {v0, v1, v2}, LX/6oe;->A1S(Ljava/lang/String;Ljava/lang/String;Ljava/util/AbstractCollection;)V
+    004a..004e  if-eqz  v6, +0x5f
+    004e..0054  const-string/jumbo  v0, "to"
+    0054..005a  invoke-static  {v6, v0, v2}, LX/DBe;->A1A(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;Ljava/util/AbstractCollection;)V
+    005a..005e  if-eqz  v5, +0x51
+    005e..0062  const-string  v0, "class"
+    0062..0068  invoke-static  {v0, v5, v2}, LX/6oe;->A1S(Ljava/lang/String;Ljava/lang/String;Ljava/util/AbstractCollection;)V
+    0068..006c  if-eqz  v4, +0x8
+    006c..0072  const-string/jumbo  v0, "type"
+    0072..0078  invoke-static  {v0, v4, v2}, LX/6oe;->A1S(Ljava/lang/String;Ljava/lang/String;Ljava/util/AbstractCollection;)V
+    0078..007c  iget-object  v1, v8, LX/Eoh;->A01:Lcom/whatsapp/infra/core/jid/Jid;
+    007c..0080  if-eqz  v1, +0x7
+    0080..0084  const-string  v0, "participant"
+    0084..008a  invoke-static  {v1, v0, v2}, LX/DBe;->A1A(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;Ljava/util/AbstractCollection;)V
+    008a..008e  iget-object  v1, v8, LX/Eoh;->A03:Lcom/whatsapp/infra/core/jid/UserJid;
+    008e..0092  if-eqz  v1, +0x7
+    0092..0096  const-string  v0, "recipient"
+    0096..009c  invoke-static  {v1, v0, v2}, LX/DBe;->A1A(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;Ljava/util/AbstractCollection;)V
+    009c..00a0  iget-object  v1, v8, LX/Eoh;->A07:Ljava/lang/String;
+    00a0..00a6  invoke-static  {v1}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+    00a6..00a8  move-result  v0
+    00a8..00ac  if-nez  v0, +0xf
+    00ac..00b0  const-string  v0, "0"
+    00b0..00b6  invoke-virtual  {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    00b6..00b8  move-result  v0
+    00b8..00bc  if-nez  v0, +0x7
+    00bc..00c0  const-string  v0, "edit"
+    00c0..00c6  invoke-static  {v0, v1, v2}, LX/6oe;->A1S(Ljava/lang/String;Ljava/lang/String;Ljava/util/AbstractCollection;)V
+    00c6..00ca  iget-object  v0, v8, LX/Eoh;->A0A:Ljava/util/List;
+    00ca..00ce  if-eqz  v0, +0x5
+    00ce..00d4  invoke-virtual  {v2, v0}, Ljava/util/AbstractCollection;->addAll(Ljava/util/Collection;)Z
+    00d4..00da  invoke-static  {v2, v3}, LX/B1y;->A1a(Ljava/util/AbstractCollection;I)[LX/0Tl;
+    00da..00dc  move-result-object  v2
+    00dc..00e0  if-nez  v7, +0xa
+    00e0..00e2  const/4  v1, #0x0
+    00e2..00e6  const-string  v0, "ack"
+    00e6..00ec  invoke-static  {v0, v2, v1}, LX/DBc;->A0m(Ljava/lang/String;[LX/0Tl;[LX/0Tp;)LX/0Tp;
+    00ec..00ee  move-result-object  v0
+    00ee..00f0  return-object  v0
+    00f0..00f2  const/4  v0, #0x1
+    00f2..00f6  new-array  v1, v0, [LX/0Tp;
+    00f6..00fa  aput-object  v7, v1, v3
+    00fa..00fc  goto  -0xc
+    00fc..0100  const-string  v0, "received stanza with null class"
+    0100..0106  invoke-static  {v3, v0}, LX/00L;->A0C(ZLjava/lang/String;)V
+    0106..0108  goto  -0x4f
+    0108..010c  sget-object  v0, LX/00L;->A02:Ljava/lang/Boolean;
+    010c..010e  goto  -0x59
+    010e..0112  const-string  v0, "received stanza with null id"
+    0112..0118  invoke-static  {v3, v0}, LX/00L;->A0C(ZLjava/lang/String;)V
+    0118..011a  goto  -0x67
+    011a..011e  iget-object  v4, v8, LX/Eoh;->A09:Ljava/lang/String;
+    011e..0120  goto  -0x78
+    # exception table: 0 try range(s)
+.end method

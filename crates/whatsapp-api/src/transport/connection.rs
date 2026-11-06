@@ -2338,6 +2338,11 @@ mod tests {
             .attr("from", "123456-789@g.us")
             .attr("participant", "15551234567@s.whatsapp.net")
             .attr("id", "PICTURE")
+            // F0R.A02/A00 does not copy these incoming attributes into Efa.
+            .attr("recipient", "15557654321@s.whatsapp.net")
+            .attr("edit", "7")
+            .attr("error", "500")
+            .attr("offline", "1")
             .children(children);
         let capture = format!(
             "inbound:sha256:{}",
