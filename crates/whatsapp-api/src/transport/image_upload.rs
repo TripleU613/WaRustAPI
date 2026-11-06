@@ -545,12 +545,45 @@ fn locations(response: &serde_json::Value) -> Result<(String, String)> {
     Ok((url.to_owned(), path.to_owned()))
 }
 
+fn replace_upload_state(
+    store: &ProtocolStore,
+    key: &str,
+    expected: &serde_json::Value,
+    next: &serde_json::Value,
+) -> Result<()> {
+    store.write(|tx| {
+        let current: Option<serde_json::Value> =
+            tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?;
+        if current.as_ref() != Some(expected) {
+            return Err(invalid(
+                "upload reservation changed before response settlement",
+            ));
+        }
+        tx.put_json(Table::Checkpoints, key.as_bytes(), 1, next)
+    })
+}
+
+// Observation is independent of mutable upload authority, and never authorizes retry.
+fn capture_upload_response(
+    store: &ProtocolStore,
+    key: &str,
+    reservation: &serde_json::Value,
+    status: u16,
+    body: Option<&[u8]>,
+) -> Result<String> {
+    let capture = format!("{key}:response:{}", super::messaging::new_message_id()?);
+    store.write(|tx| tx.put_json(Table::Checkpoints, capture.as_bytes(), 1,
+        &serde_json::json!({"http_status":status,"body":body,"encrypted_hash":reservation["encrypted_hash"],"at":Timestamp::now()})))?;
+    Ok(capture)
+}
+
 // Header receipt is distinct from a complete usable upload result. Persist it
 // before streaming the bounded body; interruptions must not erase known status.
 fn retain_response_headers(
     store: &ProtocolStore,
     key: &str,
     status: u16,
+    expected: &serde_json::Value,
 ) -> Result<serde_json::Value> {
     if !(100..=599).contains(&status) {
         return Err(invalid("invalid upload HTTP status"));
@@ -559,6 +592,11 @@ fn retain_response_headers(
         let mut saved: serde_json::Value = tx
             .get_json(Table::Checkpoints, key.as_bytes(), 1)?
             .ok_or_else(|| invalid("upload response has no reservation"))?;
+        if &saved != expected {
+            return Err(invalid(
+                "upload reservation changed before response headers",
+            ));
+        }
         if saved["status"] != "outcome_unknown" {
             return Err(invalid("upload headers cannot replace an existing outcome"));
         }
@@ -800,7 +838,9 @@ async fn upload_prepared(
         .await
         .map_err(|_| invalid("upload transport failed; outcome unknown, no retry"))?;
     let status = response.status().as_u16();
-    let mut saved = retain_response_headers(store, &key, status)?;
+    capture_upload_response(store, &key, &saved, status, None)?;
+    let mut saved = retain_response_headers(store, &key, status, &saved)?;
+    let headers = saved.clone();
     let mut body = Zeroizing::new(Vec::new());
     while let Some(chunk) = response
         .chunk()
@@ -814,11 +854,13 @@ async fn upload_prepared(
         }
         body.extend_from_slice(&chunk);
     }
+    capture_upload_response(store, &key, &saved, status, Some(&body))?;
     saved["http_status"] = status.into();
     saved["response"] = serde_json::json!(&*body);
     // Persist even malformed/refused responses before inspecting them.
     saved["status"] = "response_received".into();
-    store.write(|tx| tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &saved))?;
+    replace_upload_state(store, &key, &headers, &saved)?;
+    let response_state = saved.clone();
     tracing::info!(status, "media upload response saved encrypted");
     if status != 200 {
         return Err(invalid("upload not accepted; no automatic retry"));
@@ -921,12 +963,90 @@ async fn upload_prepared(
     };
     saved["protobuf"] = serde_json::json!(&*payload);
     saved["status"] = "uploaded".into();
-    store.write(|tx| tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &saved))?;
+    replace_upload_state(store, &key, &response_state, &saved)?;
     Ok(payload)
 }
 
 #[cfg(test)]
 mod tests {
+    // Existing phase tests use the current record; production passes its frozen
+    // initiating reservation explicitly to the parent function.
+    fn test_response_headers(
+        store: &ProtocolStore,
+        key: &str,
+        status: u16,
+    ) -> Result<serde_json::Value> {
+        let current = store
+            .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))?
+            .unwrap_or(serde_json::Value::Null);
+        retain_response_headers(store, key, status, &current)
+    }
+
+    #[test]
+    fn upload_response_stages_refuse_replaced_state_and_preserve_observations_after_reopen() {
+        use super::*;
+        use crate::{
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("upload-owner.redb");
+        let open = |create| {
+            ProtocolStore::open(OpenOptions {
+                path: path.clone(),
+                account_id: AccountId::new("fixture").unwrap(),
+                create,
+                key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+            })
+            .unwrap()
+        };
+        let store = open(true);
+        let key = "upload";
+        let expected = serde_json::json!({"status":"outcome_unknown","hash":"original","encrypted_hash":[1,2,3]});
+        let replacement = serde_json::json!({"status":"outcome_unknown","hash":"replacement"});
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &replacement))
+            .unwrap();
+        let capture =
+            capture_upload_response(&store, key, &expected, 200, Some(b"private-response"))
+                .unwrap();
+        let journal = store.journal_head().unwrap();
+        assert!(retain_response_headers(&store, key, 200, &expected).is_err());
+        for phase in ["response_headers_received", "response_received"] {
+            let old = serde_json::json!({"status":phase,"hash":"original"});
+            assert!(
+                replace_upload_state(&store, key, &old, &serde_json::json!({"status":"uploaded"}))
+                    .is_err()
+            );
+        }
+        assert_eq!(store.journal_head().unwrap(), journal);
+        drop(store);
+        let store = open(false);
+        assert_eq!(
+            store
+                .read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, key.as_bytes(), 1))
+                .unwrap(),
+            Some(replacement)
+        );
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                .unwrap()
+                .is_some()
+        );
+        // Each exact phase can progress, but its old snapshot cannot settle twice.
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &expected))
+            .unwrap();
+        let headers = retain_response_headers(&store, key, 200, &expected).unwrap();
+        let body = serde_json::json!({"status":"response_received","http_status":200});
+        replace_upload_state(&store, key, &headers, &body).unwrap();
+        assert!(replace_upload_state(&store, key, &headers, &body).is_err());
+        let uploaded = serde_json::json!({"status":"uploaded","protobuf":[1,2]});
+        replace_upload_state(&store, key, &body, &uploaded).unwrap();
+        assert!(replace_upload_state(&store, key, &body, &uploaded).is_err());
+    }
+
     #[test]
     fn finished_voice_seal_has_android_json_order_slash_escaping_and_length() {
         let seal = finished_voice_seal(&[0; 32]).unwrap();
@@ -1230,7 +1350,7 @@ mod tests {
         store
             .write(|tx| tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &reservation))
             .unwrap();
-        let observed = retain_response_headers(&store, key, 200).unwrap();
+        let observed = test_response_headers(&store, key, 200).unwrap();
         for field in [
             "body",
             "encrypted_hash",
@@ -1247,7 +1367,7 @@ mod tests {
             .unwrap();
         assert_eq!(restored, observed);
         assert!(saved_payload(&restored, "voice-fixture", "recipient-fixture").is_err());
-        assert!(retain_response_headers(&store, key, 503).is_err());
+        assert!(test_response_headers(&store, key, 503).is_err());
         // Historical completed rows need no seal/version backfill to reuse the
         // already-created payload. Calling the resolver must not mutate storage.
         let legacy = serde_json::json!({"status":"uploaded", "hash":"voice-fixture",
@@ -1286,16 +1406,16 @@ mod tests {
         };
         let store = open();
         let key = "message:synthetic:upload";
-        assert!(retain_response_headers(&store, key, 200).is_err());
+        assert!(test_response_headers(&store, key, 200).is_err());
         for status in [200, 302, 403, 429, 503] {
             store.write(|tx| tx.put_json(Table::Checkpoints, key.as_bytes(), 1,
                 &serde_json::json!({"status":"outcome_unknown", "hash":"fixture-hash", "to":"fixture-recipient", "body":[1,2,3]}))).unwrap();
-            let saved = retain_response_headers(&store, key, status).unwrap();
+            let saved = test_response_headers(&store, key, status).unwrap();
             assert_eq!(saved["http_status"], status);
             assert_eq!(saved["status"], "response_headers_received");
             assert_eq!(saved["body"], serde_json::json!([1, 2, 3]));
             assert!(saved_payload(&saved, "fixture-hash", "fixture-recipient").is_err());
-            assert!(retain_response_headers(&store, key, 500).is_err());
+            assert!(test_response_headers(&store, key, 500).is_err());
         }
         drop(store);
         let store = open();
@@ -1310,7 +1430,7 @@ mod tests {
             store
                 .write(|tx| tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &settled))
                 .unwrap();
-            assert!(retain_response_headers(&store, key, 200).is_err());
+            assert!(test_response_headers(&store, key, 200).is_err());
             let after: serde_json::Value = store
                 .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
                 .unwrap()

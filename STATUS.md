@@ -1,3 +1,5 @@
+Media upload headers/body/protobuf transitions now require exact expected reservation state; independent encrypted HTTP observations survive stale settlement refusal. [Media-upload response reservation ownership](docs/protocol/replay-safety-audit.md#media-upload-response-transitions-retain-reservation-ownership-2026-11-06). Existing one-POST/no-retry behavior retained; offline only.
+
 Separate CLI group distributions now reserve frozen child wire/ID before write and require exact parent/child authority at settlement. [Separate distribution reservation ownership](docs/protocol/replay-safety-audit.md#cli-separate-distributions-reserve-before-write-2026-11-06). Duplicate/changed/reopen paths refuse; no live operation.
 
 CLI group ACK now requires exact current uncertain intent before status settlement or sender-key distribution confirmation. [Group ACK intent and distribution authority](docs/protocol/replay-safety-audit.md#cli-group-ack-owns-intent-before-distribution-promotion-2026-11-06). Real distribution-state stale/duplicate/reopen controls; no live operation.

@@ -8254,3 +8254,5 @@ Local CLI direct-send cached-intent overwrite corrected with transaction-bound e
 CLI group ACK cached-intent overwrite/promotion gap closed using shared direct-send ownership guard before distribution confirmation. [Group ACK intent and distribution authority](replay-safety-audit.md#cli-group-ack-owns-intent-before-distribution-promotion-2026-11-06). No wire or handset-delivery claim.
 
 Local out-of-band sender-key child write/settlement ownership now durable before network write and bound to current parent intent. [Separate distribution reservation ownership](replay-safety-audit.md#cli-separate-distributions-reserve-before-write-2026-11-06). No retry, wire grammar or native-policy claim.
+
+Local media-upload cached-state overwrite gaps corrected across header/response/uploaded transitions with independent HTTP evidence capture. [Media-upload response reservation ownership](replay-safety-audit.md#media-upload-response-transitions-retain-reservation-ownership-2026-11-06). No wire-schema or live acceptance claim.

@@ -1222,3 +1222,36 @@ the existing waiter. Full native separate-distribution scheduling and session-wi
 credential ownership remain separate audit work. The additional frozen child
 wire is stored only in the encrypted protocol store; no plaintext artifact or
 new public retry operation is created.
+
+## Media upload response transitions retain reservation ownership (2026-11-06)
+
+**Confirmed local gaps / fixed offline:** upload header handling required only
+current status=outcome_unknown, not equality with the reservation that initiated
+the POST. Complete-body and usable-payload transitions later overwrote the row
+from cached values without current-state comparison.
+
+The production header transition now receives the initiating frozen reservation
+and checks exact equality inside its transaction. Body persistence requires the
+exact header state; uploaded/protobuf persistence requires the exact response
+state. A changed, missing or already-advanced record refuses rather than applying
+a stale HTTP response to another upload. Existing one-POST, size bounds, MIME/
+seal, location validation and no-retry policy remain unchanged.
+
+HTTP status observations and complete bounded response bodies are independently
+captured before their authority transitions under unique upload response keys.
+They contain HTTP status/body, encrypted-file hash reference and local observation
+time, not another media-key copy. They stay encrypted in the protocol store.
+Stale transition refusal does not discard those observations. Interrupted bodies
+still retain header observations; a partial body is not labelled complete.
+
+Regression upload_response_stages_refuse_replaced_state_and_preserve_observations_after_reopen
+covers old reservation/header/response snapshots refusing to overwrite replacement
+state, unchanged journal after rejected transitions, separately retained response
+capture after reopen, and once-only exact phase progression. Existing header and
+voice-seal regressions still verify status retention and frozen body preservation.
+No HTTP request or account operation ran in these tests.
+
+**Limits:** snapshot checks are local transaction boundaries, not atomic HTTP/store
+operations or proof of successful server adoption. This is not a new Android
+upload schema or ban-prevention guarantee. The added observation artifacts do not
+permit retransmission or clearing an uncertain upload.

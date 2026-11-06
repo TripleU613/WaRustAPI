@@ -17821,5 +17821,12 @@
     "x-live": false,
     "description": "Existing CLI separate sender-key distribution reserves frozen wire/ID as outcome_unknown before write under exact current group intent. Child settlement checks both parent and child; existing/uncertain child refuses replay. Captured replies persist through existing waiter. No new wire fields, retry API, key rotation or live verification.",
     "evidence": "docs/protocol/replay-safety-audit.md#cli-separate-distributions-reserve-before-write-2026-11-06"
+},
+  "x-media-upload-response-ownership": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Existing media uploads require exact reservation/header/response snapshots at each authority transition. HTTP status and complete bounded response bodies are independently retained encrypted before settlement; changed state refuses without retransmission. Existing one-POST, body bounds and upload location validation remain; no live verification or new retry capability.",
+    "evidence": "docs/protocol/replay-safety-audit.md#media-upload-response-transitions-retain-reservation-ownership-2026-11-06"
 }
 }
