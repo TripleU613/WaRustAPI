@@ -111,6 +111,48 @@ internals, nested controls, all corruption routing and complete retry/lifecycle
 parity remain outside these corrections. No live account operation or
 ban-prevention guarantee is established.
 
+## Compression failure consumes the receive epoch (2026-11-06)
+
+**Confirmed selected static / implemented offline:**123.A08's two compressed
+branches use InflaterInputStream; the streaming variant drains the remainder to
+EOF before returning its parsed node. IOException during read/parse/drain is
+not caught as a recoverable stanza exception.1s2.run cleans its reader-local
+map, rethrows to the outer IOException handler, invokes onError and returns.
+[Complete sources, exact exception ranges and concrete listener routing](apk/2.26.43.72-compression-failure/README.md).
+This is distinct from nativeLIL error2 and is not evidence of native replay or
+account-ban policy. Android inflater runtime behavior was not executed here.
+
+Rust previously treated CodecError::Compression/classcompression as an ordinary
+undecodable frame and could keep reading or writing. terminal_frame_error now
+maps that class to PeerProtocol with a fixed diagnostic. Existing normal-reader
+coordination consumes the split epoch and preserves the exact authenticated
+record before queue publication; actor/captured waits/CLI windows stop before a
+later ACK or ping. read_frame closes the channel and returns the capture carrier;
+read_node closes and returns the transport error. No-store callers still cannot
+persist captures on their own. No new NACK, acceptance, callback completion,
+reservation reset or resend is introduced. Already-started writes remain uncertain.
+
+The existing bounded inflation failure also uses classcompression and now
+terminates. This is a local fail-closed size policy, NOT a native maximum or a
+claim that every malformed input takes the identical native exception branch.
+Unknown noncompression codec classes retain their existing capture behavior.
+Successfully inflated but undecodable nodes keep their distinct codec classes;
+this change does not establish parity for those parse-failure branches.
+Generic reader-local map cleanup is not ported into durable state deletion.
+
+The real encrypted receive fixture failed before correction because a subsequent
+write was not rejected asClosed. Both read_node/read_frame now reject later reads
+and writes after invalid zlib and corrupted-Adler-checksum records containing an
+otherwise complete literal IQ. The extended actor ping fixture also failed before
+correction; it now captures and stops before a following ping can produce a
+response. Actor delivery uses the existing fake node link, not a new full socket
+integration test. A real durable in-flight receipt stays outcome_unknown after
+compression failure followed by its matching ACK and a ping, survives reopen,
+and is not replayed by the next activated actor. Captured-wait tests retain exact
+raw bytes and an unchanged synthetic uncertain checkpoint, leaving the following
+matching reply unread. Positive compression and local output-bound codec controls
+remain in the workspace suite. No live account operation was performed.
+
 ## Reproduce the evidence
 
 The linked checked bundles already retain complete methods, APK identity,

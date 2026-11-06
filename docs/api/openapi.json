@@ -18351,5 +18351,17 @@
     ],
     "description": "Pinned123.A08 skips authenticated zero-length plaintext. Normal split reader and both stanza receive APIs now skip before decoding/capture/routing, retaining crypto counter consumption and caller-owned deadlines with cooperative cancellation. Raw encrypted read and pure offline decoder semantics unchanged. Failing-before local encrypted IQ fixture and bounded pending-read cancellation controls retained; no new send, retry, settlement or live operation. New encrypted fixtures cover low-level APIs, not an end-to-end actor/socket empty-record test.",
     "evidence": "docs/protocol/frame-admission.md#authenticated-empty-records-are-skipped-2026-11-06"
+  },
+  "x-compression-failure-admission": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [
+      "whatsapp_api::transport::messaging::terminal_frame_error",
+      "whatsapp_api::transport::messaging::read_node",
+      "whatsapp_api::transport::messaging::read_frame"
+    ],
+    "description": "Pinned123.A08 compressed reads/drain precede stanza return;1s2.run IOException path invokes onError and returns. Compression codec class now maps toPeerProtocol, consumes receive epoch, captures before publication where a store exists, and stops actor/waits/CLI before following ACK/ping. Low-level channels reject later reads/writes. Existing local inflation cap uses the same terminal policy; no native size limit claimed. Failing-before encrypted invalid/checksum fixtures, actor ping and real uncertain receipt reopen/no-replay controls retained. No native global reconnect emulation, NACK, settlement, replay authority or live operation.",
+    "evidence": "docs/protocol/frame-admission.md#compression-failure-consumes-the-receive-epoch-2026-11-06"
   }
 }

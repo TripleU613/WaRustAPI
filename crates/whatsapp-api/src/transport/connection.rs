@@ -3913,6 +3913,7 @@ mod tests {
         for (frame, class) in [
             (fragmented, "fragmented_frame"),
             (vec![0], "header_only_frame"),
+            (vec![2, 0], "compression"),
         ] {
             let dir = tempfile::tempdir().unwrap();
             let store = open(&dir.path().join("frame-admission.redb"));
@@ -3947,70 +3948,75 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn root_stream_end_is_captured_before_following_ping_without_ack() {
-        let dir = tempfile::tempdir().unwrap();
-        let path = dir.path().join("stream-end.redb");
-        let store = open(&path);
-        queue_read_receipt(&store, "held-before-end");
-        let mut fake = start(&store, false, None);
-        fake.activate().await;
-        let (receipt, written) = fake.written().await;
-        let root = receipt
-            .get_attr("id")
-            .and_then(|v| v.as_text())
-            .unwrap()
-            .to_owned();
-        written.send(Ok(())).unwrap();
-        assert_eq!(receipt_status(&store, "held-before-end"), "outcome_unknown");
-        let frame = [0, 0xF8, 1, 2];
-        fake.to_worker
-            .try_send(Ok(inbound_from_frame(&frame)))
-            .unwrap();
-        fake.to_worker
-            .try_send(Ok(Inbound::Node(
-                Node::new("ack")
-                    .attr("id", root)
-                    .attr("class", "receipt")
-                    .attr("type", "read")
-                    .attr("from", peer()),
-            )))
-            .unwrap();
-        fake.to_worker
-            .try_send(Ok(Inbound::Node(
-                Node::new("iq")
-                    .attr("id", "following-ping")
-                    .attr("type", "get")
-                    .attr("xmlns", "urn:xmpp:ping"),
-            )))
-            .unwrap();
-        let result = tokio::time::timeout(Duration::from_secs(1), &mut fake.task)
-            .await
-            .expect("stream end must stop without another response")
-            .unwrap();
-        assert!(matches!(
-            result,
-            Err(Error::Transport(TransportError::PeerClosed))
-        ));
-        assert!(matches!(
-            fake.from_worker.try_recv(),
-            Err(mpsc::error::TryRecvError::Disconnected)
-        ));
-        let captures = super::super::inbox::undecodable_frames(&store).unwrap();
-        assert_eq!(captures.len(), 1);
-        assert_eq!(captures[0].class, "stream_end");
-        assert_eq!(captures[0].bytes, frame.len());
-        assert_eq!(receipt_status(&store, "held-before-end"), "outcome_unknown");
-        drop(fake);
-        drop(store);
-        let reopened = open(&path);
-        assert_eq!(
-            receipt_status(&reopened, "held-before-end"),
-            "outcome_unknown"
-        );
-        let mut next = start(&reopened, false, None);
-        next.activate().await;
-        next.nothing_written(Duration::from_millis(100)).await;
-        next.stop_cleanly().await;
+    async fn terminal_frame_is_captured_before_following_ack_or_ping_without_replay() {
+        for (frame, class) in [
+            (vec![0, 0xF8, 1, 2], "stream_end"),
+            (vec![2, 0], "compression"),
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("stream-end.redb");
+            let store = open(&path);
+            queue_read_receipt(&store, "held-before-end");
+            let mut fake = start(&store, false, None);
+            fake.activate().await;
+            let (receipt, written) = fake.written().await;
+            let root = receipt
+                .get_attr("id")
+                .and_then(|v| v.as_text())
+                .unwrap()
+                .to_owned();
+            written.send(Ok(())).unwrap();
+            assert_eq!(receipt_status(&store, "held-before-end"), "outcome_unknown");
+            fake.to_worker
+                .try_send(Ok(inbound_from_frame(&frame)))
+                .unwrap();
+            fake.to_worker
+                .try_send(Ok(Inbound::Node(
+                    Node::new("ack")
+                        .attr("id", root)
+                        .attr("class", "receipt")
+                        .attr("type", "read")
+                        .attr("from", peer()),
+                )))
+                .unwrap();
+            fake.to_worker
+                .try_send(Ok(Inbound::Node(
+                    Node::new("iq")
+                        .attr("id", "following-ping")
+                        .attr("type", "get")
+                        .attr("xmlns", "urn:xmpp:ping"),
+                )))
+                .unwrap();
+            let result = tokio::time::timeout(Duration::from_secs(1), &mut fake.task)
+                .await
+                .expect("terminal frame must stop without another response")
+                .unwrap();
+            match (class, result) {
+                ("stream_end", Err(Error::Transport(TransportError::PeerClosed))) => {}
+                ("compression", Err(Error::Transport(TransportError::PeerProtocol(_)))) => {}
+                (_, other) => panic!("unexpected terminal outcome: {other:?}"),
+            }
+            assert!(matches!(
+                fake.from_worker.try_recv(),
+                Err(mpsc::error::TryRecvError::Disconnected)
+            ));
+            let captures = super::super::inbox::undecodable_frames(&store).unwrap();
+            assert_eq!(captures.len(), 1);
+            assert_eq!(captures[0].class, class);
+            assert_eq!(captures[0].bytes, frame.len());
+            assert_eq!(receipt_status(&store, "held-before-end"), "outcome_unknown");
+            drop(fake);
+            drop(store);
+            let reopened = open(&path);
+            assert_eq!(
+                receipt_status(&reopened, "held-before-end"),
+                "outcome_unknown"
+            );
+            let mut next = start(&reopened, false, None);
+            next.activate().await;
+            next.nothing_written(Duration::from_millis(100)).await;
+            next.stop_cleanly().await;
+        }
     }
 
     #[tokio::test]

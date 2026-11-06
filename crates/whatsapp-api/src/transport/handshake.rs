@@ -370,6 +370,7 @@ mod tests {
         CancelRead,
         PartialWrite,
         StreamEnd,
+        InvalidCompression { direct: bool, checksum: bool },
         EmptyRecord { direct: bool, timeout: bool },
         InvalidFrame { fragmented: bool, direct: bool },
     }
@@ -480,7 +481,18 @@ mod tests {
                 assert!(reader.read_frame(&mut server).await.unwrap().is_none());
                 return;
             }
+            // A complete node with a corrupted Adler checksum must not be routed.
+            let mut corrupt = vec![2];
+            corrupt.extend(miniz_oxide::deflate::compress_to_vec_zlib(
+                &[0xF8, 1, 25],
+                6,
+            ));
+            *corrupt.last_mut().unwrap() ^= 1;
             let reply: &[u8] = match record_case {
+                RecordCase::InvalidCompression { checksum: true, .. } => &corrupt,
+                RecordCase::InvalidCompression {
+                    checksum: false, ..
+                } => &[2, 0],
                 RecordCase::EmptyRecord { .. } => &[0, 0xF8, 1, 25],
                 RecordCase::StreamEnd => &[0, 0xF8, 1, 2],
                 RecordCase::InvalidFrame {
@@ -580,7 +592,9 @@ mod tests {
                 };
                 assert_eq!(node.description, "iq");
                 assert!(channel.read().await.unwrap().is_none());
-            } else if let RecordCase::InvalidFrame { direct, .. } = record_case {
+            } else if let RecordCase::InvalidFrame { direct, .. }
+            | RecordCase::InvalidCompression { direct, .. } = record_case
+            {
                 channel.write(b"local record fixture").await.unwrap();
                 if direct {
                     assert!(matches!(
@@ -594,7 +608,7 @@ mod tests {
                     assert!(matches!(
                         frame,
                         super::super::messaging::FrameRead::Undecodable {
-                            class: "header_only_frame" | "fragmented_frame",
+                            class: "header_only_frame" | "fragmented_frame" | "compression",
                             ..
                         }
                     ));
@@ -724,6 +738,20 @@ mod tests {
                 },
             )
             .await;
+        }
+    }
+
+    #[tokio::test]
+    async fn invalid_compression_consumes_both_encrypted_receive_apis() {
+        for checksum in [false, true] {
+            for direct in [false, true] {
+                exchange(
+                    false,
+                    false,
+                    RecordCase::InvalidCompression { direct, checksum },
+                )
+                .await;
+            }
         }
     }
 

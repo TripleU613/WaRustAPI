@@ -1,0 +1,14 @@
+{
+  "README.md": {
+    "bytes": 3717,
+    "sha256": "ab55fff68d732485b624ddb65206f2e708d689f7b50c3c499e5472f8a426b5cd"
+  },
+  "error-manager-proxy.txt": {
+    "bytes": 279,
+    "sha256": "1c46a390f6e422873fe6353eb51bd2615eaac2e87b8cac46fff71fb3814a5218"
+  },
+  "reader-error-submit.txt": {
+    "bytes": 524,
+    "sha256": "b821d3b48bfbb77ae52867eccc94434c2839ee5b1f6a35c47169d658f1532803"
+  }
+}

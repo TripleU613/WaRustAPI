@@ -1,0 +1,10 @@
+
+# class: LX/0ZJ;
+# extends: Landroid/os/HandlerThread;
+
+.method public A1J(VLI)  # .registers 2
+    # full signature: LX/0ZJ;->A1J(LX/0ZJ;I)V
+    0000..0006  invoke-direct  {v0, v1}, LX/0ZJ;->A0m(I)V
+    0006..0008  return-void
+    # exception table: 0 try range(s)
+.end method
