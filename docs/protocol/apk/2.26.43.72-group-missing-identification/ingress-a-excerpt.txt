@@ -1,0 +1,39 @@
+# Prefix excerpt only; not complete method/control flow.
+# Full export SHA-256: 1d435d87f0d71f1cfce2fe7ca08d6c8eb27abfecc7fd75d226b965e4954e251b
+
+# class: LX/0w9;
+# extends: LX/0v6;
+
+.method public A09(VLI)  # .registers 66
+    # full signature: LX/0w9;->A09(LX/0Tp;I)V
+    0000..0004  move-object/from16  v1, v63
+    0004..0008  iget-object  v0, v1, LX/0v6;->A00:Lcom/whatsapp/infra/core/jid/Jid;
+    0008..000e  invoke-static  {v0}, LX/0Dn;->A00(Lcom/whatsapp/infra/core/jid/Jid;)LX/0DY;
+    000e..0010  move-result-object  v2
+    0010..0014  sget-object  v0, Lcom/whatsapp/infra/core/jid/UserJid;->Companion:LX/0Dj;
+    0014..001a  invoke-static  {v2}, LX/0Dj;->A00(Lcom/whatsapp/infra/core/jid/Jid;)Lcom/whatsapp/infra/core/jid/UserJid;
+    001a..001c  move-result-object  v9
+    001c..0020  move-object/from16  v4, v64
+    0020..0026  invoke-virtual  {v4}, LX/0Tp;->A0D()LX/0Tp;
+    0026..0028  move-result-object  v0
+    0028..002c  const-class  v10, Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    002c..0030  const-string  v2, "participant_pn"
+    0030..0036  invoke-virtual  {v4, v10, v2}, LX/0Tp;->A0A(Ljava/lang/Class;Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    0036..0038  move-result-object  v7
+    0038..003c  check-cast  v7, Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    003c..0042  invoke-direct  {v1, v7, v9}, LX/0w9;->A05(Lcom/whatsapp/infra/core/jid/PhoneUserJid;Lcom/whatsapp/infra/core/jid/UserJid;)V
+    0042..0046  iget-object  v3, v1, LX/0v6;->A01:Lcom/whatsapp/infra/core/jid/Jid;
+    0046..004a  sget-object  v2, LX/1bc;->A01:LX/1bd;
+    004a..0050  invoke-static  {v3}, LX/1bd;->A00(Lcom/whatsapp/infra/core/jid/Jid;)LX/1bc;
+    0050..0052  move-result-object  v2
+    0052..0056  iget-object  v8, v1, LX/0w9;->A07:LX/08Y;
+    0056..005a  const/16  v3, #0x36fe
+    005a..0060  invoke-virtual  {v8, v3}, LX/00E;->A14(I)Z
+    0060..0062  move-result  v3
+    0062..0066  if-eqz  v3, +0x17e
+    0066..006c  invoke-virtual  {v4}, LX/0Tp;->A0D()LX/0Tp;
+    006c..006e  move-result-object  v5
+    006e..0072  iget-object  v6, v5, LX/0Tp;->A00:Ljava/lang/String;
+    0072..0076  if-eqz  v2, +0x7
+    0076..007a  iget-object  v3, v1, LX/0w9;->A0I:LX/0zu;
+    007a..0080  invoke-virtual  {v3, v2, v4}, LX/0zu;->A02(Lcom/whatsapp/infra/core/jid/GroupJid;LX/0Tp;)V

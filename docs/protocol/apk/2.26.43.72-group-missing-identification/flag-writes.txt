@@ -1,0 +1,2 @@
+classes5.dex  LX/82U;-><init>(VLLLLLLLLLLLLLLIIIIIIIIJJJJZZZZZZZZZZZZZ)
+  write opcode 0x5c, dex byte offset: 0x3ebb92

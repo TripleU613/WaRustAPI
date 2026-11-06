@@ -1,3 +1,14 @@
+2026-11-05 — **Missing participant-identification context lifecycle connected.**
+
+The current APK persists a group set: selected marker presence adds, and group
+info's mapped missing-identification boolean later adds/removes. Rust's explicit
+MEX context vocabulary already exists; automatic lifecycle/admission remains
+unported and no partial ingress policy was guessed.
+[Source, register proof and limits](docs/protocol/apk/2.26.43.72-group-missing-identification/README.md).
+Validation: fmt, strict Clippy, CLI reference, OpenAPI, APK coverage, pinned
+APK identity and staged checksum/link hygiene passed. No new workspace test
+run for this research-only chunk. No runtime or live account operation changed.
+
 2026-11-05 — **Current group-info MEX writer and selected timeout connected.**
 
 The current helper builds QueryGroupInfo GraphQL input, not Rust's classic

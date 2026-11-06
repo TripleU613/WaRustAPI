@@ -15838,6 +15838,15 @@
     "evidence": "docs/protocol/apk/2.26.43.72-sender-key-ack-confirmation/README.md",
     "description": "Traces native message ACK callback registration and wait, successful normal sender-key marking and conditional one-time-key reset. Connects registration-time pre-ACK marker snapshot to matched callback retirement after wrapped result. Rust per-distribution durable confirmation and native address ownership remain incomplete. Evidence only; no command, HTTP route or production behavior change."
   },
+  "x-group-missing-identification-lifecycle-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline current-APK MEX context lifecycle evidence"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-group-missing-identification/README.md",
+    "description": "Traces persisted missing-identification group set, selected marker add, and converted group-info boolean add/remove through exact current field/register propagation. Rust already has explicit context vocabulary; automatic admitted ingress, lifecycle, preferences transaction parity and coordinator integration remain unported. No runtime policy, query, route or live operation added."
+  },
   "x-group-info-mex-timeout-evidence": {
     "x-cli": false,
     "x-transport": [

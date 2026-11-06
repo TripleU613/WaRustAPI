@@ -1,0 +1,26 @@
+
+# class: LX/0zu;
+# extends: Ljava/lang/Object;
+
+.method public A02(VLL)  # .registers 5
+    # full signature: LX/0zu;->A02(Lcom/whatsapp/infra/core/jid/GroupJid;LX/0Tp;)V
+    0000..0002  const/4  v0, #0x1
+    0002..0008  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  const-string  v0, "missing_participant_identification"
+    000c..0012  invoke-virtual  {v4, v0}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    0012..0014  move-result-object  v0
+    0014..0018  if-eqz  v0, +0x1a
+    0018..001c  iget-object  v0, v2, LX/0zu;->A01:LX/05a;
+    001c..0020  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0020..0026  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0026..0028  move-result-object  v1
+    0028..002c  check-cast  v1, LX/0cv;
+    002c..0032  invoke-static  {v1}, LX/0cv;->A00(LX/0cv;)Ljava/util/Set;
+    0032..0034  move-result-object  v0
+    0034..003a  invoke-static  {v0}, LX/07Z;->A1R(Ljava/lang/Iterable;)Ljava/util/Set;
+    003a..003c  move-result-object  v0
+    003c..0042  invoke-interface  {v0, v3}, Ljava/util/Set;->add(Ljava/lang/Object;)Z
+    0042..0048  invoke-static  {v1, v0}, LX/0cv;->A01(LX/0cv;Ljava/util/Set;)V
+    0048..004a  return-void
+    # exception table: 0 try range(s)
+.end method

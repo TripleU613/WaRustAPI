@@ -1,0 +1,62 @@
+{
+  "README.md": {
+    "bytes": 5263,
+    "sha256": "08c110b006b8c2ab8a5c1c01bd863e40a069491b347835a56675634fb062d3a8"
+  },
+  "adjacent-flag-negative.txt": {
+    "bytes": 119,
+    "sha256": "71ca2d96027803823de0ae43b3be68fae6b438a870574a61dc80630a9acbdde8"
+  },
+  "apply-group-info.txt": {
+    "bytes": 39385,
+    "sha256": "aee41162788c93d67d5e0fa5f89bb7bc976421e38681b2b8d7c04016dba1ed13"
+  },
+  "converter.txt": {
+    "bytes": 39954,
+    "sha256": "8e82aff339dd36b90f9d27aba9ca7bb592147224f0d2ddb88c65c4337dca4621"
+  },
+  "flag-writes.txt": {
+    "bytes": 119,
+    "sha256": "3470a5b4253da61be44caf355bd50fd1e2be73083dd7bdf07a567e63bdf76d27"
+  },
+  "ingress-a-excerpt.txt": {
+    "bytes": 2292,
+    "sha256": "b9a0aafc0dd9955620a6f947300bce3f1506535e25de07ed0fee2e5286755df8"
+  },
+  "ingress-b.txt": {
+    "bytes": 27261,
+    "sha256": "45681b3961485920c40347a39e3bd732a553f5a87ad6b43cde3eb7fddaecca47"
+  },
+  "mark-callers.txt": {
+    "bytes": 132,
+    "sha256": "47d8dba4f5e6c9bd15c17f4e310ac51a71e07678135bccfeacffb3adeaa09256"
+  },
+  "mark-missing.txt": {
+    "bytes": 1258,
+    "sha256": "fe793eb861f189b466d2426ee05da943a32d17f28ae964023d1a41ae14331770"
+  },
+  "preference-readers.txt": {
+    "bytes": 236,
+    "sha256": "1af98c1fbbc5cfa85e68a8fb6f56c8dd777ae357869e19409eec99d28ffd0366"
+  },
+  "preference-writers.txt": {
+    "bytes": 170,
+    "sha256": "abe2b60fabee94153312dc2e3b23553b3493a51947835d6d89fe898fe298dacb"
+  },
+  "preference-xrefs.txt": {
+    "bytes": 183,
+    "sha256": "3313f8f76f15527b77ab99ee5f5d5ee7e41835b656e53a058390b746aad50be6"
+  },
+  "preferences.txt": {
+    "bytes": 6202,
+    "sha256": "73a108ef7856e96f9aff6366c4d33407c1ed186fa37195810d6a871059b519ce"
+  },
+  "response-dispatch.txt": {
+    "bytes": 6045,
+    "sha256": "96446e827d006f0ca0d1c2ade27113381ab2e1ffd07b5ef8561fb156dd3ef50d"
+  },
+  "response-init.txt": {
+    "bytes": 3713,
+    "sha256": "9e04ca8e5f22cfa7aa86f0ee35edfddbebe53496dcc7567773fea235eaf7d749"
+  }
+}

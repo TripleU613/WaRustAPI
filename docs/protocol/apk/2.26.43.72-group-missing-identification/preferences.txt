@@ -1,0 +1,116 @@
+
+# class: LX/0cv;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 3
+    # full signature: LX/0cv;-><init>()V
+    0000..0006  invoke-direct  {v2}, Ljava/lang/Object;-><init>()V
+    0006..000a  const/16  v0, #0x72
+    000a..0010  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0010..0012  move-result-object  v0
+    0012..0016  check-cast  v0, LX/00S;
+    0016..001a  iput-object  v0, v2, LX/0cv;->A00:LX/00S;
+    001a..001e  const/16  v1, #0x29
+    001e..0022  new-instance  v0, LX/1Wz;
+    0022..0028  invoke-direct  {v0, v2, v1}, LX/1Wz;-><init>(Ljava/lang/Object;I)V
+    0028..002e  invoke-static  {v0}, LX/00o;->A01(Lkotlin/jvm/functions/Function0;)LX/00q;
+    002e..0030  move-result-object  v0
+    0030..0034  iput-object  v0, v2, LX/0cv;->A01:LX/00p;
+    0034..0036  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(LL)  # .registers 4
+    # full signature: LX/0cv;->A00(LX/0cv;)Ljava/util/Set;
+    0000..0004  iget-object  v0, v3, LX/0cv;->A01:LX/00p;
+    0004..000a  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    000a..000c  move-result-object  v2
+    000c..0012  invoke-static  {v2}, LX/00l;->A05(Ljava/lang/Object;)V
+    0012..0016  check-cast  v2, Landroid/content/SharedPreferences;
+    0016..001a  const-string  v0, "groups_with_missing_participant_ids"
+    001a..001e  sget-object  v1, LX/06e;->A00:LX/06e;
+    001e..0024  invoke-interface  {v2, v0, v1}, Landroid/content/SharedPreferences;->getStringSet(Ljava/lang/String;Ljava/util/Set;)Ljava/util/Set;
+    0024..0026  move-result-object  v0
+    0026..002a  if-eqz  v0, +0x27
+    002a..002e  new-instance  v3, Ljava/util/ArrayList;
+    002e..0034  invoke-direct  {v3}, Ljava/util/ArrayList;-><init>()V
+    0034..003a  invoke-interface  {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    003a..003c  move-result-object  v2
+    003c..0042  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    0042..0044  move-result  v0
+    0044..0048  if-eqz  v0, +0x14
+    0048..004e  invoke-interface  {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    004e..0050  move-result-object  v1
+    0050..0054  check-cast  v1, Ljava/lang/String;
+    0054..0058  sget-object  v0, Lcom/whatsapp/infra/core/jid/GroupJid;->Companion:LX/0nW;
+    0058..005e  invoke-virtual  {v0, v1}, LX/0nW;->A03(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/GroupJid;
+    005e..0060  move-result-object  v0
+    0060..0064  if-eqz  v0, -0x12
+    0064..006a  invoke-virtual  {v3, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    006a..006c  goto  -0x17
+    006c..0072  invoke-static  {v3}, LX/07Z;->A1S(Ljava/lang/Iterable;)Ljava/util/Set;
+    0072..0074  move-result-object  v1
+    0074..0076  return-object  v1
+    # exception table: 0 try range(s)
+.end method
+
+.method public A01(VLL)  # .registers 5
+    # full signature: LX/0cv;->A01(LX/0cv;Ljava/util/Set;)V
+    0000..0004  const/16  v0, #0xa
+    0004..000a  invoke-static  {v4, v0}, LX/07S;->A0F(Ljava/lang/Iterable;I)I
+    000a..000c  move-result  v0
+    000c..0010  new-instance  v2, Ljava/util/ArrayList;
+    0010..0016  invoke-direct  {v2, v0}, Ljava/util/ArrayList;-><init>(I)V
+    0016..001c  invoke-interface  {v4}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    001c..001e  move-result-object  v1
+    001e..0024  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    0024..0026  move-result  v0
+    0026..002a  if-eqz  v0, +0x10
+    002a..0030  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0030..0032  move-result-object  v0
+    0032..0036  check-cast  v0, Lcom/whatsapp/infra/core/jid/Jid;
+    0036..003c  invoke-virtual  {v0}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+    003c..003e  move-result-object  v0
+    003e..0044  invoke-virtual  {v2, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0044..0046  goto  -0x13
+    0046..004c  invoke-static  {v2}, LX/07Z;->A1S(Ljava/lang/Iterable;)Ljava/util/Set;
+    004c..004e  move-result-object  v2
+    004e..0052  iget-object  v0, v3, LX/0cv;->A01:LX/00p;
+    0052..0058  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    0058..005a  move-result-object  v0
+    005a..0060  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    0060..0064  check-cast  v0, Landroid/content/SharedPreferences;
+    0064..006a  invoke-interface  {v0}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
+    006a..006c  move-result-object  v1
+    006c..0070  const-string  v0, "groups_with_missing_participant_ids"
+    0070..0076  invoke-interface  {v1, v0, v2}, Landroid/content/SharedPreferences$Editor;->putStringSet(Ljava/lang/String;Ljava/util/Set;)Landroid/content/SharedPreferences$Editor;
+    0076..007c  invoke-interface  {v1}, Landroid/content/SharedPreferences$Editor;->apply()V
+    007c..007e  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A02(Z)  # .registers 4
+    # full signature: LX/0cv;->A02()Z
+    0000..0004  sget-object  v1, LX/00L;->A02:Ljava/lang/Boolean;
+    0004..0006  const/4  v0, #0x1
+    0006..000c  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    000c..000e  move-result-object  v0
+    000e..0014  invoke-static  {v1, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    0014..0016  move-result  v0
+    0016..0018  const/4  v2, #0x0
+    0018..001c  if-nez  v0, +0x9
+    001c..0022  invoke-static  {}, LX/0LG;->A04()Z
+    0022..0024  move-result  v0
+    0024..0028  if-eqz  v0, +0x3
+    0028..002a  return  v2
+    002a..002e  iget-object  v0, v3, LX/0cv;->A01:LX/00p;
+    002e..0034  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    0034..0036  move-result-object  v1
+    0036..003c  invoke-static  {v1}, LX/00l;->A05(Ljava/lang/Object;)V
+    003c..0040  check-cast  v1, Landroid/content/SharedPreferences;
+    0040..0044  const-string  v0, "push_name_notification_received"
+    0044..004a  invoke-interface  {v1, v0, v2}, Landroid/content/SharedPreferences;->getBoolean(Ljava/lang/String;Z)Z
+    004a..004c  move-result  v0
+    004c..004e  return  v0
+    # exception table: 0 try range(s)
+.end method

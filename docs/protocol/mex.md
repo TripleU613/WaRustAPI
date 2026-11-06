@@ -1540,3 +1540,13 @@ Full durable group application, runtime complete-device hashing and live MEX
 settlement remain unimplemented/unverified. No account state or live operation
 changed. The snapshot adds twenty selected methods (86 total), preserving all
 66 older texts; 91 files/337088 bytes, cached diff 0.052231 s.
+
+### Missing participant-identification context lifecycle (2026-11-05)
+
+**Confirmed static, APK43.72:** the MEX override set is stored in preferences.
+0zu.A02 adds a group when the selected marker child is present; absence does
+not clear it.0co.A03 ->82U.A0Y ->0wE.A0e/A0b carries the group-info boolean
+to an add/remove operation before later group processing.
+[Persisted-set methods, exact register mapping, ingress gates and unknowns](apk/2.26.43.72-group-missing-identification/README.md).
+Rust already exposes the explicit MEX context vocabulary; automatic lifecycle
+and fully admitted ingress parity remain unported. No runtime/live operation.

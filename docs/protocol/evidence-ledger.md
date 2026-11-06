@@ -7251,3 +7251,13 @@ helper's30-second initializer calculation is discarded, not timer evidence.
 Rust's classic group IQ remains an inferred separate shape; neither its
 30-second local preparation limit nor all group-info deadlines gain native
 parity from this MEX trace. No runtime policy or live operation changed.
+
+### Missing participant-identification context lifecycle (2026-11-05)
+
+**Confirmed static, APK43.72:** the MEX override set is stored in preferences.
+0zu.A02 adds a group when the selected marker child is present; absence does
+not clear it.0co.A03 ->82U.A0Y ->0wE.A0e/A0b carries the group-info boolean
+to an add/remove operation before later group processing.
+[Persisted-set methods, exact register mapping, ingress gates and unknowns](apk/2.26.43.72-group-missing-identification/README.md).
+Rust already exposes the explicit MEX context vocabulary; automatic lifecycle
+and fully admitted ingress parity remain unported. No runtime/live operation.

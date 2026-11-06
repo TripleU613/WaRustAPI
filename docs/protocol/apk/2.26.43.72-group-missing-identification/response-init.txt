@@ -1,0 +1,75 @@
+
+# class: LX/82U;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLLLLLLLLLLIIIIIIIIJJJJZZZZZZZZZZZZZ)  # .registers 46
+    # full signature: LX/82U;-><init>(LX/87J;LX/1bc;LX/1bc;Lcom/whatsapp/infra/core/jid/UserJid;LX/11i;LX/0iP;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Integer;Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;IIIIIIIIJJJJZZZZZZZZZZZZZ)V
+    0000..0006  invoke-direct  {v2}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v4, v2, LX/82U;->A0D:LX/1bc;
+    000a..000e  iput-object  v6, v2, LX/82U;->A0F:Lcom/whatsapp/infra/core/jid/UserJid;
+    000e..0012  move-wide/from16  v0, v25
+    0012..0016  iput-wide  v0, v2, LX/82U;->A0A:J
+    0016..001a  iput-object  v12, v2, LX/82U;->A0L:Ljava/lang/String;
+    001a..001e  move-wide/from16  v0, v27
+    001e..0022  iput-wide  v0, v2, LX/82U;->A0B:J
+    0022..0026  move-wide/from16  v0, v29
+    0026..002a  iput-wide  v0, v2, LX/82U;->A08:J
+    002a..002e  move/from16  v0, v17
+    002e..0032  iput  v0, v2, LX/82U;->A07:I
+    0032..0036  iput-object  v7, v2, LX/82U;->A0G:LX/11i;
+    0036..003a  move/from16  v0, v33
+    003a..003e  iput-boolean  v0, v2, LX/82U;->A0T:Z
+    003e..0042  move/from16  v0, v34
+    0042..0046  iput-boolean  v0, v2, LX/82U;->A0c:Z
+    0046..004a  move/from16  v0, v35
+    004a..004e  iput-boolean  v0, v2, LX/82U;->A0S:Z
+    004e..0052  move/from16  v0, v36
+    0052..0056  iput-boolean  v0, v2, LX/82U;->A0a:Z
+    0056..005a  iput-object  v8, v2, LX/82U;->A0H:LX/0iP;
+    005a..005e  move/from16  v0, v18
+    005e..0062  iput  v0, v2, LX/82U;->A02:I
+    0062..0066  iput-object  v3, v2, LX/82U;->A0C:LX/87J;
+    0066..006a  move/from16  v0, v19
+    006a..006e  iput  v0, v2, LX/82U;->A03:I
+    006e..0072  move/from16  v0, v37
+    0072..0076  iput-boolean  v0, v2, LX/82U;->A0b:Z
+    0076..007a  iput-object  v5, v2, LX/82U;->A0E:LX/1bc;
+    007a..007e  iput-object  v13, v2, LX/82U;->A0P:Ljava/util/Map;
+    007e..0082  move/from16  v0, v38
+    0082..0086  iput-boolean  v0, v2, LX/82U;->A0W:Z
+    0086..008a  move/from16  v0, v39
+    008a..008e  iput-boolean  v0, v2, LX/82U;->A0X:Z
+    008e..0092  move/from16  v0, v20
+    0092..0096  iput  v0, v2, LX/82U;->A00:I
+    0096..009a  move/from16  v0, v21
+    009a..009e  iput  v0, v2, LX/82U;->A04:I
+    009e..00a2  move/from16  v0, v22
+    00a2..00a6  iput  v0, v2, LX/82U;->A05:I
+    00a6..00aa  move/from16  v0, v23
+    00aa..00ae  iput  v0, v2, LX/82U;->A06:I
+    00ae..00b2  move/from16  v0, v40
+    00b2..00b6  iput-boolean  v0, v2, LX/82U;->A0Q:Z
+    00b6..00ba  move/from16  v0, v41
+    00ba..00be  iput-boolean  v0, v2, LX/82U;->A0Z:Z
+    00be..00c2  move/from16  v0, v42
+    00c2..00c6  iput-boolean  v0, v2, LX/82U;->A0R:Z
+    00c6..00ca  move/from16  v0, v24
+    00ca..00ce  iput  v0, v2, LX/82U;->A01:I
+    00ce..00d2  move/from16  v0, v43
+    00d2..00d6  iput-boolean  v0, v2, LX/82U;->A0V:Z
+    00d6..00da  iput-object  v14, v2, LX/82U;->A0M:Ljava/util/Map;
+    00da..00de  iput-object  v9, v2, LX/82U;->A0J:Ljava/lang/Boolean;
+    00de..00e2  iput-object  v15, v2, LX/82U;->A0O:Ljava/util/Map;
+    00e2..00e6  move-object/from16  v0, v16
+    00e6..00ea  iput-object  v0, v2, LX/82U;->A0N:Ljava/util/Map;
+    00ea..00ee  move/from16  v0, v44
+    00ee..00f2  iput-boolean  v0, v2, LX/82U;->A0Y:Z
+    00f2..00f6  move/from16  v0, v45
+    00f6..00fa  iput-boolean  v0, v2, LX/82U;->A0U:Z
+    00fa..00fe  iput-object  v11, v2, LX/82U;->A0K:Ljava/lang/Integer;
+    00fe..0102  move-wide/from16  v0, v31
+    0102..0106  iput-wide  v0, v2, LX/82U;->A09:J
+    0106..010a  iput-object  v10, v2, LX/82U;->A0I:Ljava/lang/Boolean;
+    010a..010c  return-void
+    # exception table: 0 try range(s)
+.end method
