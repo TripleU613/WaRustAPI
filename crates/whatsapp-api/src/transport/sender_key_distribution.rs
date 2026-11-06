@@ -92,6 +92,43 @@ pub fn load_in(tx: &ReadTx<'_>, chat: &Jid, own: &Jid) -> Result<Option<Distribu
     tx.get_json(Table::Checkpoints, &key(chat, own), 1)
 }
 
+/// Connection-local authority for ciphertext reserved under one own chain.
+/// Receipt bookkeeping may grow without changing this authority.
+pub(super) struct ChainGuard {
+    selector: Vec<u8>,
+    own: Jid,
+    chain: u64,
+}
+impl ChainGuard {
+    pub(super) fn unchanged_in(&self, tx: &ReadTx<'_>) -> Result<bool> {
+        let state: Option<DistributionState> =
+            tx.get_json(Table::Checkpoints, &self.selector, 1)?;
+        Ok(state.is_some_and(|state| {
+            state.own == self.own && state.chain == self.chain && !state.rotation_pending
+        }))
+    }
+}
+/// Capture after reserve_in in the original send transaction. APK37.71 D4x.A00
+/// invalidates exposed keys after primary changes; late ACKs must not release
+/// dependent ciphertext after that local invalidation or a replacement chain.
+pub(super) fn chain_guard_in(tx: &WriteTx<'_>, chat: &Jid, own: &Jid) -> Result<ChainGuard> {
+    let selector = key(chat, own);
+    let state: DistributionState = tx
+        .get_json(Table::Checkpoints, &selector, 1)?
+        .ok_or_else(|| Error::invalid("group_send", "reserved sender-key authority missing"))?;
+    if state.own != *own || state.rotation_pending {
+        return Err(Error::invalid(
+            "group_send",
+            "invalid reserved sender-key authority",
+        ));
+    }
+    Ok(ChainGuard {
+        selector,
+        own: own.clone(),
+        chain: state.chain,
+    })
+}
+
 /// Check the original exposure before a composed identity archive can mark it
 /// pending. A later real rotation must not be hidden by our predicted change.
 pub(super) fn validate_in(

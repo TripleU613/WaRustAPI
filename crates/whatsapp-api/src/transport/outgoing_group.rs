@@ -436,6 +436,16 @@ pub(super) mod tests {
             assert_distribution_change_stops(change).await;
         }
     }
+    #[tokio::test]
+    async fn sender_key_invalidation_during_distribution_cannot_release_old_ciphertext() {
+        for change in ["rotation_pending", "chain_replaced"] {
+            assert_distribution_change_stops(change).await;
+        }
+    }
+    #[tokio::test]
+    async fn same_chain_ack_metadata_does_not_block_distribution_continuation() {
+        assert_distribution_change_stops("same_chain_ack").await;
+    }
     async fn assert_distribution_change_stops(change_kind: &str) {
         use super::super::group_references::tests::{reference, save_parent};
         for accepted_before_change in [0, 1] {
@@ -556,6 +566,48 @@ pub(super) mod tests {
                         )
                     })
                     .unwrap(),
+                "rotation_pending" | "chain_replaced" => {
+                    store
+                        .write(|tx| {
+                            super::super::sender_key_distribution::after_primary_change_in(tx, peer)
+                        })
+                        .unwrap();
+                    if change_kind == "chain_replaced" {
+                        let staged = group_fanout::Snapshot::load(
+                            &store,
+                            pending.plan.as_ref().unwrap(),
+                            false,
+                        )
+                        .unwrap()
+                        .prepare(
+                            &f.alice,
+                            None,
+                            &super::super::quotes::conversation("separate reserved send"),
+                        )
+                        .await
+                        .unwrap();
+                        store
+                            .write(|tx| staged.reserve_in(tx, b"separate-rotation-archive"))
+                            .unwrap();
+                    }
+                }
+                "same_chain_ack" => {
+                    store
+                        .write(|tx| {
+                            super::super::sender_key_distribution::pending_ack_in(
+                                tx,
+                                &f.plan.chat,
+                                &f.plan.own,
+                                "OTHER-SAME-CHAIN",
+                                std::slice::from_ref(peer),
+                            )?;
+                            super::super::sender_key_distribution::confirm_ack_in(
+                                tx,
+                                "OTHER-SAME-CHAIN",
+                            )
+                        })
+                        .unwrap();
+                }
                 _ => unreachable!(),
             }
             let reserved = store.read(|tx| outbox().get(tx, id)).unwrap().unwrap();
@@ -569,23 +621,32 @@ pub(super) mod tests {
                 .settle(&store, &f.alice, &ack, ConnectionEpoch(29), &mut cursor)
                 .await
                 .unwrap();
-            assert!(
-                step.node.is_none(),
-                "{change_kind} change released stale ciphertext"
-            );
-            assert!(step.pending.is_none());
-            assert_eq!(
-                preparation(&store, id)
-                    .unwrap()
-                    .unwrap()
-                    .blocking_reason
-                    .as_deref(),
-                Some(if change_kind == "membership" {
-                    "membership_changed"
-                } else {
-                    "routing_changed"
-                })
-            );
+            if change_kind == "same_chain_ack" {
+                assert!(step.node.is_some());
+                assert_eq!(step.pending.is_some(), accepted_before_change == 0);
+                assert_eq!(
+                    preparation(&store, id).unwrap().unwrap().blocking_reason,
+                    None
+                );
+            } else {
+                assert!(
+                    step.node.is_none(),
+                    "{change_kind} change released stale ciphertext"
+                );
+                assert!(step.pending.is_none());
+                assert_eq!(
+                    preparation(&store, id)
+                        .unwrap()
+                        .unwrap()
+                        .blocking_reason
+                        .as_deref(),
+                    Some(if change_kind == "membership" {
+                        "membership_changed"
+                    } else {
+                        "routing_changed"
+                    })
+                );
+            }
             assert_eq!(
                 store.read(|tx| outbox().get(tx, id)).unwrap().unwrap(),
                 reserved

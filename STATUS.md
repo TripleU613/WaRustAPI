@@ -1,3 +1,14 @@
+2026-11-05 — **Invalidated sender-key chains stop ACK-driven continuation.**
+
+The reservation captures chain identity; later distribution ACKs cannot release
+old ciphertext after rotation invalidation or a replacement chain. Same-chain
+ACK bookkeeping remains permitted and original uncertainty stays held.
+[Defect, regressions and limits](docs/protocol/normal-group-outbox.md#sender-key-validity-across-distribution-ack-waits-2026-11-05).
+Validation: the invalidation regression failed before the guard; four targeted
+continuation tests and all 1382 workspace/all-feature tests passed afterward.
+Fmt, strict Clippy, CLI/OpenAPI, APK coverage, pinned APK identity and staged
+checksum/link hygiene passed. No live account operation.
+
 2026-11-05 — **Changed routing authority stops distribution continuation.**
 
 Post-reservation device-list, primary/device pin and own identity authority is

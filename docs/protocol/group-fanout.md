@@ -365,3 +365,12 @@ peer pins or own authority block with `routing_changed`; ratchets are excluded.
 [Red/green regression, exact scope and native/local limits](normal-group-outbox.md#authority-guard-across-distribution-ack-waits-2026-11-05).
 Original ciphertext, keys and uncertainty remain reserved; reopen cannot replay.
 No live operation.
+
+### Sender-key validity across distribution ACK waits (2026-11-05)
+
+**Confirmed local defect / corrected offline:** a distribution ACK can no longer
+release dependent old-chain ciphertext after saved exposure invalidation or
+chain replacement. The reservation captures chain authority, and continuation
+checks it alongside routing. Same-chain delivery bookkeeping remains allowed.
+[Red/green invalidation, replacement and positive-control cases](normal-group-outbox.md#sender-key-validity-across-distribution-ack-waits-2026-11-05).
+Original reservations/uncertainty remain held; no reset, replay or live operation.

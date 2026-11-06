@@ -37,11 +37,17 @@ struct RoutingRow {
 
 /// Post-reservation authority only, held for one connection's dependent sends.
 /// Ratchets may advance on receive and are deliberately excluded.
-pub(super) struct RoutingGuard(Vec<RoutingRow>);
+pub(super) struct RoutingGuard {
+    rows: Vec<RoutingRow>,
+    chain: sender_key_distribution::ChainGuard,
+}
 impl RoutingGuard {
     pub(super) fn unchanged(&self, store: &ProtocolStore) -> Result<bool> {
         store.read(|tx| {
-            for row in &self.0 {
+            if !self.chain.unchanged_in(tx)? {
+                return Ok(false);
+            }
+            for row in &self.rows {
                 let held = tx.get(row.table, &row.key, 1)?;
                 if held.as_deref() != row.value.as_deref().map(|v| v.as_slice()) {
                     return Ok(false);
@@ -440,7 +446,14 @@ impl Prepared {
                 key,
             });
         }
-        Ok(RoutingGuard(rows))
+        Ok(RoutingGuard {
+            rows,
+            chain: sender_key_distribution::chain_guard_in(
+                tx,
+                &self.original.chat,
+                &self.original.own,
+            )?,
+        })
     }
     /// Validate every captured ratchet/pin/own-key/exposure snapshot and reserve
     /// all next state in the caller's send transaction. Fresh mode has the same

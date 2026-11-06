@@ -719,3 +719,39 @@ It is not atomic with socket write, does not freeze every store row or pending
 work marker, and does not establish native direct-SKDM ACK ownership. The guard
 is connection-local; interruption continues to preserve existing non-replayable
 reservations. No automatic refresh, key reset, resend or live operation.
+
+### Sender-key validity across distribution ACK waits (2026-11-05)
+
+**Confirmed local defect / corrected offline:** the post-reservation routing
+guard did not include sender-key chain authority. Calling the existing
+primary-change invalidation helper could mark the exposed key rotation_pending
+without changing any routing/pin bytes, and a later distribution ACK still
+released old-chain ciphertext. The regression reproduced this release.
+
+The original reservation transaction now captures the distribution state's
+own identity and chain ID. Before returning dependent ciphertext the same read
+transaction that checks routing also requires the state to exist, retain those
+values and have rotation_pending=false. Invalidation, replacement or removal
+blocks with the existing routing_changed diagnostic. It neither rolls back
+exposure/ratchets nor deletes the original ciphertext or pending ACK history.
+This is connection-local authority checking; it does not authorize restarting
+or automatically rotating/resending the held intent.
+
+`sender_key_invalidation_during_distribution_cannot_release_old_ciphertext`
+uses the real invalidation helper while either the first or second distribution
+ACK is outstanding. Its second case also stages and reserves a real independent
+fanout/new chain before delivering the old ACK. Both cases stop further output,
+preserve post-change crypto and non-preparation checkpoints, and stay blocked
+after reopen. `same_chain_ack_metadata_does_not_block_distribution_continuation`
+records and confirms a separate same-chain pending ACK: changing delivered-device
+bookkeeping alone still allows the next distribution/final group stanza.
+The guard deliberately compares chain authority rather than the whole mutable
+exposure record or sender-key ratchet bytes.
+
+**Evidence / limits:** APK37.71 D4x.A00 primary-change exposure invalidation and
+the existing generation-aware confirm_ack_in contract are retained in
+[group fanout](group-fanout.md) and sender_key_distribution.rs. This extends the
+local frozen-state policy; native per-ACK revalidation/scheduler equivalence is
+not proven. The guard does not make validation atomic with socket write or
+resolve the native direct-SKDM producer/address tuple. Corrupt store data remains
+an error. No live account operation or recovery reset.
