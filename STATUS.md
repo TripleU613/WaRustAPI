@@ -1,3 +1,9 @@
+Confirmed native deferred-ACK watchdog behavior: its shared six-second timer
+logs and clears tracking maps without sending ACKs, canceling workers or
+consuming their held metadata tokens. Late completion can still dispatch.
+[Evidence and port limits](docs/protocol/apk/2.26.43.72-deferred-ack-watchdog/README.md).
+Offline research; Rust scheduling unchanged.
+
 Malformed PQ count content now receives its normal control ACK after capture,
 without upload work, following current native parser/base-handler catch flow.
 Invalid ACK envelopes remain refused; storage failures propagate.

@@ -3882,3 +3882,13 @@ ACK; storage and uncertain write failures still propagate. This supersedes the
 earlier local no-ACK policy for malformed PQ content.
 [Exact parser/catch paths, incoming-kind census, regression and remaining queue limits](apk/2.26.43.72-count-content-error-ack/README.md).
 Valid-count upload/ACK ordering and full queue replay remain open. No live operations.
+
+### Deferred ACK six-second watchdog is not a send deadline (2026-11-05)
+
+**Confirmed static,43.72:** the0v6.A07 scheduled8bZ selector41 reports pending
+ACK failures and clears tracking maps; it does not ACK, cancel upload work or
+consume held89Y tokens. Deferral resets the shared6000ms schedule. A later
+89Y completion ignores whether removal found an entry and can still dispatch
+its one-use token. [Exact schedule, branch and token distinction](apk/2.26.43.72-deferred-ack-watchdog/README.md).
+This closes the prior timer-action unknown, not count-specific routing,
+socket ordering or recovery parity. No Rust timer/replay or live operation added.

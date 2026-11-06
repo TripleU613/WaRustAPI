@@ -17247,5 +17247,12 @@
     "x-live": false,
     "description": "Malformed present PQ count is captured and receives a normal encrypt notification ACK when its local envelope is valid, without upload work. Invalid ID/source still refuses ACK. Storage and ACK-write failures propagate. Native queue/crash replay and valid-count upload/ACK ordering remain unported.",
     "evidence": "docs/protocol/apk/2.26.43.72-count-content-error-ack/README.md"
+  },
+  "x-deferred-ack-watchdog-audit": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Static current APK trace: shared reset-on-deferral 6000ms watchdog logs pending ACK failure and clears tracking maps. It does not ACK or cancel work; held one-use metadata can still dispatch after clearing. No Rust watchdog or replay implementation.",
+    "evidence": "docs/protocol/apk/2.26.43.72-deferred-ack-watchdog/README.md"
   }
 }
