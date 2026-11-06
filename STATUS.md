@@ -1,3 +1,5 @@
+Separate CLI group distributions now reserve frozen child wire/ID before write and require exact parent/child authority at settlement. [Separate distribution reservation ownership](docs/protocol/replay-safety-audit.md#cli-separate-distributions-reserve-before-write-2026-11-06). Duplicate/changed/reopen paths refuse; no live operation.
+
 CLI group ACK now requires exact current uncertain intent before status settlement or sender-key distribution confirmation. [Group ACK intent and distribution authority](docs/protocol/replay-safety-audit.md#cli-group-ack-owns-intent-before-distribution-promotion-2026-11-06). Real distribution-state stale/duplicate/reopen controls; no live operation.
 
 CLI direct-send ACK settlement now requires the exact current uncertain intent; stale or duplicate responses cannot overwrite changed/refused/acknowledged state. [CLI direct-send ACK intent authority](docs/protocol/replay-safety-audit.md#cli-direct-send-ack-retains-intent-authority-2026-11-06). Captures retained; no live operation.

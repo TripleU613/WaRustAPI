@@ -37,6 +37,32 @@ fn invalid(reason: impl Into<String>) -> Error {
 /// message or a retry receipt. They go to the same content-hashed
 /// capture keys the receive loop uses, so `lab-inbox` opens them later exactly
 /// as it would a frame read by `--receive`.
+fn reserve_distribution(
+    tx: &mut whatsapp_api::store::WriteTx<'_>,
+    parent_key: &[u8],
+    parent: &serde_json::Value,
+    child_key: &[u8],
+    child: &serde_json::Value,
+) -> Result<(), Error> {
+    super::transport_send::check_reserved_intent(tx, parent_key, parent)?;
+    if tx.get(Table::Checkpoints, child_key, 1)?.is_some() {
+        return Err(invalid("distribution already reserved; no replay"));
+    }
+    tx.put_json(Table::Checkpoints, child_key, 1, child)
+}
+
+fn settle_distribution(
+    tx: &mut whatsapp_api::store::WriteTx<'_>,
+    parent_key: &[u8],
+    parent: &serde_json::Value,
+    child_key: &[u8],
+    child: &serde_json::Value,
+    result: &serde_json::Value,
+) -> Result<(), Error> {
+    super::transport_send::check_reserved_intent(tx, parent_key, parent)?;
+    super::transport_send::settle_reserved_intent(tx, child_key, child, result)
+}
+
 fn settle_group_intent(
     tx: &mut whatsapp_api::store::WriteTx<'_>,
     key: &[u8],
@@ -406,6 +432,20 @@ async fn transmit(
                 target.kind,
                 target.ciphertext.clone(),
             )?;
+            let child_key = format!("message:{}:skdm:{}", message.request_id, target.device);
+            let child = serde_json::json!({
+                "status":"outcome_unknown", "wire_id":id,
+                "wire":Encoder::new(dict).encode(&distribution)?, "at":Timestamp::now(),
+            });
+            store.write(|tx| {
+                reserve_distribution(
+                    tx,
+                    intent_key.as_bytes(),
+                    &intent,
+                    child_key.as_bytes(),
+                    &child,
+                )
+            })?;
             let (ack, pending) =
                 write_and_wait_captured(store, channel, &distribution, "ack", &id).await?;
             keep(store, &pending)?;
@@ -413,16 +453,16 @@ async fn transmit(
             let outcome = whatsapp_api::transport::messaging::message_ack_outcome(&ack);
             let accepted =
                 outcome == whatsapp_api::transport::messaging::MessageAckOutcome::Accepted;
+            let mut child_result = child.clone();
+            child_result["status"] = serde_json::json!(outcome.status());
             store.write(|tx| {
-                tx.put_json(
-                    Table::Checkpoints,
-                    format!("message:{}:skdm:{}", message.request_id, target.device).as_bytes(),
-                    1,
-                    &serde_json::json!({
-                        "status": outcome.status(),
-                        "wire_id": id,
-                        "at": Timestamp::now(),
-                    }),
+                settle_distribution(
+                    tx,
+                    intent_key.as_bytes(),
+                    &intent,
+                    child_key.as_bytes(),
+                    &child,
+                    &child_result,
                 )
             })?;
             if matches!(
@@ -976,6 +1016,100 @@ fn settle_retry_write(
 mod retry_admission_tests {
     use super::*;
     use whatsapp_api::{binary::Node, transport::receipts::parse_retry};
+
+    #[test]
+    fn distribution_reserves_before_write_and_requires_parent_and_child_ownership() {
+        use std::sync::Arc;
+        use whatsapp_api::{
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        for change in ["parent", "child", "valid"] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("distribution.redb");
+            let open = |create| {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: AccountId::new("fixture").unwrap(),
+                    create,
+                    key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+                })
+                .unwrap()
+            };
+            let store = open(true);
+            let parent = serde_json::json!({"status":"outcome_unknown","wire_id":"parent"});
+            let child =
+                serde_json::json!({"status":"outcome_unknown","wire_id":"child","wire":[1,2,3]});
+            let mut result = child.clone();
+            result["status"] = serde_json::json!("server_acknowledged");
+            store
+                .write(|tx| tx.put_json(Table::Checkpoints, b"parent", 1, &parent))
+                .unwrap();
+            store
+                .write(|tx| reserve_distribution(tx, b"parent", &parent, b"child", &child))
+                .unwrap();
+            assert_eq!(
+                store
+                    .read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, b"child", 1))
+                    .unwrap(),
+                Some(child.clone())
+            );
+            assert!(
+                store
+                    .write(|tx| reserve_distribution(tx, b"parent", &parent, b"child", &child))
+                    .is_err()
+            );
+            store.write(|tx|{
+                if change!="valid" {tx.put_json(Table::Checkpoints,if change=="parent" {b"parent"} else {b"child"},1,
+                    &serde_json::json!({"status":"outcome_unknown","wire_id":"replacement"}))?;}
+                Ok(())
+            }).unwrap();
+            let settle = |store: &ProtocolStore| {
+                store.write(|tx| {
+                    settle_distribution(tx, b"parent", &parent, b"child", &child, &result)
+                })
+            };
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let journal = store.journal_head().unwrap();
+            if change == "valid" {
+                settle(&store).unwrap();
+                assert!(settle(&store).is_err());
+            } else {
+                assert!(settle(&store).is_err());
+                assert_eq!(store.journal_head().unwrap(), journal);
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    before
+                );
+                drop(store);
+                let store = open(false);
+                assert!(settle(&store).is_err());
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    before
+                );
+                if change == "parent" {
+                    assert!(
+                        store
+                            .write(|tx| reserve_distribution(
+                                tx,
+                                b"parent",
+                                &parent,
+                                b"another-child",
+                                &child
+                            ))
+                            .is_err()
+                    );
+                }
+            }
+        }
+    }
 
     #[test]
     fn stale_group_ack_preserves_distribution_until_exact_intent_settlement() {

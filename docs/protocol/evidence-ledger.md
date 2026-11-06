@@ -8252,3 +8252,5 @@ Local CLI malformed-present LID omission closed via shared success identity help
 Local CLI direct-send cached-intent overwrite corrected with transaction-bound expected/current equality before ACK settlement. [CLI direct-send ACK intent authority](replay-safety-audit.md#cli-direct-send-ack-retains-intent-authority-2026-11-06). Reopen/duplicate/session-preservation controls; no native wire change.
 
 CLI group ACK cached-intent overwrite/promotion gap closed using shared direct-send ownership guard before distribution confirmation. [Group ACK intent and distribution authority](replay-safety-audit.md#cli-group-ack-owns-intent-before-distribution-promotion-2026-11-06). No wire or handset-delivery claim.
+
+Local out-of-band sender-key child write/settlement ownership now durable before network write and bound to current parent intent. [Separate distribution reservation ownership](replay-safety-audit.md#cli-separate-distributions-reserve-before-write-2026-11-06). No retry, wire grammar or native-policy claim.

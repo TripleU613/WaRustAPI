@@ -12,11 +12,10 @@ use whatsapp_api::{
 };
 
 // A captured ACK does not own a send whose durable intent was replaced.
-pub(super) fn settle_reserved_intent(
-    tx: &mut whatsapp_api::store::WriteTx<'_>,
+pub(super) fn check_reserved_intent(
+    tx: &whatsapp_api::store::WriteTx<'_>,
     key: &[u8],
     expected: &serde_json::Value,
-    result: &serde_json::Value,
 ) -> Result<(), Error> {
     let current: Option<serde_json::Value> = tx.get_json(Table::Checkpoints, key, 1)?;
     if expected["status"] != "outcome_unknown" || current.as_ref() != Some(expected) {
@@ -25,6 +24,16 @@ pub(super) fn settle_reserved_intent(
             "send intent changed before acknowledgement settlement",
         ));
     }
+    Ok(())
+}
+
+pub(super) fn settle_reserved_intent(
+    tx: &mut whatsapp_api::store::WriteTx<'_>,
+    key: &[u8],
+    expected: &serde_json::Value,
+    result: &serde_json::Value,
+) -> Result<(), Error> {
+    check_reserved_intent(tx, key, expected)?;
     tx.put_json(Table::Checkpoints, key, 1, result)
 }
 

@@ -1193,3 +1193,32 @@ local sent_sender_key bookkeeping, not handset delivery or a new native policy.
 paths remain separate audit surfaces. This does not make network and database
 writes one atomic operation or authorize an uncertain group resend. No live
 account operation or key rotation ran.
+
+## CLI separate distributions reserve before write (2026-11-06)
+
+**Confirmed local gap / fixed offline:** out-of-band group sender-key
+distributions had a durable parent group intent, but each child checkpoint was
+created only after its ACK. The parent blocked restarting the whole group send;
+it did not persist that individual child wire ID before transmission or check
+current parent/child ownership before ACK status replacement.
+
+Each separate distribution now stores its generated wire ID, frozen encoded node,
+time and outcome_unknown in a child checkpoint before invoking the existing
+captured write/wait. The reservation transaction requires exact current uncertain
+parent intent and absent child key. After capture, settlement requires that same
+parent plus exact child reservation before replacing child status. Existing child
+rows refuse a new attempt, including unknown rows; no replay or candidate reset
+is added. Parent/group status and final sender-key promotion remain separate.
+
+Regression distribution_reserves_before_write_and_requires_parent_and_child_ownership
+checks the durable pre-write child contents, duplicate-reservation refusal,
+parent/child replacement, valid once-only settlement, unchanged rows/journal and
+reopen refusal. A replaced parent cannot reserve a further child. No test sends
+a stanza or rotates keys; crypto bytes/fan-out generation remain unchanged.
+
+**Limits:** these are local authority checks at transaction boundaries, not a
+lock spanning socket writes. Captured ACKs and pending frames remain durable via
+the existing waiter. Full native separate-distribution scheduling and session-wide
+credential ownership remain separate audit work. The additional frozen child
+wire is stored only in the encrypted protocol store; no plaintext artifact or
+new public retry operation is created.

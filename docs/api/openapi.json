@@ -17814,5 +17814,12 @@
     "x-live": false,
     "description": "Existing CLI group ACK settlement requires exact current uncertain send intent before status and accepted sender-key distribution confirmation in the same transaction. Changed/missing/settled intent refuses; captures and uncertainty remain. Real distribution-state regressions cover stale/reopen/duplicate controls. Out-of-band checkpoint lifecycle remains separate; no live or handset-delivery verification.",
     "evidence": "docs/protocol/replay-safety-audit.md#cli-group-ack-owns-intent-before-distribution-promotion-2026-11-06"
+},
+  "x-cli-distribution-child-reservation": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Existing CLI separate sender-key distribution reserves frozen wire/ID as outcome_unknown before write under exact current group intent. Child settlement checks both parent and child; existing/uncertain child refuses replay. Captured replies persist through existing waiter. No new wire fields, retry API, key rotation or live verification.",
+    "evidence": "docs/protocol/replay-safety-audit.md#cli-separate-distributions-reserve-before-write-2026-11-06"
 }
 }
