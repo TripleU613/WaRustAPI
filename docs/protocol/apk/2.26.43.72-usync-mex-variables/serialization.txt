@@ -1,0 +1,448 @@
+
+# class: Lcom/facebook/graphql/calls/GraphQlCallInput;
+# extends: Ljava/lang/Object;
+
+.method public <clinit>(V)  # .registers 1
+    # full signature: Lcom/facebook/graphql/calls/GraphQlCallInput;-><clinit>()V
+    0000..0004  new-instance  v0, LX/0iH;
+    0004..000a  invoke-direct  {v0}, LX/0iH;-><init>()V
+    000a..000e  sput-object  v0, Lcom/facebook/graphql/calls/GraphQlCallInput;->A02:LX/0iH;
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(V)  # .registers 2
+    # full signature: Lcom/facebook/graphql/calls/GraphQlCallInput;-><init>()V
+    0000..0006  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    0006..000a  sget-object  v0, Lcom/facebook/graphql/calls/GraphQlCallInput;->A02:LX/0iH;
+    000a..000e  iput-object  v0, v1, Lcom/facebook/graphql/calls/GraphQlCallInput;->A01:LX/0iH;
+    000e..0010  const/4  v0, #0x0
+    0010..0014  iput-object  v0, v1, Lcom/facebook/graphql/calls/GraphQlCallInput;->A00:LX/Nha;
+    0014..0016  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method private A00(LL)  # .registers 6
+    # full signature: Lcom/facebook/graphql/calls/GraphQlCallInput;->A00(Ljava/lang/Object;)Ljava/lang/Object;
+    0000..0004  if-nez  v5, +0x4
+    0004..0006  const/4  v0, #0x0
+    0006..0008  return-object  v0
+    0008..000c  instance-of  v0, v5, LX/Nhb;
+    000c..0010  if-eqz  v0, +0x9a
+    0010..0014  check-cast  v5, LX/Nhb;
+    0014..0018  iget-object  v3, v5, LX/Nhb;->A00:Ljava/util/ArrayList;
+    0018..001e  invoke-virtual  {v3}, Ljava/util/AbstractCollection;->size()I
+    001e..0020  move-result  v0
+    0020..0024  if-lez  v0, +0x2f
+    0024..0026  const/4  v0, #0x0
+    0026..002c  invoke-virtual  {v3, v0}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+    002c..002e  move-result-object  v0
+    002e..0032  instance-of  v0, v0, LX/Nha;
+    0032..0036  if-eqz  v0, +0x26
+    0036..003c  invoke-virtual  {v3}, Ljava/util/AbstractCollection;->size()I
+    003c..003e  move-result  v0
+    003e..0042  new-instance  v5, Ljava/util/ArrayList;
+    0042..0048  invoke-direct  {v5, v0}, Ljava/util/ArrayList;-><init>(I)V
+    0048..004a  const/4  v1, #0x0
+    004a..0050  invoke-virtual  {v3}, Ljava/util/AbstractCollection;->size()I
+    0050..0052  move-result  v0
+    0052..0056  if-ge  v1, v0, +0x86
+    0056..005c  invoke-virtual  {v3, v1}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+    005c..005e  move-result-object  v0
+    005e..0062  if-eqz  v0, +0xd
+    0062..0068  invoke-virtual  {v3, v1}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+    0068..006a  move-result-object  v0
+    006a..0070  invoke-direct  {v4, v0}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A00(Ljava/lang/Object;)Ljava/lang/Object;
+    0070..0072  move-result-object  v0
+    0072..0078  invoke-virtual  {v5, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0078..007c  add-int/lit8  v1, v1, #0x1
+    007c..007e  goto  -0x19
+    007e..0084  invoke-virtual  {v3}, Ljava/util/AbstractCollection;->size()I
+    0084..0086  move-result  v0
+    0086..008a  if-lez  v0, +0x2f
+    008a..008c  const/4  v0, #0x0
+    008c..0092  invoke-virtual  {v3, v0}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+    0092..0094  move-result-object  v0
+    0094..0098  instance-of  v0, v0, LX/Nhb;
+    0098..009c  if-eqz  v0, +0x26
+    009c..00a2  invoke-virtual  {v3}, Ljava/util/AbstractCollection;->size()I
+    00a2..00a4  move-result  v0
+    00a4..00a8  new-instance  v5, Ljava/util/ArrayList;
+    00a8..00ae  invoke-direct  {v5, v0}, Ljava/util/ArrayList;-><init>(I)V
+    00ae..00b0  const/4  v1, #0x0
+    00b0..00b6  invoke-virtual  {v3}, Ljava/util/AbstractCollection;->size()I
+    00b6..00b8  move-result  v0
+    00b8..00bc  if-ge  v1, v0, +0x53
+    00bc..00c2  invoke-virtual  {v3, v1}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+    00c2..00c4  move-result-object  v0
+    00c4..00c8  if-eqz  v0, +0xd
+    00c8..00ce  invoke-virtual  {v3, v1}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+    00ce..00d0  move-result-object  v0
+    00d0..00d6  invoke-direct  {v4, v0}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A00(Ljava/lang/Object;)Ljava/lang/Object;
+    00d6..00d8  move-result-object  v0
+    00d8..00de  invoke-virtual  {v5, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    00de..00e2  add-int/lit8  v1, v1, #0x1
+    00e2..00e4  goto  -0x19
+    00e4..00ea  invoke-virtual  {v3}, Ljava/util/AbstractCollection;->size()I
+    00ea..00ec  move-result  v0
+    00ec..00f0  new-instance  v5, Ljava/util/ArrayList;
+    00f0..00f6  invoke-direct  {v5, v0}, Ljava/util/ArrayList;-><init>(I)V
+    00f6..00f8  const/4  v2, #0x0
+    00f8..00fe  invoke-virtual  {v3}, Ljava/util/AbstractCollection;->size()I
+    00fe..0100  move-result  v0
+    0100..0104  if-ge  v2, v0, +0x2f
+    0104..010a  invoke-virtual  {v3, v2}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+    010a..010c  move-result-object  v1
+    010c..0110  if-eqz  v1, +0x18
+    0110..0114  instance-of  v0, v1, Ljava/lang/Number;
+    0114..0118  if-nez  v0, +0x10
+    0118..011c  instance-of  v0, v1, Ljava/lang/Boolean;
+    011c..0120  if-nez  v0, +0xc
+    0120..0126  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0126..0128  move-result-object  v0
+    0128..012e  invoke-virtual  {v5, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    012e..0132  add-int/lit8  v2, v2, #0x1
+    0132..0134  goto  -0x1d
+    0134..013a  invoke-virtual  {v5, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    013a..013c  goto  -0x6
+    013c..013e  const/4  v0, #0x0
+    013e..0140  goto  -0xb
+    0140..0144  instance-of  v0, v5, LX/Nha;
+    0144..0148  if-eqz  v0, +0xd
+    0148..014c  check-cast  v5, LX/Nha;
+    014c..0150  new-instance  v0, Ljava/util/TreeMap;
+    0150..0156  invoke-direct  {v0}, Ljava/util/TreeMap;-><init>()V
+    0156..015c  invoke-direct  {v4, v0, v5}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A01(Ljava/util/Map;LX/Nha;)V
+    015c..015e  return-object  v0
+    015e..0160  return-object  v5
+    # exception table: 0 try range(s)
+.end method
+
+.method private A01(VLL)  # .registers 6
+    # full signature: Lcom/facebook/graphql/calls/GraphQlCallInput;->A01(Ljava/util/Map;LX/Nha;)V
+    0000..0004  if-eqz  v5, +0x19
+    0004..0006  const/4  v2, #0x0
+    0006..000a  iget  v0, v5, LX/Nha;->A00:I
+    000a..000e  if-ge  v2, v0, +0x14
+    000e..0014  invoke-virtual  {v5, v2}, LX/Nha;->A09(I)Ljava/lang/String;
+    0014..0016  move-result-object  v1
+    0016..001c  invoke-virtual  {v5, v2}, LX/Nha;->A08(I)Ljava/lang/Object;
+    001c..001e  move-result-object  v0
+    001e..0024  invoke-direct  {v3, v0}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A00(Ljava/lang/Object;)Ljava/lang/Object;
+    0024..0026  move-result-object  v0
+    0026..002c  invoke-interface  {v4, v1, v0}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    002c..0030  add-int/lit8  v2, v2, #0x1
+    0030..0032  goto  -0x15
+    0032..0034  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A02(L)  # .registers 2
+    # full signature: Lcom/facebook/graphql/calls/GraphQlCallInput;->A02()LX/Nha;
+    0000..0004  iget-object  v0, v1, Lcom/facebook/graphql/calls/GraphQlCallInput;->A00:LX/Nha;
+    0004..0008  if-nez  v0, +0xa
+    0008..000c  iget-object  v0, v1, Lcom/facebook/graphql/calls/GraphQlCallInput;->A01:LX/0iH;
+    000c..0012  invoke-virtual  {v0}, LX/0iH;->A01()LX/Nha;
+    0012..0014  move-result-object  v0
+    0014..0018  iput-object  v0, v1, Lcom/facebook/graphql/calls/GraphQlCallInput;->A00:LX/Nha;
+    0018..001a  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A03(L)  # .registers 3
+    # full signature: Lcom/facebook/graphql/calls/GraphQlCallInput;->A03()Ljava/util/TreeMap;
+    0000..0004  new-instance  v1, Ljava/util/TreeMap;
+    0004..000a  invoke-direct  {v1}, Ljava/util/TreeMap;-><init>()V
+    000a..000e  iget-object  v0, v2, Lcom/facebook/graphql/calls/GraphQlCallInput;->A00:LX/Nha;
+    000e..0014  invoke-direct  {v2, v1, v0}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A01(Ljava/util/Map;LX/Nha;)V
+    0014..0016  return-object  v1
+    # exception table: 0 try range(s)
+.end method
+
+.method public A04(VLL)  # .registers 7
+    # full signature: Lcom/facebook/graphql/calls/GraphQlCallInput;->A04(LX/Nhb;Ljava/util/List;)V
+    0000..0004  if-eqz  v6, +0xf8
+    0004..000a  invoke-interface  {v6}, Ljava/util/List;->isEmpty()Z
+    000a..000c  move-result  v0
+    000c..0010  if-nez  v0, +0xf2
+    0010..0016  invoke-interface  {v6}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0016..0018  move-result-object  v1
+    0018..001e  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    001e..0020  move-result  v0
+    0020..0024  if-eqz  v0, +0xe8
+    0024..002a  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    002a..002c  move-result-object  v2
+    002c..0030  if-eqz  v2, -0xa
+    0030..0034  instance-of  v0, v2, Ljava/util/List;
+    0034..0038  if-eqz  v0, +0x2d
+    0038..003e  invoke-interface  {v6}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    003e..0040  move-result-object  v3
+    0040..0046  invoke-interface  {v3}, Ljava/util/Iterator;->hasNext()Z
+    0046..0048  move-result  v0
+    0048..004c  if-eqz  v0, +0xd4
+    004c..0052  invoke-interface  {v3}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0052..0054  move-result-object  v2
+    0054..0058  check-cast  v2, Ljava/util/List;
+    0058..005c  iget-object  v1, v5, LX/NhZ;->A01:LX/0iH;
+    005c..0060  iget-object  v0, v1, LX/0iH;->A00:LX/0iL;
+    0060..0066  invoke-virtual  {v0}, LX/0iK;->A8D()Ljava/lang/Object;
+    0066..0068  move-result-object  v0
+    0068..006c  check-cast  v0, LX/Nhb;
+    006c..0070  if-nez  v0, +0x7
+    0070..0074  new-instance  v0, LX/Nhb;
+    0074..007a  invoke-direct  {v0}, LX/Nhb;-><init>()V
+    007a..0080  invoke-virtual  {v0, v1}, LX/NhZ;->A06(LX/0iH;)V
+    0080..0086  invoke-virtual  {v5, v0}, LX/Nhb;->A07(LX/NhZ;)V
+    0086..008c  invoke-virtual  {v4, v0, v2}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A04(LX/Nhb;Ljava/util/List;)V
+    008c..008e  goto  -0x26
+    008e..0092  instance-of  v0, v2, Ljava/lang/String;
+    0092..0096  if-eqz  v0, +0x14
+    0096..009c  invoke-interface  {v6}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    009c..009e  move-result-object  v1
+    009e..00a4  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    00a4..00a6  move-result  v0
+    00a6..00aa  if-eqz  v0, +0xa5
+    00aa..00b0  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    00b0..00b2  move-result-object  v0
+    00b2..00b8  invoke-static  {v5, v0}, LX/Nhb;->A00(LX/Nhb;Ljava/lang/Object;)V
+    00b8..00ba  goto  -0xd
+    00ba..00be  instance-of  v0, v2, Ljava/lang/Boolean;
+    00be..00c2  if-eqz  v0, +0x14
+    00c2..00c8  invoke-interface  {v6}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    00c8..00ca  move-result-object  v1
+    00ca..00d0  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    00d0..00d2  move-result  v0
+    00d2..00d6  if-eqz  v0, +0x8f
+    00d6..00dc  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    00dc..00de  move-result-object  v0
+    00de..00e4  invoke-static  {v5, v0}, LX/Nhb;->A00(LX/Nhb;Ljava/lang/Object;)V
+    00e4..00e6  goto  -0xd
+    00e6..00ea  instance-of  v0, v2, Ljava/lang/Number;
+    00ea..00ee  if-eqz  v0, +0x14
+    00ee..00f4  invoke-interface  {v6}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    00f4..00f6  move-result-object  v1
+    00f6..00fc  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    00fc..00fe  move-result  v0
+    00fe..0102  if-eqz  v0, +0x79
+    0102..0108  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0108..010a  move-result-object  v0
+    010a..0110  invoke-static  {v5, v0}, LX/Nhb;->A00(LX/Nhb;Ljava/lang/Object;)V
+    0110..0112  goto  -0xd
+    0112..0116  instance-of  v0, v2, Ljava/lang/Enum;
+    0116..011a  if-eqz  v0, +0x18
+    011a..0120  invoke-interface  {v6}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0120..0122  move-result-object  v1
+    0122..0128  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    0128..012a  move-result  v0
+    012a..012e  if-eqz  v0, +0x63
+    012e..0134  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0134..0136  move-result-object  v0
+    0136..013c  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    013c..013e  move-result-object  v0
+    013e..0144  invoke-static  {v5, v0}, LX/Nhb;->A00(LX/Nhb;Ljava/lang/Object;)V
+    0144..0146  goto  -0x11
+    0146..014a  instance-of  v0, v2, Lcom/facebook/graphql/calls/GraphQlCallInput;
+    014a..014e  if-eqz  v0, +0x1a
+    014e..0154  invoke-interface  {v6}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0154..0156  move-result-object  v1
+    0156..015c  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    015c..015e  move-result  v0
+    015e..0162  if-eqz  v0, +0x49
+    0162..0168  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0168..016a  move-result-object  v0
+    016a..016e  check-cast  v0, Lcom/facebook/graphql/calls/GraphQlCallInput;
+    016e..0174  invoke-virtual  {v0}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A02()LX/Nha;
+    0174..0176  move-result-object  v0
+    0176..017c  invoke-virtual  {v5, v0}, LX/Nhb;->A07(LX/NhZ;)V
+    017c..017e  goto  -0x13
+    017e..0182  instance-of  v0, v2, Ljava/util/Map;
+    0182..0186  if-eqz  v0, +0x1f
+    0186..018c  invoke-interface  {v6}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    018c..018e  move-result-object  v2
+    018e..0194  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    0194..0196  move-result  v0
+    0196..019a  if-eqz  v0, +0x2d
+    019a..01a0  invoke-interface  {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    01a0..01a2  move-result-object  v1
+    01a2..01a6  check-cast  v1, Ljava/util/Map;
+    01a6..01aa  iget-object  v0, v5, LX/NhZ;->A01:LX/0iH;
+    01aa..01b0  invoke-virtual  {v0}, LX/0iH;->A01()LX/Nha;
+    01b0..01b2  move-result-object  v0
+    01b2..01b8  invoke-virtual  {v5, v0}, LX/Nhb;->A07(LX/NhZ;)V
+    01b8..01be  invoke-virtual  {v4, v1, v0}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A0C(Ljava/util/Map;LX/Nha;)V
+    01be..01c0  goto  -0x18
+    01c0..01c4  const-string  v0, "List value type is not supported: "
+    01c4..01c8  new-instance  v1, Ljava/lang/StringBuilder;
+    01c8..01ce  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    01ce..01d4  invoke-virtual  {v2}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+    01d4..01d6  move-result-object  v0
+    01d6..01dc  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    01dc..01e2  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    01e2..01e4  move-result-object  v1
+    01e4..01e8  new-instance  v0, Ljava/lang/IllegalArgumentException;
+    01e8..01ee  invoke-direct  {v0, v1}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;)V
+    01ee..01f0  throw  v0
+    01f0..01f2  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A05(VLL)  # .registers 5
+    # full signature: Lcom/facebook/graphql/calls/GraphQlCallInput;->A05(Lcom/facebook/graphql/calls/GraphQlCallInput;Ljava/lang/String;)V
+    0000..0004  if-eqz  v3, +0xd
+    0004..000a  invoke-virtual  {v2}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A02()LX/Nha;
+    000a..000c  move-result-object  v1
+    000c..0012  invoke-virtual  {v3}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A02()LX/Nha;
+    0012..0014  move-result-object  v0
+    0014..001a  invoke-virtual  {v1, v0, v4}, LX/Nha;->A0A(LX/NhZ;Ljava/lang/String;)V
+    001a..001c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A06(VLL)  # .registers 4
+    # full signature: Lcom/facebook/graphql/calls/GraphQlCallInput;->A06(Ljava/lang/Number;Ljava/lang/String;)V
+    0000..0006  invoke-virtual  {v1}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A02()LX/Nha;
+    0006..0008  move-result-object  v0
+    0008..000e  invoke-static  {v0, v2, v3}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A07(VL)  # .registers 6
+    # full signature: Lcom/facebook/graphql/calls/GraphQlCallInput;->A07(Ljava/lang/String;)V
+    0000..0006  invoke-virtual  {v4}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A02()LX/Nha;
+    0006..0008  move-result-object  v3
+    0008..000a  const/4  v1, #0x0
+    000a..000e  iget  v0, v3, LX/Nha;->A00:I
+    000e..0012  if-ge  v1, v0, +0x1e
+    0012..0018  invoke-virtual  {v3, v1}, LX/Nha;->A09(I)Ljava/lang/String;
+    0018..001a  move-result-object  v0
+    001a..0020  invoke-virtual  {v0, v5}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0020..0022  move-result  v0
+    0022..0026  if-eqz  v0, +0x15
+    0026..002a  iget-object  v2, v3, LX/Nha;->A01:Ljava/util/ArrayList;
+    002a..002e  mul-int/lit8  v1, v1, #0x2
+    002e..0032  add-int/lit8  v0, v1, #0x1
+    0032..0038  invoke-virtual  {v2, v0}, Ljava/util/AbstractList;->remove(I)Ljava/lang/Object;
+    0038..003e  invoke-virtual  {v2, v1}, Ljava/util/AbstractList;->remove(I)Ljava/lang/Object;
+    003e..0042  iget  v0, v3, LX/Nha;->A00:I
+    0042..0046  add-int/lit8  v0, v0, #0xff (-1)
+    0046..004a  iput  v0, v3, LX/Nha;->A00:I
+    004a..004c  return-void
+    004c..0050  add-int/lit8  v1, v1, #0x1
+    0050..0052  goto  -0x23
+    # exception table: 0 try range(s)
+.end method
+
+.method public A08(VLL)  # .registers 4
+    # full signature: Lcom/facebook/graphql/calls/GraphQlCallInput;->A08(Ljava/lang/String;Ljava/lang/Boolean;)V
+    0000..0006  invoke-virtual  {v1}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A02()LX/Nha;
+    0006..0008  move-result-object  v0
+    0008..000e  invoke-static  {v0, v3, v2}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A09(VLL)  # .registers 4
+    # full signature: Lcom/facebook/graphql/calls/GraphQlCallInput;->A09(Ljava/lang/String;Ljava/lang/Integer;)V
+    0000..0006  invoke-virtual  {v1}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A02()LX/Nha;
+    0006..0008  move-result-object  v0
+    0008..000e  invoke-static  {v0, v3, v2}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A0A(VLL)  # .registers 4
+    # full signature: Lcom/facebook/graphql/calls/GraphQlCallInput;->A0A(Ljava/lang/String;Ljava/lang/String;)V
+    0000..0006  invoke-virtual  {v1}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A02()LX/Nha;
+    0006..0008  move-result-object  v0
+    0008..000e  invoke-static  {v0, v3, v2}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A0B(VLL)  # .registers 4
+    # full signature: Lcom/facebook/graphql/calls/GraphQlCallInput;->A0B(Ljava/lang/String;Ljava/util/List;)V
+    0000..0006  invoke-virtual  {v1}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A02()LX/Nha;
+    0006..0008  move-result-object  v0
+    0008..000e  invoke-virtual  {v0, v2}, LX/Nha;->A07(Ljava/lang/String;)LX/Nhb;
+    000e..0010  move-result-object  v0
+    0010..0016  invoke-virtual  {v1, v0, v3}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A04(LX/Nhb;Ljava/util/List;)V
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A0C(VLL)  # .registers 7
+    # full signature: Lcom/facebook/graphql/calls/GraphQlCallInput;->A0C(Ljava/util/Map;LX/Nha;)V
+    0000..0006  invoke-interface  {v5}, Ljava/util/Map;->entrySet()Ljava/util/Set;
+    0006..0008  move-result-object  v0
+    0008..000e  invoke-interface  {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    000e..0010  move-result-object  v3
+    0010..0016  invoke-interface  {v3}, Ljava/util/Iterator;->hasNext()Z
+    0016..0018  move-result  v0
+    0018..001c  if-eqz  v0, +0x82
+    001c..0022  invoke-interface  {v3}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0022..0024  move-result-object  v0
+    0024..0028  check-cast  v0, Ljava/util/Map$Entry;
+    0028..002e  invoke-interface  {v0}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+    002e..0030  move-result-object  v1
+    0030..0034  check-cast  v1, Ljava/lang/String;
+    0034..003a  invoke-interface  {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+    003a..003c  move-result-object  v2
+    003c..0040  if-eqz  v2, -0x16
+    0040..0044  instance-of  v0, v2, Ljava/lang/Boolean;
+    0044..0048  if-eqz  v0, +0x14
+    0048..004c  check-cast  v2, Ljava/lang/Boolean;
+    004c..0052  invoke-virtual  {v2}, Ljava/lang/Boolean;->booleanValue()Z
+    0052..0054  move-result  v0
+    0054..0058  if-eqz  v0, +0x9
+    0058..005e  const-string/jumbo  v2, "true"
+    005e..0064  invoke-static  {v6, v2, v1}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    0064..0066  goto  -0x2a
+    0066..006a  const-string  v2, "false"
+    006a..006c  goto  -0x6
+    006c..0070  instance-of  v0, v2, Ljava/lang/Number;
+    0070..0074  if-nez  v0, -0x9
+    0074..0078  instance-of  v0, v2, Ljava/lang/String;
+    0078..007c  if-nez  v0, -0xd
+    007c..0080  instance-of  v0, v2, Ljava/lang/Enum;
+    0080..0084  if-eqz  v0, +0x7
+    0084..008a  invoke-virtual  {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    008a..008c  move-result-object  v2
+    008c..008e  goto  -0x17
+    008e..0092  instance-of  v0, v2, Lcom/facebook/graphql/calls/GraphQlCallInput;
+    0092..0096  if-eqz  v0, +0xc
+    0096..009a  check-cast  v2, Lcom/facebook/graphql/calls/GraphQlCallInput;
+    009a..00a0  invoke-virtual  {v2}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A02()LX/Nha;
+    00a0..00a2  move-result-object  v0
+    00a2..00a8  invoke-virtual  {v6, v0, v1}, LX/Nha;->A0A(LX/NhZ;Ljava/lang/String;)V
+    00a8..00aa  goto  -0x4c
+    00aa..00ae  instance-of  v0, v2, Ljava/util/List;
+    00ae..00b2  if-eqz  v0, +0xc
+    00b2..00b8  invoke-virtual  {v6, v1}, LX/Nha;->A07(Ljava/lang/String;)LX/Nhb;
+    00b8..00ba  move-result-object  v0
+    00ba..00be  check-cast  v2, Ljava/util/List;
+    00be..00c4  invoke-virtual  {v4, v0, v2}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A04(LX/Nhb;Ljava/util/List;)V
+    00c4..00c6  goto  -0x5a
+    00c6..00ca  instance-of  v0, v2, Ljava/util/Map;
+    00ca..00ce  if-eqz  v0, +0x11
+    00ce..00d2  iget-object  v0, v6, LX/NhZ;->A01:LX/0iH;
+    00d2..00d8  invoke-virtual  {v0}, LX/0iH;->A01()LX/Nha;
+    00d8..00da  move-result-object  v0
+    00da..00e0  invoke-virtual  {v6, v0, v1}, LX/Nha;->A0A(LX/NhZ;Ljava/lang/String;)V
+    00e0..00e4  check-cast  v2, Ljava/util/Map;
+    00e4..00ea  invoke-virtual  {v4, v2, v0}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A0C(Ljava/util/Map;LX/Nha;)V
+    00ea..00ec  goto  -0x6d
+    00ec..00f0  const-string  v0, "Unexpected object value type "
+    00f0..00f4  new-instance  v1, Ljava/lang/StringBuilder;
+    00f4..00fa  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00fa..0100  invoke-virtual  {v2}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+    0100..0102  move-result-object  v0
+    0102..0108  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0108..010e  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    010e..0110  move-result-object  v1
+    0110..0114  new-instance  v0, Ljava/lang/IllegalArgumentException;
+    0114..011a  invoke-direct  {v0, v1}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;)V
+    011a..011c  throw  v0
+    011c..011e  return-void
+    # exception table: 0 try range(s)
+.end method

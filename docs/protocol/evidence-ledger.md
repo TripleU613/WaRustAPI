@@ -8204,3 +8204,5 @@ APK43.72 selected MEX server JID equality and diagnostic-only compliance path re
 Current43.72 shared MEX request envelope comparison found no correction justified; native assertion/return semantics retained. [Current shared-envelope comparison and assertion limits](mex.md#current-mex-request-envelope-comparison-2026-11-06). No live operations.
 
 Current43.72 UsyncQuery packaged server ID and resolver chain retained with exact decimal identity; runtime/Pando/adoption remain separate. [Pinned server ID versus client ID, exact asset and resolver scope](bulk-prekey-refresh.md#missing-lid-usyncquery-server-id-2026-11-06). No live operation.
+
+Current43.72 UsyncQuery variable spine retained: raw typed JID, nested uppercase context, conditional flags without automatic false defaults. [Raw-JID targets, MESSAGE telemetry and omitted-flag semantics](bulk-prekey-refresh.md#missing-lid-usyncquery-variables-spine-2026-11-06). No live operation.

@@ -1,0 +1,11 @@
+
+# class: LX/0vD;
+# extends: Ljava/lang/Enum;
+
+.method public <init>(VLIL)  # .registers 4
+    # full signature: LX/0vD;-><init>(Ljava/lang/String;ILjava/lang/String;)V
+    0000..0006  invoke-direct  {v0, v1, v2}, Ljava/lang/Enum;-><init>(Ljava/lang/String;I)V
+    0006..000a  iput-object  v3, v0, LX/0vD;->contextString:Ljava/lang/String;
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method

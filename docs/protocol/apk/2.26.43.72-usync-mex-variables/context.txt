@@ -1,0 +1,17 @@
+
+# class: LX/Fwx;
+# extends: Ljava/lang/Object;
+
+.method public A0z(VLLL)  # .registers 5
+    # full signature: LX/Fwx;->A0z(LX/0iH;Lcom/facebook/graphql/calls/GraphQlCallInput;Ljava/lang/Object;)V
+    0000..0004  const-string  v0, "context"
+    0004..000a  invoke-virtual  {v2}, LX/0iH;->A01()LX/Nha;
+    000a..000c  move-result-object  v2
+    000c..0012  invoke-static  {v2, v4, v0}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    0012..0016  const-string  v1, "telemetry"
+    0016..001c  invoke-virtual  {v3}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A02()LX/Nha;
+    001c..001e  move-result-object  v0
+    001e..0024  invoke-virtual  {v0, v2, v1}, LX/Nha;->A0A(LX/NhZ;Ljava/lang/String;)V
+    0024..0026  return-void
+    # exception table: 0 try range(s)
+.end method

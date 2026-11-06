@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "bytes": 4457,
+    "sha256": "50175b7a6ad2bf4314185860400d27599d3c58509cdb10257afcbbb5fcb110e2"
+  },
+  "context-case.txt": {
+    "bytes": 613,
+    "sha256": "b40205ded30ba4849708fbdcd962cb571d36244cac7b81f247161a95067a07cd"
+  },
+  "context-constructor.txt": {
+    "bytes": 418,
+    "sha256": "b7b40f280e98709474b440bd87105fea91a35734a6c01b4587fb50dbd82a7b1d"
+  },
+  "context-enum.txt": {
+    "bytes": 4502,
+    "sha256": "87e7de01e7710bc1817e06dcc2124a8919e1187da21a1de3d2cebfcc71eb439f"
+  },
+  "context.txt": {
+    "bytes": 793,
+    "sha256": "7464a063607187886569c3a9a5e43a0b3faef98c5c5f26971f8f0c930e36df84"
+  },
+  "jid-string.txt": {
+    "bytes": 515,
+    "sha256": "3afb3bca392fb6dc1c4344d8b80095c73b3afc22fe45c643586a89e7ef4873ab"
+  },
+  "params.txt": {
+    "bytes": 2588,
+    "sha256": "4234b77871a869e05b13f2ea9b3142adf3eed65979e6d56ca43560c7d8706603"
+  },
+  "serialization.txt": {
+    "bytes": 24020,
+    "sha256": "a6dbfda454f739a74fde84d964e5d3cfa7250b56c53feafe3626fab73e86468b"
+  },
+  "target.txt": {
+    "bytes": 586,
+    "sha256": "d1097f0dbe6251d6adce41f3c36555cd9644935d438bd1622eb2f545d2fe41d9"
+  },
+  "variables.txt": {
+    "bytes": 526,
+    "sha256": "d4dd865ee9a4f1c35c7302029afa10cb27efb74763ba30e0c636164bb9c492b2"
+  }
+}

@@ -17646,5 +17646,12 @@
     "x-live": false,
     "description": "Research-only pinned APK43.72 UsyncQuery/whatsapp-android-mex CRh resolver and exact packaged server doc_id38635300486116501, distinct from client_doc_id. Effective runtime registry/Pando selection, variables/gates and server acceptance remain incomplete. No lookup/preflight/API added.",
     "evidence": "docs/protocol/bulk-prekey-refresh.md#missing-lid-usyncquery-server-id-2026-11-06"
+},
+  "x-usync-mex-variables-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Research-only APK43.72 UsyncQuery variable spine: input.query_input[].jid uses typed raw JID; input.telemetry.context uppercases selected message context to MESSAGE; requested include flags are conditional true entries, skipped flags omitted. Full cached/user/config/privacy/merge and adoption behavior remain incomplete. No executable lookup/API added.",
+    "evidence": "docs/protocol/bulk-prekey-refresh.md#missing-lid-usyncquery-variables-spine-2026-11-06"
 }
 }

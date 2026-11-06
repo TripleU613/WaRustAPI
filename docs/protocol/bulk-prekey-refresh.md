@@ -209,3 +209,9 @@ A00 waits using inherited FfK.get() without a timeout for this null-timeout call
 **Confirmed static APK43.72:** [exact asset, selected entry and constructor/registry/loader chain](apk/2.26.43.72-usync-mex-query-id/README.md) resolve UsyncQuery in whatsapp-android-mex throughCRh to packaged server doc_id38635300486116501. The longer client_doc_id407762649418300062941108847678 is separate. Exact decimal preservation matters because the server ID exceeds2^53. This narrows the prior query-identifier gap for the selected non-Pando resolver; fallback/unregistered config returns no usable server ID.
 
 **Unknown / unported:** effective runtime registry/Pando choice, remote acceptance, complete variables/gates and authenticated mapping adoption. No Rust MEX lookup/preflight or live operation added; this is pinned evidence, not a timeless ID.
+
+## Missing-LID UsyncQuery variables spine (2026-11-06)
+
+**Confirmed static APK43.72:** [target/telemetry/params serialization chain](apk/2.26.43.72-usync-mex-variables/README.md) binds variables.input.query_input[].jid to typed UserJid.getRawString and input.telemetry.context to Locale.US uppercase of the preset context: MESSAGE on this selected route. Requested include_* entries are written true conditionally; skipped branches remain omitted rather than defaulting false. Explicit false is still supported by the general setter. LID and devices retain separate aggregate fields.
+
+**Unknown / unported:** complete per-user cached/profile fields, config/privacy/splitting and merge authority, binary/Pando serializer details, response authentication/adoption and live gates. This is a variable spine, not a full executable request oracle. No Rust lookup/preflight/API or live operation added.

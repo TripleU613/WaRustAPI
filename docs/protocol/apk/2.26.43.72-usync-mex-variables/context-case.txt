@@ -1,0 +1,14 @@
+
+# class: LX/B21;
+# extends: Ljava/lang/Object;
+
+.method public A0j(LL)  # .registers 2
+    # full signature: LX/B21;->A0j(Ljava/lang/String;)Ljava/lang/String;
+    0000..0004  sget-object  v0, Ljava/util/Locale;->US:Ljava/util/Locale;
+    0004..000a  invoke-static  {v0}, LX/00l;->A06(Ljava/lang/Object;)V
+    000a..0010  invoke-virtual  {v1, v0}, Ljava/lang/String;->toUpperCase(Ljava/util/Locale;)Ljava/lang/String;
+    0010..0012  move-result-object  v0
+    0012..0018  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    0018..001a  return-object  v0
+    # exception table: 0 try range(s)
+.end method
