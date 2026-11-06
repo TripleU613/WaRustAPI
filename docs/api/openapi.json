@@ -17450,5 +17450,12 @@
     "x-live": false,
     "description": "DeviceQuery ingestion now rejects at/after its original monotonic deadline, rolling back staged list/pending changes. Local InvalidInput field device_query_deadline lets cursor settlement defer users, standalone receive ignore expiry and group preparation block as outcome_unknown (or preserve cancellation). All standalone/group device handoffs attach a writer deadline guard before encoding. No renewed deadline, timeout-length change, automatic reissue or historical callback reconstruction; later I/O/commit and full account/query binding remain separate boundaries.",
     "evidence": "docs/protocol/device-query-deadlines.md"
+  },
+  "x-device-query-durable-ownership": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "DeviceQuery ingestion and writer dequeue now require outcome_unknown, exact original ordered users and Some(revisions) with matching cardinality. Device outbound guards retain the original callback/store instead of only a deadline. Missing/changed ownership refuses without encoding, list/pending application or repair; old absent revisions are not inferred. Newer pending notification revisions remain independently protected. Full account/context/SID/wire binding and post-snapshot mutation remain outside this guard.",
+    "evidence": "docs/protocol/device-query-deadlines.md#durable-userrevision-ownership-2026-11-06"
   }
 }

@@ -508,7 +508,7 @@ pub fn pending_users(store: &ProtocolStore) -> Result<Vec<Jid>> {
 }
 
 /// A reserved device query awaiting its `iq` reply on this connection.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct DeviceQuery {
     iq_id: String,
     users: Vec<Jid>,
@@ -1021,6 +1021,29 @@ fn ingest_user(
 }
 
 impl DeviceQuery {
+    fn check_record(&self, record: &QueryRecord) -> Result<()> {
+        if record.status != "outcome_unknown" {
+            return Err(invalid("query already settled"));
+        }
+        if record.users != self.users
+            || record.generations.as_deref() != Some(self.generations.as_slice())
+            || self.users.len() != self.generations.len()
+        {
+            return Err(invalid("reserved query users or revisions changed"));
+        }
+        Ok(())
+    }
+    /// Recheck the durable reservation after queue handoff, without writes.
+    pub(crate) fn check_write_authority(&self, store: &ProtocolStore) -> Result<()> {
+        check_deadline(self.deadline)?;
+        store.read(|tx| {
+            let record: QueryRecord = tx
+                .get_json(Table::Checkpoints, query_key(&self.iq_id).as_bytes(), 1)?
+                .ok_or_else(|| invalid("reserved query disappeared before write"))?;
+            self.check_record(&record)?;
+            check_deadline(self.deadline)
+        })
+    }
     /// Only the exact `iq` reply for this query settles it.
     pub fn matches(&self, node: &Node) -> bool {
         // APK 2.26.43.72 0ln.A01 admits only result/error to IQ callbacks.
@@ -1053,9 +1076,7 @@ impl DeviceQuery {
             let mut record: QueryRecord = tx
                 .get_json(Table::Checkpoints, key.as_bytes(), 1)?
                 .ok_or_else(|| invalid("reserved query disappeared"))?;
-            if record.status != "outcome_unknown" {
-                return Err(invalid("query already settled"));
-            }
+            self.check_record(&record)?;
             let mut summary = IngestSummary {
                 accepted,
                 ..Default::default()
@@ -2652,6 +2673,86 @@ mod tests {
         )
         .unwrap();
         assert_eq!(pending_users(&store).unwrap(), vec![contact()]);
+    }
+
+    #[test]
+    fn device_reply_requires_original_durable_users_and_revisions() {
+        let dir = tempfile::tempdir().unwrap();
+        for damage in 0..7 {
+            for kind in ["result", "error"] {
+                let path = dir.path().join(format!("query-owner-{damage}-{kind}.db"));
+                let store = open(&path);
+                let other = Jid::parse("15555550102@s.whatsapp.net").unwrap();
+                for user in [contact(), other.clone()] {
+                    request_sync(&store, None, &user, None, "fixture").unwrap();
+                }
+                let (query, iq) = begin_query(&store, SyncContext::Interactive)
+                    .unwrap()
+                    .unwrap();
+                let response = if kind == "result" {
+                    reply(
+                        &iq,
+                        vec![
+                            user_node(&contact(), &[(0, 0, false)], None),
+                            user_node(&other, &[(0, 0, false)], None),
+                        ],
+                    )
+                } else {
+                    Node::new("iq")
+                        .attr("id", query.iq_id.as_str())
+                        .attr("type", "error")
+                        .children(vec![Node::new("error").attr("code", "503")])
+                };
+                store
+                    .write(|tx| {
+                        let key = query_key(&query.iq_id);
+                        let mut record: QueryRecord =
+                            tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?.unwrap();
+                        match damage {
+                            0 => record.users.reverse(),
+                            1 => {
+                                record.users.pop();
+                            }
+                            2 => {
+                                record.users[0] = Jid::parse("15555550103@s.whatsapp.net").unwrap()
+                            }
+                            3 => record.generations.as_mut().unwrap()[0] += 1,
+                            4 => record.generations = None,
+                            5 => {
+                                record.generations.as_mut().unwrap().pop();
+                            }
+                            _ => record.generations.as_mut().unwrap().push(999),
+                        }
+                        tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &record)
+                    })
+                    .unwrap();
+                let snapshot = |store: &ProtocolStore| {
+                    store
+                        .read(|tx| {
+                            [
+                                Table::Checkpoints,
+                                Table::PeerIdentities,
+                                Table::SignalSessions,
+                            ]
+                            .into_iter()
+                            .map(|t| tx.scan(t, 1, 10000))
+                            .collect::<Result<Vec<_>>>()
+                        })
+                        .unwrap()
+                };
+                let before = snapshot(&store);
+                assert!(query.check_write_authority(&store).is_err());
+                assert!(
+                    query.ingest(&store, &response).is_err(),
+                    "changed durable binding {damage}/{kind} cannot settle"
+                );
+                assert_eq!(snapshot(&store), before);
+                drop(store);
+                let store = open(&path);
+                assert!(query.ingest(&store, &response).is_err());
+                assert_eq!(snapshot(&store), before);
+            }
+        }
     }
 
     #[tokio::test(start_paused = true)]

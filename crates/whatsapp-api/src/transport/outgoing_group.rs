@@ -1355,7 +1355,7 @@ pub(super) mod tests {
             .unwrap();
         let pending = step.pending.unwrap();
         let node = step.node.unwrap();
-        assert!(pending.device_query_deadline().is_some());
+        assert!(pending.device_query().is_some());
         let query_key = format!(
             "device-sync:{}",
             node.get_attr("id").unwrap().as_text().unwrap()
@@ -2006,9 +2006,9 @@ impl Pending {
             }
         }
     }
-    pub(crate) fn device_query_deadline(&self) -> Option<tokio::time::Instant> {
+    pub(crate) fn device_query(&self) -> Option<&devices::DeviceQuery> {
         match &self.waiting {
-            Waiting::Devices(query) => Some(query.deadline),
+            Waiting::Devices(query) => Some(query),
             _ => None,
         }
     }

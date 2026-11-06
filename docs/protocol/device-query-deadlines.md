@@ -37,8 +37,9 @@ result. Other failures continue to surface through their existing paths.
 
 ## Queue writer coverage
 
-The internal writer envelope now has a typed WriteGuard: existing prekey
-ownership/material guards or a device-query deadline. All four standalone
+The internal writer envelope has a typed WriteGuard: existing prekey
+ownership/material guards or the device query whose deadline and durable
+user/revision binding are checked at dequeue. All four standalone
 cursor dispatch sites (maintenance, activation, continuation and notification)
 carry the original inner query deadline. All three group step handoffs use a
 helper that attaches the inner device deadline when the pending step is Devices;
@@ -81,3 +82,47 @@ and server timestamps are not used to revive or age historical callbacks.
 Validation: direct ingestion reproduced expired result adoption at30,000ms
 before the fix. All 1,408 workspace/all-feature tests, strict Clippy, CLI reference,
 OpenAPI library, formatting and APK coverage freshness checks passed.
+
+## Durable user/revision ownership (2026-11-06)
+
+**Confirmed local defect, fixed offline:** atc58dcd52, ingestion required only
+outcome_unknown on the durable QueryRecord before applying a reply against the
+in-memory callback's users/revisions. A changed durable list could therefore be
+marked acknowledged/refused while the callback updated different original users.
+The initial regression reversed the saved user order and old ingestion accepted
+the result. Durable reservation status alone is not exact routing ownership.
+
+DeviceQuery.check_record now requires outcome_unknown, exact users in original
+order, exact Some(generations) values, and callback user/revision cardinality.
+Ingestion performs this check in its write transaction before any list/pending
+updates. A changed record is refused without repair, inference or partial writes.
+Historical generations=None remains readable for inspection, but cannot become
+live ownership evidence for a held callback.
+
+The queued device guard now carries a cloned original DeviceQuery plus its store
+handle, rather than only a deadline. On dequeue it rereads the durable reservation
+and checks the same ownership in one read snapshot, with deadline checks before
+and after. Standalone handoffs and group device steps retain the complete original
+callback through their shared helpers. Cloning a callback does not renew its
+expiry or permit a second settlement; the durable status check still owns release.
+
+Regression device_reply_requires_original_durable_users_and_revisions covers
+reordered, shortened and substituted users; altered, absent, shortened and
+lengthened revisions. Result/error ingestion and writer preflight refuse with
+exact Checkpoints/pins/sessions preservation, including repeated ingestion after
+reopen. queued_device_query_refuses_changed_or_missing_reservation holds actual
+outbound envelopes, deletes or changes their saved users/revisions/status, then
+proves preparation refuses before encoding. It preserves pending/query rows after
+the injection and surfaces ownership failures distinctly from deadline expiry.
+
+Newer pending notification revisions remain legitimate: they do not rewrite the
+original query's saved binding, and existing ingest logic preserves newer pending
+work. Existing continuation/deadline/group tests cover that control. No query
+context/SID/wire-body digest or account-generation authority is added by this
+check; mutation after the snapshot, full record binding and wholesale rollback
+remain separate boundaries. No live operation, automatic repair or new retry.
+
+Validation: reordered durable users reproduced accepted settlement before the
+fix. All 1,410 workspace/all-feature tests, strict Clippy, CLI reference, OpenAPI
+library, formatting and coverage freshness checks passed. Existing newer-revision
+continuation and grouped-send/deadline controls remain green. Offline only.

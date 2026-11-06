@@ -2368,3 +2368,12 @@ the original deadline and refuse expired writes before encoding. Existing
 prekey guards remain in the typed envelope. [Boundary regressions, coverage and
 remaining limits](device-query-deadlines.md). No wire/timeout-length change or
 live account operation.
+
+### Device-query durable user/revision ownership (2026-11-06)
+
+**Confirmed local fix:** writer dequeue and ingestion now require the saved
+uncertain query's users/revisions to exactly match the original callback.
+Changed/missing bindings refuse before encoding or application; historical
+missing revisions are not inferred. Newer pending notifications remain distinct
+from the original query binding. [Regression matrix, snapshot scope and limits](device-query-deadlines.md#durable-userrevision-ownership-2026-11-06).
+No repair, new retry policy or live operation.

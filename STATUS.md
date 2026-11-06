@@ -1,3 +1,8 @@
+Device-query writer/ingestion admission now checks exact durable users and
+revision bindings against the original callback, not just uncertain status.
+Changed or missing ownership refuses without encoding/application or repair.
+[Audit](docs/protocol/device-query-deadlines.md#durable-userrevision-ownership-2026-11-06).
+
 Device queries now enforce their original deadline in direct/cursor ingestion
 and standalone/group writer handoffs. Expiry preserves pending/query state;
 group preparation blocks and receive handles late replies without hiding faults.
