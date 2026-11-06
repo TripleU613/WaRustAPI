@@ -50,11 +50,11 @@ pub async fn connect(
         &crate::signal::crypto::SignalSignatureVerifier,
     )
     .await?;
-    reserve_login(store, &snapshot)?;
+    let reservation = reserve_login(store, &snapshot)?;
     let mut channel = verified.finish(&payload).await?;
     let reply = super::messaging::read_node(&mut channel).await?;
     super::inbox::preserve_in_epoch(store, &reply, epoch)?;
-    record_login_reply(store, &reply)?;
+    record_login_reply_checked(store, &reply, Some((&snapshot, &reservation)))?;
     Ok(channel)
 }
 
@@ -71,28 +71,34 @@ fn login_account_bytes(account: &AccountRecord) -> Result<zeroize::Zeroizing<Vec
         .map_err(|_| Error::invalid("connection", "cannot encode login account snapshot"))
 }
 
-fn reserve_login(store: &ProtocolStore, snapshot: &LoginSnapshot) -> Result<()> {
-    store.write(|tx| {
-        let account = AccountRecord::load_in_write(tx)?.ok_or(Error::NotRegistered)?;
-        if login_account_bytes(&account)? != snapshot.account {
+fn check_login_snapshot(tx: &crate::store::WriteTx<'_>, snapshot: &LoginSnapshot) -> Result<()> {
+    let account = AccountRecord::load_in_write(tx)?.ok_or(Error::NotRegistered)?;
+    if login_account_bytes(&account)? != snapshot.account {
+        return Err(Error::invalid(
+            "connection",
+            "login account changed after preflight",
+        ));
+    }
+    #[cfg(feature = "experimental-signal-crypto")]
+    {
+        use crate::registration::factory::{MATERIAL_KEY, RECORD_VERSION};
+        let material = tx
+            .get(Table::Account, MATERIAL_KEY, RECORD_VERSION)?
+            .map(zeroize::Zeroizing::new);
+        if material != snapshot.material {
             return Err(Error::invalid(
                 "connection",
-                "login account changed after preflight",
+                "registration material changed after preflight",
             ));
         }
-        #[cfg(feature = "experimental-signal-crypto")]
-        {
-            use crate::registration::factory::{MATERIAL_KEY, RECORD_VERSION};
-            let material = tx
-                .get(Table::Account, MATERIAL_KEY, RECORD_VERSION)?
-                .map(zeroize::Zeroizing::new);
-            if material != snapshot.material {
-                return Err(Error::invalid(
-                    "connection",
-                    "registration material changed after preflight",
-                ));
-            }
-        }
+    }
+    Ok(())
+}
+
+fn reserve_login(store: &ProtocolStore, snapshot: &LoginSnapshot) -> Result<String> {
+    let reservation = super::messaging::new_message_id()?;
+    store.write(|tx| {
+        check_login_snapshot(tx, snapshot)?;
         let previous: Option<serde_json::Value> = tx.get_json(Table::Checkpoints, LOGIN_KEY, 1)?;
         if previous.is_some_and(|v| v["status"] != "success") {
             return Err(Error::invalid("connection", "login already reserved"));
@@ -101,9 +107,10 @@ fn reserve_login(store: &ProtocolStore, snapshot: &LoginSnapshot) -> Result<()> 
             Table::Checkpoints,
             LOGIN_KEY,
             1,
-            &serde_json::json!({"status":"outcome_unknown", "at":Timestamp::now()}),
+            &serde_json::json!({"status":"outcome_unknown", "at":Timestamp::now(), "reservation":reservation}),
         )
-    })
+    })?;
+    Ok(reservation)
 }
 
 // This seam performs only configuration/store reads and payload construction.
@@ -156,7 +163,16 @@ fn login_material(
 }
 
 // One transaction commits the login result, clock sample and own identity.
+#[cfg(test)]
 fn record_login_reply(store: &ProtocolStore, reply: &Node) -> Result<()> {
+    record_login_reply_checked(store, reply, None)
+}
+
+fn record_login_reply_checked(
+    store: &ProtocolStore,
+    reply: &Node,
+    ownership: Option<(&LoginSnapshot, &str)>,
+) -> Result<()> {
     let status = if reply.description == "success" {
         "success"
     } else {
@@ -172,6 +188,20 @@ fn record_login_reply(store: &ProtocolStore, reply: &Node) -> Result<()> {
         .filter(|v| v.len() <= 5)
         .and_then(|v| v.parse::<u32>().ok());
     store.write(|tx| {
+        if let Some((snapshot, reservation)) = ownership {
+            check_login_snapshot(tx, snapshot)?;
+            let current: Option<serde_json::Value> =
+                tx.get_json(Table::Checkpoints, LOGIN_KEY, 1)?;
+            if !current.is_some_and(|v| {
+                v["status"] == "outcome_unknown" && v["reservation"].as_str() == Some(reservation)
+            }) {
+                return Err(Error::invalid(
+                    "connection",
+                    "login reply no longer owns reservation",
+                ));
+            }
+        }
+
         tx.put_json(
             Table::Checkpoints,
             LOGIN_KEY,
@@ -1630,6 +1660,121 @@ mod tests {
             let (_, _, current) = login_material(&store, &config).unwrap();
             reserve_login(&store, &current).unwrap();
             assert!(reserve_login(&store, &current).is_err());
+        }
+    }
+
+    #[cfg(feature = "experimental-signal-crypto")]
+    #[test]
+    fn stale_login_reply_preserves_current_reservation_account_and_clock() {
+        for case in [
+            "account", "material", "owner", "settled", "missing", "valid",
+        ] {
+            for kind in ["success", "failure"] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("login-owner.redb");
+                let store = identity_store(&path);
+                let config = config();
+                crate::registration::factory::install_test_material(&store, &config).unwrap();
+                store
+                    .write(|tx| {
+                        let mut account = AccountRecord::load_in_write(tx)?.unwrap();
+                        account.credentials.push(ObservedCredential {
+                            name: "login".into(),
+                            value: zeroize::Zeroizing::new(
+                                config.phone.protocol_digits().into_bytes(),
+                            ),
+                            observed_at: Timestamp(0),
+                            source_step: None,
+                        });
+                        account.save(tx)
+                    })
+                    .unwrap();
+                let (_, _, snapshot) = login_material(&store, &config).unwrap();
+                let owner = reserve_login(&store, &snapshot).unwrap();
+                store.write(|tx| {
+                    match case {
+                        "account" => {
+                            let mut account = AccountRecord::load_in_write(tx)?.unwrap();
+                            account.last_authenticated_at = Some(Timestamp(123));
+                            account.save(tx)?;
+                        }
+                        "material" => { tx.delete(Table::Account, crate::registration::factory::MATERIAL_KEY)?; }
+                        "owner" | "settled" => tx.put_json(Table::Checkpoints, LOGIN_KEY, 1,
+                            &serde_json::json!({"status":if case == "settled" {"refused"} else {"outcome_unknown"},
+                                "reservation":"different-owner", "code":403}))?,
+                        "missing" => { tx.delete(Table::Checkpoints, LOGIN_KEY)?; }
+                        _ => {}
+                    }
+                    Ok(())
+                }).unwrap();
+                let account = store.read(|tx| tx.scan(Table::Account, 1, 20)).unwrap();
+                let checkpoints = store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap();
+                let journal = store.journal_head().unwrap();
+                let reply = Node::new(kind)
+                    .attr("reason", "403")
+                    .attr("t", "1700000000");
+                let result = record_login_reply_checked(&store, &reply, Some((&snapshot, &owner)));
+                if case == "valid" {
+                    if kind == "success" {
+                        result.unwrap();
+                    } else {
+                        assert!(matches!(
+                            result,
+                            Err(Error::Authentication { code: Some(403) })
+                        ));
+                    }
+                    let settled = store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap();
+                    assert!(
+                        record_login_reply_checked(&store, &reply, Some((&snapshot, &owner)))
+                            .is_err()
+                    );
+                    assert_eq!(
+                        store
+                            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                            .unwrap(),
+                        settled
+                    );
+                } else {
+                    assert!(matches!(
+                        result,
+                        Err(Error::InvalidInput {
+                            field: "connection",
+                            ..
+                        })
+                    ));
+                    assert_eq!(store.journal_head().unwrap(), journal);
+                    assert_eq!(
+                        store.read(|tx| tx.scan(Table::Account, 1, 20)).unwrap(),
+                        account
+                    );
+                    assert_eq!(
+                        store
+                            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                            .unwrap(),
+                        checkpoints
+                    );
+                    drop(store);
+                    let store = identity_store(&path);
+                    assert!(
+                        record_login_reply_checked(&store, &reply, Some((&snapshot, &owner)))
+                            .is_err()
+                    );
+                    assert_eq!(
+                        store.read(|tx| tx.scan(Table::Account, 1, 20)).unwrap(),
+                        account
+                    );
+                    assert_eq!(
+                        store
+                            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                            .unwrap(),
+                        checkpoints
+                    );
+                }
+            }
         }
     }
 

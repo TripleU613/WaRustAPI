@@ -8236,3 +8236,5 @@ Auth-key/token evidence chains reconciled; earlier token findings replace global
 Confirmed local login material-copy mismatch now refuses before network/reservation; existing optional-record and feature boundaries retained. [Registration-copy consistency before login](authkey-lifecycle.md#registration-copy-consistency-before-login-2026-11-06). No native wire or live claim.
 
 Confirmed local await-interleaving gap closed at login reservation using zeroized account/material snapshot comparison. [Login reservation binds its preflight snapshot](authkey-lifecycle.md#login-reservation-binds-its-preflight-snapshot-2026-11-06). Post-reservation generation ownership remains open; no live operation.
+
+Local login result now requires current credential snapshot and exact unknown reservation owner before atomic settlement. [Login reply reservation and credential ownership](authkey-lifecycle.md#login-reply-owns-its-reservation-and-credentials-2026-11-06). Success/failure, stale/duplicate and reopen regressions; no live operation.

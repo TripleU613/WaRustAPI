@@ -17758,5 +17758,12 @@
     "x-live": false,
     "description": "Existing login reservation now atomically compares account and optional Signal registration-material bytes to preflight snapshot before reserving outcome_unknown and publishing the client login payload. Mismatch refuses without repair. Initial server handshake precedes this guard; post-reservation generation ownership remains unresolved. No live verification.",
     "evidence": "docs/protocol/authkey-lifecycle.md#login-reservation-binds-its-preflight-snapshot-2026-11-06"
+},
+  "x-login-reply-reservation-ownership": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Comparison connection login reservation carries a fresh local owner ID. Result settlement requires matching unknown reservation and account/material snapshot before clock/account/identity writes. Stale/duplicate replies preserve current state and uncertainty after capture. Separate CLI lab-transport login path is outside this helper; no live verification or rotation added.",
+    "evidence": "docs/protocol/authkey-lifecycle.md#login-reply-owns-its-reservation-and-credentials-2026-11-06"
 }
 }

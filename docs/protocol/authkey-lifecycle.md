@@ -163,3 +163,36 @@ VerifiedHandshake.finish publishes the client login/key payload. It does not
 prevent initial TCP/ephemeral traffic, mutations after reservation, concurrent
 late replies or stale-result installation. Those require broader generation
 ownership; this is not a completed rotation or reconnect lifecycle.
+
+## Login reply owns its reservation and credentials (2026-11-06)
+
+**Confirmed local gap / fixed offline:** the comparison connection's result
+transaction previously replaced the login checkpoint and applied clock/identity
+state without binding the reply to the attempt that sent the login. Reservation
+now writes a fresh local ID. Production connect retains that ID and its prepared
+credential snapshot through reply capture, and the result transaction requires
+both the same account/material bytes and an outcome_unknown checkpoint with
+that exact ID before any settlement/clock/account/identity write.
+
+Changed credentials, a missing/replaced/settled checkpoint or duplicate reply
+therefore cannot overwrite current state. The inbound reply capture still occurs
+first. Refusal returns a fixed local error and leaves current uncertainty intact;
+it does not repair keys, clear a refusal or authorize reconnect/replay. A matching
+failure still commits its authentication code and returns Authentication, while a
+matching success retains existing atomic account/clock/identity semantics.
+The old unowned settlement wrapper is compiled only for isolated legacy unit
+tests; the production connection calls the owned path.
+
+Regression stale_login_reply_preserves_current_reservation_account_and_clock
+covers success/failure across account change, material removal, replaced owner,
+already-settled and missing checkpoint cases, plus valid controls. Refused writes
+preserve account/checkpoint rows and journal, including after reopen. Valid
+settlement rejects a duplicate. The ID is local ownership metadata, not a wire
+IQ ID or server authentication claim.
+
+**Scope:** this closes the actor connection's reservation-to-result write race,
+not every credential mutation during a live session or an atomic network/store
+transaction. The separate CLI comparison lab-transport login implementation is
+not routed through this helper and remains a distinct audit obligation. Legacy
+uncertain rows without an ownership ID remain blocked rather than upgraded.
+No live operation or rotation implementation.

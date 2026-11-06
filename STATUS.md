@@ -1,3 +1,5 @@
+Fixed comparison connection login-result ownership: stale success/failure cannot settle another reservation or apply clock/account state after credentials change. [Login reply reservation and credential ownership](docs/protocol/authkey-lifecycle.md#login-reply-owns-its-reservation-and-credentials-2026-11-06). Capture remains first; separate CLI lab path remains outside this helper.
+
 Fixed stale-preflight login reservation: current account/material must match the prepared snapshot atomically before outcome_unknown is written. [Login reservation binds its preflight snapshot](docs/protocol/authkey-lifecycle.md#login-reservation-binds-its-preflight-snapshot-2026-11-06). Reopen and fresh/duplicate reservation controls pass; no live operation.
 
 Fixed local login preflight gap: with Signal enabled, a valid account Noise pair cannot silently disagree with present registration material. [Registration-copy consistency before login](docs/protocol/authkey-lifecycle.md#registration-copy-consistency-before-login-2026-11-06). Regression covers unchanged state and reopen; no rotation or live operation.
