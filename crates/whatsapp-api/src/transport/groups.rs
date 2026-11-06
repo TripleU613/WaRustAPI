@@ -987,7 +987,13 @@ fn apply_reply_in(
     };
     if let Some(node) = group_node {
         require_complete_group(node)?;
-        if let Some(group) = parse_group(node) {
+        let group = parse_group(node);
+        if kind == "group-info" && group.is_none() {
+            // Do not consume a pending projection when the selected group has
+            // no usable identity. Snapshot absence is not successful application.
+            return Err(invalid("group info reply has no usable group identity"));
+        }
+        if let Some(group) = group {
             if kind == "group-info" {
                 // A correlated IQ id alone does not authorize replacing another
                 // group's membership. parse_group also accepts a short numeric id.
@@ -2953,7 +2959,14 @@ mod tests {
 
     #[test]
     fn ambiguous_group_info_cannot_replace_membership_on_recovery() {
-        for case in ["duplicate", "foreign_second", "missing", "single"] {
+        for case in [
+            "duplicate",
+            "foreign_second",
+            "missing",
+            "missing_id",
+            "invalid_id_type",
+            "single",
+        ] {
             let (dir, s) = store();
             let group = Jid::parse("12345-67890@g.us").unwrap();
             let old = Node::new("group")
@@ -2972,6 +2985,11 @@ mod tests {
                     vec![updated, Node::new("group").attr("id", "99999-12345@g.us")]
                 }
                 "missing" => vec![],
+                "missing_id" => vec![Node::new("group").attr("subject", "After")],
+                "invalid_id_type" => vec![Node::new("group").attr(
+                    "id",
+                    crate::binary::AttributeValue::Bytes(bytes::Bytes::from_static(b"\xff")),
+                )],
                 _ => vec![updated],
             };
             let reply = Node::new("iq")

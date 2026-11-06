@@ -1,3 +1,14 @@
+2026-11-05 — **Unusable group-info identity no longer consumes pending projection.**
+
+Missing/nontext group ID now leaves queued group-info unapplied instead of
+marking a no-op successful and deleting its pending marker. Prior snapshots,
+action replies, checkpoints and journal remain preserved across recovery.
+[Regression and scope](docs/protocol/normal-group-outbox.md#unusable-group-info-identity-preserves-pending-projection-2026-11-05).
+Validation: expanded recovery regression failed before the fix and passes
+afterward. All 1387 workspace/all-feature tests, fmt, strict Clippy, CLI/OpenAPI,
+APK coverage, pinned APK identity and staged checksum/link hygiene passed.
+No live account operation or replay authority.
+
 2026-11-05 — **Ambiguous group-info replies stay unapplied across recovery.**
 
 Shared projection now rejects multiple outer group children and missing queued

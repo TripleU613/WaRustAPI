@@ -15850,7 +15850,7 @@
     ],
     "x-live": false,
     "evidence": "docs/protocol/normal-group-outbox.md#unique-group-info-projection-across-recovery-2026-11-05",
-    "description": "Shared projection refuses multiple outer group children; queued group-info requires one present. Invalid results preserve prior snapshot, pending projection marker and saved reply without recovery replay. Direct recorder retains no-group=false. Valid single correlated groups still apply once. Local consistency rule; native outer-IQ cardinality not claimed."
+    "description": "Shared projection refuses multiple outer group children; queued group-info requires one present with a parseable identity. Missing/nontext identity preserves pending projection rather than consuming it as a successful no-op. Invalid results preserve prior snapshot, pending projection marker and saved reply without recovery replay. Direct recorder retains no-group=false. Valid single correlated groups still apply once. Local consistency rule; native outer-IQ cardinality not claimed."
   },
   "x-direct-directory-refusal-isolation": {
     "x-cli": {

@@ -861,3 +861,31 @@ initial review found these are supported by ADs.A05 evidence in parse_group,
 so no speculative stricter member parser was added. Native exception/recovery
 parity, every group action and a guarantee against all stale snapshots remain
 unproven. No query replay, live account operation or cache fallback.
+
+### Unusable group-info identity preserves pending projection (2026-11-05)
+
+**Confirmed local defect / corrected offline:** a single group element with
+no ID (or nontext invalid ID bytes) passed the new outer cardinality guard,
+then parse_group returned None. Shared queued application fell through as a
+successful no-op, recorded the applied marker and removed pending projection.
+The saved snapshot was not overwritten, but application diagnostics/history
+incorrectly claimed that incomplete group data had been applied.
+
+Queued group-info now requires the selected group to parse before marking
+application complete. Failure follows the existing group-field refusal boundary:
+prior snapshot, action reply, pending marker, all checkpoints and journal stay
+unchanged. It neither retries the network query nor treats old membership as
+a fresh response. The direct recorder's existing no-identity=false contract and
+other action families are unchanged.
+
+The existing recovery regression now includes missing ID and invalid ID-byte
+forms alongside duplicate/missing groups and a valid single-group control.
+Before the fix recovery reported one application for missing ID; afterward it
+reports none, preserves every checkpoint/journal and repeat recovery still
+leaves the retained reply pending without reserving another action.
+
+**Scope:** this repairs local projection bookkeeping, not new native wire
+grammar or a tighter participant parser. Correlated target comparison still
+checks any parsed group identity, including the existing supported short-ID
+normalization. It does not claim all group response fields or action families
+are fully audited. No live account operation, reset or replay authority.

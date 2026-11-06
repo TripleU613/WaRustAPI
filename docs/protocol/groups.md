@@ -3228,3 +3228,11 @@ Shared projection rejects multiple group elements; missing queued group data
 stays unapplied. Prior snapshot, pending marker and reply remain preserved.
 [Red/green recovery, direct-recorder control and native/local scope](normal-group-outbox.md#unique-group-info-projection-across-recovery-2026-11-05).
 Valid single groups still apply once. No query replay or live account operation.
+
+### Unusable group-info identity stays pending (2026-11-05)
+
+**Confirmed local defect / corrected offline:** missing/nontext ID in a selected
+group-info element no longer consumes its pending projection as a successful
+no-op. Recovery preserves reply, prior snapshot, checkpoints and journal.
+[Red/green cases and bookkeeping boundary](normal-group-outbox.md#unusable-group-info-identity-preserves-pending-projection-2026-11-05).
+No network retry, cache fallback or live account operation.
