@@ -1,0 +1,12 @@
+
+# class: LX/JoW;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLL)  # .registers 3
+    # full signature: LX/JoW;-><init>(Ljava/util/Map;Ljava/util/Map;)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v1, v0, LX/JoW;->A01:Ljava/util/Map;
+    000a..000e  iput-object  v2, v0, LX/JoW;->A00:Ljava/util/Map;
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method

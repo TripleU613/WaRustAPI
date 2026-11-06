@@ -3966,3 +3966,15 @@ reopen still refuses and retains bytes. Clean construction is a control in
 each case. Old code failed the Noise case because it built the request.
 This is local cryptographic integrity, not an APK wire-field requirement or
 proof of native corrupt-store behavior. No HTTP/account operation ran.
+
+### Count ingress has a gated tracked fallback (2026-11-05)
+
+**Confirmed static,43.72:** notification reader routing is conditional on
+provider selection and configuration. With no named provider,3992 true creates
+a tracked1k4 wrapper for recognized encrypt; false reaches direct handling.
+A bounded census of ten physical routing-provider constructors declares no
+encrypt entry, but does not establish the full effective injected set.
+[Registry identity, enum, wrapper, persistence-policy methods and exact limits](apk/2.26.43.72-count-ingress-routing/README.md).
+The reader inverts buffering-policy output for a wrapper Boolean; its durable
+meaning and count-specific bulk ownership remain unproven. No Rust routing,
+ACK order, default flag or replay changed; no live operations.

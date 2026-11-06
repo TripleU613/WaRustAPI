@@ -1,0 +1,70 @@
+
+# class: LX/Eza;
+# extends: Ljava/lang/Object;
+
+.method public A03(LLLJJJZ)  # .registers 35
+    # full signature: LX/Eza;->A03(LX/1kz;LX/0Tp;JJJZ)LX/1k4;
+    0000..0004  const-class  v3, Lcom/whatsapp/infra/core/jid/Jid;
+    0004..0008  const-string  v0, "from"
+    0008..000c  move-object/from16  v9, v27
+    000c..0012  invoke-virtual  {v9, v3, v0}, LX/0Tp;->A0A(Ljava/lang/Class;Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    0012..0014  move-result-object  v8
+    0014..0018  const-string  v0, "id"
+    0018..001e  invoke-virtual  {v9, v0}, LX/0Tp;->A0L(Ljava/lang/String;)Ljava/lang/String;
+    001e..0020  move-result-object  v11
+    0020..0024  const-string  v2, "t"
+    0024..0028  const-wide/16  v0, #0x0
+    0028..002e  invoke-virtual  {v9, v2, v0, v1}, LX/0Tp;->A08(Ljava/lang/String;J)J
+    002e..0030  move-result-wide  v15
+    0030..0036  const-string/jumbo  v1, "type"
+    0036..003a  const-string  v0, "delivery"
+    003a..0040  invoke-virtual  {v9, v1, v0}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0040..0042  move-result-object  v2
+    0042..0046  const-string  v0, "participant"
+    0046..004c  invoke-virtual  {v9, v3, v0}, LX/0Tp;->A0A(Ljava/lang/Class;Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    004c..004e  move-result-object  v0
+    004e..0054  invoke-static  {v8, v9}, LX/Eza;->A00(Lcom/whatsapp/infra/core/jid/Jid;LX/0Tp;)LX/0DY;
+    0054..0056  move-result-object  v7
+    0056..005a  if-eqz  v0, +0x3
+    005a..005c  move-object  v8, v0
+    005c..0062  invoke-static  {v7}, LX/EHd;->A00(LX/0DY;)LX/E6e;
+    0062..0064  move-result-object  v3
+    0064..0068  sget-object  v0, LX/EtA;->A00:LX/EtA;
+    0068..006e  invoke-virtual  {v0, v9}, LX/EtA;->A00(LX/0Tp;)LX/2DG;
+    006e..0070  move-result-object  v4
+    0070..0076  invoke-static  {v4}, LX/00L;->A05(Ljava/lang/Object;)V
+    0076..007c  invoke-static  {v4}, LX/00l;->A05(Ljava/lang/Object;)V
+    007c..0082  invoke-static  {v2}, LX/00L;->A05(Ljava/lang/Object;)V
+    0082..0088  invoke-static  {v2}, LX/00l;->A05(Ljava/lang/Object;)V
+    0088..008c  sget-object  v0, LX/E8e;->A00:LX/06B;
+    008c..0092  invoke-interface  {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0092..0094  move-result-object  v1
+    0094..009a  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    009a..009c  move-result  v0
+    009c..00a0  if-eqz  v0, +0x26
+    00a0..00a6  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    00a6..00a8  move-result-object  v6
+    00a8..00ac  check-cast  v6, LX/E8e;
+    00ac..00b0  iget-object  v0, v6, LX/E8e;->type:Ljava/lang/String;
+    00b0..00b6  invoke-static  {v0, v2}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    00b6..00b8  move-result  v0
+    00b8..00bc  if-eqz  v0, -0x12
+    00bc..00be  const/4  v10, #0x0
+    00be..00c0  const/4  v14, #0x0
+    00c0..00c4  new-instance  v2, LX/1k4;
+    00c4..00c6  move-object  v13, v10
+    00c6..00ca  move-object/from16  v5, v26
+    00ca..00ce  move-wide/from16  v17, v28
+    00ce..00d2  move-wide/from16  v19, v30
+    00d2..00d6  move-wide/from16  v21, v32
+    00d6..00da  move/from16  v23, v34
+    00da..00dc  move-object  v12, v10
+    00dc..00e0  move/from16  v24, v14
+    00e0..00e6  invoke-direct/range  {v2..v24}, LX/1k4;-><init>(LX/E6e;LX/2DG;LX/1kz;LX/E8e;Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/Jid;LX/0Tp;Ljava/lang/Long;Ljava/lang/String;[B[BIJJJJZZ)V
+    00e6..00e8  return-object  v2
+    00e8..00ec  const-string  v1, "Collection contains no element matching the predicate."
+    00ec..00f0  new-instance  v0, Ljava/util/NoSuchElementException;
+    00f0..00f6  invoke-direct  {v0, v1}, Ljava/util/NoSuchElementException;-><init>(Ljava/lang/String;)V
+    00f6..00f8  throw  v0
+    # exception table: 0 try range(s)
+.end method

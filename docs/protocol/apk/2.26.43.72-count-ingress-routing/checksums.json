@@ -1,0 +1,82 @@
+{
+  "README.md": {
+    "bytes": 4610,
+    "sha256": "51967e1b19c4220b9fda88f53d95d93f810b678401bf82e7599a4c3bf76509be"
+  },
+  "fallback-persistence-policy.txt": {
+    "bytes": 1937,
+    "sha256": "d84ef20313a7bcfd61e0c665dc7b343fe3d318240935af34792a77d83b99862b"
+  },
+  "named-persistence-policy.txt": {
+    "bytes": 1763,
+    "sha256": "c26dc224e247484e137de52a393f6fe657863b4dfa662c4b8113cef8a2aed141"
+  },
+  "provider-KL6.txt": {
+    "bytes": 611,
+    "sha256": "269efc97f8b8e6792bb7f92bb3427302adec815df7fdd387a7033c55db9cb18f"
+  },
+  "provider-KL7.txt": {
+    "bytes": 635,
+    "sha256": "f045222ef94f811630438d551cf1a230b80e86b246d3330dc1ce9240d9e831dc"
+  },
+  "provider-KL8.txt": {
+    "bytes": 637,
+    "sha256": "332ba6c609c7995463c67fe9c47f40391f12e55dcfc9e6429971573eebe0810c"
+  },
+  "provider-T3n.txt": {
+    "bytes": 608,
+    "sha256": "5ff9a20aa177a0181215a9c53a34a43378b54c9b24c7c49df298782d5da9bace"
+  },
+  "provider-T3o.txt": {
+    "bytes": 606,
+    "sha256": "a71799c2807b0297cd99f47591491a22f412b3c2ce3a05a5cf131a35481061d3"
+  },
+  "provider-T3p.txt": {
+    "bytes": 634,
+    "sha256": "788ff0bbbc3f4da20806c27b7037834f5f702dd8cd467df51ccfb661c2e0f393"
+  },
+  "provider-T3q.txt": {
+    "bytes": 624,
+    "sha256": "84c38116254093750d66492b407ff01eab5eb9199cafc212dc41d467002dee00"
+  },
+  "provider-T3r.txt": {
+    "bytes": 629,
+    "sha256": "ad5b61fb490851e952e49177048758ab628d4f7d2c5c78c5bdc29371fd5f5a8a"
+  },
+  "provider-T3s.txt": {
+    "bytes": 626,
+    "sha256": "c13ddec23149439bb551031c31610142279cceb996d7ac50678f4b13160a7da0"
+  },
+  "provider-T3t.txt": {
+    "bytes": 629,
+    "sha256": "5927a12ff6e8da52dcdd1b13f247ade4b70af371c70cf59120c3de9c6886043f"
+  },
+  "provider-contract.txt": {
+    "bytes": 366,
+    "sha256": "91867eece0e2f5c62be8209a7144c1503479162e3f26980c328bcab1c2ce23e5"
+  },
+  "provider-type-declarations.txt": {
+    "bytes": 2937,
+    "sha256": "9f9b2db0af67c1ba6297e8bccf7982c854b7c14e8406d829de8ab94473fcd920"
+  },
+  "registry-constructor-callers.txt": {
+    "bytes": 69,
+    "sha256": "5fdfc336d97208a9ea2282f6dd2d41d3c83f90057a322d94888708126724536d"
+  },
+  "registry-constructor.txt": {
+    "bytes": 440,
+    "sha256": "0ee7a9cf0f65722c6263164236ee13c82a1d47cc96d1bc5f93883e756cc88e64"
+  },
+  "tracked-notification-types.txt": {
+    "bytes": 21270,
+    "sha256": "e1947134d7cea373d7a16577f38cf8f34dcb71c18e0143d35a2923d454cd5c0b"
+  },
+  "tracked-wrapper-builder.txt": {
+    "bytes": 3821,
+    "sha256": "1513c84720183d92e95cc73393c013cd2eabf8f9ffbb0bd3a7ed5ae3bd05cf75"
+  },
+  "tracked-wrapper-constructor.txt": {
+    "bytes": 1927,
+    "sha256": "9240632cc9c673b17a250d26aeeed230fd8647033cc286848eb3140edd9fe96a"
+  }
+}

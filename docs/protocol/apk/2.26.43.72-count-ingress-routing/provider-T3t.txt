@@ -1,0 +1,16 @@
+
+# class: LX/T3t;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 3
+    # full signature: LX/T3t;-><init>()V
+    0000..0006  invoke-direct  {v2}, Ljava/lang/Object;-><init>()V
+    0006..000a  const-string  v1, "UsernameUpdateNotification"
+    000a..000e  new-instance  v0, LX/J9B;
+    000e..0014  invoke-direct  {v0, v1}, LX/J9B;-><init>(Ljava/lang/String;)V
+    0014..0018  iput-object  v0, v2, LX/T3t;->A00:LX/JSc;
+    0018..001c  sget-object  v0, LX/Rqj;->A00:LX/Rqj;
+    001c..0020  iput-object  v0, v2, LX/T3t;->A01:LX/JSd;
+    0020..0022  return-void
+    # exception table: 0 try range(s)
+.end method

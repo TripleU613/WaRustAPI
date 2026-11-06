@@ -1,0 +1,39 @@
+
+# class: LX/0ZP;
+# extends: Ljava/lang/Object;
+
+.method public A04(ZLL)  # .registers 9
+    # full signature: LX/0ZP;->A04(LX/0ZP;LX/0Tp;)Z
+    0000..0004  const-string  v0, "offline"
+    0004..0006  const/4  v6, #0xff (-1)
+    0006..000c  invoke-virtual  {v8, v0, v6}, LX/0Tp;->A05(Ljava/lang/String;I)I
+    000c..000e  move-result  v5
+    000e..0010  const/4  v4, #0x1
+    0010..0012  const/4  v3, #0x0
+    0012..0016  if-ne  v5, v6, +0x3
+    0016..0018  const/4  v3, #0x1
+    0018..001c  const/16  v1, #0x3cd4
+    001c..0020  const/16  v0, #0x64
+    0020..0026  invoke-static  {v7, v1, v6, v0}, LX/0ZP;->A00(LX/0ZP;III)I
+    0026..0028  move-result  v2
+    0028..002c  if-eqz  v3, +0x5
+    002c..0030  if-ne  v2, v6, +0x24
+    0030..0032  return  v4
+    0032..0036  if-lt  v5, v2, +0x21
+    0036..003a  iget-boolean  v0, v7, LX/0ZP;->A01:Z
+    003a..003e  if-nez  v0, +0x1d
+    003e..0042  iput-boolean  v4, v7, LX/0ZP;->A01:Z
+    0042..0046  const-string  v0, "StanzaReceiver/shouldPersistStanza/Entering offline buffering mode due to high offline count "
+    0046..004a  new-instance  v1, Ljava/lang/StringBuilder;
+    004a..0050  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0050..0056  invoke-virtual  {v1, v5}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0056..005a  const-string  v0, " >= "
+    005a..0060  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0060..0066  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0066..006c  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    006c..006e  move-result-object  v0
+    006e..0074  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0074..0078  iget-boolean  v0, v7, LX/0ZP;->A01:Z
+    0078..007a  return  v0
+    # exception table: 0 try range(s)
+.end method

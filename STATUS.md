@@ -1,3 +1,9 @@
+Count-notification ingress now has an evidence-backed conditional routing
+map: unmatched-provider fallback can create tracked encrypt wrappers under
+flag3992; its false branch reaches direct handling. Effective configuration
+and persistence ownership remain open. [Audit](docs/protocol/apk/2.26.43.72-count-ingress-routing/README.md).
+Offline research; Rust routing unchanged.
+
 Registration request construction and repeated preparation now reject
 inconsistent saved Noise/identity/signed key pairs, including private-half
 corruption in the separate account record. Five substitution cases preserve

@@ -382,3 +382,15 @@ consume held89Y tokens. Deferral resets the shared6000ms schedule. A later
 its one-use token. [Exact schedule, branch and token distinction](apk/2.26.43.72-deferred-ack-watchdog/README.md).
 This closes the prior timer-action unknown, not count-specific routing,
 socket ordering or recovery parity. No Rust timer/replay or live operation added.
+
+### Count ingress has a gated tracked fallback (2026-11-05)
+
+**Confirmed static,43.72:** notification reader routing is conditional on
+provider selection and configuration. With no named provider,3992 true creates
+a tracked1k4 wrapper for recognized encrypt; false reaches direct handling.
+A bounded census of ten physical routing-provider constructors declares no
+encrypt entry, but does not establish the full effective injected set.
+[Registry identity, enum, wrapper, persistence-policy methods and exact limits](apk/2.26.43.72-count-ingress-routing/README.md).
+The reader inverts buffering-policy output for a wrapper Boolean; its durable
+meaning and count-specific bulk ownership remain unproven. No Rust routing,
+ACK order, default flag or replay changed; no live operations.
