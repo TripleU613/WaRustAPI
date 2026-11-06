@@ -12,7 +12,7 @@ use whatsapp_api::{
 };
 
 // A captured ACK does not own a send whose durable intent was replaced.
-fn settle_reserved_intent(
+pub(super) fn settle_reserved_intent(
     tx: &mut whatsapp_api::store::WriteTx<'_>,
     key: &[u8],
     expected: &serde_json::Value,

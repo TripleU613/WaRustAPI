@@ -8250,3 +8250,5 @@ CLI reservation/result await gaps closed using shared redacted LoginSnapshot and
 Local CLI malformed-present LID omission closed via shared success identity helper, keeping canonical/legacy LID coherent and partial fields intact. [Shared CLI login identity validation](login-identity-updates.md#cli-shares-the-authenticated-identity-update-2026-11-06). No native or live acceptance claim.
 
 Local CLI direct-send cached-intent overwrite corrected with transaction-bound expected/current equality before ACK settlement. [CLI direct-send ACK intent authority](replay-safety-audit.md#cli-direct-send-ack-retains-intent-authority-2026-11-06). Reopen/duplicate/session-preservation controls; no native wire change.
+
+CLI group ACK cached-intent overwrite/promotion gap closed using shared direct-send ownership guard before distribution confirmation. [Group ACK intent and distribution authority](replay-safety-audit.md#cli-group-ack-owns-intent-before-distribution-promotion-2026-11-06). No wire or handset-delivery claim.

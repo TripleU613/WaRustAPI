@@ -17807,5 +17807,12 @@
     "x-live": false,
     "description": "Existing CLI direct-send ACK settlement requires exact current uncertain intent before status/extra response writes. Shared wait preserves pending/ACK captures first. Changed/missing/settled intent refuses without replay or crypto changes. Auth-challenge459/unrelated-family uncertainty remains; no live verification or handset-delivery claim.",
     "evidence": "docs/protocol/replay-safety-audit.md#cli-direct-send-ack-retains-intent-authority-2026-11-06"
+},
+  "x-cli-group-ack-intent-authority": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Existing CLI group ACK settlement requires exact current uncertain send intent before status and accepted sender-key distribution confirmation in the same transaction. Changed/missing/settled intent refuses; captures and uncertainty remain. Real distribution-state regressions cover stale/reopen/duplicate controls. Out-of-band checkpoint lifecycle remains separate; no live or handset-delivery verification.",
+    "evidence": "docs/protocol/replay-safety-audit.md#cli-group-ack-owns-intent-before-distribution-promotion-2026-11-06"
 }
 }

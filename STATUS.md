@@ -1,3 +1,5 @@
+CLI group ACK now requires exact current uncertain intent before status settlement or sender-key distribution confirmation. [Group ACK intent and distribution authority](docs/protocol/replay-safety-audit.md#cli-group-ack-owns-intent-before-distribution-promotion-2026-11-06). Real distribution-state stale/duplicate/reopen controls; no live operation.
+
 CLI direct-send ACK settlement now requires the exact current uncertain intent; stale or duplicate responses cannot overwrite changed/refused/acknowledged state. [CLI direct-send ACK intent authority](docs/protocol/replay-safety-audit.md#cli-direct-send-ack-retains-intent-authority-2026-11-06). Captures retained; no live operation.
 
 CLI login-success identity writes now share canonical PN/LID validation and partial-update rules; malformed supplied fields refuse atomically instead of becoming absent. [Shared CLI login identity validation](docs/protocol/login-identity-updates.md#cli-shares-the-authenticated-identity-update-2026-11-06). Capture remains durable; no live operation.

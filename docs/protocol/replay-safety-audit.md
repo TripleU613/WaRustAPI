@@ -1165,3 +1165,31 @@ are synthetic; no network or account operation ran.
 a session-wide credential lock, prove handset delivery, or port all group/media
 send paths. Existing auth-challenge459 and unrelated-family outcomes remain
 uncertain, without automatic retry.
+
+## CLI group ACK owns intent before distribution promotion (2026-11-06)
+
+**Confirmed local gap / fixed offline:** the group send path, like the earlier
+direct path, constructed settlement from a cached intent without checking the
+current checkpoint. An accepted ACK then invoked sender_key_distribution.confirm_ack_in.
+That helper protects chain ownership, but it does not establish that the caller's
+send intent is still current; those are different authorities.
+
+Group settlement now shares the exact current-uncertain-intent guard with direct
+send. Only after it passes does the same transaction confirm accepted sender-key
+distribution and store extra response records. Failure in either part rolls back
+all settlement writes. The shared network wait still captures pending frames and
+ACK before return; no wire grammar, fan-out reservation, ratchet or ACK outcome
+classification changes. Auth-challenged/unrelated ACKs remain uncertain, without
+network replay.
+
+Regression stale_group_ack_preserves_distribution_until_exact_intent_settlement
+uses the real reserve_in/pending_ack_in distribution APIs. Missing/changed/refused/
+already-acknowledged send rows cannot promote the pending recipient to delivered
+and preserve checkpoint rows/journal, including after reopen. Exact valid intent
+settles and confirms delivery once; duplicate settlement refuses. This verifies
+local sent_sender_key bookkeeping, not handset delivery or a new native policy.
+
+**Limits:** out-of-band distribution checkpoint lifecycles and other group retry
+paths remain separate audit surfaces. This does not make network and database
+writes one atomic operation or authorize an uncertain group resend. No live
+account operation or key rotation ran.

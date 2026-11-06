@@ -37,6 +37,22 @@ fn invalid(reason: impl Into<String>) -> Error {
 /// message or a retry receipt. They go to the same content-hashed
 /// capture keys the receive loop uses, so `lab-inbox` opens them later exactly
 /// as it would a frame read by `--receive`.
+fn settle_group_intent(
+    tx: &mut whatsapp_api::store::WriteTx<'_>,
+    key: &[u8],
+    expected: &serde_json::Value,
+    result: &serde_json::Value,
+    wire_id: &str,
+    accepted: bool,
+) -> Result<(), Error> {
+    super::transport_send::settle_reserved_intent(tx, key, expected, result)?;
+    if accepted {
+        // Matching durable send ownership must precede sent_sender_key promotion.
+        whatsapp_api::transport::sender_key_distribution::confirm_ack_in(tx, wire_id)?;
+    }
+    Ok(())
+}
+
 fn keep(store: &ProtocolStore, frames: &[whatsapp_api::binary::Node]) -> Result<(), Error> {
     for frame in frames {
         inbox::preserve(store, frame)?;
@@ -434,15 +450,18 @@ async fn transmit(
         .get_attr("error")
         .and_then(|v| v.as_text())
         .filter(|v| v.len() <= 5 && v.bytes().all(|b| b.is_ascii_digit()));
-    let mut result = intent;
+    let mut result = intent.clone();
     result["status"] = serde_json::json!(outcome.status());
     result["error"] = serde_json::json!(code);
     store.write(|tx| {
-        tx.put_json(Table::Checkpoints, intent_key.as_bytes(), 1, &result)?;
-        if accepted {
-            // APK: sent_sender_key = 1 only after the ACK.
-            whatsapp_api::transport::sender_key_distribution::confirm_ack_in(tx, &wire_id)?;
-        }
+        settle_group_intent(
+            tx,
+            intent_key.as_bytes(),
+            &intent,
+            &result,
+            &wire_id,
+            accepted,
+        )?;
         for (index, node) in pending.iter().chain(std::iter::once(&ack)).enumerate() {
             let bytes = Encoder::new(dict).encode(node)?;
             tx.put_json(
@@ -957,6 +976,113 @@ fn settle_retry_write(
 mod retry_admission_tests {
     use super::*;
     use whatsapp_api::{binary::Node, transport::receipts::parse_retry};
+
+    #[test]
+    fn stale_group_ack_preserves_distribution_until_exact_intent_settlement() {
+        use std::sync::Arc;
+        use whatsapp_api::{
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+            transport::sender_key_distribution as distribution,
+        };
+        for case in ["missing", "changed", "refused", "acknowledged", "valid"] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("group-owner.redb");
+            let open = |create| {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: AccountId::new("fixture").unwrap(),
+                    create,
+                    key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+                })
+                .unwrap()
+            };
+            let store = open(true);
+            let chat = Jid::parse("123456@g.us").unwrap();
+            let own = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+            let peer = Jid::parse("15555550102:3@s.whatsapp.net").unwrap();
+            let expected = serde_json::json!({"status":"outcome_unknown","wire_id":"group-wire","wire":[1,2,3]});
+            let mut result = expected.clone();
+            result["status"] = serde_json::json!("server_acknowledged");
+            store
+                .write(|tx| {
+                    distribution::reserve_in(tx, &chat, &own, None, std::slice::from_ref(&peer))?;
+                    distribution::pending_ack_in(
+                        tx,
+                        &chat,
+                        &own,
+                        "group-wire",
+                        std::slice::from_ref(&peer),
+                    )?;
+                    let mut current = expected.clone();
+                    match case {
+                        "changed" => current["wire_id"] = serde_json::json!("another-wire"),
+                        "refused" => current["status"] = serde_json::json!("server_refused"),
+                        "acknowledged" => {
+                            current["status"] = serde_json::json!("server_acknowledged")
+                        }
+                        _ => {}
+                    }
+                    if case != "missing" {
+                        tx.put_json(Table::Checkpoints, b"send", 1, &current)?;
+                    }
+                    Ok(())
+                })
+                .unwrap();
+            let settle = |store: &ProtocolStore| {
+                store.write(|tx| {
+                    settle_group_intent(tx, b"send", &expected, &result, "group-wire", true)
+                })
+            };
+            let rows = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let journal = store.journal_head().unwrap();
+            if case == "valid" {
+                settle(&store).unwrap();
+                assert!(
+                    store
+                        .read(|tx| distribution::load_in(tx, &chat, &own))
+                        .unwrap()
+                        .unwrap()
+                        .delivered(&peer)
+                );
+                assert!(settle(&store).is_err());
+            } else {
+                assert!(settle(&store).is_err());
+                assert!(
+                    !store
+                        .read(|tx| distribution::load_in(tx, &chat, &own))
+                        .unwrap()
+                        .unwrap()
+                        .delivered(&peer)
+                );
+                assert_eq!(store.journal_head().unwrap(), journal);
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    rows
+                );
+                drop(store);
+                let store = open(false);
+                assert!(settle(&store).is_err());
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    rows
+                );
+                assert!(
+                    !store
+                        .read(|tx| distribution::load_in(tx, &chat, &own))
+                        .unwrap()
+                        .unwrap()
+                        .delivered(&peer)
+                );
+            }
+        }
+    }
 
     #[test]
     fn group_retry_count_reaches_each_enc_without_changing_other_stanza_bytes() {
