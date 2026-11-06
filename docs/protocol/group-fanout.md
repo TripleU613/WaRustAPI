@@ -298,3 +298,14 @@ not ordinary direct messages. Neither that job nor includeSenderKeysInMessage
 proves the native ordinary reaction distribution shape or callback address tuple.
 [Methods, caller inventories and remaining gaps](apk/2.26.43.72-ack-api-variants/README.md).
 No production behavior, speculative address restriction or live operation changed.
+
+### 2026-11-05: non-reply IQ cannot consume a pending key page
+
+**Implemented offline, confirmed APK43.72 outer dispatch:** key-batch settle now
+returns false without store mutation for IQs lacking result/error type, even with
+matching ID and error child. Previously reusable settlement could terminally
+classify such input and lose the later actual reply. Normal group-driver already
+filtered these types. Red/green regression covers state equality, blocked reserve,
+reopen, later valid settlement, duplicate refusal and complete local assembly.
+No new callback authority, key adoption, timeout or automatic retry is added.
+[Evidence, scope and unresolved native lifetime](device-key-batches.md#key-batch-reply-admission-correction-2026-11-05).

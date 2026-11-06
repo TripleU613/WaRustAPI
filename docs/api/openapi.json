@@ -16979,5 +16979,12 @@
     "x-live": false,
     "description": "Static APK43.72 prekey error manager retains affected non-PQ 5xx requests in pending map with separate mode/posted flags. Delay starts at zero; delayed drain and explicit reset differ. Does not prove global server cooldown or safe uncertain-write replay. Network ingress, job policy and durable lifetime remain unported; no runtime change.",
     "evidence": "docs/protocol/apk/2.26.43.72-prekey-error-backoff/README.md"
+  },
+  "x-key-batch-reply-admission": {
+    "x-cli": false,
+    "x-transport": "experimental",
+    "x-live": false,
+    "description": "Reusable device_key_batches::settle accepts only IQ result/error before durable claim. Missing/get/set/unsupported/nontext type returns false without mutation even with matching ID/error child. Normal group driver already filters these types. Pending reservation remains held; no new query, callback restoration, retry or HTTP write route.",
+    "evidence": "docs/protocol/device-key-batches.md#key-batch-reply-admission-correction-2026-11-05"
   }
 }

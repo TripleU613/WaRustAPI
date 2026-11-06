@@ -156,3 +156,44 @@ re-export changed only targets/checksums metadata, not native method bodies;
 all 44 files / 928,943 bytes / 43 selected methods reproduce. Cached self-diff
 is 0.047877 seconds, not a claim of cross-release equivalence. Large-group live
 lookup, native optional-field gates and normal group actor wiring remain pending.
+
+## Key-batch reply admission correction (2026-11-05)
+
+**Confirmed static, APK 2.26.43.72; implemented and tested offline:** only outer
+IQ result/error can claim a request callback. Current legacy `1rA.A03` dispatches
+those branches to `1ru.A02/A01`; normal `0ln.A01` also restricts callback dispatch
+by outer type. Retained sources:
+[legacy dispatcher](apk/2.26.43.72-about-callback-lifetime/legacy-iq-base.txt),
+[ordinary dispatcher](apk/2.26.43.72-client-pong-schema/iq-callback-dispatch.txt),
+[current key callback binding](apk/2.26.43.72-prekey-wire-error-attribution/README.md).
+The pinned APK SHA256 is
+`887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e`.
+
+The reusable `device_key_batches::settle` helper previously accepted any IQ with
+its reserved ID. Classifying that node could durably turn OutcomeUnknown into
+Invalid or Refused, even for get/set/absent/unsupported type. This consumed the
+page's ownership and prevented a later actual result from settling. Normal
+group-driver Pending::matches already filters result/error; this correction is
+at the reusable settlement boundary, not evidence of a demonstrated live-driver
+failure. No network or account operation was performed.
+
+The helper now returns false before entering the store for those non-replies,
+including a nontext typed type and a non-reply carrying an error/code child.
+Pending bytes and all state remain unchanged. Admitted result/error still use the
+existing complete-coverage, signature, duplicate and refusal validation; invalid
+actual replies remain held and never authorize another page or resend. This does
+not grant saved reservations a new live callback after reconnect: caller-owned
+transport/capture authority is still required, as before.
+
+`nonreply_iq_cannot_consume_pending_key_batch_across_reopen` failed against the
+old helper because an IQ without type was accepted. It passes with the guard.
+The test compares Checkpoints, PeerIdentities, SignalSessions, SenderKeys and
+Outbox after each ignored input; verifies another reservation stays blocked;
+closes/reopens the store; settles one valid response; rejects its duplicate;
+and assembles the complete page without a new request or state mutation. The
+nontext type fixture moved from terminal-invalid reply cases to this ignored
+input test, preserving coverage with the corrected meaning. These controlled
+store fixtures do not establish native execution, server acceptance, full key
+policy parity or restriction prevention. No timeout, retry, reset, new command
+or HTTP write route is added. Full native durable backoff, device/session
+installation and callback lifetime remain separate unresolved requirements.

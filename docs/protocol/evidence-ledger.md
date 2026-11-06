@@ -7082,3 +7082,14 @@ JVM-case regressions cover root/user attribution, redaction, reopen and no refre
 or resend. Other inspectors/generic action fields remain unchanged. Full native
 registration, duplicate/missing-device and durable retry ownership remain open.
 [Source, API consequence and limits](apk/2.26.43.72-prekey-wire-error-attribution/README.md).
+
+### 2026-11-05: non-reply IQ cannot consume a pending key page
+
+**Implemented offline, confirmed APK43.72 outer dispatch:** key-batch settle now
+returns false without store mutation for IQs lacking result/error type, even with
+matching ID and error child. Previously reusable settlement could terminally
+classify such input and lose the later actual reply. Normal group-driver already
+filtered these types. Red/green regression covers state equality, blocked reserve,
+reopen, later valid settlement, duplicate refusal and complete local assembly.
+No new callback authority, key adoption, timeout or automatic retry is added.
+[Evidence, scope and unresolved native lifetime](device-key-batches.md#key-batch-reply-admission-correction-2026-11-05).

@@ -1,3 +1,14 @@
+2026-11-05 — **Non-reply IQs cannot consume reusable key-batch ownership.**
+
+The settlement helper now rejects missing/get/set/unsupported/nontext type before
+store mutation. Matching ID or error child alone cannot terminally hold a page
+and prevent the later valid response. The normal group driver already filtered
+these types. No new replay or callback authority is granted.
+[Red/green durable regression and APK dispatch evidence](docs/protocol/device-key-batches.md#key-batch-reply-admission-correction-2026-11-05).
+Validation: red/green regression, all 1378 workspace/all-feature tests, seven
+focused key-batch tests, fmt, strict Clippy, CLI/OpenAPI, coverage, pinned APK
+identity and staged checksum/link hygiene passed. No live account operation.
+
 2026-11-05 — **Key-fetch wire error attribution and signed inspection corrected.**
 
 Current writer binds Dxh to original devices; its error event matches backoff

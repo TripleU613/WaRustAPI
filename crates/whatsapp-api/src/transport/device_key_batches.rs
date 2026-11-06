@@ -293,10 +293,17 @@ fn classify(node: &Node, expected: &[Jid]) -> std::result::Result<(), Reason> {
     Ok(())
 }
 /// Commit the first authenticated matching query response, retaining its exact
-/// wire privately. Returns false for unmatched/terminal IDs without mutation.
+/// wire privately. Returns false for non-replies or unmatched/terminal IDs without mutation.
 /// Call only after transport authentication; saving does not replace peer pins.
 pub fn settle(store: &ProtocolStore, id: &ClientRequestId, node: &Node) -> Result<bool> {
-    if node.description != "iq" {
+    // APK43.72 1rA.A03 and 0ln.A01 select result/error before invoking
+    // callbacks. An ID alone must not consume durable pending ownership.
+    if node.description != "iq"
+        || !matches!(
+            node.get_attr("type").and_then(|v| v.as_text()),
+            Some("result" | "error")
+        )
+    {
         return Ok(false);
     }
     let Some(query_id) = node.get_attr("id").and_then(|v| v.as_text()) else {
@@ -557,6 +564,46 @@ mod tests {
             .unwrap()
     }
     #[test]
+    fn nonreply_iq_cannot_consume_pending_key_batch_across_reopen() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("nonreply.redb");
+        let store = open(&path);
+        let selector = id();
+        let targets = vec![target(0)];
+        let query = reserve_next(&store, &selector, &targets).unwrap().unwrap();
+        let expected = state(&store);
+        for kind in [None, Some("get"), Some("set"), Some("unknown")] {
+            let mut incoming = Node::new("iq")
+                .attr("id", query.get_attr("id").unwrap().clone())
+                .children(vec![Node::new("error").attr("code", "500")]);
+            if let Some(kind) = kind {
+                incoming = incoming.attr("type", kind);
+            }
+            assert!(!settle(&store, &selector, &incoming).unwrap(), "{kind:?}");
+            assert_eq!(state(&store), expected);
+        }
+        let typed = Node::new("iq")
+            .attr("id", query.get_attr("id").unwrap().clone())
+            .attr("type", Jid::parse("100001@lid").unwrap());
+        assert!(!settle(&store, &selector, &typed).unwrap());
+        assert_eq!(state(&store), expected);
+        assert!(reserve_next(&store, &selector, &targets).is_err());
+        assert_eq!(state(&store), expected);
+        drop(store);
+        let store = open(&path);
+        assert_eq!(state(&store), expected);
+        let incoming = reply(&query, &user_template());
+        assert!(settle(&store, &selector, &incoming).unwrap());
+        let settled = state(&store);
+        assert!(!settle(&store, &selector, &incoming).unwrap());
+        assert_eq!(state(&store), settled);
+        assert!(summary(&store, &selector).unwrap().unwrap().complete);
+        assert!(reserve_next(&store, &selector, &targets).unwrap().is_none());
+        assert!(assembled(&store, &selector, &targets).unwrap().is_some());
+        assert_eq!(state(&store), settled);
+    }
+
+    #[test]
     fn full_large_frozen_plan_batches_every_device_once_and_reuses_complete_replies_after_reopen() {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("large.redb");
@@ -653,7 +700,6 @@ mod tests {
             "user_error",
             "query_error",
             "pqkey",
-            "type",
             "signature",
             "width",
             "lists",
@@ -687,9 +733,6 @@ mod tests {
                     let mut children = users[0].child_nodes().to_vec();
                     children.push(Node::new("error").attr("code", "480"));
                     users[0] = users[0].clone().children(children);
-                }
-                "type" => {
-                    incoming = incoming.attr("type", Jid::parse("100001@lid").unwrap());
                 }
                 "query_error" => {
                     incoming = incoming.attr("type", "error");
@@ -733,7 +776,6 @@ mod tests {
                 "foreign" | "namespace" => "foreign_device",
                 "user_error" => "device_refused",
                 "query_error" => "query_refused",
-                "type" => "invalid_reply",
                 "signature" => "invalid_signature",
                 "width" | "pqkey" => "invalid_bundle",
                 _ => "invalid_list",
