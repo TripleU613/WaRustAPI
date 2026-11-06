@@ -1,0 +1,90 @@
+# BOUNDED EXCERPT, not a complete method. Full-source identity and line ranges: producer-excerpt.json
+
+# class: LX/FeM;
+# extends: Ljava/lang/Object;
+
+.method public run(V)  # .registers 27
+    # full signature: LX/FeM;->run()V
+    0000..0004  move-object/from16  v3, v26
+    0004..0008  iget  v0, v3, LX/FeM;->$t:I
+    0008..000e  packed-switch  v0, payload@0x1cfc, cases=[0:@0x1a38, 1:@0x1a16, 2:@0x1a16, 3:@0x198e, 4:@0x1960, 5:@0x18e6, 6:@0x18ce, 7:@0x18b6, 8:@0x18b6, 9:@0x188a, 10:@0x11c6, 11:@0x1072, 12:@0x1030, 13:@0x1010, 14:@0xe88, 15:@0xda0, 16:@0x1740, 17:@0xbd0, 18:@0xb50, 19:@0xb24, 20:@0x1724, 21:@0x1706, 22:@0xe, 23:@0x16ee, 24:@0xe, 25:@0x29a, 26:@0x14e2, 27:@0x1cb4, 28:@0x246, 29:@0x14ba, 30:@0x1492, 31:@0x1452, 32:@0x1436, 33:@0x1406, 34:@0x13ba, 35:@0x139e, 36:@0x1352, 37:@0x206, 38:@0x1328, 39:@0x1300, 40:@0x12ce, 41:@0x1a8, 42:@0x16c, 43:@0x108, 44:@0x12b0, 45:@0x90, 46:@0x127e, 47:@0x124e, 48:@0x26, 49:@0x122e], default@0xe
+    1740..1744  iget-object  v4, v3, LX/FeM;->A00:Ljava/lang/Object;
+    1744..1748  check-cast  v4, LX/10L;
+    1748..174c  iget-object  v5, v3, LX/FeM;->A01:Ljava/lang/Object;
+    174c..1750  check-cast  v5, Ljava/util/List;
+    1750..1754  iget-object  v0, v4, LX/10L;->A06:LX/00x;
+    1754..175a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    175a..175c  move-result-object  v6
+    175c..1760  check-cast  v6, LX/3KB;
+    1760..1762  const/4  v3, #0x0
+    1762..1768  invoke-static  {v5, v3}, LX/00l;->A09(Ljava/lang/Object;I)V
+    1768..176e  invoke-static  {v5}, LX/1Xl;->A19(Ljava/lang/Iterable;)Ljava/util/ArrayList;
+    176e..1770  move-result-object  v2
+    1770..1776  invoke-interface  {v5}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    1776..1778  move-result-object  v1
+    1778..177e  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    177e..1780  move-result  v0
+    1780..1784  if-eqz  v0, +0x6
+    1784..178a  invoke-static  {v2, v1}, LX/DBg;->A1C(Ljava/util/AbstractCollection;Ljava/util/Iterator;)V
+    178a..178c  goto  -0x9
+    178c..1792  invoke-static  {v2}, LX/07Z;->A1S(Ljava/lang/Iterable;)Ljava/util/Set;
+    1792..1794  move-result-object  v0
+    1794..179a  invoke-virtual  {v6, v0, v3}, LX/3KB;->A01(Ljava/util/Set;Z)LX/1xM;
+    179a..179c  goto  +0x7
+    179c..179e  move-exception  v1
+    179e..17a2  const-string  v0, "ConversationDelegate/requestMissingLidsOnGetIdentities"
+    17a2..17a8  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    17a8..17ac  iget-object  v0, v4, LX/10L;->A05:LX/00x;
+    17ac..17b2  invoke-static  {v0}, LX/6oj;->A12(LX/00x;)Ljava/lang/String;
+    17b2..17b4  move-result-object  v11
+    17b4..17ba  invoke-static  {v0}, LX/6oe;->A0u(LX/00x;)LX/0Sf;
+    17ba..17bc  move-result-object  v8
+    17bc..17c2  invoke-interface  {v5}, Ljava/util/List;->size()I
+    17c2..17c4  move-result  v0
+    17c4..17c8  new-array  v7, v0, [LX/0Tp;
+    17c8..17ca  const/4  v6, #0x0
+    17ca..17d0  invoke-interface  {v5}, Ljava/util/List;->size()I
+    17d0..17d2  move-result  v0
+    17d2..17d4  const/4  v2, #0x1
+    17d4..17d8  if-ge  v6, v0, +0x1b
+    17d8..17dc  new-array  v2, v2, [LX/0Tl;
+    17dc..17e2  invoke-interface  {v5, v6}, Ljava/util/List;->get(I)Ljava/lang/Object;
+    17e2..17e4  move-result-object  v1
+    17e4..17e8  check-cast  v1, Lcom/whatsapp/infra/core/jid/Jid;
+    17e8..17ec  const-string  v0, "jid"
+    17ec..17f2  invoke-static  {v1, v0, v2, v3}, LX/6oe;->A1K(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;[Ljava/lang/Object;I)V
+    17f2..17f8  const-string/jumbo  v0, "user"
+    17f8..17fe  invoke-static  {v0, v2}, LX/B1w;->A0Z(Ljava/lang/String;[LX/0Tl;)LX/0Tp;
+    17fe..1800  move-result-object  v0
+    1800..1804  aput-object  v0, v7, v6
+    1804..1808  add-int/lit8  v6, v6, #0x1
+    1808..180a  goto  -0x1f
+    180a..180c  const/4  v0, #0x4
+    180c..1810  new-array  v6, v0, [LX/0Tl;
+    1810..1814  const-string  v0, "id"
+    1814..181a  invoke-static  {v0, v11, v6, v3}, LX/3q1;->A1T(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;I)V
+    181a..1820  const-string/jumbo  v1, "xmlns"
+    1820..1824  const-string  v0, "encrypt"
+    1824..182a  invoke-static  {v1, v0, v6, v2}, LX/3q1;->A1T(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;I)V
+    182a..1830  const-string/jumbo  v1, "type"
+    1830..1834  const-string  v0, "get"
+    1834..183a  invoke-static  {v1, v0, v6}, LX/6oj;->A1Q(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+    183a..1840  const-string/jumbo  v2, "to"
+    1840..1844  sget-object  v0, LX/0mL;->A00:LX/0mL;
+    1844..1848  new-instance  v1, LX/0Tl;
+    1848..184e  invoke-direct  {v1, v0, v2}, LX/0Tl;-><init>(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;)V
+    184e..1850  const/4  v0, #0x3
+    1850..1854  aput-object  v1, v6, v0
+    1854..1858  const-string  v1, "identity"
+    1858..185a  const/4  v0, #0x0
+    185a..1860  invoke-static  {v1, v0, v7}, LX/DBc;->A0m(Ljava/lang/String;[LX/0Tl;[LX/0Tp;)LX/0Tp;
+    1860..1862  move-result-object  v1
+    1862..1866  const-string  v0, "iq"
+    1866..186a  new-instance  v10, LX/0Tp;
+    186a..1870  invoke-direct  {v10, v1, v0, v6}, LX/0Tp;-><init>(LX/0Tp;Ljava/lang/String;[LX/0Tl;)V
+    1870..1874  new-instance  v9, LX/FUP;
+    1874..187a  invoke-direct  {v9, v5, v4, v3}, LX/FUP;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V
+    187a..187e  const-wide/16  v13, #0x7d00
+    187e..1882  const/16  v12, #0x99
+    1882..1888  invoke-virtual/range  {v8..v14}, LX/0Sf;->A0W(LX/0lG;LX/0Tp;Ljava/lang/String;IJ)Z
+    1888..188a  return-void

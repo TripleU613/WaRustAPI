@@ -1,3 +1,8 @@
+Identity-only replies now follow pinned APK43.72 outer-type/per-user error
+context. Root extensions cannot override the selected identity or refusal.
+Inspection retains signed i32 server codes; no identity adoption or replay.
+[Trace and limits](docs/protocol/peer-identity.md#identity-only-reply-context-and-signed-codes-2026-11-06).
+
 Peer directory diagnostics now classify saved reply context independently of
 generic action status. Typed peer-key results ignore root extension errors;
 selected-user refusals and signature verdicts remain distinct. Historical

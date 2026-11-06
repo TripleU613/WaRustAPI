@@ -1,0 +1,94 @@
+
+# class: LX/FUP;
+# extends: Ljava/lang/Object;
+
+.method public BsS(VL)  # .registers 6
+    # full signature: LX/FUP;->BsS(Ljava/lang/String;)V
+    0000..0004  iget  v0, v4, LX/FUP;->$t:I
+    0004..000a  packed-switch  v0, payload@0x78, cases=[0:@0x38, 1:@0x3a, 2:@0x46], default@0xa
+    000a..000e  const-string  v0, "TwoFactorXmppMethods/sendCheckTwoFactorAuth/onDeliveryFailure; iq="
+    000e..0014  invoke-static  {v0, v5}, LX/2LA;->A1N(Ljava/lang/String;Ljava/lang/String;)V
+    0014..0018  iget-object  v0, v4, LX/FUP;->A00:Ljava/lang/Object;
+    0018..001c  check-cast  v0, LX/1HS;
+    001c..0020  iget-object  v3, v0, LX/1HS;->A02:LX/0Js;
+    0020..0024  iget-object  v2, v4, LX/FUP;->A01:Ljava/lang/Object;
+    0024..0028  const/16  v1, #0x21
+    0028..002c  new-instance  v0, LX/FeO;
+    002c..0032  invoke-direct  {v0, v5, v1, v2}, LX/FeO;-><init>(Ljava/lang/String;ILjava/lang/Object;)V
+    0032..0038  invoke-virtual  {v3, v0}, LX/0Js;->CbR(Ljava/lang/Runnable;)V
+    0038..003a  return-void
+    003a..003e  const-string  v0, "LocationSubscriptionSendMethods/subscribe/onDeliveryFailure; iqId="
+    003e..0044  invoke-static  {v0, v5}, LX/2LA;->A1N(Ljava/lang/String;Ljava/lang/String;)V
+    0044..0046  return-void
+    0046..004a  const-string  v0, "TwoFactorXmppMethods/sendGetTwoFactorAuth/onDeliveryFailure; iq="
+    004a..0050  invoke-static  {v0, v5}, LX/2LA;->A1N(Ljava/lang/String;Ljava/lang/String;)V
+    0050..0054  iget-object  v2, v4, LX/FUP;->A01:Ljava/lang/Object;
+    0054..0058  check-cast  v2, Lcom/google/common/util/concurrent/AbstractFuture;
+    0058..005c  const-string  v0, "Delivery failure: iqId="
+    005c..0062  invoke-static  {v0, v5}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0062..0064  move-result-object  v1
+    0064..0068  new-instance  v0, Ljava/lang/RuntimeException;
+    0068..006e  invoke-direct  {v0, v1}, Ljava/lang/RuntimeException;-><init>(Ljava/lang/String;)V
+    006e..0074  invoke-virtual  {v2, v0}, Lcom/google/common/util/concurrent/AbstractFuture;->setException(Ljava/lang/Throwable;)Z
+    0074..0076  return-void
+    0076..0078  nop
+    0078..008c  packed-switch-payload  size=3
+    # exception table: 0 try range(s)
+.end method
+
+.method public Bvj(VLL)  # .registers 8
+    # full signature: LX/FUP;->Bvj(LX/0Tp;Ljava/lang/String;)V
+    0000..0004  iget  v0, v5, LX/FUP;->$t:I
+    0004..000a  packed-switch  v0, payload@0xd8, cases=[0:@0x4e, 1:@0x8a, 2:@0xb4], default@0xa
+    000a..0010  invoke-static  {v6}, LX/1ud;->A01(LX/0Tp;)Landroid/util/Pair;
+    0010..0012  move-result-object  v4
+    0012..0016  const-string  v0, "TwoFactorXmppMethods/sendCheckTwoFactorAuth/onError; iq="
+    0016..001c  invoke-static  {v0, v7}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    001c..001e  move-result-object  v1
+    001e..0022  const-string  v0, " error="
+    0022..0028  invoke-static  {v4, v0, v1}, LX/2LA;->A1J(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    0028..002c  iget-object  v0, v5, LX/FUP;->A00:Ljava/lang/Object;
+    002c..0030  check-cast  v0, LX/1HS;
+    0030..0034  iget-object  v3, v0, LX/1HS;->A02:LX/0Js;
+    0034..0038  iget-object  v2, v5, LX/FUP;->A01:Ljava/lang/Object;
+    0038..003c  const/16  v1, #0x2e
+    003c..0040  new-instance  v0, LX/Fc2;
+    0040..0046  invoke-direct  {v0, v4, v2, v1}, LX/Fc2;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V
+    0046..004c  invoke-virtual  {v3, v0}, LX/0Js;->CbR(Ljava/lang/Runnable;)V
+    004c..004e  return-void
+    004e..0054  invoke-static  {v6}, LX/1ud;->A00(LX/0Tp;)I
+    0054..0056  move-result  v3
+    0056..005a  iget-object  v0, v5, LX/FUP;->A01:Ljava/lang/Object;
+    005a..005e  check-cast  v0, Ljava/util/List;
+    005e..0064  invoke-interface  {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0064..0066  move-result-object  v2
+    0066..006c  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    006c..006e  move-result  v0
+    006e..0072  if-eqz  v0, -0x11
+    0072..0078  invoke-static  {v2}, LX/DBc;->A0b(Ljava/util/Iterator;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0078..007a  move-result-object  v1
+    007a..007e  iget-object  v0, v5, LX/FUP;->A00:Ljava/lang/Object;
+    007e..0082  check-cast  v0, LX/10L;
+    0082..0088  invoke-static  {v0, v1, v3}, LX/10L;->A00(LX/10L;Lcom/whatsapp/infra/core/jid/DeviceJid;I)V
+    0088..008a  goto  -0x11
+    008a..0090  invoke-static  {v6}, LX/1ud;->A00(LX/0Tp;)I
+    0090..0092  move-result  v2
+    0092..0096  const-string  v0, "LocationSubscriptionSendMethods/subscribe/onError; iqId="
+    0096..009c  invoke-static  {v0, v7}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    009c..009e  move-result-object  v1
+    009e..00a2  const-string  v0, ", error="
+    00a2..00a8  invoke-static  {v0, v1, v2}, LX/1Xl;->A1U(Ljava/lang/String;Ljava/lang/StringBuilder;I)V
+    00a8..00ac  const-string  v0, "locationssubscriberesponsehandler/error "
+    00ac..00b2  invoke-static  {v0, v2}, LX/6ol;->A1L(Ljava/lang/String;I)V
+    00b2..00b4  return-void
+    00b4..00b8  const-string  v0, "TwoFactorXmppMethods/sendGetTwoFactorAuth/onError; iq="
+    00b8..00be  invoke-static  {v0, v7}, LX/2LA;->A1N(Ljava/lang/String;Ljava/lang/String;)V
+    00be..00c2  iget-object  v1, v5, LX/FUP;->A01:Ljava/lang/Object;
+    00c2..00c6  check-cast  v1, Lcom/google/common/util/concurrent/AbstractFuture;
+    00c6..00ca  new-instance  v0, LX/Giq;
+    00ca..00d0  invoke-direct  {v0, v6, v7}, LX/Giq;-><init>(LX/0Tp;Ljava/lang/String;)V
+    00d0..00d6  invoke-virtual  {v1, v0}, Lcom/google/common/util/concurrent/AbstractFuture;->setException(Ljava/lang/Throwable;)Z
+    00d6..00d8  return-void
+    00d8..00ec  packed-switch-payload  size=3
+    # exception table: 0 try range(s)
+.end method

@@ -3889,9 +3889,9 @@
               "integer",
               "null"
             ],
-            "minimum": 0,
-            "maximum": 65535,
-            "description": "Recognized correlated refusal code; no guessed wait or raw text."
+            "minimum": -2147483648,
+            "maximum": 2147483647,
+            "description": "Signed Java integer from the correlated outer or selected-user refusal; malformed or overflowing code is null. Root errors cannot override an outer result. No guessed wait or raw text."
           },
           "fingerprint": {
             "type": [
@@ -17476,7 +17476,14 @@
     "x-cli": true,
     "x-transport": true,
     "x-live": false,
-    "description": "Peer directory inspection reads saved outer IQ type, selected user refusal and signed bundle independently of generic action status. Typed peer_keys encrypt/get/key result settlement ignores root extension errors. Historical Error records remain unchanged and cannot authorize refresh; generic Ok does not prove bundle validity. No identity adoption, replay or live validation. Identity-only and generic foreign-user attribution remain separate audit gaps.",
+    "description": "Peer directory inspection reads saved outer IQ type, selected user refusal and signed bundle independently of generic action status. Typed peer_keys encrypt/get/key result settlement ignores root extension errors. Historical Error records remain unchanged and cannot authorize refresh; generic Ok does not prove bundle validity. No identity adoption, replay or live validation. Generic foreign-user attribution remains a separate audit gap; identity-only context is covered by x-identity-only-reply-context.",
     "evidence": "docs/protocol/peer-identity.md#peer-directory-inspection-uses-reply-context-2026-11-06"
+  },
+  "x-identity-only-reply-context": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Identity-only results follow APK43.72 0ln.A01 outer-type dispatch and FeM case16/FUP case0 per-user errors. Root extensions cannot override valid identity or selected refusal. Signed i32 inspection code replaces u16; existing JSON positive values remain compatible. Generic Ok does not prove usable identity; no adoption, callback timer port or replay.",
+    "evidence": "docs/protocol/peer-identity.md#identity-only-reply-context-and-signed-codes-2026-11-06"
   }
 }

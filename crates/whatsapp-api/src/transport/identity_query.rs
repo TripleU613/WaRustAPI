@@ -121,8 +121,8 @@ pub struct IdentityQueryInspection {
     pub status: IdentityQueryStatus,
     /// Fixed local parser diagnosis; null for received identity/refusal.
     pub failure: Option<IdentityReplyFailure>,
-    /// Parsed server refusal code; no raw text or inferred wait.
-    pub server_error_code: Option<u16>,
+    /// Signed Java integer refusal code; no raw text or inferred wait.
+    pub server_error_code: Option<i32>,
     /// SHA-256 of type 5 plus the first 32 public bytes; not a safety number.
     pub fingerprint: Option<String>,
     /// Exact queried namespace only; null when no local pin exists.
@@ -142,10 +142,12 @@ fn body(node: &Node) -> Option<&[u8]> {
         _ => None,
     }
 }
-fn error_code(node: &Node) -> Option<u16> {
+fn error_code(node: &Node) -> Option<i32> {
+    // APK43.72 FUP.CK4 case0 uses 0Tp.A04's signed Java integer.
     node.get_attr("code")
         .and_then(|v| v.as_text())
-        .and_then(|s| s.parse().ok())
+        .and_then(super::mex::java_decimal_long)
+        .and_then(|value| i32::try_from(value).ok())
 }
 fn public_identity(user: &Node) -> std::result::Result<[u8; 33], IdentityReplyFailure> {
     let kind = one(user, "type")
@@ -206,12 +208,14 @@ pub fn inspect(store: &ProtocolStore, peer: &Jid) -> Result<Option<IdentityQuery
             return Ok(Some(view));
         }
         let kind = reply.get_attr("type").and_then(|v| v.as_text());
-        if kind == Some("error") || (kind == Some("result") && one(&reply, "error").is_some()) {
+        // APK43.72 0ln.A01 dispatches by outer type; FUP.CK4 case0
+        // reads list/user errors, so a root extension cannot override result.
+        if kind == Some("error") {
             view.status = IdentityQueryStatus::ServerRefused;
             view.server_error_code = one(&reply, "error").and_then(error_code);
             return Ok(Some(view));
         }
-        if kind != Some("result") || reply.child("error").is_some() {
+        if kind != Some("result") {
             view.failure = Some(IdentityReplyFailure::Envelope);
             return Ok(Some(view));
         }
@@ -487,6 +491,153 @@ mod tests {
         assert!(actions::reserve_pending(&store).unwrap().is_empty());
     }
     #[test]
+    fn root_errors_cannot_override_identity_result_context() {
+        for first in [false, true] {
+            for context in ["valid", "user_error", "bad_type", "missing_list"] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("mixed.redb");
+                let store = open(&path);
+                let peer = peer();
+                let id = queue(&store, &peer).unwrap();
+                actions::reserve_pending(&store).unwrap();
+                let selected = match context {
+                    "user_error" => Node::new("user")
+                        .attr("jid", peer.clone())
+                        .children(vec![Node::new("error").attr("code", "403")]),
+                    "bad_type" => Node::new("user").attr("jid", peer.clone()).children(vec![
+                        Node::new("type").bytes(vec![5, 5]),
+                        Node::new("identity").bytes(vec![11; 32]),
+                    ]),
+                    _ => user(&peer),
+                };
+                let list = Node::new("list").children(vec![selected]);
+                let error = Node::new("error")
+                    .attr("code", "503")
+                    .attr("text", "SECRET_BODY");
+                let children = if context == "missing_list" {
+                    vec![error]
+                } else if first {
+                    vec![error, list]
+                } else {
+                    vec![list, error]
+                };
+                let incoming = Node::new("iq")
+                    .attr("type", "result")
+                    .attr("id", id.as_str())
+                    .children(children);
+                actions::record_reply(&store, &incoming).unwrap();
+                assert_eq!(
+                    actions::outcomes(&store).unwrap()[0].status,
+                    if context == "user_error" {
+                        actions::ActionStatus::Error
+                    } else {
+                        actions::ActionStatus::Ok
+                    }
+                );
+                drop(store);
+                let store = open(&path);
+                let snapshot = || {
+                    store
+                        .read(|tx| {
+                            Ok((
+                                tx.scan_after(Table::Checkpoints, 1, None, 256)?,
+                                tx.scan_after(Table::PeerIdentities, 1, None, 256)?,
+                                tx.scan_after(Table::SignalSessions, 1, None, 256)?,
+                            ))
+                        })
+                        .unwrap()
+                };
+                let before = snapshot();
+                let head = store.journal_head().unwrap();
+                let view = inspect(&store, &peer).unwrap().unwrap();
+                assert_eq!(
+                    view.status,
+                    match context {
+                        "valid" => IdentityQueryStatus::PrimaryIdentityReceived,
+                        "user_error" => IdentityQueryStatus::ServerRefused,
+                        _ => IdentityQueryStatus::InvalidReply,
+                    }
+                );
+                assert_eq!(
+                    view.server_error_code,
+                    if context == "user_error" {
+                        Some(403)
+                    } else {
+                        None
+                    }
+                );
+                assert_eq!(
+                    view.failure,
+                    match context {
+                        "bad_type" => Some(IdentityReplyFailure::Type),
+                        "missing_list" => Some(IdentityReplyFailure::UserSet),
+                        _ => None,
+                    }
+                );
+                assert_eq!(view.fingerprint.is_some(), context == "valid");
+                assert_eq!(snapshot(), before);
+                assert_eq!(store.journal_head().unwrap(), head);
+                assert_eq!(queue(&store, &peer).unwrap(), id);
+                assert!(actions::reserve_pending(&store).unwrap().is_empty());
+                assert_eq!(actions::reply(&store, &id).unwrap(), Some(incoming));
+                let rendered = serde_json::to_string(&view).unwrap();
+                assert!(!rendered.contains("SECRET_BODY") && !rendered.contains(&peer.user));
+            }
+        }
+    }
+
+    #[test]
+    fn identity_refusal_codes_preserve_signed_java_integer_context() {
+        for outer in [false, true] {
+            for (code, expected) in [
+                ("-1", Some(-1)),
+                ("65536", Some(65536)),
+                ("2147483647", Some(i32::MAX)),
+                ("-2147483648", Some(i32::MIN)),
+                ("+４８０", Some(480)),
+                ("2147483648", None),
+                ("-2147483649", None),
+                (" 480", None),
+                ("SECRET_BODY", None),
+            ] {
+                let dir = tempfile::tempdir().unwrap();
+                let store = open(&dir.path().join("codes.redb"));
+                let peer = peer();
+                let id = queue(&store, &peer).unwrap();
+                actions::reserve_pending(&store).unwrap();
+                let error = Node::new("error").attr("code", code);
+                let incoming = if outer {
+                    Node::new("iq")
+                        .attr("type", "error")
+                        .attr("id", id.as_str())
+                        .children(vec![error])
+                } else {
+                    reply(
+                        &id,
+                        vec![
+                            Node::new("user")
+                                .attr("jid", peer.clone())
+                                .children(vec![error]),
+                        ],
+                    )
+                };
+                actions::record_reply(&store, &incoming).unwrap();
+                let view = inspect(&store, &peer).unwrap().unwrap();
+                assert_eq!(view.status, IdentityQueryStatus::ServerRefused);
+                assert_eq!(
+                    view.server_error_code.map(i64::from),
+                    expected.map(i64::from)
+                );
+                assert!(view.fingerprint.is_none());
+                assert!(
+                    !serde_json::to_string(&view)
+                        .unwrap()
+                        .contains("SECRET_BODY")
+                );
+            }
+        }
+    }
+    #[test]
     fn apk_key_type_length_and_trailing_byte_rules_are_preserved() {
         let peer = peer();
         let mut row = user(&peer);
@@ -585,8 +736,8 @@ mod tests {
             Node::new("iq")
                 .attr("type", "result")
                 .children(vec![Node::new("error").attr("code", "404")]),
-            IdentityQueryStatus::ServerRefused,
-            None,
+            IdentityQueryStatus::InvalidReply,
+            Some(IdentityReplyFailure::UserSet),
         ));
         for (node, status, failure) in cases {
             let dir = tempfile::tempdir().unwrap();

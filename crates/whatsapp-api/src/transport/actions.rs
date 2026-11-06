@@ -727,6 +727,13 @@ pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
             && request.get_attr("xmlns").and_then(|v| v.as_text()) == Some("encrypt")
             && request.get_attr("type").and_then(|v| v.as_text()) == Some("get")
             && request.child("key").is_some();
+        // APK43.72 FeM.run case16 binds identity/user to FUP case0;
+        // 0ln.A01 -> CK4 selects list/user errors instead of root extensions.
+        let identity_only_result = kind == Some("result")
+            && row.kind == "peer_identity_query"
+            && request.get_attr("xmlns").and_then(|v| v.as_text()) == Some("encrypt")
+            && request.get_attr("type").and_then(|v| v.as_text()) == Some("get")
+            && request.child("identity").is_some();
         // An `iq type=result` can still carry a refusal further in. App-state
         // answers per collection: `<sync><collection type="error"><error
         // code="409" text="conflict"/>`, observed live 2026-09-24. Reading only
@@ -748,7 +755,7 @@ pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
                         .flatten()
                     })
                     .or_else(|| {
-                        (!peer_directory_result)
+                        (!peer_directory_result && !identity_only_result)
                             .then(|| node.child("error"))
                             .flatten()
                     })

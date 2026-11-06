@@ -1,0 +1,17 @@
+{
+  "command": "target/debug/xtask apk-smali ../android-lab/apks/WhatsApp.1.apk --class 'LX/FeM;' --method run --signatures --exceptions",
+  "full_source_bytes": 106270,
+  "full_source_sha256": "d313fe25ecf869e4f0f628d6759c1e304d531fedb722341f4fe9cd0a2c0b98e0",
+  "full_source_lines": 1905,
+  "inclusive_line_ranges": [
+    [
+      1,
+      9
+    ],
+    [
+      1496,
+      1575
+    ]
+  ],
+  "scope": "Method header, discriminator switch, and complete case16 path 1740..188a; other cases and exception table excluded."
+}
