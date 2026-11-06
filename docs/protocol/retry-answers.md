@@ -401,3 +401,10 @@ Validation:1326 workspace/all-feature tests passed, including the live callback/
 reopen regression. Strict workspace/all-target/all-feature Clippy, formatting,
 CLI reference regeneration, APK coverage and repository hygiene passed. Offline
 only; no full native timeout/recovery parity or live acceptance claim.
+
+## Queued refetch reservation ownership (2026-11-06)
+
+Normal runtime now carries the reserved job snapshot to both ACK and query
+writer admission, refusing changed/missing jobs or non-fetching answer markers
+before encoding. [Mechanism, queue/reopen tests and limits](retry-ack-dispatch.md#queued-key-refetch-writes-retain-reservation-ownership-2026-11-06).
+No guessed response timer, replay or live acceptance claim.

@@ -17849,5 +17849,12 @@
   "x-live": false,
   "description": "Offline audit of existing media refresh ownership and lifetimes; corrects historical first-route false support wording. No new capability, runtime change or live verification. Native clock parity, scheduler and complete sender/host policy remain unproved.",
   "evidence": "docs/protocol/media-network-outcomes.md#refresh-authority-and-lifetime-audit-2026-11-06"
+},
+  "x-retry-refetch-queued-write-ownership": {
+  "x-cli": false,
+  "x-transport": true,
+  "x-live": false,
+  "description": "Normal runtime retry key-refetch ACK and query writer admission require the exact reserved job and matching fetching answer query/count before encoding. Stale work ends the connection without clearing uncertainty or replay. No lock across socket I/O, guessed timeout or live acceptance claim; direct retry messages and low-level callers remain separate.",
+  "evidence": "docs/protocol/retry-ack-dispatch.md#queued-key-refetch-writes-retain-reservation-ownership-2026-11-06"
 }
 }

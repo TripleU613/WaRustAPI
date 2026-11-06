@@ -8263,3 +8263,5 @@ Ordinary media GET settlement now binds success and HTTP refusal to a unique loc
 Local public upload eligibility omission corrected at shared entry, including cached-success preflight and unchanged-state controls. [Shared upload account/config preflight](media-network-outcomes.md#shared-upload-preflight-precedes-cache-and-reservation-2026-11-06). No native account-gate or live claim.
 
 2026-11-06 — **Confirmed Rust/offline, negative audit:** existing media refresh ownership, conditional host merge and TTL guards verified; stale first-route-false documentation corrected. No runtime change or new APK/live evidence. [Scope and remaining gaps](media-network-outcomes.md#refresh-authority-and-lifetime-audit-2026-11-06).
+
+2026-11-06 — **Confirmed Rust/offline:** retry key-refetch ACK/query queue ownership gap fixed with the reservation-time snapshot at each writer admission. Changed/missing/settled controls preserve checkpoints across reopen; no new timer or native-format claim. [Evidence and boundaries](retry-ack-dispatch.md#queued-key-refetch-writes-retain-reservation-ownership-2026-11-06).

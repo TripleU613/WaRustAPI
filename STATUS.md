@@ -1,3 +1,5 @@
+Retry key-refetch ACK/query writes now recheck the reserved job and fetching answer at writer admission. Queued stale work refuses before encoding; no replay or guessed deadline. [Ownership fix and boundaries](docs/protocol/retry-ack-dispatch.md#queued-key-refetch-writes-retain-reservation-ownership-2026-11-06).
+
 Media refresh audit verified existing request/prior-route ownership and request-time TTL guards; corrected stale first-route false documentation. No runtime change. [Audit scope and open boundaries](docs/protocol/media-network-outcomes.md#refresh-authority-and-lifetime-audit-2026-11-06).
 
 Shared upload entry now checks config and registered matching account before cache reuse, route selection or persisted randomness/reservation. [Shared upload account/config preflight](docs/protocol/media-network-outcomes.md#shared-upload-preflight-precedes-cache-and-reservation-2026-11-06). Both public entry points have offline positive/refusal controls.

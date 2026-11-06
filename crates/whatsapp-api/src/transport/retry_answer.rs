@@ -121,6 +121,7 @@ impl ActiveRefetches {
 pub(crate) struct ReservedAnswer {
     pub node: Node,
     pub confirmation: Option<Node>,
+    pub refetch: Option<RefetchWriteGuard>,
 }
 
 pub(crate) async fn answer_with_confirmation(
@@ -129,7 +130,8 @@ pub(crate) async fn answer_with_confirmation(
     node: &Node,
     epoch: ConnectionEpoch,
 ) -> Result<Option<ReservedAnswer>> {
-    let Some(answer) = answer(store, account, node, epoch).await? else {
+    let mut refetch = None;
+    let Some(answer) = answer_inner(store, account, node, epoch, &mut refetch).await? else {
         return Ok(None);
     };
     // APK43.72 ACK submission precedes the Fe5 callback which adds a send
@@ -150,6 +152,7 @@ pub(crate) async fn answer_with_confirmation(
     Ok(Some(ReservedAnswer {
         node: answer,
         confirmation,
+        refetch,
     }))
 }
 
@@ -160,6 +163,16 @@ pub async fn answer(
     account: &AccountRecord,
     node: &Node,
     epoch: ConnectionEpoch,
+) -> Result<Option<Node>> {
+    answer_inner(store, account, node, epoch, &mut None).await
+}
+
+async fn answer_inner(
+    store: &ProtocolStore,
+    account: &AccountRecord,
+    node: &Node,
+    epoch: ConnectionEpoch,
+    authority: &mut Option<RefetchWriteGuard>,
 ) -> Result<Option<Node>> {
     let Some(retry) = super::receipts::parse_retry(node) else {
         return Ok(None);
@@ -293,7 +306,14 @@ pub async fn answer(
                 &query,
                 &job,
             )?;
-            return Ok(reserved.then(|| super::messaging::key_request(&peer, &query)));
+            if reserved {
+                *authority = Some(RefetchWriteGuard {
+                    query: query.clone(),
+                    job,
+                });
+                return Ok(Some(super::messaging::key_request(&peer, &query)));
+            }
+            return Ok(None);
         }
     };
     let prepared = match crate::signal::direct::prepare_payload(
@@ -359,6 +379,20 @@ struct Refetch {
     count: u32,
 }
 
+// Freeze at reservation, not by reloading the job after the ACK or queue wait.
+// Local ownership boundary; native ACK-before-query evidence is retained in
+// docs/protocol/retry-ack-dispatch.md. No new timer or replay authority.
+#[derive(Clone)]
+pub(crate) struct RefetchWriteGuard {
+    query: String,
+    job: Refetch,
+}
+impl RefetchWriteGuard {
+    pub(crate) fn check_write_authority(&self, store: &ProtocolStore) -> Result<()> {
+        store.write(|tx| ensure_refetch_owned(tx, &self.query, &self.job))
+    }
+}
+
 // A delayed directory callback owns exactly the job it loaded and a fetching
 // answer for that query/count. Recheck both in the transaction that consumes
 // them; checking only query permits replacing a newer job or terminal marker.
@@ -368,7 +402,7 @@ fn ensure_refetch_owned(tx: &mut WriteTx<'_>, query: &str, job: &Refetch) -> Res
     if current.as_ref() != Some(job) {
         return Err(Error::invalid(
             "retry",
-            "pending refetch changed before settlement",
+            "pending refetch changed before use",
         ));
     }
     let state: Option<serde_json::Value> =
@@ -380,7 +414,7 @@ fn ensure_refetch_owned(tx: &mut WriteTx<'_>, query: &str, job: &Refetch) -> Res
     {
         return Err(Error::invalid(
             "retry",
-            "refetch answer ownership changed before settlement",
+            "refetch answer ownership changed before use",
         ));
     }
     Ok(())
@@ -1083,6 +1117,125 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn queued_refetch_rechecks_owner_before_ack_and_query_encoding() {
+        for change_at in ["none", "ack", "query"] {
+            for change in ["missing_job", "replaced_job", "settled_answer"] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("queued-refetch.redb");
+                let open = || {
+                    ProtocolStore::open(OpenOptions {
+                        path: path.clone(),
+                        account_id: AccountId::new("test").unwrap(),
+                        key_source: std::sync::Arc::new(StaticKeySource::new(
+                            MasterKey::from_bytes([7; 32]),
+                        )),
+                        create: true,
+                    })
+                    .unwrap()
+                };
+                let store = std::sync::Arc::new(open());
+                let job = Refetch {
+                    wire_id: "W1".into(),
+                    answer_key: "answer".into(),
+                    unanswered_key: "unanswered".into(),
+                    count: 2,
+                };
+                store
+                    .write(|tx| {
+                        tx.put_json(Table::Checkpoints, refetch_key("Q1").as_bytes(), 1, &job)?;
+                        tx.put_json(
+                            Table::Checkpoints,
+                            b"answer",
+                            1,
+                            &serde_json::json!({"status":"fetching","query":"Q1","count":2}),
+                        )
+                    })
+                    .unwrap();
+                let authority = RefetchWriteGuard {
+                    query: "Q1".into(),
+                    job: job.clone(),
+                };
+                let (_incoming, incoming) = tokio::sync::mpsc::channel(1);
+                let (outgoing, mut writes) = tokio::sync::mpsc::channel(2);
+                let link = super::super::connection::NodeLink::new(incoming, outgoing);
+                let worker_store = store.clone();
+                let task = tokio::spawn(async move {
+                    link.send_retry_answer(
+                        &worker_store,
+                        &ReservedAnswer {
+                            node: Node::new("iq").attr("id", "Q1"),
+                            confirmation: Some(Node::new("ack").attr("id", "R1")),
+                            refetch: Some(authority),
+                        },
+                    )
+                    .await
+                });
+                let mut expected = None;
+                for stage in ["ack", "query"] {
+                    let queued = writes.recv().await.expect("queued stage");
+                    if change_at == stage {
+                        store
+                            .write(|tx| match change {
+                                "missing_job" => {
+                                    tx.delete(Table::Checkpoints, refetch_key("Q1").as_bytes())?;
+                                    Ok(())
+                                }
+                                "replaced_job" => {
+                                    let mut replacement = job.clone();
+                                    replacement.wire_id = "W2".into();
+                                    tx.put_json(
+                                        Table::Checkpoints,
+                                        refetch_key("Q1").as_bytes(),
+                                        1,
+                                        &replacement,
+                                    )
+                                }
+                                _ => tx.put_json(
+                                    Table::Checkpoints,
+                                    b"answer",
+                                    1,
+                                    &serde_json::json!({"status":"reserved"}),
+                                ),
+                            })
+                            .unwrap();
+                        expected = Some(
+                            store
+                                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                                .unwrap(),
+                        );
+                    }
+                    let prepared = queued.prepare();
+                    if change_at == stage {
+                        assert!(prepared.is_none(), "{stage}/{change}");
+                        break;
+                    }
+                    let (node, written) = prepared.expect("unchanged owner admits encoding");
+                    assert_eq!(node.description, if stage == "ack" { "ack" } else { "iq" });
+                    written.send(Ok(())).unwrap();
+                }
+                assert_eq!(task.await.unwrap().is_ok(), change_at == "none");
+                assert!(writes.recv().await.is_none());
+                if let Some(expected) = expected {
+                    assert_eq!(
+                        store
+                            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                            .unwrap(),
+                        expected
+                    );
+                    drop(store);
+                    let reopened = open();
+                    assert_eq!(
+                        reopened
+                            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                            .unwrap(),
+                        expected
+                    );
+                }
+            }
+        }
+    }
+
+    #[tokio::test]
     async fn refetch_settlement_preserves_replaced_job_and_non_fetching_answer() {
         for change in [
             "unchanged",
@@ -1134,6 +1287,10 @@ mod tests {
                     )
                 })
                 .unwrap();
+            let write_guard = RefetchWriteGuard {
+                query: "Q1".into(),
+                job: expected.clone(),
+            };
             // Snapshot was loaded before another transaction changed ownership.
             store
                 .write(|tx| {
@@ -1187,6 +1344,12 @@ mod tests {
                     .unwrap()
             };
             let before = snapshot(&store);
+            assert_eq!(
+                write_guard.check_write_authority(&store).is_ok(),
+                change == "unchanged",
+                "{change}"
+            );
+            assert_eq!(snapshot(&store), before);
             let result = store.write(|tx| {
                 ensure_refetch_owned(tx, "Q1", &expected)?;
                 tx.delete(Table::Checkpoints, refetch_key("Q1").as_bytes())?;
@@ -1200,6 +1363,7 @@ mod tests {
             if change == "unchanged" {
                 result.unwrap();
                 let settled = snapshot(&store);
+                assert!(write_guard.check_write_authority(&store).is_err());
                 assert!(
                     store
                         .write(|tx| ensure_refetch_owned(tx, "Q1", &expected))
@@ -1230,6 +1394,8 @@ mod tests {
                 }
                 drop(store);
                 let store = open();
+                assert_eq!(snapshot(&store), before, "{change}");
+                assert!(write_guard.check_write_authority(&store).is_err());
                 assert_eq!(snapshot(&store), before, "{change}");
             }
         }
@@ -1371,11 +1537,13 @@ mod tests {
             active.record_written(&ReservedAnswer {
                 node: Node::new("message").attr("id", "Q1"),
                 confirmation: None,
+                refetch: None,
             });
             assert!(active.0.is_empty());
             active.record_written(&ReservedAnswer {
                 node: Node::new("iq").attr("id", "Q1"),
                 confirmation: None,
+                refetch: None,
             });
             for node in [
                 Node::new("iq").attr("id", "Q1"),
@@ -1815,6 +1983,12 @@ mod tests {
                         .await?;
                 Ok::<_, Error>(reserved.map(|answer| {
                     if answer.node.description == "iq" {
+                        answer
+                            .refetch
+                            .as_ref()
+                            .expect("query carries reservation snapshot")
+                            .check_write_authority(store_ref)
+                            .unwrap();
                         let query = answer
                             .node
                             .get_attr("id")

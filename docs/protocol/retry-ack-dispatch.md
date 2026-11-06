@@ -173,3 +173,47 @@ Follow-up: [selected key-query manager-to-wire construction](retry-key-query-wir
 is now traced throughBulkGetPreKeyJob/Message87. Its classic baseline matches
 Rust; effective context/PQ/manager timing and recovery remain open. This
 supersedes the selected final-serializer gap above, not those broader unknowns.
+
+## Queued key-refetch writes retain reservation ownership (2026-11-06)
+
+**Confirmed Rust defect fixed offline:** the normal runtime durably reserved a
+retry key query, but queued its receipt ACK and query as unguarded writes. A
+concurrent local change could remove/replace the pending job or settle its answer
+while either stanza waited for the writer; the writer still admitted it.
+
+The private answer wrapper now carries the exact query/job snapshot captured at
+reservation. Both ACK and key IQ carry that guard through the writer queue.
+Before encoding each stanza, the writer requires the unchanged pending job and
+the matching fetching answer's query/count. A refusal consumes the queued item,
+reports an error and ends this connection; it does not clear uncertainty, repair
+state, start another query or authorize replay. The live callback is registered
+only after the guarded query write succeeds, as before.
+
+**Confirmed static reference, APK2.26.43.72:**
+[14h.A00/Fe5 ACK-before-job ordering](apk/2.26.43.72-retry-ack-dispatch/README.md)
+and [bulk future/callback completion](apk/2.26.43.72-bulk-key-job-completion/README.md)
+remain the native evidence. This change closes a local queue ownership gap; it
+does not claim native uses Rust's durable checkpoint format. Follow-up direct
+field/caller searches reproduced the already retained future-map census. They
+justify no new deadline: BulkGetPreKeyJob uses untimed FfK.get, while the manager's
+60-second suppression and ordinary IQ timers are distinct mechanisms. The shared
+legacy callback map and its reader aliases were already retained in the
+[about callback audit](apk/2.26.43.72-about-callback-lifetime/README.md#shared-legacy-map-separate-ui-timeout).
+Full sender admission, wire-callback expiry and native recovery remain open.
+
+The queue regression holds ACK/query separately, removes/replaces the job or
+settles the answer before either encoding boundary, and verifies refusal, no next
+write, unchanged checkpoints and reopen. Unchanged control emits ACK then query.
+Existing ownership tests also exercise missing/malformed/changed markers against
+the writer guard and retain a frozen snapshot through reopen. The real retry
+workflow asserts its reserved IQ carries a valid guard.
+
+**Limits:** no lock is held across encoding/socket I/O; a mutation after the
+writer check is outside this boundary. Direct message retry writes and callers
+of public low-level answer/complete_refetch retain their existing contracts.
+No wire grammar, timeout, automatic resend or live account operation changed.
+
+Validation:1,446 workspace/all-feature tests passed, including the new queue
+regression. Strict workspace/all-target/all-feature Clippy, formatting, CLI
+reference regeneration, OpenAPI symbol validation, APK coverage freshness and
+repository hygiene passed. Offline only.

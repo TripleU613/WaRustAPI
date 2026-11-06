@@ -334,6 +334,7 @@ type Written = (Node, oneshot::Sender<Result<()>>);
 enum WriteGuard {
     Prekey(Arc<ProtocolStore>, super::prekeys::PendingUpload),
     Devices(Arc<ProtocolStore>, super::devices::DeviceQuery),
+    RetryRefetch(Arc<ProtocolStore>, super::retry_answer::RefetchWriteGuard),
 }
 pub(crate) struct Outbound {
     node: Node,
@@ -343,10 +344,11 @@ pub(crate) struct Outbound {
 impl Outbound {
     // A refusal consumes the queued write and reports its actual local error.
     // The writer ends the epoch without encoding, writing, or releasing a batch.
-    fn prepare(self) -> Option<Written> {
+    pub(crate) fn prepare(self) -> Option<Written> {
         let admission = match self.guard {
             Some(WriteGuard::Prekey(store, pending)) => pending.check_write_authority(&store),
             Some(WriteGuard::Devices(store, query)) => query.check_write_authority(&store),
+            Some(WriteGuard::RetryRefetch(store, pending)) => pending.check_write_authority(&store),
             None => Ok(()),
         };
         if let Err(error) = admission {
@@ -400,17 +402,24 @@ impl NodeLink {
     // APK43.72 14h.A00 submits the ACK before running the deferred Fe5
     // callback. Reservation has committed before this handoff. Any write error
     // ends the epoch; neither an ACK nor a resend authorizes replay.
-    async fn send_retry_answer(
+    pub(crate) async fn send_retry_answer(
         &self,
+        store: &Arc<ProtocolStore>,
         answer: &super::retry_answer::ReservedAnswer,
     ) -> Result<bool> {
+        let guard = || {
+            answer
+                .refetch
+                .as_ref()
+                .map(|pending| WriteGuard::RetryRefetch(store.clone(), pending.clone()))
+        };
         let confirmed = if let Some(confirmation) = &answer.confirmation {
-            self.send(confirmation).await?;
+            self.send_guarded(confirmation, guard()).await?;
             true
         } else {
             false
         };
-        self.send(&answer.node).await?;
+        self.send_guarded(&answer.node, guard()).await?;
         Ok(confirmed)
     }
 
@@ -1254,7 +1263,7 @@ pub(crate) async fn drive(
                 if receipt_recorded {
                     match super::retry_answer::answer_with_confirmation(&store, &account, &node, epoch).await {
                         Ok(Some(answer)) => {
-                            confirmed = link.send_retry_answer(&answer).await?;
+                            confirmed = link.send_retry_answer(&store, &answer).await?;
                             retry_refetches.record_written(&answer);
                             tracing::info!(target: "whatsapp_api::incoming", kind = %answer.node.description, "retry receipt answered (message), or its fresh-bundle query sent (iq)");
                         }
@@ -2004,16 +2013,22 @@ mod tests {
                 let (_incoming, incoming) = mpsc::channel(1);
                 let (outgoing, mut writes) = mpsc::channel(2);
                 let link = NodeLink::new(incoming, outgoing);
+                let dir = tempfile::tempdir().unwrap();
+                let store = Arc::new(open(&dir.path().join("retry-write.db")));
                 let task = tokio::spawn(async move {
-                    link.send_retry_answer(&super::super::retry_answer::ReservedAnswer {
-                        confirmation: Some(
-                            Node::new("ack")
-                                .attr("id", "ROOT")
-                                .attr("class", "receipt")
-                                .attr("type", "retry"),
-                        ),
-                        node: Node::new(answer_kind).attr("id", "W1"),
-                    })
+                    link.send_retry_answer(
+                        &store,
+                        &super::super::retry_answer::ReservedAnswer {
+                            refetch: None,
+                            confirmation: Some(
+                                Node::new("ack")
+                                    .attr("id", "ROOT")
+                                    .attr("class", "receipt")
+                                    .attr("type", "retry"),
+                            ),
+                            node: Node::new(answer_kind).attr("id", "W1"),
+                        },
+                    )
                     .await
                 });
                 let (first, outcome) = writes.recv().await.unwrap().prepare().unwrap();
