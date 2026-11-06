@@ -1,0 +1,9 @@
+{
+  "library_sha256": "d0ab3f2237e92a76ac3519c3577b5836b9e6f65a186c2016cefd43c4923f4b0d",
+  "start_va": "0x663b10",
+  "end_va": "0x663b2c",
+  "file_offset": "0x65fb10",
+  "bytes": 28,
+  "sha256": "4c8c5fe8896888dd4e87cf278c3df8e60052505620e10b8fa007d1cdfca03947",
+  "scope": "Static native setter window, not downstream serialization"
+}

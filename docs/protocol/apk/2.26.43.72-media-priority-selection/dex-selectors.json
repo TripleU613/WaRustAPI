@@ -1,0 +1,34 @@
+{
+  "lazy-producer": [
+    "LX/1Wv;",
+    "invoke"
+  ],
+  "producer-constructor": [
+    "LX/1Wv;",
+    "<init>"
+  ],
+  "boolean-getter": [
+    "LX/00E;",
+    "A14"
+  ],
+  "boolean-resolution": [
+    "LX/00E;",
+    "A0D"
+  ],
+  "lazy-factory": [
+    "LX/00o;",
+    "A01"
+  ],
+  "lazy-value": [
+    "LX/00q;",
+    "getValue"
+  ],
+  "lazy-constructor": [
+    "LX/00q;",
+    "<init>"
+  ],
+  "request-builder": [
+    "TigonRequestBuilder",
+    null
+  ]
+}

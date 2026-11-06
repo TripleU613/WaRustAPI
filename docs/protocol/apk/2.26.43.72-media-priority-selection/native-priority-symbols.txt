@@ -1,0 +1,4 @@
+                 U folly::Executor::addWithPriority(folly::Function<void ()>, signed char)
+0000000000663b10 T facebook::tigon::TigonRequest::httpPriority(facebook::tigon::HttpPriority)
+                 U getpriority@LIBC
+                 U setpriority@LIBC

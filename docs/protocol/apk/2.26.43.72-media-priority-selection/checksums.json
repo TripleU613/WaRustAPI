@@ -1,0 +1,62 @@
+{
+  "README.md": {
+    "bytes": 5096,
+    "sha256": "bffe8fc25b3c3350cec5abed06940d99da27f875c9eec37484ef8b6377eb0920"
+  },
+  "boolean-getter.txt": {
+    "bytes": 423,
+    "sha256": "b8825622a32d0d749d2758c26d10c6271b9c8026c55a6f936af7225b617baa4f"
+  },
+  "boolean-resolution.txt": {
+    "bytes": 1073,
+    "sha256": "8d09d9989ef28e2dd7bd31706cf93cc99d9fa932c7cea63465dbefbd6df87570"
+  },
+  "dex-selectors.json": {
+    "bytes": 450,
+    "sha256": "07c553ec3a90927371c8469ed7bfb38681e72459ef3e23f4baf94e5e848bffc4"
+  },
+  "inspect-native.py": {
+    "bytes": 629,
+    "sha256": "1afd4b2d111a83428bcc56143970a4605536341c9217d84059a2f374d95c00c9"
+  },
+  "lazy-constructor.txt": {
+    "bytes": 684,
+    "sha256": "00fb780d9344a9fd073ca052cfd0bf603cf3068d2cf598292bc0db6d51e8e88b"
+  },
+  "lazy-factory.txt": {
+    "bytes": 548,
+    "sha256": "79dfe547bf7cf612b35d0c61d18163b480839de98cce57583cbfc4e3700379fe"
+  },
+  "lazy-producer.txt": {
+    "bytes": 68397,
+    "sha256": "553ac0fe643cecf56f28373e587f88496f6b31aada1be2405c15c66f2d6ef652"
+  },
+  "lazy-value.txt": {
+    "bytes": 1308,
+    "sha256": "f141fe099787fa44c1a49f41a342748ee2cdcf4cc33d6f85e63096cf35021b92"
+  },
+  "native-priority-setter.txt": {
+    "bytes": 446,
+    "sha256": "5fa9d782e852247eff988d9abc9687be6c3a7bfe2f6bd006a89522ae53c35f15"
+  },
+  "native-priority-symbols.txt": {
+    "bytes": 257,
+    "sha256": "2e01c89202eb0be904fe1b9f969fa6fa2131aa0a406175c69c12162b554c99a7"
+  },
+  "native-window.json": {
+    "bytes": 337,
+    "sha256": "3454bb7ebff6cabcbdb86a6c25bbdc51ccadd48513b571148265a34a9a75e4b4"
+  },
+  "producer-constructor.txt": {
+    "bytes": 322,
+    "sha256": "873677906a7e1dfc9b2e7deb430314b05ae48baf325fafc616586c55f26009b2"
+  },
+  "rejected-raw-class-name.json": {
+    "bytes": 2151,
+    "sha256": "2550b2d89c7c3f22dd5adbb6d531544b41c170f51b226b834642624630f295f3"
+  },
+  "request-builder.txt": {
+    "bytes": 34223,
+    "sha256": "4b4f1e5088a42ddda423230b1592ff53e0f081203d48af4948716c10562ac761"
+  }
+}

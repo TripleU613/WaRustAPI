@@ -1,0 +1,16 @@
+
+# class: LX/00q;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLL)  # .registers 4
+    # full signature: LX/00q;-><init>(Ljava/lang/Object;Lkotlin/jvm/functions/Function0;)V
+    0000..0006  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v3, v1, LX/00q;->initializer:Lkotlin/jvm/functions/Function0;
+    000a..000e  sget-object  v0, LX/00r;->A00:LX/00r;
+    000e..0012  iput-object  v0, v1, LX/00q;->_value:Ljava/lang/Object;
+    0012..0016  if-nez  v2, +0x3
+    0016..0018  move-object  v2, v1
+    0018..001c  iput-object  v2, v1, LX/00q;->lock:Ljava/lang/Object;
+    001c..001e  return-void
+    # exception table: 0 try range(s)
+.end method

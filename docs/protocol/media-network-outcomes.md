@@ -897,3 +897,25 @@ obtains `0eA.A0z.getValue()` as HttpPriorityCalculatorProvider and passes it
 into the TigonHttpClient constructor at0x05f6. Trace that lazy producer before
 assuming which holder/boolean value is selected; the User-Agent bundle already
 retains the complete factory and 0eA class initializer.
+
+## Selected priority calculator flag source (2026-11-06)
+
+**Confirmed static:** 0eA.A0z wraps1Wv(2) in00q; producer case2 constructs
+WAHttpPriorityCalculatorHolder with0eA.A06.A14(38178 /0x9522), and0eB.A00
+passes this provider to the client. This closes the prior selected-provider
+boundary. The app path does not use the holder's default-false constructor.
+The synchronized lazy caches the successful result and clears its initializer;
+the gate is not re-read on every request through that wrapper. A14 forwards a
+null boxed default through A0D to the generic configuration resolver; null is
+not a proven false. **Unknown:** effective value, stored/default overrides,
+initialization timing, downstream scheduling/HTTP priority serialization.
+
+[Complete checked DEX, native setter window and reproduction](apk/2.26.43.72-media-priority-selection/README.md)
+and [complete REA class search/producer Evidence](rea/2.26.43.72-media-priority-selection/README.md)
+retain both positive and negative results. The exported native HttpPriority
+setter writes a separate24-byte field+0x158, so neither that symbol nor the
+Java priority setter proves metadata+0x1e0 is HttpPriority. A raw-name REA lookup
+failed; the discovered alias X.C1Wv succeeded. No Rust behavior change, invented
+header/gate value, replay or live account operation. Next unresolved boundary:
+where the selected calculator result is consumed for actual request scheduling
+and HTTP/2/3 serialization, including any conditional wire priority fields.

@@ -1,0 +1,1335 @@
+
+# class: LX/1Wv;
+# extends: Ljava/lang/Object;
+
+.method public invoke(L)  # .registers 7
+    # full signature: LX/1Wv;->invoke()Ljava/lang/Object;
+    0000..0004  iget  v0, v6, LX/1Wv;->$t:I
+    0004..000a  packed-switch  v0, payload@0x146c, cases=[0:@0x145a, 1:@0x143a, 2:@0x1414, 3:@0x138e, 4:@0x12c4, 5:@0x12b0, 6:@0x129c, 7:@0x1288, 8:@0x126a, 9:@0x1258, 10:@0x1246, 11:@0x1232, 12:@0x121e, 13:@0x1204, 14:@0x11f2, 15:@0x11d4, 16:@0x11c2, 17:@0x11b0, 18:@0x1190, 19:@0x1170, 20:@0x115e, 21:@0x1150, 22:@0x1132, 23:@0xa, 24:@0x1124, 25:@0x110e, 26:@0x1100, 27:@0x10f4, 28:@0x10e6, 29:@0x10da, 30:@0xfe8, 31:@0xfd4, 32:@0xfca, 33:@0xdc4, 34:@0xbee, 35:@0x604, 36:@0xa, 37:@0x5ee, 38:@0x5d4, 39:@0x5b6, 40:@0x56a, 41:@0x54a, 42:@0x528, 43:@0x246, 44:@0x92, 45:@0x86, 46:@0x7a, 47:@0x4e, 48:@0x22, 49:@0x16], default@0xa
+    000a..000e  new-instance  v3, Ljava/util/Random;
+    000e..0014  invoke-direct  {v3}, Ljava/util/Random;-><init>()V
+    0014..0016  return-object  v3
+    0016..001a  new-instance  v3, Ljava/util/concurrent/ConcurrentHashMap;
+    001a..0020  invoke-direct  {v3}, Ljava/util/concurrent/ConcurrentHashMap;-><init>()V
+    0020..0022  return-object  v3
+    0022..0028  const-string/jumbo  v2, "wa-async-ui-resource-cache-loader-handler"
+    0028..002a  const/4  v1, #0x1
+    002a..002e  new-instance  v0, Landroid/os/HandlerThread;
+    002e..0034  invoke-direct  {v0, v2, v1}, Landroid/os/HandlerThread;-><init>(Ljava/lang/String;I)V
+    0034..003a  invoke-virtual  {v0}, Ljava/lang/Thread;->start()V
+    003a..0040  invoke-virtual  {v0}, Landroid/os/HandlerThread;->getLooper()Landroid/os/Looper;
+    0040..0042  move-result-object  v0
+    0042..0046  new-instance  v3, Landroid/os/Handler;
+    0046..004c  invoke-direct  {v3, v0}, Landroid/os/Handler;-><init>(Landroid/os/Looper;)V
+    004c..004e  return-object  v3
+    004e..0054  const-string/jumbo  v2, "wa-async-ui-resource-loader-handler"
+    0054..0056  const/4  v1, #0x1
+    0056..005a  new-instance  v0, Landroid/os/HandlerThread;
+    005a..0060  invoke-direct  {v0, v2, v1}, Landroid/os/HandlerThread;-><init>(Ljava/lang/String;I)V
+    0060..0066  invoke-virtual  {v0}, Ljava/lang/Thread;->start()V
+    0066..006c  invoke-virtual  {v0}, Landroid/os/HandlerThread;->getLooper()Landroid/os/Looper;
+    006c..006e  move-result-object  v0
+    006e..0072  new-instance  v3, Landroid/os/Handler;
+    0072..0078  invoke-direct  {v3, v0}, Landroid/os/Handler;-><init>(Landroid/os/Looper;)V
+    0078..007a  return-object  v3
+    007a..007e  new-instance  v3, Landroid/util/SparseArray;
+    007e..0084  invoke-direct  {v3}, Landroid/util/SparseArray;-><init>()V
+    0084..0086  return-object  v3
+    0086..008a  new-instance  v3, LX/Rqi;
+    008a..0090  invoke-direct  {v3}, LX/Rqi;-><init>()V
+    0090..0092  return-object  v3
+    0092..0096  const/16  v5, #0x17
+    0096..009a  new-array  v4, v5, [Ljava/lang/String;
+    009a..009c  const/4  v3, #0x0
+    009c..00a2  const-string/jumbo  v0, "➕"
+    00a2..00a6  aput-object  v0, v4, v3
+    00a6..00ac  const-string/jumbo  v1, "➖"
+    00ac..00ae  const/4  v0, #0x1
+    00ae..00b2  aput-object  v1, v4, v0
+    00b2..00b8  const-string/jumbo  v1, "➗"
+    00b8..00ba  const/4  v0, #0x2
+    00ba..00be  aput-object  v1, v4, v0
+    00be..00c4  const-string/jumbo  v1, "✖\u{fe0f}"
+    00c4..00c6  const/4  v0, #0x3
+    00c6..00ca  aput-object  v1, v4, v0
+    00ca..00d0  const-string/jumbo  v1, "🟰"
+    00d0..00d2  const/4  v0, #0x4
+    00d2..00d6  aput-object  v1, v4, v0
+    00d6..00dc  const-string/jumbo  v1, "♾\u{fe0f}"
+    00dc..00de  const/4  v0, #0x5
+    00de..00e2  aput-object  v1, v4, v0
+    00e2..00e8  const-string/jumbo  v1, "💲"
+    00e8..00ea  const/4  v0, #0x6
+    00ea..00ee  aput-object  v1, v4, v0
+    00ee..00f4  const-string/jumbo  v1, "💱"
+    00f4..00f6  const/4  v0, #0x7
+    00f6..00fa  aput-object  v1, v4, v0
+    00fa..0100  const-string/jumbo  v1, "™\u{fe0f}"
+    0100..0104  const/16  v0, #0x8
+    0104..0108  aput-object  v1, v4, v0
+    0108..010e  const-string/jumbo  v1, "©\u{fe0f}"
+    010e..0112  const/16  v0, #0x9
+    0112..0116  aput-object  v1, v4, v0
+    0116..011c  const-string/jumbo  v1, "®\u{fe0f}"
+    011c..0120  const/16  v0, #0xa
+    0120..0124  aput-object  v1, v4, v0
+    0124..012a  const-string/jumbo  v1, "👁\u{fe0f}\u{200d}🗨\u{fe0f}"
+    012a..012e  const/16  v0, #0xb
+    012e..0132  aput-object  v1, v4, v0
+    0132..0138  const-string/jumbo  v1, "🔚"
+    0138..013c  const/16  v0, #0xc
+    013c..0140  aput-object  v1, v4, v0
+    0140..0146  const-string/jumbo  v1, "🔙"
+    0146..014a  const/16  v0, #0xd
+    014a..014e  aput-object  v1, v4, v0
+    014e..0154  const-string/jumbo  v1, "🔛"
+    0154..0158  const/16  v0, #0xe
+    0158..015c  aput-object  v1, v4, v0
+    015c..0162  const-string/jumbo  v1, "🔝"
+    0162..0166  const/16  v0, #0xf
+    0166..016a  aput-object  v1, v4, v0
+    016a..0170  const-string/jumbo  v1, "🔜"
+    0170..0174  const/16  v0, #0x10
+    0174..0178  aput-object  v1, v4, v0
+    0178..017e  const-string/jumbo  v1, "〰\u{fe0f}"
+    017e..0182  const/16  v0, #0x11
+    0182..0186  aput-object  v1, v4, v0
+    0186..018c  const-string/jumbo  v1, "➰"
+    018c..0190  const/16  v0, #0x12
+    0190..0194  aput-object  v1, v4, v0
+    0194..019a  const-string/jumbo  v1, "➿"
+    019a..019e  const/16  v0, #0x13
+    019e..01a2  aput-object  v1, v4, v0
+    01a2..01a8  const-string/jumbo  v1, "✔\u{fe0f}"
+    01a8..01ac  const/16  v0, #0x14
+    01ac..01b0  aput-object  v1, v4, v0
+    01b0..01b6  const-string/jumbo  v1, "🫍"
+    01b6..01ba  const/16  v0, #0x15
+    01ba..01be  aput-object  v1, v4, v0
+    01be..01c4  const-string/jumbo  v1, "🫈"
+    01c4..01c8  const/16  v0, #0x16
+    01c8..01cc  aput-object  v1, v4, v0
+    01cc..01d0  new-instance  v2, LX/KmB;
+    01d0..01d6  invoke-direct  {v2}, LX/KmB;-><init>()V
+    01d6..01da  aget-object  v0, v4, v3
+    01da..01de  new-instance  v1, LX/1cc;
+    01de..01e4  invoke-direct  {v1, v0}, LX/1cc;-><init>(Ljava/lang/CharSequence;)V
+    01e4..01e6  const/4  v0, #0x0
+    01e6..01ec  invoke-static  {v1, v0}, LX/1cd;->A00(LX/1cb;Z)J
+    01ec..01ee  move-result-wide  v0
+    01ee..01f4  invoke-static  {v0, v1}, LX/9ht;->A00(J)LX/9wx;
+    01f4..01f6  move-result-object  v0
+    01f6..01fc  invoke-virtual  {v2, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    01fc..0200  add-int/lit8  v3, v3, #0x1
+    0200..0204  if-lt  v3, v5, -0x15
+    0204..0208  const/16  v0, #0xdf6
+    0208..020e  filled-new-array  {v0}, [I
+    020e..0210  move-result-object  v1
+    0210..0214  new-instance  v0, LX/9wx;
+    0214..021a  invoke-direct  {v0, v1}, LX/9wx;-><init>([I)V
+    021a..0220  invoke-virtual  {v2, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0220..0224  const/16  v0, #0xdff
+    0224..022a  filled-new-array  {v0}, [I
+    022a..022c  move-result-object  v1
+    022c..0230  new-instance  v0, LX/9wx;
+    0230..0236  invoke-direct  {v0, v1}, LX/9wx;-><init>([I)V
+    0236..023c  invoke-virtual  {v2, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    023c..0242  invoke-static  {v2}, LX/06c;->A00(Ljava/util/Set;)LX/KmB;
+    0242..0244  move-result-object  v3
+    0244..0246  return-object  v3
+    0246..024a  const/16  v0, #0x17
+    024a..024e  new-array  v2, v0, [LX/08T;
+    024e..0252  const-class  v0, Landroid/widget/Button;
+    0252..0258  invoke-virtual  {v0}, Ljava/lang/Class;->getName()Ljava/lang/String;
+    0258..025a  move-result-object  v1
+    025a..025e  const-string  v0, "Button"
+    025e..0264  invoke-static  {v0, v1}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0264..0266  move-result-object  v1
+    0266..0268  const/4  v0, #0x0
+    0268..026c  aput-object  v1, v2, v0
+    026c..0270  const-class  v0, Landroid/widget/CheckBox;
+    0270..0276  invoke-virtual  {v0}, Ljava/lang/Class;->getName()Ljava/lang/String;
+    0276..0278  move-result-object  v1
+    0278..027c  const-string  v0, "Checkbox"
+    027c..0282  invoke-static  {v0, v1}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0282..0284  move-result-object  v1
+    0284..0286  const/4  v0, #0x1
+    0286..028a  aput-object  v1, v2, v0
+    028a..028e  const-class  v0, Landroid/widget/Spinner;
+    028e..0294  invoke-virtual  {v0}, Ljava/lang/Class;->getName()Ljava/lang/String;
+    0294..0296  move-result-object  v1
+    0296..029a  const-string  v0, "DropdownList"
+    029a..02a0  invoke-static  {v0, v1}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    02a0..02a2  move-result-object  v1
+    02a2..02a4  const/4  v0, #0x2
+    02a4..02a8  aput-object  v1, v2, v0
+    02a8..02ac  const-class  v0, Landroid/widget/EditText;
+    02ac..02b2  invoke-virtual  {v0}, Ljava/lang/Class;->getName()Ljava/lang/String;
+    02b2..02b4  move-result-object  v1
+    02b4..02b8  const-string  v0, "Edittext"
+    02b8..02be  invoke-static  {v0, v1}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    02be..02c0  move-result-object  v1
+    02c0..02c2  const/4  v0, #0x3
+    02c2..02c6  aput-object  v1, v2, v0
+    02c6..02ca  const-class  v0, Landroid/widget/GridView;
+    02ca..02d0  invoke-virtual  {v0}, Ljava/lang/Class;->getName()Ljava/lang/String;
+    02d0..02d2  move-result-object  v1
+    02d2..02d6  const-string  v0, "Grid"
+    02d6..02dc  invoke-static  {v0, v1}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    02dc..02de  move-result-object  v1
+    02de..02e0  const/4  v0, #0x4
+    02e0..02e4  aput-object  v1, v2, v0
+    02e4..02e8  const-class  v0, Landroid/widget/ImageView;
+    02e8..02ee  invoke-virtual  {v0}, Ljava/lang/Class;->getName()Ljava/lang/String;
+    02ee..02f0  move-result-object  v1
+    02f0..02f4  const-string  v0, "Image"
+    02f4..02fa  invoke-static  {v0, v1}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    02fa..02fc  move-result-object  v1
+    02fc..02fe  const/4  v0, #0x5
+    02fe..0302  aput-object  v1, v2, v0
+    0302..0306  const-class  v0, Landroid/widget/AbsListView;
+    0306..030c  invoke-virtual  {v0}, Ljava/lang/Class;->getName()Ljava/lang/String;
+    030c..030e  move-result-object  v1
+    030e..0312  const-string  v0, "List"
+    0312..0318  invoke-static  {v0, v1}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0318..031a  move-result-object  v1
+    031a..031c  const/4  v0, #0x6
+    031c..0320  aput-object  v1, v2, v0
+    0320..0324  const-class  v0, Landroid/widget/RadioButton;
+    0324..032a  invoke-virtual  {v0}, Ljava/lang/Class;->getName()Ljava/lang/String;
+    032a..032c  move-result-object  v1
+    032c..0330  const-string  v0, "RadioButton  "
+    0330..0336  invoke-static  {v0, v1}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0336..0338  move-result-object  v1
+    0338..033a  const/4  v0, #0x7
+    033a..033e  aput-object  v1, v2, v0
+    033e..0342  const-class  v0, Landroid/widget/SeekBar;
+    0342..0348  invoke-virtual  {v0}, Ljava/lang/Class;->getName()Ljava/lang/String;
+    0348..034a  move-result-object  v1
+    034a..034e  const-string  v0, "SeekControl"
+    034e..0354  invoke-static  {v0, v1}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0354..0356  move-result-object  v1
+    0356..035a  const/16  v0, #0x8
+    035a..035e  aput-object  v1, v2, v0
+    035e..0362  const-class  v0, Landroid/widget/Switch;
+    0362..0368  invoke-virtual  {v0}, Ljava/lang/Class;->getName()Ljava/lang/String;
+    0368..036a  move-result-object  v1
+    036a..036e  const-string  v0, "Switch"
+    036e..0374  invoke-static  {v0, v1}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0374..0376  move-result-object  v1
+    0376..037a  const/16  v0, #0x9
+    037a..037e  aput-object  v1, v2, v0
+    037e..0382  const-class  v0, Landroid/widget/ToggleButton;
+    0382..0388  invoke-virtual  {v0}, Ljava/lang/Class;->getName()Ljava/lang/String;
+    0388..038a  move-result-object  v1
+    038a..038e  const-string  v0, "ToggleButton"
+    038e..0394  invoke-static  {v0, v1}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0394..0396  move-result-object  v1
+    0396..039a  const/16  v0, #0xa
+    039a..039e  aput-object  v1, v2, v0
+    039e..03a2  const-class  v0, Landroid/webkit/WebView;
+    03a2..03a8  invoke-virtual  {v0}, Ljava/lang/Class;->getName()Ljava/lang/String;
+    03a8..03aa  move-result-object  v1
+    03aa..03ae  const-string  v0, "WebView"
+    03ae..03b4  invoke-static  {v0, v1}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    03b4..03b6  move-result-object  v1
+    03b6..03ba  const/16  v0, #0xb
+    03ba..03be  aput-object  v1, v2, v0
+    03be..03c2  const-class  v0, Landroid/widget/ProgressBar;
+    03c2..03c8  invoke-virtual  {v0}, Ljava/lang/Class;->getName()Ljava/lang/String;
+    03c8..03ca  move-result-object  v1
+    03ca..03ce  const-string  v0, "ProgressBar"
+    03ce..03d4  invoke-static  {v0, v1}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    03d4..03d6  move-result-object  v1
+    03d6..03da  const/16  v0, #0xc
+    03da..03de  aput-object  v1, v2, v0
+    03de..03e2  const-class  v0, Landroid/widget/Toast;
+    03e2..03e8  invoke-virtual  {v0}, Ljava/lang/Class;->getName()Ljava/lang/String;
+    03e8..03ea  move-result-object  v1
+    03ea..03ee  const-string  v0, "Toast"
+    03ee..03f4  invoke-static  {v0, v1}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    03f4..03f6  move-result-object  v1
+    03f6..03fa  const/16  v0, #0xd
+    03fa..03fe  aput-object  v1, v2, v0
+    03fe..0402  const-class  v0, Landroid/app/AlertDialog;
+    0402..0408  invoke-virtual  {v0}, Ljava/lang/Class;->getName()Ljava/lang/String;
+    0408..040a  move-result-object  v1
+    040a..040e  const-string  v0, "AlertDialog"
+    040e..0414  invoke-static  {v0, v1}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0414..0416  move-result-object  v1
+    0416..041a  const/16  v0, #0xe
+    041a..041e  aput-object  v1, v2, v0
+    041e..0422  const-class  v0, Landroid/app/DatePickerDialog;
+    0422..0428  invoke-virtual  {v0}, Ljava/lang/Class;->getName()Ljava/lang/String;
+    0428..042a  move-result-object  v1
+    042a..042e  const-string  v0, "DatePickerDialog"
+    042e..0434  invoke-static  {v0, v1}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0434..0436  move-result-object  v1
+    0436..043a  const/16  v0, #0xf
+    043a..043e  aput-object  v1, v2, v0
+    043e..0442  const-class  v0, Landroid/app/TimePickerDialog;
+    0442..0448  invoke-virtual  {v0}, Ljava/lang/Class;->getName()Ljava/lang/String;
+    0448..044a  move-result-object  v1
+    044a..044e  const-string  v0, "TimePickerDialog"
+    044e..0454  invoke-static  {v0, v1}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0454..0456  move-result-object  v1
+    0456..045a  const/16  v0, #0x10
+    045a..045e  aput-object  v1, v2, v0
+    045e..0462  const-class  v0, Landroid/widget/DatePicker;
+    0462..0468  invoke-virtual  {v0}, Ljava/lang/Class;->getName()Ljava/lang/String;
+    0468..046a  move-result-object  v1
+    046a..046e  const-string  v0, "DatePicker"
+    046e..0474  invoke-static  {v0, v1}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0474..0476  move-result-object  v1
+    0476..047a  const/16  v0, #0x11
+    047a..047e  aput-object  v1, v2, v0
+    047e..0482  const-class  v0, Landroid/widget/TimePicker;
+    0482..0488  invoke-virtual  {v0}, Ljava/lang/Class;->getName()Ljava/lang/String;
+    0488..048a  move-result-object  v1
+    048a..048e  const-string  v0, "TimePicker"
+    048e..0494  invoke-static  {v0, v1}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0494..0496  move-result-object  v1
+    0496..049a  const/16  v0, #0x12
+    049a..049e  aput-object  v1, v2, v0
+    049e..04a2  const-class  v0, Landroid/widget/NumberPicker;
+    04a2..04a8  invoke-virtual  {v0}, Ljava/lang/Class;->getName()Ljava/lang/String;
+    04a8..04aa  move-result-object  v1
+    04aa..04ae  const-string  v0, "NumberPicker"
+    04ae..04b4  invoke-static  {v0, v1}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    04b4..04b6  move-result-object  v1
+    04b6..04ba  const/16  v0, #0x13
+    04ba..04be  aput-object  v1, v2, v0
+    04be..04c2  const-class  v0, Landroid/widget/ScrollView;
+    04c2..04c8  invoke-virtual  {v0}, Ljava/lang/Class;->getName()Ljava/lang/String;
+    04c8..04ca  move-result-object  v1
+    04ca..04ce  const-string  v0, "ScrollView"
+    04ce..04d4  invoke-static  {v0, v1}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    04d4..04d6  move-result-object  v1
+    04d6..04da  const/16  v0, #0x14
+    04da..04de  aput-object  v1, v2, v0
+    04de..04e2  const-class  v0, Landroid/widget/HorizontalScrollView;
+    04e2..04e8  invoke-virtual  {v0}, Ljava/lang/Class;->getName()Ljava/lang/String;
+    04e8..04ea  move-result-object  v1
+    04ea..04ee  const-string  v0, "HorizontalScrollView"
+    04ee..04f4  invoke-static  {v0, v1}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    04f4..04f6  move-result-object  v1
+    04f6..04fa  const/16  v0, #0x15
+    04fa..04fe  aput-object  v1, v2, v0
+    04fe..0502  const-class  v0, Landroid/widget/TabWidget;
+    0502..0508  invoke-virtual  {v0}, Ljava/lang/Class;->getName()Ljava/lang/String;
+    0508..050a  move-result-object  v1
+    050a..050e  const-string  v0, "TabBar"
+    050e..0514  invoke-static  {v0, v1}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0514..0516  move-result-object  v1
+    0516..051a  const/16  v0, #0x16
+    051a..051e  aput-object  v1, v2, v0
+    051e..0524  invoke-static  {v2}, LX/05p;->A0J([LX/08T;)Ljava/util/Map;
+    0524..0526  move-result-object  v3
+    0526..0528  return-object  v3
+    0528..052c  const/16  v0, #0x42
+    052c..0532  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0532..0534  move-result-object  v0
+    0534..053a  invoke-static  {v0}, LX/05a;->A00(LX/05a;)LX/00E;
+    053a..053c  move-result-object  v1
+    053c..0540  sget-object  v0, LX/1aS;->A02:LX/00f;
+    0540..0546  invoke-static  {v1, v0}, LX/00E;->A04(LX/00E;LX/00f;)Ljava/lang/Boolean;
+    0546..0548  move-result-object  v3
+    0548..054a  return-object  v3
+    054a..054e  sget-object  v0, LX/0Nx;->A0E:LX/00p;
+    054e..0552  const/16  v0, #0xcd
+    0552..0558  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0558..055a  move-result-object  v0
+    055a..0560  invoke-static  {v0}, Ljava/util/Collections;->singleton(Ljava/lang/Object;)Ljava/util/Set;
+    0560..0562  move-result-object  v3
+    0562..0568  invoke-static  {v3}, LX/00l;->A05(Ljava/lang/Object;)V
+    0568..056a  return-object  v3
+    056a..056e  sget-object  v0, LX/0Nx;->A0E:LX/00p;
+    056e..0570  const/4  v0, #0x2
+    0570..0574  new-array  v2, v0, [LX/08T;
+    0574..0578  const/16  v0, #0xf
+    0578..057e  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    057e..0580  move-result-object  v0
+    0580..0584  new-instance  v1, LX/08T;
+    0584..058a  invoke-direct  {v1, v0, v0}, LX/08T;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+    058a..058c  const/4  v0, #0x0
+    058c..0590  aput-object  v1, v2, v0
+    0590..0594  const/16  v0, #0x13
+    0594..059a  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    059a..059c  move-result-object  v0
+    059c..05a0  new-instance  v1, LX/08T;
+    05a0..05a6  invoke-direct  {v1, v0, v0}, LX/08T;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+    05a6..05a8  const/4  v0, #0x1
+    05a8..05ac  aput-object  v1, v2, v0
+    05ac..05b2  invoke-static  {v2}, LX/08w;->A0h([Ljava/lang/Object;)Ljava/util/Set;
+    05b2..05b4  move-result-object  v3
+    05b4..05b6  return-object  v3
+    05b6..05b8  const/4  v0, #0xff (-1)
+    05b8..05bc  new-instance  v3, Landroid/content/UriMatcher;
+    05bc..05c2  invoke-direct  {v3, v0}, Landroid/content/UriMatcher;-><init>(I)V
+    05c2..05c6  sget-object  v2, Lcom/whatsapp/stickers/ui/storage/WhitelistPackQueryContentProvider;->A02:Ljava/lang/String;
+    05c6..05ca  const-string  v1, "is_whitelisted"
+    05ca..05cc  const/4  v0, #0x1
+    05cc..05d2  invoke-virtual  {v3, v2, v1, v0}, Landroid/content/UriMatcher;->addURI(Ljava/lang/String;Ljava/lang/String;I)V
+    05d2..05d4  return-object  v3
+    05d4..05d8  sget  v0, LX/16y;->A0O:I
+    05d8..05dc  const/16  v0, #0x1ac
+    05dc..05e2  invoke-static  {v0}, LX/05d;->A01(I)LX/0BP;
+    05e2..05e4  move-result-object  v0
+    05e4..05ea  invoke-virtual  {v0}, Lcom/google/common/base/Optional;->A01()Ljava/lang/Object;
+    05ea..05ec  move-result-object  v3
+    05ec..05ee  return-object  v3
+    05ee..05f2  const/16  v0, #0x1d0
+    05f2..05f8  invoke-static  {v0}, LX/05d;->A01(I)LX/0BP;
+    05f8..05fa  move-result-object  v0
+    05fa..0600  invoke-virtual  {v0}, Lcom/google/common/base/Optional;->A01()Ljava/lang/Object;
+    0600..0602  const/4  v3, #0x0
+    0602..0604  return-object  v3
+    0604..0608  const/16  v0, #0x3f
+    0608..060c  new-array  v2, v0, [LX/08T;
+    060c..0610  const-string  v1, "Minimal-Brown"
+    0610..0614  const-string  v0, "Brown@Minimal"
+    0614..061a  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    061a..061c  move-result-object  v1
+    061c..061e  const/4  v0, #0x0
+    061e..0622  aput-object  v1, v2, v0
+    0622..0626  const-string  v1, "BrownTonal"
+    0626..062a  const-string  v0, "Brown@Tonal"
+    062a..0630  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0630..0632  move-result-object  v1
+    0632..0634  const/4  v0, #0x1
+    0634..0638  aput-object  v1, v2, v0
+    0638..063c  const-string  v1, "Minimal-BrownTonal"
+    063c..0640  const-string  v0, "Brown@Tonal@Minimal"
+    0640..0646  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0646..0648  move-result-object  v1
+    0648..064a  const/4  v0, #0x2
+    064a..064e  aput-object  v1, v2, v0
+    064e..0652  const-string  v1, "Minimal-Charcoal-Green"
+    0652..0656  const-string  v0, "Charcoal-Green@Minimal"
+    0656..065c  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    065c..065e  move-result-object  v1
+    065e..0660  const/4  v0, #0x3
+    0660..0664  aput-object  v1, v2, v0
+    0664..0668  const-string  v1, "Charcoal-GreenTonal"
+    0668..066c  const-string  v0, "Charcoal-Green@Tonal"
+    066c..0672  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0672..0674  move-result-object  v1
+    0674..0676  const/4  v0, #0x4
+    0676..067a  aput-object  v1, v2, v0
+    067a..067e  const-string  v1, "Minimal-Charcoal-GreenTonal"
+    067e..0682  const-string  v0, "Charcoal-Green@Tonal@Minimal"
+    0682..0688  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0688..068a  move-result-object  v1
+    068a..068c  const/4  v0, #0x5
+    068c..0690  aput-object  v1, v2, v0
+    0690..0694  const-string  v1, "Minimal-Cream"
+    0694..0698  const-string  v0, "Cream@Minimal"
+    0698..069e  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    069e..06a0  move-result-object  v1
+    06a0..06a2  const/4  v0, #0x6
+    06a2..06a6  aput-object  v1, v2, v0
+    06a6..06aa  const-string  v1, "CreamTonal"
+    06aa..06ae  const-string  v0, "Cream@Tonal"
+    06ae..06b4  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    06b4..06b6  move-result-object  v1
+    06b6..06b8  const/4  v0, #0x7
+    06b8..06bc  aput-object  v1, v2, v0
+    06bc..06c0  const-string  v1, "Minimal-CreamTonal"
+    06c0..06c4  const-string  v0, "Cream@Tonal@Minimal"
+    06c4..06ca  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    06ca..06cc  move-result-object  v1
+    06cc..06d0  const/16  v0, #0x8
+    06d0..06d4  aput-object  v1, v2, v0
+    06d4..06d8  const-string  v1, "Minimal-Dark-Cerulean"
+    06d8..06dc  const-string  v0, "Dark-Cerulean@Minimal"
+    06dc..06e2  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    06e2..06e4  move-result-object  v1
+    06e4..06e8  const/16  v0, #0x9
+    06e8..06ec  aput-object  v1, v2, v0
+    06ec..06f0  const-string  v1, "Dark-CeruleanTonal"
+    06f0..06f4  const-string  v0, "Dark-Cerulean@Tonal"
+    06f4..06fa  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    06fa..06fc  move-result-object  v1
+    06fc..0700  const/16  v0, #0xa
+    0700..0704  aput-object  v1, v2, v0
+    0704..0708  const-string  v1, "Minimal-Dark-CeruleanTonal"
+    0708..070c  const-string  v0, "Dark-Cerulean@Tonal@Minimal"
+    070c..0712  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0712..0714  move-result-object  v1
+    0714..0718  const/16  v0, #0xb
+    0718..071c  aput-object  v1, v2, v0
+    071c..0720  const-string  v1, "Minimal-Default"
+    0720..0724  const-string  v0, "Default@Minimal"
+    0724..072a  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    072a..072c  move-result-object  v1
+    072c..0730  const/16  v0, #0xc
+    0730..0734  aput-object  v1, v2, v0
+    0734..0738  const-string  v1, "Minimal-Default-Blue"
+    0738..073c  const-string  v0, "Default-Blue@Minimal"
+    073c..0742  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0742..0744  move-result-object  v1
+    0744..0748  const/16  v0, #0xd
+    0748..074c  aput-object  v1, v2, v0
+    074c..0750  const-string  v1, "Minimal-Default-BlueTonal"
+    0750..0754  const-string  v0, "Default-Blue@Tonal@Minimal"
+    0754..075a  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    075a..075c  move-result-object  v1
+    075c..0760  const/16  v0, #0xe
+    0760..0764  aput-object  v1, v2, v0
+    0764..0768  const-string  v1, "Minimal-Default-Mono"
+    0768..076c  const-string  v0, "Default-Mono@Minimal"
+    076c..0772  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0772..0774  move-result-object  v1
+    0774..0778  const/16  v0, #0xf
+    0778..077c  aput-object  v1, v2, v0
+    077c..0780  const-string  v1, "Minimal-Default-MonoTonal"
+    0780..0784  const-string  v0, "Default-Mono@Tonal@Minimal"
+    0784..078a  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    078a..078c  move-result-object  v1
+    078c..0790  const/16  v0, #0x10
+    0790..0794  aput-object  v1, v2, v0
+    0794..0798  const-string  v1, "Minimal-Dune-Mono"
+    0798..079c  const-string  v0, "Dune-Mono@Minimal"
+    079c..07a2  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    07a2..07a4  move-result-object  v1
+    07a4..07a8  const/16  v0, #0x11
+    07a8..07ac  aput-object  v1, v2, v0
+    07ac..07b0  const-string  v1, "Dune-MonoTonal"
+    07b0..07b4  const-string  v0, "Dune-Mono@Tonal"
+    07b4..07ba  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    07ba..07bc  move-result-object  v1
+    07bc..07c0  const/16  v0, #0x12
+    07c0..07c4  aput-object  v1, v2, v0
+    07c4..07c8  const-string  v1, "Minimal-Dune-MonoTonal"
+    07c8..07cc  const-string  v0, "Dune-Mono@Tonal@Minimal"
+    07cc..07d2  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    07d2..07d4  move-result-object  v1
+    07d4..07d8  const/16  v0, #0x13
+    07d8..07dc  aput-object  v1, v2, v0
+    07dc..07e0  const-string  v1, "Minimal-Emerald"
+    07e0..07e4  const-string  v0, "Emerald@Minimal"
+    07e4..07ea  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    07ea..07ec  move-result-object  v1
+    07ec..07f0  const/16  v0, #0x14
+    07f0..07f4  aput-object  v1, v2, v0
+    07f4..07f8  const-string  v1, "EmeraldTonal"
+    07f8..07fc  const-string  v0, "Emerald@Tonal"
+    07fc..0802  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0802..0804  move-result-object  v1
+    0804..0808  const/16  v0, #0x15
+    0808..080c  aput-object  v1, v2, v0
+    080c..0810  const-string  v1, "Minimal-EmeraldTonal"
+    0810..0814  const-string  v0, "Emerald@Tonal@Minimal"
+    0814..081a  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    081a..081c  move-result-object  v1
+    081c..0820  const/16  v0, #0x16
+    0820..0824  aput-object  v1, v2, v0
+    0824..0828  const-string  v1, "Minimal-Lemon"
+    0828..082c  const-string  v0, "Lemon@Minimal"
+    082c..0832  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0832..0834  move-result-object  v1
+    0834..0838  const/16  v0, #0x17
+    0838..083c  aput-object  v1, v2, v0
+    083c..0840  const-string  v1, "LemonTonal"
+    0840..0844  const-string  v0, "Lemon@Tonal"
+    0844..084a  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    084a..084c  move-result-object  v1
+    084c..0850  const/16  v0, #0x18
+    0850..0854  aput-object  v1, v2, v0
+    0854..0858  const-string  v1, "Minimal-LemonTonal"
+    0858..085c  const-string  v0, "Lemon@Tonal@Minimal"
+    085c..0862  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0862..0864  move-result-object  v1
+    0864..0868  const/16  v0, #0x19
+    0868..086c  aput-object  v1, v2, v0
+    086c..0870  const-string  v1, "Minimal-Lime"
+    0870..0874  const-string  v0, "Lime@Minimal"
+    0874..087a  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    087a..087c  move-result-object  v1
+    087c..0880  const/16  v0, #0x1a
+    0880..0884  aput-object  v1, v2, v0
+    0884..0888  const-string  v1, "LimeTonal"
+    0888..088c  const-string  v0, "Lime@Tonal"
+    088c..0892  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0892..0894  move-result-object  v1
+    0894..0898  const/16  v0, #0x1b
+    0898..089c  aput-object  v1, v2, v0
+    089c..08a0  const-string  v1, "Minimal-LimeTonal"
+    08a0..08a4  const-string  v0, "Lime@Tonal@Minimal"
+    08a4..08aa  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    08aa..08ac  move-result-object  v1
+    08ac..08b0  const/16  v0, #0x1c
+    08b0..08b4  aput-object  v1, v2, v0
+    08b4..08b8  const-string  v1, "Minimal-Merino-Teal"
+    08b8..08bc  const-string  v0, "Merino-Teal@Minimal"
+    08bc..08c2  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    08c2..08c4  move-result-object  v1
+    08c4..08c8  const/16  v0, #0x1d
+    08c8..08cc  aput-object  v1, v2, v0
+    08cc..08d0  const-string  v1, "Merino-TealTonal"
+    08d0..08d4  const-string  v0, "Merino-Teal@Tonal"
+    08d4..08da  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    08da..08dc  move-result-object  v1
+    08dc..08e0  const/16  v0, #0x1e
+    08e0..08e4  aput-object  v1, v2, v0
+    08e4..08e8  const-string  v1, "Minimal-Merino-TealTonal"
+    08e8..08ec  const-string  v0, "Merino-Teal@Tonal@Minimal"
+    08ec..08f2  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    08f2..08f4  move-result-object  v1
+    08f4..08f8  const/16  v0, #0x1f
+    08f8..08fc  aput-object  v1, v2, v0
+    08fc..0900  const-string  v1, "Minimal-Pearl-Indigo"
+    0900..0904  const-string  v0, "Pearl-Indigo@Minimal"
+    0904..090a  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    090a..090c  move-result-object  v1
+    090c..0910  const/16  v0, #0x20
+    0910..0914  aput-object  v1, v2, v0
+    0914..0918  const-string  v1, "Pearl-IndigoTonal"
+    0918..091c  const-string  v0, "Pearl-Indigo@Tonal"
+    091c..0922  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0922..0924  move-result-object  v1
+    0924..0928  const/16  v0, #0x21
+    0928..092c  aput-object  v1, v2, v0
+    092c..0930  const-string  v1, "Minimal-Pearl-IndigoTonal"
+    0930..0934  const-string  v0, "Pearl-Indigo@Tonal@Minimal"
+    0934..093a  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    093a..093c  move-result-object  v1
+    093c..0940  const/16  v0, #0x22
+    0940..0944  aput-object  v1, v2, v0
+    0944..0948  const-string  v1, "Minimal-Persian-Plum"
+    0948..094c  const-string  v0, "Persian-Plum@Minimal"
+    094c..0952  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0952..0954  move-result-object  v1
+    0954..0958  const/16  v0, #0x23
+    0958..095c  aput-object  v1, v2, v0
+    095c..0960  const-string  v1, "Persian-PlumTonal"
+    0960..0964  const-string  v0, "Persian-Plum@Tonal"
+    0964..096a  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    096a..096c  move-result-object  v1
+    096c..0970  const/16  v0, #0x24
+    0970..0974  aput-object  v1, v2, v0
+    0974..0978  const-string  v1, "Minimal-Persian-PlumTonal"
+    0978..097c  const-string  v0, "Persian-Plum@Tonal@Minimal"
+    097c..0982  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0982..0984  move-result-object  v1
+    0984..0988  const/16  v0, #0x25
+    0988..098c  aput-object  v1, v2, v0
+    098c..0990  const-string  v1, "Minimal-Pink"
+    0990..0994  const-string  v0, "Pink@Minimal"
+    0994..099a  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    099a..099c  move-result-object  v1
+    099c..09a0  const/16  v0, #0x26
+    09a0..09a4  aput-object  v1, v2, v0
+    09a4..09a8  const-string  v1, "PinkTonal"
+    09a8..09ac  const-string  v0, "Pink@Tonal"
+    09ac..09b2  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    09b2..09b4  move-result-object  v1
+    09b4..09b8  const/16  v0, #0x27
+    09b8..09bc  aput-object  v1, v2, v0
+    09bc..09c0  const-string  v1, "Minimal-PinkTonal"
+    09c0..09c4  const-string  v0, "Pink@Tonal@Minimal"
+    09c4..09ca  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    09ca..09cc  move-result-object  v1
+    09cc..09d0  const/16  v0, #0x28
+    09d0..09d4  aput-object  v1, v2, v0
+    09d4..09d8  const-string  v1, "Minimal-Red"
+    09d8..09dc  const-string  v0, "Red@Minimal"
+    09dc..09e2  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    09e2..09e4  move-result-object  v1
+    09e4..09e8  const/16  v0, #0x29
+    09e8..09ec  aput-object  v1, v2, v0
+    09ec..09f0  const-string  v1, "RedTonal"
+    09f0..09f4  const-string  v0, "Red@Tonal"
+    09f4..09fa  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    09fa..09fc  move-result-object  v1
+    09fc..0a00  const/16  v0, #0x2a
+    0a00..0a04  aput-object  v1, v2, v0
+    0a04..0a08  const-string  v1, "Minimal-RedTonal"
+    0a08..0a0c  const-string  v0, "Red@Tonal@Minimal"
+    0a0c..0a12  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0a12..0a14  move-result-object  v1
+    0a14..0a18  const/16  v0, #0x2b
+    0a18..0a1c  aput-object  v1, v2, v0
+    0a1c..0a20  const-string  v1, "Minimal-Royal-Blue"
+    0a20..0a24  const-string  v0, "Royal-Blue@Minimal"
+    0a24..0a2a  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0a2a..0a2c  move-result-object  v1
+    0a2c..0a30  const/16  v0, #0x2c
+    0a30..0a34  aput-object  v1, v2, v0
+    0a34..0a38  const-string  v1, "Royal-BlueTonal"
+    0a38..0a3c  const-string  v0, "Royal-Blue@Tonal"
+    0a3c..0a42  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0a42..0a44  move-result-object  v1
+    0a44..0a48  const/16  v0, #0x2d
+    0a48..0a4c  aput-object  v1, v2, v0
+    0a4c..0a50  const-string  v1, "Minimal-Royal-BlueTonal"
+    0a50..0a54  const-string  v0, "Royal-Blue@Tonal@Minimal"
+    0a54..0a5a  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0a5a..0a5c  move-result-object  v1
+    0a5c..0a60  const/16  v0, #0x2e
+    0a60..0a64  aput-object  v1, v2, v0
+    0a64..0a68  const-string  v1, "Minimal-Sky-Blue"
+    0a68..0a6c  const-string  v0, "Sky-Blue@Minimal"
+    0a6c..0a72  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0a72..0a74  move-result-object  v1
+    0a74..0a78  const/16  v0, #0x2f
+    0a78..0a7c  aput-object  v1, v2, v0
+    0a7c..0a80  const-string  v1, "Minimal-Sky-BlueTonal"
+    0a80..0a84  const-string  v0, "Sky-Blue@Tonal@Minimal"
+    0a84..0a8a  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0a8a..0a8c  move-result-object  v1
+    0a8c..0a90  const/16  v0, #0x30
+    0a90..0a94  aput-object  v1, v2, v0
+    0a94..0a98  const-string  v1, "Minimal-Sunrise-Orange"
+    0a98..0a9c  const-string  v0, "Sunrise-Orange@Minimal"
+    0a9c..0aa2  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0aa2..0aa4  move-result-object  v1
+    0aa4..0aa8  const/16  v0, #0x31
+    0aa8..0aac  aput-object  v1, v2, v0
+    0aac..0ab0  const-string  v1, "Sunrise-OrangeTonal"
+    0ab0..0ab4  const-string  v0, "Sunrise-Orange@Tonal"
+    0ab4..0aba  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0aba..0abc  move-result-object  v1
+    0abc..0ac0  const/16  v0, #0x32
+    0ac0..0ac4  aput-object  v1, v2, v0
+    0ac4..0ac8  const-string  v1, "Minimal-Sunrise-OrangeTonal"
+    0ac8..0acc  const-string  v0, "Sunrise-Orange@Tonal@Minimal"
+    0acc..0ad2  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0ad2..0ad4  move-result-object  v1
+    0ad4..0ad8  const/16  v0, #0x33
+    0ad8..0adc  aput-object  v1, v2, v0
+    0adc..0ae0  const-string  v1, "Minimal-Sunset-Orange"
+    0ae0..0ae4  const-string  v0, "Sunset-Orange@Minimal"
+    0ae4..0aea  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0aea..0aec  move-result-object  v1
+    0aec..0af0  const/16  v0, #0x34
+    0af0..0af4  aput-object  v1, v2, v0
+    0af4..0af8  const-string  v1, "Sunset-OrangeTonal"
+    0af8..0afc  const-string  v0, "Sunset-Orange@Tonal"
+    0afc..0b02  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0b02..0b04  move-result-object  v1
+    0b04..0b08  const/16  v0, #0x35
+    0b08..0b0c  aput-object  v1, v2, v0
+    0b0c..0b10  const-string  v1, "Minimal-Sunset-OrangeTonal"
+    0b10..0b14  const-string  v0, "Sunset-Orange@Tonal@Minimal"
+    0b14..0b1a  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0b1a..0b1c  move-result-object  v1
+    0b1c..0b20  const/16  v0, #0x36
+    0b20..0b24  aput-object  v1, v2, v0
+    0b24..0b28  const-string  v1, "Minimal-Tyrian-Purple"
+    0b28..0b2c  const-string  v0, "Tyrian-Purple@Minimal"
+    0b2c..0b32  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0b32..0b34  move-result-object  v1
+    0b34..0b38  const/16  v0, #0x37
+    0b38..0b3c  aput-object  v1, v2, v0
+    0b3c..0b40  const-string  v1, "Tyrian-PurpleTonal"
+    0b40..0b44  const-string  v0, "Tyrian-Purple@Tonal"
+    0b44..0b4a  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0b4a..0b4c  move-result-object  v1
+    0b4c..0b50  const/16  v0, #0x38
+    0b50..0b54  aput-object  v1, v2, v0
+    0b54..0b58  const-string  v1, "Minimal-Tyrian-PurpleTonal"
+    0b58..0b5c  const-string  v0, "Tyrian-Purple@Tonal@Minimal"
+    0b5c..0b62  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0b62..0b64  move-result-object  v1
+    0b64..0b68  const/16  v0, #0x39
+    0b68..0b6c  aput-object  v1, v2, v0
+    0b6c..0b70  const-string  v1, "Minimal-Warm-Yellow"
+    0b70..0b74  const-string  v0, "Warm-Yellow@Minimal"
+    0b74..0b7a  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0b7a..0b7c  move-result-object  v1
+    0b7c..0b80  const/16  v0, #0x3a
+    0b80..0b84  aput-object  v1, v2, v0
+    0b84..0b88  const-string  v1, "Warm-YellowTonal"
+    0b88..0b8c  const-string  v0, "Warm-Yellow@Tonal"
+    0b8c..0b92  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0b92..0b94  move-result-object  v1
+    0b94..0b98  const/16  v0, #0x3b
+    0b98..0b9c  aput-object  v1, v2, v0
+    0b9c..0ba0  const-string  v1, "Minimal-Warm-YellowTonal"
+    0ba0..0ba4  const-string  v0, "Warm-Yellow@Tonal@Minimal"
+    0ba4..0baa  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0baa..0bac  move-result-object  v1
+    0bac..0bb0  const/16  v0, #0x3c
+    0bb0..0bb4  aput-object  v1, v2, v0
+    0bb4..0bb8  const-string  v1, "WhatsAppGreen"
+    0bb8..0bbc  const-string  v0, "WhatsApp-Green"
+    0bbc..0bc2  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0bc2..0bc4  move-result-object  v1
+    0bc4..0bc8  const/16  v0, #0x3d
+    0bc8..0bcc  aput-object  v1, v2, v0
+    0bcc..0bd0  const-string  v1, "Minimal-WhatsAppGreen"
+    0bd0..0bd4  const-string  v0, "WhatsApp-Green@Minimal"
+    0bd4..0bda  invoke-static  {v1, v0}, LX/08T;->A00(Ljava/lang/Object;Ljava/lang/Object;)LX/08T;
+    0bda..0bdc  move-result-object  v1
+    0bdc..0be0  const/16  v0, #0x3e
+    0be0..0be4  aput-object  v1, v2, v0
+    0be4..0bea  invoke-static  {v2}, LX/05p;->A0J([LX/08T;)Ljava/util/Map;
+    0bea..0bec  move-result-object  v3
+    0bec..0bee  return-object  v3
+    0bee..0bf2  const/16  v0, #0x27
+    0bf2..0bf6  new-array  v2, v0, [LX/0tt;
+    0bf6..0bf8  const/4  v1, #0x0
+    0bf8..0bfc  sget-object  v0, LX/0u0;->A00:LX/0u0;
+    0bfc..0c00  aput-object  v0, v2, v1
+    0c00..0c02  const/4  v1, #0x1
+    0c02..0c06  sget-object  v0, LX/0u1;->A00:LX/0u1;
+    0c06..0c0a  aput-object  v0, v2, v1
+    0c0a..0c0c  const/4  v1, #0x2
+    0c0c..0c10  sget-object  v0, LX/0u2;->A00:LX/0u2;
+    0c10..0c14  aput-object  v0, v2, v1
+    0c14..0c16  const/4  v1, #0x3
+    0c16..0c1a  sget-object  v0, LX/0u3;->A00:LX/0u3;
+    0c1a..0c1e  aput-object  v0, v2, v1
+    0c1e..0c20  const/4  v1, #0x4
+    0c20..0c24  sget-object  v0, LX/0u5;->A00:LX/0u5;
+    0c24..0c28  aput-object  v0, v2, v1
+    0c28..0c2a  const/4  v1, #0x5
+    0c2a..0c2e  sget-object  v0, LX/0u6;->A00:LX/0u6;
+    0c2e..0c32  aput-object  v0, v2, v1
+    0c32..0c34  const/4  v1, #0x6
+    0c34..0c38  sget-object  v0, LX/0u7;->A00:LX/0u7;
+    0c38..0c3c  aput-object  v0, v2, v1
+    0c3c..0c3e  const/4  v1, #0x7
+    0c3e..0c42  sget-object  v0, LX/0u8;->A00:LX/0u8;
+    0c42..0c46  aput-object  v0, v2, v1
+    0c46..0c4a  const/16  v1, #0x8
+    0c4a..0c4e  sget-object  v0, LX/0u9;->A00:LX/0u9;
+    0c4e..0c52  aput-object  v0, v2, v1
+    0c52..0c56  const/16  v1, #0x9
+    0c56..0c5a  sget-object  v0, LX/0uA;->A00:LX/0uA;
+    0c5a..0c5e  aput-object  v0, v2, v1
+    0c5e..0c62  const/16  v1, #0xa
+    0c62..0c66  sget-object  v0, LX/0uB;->A00:LX/0uB;
+    0c66..0c6a  aput-object  v0, v2, v1
+    0c6a..0c6e  const/16  v1, #0xb
+    0c6e..0c72  sget-object  v0, LX/0uC;->A00:LX/0uC;
+    0c72..0c76  aput-object  v0, v2, v1
+    0c76..0c7a  const/16  v1, #0xc
+    0c7a..0c7e  sget-object  v0, LX/0uD;->A00:LX/0uD;
+    0c7e..0c82  aput-object  v0, v2, v1
+    0c82..0c86  const/16  v1, #0xd
+    0c86..0c8a  sget-object  v0, LX/0uE;->A00:LX/0uE;
+    0c8a..0c8e  aput-object  v0, v2, v1
+    0c8e..0c92  const/16  v1, #0xe
+    0c92..0c96  sget-object  v0, LX/0uF;->A00:LX/0uF;
+    0c96..0c9a  aput-object  v0, v2, v1
+    0c9a..0c9e  const/16  v1, #0xf
+    0c9e..0ca2  sget-object  v0, LX/0uG;->A00:LX/0uG;
+    0ca2..0ca6  aput-object  v0, v2, v1
+    0ca6..0caa  const/16  v1, #0x10
+    0caa..0cae  sget-object  v0, LX/0uH;->A00:LX/0uH;
+    0cae..0cb2  aput-object  v0, v2, v1
+    0cb2..0cb6  const/16  v1, #0x11
+    0cb6..0cba  sget-object  v0, LX/0uI;->A00:LX/0uI;
+    0cba..0cbe  aput-object  v0, v2, v1
+    0cbe..0cc2  const/16  v1, #0x12
+    0cc2..0cc6  sget-object  v0, LX/0uJ;->A00:LX/0uJ;
+    0cc6..0cca  aput-object  v0, v2, v1
+    0cca..0cce  const/16  v1, #0x13
+    0cce..0cd2  sget-object  v0, LX/0uK;->A00:LX/0uK;
+    0cd2..0cd6  aput-object  v0, v2, v1
+    0cd6..0cda  const/16  v1, #0x14
+    0cda..0cde  sget-object  v0, LX/0uL;->A00:LX/0uL;
+    0cde..0ce2  aput-object  v0, v2, v1
+    0ce2..0ce6  const/16  v1, #0x15
+    0ce6..0cea  sget-object  v0, LX/0uM;->A00:LX/0uM;
+    0cea..0cee  aput-object  v0, v2, v1
+    0cee..0cf2  const/16  v1, #0x16
+    0cf2..0cf6  sget-object  v0, LX/0uN;->A00:LX/0uN;
+    0cf6..0cfa  aput-object  v0, v2, v1
+    0cfa..0cfe  const/16  v1, #0x17
+    0cfe..0d02  sget-object  v0, LX/0uO;->A00:LX/0uO;
+    0d02..0d06  aput-object  v0, v2, v1
+    0d06..0d0a  const/16  v1, #0x18
+    0d0a..0d0e  sget-object  v0, LX/0uP;->A00:LX/0uP;
+    0d0e..0d12  aput-object  v0, v2, v1
+    0d12..0d16  const/16  v1, #0x19
+    0d16..0d1a  sget-object  v0, LX/0uQ;->A00:LX/0uQ;
+    0d1a..0d1e  aput-object  v0, v2, v1
+    0d1e..0d22  const/16  v1, #0x1a
+    0d22..0d26  sget-object  v0, LX/0uR;->A00:LX/0uR;
+    0d26..0d2a  aput-object  v0, v2, v1
+    0d2a..0d2e  const/16  v1, #0x1b
+    0d2e..0d32  sget-object  v0, LX/0uS;->A00:LX/0uS;
+    0d32..0d36  aput-object  v0, v2, v1
+    0d36..0d3a  const/16  v1, #0x1c
+    0d3a..0d3e  sget-object  v0, LX/0uU;->A00:LX/0uU;
+    0d3e..0d42  aput-object  v0, v2, v1
+    0d42..0d46  const/16  v1, #0x1d
+    0d46..0d4a  sget-object  v0, LX/0uV;->A00:LX/0uV;
+    0d4a..0d4e  aput-object  v0, v2, v1
+    0d4e..0d52  const/16  v1, #0x1e
+    0d52..0d56  sget-object  v0, LX/0uW;->A00:LX/0uW;
+    0d56..0d5a  aput-object  v0, v2, v1
+    0d5a..0d5e  const/16  v1, #0x1f
+    0d5e..0d62  sget-object  v0, LX/0uX;->A00:LX/0uX;
+    0d62..0d66  aput-object  v0, v2, v1
+    0d66..0d6a  const/16  v1, #0x20
+    0d6a..0d6e  sget-object  v0, LX/0uY;->A00:LX/0uY;
+    0d6e..0d72  aput-object  v0, v2, v1
+    0d72..0d76  const/16  v1, #0x21
+    0d76..0d7a  sget-object  v0, LX/0uZ;->A00:LX/0uZ;
+    0d7a..0d7e  aput-object  v0, v2, v1
+    0d7e..0d82  const/16  v1, #0x22
+    0d82..0d86  sget-object  v0, LX/0ua;->A00:LX/0ua;
+    0d86..0d8a  aput-object  v0, v2, v1
+    0d8a..0d8e  const/16  v1, #0x23
+    0d8e..0d92  sget-object  v0, LX/0ub;->A00:LX/0ub;
+    0d92..0d96  aput-object  v0, v2, v1
+    0d96..0d9a  const/16  v1, #0x24
+    0d9a..0d9e  sget-object  v0, LX/0uc;->A00:LX/0uc;
+    0d9e..0da2  aput-object  v0, v2, v1
+    0da2..0da6  const/16  v1, #0x25
+    0da6..0daa  sget-object  v0, LX/0ud;->A00:LX/0ud;
+    0daa..0dae  aput-object  v0, v2, v1
+    0dae..0db2  const/16  v1, #0x26
+    0db2..0db6  sget-object  v0, LX/0ue;->A00:LX/0ue;
+    0db6..0dba  aput-object  v0, v2, v1
+    0dba..0dc0  invoke-static  {v2}, LX/01i;->A0A([Ljava/lang/Object;)Ljava/util/List;
+    0dc0..0dc2  move-result-object  v3
+    0dc2..0dc4  return-object  v3
+    0dc4..0dc8  const/16  v0, #0x2b
+    0dc8..0dcc  new-array  v2, v0, [LX/0rO;
+    0dcc..0dce  const/4  v1, #0x0
+    0dce..0dd2  sget-object  v0, LX/0tM;->A00:LX/0tM;
+    0dd2..0dd6  aput-object  v0, v2, v1
+    0dd6..0dd8  const/4  v1, #0x1
+    0dd8..0ddc  sget-object  v0, LX/0tN;->A00:LX/0tN;
+    0ddc..0de0  aput-object  v0, v2, v1
+    0de0..0de2  const/4  v1, #0x2
+    0de2..0de6  sget-object  v0, LX/0tO;->A00:LX/0tO;
+    0de6..0dea  aput-object  v0, v2, v1
+    0dea..0dec  const/4  v1, #0x3
+    0dec..0df0  sget-object  v0, LX/0rS;->A00:LX/0rS;
+    0df0..0df4  aput-object  v0, v2, v1
+    0df4..0df6  const/4  v1, #0x4
+    0df6..0dfa  sget-object  v0, LX/0tQ;->A00:LX/0tQ;
+    0dfa..0dfe  aput-object  v0, v2, v1
+    0dfe..0e00  const/4  v1, #0x5
+    0e00..0e04  sget-object  v0, LX/0rQ;->A00:LX/0rQ;
+    0e04..0e08  aput-object  v0, v2, v1
+    0e08..0e0a  const/4  v1, #0x6
+    0e0a..0e0e  sget-object  v0, LX/0tR;->A00:LX/0tR;
+    0e0e..0e12  aput-object  v0, v2, v1
+    0e12..0e14  const/4  v1, #0x7
+    0e14..0e18  sget-object  v0, LX/0rV;->A00:LX/0rV;
+    0e18..0e1c  aput-object  v0, v2, v1
+    0e1c..0e20  const/16  v1, #0x8
+    0e20..0e24  sget-object  v0, LX/0tS;->A00:LX/0tS;
+    0e24..0e28  aput-object  v0, v2, v1
+    0e28..0e2c  const/16  v1, #0x9
+    0e2c..0e30  sget-object  v0, LX/0rX;->A00:LX/0rX;
+    0e30..0e34  aput-object  v0, v2, v1
+    0e34..0e38  const/16  v1, #0xa
+    0e38..0e3c  sget-object  v0, LX/0tT;->A00:LX/0tT;
+    0e3c..0e40  aput-object  v0, v2, v1
+    0e40..0e44  const/16  v1, #0xb
+    0e44..0e48  sget-object  v0, LX/0rW;->A00:LX/0rW;
+    0e48..0e4c  aput-object  v0, v2, v1
+    0e4c..0e50  const/16  v1, #0xc
+    0e50..0e54  sget-object  v0, LX/0tU;->A00:LX/0tU;
+    0e54..0e58  aput-object  v0, v2, v1
+    0e58..0e5c  const/16  v1, #0xd
+    0e5c..0e60  sget-object  v0, LX/0rT;->A00:LX/0rT;
+    0e60..0e64  aput-object  v0, v2, v1
+    0e64..0e68  const/16  v1, #0xe
+    0e68..0e6c  sget-object  v0, LX/0tV;->A00:LX/0tV;
+    0e6c..0e70  aput-object  v0, v2, v1
+    0e70..0e74  const/16  v1, #0xf
+    0e74..0e78  sget-object  v0, LX/0rR;->A00:LX/0rR;
+    0e78..0e7c  aput-object  v0, v2, v1
+    0e7c..0e80  const/16  v1, #0x10
+    0e80..0e84  sget-object  v0, LX/0tX;->A00:LX/0tX;
+    0e84..0e88  aput-object  v0, v2, v1
+    0e88..0e8c  const/16  v1, #0x11
+    0e8c..0e90  sget-object  v0, LX/0rl;->A00:LX/0rl;
+    0e90..0e94  aput-object  v0, v2, v1
+    0e94..0e98  const/16  v1, #0x12
+    0e98..0e9c  sget-object  v0, LX/0tY;->A00:LX/0tY;
+    0e9c..0ea0  aput-object  v0, v2, v1
+    0ea0..0ea4  const/16  v1, #0x13
+    0ea4..0ea8  sget-object  v0, LX/0rc;->A00:LX/0rc;
+    0ea8..0eac  aput-object  v0, v2, v1
+    0eac..0eb0  const/16  v1, #0x14
+    0eb0..0eb4  sget-object  v0, LX/0ta;->A00:LX/0ta;
+    0eb4..0eb8  aput-object  v0, v2, v1
+    0eb8..0ebc  const/16  v1, #0x15
+    0ebc..0ec0  sget-object  v0, LX/0ra;->A00:LX/0ra;
+    0ec0..0ec4  aput-object  v0, v2, v1
+    0ec4..0ec8  const/16  v1, #0x16
+    0ec8..0ecc  sget-object  v0, LX/0tc;->A00:LX/0tc;
+    0ecc..0ed0  aput-object  v0, v2, v1
+    0ed0..0ed4  const/16  v1, #0x17
+    0ed4..0ed8  sget-object  v0, LX/0rh;->A00:LX/0rh;
+    0ed8..0edc  aput-object  v0, v2, v1
+    0edc..0ee0  const/16  v1, #0x18
+    0ee0..0ee4  sget-object  v0, LX/0td;->A00:LX/0td;
+    0ee4..0ee8  aput-object  v0, v2, v1
+    0ee8..0eec  const/16  v1, #0x19
+    0eec..0ef0  sget-object  v0, LX/0rf;->A00:LX/0rf;
+    0ef0..0ef4  aput-object  v0, v2, v1
+    0ef4..0ef8  const/16  v1, #0x1a
+    0ef8..0efc  sget-object  v0, LX/0te;->A00:LX/0te;
+    0efc..0f00  aput-object  v0, v2, v1
+    0f00..0f04  const/16  v1, #0x1b
+    0f04..0f08  sget-object  v0, LX/0re;->A00:LX/0re;
+    0f08..0f0c  aput-object  v0, v2, v1
+    0f0c..0f10  const/16  v1, #0x1c
+    0f10..0f14  sget-object  v0, LX/0tg;->A00:LX/0tg;
+    0f14..0f18  aput-object  v0, v2, v1
+    0f18..0f1c  const/16  v1, #0x1d
+    0f1c..0f20  sget-object  v0, LX/0rZ;->A00:LX/0rZ;
+    0f20..0f24  aput-object  v0, v2, v1
+    0f24..0f28  const/16  v1, #0x1e
+    0f28..0f2c  sget-object  v0, LX/0th;->A00:LX/0th;
+    0f2c..0f30  aput-object  v0, v2, v1
+    0f30..0f34  const/16  v1, #0x1f
+    0f34..0f38  sget-object  v0, LX/0rd;->A00:LX/0rd;
+    0f38..0f3c  aput-object  v0, v2, v1
+    0f3c..0f40  const/16  v1, #0x20
+    0f40..0f44  sget-object  v0, LX/0tj;->A00:LX/0tj;
+    0f44..0f48  aput-object  v0, v2, v1
+    0f48..0f4c  const/16  v1, #0x21
+    0f4c..0f50  sget-object  v0, LX/0rY;->A00:LX/0rY;
+    0f50..0f54  aput-object  v0, v2, v1
+    0f54..0f58  const/16  v1, #0x22
+    0f58..0f5c  sget-object  v0, LX/0tk;->A00:LX/0tk;
+    0f5c..0f60  aput-object  v0, v2, v1
+    0f60..0f64  const/16  v1, #0x23
+    0f64..0f68  sget-object  v0, LX/0rU;->A00:LX/0rU;
+    0f68..0f6c  aput-object  v0, v2, v1
+    0f6c..0f70  const/16  v1, #0x24
+    0f70..0f74  sget-object  v0, LX/0tl;->A00:LX/0tl;
+    0f74..0f78  aput-object  v0, v2, v1
+    0f78..0f7c  const/16  v1, #0x25
+    0f7c..0f80  sget-object  v0, LX/0rn;->A00:LX/0rn;
+    0f80..0f84  aput-object  v0, v2, v1
+    0f84..0f88  const/16  v1, #0x26
+    0f88..0f8c  sget-object  v0, LX/0tn;->A00:LX/0tn;
+    0f8c..0f90  aput-object  v0, v2, v1
+    0f90..0f94  const/16  v1, #0x27
+    0f94..0f98  sget-object  v0, LX/0rp;->A00:LX/0rp;
+    0f98..0f9c  aput-object  v0, v2, v1
+    0f9c..0fa0  const/16  v1, #0x28
+    0fa0..0fa4  sget-object  v0, LX/0to;->A00:LX/0to;
+    0fa4..0fa8  aput-object  v0, v2, v1
+    0fa8..0fac  const/16  v1, #0x29
+    0fac..0fb0  sget-object  v0, LX/0rk;->A00:LX/0rk;
+    0fb0..0fb4  aput-object  v0, v2, v1
+    0fb4..0fb8  const/16  v1, #0x2a
+    0fb8..0fbc  sget-object  v0, LX/0tp;->A00:LX/0tp;
+    0fbc..0fc0  aput-object  v0, v2, v1
+    0fc0..0fc6  invoke-static  {v2}, LX/01i;->A0A([Ljava/lang/Object;)Ljava/util/List;
+    0fc6..0fc8  move-result-object  v3
+    0fc8..0fca  return-object  v3
+    0fca..0fd0  invoke-static  {}, LX/0yA;->A02()Ljava/util/LinkedHashMap;
+    0fd0..0fd2  move-result-object  v3
+    0fd2..0fd4  return-object  v3
+    0fd4..0fd8  const/16  v0, #0x27
+    0fd8..0fde  invoke-static  {v0}, LX/00D;->A05(I)Ljava/util/Set;
+    0fde..0fe0  move-result-object  v3
+    0fe0..0fe6  invoke-static  {v3}, LX/00l;->A05(Ljava/lang/Object;)V
+    0fe6..0fe8  return-object  v3
+    0fe8..0fec  sget-object  v0, LX/126;->A0C:LX/00p;
+    0fec..0ff0  const/16  v0, #0x13
+    0ff0..0ff4  new-array  v2, v0, [Ljava/lang/String;
+    0ff4..0ff8  const-string  v1, "payment_composer_icon"
+    0ff8..0ffa  const/4  v0, #0x0
+    0ffa..0ffe  aput-object  v1, v2, v0
+    0ffe..1002  const-string  v1, "chat"
+    1002..1004  const/4  v0, #0x1
+    1004..1008  aput-object  v1, v2, v0
+    1008..100c  const-string  v1, "send_again_chat"
+    100c..100e  const/4  v0, #0x2
+    100e..1012  aput-object  v1, v2, v0
+    1012..1018  const-string/jumbo  v1, "try_again_failed_chat"
+    1018..101a  const/4  v0, #0x3
+    101a..101e  aput-object  v1, v2, v0
+    101e..1022  const-string  v1, "photo_received"
+    1022..1024  const/4  v0, #0x4
+    1024..1028  aput-object  v1, v2, v0
+    1028..102c  const-string  v1, "photo_received_gallery"
+    102c..102e  const/4  v0, #0x5
+    102e..1032  aput-object  v1, v2, v0
+    1032..1036  const-string  v1, "photo_received_cta"
+    1036..1038  const/4  v0, #0x6
+    1038..103c  aput-object  v1, v2, v0
+    103c..1040  const-string  v1, "photo_received_media"
+    1040..1042  const/4  v0, #0x7
+    1042..1046  aput-object  v1, v2, v0
+    1046..104a  const-string  v1, "send_again_button"
+    104a..104e  const/16  v0, #0x8
+    104e..1052  aput-object  v1, v2, v0
+    1052..1056  const-string  v1, "photo_received_view_media"
+    1056..105a  const/16  v0, #0x9
+    105a..105e  aput-object  v1, v2, v0
+    105e..1062  const-string  v1, "photo_received_download"
+    1062..1066  const/16  v0, #0xa
+    1066..106a  aput-object  v1, v2, v0
+    106a..106e  const-string  v1, "pay_number_contact_picker"
+    106e..1072  const/16  v0, #0xb
+    1072..1076  aput-object  v1, v2, v0
+    1076..107a  const-string  v1, "payment_text_detection"
+    107a..107e  const/16  v0, #0xc
+    107e..1082  aput-object  v1, v2, v0
+    1082..1088  const-string/jumbo  v1, "split_payment_bubble"
+    1088..108c  const/16  v0, #0xd
+    108c..1090  aput-object  v1, v2, v0
+    1090..1096  const-string/jumbo  v1, "split_details_pay_now"
+    1096..109a  const/16  v0, #0xe
+    109a..109e  aput-object  v1, v2, v0
+    109e..10a2  const-string  v1, "contact_card"
+    10a2..10a6  const/16  v0, #0xf
+    10a6..10aa  aput-object  v1, v2, v0
+    10aa..10ae  const-string  v1, "payment_contact_picker"
+    10ae..10b2  const/16  v0, #0x10
+    10b2..10b6  aput-object  v1, v2, v0
+    10b6..10bc  const-string/jumbo  v1, "vpa_handle_chat"
+    10bc..10c0  const/16  v0, #0x11
+    10c0..10c4  aput-object  v1, v2, v0
+    10c4..10c8  const-string  v1, "phone_number_chat"
+    10c8..10cc  const/16  v0, #0x12
+    10cc..10d0  aput-object  v1, v2, v0
+    10d0..10d6  invoke-static  {v2}, LX/01i;->A0A([Ljava/lang/Object;)Ljava/util/List;
+    10d6..10d8  move-result-object  v3
+    10d8..10da  return-object  v3
+    10da..10de  new-instance  v3, LX/PkZ;
+    10de..10e4  invoke-direct  {v3}, LX/PkZ;-><init>()V
+    10e4..10e6  return-object  v3
+    10e6..10ea  const-string  v0, "US-ASCII"
+    10ea..10f0  invoke-static  {v0}, Ljava/nio/charset/Charset;->forName(Ljava/lang/String;)Ljava/nio/charset/Charset;
+    10f0..10f2  move-result-object  v3
+    10f2..10f4  return-object  v3
+    10f4..10f8  new-instance  v3, LX/0Gg;
+    10f8..10fe  invoke-direct  {v3}, LX/0Gg;-><init>()V
+    10fe..1100  return-object  v3
+    1100..1104  const/16  v0, #0x1a9
+    1104..110a  invoke-static  {v0}, LX/05W;->A01(I)LX/0BP;
+    110a..110c  move-result-object  v3
+    110c..110e  return-object  v3
+    110e..1112  const/16  v0, #0x1ac
+    1112..1118  invoke-static  {v0}, LX/05d;->A01(I)LX/0BP;
+    1118..111a  move-result-object  v0
+    111a..1120  invoke-virtual  {v0}, Lcom/google/common/base/Optional;->A01()Ljava/lang/Object;
+    1120..1122  move-result-object  v3
+    1122..1124  return-object  v3
+    1124..1128  const/16  v0, #0x17d
+    1128..112e  invoke-static  {v0}, LX/05W;->A01(I)LX/0BP;
+    112e..1130  move-result-object  v3
+    1130..1132  return-object  v3
+    1132..1136  const/16  v0, #0x72
+    1136..113c  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    113c..113e  move-result-object  v1
+    113e..1142  check-cast  v1, LX/00S;
+    1142..1146  const-string  v0, "mc_fetch_tracker"
+    1146..114c  invoke-virtual  {v1, v0}, LX/00S;->A04(Ljava/lang/String;)Landroid/content/SharedPreferences;
+    114c..114e  move-result-object  v3
+    114e..1150  return-object  v3
+    1150..1154  const/16  v0, #0xe9
+    1154..115a  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    115a..115c  move-result-object  v3
+    115c..115e  return-object  v3
+    115e..1164  const  v0, #0xd0056f
+    1164..1168  new-instance  v3, LX/POm;
+    1168..116e  invoke-direct  {v3, v0}, LX/POm;-><init>(I)V
+    116e..1170  return-object  v3
+    1170..1174  sget-object  v1, LX/0eA;->A06:LX/08Y;
+    1174..1178  sget-object  v0, LX/LnP;->A0A:LX/0AB;
+    1178..117e  invoke-static  {v0}, LX/00l;->A06(Ljava/lang/Object;)V
+    117e..1184  invoke-virtual  {v1, v0}, LX/00E;->A0e(LX/0AB;)I
+    1184..1186  move-result  v0
+    1186..118c  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    118c..118e  move-result-object  v3
+    118e..1190  return-object  v3
+    1190..1194  sget-object  v1, LX/0eA;->A06:LX/08Y;
+    1194..1198  sget-object  v0, LX/LnP;->A09:LX/0AB;
+    1198..119e  invoke-static  {v0}, LX/00l;->A06(Ljava/lang/Object;)V
+    119e..11a4  invoke-virtual  {v1, v0}, LX/00E;->A0e(LX/0AB;)I
+    11a4..11a6  move-result  v0
+    11a6..11ac  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    11ac..11ae  move-result-object  v3
+    11ae..11b0  return-object  v3
+    11b0..11b4  sget-object  v1, LX/0eA;->A06:LX/08Y;
+    11b4..11b8  sget-object  v0, LX/LnP;->A00:LX/00f;
+    11b8..11be  invoke-static  {v1, v0}, LX/00E;->A04(LX/00E;LX/00f;)Ljava/lang/Boolean;
+    11be..11c0  move-result-object  v3
+    11c0..11c2  return-object  v3
+    11c2..11c6  sget-object  v1, LX/0eA;->A06:LX/08Y;
+    11c6..11ca  const/16  v0, #0x616b
+    11ca..11d0  invoke-static  {v1, v0}, LX/00E;->A03(LX/00E;I)Ljava/lang/Boolean;
+    11d0..11d2  move-result-object  v3
+    11d2..11d4  return-object  v3
+    11d4..11d8  sget-object  v1, LX/0eA;->A06:LX/08Y;
+    11d8..11dc  const/16  v0, #0x5523
+    11dc..11e2  invoke-virtual  {v1, v0}, LX/00E;->A0a(I)I
+    11e2..11e4  move-result  v0
+    11e4..11e8  mul-int/lit16  v0, v0, #0x3e8
+    11e8..11ee  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    11ee..11f0  move-result-object  v3
+    11f0..11f2  return-object  v3
+    11f2..11f6  sget-object  v1, LX/0eA;->A06:LX/08Y;
+    11f6..11fa  const/16  v0, #0x7051
+    11fa..1200  invoke-static  {v1, v0}, LX/00E;->A05(LX/00E;I)Ljava/lang/Integer;
+    1200..1202  move-result-object  v3
+    1202..1204  return-object  v3
+    1204..1208  sget-object  v0, LX/0eA;->A02:LX/05a;
+    1208..120e  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    120e..1210  move-result-object  v0
+    1210..1214  check-cast  v0, LX/644;
+    1214..121a  invoke-virtual  {v0}, LX/644;->ATs()LX/NYE;
+    121a..121c  move-result-object  v3
+    121c..121e  return-object  v3
+    121e..1222  sget-object  v1, LX/0eA;->A06:LX/08Y;
+    1222..1228  const  v0, #0x9206
+    1228..122e  invoke-static  {v1, v0}, LX/00E;->A03(LX/00E;I)Ljava/lang/Boolean;
+    122e..1230  move-result-object  v3
+    1230..1232  return-object  v3
+    1232..1236  sget-object  v1, LX/0eA;->A06:LX/08Y;
+    1236..123c  const  v0, #0x868f
+    123c..1242  invoke-static  {v1, v0}, LX/00E;->A03(LX/00E;I)Ljava/lang/Boolean;
+    1242..1244  move-result-object  v3
+    1244..1246  return-object  v3
+    1246..124a  sget-object  v1, LX/0eA;->A06:LX/08Y;
+    124a..124e  const/16  v0, #0x75a7
+    124e..1254  invoke-static  {v1, v0}, LX/00E;->A03(LX/00E;I)Ljava/lang/Boolean;
+    1254..1256  move-result-object  v3
+    1256..1258  return-object  v3
+    1258..125c  sget-object  v1, LX/0eA;->A06:LX/08Y;
+    125c..1260  const/16  v0, #0x75a6
+    1260..1266  invoke-static  {v1, v0}, LX/00E;->A03(LX/00E;I)Ljava/lang/Boolean;
+    1266..1268  move-result-object  v3
+    1268..126a  return-object  v3
+    126a..126e  sget-object  v1, LX/0eA;->A06:LX/08Y;
+    126e..1272  const/16  v0, #0x5522
+    1272..1278  invoke-virtual  {v1, v0}, LX/00E;->A0a(I)I
+    1278..127a  move-result  v0
+    127a..127e  mul-int/lit16  v0, v0, #0x3e8
+    127e..1284  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    1284..1286  move-result-object  v3
+    1286..1288  return-object  v3
+    1288..128c  sget-object  v1, LX/0eA;->A06:LX/08Y;
+    128c..1292  const  v0, #0x9620
+    1292..1298  invoke-static  {v1, v0}, LX/00E;->A05(LX/00E;I)Ljava/lang/Integer;
+    1298..129a  move-result-object  v3
+    129a..129c  return-object  v3
+    129c..12a0  sget-object  v1, LX/0eA;->A06:LX/08Y;
+    12a0..12a6  const  v0, #0x8306
+    12a6..12ac  invoke-static  {v1, v0}, LX/00E;->A05(LX/00E;I)Ljava/lang/Integer;
+    12ac..12ae  move-result-object  v3
+    12ae..12b0  return-object  v3
+    12b0..12b4  sget-object  v1, LX/0eA;->A06:LX/08Y;
+    12b4..12ba  const  v0, #0x80a1
+    12ba..12c0  invoke-static  {v1, v0}, LX/00E;->A05(LX/00E;I)Ljava/lang/Integer;
+    12c0..12c2  move-result-object  v3
+    12c2..12c4  return-object  v3
+    12c4..12c8  sget-object  v1, LX/0eA;->A06:LX/08Y;
+    12c8..12cc  sget-object  v0, LX/LnP;->A0H:LX/0AA;
+    12cc..12d2  invoke-static  {v0}, LX/00l;->A06(Ljava/lang/Object;)V
+    12d2..12d8  invoke-virtual  {v1, v0}, LX/00E;->A0m(LX/0AA;)Ljava/lang/String;
+    12d8..12da  move-result-object  v2
+    12da..12dc  const/4  v0, #0x1
+    12dc..12e0  new-array  v1, v0, [Ljava/lang/String;
+    12e0..12e2  const/4  v4, #0x0
+    12e2..12e6  const-string  v0, ","
+    12e6..12ea  aput-object  v0, v1, v4
+    12ea..12f0  invoke-static  {v2, v1, v4}, LX/0Cf;->A0o(Ljava/lang/CharSequence;[Ljava/lang/String;I)Ljava/util/List;
+    12f0..12f2  move-result-object  v1
+    12f2..12f6  const/16  v0, #0xa
+    12f6..12fc  invoke-static  {v1, v0}, LX/07S;->A0F(Ljava/lang/Iterable;I)I
+    12fc..12fe  move-result  v0
+    12fe..1302  new-instance  v2, Ljava/util/ArrayList;
+    1302..1308  invoke-direct  {v2, v0}, Ljava/util/ArrayList;-><init>(I)V
+    1308..130e  invoke-interface  {v1}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    130e..1310  move-result-object  v1
+    1310..1316  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    1316..1318  move-result  v0
+    1318..131c  if-eqz  v0, +0x14
+    131c..1322  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    1322..1324  move-result-object  v0
+    1324..1328  check-cast  v0, Ljava/lang/String;
+    1328..132e  invoke-static  {v0}, LX/0Cf;->A0R(Ljava/lang/CharSequence;)Ljava/lang/CharSequence;
+    132e..1330  move-result-object  v0
+    1330..1336  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    1336..1338  move-result-object  v0
+    1338..133e  invoke-virtual  {v2, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    133e..1340  goto  -0x17
+    1340..1344  new-instance  v3, Ljava/util/ArrayList;
+    1344..134a  invoke-direct  {v3}, Ljava/util/ArrayList;-><init>()V
+    134a..1350  invoke-interface  {v2}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    1350..1352  move-result-object  v2
+    1352..1358  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    1358..135a  move-result  v0
+    135a..135e  if-eqz  v0, +0x13
+    135e..1364  invoke-interface  {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    1364..1366  move-result-object  v1
+    1366..1368  move-object  v0, v1
+    1368..136c  check-cast  v0, Ljava/lang/String;
+    136c..1372  invoke-virtual  {v0}, Ljava/lang/String;->length()I
+    1372..1374  move-result  v0
+    1374..1378  if-lez  v0, -0x11
+    1378..137e  invoke-virtual  {v3, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    137e..1380  goto  -0x16
+    1380..1384  new-array  v0, v4, [Ljava/lang/String;
+    1384..138a  invoke-interface  {v3, v0}, Ljava/util/List;->toArray([Ljava/lang/Object;)[Ljava/lang/Object;
+    138a..138c  move-result-object  v3
+    138c..138e  return-object  v3
+    138e..1392  sget-object  v1, LX/0eA;->A06:LX/08Y;
+    1392..1398  const  v0, #0x8081
+    1398..139e  invoke-virtual  {v1, v0}, LX/00E;->A0i(I)Ljava/lang/String;
+    139e..13a0  move-result-object  v2
+    13a0..13a2  const/4  v0, #0x1
+    13a2..13a6  new-array  v1, v0, [Ljava/lang/String;
+    13a6..13a8  const/4  v3, #0x0
+    13a8..13ac  const-string  v0, ","
+    13ac..13b0  aput-object  v0, v1, v3
+    13b0..13b6  invoke-static  {v2, v1, v3}, LX/0Cf;->A0o(Ljava/lang/CharSequence;[Ljava/lang/String;I)Ljava/util/List;
+    13b6..13b8  move-result-object  v0
+    13b8..13bc  new-instance  v2, Ljava/util/ArrayList;
+    13bc..13c2  invoke-direct  {v2}, Ljava/util/ArrayList;-><init>()V
+    13c2..13c8  invoke-interface  {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    13c8..13ca  move-result-object  v1
+    13ca..13d0  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    13d0..13d2  move-result  v0
+    13d2..13d6  if-eqz  v0, +0x1a
+    13d6..13dc  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    13dc..13de  move-result-object  v0
+    13de..13e2  check-cast  v0, Ljava/lang/String;
+    13e2..13e8  invoke-static  {v0}, LX/0Cf;->A0R(Ljava/lang/CharSequence;)Ljava/lang/CharSequence;
+    13e8..13ea  move-result-object  v0
+    13ea..13f0  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    13f0..13f2  move-result-object  v0
+    13f2..13f8  invoke-static  {v0}, LX/0Cd;->A06(Ljava/lang/String;)Ljava/lang/Integer;
+    13f8..13fa  move-result-object  v0
+    13fa..13fe  if-eqz  v0, -0x18
+    13fe..1404  invoke-virtual  {v2, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    1404..1406  goto  -0x1d
+    1406..140a  new-array  v0, v3, [Ljava/lang/Integer;
+    140a..1410  invoke-interface  {v2, v0}, Ljava/util/List;->toArray([Ljava/lang/Object;)[Ljava/lang/Object;
+    1410..1412  move-result-object  v3
+    1412..1414  return-object  v3
+    1414..1418  sget-object  v0, LX/0eA;->A08:LX/08Z;
+    1418..141c  sget-object  v0, Lcom/whatsapp/infra/tigon/WAHttpPriorityCalculatorHolder;->Companion:LX/SBS;
+    141c..1420  sget-object  v1, LX/0eA;->A06:LX/08Y;
+    1420..1426  const  v0, #0x9522
+    1426..142c  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    142c..142e  move-result  v0
+    142e..1432  new-instance  v3, Lcom/whatsapp/infra/tigon/WAHttpPriorityCalculatorHolder;
+    1432..1438  invoke-direct  {v3, v0}, Lcom/whatsapp/infra/tigon/WAHttpPriorityCalculatorHolder;-><init>(Z)V
+    1438..143a  return-object  v3
+    143a..143e  sget-object  v1, LX/0eA;->A06:LX/08Y;
+    143e..1442  sget-object  v0, LX/LnP;->A0G:LX/0AB;
+    1442..1448  invoke-static  {v0}, LX/00l;->A06(Ljava/lang/Object;)V
+    1448..144e  invoke-virtual  {v1, v0}, LX/00E;->A0e(LX/0AB;)I
+    144e..1450  move-result  v0
+    1450..1456  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    1456..1458  move-result-object  v3
+    1458..145a  return-object  v3
+    145a..145e  sget-object  v1, LX/0eA;->A06:LX/08Y;
+    145e..1462  const/16  v0, #0x67c1
+    1462..1468  invoke-static  {v1, v0}, LX/00E;->A03(LX/00E;I)Ljava/lang/Boolean;
+    1468..146a  move-result-object  v3
+    146a..146c  return-object  v3
+    146c..153c  packed-switch-payload  size=50
+    # exception table: 0 try range(s)
+.end method

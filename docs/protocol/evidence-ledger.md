@@ -1,3 +1,10 @@
+2026-11-06 — **App priority calculator selection and enable-key source traced.**
+
+0eA.A0z lazily constructs the holder from configuration key38178; the default
+false constructor is not the selected path. Effective runtime value and wire
+priority serialization remain unknown. [Evidence and scoped offset distinction](media-network-outcomes.md#selected-priority-calculator-flag-source-2026-11-06).
+No Rust request change or live operation.
+
 2026-11-06 — **Native priority interceptor attaches typed scheduling context.**
 
 Confirmed static registration/factory/vtable/invocation and calculator numeric

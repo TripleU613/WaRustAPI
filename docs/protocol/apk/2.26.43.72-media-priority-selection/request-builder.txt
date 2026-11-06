@@ -1,0 +1,552 @@
+
+# class: Lcom/facebook/tigon/iface/TigonRequestBuilder;
+# extends: Lcom/facebook/tigon/iface/TigonPropertyContainer;
+
+.method public <clinit>(V)  # .registers 1
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder;-><clinit>()V
+    0000..0004  new-instance  v0, Lcom/facebook/tigon/iface/TigonRequestBuilder$Companion;
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000a..000e  sput-object  v0, Lcom/facebook/tigon/iface/TigonRequestBuilder;->Companion:Lcom/facebook/tigon/iface/TigonRequestBuilder$Companion;
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VL)  # .registers 45
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder;-><init>(Lcom/facebook/tigon/iface/TigonRequest;)V
+    0000..0002  const/4  v13, #0x0
+    0002..0006  move-object/from16  v14, v44
+    0006..000c  invoke-static  {v14, v13}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000c..0010  iget-object  v0, v14, Lcom/facebook/tigon/iface/TigonRequest;->method:Ljava/lang/String;
+    0010..0014  move-object/from16  v42, v0
+    0014..0018  iget-object  v0, v14, Lcom/facebook/tigon/iface/TigonRequest;->url:Ljava/lang/String;
+    0018..001c  move-object/from16  v41, v0
+    001c..0020  iget-object  v0, v14, Lcom/facebook/tigon/iface/TigonRequest;->headers:Ljava/util/Map;
+    0020..0026  invoke-static  {v0}, LX/05p;->A07(Ljava/util/Map;)Ljava/util/LinkedHashMap;
+    0026..0028  move-result-object  v20
+    0028..002c  iget-object  v0, v14, Lcom/facebook/tigon/iface/TigonRequest;->httpPriority:LX/1FD;
+    002c..0030  move-object/from16  v24, v0
+    0030..0034  iget-boolean  v0, v14, Lcom/facebook/tigon/iface/TigonRequest;->retryable:Z
+    0034..0038  move/from16  v22, v0
+    0038..003c  iget-boolean  v0, v14, Lcom/facebook/tigon/iface/TigonRequest;->replaySafe:Z
+    003c..0040  move/from16  v23, v0
+    0040..0044  sget-object  v16, LX/1Fc;->A01:[LX/1Fd;
+    0044..0046  const/4  v0, #0x1
+    0046..004a  new-instance  v12, Ljava/util/HashMap;
+    004a..0050  invoke-direct  {v12, v0}, Ljava/util/HashMap;-><init>(I)V
+    0050..0054  iget-wide  v8, v14, Lcom/facebook/tigon/iface/TigonRequest;->connectionTimeoutMS:J
+    0054..0058  iget-wide  v6, v14, Lcom/facebook/tigon/iface/TigonRequest;->idleTimeoutMS:J
+    0058..005c  iget-wide  v4, v14, Lcom/facebook/tigon/iface/TigonRequest;->requestTimeoutMS:J
+    005c..0060  iget-wide  v2, v14, Lcom/facebook/tigon/iface/TigonRequest;->responseTimeoutMS:J
+    0060..0064  iget-object  v0, v14, Lcom/facebook/tigon/iface/TigonRequest;->requestCategory:LX/1FF;
+    0064..0068  move-object/from16  v21, v0
+    0068..006c  iget-object  v0, v14, Lcom/facebook/tigon/iface/TigonRequest;->purpose:LX/1FH;
+    006c..0070  move-object/from16  v19, v0
+    0070..0074  iget-object  v0, v14, Lcom/facebook/tigon/iface/TigonRequest;->loggingId:Ljava/lang/String;
+    0074..0078  move-object/from16  v18, v0
+    0078..007c  iget  v0, v14, Lcom/facebook/tigon/iface/TigonRequest;->startupStatusOnAdded:I
+    007c..0080  move/from16  v17, v0
+    0080..0084  iget-wide  v0, v14, Lcom/facebook/tigon/iface/TigonRequest;->addedToMiddlewareSinceEpochMS:J
+    0084..0088  iget-object  v15, v14, Lcom/facebook/tigon/iface/TigonRequest;->authHandler:Lcom/facebook/tigon/iface/TigonAuthHandler;
+    0088..008c  iget-object  v11, v14, Lcom/facebook/tigon/iface/TigonRequest;->httpPriorityContext:Lcom/facebook/tigon/iface/HttpPriorityContext;
+    008c..0090  move-object/from16  v10, v43
+    0090..0094  move-wide/from16  v31, v2
+    0094..0098  move-object/from16  v33, v21
+    0098..009c  move-object/from16  v34, v19
+    009c..00a0  move-object/from16  v35, v18
+    00a0..00a4  move/from16  v36, v17
+    00a4..00a8  move-wide/from16  v37, v0
+    00a8..00ac  move-object/from16  v39, v15
+    00ac..00b0  move-object/from16  v40, v11
+    00b0..00b4  move-object/from16  v21, v24
+    00b4..00b8  move-object/from16  v24, v12
+    00b8..00bc  move-wide/from16  v25, v8
+    00bc..00c0  move-wide/from16  v27, v6
+    00c0..00c4  move-wide/from16  v29, v4
+    00c4..00c8  move-object/from16  v17, v10
+    00c8..00cc  move-object/from16  v18, v42
+    00cc..00d0  move-object/from16  v19, v41
+    00d0..00d6  invoke-direct/range  {v17..v40}, Lcom/facebook/tigon/iface/TigonRequestBuilder;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;LX/1FD;ZZLjava/util/Map;JJJJLX/1FF;LX/1FH;Ljava/lang/String;IJLcom/facebook/tigon/iface/TigonAuthHandler;Lcom/facebook/tigon/iface/HttpPriorityContext;)V
+    00d6..00dc  invoke-virtual  {v14, v10}, Lcom/facebook/tigon/iface/TigonPropertyContainer;->copyPropertiesTo(Lcom/facebook/tigon/iface/TigonPropertyContainer;)V
+    00dc..00e0  aget-object  v2, v16, v13
+    00e0..00e6  invoke-virtual  {v14, v2}, Lcom/facebook/tigon/iface/TigonRequest;->getLayerInformation(LX/1Fd;)Ljava/lang/Object;
+    00e6..00e8  move-result-object  v1
+    00e8..00ec  if-eqz  v1, +0x7
+    00ec..00f0  iget-object  v0, v10, Lcom/facebook/tigon/iface/TigonRequestBuilder;->layerInformation:Ljava/util/Map;
+    00f0..00f6  invoke-interface  {v0, v2, v1}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    00f6..00f8  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VLL)  # .registers 29
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    0000..0002  const/4  v5, #0x0
+    0002..0006  move-object/from16  v1, v27
+    0006..000c  invoke-static  {v1, v5}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000c..000e  const/4  v0, #0x1
+    000e..0012  move-object/from16  v2, v28
+    0012..0018  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0018..001c  new-instance  v3, Ljava/util/LinkedHashMap;
+    001c..0022  invoke-direct  {v3}, Ljava/util/LinkedHashMap;-><init>()V
+    0022..0028  const  v24, #0x3fff8
+    0028..002a  const/4  v4, #0x0
+    002a..002e  const-wide/16  v8, #0x0
+    002e..0032  move-object/from16  v0, v26
+    0032..0034  move  v6, v5
+    0034..0036  move-object  v7, v4
+    0036..0038  move-wide  v10, v8
+    0038..003a  move-wide  v12, v8
+    003a..003c  move-wide  v14, v8
+    003c..0040  move-object/from16  v16, v4
+    0040..0044  move-object/from16  v17, v4
+    0044..0048  move-object/from16  v18, v4
+    0048..004c  move/from16  v19, v5
+    004c..0050  move-wide/from16  v20, v8
+    0050..0054  move-object/from16  v22, v4
+    0054..0058  move-object/from16  v23, v4
+    0058..005c  move-object/from16  v25, v4
+    005c..0062  invoke-direct/range  {v0..v25}, Lcom/facebook/tigon/iface/TigonRequestBuilder;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;LX/1FD;ZZLjava/util/Map;JJJJLX/1FF;LX/1FH;Ljava/lang/String;IJLcom/facebook/tigon/iface/TigonAuthHandler;Lcom/facebook/tigon/iface/HttpPriorityContext;ILX/2yy;)V
+    0062..0064  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VLLLLZZLJJJJLLLIJLL)  # .registers 26
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;LX/1FD;ZZLjava/util/Map;JJJJLX/1FF;LX/1FH;Ljava/lang/String;IJLcom/facebook/tigon/iface/TigonAuthHandler;Lcom/facebook/tigon/iface/HttpPriorityContext;)V
+    0000..0006  invoke-direct  {v2}, Lcom/facebook/tigon/iface/TigonPropertyContainer;-><init>()V
+    0006..000a  iput-object  v3, v2, Lcom/facebook/tigon/iface/TigonRequestBuilder;->method:Ljava/lang/String;
+    000a..000e  iput-object  v4, v2, Lcom/facebook/tigon/iface/TigonRequestBuilder;->url:Ljava/lang/String;
+    000e..0012  iput-object  v5, v2, Lcom/facebook/tigon/iface/TigonRequestBuilder;->headers:Ljava/util/Map;
+    0012..0016  iput-object  v6, v2, Lcom/facebook/tigon/iface/TigonRequestBuilder;->httpPriority:LX/1FD;
+    0016..001a  iput-boolean  v7, v2, Lcom/facebook/tigon/iface/TigonRequestBuilder;->retryable:Z
+    001a..001e  iput-boolean  v8, v2, Lcom/facebook/tigon/iface/TigonRequestBuilder;->replaySafe:Z
+    001e..0022  iput-object  v9, v2, Lcom/facebook/tigon/iface/TigonRequestBuilder;->layerInformation:Ljava/util/Map;
+    0022..0026  iput-wide  v10, v2, Lcom/facebook/tigon/iface/TigonRequestBuilder;->connectionTimeoutMS:J
+    0026..002a  iput-wide  v12, v2, Lcom/facebook/tigon/iface/TigonRequestBuilder;->idleTimeoutMS:J
+    002a..002e  iput-wide  v14, v2, Lcom/facebook/tigon/iface/TigonRequestBuilder;->requestTimeoutMS:J
+    002e..0032  move-wide/from16  v0, v16
+    0032..0036  iput-wide  v0, v2, Lcom/facebook/tigon/iface/TigonRequestBuilder;->responseTimeoutMS:J
+    0036..003a  move-object/from16  v0, v18
+    003a..003e  iput-object  v0, v2, Lcom/facebook/tigon/iface/TigonRequestBuilder;->requestCategory:LX/1FF;
+    003e..0042  move-object/from16  v0, v19
+    0042..0046  iput-object  v0, v2, Lcom/facebook/tigon/iface/TigonRequestBuilder;->purpose:LX/1FH;
+    0046..004a  move-object/from16  v0, v20
+    004a..004e  iput-object  v0, v2, Lcom/facebook/tigon/iface/TigonRequestBuilder;->loggingId:Ljava/lang/String;
+    004e..0052  move/from16  v0, v21
+    0052..0056  iput  v0, v2, Lcom/facebook/tigon/iface/TigonRequestBuilder;->startupStatusOnAdded:I
+    0056..005a  move-wide/from16  v0, v22
+    005a..005e  iput-wide  v0, v2, Lcom/facebook/tigon/iface/TigonRequestBuilder;->addedToMiddlewareSinceEpochMS:J
+    005e..0062  move-object/from16  v0, v24
+    0062..0066  iput-object  v0, v2, Lcom/facebook/tigon/iface/TigonRequestBuilder;->authHandler:Lcom/facebook/tigon/iface/TigonAuthHandler;
+    0066..006a  move-object/from16  v0, v25
+    006a..006e  iput-object  v0, v2, Lcom/facebook/tigon/iface/TigonRequestBuilder;->httpPriorityContext:Lcom/facebook/tigon/iface/HttpPriorityContext;
+    006e..0070  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VLLLLZZLJJJJLLLIJLLIL)  # .registers 50
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;LX/1FD;ZZLjava/util/Map;JJJJLX/1FF;LX/1FH;Ljava/lang/String;IJLcom/facebook/tigon/iface/TigonAuthHandler;Lcom/facebook/tigon/iface/HttpPriorityContext;ILX/2yy;)V
+    0000..0004  move/from16  v0, v48
+    0004..0008  move-object/from16  v22, v46
+    0008..000c  move-object/from16  v4, v28
+    000c..0010  move-object/from16  v17, v41
+    0010..0014  move/from16  v5, v29
+    0014..0018  move-object/from16  v18, v42
+    0018..001c  move/from16  v6, v30
+    001c..0020  move/from16  v19, v43
+    0020..0024  move-object/from16  v7, v31
+    0024..0028  move-wide/from16  v20, v44
+    0028..002c  move-wide/from16  v8, v32
+    002c..0030  move-wide/from16  v10, v34
+    0030..0034  move-wide/from16  v12, v36
+    0034..0038  move-wide/from16  v14, v38
+    0038..003c  move-object/from16  v16, v40
+    003c..0040  and-int/lit8  v1, v48, #0x8
+    0040..0044  const/16  v23, #0x0
+    0044..0048  if-eqz  v1, +0x9
+    0048..004a  const/4  v2, #0x3
+    004a..004c  const/4  v1, #0x1
+    004c..0050  new-instance  v4, LX/1FD;
+    0050..0056  invoke-direct  {v4, v2, v1}, LX/1FD;-><init>(BZ)V
+    0056..005a  and-int/lit8  v1, v48, #0x10
+    005a..005e  if-eqz  v1, +0x3
+    005e..0060  const/4  v5, #0x1
+    0060..0064  and-int/lit8  v1, v48, #0x20
+    0064..0068  if-eqz  v1, +0x3
+    0068..006a  const/4  v6, #0x0
+    006a..006e  and-int/lit8  v1, v48, #0x40
+    006e..0072  if-eqz  v1, +0x7
+    0072..0076  new-instance  v7, Ljava/util/LinkedHashMap;
+    0076..007c  invoke-direct  {v7}, Ljava/util/LinkedHashMap;-><init>()V
+    007c..0080  and-int/lit16  v1, v0, #0x80
+    0080..0084  if-eqz  v1, +0x4
+    0084..0088  const-wide/16  v8, #0x0
+    0088..008c  and-int/lit16  v1, v0, #0x100
+    008c..0090  if-eqz  v1, +0x4
+    0090..0094  const-wide/16  v10, #0x0
+    0094..0098  and-int/lit16  v1, v0, #0x200
+    0098..009c  if-eqz  v1, +0x4
+    009c..00a0  const-wide/16  v12, #0x0
+    00a0..00a4  and-int/lit16  v1, v0, #0x400
+    00a4..00a8  if-eqz  v1, +0x4
+    00a8..00ac  const-wide/16  v14, #0x0
+    00ac..00b0  and-int/lit16  v1, v0, #0x800
+    00b0..00b4  if-eqz  v1, +0x4
+    00b4..00b8  sget-object  v16, LX/1FF;->A0F:LX/1FF;
+    00b8..00bc  and-int/lit16  v1, v0, #0x1000
+    00bc..00c0  if-eqz  v1, +0x4
+    00c0..00c4  sget-object  v17, LX/1FH;->A04:LX/1FH;
+    00c4..00c8  and-int/lit16  v1, v0, #0x2000
+    00c8..00cc  if-eqz  v1, +0x4
+    00cc..00d0  const-string  v18, ""
+    00d0..00d4  and-int/lit16  v1, v0, #0x4000
+    00d4..00d8  if-eqz  v1, +0x4
+    00d8..00dc  const/16  v19, #0xffff (-1)
+    00dc..00e2  const  v1, #0x8000
+    00e2..00e6  and-int  v1, v1, v48
+    00e6..00ea  if-eqz  v1, +0x4
+    00ea..00ee  const-wide/16  v20, #0xffff (-1)
+    00ee..00f2  const/high16  v1, #0x10000
+    00f2..00f6  and-int  v1, v1, v48
+    00f6..00fa  if-eqz  v1, +0x4
+    00fa..00fe  move-object/from16  v22, v23
+    00fe..0102  const/high16  v1, #0x20000
+    0102..0106  and-int  v0, v48, v1
+    0106..010a  if-nez  v0, +0x4
+    010a..010e  move-object/from16  v23, v47
+    010e..0112  move-object/from16  v0, v24
+    0112..0116  move-object/from16  v3, v27
+    0116..011a  move-object/from16  v2, v26
+    011a..011e  move-object/from16  v1, v25
+    011e..0124  invoke-direct/range  {v0..v23}, Lcom/facebook/tigon/iface/TigonRequestBuilder;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;LX/1FD;ZZLjava/util/Map;JJJJLX/1FF;LX/1FH;Ljava/lang/String;IJLcom/facebook/tigon/iface/TigonAuthHandler;Lcom/facebook/tigon/iface/HttpPriorityContext;)V
+    0124..0126  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public create(LLLLZLLL)  # .registers 8
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder;->create(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequest;
+    0000..0004  sget-object  v0, Lcom/facebook/tigon/iface/TigonRequestBuilder;->Companion:Lcom/facebook/tigon/iface/TigonRequestBuilder$Companion;
+    0004..000a  invoke-static/range  {v0..v7}, Lcom/facebook/tigon/iface/TigonRequestBuilder$Companion;->access$create(Lcom/facebook/tigon/iface/TigonRequestBuilder$Companion;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequest;
+    000a..000c  move-result-object  v0
+    000c..000e  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public addHeader(LLL)  # .registers 4
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder;->addHeader(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0000..0004  if-eqz  v2, +0x15
+    0004..000a  invoke-virtual  {v2}, Ljava/lang/String;->length()I
+    000a..000c  move-result  v0
+    000c..0010  if-eqz  v0, +0xf
+    0010..0014  if-eqz  v3, +0xd
+    0014..001a  invoke-virtual  {v3}, Ljava/lang/String;->length()I
+    001a..001c  move-result  v0
+    001c..0020  if-eqz  v0, +0x7
+    0020..0024  iget-object  v0, v1, Lcom/facebook/tigon/iface/TigonRequestBuilder;->headers:Ljava/util/Map;
+    0024..002a  invoke-interface  {v0, v2, v3}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    002a..002c  return-object  v1
+    # exception table: 0 try range(s)
+.end method
+
+.method public addHeaders(LL)  # .registers 5
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder;->addHeaders(Ljava/util/Map;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v4, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-interface  {v4}, Ljava/util/Map;->entrySet()Ljava/util/Set;
+    000e..0010  move-result-object  v0
+    0010..0016  invoke-interface  {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    0016..0018  move-result-object  v2
+    0018..001e  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    001e..0020  move-result  v0
+    0020..0024  if-eqz  v0, +0x18
+    0024..002a  invoke-interface  {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    002a..002c  move-result-object  v0
+    002c..0030  check-cast  v0, Ljava/util/Map$Entry;
+    0030..0036  invoke-interface  {v0}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+    0036..0038  move-result-object  v1
+    0038..003c  check-cast  v1, Ljava/lang/String;
+    003c..0042  invoke-interface  {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+    0042..0044  move-result-object  v0
+    0044..0048  check-cast  v0, Ljava/lang/String;
+    0048..004e  invoke-virtual  {v3, v1, v0}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->addHeader(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    004e..0050  goto  -0x1b
+    0050..0052  return-object  v3
+    # exception table: 0 try range(s)
+.end method
+
+.method public addLayerInformation(LLL)  # .registers 4
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder;->addLayerInformation(LX/1Fd;Ljava/lang/Object;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  if-eqz  v3, +0x7
+    000c..0010  iget-object  v0, v1, Lcom/facebook/tigon/iface/TigonRequestBuilder;->layerInformation:Ljava/util/Map;
+    0010..0016  invoke-interface  {v0, v2, v3}, Ljava/util/Map;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0016..0018  return-object  v1
+    # exception table: 0 try range(s)
+.end method
+
+.method public build(L)  # .registers 42
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder;->build()Lcom/facebook/tigon/iface/TigonRequest;
+    0000..0004  move-object/from16  v13, v41
+    0004..0008  iget-object  v0, v13, Lcom/facebook/tigon/iface/TigonRequestBuilder;->method:Ljava/lang/String;
+    0008..000c  move-object/from16  v40, v0
+    000c..0010  iget-object  v0, v13, Lcom/facebook/tigon/iface/TigonRequestBuilder;->url:Ljava/lang/String;
+    0010..0014  move-object/from16  v39, v0
+    0014..0018  iget-object  v0, v13, Lcom/facebook/tigon/iface/TigonRequestBuilder;->headers:Ljava/util/Map;
+    0018..001e  invoke-static  {v0}, LX/05p;->A0F(Ljava/util/Map;)Ljava/util/Map;
+    001e..0020  move-result-object  v17
+    0020..0024  iget-object  v0, v13, Lcom/facebook/tigon/iface/TigonRequestBuilder;->httpPriority:LX/1FD;
+    0024..0028  move-object/from16  v38, v0
+    0028..002c  iget-boolean  v0, v13, Lcom/facebook/tigon/iface/TigonRequestBuilder;->retryable:Z
+    002c..0030  move/from16  v19, v0
+    0030..0034  iget-boolean  v0, v13, Lcom/facebook/tigon/iface/TigonRequestBuilder;->replaySafe:Z
+    0034..0038  move/from16  v20, v0
+    0038..003c  iget-object  v0, v13, Lcom/facebook/tigon/iface/TigonRequestBuilder;->layerInformation:Ljava/util/Map;
+    003c..0042  invoke-static  {v0}, LX/05p;->A0F(Ljava/util/Map;)Ljava/util/Map;
+    0042..0044  move-result-object  v21
+    0044..0048  iget-object  v0, v13, Lcom/facebook/tigon/iface/TigonRequestBuilder;->requestCategory:LX/1FF;
+    0048..004c  move-object/from16  v18, v0
+    004c..0050  iget-object  v0, v13, Lcom/facebook/tigon/iface/TigonRequestBuilder;->purpose:LX/1FH;
+    0050..0054  move-object/from16  v16, v0
+    0054..0058  iget-wide  v8, v13, Lcom/facebook/tigon/iface/TigonRequestBuilder;->connectionTimeoutMS:J
+    0058..005c  iget-wide  v6, v13, Lcom/facebook/tigon/iface/TigonRequestBuilder;->idleTimeoutMS:J
+    005c..0060  iget-wide  v4, v13, Lcom/facebook/tigon/iface/TigonRequestBuilder;->requestTimeoutMS:J
+    0060..0064  iget-wide  v2, v13, Lcom/facebook/tigon/iface/TigonRequestBuilder;->responseTimeoutMS:J
+    0064..0068  iget-object  v15, v13, Lcom/facebook/tigon/iface/TigonRequestBuilder;->loggingId:Ljava/lang/String;
+    0068..006c  iget  v14, v13, Lcom/facebook/tigon/iface/TigonRequestBuilder;->startupStatusOnAdded:I
+    006c..0070  iget-wide  v0, v13, Lcom/facebook/tigon/iface/TigonRequestBuilder;->addedToMiddlewareSinceEpochMS:J
+    0070..0074  iget-object  v12, v13, Lcom/facebook/tigon/iface/TigonRequestBuilder;->authHandler:Lcom/facebook/tigon/iface/TigonAuthHandler;
+    0074..0078  iget-object  v11, v13, Lcom/facebook/tigon/iface/TigonRequestBuilder;->httpPriorityContext:Lcom/facebook/tigon/iface/HttpPriorityContext;
+    0078..007c  new-instance  v10, Lcom/facebook/tigon/iface/TigonRequest;
+    007c..0080  move-wide/from16  v30, v2
+    0080..0084  move-object/from16  v32, v15
+    0084..0088  move/from16  v33, v14
+    0088..008c  move-wide/from16  v34, v0
+    008c..0090  move-object/from16  v36, v12
+    0090..0094  move-object/from16  v37, v11
+    0094..0098  move-object/from16  v22, v18
+    0098..009c  move-object/from16  v23, v16
+    009c..00a0  move-wide/from16  v24, v8
+    00a0..00a4  move-wide/from16  v26, v6
+    00a4..00a8  move-wide/from16  v28, v4
+    00a8..00aa  move-object  v14, v10
+    00aa..00ae  move-object/from16  v15, v40
+    00ae..00b2  move-object/from16  v16, v39
+    00b2..00b6  move-object/from16  v18, v38
+    00b6..00bc  invoke-direct/range  {v14..v37}, Lcom/facebook/tigon/iface/TigonRequest;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;LX/1FD;ZZLjava/util/Map;LX/1FF;LX/1FH;JJJJLjava/lang/String;IJLcom/facebook/tigon/iface/TigonAuthHandler;Lcom/facebook/tigon/iface/HttpPriorityContext;)V
+    00bc..00c2  invoke-virtual  {v13, v10}, Lcom/facebook/tigon/iface/TigonPropertyContainer;->copyPropertiesTo(Lcom/facebook/tigon/iface/TigonPropertyContainer;)V
+    00c2..00c4  return-object  v10
+    # exception table: 0 try range(s)
+.end method
+
+.method public setAddedToMiddlewareSinceEpochMS(LJ)  # .registers 3
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder;->setAddedToMiddlewareSinceEpochMS(J)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0000..0004  iput-wide  v1, v0, Lcom/facebook/tigon/iface/TigonRequestBuilder;->addedToMiddlewareSinceEpochMS:J
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public setAuthHandler(LL)  # .registers 2
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder;->setAuthHandler(Lcom/facebook/tigon/iface/TigonAuthHandler;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0000..0004  iput-object  v1, v0, Lcom/facebook/tigon/iface/TigonRequestBuilder;->authHandler:Lcom/facebook/tigon/iface/TigonAuthHandler;
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public setConnectionTimeoutMS(LJ)  # .registers 6
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder;->setConnectionTimeoutMS(J)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0000..0004  const-wide/16  v1, #0x0
+    0004..0008  cmp-long  v0, v4, v1
+    0008..000c  if-ltz  v0, +0x5
+    000c..0010  iput-wide  v4, v3, Lcom/facebook/tigon/iface/TigonRequestBuilder;->connectionTimeoutMS:J
+    0010..0012  return-object  v3
+    0012..0016  const-string  v1, "ConnectionTimeout should be nonzero."
+    0016..001a  new-instance  v0, Ljava/lang/IllegalArgumentException;
+    001a..0020  invoke-direct  {v0, v1}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;)V
+    0020..0022  throw  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public setFriendlyNameAndTags(LLLL)  # .registers 7
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder;->setFriendlyNameAndTags(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v4, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  const/4  v0, #0x1
+    000a..0010  invoke-static  {v5, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0010..0012  const/4  v0, #0x2
+    0012..0018  invoke-static  {v6, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0018..001c  sget-object  v2, LX/1FJ;->A03:LX/1FK;
+    001c..0020  new-instance  v1, Lcom/facebook/tigon/iface/TigonPropertyContainer$Group;
+    0020..0026  invoke-direct  {v1}, Lcom/facebook/tigon/iface/TigonPropertyContainer$Group;-><init>()V
+    0026..002a  sget-object  v0, LX/1FN;->A02:LX/1FK;
+    002a..0030  invoke-virtual  {v1, v0, v4}, Lcom/facebook/tigon/iface/TigonPropertyContainer$Group;->setProperty(LX/1FK;Ljava/lang/String;)V
+    0030..0034  sget-object  v0, LX/1FN;->A00:LX/1FK;
+    0034..003a  invoke-virtual  {v1, v0, v5}, Lcom/facebook/tigon/iface/TigonPropertyContainer$Group;->setProperty(LX/1FK;Ljava/lang/String;)V
+    003a..003e  sget-object  v0, LX/1FN;->A01:LX/1FK;
+    003e..0044  invoke-virtual  {v1, v0, v6}, Lcom/facebook/tigon/iface/TigonPropertyContainer$Group;->setProperty(LX/1FK;Ljava/lang/String;)V
+    0044..004a  invoke-virtual  {v3, v2, v1}, Lcom/facebook/tigon/iface/TigonPropertyContainer;->setPropertyGroup(LX/1FK;Lcom/facebook/tigon/iface/TigonPropertyContainer$Group;)V
+    004a..004c  return-object  v3
+    # exception table: 0 try range(s)
+.end method
+
+.method public setHttpPriority(LL)  # .registers 3
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder;->setHttpPriority(LX/1FD;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  iput-object  v2, v1, Lcom/facebook/tigon/iface/TigonRequestBuilder;->httpPriority:LX/1FD;
+    000c..000e  return-object  v1
+    # exception table: 0 try range(s)
+.end method
+
+.method public setHttpPriorityContext(LL)  # .registers 2
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder;->setHttpPriorityContext(Lcom/facebook/tigon/iface/HttpPriorityContext;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0000..0004  iput-object  v1, v0, Lcom/facebook/tigon/iface/TigonRequestBuilder;->httpPriorityContext:Lcom/facebook/tigon/iface/HttpPriorityContext;
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public setIdleTimeoutMS(LJ)  # .registers 6
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder;->setIdleTimeoutMS(J)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0000..0004  const-wide/16  v1, #0x0
+    0004..0008  cmp-long  v0, v4, v1
+    0008..000c  if-ltz  v0, +0x5
+    000c..0010  iput-wide  v4, v3, Lcom/facebook/tigon/iface/TigonRequestBuilder;->idleTimeoutMS:J
+    0010..0012  return-object  v3
+    0012..0016  const-string  v1, "IdleTimeout should be nonzero."
+    0016..001a  new-instance  v0, Ljava/lang/IllegalArgumentException;
+    001a..0020  invoke-direct  {v0, v1}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;)V
+    0020..0022  throw  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public setLoggingId(LL)  # .registers 3
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder;->setLoggingId(Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  iput-object  v2, v1, Lcom/facebook/tigon/iface/TigonRequestBuilder;->loggingId:Ljava/lang/String;
+    000c..000e  return-object  v1
+    # exception table: 0 try range(s)
+.end method
+
+.method public setPurpose(LL)  # .registers 3
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder;->setPurpose(LX/1FH;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  iput-object  v2, v1, Lcom/facebook/tigon/iface/TigonRequestBuilder;->purpose:LX/1FH;
+    000c..000e  return-object  v1
+    # exception table: 0 try range(s)
+.end method
+
+.method public setReplaySafe(LZ)  # .registers 2
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder;->setReplaySafe(Z)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0000..0004  iput-boolean  v1, v0, Lcom/facebook/tigon/iface/TigonRequestBuilder;->replaySafe:Z
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public setRequestCategory(LL)  # .registers 3
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder;->setRequestCategory(LX/1FF;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  iput-object  v2, v1, Lcom/facebook/tigon/iface/TigonRequestBuilder;->requestCategory:LX/1FF;
+    000c..000e  return-object  v1
+    # exception table: 0 try range(s)
+.end method
+
+.method public setRequestTimeoutMS(LJ)  # .registers 6
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder;->setRequestTimeoutMS(J)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0000..0004  const-wide/16  v1, #0x0
+    0004..0008  cmp-long  v0, v4, v1
+    0008..000c  if-ltz  v0, +0x5
+    000c..0010  iput-wide  v4, v3, Lcom/facebook/tigon/iface/TigonRequestBuilder;->requestTimeoutMS:J
+    0010..0012  return-object  v3
+    0012..0016  const-string  v1, "RequestTimeout should be nonzero."
+    0016..001a  new-instance  v0, Ljava/lang/IllegalArgumentException;
+    001a..0020  invoke-direct  {v0, v1}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;)V
+    0020..0022  throw  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public setResponseTimeoutMS(LJ)  # .registers 6
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder;->setResponseTimeoutMS(J)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0000..0004  const-wide/16  v1, #0x0
+    0004..0008  cmp-long  v0, v4, v1
+    0008..000c  if-ltz  v0, +0x5
+    000c..0010  iput-wide  v4, v3, Lcom/facebook/tigon/iface/TigonRequestBuilder;->responseTimeoutMS:J
+    0010..0012  return-object  v3
+    0012..0016  const-string  v1, "ResponseTimeout should be nonnegative."
+    0016..001a  new-instance  v0, Ljava/lang/IllegalArgumentException;
+    001a..0020  invoke-direct  {v0, v1}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;)V
+    0020..0022  throw  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public setRetryable(LZ)  # .registers 2
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder;->setRetryable(Z)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0000..0004  iput-boolean  v1, v0, Lcom/facebook/tigon/iface/TigonRequestBuilder;->retryable:Z
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public setStartupStatusOnAdded(LI)  # .registers 2
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder;->setStartupStatusOnAdded(I)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0000..0004  iput  v1, v0, Lcom/facebook/tigon/iface/TigonRequestBuilder;->startupStatusOnAdded:I
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: Lcom/facebook/tigon/iface/TigonRequestBuilder$Companion;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 1
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder$Companion;-><init>()V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..0008  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VL)  # .registers 2
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder$Companion;-><init>(LX/2yy;)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..0008  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public access$create(LLLLLZLLL)  # .registers 8
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder$Companion;->access$create(Lcom/facebook/tigon/iface/TigonRequestBuilder$Companion;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequest;
+    0000..0006  invoke-direct/range  {v0..v7}, Lcom/facebook/tigon/iface/TigonRequestBuilder$Companion;->create(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequest;
+    0006..0008  move-result-object  v0
+    0008..000a  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method private create(LLLLZLLL)  # .registers 13
+    # full signature: Lcom/facebook/tigon/iface/TigonRequestBuilder$Companion;->create(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequest;
+    0000..0004  new-instance  v4, Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0004..000a  invoke-direct  {v4, v6, v7}, Lcom/facebook/tigon/iface/TigonRequestBuilder;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    000a..000e  iput-boolean  v9, v4, Lcom/facebook/tigon/iface/TigonRequestBuilder;->retryable:Z
+    000e..0010  array-length  v3, v8
+    0010..0014  and-int/lit8  v0, v3, #0x1
+    0014..0018  if-nez  v0, +0x23
+    0018..001a  const/4  v2, #0x0
+    001a..001e  if-ge  v2, v3, +0xe
+    001e..0022  aget-object  v1, v8, v2
+    0022..0026  add-int/lit8  v0, v2, #0x1
+    0026..002a  aget-object  v0, v8, v0
+    002a..0030  invoke-virtual  {v4, v1, v0}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->addHeader(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0030..0034  add-int/lit8  v2, v2, #0x2
+    0034..0036  goto  -0xd
+    0036..003a  if-eqz  v10, +0xd
+    003a..003e  const-string  v0, ""
+    003e..0042  if-nez  v11, +0x3
+    0042..0044  move-object  v11, v0
+    0044..0048  if-nez  v12, +0x3
+    0048..004a  move-object  v12, v0
+    004a..0050  invoke-virtual  {v4, v10, v11, v12}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->setFriendlyNameAndTags(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0050..0056  invoke-virtual  {v4}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->build()Lcom/facebook/tigon/iface/TigonRequest;
+    0056..0058  move-result-object  v0
+    0058..005a  return-object  v0
+    005a..005e  const-string  v1, "must have even number of flattened headers"
+    005e..0062  new-instance  v0, Ljava/lang/IllegalArgumentException;
+    0062..0068  invoke-direct  {v0, v1}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;)V
+    0068..006a  throw  v0
+    # exception table: 0 try range(s)
+.end method

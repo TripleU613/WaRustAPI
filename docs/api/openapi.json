@@ -18544,5 +18544,13 @@
     "x-library": [],
     "description": "Static APK audit connects priority-context interceptor JNI registration/factory/vtables to context attachment and conditional numeric calculator branches. Existing context preserved; no direct header insertion established in the interceptor. Effective provider/flag and downstream priority serialization unknown. No product route, runtime behavior, header, retry, persistence or live validation changed.",
     "evidence": "docs/protocol/media-network-outcomes.md#native-http-priority-context-separated-from-headers-2026-11-06"
+},
+  "x-media-priority-selection-research": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Static selected app factory gets a cached lazy WAHttpPriorityCalculatorHolder constructed with configuration key38178 (0x9522), not its default false constructor. Effective runtime value and downstream wire priority remain unknown. Exported native HttpPriority setter is a separate request field from WA context metadata. No product route, request/header, scheduling, retry, persistence or live behavior change.",
+    "evidence": "docs/protocol/media-network-outcomes.md#selected-priority-calculator-flag-source-2026-11-06"
 }
 }

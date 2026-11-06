@@ -1,0 +1,13 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+0000000000663b10 <_ZN8facebook5tigon12TigonRequest12httpPriorityENS0_12HttpPriorityE>:
+  663b10:      	bti	c
+  663b14:      	ldr	x8, [x1, #0x10]
+  663b18:      	ldr	q0, [x1]
+  663b1c:      	add	x9, x0, #0x158
+  663b20:      	str	x8, [x0, #0x168]
+  663b24:      	str	q0, [x9]
+  663b28:      	ret
