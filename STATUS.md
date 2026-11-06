@@ -1,3 +1,15 @@
+2026-11-05 — **Selected ordinary message ACK forwarding connected.**
+
+Success/refusal event branches return to original-key callback lookup. The
+investigated destination helper is FBID-migration-specific; the exact native
+out-of-band sender-key producer remains unconfirmed, so no speculative address
+or type guard was added.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-message-ack-forwarding/README.md).
+Validation: fmt, strict Clippy, CLI reference, OpenAPI, APK coverage, pinned
+artifact identity and staged checksum/link hygiene passed. No new workspace
+test run for this research-only chunk; previous 1378-test result is unchanged
+code evidence. No runtime change or live account operation.
+
 2026-11-05 — **Non-reply IQs cannot consume reusable key-batch ownership.**
 
 The settlement helper now rejects missing/get/set/unsupported/nontext type before

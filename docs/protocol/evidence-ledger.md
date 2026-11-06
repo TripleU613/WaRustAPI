@@ -7093,3 +7093,14 @@ filtered these types. Red/green regression covers state equality, blocked reserv
 reopen, later valid settlement, duplicate refusal and complete local assembly.
 No new callback authority, key adoption, timeout or automatic retry is added.
 [Evidence, scope and unresolved native lifetime](device-key-batches.md#key-batch-reply-admission-correction-2026-11-05).
+
+### Ordinary message ACK forwarding (2026-11-05)
+
+**Confirmed static, APK43.72:** selected ordinary message success and refusal
+event paths both jump back to generic A1D with the original node/Eoh key.
+This closes those forwarding edges into the previously traced concrete callback
+bridge. Error459 and malformed/early paths remain separately qualified. The
+destination rewrite helper inspected here is FBID-migration-specific; Efa's
+null type default does not prove the out-of-band producer leaves type unset.
+[Exact offsets, retained exports and remaining producer gap](apk/2.26.43.72-message-ack-forwarding/README.md).
+No runtime guard, replay policy or live account operation changed.

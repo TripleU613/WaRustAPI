@@ -160,3 +160,14 @@ now excludes459, preserving original reservations and uncertainty. Java decimal
 spellings are covered; no challenge bypass, retry or account-wide policy added.
 [Methods, before/after regression and unported boundaries](apk/2.26.43.72-ack-auth-challenge/README.md).
 No live operations. Full challenge-controller parity remains incomplete.
+
+### Ordinary message ACK forwarding (2026-11-05)
+
+**Confirmed static, APK43.72:** selected ordinary message success and refusal
+event paths both jump back to generic A1D with the original node/Eoh key.
+This closes those forwarding edges into the previously traced concrete callback
+bridge. Error459 and malformed/early paths remain separately qualified. The
+destination rewrite helper inspected here is FBID-migration-specific; Efa's
+null type default does not prove the out-of-band producer leaves type unset.
+[Exact offsets, retained exports and remaining producer gap](apk/2.26.43.72-message-ack-forwarding/README.md).
+No runtime guard, replay policy or live account operation changed.

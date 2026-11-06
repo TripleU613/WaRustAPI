@@ -1,0 +1,18 @@
+{
+  "README.md": {
+    "bytes": 3785,
+    "sha256": "354cd0af851ccf9c655859feba864af1ae837a1cc3b5204aac1e88b3e2b84a55"
+  },
+  "destination-predicate.txt": {
+    "bytes": 860,
+    "sha256": "fa91313c3ac3220679c5d759f959094e444aef080cd44fca8dece059d46ea9ce"
+  },
+  "destination-rewrite.txt": {
+    "bytes": 2047,
+    "sha256": "fde35e8d9a84b5d3e46add7c0e9b9621590a6991d0a23d1e143394682fccf94c"
+  },
+  "fields-init.txt": {
+    "bytes": 450,
+    "sha256": "cbfc86952e18fda50789c6cec7b8c3cece45bf6fc365f663c3e60e87cef8f80b"
+  }
+}

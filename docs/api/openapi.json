@@ -15837,6 +15837,15 @@
     "evidence": "docs/protocol/apk/2.26.43.72-sender-key-ack-confirmation/README.md",
     "description": "Traces native message ACK callback registration and wait, successful normal sender-key marking and conditional one-time-key reset. Connects registration-time pre-ACK marker snapshot to matched callback retirement after wrapped result. Rust per-distribution durable confirmation and native address ownership remain incomplete. Evidence only; no command, HTTP route or production behavior change."
   },
+  "x-ack-message-forwarding-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-message-ack-forwarding/README.md",
+    "description": "Selected ordinary message success/refusal branches forward original node and callback key to the generic bridge. FBID migration helper and builder null defaults do not establish the out-of-band distribution expected tuple. Research only; no command, route, runtime policy or live operation."
+  },
   "x-ack-key-normalization-evidence": {
     "x-cli": false,
     "x-transport": [

@@ -625,3 +625,14 @@ cancelled by this helper. A failed write returns its existing error. Unread
 late records are not captured, and expiry never proves the server did not
 receive the write. Original uncertain intents remain nonreplayable. No native
 request-address/challenge-controller parity, new route or live operation.
+
+### Ordinary message ACK forwarding (2026-11-05)
+
+**Confirmed static, APK43.72:** selected ordinary message success and refusal
+event paths both jump back to generic A1D with the original node/Eoh key.
+This closes those forwarding edges into the previously traced concrete callback
+bridge. Error459 and malformed/early paths remain separately qualified. The
+destination rewrite helper inspected here is FBID-migration-specific; Efa's
+null type default does not prove the out-of-band producer leaves type unset.
+[Exact offsets, retained exports and remaining producer gap](apk/2.26.43.72-message-ack-forwarding/README.md).
+No runtime guard, replay policy or live account operation changed.
