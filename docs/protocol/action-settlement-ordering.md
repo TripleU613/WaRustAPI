@@ -140,8 +140,10 @@ bytes and journal head, and survive reopen. The slow-completion control verifies
 that callback expiry uses the original base, not write completion.
 
 **Limits:** no lock spans encoding/socket I/O. Other account, sidecar admission,
-privacy/restriction/backoff changes after reservation are not re-evaluated by
-this exact-row guard unless they change that row. Live reply ownership still
+privacy/restriction/backoff changes after reservation were not re-evaluated by
+this exact-row guard unless they changed that row. The later restriction/wait
+follow-up below now rechecks two existing admission rules; other sidecars remain
+separate. Live reply ownership still
 correlates by ID/deadline rather than retaining this row snapshot through
 settlement; the written-row binding follow-up below closes that separate gap. Low-level/feature-owned
 writers retain their contracts. No reconnect, automatic retry, reset or live
@@ -201,5 +203,53 @@ lifecycle parity remain separate work. No new outgoing operation, automatic
 resend, reset, reconnect or live account operation.
 
 Validation:1,451 workspace/all-feature tests passed. Strict workspace/all-target/
+all-feature Clippy, formatting, CLI reference regeneration, OpenAPI symbol
+validation, APK coverage freshness and repository hygiene passed. Offline only.
+
+## Writer rechecks recorded restrictions and explicit backoff (2026-11-06)
+
+**Confirmed Rust defect fixed offline:** a reach-out update or app-state backoff
+could be recorded after action reservation while its Node waited for the writer.
+The exact Sent row remained unchanged, so row/deadline ownership alone admitted
+traffic that the same stored restriction/wait would have blocked at reservation.
+
+Normal action writer admission now rechecks existing rules in the same read
+snapshot as exact-row ownership: group-create refuses a recorded active
+reach-out restriction; app-state fetch, patch and held-fetch kinds refuse an
+active stored server backoff. Read and reservation paths share backoff validation
+and expiry logic. Malformed stored backoff refuses these app-state writes.
+Unrelated action kinds do not inherit these gates. The writer check updates no
+row, sidecar or journal; it neither extends nor clears a wait.
+
+A recorded active reach-out restriction remains active even after its displayed
+end, until a clearing update is recorded. This preserves the existing local
+conservative admission boundary; it does not port all native recipient/account/
+visibility predicates. Expired valid app-state backoff instead permits this
+check, matching existing reservation behavior. No new duration is invented.
+
+**Existing static basis, APK2.26.43.72:**
+[reach-out lifecycle and limits](rea/2.26.43.72-reachout-state/README.md)
+and [FUc.Bvj explicit backoff and durable Rust boundary](app-state-patch-atomicity.md#explicit-server-backoff)
+remain the evidence. This correction carries already implemented admission to
+the final local writer boundary; no new APK trace, global outbound restriction
+policy or causal restriction-prevention claim is made.
+
+Regression: `queued_action_rechecks_later_restrictions_and_server_wait_without_mutation`
+holds the actual NodeLink write queue, then records the gate after reservation.
+Real group-create and fetch producers cover late active state and controls.
+Patch/held-fetch Sent-row fixtures isolate their shared writer-kind gate; they
+do not establish full producer/crypto/sidecar admission. Cases cover active and
+elapsed-but-active reach-out state, explicit inactive updates, active/expired/
+malformed app-state deadlines, no gate and unrelated controls. Stored checkpoints
+and journal head remain identical through refusal and reopen.
+
+**Limits:** state can change after the read check and before/during socket I/O;
+no cross-network lock is claimed. A refused already-reserved action stays Sent
+and is not automatically queued again after the wait clears. Public low-level
+writers retain their caller authority contracts. Other account/sidecar guards,
+full native scheduler/recovery and sender policy remain separate work. No live
+account operation, automatic retry, checkpoint reset or new outgoing request.
+
+Validation:1,452 workspace/all-feature tests passed. Strict workspace/all-target/
 all-feature Clippy, formatting, CLI reference regeneration, OpenAPI symbol
 validation, APK coverage freshness and repository hygiene passed. Offline only.

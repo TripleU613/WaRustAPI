@@ -428,6 +428,34 @@ impl ActionWriteGuard {
                     "reserved action changed before write",
                 ));
             }
+            #[derive(Deserialize)]
+            struct AdmissionKind {
+                kind: String,
+            }
+            let row: AdmissionKind = serde_json::from_slice(&current)
+                .map_err(|_| Error::invalid("action", "invalid reserved action metadata"))?;
+            // Reuse reservation admission at the last local write boundary:
+            // a restriction/backoff notification can arrive during queueing.
+            if row.kind == "group-create"
+                && super::notifications::recorded_active_reachout_timelock_read_in(tx)?.is_some()
+            {
+                return Err(Error::invalid(
+                    "action",
+                    "recorded reach-out restriction blocks queued group creation",
+                ));
+            }
+            if matches!(
+                row.kind.as_str(),
+                super::app_state_sync::FETCH_ACTION_KIND
+                    | super::app_state_sync::PATCH_ACTION_KIND
+                    | super::app_state_sync::HELD_FETCH_ACTION_KIND
+            ) && super::app_state_sync::server_waiting_read_in(tx)?
+            {
+                return Err(Error::invalid(
+                    "action",
+                    "server app-state backoff blocks queued action",
+                ));
+            }
             if self
                 .deadline
                 .is_some_and(|deadline| tokio::time::Instant::now() >= deadline)
@@ -1562,6 +1590,133 @@ mod tests {
             },
         };
         live.record_written(&action).unwrap();
+    }
+
+    #[tokio::test]
+    async fn queued_action_rechecks_later_restrictions_and_server_wait_without_mutation() {
+        for producer in [
+            "group-create",
+            super::super::app_state_sync::FETCH_ACTION_KIND,
+            super::super::app_state_sync::PATCH_ACTION_KIND,
+            super::super::app_state_sync::HELD_FETCH_ACTION_KIND,
+            "unrelated",
+        ] {
+            for gate in ["none", "active", "expired", "cleared", "malformed"] {
+                if producer == "group-create" && gate == "malformed" {
+                    continue;
+                }
+                let (dir, db) = store();
+                let db = Arc::new(db);
+                let id = match producer {
+                    "group-create" => super::super::groups::queue_create(
+                        &db,
+                        "Offline fixture",
+                        &[crate::model::jid::Jid::parse("15555550101@s.whatsapp.net").unwrap()],
+                    ),
+                    super::super::app_state_sync::FETCH_ACTION_KIND => {
+                        super::super::app_state_sync::queue_fetch(&db)
+                    }
+                    _ => queue(&db, "fixture", "fixture", ping),
+                }
+                .unwrap();
+                let action = if matches!(
+                    producer,
+                    super::super::app_state_sync::PATCH_ACTION_KIND
+                        | super::super::app_state_sync::HELD_FETCH_ACTION_KIND
+                ) {
+                    // These fixtures isolate the shared writer gate; their full
+                    // producer/key/sidecar admission is covered in app-state tests.
+                    let node = request(&db, &id).unwrap().unwrap();
+                    let raw = db
+                        .write(|tx| {
+                            let mut row: Row = tx
+                                .get_json(Table::Checkpoints, key(&id).as_bytes(), 1)?
+                                .unwrap();
+                            row.kind = producer.into();
+                            row.status = ActionStatus::Sent;
+                            row.sent_at = Some(Timestamp::now());
+                            tx.put_json(Table::Checkpoints, key(&id).as_bytes(), 1, &row)?;
+                            Ok(tx.get(Table::Checkpoints, key(&id).as_bytes(), 1)?.unwrap())
+                        })
+                        .unwrap();
+                    ReservedAction {
+                        node,
+                        started: tokio::time::Instant::now(),
+                        guard: ActionWriteGuard {
+                            key: key(&id).into_bytes(),
+                            row: zeroize::Zeroizing::new(raw),
+                            deadline: None,
+                        },
+                    }
+                } else {
+                    reserve_next_owned(&db).unwrap().unwrap()
+                };
+                let (_incoming, incoming) = tokio::sync::mpsc::channel(1);
+                let (outgoing, mut writes) = tokio::sync::mpsc::channel(1);
+                let link = super::super::connection::NodeLink::new(incoming, outgoing);
+                let worker = db.clone();
+                let task = tokio::spawn(async move { link.send_action(&worker, &action).await });
+                let queued = writes.recv().await.unwrap();
+                if gate != "none" {
+                    if producer == "group-create" || producer == "unrelated" {
+                        let update=Node::new("notification").attr("type","mex").attr("id","restriction-fixture").attr("from","s.whatsapp.net")
+                            .children(vec![Node::new("update").attr("op_name","NotificationUserReachoutTimelockUpdate")
+                                .bytes(serde_json::to_vec(&serde_json::json!({"data":{"xwa2_notify_account_reachout_timelock":{"is_active":gate!="cleared","time_enforcement_ends":if gate=="active" {"20000000000"} else {"1"}}}})).unwrap())]);
+                        super::super::notifications::record_reachout_timelock(&db, &update)
+                            .unwrap();
+                    }
+                    if producer != "group-create" {
+                        let until = match gate {
+                            "active" => i64::MAX,
+                            "malformed" => -1,
+                            _ => 1,
+                        };
+                        db.write(|tx| {
+                            tx.put_json(
+                                Table::Checkpoints,
+                                b"app-state-server-backoff-until",
+                                1,
+                                &Timestamp(until),
+                            )
+                        })
+                        .unwrap();
+                    }
+                }
+                let before = db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap();
+                let head = db.journal_head().unwrap();
+                let admitted = producer == "unrelated"
+                    || gate == "none"
+                    || gate == "cleared"
+                    || (producer != "group-create" && gate == "expired");
+                let prepared = queued.prepare();
+                assert_eq!(prepared.is_some(), admitted, "{producer}/{gate}");
+                if let Some((_node, written)) = prepared {
+                    written.send(Ok(())).unwrap();
+                }
+                assert_eq!(task.await.unwrap().is_ok(), admitted);
+                assert!(writes.recv().await.is_none());
+                assert_eq!(
+                    db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap(),
+                    before
+                );
+                assert_eq!(db.journal_head().unwrap(), head);
+                drop(db);
+                let reopened = ProtocolStore::open(OpenOptions {
+                    path: dir.path().join("p.redb"),
+                    account_id: AccountId::new("a").unwrap(),
+                    key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([7; 32]))),
+                    create: false,
+                })
+                .unwrap();
+                assert_eq!(
+                    reopened
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    before
+                );
+                assert_eq!(reopened.journal_head().unwrap(), head);
+            }
+        }
     }
 
     #[tokio::test(start_paused = true)]

@@ -185,8 +185,14 @@ pub fn record_reachout_timelock(
 pub(super) fn recorded_active_reachout_timelock(
     store: &ProtocolStore,
 ) -> Result<Option<ReachoutTimelock>> {
-    let lock: Option<ReachoutTimelock> =
-        store.read(|tx| tx.get_json(Table::Checkpoints, REACHOUT_TIMELOCK, 1))?;
+    store.read(recorded_active_reachout_timelock_read_in)
+}
+
+/// The same recorded restriction in an existing read snapshot (writer admission).
+pub(super) fn recorded_active_reachout_timelock_read_in(
+    tx: &crate::store::ReadTx<'_>,
+) -> Result<Option<ReachoutTimelock>> {
+    let lock: Option<ReachoutTimelock> = tx.get_json(Table::Checkpoints, REACHOUT_TIMELOCK, 1)?;
     Ok(lock.filter(|l| l.active))
 }
 

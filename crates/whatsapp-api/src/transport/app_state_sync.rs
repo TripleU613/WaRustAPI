@@ -815,11 +815,22 @@ fn ensure_no_pending_collection_in(
     }
 }
 
+pub(crate) fn server_waiting_read_in(tx: &crate::store::ReadTx<'_>) -> Result<bool> {
+    let until = tx.get_json(crate::store::Table::Checkpoints, SERVER_BACKOFF, 1)?;
+    Ok(active_backoff_until(until)?.is_some())
+}
+
 fn active_backoff_in(
     tx: &crate::store::WriteTx<'_>,
 ) -> Result<Option<crate::model::time::Timestamp>> {
     let until: Option<crate::model::time::Timestamp> =
         tx.get_json(crate::store::Table::Checkpoints, SERVER_BACKOFF, 1)?;
+    active_backoff_until(until)
+}
+
+fn active_backoff_until(
+    until: Option<crate::model::time::Timestamp>,
+) -> Result<Option<crate::model::time::Timestamp>> {
     if until.is_some_and(|v| v.0 < 0) {
         return Err(invalid_patch("invalid stored app-state backoff"));
     }

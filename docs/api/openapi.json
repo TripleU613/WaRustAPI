@@ -17898,5 +17898,12 @@
   "x-live": false,
   "description": "Normal actor action callbacks retain the written reservation snapshot and require exact current-row equality inside reply settlement before parsing, sequence allocation or feature application. Duplicate active IDs refuse without replacing owners/deadlines; missing/mismatched ID/timer registration refuses. Claim, expiry and disconnect drop snapshots without replay. Public low-level reconciliation still requires caller authority; existing timer-claim semantics stay unchanged. No new sender policy or live verification.",
   "evidence": "docs/protocol/action-settlement-ordering.md#action-callbacks-retain-the-written-reservation-2026-11-06"
+},
+  "x-action-late-restriction-and-backoff-admission": {
+  "x-cli": false,
+  "x-transport": true,
+  "x-live": false,
+  "description": "Normal action writer admission rechecks recorded active reach-out restriction for group-create and stored explicit backoff for app-state fetch/patch/held-fetch, in the same read snapshot as row ownership. Active/malformed waits refuse without changing intent, journal or wait; unrelated kinds stay independent. Expired app-state deadlines and explicit inactive reach-out state preserve existing admission. No lock across socket I/O, universal restriction policy, replay or live verification.",
+  "evidence": "docs/protocol/action-settlement-ordering.md#writer-rechecks-recorded-restrictions-and-explicit-backoff-2026-11-06"
 }
 }

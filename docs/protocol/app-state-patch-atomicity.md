@@ -187,3 +187,11 @@ Conflict spelling tests use independent literal authenticated patch vectors and
 check retained actions. These are offline source tests, not observed server
 spellings or a claim about Android Unicode-version differences. No live traffic
 or new APK evidence was introduced.
+
+## Late writer admission recheck (2026-11-06)
+
+Normal actor fetch/patch/held-fetch writes now re-read the same stored backoff
+policy at writer admission, covering a deadline recorded while a reserved action
+waits in the queue. Malformed stored waits refuse; valid expiry and unrelated
+requests retain existing behavior. The gate does not reset Sent reservations or
+extend/erase waits. [Queue/reopen controls and limits](action-settlement-ordering.md#writer-rechecks-recorded-restrictions-and-explicit-backoff-2026-11-06).
