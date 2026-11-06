@@ -370,6 +370,8 @@ mod tests {
         CancelRead,
         PartialWrite,
         StreamEnd,
+        PackedFailure { direct: bool, negative: bool },
+        Truncated { direct: bool, compressed: bool },
         InvalidCompression { direct: bool, checksum: bool },
         EmptyRecord { direct: bool, timeout: bool },
         InvalidFrame { fragmented: bool, direct: bool },
@@ -488,7 +490,22 @@ mod tests {
                 6,
             ));
             *corrupt.last_mut().unwrap() ^= 1;
+            let mut truncated_compressed = vec![2];
+            truncated_compressed.extend(miniz_oxide::deflate::compress_to_vec_zlib(
+                &[0xF8, 2, 25, 0xFC, 2, b'a'],
+                6,
+            ));
             let reply: &[u8] = match record_case {
+                RecordCase::PackedFailure { negative: true, .. } => &[0, 0xF8, 1, 0xFF, 0x80],
+                RecordCase::PackedFailure {
+                    negative: false, ..
+                } => &[0, 0xF8, 1, 0xFF, 1, 0xD0],
+                RecordCase::Truncated {
+                    compressed: true, ..
+                } => &truncated_compressed,
+                RecordCase::Truncated {
+                    compressed: false, ..
+                } => &[0, 0xF8, 2, 25, 0xFC, 2, b'a'],
                 RecordCase::InvalidCompression { checksum: true, .. } => &corrupt,
                 RecordCase::InvalidCompression {
                     checksum: false, ..
@@ -593,7 +610,9 @@ mod tests {
                 assert_eq!(node.description, "iq");
                 assert!(channel.read().await.unwrap().is_none());
             } else if let RecordCase::InvalidFrame { direct, .. }
-            | RecordCase::InvalidCompression { direct, .. } = record_case
+            | RecordCase::InvalidCompression { direct, .. }
+            | RecordCase::Truncated { direct, .. }
+            | RecordCase::PackedFailure { direct, .. } = record_case
             {
                 channel.write(b"local record fixture").await.unwrap();
                 if direct {
@@ -608,7 +627,12 @@ mod tests {
                     assert!(matches!(
                         frame,
                         super::super::messaging::FrameRead::Undecodable {
-                            class: "header_only_frame" | "fragmented_frame" | "compression",
+                            class: "header_only_frame"
+                                | "fragmented_frame"
+                                | "compression"
+                                | "unexpected_eof"
+                                | "invalid_packed_digit"
+                                | "invalid_packed_length",
                             ..
                         }
                     ));
@@ -738,6 +762,24 @@ mod tests {
                 },
             )
             .await;
+        }
+    }
+
+    #[tokio::test]
+    async fn packed_failure_consumes_both_encrypted_receive_apis() {
+        for negative in [false, true] {
+            for direct in [false, true] {
+                exchange(false, false, RecordCase::PackedFailure { direct, negative }).await;
+            }
+        }
+    }
+
+    #[tokio::test]
+    async fn truncated_node_consumes_both_encrypted_receive_apis() {
+        for compressed in [false, true] {
+            for direct in [false, true] {
+                exchange(false, false, RecordCase::Truncated { direct, compressed }).await;
+            }
         }
     }
 

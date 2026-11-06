@@ -73,6 +73,9 @@ pub enum CodecError {
         /// Offset.
         offset: usize,
     },
+    /// The packed header would produce a negative digit count.
+    #[error("negative packed digit count")]
+    InvalidPackedLength,
     /// A string or bytes value exceeded the configured bound.
     #[error("{what} length {len} exceeds limit {limit}")]
     LengthLimit {
@@ -140,6 +143,7 @@ impl CodecError {
             Self::UnknownTag { .. } => "unknown_tag",
             Self::UnknownToken { .. } => "unknown_token",
             Self::InvalidPackedDigit { .. } => "invalid_packed_digit",
+            Self::InvalidPackedLength => "invalid_packed_length",
             Self::LengthLimit { .. } => "length_limit",
             Self::DepthLimit { .. } => "depth_limit",
             Self::InvalidNode { .. } => "invalid_node",

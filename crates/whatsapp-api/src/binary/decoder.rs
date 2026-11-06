@@ -158,11 +158,13 @@ impl<'a> Decoder<'a> {
         // final low nibble is padding, not a digit to validate then discard.
         // Evidence: docs/protocol/apk/2.26.43.72-packed-nibble/README.md.
         if odd && pairs == 0 {
-            return Err(CodecError::InvalidNode {
-                offset: self.pos - 1,
-                reason: "negative packed digit count",
-            });
+            return Err(CodecError::InvalidPackedLength);
         }
+        // APK 43.72 123.A07 calls A06 to read the entire declared packed
+        // buffer before interpreting digits. A bad prefix must not mask a
+        // missing suffix as a recoverable digit error.
+        // Evidence: docs/protocol/apk/2.26.43.72-truncated-node/README.md.
+        self.need(pairs)?;
         let mut out = String::with_capacity(pairs * 2);
         for index in 0..pairs {
             let offset = self.pos;

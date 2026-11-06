@@ -18363,5 +18363,19 @@
     ],
     "description": "Pinned123.A08 compressed reads/drain precede stanza return;1s2.run IOException path invokes onError and returns. Compression codec class now maps toPeerProtocol, consumes receive epoch, captures before publication where a store exists, and stops actor/waits/CLI before following ACK/ping. Low-level channels reject later reads/writes. Existing local inflation cap uses the same terminal policy; no native size limit claimed. Failing-before encrypted invalid/checksum fixtures, actor ping and real uncertain receipt reopen/no-replay controls retained. No native global reconnect emulation, NACK, settlement, replay authority or live operation.",
     "evidence": "docs/protocol/frame-admission.md#compression-failure-consumes-the-receive-epoch-2026-11-06"
+  },
+  "x-truncated-node-admission": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [
+      "whatsapp_api::binary::CodecError",
+      "whatsapp_api::binary::Decoder",
+      "whatsapp_api::transport::messaging::terminal_frame_error",
+      "whatsapp_api::transport::messaging::read_node",
+      "whatsapp_api::transport::messaging::read_frame"
+    ],
+    "description": "Pinned123.A07 reads all declared pairs throughA06 before digit validation; Decoder now checks packed buffer completeness first. UnexpectedEof class maps to terminalPeerProtocol: normal reader consumes epoch and captures before publication, actor/waits/CLI stop before later ACK/ping, low-level channels reject later I/O. Raw empty authenticated records still skip before node decoding. Failing-before literal/encrypted controls, compressed/uncompressed captures and durable receipt uncertainty/reopen/no-replay tested offline. One local truncation refusal policy, not identical native exception/backoff parity for every format. No new send, NACK, retry, settlement, replay permission or live operation. Complete nativeA07 bad-nibble/negative-count LIL also terminates. invalid_packed_digit and new publicCodecError::InvalidPackedLength/classinvalid_packed_length map toPeerProtocol; genericinvalid_node stays distinct. Bad-digit encrypted fixture failed before correction; both packed cases cover encrypted APIs, actor uncertainty/reopen/no-replay and compressed/uncompressed captured waits. Existing saved diagnostics are not relabeled or replayed.",
+    "evidence": "docs/protocol/frame-admission.md#truncated-nodes-consume-the-receive-epoch-2026-11-06"
   }
 }

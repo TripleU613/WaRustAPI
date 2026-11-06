@@ -153,6 +153,59 @@ raw bytes and an unchanged synthetic uncertain checkpoint, leaving the following
 matching reply unread. Positive compression and local output-bound codec controls
 remain in the workspace suite. No live account operation was performed.
 
+## Truncated nodes consume the receive epoch (2026-11-06)
+
+**Confirmed selected static / implemented offline:** native123.A06 reads every
+declared buffer byte and throws IOException on early EOF.123.A07 invokes it for
+all packed pairs BEFORE validating digits, so invalid prefixes do not mask
+missing suffixes. NativeA00/A0A separately reject missing list/string tokens
+with LIL; initial node read failures leave1s2.run through outer error handlers.
+[Complete methods, exact catch routing and remaining native format gaps](apk/2.26.43.72-truncated-node/README.md).
+
+Rust now checks the full packed byte count before interpreting any digit. The
+existing CodecError::UnexpectedEof/classunexpected_eof maps through
+terminal_frame_error to PeerProtocol(truncated stanza frame). Normal reader
+coordination consumes the epoch and captures before publication, actor/captured
+waits/CLI windows stop before following nodes, and both low-level stanza APIs
+consume their channels. Pure offline decode still reports the codec error;
+authenticated zero-length plaintext records remain skipped before this decoder.
+A successfully inflated but truncated node now stops too, rather than being
+mistaken for an ordinary undecodable record that permits continued routing.
+
+Complete invalid packed values are also terminal: nativeA07's bad-nibble and
+negative-count LIL are initial parse failures. invalid_packed_digit and the new
+public CodecError::InvalidPackedLength/classinvalid_packed_length now map to
+PeerProtocol with a fixed diagnostic. Giving the negative-count case its own
+class avoids treating the entire invalid_node family as terminal. The packed
+channel fixture failed before correction on a complete bad digit; it now tests
+bad digits and negative counts through both encrypted receive APIs. Actor
+uncertain-receipt/no-following-ping and compressed/uncompressed captured-wait
+matrices include both classes. Colon12, full hex alphabet and ignored odd
+padding remain valid. Saved old invalid_node captures are not reclassified or
+replayed; only fresh decoding receives the new negative-count class.
+
+This applies one local terminal policy to Rust's truncation class. The selected
+native buffer/token failure families are confirmed; exact native exception
+numbers, every reference/native JID format, negative array/count behavior and
+all malformed-input routing are not claimed equivalent. Other nonterminal
+codec classes retain their current capture behavior. No new NACK, retry,
+settlement, callback completion, durable deletion or replay permission is added.
+
+Literal fixtures cover missing list/count/description, raw strings, attribute
+value, binary body, child node and even/odd packed suffixes. The packed invalid
+prefix fixture failed before correction (invalid_packed_digit instead of
+unexpected_eof); complete invalid and valid packed controls keep their results.
+The certificate-verified local encrypted fixture also failed before correction
+because later writes were still possible. It now covers compressed/uncompressed
+truncated binary bodies through BOTH read_node and read_frame, rejecting later
+reads/writes. Actor fixtures cover capture/stop before a following ping and a
+real durable in-flight receipt's matching ACK: the receipt remains uncertain
+through reopen and no replay occurs on the next activation. Actor inputs use
+the existing fake link, not a new full socket integration. Captured-wait tests
+retain exact compressed/uncompressed raw frames and an unchanged synthetic
+uncertain checkpoint, leaving the next matching reply unread. No live account
+operation or restriction-prevention guarantee follows from these controls.
+
 ## Reproduce the evidence
 
 The linked checked bundles already retain complete methods, APK identity,

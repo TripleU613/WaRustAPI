@@ -3914,6 +3914,9 @@ mod tests {
             (fragmented, "fragmented_frame"),
             (vec![0], "header_only_frame"),
             (vec![2, 0], "compression"),
+            (vec![0, 0xF8, 2, 25, 0xFC, 2, b'a'], "unexpected_eof"),
+            (vec![0, 0xF8, 1, 0xFF, 1, 0xD0], "invalid_packed_digit"),
+            (vec![0, 0xF8, 1, 0xFF, 0x80], "invalid_packed_length"),
         ] {
             let dir = tempfile::tempdir().unwrap();
             let store = open(&dir.path().join("frame-admission.redb"));
@@ -3952,6 +3955,9 @@ mod tests {
         for (frame, class) in [
             (vec![0, 0xF8, 1, 2], "stream_end"),
             (vec![2, 0], "compression"),
+            (vec![0, 0xF8, 2, 25, 0xFC, 2, b'a'], "unexpected_eof"),
+            (vec![0, 0xF8, 1, 0xFF, 1, 0xD0], "invalid_packed_digit"),
+            (vec![0, 0xF8, 1, 0xFF, 0x80], "invalid_packed_length"),
         ] {
             let dir = tempfile::tempdir().unwrap();
             let path = dir.path().join("stream-end.redb");
@@ -3993,7 +3999,13 @@ mod tests {
                 .unwrap();
             match (class, result) {
                 ("stream_end", Err(Error::Transport(TransportError::PeerClosed))) => {}
-                ("compression", Err(Error::Transport(TransportError::PeerProtocol(_)))) => {}
+                (
+                    "compression"
+                    | "unexpected_eof"
+                    | "invalid_packed_digit"
+                    | "invalid_packed_length",
+                    Err(Error::Transport(TransportError::PeerProtocol(_))),
+                ) => {}
                 (_, other) => panic!("unexpected terminal outcome: {other:?}"),
             }
             assert!(matches!(

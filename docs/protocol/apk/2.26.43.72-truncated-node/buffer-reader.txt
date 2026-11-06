@@ -1,0 +1,23 @@
+
+# class: LX/123;
+# extends: Ljava/lang/Object;
+
+.method public A06(VLL)  # .registers 6
+    # full signature: LX/123;->A06(Ljava/io/InputStream;[B)V
+    0000..0002  array-length  v3, v5
+    0002..0004  const/4  v2, #0x0
+    0004..0008  if-ge  v2, v3, +0x15
+    0008..000c  sub-int  v0, v3, v2
+    000c..0012  invoke-virtual  {v4, v5, v2, v0}, Ljava/io/InputStream;->read([BII)I
+    0012..0014  move-result  v1
+    0014..0016  const/4  v0, #0xff (-1)
+    0016..001a  if-eq  v1, v0, +0x4
+    001a..001c  add-int/2addr  v2, v1
+    001c..001e  goto  -0xc
+    001e..0022  const-string  v1, "ran out of bytes while reading into buffer"
+    0022..0026  new-instance  v0, Ljava/io/IOException;
+    0026..002c  invoke-direct  {v0, v1}, Ljava/io/IOException;-><init>(Ljava/lang/String;)V
+    002c..002e  throw  v0
+    002e..0030  return-void
+    # exception table: 0 try range(s)
+.end method

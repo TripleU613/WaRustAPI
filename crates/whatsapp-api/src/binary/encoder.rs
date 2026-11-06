@@ -259,6 +259,47 @@ mod tests {
     }
 
     #[test]
+    fn apk_truncation_precedes_packed_digit_validation() {
+        let limits = Limits::default();
+        for bytes in [
+            vec![],
+            vec![0xF8],
+            vec![0xF8, 1],
+            vec![0xF8, 1, 0xFC, 2, b'a'],
+            vec![0xF8, 3, 25, 0xFC, 1, b'k'],
+            vec![0xF8, 2, 25, 0xFC, 2, b'a'],
+            vec![0xF8, 2, 25, 0xF8, 1, 0xF8],
+            // Native123.A07 calls A06 for ALL pairs before unpacking digits.
+            vec![0xF8, 1, 0xFF, 2, 0xD0],
+            vec![0xF8, 1, 0xFF, 0x82, 0xD0],
+        ] {
+            assert_eq!(
+                Decoder::new(&bytes, dict(), &limits)
+                    .decode_node()
+                    .unwrap_err()
+                    .class(),
+                "unexpected_eof",
+                "{bytes:?}"
+            );
+        }
+        // Complete packed input retains its actual digit result.
+        assert_eq!(
+            Decoder::new(&[0xF8, 1, 0xFF, 1, 0xD0], dict(), &limits)
+                .decode_node()
+                .unwrap_err()
+                .class(),
+            "invalid_packed_digit"
+        );
+        assert_eq!(
+            Decoder::new(&[0xF8, 1, 0xFB, 1, 0xAB], dict(), &limits)
+                .decode_node()
+                .unwrap()
+                .description,
+            "AB"
+        );
+    }
+
+    #[test]
     fn apk_frame_admission_rejects_fragment_and_header_only_before_nodes() {
         let limits = Limits::default();
         for flag in [0, 1, 2, 3, 255] {
@@ -429,7 +470,10 @@ mod tests {
                 Err(CodecError::InvalidPackedDigit { value, .. }) if value == digit
             ));
         }
-        assert!(decode(0xFF, 0x80, &[]).is_err());
+        assert!(matches!(
+            decode(0xFF, 0x80, &[]),
+            Err(CodecError::InvalidPackedLength)
+        ));
         assert_eq!(
             decode(0xFB, 1, &[0xCF])
                 .unwrap()

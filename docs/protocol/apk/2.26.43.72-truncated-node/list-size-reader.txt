@@ -1,0 +1,35 @@
+
+# class: LX/123;
+# extends: Ljava/lang/Object;
+
+.method private A00(IIL)  # .registers 6
+    # full signature: LX/123;->A00(ILjava/io/InputStream;)I
+    0000..0002  const/4  v0, #0x0
+    0002..0006  if-eqz  v4, +0x15
+    0006..000a  const/16  v0, #0xf8
+    000a..000e  if-eq  v4, v0, +0x2a
+    000e..0012  const/16  v0, #0xf9
+    0012..0016  if-ne  v4, v0, +0xe
+    0016..001c  invoke-virtual  {v5}, Ljava/io/InputStream;->read()I
+    001c..001e  move-result  v0
+    001e..0024  invoke-virtual  {v5}, Ljava/io/InputStream;->read()I
+    0024..0026  move-result  v1
+    0026..002a  shl-int/lit8  v0, v0, #0x8
+    002a..002c  add-int/2addr  v0, v1
+    002c..002e  return  v0
+    002e..0032  const-string  v1, "invalid list size in readListSize: token "
+    0032..0036  new-instance  v0, Ljava/lang/StringBuilder;
+    0036..003c  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    003c..0042  invoke-virtual  {v0, v4}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0042..0048  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0048..004a  move-result-object  v2
+    004a..0050  invoke-virtual  {v3}, LX/123;->A09()Ljava/lang/String;
+    0050..0052  move-result-object  v1
+    0052..0056  new-instance  v0, LX/LIL;
+    0056..005c  invoke-direct  {v0, v2, v1}, LX/LIL;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    005c..005e  throw  v0
+    005e..0064  invoke-virtual  {v5}, Ljava/io/InputStream;->read()I
+    0064..0066  move-result  v0
+    0066..0068  return  v0
+    # exception table: 0 try range(s)
+.end method

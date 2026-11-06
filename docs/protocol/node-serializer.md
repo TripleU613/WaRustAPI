@@ -177,3 +177,18 @@ write races, nested control semantics and full protocol coverage. This closes
 the specifically identified coordinated root-end gap, not the overall goal.
 
 - **2026-11-06 frame-envelope follow-through:** header-only andmask0x01 fragmented records now capture and consume the epoch before semantic node routing. [Pinned admission checks, shared terminal classifier and regressions](frame-admission.md). Empty authenticated-record skipping remains a separate known difference.
+
+## Packed buffer truncation precedes digit errors (2026-11-06)
+
+**Confirmed pinned static / implemented offline:**123.A07 calls A06 for the
+entire declared packed buffer before validating nibbles. Decoder now checks
+all pair bytes first; a truncated invalid prefix becomes unexpected_eof and
+consumes a live stanza receive epoch. Complete invalid digits retain their
+error and odd padding retains its prior behavior. [Sources, failing-before
+literal/encrypted controls and receive-policy scope](frame-admission.md#truncated-nodes-consume-the-receive-epoch-2026-11-06).
+
+The same nativeA07 bad-nibble and negative-count LIL branches are now terminal
+at receive admission. Complete bad digits keep InvalidPackedDigit; a negative
+count now has public InvalidPackedLength/classinvalid_packed_length, replacing
+the generic InvalidNode classification for fresh inputs. This does not relabel
+or replay historical saved diagnostics. See the same linked failure matrix.

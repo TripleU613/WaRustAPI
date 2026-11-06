@@ -489,6 +489,13 @@ pub async fn read_node<S: AsyncRead + AsyncWrite + Unpin>(
 pub fn terminal_frame_error(class: &str) -> Option<TransportError> {
     match class {
         "stream_end" => Some(TransportError::PeerClosed),
+        // APK 43.72 123.A06 throws on truncated buffers; A00/A0A refuse
+        // missing list/string tokens. These failures leave 1s2.run.
+        "unexpected_eof" => Some(TransportError::PeerProtocol("truncated stanza frame")),
+        // Complete123.A07 bad-nibble/negative-count LIL also leaves the reader.
+        "invalid_packed_digit" | "invalid_packed_length" => {
+            Some(TransportError::PeerProtocol("invalid packed stanza value"))
+        }
         // APK 43.72 123.A08 inflation I/O escapes to 1s2.run's terminal
         // error callback. The existing local inflation cap also fails closed.
         // See docs/protocol/frame-admission.md (compression failure section).
@@ -509,7 +516,8 @@ pub enum FrameRead {
     Node(Node),
     /// A frame that decrypted but is not an ordinary node; for
     /// [`super::inbox::preserve_undecodable`]. Known terminal classes consume
-    /// the channel: stream-end, header-only, fragmented and compression failures.
+    /// the channel: stream-end, header-only, fragmented, compression, truncation
+    /// and invalid packed-value failures.
     Undecodable {
         /// The decrypted frame.
         frame: Vec<u8>,
@@ -3374,6 +3382,12 @@ mod captured_wait_tests {
             ("header_only_frame", false),
             ("header_only_frame", true),
             ("compression", true),
+            ("unexpected_eof", false),
+            ("unexpected_eof", true),
+            ("invalid_packed_digit", false),
+            ("invalid_packed_digit", true),
+            ("invalid_packed_length", false),
+            ("invalid_packed_length", true),
         ] {
             let dir = tempfile::tempdir().unwrap();
             let path = dir.path().join("stream-end.redb");
@@ -3401,7 +3415,23 @@ mod captured_wait_tests {
             } else {
                 vec![0, 0xF8, 1, 2]
             };
-            if kind == "compression" {
+            if matches!(
+                kind,
+                "unexpected_eof" | "invalid_packed_digit" | "invalid_packed_length"
+            ) {
+                let body: &[u8] = match kind {
+                    "unexpected_eof" => &[0xF8, 2, 25, 0xFC, 2, b'a'],
+                    "invalid_packed_digit" => &[0xF8, 1, 0xFF, 1, 0xD0],
+                    _ => &[0xF8, 1, 0xFF, 0x80],
+                };
+                frame = if compressed {
+                    let mut bytes = vec![2];
+                    bytes.extend(miniz_oxide::deflate::compress_to_vec_zlib(body, 6));
+                    bytes
+                } else {
+                    [&[0][..], body].concat()
+                };
+            } else if kind == "compression" {
                 frame = vec![2, 0];
             } else if kind == "header_only_frame" {
                 frame = vec![if compressed { 2 } else { 0 }];
