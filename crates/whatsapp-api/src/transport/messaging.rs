@@ -1225,6 +1225,14 @@ pub(crate) fn ack_user_text(text: &str) -> Option<AckUserText<'_>> {
     Some(AckUserText::Device(user))
 }
 
+// APK43.72 Dv5.<init>:18..32 ASCII hex characters; type10 is
+// accepted by call sender predicate, but the class is not0DY/UserJid.
+pub(crate) fn ack_call_text_valid(text: &str) -> Option<bool> {
+    let (user, domain) = text.rsplit_once('@')?;
+    (domain == "call")
+        .then(|| (18..=32).contains(&user.len()) && user.bytes().all(|b| b.is_ascii_hexdigit()))
+}
+
 // Pinned1bc/0nW.A02 group,2U8 broadcast constructors and0De.A03 newsletter factory.
 // Newsletter's error text says number, but its actual predicate only checks
 // Java-trimmed nonempty/nonzero-leading text; original user is preserved.
@@ -1237,6 +1245,8 @@ pub(crate) fn ack_non_user_text_valid(text: &str) -> Option<bool> {
             && value.bytes().all(|b| b.is_ascii_digit())
     };
     match domain {
+        // APK43.72 7Kr.<init> ->0Cf.A0z/A0O ->String.indexOf("-").
+        "temp" => Some(user.contains('-')),
         "broadcast" => Some(matches!(user, "status" | "location") || decimal_nonzero(user, 20)),
         "g.us" => Some(
             decimal_nonzero(user, 20)
@@ -1296,6 +1306,7 @@ fn call_ack_sender_known_null(node: &Node) -> bool {
         || !recognized(domain)
         || matches!(ack_user_text(text), Some(AckUserText::Null))
         || ack_non_user_text_valid(text) == Some(false)
+        || ack_call_text_valid(text) == Some(false)
 }
 
 /// Validate ACK required-ID, numeric and supported call-field admission. Stateful receivers must first capture the Node.
@@ -1332,7 +1343,7 @@ pub fn validate_received_ack(node: &Node) -> crate::Result<()> {
             // DCF/Dv7/J9O types7/8/9 are nonnull but excluded by0Dn.A0R.
             || matches!(node.get_attr("from").and_then(|v| v.as_text()).and_then(ack_user_text),
                 Some(AckUserText::User("0") | AckUserText::ServiceUser(_) | AckUserText::NonUser(_)))
-            // Text constructor success establishes excluded types1/21/3/5/6 even if Rust's
+            // Text constructor success establishes excluded types1/21/3/5/6/2 even if Rust's
             // generic JID parser cannot represent the native newsletter user.
             || node.get_attr("from").and_then(|v| v.as_text()).and_then(ack_non_user_text_valid) == Some(true)
             // EW4.<init> -> 0Dn.A0R rejects known group/newsletter types1/21.
@@ -3352,6 +3363,42 @@ mod captured_wait_tests {
                 assert!(validate_received_ack(&ack.clone().attr("error", "459")).is_ok());
                 assert!(validate_received_ack(&ack.attr("error", "bad")).is_err());
             }
+        }
+    }
+
+    #[test]
+    fn call_and_temp_jid_constructors_have_distinct_ack_sender_types() {
+        for (text, nonnull, admitted) in [
+            ("0123456789abcdefAB@call", true, true),
+            ("0123456789abcdef0123456789ABCDEF@call", true, true),
+            ("0123456789abcdefA@call", false, false),
+            ("0123456789abcdef0123456789ABCDEF0@call", false, false),
+            ("0123456789abcdefAG@call", false, false),
+            ("０123456789abcdefAB@call", false, false),
+            ("0123456789abcdef:0@call", false, false),
+            ("-@temp", true, false),
+            ("a-b@temp", true, false),
+            ("a-@temp", true, false),
+            ("-a@temp", true, false),
+            ("a.b-c@temp", true, false),
+            ("abc@temp", false, false),
+        ] {
+            let ack = Node::new("ack")
+                .attr("class", "call")
+                .attr("id", "fixture")
+                .attr("type", "offer")
+                .attr("from", text);
+            assert_eq!(call_ack_sender_known_null(&ack), !nonnull, "{text}");
+            assert_eq!(
+                validate_received_ack(&ack).is_ok(),
+                !nonnull || admitted,
+                "{text}"
+            );
+            let mut no_type = ack.clone();
+            no_type.attributes.retain(|a| a.name != "type");
+            assert_eq!(validate_received_ack(&no_type).is_ok(), !nonnull, "{text}");
+            assert!(validate_received_ack(&no_type.clone().attr("error", "459")).is_ok());
+            assert!(validate_received_ack(&no_type.attr("error", "bad")).is_err());
         }
     }
 

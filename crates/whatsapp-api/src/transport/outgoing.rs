@@ -1268,17 +1268,16 @@ fn message_ack_address(node: &Node, name: &str) -> Option<crate::model::jid::Jid
             return None;
         }
         let (user, domain) = text.rsplit_once('@')?;
-        return crate::model::jid::Jid::new(
-            user,
-            if domain == "g.us" {
-                Server::Group
-            } else if domain == "broadcast" {
-                Server::Broadcast
-            } else {
-                Server::Newsletter
-            },
-        )
-        .ok();
+        return crate::model::jid::Jid::new(user, Server::parse(domain).ok()?).ok();
+    }
+    if node
+        .get_attr(name)
+        .and_then(|v| v.as_text())
+        .and_then(super::messaging::ack_call_text_valid)
+        .is_some()
+    {
+        // Dv5 extends Jid directly: neither UserJid recipient nor0DY chat.
+        return None;
     }
     if let Some(parsed) = node
         .get_attr(name)
@@ -3063,9 +3062,26 @@ mod tests {
         assert_eq!(status.facts.len(), 2);
     }
     #[test]
+    fn native_call_jid_is_not_a_selected_message_chat() {
+        for text in ["0123456789abcdefAB@call", "bad@call"] {
+            assert!(message_ack_chat(&Node::new("ack").attr("from", text)).is_none());
+            let ack = Node::new("ack")
+                .attr("from", "15555550100@s.whatsapp.net")
+                .attr("recipient", text);
+            assert_eq!(
+                message_ack_chat(&ack),
+                Some(Jid::parse("15555550100@s.whatsapp.net").unwrap())
+            );
+        }
+    }
+
+    #[test]
     fn non_user_ack_text_cast_and_original_user_are_preserved() {
         for (text, valid) in [
             ("1@g.us", true),
+            ("a-b@temp", true),
+            ("a.b-c@temp", true),
+            ("abc@temp", false),
             ("1@broadcast", true),
             ("status@broadcast", true),
             ("location@broadcast", true),

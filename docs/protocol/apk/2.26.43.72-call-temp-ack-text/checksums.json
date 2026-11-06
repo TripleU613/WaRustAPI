@@ -1,0 +1,26 @@
+{
+  "README.md": {
+    "bytes": 3114,
+    "sha256": "99d4611fe721d7aac5269a5058e6a11d090b700f5670517b8ec0445331fd422f"
+  },
+  "call-class.txt": {
+    "bytes": 3005,
+    "sha256": "32eb7425db6387a4a8a9950b8773f8b302b0bb728ca9284579e4eec8149dc974"
+  },
+  "chat-cast.txt": {
+    "bytes": 435,
+    "sha256": "ca55b2c4380168a834825ec5a91933a3b8d676a91962e2889050fdcab43c1432"
+  },
+  "hyphen-contains.txt": {
+    "bytes": 1216,
+    "sha256": "416b9356e64ada923b2fb3ef2de2edb32de74099fbae1e02fbf2bcff8da49f59"
+  },
+  "string-index.txt": {
+    "bytes": 1173,
+    "sha256": "5c78cd466df63317608dbdbc9fbf4fbedfb72cd76c0c5e5a110cbd240e9fb21e"
+  },
+  "temp-class.txt": {
+    "bytes": 3614,
+    "sha256": "f3c1391add80fbf4344d394c27543c559c5fd9514f8abd35c9128f34ee8ec019"
+  }
+}

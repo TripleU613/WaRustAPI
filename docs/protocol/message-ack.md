@@ -823,3 +823,28 @@ numeric/status/location from and nonUser recipient fallback. The actual actor
 capture-and-continue test now includes invalid broadcast senders. Binary typed
 JIDs, generic receipt routes, full cache/recovery and server policy remain open.
 No live traffic or replay authority.
+
+
+## Call and temporary ACK JID text keep distinct native types (2026-11-06)
+
+**Confirmed selected pinned static / Rust correction.**
+[CompleteDv5/7Kr classes, hyphen helper chain and0Di cast](apk/2.26.43.72-call-temp-ack-text/README.md)
+show call users require18..32 ASCII hex characters; temp users only require
+one hyphen anywhere. Both constructors keep the entire user. Invalid text now
+follows known-null call sender handling; valid type10 is accepted by the sender
+predicate, while temp/type2 is excluded.459/global numeric/id precedence stays
+unchanged; payload parsing remains unported.
+
+A validDv5 extends Jid directly and fails the0DY chat cast as well as UserJid
+recipient cast. It now cannot establish a message chat from; as recipient it
+falls back to from.7Kr extendsGroupJid/0DY, so valid selected temp from retains
+original plain user within Rust model limits, while recipient cast fails.
+No invented numeric temp grammar, device suffix normalization or global Jid
+rewrite. Unrepresentable values retain uncertainty.
+
+**Offline regression:** call length17/18/32/33 and lowercase/uppercase/nonhex/
+Unicode/suffix cases, temp hyphen position and absence, call-field ordering,
+459/malformed error, selected-chat cast/fallback and temp dot preservation.
+Actual capture-and-continue actor coverage includes invalid call/temp text.
+Binary typed JIDs, bare/cache aliases, generic receipt routes, full recovery
+and server acceptance remain open. No live operations or replay authority.

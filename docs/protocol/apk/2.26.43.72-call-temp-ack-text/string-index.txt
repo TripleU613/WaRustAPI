@@ -1,0 +1,28 @@
+
+# class: LX/0Cf;
+# extends: LX/0Ce;
+
+.method public A0O(ILLIZ)  # .registers 10
+    # full signature: LX/0Cf;->A0O(Ljava/lang/CharSequence;Ljava/lang/String;IZ)I
+    0000..0002  move-object  v1, v6
+    0002..0004  const/4  v6, #0x0
+    0004..000a  invoke-static  {v1, v6}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000a..000c  const/4  v0, #0x1
+    000c..000e  move-object  v2, v7
+    000e..0014  invoke-static  {v7, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0014..0016  move  v3, v8
+    0016..0018  move  v5, v9
+    0018..001c  if-nez  v9, +0xd
+    001c..0020  instance-of  v0, v1, Ljava/lang/String;
+    0020..0024  if-eqz  v0, +0x9
+    0024..0028  check-cast  v1, Ljava/lang/String;
+    0028..002e  invoke-virtual  {v1, v7, v8}, Ljava/lang/String;->indexOf(Ljava/lang/String;I)I
+    002e..0030  move-result  v0
+    0030..0032  return  v0
+    0032..0038  invoke-interface  {v1}, Ljava/lang/CharSequence;->length()I
+    0038..003a  move-result  v4
+    003a..0040  invoke-static/range  {v1..v6}, LX/0Cf;->A0M(Ljava/lang/CharSequence;Ljava/lang/CharSequence;IIZZ)I
+    0040..0042  move-result  v0
+    0042..0044  return  v0
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,78 @@
+
+# class: LX/Dv5;
+# extends: Lcom/whatsapp/infra/core/jid/Jid;
+
+.method public <clinit>(V)  # .registers 1
+    # full signature: LX/Dv5;-><clinit>()V
+    0000..0004  new-instance  v0, LX/F4y;
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000a..000e  sput-object  v0, LX/Dv5;->CREATOR:Landroid/os/Parcelable$Creator;
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VL)  # .registers 7
+    # full signature: LX/Dv5;-><init>(Ljava/lang/String;)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v6, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-direct  {v5, v6}, Lcom/whatsapp/infra/core/jid/Jid;-><init>(Ljava/lang/String;)V
+    000e..0012  iput-object  v6, v5, LX/Dv5;->A00:Ljava/lang/String;
+    0012..0018  invoke-virtual  {v6}, Ljava/lang/String;->length()I
+    0018..001a  move-result  v4
+    001a..001e  const/16  v0, #0x12
+    001e..0022  if-lt  v4, v0, +0x26
+    0022..0026  const/16  v0, #0x20
+    0026..002a  if-gt  v4, v0, +0x22
+    002a..002c  const/4  v3, #0x0
+    002c..0032  invoke-virtual  {v6, v3}, Ljava/lang/String;->charAt(I)C
+    0032..0034  move-result  v2
+    0034..0038  const/16  v0, #0x30
+    0038..003c  if-gt  v0, v2, +0x19
+    003c..0040  const/16  v0, #0x3a
+    0040..0044  if-lt  v2, v0, +0x10
+    0044..0048  const/16  v1, #0x61
+    0048..004c  const/16  v0, #0x67
+    004c..0050  if-le  v1, v2, +0x8
+    0050..0054  const/16  v0, #0x41
+    0054..0058  if-gt  v0, v2, +0xb
+    0058..005c  const/16  v0, #0x47
+    005c..0060  if-ge  v2, v0, +0x7
+    0060..0064  add-int/lit8  v3, v3, #0x1
+    0064..0068  if-lt  v3, v4, -0x1c
+    0068..006a  return-void
+    006a..006e  new-instance  v0, LX/09P;
+    006e..0074  invoke-direct  {v0, v6}, LX/09P;-><init>(Ljava/lang/String;)V
+    0074..0076  throw  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public describeContents(I)  # .registers 2
+    # full signature: LX/Dv5;->describeContents()I
+    0000..0002  const/4  v0, #0x0
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getServer(L)  # .registers 2
+    # full signature: LX/Dv5;->getServer()Ljava/lang/String;
+    0000..0004  const-string  v0, "call"
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public getType(I)  # .registers 2
+    # full signature: LX/Dv5;->getType()I
+    0000..0004  const/16  v0, #0xa
+    0004..0006  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public writeToParcel(VLI)  # .registers 4
+    # full signature: LX/Dv5;->writeToParcel(Landroid/os/Parcel;I)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  iget-object  v0, v1, LX/Dv5;->A00:Ljava/lang/String;
+    000c..0012  invoke-virtual  {v2, v0}, Landroid/os/Parcel;->writeString(Ljava/lang/String;)V
+    0012..0014  return-void
+    # exception table: 0 try range(s)
+.end method

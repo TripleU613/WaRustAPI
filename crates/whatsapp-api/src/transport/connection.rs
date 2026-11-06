@@ -2389,6 +2389,9 @@ mod tests {
             Some("0@broadcast"),
             Some("letters@broadcast"),
             Some("1:0@broadcast"),
+            Some("short@call"),
+            Some("0123456789abcdefAG@call"),
+            Some("abc@temp"),
         ]
         .into_iter()
         .enumerate()
