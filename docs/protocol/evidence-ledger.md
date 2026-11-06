@@ -8117,3 +8117,14 @@ reconnect/restart or guarantee the deadline stays unexpired across later encodin
 socket I/O or transaction commit. Those operations are not atomic with the clock.
 No APK wire field, configured timeout length, native hold delay, retry authority
 or live account behavior changed. Tests use synthetic stores/injected channels.
+
+### Device-query deadlines fence ingestion and queued writes (2026-11-06)
+
+**Confirmed local fixes:** public direct/cursor ingestion now rejects expired
+claims with transaction rollback; cursor expiry defers users despite fresh
+revisions. Standalone receive continues on classified expiry; grouped sends
+block without adopting lists. Standalone/group device-query envelopes retain
+the original deadline and refuse expired writes before encoding. Existing
+prekey guards remain in the typed envelope. [Boundary regressions, coverage and
+remaining limits](device-query-deadlines.md). No wire/timeout-length change or
+live account operation.

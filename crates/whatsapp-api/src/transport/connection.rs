@@ -215,18 +215,25 @@ fn update_login_identity(
 
 /// One outbound stanza and where to report the socket write outcome.
 type Written = (Node, oneshot::Sender<Result<()>>);
+enum WriteGuard {
+    Prekey(Arc<ProtocolStore>, super::prekeys::PendingUpload),
+    Devices(tokio::time::Instant),
+}
 pub(crate) struct Outbound {
     node: Node,
     reply: oneshot::Sender<Result<()>>,
-    prekey_guard: Option<(Arc<ProtocolStore>, super::prekeys::PendingUpload)>,
+    guard: Option<WriteGuard>,
 }
 impl Outbound {
     // A refusal consumes the queued write and reports its actual local error.
     // The writer ends the epoch without encoding, writing, or releasing a batch.
     fn prepare(self) -> Option<Written> {
-        if let Some((store, pending)) = self.prekey_guard
-            && let Err(error) = pending.check_write_authority(&store)
-        {
+        let admission = match self.guard {
+            Some(WriteGuard::Prekey(store, pending)) => pending.check_write_authority(&store),
+            Some(WriteGuard::Devices(deadline)) => super::devices::check_deadline(deadline),
+            None => Ok(()),
+        };
+        if let Err(error) = admission {
             let _ = self.reply.send(Err(error));
             return None;
         }
@@ -302,20 +309,30 @@ impl NodeLink {
         pending: super::prekeys::PendingUpload,
         node: &Node,
     ) -> Result<()> {
-        self.send_guarded(node, Some((store.clone(), pending)))
+        self.send_guarded(node, Some(WriteGuard::Prekey(store.clone(), pending)))
             .await
     }
-    async fn send_guarded(
+    async fn send_device_query(&self, deadline: tokio::time::Instant, node: &Node) -> Result<()> {
+        self.send_guarded(node, Some(WriteGuard::Devices(deadline)))
+            .await
+    }
+    async fn send_group_step(
         &self,
+        pending: Option<&super::outgoing_group::Pending>,
         node: &Node,
-        prekey_guard: Option<(Arc<ProtocolStore>, super::prekeys::PendingUpload)>,
     ) -> Result<()> {
+        let guard = pending
+            .and_then(|p| p.device_query_deadline())
+            .map(WriteGuard::Devices);
+        self.send_guarded(node, guard).await
+    }
+    async fn send_guarded(&self, node: &Node, guard: Option<WriteGuard>) -> Result<()> {
         let (reply, outcome) = oneshot::channel();
         self.outgoing
             .send(Outbound {
                 node: node.clone(),
                 reply,
-                prekey_guard,
+                guard,
             })
             .await
             .map_err(|_| Error::Transport(super::TransportError::Closed))?;
@@ -644,7 +661,7 @@ pub(crate) async fn drive(
                     if let Some(id) = selected {
                         if let Some((pending,node))=super::outgoing_group::begin_selected(&store,id)? {
                             group_outgoing=Some(pending);
-                            link.send(&node).await?;
+                            link.send_group_step(group_outgoing.as_ref(), &node).await?;
                         } else if let Some((pending,node))=super::outgoing::begin_selected(&store,Some(id))? {
                             outgoing=Some(pending);
                             link.send(&node).await?;
@@ -663,8 +680,9 @@ pub(crate) async fn drive(
                     // queue work during this connection without a devices notification.
                     if device_query.is_none() && group_outgoing.as_ref().is_none_or(|g| !g.devices_pending())
                         && let Some((query,node))=device_cursor.begin_next(&store,device_context)? {
+                        let deadline = query.deadline;
                         device_query=Some(query);
-                        link.send(&node).await?;
+                        link.send_device_query(deadline, &node).await?;
                     }
                     for receipt in super::receipts::reserve_pending(&store)? { link.send(&receipt).await?; }
                     action_drain.trigger();
@@ -755,7 +773,7 @@ pub(crate) async fn drive(
                 if node.description == "ack" && group_outgoing.as_ref().is_some_and(|v|tokio::time::Instant::now() < v.deadline && v.matches(&node)) {
                     let next=group_outgoing.take().expect("matched group distribution").settle_with_policy(&store,&account,&node,epoch,&mut device_cursor,config.transport.outgoing_identity_changes).await?;
                     group_outgoing=next.pending;
-                    if let Some(stanza)=next.node { link.send(&stanza).await?; }
+                    if let Some(stanza)=next.node { link.send_group_step(group_outgoing.as_ref(), &stanza).await?; }
                 }
                 if node.description == "iq" {
                     // A retry answer waiting for the peer's fresh bundle (retry_answer).
@@ -775,7 +793,7 @@ pub(crate) async fn drive(
                         let next=group_outgoing.take().expect("matched group preparation").settle_with_policy(&store,&account,&node,epoch,&mut device_cursor,config.transport.outgoing_identity_changes).await?;
                         group_outgoing=next.pending;
                         if let Some(pending) = &group_outgoing { pending.observe_device_query(&mut device_cursor); }
-                        if let Some(stanza)=next.node { link.send(&stanza).await?; }
+                        if let Some(stanza)=next.node { link.send_group_step(group_outgoing.as_ref(), &stanza).await?; }
                         continue;
                     }
                     if outgoing.as_ref().is_some_and(|v|tokio::time::Instant::now() < v.deadline && v.matches(&node)) {
@@ -809,8 +827,9 @@ pub(crate) async fn drive(
                         }
                         // SyncDevicesJob default preset: pending users are queried interactively.
                         if let Some((query, node)) = device_cursor.begin_next(&store, device_context)? {
+                            let deadline = query.deadline;
                             device_query = Some(query);
-                            link.send(&node).await?;
+                            link.send_device_query(deadline, &node).await?;
                         }
                         continue;
                     }
@@ -840,7 +859,11 @@ pub(crate) async fn drive(
                     }
                     if device_query.as_ref().is_some_and(|q| tokio::time::Instant::now() < q.deadline && q.matches(&node)) {
                         let query = device_query.take().expect("matched device query");
-                        let summary = device_cursor.settle(&query, &store, &node)?;
+                        let summary = match device_cursor.settle(&query, &store, &node) {
+                            Ok(value) => value,
+                            Err(error) if super::devices::is_expired(&error) => { tracing::info!("device query reply expired; users deferred"); continue; }
+                            Err(error) => return Err(error),
+                        };
                         if summary.verification_errors > 0 {
                             // Matching proves this is our opaque local reservation
                             // ID, not a user address or arbitrary response body.
@@ -849,8 +872,9 @@ pub(crate) async fn drive(
                         tracing::info!(accepted = summary.accepted, ingested = summary.ingested, partial_errors = summary.partial_errors, omitted_users = summary.omitted_users, superseded_users = summary.superseded_users, verification_errors = summary.verification_errors, "device query settled");
                         if group_outgoing.as_ref().is_none_or(|g| !g.devices_pending())
                             && let Some((query, sync)) = device_cursor.begin_next(&store, device_context)? {
+                            let deadline = query.deadline;
                             device_query = Some(query);
-                            link.send(&sync).await?;
+                            link.send_device_query(deadline, &sync).await?;
                         }
                         continue;
                     }
@@ -1042,8 +1066,9 @@ pub(crate) async fn drive(
                     if device_query.is_none()
                         && group_outgoing.as_ref().is_none_or(|g| !g.devices_pending())
                         && let Some((query, sync)) = device_cursor.begin_next(&store, device_context)? {
+                        let deadline = query.deadline;
                         device_query = Some(query);
-                        link.send(&sync).await?;
+                        link.send_device_query(deadline, &sync).await?;
                     }
                 }
 
@@ -4940,6 +4965,57 @@ mod tests {
         Arc::new(store)
     }
     #[tokio::test(start_paused = true)]
+    async fn queued_device_query_refuses_encoding_at_its_original_deadline() {
+        let dir = tempfile::tempdir().unwrap();
+        for delay_ms in [29_999, 30_000, 30_001] {
+            let store = registered_store(&dir.path().join(format!("queued-device-{delay_ms}.db")));
+            super::super::devices::request_sync(&store, None, &peer(), None, "fixture").unwrap();
+            let (query, node) = super::super::devices::begin_query(
+                &store,
+                super::super::devices::SyncContext::Interactive,
+            )
+            .unwrap()
+            .unwrap();
+            let deadline = query.deadline;
+            let (_incoming, incoming) = mpsc::channel(1);
+            let (outgoing, mut writes) = mpsc::channel(1);
+            let link = NodeLink::new(incoming, outgoing);
+            let task = tokio::spawn(async move { link.send_device_query(deadline, &node).await });
+            let queued = writes.recv().await.unwrap();
+            assert!(matches!(&queued.guard, Some(WriteGuard::Devices(_))));
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                .unwrap();
+            tokio::time::advance(Duration::from_millis(delay_ms)).await;
+            let mut encoded = 0;
+            if let Some((node, outcome)) = queued.prepare() {
+                encode(&node).unwrap();
+                encoded += 1;
+                outcome.send(Ok(())).unwrap();
+            }
+            let result = task.await.unwrap();
+            if delay_ms < 30_000 {
+                assert!(result.is_ok());
+                assert_eq!(encoded, 1);
+            } else {
+                assert!(super::super::devices::is_expired(&result.unwrap_err()));
+                assert_eq!(encoded, 0);
+            }
+            assert!(writes.recv().await.is_none());
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                    .unwrap(),
+                before
+            );
+            assert_eq!(
+                super::super::devices::pending_users(&store).unwrap().len(),
+                1
+            );
+        }
+    }
+
+    #[tokio::test(start_paused = true)]
     async fn queued_prekey_upload_cannot_start_at_or_after_reply_deadline() {
         let dir = tempfile::tempdir().unwrap();
         for delay_ms in [29_999, 30_000, 30_001] {
@@ -4965,7 +5041,10 @@ mod tests {
                 (result, pending.is_some(), rounds)
             });
             let queued = writes.recv().await.unwrap();
-            let pending_reply = queued.prekey_guard.as_ref().unwrap().1.clone();
+            let pending_reply = match &queued.guard {
+                Some(WriteGuard::Prekey(_, pending)) => pending.clone(),
+                _ => panic!("prekey guard"),
+            };
             let reply = Node::new("iq")
                 .attr("id", queued.node.get_attr("id").unwrap().as_text().unwrap())
                 .attr("type", "result");
@@ -5079,7 +5158,7 @@ mod tests {
             });
             // Hold the actual queued envelope before the shared writer preflight.
             let queued = writes.recv().await.unwrap();
-            assert!(queued.prekey_guard.is_some());
+            assert!(matches!(&queued.guard, Some(WriteGuard::Prekey(..))));
             let iq_id = queued
                 .node
                 .get_attr("id")

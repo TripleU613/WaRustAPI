@@ -1335,6 +1335,71 @@ pub(super) mod tests {
         }
     }
 
+    #[tokio::test(start_paused = true)]
+    async fn expired_group_device_reply_blocks_preparation_without_adopting_lists() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = group_fanout::tests::open(&dir.path().join("expired-group-devices.db"));
+        let fixture = group_fanout::tests::fixture();
+        let id = enqueue(&store, &fixture.plan.chat, "expired-group-device-claim");
+        let (pending, node) = begin_selected(&store, id).unwrap().unwrap();
+        let mut cursor = devices::DeviceSyncCursor::default();
+        let step = pending
+            .settle(
+                &store,
+                &fixture.alice,
+                &membership(&node, &fixture.plan.own, &fixture.plan.recipients),
+                ConnectionEpoch(1),
+                &mut cursor,
+            )
+            .await
+            .unwrap();
+        let pending = step.pending.unwrap();
+        let node = step.node.unwrap();
+        assert!(pending.device_query_deadline().is_some());
+        let query_key = format!(
+            "device-sync:{}",
+            node.get_attr("id").unwrap().as_text().unwrap()
+        );
+        let before = store
+            .read(|tx| tx.get(Table::Checkpoints, query_key.as_bytes(), 1))
+            .unwrap();
+        tokio::time::advance(std::time::Duration::from_secs(30)).await;
+        let step = pending
+            .settle(
+                &store,
+                &fixture.alice,
+                &device_reply(&node),
+                ConnectionEpoch(1),
+                &mut cursor,
+            )
+            .await
+            .unwrap();
+        assert!(step.pending.is_none() && step.node.is_none());
+        assert_eq!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, query_key.as_bytes(), 1))
+                .unwrap(),
+            before
+        );
+        let row: Row = store
+            .read(|tx| tx.get_json(Table::Checkpoints, key(id).as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        assert_eq!(row.phase, Phase::Blocked);
+        assert_eq!(row.reason, Some(Block::OutcomeUnknown));
+        for user in &fixture.plan.recipients {
+            assert!(devices::device_list(&store, user).unwrap().is_none());
+            devices::request_sync(&store, None, user, Some("2:new"), "notification").unwrap();
+        }
+        assert!(
+            cursor
+                .begin_next(&store, devices::SyncContext::Notification)
+                .unwrap()
+                .is_none()
+        );
+        assert!(begin_selected(&store, id).unwrap().is_none());
+    }
+
     #[tokio::test]
     async fn refused_partial_and_interrupted_queries_preserve_original_intents_and_do_not_reselect()
     {
@@ -1941,6 +2006,12 @@ impl Pending {
             }
         }
     }
+    pub(crate) fn device_query_deadline(&self) -> Option<tokio::time::Instant> {
+        match &self.waiting {
+            Waiting::Devices(query) => Some(query.deadline),
+            _ => None,
+        }
+    }
     pub fn devices_pending(&self) -> bool {
         matches!(self.waiting, Waiting::Devices(_))
     }
@@ -2027,9 +2098,13 @@ impl Pending {
                         return Err(invalid("membership action cannot settle"));
                     }
                 }
-                Waiting::Devices(query) => {
-                    cursor.settle(query, store, node)?;
-                }
+                Waiting::Devices(query) => match cursor.settle(query, store, node) {
+                    Ok(_) => {}
+                    Err(error) if devices::is_expired(&error) => {
+                        return self.block(store, Block::IntentCancelled);
+                    }
+                    Err(error) => return Err(error),
+                },
                 Waiting::Keys(_) => {
                     if !device_key_batches::settle(
                         store,
@@ -2129,7 +2204,13 @@ impl Pending {
                 self.reserve_devices(store)
             }
             Waiting::Devices(query) => {
-                let result = cursor.settle(query, store, node)?;
+                let result = match cursor.settle(query, store, node) {
+                    Ok(value) => value,
+                    Err(error) if devices::is_expired(&error) => {
+                        return self.block(store, Block::OutcomeUnknown);
+                    }
+                    Err(error) => return Err(error),
+                };
                 if result.require_complete().is_err() {
                     return self.block(store, Block::DevicesIncomplete);
                 }

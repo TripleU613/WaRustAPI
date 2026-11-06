@@ -17443,5 +17443,12 @@
     "x-live": false,
     "description": "Writer preflight and PendingUpload.settle now reject at or after the original monotonic pending deadline, with rechecks after ownership/material validation. Writer refusal occurs before encoding; direct expired result/error cannot release or acknowledge keys. Dedicated local InvalidInput field prekey_upload_deadline lets the actor ignore settlement expiry while preserving storage/ownership errors. Uncertainty remains held without renewed deadlines, replacement writes or replay. No configured timeout/wire change or clock atomicity across later I/O/commit is claimed.",
     "evidence": "docs/protocol/prekey-count-notifications.md#upload-deadline-fences-writer-and-direct-settlement-admission-2026-11-06"
+  },
+  "x-device-query-deadline-admission": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "DeviceQuery ingestion now rejects at/after its original monotonic deadline, rolling back staged list/pending changes. Local InvalidInput field device_query_deadline lets cursor settlement defer users, standalone receive ignore expiry and group preparation block as outcome_unknown (or preserve cancellation). All standalone/group device handoffs attach a writer deadline guard before encoding. No renewed deadline, timeout-length change, automatic reissue or historical callback reconstruction; later I/O/commit and full account/query binding remain separate boundaries.",
+    "evidence": "docs/protocol/device-query-deadlines.md"
   }
 }

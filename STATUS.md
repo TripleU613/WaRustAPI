@@ -1,3 +1,8 @@
+Device queries now enforce their original deadline in direct/cursor ingestion
+and standalone/group writer handoffs. Expiry preserves pending/query state;
+group preparation blocks and receive handles late replies without hiding faults.
+[Audit and regression scope](docs/protocol/device-query-deadlines.md).
+
 Prekey upload expiry now fences both writer dequeue and direct result/error
 settlement, using the original monotonic deadline with an exact >= boundary.
 Expired claims preserve uncertainty without encoding, release or replay.

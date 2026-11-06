@@ -59,6 +59,26 @@ const QUERY_PREFIX: &str = "device-sync:";
 const LIST_PREFIX: &str = "devices:";
 const GENERATION_PREFIX: &str = "device-sync-generation:";
 
+pub(crate) const DEADLINE_FIELD: &str = "device_query_deadline";
+pub(crate) fn check_deadline(deadline: tokio::time::Instant) -> Result<()> {
+    if tokio::time::Instant::now() >= deadline {
+        return Err(Error::invalid(
+            DEADLINE_FIELD,
+            "device query deadline elapsed",
+        ));
+    }
+    Ok(())
+}
+pub(crate) fn is_expired(error: &Error) -> bool {
+    matches!(
+        error,
+        Error::InvalidInput {
+            field: DEADLINE_FIELD,
+            ..
+        }
+    )
+}
+
 fn invalid(reason: impl Into<String>) -> Error {
     Error::invalid("devices", reason)
 }
@@ -556,7 +576,14 @@ impl DeviceSyncCursor {
         store: &ProtocolStore,
         node: &Node,
     ) -> Result<IngestSummary> {
-        let (summary, failed) = query.ingest_internal(store, node)?;
+        let (summary, failed) = match query.ingest_internal(store, node) {
+            Ok(value) => value,
+            Err(error) if is_expired(&error) => {
+                self.defer(query);
+                return Err(error);
+            }
+            Err(error) => return Err(error),
+        };
         self.deferred.extend(failed);
         Ok(summary)
     }
@@ -1016,6 +1043,7 @@ impl DeviceQuery {
         if !self.matches(node) {
             return Err(invalid("reply does not belong to this query"));
         }
+        check_deadline(self.deadline)?;
         let accepted = attr_text(node, "type") == Some("result");
         let code = child(node, "error")
             .and_then(|c| attr_text(c, "code"))
@@ -1118,6 +1146,8 @@ impl DeviceQuery {
             record.code = code.clone();
             record.ingested = summary.ingested;
             record.partial_errors = summary.partial_errors;
+            // Any earlier staged user mutations roll back if admission expires.
+            check_deadline(self.deadline)?;
             tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &record)?;
             let failed = if accepted {
                 // Omitted users have no settled list either; a new notification
@@ -2622,6 +2652,74 @@ mod tests {
         )
         .unwrap();
         assert_eq!(pending_users(&store).unwrap(), vec![contact()]);
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn expired_device_claims_cannot_ingest_or_retry_new_revisions() {
+        let dir = tempfile::tempdir().unwrap();
+        for kind in ["result", "error"] {
+            for delay_ms in [29_999, 30_000, 30_001] {
+                let path = dir
+                    .path()
+                    .join(format!("device-claim-{kind}-{delay_ms}.db"));
+                let store = open(&path);
+                request_sync(&store, None, &contact(), None, "fixture").unwrap();
+                let mut cursor = DeviceSyncCursor::default();
+                let (query, iq) = cursor
+                    .begin_next(&store, SyncContext::Interactive)
+                    .unwrap()
+                    .unwrap();
+                let response = if kind == "result" {
+                    reply(&iq, vec![user_node(&contact(), &[(0, 0, false)], None)])
+                } else {
+                    Node::new("iq")
+                        .attr("id", query.iq_id.as_str())
+                        .attr("type", "error")
+                        .children(vec![Node::new("error").attr("code", "503")])
+                };
+                let snapshot = |store: &ProtocolStore| {
+                    store
+                        .read(|tx| {
+                            [
+                                Table::Checkpoints,
+                                Table::PeerIdentities,
+                                Table::SignalSessions,
+                            ]
+                            .into_iter()
+                            .map(|t| tx.scan(t, 1, 10000))
+                            .collect::<Result<Vec<_>>>()
+                        })
+                        .unwrap()
+                };
+                let before = snapshot(&store);
+                tokio::time::advance(std::time::Duration::from_millis(delay_ms)).await;
+                if delay_ms < 30_000 {
+                    assert_eq!(
+                        cursor.settle(&query, &store, &response).unwrap().accepted,
+                        kind == "result"
+                    );
+                } else {
+                    assert!(
+                        query.ingest(&store, &response).is_err(),
+                        "expired direct {kind} {delay_ms} must refuse"
+                    );
+                    assert!(cursor.settle(&query, &store, &response).is_err());
+                    assert_eq!(snapshot(&store), before);
+                    drop(store);
+                    let store = open(&path);
+                    assert!(query.ingest(&store, &response).is_err());
+                    assert_eq!(snapshot(&store), before);
+                    request_sync(&store, None, &contact(), Some("2:new"), "notification").unwrap();
+                    assert!(
+                        cursor
+                            .begin_next(&store, SyncContext::Notification)
+                            .unwrap()
+                            .is_none(),
+                        "expired work stays deferred despite a new revision"
+                    );
+                }
+            }
+        }
     }
 
     #[test]

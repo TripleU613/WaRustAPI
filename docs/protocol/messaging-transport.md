@@ -2357,3 +2357,14 @@ refusals. Individual fixed reasons and redacted peer tickets remain the same.
 Inspection grants no send, trust adoption, query, reset or replay authority.
 Native job equivalence and other suspension families remain outside this test.
 No live account operation.
+
+### Device-query deadlines fence ingestion and queued writes (2026-11-06)
+
+**Confirmed local fixes:** public direct/cursor ingestion now rejects expired
+claims with transaction rollback; cursor expiry defers users despite fresh
+revisions. Standalone receive continues on classified expiry; grouped sends
+block without adopting lists. Standalone/group device-query envelopes retain
+the original deadline and refuse expired writes before encoding. Existing
+prekey guards remain in the typed envelope. [Boundary regressions, coverage and
+remaining limits](device-query-deadlines.md). No wire/timeout-length change or
+live account operation.
