@@ -1,0 +1,62 @@
+{
+  "README.md": {
+    "bytes": 5270,
+    "sha256": "002656131613f881cf4aa7eace1061de7f5946fd7583c6e894fb2ac849f54753"
+  },
+  "batch-router.txt": {
+    "bytes": 5341,
+    "sha256": "df6a511a64945473525e2e274030b6098c585f2ce996039d10462af4cc4a2562"
+  },
+  "cache-filter.txt": {
+    "bytes": 1589,
+    "sha256": "29794ae7ba9ea91d2ea975327c5ecaed1fd1d97bee222ba4204c6c739efe6cff"
+  },
+  "cache-selection-predicate.txt": {
+    "bytes": 19354,
+    "sha256": "4b4d784eb6237aabd082dfa49a6e06b2489adeaf91779471ec1d78f4428a6c46"
+  },
+  "class-group-router.txt": {
+    "bytes": 2315,
+    "sha256": "4c050a45802cf027447e89d64c311a07de6ea54ad224caa625078dc5db87f663"
+  },
+  "consumer-cursor-update.txt": {
+    "bytes": 859,
+    "sha256": "7f2a9ee77c87c4b8c32882d097d79790fd5b72bfe255a7c3beb5a00e74a6ee3f"
+  },
+  "consumer-routing-policy.txt": {
+    "bytes": 979,
+    "sha256": "0b379dc5cfe89b4c874d6e8e944ac1139abd85e86aba83005d0707095dd8dc4e"
+  },
+  "consumer-runner.txt": {
+    "bytes": 195099,
+    "sha256": "1f2028887956226083d0595ed98d5c118d82ed2b419d4a7f39353a3d8e4d5c0a"
+  },
+  "consumer-scheduler.txt": {
+    "bytes": 4176,
+    "sha256": "ac0ed2f0d37b0ca1a46e1d9f6740422433b562921f0dcde183c01f2c8f8e2727"
+  },
+  "consumer-selection-bridge.txt": {
+    "bytes": 2614,
+    "sha256": "d811296740f1578e5844aa3d9d5924fc74e8edcf47c100c767174c1ec716ab53"
+  },
+  "mark-selected-state.txt": {
+    "bytes": 1339,
+    "sha256": "c6f4a3f7c028e3ce58fe95dc8c05ea003441615fad2465b379220ccbe2c72c4b"
+  },
+  "queue-selection.txt": {
+    "bytes": 22209,
+    "sha256": "0b62a3ca0976ee978f1f9138dca1648fec6a35d124c43019b7650fcef88b6b37"
+  },
+  "selection-stage-hook.txt": {
+    "bytes": 1818,
+    "sha256": "1c67f8f526ceaa58dfab99fed7a2b65bd932b8471a6ac72f84c9567da7086b6c"
+  },
+  "single-stanza-router.txt": {
+    "bytes": 2929,
+    "sha256": "28f413ed7a026c00c625f1188f63c0257c1695d5b0d7c21f02883e4812c8b7be"
+  },
+  "unordered-queue-constructor.txt": {
+    "bytes": 788,
+    "sha256": "384c173cdc7b8cb1bcf96febcc09e951279d5cfdb6f53252a63c1b749e50ef2e"
+  }
+}

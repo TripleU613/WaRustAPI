@@ -1,0 +1,20 @@
+
+# class: LX/1ix;
+# extends: LX/1id;
+
+.method public <init>(V)  # .registers 5
+    # full signature: LX/1ix;-><init>()V
+    0000..0004  sget-object  v3, LX/1ig;->A04:LX/1ig;
+    0004..0008  const/16  v0, #0x8c9
+    0008..000e  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    000e..0010  move-result-object  v2
+    0010..0014  check-cast  v2, LX/1ih;
+    0014..0018  const/16  v0, #0xd04
+    0018..001e  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    001e..0020  move-result-object  v1
+    0020..0024  check-cast  v1, LX/1im;
+    0024..0028  const-string  v0, "UnorderedQueue"
+    0028..002e  invoke-direct  {v4, v3, v1, v2, v0}, LX/1id;-><init>(LX/1ig;LX/1im;LX/1ih;Ljava/lang/String;)V
+    002e..0030  return-void
+    # exception table: 0 try range(s)
+.end method

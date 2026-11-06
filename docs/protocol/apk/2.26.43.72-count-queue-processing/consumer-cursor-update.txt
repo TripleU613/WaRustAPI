@@ -1,0 +1,22 @@
+
+# class: LX/1il;
+# extends: Ljava/lang/Object;
+
+.method public A00(VLL)  # .registers 7
+    # full signature: LX/1il;->A00(LX/1kq;LX/1il;)V
+    0000..0004  iget-object  v5, v5, LX/1kq;->A00:Ljava/lang/Long;
+    0004..0008  if-eqz  v5, +0x14
+    0008..000e  invoke-virtual  {v5}, Ljava/lang/Number;->longValue()J
+    000e..0010  move-result-wide  v3
+    0010..0014  iget-object  v0, v6, LX/1il;->A08:Ljava/lang/Long;
+    0014..0018  if-eqz  v0, +0xd
+    0018..001e  invoke-virtual  {v0}, Ljava/lang/Number;->longValue()J
+    001e..0020  move-result-wide  v1
+    0020..0024  cmp-long  v0, v3, v1
+    0024..0028  if-lez  v0, +0x4
+    0028..002c  iput-object  v5, v6, LX/1il;->A08:Ljava/lang/Long;
+    002c..002e  return-void
+    002e..0032  const-wide/high16  v1, #0x8000000000000000
+    0032..0034  goto  -0x9
+    # exception table: 0 try range(s)
+.end method

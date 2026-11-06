@@ -406,3 +406,15 @@ Flr selector7 transactional writer.
 [Seven complete methods, Boolean mapping and processing-gate limits](apk/2.26.43.72-count-queue-admission/README.md).
 The arrival hook reaches1il/2Ek processing helpers, still untraced here. No
 Rust timer, ACK ordering, replay or live account behavior changed.
+
+### In-memory processing selection is not disk-commit proof (2026-11-05)
+
+**Confirmed static,43.72:** consumer scheduling reaches1id.A08 selection. Its
+first memory predicate requiresA0H=A05 and optional ordering, not a row ID;
+new wrappers start inA05. Selection changes memory state toA06, then routes
+selected1k4 entries by class into1rA.A03. SQLite full/corruption failures
+rethrow; other selected handler failures go to1ic.A0E.
+[Fourteen exact methods and remaining injection/hold/refill/error limits](apk/2.26.43.72-count-queue-processing/README.md).
+This refutes a blanket inference that all processing must await disk commit.
+ACK durability remains a separate conditional writer boundary. No Rust queue,
+ACK ordering, replay or live account behavior changed.

@@ -1,3 +1,9 @@
+Tracked queue processing now has a retained selection-to-handler trace:
+new memory entries can satisfy the state predicate without a database row ID.
+This is not disk-commit proof; ACK durability remains a separate boundary.
+[Evidence and unresolved gates](docs/protocol/apk/2.26.43.72-count-queue-processing/README.md).
+Static/offline research; Rust processing/ACK behavior unchanged.
+
 Tracked count ingress now connects to native1ix queue admission and its
 Flr disk-write scheduler. Admission is initially in memory; A0D=false requires
 a backend and1ix disables the generic inline-state promotion.

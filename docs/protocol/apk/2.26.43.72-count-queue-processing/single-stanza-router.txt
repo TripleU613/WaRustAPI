@@ -1,0 +1,61 @@
+
+# class: LX/2Ek;
+# extends: Ljava/lang/Object;
+
+.method public A01(VL)  # .registers 6
+    # full signature: LX/2Ek;->A01(LX/1k3;)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v5, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  iget-object  v0, v4, LX/2Ek;->A04:LX/00p;
+    000c..0012  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    0012..0014  move-result-object  v0
+    0014..0018  check-cast  v0, Ljava/util/Map;
+    0018..001c  iget-object  v1, v5, LX/1k3;->A06:LX/1kz;
+    001c..0022  invoke-interface  {v0, v1}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    0022..0024  move-result-object  v3
+    0024..0028  check-cast  v3, LX/1rA;
+    0028..002c  if-eqz  v3, +0x3b
+    002c..0030  instance-of  v0, v5, LX/1k8;
+    0030..0034  if-eqz  v0, +0x24
+    0034..0038  iget-object  v0, v4, LX/2Ek;->A00:LX/05a;
+    0038..003e  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    003e..0040  move-result-object  v2
+    0040..0044  check-cast  v2, LX/0Td;
+    0044..0048  iget-wide  v0, v5, LX/1k3;->A0C:J
+    0048..004e  invoke-virtual  {v2, v0, v1}, LX/0Td;->A01(J)LX/F0K;
+    004e..0050  move-result-object  v1
+    0050..0054  instance-of  v0, v1, LX/E0C;
+    0054..0058  if-eqz  v0, +0x12
+    0058..005c  check-cast  v1, LX/E0C;
+    005c..0060  if-eqz  v1, +0xe
+    0060..0064  instance-of  v0, v1, LX/E08;
+    0064..0068  if-eqz  v0, +0x7
+    0068..006a  const/4  v0, #0x7
+    006a..0070  invoke-virtual  {v1, v0}, LX/F0K;->A09(I)V
+    0070..0072  goto  +0x4
+    0072..0076  const/16  v0, #0xb
+    0076..0078  goto  -0x6
+    0078..007e  invoke-virtual  {v3, v5}, LX/1rA;->A03(LX/1k2;)V
+    007e..0080  return-void
+    0080..0082  move-exception  v0
+    0082..0084  throw  v0
+    0084..0086  move-exception  v1
+    0086..008a  iget-object  v0, v4, LX/2Ek;->A01:LX/05a;
+    008a..0090  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0090..0092  move-result-object  v0
+    0092..0096  check-cast  v0, LX/1ic;
+    0096..009c  invoke-virtual  {v0, v5, v1}, LX/1ic;->A0E(LX/1k3;Ljava/lang/Throwable;)V
+    009c..009e  return-void
+    009e..00a2  const-string  v0, "Unable to route stanza: "
+    00a2..00a8  invoke-static  {v0, v1}, LX/1Xl;->A0w(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/String;
+    00a8..00aa  move-result-object  v0
+    00aa..00b0  invoke-static  {v0}, LX/1Xl;->A0f(Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    00b0..00b2  move-result-object  v0
+    00b2..00b4  throw  v0
+    # exception table: 1 try range(s)
+    # catch LX/LIL; code_units 003c..0040 -> 0042
+    # catch Landroid/database/sqlite/SQLiteFullException; code_units 003c..0040 -> 0040
+    # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 003c..0040 -> 0040
+    # catch Ljava/lang/Exception; code_units 003c..0040 -> 0042
+    # catch Ljava/lang/StackOverflowError; code_units 003c..0040 -> 0042
+.end method

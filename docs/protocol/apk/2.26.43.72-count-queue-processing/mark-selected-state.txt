@@ -1,0 +1,33 @@
+
+# class: LX/1iq;
+# extends: LX/0Wr;
+
+.method public A0H(VL)  # .registers 8
+    # full signature: LX/1iq;->A0H(Ljava/util/List;)V
+    0000..0004  iget-object  v5, v6, LX/1iq;->A07:Ljava/util/HashMap;
+    0004..0006  monitor-enter
+    0006..000c  invoke-interface  {v7}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    000c..000e  move-result-object  v4
+    000e..0010  const/4  v3, #0x0
+    0010..0016  invoke-interface  {v4}, Ljava/util/Iterator;->hasNext()Z
+    0016..0018  move-result  v0
+    0018..001c  if-eqz  v0, +0x15
+    001c..0022  invoke-interface  {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0022..0024  move-result-object  v2
+    0024..0028  check-cast  v2, LX/1k3;
+    0028..002c  iget-object  v1, v2, LX/1k3;->A0H:LX/2A3;
+    002c..0030  sget-object  v0, LX/2A3;->A05:LX/2A3;
+    0030..0034  if-ne  v1, v0, +0x4
+    0034..0038  add-int/lit8  v3, v3, #0x1
+    0038..003c  sget-object  v0, LX/2A3;->A06:LX/2A3;
+    003c..0040  iput-object  v0, v2, LX/1k3;->A0H:LX/2A3;
+    0040..0042  goto  -0x18
+    0042..0048  invoke-static  {v6, v3}, LX/1iq;->A03(LX/1iq;I)V
+    0048..004a  monitor-exit
+    004a..004c  return-void
+    004c..004e  move-exception  v0
+    004e..0050  monitor-exit
+    0050..0052  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0003..0024 -> 0026
+.end method

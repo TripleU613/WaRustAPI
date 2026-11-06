@@ -1,0 +1,55 @@
+
+# class: LX/1il;
+# extends: Ljava/lang/Object;
+
+.method public A03(LLLI)  # .registers 9
+    # full signature: LX/1il;->A03(LX/1k3;Ljava/lang/Long;I)LX/1kq;
+    0000..0004  instance-of  v0, v5, LX/1iz;
+    0004..0008  if-eqz  v0, +0x1c
+    0008..000e  invoke-virtual  {v5}, LX/1il;->A02()I
+    000e..0010  move-result  v0
+    0010..0016  invoke-static  {v8, v0}, Ljava/lang/Math;->min(II)I
+    0016..0018  move-result  v1
+    0018..001e  invoke-virtual  {v5}, LX/1il;->A04()LX/1ic;
+    001e..0020  move-result-object  v2
+    0020..0026  invoke-static  {v2}, LX/1ic;->A05(LX/1ic;)LX/1ix;
+    0026..0028  move-result-object  v0
+    0028..002e  invoke-virtual  {v0, v6, v7, v1}, LX/1id;->A08(LX/1k3;Ljava/lang/Long;I)LX/1kq;
+    002e..0030  move-result-object  v1
+    0030..0034  iget-object  v0, v1, LX/1kq;->A01:Ljava/util/List;
+    0034..003a  invoke-static  {v2, v0}, LX/1ic;->A0B(LX/1ic;Ljava/util/List;)V
+    003a..003c  return-object  v1
+    003c..0040  instance-of  v0, v5, LX/1in;
+    0040..0044  if-eqz  v0, +0x2c
+    0044..0046  move-object  v4, v5
+    0046..004a  check-cast  v4, LX/1in;
+    004a..0050  invoke-virtual  {v4}, LX/1il;->A02()I
+    0050..0052  move-result  v0
+    0052..0058  invoke-static  {v8, v0}, Ljava/lang/Math;->min(II)I
+    0058..005a  move-result  v1
+    005a..0060  invoke-virtual  {v4}, LX/1il;->A04()LX/1ic;
+    0060..0062  move-result-object  v3
+    0062..0068  invoke-static  {v3}, LX/1ic;->A04(LX/1ic;)LX/1if;
+    0068..006a  move-result-object  v0
+    006a..0070  invoke-virtual  {v0, v6, v7, v1}, LX/1id;->A08(LX/1k3;Ljava/lang/Long;I)LX/1kq;
+    0070..0072  move-result-object  v2
+    0072..0076  iget-object  v1, v2, LX/1kq;->A01:Ljava/util/List;
+    0076..007c  invoke-static  {v3, v1}, LX/1ic;->A0B(LX/1ic;Ljava/util/List;)V
+    007c..0080  iget-object  v0, v4, LX/1in;->A01:LX/05a;
+    0080..0084  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0084..008a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    008a..008c  move-result-object  v0
+    008c..0090  check-cast  v0, LX/1kx;
+    0090..0096  invoke-virtual  {v0, v1}, LX/1kx;->A00(Ljava/util/List;)V
+    0096..0098  return-object  v2
+    0098..009e  invoke-virtual  {v5}, LX/1il;->A02()I
+    009e..00a0  move-result  v0
+    00a0..00a6  invoke-static  {v8, v0}, Ljava/lang/Math;->min(II)I
+    00a6..00a8  move-result  v1
+    00a8..00ae  invoke-virtual  {v5}, LX/1il;->A04()LX/1ic;
+    00ae..00b0  move-result-object  v2
+    00b0..00b6  invoke-static  {v2}, LX/1ic;->A02(LX/1ic;)LX/1iu;
+    00b6..00b8  move-result-object  v0
+    00b8..00ba  goto  -0x48
+    # exception table: 0 try range(s)
+.end method

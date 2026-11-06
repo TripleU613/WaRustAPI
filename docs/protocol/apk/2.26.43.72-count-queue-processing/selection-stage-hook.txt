@@ -1,0 +1,37 @@
+
+# class: LX/1ic;
+# extends: Ljava/lang/Object;
+
+.method public A0B(VLL)  # .registers 5
+    # full signature: LX/1ic;->A0B(LX/1ic;Ljava/util/List;)V
+    0000..0006  invoke-interface  {v4}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0006..0008  move-result-object  v2
+    0008..000e  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    000e..0010  move-result  v0
+    0010..0014  if-eqz  v0, +0x33
+    0014..001a  invoke-interface  {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    001a..001c  move-result-object  v1
+    001c..0020  check-cast  v1, LX/1k3;
+    0020..0024  iget-object  v0, v1, LX/1k3;->A06:LX/1kz;
+    0024..002a  invoke-virtual  {v0}, LX/1kz;->A00()Z
+    002a..002c  move-result  v0
+    002c..0030  if-eqz  v0, -0x12
+    0030..0036  invoke-virtual  {v1}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+    0036..0038  move-result-object  v1
+    0038..003c  new-instance  v0, LX/0Ae;
+    003c..0042  invoke-direct  {v0, v1}, LX/0Ae;-><init>(Ljava/lang/Class;)V
+    0042..0048  invoke-virtual  {v0}, LX/0Ae;->B7o()Ljava/lang/String;
+    0048..004c  iget-object  v0, v3, LX/1ic;->A0B:Ljava/util/List;
+    004c..0052  invoke-interface  {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0052..0054  move-result-object  v1
+    0054..005a  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    005a..005c  move-result  v0
+    005c..0060  if-eqz  v0, -0x2a
+    0060..0066  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0066..006a  const-string  v1, "onCcqStage"
+    006a..006e  new-instance  v0, Ljava/lang/NullPointerException;
+    006e..0074  invoke-direct  {v0, v1}, Ljava/lang/NullPointerException;-><init>(Ljava/lang/String;)V
+    0074..0076  throw  v0
+    0076..0078  return-void
+    # exception table: 0 try range(s)
+.end method

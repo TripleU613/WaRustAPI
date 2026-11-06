@@ -1,0 +1,48 @@
+
+# class: LX/2Ek;
+# extends: Ljava/lang/Object;
+
+.method private A00(VLL)  # .registers 7
+    # full signature: LX/2Ek;->A00(LX/1kz;Ljava/util/List;)V
+    0000..0006  invoke-interface  {v6}, Ljava/util/List;->isEmpty()Z
+    0006..0008  move-result  v0
+    0008..000c  if-nez  v0, +0x47
+    000c..0010  iget-object  v0, v4, LX/2Ek;->A04:LX/00p;
+    0010..0016  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    0016..0018  move-result-object  v0
+    0018..001c  check-cast  v0, Ljava/util/Map;
+    001c..0022  invoke-interface  {v0, v5}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    0022..0024  move-result-object  v0
+    0024..0028  if-eqz  v0, +0x2e
+    0028..002e  invoke-interface  {v6}, Ljava/util/List;->size()I
+    002e..0030  move-result  v1
+    0030..0034  const-string  v0, "QueuedStanzaRouter/routeStanzasWithSameClass size="
+    0034..003a  invoke-static  {v1, v0}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    003a..003c  move-result-object  v0
+    003c..0042  invoke-static  {v0}, LX/1Xl;->A1N(Ljava/lang/Object;)V
+    0042..0048  invoke-interface  {v6}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0048..004a  move-result-object  v3
+    004a..004c  const/4  v2, #0x0
+    004c..0052  invoke-interface  {v3}, Ljava/util/Iterator;->hasNext()Z
+    0052..0054  move-result  v0
+    0054..0058  if-eqz  v0, +0x21
+    0058..005e  invoke-interface  {v3}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    005e..0060  move-result-object  v1
+    0060..0064  add-int/lit8  v0, v2, #0x1
+    0064..0068  if-gez  v2, +0x7
+    0068..006e  invoke-static  {}, LX/01i;->A0E()V
+    006e..0070  const/4  v0, #0x0
+    0070..0072  throw  v0
+    0072..0076  check-cast  v1, LX/1k3;
+    0076..007c  invoke-virtual  {v4, v1}, LX/2Ek;->A01(LX/1k3;)V
+    007c..007e  move  v2, v0
+    007e..0080  goto  -0x19
+    0080..0084  const-string  v0, "Unable to route stanza: "
+    0084..008a  invoke-static  {v0, v5}, LX/1Xl;->A0w(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/String;
+    008a..008c  move-result-object  v0
+    008c..0092  invoke-static  {v0}, LX/1Xl;->A0f(Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    0092..0094  move-result-object  v0
+    0094..0096  throw  v0
+    0096..0098  return-void
+    # exception table: 0 try range(s)
+.end method
