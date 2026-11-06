@@ -143,9 +143,11 @@ impl<'a> Decoder<'a> {
             tags::LIST_EMPTY => Ok(0),
             tags::LIST_8 => Ok(self.byte()? as usize),
             tags::LIST_16 => Ok(self.u16be()? as usize),
-            other => Err(CodecError::UnknownTag {
-                tag: other,
+            // APK 43.72 123.A00 throws LIL for a non-list marker.
+            // Keep unknown value tags separate: native formats may be unported.
+            _ => Err(CodecError::InvalidWireStructure {
                 offset: self.pos - 1,
+                reason: "invalid list marker",
             }),
         }
     }
@@ -412,18 +414,34 @@ impl<'a> Decoder<'a> {
         let size_tag = self.byte()?;
         let list_size = self.list_size(size_tag)?;
         if list_size == 0 {
-            return Err(CodecError::InvalidNode {
+            // Native A01 returns null for token2 before checking list size.
+            // Root control is handled above decode_node; nested null-child
+            // semantics remain unported, so retain their local refusal class.
+            if depth > 0 && self.data.get(self.pos) == Some(&2) {
+                return Err(CodecError::InvalidNode {
+                    offset,
+                    reason: "empty node list",
+                });
+            }
+            return Err(CodecError::InvalidWireStructure {
                 offset,
                 reason: "empty node list",
             });
         }
-        let description =
-            self.read_string_value()?
-                .filter(|d| !d.is_empty())
-                .ok_or(CodecError::InvalidNode {
-                    offset,
-                    reason: "missing description",
-                })?;
+        // APK 43.72 123.A01 rejects a null tag; its check does not equate
+        // nonnull empty text with null. Preserve the separate local refusal.
+        let description = self
+            .read_string_value()?
+            .ok_or(CodecError::InvalidWireStructure {
+                offset,
+                reason: "null node description",
+            })?;
+        if description.is_empty() {
+            return Err(CodecError::InvalidNode {
+                offset,
+                reason: "missing description",
+            });
+        }
         let attr_count = (list_size - 1) / 2;
         let attr_limit = self.limits.max_attributes as usize;
         if attr_count > attr_limit {
@@ -448,7 +466,7 @@ impl<'a> Decoder<'a> {
                 // String constructor. A null marker is not explicit empty text.
                 // Evidence: docs/protocol/apk/2.26.43.72-null-attribute/README.md.
                 Value::Absent => {
-                    return Err(CodecError::InvalidNode {
+                    return Err(CodecError::InvalidWireStructure {
                         offset: self.pos - 1,
                         reason: "null attribute value",
                     });

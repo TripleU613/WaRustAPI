@@ -259,6 +259,63 @@ mod tests {
     }
 
     #[test]
+    fn apk_wire_structure_errors_are_distinct_from_local_decode_refusals() {
+        let limits = Limits::default();
+        for bytes in [
+            vec![25], // Non-list marker at the node boundary.
+            vec![0xF8, 0, 25],
+            vec![0xF8, 1, 0],
+            vec![0xF8, 3, 25, 8, 0],
+        ] {
+            assert_eq!(
+                Decoder::new(&bytes, dict(), &limits)
+                    .decode_node()
+                    .unwrap_err()
+                    .class(),
+                "invalid_wire_structure",
+                "{bytes:?}"
+            );
+        }
+        // The native token2 root control still precedes list-count validation.
+        assert_eq!(
+            Decoder::new(&[0, 2], dict(), &limits)
+                .decode_node()
+                .unwrap_err()
+                .class(),
+            "stream_end"
+        );
+        // A nested null-child control has not been reconstructed; do not
+        // relabel its existing local refusal as a proven native wire failure.
+        for child in [vec![0, 2], vec![0xF8, 0, 2], vec![0xF9, 0, 0, 2]] {
+            let mut bytes = vec![0xF8, 2, 25, 0xF8, 1];
+            bytes.extend(child);
+            assert_eq!(
+                Decoder::new(&bytes, dict(), &limits)
+                    .decode_node()
+                    .unwrap_err()
+                    .class(),
+                "invalid_node"
+            );
+        }
+        // A nonnull empty description and an unsupported value tag retain their
+        // distinct existing refusal classes; neither is inferred corrupt here.
+        assert_eq!(
+            Decoder::new(&[0xF8, 1, 0xFC, 0], dict(), &limits)
+                .decode_node()
+                .unwrap_err()
+                .class(),
+            "invalid_node"
+        );
+        assert_eq!(
+            Decoder::new(&[0xF8, 1, 0xF0], dict(), &limits)
+                .decode_node()
+                .unwrap_err()
+                .class(),
+            "unknown_tag"
+        );
+    }
+
+    #[test]
     fn apk_truncation_precedes_packed_digit_validation() {
         let limits = Limits::default();
         for bytes in [
@@ -362,7 +419,7 @@ mod tests {
         let null = [0xF8, 3, 25, 8, 0];
         assert!(matches!(
             Decoder::new(&null, dict(), &limits).decode_node(),
-            Err(CodecError::InvalidNode {
+            Err(CodecError::InvalidWireStructure {
                 reason: "null attribute value",
                 ..
             })

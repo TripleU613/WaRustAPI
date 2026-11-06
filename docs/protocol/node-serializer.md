@@ -192,3 +192,14 @@ at receive admission. Complete bad digits keep InvalidPackedDigit; a negative
 count now has public InvalidPackedLength/classinvalid_packed_length, replacing
 the generic InvalidNode classification for fresh inputs. This does not relabel
 or replay historical saved diagnostics. See the same linked failure matrix.
+
+## Selected native list/null failures stop receiving (2026-11-06)
+
+**Confirmed selected static / implemented offline:** initial invalid list marker,
+zero node list, null description and null attribute value now have public
+InvalidWireStructure/classinvalid_wire_structure and terminate receive admission
+after capture. Null attributes previously used genericInvalidNode after their
+normalization fix; fresh decoding now gets the refined diagnostic. Root token2
+precedence, unknown-format/local refusal classes, nonnull empty values and
+historical saved diagnostics remain separate. [Complete sources, nested control
+exclusion and literal/encrypted/uncertainty tests](frame-admission.md#selected-wire-structure-failures-are-terminal-2026-11-06).

@@ -3917,6 +3917,10 @@ mod tests {
             (vec![0, 0xF8, 2, 25, 0xFC, 2, b'a'], "unexpected_eof"),
             (vec![0, 0xF8, 1, 0xFF, 1, 0xD0], "invalid_packed_digit"),
             (vec![0, 0xF8, 1, 0xFF, 0x80], "invalid_packed_length"),
+            (vec![0, 25], "invalid_wire_structure"),
+            (vec![0, 0xF8, 0, 25], "invalid_wire_structure"),
+            (vec![0, 0xF8, 1, 0], "invalid_wire_structure"),
+            (vec![0, 0xF8, 3, 25, 8, 0], "invalid_wire_structure"),
         ] {
             let dir = tempfile::tempdir().unwrap();
             let store = open(&dir.path().join("frame-admission.redb"));
@@ -3958,6 +3962,10 @@ mod tests {
             (vec![0, 0xF8, 2, 25, 0xFC, 2, b'a'], "unexpected_eof"),
             (vec![0, 0xF8, 1, 0xFF, 1, 0xD0], "invalid_packed_digit"),
             (vec![0, 0xF8, 1, 0xFF, 0x80], "invalid_packed_length"),
+            (vec![0, 25], "invalid_wire_structure"),
+            (vec![0, 0xF8, 0, 25], "invalid_wire_structure"),
+            (vec![0, 0xF8, 1, 0], "invalid_wire_structure"),
+            (vec![0, 0xF8, 3, 25, 8, 0], "invalid_wire_structure"),
         ] {
             let dir = tempfile::tempdir().unwrap();
             let path = dir.path().join("stream-end.redb");
@@ -4003,7 +4011,8 @@ mod tests {
                     "compression"
                     | "unexpected_eof"
                     | "invalid_packed_digit"
-                    | "invalid_packed_length",
+                    | "invalid_packed_length"
+                    | "invalid_wire_structure",
                     Err(Error::Transport(TransportError::PeerProtocol(_))),
                 ) => {}
                 (_, other) => panic!("unexpected terminal outcome: {other:?}"),

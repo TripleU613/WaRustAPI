@@ -206,6 +206,50 @@ retain exact compressed/uncompressed raw frames and an unchanged synthetic
 uncertain checkpoint, leaving the next matching reply unread. No live account
 operation or restriction-prevention guarantee follows from these controls.
 
+## Selected wire-structure failures are terminal (2026-11-06)
+
+**Confirmed selected static / implemented offline:**123.A00 rejects a non-list
+marker with LIL;123.A01 rejects zero node count and null description after the
+token2 control check. Its ordinary attribute-value path invokes0Tl's checked
+String constructor, whose00l.A0F constructs/throws NullPointerException for null.
+Initial LIL and runtime failures leave1s2.run via different outer handlers,
+instead of entering recoverable parsed-stanza handling. [Complete methods,
+exact catch routing and concrete listener limits](apk/2.26.43.72-wire-structure/README.md).
+
+Rust previously captured these selected errors under generic unknown_tag or
+invalid_node and could continue. Public CodecError::InvalidWireStructure carries
+an offset/fixed reason and fixed classinvalid_wire_structure. Only the four
+selected checks produce it; terminal_frame_error maps it to PeerProtocol.
+Normal reader coordination consumes the split epoch and captures before queue
+publication. Actor/captured waits/CLI windows stop before later nodes; low-level
+read_frame closes before returning the diagnostic carrier and read_node closes
+before returning its error. Already-started writes remain uncertain.
+
+Native root token2 still wins before zero-count validation. A nested zero-count
+list followed by token2 remains Rust's prior local InvalidNode refusal because
+native null-child/parent semantics are unported. Nonnull empty descriptions,
+unknown value tags, duplicate attributes, local limits and other generic
+InvalidNode cases are NOT promoted into this new terminal class. Their existing
+behavior is not claimed as complete native parity. Explicit empty attribute
+text and token0 empty body retain their distinct accepted representations.
+Previously stored invalid_node/unknown_tag diagnostics are not relabeled or
+replayed; the refined class applies only to fresh decoding. No durable migration,
+new NACK, settlement, callback completion or retry authority is introduced.
+
+The literal classification fixture and encrypted fixture failed before correction
+on the old generic diagnostics. New controls preserve root control precedence,
+three nested zero-count/token2 headers, empty-description local refusal and
+unknown value-tag class. Sixteen certificate-verified in-memory exchanges cover
+all four error families compressed/uncompressed through both low-level receive
+APIs; later reads/writes rejectClosed. Actor fixtures cover every family before
+a following ping and before a real in-flight receipt's matching ACK: exact frame
+size/class is captured, the receipt remains outcome_unknown through reopen, and
+reactivation produces no replay. These actor inputs use the fake node link,
+not a new end-to-end socket test. Captured waits retain exact compressed/
+uncompressed null-attribute frames and an unchanged synthetic uncertain
+checkpoint while leaving the following matching reply unread. No live account
+operation or restriction-prevention guarantee is established.
+
 ## Reproduce the evidence
 
 The linked checked bundles already retain complete methods, APK identity,

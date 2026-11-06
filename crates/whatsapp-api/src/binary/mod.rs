@@ -92,6 +92,15 @@ pub enum CodecError {
         /// Configured limit.
         limit: usize,
     },
+    /// A wire-structure rule proven invalid in the pinned native reader.
+    /// Kept distinct from local unsupported-node/refusal cases.
+    #[error("invalid wire structure at offset {offset}: {reason}")]
+    InvalidWireStructure {
+        /// Offset.
+        offset: usize,
+        /// Fixed diagnostic, without input text.
+        reason: &'static str,
+    },
     /// Structural rule violation.
     #[error("invalid node structure at offset {offset}: {reason}")]
     InvalidNode {
@@ -147,6 +156,7 @@ impl CodecError {
             Self::LengthLimit { .. } => "length_limit",
             Self::DepthLimit { .. } => "depth_limit",
             Self::InvalidNode { .. } => "invalid_node",
+            Self::InvalidWireStructure { .. } => "invalid_wire_structure",
             Self::DuplicateAttribute { .. } => "duplicate_attribute",
             Self::NonStringKey { .. } => "non_string_key",
             Self::InvalidJid { .. } => "invalid_jid",

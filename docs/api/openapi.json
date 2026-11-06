@@ -18301,7 +18301,7 @@
     "x-library": [
       "whatsapp_api::binary::Decoder"
     ],
-    "description": "Pinned APK123.A01/A0A passes null attribute markers into checked0Tl constructors, which refuse them. Decoder now returnsInvalidNode null attribute value instead of manufacturing present empty text. Explicit rawempty strings and empty bodies remain distinct. Literal fixture failed before correction. No new ACK/notification settlement, retry/NACK, persistence migration or live verification; full native failure routing remains open.",
+    "description": "Pinned APK123.A01/A0A passes null attribute markers into checked0Tl constructors, which refuse them. Decoder now returnsInvalidWireStructure null attribute value (refined from genericInvalidNode by x-wire-structure-admission) instead of manufacturing present empty text. Explicit rawempty strings and empty bodies remain distinct. Literal fixture failed before correction. No new ACK/notification settlement, retry/NACK, persistence migration or live verification; full native failure routing remains open.",
     "evidence": "docs/protocol/node-serializer.md#null-attribute-values-cannot-become-empty-text-2026-11-06"
   },
   "x-stream-end-control-research": {
@@ -18377,5 +18377,19 @@
     ],
     "description": "Pinned123.A07 reads all declared pairs throughA06 before digit validation; Decoder now checks packed buffer completeness first. UnexpectedEof class maps to terminalPeerProtocol: normal reader consumes epoch and captures before publication, actor/waits/CLI stop before later ACK/ping, low-level channels reject later I/O. Raw empty authenticated records still skip before node decoding. Failing-before literal/encrypted controls, compressed/uncompressed captures and durable receipt uncertainty/reopen/no-replay tested offline. One local truncation refusal policy, not identical native exception/backoff parity for every format. No new send, NACK, retry, settlement, replay permission or live operation. Complete nativeA07 bad-nibble/negative-count LIL also terminates. invalid_packed_digit and new publicCodecError::InvalidPackedLength/classinvalid_packed_length map toPeerProtocol; genericinvalid_node stays distinct. Bad-digit encrypted fixture failed before correction; both packed cases cover encrypted APIs, actor uncertainty/reopen/no-replay and compressed/uncompressed captured waits. Existing saved diagnostics are not relabeled or replayed.",
     "evidence": "docs/protocol/frame-admission.md#truncated-nodes-consume-the-receive-epoch-2026-11-06"
+  },
+  "x-wire-structure-admission": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [
+      "whatsapp_api::binary::CodecError",
+      "whatsapp_api::binary::Decoder",
+      "whatsapp_api::transport::messaging::terminal_frame_error",
+      "whatsapp_api::transport::messaging::read_node",
+      "whatsapp_api::transport::messaging::read_frame"
+    ],
+    "description": "Pinned123.A00/A01 rejects invalid list marker, zero count and null description;0Tl null-value check throws through00l.A0F. Initial LIL/runtime paths leave1s2.run. Four selected checks now use publicInvalidWireStructure/classinvalid_wire_structure, mapped toPeerProtocol for capture/epoch consumption and stopping later ACK/ping handling. Unknown value tags, genericInvalidNode and unported nested zero-count/token2 null-child semantics retain prior local refusal classes; root control still precedes count checks. Failing-before classification/encrypted tests, 16 synthetic encrypted cases, all-family actor receipt uncertainty/reopen/no-replay and captured waits retained. No native global backoff emulation, NACK, settlement, saved-diagnostic relabeling, replay permission or live operation.",
+    "evidence": "docs/protocol/frame-admission.md#selected-wire-structure-failures-are-terminal-2026-11-06"
   }
 }

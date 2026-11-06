@@ -370,11 +370,31 @@ mod tests {
         CancelRead,
         PartialWrite,
         StreamEnd,
-        PackedFailure { direct: bool, negative: bool },
-        Truncated { direct: bool, compressed: bool },
-        InvalidCompression { direct: bool, checksum: bool },
-        EmptyRecord { direct: bool, timeout: bool },
-        InvalidFrame { fragmented: bool, direct: bool },
+        MalformedStructure {
+            direct: bool,
+            compressed: bool,
+            family: u8,
+        },
+        PackedFailure {
+            direct: bool,
+            negative: bool,
+        },
+        Truncated {
+            direct: bool,
+            compressed: bool,
+        },
+        InvalidCompression {
+            direct: bool,
+            checksum: bool,
+        },
+        EmptyRecord {
+            direct: bool,
+            timeout: bool,
+        },
+        InvalidFrame {
+            fragmented: bool,
+            direct: bool,
+        },
     }
 
     async fn exchange(wrong_root: bool, split: bool, record_case: RecordCase) {
@@ -495,7 +515,30 @@ mod tests {
                 &[0xF8, 2, 25, 0xFC, 2, b'a'],
                 6,
             ));
+            let malformed_body: &[u8] = match record_case {
+                RecordCase::MalformedStructure { family: 0, .. } => &[25],
+                RecordCase::MalformedStructure { family: 1, .. } => &[0xF8, 0, 25],
+                RecordCase::MalformedStructure { family: 2, .. } => &[0xF8, 1, 0],
+                _ => &[0xF8, 3, 25, 8, 0],
+            };
+            let malformed = if matches!(
+                record_case,
+                RecordCase::MalformedStructure {
+                    compressed: true,
+                    ..
+                }
+            ) {
+                let mut frame = vec![2];
+                frame.extend(miniz_oxide::deflate::compress_to_vec_zlib(
+                    malformed_body,
+                    6,
+                ));
+                frame
+            } else {
+                [&[0][..], malformed_body].concat()
+            };
             let reply: &[u8] = match record_case {
+                RecordCase::MalformedStructure { .. } => &malformed,
                 RecordCase::PackedFailure { negative: true, .. } => &[0, 0xF8, 1, 0xFF, 0x80],
                 RecordCase::PackedFailure {
                     negative: false, ..
@@ -612,7 +655,8 @@ mod tests {
             } else if let RecordCase::InvalidFrame { direct, .. }
             | RecordCase::InvalidCompression { direct, .. }
             | RecordCase::Truncated { direct, .. }
-            | RecordCase::PackedFailure { direct, .. } = record_case
+            | RecordCase::PackedFailure { direct, .. }
+            | RecordCase::MalformedStructure { direct, .. } = record_case
             {
                 channel.write(b"local record fixture").await.unwrap();
                 if direct {
@@ -632,7 +676,8 @@ mod tests {
                                 | "compression"
                                 | "unexpected_eof"
                                 | "invalid_packed_digit"
-                                | "invalid_packed_length",
+                                | "invalid_packed_length"
+                                | "invalid_wire_structure",
                             ..
                         }
                     ));
@@ -762,6 +807,26 @@ mod tests {
                 },
             )
             .await;
+        }
+    }
+
+    #[tokio::test]
+    async fn malformed_structure_consumes_both_encrypted_receive_apis() {
+        for family in 0..4 {
+            for compressed in [false, true] {
+                for direct in [false, true] {
+                    exchange(
+                        false,
+                        false,
+                        RecordCase::MalformedStructure {
+                            direct,
+                            compressed,
+                            family,
+                        },
+                    )
+                    .await;
+                }
+            }
         }
     }
 

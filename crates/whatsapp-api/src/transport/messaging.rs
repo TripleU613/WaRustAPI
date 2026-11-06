@@ -489,6 +489,11 @@ pub async fn read_node<S: AsyncRead + AsyncWrite + Unpin>(
 pub fn terminal_frame_error(class: &str) -> Option<TransportError> {
     match class {
         "stream_end" => Some(TransportError::PeerClosed),
+        // APK 43.72 123.A00/A01 list/null checks and 0Tl's checked String
+        // constructor fail during initial parsing, outside stanza recovery.
+        "invalid_wire_structure" => Some(TransportError::PeerProtocol(
+            "invalid stanza wire structure",
+        )),
         // APK 43.72 123.A06 throws on truncated buffers; A00/A0A refuse
         // missing list/string tokens. These failures leave 1s2.run.
         "unexpected_eof" => Some(TransportError::PeerProtocol("truncated stanza frame")),
@@ -517,7 +522,7 @@ pub enum FrameRead {
     /// A frame that decrypted but is not an ordinary node; for
     /// [`super::inbox::preserve_undecodable`]. Known terminal classes consume
     /// the channel: stream-end, header-only, fragmented, compression, truncation
-    /// and invalid packed-value failures.
+    /// and invalid packed-value/wire-structure failures.
     Undecodable {
         /// The decrypted frame.
         frame: Vec<u8>,
@@ -3388,6 +3393,8 @@ mod captured_wait_tests {
             ("invalid_packed_digit", true),
             ("invalid_packed_length", false),
             ("invalid_packed_length", true),
+            ("invalid_wire_structure", false),
+            ("invalid_wire_structure", true),
         ] {
             let dir = tempfile::tempdir().unwrap();
             let path = dir.path().join("stream-end.redb");
@@ -3417,11 +3424,15 @@ mod captured_wait_tests {
             };
             if matches!(
                 kind,
-                "unexpected_eof" | "invalid_packed_digit" | "invalid_packed_length"
+                "unexpected_eof"
+                    | "invalid_packed_digit"
+                    | "invalid_packed_length"
+                    | "invalid_wire_structure"
             ) {
                 let body: &[u8] = match kind {
                     "unexpected_eof" => &[0xF8, 2, 25, 0xFC, 2, b'a'],
                     "invalid_packed_digit" => &[0xF8, 1, 0xFF, 1, 0xD0],
+                    "invalid_wire_structure" => &[0xF8, 3, 25, 8, 0],
                     _ => &[0xF8, 1, 0xFF, 0x80],
                 };
                 frame = if compressed {
