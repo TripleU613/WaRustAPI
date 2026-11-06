@@ -1,0 +1,46 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000064987c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv>:
+  64fa04:      	paciasp
+  64fa08:      	sub	sp, sp, #0x50
+  64fa0c:      	stp	x29, x30, [sp, #0x10]
+  64fa10:      	bl	0x2ea3f8 <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0x1c51c>
+  64fa14:      	add	x29, sp, #0x10
+  64fa18:      	bl	0x732ba8 <MCFSetGetCount+0xeaf0>
+  64fa1c:      	bl	0x72f908 <MCFSetGetCount+0xb850>
+  64fa20:      	mov	w0, #0x78               // =120
+  64fa24:      	mov	x21, x1
+  64fa28:      	str	x8, [sp, #0x8]
+  64fa2c:      	bl	0x737430 <__wrap__Znwm@plt>
+  64fa30:      	ldr	x24, [x22, #0x8]
+  64fa34:      	mov	x19, x0
+  64fa38:      	str	xzr, [x22, #0x8]
+  64fa3c:      	str	x24, [sp]
+  64fa40:      	bl	0x3eb6d4 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x3a3e4>
+  64fa44:      	adrp	x8, 0x778000 <_ZTVN6google8protobuf11MessageLiteE+0x1ce18>
+  64fa48:      	add	x8, x8, #0x780
+  64fa4c:      	mov	x0, sp
+  64fa50:      	str	x8, [x19]
+  64fa54:      	str	xzr, [sp]
+  64fa58:      	stp	x24, x21, [x19, #0x68]
+  64fa5c:      	bl	0x409a4c <_ZNK8facebook9stash_jni10JFileStash9removeAllEv+0x3b00>
+  64fa60:      	str	x19, [x20]
+  64fa64:      	bl	0x72627c <MCFSetGetCount+0x21c4>
+  64fa68:      	b.ne	0x64faa0 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x6224>
+  64fa6c:      	bl	0x2ea420 <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0x1c544>
+  64fa70:      	ldp	x29, x30, [sp, #0x10]
+  64fa74:      	add	sp, sp, #0x50
+  64fa78:      	autiasp
+  64fa7c:      	ret
+  64fa80:      	bl	0x72a228 <MCFSetGetCount+0x6170>
+  64fa84:      	bl	0x409a4c <_ZNK8facebook9stash_jni10JFileStash9removeAllEv+0x3b00>
+  64fa88:      	bl	0x72627c <MCFSetGetCount+0x21c4>
+  64fa8c:      	b.ne	0x64faa0 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x6224>
+  64fa90:      	mov	x0, x19
+  64fa94:      	bl	0x7373a0 <__wrap__ZdlPv@plt>
+  64fa98:      	mov	x0, x20
+  64fa9c:      	bl	0x7373e0 <__wrap__Unwind_Resume@plt>
+  64faa0:      	bl	0x7378f0 <__stack_chk_fail@plt>

@@ -1,0 +1,199 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000064987c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv>:
+  651860:      	paciasp
+  651864:      	stp	x29, x30, [sp, #-0x60]!
+  651868:      	bl	0x2dade8 <Java_com_whatsapp_labyrinth_LabyrinthJniBridge_nativeSelectRotationMembers+0xcf0c>
+  65186c:      	sub	sp, sp, #0x3e0
+  651870:      	mrs	x8, TPIDR_EL0
+  651874:      	mov	x24, x2
+  651878:      	mov	x23, x1
+  65187c:      	str	x8, [sp, #0x18]
+  651880:      	bl	0x72cb74 <MCFSetGetCount+0x8abc>
+  651884:      	ldr	x8, [x8, #0x28]
+  651888:      	bl	0x72e360 <MCFSetGetCount+0xa2a8>
+  65188c:      	bl	0x72d404 <MCFSetGetCount+0x934c>
+  651890:      	mov	w25, w4
+  651894:      	mov	x26, x3
+  651898:      	stur	x8, [x29, #-0x18]
+  65189c:      	bl	0x734d20 <memset@plt>
+  6518a0:      	movi	v0.2d, #0000000000000000
+  6518a4:      	add	x0, sp, #0x2a0
+  6518a8:      	sub	x1, x29, #0x20
+  6518ac:      	mov	w2, w25
+  6518b0:      	stur	x26, [x29, #-0x20]
+  6518b4:      	stp	q0, q0, [sp, #0x2a0]
+  6518b8:      	stp	q0, q0, [sp, #0x2c0]
+  6518bc:      	bl	0x65483c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xafc0>
+  6518c0:      	stp	xzr, xzr, [x29, #-0x78]
+  6518c4:      	stur	xzr, [x29, #-0x68]
+  6518c8:      	sub	x0, x29, #0x78
+  6518cc:      	add	x1, sp, #0x2a0
+  6518d0:      	bl	0x6536b8 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x9e3c>
+  6518d4:      	bl	0x7328f4 <MCFSetGetCount+0xe83c>
+  6518d8:      	sub	x0, x29, #0x90
+  6518dc:      	add	x1, sp, #0x2a0
+  6518e0:      	bl	0x6536b8 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x9e3c>
+  6518e4:      	movi	v0.2d, #0000000000000000
+  6518e8:      	ldr	x8, [sp, #0x2a0]
+  6518ec:      	stur	xzr, [x29, #-0xa0]
+  6518f0:      	str	x19, [sp]
+  6518f4:      	stp	q0, q0, [x29, #-0xc0]
+  6518f8:      	ldr	x8, [x8, #0x10]
+  6518fc:      	add	x0, sp, #0x2a0
+  651900:      	mov	w1, #0x4                // =4
+  651904:      	blr	x8
+  651908:      	ldr	w19, [x0]
+  65190c:      	bl	0x72a41c <MCFSetGetCount+0x6364>
+  651910:      	stp	x24, x23, [sp, #0x38]
+  651914:      	sxtw	x1, w19
+  651918:      	stp	x22, x21, [sp, #0x8]
+  65191c:      	str	x20, [sp, #0x48]
+  651920:      	stur	xzr, [x29, #-0xa0]
+  651924:      	stp	q0, q0, [x29, #-0xc0]
+  651928:      	stur	w8, [x29, #-0xa0]
+  65192c:      	sub	x0, x29, #0xc0
+  651930:      	sub	x20, x29, #0xc0
+  651934:      	bl	0x47a6bc <MCIAccountSessionCreate+0xb23c>
+  651938:      	bic	w27, w19, w19, asr #31
+  65193c:      	mov	w21, wzr
+  651940:      	add	x22, x20, #0x10
+  651944:      	mov	w28, #0x1               // =1
+  651948:      	cmp	w21, w27
+  65194c:      	b.eq	0x651b64 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x82e8>
+  651950:      	bl	0x730f24 <MCFSetGetCount+0xce6c>
+  651954:      	sub	x0, x29, #0x48
+  651958:      	add	x1, sp, #0x2a0
+  65195c:      	bl	0x6536b8 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x9e3c>
+  651960:      	bl	0x7300c8 <MCFSetGetCount+0xc010>
+  651964:      	sub	x0, x29, #0x60
+  651968:      	add	x1, sp, #0x2a0
+  65196c:      	bl	0x6536b8 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x9e3c>
+  651970:      	sub	x0, x29, #0x48
+  651974:      	bl	0x3eafc8 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x39cd8>
+  651978:      	ldur	x20, [x29, #-0xb8]
+  65197c:      	mov	x25, x0
+  651980:      	cbz	x20, 0x65199c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x8120>
+  651984:      	fmov	d0, x20
+  651988:      	bl	0x725f44 <MCFSetGetCount+0x1e8c>
+  65198c:      	b.hi	0x6519a4 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x8128>
+  651990:      	sub	x8, x20, #0x1
+  651994:      	and	x23, x8, x25
+  651998:      	b	0x6519b8 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x813c>
+  65199c:      	mov	x23, xzr
+  6519a0:      	b	0x651a14 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x8198>
+  6519a4:      	cmp	x25, x20
+  6519a8:      	mov	x23, x25
+  6519ac:      	b.lo	0x6519b8 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x813c>
+  6519b0:      	udiv	x8, x25, x20
+  6519b4:      	msub	x23, x8, x20, x25
+  6519b8:      	ldur	x8, [x29, #-0xc0]
+  6519bc:      	ldr	x26, [x8, x23, lsl #3]
+  6519c0:      	cbz	x26, 0x651a14 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x8198>
+  6519c4:      	sub	x19, x20, #0x1
+  6519c8:      	ldr	x26, [x26]
+  6519cc:      	cbz	x26, 0x651a14 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x8198>
+  6519d0:      	ldr	x8, [x26, #0x8]
+  6519d4:      	cmp	x8, x25
+  6519d8:      	b.ne	0x6519f0 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x8174>
+  6519dc:      	add	x0, x26, #0x10
+  6519e0:      	sub	x1, x29, #0x48
+  6519e4:      	bl	0x3eafe8 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x39cf8>
+  6519e8:      	tbz	w0, #0x0, 0x6519c8 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x814c>
+  6519ec:      	b	0x651b4c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x82d0>
+  6519f0:      	cmp	x24, #0x1
+  6519f4:      	b.hi	0x651a00 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x8184>
+  6519f8:      	and	x8, x8, x19
+  6519fc:      	b	0x651a0c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x8190>
+  651a00:      	cmp	x8, x20
+  651a04:      	b.lo	0x651a0c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x8190>
+  651a08:      	bl	0x72f3b0 <MCFSetGetCount+0xb2f8>
+  651a0c:      	cmp	x8, x23
+  651a10:      	b.eq	0x6519c8 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x814c>
+  651a14:      	stur	xzr, [x29, #-0xe8]
+  651a18:      	mov	w0, #0x40               // =64
+  651a1c:      	bl	0x737430 <__wrap__Znwm@plt>
+  651a20:      	add	x8, sp, #0x2a0
+  651a24:      	ldur	s1, [x29, #-0xa0]
+  651a28:      	mov	x26, x0
+  651a2c:      	ldur	q0, [x8, #0xf8]
+  651a30:      	ldur	x8, [x29, #-0x38]
+  651a34:      	stp	x0, x22, [x29, #-0xf8]
+  651a38:      	stp	xzr, x25, [x0]
+  651a3c:      	str	x8, [x0, #0x20]
+  651a40:      	ldur	x8, [x29, #-0x50]
+  651a44:      	str	q0, [x0, #0x10]
+  651a48:      	ldur	q0, [x29, #-0x60]
+  651a4c:      	str	x8, [x0, #0x38]
+  651a50:      	ldur	x8, [x29, #-0xa8]
+  651a54:      	stur	q0, [x0, #0x28]
+  651a58:      	add	x8, x8, #0x1
+  651a5c:      	stp	xzr, xzr, [x29, #-0x48]
+  651a60:      	ucvtf	s0, x8
+  651a64:      	stur	xzr, [x29, #-0x38]
+  651a68:      	stp	xzr, xzr, [x29, #-0x58]
+  651a6c:      	stur	xzr, [x29, #-0x60]
+  651a70:      	sturb	w28, [x29, #-0xe8]
+  651a74:      	cbz	x20, 0x651a84 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x8208>
+  651a78:      	ucvtf	s2, x20
+  651a7c:      	bl	0x728f28 <MCFSetGetCount+0x4e70>
+  651a80:      	b.pl	0x651adc <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x8260>
+  651a84:      	cmp	x20, #0x3
+  651a88:      	b.lo	0x651a98 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x821c>
+  651a8c:      	bl	0x72f3bc <MCFSetGetCount+0xb304>
+  651a90:      	cset	w8, ne
+  651a94:      	b	0x651a9c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x8220>
+  651a98:      	mov	w8, #0x1                // =1
+  651a9c:      	fdiv	s0, s0, s1
+  651aa0:      	lsl	x10, x20, #1
+  651aa4:      	bl	0x724f74 <MCFSetGetCount+0xebc>
+  651aa8:      	sub	x0, x29, #0xc0
+  651aac:      	bl	0x48c3b8 <MCIAccountSessionCreate+0x1cf38>
+  651ab0:      	ldur	x20, [x29, #-0xb8]
+  651ab4:      	bl	0x72f3bc <MCFSetGetCount+0xb304>
+  651ab8:      	b.ne	0x651ac4 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x8248>
+  651abc:      	and	x23, x8, x25
+  651ac0:      	b	0x651adc <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x8260>
+  651ac4:      	cmp	x25, x20
+  651ac8:      	b.hs	0x651ad4 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x8258>
+  651acc:      	mov	x23, x25
+  651ad0:      	b	0x651adc <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x8260>
+  651ad4:      	udiv	x8, x25, x20
+  651ad8:      	msub	x23, x8, x20, x25
+  651adc:      	ldur	x9, [x29, #-0xc0]
+  651ae0:      	ldr	x8, [x9, x23, lsl #3]
+  651ae4:      	cbz	x8, 0x651af4 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x8278>
+  651ae8:      	ldr	x9, [x8]
+  651aec:      	str	x9, [x26]
+  651af0:      	b	0x651b30 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x82b4>
+  651af4:      	ldur	x8, [x29, #-0xb0]
+  651af8:      	stur	x26, [x29, #-0xb0]
+  651afc:      	str	x8, [x26]
+  651b00:      	str	x22, [x9, x23, lsl #3]
+  651b04:      	ldr	x8, [x26]
+  651b08:      	cbz	x8, 0x651b34 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x82b8>
+  651b0c:      	bl	0x72f004 <MCFSetGetCount+0xaf4c>
+  651b10:      	b.ne	0x651b1c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x82a0>
+  651b14:      	and	x8, x8, x9
+  651b18:      	b	0x651b28 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x82ac>
+  651b1c:      	cmp	x8, x20
+  651b20:      	b.lo	0x651b28 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x82ac>
+  651b24:      	bl	0x72f3b0 <MCFSetGetCount+0xb2f8>
+  651b28:      	ldur	x9, [x29, #-0xc0]
+  651b2c:      	add	x8, x9, x8, lsl #3
+  651b30:      	str	x26, [x8]
+  651b34:      	ldur	x8, [x29, #-0xa8]
+  651b38:      	sub	x0, x29, #0xf8
+  651b3c:      	stur	xzr, [x29, #-0xf8]
+  651b40:      	add	x8, x8, #0x1
+  651b44:      	stur	x8, [x29, #-0xa8]
+  651b48:      	bl	0x3eb028 <_ZN10tokenizers16Llama2cTokenizerC1Ev+0x39d38>
+  651b4c:      	sub	x0, x29, #0x60
+  651b50:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  651b54:      	sub	x0, x29, #0x48
+  651b58:      	bl	0x734c80 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+  651b5c:      	add	w21, w21, #0x1
+  651b60:      	b	0x651948 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x80cc>

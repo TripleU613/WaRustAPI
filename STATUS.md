@@ -1,3 +1,10 @@
+2026-11-06 — **Selected JNI submission connected to native Java-body adapter.**
+
+Exact tuples/factories/vtables identify a conditional upload-provider chain to previously
+traced stream start; effective wrapper gate and downstream headers remain open.
+[Static chain and retained scopes](docs/protocol/media-network-outcomes.md#selected-jni-upload-provider-adapter-connected-2026-11-06).
+No Rust behavior change, replay or live operation.
+
 2026-11-06 — **Selected Java upload header serialization traced to JNI.**
 
 Existing header map is serialized separately from body provider; native internal

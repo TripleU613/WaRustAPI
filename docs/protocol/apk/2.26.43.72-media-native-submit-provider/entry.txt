@@ -1,0 +1,219 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000064987c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv>:
+  650ff0:      	paciasp
+  650ff4:      	sub	sp, sp, #0x120
+  650ff8:      	stp	x29, x30, [sp, #0xc0]
+  650ffc:      	str	x28, [sp, #0xd0]
+  651000:      	stp	x26, x25, [sp, #0xe0]
+  651004:      	bl	0x37cc74 <_RNvXsp_NtCsUHwbHsI1a0_5alloc3vecINtB5_3VecmENtNtNtCsd0h5sCe2hTT_4core3ops4drop4Drop4dropCs83ZMWuwgNvG_3cxx+0x47e4c>
+  651008:      	add	x29, sp, #0xc0
+  65100c:      	mrs	x26, TPIDR_EL0
+  651010:      	bl	0x72a1cc <MCFSetGetCount+0x6114>
+  651014:      	ldr	x8, [x26, #0x28]
+  651018:      	mov	x0, sp
+  65101c:      	mov	w24, w7
+  651020:      	mov	x25, x6
+  651024:      	mov	x23, x5
+  651028:      	mov	w19, w4
+  65102c:      	bl	0x72e194 <MCFSetGetCount+0xa0dc>
+  651030:      	bl	0x725f6c <MCFSetGetCount+0x1eb4>
+  651034:      	bl	0x734db0 <_ZN8facebook3jni6detail12JniEnvCacherC1EP7_JNIEnv@plt>
+  651038:      	str	x21, [sp, #0x40]
+  65103c:      	add	x0, sp, #0x40
+  651040:      	bl	0x3a1b7c <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x353c>
+  651044:      	mov	x21, x0
+  651048:      	str	x23, [sp, #0x50]
+  65104c:      	cbz	x23, 0x6510b8 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x783c>
+  651050:      	adrp	x8, 0x7a3000 <_ZN6google8protobuf8internal26fixed_address_empty_stringE+0x37b0>
+  651054:      	add	x8, x8, #0x418
+  651058:      	ldarb	w8, [x8]
+  65105c:      	tbz	w8, #0x0, 0x6511c4 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x7948>
+  651060:      	adrp	x8, 0x7a3000 <_ZN6google8protobuf8internal26fixed_address_empty_stringE+0x37b0>
+  651064:      	ldr	x1, [x8, #0x410]
+  651068:      	add	x0, sp, #0x50
+  65106c:      	bl	0x3a1d84 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x3744>
+  651070:      	ldr	x8, [x0]
+  651074:      	ldr	x1, [x21, #0x18]
+  651078:      	ldr	x9, [x8, #0x10]
+  65107c:      	sub	x8, x29, #0x50
+  651080:      	blr	x9
+  651084:      	movi	v0.2d, #0000000000000000
+  651088:      	ldur	x23, [x29, #-0x50]
+  65108c:      	stur	x25, [x29, #-0x10]
+  651090:      	bl	0x72978c <MCFSetGetCount+0x56d4>
+  651094:      	sub	x0, x29, #0x50
+  651098:      	sub	x1, x29, #0x10
+  65109c:      	mov	w2, w24
+  6510a0:      	bl	0x65483c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xafc0>
+  6510a4:      	sub	x0, x29, #0x50
+  6510a8:      	add	x1, x23, #0x18
+  6510ac:      	bl	0x653dc4 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xa548>
+  6510b0:      	sub	x0, x29, #0x50
+  6510b4:      	bl	0x65493c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xb0c0>
+  6510b8:      	ldr	x1, [x29, #0x68]
+  6510bc:      	stp	xzr, xzr, [x29, #-0x50]
+  6510c0:      	sub	x0, x29, #0x50
+  6510c4:      	bl	0x651344 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x7ac8>
+  6510c8:      	ldr	x1, [x29, #0x60]
+  6510cc:      	ldrb	w4, [x21, #0x50]
+  6510d0:      	str	xzr, [sp, #0x38]
+  6510d4:      	add	x0, sp, #0x38
+  6510d8:      	add	x2, x21, #0x8
+  6510dc:      	add	x3, x21, #0x20
+  6510e0:      	bl	0x651610 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x7d94>
+  6510e4:      	ldr	x8, [sp, #0x38]
+  6510e8:      	ldrb	w1, [x21, #0x51]
+  6510ec:      	stp	x8, xzr, [sp, #0x28]
+  6510f0:      	add	x0, sp, #0x30
+  6510f4:      	add	x2, sp, #0x28
+  6510f8:      	bl	0x6516f8 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x7e7c>
+  6510fc:      	bl	0x72ab30 <MCFSetGetCount+0x6a78>
+  651100:      	cbz	x0, 0x65110c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x7890>
+  651104:      	bl	0x728b50 <MCFSetGetCount+0x4a98>
+  651108:      	blr	x8
+  65110c:      	stur	x22, [x29, #-0x58]
+  651110:      	ldp	x9, x22, [x29, #-0x50]
+  651114:      	ldr	x8, [sp, #0x30]
+  651118:      	stp	x8, x23, [sp, #0x18]
+  65111c:      	stp	x9, x22, [sp, #0x58]
+  651120:      	cbz	x22, 0x65112c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x78b0>
+  651124:      	bl	0x728f64 <MCFSetGetCount+0x4eac>
+  651128:      	bl	0x39def0 <_RNvYINtNtNtCsd0h5sCe2hTT_4core5slice4iter7IterMutmENtNtNtNtB9_4iter8adapters3zip27TrustedRandomAccessNoCoerce4sizeB9_+0x4f30>
+  65112c:      	add	x0, sp, #0x48
+  651130:      	sub	x2, x29, #0x58
+  651134:      	add	x5, sp, #0x20
+  651138:      	add	x6, sp, #0x18
+  65113c:      	add	x7, sp, #0x58
+  651140:      	bl	0x72f9a4 <MCFSetGetCount+0xb8ec>
+  651144:      	mov	w4, w19
+  651148:      	bl	0x651860 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x7fe4>
+  65114c:      	mov	x0, x22
+  651150:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  651154:      	ldr	x0, [sp, #0x18]
+  651158:      	cbz	x0, 0x651164 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x78e8>
+  65115c:      	bl	0x728b50 <MCFSetGetCount+0x4a98>
+  651160:      	blr	x8
+  651164:      	ldr	x0, [sp, #0x20]
+  651168:      	cbz	x0, 0x651174 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x78f8>
+  65116c:      	bl	0x728b50 <MCFSetGetCount+0x4a98>
+  651170:      	blr	x8
+  651174:      	mov	x0, x22
+  651178:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  65117c:      	ldr	x19, [sp, #0x48]
+  651180:      	add	x0, sp, #0x48
+  651184:      	str	xzr, [sp, #0x48]
+  651188:      	bl	0x41199c <_ZNK8facebook9stash_jni10JFileStash9removeAllEv+0xba50>
+  65118c:      	mov	x0, sp
+  651190:      	bl	0x734dd0 <_ZN8facebook3jni6detail12JniEnvCacherD1Ev@plt>
+  651194:      	bl	0x725dec <MCFSetGetCount+0x1d34>
+  651198:      	b.ne	0x651340 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x7ac4>
+  65119c:      	mov	x0, x19
+  6511a0:      	ldp	x20, x19, [sp, #0x110]
+  6511a4:      	ldp	x22, x21, [sp, #0x100]
+  6511a8:      	ldr	x28, [sp, #0xd0]
+  6511ac:      	ldp	x24, x23, [sp, #0xf0]
+  6511b0:      	ldp	x26, x25, [sp, #0xe0]
+  6511b4:      	ldp	x29, x30, [sp, #0xc0]
+  6511b8:      	add	sp, sp, #0x120
+  6511bc:      	autiasp
+  6511c0:      	ret
+  6511c4:      	adrp	x0, 0x7a3000 <_ZN6google8protobuf8internal26fixed_address_empty_stringE+0x37b0>
+  6511c8:      	add	x0, x0, #0x418
+  6511cc:      	bl	0x737480 <__wrap___cxa_guard_acquire@plt>
+  6511d0:      	cbz	w0, 0x651060 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x77e4>
+  6511d4:      	sub	x0, x29, #0x10
+  6511d8:      	add	x1, sp, #0x50
+  6511dc:      	bl	0x3a1d24 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x36e4>
+  6511e0:      	ldur	x8, [x29, #-0x10]
+  6511e4:      	stur	x8, [x29, #-0x50]
+  6511e8:      	sub	x0, x29, #0x50
+  6511ec:      	bl	0x3a1fd4 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x3994>
+  6511f0:      	tbz	w0, #0x0, 0x6511fc <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x7980>
+  6511f4:      	mov	x0, xzr
+  6511f8:      	b	0x651214 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x7998>
+  6511fc:      	add	x0, sp, #0x58
+  651200:      	bl	0x64f3e8 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x5b6c>
+  651204:      	bl	0x729a84 <MCFSetGetCount+0x59cc>
+  651208:      	add	x0, sp, #0x58
+  65120c:      	bl	0x3a2090 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x3a50>
+  651210:      	cbz	x0, 0x651234 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x79b8>
+  651214:      	adrp	x23, 0x7a3000 <_ZN6google8protobuf8internal26fixed_address_empty_stringE+0x37b0>
+  651218:      	add	x23, x23, #0x410
+  65121c:      	str	x0, [x23], #0x8
+  651220:      	sub	x0, x29, #0x10
+  651224:      	bl	0x41199c <_ZNK8facebook9stash_jni10JFileStash9removeAllEv+0xba50>
+  651228:      	mov	x0, x23
+  65122c:      	bl	0x737390 <__wrap___cxa_guard_release@plt>
+  651230:      	b	0x651060 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x77e4>
+  651234:      	bl	0x725dec <MCFSetGetCount+0x1d34>
+  651238:      	b.ne	0x651340 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x7ac4>
+  65123c:      	bl	0x3a1ec8 <Java_com_whatsapp_companiondevice_garmin_peripheralprops_PeripheralPropsEvaluator_nativeEvaluateAll+0x3888>
+  651240:      	bl	0x729aa4 <MCFSetGetCount+0x59ec>
+  651244:      	bl	0x41199c <_ZNK8facebook9stash_jni10JFileStash9removeAllEv+0xba50>
+  651248:      	adrp	x0, 0x7a3000 <_ZN6google8protobuf8internal26fixed_address_empty_stringE+0x37b0>
+  65124c:      	add	x0, x0, #0x418
+  651250:      	bl	0x7373c0 <__wrap___cxa_guard_abort@plt>
+  651254:      	b	0x6512dc <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x7a60>
+  651258:      	bl	0x72a6a0 <MCFSetGetCount+0x65e8>
+  65125c:      	bl	0x65493c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0xb0c0>
+  651260:      	b	0x6512c4 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x7a48>
+  651264:      	b	0x6512c0 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x7a44>
+  651268:      	bl	0x72a190 <MCFSetGetCount+0x60d8>
+  65126c:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  651270:      	bl	0x72ab0c <MCFSetGetCount+0x6a54>
+  651274:      	cbz	x0, 0x651280 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x7a04>
+  651278:      	bl	0x728b50 <MCFSetGetCount+0x4a98>
+  65127c:      	blr	x8
+  651280:      	bl	0x72a730 <MCFSetGetCount+0x6678>
+  651284:      	cbz	x0, 0x651290 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x7a14>
+  651288:      	bl	0x728b50 <MCFSetGetCount+0x4a98>
+  65128c:      	blr	x8
+  651290:      	mov	x23, xzr
+  651294:      	b	0x6512b4 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x7a38>
+  651298:      	mov	x19, x0
+  65129c:      	bl	0x72ab30 <MCFSetGetCount+0x6a78>
+  6512a0:      	cbz	x0, 0x6512b4 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x7a38>
+  6512a4:      	bl	0x728b50 <MCFSetGetCount+0x4a98>
+  6512a8:      	blr	x8
+  6512ac:      	b	0x6512b4 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x7a38>
+  6512b0:      	mov	x19, x0
+  6512b4:      	ldur	x0, [x29, #-0x48]
+  6512b8:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  6512bc:      	b	0x6512c4 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x7a48>
+  6512c0:      	mov	x19, x0
+  6512c4:      	cbz	x23, 0x6512dc <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x7a60>
+  6512c8:      	bl	0x329d30 <MCIJSONCreateDeserializedObjectFromString+0x27394>
+  6512cc:      	ldr	x8, [x8, #0x8]
+  6512d0:      	blr	x8
+  6512d4:      	b	0x6512dc <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x7a60>
+  6512d8:      	mov	x19, x0
+  6512dc:      	mov	x0, x19
+  6512e0:      	bl	0x737360 <__wrap___cxa_begin_catch@plt>
+  6512e4:      	add	x8, sp, #0x38
+  6512e8:      	bl	0x7375c0 <__wrap__ZSt17current_exceptionv@plt>
+  6512ec:      	add	x0, sp, #0x38
+  6512f0:      	bl	0x7375e0 <__wrap__ZNSt13exception_ptrD1Ev@plt>
+  6512f4:      	bl	0x725dec <MCFSetGetCount+0x1d34>
+  6512f8:      	b.ne	0x651340 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x7ac4>
+  6512fc:      	bl	0x737490 <__wrap___cxa_rethrow@plt>
+  651300:      	mov	x19, x0
+  651304:      	bl	0x7373d0 <__wrap___cxa_end_catch@plt>
+  651308:      	mov	x0, x19
+  65130c:      	bl	0x737360 <__wrap___cxa_begin_catch@plt>
+  651310:      	bl	0x734dc0 <_ZN8facebook3jni43translatePendingCppExceptionToJavaExceptionEv@plt>
+  651314:      	bl	0x7373d0 <__wrap___cxa_end_catch@plt>
+  651318:      	mov	x19, xzr
+  65131c:      	b	0x65118c <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x7910>
+  651320:      	mov	x19, x0
+  651324:      	bl	0x7373d0 <__wrap___cxa_end_catch@plt>
+  651328:      	mov	x0, sp
+  65132c:      	bl	0x734dd0 <_ZN8facebook3jni6detail12JniEnvCacherD1Ev@plt>
+  651330:      	bl	0x725dec <MCFSetGetCount+0x1d34>
+  651334:      	b.ne	0x651340 <_ZN8facebook9distribgw6client13QlogCollector7getLogsEv+0x7ac4>
+  651338:      	mov	x0, x19
+  65133c:      	bl	0x7373e0 <__wrap__Unwind_Resume@plt>
+  651340:      	bl	0x7378f0 <__stack_chk_fail@plt>

@@ -793,3 +793,18 @@ A native internal content-length=-1 write sits near sec-websocket-protocol setup
 no ordinary-upload binding or final wire-header claim established. Native
 middleware/property effects and absent-explicit-header synthesis remain open.
 No Rust behavior/header change, replay or live operation.
+
+## Selected JNI upload provider adapter connected 2026-11-06
+
+**Confirmed selected static:** JNI tuple identifies650ff0 as the selected provider
+submit entry; matching initHybrid factory64f83c createsTigonXplatBodyProvider.
+Class-to-table registration remains untraced, so its inherited-factory binding
+is conditional.
+Its slot0x10 adapter64fa04 createsTigonJavaBodyProvider, whose slot0x10 is the
+previously traced64e908 stream start. Nonzero adapter+0x70 selects the limiting
+wrapper; effective service input remains unknown. [Exact tuples, RTTI/primary
+vtable checks, factories and full selected submit entry](apk/2.26.43.72-media-native-submit-provider/README.md).
+
+Request buffer is decoded separately by651860; retained prefix reads method/URL
+and header pairs. Remaining conversion/native middleware and automatic headers
+are unproven. No Rust behavior change, acceptance, retry or live operation.

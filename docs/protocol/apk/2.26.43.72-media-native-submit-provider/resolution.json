@@ -1,0 +1,135 @@
+{
+  "scope": "Static JNI/provider chain and selected windows, not observed dispatch or final wire construction",
+  "library_sha256": "d0ab3f2237e92a76ac3519c3577b5836b9e6f65a186c2016cefd43c4923f4b0d",
+  "jni": [
+    {
+      "slot_va": "0x7561e0",
+      "name": "sendRequestBodyBufferIntegerBuffer",
+      "signature": "(Lcom/facebook/tigon/iface/TigonRequest;[BILcom/facebook/tigon/TigonBodyProvider;[BILcom/facebook/tigon/TigonCallbacks;Ljava/util/concurrent/Executor;)Lcom/facebook/tigon/TigonXplatRequestToken;",
+      "function_va": "0x650ff0"
+    },
+    {
+      "slot_va": "0x755fd0",
+      "name": "initHybrid",
+      "signature": "()Lcom/facebook/jni/HybridData;",
+      "function_va": "0x64f83c"
+    }
+  ],
+  "tables": [
+    {
+      "rtti_name": "N8facebook5tigon22TigonXplatBodyProviderE",
+      "typeinfo_va": "0x756030",
+      "address_point": "0x7788d0",
+      "functions": {
+        "0x0": "0x64f9c8",
+        "0x8": "0x64f9dc",
+        "0x10": "0x64fa04"
+      }
+    },
+    {
+      "rtti_name": "N8facebook5tigon21TigonJavaBodyProviderE",
+      "typeinfo_va": "0x755f50",
+      "address_point": "0x778780",
+      "functions": {
+        "0x0": "0x64e8ac",
+        "0x8": "0x64e8e0",
+        "0x10": "0x64e908",
+        "0x18": "0x64f064",
+        "0x20": "0x3ed468",
+        "0x28": "0x64f090",
+        "0x30": "0x64f108"
+      }
+    }
+  ],
+  "provider_name": "Java",
+  "windows": [
+    {
+      "name": "entry",
+      "start_va": "0x650ff0",
+      "end_va": "0x651344",
+      "bytes": 852,
+      "file_offset": "0x64cff0",
+      "sha256": "dd36f98b2be7980d3e524509382d35196c0ff4c969516d4c55db7cd9d959eec0"
+    },
+    {
+      "name": "converter-prefix",
+      "start_va": "0x651860",
+      "end_va": "0x651b64",
+      "bytes": 772,
+      "file_offset": "0x64d860",
+      "sha256": "62c0209b7d9922c4169a53f43d1965a6ec8642fc58f83df6a41e80cfa932937c"
+    },
+    {
+      "name": "provider-factory",
+      "start_va": "0x64f83c",
+      "end_va": "0x64f9c8",
+      "bytes": 396,
+      "file_offset": "0x64b83c",
+      "sha256": "427d5cdacd23b8ee95d05ae7791143140946e2e79f1c53db29ff9129728c13a7"
+    },
+    {
+      "name": "provider-adapter",
+      "start_va": "0x64fa04",
+      "end_va": "0x64faa4",
+      "bytes": 160,
+      "file_offset": "0x64ba04",
+      "sha256": "2c510d511d478dbde39f278286cee1da5f2aa9338c9de4646af73f20de26406b"
+    },
+    {
+      "name": "provider-name",
+      "start_va": "0x64f064",
+      "end_va": "0x64f090",
+      "bytes": 44,
+      "file_offset": "0x64b064",
+      "sha256": "805e7b011df441f8324b679b75bc1f2308e5ea320cb74dcd1b1d8c68d1a90a45"
+    },
+    {
+      "name": "provider-copy-window",
+      "start_va": "0x3ed468",
+      "end_va": "0x3ed49c",
+      "bytes": 52,
+      "file_offset": "0x3e9468",
+      "sha256": "3f15ae0e8d6fe9846421bf5f60b30579caefd2ac220497ef12f803c24d47487b"
+    },
+    {
+      "name": "stream-start-prefix",
+      "start_va": "0x64e908",
+      "end_va": "0x64ec00",
+      "bytes": 760,
+      "file_offset": "0x64a908",
+      "sha256": "0090e7116b625bf13ce4630e32376d6ee55aa149012476f53fafce67d3adf779"
+    },
+    {
+      "name": "jni-arguments",
+      "start_va": "0x72a1cc",
+      "end_va": "0x72a1d8",
+      "bytes": 12,
+      "file_offset": "0x7261cc",
+      "sha256": "8342385f57c10551ae38b36d2ea32546d284f17e65d2f0ed08c49dd8095e4902"
+    },
+    {
+      "name": "buffer-arguments",
+      "start_va": "0x72e194",
+      "end_va": "0x72e1a0",
+      "bytes": 12,
+      "file_offset": "0x72a194",
+      "sha256": "474e526de157c4899d080ac13ef94e70ee7571a143fdc99a1ff06d02af51d8d5"
+    },
+    {
+      "name": "adapter-result",
+      "start_va": "0x732ba8",
+      "end_va": "0x732bb4",
+      "bytes": 12,
+      "file_offset": "0x72eba8",
+      "sha256": "15bda957c257bafc0a0da6312ee5697898cd8c94880c5138b2e4e172daf0f299"
+    },
+    {
+      "name": "adapter-arguments",
+      "start_va": "0x72f908",
+      "end_va": "0x72f914",
+      "bytes": 12,
+      "file_offset": "0x72b908",
+      "sha256": "72f2516a3cca8ff9af3f351476947905ddb9b98e46dbec518455086948d852a2"
+    }
+  ]
+}
