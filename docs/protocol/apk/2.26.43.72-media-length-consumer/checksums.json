@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "bytes": 5153,
+    "sha256": "810e71554e457f200c446c78bc1664109dcb3397867b362afd3e3423dfc5d397"
+  },
+  "callback-helper.txt": {
+    "bytes": 262,
+    "sha256": "0e4a95dad826a3645a150db0ac2da1bc67fad8b58b2c701155b4708a3d1b7bbf"
+  },
+  "consumer-arguments.txt": {
+    "bytes": 433,
+    "sha256": "52a0fa692199f868ad945494caf6aa04dbed3ae7ee1cd2cc8535dd2cc8cc397f"
+  },
+  "consumer-registration.txt": {
+    "bytes": 2738,
+    "sha256": "92885cef486e3c13029ad2251916d9a0dce0cc3335ea63b20813c4fa4cc72467"
+  },
+  "consumer.txt": {
+    "bytes": 5318,
+    "sha256": "c66c349aa283145c7114ea797f4248e4fbf096d3f57bdefc7c77d506f42cb04f"
+  },
+  "inspect-consumer.py": {
+    "bytes": 871,
+    "sha256": "8a1511ebfd340e4cfc7a36742d0add2f0ee5edd85935c9b3ea7489bc34949bfb"
+  },
+  "offset-census.txt": {
+    "bytes": 7933,
+    "sha256": "2609ccc42fd6460ab9da4212fb62450132918903fcf12480464769d4efd5aa15"
+  },
+  "owner-resolver.txt": {
+    "bytes": 1799,
+    "sha256": "e18e44a34ccd174f42316fd52a8dfdfad2e8c3855e8bab4d77a0beb3dc083e03"
+  },
+  "progress-literals.txt": {
+    "bytes": 639,
+    "sha256": "d0c61790ce9ebcb6987b155324ec7f4893668957053d4f7406bca6b71801c1e3"
+  },
+  "windows.json": {
+    "bytes": 1407,
+    "sha256": "4388566aa0463021389bfd20c701e61f34c5f0bc547d25e9c4836b9e059d8441"
+  }
+}

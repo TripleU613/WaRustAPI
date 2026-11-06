@@ -1,0 +1,53 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000050edfc <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv>:
+  5206e0:      	nop
+  5206e4:      	adr	x8, 0x5191dc <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xa3e0>
+  5206e8:      	stp	x8, xzr, [sp, #0xa0]
+  5206ec:      	nop
+  5206f0:      	adr	x8, 0x51971c <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xa920>
+  5206f4:      	nop
+  5206f8:      	adr	x9, 0x5198ac <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xaab0>
+  5206fc:      	add	x2, sp, #0x90
+  520700:      	stp	x8, x9, [sp, #0xb0]
+  520704:      	nop
+  520708:      	adr	x8, 0x519a38 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xac3c>
+  52070c:      	nop
+  520710:      	adr	x9, 0x519fbc <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xb1c0>
+  520714:      	add	x4, sp, #0x80
+  520718:      	stp	x8, x9, [sp, #0xd0]
+  52071c:      	nop
+  520720:      	adr	x8, 0x51a788 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xb98c>
+  520724:      	nop
+  520728:      	adr	x9, 0x51a904 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xbb08>
+  52072c:      	mov	x0, x19
+  520730:      	stp	x8, x9, [sp, #0xe0]
+  520734:      	nop
+  520738:      	adr	x8, 0x51aa80 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xbc84>
+  52073c:      	stp	x8, xzr, [sp, #0xf0]
+  520740:      	nop
+  520744:      	adr	x8, 0x517d54 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x8f58>
+  520748:      	mov	x3, x23
+  52074c:      	stp	xzr, xzr, [sp, #0xc0]
+  520750:      	stp	x8, x20, [sp, #0x100]
+  520754:      	str	q0, [sp, #0x80]
+  520758:      	stp	xzr, xzr, [sp, #0x140]
+  52075c:      	bl	0x53b9c4 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x2cbc8>
+  520760:      	ldr	x0, [sp, #0x88]
+  520764:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  520768:      	add	x0, sp, #0x178
+  52076c:      	bl	0x4e6724 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x15370>
+  520770:      	mov	x0, x20
+  520774:      	bl	0x643e0c <MCFRelease>
+  520778:      	ldr	w8, [sp, #0x50]
+  52077c:      	cbz	w8, 0x520884 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x11a88>
+  520780:      	mov	w0, #0x60               // =96
+  520784:      	bl	0x737430 <__wrap__Znwm@plt>
+  520788:      	ldur	q0, [x21, #0x68]
+  52078c:      	mov	x22, x0
+  520790:      	adrp	x9, 0x76f000 <_ZTVN6google8protobuf11MessageLiteE+0x13e18>
+  520794:      	add	x9, x9, #0x170
+  520798:      	stp	xzr, xzr, [x0, #0x8]

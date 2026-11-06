@@ -1,3 +1,10 @@
+2026-11-06 — **Native stored upload length reaches count/total callback.**
+
+Selected consumer pairs declared length with accumulated count; progress semantics
+are inferred, exact callback target remains unknown. [Evidence and physical-search
+limits](media-network-outcomes.md#stored-length-reaches-a-count-and-total-callback-2026-11-06).
+No evidence of framing enforcement here; no Rust behavior change or live traffic.
+
 2026-11-06 — **Conditional native upload length handlers identified.**
 
 RTTI/vtable checks resolve limiting/MNS/HUC slot0x30 candidates. Limiting forwards

@@ -1,0 +1,46 @@
+{
+  "scope": "Selected static windows, not observed callback execution or exhaustive aliases",
+  "library_sha256": "d0ab3f2237e92a76ac3519c3577b5836b9e6f65a186c2016cefd43c4923f4b0d",
+  "windows": [
+    {
+      "label": "consumer",
+      "start_va": "0x51aa80",
+      "end_va": "0x51ac1c",
+      "file_offset": "0x516a80",
+      "bytes": 412,
+      "sha256": "5cfbf9927ca972a03d43952a30bfac2572314d06c61acfb47ad6e5ad209e4fa5"
+    },
+    {
+      "label": "callback-helper",
+      "start_va": "0x72f330",
+      "end_va": "0x72f33c",
+      "file_offset": "0x72b330",
+      "bytes": 12,
+      "sha256": "ca49024be1e3c3e32ac442510053f2f91320d0e3dcd0d80d12671c2d1e213dd0"
+    },
+    {
+      "label": "consumer-registration",
+      "start_va": "0x5206e0",
+      "end_va": "0x52079c",
+      "file_offset": "0x51c6e0",
+      "bytes": 188,
+      "sha256": "59c811bd9c7b0afad30b704ce3aaa2b45ed99dd0f89b159805e3dfd189dcee06"
+    },
+    {
+      "label": "consumer-arguments",
+      "start_va": "0x724748",
+      "end_va": "0x724768",
+      "file_offset": "0x720748",
+      "bytes": 32,
+      "sha256": "43ff23ee87f7235e067fbe2e7eb14bc542e1c4e601066e162c15c7155f962497"
+    },
+    {
+      "label": "owner-resolver",
+      "start_va": "0x517ecc",
+      "end_va": "0x517f50",
+      "file_offset": "0x513ecc",
+      "bytes": 132,
+      "sha256": "ba577d6a25c720ce2ef2263166d8d48c69c2c63ff21c298244f64df30db49024"
+    }
+  ]
+}

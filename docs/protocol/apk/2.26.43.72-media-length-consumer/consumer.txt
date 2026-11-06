@@ -1,0 +1,109 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000050edfc <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv>:
+  51aa80:      	paciasp
+  51aa84:      	sub	sp, sp, #0xb0
+  51aa88:      	stp	x29, x30, [sp, #0x60]
+  51aa8c:      	str	x25, [sp, #0x70]
+  51aa90:      	bl	0x726198 <MCFSetGetCount+0x20e0>
+  51aa94:      	add	x29, sp, #0x60
+  51aa98:      	bl	0x724748 <MCFSetGetCount+0x690>
+  51aa9c:      	bl	0x517ecc <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x90d0>
+  51aaa0:      	ldr	x21, [sp]
+  51aaa4:      	cbz	x21, 0x51ab70 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xbd74>
+  51aaa8:      	ldr	x22, [x21, #0x280]
+  51aaac:      	cbz	x22, 0x51aae0 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xbce4>
+  51aab0:      	add	x0, x22, #0x10
+  51aab4:      	bl	0x734fc0 <_ZNSt6__ndk15mutex4lockEv@plt>
+  51aab8:      	ldr	x8, [x22, #0x68]
+  51aabc:      	ldrb	w9, [x22]
+  51aac0:      	sub	x8, x8, x19
+  51aac4:      	cmp	w9, #0x1
+  51aac8:      	str	x8, [x22, #0x68]
+  51aacc:      	b.ne	0x51aad8 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xbcdc>
+  51aad0:      	add	x0, x22, #0x38
+  51aad4:      	bl	0x735400 <_ZNSt6__ndk118condition_variable10notify_allEv@plt>
+  51aad8:      	add	x0, x22, #0x10
+  51aadc:      	bl	0x734fd0 <_ZNSt6__ndk15mutex6unlockEv@plt>
+  51aae0:      	ldr	x8, [x21, #0x318]
+  51aae4:      	add	x8, x8, x19
+  51aae8:      	str	x8, [x21, #0x318]
+  51aaec:      	add	x0, x21, #0x290
+  51aaf0:      	bl	0x734fc0 <_ZNSt6__ndk15mutex4lockEv@plt>
+  51aaf4:      	ldr	x23, [x21, #0x320]
+  51aaf8:      	add	x0, x21, #0x290
+  51aafc:      	bl	0x734fd0 <_ZNSt6__ndk15mutex6unlockEv@plt>
+  51ab00:      	ldr	x19, [x21, #0x260]
+  51ab04:      	ldr	x24, [x21, #0x258]
+  51ab08:      	ldr	x25, [x21, #0x318]
+  51ab0c:      	ldr	x21, [x21, #0x250]
+  51ab10:      	ldr	x8, [x19]
+  51ab14:      	ldur	x22, [x8, #-0x48]
+  51ab18:      	cbz	x24, 0x51ab24 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xbd28>
+  51ab1c:      	bl	0x729424 <MCFSetGetCount+0x536c>
+  51ab20:      	bl	0x39def0 <_RNvYINtNtNtCsd0h5sCe2hTT_4core5slice4iter7IterMutmENtNtNtNtB9_4iter8adapters3zip27TrustedRandomAccessNoCoerce4sizeB9_+0x4f30>
+  51ab24:      	stp	x25, x23, [sp, #0x10]
+  51ab28:      	nop
+  51ab2c:      	adr	x8, 0x51abdc <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xbde0>
+  51ab30:      	nop
+  51ab34:      	adr	x9, 0x51abfc <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xbe00>
+  51ab38:      	ldr	x10, [x19, x22]
+  51ab3c:      	stp	x21, x24, [sp, #0x20]
+  51ab40:      	stp	x8, x9, [sp, #0x40]
+  51ab44:      	ldr	x8, [x10, #0x10]
+  51ab48:      	add	x0, x19, x22
+  51ab4c:      	add	x1, sp, #0x10
+  51ab50:      	blr	x8
+  51ab54:      	ldr	x8, [sp, #0x48]
+  51ab58:      	cbz	x8, 0x51ab68 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xbd6c>
+  51ab5c:      	add	x1, sp, #0x10
+  51ab60:      	bl	0x728bf8 <MCFSetGetCount+0x4b40>
+  51ab64:      	blr	x8
+  51ab68:      	mov	x0, xzr
+  51ab6c:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  51ab70:      	ldr	x0, [sp, #0x8]
+  51ab74:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  51ab78:      	bl	0x725e44 <MCFSetGetCount+0x1d8c>
+  51ab7c:      	b.ne	0x51abd8 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xbddc>
+  51ab80:      	bl	0x725b1c <MCFSetGetCount+0x1a64>
+  51ab84:      	ldp	x29, x30, [sp, #0x60]
+  51ab88:      	add	sp, sp, #0xb0
+  51ab8c:      	autiasp
+  51ab90:      	ret
+  51ab94:      	b	0x51abbc <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xbdc0>
+  51ab98:      	ldr	x8, [sp, #0x48]
+  51ab9c:      	mov	x19, x0
+  51aba0:      	cbz	x8, 0x51abb0 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xbdb4>
+  51aba4:      	add	x1, sp, #0x10
+  51aba8:      	bl	0x728bf8 <MCFSetGetCount+0x4b40>
+  51abac:      	blr	x8
+  51abb0:      	mov	x0, xzr
+  51abb4:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  51abb8:      	b	0x51abc0 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xbdc4>
+  51abbc:      	mov	x19, x0
+  51abc0:      	ldr	x0, [sp, #0x8]
+  51abc4:      	bl	0x4d7044 <_ZN8facebook14nativeutil_jni15NativeMapHybrid7consumeEv+0x5c90>
+  51abc8:      	bl	0x725e44 <MCFSetGetCount+0x1d8c>
+  51abcc:      	b.ne	0x51abd8 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xbddc>
+  51abd0:      	mov	x0, x19
+  51abd4:      	bl	0x7373e0 <__wrap__Unwind_Resume@plt>
+  51abd8:      	bl	0x7378f0 <__stack_chk_fail@plt>
+  51abdc:      	bti	c
+  51abe0:      	ldp	x2, x8, [x0, #0x8]
+  51abe4:      	ldr	x1, [x0]
+  51abe8:      	mov	x3, x30
+  51abec:      	bl	0x72f330 <MCFSetGetCount+0xb278>
+  51abf0:      	mov	x30, x3
+  51abf4:      	ldr	x16, [x9, #0x30]
+  51abf8:      	br	x16
+  51abfc:      	paciasp
+  51ac00:      	stp	x29, x30, [sp, #-0x10]!
+  51ac04:      	mov	x29, sp
+  51ac08:      	bl	0x51aa28 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0xbc2c>
+  51ac0c:      	mov	x0, xzr
+  51ac10:      	ldp	x29, x30, [sp], #0x10
+  51ac14:      	autiasp
+  51ac18:      	ret

@@ -1,0 +1,39 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000050edfc <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv>:
+  517ecc:      	paciasp
+  517ed0:      	sub	sp, sp, #0x40
+  517ed4:      	stp	x29, x30, [sp, #0x10]
+  517ed8:      	str	x21, [sp, #0x20]
+  517edc:      	stp	x20, x19, [sp, #0x30]
+  517ee0:      	add	x29, sp, #0x10
+  517ee4:      	bl	0x7249f8 <MCFSetGetCount+0x940>
+  517ee8:      	bl	0x7296d0 <MCFSetGetCount+0x5618>
+  517eec:      	bl	0x643608 <MCFArrayGetTypeID>
+  517ef0:      	mov	x1, x19
+  517ef4:      	bl	0x6414e8 <__MCFCastToClassNotNull>
+  517ef8:      	bl	0x6402dc <MCIPointerGetTypeID>
+  517efc:      	mov	x3, x0
+  517f00:      	mov	x2, sp
+  517f04:      	mov	w0, #0x1                // =1
+  517f08:      	mov	x1, x19
+  517f0c:      	bl	0x6401a4 <MCIParamsUnpackWithTypeIDs>
+  517f10:      	ldr	x8, [sp]
+  517f14:      	adrp	x9, 0x7a2000 <_ZN6google8protobuf8internal26fixed_address_empty_stringE+0x27b0>
+  517f18:      	mov	x0, x20
+  517f1c:      	ldr	x9, [x9, #0xf48]
+  517f20:      	bl	0x72dc58 <MCFSetGetCount+0x9ba0>
+  517f24:      	eor	x1, x10, x8
+  517f28:      	bl	0x5573c8 <_ZN8crossapp9tigonhttp3mns13TCPConnection6createENSt6__ndk110shared_ptrINS1_9EventLoopEEEPNS1_22TCPConnectionCallbacksENS1_11TCPSettingsE+0xb60>
+  517f2c:      	bl	0x725bbc <MCFSetGetCount+0x1b04>
+  517f30:      	b.ne	0x517f48 <_ZN8facebook5tigon26TigonComposableRetryPolicy7Builder5buildEv+0x914c>
+  517f34:      	bl	0x2f651c <MCISessionedNetworkerUnregisterObserver+0x5a18>
+  517f38:      	ldp	x29, x30, [sp, #0x10]
+  517f3c:      	add	sp, sp, #0x40
+  517f40:      	autiasp
+  517f44:      	ret
+  517f48:      	bl	0x7378f0 <__stack_chk_fail@plt>
+  517f4c:      	paciasp

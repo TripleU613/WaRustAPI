@@ -734,3 +734,19 @@ HUC downstream target, limiting-wrapper gate, dynamic object binding and MNS
 stored-field consumers remain unknown. A class named Limiting does not itself
 prove length truncation. No Rust behavior change, replay or live traffic. Next:
 trace MNS+0x320 consumers or prove the actual stream implementation.
+
+## Stored length reaches a count-and-total callback 2026-11-06
+
+**Confirmed selected static:** candidate routine51aa80 incrementsowner+0x318,
+loadsowner+0x320 under mutex+0x290, and captures the two values for a downstream
+callback. Its closure passes count and declared length unchanged through the
+callback object's slot0x30. This is a different interface from the stream's
+length-report slot. No count/length comparison or HTTP header is constructed in
+this selected routine. **Inferred:** upload-progress reporting, supported by the
+pair/context and literals; exact callback target is not established.
+[Complete selected method, helper/registration windows and search limits](apk/2.26.43.72-media-length-consumer/README.md).
+
+The207 exact-offset textual matches include unrelated/stack objects and do not
+constitute a field-alias census. Other consumers, effective configuration and
+wire framing remain unproven. No Rust behavior change, truncation, replay or live
+operation. This consumer does not establish length enforcement.
