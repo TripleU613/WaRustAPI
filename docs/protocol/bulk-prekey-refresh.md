@@ -215,3 +215,9 @@ A00 waits using inherited FfK.get() without a timeout for this null-timeout call
 **Confirmed static APK43.72:** [target/telemetry/params serialization chain](apk/2.26.43.72-usync-mex-variables/README.md) binds variables.input.query_input[].jid to typed UserJid.getRawString and input.telemetry.context to Locale.US uppercase of the preset context: MESSAGE on this selected route. Requested include_* entries are written true conditionally; skipped branches remain omitted rather than defaulting false. Explicit false is still supported by the general setter. LID and devices retain separate aggregate fields.
 
 **Unknown / unported:** complete per-user cached/profile fields, config/privacy/splitting and merge authority, binary/Pando serializer details, response authentication/adoption and live gates. This is a variable spine, not a full executable request oracle. No Rust lookup/preflight/API or live operation added.
+
+## Missing-LID MEX device cache fields (2026-11-06)
+
+**Confirmed static APK43.72:** [cache getters, field chain and scalar helper](apk/2.26.43.72-usync-mex-device-cache/README.md) show per-user devices cache input requires enabled devices and a nonempty real hash. Positive timestamp and strictly newer expected timestamp are separate gates; supplied values are decimal Strings through String.valueOf(long), not numeric JSON scalars. Hash formatting has a0x415b configuration switch. Initialized null fields are distinct from omitted flags at the intermediate map stage.
+
+**Unknown / unported:** complete hash format/config, cache/alias authority and timestamp units, coherent snapshots, final null/Pando serialization and response adoption. No clock/hash/cache values were invented and no Rust preflight/request or live operation added.

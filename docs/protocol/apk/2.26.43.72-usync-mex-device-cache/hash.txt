@@ -1,0 +1,25 @@
+
+# class: LX/0jD;
+# extends: Ljava/lang/Object;
+
+.method public A07(LL)  # .registers 5
+    # full signature: LX/0jD;->A07(Lcom/whatsapp/infra/core/jid/UserJid;)Ljava/lang/String;
+    0000..0004  const-string  v2, ""
+    0004..0008  if-eqz  v4, +0x1e
+    0008..000e  invoke-virtual  {v3, v4}, LX/0jD;->A0C(Lcom/whatsapp/infra/core/jid/UserJid;)Ljava/util/HashSet;
+    000e..0010  move-result-object  v0
+    0010..0014  new-instance  v1, Ljava/util/HashSet;
+    0014..001a  invoke-direct  {v1, v0}, Ljava/util/HashSet;-><init>(Ljava/util/Collection;)V
+    001a..0020  invoke-virtual  {v1}, Ljava/util/AbstractCollection;->isEmpty()Z
+    0020..0022  move-result  v0
+    0022..0026  if-nez  v0, +0xf
+    0026..002a  iget-object  v0, v3, LX/0jD;->A05:LX/00x;
+    002a..0030  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0030..0032  move-result-object  v0
+    0032..0036  check-cast  v0, LX/08Y;
+    0036..003c  invoke-static  {v0, v1}, LX/F2N;->A03(LX/08Y;Ljava/util/Collection;)Ljava/lang/String;
+    003c..003e  move-result-object  v0
+    003e..0040  return-object  v0
+    0040..0042  return-object  v2
+    # exception table: 0 try range(s)
+.end method

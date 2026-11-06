@@ -1,0 +1,16 @@
+
+# class: LX/Nha;
+# extends: LX/NhZ;
+
+.method public A00(VLLL)  # .registers 4
+    # full signature: LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    0000..0006  invoke-direct  {v1, v3}, LX/Nha;->A01(Ljava/lang/String;)V
+    0006..000a  iget-object  v0, v1, LX/Nha;->A01:Ljava/util/ArrayList;
+    000a..0010  invoke-virtual  {v0, v3}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0010..0016  invoke-virtual  {v0, v2}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0016..001a  iget  v0, v1, LX/Nha;->A00:I
+    001a..001e  add-int/lit8  v0, v0, #0x1
+    001e..0022  iput  v0, v1, LX/Nha;->A00:I
+    0022..0024  return-void
+    # exception table: 0 try range(s)
+.end method

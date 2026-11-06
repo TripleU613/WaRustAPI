@@ -1,3 +1,5 @@
+Pinned MEX per-user device cache fields now traced: nonempty hash gate, decimal-string timestamp fields and strict expected-timestamp comparison. [Device cache gates, decimal-string timestamps and unresolved authority](docs/protocol/bulk-prekey-refresh.md#missing-lid-mex-device-cache-fields-2026-11-06). Research only; cache/hash/null serialization remain incomplete.
+
 Pinned UsyncQuery variables now traced through raw-JID targets, nested MESSAGE telemetry and conditionally omitted include flags. [Raw-JID targets, MESSAGE telemetry and omitted-flag semantics](docs/protocol/bulk-prekey-refresh.md#missing-lid-usyncquery-variables-spine-2026-11-06). Research only; complete per-user variables remain unfinished.
 
 Pinned UsyncQuery server doc_id now recovered with exact asset and normal resolver chain; client_doc_id remains a distinct value. [Pinned server ID versus client ID, exact asset and resolver scope](docs/protocol/bulk-prekey-refresh.md#missing-lid-usyncquery-server-id-2026-11-06). Research only; no runtime lookup added.

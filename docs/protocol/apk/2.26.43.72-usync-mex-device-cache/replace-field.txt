@@ -1,0 +1,28 @@
+
+# class: LX/Nha;
+# extends: LX/NhZ;
+
+.method private A01(VL)  # .registers 4
+    # full signature: LX/Nha;->A01(Ljava/lang/String;)V
+    0000..0004  iget-boolean  v0, v2, LX/NhZ;->A03:Z
+    0004..0008  if-eqz  v0, +0x1f
+    0008..000c  if-eqz  v3, +0x9
+    000c..0012  invoke-virtual  {v3}, Ljava/lang/String;->isEmpty()Z
+    0012..0014  move-result  v0
+    0014..0018  if-nez  v0, +0x3
+    0018..001a  return-void
+    001a..001e  const-string  v1, "key="
+    001e..0022  new-instance  v0, Ljava/lang/StringBuilder;
+    0022..0028  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0028..002e  invoke-virtual  {v0, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    002e..0034  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0034..0036  move-result-object  v0
+    0036..003a  new-instance  v1, Ljava/lang/IllegalArgumentException;
+    003a..0040  invoke-direct  {v1, v0}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;)V
+    0040..0042  throw  v1
+    0042..0046  const-string  v0, "Expected object to be mutable"
+    0046..004a  new-instance  v1, Ljava/lang/IllegalStateException;
+    004a..0050  invoke-direct  {v1, v0}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+    0050..0052  throw  v1
+    # exception table: 0 try range(s)
+.end method

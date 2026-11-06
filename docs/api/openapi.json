@@ -17653,5 +17653,12 @@
     "x-live": false,
     "description": "Research-only APK43.72 UsyncQuery variable spine: input.query_input[].jid uses typed raw JID; input.telemetry.context uppercases selected message context to MESSAGE; requested include flags are conditional true entries, skipped flags omitted. Full cached/user/config/privacy/merge and adoption behavior remain incomplete. No executable lookup/API added.",
     "evidence": "docs/protocol/bulk-prekey-refresh.md#missing-lid-usyncquery-variables-spine-2026-11-06"
+},
+  "x-usync-mex-device-cache-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Research-only APK43.72 MEX per-user devices cache: enabled-device/nonempty-hash gate; positive timestamps and strictly newer expected timestamps become decimal strings. Hash configuration, cache/alias authority, units, coherent snapshots and final null/Pando serialization remain unported. No request/cache fabrication/runtime capability added.",
+    "evidence": "docs/protocol/bulk-prekey-refresh.md#missing-lid-mex-device-cache-fields-2026-11-06"
 }
 }
