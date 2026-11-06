@@ -1,0 +1,43 @@
+
+# class: Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;
+# extends: Lorg/whispersystems/jobqueue/Job;
+
+.method public <init>(VLZ)  # .registers 7
+    # full signature: Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;-><init>(LX/EcR;Z)V
+    0000..0006  invoke-static  {}, LX/DCZ;->A00()LX/DCZ;
+    0006..0008  move-result-object  v3
+    0008..000c  const-string  v0, "played-receipt-v2-"
+    000c..0012  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0012..0014  move-result-object  v2
+    0014..0018  iget-object  v1, v5, LX/EcR;->A01:LX/0DY;
+    0018..001e  invoke-virtual  {v1}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+    001e..0020  move-result-object  v0
+    0020..0026  invoke-static  {v0}, LX/00L;->A05(Ljava/lang/Object;)V
+    0026..002c  invoke-static  {v0, v2}, LX/1Xl;->A0z(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    002c..002e  move-result-object  v0
+    002e..0034  invoke-static  {v0, v3}, LX/6ol;->A0n(Ljava/lang/String;LX/DCZ;)Lorg/whispersystems/jobqueue/JobParameters;
+    0034..0036  move-result-object  v0
+    0036..003c  invoke-direct  {v4, v0}, Lorg/whispersystems/jobqueue/Job;-><init>(Lorg/whispersystems/jobqueue/JobParameters;)V
+    003c..0042  invoke-virtual  {v1}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+    0042..0044  move-result-object  v0
+    0044..004a  invoke-static  {v0}, LX/00L;->A05(Ljava/lang/Object;)V
+    004a..004e  iput-object  v0, v4, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->toRawJid:Ljava/lang/String;
+    004e..0052  iget-object  v0, v5, LX/EcR;->A00:LX/0DY;
+    0052..0056  if-nez  v0, +0x1a
+    0056..0058  const/4  v0, #0x0
+    0058..005c  iput-object  v0, v4, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->participantRawJid:Ljava/lang/String;
+    005c..0060  iget-object  v0, v5, LX/EcR;->A03:[Ljava/lang/Long;
+    0060..0066  invoke-static  {v0}, LX/00L;->A0G([Ljava/lang/Object;)V
+    0066..006a  iput-object  v0, v4, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->messageRowIds:[Ljava/lang/Long;
+    006a..006e  iget-object  v0, v5, LX/EcR;->A04:[Ljava/lang/String;
+    006e..0074  invoke-static  {v0}, LX/00L;->A0G([Ljava/lang/Object;)V
+    0074..0078  iput-object  v0, v4, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->messageIds:[Ljava/lang/String;
+    0078..007c  iput-boolean  v6, v4, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->playedSelfFromPeer:Z
+    007c..0080  iget-boolean  v0, v5, LX/EcR;->A02:Z
+    0080..0084  iput-boolean  v0, v4, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->isCoExV2:Z
+    0084..0086  return-void
+    0086..008c  invoke-virtual  {v0}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+    008c..008e  move-result-object  v0
+    008e..0090  goto  -0x1b
+    # exception table: 0 try range(s)
+.end method

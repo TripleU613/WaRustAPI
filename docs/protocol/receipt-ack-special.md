@@ -248,3 +248,23 @@ A05 provider side effects, all failure producers, native job retry and full
 shutdown/generation ordering remain open. No runtime code or account operation.
 Fresh source exports reproduce byte-for-byte; REA retains complete source and
 limitations, with coverage/docs/hygiene checks. No new Rust tests claimed.
+
+## Played job retry eligibility and native parity gap (2026-11-06)
+
+**Confirmed selected static:** [constructor, parameter binding, retry hook,
+shared worker comparison and complete REA Evidence](apk/2.26.43.72-played-job-retry/README.md)
+connect current played job to persistent per-chat grouping,100 attempt budget
+and ChatConnectionRequirement. Its A0N returns true after diagnostic formatting;
+shared Qlq worker bypasses it for RuntimeException, checks requirements after
+eligible exceptions and either loops within the budget or defers the job.
+Fresh shared worker/builder/requirement exports match retained evidence.
+
+This closes hook/budget/requirement eligibility; it does not establish100 wire
+sends or replay after server refusal. Native exception retry exists and remains
+unported in Rust: uncertain reservations retain their original wire/owner and
+are not reselected. This is an explicit lifecycle parity gap, not a claim of
+complete APK equivalence. Full source eligibility, played-self policy, callback
+replacement, restart deduplication and safe partial-write recovery remain open
+before any reconstruction of retry authority. No code or live account change.
+Selected exports reproduce exactly; subject/checksums, coverage, OpenAPI/CLI
+reference and repository hygiene verified. No new Rust runtime test claimed.

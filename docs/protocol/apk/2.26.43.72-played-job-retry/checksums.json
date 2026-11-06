@@ -1,0 +1,22 @@
+{
+  "README.md": {
+    "bytes": 5018,
+    "sha256": "c33d8a06ce15e164145b2dd001f499c740aea74bbce48d8706a86f08f88b6ab8"
+  },
+  "constructor.txt": {
+    "bytes": 3025,
+    "sha256": "ab7249ece33da23e9c39a9c62f0a0a3f0f08aa5fd19db1bc0539e2b17408e623"
+  },
+  "diagnostic.txt": {
+    "bytes": 2565,
+    "sha256": "f31a775d9da92eaf91abf688489959b322064f8b928052a69687127bf76a069a"
+  },
+  "parameters.txt": {
+    "bytes": 847,
+    "sha256": "4c5b5b5ca19d0bf963c1a902d25186812924f0fd9021031a52ada13919d03308"
+  },
+  "retry.txt": {
+    "bytes": 529,
+    "sha256": "cb292da31db6d94b5667eeba1f308d410f98bccea3cf35dbd6ff1b3ba46dbbfe"
+  }
+}

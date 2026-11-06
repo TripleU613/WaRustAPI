@@ -1,0 +1,11 @@
+
+# class: Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;
+# extends: Lorg/whispersystems/jobqueue/Job;
+
+.method public A0N(ZL)  # .registers 3
+    # full signature: Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->A0N(Ljava/lang/Exception;)Z
+    0000..0006  invoke-direct  {v1}, Lcom/whatsapp/messaging/receipts/jobqueue/job/SendPlayedReceiptJobV2;->A00()Ljava/lang/String;
+    0006..0008  const/4  v0, #0x1
+    0008..000a  return  v0
+    # exception table: 0 try range(s)
+.end method

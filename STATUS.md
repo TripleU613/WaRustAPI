@@ -1,3 +1,11 @@
+2026-11-06 — **Native played-receipt exception retry eligibility established.**
+
+Pinned constructor binds persistence, per-chat group, chat requirement and100
+job-attempt budget; exception hook returns true. Shared worker still distinguishes
+runtime exceptions, requirement deferral and normal callback completion. Rust's
+uncertain-receipt no-replay policy remains an explicit lifecycle compatibility gap;
+no unsafe retry loop or live operation added. [Evidence and limits](docs/protocol/receipt-ack-special.md#played-job-retry-eligibility-and-native-parity-gap-2026-11-06).
+
 2026-11-06 — **Receipt dispatch drop/exception boundaries confirmed.**
 
 Pinned APK dispatch can return without sending or completing its registered
