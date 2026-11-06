@@ -3139,6 +3139,135 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn mixed_refresh_errors_keep_selected_reply_and_adoption_authority() {
+        for first in [false, true] {
+            for context in ["valid", "forged", "user_error", "outer_error"] {
+                let f = fixture("222222222222222@lid").await;
+                let response = if context == "forged" {
+                    reply(&f.peer, &f.id, &f.new, false)
+                } else {
+                    f.response.clone()
+                };
+                let selected = if context == "user_error" {
+                    Node::new("user")
+                        .attr("jid", f.peer.clone())
+                        .children(vec![Node::new("error").attr("code", "480")])
+                } else {
+                    response
+                        .child("list")
+                        .unwrap()
+                        .child("user")
+                        .unwrap()
+                        .clone()
+                };
+                let foreign = Node::new("user")
+                    .attr("jid", Jid::parse("222222222222223@lid").unwrap())
+                    .children(vec![
+                        Node::new("error")
+                            .attr("code", "503")
+                            .attr("text", "FOREIGN_PRIVATE"),
+                    ]);
+                let users = if first {
+                    vec![foreign, selected]
+                } else {
+                    vec![selected, foreign]
+                };
+                let list = Node::new("list").children(users);
+                let root = Node::new("error").attr("code", "500");
+                let response = response.children(if first {
+                    vec![root, list]
+                } else {
+                    vec![list, root]
+                });
+                let response = if context == "outer_error" {
+                    response.attr("type", "error")
+                } else {
+                    response
+                };
+                settle(&f, &response);
+                let outcome = actions::outcomes(&f.store).unwrap().remove(0);
+                assert_eq!(
+                    outcome.status,
+                    if matches!(context, "user_error" | "outer_error") {
+                        actions::ActionStatus::Error
+                    } else {
+                        actions::ActionStatus::Ok
+                    }
+                );
+                assert_eq!(
+                    outcome.error_code,
+                    match context {
+                        "user_error" => Some(480),
+                        "outer_error" => Some(500),
+                        _ => None,
+                    }
+                );
+                assert!(
+                    !serde_json::to_string(&outcome)
+                        .unwrap()
+                        .contains("FOREIGN_PRIVATE")
+                );
+                let before = snapshot(&f.store);
+                let view = super::super::inspect(&f.store, &f.id).unwrap().unwrap();
+                use super::super::super::peer_keys::DirectoryStatus;
+                assert_eq!(
+                    view.status,
+                    match context {
+                        "valid" => DirectoryStatus::VerifiedBundle,
+                        "forged" => DirectoryStatus::InvalidSignature,
+                        _ => DirectoryStatus::ServerRefused,
+                    }
+                );
+                assert_eq!(
+                    view.server_error_code,
+                    match context {
+                        "user_error" => Some(480),
+                        "outer_error" => Some(500),
+                        _ => None,
+                    }
+                );
+                assert_eq!(before, snapshot(&f.store));
+                let result = apply(&f.store, &f.id, IdentityChangePolicy::ApkAuthenticated)
+                    .await
+                    .unwrap();
+                if context == "valid" {
+                    assert_eq!(result, Application::Applied);
+                    let pin: Vec<u8> = f
+                        .store
+                        .read(|tx| {
+                            Ok(tx
+                                .get_json(
+                                    Table::PeerIdentities,
+                                    format!("comparison-direct:{}", f.peer).as_bytes(),
+                                    1,
+                                )?
+                                .unwrap())
+                        })
+                        .unwrap();
+                    assert_eq!(pin, f.new.identity_key().serialize().to_vec());
+                } else {
+                    assert!(matches!(result, Application::Deferred(_)));
+                    assert_eq!(before, snapshot(&f.store));
+                }
+                assert!(actions::reserve_pending(&f.store).unwrap().is_empty());
+                let after = snapshot(&f.store);
+                drop(f.store);
+                let store = open(&f.dir.path().join("application.redb"));
+                assert_eq!(after, snapshot(&store));
+                let repeated = apply(&store, &f.id, IdentityChangePolicy::ApkAuthenticated)
+                    .await
+                    .unwrap();
+                assert!(if context == "valid" {
+                    repeated == Application::AlreadyApplied
+                } else {
+                    matches!(repeated, Application::Deferred(_))
+                });
+                assert_eq!(after, snapshot(&store));
+            }
+        }
+    }
+
+    #[tokio::test]
     async fn staged_refresh_cannot_adopt_after_original_action_changes() {
         for case in ["kind", "request", "malformed_request"] {
             let f = fixture("222222222222222@lid").await;

@@ -725,6 +725,14 @@ pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
             && request.get_attr("xmlns").and_then(|v| v.as_text()) == Some("encrypt")
             && request.get_attr("type").and_then(|v| v.as_text()) == Some("get")
             && request.child("identity").is_some();
+        // APK43.72 0v0.A00 binds identityJids/reason=identity key reads
+        // to Dxh too. Preserve its selected-device errors and outer dispatch.
+        let identity_refresh_peer =
+            if matches!(kind, Some("result" | "error")) && row.kind == "identity_refresh" {
+                Some(super::identity_notifications::request_peer(&request, id)?)
+            } else {
+                None
+            };
         // An `iq type=result` can still carry a refusal further in. App-state
         // answers per collection: `<sync><collection type="error"><error
         // code="409" text="conflict"/>`, observed live 2026-09-24. Reading only
@@ -742,6 +750,19 @@ pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
                     .and_then(|user| super::receipts::jid(user, "jid"))
                     .and_then(|peer| super::peer_keys::selected_user(node, &peer).ok())
                     .and_then(|user| user.child("error"))
+            } else if let Some(peer) = identity_refresh_peer.as_ref() {
+                if kind == Some("error") {
+                    let mut errors = node
+                        .child_nodes()
+                        .iter()
+                        .filter(|child| child.description == "error");
+                    let error = errors.next();
+                    errors.next().is_none().then_some(error).flatten()
+                } else {
+                    super::peer_keys::selected_user(node, peer)
+                        .ok()
+                        .and_then(|user| user.child("error"))
+                }
             } else {
                 node.child_nodes()
                     .iter()

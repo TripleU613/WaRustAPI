@@ -4513,3 +4513,5 @@ Local directory refresh and inspection now validate original single-peer request
 Identity-refresh staging/application now validates producer request ownership and freezes exact request bytes plus action kind across derivation/commit. [Confirmed race regression, local request-shape checks and remaining prior-notification gate](identity-refresh-application.md#original-request-authority-across-staging-and-commit-2026-11-06). No live operation or new server requirement.
 
 Prior identity-notification success gate now validates action kind, original request/device and correlated reply before another read. Removed the last reply-only success helper. [Seven reopen/unchanged-state cases and native-policy limits](identity-notification-key-read.md#prior-notification-success-retains-request-ownership-2026-11-06). Offline only.
+
+Identity-refresh typed action/inspection now follow pinned43.72 outer-type and exact-device error context; signed codes retained as i32. [Verified writer/callback hashes, end-to-end guarded adoption controls and limits](identity-refresh-application.md#identity-refresh-resulterror-context-2026-11-06). Offline only.

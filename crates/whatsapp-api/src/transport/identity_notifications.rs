@@ -189,8 +189,8 @@ pub struct Inspection {
     pub peer_namespace: &'static str,
     /// Exact queried device, separate from the notification's participant.
     pub device: u16,
-    /// Recognized numeric refusal code; raw server text is not exposed.
-    pub server_error_code: Option<u16>,
+    /// Signed Java integer refusal code; raw server text is not exposed.
+    pub server_error_code: Option<i32>,
     /// Null until a complete supported signed device bundle is available.
     pub signature_valid: Option<bool>,
     /// Null without a complete bundle/pin; comparison is not adoption or trust.
@@ -225,7 +225,7 @@ pub fn inspect(store: &ProtocolStore, id: &str) -> Result<Option<Inspection>> {
 }
 
 // Local ownership for the request produced by queue(), not a server requirement.
-fn request_peer(request: &Node, id: &str) -> Result<crate::model::jid::Jid> {
+pub(super) fn request_peer(request: &Node, id: &str) -> Result<crate::model::jid::Jid> {
     let invalid = || {
         Error::invalid(
             "identity_notification",
@@ -346,19 +346,28 @@ fn inspect_in(tx: &crate::store::ReadTx<'_>, id: &str) -> Result<Option<Inspecti
         .flat_map(|v| v.child_nodes())
         .filter(|v| v.description == "error")
         .collect();
-    let refusal = if root_errors.len() == 1 {
-        Some(root_errors[0])
-    } else if root_errors.is_empty() && lists.len() == 1 && users.len() == 1 && errors.len() == 1 {
-        Some(errors[0])
-    } else {
-        None
-    };
-    if let Some(error) = refusal {
-        result.status = DirectoryStatus::ServerRefused;
-        result.server_error_code = error
+    // APK43.72 1rA.A03 selects the outer branch; Dxh.A02 only
+    // reads per-user errors after result dispatch (0084..008e).
+    let code = |error: &Node| {
+        error
             .get_attr("code")
-            .and_then(|v| v.as_text())
-            .and_then(|v| v.parse().ok());
+            .and_then(|value| value.as_text())
+            .and_then(super::mex::java_decimal_long)
+            .and_then(|value| i32::try_from(value).ok())
+    };
+    if reply.get_attr("type").and_then(|value| value.as_text()) == Some("error") {
+        result.status = DirectoryStatus::ServerRefused;
+        result.server_error_code = (root_errors.len() == 1)
+            .then(|| code(root_errors[0]))
+            .flatten();
+        return Ok(Some(result));
+    }
+    if lists.len() != 1 || users.len() != 1 || errors.len() > 1 {
+        return Ok(Some(result));
+    }
+    if let Some(error) = errors.first() {
+        result.status = DirectoryStatus::ServerRefused;
+        result.server_error_code = code(error);
         return Ok(Some(result));
     }
     let Ok(bundle) = crate::signal::direct::classic_bundle_metadata_for(&reply, &peer) else {
@@ -1910,6 +1919,67 @@ pub(super) mod tests {
             inspect(&store, &id).unwrap().unwrap().refresh_guard,
             RefreshGuard::Matches
         );
+    }
+
+    #[test]
+    fn refresh_refusal_codes_use_signed_java_integer_context() {
+        for outer in [false, true] {
+            for (code, expected) in [
+                ("-1", Some(-1)),
+                ("65536", Some(65536)),
+                ("+４８０", Some(480)),
+                ("2147483647", Some(i32::MAX)),
+                ("-2147483648", Some(i32::MIN)),
+                ("2147483648", None),
+                (" 480", None),
+                ("PRIVATE_BODY", None),
+            ] {
+                let dir = tempfile::tempdir().unwrap();
+                let store = open(&dir.path().join("codes.redb"));
+                let peer = Jid::parse("222222222222222:4@lid").unwrap();
+                install_pin(&store, &peer);
+                let Refresh::Queued(id) = queue(
+                    &store,
+                    &account(),
+                    &notification(&peer.to_string(), "codes"),
+                )
+                .unwrap() else {
+                    panic!("queued")
+                };
+                actions::reserve_pending(&store).unwrap();
+                let error = Node::new("error").attr("code", code);
+                let response = Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", if outer { "error" } else { "result" })
+                    .children(if outer {
+                        vec![error]
+                    } else {
+                        vec![Node::new("list").children(
+                            vec![Node::new("user").attr("jid",peer.clone()).children(vec![error])],
+                        )]
+                    });
+                actions::record_reply(&store, &response).unwrap();
+                let view = inspect(&store, &id).unwrap().unwrap();
+                assert_eq!(
+                    view.status,
+                    super::super::peer_keys::DirectoryStatus::ServerRefused
+                );
+                assert_eq!(
+                    view.server_error_code.map(i64::from),
+                    expected.map(i64::from)
+                );
+                assert!(
+                    !serde_json::to_string(&view)
+                        .unwrap()
+                        .contains("PRIVATE_BODY")
+                );
+                assert_eq!(
+                    queue(&store, &account(), &notification(&peer.to_string(), "next")).unwrap(),
+                    Refresh::BlockedPrior
+                );
+                assert!(actions::reserve_pending(&store).unwrap().is_empty());
+            }
+        }
     }
 
     #[test]

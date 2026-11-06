@@ -4447,9 +4447,9 @@
               "integer",
               "null"
             ],
-            "minimum": 0,
-            "maximum": 65535,
-            "description": "Numeric root or exact-device refusal code; null if absent/malformed/unrecognized."
+            "minimum": -2147483648,
+            "maximum": 2147483647,
+            "description": "Signed Java i32 from a unique outer-error root or selected-device result refusal. Root errors in result and foreign-device errors are ignored. Null for malformed, overflowing or ambiguous code; no inferred wait."
           },
           "signature_valid": {
             "type": [
@@ -17513,5 +17513,12 @@
     "x-live": false,
     "description": "A new identity notification may queue a subsequent read only after saved identity_refresh Ok evidence retains original typed IQ request ID/destination/reason, exact selected device and correlated reply ID, plus existing bundle/signature checks. Ownership mismatch returns existing BlockedPrior; malformed encoded saved wire faults locally without repair. Duplicate event returns its original ID without a reservation. Reply-only private helper removed after caller migration. No native retry-scheduler parity, key adoption or live acceptance claim.",
     "evidence": "docs/protocol/identity-notification-key-read.md#prior-notification-success-retains-request-ownership-2026-11-06"
+  },
+  "x-identity-refresh-reply-context": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Identity-refresh action/inspection follows APK43.72 0v0/Dxh/1rA outer-type dispatch and original requested-device errors. Valid signed result is not poisoned by root/foreign errors; outer refusal uses root diagnostics. Inspection code widens to signed i32; generic action code stays u16. End-to-end synthetic guarded adoption accepts only valid result and remains once-only; no new identity authority or live parity claim.",
+    "evidence": "docs/protocol/identity-refresh-application.md#identity-refresh-resulterror-context-2026-11-06"
   }
 }

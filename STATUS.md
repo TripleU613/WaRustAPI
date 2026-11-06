@@ -1,3 +1,8 @@
+Identity-refresh reply handling now follows APK43.72 outer IQ type and
+selected-device errors. Root/foreign errors cannot mask valid signed data;
+outer or selected refusal still blocks adoption. Inspection codes use i32.
+[Callback evidence and adoption tests](docs/protocol/identity-refresh-application.md#identity-refresh-resulterror-context-2026-11-06).
+
 A new identity notification now requires an owned, correlated prior success
 before it can reserve another key read. Wrong kind/request/device/reply cannot
 reuse signed data as permission; duplicate events still return the original ID.
