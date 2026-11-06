@@ -1,7 +1,7 @@
 {
   "README.md": {
-    "bytes": 16377,
-    "sha256": "3b4c8629f50f6b64688e956c1c6ad82258666cbf87f9e161b3ade6019f434c81"
+    "bytes": 18622,
+    "sha256": "bf4176f493e9a730ee91ec31285aa4f332de58fe4370cd5a22344ad84eb5d80e"
   },
   "ack-attribute-constructors.txt": {
     "bytes": 4272,
@@ -82,6 +82,42 @@
   "converter.txt": {
     "bytes": 39954,
     "sha256": "8e82aff339dd36b90f9d27aba9ca7bb592147224f0d2ddb88c65c4337dca4621"
+  },
+  "current-ad-string-join.txt": {
+    "bytes": 1750,
+    "sha256": "446be3f097056dfb115b6d68923218af4983fc72ea842c8deae39c1069b6fde9"
+  },
+  "current-ad-string-reader.txt": {
+    "bytes": 4417,
+    "sha256": "ea6d87b7e26734450c045c349f3fde5d9e4883c4a830a92da2d6539fd617142b"
+  },
+  "current-agent-overrides.txt": {
+    "bytes": 908,
+    "sha256": "e617f7167c7b62102b990ac7cb5abc281d198bcc13c3ab374b3f00663eaa7202"
+  },
+  "current-device-overrides.txt": {
+    "bytes": 2882,
+    "sha256": "388105c8e8311ca71655a31c8148b8becd9122bf2d931332bbe14d721dd3561c"
+  },
+  "current-get-agent-callers.txt": {
+    "bytes": 507,
+    "sha256": "a30c0a8296140e07efbcb193824ae542136b9de2f6a9e635e0989a9d0efab2a6"
+  },
+  "current-jid-attribute-reader.txt": {
+    "bytes": 9400,
+    "sha256": "0abd873bd6834b633d6ebe2709611a61054465ee8ae25870e072150152c824c6"
+  },
+  "current-jid-writer.txt": {
+    "bytes": 5823,
+    "sha256": "fd15e791314d5ffd68701080a75e73d9b6d149ce268f5e6ef5d05c7c1bc63aa5"
+  },
+  "current-type-overrides.txt": {
+    "bytes": 10217,
+    "sha256": "6a427df02678661720278e6d2e88c296fdc31edd7994c41d226adfae59aa229a"
+  },
+  "current-user-factory.txt": {
+    "bytes": 3768,
+    "sha256": "99aef05a065a48528bfde0852821a15df03f78e206788e21fee0c75dcb9627b0"
   },
   "factory-i-excerpt.txt": {
     "bytes": 4204,

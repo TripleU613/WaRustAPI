@@ -1,0 +1,31 @@
+
+# class: LX/123;
+# extends: Ljava/lang/Object;
+
+.method public A04(LLLI)  # .registers 6
+    # full signature: LX/123;->A04(Ljava/lang/String;Ljava/lang/String;I)Ljava/lang/String;
+    0000..0006  invoke-static  {v3}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+    0006..0008  move-result  v0
+    0008..000c  if-nez  v0, +0x2d
+    000c..0010  new-instance  v2, Ljava/lang/StringBuilder;
+    0010..0016  invoke-direct  {v2}, Ljava/lang/StringBuilder;-><init>()V
+    0016..001c  invoke-virtual  {v2, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    001c..0020  if-nez  v5, +0x14
+    0020..0024  const-string  v0, ""
+    0024..002a  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    002a..002e  const/16  v0, #0x40
+    002e..0034  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(C)Ljava/lang/StringBuilder;
+    0034..003a  invoke-virtual  {v2, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    003a..0040  invoke-virtual  {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0040..0042  move-result-object  v0
+    0042..0044  return-object  v0
+    0044..0048  const-string  v1, ":"
+    0048..004c  new-instance  v0, Ljava/lang/StringBuilder;
+    004c..0052  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0052..0058  invoke-virtual  {v0, v5}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0058..005e  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    005e..0060  move-result-object  v0
+    0060..0062  goto  -0x1e
+    0062..0064  return-object  v4
+    # exception table: 0 try range(s)
+.end method

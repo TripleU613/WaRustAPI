@@ -1,0 +1,24 @@
+# Declared overrides: Lcom/whatsapp/infra/core/jid/Jid;->getAgent()I
+# Coverage: 114178 APK classes; superclass ancestry only; external/runtime/interface dispatch unverified
+# ancestry: LX/0EM; -> LX/0EL; -> Lcom/whatsapp/infra/core/jid/DeviceJid; -> Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+# ancestry: Lcom/whatsapp/infra/core/jid/Jid; -> Ljava/lang/Object;
+
+# class: LX/0EM;
+# extends: LX/0EL;
+
+.method public getAgent(I)  # .registers 2
+    # full signature: LX/0EM;->getAgent()I
+    0000..0002  const/4  v0, #0x1
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: Lcom/whatsapp/infra/core/jid/Jid;
+# extends: Ljava/lang/Object;
+
+.method public getAgent(I)  # .registers 2
+    # full signature: Lcom/whatsapp/infra/core/jid/Jid;->getAgent()I
+    0000..0002  const/4  v0, #0x0
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method

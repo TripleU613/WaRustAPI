@@ -2369,6 +2369,56 @@ mod tests {
             );
             written.send(Ok(())).unwrap();
         }
+        // APK43.72 123.A02/A04 reconstruct zero-device PN/LID as users;
+        // 1r2.A00 writes pairs for zero getters and AD for positive ones.
+        for (server, agent, device, expected_peer) in [
+            (
+                crate::model::jid::Server::User,
+                0,
+                0,
+                Jid::parse("15551234567@s.whatsapp.net").unwrap(),
+            ),
+            (
+                crate::model::jid::Server::Lid,
+                0,
+                0,
+                Jid::parse("15551234567@lid").unwrap(),
+            ),
+            (
+                crate::model::jid::Server::User,
+                0,
+                2,
+                Jid::parse("15551234567:2@s.whatsapp.net").unwrap(),
+            ),
+            (
+                crate::model::jid::Server::Lid,
+                0,
+                2,
+                Jid::parse("15551234567:2@lid").unwrap(),
+            ),
+        ] {
+            let incoming_peer = Jid {
+                user: "15551234567".into(),
+                server,
+                agent,
+                device,
+                kind: crate::model::jid::JidKind::AgentDevice,
+            };
+            let incoming = notification
+                .clone()
+                .attr("from", incoming_peer.clone())
+                .attr("participant", incoming_peer);
+            fake.deliver(incoming).await;
+            let (ack, written) = fake.written().await;
+            let expected = Node::new("ack")
+                .attr("id", "PICTURE")
+                .attr("to", expected_peer.clone())
+                .attr("class", "notification")
+                .attr("type", "picture")
+                .attr("participant", expected_peer);
+            assert_eq!(ack, expected);
+            written.send(Ok(())).unwrap();
+        }
         // An unusable ACK envelope must not terminate receive or fabricate a peer.
         fake.deliver(
             Node::new("notification")

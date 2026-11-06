@@ -1,0 +1,81 @@
+
+# class: LX/123;
+# extends: Ljava/lang/Object;
+
+.method private A02(LL)  # .registers 12
+    # full signature: LX/123;->A02(Ljava/io/InputStream;)Ljava/lang/String;
+    0000..0006  invoke-virtual  {v11}, Ljava/io/InputStream;->read()I
+    0006..0008  move-result  v1
+    0008..000e  invoke-virtual  {v11}, Ljava/io/InputStream;->read()I
+    000e..0010  move-result  v0
+    0010..0014  and-int/lit16  v4, v0, #0xff
+    0014..001a  invoke-virtual  {v11}, Ljava/io/InputStream;->read()I
+    001a..001c  move-result  v0
+    001c..0022  invoke-virtual  {v10, v11, v0}, LX/123;->A0A(Ljava/io/InputStream;I)Ljava/lang/String;
+    0022..0024  move-result-object  v5
+    0024..0028  and-int/lit8  v0, v1, #0x1
+    0028..002a  const/4  v6, #0x0
+    002a..002c  const/4  v9, #0x0
+    002c..0030  if-nez  v0, +0x3
+    0030..0032  const/4  v9, #0x1
+    0032..0036  and-int/lit16  v0, v1, #0x80
+    0036..003a  if-eqz  v0, +0x3
+    003a..003c  const/4  v6, #0x1
+    003c..0040  iget-object  v0, v10, LX/123;->A01:LX/00x;
+    0040..0046  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0046..0048  move-result-object  v0
+    0048..004c  check-cast  v0, LX/00X;
+    004c..0052  invoke-virtual  {v0}, LX/00X;->A01()LX/00Y;
+    0052..0054  move-result-object  v1
+    0054..0058  const/16  v0, #0x4e3
+    0058..005e  invoke-static  {v1, v0}, LX/09H;->A03(LX/00Y;I)Ljava/lang/Object;
+    005e..0060  move-result-object  v8
+    0060..0064  check-cast  v8, LX/0B0;
+    0064..0066  const/4  v7, #0x0
+    0066..006a  const/16  v1, #0x63
+    006a..006c  const/4  v0, #0x0
+    006c..0070  if-ne  v4, v1, +0x3
+    0070..0072  const/4  v0, #0x1
+    0072..0076  if-eq  v0, v6, +0x22
+    0076..007a  const-string  v3, "; flag="
+    007a..007e  const-string  v2, "; device="
+    007e..0082  const-string  v0, "Hosted flag mismatch on jid; user="
+    0082..0086  if-eqz  v8, +0x30
+    0086..008a  const-string  v0, "jid read; isHosted: "
+    008a..008e  new-instance  v1, Ljava/lang/StringBuilder;
+    008e..0094  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0094..009a  invoke-virtual  {v1, v6}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    009a..009e  const-string  v0, "; proceeding since no validation"
+    009e..00a4  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00a4..00aa  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00aa..00ac  move-result-object  v1
+    00ac..00b0  const-string  v0, "invalid-hosted-flag"
+    00b0..00b6  invoke-virtual  {v8, v0, v1, v7}, LX/0B0;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+    00b6..00ba  if-eqz  v6, +0xe
+    00ba..00be  if-eqz  v9, +0x9
+    00be..00c2  const-string  v0, "hosted"
+    00c2..00c8  invoke-static  {v5, v0, v4}, LX/123;->A04(Ljava/lang/String;Ljava/lang/String;I)Ljava/lang/String;
+    00c8..00ca  move-result-object  v0
+    00ca..00cc  return-object  v0
+    00cc..00d0  const-string  v0, "hosted.lid"
+    00d0..00d2  goto  -0x7
+    00d2..00d6  if-eqz  v9, +0x5
+    00d6..00da  const-string  v0, "s.whatsapp.net"
+    00da..00dc  goto  -0xc
+    00dc..00e0  const-string  v0, "lid"
+    00e0..00e2  goto  -0xf
+    00e2..00e6  new-instance  v1, Ljava/lang/StringBuilder;
+    00e6..00ec  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00ec..00f2  invoke-virtual  {v1, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00f2..00f8  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00f8..00fe  invoke-virtual  {v1, v4}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00fe..0104  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0104..010a  invoke-virtual  {v1, v6}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    010a..010e  const-string  v0, "; not reporting and proceeding"
+    010e..0114  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0114..011a  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    011a..011c  move-result-object  v0
+    011c..0122  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0122..0124  goto  -0x36
+    # exception table: 0 try range(s)
+.end method

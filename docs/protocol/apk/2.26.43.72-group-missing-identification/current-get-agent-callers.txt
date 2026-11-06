@@ -1,0 +1,14 @@
+classes.dex  Lcom/whatsapp/infra/core/jid/DeviceJid;->getRawString(L)
+  invoke dex byte offset: 0x4b1628
+classes.dex  LX/0EB;->A01(LLI)
+  invoke dex byte offset: 0x4b1b30
+classes.dex  LX/0Wv;->A01(JLI)
+  invoke dex byte offset: 0x5d3324
+classes.dex  LX/0Wv;->A01(JLI)
+  invoke dex byte offset: 0x5d3566
+classes.dex  LX/0Wv;->A02(JLL)
+  invoke dex byte offset: 0x5d3a3a
+classes.dex  LX/0Wv;->A03(LLIIIIII)
+  invoke dex byte offset: 0x5d3bf0
+classes2.dex  LX/1r2;->A00(VLL)
+  invoke dex byte offset: 0x23e80c

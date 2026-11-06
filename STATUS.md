@@ -1,3 +1,8 @@
+Current APK binary reader/writer confirms selected zero-device ACK pair
+normalization. Picture actor regression expanded to zero/nonzero PN/LID sender
+and participant forms; no runtime policy change.
+[Evidence](docs/protocol/apk/2.26.43.72-group-missing-identification/README.md).
+
 ACK address audit: current APK typed getter logs protocol-compliance failures
 but continues; no new Rust rejection inferred. Attribute helper preserves Jid
 objects; current binary reader/writer subtype parity remains unclosed.

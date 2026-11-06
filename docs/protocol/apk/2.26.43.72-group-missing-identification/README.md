@@ -259,3 +259,37 @@ returned no references; this is a failed anchor, not absence of an AD reader.
 
 No runtime change, generated query, protocol rejection, live account activity or
 claim of complete current-build address parity resulted from this follow-up.
+
+## Current binary ACK address reader/writer — 2026-11-05
+
+**Confirmed static:** exact Jid.getAgent caller census locates1r2.A00 as the
+binary writer. Its preceding interop branches are separate. At009c..00b6,
+positive getAgent/getDevice selects AD tag0xf7 at0132. Otherwise a compliant
+Jid selects pair tag0xfa at00c2; failed compliance reaches an IOException at
+0100..0132. Thus the earlier typed-getter diagnostic is not proof that final
+serialization succeeds. AD domain bit0 derives from0EM and hosted bit0x80
+from EpS.A00, followed by device and user. These are domain flags, not Rust's
+legacy Jid.agent field; Rust's LID namespace carries bit0 while agent stays0.
+The initial test fixture incorrectly assigned agent1 to a Rust LID and was
+corrected; encoder correctly refuses a separate nonzero agent field.
+
+123.A01 recognizes AD tag0xf7, calls A02, reconstructs through0Dd.A00 and
+stores a typed0Tl. A02 reads domain/device/user; bit0 chooses PN/LID and bit0x80
+hosted namespace, then A04 joins user/device/server. A04 omits :device when
+device is0 and returns server alone for empty user. The full A02 also logs
+hosted flag/device99 mismatch and proceeds; this diagnostic is not a refusal.
+The existing factory shows strings without device suffix go through a user
+factory; explicit suffixes select device classes. Complete superclass censuses
+cover114178 APK classes: two getAgent declarations, seven getDevice and27
+getType.0EM.getAgent returns1; base returns0. External/runtime/interface
+dispatch remains outside that census. This confirms current selected zero-device
+normalization without asserting parity for every special namespace/subtype.
+
+**Locally verified:** existing picture ACK actor regression now additionally
+covers binary-kind zero PN/LID and nonzero-device PN/LID in both from and
+participant. Expected zero output is a plain pair; nonzero device remains AD.
+No runtime change was needed. Existing ack_address remains scoped to PN/LID
+binary AgentDevice with zero agent/device; it is not a global encoder rewrite.
+Native factory subtype validation, all interop/hosted cases and live acceptance
+remain outside these four controls. Earlier current-reader gap notes are now
+qualified by this retained selected trace.

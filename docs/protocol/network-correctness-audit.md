@@ -3664,3 +3664,14 @@ toward class conversion/return; it does not reject solely on that boolean. A
 proposed blanket rejection based on this diagnostic was ruled out. Current
 binary-reader zero-AD normalization and subtype writer parity remain unclosed;
 no shared Rust address policy changed. [Retained source and limits](apk/2.26.43.72-group-missing-identification/README.md).
+
+
+### Current-build ACK zero-device normalization (2026-11-05)
+
+**Confirmed static, APK2.26.43.72 / offline regression:**123.A01/A02/A04
+reconstruct binary zero-device PN/LID without a device suffix;1r2.A00 chooses
+pair for zero compliant getters and AD for positive device/agent. The existing
+picture actor test now covers zero/nonzero PN/LID sender and participant forms.
+Native domain flags are distinct from Rust's agent field. No runtime policy
+change; all subtype/hosted/interop behavior and live acceptance are not claimed.
+[Current source and census](apk/2.26.43.72-group-missing-identification/README.md).
