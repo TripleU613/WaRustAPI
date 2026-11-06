@@ -3724,3 +3724,13 @@ update then emits w:gp2 ACK. Store/transaction errors now surface first; wire
 skip behavior is unchanged. Red/green actor regression proves no ACK after a
 corrupt-snapshot read, unchanged saved bytes and durable capture across reopen.
 No automatic replay/repair or live operation. [Full correction and APK boundary](notification-ack-audit.md#group-notification-storage-failures-stop-before-ack-2026-11-05).
+
+
+### Group envelope admission precedes membership updates (2026-11-05)
+
+**Confirmed local defect/fix:** invalid group ACK envelopes previously changed
+saved membership before refusal. The actor now validates the existing envelope,
+commits the supported change, then writes ACK. Missing/empty ID and unusable
+participant regressions preserve exact snapshot bytes and receive continuity;
+a valid control commits before ACK and survives reopen. Store faults remain
+visible; groups_dirty retains its own path. [Evidence, red/green test and limits](notification-ack-audit.md#validate-group-ack-envelope-before-membership-mutation-2026-11-05).

@@ -939,13 +939,14 @@ pub(crate) async fn drive(
                     }
                     Err(error) => return Err(error),
                 }
-                // Captured already; the snapshot follows the change (0yv.A09).
-                // This helper skips unsupported/malformed wire shapes without error.
-                // Its errors are local store/transaction failures; do not turn
-                // a failed membership update into a successful notification ACK.
-                super::groups::apply_change_notification(&store, &node)?;
+                // Validate the control envelope before mutating membership. The
+                // capture is already durable; commit the supported change before
+                // writing ACK, and surface store failures without acknowledging.
                 match super::groups::notification_ack(&node) {
-                    Ok(Some(ack)) => link.send(&ack).await?,
+                    Ok(Some(ack)) => {
+                        super::groups::apply_change_notification(&store, &node)?;
+                        link.send(&ack).await?;
+                    }
                     Ok(None) => {}
                     Err(Error::InvalidInput { field, reason }) => {
                         tracing::warn!(field, reason, "group notification refused locally; captured without ACK; session continues");
@@ -2319,6 +2320,83 @@ mod tests {
             );
         }
         fake.stop_cleanly().await;
+    }
+
+    #[tokio::test]
+    async fn refused_group_ack_envelope_cannot_change_membership() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("group-envelope.redb");
+        let store = open(&path);
+        let key = super::super::groups::key("123456-789@g.us");
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    key.as_bytes(),
+                    1,
+                    &serde_json::json!({"jid":"123456-789@g.us", "updated_at":0,
+                "members":[{"jid":"15551234567@s.whatsapp.net","role":null}]}),
+                )
+            })
+            .unwrap();
+        let before = store
+            .read(|tx| tx.get(Table::Checkpoints, key.as_bytes(), 1))
+            .unwrap();
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        (&mut fake.ready).await.unwrap();
+        let members = vec![Node::new("participant").attr("jid", "15551234567@s.whatsapp.net")];
+        let notification = Node::new("notification")
+            .attr("type", "w:gp2")
+            .attr("from", "123456-789@g.us")
+            .children(vec![Node::new("remove").children(members)]);
+        for invalid in [
+            notification.clone(),
+            notification.clone().attr("id", ""),
+            notification
+                .clone()
+                .attr("id", "BAD-PARTICIPANT")
+                .attr("participant", ""),
+        ] {
+            fake.deliver(invalid).await;
+            // Processing barrier: refusal must leave receive running without ACK.
+            fake.deliver(
+                Node::new("iq")
+                    .attr("type", "get")
+                    .attr("xmlns", "urn:xmpp:ping"),
+            )
+            .await;
+            let (pong, written) = fake.written().await;
+            assert_eq!(pong.description, "iq");
+            written.send(Ok(())).unwrap();
+            assert_eq!(
+                store
+                    .read(|tx| tx.get(Table::Checkpoints, key.as_bytes(), 1))
+                    .unwrap(),
+                before,
+                "unusable ACK envelope cannot mutate membership"
+            );
+        }
+        fake.deliver(notification.attr("id", "VALID")).await;
+        let (ack, written) = fake.written().await;
+        assert_eq!(ack.description, "ack");
+        let snapshot: super::super::groups::GroupSnapshot = store
+            .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        assert!(
+            snapshot.members.is_empty(),
+            "valid change commits before ACK write"
+        );
+        written.send(Ok(())).unwrap();
+        fake.stop_cleanly().await;
+        drop(store);
+        let reopened = open(&path);
+        let snapshot: super::super::groups::GroupSnapshot = reopened
+            .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        assert!(snapshot.members.is_empty());
     }
 
     #[tokio::test]

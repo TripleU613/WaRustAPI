@@ -197,3 +197,30 @@ rethrows SQLiteFullException/SQLiteDatabaseCorruptException at020c..0210 in the
 [retained base handler](apk/2.26.43.72-group-missing-identification/ingress-base.txt);
 Rust serialization faults are not claimed to be identical native exceptions.
 No live account, automatic query, identity adoption or resend occurred.
+
+
+### Validate group ACK envelope before membership mutation (2026-11-05)
+
+**Confirmed local defect/fix:** receive dispatch applied a w:gp2 membership
+change before validating its id/from/participant ACK envelope. A missing-ID
+remove could therefore change saved membership, then be refused without ACK.
+The actor now constructs/validates the existing ACK first, applies a supported
+change only for that admitted envelope, then writes the ACK after commit.
+Existing limits and malformed-envelope logging remain; no new wire rule was
+added. groups_dirty retains its separate preceding durable scheduling path.
+Store faults still propagate before ACK, preserving the preceding correction.
+
+The actor regression refused_group_ack_envelope_cannot_change_membership failed
+on the original missing-ID case with changed saved bytes. The corrected path
+checks missing ID, empty ID and unusable participant: each receives no ACK,
+passes a server-ping processing barrier and leaves the snapshot byte-for-byte
+unchanged. Its valid control removes the participant and verifies the committed
+empty membership before ACK write completion and after reopening the store.
+No automatic replay, query, identifier change or live operation occurred.
+
+This is a local admission-order correction. Current APK F0R.A02/A00 constructs
+the notification key, including id/from/participant, before the base handler
+dispatches A09; the [selected retained key path](apk/2.26.43.72-group-missing-identification/notification-key-entry.txt)
+and [fields](apk/2.26.43.72-group-missing-identification/notification-key-fields.txt)
+provide the comparison boundary. Exact native malformed-envelope/error-ACK
+behavior and this client's128-byte ID bound are not claimed identical.

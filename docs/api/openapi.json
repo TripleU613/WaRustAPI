@@ -17149,5 +17149,12 @@
     "x-live": false,
     "description": "Receive dispatch propagates group-change snapshot storage/transaction failures before w:gp2 ACK. Unsupported wire shapes retain existing skip behavior; no new wire guard, replay, repair, query, identity adoption or route. Actor regression fails on prior ACK-after-fault behavior and verifies no outbound ACK, visible storage error, unchanged original snapshot and durable capture across reopen. Local integrity policy, not a claim that Rust serialization faults equal native SQLite exceptions.",
     "evidence": "docs/protocol/notification-ack-audit.md#group-notification-storage-failures-stop-before-ack-2026-11-05"
+  },
+  "x-group-notification-envelope-before-mutation": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Receive actor validates the existing non-dirty w:gp2 ACK envelope before applying a supported membership/subject change; successful commit precedes ACK write. Missing/empty ID or unusable participant leaves snapshot unchanged and receive running without ACK. Storage faults still surface before ACK. groups_dirty retains its separate scheduling path. Actor red/green regression includes three refused envelopes, ping barriers, valid commit-before-write and reopen. No new input limit, replay, query, identity change or HTTP route.",
+    "evidence": "docs/protocol/notification-ack-audit.md#validate-group-ack-envelope-before-membership-mutation-2026-11-05"
   }
 }

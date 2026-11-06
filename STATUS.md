@@ -1,3 +1,8 @@
+Fixed invalid group ACK envelopes mutating membership before refusal.
+Envelope validation now precedes the update; commit still precedes ACK write.
+Actor regression includes three refusals and a valid/reopen control.
+[Details](docs/protocol/notification-ack-audit.md).
+
 Fixed group notification storage failures being logged then ACKed. The actor
 now surfaces the fault before ACK; regression preserves corrupt snapshot bytes
 and durable capture across reopen. No live validation.
