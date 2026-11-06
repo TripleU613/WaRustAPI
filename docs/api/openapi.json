@@ -17786,5 +17786,12 @@
     "x-live": false,
     "description": "Existing lab-transport initial account load checks present registration material in one read snapshot before send-path claiming and network side effects. Shared feature-gated factory.check_login_account_in is public. Optional absent lab material remains supported; no repair or rotation. Awaited CLI reservation/result ownership remains unresolved.",
     "evidence": "docs/protocol/authkey-lifecycle.md#cli-account-load-checks-the-registration-copy-2026-11-06"
+},
+  "x-cli-login-snapshot-ownership": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Existing lab-transport login captures shared zeroized LoginSnapshot, validates account/material at reservation, and requires exact unknown owner plus same snapshot before settlement/account writes. Decoded reply capture commits first. LoginSnapshot.capture_in/validate_in_write expose local validation only. Network/session-wide locking and lost rotation recovery remain outside scope; no live verification.",
+    "evidence": "docs/protocol/authkey-lifecycle.md#cli-login-snapshot-and-reservation-ownership-2026-11-06"
 }
 }

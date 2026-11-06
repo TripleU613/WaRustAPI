@@ -277,3 +277,38 @@ than adding another parser or key comparison. No live operation.
 work. CLI login reservation/result ownership still needs the actor-equivalent
 checks; this initial load does not authorize stale material or account changes
 later in the request lifecycle.
+
+## CLI login snapshot and reservation ownership (2026-11-06)
+
+**Confirmed local gap / fixed offline:** the separate CLI login path checked
+neither its initial credential snapshot at reservation nor its reservation owner
+at result settlement. Awaited image/socket/handshake work could leave its key and
+payload stale, and a late result could overwrite a newer checkpoint/account.
+
+LoginSnapshot is now a public redacted/zeroized local guard shared across the
+actor and CLI. capture_in validates present lab material in the caller's account
+read transaction; validate_in_write compares account/material inside a caller's
+write transaction. It exposes no key bytes and itself neither sends nor reserves.
+CLI initial load captures it; reserve_cli_login validates it, requires an absent
+or successful previous checkpoint, and commits an outcome_unknown with a fresh
+local reservation ID. The result transaction validates the same snapshot and
+exact unknown owner before existing result/account writes. No new wire fields,
+key repair, automatic retries or refusal bypass are introduced.
+
+Decoded login replies now use inbox.preserve_in_epoch before the guarded result
+transaction, so evidence survives a stale-result refusal. The existing historical
+login-result capture remains on the successful settlement path too. Capture
+failure blocks settlement. A rejected result leaves the current reservation,
+account and reply capture intact rather than reconnecting or fabricating success.
+
+Regression cli_login_reservation_and_reply_refuse_stale_credentials_or_owner_after_reopen
+covers account/material changes, replaced/settled reservations, duplicate reserve,
+valid and duplicate settlement, durable reply capture and unchanged checkpoint
+rows/journal on refusal, including reopening. Existing actor tests continue to
+exercise the shared snapshot. No live request was performed.
+
+**Limits:** this is a local check at reservation and settlement, not a lock across
+network awaits or the whole authenticated session. Image preparation can occur
+before the later reservation recheck. Post-login message/media flows and native
+lost-rotation-result reconciliation remain separate obligations. Earlier dated
+notes saying the CLI has no snapshot/owner guard are superseded for this path.

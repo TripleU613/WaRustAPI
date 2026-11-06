@@ -8244,3 +8244,5 @@ CLI explicit refusal recheck now checks exact current row/history in its archive
 Local CLI Noise-half consistency now checked before side effects; fixed diagnostics and valid/mutated/absent controls retained. [CLI Noise preflight before side effects](authkey-lifecycle.md#cli-validates-noise-halves-before-side-effects-2026-11-06). No wire or live acceptance claim.
 
 CLI account preflight now validates present registration material through the existing shared invariant, preserving optional absence and refusing malformed state before side effects. [CLI registration-copy preflight](authkey-lifecycle.md#cli-account-load-checks-the-registration-copy-2026-11-06). Offline only.
+
+CLI reservation/result await gaps closed using shared redacted LoginSnapshot and local owner ID, retaining durable capture before stale refusal. [CLI login snapshot and reservation ownership](authkey-lifecycle.md#cli-login-snapshot-and-reservation-ownership-2026-11-06). Not a session-wide lock or rotation recovery claim.

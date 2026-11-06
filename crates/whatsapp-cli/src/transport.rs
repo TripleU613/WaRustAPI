@@ -18,13 +18,63 @@ use whatsapp_api::{
 };
 
 /// Load the account and validate any lab registration copy in one snapshot.
-fn load_transport_account(store: &ProtocolStore) -> Result<AccountRecord, Error> {
+fn load_transport_account(
+    store: &ProtocolStore,
+) -> Result<
+    (
+        AccountRecord,
+        whatsapp_api::transport::connection::LoginSnapshot,
+    ),
+    Error,
+> {
     store.read(|tx| {
         let account = AccountRecord::load(tx)?
             .ok_or_else(|| Error::invalid("transport", "missing account"))?;
-        whatsapp_api::registration::factory::check_login_account_in(tx, &account)?;
-        Ok(account)
+        let snapshot =
+            whatsapp_api::transport::connection::LoginSnapshot::capture_in(tx, &account)?;
+        Ok((account, snapshot))
     })
+}
+
+fn reserve_cli_login(
+    store: &ProtocolStore,
+    snapshot: &whatsapp_api::transport::connection::LoginSnapshot,
+    payload_bytes: usize,
+) -> Result<String, Error> {
+    use whatsapp_api::store::Table;
+    let reservation = whatsapp_api::transport::messaging::new_message_id()?;
+    store.write(|tx| {
+        snapshot.validate_in_write(tx)?;
+        let previous: Option<serde_json::Value> = tx.get_json(Table::Checkpoints, b"comparison-primary-login-v1", 1)?;
+        if previous.is_some_and(|v| v["status"] != "success") {
+            return Err(Error::invalid("transport", "login already reserved or refused"));
+        }
+        tx.put_json(Table::Checkpoints, b"comparison-primary-login-v1", 1,
+            &serde_json::json!({"status":"outcome_unknown", "at":Timestamp::now(), "payload_bytes":payload_bytes, "reservation":reservation}))
+    })?;
+    Ok(reservation)
+}
+
+fn validate_cli_login_owner(
+    tx: &whatsapp_api::store::WriteTx<'_>,
+    snapshot: &whatsapp_api::transport::connection::LoginSnapshot,
+    reservation: &str,
+) -> Result<(), Error> {
+    snapshot.validate_in_write(tx)?;
+    let current: Option<serde_json::Value> = tx.get_json(
+        whatsapp_api::store::Table::Checkpoints,
+        b"comparison-primary-login-v1",
+        1,
+    )?;
+    if !current.is_some_and(|v| {
+        v["status"] == "outcome_unknown" && v["reservation"].as_str() == Some(reservation)
+    }) {
+        return Err(Error::invalid(
+            "transport",
+            "login reply no longer owns reservation",
+        ));
+    }
+    Ok(())
 }
 
 /// Pure preflight: run before uploads, refusal-history mutation or sockets.
@@ -221,7 +271,7 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
         key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
         create: false,
     })?;
-    let account = load_transport_account(&store)?;
+    let (account, login_snapshot) = load_transport_account(&store)?;
     if let Some(message) = &message {
         whatsapp_api::transport::send_path::claim(
             &store,
@@ -344,11 +394,7 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
             profile::Limits,
             store::Table,
         };
-        store.write(|tx| {
-            let previous: Option<serde_json::Value> = tx.get_json(Table::Checkpoints, LOGIN_KEY, 1)?;
-            if previous.as_ref().is_some_and(|v| v["status"] != "success") { return Err(Error::invalid("transport", "login already reserved or refused")); }
-            tx.put_json(Table::Checkpoints, LOGIN_KEY, 1, &serde_json::json!({"status":"outcome_unknown", "at":Timestamp::now(), "payload_bytes":payload.len()}))
-        })?;
+        let reservation = reserve_cli_login(&store, &login_snapshot, payload.len())?;
         eprintln!(
             "transport: sending one minimal primary login ({} bytes); unknown hardware fields omitted",
             payload.len()
@@ -371,6 +417,9 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                     "cannot decode login response with comparison dictionary",
                 )
             })?;
+        // Durable capture precedes ownership checks: a stale reply is evidence,
+        // not authority to settle a newer login or change its account.
+        whatsapp_api::transport::inbox::preserve_in_epoch(&store, &node, ConnectionEpoch(1))?;
         let status = match node.description.as_str() {
             "success" => "success",
             "failure" => "failure",
@@ -399,6 +448,7 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                 .encode(&node)
                 .ok();
         store.write(|tx| {
+            validate_cli_login_owner(tx, &login_snapshot, &reservation)?;
             tx.put_json(Table::Checkpoints, LOGIN_KEY, 1, &result)?;
             if let Some(wire) = &login_wire {
                 tx.put_json(
@@ -919,6 +969,85 @@ mod tests {
         model::jid::Jid,
         store::{MasterKey, StaticKeySource},
     };
+
+    #[test]
+    fn cli_login_reservation_and_reply_refuse_stale_credentials_or_owner_after_reopen() {
+        use whatsapp_api::store::Table;
+        for case in ["account", "material", "owner", "settled", "valid"] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("cli-owner.redb");
+            let open = |create| {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: AccountId::new("fixture").unwrap(),
+                    create,
+                    key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+                })
+                .unwrap()
+            };
+            let store = open(true);
+            store.write(|tx| AccountRecord::default().save(tx)).unwrap();
+            let (_, snapshot) = load_transport_account(&store).unwrap();
+            let owner = reserve_cli_login(&store, &snapshot, 7).unwrap();
+            assert!(reserve_cli_login(&store, &snapshot, 7).is_err());
+            store.write(|tx| {
+                match case {
+                    "account" => {
+                        let mut account = AccountRecord::load_in_write(tx)?.unwrap();
+                        account.last_authenticated_at = Some(Timestamp(123));
+                        account.save(tx)?;
+                    }
+                    "material" => tx.put(Table::Account, b"registration-lab-material", 1, b"{")?,
+                    "owner" | "settled" => tx.put_json(Table::Checkpoints, b"comparison-primary-login-v1", 1,
+                        &serde_json::json!({"status":if case == "settled" {"failure"} else {"outcome_unknown"}, "reservation":"different"}))?,
+                    _ => {}
+                }
+                Ok(())
+            }).unwrap();
+            // Preserve reply evidence before attempting the guarded state write.
+            whatsapp_api::transport::inbox::preserve(&store, &Node::new("success")).unwrap();
+            let rows = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let journal = store.journal_head().unwrap();
+            let settle = |store: &ProtocolStore| {
+                store.write(|tx| {
+                    validate_cli_login_owner(tx, &snapshot, &owner)?;
+                    tx.put_json(
+                        Table::Checkpoints,
+                        b"comparison-primary-login-v1",
+                        1,
+                        &serde_json::json!({"status":"success"}),
+                    )
+                })
+            };
+            if case == "valid" {
+                settle(&store).unwrap();
+                assert!(settle(&store).is_err());
+            } else {
+                assert!(settle(&store).is_err());
+                assert_eq!(store.journal_head().unwrap(), journal);
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    rows
+                );
+                drop(store);
+                let store = open(false);
+                assert!(settle(&store).is_err());
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    rows
+                );
+                if matches!(case, "account" | "material") {
+                    assert!(reserve_cli_login(&store, &snapshot, 7).is_err());
+                }
+            }
+        }
+    }
 
     #[test]
     fn cli_account_load_refuses_present_invalid_material_without_mutation_after_reopen() {

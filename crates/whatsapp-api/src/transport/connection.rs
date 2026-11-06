@@ -58,11 +58,48 @@ pub async fn connect(
     Ok(channel)
 }
 
-// Kept only in memory and zeroized; never logged or persisted as another key copy.
-struct LoginSnapshot {
+/// In-memory, zeroized account/material snapshot for local login ownership.
+/// Does not authorize a request or prove server acceptance; never exposes keys.
+pub struct LoginSnapshot {
     account: zeroize::Zeroizing<Vec<u8>>,
     #[cfg(feature = "experimental-signal-crypto")]
     material: Option<zeroize::Zeroizing<Vec<u8>>>,
+}
+
+impl std::fmt::Debug for LoginSnapshot {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("LoginSnapshot").finish_non_exhaustive()
+    }
+}
+
+impl LoginSnapshot {
+    /// Validate present registration material and capture this account in the
+    /// caller's read transaction, before any login-side effects.
+    pub fn capture_in(tx: &crate::store::ReadTx<'_>, account: &AccountRecord) -> Result<Self> {
+        // A consistent pair can still be a different account key. Check the
+        // existing registration copy before a socket or login reservation exists.
+        // Local invariant, not an APK requirement for Android storage layout.
+        #[cfg(feature = "experimental-signal-crypto")]
+        crate::registration::factory::check_login_account_in(tx, account)?;
+        Ok(Self {
+            account: login_account_bytes(account)?,
+            #[cfg(feature = "experimental-signal-crypto")]
+            material: tx
+                .get(
+                    Table::Account,
+                    crate::registration::factory::MATERIAL_KEY,
+                    crate::registration::factory::RECORD_VERSION,
+                )?
+                .map(zeroize::Zeroizing::new),
+        })
+    }
+
+    /// Refuse a changed account/material inside the caller's write transaction.
+    /// The caller must separately check its reservation and perform settlement
+    /// in that same transaction. No locks are held across network awaits.
+    pub fn validate_in_write(&self, tx: &crate::store::WriteTx<'_>) -> Result<()> {
+        check_login_snapshot(tx, self)
+    }
 }
 
 fn login_account_bytes(account: &AccountRecord) -> Result<zeroize::Zeroizing<Vec<u8>>> {
@@ -123,22 +160,7 @@ fn login_material(
     config.validate()?;
     let (account, snapshot) = store.read(|tx| {
         let account = AccountRecord::load(tx)?.ok_or(Error::NotRegistered)?;
-        // A consistent pair can still be a different account key. Check the
-        // existing registration copy before a socket or login reservation exists.
-        // Local invariant, not an APK requirement for Android storage layout.
-        #[cfg(feature = "experimental-signal-crypto")]
-        crate::registration::factory::check_login_account_in(tx, &account)?;
-        let snapshot = LoginSnapshot {
-            account: login_account_bytes(&account)?,
-            #[cfg(feature = "experimental-signal-crypto")]
-            material: tx
-                .get(
-                    Table::Account,
-                    crate::registration::factory::MATERIAL_KEY,
-                    crate::registration::factory::RECORD_VERSION,
-                )?
-                .map(zeroize::Zeroizing::new),
-        };
+        let snapshot = LoginSnapshot::capture_in(tx, &account)?;
         Ok((account, snapshot))
     })?;
     if !account.is_registered() || account.phone.as_ref() != Some(&config.phone) {
