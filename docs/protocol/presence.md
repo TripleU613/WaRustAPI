@@ -206,3 +206,31 @@ provider/consumer and exception policy remain open. No live operation occurred.
 Validation:1,449 workspace/all-feature tests passed. Strict workspace/all-target/
 all-feature Clippy, formatting, CLI reference regeneration, OpenAPI symbol
 validation, APK coverage freshness and repository hygiene passed. Offline only.
+
+## Current target types and outbound guard (2026-11-06)
+
+**Confirmed static / implemented offline:** [APK43.72 writers and target hierarchy](apk/2.26.43.72-presence-targets/README.md)
+re-anchor composing/audio/paused and the subscription writer. Current1bc is
+concretely GroupJid/g.us; DeviceJid and server-only0mL are separate Jid types.
+The native schema checker logs type mismatch, not a proven server ban rule.
+Rust's supported named primary-chat API previously admitted empty-user server
+addresses and AD forms when numeric device was0. chat_target/chatstate/subscribe
+now require nonempty user and !is_ad alongside their existing server set;
+subscription context gets the same named non-device restriction. Explicit
+AD0/0 wire kind remains distinct from a plain primary identity. No stripping or
+global JID-parser change. CLI validation occurs before transport::run.
+
+Red/green regression covers empty PN/LID/group, agent-only/device-only/AD0/0,
+invalid group contexts and valid primary/token cases. Existing codec round trips
+retain supported wire construction. Native group subscription remains outside
+the existing people-only Rust subset; no feature was added.
+
+DEd's2500ms message2 pause scheduling and strictly>10000ms event suppression
+comparison are retained with their0AI.A06/queued-message/bot-state gates. They
+are not a mandatory heartbeat. Effective gate meaning, upstream activity/cancel,
+full scheduler/restart behavior and the bot/interop branches remain unported.
+No extra network request, ACK, automatic timer traffic or live operation.
+
+Current0Tj.A03/A04 additionally confirm smax:any token wrappers merge into a
+plain tctoken byte child. The existing Rust subscription wire form needs no
+change; other merge branches and complete token-issuance policy remain separate.

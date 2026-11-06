@@ -1,0 +1,13 @@
+
+# class: Lcom/whatsapp/infra/core/jid/UserJid;
+# extends: LX/0DY;
+
+.method public getPrimaryDevice(L)  # .registers 3
+    # full signature: Lcom/whatsapp/infra/core/jid/UserJid;->getPrimaryDevice()Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0000..0004  sget-object  v1, Lcom/whatsapp/infra/core/jid/DeviceJid;->Companion:LX/0EB;
+    0004..0006  const/4  v0, #0x0
+    0006..000c  invoke-virtual  {v1, v2, v0}, LX/0EB;->A01(Lcom/whatsapp/infra/core/jid/UserJid;I)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    000c..000e  move-result-object  v0
+    000e..0010  return-object  v0
+    # exception table: 0 try range(s)
+.end method

@@ -20,7 +20,7 @@ A field or URL existing in an APK does not establish a mandatory request.
 | Direct/group message, server ACK, receipts and retry | transport/{messaging,receipts,retry_answer,group_receipts,outgoing} | Existing durable reservations; retry counts 1/2 corrected in previous batch. Higher counts, base-key checks and complete routing remain open; see retry-enc-count.md. |
 | Devices/identity/prekeys/key queries | transport/{devices,peer_keys,identity_query,prekeys,device_key_batches} | Existing signed baseline and bounded query machinery; conditional fields, teardown and all negative responses require continuing current-build review. |
 | Media upload/download and connection metadata | transport/{media,image_upload,image_download,voice_note} | [Media outcome persistence and pinned lifetime readers](media-network-outcomes.md) corrected/traced offline; both lifetimes are required Java longs, while full deadline/refresh policy remains open; authenticate metadata, URL/host selection, headers, expiry, hashes, bounded errors and request replay remain in the current-build queue. No endpoint-literal scan can establish required traffic. |
-| Groups/status/presence | transport/{groups,group_send,status_receipts,presence} | Existing ports are partial. Queue full notification-to-refresh ordering and response obligations, not feature expansion. |
+| Groups/status/presence | transport/{groups,group_send,status_receipts,presence} | [Current presence targets and token merge](presence.md#current-target-types-and-outbound-guard-2026-11-06) verified; unsupported target bypass fixed. Upstream typing activity/cancel, effective producer gates and full notification-to-refresh ordering remain open. Existing group/status ports are partial. |
 | Account/profile/contact actions | transport/{actions,about,profile_picture,blocklist,two_factor,report,contacts} | [Producer-specific action callbacks](chat-actions.md); photo outer/error selection and report32s callback ownership corrected offline. Full payload/native-state adoption, report optional metadata and complete per-producer response matrices remain open. Generic Ok is not feature acceptance. |
 | App state/MEX/settings/history | transport/{app_state_sync,mex,chat_settings,history_notice} | Queue conditional startup dependencies, sync cursors, mutation acknowledgements and persistence. Mandatory startup status remains unproven. |
 | Optional services/telemetry/third parties | versioned APK evidence, ownership not yet complete | Queue trace callers and runtime gates before classifying required/conditional/optional. Never invent events, device provenance or values. |
@@ -4781,3 +4781,31 @@ root403/nested401, original reply, duplicate refusal, reopen and no resend;
 kind-only ping negatives keep the generic parser. Generic Ok is not native
 schema admission or moderation acceptance. No request, ACK, retry, source guard
 or live operation was added. Existing32s callback expiry remains authoritative.
+
+## Current target types and outbound guard (2026-11-06)
+
+**Confirmed static / implemented offline:** [APK43.72 writers and target hierarchy](apk/2.26.43.72-presence-targets/README.md)
+re-anchor composing/audio/paused and the subscription writer. Current1bc is
+concretely GroupJid/g.us; DeviceJid and server-only0mL are separate Jid types.
+The native schema checker logs type mismatch, not a proven server ban rule.
+Rust's supported named primary-chat API previously admitted empty-user server
+addresses and AD forms when numeric device was0. chat_target/chatstate/subscribe
+now require nonempty user and !is_ad alongside their existing server set;
+subscription context gets the same named non-device restriction. Explicit
+AD0/0 wire kind remains distinct from a plain primary identity. No stripping or
+global JID-parser change. CLI validation occurs before transport::run.
+
+Red/green regression covers empty PN/LID/group, agent-only/device-only/AD0/0,
+invalid group contexts and valid primary/token cases. Existing codec round trips
+retain supported wire construction. Native group subscription remains outside
+the existing people-only Rust subset; no feature was added.
+
+DEd's2500ms message2 pause scheduling and strictly>10000ms event suppression
+comparison are retained with their0AI.A06/queued-message/bot-state gates. They
+are not a mandatory heartbeat. Effective gate meaning, upstream activity/cancel,
+full scheduler/restart behavior and the bot/interop branches remain unported.
+No extra network request, ACK, automatic timer traffic or live operation.
+
+Current0Tj.A03/A04 additionally confirm smax:any token wrappers merge into a
+plain tctoken byte child. The existing Rust subscription wire form needs no
+change; other merge branches and complete token-issuance policy remain separate.

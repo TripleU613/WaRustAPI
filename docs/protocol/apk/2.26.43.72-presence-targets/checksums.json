@@ -1,0 +1,58 @@
+{
+  "README.md": {
+    "bytes": 8589,
+    "sha256": "eeaf167201286889bb0122ae8ffa57314962da8c6896537abd2cc0106791122e"
+  },
+  "chatstate-xref.txt": {
+    "bytes": 366,
+    "sha256": "b0a76119d560189b8bbe9199da837a64345598744eb9b5049eae19b0e73aa83b"
+  },
+  "composing-writer.txt": {
+    "bytes": 5447,
+    "sha256": "453824d5a9d7170bd2e7ced054d31a2d97ed5d99e8cea29e4605be463fb0003f"
+  },
+  "composing-xref.txt": {
+    "bytes": 359,
+    "sha256": "94451b2ef6e0ec71d7d65387c845f8a87543ca3aa190a5820857996169015f39"
+  },
+  "device-class.txt": {
+    "bytes": 493,
+    "sha256": "c703e7c3975cfe9a96b21cbe14aeb728e91cb24b9bafb6ddb549cbaf19302d01"
+  },
+  "group-class.txt": {
+    "bytes": 299,
+    "sha256": "8cf8bebb4eb7a8f839728e4272eae563eb2e29c21f8dad50ee54951ebaca00be"
+  },
+  "server-class.txt": {
+    "bytes": 304,
+    "sha256": "2876e9fac7544fdd0191992747d9102c7a7ff4f014dd24ff4bca793fa0bec523"
+  },
+  "subscribe-xref.txt": {
+    "bytes": 354,
+    "sha256": "498a86e1720c177e70c46094b368373d8fd766f59bf38273c7980ddcfa194cd2"
+  },
+  "subscription-selected.txt": {
+    "bytes": 5672,
+    "sha256": "c39b3eb22edf094ad73583e6deaa4499c0ae8775c04381e7414cf8fd3c7e5142"
+  },
+  "target-check.txt": {
+    "bytes": 2965,
+    "sha256": "1b133ec3efe7f9552753b0244a14b24c61bbbf5d1ab761f19aee9cd568f00f42"
+  },
+  "timer-paused.txt": {
+    "bytes": 8427,
+    "sha256": "cbf84f7654480915f45fe9f3e07c1dd46e4595deb8e1deee7938bcb398d06870"
+  },
+  "token-any-merge.txt": {
+    "bytes": 20369,
+    "sha256": "ed0c993acd2ccce5ae75b02578bedd8df9da55b74ae1464eeff647e923a0ea48"
+  },
+  "token-child-add.txt": {
+    "bytes": 398,
+    "sha256": "fbb3fd064fe1d40ddc27f495c54c4126d13304f14d62f235797341468b65761a"
+  },
+  "user-primary.txt": {
+    "bytes": 625,
+    "sha256": "5dba6f7f420de70655f08673960844a475a32908e50f95d0ea8c95206d90c132"
+  }
+}

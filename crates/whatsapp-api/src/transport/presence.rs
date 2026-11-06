@@ -125,6 +125,14 @@ impl ChatState {
     }
 }
 
+// APK43.72 DEc.A01/DEd.handleMessage use UserJid/1bc class targets;
+// DeviceJid and server-only0mL extend Jid separately. Reject device
+// representations even with AD_JID encoded agent0/device0.
+// docs/protocol/apk/2.26.43.72-presence-targets/README.md.
+fn named_primary(jid: &Jid) -> bool {
+    !jid.user.is_empty() && !jid.is_ad()
+}
+
 /// Where a typing indicator may go: a person (phone or LID) or a group, never
 /// a device, a broadcast list or status.
 pub fn chat_target(raw: &str) -> Result<Jid> {
@@ -140,9 +148,9 @@ pub fn chat_target(raw: &str) -> Result<Jid> {
         }
         Jid::parse(&format!("{digits}@s.whatsapp.net"))?
     };
-    if !matches!(jid.server, Server::User | Server::Lid | Server::Group) || jid.device != 0 {
+    if !matches!(jid.server, Server::User | Server::Lid | Server::Group) || !named_primary(&jid) {
         return Err(invalid(
-            "a chat is a person or a group, with no device suffix",
+            "a chat is a named person or group, without agent/device encoding",
         ));
     }
     Ok(jid)
@@ -150,9 +158,9 @@ pub fn chat_target(raw: &str) -> Result<Jid> {
 
 /// `<chatstate to=<chat>><composing [media="audio"]/> | <paused/></chatstate>`.
 pub fn chatstate(chat: &Jid, state: ChatState) -> Result<Node> {
-    if !matches!(chat.server, Server::User | Server::Lid | Server::Group) || chat.device != 0 {
+    if !matches!(chat.server, Server::User | Server::Lid | Server::Group) || !named_primary(chat) {
         return Err(invalid(
-            "a chat is a person or a group, with no device suffix",
+            "a chat is a named person or group, without agent/device encoding",
         ));
     }
     let child = match state {
@@ -178,15 +186,17 @@ pub fn chatstate(chat: &Jid, state: ChatState) -> Result<Node> {
 /// it is added to, so on the wire it is a plain `<tctoken>` child of
 /// `presence` carrying the bytes.
 pub fn subscribe(to: &Jid, context: Option<&Jid>, tctoken: Option<&[u8]>) -> Result<Node> {
-    if !matches!(to.server, Server::User | Server::Lid) || to.device != 0 {
+    if !matches!(to.server, Server::User | Server::Lid) || !named_primary(to) {
         return Err(invalid(
-            "a subscription is to a person, with no device suffix",
+            "a subscription is to a named person, without agent/device encoding",
         ));
     }
     let mut node = Node::new("presence").attr("type", "subscribe");
     if let Some(context) = context {
-        if context.server != Server::Group {
-            return Err(invalid("a subscription context is a group"));
+        if context.server != Server::Group || !named_primary(context) {
+            return Err(invalid(
+                "a subscription context is a named group, without agent/device encoding",
+            ));
         }
         node = node.attr("context", context.clone());
     }
@@ -350,6 +360,47 @@ mod tests {
             .decode_node()
             .unwrap();
         assert_eq!(&decoded, node);
+    }
+
+    #[test]
+    fn outbound_presence_refuses_server_only_and_device_qualified_targets() {
+        let peer = Jid::parse("15551234567@s.whatsapp.net").unwrap();
+        for server in [Server::User, Server::Lid, Server::Group] {
+            let empty = Jid::new("", server.clone()).unwrap();
+            assert!(chatstate(&empty, ChatState::Composing).is_err());
+            if server != Server::Group {
+                assert!(subscribe(&empty, None, None).is_err());
+            }
+            let user = if server == Server::Group {
+                "120363000000000001"
+            } else {
+                "15551234567"
+            };
+            let plain = Jid::new(user, server.clone()).unwrap();
+            assert!(chatstate(&plain, ChatState::Paused).is_ok());
+            for (agent, device) in [(1, 0), (0, 2), (0, 0)] {
+                let ad = Jid::new_ad(user, agent, device, server.clone()).unwrap();
+                assert!(
+                    chatstate(&ad, ChatState::Recording).is_err(),
+                    "{agent}/{device}"
+                );
+                if server != Server::Group {
+                    assert!(subscribe(&ad, None, None).is_err());
+                } else {
+                    assert!(subscribe(&peer, Some(&ad), None).is_err());
+                }
+            }
+        }
+        for text in [
+            "@s.whatsapp.net",
+            "@lid",
+            "@g.us",
+            "15551234567.1:0@s.whatsapp.net",
+        ] {
+            assert!(chat_target(text).is_err(), "{text}");
+        }
+        assert!(subscribe(&peer, Some(&Jid::new("", Server::Group).unwrap()), None).is_err());
+        assert!(subscribe(&peer, None, Some(&[7; 20])).is_ok());
     }
 
     /// `LX/0y0->A00` case 3: `name` then `type="available"`, nothing else.

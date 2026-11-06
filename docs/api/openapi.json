@@ -1,4 +1,11 @@
 {
+  "x-presence-primary-target-validation": {
+    "x-cli": "whatsapp-cli listen --typing / --subscribe (validated before connecting); xtask apk-smali <apk> --class <class> --method <method> --signatures --exceptions",
+    "x-transport": "experimental outbound presence/chatstate builder validation",
+    "x-live": false,
+    "description": "Pinned APK43.72 DEc/DEd writers use UserJid/1bc/2p3 target classes;1bc is GroupJid/g.us and DeviceJid/server-only0mL extend Jid separately. Supported chat_target/chatstate/subscribe and group context now require nonempty user and !is_ad alongside existing server restrictions, rejecting agent-only/device-only and explicit AD0/0 before node construction. CLI validation occurs before transport::run. No stripping/global JID parse or saved-state change. Native type assertion is diagnostic, not a proven server refusal or ban rule. Current subscription and2500/>10000 event-driven pause/suppression gates retained as evidence; effective gate/upstream activity/bot/interop/scheduler recovery remain unported. Existing people-only subscribe subset and wire/token behavior preserved. No heartbeat, extra request/ACK/timer, HTTP route or live operation.",
+    "evidence": "docs/protocol/apk/2.26.43.72-presence-targets/README.md"
+  },
   "x-report-response-bounds": {
     "x-cli": "whatsapp-cli actions; xtask apk-smali <apk> --class <class> --method <method> --signatures --exceptions",
     "x-transport": "experimental report action result classification and offline static evidence",

@@ -1,0 +1,10 @@
+
+# class: LX/1bc;
+# extends: Lcom/whatsapp/infra/core/jid/GroupJid;
+
+.method public getServer(L)  # .registers 2
+    # full signature: LX/1bc;->getServer()Ljava/lang/String;
+    0000..0004  const-string  v0, "g.us"
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method

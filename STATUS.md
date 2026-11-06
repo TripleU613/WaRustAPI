@@ -1,3 +1,10 @@
+2026-11-06 — **Refused unsupported presence/typing targets before construction.**
+Empty-user server addresses, agent/device metadata (including explicit AD0/0)
+and malformed group contexts no longer pass the supported outbound APIs.
+Pinned current writers/type hierarchy and event-driven timer gates retained.
+[Evidence and regression](docs/protocol/presence.md#current-target-types-and-outbound-guard-2026-11-06).
+No traffic, identity normalization or scheduler feature was added.
+
 2026-11-06 — **Corrected report result extensions; resolved native list bounds.**
 Valid report results no longer become refusals due to unrelated error extensions.
 Current constructors permit empty lists; optional report/id bounds and exact ID
