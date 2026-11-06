@@ -1,3 +1,8 @@
+Research follow-up: current missing-identification handlers now traced through
+numeric registration and shared handler filtering; wire-type admission remains
+unclosed. No Rust runtime change or live operation. See the
+[retained boundary](docs/protocol/apk/2.26.43.72-group-missing-identification/README.md).
+
 2026-11-05 — **Missing participant-identification context lifecycle connected.**
 
 The current APK persists a group set: selected marker presence adds, and group

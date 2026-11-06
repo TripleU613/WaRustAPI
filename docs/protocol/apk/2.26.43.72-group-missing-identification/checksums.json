@@ -1,7 +1,7 @@
 {
   "README.md": {
-    "bytes": 5263,
-    "sha256": "08c110b006b8c2ab8a5c1c01bd863e40a069491b347835a56675634fb062d3a8"
+    "bytes": 6657,
+    "sha256": "482470ff5d9975e119744ca2ad31edff4130a5f74d600ca1ca37fb54ac9b5afc"
   },
   "adjacent-flag-negative.txt": {
     "bytes": 119,
@@ -11,9 +11,37 @@
     "bytes": 39385,
     "sha256": "aee41162788c93d67d5e0fa5f89bb7bc976421e38681b2b8d7c04016dba1ed13"
   },
+  "base-callers.txt": {
+    "bytes": 130,
+    "sha256": "f3e9aae17bac112e62a39ced85e36f71283663234bb59ec0acec8b9732ba024f"
+  },
+  "constructor-a-callers.txt": {
+    "bytes": 67,
+    "sha256": "9ae2857f9d762c3cd68e1697f565bfc2fdc30654644b234f309acf66fbe28f50"
+  },
+  "constructor-a.txt": {
+    "bytes": 5698,
+    "sha256": "a2439fad7b9f13d9144df7b8511eb5d823442e77c14cf7f7117ae1217ccb4b5b"
+  },
+  "constructor-b-callers.txt": {
+    "bytes": 67,
+    "sha256": "6b131b1c7f1e3103943dff3b0376c38471be78b173884c017a94838a1d42716a"
+  },
+  "constructor-b.txt": {
+    "bytes": 3981,
+    "sha256": "6ce54fe55136645fc227890d3e944cda47e697140320ad7090d62268728e5610"
+  },
   "converter.txt": {
     "bytes": 39954,
     "sha256": "8e82aff339dd36b90f9d27aba9ca7bb592147224f0d2ddb88c65c4337dca4621"
+  },
+  "factory-i-excerpt.txt": {
+    "bytes": 4204,
+    "sha256": "7a280b640c3ff0d405f450f4c4da63919193288f224a9eeec26cf53a181df330"
+  },
+  "factory-q-excerpt.txt": {
+    "bytes": 4204,
+    "sha256": "48d510858a60a172003e3fde75f8957354166b823366006439898c33026d0319"
   },
   "flag-writes.txt": {
     "bytes": 119,
@@ -26,6 +54,10 @@
   "ingress-b.txt": {
     "bytes": 27261,
     "sha256": "45681b3961485920c40347a39e3bd732a553f5a87ad6b43cde3eb7fddaecca47"
+  },
+  "ingress-base.txt": {
+    "bytes": 25306,
+    "sha256": "3adcdf6ee23cbb15e7760086777095d8dbb0a4923a54cf421c0ec72cfea41bf4"
   },
   "mark-callers.txt": {
     "bytes": 132,

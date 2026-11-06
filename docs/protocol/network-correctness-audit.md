@@ -3612,3 +3612,13 @@ to an add/remove operation before later group processing.
 [Persisted-set methods, exact register mapping, ingress gates and unknowns](apk/2.26.43.72-group-missing-identification/README.md).
 Rust already exposes the explicit MEX context vocabulary; automatic lifecycle
 and fully admitted ingress parity remain unported. No runtime/live operation.
+
+
+### Missing-identification numeric handler boundary (2026-11-05)
+
+**Confirmed static, APK2.26.43.72:** marker consumers0w9/19k construct
+BaseNotificationHandler with numeric registrations209/189. The base checks
+that integer before processing IncomingStanza; factory construction alone does
+not establish wire notification type or authorization. Runnable selector paths
+and the upstream integer producer remain unknown. No runtime port or live
+operation. [Retained constructors, base handler, factory excerpts and limits](apk/2.26.43.72-group-missing-identification/README.md).

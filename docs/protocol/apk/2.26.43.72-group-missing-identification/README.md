@@ -87,3 +87,26 @@ not a ban status or permission to replay a failed query. No live account
 operation, automatic query, identifier invention or identity-policy relaxation.
 
 `checksums.json` records bytes and SHA-256 for every other bundle file.
+
+## Handler construction and numeric dispatch follow-up — 2026-11-05
+
+**Confirmed static:** exact constructor caller searches find 1Uw.A0Q for
+0w9 and 1Uw.A0I for19k. These are dependency-injection factories, not wire
+notification registrations. Both mask the selector with0x3fff: retained switch
+entries select0w9 at2518 ->0bf0 and19k at7001 ->0cba. Factory excerpts retain
+the switch/header and selected branch plus complete-source SHA-256; unrelated
+factory branches are omitted.
+
+Complete constructors pass singleton integer arrays and true to0v6.<init>:
+0w9 uses0xd1 (209),19k uses0xbd (189). The base constructor stores that array
+in A0D; Amf returns it. BLn checks the supplied handler integer against A0D
+before accepting Message.obj as IncomingStanza, obtains its node and builds
+an8bl runnable (selector13). A01 obtains the IncomingStanza node and calls
+virtual A09 at0204..020a. Its exact physical callers are8aj.run and8bl.run.
+These sources establish numeric filtering and the shared processing boundary;
+they do not yet map209/189 to wire type strings or prove transport authorization.
+The runnable selector paths and upstream integer producer remain untraced.
+Do not equate numeric handler codes with binary-node token IDs.
+
+No Rust behavior changed. Unknown notification admission remains a port blocker
+for a generic marker consumer, not a reason to invent a broader policy.
