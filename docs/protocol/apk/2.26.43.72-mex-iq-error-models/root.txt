@@ -1,0 +1,11 @@
+
+# class: LX/6oe;
+# extends: Ljava/lang/Object;
+
+.method public A1M(VL)  # .registers 2
+    # full signature: LX/6oe;->A1M(LX/0Tp;)V
+    0000..0004  const-string  v0, "iq"
+    0004..000a  invoke-static  {v1, v0}, LX/0Tp;->A01(LX/0Tp;Ljava/lang/String;)V
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method

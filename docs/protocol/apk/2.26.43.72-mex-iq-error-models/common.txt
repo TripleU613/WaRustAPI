@@ -1,0 +1,12 @@
+
+# class: LX/8B6;
+# extends: Ljava/lang/Object;
+
+.method public A0C(ZLL)  # .registers 3
+    # full signature: LX/8B6;->A0C(LX/0Tp;LX/8B6;)Z
+    0000..0004  const-string  v0, "error"
+    0004..000a  invoke-virtual  {v2, v1, v0}, LX/8B6;->A0N(LX/0Tp;Ljava/lang/String;)Z
+    000a..000c  move-result  v0
+    000c..000e  return  v0
+    # exception table: 0 try range(s)
+.end method

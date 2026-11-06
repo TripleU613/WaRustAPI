@@ -8216,3 +8216,5 @@ Current43.72 self-device hash helper gap narrowed with source filtering and own-
 APK43.72 hosted LID device99 distinction retained; current Rust domain guard avoids unsupported normalization. [Hosted LID device99 boundary and remaining dispatch/authority limits](cross-device-sync.md#hosted-lid-device99-hash-boundary-2026-11-06). No live operation.
 
 MEX map-constructor null behavior narrowed using pinned AOSP sources and APK call site; put(null) removal is a different API. [MEX null serialization platform boundary](bulk-prekey-refresh.md#missing-lid-mex-null-serialization-platform-boundary-2026-11-06). No live operation.
+
+APK43.72 MEX IQ error matchers/wrappers traced; ignored backoff read does not establish a retry duration. [MEX IQ error families and backoff boundary](mex.md#current-mex-iq-error-families-and-backoff-boundary-2026-11-06). Offline only.

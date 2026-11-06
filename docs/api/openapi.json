@@ -17688,5 +17688,12 @@
     "x-live": false,
     "description": "Research-only APK43.72 JSONObject(Map) call site plus pinned AOSP Android16 source predicts explicit stored nulls on the selected non-Pando JSON path. Absent include flags stay absent. Actual platform/classloader and Pando behavior remain unverified; no runtime query implementation added.",
     "evidence": "docs/protocol/bulk-prekey-refresh.md#missing-lid-mex-null-serialization-platform-boundary-2026-11-06"
+},
+  "x-mex-iq-error-model-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Research-only APK43.72 MEX IQ error models: request400/501 and server429/500/503 expected code/text pairs; exactly-one server error child; LIM transport wrappers distinct from GraphQL scoped backoff. Backoff scalar is read but not retained by this constructor; timers/consumers remain unknown. No retry or runtime classifier added.",
+    "evidence": "docs/protocol/mex.md#current-mex-iq-error-families-and-backoff-boundary-2026-11-06"
 }
 }

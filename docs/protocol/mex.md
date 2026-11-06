@@ -1572,3 +1572,9 @@ Regression duplicate_result_payloads_refuse_without_update_fallback_or_content_e
 ## Current MEX request envelope comparison (2026-11-06)
 
 **Confirmed static APK43.72:** [current trace/bound helper and shared constructors](apk/2.26.43.72-mex-request-envelope/README.md) agree with Rust's existing shared envelope fields: server destination,w:mex/get, server ID in trace/flow_id/query_id and queryId/variables JSON. No wrapper mismatch was found. This does not reanchor group-specific query ID/variables or establish live acceptance. Native string-bound assertions are not a simple false-return validator; Rust's stricter input policy remains local. No runtime change or live operation.
+
+## Current MEX IQ error families and backoff boundary (2026-11-06)
+
+**Confirmed static APK43.72:** [typed IQ error models and transport wrappers](apk/2.26.43.72-mex-iq-error-models/README.md) bind bad-request/400 and feature-not-implemented/501 to request errors, and rate-overlimit/429, internal-server-error/500, service-unavailable/503 to server errors. The server constructor requires exactly one error child and reads but does not retain the backoff scalar; it retains the raw child. Both callback families construct LIM transport errors, distinct from GraphQL Hxy scoped extension backoff. Delegate constructor order, rather than an error child alone, selects the category.
+
+**Unknown / unchanged:** ignored backoff-read diagnostic effects, units/consumers/persistence, full callback dispatch and outer admission/Pando. Rust JSON payload parsing is not a live IQ error classifier; no guessed retry, mixed-child guard or runtime behavior added. No live operation.
