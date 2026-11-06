@@ -1,3 +1,10 @@
+2026-11-06 — **Blocklist default metadata provider binding resolved.**
+Pinned provider/cache/factory instructions connect7to provider0xb43 ->0x430
+->0bZ, with delegated12d and metadata helper12g. This establishes packaged
+default construction, not current runtime cache or complete backend ownership.
+[Exact cases and boundaries](chat-actions.md#blocklist-default-provider-binding-2026-11-06).
+No Rust runtime or live account change.
+
 2026-11-06 — **Blocklist metadata concrete writer boundaries retained.**
 Traced candidate store declarations, username trim/leading-@ normalization,
 database-readiness/delegation and separate write/notification stages. Active

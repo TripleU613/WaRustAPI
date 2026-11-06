@@ -353,6 +353,12 @@
     "x-live": false,
     "description": "APK43.72 bounded metadata-writer declaration census and selected concrete methods: Android whitespace trim then leading-@ stripping, changed-value/empty handling, database readiness, delegation and separate notification stages. Per-entry Boolean setter results are ignored in one wrapper; returned keys do not prove durable write success. Superclass override query excludes interface dispatch; active binding and complete backend/alias effects remain open. REA writer body unavailable; DEX instructions retained. No production behavior or request added. docs/protocol/chat-actions.md#blocklist-metadata-concrete-write-boundaries-2026-11-06"
   },
+  "x-blocklist-default-provider-evidence": {
+    "x-cli": "xtask apk-smali <apk> --class <class> --method <method> --signatures --exceptions; xtask apk-callers <apk> --class <class> --method <method>",
+    "x-transport": "offline static APK evidence only",
+    "x-live": false,
+    "description": "APK43.72 default metadata provider chain: 7to provider0xb43 via cached registry alias0x430 reaches concrete0bZ; constructor delegates0x439 to12d and helper0x438 to12g. Exact selector/range/switch cases and cache bypasses retained. This establishes packaged default construction, not current runtime cache, overrides/lifecycle or complete backend ownership. Rust user-saved contact names are not an equivalent native LID metadata store. No production behavior/request added. docs/protocol/chat-actions.md#blocklist-default-provider-binding-2026-11-06"
+  },
   "x-library-capabilities": [
     {
       "symbol": "whatsapp_api::transport::app_state_sync::binding::bind_inline_fetch_plan",

@@ -1340,3 +1340,29 @@ coverage freshness pass (966 distinct REA records,0 duplicate copies,72 mapped).
 No Rust behavior changed; workspace runtime tests were not rerun for this
 research-only chunk.
 Repository hygiene passes (423 APK checksum bundles).
+
+## Blocklist default provider binding (2026-11-06)
+
+**Confirmed selected static:** [provider/cache methods, exact factory cases,
+constructor and caller census](apk/2.26.43.72-blocklist-provider-binding/README.md)
+resolve the packaged default path from7to provider0xb43 to0bZ.05d/05h preserve
+the ID;00D.A03 checks its cache then uses1Uw factories. Root selector0 and
+low14-bit range0xaf7..0xc10 reachA0S key2883 ->0x430. Root/range dispatch for
+0x430 reachesA04 key1072, constructing0bZ. Its delegate0x439 reaches12d and
+metadata helper0x438 reaches12g. The earlier candidate declaration evidence
+is now connected to this default static construction route.
+
+This does not observe current runtime cached objects or enumerate override/
+reset lifecycle. No cache miss or new construction is presumed at runtime.
+Other0Ws/3LI/0Wv provider/backend effects remain separate. Rust's contact
+address book has user-saved PN names, not the distinct LID username/display-name
+stores shown here; those names must not be overwritten as a substitute adapter.
+No Rust behavior, identity merge, sender, retry or live account operation added.
+
+Validation: thirteen export commands reproduce; complete bridge/cache methods,
+constructor caller census and three explicitly partial dispatcher excerpts match.
+The README extraction executes exactly; bundle checksums and APK digest match.
+Formatting, CLI reference regeneration, OpenAPI library coverage and APK coverage
+freshness pass. No new REA record or Rust behavior; workspace runtime tests were
+not rerun for this research-only chunk.
+Repository hygiene passes (424 APK checksum bundles).

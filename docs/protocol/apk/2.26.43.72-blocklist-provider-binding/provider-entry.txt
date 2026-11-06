@@ -1,0 +1,14 @@
+
+# class: LX/05d;
+# extends: Ljava/lang/Object;
+
+.method public A00(LI)  # .registers 2
+    # full signature: LX/05d;->A00(I)LX/05a;
+    0000..0006  invoke-static  {v1}, LX/00D;->A00(I)LX/05h;
+    0006..0008  move-result-object  v1
+    0008..000e  invoke-static  {v1}, LX/00l;->A05(Ljava/lang/Object;)V
+    000e..0012  new-instance  v0, LX/05a;
+    0012..0018  invoke-direct  {v0, v1}, LX/05a;-><init>(LX/00x;)V
+    0018..001a  return-object  v0
+    # exception table: 0 try range(s)
+.end method
