@@ -103,3 +103,63 @@ checksums.json binds every other bundle file by bytes and SHA256. Compare each
 export byte-for-byte. Branch operands are code units: multiply by2 before adding
 to displayed byte offsets. Complete selected bodies include their catch tables;
 no bulk synthetic job tree is included.
+
+## Lifecycle and retry eligibility follow-up
+
+**Confirmed selected static:** lifecycle.txt completes the other six declared
+methods, including private logging helper, readObject, added/canceled logs,
+exception decision and provider injection. readObject calls defaultReadObject
+and rejects null/empty rawJid with InvalidObjectException. It does not validate
+sequenceNumber or fully parse the JID there; A0L performs the later parse.
+A0K only logs cancellation; no socket cancellation is proven by that hook.
+Cf0 restores137/0zB service references, not saved protocol acceptance.
+
+A0N logs the Exception and returns true. Reuse the already-retained complete
+[builder, JobParameters, runner and requirement check](../2.26.43.72-bulk-key-job-completion/README.md):
+constructor parameters bind rawJid as groupId, persistence=true, retryCount100
+and ChatConnectionRequirement. It calls DCZ.A02, not the separate A01 helper
+that adds OfflineProcessingCompletedRequirement. Four freshly exported builder
+methods matched their retained bodies. These parameters do not prove100 sends,
+actual persistent-database durability, group serialization/dedup or restart
+acceptance. connection-ready.txt proves BWq requires a nonnull0AI service and
+returns true exactly when0AI.A0O returns true; its full readiness semantics
+remain untraced here.
+
+The retained Qlq runner increments attempt count on Exception; RuntimeException
+is rethrown before A0N. Other exceptions reach this true decision and then
+Job.A0M: satisfied requirements loop through the attempt-budget check;
+unsatisfied requirements enter deferred/requeue handling. Every later A0L
+attempt performs its current-sharing check and allocates a fresh outer ID,
+while retaining the job's sequenceNumber. The callback-result-discarding
+contract remains distinct from exception eligibility. No explicit delay is
+present on that selected in-runner loop; global scheduling/backoff remains
+outside this claim. Native retry eligibility does not authorize replaying a
+Rust durable uncertain send or rotating its ID to escape uncertainty.
+
+Reproduce the additional retained files with the same APK/OUT variables:
+
+```sh
+target/debug/xtask apk-smali "$APK" --class 'Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;' --signatures --exceptions > "$OUT/class.txt"
+target/debug/xtask apk-smali "$APK" --class 'Lcom/whatsapp/infra/jobs/requirements/ChatConnectionRequirement;' --method BWq --signatures --exceptions > "$OUT/connection-ready.txt"
+python3 - <<'PYCODE'
+from pathlib import Path
+root=Path('/tmp/blocklist-location-disable-repro')
+lines=(root/'class.txt').read_text().splitlines()
+selected=['# Complete selected lifecycle methods; constructor and send method retained separately.']+lines[:4]
+keep=False
+for line in lines[4:]:
+    if line.startswith('.method '):
+        keep=any((' '+name+'(') in line for name in ['A00','readObject','A0J','A0K','A0N','Cf0'])
+    if keep:
+        selected.append(line)
+    if line=='.end method' and keep:
+        selected.append('')
+        keep=False
+(root/'lifecycle.txt').write_text('\n'.join(selected)+'\n')
+PYCODE
+```
+
+Remaining gap: complete deferred-job persistence/scheduling and final ACK
+failure classification, native active share/sequence authority and Rust recovery
+integration. No production retry policy changed. This closes selected retry
+eligibility, not the broad network correctness audit.

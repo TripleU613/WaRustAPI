@@ -1,0 +1,89 @@
+# Complete selected lifecycle methods; constructor and send method retained separately.
+
+# class: Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;
+# extends: Lorg/whispersystems/jobqueue/Job;
+
+.method private A00(L)  # .registers 4
+    # full signature: Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;->A00()Ljava/lang/String;
+    0000..0004  iget-object  v0, v3, Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;->rawJid:Ljava/lang/String;
+    0004..000a  invoke-static  {v0}, LX/2L6;->A0j(Ljava/lang/String;)LX/0DY;
+    000a..000c  move-result-object  v1
+    000c..0010  const-string  v0, "; jid="
+    0010..0016  invoke-static  {v1, v0}, LX/1Xl;->A15(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0016..0018  move-result-object  v2
+    0018..001c  const-string  v0, "; persistentId="
+    001c..0022  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0022..0026  iget-wide  v0, v3, Lorg/whispersystems/jobqueue/Job;->A01:J
+    0026..002c  invoke-virtual  {v2, v0, v1}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    002c..0032  invoke-virtual  {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0032..0034  move-result-object  v0
+    0034..0036  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method private readObject(VL)  # .registers 3
+    # full signature: Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;->readObject(Ljava/io/ObjectInputStream;)V
+    0000..0006  invoke-virtual  {v2}, Ljava/io/ObjectInputStream;->defaultReadObject()V
+    0006..000a  iget-object  v0, v1, Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;->rawJid:Ljava/lang/String;
+    000a..0010  invoke-static  {v0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+    0010..0012  move-result  v0
+    0012..0016  if-nez  v0, +0x3
+    0016..0018  return-void
+    0018..001c  const-string  v0, "jid must not be empty"
+    001c..0022  invoke-static  {v0}, LX/DBc;->A11(Ljava/lang/String;)Ljava/io/InvalidObjectException;
+    0022..0024  move-result-object  v0
+    0024..0026  throw  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A0J(V)  # .registers 3
+    # full signature: Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;->A0J()V
+    0000..0004  const-string  v0, "disable live location job added"
+    0004..000a  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    000a..000c  move-result-object  v1
+    000c..0012  invoke-direct  {v2}, Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;->A00()Ljava/lang/String;
+    0012..0014  move-result-object  v0
+    0014..001a  invoke-static  {v1, v0}, LX/2L9;->A1K(Ljava/lang/StringBuilder;Ljava/lang/String;)V
+    001a..001c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A0K(V)  # .registers 3
+    # full signature: Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;->A0K()V
+    0000..0004  const-string  v0, "canceled disable live location job"
+    0004..000a  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    000a..000c  move-result-object  v1
+    000c..0012  invoke-direct  {v2}, Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;->A00()Ljava/lang/String;
+    0012..0014  move-result-object  v0
+    0014..001a  invoke-static  {v1, v0}, LX/2LD;->A1D(Ljava/lang/StringBuilder;Ljava/lang/String;)V
+    001a..001c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A0N(ZL)  # .registers 4
+    # full signature: Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;->A0N(Ljava/lang/Exception;)Z
+    0000..0004  const-string  v0, "exception while running disable live location job"
+    0004..000a  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    000a..000c  move-result-object  v1
+    000c..0012  invoke-direct  {v2}, Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;->A00()Ljava/lang/String;
+    0012..0014  move-result-object  v0
+    0014..001a  invoke-static  {v0, v1, v3}, LX/DBf;->A1O(Ljava/lang/String;Ljava/lang/StringBuilder;Ljava/lang/Throwable;)V
+    001a..001c  const/4  v0, #0x1
+    001c..001e  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public Cf0(VL)  # .registers 3
+    # full signature: Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;->Cf0(Landroid/content/Context;)V
+    0000..0004  const/16  v0, #0x1959
+    0004..000a  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    000a..000c  move-result-object  v0
+    000c..0010  check-cast  v0, LX/137;
+    0010..0014  iput-object  v0, v1, Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;->A01:LX/137;
+    0014..001a  invoke-static  {}, LX/DBf;->A0U()LX/0zB;
+    001a..001c  move-result-object  v0
+    001c..0020  iput-object  v0, v1, Lcom/whatsapp/locationsharing/jobqueue/job/SendDisableLiveLocationJob;->A00:LX/0zB;
+    0020..0022  return-void
+    # exception table: 0 try range(s)
+.end method
+

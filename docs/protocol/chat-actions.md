@@ -1654,3 +1654,23 @@ checksums and selected cancellation, stale-job and sequence branch targets
 match. Formatting, OpenAPI library coverage, APK coverage freshness, diff
 whitespace and repository hygiene pass (435 bundles). No Rust code changed;
 no APK execution or live account test was performed.
+
+## Location-disable lifecycle and retry boundary (2026-11-06)
+
+**Confirmed selected static:** [six remaining lifecycle methods, connection
+requirement and reused runner/parameters](apk/2.26.43.72-blocklist-location-disable/README.md#lifecycle-and-retry-eligibility-follow-up)
+show persistent=true, rawJid groupId, budget100 and ChatConnectionRequirement,
+not an offline-processing requirement. Deserialization only checks nonempty
+rawJid here; execution parses it. Cancellation hook only logs. A0N returns true,
+but the runner rethrows RuntimeException first. Other exceptions can loop within
+the budget when requirements hold or defer when they do not. Each execution
+rechecks sharing and obtains a fresh outer ID while preserving the saved
+sequence. This is neither100 sends nor a Rust replay recipe. Full deferred
+persistence/backoff, native state/recovery and ACK failure policy remain open.
+No production retry or live behavior changed.
+
+Validation: fresh complete job/requirement exports and selected lifecycle
+extraction match; four builder methods match reused evidence. Bundle checksums
+and selected runner branch targets verified. Formatting, OpenAPI library test,
+APK coverage freshness, diff whitespace and hygiene pass (435 bundles).
+Evidence-only change; Rust tests beyond document coverage were not rerun.

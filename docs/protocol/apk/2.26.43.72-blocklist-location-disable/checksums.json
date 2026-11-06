@@ -1,7 +1,7 @@
 {
   "README.md": {
-    "bytes": 6269,
-    "sha256": "d45cec0088d1879f6693b0cb3b41ae5a71be991b86c6b16a38f59adca3b54505"
+    "bytes": 9676,
+    "sha256": "7396232c6a1acf20b9f6a1c537cbe317c790904a32541d57794e11cdcdc31552"
   },
   "active.txt": {
     "bytes": 454,
@@ -11,9 +11,17 @@
     "bytes": 8432,
     "sha256": "3e54fa6e38b15a685117b50c2c740acbbf27e96ff278ad0a7d869287091c43db"
   },
+  "connection-ready.txt": {
+    "bytes": 692,
+    "sha256": "2fd2a52de854eede6319b0e3a26ea5949c7469bf849438bcd87a4e2d0cba6fc7"
+  },
   "constructor.txt": {
     "bytes": 1539,
     "sha256": "c250ff08d30d7369a0f20a1f7233e227a28ae7381c75c92bb1e25a5ddb711abb"
+  },
+  "lifecycle.txt": {
+    "bytes": 5209,
+    "sha256": "6e44e0db8d5da4a83e75119ecc06836fb5c997fff2573177a9c2efe46e2f95ea"
   },
   "recheck.txt": {
     "bytes": 2671,

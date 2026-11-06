@@ -1,3 +1,10 @@
+2026-11-06 — **Location-disable lifecycle and retry eligibility resolved.**
+Persistent job retains its sequence, rechecks sharing on each execution, and
+uses ChatConnectionRequirement. Runtime exceptions bypass its retry decision;
+other exceptions can retry/defer within the native runner's attempt budget.
+[Evidence and remaining recovery limits](docs/protocol/chat-actions.md#location-disable-lifecycle-and-retry-boundary-2026-11-06).
+No production retry change or live account operation.
+
 2026-11-06 — **Blocklist location-disable wire and stale-job gate traced.**
 Existing share state gates cancellation; the queued job rechecks current sharing
 before sending notification/location with a saved sequence in disable.id.
