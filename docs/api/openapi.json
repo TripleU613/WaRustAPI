@@ -17387,5 +17387,12 @@
     "x-live": false,
     "description": "Offline prekeys digest inspection now validates all owned KEM rows before gated last-resort selection, using the same scan as publication. Noncanonical names, row/material mismatches and consumption-marker conflicts in unselected ordinary/unsent rows refuse rather than yield Matches. Classic/no-LR branches do not gain a full KEM census. No digest network admission, reset or replay authority is added.",
     "evidence": "docs/protocol/prekey-count-notifications.md#pq-digest-rejects-corrupt-unselected-kem-rows-2026-11-05"
+  },
+  "x-prekey-settlement-account-authority": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "New Batch.account_authority_sha256 is an optional 32-byte publication-ownership fingerprint retained by PendingUpload. Settlement rereads registered account authority and transaction generation and requires the durable binding to match before result/error status writes. Phone/JID, registration, generation and Signal identity changes refuse; unrelated authentication time, credentials and Noise metadata are excluded. Historical field defaults null without reconstruction, inference or replay. Reservation-to-write and signed-key rotation remain separate limits.",
+    "evidence": "docs/protocol/prekey-count-notifications.md#upload-settlement-retains-publication-account-authority-2026-11-05"
   }
 }

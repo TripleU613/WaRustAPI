@@ -1380,3 +1380,44 @@ not authenticated server acceptance or a guarantee against restrictions.
 Validation: the alias regression reproduced a false Matches result before the
 fix. All 1,401 workspace/all-feature tests, strict Clippy, CLI reference, OpenAPI
 library, formatting and coverage freshness checks passed. Offline stores only.
+
+### Upload settlement retains publication account authority (2026-11-05)
+
+**Confirmed local defect, fixed offline:** reservation reread and checked the
+stored account, but PendingUpload.settle only rechecked batch/key ownership.
+A matching result could mark keys Uploaded after the stored account generation,
+registration, address or identity changed. A correlated error could likewise
+return keys to Unsent under changed authority. Reservation-time checks alone
+were not sufficient settlement permission.
+
+New reservations retain account_authority_sha256 in PendingUpload and as an
+optional Batch field. It is a domain-separated SHA256 of length-delimited
+serialized generation/phone/own-JID/registration-ID metadata plus fixed-length
+Signal public/private identity bytes. Private bytes enter the incremental hash,
+not a temporary serialized buffer. No new raw private material is stored.
+Settlement rereads a registered account in its existing write transaction,
+requires its generation to equal the transaction generation and its authority
+fingerprint to equal the callback's, then checks the saved Batch binding before
+any status writes. Changes refuse without repairing or releasing uncertainty.
+Credentials, Noise metadata and last_authenticated_at remain outside publication
+authority, consistent with the reservation check's existing field selection.
+
+settlement_rejects_changed_publication_authority_without_writes tests nine
+independent cases after reservation: changed generation, revoked status,
+registration ID, public identity, private identity, own JID, phone, missing
+identity and missing account. Both result/error refuse with exact key/checkpoint
+preservation; the held callback also refuses after reopening. The old code
+failed on changed-generation result settlement. The existing signed-key authority
+test now also proves authentication-time updates still permit valid settlement.
+
+Historical Batch.account_authority_sha256 defaults None for inspection; callbacks
+are not reconstructed, bindings are not inferred, and no retry/replay is added.
+This is a local ownership invariant, not an APK callback-policy claim. It does
+not prevent an account change between reservation and socket write, implement
+same-identity signed-key rotation ownership, or defend against wholesale rollback
+of all evidence. Those remain separate open work. No live account operation.
+
+Validation: the changed-generation regression reproduced settlement under stale
+authority before the fix. All 1,402 workspace/all-feature tests, strict Clippy,
+CLI reference, OpenAPI library, formatting and APK coverage checks passed.
+Offline synthetic stores only.

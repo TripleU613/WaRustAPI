@@ -1,3 +1,8 @@
+Upload reply settlement now rechecks the originally reserved account authority
+inside the settlement transaction. Changed/missing/revoked authority refuses
+without altering key or batch status; authentication-time updates still work.
+[Audit and remaining limits](docs/protocol/prekey-count-notifications.md#upload-settlement-retains-publication-account-authority-2026-11-05).
+
 PQ digest inspection now shares publication's validated KEM inventory for gated
 last-resort selection. Corrupt unselected records refuse instead of yielding a
 normal Matches result. Read-only comparison remains local evidence.

@@ -171,6 +171,9 @@ pub struct Batch {
     /// Public fingerprints aligned with ids; historical records default empty.
     #[serde(default)]
     pub public_sha256: Vec<[u8; 32]>,
+    /// Publication ownership only; historical batches carry no inferred binding.
+    #[serde(default)]
+    pub account_authority_sha256: Option<[u8; 32]>,
     /// `outcome_unknown`, `server_acknowledged` or `refused`.
     pub status: String,
     /// Canonical signed 32-bit server code for a refusal (invalid/missing -> 0).
@@ -527,12 +530,41 @@ pub(crate) fn kem_upload_children(
     Ok(children)
 }
 
+// Bind the same authority fields checked at reservation, excluding credentials,
+// Noise metadata and authentication time. Private identity bytes enter only the
+// incremental hash, never a temporary serialized buffer or diagnostic output.
+fn account_authority(account: &AccountRecord) -> Result<[u8; 32]> {
+    use sha2::{Digest, Sha256};
+    if !account.is_registered() {
+        return Err(invalid("publication account is not registered"));
+    }
+    let identity = account
+        .signal_identity
+        .as_ref()
+        .ok_or_else(|| invalid("publication identity unavailable"))?;
+    let metadata = serde_json::to_vec(&(
+        account.generation,
+        &account.phone,
+        &account.own_jid,
+        account.signal_registration_id,
+    ))
+    .map_err(|_| invalid("publication authority serialization"))?;
+    let mut hash = Sha256::new();
+    hash.update(b"WaRustAPI prekey publication authority v1\0");
+    hash.update((metadata.len() as u64).to_be_bytes());
+    hash.update(metadata);
+    hash.update(identity.0.public);
+    hash.update(identity.0.private);
+    Ok(hash.finalize().into())
+}
+
 /// A reserved upload awaiting the server's `iq` reply for this connection.
 #[derive(Debug)]
 pub struct PendingUpload {
     iq_id: String,
     ids: Vec<u32>,
     public_sha256: Vec<[u8; 32]>,
+    account_authority_sha256: [u8; 32],
     kem_ids: Vec<u32>,
     kem_public_sha256: Vec<[u8; 32]>,
     /// After this instant the outcome is treated as unknown for this session.
@@ -629,6 +661,7 @@ fn begin_upload_selected(
     if !identity_public.verify_signature(&signed_public.serialize(), &signed_signature) {
         return Err(invalid("signed prekey does not match publication identity"));
     }
+    let account_authority_sha256 = account_authority(account)?;
     let iq_id = super::messaging::new_message_id()?;
     // 07t.A0R 0196..01a2: property 21201 defaults to 10; returned values are
     // not applied (MobileConfig unported), so the default is used.
@@ -784,6 +817,7 @@ fn begin_upload_selected(
                 &Batch {
                     ids: ids.clone(),
                     public_sha256: public_sha256.clone(),
+                    account_authority_sha256: Some(account_authority_sha256),
                     status: "outcome_unknown".into(),
                     code: None,
                     count_low: None,
@@ -803,6 +837,7 @@ fn begin_upload_selected(
             iq_id,
             ids,
             public_sha256,
+            account_authority_sha256,
             kem_ids,
             kem_public_sha256,
             deadline: tokio::time::Instant::now() + std::time::Duration::from_secs(30),
@@ -860,10 +895,20 @@ impl PendingUpload {
                 .to_string()
         });
         store.write(|tx| {
+            let current = AccountRecord::load_in_write(tx)?
+                .ok_or_else(|| invalid("publication account unavailable at settlement"))?;
+            if current.generation != tx.generation()
+                || account_authority(&current)? != self.account_authority_sha256
+            {
+                return Err(invalid("publication account changed before settlement"));
+            }
             let key = batch_key(&self.iq_id);
             let mut batch: Batch = tx
                 .get_json(Table::Checkpoints, key.as_bytes(), 1)?
                 .ok_or_else(|| invalid("reserved batch disappeared"))?;
+            if batch.account_authority_sha256 != Some(self.account_authority_sha256) {
+                return Err(invalid("reserved publication authority changed"));
+            }
             if batch.status != "outcome_unknown" {
                 return Err(invalid("batch already settled"));
             }
@@ -1582,6 +1627,73 @@ mod tests {
     /// on, and only with an unsent last-resort key; once that is acknowledged
     /// the next upload carries none.
     #[test]
+    fn settlement_rejects_changed_publication_authority_without_writes() {
+        for change in 0..9 {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("stale-publication.redb");
+            let store = open(&path);
+            let (account, signed) = account_and_signed(&store);
+            generate(&store).unwrap();
+            let (pending, _) = begin_upload(&store, &account, &signed).unwrap().unwrap();
+            let mut current = account.clone();
+            match change {
+                0 => current.generation.0 += 1,
+                1 => current.registration = RegistrationStatus::Revoked,
+                2 => current.signal_registration_id = Some(42),
+                3 => current.signal_identity.as_mut().unwrap().0.public[0] ^= 1,
+                4 => current.signal_identity.as_mut().unwrap().0.private[0] ^= 1,
+                5 => current.own_jid = Some(Jid::parse("15555550123@s.whatsapp.net").unwrap()),
+                6 => {
+                    current.phone =
+                        Some(crate::model::phone::PhoneNumber::new(1, "5555550123").unwrap())
+                }
+                7 => current.signal_identity = None,
+                8 => {}
+                _ => unreachable!(),
+            }
+            store
+                .write(|tx| {
+                    if change == 8 {
+                        tx.delete(Table::Account, b"account").map(|_| ())
+                    } else {
+                        current.save(tx)
+                    }
+                })
+                .unwrap();
+            let snapshot = |store: &ProtocolStore| {
+                store
+                    .read(|tx| {
+                        [Table::Prekeys, Table::Checkpoints]
+                            .into_iter()
+                            .map(|table| tx.scan(table, 1, 10000))
+                            .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot(&store);
+            for kind in ["result", "error"] {
+                let reply = Node::new("iq")
+                    .attr("id", pending.iq_id.as_str())
+                    .attr("type", kind);
+                assert!(
+                    pending.settle(&store, &reply).is_err(),
+                    "changed authority {change} must not settle {kind}"
+                );
+                assert_eq!(snapshot(&store), before);
+            }
+            assert_eq!(snapshot(&store), before);
+            drop(store);
+            let store = open(&path);
+            assert_eq!(snapshot(&store), before);
+            let reply = Node::new("iq")
+                .attr("id", pending.iq_id.as_str())
+                .attr("type", "result");
+            assert!(pending.settle(&store, &reply).is_err());
+            assert_eq!(snapshot(&store), before);
+        }
+    }
+
+    #[test]
     fn publication_rejects_stale_account_authority_without_reserving_keys() {
         for change in 0..9 {
             let dir = tempfile::tempdir().unwrap();
@@ -1748,7 +1860,13 @@ mod tests {
         let mut updated = account.clone();
         updated.last_authenticated_at = Some(Timestamp::now());
         store.write(|tx| updated.save(tx)).unwrap();
-        assert!(begin_upload(&store, &account, &signed).unwrap().is_some());
+        let (pending, _) = begin_upload(&store, &account, &signed).unwrap().unwrap();
+        updated.last_authenticated_at = Some(Timestamp::now());
+        store.write(|tx| updated.save(tx)).unwrap();
+        let reply = Node::new("iq")
+            .attr("id", pending.iq_id.as_str())
+            .attr("type", "result");
+        assert!(pending.settle(&store, &reply).unwrap().accepted);
     }
 
     #[test]

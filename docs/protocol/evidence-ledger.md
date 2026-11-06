@@ -7914,3 +7914,13 @@ behind LR/status filtering and produce Matches. Four injected corruption cases
 preserve exact rows on refusal; existing published-signature controls remain.
 [Scope, reproducer and limits](prekey-count-notifications.md#pq-digest-rejects-corrupt-unselected-kem-rows-2026-11-05).
 No live request, resynchronization or replay authority.
+
+### Upload settlement checks reserved account authority (2026-11-05)
+
+**Confirmed local fix:** PendingUpload now retains a publication-authority hash
+and persists it in Batch. Settlement rereads the account and checks transaction
+generation, registered authority and durable binding before status writes.
+Nine changed/missing authority cases refuse result/error across reopen; unrelated
+authentication-time updates still settle. [Scope and remaining write/rotation
+limits](prekey-count-notifications.md#upload-settlement-retains-publication-account-authority-2026-11-05).
+No live traffic, replay or inferred historical binding.
