@@ -1,0 +1,50 @@
+
+# class: LX/3KB;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLLLZ)  # .registers 7
+    # full signature: LX/3KB;->A00(LX/3KB;Ljava/lang/Long;Ljava/util/Set;Z)LX/1xM;
+    0000..0006  invoke-virtual  {v3, v5}, LX/3KB;->A02(Ljava/util/Set;)Ljava/util/Set;
+    0006..0008  move-result-object  v2
+    0008..000e  invoke-interface  {v2}, Ljava/util/Set;->isEmpty()Z
+    000e..0010  move-result  v0
+    0010..0014  if-eqz  v0, +0xd
+    0014..001a  invoke-static  {v2}, LX/07Z;->A1S(Ljava/lang/Iterable;)Ljava/util/Set;
+    001a..001c  move-result-object  v2
+    001c..001e  const/4  v1, #0x1
+    001e..0022  new-instance  v0, LX/1xM;
+    0022..0028  invoke-direct  {v0, v2, v1}, LX/1xM;-><init>(Ljava/util/Set;I)V
+    0028..002a  return-object  v0
+    002a..002e  iget-object  v0, v3, LX/3KB;->A04:LX/05a;
+    002e..0034  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0034..0036  move-result-object  v0
+    0036..003a  check-cast  v0, LX/0AI;
+    003a..0040  invoke-virtual  {v0}, LX/0AI;->A0O()Z
+    0040..0042  move-result  v0
+    0042..0046  if-nez  v0, +0xa
+    0046..004a  if-eqz  v6, +0x8
+    004a..0050  invoke-static  {v2}, LX/07Z;->A1S(Ljava/lang/Iterable;)Ljava/util/Set;
+    0050..0052  move-result-object  v2
+    0052..0054  const/4  v1, #0x0
+    0054..0056  goto  -0x1b
+    0056..005a  iget-object  v0, v3, LX/3KB;->A02:LX/05a;
+    005a..0060  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0060..0062  move-result-object  v1
+    0062..0066  check-cast  v1, LX/0ob;
+    0066..006a  sget-object  v0, LX/0vC;->A0M:LX/0vC;
+    006a..0070  invoke-virtual  {v1, v0, v2}, LX/0ob;->A0A(LX/0vC;Ljava/util/Collection;)LX/E0F;
+    0070..0072  move-result-object  v3
+    0072..0076  if-nez  v4, +0xc
+    0076..007c  invoke-virtual  {v3}, LX/FfK;->get()Ljava/lang/Object;
+    007c..007e  move-result-object  v0
+    007e..0084  invoke-static  {v0}, LX/00l;->A08(Ljava/lang/Object;)V
+    0084..0088  check-cast  v0, LX/1xM;
+    0088..008a  return-object  v0
+    008a..0090  invoke-virtual  {v4}, Ljava/lang/Number;->longValue()J
+    0090..0092  move-result-wide  v1
+    0092..0096  sget-object  v0, Ljava/util/concurrent/TimeUnit;->MILLISECONDS:Ljava/util/concurrent/TimeUnit;
+    0096..009c  invoke-virtual  {v3, v1, v2, v0}, LX/FfK;->get(JLjava/util/concurrent/TimeUnit;)Ljava/lang/Object;
+    009c..009e  move-result-object  v0
+    009e..00a0  goto  -0x10
+    # exception table: 0 try range(s)
+.end method

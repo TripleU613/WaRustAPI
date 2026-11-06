@@ -1,0 +1,14 @@
+
+# class: LX/0ob;
+# extends: Ljava/lang/Object;
+
+.method public A08(LL)  # .registers 4
+    # full signature: LX/0ob;->A08(LX/0vt;)LX/E0F;
+    0000..0004  new-instance  v1, LX/E0F;
+    0004..000a  invoke-direct  {v1}, LX/E0F;-><init>()V
+    000a..0010  invoke-virtual  {v3, v1}, LX/0vt;->A03(LX/E0F;)V
+    0010..0014  iget-object  v0, v2, LX/0ob;->A0A:LX/0p4;
+    0014..001a  invoke-virtual  {v0, v3}, LX/0p4;->A04(LX/0vt;)V
+    001a..001c  return-object  v1
+    # exception table: 0 try range(s)
+.end method

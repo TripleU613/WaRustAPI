@@ -17555,5 +17555,12 @@
     "x-live": false,
     "description": "Research-only APK43.72 bulk-key job completion trace: concrete FfK/1ue success can come from the IQ result/error response fallback and does not establish key/server acceptance. Native exception handling distinguishes runtime rethrow, non-upgrade eligibility, requirement-gated looping/defer and attempt budget. Untimed get, cancellation and constructor flags are retained facts, not a Rust timeout/retry recipe. No runtime behavior, request, retry or adoption authority added.",
     "evidence": "docs/protocol/bulk-prekey-refresh.md#bulk-job-completion-is-not-fetched-key-acceptance-2026-11-06"
-  }
+  },
+  "x-bulk-key-lid-preflight-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Research-only APK43.72 conditional missing-LID preflight: target filters, request-object sync queue submission and untimed wait precede bulk-key dispatch. Wire rendering, response acceptance and mapping adoption remain untraced. No Rust lookup or retry added.",
+    "evidence": "docs/protocol/bulk-prekey-refresh.md#bulk-pre-key-missing-lid-preflight-2026-11-06"
+}
 }

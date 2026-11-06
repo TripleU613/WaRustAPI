@@ -1,0 +1,38 @@
+
+# class: LX/0ob;
+# extends: Ljava/lang/Object;
+
+.method public A06(LLLLLZZ)  # .registers 10
+    # full signature: LX/0ob;->A06(LX/0vY;LX/0vJ;LX/0vC;Ljava/util/Collection;ZZ)LX/E0F;
+    0000..0006  invoke-virtual  {v4}, LX/0vY;->A00()Z
+    0006..0008  move-result  v0
+    0008..000e  invoke-static  {v0}, LX/00L;->A0A(Z)V
+    000e..0012  iget-object  v2, v6, LX/0vC;->scope:LX/0vG;
+    0012..0016  sget-object  v1, LX/0vG;->A03:LX/0vG;
+    0016..0018  const/4  v0, #0x0
+    0018..001c  if-ne  v2, v1, +0x3
+    001c..001e  const/4  v0, #0x1
+    001e..0024  invoke-static  {v0}, LX/00L;->A0A(Z)V
+    0024..002a  invoke-interface  {v7}, Ljava/util/Collection;->size()I
+    002a..002e  new-instance  v2, LX/0vW;
+    002e..0034  invoke-direct  {v2, v5, v6}, LX/0vW;-><init>(LX/0vJ;LX/0vC;)V
+    0034..0038  iput-boolean  v8, v2, LX/0vW;->A07:Z
+    0038..003c  iput-boolean  v9, v2, LX/0vW;->A0A:Z
+    003c..0040  iput-object  v4, v2, LX/0vW;->A04:LX/0vY;
+    0040..0046  invoke-interface  {v7}, Ljava/util/Collection;->iterator()Ljava/util/Iterator;
+    0046..0048  move-result-object  v1
+    0048..004e  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    004e..0050  move-result  v0
+    0050..0054  if-eqz  v0, +0xc
+    0054..005a  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    005a..005c  move-result-object  v0
+    005c..0060  check-cast  v0, Lcom/whatsapp/infra/core/jid/UserJid;
+    0060..0066  invoke-virtual  {v2, v0}, LX/0vW;->A01(Lcom/whatsapp/infra/core/jid/UserJid;)V
+    0066..0068  goto  -0xf
+    0068..006e  invoke-virtual  {v2}, LX/0vW;->A00()LX/0vt;
+    006e..0070  move-result-object  v0
+    0070..0076  invoke-virtual  {v3, v0}, LX/0ob;->A08(LX/0vt;)LX/E0F;
+    0076..0078  move-result-object  v0
+    0078..007a  return-object  v0
+    # exception table: 0 try range(s)
+.end method

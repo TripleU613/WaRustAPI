@@ -1,0 +1,19 @@
+
+# class: LX/0ob;
+# extends: Ljava/lang/Object;
+
+.method public A0A(LLL)  # .registers 10
+    # full signature: LX/0ob;->A0A(LX/0vC;Ljava/util/Collection;)LX/E0F;
+    0000..0002  move-object  v4, v9
+    0002..0008  invoke-interface  {v9}, Ljava/util/Collection;->size()I
+    0008..000c  sget-object  v2, LX/0vJ;->A0h:LX/0vJ;
+    000c..0010  sget-object  v1, LX/0vY;->A0N:LX/0vY;
+    0010..0012  const/4  v5, #0x1
+    0012..0014  move-object  v0, v7
+    0014..0016  move-object  v3, v8
+    0016..0018  move  v6, v5
+    0018..001e  invoke-virtual/range  {v0..v6}, LX/0ob;->A06(LX/0vY;LX/0vJ;LX/0vC;Ljava/util/Collection;ZZ)LX/E0F;
+    001e..0020  move-result-object  v0
+    0020..0022  return-object  v0
+    # exception table: 0 try range(s)
+.end method

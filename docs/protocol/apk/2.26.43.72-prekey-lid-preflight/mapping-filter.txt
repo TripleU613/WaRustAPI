@@ -1,0 +1,24 @@
+
+# class: LX/0YG;
+# extends: Ljava/lang/Object;
+
+.method public A05(LLLL)  # .registers 7
+    # full signature: LX/0YG;->A05(Ljava/lang/String;Ljava/lang/String;Ljava/util/Set;)Ljava/util/Map;
+    0000..0004  iget-object  v0, v3, LX/0YG;->A03:LX/0YH;
+    0004..0008  iget-object  v0, v0, LX/0YH;->A00:LX/0Ws;
+    0008..000e  invoke-virtual  {v0, v6}, LX/0Ws;->A0S(Ljava/util/Set;)Ljava/util/Map;
+    000e..0010  move-result-object  v2
+    0010..0016  invoke-interface  {v2}, Ljava/util/Map;->keySet()Ljava/util/Set;
+    0016..0018  move-result-object  v0
+    0018..001e  invoke-static  {v0, v6}, LX/0Ef;->A08(Ljava/lang/Iterable;Ljava/util/Set;)Ljava/util/Set;
+    001e..0020  move-result-object  v1
+    0020..0026  invoke-interface  {v1}, Ljava/util/Set;->isEmpty()Z
+    0026..0028  move-result  v0
+    0028..002c  if-nez  v0, +0xb
+    002c..0032  invoke-static  {v1}, LX/07Z;->A0m(Ljava/lang/Iterable;)Ljava/lang/Object;
+    0032..0034  move-result-object  v0
+    0034..0038  check-cast  v0, Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    0038..003e  invoke-direct  {v3, v0, v4, v5}, LX/0YG;->A00(Lcom/whatsapp/infra/core/jid/PhoneUserJid;Ljava/lang/String;Ljava/lang/String;)V
+    003e..0040  return-object  v2
+    # exception table: 0 try range(s)
+.end method

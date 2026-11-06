@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "bytes": 1697,
+    "sha256": "7ec8c5c7828798132d739e8499d42aae8dd183db67bdfe036400dac61761bde9"
+  },
+  "category-filter.txt": {
+    "bytes": 535,
+    "sha256": "d1097e16b8d95a1a2a92dde0b90c4d0a7571c9e602ced288f5be06b2306536aa"
+  },
+  "dispatch.txt": {
+    "bytes": 509,
+    "sha256": "6a37fc2fb69b39986b9531503e0a0582dc0381d019a54670c47bbe350bf15d99"
+  },
+  "entry.txt": {
+    "bytes": 526,
+    "sha256": "d1d82c8d3b958d829a9d31ca73eb491239d6fd8082761991ea097f0ea188cd8e"
+  },
+  "filter.txt": {
+    "bytes": 5031,
+    "sha256": "b4428befb65ff4e4b18c67d0e3fdae54d56e36fb9f7ae433cc823e062be235fd"
+  },
+  "jid-filter.txt": {
+    "bytes": 523,
+    "sha256": "b370783ea062f014fbf3918a65db1069d9ccb094cca14802d7ca84dd576da496"
+  },
+  "mapping-filter.txt": {
+    "bytes": 1264,
+    "sha256": "e27165e48b1de2d0aec417d510c55a6e05f57fc37c709c222cefa2ad65239e25"
+  },
+  "resolver.txt": {
+    "bytes": 2446,
+    "sha256": "493c6a183e3d37c1e91a84c2a22c0f8815cd75f9b25dc62582376c1cc0b63008"
+  },
+  "submit.txt": {
+    "bytes": 1834,
+    "sha256": "f3b72340ef8122cb93d774ae604a7a292e13687e2d1a7f08b10eabadecc65dd2"
+  },
+  "usync.txt": {
+    "bytes": 752,
+    "sha256": "943d76bc1cbd7f8d80dfa546e085b1963c619780c1c5c7ba04fda4d769b30e84"
+  }
+}
