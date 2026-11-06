@@ -1,3 +1,5 @@
+Media refresh audit verified existing request/prior-route ownership and request-time TTL guards; corrected stale first-route false documentation. No runtime change. [Audit scope and open boundaries](docs/protocol/media-network-outcomes.md#refresh-authority-and-lifetime-audit-2026-11-06).
+
 Shared upload entry now checks config and registered matching account before cache reuse, route selection or persisted randomness/reservation. [Shared upload account/config preflight](docs/protocol/media-network-outcomes.md#shared-upload-preflight-precedes-cache-and-reservation-2026-11-06). Both public entry points have offline positive/refusal controls.
 
 Ordinary media GET success/refusal now require the exact initiating reservation; late results cannot overwrite changed or settled state. [Media GET result reservation ownership](docs/protocol/media-network-outcomes.md#download-result-reservation-ownership-2026-11-06). Shared HTTP client already disables redirects/retries; offline verification only.

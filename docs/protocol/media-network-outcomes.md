@@ -119,12 +119,13 @@ new auth, IDs, lifetimes, base and other response metadata. `A0P` is a locked
 getter with no expiry filtering; the request path obtains last_id from that
 current object's A0B. This does not prove cache restore installs expired objects.
 
-**Confirmed Rust support gap/guarded offline:** cached route selection previously
+**Historical Rust support gap/guarded offline:** cached route selection previously
 ignored is_new and selected reply hosts regardless of prior-route semantics.
 It now parses the flag with the Java-compatible integer helper/default and
 explicitly refuses non-new replies because no frozen prior-host context exists.
-This is a local unsupported boundary, including the native first-route false
-branch, not a claim that native refuses such replies. Stored wire/checkpoints
+At that stage this included the native first-route false branch. The subsequent
+prospective wrapper supports that branch; legacy unbound standalone replies
+remain refused. This is not a claim that native refuses such replies. Stored wire/checkpoints
 remain unchanged and no old token/host is silently substituted.
 
 The required implementation is prospective prior-route capture, conditional
@@ -602,3 +603,25 @@ no-media input still returns None without creating an upload. This preflight doe
 not hold account state across later HTTP awaits or bind every account field to
 upload settlement. The separate response reservation checks remain required.
 No new retry, identity mutation or live operation.
+
+## Refresh authority and lifetime audit (2026-11-06)
+
+**Confirmed Rust/offline:** the existing prospective refresh path binds settlement
+to its request generation, IQ identity, owner and frozen prior route. A competing
+installed route makes the old reply stale instead of replacing newer auth. Exact
+duplicate receipts do not extend the stored throttle. Upload route selection
+checks both route TTL and auth TTL from the retained request time.
+
+The first prospective response accepts `is_new=0` with no prior route and uses
+incoming hosts; subsequent non-new responses retain prior hosts with incoming
+metadata. The older unsupported-first-route wording above described the earlier
+unbound cache path, not the current prospective implementation. The retained
+[0VM.A0A evidence](rea/2.26.43.72-media-route-lifetimes/README.md#conditional-mergecurrent-route-follow-up)
+already establishes the native first-route branch; no new APK trace is claimed.
+
+Validation reran all 19 refresh/recovery tests and the pure first/new projection
+regression. No runtime correction was found in this audit. **Unknown/unported:**
+complete sender admission, native elapsed-clock/reboot parity, automatic native
+refresh scheduling and complete host policy. The conservative local wall-clock
+boundary remains; these checks do not prove server acceptance or prevent bans.
+No live operations occurred.

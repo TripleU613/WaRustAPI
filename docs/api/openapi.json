@@ -17842,5 +17842,12 @@
     "x-live": false,
     "description": "Existing shared upload entry validates config and registered-account/phone match before cached payload reuse, route selection, encryption randomness or reservation. Applies to prepare/prepare_outbox/upload_source; valid cache reuse remains. Bounded file reading/no-media handling precede this boundary; no account lock through HTTP awaits or live verification.",
     "evidence": "docs/protocol/media-network-outcomes.md#shared-upload-preflight-precedes-cache-and-reservation-2026-11-06"
+},
+  "x-media-refresh-authority-audit-2026-11-06": {
+  "x-cli": false,
+  "x-transport": false,
+  "x-live": false,
+  "description": "Offline audit of existing media refresh ownership and lifetimes; corrects historical first-route false support wording. No new capability, runtime change or live verification. Native clock parity, scheduler and complete sender/host policy remain unproved.",
+  "evidence": "docs/protocol/media-network-outcomes.md#refresh-authority-and-lifetime-audit-2026-11-06"
 }
 }

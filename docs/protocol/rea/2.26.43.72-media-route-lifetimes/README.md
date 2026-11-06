@@ -85,8 +85,9 @@ This closes the getter/setter branch, not all refresh/deadline consumers.
 At this tracing stage Rust refused non-new standalone cached replies. The
 [subsequent prospective wrapper](../../media-network-outcomes.md#prospective-refresh-integration-2026-11-04)
 now supplies prior-host binding and atomic merge for new contexts; legacy
-non-new standalone cached replies remain unsupported. Native first-route false acceptance remains
-unsupported locally. No server refusal/retry requirement is inferred.
+non-new standalone cached replies remain unsupported. The prospective wrapper
+accepts first-route false replies because its frozen prior route is absent;
+subsequent false replies retain the frozen prior hosts. No server refusal/retry requirement is inferred.
 
 - [current-route.json](current-route.json) — SHA-256 `139b8e70d071687bf8a23616ec35a398222c02fef29feaee7ff5a49b542bd258`.
 - [route-setter.json](route-setter.json) — SHA-256 `6cf815f762fd3aeb71e06152287c950e38c4b5d3ba2e92c174929099ea3e39cc`.

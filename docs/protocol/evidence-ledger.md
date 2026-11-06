@@ -741,7 +741,8 @@ first/new branches and ambiguity refusal. No new APK/live evidence is claimed.
 retains prior hosts on non-new routing responses; A0P returns the current object
 without expiry filtering. Rust previously ignored is_new. Non-new cached replies
 now refuse pending frozen prior-host context; native first-route false acceptance
-is explicitly still unsupported. Flag parsing/store-preservation tests are offline.
+was unsupported at that stage; the prospective wrapper now supports it.
+Flag parsing/store-preservation tests are offline.
 [Evidence and implementation boundary](media-network-outcomes.md#conditional-prior-host-retention-2026-11-04).
 
 2026-11-04 — **Confirmed static/Rust defect fixed offline:** 0VM.A07 anchors
@@ -8260,3 +8261,5 @@ Local media-upload cached-state overwrite gaps corrected across header/response/
 Ordinary media GET settlement now binds success and HTTP refusal to a unique local reservation; client no-redirect/no-retry settings verified unchanged. [Media GET result reservation ownership](media-network-outcomes.md#download-result-reservation-ownership-2026-11-06). No native timeout or live claim.
 
 Local public upload eligibility omission corrected at shared entry, including cached-success preflight and unchanged-state controls. [Shared upload account/config preflight](media-network-outcomes.md#shared-upload-preflight-precedes-cache-and-reservation-2026-11-06). No native account-gate or live claim.
+
+2026-11-06 — **Confirmed Rust/offline, negative audit:** existing media refresh ownership, conditional host merge and TTL guards verified; stale first-route-false documentation corrected. No runtime change or new APK/live evidence. [Scope and remaining gaps](media-network-outcomes.md#refresh-authority-and-lifetime-audit-2026-11-06).
