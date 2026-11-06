@@ -1256,6 +1256,33 @@ impl Pending {
 
 pub(super) use super::messaging::is_auth_challenge_ack;
 
+// APK43.72 1rH.A03 0294..02c2 selects a typed UserJid recipient
+// before normalizing from; 0Dn.A00 unwraps DeviceJid.userJid. Plain PN/LID
+// types0/18 bypass A00's special bot type26/27 conversion.
+fn message_ack_chat(node: &Node) -> Option<crate::model::jid::Jid> {
+    if let Some(recipient) = super::receipts::jid(node, "recipient")
+        && !recipient.is_ad()
+        && !matches!(
+            recipient.server,
+            Server::Group | Server::Broadcast | Server::Newsletter
+        )
+    {
+        // Other native UserJid families/forms need their own grammar and
+        // normalization audit; do not fall back to from speculatively.
+        return (matches!(recipient.server, Server::User | Server::Lid)
+            && !recipient.user.is_empty()
+            && recipient.user.len() <= 15
+            && recipient.user.bytes().all(|b| b.is_ascii_digit()))
+        .then_some(recipient);
+    }
+    let from = super::receipts::jid(node, "from")?;
+    if matches!(from.server, Server::User | Server::Lid) {
+        Some(from.to_non_ad())
+    } else {
+        Some(from)
+    }
+}
+
 /// Correlate message ACKs to an existing in-flight intent by ID and recipient.
 pub fn acknowledge(store: &ProtocolStore, node: &Node) -> Result<bool> {
     if !super::messaging::ack_error_is_valid(node) {
@@ -1275,7 +1302,7 @@ pub fn acknowledge(store: &ProtocolStore, node: &Node) -> Result<bool> {
     let Some(id) = node.get_attr("id").and_then(|v| v.as_text()) else {
         return Ok(false);
     };
-    let Some(from) = super::receipts::jid(node, "from") else {
+    let Some(chat) = message_ack_chat(node) else {
         return Ok(false);
     };
     // APK 2.26.37.71: 1Qy.A02 converts participant through 0DK.A00 only
@@ -1298,7 +1325,7 @@ pub fn acknowledge(store: &ProtocolStore, node: &Node) -> Result<bool> {
         // transaction; a duplicate wire reservation must never select a winner.
         // APK admission/recipient evidence: docs/protocol/message-ack.md.
         if let Some(mut entry) = outbox().by_wire_id_in_write(tx, &wire_id)? {
-            if entry.progress != AttemptProgress::InFlight || entry.intent.chat.jid() != &from {
+            if entry.progress != AttemptProgress::InFlight || entry.intent.chat.jid() != &chat {
                 return Ok(false);
             }
             let kind = if node.get_attr("error").is_some() {
@@ -2986,6 +3013,88 @@ mod tests {
         assert!(!status.is_uncertain());
         assert_eq!(status.facts.len(), 2);
     }
+    #[test]
+    fn message_ack_recipient_precedes_from_and_device_from_normalizes() {
+        for error in [None, Some("500")] {
+            for (from, recipient, settles) in [
+                (
+                    "15555550999@s.whatsapp.net",
+                    Some("15555550100@s.whatsapp.net"),
+                    true,
+                ),
+                (
+                    "15555550100@s.whatsapp.net",
+                    Some("15555550999@s.whatsapp.net"),
+                    false,
+                ),
+                ("15555550100:7@s.whatsapp.net", None, true),
+                ("99999@lid", Some("12345@lid"), true),
+                ("12345:7@lid", None, true),
+                ("15555550100@s.whatsapp.net", Some("12345@lid"), false),
+                ("15555550100@s.whatsapp.net", Some("12345@hosted"), false),
+                ("15555550100@s.whatsapp.net", Some("letters@lid"), false),
+                (
+                    "15555550100@s.whatsapp.net",
+                    Some("1234567890123456@lid"),
+                    false,
+                ),
+                ("15555550100@s.whatsapp.net", Some("12345-6@g.us"), true),
+                (
+                    "15555550100@s.whatsapp.net",
+                    Some("15555550999:7@s.whatsapp.net"),
+                    true,
+                ),
+            ] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("recipient-ack.redb");
+                let store = open(&path);
+                let local_id = enqueue(&store);
+                store
+                    .write(|tx| {
+                        let mut entry = outbox().get_mut(tx, local_id)?.unwrap();
+                        if matches!(from, "99999@lid" | "12345:7@lid") {
+                            entry.intent.chat = ChatId::from_jid(&Jid::parse("12345@lid")?)?;
+                        }
+                        entry.wire_id = Some(MessageId::new("fixture")?);
+                        outbox().set_progress(tx, &mut entry, AttemptProgress::InFlight)
+                    })
+                    .unwrap();
+                let before = store.read(|tx| outbox().get(tx, local_id)).unwrap();
+                let mut ack = Node::new("ack")
+                    .attr("class", "message")
+                    .attr("id", "fixture")
+                    .attr("from", from);
+                if let Some(recipient) = recipient {
+                    ack = ack.attr("recipient", recipient);
+                }
+                if let Some(error) = error {
+                    ack = ack.attr("error", error);
+                }
+                assert_eq!(acknowledge(&store, &ack).unwrap(), settles);
+                assert!(!acknowledge(&store, &ack).unwrap());
+                let after = store.read(|tx| outbox().get(tx, local_id)).unwrap();
+                if !settles {
+                    assert_eq!(after, before);
+                } else {
+                    let facts = &after.as_ref().unwrap().facts;
+                    assert_eq!(facts.len(), 1);
+                    assert_eq!(
+                        facts[0].kind,
+                        if error.is_some() {
+                            DeliveryFactKind::Failed
+                        } else {
+                            DeliveryFactKind::ServerAccepted
+                        }
+                    );
+                }
+                drop(store);
+                let store = open(&path);
+                assert_eq!(store.read(|tx| outbox().get(tx, local_id)).unwrap(), after);
+                assert!(begin_selected(&store, Some(local_id)).unwrap().is_none());
+            }
+        }
+    }
+
     #[test]
     fn acknowledgement_timestamp_uses_java_oracle_and_survives_reopen() {
         // Independent executed Java oracle, retained for 0Gv.A01 and DEX

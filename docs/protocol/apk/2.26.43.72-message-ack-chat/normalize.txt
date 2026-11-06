@@ -1,0 +1,28 @@
+
+# class: LX/1rH;
+# extends: LX/1rA;
+
+.method private A00(LL)  # .registers 4
+    # full signature: LX/1rH;->A00(LX/0DY;)LX/0DY;
+    0000..0006  invoke-static  {v3}, LX/0Dn;->A0O(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0006..0008  move-result  v0
+    0008..000c  if-eqz  v0, +0x22
+    000c..0010  iget-object  v0, v2, LX/1rH;->A00:LX/05a;
+    0010..0014  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0014..001a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    001a..001c  move-result-object  v0
+    001c..0020  check-cast  v0, LX/1aa;
+    0020..0026  invoke-virtual  {v0}, LX/1aa;->A02()Z
+    0026..0028  move-result  v0
+    0028..002c  xor-int/lit8  v0, v0, #0x1
+    002c..0030  if-eqz  v0, +0x10
+    0030..0036  invoke-static  {v3}, LX/0x9;->A00(LX/0DY;)LX/0DY;
+    0036..0038  move-result-object  v3
+    0038..003c  if-nez  v3, +0xa
+    003c..0040  const-string  v1, "Required value was null."
+    0040..0044  new-instance  v0, Ljava/lang/IllegalStateException;
+    0044..004a  invoke-direct  {v0, v1}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+    004a..004c  throw  v0
+    004c..004e  return-object  v3
+    # exception table: 0 try range(s)
+.end method

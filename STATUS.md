@@ -1,3 +1,5 @@
+Ordinary outbox ACK settlement now selects supported numeric PN/LID recipient before from, and unwraps PN/LID device from when no user recipient applies. Conflicting recipient preserves uncertainty. [Pinned selection, tests and remaining adapters](docs/protocol/message-ack.md#select-the-message-ack-chat-before-outbox-correlation-2026-11-06). Offline only.
+
 Pinned ACK address-accessor audit retained a negative finding: optional address parse/cast failure does not establish the required-ID fatal behavior. No blanket fatal address gate was added. Native recipient-preferred message routing and generic callback ownership remain open. [Evidence and next scope](docs/protocol/message-ack.md#optional-typed-ack-addresses-are-not-a-blanket-fatal-gate-2026-11-06). Static/offline only.
 
 Missing ACK id now stops stateful reception after capture, before error459/class dispatch, matching the pinned required accessor. Pending work remains uncertain; empty textual id retains native null-check behavior. [Evidence and limits](docs/protocol/message-ack.md#required-ack-id-before-error-and-class-routing-2026-11-06). Offline only.

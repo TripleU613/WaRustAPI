@@ -1,0 +1,35 @@
+
+# class: LX/0x9;
+# extends: Ljava/lang/Object;
+
+.method public A00(LL)  # .registers 3
+    # full signature: LX/0x9;->A00(LX/0DY;)LX/0DY;
+    0000..0006  invoke-static  {v2}, LX/0x9;->A05(LX/0DY;)Z
+    0006..0008  move-result  v0
+    0008..000c  if-eqz  v0, +0x1d
+    000c..0010  instance-of  v1, v2, LX/0xC;
+    0010..0012  const/4  v0, #0x0
+    0012..0016  if-eqz  v1, +0x3
+    0016..0018  move-object  v0, v2
+    0018..001a  const/4  v1, #0x0
+    001a..001e  if-eqz  v0, +0x4
+    001e..0022  iget-object  v1, v0, Lcom/whatsapp/infra/core/jid/Jid;->user:Ljava/lang/String;
+    0022..0026  const-string  v0, "1807055946647698"
+    0026..002c  invoke-static  {v1, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    002c..002e  move-result  v0
+    002e..0032  if-eqz  v0, +0x1b
+    0032..0036  const-string  v1, "165332417282214"
+    0036..003a  new-instance  v0, LX/0Dx;
+    003a..0040  invoke-direct  {v0, v1}, LX/0Dx;-><init>(Ljava/lang/String;)V
+    0040..0042  return-object  v0
+    0042..0048  invoke-static  {v2}, LX/0Dn;->A0O(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0048..004a  move-result  v0
+    004a..004e  if-eqz  v0, +0xd
+    004e..0052  const-string  v0, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.UserJid"
+    0052..0058  invoke-static  {v2, v0}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    0058..005c  check-cast  v2, Lcom/whatsapp/infra/core/jid/UserJid;
+    005c..0062  invoke-static  {v2}, LX/0Dn;->A07(Lcom/whatsapp/infra/core/jid/UserJid;)Lcom/whatsapp/infra/core/jid/UserJid;
+    0062..0064  move-result-object  v2
+    0064..0066  return-object  v2
+    # exception table: 0 try range(s)
+.end method

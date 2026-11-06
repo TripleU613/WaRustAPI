@@ -17968,5 +17968,11 @@
     "x-library": ["whatsapp_api::transport::messaging::validate_received_ack"],
     "description": "Stateful receive captures then rejects a root ACK with absent id before numeric error and class routing, preserving uncertain reservations and stopping the receive epoch. Empty textual id passes this null check. The pure validator performs no capture or channel mutation; borrowed callers must discard on failure. This is not complete ACK-envelope validation or native reconnect-policy emulation. No replay or live operation.",
     "evidence": "docs/protocol/message-ack.md#required-ack-id-before-error-and-class-routing-2026-11-06"
+  },
+  "x-message-ack-selected-chat": {
+    "x-cli": false, "x-transport": true, "x-live": false,
+    "x-library": ["whatsapp_api::transport::outgoing::acknowledge"],
+    "description": "Ordinary saved-outbox ACK settlement prefers a supported plain numeric PN/LID recipient (1..15 ASCII digits), otherwise normalizes PN/LID device from when no user recipient applies. Conflicting supported recipient leaves the entry uncertain. Known non-user/device recipients fall back to from; other parsed recipient families/forms remain unsupported and uncertain. Unique wire reservation, exact saved-chat equality, InFlight and once-only settlement remain required. This is not full native JID grammar, generic callback or comparison CLI/distribution-wait equivalence. No identity merge, retry or live operation.",
+    "evidence": "docs/protocol/message-ack.md#select-the-message-ack-chat-before-outbox-correlation-2026-11-06"
   }
 }

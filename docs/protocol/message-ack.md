@@ -360,3 +360,36 @@ subtype/normalization rules and that generic callback's ownership need further
 tracing before widening Rust settlement. Nontext cached representations and
 all helper exception paths remain unverified. No runtime claim, code change,
 new request/response, replay or stricter connection-stop policy in this audit.
+
+## Select the message ACK chat before outbox correlation (2026-11-06)
+
+**Confirmed pinned static / Rust correction:** [normalization, user factory,
+subtype census and success dispatch](apk/2.26.43.72-message-ack-chat/README.md)
+resolve the preceding recipient-routing gap for supported numeric PN/LID
+addresses. 1rH.A03 selects a typed recipient first, otherwise unwraps device
+from to its user, then constructs its message key. Original from remains
+separate remote-device metadata. Plain PN/LID bypass special type26/27 mapping.
+
+outgoing::acknowledge now correlates its uniquely reserved wire id against
+that selected chat for supported plain numeric PN/LID recipients. It normalizes
+PN/LID device from when no user recipient applies. Conflicting supported
+recipient cannot settle an entry merely because from matches. Known non-user
+or device recipients use from because the native UserJid cast does not accept
+them. Other parsed recipient families/forms remain uncertain; this adapter's
+1..15 ASCII-digit PN/LID support bound is not a complete native grammar claim.
+
+A real outbox regression covers matching recipient with another from,
+conflicting recipient with matching from, device-from normalization, PN/LID
+namespace disagreement, non-user/device recipient fallback, and actual LID
+outbox entries. Success and ordinary refusal run independently; duplicates
+cannot rewrite facts, conflicting rows remain unchanged, store reopen retains
+results, and neither accepted nor uncertain reservations are reselected.
+
+Limits: this corrects ordinary saved-outbox settlement, not every distribution
+wait or comparison CLI. Full generic callback authority, special/bot feature
+policy, hosted/interop normalization and complete JID grammar remain open.
+No identity namespace merge, generated request or automatic replay is added.
+
+Validation: 1,459 workspace/all-feature tests passed. Strict workspace/all-target/
+all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
+validation, APK coverage freshness and repository hygiene passed. Offline only.

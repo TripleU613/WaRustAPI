@@ -1,0 +1,58 @@
+{
+  "README.md": {
+    "bytes": 4957,
+    "sha256": "a2484f18425f3278f5bd4016b45b8111b21afc11a84e9a0602d185a25696744e"
+  },
+  "chat-cast.txt": {
+    "bytes": 435,
+    "sha256": "ca55b2c4380168a834825ec5a91933a3b8d676a91962e2889050fdcab43c1432"
+  },
+  "device-types.txt": {
+    "bytes": 915,
+    "sha256": "2df23cd04d4a21544a3036276201c0fd22aa991aceca37cc2cf72c29b8c0718a"
+  },
+  "jid-parser.txt": {
+    "bytes": 11633,
+    "sha256": "650fe9f594ffb1c2ff9fb7d8bb55535021e2fe69465d46e4305798883b3257c5"
+  },
+  "jid-types.txt": {
+    "bytes": 10217,
+    "sha256": "6a427df02678661720278e6d2e88c296fdc31edd7994c41d226adfae59aa229a"
+  },
+  "lid-user.txt": {
+    "bytes": 5545,
+    "sha256": "7ff03ca9d68219395e2dd004485339345beaa29f31fbf6ea2aeebe5924511760"
+  },
+  "normalize.txt": {
+    "bytes": 1193,
+    "sha256": "9f6f207a357cfe45245e138d376136d07e03e2427d67f462d7dbecf26831569d"
+  },
+  "special-normalize.txt": {
+    "bytes": 1671,
+    "sha256": "6c115ee8c40bbfe43882cda0d776f4d01922e8456f78a59b889432cc86dc93d4"
+  },
+  "special-types.txt": {
+    "bytes": 625,
+    "sha256": "6092b714709b158a7becce008f2bf445b93bc44b972755deaa913983284fc87e"
+  },
+  "status-user.txt": {
+    "bytes": 2791,
+    "sha256": "93d728320d0c645262ae7d06236333906352754fd8fed53cb755f9fe92c052d7"
+  },
+  "success-dispatch.txt": {
+    "bytes": 4175,
+    "sha256": "ce932db8f3e671e8931ded0db17efd5bff8de8e6ddb437ee59efebe181bba9c8"
+  },
+  "unwrap-device.txt": {
+    "bytes": 815,
+    "sha256": "dc908f426344c70d20203690ccf16f96cd48daa4ea1742674ec057cccac76d5e"
+  },
+  "user-base.txt": {
+    "bytes": 2919,
+    "sha256": "0259b840fcd86f3b50405c8b3d614fd11266794cd3a861c259211d04ae7a9319"
+  },
+  "user-factory.txt": {
+    "bytes": 3768,
+    "sha256": "99aef05a065a48528bfde0852821a15df03f78e206788e21fee0c75dcb9627b0"
+  }
+}
