@@ -1,0 +1,26 @@
+{
+  "README.md": {
+    "bytes": 5784,
+    "sha256": "815eeebfa08e6d9b0658b87c7e1ef0875d91b0c0a04a69b37b4cc3b50e08f745"
+  },
+  "builder.txt": {
+    "bytes": 5865,
+    "sha256": "b9eacbdf241f2df97908bd59fceaa98701be3854b1fa08ffc40cd886b5019e19"
+  },
+  "consumer.txt": {
+    "bytes": 181964,
+    "sha256": "0e2e67b8f7ffc854e711c48cb9ba50f74f69e7a41e20998f1b4dab0cf282736f"
+  },
+  "reason-map.txt": {
+    "bytes": 2511,
+    "sha256": "25caf3bb4ad4c51cb0899a70de32ffeed5d231578ac7d456d48759923c8413b2"
+  },
+  "record-constructor.txt": {
+    "bytes": 2348,
+    "sha256": "ff2f381bf9de395166d886fd06f4549985485485ace6e7b0afea29ca61fc2336"
+  },
+  "record-entity.txt": {
+    "bytes": 1041,
+    "sha256": "066f959071e83e9869d4b2661ce76a4c0b8fca1020bc0a03febb8962365588f3"
+  }
+}

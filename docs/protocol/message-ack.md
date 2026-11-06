@@ -1137,3 +1137,20 @@ not authorize dropping durable uncertainty, rolling back keys or resending;
 late matching ACKs retain their existing guarded settlement path. A05 producers,
 whole shutdown/ACK ordering and account/generation/restart authority remain
 unverified. No live account operation or complete lifecycle parity claim.
+
+## Disconnect row bookkeeping feeds logging rather than a proven state write (2026-11-06)
+
+**Confirmed selected static, APK2.26.43.72:**
+[CompleteF1z/EuU consumer and reason mapper](apk/2.26.43.72-disconnect-send-logging/README.md)
+correct the open persistence hypothesis above: selectedF1z dispatch buildsEuU
+and calls message-send logging0x7.A01. Result4 reachesDqZ.A0e; original reason
+passes through2Aj.A00 intoDqZ.A0a, not a newly established delivery-state enum.
+OriginalEoh is stored separately and has no direct read in that consumer.
+The selectedDqZ event reaches0NX.CSJ/CSW metrics submission; full downstream
+endpoint/buffering/sampling is not established by this trace.
+
+The large consumer also writes usage preferences and calls other helpers;
+complete transitive side effects remain open. No proof of durable delivery
+state mutation, retry scheduling or safe replay follows. No native counters
+or telemetry are synthesized. Rust durable receipt ownership and partial-write
+controls pass unchanged; no runtime change or live account operation included.

@@ -1,0 +1,23 @@
+
+# class: LX/EuU;
+# extends: Ljava/lang/Object;
+
+.method public A00(L)  # .registers 4
+    # full signature: LX/EuU;->A00()LX/B1D;
+    0000..0004  iget-object  v2, v3, LX/EuU;->A0A:LX/18U;
+    0004..0008  sget-object  v0, LX/EuU;->A0P:LX/18U;
+    0008..000c  if-ne  v2, v0, +0xc
+    000c..0010  iget-object  v1, v3, LX/EuU;->A0C:LX/B1D;
+    0010..0014  iput-object  v1, v3, LX/EuU;->A00:LX/B1D;
+    0014..0018  const-string  v0, "null cannot be cast to non-null type com.whatsapp.infra.sendableentity.base.SendableEntity"
+    0018..001e  invoke-static  {v1, v0}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    001e..0020  return-object  v1
+    0020..0024  iget-object  v1, v3, LX/EuU;->A00:LX/B1D;
+    0024..0028  if-nez  v1, -0x8
+    0028..002c  iget-object  v0, v3, LX/EuU;->A08:LX/05a;
+    002c..0032  invoke-static  {v0}, LX/2L6;->A1X(LX/05a;)V
+    0032..0038  invoke-static  {v2}, LX/A9H;->A00(LX/18O;)LX/FVD;
+    0038..003a  move-result-object  v1
+    003a..003c  goto  -0x15
+    # exception table: 0 try range(s)
+.end method
