@@ -8341,7 +8341,7 @@
           "Media"
         ],
         "summary": "Download one authenticated view-once image as private ciphertext",
-        "description": "Download one authenticated view-once image as private ciphertext; do not open it. Before inbox selection or reservation, validate config and require a registered saved account whose phone matches it. A supported descriptor must contain both 32-byte plaintext and ciphertext hashes before any GET. These local guards send no request on refusal. See docs/protocol/media-network-outcomes.md.",
+        "description": "Download one authenticated view-once image as private ciphertext; do not open it. Before inbox selection or reservation, validate config and require a registered saved account whose phone matches it. A supported descriptor must contain both 32-byte plaintext and ciphertext hashes before any GET. These local guards send no request on refusal. See docs/protocol/media-network-outcomes.md. New download reservations bind the exact selected inbox row and a fresh local attempt ID. Definite HTTP refusal or authenticated ciphertext completion commits only if both reservation and source row still match in the same transaction; missing/changed state refuses without overwriting current outcomes. The attempt ID is never transmitted, cached outcomes remain readable and uncertain downloads never retry. This local ownership correction is offline tested; it does not make HTTP/storage atomic. See docs/protocol/media-network-outcomes.md#view-once-download-result-ownership-2026-11-06.",
         "operationId": "downloadViewOnce",
         "x-cli": "whatsapp-cli lab-download-view-once",
         "x-transport": [

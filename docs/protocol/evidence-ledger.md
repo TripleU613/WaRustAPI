@@ -1,3 +1,10 @@
+2026-11-06 — **View-once GET settlement now binds its reservation and inbox source.**
+
+Late success/refusal cannot recreate removed state or overwrite changed outcomes;
+the pre-network transaction also checks the original source row. Existing
+uncertain outcomes remain no-retry. [Regression, evidence and limits](media-network-outcomes.md#view-once-download-result-ownership-2026-11-06).
+1,511 workspace tests and strict Clippy pass; no live account operation.
+
 2026-11-06 — **Standard upload category/purpose native transfer confirmed.**
 
 Little-endian serialization and checked native register/member flow connect

@@ -212,10 +212,10 @@ pub async fn download_view_once(
                     "multiple view-once images; explicit message selection needed",
                 ));
             }
-            candidate = Some((key, image));
+            candidate = Some((key, image, Zeroizing::new(bytes)));
         }
     }
-    let (key, image) = candidate.ok_or_else(|| {
+    let (key, image, source) = candidate.ok_or_else(|| {
         invalid("no authenticated view-once image in saved inbox; nothing downloaded")
     })?;
     let state_key = format!("view-once-download:{}", hex::encode(Sha256::digest(&key)));
@@ -226,20 +226,7 @@ pub async fn download_view_once(
     }
     let url = url(&image)?;
     let client = super::image_upload::client(config)?;
-    store.write(|tx| {
-        if tx
-            .get_json::<serde_json::Value>(Table::Checkpoints, state_key.as_bytes(), 1)?
-            .is_some()
-        {
-            return Err(invalid("download already reserved"));
-        }
-        tx.put_json(
-            Table::Checkpoints,
-            state_key.as_bytes(),
-            1,
-            &serde_json::json!({"status":"outcome_unknown","at":Timestamp::now()}),
-        )
-    })?;
+    let reservation = reserve_download(store, &state_key, &key, &source)?;
     let mut response = client
         .get(url)
         .header("Accept-Encoding", "identity")
@@ -248,7 +235,14 @@ pub async fn download_view_once(
         .map_err(|_| invalid("download transport failed; reservation preserved"))?;
     let status = response.status().as_u16();
     if status != 200 {
-        store.write(|tx|tx.put_json(Table::Checkpoints,state_key.as_bytes(),1,&serde_json::json!({"status":"server_refused","http_status":status,"at":Timestamp::now()})))?;
+        settle_download(
+            store,
+            &state_key,
+            &reservation,
+            &key,
+            &source,
+            &serde_json::json!({"status":"server_refused","http_status":status,"at":Timestamp::now()}),
+        )?;
         return Err(Error::invalid(
             "image_download",
             format!("HTTP {status}; no retry"),
@@ -283,15 +277,278 @@ pub async fn download_view_once(
             .map_err(|_| invalid("invalid media hash"))?,
         image.length,
     )?;
-    store.write(|tx|tx.put_json(Table::Checkpoints,state_key.as_bytes(),1,&serde_json::json!({
-        "status":"downloaded_unopened","body":&*body,"encrypted_bytes":body.len(),"at":Timestamp::now(),"http_status":status
-    })))?;
+    settle_download(
+        store,
+        &state_key,
+        &reservation,
+        &key,
+        &source,
+        &serde_json::json!({
+            "status":"downloaded_unopened","body":&*body,"encrypted_bytes":body.len(),"at":Timestamp::now(),"http_status":status
+        }),
+    )?;
     Ok(body.len() as u64)
+}
+
+// Local attempt ownership only; this identifier is never sent to WhatsApp.
+fn reserve_download(
+    store: &ProtocolStore,
+    state_key: &str,
+    source_key: &[u8],
+    source: &[u8],
+) -> Result<serde_json::Value> {
+    let reservation = serde_json::json!({"status":"outcome_unknown",
+        "at":Timestamp::now(),"reservation":super::messaging::new_message_id()?});
+    store.write(|tx| {
+        if tx
+            .get_json::<serde_json::Value>(Table::Checkpoints, state_key.as_bytes(), 1)?
+            .is_some()
+        {
+            return Err(invalid("download already reserved"));
+        }
+        ensure_download_source(tx, source_key, source)?;
+        tx.put_json(Table::Checkpoints, state_key.as_bytes(), 1, &reservation)
+    })?;
+    Ok(reservation)
+}
+
+fn settle_download(
+    store: &ProtocolStore,
+    state_key: &str,
+    expected: &serde_json::Value,
+    source_key: &[u8],
+    source: &[u8],
+    result: &serde_json::Value,
+) -> Result<()> {
+    // Match both records in the same transaction: a late HTTP result cannot
+    // recreate removed state or replace another attempt/consumed outcome.
+    // See docs/protocol/media-network-outcomes.md (view-once ownership audit).
+    store.write(|tx| {
+        let prior: Option<serde_json::Value> =
+            tx.get_json(Table::Checkpoints, state_key.as_bytes(), 1)?;
+        if expected["status"] != "outcome_unknown"
+            || !expected["reservation"]
+                .as_str()
+                .is_some_and(|id| !id.is_empty())
+            || prior.as_ref() != Some(expected)
+        {
+            return Err(invalid(
+                "view-once download reservation changed before settlement",
+            ));
+        }
+        ensure_download_source(tx, source_key, source)?;
+        tx.put_json(Table::Checkpoints, state_key.as_bytes(), 1, result)
+    })
+}
+
+fn ensure_download_source(
+    tx: &crate::store::WriteTx<'_>,
+    source_key: &[u8],
+    source: &[u8],
+) -> Result<()> {
+    let current = tx
+        .get(Table::Checkpoints, source_key, 1)?
+        .map(Zeroizing::new);
+    if current.as_ref().map(|row| row.as_slice()) != Some(source) {
+        return Err(invalid(
+            "view-once source changed before reservation or settlement",
+        ));
+    }
+    Ok(())
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn late_view_once_results_preserve_reservations_and_source_after_reopen() {
+        use crate::{
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        use std::sync::Arc;
+        for change in [
+            "missing",
+            "different_owner",
+            "legacy_unknown",
+            "consumed",
+            "server_refused",
+            "downloaded_unopened",
+            "source_missing",
+            "source_changed",
+            "valid_success",
+            "valid_refusal",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("view-once-owner.redb");
+            let open = |create| {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: AccountId::new("fixture").unwrap(),
+                    create,
+                    key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([6; 32]))),
+                })
+                .unwrap()
+            };
+            let store = open(true);
+            let source_key = b"received:offline:view-once";
+            let inbox = serde_json::json!({"status":"decrypted","protobuf":[26,0]});
+            store
+                .write(|tx| tx.put_json(Table::Checkpoints, source_key, 1, &inbox))
+                .unwrap();
+            let source = store
+                .read(|tx| tx.get(Table::Checkpoints, source_key, 1))
+                .unwrap()
+                .unwrap();
+            let reservation = reserve_download(&store, "download", source_key, &source).unwrap();
+            store.write(|tx| {
+                match change {
+                    "missing" => { tx.delete(Table::Checkpoints,b"download")?; }
+                    "source_missing" => { tx.delete(Table::Checkpoints,source_key)?; }
+                    "source_changed" => { tx.put_json(Table::Checkpoints,source_key,1,&serde_json::json!({"status":"consumed"}))?; }
+                    "different_owner" => { tx.put_json(Table::Checkpoints,b"download",1,&serde_json::json!({"status":"outcome_unknown","reservation":"replacement"}))?; }
+                    "legacy_unknown" => { tx.put_json(Table::Checkpoints,b"download",1,&serde_json::json!({"status":"outcome_unknown"}))?; }
+                    "consumed" | "server_refused" | "downloaded_unopened" => { tx.put_json(Table::Checkpoints,b"download",1,&serde_json::json!({"status":change,"sentinel":"preserve"}))?; }
+                    _ => {}
+                }
+                Ok(())
+            }).unwrap();
+            drop(store);
+            let store = open(false);
+            let rows = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let journal = store.journal_head().unwrap();
+            let success = serde_json::json!({"status":"downloaded_unopened","body":[1,2,3],"encrypted_bytes":3});
+            let refusal = serde_json::json!({"status":"server_refused","http_status":429});
+            if change.starts_with("valid_") {
+                let result = if change == "valid_success" {
+                    &success
+                } else {
+                    &refusal
+                };
+                settle_download(
+                    &store,
+                    "download",
+                    &reservation,
+                    source_key,
+                    &source,
+                    result,
+                )
+                .unwrap();
+                assert_eq!(
+                    store
+                        .read(|tx| tx.get_json::<serde_json::Value>(
+                            Table::Checkpoints,
+                            b"download",
+                            1
+                        ))
+                        .unwrap()
+                        .as_ref(),
+                    Some(result)
+                );
+                let settled = store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap();
+                let settled_journal = store.journal_head().unwrap();
+                for late in [&success, &refusal] {
+                    assert!(
+                        settle_download(
+                            &store,
+                            "download",
+                            &reservation,
+                            source_key,
+                            &source,
+                            late
+                        )
+                        .is_err()
+                    );
+                }
+                assert_eq!(store.journal_head().unwrap(), settled_journal);
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    settled
+                );
+                drop(store);
+                let reopened = open(false);
+                assert_eq!(
+                    reopened
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    settled
+                );
+                assert!(reserve_download(&reopened, "download", source_key, &source).is_err());
+            } else {
+                for result in [&success, &refusal] {
+                    assert!(
+                        settle_download(
+                            &store,
+                            "download",
+                            &reservation,
+                            source_key,
+                            &source,
+                            result
+                        )
+                        .is_err(),
+                        "{change}"
+                    );
+                }
+                assert_eq!(store.journal_head().unwrap(), journal);
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    rows
+                );
+                drop(store);
+                let reopened = open(false);
+                assert_eq!(
+                    reopened
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    rows
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn view_once_reservation_refuses_changed_source_without_mutation() {
+        use crate::{
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("view-once-source.redb"),
+            account_id: AccountId::new("fixture").unwrap(),
+            create: true,
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([6; 32]))),
+        })
+        .unwrap();
+        for prior in [None, Some(serde_json::json!({"status":"consumed"}))] {
+            if let Some(prior) = prior {
+                store
+                    .write(|tx| tx.put_json(Table::Checkpoints, b"source", 1, &prior))
+                    .unwrap();
+            }
+            let rows = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let journal = store.journal_head().unwrap();
+            assert!(reserve_download(&store, "download", b"source", b"stale original").is_err());
+            assert_eq!(store.journal_head().unwrap(), journal);
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                rows
+            );
+        }
+    }
+
     #[test]
     fn opening_consumes_atomically_and_rejects_a_second_open() {
         use crate::{

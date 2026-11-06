@@ -1015,3 +1015,49 @@ runtime/server acceptance. The byte example is synthetic, not captured traffic.
 No Rust request/header/retry/timing/persistence behavior or live account action
 changed. Full converter error behavior and arbitrary malformed inputs are not
 claimed verified by this bounded transfer proof.
+
+## View-once download result ownership (2026-11-06)
+
+**Confirmed local defect / fixed offline:** view-once GET persisted definite
+HTTP refusal or authenticated download completion with unconditional checkpoint
+writes after network awaits. Unlike the ordinary-download ownership guard,
+these writes could recreate a removed checkpoint or replace a changed attempt,
+consumed/refused/completed outcome, or outlive the source inbox row.
+
+`image_download::download_view_once` now retains the exact selected inbox row
+in zeroizing memory. Its new-download reservation transaction requires that
+source row to remain byte-identical and no prior download state to exist. It
+persists a fresh local reservation ID plus the existing unknown outcome/time.
+The ID is never sent on the wire and does not authorize another request.
+
+Both definite HTTP refusal and authenticated ciphertext completion now compare
+the exact initiating reservation AND the original source row in the same write
+transaction. A missing/changed row returns local InvalidInput(image_download)
+without replacing current state. Successful completion returns only after the
+checked commit. The extra fetched inbox bytes are zeroized after comparison.
+Existing cached completed downloads, old uncertain/no-retry rows, config/account
+preflight, crypto/length bounds and atomic consumption retain their paths.
+No opening, opened receipt or plaintext export was added.
+
+Regression `late_view_once_results_preserve_reservations_and_source_after_reopen`
+first failed with the old unconditional write retained in the extracted
+settlement helper (case missing), before adding the settlement checks. It now
+covers missing/differently owned/legacy unknown checkpoints, consumed/refused/
+downloaded outcomes, removed/changed inbox sources, and exact success/refusal
+controls. It checks unchanged checkpoint bytes and journal on refusal, persistence
+across reopen, one-time success/refusal, duplicate/late result refusal and
+refusal to reserve again. `view_once_reservation_refuses_changed_source_without_mutation`
+checks the pre-network source fence independently. All tests use synthetic
+records and real encrypted local stores; no network server or account operation.
+
+Validation:1,511 workspace tests pass (9 result suites), strict workspace/
+all-target/all-feature Clippy and formatting pass. No new APK claim or native
+parity inference is made: this is a Rust state-ownership correction, following
+the existing ordinary-media invariant in this document.
+
+**Limits:** this does not make HTTP and storage atomic. A source can change
+after reservation while a GET is in flight; late settlement is refused. Exact
+source bytes deliberately refuse even a metadata-only rewrite rather than guess
+that it is equivalent. No generic retry, checkpoint reset, stale-body recovery,
+identity rotation or broader account/session-generation race guarantee is added.
+The native Priority optional-property uncertainty remains open independently.

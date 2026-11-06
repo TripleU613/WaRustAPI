@@ -267,3 +267,8 @@ A missing value returns local `InvalidInput(client.user_agent)` before upload
 state allocation or transmission; stored outcomes remain readable. This does
 not provide a User-Agent value or claim server acceptance. See
 [APK evidence and scope](../protocol/media-network-outcomes.md#new-media-upload-user-agent-preflight-2026-11-06).
+
+View-once ciphertext prefetch binds new requests to their saved inbox source
+and local reservation. A source or attempt that changes before settlement
+causes a local refusal; it does not reset an uncertain download or open content.
+[Ownership and concurrency limits](../protocol/media-network-outcomes.md#view-once-download-result-ownership-2026-11-06).
