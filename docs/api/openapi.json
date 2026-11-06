@@ -1,4 +1,11 @@
 {
+  "x-report-response-bounds": {
+    "x-cli": "whatsapp-cli actions; xtask apk-smali <apk> --class <class> --method <method> --signatures --exceptions",
+    "x-transport": "experimental report action result classification and offline static evidence",
+    "x-live": false,
+    "description": "APK43.72 manager tries typed Rv2 success before error fallback; its success path does not inspect unrelated root/nested error extensions. Matching saved report/spam-set-spam_list results now keep correlated outer-result outcome. Live owner/deadline, raw reply, settlement sequence, outer-error and no-replay guards remain. Current helper evidence confirms declared list bounds0..210/0..5/0..5; out-of-range nonnull lists log rather than hard-refuse. report/id uses1..20 UTF16 units but nullable model is allowed; do not infer required report ID. Exact request-ID/type checks and generic from JID classes are traced, not a new native schema/source/adoption port. Generic Ok is not moderation acceptance. No new payload, source guard, retry/ACK/HTTP route or live operation.",
+    "evidence": "docs/protocol/apk/2.26.43.72-report-response-bounds/README.md"
+  },
   "x-report-callback-timer": {
     "x-cli": "whatsapp-cli report (offline queue); whatsapp-cli actions; xtask apk-smali <apk> --class <class> --method <method> --signatures --exceptions",
     "x-transport": "experimental individual spam report callback ownership",

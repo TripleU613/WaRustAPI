@@ -114,3 +114,11 @@ workspace/all-target/all-feature Clippy, fmt, OpenAPI library-symbol and
 CLI-reference tests, APK coverage freshness and repository hygiene passed.
 All eleven retained .txt exports and the reused Cgd.BsS method reproduce exactly.
 Focused regression: `cargo test --locked -p whatsapp-api --all-features report_callback_expires_at_native_timeout_without_replay`.
+
+## Response/bounds follow-up (2026-11-06)
+
+[Exact helper trace](../2.26.43.72-report-response-bounds/README.md) resolves the
+list lower bounds to0 and report/id length units to UTF16. It also traces
+request-ID equality and nullable report model/source behavior, and corrects
+unrelated result-error extensions. Full native schema/source admission and
+report application remain unported.

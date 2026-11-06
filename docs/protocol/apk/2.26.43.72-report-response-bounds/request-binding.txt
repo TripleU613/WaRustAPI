@@ -1,0 +1,13 @@
+
+# class: LX/6oi;
+# extends: Ljava/lang/Object;
+
+.method public A0b(LLL)  # .registers 3
+    # full signature: LX/6oi;->A0b(LX/0Tp;LX/Dzb;)LX/0Tp;
+    0000..0004  const-string  v0, "iq"
+    0004..000a  invoke-static  {v1, v0}, LX/0Tp;->A01(LX/0Tp;Ljava/lang/String;)V
+    000a..000e  iget-object  v0, v2, LX/Dzb;->A00:Ljava/lang/Object;
+    000e..0012  check-cast  v0, LX/0Tp;
+    0012..0014  return-object  v0
+    # exception table: 0 try range(s)
+.end method

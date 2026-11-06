@@ -1,0 +1,320 @@
+
+# class: LX/8B6;
+# extends: Ljava/lang/Object;
+
+.method public A0J(LLLLLLLZ)  # .registers 27
+    # full signature: LX/8B6;->A0J(LX/0Tp;Ljava/lang/Class;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Object;[Ljava/lang/String;Z)Ljava/lang/Object;
+    0000..0004  move-object/from16  v9, v24
+    0004..0008  move-object/from16  v4, v22
+    0008..000a  const/4  v2, #0x0
+    000a..000e  move-object/from16  v12, v20
+    000e..0014  invoke-static  {v12, v2}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0014..0018  move-object/from16  v1, v21
+    0018..001e  invoke-static  {v1}, LX/3q3;->A1V(Ljava/lang/Object;)Z
+    001e..0020  move-result  v0
+    0020..0024  move-object/from16  v13, v25
+    0024..0026  array-length  v11, v13
+    0026..0028  const/4  v6, #0x0
+    0028..002a  sub-int/2addr  v11, v0
+    002a..002e  aget-object  v7, v25, v11
+    002e..0030  const/4  v10, #0x0
+    0030..0036  invoke-virtual  {v7, v2}, Ljava/lang/String;->charAt(I)C
+    0036..0038  move-result  v2
+    0038..003c  const/16  v0, #0x23
+    003c..0042  invoke-static  {v2, v0}, LX/2L9;->A1O(II)Z
+    0042..0044  move-result  v3
+    0044..0046  move-object  v8, v12
+    0046..004a  move-object/from16  v5, v19
+    004a..004e  if-ge  v10, v11, +0x24
+    004e..0054  invoke-static  {v8, v13, v10}, LX/6of;->A0i(LX/0Tp;[Ljava/lang/String;I)LX/0Tp;
+    0054..0056  move-result-object  v8
+    0056..005a  if-nez  v8, +0x1b
+    005a..005e  aget-object  v1, v25, v10
+    005e..0062  iget-object  v2, v12, LX/0Tp;->A00:Ljava/lang/String;
+    0062..0066  const-string  v0, "required child "
+    0066..006c  invoke-static  {v0, v1}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    006c..006e  move-result-object  v1
+    006e..0072  const-string  v0, " missing for tag "
+    0072..0078  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0078..007e  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    007e..0084  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0084..0086  move-result-object  v0
+    0086..008a  iput-object  v0, v5, LX/8B6;->A00:Ljava/lang/String;
+    008a..008c  return-object  v6
+    008c..0090  add-int/lit8  v10, v10, #0x1
+    0090..0092  goto  -0x25
+    0092..0096  const-class  v0, Ljava/lang/String;
+    0096..009c  invoke-virtual  {v1, v0}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
+    009c..009e  move-result  v0
+    009e..00a2  move-object/from16  v2, v23
+    00a2..00a6  if-eqz  v0, +0x8b
+    00a6..00aa  instance-of  v0, v9, Ljava/lang/String;
+    00aa..00ae  if-nez  v0, +0x3
+    00ae..00b0  move-object  v9, v6
+    00b0..00b4  if-eqz  v3, +0x7f
+    00b4..00ba  invoke-virtual  {v8}, LX/0Tp;->A0I()Ljava/lang/String;
+    00ba..00bc  move-result-object  v10
+    00bc..00c0  const-string  v18, "Error while parsing attribute '"
+    00c0..00c4  const-string  v12, "/>."
+    00c4..00c8  const-string  v11, "' in tag <"
+    00c8..00cc  if-eqz  v26, +0x1b
+    00cc..00d2  invoke-static  {v10, v9}, LX/09W;->A00(Ljava/lang/Object;Ljava/lang/Object;)Z
+    00d2..00d4  move-result  v0
+    00d4..00d8  if-nez  v0, +0x123
+    00d8..00dc  iget-object  v2, v8, LX/0Tp;->A00:Ljava/lang/String;
+    00dc..00e2  invoke-static/range  {v18..v18}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00e2..00e4  move-result-object  v1
+    00e4..00ea  invoke-static  {v7, v11, v2, v1}, LX/3q4;->A1J(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    00ea..00f0  invoke-virtual  {v1, v12}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00f0..00f6  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00f6..00f8  move-result-object  v0
+    00f8..00fc  iput-object  v0, v5, LX/8B6;->A00:Ljava/lang/String;
+    00fc..00fe  return-object  v6
+    00fe..0102  if-nez  v10, +0xb
+    0102..0106  iget-object  v2, v8, LX/0Tp;->A00:Ljava/lang/String;
+    0106..010a  const-string  v0, "Missing attribute '"
+    010a..0110  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0110..0112  move-result-object  v1
+    0112..0114  goto  -0x17
+    0114..0118  const-string  v13, "."
+    0118..011c  const-string  v3, " for tag "
+    011c..0120  const-string  v17, "Length of attribute "
+    0120..0124  if-eqz  v22, +0x24
+    0124..012a  invoke-virtual  {v10}, Ljava/lang/String;->length()I
+    012a..012c  move-result  v0
+    012c..012e  int-to-long  v0, v0
+    012e..0134  invoke-virtual  {v4}, Ljava/lang/Number;->longValue()J
+    0134..0136  move-result-wide  v15
+    0136..013a  cmp-long  v14, v0, v15
+    013a..013e  if-gez  v14, +0x17
+    013e..0142  iget-object  v0, v8, LX/0Tp;->A00:Ljava/lang/String;
+    0142..0148  invoke-static/range  {v17..v17}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0148..014a  move-result-object  v1
+    014a..0150  invoke-static  {v7, v3, v0, v1}, LX/3q4;->A1J(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    0150..0154  const-string  v0, " is less than the specified lower bound value of "
+    0154..015a  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    015a..0160  invoke-virtual  {v1, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0160..0166  invoke-virtual  {v1, v13}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0166..0168  goto  -0x3b
+    0168..016a  move-object  v4, v2
+    016a..016e  if-eqz  v23, +0x1b
+    016e..0174  invoke-virtual  {v10}, Ljava/lang/String;->length()I
+    0174..0176  move-result  v0
+    0176..0178  int-to-long  v0, v0
+    0178..017e  invoke-virtual  {v2}, Ljava/lang/Number;->longValue()J
+    017e..0180  move-result-wide  v14
+    0180..0184  cmp-long  v2, v0, v14
+    0184..0188  if-lez  v2, +0xe
+    0188..018c  iget-object  v0, v8, LX/0Tp;->A00:Ljava/lang/String;
+    018c..0192  invoke-static/range  {v17..v17}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0192..0194  move-result-object  v1
+    0194..019a  invoke-static  {v7, v3, v0, v1}, LX/3q4;->A1J(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    019a..019e  const-string  v0, " is more than the specified upper bound value of "
+    019e..01a0  goto  -0x25
+    01a0..01a4  if-eqz  v9, +0x190
+    01a4..01aa  invoke-virtual  {v10, v9}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    01aa..01ac  move-result  v0
+    01ac..01ae  goto  -0x6c
+    01ae..01b4  invoke-virtual  {v8, v7, v6}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    01b4..01b6  move-result-object  v10
+    01b6..01b8  goto  -0x7d
+    01b8..01bc  const-class  v0, [B
+    01bc..01c2  invoke-virtual  {v1, v0}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
+    01c2..01c4  move-result  v0
+    01c4..01c8  if-eqz  v0, +0x51
+    01c8..01cc  if-nez  v3, +0xc
+    01cc..01d0  iget-object  v2, v8, LX/0Tp;->A00:Ljava/lang/String;
+    01d0..01d4  const-string  v0, "Cannot have binary not contained in an element value in tag "
+    01d4..01da  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    01da..01dc  move-result-object  v1
+    01dc..01e0  goto/16  -0xb2
+    01e0..01e4  iget-object  v10, v8, LX/0Tp;->A01:[B
+    01e4..01e8  if-nez  v10, +0x7
+    01e8..01ec  iget-object  v2, v8, LX/0Tp;->A00:Ljava/lang/String;
+    01ec..01f0  const-string  v0, "Missing element value for tag "
+    01f0..01f2  goto  -0xe
+    01f2..01f6  const-string  v7, "Length of element value for tag "
+    01f6..01fa  if-eqz  v22, +0x1c
+    01fa..01fc  array-length  v0, v10
+    01fc..01fe  int-to-long  v0, v0
+    01fe..0204  invoke-virtual  {v4}, Ljava/lang/Number;->longValue()J
+    0204..0206  move-result-wide  v11
+    0206..020a  cmp-long  v3, v0, v11
+    020a..020e  if-gez  v3, +0x12
+    020e..0212  iget-object  v0, v8, LX/0Tp;->A00:Ljava/lang/String;
+    0212..0218  invoke-static  {v7, v0}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0218..021a  move-result-object  v1
+    021a..021e  const-string  v0, " is less than the specified lower bound value of "
+    021e..0224  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0224..022a  invoke-virtual  {v1, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    022a..022e  goto/16  -0xd6
+    022e..0232  if-eqz  v23, +0x149
+    0232..0234  array-length  v0, v10
+    0234..0236  int-to-long  v0, v0
+    0236..023c  invoke-virtual  {v2}, Ljava/lang/Number;->longValue()J
+    023c..023e  move-result-wide  v11
+    023e..0242  cmp-long  v3, v0, v11
+    0242..0246  if-lez  v3, +0x13f
+    0246..024a  iget-object  v0, v8, LX/0Tp;->A00:Ljava/lang/String;
+    024a..0250  invoke-static  {v7, v0}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0250..0252  move-result-object  v1
+    0252..0256  const-string  v0, " is more than the specified upper bound value of "
+    0256..025c  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    025c..0262  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0262..0266  goto/16  -0xf2
+    0266..026a  const-class  v0, Ljava/lang/Long;
+    026a..0270  invoke-virtual  {v1, v0}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
+    0270..0272  move-result  v0
+    0272..0276  if-nez  v0, +0x5a
+    0276..027a  sget-object  v0, Ljava/lang/Long;->TYPE:Ljava/lang/Class;
+    027a..0280  invoke-virtual  {v1, v0}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
+    0280..0282  move-result  v0
+    0282..0286  if-nez  v0, +0x52
+    0286..028a  const-class  v0, Lcom/whatsapp/infra/core/jid/Jid;
+    028a..0290  invoke-virtual  {v0, v1}, Ljava/lang/Class;->isAssignableFrom(Ljava/lang/Class;)Z
+    0290..0292  move-result  v0
+    0292..0296  if-eqz  v0, +0x38
+    0296..029a  instance-of  v0, v9, Lcom/whatsapp/infra/core/jid/Jid;
+    029a..029e  if-nez  v0, +0x3
+    029e..02a0  move-object  v9, v6
+    02a0..02a6  invoke-virtual  {v8, v1, v7}, LX/0Tp;->A0A(Ljava/lang/Class;Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    02a6..02a8  move-result-object  v10
+    02a8..02ac  const-string  v4, "Error while parsing attribute '"
+    02ac..02b0  const-string  v3, "/>."
+    02b0..02b4  const-string  v2, "' in tag <"
+    02b4..02b8  if-eqz  v26, +0x15
+    02b8..02be  invoke-static  {v10, v9}, LX/09W;->A00(Ljava/lang/Object;Ljava/lang/Object;)Z
+    02be..02c0  move-result  v0
+    02c0..02c4  if-nez  v0, +0x30
+    02c4..02c8  iget-object  v1, v8, LX/0Tp;->A00:Ljava/lang/String;
+    02c8..02ce  invoke-static  {v4}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    02ce..02d0  move-result-object  v0
+    02d0..02d6  invoke-static  {v7, v2, v1, v0}, LX/3q4;->A1J(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    02d6..02dc  invoke-static  {v5, v3, v0}, LX/8B6;->A0B(LX/8B6;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    02dc..02de  return-object  v6
+    02de..02e2  if-nez  v10, +0xb
+    02e2..02e6  iget-object  v1, v8, LX/0Tp;->A00:Ljava/lang/String;
+    02e6..02ea  const-string  v0, "Missing attribute '"
+    02ea..02f0  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    02f0..02f2  move-result-object  v0
+    02f2..02f4  goto  -0x11
+    02f4..02f8  if-eqz  v9, +0xe6
+    02f8..02fe  invoke-virtual  {v10, v9}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
+    02fe..0300  move-result  v0
+    0300..0302  goto  -0x20
+    0302..0308  invoke-virtual  {v1}, Ljava/lang/Class;->getName()Ljava/lang/String;
+    0308..030a  move-result-object  v1
+    030a..030e  const-string  v0, "Tried to get attribute of unsupported type "
+    030e..0314  invoke-static  {v0, v1}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0314..0316  move-result-object  v0
+    0316..031a  goto/16  -0x148
+    031a..031e  if-nez  v10, +0xd3
+    031e..0320  return-object  v6
+    0320..0324  if-nez  v10, +0xd0
+    0324..0326  return-object  v6
+    0326..032a  instance-of  v0, v9, Ljava/lang/Long;
+    032a..032e  if-nez  v0, +0x3
+    032e..0330  move-object  v9, v6
+    0330..0334  if-eqz  v3, +0x2c
+    0334..033a  invoke-virtual  {v8}, LX/0Tp;->A0I()Ljava/lang/String;
+    033a..033c  move-result-object  v14
+    033c..0340  const-string  v17, "Error while parsing attribute '"
+    0340..0344  const-string  v13, " is not integral: "
+    0344..0348  const-string  v12, " for tag "
+    0348..034c  const-string  v0, "attribute "
+    034c..0350  const-string  v11, "/>."
+    0350..0354  const-string  v3, "' in tag <"
+    0354..0358  if-eqz  v26, +0x36
+    0358..035c  if-eqz  v14, +0x1d
+    035c..0362  invoke-static  {v14}, LX/0Cd;->A08(Ljava/lang/String;)Ljava/lang/Long;
+    0362..0364  move-result-object  v10
+    0364..0368  if-nez  v10, +0x18
+    0368..036c  iget-object  v1, v8, LX/0Tp;->A00:Ljava/lang/String;
+    036c..0372  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0372..0374  move-result-object  v0
+    0374..037a  invoke-static  {v7, v12, v1, v0}, LX/3q4;->A1J(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    037a..0380  invoke-static  {v13, v14, v0}, LX/1Xl;->A0x(Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    0380..0382  move-result-object  v0
+    0382..0386  iput-object  v0, v5, LX/8B6;->A00:Ljava/lang/String;
+    0386..0388  return-object  v6
+    0388..038e  invoke-virtual  {v8, v7, v6}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    038e..0390  move-result-object  v14
+    0390..0392  goto  -0x2a
+    0392..0394  move-object  v10, v6
+    0394..039a  invoke-static  {v10, v9}, LX/09W;->A00(Ljava/lang/Object;Ljava/lang/Object;)Z
+    039a..039c  move-result  v0
+    039c..03a0  if-nez  v0, +0xf
+    03a0..03a4  iget-object  v1, v8, LX/0Tp;->A00:Ljava/lang/String;
+    03a4..03aa  invoke-static/range  {v17..v17}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    03aa..03ac  move-result-object  v0
+    03ac..03b2  invoke-static  {v7, v3, v1, v0}, LX/3q4;->A1J(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    03b2..03b8  invoke-static  {v5, v11, v0}, LX/8B6;->A0B(LX/8B6;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    03b8..03ba  return-object  v6
+    03ba..03be  if-nez  v10, +0x83
+    03be..03c0  return-object  v6
+    03c0..03c4  if-nez  v14, +0x11
+    03c4..03c8  iget-object  v1, v8, LX/0Tp;->A00:Ljava/lang/String;
+    03c8..03cc  const-string  v0, "Missing attribute '"
+    03cc..03d2  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    03d2..03d4  move-result-object  v0
+    03d4..03da  invoke-static  {v7, v3, v1, v0}, LX/3q4;->A1J(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    03da..03e0  invoke-static  {v5, v11, v0}, LX/8B6;->A0B(LX/8B6;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    03e0..03e2  return-object  v6
+    03e2..03e8  invoke-static  {v14}, LX/0Cd;->A08(Ljava/lang/String;)Ljava/lang/Long;
+    03e8..03ea  move-result-object  v10
+    03ea..03ee  if-nez  v10, +0x12
+    03ee..03f2  iget-object  v1, v8, LX/0Tp;->A00:Ljava/lang/String;
+    03f2..03f8  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    03f8..03fa  move-result-object  v0
+    03fa..0400  invoke-static  {v7, v12, v1, v0}, LX/3q4;->A1J(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    0400..0406  invoke-static  {v13, v14, v0}, LX/1Xl;->A0x(Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    0406..0408  move-result-object  v0
+    0408..040c  iput-object  v0, v5, LX/8B6;->A00:Ljava/lang/String;
+    040c..040e  return-object  v6
+    040e..0412  const-string  v14, "' for tag "
+    0412..0416  const-string  v1, "Value of attribute '"
+    0416..041a  if-eqz  v22, +0x20
+    041a..0420  invoke-virtual  {v10}, Ljava/lang/Number;->longValue()J
+    0420..0422  move-result-wide  v15
+    0422..0428  invoke-virtual  {v4}, Ljava/lang/Number;->longValue()J
+    0428..042a  move-result-wide  v12
+    042a..042e  cmp-long  v0, v15, v12
+    042e..0432  if-gez  v0, +0x14
+    0432..0436  iget-object  v0, v8, LX/0Tp;->A00:Ljava/lang/String;
+    0436..043c  invoke-static  {v1}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    043c..043e  move-result-object  v1
+    043e..0444  invoke-static  {v7, v14, v0, v1}, LX/3q4;->A1J(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    0444..0448  const-string  v0, " is less than the specified lower bound value of "
+    0448..044e  invoke-static  {v4, v0, v1}, LX/1Xl;->A0v(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    044e..0450  move-result-object  v0
+    0450..0454  iput-object  v0, v5, LX/8B6;->A00:Ljava/lang/String;
+    0454..0456  return-object  v6
+    0456..045a  if-eqz  v23, +0x20
+    045a..0460  invoke-virtual  {v10}, Ljava/lang/Number;->longValue()J
+    0460..0462  move-result-wide  v15
+    0462..0468  invoke-virtual  {v2}, Ljava/lang/Number;->longValue()J
+    0468..046a  move-result-wide  v12
+    046a..046e  cmp-long  v0, v15, v12
+    046e..0472  if-lez  v0, +0x14
+    0472..0476  iget-object  v0, v8, LX/0Tp;->A00:Ljava/lang/String;
+    0476..047c  invoke-static  {v1}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    047c..047e  move-result-object  v1
+    047e..0484  invoke-static  {v7, v14, v0, v1}, LX/3q4;->A1J(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    0484..0488  const-string  v0, " is more than the specified upper bound value of "
+    0488..048e  invoke-static  {v2, v0, v1}, LX/1Xl;->A0v(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    048e..0490  move-result-object  v0
+    0490..0494  iput-object  v0, v5, LX/8B6;->A00:Ljava/lang/String;
+    0494..0496  return-object  v6
+    0496..049a  if-eqz  v9, +0x15
+    049a..04a0  invoke-virtual  {v9, v10}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
+    04a0..04a2  move-result  v0
+    04a2..04a6  if-nez  v0, +0xf
+    04a6..04aa  iget-object  v1, v8, LX/0Tp;->A00:Ljava/lang/String;
+    04aa..04b0  invoke-static/range  {v17..v17}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    04b0..04b2  move-result-object  v0
+    04b2..04b8  invoke-static  {v7, v3, v1, v0}, LX/3q4;->A1J(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    04b8..04be  invoke-static  {v5, v11, v0}, LX/8B6;->A0B(LX/8B6;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    04be..04c0  return-object  v6
+    04c0..04c2  return-object  v10
+    # exception table: 0 try range(s)
+.end method

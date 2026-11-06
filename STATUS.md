@@ -1,3 +1,10 @@
+2026-11-06 — **Corrected report result extensions; resolved native list bounds.**
+Valid report results no longer become refusals due to unrelated error extensions.
+Current constructors permit empty lists; optional report/id bounds and exact ID
+correlation are traced without inventing source or acceptance requirements.
+[Evidence, regression and remaining schema gaps](docs/protocol/chat-actions.md#report-response-and-list-bounds-2026-11-06).
+No live account operation.
+
 2026-11-06 — **Bound individual report callback ownership to native32s.**
 Pinned RPC/wrapper evidence supplies32000 to the shared IQ registration path.
 Expiry now drops the live claim while preserving uncertain Sent state and no

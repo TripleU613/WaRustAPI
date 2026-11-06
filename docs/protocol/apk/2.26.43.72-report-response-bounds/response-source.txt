@@ -1,0 +1,24 @@
+
+# class: LX/RNG;
+# extends: Ljava/lang/Object;
+
+.method public A0H(LLL)  # .registers 7
+    # full signature: LX/RNG;->A0H(LX/0Tp;LX/8B6;)Lcom/whatsapp/infra/core/jid/Jid;
+    0000..0002  const/4  v4, #0x0
+    0002..0004  const/4  v3, #0x1
+    0004..0006  const/4  v0, #0x2
+    0006..000a  new-array  v1, v0, [Ljava/lang/Class;
+    000a..000e  const-class  v0, Lcom/whatsapp/infra/core/jid/Jid;
+    000e..0012  aput-object  v0, v1, v4
+    0012..0016  const-class  v0, Lcom/whatsapp/infra/core/jid/UserJid;
+    0016..001a  aput-object  v0, v1, v3
+    001a..0020  invoke-static  {v1}, LX/01i;->A0A([Ljava/lang/Object;)Ljava/util/List;
+    0020..0022  move-result-object  v2
+    0022..0026  new-array  v1, v3, [Ljava/lang/String;
+    0026..002a  const-string  v0, "from"
+    002a..002e  aput-object  v0, v1, v4
+    002e..0034  invoke-virtual  {v6, v5, v2, v1}, LX/8B6;->A0F(LX/0Tp;Ljava/util/List;[Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    0034..0036  move-result-object  v0
+    0036..0038  return-object  v0
+    # exception table: 0 try range(s)
+.end method

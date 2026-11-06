@@ -889,6 +889,12 @@ fn record_reply_inner(
         let privacy_token_result = kind == Some("result")
             && row.kind == super::token_issue::ACTION_KIND
             && super::token_issue::is_issue_request(&request);
+        // APK43.72 SpamRPCManager.A01 tries Rv2 selector1 first; its
+        // report/id success reader does not select unrelated error extensions.
+        // This is envelope dispatch, not full native schema/report adoption.
+        // docs/protocol/apk/2.26.43.72-report-response-bounds/README.md.
+        let report_result =
+            kind == Some("result") && row.kind == "report" && super::report::is_request(&request);
         // APK43.72 8R7/6p9 select CK4 from the outer result, then parse
         // their list. Unrelated error extensions cannot select Bvj instead.
         let blocklist_reply = matches!(row.kind.as_str(), "blocklist" | "block" | "unblock")
@@ -926,6 +932,7 @@ fn record_reply_inner(
             || photo_lookup_result
             || two_factor_result
             || privacy_token_result
+            || report_result
             || (blocklist_reply && kind == Some("result"))
         {
             None
@@ -2502,6 +2509,69 @@ mod tests {
                 );
             }
         }
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn report_result_ignores_unrelated_error_extensions() {
+        use super::super::report;
+        let (dir, store) = store();
+        let id = report::queue_report(
+            &store,
+            &crate::model::jid::Jid::parse("15555550101@s.whatsapp.net").unwrap(),
+            "chat",
+            None,
+        )
+        .unwrap();
+        let request = reserve_next(&store).unwrap().unwrap();
+        let mut live = LiveReplies::default();
+        register_written(&mut live, &store, &request, tokio::time::Instant::now());
+        let reply = Node::new("iq")
+            .attr("id", id.as_str())
+            .attr(
+                "from",
+                crate::model::jid::Jid::parse("s.whatsapp.net").unwrap(),
+            )
+            .attr("type", "result")
+            .children(vec![
+                Node::new("report").attr("id", "fixture-report"),
+                Node::new("error").attr("code", "403"),
+                Node::new("list").children(vec![
+                    Node::new("user").children(vec![Node::new("error").attr("code", "401")]),
+                ]),
+            ]);
+        assert!(live.record_reply(&store, &reply).unwrap());
+        assert!(!live.record_reply(&store, &reply).unwrap());
+        let before = outcomes(&store).unwrap();
+        assert_eq!(before[0].status, ActionStatus::Ok);
+        assert_eq!(before[0].error_code, None);
+        assert_eq!(before[0].error_text, None);
+        assert_eq!(super::reply(&store, &id).unwrap(), Some(reply));
+        drop(store);
+        let reopened = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("p.redb"),
+            account_id: AccountId::new("a").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([7; 32]))),
+            create: false,
+        })
+        .unwrap();
+        assert_eq!(outcomes(&reopened).unwrap(), before);
+        assert!(reserve_pending(&reopened).unwrap().is_empty());
+        let id = queue(&reopened, "report", "wrong producer", ping).unwrap();
+        reserve_next(&reopened).unwrap().unwrap();
+        let reply = Node::new("iq")
+            .attr("id", id.as_str())
+            .attr("type", "result")
+            .children(vec![Node::new("error").attr("code", "403")]);
+        assert!(record_reply(&reopened, &reply).unwrap());
+        assert_eq!(
+            outcomes(&reopened)
+                .unwrap()
+                .iter()
+                .find(|row| row.id == id)
+                .unwrap()
+                .status,
+            ActionStatus::Error
+        );
     }
 
     #[tokio::test(start_paused = true)]

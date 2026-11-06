@@ -21,7 +21,7 @@ A field or URL existing in an APK does not establish a mandatory request.
 | Devices/identity/prekeys/key queries | transport/{devices,peer_keys,identity_query,prekeys,device_key_batches} | Existing signed baseline and bounded query machinery; conditional fields, teardown and all negative responses require continuing current-build review. |
 | Media upload/download and connection metadata | transport/{media,image_upload,image_download,voice_note} | [Media outcome persistence and pinned lifetime readers](media-network-outcomes.md) corrected/traced offline; both lifetimes are required Java longs, while full deadline/refresh policy remains open; authenticate metadata, URL/host selection, headers, expiry, hashes, bounded errors and request replay remain in the current-build queue. No endpoint-literal scan can establish required traffic. |
 | Groups/status/presence | transport/{groups,group_send,status_receipts,presence} | Existing ports are partial. Queue full notification-to-refresh ordering and response obligations, not feature expansion. |
-| Account/profile/contact actions | transport/{actions,about,profile_picture,blocklist,two_factor,report,contacts} | [Producer-specific action callbacks](chat-actions.md); photo outer/error selection and report32s callback ownership corrected offline. Full payload/native-state adoption, report list lower bounds/optional metadata and complete per-producer response matrices remain open. Generic Ok is not feature acceptance. |
+| Account/profile/contact actions | transport/{actions,about,profile_picture,blocklist,two_factor,report,contacts} | [Producer-specific action callbacks](chat-actions.md); photo outer/error selection and report32s callback ownership corrected offline. Full payload/native-state adoption, report optional metadata and complete per-producer response matrices remain open. Generic Ok is not feature acceptance. |
 | App state/MEX/settings/history | transport/{app_state_sync,mex,chat_settings,history_notice} | Queue conditional startup dependencies, sync cursors, mutation acknowledgements and persistence. Mandatory startup status remains unproven. |
 | Optional services/telemetry/third parties | versioned APK evidence, ownership not yet complete | Queue trace callers and runtime gates before classifying required/conditional/optional. Never invent events, device provenance or values. |
 
@@ -4756,3 +4756,28 @@ Generic Ok does not prove native report acceptance or moderation outcome.
 The current flow fragment has100 schema entries; Rust's seven flows are a local
 subset, not the complete native list. List lower bounds and effective optional
 metadata were not newly reconstructed, and no message/trace field is invented.
+
+## Report response and list bounds (2026-11-06)
+
+**Confirmed static / implemented offline:** [current list and response readers](apk/2.26.43.72-report-response-bounds/README.md)
+resolve the previous lower-bound unknown: B23.A03 returns0, so Dzb's declared
+list bounds are0..210,0..5,0..5. Empty lists are permitted by this constructor;
+no server acceptance follows. Out-of-range nonnull lists log an AssertionError
+through00L.A0C and still return true, so schema diagnostics must not be described
+as hard server enforcement. Rust still supplies no reported-message children.
+
+Rv2 reads request id then checks response id equality and type=result through
+8B6.A0J. Shk's report/id uses1..20 UTF16 code units, but a missing/invalid ID
+produces a nullable model that the selected RPC can still wrap as success with
+null report ID. It must not be turned into a guessed whole-IQ refusal. The
+from reader uses generic Jid/UserJid assignability; this constructor does not
+establish a server-only source requirement. Full native source/schema/duplicate
+policy and report-ID projection remain unported.
+
+The old generic action parser incorrectly selected unrelated root/nested error
+extensions in a valid report result. Matching saved report requests now preserve
+their outer-result outcome. Red/green regression covers live ownership,
+root403/nested401, original reply, duplicate refusal, reopen and no resend;
+kind-only ping negatives keep the generic parser. Generic Ok is not native
+schema admission or moderation acceptance. No request, ACK, retry, source guard
+or live operation was added. Existing32s callback expiry remains authoritative.

@@ -1,0 +1,50 @@
+{
+  "README.md": {
+    "bytes": 7084,
+    "sha256": "5994bfeeaabd4a6c24bfa262dd67f5cd47e41d0b8d0c611dc001a46f110e2db8"
+  },
+  "bound-assertion.txt": {
+    "bytes": 512,
+    "sha256": "624cde421ffd23991d9104849d5d30c6f8add802b5daa811c5f493d69c21c443"
+  },
+  "list-baseline.txt": {
+    "bytes": 807,
+    "sha256": "f41a1c8f84b2ab0bf70b1845e9a41f428c8ce3c28f63be969d523f59385c5fe4"
+  },
+  "list-bound.txt": {
+    "bytes": 2556,
+    "sha256": "bb68355b50e554e6d117030997f93e85c64c51b0397cceeb4bc2d5aabf6461ea"
+  },
+  "report-id-minimum.txt": {
+    "bytes": 389,
+    "sha256": "2328f15eab9797dcc4296afac4c2268336e55acb6bae97f8b70a956f4f901448"
+  },
+  "request-binding.txt": {
+    "bytes": 461,
+    "sha256": "21037a0a06f4a6a3fb2abe05b086dc3ef2f10989a65b21bb8fa6f08799d415de"
+  },
+  "request-id-maximum.txt": {
+    "bytes": 418,
+    "sha256": "e5c619d6e295bc3acb99c1c77733de0631109ba4adfb40aa29c6eda50f72ef5d"
+  },
+  "request-id-path-minimum.txt": {
+    "bytes": 502,
+    "sha256": "267105dcb7a55cc4671b155b422a35144e3176d46cbf1b8e1202e62f129ba452"
+  },
+  "response-source.txt": {
+    "bytes": 1072,
+    "sha256": "a1a0a6b0bf031bef590e9cb0d9b496213ecc329eff661fc4e4c6ee19b40a7db7"
+  },
+  "schema-jid.txt": {
+    "bytes": 1952,
+    "sha256": "1204166f8d46f188ebe4f9de8506e349fca3e8bbeacc7c2f37eeeca2486f1f63"
+  },
+  "schema-value.txt": {
+    "bytes": 18991,
+    "sha256": "42989269b621c6c4fcc3c4aec860fd5cf05bcd3d8832e069c0e2bc2d708acd86"
+  },
+  "type-path.txt": {
+    "bytes": 399,
+    "sha256": "8446751f6e9f827c7edd7cb82506f27d827e80826e8f5b1329cce60e53fd0d35"
+  }
+}

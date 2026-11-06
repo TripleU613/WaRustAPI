@@ -1,0 +1,13 @@
+
+# class: LX/6oj;
+# extends: Ljava/lang/Object;
+
+.method public A0v(LLLI)  # .registers 3
+    # full signature: LX/6oj;->A0v(Ljava/lang/Object;[Ljava/lang/Object;I)Ljava/lang/Long;
+    0000..0004  aput-object  v0, v1, v2
+    0004..000e  const-wide  v0, #0xffe0000000000001 (-9007199254740991)
+    000e..0014  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0014..0016  move-result-object  v0
+    0016..0018  return-object  v0
+    # exception table: 0 try range(s)
+.end method

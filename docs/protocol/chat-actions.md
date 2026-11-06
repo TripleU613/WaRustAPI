@@ -1816,3 +1816,28 @@ Generic Ok does not prove native report acceptance or moderation outcome.
 The current flow fragment has100 schema entries; Rust's seven flows are a local
 subset, not the complete native list. List lower bounds and effective optional
 metadata were not newly reconstructed, and no message/trace field is invented.
+
+## Report response and list bounds (2026-11-06)
+
+**Confirmed static / implemented offline:** [current list and response readers](apk/2.26.43.72-report-response-bounds/README.md)
+resolve the previous lower-bound unknown: B23.A03 returns0, so Dzb's declared
+list bounds are0..210,0..5,0..5. Empty lists are permitted by this constructor;
+no server acceptance follows. Out-of-range nonnull lists log an AssertionError
+through00L.A0C and still return true, so schema diagnostics must not be described
+as hard server enforcement. Rust still supplies no reported-message children.
+
+Rv2 reads request id then checks response id equality and type=result through
+8B6.A0J. Shk's report/id uses1..20 UTF16 code units, but a missing/invalid ID
+produces a nullable model that the selected RPC can still wrap as success with
+null report ID. It must not be turned into a guessed whole-IQ refusal. The
+from reader uses generic Jid/UserJid assignability; this constructor does not
+establish a server-only source requirement. Full native source/schema/duplicate
+policy and report-ID projection remain unported.
+
+The old generic action parser incorrectly selected unrelated root/nested error
+extensions in a valid report result. Matching saved report requests now preserve
+their outer-result outcome. Red/green regression covers live ownership,
+root403/nested401, original reply, duplicate refusal, reopen and no resend;
+kind-only ping negatives keep the generic parser. Generic Ok is not native
+schema admission or moderation acceptance. No request, ACK, retry, source guard
+or live operation was added. Existing32s callback expiry remains authoritative.
