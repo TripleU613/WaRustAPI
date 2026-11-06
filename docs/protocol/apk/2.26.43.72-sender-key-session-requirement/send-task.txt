@@ -1,0 +1,27 @@
+
+# class: LX/FhB;
+# extends: Ljava/lang/Object;
+
+.method public invoke(L)  # .registers 16
+    # full signature: LX/FhB;->invoke()Ljava/lang/Object;
+    0000..0004  iget-object  v6, v15, LX/FhB;->A08:Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;
+    0004..0008  iget-wide  v11, v15, LX/FhB;->A01:J
+    0008..000c  iget-object  v7, v15, LX/FhB;->A09:Ljava/lang/String;
+    000c..0010  iget-object  v0, v15, LX/FhB;->A02:LX/0DY;
+    0010..0014  iget-object  v5, v15, LX/FhB;->A07:LX/1dW;
+    0014..0018  iget-object  v1, v15, LX/FhB;->A03:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0018..001c  iget-object  v2, v15, LX/FhB;->A04:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    001c..0020  iget-object  v3, v15, LX/FhB;->A05:Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    0020..0024  iget-object  v8, v15, LX/FhB;->A0A:Ljava/lang/String;
+    0024..0028  iget-object  v4, v15, LX/FhB;->A06:Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    0028..002c  iget  v10, v15, LX/FhB;->A00:I
+    002c..0030  iget-object  v9, v15, LX/FhB;->A0B:Ljava/util/Collection;
+    0030..0034  iget-boolean  v13, v15, LX/FhB;->A0C:Z
+    0034..0036  const/4  v14, #0x1
+    0036..003c  invoke-static/range  {v0..v14}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A06(LX/0DY;Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/PhoneUserJid;Lcom/whatsapp/infra/core/jid/PhoneUserJid;LX/1dW;Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;Ljava/lang/String;Ljava/lang/String;Ljava/util/Collection;IJZZ)Z
+    003c..003e  move-result  v0
+    003e..0044  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0044..0046  move-result-object  v0
+    0046..0048  return-object  v0
+    # exception table: 0 try range(s)
+.end method

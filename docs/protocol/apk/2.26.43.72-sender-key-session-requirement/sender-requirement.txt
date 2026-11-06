@@ -1,0 +1,57 @@
+
+# class: Lcom/whatsapp/productinfra/messaging/jobqueue/requirement/AxolotlMultiDeviceSenderKeyRequirement;
+# extends: Lcom/whatsapp/productinfra/messaging/jobqueue/requirement/AxolotlMultiDeviceSessionRequirement;
+
+.method public <init>(VLLLLLLIZZ)  # .registers 19
+    # full signature: Lcom/whatsapp/productinfra/messaging/jobqueue/requirement/AxolotlMultiDeviceSenderKeyRequirement;-><init>(LX/0nT;LX/E78;Ljava/lang/Boolean;Ljava/lang/String;Ljava/lang/String;Ljava/util/Set;IZZ)V
+    0000..0002  const/4  v8, #0x0
+    0002..0004  move-object  v1, v9
+    0004..0006  move-object  v2, v10
+    0006..0008  move-object  v3, v11
+    0008..000a  move-object  v4, v12
+    000a..000c  move-object  v5, v13
+    000c..000e  move-object  v6, v15
+    000e..0012  move/from16  v7, v16
+    0012..0018  invoke-direct/range  {v1..v8}, Lcom/whatsapp/productinfra/messaging/jobqueue/requirement/AxolotlMultiDeviceSessionRequirement;-><init>(LX/0DY;LX/E78;Ljava/lang/Boolean;Ljava/lang/String;Ljava/util/Set;IZ)V
+    0018..001c  iput-object  v14, v9, Lcom/whatsapp/productinfra/messaging/jobqueue/requirement/AxolotlMultiDeviceSenderKeyRequirement;->groupParticipantHash:Ljava/lang/String;
+    001c..0020  move/from16  v0, v17
+    0020..0024  iput-boolean  v0, v9, Lcom/whatsapp/productinfra/messaging/jobqueue/requirement/AxolotlMultiDeviceSenderKeyRequirement;->useLidForEncryption:Z
+    0024..0028  move/from16  v0, v18
+    0028..002c  iput-boolean  v0, v9, Lcom/whatsapp/productinfra/messaging/jobqueue/requirement/AxolotlMultiDeviceSenderKeyRequirement;->useParticipantUserHash:Z
+    002c..002e  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public Cf0(VL)  # .registers 3
+    # full signature: Lcom/whatsapp/productinfra/messaging/jobqueue/requirement/AxolotlMultiDeviceSenderKeyRequirement;->Cf0(Landroid/content/Context;)V
+    0000..0006  invoke-super  {v1, v2}, Lcom/whatsapp/productinfra/messaging/jobqueue/requirement/AxolotlMultiDeviceSessionRequirement;->Cf0(Landroid/content/Context;)V
+    0006..000c  invoke-static  {}, LX/2L9;->A0K()LX/08Y;
+    000c..000e  move-result-object  v0
+    000e..0012  iput-object  v0, v1, Lcom/whatsapp/productinfra/messaging/jobqueue/requirement/AxolotlMultiDeviceSenderKeyRequirement;->A00:LX/08Y;
+    0012..0018  invoke-static  {}, LX/2L9;->A0a()LX/09F;
+    0018..001a  move-result-object  v0
+    001a..001e  iput-object  v0, v1, Lcom/whatsapp/productinfra/messaging/jobqueue/requirement/AxolotlMultiDeviceSenderKeyRequirement;->A03:LX/09F;
+    001e..0024  invoke-static  {}, LX/2L9;->A0U()LX/0Fy;
+    0024..0026  move-result-object  v0
+    0026..002a  iput-object  v0, v1, Lcom/whatsapp/productinfra/messaging/jobqueue/requirement/AxolotlMultiDeviceSenderKeyRequirement;->A02:LX/0Fy;
+    002a..002e  const/16  v0, #0x45b
+    002e..0034  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0034..0036  move-result-object  v0
+    0036..003a  check-cast  v0, LX/0iD;
+    003a..003e  iput-object  v0, v1, Lcom/whatsapp/productinfra/messaging/jobqueue/requirement/AxolotlMultiDeviceSenderKeyRequirement;->A06:LX/0iD;
+    003e..0044  invoke-static  {}, LX/6oi;->A0N()LX/0i9;
+    0044..0046  move-result-object  v0
+    0046..004a  iput-object  v0, v1, Lcom/whatsapp/productinfra/messaging/jobqueue/requirement/AxolotlMultiDeviceSenderKeyRequirement;->A01:LX/0i9;
+    004a..004e  const/16  v0, #0x1933
+    004e..0054  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0054..0056  move-result-object  v0
+    0056..005a  check-cast  v0, LX/0yI;
+    005a..005e  iput-object  v0, v1, Lcom/whatsapp/productinfra/messaging/jobqueue/requirement/AxolotlMultiDeviceSenderKeyRequirement;->A05:LX/0yI;
+    005e..0062  const/16  v0, #0xa7f
+    0062..0068  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0068..006a  move-result-object  v0
+    006a..006e  check-cast  v0, LX/Ex8;
+    006e..0072  iput-object  v0, v1, Lcom/whatsapp/productinfra/messaging/jobqueue/requirement/AxolotlMultiDeviceSenderKeyRequirement;->A04:LX/Ex8;
+    0072..0074  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,1202 @@
+
+# class: Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;
+# extends: Lorg/whispersystems/jobqueue/Job;
+
+.method public A0L(V)  # .registers 40
+    # full signature: Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0L()V
+    0000..0004  const-string  v18, "SendE2EMessageJob/ e2e message send job finished result = "
+    0004..0008  move-object/from16  v0, v39
+    0008..000c  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->id:Ljava/lang/String;
+    000c..0010  const-string  v1, "SendE2EMessageJob/onRun "
+    0010..0016  invoke-static  {v1, v2}, LX/2LA;->A1N(Ljava/lang/String;Ljava/lang/String;)V
+    0016..001a  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0N:LX/08q;
+    001a..001c  const/4  v1, #0x0
+    001c..0020  if-nez  v2, +0x9
+    0020..0026  const-string/jumbo  v0, "time"
+    0026..002c  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    002c..002e  throw  v1
+    002e..0034  invoke-static  {}, Landroid/os/SystemClock;->uptimeMillis()J
+    0034..0036  move-result-wide  v16
+    0036..003a  iget-wide  v3, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0s:J
+    003a..003e  const-wide/16  v5, #0x0
+    003e..0042  cmp-long  v2, v3, v5
+    0042..0046  if-nez  v2, +0x6
+    0046..004a  move-wide/from16  v2, v16
+    004a..004e  iput-wide  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0s:J
+    004e..0054  invoke-direct  {v0}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A00()Ljava/lang/String;
+    0054..0056  move-result-object  v10
+    0056..005a  iget-boolean  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->duplicate:Z
+    005a..005e  if-eqz  v2, +0x8
+    005e..0062  const-string  v0, "SendE2EMessageJob/e2e message job is duplicate skipping"
+    0062..0068  invoke-static  {v0, v10}, LX/2LE;->A1B(Ljava/lang/String;Ljava/lang/String;)V
+    0068..006a  return-void
+    006a..006e  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0K:Lcom/whatsapp/infra/core/jid/Jid;
+    006e..0074  invoke-static  {v2}, LX/0Dn;->A00(Lcom/whatsapp/infra/core/jid/Jid;)LX/0DY;
+    0074..0076  move-result-object  v4
+    0076..007a  if-eqz  v4, +0x8f5
+    007a..0080  invoke-static  {v4}, LX/0Dn;->A0a(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0080..0082  move-result  v2
+    0082..0084  const/4  v8, #0x0
+    0084..0088  if-eqz  v2, +0x12
+    0088..008c  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0I:LX/0B0;
+    008c..0090  if-nez  v2, +0x8
+    0090..0094  const-string  v0, "crashLogs"
+    0094..009a  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    009a..009c  throw  v1
+    009c..00a0  const-string  v0, "cant use sende2emessagejob for this jid"
+    00a0..00a6  invoke-virtual  {v2, v0, v1, v8}, LX/0B0;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+    00a6..00a8  return-void
+    00a8..00ae  invoke-virtual  {v0}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0O()LX/1dW;
+    00ae..00b0  move-result-object  v9
+    00b0..00b4  sget-object  v3, Lcom/whatsapp/infra/core/jid/DeviceJid;->Companion:LX/0EB;
+    00b4..00b8  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->participant:Ljava/lang/String;
+    00b8..00be  invoke-virtual  {v3, v2}, LX/0EB;->A04(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    00be..00c0  move-result-object  v25
+    00c0..00c4  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->participant:Ljava/lang/String;
+    00c4..00c8  if-eqz  v2, +0xb
+    00c8..00ce  invoke-virtual  {v2}, Ljava/lang/String;->length()I
+    00ce..00d0  move-result  v2
+    00d0..00d4  if-eqz  v2, +0x5
+    00d4..00d8  move-object/from16  v36, v25
+    00d8..00da  goto  +0x5
+    00da..00de  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0J:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    00de..00e2  move-object/from16  v36, v2
+    00e2..00e6  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0L:Lcom/whatsapp/infra/core/jid/UserJid;
+    00e6..00ea  const-string  v23, "meManager"
+    00ea..00ee  const-string  v24, "Required value was null."
+    00ee..00f2  if-eqz  v2, +0x25
+    00f2..00f6  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0J:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    00f6..00fa  if-eqz  v2, +0x1c
+    00fa..00fe  iget-object  v3, v2, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    00fe..0102  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0M:LX/09F;
+    0102..0106  if-eqz  v2, +0x707
+    0106..010c  invoke-interface  {v2, v3}, LX/09F;->BVC(LX/0DY;)Z
+    010c..010e  move-result  v2
+    010e..0112  if-nez  v2, +0x15
+    0112..0118  invoke-static  {v4}, LX/0x9;->A03(LX/0DY;)Z
+    0118..011a  move-result  v2
+    011a..011e  if-nez  v2, +0xf
+    011e..0122  const-string  v2, "SendE2EMessageJob/cannot send e2e message with recipient other than own devices"
+    0122..0128  invoke-static  {v2}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0128..012a  const/4  v4, #0x0
+    012a..012e  goto/16  +0x7ee
+    012e..0134  invoke-static/range  {v24..v24}, LX/1Xl;->A0g(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+    0134..0136  move-result-object  v0
+    0136..0138  throw  v0
+    0138..013c  iget-object  v3, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0S:LX/EaT;
+    013c..0140  if-nez  v3, +0x8
+    0140..0144  const-string  v0, "messageReaderUtil"
+    0144..014a  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    014a..014c  throw  v1
+    014c..014e  const/4  v2, #0x1
+    014e..0154  invoke-virtual  {v3, v9, v2}, LX/EaT;->A00(LX/1dW;Z)LX/18U;
+    0154..0156  move-result-object  v3
+    0156..015a  if-eqz  v3, +0x23
+    015a..015e  iget-object  v5, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0l:LX/DiW;
+    015e..0162  if-nez  v5, +0x5
+    0162..0166  const-string  v0, "message"
+    0166..0168  goto  -0x11
+    0168..016c  iget-object  v6, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0D:LX/08Y;
+    016c..0170  if-nez  v6, +0x5
+    0170..0174  const-string  v0, "abProps"
+    0174..0176  goto  -0x18
+    0176..017a  iget  v7, v5, LX/DiW;->bitField1_:I
+    017a..017e  and-int/lit8  v2, v7, #0x10
+    017e..0182  if-nez  v2, +0x3a
+    0182..0186  and-int/lit16  v2, v7, #0x1000
+    0186..018a  if-nez  v2, +0x36
+    018a..018e  and-int/lit16  v2, v7, #0x100
+    018e..0192  if-nez  v2, +0x32
+    0192..0196  and-int/lit16  v2, v7, #0x80
+    0196..019a  if-eqz  v2, +0x39
+    019a..019c  goto  +0x20
+    019c..01a0  iget  v6, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->messageType:I
+    01a0..01a6  invoke-static  {v6}, LX/1dX;->A0B(I)Z
+    01a6..01a8  move-result  v2
+    01a8..01ac  if-eqz  v2, +0x25
+    01ac..01b0  const/16  v2, #0x3a
+    01b0..01b4  if-eq  v6, v2, +0xe
+    01b4..01b8  const/16  v2, #0x45
+    01b8..01bc  if-eq  v6, v2, +0xa
+    01bc..01c0  const/16  v2, #0x4d
+    01c0..01c4  if-eq  v6, v2, +0x6
+    01c4..01c8  const/16  v2, #0x86
+    01c8..01cc  if-ne  v6, v2, +0xa1
+    01cc..01d0  iget-object  v5, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0R:LX/1dY;
+    01d0..01d4  if-nez  v5, +0x43
+    01d4..01d8  const-string  v0, "fMessageFactorySubsystem"
+    01d8..01da  goto  -0x4a
+    01da..01de  iget-object  v2, v5, LX/DiW;->pollUpdateMessage_:LX/Dea;
+    01de..01e2  if-nez  v2, +0x4
+    01e2..01e6  sget-object  v2, LX/Dea;->DEFAULT_INSTANCE:LX/Dea;
+    01e6..01ea  iget  v2, v2, LX/Dea;->bitField0_:I
+    01ea..01ee  and-int/lit8  v2, v2, #0x2
+    01ee..01f2  if-eqz  v2, +0xd
+    01f2..01f6  instance-of  v2, v3, LX/DwR;
+    01f6..01fa  if-eqz  v2, +0x40
+    01fa..01fe  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0C:LX/16C;
+    01fe..0202  if-nez  v2, +0x33
+    0202..0206  const-string  v0, "editedMessageManager"
+    0206..0208  goto  -0x61
+    0208..020c  const/high16  v2, #0x100000
+    020c..020e  and-int/2addr  v7, v2
+    020e..0212  if-eqz  v7, +0xb
+    0212..0216  const/16  v2, #0x1044
+    0216..021c  invoke-virtual  {v6, v2}, LX/00E;->A14(I)Z
+    021c..021e  move-result  v2
+    021e..0222  if-eqz  v2, +0x3
+    0222..0224  goto  -0x18
+    0224..022a  invoke-virtual  {v5}, LX/DiW;->A0F()Z
+    022a..022c  move-result  v2
+    022c..0230  if-nez  v2, -0x1d
+    0230..0234  iget  v5, v5, LX/DiW;->bitField2_:I
+    0234..0238  const/high16  v2, #0x2000000
+    0238..023a  and-int/2addr  v5, v2
+    023a..023e  if-nez  v5, -0x24
+    023e..0242  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0P:LX/17r;
+    0242..0246  if-nez  v2, +0x6
+    0246..024a  const-string  v0, "fMessageLazyManager"
+    024a..024e  goto/16  -0x83
+    024e..0254  invoke-virtual  {v2, v3}, LX/17r;->A06(LX/18U;)V
+    0254..0256  goto  -0x31
+    0256..025a  iget-wide  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->messageSendStartTime:J
+    025a..0260  invoke-virtual  {v5, v9, v6, v2, v3}, LX/1dY;->A00(LX/1dW;IJ)LX/18U;
+    0260..0262  move-result-object  v3
+    0262..0264  goto  +0xa
+    0264..0268  check-cast  v3, LX/DwR;
+    0268..026e  invoke-virtual  {v2, v3}, LX/16C;->A04(LX/DwR;)LX/18U;
+    026e..0270  move-result-object  v3
+    0270..0272  const/4  v2, #0x1
+    0272..0276  iput-boolean  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0q:Z
+    0276..027a  if-eqz  v3, +0x4a
+    027a..027e  iget-object  v5, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0D:LX/08Y;
+    027e..0282  if-nez  v5, +0x8
+    0282..0286  const-string  v0, "abProps"
+    0286..028c  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    028c..028e  goto  +0x2f
+    028e..0292  const/16  v2, #0x15f7
+    0292..0298  invoke-virtual  {v5, v2}, LX/00E;->A14(I)Z
+    0298..029a  move-result  v2
+    029a..029e  if-eqz  v2, +0x38
+    029e..02a2  iget-object  v2, v3, LX/18U;->A0j:LX/1dW;
+    02a2..02a6  iget-object  v5, v2, LX/1dW;->A00:LX/0DY;
+    02a6..02ac  invoke-static  {v5}, LX/0Dn;->A0Y(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    02ac..02ae  move-result  v2
+    02ae..02b2  if-eqz  v2, +0x2e
+    02b2..02b6  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0G:LX/0Fy;
+    02b6..02ba  if-nez  v2, +0x5
+    02ba..02be  const-string  v0, "chatsCache"
+    02be..02c0  goto  -0x1c
+    02c0..02c6  invoke-virtual  {v2, v5}, LX/0Fy;->A0G(LX/0DY;)LX/0i4;
+    02c6..02c8  move-result-object  v2
+    02c8..02cc  if-eqz  v2, +0x6
+    02cc..02d0  iget-object  v2, v2, LX/0i4;->A0m:LX/0iC;
+    02d0..02d4  iput-object  v2, v3, LX/18U;->A0J:LX/0iC;
+    02d4..02d8  iget-object  v2, v3, LX/18U;->A0J:LX/0iC;
+    02d8..02dc  if-nez  v2, +0x19
+    02dc..02e0  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0V:LX/2P5;
+    02e0..02e4  if-nez  v2, +0x7
+    02e4..02e8  const-string  v0, "chatOriginCache"
+    02e8..02ea  goto  -0x31
+    02ea..02ec  const/4  v0, #0x0
+    02ec..02ee  goto  +0x8
+    02ee..02f2  if-eqz  v5, +0x3
+    02f2..02f4  goto  +0x6
+    02f4..02fa  invoke-static/range  {v24..v24}, LX/1Xl;->A0g(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+    02fa..02fc  move-result-object  v0
+    02fc..02fe  throw  v0
+    02fe..0304  invoke-virtual  {v2, v5}, LX/2P5;->A00(LX/0DY;)LX/0iC;
+    0304..0306  move-result-object  v2
+    0306..030a  iput-object  v2, v3, LX/18U;->A0J:LX/0iC;
+    030a..030e  iput-object  v3, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0O:LX/18U;
+    030e..0312  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0e:LX/DEk;
+    0312..0316  if-nez  v2, +0x8
+    0316..031a  const-string  v5, "acp2MessageAudienceFilter"
+    031a..0320  invoke-static  {v5}, LX/00l;->A0H(Ljava/lang/String;)V
+    0320..0322  throw  v1
+    0322..0328  invoke-virtual  {v2, v3}, LX/DEk;->A03(LX/18U;)Z
+    0328..032a  move-result  v37
+    032a..032e  iget-object  v2, v0, Lorg/whispersystems/jobqueue/Job;->parameters:Lorg/whispersystems/jobqueue/JobParameters;
+    032e..0332  iget-object  v2, v2, Lorg/whispersystems/jobqueue/JobParameters;->requirements:Ljava/util/List;
+    0332..0338  invoke-static  {v2}, LX/2LC;->A14(Ljava/lang/Object;)Ljava/util/ArrayList;
+    0338..033a  move-result-object  v6
+    033a..0340  invoke-interface  {v2}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0340..0342  move-result-object  v5
+    0342..0348  invoke-interface  {v5}, Ljava/util/Iterator;->hasNext()Z
+    0348..034a  move-result  v2
+    034a..034e  if-eqz  v2, +0xe
+    034e..0354  invoke-interface  {v5}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0354..0356  move-result-object  v3
+    0356..035a  instance-of  v2, v3, Lcom/whatsapp/infra/aea/statemanagement/AeaReconciliationRequirement;
+    035a..035e  if-eqz  v2, -0xc
+    035e..0364  invoke-virtual  {v6, v3}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0364..0366  goto  -0x11
+    0366..036c  invoke-static  {v6}, LX/07Z;->A0v(Ljava/util/List;)Ljava/lang/Object;
+    036c..036e  move-result-object  v2
+    036e..0372  check-cast  v2, Lcom/whatsapp/infra/aea/statemanagement/AeaReconciliationRequirement;
+    0372..0376  const-string  v22, "failureLogger"
+    0376..037a  const-string  v21, "abProps"
+    037a..037c  const/4  v7, #0x1
+    037c..0380  if-eqz  v2, +0x1de
+    0380..0384  iget-object  v13, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0F:LX/EW2;
+    0384..0388  if-nez  v13, +0x8
+    0388..038c  const-string  v0, "aeaSendTimeReconciler"
+    038c..0392  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    0392..0394  goto  -0x39
+    0394..0398  iget-object  v5, v2, Lcom/whatsapp/infra/aea/statemanagement/AeaReconciliationRequirement;->A00:LX/ExG;
+    0398..039c  if-nez  v5, +0x8
+    039c..03a0  const-string  v0, "threadStateUtil"
+    03a0..03a6  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    03a6..03a8  throw  v1
+    03a8..03ac  iget-object  v3, v2, Lcom/whatsapp/infra/aea/statemanagement/AeaReconciliationRequirement;->A01:LX/0DY;
+    03ac..03b2  invoke-virtual  {v5, v3}, LX/ExG;->A03(LX/0DY;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    03b2..03b4  move-result-object  v3
+    03b4..03b8  iget  v5, v2, Lcom/whatsapp/infra/aea/statemanagement/AeaReconciliationRequirement;->initialAttestationStateValue:I
+    03b8..03be  invoke-static  {v5}, LX/EHp;->A00(I)LX/E7b;
+    03be..03c0  move-result-object  v15
+    03c0..03c4  iget  v2, v2, Lcom/whatsapp/infra/aea/statemanagement/AeaReconciliationRequirement;->initialChatEncryptionStateValue:I
+    03c4..03ca  invoke-static  {v2}, LX/0iS;->A00(I)LX/0i7;
+    03ca..03cc  move-result-object  v6
+    03cc..03d0  if-eqz  v3, +0x11e
+    03d0..03d6  invoke-static  {v6}, LX/ExZ;->A00(LX/0i7;)LX/E7b;
+    03d6..03d8  move-result-object  v11
+    03d8..03dc  if-eqz  v11, +0x118
+    03dc..03e2  invoke-static  {v3}, LX/F3k;->A04(Lcom/whatsapp/infra/core/jid/DeviceJid;)LX/EoY;
+    03e2..03e4  move-result-object  v5
+    03e4..03e8  iget-object  v2, v13, LX/EW2;->A01:LX/05a;
+    03e8..03ee  invoke-static  {v2}, LX/DBe;->A0g(LX/05a;)LX/0WJ;
+    03ee..03f0  move-result-object  v2
+    03f0..03f4  iget-object  v2, v2, LX/0WJ;->A0J:LX/0YT;
+    03f4..03fa  invoke-virtual  {v2, v5}, LX/0YT;->A0A(LX/EoY;)LX/E7b;
+    03fa..03fc  move-result-object  v5
+    03fc..0400  sget-object  v2, LX/0i7;->A0D:LX/0i7;
+    0400..0404  if-ne  v6, v2, +0x9
+    0404..040a  invoke-static  {v5}, LX/ExZ;->A02(LX/E7b;)Z
+    040a..040c  move-result  v2
+    040c..0410  if-eqz  v2, +0x3
+    0410..0412  move-object  v11, v5
+    0412..0418  invoke-static  {v11, v5, v15}, LX/ExZ;->A01(LX/E7b;LX/E7b;LX/E7b;)Ljava/lang/Integer;
+    0418..041a  move-result-object  v20
+    041a..041e  iget-object  v2, v13, LX/EW2;->A02:LX/05a;
+    041e..0422  iget-object  v2, v2, LX/05a;->A00:LX/00x;
+    0422..0426  move-object/from16  v34, v2
+    0426..042c  invoke-interface/range  {v34..v34}, LX/00x;->get()Ljava/lang/Object;
+    042c..042e  move-result-object  v12
+    042e..0432  check-cast  v12, LX/ExG;
+    0432..0436  sget-object  v11, LX/02X;->A01:Ljava/lang/Integer;
+    0436..043a  sget-object  v2, LX/ExG;->A07:LX/EYg;
+    043a..0440  invoke-virtual  {v2, v6, v4}, LX/EYg;->A00(LX/0i7;LX/0DY;)I
+    0440..0442  move-result  v14
+    0442..0446  if-eqz  v14, +0xb
+    0446..044c  invoke-virtual  {v12, v11}, LX/ExG;->A00(Ljava/lang/Integer;)I
+    044c..044e  move-result  v2
+    044e..0450  and-int/2addr  v14, v2
+    0450..0454  const/16  v19, #0x1
+    0454..0458  if-eqz  v14, +0x4
+    0458..045c  const/16  v19, #0x0
+    045c..0462  invoke-virtual/range  {v20..v20}, Ljava/lang/Number;->intValue()I
+    0462..0464  move-result  v2
+    0464..0468  const-string  v14, " state="
+    0468..046c  if-eq  v2, v8, +0xa9
+    046c..046e  const/4  v11, #0x4
+    046e..0472  if-eq  v2, v11, +0xa6
+    0472..0476  if-eq  v2, v7, +0x6d
+    0476..0478  const/4  v11, #0x2
+    0478..047c  if-eq  v2, v11, +0x45
+    047c..0480  const-string  v11, "AeaSendTimeReconciler/irreconcilable mismatch; jid="
+    0480..0486  invoke-static  {v3, v11}, LX/1Xl;->A15(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0486..0488  move-result-object  v12
+    0488..048e  invoke-virtual  {v12, v14}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    048e..0494  invoke-virtual  {v12, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0494..0498  const-string  v11, " attestation="
+    0498..049e  invoke-virtual  {v12, v11}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    049e..04a4  invoke-virtual  {v12, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    04a4..04a8  const-string  v11, " initialAttestation="
+    04a8..04ae  invoke-static  {v15, v11, v12}, LX/6ok;->A16(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    04ae..04b2  iget-object  v11, v13, LX/EW2;->A04:LX/05a;
+    04b2..04b8  invoke-static  {v11}, LX/2L8;->A0p(LX/05a;)LX/0NX;
+    04b8..04ba  move-result-object  v26
+    04ba..04c0  invoke-static  {v6}, LX/F1d;->A00(LX/0i7;)I
+    04c0..04c2  move-result  v11
+    04c2..04c8  invoke-static  {v11}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    04c8..04ca  move-result-object  v32
+    04ca..04ce  const/16  v33, #0x7
+    04ce..04d2  move-object/from16  v29, v1
+    04d2..04d6  move-object/from16  v31, v1
+    04d6..04da  move-object/from16  v27, v5
+    04da..04de  move-object/from16  v28, v1
+    04de..04e2  move-object/from16  v30, v15
+    04e2..04e8  invoke-static/range  {v26..v33}, LX/F1d;->A03(LX/0NX;LX/E7b;LX/E7b;LX/E7b;LX/E7b;Ljava/lang/Integer;Ljava/lang/Integer;I)V
+    04e8..04ec  if-nez  v19, +0x6b
+    04ec..04f2  invoke-interface/range  {v34..v34}, LX/00x;->get()Ljava/lang/Object;
+    04f2..04f4  move-result-object  v2
+    04f4..04f8  check-cast  v2, LX/ExG;
+    04f8..04fe  invoke-virtual  {v2, v4}, LX/ExG;->A05(LX/0DY;)V
+    04fe..0502  goto/16  +0xaf
+    0502..0506  const-string  v11, "AeaSendTimeReconciler/auto-downgrade; jid="
+    0506..050c  invoke-static  {v11, v3}, LX/2LA;->A1L(Ljava/lang/String;Ljava/lang/Object;)V
+    050c..0510  iget-object  v11, v13, LX/EW2;->A04:LX/05a;
+    0510..0516  invoke-static  {v11}, LX/2L8;->A0p(LX/05a;)LX/0NX;
+    0516..0518  move-result-object  v26
+    0518..051e  invoke-static  {v6}, LX/F1d;->A00(LX/0i7;)I
+    051e..0520  move-result  v11
+    0520..0526  invoke-static  {v11}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0526..0528  move-result-object  v32
+    0528..052c  const/16  v33, #0x6
+    052c..0530  move-object/from16  v29, v1
+    0530..0534  move-object/from16  v31, v1
+    0534..0538  move-object/from16  v27, v5
+    0538..053c  move-object/from16  v28, v1
+    053c..0540  move-object/from16  v30, v15
+    0540..0546  invoke-static/range  {v26..v33}, LX/F1d;->A03(LX/0NX;LX/E7b;LX/E7b;LX/E7b;LX/E7b;Ljava/lang/Integer;Ljava/lang/Integer;I)V
+    0546..054a  if-nez  v19, +0x3c
+    054a..054c  goto  +0x6e
+    054c..0550  const-string  v11, "AeaSendTimeReconciler/auto-upgrade; jid="
+    0550..0556  invoke-static  {v11, v3}, LX/2LA;->A1L(Ljava/lang/String;Ljava/lang/Object;)V
+    0556..055a  iget-object  v11, v13, LX/EW2;->A03:LX/05a;
+    055a..0560  invoke-static  {v11}, LX/2L6;->A1X(LX/05a;)V
+    0560..0564  iget-object  v11, v13, LX/EW2;->A04:LX/05a;
+    0564..056a  invoke-static  {v11}, LX/2L8;->A0p(LX/05a;)LX/0NX;
+    056a..056c  move-result-object  v26
+    056c..0572  invoke-static  {v6}, LX/F1d;->A00(LX/0i7;)I
+    0572..0574  move-result  v11
+    0574..057a  invoke-static  {v11}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    057a..057c  move-result-object  v32
+    057c..0580  const/16  v33, #0x5
+    0580..0584  move-object/from16  v29, v1
+    0584..0588  move-object/from16  v31, v1
+    0588..058c  move-object/from16  v27, v5
+    058c..0590  move-object/from16  v28, v1
+    0590..0594  move-object/from16  v30, v15
+    0594..059a  invoke-static/range  {v26..v33}, LX/F1d;->A03(LX/0NX;LX/E7b;LX/E7b;LX/E7b;LX/E7b;Ljava/lang/Integer;Ljava/lang/Integer;I)V
+    059a..059e  if-nez  v19, +0x12
+    059e..05a4  invoke-interface/range  {v34..v34}, LX/00x;->get()Ljava/lang/Object;
+    05a4..05a6  move-result-object  v6
+    05a6..05aa  check-cast  v6, LX/ExG;
+    05aa..05ae  sget-object  v3, LX/0i7;->A06:LX/0i7;
+    05ae..05b2  sget-object  v2, LX/02X;->A0u:Ljava/lang/Integer;
+    05b2..05b8  invoke-virtual  {v6, v3, v4, v5, v2}, LX/ExG;->A04(LX/0i7;LX/0DY;LX/E7b;Ljava/lang/Integer;)V
+    05b8..05ba  goto  +0x52
+    05ba..05be  if-eqz  v19, +0x51
+    05be..05c4  invoke-static  {v4}, LX/0x9;->A03(LX/0DY;)Z
+    05c4..05c6  move-result  v11
+    05c6..05ca  const-string  v5, "AeaSendTimeReconciler/result not applied (non-attesting chat); result="
+    05ca..05d0  invoke-static  {v5}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    05d0..05d2  move-result-object  v5
+    05d2..05d8  packed-switch  v2, payload@0x1288, cases=[0:@0x60e, 1:@0x614, 2:@0x61a, 3:@0x620], default@0x5d8
+    05d8..05dc  const-string  v2, "SKIP"
+    05dc..05e2  invoke-virtual  {v5, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    05e2..05e8  invoke-virtual  {v5, v14}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    05e8..05ee  invoke-virtual  {v5, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    05ee..05f2  const-string  v2, " bot="
+    05f2..05f8  invoke-virtual  {v5, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    05f8..05fe  invoke-virtual  {v5, v11}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    05fe..0602  const-string  v2, " jid="
+    0602..0608  invoke-static  {v3, v2, v5}, LX/2LA;->A1J(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    0608..060c  sget-object  v20, LX/02X;->A0Y:Ljava/lang/Integer;
+    060c..060e  goto  +0x28
+    060e..0612  const-string  v2, "MATCH"
+    0612..0614  goto  -0x1b
+    0614..0618  const-string  v2, "AUTO_UPGRADE"
+    0618..061a  goto  -0x1e
+    061a..061e  const-string  v2, "AUTO_DOWNGRADE"
+    061e..0620  goto  -0x21
+    0620..0624  const-string  v2, "REJECT"
+    0624..0626  goto  -0x24
+    0626..062a  sget-object  v6, LX/E7b;->A03:LX/E7b;
+    062a..062e  if-eq  v5, v6, +0x4
+    062e..0632  sget-object  v6, LX/E7b;->A04:LX/E7b;
+    0632..0638  invoke-interface/range  {v34..v34}, LX/00x;->get()Ljava/lang/Object;
+    0638..063a  move-result-object  v2
+    063a..063e  check-cast  v2, LX/ExG;
+    063e..0644  invoke-virtual  {v2, v4, v6}, LX/ExG;->A01(LX/0DY;LX/E7b;)LX/0i7;
+    0644..0646  move-result-object  v5
+    0646..064c  invoke-interface/range  {v34..v34}, LX/00x;->get()Ljava/lang/Object;
+    064c..064e  move-result-object  v3
+    064e..0652  check-cast  v3, LX/ExG;
+    0652..0656  sget-object  v2, LX/02X;->A0u:Ljava/lang/Integer;
+    0656..065c  invoke-virtual  {v3, v5, v4, v6, v2}, LX/ExG;->A04(LX/0i7;LX/0DY;LX/E7b;Ljava/lang/Integer;)V
+    065c..0662  invoke-virtual/range  {v20..v20}, Ljava/lang/Number;->intValue()I
+    0662..0664  move-result  v5
+    0664..0668  if-eq  v5, v8, +0x6a
+    0668..066a  const/4  v2, #0x4
+    066a..066e  if-eq  v5, v2, +0x67
+    066e..0672  const/16  v3, #0x7497
+    0672..0676  if-eq  v5, v7, +0x50
+    0676..0678  const/4  v2, #0x2
+    0678..067c  if-eq  v5, v2, +0x3c
+    067c..0680  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0D:LX/08Y;
+    0680..0684  if-eqz  v2, +0x43e
+    0684..068a  invoke-virtual  {v2, v3}, LX/00E;->A14(I)Z
+    068a..068c  move-result  v2
+    068c..0690  if-eqz  v2, +0x56
+    0690..0694  iget-object  v11, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0d:LX/Ef4;
+    0694..0698  if-eqz  v11, +0x439
+    0698..069c  const/16  v2, #0x15
+    069c..06a0  new-instance  v7, LX/Ehw;
+    06a0..06a6  invoke-direct  {v7, v2, v1}, LX/Ehw;-><init>(ILjava/lang/Integer;)V
+    06a6..06aa  iget  v6, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A01:I
+    06aa..06ae  iget-object  v5, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0O:LX/18U;
+    06ae..06b2  sget-object  v23, LX/01k;->A00:LX/01k;
+    06b2..06b6  iget  v4, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->retryCount:I
+    06b6..06ba  iget-object  v3, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->messageSendRetrySource:Ljava/lang/Integer;
+    06ba..06be  iget-boolean  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0r:Z
+    06be..06c4  invoke-direct  {v0}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A04()Z
+    06c4..06c6  move-result  v28
+    06c6..06ca  move/from16  v25, v8
+    06ca..06ce  move/from16  v26, v4
+    06ce..06d2  move/from16  v27, v2
+    06d2..06d6  move/from16  v24, v6
+    06d6..06da  move-object/from16  v19, v11
+    06da..06de  move-object/from16  v20, v5
+    06de..06e2  move-object/from16  v21, v7
+    06e2..06e6  move-object/from16  v22, v3
+    06e6..06ec  invoke-virtual/range  {v19..v28}, LX/Ef4;->A00(LX/18U;LX/Ehw;Ljava/lang/Integer;Ljava/util/Collection;IIIZZ)V
+    06ec..06f0  goto/16  +0x417
+    06f0..06f4  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0D:LX/08Y;
+    06f4..06f8  if-eqz  v2, +0x404
+    06f8..06fe  invoke-virtual  {v2, v3}, LX/00E;->A14(I)Z
+    06fe..0700  move-result  v2
+    0700..0704  if-eqz  v2, +0x1c
+    0704..0708  iget-object  v5, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0O:LX/18U;
+    0708..070c  if-eqz  v5, +0x18
+    070c..0710  const-wide/high16  v2, #0x2000000000000
+    0710..0712  goto  +0x11
+    0712..0716  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0D:LX/08Y;
+    0716..071a  if-eqz  v2, +0x3f3
+    071a..0720  invoke-virtual  {v2, v3}, LX/00E;->A14(I)Z
+    0720..0722  move-result  v2
+    0722..0726  if-eqz  v2, +0xb
+    0726..072a  iget-object  v5, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0O:LX/18U;
+    072a..072e  if-eqz  v5, +0x7
+    072e..0732  const-wide/high16  v2, #0x1000000000000
+    0732..0738  invoke-virtual  {v5, v2, v3}, LX/18U;->A0L(J)V
+    0738..073c  iget-object  v5, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0O:LX/18U;
+    073c..0740  if-eqz  v5, +0xc
+    0740..0744  const-wide/high16  v2, #0x1000000000000
+    0744..074a  invoke-virtual  {v5, v2, v3}, LX/18U;->A0h(J)Z
+    074a..074c  move-result  v2
+    074c..0750  const/16  v35, #0x1
+    0750..0754  if-eq  v2, v7, +0x4
+    0754..0758  const/16  v35, #0x0
+    0758..075c  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A05:LX/00x;
+    075c..0760  if-nez  v2, +0x6
+    0760..0764  const-string  v0, "botGroupGating"
+    0764..0768  goto/16  -0x1ec
+    0768..076c  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0Q:LX/0a2;
+    076c..0770  if-nez  v2, +0x6
+    0770..0774  const-string  v0, "fMessageDatabase"
+    0774..0778  goto/16  -0x1f4
+    0778..077e  invoke-static  {v2}, LX/00y;->A01(Ljava/lang/Object;)LX/00y;
+    077e..0782  iget-object  v11, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A06:LX/00x;
+    0782..0786  if-nez  v11, +0x6
+    0786..078a  const-string  v0, "botRevokeMessageUtil"
+    078a..078e  goto/16  -0x1ff
+    078e..0792  iget-object  v6, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0H:LX/0fY;
+    0792..0796  if-nez  v6, +0x6
+    0796..079a  const-string  v0, "receiptDeviceManager"
+    079a..079e  goto/16  -0x207
+    079e..07a2  iget-object  v5, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0j:LX/16U;
+    07a2..07a6  if-nez  v5, +0x9
+    07a6..07aa  const-string  v14, "messageDeviceTargetManager"
+    07aa..07b0  invoke-static  {v14}, LX/00l;->A0H(Ljava/lang/String;)V
+    07b0..07b4  goto/16  -0x248
+    07b4..07b8  iget-object  v3, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0K:Lcom/whatsapp/infra/core/jid/Jid;
+    07b8..07bc  const/16  v26, #0x1
+    07bc..07c0  iget  v13, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->messageType:I
+    07c0..07c4  iget-object  v12, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->targetDeviceRawJids:Ljava/util/HashSet;
+    07c4..07c8  new-instance  v2, LX/EfU;
+    07c8..07cc  move-object/from16  v27, v2
+    07cc..07d0  move-object/from16  v28, v11
+    07d0..07d4  move-object/from16  v29, v6
+    07d4..07d8  move-object/from16  v30, v3
+    07d8..07dc  move-object/from16  v31, v9
+    07dc..07e0  move-object/from16  v32, v5
+    07e0..07e4  move-object/from16  v33, v12
+    07e4..07e8  move/from16  v34, v13
+    07e8..07ee  invoke-direct/range  {v27..v35}, LX/EfU;-><init>(LX/00x;LX/0fY;Lcom/whatsapp/infra/core/jid/Jid;LX/1dW;LX/16U;Ljava/util/Set;IZ)V
+    07ee..07f2  iput-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0k:LX/EfU;
+    07f2..07f6  iget-object  v6, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0Z:LX/ETz;
+    07f6..07fa  if-nez  v6, +0x6
+    07fa..07fe  const-string  v5, "recipientPhoneUtil"
+    07fe..0802  goto/16  -0x272
+    0802..0806  iget-object  v5, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0O:LX/18U;
+    0806..080c  invoke-static  {v3}, LX/0Dn;->A0Z(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    080c..080e  move-result  v2
+    080e..0812  if-nez  v2, +0x11
+    0812..0818  invoke-static  {v3}, LX/0Dn;->A0Y(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0818..081a  move-result  v2
+    081a..081e  if-eqz  v2, +0x1a
+    081e..0822  const-string  v2, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.LidDeviceJid"
+    0822..0828  invoke-static  {v3, v2}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    0828..082c  check-cast  v3, LX/0EM;
+    082c..0830  iget-object  v3, v3, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    0830..0836  invoke-static  {v3}, LX/6oe;->A1O(Ljava/lang/Object;)V
+    0836..083a  check-cast  v3, LX/0Dx;
+    083a..083e  if-eqz  v3, +0xa
+    083e..0842  if-eqz  v5, +0xb
+    0842..0846  iget  v5, v5, LX/18U;->A0i:I
+    0846..084a  const/16  v2, #0x49
+    084a..084e  if-ne  v5, v2, +0x5
+    084e..0852  move-object/from16  v27, v1
+    0852..0854  goto  +0x25
+    0854..0858  iget-boolean  v2, v9, LX/1dW;->A02:Z
+    0858..085c  if-eqz  v2, -0x5
+    085c..0860  iget-object  v2, v6, LX/ETz;->A00:LX/05a;
+    0860..0866  invoke-static  {v2, v3, v8}, LX/6ok;->A0K(LX/05a;LX/0DY;Z)LX/0i4;
+    0866..0868  move-result-object  v2
+    0868..086c  if-eqz  v2, -0xd
+    086c..0870  iget-object  v5, v2, LX/0i4;->A0m:LX/0iC;
+    0870..0874  sget-object  v2, LX/0iC;->A04:LX/0iC;
+    0874..0878  if-ne  v5, v2, -0x13
+    0878..087c  iget-object  v2, v6, LX/ETz;->A02:LX/0kl;
+    087c..0882  invoke-virtual  {v2, v3}, LX/0kl;->A05(LX/0Dx;)Ljava/lang/Boolean;
+    0882..0884  move-result-object  v2
+    0884..088a  invoke-static  {v2, v7}, LX/2LC;->A1X(Ljava/lang/Object;Z)Z
+    088a..088c  move-result  v2
+    088c..0890  if-nez  v2, -0x1f
+    0890..0894  iget-object  v2, v6, LX/ETz;->A01:LX/0Ws;
+    0894..089a  invoke-virtual  {v2, v3}, LX/0Ws;->A0J(LX/0Dw;)Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    089a..089c  move-result-object  v27
+    089c..08a0  iget-object  v3, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0a:LX/Eae;
+    08a0..08a4  if-nez  v3, +0x6
+    08a4..08a8  const-string  v5, "recipientUsernameUtil"
+    08a8..08ac  goto/16  -0x2c7
+    08ac..08b0  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0O:LX/18U;
+    08b0..08b6  invoke-virtual  {v3, v2, v9}, LX/Eae;->A00(LX/18U;LX/1dW;)Ljava/lang/String;
+    08b6..08b8  move-result-object  v32
+    08b8..08bc  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0O:LX/18U;
+    08bc..08c0  if-eqz  v2, +0x10
+    08c0..08c6  invoke-static  {v2}, LX/ABc;->A03(LX/18U;)Z
+    08c6..08c8  move-result  v2
+    08c8..08cc  if-eqz  v2, +0xa
+    08cc..08d0  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0U:LX/0cM;
+    08d0..08d4  if-nez  v2, +0x293
+    08d4..08d8  const-string  v5, "statusInfraConfig"
+    08d8..08dc  goto/16  -0x2df
+    08dc..08e0  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0l:LX/DiW;
+    08e0..08e4  const-string  v5, "message"
+    08e4..08e8  if-eqz  v2, -0x2e5
+    08e8..08ec  iget  v2, v2, LX/DiW;->bitField0_:I
+    08ec..08f0  and-int/lit16  v2, v2, #0x400
+    08f0..08f6  invoke-static  {v2}, LX/2L9;->A1M(I)Z
+    08f6..08f8  move-result  v2
+    08f8..08fc  const-string  v14, "crashLogs"
+    08fc..08fe  move-object  v15, v14
+    08fe..0902  if-nez  v2, +0x4c
+    0902..0906  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0O:LX/18U;
+    0906..090a  if-nez  v2, +0x48
+    090a..090e  const-string  v2, "SendE2EMessageJob/e2e message was deleted from message store"
+    090e..0914  invoke-static  {v2, v10}, LX/2LA;->A1N(Ljava/lang/String;Ljava/lang/String;)V
+    0914..0918  iget-object  v3, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0l:LX/DiW;
+    0918..091c  if-eqz  v3, -0x2ff
+    091c..0920  iget  v2, v3, LX/DiW;->bitField1_:I
+    0920..0924  and-int/lit16  v2, v2, #0x100
+    0924..0928  if-eqz  v2, +0x3ad
+    0928..092c  iget-object  v3, v3, LX/DiW;->keepInChatMessage_:LX/DdF;
+    092c..0930  if-nez  v3, +0x6
+    0930..0934  sget-object  v3, LX/DdF;->DEFAULT_INSTANCE:LX/DdF;
+    0934..0938  if-eqz  v3, +0x19
+    0938..093c  iget  v2, v3, LX/DdF;->bitField0_:I
+    093c..0940  and-int/lit8  v2, v2, #0x2
+    0940..0944  if-eqz  v2, +0x11
+    0944..0948  iget  v2, v3, LX/DdF;->keepType_:I
+    0948..094e  invoke-static  {v2}, LX/EAJ;->forNumber(I)LX/EAJ;
+    094e..0950  move-result-object  v3
+    0950..0954  if-nez  v3, +0x4
+    0954..0958  sget-object  v3, LX/EAJ;->A03:LX/EAJ;
+    0958..095c  sget-object  v2, LX/EAJ;->A02:LX/EAJ;
+    095c..0960  if-ne  v3, v2, +0x3
+    0960..0962  goto  +0x3
+    0962..0964  const/4  v3, #0x0
+    0964..0966  goto  +0x2
+    0966..0968  const/4  v3, #0x1
+    0968..096c  iget-object  v5, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0I:LX/0B0;
+    096c..0970  if-eqz  v5, -0xe1
+    0970..0974  const-string  v2, "isUnkeep? "
+    0974..097a  invoke-static  {v2, v3}, LX/8t5;->A0v(Ljava/lang/String;Z)Ljava/lang/String;
+    097a..097c  move-result-object  v4
+    097c..0982  invoke-direct  {v0}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A04()Z
+    0982..0984  move-result  v2
+    0984..0988  xor-int/lit8  v3, v2, #0x1
+    0988..098c  const-string  v2, "SendE2EMessageJob/unkeep-failed-msg-deleted"
+    098c..0992  invoke-virtual  {v5, v2, v4, v3}, LX/0B0;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+    0992..0996  goto/16  +0x376
+    0996..099a  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0O:LX/18U;
+    099a..099e  if-eqz  v2, +0x5e
+    099e..09a2  iget  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->retryCount:I
+    09a2..09a6  if-nez  v2, +0x5a
+    09a6..09ac  invoke-direct  {v0}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A03()Z
+    09ac..09ae  move-result  v2
+    09ae..09b2  if-nez  v2, +0x54
+    09b2..09b6  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0O:LX/18U;
+    09b6..09ba  if-eqz  v2, +0x2c9
+    09ba..09be  iget  v3, v2, LX/18U;->A08:I
+    09be..09c0  const/4  v2, #0x4
+    09c0..09c6  invoke-static  {v3, v2}, LX/1e4;->A04(II)Z
+    09c6..09c8  move-result  v2
+    09c8..09cc  if-eqz  v2, +0x47
+    09cc..09d0  iget-object  v3, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0D:LX/08Y;
+    09d0..09d4  if-eqz  v3, +0x296
+    09d4..09d8  const/16  v2, #0x591b
+    09d8..09de  invoke-virtual  {v3, v2}, LX/00E;->A14(I)Z
+    09de..09e0  move-result  v2
+    09e0..09e4  if-nez  v2, +0x16
+    09e4..09e8  iget-object  v2, v9, LX/1dW;->A00:LX/0DY;
+    09e8..09ee  invoke-static  {v2}, LX/0Dn;->A0h(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    09ee..09f0  move-result  v2
+    09f0..09f4  if-eqz  v2, +0x33
+    09f4..09f8  iget-object  v3, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0D:LX/08Y;
+    09f8..09fc  if-eqz  v3, +0x282
+    09fc..0a00  sget-object  v2, LX/EMu;->A01:LX/00f;
+    0a00..0a06  invoke-static  {v3, v2}, LX/00E;->A0F(LX/00E;LX/00f;)Z
+    0a06..0a08  move-result  v2
+    0a08..0a0c  if-eqz  v2, +0x27
+    0a0c..0a10  const-string  v2, "SendE2EMessageJob/e2e message should be aborted if message was already ACKed by server"
+    0a10..0a16  invoke-static  {v2}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0a16..0a1a  iget-object  v5, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0I:LX/0B0;
+    0a1a..0a1e  if-eqz  v5, -0x138
+    0a1e..0a22  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0O:LX/18U;
+    0a22..0a26  if-eqz  v2, +0x28e
+    0a26..0a2a  iget  v3, v2, LX/18U;->A0i:I
+    0a2a..0a2e  iget  v4, v2, LX/18U;->A08:I
+    0a2e..0a32  const-string  v2, "messageType="
+    0a32..0a38  invoke-static  {v3, v2}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    0a38..0a3a  move-result-object  v3
+    0a3a..0a3e  const-string  v2, " fMessage.status="
+    0a3e..0a44  invoke-static  {v2, v3, v4}, LX/1Xl;->A11(Ljava/lang/String;Ljava/lang/StringBuilder;I)Ljava/lang/String;
+    0a44..0a46  move-result-object  v4
+    0a46..0a4a  const-string  v3, "SendE2EMessageJob/already-acked-by-server"
+    0a4a..0a4c  const/4  v2, #0x2
+    0a4c..0a52  invoke-virtual  {v5, v3, v4, v8, v2}, LX/0B0;->A0h(Ljava/lang/String;Ljava/lang/String;ZI)V
+    0a52..0a56  goto/16  +0x316
+    0a56..0a5a  iget-object  v6, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0O:LX/18U;
+    0a5a..0a5e  if-eqz  v6, +0x2e
+    0a5e..0a62  iget  v3, v6, LX/18U;->A08:I
+    0a62..0a66  const/16  v2, #0x16
+    0a66..0a6a  if-ne  v3, v2, +0x11
+    0a6a..0a6e  iget-object  v2, v9, LX/1dW;->A00:LX/0DY;
+    0a6e..0a74  invoke-static  {v2}, LX/0Dn;->A0h(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0a74..0a76  move-result  v2
+    0a76..0a7a  if-eqz  v2, +0x9
+    0a7a..0a7e  const-string  v2, "SendE2EMessageJob/e2e message should be aborted due to message status set to ABORTED"
+    0a7e..0a84  invoke-static  {v2}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0a84..0a88  goto/16  +0x2fd
+    0a88..0a8c  instance-of  v2, v6, LX/BUW;
+    0a8c..0a90  if-eqz  v2, +0x15
+    0a90..0a92  move-object  v2, v6
+    0a92..0a96  check-cast  v2, LX/BUW;
+    0a96..0a9a  iget-object  v5, v2, LX/BUW;->A00:LX/CVV;
+    0a9a..0a9e  if-eqz  v5, +0xe
+    0a9e..0aa2  iget-object  v3, v5, LX/CVV;->A03:LX/CV4;
+    0aa2..0aa6  if-eqz  v3, +0x8
+    0aa6..0aaa  iget-object  v2, v3, LX/CV4;->A09:Ljava/lang/String;
+    0aaa..0aae  if-eqz  v2, +0x4
+    0aae..0ab2  iput-object  v1, v3, LX/CV4;->A09:Ljava/lang/String;
+    0ab2..0ab6  iput-object  v3, v5, LX/CVV;->A03:LX/CV4;
+    0ab6..0aba  iget-object  v3, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0O:LX/18U;
+    0aba..0abe  if-eqz  v3, +0x19
+    0abe..0ac2  iget-boolean  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0q:Z
+    0ac2..0ac6  if-nez  v2, +0x15
+    0ac6..0aca  instance-of  v2, v3, LX/1eq;
+    0aca..0ace  if-nez  v2, +0x11
+    0ace..0ad2  instance-of  v2, v3, LX/1f3;
+    0ad2..0ad6  if-nez  v2, +0xd
+    0ad6..0ada  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0A:LX/0wZ;
+    0ada..0ade  if-nez  v2, +0x6
+    0ade..0ae2  const-string  v0, "coreMessageStore"
+    0ae2..0ae6  goto/16  -0x3ab
+    0ae6..0aea  if-eqz  v6, +0x236
+    0aea..0aec  goto  +0x4
+    0aec..0af0  const/16  v34, #0x0
+    0af0..0af2  goto  +0x7
+    0af2..0af6  iget-object  v2, v2, LX/0wZ;->A0c:LX/0xw;
+    0af6..0afc  invoke-virtual  {v2, v6}, LX/0xw;->A01(LX/18U;)I
+    0afc..0afe  move-result  v34
+    0afe..0b02  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0N:LX/08q;
+    0b02..0b06  if-nez  v2, +0x9
+    0b06..0b0c  const-string/jumbo  v0, "time"
+    0b0c..0b12  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    0b12..0b14  throw  v1
+    0b14..0b1a  invoke-static  {v2}, LX/08q;->A00(LX/08q;)J
+    0b1a..0b1c  move-result-wide  v11
+    0b1c..0b20  iget-wide  v6, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->expireTimeMs:J
+    0b20..0b24  cmp-long  v2, v11, v6
+    0b24..0b2a  invoke-static  {v2}, LX/6oi;->A1V(I)Z
+    0b2a..0b2c  move-result  v2
+    0b2c..0b30  const-string  v13, "messageStatusStore"
+    0b30..0b34  const-string  v14, "messageRecipientDevicesProvider"
+    0b34..0b38  if-eqz  v2, +0x37
+    0b38..0b3c  iget-wide  v4, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->originalTimestamp:J
+    0b3c..0b40  iget-wide  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->messageSendStartTime:J
+    0b40..0b44  const-string  v11, "SendE2EMessageJob/e2e message send job expired"
+    0b44..0b4a  invoke-static  {v11, v10}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0b4a..0b4c  move-result-object  v11
+    0b4c..0b50  const-string  v12, " originalTime="
+    0b50..0b56  invoke-virtual  {v11, v12}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0b56..0b5c  invoke-virtual  {v11, v4, v5}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    0b5c..0b60  const-string  v4, " sendStartTime="
+    0b60..0b66  invoke-virtual  {v11, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0b66..0b6c  invoke-virtual  {v11, v2, v3}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    0b6c..0b70  const-string  v2, " expireTimeMs="
+    0b70..0b76  invoke-static  {v2, v11, v6, v7}, LX/DBb;->A1L(Ljava/lang/String;Ljava/lang/StringBuilder;J)V
+    0b76..0b7a  iget-object  v7, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0O:LX/18U;
+    0b7a..0b7e  if-eqz  v7, +0x282
+    0b7e..0b82  iget-object  v6, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0d:LX/Ef4;
+    0b82..0b86  if-eqz  v6, +0x1c2
+    0b86..0b88  const/4  v2, #0x5
+    0b88..0b8c  new-instance  v5, LX/Ehw;
+    0b8c..0b92  invoke-direct  {v5, v2, v1}, LX/Ehw;-><init>(ILjava/lang/Integer;)V
+    0b92..0b96  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0k:LX/EfU;
+    0b96..0b9a  if-nez  v2, +0x1e3
+    0b9a..0ba0  invoke-static  {v14}, LX/00l;->A0H(Ljava/lang/String;)V
+    0ba0..0ba2  throw  v1
+    0ba2..0ba6  iget-object  v6, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0O:LX/18U;
+    0ba6..0baa  if-eqz  v6, +0x31
+    0baa..0bae  sget-object  v5, LX/DE7;->A00:LX/1dX;
+    0bae..0bb2  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0N:LX/08q;
+    0bb2..0bb6  if-nez  v2, +0x7
+    0bb6..0bbc  const-string/jumbo  v0, "time"
+    0bbc..0bc0  goto/16  -0x418
+    0bc0..0bc6  invoke-static  {v2}, LX/08q;->A00(LX/08q;)J
+    0bc6..0bc8  move-result-wide  v2
+    0bc8..0bce  invoke-virtual  {v5, v6, v2, v3}, LX/1dX;->A0b(LX/18U;J)Z
+    0bce..0bd0  move-result  v2
+    0bd0..0bd4  if-eqz  v2, +0x1c
+    0bd4..0bd8  const-string  v2, "SendE2EMessageJob/e2e message is ephemerally expired"
+    0bd8..0bde  invoke-static  {v2, v10}, LX/2LA;->A1N(Ljava/lang/String;Ljava/lang/String;)V
+    0bde..0be2  iget-object  v7, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0d:LX/Ef4;
+    0be2..0be6  if-eqz  v7, +0x192
+    0be6..0bea  const/16  v2, #0xf
+    0bea..0bee  new-instance  v6, LX/Ehw;
+    0bee..0bf4  invoke-direct  {v6, v2, v1}, LX/Ehw;-><init>(ILjava/lang/Integer;)V
+    0bf4..0bf8  iget-object  v5, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0O:LX/18U;
+    0bf8..0bfc  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0k:LX/EfU;
+    0bfc..0c00  if-nez  v2, +0x1fb
+    0c00..0c06  invoke-static  {v14}, LX/00l;->A0H(Ljava/lang/String;)V
+    0c06..0c08  throw  v1
+    0c08..0c0c  instance-of  v3, v4, LX/0Dx;
+    0c0c..0c10  if-eqz  v3, +0xf
+    0c10..0c12  move-object  v5, v4
+    0c12..0c16  check-cast  v5, LX/0Dx;
+    0c16..0c1a  if-eqz  v5, +0xa
+    0c1a..0c1e  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0W:LX/0Ws;
+    0c1e..0c22  if-nez  v2, +0x9
+    0c22..0c26  const-string  v0, "jidMapRepository"
+    0c26..0c2a  goto/16  -0x44d
+    0c2a..0c2e  move-object/from16  v28, v1
+    0c2e..0c30  goto  +0x5
+    0c30..0c36  invoke-virtual  {v2, v5}, LX/0Ws;->A0J(LX/0Dw;)Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    0c36..0c38  move-result-object  v28
+    0c38..0c3e  invoke-static/range  {v28..v28}, LX/0x9;->A08(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0c3e..0c40  move-result  v2
+    0c40..0c44  if-eqz  v2, +0x41
+    0c44..0c48  const-string  v2, "SendE2EMessageJob/sendMessage refusing LID-addressed Meta AI chat"
+    0c48..0c4e  invoke-static  {v2}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0c4e..0c52  iget-object  v7, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0O:LX/18U;
+    0c52..0c56  if-eqz  v7, +0x216
+    0c56..0c5a  iget-object  v11, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0d:LX/Ef4;
+    0c5a..0c5e  if-eqz  v11, +0x156
+    0c5e..0c64  invoke-static/range  {v26..v26}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0c64..0c66  move-result-object  v3
+    0c66..0c6a  const/16  v2, #0x16
+    0c6a..0c6e  new-instance  v6, LX/Ehw;
+    0c6e..0c74  invoke-direct  {v6, v2, v3}, LX/Ehw;-><init>(ILjava/lang/Integer;)V
+    0c74..0c78  iget  v5, v7, LX/18U;->A1A:I
+    0c78..0c7c  sget-object  v23, LX/01k;->A00:LX/01k;
+    0c7c..0c80  iget  v4, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->retryCount:I
+    0c80..0c84  iget-object  v3, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->messageSendRetrySource:Ljava/lang/Integer;
+    0c84..0c88  iget-boolean  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0r:Z
+    0c88..0c8e  invoke-direct  {v0}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A04()Z
+    0c8e..0c90  move-result  v28
+    0c90..0c94  move/from16  v24, v5
+    0c94..0c98  move/from16  v25, v4
+    0c98..0c9c  move/from16  v27, v2
+    0c9c..0ca0  move-object/from16  v19, v11
+    0ca0..0ca4  move-object/from16  v20, v7
+    0ca4..0ca8  move-object/from16  v21, v6
+    0ca8..0cac  move-object/from16  v22, v3
+    0cac..0cb2  invoke-virtual/range  {v19..v28}, LX/Ef4;->A01(LX/18U;LX/Ehw;Ljava/lang/Integer;Ljava/util/Collection;IIZZZ)V
+    0cb2..0cb6  iget-object  v4, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0B:LX/17f;
+    0cb6..0cba  if-nez  v4, +0x1c5
+    0cba..0cc0  invoke-static  {v13}, LX/00l;->A0H(Ljava/lang/String;)V
+    0cc0..0cc2  throw  v1
+    0cc2..0cc6  iget-object  v5, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0L:Lcom/whatsapp/infra/core/jid/UserJid;
+    0cc6..0cc8  move-object  v6, v4
+    0cc8..0cce  invoke-static  {v4}, LX/0Dn;->A0k(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0cce..0cd0  move-result  v7
+    0cd0..0cd4  if-eqz  v7, +0x48
+    0cd4..0cd8  if-eqz  v5, +0x3
+    0cd8..0cda  move-object  v6, v5
+    0cda..0cde  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0G:LX/0Fy;
+    0cde..0ce2  if-nez  v2, +0x8
+    0ce2..0ce6  const-string  v0, "chatsCache"
+    0ce6..0cec  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    0cec..0cee  throw  v1
+    0cee..0cf4  invoke-static  {v2, v6, v8}, LX/0Fy;->A00(LX/0Fy;LX/0DY;Z)LX/0i4;
+    0cf4..0cf6  move-result-object  v2
+    0cf6..0cfa  if-eqz  v2, +0x9
+    0cfa..0cfe  iget-object  v6, v2, LX/0i4;->A0m:LX/0iC;
+    0cfe..0d02  sget-object  v2, LX/0iC;->A04:LX/0iC;
+    0d02..0d06  if-ne  v6, v2, +0x3
+    0d06..0d08  goto  +0x2d
+    0d08..0d0c  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0X:LX/0f5;
+    0d0c..0d10  if-nez  v2, +0x5
+    0d10..0d14  const-string  v0, "chatLidMigrationHelper"
+    0d14..0d16  goto  -0x17
+    0d16..0d1c  invoke-virtual  {v2}, LX/0f5;->A0H()Z
+    0d1c..0d1e  move-result  v2
+    0d1e..0d22  if-eqz  v2, +0x21
+    0d22..0d26  if-nez  v5, +0x6
+    0d26..0d2c  invoke-static  {v4}, LX/2L6;->A0n(Lcom/whatsapp/infra/core/jid/Jid;)Lcom/whatsapp/infra/core/jid/UserJid;
+    0d2c..0d2e  move-result-object  v5
+    0d2e..0d34  invoke-static  {v5}, LX/0Dn;->A0N(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0d34..0d36  move-result  v2
+    0d36..0d3a  if-eqz  v2, +0x15
+    0d3a..0d40  invoke-static  {v5, v4}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    0d40..0d42  move-result  v2
+    0d42..0d46  if-eqz  v2, +0x5
+    0d46..0d4a  if-eqz  v3, +0x3
+    0d4a..0d4c  goto  +0x17
+    0d4c..0d50  iget-object  v3, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0W:LX/0Ws;
+    0d50..0d54  if-nez  v3, +0xb
+    0d54..0d58  const-string  v0, "jidMapRepository"
+    0d58..0d5e  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    0d5e..0d60  throw  v1
+    0d60..0d64  move-object/from16  v28, v1
+    0d64..0d66  goto  +0xa
+    0d66..0d6a  const-string  v2, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.AccountUserJid"
+    0d6a..0d70  invoke-static  {v5, v2}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    0d70..0d76  invoke-static  {v3, v5}, LX/6of;->A0b(LX/0Ws;Ljava/lang/Object;)Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    0d76..0d78  move-result-object  v28
+    0d78..0d7c  const-string  v2, "SendE2EMessageJob/running e2e message send job"
+    0d7c..0d82  invoke-static  {v2, v10}, LX/2LA;->A1N(Ljava/lang/String;Ljava/lang/String;)V
+    0d82..0d86  iget  v3, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->retryCount:I
+    0d86..0d88  const/4  v2, #0x4
+    0d88..0d8c  if-le  v3, v2, +0xa
+    0d8c..0d90  const-string  v2, "SendE2EMessageJob/aborting e2e message send job due to high retry count"
+    0d90..0d96  invoke-static  {v2, v10}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0d96..0d98  move-result-object  v2
+    0d98..0d9c  goto/16  -0x18d
+    0d9c..0da0  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0k:LX/EfU;
+    0da0..0da4  if-eqz  v2, -0x2fb
+    0da4..0daa  invoke-virtual  {v2}, LX/EfU;->A00()Ljava/util/Set;
+    0daa..0dac  move-result-object  v33
+    0dac..0db2  invoke-static/range  {v33..v33}, LX/00l;->A05(Ljava/lang/Object;)V
+    0db2..0db8  invoke-direct  {v0}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A03()Z
+    0db8..0dba  move-result  v2
+    0dba..0dbe  if-eqz  v2, +0xb
+    0dbe..0dc4  invoke-interface/range  {v33..v33}, Ljava/util/Set;->isEmpty()Z
+    0dc4..0dc6  move-result  v2
+    0dc6..0dca  if-eqz  v2, +0x5
+    0dca..0dce  const-string  v2, "SendE2EMessageJob/aborting e2e message send job due to empty target devices"
+    0dce..0dd0  goto  -0x1f
+    0dd0..0dd4  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0M:LX/09F;
+    0dd4..0dd8  if-eqz  v2, +0x9e
+    0dd8..0dde  invoke-interface  {v2, v4}, LX/09F;->BXv(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0dde..0de0  move-result  v2
+    0de0..0de4  if-eqz  v2, +0x18
+    0de4..0dea  invoke-interface/range  {v33..v33}, Ljava/util/Set;->isEmpty()Z
+    0dea..0dec  move-result  v2
+    0dec..0df0  if-eqz  v2, +0x12
+    0df0..0df4  const-string  v2, "SendE2EMessageJob/aborting e2e message send job due to empty deviceEncryptedMessages for self-thread"
+    0df4..0df6  goto  -0x32
+    0df6..0dfa  const-string  v2, "SendE2EMessageJob//sendMessage status message is sent over status infra"
+    0dfa..0e00  invoke-static  {v2}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0e00..0e04  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A08:LX/00x;
+    0e04..0e08  if-nez  v2, +0x8e
+    0e08..0e0c  const-string  v0, "statusLegacyPathLogger"
+    0e0c..0e10  goto/16  -0x540
+    0e10..0e14  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0O:LX/18U;
+    0e14..0e18  if-nez  v7, +0x31
+    0e18..0e1e  invoke-static/range  {v33..v33}, LX/EpS;->A01(Ljava/util/Collection;)Z
+    0e1e..0e20  move-result  v3
+    0e20..0e24  if-eqz  v3, +0x2b
+    0e24..0e28  if-eqz  v2, +0x9
+    0e28..0e2c  iget  v2, v2, LX/18U;->A0i:I
+    0e2c..0e32  invoke-static  {v2}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0e32..0e34  move-result-object  v3
+    0e34..0e36  goto  +0x3
+    0e36..0e3a  const-string  v3, "null"
+    0e3a..0e40  invoke-virtual  {v4}, Lcom/whatsapp/infra/core/jid/Jid;->getType()I
+    0e40..0e42  move-result  v5
+    0e42..0e46  const-string  v2, "msg_send: "
+    0e46..0e4c  invoke-static  {v3, v2}, LX/1Xl;->A15(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0e4c..0e4e  move-result-object  v3
+    0e4e..0e52  const-string  v2, ";"
+    0e52..0e58  invoke-static  {v2, v3, v5}, LX/1Xl;->A11(Ljava/lang/String;Ljava/lang/StringBuilder;I)Ljava/lang/String;
+    0e58..0e5a  move-result-object  v5
+    0e5a..0e5e  iget-object  v3, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0I:LX/0B0;
+    0e5e..0e62  if-nez  v3, +0x6
+    0e62..0e68  invoke-static  {v15}, LX/00l;->A0H(Ljava/lang/String;)V
+    0e68..0e6a  throw  v1
+    0e6a..0e70  const-string/jumbo  v2, "unexpected-hosted-device"
+    0e70..0e76  invoke-virtual  {v3, v2, v5, v8}, LX/0B0;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+    0e76..0e7c  invoke-direct  {v0}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A05()Z
+    0e7c..0e7e  move-result  v2
+    0e7e..0e82  if-eqz  v2, +0x1a
+    0e82..0e86  iget-object  v3, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0D:LX/08Y;
+    0e86..0e8a  if-nez  v3, +0x6
+    0e8a..0e90  invoke-static/range  {v21..v21}, LX/00l;->A0H(Ljava/lang/String;)V
+    0e90..0e92  throw  v1
+    0e92..0e98  const  v2, #0x808c
+    0e98..0e9e  invoke-static  {v3, v2}, LX/2L7;->A1a(LX/00E;I)Z
+    0e9e..0ea0  move-result  v2
+    0ea0..0ea4  if-nez  v2, +0x9
+    0ea4..0ea8  const-string  v2, "SendE2EMessageJob//failing TEE chatD send path: RT-2 abProp turned off after job creation"
+    0ea8..0eae  invoke-static  {v2}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0eae..0eb2  goto/16  +0xe8
+    0eb2..0eb6  iget-boolean  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0p:Z
+    0eb6..0eba  if-eqz  v2, +0x15
+    0eba..0ebe  iget-object  v5, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0i:LX/0x3;
+    0ebe..0ec2  if-nez  v5, +0x6
+    0ec2..0ec6  const-string  v0, "messageSendPerfLogging"
+    0ec6..0eca  goto/16  -0x59d
+    0eca..0ece  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->id:Ljava/lang/String;
+    0ece..0ed4  invoke-virtual  {v2}, Ljava/lang/String;->hashCode()I
+    0ed4..0ed6  move-result  v3
+    0ed6..0eda  const/16  v2, #0x8
+    0eda..0ee0  invoke-virtual  {v5, v3, v2}, LX/0x3;->A03(II)V
+    0ee0..0ee6  invoke-direct  {v0}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A05()Z
+    0ee6..0ee8  move-result  v2
+    0ee8..0eec  if-eqz  v2, +0xf5
+    0eec..0ef0  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0m:Lcom/whatsapp/teechatinfra/send/TeeSendCoordinator;
+    0ef0..0ef4  if-nez  v2, +0xc9
+    0ef4..0ef8  const-string  v0, "teeSendCoordinator"
+    0ef8..0efc  goto/16  -0x5b6
+    0efc..0f02  invoke-static/range  {v21..v21}, LX/00l;->A0H(Ljava/lang/String;)V
+    0f02..0f06  goto/16  -0x5f1
+    0f06..0f0c  invoke-static/range  {v22..v22}, LX/00l;->A0H(Ljava/lang/String;)V
+    0f0c..0f10  goto/16  -0x5f6
+    0f10..0f16  invoke-static/range  {v23..v23}, LX/00l;->A0H(Ljava/lang/String;)V
+    0f16..0f1a  goto/16  -0x5fb
+    0f1a..0f1c  const/4  v4, #0x0
+    0f1c..0f20  goto/16  +0xf5
+    0f20..0f26  invoke-static  {v2}, LX/2L7;->A1H(LX/00x;)Ljava/lang/Object;
+    0f26..0f28  move-result-object  v4
+    0f28..0f2c  check-cast  v4, LX/EZR;
+    0f2c..0f30  sget-object  v3, LX/02X;->A1R:Ljava/lang/Integer;
+    0f30..0f34  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0O:LX/18U;
+    0f34..0f3a  invoke-virtual  {v4, v2, v3, v1}, LX/EZR;->A00(LX/18U;Ljava/lang/Integer;Ljava/lang/String;)V
+    0f3a..0f3e  goto/16  +0xa2
+    0f3e..0f44  invoke-static/range  {v24..v24}, LX/1Xl;->A0g(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+    0f44..0f46  move-result-object  v0
+    0f46..0f48  throw  v0
+    0f48..0f4e  invoke-static/range  {v24..v24}, LX/1Xl;->A0g(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+    0f4e..0f50  move-result-object  v0
+    0f50..0f52  throw  v0
+    0f52..0f58  invoke-static/range  {v24..v24}, LX/1Xl;->A0g(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+    0f58..0f5a  move-result-object  v0
+    0f5a..0f5c  throw  v0
+    0f5c..0f62  invoke-virtual  {v2}, LX/EfU;->A00()Ljava/util/Set;
+    0f62..0f64  move-result-object  v33
+    0f64..0f6a  invoke-static/range  {v33..v33}, LX/00l;->A05(Ljava/lang/Object;)V
+    0f6a..0f6e  iget  v4, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->retryCount:I
+    0f6e..0f72  iget-object  v3, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->messageSendRetrySource:Ljava/lang/Integer;
+    0f72..0f76  iget-boolean  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0r:Z
+    0f76..0f7c  invoke-direct  {v0}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A04()Z
+    0f7c..0f7e  move-result  v38
+    0f7e..0f82  xor-int/lit8  v36, v38, #0x1
+    0f82..0f86  move-object/from16  v29, v6
+    0f86..0f8a  move-object/from16  v30, v7
+    0f8a..0f8e  move-object/from16  v31, v5
+    0f8e..0f92  move-object/from16  v32, v3
+    0f92..0f96  move/from16  v35, v4
+    0f96..0f9a  move/from16  v37, v2
+    0f9a..0fa0  invoke-virtual/range  {v29..v38}, LX/Ef4;->A01(LX/18U;LX/Ehw;Ljava/lang/Integer;Ljava/util/Collection;IIZZZ)V
+    0fa0..0fa4  iget-object  v3, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0D:LX/08Y;
+    0fa4..0fa8  if-nez  v3, +0x6
+    0fa8..0fae  invoke-static/range  {v21..v21}, LX/00l;->A0H(Ljava/lang/String;)V
+    0fae..0fb0  throw  v1
+    0fb0..0fb4  sget-object  v2, LX/EMu;->A05:LX/00f;
+    0fb4..0fba  invoke-static  {v3, v2}, LX/00E;->A0F(LX/00E;LX/00f;)Z
+    0fba..0fbc  move-result  v2
+    0fbc..0fc0  if-eqz  v2, +0x61
+    0fc0..0fc4  iget-object  v4, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0B:LX/17f;
+    0fc4..0fc8  if-nez  v4, +0x6
+    0fc8..0fce  invoke-static  {v13}, LX/00l;->A0H(Ljava/lang/String;)V
+    0fce..0fd0  throw  v1
+    0fd0..0fd4  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0O:LX/18U;
+    0fd4..0fd8  if-eqz  v2, +0xa
+    0fd8..0fdc  iget-object  v3, v2, LX/18U;->A0j:LX/1dW;
+    0fdc..0fe0  const/16  v2, #0x14
+    0fe0..0fe6  invoke-virtual  {v4, v3, v1, v2}, LX/17f;->A05(LX/1dW;LX/Ftu;I)V
+    0fe6..0fe8  goto  +0x4c
+    0fe8..0fee  invoke-static/range  {v24..v24}, LX/1Xl;->A0g(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+    0fee..0ff0  move-result-object  v0
+    0ff0..0ff2  throw  v0
+    0ff2..0ff8  invoke-virtual  {v2}, LX/EfU;->A00()Ljava/util/Set;
+    0ff8..0ffa  move-result-object  v23
+    0ffa..1000  invoke-static/range  {v23..v23}, LX/00l;->A05(Ljava/lang/Object;)V
+    1000..1004  iget  v4, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->retryCount:I
+    1004..1008  iget-object  v3, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->messageSendRetrySource:Ljava/lang/Integer;
+    1008..100c  iget-boolean  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0r:Z
+    100c..1012  invoke-direct  {v0}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A04()Z
+    1012..1014  move-result  v28
+    1014..1018  if-eqz  v5, +0x35
+    1018..101c  xor-int/lit8  v26, v28, #0x1
+    101c..1020  move/from16  v24, v34
+    1020..1024  move/from16  v25, v4
+    1024..1028  move/from16  v27, v2
+    1028..102c  move-object/from16  v19, v7
+    102c..1030  move-object/from16  v20, v5
+    1030..1034  move-object/from16  v21, v6
+    1034..1038  move-object/from16  v22, v3
+    1038..103e  invoke-virtual/range  {v19..v28}, LX/Ef4;->A01(LX/18U;LX/Ehw;Ljava/lang/Integer;Ljava/util/Collection;IIZZZ)V
+    103e..1040  goto  +0x20
+    1040..1044  iget-object  v3, v7, LX/18U;->A0j:LX/1dW;
+    1044..1048  const/16  v2, #0x15
+    1048..104e  invoke-virtual  {v4, v3, v1, v2}, LX/17f;->A05(LX/1dW;LX/Ftu;I)V
+    104e..1052  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A07:LX/00x;
+    1052..1056  if-nez  v2, +0x8
+    1056..105a  const-string  v0, "messageCacheManager"
+    105a..1060  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    1060..1062  throw  v1
+    1062..1068  invoke-interface  {v2}, LX/00x;->get()Ljava/lang/Object;
+    1068..106a  move-result-object  v2
+    106a..106e  check-cast  v2, LX/0he;
+    106e..1074  invoke-static  {v3}, LX/00l;->A04(Ljava/lang/Object;)V
+    1074..1078  iget-object  v2, v2, LX/0he;->A03:Ljava/util/concurrent/ConcurrentHashMap;
+    1078..107e  invoke-virtual  {v2, v3}, Ljava/util/AbstractMap;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+    107e..1080  const/4  v4, #0x0
+    1080..1082  goto  +0x43
+    1082..1086  new-instance  v23, LX/FhB;
+    1086..108a  move-object/from16  v24, v4
+    108a..108e  move-object/from16  v26, v36
+    108e..1092  move-object/from16  v29, v9
+    1092..1096  move-object/from16  v30, v0
+    1096..109a  move-object/from16  v31, v10
+    109a..109e  move-wide/from16  v35, v16
+    109e..10a4  invoke-direct/range  {v23..v37}, LX/FhB;-><init>(LX/0DY;Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/PhoneUserJid;Lcom/whatsapp/infra/core/jid/PhoneUserJid;LX/1dW;Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;Ljava/lang/String;Ljava/lang/String;Ljava/util/Collection;IJZ)V
+    10a4..10a8  iget-object  v2, v2, Lcom/whatsapp/teechatinfra/send/TeeSendCoordinator;->A04:LX/05a;
+    10a8..10ae  invoke-static  {v2}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    10ae..10b0  move-result-object  v2
+    10b0..10b4  check-cast  v2, Lcom/whatsapp/infra/tee/nodetoken/GlobalNodeTokenManager;
+    10b4..10b8  iget-object  v3, v2, Lcom/whatsapp/infra/tee/nodetoken/GlobalNodeTokenManager;->A04:Ljava/util/concurrent/atomic/AtomicInteger;
+    10b8..10be  invoke-virtual  {v3}, Ljava/util/concurrent/atomic/AtomicInteger;->incrementAndGet()I
+    10be..10c4  invoke-virtual/range  {v23..v23}, LX/FhB;->invoke()Ljava/lang/Object;
+    10c4..10c6  move-result-object  v2
+    10c6..10c8  goto  +0x19
+    10c8..10ca  move-exception  v0
+    10ca..10d0  invoke-virtual  {v3}, Ljava/util/concurrent/atomic/AtomicInteger;->decrementAndGet()I
+    10d0..10d2  throw  v0
+    10d2..10d6  move-object/from16  v24, v4
+    10d6..10da  move-object/from16  v26, v36
+    10da..10de  move-object/from16  v29, v9
+    10de..10e2  move-object/from16  v30, v0
+    10e2..10e6  move-object/from16  v31, v10
+    10e6..10ea  move-wide/from16  v35, v16
+    10ea..10ee  move/from16  v38, v8
+    10ee..10f4  invoke-static/range  {v24..v38}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A06(LX/0DY;Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/PhoneUserJid;Lcom/whatsapp/infra/core/jid/PhoneUserJid;LX/1dW;Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;Ljava/lang/String;Ljava/lang/String;Ljava/util/Collection;IJZZ)Z
+    10f4..10f6  move-result  v4
+    10f6..10f8  goto  +0x8
+    10f8..10fe  invoke-virtual  {v3}, Ljava/util/concurrent/atomic/AtomicInteger;->decrementAndGet()I
+    10fe..1104  invoke-static  {v2}, LX/2L6;->A1b(Ljava/lang/Object;)Z
+    1104..1106  move-result  v4
+    1106..110a  iget-object  v5, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0O:LX/18U;
+    110a..110e  if-eqz  v5, +0x26
+    110e..1118  const-wide  v2, #0x400000000000 (70368744177664)
+    1118..111e  invoke-virtual  {v5, v2, v3}, LX/18U;->A0h(J)Z
+    111e..1120  move-result  v2
+    1120..1124  if-eqz  v2, +0x1b
+    1124..1128  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A17:LX/Ex8;
+    1128..112c  if-nez  v2, +0x8
+    112c..1130  const-string  v0, "pqMigrationChecker"
+    1130..1136  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    1136..1138  throw  v1
+    1138..113c  iget-object  v2, v2, LX/Ex8;->A01:LX/05a;
+    113c..1142  invoke-static  {v2}, LX/6oi;->A0K(LX/05a;)LX/08Y;
+    1142..1144  move-result-object  v3
+    1144..1148  sget-object  v2, LX/EMv;->A02:LX/00f;
+    1148..114e  invoke-static  {v3, v2}, LX/00E;->A0F(LX/00E;LX/00f;)Z
+    114e..1150  move-result  v2
+    1150..1152  const/4  v7, #0x1
+    1152..1156  if-nez  v2, +0x5
+    1156..1158  const/4  v7, #0x0
+    1158..115c  if-eqz  v5, +0xb
+    115c..1160  const-wide/high16  v2, #0x1000000000000
+    1160..1166  invoke-virtual  {v5, v2, v3}, LX/18U;->A0h(J)Z
+    1166..1168  move-result  v2
+    1168..116a  const/4  v6, #0x1
+    116a..116e  if-nez  v2, +0x5
+    116e..1170  const/4  v6, #0x0
+    1170..1174  if-eqz  v5, +0xb
+    1174..1178  const-wide/high16  v2, #0x2000000000000
+    1178..117e  invoke-virtual  {v5, v2, v3}, LX/18U;->A0h(J)Z
+    117e..1180  move-result  v2
+    1180..1184  if-eqz  v2, +0x3
+    1184..1186  const/4  v8, #0x1
+    1186..118a  if-eqz  v4, +0x3c
+    118a..118e  if-eqz  v5, +0x1a
+    118e..1192  if-nez  v7, +0x6
+    1192..1196  if-nez  v6, +0x4
+    1196..119a  if-eqz  v8, +0x14
+    119a..119e  instance-of  v2, v5, LX/1eq;
+    119e..11a2  if-nez  v2, +0x10
+    11a2..11a6  iget-object  v3, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0Q:LX/0a2;
+    11a6..11aa  if-nez  v3, +0x8
+    11aa..11ae  const-string  v0, "fMessageDatabase"
+    11ae..11b4  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    11b4..11b6  goto  -0x3f
+    11b6..11b8  const/4  v2, #0xff (-1)
+    11b8..11be  invoke-virtual  {v3, v5, v2}, LX/0a2;->A09(LX/18U;I)Z
+    11be..11c4  invoke-direct  {v0}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A03()Z
+    11c4..11c6  move-result  v2
+    11c6..11ca  if-eqz  v2, +0x2f
+    11ca..11ce  iget-object  v2, v9, LX/1dW;->A00:LX/0DY;
+    11ce..11d4  invoke-static  {v2}, LX/0Dn;->A0k(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    11d4..11d6  move-result  v2
+    11d6..11da  if-eqz  v2, +0x27
+    11da..11de  iget-object  v3, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0D:LX/08Y;
+    11de..11e2  if-nez  v3, +0x8
+    11e2..11e6  const-string  v0, "abProps"
+    11e6..11ec  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    11ec..11ee  throw  v1
+    11ee..11f2  const/16  v2, #0x7146
+    11f2..11f8  invoke-virtual  {v3, v2}, LX/00E;->A14(I)Z
+    11f8..11fa  move-result  v2
+    11fa..11fe  if-eqz  v2, +0x15
+    11fe..1202  iget-object  v5, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0b:LX/0TX;
+    1202..1206  if-nez  v5, +0x8
+    1206..120a  const-string  v0, "inFlightMessages"
+    120a..1210  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    1210..1212  goto  -0x6d
+    1212..1216  iget-object  v3, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A0J:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    1216..121c  invoke-direct  {v0}, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A01()Ljava/util/HashSet;
+    121c..121e  move-result-object  v2
+    121e..1224  invoke-virtual  {v5, v3, v9, v2}, LX/0TX;->A04(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/1dW;Ljava/util/Set;)V
+    1224..1228  sget-object  v7, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A1U:Ljava/util/concurrent/ConcurrentHashMap;
+    1228..122c  iget-object  v6, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->jid:Ljava/lang/String;
+    122c..1230  iget-object  v5, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->id:Ljava/lang/String;
+    1230..1234  iget  v3, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->editVersion:I
+    1234..1238  iget-object  v2, v0, Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->participant:Ljava/lang/String;
+    1238..123c  new-instance  v0, LX/Ef1;
+    123c..1242  invoke-direct  {v0, v6, v5, v3, v2}, LX/Ef1;-><init>(Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;)V
+    1242..1248  invoke-virtual  {v7, v0}, Ljava/util/AbstractMap;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+    1248..124c  move-object/from16  v0, v18
+    124c..1252  invoke-static  {v0, v4}, LX/2L8;->A1M(Ljava/lang/String;Z)Ljava/lang/StringBuilder;
+    1252..1254  move-result-object  v2
+    1254..1258  const-string  v0, " : "
+    1258..125e  invoke-static  {v0, v10, v2}, LX/DBh;->A1G(Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    125e..1260  return-void
+    1260..1266  invoke-static  {}, LX/2L8;->A1C()Ljava/lang/IllegalStateException;
+    1266..1268  move-result-object  v0
+    1268..126a  throw  v0
+    126a..126c  move-exception  v2
+    126c..126e  goto  +0x2
+    126e..1270  move-exception  v2
+    1270..1274  const-string  v0, "SendE2EMessageJob/ onRun/exception while sending message: "
+    1274..127a  invoke-static  {v0, v10, v2}, LX/6oe;->A1R(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+    127a..127e  new-instance  v0, LX/ED8;
+    127e..1284  invoke-direct  {v0, v1, v2}, LX/ED8;-><init>(LX/Ehw;Ljava/lang/Throwable;)V
+    1284..1286  throw  v0
+    1286..1288  nop
+    1288..12a0  packed-switch-payload  size=4
+    # exception table: 6 try range(s)
+    # catch Ljava/lang/RuntimeException; code_units 0035..0058 -> 0935
+    # catch Ljava/lang/RuntimeException; code_units 0058..0476 -> 0937
+    # catch Ljava/lang/RuntimeException; code_units 047c..0590 -> 0937
+    # catch Ljava/lang/RuntimeException; code_units 0596..085f -> 0937
+    # catch <all> code_units 085f..0864 -> 0864
+    # catch Ljava/lang/RuntimeException; code_units 0864..0935 -> 0937
+.end method

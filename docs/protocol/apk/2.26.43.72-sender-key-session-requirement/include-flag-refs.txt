@@ -1,0 +1,10 @@
+classes8.dex  Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;-><init>(VLLLLLLLLLLLLLLLLLLIIIJJJJJZZZZZZZZZZ)
+  write opcode 0x5c, dex byte offset: 0x8d84bc
+classes8.dex  Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A00(L)
+  read opcode 0x55, dex byte offset: 0x8d8634
+classes8.dex  Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A02(VLL)
+  read opcode 0x55, dex byte offset: 0x8d87b6
+classes8.dex  Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A06(ZLLLLLLLLLLIJZZ)
+  read opcode 0x55, dex byte offset: 0x8d962e
+classes8.dex  Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A06(ZLLLLLLLLLLIJZZ)
+  read opcode 0x55, dex byte offset: 0x8d9c8e

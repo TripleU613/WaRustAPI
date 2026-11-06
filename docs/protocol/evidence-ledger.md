@@ -7104,3 +7104,14 @@ destination rewrite helper inspected here is FBID-migration-specific; Efa's
 null type default does not prove the out-of-band producer leaves type unset.
 [Exact offsets, retained exports and remaining producer gap](apk/2.26.43.72-message-ack-forwarding/README.md).
 No runtime guard, replay policy or live account operation changed.
+
+### Sender-key requirement/session boundary (2026-11-05)
+
+**Confirmed static, APK43.72:** the sender-key requirement inherits conditional
+recipient selection and pairwise session readiness. A selected hash mismatch
+retains the original candidate set instead of applying later sent-key filtering.
+The latched A07/A08 booleans come from session/PQ policy, not distribution ACKs.
+The exact native ordinary direct-SKDM producer is still unlocated; the status
+requester and include flag do not establish it.
+[Methods, offsets, search scope and unknowns](apk/2.26.43.72-sender-key-session-requirement/README.md).
+No Rust runtime, replay or live account behavior changed.

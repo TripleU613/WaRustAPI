@@ -1,3 +1,13 @@
+2026-11-05 — **Sender-key prerequisite selection separated from delivery ACKs.**
+
+Native selected hash mismatch retains original session candidates; inherited
+session/PQ checks do not establish a separate distribution ACK producer.
+[Retained methods, branch limits and remaining producer gap](docs/protocol/apk/2.26.43.72-sender-key-session-requirement/README.md).
+Validation: fmt, strict Clippy, CLI reference, OpenAPI, APK coverage, pinned
+APK identity and staged checksum/link hygiene passed. No new workspace test
+run for this research-only chunk. No Rust source or live account operation
+changed.
+
 2026-11-05 — **Selected ordinary message ACK forwarding connected.**
 
 Success/refusal event branches return to original-key callback lookup. The

@@ -15837,6 +15837,15 @@
     "evidence": "docs/protocol/apk/2.26.43.72-sender-key-ack-confirmation/README.md",
     "description": "Traces native message ACK callback registration and wait, successful normal sender-key marking and conditional one-time-key reset. Connects registration-time pre-ACK marker snapshot to matched callback retirement after wrapped result. Rust per-distribution durable confirmation and native address ownership remain incomplete. Evidence only; no command, HTTP route or production behavior change."
   },
+  "x-sender-key-session-requirement-evidence": {
+    "x-cli": false,
+    "x-transport": [
+      "offline pinned-APK evidence only"
+    ],
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-sender-key-session-requirement/README.md",
+    "description": "Native sender-key requirement recipient/hash selection and pairwise session readiness traced. Selected hash mismatch retains original candidates. Session/PQ latches and status requester do not establish a normal direct-SKDM producer or ACK tuple. No new command, route, runtime policy or live behavior."
+  },
   "x-ack-message-forwarding-evidence": {
     "x-cli": false,
     "x-transport": [

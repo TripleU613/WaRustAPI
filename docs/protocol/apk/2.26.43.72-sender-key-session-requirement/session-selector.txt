@@ -1,0 +1,14 @@
+
+# class: LX/F3k;
+# extends: Ljava/lang/Object;
+
+.method public A08(LLLL)  # .registers 4
+    # full signature: LX/F3k;->A08(LX/E7N;Lcom/whatsapp/productinfra/messaging/jobqueue/requirement/AxolotlMultiDeviceSessionRequirement;Ljava/util/Collection;)Ljava/util/List;
+    0000..0004  iget  v0, v2, Lcom/whatsapp/productinfra/messaging/jobqueue/requirement/AxolotlMultiDeviceSessionRequirement;->sessionScopeValue:I
+    0004..000a  invoke-static  {v0}, LX/EHr;->A00(I)LX/E78;
+    000a..000c  move-result-object  v0
+    000c..0012  invoke-static  {v0, v1, v3}, LX/F3k;->A07(LX/E78;LX/E7N;Ljava/util/Collection;)Ljava/util/List;
+    0012..0014  move-result-object  v0
+    0014..0016  return-object  v0
+    # exception table: 0 try range(s)
+.end method

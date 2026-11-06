@@ -309,3 +309,14 @@ filtered these types. Red/green regression covers state equality, blocked reserv
 reopen, later valid settlement, duplicate refusal and complete local assembly.
 No new callback authority, key adoption, timeout or automatic retry is added.
 [Evidence, scope and unresolved native lifetime](device-key-batches.md#key-batch-reply-admission-correction-2026-11-05).
+
+### Sender-key requirement/session boundary (2026-11-05)
+
+**Confirmed static, APK43.72:** the sender-key requirement inherits conditional
+recipient selection and pairwise session readiness. A selected hash mismatch
+retains the original candidate set instead of applying later sent-key filtering.
+The latched A07/A08 booleans come from session/PQ policy, not distribution ACKs.
+The exact native ordinary direct-SKDM producer is still unlocated; the status
+requester and include flag do not establish it.
+[Methods, offsets, search scope and unknowns](apk/2.26.43.72-sender-key-session-requirement/README.md).
+No Rust runtime, replay or live account behavior changed.

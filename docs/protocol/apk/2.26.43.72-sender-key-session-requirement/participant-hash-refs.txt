@@ -1,0 +1,4 @@
+classes8.dex  Lcom/whatsapp/productinfra/messaging/jobqueue/requirement/AxolotlMultiDeviceSenderKeyRequirement;-><init>(VLLLLLLIZZ)
+  write opcode 0x5b, dex byte offset: 0x52ebf0
+classes8.dex  Lcom/whatsapp/productinfra/messaging/jobqueue/requirement/AxolotlMultiDeviceSessionRequirement;->A01(L)
+  read opcode 0x54, dex byte offset: 0x87c7be

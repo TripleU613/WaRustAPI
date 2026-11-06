@@ -1,0 +1,102 @@
+
+# class: LX/0WJ;
+# extends: Ljava/lang/Object;
+
+.method public A18(ZL)  # .registers 10
+    # full signature: LX/0WJ;->A18(Ljava/util/List;)Z
+    0000..0004  const-string  v5, "SignalCoordinator/containsAllSessions/invalid sessions found: "
+    0004..0008  const-string  v1, "containsAllSessions"
+    0008..000c  new-instance  v0, Ljava/util/HashSet;
+    000c..0012  invoke-direct  {v0, v9}, Ljava/util/HashSet;-><init>(Ljava/util/Collection;)V
+    0012..0018  invoke-direct  {v8, v1, v0}, LX/0WJ;->A0A(Ljava/lang/String;Ljava/util/Set;)Ljava/util/LinkedHashMap;
+    0018..001a  move-result-object  v0
+    001a..0020  invoke-interface  {v0}, Ljava/util/Map;->values()Ljava/util/Collection;
+    0020..0022  move-result-object  v0
+    0022..0026  new-instance  v7, Ljava/util/ArrayList;
+    0026..002c  invoke-direct  {v7, v0}, Ljava/util/ArrayList;-><init>(Ljava/util/Collection;)V
+    002c..0030  new-instance  v4, Ljava/util/HashSet;
+    0030..0036  invoke-direct  {v4}, Ljava/util/HashSet;-><init>()V
+    0036..003a  new-instance  v2, Ljava/util/HashSet;
+    003a..0040  invoke-direct  {v2}, Ljava/util/HashSet;-><init>()V
+    0040..0042  const/4  v0, #0x1
+    0042..0046  new-array  v3, v0, [I
+    0046..004c  invoke-direct  {v8}, LX/0WJ;->A0I()Z
+    004c..004e  move-result  v0
+    004e..0052  if-eqz  v0, +0x39
+    0052..0056  iget-object  v6, v8, LX/0WJ;->A0I:LX/0Wk;
+    0056..005a  new-instance  v0, Ljava/util/HashSet;
+    005a..0060  invoke-direct  {v0, v7}, Ljava/util/HashSet;-><init>(Ljava/util/Collection;)V
+    0060..0066  invoke-virtual  {v6, v0}, LX/0Wk;->A07(Ljava/util/Set;)Ljava/util/HashSet;
+    0066..0068  move-result-object  v1
+    0068..006e  invoke-virtual  {v6, v1}, LX/0Wk;->A08(Ljava/util/Set;)V
+    006e..0074  invoke-direct  {v8, v7, v4, v2, v3}, LX/0WJ;->A08(Ljava/util/List;Ljava/util/Set;Ljava/util/Set;[I)Ljava/lang/Boolean;
+    0074..0076  move-result-object  v0
+    0076..007a  if-eqz  v0, +0x7
+    007a..0080  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue()Z
+    0080..0082  move-result  v4
+    0082..0084  goto  +0x6e
+    0084..008a  invoke-virtual  {v4}, Ljava/util/AbstractCollection;->isEmpty()Z
+    008a..008c  move-result  v0
+    008c..0090  if-nez  v0, +0x57
+    0090..0094  new-instance  v0, Ljava/lang/StringBuilder;
+    0094..009a  invoke-direct  {v0, v5}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    009a..00a0  invoke-virtual  {v0, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    00a0..00a6  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00a6..00a8  move-result-object  v0
+    00a8..00ae  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    00ae..00b4  invoke-direct  {v8, v4}, LX/0WJ;->A0H(Ljava/util/Set;)V
+    00b4..00b6  goto  +0x43
+    00b6..00b8  move-exception  v0
+    00b8..00be  invoke-static  {v1}, LX/0Wk;->A03(Ljava/util/Set;)V
+    00be..00c0  throw  v0
+    00c0..00c4  iget-object  v0, v8, LX/0WJ;->A05:LX/00x;
+    00c4..00ca  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    00ca..00cc  move-result-object  v1
+    00cc..00ce  monitor-enter
+    00ce..00d4  invoke-direct  {v8, v7, v4, v2, v3}, LX/0WJ;->A08(Ljava/util/List;Ljava/util/Set;Ljava/util/Set;[I)Ljava/lang/Boolean;
+    00d4..00d6  move-result-object  v0
+    00d6..00da  if-eqz  v0, +0x8
+    00da..00e0  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue()Z
+    00e0..00e2  move-result  v4
+    00e2..00e4  monitor-exit
+    00e4..00e6  return  v4
+    00e6..00e8  monitor-exit
+    00e8..00ee  invoke-virtual  {v4}, Ljava/util/AbstractCollection;->isEmpty()Z
+    00ee..00f0  move-result  v0
+    00f0..00f4  if-nez  v0, +0x28
+    00f4..00f8  new-instance  v0, Ljava/lang/StringBuilder;
+    00f8..00fe  invoke-direct  {v0, v5}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00fe..0104  invoke-virtual  {v0, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0104..010a  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    010a..010c  move-result-object  v0
+    010c..0112  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0112..0118  invoke-virtual  {v4}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+    0118..011a  move-result-object  v1
+    011a..0120  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    0120..0122  move-result  v0
+    0122..0126  if-eqz  v0, +0xf
+    0126..012c  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    012c..012e  move-result-object  v0
+    012e..0132  check-cast  v0, LX/EoY;
+    0132..0138  invoke-static  {v8, v0}, LX/0WJ;->A00(LX/0WJ;LX/EoY;)LX/Etk;
+    0138..013a  goto  -0xf
+    013a..0140  invoke-static  {v1}, LX/0Wk;->A03(Ljava/util/Set;)V
+    0140..0146  invoke-virtual  {v4}, Ljava/util/AbstractCollection;->isEmpty()Z
+    0146..0148  move-result  v4
+    0148..014a  const/4  v0, #0x0
+    014a..014e  aget  v1, v3, v0
+    014e..0154  invoke-virtual  {v2}, Ljava/util/AbstractCollection;->size()I
+    0154..0156  move-result  v0
+    0156..015a  if-eq  v1, v0, +0x7
+    015a..015c  const/4  v4, #0x0
+    015c..015e  return  v4
+    015e..0164  invoke-static  {v1}, LX/0Wk;->A03(Ljava/util/Set;)V
+    0164..0166  return  v4
+    0166..0168  move-exception  v0
+    0168..016a  monitor-exit
+    016a..016c  throw  v0
+    # exception table: 3 try range(s)
+    # catch <all> code_units 0034..005b -> 005b
+    # catch <all> code_units 0067..0074 -> 00b3
+    # catch <all> code_units 00b4..00b5 -> 00b3
+.end method
