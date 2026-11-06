@@ -4562,3 +4562,14 @@ on its old environment until reconnected; no client-wide restart was attempted.
 The provider-cache accessor audit narrows the prior reset uncertainty to selected
 initialization paths without inventing account-switch or replay authority.
 No protocol or live-account behavior changed.
+
+## Blocklist recovery contains a separate MEX request (2026-11-06)
+
+[Current pinned migration obligation](chat-actions.md#blocklist-migration-request-and-state-authority-2026-11-06)
+connects selected dirty-list merge/lookup, persisted addressing mode, distinct
+MigrateBlocklistLid input/response and conditional cache adoption. This closes
+selected call/field links while retaining the absence of a Rust sender and
+complete mode/identifier/callback authority. Native isRollback completion can
+log without either mode or cache writes. Do not replay the original set or
+promote a current cached mapping into migration permission. No runtime change,
+new timer, automatic fetch or live operation.

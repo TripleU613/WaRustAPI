@@ -1,0 +1,15 @@
+
+# class: LX/6pA;
+# extends: Ljava/lang/Object;
+
+.method public A02(Z)  # .registers 2
+    # full signature: LX/6pA;->A02()Z
+    0000..0004  iget-object  v0, v1, LX/6pA;->A00:LX/05a;
+    0004..000a  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    000a..000c  move-result-object  v0
+    000c..0010  check-cast  v0, LX/3BU;
+    0010..0016  invoke-virtual  {v0}, LX/3BU;->A01()Z
+    0016..0018  move-result  v0
+    0018..001a  return  v0
+    # exception table: 0 try range(s)
+.end method

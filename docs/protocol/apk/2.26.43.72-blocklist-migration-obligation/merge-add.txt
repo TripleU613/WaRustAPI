@@ -1,0 +1,26 @@
+
+# class: LX/07W;
+# extends: LX/07V;
+
+.method public A0M(VLL)  # .registers 3
+    # full signature: LX/07W;->A0M(Ljava/lang/Iterable;Ljava/util/Collection;)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  const/4  v0, #0x1
+    000a..0010  invoke-static  {v1, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0010..0014  instance-of  v0, v1, Ljava/util/Collection;
+    0014..0018  if-eqz  v0, +0x8
+    0018..001c  check-cast  v1, Ljava/util/Collection;
+    001c..0022  invoke-interface  {v2, v1}, Ljava/util/Collection;->addAll(Ljava/util/Collection;)Z
+    0022..0024  return-void
+    0024..002a  invoke-interface  {v1}, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
+    002a..002c  move-result-object  v1
+    002c..0032  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    0032..0034  move-result  v0
+    0034..0038  if-eqz  v0, -0x9
+    0038..003e  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    003e..0040  move-result-object  v0
+    0040..0046  invoke-interface  {v2, v0}, Ljava/util/Collection;->add(Ljava/lang/Object;)Z
+    0046..0048  goto  -0xd
+    # exception table: 0 try range(s)
+.end method

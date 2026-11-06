@@ -1584,3 +1584,18 @@ Regression duplicate_result_payloads_refuse_without_update_fallback_or_content_e
 **Confirmed static APK43.72:** [concrete telemetry methods, callback binding and exact-field inventories](apk/2.26.43.72-mex-error-dispatch/README.md) resolve0mT.A02 as telemetry; product failure instead goes through0mZ.A00 ->Bx5(Throwable) ->BaseMexCallback.A06 ->A08(Hbw). The product callback wraps the exception afresh, distinct from the telemetry Hbw. Both exact7Ol.A01 and7MD.error field inventories contain only constructor writes; inherited original-IQ consumers/reflection/native access remain outside that search.
 
 **Unknown / unchanged:** broader raw-IQ/backoff consumers, reporting policy, all product callbacks and Pando. Telemetry completion does not establish product completion or response adoption. No runtime change, retry authority or live operation added.
+
+## Current blocklist migration obligation (2026-11-06)
+
+**Pinned APK2.26.43.72 selected static:** [MigrateBlocklistLid operation export,
+request/response and mode/rollback gates](apk/2.26.43.72-blocklist-migration-obligation/README.md)
+identify namespace whatsapp-android-mex, server doc_id25028600226770432,
+client_doc_id12789525189554463941782259879 and response root
+xwa2_migrate_blocklist_lid. The outer input wrapper contains dhash and blocklist;
+each entry has jid/nested identifier, with conditional dirty_ack at the outer
+level. Setter presence is not proof of serialized null/omission rules.
+
+This is an unported recovery request, not ordinary blocklist/set replay or a
+new runtime route. Its asset differs from the historical37.71 group queries
+above. Final wire envelope/transport, effective mode, identifier provenance,
+callback/deadline and safe adoption remain open. No new request was sent.

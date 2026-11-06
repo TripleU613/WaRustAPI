@@ -1123,3 +1123,34 @@ strict workspace/all-target/all-feature Clippy, formatting, CLI reference
 regeneration, OpenAPI library coverage, APK coverage freshness and repository
 hygiene pass. Five selected DEX exports reproduce byte-for-byte; subject hash,
 complete REA source with warnings and bundle checksums are retained/verified.
+
+## Blocklist migration request and state authority (2026-11-06)
+
+**Confirmed selected static, pinned APK43.72:** [complete worker/constructor,
+mode storage/census, migration builder/response and asset export](apk/2.26.43.72-blocklist-migration-obligation/README.md)
+close8bU worker0 ->1dH.A0O and expose the distinct dirty worker1 path through
+lookup/merge and MigrateBlocklistLid. Its whatsapp-android-mex descriptor uses
+server doc_id25028600226770432; input holds dhash, blocklist entries with nested
+identifier, and a conditional dirty_ack=true setter. Concrete identifier values
+come from multiple providers; full authority/null serialization remains open.
+
+3BU stores is_blocklist_lid_based through the namespaced0aj store. A parsed
+LID/mapping is not proof of that mode. The selected manager accepts7Da, but
+only isRollback=false both writes mode=true and adopts returned cache data.
+The true branch still reaches the completion log while skipping both writes.
+Missing typed response structure or caughtGiw yields7Db; manager throws7gZ.
+Parsed response, log completion and account-safe adoption are separate results.
+
+Rust's matched=false warning/manual full-fetch path remains unchanged and is
+not native migration equivalence. MigrateBlocklistLid sender, mode adoption,
+lookup/alias authority, full metadata/serialization, final envelope, callback
+lifetime/deadline and writer/account-generation policy remain unported. No
+classic20s block/set or guessed32s MEX timeout is assigned. No action replay,
+automatic fetch or live account operation. Shared helper0Ef.A06 is a union;
+parsed878.A01 keys are PN-association input, not an invented local block cache.
+
+Validation:18 selected DEX/census/asset exports reproduce byte-for-byte; the
+MEX extractor's provenance check, APK subject hash, complete REA manager source
+and bundle checksums match. Formatting, CLI reference regeneration, OpenAPI
+library coverage, APK coverage freshness and repository hygiene pass. No Rust
+behavior changed, so no new runtime-test or live-result claim is made.

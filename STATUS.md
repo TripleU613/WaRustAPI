@@ -1,3 +1,12 @@
+2026-11-06 — **Blocklist migration request and state authority traced.**
+
+Pinned MigrateBlocklistLid MEX operation has a distinct input/hash/list/dirty-ack
+builder and response path. Selected worker0 adopts a supplied snapshot; worker1
+resolves/merges identities before migration. Persisted addressing mode and the
+isRollback guard control state writes; completion log alone proves neither.
+[Evidence, identifiers and unported boundaries](docs/protocol/chat-actions.md#blocklist-migration-request-and-state-authority-2026-11-06).
+No Rust behavior change or live account operation.
+
 2026-11-06 — **Malformed blocklist children cannot erase the cache.**
 
 Pinned parser requires every list child to be item. Rust now refuses unknown

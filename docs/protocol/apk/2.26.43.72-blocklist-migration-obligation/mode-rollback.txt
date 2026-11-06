@@ -1,0 +1,20 @@
+
+# class: LX/6pA;
+# extends: Ljava/lang/Object;
+
+.method public A01(V)  # .registers 3
+    # full signature: LX/6pA;->A01()V
+    0000..0004  iget-object  v0, v2, LX/6pA;->A00:LX/05a;
+    0004..000a  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    000a..000c  move-result-object  v1
+    000c..0010  check-cast  v1, LX/3BU;
+    0010..0012  const/4  v0, #0x0
+    0012..0018  invoke-virtual  {v1, v0}, LX/3BU;->A00(Z)V
+    0018..001c  iget-object  v0, v2, LX/6pA;->A02:LX/05a;
+    001c..0022  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0022..0024  move-result-object  v0
+    0024..0028  check-cast  v0, LX/0W9;
+    0028..002e  invoke-virtual  {v0}, LX/0W9;->A03()V
+    002e..0030  return-void
+    # exception table: 0 try range(s)
+.end method

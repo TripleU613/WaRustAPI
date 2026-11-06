@@ -1,0 +1,18 @@
+{
+  "format_version": 1,
+  "apk_version": "2.26.43.72",
+  "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+  "namespace": "whatsapp-android-mex",
+  "asset_path": "assets/whatsapp-android-mex_client_persist_ids.json",
+  "asset_sha256": "a30a4b3ce55150747820bbf353e5d2e742fde19e2a11dd3e43b094d7088ae797",
+  "operations": {
+    "MigrateBlocklistLid": {
+      "operation_name": "MigrateBlocklistLid",
+      "operation_name_hash": "1278952518",
+      "operation_text_hash": "9554463941782259879",
+      "client_doc_id": "12789525189554463941782259879",
+      "doc_id": "25028600226770432",
+      "schema": "whatsapp_mex"
+    }
+  }
+}

@@ -1,0 +1,124 @@
+
+# class: LX/88m;
+# extends: Ljava/lang/Object;
+
+.method public A01(VLL)  # .registers 11
+    # full signature: LX/88m;->A01(LX/88m;Ljava/util/Set;)V
+    0000..0004  iget-object  v0, v9, LX/88m;->A06:LX/05a;
+    0004..0008  iget-object  v4, v0, LX/05a;->A00:LX/00x;
+    0008..000e  invoke-interface  {v4}, LX/00x;->get()Ljava/lang/Object;
+    000e..0010  move-result-object  v0
+    0010..0014  check-cast  v0, LX/3KB;
+    0014..001a  invoke-virtual  {v0, v10}, LX/3KB;->A02(Ljava/util/Set;)Ljava/util/Set;
+    001a..001c  move-result-object  v0
+    001c..0022  invoke-static  {}, LX/1Xl;->A18()Ljava/util/ArrayList;
+    0022..0024  move-result-object  v2
+    0024..002a  invoke-interface  {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    002a..002c  move-result-object  v1
+    002c..0032  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    0032..0034  move-result  v0
+    0034..0038  if-eqz  v0, +0x6
+    0038..003e  invoke-static  {v2, v1}, LX/2LE;->A1I(Ljava/util/AbstractCollection;Ljava/util/Iterator;)V
+    003e..0040  goto  -0x9
+    0040..0046  invoke-static  {v2}, LX/07Z;->A1R(Ljava/lang/Iterable;)Ljava/util/Set;
+    0046..0048  move-result-object  v3
+    0048..004e  invoke-interface  {v3}, Ljava/util/Set;->isEmpty()Z
+    004e..0050  move-result  v0
+    0050..0054  if-nez  v0, +0xb8
+    0054..005a  invoke-interface  {v4}, LX/00x;->get()Ljava/lang/Object;
+    005a..005c  move-result-object  v1
+    005c..0060  check-cast  v1, LX/3KB;
+    0060..0062  const/4  v0, #0x0
+    0062..0064  const/4  v8, #0x0
+    0064..006a  invoke-static  {v1, v8, v3, v0}, LX/3KB;->A00(LX/3KB;Ljava/lang/Long;Ljava/util/Set;Z)LX/1xM;
+    006a..006c  move-result-object  v1
+    006c..0072  invoke-virtual  {v1}, LX/1xM;->A01()Z
+    0072..0074  move-result  v0
+    0074..0078  xor-int/lit8  v0, v0, #0x1
+    0078..007c  if-nez  v0, +0x7b
+    007c..0080  iget-object  v0, v9, LX/88m;->A05:LX/05a;
+    0080..0086  invoke-static  {v0}, LX/2L8;->A15(LX/05a;)LX/0Ws;
+    0086..0088  move-result-object  v0
+    0088..008e  invoke-virtual  {v0, v3}, LX/0Ws;->A0S(Ljava/util/Set;)Ljava/util/Map;
+    008e..0090  move-result-object  v0
+    0090..0096  invoke-interface  {v0}, Ljava/util/Map;->keySet()Ljava/util/Set;
+    0096..0098  move-result-object  v0
+    0098..009e  invoke-interface  {v3, v0}, Ljava/util/Set;->removeAll(Ljava/util/Collection;)Z
+    009e..00a4  invoke-interface  {v3}, Ljava/util/Set;->isEmpty()Z
+    00a4..00a6  move-result  v0
+    00a6..00aa  if-nez  v0, +0x8d
+    00aa..00ae  const/16  v1, #0x4e3
+    00ae..00b2  iget-object  v0, v9, LX/88m;->A08:LX/05a;
+    00b2..00b8  invoke-static  {v0, v1}, LX/6ol;->A0K(LX/05a;I)LX/05a;
+    00b8..00ba  move-result-object  v7
+    00ba..00be  iget-object  v0, v9, LX/88m;->A04:LX/05a;
+    00be..00c4  invoke-static  {v0}, LX/2LB;->A0Z(LX/05a;)LX/0bD;
+    00c4..00c6  move-result-object  v0
+    00c6..00cc  invoke-virtual  {v0, v3}, LX/0bD;->A0G(Ljava/util/Collection;)Ljava/util/HashMap;
+    00cc..00ce  move-result-object  v6
+    00ce..00d4  invoke-static  {}, LX/1Xl;->A18()Ljava/util/ArrayList;
+    00d4..00d6  move-result-object  v5
+    00d6..00dc  invoke-interface  {v3}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    00dc..00de  move-result-object  v2
+    00de..00e4  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    00e4..00e6  move-result  v0
+    00e6..00e8  const/4  v4, #0x1
+    00e8..00ec  if-eqz  v0, +0x16
+    00ec..00f2  invoke-interface  {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    00f2..00f4  move-result-object  v1
+    00f4..00fa  invoke-virtual  {v6, v1}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    00fa..00fc  move-result-object  v0
+    00fc..0100  check-cast  v0, LX/0wj;
+    0100..0104  if-eqz  v0, -0x11
+    0104..0108  iget-boolean  v0, v0, LX/0wj;->A0A:Z
+    0108..010c  if-ne  v0, v4, -0x15
+    010c..0112  invoke-virtual  {v5, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0112..0114  goto  -0x1a
+    0114..011a  invoke-interface  {v5}, Ljava/util/List;->isEmpty()Z
+    011a..011c  move-result  v0
+    011c..0120  if-nez  v0, +0x1d
+    0120..0124  const-string  v0, ", "
+    0124..012a  invoke-static  {v0, v5, v8}, LX/2LB;->A17(Ljava/lang/CharSequence;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
+    012a..012c  move-result-object  v1
+    012c..0132  invoke-static  {v7}, LX/2L9;->A0V(LX/05a;)LX/0B0;
+    0132..0134  move-result-object  v2
+    0134..0138  const-string  v0, "Jids with missing mappings = ["
+    0138..013e  invoke-static  {v0, v1}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    013e..0140  move-result-object  v1
+    0140..0144  const-string  v0, "]"
+    0144..014a  invoke-static  {v0, v1}, LX/1Xl;->A0z(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    014a..014c  move-result-object  v1
+    014c..0150  const-string  v0, "BlocklistLidMigration/MissingLidMappingsForWhatsAppContact"
+    0150..0156  invoke-virtual  {v2, v0, v1, v4, v4}, LX/0B0;->A0h(Ljava/lang/String;Ljava/lang/String;ZI)V
+    0156..015a  iget-object  v0, v9, LX/88m;->A03:LX/05a;
+    015a..0160  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0160..0162  move-result-object  v0
+    0162..0166  check-cast  v0, LX/DCH;
+    0166..016c  invoke-virtual  {v0, v3}, LX/DCH;->A01(Ljava/util/Set;)Ljava/util/Map;
+    016c..016e  return-void
+    016e..0172  iget  v2, v1, LX/1xM;->A00:I
+    0172..0178  invoke-static  {}, LX/1Xl;->A13()Ljava/lang/StringBuilder;
+    0178..017a  move-result-object  v1
+    017a..017e  const-string  v0, "BlocklistLidMigrationManager/Request Missing Lids Sync Failed, SyncResultType = "
+    017e..0184  invoke-static  {v0, v1, v2}, LX/1Xl;->A11(Ljava/lang/String;Ljava/lang/StringBuilder;I)Ljava/lang/String;
+    0184..0186  move-result-object  v1
+    0186..018a  new-instance  v0, LX/7gZ;
+    018a..0190  invoke-direct  {v0, v1}, LX/7gZ;-><init>(Ljava/lang/String;)V
+    0190..0192  throw  v0
+    0192..0194  move-exception  v2
+    0194..019a  invoke-virtual  {v2}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    019a..019c  move-result-object  v1
+    019c..01a0  const-string  v0, "BlocklistLidMigrationManager/Request Missing Lids Failed. Message ="
+    01a0..01a6  invoke-static  {v0, v1}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    01a6..01a8  move-result-object  v1
+    01a8..01ac  const-string  v0, " \nException = "
+    01ac..01b2  invoke-static  {v2, v0, v1}, LX/1Xl;->A0v(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    01b2..01b4  move-result-object  v1
+    01b4..01b8  new-instance  v0, LX/7gZ;
+    01b8..01be  invoke-direct  {v0, v1}, LX/7gZ;-><init>(Ljava/lang/String;)V
+    01be..01c0  throw  v0
+    01c0..01c2  return-void
+    # exception table: 2 try range(s)
+    # catch Ljava/lang/Exception; code_units 002a..003e -> 00c9
+    # catch Ljava/lang/Exception; code_units 00b7..00c9 -> 00c9
+.end method

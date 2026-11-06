@@ -427,3 +427,13 @@ unexpected file are rejected; CI runs it before the real repository checker.
 No committed research artifact was changed to make an invalid checksum pass.
 Current APK evidence remains build 2.26.37.71 with the recorded hash; this
 repository-checker finding is observed tooling behavior, not APK behavior.
+
+## Blocklist migration authority follow-up (2026-11-06)
+
+A09 now has [pinned selected MigrateBlocklistLid request/response and
+mode/rollback evidence](chat-actions.md#blocklist-migration-request-and-state-authority-2026-11-06).
+This adds an explicit unported outbound request obligation, not a completion
+percentage or newly implemented feature. Remaining work includes final wire
+serialization, identity/mode adoption, callback lifetime/deadline and safe
+writer/account authority. Rust's manual fetch/reconciliation warning is not
+claimed as native migration parity; no sender or retry is enabled.

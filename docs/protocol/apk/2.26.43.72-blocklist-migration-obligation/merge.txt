@@ -1,0 +1,35 @@
+
+# class: LX/0Ef;
+# extends: LX/06d;
+
+.method public A06(LLL)  # .registers 4
+    # full signature: LX/0Ef;->A06(Ljava/lang/Iterable;Ljava/util/Set;)Ljava/util/LinkedHashSet;
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  const/4  v0, #0x1
+    000a..0010  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0010..0014  instance-of  v0, v2, Ljava/util/Collection;
+    0014..0018  if-eqz  v0, +0x24
+    0018..001a  move-object  v0, v2
+    001a..001e  check-cast  v0, Ljava/util/Collection;
+    001e..0024  invoke-interface  {v0}, Ljava/util/Collection;->size()I
+    0024..0026  move-result  v1
+    0026..002c  invoke-static  {v1}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    002c..002e  move-result-object  v0
+    002e..0032  if-eqz  v0, +0x17
+    0032..0038  invoke-interface  {v3}, Ljava/util/Set;->size()I
+    0038..003a  move-result  v0
+    003a..003c  add-int/2addr  v0, v1
+    003c..0042  invoke-static  {v0}, LX/05o;->A02(I)I
+    0042..0044  move-result  v1
+    0044..0048  new-instance  v0, Ljava/util/LinkedHashSet;
+    0048..004e  invoke-direct  {v0, v1}, Ljava/util/LinkedHashSet;-><init>(I)V
+    004e..0054  invoke-virtual  {v0, v3}, Ljava/util/AbstractCollection;->addAll(Ljava/util/Collection;)Z
+    0054..005a  invoke-static  {v2, v0}, LX/07W;->A0M(Ljava/lang/Iterable;Ljava/util/Collection;)V
+    005a..005c  return-object  v0
+    005c..0062  invoke-interface  {v3}, Ljava/util/Set;->size()I
+    0062..0064  move-result  v0
+    0064..0068  mul-int/lit8  v0, v0, #0x2
+    0068..006a  goto  -0x16
+    # exception table: 0 try range(s)
+.end method

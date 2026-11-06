@@ -1,0 +1,34 @@
+
+# class: LX/8bU;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLI)  # .registers 6
+    # full signature: LX/8bU;-><init>(LX/84h;LX/0wj;LX/0Ij;Ljava/lang/String;I)V
+    0000..0004  iput  v5, v0, LX/8bU;->$t:I
+    0004..0008  rsub-int/lit8  v5, v5, #0x2
+    0008..000c  if-eqz  v5, +0xe
+    000c..0012  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0012..0016  iput-object  v1, v0, LX/8bU;->A00:Ljava/lang/Object;
+    0016..001a  iput-object  v3, v0, LX/8bU;->A01:Ljava/lang/Object;
+    001a..001e  iput-object  v2, v0, LX/8bU;->A02:Ljava/lang/Object;
+    001e..0022  iput-object  v4, v0, LX/8bU;->A03:Ljava/lang/String;
+    0022..0024  return-void
+    0024..002a  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    002a..002e  iput-object  v2, v0, LX/8bU;->A00:Ljava/lang/Object;
+    002e..0032  iput-object  v1, v0, LX/8bU;->A01:Ljava/lang/Object;
+    0032..0036  iput-object  v3, v0, LX/8bU;->A02:Ljava/lang/Object;
+    0036..0038  goto  -0xc
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VLLLLI)  # .registers 6
+    # full signature: LX/8bU;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;I)V
+    0000..0004  iput  v5, v0, LX/8bU;->$t:I
+    0004..000a  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000a..000e  iput-object  v2, v0, LX/8bU;->A00:Ljava/lang/Object;
+    000e..0012  iput-object  v1, v0, LX/8bU;->A01:Ljava/lang/Object;
+    0012..0016  iput-object  v4, v0, LX/8bU;->A03:Ljava/lang/String;
+    0016..001a  iput-object  v3, v0, LX/8bU;->A02:Ljava/lang/Object;
+    001a..001c  return-void
+    # exception table: 0 try range(s)
+.end method
