@@ -354,9 +354,8 @@ pub(crate) fn prekey_user_for<'a>(reply: &'a Node, recipient: &Jid) -> Result<&'
     {
         return Err(invalid("key query was not successful"));
     }
-    if reply.child("error").is_some() {
-        return Err(invalid("server refused recipient key lookup"));
-    }
+    // APK43.72 1rA.A03 result dispatch reaches Dxh.A02, which selects
+    // list then checks each user's error. A root error cannot override result.
     let list = child(reply, "list")?;
     let same_address = |v: &Jid| {
         v.user == recipient.user
@@ -1371,7 +1370,9 @@ mod tests {
             Node::new("list").children(vec![exact]),
             Node::new("error").attr("code", "503"),
         ]);
-        assert!(prekey_bundle_for(&conflicting_outer_error, &peer).is_err());
+        // APK result dispatch preserves the valid selected user despite a root error.
+        assert!(prekey_bundle_for(&conflicting_outer_error, &peer).is_ok());
+        assert!(prekey_bundle_for(&conflicting_outer_error.attr("type", "error"), &peer).is_err());
     }
 
     #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]

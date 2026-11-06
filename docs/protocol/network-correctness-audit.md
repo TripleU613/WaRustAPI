@@ -4497,3 +4497,7 @@ exact reply/query/target/bundle checks with assembled. Corrupt earlier wire can
 no longer authorize an extra query from its status flag alone. Stored summary
 counts remain diagnostic. [Regression matrix and scope](device-key-batches.md#saved-answered-pages-cannot-authorize-continuation-by-status-alone-2026-11-06).
 No retry, pin replacement, wire change or live operation.
+
+## Directory result dispatch (2026-11-06)
+
+Confirmed static APK43.72 outer-type dispatch now governs shared bundle and frozen-page adoption. A root error inside a result no longer overrides its validated device list. Per-user refusals and cryptographic checks remain. [Evidence, regression and remaining diagnostic attribution gap](device-key-batches.md#directory-result-and-error-branch-selection-2026-11-06). No live requests.

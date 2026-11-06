@@ -1,3 +1,8 @@
+Directory-key adoption now follows APK outer IQ type: a stray root error does
+not override a valid result list. Per-user refusal and crypto guards remain.
+Diagnostic mixed-result attribution is a separate open gap.
+[Evidence](docs/protocol/device-key-batches.md#directory-result-and-error-branch-selection-2026-11-06).
+
 Directory-key batches now revalidate saved Answered replies before reserving a
 later page or reporting completion. Corrupt evidence refuses without changing
 outcomes; summary flags remain diagnostic rather than cryptographic authority.

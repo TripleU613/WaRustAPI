@@ -8146,3 +8146,5 @@ exact reply/query/target/bundle checks with assembled. Corrupt earlier wire can
 no longer authorize an extra query from its status flag alone. Stored summary
 counts remain diagnostic. [Regression matrix and scope](device-key-batches.md#saved-answered-pages-cannot-authorize-continuation-by-status-alone-2026-11-06).
 No retry, pin replacement, wire change or live operation.
+
+Directory key mixed-result parsing: shared bundle and batch adoption now follow APK43.72 outer-type dispatch; retained offsets, regression and separate diagnostic limits in [device-key-batches](device-key-batches.md#directory-result-and-error-branch-selection-2026-11-06). Offline only.

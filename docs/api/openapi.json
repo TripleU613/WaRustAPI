@@ -17464,5 +17464,12 @@
     "x-live": false,
     "description": "Directory-key reserve_next revalidates all saved Answered reply bytes before another page or completion. Shared answered_reply enforces IQ/query ownership and the existing frozen-target/bundle/signature classifier used by assembled. Corruption refuses without changing saved outcomes or granting repair/retry. Summary answered/complete count stored statuses and are not current cryptographic authority. No wire, pin-replacement, callback-deadline or account-generation claim is added.",
     "evidence": "docs/protocol/device-key-batches.md#saved-answered-pages-cannot-authorize-continuation-by-status-alone-2026-11-06"
+  },
+  "x-directory-key-result-dispatch": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Directory-key batch and shared selected-device bundle adoption dispatch by outer IQ type, matching APK43.72 1rA.A03 and Dxh.A02. Root error children do not override a result; per-user errors, exact coverage and signature guards remain. Generic action and diagnostic mixed-result attribution remain separate open gaps. Offline regression only.",
+    "evidence": "docs/protocol/device-key-batches.md#directory-result-and-error-branch-selection-2026-11-06"
   }
 }

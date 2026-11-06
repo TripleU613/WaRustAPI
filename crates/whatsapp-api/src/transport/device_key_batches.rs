@@ -247,9 +247,8 @@ pub fn reserve_next(
     })
 }
 fn classify(node: &Node, expected: &[Jid]) -> std::result::Result<(), Reason> {
-    if node.get_attr("type").and_then(|v| v.as_text()) == Some("error")
-        || node.child("error").is_some()
-    {
+    // APK43.72 1rA.A03 dispatches by outer type; Dxh.A02 reads user errors.
+    if node.get_attr("type").and_then(|v| v.as_text()) == Some("error") {
         return Err(Reason::QueryRefused);
     }
     if node.get_attr("type").and_then(|v| v.as_text()) != Some("result") {
@@ -685,6 +684,46 @@ mod tests {
         assert_eq!(complete, state(&store));
         let rendered = serde_json::to_string(&summary).unwrap();
         assert!(!rendered.contains("1555555") && !rendered.contains("signature"));
+    }
+    #[test]
+    fn result_root_error_does_not_override_valid_device_bundles() {
+        for first in [false, true] {
+            for error in [Node::new("error"), Node::new("error").attr("code", "503")] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("mixed.redb");
+                let store = open(&path);
+                let targets = vec![target(0)];
+                let query = reserve_next(&store, &id(), &targets).unwrap().unwrap();
+                let incoming = reply(&query, &user_template());
+                let list = incoming.child("list").unwrap().clone();
+                let incoming = incoming.children(if first {
+                    vec![error, list]
+                } else {
+                    vec![list, error]
+                });
+                assert_eq!(classify(&incoming, &targets), Ok(()));
+                assert!(settle(&store, &id(), &incoming).unwrap());
+                let saved = state(&store);
+                drop(store);
+                let store = open(&path);
+                assert!(reserve_next(&store, &id(), &targets).unwrap().is_none());
+                assert!(assembled(&store, &id(), &targets).unwrap().is_some());
+                assert_eq!(saved, state(&store));
+                assert_eq!(
+                    classify(&incoming.clone().attr("type", "error"), &targets),
+                    Err(Reason::QueryRefused)
+                );
+                assert!(
+                    classify(
+                        &Node::new("iq")
+                            .attr("type", "result")
+                            .children(vec![Node::new("error")]),
+                        &targets
+                    )
+                    .is_err()
+                );
+            }
+        }
     }
     #[test]
     fn interrupted_query_and_changed_targets_remain_reserved_across_restart() {

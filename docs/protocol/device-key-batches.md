@@ -246,3 +246,11 @@ Source follow-through: outgoing_group::Pending.next_keys already maps local
 reserve_next InvalidInput failures to KeysInvalid, separately from saved server
 refusal counts. This new corruption refusal therefore does not invent a server
 refusal reason or require another group-path classification change.
+
+## Directory result and error branch selection (2026-11-06)
+
+**Confirmed static, APK 2.26.43.72:** retained `2.26.43.72-about-callback-lifetime/legacy-iq-base.txt`, `1rA.A03` offsets0040..007a, dispatches outer `type=result` to the successful callback and returns before the error branch. Current `Dxh.A02` in `2.26.43.72-prekey-wire-error-attribution/callback.txt` selects root `list` at0000..000e, then checks each user error at0084..008e. Both retained file hashes were verified against their bundle manifests. This is static path evidence, not an observed mixed server response.
+
+The shared selected-device bundle parser and frozen directory-key batch classifier now ignore stray root errors after requiring outer result. Outer error remains query refusal; selected-user error, missing/duplicate/foreign coverage, malformed bundles and invalid signatures retain their guards. Regression covers code-less/503 root errors before/after a valid signed list, durable settlement/reopen/assembly and outer-error/missing-list controls. Existing negative tests cover user errors and bad signatures. No wire request or replay policy changes.
+
+**Negative source follow-through:** batch settlement selects the uniquely pending page by its original query ID; no later-page overwrite of an earlier answer was found. **Remaining separate diagnostic gap:** peer_keys and identity_query inspections (and generic action status) still have root-error attribution rules; this chunk does not claim their mixed-result classification is corrected. No live operations or guarantee against restrictions.
