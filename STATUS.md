@@ -1,3 +1,7 @@
+Server-sync Rust state mapping audited: existing login/admission/backoff
+authorities do not supply native bootstrap/recovery/ready-mutation gates.
+[Concrete mapping and remaining integration](docs/protocol/server-sync-rust-state-mapping.md).
+
 Server-sync completion callback identified as metrics/counter cleanup, not
 an ACK gate. Census reconciled with existing dirty-version/scheduling evidence;
 Rust lifecycle state mapping remains unported.

@@ -7346,3 +7346,12 @@ ACK-before-async-result ordering. The constructor census now links that evidence
 instead of presenting it as newly unknown. Rust role/recovery/bootstrap and
 durable notification scheduling remain unported. No runtime change.
 [Callback evidence and limits](apk/2.26.43.72-notification-handler-census/README.md).
+
+
+### Rust server-sync gate mapping audit (2026-11-05)
+
+**Confirmed source:** current primary-login checks, held-fetch admission, pending
+patch exclusion and receipt-time server backoff were mapped individually against
+the native lifecycle. None supplies the missing bootstrap/recovery/ready-mutation
+gates by default. Generic reservation/ActionStatus::Ok is not sync-flight ownership
+or authenticated collection advancement. [Mapping, source boundaries and integration consequences](server-sync-rust-state-mapping.md). No runtime or live operation changed.

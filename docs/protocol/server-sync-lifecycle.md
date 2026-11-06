@@ -178,3 +178,21 @@ and recovery gaps without treating a captured result as completed sync.
 map. It does not claim/send an ACK or gate sync work. This closes that callback
 edge while leaving the role/recovery/durable-scheduler prerequisites above
 intact. [Checked bounded callback and census reconciliation](apk/2.26.43.72-notification-handler-census/README.md).
+
+
+### Rust server-sync gate mapping audit (2026-11-05)
+
+**Confirmed source:** current primary-login checks, held-fetch admission, pending
+patch exclusion and receipt-time server backoff were mapped individually against
+the native lifecycle. None supplies the missing bootstrap/recovery/ready-mutation
+gates by default. Generic reservation/ActionStatus::Ok is not sync-flight ownership
+or authenticated collection advancement. [Mapping, source boundaries and integration consequences](server-sync-rust-state-mapping.md). No runtime or live operation changed.
+
+
+## Selected BU7 role body (2026-11-05)
+
+**Confirmed static:** concrete09G/09O.BU7 delegate to09O.BU8(false), which
+initializes through A07, reads registration_device_id default0 and returns
+value>0. Initialization callable and saved-ID writers remain untraced; no
+corresponding native preference authority exists in audited Rust account/login
+sources. [Predicate, source census and mapping limits](server-sync-rust-state-mapping.md).

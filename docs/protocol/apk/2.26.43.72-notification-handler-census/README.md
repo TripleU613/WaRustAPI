@@ -117,3 +117,26 @@ applied collection version or fabricate native preference defaults.
 
 No runtime change or live operation. This follow-up avoids duplicating existing
 bulk scheduler/version-store exports and retains only the newly traced callback.
+
+## Concrete BU7 role predicate — 2026-11-05
+
+**Confirmed static:** apk-smali APK --class '' --method BU7 --signatures
+--exceptions selects three physical declarations:09F abstract,09G concrete and
+09O concrete. Both concrete bodies call09O.BU8(false). This is a physical
+method-name census, not complete interface/runtime dispatch proof.
+BU8 calls09O.A07 first. With false it reads09T.A01/09U SharedPreferences
+registration_device_id with default0 and returns true only for value>0.
+The unused true arm consults an AtomicInteger, treating Integer.MIN_VALUE as
+uninitialized and CAS-loading the same preference; it still returns value>0.
+Negative values do not become true. This closes the selected predicate body,
+without establishing all writers or validity rules of that saved integer.
+
+A07 checks09a.A01; when not initialized it schedules1Wk selector1 through
+09a.A04 then calls09a.A00. Callable body and waiting/failure semantics remain
+untraced. The preference read occurs after this initialization call, so absence
+of a Rust preference row is not proof that native initialization would leave0.
+Rust AccountRecord and primary_login contain no equivalent persisted native
+registration_device_id authority. Its explicit primary payload is useful source
+context but not a migration of native role/bootstrap/recovery state. Complete
+Rust mapping is [separate](../../server-sync-rust-state-mapping.md).
+No new default role value, preferences, query, ACK or runtime policy was added.
