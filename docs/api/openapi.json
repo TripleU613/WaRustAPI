@@ -18004,5 +18004,11 @@
     "x-library": ["whatsapp_api::transport::receipts::reserve_pending_owned", "whatsapp_api::transport::receipts::record_ack"],
     "description": "Reservation atomically persists an encrypted original callback snapshot at receipt-callback:<batch-wire-sha256> with member keys/raw values and consumed=false. Receipt member callback_owner references it. After existing routing/account checks, ACK settlement requires every original row unchanged, transitions only original keys and consumes owner atomically. Foreign same-wire rows are excluded; missing/replaced members or missing/consumed owner retain uncertainty. Existing owner cannot be overwritten by re-reservation. Unchanged original reservations can still settle from late authenticated ACK after partial write/reconnect without resend. Historical unbound uncertainty is not guessed or migrated. Internal metadata only, not native wire fields or independent proof of write; no compaction, new recovery, replay or live operation.",
     "evidence": "docs/protocol/replay-safety-audit.md#durable-original-receipt-callback-members-2026-11-06"
+  },
+  "x-receipt-writer-callback-owner-check": {
+    "x-cli": true, "x-transport": true, "x-live": false,
+    "x-library": ["whatsapp_api::transport::receipts::ReservedReceipt::check_write_authority", "whatsapp_api::transport::receipts::reserve_pending_owned"],
+    "description": "Owned receipt write guard also captures exact durable callback key/raw bytes at reservation. Actual actor writer and CLI-style authority checks compare that snapshot in the same read transaction as account/member/privacy checks. Late callback deletion, consumed-state mutation or corruption blocks the whole batch before encoding without recreating owner, releasing uncertainty or replaying. Snapshot remains opaque/zeroizing and Debug-redacted. No new persisted/wire field, method, native recovery policy or live-server claim. Existing durable late-ACK-after-partial-write behavior is preserved.",
+    "evidence": "docs/protocol/replay-safety-audit.md#receipt-writer-also-owns-the-durable-callback-record-2026-11-06"
   }
 }

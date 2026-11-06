@@ -735,7 +735,7 @@ impl ReservedReceipt {
     pub fn node(&self) -> &Node {
         &self.node
     }
-    /// Recheck account authority, reservation members and automatic-read privacy.
+    /// Recheck account authority, original callback, members and read privacy.
     /// Normal actor uses this at its writer; direct writers must check just
     /// before encoding and preserve uncertainty on any failed/partial write.
     pub fn check_write_authority(&self, store: &ProtocolStore) -> Result<()> {
@@ -745,6 +745,7 @@ impl ReservedReceipt {
 #[derive(Clone)]
 pub(crate) struct ReceiptWriteGuard {
     account_authority: [u8; 32],
+    callback_owner: (Vec<u8>, zeroize::Zeroizing<Vec<u8>>),
     members: Vec<(Vec<u8>, zeroize::Zeroizing<Vec<u8>>)>,
     automatic_direct_read: bool,
 }
@@ -758,6 +759,18 @@ impl ReceiptWriteGuard {
                 return Err(Error::invalid(
                     "receipt",
                     "local account changed before receipt write",
+                ));
+            }
+            // The durable callback is part of this same write authority; do
+            // not emit a batch whose original settlement owner was lost/changed.
+            let callback = zeroize::Zeroizing::new(
+                tx.get(Table::Checkpoints, &self.callback_owner.0, 1)?
+                    .unwrap_or_default(),
+            );
+            if *callback != *self.callback_owner.1 {
+                return Err(Error::invalid(
+                    "receipt",
+                    "original receipt callback changed before write",
                 ));
             }
             if self.members.is_empty() {
@@ -955,10 +968,17 @@ pub fn reserve_pending_owned(store: &ProtocolStore) -> Result<Vec<ReservedReceip
                     consumed: false,
                 },
             )?;
+            let callback_raw = tx
+                .get(Table::Checkpoints, callback_key.as_bytes(), 1)?
+                .ok_or_else(|| Error::invalid("receipt", "reserved receipt callback missing"))?;
             out.push(ReservedReceipt {
                 node,
                 guard: ReceiptWriteGuard {
                     account_authority,
+                    callback_owner: (
+                        callback_key.into_bytes(),
+                        zeroize::Zeroizing::new(callback_raw),
+                    ),
                     members,
                     automatic_direct_read,
                 },
@@ -2967,6 +2987,9 @@ mod tests {
         for mode in ["automatic", "manual", "mixed", "group", "singleton"] {
             for change in [
                 "same",
+                "callback_missing",
+                "callback_consumed",
+                "callback_corrupt",
                 "account_missing",
                 "account_generation",
                 "account_phone",
@@ -3016,6 +3039,7 @@ mod tests {
                 let receipt = batch.pop().unwrap();
                 assert_eq!(receipt.guard.members.len(), count);
                 let expected_node = receipt.node().clone();
+                let callback_key = receipt.guard.callback_owner.0.clone();
                 let cli_view = ReservedReceipt {
                     node: expected_node.clone(),
                     guard: receipt.guard.clone(),
@@ -3035,6 +3059,26 @@ mod tests {
                 let queued = writes.recv().await.unwrap();
                 if change == "privacy_disabled" {
                     server_read_preference(&db, "late-disabled", "none");
+                } else if change.starts_with("callback_") {
+                    db.write(|tx| {
+                        match change {
+                            "callback_missing" => {
+                                tx.delete(Table::Checkpoints, &callback_key)?;
+                            }
+                            "callback_corrupt" => {
+                                tx.put(Table::Checkpoints, &callback_key, 1, b"bad-owner")?
+                            }
+                            "callback_consumed" => {
+                                let mut owner: ReceiptCallbackOwner =
+                                    tx.get_json(Table::Checkpoints, &callback_key, 1)?.unwrap();
+                                owner.consumed = true;
+                                tx.put_json(Table::Checkpoints, &callback_key, 1, &owner)?;
+                            }
+                            _ => unreachable!(),
+                        }
+                        Ok(())
+                    })
+                    .unwrap();
                 } else if change.starts_with("account_") {
                     db.write(|tx| {
                         if change == "account_missing" {

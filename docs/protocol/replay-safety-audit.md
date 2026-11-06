@@ -1461,3 +1461,35 @@ Validation: 1,462 workspace/all-feature tests passed, including the existing
 actual actor partial-write/reconnect late-ACK regression. Strict workspace/
 all-target/all-feature Clippy, formatting, regenerated CLI reference, OpenAPI
 symbol validation, APK coverage freshness and repository hygiene passed. Offline only.
+
+## Receipt writer also owns the durable callback record (2026-11-06)
+
+**Confirmed Rust local write-authority gap / correction:** the durable original
+callback introduced above was checked at ACK settlement, but the queued writer
+still owned only account authority and member rows. Deleting, consuming or
+corrupting the separate callback after reservation could leave unchanged member
+rows writable even though the original settlement owner no longer existed.
+
+ReceiptWriteGuard now snapshots the exact callback key/raw bytes when the
+reservation transaction creates that record. At the writer's existing admission
+point it compares that callback in the same read transaction as account,
+member and late automatic-read privacy checks. A changed/missing callback
+refuses the whole queued batch before encoding/bytes. No replacement callback
+is synthesized, uncertain member rows are not released and no replay is added.
+The immutable snapshot is zeroizing memory in the opaque guard; Debug remains
+redacted. No new persisted field, wire field or API method is introduced.
+
+The actual queued-writer regression now covers105 combinations across automatic,
+manual, mixed, group and singleton modes. Added callback deletion, consumed-state
+change and corrupt raw-record cases are checked through both public CLI-style
+check_write_authority and actual Outbound.prepare. They produce no prepared
+Node, preserve rows/journal through checking and retain uncertainty after reopen.
+Existing row/account/privacy and allowed observation controls still apply.
+Durable late ACK after partial-write/reconnect remains unchanged and separately
+covered by the existing actor regression. No native callback-format/account
+policy equivalence or live server acceptance is inferred from this local guard.
+
+Validation: 1,462 workspace/all-feature tests passed, including the existing
+partial-write/reconnect late-ACK actor regression. Strict workspace/all-target/
+all-feature Clippy, formatting, regenerated CLI reference, OpenAPI symbol
+validation, APK coverage freshness and repository hygiene passed. Offline only.
