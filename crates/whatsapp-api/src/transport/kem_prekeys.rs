@@ -190,9 +190,15 @@ fn all_rows(tx: &WriteTx<'_>) -> Result<Vec<StoredKemPrekey>> {
         let done = rows.len() < 512;
         cursor = rows.last().map(|(key, _)| key.clone());
         for (key, bytes) in rows {
-            if key.starts_with(RECORD_PREFIX.as_bytes())
-                && let Ok(row) = serde_json::from_slice::<StoredKemPrekey>(&bytes)
-            {
+            if key.starts_with(RECORD_PREFIX.as_bytes()) {
+                // Batch selection must not turn corrupt owned rows into an
+                // apparently missing inventory and generate around them.
+                let row: StoredKemPrekey =
+                    serde_json::from_slice(&bytes).map_err(|_| invalid("row does not parse"))?;
+                if key != record_key(row.id).as_bytes() {
+                    return Err(invalid("row ID does not match its key"));
+                }
+                row.validate(row.id)?;
                 out.push(row);
             }
         }
@@ -387,6 +393,90 @@ mod tests {
         signal::kem,
         store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource},
     };
+
+    #[test]
+    fn batch_inventory_refuses_corrupt_owned_rows_before_generation_or_migration() {
+        let (public, secret) = kem::generate_key_pair().unwrap();
+        for case in ["json", "wrong-id", "alias", "utf8", "secret"] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("kem-batch-integrity.redb");
+            let reopen = || {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: AccountId::new("kem-inventory").unwrap(),
+                    key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                        [9; 32],
+                    ))),
+                    create: true,
+                })
+                .unwrap()
+            };
+            let store = reopen();
+            store
+                .write(|tx| install_for_test(tx, 5, &public, secret.as_bytes(), false))
+                .unwrap();
+            store
+                .write(|tx| {
+                    let mut row: StoredKemPrekey = tx
+                        .get_json(Table::Prekeys, record_key(5).as_bytes(), 1)?
+                        .unwrap();
+                    tx.delete(Table::Prekeys, record_key(5).as_bytes())?;
+                    let mut key = record_key(5).into_bytes();
+                    match case {
+                        "json" => return tx.put(Table::Prekeys, &key, 1, b"{"),
+                        "wrong-id" => row.id = 6,
+                        "alias" => key = format!("{RECORD_PREFIX}05").into_bytes(),
+                        "utf8" => key.push(255),
+                        "secret" => {
+                            row.secret[EMBEDDED_PUBLIC] ^= 1;
+                            row.last_resort = true;
+                            row.sent = true;
+                        }
+                        _ => unreachable!(),
+                    }
+                    tx.put_json(Table::Prekeys, &key, 1, &row)
+                })
+                .unwrap();
+            let snapshot = store
+                .read(|tx| {
+                    Ok((
+                        tx.scan(Table::Prekeys, 1, 100)?,
+                        tx.scan(Table::Checkpoints, 1, 100)?,
+                    ))
+                })
+                .unwrap();
+            assert!(
+                store.write(|tx| migrated_in(tx)).is_err(),
+                "{case}: no partial migration view"
+            );
+            assert!(
+                store.write(|tx| upload_rows_in(tx, 10)).is_err(),
+                "{case}: no regeneration around corrupt row"
+            );
+            assert!(store.write(|tx| add_rows_in(tx, 20, 10)).is_err(), "{case}");
+            assert_eq!(
+                store
+                    .read(|tx| Ok((
+                        tx.scan(Table::Prekeys, 1, 100)?,
+                        tx.scan(Table::Checkpoints, 1, 100)?
+                    )))
+                    .unwrap(),
+                snapshot
+            );
+            drop(store);
+            let store = reopen();
+            assert!(store.write(|tx| migrated_in(tx)).is_err());
+            assert_eq!(
+                store
+                    .read(|tx| Ok((
+                        tx.scan(Table::Prekeys, 1, 100)?,
+                        tx.scan(Table::Checkpoints, 1, 100)?
+                    )))
+                    .unwrap(),
+                snapshot
+            );
+        }
+    }
 
     #[test]
     fn rows_validate_count_and_consume_only_unchanged_ordinary_keys() {

@@ -1,3 +1,8 @@
+KEM write-side batch scans now refuse malformed, aliased, key/ID-mismatched
+or invalid owned records before migration/SET/ADD decisions. Existing strict
+point validation is reused; diagnostic counts remain diagnostic.
+[Audit](docs/protocol/kem-prekey-inventory.md#kem-batch-scans-refuse-corrupt-owned-inventory-2026-11-05).
+
 Direct prekey upload API now validates the supplied signed private/public
 pair before IQ ID allocation or reservation, closing the path around factory
 validation. A valid public signature no longer admits a mismatched private half.

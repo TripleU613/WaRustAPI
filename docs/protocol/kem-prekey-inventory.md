@@ -295,3 +295,36 @@ fetch schedulers whose wire effect is untraced. With 21198 and 24160 at their
 false defaults for `q`, the APK would not send `pqsupport`, and there is no
 request of ours for it to ride on.
 
+
+### KEM batch scans refuse corrupt owned inventory (2026-11-05)
+
+**Confirmed local defect, fixed offline:** kem_prekeys.all_rows skipped JSON
+parse failures and accepted parsed records without binding their IDs to their
+owned storage names. Migration could inspect sent/last_resort from rows whose
+material or key binding had not been validated; replenishment could count a
+partial inventory and generate around malformed records. This was distinct
+from the existing strict point lookup.
+
+The write-side batch scan now parses every owned row or refuses, requires the
+exact canonical record_key(row.id), and applies existing row.validate before
+returning any inventory. This covers migration detection, SET selection and
+ADD replenishment. Corrupt sent or otherwise unselected rows also refuse the
+whole write-side inventory. Diagnostic counts retain their documented ability
+to count malformed rows; they are not upload or migration authority.
+
+**Refuted suspected gap:** point lookup already checks row ID, lengths, signature
+length and the public key embedded in expanded secret. Those checks were not
+missing and were not reimplemented. This change applies them to batch admission;
+it does not prove additional algebraic secret/public consistency or native
+corrupt-store recovery. Existing signature/public-key upload validation remains.
+
+Regression injects malformed JSON, mismatched row ID, leading-zero alias,
+invalid-UTF8 suffix and a sent last-resort row with mismatched embedded public
+material. Migration, SET selection and ADD replenishment all refuse without
+changing exact prekey/checkpoint bytes; reopen still refuses. Old code failed
+the malformed-JSON migration case by returning a partial result. No identity
+rotation, replacement keys, new retry, live account or network operation.
+
+Validation: red malformed-row regression reproduced partial migration result;
+all 1,398 workspace/all-feature tests, strict Clippy, CLI reference and
+OpenAPI library checks passed. Local stores/injected links only.

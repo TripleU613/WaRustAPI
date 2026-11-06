@@ -17345,5 +17345,12 @@
     "x-live": false,
     "description": "Shared direct upload admission derives public from caller-supplied signed-prekey private material before IQ ID allocation/reservation. Valid public signature alone no longer admits pair mismatch. Factory guard remains separate; no repair, alternative identity or wire-field change.",
     "evidence": "docs/protocol/prekey-count-notifications.md#direct-upload-api-validates-the-supplied-signed-private-half-2026-11-05"
+  },
+  "x-kem-batch-inventory-integrity": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "description": "KEM write-side inventory scans now reject malformed owned JSON, noncanonical or mismatched row keys and existing material-integrity failures before migration detection, SET upload selection or ADD replenishment. Whole selected inventory refuses instead of silently skipping corruption; diagnostic counts remain diagnostic. No regeneration around corrupt rows or retry authority.",
+    "evidence": "docs/protocol/kem-prekey-inventory.md#kem-batch-scans-refuse-corrupt-owned-inventory-2026-11-05"
   }
 }
