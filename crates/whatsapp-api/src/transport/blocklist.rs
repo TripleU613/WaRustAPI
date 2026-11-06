@@ -268,11 +268,12 @@ fn apply_fetch_in(tx: &mut crate::store::WriteTx<'_>, reply: &Node) -> Result<()
     let dhash = text_attr(list, "dhash")?;
     let mut current = BTreeSet::new();
     let mut new_rows = Vec::new();
-    for item in list
-        .child_nodes()
-        .iter()
-        .filter(|item| item.description == "item")
-    {
+    for item in list.child_nodes() {
+        // APK43.72 6qD.A02 requires each child to be item via 0Tp.A01.
+        // Ignoring unknown tags can turn a malformed list into a cache wipe.
+        if item.description != "item" {
+            return Err(invalid("unexpected blocklist snapshot child"));
+        }
         let action = text_attr(item, "action")?.unwrap_or("block");
         if action != "block" {
             continue;
@@ -1019,6 +1020,106 @@ mod tests {
         assert!(saved_dhash(&s).unwrap().is_none());
         assert_eq!(ingest(&s).unwrap(), 1);
         assert_eq!(ingest(&s).unwrap(), 0);
+    }
+
+    #[test]
+    fn snapshot_rejects_unknown_children_without_erasing_cache_or_reconciliation_after_reopen() {
+        for mode in [
+            "unknown_only",
+            "unknown_first",
+            "unknown_last",
+            "nested_list",
+            "valid_empty",
+            "valid_item",
+        ] {
+            let (dir, s) = store();
+            let initial = queue_fetch(&s).unwrap();
+            super::super::actions::reserve_pending(&s).unwrap();
+            super::super::actions::record_reply(
+                &s,
+                &fetch_reply(
+                    &initial,
+                    "before",
+                    vec![Node::new("item").attr("jid", phone())],
+                ),
+            )
+            .unwrap();
+            assert_eq!(ingest(&s).unwrap(), 1);
+            let change = queue_unblock(&s, &phone()).unwrap();
+            super::super::actions::reserve_pending(&s).unwrap();
+            let unmatched = Node::new("iq")
+                .attr("id", change)
+                .attr("type", "result")
+                .children(vec![Node::new("list").attr("matched", "false")]);
+            super::super::actions::record_reply(&s, &unmatched).unwrap();
+            assert_eq!(ingest(&s).unwrap(), 0);
+            assert!(reconciliation_required(&s).unwrap());
+            let fetch = queue_fetch(&s).unwrap();
+            super::super::actions::reserve_pending(&s).unwrap();
+            let valid = Node::new("item").attr("jid", "15555550199@s.whatsapp.net");
+            let unknown =
+                Node::new("PRIVATE-UNSUPPORTED-TAG").attr("jid", "15555550999@s.whatsapp.net");
+            let children = match mode {
+                "unknown_only" => vec![unknown],
+                "unknown_first" => vec![unknown, valid],
+                "unknown_last" => vec![valid, unknown],
+                "nested_list" => vec![Node::new("list").children(vec![valid])],
+                "valid_empty" => vec![],
+                "valid_item" => vec![valid],
+                _ => unreachable!(),
+            };
+            super::super::actions::record_reply(&s, &fetch_reply(&fetch, "after", children))
+                .unwrap();
+            let before = s.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap();
+            let head = s.journal_head().unwrap();
+            let malformed = mode.starts_with("unknown") || mode == "nested_list";
+            if malformed {
+                let error = ingest(&s).unwrap_err().to_string();
+                assert!(error.contains("unexpected blocklist snapshot child"));
+                assert!(!error.contains("PRIVATE-UNSUPPORTED-TAG"));
+                assert!(!error.contains("15555550999"));
+                assert_eq!(
+                    s.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap(),
+                    before
+                );
+                assert_eq!(s.journal_head().unwrap(), head);
+                assert!(reconciliation_required(&s).unwrap());
+            } else {
+                assert_eq!(ingest(&s).unwrap(), 1);
+                assert!(!reconciliation_required(&s).unwrap());
+                assert_eq!(saved_dhash(&s).unwrap().as_deref(), Some("after"));
+                assert_eq!(
+                    blocked(&s).unwrap().len(),
+                    usize::from(mode == "valid_item")
+                );
+            }
+            drop(s);
+            let s = reopen(dir.path());
+            if malformed {
+                assert!(ingest(&s).is_err());
+                assert_eq!(
+                    s.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap(),
+                    before
+                );
+                assert_eq!(s.journal_head().unwrap(), head);
+                assert!(reconciliation_required(&s).unwrap());
+                assert_eq!(blocked(&s).unwrap()[0].jid, phone().to_string());
+                assert_eq!(saved_dhash(&s).unwrap().as_deref(), Some("before"));
+                assert!(
+                    s.read(|tx| tx.get(Table::Checkpoints, ingested_key(&fetch).as_bytes(), 1))
+                        .unwrap()
+                        .is_none()
+                );
+            } else {
+                assert_eq!(ingest(&s).unwrap(), 0);
+                assert!(!reconciliation_required(&s).unwrap());
+            }
+            assert!(
+                super::super::actions::reserve_pending(&s)
+                    .unwrap()
+                    .is_empty()
+            );
+        }
     }
 
     #[test]

@@ -263,3 +263,12 @@ and do not alter the generic network Ok outcome. No-list fetches retain the
 warning; a later admitted full snapshot clears it atomically. Older inspected
 unmatched replies cannot overwrite that snapshot. Native migration/reconciliation
 and already projected historical cache repair remain explicit limitations.
+
+## Snapshot admission precedes cache/reconciliation settlement (2026-11-06)
+
+[Blocklist child-tag correction](chat-actions.md#blocklist-snapshot-child-admission-2026-11-06)
+rejects an unknown child rather than treating the filtered items as a full
+snapshot. Blocked rows, hash, prior reconciliation warning and absent projection
+marker remain unchanged with the journal, including after reopen. Valid empty
+snapshots retain their separate semantics. No action retry/reset or automatic
+malformed-history skip is introduced.

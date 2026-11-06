@@ -1096,3 +1096,30 @@ strict workspace/all-target/all-feature Clippy, formatting, CLI reference
 regeneration, OpenAPI library-symbol coverage, APK coverage freshness and
 repository hygiene pass. Thirteen selected DEX methods/censuses reproduce
 byte-for-byte; APK subject hash, complete REA source and bundle checksums match.
+
+## Blocklist snapshot child admission (2026-11-06)
+
+**Confirmed pinned mismatch / correction:** [complete parser, requireTag,
+constructor/unboxing checks and REA limitations](apk/2.26.43.72-blocklist-snapshot-children/README.md)
+show6qD.A02 requires every child to be item. Rust's description filter silently
+ignored unknown children, which could project a false empty/partial snapshot,
+advance its hash, mark it applied and clear the reconciliation warning.
+
+The projector now returns a fixed redacted InvalidInput(blocklist) error before
+any cache/hash/marker/reconciliation writes can commit. The new regression
+failed before the fix (malformed snapshot returned1) and covers unknown-only,
+first/last unknown, nested-list, valid-empty and valid-item cases. Invalid input
+preserves all checkpoint bytes and journal across reopen; valid snapshots still
+replace state. No pending request is recreated and no live operation occurs.
+
+Malformed saved snapshots remain unprojected and ingest continues to refuse
+rather than quarantine/skip them. Native duplicates use map put while this
+adapter refuses duplicates; full typed fallback, conditional metadata/alias,
+migration and previously projected bad-cache repair are separate gaps. No
+complete native blocklist/played-policy equivalence or ban-rate claim follows.
+
+Validation:1,517 workspace tests pass (9 result suites, four test threads);
+strict workspace/all-target/all-feature Clippy, formatting, CLI reference
+regeneration, OpenAPI library coverage, APK coverage freshness and repository
+hygiene pass. Five selected DEX exports reproduce byte-for-byte; subject hash,
+complete REA source with warnings and bundle checksums are retained/verified.

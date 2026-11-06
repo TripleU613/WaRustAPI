@@ -1,0 +1,97 @@
+
+# class: LX/6qD;
+# extends: Ljava/lang/Object;
+
+.method public A02(LL)  # .registers 16
+    # full signature: LX/6qD;->A02(LX/0Tp;)LX/80Z;
+    0000..0006  invoke-static  {}, LX/2L6;->A1E()Ljava/util/HashMap;
+    0006..0008  move-result-object  v7
+    0008..000e  invoke-static  {}, LX/2L6;->A1E()Ljava/util/HashMap;
+    000e..0010  move-result-object  v8
+    0010..0016  invoke-static  {}, LX/2L6;->A1E()Ljava/util/HashMap;
+    0016..0018  move-result-object  v6
+    0018..001e  invoke-static  {}, LX/2L6;->A1E()Ljava/util/HashMap;
+    001e..0020  move-result-object  v5
+    0020..0024  const-string  v0, "dhash"
+    0024..002a  invoke-static  {v15, v0}, LX/6oe;->A18(LX/0Tp;Ljava/lang/String;)Ljava/lang/String;
+    002a..002c  move-result-object  v4
+    002c..0030  iget-object  v10, v15, LX/0Tp;->A02:[LX/0Tp;
+    0030..0034  if-eqz  v10, +0x90
+    0034..0036  array-length  v9, v10
+    0036..0038  const/4  v3, #0x0
+    0038..003c  if-ge  v3, v9, +0x8c
+    003c..0040  aget-object  v13, v10, v3
+    0040..0044  const-string  v0, "item"
+    0044..004a  invoke-static  {v13, v0}, LX/0Tp;->A01(LX/0Tp;Ljava/lang/String;)V
+    004a..004e  const-class  v1, Lcom/whatsapp/infra/core/jid/UserJid;
+    004e..0052  const-string  v0, "jid"
+    0052..0058  invoke-virtual  {v13, v1, v0}, LX/0Tp;->A0A(Ljava/lang/Class;Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    0058..005a  move-result-object  v11
+    005a..005e  check-cast  v11, Lcom/whatsapp/infra/core/jid/UserJid;
+    005e..0062  const-string  v14, "pn_jid"
+    0062..0066  if-nez  v11, +0x11
+    0066..006a  const-class  v0, Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    006a..0070  invoke-virtual  {v13, v0, v14}, LX/0Tp;->A0A(Ljava/lang/Class;Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    0070..0072  move-result-object  v11
+    0072..0076  check-cast  v11, Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    0076..007a  if-eqz  v11, +0x67
+    007a..007e  const-string  v0, "ProtocolTreeNodeParserUtil/parseBlocklistFromProtocolTreeNode/jid null, using pn_jid"
+    007e..0084  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0084..0088  const-string  v0, "action"
+    0088..008c  const-string  v12, "block"
+    008c..0092  invoke-virtual  {v13, v0, v12}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0092..0094  move-result-object  v2
+    0094..0098  const-string  v1, "active"
+    0098..009c  const-string  v0, "false"
+    009c..00a2  invoke-virtual  {v13, v1, v0}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    00a2..00a4  move-result-object  v1
+    00a4..00aa  invoke-virtual  {v12, v2}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    00aa..00ac  move-result  v15
+    00ac..00b0  const-string  v0, "true"
+    00b0..00b6  invoke-virtual  {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    00b6..00b8  move-result  v12
+    00b8..00be  invoke-static  {v11}, LX/0Dn;->A0Z(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    00be..00c0  move-result  v0
+    00c0..00c4  if-eqz  v0, +0x14
+    00c4..00c8  const-string  v0, "display_name"
+    00c8..00ca  const/4  v2, #0x0
+    00ca..00d0  invoke-virtual  {v13, v0, v2}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    00d0..00d2  move-result-object  v1
+    00d2..00d6  if-eqz  v1, +0x15
+    00d6..00dc  invoke-virtual  {v1}, Ljava/lang/String;->isEmpty()Z
+    00dc..00de  move-result  v0
+    00de..00e2  if-nez  v0, +0x5
+    00e2..00e8  invoke-virtual  {v8, v11, v1}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    00e8..00ee  invoke-static  {v15}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    00ee..00f0  move-result-object  v0
+    00f0..00f6  invoke-virtual  {v7, v11, v0}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    00f6..00fa  add-int/lit8  v3, v3, #0x1
+    00fa..00fc  goto  -0x61
+    00fc..0100  const-class  v0, Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    0100..0106  invoke-virtual  {v13, v0, v14}, LX/0Tp;->A0A(Ljava/lang/Class;Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    0106..0108  move-result-object  v0
+    0108..010c  if-eqz  v0, +0x12
+    010c..0112  invoke-static  {v0, v5}, LX/6ol;->A0l(Ljava/lang/Object;Ljava/util/AbstractMap;)Ljava/util/List;
+    0112..0114  move-result-object  v2
+    0114..0116  move-object  v1, v11
+    0116..011a  check-cast  v1, LX/0Dw;
+    011a..011e  new-instance  v0, LX/7xy;
+    011e..0124  invoke-direct  {v0, v1, v12}, LX/7xy;-><init>(LX/0Dw;Z)V
+    0124..012a  invoke-interface  {v2, v0}, Ljava/util/List;->add(Ljava/lang/Object;)Z
+    012a..012c  goto  -0x21
+    012c..0130  const-string  v0, "username"
+    0130..0136  invoke-virtual  {v13, v0, v2}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0136..0138  move-result-object  v0
+    0138..013c  if-eqz  v0, -0x28
+    013c..0142  invoke-virtual  {v6, v11, v0}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0142..0144  goto  -0x2d
+    0144..0148  const-string  v0, "ProtocolTreeNodeParserUtil/parseBlocklistFromProtocolTreeNode/jid is null"
+    0148..014e  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    014e..0150  goto  -0x2c
+    0150..0154  new-instance  v1, LX/878;
+    0154..015a  invoke-direct  {v1, v5, v6, v8}, LX/878;-><init>(Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;)V
+    015a..015e  new-instance  v0, LX/80Z;
+    015e..0164  invoke-direct  {v0, v1, v4, v7}, LX/80Z;-><init>(LX/878;Ljava/lang/String;Ljava/util/Map;)V
+    0164..0166  return-object  v0
+    # exception table: 0 try range(s)
+.end method

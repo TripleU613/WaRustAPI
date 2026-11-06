@@ -1,3 +1,11 @@
+2026-11-06 — **Malformed blocklist children cannot erase the cache.**
+
+Pinned parser requires every list child to be item. Rust now refuses unknown
+children instead of projecting a partial/empty list, preserving every checkpoint,
+hash, reconciliation warning and journal across reopen. Valid empty snapshots
+remain valid; no request or retry added. [Evidence and regression](chat-actions.md#blocklist-snapshot-child-admission-2026-11-06).
+1,517 workspace tests (four threads), strict Clippy and repository gates pass.
+
 2026-11-06 — **Unmatched blocklist results no longer falsely change the cache.**
 
 Pinned set callback diverts list matched=false into reconciliation. Rust now

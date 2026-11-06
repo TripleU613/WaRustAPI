@@ -1,0 +1,12 @@
+
+# class: LX/2L6;
+# extends: Ljava/lang/Object;
+
+.method public A1b(ZL)  # .registers 1
+    # full signature: LX/2L6;->A1b(Ljava/lang/Object;)Z
+    0000..0004  check-cast  v0, Ljava/lang/Boolean;
+    0004..000a  invoke-virtual  {v0}, Ljava/lang/Boolean;->booleanValue()Z
+    000a..000c  move-result  v0
+    000c..000e  return  v0
+    # exception table: 0 try range(s)
+.end method
