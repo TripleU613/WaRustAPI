@@ -98,3 +98,10 @@ The previously open Bvj callbacks are now retained in the
 Both select1ud.A00; lookup404/410 routes to empty metadata while upload still
 calls onError. Rust now preserves this diagnostic and correct direct-code
 selection; downstream ITY/8pX effects remain unported/untraced.
+
+## Lookup result follow-up (2026-11-06)
+
+[Named-child and constructor trace](../2.26.43.72-photo-lookup-result/README.md)
+closes the lookup result/error-extension mismatch. The saved callback long is
+now bound to constructor SystemClock.elapsedRealtime(); downstream uses remain
+unknown. Full payload validation and native cache adoption remain unported.

@@ -1,0 +1,14 @@
+{
+  "README.md": {
+    "bytes": 4400,
+    "sha256": "e8bfc94a36fc641d8fc8c23f11175d965f50db45f964a544b44677b4787f71ba"
+  },
+  "first-named-child.txt": {
+    "bytes": 872,
+    "sha256": "d0d1534f2ccbf7046482d845157b888f83e86e8cb2bc779074725b95f3bfecb6"
+  },
+  "lookup-init.txt": {
+    "bytes": 1324,
+    "sha256": "434f751559808a8f37c993c7a35afd9053358efaa95dd30df8e79e9eed86c16a"
+  }
+}

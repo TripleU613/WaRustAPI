@@ -1,4 +1,11 @@
 {
+  "x-photo-lookup-result-dispatch": {
+    "x-cli": "whatsapp-cli actions; xtask apk-smali <apk> --class <class> --method <method> --signatures --exceptions",
+    "x-transport": "experimental photo lookup action result settlement",
+    "x-live": false,
+    "description": "APK43.72 6p1.CK4 selects first named picture via0Tp.A0F and ignores unrelated root/nested error extensions. Matching saved profile-picture-get w:profile:picture/get/target/picture-image-query-url results now keep their outer-result outcome rather than a false generic refusal. Raw reply remains saved; no native URL/id parser, cache adoption or publication verdict is implemented. Outer error retains existing signed code and lookup404/410 metadata; other producers and kind-only negative requests keep their policies. Constructor binds optional request ID A04 and saved clock sample A06=SystemClock.elapsedRealtime(), not timeout duration. No timer/retry/ACK/query/HTTP route or live operation added.",
+    "evidence": "docs/protocol/apk/2.26.43.72-photo-lookup-result/README.md"
+  },
   "x-photo-error-callback-outcomes": {
     "x-cli": "whatsapp-cli actions (text and JSON); xtask apk-smali <apk> --class <class> --method Bvj --signatures --exceptions",
     "x-transport": "experimental saved photo action error settlement",
@@ -943,7 +950,7 @@
           "ok",
           "error"
         ],
-        "description": "Status of a queued action transmission. `sent` means reserved for a socket write (marked before the write so a cut never resends it); whether it reached the socket is unknown until `ok`/`error` arrives."
+        "description": "Status of a queued action transmission. `sent` means reserved for a socket write (marked before the write so a cut never resends it); whether it reached the socket is unknown until `ok`/`error` arrives. `ok` is a correlated result without recognized producer-specific refusal; it does not prove payload validation, native feature-state adoption or publication. `error` includes outer IQ errors and recognized producer-specific inner refusals."
       },
       "DeliveryFact": {
         "type": "object",

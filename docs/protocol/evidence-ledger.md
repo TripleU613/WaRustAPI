@@ -1,3 +1,9 @@
+2026-11-06 — **Corrected photo lookup result dispatch.**
+Unrelated root/nested error extensions no longer turn a matching lookup result
+into a refusal. Retained first-named-child and constructor proof; result
+payload validation/cache adoption remain unported. No retry or live operation.
+[Regression, evidence and limits](chat-actions.md#photo-lookup-result-extensions-2026-11-06).
+
 2026-11-06 — **Corrected photo outer-error selection and retained callback outcome.**
 Upload and lookup now select the first direct coded error, matching the pinned
 APK, instead of a competing nested error. Optional durable photo_error keeps

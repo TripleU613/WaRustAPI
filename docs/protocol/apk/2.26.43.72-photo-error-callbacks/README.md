@@ -71,3 +71,10 @@ Verification:1536 workspace tests across nine suites (including doc tests),
 strict workspace/all-target/all-feature Clippy, fmt, OpenAPI library-symbol and
 CLI-reference tests, APK coverage freshness and research hygiene passed.
 Focused regressions: `cargo test --locked -p whatsapp-api --all-features photo_error_`.
+
+## Lookup result follow-up (2026-11-06)
+
+[Named-child and constructor trace](../2.26.43.72-photo-lookup-result/README.md)
+closes the lookup result/error-extension mismatch. The saved callback long is
+now bound to constructor SystemClock.elapsedRealtime(); downstream uses remain
+unknown. Full payload validation and native cache adoption remain unported.

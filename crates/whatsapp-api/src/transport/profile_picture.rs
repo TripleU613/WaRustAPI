@@ -47,6 +47,16 @@ pub struct PhotoErrorOutcome {
     pub empty_lookup: bool,
 }
 
+pub(super) fn is_lookup_request(request: &Node) -> bool {
+    request.get_attr("xmlns").and_then(|v| v.as_text()) == Some("w:profile:picture")
+        && request.get_attr("type").and_then(|v| v.as_text()) == Some("get")
+        && request.get_attr("target").is_some()
+        && matches!(request.child_nodes(), [picture]
+            if picture.description == "picture"
+                && picture.get_attr("type").and_then(|v| v.as_text()) == Some("image")
+                && picture.get_attr("query").and_then(|v| v.as_text()) == Some("url"))
+}
+
 pub(super) fn error_outcome(kind: &str, request: &Node, reply: &Node) -> Option<PhotoErrorOutcome> {
     if reply.get_attr("type").and_then(|v| v.as_text()) != Some("error")
         || request.get_attr("xmlns").and_then(|v| v.as_text()) != Some("w:profile:picture")
@@ -59,13 +69,7 @@ pub(super) fn error_outcome(kind: &str, request: &Node, reply: &Node) -> Option<
             if picture.description == "picture"
                 && picture.get_attr("type").and_then(|v| v.as_text()) == Some("image")
                 && matches!(&picture.content, crate::binary::NodeContent::Bytes(_)));
-    let lookup = kind == GET_KIND
-        && request.get_attr("type").and_then(|v| v.as_text()) == Some("get")
-        && request.get_attr("target").is_some()
-        && matches!(request.child_nodes(), [picture]
-            if picture.description == "picture"
-                && picture.get_attr("type").and_then(|v| v.as_text()) == Some("image")
-                && picture.get_attr("query").and_then(|v| v.as_text()) == Some("url"));
+    let lookup = kind == GET_KIND && is_lookup_request(request);
     if !upload && !lookup {
         return None;
     }

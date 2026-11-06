@@ -4708,3 +4708,26 @@ No native photo/cache adoption, image transformation, request construction,
 source/callback lifetime, retry, timer or HTTP-route behavior was added. Downstream
 ITY/8pX state effects and the meaning of the saved callback long remain unknown.
 No live account operation or claim that these codes cause account restrictions.
+
+## Photo lookup result extensions (2026-11-06)
+
+**Confirmed static / implemented offline:** [lookup CK4 and named-child proof](apk/2.26.43.72-photo-lookup-result/README.md)
+select the first direct picture by name, independently of unrelated siblings,
+and never route root/nested error extensions to Bvj. Missing picture constructs
+empty metadata with the saved request ID input; URL/id parsing still has its
+own LIL failures. The new constructor binds that ID field and shows the saved
+callback long originates in SystemClock.elapsedRealtime(), not a timeout value.
+Its downstream uses remain untraced.
+
+The old generic action parser incorrectly classified actual photo lookup results
+as refusals on unrelated error extensions. Matching saved lookup wire shapes now
+keep their outer-result outcome. Result-with-picture, preceding metadata,
+missing picture and later duplicate pictures retain the raw reply and settle
+once across reopen; no resend. Both kind-only upload/lookup negatives retain
+the generic parser. Outer photo error classification and other producer policies
+remain unchanged.
+
+ActionStatus.Ok is an envelope/recognized-refusal outcome, not a claim native
+URL/id validation, cache adoption or photo publication succeeded. That admission
+and downstream state port remain unfinished. No timer, ACK, refresh, retry,
+query or live operation was added.

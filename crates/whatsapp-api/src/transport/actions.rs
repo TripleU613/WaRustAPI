@@ -66,9 +66,10 @@ pub enum ActionStatus {
     /// resends it; whether it reached the socket is unknown until a reply
     /// arrives (`reserve_pending` reserves up to 16, written one at a time).
     Sent,
-    /// The server answered `type=result`.
+    /// A correlated result without a recognized producer-specific refusal.
+    /// This does not establish payload validation or feature-state adoption.
     Ok,
-    /// The server answered `type=error`.
+    /// A correlated outer error or recognized producer-specific inner refusal.
     Error,
 }
 
@@ -865,6 +866,12 @@ fn record_reply_inner(
                 .child_nodes()
                 .first()
                 .is_some_and(|child| child.description == "picture");
+        // APK43.72 6p1.CK4 selects picture by name, otherwise empty metadata;
+        // it never searches error extensions. This is outer callback dispatch,
+        // not validation of URL/id or native photo/cache adoption.
+        let photo_lookup_result = kind == Some("result")
+            && row.kind == super::profile_picture::GET_KIND
+            && super::profile_picture::is_lookup_request(&request);
         // APK43.72 FUS.CK4 schedules the originally requested values without
         // reading response payload. Preserve outer-type dispatch for this
         // typed producer, independently of unrelated nested-refusal parsers.
@@ -910,6 +917,7 @@ fn record_reply_inner(
         // — it is an error the caller is told is fine.
         let inner_error = if about_result
             || photo_set_result
+            || photo_lookup_result
             || two_factor_result
             || privacy_token_result
             || (blocklist_reply && kind == Some("result"))
@@ -2490,6 +2498,62 @@ mod tests {
         }
     }
 
+    #[tokio::test(start_paused = true)]
+    async fn photo_lookup_result_extensions_do_not_select_refusal_callback() {
+        use super::super::profile_picture;
+        for shape in [
+            "picture_first",
+            "metadata_first",
+            "no_picture",
+            "two_pictures",
+        ] {
+            let (dir, store) = store();
+            let id = profile_picture::queue_get(
+                &store,
+                &crate::model::jid::Jid::parse("15555550101@s.whatsapp.net").unwrap(),
+            )
+            .unwrap();
+            let request = reserve_next(&store).unwrap().unwrap();
+            let mut live = LiveReplies::default();
+            register_written(&mut live, &store, &request, tokio::time::Instant::now());
+            let picture = Node::new("picture")
+                .attr("id", "7")
+                .attr("url", "https://example.invalid/picture.jpg");
+            let mut children = match shape {
+                "picture_first" => vec![picture],
+                "metadata_first" => vec![Node::new("metadata"), picture],
+                "two_pictures" => vec![picture, Node::new("picture").attr("id", "8")],
+                _ => vec![Node::new("metadata")],
+            };
+            children.push(Node::new("error").attr("code", "403"));
+            children.push(Node::new("list").children(vec![
+                Node::new("user").children(vec![Node::new("error").attr("code", "401")]),
+            ]));
+            let reply = Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "result")
+                .children(children);
+            assert!(live.record_reply(&store, &reply).unwrap());
+            assert!(!live.record_reply(&store, &reply).unwrap());
+            let before = outcomes(&store).unwrap();
+            assert_eq!(before[0].status, ActionStatus::Ok, "{shape}");
+            assert_eq!(before[0].error_code, None);
+            assert_eq!(before[0].photo_error, None);
+            let saved_reply = super::reply(&store, &id).unwrap();
+            assert_eq!(saved_reply, Some(reply));
+            drop(store);
+            let reopened = ProtocolStore::open(OpenOptions {
+                path: dir.path().join("p.redb"),
+                account_id: AccountId::new("a").unwrap(),
+                key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([7; 32]))),
+                create: false,
+            })
+            .unwrap();
+            assert_eq!(outcomes(&reopened).unwrap(), before);
+            assert!(reserve_pending(&reopened).unwrap().is_empty());
+        }
+    }
+
     #[test]
     fn photo_error_selects_first_direct_coded_child() {
         use super::super::profile_picture;
@@ -2686,22 +2750,32 @@ mod tests {
         }
         // A mislabeled action must not inherit this callback's reply policy.
         let (_dir, store) = store();
-        let id = queue(&store, profile_picture::SET_KIND, "wrong producer", ping).unwrap();
-        reserve_next(&store).unwrap().unwrap();
-        assert!(
-            record_reply(
-                &store,
-                &Node::new("iq")
-                    .attr("id", id.as_str())
-                    .attr("type", "result")
-                    .children(vec![
-                        Node::new("picture"),
-                        Node::new("error").attr("code", "403")
-                    ])
-            )
-            .unwrap()
-        );
-        assert_eq!(outcomes(&store).unwrap()[0].status, ActionStatus::Error);
+        for kind in [profile_picture::SET_KIND, profile_picture::GET_KIND] {
+            let id = queue(&store, kind, "wrong producer", ping).unwrap();
+            reserve_next(&store).unwrap().unwrap();
+            assert!(
+                record_reply(
+                    &store,
+                    &Node::new("iq")
+                        .attr("id", id.as_str())
+                        .attr("type", "result")
+                        .children(vec![
+                            Node::new("picture"),
+                            Node::new("error").attr("code", "403")
+                        ])
+                )
+                .unwrap()
+            );
+            assert_eq!(
+                outcomes(&store)
+                    .unwrap()
+                    .iter()
+                    .find(|row| row.id == id)
+                    .unwrap()
+                    .status,
+                ActionStatus::Error
+            );
+        }
     }
 
     #[tokio::test(start_paused = true)]
