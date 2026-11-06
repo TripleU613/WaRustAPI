@@ -1,0 +1,33 @@
+
+# class: Lcom/whatsapp/infra/core/jid/Jid;
+# extends: Ljava/lang/Object;
+
+.method public equals(ZL)  # .registers 6
+    # full signature: Lcom/whatsapp/infra/core/jid/Jid;->equals(Ljava/lang/Object;)Z
+    0000..0002  const/4  v3, #0x1
+    0002..0006  if-eq  v5, v4, +0x2b
+    0006..000a  instance-of  v0, v5, Lcom/whatsapp/infra/core/jid/Jid;
+    000a..000c  const/4  v2, #0x0
+    000c..0010  if-eqz  v0, +0x27
+    0010..0014  iget-object  v1, v4, Lcom/whatsapp/infra/core/jid/Jid;->user:Ljava/lang/String;
+    0014..0018  check-cast  v5, Lcom/whatsapp/infra/core/jid/Jid;
+    0018..001c  iget-object  v0, v5, Lcom/whatsapp/infra/core/jid/Jid;->user:Ljava/lang/String;
+    001c..0022  invoke-static  {v1, v0}, LX/09W;->A00(Ljava/lang/Object;Ljava/lang/Object;)Z
+    0022..0024  move-result  v0
+    0024..0028  if-eqz  v0, +0x1b
+    0028..002e  invoke-virtual  {v4}, Lcom/whatsapp/infra/core/jid/Jid;->getServer()Ljava/lang/String;
+    002e..0030  move-result-object  v1
+    0030..0036  invoke-virtual  {v5}, Lcom/whatsapp/infra/core/jid/Jid;->getServer()Ljava/lang/String;
+    0036..0038  move-result-object  v0
+    0038..003e  invoke-static  {v1, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    003e..0040  move-result  v0
+    0040..0044  if-eqz  v0, +0xd
+    0044..004a  invoke-virtual  {v4}, Lcom/whatsapp/infra/core/jid/Jid;->getType()I
+    004a..004c  move-result  v1
+    004c..0052  invoke-virtual  {v5}, Lcom/whatsapp/infra/core/jid/Jid;->getType()I
+    0052..0054  move-result  v0
+    0054..0058  if-ne  v1, v0, +0x3
+    0058..005a  return  v3
+    005a..005c  return  v2
+    # exception table: 0 try range(s)
+.end method

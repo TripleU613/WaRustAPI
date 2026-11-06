@@ -1562,3 +1562,9 @@ Regression duplicate_result_payloads_refuse_without_update_fallback_or_content_e
 **Confirmed static APK43.72:** [complete common envelope/typed-value helper and constructor references](apk/2.26.43.72-mex-envelope-correlation/README.md) show reply ID checked against original request ID and typed reply from checked against request to. Expected values are equality constraints, not missing-field defaults. Selected success validates inline before payload/model selection; the request-error constructor uses88J.A00. Full typed Jid normalization and outer dispatch remain separate.
 
 **Rust boundary:** parse_json_response is a payload inspection API without an original-request argument; its duplicate-result guard does not establish sender/request admission. A future live adopter must own the sent callback and validate this envelope separately, with expiry/restart/no-replay rules. No new runtime mismatch was established for a live Rust MEX callback in this bounded search, and no guessed sender check/API was added. Mapping adoption, streaming and native normalization remain unported. Offline research only.
+
+## Selected MEX server JID equality (2026-11-06)
+
+**Confirmed static APK43.72:** [typed attribute/server parser, full singleton and inherited equality](apk/2.26.43.72-mex-server-jid-equality/README.md) bind the original MEX request-to to0mL: empty user, s.whatsapp.net, type13. Exact text s.whatsapp.net resolves to that singleton; inherited equality compares user/server/type. The selected MEX validator requests baseJid, not DeviceJid conversion. Protocol-compliance failure in the reader logs and continues, so it is not a standalone rejection rule.
+
+**Limits:** binary decoder encodings, general subtype overrides/aliases, trusted ingress and full MEX/mapping adoption remain unverified. The prior server equality gap is narrowed for this concrete server, not closed for all JIDs. No new Rust sender policy/request or live operation.

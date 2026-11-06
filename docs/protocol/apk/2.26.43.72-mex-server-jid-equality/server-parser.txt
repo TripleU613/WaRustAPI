@@ -1,0 +1,28 @@
+
+# class: LX/0De;
+# extends: Ljava/lang/Object;
+
+.method public A00(LL)  # .registers 2
+    # full signature: LX/0De;->A00(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    0000..0004  const-string  v0, "s.whatsapp.net"
+    0004..000a  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    000a..000c  move-result  v0
+    000c..0010  if-eqz  v0, +0x5
+    0010..0014  sget-object  v0, LX/0mL;->A00:LX/0mL;
+    0014..0016  return-object  v0
+    0016..001a  const-string  v0, "g.us"
+    001a..0020  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0020..0022  move-result  v0
+    0022..0026  if-eqz  v0, +0x5
+    0026..002a  sget-object  v0, LX/7Ks;->A00:LX/7Ks;
+    002a..002c  return-object  v0
+    002c..0030  const-string  v0, "call"
+    0030..0036  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0036..0038  move-result  v0
+    0038..003c  if-eqz  v0, +0x5
+    003c..0040  sget-object  v0, LX/J9P;->A00:LX/J9P;
+    0040..0042  return-object  v0
+    0042..0044  const/4  v0, #0x0
+    0044..0046  return-object  v0
+    # exception table: 0 try range(s)
+.end method

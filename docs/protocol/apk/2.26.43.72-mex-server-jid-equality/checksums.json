@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "bytes": 4626,
+    "sha256": "e79c753b53f4382b459234241d241652b2b84c9699ad2fa21e301a74471f092c"
+  },
+  "attribute.txt": {
+    "bytes": 9685,
+    "sha256": "e02cf6a3afbc64492d9954324caff53e519290a5aafe96e5628dbc9417b024f7"
+  },
+  "base-equality.txt": {
+    "bytes": 1648,
+    "sha256": "e57f1e5e57c2938c540ff371b6358a1cf83cead2049bd3a332dcf3a5746ec941"
+  },
+  "envelope-request.txt": {
+    "bytes": 2231,
+    "sha256": "62d7f02952d398737fe575d321b6ca7fae7ac225264bb81832196471e92ac02e"
+  },
+  "parser-dispatch.txt": {
+    "bytes": 11633,
+    "sha256": "650fe9f594ffb1c2ff9fb7d8bb55535021e2fe69465d46e4305798883b3257c5"
+  },
+  "request-node.txt": {
+    "bytes": 3604,
+    "sha256": "2d592b6269ef1ed6dc3c931428388f83c66e2260f89c0b5e835cb75550b1f74f"
+  },
+  "server-parser.txt": {
+    "bytes": 1156,
+    "sha256": "a10cfd8f9d425262a40cc92b2d9b7264a6e66c747b94f55b22f878cc9c1c23bc"
+  },
+  "server.txt": {
+    "bytes": 1942,
+    "sha256": "9b7609bba92f00a97aeba1053898348d6f4c39cd17cb1c8a0001067ae16856d3"
+  },
+  "string-parser.txt": {
+    "bytes": 1017,
+    "sha256": "d153de3994b006bbd5e24fb449fda9a921854cea331acdc53face43836e0906a"
+  },
+  "typed-jid-reader.txt": {
+    "bytes": 4444,
+    "sha256": "0e1523de412bd1c3e33fecc249ec1ed222f1656cb875b02634893a0b574fbee8"
+  }
+}

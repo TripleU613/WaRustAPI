@@ -1,3 +1,5 @@
+Pinned MEX server equality narrowed: request-to and exact s.whatsapp.net text resolve to0mL; user/server/type determine inherited equality. [Concrete server equality, diagnostic-only compliance check and remaining decoder limits](docs/protocol/mex.md#selected-mex-server-jid-equality-2026-11-06). Research only; binary/general aliases remain unverified.
+
 Pinned MEX constructors now traced through original-ID and typed reply-from/request-to equality; Rust JSON payload parsing remains separate from live envelope admission. [Request ID/from equality evidence and payload-only Rust boundary](docs/protocol/mex.md#original-request-mex-envelope-correlation-2026-11-06). Research only; no guessed sender policy added.
 
 MEX JSON parser now rejects duplicate result payloads instead of choosing the first, matching the pinned non-Pando success constructor cardinality. [Pinned cardinality evidence, both-order regression and limits](docs/protocol/mex.md#duplicate-result-payload-rejection-2026-11-06). Offline only; no query/retry added.

@@ -8198,3 +8198,5 @@ APK43.72 non-Pando MEX expiry removes ordinary pending ownership before scheduli
 APK43.72 explicit exactly-one MEX result check closes a Rust first-child ambiguity; duplicate result cannot fall back to update. [Pinned cardinality evidence, both-order regression and limits](mex.md#duplicate-result-payload-rejection-2026-11-06). No live operation.
 
 Current43.72 MEX envelope expected values are checked, not defaults: original request ID and typed to/from equality precede selected model parsing. [Request ID/from equality evidence and payload-only Rust boundary](mex.md#original-request-mex-envelope-correlation-2026-11-06). No live operation or complete Rust admission claim.
+
+APK43.72 selected MEX server JID equality and diagnostic-only compliance path retained; no blanket parser rejection or alias policy inferred. [Concrete server equality, diagnostic-only compliance check and remaining decoder limits](mex.md#selected-mex-server-jid-equality-2026-11-06). Offline only.

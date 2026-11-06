@@ -17625,5 +17625,12 @@
     "x-live": false,
     "description": "Research-only APK43.72 selected MEX constructors validate reply ID against saved request ID and typed reply from against request to. Expected values are checks, not defaults. Rust JSON payload inspection does not provide this live envelope authority; typed Jid normalization, streaming and authenticated adoption remain incomplete. No sender policy/API/runtime behavior added.",
     "evidence": "docs/protocol/mex.md#original-request-mex-envelope-correlation-2026-11-06"
+},
+  "x-mex-server-jid-equality-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Research-only APK43.72 selected MEX request-to server singleton and exact s.whatsapp.net text parsing. Inherited equality compares user/server/type; protocol-compliance failure logs and continues before class cast. Binary encoding, general aliases/subtype overrides and trusted live admission remain incomplete. No Rust sender policy or request added.",
+    "evidence": "docs/protocol/mex.md#selected-mex-server-jid-equality-2026-11-06"
 }
 }
