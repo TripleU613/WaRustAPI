@@ -1,7 +1,11 @@
 {
   "README.md": {
-    "bytes": 14131,
-    "sha256": "b01b3af21c144833122b631df7ec2708612020568172ccc5d827691bd04897c2"
+    "bytes": 16377,
+    "sha256": "3b4c8629f50f6b64688e956c1c6ad82258666cbf87f9e161b3ade6019f434c81"
+  },
+  "ack-attribute-constructors.txt": {
+    "bytes": 4272,
+    "sha256": "da83cb245079996467475c91b935e0cca9341e48596e7fc0e67168680d2e288e"
   },
   "ack-class-field-refs.txt": {
     "bytes": 2112,
@@ -10,6 +14,30 @@
   "ack-envelope-callers.txt": {
     "bytes": 134,
     "sha256": "c78e798c351eb700a865f5397467a7f92bd3331d9e6cd091e6b1c7ce37462bc0"
+  },
+  "ack-jid-attribute-helper.txt": {
+    "bytes": 543,
+    "sha256": "298afdda913a1cb5a474f823f82517b02fac13ad4a477af21243ac016d51138a"
+  },
+  "ack-jid-compliance.txt": {
+    "bytes": 753,
+    "sha256": "21095f1ebc3e3e61f4d803be3a5a51a50ce726a032fd6abecc31c8650e2e026e"
+  },
+  "ack-jid-factory.txt": {
+    "bytes": 11633,
+    "sha256": "650fe9f594ffb1c2ff9fb7d8bb55535021e2fe69465d46e4305798883b3257c5"
+  },
+  "ack-nullable-jid-parser.txt": {
+    "bytes": 1017,
+    "sha256": "d153de3994b006bbd5e24fb449fda9a921854cea331acdc53face43836e0906a"
+  },
+  "ack-typed-jid-read.txt": {
+    "bytes": 4444,
+    "sha256": "0e1523de412bd1c3e33fecc249ec1ed222f1656cb875b02634893a0b574fbee8"
+  },
+  "ad-reader-anchor-negative.txt": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   },
   "adjacent-flag-negative.txt": {
     "bytes": 119,

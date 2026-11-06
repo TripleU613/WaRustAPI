@@ -1,3 +1,8 @@
+ACK address audit: current APK typed getter logs protocol-compliance failures
+but continues; no new Rust rejection inferred. Attribute helper preserves Jid
+objects; current binary reader/writer subtype parity remains unclosed.
+[Evidence](docs/protocol/apk/2.26.43.72-group-missing-identification/README.md).
+
 Picture ACK final builder and fresh notification-key fields now traced in
 current APK; regression rejects accidental copying of incoming recipient/edit/
 error/offline attributes. No runtime change or live validation.

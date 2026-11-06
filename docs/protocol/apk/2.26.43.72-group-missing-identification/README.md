@@ -225,3 +225,37 @@ this selected trace. No runtime policy changed in this follow-up.
 constructing this ACK.0m2.handleMessage manages callback completion; final wire
 construction is the positive0v0 ->0v2 ->F3e path retained here. This records
 negative search direction without retaining unrelated bulk dispatchers.
+
+## ACK JID attribute and diagnostic boundary — 2026-11-05
+
+**Confirmed static:** F3e's address helper DBe.A1A constructs0Tl(Jid,key)
+without stripping agent/device or changing namespace. That constructor obtains
+getRawString and delegates with type byte1; the full constructor stores both
+Jid and raw string. It checks0Dn.A0e/type8 and calls00L.A0D for its protocol
+compliance diagnostic. The behavior of that assertion helper is not traced here;
+do not infer unconditional conversion, rejection or successful serialization.
+The eventual binary JID writer remains outside this follow-up.
+
+0Tp.A0A first uses the attribute's typed Jid when present; otherwise it obtains
+text and calls0Dd.A02. That nullable parser returns null for null/empty or caught
+parse failures and otherwise delegates to0Dd.A00. The retained full factory
+contains namespace/class branches and caching; every subtype's grammar is not
+re-established. After reading a Jid,0Tp.A0A calls isProtocolCompliant. A false
+result logs at003a..0084, then continues at008a, including optional DeviceJid
+conversion and Class.cast. It does not immediately return null or throw solely
+because that boolean is false. ClassCastException is logged and returns null.
+Jid.isProtocolCompliant returns false for getType2/9/11/8. Mapping every current
+runtime subtype to those integers is not established by this selected trace.
+
+**Refuted hypothesis:** using this getter's compliance check as evidence for a
+new blanket notification-address rejection would confuse logging with refusal.
+No such Rust guard was added. The existing ack_address zero-AD conversion is
+supported by older37.71 reader/writer evidence in receipt-primary-ack.md; the
+current address-attribute helper does not itself re-prove current binary reader
+normalization. Nonzero device/agent, decoded-zero versus literal-text-zero and
+all subtype writer behavior still require tracing through current read/write
+factories before changing that shared policy. An exact readAdJid string search
+returned no references; this is a failed anchor, not absence of an AD reader.
+
+No runtime change, generated query, protocol rejection, live account activity or
+claim of complete current-build address parity resulted from this follow-up.
