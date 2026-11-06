@@ -1,0 +1,24 @@
+# Bounded selected ranges; complete export SHA-256: a1a98e2bd2b49f945036a9eadf45ec3204a5b8b3b35bdf71666cc2f47a51801c
+
+# class: LX/G0j;
+# extends: LX/07o;
+
+.method private A02(VLLZ)  # .registers 16
+    # full signature: LX/G0j;->A02(Landroid/content/Context;Ljava/lang/Runnable;Z)V
+    0000..0004  iget-object  v3, v12, LX/G0j;->A0b:LX/00x;
+    03d6..03da  iget-object  v0, v5, LX/09T;->A01:LX/09U;
+    03da..03dc  const/4  v4, #0x0
+    03dc..03e0  iget-object  v3, v0, LX/09U;->A00:Landroid/content/SharedPreferences;
+    03e0..03e6  invoke-interface  {v3}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
+    03e6..03e8  move-result-object  v1
+    03e8..03ec  const-string  v0, "registration_device_id"
+    03ec..03f2  invoke-static  {v1, v0, v4}, LX/6og;->A1M(Landroid/content/SharedPreferences$Editor;Ljava/lang/String;I)V
+    03f2..03f8  invoke-interface  {v3}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
+    03f8..03fa  move-result-object  v1
+    03fa..03fe  const-string  v0, "companion_registration_state"
+    03fe..0404  invoke-interface  {v1, v0, v4}, Landroid/content/SharedPreferences$Editor;->putInt(Ljava/lang/String;I)Landroid/content/SharedPreferences$Editor;
+    0404..0406  move-result-object  v0
+    0406..040c  invoke-interface  {v0}, Landroid/content/SharedPreferences$Editor;->commit()Z
+    040c..0410  iget-object  v0, v5, LX/09T;->A02:Ljava/util/concurrent/atomic/AtomicInteger;
+    0410..0416  invoke-virtual  {v0, v4}, Ljava/util/concurrent/atomic/AtomicInteger;->set(I)V
+    0416..0418  const/4  v4, #0x0

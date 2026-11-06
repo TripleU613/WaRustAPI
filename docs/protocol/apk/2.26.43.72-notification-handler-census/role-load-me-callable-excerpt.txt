@@ -1,0 +1,71 @@
+# Bounded selected ranges; complete export SHA-256: 9b1c89379bea90df372022d32efe6431594c12584e651b578db8f52c86a2de35
+
+# class: LX/1Wk;
+# extends: Ljava/lang/Object;
+
+.method public call(L)  # .registers 21
+    # full signature: LX/1Wk;->call()Ljava/lang/Object;
+    0000..0004  move-object/from16  v1, v20
+    0004..0008  iget  v0, v1, LX/1Wk;->$t:I
+    0008..000e  packed-switch  v0, payload@0x384, cases=[0:@0x128, 1:@0x34], default@0xe
+    0034..0038  iget-object  v5, v1, LX/1Wk;->A00:Ljava/lang/Object;
+    0038..003c  check-cast  v5, LX/09O;
+    003c..0040  const-string  v1, "MeManager/loadMe"
+    0040..0044  sget-object  v0, LX/0Cx;->A03:Ljava/lang/reflect/Method;
+    0044..004a  invoke-static  {v1}, Landroid/os/Trace;->beginSection(Ljava/lang/String;)V
+    004a..004e  iget-object  v6, v5, LX/09O;->A0A:LX/09a;
+    004e..0054  invoke-virtual  {v6}, LX/09a;->A03()V
+    0054..0058  const-string  v0, "memanager/load-me"
+    0058..005e  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    005e..0062  iget-object  v0, v5, LX/09O;->A05:LX/00x;
+    0062..0068  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0068..006a  move-result-object  v7
+    006a..006e  check-cast  v7, LX/0Cz;
+    006e..0070  monitor-enter
+    0070..0076  invoke-static  {}, LX/00J;->A00()Landroid/app/Application;
+    0076..0078  move-result-object  v0
+    0078..007e  invoke-virtual  {v0}, Landroid/content/Context;->getFilesDir()Ljava/io/File;
+    007e..0080  move-result-object  v1
+    0080..0084  const-string  v0, "me"
+    0084..008a  invoke-static  {v1, v0}, LX/0D0;->A01(Ljava/io/File;Ljava/lang/String;)LX/0E2;
+    008a..008c  move-result-object  v8
+    008c..0090  if-nez  v8, +0x4
+    0090..0092  monitor-exit
+    0092..0094  goto  +0x3e
+    0094..0098  iget-object  v0, v8, LX/0E2;->A00:LX/0Dx;
+    0098..009c  if-nez  v0, +0x18
+    009c..00a2  invoke-virtual  {v7}, LX/0Cz;->A01()Ljava/lang/String;
+    00a2..00a4  move-result-object  v0
+    00a4..00aa  invoke-static  {v0}, LX/0D0;->A00(Ljava/lang/String;)LX/0Dx;
+    00aa..00ac  move-result-object  v4
+    00ac..00b0  if-eqz  v4, +0xe
+    00b0..00b4  iget-object  v2, v8, LX/0E2;->A02:Ljava/lang/String;
+    00b4..00b8  iget-object  v1, v8, LX/0E2;->A03:Ljava/lang/String;
+    00b8..00bc  iget-object  v0, v8, LX/0E2;->A01:Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    00bc..00c0  new-instance  v3, LX/0E2;
+    00c0..00c6  invoke-direct  {v3, v4, v0, v2, v1}, LX/0E2;-><init>(LX/0Dx;Lcom/whatsapp/infra/core/jid/PhoneUserJid;Ljava/lang/String;Ljava/lang/String;)V
+    00c6..00c8  goto  +0x2
+    00c8..00ca  move-object  v3, v8
+    00ca..00ce  if-eq  v3, v8, +0x13
+    00ce..00d2  iget-object  v0, v7, LX/0Cz;->A01:LX/05a;
+    00d2..00d8  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    00d8..00da  move-result-object  v2
+    00da..00de  check-cast  v2, LX/08Z;
+    00de..00e0  const/4  v1, #0x2
+    00e0..00e4  new-instance  v0, LX/IBq;
+    00e4..00ea  invoke-direct  {v0, v3, v8, v7, v1}, LX/IBq;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+    00ea..00f0  invoke-interface  {v2, v0}, LX/08Z;->CbD(Ljava/lang/Runnable;)V
+    00f0..00f2  monitor-exit
+    00f2..00f4  monitor-enter
+    00f4..00fa  invoke-static  {v3, v5}, LX/09O;->A00(LX/0E2;LX/09O;)LX/0E2;
+    00fa..00fc  move-result-object  v1
+    00fc..0100  iget-object  v0, v5, LX/09O;->A0H:LX/0E2;
+    0100..0102  monitor-exit
+    0102..0108  invoke-virtual  {v6}, LX/09a;->A01()V
+    0108..010e  invoke-static  {v1, v0, v5}, LX/09O;->A02(LX/0E2;LX/0E2;LX/09O;)V
+    010e..0112  iget-boolean  v0, v6, LX/09a;->A01:Z
+    0112..0116  xor-int/lit8  v0, v0, #0x1
+    0116..011a  if-eqz  v0, +0x5
+    011a..0120  invoke-virtual  {v6}, LX/09a;->A02()V
+    0120..0126  invoke-static  {}, Landroid/os/Trace;->endSection()V
+    0126..0128  goto  -0x7b

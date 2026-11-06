@@ -136,8 +136,8 @@
     "sha256": "44efae6cd735b20883b1b03ef834ca72c029f9a6c7f45ec6fa734def89c736d5"
   },
   "README.md": {
-    "bytes": 7649,
-    "sha256": "6ea4f85e5a17030a39ee2e949d2d005b382c763d7b8253879634dc48c22383ec"
+    "bytes": 10372,
+    "sha256": "4ff6e92fd581a9f65c7bb1aee0623c7ba37b4079b42d979625fdeacdc2484916"
   },
   "base-constructor-callers.txt": {
     "bytes": 2278,
@@ -151,13 +151,49 @@
     "bytes": 913,
     "sha256": "dd19fb3be2ab4c6c540211663b1924e089e3ca3da1123e5a809b37baac2b3171"
   },
+  "role-cleanup-reset-excerpt.txt": {
+    "bytes": 1613,
+    "sha256": "d091976df27d573ab3f7a1a738ab5780c1fcbe4e1d71312baa6c2393e61fc066"
+  },
+  "role-clear-reset.txt": {
+    "bytes": 1623,
+    "sha256": "4ad08e414ce4e84864186e492a25723f5a3d19bbd5978afba2bc78d502210ab2"
+  },
   "role-device-id-predicate.txt": {
     "bytes": 1775,
     "sha256": "ff521bf8aafec7a94d04d637ded73ce07244a9bd55d6153ca8a133a6d432863a"
   },
+  "role-device-id-xrefs.txt": {
+    "bytes": 545,
+    "sha256": "334bded25538651f4b2fd8efc8fde6d79e095c891519397267372428f867f160"
+  },
   "role-initialization-boundary.txt": {
     "bytes": 692,
     "sha256": "15efa5fd297eebf9252574f9f5b8aa51f878c8e172cdf7b03a0824556e33efdf"
+  },
+  "role-load-me-callable-excerpt.txt": {
+    "bytes": 3830,
+    "sha256": "f177cec7a43b25896357cea41d765f01a3b139c882a16ab78d635cc1682f5441"
+  },
+  "role-pairing-device-write-excerpt.txt": {
+    "bytes": 3266,
+    "sha256": "7ccd390df30b1cd43fc373ce20f9f217bcd1daa2b0c01edf76fc4c5ad226221e"
+  },
+  "role-preference-put-helper.txt": {
+    "bytes": 561,
+    "sha256": "56f465565670724e60fbed41db16de3f06453834e718e53ebc037259873cf52c"
+  },
+  "role-protobuf-reader-excerpt.txt": {
+    "bytes": 1743,
+    "sha256": "6e2be63a7b00e3c0123c0f8d16aef2aea941066f60f0c852822c791ac313e09d"
+  },
+  "role-raw-device-index.txt": {
+    "bytes": 643,
+    "sha256": "f32109f60aedab5b509279116f92b92171769ecdacd9c96e48d352e4c6624083"
+  },
+  "role-selected-account-reader.txt": {
+    "bytes": 1051,
+    "sha256": "3e11d40178d904039cac69c250fdd3a7cdb064659df160356c820e69018f5123"
   },
   "server-handler.txt": {
     "bytes": 9549,

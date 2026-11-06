@@ -140,3 +140,46 @@ registration_device_id authority. Its explicit primary payload is useful source
 context but not a migration of native role/bootstrap/recovery state. Complete
 Rust mapping is [separate](../../server-sync-rust-state-mapping.md).
 No new default role value, preferences, query, ACK or runtime policy was added.
+
+## Saved role ID writer/reader census — 2026-11-05
+
+**Confirmed static:** exact registration_device_id anchor scan finds8 physical
+references:09O.A01 reset;09O.Auf read; two09O.BU8 reads;0Qq.A0a selected-account
+read;107.BLn write;1nW.ABS protobuf-producer read;G0j.A02 reset. This is a
+constant-string census, not proof against reflection, dynamic keys, preference
+clear/import or indirect writers.
+
+09O.A01 clears Me/providers and writes0 through putInt/apply, then sets the
+09T atomic cache to0. Auf returns the saved integer directly with default0.
+0Qq.A0a takes5VA, calls5kq.A00(selectedAccount,reader,key) and tests positive;
+this is selected-account state, not automatically the current account. Full
+5kq directory/key scoping still needs separate verification.
+
+107.BLn's selected registration branch gets v2 from DeviceJid.getDevice on
+v13 at13d2 or v14 at140a. Its retained writer block stores that integer in
+09T.A01/09U preferences at153e..1550 and updates the atomic cache at1550..155a.
+This binds the local value source to a device JID, not arbitrary phone digits.
+It does not re-prove every upstream pairing/HMAC/account-signature or owner
+binding branch; the [earlier current companion-ingress trace](../../own-companion-ingress-current.md)
+retains that broader selected producer. Do not treat any supplied Rust Jid.device
+as authorization to write a registered companion index.
+
+G0j.A02's selected cleanup block writes0 with6og.A1M (putInt/apply), separately
+writes companion_registration_state0 with commit, then resets the atomic cache.
+This is a distinct field/operation: no atomicity across the preference writes,
+cache update and broader cleanup is proved. No cleanup/reset was executed.
+1nW.ABS reads the preference in its protobuf-building path; that reference is
+not another role setter. No full protobuf-field mapping is asserted here.
+
+The1Wk selector1 callable loads selected filesDir/me through0D0.A01, updates
+through09O.A00 and completes09a coordination; broader load/invalid-identity
+behavior was already traced in [read-self authority](../../read-self-authority-current.md)
+and [own identity ingress](../../own-companion-ingress-current.md). The earlier
+[role/recovery audit](../../server-sync-role-recovery.md) already establishes
+BU7 companion mode and recovery semantics. Recent census/mapping unknowns
+are qualified by those existing records; no re-discovery is claimed as a port.
+
+Remaining gaps are exact Rust authority/migration, all positive device-index
+writers/clear/import paths and full producer-to-account binding. Rust has no
+native preference row to default/reset automatically. No runtime behavior,
+ACK, query, identity, account switch or live account operation changed.

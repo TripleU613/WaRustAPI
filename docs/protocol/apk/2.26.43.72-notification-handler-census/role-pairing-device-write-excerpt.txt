@@ -1,0 +1,50 @@
+# Bounded selected ranges; complete export SHA-256: e474e7c248bc92244a5f664f6ecfa2c95608875080be91cc332fa4a85ae1dab2
+
+# class: LX/107;
+# extends: Ljava/lang/Object;
+
+.method public BLn(ZLI)  # .registers 29
+    # full signature: LX/107;->BLn(Landroid/os/Message;I)Z
+    0000..0004  const/16  v1, #0xf2
+    13a2..13a6  iget-object  v13, v3, LX/0Xl;->A07:LX/0EM;
+    13a6..13ac  invoke-static  {v13}, LX/00L;->A05(Ljava/lang/Object;)V
+    13ac..13b0  iget-boolean  v2, v3, LX/0Xl;->A0K:Z
+    13b0..13b4  if-eqz  v2, +0xa
+    13b4..13b8  iget-boolean  v1, v3, LX/0Xl;->A0L:Z
+    13b8..13bc  if-eqz  v1, +0x6
+    13bc..13c0  const/16  v16, #0x1
+    13c0..13c4  if-eqz  v14, +0x4
+    13c4..13c8  const/16  v16, #0x0
+    13c8..13ca  const/4  v6, #0x0
+    13ca..13ce  if-eqz  v2, +0x1d
+    13ce..13d2  iget-object  v11, v13, Lcom/whatsapp/infra/core/jid/Jid;->user:Ljava/lang/String;
+    13d2..13d8  invoke-virtual  {v13}, Lcom/whatsapp/infra/core/jid/Jid;->getDevice()I
+    13d8..13da  move-result  v2
+    13da..13de  iget-object  v4, v13, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    13de..13e2  const-string  v7, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.LidUserJid"
+    13e2..13e8  invoke-static  {v4, v7}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    13e8..13ec  check-cast  v4, LX/0Dx;
+    13ec..13f0  iget-object  v1, v13, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    13f0..13f6  invoke-static  {v1, v7}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    13f6..13fa  check-cast  v1, LX/0Dx;
+    13fa..1400  invoke-virtual  {v1}, Lcom/whatsapp/infra/core/jid/UserJid;->getPrimaryDevice()Lcom/whatsapp/infra/core/jid/DeviceJid;
+    1400..1402  move-result-object  v7
+    1402..1404  goto  +0xf
+    1404..140a  invoke-static  {v14}, LX/00L;->A05(Ljava/lang/Object;)V
+    140a..1410  invoke-virtual  {v14}, Lcom/whatsapp/infra/core/jid/Jid;->getDevice()I
+    1410..1412  move-result  v2
+    1412..1416  iget-object  v4, v14, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    1416..141c  invoke-virtual  {v4}, Lcom/whatsapp/infra/core/jid/UserJid;->getPrimaryDevice()Lcom/whatsapp/infra/core/jid/DeviceJid;
+    141c..141e  move-result-object  v7
+    141e..1420  move-object  v11, v6
+    152a..152e  iget-object  v14, v3, LX/0Xl;->A0v:LX/09T;
+    152e..1532  iget-object  v1, v14, LX/09T;->A01:LX/09U;
+    1532..1536  iget-object  v1, v1, LX/09U;->A00:Landroid/content/SharedPreferences;
+    1536..153c  invoke-interface  {v1}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
+    153c..153e  move-result-object  v15
+    153e..1542  const-string  v1, "registration_device_id"
+    1542..1548  invoke-interface  {v15, v1, v2}, Landroid/content/SharedPreferences$Editor;->putInt(Ljava/lang/String;I)Landroid/content/SharedPreferences$Editor;
+    1548..154a  move-result-object  v1
+    154a..1550  invoke-interface  {v1}, Landroid/content/SharedPreferences$Editor;->apply()V
+    1550..1554  iget-object  v1, v14, LX/09T;->A02:Ljava/util/concurrent/atomic/AtomicInteger;
+    1554..155a  invoke-virtual  {v1, v2}, Ljava/util/concurrent/atomic/AtomicInteger;->set(I)V

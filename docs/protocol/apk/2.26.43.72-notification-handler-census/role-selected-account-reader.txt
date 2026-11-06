@@ -1,0 +1,24 @@
+
+# class: LX/0Qq;
+# extends: Ljava/lang/Object;
+
+.method public A0a(ZL)  # .registers 5
+    # full signature: LX/0Qq;->A0a(LX/5VA;)Z
+    0000..0002  const/4  v2, #0x0
+    0002..0008  invoke-static  {v4, v2}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  iget-object  v0, v3, LX/0Qq;->A0C:LX/05a;
+    000c..0010  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0010..0016  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0016..0018  move-result-object  v1
+    0018..001c  check-cast  v1, LX/5kq;
+    001c..0020  const-string  v0, "MultiAccountSharedPrefReader/getPushNameFromSharedPref"
+    0020..0026  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0026..002a  const-string  v0, "registration_device_id"
+    002a..0030  invoke-static  {v4, v1, v0}, LX/5kq;->A00(LX/5VA;LX/5kq;Ljava/lang/String;)I
+    0030..0032  move-result  v0
+    0032..0036  if-lez  v0, +0x4
+    0036..0038  const/4  v0, #0x1
+    0038..003a  return  v0
+    003a..003c  return  v2
+    # exception table: 0 try range(s)
+.end method

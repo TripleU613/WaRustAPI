@@ -1,3 +1,8 @@
+Saved role-ID reference census retained: pairing device-JID value writes,
+zero resets and selected-account readers are distinguished. Existing role/Me
+audits linked; full Rust migration/account authority remains unported.
+[Evidence](docs/protocol/apk/2.26.43.72-notification-handler-census/README.md).
+
 Server-sync Rust state mapping audited: existing login/admission/backoff
 authorities do not supply native bootstrap/recovery/ready-mutation gates.
 [Concrete mapping and remaining integration](docs/protocol/server-sync-rust-state-mapping.md).

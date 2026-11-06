@@ -67,3 +67,18 @@ Rust has no declaration matching that preference in the audited account/login
 sources. A missing row must not silently select a native default before the
 initializer/writer mapping is established. Other role/bootstrap/recovery gates
 remain independent.
+
+
+## Existing role evidence and current writer census (2026-11-05)
+
+The earlier [role/recovery audit](server-sync-role-recovery.md),
+[read-self authority](read-self-authority-current.md) and
+[own-identity ingress](own-companion-ingress-current.md) already trace selected
+initialization and reset behavior. They qualify earlier unclosed wording above;
+full Rust migration/account authority is still missing. The new
+[exact preference-string census and selected writer value flow](apk/2.26.43.72-notification-handler-census/README.md)
+finds8 references. Pairing writes DeviceJid.getDevice and updates the cache;
+Me clear and selected cleanup reset both to0. Account-switch reader is scoped
+through a supplied selected-account argument, not presumed current-account.
+These native observations do not authorize Rust identity/role resets, and
+preference/cache operations are not an atomic protocol-store migration.

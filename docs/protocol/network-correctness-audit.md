@@ -3706,3 +3706,12 @@ patch exclusion and receipt-time server backoff were mapped individually against
 the native lifecycle. None supplies the missing bootstrap/recovery/ready-mutation
 gates by default. Generic reservation/ActionStatus::Ok is not sync-flight ownership
 or authenticated collection advancement. [Mapping, source boundaries and integration consequences](server-sync-rust-state-mapping.md). No runtime or live operation changed.
+
+
+### Registered device-index writer provenance (2026-11-05)
+
+**Confirmed static:** exact registration_device_id string scan finds8 references.
+Selected107.BLn device-JID getter feeds the saved value/cache;09O.A01 and
+G0j.A02 have zero resets;0Qq.A0a reads selected-account state. Existing role/
+Me-ingress audits qualify the newer mapping's unknowns. Full Rust role migration
+and producer/account binding remain unported. [Writer/reader census and limits](apk/2.26.43.72-notification-handler-census/README.md). No runtime reset, query or live operation.
