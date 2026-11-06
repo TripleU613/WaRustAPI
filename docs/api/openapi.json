@@ -17296,5 +17296,12 @@
     "x-live": false,
     "description": "Static current APK selected memory queue path uses A0H=A05 and optional ordering without requiring row ID, then marks A06 and routes tracked 1k4 by class to handler. Processing selection is distinct from commit and ACK durability. Full injection, hold/refill/error cleanup and count ACK provenance remain open; no Rust behavior change.",
     "evidence": "docs/protocol/apk/2.26.43.72-count-queue-processing/README.md"
+  },
+  "x-count-handler-error-completion-audit": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "description": "Static current APK escaped-handler path requests NACK487 for LIL or500 for other selected failures, separately marking failed completion with ACK-list flagfalse. SQLite full/corruption rethrow. Inner count-parser LIL caught by base handler remains normal ACK. Full cleanup/NACK queue/recovery semantics unported; no Rust error/retry change.",
+    "evidence": "docs/protocol/apk/2.26.43.72-count-handler-error-completion/README.md"
   }
 }

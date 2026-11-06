@@ -7651,3 +7651,16 @@ rethrow; other selected handler failures go to1ic.A0E.
 This refutes a blanket inference that all processing must await disk commit.
 ACK durability remains a separate conditional writer boundary. No Rust queue,
 ACK ordering, replay or live account behavior changed.
+
+### Escaped handler errors have separate NACK and completion paths (2026-11-05)
+
+**Confirmed static,43.72:** queued router storage full/corruption errors rethrow.
+Other selected escaped errors reach1ic.A0E, requesting487 for LIL or500 for
+other failures and constructing completion metadata with ACK-list flagfalse.
+Selected completion marks FAILED_TO_PROCESS; that false flag prevents adding
+another ElB ACK from its list-generation branch. Queue enum names confirm
+QUEUED/READY_TO_PROCESS/PROCESSING/PROCESSED/FAILED_TO_PROCESS are distinct
+from persistence and server confirmation.
+[Eleven exact methods, response/completion separation and callback limits](apk/2.26.43.72-count-handler-error-completion/README.md).
+Count PQ parse LIL caught inside0v6 still follows its original normal ACK,
+not this escaped-error487 path. No Rust NACK/retry/replay or live operation added.

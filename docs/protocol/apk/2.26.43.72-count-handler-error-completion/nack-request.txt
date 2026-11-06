@@ -1,0 +1,61 @@
+
+# class: LX/1rg;
+# extends: Ljava/lang/Object;
+
+.method public A03(VLI)  # .registers 7
+    # full signature: LX/1rg;->A03(LX/0Tp;I)V
+    0000..0006  invoke-virtual  {v4, v5, v6}, LX/1rg;->A02(LX/0Tp;I)V
+    0006..000a  iget-object  v1, v5, LX/0Tp;->A00:Ljava/lang/String;
+    000a..000e  sget-object  v0, LX/1rg;->A05:Ljava/util/Set;
+    000e..0014  invoke-static  {v0, v1}, LX/07Z;->A1W(Ljava/lang/Iterable;Ljava/lang/Object;)Z
+    0014..0016  move-result  v0
+    0016..001a  if-eqz  v0, +0x51
+    001a..001e  if-eqz  v1, +0x4f
+    001e..0022  new-instance  v3, LX/Efa;
+    0022..0028  invoke-direct  {v3}, LX/Efa;-><init>()V
+    0028..002c  iput-object  v1, v3, LX/Efa;->A06:Ljava/lang/String;
+    002c..0030  const-string  v0, "id"
+    0030..0036  invoke-virtual  {v5, v0}, LX/0Tp;->A0L(Ljava/lang/String;)Ljava/lang/String;
+    0036..0038  move-result-object  v0
+    0038..003c  iput-object  v0, v3, LX/Efa;->A08:Ljava/lang/String;
+    003c..0042  invoke-static  {v6}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+    0042..0044  move-result-object  v0
+    0044..004a  invoke-virtual  {v3, v0}, LX/Efa;->A01(Ljava/lang/String;)V
+    004a..004e  const-wide/16  v0, #0xfffe (-2)
+    004e..0052  iput-wide  v0, v3, LX/Efa;->A00:J
+    0052..0056  const-class  v2, Lcom/whatsapp/infra/core/jid/Jid;
+    0056..005a  const-string  v0, "from"
+    005a..0060  invoke-virtual  {v5, v2, v0}, LX/0Tp;->A0A(Ljava/lang/Class;Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    0060..0062  move-result-object  v0
+    0062..0066  if-eqz  v0, +0x4
+    0066..006a  iput-object  v0, v3, LX/Efa;->A02:Lcom/whatsapp/infra/core/jid/Jid;
+    006a..006e  const-string  v1, "type"
+    006e..0070  const/4  v0, #0x0
+    0070..0076  invoke-virtual  {v5, v1, v0}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0076..0078  move-result-object  v0
+    0078..007c  if-eqz  v0, +0x4
+    007c..0080  iput-object  v0, v3, LX/Efa;->A09:Ljava/lang/String;
+    0080..0084  const-string  v0, "participant"
+    0084..008a  invoke-virtual  {v5, v2, v0}, LX/0Tp;->A0A(Ljava/lang/Class;Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    008a..008c  move-result-object  v0
+    008c..0090  if-eqz  v0, +0x4
+    0090..0094  iput-object  v0, v3, LX/Efa;->A01:Lcom/whatsapp/infra/core/jid/Jid;
+    0094..0098  iget-object  v0, v4, LX/1rg;->A02:LX/05a;
+    0098..009c  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    009c..00a2  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    00a2..00a4  move-result-object  v1
+    00a4..00a8  check-cast  v1, LX/0Sf;
+    00a8..00ae  invoke-virtual  {v3}, LX/Efa;->A00()LX/Eoh;
+    00ae..00b0  move-result-object  v0
+    00b0..00b6  invoke-virtual  {v1, v0}, LX/0Sf;->A0S(LX/Eoh;)V
+    00b6..00b8  return-void
+    00b8..00bc  const-string  v1, "StanzaParsingErrorHandler/read/can't send nack for non ackable stanza:"
+    00bc..00c0  new-instance  v0, Ljava/lang/StringBuilder;
+    00c0..00c6  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00c6..00cc  invoke-virtual  {v0, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    00cc..00d2  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00d2..00d4  move-result-object  v0
+    00d4..00da  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    00da..00dc  return-void
+    # exception table: 0 try range(s)
+.end method

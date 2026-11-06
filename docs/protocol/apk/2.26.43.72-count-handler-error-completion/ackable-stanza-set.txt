@@ -1,0 +1,29 @@
+
+# class: LX/1rg;
+# extends: Ljava/lang/Object;
+
+.method public <clinit>(V)  # .registers 7
+    # full signature: LX/1rg;-><clinit>()V
+    0000..0002  const/4  v6, #0x0
+    0002..0004  const/4  v5, #0x1
+    0004..0006  const/4  v4, #0x2
+    0006..0008  const/4  v3, #0x3
+    0008..000a  const/4  v2, #0x4
+    000a..000c  const/4  v0, #0x5
+    000c..0010  new-array  v1, v0, [Ljava/lang/String;
+    0010..0014  const-string  v0, "receipt"
+    0014..0018  aput-object  v0, v1, v6
+    0018..001c  const-string  v0, "notification"
+    001c..0020  aput-object  v0, v1, v5
+    0020..0024  const-string  v0, "message"
+    0024..0028  aput-object  v0, v1, v4
+    0028..002c  const-string  v0, "call"
+    002c..0030  aput-object  v0, v1, v3
+    0030..0034  const-string  v0, "status"
+    0034..0038  aput-object  v0, v1, v2
+    0038..003e  invoke-static  {v1}, LX/08w;->A0h([Ljava/lang/Object;)Ljava/util/Set;
+    003e..0040  move-result-object  v0
+    0040..0044  sput-object  v0, LX/1rg;->A05:Ljava/util/Set;
+    0044..0046  return-void
+    # exception table: 0 try range(s)
+.end method

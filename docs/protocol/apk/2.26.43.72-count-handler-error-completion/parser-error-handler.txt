@@ -1,0 +1,85 @@
+
+# class: LX/1rg;
+# extends: Ljava/lang/Object;
+
+.method public A04(VLL)  # .registers 13
+    # full signature: LX/1rg;->A04(LX/0Tp;LX/LIL;)V
+    0000..0004  const-string  v4, " "
+    0004..0008  const-string  v8, "source=ConnectionReader debug="
+    0008..000c  const-string  v9, "cls:"
+    000c..0010  const-string  v5, "StanzaParsingErrorHandler/onCorruptStreamException STANZA_PARSING_ERROR id="
+    0010..0012  const/4  v7, #0x0
+    0012..0014  const/4  v0, #0x1
+    0014..001a  invoke-static  {v12, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    001a..001e  const/16  v1, #0x4e3
+    001e..0022  iget-object  v0, v10, LX/1rg;->A03:LX/05a;
+    0022..0026  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0026..002c  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    002c..002e  move-result-object  v0
+    002e..0032  check-cast  v0, LX/00X;
+    0032..0038  invoke-virtual  {v0}, LX/00X;->A01()LX/00Y;
+    0038..003a  move-result-object  v0
+    003a..003e  check-cast  v0, LX/00Z;
+    003e..0044  invoke-static  {v0, v1}, LX/09H;->A00(LX/00Y;I)LX/05a;
+    0044..0046  move-result-object  v3
+    0046..004a  iget-object  v6, v11, LX/0Tp;->A00:Ljava/lang/String;
+    004a..004e  sget-object  v0, LX/1rg;->A05:Ljava/util/Set;
+    004e..0054  invoke-static  {v0, v6}, LX/07Z;->A1W(Ljava/lang/Iterable;Ljava/lang/Object;)Z
+    0054..0056  move-result  v0
+    0056..005a  if-eqz  v0, +0x76
+    005a..005e  if-eqz  v6, +0x74
+    005e..0062  const-string  v0, "id"
+    0062..0064  const/4  v2, #0x0
+    0064..006a  invoke-virtual  {v11, v0, v2}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    006a..006c  move-result-object  v1
+    006c..0070  new-instance  v0, Ljava/lang/StringBuilder;
+    0070..0076  invoke-direct  {v0, v5}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0076..007c  invoke-virtual  {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    007c..0082  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0082..0084  move-result-object  v0
+    0084..008a  invoke-static  {v0, v12}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;Ljava/lang/Throwable;)V
+    008a..008e  new-instance  v5, Ljava/lang/StringBuilder;
+    008e..0094  invoke-direct  {v5, v9}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0094..009a  invoke-virtual  {v5, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    009a..00a0  invoke-virtual  {v5, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00a0..00a4  const-string  v0, "type"
+    00a4..00aa  invoke-virtual  {v11, v0, v2}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    00aa..00ac  move-result-object  v1
+    00ac..00b0  if-eqz  v1, +0xd
+    00b0..00b4  const-string  v0, "type:"
+    00b4..00ba  invoke-virtual  {v5, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00ba..00c0  invoke-virtual  {v5, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00c0..00c6  invoke-virtual  {v5, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00c6..00ca  iget-object  v0, v3, LX/05a;->A00:LX/00x;
+    00ca..00d0  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    00d0..00d2  move-result-object  v4
+    00d2..00d6  check-cast  v4, LX/0GO;
+    00d6..00da  const-string  v3, "CorruptStreamException"
+    00da..00e0  invoke-virtual  {v12}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    00e0..00e2  move-result-object  v2
+    00e2..00e6  new-instance  v1, Ljava/lang/StringBuilder;
+    00e6..00ec  invoke-direct  {v1, v8}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00ec..00f2  invoke-virtual  {v1, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    00f2..00f6  const-string  v0, " message="
+    00f6..00fc  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00fc..0102  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0102..0108  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0108..010a  move-result-object  v0
+    010a..0110  invoke-virtual  {v4, v3, v0, v7}, LX/0B0;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+    0110..0114  const-string  v0, "message"
+    0114..011a  invoke-virtual  {v0, v6}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    011a..011c  move-result  v0
+    011c..0120  if-eqz  v0, +0x6
+    0120..0122  const/4  v0, #0x4
+    0122..0128  invoke-virtual  {v10, v11, v0}, LX/1rg;->A01(LX/0Tp;I)V
+    0128..012c  const/16  v0, #0x1e7
+    012c..0132  invoke-virtual  {v10, v11, v0}, LX/1rg;->A03(LX/0Tp;I)V
+    0132..0134  return-void
+    0134..0136  move-exception  v1
+    0136..013a  const-string  v0, "StanzaParsingErrorHandler/error handling exception"
+    013a..0140  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0140..0142  return-void
+    0142..0144  throw  v12
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/Exception; code_units 002f..009a -> 009a
+.end method

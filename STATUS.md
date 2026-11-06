@@ -1,3 +1,10 @@
+Native escaped-handler errors now have a retained NACK/completion trace:
+487 for parser LIL,500 for other selected failures, separate failed queue
+completion with ACK-list flagfalse. SQLite full/corruption still rethrow;
+count parser errors caught internally retain their normal ACK path.
+[Evidence and limits](docs/protocol/apk/2.26.43.72-count-handler-error-completion/README.md).
+Offline research; Rust error/queue behavior unchanged.
+
 Tracked queue processing now has a retained selection-to-handler trace:
 new memory entries can satisfy the state predicate without a database row ID.
 This is not disk-commit proof; ACK durability remains a separate boundary.

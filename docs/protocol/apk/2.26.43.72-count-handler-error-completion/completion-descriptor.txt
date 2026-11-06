@@ -1,0 +1,20 @@
+
+# class: LX/2Dx;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLLZZ)  # .registers 10
+    # full signature: LX/2Dx;-><init>(Landroid/os/Bundle;LX/1k3;LX/1k3;LX/1vZ;Ljava/lang/Integer;Ljava/lang/Integer;ZZ)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    000e..0012  iput-object  v3, v1, LX/2Dx;->A02:LX/1k3;
+    0012..0016  iput-boolean  v8, v1, LX/2Dx;->A07:Z
+    0016..001a  iput-object  v6, v1, LX/2Dx;->A05:Ljava/lang/Integer;
+    001a..001e  iput-object  v7, v1, LX/2Dx;->A04:Ljava/lang/Integer;
+    001e..0022  iput-object  v4, v1, LX/2Dx;->A01:LX/1k3;
+    0022..0026  iput-object  v2, v1, LX/2Dx;->A00:Landroid/os/Bundle;
+    0026..002a  iput-object  v5, v1, LX/2Dx;->A03:LX/1vZ;
+    002a..002e  iput-boolean  v9, v1, LX/2Dx;->A06:Z
+    002e..0030  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,118 @@
+
+# class: LX/1ic;
+# extends: Ljava/lang/Object;
+
+.method public A0F(VL)  # .registers 18
+    # full signature: LX/1ic;->A0F(LX/2Dx;)V
+    0000..0004  move-object/from16  v1, v17
+    0004..0008  iget-object  v4, v1, LX/2Dx;->A02:LX/1k3;
+    0008..000e  invoke-static  {v1}, Ljava/util/Collections;->singletonList(Ljava/lang/Object;)Ljava/util/List;
+    000e..0010  move-result-object  v8
+    0010..0016  invoke-static  {v8}, LX/00l;->A05(Ljava/lang/Object;)V
+    0016..001a  move-object/from16  v9, v16
+    001a..0020  invoke-static  {v4, v9}, LX/1ic;->A01(LX/1k3;LX/1ic;)LX/1id;
+    0020..0022  move-result-object  v2
+    0022..0026  iget-object  v0, v4, LX/1k3;->A0H:LX/2A3;
+    0026..002c  invoke-static  {v0}, LX/2Aa;->A00(LX/2A3;)Z
+    002c..002e  move-result  v0
+    002e..0032  if-nez  v0, +0xb3
+    0032..0038  invoke-static  {v1}, Ljava/util/Collections;->singletonList(Ljava/lang/Object;)Ljava/util/List;
+    0038..003a  move-result-object  v1
+    003a..0040  invoke-static  {v1}, LX/00l;->A05(Ljava/lang/Object;)V
+    0040..0044  const-string  v0, "failedToProcessStanzasNotInQueue"
+    0044..004a  invoke-static  {v2, v0, v1}, LX/1id;->A01(LX/1id;Ljava/lang/String;Ljava/util/List;)Ljava/util/List;
+    004a..004c  move-result-object  v7
+    004c..0052  invoke-static  {v9}, LX/1ic;->A03(LX/1ic;)LX/0av;
+    0052..0054  move-result-object  v0
+    0054..0058  iget-boolean  v0, v0, LX/0av;->A0T:Z
+    0058..005c  if-nez  v0, +0x4
+    005c..0060  sget-object  v7, LX/01k;->A00:LX/01k;
+    0060..0064  new-instance  v3, Ljava/util/ArrayList;
+    0064..006a  invoke-direct  {v3}, Ljava/util/ArrayList;-><init>()V
+    006a..0070  invoke-interface  {v8}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0070..0072  move-result-object  v2
+    0072..0078  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    0078..007a  move-result  v0
+    007a..007e  if-eqz  v0, +0x11
+    007e..0084  invoke-interface  {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0084..0086  move-result-object  v1
+    0086..0088  move-object  v0, v1
+    0088..008c  check-cast  v0, LX/2Dx;
+    008c..0090  iget-boolean  v0, v0, LX/2Dx;->A06:Z
+    0090..0094  if-nez  v0, -0xf
+    0094..009a  invoke-virtual  {v3, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    009a..009c  goto  -0x14
+    009c..00a2  invoke-interface  {v3}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    00a2..00a4  move-result-object  v6
+    00a4..00aa  invoke-interface  {v6}, Ljava/util/Iterator;->hasNext()Z
+    00aa..00ac  move-result  v0
+    00ac..00b0  if-eqz  v0, +0x21
+    00b0..00b6  invoke-interface  {v6}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    00b6..00b8  move-result-object  v1
+    00b8..00bc  check-cast  v1, LX/2Dx;
+    00bc..00c0  iget-object  v0, v9, LX/1ic;->A06:LX/05a;
+    00c0..00c4  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    00c4..00ca  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    00ca..00cc  move-result-object  v5
+    00cc..00d0  check-cast  v5, LX/1k1;
+    00d0..00d4  iget-object  v0, v1, LX/2Dx;->A02:LX/1k3;
+    00d4..00da  invoke-static  {v0}, LX/2Ab;->A00(LX/1k3;)LX/2E0;
+    00da..00dc  move-result-object  v3
+    00dc..00e0  iget-object  v2, v1, LX/2Dx;->A04:Ljava/lang/Integer;
+    00e0..00e4  iget-object  v1, v1, LX/2Dx;->A05:Ljava/lang/Integer;
+    00e4..00e6  const/4  v0, #0x4
+    00e6..00ec  invoke-virtual  {v5, v3, v2, v1, v0}, LX/1k1;->A01(LX/2E0;Ljava/lang/Integer;Ljava/lang/Integer;I)V
+    00ec..00ee  goto  -0x24
+    00ee..00f2  iget-object  v0, v9, LX/1ic;->A0B:Ljava/util/List;
+    00f2..00f8  invoke-interface  {v0}, Ljava/util/List;->isEmpty()Z
+    00f8..00fa  move-result  v0
+    00fa..00fe  if-nez  v0, +0xc
+    00fe..0104  invoke-static  {v4}, Ljava/util/Collections;->singletonList(Ljava/lang/Object;)Ljava/util/List;
+    0104..0106  move-result-object  v0
+    0106..010c  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    010c..0112  invoke-static  {v9, v0}, LX/1ic;->A0B(LX/1ic;Ljava/util/List;)V
+    0112..0116  const/16  v0, #0x2e
+    0116..011a  new-instance  v6, LX/Feh;
+    011a..0120  invoke-direct  {v6, v8, v4, v9, v0}, LX/Feh;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+    0120..0124  sget-object  v1, LX/Bzy;->A00:Ljava/util/Set;
+    0124..012a  invoke-static  {}, Ljava/lang/Thread;->currentThread()Ljava/lang/Thread;
+    012a..012c  move-result-object  v0
+    012c..0132  invoke-virtual  {v0}, Ljava/lang/Thread;->getName()Ljava/lang/String;
+    0132..0134  move-result-object  v0
+    0134..013a  invoke-interface  {v1, v0}, Ljava/util/Set;->contains(Ljava/lang/Object;)Z
+    013a..013c  move-result  v0
+    013c..0140  if-eqz  v0, +0x15
+    0140..0144  iget-object  v0, v9, LX/1ic;->A0I:LX/00p;
+    0144..014a  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    014a..014c  move-result-object  v0
+    014c..0150  check-cast  v0, LX/098;
+    0150..0154  const/16  v10, #0x11
+    0154..0158  new-instance  v5, LX/8bT;
+    0158..015e  invoke-direct/range  {v5..v10}, LX/8bT;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+    015e..0164  invoke-virtual  {v0, v5}, LX/098;->execute(Ljava/lang/Runnable;)V
+    0164..0166  goto  +0xf
+    0166..0168  const/4  v11, #0x0
+    0168..016c  const-wide/16  v14, #0xffff (-1)
+    016c..016e  move-object  v10, v6
+    016e..0170  move-object  v12, v8
+    0170..0172  move-object  v13, v7
+    0172..0178  invoke-static/range  {v9..v15}, LX/1ic;->A0A(LX/1ic;Ljava/lang/Runnable;Ljava/lang/Runnable;Ljava/util/List;Ljava/util/List;J)V
+    0178..017c  sget-object  v0, LX/02X;->A01:Ljava/lang/Integer;
+    017c..0182  invoke-static  {v9, v0}, LX/1ic;->A08(LX/1ic;Ljava/lang/Integer;)V
+    0182..0188  invoke-static  {v9}, LX/1ic;->A07(LX/1ic;)V
+    0188..018a  return-void
+    018a..018c  move-exception  v0
+    018c..0192  invoke-static  {v9}, LX/1ic;->A07(LX/1ic;)V
+    0192..0194  throw  v0
+    0194..0198  const-string  v1, "Failed to process can only be called for ready to process stanza "
+    0198..019c  new-instance  v0, Ljava/lang/StringBuilder;
+    019c..01a2  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    01a2..01a8  invoke-virtual  {v0, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    01a8..01ae  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    01ae..01b0  move-result-object  v1
+    01b0..01b4  new-instance  v0, Ljava/lang/IllegalArgumentException;
+    01b4..01ba  invoke-direct  {v0, v1}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;)V
+    01ba..01bc  throw  v0
+    # exception table: 1 try range(s)
+    # catch <all> code_units 0090..00c1 -> 00c5
+.end method

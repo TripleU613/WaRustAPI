@@ -1,0 +1,50 @@
+{
+  "README.md": {
+    "bytes": 4509,
+    "sha256": "a14b26c3c7899cf6cbd77db167d0b4e3e5c7f340f2d3e4f283d985aa45090faa"
+  },
+  "ackable-stanza-set.txt": {
+    "bytes": 1080,
+    "sha256": "9991685f78564079f8dc28391467a614fdf718ca9b13b0b44c262ae0792427eb"
+  },
+  "completed-state-predicate.txt": {
+    "bytes": 589,
+    "sha256": "495c02eef2ecc7263a56c4325fc160b892ab4640bf05a70cd59142d4fc53031f"
+  },
+  "completion-descriptor.txt": {
+    "bytes": 965,
+    "sha256": "10db1b176d5dcaf7c6c21d9c9d3699a2dd359f3d76fd39d85685c9ff35ebe743"
+  },
+  "completion-selection.txt": {
+    "bytes": 13227,
+    "sha256": "cb8910df0b20f693af79884c5c535360bca433a3bc6751ed7e66691900f84750"
+  },
+  "failure-completion-entry.txt": {
+    "bytes": 6711,
+    "sha256": "53261c162ba24ee2ddb78091c831f0dbaf48c67bfdd9cddc16907c40a316d212"
+  },
+  "generic-error-handler.txt": {
+    "bytes": 1024,
+    "sha256": "8d5a98ec3f9392d675eec9b4914c346a9faccadd8749d88e83caa33e46ce61b5"
+  },
+  "nack-metrics.txt": {
+    "bytes": 1310,
+    "sha256": "1c2dd74d2c6b95ef0f63e1be3515aabffebe0c1d5cd21ebb9cc6df1309312017"
+  },
+  "nack-request.txt": {
+    "bytes": 3436,
+    "sha256": "9c08e4a31285d47f6da32159d51f9b2c981e0f138e1080fe4b0657cf34162d05"
+  },
+  "parser-error-handler.txt": {
+    "bytes": 5257,
+    "sha256": "f7d33038a6bfca315a4c288abfe7c00d062891ff418b108b3c7d667fe1bbf551"
+  },
+  "queue-state-enum.txt": {
+    "bytes": 2098,
+    "sha256": "7190ee99a9a4b1dcda93ae77132bf9457cacf0631c82e7ea9cd586f61707b0ed"
+  },
+  "unhandled-error-entry.txt": {
+    "bytes": 2649,
+    "sha256": "a7193627aea4b6f2502399da0d8064fbfd0673718f54ef97114442af890a5bc3"
+  }
+}
