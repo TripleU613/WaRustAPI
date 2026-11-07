@@ -1,0 +1,69 @@
+{
+  "evidence_id": "ev_49ee749b1ed574309844a6a9f5b32ae5d132b6021706ef41a7abb2e1166a7f39",
+  "subject": {
+    "name": "libmobileconfig-jni.so",
+    "digest": {
+      "sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so",
+    "format": "unknown",
+    "architecture": null
+  },
+  "provider": {
+    "id": "rizin",
+    "name": "Rizin",
+    "version": null
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.reverse-engineering.command-observation",
+  "operation": "execute_rizin_command",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so",
+    "command": "e scr.color=0; pd 36 @ 0x82c4c",
+    "provider_executable": "rizin",
+    "command_arguments": [
+      "-N",
+      "-q",
+      "-c",
+      "e scr.color=0; pd 36 @ 0x82c4c",
+      "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so"
+    ]
+  },
+  "raw_result": {
+    "stdout": "            0x00082c4c      paciasp\n            0x00082c50      stp   x29, x30, [sp, -0x60]!\n            0x00082c54      bl    0xc9fd4\n            0x00082c58      sub   sp, sp, 0x1e0\n            0x00082c5c      stp   x5, x6, [sp, 0x18]\n            0x00082c60      mov   x21, x0\n            0x00082c64      mov   x28, x1\n            0x00082c68      str   x4, [sp, 0x10]\n            0x00082c6c      mrs   x26, tpidr_el0\n            0x00082c70      mov   w1, 0x2bdb\n            0x00082c74      ldr   x9, [x26, 0x28]                      ; [0x28:4]=0xcfad8\n            0x00082c78      mov   x27, x2\n            0x00082c7c      movk  w1, 0xd0, lsl 16\n            0x00082c80      mov   x22, x7\n            0x00082c84      mov   w23, w3\n            0x00082c88      mov   x19, x8\n            0x00082c8c      stur  x9, [x29, -0x10]\n            0x00082c90      adrp  x9, 0xd6000\n            0x00082c94      ldr   x0, [x0, 0xf8]                       ; [0xf8:4]=0xd1a30 segment.GNU_RELRO\n            0x00082c98      ldr   x9, [x9, 0xbb8]                      ; [0xbb8:4]=0x1085\n            0x00082c9c      ldr   x10, [x0]\n            0x00082ca0      ldr   w20, [x9]\n            0x00082ca4      ldr   x9, [x10, 0x28]                      ; [0x28:4]=0xcfad8\n            0x00082ca8      mov   w2, w20\n            0x00082cac      blr   x9\n            0x00082cb0      ldr   w0, [x21, 0x408]                     ; [0x408:4]=254\n            0x00082cb4      ldr   x24, [x21, 0xf8]                     ; [0xf8:4]=0xd1a30 segment.GNU_RELRO\n            0x00082cb8      sub   x8, x29, 0xd8\n            0x00082cbc      bl    method.std::__ndk1.to_string_int\n            0x00082cc0      bl    0xcc6bc\n            0x00082cc4      sub   x0, x29, 0x70\n            0x00082cc8      sub   x2, x29, 0xd8\n            0x00082ccc      bl    0x7cf20\n            0x00082cd0      sub   x0, x29, 0xc0\n            0x00082cd4      sub   x1, x29, 0x70\n            0x00082cd8      mov   w2, 1\n",
+    "stderr": "ERROR: Cannot determine entrypoint, using 0x0004c460.\n",
+    "exit_code": 0,
+    "signal": null,
+    "output_truncated": false,
+    "completion_status": "complete",
+    "artifact_sha256_after": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+    "artifact_changed": false
+  },
+  "normalized_result": {
+    "stdout": "            0x00082c4c      paciasp\n            0x00082c50      stp   x29, x30, [sp, -0x60]!\n            0x00082c54      bl    0xc9fd4\n            0x00082c58      sub   sp, sp, 0x1e0\n            0x00082c5c      stp   x5, x6, [sp, 0x18]\n            0x00082c60      mov   x21, x0\n            0x00082c64      mov   x28, x1\n            0x00082c68      str   x4, [sp, 0x10]\n            0x00082c6c      mrs   x26, tpidr_el0\n            0x00082c70      mov   w1, 0x2bdb\n            0x00082c74      ldr   x9, [x26, 0x28]                      ; [0x28:4]=0xcfad8\n            0x00082c78      mov   x27, x2\n            0x00082c7c      movk  w1, 0xd0, lsl 16\n            0x00082c80      mov   x22, x7\n            0x00082c84      mov   w23, w3\n            0x00082c88      mov   x19, x8\n            0x00082c8c      stur  x9, [x29, -0x10]\n            0x00082c90      adrp  x9, 0xd6000\n            0x00082c94      ldr   x0, [x0, 0xf8]                       ; [0xf8:4]=0xd1a30 segment.GNU_RELRO\n            0x00082c98      ldr   x9, [x9, 0xbb8]                      ; [0xbb8:4]=0x1085\n            0x00082c9c      ldr   x10, [x0]\n            0x00082ca0      ldr   w20, [x9]\n            0x00082ca4      ldr   x9, [x10, 0x28]                      ; [0x28:4]=0xcfad8\n            0x00082ca8      mov   w2, w20\n            0x00082cac      blr   x9\n            0x00082cb0      ldr   w0, [x21, 0x408]                     ; [0x408:4]=254\n            0x00082cb4      ldr   x24, [x21, 0xf8]                     ; [0xf8:4]=0xd1a30 segment.GNU_RELRO\n            0x00082cb8      sub   x8, x29, 0xd8\n            0x00082cbc      bl    method.std::__ndk1.to_string_int\n            0x00082cc0      bl    0xcc6bc\n            0x00082cc4      sub   x0, x29, 0x70\n            0x00082cc8      sub   x2, x29, 0xd8\n            0x00082ccc      bl    0x7cf20\n            0x00082cd0      sub   x0, x29, 0xc0\n            0x00082cd4      sub   x1, x29, 0x70\n            0x00082cd8      mov   w2, 1\n",
+    "stderr": "ERROR: Cannot determine entrypoint, using 0x0004c460.\n",
+    "exit_code": 0,
+    "signal": null,
+    "output_truncated": false,
+    "completion_status": "complete",
+    "artifact_sha256_after": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+    "artifact_changed": false
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "The executable version and supported formats are reported as unknown because no reliable version probe was performed.",
+    "A non-zero process exit is preserved as an observed command result.",
+    "Rizin commands and retained plugins may read files or access network resources outside the selected artifact; those external inputs are not bound to Evidence.",
+    "When both are available, pre-run and post-run digests detect artifact changes across the provider call but cannot prove the exact bytes consumed during the call."
+  ],
+  "relationship_coverage": null,
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so"
+    }
+  ],
+  "evidence_links": []
+}

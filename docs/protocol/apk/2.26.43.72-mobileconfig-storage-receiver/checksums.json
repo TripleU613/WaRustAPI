@@ -1,0 +1,38 @@
+{
+  "README.md": {
+    "bytes": 4909,
+    "sha256": "db1a351e0c4ac5f0667c5351bd31c539d0328458b09d28912e99a3e3abc1b7d9"
+  },
+  "discovery-callers.txt": {
+    "bytes": 1704,
+    "sha256": "6683656f75a4da15eacd4b3db8661f3b31c76f7f26ca16ddc6d0478978e5ea18"
+  },
+  "discovery-setter-candidate.txt": {
+    "bytes": 2904,
+    "sha256": "7a759ea2028816edde7770b09763b0b4ec63ed467dc79c262c6264073bdaf74d"
+  },
+  "inspect-receiver.py": {
+    "bytes": 1719,
+    "sha256": "64abde21a2e8b579689296b66f5b4e4c8030f54de00ab4dcce83d0b65749c5e1"
+  },
+  "owner-and-storage-construction.txt": {
+    "bytes": 21142,
+    "sha256": "f5293862bd288295b7afbc51e16ddd6753be8a40be4e9c8309e6fc5c320fb220"
+  },
+  "rea-storage-entry.json": {
+    "bytes": 6757,
+    "sha256": "bec34fade6fb9ff1a55cef6487734b22f5e5cba396a4002b430b7e7c2234edf1"
+  },
+  "receiver.json": {
+    "bytes": 982,
+    "sha256": "4a5fdc4eb4227e6f725498d15888b7fd153dd683e6a81a20d24a1ff4bdf08a2d"
+  },
+  "shared-alias.txt": {
+    "bytes": 438,
+    "sha256": "0246d804cff7f2710c966db4367dd59d02bc62be1458db4e59564276262b3bf2"
+  },
+  "storage-response-entry.txt": {
+    "bytes": 3378,
+    "sha256": "3f60c127eb4716534eeeb343c8f4e36b5feaaffad170e1b6d319eee662714c37"
+  }
+}

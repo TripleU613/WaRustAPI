@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-storage-receiver-evidence": {
+    "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-storage-receiver/inspect-receiver.py <pinned-library>; offline RTTI/construction inspection",
+    "x-transport": "research only; selected response virtual target, parsing/adoption untraced",
+    "x-live": false,
+    "description": "Pinned construction/RTTI binds the selected updater receiver chain through FBMobileConfigManager+0x88 to FBMobileConfigStorageManager. Its vtable+0x10 resolves to 0x82c4c, replacing the earlier unbound manager-slot candidate for this route. Later response processing, replacement, validation, persistence and account ownership remain unresolved.",
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-storage-receiver/README.md"
+  },
   "x-mobileconfig-request-data-type-evidence": {
     "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-request-data-type/inspect-type.py <pinned-library>; offline RTTI inspection only",
     "x-transport": "research only; RequestData type binding, response receiver unresolved",

@@ -57,3 +57,8 @@ rea-constructor-type.json retains complete REA Evidence
 It is the bounded command `e scr.color=0; pd 28 @ 0xa9470`, with unchanged member
 hash, exit 0 and no output truncation, plus an entrypoint warning. It does not
 resolve the response receiver or observe runtime object identity.
+
+Follow-up: [storage receiver construction](../2.26.43.72-mobileconfig-storage-receiver/README.md)
+now binds the selected enclosing owner to FBMobileConfigManager and its +0x88
+pair to FBMobileConfigStorageManager, resolving the selected response slot to
+0x82c4c. RequestData remains distinct; other routes and later writes stay open.

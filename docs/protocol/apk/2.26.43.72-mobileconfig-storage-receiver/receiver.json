@@ -1,0 +1,21 @@
+{
+  "member_sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+  "relative_relocations": {
+    "0xd4d88": "0xd3420",
+    "0xd3428": "0x20ab3",
+    "0xd5578": "0xd38d8",
+    "0xd38e0": "0x2215e",
+    "0xd5590": "0x82c4c"
+  },
+  "owner_type": "N12mobileconfig21FBMobileConfigManagerE",
+  "receiver_type": "N12mobileconfig28FBMobileConfigStorageManagerE",
+  "geometry": {
+    "storage_object": "allocation+0x20, vtable installed 0x77614",
+    "storage_alias": "0x77810..0x77818 -> shared pair at sp+0xf0",
+    "manager_object": "allocation+0x18, vtable installed 0x7795c",
+    "manager_receiver_pair": "alias x26=allocation+0x58; store pair at +0x48 -> manager+0x88",
+    "updater_receiver": "prior proof copies manager+0x88 to updater+0x2d8"
+  },
+  "response_slot": "storage vtable+0x10 = 0xd5590 -> 0x82c4c",
+  "scope": "selected static constructor/receiver binding; later replacement, overrides, live traffic and parsing/persistence contract unresolved"
+}

@@ -1,0 +1,46 @@
+Bounded caller discovery 0x62720..0x62764
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000004c460 <.text>:
+   62720:      	ldp	x8, x24, [x20, #0x130]
+   62724:      	str	x8, [sp, #0x340]
+   62728:      	str	x24, [sp, #0x348]
+   6272c:      	cbz	x24, 0x6273c <.text+0x162dc>
+   62730:      	add	x1, x24, #0x8
+   62734:      	mov	w0, #0x1                // =1
+   62738:      	bl	0x4c570 <.text+0x110>
+   6273c:      	ldrb	w2, [x20, #0x140]
+   62740:      	add	x1, sp, #0x340
+   62744:      	mov	x0, x23
+   62748:      	bl	0x7b2e8 <JNI_OnLoad+0xc148>
+   6274c:      	mov	x0, x24
+   62750:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   62754:      	add	x0, sp, #0x370
+   62758:      	bl	0x59b2c <.text+0xd6cc>
+   6275c:      	mov	x0, x22
+   62760:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+Bounded caller discovery 0x6e580..0x6e5bc
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000004c460 <.text>:
+   6e580:      	bl	0x4c570 <.text+0x110>
+   6e584:      	cbz	x21, 0x6e5b8 <.text+0x22158>
+   6e588:      	ldp	x8, x22, [x19, #0x10]
+   6e58c:      	stp	x8, x22, [x29, #-0x40]
+   6e590:      	cbz	x22, 0x6e5a0 <.text+0x22140>
+   6e594:      	add	x1, x22, #0x8
+   6e598:      	mov	w0, #0x1                // =1
+   6e59c:      	bl	0x4c570 <.text+0x110>
+   6e5a0:      	ldrb	w2, [x19, #0x20]
+   6e5a4:      	sub	x1, x29, #0x40
+   6e5a8:      	mov	x0, x21
+   6e5ac:      	bl	0x7b2e8 <JNI_OnLoad+0xc148>
+   6e5b0:      	mov	x0, x22
+   6e5b4:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   6e5b8:      	mov	x0, x20
