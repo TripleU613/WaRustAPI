@@ -1,0 +1,221 @@
+
+# class: LX/17t;
+# extends: LX/14h;
+
+.method public A04(ZLL)  # .registers 33
+    # full signature: LX/17t;->A04(LX/0Tp;LX/Eoh;)Z
+    0000..0002  const/4  v8, #0x1
+    0002..0006  move-object/from16  v3, v31
+    0006..000c  invoke-static  {v3, v8}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000c..000e  const/4  v0, #0x2
+    000e..0012  move-object/from16  v2, v32
+    0012..0018  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0018..001c  move-object/from16  v1, v30
+    001c..0020  iget-object  v0, v1, LX/17t;->A01:LX/05a;
+    0020..0024  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0024..002a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    002a..002c  move-result-object  v0
+    002c..0030  check-cast  v0, LX/F10;
+    0030..0036  invoke-virtual  {v0, v3, v2}, LX/F10;->A04(LX/0Tp;LX/Eoh;)LX/EYC;
+    0036..0038  move-result-object  v2
+    0038..003c  if-eqz  v2, +0x1a0
+    003c..0040  iget-object  v0, v1, LX/17t;->A00:LX/05a;
+    0040..0044  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0044..004a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    004a..004c  move-result-object  v7
+    004c..0050  check-cast  v7, LX/38p;
+    0050..0054  iget-object  v0, v2, LX/EYC;->A08:LX/Eoh;
+    0054..0058  iget-object  v3, v0, LX/Eoh;->A02:Lcom/whatsapp/infra/core/jid/Jid;
+    0058..005c  sget-object  v0, Lcom/whatsapp/infra/core/jid/DeviceJid;->Companion:LX/0EB;
+    005c..0062  invoke-virtual  {v0, v3}, LX/0EB;->A00(Lcom/whatsapp/infra/core/jid/Jid;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0062..0064  move-result-object  v10
+    0064..0068  iget-object  v6, v2, LX/EYC;->A03:LX/1dW;
+    0068..006e  invoke-static  {v6}, LX/00l;->A04(Ljava/lang/Object;)V
+    006e..0072  iget-object  v5, v2, LX/EYC;->A0E:[B
+    0072..0076  iget  v4, v2, LX/EYC;->A00:I
+    0076..007a  iget-wide  v0, v2, LX/EYC;->A01:J
+    007a..007e  iget-object  v11, v6, LX/1dW;->A01:Ljava/lang/String;
+    007e..0082  const-string  v9, "PeerMessageRetryHandler/onPeerMessageDecryptionFailureRetry/got retry request from peer "
+    0082..0086  new-instance  v12, Ljava/lang/StringBuilder;
+    0086..008c  invoke-direct  {v12, v9}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    008c..0092  invoke-virtual  {v12, v10}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0092..0096  const-string  v9, " retryCount "
+    0096..009c  invoke-virtual  {v12, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    009c..00a2  invoke-virtual  {v12, v4}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00a2..00a6  const-string  v9, " for "
+    00a6..00ac  invoke-virtual  {v12, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00ac..00b2  invoke-virtual  {v12, v11}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00b2..00b6  const-string  v9, " originally sent at "
+    00b6..00bc  invoke-virtual  {v12, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00bc..00c2  invoke-virtual  {v12, v0, v1}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    00c2..00c8  invoke-virtual  {v12}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00c8..00ca  move-result-object  v0
+    00ca..00d0  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    00d0..00d4  if-eqz  v10, +0x18
+    00d4..00da  invoke-static  {v10}, LX/Exz;->A01(Lcom/whatsapp/infra/core/jid/DeviceJid;)Z
+    00da..00dc  move-result  v0
+    00dc..00e0  if-eqz  v0, +0x24
+    00e0..00e4  iget-object  v0, v7, LX/38p;->A00:LX/05a;
+    00e4..00e8  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    00e8..00ee  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    00ee..00f0  move-result-object  v0
+    00f0..00f4  check-cast  v0, LX/0jL;
+    00f4..00fa  invoke-virtual  {v0}, LX/0jL;->A01()Z
+    00fa..00fc  move-result  v0
+    00fc..0100  if-nez  v0, +0x38
+    0100..0104  const-string  v0, "PeerMessageRetryHandler/onPeerMessageDecryptionFailureRetry/ineligible retry sender, not a companion or CoExV2 sync is disabled: "
+    0104..0108  new-instance  v1, Ljava/lang/StringBuilder;
+    0108..010e  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    010e..0114  invoke-virtual  {v1, v10}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0114..011a  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    011a..011c  move-result-object  v0
+    011c..0122  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0122..0124  return  v8
+    0124..0128  iget-object  v0, v7, LX/38p;->A02:LX/05a;
+    0128..012c  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    012c..0132  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0132..0134  move-result-object  v0
+    0134..0138  check-cast  v0, LX/09F;
+    0138..013e  invoke-interface  {v0, v10}, LX/09F;->BRq(Lcom/whatsapp/infra/core/jid/DeviceJid;)Z
+    013e..0140  move-result  v0
+    0140..0144  if-eqz  v0, -0x20
+    0144..0148  iget-object  v0, v7, LX/38p;->A07:LX/05a;
+    0148..014c  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    014c..0152  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0152..0154  move-result-object  v0
+    0154..0158  check-cast  v0, LX/0jD;
+    0158..015e  invoke-virtual  {v0}, LX/0jD;->A0A()Ljava/util/HashSet;
+    015e..0160  move-result-object  v0
+    0160..0166  invoke-virtual  {v0, v10}, Ljava/util/AbstractCollection;->contains(Ljava/lang/Object;)Z
+    0166..0168  move-result  v0
+    0168..016c  if-eqz  v0, -0x34
+    016c..0170  iget-object  v0, v7, LX/38p;->A03:LX/05a;
+    0170..0174  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0174..017a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    017a..017c  move-result-object  v0
+    017c..0180  check-cast  v0, LX/0g9;
+    0180..0186  invoke-virtual  {v0, v10, v11}, LX/0g9;->A04(Lcom/whatsapp/infra/core/jid/DeviceJid;Ljava/lang/String;)LX/Dwy;
+    0186..0188  move-result-object  v9
+    0188..018c  if-nez  v9, +0x12
+    018c..0190  const-string  v0, "PeerMessageRetryHandler/onPeerMessageDecryptionFailureRetry/invalid peer message: "
+    0190..0194  new-instance  v1, Ljava/lang/StringBuilder;
+    0194..019a  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    019a..01a0  invoke-virtual  {v1, v11}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    01a0..01a4  const-string  v0, " device: "
+    01a4..01aa  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    01aa..01ac  goto  -0x4e
+    01ac..01b0  iget-wide  v0, v9, LX/18U;->A0F:J
+    01b0..01b4  iget-object  v10, v7, LX/38p;->A06:LX/05a;
+    01b4..01b8  iget-object  v10, v10, LX/05a;->A00:LX/00x;
+    01b8..01be  invoke-interface  {v10}, LX/00x;->get()Ljava/lang/Object;
+    01be..01c0  move-result-object  v10
+    01c0..01c4  check-cast  v10, LX/08q;
+    01c4..01ca  invoke-static  {v10}, LX/08q;->A00(LX/08q;)J
+    01ca..01cc  move-result-wide  v12
+    01cc..01d6  const-wide  v10, #0x134fd9000 (5184000000)
+    01d6..01d8  sub-long/2addr  v12, v10
+    01d8..01dc  cmp-long  v10, v0, v12
+    01dc..01e0  if-gez  v10, +0x5
+    01e0..01e4  const-string  v0, "PeerMessageRetryHandler/onPeerMessageDecryptionFailureRetry/cannot send retry to older message"
+    01e4..01e6  goto  -0x64
+    01e6..01ea  iget-object  v0, v7, LX/38p;->A05:LX/05a;
+    01ea..01ee  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    01ee..01f4  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    01f4..01f6  move-result-object  v0
+    01f6..01fa  check-cast  v0, LX/0fz;
+    01fa..0200  invoke-virtual  {v0, v9, v4}, LX/0fz;->A0L(LX/Dwy;I)V
+    0200..0202  const/4  v0, #0x4
+    0202..0206  if-le  v4, v0, +0xe
+    0206..020a  const-string  v0, "PeerMessageRetryHandler/onPeerMessageDecryptionFailureRetry/skipping retry for "
+    020a..020e  new-instance  v1, Ljava/lang/StringBuilder;
+    020e..0214  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0214..021a  invoke-virtual  {v1, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    021a..021e  goto/16  -0x83
+    021e..0222  sget-object  v0, Lcom/whatsapp/infra/core/jid/DeviceJid;->Companion:LX/0EB;
+    0222..0228  invoke-virtual  {v0, v3}, LX/0EB;->A00(Lcom/whatsapp/infra/core/jid/Jid;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0228..022a  move-result-object  v11
+    022a..022e  if-eqz  v11, +0x9f
+    022e..0232  iget-object  v10, v2, LX/EYC;->A0D:[B
+    0232..0236  iget-object  v12, v2, LX/EYC;->A0C:[B
+    0236..023a  iget-object  v3, v2, LX/EYC;->A07:LX/ETs;
+    023a..023e  iget-object  v15, v2, LX/EYC;->A06:LX/ETs;
+    023e..0242  iget-object  v14, v2, LX/EYC;->A05:LX/ETs;
+    0242..0246  iget-object  v13, v2, LX/EYC;->A02:LX/Ejp;
+    0246..024a  iget-boolean  v2, v2, LX/EYC;->A0B:Z
+    024a..024c  const/4  v1, #0x0
+    024c..0252  invoke-static  {v5, v1}, LX/1nr;->A01([BI)I
+    0252..0254  move-result  v22
+    0254..0258  if-eqz  v10, +0x34
+    0258..025c  if-eqz  v3, +0x32
+    025c..0260  iget-object  v0, v7, LX/38p;->A01:LX/05a;
+    0260..0264  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0264..026a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    026a..026c  move-result-object  v0
+    026c..0270  check-cast  v0, LX/10N;
+    0270..0274  const/16  v27, #0x5
+    0274..0278  const/16  v28, #0x3
+    0278..027c  move-object/from16  v23, v0
+    027c..0280  move-object/from16  v24, v11
+    0280..0284  move-object/from16  v25, v12
+    0284..0288  move-object/from16  v26, v10
+    0288..028c  move/from16  v29, v1
+    028c..0292  invoke-virtual/range  {v23..v29}, LX/10N;->A0D(Lcom/whatsapp/infra/core/jid/DeviceJid;[B[BBIZ)Z
+    0292..0294  move-result  v0
+    0294..0298  if-nez  v0, +0x14
+    0298..029c  const-string  v1, "PeerMessageRetryHandler/onPeerMessageDecryptionFailureRetry/adv validation fails, key="
+    029c..02a0  new-instance  v0, Ljava/lang/StringBuilder;
+    02a0..02a6  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    02a6..02ac  invoke-virtual  {v0, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    02ac..02b2  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    02b2..02b4  move-result-object  v0
+    02b4..02ba  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    02ba..02bc  return  v8
+    02bc..02c0  iget-object  v0, v7, LX/38p;->A04:LX/05a;
+    02c0..02c4  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    02c4..02ca  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    02ca..02cc  move-result-object  v0
+    02cc..02d0  check-cast  v0, LX/Nci;
+    02d0..02d4  check-cast  v0, LX/Mqa;
+    02d4..02d8  iget-object  v0, v0, LX/Mqa;->A00:LX/05a;
+    02d8..02dc  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    02dc..02e2  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    02e2..02e4  move-result-object  v12
+    02e4..02e8  check-cast  v12, LX/163;
+    02e8..02ec  move-object/from16  v20, v10
+    02ec..02f0  move/from16  v21, v4
+    02f0..02f4  move/from16  v23, v2
+    02f4..02f8  move-object/from16  v19, v5
+    02f8..02fc  move-object/from16  v18, v14
+    02fc..0300  move-object/from16  v17, v15
+    0300..0304  move-object/from16  v16, v3
+    0304..0306  move-object  v15, v6
+    0306..0308  move-object  v14, v11
+    0308..030e  invoke-virtual/range  {v12..v23}, LX/163;->A05(LX/Ejp;Lcom/whatsapp/infra/core/jid/DeviceJid;LX/1dW;LX/ETs;LX/ETs;LX/ETs;[B[BIIZ)[B
+    030e..0310  move-result-object  v2
+    0310..0314  const-string  v0, "PeerMessageRetryHandler/onPeerMessageDecryptionFailureRetry/sending retry for msg = "
+    0314..0318  new-instance  v1, Ljava/lang/StringBuilder;
+    0318..031e  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    031e..0324  invoke-virtual  {v1, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0324..0328  const-string  v0, " device = "
+    0328..032e  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    032e..0334  invoke-virtual  {v1, v11}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0334..033a  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    033a..033c  move-result-object  v0
+    033c..0342  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0342..0346  iget-object  v0, v7, LX/38p;->A08:LX/05a;
+    0346..034a  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    034a..0350  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0350..0352  move-result-object  v1
+    0352..0356  check-cast  v1, LX/0fW;
+    0356..035a  new-instance  v0, Lcom/whatsapp/companiondevice/devices/jobqueue/job/SendPeerMessageJob;
+    035a..0360  invoke-direct  {v0, v11, v9, v2, v4}, Lcom/whatsapp/companiondevice/devices/jobqueue/job/SendPeerMessageJob;-><init>(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/Dwy;[BI)V
+    0360..0366  invoke-virtual  {v1, v0}, LX/0fW;->A01(Lorg/whispersystems/jobqueue/Job;)V
+    0366..0368  return  v8
+    0368..036c  const-string  v1, "Required value was null."
+    036c..0370  new-instance  v0, Ljava/lang/IllegalStateException;
+    0370..0376  invoke-direct  {v0, v1}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+    0376..0378  throw  v0
+    0378..037a  const/4  v0, #0x0
+    037a..037c  return  v0
+    # exception table: 0 try range(s)
+.end method

@@ -122,3 +122,18 @@ remain unsupported; no new success ACK, fact, unknown-type response or live
 operation is introduced. The saved-session workflow exercises validation,
 recording and resend/refetch policy with first-count key-only children.
 [Exact route evidence and test/coverage limits](apk/2.26.43.72-retry-upstream-routing/README.md).
+
+
+## Peer route shares parser errors, not ordinary resend handling (2026-11-06)
+
+**Confirmed selected static / implemented correction:** code263 registers17t;
+17t.A04 calls the same F10.A04 as ordinary160, then processes peer-message records
+through a separate eligibility/age/count/crypto/job pipeline. Its uncaught LIL and
+null parser result therefore retain fresh487 and copied487 respectively. Earlier
+exclusion of peer from ordinary retry processing was too broad for error ACKs.
+Shared parser-route selection now permits proven peer schema/version responses;
+ordinary RetryRequest, handled-success ACK and resend/refetch still exclude peer.
+Leading participants/message_id retains precedence. Valid peer schema remains
+without ordinary success ACK or resend; full peer responder policy is unported.
+[Complete handler, registration census, error-context tests and open boundaries](apk/2.26.43.72-peer-retry-handler/README.md).
+No live account operation or server acceptance claim.

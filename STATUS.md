@@ -1,3 +1,10 @@
+2026-11-06 — **Restored proven peer-retry schema/version error responses.**
+The peer handler calls the same retry parser before its separate responder.
+Shared error classification now permits peer fresh/copied487 responses while
+ordinary success ACK, resend and key-refetch remain excluded. Leading aggregate
+precedence remains. Full peer success handling is still unported.
+[Complete handler, census and corrected assumption](docs/protocol/apk/2.26.43.72-peer-retry-handler/README.md). No live account operation.
+
 2026-11-06 — **Stopped key-aggregate validation from blocking valid retry routes.**
 A leading participants child without message_id selects key aggregation only for
 the native ordinary status set. Retry/special/unknown roots now retain their own

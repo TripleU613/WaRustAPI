@@ -4,7 +4,15 @@
 SHA256 `887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e`.
 Existing xtask fallback; no Android runtime, live account operation or REA Evidence ID.
 
-## Evidence and correction
+## Subsequent peer-parser correction
+
+The initial error-ACK exclusion described below was too broad for category=peer.
+[Subsequent17t tracing](../2.26.43.72-peer-retry-handler/README.md) proves it calls
+the same F10.A04 before its separate responder: peer schema/version487 responses
+are now restored. Peer ordinary resend/refetch/success-ACK exclusion remains.
+The initial investigation below is retained as history, not current error policy.
+
+## Evidence and initial correction
 
 The complete [1rU.A05 router](../2.26.43.72-receipt-router-boundary/receipt-route.txt)
 reads its FIRST child at020c. At0250..0294, a participants child with NONNULL

@@ -1,0 +1,28 @@
+
+# class: LX/160;
+# extends: LX/14h;
+
+.method public <init>(V)  # .registers 5
+    # full signature: LX/160;-><init>()V
+    0000..0002  const/4  v0, #0x2
+    0002..0008  filled-new-array  {v0}, [I
+    0008..000a  move-result-object  v3
+    000a..000e  const/16  v0, #0x29
+    000e..0012  new-instance  v2, LX/1Wo;
+    0012..0018  invoke-direct  {v2, v0}, LX/1Wo;-><init>(I)V
+    0018..001a  const/4  v1, #0x0
+    001a..001e  new-instance  v0, LX/00y;
+    001e..0024  invoke-direct  {v0, v1, v2}, LX/00y;-><init>(Ljava/lang/Object;LX/00v;)V
+    0024..002a  invoke-direct  {v4, v0, v3}, LX/14h;-><init>(LX/00x;[I)V
+    002a..002e  const/16  v0, #0x1a87
+    002e..0034  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0034..0036  move-result-object  v0
+    0036..003a  check-cast  v0, LX/163;
+    003a..003e  iput-object  v0, v4, LX/160;->A01:LX/163;
+    003e..0042  const/16  v0, #0xbfd
+    0042..0048  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0048..004a  move-result-object  v0
+    004a..004e  iput-object  v0, v4, LX/160;->A00:LX/05a;
+    004e..0050  return-void
+    # exception table: 0 try range(s)
+.end method

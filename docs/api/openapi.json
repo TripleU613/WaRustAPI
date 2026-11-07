@@ -1,4 +1,11 @@
 {
+  "x-peer-retry-parser-errors": {
+    "x-cli": "existing receive/retry paths; no new command or flag",
+    "x-transport": "shared retry parser errors for ordinary and peer routes; distinct responder admission",
+    "x-live": false,
+    "description": "Pinned17t registers263 and calls F10.A04 before its peer-message responder, sharing ordinary retry schema/version error contexts. Retry error classification now permits proven peer fresh root487 or unsupported-version copied487; ordinary RetryRequest, handled-success ACK, resend/refetch still exclude peer. Leading participants/message_id precedes both and nontext selectors remain unsupported. Valid peer schema grants no ordinary success ACK or resend. Full peer eligibility, age/count metadata, ADV/crypto/job, completion and live acceptance remain open. No HTTP route or account operation.",
+    "evidence": "docs/protocol/apk/2.26.43.72-peer-retry-handler/README.md"
+  },
   "x-key-aggregate-upstream-routing": {
     "x-cli": "existing receive/receipt inspection paths; no new command or flag",
     "x-transport": "ordinary root-set selection before key-aggregate expansion and validation",
@@ -10,7 +17,7 @@
     "x-cli": "existing receive and retry inspection paths; no new command or flag",
     "x-transport": "shared ordinary retry route selector before parsing, error ACK and resend/refetch processing",
     "x-live": false,
-    "description": "Pinned1rU.A05 forwards a first participants/message_id before retry selection, while category=peer selects263 instead of ordinary2. Both routes now return no ordinary RetryRequest, retry error487, handled success ACK, resend or refetch reservation. Empty message_id selects the early route; key-only/nonleading participants do not. Nontext selectors remain unsupported. Saved-session regression preserves outbox/checkpoint/ratchet/identity rows. Aggregate validation remains independent. Full router, alternate consumers, unknown copied487, feature/queue state and live acceptance remain open; no HTTP route or account operation.",
+    "description": "Pinned1rU.A05 forwards a first participants/message_id before retry selection, while category=peer selects263 instead of ordinary2. Both routes return no ordinary RetryRequest, handled success ACK, resend or refetch reservation. Subsequent17t tracing confirms that peer still shares parser schema/version487 responses; only leading message_id suppresses retry-parser error classification. Empty message_id selects the early route; key-only/nonleading participants do not. Nontext selectors remain unsupported. Saved-session regression preserves outbox/checkpoint/ratchet/identity rows. Aggregate validation remains independent. Full router, alternate consumers, unknown copied487, feature/queue state and live acceptance remain open; no HTTP route or account operation.",
     "evidence": "docs/protocol/apk/2.26.43.72-retry-upstream-routing/README.md"
   },
   "x-receipt-upstream-router-research": {

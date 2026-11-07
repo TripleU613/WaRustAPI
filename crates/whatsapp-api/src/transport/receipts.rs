@@ -6292,10 +6292,10 @@ pub struct RetryRequest {
     pub registration: Option<Vec<u8>>,
 }
 
-// APK43.72 1rU.A05: a first participants/message_id routes at028e before
-// retry selection; category=peer routes to263, not ordinary retry code2.
-// Nontext selector carriers remain unsupported rather than authorizing a resend.
-pub(super) fn ordinary_retry_route(node: &Node) -> bool {
+// APK43.72 1rU.A05: first participants/message_id routes at028e before
+// retry selection. Both code2 (160) and peer code263 (17t) call F10.A04.
+// Nontext selector carriers remain unsupported, without inventing native errors.
+pub(super) fn retry_parser_route(node: &Node) -> bool {
     node.description == "receipt"
         && node.get_attr("type").and_then(|value| value.as_text()) == Some("retry")
         && !node.child_nodes().first().is_some_and(|child| {
@@ -6303,7 +6303,12 @@ pub(super) fn ordinary_retry_route(node: &Node) -> bool {
         })
         && node
             .get_attr("category")
-            .is_none_or(|value| value.as_text().is_some_and(|category| category != "peer"))
+            .is_none_or(|value| value.as_text().is_some())
+}
+
+pub(super) fn ordinary_retry_route(node: &Node) -> bool {
+    retry_parser_route(node)
+        && node.get_attr("category").and_then(|value| value.as_text()) != Some("peer")
 }
 
 /// Parse an ordinary retry receipt after the native upstream routing selectors.

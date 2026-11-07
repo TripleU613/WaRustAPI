@@ -1,0 +1,46 @@
+
+# class: LX/14h;
+# extends: Ljava/lang/Object;
+
+.method public BLn(ZLI)  # .registers 14
+    # full signature: LX/14h;->BLn(Landroid/os/Message;I)Z
+    0000..0002  const/4  v4, #0x1
+    0002..0008  invoke-static  {v12, v4}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  move-object  v8, v11
+    000a..000e  iget-object  v0, v11, LX/14h;->A0A:[I
+    000e..0010  move  v9, v13
+    0010..0016  invoke-static  {v0, v13}, LX/08w;->A0l([II)Z
+    0016..0018  move-result  v0
+    0018..001c  if-nez  v0, +0x15
+    001c..0020  const-string  v1, "BaseReceiptHandler/unexpected type="
+    0020..0024  new-instance  v0, Ljava/lang/StringBuilder;
+    0024..002a  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    002a..0030  invoke-virtual  {v0, v13}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0030..0036  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0036..0038  move-result-object  v0
+    0038..003e  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    003e..0040  const/4  v0, #0x0
+    0040..0042  return  v0
+    0042..0046  iget-object  v6, v12, Landroid/os/Message;->obj:Ljava/lang/Object;
+    0046..004a  const-string  v0, "null cannot be cast to non-null type com.whatsapp.infra.protocol.IncomingStanza"
+    004a..0050  invoke-static  {v6, v0}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    0050..0054  check-cast  v6, LX/1k2;
+    0054..005a  invoke-interface  {v6}, LX/1k2;->Ay8()LX/0Tp;
+    005a..005c  move-result-object  v3
+    005c..0062  invoke-static  {v3}, LX/00L;->A05(Ljava/lang/Object;)V
+    0062..0068  invoke-static  {v3}, LX/00l;->A05(Ljava/lang/Object;)V
+    0068..006e  invoke-virtual  {v12}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+    006e..0070  move-result-object  v1
+    0070..0074  const-string  v0, "loggableStanzaId"
+    0074..007a  invoke-virtual  {v1, v0}, Landroid/os/BaseBundle;->getLong(Ljava/lang/String;)J
+    007a..007c  move-result-wide  v1
+    007c..007e  const/4  v0, #0x0
+    007e..0084  invoke-static  {v3, v0, v1, v2}, LX/F0R;->A03(LX/0Tp;Ljava/lang/Integer;J)LX/Eoh;
+    0084..0086  move-result-object  v7
+    0086..008a  const/16  v10, #0xa
+    008a..008e  new-instance  v5, LX/FcN;
+    008e..0094  invoke-direct/range  {v5..v10}, LX/FcN;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;II)V
+    0094..009a  invoke-virtual  {v5}, LX/FcN;->run()V
+    009a..009c  return  v4
+    # exception table: 0 try range(s)
+.end method

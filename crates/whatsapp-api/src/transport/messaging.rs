@@ -1116,7 +1116,7 @@ fn retry_context_supported(incoming: &Node) -> bool {
 }
 
 fn retry_receipt_error(incoming: &Node) -> Option<RetryReceiptError> {
-    if !super::receipts::ordinary_retry_route(incoming) {
+    if !super::receipts::retry_parser_route(incoming) {
         return None;
     }
     if !retry_context_supported(incoming) {
@@ -2331,15 +2331,12 @@ mod tests {
             .attr("id", "R1")
             .attr("from", "15555550100@s.whatsapp.net")
             .attr("type", "retry");
-        for node in [
-            base.clone().attr("category", "peer"),
-            base.clone()
-                .children(vec![Node::new("participants").attr("message_id", "")]),
-        ] {
-            assert!(retry_receipt_error(&node).is_none());
-            assert!(received_confirmation(&node).is_none());
-            assert!(handled_retry_confirmation(&node).is_none());
-        }
+        let node = base
+            .clone()
+            .children(vec![Node::new("participants").attr("message_id", "")]);
+        assert!(retry_receipt_error(&node).is_none());
+        assert!(received_confirmation(&node).is_none());
+        assert!(handled_retry_confirmation(&node).is_none());
         assert!(received_confirmation(&base).is_some()); // Missing ordinary retry =>487.
         assert!(
             received_confirmation(&base.clone().children(vec![
@@ -2354,6 +2351,56 @@ mod tests {
             )
             .is_some()
         );
+    }
+
+    #[test]
+    fn peer_retry_parser_errors_share_native_response_contexts_without_resends() {
+        let base = Node::new("receipt")
+            .attr("id", "PEER-ROOT")
+            .attr("from", "15555550100@s.whatsapp.net")
+            .attr("recipient", "15555550101@s.whatsapp.net")
+            .attr("edit", "7")
+            .attr("category", "peer")
+            .attr("type", "retry");
+        let reg = || Node::new("registration").bytes(vec![0, 0, 0, 1]);
+        let retry = || Node::new("retry").attr("id", "INNER").attr("t", "1");
+        for children in [
+            vec![],
+            vec![retry()],
+            vec![retry().attr("count", "bad"), reg()],
+            vec![retry().attr("t", "bad"), reg()],
+            vec![Node::new("retry").attr("t", "1"), reg()],
+        ] {
+            let node = base.clone().children(children);
+            let ack = received_confirmation(&node).unwrap();
+            assert_eq!(
+                ack.get_attr("error").and_then(|value| value.as_text()),
+                Some("487")
+            );
+            assert_eq!(
+                ack.get_attr("id").and_then(|value| value.as_text()),
+                Some("PEER-ROOT")
+            );
+            for omitted in ["recipient", "edit", "category"] {
+                assert!(ack.get_attr(omitted).is_none());
+            }
+            assert!(super::super::receipts::parse_retry(&node).is_none());
+            assert!(handled_retry_confirmation(&node).is_none());
+        }
+        let unsupported = base.clone().children(vec![retry().attr("v", "2"), reg()]);
+        let ack = received_confirmation(&unsupported).unwrap();
+        assert!(ack.get_attr("recipient").is_some());
+        assert_eq!(
+            ack.get_attr("edit").and_then(|value| value.as_text()),
+            Some("7")
+        );
+        let valid = base.children(vec![retry(), reg()]);
+        assert!(received_confirmation(&valid).is_none());
+        assert!(handled_retry_confirmation(&valid).is_none());
+        assert!(super::super::receipts::parse_retry(&valid).is_none());
+        let mut children = vec![Node::new("participants").attr("message_id", "AGG")];
+        children.extend(unsupported.child_nodes().iter().cloned());
+        assert!(received_confirmation(&unsupported.children(children)).is_none());
     }
 
     /// `LX/Cp2->A05`: a receipt's ack mirrors the receipt — `to` its `from`,
