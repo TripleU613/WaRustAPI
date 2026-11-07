@@ -9545,3 +9545,8 @@ Local public upload eligibility omission corrected at shared entry, including ca
   reference creation to the validated upload-row snapshot. Transactional snapshot
   checks now prevent stale reference installation. See
   [snapshot binding](media-network-outcomes.md#atomic-upload-snapshot-binding-for-reference-creation).
+
+- Confirmed source gap at `f9e6ca9f`: direct/quoted media preflight discarded
+  all resolver errors. Shared preflight now preserves non-InvalidInput errors,
+  with an encrypted-store malformed-checkpoint regression. See
+  [preflight errors](media-network-outcomes.md#media-preflight-preserves-operational-errors).

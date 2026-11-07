@@ -6002,3 +6002,27 @@ validated source snapshots, changes payload/status/metadata or removes the row,
 reopens the encrypted store, and attempts the guarded reference-write transaction.
 Rejected cases preserve all checkpoint rows and journal head; unchanged controls
 allow the write. No HTTP request, send or account operation is performed.
+
+## Media preflight preserves operational errors
+
+**Confirmed Rust source defect, corrected offline.** At baseline `f9e6ca9f`,
+direct media selection used `resolve(...).is_ok_and(...)`, and quoted-media
+preflight used `let Ok(...) ... else return false`. Both discarded all media
+resolution errors. A corrupt encrypted upload checkpoint could therefore be
+silently treated as unsupported media and leave queued work skipped, despite
+the adjacent quote-preflight contract that storage errors propagate.
+
+Both preflight callers now use one resolver wrapper: InvalidInput remains
+unsupported/local refusal, successful media remains eligible subject to existing
+checks, and storage/account/other operational errors propagate unchanged. This
+adds diagnosability before a key-query reservation; it does not retry, repair,
+rewrite queued work or classify every refusal as a protocol error. The actual
+send preparation still re-resolves media and checks queued account/session
+ownership transactionally at reservation. Complete descriptor-lifetime parity
+and all group/status pathways remain separate audit work.
+
+The offline regression verifies a missing upload remains unsupported, writes a
+synthetic malformed JSON upload into the encrypted store, reopens it and checks
+that preflight returns Storage error without changing checkpoint rows or journal
+head. No live account/network operation is performed. This is source-level
+error-propagation evidence, not APK evidence of server restriction causality.

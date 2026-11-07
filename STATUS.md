@@ -10567,3 +10567,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   snapshot in its write transaction, refusing same-account row replacement.
   Offline public/message upload rollback cases cover payload/status/metadata
   changes and removal after reopen. No live operation.
+
+- Direct/quoted media preflight now propagates storage/account operational
+  failures instead of silently classifying every resolution error as unsupported.
+  Missing/invalid references retain local refusal. Offline corruption/reopen
+  regression verifies unchanged state; no network operation.

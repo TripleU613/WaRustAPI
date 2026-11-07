@@ -331,15 +331,13 @@ pub fn begin_selected(
                     caption: None,
                     file_name: None,
                     quoted,
-                } => {
-                    super::outgoing_media::resolve(store, &entry.client_request_id, peer, reference)
-                        .is_ok_and(|(payload, _)| {
-                            quoted.as_ref().is_none_or(|q| {
-                                q.key.chat.jid().to_non_ad() == peer.to_non_ad()
-                                    && super::quotes::media_quote_supported(&payload)
-                            })
+                } => preflight_media(store, &entry.client_request_id, peer, reference)?
+                    .is_some_and(|(payload, _)| {
+                        quoted.as_ref().is_none_or(|q| {
+                            q.key.chat.jid().to_non_ad() == peer.to_non_ad()
+                                && super::quotes::media_quote_supported(&payload)
                         })
-                }
+                    }),
                 MessageContent::Reaction { target, emoji } => {
                     super::reactions::validate(peer, target, emoji.as_deref()).is_ok()
                 }
@@ -588,6 +586,22 @@ fn reply_payload_for(
 /// `direct::prepare_payload` and the hybrid encryptor refuse larger plaintexts.
 const DIRECT_PAYLOAD_LIMIT: usize = 32768;
 
+// Invalid references are unsupported work; durable storage/account failures must
+// remain visible rather than silently stranding an otherwise eligible intent.
+type PreflightMedia = (Zeroizing<Vec<u8>>, &'static str);
+fn preflight_media(
+    store: &ProtocolStore,
+    id: &crate::model::ids::ClientRequestId,
+    peer: &crate::model::jid::Jid,
+    reference: &crate::model::message::MediaReference,
+) -> Result<Option<PreflightMedia>> {
+    match super::outgoing_media::resolve(store, id, peer, reference) {
+        Ok(media) => Ok(Some(media)),
+        Err(Error::InvalidInput { .. }) => Ok(None),
+        Err(error) => Err(error),
+    }
+}
+
 /// Build a direct quote's payload at selection, exactly as preparation will,
 /// before any key query is reserved. A quote that cannot be built (parent in
 /// another chat or ambiguous, no own identity, unsupported media shape) or
@@ -619,8 +633,8 @@ fn quote_buildable(
             let Some(account) = store.read(AccountRecord::load)? else {
                 return Ok(false);
             };
-            let Ok((payload, _)) =
-                super::outgoing_media::resolve(store, &entry.client_request_id, peer, reference)
+            let Some((payload, _)) =
+                preflight_media(store, &entry.client_request_id, peer, reference)?
             else {
                 return Ok(false);
             };
@@ -1669,6 +1683,72 @@ pub fn acknowledge(store: &ProtocolStore, node: &Node) -> Result<bool> {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn media_preflight_reports_corrupt_upload_without_mutating_state() {
+        use super::*;
+        use crate::{
+            model::{
+                ids::{AccountId, ClientRequestId},
+                jid::Jid,
+                message::{MediaKind, MediaReference},
+            },
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("preflight-corruption.redb");
+        let reopen = |create| {
+            ProtocolStore::open(OpenOptions {
+                path: path.clone(),
+                create,
+                account_id: AccountId::new("test").unwrap(),
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [8; 32],
+                ))),
+            })
+            .unwrap()
+        };
+        let store = reopen(true);
+        let id = ClientRequestId::new("preflight-corrupt").unwrap();
+        let peer = Jid::parse("100@s.whatsapp.net").unwrap();
+        let reference = MediaReference {
+            sealed: vec![1, 2, 3].into(),
+            kind: MediaKind::Image,
+            mime_type: "image/png".into(),
+            length: None,
+        };
+        assert!(
+            preflight_media(&store, &id, &peer, &reference)
+                .unwrap()
+                .is_none()
+        );
+        store
+            .write(|tx| {
+                tx.put(
+                    Table::Checkpoints,
+                    b"message:preflight-corrupt:upload",
+                    1,
+                    b"not-json",
+                )
+            })
+            .unwrap();
+        drop(store);
+        let store = reopen(false);
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        let journal = store.journal_head().unwrap();
+        assert!(matches!(
+            preflight_media(&store, &id, &peer, &reference),
+            Err(Error::Storage(_))
+        ));
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap(),
+            before
+        );
+        assert_eq!(store.journal_head().unwrap(), journal);
+    }
     use super::*;
     use crate::{
         model::{

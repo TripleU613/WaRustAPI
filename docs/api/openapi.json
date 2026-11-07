@@ -1,4 +1,11 @@
 {
+  "x-media-preflight-operational-errors": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "evidence": "docs/protocol/media-network-outcomes.md#media-preflight-preserves-operational-errors",
+    "behavior": "Direct and quoted media preflight skips InvalidInput references while propagating storage/account operational failures before key-query reservation; no automatic retry or repair."
+  },
   "x-upload-reference-snapshot-binding": {
     "x-cli": false,
     "x-transport": true,
