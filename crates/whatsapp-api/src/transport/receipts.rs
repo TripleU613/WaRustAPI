@@ -1209,12 +1209,28 @@ pub(super) fn network_jid(node: &Node, name: &str) -> Option<Jid> {
 }
 
 pub(super) fn recipient(node: &Node) -> Option<Jid> {
-    // Text :0 still constructs DeviceJid; local parsing loses that class distinction.
-    if node.get_attr("recipient")?.as_text().is_some_and(|text| {
-        text.rsplit_once('@')
-            .is_some_and(|(user, _)| user.contains(':'))
-    }) {
-        return None;
+    if let Some(text) = node.get_attr("recipient")?.as_text() {
+        // APK43.72 F0R.A03 requests UserJid; 0Dd.A00 tests dot/colon
+        // presence before numeric value. Reuse the native PN/LID/hosted
+        // classifier, rather than letting .0 erase DeviceJid class or an
+        // invalid user gain recipient authority. Typed binary zero is separate.
+        match super::messaging::ack_user_text(text) {
+            Some(
+                super::messaging::AckUserText::User(_)
+                | super::messaging::AckUserText::ServiceUser(_),
+            ) => {}
+            Some(_) => return None,
+            None => {
+                // Other supported families retain their prior subset until
+                // their complete grammar is traced; do not generalize dots.
+                if text
+                    .rsplit_once('@')
+                    .is_some_and(|(user, _)| user.contains(':'))
+                {
+                    return None;
+                }
+            }
+        }
     }
     let value = network_jid(node, "recipient")?;
     // shortcut: shipped UserJid namespaces/zero-device encoding, extend with special grammar.
@@ -5231,6 +5247,13 @@ mod tests {
                             "gdpr@s.whatsapp.net",
                             "15555550100:2@s.whatsapp.net",
                             "100001:0@lid",
+                            "15555550100.0@s.whatsapp.net",
+                            "100001.0@lid",
+                            "100001.ignored@lid",
+                            "01555550100@s.whatsapp.net",
+                            "not-a-user@lid",
+                            "15555550100.0@hosted",
+                            "100001.0@hosted.lid",
                         ])
                         .into_iter()
                         .flatten(),

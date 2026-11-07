@@ -1,3 +1,11 @@
+2026-11-06 — **Corrected receipt recipient text-class admission.**
+Dot-qualified zero/ignored suffixes and invalid PN/LID users no longer become
+primary-user recipient qualifiers through generic parsing. ACKs omit the field;
+ordinary matching facts retain original actor/attempt/uncertainty and deduplicate
+across reopen. Binary-zero users and strict receipt ACK settlement remain.
+[Current class evidence, regressions and limits](receipt-user-recipient.md#current-text-class-admission-including-dot-qualifiers-2026-11-06).
+No live account operation.
+
 2026-11-06 — **Closed raw-route gaps in remaining notification ACK builders.**
 Device, prekey-count, dirty-group and account-privacy envelope readers now share
 empty-user text refusal. Malformed text cannot gain local server settings

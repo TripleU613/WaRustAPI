@@ -82,3 +82,69 @@ checks. Strict workspace Clippy, warnings-denied Rustdoc, CLI-reference/OpenAPI
 coverage and formatting passed. Three complete REA envelopes match the pinned
 subject hash; 27 exact ancestry chains were checked. These checks are offline,
 not evidence of fresh live receipt acceptance.
+
+
+## Current text-class admission, including dot qualifiers (2026-11-06)
+
+**Confirmed local defect / fixed offline:** the recipient getter rejected colon
+syntax but admitted `user.0@lid` and PN equivalents after generic parsing erased
+the qualifier. It also admitted dotted nonnumeric suffixes and constructor-invalid
+plain users. That copied a non-UserJid recipient into receipt ACKs and suppressed
+otherwise attributable ordinary facts. The ACK regression failed with an echoed
+recipient; the outbox-fact regression failed with0 updates instead of1.
+
+The getter now reuses messaging::ack_user_text for raw PN/LID/hosted/hosted.lid
+class admission. User/ServiceUser results continue through existing namespace
+and supported-route checks; Device, NonUser and Null results take the optional
+null path. Other families retain their prior supported subset and colon guard;
+dots are not generalized to untraced namespaces. No new parser is duplicated,
+no alias/address normalization is added, and typed binary-zero handling remains.
+
+**Reused confirmed static evidence**, pinned APK43.72 SHA256887a6f94:
+
+- [F0R.A03](apk/2.26.43.72-retry-ack-dispatch/receipt-context-factory.txt)
+  requests UserJid.class for recipient at0010..0024, sets the Efa field then
+  freezes it. This is the current-build receipt descriptor, separate from the
+  incoming ACK reader and the older CmG fact-dispatch trace.
+- [0Tp.A0A](apk/2.26.43.72-group-missing-identification/ack-typed-jid-read.txt)
+  uses nullable parsing and Class.cast; failed conversion returns null.
+- [0Dd.A00](apk/2.26.43.72-message-ack-chat/jid-parser.txt)
+  tests last dot/colon presence at0196..01c4 before numeric value. Both .0 and
+  an ignored dot suffix still select DeviceJid construction, not UserJid.
+  [Declared ancestry](apk/2.26.43.72-group-missing-identification/current-device-overrides.txt)
+  separates0EE/0EM from UserJid.
+- [PN constructor/grammar](apk/2.26.43.72-pn-ack-text/README.md) and
+  [LID constructor](apk/2.26.43.72-message-ack-chat/lid-user.txt) reject invalid
+  plain users; [hosted factory/constructors](apk/2.26.43.72-hosted-chatstate/README.md)
+  share the base user grammar and add original device99 constraints.
+  Special PN UserJid singletons remain admitted by the shared classifier.
+
+These are reused retained static exports, not new REA Evidence IDs or observed
+traffic. Full current receipt-fact dispatch is not re-traced by this correction.
+
+**Regressions:** actual binary encode/decode ACK cases omit dot-qualified
+recipient while retaining the separate generic participant field. Additional
+recipient-only cases cover invalid plain users and hosted .0 forms. The direct
+fact matrix covers PN/LID original chats, delivery/read/played, dot0/ignored-dot,
+invalid user and hosted qualifiers. It retains the original actor, intent,
+attempts, progress and uncertainty, appends only the matching independent fact,
+and proves duplicates across reopen add no fact or journal event. Existing valid
+plain-user and binary zero-device controls remain.
+
+**Checked unchanged:** record_ack does not call this getter and retains strict
+raw recipient/edit exclusion, account-bound reservation and immutable callback
+membership checks. No pending receipt is settled through this new nullable path.
+Retry context admission does use the getter; unsupported recipient context stays
+captured rather than being assigned a guessed parse-error ACK. Retry-answer
+recipient syntax already refuses dot/colon. Generic participants, global JID
+parsing, saved identities, aliases, read policy and replay state are unchanged.
+
+**Unknown:** every special namespace/class, cached typed values with lost text
+provenance, complete native error/ACK ordering and live acceptance. This does not
+claim complete receipt parity. No new request, retry or account operation.
+
+Verification: both ACK and fact regressions failed before correction and pass
+with it. All1544 workspace/all-feature tests, strict all-target/all-feature
+Clippy, formatting, OpenAPI library symbols, regenerated CLI reference, APK
+coverage and repository hygiene pass. Hygiene checked8031 local links and451
+APK checksum bundles. These are offline results, not live acceptance evidence.

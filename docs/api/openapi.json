@@ -1,4 +1,11 @@
 {
+  "x-receipt-recipient-text-class": {
+    "x-cli": false,
+    "x-transport": "receipts::recipient; messaging receipt ACK construction; existing direct/group fact admission",
+    "x-live": false,
+    "description": "Raw PN/LID/hosted recipient text now reuses the existing native user-class classifier. Dot-qualified zero/ignored suffixes and constructor-invalid users yield optional null rather than gaining primary-user recipient authority: ACK omits recipient and ordinary fact routing can proceed only under existing saved-chat/device/attempt guards. Device versus UserJid class and typed binary zero remain distinct. Other namespaces retain prior subset; no global JID parser or alias normalization. Actual encode/decode, original intent/attempt/progress/uncertainty, independent facts and reopen deduplication regressions cover the fix. Strict outbound receipt ACK callback settlement is unchanged; unsupported retry context remains deferred rather than receiving a guessed NACK. Full native fact dispatch/special families/live acceptance remain unverified. No new request, retry, HTTP route or account operation.",
+    "evidence": "docs/protocol/receipt-user-recipient.md#current-text-class-admission-including-dot-qualifiers-2026-11-06"
+  },
   "x-remaining-notification-raw-route-guards": {
     "x-cli": false,
     "x-transport": "devices::notification_ack; prekeys::low_count_ack; groups::handle_dirty_notification; account_privacy::validate/handle",

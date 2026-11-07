@@ -2241,6 +2241,9 @@ mod tests {
             .attr("from", "15555550100@s.whatsapp.net")
             .attr("id", "TYPED-RECIPIENT");
         for recipient in [
+            "15555550100.0@s.whatsapp.net",
+            "100001.0@lid",
+            "100001.ignored@lid",
             "120363000000000001@g.us",
             "status@broadcast",
             "123@newsletter",
@@ -2271,6 +2274,15 @@ mod tests {
             let ack = received_confirmation(&node).unwrap();
             assert!(ack.get_attr("recipient").is_none(), "{recipient}");
             assert!(ack.get_attr("participant").is_some(), "{recipient}");
+        }
+        for recipient in [
+            "01555550100@s.whatsapp.net",
+            "not-a-user@lid",
+            "15555550100.0@hosted",
+            "100001.0@hosted.lid",
+        ] {
+            let ack = received_confirmation(&base.clone().attr("recipient", recipient)).unwrap();
+            assert!(ack.get_attr("recipient").is_none(), "{recipient}");
         }
         for recipient in [
             "15555550100@s.whatsapp.net",

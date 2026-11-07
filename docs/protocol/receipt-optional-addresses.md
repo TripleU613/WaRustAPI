@@ -72,3 +72,14 @@ The namespace helper does not port every specialized native JID grammar or
 UserJid subtype cast. Recognized unsupported qualifiers remain deferred;
 read-self/played-self, full native dispatch and fresh live fact projection remain
 unported/unverified. No account operation or network request ran for this change.
+
+
+## Current recipient text-class follow-up (2026-11-06)
+
+[Current receipt-class correction](receipt-user-recipient.md#current-text-class-admission-including-dot-qualifiers-2026-11-06)
+now applies the existing native PN/LID/hosted classifier before generic parsing.
+Dot-qualified zero/ignored suffixes and constructor-invalid users cannot gain
+UserJid recipient authority. They omit the ACK recipient and allow ordinary
+facts only under the unchanged original-chat/device/attempt correlation.
+Generic participant handling and strict outbound-receipt ACK settlement remain
+separate. No global parser, alias normalization, retry or live operation changed.

@@ -4885,3 +4885,18 @@ Waking worker27 normally completes after promotion selection/rendering method
 return; its selected Exception path uses487. No remote fetch or queued-render
 success is established by that call. Effective flags, wrapper/provider/runtime
 lifecycle, native application and recovery remain open. Runtime policy unchanged.
+
+
+### Receipt recipient text-class admission (2026-11-06)
+
+**Confirmed local fix / current static class evidence:** [receipt recipient audit](receipt-user-recipient.md#current-text-class-admission-including-dot-qualifiers-2026-11-06)
+reuses current F0R.A03 UserJid getter, parser/factory and class ancestry. Raw .0
+or ignored dot suffixes previously became plain-user recipients; invalid ordinary
+PN/LID text could also pass. ACKs echoed those recipients and fact routing skipped
+matching ordinary receipts. The shared getter now uses the existing native
+PN/LID/hosted classifier. Optional invalid recipient takes the null path while
+original target/actor/attempt/uncertainty and callback settlement boundaries stay.
+Both ACK and fact regressions failed before correction; encode/decode/reopen
+controls verify the correction offline. Binary-zero and valid users remain.
+Full current fact dispatch, special families and live acceptance remain open.
+No global identity normalization, new request, replay or account operation.
