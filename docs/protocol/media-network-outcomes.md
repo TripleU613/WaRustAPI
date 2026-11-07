@@ -1188,3 +1188,19 @@ is specifically the seconds-to-ms conversion within the existing local guard;
 it does not establish complete native deadline parity or make a ban guarantee.
 Route selection runs before upload encryption/seed/reservation in the existing
 new-upload path. No live HTTP/account operation or state migration was performed.
+
+
+## Media deadline consumers separate refresh from auth validity (2026-11-06)
+
+**Confirmed selected static / research only:** exact1t5 field census finds A04
+route deadline read only by0VM.A0T's120s refresh test; auth A02 has distinct
+cache/timer/wait/upload/supplier consumers. A06 schedules auth expiry minus60s;
+A0C requires changed auth versus an optional old token plus strict future expiry
+with a caller margin. A0B waits in <=1s chunks only with request flight, using an
+uptime budget while auth uses elapsedRealtime. Selected upload paths pass120s
+or0 margin with20s wait input, and may still accept future auth after requesting
+refresh. Feature/online/offline and post-offline-skip transfer checks remain
+separate. This refutes a blanket120s hard auth cutoff and does not establish
+route TTL as every upload's hard expiry. Rust's current minimum is local policy.
+[Complete field census, nine methods, exact gates and required next work](apk/2.26.43.72-media-deadline-consumers/README.md).
+No timer, automatic refresh, runtime behavior or live account operation changed.

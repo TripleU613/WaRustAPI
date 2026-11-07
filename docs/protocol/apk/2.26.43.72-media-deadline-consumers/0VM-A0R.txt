@@ -1,0 +1,28 @@
+
+# class: LX/0VM;
+# extends: LX/07o;
+
+.method public A0R(V)  # .registers 12
+    # full signature: LX/0VM;->A0R()V
+    0000..0004  const-string  v0, "routeselector/requestroutesandwaitforauth"
+    0004..000a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    000a..000c  move-object  v5, v11
+    000c..0012  invoke-virtual  {v11}, LX/0VM;->A0T()Z
+    0012..0014  move-result  v0
+    0014..0018  if-eqz  v0, +0x1d
+    0018..001c  iget-object  v0, v11, LX/0VM;->A01:LX/1t5;
+    001c..0020  if-eqz  v0, +0xc
+    0020..0024  iget-wide  v3, v0, LX/1t5;->A02:J
+    0024..002a  invoke-static  {}, Landroid/os/SystemClock;->elapsedRealtime()J
+    002a..002c  move-result-wide  v1
+    002c..0030  cmp-long  v0, v3, v1
+    0030..0034  if-gtz  v0, +0xf
+    0034..0038  const-string  v0, "routeselector/requestroutesandwaitforauth/waiting for response"
+    0038..003e  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    003e..0042  const-wide/16  v7, #0x0
+    0042..0046  const-wide/16  v9, #0x4e20
+    0046..0048  const/4  v6, #0x0
+    0048..004e  invoke-static/range  {v5..v10}, LX/0VM;->A0B(LX/0VM;Ljava/lang/String;JJ)V
+    004e..0050  return-void
+    # exception table: 0 try range(s)
+.end method

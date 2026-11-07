@@ -1,0 +1,50 @@
+{
+  "0VM-A06.txt": {
+    "bytes": 1659,
+    "sha256": "1c968ca81518f79d33f479357b9eec5d31b564eb65e5e2d6c1952ae7dafe0d46"
+  },
+  "0VM-A08.txt": {
+    "bytes": 9771,
+    "sha256": "1a6797e556bb43897fea12d2558a412e85c51b223106cb78e32006204b530405"
+  },
+  "0VM-A0B.txt": {
+    "bytes": 3442,
+    "sha256": "a8e87fd809ff1dfea8aae4c152be14847d022841d474fe4aa694b00334f547a8"
+  },
+  "0VM-A0C.txt": {
+    "bytes": 822,
+    "sha256": "c142f152e9b67d97c9c9341e3af73f16525c66da8672270889112c9d44dd6f8d"
+  },
+  "0VM-A0R.txt": {
+    "bytes": 1253,
+    "sha256": "70e6d85cf11611382f73bd2fa879faaa7673144311c40d4b2becce8f4c755509"
+  },
+  "0VM-A0T.txt": {
+    "bytes": 3487,
+    "sha256": "de085bb075a2b38460548a54b5a90aec957a67be193f837c63e29d8503812ef1"
+  },
+  "A02-field-refs.txt": {
+    "bytes": 783,
+    "sha256": "91aabf01766027f528f9ef44dfb683d4eb00153a02637ce294d857d6479bd398"
+  },
+  "A04-field-refs.txt": {
+    "bytes": 167,
+    "sha256": "797c279490b33aa7b7f792412ba8e0e50ff25dea6dc95c474f4db00c98b3a27b"
+  },
+  "MOu-A05.txt": {
+    "bytes": 21649,
+    "sha256": "947e643135fdbb16c6dafdab9ec0a479ea3a52b8b8fc8a3c3bf40e4f72314012"
+  },
+  "MtZ-Cb6.txt": {
+    "bytes": 37338,
+    "sha256": "4104a8ea7c39e7992c93cbadc1c43bb0927223b2d697f26d516b30d86dce4e77"
+  },
+  "Mtv-CW7.txt": {
+    "bytes": 4254,
+    "sha256": "c11f9b5fc9fbd449cc3c9473aafcf6d2e20b9ce4d85b2e27a282b51ee9296357"
+  },
+  "README.md": {
+    "bytes": 7282,
+    "sha256": "49bac707be00050b07ebf10faa5888096f06d9f1871c08e3d8c2980454075abb"
+  }
+}

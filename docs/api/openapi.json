@@ -1,4 +1,11 @@
 {
+  "x-media-deadline-consumer-research": {
+    "x-cli": "xtask apk-field-refs and apk-smali; existing offline inspection paths",
+    "x-transport": "research only: route refresh trigger versus auth expiry, timer, wait and selected transfer conditions",
+    "x-live": false,
+    "description": "Exact pinned1t5 field census gives A04 sole direct consumer0VM.A0T (120s refresh trigger), while auth A02 has distinct cache/timer/wait/upload/supplier readers. A06 timer uses auth deadline minus60s. A0C checks changed token and strict future auth with caller margin; A0B uses request-flight checks, <=1s waits and uptime budget, distinct from elapsedRealtime validity. Selected upload paths use0/120s margin and20s budget with feature/offline/pre-transfer gates. No blanket120s hard cutoff or unconditional route-TTL upload expiry is established; current Rust minimum remains local policy. Nine complete method exports retain gaps in producer/mode/gate/clock/transfer parity. No runtime timer, automatic request, HTTP route or account operation added.",
+    "evidence": "docs/protocol/apk/2.26.43.72-media-deadline-consumers/README.md"
+  },
   "x-media-route-wrapped-lifetimes": {
     "x-cli": "existing media upload route selection; no new command or flag",
     "x-transport": "separate signed64 wrapped ttl/auth_ttl millisecond conversion before local age/minimum eligibility",

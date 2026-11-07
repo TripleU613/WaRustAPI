@@ -1,0 +1,168 @@
+
+# class: LX/0VM;
+# extends: LX/07o;
+
+.method public A08(VL)  # .registers 39
+    # full signature: LX/0VM;->A08(LX/0VM;)V
+    0000..0004  move-object/from16  v2, v38
+    0004..0008  iget-object  v1, v2, LX/0VM;->A07:LX/08Y;
+    0008..000c  const/16  v0, #0x95
+    000c..0012  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    0012..0014  move-result  v0
+    0014..0018  if-eqz  v0, +0x129
+    0018..001c  iget-object  v3, v2, LX/0VM;->A0J:Ljava/util/concurrent/atomic/AtomicBoolean;
+    001c..001e  const/4  v1, #0x0
+    001e..0020  const/4  v0, #0x1
+    0020..0026  invoke-virtual  {v3, v1, v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->compareAndSet(ZZ)Z
+    0026..0028  move-result  v0
+    0028..002c  if-eqz  v0, +0x11f
+    002c..0030  iget-object  v1, v2, LX/0VM;->A08:LX/00S;
+    0030..0034  const-string  v0, "route_selector_prefs"
+    0034..003a  invoke-virtual  {v1, v0}, LX/00S;->A04(Ljava/lang/String;)Landroid/content/SharedPreferences;
+    003a..003c  move-result-object  v3
+    003c..0040  const-string  v1, "media_conn"
+    0040..0042  const/4  v0, #0x0
+    0042..0048  invoke-interface  {v3, v1, v0}, Landroid/content/SharedPreferences;->getString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0048..004a  move-result-object  v0
+    004a..004e  iget-object  v9, v2, LX/0VM;->A09:LX/08q;
+    004e..0050  const/4  v4, #0x0
+    0050..0054  if-eqz  v0, +0xf0
+    0054..005a  invoke-static  {v0}, LX/1sp;->A07(Ljava/lang/String;)Lorg/json/JSONObject;
+    005a..005c  move-result-object  v1
+    005c..0060  const-string  v0, "auth_token"
+    0060..0066  invoke-virtual  {v1, v0}, Lorg/json/JSONObject;->getString(Ljava/lang/String;)Ljava/lang/String;
+    0066..0068  move-result-object  v24
+    0068..006c  const-string  v0, "conn_ttl"
+    006c..0072  invoke-virtual  {v1, v0}, Lorg/json/JSONObject;->getLong(Ljava/lang/String;)J
+    0072..0074  move-result-wide  v30
+    0074..0078  const-string  v0, "auth_ttl"
+    0078..007e  invoke-virtual  {v1, v0}, Lorg/json/JSONObject;->getLong(Ljava/lang/String;)J
+    007e..0080  move-result-wide  v32
+    0080..0084  const-string  v0, "max_buckets"
+    0084..008a  invoke-virtual  {v1, v0}, Lorg/json/JSONObject;->getLong(Ljava/lang/String;)J
+    008a..008c  move-result-wide  v34
+    008c..0090  const-string  v0, "hosts"
+    0090..0096  invoke-virtual  {v1, v0}, Lorg/json/JSONObject;->getJSONArray(Ljava/lang/String;)Lorg/json/JSONArray;
+    0096..0098  move-result-object  v8
+    0098..009e  invoke-virtual  {v8}, Lorg/json/JSONArray;->length()I
+    009e..00a0  move-result  v6
+    00a0..00a4  new-instance  v7, Ljava/util/ArrayList;
+    00a4..00aa  invoke-direct  {v7, v6}, Ljava/util/ArrayList;-><init>(I)V
+    00aa..00ac  const/4  v3, #0x0
+    00ac..00b0  if-ge  v3, v6, +0x6d
+    00b0..00b6  invoke-virtual  {v8, v3}, Lorg/json/JSONArray;->getJSONObject(I)Lorg/json/JSONObject;
+    00b6..00b8  move-result-object  v0
+    00b8..00bc  const-string  v5, "hostname"
+    00bc..00c2  invoke-virtual  {v0, v5}, Lorg/json/JSONObject;->getString(Ljava/lang/String;)Ljava/lang/String;
+    00c2..00c4  move-result-object  v11
+    00c4..00c8  const-string  v5, "ip4"
+    00c8..00ce  invoke-static  {v5, v0}, LX/0VM;->A04(Ljava/lang/String;Lorg/json/JSONObject;)Ljava/lang/String;
+    00ce..00d0  move-result-object  v12
+    00d0..00d4  const-string  v5, "ip6"
+    00d4..00da  invoke-static  {v5, v0}, LX/0VM;->A04(Ljava/lang/String;Lorg/json/JSONObject;)Ljava/lang/String;
+    00da..00dc  move-result-object  v13
+    00dc..00e0  const-string  v5, "class"
+    00e0..00e6  invoke-static  {v5, v0}, LX/0VM;->A04(Ljava/lang/String;Lorg/json/JSONObject;)Ljava/lang/String;
+    00e6..00e8  move-result-object  v14
+    00e8..00ec  const-string  v5, "fallback_hostname"
+    00ec..00f2  invoke-static  {v5, v0}, LX/0VM;->A04(Ljava/lang/String;Lorg/json/JSONObject;)Ljava/lang/String;
+    00f2..00f4  move-result-object  v15
+    00f4..00f8  const-string  v5, "fallback_ip4"
+    00f8..00fe  invoke-static  {v5, v0}, LX/0VM;->A04(Ljava/lang/String;Lorg/json/JSONObject;)Ljava/lang/String;
+    00fe..0100  move-result-object  v16
+    0100..0104  const-string  v5, "fallback_ip6"
+    0104..010a  invoke-static  {v5, v0}, LX/0VM;->A04(Ljava/lang/String;Lorg/json/JSONObject;)Ljava/lang/String;
+    010a..010c  move-result-object  v17
+    010c..0110  const-string  v5, "fallback_class"
+    0110..0116  invoke-static  {v5, v0}, LX/0VM;->A04(Ljava/lang/String;Lorg/json/JSONObject;)Ljava/lang/String;
+    0116..0118  move-result-object  v18
+    0118..011e  const-string/jumbo  v5, "upload"
+    011e..0124  invoke-virtual  {v0, v5}, Lorg/json/JSONObject;->optJSONArray(Ljava/lang/String;)Lorg/json/JSONArray;
+    0124..0126  move-result-object  v5
+    0126..012c  invoke-static  {v5}, LX/0VM;->A05(Lorg/json/JSONArray;)Ljava/util/HashSet;
+    012c..012e  move-result-object  v20
+    012e..0132  const-string  v5, "download"
+    0132..0138  invoke-virtual  {v0, v5}, Lorg/json/JSONObject;->optJSONArray(Ljava/lang/String;)Lorg/json/JSONArray;
+    0138..013a  move-result-object  v5
+    013a..0140  invoke-static  {v5}, LX/0VM;->A05(Lorg/json/JSONArray;)Ljava/util/HashSet;
+    0140..0142  move-result-object  v21
+    0142..0146  const-string  v5, "download_buckets"
+    0146..014c  invoke-virtual  {v0, v5}, Lorg/json/JSONObject;->optJSONArray(Ljava/lang/String;)Lorg/json/JSONArray;
+    014c..014e  move-result-object  v5
+    014e..0154  invoke-static  {v5}, LX/0VM;->A05(Lorg/json/JSONArray;)Ljava/util/HashSet;
+    0154..0156  move-result-object  v22
+    0156..015c  const-string/jumbo  v5, "type"
+    015c..0162  invoke-static  {v5, v0}, LX/0VM;->A04(Ljava/lang/String;Lorg/json/JSONObject;)Ljava/lang/String;
+    0162..0164  move-result-object  v19
+    0164..0168  const-string  v5, "force_ip"
+    0168..016e  invoke-virtual  {v0, v5}, Lorg/json/JSONObject;->optBoolean(Ljava/lang/String;)Z
+    016e..0170  move-result  v23
+    0170..0174  new-instance  v10, LX/1t1;
+    0174..017a  invoke-direct/range  {v10..v23}, LX/1t1;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;Z)V
+    017a..0180  invoke-virtual  {v7, v10}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0180..0184  add-int/lit8  v3, v3, #0x1
+    0184..0186  goto  -0x6c
+    0186..018a  const-string  v0, "send_time_abs_ms"
+    018a..0190  invoke-virtual  {v1, v0}, Lorg/json/JSONObject;->getLong(Ljava/lang/String;)J
+    0190..0192  move-result-wide  v36
+    0192..0198  invoke-static  {v9}, LX/08q;->A00(LX/08q;)J
+    0198..019a  move-result-wide  v5
+    019a..019e  sub-long  v36, v36, v5
+    019e..01a4  invoke-static  {}, Landroid/os/SystemClock;->elapsedRealtime()J
+    01a4..01a6  move-result-wide  v5
+    01a6..01aa  add-long  v36, v36, v5
+    01aa..01ae  const-string  v0, "last_id"
+    01ae..01b4  invoke-static  {v0, v1}, LX/0VM;->A04(Ljava/lang/String;Lorg/json/JSONObject;)Ljava/lang/String;
+    01b4..01b6  move-result-object  v25
+    01b6..01ba  const-string  v0, "is_new"
+    01ba..01c0  invoke-virtual  {v1, v0}, Lorg/json/JSONObject;->getBoolean(Ljava/lang/String;)Z
+    01c0..01c2  move-result  v38
+    01c2..01c6  const-string  v0, "max_autodownload_retry"
+    01c6..01cc  invoke-virtual  {v1, v0}, Lorg/json/JSONObject;->getInt(Ljava/lang/String;)I
+    01cc..01ce  move-result  v28
+    01ce..01d2  const-string  v0, "max_manual_retry"
+    01d2..01d8  invoke-virtual  {v1, v0}, Lorg/json/JSONObject;->getInt(Ljava/lang/String;)I
+    01d8..01da  move-result  v29
+    01da..01de  const-string  v0, "ip_token"
+    01de..01e4  invoke-virtual  {v1, v0, v4}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    01e4..01e6  move-result-object  v26
+    01e6..01ec  const-string/jumbo  v0, "set_ip_token"
+    01ec..01f2  invoke-virtual  {v1, v0}, Lorg/json/JSONObject;->has(Ljava/lang/String;)Z
+    01f2..01f4  move-result  v3
+    01f4..01f8  if-eqz  v3, +0x12
+    01f8..01fe  invoke-virtual  {v1, v0}, Lorg/json/JSONObject;->optBoolean(Ljava/lang/String;)Z
+    01fe..0200  move-result  v0
+    0200..0206  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0206..0208  move-result-object  v23
+    0208..020c  new-instance  v22, LX/1t5;
+    020c..0210  move-object/from16  v27, v7
+    0210..0216  invoke-direct/range  {v22..v38}, LX/1t5;-><init>(Ljava/lang/Boolean;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;IIJJJJZ)V
+    0216..0218  goto  +0x4
+    0218..021c  const/16  v23, #0x0
+    021c..021e  goto  -0xa
+    021e..0222  move-object/from16  v4, v22
+    0222..0224  goto  +0x7
+    0224..0226  move-exception  v1
+    0226..022a  const-string  v0, "routingresponse/can't parse json"
+    022a..0230  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0230..0234  iget-object  v1, v2, LX/0VM;->A0H:Ljava/lang/Object;
+    0234..0236  monitor-enter
+    0236..023a  iget-object  v0, v2, LX/0VM;->A01:LX/1t5;
+    023a..023e  if-nez  v0, +0x11
+    023e..0242  if-eqz  v4, +0xf
+    0242..0246  iget-wide  v7, v4, LX/1t5;->A02:J
+    0246..024c  invoke-static  {}, Landroid/os/SystemClock;->elapsedRealtime()J
+    024c..024e  move-result-wide  v5
+    024e..0252  cmp-long  v0, v7, v5
+    0252..0256  if-lez  v0, +0x5
+    0256..025c  invoke-static  {v2, v4}, LX/0VM;->A0A(LX/0VM;LX/1t5;)V
+    025c..025e  monitor-exit
+    025e..0260  return-void
+    0260..0262  move-exception  v0
+    0262..0264  monitor-exit
+    0264..0266  throw  v0
+    0266..0268  return-void
+    # exception table: 2 try range(s)
+    # catch Lorg/json/JSONException; code_units 002a..0112 -> 0112
+    # catch <all> code_units 011b..0132 -> 0130
+.end method

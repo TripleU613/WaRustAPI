@@ -1,3 +1,10 @@
+2026-11-06 — **Separated media refresh deadlines from hard auth validity.**
+Exact field/method tracing closes120s refresh trigger,60s timer and request-aware
+20s wait inputs, with distinct elapsed/uptime clocks and old-auth comparison.
+Selected upload paths have additional feature/offline/pre-transfer gates; neither
+120s nor route TTL is proven a universal hard upload cutoff. Research-only chunk.
+[Complete evidence and unported runtime boundaries](docs/protocol/apk/2.26.43.72-media-deadline-consumers/README.md). No live account operation.
+
 2026-11-06 — **Stopped saturated media lifetimes from extending auth eligibility.**
 Upload route selection now wraps each seconds-to-ms product before applying its
 existing age/minimum guard, matching the pinned constructor operation. Tests cover
