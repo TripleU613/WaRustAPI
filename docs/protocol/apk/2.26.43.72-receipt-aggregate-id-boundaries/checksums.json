@@ -1,0 +1,30 @@
+{
+  "README.md": {
+    "bytes": 5684,
+    "sha256": "2a1a4afcc3ef3673d762abc8d0caa514198edcde9d0abe9d0f1d8606ea6b93b2"
+  },
+  "chat-canonicalizer.txt": {
+    "bytes": 1154,
+    "sha256": "891745357c5cfa94af9acefd3d7b018d60ccacab4aafc3e9e882f352e0ee6158"
+  },
+  "chat-safe-cast.txt": {
+    "bytes": 435,
+    "sha256": "ca55b2c4380168a834825ec5a91933a3b8d676a91962e2889050fdcab43c1432"
+  },
+  "chat-selector.txt": {
+    "bytes": 1338,
+    "sha256": "9bc7c4787f6d5102a537065928fb85f703da12b23c8105a4830a6dd0817f3527"
+  },
+  "chat-unwrapper.txt": {
+    "bytes": 815,
+    "sha256": "dc908f426344c70d20203690ccf16f96cd48daa4ea1742674ec057cccac76d5e"
+  },
+  "message-key-constructors.txt": {
+    "bytes": 1301,
+    "sha256": "75b642acf9779a95eb7dc33845d44a8d3df681aeefda81b5d52b6c3ce0157cd9"
+  },
+  "message-key-wrapper.txt": {
+    "bytes": 380,
+    "sha256": "d2cb76499f7d214946c1a9cffbc9cbdaf39ea661067b8e3cb2fc634d4d5322ed"
+  }
+}

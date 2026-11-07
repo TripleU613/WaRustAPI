@@ -5233,3 +5233,19 @@ response. With valid time, unknown/empty kind conversion is non-LIL, outside the
 gap; no new500 response is added. Codec cause/ACK precedence and actor-priority
 controls pass alongside aggregate atomic-refusal tests. No new fact kind, query,
 resend, identity change or live account operation.
+
+## Missing aggregate key versus local ID bounds (2026-11-06)
+
+**Confirmed selected static / fixed offline:** [identifier selector/read-order, constructor and chat-resolution evidence](apk/2.26.43.72-receipt-aggregate-id-boundaries/README.md)
+bind key absence to required A0L before chat resolution, after root-kind selection.
+The shared native error cause set now includes native_required_key for the
+supported selected key branch and emits a fresh root487 after capture. A valid
+message_id branch needs no key. Empty/overlong IDs remain local refusals: A0L
+and the selected message-key constructor assert nonnull, not those bounds.
+Codec/store controls prevent a local bound from authorizing a native NACK or
+falling back to ROOT-ID facts. The actor checks capture-before-write and unchanged
+outbox/identity/session state. Chat resolution precedes the required message_id
+read but follows key read; the earlier blanket ordering hypothesis was refuted.
+No synthesized ID, new fact/identity authority, query/resend or account operation.
+Opaque string/root-type policy, full native key/storage/chat/queue behavior and
+live acceptance remain open.

@@ -969,8 +969,8 @@ pub(super) fn handled_retry_confirmation(incoming: &Node) -> Option<Node> {
     receipt_ack_after_processing(incoming, true)
 }
 
-/// Build an error487 receipt ACK only for a proven native required-device or
-/// aggregate timestamp parse failure from pure validation. No store, network, retry or fact mutation.
+/// Build an error487 receipt ACK only for a proven native required-device,
+/// aggregate timestamp or missing aggregate-key failure from pure validation. No store, network, retry or fact mutation.
 /// Call only after durable capture; a failed write must not be replayed locally.
 /// Local bounds, opaque binary failures and stored-row errors do not qualify.
 pub fn received_parse_error_confirmation(incoming: &Node) -> Option<Node> {

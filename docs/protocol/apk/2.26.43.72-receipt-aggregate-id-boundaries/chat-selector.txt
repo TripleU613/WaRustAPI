@@ -1,0 +1,28 @@
+
+# class: LX/F10;
+# extends: Ljava/lang/Object;
+
+.method private A02(LL)  # .registers 5
+    # full signature: LX/F10;->A02(LX/Eoh;)LX/0DY;
+    0000..0004  iget-object  v2, v4, LX/Eoh;->A03:Lcom/whatsapp/infra/core/jid/UserJid;
+    0004..0008  iget-object  v0, v4, LX/Eoh;->A02:Lcom/whatsapp/infra/core/jid/Jid;
+    0008..000e  invoke-static  {v0}, LX/0Dn;->A00(Lcom/whatsapp/infra/core/jid/Jid;)LX/0DY;
+    000e..0010  move-result-object  v1
+    0010..0014  if-eqz  v2, +0xf
+    0014..001a  invoke-static  {v1}, LX/0Dn;->A0l(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    001a..001c  move-result  v0
+    001c..0020  if-nez  v0, +0x9
+    0020..0026  invoke-static  {v1}, LX/0Dn;->A0h(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0026..0028  move-result  v0
+    0028..002c  if-nez  v0, +0x3
+    002c..002e  move-object  v1, v2
+    002e..0034  invoke-static  {v1}, LX/00L;->A05(Ljava/lang/Object;)V
+    0034..003a  invoke-static  {v1}, LX/00l;->A05(Ljava/lang/Object;)V
+    003a..003e  check-cast  v1, LX/0DY;
+    003e..0044  invoke-static  {v1, v3}, LX/F10;->A01(LX/0DY;LX/F10;)LX/0DY;
+    0044..0046  move-result-object  v0
+    0046..004c  invoke-static  {v0}, LX/00L;->A05(Ljava/lang/Object;)V
+    004c..0052  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    0052..0054  return-object  v0
+    # exception table: 0 try range(s)
+.end method

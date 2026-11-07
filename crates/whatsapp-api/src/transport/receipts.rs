@@ -1469,9 +1469,13 @@ fn routes_to_group(node: &Node) -> bool {
 // ordinary parse-error response. Local bounds/storage/opaque binary failures do not.
 pub(super) const NATIVE_REQUIRED_DEVICE_FIELD: &str = "receipt.aggregate.native_required_device";
 pub(super) const NATIVE_TIMESTAMP_FIELD: &str = "receipt.aggregate.native_timestamp";
+pub(super) const NATIVE_KEY_FIELD: &str = "receipt.aggregate.native_required_key";
 
 pub(super) fn is_native_parse_error_field(field: &str) -> bool {
-    matches!(field, NATIVE_REQUIRED_DEVICE_FIELD | NATIVE_TIMESTAMP_FIELD)
+    matches!(
+        field,
+        NATIVE_REQUIRED_DEVICE_FIELD | NATIVE_TIMESTAMP_FIELD | NATIVE_KEY_FIELD
+    )
 }
 
 fn offline_aggregate(node: &Node, participants: &Node) -> Result<Vec<Node>> {
@@ -1482,6 +1486,9 @@ fn offline_aggregate(node: &Node, participants: &Node) -> Result<Vec<Node>> {
             "missing or invalid required DeviceJid",
         )
     };
+    // APK43.72 A0L rejects null only; 1dW.<init> asserts nonnull, not
+    // nonempty/128 bytes. This supported message_id bound is local and must
+    // not by itself authorize a native error ACK.
     let id = participants
         .get_attr("message_id")
         .and_then(|v| v.as_text())
@@ -1601,12 +1608,6 @@ fn offline_aggregate(node: &Node, participants: &Node) -> Result<Vec<Node>> {
 
 fn key_aggregate(node: &Node, participants: &Node, default_seconds: i64) -> Result<Vec<Node>> {
     let invalid = |reason| Error::invalid("receipt.aggregate", reason);
-    let id = participants
-        .get_attr("key")
-        .and_then(|v| v.as_text())
-        .filter(|id| !id.is_empty() && id.len() <= 128)
-        .ok_or_else(|| invalid("missing or invalid key"))?;
-    let from = jid(node, "from").ok_or_else(|| invalid("missing or invalid from"))?;
     let kind = match node.get_attr("type") {
         None => "delivery",
         Some(value) => value
@@ -1619,6 +1620,19 @@ fn key_aggregate(node: &Node, participants: &Node, default_seconds: i64) -> Resu
     ) {
         return Err(invalid("unknown root type"));
     }
+    // APK43.72 A0L rejects null only; 1dW.<init> asserts nonnull, not
+    // nonempty/128 bytes. This supported key bound is local and must
+    // not by itself authorize a native error ACK.
+    // F10.A03 checks the root kind before A0L(key), then resolves its chat.
+    // Only absence is the proved required-string LIL, not empty/long/opaque IDs.
+    let source = participants
+        .get_attr("key")
+        .ok_or_else(|| Error::invalid(NATIVE_KEY_FIELD, "missing required aggregate key"))?;
+    let id = source
+        .as_text()
+        .filter(|id| !id.is_empty() && id.len() <= 128)
+        .ok_or_else(|| invalid("invalid or unsupported key"))?;
+    let from = jid(node, "from").ok_or_else(|| invalid("missing or invalid from"))?;
     let crate::binary::NodeContent::Children(items) = &participants.content else {
         return Err(invalid("missing participant list"));
     };
@@ -4637,6 +4651,99 @@ mod tests {
                 Ok(ticket.local_id)
             })
             .unwrap()
+    }
+
+    #[test]
+    fn missing_aggregate_key_gets_root_487_only_in_selected_key_branch() {
+        let input = Node::new("receipt")
+            .attr("id", "ROOT-KEY")
+            .attr("from", "15555550100@s.whatsapp.net")
+            .attr("type", "read")
+            .attr("recipient", "15555550999@s.whatsapp.net")
+            .attr("edit", "7")
+            .children(vec![Node::new("participants").children(vec![
+                Node::new("participant").attr("jid", "15555550100@s.whatsapp.net").attr("t", "20"),
+            ])]);
+        let ack = super::super::messaging::received_parse_error_confirmation(&input)
+            .expect("required key absence throws native LIL");
+        assert_eq!(ack.get_attr("error").and_then(|v| v.as_text()), Some("487"));
+        assert_eq!(
+            ack.get_attr("id").and_then(|v| v.as_text()),
+            Some("ROOT-KEY")
+        );
+        assert!(ack.get_attr("recipient").is_none());
+        assert!(ack.get_attr("edit").is_none());
+        let selected_offline = input.clone().children(vec![
+            Node::new("participants")
+                .attr("message_id", "INNER")
+                .children(vec![
+                    Node::new("participant")
+                        .attr("jid", "15555550100@s.whatsapp.net")
+                        .attr("t", "20"),
+                ]),
+        ]);
+        assert!(validate(&selected_offline).is_ok());
+        assert!(
+            super::super::messaging::received_parse_error_confirmation(&selected_offline).is_none()
+        );
+        assert!(
+            super::super::messaging::received_parse_error_confirmation(
+                &input.attr("type", "unported-root-type")
+            )
+            .is_none()
+        );
+    }
+
+    #[test]
+    fn local_aggregate_id_bounds_do_not_authorize_native_error_ack_or_root_facts() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("local-aggregate-id.redb"), true);
+        saved_receipt_send(&store, "id-bound", "15555550100@s.whatsapp.net", "ROOT-ID");
+        let snapshot = || {
+            store
+                .read(|tx| {
+                    Ok((
+                        tx.scan(Table::Checkpoints, 1, 100)?,
+                        tx.scan(Table::Outbox, 1, 100)?,
+                        tx.journal_head()?,
+                    ))
+                })
+                .unwrap()
+        };
+        let before = snapshot();
+        for selector in ["message_id", "key"] {
+            for inner_id in [String::new(), "X".repeat(129)] {
+                let input = Node::new("receipt")
+                    .attr("id", "ROOT-ID")
+                    .attr("from", "15555550100@s.whatsapp.net")
+                    .attr("type", "read")
+                    .attr("t", "20")
+                    .children(vec![
+                        Node::new("participants")
+                            .attr(selector, inner_id)
+                            .children(vec![
+                                Node::new("participant")
+                                    .attr("jid", "15555550100@s.whatsapp.net")
+                                    .attr("t", "20"),
+                            ]),
+                    ]);
+                let wire = crate::binary::Encoder::new(
+                    crate::binary::TokenDictionary::comparison_2_26_37_71(),
+                )
+                .encode(&input)
+                .unwrap();
+                let input = decode(&wire).unwrap();
+                let Error::InvalidInput { field, .. } = validate(&input).unwrap_err() else {
+                    panic!("pure refusal");
+                };
+                assert!(!is_native_parse_error_field(field));
+                assert!(
+                    super::super::messaging::received_parse_error_confirmation(&input).is_none()
+                );
+                assert!(record(&store, &input).is_err());
+                assert_eq!(snapshot(), before);
+            }
+        }
     }
 
     #[test]

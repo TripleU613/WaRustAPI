@@ -1,0 +1,27 @@
+
+# class: LX/F10;
+# extends: Ljava/lang/Object;
+
+.method public A01(LLL)  # .registers 3
+    # full signature: LX/F10;->A01(LX/0DY;LX/F10;)LX/0DY;
+    0000..0006  invoke-static  {v1}, LX/0Dn;->A0O(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0006..0008  move-result  v0
+    0008..000c  if-eqz  v0, +0x11
+    000c..0010  iget-object  v0, v2, LX/F10;->A01:LX/05a;
+    0010..0016  invoke-static  {v0}, LX/DBb;->A1P(LX/05a;)Z
+    0016..0018  move-result  v0
+    0018..001c  if-eqz  v0, +0x9
+    001c..0022  invoke-static  {v1}, LX/0x9;->A00(LX/0DY;)LX/0DY;
+    0022..0024  move-result-object  v0
+    0024..0028  if-eqz  v0, +0x13
+    0028..002a  return-object  v0
+    002a..002e  iget-object  v0, v2, LX/F10;->A02:LX/05a;
+    002e..0034  invoke-static  {v0}, LX/B1z;->A0E(LX/05a;)LX/0f5;
+    0034..0036  move-result-object  v0
+    0036..003c  invoke-virtual  {v0, v1}, LX/0f5;->A07(LX/0DY;)LX/0DY;
+    003c..003e  move-result-object  v1
+    003e..0044  invoke-static  {v1}, LX/00L;->A05(Ljava/lang/Object;)V
+    0044..004a  invoke-static  {v1}, LX/00l;->A05(Ljava/lang/Object;)V
+    004a..004c  return-object  v1
+    # exception table: 0 try range(s)
+.end method

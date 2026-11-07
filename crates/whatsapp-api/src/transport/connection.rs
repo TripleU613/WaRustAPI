@@ -3770,6 +3770,28 @@ mod tests {
                 written.send(Ok(())).unwrap();
             }
         }
+        let missing_key = input
+            .clone()
+            .children(vec![Node::new("participants").children(vec![
+                Node::new("participant")
+                    .attr("jid", "15555550100@s.whatsapp.net")
+                    .attr("t", "20"),
+            ])]);
+        let missing_key_capture = format!(
+            "inbound:sha256:{}",
+            hex::encode(sha2::Sha256::digest(encode(&missing_key).unwrap()))
+        );
+        fake.deliver(missing_key).await;
+        let (ack, written) = fake.written().await;
+        assert_eq!(ack, expected);
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, missing_key_capture.as_bytes(), 1))
+                .unwrap()
+                .is_some()
+        );
+        assert_eq!(snapshot(), before);
+        written.send(Ok(())).unwrap();
         // This local bound is not a native LIL cause and gets no error ACK.
         let oversized = Node::new("receipt")
             .attr("id", "LOCAL-BOUND")

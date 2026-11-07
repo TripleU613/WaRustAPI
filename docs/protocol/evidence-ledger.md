@@ -1,3 +1,10 @@
+2026-11-06 — **Added missing aggregate-key error487 with local-ID boundaries.**
+Only proved required key absence in the supported key branch gains a native error
+cause and fresh ROOT-ID response. Empty/overlong inner IDs remain local refusals,
+with tests preventing NACK authority or root-fact fallback. The two aggregate
+branches have distinct chat/ID read order, retained with exact evidence.
+[Required-ID/constructor evidence, regressions and remaining scope](apk/2.26.43.72-receipt-aggregate-id-boundaries/README.md). No live account operation.
+
 2026-11-06 — **Corrected offline receipt timestamp/status error precedence.**
 Required item time is parsed before unknown status conversion, matching the APK.
 An unknown kind no longer masks an earlier timestamp487 cause. Valid-time unknown

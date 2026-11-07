@@ -1,4 +1,11 @@
 {
+  "x-aggregate-required-key-error-boundary": {
+    "x-cli": "existing receive paths; no new command or flag",
+    "x-transport": "selected key-aggregate required-key cause and fresh root487 response",
+    "x-live": false,
+    "description": "Pinned F10.A03 reads A0L(key) before chat resolution, after root-kind selection. Missing key now has receipt.aggregate.native_required_key cause shared by normal/selected CLI response paths; fresh ACK uses outer stanza ID and omits recipient/edit/children. A valid message_id branch requires no key. Empty/129-byte/opaque present IDs remain generic local refusals: the required getter and selected message-key constructor check nonnull, not those bounds. Codec/store tests prevent native NACK authority and root-fact fallback; actor verifies capture-before-write and unchanged state. Exact chat/read ordering differs between branches and is retained. Unsupported root types, full binary/string/storage/chat/queue behavior and live acceptance remain open. No synthesized ID, new fact kind, query/resend, identity, HTTP route or account operation.",
+    "evidence": "docs/protocol/apk/2.26.43.72-receipt-aggregate-id-boundaries/README.md"
+  },
   "x-offline-item-time-status-precedence": {
     "x-cli": "existing receive paths; no new command or flag",
     "x-transport": "offline message_id receipt item required-time/status conversion ordering",
