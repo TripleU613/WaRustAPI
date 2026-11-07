@@ -20023,5 +20023,15 @@
     "x-live": false,
     "description": "Pinned static initial login reader distinguishes web/success/failure and throws on unexpected nodes. Success lid uses Jid.class; getter logs protocol noncompliance then continues conversion. Numeric login grammar, typed attribute construction, effective setter and PN lifecycle remain unresolved. Existing xtask selectors reproduce evidence; no runtime validation, route or wire change.",
     "evidence": "docs/protocol/apk/2.26.43.72-login-success-reader/README.md"
+  },
+  "x-login-lid-constructor-validation": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [
+      "whatsapp_api::transport::connection::update_login_identity"
+    ],
+    "description": "Shared login identity validation enforces pinned LidUserJid constructor grammar (1..15 ASCII digits, no leading zero) for supplied LIDs and saved LIDs during requested updates. Invalid values refuse atomically after capture, retaining uncertainty and no-replay ownership. PN, agent/device admission and valid-LID replacement policy unchanged. No new route or live validation.",
+    "evidence": "docs/protocol/login-identity-updates.md#lid-constructor-grammar-at-login"
   }
 }

@@ -264,6 +264,12 @@ fn login_user(
     (jid.server == server
         && !jid.user.is_empty()
         && jid.agent == 0
+        // APK43.72 0ZJ.A13 reads a generic Jid, but the LidUserJid
+        // constructor 0Dx rejects non-ASCII/non-numeric, leading-zero and
+        // >15-digit users. Getter compliance logging is a separate check.
+        // See login-identity-updates.md#lid-constructor-grammar-at-login.
+        && (server != crate::model::jid::Server::Lid
+            || super::messaging::native_plain_lid_user_valid(&jid.user))
         && matches!(jid.kind, JidKind::Plain | JidKind::AgentDevice))
     .then(|| jid.to_non_ad())
 }
@@ -2178,6 +2184,81 @@ mod tests {
     }
 
     #[test]
+    fn login_lid_constructor_grammar_preserves_owned_uncertainty_on_refusal() {
+        for (user, valid) in [
+            ("1", true),
+            ("999999999999999", true),
+            ("letters-private", false),
+            ("0", false),
+            ("012345", false),
+            ("1234567890123456", false),
+            ("１２３４５", false),
+            ("123 45", false),
+        ] {
+            for typed in [false, true] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("login-lid-grammar.redb");
+                let store = identity_store(&path);
+                let account = AccountRecord {
+                    generation: store.generation(),
+                    ..Default::default()
+                };
+                store
+                    .write(|tx| {
+                        account.save(tx)?;
+                        tx.put_json(
+                            Table::Checkpoints,
+                            b"login-identity",
+                            1,
+                            &serde_json::json!({"lid":"111111111111111@lid","pn":null,"retained":"fixture"}),
+                        )?;
+                        tx.put_json(Table::PeerIdentities, b"fixture", 1, &vec![1u8, 2, 3])?;
+                        tx.put_json(Table::SignalSessions, b"fixture", 1, &vec![4u8, 5, 6])?;
+                        tx.put_json(Table::Outbox, b"fixture", 1, &serde_json::json!({"retained":true}))
+                    })
+                    .unwrap();
+                let snapshot = store
+                    .read(|tx| LoginSnapshot::capture_in(tx, &account))
+                    .unwrap();
+                let owner = reserve_login(&store, &snapshot).unwrap();
+                let text = format!("{user}@lid");
+                let reply = if typed {
+                    Node::new("success").attr("lid", Jid::parse(&text).unwrap())
+                } else {
+                    Node::new("success").attr("lid", text.clone())
+                }
+                .attr("t", "1700000000");
+                super::super::inbox::preserve_in_epoch(&store, &reply, ConnectionEpoch(1)).unwrap();
+                let before = login_snapshot(&store);
+                let head = store.journal_head().unwrap();
+                let result = record_login_reply_checked(&store, &reply, Some((&snapshot, &owner)));
+                if valid {
+                    result.unwrap();
+                    assert_eq!(
+                        last_login_status(&store).unwrap().as_deref(),
+                        Some("success")
+                    );
+                    assert_eq!(
+                        super::super::group_send::own_lid(&store).unwrap(),
+                        Some(Jid::parse(&text).unwrap())
+                    );
+                } else {
+                    let error = result.expect_err("invalid LID became own-account identity");
+                    assert!(!error.to_string().contains(user));
+                    assert!(!error.is_recoverable_by_reconnect());
+                    assert_eq!(login_snapshot(&store), before);
+                    assert_eq!(store.journal_head().unwrap(), head);
+                    drop(store);
+                    let store = identity_store(&path);
+                    assert_eq!(login_snapshot(&store), before);
+                    assert!(reserve_login(&store, &snapshot).is_err());
+                    assert_eq!(store.journal_head().unwrap(), head);
+                }
+            }
+        }
+    }
+
+    #[test]
     fn malformed_saved_login_identity_is_not_repaired_by_a_new_success() {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("malformed-login-history.redb");
@@ -2188,6 +2269,9 @@ mod tests {
             serde_json::json!(false),
             serde_json::json!({"pn":"s.whatsapp.net","lid":null}),
             serde_json::json!({"pn":null,"lid":7}),
+            serde_json::json!({"pn":null,"lid":"letters-private@lid"}),
+            serde_json::json!({"pn":null,"lid":"012345@lid"}),
+            serde_json::json!({"pn":null,"lid":"1234567890123456@lid"}),
             serde_json::json!({"pn":null,"lid":"111111111111111.1:0@lid"}),
         ] {
             store

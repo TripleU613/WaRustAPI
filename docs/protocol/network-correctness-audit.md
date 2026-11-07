@@ -6240,3 +6240,10 @@ evidence, not new APK behavior or proof of full group-send/network parity.
   getter logs noncompliance then continues. Numeric login grammar, effective setter
   and PN handling remain unresolved; no speculative runtime gate added. See
   [reader evidence](apk/2.26.43.72-login-success-reader/README.md).
+
+- Confirmed login own-LID constructor grammar defect at `8f7759f8`: alphabetic
+  LID settled successfully. Shared login identity validation now enforces pinned
+  0Dx's 1..15 ASCII digits/no leading zero for supplied and requested saved LIDs.
+  Owned text/typed capture/reopen/no-replay and valid boundary controls added.
+  Existing fill-only native setter corroborated; full flag/provider lifecycle
+  remains separate. See [LID login grammar](login-identity-updates.md#lid-constructor-grammar-at-login).

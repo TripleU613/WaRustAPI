@@ -152,3 +152,30 @@ login grammar from ACK-specific rules. The native initial reader separately
 throws for unexpected nodes rather than treating each as a failure stanza.
 See [complete methods, negative selectors and reproduction](apk/2.26.43.72-login-success-reader/README.md).
 No runtime change or live operation.
+
+## LID constructor grammar at login
+
+2026-11-07. **Confirmed local defect/fixed offline:** supplied login LIDs with
+alphabetic, leading-zero or oversized users could become own-account identity.
+The pinned 0ZJ.A13 ->0Tp.A0A ->0Dd.A02/A00 ->0De.A02 ->0Dx construction chain
+requires 1..15 ASCII digits without leading zero. This is constructor validation,
+not the separate compliance check that only logs. The existing shared
+login_user helper now reuses that grammar for Server::Lid in both supplied and
+saved requested-update validation. PN grammar, agent/device normalization and
+valid replacement policy remain unchanged. Existing malformed-history and omitted
+field policies remain local contracts.
+
+The owned real-store regression failed before the fix with an alphabetic LID
+settling successfully. Text/typed invalid users now preserve prior durable reply
+capture, account/checkpoint/pin/session/outbox rows, event head and uncertainty,
+including after reopen; another reservation remains blocked. Valid one- and
+15-digit controls succeed; existing AD and shared CLI controls remain.
+No live account operation or complete native malformed-success policy is claimed.
+See [constructor/setter evidence and limits](apk/2.26.43.72-login-lid-constructor/README.md).
+
+The earlier setter implementation unknown was scoped to that reader trace:
+[existing own-Me evidence](own-companion-ingress-current.md#me-is-persisted-identity-data-not-standalone-authentication-proof)
+already shows 09O.ChR fills an absent LID and preserves an existing one. The new
+scan corroborates it. Its effective login flag/provider and complete replacement
+lifecycle remain unknown; this patch does not apply that conditional setter's
+policy universally to the canonical authenticated-identity checkpoint.

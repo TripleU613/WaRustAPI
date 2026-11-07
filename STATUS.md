@@ -10722,3 +10722,9 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   logs rather than rejecting. Full identity parser/setter parity remains unknown;
   no speculative numeric gate or live operation. See
   [login audit](docs/protocol/login-identity-updates.md#pinned-initial-reader-audit-2026-11-07).
+
+- Fixed acceptance of impossible constructed own-LID users at login: shared
+  helper enforces pinned 1..15 ASCII digits/no leading zero, preserving capture
+  and uncertain reservation on refusal. Owned text/typed/reopen controls added.
+  PN, valid replacement policy and live operation unchanged. See
+  [LID constructor grammar](docs/protocol/login-identity-updates.md#lid-constructor-grammar-at-login).

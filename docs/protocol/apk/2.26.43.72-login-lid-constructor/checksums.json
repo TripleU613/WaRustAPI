@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "bytes": 5130,
+    "sha256": "f6b677c6bef82059d847ec75fe94b7aa12c468afd932c45e5f5bb3ac68f884ab"
+  },
+  "lid-device-type.txt": {
+    "bytes": 2648,
+    "sha256": "d91c1c7a28ff525e4e3bcb100080e2652b94706144b896db00729805091d515e"
+  },
+  "lid-type-predicate.txt": {
+    "bytes": 525,
+    "sha256": "89b6d8dde9cfc793154eb3ccd944c2c9eb1646d86375dd02449d39330b284b21"
+  },
+  "lid-user-type.txt": {
+    "bytes": 5545,
+    "sha256": "7ff03ca9d68219395e2dd004485339345beaa29f31fbf6ea2aeebe5924511760"
+  },
+  "nullable-string-parser.txt": {
+    "bytes": 1017,
+    "sha256": "d153de3994b006bbd5e24fb449fda9a921854cea331acdc53face43836e0906a"
+  },
+  "own-record-initialization-gate.txt": {
+    "bytes": 692,
+    "sha256": "15efa5fd297eebf9252574f9f5b8aa51f878c8e172cdf7b03a0824556e33efdf"
+  },
+  "record-adoption.txt": {
+    "bytes": 3274,
+    "sha256": "ae02b40738644b224164a7875625b9e24d0634cd4fae444a459daaeea42b9bfb"
+  },
+  "record-notify.txt": {
+    "bytes": 979,
+    "sha256": "5e3bf774a1acc1498a43fa51580f3328fa5a98b472f7093b80650f5f391e5c44"
+  },
+  "reproduce.py": {
+    "bytes": 1653,
+    "sha256": "87f704bfe861ab83d2a5fa70abb8e151a76700c698c950bda47b9011db668979"
+  },
+  "setter-definitions.txt": {
+    "bytes": 4626,
+    "sha256": "eede7668db6f5d0d72fa30e031075fa462b1ceab28da63a184c3c467041e477a"
+  }
+}

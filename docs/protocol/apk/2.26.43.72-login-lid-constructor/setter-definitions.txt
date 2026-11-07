@@ -1,0 +1,95 @@
+
+# class: LX/09F;
+# extends: Ljava/lang/Object;
+
+.method public ChR(VL)  # .registers 0
+    # full signature: LX/09F;->ChR(Lcom/whatsapp/infra/core/jid/Jid;)V
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/09G;
+# extends: Ljava/lang/Object;
+
+.method public ChR(VL)  # .registers 3
+    # full signature: LX/09G;->ChR(Lcom/whatsapp/infra/core/jid/Jid;)V
+    0000..0004  iget-object  v0, v1, LX/09G;->A00:LX/09O;
+    0004..000a  invoke-virtual  {v0, v2}, LX/09O;->ChR(Lcom/whatsapp/infra/core/jid/Jid;)V
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/09O;
+# extends: Ljava/lang/Object;
+
+.method public ChR(VL)  # .registers 7
+    # full signature: LX/09O;->ChR(Lcom/whatsapp/infra/core/jid/Jid;)V
+    0000..0006  invoke-static  {v6}, LX/0Dn;->A0Z(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0006..0008  move-result  v0
+    0008..000c  if-nez  v0, +0xf
+    000c..0010  instance-of  v0, v6, LX/0EM;
+    0010..0014  if-eqz  v0, +0x74
+    0014..0018  check-cast  v6, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0018..001c  iget-object  v6, v6, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    001c..0020  const-string  v0, "null cannot be cast to non-null type com.whatsapp.infra.core.jid.LidUserJid"
+    0020..0026  invoke-static  {v6, v0}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    0026..002a  check-cast  v6, LX/0Dx;
+    002a..0030  invoke-virtual  {v5}, LX/09O;->A07()V
+    0030..0032  monitor-enter
+    0032..0036  iget-object  v4, v5, LX/09O;->A0H:LX/0E2;
+    0036..003a  if-eqz  v4, +0x8
+    003a..003e  iget-object  v0, v4, LX/0E2;->A00:LX/0Dx;
+    003e..0042  if-eqz  v0, +0x4
+    0042..0044  monitor-exit
+    0044..0046  goto  +0x40
+    0046..004c  invoke-virtual  {v6}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+    004c..004e  move-result-object  v2
+    004e..0052  iget-object  v1, v5, LX/09O;->A05:LX/00x;
+    0052..0058  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    0058..005a  move-result-object  v0
+    005a..005e  check-cast  v0, LX/0Cz;
+    005e..0064  invoke-virtual  {v0}, LX/0Cz;->A01()Ljava/lang/String;
+    0064..0066  move-result-object  v0
+    0066..006c  invoke-virtual  {v2, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    006c..006e  move-result  v0
+    006e..0072  if-nez  v0, +0x28
+    0072..0078  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    0078..007a  move-result-object  v0
+    007a..007e  check-cast  v0, LX/0Cz;
+    007e..0082  iget-object  v0, v0, LX/0Cz;->A00:LX/00x;
+    0082..0088  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0088..008a  move-result-object  v0
+    008a..0090  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    0090..0094  check-cast  v0, LX/09S;
+    0094..0098  iget-object  v0, v0, LX/09S;->A0p:LX/00x;
+    0098..009e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    009e..00a0  move-result-object  v0
+    00a0..00a4  check-cast  v0, LX/2oe;
+    00a4..00aa  invoke-virtual  {v0}, LX/0FZ;->A02()Landroid/content/SharedPreferences$Editor;
+    00aa..00ac  move-result-object  v1
+    00ac..00b0  const-string  v0, "self_lid"
+    00b0..00b6  invoke-interface  {v1, v0, v2}, Landroid/content/SharedPreferences$Editor;->putString(Ljava/lang/String;Ljava/lang/String;)Landroid/content/SharedPreferences$Editor;
+    00b6..00b8  move-result-object  v0
+    00b8..00be  invoke-interface  {v0}, Landroid/content/SharedPreferences$Editor;->apply()V
+    00be..00c2  if-eqz  v4, -0x3e
+    00c2..00c4  goto  +0x2
+    00c4..00c6  return-void
+    00c6..00ca  iget-object  v3, v4, LX/0E2;->A02:Ljava/lang/String;
+    00ca..00ce  iget-object  v2, v4, LX/0E2;->A03:Ljava/lang/String;
+    00ce..00d2  iget-object  v1, v4, LX/0E2;->A01:Lcom/whatsapp/infra/core/jid/PhoneUserJid;
+    00d2..00d6  new-instance  v0, LX/0E2;
+    00d6..00dc  invoke-direct  {v0, v6, v1, v3, v2}, LX/0E2;-><init>(LX/0Dx;Lcom/whatsapp/infra/core/jid/PhoneUserJid;Ljava/lang/String;Ljava/lang/String;)V
+    00dc..00e2  invoke-static  {v0, v5}, LX/09O;->A00(LX/0E2;LX/09O;)LX/0E2;
+    00e2..00e4  move-result-object  v1
+    00e4..00e8  iget-object  v0, v5, LX/09O;->A0H:LX/0E2;
+    00e8..00ea  monitor-exit
+    00ea..00ec  goto  +0x4
+    00ec..00ee  move-exception  v0
+    00ee..00f0  monitor-exit
+    00f0..00f2  throw  v0
+    00f2..00f8  invoke-static  {v1, v0, v5}, LX/09O;->A02(LX/0E2;LX/0E2;LX/09O;)V
+    00f8..00fa  return-void
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0019..0076 -> 0076
+    # catch <all> code_units 0077..0078 -> 0076
+.end method
