@@ -1,5 +1,10 @@
 # Network correctness audit
 
+**Stateless/PQ retry inputs traced.** Incoming enc flags feed native named job
+fields and conditional key preparation; Rust policy integration remains unproven.
+Native also has a minimal branch, so no speculative gate or key emission was
+added. [Evidence](outgoing-retry-receipts.md#statelesspq-retry-preparation-inputs-2026-11-07).
+
 **Overwritten missing-body bypass closed.** All immediate enc children now receive
 the native null-body admission check before routing/selection. Exact live-location
 exception and null-versus-empty distinction are retained. Real ciphertext verifies

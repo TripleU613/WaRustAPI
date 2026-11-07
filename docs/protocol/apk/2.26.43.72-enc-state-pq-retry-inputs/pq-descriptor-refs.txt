@@ -1,0 +1,24 @@
+classes8.dex  LX/Dxs;->A0R(VLL)
+  read opcode 0x55, dex byte offset: 0x50f0f0
+classes8.dex  LX/Eny;->A00(LLZ)
+  read opcode 0x55, dex byte offset: 0x5cd6a6
+classes8.dex  LX/Ezj;-><init>(VLLLIIZZZ)
+  write opcode 0x5c, dex byte offset: 0x62d73a
+classes8.dex  LX/F1Z;->A0N(Z)
+  read opcode 0x55, dex byte offset: 0x65e86e
+classes8.dex  LX/F3f;->A03(LLI)
+  read opcode 0x55, dex byte offset: 0x6afc52
+classes8.dex  LX/F3f;->A04(LLLLLIZ)
+  read opcode 0x55, dex byte offset: 0x6afcd6
+classes8.dex  Lcom/whatsapp/calling/service/OutgoingSignalingHandler;->getBulkEncryptedE2EKeys(LLIZL)
+  read opcode 0x55, dex byte offset: 0x713a82
+classes8.dex  LX/FTp;->ATZ(VLLL)
+  read opcode 0x55, dex byte offset: 0x7ac056
+classes8.dex  LX/FTt;->A03(LLLL)
+  read opcode 0x55, dex byte offset: 0x7aefe4
+classes8.dex  LX/FTt;->Axu(LLZZZ)
+  read opcode 0x55, dex byte offset: 0x7b0714
+classes8.dex  Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A06(ZLLLLLLLLLLIJZZ)
+  read opcode 0x55, dex byte offset: 0x8da2c2
+classes8.dex  Lcom/whatsapp/jobqueue/job/SendE2EMessageJob;->A06(ZLLLLLLLLLLIJZZ)
+  read opcode 0x55, dex byte offset: 0x8da318

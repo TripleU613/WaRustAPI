@@ -1,4 +1,11 @@
 {
+  "x-enc-stateless-pq-retry-static-boundary": {
+    "x-cli": "research through existing APK inspection commands; no new command or flag",
+    "x-transport": "no runtime change; retained stateless/PQ retry key-preparation policy boundary",
+    "x-live": false,
+    "description": "Exact incoming enc state=false and session_type=pq produce Ezj flags preserved as native retry-job isStateless/isPqSession. Dispatcher and job apply conditional policy/key getters with a minimal branch too. Rust bounded minimal retry does not implement that selection; feature values, enum/key lifecycle and selected wire effects remain unproven. No blanket decryption refusal, invented keys, outgoing enc flags, retry replay or live traffic added. VoIP candidate is retained separately from ordinary chat evidence.",
+    "evidence": "docs/protocol/apk/2.26.43.72-enc-state-pq-retry-inputs/README.md"
+  },
   "x-inbox-encrypted-child-body-presence": {
     "x-cli": "existing receive/listen and saved inbox processing; no new command or flag",
     "x-transport": "per-child ciphertext body-presence admission before routing and descriptor overwrite",

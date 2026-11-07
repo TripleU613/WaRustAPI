@@ -1,0 +1,4 @@
+classes8.dex  LX/Ff4;->call(L)
+  read opcode 0x55, dex byte offset: 0x84e748
+classes8.dex  Lcom/whatsapp/jobqueue/job/SendRetryReceiptJob;-><init>(VLLIII)
+  write opcode 0x5c, dex byte offset: 0x8cfd5a

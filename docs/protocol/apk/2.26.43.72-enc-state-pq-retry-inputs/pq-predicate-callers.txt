@@ -1,0 +1,20 @@
+classes.dex  LX/0wT;->A0A(VLLLII)
+  invoke dex byte offset: 0x763602
+classes.dex  LX/0wT;->A0A(VLLLII)
+  invoke dex byte offset: 0x763d1e
+classes.dex  LX/0wT;->A0B(VLLLLI)
+  invoke dex byte offset: 0x763e18
+classes8.dex  LX/E5U;->A0B(VLLL)
+  invoke dex byte offset: 0x54d040
+classes8.dex  LX/EeR;->A01(LL)
+  invoke dex byte offset: 0x5965ba
+classes8.dex  LX/EpZ;->A00(LLLLLIJ)
+  invoke dex byte offset: 0x5db142
+classes8.dex  LX/EpZ;->A01(LLLLIJ)
+  invoke dex byte offset: 0x5db24c
+classes8.dex  LX/F2q;->A06(VLLL)
+  invoke dex byte offset: 0x68b638
+classes8.dex  LX/FSk;->ADI(LLLL)
+  invoke dex byte offset: 0x79ebee
+classes8.dex  Lcom/whatsapp/jobqueue/job/SendRetryReceiptJob;-><init>(VLLIII)
+  invoke dex byte offset: 0x8cfd52

@@ -349,3 +349,13 @@ strict workspace/all-target/all-feature Clippy, CLI reference regeneration,
 regenerated APK coverage, staged whitespace and research checksum/link hygiene
 passed. The invalid table fixture and inventory-test clock were corrected before
 that final run. Offline only.
+
+## Stateless/PQ retry preparation inputs (2026-11-07)
+
+**Confirmed selected static:** exact incoming enc state=false and session_type=pq
+produce native isStateless/isPqSession retry-job inputs. They affect conditional
+key preparation at dispatch and job time, with a native minimal-key branch too;
+they are not blanket invalid/decrypt gates. Rust's bounded minimal retry does not
+implement this policy. Feature/enum/key lifecycle and wire bindings remain open.
+[Evidence](apk/2.26.43.72-enc-state-pq-retry-inputs/README.md). No runtime change,
+key regeneration, new request or replay was added.
