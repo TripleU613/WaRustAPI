@@ -27,6 +27,18 @@ pub async fn connect(
     config: &LabRegistrationConfig,
     epoch: ConnectionEpoch,
 ) -> Result<EncryptedConnection<tokio::net::TcpStream>> {
+    connect_with_authority(store, config, epoch)
+        .await
+        .map(|(channel, _)| channel)
+}
+
+// Keep the settlement-produced authority with the socket, without a later read
+// that could silently adopt a replacement account before actor startup.
+async fn connect_with_authority(
+    store: &ProtocolStore,
+    config: &LabRegistrationConfig,
+    epoch: ConnectionEpoch,
+) -> Result<(EncryptedConnection<tokio::net::TcpStream>, [u8; 32])> {
     // Validate every local login fact before DNS, TCP or Noise work.
     let (local, payload, snapshot) = login_material(store, config)?;
     let endpoint = ComparisonEndpoint::built_in(ComparisonGateway::Primary, 443)
@@ -54,8 +66,8 @@ pub async fn connect(
     let mut channel = verified.finish(&payload).await?;
     let reply = super::messaging::read_node(&mut channel).await?;
     super::inbox::preserve_in_epoch(store, &reply, epoch)?;
-    record_login_reply_checked(store, &reply, Some((&snapshot, &reservation)))?;
-    Ok(channel)
+    let authority = record_login_reply_checked(store, &reply, Some((&snapshot, &reservation)))?;
+    Ok((channel, authority))
 }
 
 /// In-memory, zeroized account/material snapshot for local login ownership.
@@ -215,14 +227,14 @@ pub fn login_reply_reason(reply: &Node) -> Result<Option<i32>> {
 // One transaction commits the login result, clock sample and own identity.
 #[cfg(test)]
 fn record_login_reply(store: &ProtocolStore, reply: &Node) -> Result<()> {
-    record_login_reply_checked(store, reply, None)
+    record_login_reply_checked(store, reply, None).map(|_| ())
 }
 
 fn record_login_reply_checked(
     store: &ProtocolStore,
     reply: &Node,
     ownership: Option<(&LoginSnapshot, &str)>,
-) -> Result<()> {
+) -> Result<[u8; 32]> {
     // Shared APK43.72 0ZJ.A13 / 0Tp required-int admission. Capture and
     // owned settlement remain each caller's responsibility.
     let reason = login_reply_reason(reply)?;
@@ -233,7 +245,7 @@ fn record_login_reply_checked(
     };
     // Error's existing unsigned code cannot represent negative native reasons.
     let code = reason.and_then(|value| u32::try_from(value).ok());
-    store.write(|tx| {
+    let authority = store.write(|tx| {
         if let Some((snapshot, reservation)) = ownership {
             check_login_snapshot(tx, snapshot)?;
             let current: Option<serde_json::Value> =
@@ -263,13 +275,15 @@ fn record_login_reply_checked(
                 current.own_jid = pn;
             }
             current.save(tx)?;
+            return super::account_authority::fingerprint(tx.generation(), Some(&current))
+                .map(Some);
         }
-        Ok(())
+        Ok(None)
     })?;
     if status != "success" {
         return Err(Error::Authentication { code });
     }
-    Ok(())
+    authority.ok_or_else(|| Error::invalid("connection", "login success lacks account authority"))
 }
 
 fn login_user(
@@ -884,9 +898,13 @@ pub async fn run(
     send_outbox: bool,
     ticket: Option<crate::model::ids::LocalMessageId>,
 ) -> Result<()> {
-    let channel = connect(&store, &config, epoch).await?;
+    let (channel, expected) = connect_with_authority(&store, &config, epoch).await?;
     // Abort-on-drop also covers callers cancelling this whole future.
-    let (link, _tasks) = link_from(channel, store.clone(), epoch)?;
+    let (mut link, _tasks) = link_from(channel, store.clone(), epoch)?;
+    link.epoch_authority = Some(EpochWriteAuthority {
+        store: store.clone(),
+        expected,
+    });
     drive(
         Session {
             store,
@@ -1051,15 +1069,27 @@ pub(crate) async fn drive(
         send_outbox,
         ticket,
     } = session;
-    let account = store
-        .read(AccountRecord::load)?
-        .ok_or(Error::NotRegistered)?;
-    // Freeze the authenticated epoch's original account, including plain ACK,
-    // presence and keepalive writes; request-specific guards remain additional.
-    link.epoch_authority = Some(EpochWriteAuthority {
-        store: store.clone(),
-        expected: super::account_authority::fingerprint(store.generation(), Some(&account))?,
-    });
+    let (account, expected) = store.read(|tx| {
+        let account = AccountRecord::load(tx)?.ok_or(Error::NotRegistered)?;
+        let expected = super::account_authority::fingerprint(tx.generation(), Some(&account))?;
+        if let Some(authority) = &link.epoch_authority
+            && authority.expected != expected
+        {
+            return Err(Error::invalid(
+                "transport",
+                "authenticated account changed before actor startup",
+            ));
+        }
+        Ok((account, expected))
+    })?;
+    // Injected node-only tests bind here; production preserves the authority
+    // returned by the login settlement transaction, never a replacement read.
+    if link.epoch_authority.is_none() {
+        link.epoch_authority = Some(EpochWriteAuthority {
+            store: store.clone(),
+            expected,
+        });
+    }
     super::groups::recover_pending(&store)?;
     super::app_state_sync::recover_fetch_backoff(&store)?;
     super::identity_notifications::application::recover(&store, config.transport.identity_changes)
@@ -3026,6 +3056,105 @@ mod tests {
             assert!(self.finished().await.is_ok());
         }
     }
+    #[tokio::test]
+    async fn actor_start_preserves_authenticated_login_authority() {
+        for change in ["same", "observation", "account", "missing"] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("login-actor-owner.redb");
+            let store = open(&path);
+            store
+                .write(|tx| {
+                    let mut account = AccountRecord::load_in_write(tx)?.unwrap();
+                    account.own_jid = None;
+                    account.save(tx)
+                })
+                .unwrap();
+            let account = store.read(AccountRecord::load).unwrap().unwrap();
+            let before_login =
+                super::super::account_authority::fingerprint(store.generation(), Some(&account))
+                    .unwrap();
+            let snapshot = store
+                .read(|tx| LoginSnapshot::capture_in(tx, &account))
+                .unwrap();
+            let owner = reserve_login(&store, &snapshot).unwrap();
+            let expected = record_login_reply_checked(
+                &store,
+                &Node::new("success")
+                    .attr("t", "1700000000")
+                    .attr("pn", "15555550100@s.whatsapp.net"),
+                Some((&snapshot, &owner)),
+            )
+            .unwrap();
+            assert_ne!(
+                expected, before_login,
+                "login-supplied PN must be part of settled authority"
+            );
+            let (_incoming, incoming) = mpsc::channel(1);
+            let (outgoing, mut writes) = mpsc::channel(1);
+            let mut link = NodeLink::new(incoming, outgoing);
+            link.epoch_authority = Some(EpochWriteAuthority {
+                store: store.clone(),
+                expected,
+            });
+            store
+                .write(|tx| {
+                    let mut account = AccountRecord::load_in_write(tx)?.unwrap();
+                    match change {
+                        "account" => account.signal_registration_id = Some(4321),
+                        "observation" => account.last_authenticated_at = Some(Timestamp(123)),
+                        "missing" => {
+                            tx.delete(Table::Account, b"account")?;
+                            return Ok(());
+                        }
+                        _ => {}
+                    }
+                    account.save(tx)
+                })
+                .unwrap();
+            let snapshot = |store: &ProtocolStore| {
+                store
+                    .read(|tx| {
+                        Table::ALL
+                            .into_iter()
+                            .map(|t| tx.scan(t, 1, 10000))
+                            .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot(&store);
+            let head = store.journal_head().unwrap();
+            let (stop, stop_rx) = watch::channel(false);
+            let (ready, _ready_rx) = oneshot::channel();
+            let task = tokio::spawn(drive(
+                Session {
+                    store: store.clone(),
+                    config: config(),
+                    epoch: ConnectionEpoch(1),
+                    send_outbox: false,
+                    ticket: None,
+                },
+                stop_rx,
+                ready,
+                link,
+            ));
+            let accepted = matches!(change, "same" | "observation");
+            let queued = writes.recv().await;
+            assert_eq!(queued.is_some(), accepted, "{change}");
+            if let Some(queued) = queued {
+                let (_, written) = queued.prepare().unwrap();
+                written.send(Ok(())).unwrap();
+                stop.send(true).unwrap();
+            }
+            assert_eq!(task.await.unwrap().is_ok(), accepted, "{change}");
+            assert_eq!(snapshot(&store), before);
+            assert_eq!(store.journal_head().unwrap(), head);
+            drop(store);
+            let reopened = identity_store(&path);
+            assert_eq!(snapshot(&reopened), before);
+            assert_eq!(reopened.journal_head().unwrap(), head);
+        }
+    }
+
     #[tokio::test]
     async fn unreserved_epoch_writes_recheck_authenticated_account() {
         for phase in ["activation", "presence", "pong", "notification_ack"] {

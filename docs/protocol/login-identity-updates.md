@@ -179,3 +179,6 @@ already shows 09O.ChR fills an absent LID and preserves an existing one. The new
 scan corroborates it. Its effective login flag/provider and complete replacement
 lifecycle remain unknown; this patch does not apply that conditional setter's
 policy universally to the canonical authenticated-identity checkpoint.
+
+
+The persistent actor now retains the post-success account authority returned by the same login settlement transaction, including a newly supplied PN. A changed account between settlement and actor startup refuses before activation. [Local regression and limits](replay-safety-audit.md#login-settlement-authority-survives-actor-startup-2026-11-07).

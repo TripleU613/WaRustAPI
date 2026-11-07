@@ -1,4 +1,11 @@
 {
+  "x-login-settlement-actor-authority": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Persistent run carries the existing account fingerprint produced inside login-success settlement with its encrypted channel into actor startup. Startup refuses changed/missing account before recovery or activation, preserving the original epoch authority. Login-supplied PN and observation-only timestamp controls remain valid. Public connect API unchanged; custom raw-channel ownership and material fields outside the existing fingerprint remain separate scope. Offline regression only.",
+    "evidence": "docs/protocol/replay-safety-audit.md#login-settlement-authority-survives-actor-startup-2026-11-07"
+  },
   "x-authenticated-epoch-writer-account-authority": {
     "x-cli": true,
     "x-transport": true,
