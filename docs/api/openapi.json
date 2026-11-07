@@ -20151,6 +20151,14 @@
     "description": "Pinned dirty stanza lazy selector/constructors/accessors establish iq/get/g.us/w:g2, supplied id/context and typed group children; selected Rust semantic fields match. ID bound is Java string length; list diagnostics do not establish hard gates without assertion policy. Legacy group admission, encoded order and callback/persistence remain separate. Existing xtask reproduces evidence; no wire/route/runtime/live change.",
     "evidence": "docs/protocol/apk/2.26.43.72-group-dirty-stanza-serializer/README.md"
   },
+  "x-sender-key-distribution-writer-admission": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [],
+    "description": "Distribution dequeue binds actual encoding to the privately prepared node and held committed group attempt, ACK/preparation ownership, frozen membership/routing/chain authority and original pending deadline. Same-chain ACK metadata and receive-ratchet exclusions remain. Refusal preserves uncertainty and does not release final group ciphertext, reset keys, renew timers or replay. Other group query payloads/native lifecycle remain separate; no live acceptance claim.",
+    "evidence": "docs/protocol/replay-safety-audit.md#sender-key-distribution-writer-admission-2026-11-07"
+  },
   "x-final-group-message-writer-binding": {
     "x-cli": true,
     "x-transport": true,

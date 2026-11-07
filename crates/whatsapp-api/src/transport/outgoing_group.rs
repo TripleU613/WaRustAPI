@@ -588,6 +588,177 @@ pub(super) mod tests {
             assert_distribution_change_stops(change).await;
         }
     }
+    #[tokio::test(start_paused = true)]
+    async fn distribution_writer_binds_prepared_payload_and_held_group() {
+        use super::super::group_references::tests::{reference, save_parent};
+        for change in [
+            "same",
+            "id",
+            "to",
+            "ciphertext",
+            "group_row",
+            "owner",
+            "entry",
+            "deadline",
+            "membership",
+            "routing",
+            "same_chain_ack",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("distribution-writer.redb");
+            let store = std::sync::Arc::new(group_fanout::tests::open(&path));
+            let mut f = group_fanout::tests::fixture();
+            f.alice.generation = store.generation();
+            store.write(|tx| f.alice.save(tx)).unwrap();
+            let peer = &f.plan.recipients[0];
+            let target = reference(&f.plan.chat, peer, false);
+            save_parent(
+                &store,
+                &f.plan.chat,
+                peer,
+                &super::super::quotes::conversation("retained parent"),
+            )
+            .unwrap();
+            let id = store
+                .write(|tx| {
+                    Ok(outbox()
+                        .enqueue(
+                            tx,
+                            &SendRequest {
+                                client_request_id: ClientRequestId::new("distribution-writer")?,
+                                chat: ChatId::from_jid(&f.plan.chat)?,
+                                content: MessageContent::Reaction {
+                                    target,
+                                    emoji: Some("👍".into()),
+                                },
+                            },
+                        )?
+                        .0
+                        .local_id)
+                })
+                .unwrap();
+            let (mut pending, mut node) = begin_selected(&store, id).unwrap().unwrap();
+            let mut cursor = devices::DeviceSyncCursor::default();
+            while node.description == "iq" {
+                let reply = match node.get_attr("xmlns").and_then(|v| v.as_text()) {
+                    Some("w:g2") => membership(&node, &f.plan.own, &f.plan.recipients),
+                    Some("usync") => device_reply(&node),
+                    Some("encrypt") => key_reply(&node, &f),
+                    _ => panic!("unexpected preparation query"),
+                };
+                let step = pending
+                    .settle(&store, &f.alice, &reply, ConnectionEpoch(29), &mut cursor)
+                    .await
+                    .unwrap();
+                pending = step.pending.expect("distribution pending");
+                node = step.node.unwrap();
+            }
+            match change {
+                "id" => node = node.attr("id", "changed-fixture"),
+                "to" => node = node.attr("to", "changed.invalid"),
+                "ciphertext" => node = node.children(vec![Node::new("enc").bytes(vec![9, 9, 9])]),
+                _ => {}
+            }
+            let (_incoming, incoming) = tokio::sync::mpsc::channel(1);
+            let (outgoing, mut writes) = tokio::sync::mpsc::channel(1);
+            let link = super::super::connection::NodeLink::new(incoming, outgoing);
+            let worker = store.clone();
+            let account = f.alice.clone();
+            let task = tokio::spawn(async move {
+                link.send_group_step(&worker, &account, Some(&pending), &node)
+                    .await
+            });
+            let queued = writes.recv().await.unwrap();
+            match change {
+                "group_row" | "owner" | "entry" => store
+                    .write(|tx| {
+                        if change == "entry" {
+                            tx.delete(Table::Outbox, &id.0)?;
+                        } else {
+                            let row = if change == "owner" {
+                                format!("outbox-message-ack-owner:{id}")
+                            } else {
+                                key(id)
+                            };
+                            tx.delete(Table::Checkpoints, row.as_bytes())?;
+                        }
+                        Ok(())
+                    })
+                    .unwrap(),
+                "deadline" => tokio::time::advance(std::time::Duration::from_secs(30)).await,
+                "membership" => {
+                    let notification = Node::new("notification")
+                        .attr("type", "w:gp2")
+                        .attr("id", "WRITER-MEMBERSHIP")
+                        .attr("from", f.plan.chat.clone())
+                        .children(vec![Node::new("remove").children(vec![
+                            Node::new("participant").attr("jid", peer.clone()),
+                        ])]);
+                    assert!(groups::apply_change_notification(&store, &notification).unwrap());
+                }
+                "routing" => store
+                    .write(|tx| {
+                        let key = devices::list_key(peer);
+                        let mut list: devices::DeviceList =
+                            tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?.unwrap();
+                        list.expected_timestamp = Some(123456789);
+                        tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &list)
+                    })
+                    .unwrap(),
+                "same_chain_ack" => store
+                    .write(|tx| {
+                        super::super::sender_key_distribution::pending_ack_in(
+                            tx,
+                            &f.plan.chat,
+                            &f.plan.own,
+                            "OTHER-SAME-CHAIN",
+                            std::slice::from_ref(peer),
+                        )?;
+                        super::super::sender_key_distribution::confirm_ack_in(
+                            tx,
+                            "OTHER-SAME-CHAIN",
+                        )
+                    })
+                    .unwrap(),
+                _ => {}
+            }
+            let snapshot = |store: &ProtocolStore| {
+                store
+                    .read(|tx| {
+                        Table::ALL
+                            .into_iter()
+                            .map(|t| tx.scan(t, 1, 10000))
+                            .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot(&store);
+            let head = store.journal_head().unwrap();
+            let prepared = queued.prepare();
+            assert_eq!(
+                prepared.is_some(),
+                matches!(change, "same" | "same_chain_ack"),
+                "{change}"
+            );
+            if let Some((_, written)) = prepared {
+                written.send(Ok(())).unwrap();
+            }
+            assert_eq!(
+                task.await.unwrap().is_ok(),
+                matches!(change, "same" | "same_chain_ack"),
+                "{change}"
+            );
+            assert!(writes.recv().await.is_none(), "no held group release");
+            assert_eq!(snapshot(&store), before);
+            assert_eq!(store.journal_head().unwrap(), head);
+            drop(store);
+            let reopened = group_fanout::tests::open(&path);
+            assert_eq!(snapshot(&reopened), before);
+            assert_eq!(reopened.journal_head().unwrap(), head);
+            assert!(begin_selected(&reopened, id).unwrap().is_none());
+        }
+    }
+
     async fn assert_distribution_change_stops(change_kind: &str) {
         use super::super::group_references::tests::{reference, save_parent};
         for accepted_before_change in [0, 1] {
@@ -1890,6 +2061,7 @@ enum Waiting {
 }
 /// One connection's original preparation. No resume/reset/replay API is provided.
 pub(crate) struct Pending {
+    write_node: Node,
     entry: OutboxEntry,
     row: Row,
     waiting: Waiting,
@@ -1898,7 +2070,7 @@ pub(crate) struct Pending {
     membership: Option<[u8; 32]>,
     completed_users: usize,
     snapshot: Option<group_fanout::Snapshot>,
-    routing_guard: Option<group_fanout::RoutingGuard>,
+    routing_guard: Option<std::sync::Arc<group_fanout::RoutingGuard>>,
     plan: Option<group_send::FanoutPlan>,
     needed: Vec<Jid>,
     pub deadline: tokio::time::Instant,
@@ -1917,7 +2089,8 @@ pub(crate) struct Step {
     pub node: Option<Node>,
 }
 impl Step {
-    fn waiting(pending: Pending, node: Node) -> Self {
+    fn waiting(mut pending: Pending, node: Node) -> Self {
+        pending.write_node = node.clone();
         Self {
             pending: Some(pending),
             node: Some(node),
@@ -2133,6 +2306,7 @@ pub(crate) fn begin_selected(
     Ok(result.map(|(row, node)| {
         (
             Pending {
+                write_node: node.clone(),
                 waiting: Waiting::Membership(row.info_query.clone()),
                 entry,
                 row,
@@ -2164,7 +2338,85 @@ fn membership_digest(store: &ProtocolStore, chat: &Jid) -> Result<Option<[u8; 32
             .map(|raw| Sha256::digest(raw).into()))
     })
 }
+/// One prepared distribution, its held final message and original time window.
+pub(crate) struct DistributionWriteGuard {
+    expected_sha256: [u8; 32],
+    group: Node,
+    committed: super::outgoing::MessageWriteGuard,
+    row: Row,
+    chat: Jid,
+    membership: Option<[u8; 32]>,
+    routing: std::sync::Arc<group_fanout::RoutingGuard>,
+    deadline: tokio::time::Instant,
+}
+impl DistributionWriteGuard {
+    pub(crate) fn check_write_authority(&self, store: &ProtocolStore, node: &Node) -> Result<()> {
+        let check_deadline = || {
+            if tokio::time::Instant::now() >= self.deadline {
+                Err(invalid("distribution deadline elapsed before write"))
+            } else {
+                Ok(())
+            }
+        };
+        check_deadline()?;
+        let wire =
+            Zeroizing::new(Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(node)?);
+        if <[u8; 32]>::from(Sha256::digest(&*wire)) != self.expected_sha256 {
+            return Err(invalid("queued distribution differs from its preparation"));
+        }
+        self.committed.check_write_authority(store, &self.group)?;
+        store.read(|tx| {
+            let held: Option<Row> =
+                tx.get_json(Table::Checkpoints, key(self.row.local_id).as_bytes(), 1)?;
+            if held.as_ref() != Some(&self.row) {
+                return Err(invalid(
+                    "distribution group preparation changed before write",
+                ));
+            }
+            Ok(())
+        })?;
+        // Existing membership, chain and routing authority survives the queue
+        // wait; receipt metadata and receive-ratchet advances remain excluded.
+        if membership_digest(store, &self.chat)? != self.membership
+            || !self.routing.unchanged(store)?
+        {
+            return Err(invalid(
+                "distribution membership or routing changed before write",
+            ));
+        }
+        check_deadline()
+    }
+}
+
 impl Pending {
+    pub(crate) fn distribution_write_guard(
+        &self,
+        store: &ProtocolStore,
+        account: &AccountRecord,
+    ) -> Result<Option<DistributionWriteGuard>> {
+        let Waiting::Distribution { group, .. } = &self.waiting else {
+            return Ok(None);
+        };
+        let wire = Zeroizing::new(
+            Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(&self.write_node)?,
+        );
+        let guard = DistributionWriteGuard {
+            expected_sha256: Sha256::digest(&*wire).into(),
+            group: (**group).clone(),
+            committed: super::outgoing::MessageWriteGuard::capture_group(store, account, group)?,
+            row: self.row.clone(),
+            chat: self.entry.intent.chat.jid().clone(),
+            membership: self.membership,
+            routing: self
+                .routing_guard
+                .as_ref()
+                .cloned()
+                .ok_or_else(|| invalid("distribution routing authority missing"))?,
+            deadline: self.deadline,
+        };
+        guard.check_write_authority(store, &self.write_node)?;
+        Ok(Some(guard))
+    }
     fn check_account_in(&self, tx: &crate::store::WriteTx<'_>) -> Result<()> {
         let saved = AccountRecord::load_in_write(tx)?;
         self.row.check_account(tx.generation(), saved.as_ref())
@@ -2712,7 +2964,7 @@ impl Pending {
                         return Err(error);
                     }
                 };
-                self.routing_guard = Some(routing_guard);
+                self.routing_guard = Some(std::sync::Arc::new(routing_guard));
                 self.row = reserved;
                 self.next_distribution(store, distributions, node)
             }

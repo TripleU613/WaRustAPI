@@ -362,6 +362,10 @@ pub fn update_login_identity(
 /// One outbound stanza and where to report the socket write outcome.
 type Written = (Node, oneshot::Sender<Result<()>>);
 enum WriteGuard {
+    GroupDistribution(
+        Arc<ProtocolStore>,
+        Box<super::outgoing_group::DistributionWriteGuard>,
+    ),
     GroupStep(
         Arc<ProtocolStore>,
         [u8; 32],
@@ -394,6 +398,9 @@ impl Outbound {
     // The writer ends the epoch without encoding, writing, or releasing a batch.
     pub(crate) fn prepare(self) -> Option<Written> {
         let admission = match self.guard {
+            Some(WriteGuard::GroupDistribution(store, guard)) => {
+                guard.check_write_authority(&store, &self.node)
+            }
             Some(WriteGuard::GroupStep(store, expected, query)) => store
                 .read(|tx| {
                     let current = AccountRecord::load(tx)?;
@@ -630,13 +637,26 @@ impl NodeLink {
         )
         .await
     }
-    async fn send_group_step(
+    pub(crate) async fn send_group_step(
         &self,
         store: &Arc<ProtocolStore>,
         account: &AccountRecord,
         pending: Option<&super::outgoing_group::Pending>,
         node: &Node,
     ) -> Result<()> {
+        if let Some(pending) = pending
+            && let Some(guard) = pending.distribution_write_guard(store, account)?
+        {
+            return self
+                .send_guarded(
+                    node,
+                    Some(WriteGuard::GroupDistribution(
+                        store.clone(),
+                        Box::new(guard),
+                    )),
+                )
+                .await;
+        }
         if node.description == "message" && pending.is_none() {
             let guard = super::outgoing::MessageWriteGuard::capture_group(store, account, node)?;
             return self
