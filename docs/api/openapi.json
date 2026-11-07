@@ -20151,6 +20151,13 @@
     "description": "Pinned dirty stanza lazy selector/constructors/accessors establish iq/get/g.us/w:g2, supplied id/context and typed group children; selected Rust semantic fields match. ID bound is Java string length; list diagnostics do not establish hard gates without assertion policy. Legacy group admission, encoded order and callback/persistence remain separate. Existing xtask reproduces evidence; no wire/route/runtime/live change.",
     "evidence": "docs/protocol/apk/2.26.43.72-group-dirty-stanza-serializer/README.md"
   },
+  "x-retry-refetch-query-writer-payload-binding": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Reserved retry key-query handoffs capture an original encoded-request digest. The ACK phase retains ownership admission; the subsequent query additionally checks actual payload encoding. Query refusal preserves uncertainty without ACK/query replay, new timer or schema change. Confirmation payload and final resend-message provenance remain separate; no live acceptance claim.",
+    "evidence": "docs/protocol/replay-safety-audit.md#retry-refetch-query-payload-binding-after-confirmation-2026-11-07"
+  },
   "x-direct-key-query-writer-payload-binding": {
     "x-cli": true,
     "x-transport": true,

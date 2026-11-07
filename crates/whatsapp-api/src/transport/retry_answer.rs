@@ -345,6 +345,8 @@ async fn answer_inner(
                 unanswered_key: key.clone(),
                 count: retry.count,
             };
+            let request = super::messaging::key_request(&peer, &query);
+            let request_sha256 = refetch_request_sha256(&request)?;
             let reserved = reserve_refetch(
                 store,
                 &entry,
@@ -359,6 +361,7 @@ async fn answer_inner(
             )?;
             if reserved {
                 *authority = Some(RefetchWriteGuard {
+                    request_sha256,
                     account_authority: super::account_authority::fingerprint(
                         account.generation,
                         Some(account),
@@ -366,7 +369,7 @@ async fn answer_inner(
                     query: query.clone(),
                     job,
                 });
-                return Ok(Some(super::messaging::key_request(&peer, &query)));
+                return Ok(Some(request));
             }
             return Ok(None);
         }
@@ -441,11 +444,33 @@ struct Refetch {
 // docs/protocol/retry-ack-dispatch.md. No new timer or replay authority.
 #[derive(Clone)]
 pub(crate) struct RefetchWriteGuard {
+    request_sha256: [u8; 32],
     account_authority: [u8; 32],
     query: String,
     job: Refetch,
 }
+fn refetch_request_sha256(node: &Node) -> Result<[u8; 32]> {
+    use sha2::{Digest, Sha256};
+    let wire = zeroize::Zeroizing::new(
+        Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(node)?,
+    );
+    Ok(Sha256::digest(&*wire).into())
+}
+
 impl RefetchWriteGuard {
+    pub(crate) fn check_query_write_authority(
+        &self,
+        store: &ProtocolStore,
+        node: &Node,
+    ) -> Result<()> {
+        if refetch_request_sha256(node)? != self.request_sha256 {
+            return Err(Error::invalid(
+                "retry",
+                "queued refetch query differs from its reservation",
+            ));
+        }
+        self.check_write_authority(store)
+    }
     fn check_account_in(&self, tx: &WriteTx<'_>) -> Result<()> {
         let account = AccountRecord::load_in_write(tx)?;
         if super::account_authority::fingerprint(tx.generation(), account.as_ref())?
@@ -1231,6 +1256,7 @@ mod tests {
             })
             .unwrap();
         let guard = RefetchWriteGuard {
+            request_sha256: refetch_request_sha256(&Node::new("iq").attr("id", "Q1")).unwrap(),
             account_authority: store
                 .read(|tx| {
                     let account = AccountRecord::load(tx)?;
@@ -1589,7 +1615,18 @@ mod tests {
     #[tokio::test]
     async fn queued_refetch_rechecks_owner_before_ack_and_query_encoding() {
         for change_at in ["none", "ack", "query"] {
-            for change in ["missing_job", "replaced_job", "settled_answer", "account"] {
+            for change in [
+                "missing_job",
+                "replaced_job",
+                "settled_answer",
+                "account",
+                "node_id",
+                "node_to",
+                "node_body",
+            ] {
+                if change.starts_with("node_") && change_at != "query" {
+                    continue;
+                }
                 let dir = tempfile::tempdir().unwrap();
                 let path = dir.path().join("queued-refetch.redb");
                 let open = || {
@@ -1622,6 +1659,8 @@ mod tests {
                     })
                     .unwrap();
                 let authority = RefetchWriteGuard {
+                    request_sha256: refetch_request_sha256(&Node::new("iq").attr("id", "Q1"))
+                        .unwrap(),
                     account_authority: store
                         .read(|tx| {
                             let account = AccountRecord::load(tx)?;
@@ -1642,7 +1681,16 @@ mod tests {
                     link.send_retry_answer(
                         &worker_store,
                         &ReservedAnswer {
-                            node: Node::new("iq").attr("id", "Q1"),
+                            node: match change {
+                                "node_id" => Node::new("iq").attr("id", "changed-fixture"),
+                                "node_to" => Node::new("iq")
+                                    .attr("id", "Q1")
+                                    .attr("to", "changed.invalid"),
+                                "node_body" => Node::new("iq")
+                                    .attr("id", "Q1")
+                                    .children(vec![Node::new("changed-fixture")]),
+                                _ => Node::new("iq").attr("id", "Q1"),
+                            },
                             confirmation: Some(Node::new("ack").attr("id", "R1")),
                             refetch: Some(authority),
                         },
@@ -1655,6 +1703,7 @@ mod tests {
                     if change_at == stage {
                         store
                             .write(|tx| match change {
+                                change if change.starts_with("node_") => Ok(()),
                                 "account" => AccountRecord {
                                     generation: tx.generation(),
                                     signal_registration_id: Some(31),
@@ -1689,7 +1738,9 @@ mod tests {
                                 .unwrap(),
                         );
                     }
+                    let head = store.journal_head().unwrap();
                     let prepared = queued.prepare();
+                    assert_eq!(store.journal_head().unwrap(), head);
                     if change_at == stage {
                         assert!(prepared.is_none(), "{stage}/{change}");
                         break;
@@ -1773,6 +1824,7 @@ mod tests {
                 })
                 .unwrap();
             let write_guard = RefetchWriteGuard {
+                request_sha256: refetch_request_sha256(&Node::new("iq").attr("id", "Q1")).unwrap(),
                 account_authority: store
                     .read(|tx| {
                         let account = AccountRecord::load(tx)?;
@@ -1999,6 +2051,8 @@ mod tests {
                     node: Node::new("iq").attr("id", "Q1"),
                     confirmation: None,
                     refetch: Some(RefetchWriteGuard {
+                        request_sha256: refetch_request_sha256(&Node::new("iq").attr("id", "Q1"))
+                            .unwrap(),
                         account_authority: store
                             .read(|tx| {
                                 let account = AccountRecord::load(tx)?;
@@ -2043,6 +2097,10 @@ mod tests {
                             node: Node::new("iq").attr("id", "Q1"),
                             confirmation: None,
                             refetch: Some(RefetchWriteGuard {
+                                request_sha256: refetch_request_sha256(
+                                    &Node::new("iq").attr("id", "Q1")
+                                )
+                                .unwrap(),
                                 account_authority: store
                                     .read(|tx| {
                                         let account = AccountRecord::load(tx)?;
@@ -2204,6 +2262,8 @@ mod tests {
                     node: Node::new("iq").attr("id", "Q1"),
                     confirmation: None,
                     refetch: Some(RefetchWriteGuard {
+                        request_sha256: refetch_request_sha256(&Node::new("iq").attr("id", "Q1"))
+                            .unwrap(),
                         account_authority: store
                             .read(|tx| {
                                 let account = AccountRecord::load(tx)?;

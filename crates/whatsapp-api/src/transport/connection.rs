@@ -372,6 +372,7 @@ enum WriteGuard {
     Prekey(Arc<ProtocolStore>, super::prekeys::PendingUpload),
     Devices(Arc<ProtocolStore>, super::devices::DeviceQuery),
     RetryRefetch(Arc<ProtocolStore>, super::retry_answer::RefetchWriteGuard),
+    RetryRefetchQuery(Arc<ProtocolStore>, super::retry_answer::RefetchWriteGuard),
     Action(Arc<ProtocolStore>, super::actions::ActionWriteGuard),
     Receipt(Arc<ProtocolStore>, super::receipts::ReceiptWriteGuard),
 }
@@ -425,6 +426,9 @@ impl Outbound {
                 query.check_write_authority(&store, &self.node)
             }
             Some(WriteGuard::RetryRefetch(store, pending)) => pending.check_write_authority(&store),
+            Some(WriteGuard::RetryRefetchQuery(store, pending)) => {
+                pending.check_query_write_authority(&store, &self.node)
+            }
             Some(WriteGuard::Action(store, action)) => {
                 action.check_write_authority(&store, &self.node)
             }
@@ -501,7 +505,11 @@ impl NodeLink {
         } else {
             false
         };
-        self.send_guarded(&answer.node, guard()).await?;
+        let query_guard = answer
+            .refetch
+            .as_ref()
+            .map(|pending| WriteGuard::RetryRefetchQuery(store.clone(), pending.clone()));
+        self.send_guarded(&answer.node, query_guard).await?;
         Ok(confirmed)
     }
 
