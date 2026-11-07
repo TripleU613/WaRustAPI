@@ -1,0 +1,88 @@
+
+# class: LX/ExG;
+# extends: Ljava/lang/Object;
+
+.method public A06(VLL)  # .registers 11
+    # full signature: LX/ExG;->A06(Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;)V
+    0000..0002  const/4  v7, #0x0
+    0002..0006  iget-object  v0, v8, LX/ExG;->A00:LX/05a;
+    0006..000a  iget-object  v1, v0, LX/05a;->A00:LX/00x;
+    000a..0010  invoke-static  {v1}, LX/2L6;->A0d(LX/00x;)LX/00E;
+    0010..0012  move-result-object  v0
+    0012..0018  invoke-static  {v0}, LX/DBc;->A1S(LX/00E;)Z
+    0018..001a  move-result  v0
+    001a..001e  if-eqz  v0, +0x8c
+    001e..0022  iget-object  v0, v8, LX/ExG;->A05:LX/05a;
+    0022..0028  invoke-static  {v0, v9}, LX/2LA;->A1Y(LX/05a;LX/0DY;)Z
+    0028..002a  move-result  v0
+    002a..002e  if-nez  v0, +0x84
+    002e..0032  if-eqz  v10, +0x49
+    0032..0038  invoke-virtual  {v10}, Ljava/lang/String;->hashCode()I
+    0038..003a  move-result  v2
+    003a..0040  const  v0, #0x2eb1cd
+    0040..0044  if-eq  v2, v0, +0x35
+    0044..004a  const  v0, #0x53b377ff
+    004a..004e  if-eq  v2, v0, +0x25
+    004e..0054  const  v0, #0x5a93e630
+    0054..0058  if-ne  v2, v0, +0x36
+    0058..005c  const-string  v0, "hybrid_e2ee"
+    005c..0062  invoke-virtual  {v10, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0062..0064  move-result  v0
+    0064..0068  if-eqz  v0, +0x2e
+    0068..006c  sget-object  v3, LX/E7b;->A03:LX/E7b;
+    006c..0072  invoke-virtual  {v3}, Ljava/lang/Enum;->ordinal()I
+    0072..0074  move-result  v2
+    0074..0076  const/4  v0, #0x2
+    0076..007a  if-eq  v2, v0, +0x28
+    007a..007c  const/4  v0, #0x3
+    007c..0080  if-eq  v2, v0, +0x25
+    0080..0082  const/4  v0, #0x1
+    0082..0086  if-eq  v2, v0, +0x58
+    0086..008a  if-eq  v2, v7, +0x56
+    008a..0090  invoke-static  {}, LX/2L6;->A1N()LX/2K2;
+    0090..0092  move-result-object  v0
+    0092..0094  throw  v0
+    0094..0098  const-string  v0, "non_e2ee"
+    0098..009e  invoke-virtual  {v10, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    009e..00a0  move-result  v0
+    00a0..00a4  if-eqz  v0, +0x10
+    00a4..00a8  sget-object  v3, LX/E7b;->A04:LX/E7b;
+    00a8..00aa  goto  -0x1e
+    00aa..00ae  const-string  v0, "e2ee"
+    00ae..00b4  invoke-virtual  {v10, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    00b4..00b6  move-result  v0
+    00b6..00ba  if-eqz  v0, +0x5
+    00ba..00be  sget-object  v3, LX/E7b;->A02:LX/E7b;
+    00be..00c0  goto  -0x29
+    00c0..00c4  sget-object  v3, LX/E7b;->A05:LX/E7b;
+    00c4..00c6  goto  -0x2c
+    00c6..00cc  invoke-virtual  {v8, v9, v3}, LX/ExG;->A01(LX/0DY;LX/E7b;)LX/0i7;
+    00cc..00ce  move-result-object  v3
+    00ce..00d4  invoke-virtual  {v8, v9}, LX/ExG;->A02(LX/0DY;)LX/0DY;
+    00d4..00d6  move-result-object  v4
+    00d6..00da  iget-object  v0, v8, LX/ExG;->A02:LX/05a;
+    00da..00de  iget-object  v2, v0, LX/05a;->A00:LX/00x;
+    00de..00e4  invoke-interface  {v2}, LX/00x;->get()Ljava/lang/Object;
+    00e4..00e6  move-result-object  v0
+    00e6..00ea  check-cast  v0, LX/DDs;
+    00ea..00f0  invoke-virtual  {v0, v3, v4}, LX/DDs;->A0P(LX/0i7;LX/0DY;)Z
+    00f0..00f2  move-result  v0
+    00f2..00f6  if-eqz  v0, +0x8
+    00f6..00fa  const-string  v0, "ThreadStateUtil/updateChatEncryptionStateFromUsyncAccountType/skipped, contradicts active AEA cooldown jid="
+    00fa..0100  invoke-static  {v0, v4}, LX/2LA;->A1L(Ljava/lang/String;Ljava/lang/Object;)V
+    0100..0102  return-void
+    0102..0108  invoke-static  {v1}, LX/2L6;->A0d(LX/00x;)LX/00E;
+    0108..010a  move-result-object  v1
+    010a..010e  const/16  v0, #0x7497
+    010e..0114  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    0114..0116  move-result  v0
+    0116..011a  if-eqz  v0, +0xe
+    011a..0120  invoke-interface  {v2}, LX/00x;->get()Ljava/lang/Object;
+    0120..0122  move-result-object  v2
+    0122..0126  check-cast  v2, LX/DDs;
+    0126..012a  sget-object  v6, LX/02X;->A1G:Ljava/lang/Integer;
+    012a..012c  const/4  v5, #0x0
+    012c..0132  invoke-virtual/range  {v2..v7}, LX/DDs;->A0M(LX/0i7;LX/0DY;LX/E7b;Ljava/lang/Integer;Z)V
+    0132..0134  return-void
+    # exception table: 0 try range(s)
+.end method

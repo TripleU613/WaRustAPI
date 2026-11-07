@@ -90,3 +90,8 @@ retry workflow. No attestation generation, verification bypass, live request or
 account operation. Reproduce selected apk-smali methods with signatures and
 exceptions for ExG.<clinit>/A01/A02, DDs.<clinit>/A03/A0L/A0M,0i7.<clinit>,
 DEm.A02,0aq.A04 and1Xl.A1Y. Manifest covers each retained file except itself.
+
+Follow-up: [cooldown read/write policy](../2.26.43.72-aea-cooldown-policy/README.md)
+now binds wall-clock milliseconds, configured-hour expiry, selected identity
+reset, classification suppression and ignored SQL failure returns. Full effective
+configuration and indirect network policy remain open.

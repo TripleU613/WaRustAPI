@@ -1,0 +1,13 @@
+
+# class: LX/2LC;
+# extends: Ljava/lang/Object;
+
+.method public A09(JL)  # .registers 2
+    # full signature: LX/2LC;->A09(LX/05a;)J
+    0000..0004  iget-object  v0, v1, LX/05a;->A00:LX/00x;
+    0004..000a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    000a..0010  invoke-static  {}, Ljava/lang/System;->currentTimeMillis()J
+    0010..0012  move-result-wide  v0
+    0012..0014  return-wide  v0
+    # exception table: 0 try range(s)
+.end method

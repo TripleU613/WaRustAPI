@@ -1,0 +1,56 @@
+
+# class: LX/0YT;
+# extends: Ljava/lang/Object;
+
+.method public A09(JL)  # .registers 9
+    # full signature: LX/0YT;->A09(LX/EoY;)J
+    0000..0004  const-string  v0, "getIdentityTimestamp"
+    0004..000a  invoke-static  {v8, v7, v0}, LX/0YT;->A03(LX/EoY;LX/0YT;Ljava/lang/String;)LX/EoY;
+    000a..000c  move-result-object  v1
+    000c..0010  const-wide/16  v5, #0x0
+    0010..0014  if-eqz  v1, +0x43
+    0014..0018  iget-object  v0, v7, LX/0YT;->A08:LX/0Xp;
+    0018..001e  invoke-virtual  {v0}, LX/0Xp;->A06()LX/0aq;
+    001e..0020  move-result-object  v4
+    0020..0024  iget-object  v3, v4, LX/0aq;->A02:LX/0KU;
+    0024..0028  const-string  v2, "SELECT public_key, timestamp FROM identities WHERE recipient_id =? AND recipient_type = ? AND device_id =?"
+    0028..002e  invoke-virtual  {v1}, LX/EoY;->A00()[Ljava/lang/String;
+    002e..0030  move-result-object  v1
+    0030..0034  const-string  v0, "SignalIdentityKeyStore/getIdentityTimestamp"
+    0034..003a  invoke-virtual  {v3, v2, v0, v1}, LX/0KU;->A0A(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
+    003a..003c  move-result-object  v2
+    003c..0042  invoke-interface  {v2}, Landroid/database/Cursor;->moveToNext()Z
+    0042..0044  move-result  v0
+    0044..0048  if-nez  v0, +0x9
+    0048..004e  invoke-interface  {v2}, Landroid/database/Cursor;->close()V
+    004e..0054  invoke-virtual  {v4}, LX/0aq;->close()V
+    0054..0056  return-wide  v5
+    0056..005c  const-string/jumbo  v0, "timestamp"
+    005c..0062  invoke-interface  {v2, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0062..0064  move-result  v0
+    0064..006a  invoke-interface  {v2, v0}, Landroid/database/Cursor;->getLong(I)J
+    006a..006c  move-result-wide  v0
+    006c..0072  invoke-interface  {v2}, Landroid/database/Cursor;->close()V
+    0072..0078  invoke-virtual  {v4}, LX/0aq;->close()V
+    0078..007a  return-wide  v0
+    007a..007c  move-exception  v1
+    007c..007e  throw  v1
+    007e..0080  move-exception  v0
+    0080..0086  invoke-static  {v2, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    0086..0088  throw  v0
+    0088..008a  move-exception  v1
+    008a..008c  throw  v1
+    008c..008e  move-exception  v0
+    008e..0094  invoke-static  {v4, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    0094..0096  throw  v0
+    0096..0098  return-wide  v5
+    # exception table: 8 try range(s)
+    # catch <all> code_units 0010..001e -> 0044
+    # catch <all> code_units 001e..0024 -> 003d
+    # catch <all> code_units 0024..0027 -> 0044
+    # catch <all> code_units 002b..0036 -> 003d
+    # catch <all> code_units 0036..0039 -> 0044
+    # catch <all> code_units 003e..003f -> 003f
+    # catch <all> code_units 0040..0044 -> 0044
+    # catch <all> code_units 0045..0046 -> 0046
+.end method

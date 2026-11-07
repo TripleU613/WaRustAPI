@@ -1,4 +1,11 @@
 {
+  "x-aea-local-cooldown-static-boundary": {
+    "x-cli": "research through existing APK inspection commands; no new command",
+    "x-transport": "research only; no AEA cooldown or receipt-key adoption added",
+    "x-live": false,
+    "description": "Selected local AEA cooldown suppresses contradictory chat-classification updates, including USync account-type adoption. Wall-clock milliseconds and feature 0x7a16 hours govern comparison; selected newer identity timestamp clears cooldown. Constraint failure may return -1 from insert wrapper while caller discards return; delete row count also discarded. No durable success or server ban/rate-limit meaning follows. Full indirect network policy/effective values remain unproven; no runtime change or live operation.",
+    "evidence": "docs/protocol/apk/2.26.43.72-aea-cooldown-policy/README.md"
+  },
   "x-retry-chat-aea-storage-static-boundary": {
     "x-cli": "research through existing APK inspection commands; no new command",
     "x-transport": "research only; receipt-key adoption remains unsupported",

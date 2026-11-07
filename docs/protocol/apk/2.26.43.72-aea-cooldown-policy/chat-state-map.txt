@@ -1,0 +1,20 @@
+
+# class: LX/F1d;
+# extends: Ljava/lang/Object;
+
+.method public A02(LL)  # .registers 1
+    # full signature: LX/F1d;->A02(LX/0i7;)LX/E7O;
+    0000..0006  invoke-virtual  {v0}, Ljava/lang/Enum;->ordinal()I
+    0006..0008  move-result  v0
+    0008..000e  sparse-switch  v0, payload@0x24, cases=[0:@0x20, 2:@0x14, 5:@0x1a, 8:@0x14, 11:@0x14, 13:@0x1a], default@0xe
+    000e..0012  sget-object  v0, LX/E7O;->A04:LX/E7O;
+    0012..0014  return-object  v0
+    0014..0018  sget-object  v0, LX/E7O;->A02:LX/E7O;
+    0018..001a  return-object  v0
+    001a..001e  sget-object  v0, LX/E7O;->A03:LX/E7O;
+    001e..0020  return-object  v0
+    0020..0022  const/4  v0, #0x0
+    0022..0024  return-object  v0
+    0024..0058  sparse-switch-payload  size=6
+    # exception table: 0 try range(s)
+.end method

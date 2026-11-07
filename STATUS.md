@@ -1,5 +1,9 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
+**Local AEA cooldown reader traced.** It stabilizes chat classification using
+wall-clock time, configured hours and identity reset. Ignored SQL failure returns
+limit success claims; no server restriction meaning proven. [Evidence](docs/protocol/retry-answers.md#local-aea-cooldown-reader-and-ignored-insert-result-2026-11-07). Research only.
+
 **Later AEA chat storage traced.** Distinct chat classification, transition
 guards and optional local cooldown share a guarded transaction. Cache/callback
 recovery and whole-retry atomicity remain open. [Evidence](docs/protocol/retry-answers.md#post-session-aea-updates-chat-classification-2026-11-07). Research only.

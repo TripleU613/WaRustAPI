@@ -671,3 +671,14 @@ handle close; outer rollback/cache recovery remain unproven. This cooldown is
 not established as a server restriction signal. Rust receipt-key refusal remains.
 [Complete evidence and open integration requirements](apk/2.26.43.72-retry-chat-aea-storage/README.md).
 Research only; no live account operation.
+
+## Local AEA cooldown reader and ignored insert result (2026-11-07)
+
+**Confirmed selected static:** DDs.A0P suppresses contradictory chat-classification
+updates, including ExG's USync account-type consumer. Wall-clock milliseconds,
+feature0x7a16 hours and selected newer-identity reset control its lifetime.
+No server restriction/send-rate meaning is established. SQL insert wrapper can
+return-1 on constraint failure while A03 discards it; no exception is not durable
+success. Delete count is also discarded. Rust behavior remains unchanged.
+[Complete clock, read/write, caller and schema evidence](apk/2.26.43.72-aea-cooldown-policy/README.md).
+Research only; no live account operation.

@@ -1,0 +1,12 @@
+
+# class: LX/2L7;
+# extends: Ljava/lang/Object;
+
+.method public A01(JL)  # .registers 2
+    # full signature: LX/2L7;->A01(LX/00x;)J
+    0000..0006  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    0006..000c  invoke-static  {}, Ljava/lang/System;->currentTimeMillis()J
+    000c..000e  move-result-wide  v0
+    000e..0010  return-wide  v0
+    # exception table: 0 try range(s)
+.end method

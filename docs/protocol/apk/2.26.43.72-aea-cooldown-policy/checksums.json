@@ -1,0 +1,58 @@
+{
+  "README.md": {
+    "bytes": 6010,
+    "sha256": "6ceb4e043f370275e0a64ef24fec5d8d20ccb88e54ab506d61b852597838735a"
+  },
+  "anchor-refs.txt": {
+    "bytes": 529,
+    "sha256": "03e8a90403e2f5f571e4f5c35b2cc4bfe07561802da37755ff4fd17f461abd91"
+  },
+  "chat-delete-trigger.txt": {
+    "bytes": 862,
+    "sha256": "5db0b20d089c87903bf5ce93cfb8c9f67f14de426f33dedf02c1dc8986815cce"
+  },
+  "chat-state-map.txt": {
+    "bytes": 791,
+    "sha256": "00d41a0f41d4ec8efb581ca19ccac4748cf133a2a1b20732e4c1bf07c84d7a00"
+  },
+  "cooldown-reader.txt": {
+    "bytes": 14544,
+    "sha256": "ccb8173e7239c95a8ae379a3574655dd60be908c8f7fbbcf8d7a11f8a85f2c30"
+  },
+  "cooldown-states.txt": {
+    "bytes": 1439,
+    "sha256": "f09906662960163cdbe8f720fe6c217940f6e40eef09ff1227c8db46f2cfb306"
+  },
+  "duration-getter.txt": {
+    "bytes": 344,
+    "sha256": "3fd57fde51233eb493c620f7296dd38bf0b38a4ce1acd661754668954e837f20"
+  },
+  "identity-timestamp.txt": {
+    "bytes": 2831,
+    "sha256": "bb8bee7f79d433915c2e4876856c047b0747baaf34042fd91072fdf5de09f67c"
+  },
+  "insert-wrapper.txt": {
+    "bytes": 1778,
+    "sha256": "65c2edf6df945160d4845a6911738e529433e15580a0e3fac8c6ecaf8bf020ed"
+  },
+  "read-clock.txt": {
+    "bytes": 401,
+    "sha256": "64c755b06e76dba78645bc9236425631fce0c969240b40cdaeb42ce4a2b9d54a"
+  },
+  "reader-callers.txt": {
+    "bytes": 137,
+    "sha256": "29a15abf497145988b324835e0f1596147ca329c249f331214cc40765e4fb20e"
+  },
+  "schema-descriptor.txt": {
+    "bytes": 1944,
+    "sha256": "5da33403c06196c58cf89799e708469b92289a0ee2a92e8e056728d95bfa281e"
+  },
+  "usync-account-type.txt": {
+    "bytes": 4105,
+    "sha256": "37059988744f6e2c6e840366a9545707608d83b181f18201ec9d468772ae7fad"
+  },
+  "write-clock.txt": {
+    "bytes": 459,
+    "sha256": "5ecb35e834fb53d759133292643795e40c6bcbb657f2f5af8b0fe3ea51abecf2"
+  }
+}

@@ -1,0 +1,29 @@
+
+# class: LX/0KU;
+# extends: Ljava/lang/Object;
+
+.method public A09(JLLLI)  # .registers 10
+    # full signature: LX/0KU;->A09(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;I)J
+    0000..0002  const/4  v1, #0x0
+    0002..0008  invoke-static  {v5, v7, v1}, LX/0KU;->A01(LX/0KU;Ljava/lang/String;[Ljava/lang/Object;)V
+    0008..000e  invoke-static  {}, Landroid/os/SystemClock;->uptimeMillis()J
+    000e..0012  iget-object  v0, v5, LX/0KU;->A02:Landroid/database/sqlite/SQLiteDatabase;
+    0012..0018  invoke-virtual  {v0, v6, v1, v8, v9}, Landroid/database/sqlite/SQLiteDatabase;->insertWithOnConflict(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;I)J
+    0018..001a  move-result-wide  v3
+    001a..001c  goto  +0xe
+    001c..001e  move-exception  v0
+    001e..0024  invoke-direct  {v5, v0}, LX/0KU;->A00(Landroid/database/sqlite/SQLiteDatabaseCorruptException;)V
+    0024..0026  throw  v0
+    0026..0028  move-exception  v1
+    0028..002c  const-string  v0, "insertWithOnConflict/Record insertion raised an unexpected exception."
+    002c..0032  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0032..0036  const-wide/16  v3, #0xffff (-1)
+    0036..003a  iget-object  v2, v5, LX/0KU;->A04:LX/0Du;
+    003a..003e  iget-object  v1, v5, LX/0KU;->A03:Ljava/lang/String;
+    003e..0040  const/4  v0, #0x2
+    0040..0046  invoke-virtual  {v2, v1, v0, v7}, LX/0Du;->A03(Ljava/lang/String;ILjava/lang/String;)V
+    0046..0048  return-wide  v3
+    # exception table: 1 try range(s)
+    # catch Landroid/database/sqlite/SQLiteConstraintException; code_units 0007..000e -> 0013
+    # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 0007..000e -> 000e
+.end method

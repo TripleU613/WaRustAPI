@@ -1,0 +1,12 @@
+
+# class: LX/6oe;
+# extends: Ljava/lang/Object;
+
+.method public A02(JLI)  # .registers 2
+    # full signature: LX/6oe;->A02(LX/00E;I)J
+    0000..0006  invoke-virtual  {v0, v1}, LX/00E;->A0a(I)I
+    0006..0008  move-result  v0
+    0008..000a  int-to-long  v0, v0
+    000a..000c  return-wide  v0
+    # exception table: 0 try range(s)
+.end method

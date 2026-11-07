@@ -1,0 +1,15 @@
+
+# class: LX/0Mp;
+# extends: Ljava/lang/Object;
+
+.method public ATe(VL)  # .registers 5
+    # full signature: LX/0Mp;->ATe(LX/0Ma;)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v4, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  const-string  v2, "aea_chat_state"
+    000c..0010  const-string  v1, "chat_bd_for_aea_chat_state_trigger"
+    0010..0014  const-string  v0, "\n          CREATE TRIGGER chat_bd_for_aea_chat_state_trigger\n            BEFORE DELETE ON chat\n            BEGIN\n              DELETE FROM\n                aea_chat_state\n              WHERE\n                chat_row_id=old._id;\n            END\n        "
+    0014..001a  invoke-interface  {v4, v2, v1, v0}, LX/0Ma;->CWn(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+    001a..001c  return-void
+    # exception table: 0 try range(s)
+.end method
