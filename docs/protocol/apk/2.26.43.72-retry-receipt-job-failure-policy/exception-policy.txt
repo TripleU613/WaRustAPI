@@ -1,0 +1,16 @@
+
+# class: Lcom/whatsapp/jobqueue/job/SendRetryReceiptJob;
+# extends: Lorg/whispersystems/jobqueue/Job;
+
+.method public A0N(ZL)  # .registers 4
+    # full signature: Lcom/whatsapp/jobqueue/job/SendRetryReceiptJob;->A0N(Ljava/lang/Exception;)Z
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-virtual  {v2}, Lcom/whatsapp/jobqueue/job/SendRetryReceiptJob;->A0O()Ljava/lang/String;
+    000e..0010  move-result-object  v1
+    0010..0014  const-string  v0, "exception while running sent persistent retry job"
+    0014..001a  invoke-static  {v0, v1, v3}, LX/DBh;->A1I(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+    001a..001c  const/4  v0, #0x1
+    001c..001e  return  v0
+    # exception table: 0 try range(s)
+.end method

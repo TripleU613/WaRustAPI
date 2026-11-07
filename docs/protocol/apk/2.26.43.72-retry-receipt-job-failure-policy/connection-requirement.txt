@@ -1,0 +1,16 @@
+
+# class: Lcom/whatsapp/infra/jobs/requirements/ChatConnectionRequirement;
+# extends: Ljava/lang/Object;
+
+.method public BWq(Z)  # .registers 3
+    # full signature: Lcom/whatsapp/infra/jobs/requirements/ChatConnectionRequirement;->BWq()Z
+    0000..0004  iget-object  v0, v2, Lcom/whatsapp/infra/jobs/requirements/ChatConnectionRequirement;->A00:LX/0AI;
+    0004..000a  invoke-static  {v0}, LX/00L;->A05(Ljava/lang/Object;)V
+    000a..0010  invoke-virtual  {v0}, LX/0AI;->A0O()Z
+    0010..0012  move-result  v1
+    0012..0014  const/4  v0, #0x1
+    0014..0018  if-eq  v1, v0, +0x3
+    0018..001a  const/4  v0, #0x0
+    001a..001c  return  v0
+    # exception table: 0 try range(s)
+.end method

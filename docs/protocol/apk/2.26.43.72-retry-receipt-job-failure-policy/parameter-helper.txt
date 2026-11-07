@@ -1,0 +1,17 @@
+
+# class: LX/6ol;
+# extends: Ljava/lang/Object;
+
+.method public A0n(LLL)  # .registers 2
+    # full signature: LX/6ol;->A0n(Ljava/lang/String;LX/DCZ;)Lorg/whispersystems/jobqueue/JobParameters;
+    0000..0004  iput-object  v0, v1, LX/DCZ;->A01:Ljava/lang/String;
+    0004..0006  const/4  v0, #0x1
+    0006..000a  iput-boolean  v0, v1, LX/DCZ;->A03:Z
+    000a..000e  new-instance  v0, Lcom/whatsapp/infra/jobs/requirements/ChatConnectionRequirement;
+    000e..0014  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0014..001a  invoke-virtual  {v1, v0}, LX/DCZ;->A04(Lorg/whispersystems/jobqueue/requirements/Requirement;)V
+    001a..0020  invoke-virtual  {v1}, LX/DCZ;->A03()Lorg/whispersystems/jobqueue/JobParameters;
+    0020..0022  move-result-object  v0
+    0022..0024  return-object  v0
+    # exception table: 0 try range(s)
+.end method

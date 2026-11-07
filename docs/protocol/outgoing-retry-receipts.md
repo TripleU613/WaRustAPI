@@ -526,3 +526,13 @@ for an error-bearing ACK. Selected fail-all handling snapshots/clears A04 then
 calls BsR(IOException(disconnected)); the status error-by-ID consumer is separate.
 [Methods and remaining producer/retry/restart scope](apk/2.26.43.72-retry-receipt-callback-consumers/README.md).
 No Rust success/refusal or no-replay policy change; no live operation.
+
+## Retry job failure eligibility is conditional on the runner
+
+**Confirmed selected static:** SendRetryReceiptJob.A0N returns true for supplied
+exceptions on normal continuation. The shared runner excludes RuntimeException,
+counts attempts, then rechecks requirements for loop/defer. This constructor is
+persistent/grouped with default job budget100, distinct from incoming protocol
+retryCount. ChatConnectionRequirement's concrete predicate is0AI.A04==2; full
+state writers and scheduling remain open. [Exact binding and no-replay boundary](apk/2.26.43.72-retry-receipt-job-failure-policy/README.md).
+No runtime retry/defer behavior changed; no live account operation.

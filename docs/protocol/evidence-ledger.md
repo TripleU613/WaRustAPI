@@ -9669,3 +9669,10 @@ Local public upload eligibility omission corrected at shared entry, including ca
   with IOException(disconnected). Status-only error consumer is separate. Native
   job completion is not server acceptance or resend permission. See
   [callback consumers](apk/2.26.43.72-retry-receipt-callback-consumers/README.md).
+
+- Confirmed pinned retry job exception eligibility: A0N returns true on normal
+  continuation; shared worker excludes RuntimeException, counts attempts and
+  rechecks requirements. Selected persistent grouped constructor keeps default
+  budget100; ChatConnectionRequirement resolves to0AI.A04==2. Protocol count is
+  separate. No automatic Rust retry or live operation. See
+  [job failure policy](apk/2.26.43.72-retry-receipt-job-failure-policy/README.md).

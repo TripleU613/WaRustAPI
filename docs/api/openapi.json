@@ -1,4 +1,11 @@
 {
+  "x-retry-receipt-job-failure-policy-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-retry-receipt-job-failure-policy/README.md",
+    "behavior": "Static native retry job exception/runner binding separates attempt budget100 from protocol retryCount and resolves the selected connection predicate to internal state2. Research only; no Rust retries enabled."
+  },
   "x-retry-receipt-callback-consumer-evidence": {
     "x-cli": false,
     "x-transport": false,

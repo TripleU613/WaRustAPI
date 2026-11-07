@@ -1,0 +1,26 @@
+{
+  "README.md": {
+    "bytes": 5046,
+    "sha256": "853f7c3ffd4c4dc093100329786add797086e6d38a9f78eeffb0541f061bd7ff"
+  },
+  "builder-default.txt": {
+    "bytes": 313,
+    "sha256": "8a0a5c9b8e2ba7766c20f23e5472a9af3264b2bc9722b0f15586eb44caffb2c7"
+  },
+  "connection-predicate.txt": {
+    "bytes": 374,
+    "sha256": "a216b52f45a79c2024bd951455fc923fa5ad1270789110b58457d1bb36f6fac0"
+  },
+  "connection-requirement.txt": {
+    "bytes": 692,
+    "sha256": "2fd2a52de854eede6319b0e3a26ea5949c7469bf849438bcd87a4e2d0cba6fc7"
+  },
+  "exception-policy.txt": {
+    "bytes": 817,
+    "sha256": "2fae94dc478871c5a0e25b445e4c48f399a2aa7b1b6a276cb8be53213470308f"
+  },
+  "parameter-helper.txt": {
+    "bytes": 847,
+    "sha256": "4c5b5b5ca19d0bf963c1a902d25186812924f0fd9021031a52ada13919d03308"
+  }
+}

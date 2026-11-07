@@ -10666,3 +10666,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   disconnect snapshot/clear/failure and separate status-only error consumer.
   Eight direct DEX references accounted for; native scheduling/retry/restart and
   full reader admission remain separate. Research only, no live operation.
+
+- Pinned retry job failure policy now binds exception eligibility, shared runner
+  attempt/requirement checks, persistent grouped budget100 and concrete required
+  internal state2. State writers/queue scheduling/carried-key lifecycle remain
+  unresolved. Research only; Rust uncertain-write no-replay policy unchanged.

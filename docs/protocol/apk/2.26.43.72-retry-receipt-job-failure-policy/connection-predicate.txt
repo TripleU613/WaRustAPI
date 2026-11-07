@@ -1,0 +1,14 @@
+
+# class: LX/0AI;
+# extends: LX/07o;
+
+.method public A0O(Z)  # .registers 4
+    # full signature: LX/0AI;->A0O()Z
+    0000..0004  iget  v2, v3, LX/0AI;->A04:I
+    0004..0006  const/4  v1, #0x2
+    0006..0008  const/4  v0, #0x0
+    0008..000c  if-ne  v2, v1, +0x3
+    000c..000e  const/4  v0, #0x1
+    000e..0010  return  v0
+    # exception table: 0 try range(s)
+.end method
