@@ -1,0 +1,69 @@
+{
+  "evidence_id": "ev_70317bd83c1a0da547155ad2747212d0442ce94f317a1f1463d8cf25c485563a",
+  "subject": {
+    "name": "libmobileconfig-jni.so",
+    "digest": {
+      "sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so",
+    "format": "unknown",
+    "architecture": null
+  },
+  "provider": {
+    "id": "rizin",
+    "name": "Rizin",
+    "version": null
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.reverse-engineering.command-observation",
+  "operation": "execute_rizin_command",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so",
+    "command": "e scr.color=0; pd 34 @ 0xae568",
+    "provider_executable": "rizin",
+    "command_arguments": [
+      "-N",
+      "-q",
+      "-c",
+      "e scr.color=0; pd 34 @ 0xae568",
+      "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so"
+    ]
+  },
+  "raw_result": {
+    "stdout": "            0x000ae568      paciasp\n            0x000ae56c      str   d8, [sp, -0x70]!\n            0x000ae570      stp   x29, x30, [sp, 0x10]\n            0x000ae574      add   x29, sp, 0x10\n            0x000ae578      stp   x28, x27, [sp, 0x20]\n            0x000ae57c      bl    0xca2ec\n            0x000ae580      sub   sp, sp, 0x800\n            0x000ae584      str   xzr, [sp]\n            0x000ae588      str   x2, [sp, 0x30]\n            0x000ae58c      mrs   x8, tpidr_el0\n            0x000ae590      mov   x22, x1\n            0x000ae594      str   x8, [sp, 0x48]\n            0x000ae598      mov   x26, x0\n            0x000ae59c      ldr   x8, [x8, 0x28]                       ; [0x28:4]=0xcfad8\n            0x000ae5a0      stur  x8, [x29, -0x28]\n            0x000ae5a4      str   xzr, [x0]\n            0x000ae5a8      bl    0xb2ebc\n            0x000ae5ac      ldr   x0, [x22]\n        ,=< 0x000ae5b0      cbz   x0, 0xb22c4\n        |   0x000ae5b4      ldr   x19, [x22, 8]                        ; [0x8:4]=0\n       ,==< 0x000ae5b8      cbz   x19, 0xb22c4\n       ||   0x000ae5bc      bl    0xcc370\n      ,===< 0x000ae5c0      b.eq  0xae5e8\n      |||   0x000ae5c4      cmp   w8, 4\n     ,====< 0x000ae5c8      b.ne  0xae5d4\n     ||||   0x000ae5cc      ldr   x8, [x0, 0x10]                       ; [0x10:4]=0xb70003\n    ,=====< 0x000ae5d0      cbz   x8, 0xae5e8\n    |`----> 0x000ae5d4      adrp  x1, 0x16000\n    | |||   0x000ae5d8      add   x1, x1, 0xb7c\n    | |||   0x000ae5dc      add   x0, x22, 0x10\n    | |||   0x000ae5e0      bl    0x5d1ec\n    |,====< 0x000ae5e4      b     0xb22c4\n    `-`---> 0x000ae5e8      adrp  x1, 0xdb000\n     | ||   0x000ae5ec      add   x1, x1, 0x8c8\n",
+    "stderr": "ERROR: Cannot determine entrypoint, using 0x0004c460.\n",
+    "exit_code": 0,
+    "signal": null,
+    "output_truncated": false,
+    "completion_status": "complete",
+    "artifact_sha256_after": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+    "artifact_changed": false
+  },
+  "normalized_result": {
+    "stdout": "            0x000ae568      paciasp\n            0x000ae56c      str   d8, [sp, -0x70]!\n            0x000ae570      stp   x29, x30, [sp, 0x10]\n            0x000ae574      add   x29, sp, 0x10\n            0x000ae578      stp   x28, x27, [sp, 0x20]\n            0x000ae57c      bl    0xca2ec\n            0x000ae580      sub   sp, sp, 0x800\n            0x000ae584      str   xzr, [sp]\n            0x000ae588      str   x2, [sp, 0x30]\n            0x000ae58c      mrs   x8, tpidr_el0\n            0x000ae590      mov   x22, x1\n            0x000ae594      str   x8, [sp, 0x48]\n            0x000ae598      mov   x26, x0\n            0x000ae59c      ldr   x8, [x8, 0x28]                       ; [0x28:4]=0xcfad8\n            0x000ae5a0      stur  x8, [x29, -0x28]\n            0x000ae5a4      str   xzr, [x0]\n            0x000ae5a8      bl    0xb2ebc\n            0x000ae5ac      ldr   x0, [x22]\n        ,=< 0x000ae5b0      cbz   x0, 0xb22c4\n        |   0x000ae5b4      ldr   x19, [x22, 8]                        ; [0x8:4]=0\n       ,==< 0x000ae5b8      cbz   x19, 0xb22c4\n       ||   0x000ae5bc      bl    0xcc370\n      ,===< 0x000ae5c0      b.eq  0xae5e8\n      |||   0x000ae5c4      cmp   w8, 4\n     ,====< 0x000ae5c8      b.ne  0xae5d4\n     ||||   0x000ae5cc      ldr   x8, [x0, 0x10]                       ; [0x10:4]=0xb70003\n    ,=====< 0x000ae5d0      cbz   x8, 0xae5e8\n    |`----> 0x000ae5d4      adrp  x1, 0x16000\n    | |||   0x000ae5d8      add   x1, x1, 0xb7c\n    | |||   0x000ae5dc      add   x0, x22, 0x10\n    | |||   0x000ae5e0      bl    0x5d1ec\n    |,====< 0x000ae5e4      b     0xb22c4\n    `-`---> 0x000ae5e8      adrp  x1, 0xdb000\n     | ||   0x000ae5ec      add   x1, x1, 0x8c8\n",
+    "stderr": "ERROR: Cannot determine entrypoint, using 0x0004c460.\n",
+    "exit_code": 0,
+    "signal": null,
+    "output_truncated": false,
+    "completion_status": "complete",
+    "artifact_sha256_after": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+    "artifact_changed": false
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "The executable version and supported formats are reported as unknown because no reliable version probe was performed.",
+    "A non-zero process exit is preserved as an observed command result.",
+    "Rizin commands and retained plugins may read files or access network resources outside the selected artifact; those external inputs are not bound to Evidence.",
+    "When both are available, pre-run and post-run digests detect artifact changes across the provider call but cannot prove the exact bytes consumed during the call."
+  ],
+  "relationship_coverage": null,
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so"
+    }
+  ],
+  "evidence_links": []
+}

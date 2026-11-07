@@ -1,0 +1,96 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   b2ebc:      	paciasp
+   b2ec0:      	stp	x29, x30, [sp, #-0x40]!
+   b2ec4:      	str	x23, [sp, #0x10]
+   b2ec8:      	bl	0xcad30 <JNI_OnLoad+0x5bb90>
+   b2ecc:      	mov	x29, sp
+   b2ed0:      	mov	x20, x0
+   b2ed4:      	mov	w0, #0x4c0              // =1216
+   b2ed8:      	bl	0xccfa0 <__wrap__Znwm@plt>
+   b2edc:      	mov	w1, wzr
+   b2ee0:      	mov	w2, #0x4c0              // =1216
+   b2ee4:      	mov	x19, x0
+   b2ee8:      	bl	0xcda10 <memset@plt>
+   b2eec:      	mov	w8, #0x3f800000         // =1065353216
+   b2ef0:      	mov	x21, x19
+   b2ef4:      	stp	xzr, xzr, [x19, #0xb8]
+   b2ef8:      	str	w8, [x19, #0xa0]
+   b2efc:      	str	xzr, [x21, #0xb0]!
+   b2f00:      	add	x0, x19, #0xc8
+   b2f04:      	bl	0xb78d4 <JNI_OnLoad+0x48734>
+   b2f08:      	add	x0, x19, #0xd0
+   b2f0c:      	bl	0xb78d4 <JNI_OnLoad+0x48734>
+   b2f10:      	movi	v0.2d, #0000000000000000
+   b2f14:      	mov	x22, x19
+   b2f18:      	mov	w23, #0x3f800000        // =1065353216
+   b2f1c:      	str	q0, [x22, #0xd8]!
+   b2f20:      	add	x0, x22, #0x50
+   b2f24:      	str	xzr, [x22, #0x30]
+   b2f28:      	stp	q0, q0, [x22, #0x10]
+   b2f2c:      	str	w23, [x22, #0x38]
+   b2f30:      	str	wzr, [x22, #0x40]
+   b2f34:      	bl	0xb790c <JNI_OnLoad+0x4876c>
+   b2f38:      	add	x0, x22, #0xf0
+   b2f3c:      	bl	0xb790c <JNI_OnLoad+0x4876c>
+   b2f40:      	add	x0, x22, #0x190
+   b2f44:      	bl	0xb78d4 <JNI_OnLoad+0x48734>
+   b2f48:      	movi	v0.2d, #0000000000000000
+   b2f4c:      	add	x8, x19, #0x270
+   b2f50:      	add	x0, x19, #0x308
+   b2f54:      	mov	w1, wzr
+   b2f58:      	mov	w2, #0x84               // =132
+   b2f5c:      	str	wzr, [x19, #0x2ec]
+   b2f60:      	strb	wzr, [x19, #0x2f0]
+   b2f64:      	str	xzr, [x19, #0x2f8]
+   b2f68:      	stur	q0, [x8, #0x8]
+   b2f6c:      	add	x8, x19, #0x290
+   b2f70:      	stur	q0, [x8, #0x8]
+   b2f74:      	add	x8, x19, #0x2b0
+   b2f78:      	strb	wzr, [x19, #0x300]
+   b2f7c:      	str	xzr, [x19, #0x270]
+   b2f80:      	strb	wzr, [x19, #0x288]
+   b2f84:      	str	xzr, [x19, #0x290]
+   b2f88:      	strb	wzr, [x19, #0x2a8]
+   b2f8c:      	str	xzr, [x19, #0x2b0]
+   b2f90:      	strb	wzr, [x19, #0x2c8]
+   b2f94:      	stur	q0, [x8, #0x8]
+   b2f98:      	str	xzr, [x19, #0x2e0]
+   b2f9c:      	strb	wzr, [x19, #0x2e8]
+   b2fa0:      	str	q0, [x19, #0x2d0]
+   b2fa4:      	bl	0xcda10 <memset@plt>
+   b2fa8:      	movi	v0.2d, #0000000000000000
+   b2fac:      	add	x8, x19, #0x3e8
+   b2fb0:      	str	xzr, [x19, #0x3b0]
+   b2fb4:      	str	w23, [x19, #0x3b8]
+   b2fb8:      	ldp	x22, x21, [sp, #0x20]
+   b2fbc:      	str	w23, [x19, #0x3e0]
+   b2fc0:      	str	w23, [x19, #0x408]
+   b2fc4:      	stp	q0, q0, [x8]
+   b2fc8:      	add	x8, x19, #0x438
+   b2fcc:      	stp	q0, q0, [x19, #0x390]
+   b2fd0:      	stp	q0, q0, [x19, #0x3c0]
+   b2fd4:      	str	q0, [x19, #0x410]
+   b2fd8:      	str	q0, [x19, #0x420]
+   b2fdc:      	str	w23, [x19, #0x430]
+   b2fe0:      	stp	q0, q0, [x8]
+   b2fe4:      	add	x8, x19, #0x49c
+   b2fe8:      	str	w23, [x19, #0x458]
+   b2fec:      	str	q0, [x19, #0x460]
+   b2ff0:      	str	q0, [x19, #0x470]
+   b2ff4:      	str	q0, [x19, #0x480]
+   b2ff8:      	str	w23, [x19, #0x490]
+   b2ffc:      	ldr	x23, [sp, #0x10]
+   b3000:      	strh	wzr, [x19, #0x498]
+   b3004:      	strb	wzr, [x19, #0x49a]
+   b3008:      	str	wzr, [x19, #0x4bc]
+   b300c:      	str	x19, [x20]
+   b3010:      	ldp	x20, x19, [sp, #0x30]
+   b3014:      	stp	q0, q0, [x8]
+   b3018:      	ldp	x29, x30, [sp], #0x40
+   b301c:      	autiasp
+   b3020:      	ret

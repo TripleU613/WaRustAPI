@@ -1,0 +1,46 @@
+{
+  "README.md": {
+    "bytes": 4755,
+    "sha256": "f93eb6056f75d8b0ac6d4535d42b4df4d26bb1adb9ec0840946392ae6bea06fe"
+  },
+  "caller-gates.txt": {
+    "bytes": 8068,
+    "sha256": "5caad40c6690990a7b429408e0cbdcd8b6c194a57c92298984d5aac6bed5dd14"
+  },
+  "consumer-entry.txt": {
+    "bytes": 2380,
+    "sha256": "d7b2249fef859e1966d9a312cab469f7386e38e135f1560b9da4254523965969"
+  },
+  "consumer-return.txt": {
+    "bytes": 508,
+    "sha256": "992d67e53928758aabd07d8b8d82b3f5c2c968ccb03f730a61e0c595bbb7323c"
+  },
+  "consumer.json": {
+    "bytes": 1327,
+    "sha256": "fbfd221d64d79efca20eeb2b2b5bc4a2a1b7e3ebaf72e5ee957007bdcdcc8fad"
+  },
+  "context-cleanup.txt": {
+    "bytes": 814,
+    "sha256": "5077bca8b9c25861ff73634f757b8b25a6f62022c49e6fd5ba4946aa26bf318d"
+  },
+  "default-object.txt": {
+    "bytes": 3621,
+    "sha256": "bc04d4c2c8ba388e25b0214e7bf54d5508bc8172f9271222a310d0eada09a15c"
+  },
+  "inspect-consumer.py": {
+    "bytes": 2109,
+    "sha256": "cf95a995b16d8b4c0a1ba1e52ed72cd63f439a9507640483cb9662085bbde76b"
+  },
+  "length-helper.txt": {
+    "bytes": 245,
+    "sha256": "f2d596b1bd5cf0d50ab99b85c86715714726571a3f4eba947453019f9d4ae0fd"
+  },
+  "rea-consumer.json": {
+    "bytes": 6211,
+    "sha256": "a0e76e1c3c008876a5ca9bb7870db1136945af2db113ecfcb21f773f43acbad9"
+  },
+  "tag-helper.txt": {
+    "bytes": 205,
+    "sha256": "4f4a059e3a15ad777c2216f47f60d2ed5f3346128d9c2c92d98656b32a558de2"
+  }
+}

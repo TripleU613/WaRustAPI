@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-consumer-gates-evidence": {
+    "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-consumer-gates/inspect-consumer.py <pinned-library>",
+    "x-transport": "offline static research; no enabled Rust transport or HTTP route",
+    "x-live": false,
+    "description": "Confirmed selected static MobileConfig consumer gates now connect parser diagnostics and missing RequestData to internal result byte 10 (Failed to parse delta response). Invalid root kinds set a diagnostic; a separate decoded-flag condition returns byte 13. The remaining path hands ownership to 0x8d670; persistence, activation, retries and account ownership remain unproven.",
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-consumer-gates/README.md"
+  },
   "x-mobileconfig-storage-preconditions-evidence": {
     "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-storage-preconditions/inspect-preconditions.py <pinned-library>; offline static and synthetic precedence projection",
     "x-transport": "research only; native response preconditions, no full validation or enabled transport behavior",

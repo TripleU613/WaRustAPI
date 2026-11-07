@@ -1,0 +1,64 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   ae568:      	paciasp
+   ae56c:      	str	d8, [sp, #-0x70]!
+   ae570:      	stp	x29, x30, [sp, #0x10]
+   ae574:      	add	x29, sp, #0x10
+   ae578:      	stp	x28, x27, [sp, #0x20]
+   ae57c:      	bl	0xca2ec <JNI_OnLoad+0x5b14c>
+   ae580:      	sub	sp, sp, #0x800
+   ae584:      	str	xzr, [sp]
+   ae588:      	str	x2, [sp, #0x30]
+   ae58c:      	mrs	x8, TPIDR_EL0
+   ae590:      	mov	x22, x1
+   ae594:      	str	x8, [sp, #0x48]
+   ae598:      	mov	x26, x0
+   ae59c:      	ldr	x8, [x8, #0x28]
+   ae5a0:      	stur	x8, [x29, #-0x28]
+   ae5a4:      	str	xzr, [x0]
+   ae5a8:      	bl	0xb2ebc <JNI_OnLoad+0x43d1c>
+   ae5ac:      	ldr	x0, [x22]
+   ae5b0:      	cbz	x0, 0xb22c4 <JNI_OnLoad+0x43124>
+   ae5b4:      	ldr	x19, [x22, #0x8]
+   ae5b8:      	cbz	x19, 0xb22c4 <JNI_OnLoad+0x43124>
+   ae5bc:      	bl	0xcc370 <JNI_OnLoad+0x5d1d0>
+   ae5c0:      	b.eq	0xae5e8 <JNI_OnLoad+0x3f448>
+   ae5c4:      	cmp	w8, #0x4
+   ae5c8:      	b.ne	0xae5d4 <JNI_OnLoad+0x3f434>
+   ae5cc:      	ldr	x8, [x0, #0x10]
+   ae5d0:      	cbz	x8, 0xae5e8 <JNI_OnLoad+0x3f448>
+   ae5d4:      	adrp	x1, 0x16000
+   ae5d8:      	add	x1, x1, #0xb7c
+   ae5dc:      	add	x0, x22, #0x10
+   ae5e0:      	bl	0x5d1ec <.text+0x10d8c>
+   ae5e4:      	b	0xb22c4 <JNI_OnLoad+0x43124>
+   ae5e8:      	adrp	x1, 0xdb000
+   ae5ec:      	add	x1, x1, #0x8c8
+   ae5f0:      	mov	w2, #0x3                // =3
+   ae5f4:      	bl	0xc9de0 <JNI_OnLoad+0x5ac40>
+   ae5f8:      	str	x26, [sp, #0x50]
+   ae5fc:      	str	x22, [sp, #0x60]
+   ae600:      	cbz	x0, 0xaf014 <JNI_OnLoad+0x3fe74>
+   ae604:      	ldr	w8, [x0]
+   ae608:      	mov	x21, x0
+   ae60c:      	cmp	w8, #0x3
+   ae610:      	b.ne	0xaf014 <JNI_OnLoad+0x3fe74>
+   ae614:      	mov	x20, xzr
+   ae618:      	str	x21, [sp, #0x58]
+   ae61c:      	ldr	x8, [x21, #0x18]
+   ae620:      	cmp	x20, x8
+   ae624:      	b.hs	0xae878 <JNI_OnLoad+0x3f6d8>
+   ae628:      	str	xzr, [sp, #0x2e0]
+   ae62c:      	str	xzr, [sp, #0x2d8]
+   ae630:      	ldr	x8, [x21, #0x8]
+   ae634:      	str	xzr, [sp, #0x2d0]
+   ae638:      	ldr	x1, [x8, x20, lsl #3]
+   ae63c:      	add	x0, sp, #0x2d0
+   ae640:      	bl	0x4d9a0 <.text+0x1540>
+   ae644:      	ldr	x8, [x21, #0x10]
+   ae648:      	ldr	x8, [x8, x20, lsl #3]
+   ae64c:      	cbz	x8, 0xae664 <JNI_OnLoad+0x3f4c4>
