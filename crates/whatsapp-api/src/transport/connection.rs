@@ -362,6 +362,11 @@ pub fn update_login_identity(
 /// One outbound stanza and where to report the socket write outcome.
 type Written = (Node, oneshot::Sender<Result<()>>);
 enum WriteGuard {
+    FinalGroup(
+        Arc<ProtocolStore>,
+        Box<super::outgoing::MessageWriteGuard>,
+        super::outgoing_group::FinalRoutingGuard,
+    ),
     GroupQuery(
         Arc<ProtocolStore>,
         Box<super::outgoing_group::QueryWriteGuard>,
@@ -402,6 +407,9 @@ impl Outbound {
     // The writer ends the epoch without encoding, writing, or releasing a batch.
     pub(crate) fn prepare(self) -> Option<Written> {
         let admission = match self.guard {
+            Some(WriteGuard::FinalGroup(store, committed, routing)) => committed
+                .check_write_authority(&store, &self.node)
+                .and_then(|()| routing.check_write_authority(&store, &self.node)),
             Some(WriteGuard::GroupQuery(store, guard)) => {
                 guard.check_write_authority(&store, &self.node)
             }
@@ -651,6 +659,44 @@ impl NodeLink {
         pending: Option<&super::outgoing_group::Pending>,
         node: &Node,
     ) -> Result<()> {
+        self.send_group_step_with_routing(store, account, pending, node, None)
+            .await
+    }
+    pub(crate) async fn send_group_step_with_routing(
+        &self,
+        store: &Arc<ProtocolStore>,
+        account: &AccountRecord,
+        pending: Option<&super::outgoing_group::Pending>,
+        node: &Node,
+        routing: Option<&super::outgoing_group::FinalRoutingGuard>,
+    ) -> Result<()> {
+        if let Some(routing) = routing {
+            if pending.is_some() || node.description != "message" {
+                return Err(Error::invalid(
+                    "group",
+                    "final routing handoff has wrong phase",
+                ));
+            }
+            routing.check_write_authority(store, node)?;
+            let committed =
+                super::outgoing::MessageWriteGuard::capture_group(store, account, node)?;
+            return self
+                .send_guarded(
+                    node,
+                    Some(WriteGuard::FinalGroup(
+                        store.clone(),
+                        Box::new(committed),
+                        routing.clone(),
+                    )),
+                )
+                .await;
+        }
+        if pending.is_none() {
+            return Err(Error::invalid(
+                "group",
+                "group handoff lacks original pending or final routing authority",
+            ));
+        }
         if let Some(pending) = pending
             && let Some(guard) = pending.query_write_guard(store, account)?
         {
@@ -671,15 +717,6 @@ impl NodeLink {
                         store.clone(),
                         Box::new(guard),
                     )),
-                )
-                .await;
-        }
-        if node.description == "message" && pending.is_none() {
-            let guard = super::outgoing::MessageWriteGuard::capture_group(store, account, node)?;
-            return self
-                .send_guarded(
-                    node,
-                    Some(WriteGuard::CommittedMessage(store.clone(), guard)),
                 )
                 .await;
         }
@@ -1196,7 +1233,7 @@ pub(crate) async fn drive(
                 if node.description == "ack" && group_outgoing.as_ref().is_some_and(|v|tokio::time::Instant::now() < v.deadline && v.matches(&node)) {
                     let next=group_outgoing.take().expect("matched group distribution").settle_with_policy(&store,&account,&node,epoch,&mut device_cursor,config.transport.outgoing_identity_changes).await?;
                     group_outgoing=next.pending;
-                    if let Some(stanza)=next.node { link.send_group_step(&store, &account, group_outgoing.as_ref(), &stanza).await?; }
+                    if let Some(stanza)=next.node { link.send_group_step_with_routing(&store, &account, group_outgoing.as_ref(), &stanza, next.final_routing.as_ref()).await?; }
                 }
                 if node.description == "iq" {
                     // A retry answer waiting for the peer's fresh bundle (retry_answer).
@@ -1216,7 +1253,7 @@ pub(crate) async fn drive(
                         let next=group_outgoing.take().expect("matched group preparation").settle_with_policy(&store,&account,&node,epoch,&mut device_cursor,config.transport.outgoing_identity_changes).await?;
                         group_outgoing=next.pending;
                         if let Some(pending) = &group_outgoing { pending.observe_device_query(&mut device_cursor); }
-                        if let Some(stanza)=next.node { link.send_group_step(&store, &account, group_outgoing.as_ref(), &stanza).await?; }
+                        if let Some(stanza)=next.node { link.send_group_step_with_routing(&store, &account, group_outgoing.as_ref(), &stanza, next.final_routing.as_ref()).await?; }
                         continue;
                     }
                     if outgoing.as_ref().is_some_and(|v|tokio::time::Instant::now() < v.deadline && v.matches(&node)) {
@@ -7022,154 +7059,6 @@ mod tests {
                 .unwrap(),
             before
         );
-    }
-
-    fn committed_group_fixture(
-        store: &ProtocolStore,
-        node: &Node,
-    ) -> crate::model::ids::LocalMessageId {
-        use crate::{
-            model::{
-                ids::ClientRequestId,
-                message::MessageContent,
-                send::{AttemptProgress, SendRequest},
-            },
-            outbox::{AttemptRecord, Outbox},
-            profile::Limits,
-        };
-        store.write(|tx| {
-            let outbox = Outbox::new("comparison-driver", Limits::default());
-            let id = outbox.enqueue(tx, &SendRequest { client_request_id: ClientRequestId::new("group-writer-fixture").unwrap(), chat: ChatId::from_jid(&Jid::parse("1@g.us").unwrap()).unwrap(), content: MessageContent::Text { body: "fixture".into(), quoted: None, style: Default::default() } })?.0.local_id;
-            let mut entry = outbox.get_mut(tx,id)?.unwrap();
-            let wire_id = MessageId::new("frozen-group-step").unwrap();
-            entry.wire_id = Some(wire_id.clone()); entry.progress = AttemptProgress::InFlight;
-            entry.attempts.push(AttemptRecord { index:0, prepared_at:Timestamp::now(), epoch:Some(ConnectionEpoch(1)), payload:Some(encode(node)?.into()), re_encryption:false });
-            super::super::outgoing::reserve_ack_owner_in(tx,id,&wire_id)?;
-            let account = AccountRecord::load_in_write(tx)?;
-            let authority = super::super::account_authority::fingerprint(tx.generation(), account.as_ref())?;
-            tx.put_json(Table::Checkpoints, format!("outbox-group:{id}").as_bytes(),1,&serde_json::json!({"account_authority":authority,"local_id":id,"phase":"reserved","reason":null,"info_query":"fixture","device_queries":[],"key_queries":0,"recipient_count":1,"device_count":1}))?;
-            tx.put_json(Table::Outbox,&id.0,1,&entry)?; Ok(id)
-        }).unwrap()
-    }
-
-    #[tokio::test]
-    async fn queued_non_device_group_steps_refuse_changed_account_before_encoding() {
-        for description in ["iq", "message"] {
-            for change in [
-                "same",
-                "account",
-                "node_id",
-                "node_to",
-                "node_body",
-                "group_row",
-                "owner",
-                "attempt",
-                "missing",
-            ] {
-                if description == "iq" && !matches!(change, "same" | "account") {
-                    continue;
-                }
-                let changed = change != "same";
-                let dir = tempfile::tempdir().unwrap();
-                let path = dir.path().join("group-owner.redb");
-                let store = open(&path);
-                let account = AccountRecord {
-                    generation: store.generation(),
-                    signal_registration_id: Some(31),
-                    ..Default::default()
-                };
-                store.write(|tx| account.save(tx)).unwrap();
-                let ticket = (description == "message").then(|| {
-                    committed_group_fixture(
-                        &store,
-                        &Node::new("message").attr("id", "frozen-group-step"),
-                    )
-                });
-                let (_incoming, incoming) = mpsc::channel(1);
-                let (outgoing, mut writes) = mpsc::channel(1);
-                let link = NodeLink::new(incoming, outgoing);
-                let worker_store = store.clone();
-                let worker_account = account.clone();
-                let task = tokio::spawn(async move {
-                    link.send_group_step(
-                        &worker_store,
-                        &worker_account,
-                        None,
-                        &Node::new(description).attr("id", "frozen-group-step"),
-                    )
-                    .await
-                });
-                let mut queued = writes.recv().await.unwrap();
-                match change {
-                    "node_id" => queued.node = queued.node.attr("id", "changed-fixture"),
-                    "node_to" => queued.node = queued.node.attr("to", "changed.invalid"),
-                    "node_body" => {
-                        queued.node = queued.node.children(vec![Node::new("changed-fixture")])
-                    }
-                    _ => {}
-                }
-                if change == "account" {
-                    let mut replacement = account;
-                    replacement.signal_registration_id = Some(32);
-                    store.write(|tx| replacement.save(tx)).unwrap();
-                }
-                if matches!(change, "group_row" | "owner" | "attempt" | "missing") {
-                    let id = ticket.unwrap();
-                    store
-                        .write(|tx| {
-                            if matches!(change, "group_row" | "owner") {
-                                let key = if change == "owner" {
-                                    format!("outbox-message-ack-owner:{id}")
-                                } else {
-                                    format!("outbox-group:{id}")
-                                };
-                                tx.delete(Table::Checkpoints, key.as_bytes())?;
-                            } else if change == "missing" {
-                                tx.delete(Table::Outbox, &id.0)?;
-                            } else {
-                                let mut entry =
-                                    super::super::outgoing::outbox().get_mut(tx, id)?.unwrap();
-                                entry.attempts[0].payload = Some(vec![9, 9, 9].into());
-                                tx.put_json(Table::Outbox, &id.0, 1, &entry)?;
-                            }
-                            Ok(())
-                        })
-                        .unwrap();
-                }
-                let snapshot = |store: &ProtocolStore| {
-                    store
-                        .read(|tx| {
-                            [
-                                Table::Account,
-                                Table::Outbox,
-                                Table::Checkpoints,
-                                Table::SignalSessions,
-                            ]
-                            .into_iter()
-                            .map(|t| tx.scan(t, 1, 10000))
-                            .collect::<Result<Vec<_>>>()
-                        })
-                        .unwrap()
-                };
-                let before = snapshot(&store);
-                let head = store.journal_head().unwrap();
-                let prepared = queued.prepare();
-                if changed {
-                    assert!(prepared.is_none(), "{description}/{change}");
-                } else {
-                    let (_, written) = prepared.unwrap();
-                    written.send(Ok(())).unwrap();
-                }
-                assert_eq!(task.await.unwrap().is_err(), changed);
-                assert!(writes.recv().await.is_none());
-                assert_eq!(snapshot(&store), before);
-                assert_eq!(store.journal_head().unwrap(), head);
-                drop(store);
-                let reopened = identity_store(&path);
-                assert_eq!(snapshot(&reopened), before);
-                assert_eq!(reopened.journal_head().unwrap(), head);
-            }
-        }
     }
 
     #[tokio::test]

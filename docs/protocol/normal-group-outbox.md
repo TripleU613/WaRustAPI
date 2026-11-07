@@ -924,3 +924,6 @@ exception](message-ack.md#share-ordinary-participant-success-admission-2026-11-0
 Membership and key-query writes now verify privately prepared bytes, durable action/page ownership, original intent/group marker, initiating account and original deadline at dequeue. Outstanding key pages also retain their existing membership snapshot. Refused handoffs preserve uncertainty without a replacement query. [Regression and limits](replay-safety-audit.md#group-membershipkey-query-writer-admission-and-original-reservation-hold-2026-11-07).
 
 New initial preparations also save an independent encrypted `outbox-group-reservation:<local-id>` marker in the same transaction. The original intent stays held if its mutable preparation row alone disappears. Inspection reports a local missing-preparation/held-reservation error; it does not fabricate progress or recreate the row. This adds local checkpoint metadata, with no historical backfill, native wire field or replay/reset API.
+
+
+Final group handoff retains its original membership/device/sender-chain authority through writer dequeue, alongside committed ciphertext/owner checks. Same-chain ACK bookkeeping remains allowed; missing context refuses without replay. [Confirmed local regression and limits](replay-safety-audit.md#final-group-routing-authority-survives-writer-queue-2026-11-07).

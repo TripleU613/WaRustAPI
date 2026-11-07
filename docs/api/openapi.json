@@ -1,4 +1,11 @@
 {
+  "x-final-group-routing-writer-admission": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Final group-message handoff retains its original payload digest and membership/device/sender-chain routing guard through writer dequeue, alongside committed-attempt account and ownership checks. Late changes, missing final routing context and wrong phase/root refuse locally. Same-chain ACK bookkeeping remains admitted. Offline real-crypto regression only; no new deadline, replay, schema, native lifecycle completeness or server acceptance claim.",
+    "evidence": "docs/protocol/replay-safety-audit.md#final-group-routing-authority-survives-writer-queue-2026-11-07"
+  },
   "x-unexpected-login-outcome-uncertainty": {
     "x-cli": false,
     "x-transport": true,

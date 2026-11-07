@@ -945,6 +945,199 @@ pub(super) mod tests {
         }
     }
 
+    #[tokio::test]
+    async fn final_group_writer_retains_original_routing_through_queue() {
+        for change in [
+            "same",
+            "membership",
+            "routing",
+            "chain",
+            "same_chain_ack",
+            "account",
+            "id",
+            "to",
+            "body",
+            "group_row",
+            "owner",
+            "entry",
+            "missing_guard",
+            "root",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("final-routing-writer.redb");
+            let store = std::sync::Arc::new(group_fanout::tests::open(&path));
+            let mut f = group_fanout::tests::fixture();
+            f.alice.generation = store.generation();
+            store.write(|tx| f.alice.save(tx)).unwrap();
+            let id = store
+                .write(|tx| {
+                    Ok(outbox()
+                        .enqueue(
+                            tx,
+                            &SendRequest {
+                                client_request_id: ClientRequestId::new("final-routing-writer")?,
+                                chat: ChatId::from_jid(&f.plan.chat)?,
+                                content: MessageContent::Text {
+                                    body: "fixture".into(),
+                                    quoted: None,
+                                    style: Default::default(),
+                                },
+                            },
+                        )?
+                        .0
+                        .local_id)
+                })
+                .unwrap();
+            let (pending, mut node) = begin_selected(&store, id).unwrap().unwrap();
+            let mut pending = Some(pending);
+            let mut cursor = devices::DeviceSyncCursor::default();
+            let mut final_routing = None;
+            while node.description == "iq" {
+                let reply = match node.get_attr("xmlns").and_then(|v| v.as_text()) {
+                    Some("w:g2") => membership(&node, &f.plan.own, &f.plan.recipients),
+                    Some("usync") => device_reply(&node),
+                    Some("encrypt") => key_reply(&node, &f),
+                    _ => panic!("unexpected group preparation"),
+                };
+                let step = pending
+                    .take()
+                    .unwrap()
+                    .settle(&store, &f.alice, &reply, ConnectionEpoch(29), &mut cursor)
+                    .await
+                    .unwrap();
+                final_routing = step.final_routing;
+                pending = step.pending;
+                node = step.node.unwrap();
+            }
+            assert!(pending.is_none());
+            let (_incoming, incoming) = tokio::sync::mpsc::channel(1);
+            let (outgoing, mut writes) = tokio::sync::mpsc::channel(1);
+            let link = super::super::connection::NodeLink::new(incoming, outgoing);
+            let worker = store.clone();
+            let account = f.alice.clone();
+            match change {
+                "id" => node = node.attr("id", "changed-fixture"),
+                "to" => node = node.attr("to", "changed.invalid"),
+                "body" => node = node.children(vec![Node::new("changed-fixture")]),
+                "root" => node.description = "iq".into(),
+                _ => {}
+            }
+            let task = tokio::spawn(async move {
+                if change == "missing_guard" {
+                    return link.send_group_step(&worker, &account, None, &node).await;
+                }
+                link.send_group_step_with_routing(
+                    &worker,
+                    &account,
+                    None,
+                    &node,
+                    final_routing.as_ref(),
+                )
+                .await
+            });
+            // Payload mismatch is refused during capture; other changes are late.
+            if matches!(change, "id" | "to" | "body" | "missing_guard" | "root") {
+                assert!(writes.recv().await.is_none());
+                assert!(task.await.unwrap().is_err());
+                continue;
+            }
+            let queued = writes.recv().await.unwrap();
+            let peer = &f.plan.recipients[0];
+            match change {
+                "membership" => {
+                    let notification = Node::new("notification")
+                        .attr("type", "w:gp2")
+                        .attr("id", "FINAL-MEMBERSHIP")
+                        .attr("from", f.plan.chat.clone())
+                        .children(vec![Node::new("remove").children(vec![
+                            Node::new("participant").attr("jid", peer.clone()),
+                        ])]);
+                    assert!(groups::apply_change_notification(&store, &notification).unwrap());
+                }
+                "routing" => store
+                    .write(|tx| {
+                        let key = devices::list_key(peer);
+                        let mut list: devices::DeviceList =
+                            tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?.unwrap();
+                        list.expected_timestamp = Some(123456789);
+                        tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &list)
+                    })
+                    .unwrap(),
+                "chain" => store
+                    .write(|tx| {
+                        super::super::sender_key_distribution::after_primary_change_in(tx, peer)
+                    })
+                    .unwrap(),
+                "same_chain_ack" => store
+                    .write(|tx| {
+                        super::super::sender_key_distribution::pending_ack_in(
+                            tx,
+                            &f.plan.chat,
+                            &f.plan.own,
+                            "OTHER-SAME-CHAIN",
+                            std::slice::from_ref(peer),
+                        )?;
+                        super::super::sender_key_distribution::confirm_ack_in(
+                            tx,
+                            "OTHER-SAME-CHAIN",
+                        )
+                    })
+                    .unwrap(),
+                "account" => store
+                    .write(|tx| {
+                        let mut account = AccountRecord::load_in_write(tx)?.unwrap();
+                        account.signal_registration_id =
+                            Some(account.signal_registration_id.unwrap_or(31) ^ 1);
+                        account.save(tx)
+                    })
+                    .unwrap(),
+                "group_row" | "owner" | "entry" => store
+                    .write(|tx| {
+                        if change == "entry" {
+                            tx.delete(Table::Outbox, &id.0)?;
+                        } else {
+                            let key = if change == "owner" {
+                                format!("outbox-message-ack-owner:{id}")
+                            } else {
+                                key(id)
+                            };
+                            tx.delete(Table::Checkpoints, key.as_bytes())?;
+                        }
+                        Ok(())
+                    })
+                    .unwrap(),
+                _ => {}
+            }
+            let snapshot = |store: &ProtocolStore| {
+                store
+                    .read(|tx| {
+                        Table::ALL
+                            .into_iter()
+                            .map(|t| tx.scan(t, 1, 10000))
+                            .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot(&store);
+            let head = store.journal_head().unwrap();
+            let admitted = matches!(change, "same" | "same_chain_ack");
+            let prepared = queued.prepare();
+            assert_eq!(prepared.is_some(), admitted, "{change}");
+            if let Some((_, written)) = prepared {
+                written.send(Ok(())).unwrap();
+            }
+            assert_eq!(task.await.unwrap().is_ok(), admitted, "{change}");
+            assert!(writes.recv().await.is_none());
+            assert_eq!(snapshot(&store), before);
+            assert_eq!(store.journal_head().unwrap(), head);
+            drop(store);
+            let reopened = group_fanout::tests::open(&path);
+            assert_eq!(snapshot(&reopened), before);
+            assert_eq!(reopened.journal_head().unwrap(), head);
+            assert!(begin_selected(&reopened, id).unwrap().is_none());
+        }
+    }
+
     async fn assert_distribution_change_stops(change_kind: &str) {
         use super::super::group_references::tests::{reference, save_parent};
         for accepted_before_change in [0, 1] {
@@ -2298,9 +2491,36 @@ impl std::fmt::Debug for Pending {
             .finish_non_exhaustive()
     }
 }
+#[derive(Clone)]
+pub(crate) struct FinalRoutingGuard {
+    expected_sha256: [u8; 32],
+    chat: Jid,
+    membership: Option<[u8; 32]>,
+    routing: std::sync::Arc<group_fanout::RoutingGuard>,
+}
+impl FinalRoutingGuard {
+    pub(crate) fn check_write_authority(&self, store: &ProtocolStore, node: &Node) -> Result<()> {
+        let wire =
+            Zeroizing::new(Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(node)?);
+        if <[u8; 32]>::from(Sha256::digest(&*wire)) != self.expected_sha256 {
+            return Err(invalid(
+                "final group payload differs from original routing handoff",
+            ));
+        }
+        if membership_digest(store, &self.chat)? != self.membership
+            || !self.routing.unchanged(store)?
+        {
+            return Err(invalid(
+                "final group membership or routing changed before write",
+            ));
+        }
+        Ok(())
+    }
+}
 pub(crate) struct Step {
     pub pending: Option<Pending>,
     pub node: Option<Node>,
+    pub final_routing: Option<FinalRoutingGuard>,
 }
 impl Step {
     fn waiting(mut pending: Pending, node: Node) -> Self {
@@ -2308,12 +2528,14 @@ impl Step {
         Self {
             pending: Some(pending),
             node: Some(node),
+            final_routing: None,
         }
     }
     fn done() -> Self {
         Self {
             pending: None,
             node: None,
+            final_routing: None,
         }
     }
 }
@@ -3304,9 +3526,19 @@ impl Pending {
             return self.block(store, Block::RoutingChanged);
         }
         if rest.is_empty() {
+            let wire = Zeroizing::new(
+                Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(&group)?,
+            );
+            let final_routing = FinalRoutingGuard {
+                expected_sha256: Sha256::digest(&*wire).into(),
+                chat: self.entry.intent.chat.jid().clone(),
+                membership: self.membership,
+                routing: guard.clone(),
+            };
             return Ok(Step {
                 pending: None,
                 node: Some(group),
+                final_routing: Some(final_routing),
             });
         }
         let next = rest.remove(0);
