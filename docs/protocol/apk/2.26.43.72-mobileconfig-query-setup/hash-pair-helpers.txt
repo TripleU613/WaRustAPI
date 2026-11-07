@@ -1,0 +1,122 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   ae27c:      	paciasp
+   ae280:      	stp	x29, x30, [sp, #-0x20]!
+   ae284:      	stp	x20, x19, [sp, #0x10]
+   ae288:      	mov	x29, sp
+   ae28c:      	mov	x19, x1
+   ae290:      	adrp	x1, 0x17000
+   ae294:      	add	x1, x1, #0x17b
+   ae298:      	mov	x20, x0
+   ae29c:      	bl	0x4d9a0 <.text+0x1540>
+   ae2a0:      	bl	0xc9fb4 <JNI_OnLoad+0x5ae14>
+   ae2a4:      	ldp	x29, x30, [sp], #0x20
+   ae2a8:      	autiasp
+   ae2ac:      	ret
+   ae2b0:      	paciasp
+   ae2b4:      	stp	x29, x30, [sp, #-0x20]!
+   ae2b8:      	stp	x20, x19, [sp, #0x10]
+   ae2bc:      	mov	x29, sp
+   ae2c0:      	mov	x19, x1
+   ae2c4:      	adrp	x1, 0x16000
+   ae2c8:      	add	x1, x1, #0x260
+   ae2cc:      	mov	x20, x0
+   ae2d0:      	bl	0x4d9a0 <.text+0x1540>
+   ae2d4:      	bl	0xc9fb4 <JNI_OnLoad+0x5ae14>
+   ae2d8:      	ldp	x29, x30, [sp], #0x20
+   ae2dc:      	autiasp
+   ae2e0:      	ret
+   ae2e4:      	paciasp
+   ae2e8:      	stp	x29, x30, [sp, #-0x20]!
+   ae2ec:      	stp	x20, x19, [sp, #0x10]
+   ae2f0:      	mov	x29, sp
+   ae2f4:      	mov	x20, x1
+   ae2f8:      	adrp	x1, 0x18000
+   ae2fc:      	add	x1, x1, #0xe82
+   ae300:      	mov	x19, x0
+   ae304:      	bl	0x4d9a0 <.text+0x1540>
+   ae308:      	bl	0xcb49c <JNI_OnLoad+0x5c2fc>
+   ae30c:      	bl	0xcca30 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2ERKS5_@plt>
+   ae310:      	ldp	x20, x19, [sp, #0x10]
+   ae314:      	ldp	x29, x30, [sp], #0x20
+   ae318:      	autiasp
+   ae31c:      	ret
+   ae320:      	bl	0xcae74 <JNI_OnLoad+0x5bcd4>
+   ae324:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   ae328:      	mov	x0, x20
+   ae32c:      	bl	0xccf70 <__wrap__Unwind_Resume@plt>
+   ae330:      	paciasp
+   ae334:      	stp	x29, x30, [sp, #-0x20]!
+   ae338:      	stp	x20, x19, [sp, #0x10]
+   ae33c:      	mov	x29, sp
+   ae340:      	mov	x20, x1
+   ae344:      	adrp	x1, 0x18000
+   ae348:      	add	x1, x1, #0xebd
+   ae34c:      	mov	x19, x0
+   ae350:      	bl	0x4d9a0 <.text+0x1540>
+   ae354:      	bl	0xcb49c <JNI_OnLoad+0x5c2fc>
+   ae358:      	bl	0xcca30 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2ERKS5_@plt>
+   ae35c:      	ldp	x20, x19, [sp, #0x10]
+   ae360:      	ldp	x29, x30, [sp], #0x20
+   ae364:      	autiasp
+   ae368:      	ret
+   ae36c:      	bl	0xcae74 <JNI_OnLoad+0x5bcd4>
+   ae370:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   ae374:      	mov	x0, x20
+   ae378:      	bl	0xccf70 <__wrap__Unwind_Resume@plt>
+   ae37c:      	paciasp
+   ae380:      	stp	x29, x30, [sp, #-0x20]!
+   ae384:      	stp	x20, x19, [sp, #0x10]
+   ae388:      	mov	x29, sp
+   ae38c:      	mov	x20, x1
+   ae390:      	adrp	x1, 0x18000
+   ae394:      	add	x1, x1, #0xe91
+   ae398:      	mov	x19, x0
+   ae39c:      	bl	0x4d9a0 <.text+0x1540>
+   ae3a0:      	bl	0xcb49c <JNI_OnLoad+0x5c2fc>
+   ae3a4:      	bl	0xcca30 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2ERKS5_@plt>
+   ae3a8:      	ldp	x20, x19, [sp, #0x10]
+   ae3ac:      	ldp	x29, x30, [sp], #0x20
+   ae3b0:      	autiasp
+   ae3b4:      	ret
+   ae3b8:      	bl	0xcae74 <JNI_OnLoad+0x5bcd4>
+   ae3bc:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   ae3c0:      	mov	x0, x20
+   ae3c4:      	bl	0xccf70 <__wrap__Unwind_Resume@plt>
+   ae3c8:      	paciasp
+   ae3cc:      	stp	x29, x30, [sp, #-0x20]!
+   ae3d0:      	stp	x20, x19, [sp, #0x10]
+   ae3d4:      	mov	x29, sp
+   ae3d8:      	adrp	x1, 0x17000
+   ae3dc:      	add	x1, x1, #0x137
+   ae3e0:      	mov	x19, x0
+   ae3e4:      	bl	0x4d9a0 <.text+0x1540>
+   ae3e8:      	adrp	x1, 0x19000
+   ae3ec:      	add	x1, x1, #0x6bf
+   ae3f0:      	add	x0, x19, #0x18
+   ae3f4:      	bl	0x4d9a0 <.text+0x1540>
+   ae3f8:      	ldp	x20, x19, [sp, #0x10]
+   ae3fc:      	ldp	x29, x30, [sp], #0x20
+   ae400:      	autiasp
+   ae404:      	ret
+   ae408:      	bl	0xcae74 <JNI_OnLoad+0x5bcd4>
+   ae40c:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   ae410:      	mov	x0, x20
+   ae414:      	bl	0xccf70 <__wrap__Unwind_Resume@plt>
+   ae418:      	paciasp
+   ae41c:      	stp	x29, x30, [sp, #-0x20]!
+   ae420:      	stp	x20, x19, [sp, #0x10]
+   ae424:      	mov	x29, sp
+   ae428:      	mov	x19, x1
+   ae42c:      	adrp	x1, 0x18000
+   ae430:      	add	x1, x1, #0x6aa
+   ae434:      	mov	x20, x0
+   ae438:      	bl	0x4d9a0 <.text+0x1540>
+   ae43c:      	bl	0xc9fb4 <JNI_OnLoad+0x5ae14>
+   ae440:      	ldp	x29, x30, [sp], #0x20
+   ae444:      	autiasp
+   ae448:      	ret

@@ -1,0 +1,54 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   aa89c:      	paciasp
+   aa8a0:      	sub	sp, sp, #0x30
+   aa8a4:      	stp	x29, x30, [sp, #0x10]
+   aa8a8:      	stp	x20, x19, [sp, #0x20]
+   aa8ac:      	add	x29, sp, #0x10
+   aa8b0:      	bl	0xca66c <JNI_OnLoad+0x5b4cc>
+   aa8b4:      	bl	0xcc230 <JNI_OnLoad+0x5d090>
+   aa8b8:      	add	x0, x8, #0x42
+   aa8bc:      	ldarb	w8, [x0]
+   aa8c0:      	cbnz	w8, 0xaa8e8 <JNI_OnLoad+0x3b748>
+   aa8c4:      	ldr	x8, [x19, #0x258]
+   aa8c8:      	ldr	x0, [x8, #0x20]
+   aa8cc:      	bl	0xca2cc <JNI_OnLoad+0x5b12c>
+   aa8d0:      	b.ne	0xaa8f4 <JNI_OnLoad+0x3b754>
+   aa8d4:      	ldp	x20, x19, [sp, #0x20]
+   aa8d8:      	ldp	x29, x30, [sp, #0x10]
+   aa8dc:      	add	sp, sp, #0x30
+   aa8e0:      	autiasp
+   aa8e4:      	ret
+   aa8e8:      	mov	x1, sp
+   aa8ec:      	bl	0xaa760 <JNI_OnLoad+0x3b5c0>
+   aa8f0:      	b	0xaa8c4 <JNI_OnLoad+0x3b724>
+   aa8f4:      	bl	0xcd9f0 <__stack_chk_fail@plt>
+   aa8f8:      	paciasp
+   aa8fc:      	sub	sp, sp, #0x30
+   aa900:      	stp	x29, x30, [sp, #0x10]
+   aa904:      	stp	x20, x19, [sp, #0x20]
+   aa908:      	add	x29, sp, #0x10
+   aa90c:      	bl	0xca66c <JNI_OnLoad+0x5b4cc>
+   aa910:      	bl	0xcc230 <JNI_OnLoad+0x5d090>
+   aa914:      	add	x0, x8, #0x43
+   aa918:      	ldarb	w8, [x0]
+   aa91c:      	cbnz	w8, 0xaa94c <JNI_OnLoad+0x3b7ac>
+   aa920:      	ldr	x8, [x19, #0x258]
+   aa924:      	ldr	x9, [x20, #0x28]
+   aa928:      	ldr	x10, [sp, #0x8]
+   aa92c:      	cmp	x9, x10
+   aa930:      	b.ne	0xaa958 <JNI_OnLoad+0x3b7b8>
+   aa934:      	ldp	x20, x19, [sp, #0x20]
+   aa938:      	add	x0, x8, #0x28
+   aa93c:      	ldp	x29, x30, [sp, #0x10]
+   aa940:      	add	sp, sp, #0x30
+   aa944:      	autiasp
+   aa948:      	ret
+   aa94c:      	mov	x1, sp
+   aa950:      	bl	0xaa95c <JNI_OnLoad+0x3b7bc>
+   aa954:      	b	0xaa920 <JNI_OnLoad+0x3b780>
+   aa958:      	bl	0xcd9f0 <__stack_chk_fail@plt>

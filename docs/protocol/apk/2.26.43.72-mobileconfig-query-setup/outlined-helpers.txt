@@ -1,0 +1,87 @@
+Bounded outlined helper 0xcade4..0xcadf0
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   cade4:      	stp	xzr, xzr, [x19]
+   cade8:      	str	xzr, [x19, #0x10]
+   cadec:      	ret
+Bounded outlined helper 0xcb49c..0xcb4a8
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   cb49c:      	add	x0, x19, #0x18
+   cb4a0:      	mov	x1, x20
+   cb4a4:      	ret
+Bounded outlined helper 0xc9fb4..0xc9fd4
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   c9fb4:      	ldr	x8, [x19, #0x10]
+   c9fb8:      	ldr	q0, [x19]
+   c9fbc:      	str	x8, [x20, #0x28]
+   c9fc0:      	stur	q0, [x20, #0x18]
+   c9fc4:      	stp	xzr, xzr, [x19]
+   c9fc8:      	str	xzr, [x19, #0x10]
+   c9fcc:      	ldp	x20, x19, [sp, #0x10]
+   c9fd0:      	ret
+Bounded outlined helper 0xca4a8..0xca4b8
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   ca4a8:      	lsr	x10, x8, #1
+   ca4ac:      	tst	w8, #0x1
+   ca4b0:      	csel	x8, x10, x9, eq
+   ca4b4:      	ret
+Bounded outlined helper 0xcad60..0xcad6c
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   cad60:      	lsr	x10, x8, #1
+   cad64:      	tst	w8, #0x1
+   cad68:      	ret
+Bounded outlined helper 0xcad9c..0xcada8
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   cad9c:      	mov	x19, x2
+   cada0:      	mov	x20, x0
+   cada4:      	ret
+Bounded outlined helper 0xcbaf0..0xcbafc
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   cbaf0:      	add	x0, sp, #0x90
+   cbaf4:      	add	x2, sp, #0x220
+   cbaf8:      	ret
+Bounded outlined helper 0xcc230..0xcc240
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   cc230:      	str	x8, [sp, #0x8]
+   cc234:      	ldr	x8, [x0, #0x258]
+   cc238:      	str	x19, [sp]
+   cc23c:      	ret

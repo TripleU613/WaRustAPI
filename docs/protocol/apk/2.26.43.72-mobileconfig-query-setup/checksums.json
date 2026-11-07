@@ -1,0 +1,62 @@
+{
+  "README.md": {
+    "bytes": 6495,
+    "sha256": "ca253269748af26119264e4b2552184ac22a9c47d7ab27f0e85d11628f7ee539"
+  },
+  "checksum-append.txt": {
+    "bytes": 1861,
+    "sha256": "805a94b934f3424d17a577abfb0ec0770febf933303f0bff77fbe53c5274079a"
+  },
+  "getter-entry-helper.txt": {
+    "bytes": 304,
+    "sha256": "d66054d9b553ced37c4992c0d3d76de12b41dcd3b67cb2c9e634f89ca1a11bf6"
+  },
+  "hash-checksum.txt": {
+    "bytes": 1144,
+    "sha256": "902addee8452ed45c5704528c535a16222dcc85b54cdfa7d6c2be32f37418bb7"
+  },
+  "hash-pair-helpers.txt": {
+    "bytes": 4751,
+    "sha256": "c2d1d9ce3c65995552c8552490311c9c0812b72a0012f6207842282284b6ae56"
+  },
+  "inspect-query-setup.py": {
+    "bytes": 2225,
+    "sha256": "07de60911c4b0ead13a056213135a07d0c694ef04575e70dda35c4a5077fac7b"
+  },
+  "outlined-helpers.txt": {
+    "bytes": 2741,
+    "sha256": "4e52e421ada4d7d1054755469007cdc0975747bd0ced36c2076d4dff6127f0cf"
+  },
+  "pair-append.txt": {
+    "bytes": 1635,
+    "sha256": "20cab092c42683537c3437b3329d8e98f9ea02908d761f91c1ca74c3ebc9b418"
+  },
+  "pair-construction.txt": {
+    "bytes": 546,
+    "sha256": "749e41d5da84e6fb04792397b290a02c9d2488e2e4c285660ab4fb11435a10a8"
+  },
+  "query-hash-append.txt": {
+    "bytes": 1635,
+    "sha256": "9a45ee57f0980ef2cc5228da4736273b7e45a8ebf6bcc80119d2dedf42239ab3"
+  },
+  "query-producer.txt": {
+    "bytes": 67192,
+    "sha256": "bf04c7170cd9ea439c065abfea376e6ae8f1f4074e751b5d43e0abc48629f673"
+  },
+  "rea-query-entry.json": {
+    "bytes": 10837,
+    "sha256": "c9b879ac252f388fec3b168d8564a7be625a75e3904db130ea43171f2b96387d"
+  },
+  "schema-getter.txt": {
+    "bytes": 1082,
+    "sha256": "af9a46b794c33961d6209c63a03692b7dbda1da3b57cf83aef2f5caeed4e18da"
+  },
+  "secondary-schema-and-checksum-getters.txt": {
+    "bytes": 2031,
+    "sha256": "51157f5e4340a76c237eff1f0d8310ede7d1e0e06942555ef5bfd58e9dd6447f"
+  },
+  "setup.json": {
+    "bytes": 1765,
+    "sha256": "c4a0241dcc4741ef1fae40198a941cdc37eb6ad84e866756719f16c55a51fb23"
+  }
+}

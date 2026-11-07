@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-query-setup-evidence": {
+    "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-query-setup/inspect-query-setup.py <pinned-library>; offline research only",
+    "x-transport": "research only; native parameter-vector gates, not a complete wire serializer",
+    "x-live": false,
+    "description": "Confirmed selected static MobileConfig query producer returns an empty vector for empty deviceId or, on the selected non-1 mode/schema route, absent schema containers. Native metadata has distinct presence rules for global_value_hash, one_query_hash, request_data_query_hash and positive ep_refresh_id; bool_opt_policy combines raw configuration flags. Mode 1 still bypasses the caller empty-vector refusal. Values, remaining algorithms, field producers and persistence remain unresolved.",
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-query-setup/README.md"
+  },
   "x-mobileconfig-requester-dispatch-evidence": {
     "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-requester-dispatch/inspect-dispatch.py <pinned-library>; offline research only",
     "x-transport": "research only; conditional native interface route, not an enabled HTTP endpoint",

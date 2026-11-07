@@ -1,0 +1,29 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   aa704:      	paciasp
+   aa708:      	sub	sp, sp, #0x30
+   aa70c:      	stp	x29, x30, [sp, #0x10]
+   aa710:      	stp	x20, x19, [sp, #0x20]
+   aa714:      	add	x29, sp, #0x10
+   aa718:      	bl	0xca66c <JNI_OnLoad+0x5b4cc>
+   aa71c:      	bl	0xcc230 <JNI_OnLoad+0x5d090>
+   aa720:      	add	x0, x8, #0x42
+   aa724:      	ldarb	w8, [x0]
+   aa728:      	cbnz	w8, 0xaa750 <JNI_OnLoad+0x3b5b0>
+   aa72c:      	ldr	x8, [x19, #0x258]
+   aa730:      	ldr	x0, [x8, #0x18]
+   aa734:      	bl	0xca2cc <JNI_OnLoad+0x5b12c>
+   aa738:      	b.ne	0xaa75c <JNI_OnLoad+0x3b5bc>
+   aa73c:      	ldp	x20, x19, [sp, #0x20]
+   aa740:      	ldp	x29, x30, [sp, #0x10]
+   aa744:      	add	sp, sp, #0x30
+   aa748:      	autiasp
+   aa74c:      	ret
+   aa750:      	mov	x1, sp
+   aa754:      	bl	0xaa760 <JNI_OnLoad+0x3b5c0>
+   aa758:      	b	0xaa72c <JNI_OnLoad+0x3b58c>
+   aa75c:      	bl	0xcd9f0 <__stack_chk_fail@plt>
