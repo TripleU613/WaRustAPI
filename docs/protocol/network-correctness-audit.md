@@ -5418,3 +5418,16 @@ existing outgoing enc count remains ASCII. Android runtime digit-table parity is
 not claimed. ACK encoding/owner/identity/refetch/no-replay controls remain.
 [Exact APK/API evidence, reference provenance and reproduction](retry-parser-admission.md#shared-java-reference-numeric-admission-and-later-error-ordering-2026-11-06).
 No live account operation.
+
+
+## Media lifetime wrap cannot become indefinite upload auth (2026-11-06)
+
+**Confirmed pinned static / implemented:**1t5 separately wraps ttl/auth_ttl
+seconds-to-ms products. Upload route selection previously saturated the smaller
+raw-seconds value, allowing natively expired wrapped durations to remain usable.
+It now converts both first, then applies the existing local positive-duration/
+request-age guard. Tests use independent Java arithmetic vectors, each lifetime
+separately, usable positive-wrap controls, and every-table/journal preservation
+before/after reopen. No raw reply/provenance rewrite or automatic refresh/HTTP
+operation. Full base-add/elapsed/reboot/native scheduling parity remains open.
+[Exact DEX operations, reference results and remaining limits](media-network-outcomes.md#wrapped-lifetime-conversion-before-local-route-eligibility-2026-11-06).

@@ -1136,3 +1136,55 @@ Consumption remains irreversible; neither a hold nor writer refusal permits
 reopening. [Pinned policy, regression and limitations](read-receipt-policy-current.md#automatic-played-privacy-correction-2026-11-06).
 Queued intent remains distinct from transmission/server acceptance; no live
 image or account operation was performed for this correction.
+
+
+## Wrapped lifetime conversion before local route eligibility (2026-11-06)
+
+**Confirmed pinned static / implemented offline**, APK2.26.43.72 build264307238,
+SHA256 `887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e`.
+The complete retained [1t5 constructor](rea/2.26.43.72-media-route-lifetimes/model-checked.txt)
+performs separate signed64 mul-long by1000 at004e and0058 for ttl/auth_ttl,
+then adds the supplied request base. DEX multiplication wraps. Rust upload route
+selection instead chose the smaller raw seconds value and saturated its product.
+A valid signed-long lifetime that wraps to an expired duration could therefore
+remain eligible under Rust's route/auth policy, causing use of stale credentials.
+No actual server response or account restriction was observed.
+
+Route selection now converts EACH lifetime with wrapping multiplication before
+checking the existing local minimum-lifetime policy. Wrapped nonpositive duration
+or elapsed duration refuses with the existing expired-route/explicit-refresh error.
+The positive-seconds rule and request-time provenance checks remain unchanged;
+negative wire lifetimes do not gain new authority merely because they could wrap
+positive. Nor does every overflow refuse: a positive wrapped duration still uses
+its resulting value under the same age guard. Raw reply/history and request time
+are never changed, and this path schedules no automatic refresh or HTTP retry.
+
+Independent executed host OpenJDK27 results from the existing
+[Java oracle](MexJavaNumericOracle.java) confirm the selected arithmetic vectors:
+
+| Signed seconds | Wrapped milliseconds | At request age >=2000ms |
+| --- | --- | --- |
+| 3600 | 3600000 | usable under the other lifetime |
+| 9223372036854775807 | -1000 | expired |
+| 9223372036854776 | -9223372036854775616 | expired |
+| 2305843009213693952 | 0 | expired |
+| 18446744073709552 | 384 | expired |
+| 18446744073711352 | 1800384 | usable under the other lifetime |
+
+These are host arithmetic reference results, not Android/APK execution. The DEX
+operation itself establishes signed64 wrap; no runtime Unicode digit table is
+needed for these ASCII cases. The new real-store regression applies every vector
+independently to ttl and auth_ttl while keeping the other at3600, checks eligibility
+before/after reopening, and verifies EVERY table and journal are unchanged.
+The384ms case catches both saturation and taking the minimum before converting.
+The positive wrapped vector prevents replacing this with a blanket overflow ban.
+Existing missing/invalid/BMP lifetime, delayed response, auth-shorter-than-route,
+legacy provenance and refresh-ownership cases remain in the workspace suite.
+
+**Still unknown/unported:** native deadline ADD overflow, exact elapsed-clock/
+reboot parity against the local wall-clock age model, complete TTL-versus-auth
+consumers, native refresh scheduling and live host/auth acceptance. This correction
+is specifically the seconds-to-ms conversion within the existing local guard;
+it does not establish complete native deadline parity or make a ban guarantee.
+Route selection runs before upload encryption/seed/reservation in the existing
+new-upload path. No live HTTP/account operation or state migration was performed.

@@ -426,7 +426,19 @@ fn route(store: &ProtocolStore) -> Result<(String, Zeroizing<String>)> {
                 invalid("saved media route lacks request time; refresh it explicitly")
             })?,
     );
-    if age < 0 || ttl.min(auth_ttl) <= 0 || age >= ttl.min(auth_ttl).saturating_mul(1000) {
+    // APK43.72 1t5.<init> performs each mul-long by1000 separately.
+    // Saturation (or selecting min before conversion) can turn a wrapped,
+    // already-expired lifetime into usable upload auth. Preserve the existing
+    // local positive-seconds/request-age policy, but compare converted units.
+    let ttl_ms = ttl.wrapping_mul(1000);
+    let auth_ttl_ms = auth_ttl.wrapping_mul(1000);
+    if age < 0
+        || ttl <= 0
+        || auth_ttl <= 0
+        || ttl_ms <= 0
+        || auth_ttl_ms <= 0
+        || age >= ttl_ms.min(auth_ttl_ms)
+    {
         return Err(invalid("saved media route expired; refresh it explicitly"));
     }
     let auth = attr("auth")
@@ -1332,6 +1344,81 @@ mod tests {
                     .unwrap(),
                 before
             );
+        }
+    }
+
+    #[test]
+    fn wrapped_media_lifetimes_cannot_be_extended_by_saturation_or_raw_minimum() {
+        use super::*;
+        use crate::{
+            binary::{Encoder, Node},
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("wrapped-route.redb");
+        let open = |create| {
+            ProtocolStore::open(OpenOptions {
+                path: path.clone(),
+                account_id: AccountId::new("wrapped-route-test").unwrap(),
+                key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([6; 32]))),
+                create,
+            })
+            .unwrap()
+        };
+        // Independent Java Long multiplication: MAX -> -1000; 2^61 ->0;
+        // 18446744073709552 ->384ms; 18446744073711352 ->1800384ms.
+        for (seconds, accepted) in [
+            ("3600", true),
+            ("9223372036854775807", false),
+            ("9223372036854776", false),
+            ("2305843009213693952", false),
+            ("18446744073709552", false),
+            ("18446744073711352", true),
+        ] {
+            for field in ["ttl", "auth_ttl"] {
+                let store = open(true);
+                let conn = Node::new("media_conn")
+                    .attr("ttl", "3600")
+                    .attr("auth_ttl", "3600")
+                    .attr(field, seconds)
+                    .attr("auth", "synthetic-auth")
+                    .children(vec![Node::new("host").attr("hostname", "mmg.whatsapp.net")]);
+                let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71())
+                    .encode(&Node::new("iq").attr("type", "result").children(vec![conn]))
+                    .unwrap();
+                store
+                    .write(|tx| {
+                        tx.put_json(
+                            Table::Checkpoints,
+                            b"media-route:synthetic",
+                            1,
+                            &serde_json::json!({"status":"result", "at":Timestamp::now().0,
+                        "requested_at":Timestamp::now().0-2000,"wire":wire}),
+                        )
+                    })
+                    .unwrap();
+                let snapshot = |store: &ProtocolStore| {
+                    store
+                        .read(|tx| {
+                            Ok((
+                                Table::ALL
+                                    .iter()
+                                    .map(|table| tx.scan(*table, 1, 100))
+                                    .collect::<Result<Vec<_>>>()?,
+                                tx.journal_head()?,
+                            ))
+                        })
+                        .unwrap()
+                };
+                let before = snapshot(&store);
+                assert_eq!(route(&store).is_ok(), accepted, "{field}={seconds}");
+                assert_eq!(snapshot(&store), before);
+                drop(store);
+                let store = open(false);
+                assert_eq!(route(&store).is_ok(), accepted, "reopen {field}={seconds}");
+                assert_eq!(snapshot(&store), before);
+            }
         }
     }
 

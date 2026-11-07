@@ -1,3 +1,10 @@
+2026-11-06 — **Stopped saturated media lifetimes from extending auth eligibility.**
+Upload route selection now wraps each seconds-to-ms product before applying its
+existing age/minimum guard, matching the pinned constructor operation. Tests cover
+negative/zero/short/usable positive wrapped durations for both fields, with all
+store tables/journal unchanged across reopen. No automatic refresh or HTTP call.
+[Evidence and remaining clock/deadline scope](docs/protocol/media-network-outcomes.md#wrapped-lifetime-conversion-before-local-route-eligibility-2026-11-06).
+
 2026-11-06 — **Unified retry number admission and required-field ordering.**
 Java-reference BMP counts/times now pass the shared parser and cannot hide a later
 missing required field. Independent host Java178-case fixture checks int/long

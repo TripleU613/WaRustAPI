@@ -1,4 +1,11 @@
 {
+  "x-media-route-wrapped-lifetimes": {
+    "x-cli": "existing media upload route selection; no new command or flag",
+    "x-transport": "separate signed64 wrapped ttl/auth_ttl millisecond conversion before local age/minimum eligibility",
+    "x-live": false,
+    "description": "Pinned1t5 constructor separately multiplies ttl/auth_ttl by1000 using wrapping DEX long arithmetic. Upload route selection no longer saturates the smaller raw lifetime; it converts both first, refuses wrapped expired/nonpositive durations, and retains usable positive-wrap values under existing positive-seconds/request-age policy. Independent executed host Java vectors drive real-store tests on both fields with every-table/journal preservation before/after reopen. Raw reply/provenance are unchanged; no automatic refresh/upload, HTTP route or account operation. Native base-add overflow, elapsed/reboot/full deadline-consumer/scheduling parity and live acceptance remain open.",
+    "evidence": "docs/protocol/media-network-outcomes.md"
+  },
   "x-retry-java-numeric-admission": {
     "x-cli": "existing retry parser/receive/responder paths; no new command or flag",
     "x-transport": "shared Java-reference positive numeric admission and later-required-field error precedence",
