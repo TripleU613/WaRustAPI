@@ -1,0 +1,56 @@
+
+# class: LX/0WJ;
+# extends: Ljava/lang/Object;
+
+.method public A0z(Z)  # .registers 7
+    # full signature: LX/0WJ;->A0z()Z
+    0000..0004  iget-object  v0, v6, LX/0WJ;->A0K:LX/0Yd;
+    0004..0008  const-string  v5, "SignalKyberPreKeyStore/hasSentToServerLastResortKyberPreKey last resort kyber prekey exists: "
+    0008..000c  iget-object  v0, v0, LX/0Yd;->A01:LX/0Xp;
+    000c..0012  invoke-virtual  {v0}, LX/0Xp;->A06()LX/0aq;
+    0012..0014  move-result-object  v4
+    0014..0018  iget-object  v3, v4, LX/0aq;->A02:LX/0KU;
+    0018..001c  const-string  v2, "SELECT EXISTS(SELECT 1 FROM kyber_prekeys WHERE last_resort_key = 1 AND sent_to_server = 1)"
+    001c..0020  const-string  v1, "SignalKyberPreKeyStore/hasSentToServerLastResortKyberPreKey"
+    0020..0022  const/4  v0, #0x0
+    0022..0028  invoke-virtual  {v3, v2, v1, v0}, LX/0KU;->A0A(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
+    0028..002a  move-result-object  v3
+    002a..0030  invoke-interface  {v3}, Landroid/database/Cursor;->moveToNext()Z
+    0030..0032  move-result  v0
+    0032..0034  const/4  v2, #0x0
+    0034..0038  if-nez  v0, +0x8
+    0038..003c  const-string  v0, "SignalKyberPreKeyStore/hasSentToServerLastResortKyberPreKey query failed"
+    003c..0042  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0042..0044  goto  +0x18
+    0044..004a  invoke-interface  {v3, v2}, Landroid/database/Cursor;->getInt(I)I
+    004a..004c  move-result  v1
+    004c..004e  const/4  v0, #0x1
+    004e..0052  if-ne  v1, v0, +0x3
+    0052..0054  const/4  v2, #0x1
+    0054..0058  new-instance  v0, Ljava/lang/StringBuilder;
+    0058..005e  invoke-direct  {v0, v5}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    005e..0064  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    0064..006a  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    006a..006c  move-result-object  v0
+    006c..0072  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0072..0078  invoke-interface  {v3}, Landroid/database/Cursor;->close()V
+    0078..007e  invoke-virtual  {v4}, LX/0aq;->close()V
+    007e..0080  return  v2
+    0080..0082  move-exception  v1
+    0082..0084  throw  v1
+    0084..0086  move-exception  v0
+    0086..008c  invoke-static  {v3, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    008c..008e  throw  v0
+    008e..0090  move-exception  v1
+    0090..0092  throw  v1
+    0092..0094  move-exception  v0
+    0094..009a  invoke-static  {v4, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    009a..009c  throw  v0
+    # exception table: 6 try range(s)
+    # catch <all> code_units 000a..0015 -> 0047
+    # catch <all> code_units 0015..0039 -> 0040
+    # catch <all> code_units 0039..003c -> 0047
+    # catch <all> code_units 0041..0042 -> 0042
+    # catch <all> code_units 0043..0047 -> 0047
+    # catch <all> code_units 0048..0049 -> 0049
+.end method

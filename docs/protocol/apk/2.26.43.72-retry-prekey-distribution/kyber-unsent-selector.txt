@@ -1,0 +1,74 @@
+
+# class: LX/0Yd;
+# extends: Ljava/lang/Object;
+
+.method public A02(LI)  # .registers 10
+    # full signature: LX/0Yd;->A02(I)Ljava/util/ArrayList;
+    0000..0004  new-instance  v4, Ljava/util/ArrayList;
+    0004..000a  invoke-direct  {v4}, Ljava/util/ArrayList;-><init>()V
+    000a..000e  iget-object  v0, v8, LX/0Yd;->A01:LX/0Xp;
+    000e..0014  invoke-virtual  {v0}, LX/0Xp;->A06()LX/0aq;
+    0014..0016  move-result-object  v5
+    0016..001a  iget-object  v7, v5, LX/0aq;->A02:LX/0KU;
+    001a..001e  const-string  v6, "SELECT prekey_id, record FROM kyber_prekeys WHERE sent_to_server = 0 AND direct_distribution = 0 AND last_resort_key = ? LIMIT ?"
+    001e..0024  invoke-static  {v9}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+    0024..0026  move-result-object  v3
+    0026..0028  const/4  v0, #0x2
+    0028..002c  new-array  v2, v0, [Ljava/lang/String;
+    002c..0030  const-string  v1, "0"
+    0030..0032  const/4  v0, #0x0
+    0032..0036  aput-object  v1, v2, v0
+    0036..0038  const/4  v0, #0x1
+    0038..003c  aput-object  v3, v2, v0
+    003c..0040  const-string  v0, "SignalKyberPreKeyStore/getUnsentKyberPreKeys"
+    0040..0046  invoke-virtual  {v7, v6, v0, v2}, LX/0KU;->A0A(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
+    0046..0048  move-result-object  v3
+    0048..004e  invoke-interface  {v3}, Landroid/database/Cursor;->moveToNext()Z
+    004e..0050  move-result  v0
+    0050..0054  if-eqz  v0, +0x1f
+    0054..0058  const-string  v0, "prekey_id"
+    0058..005e  invoke-interface  {v3, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    005e..0060  move-result  v0
+    0060..0066  invoke-interface  {v3, v0}, Landroid/database/Cursor;->getInt(I)I
+    0066..0068  move-result  v2
+    0068..006c  const-string  v0, "record"
+    006c..0072  invoke-interface  {v3, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0072..0074  move-result  v0
+    0074..007a  invoke-interface  {v3, v0}, Landroid/database/Cursor;->getBlob(I)[B
+    007a..007c  move-result-object  v1
+    007c..0080  new-instance  v0, LX/ERb;
+    0080..0086  invoke-direct  {v0, v2, v1}, LX/ERb;-><init>(I[B)V
+    0086..008c  invoke-virtual  {v4, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    008c..008e  goto  -0x22
+    008e..0094  invoke-interface  {v3}, Landroid/database/Cursor;->close()V
+    0094..009a  invoke-virtual  {v5}, LX/0aq;->close()V
+    009a..00a0  invoke-virtual  {v4}, Ljava/util/AbstractCollection;->size()I
+    00a0..00a2  move-result  v2
+    00a2..00a6  const-string  v0, "SignalKyberPreKeyStore/getUnsentKyberPreKeys has "
+    00a6..00aa  new-instance  v1, Ljava/lang/StringBuilder;
+    00aa..00b0  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00b0..00b6  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00b6..00ba  const-string  v0, " unsent kyber prekeys"
+    00ba..00c0  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00c0..00c6  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00c6..00c8  move-result-object  v0
+    00c8..00ce  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    00ce..00d0  return-object  v4
+    00d0..00d2  move-exception  v1
+    00d2..00d4  throw  v1
+    00d4..00d6  move-exception  v0
+    00d6..00dc  invoke-static  {v3, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    00dc..00de  throw  v0
+    00de..00e0  move-exception  v1
+    00e0..00e2  throw  v1
+    00e2..00e4  move-exception  v0
+    00e4..00ea  invoke-static  {v5, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    00ea..00ec  throw  v0
+    # exception table: 6 try range(s)
+    # catch <all> code_units 000b..0024 -> 006f
+    # catch <all> code_units 0024..0047 -> 0068
+    # catch <all> code_units 0047..004a -> 006f
+    # catch <all> code_units 0069..006a -> 006a
+    # catch <all> code_units 006b..006f -> 006f
+    # catch <all> code_units 0070..0071 -> 0071
+.end method

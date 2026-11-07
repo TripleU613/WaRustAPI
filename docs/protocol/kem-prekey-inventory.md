@@ -400,3 +400,15 @@ behind LR/status filtering and produce Matches. Four injected corruption cases
 preserve exact rows on refusal; existing published-signature controls remain.
 [Scope, reproducer and limits](prekey-count-notifications.md#pq-digest-rejects-corrupt-unselected-kem-rows-2026-11-05).
 No live request, resynchronization or replay authority.
+
+## Retry prekeys: direct-distribution ownership (2026-11-07)
+
+**Confirmed selected static:** native optional Kyber retry preparation selects an
+unsent ordinary non-directly-distributed key, marks direct_distribution and its
+local publication timestamp, and requires exactly one updated row before return.
+Ordinary prekey preparation has the corresponding ownership transition. Constructor
+mapping binds signed/ordinary/Kyber envelopes to keys/skey,key,pq respectively.
+Rust has KEM inventory/upload support but no carried-key retry/direct-distribution
+state; do not add bytes without durable selection, upload exclusion and no-replay
+ownership. [Evidence](apk/2.26.43.72-retry-prekey-distribution/README.md). This is
+research only; no key mutation, runtime request or server-acceptance claim.

@@ -1,5 +1,10 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
+**Retry key publication ownership traced.** Native carried prekeys are marked
+directly distributed before retry submission; selected key/skey/pq wire mapping
+is now bound. Rust integration still needs durable ownership and upload exclusion;
+no key emission or mutation added. [Evidence](outgoing-retry-receipts.md#retry-prekeys-direct-distribution-ownership-2026-11-07).
+
 **Stateless/PQ retry inputs traced.** Incoming enc flags feed native named job
 fields and conditional key preparation; Rust policy integration remains unproven.
 Native also has a minimal branch, so no speculative gate or key emission was

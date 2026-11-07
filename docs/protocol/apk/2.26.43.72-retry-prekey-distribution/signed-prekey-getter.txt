@@ -1,0 +1,15 @@
+
+# class: LX/0WJ;
+# extends: Ljava/lang/Object;
+
+.method public A0c(L)  # .registers 3
+    # full signature: LX/0WJ;->A0c()LX/ETs;
+    0000..0006  invoke-virtual  {v2}, LX/0WJ;->A0Z()LX/EtN;
+    0006..0008  move-result-object  v1
+    0008..000c  const-string  v0, "SignalCoordinator/loaded the latest signed pre key for sending"
+    000c..0012  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0012..0018  invoke-static  {v1}, LX/0WJ;->A05(LX/EtN;)LX/ETs;
+    0018..001a  move-result-object  v0
+    001a..001c  return-object  v0
+    # exception table: 0 try range(s)
+.end method

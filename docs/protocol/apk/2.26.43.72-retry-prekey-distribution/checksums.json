@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "bytes": 6962,
+    "sha256": "dd1cc672c54ed5f7f944d9128c0041b37605be1728d41a515b1a9a30c25c047c"
+  },
+  "exists-result-predicate.txt": {
+    "bytes": 303,
+    "sha256": "c7f2725247c4093379a0e529b10459a7bfc2b5aff97c878875eae4d59e4d1a6e"
+  },
+  "key-fields-constructor.txt": {
+    "bytes": 537,
+    "sha256": "e1ae2dc56582d35dcf9a164bebd1539d7cbc625817f13a8f7da9943dcdf90529"
+  },
+  "key-result-constructor.txt": {
+    "bytes": 474,
+    "sha256": "5c9f8e261d390bd76cc0d613250468a95bd0d972d1fcc16e7f1d6135453bb4aa"
+  },
+  "kyber-direct-key.txt": {
+    "bytes": 5678,
+    "sha256": "d7cc7a973fdd2b5147f2eca2972f6ad1fd3d0e1ac49419f31a055739ad4f3d13"
+  },
+  "kyber-public-envelope.txt": {
+    "bytes": 1779,
+    "sha256": "1c536b4ca6fa1618063c6eacde419cf4abae03f5c35dc25be84fc0c10bf48154"
+  },
+  "kyber-unsent-selector.txt": {
+    "bytes": 4117,
+    "sha256": "513ae1e2069257144d2505856e5015a21d511c9c91184745e24be337283c294d"
+  },
+  "ordinary-direct-key.txt": {
+    "bytes": 9142,
+    "sha256": "aa893f46f359daf39033807515f5f924cae4dca729e5951f85e0fb92965b5a8a"
+  },
+  "signed-prekey-getter.txt": {
+    "bytes": 612,
+    "sha256": "7d77891e3226513030e3a454b63848a4c7f2162f53c14c8a41d5acd10c45b2e5"
+  },
+  "uploaded-last-resort-predicate.txt": {
+    "bytes": 3014,
+    "sha256": "ddaaa0effc16926ccff56b9c6bdaf28557b70ea58f835e0adaa58199c8b9cb2a"
+  }
+}

@@ -1,4 +1,11 @@
 {
+  "x-retry-prekey-direct-distribution-static-boundary": {
+    "x-cli": "research through existing APK inspection commands; no new command or flag",
+    "x-transport": "no runtime change; native retry key ownership and carried keys wire shape retained",
+    "x-live": false,
+    "description": "Native PQ policy distinguishes feature-disabled, uploaded last-resort, local last-resort and absent states. Optional ordinary Kyber getter selects unsent/not-directly-distributed row, marks direct_distribution and local upload_timestamp, and returns only after exactly one row update. Ordinary prekeys share publication ownership. Constructors map signed/ordinary/Kyber to retry keys/skey,key,pq. Current Rust KEM inventory exists but carried-key retry/direct-distribution state does not; safe integration needs durable reservation, upload exclusion, serialization and no replay. No key mutation, request, new retry or live traffic.",
+    "evidence": "docs/protocol/apk/2.26.43.72-retry-prekey-distribution/README.md"
+  },
   "x-enc-stateless-pq-retry-static-boundary": {
     "x-cli": "research through existing APK inspection commands; no new command or flag",
     "x-transport": "no runtime change; retained stateless/PQ retry key-preparation policy boundary",

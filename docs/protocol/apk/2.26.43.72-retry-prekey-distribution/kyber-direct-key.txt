@@ -1,0 +1,105 @@
+
+# class: LX/0WJ;
+# extends: Ljava/lang/Object;
+
+.method public A0a(L)  # .registers 19
+    # full signature: LX/0WJ;->A0a()LX/ETs;
+    0000..0004  move-object/from16  v1, v18
+    0004..0008  iget-object  v0, v1, LX/0WJ;->A0I:LX/0Wk;
+    0008..000e  invoke-virtual  {v0}, LX/0Wk;->A04()LX/FjI;
+    000e..0010  move-result-object  v11
+    0010..0014  iget-object  v0, v1, LX/0WJ;->A01:LX/0Yl;
+    0014..001a  invoke-virtual  {v0}, LX/0Yl;->A06()V
+    001a..001e  iget-object  v0, v0, LX/0Yl;->A03:LX/0Yj;
+    001e..0022  iget-object  v5, v0, LX/0Yj;->A06:LX/0Yd;
+    0022..0024  const/4  v0, #0x1
+    0024..002a  invoke-virtual  {v5, v0}, LX/0Yd;->A02(I)Ljava/util/ArrayList;
+    002a..002c  move-result-object  v0
+    002c..0032  invoke-static  {v0}, LX/07Z;->A0v(Ljava/util/List;)Ljava/lang/Object;
+    0032..0034  move-result-object  v3
+    0034..0038  check-cast  v3, LX/ERb;
+    0038..003a  const/4  v10, #0x0
+    003a..003e  if-eqz  v3, +0x80
+    003e..0042  iget  v8, v3, LX/ERb;->A00:I
+    0042..0046  iget-object  v0, v3, LX/ERb;->A01:[B
+    0046..004c  invoke-static  {v0}, LX/EqE;->A01([B)LX/EQ8;
+    004c..004e  move-result-object  v0
+    004e..0054  invoke-static  {v0, v8}, LX/0Yj;->A00(LX/EQ8;I)LX/ETs;
+    0054..0056  move-result-object  v9
+    0056..005a  iget-object  v0, v5, LX/0Yd;->A01:LX/0Xp;
+    005a..0060  invoke-virtual  {v0}, LX/0Xp;->A07()LX/0aq;
+    0060..0062  move-result-object  v3
+    0062..0064  const/4  v7, #0x2
+    0064..0068  new-instance  v13, Landroid/content/ContentValues;
+    0068..006e  invoke-direct  {v13, v7}, Landroid/content/ContentValues;-><init>(I)V
+    006e..0072  const-string  v1, "direct_distribution"
+    0072..0074  const/4  v4, #0x1
+    0074..007a  invoke-static  {v4}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    007a..007c  move-result-object  v0
+    007c..0082  invoke-virtual  {v13, v1, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Boolean;)V
+    0082..0088  const-string/jumbo  v2, "upload_timestamp"
+    0088..008c  iget-object  v0, v5, LX/0Yd;->A00:LX/08q;
+    008c..0092  invoke-static  {v0}, LX/08q;->A00(LX/08q;)J
+    0092..0094  move-result-wide  v5
+    0094..0098  const-wide/16  v0, #0x3e8
+    0098..009a  div-long/2addr  v5, v0
+    009a..00a0  invoke-static  {v5, v6}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    00a0..00a2  move-result-object  v0
+    00a2..00a8  invoke-virtual  {v13, v2, v0}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+    00a8..00ac  iget-object  v12, v3, LX/0aq;->A02:LX/0KU;
+    00ac..00b0  const-string  v14, "kyber_prekeys"
+    00b0..00b4  const-string  v15, "prekey_id=? AND last_resort_key=?"
+    00b4..00ba  invoke-static  {v8}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+    00ba..00bc  move-result-object  v2
+    00bc..00c0  new-array  v1, v7, [Ljava/lang/String;
+    00c0..00c2  const/4  v0, #0x0
+    00c2..00c6  aput-object  v2, v1, v0
+    00c6..00ca  const-string  v0, "0"
+    00ca..00ce  aput-object  v0, v1, v4
+    00ce..00d2  const-string  v16, "SignalKyberPreKeyStore/markKyberPreKeyAsDirectDistribution"
+    00d2..00d6  move-object/from16  v17, v1
+    00d6..00dc  invoke-virtual/range  {v12..v17}, LX/0KU;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+    00dc..00de  move-result  v0
+    00de..00e2  if-eq  v0, v4, +0x3
+    00e2..00e4  const/4  v4, #0x0
+    00e4..00ea  invoke-virtual  {v3}, LX/0aq;->close()V
+    00ea..00ee  if-nez  v4, +0x27
+    00ee..00f2  const-string  v0, "SignalProtocolStore/kyber prekey Failed to mark key as direct distribution, not sending kyber pre-key with retry receipt"
+    00f2..00f8  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    00f8..00fa  goto  +0x21
+    00fa..00fc  move-exception  v1
+    00fc..00fe  throw  v1
+    00fe..0100  move-exception  v0
+    0100..0106  invoke-static  {v3, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    0106..0108  throw  v0
+    0108..010a  move-exception  v2
+    010a..010e  const-string  v1, "SignalProtocolStore/kyber prekey error reading kyber prekey "
+    010e..0112  new-instance  v0, Ljava/lang/StringBuilder;
+    0112..0118  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0118..011c  iget  v1, v3, LX/ERb;->A00:I
+    011c..0122  invoke-virtual  {v0, v1}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0122..0128  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0128..012a  move-result-object  v0
+    012a..0130  invoke-static  {v0, v2}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0130..0136  invoke-virtual  {v5, v1}, LX/0Yd;->Bei(I)V
+    0136..0138  move-object  v9, v10
+    0138..013a  move-object  v10, v9
+    013a..0140  invoke-virtual  {v11}, LX/FjI;->close()V
+    0140..0142  return-object  v10
+    0142..0144  move-exception  v1
+    0144..014a  invoke-virtual  {v11}, LX/FjI;->close()V
+    014a..014c  throw  v1
+    014c..014e  move-exception  v0
+    014e..0154  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    0154..0156  throw  v1
+    # exception table: 8 try range(s)
+    # catch <all> code_units 0008..001f -> 00a1
+    # catch Ljava/lang/Exception; code_units 001f..002b -> 0084
+    # catch <all> code_units 001f..002b -> 00a1
+    # catch <all> code_units 002b..0031 -> 00a1
+    # catch <all> code_units 0031..0072 -> 007d
+    # catch <all> code_units 0072..007d -> 00a1
+    # catch <all> code_units 007e..007f -> 007f
+    # catch <all> code_units 007f..009d -> 00a1
+    # catch <all> code_units 00a2..00a5 -> 00a6
+.end method
