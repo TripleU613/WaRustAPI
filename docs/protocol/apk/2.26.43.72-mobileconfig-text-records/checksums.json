@@ -1,0 +1,46 @@
+{
+  "README.md": {
+    "bytes": 6776,
+    "sha256": "ff7568716154cac0c36965fb45c636966d46805bb7fd4c464c800ce814278d49"
+  },
+  "derive-record-fields.py": {
+    "bytes": 2471,
+    "sha256": "cbab0c61d7a7658f473aaa8e0f33a8a80dd48a22f4a8340d0ceb590328f9473d"
+  },
+  "fields.json": {
+    "bytes": 3247,
+    "sha256": "ba1695e01f10e140b80dd8abc6417b34c43a0a8209da32f184832cfbb8aec3e5"
+  },
+  "numeric-converter-entry.txt": {
+    "bytes": 1316,
+    "sha256": "474a1e667ed4714f04a79280517e10b2390554ea4bce60fc9f22856515a92d52"
+  },
+  "rea-record-construction.json": {
+    "bytes": 10785,
+    "sha256": "6bf2d3d09596d4a5c5ffe5dc636a65c9f8ac05edf3b72f942a5fece100e8fff4"
+  },
+  "record-copy.txt": {
+    "bytes": 763,
+    "sha256": "45431159e17177ec4d0403fd8f88ac504cdbec2d10c49716cc90ebd263864131"
+  },
+  "record-string-transfer.txt": {
+    "bytes": 1490,
+    "sha256": "929a7118e14140b3e73eb7d5f8cb1e1359ee4ce219b6a6194cf7d34d40aac0e9"
+  },
+  "schema-header-adjustment-entry.txt": {
+    "bytes": 1348,
+    "sha256": "4b2ed3642c1e411fdd8f8a79390ed41c752d458b6d9126babfabad483c39447b"
+  },
+  "text-record-path.txt": {
+    "bytes": 22139,
+    "sha256": "81bf6f63d8ac68a6062ed14b56c84f46bc05ff1ba36a82243435812ceeb1bbf0"
+  },
+  "text-termination.txt": {
+    "bytes": 1566,
+    "sha256": "c9d69a22f379665f5ef00e62011e5a70d0fd95ddadedad0d5d98b5cc9e0dbd7c"
+  },
+  "trailing-cr-trim.txt": {
+    "bytes": 1178,
+    "sha256": "8210abd0ab912ef853454cfcbdda65700fa06ea3ff2788b762c7c40961f953ba"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "evidence_id": "ev_82749bb1cefed2f8fbeefe6526284dbbf602991be037c18c0a845070f5bf117d",
+  "subject": {
+    "name": "libmobileconfig-jni.so",
+    "digest": {
+      "sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so",
+    "format": "unknown",
+    "architecture": null
+  },
+  "provider": {
+    "id": "rizin",
+    "name": "Rizin",
+    "version": null
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.reverse-engineering.command-observation",
+  "operation": "execute_rizin_command",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so",
+    "command": "e scr.color=0; pd 64 @ 0xbbae0",
+    "provider_executable": "rizin",
+    "command_arguments": [
+      "-N",
+      "-q",
+      "-c",
+      "e scr.color=0; pd 64 @ 0xbbae0",
+      "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so"
+    ]
+  },
+  "raw_result": {
+    "stdout": "            0x000bbae0      ldr   w8, [x19, 0x24]                      ; [0x24:4]=0\n            0x000bbae4      ldr   w1, [x19, 0x180]                     ; [0x180:4]=0x240 \"p.\" ; \"@\\U00000002\"\n            0x000bbae8      add   x0, x19, 0x110\n            0x000bbaec      add   w8, w8, 1\n            0x000bbaf0      str   w8, [x19, 0x24]\n            0x000bbaf4      bl    0xbfb1c\n            0x000bbaf8      ldr   x8, [sp, 0x10]                       ; [0x10:4]=0xb70003\n            0x000bbafc      cmp   x8, x0\n        ,=< 0x000bbb00      b.ne  0xbbb14\n        |   0x000bbb04      ldr   x1, [sp, 0x18]                       ; [0x18:4]=0\n        |   0x000bbb08      add   x0, x19, 0x110\n        |   0x000bbb0c      bl    0xbe3ec\n        |   0x000bbb10      bl    0xbe490\n        `-> 0x000bbb14      ldr   x1, [sp, 0x18]                       ; [0x18:4]=0\n            0x000bbb18      add   x0, x19, 0x110\n            0x000bbb1c      bl    0xbe3ec\n            0x000bbb20      str   w26, [sp, 0x210]\n            0x000bbb24      add   x1, sp, 0x210\n            0x000bbb28      bl    0xbe7bc\n            0x000bbb2c      add   x0, sp, 0x210\n            0x000bbb30      add   x1, x19, 0x160\n            0x000bbb34      bl    method.std::__ndk1::basic_string_char__std::__ndk1::char_traits_char___std::__ndk1::allocator_char___.basic_string_std::__ndk1::basic_string_char__std::__ndk1::char_traits_char___std::__ndk1::allocator_char____const\n            0x000bbb38      add   x8, sp, 0x210\n            0x000bbb3c      add   x1, sp, 0x70\n            0x000bbb40      add   x0, x8, 0x18\n            0x000bbb44      bl    method.std::__ndk1::basic_string_char__std::__ndk1::char_traits_char___std::__ndk1::allocator_char___.basic_string_std::__ndk1::basic_string_char__std::__ndk1::char_traits_char___std::__ndk1::allocator_char____const\n            0x000bbb48      ubfx  w8, w27, 2, 3\n            0x000bbb4c      ldr   w9, [x19, 0x178]                     ; [0x178:4]=0x240 \"p.\" ; \"@\\U00000002\"\n            0x000bbb50      ldr   w10, [x19, 0x180]                    ; [0x180:4]=0x240 \"p.\" ; \"@\\U00000002\"\n            0x000bbb54      cmp   w8, 6\n            0x000bbb58      str   w9, [sp, 0x240]\n            0x000bbb5c      str   w10, [sp, 0x244]\n            0x000bbb60      str   w9, [sp, 0x248]\n        ,=< 0x000bbb64      b.hs  0xbbe58\n        |   0x000bbb68      ldr   x11, [sp, 8]                         ; [0x8:4]=0\n        |   0x000bbb6c      strb  w8, [sp, 0x250]\n        |   0x000bbb70      str   w22, [sp, 0x254]\n        |   0x000bbb74      ldr   w9, [x11, w8, uxtw 2]\n        |   0x000bbb78      stur  w26, [x29, -0x50]\n        |   0x000bbb7c      add   w10, w9, 1\n        |   0x000bbb80      str   w10, [x11, w8, uxtw 2]\n        |   0x000bbb84      and   w8, w27, 0x80000001\n        |   0x000bbb88      cmp   w8, 1\n        |   0x000bbb8c      str   w9, [sp, 0x24c]\n        |   0x000bbb90      ubfx  w9, w27, 6, 1\n        |   0x000bbb94      cset  w8, eq\n        |   0x000bbb98      strb  w8, [sp, 0x258]\n        |   0x000bbb9c      ldr   w8, [x19, 0x184]                     ; [0x184:4]=0\n        |   0x000bbba0      strb  w9, [sp, 0x259]\n        |   0x000bbba4      str   w8, [sp, 0x25c]\n        |   0x000bbba8      add   x0, x19, 0xe8\n        |   0x000bbbac      sub   x1, x29, 0x50\n        |   0x000bbbb0      bl    0xbe260\n        |   0x000bbbb4      add   x1, sp, 0x210\n        |   0x000bbbb8      bl    0xbe52c\n        |   0x000bbbbc      add   x0, sp, 0x210\n        |   0x000bbbc0      bl    0x5fa3c\n       ,==< 0x000bbbc4      tbz   w27, 5, 0xbbc48\n       ||   0x000bbbc8      ldr   x8, [x19, 0x28]                      ; [0x28:4]=0xcfad8\n       ||   0x000bbbcc      str   w26, [sp, 0x54]\n       ||   0x000bbbd0      ldr   x27, [x8, 0x68]                      ; [0x68:4]=0x230\n       ||   0x000bbbd4      add   x0, x19, 0xe8\n       ||   0x000bbbd8      add   x1, sp, 0x54\n       ||   0x000bbbdc      bl    0xbe260\n",
+    "stderr": "ERROR: Cannot determine entrypoint, using 0x0004c460.\n",
+    "exit_code": 0,
+    "signal": null,
+    "output_truncated": false,
+    "completion_status": "complete",
+    "artifact_sha256_after": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+    "artifact_changed": false
+  },
+  "normalized_result": {
+    "stdout": "            0x000bbae0      ldr   w8, [x19, 0x24]                      ; [0x24:4]=0\n            0x000bbae4      ldr   w1, [x19, 0x180]                     ; [0x180:4]=0x240 \"p.\" ; \"@\\U00000002\"\n            0x000bbae8      add   x0, x19, 0x110\n            0x000bbaec      add   w8, w8, 1\n            0x000bbaf0      str   w8, [x19, 0x24]\n            0x000bbaf4      bl    0xbfb1c\n            0x000bbaf8      ldr   x8, [sp, 0x10]                       ; [0x10:4]=0xb70003\n            0x000bbafc      cmp   x8, x0\n        ,=< 0x000bbb00      b.ne  0xbbb14\n        |   0x000bbb04      ldr   x1, [sp, 0x18]                       ; [0x18:4]=0\n        |   0x000bbb08      add   x0, x19, 0x110\n        |   0x000bbb0c      bl    0xbe3ec\n        |   0x000bbb10      bl    0xbe490\n        `-> 0x000bbb14      ldr   x1, [sp, 0x18]                       ; [0x18:4]=0\n            0x000bbb18      add   x0, x19, 0x110\n            0x000bbb1c      bl    0xbe3ec\n            0x000bbb20      str   w26, [sp, 0x210]\n            0x000bbb24      add   x1, sp, 0x210\n            0x000bbb28      bl    0xbe7bc\n            0x000bbb2c      add   x0, sp, 0x210\n            0x000bbb30      add   x1, x19, 0x160\n            0x000bbb34      bl    method.std::__ndk1::basic_string_char__std::__ndk1::char_traits_char___std::__ndk1::allocator_char___.basic_string_std::__ndk1::basic_string_char__std::__ndk1::char_traits_char___std::__ndk1::allocator_char____const\n            0x000bbb38      add   x8, sp, 0x210\n            0x000bbb3c      add   x1, sp, 0x70\n            0x000bbb40      add   x0, x8, 0x18\n            0x000bbb44      bl    method.std::__ndk1::basic_string_char__std::__ndk1::char_traits_char___std::__ndk1::allocator_char___.basic_string_std::__ndk1::basic_string_char__std::__ndk1::char_traits_char___std::__ndk1::allocator_char____const\n            0x000bbb48      ubfx  w8, w27, 2, 3\n            0x000bbb4c      ldr   w9, [x19, 0x178]                     ; [0x178:4]=0x240 \"p.\" ; \"@\\U00000002\"\n            0x000bbb50      ldr   w10, [x19, 0x180]                    ; [0x180:4]=0x240 \"p.\" ; \"@\\U00000002\"\n            0x000bbb54      cmp   w8, 6\n            0x000bbb58      str   w9, [sp, 0x240]\n            0x000bbb5c      str   w10, [sp, 0x244]\n            0x000bbb60      str   w9, [sp, 0x248]\n        ,=< 0x000bbb64      b.hs  0xbbe58\n        |   0x000bbb68      ldr   x11, [sp, 8]                         ; [0x8:4]=0\n        |   0x000bbb6c      strb  w8, [sp, 0x250]\n        |   0x000bbb70      str   w22, [sp, 0x254]\n        |   0x000bbb74      ldr   w9, [x11, w8, uxtw 2]\n        |   0x000bbb78      stur  w26, [x29, -0x50]\n        |   0x000bbb7c      add   w10, w9, 1\n        |   0x000bbb80      str   w10, [x11, w8, uxtw 2]\n        |   0x000bbb84      and   w8, w27, 0x80000001\n        |   0x000bbb88      cmp   w8, 1\n        |   0x000bbb8c      str   w9, [sp, 0x24c]\n        |   0x000bbb90      ubfx  w9, w27, 6, 1\n        |   0x000bbb94      cset  w8, eq\n        |   0x000bbb98      strb  w8, [sp, 0x258]\n        |   0x000bbb9c      ldr   w8, [x19, 0x184]                     ; [0x184:4]=0\n        |   0x000bbba0      strb  w9, [sp, 0x259]\n        |   0x000bbba4      str   w8, [sp, 0x25c]\n        |   0x000bbba8      add   x0, x19, 0xe8\n        |   0x000bbbac      sub   x1, x29, 0x50\n        |   0x000bbbb0      bl    0xbe260\n        |   0x000bbbb4      add   x1, sp, 0x210\n        |   0x000bbbb8      bl    0xbe52c\n        |   0x000bbbbc      add   x0, sp, 0x210\n        |   0x000bbbc0      bl    0x5fa3c\n       ,==< 0x000bbbc4      tbz   w27, 5, 0xbbc48\n       ||   0x000bbbc8      ldr   x8, [x19, 0x28]                      ; [0x28:4]=0xcfad8\n       ||   0x000bbbcc      str   w26, [sp, 0x54]\n       ||   0x000bbbd0      ldr   x27, [x8, 0x68]                      ; [0x68:4]=0x230\n       ||   0x000bbbd4      add   x0, x19, 0xe8\n       ||   0x000bbbd8      add   x1, sp, 0x54\n       ||   0x000bbbdc      bl    0xbe260\n",
+    "stderr": "ERROR: Cannot determine entrypoint, using 0x0004c460.\n",
+    "exit_code": 0,
+    "signal": null,
+    "output_truncated": false,
+    "completion_status": "complete",
+    "artifact_sha256_after": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+    "artifact_changed": false
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "The executable version and supported formats are reported as unknown because no reliable version probe was performed.",
+    "A non-zero process exit is preserved as an observed command result.",
+    "Rizin commands and retained plugins may read files or access network resources outside the selected artifact; those external inputs are not bound to Evidence.",
+    "When both are available, pre-run and post-run digests detect artifact changes across the provider call but cannot prove the exact bytes consumed during the call."
+  ],
+  "relationship_coverage": null,
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so"
+    }
+  ],
+  "evidence_links": []
+}

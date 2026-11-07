@@ -1,0 +1,110 @@
+{
+  "member_sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+  "selected_calls": {
+    "0xbb630": "0xbc410",
+    "0xbb824": "0xc7810",
+    "0xbbb34": "0xcca30",
+    "0xbbb44": "0xcca30",
+    "0xbbbb8": "0xbe52c"
+  },
+  "literals": {
+    "0x1b4a2": "END",
+    "0x1bccd": "failed_to_find_end_2",
+    "0x192c4": "wrong_token_size_while_parsing",
+    "0x18700": "wrong_token_size_while_parsing_param",
+    "0x192e3": "empty_line_while_parsing"
+  },
+  "record_layout": {
+    "0x00": "group string copy",
+    "0x18": "parameter string copy",
+    "0x30": "loader+0x178 accumulated parameter word",
+    "0x34": "loader+0x180 group ordinal",
+    "0x38": "same accumulated parameter word",
+    "0x3c": "previous selected type counter",
+    "0x40": "(flags >> 2) & 7, requires <6 on this path",
+    "0x44": "selected local version/unit word w22; producer conditions retained, semantic name unproven",
+    "0x48": "(flags & 0x80000001) == 1",
+    "0x49": "flags bit6",
+    "0x4c": "loader+0x184 wire config ID"
+  },
+  "lookup_key": "(accumulated_parameter_word OR (config_ID << 12)) mod 2^32",
+  "authority": "analyst-derived scalar projection over supplied flags/counters, not a decoder, actual record extraction or APK execution",
+  "synthetic_flag_cases": {
+    "0x0": {
+      "type": 0,
+      "in_model_domain": true,
+      "record_word3c_slot": 9,
+      "counter_after": 10,
+      "record_byte40": 0,
+      "record_byte48": 0,
+      "record_byte49": 0,
+      "bit5_optional_followup": false
+    },
+    "0x4": {
+      "type": 1,
+      "in_model_domain": true,
+      "record_word3c_slot": 9,
+      "counter_after": 10,
+      "record_byte40": 1,
+      "record_byte48": 0,
+      "record_byte49": 0,
+      "bit5_optional_followup": false
+    },
+    "0x5": {
+      "type": 1,
+      "in_model_domain": true,
+      "record_word3c_slot": 9,
+      "counter_after": 10,
+      "record_byte40": 1,
+      "record_byte48": 1,
+      "record_byte49": 0,
+      "bit5_optional_followup": false
+    },
+    "0x44": {
+      "type": 1,
+      "in_model_domain": true,
+      "record_word3c_slot": 9,
+      "counter_after": 10,
+      "record_byte40": 1,
+      "record_byte48": 0,
+      "record_byte49": 1,
+      "bit5_optional_followup": false
+    },
+    "0x64": {
+      "type": 1,
+      "in_model_domain": true,
+      "record_word3c_slot": 9,
+      "counter_after": 10,
+      "record_byte40": 1,
+      "record_byte48": 0,
+      "record_byte49": 1,
+      "bit5_optional_followup": true
+    },
+    "0x80000005": {
+      "type": 1,
+      "in_model_domain": true,
+      "record_word3c_slot": 9,
+      "counter_after": 10,
+      "record_byte40": 1,
+      "record_byte48": 0,
+      "record_byte49": 0,
+      "bit5_optional_followup": false
+    },
+    "0x14": {
+      "type": 5,
+      "in_model_domain": true,
+      "record_word3c_slot": 9,
+      "counter_after": 10,
+      "record_byte40": 5,
+      "record_byte48": 0,
+      "record_byte49": 0,
+      "bit5_optional_followup": false
+    },
+    "0x18": {
+      "type": 6,
+      "in_model_domain": false,
+      "native_branch": "0xbbe58; outcome not modeled"
+    }
+  },
+  "remaining": "actual text source, complete line grammar/conversion/errors, finalized vector and alternate binary path remain untraced"
+}

@@ -94,3 +94,8 @@ selected helper boundary. Register-relative annotations are not runtime memory.
 code, original 0x50-byte record population, configured path producer, I/O failures,
 replacement/account ownership and response persistence/cache activation. No Rust
 runtime, sender, timing or account state changed.
+
+Follow-up: [fallback text-record construction](../2.26.43.72-mobileconfig-text-records/README.md)
+now traces one producer of the 0x50-byte record layout. This is a separate loader
+path, not a demonstrated conversion of eight-byte binary entries. Final vector
+construction, real selected input and runtime decoder routing remain unresolved.

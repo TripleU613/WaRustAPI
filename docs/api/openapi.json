@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-text-records-evidence": {
+    "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-text-records/derive-record-fields.py <pinned-library>; offline scalar projection only",
+    "x-transport": "research only; text-record construction, not an enabled decoder or wire sender",
+    "x-live": false,
+    "description": "Confirmed selected static MobileConfig fallback text loader constructs the 0x50-byte record field layout used by grouping, selection and checksums, including separate group/wire IDs, per-type slots and flags. Lookup keys use accumulated parameter OR config-ID-shift12; temporary strings transfer into map records. Completion byte and diagnostics remain distinct. Real input, final vector conversion, merges and persistence remain unresolved.",
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-text-records/README.md"
+  },
   "x-mobileconfig-native-param-reader-evidence": {
     "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-native-param-reader/inspect-reader.py <pinned-library> <pinned-apk>; offline byte projection only",
     "x-transport": "research only; native file-helper validation, not wire or whole-loader acceptance",

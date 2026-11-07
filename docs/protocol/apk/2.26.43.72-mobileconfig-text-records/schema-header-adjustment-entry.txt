@@ -1,0 +1,35 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   be090:      	paciasp
+   be094:      	sub	sp, sp, #0xb0
+   be098:      	stp	x29, x30, [sp, #0x70]
+   be09c:      	str	x23, [sp, #0x80]
+   be0a0:      	bl	0xcb8d0 <JNI_OnLoad+0x5c730>
+   be0a4:      	add	x29, sp, #0x70
+   be0a8:      	mrs	x22, TPIDR_EL0
+   be0ac:      	bl	0xcb478 <JNI_OnLoad+0x5c2d8>
+   be0b0:      	bl	0xcae5c <JNI_OnLoad+0x5bcbc>
+   be0b4:      	ldrb	w8, [x0, #0x71]
+   be0b8:      	cmp	w8, #0x1
+   be0bc:      	b.ne	0xbe138 <JNI_OnLoad+0x4ef98>
+   be0c0:      	ldr	x23, [x19, #0x28]
+   be0c4:      	mov	w1, #0x3a               // =58
+   be0c8:      	mov	x2, xzr
+   be0cc:      	add	x0, x23, #0x20
+   be0d0:      	bl	0xcccc0 <_ZNKSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE4findEcm@plt>
+   be0d4:      	cmn	x0, #0x1
+   be0d8:      	b.eq	0xbe190 <JNI_OnLoad+0x4eff0>
+   be0dc:      	mov	x21, x0
+   be0e0:      	sub	x0, x29, #0x20
+   be0e4:      	add	x1, x23, #0x20
+   be0e8:      	add	x3, x21, #0x1
+   be0ec:      	mov	x2, xzr
+   be0f0:      	bl	0x5dc4c <.text+0x117ec>
+   be0f4:      	add	x0, sp, #0x20
+   be0f8:      	add	x1, x23, #0x20
+   be0fc:      	add	x2, x21, #0x1
+   be100:      	mov	x3, #-0x1               // =-1

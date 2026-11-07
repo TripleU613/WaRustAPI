@@ -1,0 +1,37 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   bbddc:      	mov	w8, #0x1                // =1
+   bbde0:      	strb	w8, [x19, #0x50]
+   bbde4:      	bl	0xcacdc <JNI_OnLoad+0x5bb3c>
+   bbde8:      	add	x0, x19, #0x58
+   bbdec:      	bl	0x5d1ec <.text+0x10d8c>
+   bbdf0:      	b	0xbbe0c <JNI_OnLoad+0x4cc6c>
+   bbdf4:      	adrp	x1, 0x19000
+   bbdf8:      	add	x1, x1, #0x2e3
+   bbdfc:      	add	x0, x19, #0x58
+   bbe00:      	bl	0x5d1ec <.text+0x10d8c>
+   bbe04:      	mov	w21, wzr
+   bbe08:      	strb	w21, [x19, #0x50]
+   bbe0c:      	add	x0, sp, #0xa0
+   bbe10:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   bbe14:      	add	x0, sp, #0x38
+   bbe18:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   bbe1c:      	add	x0, sp, #0xc0
+   bbe20:      	bl	0xbc384 <JNI_OnLoad+0x4d1e4>
+   bbe24:      	add	x0, sp, #0xc0
+   bbe28:      	bl	0xbce20 <JNI_OnLoad+0x4dc80>
+   bbe2c:      	add	x0, sp, #0x20
+   bbe30:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   bbe34:      	ldr	x8, [x24, #0x28]
+   bbe38:      	bl	0xcab48 <JNI_OnLoad+0x5b9a8>
+   bbe3c:      	b.ne	0xbbfa4 <JNI_OnLoad+0x4ce04>
+   bbe40:      	add	sp, sp, #0x3b0
+   bbe44:      	bl	0xca008 <JNI_OnLoad+0x5ae68>
+   bbe48:      	ldp	x29, x30, [sp], #0x60
+   bbe4c:      	autiasp
+   bbe50:      	ret
+   bbe54:      	brk	#0x1

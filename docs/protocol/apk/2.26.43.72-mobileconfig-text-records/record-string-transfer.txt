@@ -1,0 +1,45 @@
+Bounded transfer helper 0x5ce30..0x5ce78
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000004c460 <.text>:
+   5ce30:      	paciasp
+   5ce34:      	stp	x29, x30, [sp, #-0x20]!
+   5ce38:      	stp	x20, x19, [sp, #0x10]
+   5ce3c:      	mov	x29, sp
+   5ce40:      	ldrb	w8, [x0]
+   5ce44:      	bl	0xcb478 <JNI_OnLoad+0x5c2d8>
+   5ce48:      	tbz	w8, #0x0, 0x5ce54 <.text+0x109f4>
+   5ce4c:      	ldr	x0, [x19, #0x10]
+   5ce50:      	bl	0xccf30 <__wrap__ZdlPv@plt>
+   5ce54:      	bl	0xcb7ac <JNI_OnLoad+0x5c60c>
+   5ce58:      	mov	x0, x19
+   5ce5c:      	str	x8, [x19, #0x10]
+   5ce60:      	str	q0, [x19]
+   5ce64:      	strh	wzr, [x20]
+   5ce68:      	ldp	x20, x19, [sp, #0x10]
+   5ce6c:      	ldp	x29, x30, [sp], #0x20
+   5ce70:      	autiasp
+   5ce74:      	ret
+Bounded transfer helper 0xcb478..0xcb484
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   cb478:      	mov	x19, x0
+   cb47c:      	mov	x20, x1
+   cb480:      	ret
+Bounded transfer helper 0xcb7ac..0xcb7b8
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   cb7ac:      	ldr	x8, [x20, #0x10]
+   cb7b0:      	ldr	q0, [x20]
+   cb7b4:      	ret
