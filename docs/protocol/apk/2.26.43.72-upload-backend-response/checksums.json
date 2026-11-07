@@ -1,0 +1,30 @@
+{
+  "README.md": {
+    "bytes": 5215,
+    "sha256": "26a65c9e53da317a204091c7341644b3201be0142bdbe9adad9065d02a6a7b2b"
+  },
+  "base-constructor-callers.txt": {
+    "bytes": 168,
+    "sha256": "b05c46052c7093e64224429cae531d68280b837e3bd8d68ae8dd0bac5a0c5b9b"
+  },
+  "reproduce.py": {
+    "bytes": 1730,
+    "sha256": "43371964cfb5028e74d1ea6d317c520d2fac6f5cb73e302ee6d9d23f82006cd2"
+  },
+  "tigon-builder-constructors.txt": {
+    "bytes": 12970,
+    "sha256": "3554f891a0025752741f919c54cf85919b2ec327b51ff849261e048708c048e6"
+  },
+  "tigon-status-writers.txt": {
+    "bytes": 82,
+    "sha256": "8f080d2c2b9f26f44aec116a804d80c79cad12ccfbb7384ddcf2d86840363468"
+  },
+  "urlconnection-factory.txt": {
+    "bytes": 634,
+    "sha256": "db85f2f0d9a7aec7a30d1605418e36b95b7ff36885834ceca4126089e66a58b7"
+  },
+  "urlconnection-open.txt": {
+    "bytes": 1392,
+    "sha256": "5d4c4eb640d8d27d190639090928dd7b6b2db0831b6a455929ccdd8026426bb5"
+  }
+}

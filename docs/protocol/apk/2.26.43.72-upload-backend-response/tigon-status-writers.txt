@@ -1,0 +1,2 @@
+classes2.dex  LX/1gK;-><init>(VIL)
+  write opcode 0x59, dex byte offset: 0x1dd63e

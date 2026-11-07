@@ -20097,5 +20097,13 @@
     "x-library": [],
     "description": "Pinned static upload transfer returned-code/mode/path classification traced through Lyh result and selected MOu/MvO consumers. Nonnegative sub400 classification and runtime3300 missing-path behavior do not establish reusable-media completion. Concrete executor/effective flags/other consumers/persistence remain partial. Existing xtask selectors reproduce retained exports; no Rust acceptance, retry, route or live behavior change.",
     "evidence": "docs/protocol/apk/2.26.43.72-upload-result-classification/README.md"
+  },
+  "x-upload-backend-response-evidence": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Pinned selected JAS/JAT status sources and sub400 CDR/400+ BvX callbacks linked to upload result classifier. JAT sets retryable=false; retained opening/proxy chain does not prove native redirects disabled. Effective backend/Tigon enforcement/upstream status provenance and durable completion remain partial. Existing xtask reproduces evidence; no Rust acceptance/retry/route/live change.",
+    "evidence": "docs/protocol/apk/2.26.43.72-upload-backend-response/README.md"
   }
 }

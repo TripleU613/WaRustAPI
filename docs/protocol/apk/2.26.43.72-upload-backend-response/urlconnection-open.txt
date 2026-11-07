@@ -1,0 +1,27 @@
+
+# class: LX/0jV;
+# extends: Ljava/lang/Object;
+
+.method public A03(LL)  # .registers 5
+    # full signature: LX/0jV;->A03(Ljava/net/URL;)Ljava/net/URLConnection;
+    0000..0006  invoke-virtual  {v3}, LX/0jV;->A04()LX/08T;
+    0006..0008  move-result-object  v0
+    0008..000c  iget-object  v2, v0, LX/08T;->first:Ljava/lang/Object;
+    000c..0010  check-cast  v2, Ljava/net/Proxy;
+    0010..0014  iget-object  v1, v0, LX/08T;->second:Ljava/lang/Object;
+    0014..0018  check-cast  v1, Ljava/lang/String;
+    0018..001c  sget-object  v0, Ljava/net/Proxy;->NO_PROXY:Ljava/net/Proxy;
+    001c..0022  invoke-static  {v2, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    0022..0024  move-result  v0
+    0024..0028  if-eqz  v0, +0xa
+    0028..002e  invoke-virtual  {v4}, Ljava/net/URL;->openConnection()Ljava/net/URLConnection;
+    002e..0030  move-result-object  v0
+    0030..0036  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    0036..0038  return-object  v0
+    0038..003e  invoke-virtual  {v4, v2}, Ljava/net/URL;->openConnection(Ljava/net/Proxy;)Ljava/net/URLConnection;
+    003e..0040  move-result-object  v0
+    0040..0046  invoke-static  {v0}, LX/00l;->A08(Ljava/lang/Object;)V
+    0046..004c  invoke-static  {v1, v0}, LX/0jV;->A00(Ljava/lang/String;Ljava/net/URLConnection;)V
+    004c..004e  return-object  v0
+    # exception table: 0 try range(s)
+.end method

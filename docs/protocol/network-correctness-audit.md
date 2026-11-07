@@ -6293,3 +6293,9 @@ evidence, not new APK behavior or proof of full group-send/network parity.
   outcome/code/JSON-error state; MOu/MvO add downstream gates. Concrete executor,
   effective flags and durable completion remain partial; no Rust acceptance or
   retry widened. See [upload result boundary](media-network-outcomes.md#transfer-result-classification-and-completion-boundary).
+
+- Pinned concrete upload backend bridge corroborated from retained JAS/JAT:
+  status source and sub400 CDR/400+ BvX paths now linked to transfer classifier.
+  JAT sets retryable=false; new opening chain leaves native redirect/proxy and
+  Tigon enforcement unresolved. No Rust acceptance/retry change. See
+  [backend response boundary](media-network-outcomes.md#concrete-backend-response-code-and-retry-boundary).

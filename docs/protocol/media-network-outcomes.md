@@ -2063,3 +2063,18 @@ full persistence and retry authority remain open. Rust's HTTP200 acceptance and
 no-replay policy remain unchanged. See
 [complete transfer/result evidence](apk/2.26.43.72-upload-result-classification/README.md).
 No live operation or runtime change.
+
+## Concrete backend response code and retry boundary
+
+2026-11-07. **Confirmed static, pinned2.26.43.72:** reuse complete JAS/JAT
+implementations already retained by the upload HTTP audit. JAS returns
+getResponseCode; JAT returns TigonResult.response's integer status after its
+error/body handling. Both selected methods send sub400 bodies to CDR and
+400+ bodies to BvX before returning. JAT explicitly sets retryable=false; its
+other timeout fields and JAS's opening/proxy chain are now linked. No selected
+redirect-disable setting was established for native platform stacks, and
+upstream Tigon status/enforcement/effective selector remain separate. This
+closes the concrete returned-code bridge for selected methods, not complete
+media acceptance or worker retry policy. Rust200/no-replay settings unchanged.
+[Reused backend methods, new opening chain and reproduction](apk/2.26.43.72-upload-backend-response/README.md).
+No runtime change or live operation.

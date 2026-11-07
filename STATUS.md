@@ -10769,3 +10769,9 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   missing-path flag/modes and downstream adoption remain separate. Rust200/
   no-replay rules unchanged; no live operation. See
   [result classification](docs/protocol/media-network-outcomes.md#transfer-result-classification-and-completion-boundary).
+
+- Linked concrete native upload code/body callbacks to result classification;
+  JAT explicitly disables retryable flag. Selected opening/proxy and constructor
+  evidence retained; native platform/enforcement and durable completion remain
+  separate. No Rust policy/live change. See
+  [backend bridge](docs/protocol/media-network-outcomes.md#concrete-backend-response-code-and-retry-boundary).
