@@ -1,0 +1,15 @@
+
+# class: LX/B21;
+# extends: Ljava/lang/Object;
+
+.method public A1C(VLL)  # .registers 3
+    # full signature: LX/B21;->A1C(LX/0Tj;Ljava/util/Iterator;)V
+    0000..0006  invoke-interface  {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0006..0008  move-result-object  v0
+    0008..000c  check-cast  v0, LX/Dyu;
+    000c..0010  iget-object  v0, v0, LX/Dyu;->A00:Ljava/lang/Object;
+    0010..0014  check-cast  v0, LX/0Tp;
+    0014..001a  invoke-virtual  {v1, v0}, LX/0Tj;->A03(LX/0Tp;)V
+    001a..001c  return-void
+    # exception table: 0 try range(s)
+.end method

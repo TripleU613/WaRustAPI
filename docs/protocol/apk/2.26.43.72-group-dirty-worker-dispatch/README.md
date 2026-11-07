@@ -87,3 +87,7 @@ byte-for-byte, with complete source hash/length verification. APK coverage,
 formatting, CLI-reference regeneration, OpenAPI library-symbol test, whitespace
 and staged hygiene passed. Full runtime tests were not rerun for this
 research-only chunk; no Rust runtime source changed.
+
+Followup: the [concrete stanza serializer](../2.26.43.72-group-dirty-stanza-serializer/README.md)
+now closes8cm selector10/Dyu11/BVu4 and selected IQ/query/group fields. Native
+assertion, callback, effective flag and persistence limits remain separate.

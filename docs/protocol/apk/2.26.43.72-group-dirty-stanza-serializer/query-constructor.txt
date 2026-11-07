@@ -1,0 +1,144 @@
+# Complete selected method; other overloads omitted; source bytes=51628, sha256=b92627f4b1a9374668b8525e36c8f3a746512db2c744e7175e9debaec67ba167
+# class: LX/BVu;
+# extends: LX/0mJ;
+.method public <init>(VLLLI)  # .registers 12
+    # full signature: LX/BVu;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/util/List;I)V
+    0000..0004  iput  v11, v7, LX/BVu;->$t:I
+    0004..000a  packed-switch  v11, payload@0x224, cases=[3:@0xb6, 4:@0x15a], default@0xa
+    000a..000c  const/4  v2, #0x0
+    000c..000e  const/4  v0, #0x2
+    000e..0014  invoke-direct  {v7}, Ljava/lang/Object;-><init>()V
+    0014..0018  new-array  v1, v0, [Ljava/lang/String;
+    0018..001c  const-string  v0, "1"
+    001c..0020  aput-object  v0, v1, v2
+    0020..0024  const-string  v0, "2"
+    0024..002a  invoke-static  {v0, v1}, LX/B1z;->A0w(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/util/List;
+    002a..002c  move-result-object  v0
+    002c..0030  iput-object  v0, v7, LX/BVu;->A00:Ljava/lang/Object;
+    0030..0036  invoke-static  {}, LX/B1x;->A0c()LX/0Tj;
+    0036..0038  move-result-object  v4
+    0038..003c  const-string  v1, "xmlns"
+    003c..0040  const-string  v0, "key_transparency"
+    0040..0046  invoke-static  {v4, v1, v0}, LX/B22;->A0F(LX/0Tj;Ljava/lang/String;Ljava/lang/String;)LX/0Tl;
+    0046..0048  move-result-object  v0
+    0048..004e  invoke-static  {v0, v4, v8}, LX/B23;->A0b(LX/0Tl;LX/0Tj;Ljava/lang/String;)V
+    004e..0052  const-wide/16  v2, #0x1
+    0052..0056  const-wide/16  v0, #0x3
+    0056..005c  invoke-static  {v10, v2, v3, v0, v1}, LX/0Tk;->A07(Ljava/util/List;JJ)Z
+    005c..005e  move-result  v0
+    005e..0062  if-eqz  v0, +0x16
+    0062..0068  invoke-interface  {v10}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0068..006a  move-result-object  v1
+    006a..0070  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    0070..0072  move-result  v0
+    0072..0076  if-eqz  v0, +0xc
+    0076..007c  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    007c..007e  move-result-object  v0
+    007e..0082  check-cast  v0, LX/Dyv;
+    0082..0088  invoke-static  {v4, v0}, LX/B1y;->A1H(LX/0Tj;LX/Dyv;)V
+    0088..008a  goto  -0xf
+    008a..008e  const-string  v0, "multi_serialized_lookup"
+    008e..0094  invoke-static  {v0}, LX/B1w;->A0a(Ljava/lang/String;)LX/0Tj;
+    0094..0096  move-result-object  v2
+    0096..009a  const-string  v1, "version"
+    009a..009e  iget-object  v0, v7, LX/BVu;->A00:Ljava/lang/Object;
+    009e..00a2  check-cast  v0, Ljava/util/List;
+    00a2..00a8  invoke-virtual  {v2, v9, v1, v0}, LX/0Tj;->A06(Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+    00a8..00ae  invoke-static  {v2, v4}, LX/B21;->A0P(LX/0Tj;LX/0Tj;)LX/0Tp;
+    00ae..00b0  move-result-object  v0
+    00b0..00b4  iput-object  v0, v7, LX/BVu;->A01:Ljava/lang/Object;
+    00b4..00b6  return-void
+    00b6..00b8  const/4  v2, #0x0
+    00b8..00ba  const/4  v3, #0x1
+    00ba..00c0  invoke-static  {v3, v9, v10}, LX/3q3;->A03(ILjava/lang/Object;Ljava/lang/Object;)I
+    00c0..00c2  move-result  v0
+    00c2..00c8  invoke-direct  {v7}, Ljava/lang/Object;-><init>()V
+    00c8..00cc  new-array  v1, v0, [Ljava/lang/String;
+    00cc..00d0  const-string  v0, "false"
+    00d0..00d4  aput-object  v0, v1, v2
+    00d4..00d8  const-string  v0, "true"
+    00d8..00de  invoke-static  {v0, v1, v3}, LX/2L6;->A1H(Ljava/lang/Object;[Ljava/lang/Object;I)Ljava/util/List;
+    00de..00e0  move-result-object  v6
+    00e0..00e4  iput-object  v6, v7, LX/BVu;->A01:Ljava/lang/Object;
+    00e4..00ea  invoke-static  {}, LX/B1x;->A0c()LX/0Tj;
+    00ea..00ec  move-result-object  v4
+    00ec..00f0  const-string  v1, "type"
+    00f0..00f4  const-string  v0, "set"
+    00f4..00fa  invoke-static  {v4, v1, v0}, LX/B1y;->A1J(LX/0Tj;Ljava/lang/String;Ljava/lang/String;)V
+    00fa..00fe  const-string  v1, "xmlns"
+    00fe..0102  const-string  v0, "w:interop"
+    0102..0108  invoke-static  {v4, v1, v0}, LX/B22;->A0F(LX/0Tj;Ljava/lang/String;Ljava/lang/String;)LX/0Tl;
+    0108..010a  move-result-object  v0
+    010a..0110  invoke-virtual  {v4, v0}, LX/0Tj;->A02(LX/0Tl;)V
+    0110..0116  invoke-static  {v4, v8, v2}, LX/B23;->A03(LX/0Tj;Ljava/lang/String;Z)J
+    0116..0118  move-result-wide  v2
+    0118..011c  const-string  v0, "reachability_settings"
+    011c..0122  invoke-static  {v0}, LX/B1w;->A0a(Ljava/lang/String;)LX/0Tj;
+    0122..0124  move-result-object  v5
+    0124..0128  const-string  v0, "enabled"
+    0128..012e  invoke-virtual  {v5, v9, v0, v6}, LX/0Tj;->A07(Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+    012e..0132  const-wide/16  v0, #0x3e7
+    0132..0138  invoke-static  {v10, v2, v3, v0, v1}, LX/0Tk;->A07(Ljava/util/List;JJ)Z
+    0138..013a  move-result  v0
+    013a..013e  if-eqz  v0, +0x67
+    013e..0144  invoke-interface  {v10}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0144..0146  move-result-object  v1
+    0146..014c  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    014c..014e  move-result  v0
+    014e..0152  if-eqz  v0, +0x5d
+    0152..0158  invoke-static  {v5, v1}, LX/B21;->A1C(LX/0Tj;Ljava/util/Iterator;)V
+    0158..015a  goto  -0x9
+    015a..015c  const/4  v1, #0x0
+    015c..015e  const/4  v3, #0x2
+    015e..0164  invoke-direct  {v7}, Ljava/lang/Object;-><init>()V
+    0164..0166  const/4  v0, #0x4
+    0166..016a  new-array  v2, v0, [Ljava/lang/String;
+    016a..016e  const-string  v0, "get_participating_groups_paginated"
+    016e..0172  aput-object  v0, v2, v1
+    0172..0176  const-string  v1, "inactive_group_migration"
+    0176..0178  const/4  v0, #0x1
+    0178..017c  aput-object  v1, v2, v0
+    017c..0180  const-string  v0, "per_group_dirty_recovery"
+    0180..0184  aput-object  v0, v2, v3
+    0184..0188  const-string  v1, "per_group_dirty_recovery_truncatable"
+    0188..018a  const/4  v0, #0x3
+    018a..0190  invoke-static  {v1, v2, v0}, LX/2L6;->A1H(Ljava/lang/Object;[Ljava/lang/Object;I)Ljava/util/List;
+    0190..0192  move-result-object  v2
+    0192..0196  iput-object  v2, v7, LX/BVu;->A01:Ljava/lang/Object;
+    0196..019c  invoke-static  {}, LX/B1x;->A0c()LX/0Tj;
+    019c..019e  move-result-object  v4
+    019e..01a2  sget-object  v1, LX/7Ks;->A00:LX/7Ks;
+    01a2..01a6  const-string  v0, "to"
+    01a6..01ac  invoke-static  {v1, v4, v0}, LX/B1y;->A1F(Lcom/whatsapp/infra/core/jid/Jid;LX/0Tj;Ljava/lang/String;)V
+    01ac..01b0  const-string  v1, "xmlns"
+    01b0..01b4  const-string  v0, "w:g2"
+    01b4..01ba  invoke-static  {v1, v0}, LX/B1w;->A0X(Ljava/lang/String;Ljava/lang/String;)LX/0Tl;
+    01ba..01bc  move-result-object  v0
+    01bc..01c2  invoke-static  {v0, v4, v8}, LX/B23;->A0b(LX/0Tl;LX/0Tj;Ljava/lang/String;)V
+    01c2..01c6  const-string  v0, "query"
+    01c6..01cc  invoke-static  {v0}, LX/B1w;->A0a(Ljava/lang/String;)LX/0Tj;
+    01cc..01ce  move-result-object  v5
+    01ce..01d2  const-string  v0, "context"
+    01d2..01d8  invoke-virtual  {v5, v9, v0, v2}, LX/0Tj;->A06(Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+    01d8..01dc  const-wide/16  v2, #0x1
+    01dc..01e0  const-wide/16  v0, #0x2710
+    01e0..01e6  invoke-static  {v10, v2, v3, v0, v1}, LX/0Tk;->A07(Ljava/util/List;JJ)Z
+    01e6..01e8  move-result  v0
+    01e8..01ec  if-eqz  v0, +0x10
+    01ec..01f2  invoke-interface  {v10}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    01f2..01f4  move-result-object  v1
+    01f4..01fa  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    01fa..01fc  move-result  v0
+    01fc..0200  if-eqz  v0, +0x6
+    0200..0206  invoke-static  {v5, v1}, LX/B21;->A1C(LX/0Tj;Ljava/util/Iterator;)V
+    0206..0208  goto  -0x9
+    0208..020e  invoke-virtual  {v5}, LX/0Tj;->A01()LX/0Tp;
+    020e..0210  move-result-object  v0
+    0210..0216  invoke-virtual  {v4, v0}, LX/0Tj;->A03(LX/0Tp;)V
+    0216..021c  invoke-virtual  {v4}, LX/0Tj;->A01()LX/0Tp;
+    021c..021e  move-result-object  v0
+    021e..0222  iput-object  v0, v7, LX/BVu;->A00:Ljava/lang/Object;
+    0222..0224  return-void
+    0224..0234  packed-switch-payload  size=2
+    # exception table: 0 try range(s)
+.end method

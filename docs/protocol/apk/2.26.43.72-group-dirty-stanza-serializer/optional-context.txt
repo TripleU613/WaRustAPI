@@ -1,0 +1,13 @@
+
+# class: LX/0Tj;
+# extends: Ljava/lang/Object;
+
+.method public A06(VLLL)  # .registers 5
+    # full signature: LX/0Tj;->A06(Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+    0000..0002  const/4  v0, #0x2
+    0002..0008  invoke-static  {v4, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  if-eqz  v2, +0x5
+    000c..0012  invoke-virtual  {v1, v2, v3, v4}, LX/0Tj;->A07(Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+    0012..0014  return-void
+    # exception table: 0 try range(s)
+.end method

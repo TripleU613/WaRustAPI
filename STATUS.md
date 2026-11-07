@@ -10797,3 +10797,9 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   MEX/stanza dispatch; retained distinct context/timer/request inputs. Broader
   Rust legacy compatibility and native continuation remain separate; no runtime
   or live change. See [worker gate](docs/protocol/groups.md#current-dirty-worker-typed-admission-before-dispatch-2026-11-07).
+
+- Traced concrete native dirty-group IQ serializer and helpers; selected fields
+  match existing Rust query shape. ID/list diagnostic semantics are bounded,
+  with no invented numeric-ID requirement or new hard limit. Native legacy
+  compatibility/callback/persistence remain open; no runtime/live change. See
+  [serializer](docs/protocol/groups.md#current-dirty-stanza-concrete-serialization-2026-11-07).

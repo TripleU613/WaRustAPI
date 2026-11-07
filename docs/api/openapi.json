@@ -20142,5 +20142,13 @@
     "x-library": [],
     "description": "Pinned dirty worker parses selected raw strings through required concrete group type before MEX/stanza dispatch. Context enum, selected MEX group_jid/INTERACTIVE fields, plain32000ms timer and job exception predicate retained. Effective flags/serializer/callback/persistence and broader Rust legacy compatibility remain separate. Existing xtask reproduces evidence; no global parser, saved-work rewrite/replay, route or live change.",
     "evidence": "docs/protocol/apk/2.26.43.72-group-dirty-worker-dispatch/README.md"
+  },
+  "x-group-dirty-stanza-serializer-evidence": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Pinned dirty stanza lazy selector/constructors/accessors establish iq/get/g.us/w:g2, supplied id/context and typed group children; selected Rust semantic fields match. ID bound is Java string length; list diagnostics do not establish hard gates without assertion policy. Legacy group admission, encoded order and callback/persistence remain separate. Existing xtask reproduces evidence; no wire/route/runtime/live change.",
+    "evidence": "docs/protocol/apk/2.26.43.72-group-dirty-stanza-serializer/README.md"
   }
 }

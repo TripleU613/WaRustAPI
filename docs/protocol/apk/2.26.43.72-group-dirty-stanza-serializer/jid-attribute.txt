@@ -1,0 +1,12 @@
+
+# class: LX/B1y;
+# extends: Ljava/lang/Object;
+
+.method public A1F(VLLL)  # .registers 4
+    # full signature: LX/B1y;->A1F(Lcom/whatsapp/infra/core/jid/Jid;LX/0Tj;Ljava/lang/String;)V
+    0000..0004  new-instance  v0, LX/0Tl;
+    0004..000a  invoke-direct  {v0, v1, v3}, LX/0Tl;-><init>(Lcom/whatsapp/infra/core/jid/Jid;Ljava/lang/String;)V
+    000a..0010  invoke-virtual  {v2, v0}, LX/0Tj;->A02(LX/0Tl;)V
+    0010..0012  return-void
+    # exception table: 0 try range(s)
+.end method

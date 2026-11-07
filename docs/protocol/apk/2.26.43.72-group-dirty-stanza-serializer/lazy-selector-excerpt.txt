@@ -1,0 +1,31 @@
+# Bounded selector10 excerpt; other instructions/exception table omitted; source bytes=38982, sha256=e4ed69a0f45e3c8f44953ee13e4d422c907c6ff7ccd48b8ba2c3a7c5c8c0b22e
+# class: LX/8cm;
+# extends: Ljava/lang/Object;
+.method public invoke(L)  # .registers 14
+    # full signature: LX/8cm;->invoke()Ljava/lang/Object;
+    0000..0004  iget  v0, v13, LX/8cm;->$t:I
+    0004..000a  packed-switch  v0, payload@0x9a8, cases=[0:@0x838, 1:@0x80c, 2:@0x7f2, 3:@0x7c8, 4:@0x79e, 5:@0x76a, 6:@0x958, 7:@0xc4, 8:@0x8c, 9:@0x76, 10:@0x70a, 11:@0x6e0, 12:@0x914, 13:@0x8d0, 14:@0x6b8, 15:@0x61a, 16:@0x5e8, 17:@0x5be, 18:@0x590, 19:@0x55e, 20:@0x530, 21:@0x518, 22:@0x500, 23:@0x4e8, 24:@0x4d0, 25:@0x4ba, 26:@0x490, 27:@0x3ec, 28:@0x3be, 29:@0x38c, 30:@0x352, 31:@0x306, 32:@0x2f0, 33:@0x2ce, 34:@0x2b4, 35:@0x29c, 36:@0x282, 37:@0x266, 38:@0x88c, 39:@0x23c, 40:@0x88c, 41:@0x1f6, 42:@0x1a4, 43:@0xa, 44:@0x186, 45:@0x170, 46:@0x24, 47:@0x140, 48:@0xa, 49:@0x10e], default@0xa
+    070a..070e  iget-object  v5, v13, LX/8cm;->A00:Ljava/lang/Object;
+    070e..0712  check-cast  v5, LX/8UL;
+    0712..0716  iget-object  v0, v5, LX/8UL;->A02:Ljava/util/List;
+    0716..071c  invoke-static  {v0}, LX/1Xl;->A19(Ljava/lang/Iterable;)Ljava/util/ArrayList;
+    071c..071e  move-result-object  v4
+    071e..0724  invoke-interface  {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0724..0726  move-result-object  v3
+    0726..072c  invoke-interface  {v3}, Ljava/util/Iterator;->hasNext()Z
+    072c..072e  move-result  v0
+    072e..0732  if-eqz  v0, +0x13
+    0732..0738  invoke-interface  {v3}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0738..073a  move-result-object  v2
+    073a..073e  check-cast  v2, LX/1bc;
+    073e..0742  const/16  v1, #0xb
+    0742..0746  new-instance  v0, LX/Dyu;
+    0746..074c  invoke-direct  {v0, v2, v1}, LX/Dyu;-><init>(LX/1bc;I)V
+    074c..0752  invoke-virtual  {v4, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0752..0754  goto  -0x16
+    0754..0758  iget-object  v2, v5, LX/8UL;->A01:Ljava/lang/String;
+    0758..075c  iget-object  v1, v5, LX/8UL;->A00:Ljava/lang/String;
+    075c..075e  const/4  v0, #0x4
+    075e..0762  new-instance  v6, LX/BVu;
+    0762..0768  invoke-direct  {v6, v2, v1, v4, v0}, LX/BVu;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/util/List;I)V
+    0768..076a  return-object  v6

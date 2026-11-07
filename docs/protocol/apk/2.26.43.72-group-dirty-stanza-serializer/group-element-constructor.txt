@@ -1,0 +1,25 @@
+# Complete selected method; other overloads omitted; source bytes=22057, sha256=0431fa009111ab82c9b715554f98933cc59070789250bd517063a64e2de0f155
+# class: LX/Dyu;
+# extends: LX/0mH;
+.method public <init>(VLI)  # .registers 5
+    # full signature: LX/Dyu;-><init>(LX/1bc;I)V
+    0000..0004  iput  v4, v2, LX/Dyu;->$t:I
+    0004..0008  const-string  v1, "jid"
+    0008..000a  const/4  v0, #0x0
+    000a..0010  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0010..0014  rsub-int/lit8  v4, v4, #0xb
+    0014..0018  if-eqz  v4, +0x15
+    0018..001e  invoke-direct  {v2}, Ljava/lang/Object;-><init>()V
+    001e..0022  const-string  v0, "sub_group_suggestion"
+    0022..0028  invoke-static  {v0}, LX/B1w;->A0a(Ljava/lang/String;)LX/0Tj;
+    0028..002a  move-result-object  v0
+    002a..0030  invoke-static  {v3, v0, v1}, LX/B1y;->A1F(Lcom/whatsapp/infra/core/jid/Jid;LX/0Tj;Ljava/lang/String;)V
+    0030..0036  invoke-virtual  {v0}, LX/0Tj;->A01()LX/0Tp;
+    0036..0038  move-result-object  v0
+    0038..003c  iput-object  v0, v2, LX/Dyu;->A00:Ljava/lang/Object;
+    003c..003e  return-void
+    003e..0044  invoke-direct  {v2}, Ljava/lang/Object;-><init>()V
+    0044..0048  const-string  v0, "group"
+    0048..004a  goto  -0x13
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,62 @@
+{
+  "README.md": {
+    "bytes": 4958,
+    "sha256": "1df767e7488a45d880ffb872669a3ada46809e3b89ed2d4c8293065583c3e46d"
+  },
+  "add-group-child.txt": {
+    "bytes": 572,
+    "sha256": "ebed7c0ad8ed911bdff58da7cbb312fbdc3fe371efa998326ab7b55aef4fcfd6"
+  },
+  "children-check.txt": {
+    "bytes": 2556,
+    "sha256": "bb68355b50e554e6d117030997f93e85c64c51b0397cceeb4bc2d5aabf6461ea"
+  },
+  "enum-attribute.txt": {
+    "bytes": 556,
+    "sha256": "9cdd3626eada7b4c0478e0460d012311a5114301dc20b07ffa9dc02fde9b5784"
+  },
+  "group-element-constructor.txt": {
+    "bytes": 1287,
+    "sha256": "ba3a8480a03073c0df9a6e84c7238ec08ccbb454ab2b0a323b1dd6215fd044bf"
+  },
+  "id-string-check.txt": {
+    "bytes": 1859,
+    "sha256": "f59ac3f687221f42dc9f8bc9fd1c6d218245d8b2a2d0c5e809eef6fcc31244b9"
+  },
+  "iq-attributes.txt": {
+    "bytes": 1171,
+    "sha256": "e72b19409766aa34eb83c484f226cc689600680673b2ca83a31b856b20d848fd"
+  },
+  "iq-builder.txt": {
+    "bytes": 374,
+    "sha256": "e7bcf562b6d84960044e5cab5394998726164c1210dda625c0ef3094c1e7f251"
+  },
+  "jid-attribute.txt": {
+    "bytes": 486,
+    "sha256": "73ac2ace31b07d51d4c64a97f54496f0652ff2ed2ffc03362f586c068c92c7bf"
+  },
+  "lazy-selector-excerpt.txt": {
+    "bytes": 2351,
+    "sha256": "47ada55c5dfb5471a922dead7fdab39289a8ef3005a0efefafa0fd45030d69bf"
+  },
+  "optional-context.txt": {
+    "bytes": 519,
+    "sha256": "dda7f9bff8c7cc90d6a8d25b1fd8ca1a17591bb8d105a5b2e30e82b3f4342d1c"
+  },
+  "query-accessor.txt": {
+    "bytes": 625,
+    "sha256": "c02a748f5f81458066a5b48d14ad9d6a446ccd35f003b757a0896131e7113b6b"
+  },
+  "query-constructor.txt": {
+    "bytes": 8043,
+    "sha256": "8ad97d75df4f257d6bb630c57a6ec1028cd6dbafead0d27eb1f7831a4c116c89"
+  },
+  "reproduce.py": {
+    "bytes": 5446,
+    "sha256": "6cc3911c54f47d897cd9ef675a1241c6747937dfa055c35e7117dbcd549ea53e"
+  },
+  "server-domain.txt": {
+    "bytes": 294,
+    "sha256": "ac7ebbdf4605514a5de01cd31185cba5f23a9474904bfe36267350a46bf5293b"
+  }
+}

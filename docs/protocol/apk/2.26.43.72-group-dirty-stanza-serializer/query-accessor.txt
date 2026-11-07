@@ -1,0 +1,17 @@
+
+# class: LX/BVu;
+# extends: LX/0mJ;
+
+.method public A00(L)  # .registers 2
+    # full signature: LX/BVu;->A00()LX/0Tp;
+    0000..0004  iget  v0, v1, LX/BVu;->$t:I
+    0004..000a  sparse-switch  v0, payload@0x1c, cases=[3:@0x14, 4:@0x14, 7:@0x14, 14:@0x14], default@0xa
+    000a..000e  iget-object  v0, v1, LX/BVu;->A01:Ljava/lang/Object;
+    000e..0012  check-cast  v0, LX/0Tp;
+    0012..0014  return-object  v0
+    0014..0018  iget-object  v0, v1, LX/BVu;->A00:Ljava/lang/Object;
+    0018..001a  goto  -0x5
+    001a..001c  nop
+    001c..0040  sparse-switch-payload  size=4
+    # exception table: 0 try range(s)
+.end method

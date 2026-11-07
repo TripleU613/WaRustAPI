@@ -3426,3 +3426,16 @@ Rust broader legacy compatibility is not relabeled native-complete or globally
 changed; historical work is not rewritten/replayed.
 [Complete worker/parser/dispatch and bounded scheduler excerpt](apk/2.26.43.72-group-dirty-worker-dispatch/README.md).
 No live operation or runtime policy change.
+
+### Current dirty stanza concrete serialization (2026-11-07)
+
+**Confirmed static, pinned43.72:**8UL's8cm selector10 creates Dyu11 group
+children and BVu4. The concrete constructor/helpers build iq/get, to=g.us,
+xmlns=w:g2, supplied id and query@context with group@jid children. This matches
+the selected fields already built by Rust refresh_node; no wire change follows.
+Generated ID bounds check string length rather than numeric value, and child
+count diagnostics alone do not prove hard rejection. Native assertion/enum
+failure policy, encoded attribute order, legacy group compatibility and complete
+callback/persistence remain separate.
+[Exact selected constructors, helper chain and reproduction](apk/2.26.43.72-group-dirty-stanza-serializer/README.md).
+No live account operation or runtime change.

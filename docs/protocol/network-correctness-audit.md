@@ -6325,3 +6325,9 @@ evidence, not new APK behavior or proof of full group-send/network parity.
   predicate retained; effective flags/serializer/durable continuation remain
   separate. No historical replay or global parser change. See
   [worker admission](groups.md#current-dirty-worker-typed-admission-before-dispatch-2026-11-07).
+
+- Pinned dirty stanza serializer closed:8cm10 ->Dyu11/BVu4 ->iq/get/g.us/w:g2,
+  supplied ID/context and group@jid children. Current Rust semantic subset
+  matches; no missing field found. ID bounds are string length and list
+  diagnostics are not proved hard gates. No runtime policy change. See
+  [concrete serializer](groups.md#current-dirty-stanza-concrete-serialization-2026-11-07).
