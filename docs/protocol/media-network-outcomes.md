@@ -1667,3 +1667,21 @@ F2q→Ed7→EmK→FKc pass enables sendReceipt when its secondary descriptor is 
 Later-pass policy, persistence transactions and typed-invalid classification remain
 open. [Evidence](apk/2.26.43.72-media-error-retry-producers/README.md). No Rust
 response/retry behavior or live operation changed.
+
+## Encrypted child metadata before decryption (2026-11-07)
+
+**Confirmed mismatch fixed:** native EIM/EuN validates exact outer enc version2,
+signed Java i32 retry counts (absent=0), and ordered count consistency before
+decryption. Rust previously filtered version mismatches and ignored count. Shared
+inbox admission now refuses malformed/conflicting metadata before direct/group/
+recipient routing, ratchet advancement or ACK authority. Real ciphertext regression
+proves unchanged sender keys/journal and successful corrected decryption; ordered
+zero/signed/Unicode cases retain native behavior. No new error491/retry emission.
+The traced secondary Dxs descriptor is skmsg in the selected parser branch; later
+pass/durability/type-selection gaps remain.
+[Evidence](apk/2.26.43.72-encrypted-child-metadata/README.md).
+
+Verification: all1,588 workspace/all-feature tests passed, including the real-store
+metadata refusal/corrected-decryption fixture; strict all-target/all-feature Clippy
+and formatting passed. CLI reference, OpenAPI library-symbol check, APK coverage
+and retained-evidence integrity passed. No account operation was performed.

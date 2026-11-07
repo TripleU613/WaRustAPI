@@ -1,0 +1,111 @@
+
+# class: LX/Ewa;
+# extends: Ljava/lang/Object;
+
+.method public A01(L)  # .registers 58
+    # full signature: LX/Ewa;->A01()LX/Dxs;
+    0000..0004  move-object/from16  v0, v57
+    0004..0008  iget-object  v11, v0, LX/Ewa;->A07:Lcom/whatsapp/infra/core/jid/Jid;
+    0008..000c  const-string  v1, "remoteJid must not be null"
+    000c..0012  invoke-static  {v11, v1}, LX/00L;->A06(Ljava/lang/Object;Ljava/lang/String;)V
+    0012..0018  invoke-static  {v11}, LX/00l;->A05(Ljava/lang/Object;)V
+    0018..001c  iget-object  v2, v0, LX/Ewa;->A0J:Ljava/lang/Long;
+    001c..0022  const-string/jumbo  v1, "timestampMillis must be provided"
+    0022..0028  invoke-static  {v2, v1}, LX/00L;->A06(Ljava/lang/Object;Ljava/lang/String;)V
+    0028..002e  invoke-static  {v2}, LX/00l;->A05(Ljava/lang/Object;)V
+    002e..0034  invoke-virtual  {v2}, Ljava/lang/Number;->longValue()J
+    0034..0036  move-result-wide  v46
+    0036..003c  invoke-static  {v0}, LX/Ewa;->A00(LX/Ewa;)V
+    003c..0040  iget-object  v10, v0, LX/Ewa;->A0P:Ljava/lang/String;
+    0040..0044  const-string  v1, "id must be provided"
+    0044..004a  invoke-static  {v10, v1}, LX/00L;->A06(Ljava/lang/Object;Ljava/lang/String;)V
+    004a..0050  invoke-static  {v10}, LX/00l;->A05(Ljava/lang/Object;)V
+    0050..0054  iget-object  v9, v0, LX/Ewa;->A0X:LX/1dW;
+    0054..0058  const-string  v1, "originalMessageKey must not be null"
+    0058..005e  invoke-static  {v9, v1}, LX/00L;->A06(Ljava/lang/Object;Ljava/lang/String;)V
+    005e..0064  invoke-static  {v9}, LX/00l;->A05(Ljava/lang/Object;)V
+    0064..006a  invoke-static  {v0}, LX/Ewa;->A00(LX/Ewa;)V
+    006a..006e  iget-object  v8, v0, LX/Ewa;->A09:LX/1dW;
+    006e..0072  const-string  v1, "messageKey must not be null"
+    0072..0078  invoke-static  {v8, v1}, LX/00L;->A06(Ljava/lang/Object;Ljava/lang/String;)V
+    0078..007e  invoke-static  {v8}, LX/00l;->A05(Ljava/lang/Object;)V
+    007e..0082  iget-object  v1, v0, LX/Ewa;->A08:Lcom/whatsapp/infra/core/jid/UserJid;
+    0082..0086  move-object/from16  v56, v1
+    0086..008a  iget-object  v1, v0, LX/Ewa;->A06:Lcom/whatsapp/infra/core/jid/Jid;
+    008a..008e  move-object/from16  v55, v1
+    008e..0092  iget-object  v1, v0, LX/Ewa;->A0Q:Ljava/lang/String;
+    0092..0096  move-object/from16  v32, v1
+    0096..009a  iget-object  v1, v0, LX/Ewa;->A0R:Ljava/lang/String;
+    009a..009e  move-object/from16  v33, v1
+    009e..00a2  iget-object  v1, v0, LX/Ewa;->A0F:Ljava/lang/Integer;
+    00a2..00a6  move-object/from16  v54, v1
+    00a6..00aa  iget-boolean  v1, v0, LX/Ewa;->A0T:Z
+    00aa..00ae  move/from16  v29, v1
+    00ae..00b2  iget  v1, v0, LX/Ewa;->A02:I
+    00b2..00b6  move/from16  v28, v1
+    00b6..00ba  iget-object  v1, v0, LX/Ewa;->A0M:Ljava/lang/String;
+    00ba..00be  move-object/from16  v25, v1
+    00be..00c2  iget-object  v1, v0, LX/Ewa;->A0D:Ljava/lang/Integer;
+    00c2..00c6  move-object/from16  v26, v1
+    00c6..00ca  iget-object  v1, v0, LX/Ewa;->A0L:Ljava/lang/String;
+    00ca..00ce  move-object/from16  v24, v1
+    00ce..00d2  iget-object  v1, v0, LX/Ewa;->A0K:Ljava/lang/String;
+    00d2..00d6  move-object/from16  v21, v1
+    00d6..00da  iget-boolean  v1, v0, LX/Ewa;->A0U:Z
+    00da..00de  move/from16  v20, v1
+    00de..00e2  iget  v1, v0, LX/Ewa;->A01:I
+    00e2..00e6  move/from16  v19, v1
+    00e6..00ea  iget-object  v1, v0, LX/Ewa;->A0E:Ljava/lang/Integer;
+    00ea..00ee  move-object/from16  v27, v1
+    00ee..00f2  iget-object  v1, v0, LX/Ewa;->A0A:LX/Ezj;
+    00f2..00f6  move-object/from16  v22, v1
+    00f6..00fa  iget-object  v1, v0, LX/Ewa;->A0B:LX/Ezj;
+    00fa..00fe  move-object/from16  v23, v1
+    00fe..0102  iget-object  v1, v0, LX/Ewa;->A0W:[B
+    0102..0106  move-object/from16  v18, v1
+    0106..010a  iget-object  v1, v0, LX/Ewa;->A0V:[B
+    010a..010e  move-object/from16  v17, v1
+    010e..0112  iget  v15, v0, LX/Ewa;->A00:I
+    0112..0116  iget-object  v14, v0, LX/Ewa;->A0O:Ljava/lang/String;
+    0116..011a  iget-wide  v3, v0, LX/Ewa;->A04:J
+    011a..011e  iget-object  v13, v0, LX/Ewa;->A0N:Ljava/lang/String;
+    011e..0122  iget-wide  v1, v0, LX/Ewa;->A03:J
+    0122..0126  iget-object  v5, v0, LX/Ewa;->A0Z:Ljava/util/HashMap;
+    0126..012c  invoke-static  {v5}, LX/05p;->A0F(Ljava/util/Map;)Ljava/util/Map;
+    012c..012e  move-result-object  v40
+    012e..0132  iget-object  v12, v0, LX/Ewa;->A0H:Ljava/lang/Long;
+    0132..0136  iget-object  v7, v0, LX/Ewa;->A0I:Ljava/lang/Long;
+    0136..013a  iget-object  v6, v0, LX/Ewa;->A0C:LX/0Tp;
+    013a..013e  iget-object  v5, v0, LX/Ewa;->A0G:Ljava/lang/Integer;
+    013e..0142  iget-object  v0, v0, LX/Ewa;->A0S:Ljava/util/List;
+    0142..0146  new-instance  v16, LX/Dxs;
+    0146..014a  move-object/from16  v30, v7
+    014a..014e  move-object/from16  v31, v10
+    014e..0152  move-object/from16  v34, v25
+    0152..0156  move-object/from16  v35, v24
+    0156..015a  move-object/from16  v36, v21
+    015a..015e  move-object/from16  v37, v14
+    015e..0162  move-object/from16  v38, v13
+    0162..0166  move-object/from16  v39, v0
+    0166..016a  move-object/from16  v41, v18
+    016a..016e  move-object/from16  v42, v17
+    016e..0172  move/from16  v43, v28
+    0172..0176  move/from16  v44, v19
+    0176..017a  move/from16  v45, v15
+    017a..017e  move-wide/from16  v48, v3
+    017e..0182  move-wide/from16  v50, v1
+    0182..0186  move/from16  v52, v29
+    0186..018a  move/from16  v53, v20
+    018a..018e  move-object/from16  v17, v11
+    018e..0192  move-object/from16  v18, v55
+    0192..0196  move-object/from16  v19, v56
+    0196..019a  move-object/from16  v20, v9
+    019a..019e  move-object/from16  v21, v8
+    019e..01a2  move-object/from16  v24, v6
+    01a2..01a6  move-object/from16  v25, v54
+    01a6..01aa  move-object/from16  v28, v5
+    01aa..01ae  move-object/from16  v29, v12
+    01ae..01b4  invoke-direct/range  {v16..v53}, LX/Dxs;-><init>(Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/UserJid;LX/1dW;LX/1dW;LX/Ezj;LX/Ezj;LX/0Tp;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;[B[BIIIJJJZZ)V
+    01b4..01b6  return-object  v16
+    # exception table: 0 try range(s)
+.end method

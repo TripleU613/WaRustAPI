@@ -1,4 +1,11 @@
 {
+  "x-inbox-encrypted-child-metadata-admission": {
+    "x-cli": "existing receive/listen and saved inbox processing; no new command or flag",
+    "x-transport": "shared immediate enc version/count admission before direct/group/recipient routing and decryption",
+    "x-live": false,
+    "description": "Pinned EIM/EuN parser rejects outer versions other than exact2 and checks signed i32 count (default0), comparing current count only when previous traversal count was positive. Rust previously ignored counts and could ignore wrong-version children. Refusal now returns Unsupported before ratchet/duplicate/ACK authority; no error491 or retry added. Valid-ciphertext real-store regression preserves sender keys/journal and corrected ciphertext still decrypts. Secondary skmsg ownership traced; later-pass/durability/type-selection remain incomplete.",
+    "evidence": "docs/protocol/apk/2.26.43.72-encrypted-child-metadata/README.md"
+  },
   "x-media-error-retry-producers-static-boundary": {
     "x-cli": "existing APK research commands; no new command or flag",
     "x-transport": "research only; no new ACK or retry emission",

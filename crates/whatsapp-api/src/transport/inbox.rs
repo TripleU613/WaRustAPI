@@ -92,6 +92,37 @@ fn ciphertext_bytes(node: &Node) -> Option<&[u8]> {
     (!bytes.is_empty()).then_some(bytes)
 }
 
+// APK43.72 EuN.A01 validates each enc through EIM.A00 (exact version2)
+// and0Tp.A05/A06 (count defaults0, Java Integer.parseInt), then compares
+// against the previous count only when it was positive. Preserve child order:
+// [0,1] is admitted but [1,0] is refused. Reject before any ratchet/ACK authority.
+fn encrypted_children_metadata_valid(node: &Node) -> bool {
+    let mut previous_count = 0;
+    for enc in node.child_nodes().iter().filter(|n| n.description == "enc") {
+        if enc.get_attr("v").and_then(|v| v.as_text()) != Some("2") {
+            return false;
+        }
+        let count = match enc.get_attr("count") {
+            None => 0,
+            Some(value) => {
+                let Some(count) = value
+                    .as_text()
+                    .and_then(super::mex::java_decimal_long)
+                    .and_then(|count| i32::try_from(count).ok())
+                else {
+                    return false;
+                };
+                count
+            }
+        };
+        if previous_count > 0 && count != previous_count {
+            return false;
+        }
+        previous_count = count;
+    }
+    true
+}
+
 /// Primary chat identity for direct inbox/event/receipt lookup. Companion
 /// session selection separately preserves the actual device and namespace.
 pub fn session_sender(node: &Node) -> Option<Jid> {
@@ -893,6 +924,10 @@ async fn process_direct(
     policy: IdentityChangePolicy,
 ) -> Result<IncomingResult> {
     if node.description != "message" {
+        return Ok(IncomingResult::Unsupported);
+    }
+    if !encrypted_children_metadata_valid(node) {
+        tracing::warn!("encrypted child version/count metadata refused before decryption or ACK");
         return Ok(IncomingResult::Unsupported);
     }
     if node.get_attr("recipient").is_some() {
@@ -2502,6 +2537,31 @@ mod tests {
         assert!(group("120363000000000001@g.us", Some("120363000000000002@g.us")).is_none());
     }
 
+    #[test]
+    fn encrypted_child_metadata_preserves_native_count_order_and_integer_domain() {
+        let enc = |count: Option<&str>| {
+            let node = Node::new("enc").attr("v", "2").attr("type", "skmsg");
+            count.map_or(node.clone(), |count| node.attr("count", count))
+        };
+        for (counts, expected) in [
+            (vec![None, None], true),
+            (vec![None, Some("1")], true),
+            (vec![Some("1"), None], false),
+            (vec![Some("1"), Some("2")], false),
+            (vec![Some("+01"), Some("١")], true),
+            (vec![Some("-2147483648"), Some("2147483647")], true),
+            (vec![Some("2147483647"), Some("2147483648")], false),
+            (vec![Some(" 1")], false),
+            (vec![Some("")], false),
+        ] {
+            let node = Node::new("message").children(counts.into_iter().map(enc).collect());
+            assert_eq!(encrypted_children_metadata_valid(&node), expected);
+        }
+        let good = enc(None);
+        let mixed = Node::new("message").children(vec![good.clone(), good.attr("v", "3")]);
+        assert!(!encrypted_children_metadata_valid(&mixed));
+    }
+
     /// A group stanza we cannot read must not fail the receive session: the
     /// listen loop propagates errors from `process`, so an undecryptable stanza
     /// would otherwise drop a live connection and lose the whole window.
@@ -2717,6 +2777,40 @@ mod tests {
                     .attr("type", "skmsg")
                     .bytes(cipher.to_vec()),
             ]);
+        // Valid ciphertext must not advance its sender key or earn a durable
+        // result when enclosing enc metadata violates the native parser gate.
+        let keys_before = store.read(|tx| tx.scan(Table::SenderKeys, 1, 100)).unwrap();
+        for children in [
+            vec![node.child_nodes()[0].clone().attr("count", "2147483648")],
+            vec![node.child_nodes()[0].clone().attr("count", "garbage")],
+            vec![
+                node.child_nodes()[0].clone().attr("count", "1"),
+                Node::new("enc")
+                    .attr("v", "2")
+                    .attr("type", "msg")
+                    .bytes(vec![9]),
+            ],
+            vec![
+                node.child_nodes()[0].clone(),
+                Node::new("enc")
+                    .attr("v", "3")
+                    .attr("type", "msg")
+                    .bytes(vec![9]),
+            ],
+        ] {
+            let refused = node.clone().children(children);
+            let capture = preserve(&store, &refused).unwrap();
+            let head = store.journal_head().unwrap();
+            assert_eq!(
+                process(&store, &account, &refused, &capture).await.unwrap(),
+                IncomingResult::Unsupported
+            );
+            assert_eq!(store.journal_head().unwrap(), head);
+            assert_eq!(
+                store.read(|tx| tx.scan(Table::SenderKeys, 1, 100)).unwrap(),
+                keys_before
+            );
+        }
         let capture = preserve(&store, &node).unwrap();
         assert_eq!(
             process(&store, &account, &node, &capture).await.unwrap(),

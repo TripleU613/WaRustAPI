@@ -1,0 +1,46 @@
+{
+  "README.md": {
+    "bytes": 5554,
+    "sha256": "71b7edb90e7290fe47240111ace7472a060162d91b3ef00f189e37bfffef32c4"
+  },
+  "chat-context-builder.txt": {
+    "bytes": 6366,
+    "sha256": "c90a062b34d0cfb90a7a30cd50a34df71603e73c99a3a53699d89d656e52d8f3"
+  },
+  "chat-context-callers.txt": {
+    "bytes": 65,
+    "sha256": "59635b187fa8d53218927026f575efabe16c32c0379c7c7835c45cf87de99f69"
+  },
+  "chat-context-constructor.txt": {
+    "bytes": 4090,
+    "sha256": "13da33c5b360bc5b443f9421d7eb529b7abd46307b7fccc800ec0a7f25382def"
+  },
+  "chat-stanza-parser.txt": {
+    "bytes": 50558,
+    "sha256": "c5b36e19b4febb7d81bd1febfd38196d86213a18dcc5502973a34ad662d7488c"
+  },
+  "enc-descriptor-constructors.txt": {
+    "bytes": 1424,
+    "sha256": "ec8cca17b59dcc047459d30ffb7d8bc45380dce93a3b194e798a64177cbbb149"
+  },
+  "enc-descriptor-parser.txt": {
+    "bytes": 4573,
+    "sha256": "45968c1a1b6855acd44515712e064467d2827cf098c2156be551bfdc5e5c0009"
+  },
+  "integer-default.txt": {
+    "bytes": 601,
+    "sha256": "71844beba60f9b9c35aa7c483d0f497598195ff5f6b14728e5f5117cdb72db35"
+  },
+  "integer-parser.txt": {
+    "bytes": 1686,
+    "sha256": "ff0f1f7c71b9a6726dff0257b0cdf58a9bb0554480a8b439e943143007451445"
+  },
+  "secondary-builder-writers.txt": {
+    "bytes": 166,
+    "sha256": "7e381f4cce089be4388126428366866112b786134286f95648a2874d9a4e4022"
+  },
+  "secondary-context-writers.txt": {
+    "bytes": 114,
+    "sha256": "b31d715354881ab5a475c13f98792d8928b49a3c0ac981ab11b7871323c1c492"
+  }
+}

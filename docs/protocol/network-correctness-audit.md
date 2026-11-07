@@ -1,5 +1,10 @@
 # Network correctness audit
 
+**Encrypted child admission corrected.** Exact outer version2 and native ordered
+retry-count checks now precede inbox decryption/ACK authority. Valid-ciphertext
+regressions cover refusal without sender-key/journal advancement, then successful
+corrected decryption. [Evidence](media-network-outcomes.md#encrypted-child-metadata-before-decryption-2026-11-07).
+
 **Retry state restoration and receipt pass traced.** Native retry state can be
 restored from saved metadata; selected first-pass receipt permission depends on
 secondary-descriptor absence. Later-pass/durability/classification gaps remain;
