@@ -228,3 +228,33 @@ backfilled; original historical inbox/account provenance remains unknown.
 Preparation ownership does not itself prove original message ownership or
 complete native policy. Reserved callback/write/ACK authority checks remain
 independent. No receipt is sent and no account operation is performed.
+
+## Read/played prepared wire integrity
+
+**Confirmed Rust preparation defect, corrected offline**, baseline `b506089f`.
+The account preparation marker did not freeze read/played wire bytes. A new
+real-store regression changed a queued read's destination to another valid JID,
+reopened the store and reproduced first reservation adopting that changed wire.
+This is a local preparation integrity defect, not an observed server restriction.
+
+New read/played intents with a saved account now retain prepared_wire_sha256
+alongside their preparation account marker. The shared existing reservation
+check validates that digest before decoding/adopting pending bytes; its redacted
+error now says prepared receipt wire changed for all receipt families. Explicit
+promotion of an owned automatic read intent uses the same check before modifying
+origin/deferral fields. Stored intent digests are not recalculated to bless changed
+bytes. Encoding itself, reserved callback snapshots and retry policy are unchanged.
+
+Offline regression queues two real intents per explicit-read, automatic-direct,
+automatic-group and played family. It changes the last physical receipt row's
+wire destination, closes/reopens the encrypted store and proves reservation fails
+with checkpoints/journal unchanged. Direct automatic/played controls disable
+privacy after preparation, so rollback also preserves any earlier row deferral
+changes attempted in the reservation transaction. Explicit automatic-read
+promotion likewise refuses the changed wire without mutation. Unchanged controls
+reserve both members once without replay. No socket is used.
+
+Account-less offline adapters and historical rows without preparation digests
+keep their explicit unbound/unknown provenance; no proof is backfilled. This
+checks mutation after local preparation, not the original authenticated message's
+historical account ownership or complete native receipt parity. No live operation.

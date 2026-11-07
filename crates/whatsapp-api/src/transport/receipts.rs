@@ -89,6 +89,7 @@ pub fn queue_opened(store: &ProtocolStore, ticket: &str) -> Result<()> {
         let mut intent = serde_json::json!({"status":"pending","wire":wire,"automatic":true});
         if let Some(owner) = preparation_account_authority(tx)? {
             intent["prepared_account_authority_sha256"] = owner.into();
+            intent["prepared_wire_sha256"] = hex::encode(Sha256::digest(&wire)).into();
         }
         if automatic_direct_receipt_disabled(tx, &receipt)? {
             intent["deferred_reason"] = serde_json::json!(READ_DISABLED);
@@ -219,6 +220,13 @@ fn queue_read_with_origin(
                             "prepared receipt account changed",
                         ));
                     }
+                    if existing.get("prepared_wire_sha256").is_some() {
+                        let wire: Vec<u8> = serde_json::from_value(existing["wire"].clone())
+                            .map_err(|_| {
+                                Error::invalid("receipt", "invalid saved receipt wire bytes")
+                            })?;
+                        check_prepared_wire(&existing, &wire)?;
+                    }
                     existing["automatic"] = serde_json::json!(false);
                     existing
                         .as_object_mut()
@@ -252,6 +260,7 @@ fn queue_read_with_origin(
             let mut row = serde_json::json!({"status":"pending","wire":wire,"automatic":automatic});
             if let Some(owner) = &prepared_account {
                 row["prepared_account_authority_sha256"] = owner.clone().into();
+                row["prepared_wire_sha256"] = hex::encode(Sha256::digest(&wire)).into();
             }
             if deferred {
                 row["deferred_reason"] = serde_json::json!(READ_DISABLED);
@@ -776,6 +785,15 @@ fn receipt_account_authority(
     Ok(hash.finalize().into())
 }
 
+fn check_prepared_wire(row: &serde_json::Value, wire: &[u8]) -> Result<()> {
+    if row.get("prepared_wire_sha256").is_some_and(|prepared| {
+        prepared.as_str() != Some(hex::encode(Sha256::digest(wire)).as_str())
+    }) {
+        return Err(Error::invalid("receipt", "prepared receipt wire changed"));
+    }
+    Ok(())
+}
+
 // Bind new read/played work in its preparation transaction, before first
 // reservation can adopt it. Account-less offline adapters remain explicitly
 // unbound, like the existing retry adapter; historical rows are not backfilled.
@@ -928,11 +946,7 @@ pub fn reserve_pending_owned(store: &ProtocolStore) -> Result<Vec<ReservedReceip
                 // Catch changed pending bytes before adopting them as the
                 // original callback wire. Older rows without a preparation
                 // digest remain explicit legacy inputs; do not backfill proof.
-                if row.get("prepared_wire_sha256").is_some_and(|prepared| {
-                    prepared.as_str() != Some(hex::encode(Sha256::digest(&wire)).as_str())
-                }) {
-                    return Err(Error::invalid("receipt", "prepared retry wire changed"));
-                }
+                check_prepared_wire(&row, &wire)?;
                 let node = decode(&wire)?;
                 if row
                     .get("prepared_account_authority_sha256")
@@ -4207,6 +4221,105 @@ mod tests {
                             assert_eq!(row["status"], "outcome_unknown");
                         }
                     }
+                    assert!(reserve_pending_owned(&db).unwrap().is_empty());
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn read_and_played_prepared_wire_changes_roll_back_reservation_after_reopen() {
+        for family in ["read", "automatic", "group", "played"] {
+            for changed in [false, true] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("receipt-prepared-wire.redb");
+                let db = open(&path, true);
+                let account = crate::session::AccountRecord {
+                    generation: db.generation(),
+                    ..Default::default()
+                };
+                db.write(|tx| account.save(tx)).unwrap();
+                for i in 0..2 {
+                    if family == "played" {
+                        let ticket = opened_fixture(&db, &format!("1555555010{i}@s.whatsapp.net"));
+                        queue_opened(&db, &ticket).unwrap();
+                    } else {
+                        let incoming =
+                            automatic_text_fixture(&db, &format!("wire-{i}"), family == "group");
+                        if family == "read" {
+                            queue_read(&db, &explicit_read_for(&incoming)).unwrap();
+                        } else {
+                            queue_read_for_incoming(&db, &incoming).unwrap();
+                        }
+                    }
+                }
+                if changed {
+                    db.write(|tx| {
+                        let (key, raw) = tx
+                            .scan(Table::Checkpoints, 1, 100)?
+                            .into_iter()
+                            .rev()
+                            .find(|(key, _)| key.starts_with(b"receipt-outbox:"))
+                            .unwrap();
+                        let mut row: serde_json::Value = serde_json::from_slice(&raw).unwrap();
+                        let wire: Vec<u8> = serde_json::from_value(row["wire"].clone()).unwrap();
+                        let node = decode(&wire)?.attr("to", "15555550999@s.whatsapp.net");
+                        row["wire"] = serde_json::json!(
+                            crate::binary::Encoder::new(
+                                crate::binary::TokenDictionary::comparison_2_26_37_71()
+                            )
+                            .encode(&node)?
+                        );
+                        tx.put_json(Table::Checkpoints, &key, 1, &row)
+                    })
+                    .unwrap();
+                    if matches!(family, "automatic" | "played") {
+                        server_read_preference(&db, "wire-disabled", "none");
+                    }
+                }
+                drop(db);
+                let db = open(&path, false);
+                let before = db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap();
+                let head = db.journal_head().unwrap();
+                if changed && family == "automatic" {
+                    let (_, raw) = before
+                        .iter()
+                        .rev()
+                        .find(|(key, _)| key.starts_with(b"receipt-outbox:"))
+                        .unwrap();
+                    let row: serde_json::Value = serde_json::from_slice(raw).unwrap();
+                    let wire: Vec<u8> = serde_json::from_value(row["wire"].clone()).unwrap();
+                    let node = decode(&wire).unwrap();
+                    let incoming = Node::new("message")
+                        .attr("from", "15555550101@s.whatsapp.net")
+                        .attr("id", node.get_attr("id").unwrap().clone());
+                    assert!(queue_read(&db, &explicit_read_for(&incoming)).is_err());
+                    assert_eq!(
+                        db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap(),
+                        before
+                    );
+                    assert_eq!(db.journal_head().unwrap(), head);
+                }
+                let result = reserve_pending_owned(&db);
+                if changed {
+                    assert!(
+                        result.is_err(),
+                        "{family}: changed prepared wire was adopted"
+                    );
+                    assert_eq!(
+                        db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap(),
+                        before
+                    );
+                    assert_eq!(db.journal_head().unwrap(), head);
+                } else {
+                    assert_eq!(
+                        result
+                            .unwrap()
+                            .iter()
+                            .map(|receipt| receipt.guard.members.len())
+                            .sum::<usize>(),
+                        2
+                    );
                     assert!(reserve_pending_owned(&db).unwrap().is_empty());
                 }
             }

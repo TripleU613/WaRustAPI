@@ -9709,3 +9709,10 @@ Local public upload eligibility omission corrected at shared entry, including ca
   checks the existing marker. Reopen regression covers read/automatic/group/played,
   changed/missing account and same/observation controls. Legacy unbound rows remain
   unbound. See [preparation binding](read-receipt-policy-current.md#readplayed-preparation-account-binding).
+
+- Confirmed read/played prepared-wire defect at `b506089f`: real-store changed
+  destination was adopted at first reservation. New owned read/played intents
+  retain wire digest; reservation and explicit automatic-read promotion share
+  validation. Reopen/late-privacy rollback and unchanged no-replay controls added.
+  No wire format/live operation changed. See
+  [wire integrity](read-receipt-policy-current.md#readplayed-prepared-wire-integrity).

@@ -1,4 +1,11 @@
 {
+  "x-read-played-prepared-wire-integrity": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "evidence": "docs/protocol/read-receipt-policy-current.md#readplayed-prepared-wire-integrity",
+    "behavior": "New owned read/played intent preparation retains wire digest; first reservation and explicit automatic-read promotion refuse changed bytes. Historical unbound rows unchanged; no wire format/retry policy change."
+  },
   "x-read-played-preparation-account-binding": {
     "x-cli": false,
     "x-transport": true,

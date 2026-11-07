@@ -10696,3 +10696,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   now freezes existing account authority; reservation and explicit automatic-read
   promotion refuse changed authority. Real-store reopen controls added. Historical
   account-less/unbound provenance remains unchanged; no live operation.
+
+- New owned read/played preparations now freeze exact wire digest as well as
+  account authority. First reservation and explicit automatic-read promotion
+  refuse altered wire without mutation; reopen/late-privacy rollback regression
+  added. Legacy unbound provenance unchanged; no live operation or wire change.
