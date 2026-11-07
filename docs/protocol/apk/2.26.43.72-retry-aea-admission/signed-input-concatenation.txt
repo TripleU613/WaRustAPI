@@ -1,0 +1,25 @@
+
+# class: LX/1nr;
+# extends: Ljava/lang/Object;
+
+.method public A05(LL)  # .registers 5
+    # full signature: LX/1nr;->A05([[B)[B
+    0000..0004  new-instance  v3, Ljava/io/ByteArrayOutputStream;
+    0004..000a  invoke-direct  {v3}, Ljava/io/ByteArrayOutputStream;-><init>()V
+    000a..000c  array-length  v2, v4
+    000c..000e  const/4  v1, #0x0
+    000e..0012  if-ge  v1, v2, +0xa
+    0012..0016  aget-object  v0, v4, v1
+    0016..001c  invoke-virtual  {v3, v0}, Ljava/io/OutputStream;->write([B)V
+    001c..0020  add-int/lit8  v1, v1, #0x1
+    0020..0022  goto  -0x9
+    0022..0028  invoke-virtual  {v3}, Ljava/io/ByteArrayOutputStream;->toByteArray()[B
+    0028..002a  move-result-object  v0
+    002a..002c  return-object  v0
+    002c..002e  move-exception  v1
+    002e..0032  new-instance  v0, Ljava/lang/AssertionError;
+    0032..0038  invoke-direct  {v0, v1}, Ljava/lang/AssertionError;-><init>(Ljava/lang/Object;)V
+    0038..003a  throw  v0
+    # exception table: 1 try range(s)
+    # catch Ljava/io/IOException; code_units 0000..0016 -> 0016
+.end method

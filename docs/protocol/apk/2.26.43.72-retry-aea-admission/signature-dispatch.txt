@@ -1,0 +1,23 @@
+
+# class: LX/F3k;
+# extends: Ljava/lang/Object;
+
+.method public A0A(ZLLL)  # .registers 5
+    # full signature: LX/F3k;->A0A(LX/Ehd;[B[B)Z
+    0000..0006  invoke-static  {v3, v4}, LX/2LA;->A17(Ljava/lang/Object;Ljava/lang/Object;)V
+    0006..000a  iget-byte  v1, v2, LX/Ehd;->A00:B
+    000a..000c  const/4  v0, #0x5
+    000c..0010  if-ne  v1, v0, +0xf
+    0010..0014  const-string  v0, "best"
+    0014..001a  invoke-static  {v0}, LX/1oA;->A00(Ljava/lang/String;)LX/1oA;
+    001a..001c  move-result-object  v1
+    001c..0020  iget-object  v0, v2, LX/Ehd;->A01:[B
+    0020..0026  invoke-virtual  {v1, v0, v3, v4}, LX/1oA;->A01([B[B[B)Z
+    0026..0028  move-result  v0
+    0028..002a  return  v0
+    002a..002e  const-string  v0, "PublicKey type is invalid"
+    002e..0034  invoke-static  {v0}, LX/DBb;->A0q(Ljava/lang/Object;)Ljava/lang/AssertionError;
+    0034..0036  move-result-object  v0
+    0036..0038  throw  v0
+    # exception table: 0 try range(s)
+.end method

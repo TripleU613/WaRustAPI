@@ -1,4 +1,11 @@
 {
+  "x-retry-carried-key-aea-static-boundary": {
+    "x-cli": "research through existing APK inspection commands; no new command or flag",
+    "x-transport": "research only; receipt-carried keys remain unsupported with no adoption/send/query",
+    "x-live": false,
+    "description": "Selected native AEA uses identity/type5 provider, 64-byte signature, exact attestation types and signed input06 07 plus original serialized payload. Existing key/encryption state and gates produce distinct rejection/not-applied/state results. Selected state-update helper follows a status0 session-processing result; provider encoding, full policy/rollback/persistence remain unproven. This is distinct from ordinary prekey signatures/local peer verification. No fake attestation, verification bypass, runtime key adoption or live request added.",
+    "evidence": "docs/protocol/apk/2.26.43.72-retry-aea-admission/README.md"
+  },
   "x-retry-prepared-wire-integrity": {
     "x-cli": "existing retry queue and receipt reservation; no new command or flag",
     "x-transport": "new saved-account retry rows retain internal prepared_wire_sha256, checked before first reservation",

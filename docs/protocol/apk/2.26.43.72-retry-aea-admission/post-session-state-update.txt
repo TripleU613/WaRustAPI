@@ -1,0 +1,66 @@
+
+# class: LX/Em2;
+# extends: Ljava/lang/Object;
+
+.method public A02(VLL)  # .registers 15
+    # full signature: LX/Em2;->A02(LX/DtZ;Lcom/whatsapp/infra/core/jid/DeviceJid;)V
+    0000..0002  const/4  v6, #0x0
+    0002..0008  invoke-static  {v14, v13, v6}, LX/1Xl;->A1Y(Ljava/lang/Object;Ljava/lang/Object;I)Z
+    0008..000a  move-result  v4
+    000a..000e  iget-object  v0, v12, LX/Em2;->A03:LX/05a;
+    000e..0014  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0014..0016  move-result-object  v2
+    0016..001a  check-cast  v2, LX/ExG;
+    001a..001e  iget-object  v7, v14, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    001e..0022  iget-object  v0, v13, LX/DtZ;->A00:LX/Evl;
+    0022..0026  iget-object  v9, v0, LX/Evl;->A00:LX/E7b;
+    0026..002c  invoke-static  {v7, v6}, LX/00l;->A09(Ljava/lang/Object;I)V
+    002c..002e  const/4  v5, #0x2
+    002e..0032  iget-object  v0, v2, LX/ExG;->A00:LX/05a;
+    0032..0036  iget-object  v3, v0, LX/05a;->A00:LX/00x;
+    0036..003c  invoke-static  {v3}, LX/2L6;->A0d(LX/00x;)LX/00E;
+    003c..003e  move-result-object  v0
+    003e..0044  invoke-static  {v0}, LX/DBc;->A1S(LX/00E;)Z
+    0044..0046  move-result  v0
+    0046..004a  if-eqz  v0, +0x4a
+    004a..0050  invoke-virtual  {v2, v7}, LX/ExG;->A02(LX/0DY;)LX/0DY;
+    0050..0052  move-result-object  v8
+    0052..0058  invoke-virtual  {v9}, Ljava/lang/Enum;->ordinal()I
+    0058..005a  move-result  v1
+    005a..005c  const/4  v11, #0x1
+    005c..0060  if-eq  v1, v5, +0xe
+    0060..0062  const/4  v0, #0x3
+    0062..0066  if-eq  v1, v0, +0xb
+    0066..006a  if-eq  v1, v4, +0xe
+    006a..006e  if-eq  v1, v6, +0x38
+    006e..0074  invoke-static  {}, LX/2L6;->A1N()LX/2K2;
+    0074..0076  move-result-object  v0
+    0076..0078  throw  v0
+    0078..007e  invoke-virtual  {v2, v7, v9}, LX/ExG;->A01(LX/0DY;LX/E7b;)LX/0i7;
+    007e..0080  move-result-object  v7
+    0080..0082  goto  +0x11
+    0082..0086  iget-object  v0, v2, LX/ExG;->A02:LX/05a;
+    0086..008c  invoke-static  {v0}, LX/DBb;->A0U(LX/05a;)LX/DDs;
+    008c..008e  move-result-object  v0
+    008e..0094  invoke-virtual  {v0, v8, v4}, LX/DDs;->A0L(LX/0DY;Z)LX/0i7;
+    0094..0096  move-result-object  v1
+    0096..009a  sget-object  v0, LX/0i7;->A05:LX/0i7;
+    009a..009e  if-ne  v1, v0, +0x20
+    009e..00a2  sget-object  v7, LX/0i7;->A06:LX/0i7;
+    00a2..00a8  invoke-static  {v3}, LX/2L6;->A0d(LX/00x;)LX/00E;
+    00a8..00aa  move-result-object  v1
+    00aa..00ae  const/16  v0, #0x7497
+    00ae..00b4  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    00b4..00b6  move-result  v0
+    00b6..00ba  if-eqz  v0, +0x12
+    00ba..00be  iget-object  v0, v2, LX/ExG;->A02:LX/05a;
+    00be..00c4  invoke-static  {v0}, LX/DBb;->A0U(LX/05a;)LX/DDs;
+    00c4..00c6  move-result-object  v6
+    00c6..00ca  sget-object  v0, LX/0i7;->A0D:LX/0i7;
+    00ca..00ce  if-eq  v7, v0, +0x3
+    00ce..00d0  const/4  v11, #0x0
+    00d0..00d4  sget-object  v10, LX/02X;->A15:Ljava/lang/Integer;
+    00d4..00da  invoke-virtual/range  {v6..v11}, LX/DDs;->A0M(LX/0i7;LX/0DY;LX/E7b;Ljava/lang/Integer;Z)V
+    00da..00dc  return-void
+    # exception table: 0 try range(s)
+.end method

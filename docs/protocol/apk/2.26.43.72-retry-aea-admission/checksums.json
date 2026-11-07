@@ -1,0 +1,50 @@
+{
+  "README.md": {
+    "bytes": 6828,
+    "sha256": "16d5c3207de26449079e9a759d901154e1c28c3fb0aa9261c2ad7f10933aa01a"
+  },
+  "attestation-types.txt": {
+    "bytes": 736,
+    "sha256": "50a6c95ce06c6d25dc2048fb595b8976069bd98c8dbe32b7371ebb64d53ec69e"
+  },
+  "domain-constants.txt": {
+    "bytes": 8239,
+    "sha256": "1936eab4176d84a140d04ab36c05653c7b82e0deeed39198be56cf27e7f5c6dd"
+  },
+  "encryption-states.txt": {
+    "bytes": 1741,
+    "sha256": "3e2650541acd5497f99b07bad699086069457d25ec43a0304b379a5dec458702"
+  },
+  "post-session-state-update.txt": {
+    "bytes": 3178,
+    "sha256": "a790a462963081485f47c066370fc3af8180a94f6a49b8dae2f5b0ab39eb2ee7"
+  },
+  "request-constructor.txt": {
+    "bytes": 1209,
+    "sha256": "a9fe8370cfe98941ecb078d0b34de7552503d49a83190d44fce706e4b09a69b6"
+  },
+  "signature-dispatch.txt": {
+    "bytes": 966,
+    "sha256": "2818a6130723a805fd5b8c79aaae830b5b66ae58294ffe4f62dbaed44e9c8879"
+  },
+  "signed-input-concatenation.txt": {
+    "bytes": 1063,
+    "sha256": "cfb807747e1d8863eb21387ce87bf187290966dbe3b48212a3de6fbb3def3a1e"
+  },
+  "signed-input-order.txt": {
+    "bytes": 409,
+    "sha256": "971b2509e26d0eb1beb51efbb227957e4dc100cf4a24fd4a59918bc21a5f247f"
+  },
+  "verification-gate.txt": {
+    "bytes": 339,
+    "sha256": "9038ee4a8c32f92060515fd99258312e964d38dced2b33e576a848bab853a34e"
+  },
+  "verification-policy.txt": {
+    "bytes": 16551,
+    "sha256": "30bb62b4bf6e0ccc0162ba2d095e61af9ac06668087256a7d2cec1fab6b6db4a"
+  },
+  "verification-wrapper.txt": {
+    "bytes": 886,
+    "sha256": "8f4d4f91c15f3709133e12bf49fd6bc3f4a952597676bd81b760f6e9ddd801a9"
+  }
+}

@@ -1,5 +1,10 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
+**Receipt-key AEA input and ordering traced.** Native signature-domain bytes,
+state enums, result distinctions and post-session state-update call are retained.
+Full verification/persistence port remains open; Rust key-adoption refusal stays
+in place. [Evidence](retry-answers.md#receipt-key-aea-admission-and-state-ordering-2026-11-07).
+
 **Prepared retry wire integrity closed.** New saved-account retries freeze a
 wire digest at preparation; changed bytes cannot become the first reservation
 original. Registration-byte substitution is tested across reopen without row

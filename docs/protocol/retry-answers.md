@@ -615,3 +615,15 @@ failure, and valid count2 refetch with null optional participant. Existing ACK-
 before-write, uncertainty/no-replay and group capability policy remain distinct.
 [Evidence chain, ordering limits and complete tests](retry-ack-dispatch.md#ack-capability-preflight-before-direct-retry-work-2026-11-06).
 No live account operation or server acceptance claim.
+
+## Receipt-key AEA admission and state ordering (2026-11-07)
+
+**Confirmed selected static:** Em2 verification consumes receipt identity, supplied
+attestation and stored encryption/key state. Selected signature input is06 07
+plus original payload bytes; the type5 provider path is distinct from ordinary
+prekey validation. Rejected/not-applied/derived-state results differ; selected
+AEA state-update helper follows a status0 return from0WJ.A0K. Full provider,
+state-policy and persistence parity remain open. Rust retains its explicit
+receipt_keys_unsupported refusal with no adoption/send/query.
+[Complete trace and limits](apk/2.26.43.72-retry-aea-admission/README.md).
+No runtime behavior, attestation generation or live operation changed.

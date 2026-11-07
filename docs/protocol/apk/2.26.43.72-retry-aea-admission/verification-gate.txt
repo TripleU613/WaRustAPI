@@ -1,0 +1,12 @@
+
+# class: LX/DBc;
+# extends: Ljava/lang/Object;
+
+.method public A1S(ZL)  # .registers 2
+    # full signature: LX/DBc;->A1S(LX/00E;)Z
+    0000..0004  const/16  v0, #0x6f6f
+    0004..000a  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    000a..000c  move-result  v0
+    000c..000e  return  v0
+    # exception table: 0 try range(s)
+.end method
