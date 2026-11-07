@@ -126,7 +126,9 @@ pub fn identity_suspension(
 }
 
 /// A pending query is connection-local; its reservation survives cancellation.
+#[derive(Clone)]
 pub struct Pending {
+    account_authority: [u8; 32],
     local_id: LocalMessageId,
     query_id: String,
     /// Bounded response deadline; expiry never causes a retry.
@@ -196,6 +198,14 @@ pub async fn resume_identity_selected(
         crate::binary::Decoder::new(&raw, TokenDictionary::comparison_2_26_37_71(), &limits)
             .decode_node()?;
     let pending = Pending {
+        account_authority: match row.get("account_authority").filter(|v| !v.is_null()) {
+            Some(value) => serde_json::from_value(value.clone())
+                .map_err(|_| Error::invalid("outbox", "invalid suspended account authority"))?,
+            None => store.read(|tx| {
+                let saved = AccountRecord::load(tx)?;
+                super::account_authority::fingerprint(tx.generation(), saved.as_ref())
+            })?,
+        },
         local_id: id,
         query_id,
         deadline: tokio::time::Instant::now(),
@@ -322,7 +332,7 @@ pub fn begin_selected(
         let query_id = super::messaging::new_message_id()?;
         let won = store.write(|tx| {
             let Some(mut current) = outbox().get_mut(tx, entry.local_id)? else {
-                return Ok(false);
+                return Ok(None);
             };
             if current.progress != AttemptProgress::Queued
                 || tx
@@ -333,7 +343,7 @@ pub fn begin_selected(
                     )?
                     .is_some()
             {
-                return Ok(false);
+                return Ok(None);
             }
             if !supported {
                 outbox().set_progress(tx, &mut current, AttemptProgress::Failed)?;
@@ -348,19 +358,22 @@ pub fn begin_selected(
                         code: None,
                     },
                 )?;
-                return Ok(false);
+                return Ok(None);
             }
+            let saved = AccountRecord::load_in_write(tx)?;
+            let authority = super::account_authority::fingerprint(tx.generation(), saved.as_ref())?;
             tx.put_json(
                 Table::Checkpoints,
                 query_key(entry.local_id).as_bytes(),
                 1,
-                &serde_json::json!({"status":"outcome_unknown","query_id":query_id}),
+                &serde_json::json!({"status":"outcome_unknown","query_id":query_id,"account_authority":authority}),
             )?;
-            Ok(true)
+            Ok(Some(authority))
         })?;
-        if won {
+        if let Some(account_authority) = won {
             return Ok(Some((
                 Pending {
+                    account_authority,
                     local_id: entry.local_id,
                     query_id: query_id.clone(),
                     deadline: tokio::time::Instant::now() + std::time::Duration::from_secs(30),
@@ -704,6 +717,45 @@ fn chat_setting_payload_for(
 }
 
 impl Pending {
+    fn check_account(
+        &self,
+        generation: crate::model::ids::AccountGeneration,
+        saved: Option<&AccountRecord>,
+    ) -> Result<()> {
+        if super::account_authority::fingerprint(generation, saved)? != self.account_authority {
+            return Err(Error::invalid("outbox", "direct query account changed"));
+        }
+        Ok(())
+    }
+    fn check_account_in(&self, tx: &crate::store::WriteTx<'_>) -> Result<()> {
+        let saved = AccountRecord::load_in_write(tx)?;
+        self.check_account(tx.generation(), saved.as_ref())
+    }
+    pub(crate) fn check_write_authority(&self, store: &ProtocolStore) -> Result<()> {
+        store.read(|tx| {
+            let saved = AccountRecord::load(tx)?;
+            self.check_account(tx.generation(), saved.as_ref())?;
+            let row: serde_json::Value = tx
+                .get_json(Table::Checkpoints, query_key(self.local_id).as_bytes(), 1)?
+                .ok_or_else(|| Error::invalid("outbox", "direct query reservation missing"))?;
+            if row["query_id"].as_str() != Some(self.query_id.as_str())
+                || row["status"] != "outcome_unknown"
+            {
+                return Err(Error::invalid(
+                    "outbox",
+                    "direct query reservation changed before write",
+                ));
+            }
+            if tokio::time::Instant::now() >= self.deadline {
+                return Err(Error::invalid(
+                    "outbox",
+                    "direct query expired before write",
+                ));
+            }
+            Ok(())
+        })
+    }
+
     /// Only the exact query response can produce a prepared send.
     pub fn matches(&self, node: &Node) -> bool {
         node.description == "iq"
@@ -724,6 +776,7 @@ impl Pending {
         let peer_key = format!("comparison-direct:{peer}");
         let reply = Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(node)?;
         store.write(|tx| {
+            self.check_account_in(tx)?;
             let current = outbox().get_mut(tx, self.local_id)?
                 .ok_or_else(|| Error::invalid("outbox", "missing intent"))?;
             let held_session: Option<Vec<u8>> = tx.get_json(Table::SignalSessions, peer_key.as_bytes(), 1)?;
@@ -742,7 +795,7 @@ impl Pending {
             tx.put_json(Table::Checkpoints, query_key(self.local_id).as_bytes(), 1,
                 &serde_json::json!({"status":"identity_changed", "query_id":self.query_id,
                     "local_id":self.local_id, "peer_ticket":hex::encode(Sha256::digest(peer_key.as_bytes())),
-                    "reply":reply, "reason":reason,
+                    "reply":reply, "reason":reason, "account_authority":self.account_authority,
                     "observed_at":reservation.get("observed_at").cloned().unwrap_or_else(|| serde_json::json!(Timestamp::now())),
                     "pinned_fingerprint":identity.map(|pin| hex::encode(Sha256::digest(pin)))}))
         })
@@ -778,6 +831,16 @@ impl Pending {
         if !self.matches(node) {
             return Err(Error::invalid("outbox", "mismatched key response"));
         }
+        store.read(|tx| {
+            let saved = AccountRecord::load(tx)?;
+            self.check_account(tx.generation(), saved.as_ref())?;
+            // Account-less offline adapters remain bound to absence. A live
+            // saved account also requires the caller's cryptographic snapshot.
+            if saved.is_some() {
+                self.check_account(tx.generation(), Some(account))?;
+            }
+            Ok(())
+        })?;
         let entry = store
             .read(|tx| outbox().get(tx, self.local_id))?
             .ok_or_else(|| Error::invalid("outbox", "missing intent"))?;
@@ -786,6 +849,7 @@ impl Pending {
         }
         if node.get_attr("type").and_then(|v| v.as_text()) != Some("result") {
             store.write(|tx| {
+                self.check_account_in(tx)?;
                 let mut current = outbox()
                     .get_mut(tx, self.local_id)?
                     .ok_or_else(|| Error::invalid("outbox", "missing intent"))?;
@@ -1150,6 +1214,7 @@ impl Pending {
         let directory_reply =
             Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(node)?;
         store.write(|tx| {
+            self.check_account_in(tx)?;
             let mut current = outbox()
                 .get_mut(tx, self.local_id)?
                 .ok_or_else(|| Error::invalid("outbox", "missing intent"))?;
@@ -1586,6 +1651,52 @@ mod tests {
             })
             .unwrap()
     }
+    #[tokio::test]
+    async fn direct_reply_cannot_change_intent_after_account_replacement() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("direct-owner.redb");
+        let store = open(&path);
+        let account = AccountRecord {
+            generation: store.generation(),
+            signal_registration_id: Some(31),
+            ..Default::default()
+        };
+        store.write(|tx| account.save(tx)).unwrap();
+        let ticket = enqueue(&store);
+        let (pending, _) = begin_selected(&store, Some(ticket)).unwrap().unwrap();
+        let reply = Node::new("iq")
+            .attr("id", pending.query_id.as_str())
+            .attr("type", "error");
+        let mut changed = account.clone();
+        changed.signal_registration_id = Some(32);
+        store.write(|tx| changed.save(tx)).unwrap();
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+            .unwrap();
+        let original = store.read(|tx| outbox().get(tx, ticket)).unwrap();
+        let head = store.journal_head().unwrap();
+        assert!(
+            pending
+                .prepare(&store, &account, &reply, ConnectionEpoch(1))
+                .await
+                .is_err()
+        );
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                .unwrap(),
+            before
+        );
+        assert_eq!(store.read(|tx| outbox().get(tx, ticket)).unwrap(), original);
+        assert_eq!(store.journal_head().unwrap(), head);
+        drop(store);
+        let reopened = open(&path);
+        assert_eq!(
+            reopened.read(|tx| outbox().get(tx, ticket)).unwrap(),
+            original
+        );
+    }
+
     #[tokio::test]
     async fn signed_outgoing_replacement_is_explicit_atomic_and_never_replayed() {
         use crate::{

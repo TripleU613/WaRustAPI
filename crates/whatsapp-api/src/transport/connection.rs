@@ -332,6 +332,8 @@ pub fn update_login_identity(
 /// One outbound stanza and where to report the socket write outcome.
 type Written = (Node, oneshot::Sender<Result<()>>);
 enum WriteGuard {
+    DirectQuery(Arc<ProtocolStore>, super::outgoing::Pending),
+    DirectAccount(Arc<ProtocolStore>, [u8; 32]),
     Prekey(Arc<ProtocolStore>, super::prekeys::PendingUpload),
     Devices(Arc<ProtocolStore>, super::devices::DeviceQuery),
     RetryRefetch(Arc<ProtocolStore>, super::retry_answer::RefetchWriteGuard),
@@ -348,6 +350,19 @@ impl Outbound {
     // The writer ends the epoch without encoding, writing, or releasing a batch.
     pub(crate) fn prepare(self) -> Option<Written> {
         let admission = match self.guard {
+            Some(WriteGuard::DirectQuery(store, pending)) => pending.check_write_authority(&store),
+            Some(WriteGuard::DirectAccount(store, expected)) => store.read(|tx| {
+                let current = AccountRecord::load(tx)?;
+                if super::account_authority::fingerprint(tx.generation(), current.as_ref())?
+                    != expected
+                {
+                    return Err(Error::invalid(
+                        "outbox",
+                        "direct account changed before message write",
+                    ));
+                }
+                Ok(())
+            }),
             Some(WriteGuard::Prekey(store, pending)) => pending.check_write_authority(&store),
             Some(WriteGuard::Devices(store, query)) => query.check_write_authority(&store),
             Some(WriteGuard::RetryRefetch(store, pending)) => pending.check_write_authority(&store),
@@ -452,6 +467,32 @@ impl NodeLink {
         self.send_guarded(
             &action.node,
             Some(WriteGuard::Action(store.clone(), action.guard.clone())),
+        )
+        .await
+    }
+
+    async fn send_direct_query(
+        &self,
+        store: &Arc<ProtocolStore>,
+        pending: &super::outgoing::Pending,
+        node: &Node,
+    ) -> Result<()> {
+        self.send_guarded(
+            node,
+            Some(WriteGuard::DirectQuery(store.clone(), pending.clone())),
+        )
+        .await
+    }
+    async fn send_direct_message(
+        &self,
+        store: &Arc<ProtocolStore>,
+        account: &AccountRecord,
+        node: &Node,
+    ) -> Result<()> {
+        let expected = super::account_authority::fingerprint(account.generation, Some(account))?;
+        self.send_guarded(
+            node,
+            Some(WriteGuard::DirectAccount(store.clone(), expected)),
         )
         .await
     }
@@ -842,7 +883,7 @@ pub(crate) async fn drive(
             _ = outbox_tick.tick(), if send_outbox && ready.is_none() => {
                 if outgoing.is_none() && group_outgoing.is_none() && let Some(id)=ticket
                     && let Some(stanza)=super::outgoing::resume_identity_selected(&store,&account,id,epoch,config.transport.outgoing_identity_changes).await? {
-                    link.send(&stanza).await?;
+                    link.send_direct_message(&store,&account,&stanza).await?;
                     continue;
                 }
                 if outgoing.is_none() && group_outgoing.is_none() {
@@ -856,7 +897,7 @@ pub(crate) async fn drive(
                             link.send_group_step(&store, group_outgoing.as_ref(), &node).await?;
                         } else if let Some((pending,node))=super::outgoing::begin_selected(&store,Some(id))? {
                             outgoing=Some(pending);
-                            link.send(&node).await?;
+                            link.send_direct_query(&store,outgoing.as_ref().expect("reserved direct query"),&node).await?;
                         }
                     }
                 }
@@ -995,7 +1036,7 @@ pub(crate) async fn drive(
                     }
                     if outgoing.as_ref().is_some_and(|v|tokio::time::Instant::now() < v.deadline && v.matches(&node)) {
                         if let Some(stanza)=outgoing.take().expect("matched pending query").prepare_with_policy(&store,&account,&node,epoch,config.transport.outgoing_identity_changes).await? {
-                            link.send(&stanza).await?;
+                            link.send_direct_message(&store,&account,&stanza).await?;
                         }
                         continue;
                     }
@@ -6183,6 +6224,97 @@ mod tests {
                     .unwrap()
                     .is_none()
             );
+        }
+    }
+
+    #[tokio::test]
+    async fn queued_direct_query_and_message_recheck_account_before_encoding() {
+        use crate::{
+            model::{ids::ClientRequestId, message::MessageContent, send::SendRequest},
+            outbox::Outbox,
+            profile::Limits,
+        };
+        for mode in ["query", "message"] {
+            for changed in [false, true] {
+                let dir = tempfile::tempdir().unwrap();
+                let store = open(&dir.path().join("direct-owner.redb"));
+                let account = AccountRecord {
+                    generation: store.generation(),
+                    signal_registration_id: Some(31),
+                    ..Default::default()
+                };
+                store.write(|tx| account.save(tx)).unwrap();
+                let ticket = store
+                    .write(|tx| {
+                        Ok(Outbox::new("comparison-driver", Limits::default())
+                            .enqueue(
+                                tx,
+                                &SendRequest {
+                                    client_request_id: ClientRequestId::new("direct-owner")
+                                        .unwrap(),
+                                    chat: ChatId::from_jid(&peer()).unwrap(),
+                                    content: MessageContent::Text {
+                                        body: "fixture".into(),
+                                        quoted: None,
+                                        style: Default::default(),
+                                    },
+                                },
+                            )?
+                            .0
+                            .local_id)
+                    })
+                    .unwrap();
+                let (pending, query) = super::super::outgoing::begin_selected(&store, Some(ticket))
+                    .unwrap()
+                    .unwrap();
+                let (_incoming, incoming) = mpsc::channel(1);
+                let (outgoing, mut writes) = mpsc::channel(1);
+                let link = NodeLink::new(incoming, outgoing);
+                let worker_store = store.clone();
+                let worker_account = account.clone();
+                let task = tokio::spawn(async move {
+                    if mode == "query" {
+                        link.send_direct_query(&worker_store, &pending, &query)
+                            .await
+                    } else {
+                        link.send_direct_message(
+                            &worker_store,
+                            &worker_account,
+                            &Node::new("message").attr("id", "frozen"),
+                        )
+                        .await
+                    }
+                });
+                let queued = writes.recv().await.unwrap();
+                if changed {
+                    let mut replacement = account;
+                    replacement.signal_registration_id = Some(32);
+                    store.write(|tx| replacement.save(tx)).unwrap();
+                }
+                let before = store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                    .unwrap();
+                let prepared = queued.prepare();
+                if changed {
+                    assert!(prepared.is_none(), "{mode}");
+                } else {
+                    let (_, written) = prepared.unwrap();
+                    written.send(Ok(())).unwrap();
+                }
+                assert_eq!(task.await.unwrap().is_err(), changed, "{mode}");
+                assert!(writes.recv().await.is_none());
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                        .unwrap(),
+                    before
+                );
+                assert!(
+                    super::super::outgoing::begin_selected(&store, Some(ticket))
+                        .unwrap()
+                        .is_none()
+                );
+            }
         }
     }
 

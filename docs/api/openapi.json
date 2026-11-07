@@ -1,4 +1,11 @@
 {
+  "x-direct-outbox-account-ownership": {
+    "x-cli": "existing direct outbox and explicit identity-resume flows; no new command or flag",
+    "x-transport": "ordinary direct directory reservation, reply/suspension/ratchet commit and normal queued query/message writes bind saved account authority",
+    "x-live": false,
+    "description": "Reproduced acceptance of same-ID directory error after saved registration ID replacement. Pending now freezes account authority at query reservation, with private prospective metadata preserved for identity suspension. Reply admission and all mutation cuts recheck; normal writer guards queued query ownership/deadline and connection account before direct message encoding. Tests cover unchanged/replaced queued owners, refusal without checkpoint/outbox/journal mutation, reopen and no query replay. Account-less offline adapters and explicit legacy resume retain documented limits; no automatic reset or new wire field/live operation.",
+    "evidence": "docs/protocol/direct-outbox-account-ownership.md"
+  },
   "x-identity-refresh-account-deferral": {
     "x-cli": "existing identity-refresh application/recovery; no new command or flag",
     "x-transport": "stage returns fixed action_account_changed deferral when new prepared action belongs to another saved account",

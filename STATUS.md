@@ -1,5 +1,10 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
+**Ordinary direct outbox account gap closed.** Query reservation freezes its
+owner; reply/suspension/send transactions and normal queued query/message writes
+recheck authority. Refusal preserves uncertain state without replay.
+[Evidence, regression and legacy limits](docs/protocol/direct-outbox-account-ownership.md). No live operation.
+
 **Identity refresh now defers preparation-account drift.** A same-snapshot
 read check prevents stale action staging under a replacement account and avoids
 turning the final ownership refusal into a recovery error. Final fences remain.
