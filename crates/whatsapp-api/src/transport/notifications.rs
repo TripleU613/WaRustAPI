@@ -277,10 +277,10 @@ pub(super) fn ack_route(node: &Node, name: &str) -> Option<crate::model::jid::Ji
         None
     } else {
         // Retain existing parsed metadata where available; the validated native
-        // zero profile only supplies formerly unparseable signed/Unicode forms.
+        // nonpositive profile supplies formerly unparseable signed/Unicode forms.
         jid(node, name).or_else(|| {
             node.get_attr(name)
-                .and_then(super::receipts::explicit_zero_ack_address)
+                .and_then(super::receipts::explicit_nonpositive_ack_address)
                 .map(|wire| wire.to_non_ad())
         })
     }

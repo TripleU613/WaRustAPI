@@ -1184,21 +1184,15 @@ pub(super) fn ack_address(jid: Jid) -> Jid {
     }
 }
 
-// APK 43.72 0Dd.A00 explicit DeviceJid0 differs from the 123 binary AD0
-// reader, which reconstructs UserJid. 0EM.getAgent() == 1 forces AD-JID
-// at device 0; 0EE keeps JID_PAIR. Only original integer 0 is handled,
-// not byte-wrapped 256/-256. See receipt-primary-ack.md.
-pub(super) fn explicit_zero_ack_address(value: &crate::binary::AttributeValue) -> Option<Jid> {
-    let text = value.as_text()?;
-    let (local, server) = text.rsplit_once('@')?;
-    if !matches!(server, "lid" | "s.whatsapp.net") {
-        return None;
-    }
-    let super::messaging::AckUserText::Device(user) = super::messaging::ack_user_text(text)? else {
-        return None;
-    };
-    if let Some((_, device)) = local.rsplit_once(':')
-        && super::mex::java_decimal_long(device).and_then(|n| i32::try_from(n).ok()) != Some(0)
+// APK 43.72 0Dd.A00 constructs DeviceJid; 1r2.A00 chooses the wire
+// branch from original integer getters, not the constructor's narrowed byte.
+// LID Device0 has agent 1 (AD); PN nonpositive devices have agent 0 (pair).
+// Out-of-range AD getters are refused by the selected-output guard.
+pub(super) fn explicit_nonpositive_ack_address(
+    value: &crate::binary::AttributeValue,
+) -> Option<Jid> {
+    let (user, server, device) = super::messaging::ack_text_device(value.as_text()?)?;
+    if !matches!(server, "lid" | "s.whatsapp.net") || device > 0 || (server == "lid" && device < 0)
     {
         return None;
     }
@@ -1211,13 +1205,13 @@ pub(super) fn explicit_zero_ack_address(value: &crate::binary::AttributeValue) -
 
 pub(super) fn ack_wire_address(node: &Node, name: &str, parsed: Jid) -> Jid {
     node.get_attr(name)
-        .and_then(explicit_zero_ack_address)
+        .and_then(explicit_nonpositive_ack_address)
         .unwrap_or_else(|| ack_address(parsed))
 }
 
 pub(super) fn receipt_ack_wire_address(node: &Node, name: &str) -> Option<Jid> {
     node.get_attr(name)
-        .and_then(explicit_zero_ack_address)
+        .and_then(explicit_nonpositive_ack_address)
         .or_else(|| network_jid(node, name).map(ack_address))
 }
 

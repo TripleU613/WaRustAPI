@@ -3489,11 +3489,61 @@ mod tests {
             assert_eq!(ack, expected);
             written.send(Ok(())).unwrap();
         }
+        // Original negative PN device getters select JID_PAIR; LID's fixed
+        // agent selects AD and will be refused below. Exact LID zero stays AD.
+        for (route, expected_peer) in [
+            (
+                "15551234567:-256@s.whatsapp.net",
+                Jid::parse("15551234567@s.whatsapp.net").unwrap(),
+            ),
+            (
+                "15551234567:-157@s.whatsapp.net",
+                Jid::parse("15551234567@s.whatsapp.net").unwrap(),
+            ),
+            (
+                "12345:0@lid",
+                Jid::new_ad("12345", 0, 0, crate::model::jid::Server::Lid).unwrap(),
+            ),
+        ] {
+            let incoming = notification
+                .clone()
+                .attr("from", route)
+                .attr("participant", route);
+            let captured = format!(
+                "inbound:sha256:{}",
+                hex::encode(sha2::Sha256::digest(encode(&incoming).unwrap()))
+            );
+            fake.deliver(incoming).await;
+            let (ack, written) = fake.written().await;
+            assert_eq!(
+                ack.get_attr("to").and_then(|v| v.as_jid()),
+                Some(&expected_peer)
+            );
+            assert_eq!(
+                ack.get_attr("participant").and_then(|v| v.as_jid()),
+                Some(&expected_peer)
+            );
+            assert!(
+                store
+                    .read(|tx| tx.get(Table::Checkpoints, captured.as_bytes(), 1))
+                    .unwrap()
+                    .is_some()
+            );
+            written.send(Ok(())).unwrap();
+        }
         // Raw malformed text must not be repaired into a server-only ACK route.
         // The following ping barrier detects any accidental ACK and proves receive
         // continues after rejecting either field; accepted frames above remain intact.
         for field in ["from", "participant"] {
-            for invalid in ["@s.whatsapp.net", "@lid", "@g.us"] {
+            for invalid in [
+                "@s.whatsapp.net",
+                "@lid",
+                "@g.us",
+                "12345:256@lid",
+                "12345:355@lid",
+                "12345:-256@lid",
+                "15555550100:256@s.whatsapp.net",
+            ] {
                 fake.deliver(notification.clone().attr(field, invalid))
                     .await;
             }

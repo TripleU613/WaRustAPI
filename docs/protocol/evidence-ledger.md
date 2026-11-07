@@ -1,3 +1,9 @@
+2026-11-06 — **Guarded original device getter range before ACK output.**
+The pinned writer rejects AD device getters outside 0..255 despite constructor
+byte narrowing. Selected unwritable ACK fields are now refused; valid negative
+PN devices use the native pair branch. Recipient omission remains distinct.
+[Complete byte-writer evidence, regressions and limits](apk/2.26.43.72-jid-device-byte-range/README.md). No live account operation.
+
 2026-11-06 — **Preserved literal zero-device LID ACK wire class.**
 Source-aware ACK output now keeps literal DeviceLid0 as AD-JID while decoded
 binary zero-device users still reply with JID_PAIR. Receipt and shared notification

@@ -1,9 +1,16 @@
 {
+  "x-ack-original-device-range": {
+    "x-cli": "xtask apk-smali <apk> --class 'LX/1r2;' --method A03 --signatures --exceptions",
+    "x-transport": "selected receipt and shared notification ACK fields",
+    "x-live": false,
+    "description": "Known accepted explicit DeviceJid text with original out-of-range AD getter is refused before ACK output. Constructor byte narrowing does not imply writer success: positive PN/LID 256/355 and negative LID fail A03 range0..255. Valid negative PN getters select pair instead and receive source-aware projection. Omitted DeviceJid recipients do not suppress otherwise supported ACKs. Actor regressions verify capture-before-write and receive continuation after refusal. No global codec, existing parsed metadata, frozen selector, trust or HTTP route change. Constructor-null metadata, native recovery and live acceptance remain open; no account operation.",
+    "evidence": "docs/protocol/apk/2.26.43.72-jid-device-byte-range/README.md"
+  },
   "x-literal-zero-device-ack-class": {
     "x-cli": false,
     "x-transport": "selected receipt and shared notification ACK output fields",
     "x-live": false,
-    "description": "Source-aware projection preserves literal LID Device0 as AD-JID flags1/device0 while binary AD0 users reply with JID_PAIR; PN exact-zero remains pair. Signed and BMP-decimal original zero and ignored dot qualifiers are covered. Raw attributes, existing parsed metadata and persisted selectors are retained. Device recipient UserJid casts and token authority admission are unchanged. Wrapped original device integers, complete canonicalization and live acceptance remain unverified. No HTTP route or account operation.",
+    "description": "Source-aware projection preserves literal LID Device0 as AD-JID flags1/device0 while binary AD0 users reply with JID_PAIR; PN exact-zero remains pair. Signed and BMP-decimal original zero and ignored dot qualifiers are covered. Raw attributes, existing parsed metadata and persisted selectors are retained. Device recipient UserJid casts and token authority admission are unchanged. Original device getter range and valid negative PN pair projection are tracked in x-ack-original-device-range. Complete canonicalization and live acceptance remain unverified. No HTTP route or account operation.",
     "evidence": "docs/protocol/receipt-primary-ack.md#literal-zero-device-ack-wire-class-2026-11-06"
   },
   "x-selected-ack-writer-compliance": {

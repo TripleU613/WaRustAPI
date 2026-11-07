@@ -663,3 +663,20 @@ all-target/all-feature Clippy, formatting, OpenAPI library symbols, regenerated
 CLI reference, APK coverage and repository hygiene pass. The new declaration
 census is retained with reproduction and checksums; hygiene checked8108 local
 links and452 APK checksum bundles after staging the new evidence bundle. No live acceptance is claimed.
+
+## Original device getter range at ACK writing (2026-11-06)
+
+**Confirmed static / fixed offline:** [complete byte writer and outer path](apk/2.26.43.72-jid-device-byte-range/README.md)
+resolve the wrapped-device writer gap. 1r2.A03 requires 0..255; 1r2.A00 passes
+original getter integers, not narrowed constructor bytes. Positive 256/355 PN/LID
+and negative LID values that pass construction can therefore be unwritable.
+The selected-output guard now refuses these ACK fields. Omitted device-valued
+recipients remain harmless; a valid negative PN device instead takes JID_PAIR
+because its original getter is nonpositive and agent is zero. A bounded raw-text
+projection reproduces that pair without changing captures or existing selectors.
+
+The field regression failed on an ACK built with 12345:256@lid before correction.
+The receive actor exercises refusal followed by a ping barrier, and capture-before-
+write for valid negative PN and exact LID zero. Global encoder/model, native
+exception recovery, constructor-null hosted strings, other classes and live
+acceptance remain separate; no account operation or new request family.

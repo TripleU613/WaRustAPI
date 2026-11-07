@@ -1,0 +1,23 @@
+
+# class: LX/1r2;
+# extends: Ljava/lang/Object;
+
+.method public A03(VLI)  # .registers 3
+    # full signature: LX/1r2;->A03(Ljava/io/OutputStream;I)V
+    0000..0004  if-ltz  v2, +0xc
+    0004..0008  const/16  v0, #0x100
+    0008..000c  if-ge  v2, v0, +0x8
+    000c..0010  and-int/lit16  v0, v2, #0xff
+    0010..0016  invoke-virtual  {v1, v0}, Ljava/io/OutputStream;->write(I)V
+    0016..0018  return-void
+    0018..001c  const-string  v1, "value out of range; value="
+    001c..0020  new-instance  v0, Ljava/lang/StringBuilder;
+    0020..0026  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0026..002c  invoke-virtual  {v0, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    002c..0032  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0032..0034  move-result-object  v1
+    0034..0038  new-instance  v0, Ljava/io/IOException;
+    0038..003e  invoke-direct  {v0, v1}, Ljava/io/IOException;-><init>(Ljava/lang/String;)V
+    003e..0040  throw  v0
+    # exception table: 0 try range(s)
+.end method

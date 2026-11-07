@@ -1433,6 +1433,22 @@ pub(crate) fn ack_self_user_attribute(value: &crate::binary::AttributeValue) -> 
     ack_bare_attribute_text(value).is_some_and(ack_self_user_text)
 }
 
+// The constructor validates a narrowed byte but subclasses retain the original
+// int. APK 43.72 1r2.A00/A03 must use that original when selecting/checking AD.
+pub(super) fn ack_text_device(text: &str) -> Option<(&str, &str, i32)> {
+    let AckUserText::Device(user) = ack_user_text(text)? else {
+        return None;
+    };
+    let (local, server) = text.rsplit_once('@')?;
+    let device = match local.rsplit_once(':') {
+        Some((_, suffix)) => {
+            super::mex::java_decimal_long(suffix).and_then(|device| i32::try_from(device).ok())?
+        }
+        None => 0,
+    };
+    Some((user, server, device))
+}
+
 // Selected APK43.72 Jid.isProtocolCompliant rejects types2/8/9/11.
 // A false result here is unclassified, not a certification of all JID grammar.
 pub(crate) fn ack_attribute_is_known_unwritable(value: &crate::binary::AttributeValue) -> bool {
@@ -1440,13 +1456,20 @@ pub(crate) fn ack_attribute_is_known_unwritable(value: &crate::binary::Attribute
         return true;
     }
     if let Some(text) = value.as_text() {
-        return matches!(
-            ack_user_text(text),
-            Some(AckUserText::ServiceUser(_) | AckUserText::NonUser(_))
-        ) || (text
-            .rsplit_once('@')
-            .is_some_and(|(_, domain)| domain == "temp")
-            && ack_non_user_text_valid(text) == Some(true));
+        let bad_ad_device = ack_text_device(text).is_some_and(|(_, server, device)| {
+            // PN negatives take the compliant pair branch. LID's getAgent == 1
+            // forces AD even for a negative original integer, which A03 rejects.
+            (server != "s.whatsapp.net" || device > 0) && !(0..=255).contains(&device)
+        });
+        return bad_ad_device
+            || matches!(
+                ack_user_text(text),
+                Some(AckUserText::ServiceUser(_) | AckUserText::NonUser(_))
+            )
+            || (text
+                .rsplit_once('@')
+                .is_some_and(|(_, domain)| domain == "temp")
+                && ack_non_user_text_valid(text) == Some(true));
     }
     value.as_jid().is_some_and(|jid| {
         matches!(
@@ -2418,6 +2441,68 @@ mod tests {
             ack.get_attr("to").and_then(|v| v.as_jid()),
             Some(&Jid::parse("12345@lid").unwrap())
         );
+    }
+
+    #[test]
+    fn wrapped_device_numbers_cannot_create_unwritable_ack_fields() {
+        for route in [
+            "12345:256@lid",
+            "12345:355@lid",
+            "12345:-256@lid",
+            "15555550100:256@s.whatsapp.net",
+            "15555550100:355@s.whatsapp.net",
+        ] {
+            for field in ["from", "participant"] {
+                let input = Node::new("receipt")
+                    .attr("from", "15555550100@s.whatsapp.net")
+                    .attr("id", "WRAPPED-DEVICE")
+                    .attr(field, route);
+                assert!(received_confirmation(&input).is_none(), "{field}/{route}");
+                let notification = Node::new("notification")
+                    .attr("type", "picture")
+                    .attr("id", "WRAPPED-DEVICE")
+                    .attr("from", "15555550100@s.whatsapp.net")
+                    .attr(field, route);
+                assert!(
+                    super::super::notifications::base_ack(&notification, "picture").is_err(),
+                    "{field}/{route}"
+                );
+            }
+            // DeviceJid fails the optional recipient UserJid cast. Nothing unwritable
+            // is selected for output, so the source's ACK remains supported.
+            let input = Node::new("receipt")
+                .attr("from", "15555550100@s.whatsapp.net")
+                .attr("id", "OMITTED-DEVICE")
+                .attr("recipient", route);
+            let ack = received_confirmation(&input).unwrap();
+            assert!(ack.get_attr("recipient").is_none());
+        }
+        for route in [
+            "15555550100:-256@s.whatsapp.net",
+            "15555550100:-157@s.whatsapp.net",
+        ] {
+            let input = Node::new("receipt")
+                .attr("id", "NEGATIVE-PN")
+                .attr("from", route);
+            let ack =
+                received_confirmation(&input).expect("native negative PN device uses pair branch");
+            assert_eq!(
+                ack.get_attr("to").and_then(|v| v.as_jid()),
+                Some(&Jid::parse("15555550100@s.whatsapp.net").unwrap())
+            );
+            let bytes = Encoder::new(TokenDictionary::comparison_2_26_37_71())
+                .encode(&ack)
+                .unwrap();
+            assert!(!bytes.windows(3).any(|part| part[0] == 0xf7));
+            let input = Node::new("notification")
+                .attr("type", "picture")
+                .attr("id", "NEGATIVE-PN")
+                .attr("from", route);
+            let notification_ack = super::super::notifications::base_ack(&input, "picture")
+                .unwrap()
+                .unwrap();
+            assert_eq!(notification_ack.get_attr("to"), ack.get_attr("to"));
+        }
     }
 
     #[test]
