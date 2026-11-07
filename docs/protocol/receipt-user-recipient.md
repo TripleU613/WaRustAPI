@@ -213,3 +213,14 @@ after test-only unused path-qualification cleanup. Formatting, OpenAPI library
 symbols, regenerated CLI reference, APK coverage and repository hygiene pass.
 Hygiene checked8044 local links and451 APK checksum bundles. Offline verification
 does not establish live server ACK acceptance or full native parity.
+
+
+## Long typed PN follow-up (2026-11-06)
+
+The previously listed long typed PN recipient gap is now closed for the
+[existing native-validated longer-PN correlation branch](message-ack.md#long-phone-user-recipient-admission-is-independent-of-carrier-2026-11-06).
+A native-valid20-digit user no longer requires a text carrier to correlate:
+primary/hosted JID_PAIR and binary AD0 use the projected user grammar too.
+21-digit, leading-zero and prohibited10-prefix cases remain unsettled. LID's
+bound and special/short-typed/decode-layer limitations remain separate.
+No receipt getter, global alias/store normalization or live operation changed.

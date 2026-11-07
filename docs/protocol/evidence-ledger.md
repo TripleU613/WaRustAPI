@@ -1,3 +1,10 @@
+2026-11-06 — **Made native long-PN ACK admission carrier-independent.**
+A matching native-valid20-digit PN recipient now correlates in binary primary/
+hosted pairs and AD0 as it already did in text. Constructor-invalid long users
+remain unsettled; LID's separate bound and no-resend/reopen guards remain.
+[Current constructor/reader evidence and regression matrix](message-ack.md#long-phone-user-recipient-admission-is-independent-of-carrier-2026-11-06).
+No live account operation or outgoing target-builder change.
+
 2026-11-06 — **Preserved binary user-recipient precedence.**
 Message ACKs no longer ignore a binary zero-device user recipient and settle
 through an unrelated from. Hosted binary recipients project to their underlying

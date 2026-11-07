@@ -1195,3 +1195,53 @@ partial-write controls pass unchanged; no runtime/replay or live change added.
 - **2026-11-06 decoder presence follow-through:** null attribute markers now fail before semantic routing instead of becoming present empty text. Explicit emptyid remains distinct and retains existing accessor behavior. [Pinned constructor/non-null proof and literal controls](node-serializer.md#null-attribute-values-cannot-become-empty-text-2026-11-06).
 
 - **2026-11-06 root-end follow-through:** rawroot stream-end now captures and consumes the receive epoch before ACK/reply processing; pending receipt uncertainty survives reopen without replay. [Implementation, coordinated API/CLI behavior and remaining policy limits](node-serializer.md#root-stream-end-captures-and-consumes-the-receive-epoch-2026-11-06).
+
+
+## Long phone-user recipient admission is independent of carrier (2026-11-06)
+
+**Confirmed local defect / fixed offline:** after binary-zero and hosted user
+projection, message_ack_chat still admitted PN recipients longer than15 only
+when the original attribute was text. Equivalent JID_PAIR or AD0 input retained
+uncertainty even with the matching original chat and wire ID. The expanded
+outbox regression failed for a native-valid20-digit binary AD0 recipient.
+
+For the existing longer-PN branch the helper now validates the projected user
+through the already implemented native classifier, independent of the source
+attribute's text/binary carrier. It does not simply lift a length cap: ordinary
+PhoneUserJid still needs the native constructor predicate, and LID retains its
+separate1..15 limit. Existing special-user handling, recipient-over-from order,
+wire-ID/in-flight guards and original outbox authority remain.
+
+**Reused confirmed static evidence**, pinned APK43.72 SHA256887a6f94:
+[PhoneUserJid/0Dl.A02](apk/2.26.43.72-pn-ack-text/README.md) requires5..20
+ASCII digits, forbids leading0 and prefix10 unless1008. This is protocol user
+grammar, not permission to invent a phone number or change registration/E.164.
+The [user factory](apk/2.26.43.72-message-ack-chat/user-factory.txt) constructs
+that user for plain hosted/PN. [123.A01](apk/2.26.43.72-group-missing-identification/current-jid-attribute-reader.txt)
+reconstructs both JID_PAIR and AD through the factory; [A04](apk/2.26.43.72-group-missing-identification/current-ad-string-join.txt)
+omits zero device. [1rH.A03](apk/2.26.43.72-distribution-ack-admission/native.txt)
+selects a parsed UserJid recipient before from, so valid construction does not
+depend on which of those carriers produced the same user. No new REA export/ID.
+
+The real encode/decode/outbox matrix now includes ordinary and1008-prefix
+20-digit PN positives, plus21-digit, leading-zero and forbidden10-prefix
+negatives. It retains primary pairs, hosted pairs and binary AD0; opposite from
+with matching/mismatching recipient; success/error500; original entry/journal
+preservation; one terminal fact; duplicate suppression; reopen and no-resend.
+Unsupported binary constructor cases remain unsettled rather than gaining
+long-PN authority. No outgoing target builder or account state was changed.
+
+**Boundary found, not silently generalized:** the native pair/AD reader invokes
+0Dd.A00 directly, whereas optional text getters use the nullable wrapper.
+Complete Rust decode-layer constructor grammar/error policy is not established
+by this correlation fix. Short malformed opaque typed users, special families,
+all from forms, full callback ownership and live acceptance remain separate
+work. No global decoder normalization, saved identity merge, automatic retry,
+new request family or live account operation was introduced.
+
+Verification: the expanded actual-wire outbox regression failed on the old
+20-digit binary AD0 case and passes with the corrected projected-user check.
+All1545 workspace/all-feature tests, strict all-target/all-feature Clippy,
+formatting, OpenAPI library symbols, regenerated CLI reference, APK coverage
+and repository hygiene pass. Hygiene checked8053 local links and451 APK
+checksum bundles. These are offline results, not live acceptance evidence.

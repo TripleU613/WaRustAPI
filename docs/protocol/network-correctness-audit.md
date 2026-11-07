@@ -4915,3 +4915,15 @@ and1rH precedence evidence are linked. New tests retain original entry/journal,
 matched success/refusal, deduplication, reopen and no-resend behavior. No global
 normalization, alias trust, new request or account operation. Other typed/from
 families and complete native/live parity remain unverified.
+
+
+### Carrier-independent native long-PN ACK admission (2026-11-06)
+
+**Confirmed local fix:** [long phone-user recipient correlation](message-ack.md#long-phone-user-recipient-admission-is-independent-of-carrier-2026-11-06)
+previously accepted native-valid long text but refused the equivalent binary
+primary/hosted pair or AD0 recipient. The projected user now passes the same
+native constructor predicate irrespective of carrier. The extended outbox
+matrix failed before correction; it covers valid20/1008-prefix and invalid21,
+leading-zero and prohibited10-prefix cases, opposite from, success/refusal,
+state/journal preservation, duplicates, reopen and no resend. LID/special/decode
+policy limits remain explicit. No new target builder, replay or account operation.

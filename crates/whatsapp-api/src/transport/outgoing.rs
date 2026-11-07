@@ -1361,9 +1361,13 @@ pub(crate) fn message_ack_chat(node: &Node) -> Option<crate::model::jid::Jid> {
             && (recipient.user.len() <= 15
                 || (recipient.server == Server::User
                     && matches!(
-                        node.get_attr("recipient")
-                            .and_then(|v| v.as_text())
-                            .and_then(super::messaging::ack_user_text),
+                        // APK43.72 PhoneUserJid admits5..20 under0Dl.A02.
+                        // Validate the projected long PN, not its text/binary
+                        // carrier; keep LID's separate1..15 bound unchanged.
+                        super::messaging::ack_user_text(&format!(
+                            "{}@s.whatsapp.net",
+                            recipient.user
+                        )),
                         Some(super::messaging::AckUserText::User(_))
                     )))
             && recipient.user.bytes().all(|b| b.is_ascii_digit()))
@@ -3625,9 +3629,50 @@ mod tests {
 
     #[test]
     fn binary_user_recipient_keeps_message_ack_precedence_across_reopen() {
-        for (server, hosted, user, other) in [
-            (Server::User, Server::Hosted, "15555550100", "15555550999"),
-            (Server::Lid, Server::HostedLid, "12345", "99999"),
+        for (server, hosted, user, other, admitted) in [
+            (
+                Server::User,
+                Server::Hosted,
+                "15555550100",
+                "15555550999",
+                true,
+            ),
+            (Server::Lid, Server::HostedLid, "12345", "99999", true),
+            (
+                Server::User,
+                Server::Hosted,
+                "12345678901234567890",
+                "15555550999",
+                true,
+            ),
+            (
+                Server::User,
+                Server::Hosted,
+                "10081234567890123456",
+                "15555550999",
+                true,
+            ),
+            (
+                Server::User,
+                Server::Hosted,
+                "123456789012345678901",
+                "15555550999",
+                false,
+            ),
+            (
+                Server::User,
+                Server::Hosted,
+                "02345678901234567890",
+                "15555550999",
+                false,
+            ),
+            (
+                Server::User,
+                Server::Hosted,
+                "10123456789012345678",
+                "15555550999",
+                false,
+            ),
         ] {
             for carrier in ["zero-ad", "hosted-pair", "primary-pair"] {
                 for matches in [false, true] {
@@ -3671,12 +3716,12 @@ mod tests {
                             .unwrap();
                         assert_eq!(
                             acknowledge(&store, &ack).unwrap(),
-                            matches,
-                            "{server:?}/{carrier}/{matches}/{error:?}"
+                            matches && admitted,
+                            "{server:?}/{carrier}/{user}/{matches}/{error:?}"
                         );
                         assert!(!acknowledge(&store, &ack).unwrap());
                         let after = store.read(|tx| outbox().get(tx, local_id)).unwrap();
-                        if matches {
+                        if matches && admitted {
                             let facts = &after.as_ref().unwrap().facts;
                             assert_eq!(facts.len(), 1);
                             assert_eq!(

@@ -1,4 +1,11 @@
 {
+  "x-long-pn-ack-carrier-admission": {
+    "x-cli": false,
+    "x-transport": "outgoing::message_ack_chat longer-PN recipient correlation branch",
+    "x-live": false,
+    "description": "Projected PN recipients above15 characters now pass the existing native constructor classifier regardless of text, primary/hosted JID_PAIR or binary AD0 carrier. A valid20-digit binary recipient previously failed to correlate while equivalent text succeeded. This is not an unchecked length relaxation:5..20 ASCII digits, leading-zero and10/1008 constructor policy still govern this branch; LID bound is unchanged. Extended outbox matrix includes valid20 and1008-prefix plus invalid21/leading-zero/prohibited10-prefix, match/mismatch with opposite from, success/error500, unchanged entry/journal, one terminal fact, duplicates, reopen and no resend. Full decode-layer grammar, short opaque typed users, other families/from forms and live acceptance remain separate. No target builder, global decoder/store normalization, retry, HTTP route or account operation changed.",
+    "evidence": "docs/protocol/message-ack.md#long-phone-user-recipient-admission-is-independent-of-carrier-2026-11-06"
+  },
   "x-binary-user-recipient-precedence": {
     "x-cli": false,
     "x-transport": "receipts::recipient; messaging receipt ACK; outgoing::message_ack_chat",
