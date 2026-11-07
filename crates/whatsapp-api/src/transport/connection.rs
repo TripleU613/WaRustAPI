@@ -368,7 +368,7 @@ enum WriteGuard {
         Option<super::devices::DeviceQuery>,
     ),
     DirectQuery(Arc<ProtocolStore>, super::outgoing::Pending),
-    DirectMessage(Arc<ProtocolStore>, super::outgoing::MessageWriteGuard),
+    CommittedMessage(Arc<ProtocolStore>, super::outgoing::MessageWriteGuard),
     Prekey(Arc<ProtocolStore>, super::prekeys::PendingUpload),
     Devices(Arc<ProtocolStore>, super::devices::DeviceQuery),
     RetryConfirmation(
@@ -415,7 +415,7 @@ impl Outbound {
             Some(WriteGuard::DirectQuery(store, pending)) => {
                 pending.check_write_authority(&store, &self.node)
             }
-            Some(WriteGuard::DirectMessage(store, guard)) => {
+            Some(WriteGuard::CommittedMessage(store, guard)) => {
                 guard.check_write_authority(&store, &self.node)
             }
             Some(WriteGuard::Prekey(store, pending)) => {
@@ -602,8 +602,11 @@ impl NodeLink {
         node: &Node,
     ) -> Result<()> {
         let guard = super::outgoing::MessageWriteGuard::capture(store, account, node)?;
-        self.send_guarded(node, Some(WriteGuard::DirectMessage(store.clone(), guard)))
-            .await
+        self.send_guarded(
+            node,
+            Some(WriteGuard::CommittedMessage(store.clone(), guard)),
+        )
+        .await
     }
 
     async fn send_prekey_upload(
@@ -634,9 +637,17 @@ impl NodeLink {
         pending: Option<&super::outgoing_group::Pending>,
         node: &Node,
     ) -> Result<()> {
-        // Every group phase belongs to the connection account, including final
-        // messages with no remaining Pending. Preserve the stronger device-query
-        // reservation/deadline guard as an additional check, not an alternative.
+        if node.description == "message" && pending.is_none() {
+            let guard = super::outgoing::MessageWriteGuard::capture_group(store, account, node)?;
+            return self
+                .send_guarded(
+                    node,
+                    Some(WriteGuard::CommittedMessage(store.clone(), guard)),
+                )
+                .await;
+        }
+        // Remaining query/distribution phases belong to the connection account.
+        // Keep device-query reservation/deadline admission as an additional check.
         let expected = super::account_authority::fingerprint(account.generation, Some(account))?;
         let query = pending.and_then(|p| p.device_query()).cloned();
         self.send_guarded(
@@ -6976,18 +6987,67 @@ mod tests {
         );
     }
 
+    fn committed_group_fixture(
+        store: &ProtocolStore,
+        node: &Node,
+    ) -> crate::model::ids::LocalMessageId {
+        use crate::{
+            model::{
+                ids::ClientRequestId,
+                message::MessageContent,
+                send::{AttemptProgress, SendRequest},
+            },
+            outbox::{AttemptRecord, Outbox},
+            profile::Limits,
+        };
+        store.write(|tx| {
+            let outbox = Outbox::new("comparison-driver", Limits::default());
+            let id = outbox.enqueue(tx, &SendRequest { client_request_id: ClientRequestId::new("group-writer-fixture").unwrap(), chat: ChatId::from_jid(&Jid::parse("1@g.us").unwrap()).unwrap(), content: MessageContent::Text { body: "fixture".into(), quoted: None, style: Default::default() } })?.0.local_id;
+            let mut entry = outbox.get_mut(tx,id)?.unwrap();
+            let wire_id = MessageId::new("frozen-group-step").unwrap();
+            entry.wire_id = Some(wire_id.clone()); entry.progress = AttemptProgress::InFlight;
+            entry.attempts.push(AttemptRecord { index:0, prepared_at:Timestamp::now(), epoch:Some(ConnectionEpoch(1)), payload:Some(encode(node)?.into()), re_encryption:false });
+            super::super::outgoing::reserve_ack_owner_in(tx,id,&wire_id)?;
+            let account = AccountRecord::load_in_write(tx)?;
+            let authority = super::super::account_authority::fingerprint(tx.generation(), account.as_ref())?;
+            tx.put_json(Table::Checkpoints, format!("outbox-group:{id}").as_bytes(),1,&serde_json::json!({"account_authority":authority,"local_id":id,"phase":"reserved","reason":null,"info_query":"fixture","device_queries":[],"key_queries":0,"recipient_count":1,"device_count":1}))?;
+            tx.put_json(Table::Outbox,&id.0,1,&entry)?; Ok(id)
+        }).unwrap()
+    }
+
     #[tokio::test]
     async fn queued_non_device_group_steps_refuse_changed_account_before_encoding() {
         for description in ["iq", "message"] {
-            for changed in [true, false] {
+            for change in [
+                "same",
+                "account",
+                "node_id",
+                "node_to",
+                "node_body",
+                "group_row",
+                "owner",
+                "attempt",
+                "missing",
+            ] {
+                if description == "iq" && !matches!(change, "same" | "account") {
+                    continue;
+                }
+                let changed = change != "same";
                 let dir = tempfile::tempdir().unwrap();
-                let store = open(&dir.path().join("group-owner.redb"));
+                let path = dir.path().join("group-owner.redb");
+                let store = open(&path);
                 let account = AccountRecord {
                     generation: store.generation(),
                     signal_registration_id: Some(31),
                     ..Default::default()
                 };
                 store.write(|tx| account.save(tx)).unwrap();
+                let ticket = (description == "message").then(|| {
+                    committed_group_fixture(
+                        &store,
+                        &Node::new("message").attr("id", "frozen-group-step"),
+                    )
+                });
                 let (_incoming, incoming) = mpsc::channel(1);
                 let (outgoing, mut writes) = mpsc::channel(1);
                 let link = NodeLink::new(incoming, outgoing);
@@ -7002,30 +7062,75 @@ mod tests {
                     )
                     .await
                 });
-                let queued = writes.recv().await.unwrap();
-                if changed {
+                let mut queued = writes.recv().await.unwrap();
+                match change {
+                    "node_id" => queued.node = queued.node.attr("id", "changed-fixture"),
+                    "node_to" => queued.node = queued.node.attr("to", "changed.invalid"),
+                    "node_body" => {
+                        queued.node = queued.node.children(vec![Node::new("changed-fixture")])
+                    }
+                    _ => {}
+                }
+                if change == "account" {
                     let mut replacement = account;
                     replacement.signal_registration_id = Some(32);
                     store.write(|tx| replacement.save(tx)).unwrap();
                 }
-                let before = store
-                    .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
-                    .unwrap();
+                if matches!(change, "group_row" | "owner" | "attempt" | "missing") {
+                    let id = ticket.unwrap();
+                    store
+                        .write(|tx| {
+                            if matches!(change, "group_row" | "owner") {
+                                let key = if change == "owner" {
+                                    format!("outbox-message-ack-owner:{id}")
+                                } else {
+                                    format!("outbox-group:{id}")
+                                };
+                                tx.delete(Table::Checkpoints, key.as_bytes())?;
+                            } else if change == "missing" {
+                                tx.delete(Table::Outbox, &id.0)?;
+                            } else {
+                                let mut entry =
+                                    super::super::outgoing::outbox().get_mut(tx, id)?.unwrap();
+                                entry.attempts[0].payload = Some(vec![9, 9, 9].into());
+                                tx.put_json(Table::Outbox, &id.0, 1, &entry)?;
+                            }
+                            Ok(())
+                        })
+                        .unwrap();
+                }
+                let snapshot = |store: &ProtocolStore| {
+                    store
+                        .read(|tx| {
+                            [
+                                Table::Account,
+                                Table::Outbox,
+                                Table::Checkpoints,
+                                Table::SignalSessions,
+                            ]
+                            .into_iter()
+                            .map(|t| tx.scan(t, 1, 10000))
+                            .collect::<Result<Vec<_>>>()
+                        })
+                        .unwrap()
+                };
+                let before = snapshot(&store);
+                let head = store.journal_head().unwrap();
                 let prepared = queued.prepare();
                 if changed {
-                    assert!(prepared.is_none(), "{description}");
+                    assert!(prepared.is_none(), "{description}/{change}");
                 } else {
                     let (_, written) = prepared.unwrap();
                     written.send(Ok(())).unwrap();
                 }
                 assert_eq!(task.await.unwrap().is_err(), changed);
                 assert!(writes.recv().await.is_none());
-                assert_eq!(
-                    store
-                        .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
-                        .unwrap(),
-                    before
-                );
+                assert_eq!(snapshot(&store), before);
+                assert_eq!(store.journal_head().unwrap(), head);
+                drop(store);
+                let reopened = identity_store(&path);
+                assert_eq!(snapshot(&reopened), before);
+                assert_eq!(reopened.journal_head().unwrap(), head);
             }
         }
     }

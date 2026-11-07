@@ -23,7 +23,7 @@ use sha2::{Digest, Sha256};
 use zeroize::Zeroizing;
 
 const PREFIX: &str = "outbox-group:";
-fn key(id: LocalMessageId) -> String {
+pub(super) fn key(id: LocalMessageId) -> String {
     format!("{PREFIX}{id}")
 }
 
@@ -1740,6 +1740,22 @@ struct Row {
     key_queries: u32,
     recipient_count: usize,
     device_count: usize,
+}
+
+pub(super) fn check_reserved_message_in(
+    tx: &ReadTx<'_>,
+    id: LocalMessageId,
+    authority: &[u8; 32],
+) -> Result<()> {
+    let row: Row = tx
+        .get_json(Table::Checkpoints, key(id).as_bytes(), 1)?
+        .ok_or_else(|| invalid("reserved group preparation missing"))?;
+    if row.local_id != id || row.phase != Phase::Reserved || &row.authority()? != authority {
+        return Err(invalid(
+            "reserved group preparation changed before message write",
+        ));
+    }
+    Ok(())
 }
 
 impl Row {

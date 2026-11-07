@@ -182,7 +182,7 @@ pub fn identity_suspension(
     })
 }
 
-/// Connection-local authority for one newly committed ordinary direct message.
+/// Connection-local authority for one newly committed ordinary message.
 #[derive(Clone)]
 pub(crate) struct MessageWriteGuard {
     account_authority: [u8; 32],
@@ -190,7 +190,8 @@ pub(crate) struct MessageWriteGuard {
     payload_sha256: [u8; 32],
     entry: Zeroizing<Vec<u8>>,
     ack_owner: Zeroizing<Vec<u8>>,
-    query: Zeroizing<Vec<u8>>,
+    preparation_key: String,
+    preparation: Zeroizing<Vec<u8>>,
 }
 impl MessageWriteGuard {
     pub(crate) fn capture(
@@ -198,13 +199,28 @@ impl MessageWriteGuard {
         account: &AccountRecord,
         node: &Node,
     ) -> Result<Self> {
+        Self::capture_for(store, account, node, false)
+    }
+    pub(crate) fn capture_group(
+        store: &ProtocolStore,
+        account: &AccountRecord,
+        node: &Node,
+    ) -> Result<Self> {
+        Self::capture_for(store, account, node, true)
+    }
+    fn capture_for(
+        store: &ProtocolStore,
+        account: &AccountRecord,
+        node: &Node,
+        group: bool,
+    ) -> Result<Self> {
         if node.description != "message" {
-            return Err(Error::invalid("outbox", "direct write is not a message"));
+            return Err(Error::invalid("outbox", "message write is not a message"));
         }
         let wire_id = MessageId::new(
             node.get_attr("id")
                 .and_then(|v| v.as_text())
-                .ok_or_else(|| Error::invalid("outbox", "direct message id missing"))?,
+                .ok_or_else(|| Error::invalid("outbox", "message id missing"))?,
         )?;
         let payload_sha256 = write_payload_sha256(node)?;
         let account_authority =
@@ -216,17 +232,23 @@ impl MessageWriteGuard {
             {
                 return Err(Error::invalid(
                     "outbox",
-                    "direct account changed before message handoff",
+                    "message account changed before message handoff",
                 ));
             }
             let entry = outbox()
                 .by_wire_id(tx, &wire_id)?
-                .ok_or_else(|| Error::invalid("outbox", "committed direct attempt missing"))?;
+                .ok_or_else(|| Error::invalid("outbox", "committed message attempt missing"))?;
+            if entry.intent.chat.jid().is_group() != group {
+                return Err(Error::invalid(
+                    "outbox",
+                    "message handoff has wrong chat class",
+                ));
+            }
             let last = entry
                 .attempts
                 .last()
                 .filter(|attempt| !attempt.re_encryption)
-                .ok_or_else(|| Error::invalid("outbox", "ordinary direct attempt missing"))?;
+                .ok_or_else(|| Error::invalid("outbox", "ordinary message attempt missing"))?;
             use sha2::{Digest, Sha256};
             if entry.progress != AttemptProgress::InFlight
                 || last
@@ -236,25 +258,31 @@ impl MessageWriteGuard {
             {
                 return Err(Error::invalid(
                     "outbox",
-                    "direct payload differs from in-flight attempt",
+                    "message payload differs from in-flight attempt",
                 ));
             }
             let local_id = entry.local_id;
             let owner: AckOwner = tx
                 .get_json(Table::Checkpoints, ack_owner_key(local_id).as_bytes(), 1)?
-                .ok_or_else(|| Error::invalid("outbox", "direct message ACK owner missing"))?;
+                .ok_or_else(|| Error::invalid("outbox", "message ACK owner missing"))?;
             if owner.wire_id != wire_id || owner.account_authority != account_authority {
-                return Err(Error::invalid("outbox", "direct message ACK owner changed"));
+                return Err(Error::invalid("outbox", "message ACK owner changed"));
             }
-            let query: serde_json::Value = tx
-                .get_json(Table::Checkpoints, query_key(local_id).as_bytes(), 1)?
-                .ok_or_else(|| Error::invalid("outbox", "answered direct query missing"))?;
-            if query["status"] != "answered" {
-                return Err(Error::invalid("outbox", "direct query is not answered"));
-            }
+            let preparation_key = if group {
+                super::outgoing_group::check_reserved_message_in(tx, local_id, &account_authority)?;
+                super::outgoing_group::key(local_id)
+            } else {
+                let query: serde_json::Value = tx
+                    .get_json(Table::Checkpoints, query_key(local_id).as_bytes(), 1)?
+                    .ok_or_else(|| Error::invalid("outbox", "answered direct query missing"))?;
+                if query["status"] != "answered" {
+                    return Err(Error::invalid("outbox", "direct query is not answered"));
+                }
+                query_key(local_id)
+            };
             let snapshot = |table, key: &[u8]| -> Result<_> {
                 Ok(Zeroizing::new(tx.get(table, key, 1)?.ok_or_else(|| {
-                    Error::invalid("outbox", "direct write reservation missing")
+                    Error::invalid("outbox", "message write reservation missing")
                 })?))
             };
             Ok(Self {
@@ -263,7 +291,8 @@ impl MessageWriteGuard {
                 payload_sha256,
                 entry: snapshot(Table::Outbox, &local_id.0)?,
                 ack_owner: snapshot(Table::Checkpoints, ack_owner_key(local_id).as_bytes())?,
-                query: snapshot(Table::Checkpoints, query_key(local_id).as_bytes())?,
+                preparation: snapshot(Table::Checkpoints, preparation_key.as_bytes())?,
+                preparation_key,
             })
         })
     }
@@ -271,7 +300,7 @@ impl MessageWriteGuard {
         if write_payload_sha256(node)? != self.payload_sha256 {
             return Err(Error::invalid(
                 "outbox",
-                "queued direct payload differs from committed attempt",
+                "queued message payload differs from committed attempt",
             ));
         }
         store.read(|tx| {
@@ -281,7 +310,7 @@ impl MessageWriteGuard {
             {
                 return Err(Error::invalid(
                     "outbox",
-                    "direct account changed before message write",
+                    "message account changed before message write",
                 ));
             }
             for (table, key, expected) in [
@@ -293,15 +322,15 @@ impl MessageWriteGuard {
                 ),
                 (
                     Table::Checkpoints,
-                    query_key(self.local_id).into_bytes(),
-                    &self.query,
+                    self.preparation_key.clone().into_bytes(),
+                    &self.preparation,
                 ),
             ] {
                 let current = Zeroizing::new(tx.get(table, &key, 1)?.unwrap_or_default());
                 if *current != **expected {
                     return Err(Error::invalid(
                         "outbox",
-                        "committed direct reservation changed before write",
+                        "committed message reservation changed before write",
                     ));
                 }
             }
