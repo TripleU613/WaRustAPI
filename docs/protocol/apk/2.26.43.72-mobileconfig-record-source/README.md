@@ -105,3 +105,8 @@ Register-relative annotations are not observed runtime memory.
 branches and record population, cache-key semantics, replacement synchronization,
 request-data construction and response parsing/file commit/cache activation.
 No Rust runtime or account behavior changes are justified by this handoff alone.
+
+Follow-up: [JSON adapter and metadata consumer](../2.26.43.72-mobileconfig-json-adapter/README.md)
+now identifies one content-parsing branch and an unchecked consumer boolean.
+It processes existing records; original schema population and chosen decoder
+routing remain unresolved.

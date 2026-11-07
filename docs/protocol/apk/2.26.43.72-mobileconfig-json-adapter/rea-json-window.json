@@ -1,0 +1,69 @@
+{
+  "evidence_id": "ev_bbcb764101027cd5508a9e0cc101eb728e0ee2942c2acf2725dcfcf525e44cd2",
+  "subject": {
+    "name": "libmobileconfig-jni.so",
+    "digest": {
+      "sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so",
+    "format": "unknown",
+    "architecture": null
+  },
+  "provider": {
+    "id": "rizin",
+    "name": "Rizin",
+    "version": null
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.reverse-engineering.command-observation",
+  "operation": "execute_rizin_command",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so",
+    "command": "e scr.color=0; pd 76 @ 0xc950c",
+    "provider_executable": "rizin",
+    "command_arguments": [
+      "-N",
+      "-q",
+      "-c",
+      "e scr.color=0; pd 76 @ 0xc950c",
+      "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so"
+    ]
+  },
+  "raw_result": {
+    "stdout": "            0x000c950c      paciasp\n            0x000c9510      sub   sp, sp, 0x70\n            0x000c9514      stp   x29, x30, [sp, 0x30]\n            0x000c9518      bl    0xca378\n            0x000c951c      add   x29, sp, 0x30\n            0x000c9520      mrs   x24, tpidr_el0\n            0x000c9524      bl    0xcb3d0\n            0x000c9528      ldr   x8, [x24, 0x28]                      ; [0x28:4]=0xcfad8\n            0x000c952c      mov   x22, x0\n            0x000c9530      stur  x8, [x29, -8]\n            0x000c9534      stp   xzr, xzr, [sp, 8]\n            0x000c9538      stp   x1, x2, [sp, 0x18]\n        ,=< 0x000c953c      cbz   x1, 0xc9550\n        |   0x000c9540      mov   x0, x21\n        |   0x000c9544      mov   w1, wzr\n        |   0x000c9548      mov   x2, x20\n        |   0x000c954c      bl    sym.imp.memset\n        `-> 0x000c9550      nop\n            0x000c9554      adr   x0, 0xd4260\n            0x000c9558      add   x2, sp, 8\n            0x000c955c      mov   x1, xzr\n            0x000c9560      bl    sym.imp.yajl_alloc\n            0x000c9564      mov   w1, 1\n            0x000c9568      mov   w2, 1\n            0x000c956c      mov   x19, x0\n            0x000c9570      bl    sym.imp.yajl_config\n            0x000c9574      mov   x0, x22\n            0x000c9578      bl    sym.imp.strlen\n            0x000c957c      mov   x23, x0\n            0x000c9580      bl    0xcb978\n            0x000c9584      mov   x2, x23\n            0x000c9588      bl    sym.imp.yajl_parse\n            0x000c958c      mov   x0, x19\n            0x000c9590      bl    sym.imp.yajl_complete_parse\n        ,=< 0x000c9594      cbz   w0, 0xc9610\n       ,==< 0x000c9598      cbz   x21, 0xc95ec\n      ,===< 0x000c959c      cbz   x20, 0xc95ec\n      |||   0x000c95a0      mov   x0, x19\n      |||   0x000c95a4      mov   w1, 1\n      |||   0x000c95a8      mov   x2, x22\n      |||   0x000c95ac      mov   x3, x23\n      |||   0x000c95b0      bl    sym.imp.yajl_get_error\n      |||   0x000c95b4      mov   x22, x0\n      |||   0x000c95b8      adrp  x3, 0x17000\n      |||   0x000c95bc      add   x3, x3, 0x2ff\n      |||   0x000c95c0      mov   x0, x21\n      |||   0x000c95c4      mov   x2, x20\n      |||   0x000c95c8      mov   x4, x22\n      |||   0x000c95cc      bl    0xc963c\n      |||   0x000c95d0      ldp   x8, x0, [x19, 0x60]\n      |||   0x000c95d4      mov   x1, x22\n      |||   0x000c95d8      blr   x8\n     ,====< 0x000c95dc      b     0xc95ec\n    .-----> 0x000c95e0      add   x0, sp, 8\n    :||||   0x000c95e4      bl    0xc96c0\n    :||||   0x000c95e8      bl    0xc9728\n    :```--> 0x000c95ec      ldr   x8, [sp, 8]                          ; [0x8:4]=0\n    `=====< 0x000c95f0      cbnz  x8, 0xc95e0\n        |   0x000c95f4      mov   x0, x19\n        |   0x000c95f8      bl    sym.imp.yajl_free\n        |   0x000c95fc      ldr   x0, [sp, 0x10]                       ; [0x10:4]=0xb70003\n       ,==< 0x000c9600      cbz   x0, 0xc961c\n       ||   0x000c9604      bl    0xc9728\n       ||   0x000c9608      mov   x0, xzr\n       ||   0x000c960c      b     0xc961c\n       |`-> 0x000c9610      mov   x0, x19\n       |    0x000c9614      bl    sym.imp.yajl_free\n       |    0x000c9618      ldr   x0, [sp, 0x10]                       ; [0x10:4]=0xb70003\n       `--> 0x000c961c      bl    0xca314\n            0x000c9620      b.ne  0xc9638\n            0x000c9624      bl    0xca488\n            0x000c9628      ldp   x29, x30, [sp, 0x30]\n            0x000c962c      add   sp, sp, 0x70\n            0x000c9630      autiasp\n            0x000c9634      ret\n            0x000c9638      bl    sym.imp.__stack_chk_fail\n",
+    "stderr": "ERROR: Cannot determine entrypoint, using 0x0004c460.\n",
+    "exit_code": 0,
+    "signal": null,
+    "output_truncated": false,
+    "completion_status": "complete",
+    "artifact_sha256_after": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+    "artifact_changed": false
+  },
+  "normalized_result": {
+    "stdout": "            0x000c950c      paciasp\n            0x000c9510      sub   sp, sp, 0x70\n            0x000c9514      stp   x29, x30, [sp, 0x30]\n            0x000c9518      bl    0xca378\n            0x000c951c      add   x29, sp, 0x30\n            0x000c9520      mrs   x24, tpidr_el0\n            0x000c9524      bl    0xcb3d0\n            0x000c9528      ldr   x8, [x24, 0x28]                      ; [0x28:4]=0xcfad8\n            0x000c952c      mov   x22, x0\n            0x000c9530      stur  x8, [x29, -8]\n            0x000c9534      stp   xzr, xzr, [sp, 8]\n            0x000c9538      stp   x1, x2, [sp, 0x18]\n        ,=< 0x000c953c      cbz   x1, 0xc9550\n        |   0x000c9540      mov   x0, x21\n        |   0x000c9544      mov   w1, wzr\n        |   0x000c9548      mov   x2, x20\n        |   0x000c954c      bl    sym.imp.memset\n        `-> 0x000c9550      nop\n            0x000c9554      adr   x0, 0xd4260\n            0x000c9558      add   x2, sp, 8\n            0x000c955c      mov   x1, xzr\n            0x000c9560      bl    sym.imp.yajl_alloc\n            0x000c9564      mov   w1, 1\n            0x000c9568      mov   w2, 1\n            0x000c956c      mov   x19, x0\n            0x000c9570      bl    sym.imp.yajl_config\n            0x000c9574      mov   x0, x22\n            0x000c9578      bl    sym.imp.strlen\n            0x000c957c      mov   x23, x0\n            0x000c9580      bl    0xcb978\n            0x000c9584      mov   x2, x23\n            0x000c9588      bl    sym.imp.yajl_parse\n            0x000c958c      mov   x0, x19\n            0x000c9590      bl    sym.imp.yajl_complete_parse\n        ,=< 0x000c9594      cbz   w0, 0xc9610\n       ,==< 0x000c9598      cbz   x21, 0xc95ec\n      ,===< 0x000c959c      cbz   x20, 0xc95ec\n      |||   0x000c95a0      mov   x0, x19\n      |||   0x000c95a4      mov   w1, 1\n      |||   0x000c95a8      mov   x2, x22\n      |||   0x000c95ac      mov   x3, x23\n      |||   0x000c95b0      bl    sym.imp.yajl_get_error\n      |||   0x000c95b4      mov   x22, x0\n      |||   0x000c95b8      adrp  x3, 0x17000\n      |||   0x000c95bc      add   x3, x3, 0x2ff\n      |||   0x000c95c0      mov   x0, x21\n      |||   0x000c95c4      mov   x2, x20\n      |||   0x000c95c8      mov   x4, x22\n      |||   0x000c95cc      bl    0xc963c\n      |||   0x000c95d0      ldp   x8, x0, [x19, 0x60]\n      |||   0x000c95d4      mov   x1, x22\n      |||   0x000c95d8      blr   x8\n     ,====< 0x000c95dc      b     0xc95ec\n    .-----> 0x000c95e0      add   x0, sp, 8\n    :||||   0x000c95e4      bl    0xc96c0\n    :||||   0x000c95e8      bl    0xc9728\n    :```--> 0x000c95ec      ldr   x8, [sp, 8]                          ; [0x8:4]=0\n    `=====< 0x000c95f0      cbnz  x8, 0xc95e0\n        |   0x000c95f4      mov   x0, x19\n        |   0x000c95f8      bl    sym.imp.yajl_free\n        |   0x000c95fc      ldr   x0, [sp, 0x10]                       ; [0x10:4]=0xb70003\n       ,==< 0x000c9600      cbz   x0, 0xc961c\n       ||   0x000c9604      bl    0xc9728\n       ||   0x000c9608      mov   x0, xzr\n       ||   0x000c960c      b     0xc961c\n       |`-> 0x000c9610      mov   x0, x19\n       |    0x000c9614      bl    sym.imp.yajl_free\n       |    0x000c9618      ldr   x0, [sp, 0x10]                       ; [0x10:4]=0xb70003\n       `--> 0x000c961c      bl    0xca314\n            0x000c9620      b.ne  0xc9638\n            0x000c9624      bl    0xca488\n            0x000c9628      ldp   x29, x30, [sp, 0x30]\n            0x000c962c      add   sp, sp, 0x70\n            0x000c9630      autiasp\n            0x000c9634      ret\n            0x000c9638      bl    sym.imp.__stack_chk_fail\n",
+    "stderr": "ERROR: Cannot determine entrypoint, using 0x0004c460.\n",
+    "exit_code": 0,
+    "signal": null,
+    "output_truncated": false,
+    "completion_status": "complete",
+    "artifact_sha256_after": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+    "artifact_changed": false
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "The executable version and supported formats are reported as unknown because no reliable version probe was performed.",
+    "A non-zero process exit is preserved as an observed command result.",
+    "Rizin commands and retained plugins may read files or access network resources outside the selected artifact; those external inputs are not bound to Evidence.",
+    "When both are available, pre-run and post-run digests detect artifact changes across the provider call but cannot prove the exact bytes consumed during the call."
+  ],
+  "relationship_coverage": null,
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so"
+    }
+  ],
+  "evidence_links": []
+}

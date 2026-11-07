@@ -1,0 +1,82 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   c950c:      	paciasp
+   c9510:      	sub	sp, sp, #0x70
+   c9514:      	stp	x29, x30, [sp, #0x30]
+   c9518:      	bl	0xca378 <JNI_OnLoad+0x5b1d8>
+   c951c:      	add	x29, sp, #0x30
+   c9520:      	mrs	x24, TPIDR_EL0
+   c9524:      	bl	0xcb3d0 <JNI_OnLoad+0x5c230>
+   c9528:      	ldr	x8, [x24, #0x28]
+   c952c:      	mov	x22, x0
+   c9530:      	stur	x8, [x29, #-0x8]
+   c9534:      	stp	xzr, xzr, [sp, #0x8]
+   c9538:      	stp	x1, x2, [sp, #0x18]
+   c953c:      	cbz	x1, 0xc9550 <JNI_OnLoad+0x5a3b0>
+   c9540:      	mov	x0, x21
+   c9544:      	mov	w1, wzr
+   c9548:      	mov	x2, x20
+   c954c:      	bl	0xcda10 <memset@plt>
+   c9550:      	nop
+   c9554:      	adr	x0, 0xd4260
+   c9558:      	add	x2, sp, #0x8
+   c955c:      	mov	x1, xzr
+   c9560:      	bl	0xcd5a0 <yajl_alloc@plt>
+   c9564:      	mov	w1, #0x1                // =1
+   c9568:      	mov	w2, #0x1                // =1
+   c956c:      	mov	x19, x0
+   c9570:      	bl	0xcd5b0 <yajl_config@plt>
+   c9574:      	mov	x0, x22
+   c9578:      	bl	0xcc9d0 <strlen@plt>
+   c957c:      	mov	x23, x0
+   c9580:      	bl	0xcb978 <JNI_OnLoad+0x5c7d8>
+   c9584:      	mov	x2, x23
+   c9588:      	bl	0xcd620 <yajl_parse@plt>
+   c958c:      	mov	x0, x19
+   c9590:      	bl	0xcd5d0 <yajl_complete_parse@plt>
+   c9594:      	cbz	w0, 0xc9610 <JNI_OnLoad+0x5a470>
+   c9598:      	cbz	x21, 0xc95ec <JNI_OnLoad+0x5a44c>
+   c959c:      	cbz	x20, 0xc95ec <JNI_OnLoad+0x5a44c>
+   c95a0:      	mov	x0, x19
+   c95a4:      	mov	w1, #0x1                // =1
+   c95a8:      	mov	x2, x22
+   c95ac:      	mov	x3, x23
+   c95b0:      	bl	0xcd5e0 <yajl_get_error@plt>
+   c95b4:      	mov	x22, x0
+   c95b8:      	adrp	x3, 0x17000
+   c95bc:      	add	x3, x3, #0x2ff
+   c95c0:      	mov	x0, x21
+   c95c4:      	mov	x2, x20
+   c95c8:      	mov	x4, x22
+   c95cc:      	bl	0xc963c <JNI_OnLoad+0x5a49c>
+   c95d0:      	ldp	x8, x0, [x19, #0x60]
+   c95d4:      	mov	x1, x22
+   c95d8:      	blr	x8
+   c95dc:      	b	0xc95ec <JNI_OnLoad+0x5a44c>
+   c95e0:      	add	x0, sp, #0x8
+   c95e4:      	bl	0xc96c0 <JNI_OnLoad+0x5a520>
+   c95e8:      	bl	0xc9728 <JNI_OnLoad+0x5a588>
+   c95ec:      	ldr	x8, [sp, #0x8]
+   c95f0:      	cbnz	x8, 0xc95e0 <JNI_OnLoad+0x5a440>
+   c95f4:      	mov	x0, x19
+   c95f8:      	bl	0xcd630 <yajl_free@plt>
+   c95fc:      	ldr	x0, [sp, #0x10]
+   c9600:      	cbz	x0, 0xc961c <JNI_OnLoad+0x5a47c>
+   c9604:      	bl	0xc9728 <JNI_OnLoad+0x5a588>
+   c9608:      	mov	x0, xzr
+   c960c:      	b	0xc961c <JNI_OnLoad+0x5a47c>
+   c9610:      	mov	x0, x19
+   c9614:      	bl	0xcd630 <yajl_free@plt>
+   c9618:      	ldr	x0, [sp, #0x10]
+   c961c:      	bl	0xca314 <JNI_OnLoad+0x5b174>
+   c9620:      	b.ne	0xc9638 <JNI_OnLoad+0x5a498>
+   c9624:      	bl	0xca488 <JNI_OnLoad+0x5b2e8>
+   c9628:      	ldp	x29, x30, [sp, #0x30]
+   c962c:      	add	sp, sp, #0x70
+   c9630:      	autiasp
+   c9634:      	ret
+   c9638:      	bl	0xcd9f0 <__stack_chk_fail@plt>

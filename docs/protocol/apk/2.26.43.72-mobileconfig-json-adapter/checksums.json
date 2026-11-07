@@ -1,0 +1,50 @@
+{
+  "README.md": {
+    "bytes": 5994,
+    "sha256": "1b2b8c34db0d5809d9930585caf20cd14bf8954236d1584ab0b90187cb3d72ae"
+  },
+  "adapter.json": {
+    "bytes": 1186,
+    "sha256": "17f8f175cfe873a6fd53592d2709721cade6bce263c0505854cb10ca0c376b55"
+  },
+  "alternate-content-handler.txt": {
+    "bytes": 3868,
+    "sha256": "f63ad7b2b8a58aa9b9bf051fff0c88f0a1d0a02f465d1295e7e34b51e9a4ee3d"
+  },
+  "binary-mode-entry.txt": {
+    "bytes": 1520,
+    "sha256": "df2e94f505a2d4155d7a0c04df9486a5ae3e852401dda0fec29f7870320ec38b"
+  },
+  "inspect-json-adapter.py": {
+    "bytes": 1711,
+    "sha256": "9941b27b0edf37c8ebcc55208bbce0b7cbaedce6bf93e7c3162b33c6fb7f0400"
+  },
+  "json-adapter.txt": {
+    "bytes": 3072,
+    "sha256": "56bc9fe69a18183bbd95d46dc29105c8fe7ac2e86e2a8b9575e98d3391b45b85"
+  },
+  "loader-json-callsite.txt": {
+    "bytes": 3124,
+    "sha256": "3f6c40b647c14f7c30671ba40a153664094471133b6d16a4bb56792607d561d1"
+  },
+  "metadata-consumer.txt": {
+    "bytes": 15434,
+    "sha256": "8231129b8fe0060fd261af200a1b436bad6d5da288284048f3c0a3d3747070c9"
+  },
+  "outlined-helpers.txt": {
+    "bytes": 970,
+    "sha256": "2d34bb6cd51e8b55e80edd275108fd6186a0c7afa17028e1a051c2d31020d338"
+  },
+  "rea-json-window.json": {
+    "bytes": 10113,
+    "sha256": "e373de0f66df5dfa3e5f00f1899309671d364d9cd6bb1c75dfa975aece238d26"
+  },
+  "secondary-string-consumer.txt": {
+    "bytes": 3885,
+    "sha256": "20ea800e53464c327db05c446b6c491e2ba7897b97f6bfa31c8af2426e7e1e2e"
+  },
+  "stream-to-string.txt": {
+    "bytes": 3142,
+    "sha256": "763a60b0fb7e30c9f97815fdc9b26132557eb440ea4361803a9d92b40e95439f"
+  }
+}

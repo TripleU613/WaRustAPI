@@ -1,0 +1,32 @@
+{
+  "member_sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+  "selected_calls": {
+    "0xc9560": "0xcd5a0",
+    "0xc9570": "0xcd5b0",
+    "0xc9578": "0xcc9d0",
+    "0xc9588": "0xcd620",
+    "0xc9590": "0xcd5d0",
+    "0xc95b0": "0xcd5e0",
+    "0xc95f8": "0xcd630",
+    "0xbb51c": "0xc950c",
+    "0xbb528": "0xc60f8",
+    "0xbb530": "0xc9728",
+    "0xc5500": "0xc52a4"
+  },
+  "adapter": "0xc950c",
+  "input_length": "strlen of input pointer",
+  "parser_allocation": "yajl_alloc with callbacks at 0xd4260",
+  "parser_option": {
+    "numeric_option": 1,
+    "value": 1,
+    "meaning": "not resolved here"
+  },
+  "completion_status_branch": "zero returns retained root after yajl_free; nonzero formats optional diagnostic and releases partial state",
+  "selected_consumer": "0xc60f8: null or non-tag4 root returns false; valid-shaped items traverse existing records with a forward cursor",
+  "ignored_consumer_status": {
+    "call": "0xbb528",
+    "overwrite": "0xbb52c mov x0,x21",
+    "next_call": "0xbb530 parsed-root cleanup"
+  },
+  "scope": "static parser/consumer boundary, not full decoder, native execution, rollback proof or configuration acceptance"
+}

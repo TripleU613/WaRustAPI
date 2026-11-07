@@ -1,0 +1,80 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   c5588:      	paciasp
+   c558c:      	sub	sp, sp, #0x50
+   c5590:      	stp	x29, x30, [sp, #0x20]
+   c5594:      	str	x21, [sp, #0x30]
+   c5598:      	stp	x20, x19, [sp, #0x40]
+   c559c:      	add	x29, sp, #0x20
+   c55a0:      	bl	0xca240 <JNI_OnLoad+0x5b0a0>
+   c55a4:      	stp	xzr, x1, [sp, #0x8]
+   c55a8:      	stp	xzr, xzr, [x0, #0x8]
+   c55ac:      	str	xzr, [x0]
+   c55b0:      	add	x0, sp, #0x10
+   c55b4:      	bl	0xc5674 <JNI_OnLoad+0x564d4>
+   c55b8:      	mov	w20, w0
+   c55bc:      	add	x0, sp, #0x8
+   c55c0:      	bl	0xc5674 <JNI_OnLoad+0x564d4>
+   c55c4:      	and	w8, w0, #0x1
+   c55c8:      	and	w9, w20, #0x1
+   c55cc:      	cmp	w9, w8
+   c55d0:      	b.eq	0xc55f8 <JNI_OnLoad+0x56458>
+   c55d4:      	ldr	x20, [sp, #0x10]
+   c55d8:      	mov	x0, x20
+   c55dc:      	bl	0xc5650 <JNI_OnLoad+0x564b0>
+   c55e0:      	mov	w1, w0
+   c55e4:      	mov	x0, x19
+   c55e8:      	bl	0xcd110 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE9push_backEc@plt>
+   c55ec:      	mov	x0, x20
+   c55f0:      	bl	0xb78a8 <JNI_OnLoad+0x48708>
+   c55f4:      	b	0xc55b0 <JNI_OnLoad+0x56410>
+   c55f8:      	bl	0xca254 <JNI_OnLoad+0x5b0b4>
+   c55fc:      	b.ne	0xc564c <JNI_OnLoad+0x564ac>
+   c5600:      	bl	0xcaf58 <JNI_OnLoad+0x5bdb8>
+   c5604:      	ldp	x29, x30, [sp, #0x20]
+   c5608:      	add	sp, sp, #0x50
+   c560c:      	autiasp
+   c5610:      	ret
+   c5614:      	bl	0xccef0 <__wrap___cxa_begin_catch@plt>
+   c5618:      	ldrb	w8, [x19]
+   c561c:      	tbz	w8, #0x0, 0xc5628 <JNI_OnLoad+0x56488>
+   c5620:      	ldr	x0, [x19, #0x10]
+   c5624:      	bl	0xccf30 <__wrap__ZdlPv@plt>
+   c5628:      	bl	0xca254 <JNI_OnLoad+0x5b0b4>
+   c562c:      	b.ne	0xc564c <JNI_OnLoad+0x564ac>
+   c5630:      	bl	0xcd530 <__wrap___cxa_rethrow@plt>
+   c5634:      	bl	0xca254 <JNI_OnLoad+0x5b0b4>
+   c5638:      	b.ne	0xc564c <JNI_OnLoad+0x564ac>
+   c563c:      	mov	x19, x0
+   c5640:      	bl	0xccf60 <__wrap___cxa_end_catch@plt>
+   c5644:      	mov	x0, x19
+   c5648:      	bl	0xccf70 <__wrap__Unwind_Resume@plt>
+   c564c:      	bl	0xcd9f0 <__stack_chk_fail@plt>
+   c5650:      	bti	c
+   c5654:      	ldp	x8, x9, [x0, #0x18]
+   c5658:      	cmp	x8, x9
+   c565c:      	b.eq	0xc5668 <JNI_OnLoad+0x564c8>
+   c5660:      	ldrb	w0, [x8]
+   c5664:      	ret
+   c5668:      	ldr	x8, [x0]
+   c566c:      	ldr	x16, [x8, #0x48]
+   c5670:      	br	x16
+   c5674:      	paciasp
+   c5678:      	stp	x29, x30, [sp, #-0x20]!
+   c567c:      	str	x19, [sp, #0x10]
+   c5680:      	mov	x29, sp
+   c5684:      	bl	0xcb3f4 <JNI_OnLoad+0x5c254>
+   c5688:      	cbz	x0, 0xc56a8 <JNI_OnLoad+0x56508>
+   c568c:      	bl	0xc5650 <JNI_OnLoad+0x564b0>
+   c5690:      	cmn	w0, #0x1
+   c5694:      	b.eq	0xc56a4 <JNI_OnLoad+0x56504>
+   c5698:      	ldr	x8, [x19]
+   c569c:      	bl	0xcc710 <JNI_OnLoad+0x5d570>
+   c56a0:      	b	0xc56ac <JNI_OnLoad+0x5650c>
+   c56a4:      	str	xzr, [x19]
+   c56a8:      	mov	w0, #0x1                // =1
+   c56ac:      	ldr	x19, [sp, #0x10]
