@@ -1554,3 +1554,27 @@ fixtures have an unapproved-host no-network backstop; synthetic plaintext tests
 crypto/handoff, not WebP renderer validity. No reset, retry, status relaxation or
 live request was added. Native zero-byte/parser/update/URL/range semantics and
 embedded-audio ownership remain separate audit work.
+
+## Pinned visual whole-MIME preflight (2026-11-06)
+
+**Confirmed selected static / fixed offline:** EwA compares complete image MIME
+strings ignoring case, while0jZ.A09/A0E accepts exact MP4/3GPP inputs on the
+selected video path. Rust previously trimmed/split visual MIME for URL preflight
+and did not gate descriptor/cached handoff. A shared supported_mime check now
+requires whole supported-format strings at both descriptor and URL admission.
+Image ASCII case variants work; supported video/video-note remains exact MP4.
+Audio/sticker rules and document export-specific base/token handling are retained.
+
+Native image WebP additionally has config/subtype gates; Rust's existing explicit
+WebP support is not described as universally native-valid. Native3GPP recognition
+does not enable that currently unsupported format. Full PTV/update/context and
+Java Unicode image folding parity remain unverified.
+
+[Exact native comparisons, selected methods, scope and regression](apk/2.26.43.72-media-visual-mime/README.md)
+retain the findings. The new real-store image/video/video-note regression uses
+per-kind ciphertext/MAC/hashes to prove supported cached content preserves its
+kind, unsupported metadata cannot select/reference/open content, and checkpoint/
+journal state stays unchanged. After cache removal and reopen bad metadata creates
+no GET reservation; bad uncached fixtures use a refused-host no-network backstop.
+Synthetic crypto fixtures do not establish renderer or live HTTP validity. No
+reset/retry, response relaxation or live account operation was introduced.

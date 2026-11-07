@@ -1,5 +1,11 @@
 # Network correctness audit
 
+**Image/video whole-MIME preflight corrected.** A shared supported-format check
+now gates descriptors and URLs, preventing parameterized/padded visual metadata
+from authorizing cached plaintext or a new GET. Image ASCII case works; MP4 remains
+exact. Native WebP context and3GPP support remain separately bounded.
+[Evidence](media-network-outcomes.md#pinned-visual-whole-mime-preflight-2026-11-06).
+
 **Sticker MIME preflight corrected.** Pinned Di4/FPx core fields and whole-string
 WebP comparison confirm parameters/padding must not authorize the supported path.
 ASCII case variants now work; Lottie remains excluded before cache/network use.

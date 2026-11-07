@@ -1,4 +1,11 @@
 {
+  "x-media-visual-whole-mime-admission": {
+    "x-cli": "existing image/video/video-note list/reference/open/save; no new command or flag",
+    "x-transport": "shared whole supported-MIME admission at descriptor and URL preflight, before cache/network authority",
+    "x-live": false,
+    "description": "Pinned EwA whole-string image comparison and0jZ.A09/A0E exact video comparison close Rust parameter/whitespace and cache-handoff gaps. Supported image MIME uses ASCII-insensitive whole strings; video/video-note remains exact MP4. Audio/sticker rules and document-specific local token policy retain their preceding behavior. Native WebP config/subtype and3GPP/PTV/update/Unicode behavior remain bounded; no universal native allowlist claim. Real-store per-kind crypto regression covers selection/reference/cache, unchanged checkpoints/journal and reopen/no reservation with no-network backstop. No reset/retry, status relaxation or live traffic.",
+    "evidence": "docs/protocol/apk/2.26.43.72-media-visual-mime/README.md"
+  },
   "x-media-sticker-whole-mime-admission": {
     "x-cli": "existing sticker list/reference/open/save; no new command or flag",
     "x-transport": "whole-string ASCII-insensitive WebP MIME admission before selector/cache/network authority, with Lottie exclusion",

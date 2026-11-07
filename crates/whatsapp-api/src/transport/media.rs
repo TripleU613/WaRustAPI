@@ -289,7 +289,7 @@ fn descriptor(bytes: &[u8]) -> Result<Option<Descriptor>> {
         MediaKind::Video
     };
     let d = if let Some(i) = e.image {
-        if i.once {
+        if i.once || !supported_mime(MediaKind::Image, &i.mime) {
             return Ok(None);
         }
         Descriptor {
@@ -306,7 +306,7 @@ fn descriptor(bytes: &[u8]) -> Result<Option<Descriptor>> {
         // This receiver only supports Opus PTT; stripping codec parameters
         // would authorize a GET/cache handoff for metadata native parsing rejects.
         // See docs/protocol/apk/2.26.43.72-media-audio-ingress.
-        if a.once || !a.ptt || a.mime != "audio/ogg; codecs=opus" {
+        if a.once || !a.ptt || !supported_mime(MediaKind::VoiceNote, &a.mime) {
             return Ok(None);
         }
         Descriptor {
@@ -319,7 +319,7 @@ fn descriptor(bytes: &[u8]) -> Result<Option<Descriptor>> {
             length: a.length,
         }
     } else if let Some(v) = e.video.or(e.ptv) {
-        if v.once {
+        if v.once || !supported_mime(video_kind, &v.mime) {
             return Ok(None);
         }
         Descriptor {
@@ -346,7 +346,7 @@ fn descriptor(bytes: &[u8]) -> Result<Option<Descriptor>> {
         // case-insensitively. Parameters/whitespace cannot authorize retrieval.
         // ASCII MIME scope; full Java Unicode case folding is not claimed.
         // See docs/protocol/apk/2.26.43.72-media-sticker-ingress.
-        if s.lottie || !s.mime.eq_ignore_ascii_case("image/webp") {
+        if s.lottie || !supported_mime(MediaKind::Sticker, &s.mime) {
             return Ok(None);
         }
         Descriptor {
@@ -704,16 +704,21 @@ pub async fn save(
     ensure_available(store, id)?;
     export_new(output, &plain)
 }
-fn media_url(d: &Descriptor) -> Result<reqwest::Url> {
-    let mime = d.mime.split(';').next().unwrap_or("").trim();
-    let allowed = match d.kind {
-        MediaKind::Image => matches!(mime, "image/jpeg" | "image/png" | "image/webp"),
-        MediaKind::VoiceNote => mime == "audio/ogg",
-        MediaKind::Sticker => d.mime.eq_ignore_ascii_case("image/webp"),
+// Pinned43.72 EwA.A03 and 0jZ.A09/A0E compare whole MIME strings.
+// These are the receiver's supported formats, not all native codec/context paths.
+// See docs/protocol/apk/2.26.43.72-media-visual-mime.
+fn supported_mime(kind: MediaKind, mime: &str) -> bool {
+    match kind {
+        MediaKind::Image => ["image/jpeg", "image/png", "image/webp"]
+            .iter()
+            .any(|known| mime.eq_ignore_ascii_case(known)),
+        MediaKind::VoiceNote => mime == "audio/ogg; codecs=opus",
+        MediaKind::Sticker => mime.eq_ignore_ascii_case("image/webp"),
         MediaKind::Video | MediaKind::VideoNote => mime == "video/mp4",
-        // Export-only media: MIME is metadata, never a program/viewer choice.
-        // Token syntax/256-byte bound is local policy, not an APK MIME allowlist.
+        // Export-only MIME policy is local. Preserve its existing parameter/base
+        // handling; native document ingestion does not use these visual rules.
         MediaKind::Document => {
+            let mime = mime.split(';').next().unwrap_or("").trim();
             let mut parts = mime.split('/');
             let token = |part: &str| {
                 !part.is_empty()
@@ -726,7 +731,10 @@ fn media_url(d: &Descriptor) -> Result<reqwest::Url> {
                 && parts.next().is_some_and(token)
                 && parts.next().is_none()
         }
-    };
+    }
+}
+fn media_url(d: &Descriptor) -> Result<reqwest::Url> {
+    let allowed = supported_mime(d.kind, &d.mime);
     if !allowed || d.url.len() > 8192 {
         return Err(bad("unsupported media format"));
     }
@@ -964,6 +972,156 @@ pub(crate) fn ensure_available(store: &ProtocolStore, id: &str) -> Result<()> {
 
 #[cfg(test)]
 mod tests {
+    #[tokio::test]
+    async fn image_video_mime_admission_precedes_cached_plaintext_and_get_reservation() {
+        use super::*;
+        use crate::{
+            model::ids::AccountId,
+            session::{AccountRecord, RegistrationStatus},
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        for kind in [MediaKind::Image, MediaKind::Video, MediaKind::VideoNote] {
+            let plain = b"synthetic visual crypto fixture";
+            let encrypted = if kind == MediaKind::Image {
+                crate::signal::image::encrypt(plain).unwrap()
+            } else {
+                crate::signal::image::encrypt_video(plain).unwrap()
+            };
+            let cases: &[(&str, bool)] = if kind == MediaKind::Image {
+                &[
+                    ("image/png", true),
+                    ("IMAGE/PNG", true),
+                    ("Image/Jpeg", true),
+                    ("image/webp", true),
+                    ("image/png; extra=1", false),
+                    (" image/png", false),
+                    ("image/png ", false),
+                    ("image/gif", false),
+                ]
+            } else {
+                &[
+                    ("video/mp4", true),
+                    ("VIDEO/MP4", false),
+                    ("video/mp4; codecs=avc1", false),
+                    (" video/mp4", false),
+                    ("video/mp4 ", false),
+                    ("video/3gpp", false),
+                ]
+            };
+            for &(mime, accepted) in cases {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("visual-mime.redb");
+                let open_store = |create| {
+                    ProtocolStore::open(OpenOptions {
+                        path: path.clone(),
+                        account_id: AccountId::new("fixture").unwrap(),
+                        create,
+                        key_source: std::sync::Arc::new(StaticKeySource::new(
+                            MasterKey::from_bytes([7; 32]),
+                        )),
+                    })
+                    .unwrap()
+                };
+                let store = open_store(true);
+                let mut config: LabRegistrationConfig =
+                    serde_json::from_str(crate::registration::request::TEMPLATE_JSON).unwrap();
+                config.token = Zeroizing::new("offline-fixture".into());
+                let mut envelope = Envelope::default();
+                if kind == MediaKind::Image {
+                    envelope.image = Some(Image {
+                        url: "https://mmg.whatsapp.net/fixture".into(),
+                        mime: mime.into(),
+                        hash: encrypted.plaintext_hash.to_vec(),
+                        length: encrypted.plaintext_len,
+                        key: encrypted.media_key.to_vec(),
+                        enc_hash: encrypted.encrypted_hash.to_vec(),
+                        once: false,
+                    });
+                } else {
+                    let video = Some(Video {
+                        url: "https://mmg.whatsapp.net/fixture".into(),
+                        mime: mime.into(),
+                        hash: encrypted.plaintext_hash.to_vec(),
+                        length: encrypted.plaintext_len,
+                        key: encrypted.media_key.to_vec(),
+                        enc_hash: encrypted.encrypted_hash.to_vec(),
+                        once: false,
+                    });
+                    if kind == MediaKind::VideoNote {
+                        envelope.ptv = video;
+                    } else {
+                        envelope.video = video;
+                    }
+                }
+                let key = b"received:visual-mime";
+                let id = hex::encode(Sha256::digest(key));
+                let cache_key = format!("media-download:{id}");
+                store.write(|tx| {
+                    AccountRecord {phone:Some(config.phone.clone()),registration:RegistrationStatus::Registered,
+                        ..Default::default()}.save(tx)?;
+                    tx.put_json(Table::Checkpoints,key,1,&serde_json::json!({"status":"decrypted","protobuf":envelope.encode_to_vec()}))?;
+                    tx.put_json(Table::Checkpoints,cache_key.as_bytes(),1,&serde_json::json!({"status":"downloaded","body":encrypted.body}))
+                }).unwrap();
+                let rows = store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap();
+                let journal = store.journal_head().unwrap();
+                assert_eq!(
+                    list(&store).unwrap().len(),
+                    usize::from(accepted),
+                    "{kind:?} {mime}"
+                );
+                assert_eq!(
+                    references(&store).unwrap().len(),
+                    usize::from(accepted),
+                    "{kind:?} {mime}"
+                );
+                if accepted {
+                    let (actual, body) = open(&store, &config, &id).await.unwrap();
+                    assert_eq!(actual, kind);
+                    assert_eq!(&*body, plain);
+                } else {
+                    assert!(open(&store, &config, &id).await.is_err(), "{kind:?} {mime}");
+                }
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    rows
+                );
+                assert_eq!(store.journal_head().unwrap(), journal);
+                if !accepted {
+                    // A refused host ensures no live traffic even on regression.
+                    let url = "https://not-a-media-host.invalid/fixture".to_owned();
+                    if let Some(image) = envelope.image.as_mut() {
+                        image.url = url;
+                    } else if let Some(video) = envelope.video.as_mut().or(envelope.ptv.as_mut()) {
+                        video.url = url;
+                    }
+                    store.write(|tx| {
+                        tx.delete(Table::Checkpoints,cache_key.as_bytes())?;
+                        tx.put_json(Table::Checkpoints,key,1,&serde_json::json!({"status":"decrypted","protobuf":envelope.encode_to_vec()}))
+                    }).unwrap();
+                    drop(store);
+                    let store = open_store(false);
+                    let rows = store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap();
+                    let journal = store.journal_head().unwrap();
+                    assert!(list(&store).unwrap().is_empty());
+                    assert!(open(&store, &config, &id).await.is_err());
+                    assert_eq!(
+                        store
+                            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                            .unwrap(),
+                        rows
+                    );
+                    assert_eq!(store.journal_head().unwrap(), journal);
+                }
+            }
+        }
+    }
+
     #[tokio::test]
     async fn voice_note_mime_gate_precedes_cache_handoff_and_network_reservation() {
         use super::*;

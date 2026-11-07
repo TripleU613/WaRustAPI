@@ -1,0 +1,19 @@
+
+# class: LX/0jZ;
+# extends: Ljava/lang/Object;
+
+.method public A0E(ZL)  # .registers 2
+    # full signature: LX/0jZ;->A0E(Ljava/lang/String;)Z
+    0000..0006  const-string/jumbo  v0, "video/mp4"
+    0006..000c  invoke-virtual  {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    000c..000e  move-result  v0
+    000e..0012  if-nez  v0, +0xc
+    0012..0018  const-string/jumbo  v0, "video/3gpp"
+    0018..001e  invoke-virtual  {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    001e..0020  move-result  v1
+    0020..0022  const/4  v0, #0x0
+    0022..0026  if-eqz  v1, +0x3
+    0026..0028  const/4  v0, #0x1
+    0028..002a  return  v0
+    # exception table: 0 try range(s)
+.end method

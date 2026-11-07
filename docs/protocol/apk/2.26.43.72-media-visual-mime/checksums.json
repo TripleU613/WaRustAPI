@@ -1,0 +1,14 @@
+{
+  "README.md": {
+    "bytes": 5377,
+    "sha256": "1409588ed8be3d88336a401204e8d0321c7f451384ec85eae21a7067d822e10f"
+  },
+  "video-mime-eligibility.txt": {
+    "bytes": 704,
+    "sha256": "56fa67d18abcd2710edabf13029c918fb23176c262e93cd66573bd9807583271"
+  },
+  "video-mime-selector.txt": {
+    "bytes": 1910,
+    "sha256": "e74b8e1669e4e9fc36ff922b9296707b9bcaf95cc957670e6bdda0b5d824a59b"
+  }
+}
