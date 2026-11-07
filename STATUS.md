@@ -10617,3 +10617,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   and error values, retaining fixed structural names/counts plus HTTP status/size.
   JSON/Debug sentinel regression added and schema corrected; no appeal submitted.
   Operation/doc_id validity and outcome handling remain unverified.
+
+- Appeal Authorization preserves exact credential bytes and uses sensitive HTTP
+  header formatting; invalid header bytes refuse before send. Offline regression
+  covers byte preservation, CRLF/NUL refusal and Debug redaction. No live request;
+  server token grammar, operation validity and account binding remain unverified.

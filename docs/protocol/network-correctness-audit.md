@@ -6099,3 +6099,9 @@ evidence, not new APK behavior or proof of full group-send/network parity.
   returns fixed structural names/counts plus status/size, with synthetic JSON/Debug
   sentinel regression. No request sent or construction changed. See
   [summary correction](ban-appeal.md#response-summary-redaction-correction).
+
+- Confirmed appeal Authorization construction defect at `a93bb93f`: lossy UTF-8
+  conversion could alter saved credential bytes. Exact-byte HeaderValue validation
+  now refuses CRLF/NUL before send and marks Authorization sensitive for Debug.
+  Offline regression only; server token syntax/acceptance remains unknown. See
+  [authorization correction](ban-appeal.md#authorization-header-byte-preservation).

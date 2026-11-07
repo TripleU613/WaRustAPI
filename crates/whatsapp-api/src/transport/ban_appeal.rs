@@ -233,8 +233,10 @@ pub async fn submit_ban_appeal(
         .body(body.to_vec());
 
     if let Some(token) = login_token {
-        let bearer = format!("Bearer {}", String::from_utf8_lossy(&token));
-        req = req.header(reqwest::header::AUTHORIZATION, bearer);
+        req = req.header(
+            reqwest::header::AUTHORIZATION,
+            authorization_header(&token)?,
+        );
     }
 
     let response = req
@@ -264,6 +266,22 @@ pub async fn submit_ban_appeal(
         http_status,
         summary,
     })
+}
+
+// Preserve opaque saved credential bytes. Lossy UTF-8 decoding changes the
+// authentication material; HTTP header validation must refuse invalid bytes.
+fn authorization_header(token: &[u8]) -> Result<reqwest::header::HeaderValue> {
+    let mut bytes = Zeroizing::new(Vec::with_capacity(7 + token.len()));
+    bytes.extend_from_slice(b"Bearer ");
+    bytes.extend_from_slice(token);
+    let mut header = reqwest::header::HeaderValue::from_bytes(&bytes).map_err(|_| {
+        Error::invalid(
+            "ban_appeal_auth",
+            "saved login credential is not a valid HTTP header",
+        )
+    })?;
+    header.set_sensitive(true);
+    Ok(header)
 }
 
 fn build_client(config: &LabRegistrationConfig) -> Result<reqwest::Client> {
@@ -338,6 +356,29 @@ mod tests {
         session::AccountRecord,
         store::{MasterKey, OpenOptions, StaticKeySource},
     };
+
+    #[test]
+    fn appeal_authorization_preserves_bytes_and_redacts_debug() {
+        for token in [
+            b"private-login-sentinel".as_slice(),
+            b"opaque-\xff-credential".as_slice(),
+        ] {
+            let header = authorization_header(token).unwrap();
+            let mut expected = b"Bearer ".to_vec();
+            expected.extend_from_slice(token);
+            assert_eq!(header.as_bytes(), expected);
+            assert!(header.is_sensitive());
+            assert_eq!(format!("{header:?}"), "Sensitive");
+        }
+        for token in [
+            b"private\r\nInjected: value".as_slice(),
+            b"private\0credential".as_slice(),
+        ] {
+            let error = authorization_header(token).unwrap_err();
+            assert!(matches!(error, Error::InvalidInput { .. }));
+            assert!(!error.to_string().contains("private"));
+        }
+    }
 
     #[test]
     fn appeal_response_summary_never_copies_server_text_or_values() {

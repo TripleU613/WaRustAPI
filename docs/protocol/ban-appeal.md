@@ -103,3 +103,21 @@ arbitrary key names, numeric error codes and invalid/non-object bodies; neither
 summary JSON nor result Debug contains them. No request-construction, appeal-token
 selection, retry or identity behavior changes. No appeal or account operation is
 performed. Operation/doc_id validity and server outcome handling remain unknown.
+
+## Authorization header byte preservation
+
+**Confirmed Rust construction defect, corrected offline**, baseline `a93bb93f`.
+The saved login credential was decoded with `String::from_utf8_lossy` before
+forming Authorization. Invalid UTF-8 bytes therefore became replacement-character
+bytes instead of retaining the stored credential. The header was also not marked
+sensitive for HTTP Debug formatting.
+
+Construction now prefixes the exact saved bytes with `Bearer `, validates them
+with the HTTP HeaderValue parser, and marks the resulting header sensitive.
+Invalid header bytes refuse before send with a fixed redacted error. Offline
+controls verify ASCII and non-UTF-8 byte preservation, sensitive Debug formatting,
+and refusal of CRLF/NUL inputs. Non-UTF-8 HTTP-header acceptance is only a local
+parser fact, not proof that ACS accepts such credentials. No new token syntax or
+server policy is inferred. Optional-auth selection, operation/doc_id, retries and
+account binding are unchanged and remain subject to the existing unknowns. No
+appeal or live account operation was performed.

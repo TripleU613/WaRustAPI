@@ -1,4 +1,11 @@
 {
+  "x-appeal-authorization-byte-preservation": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "evidence": "docs/protocol/ban-appeal.md#authorization-header-byte-preservation",
+    "behavior": "Appeal Authorization preserves saved credential bytes, validates HTTP header bytes before send, and marks the header sensitive for Debug; no server credential syntax or acceptance inferred."
+  },
   "x-appeal-response-summary-redaction": {
     "x-cli": false,
     "x-transport": true,
