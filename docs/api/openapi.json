@@ -1,4 +1,11 @@
 {
+  "x-retry-refetch-account-ownership": {
+    "x-cli": "existing retry receive/refetch flow; no new command or flag",
+    "x-transport": "frozen account authority checked at queued retry ACK/query encoding and live refetch refusal/session adoption",
+    "x-live": false,
+    "description": "Reproduced RefetchWriteGuard acceptance after saved registration ID replacement while job/answer stayed unchanged. Production snapshot now binds the account already checked at reservation; queued writes and live completion transactions compare current authority. Refused stale callbacks remain consumed while durable job/answer/checkpoints stay unchanged. Shared internal fingerprint with DeviceQuery adds no wire/durable/CLI field. Public offline completion and historical provenance rules remain unchanged; no new replay or live operation.",
+    "evidence": "docs/protocol/retry-refetch-account-ownership.md"
+  },
   "x-device-query-account-ownership": {
     "x-cli": "existing device query/receive workflows; no new command or flag",
     "x-transport": "DeviceQuery freezes account/store authority at reservation and rechecks before writer handoff and transactional reply adoption",

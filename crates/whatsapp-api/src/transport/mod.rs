@@ -18,6 +18,12 @@ pub mod abprops;
     feature = "experimental-noise",
     feature = "experimental-transport"
 ))]
+mod account_authority;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
 pub mod account_privacy;
 #[cfg(all(
     feature = "experimental-signal-crypto",

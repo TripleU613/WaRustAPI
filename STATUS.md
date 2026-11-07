@@ -1,5 +1,10 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
+**Retry refetch account handoff gap closed.** Frozen account authority now
+guards ACK/query encoding and live refusal/session-adoption transactions.
+Stale callbacks remain consumed without changing durable job/answer state.
+[Evidence and regression coverage](docs/protocol/retry-refetch-account-ownership.md). No live operation.
+
 **Device queries now retain account ownership.** A reproduced stale actor
 passed writer admission after saved-account replacement. Reservation now freezes
 account/store authority, checked before write and transactional reply adoption.

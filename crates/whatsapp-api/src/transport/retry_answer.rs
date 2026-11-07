@@ -143,7 +143,7 @@ impl ActiveRefetches {
         let Some(owner) = self.0.remove(id) else {
             return Ok(None);
         };
-        complete_refetch_inner(store, account, node, epoch, Some(&owner.job)).await
+        complete_refetch_inner(store, account, node, epoch, Some(&owner)).await
     }
 }
 
@@ -359,6 +359,10 @@ async fn answer_inner(
             )?;
             if reserved {
                 *authority = Some(RefetchWriteGuard {
+                    account_authority: super::account_authority::fingerprint(
+                        account.generation,
+                        Some(account),
+                    )?,
                     query: query.clone(),
                     job,
                 });
@@ -437,12 +441,28 @@ struct Refetch {
 // docs/protocol/retry-ack-dispatch.md. No new timer or replay authority.
 #[derive(Clone)]
 pub(crate) struct RefetchWriteGuard {
+    account_authority: [u8; 32],
     query: String,
     job: Refetch,
 }
 impl RefetchWriteGuard {
+    fn check_account_in(&self, tx: &WriteTx<'_>) -> Result<()> {
+        let account = AccountRecord::load_in_write(tx)?;
+        if super::account_authority::fingerprint(tx.generation(), account.as_ref())?
+            != self.account_authority
+        {
+            return Err(Error::invalid(
+                "retry",
+                "refetch account changed before use",
+            ));
+        }
+        Ok(())
+    }
     pub(crate) fn check_write_authority(&self, store: &ProtocolStore) -> Result<()> {
-        store.write(|tx| ensure_refetch_owned(tx, &self.query, &self.job))
+        store.write(|tx| {
+            self.check_account_in(tx)?;
+            ensure_refetch_owned(tx, &self.query, &self.job)
+        })
     }
 }
 
@@ -540,7 +560,7 @@ async fn complete_refetch_inner(
     account: &AccountRecord,
     node: &Node,
     epoch: ConnectionEpoch,
-    expected: Option<&Refetch>,
+    expected: Option<&RefetchWriteGuard>,
 ) -> Result<Option<Option<Node>>> {
     // APK 43.72 0ln.A01 invokes IQ callbacks only for exact result/error.
     // A same-ID request must not consume the reserved refetch or retry history.
@@ -557,7 +577,7 @@ async fn complete_refetch_inner(
     };
     let job: Option<Refetch> =
         store.read(|tx| tx.get_json(Table::Checkpoints, refetch_key(query).as_bytes(), 1))?;
-    if expected.is_some_and(|expected| job.as_ref() != Some(expected)) {
+    if expected.is_some_and(|expected| job.as_ref() != Some(&expected.job)) {
         return Err(Error::invalid(
             "retry",
             "written refetch job changed before reply",
@@ -568,6 +588,7 @@ async fn complete_refetch_inner(
     };
     let refuse = |reason: &str| -> Result<Option<Option<Node>>> {
         store.write(|tx| {
+            if let Some(expected) = expected { expected.check_account_in(tx)?; }
             ensure_refetch_owned(tx, query, &job)?;
             // Retire the fetch only with both durable refusal records. A store
             // fault must not leave a fetching answer without its pending job.
@@ -676,6 +697,7 @@ async fn complete_refetch_inner(
     store.write(|tx| {
         ensure_retry_account(tx, account)?;
         ensure_retry_source(tx, wire_id.as_str(), &source)?;
+        if let Some(expected) = expected { expected.check_account_in(tx)?; }
         ensure_refetch_owned(tx, query, &job)?;
         ensure_retry_peer_unchanged(tx, &peer_key, identity.as_deref(), previous_session.as_deref())?;
         // The consumed job, replacement session and reserved same-ID resend
@@ -1175,6 +1197,86 @@ mod tests {
         }
     }
 
+    #[tokio::test]
+    async fn refetch_handoff_rejects_changed_account_before_ack_or_query() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("refetch-account.redb"),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([7; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let account = AccountRecord {
+            generation: store.generation(),
+            signal_registration_id: Some(31),
+            ..Default::default()
+        };
+        store.write(|tx| account.save(tx)).unwrap();
+        let job = Refetch {
+            wire_id: "W1".into(),
+            answer_key: "answer".into(),
+            unanswered_key: "unanswered".into(),
+            count: 2,
+        };
+        store
+            .write(|tx| {
+                tx.put_json(Table::Checkpoints, refetch_key("Q1").as_bytes(), 1, &job)?;
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"answer",
+                    1,
+                    &serde_json::json!({"status":"fetching","query":"Q1","count":2}),
+                )
+            })
+            .unwrap();
+        let guard = RefetchWriteGuard {
+            account_authority: store
+                .read(|tx| {
+                    let account = AccountRecord::load(tx)?;
+                    super::super::account_authority::fingerprint(tx.generation(), account.as_ref())
+                })
+                .unwrap(),
+            query: "Q1".into(),
+            job,
+        };
+        let mut active = ActiveRefetches::default();
+        active
+            .record_written(&ReservedAnswer {
+                node: Node::new("iq").attr("id", "Q1"),
+                confirmation: None,
+                refetch: Some(guard.clone()),
+            })
+            .unwrap();
+        let mut changed = account;
+        changed.signal_registration_id = Some(32);
+        store.write(|tx| changed.save(tx)).unwrap();
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+            .unwrap();
+        assert!(
+            guard.check_write_authority(&store).is_err(),
+            "old refetch account must refuse"
+        );
+        let error_reply = Node::new("iq").attr("type", "error").attr("id", "Q1");
+        assert!(
+            active
+                .complete(&store, &changed, &error_reply, ConnectionEpoch(1))
+                .await
+                .is_err()
+        );
+        assert!(
+            active.0.is_empty(),
+            "failed callback is consumed, not replayable"
+        );
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                .unwrap(),
+            before
+        );
+    }
+
     #[test]
     fn refetch_query_reservation_rechecks_inputs_and_commits_once() {
         for change in [
@@ -1487,7 +1589,7 @@ mod tests {
     #[tokio::test]
     async fn queued_refetch_rechecks_owner_before_ack_and_query_encoding() {
         for change_at in ["none", "ack", "query"] {
-            for change in ["missing_job", "replaced_job", "settled_answer"] {
+            for change in ["missing_job", "replaced_job", "settled_answer", "account"] {
                 let dir = tempfile::tempdir().unwrap();
                 let path = dir.path().join("queued-refetch.redb");
                 let open = || {
@@ -1520,6 +1622,15 @@ mod tests {
                     })
                     .unwrap();
                 let authority = RefetchWriteGuard {
+                    account_authority: store
+                        .read(|tx| {
+                            let account = AccountRecord::load(tx)?;
+                            super::super::account_authority::fingerprint(
+                                tx.generation(),
+                                account.as_ref(),
+                            )
+                        })
+                        .unwrap(),
                     query: "Q1".into(),
                     job: job.clone(),
                 };
@@ -1544,6 +1655,12 @@ mod tests {
                     if change_at == stage {
                         store
                             .write(|tx| match change {
+                                "account" => AccountRecord {
+                                    generation: tx.generation(),
+                                    signal_registration_id: Some(31),
+                                    ..Default::default()
+                                }
+                                .save(tx),
                                 "missing_job" => {
                                     tx.delete(Table::Checkpoints, refetch_key("Q1").as_bytes())?;
                                     Ok(())
@@ -1656,6 +1773,15 @@ mod tests {
                 })
                 .unwrap();
             let write_guard = RefetchWriteGuard {
+                account_authority: store
+                    .read(|tx| {
+                        let account = AccountRecord::load(tx)?;
+                        super::super::account_authority::fingerprint(
+                            tx.generation(),
+                            account.as_ref(),
+                        )
+                    })
+                    .unwrap(),
                 query: "Q1".into(),
                 job: expected.clone(),
             };
@@ -1873,6 +1999,15 @@ mod tests {
                     node: Node::new("iq").attr("id", "Q1"),
                     confirmation: None,
                     refetch: Some(RefetchWriteGuard {
+                        account_authority: store
+                            .read(|tx| {
+                                let account = AccountRecord::load(tx)?;
+                                super::super::account_authority::fingerprint(
+                                    tx.generation(),
+                                    account.as_ref(),
+                                )
+                            })
+                            .unwrap(),
                         query: "Q1".into(),
                         job: original.clone(),
                     }),
@@ -1908,6 +2043,15 @@ mod tests {
                             node: Node::new("iq").attr("id", "Q1"),
                             confirmation: None,
                             refetch: Some(RefetchWriteGuard {
+                                account_authority: store
+                                    .read(|tx| {
+                                        let account = AccountRecord::load(tx)?;
+                                        super::super::account_authority::fingerprint(
+                                            tx.generation(),
+                                            account.as_ref(),
+                                        )
+                                    })
+                                    .unwrap(),
                                 query: "Q1".into(),
                                 job: replacement
                             }),
@@ -2060,6 +2204,15 @@ mod tests {
                     node: Node::new("iq").attr("id", "Q1"),
                     confirmation: None,
                     refetch: Some(RefetchWriteGuard {
+                        account_authority: store
+                            .read(|tx| {
+                                let account = AccountRecord::load(tx)?;
+                                super::super::account_authority::fingerprint(
+                                    tx.generation(),
+                                    account.as_ref(),
+                                )
+                            })
+                            .unwrap(),
                         query: "Q1".into(),
                         job,
                     }),

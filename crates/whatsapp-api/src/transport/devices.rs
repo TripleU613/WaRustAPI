@@ -646,7 +646,8 @@ pub(crate) fn reserve_query_in(
         return Ok(None);
     }
     let account = crate::session::AccountRecord::load_in_write(tx)?;
-    let account_authority = query_account_authority(tx.generation(), account.as_ref())?;
+    let account_authority =
+        super::account_authority::fingerprint(tx.generation(), account.as_ref())?;
     let iq_id = super::messaging::new_message_id()?;
     let sid = super::messaging::new_message_id()?;
     let generations = {
@@ -1026,49 +1027,13 @@ fn ingest_user(
     Ok(UserIngest::Stored)
 }
 
-// A matching IQ ID/pending revision does not authorize an actor prepared under
-// another saved account. Freeze authority at reservation and check under the
-// same transaction that would adopt its reply. This is local ownership policy,
-// not an APK wire field or permission to resend an uncertain query.
-fn query_account_authority(
-    generation: crate::model::ids::AccountGeneration,
-    account: Option<&crate::session::AccountRecord>,
-) -> Result<[u8; 32]> {
-    use sha2::{Digest, Sha256};
-    let metadata = serde_json::to_vec(&(
-        generation,
-        account.map(|a| {
-            (
-                a.generation,
-                &a.phone,
-                &a.own_jid,
-                a.registration,
-                a.signal_registration_id,
-            )
-        }),
-    ))
-    .map_err(|_| invalid("account authority serialization"))?;
-    let mut hash = Sha256::new();
-    hash.update(b"WaRustAPI device query authority v1\0");
-    hash.update((metadata.len() as u64).to_be_bytes());
-    hash.update(metadata);
-    if let Some(identity) = account.and_then(|a| a.signal_identity.as_ref()) {
-        hash.update([1]);
-        hash.update(identity.0.public);
-        hash.update(identity.0.private);
-    } else {
-        hash.update([0]);
-    }
-    Ok(hash.finalize().into())
-}
-
 impl DeviceQuery {
     fn check_account(
         &self,
         generation: crate::model::ids::AccountGeneration,
         account: Option<&crate::session::AccountRecord>,
     ) -> Result<()> {
-        if query_account_authority(generation, account)? != self.account_authority {
+        if super::account_authority::fingerprint(generation, account)? != self.account_authority {
             return Err(invalid("device query account changed"));
         }
         Ok(())

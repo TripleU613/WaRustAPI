@@ -682,3 +682,13 @@ return-1 on constraint failure while A03 discards it; no exception is not durabl
 success. Delete count is also discarded. Rust behavior remains unchanged.
 [Complete clock, read/write, caller and schema evidence](apk/2.26.43.72-aea-cooldown-policy/README.md).
 Research only; no live account operation.
+
+## Refetch handoff and live callback account binding (2026-11-07)
+
+**Implemented/offline:** reproduced stale-account admission despite unchanged
+refetch job/answer markers. Production guard now freezes checked reservation
+account authority and rechecks at ACK/query encoding plus live refusal/success
+transactions. Callback failure preserves durable rows and never restores live
+replay authority. Public offline adapter and historical provenance limits remain.
+[Complete correction, tests and scope](retry-refetch-account-ownership.md).
+No live account operation or new wire field.

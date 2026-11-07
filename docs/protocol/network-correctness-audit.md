@@ -1,5 +1,10 @@
 # Network correctness audit
 
+**Retry refetch account handoff gap closed.** Frozen account authority now
+guards ACK/query encoding and live refusal/session-adoption transactions.
+Stale callbacks remain consumed without changing durable job/answer state.
+[Evidence and regression coverage](retry-refetch-account-ownership.md). No live operation.
+
 **Device queries now retain account ownership.** A reproduced stale actor
 passed writer admission after saved-account replacement. Reservation now freezes
 account/store authority, checked before write and transactional reply adoption.
