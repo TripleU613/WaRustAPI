@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "bytes": 3696,
+    "sha256": "60f645a50e3e07bece1a60fe06731fd88e82d652a1c5d595b468082fc51cde16"
+  },
+  "callable-cleanup-discovery.txt": {
+    "bytes": 1332,
+    "sha256": "ff99acf1d090de70b1651c033dad87632f40c9c0e4b4531c49aa85f950adf97d"
+  },
+  "completion-indirect-call.txt": {
+    "bytes": 696,
+    "sha256": "9b9c6fb5c9f7e1d9ea84b80bcaa40bbee31447a20a3c95148aced81e6d48d556"
+  },
+  "inspect-type.py": {
+    "bytes": 1084,
+    "sha256": "e617b1a944595e6a0a4de45bdf7d5fb90cfdf7feb8743a0cf56eec9576cce1a8"
+  },
+  "nearby-discovery.txt": {
+    "bytes": 1447,
+    "sha256": "8a0c3d5f9d47dd27950cd39b933c64c2441441a83283421dd2e86bd0befe24c6"
+  },
+  "rea-constructor-type.json": {
+    "bytes": 5981,
+    "sha256": "31b01f350ad4bc67572ad21ec36825b6f9aa8e59e998297febc28dc4a0b04a87"
+  },
+  "rejected-manager-candidate.txt": {
+    "bytes": 2874,
+    "sha256": "d9a1f687478d939430a1cc8df0f2277dc2545792a29c5ad674307c3164b2d103"
+  },
+  "request-data-destructor.txt": {
+    "bytes": 1497,
+    "sha256": "f90aebb39df38446d7147de1b920cf0f3041e6c3579ece55890c3872a1c4cccf"
+  },
+  "type.json": {
+    "bytes": 593,
+    "sha256": "94a6b4405f940cd22bdbe257ada4479f70b506eda2150ca946c34401b1cf54aa"
+  },
+  "updater-captured-owner.txt": {
+    "bytes": 6397,
+    "sha256": "217da0c42f5e8e2cda95bb6c390fec0a2b6aa8556aca02640ab8dcad2048d04f"
+  }
+}

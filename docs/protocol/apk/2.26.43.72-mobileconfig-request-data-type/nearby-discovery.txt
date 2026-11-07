@@ -1,0 +1,39 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   7d000:      	tbnz	w8, #0x0, 0x7d0ac <JNI_OnLoad+0xdf0c>
+   7d004:      	ldr	x20, [x0, #0x8]
+   7d008:      	mov	x21, x0
+   7d00c:      	cbz	x20, 0x7d0ac <JNI_OnLoad+0xdf0c>
+   7d010:      	adrp	x1, 0x17000
+   7d014:      	add	x1, x1, #0x4a2
+   7d018:      	sub	x0, x29, #0x20
+   7d01c:      	mov	x19, x2
+   7d020:      	bl	0x4d9a0 <.text+0x1540>
+   7d024:      	adrp	x1, 0x19000
+   7d028:      	add	x1, x1, #0x27e
+   7d02c:      	sub	x0, x29, #0x38
+   7d030:      	bl	0x4d9a0 <.text+0x1540>
+   7d034:      	adrp	x0, 0x1c000
+   7d038:      	add	x0, x0, #0x530
+   7d03c:      	mov	x8, sp
+   7d040:      	add	x1, x21, #0x18
+   7d044:      	bl	0xccc20 <_ZNSt6__ndk1plIcNS_11char_traitsIcEENS_9allocatorIcEEEENS_12basic_stringIT_T0_T1_EEPKS6_RKS9_@plt>
+   7d048:      	adrp	x2, 0x1c000
+   7d04c:      	add	x2, x2, #0x6d9
+   7d050:      	bl	0xcbf44 <JNI_OnLoad+0x5cda4>
+   7d054:      	bl	0x5d0fc <.text+0x10c9c>
+   7d058:      	add	x0, sp, #0x30
+   7d05c:      	add	x1, sp, #0x18
+   7d060:      	mov	x2, x19
+   7d064:      	bl	0x5d128 <.text+0x10cc8>
+   7d068:      	ldr	x8, [x20]
+   7d06c:      	sub	x1, x29, #0x20
+   7d070:      	sub	x2, x29, #0x38
+   7d074:      	add	x3, sp, #0x30
+   7d078:      	mov	x0, x20
+   7d07c:      	ldr	x8, [x8]
+   7d080:      	blr	x8

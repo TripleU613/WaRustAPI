@@ -86,3 +86,8 @@ memory.
 later configuration writes, complete constructor/exception contract, account
 ownership, selected live request derivation and response persistence/cache
 activation. No Rust runtime or saved account state changed.
+
+Type refinement: [RequestData RTTI binding](../2.26.43.72-mobileconfig-request-data-type/README.md)
+identifies 0xa9430 as constructing FBMobileConfigRequestData. The generic
+configuration-state wording above denotes that request-data object and does not
+identify the separate response-processing receiver or prove configuration adoption.

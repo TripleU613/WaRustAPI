@@ -1,0 +1,71 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   72f00:      	paciasp
+   72f04:      	sub	sp, sp, #0x190
+   72f08:      	stp	x29, x30, [sp, #0x130]
+   72f0c:      	str	x28, [sp, #0x140]
+   72f10:      	stp	x26, x25, [sp, #0x150]
+   72f14:      	bl	0xcb2b4 <JNI_OnLoad+0x5c114>
+   72f18:      	add	x29, sp, #0x130
+   72f1c:      	mrs	x24, TPIDR_EL0
+   72f20:      	mov	x22, x0
+   72f24:      	mov	x20, x2
+   72f28:      	ldr	x8, [x24, #0x28]
+   72f2c:      	mov	x21, x1
+   72f30:      	stur	x8, [x29, #-0x8]
+   72f34:      	ldr	x0, [x0, #0x378]
+   72f38:      	cbz	x0, 0x72f4c <JNI_OnLoad+0x3dac>
+   72f3c:      	ldr	x8, [x0]
+   72f40:      	mov	x1, x21
+   72f44:      	ldr	x8, [x8, #0x18]
+   72f48:      	blr	x8
+   72f4c:      	ldr	x23, [x22, #0x18]
+   72f50:      	cbz	x23, 0x73150 <JNI_OnLoad+0x3fb0>
+   72f54:      	ldrb	w8, [x22, #0x292]
+   72f58:      	cmp	w8, #0x1
+   72f5c:      	b.ne	0x73078 <JNI_OnLoad+0x3ed8>
+   72f60:      	ldrb	w8, [x23, #0x150]
+   72f64:      	cmp	w8, #0x1
+   72f68:      	b.ne	0x73150 <JNI_OnLoad+0x3fb0>
+   72f6c:      	ldrb	w8, [x21]
+   72f70:      	ldr	x9, [x21, #0x8]
+   72f74:      	bl	0xca4a8 <JNI_OnLoad+0x5b308>
+   72f78:      	cbz	x8, 0x73150 <JNI_OnLoad+0x3fb0>
+   72f7c:      	adrp	x1, 0x19000
+   72f80:      	add	x1, x1, #0xa89
+   72f84:      	add	x0, sp, #0x88
+   72f88:      	bl	0x4d9a0 <.text+0x1540>
+   72f8c:      	add	x2, sp, #0x88
+   72f90:      	mov	x0, x23
+   72f94:      	mov	x1, x21
+   72f98:      	bl	0xb8c64 <JNI_OnLoad+0x49ac4>
+   72f9c:      	mov	w19, w0
+   72fa0:      	add	x0, sp, #0x88
+   72fa4:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   72fa8:      	tbz	w19, #0x0, 0x73150 <JNI_OnLoad+0x3fb0>
+   72fac:      	ldp	x26, x19, [x22, #0x18]
+   72fb0:      	cbz	x19, 0x72fc0 <JNI_OnLoad+0x3e20>
+   72fb4:      	add	x1, x19, #0x10
+   72fb8:      	mov	w0, #0x1                // =1
+   72fbc:      	bl	0x4c570 <.text+0x110>
+   72fc0:      	ldr	x23, [x22, #0x110]
+   72fc4:      	ldr	x8, [x23]
+   72fc8:      	ldur	x25, [x8, #-0x48]
+   72fcc:      	stp	x26, x19, [sp, #0x40]
+   72fd0:      	cbz	x19, 0x72fe0 <JNI_OnLoad+0x3e40>
+   72fd4:      	add	x1, x19, #0x10
+   72fd8:      	mov	w0, #0x1                // =1
+   72fdc:      	bl	0x4c570 <.text+0x110>
+   72fe0:      	add	x22, sp, #0x40
+   72fe4:      	mov	x1, x21
+   72fe8:      	add	x0, x22, #0x10
+   72fec:      	bl	0xcca30 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2ERKS5_@plt>
+   72ff0:      	add	x0, x22, #0x28
+   72ff4:      	mov	x1, x20
+   72ff8:      	bl	0xcca30 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2ERKS5_@plt>
+   72ffc:      	mov	w0, #0x40               // =64
+   73000:      	bl	0xccfa0 <__wrap__Znwm@plt>

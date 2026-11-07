@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-request-data-type-evidence": {
+    "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-request-data-type/inspect-type.py <pinned-library>; offline RTTI inspection only",
+    "x-transport": "research only; RequestData type binding, response receiver unresolved",
+    "x-live": false,
+    "description": "Pinned RTTI identifies the previously traced constructor object as FBMobileConfigRequestData. Its retained records/deferred fields do not identify the updater response receiver. Construction narrows that receiver to an enclosing owner field+0x88, still untyped; a same-slot manager candidate is not a proved call target. Response parsing/adoption and persistence remain unresolved.",
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-request-data-type/README.md"
+  },
   "x-mobileconfig-loader-handoff-evidence": {
     "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-loader-handoff/inspect-handoff.py <pinned-library>; offline inspection only",
     "x-transport": "research only; diagnostic and constructor handoff, not validated account/configuration adoption",

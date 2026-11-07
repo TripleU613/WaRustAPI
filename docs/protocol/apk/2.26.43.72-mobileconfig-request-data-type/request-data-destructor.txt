@@ -1,0 +1,39 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   a987c:      	paciasp
+   a9880:      	stp	x29, x30, [sp, #-0x20]!
+   a9884:      	str	x19, [sp, #0x10]
+   a9888:      	mov	x29, sp
+   a988c:      	mov	x19, x0
+   a9890:      	bl	0xa98a4 <JNI_OnLoad+0x3a704>
+   a9894:      	bl	0xcaaa8 <JNI_OnLoad+0x5b908>
+   a9898:      	ldp	x29, x30, [sp], #0x20
+   a989c:      	autiasp
+   a98a0:      	b	0xccf30 <__wrap__ZdlPv@plt>
+   a98a4:      	paciasp
+   a98a8:      	stp	x29, x30, [sp, #-0x20]!
+   a98ac:      	stp	x20, x19, [sp, #0x10]
+   a98b0:      	mov	x29, sp
+   a98b4:      	ldr	x20, [x0, #0x258]
+   a98b8:      	mov	x19, x0
+   a98bc:      	adrp	x8, 0xd6000
+   a98c0:      	add	x8, x8, #0x400
+   a98c4:      	str	xzr, [x0, #0x258]
+   a98c8:      	str	x8, [x0]
+   a98cc:      	cbz	x20, 0xa9908 <JNI_OnLoad+0x3a768>
+   a98d0:      	ldr	x0, [x20, #0x50]
+   a98d4:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   a98d8:      	add	x0, x20, #0x28
+   a98dc:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   a98e0:      	add	x0, x20, #0x20
+   a98e4:      	bl	0xa9974 <JNI_OnLoad+0x3a7d4>
+   a98e8:      	add	x0, x20, #0x18
+   a98ec:      	bl	0xa9974 <JNI_OnLoad+0x3a7d4>
+   a98f0:      	add	x0, x20, #0x10
+   a98f4:      	bl	0x9c778 <JNI_OnLoad+0x2d5d8>
+   a98f8:      	ldr	x0, [x20, #0x8]
+   a98fc:      	bl	0x6f20c <JNI_OnLoad+0x6c>
