@@ -85,3 +85,8 @@ Verification: **1,602 workspace/all-feature tests passed** and strict workspace/
 all-target/all-feature Clippy passed. Formatting, CLI/OpenAPI, coverage freshness
 and staged repository hygiene are checked before commit. Offline tests do not
 prove server acceptance or complete network parity.
+
+
+## Original query reservation hold (2026-11-07)
+
+New direct key-query preparation also saves an independent encrypted original-reservation marker in its initial transaction. Either that marker or the mutable outcome row suppresses another selection for the same local intent. A lost outcome row alone therefore remains held across restart; inspection reports a redacted local fault instead of silently treating it as fresh work. No historical state is backfilled or replayed. [Regression and limits](replay-safety-audit.md#direct-key-query-original-reservation-survives-checkpoint-loss-2026-11-07).

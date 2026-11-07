@@ -24,6 +24,25 @@ pub(crate) fn outbox() -> Outbox {
 fn query_key(id: LocalMessageId) -> String {
     format!("outbox-key-query:{id}")
 }
+const QUERY_RESERVATION_PREFIX: &str = "outbox-key-query-reservation:";
+fn query_reservation_key(id: LocalMessageId) -> String {
+    format!("{QUERY_RESERVATION_PREFIX}{id}")
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+struct QueryReservation {
+    local_id: LocalMessageId,
+    query_id: String,
+    account_authority: [u8; 32],
+    request_sha256: [u8; 32],
+}
+fn query_reserved_in(tx: &crate::store::ReadTx<'_>, id: LocalMessageId) -> Result<bool> {
+    Ok(tx
+        .get_json::<serde_json::Value>(Table::Checkpoints, query_key(id).as_bytes(), 1)?
+        .is_some()
+        || tx
+            .get(Table::Checkpoints, query_reservation_key(id).as_bytes(), 1)?
+            .is_some())
+}
 
 #[derive(serde::Serialize, serde::Deserialize)]
 struct AckOwner {
@@ -137,6 +156,35 @@ pub fn identity_suspended(store: &ProtocolStore) -> Result<Vec<IdentitySuspensio
             }
             cursor = rows.last().map(|(key, _)| key.clone());
             for (key, value) in rows {
+                if key.starts_with(QUERY_RESERVATION_PREFIX.as_bytes()) {
+                    let original: QueryReservation =
+                        serde_json::from_slice(&value).map_err(|_| {
+                            Error::invalid("outbox", "invalid original direct query reservation")
+                        })?;
+                    if query_reservation_key(original.local_id).as_bytes() != key.as_slice() {
+                        return Err(Error::invalid(
+                            "outbox",
+                            "original direct query reservation selector mismatch",
+                        ));
+                    }
+                    if outbox()
+                        .get(tx, original.local_id)?
+                        .is_some_and(|entry| entry.progress == AttemptProgress::Queued)
+                        && tx
+                            .get(
+                                Table::Checkpoints,
+                                query_key(original.local_id).as_bytes(),
+                                1,
+                            )?
+                            .is_none()
+                    {
+                        return Err(Error::invalid(
+                            "outbox",
+                            "direct query checkpoint missing; original reservation held; no replay",
+                        ));
+                    }
+                    continue;
+                }
                 if !key.starts_with(b"outbox-key-query:") {
                     continue;
                 }
@@ -173,6 +221,16 @@ pub fn identity_suspension(
         }
         let row: Option<serde_json::Value> =
             tx.get_json(Table::Checkpoints, query_key(id).as_bytes(), 1)?;
+        if row.is_none()
+            && tx
+                .get(Table::Checkpoints, query_reservation_key(id).as_bytes(), 1)?
+                .is_some()
+        {
+            return Err(Error::invalid(
+                "outbox",
+                "direct query checkpoint missing; original reservation held; no replay",
+            ));
+        }
         let Some(row) = row.filter(|row| row["status"] == "identity_changed") else {
             return Ok(None);
         };
@@ -438,13 +496,7 @@ pub fn begin(store: &ProtocolStore) -> Result<Option<(Pending, Node)>> {
 }
 fn unreserved_queued(tx: &crate::store::ReadTx<'_>, entry: &OutboxEntry) -> Result<bool> {
     Ok(entry.progress == AttemptProgress::Queued
-        && tx
-            .get_json::<serde_json::Value>(
-                Table::Checkpoints,
-                query_key(entry.local_id).as_bytes(),
-                1,
-            )?
-            .is_none()
+        && !query_reserved_in(tx, entry.local_id)?
         && !super::outgoing_group::reserved_in(tx, entry.local_id)?)
 }
 /// Queued intents an outbox-enabled comparison session would attempt next, in
@@ -527,15 +579,7 @@ pub fn begin_selected(
                 }
                 _ => false,
             };
-        let reserved = store
-            .read(|tx| {
-                tx.get_json::<serde_json::Value>(
-                    Table::Checkpoints,
-                    query_key(entry.local_id).as_bytes(),
-                    1,
-                )
-            })?
-            .is_some();
+        let reserved = store.read(|tx| query_reserved_in(tx, entry.local_id))?;
         if reserved {
             continue;
         }
@@ -557,6 +601,7 @@ pub fn begin_selected(
                         1,
                     )?
                     .is_some()
+                || tx.get(Table::Checkpoints,query_reservation_key(entry.local_id).as_bytes(),1)?.is_some()
             {
                 return Ok(None);
             }
@@ -579,6 +624,9 @@ pub fn begin_selected(
             let request_sha256 = write_payload_sha256(&node)?;
             let saved = AccountRecord::load_in_write(tx)?;
             let authority = super::account_authority::fingerprint(tx.generation(), saved.as_ref())?;
+            tx.put_json(Table::Checkpoints,query_reservation_key(entry.local_id).as_bytes(),1,&QueryReservation {
+                local_id:entry.local_id,query_id:query_id.clone(),account_authority:authority,request_sha256,
+            })?;
             tx.put_json(
                 Table::Checkpoints,
                 query_key(entry.local_id).as_bytes(),
@@ -3440,6 +3488,86 @@ mod tests {
             assert_eq!(snapshot(&store), before);
             assert!(begin_selected(&store, Some(id)).unwrap().is_none());
         }
+    }
+
+    #[test]
+    fn lost_direct_query_checkpoint_remains_held_after_reopen() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("lost-direct-query.redb");
+        let store = open(&path);
+        let id = enqueue(&store);
+        let (_pending, _query) = begin(&store).unwrap().unwrap();
+        store
+            .write(|tx| {
+                tx.delete(Table::Checkpoints, query_key(id).as_bytes())?;
+                Ok(())
+            })
+            .unwrap();
+        let snapshot = |store: &ProtocolStore| {
+            store
+                .read(|tx| {
+                    Table::ALL
+                        .into_iter()
+                        .map(|t| tx.scan(t, 1, 10000))
+                        .collect::<Result<Vec<_>>>()
+                })
+                .unwrap()
+        };
+        let before = snapshot(&store);
+        let head = store.journal_head().unwrap();
+        assert!(
+            eligible(&store, 16).unwrap().is_empty(),
+            "lost query must not become eligible"
+        );
+        assert!(begin_selected(&store, Some(id)).unwrap().is_none());
+        assert!(begin(&store).unwrap().is_none());
+        assert!(identity_suspension(&store, id).is_err());
+        assert!(identity_suspended(&store).is_err());
+        assert_eq!(snapshot(&store), before);
+        assert_eq!(store.journal_head().unwrap(), head);
+        drop(store);
+        let store = open(&path);
+        assert!(eligible(&store, 16).unwrap().is_empty());
+        assert!(begin_selected(&store, Some(id)).unwrap().is_none());
+        assert!(identity_suspension(&store, id).is_err());
+        assert!(identity_suspended(&store).is_err());
+        assert_eq!(snapshot(&store), before);
+        assert_eq!(store.journal_head().unwrap(), head);
+        let original = store.read(|tx| outbox().get(tx, id)).unwrap().unwrap();
+        let mut other = original.intent.clone();
+        other.client_request_id = ClientRequestId::new("unrelated-direct-query").unwrap();
+        let other_id = store
+            .write(|tx| Ok(outbox().enqueue(tx, &other)?.0.local_id))
+            .unwrap();
+        let available = eligible(&store, 16).unwrap();
+        assert_eq!(available.len(), 1);
+        assert_eq!(available[0].local_id, other_id);
+        let (next, _) = begin(&store).unwrap().unwrap();
+        assert_eq!(next.local_id, other_id);
+        assert!(begin_selected(&store, Some(id)).unwrap().is_none());
+        assert_eq!(
+            store.read(|tx| outbox().get(tx, id)).unwrap().unwrap(),
+            original
+        );
+        // Corrupt original proof remains a hold, never authority for a fresh query.
+        store
+            .write(|tx| {
+                tx.put(
+                    Table::Checkpoints,
+                    query_reservation_key(id).as_bytes(),
+                    1,
+                    b"corrupt-fixture",
+                )
+            })
+            .unwrap();
+        let before = snapshot(&store);
+        let head = store.journal_head().unwrap();
+        assert!(eligible(&store, 16).unwrap().is_empty());
+        assert!(begin_selected(&store, Some(id)).unwrap().is_none());
+        assert!(identity_suspended(&store).is_err());
+        assert!(identity_suspension(&store, id).is_err());
+        assert_eq!(snapshot(&store), before);
+        assert_eq!(store.journal_head().unwrap(), head);
     }
 
     #[tokio::test]
