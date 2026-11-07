@@ -83,11 +83,14 @@ pub fn notification_ack(node: &Node) -> Result<Option<Node>> {
     // type). Its notification descriptor does not carry recipient/category/edit.
     let mut ack = Node::new("ack")
         .attr("id", id)
-        .attr("to", super::receipts::ack_address(from))
+        .attr("to", super::receipts::ack_wire_address(node, "from", from))
         .attr("class", "notification")
         .attr("type", "encrypt");
     if let Some(participant) = participant {
-        ack = ack.attr("participant", super::receipts::ack_address(participant));
+        ack = ack.attr(
+            "participant",
+            super::receipts::ack_wire_address(node, "participant", participant),
+        );
     }
     Ok(Some(ack))
 }
@@ -805,6 +808,68 @@ pub(super) mod tests {
             );
         assert_eq!(ack, expected);
         assert_eq!(decode(&Encoder::new(dict).encode(&ack).unwrap()), expected);
+    }
+
+    #[test]
+    fn literal_zero_lid_keeps_device_class_in_notification_acks() {
+        for route in [
+            "12345:0@lid",
+            "12345.ignored@lid",
+            "12345:+0@lid",
+            "12345:٠@lid",
+        ] {
+            let base = Node::new("notification")
+                .attr("from", route)
+                .attr("participant", route)
+                .attr("id", "LITERAL-ZERO");
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("notifications.redb"));
+            let dirty = base
+                .clone()
+                .attr("type", "w:gp2")
+                .children(vec![Node::new("groups_dirty").children(vec![
+                    Node::new("group").attr("jid", "12345-67890@g.us"),
+                ])]);
+            let acks = [
+                super::super::notifications::base_ack(
+                    &base.clone().attr("type", "picture"),
+                    "picture",
+                )
+                .unwrap()
+                .unwrap(),
+                notification_ack(
+                    &base
+                        .clone()
+                        .attr("type", "encrypt")
+                        .children(vec![Node::new("identity")]),
+                )
+                .unwrap()
+                .unwrap(),
+                super::super::devices::notification_ack(&base).unwrap(),
+                super::super::prekeys::low_count_ack(&base).unwrap(),
+                super::super::groups::handle_dirty_notification(&store, &dirty)
+                    .unwrap()
+                    .unwrap(),
+            ];
+            let expected = Jid::new_ad("12345", 0, 0, Server::Lid).unwrap();
+            for ack in acks {
+                assert_eq!(
+                    ack.get_attr("to").and_then(|v| v.as_jid()),
+                    Some(&expected),
+                    "{route}"
+                );
+                if let Some(participant) = ack.get_attr("participant") {
+                    assert_eq!(participant.as_jid(), Some(&expected), "{route}");
+                }
+                let bytes = crate::binary::Encoder::new(
+                    crate::binary::TokenDictionary::comparison_2_26_37_71(),
+                )
+                .encode(&ack)
+                .unwrap();
+                assert!(bytes.windows(3).any(|part| part == [0xf7, 1, 0]), "{route}");
+            }
+            assert_eq!(base.get_attr("from").and_then(|v| v.as_text()), Some(route));
+        }
     }
 
     #[test]

@@ -245,11 +245,14 @@ pub(crate) fn base_ack(node: &Node, kind: &str) -> Result<Option<Node>> {
         .transpose()?;
     let mut ack = Node::new("ack")
         .attr("id", id)
-        .attr("to", super::receipts::ack_address(from))
+        .attr("to", super::receipts::ack_wire_address(node, "from", from))
         .attr("class", "notification")
         .attr("type", kind);
     if let Some(participant) = participant {
-        ack = ack.attr("participant", super::receipts::ack_address(participant));
+        ack = ack.attr(
+            "participant",
+            super::receipts::ack_wire_address(node, "participant", participant),
+        );
     }
     Ok(Some(ack))
 }
@@ -273,7 +276,13 @@ pub(super) fn ack_route(node: &Node, name: &str) -> Option<crate::model::jid::Ji
     {
         None
     } else {
-        jid(node, name)
+        // Retain existing parsed metadata where available; the validated native
+        // zero profile only supplies formerly unparseable signed/Unicode forms.
+        jid(node, name).or_else(|| {
+            node.get_attr(name)
+                .and_then(super::receipts::explicit_zero_ack_address)
+                .map(|wire| wire.to_non_ad())
+        })
     }
 }
 

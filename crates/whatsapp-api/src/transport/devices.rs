@@ -320,7 +320,7 @@ pub fn notification_ack(node: &Node) -> Result<Node> {
     let to = super::notifications::ack_route(node, "from")
         .ok_or_else(|| invalid("devices notification without from"))?;
     Ok(Node::new("ack")
-        .attr("to", super::receipts::ack_address(to))
+        .attr("to", super::receipts::ack_wire_address(node, "from", to))
         .attr("id", id)
         .attr("class", "notification")
         .attr("type", "devices"))

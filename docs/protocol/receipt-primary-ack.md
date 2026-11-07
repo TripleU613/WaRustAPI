@@ -41,9 +41,10 @@ All callers use received_confirmation; message delivery/read/played producers
 select its separate message branch and do not receive this conversion.
 
 Nonzero device routing and the global encoder retain their existing behavior.
-No new API route, field or CLI flag is introduced. Hosted primary aliases,
-literal-text device-zero class validation, interop JNI codecs and complete
-native message-to-DeviceJid conversion remain separate unfinished work.
+No new API route, field or CLI flag is introduced. The later literal-zero
+section below narrows the former text-device-zero gap. Hosted primary aliases,
+interop JNI codecs and complete native message-to-DeviceJid conversion remain
+separate unfinished work.
 
 ## Reproduction and checks
 
@@ -140,3 +141,32 @@ presence, not writer success. It is replaced by explicit unwritable-participant
 and omitted-recipient controls. Native writer recovery, complete address grammar
 and live acceptance remain open. No fact/identity/replay policy, request family
 or global encoder behavior changed.
+
+## Literal zero-device ACK wire class (2026-11-06)
+
+**Confirmed static / fixed offline, APK 2.26.43.72:** literal text
+`12345:0@lid` is a DeviceLid (0EM), whose `getAgent()` returns 1.
+The native 1r2.A00 writer therefore emits AD-JID flags 1/device 0. In contrast,
+123.A01/A02/A04 reconstruct incoming binary AD0 as an ordinary user, whose
+reply uses JID_PAIR. A prior generic normalization incorrectly flattened both.
+PN Device0 has agent 0 and still writes JID_PAIR.
+
+Sources: [parser](apk/2.26.43.72-message-ack-chat/jid-parser.txt),
+[current getter census and writer](apk/2.26.43.72-group-missing-identification/README.md),
+and [original integer device storage](apk/2.26.43.72-lid-device-ack-text/README.md).
+Source-aware projection now applies to selected receipt ACK from/participant
+and generic picture, identity, devices, count and groups_dirty ACK fields.
+It recognizes original exact-zero signed/BMP decimal forms and ignored dot
+qualifiers using the existing native text classifier. Device recipients still
+fail the receipt UserJid cast; token authority admission is unchanged.
+
+The regression first failed on the Plain versus AgentDevice kind, then passed
+with actual AD-JID bytes `f7 01 00`. Additional notification-builder tests cover
+literal, ignored-dot, signed and Unicode zero forms. Existing binary-zero tests
+retain the opposite pair outcome. Incoming attributes remain unchanged;
+already-parseable metadata and persisted dirty-notification selectors are not
+normalized. A bounded metadata fallback admits formerly unparseable exact-zero
+forms. This is ACK output projection, not full sender/fact canonicalization.
+Original device integers 256/-256, hosted-zero validity, unknown subclasses,
+complete grammar, runtime writer recovery and live acceptance remain unverified.
+No account operation or new request family.

@@ -975,7 +975,7 @@ fn receipt_ack_after_processing(incoming: &Node, handled_retry: bool) -> Option<
     if super::receipts::has_self_user_address(incoming) {
         return None;
     }
-    let from = super::receipts::ack_address(super::receipts::network_jid(incoming, "from")?);
+    let from = super::receipts::receipt_ack_wire_address(incoming, "from")?;
     // APK43.72 distinguishes F10 null/unhandled (2Cx) from LIL parse errors
     // (1rg). Both use487, but their context fields differ. Local capability
     // refusals are not a generic parse error. docs/protocol/retry-ack-dispatch.md
@@ -1011,8 +1011,8 @@ fn receipt_ack_after_processing(incoming: &Node, handled_retry: bool) -> Option<
     if kind != "delivery" {
         ack = ack.attr("type", kind);
     }
-    if let Some(participant) = super::receipts::network_jid(incoming, "participant") {
-        ack = ack.attr("participant", super::receipts::ack_address(participant));
+    if let Some(participant) = super::receipts::receipt_ack_wire_address(incoming, "participant") {
+        ack = ack.attr("participant", participant);
     }
     // 1rg.A03 makes a fresh parse-error context with no recipient/edit.
     // 2Cx's unhandled-version path instead copies the original Eoh context.
@@ -2350,6 +2350,73 @@ mod tests {
         assert_eq!(
             ack.get_attr("participant").unwrap().as_jid().unwrap(),
             &Jid::parse("15555550100@s.whatsapp.net").unwrap()
+        );
+    }
+
+    #[test]
+    fn literal_zero_device_ack_fields_keep_native_lid_class() {
+        for text in [
+            "12345:0@lid",
+            "12345.0@lid",
+            "12345.ignored@lid",
+            "12345:+0@lid",
+            "12345:-0@lid",
+            "12345:٠@lid",
+        ] {
+            for field in ["from", "participant"] {
+                let node = Node::new("receipt")
+                    .attr("from", "15555550100@s.whatsapp.net")
+                    .attr("id", "ZERO-TEXT")
+                    .attr("type", "read")
+                    .attr(field, text);
+                let dict = TokenDictionary::comparison_2_26_37_71();
+                let wire = Encoder::new(dict).encode(&node).unwrap();
+                let input = Decoder::new(&wire[1..], dict, &Limits::default())
+                    .decode_node()
+                    .unwrap();
+                let ack =
+                    received_confirmation(&input).expect("native literal device0 is supported");
+                let output = if field == "from" { "to" } else { "participant" };
+                let expected = Jid::new_ad("12345", 0, 0, crate::model::jid::Server::Lid).unwrap();
+                assert_eq!(
+                    ack.get_attr(output).and_then(|v| v.as_jid()),
+                    Some(&expected),
+                    "{field}/{text}"
+                );
+                let encoded = Encoder::new(dict).encode(&ack).unwrap();
+                assert!(encoded.windows(3).any(|bytes| bytes == [0xf7, 1, 0]));
+                assert_eq!(input.get_attr(field).and_then(|v| v.as_text()), Some(text));
+            }
+        }
+        for text in [
+            "15555550100:0@s.whatsapp.net",
+            "15555550100.ignored@s.whatsapp.net",
+        ] {
+            let node = Node::new("receipt")
+                .attr("from", text)
+                .attr("id", "ZERO-PN");
+            let ack = received_confirmation(&node).unwrap();
+            assert_eq!(
+                ack.get_attr("to").and_then(|v| v.as_jid()),
+                Some(&Jid::parse("15555550100@s.whatsapp.net").unwrap())
+            );
+        }
+        // Binary AD0 is reconstructed to UserJid by123, not DeviceLidJid.
+        let node = Node::new("receipt")
+            .attr(
+                "from",
+                Jid::new_ad("12345", 0, 0, crate::model::jid::Server::Lid).unwrap(),
+            )
+            .attr("id", "ZERO-BINARY");
+        let dict = TokenDictionary::comparison_2_26_37_71();
+        let wire = Encoder::new(dict).encode(&node).unwrap();
+        let node = Decoder::new(&wire[1..], dict, &Limits::default())
+            .decode_node()
+            .unwrap();
+        let ack = received_confirmation(&node).unwrap();
+        assert_eq!(
+            ack.get_attr("to").and_then(|v| v.as_jid()),
+            Some(&Jid::parse("12345@lid").unwrap())
         );
     }
 

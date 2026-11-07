@@ -502,14 +502,17 @@ pub fn handle_dirty_notification(store: &ProtocolStore, node: &Node) -> Result<O
         // CmG.A02/A00 extracts from/id/type/participant; recipient/category/edit
         // belong to its separate receipt wrapper, so are not echoed here.
         let mut ack = Node::new("ack")
-            .attr("to", super::receipts::ack_address(from.clone()))
+            .attr(
+                "to",
+                super::receipts::ack_wire_address(node, "from", from.clone()),
+            )
             .attr("id", id)
             .attr("class", "notification")
             .attr("type", "w:gp2");
         if let Some(participant) = &participant {
             ack = ack.attr(
                 "participant",
-                super::receipts::ack_address(participant.clone()),
+                super::receipts::ack_wire_address(node, "participant", participant.clone()),
             );
         }
         use sha2::{Digest, Sha256};

@@ -1136,7 +1136,7 @@ pub fn low_count_ack(node: &Node) -> Result<Node> {
         .transpose()?;
     let mut ack = Node::new("ack").attr("id", id);
     if let Some(to) = to {
-        ack = ack.attr("to", super::receipts::ack_address(to));
+        ack = ack.attr("to", super::receipts::ack_wire_address(node, "from", to));
     }
     Ok(ack.attr("class", "notification").attr("type", "encrypt"))
 }

@@ -1,4 +1,11 @@
 {
+  "x-literal-zero-device-ack-class": {
+    "x-cli": false,
+    "x-transport": "selected receipt and shared notification ACK output fields",
+    "x-live": false,
+    "description": "Source-aware projection preserves literal LID Device0 as AD-JID flags1/device0 while binary AD0 users reply with JID_PAIR; PN exact-zero remains pair. Signed and BMP-decimal original zero and ignored dot qualifiers are covered. Raw attributes, existing parsed metadata and persisted selectors are retained. Device recipient UserJid casts and token authority admission are unchanged. Wrapped original device integers, complete canonicalization and live acceptance remain unverified. No HTTP route or account operation.",
+    "evidence": "docs/protocol/receipt-primary-ack.md#literal-zero-device-ack-wire-class-2026-11-06"
+  },
   "x-selected-ack-writer-compliance": {
     "x-cli": "xtask apk-virtual-overrides <apk> --class 'Lcom/whatsapp/infra/core/jid/Jid;' --method isProtocolCompliant --signature '()Z' --include-interfaces",
     "x-transport": "notification ACK route guard and selected receipt ACK output fields",

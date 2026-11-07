@@ -4984,3 +4984,7 @@ regressions failed on previously constructed service-user ACKs. This preserves
 native context/cast distinctions while leaving general grammar, codec policy,
 writer recovery and live acceptance explicit. No new request, receipt fact,
 identity normalization or account operation.
+
+## Literal zero-device ACK class (2026-11-06)
+
+**Fixed offline:** [source-aware ACK projection](receipt-primary-ack.md#literal-zero-device-ack-wire-class-2026-11-06) preserves literal LID Device0 AD-JID output separately from binary-zero UserJid pair output. Shared notification and receipt paths are covered; metadata/fact canonicalization, wrapped original device integers and live acceptance remain open.

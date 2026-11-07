@@ -1,3 +1,10 @@
+2026-11-06 — **Preserved literal zero-device LID ACK wire class.**
+Source-aware ACK output now keeps literal DeviceLid0 as AD-JID while decoded
+binary zero-device users still reply with JID_PAIR. Receipt and shared notification
+builders have offline kind/byte regressions, including signed and Unicode zero.
+Incoming captures and existing persisted selectors remain unchanged.
+[Evidence, boundaries and remaining gaps](docs/protocol/receipt-primary-ack.md#literal-zero-device-ack-wire-class-2026-11-06). No live account operation.
+
 2026-11-06 — **Guarded selected automatic ACK writer compliance.**
 Notification and receipt ACKs no longer copy known noncompliant native address
 objects. Omitted recipients and fresh retry contexts remain distinct from copied
