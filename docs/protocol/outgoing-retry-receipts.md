@@ -545,3 +545,12 @@ Only2 satisfies ChatConnectionRequirement. Existing readiness work is reused;
 state clearing and the distant connecting-handler join are now classified.
 [Exact bodies and concurrent-ordering limits](apk/2.26.43.72-retry-connection-requirement-state/README.md).
 No Rust reconnect/replay behavior or live account operation changed.
+
+## Queue wake provider construction boundary
+
+**Confirmed selected static:** the queue facade combines two injected sets,
+passes an RF1 snapshot to a per-facade cached NhR, whose retained constructor
+associates each observer via Cgm. RNL's concrete masked factory case245 is now
+located; set-key membership/provider lifecycle remains unresolved. Existing wake
+and requirement traces are reused. [Provider evidence](apk/2.26.43.72-jobqueue-observer-provider/README.md).
+No runtime replay/reconnect behavior changed.

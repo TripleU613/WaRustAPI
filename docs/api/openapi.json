@@ -1,4 +1,11 @@
 {
+  "x-jobqueue-observer-provider-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-jobqueue-observer-provider/README.md",
+    "behavior": "Static queue observer set/provider construction: two set keys feed an RF1 snapshot and per-facade cached manager; concrete RNL factory case located. Complete membership/lifecycle remains unknown; no runtime capability added."
+  },
   "x-retry-connection-requirement-state-evidence": {
     "x-cli": false,
     "x-transport": false,

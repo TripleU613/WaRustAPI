@@ -10676,3 +10676,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   initial/disconnect3, connecting1 and separate state4. Disconnect closes its
   condition variable; global failure/state ordering and observer wake remain
   unproven. Compact evidence retained; no runtime or live operation changed.
+
+- Pinned queue observer provider now binds two injected set keys, RF1 snapshot
+  and synchronized per-facade NhR caching, plus RNL's factory case245. Complete
+  set membership/provider lifecycle remain unknown. Research only; no runtime
+  change or live account operation.

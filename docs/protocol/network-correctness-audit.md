@@ -6180,3 +6180,9 @@ evidence, not new APK behavior or proof of full group-send/network parity.
   the retry job requirement is not latched true. Global ordering/provider/wake
   semantics remain unknown. Research only. See
   [state writer binding](apk/2.26.43.72-retry-connection-requirement-state/README.md).
+
+- Pinned jobqueue provider boundary:0fW combines set keys0x1ded/0x1d37, snapshots
+  RF1 inputs and caches a new NhR per facade under its monitor; existing Cgm
+  association/wake path reused. RNH masked case245 constructs RNL, but backing
+  set membership/global provider identity remain unresolved. Research only. See
+  [observer provider evidence](apk/2.26.43.72-jobqueue-observer-provider/README.md).

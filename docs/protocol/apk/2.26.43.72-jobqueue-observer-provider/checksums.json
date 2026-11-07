@@ -1,0 +1,34 @@
+{
+  "README.md": {
+    "bytes": 4608,
+    "sha256": "c588f4c4ec760984a925f8bb51b304a3a25cd4c4664acaab362fe3e3ce0ca777"
+  },
+  "app-set-adapter.txt": {
+    "bytes": 1095,
+    "sha256": "ab81e1f0c13f081ddd7511615b1a7fe2b9b60115f4c28bb7a845725f8a618deb"
+  },
+  "extract-factory-case.py": {
+    "bytes": 1056,
+    "sha256": "2262534750a51e89e59efc6674ec9c87ed742afd460af96b13223b19642ecdef"
+  },
+  "facade-constructor.txt": {
+    "bytes": 3032,
+    "sha256": "ef357592ad81b4d743aba306aabd362054cc5596be42309d8ec2ad83be55e60a"
+  },
+  "manager-callers.txt": {
+    "bytes": 65,
+    "sha256": "592ad4fbdf896b7d8fbc8b7331cca5767ab9e8d3b1b3bf5af8b0f6e051ceded0"
+  },
+  "manager-provider.txt": {
+    "bytes": 4507,
+    "sha256": "9358ad0b42aacc7ed6a67e17b245dcb0ee38ad1235c740c2e45d1c179033efce"
+  },
+  "observer-factory-case.txt": {
+    "bytes": 4297,
+    "sha256": "b842dfea446180d35c12dedc8b9edb4bca4d93626963760ccfaa0e3f54e821c9"
+  },
+  "session-set-adapter.txt": {
+    "bytes": 553,
+    "sha256": "9c2c1936da9a9b6a8cb8c9c77e5d24baca8eb79eaf51f2d30725e00acc1a100a"
+  }
+}
