@@ -1,0 +1,38 @@
+{
+  "README.md": {
+    "bytes": 5791,
+    "sha256": "6297dd14ae61e188aeeb7812dde6be447effde28b9ffaf206fde600a69bd4109"
+  },
+  "caller-gate.txt": {
+    "bytes": 1520,
+    "sha256": "df2e94f505a2d4155d7a0c04df9486a5ae3e852401dda0fec29f7870320ec38b"
+  },
+  "failure-clear-helpers.txt": {
+    "bytes": 1859,
+    "sha256": "a71cc256987454bcf3963b5b927879d17858d722e4eb79d67dc155e1aef06067"
+  },
+  "header-forwarding.txt": {
+    "bytes": 1105,
+    "sha256": "61c813fd3b9ec868baac51afb3ea7dfe21e9b83717e961881e6193cda4f55399"
+  },
+  "inspect-reader.py": {
+    "bytes": 3172,
+    "sha256": "0cd787683393a8a4ea4b182ba4cd3ad87ba9ec31c228fa953e4b5cf5c41d5ba9"
+  },
+  "native-body.txt": {
+    "bytes": 4053,
+    "sha256": "2aa23bcf525a2721fc5db229577b43dd5fd359e929075f21dd4b9b972674a4b0"
+  },
+  "native-header.txt": {
+    "bytes": 2674,
+    "sha256": "ae9cd18f8b141e136ac0ab2548fe41a96352007026c5aa91407fa9b0928e0ec3"
+  },
+  "rea-native-header.json": {
+    "bytes": 9539,
+    "sha256": "c7a8bf03b4b32ee7ecbb716a4c2c5624e4f6be2d2212298207f1c0bec351d6f0"
+  },
+  "reader.json": {
+    "bytes": 7763,
+    "sha256": "87c701141daf8cea1d952601c6c84fca79fdc2cc434fae969279f780a960b115"
+  }
+}

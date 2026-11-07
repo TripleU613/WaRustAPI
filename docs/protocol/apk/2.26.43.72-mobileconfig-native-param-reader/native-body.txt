@@ -1,0 +1,103 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   bf6ec:      	paciasp
+   bf6f0:      	sub	sp, sp, #0x90
+   bf6f4:      	stp	x29, x30, [sp, #0x30]
+   bf6f8:      	str	x27, [sp, #0x40]
+   bf6fc:      	bl	0xca5c0 <JNI_OnLoad+0x5b420>
+   bf700:      	add	x29, sp, #0x30
+   bf704:      	mrs	x23, TPIDR_EL0
+   bf708:      	mov	x19, x1
+   bf70c:      	mov	x21, x1
+   bf710:      	ldr	x8, [x23, #0x28]
+   bf714:      	bl	0xcb708 <JNI_OnLoad+0x5c568>
+   bf718:      	ldp	x8, x9, [x19, #0x38]!
+   bf71c:      	ldurh	w22, [x19, #-0x30]
+   bf720:      	sub	x10, x9, x8
+   bf724:      	asr	x24, x10, #3
+   bf728:      	cmp	x22, x10, asr #3
+   bf72c:      	b.ls	0xbf770 <JNI_OnLoad+0x505d0>
+   bf730:      	mov	x27, x21
+   bf734:      	sub	x25, x22, x24
+   bf738:      	ldr	x1, [x27, #0x48]!
+   bf73c:      	sub	x10, x1, x9
+   bf740:      	cmp	x25, x10, asr #3
+   bf744:      	b.ls	0xbf784 <JNI_OnLoad+0x505e4>
+   bf748:      	mov	x0, x8
+   bf74c:      	mov	x2, x22
+   bf750:      	bl	0x614d0 <.text+0x15070>
+   bf754:      	ldp	x9, x8, [x21, #0x38]
+   bf758:      	str	x27, [sp, #0x20]
+   bf75c:      	sub	x8, x8, x9
+   bf760:      	asr	x26, x8, #3
+   bf764:      	cbz	x0, 0xbf7a4 <JNI_OnLoad+0x50604>
+   bf768:      	bl	0x61510 <.text+0x150b0>
+   bf76c:      	b	0xbf7a8 <JNI_OnLoad+0x50608>
+   bf770:      	cmp	x22, x24
+   bf774:      	b.hs	0xbf7ec <JNI_OnLoad+0x5064c>
+   bf778:      	add	x8, x8, x22, lsl #3
+   bf77c:      	str	x8, [x21, #0x40]
+   bf780:      	b	0xbf7ec <JNI_OnLoad+0x5064c>
+   bf784:      	lsl	x10, x22, #3
+   bf788:      	add	x8, x9, x25, lsl #3
+   bf78c:      	sub	x10, x10, x24, lsl #3
+   bf790:      	cbz	x10, 0xbf77c <JNI_OnLoad+0x505dc>
+   bf794:      	str	xzr, [x9], #0x8
+   bf798:      	sub	x10, x10, #0x8
+   bf79c:      	cbnz	x10, 0xbf794 <JNI_OnLoad+0x505f4>
+   bf7a0:      	b	0xbf77c <JNI_OnLoad+0x505dc>
+   bf7a4:      	mov	x1, xzr
+   bf7a8:      	add	x8, x0, x26, lsl #3
+   bf7ac:      	lsl	x10, x22, #3
+   bf7b0:      	add	x11, x0, x1, lsl #3
+   bf7b4:      	add	x9, x8, x25, lsl #3
+   bf7b8:      	sub	x10, x10, x24, lsl #3
+   bf7bc:      	stp	x0, x8, [sp]
+   bf7c0:      	str	x11, [sp, #0x18]
+   bf7c4:      	cbz	x10, 0xbf7d4 <JNI_OnLoad+0x50634>
+   bf7c8:      	str	xzr, [x8], #0x8
+   bf7cc:      	sub	x10, x10, #0x8
+   bf7d0:      	cbnz	x10, 0xbf7c8 <JNI_OnLoad+0x50628>
+   bf7d4:      	bl	0xcacb8 <JNI_OnLoad+0x5bb18>
+   bf7d8:      	str	x9, [sp, #0x10]
+   bf7dc:      	bl	0x6dac0 <.text+0x21660>
+   bf7e0:      	mov	x0, sp
+   bf7e4:      	bl	0xabbf0 <JNI_OnLoad+0x3ca50>
+   bf7e8:      	ldrh	w22, [x21, #0x8]
+   bf7ec:      	ldr	x1, [x19]
+   bf7f0:      	lsl	x2, x22, #3
+   bf7f4:      	mov	x0, x20
+   bf7f8:      	bl	0xcd570 <_ZNSt6__ndk113basic_istreamIcNS_11char_traitsIcEEE4readEPcl@plt>
+   bf7fc:      	mov	x0, x20
+   bf800:      	bl	0xcd3a0 <_ZNSt6__ndk113basic_istreamIcNS_11char_traitsIcEEE4peekEv@plt>
+   bf804:      	cmn	w0, #0x1
+   bf808:      	b.ne	0xbf828 <JNI_OnLoad+0x50688>
+   bf80c:      	ldr	x8, [x20]
+   bf810:      	mov	w9, #0x5                // =5
+   bf814:      	ldur	x8, [x8, #-0x18]
+   bf818:      	add	x8, x20, x8
+   bf81c:      	ldrb	w8, [x8, #0x20]
+   bf820:      	tst	w8, w9
+   bf824:      	b.eq	0xbf864 <JNI_OnLoad+0x506c4>
+   bf828:      	bl	0xcacb8 <JNI_OnLoad+0x5bb18>
+   bf82c:      	bl	0xcac30 <JNI_OnLoad+0x5ba90>
+   bf830:      	bl	0xa8264 <JNI_OnLoad+0x390c4>
+   bf834:      	mov	x0, sp
+   bf838:      	bl	0x59c54 <.text+0xd7f4>
+   bf83c:      	mov	w0, wzr
+   bf840:      	bl	0xca274 <JNI_OnLoad+0x5b0d4>
+   bf844:      	b.ne	0xbf86c <JNI_OnLoad+0x506cc>
+   bf848:      	ldp	x20, x19, [sp, #0x80]
+   bf84c:      	ldr	x27, [sp, #0x40]
+   bf850:      	bl	0xcaac4 <JNI_OnLoad+0x5b924>
+   bf854:      	ldp	x29, x30, [sp, #0x30]
+   bf858:      	add	sp, sp, #0x90
+   bf85c:      	autiasp
+   bf860:      	ret
+   bf864:      	mov	w0, #0x1                // =1
+   bf868:      	b	0xbf840 <JNI_OnLoad+0x506a0>
+   bf86c:      	bl	0xcd9f0 <__stack_chk_fail@plt>

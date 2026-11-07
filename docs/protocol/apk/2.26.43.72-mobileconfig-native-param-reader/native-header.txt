@@ -1,0 +1,69 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   bf870:      	paciasp
+   bf874:      	sub	sp, sp, #0xc0
+   bf878:      	stp	x29, x30, [sp, #0x90]
+   bf87c:      	stp	x22, x21, [sp, #0xa0]
+   bf880:      	stp	x20, x19, [sp, #0xb0]
+   bf884:      	add	x29, sp, #0x90
+   bf888:      	mrs	x22, TPIDR_EL0
+   bf88c:      	mov	w2, #0x1e               // =30
+   bf890:      	mov	x19, x1
+   bf894:      	ldr	x8, [x22, #0x28]
+   bf898:      	bl	0xcb708 <JNI_OnLoad+0x5c568>
+   bf89c:      	bl	0xcd570 <_ZNSt6__ndk113basic_istreamIcNS_11char_traitsIcEEE4readEPcl@plt>
+   bf8a0:      	ldr	x8, [x20]
+   bf8a4:      	ldur	x8, [x8, #-0x18]
+   bf8a8:      	add	x8, x20, x8
+   bf8ac:      	ldr	w8, [x8, #0x20]
+   bf8b0:      	cbnz	w8, 0xbf8e8 <JNI_OnLoad+0x50748>
+   bf8b4:      	ldrh	w8, [x19, #0x2]
+   bf8b8:      	ldrh	w9, [x19, #0x4]
+   bf8bc:      	sub	w8, w8, #0xa
+   bf8c0:      	cmp	w8, #0x1ea
+   bf8c4:      	mov	w8, #0x7fff             // =32767
+   bf8c8:      	ccmp	w9, w8, #0x0, ls
+   bf8cc:      	b.ne	0xbf8e8 <JNI_OnLoad+0x50748>
+   bf8d0:      	ldrh	w8, [x19, #0x6]
+   bf8d4:      	ldrh	w9, [x19, #0x8]
+   bf8d8:      	mov	w10, #0xea60            // =60000
+   bf8dc:      	cmp	w8, w10
+   bf8e0:      	ccmp	w9, w10, #0x2, ls
+   bf8e4:      	b.ls	0xbf910 <JNI_OnLoad+0x50770>
+   bf8e8:      	mov	w21, wzr
+   bf8ec:      	bl	0xca264 <JNI_OnLoad+0x5b0c4>
+   bf8f0:      	b.ne	0xbf968 <JNI_OnLoad+0x507c8>
+   bf8f4:      	mov	w0, w21
+   bf8f8:      	ldp	x20, x19, [sp, #0xb0]
+   bf8fc:      	ldp	x22, x21, [sp, #0xa0]
+   bf900:      	ldp	x29, x30, [sp, #0x90]
+   bf904:      	add	sp, sp, #0xc0
+   bf908:      	autiasp
+   bf90c:      	ret
+   bf910:      	add	x0, sp, #0x7
+   bf914:      	mov	w1, wzr
+   bf918:      	mov	w2, #0x81               // =129
+   bf91c:      	bl	0xcda10 <memset@plt>
+   bf920:      	ldrh	w2, [x19, #0x1c]
+   bf924:      	cmp	x2, #0x81
+   bf928:      	cset	w21, lo
+   bf92c:      	cmp	x2, #0x80
+   bf930:      	b.hi	0xbf8ec <JNI_OnLoad+0x5074c>
+   bf934:      	add	x1, sp, #0x7
+   bf938:      	mov	x0, x20
+   bf93c:      	add	x20, sp, #0x7
+   bf940:      	bl	0xcd570 <_ZNSt6__ndk113basic_istreamIcNS_11char_traitsIcEEE4readEPcl@plt>
+   bf944:      	ldrh	w8, [x19, #0x1c]
+   bf948:      	cmp	x8, #0x81
+   bf94c:      	b.hs	0xbf964 <JNI_OnLoad+0x507c4>
+   bf950:      	add	x0, x19, #0x20
+   bf954:      	add	x1, sp, #0x7
+   bf958:      	strb	wzr, [x20, x8]
+   bf95c:      	bl	0x5d1ec <.text+0x10d8c>
+   bf960:      	b	0xbf8ec <JNI_OnLoad+0x5074c>
+   bf964:      	brk	#0x1
+   bf968:      	bl	0xcd9f0 <__stack_chk_fail@plt>

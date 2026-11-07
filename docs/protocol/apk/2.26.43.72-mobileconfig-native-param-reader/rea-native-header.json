@@ -1,0 +1,69 @@
+{
+  "evidence_id": "ev_2b5272cc722ddf8c7af0412e09a70f057240bfd94dc397fff38f54543d3b68a9",
+  "subject": {
+    "name": "libmobileconfig-jni.so",
+    "digest": {
+      "sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so",
+    "format": "unknown",
+    "architecture": null
+  },
+  "provider": {
+    "id": "rizin",
+    "name": "Rizin",
+    "version": null
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.reverse-engineering.command-observation",
+  "operation": "execute_rizin_command",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so",
+    "command": "e scr.color=0; pd 62 @ 0xbf870",
+    "provider_executable": "rizin",
+    "command_arguments": [
+      "-N",
+      "-q",
+      "-c",
+      "e scr.color=0; pd 62 @ 0xbf870",
+      "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so"
+    ]
+  },
+  "raw_result": {
+    "stdout": "            0x000bf870      paciasp\n            0x000bf874      sub   sp, sp, 0xc0\n            0x000bf878      stp   x29, x30, [sp, 0x90]\n            0x000bf87c      stp   x22, x21, [sp, 0xa0]\n            0x000bf880      stp   x20, x19, [sp, 0xb0]\n            0x000bf884      add   x29, sp, 0x90\n            0x000bf888      mrs   x22, tpidr_el0\n            0x000bf88c      mov   w2, 0x1e\n            0x000bf890      mov   x19, x1\n            0x000bf894      ldr   x8, [x22, 0x28]                      ; [0x28:4]=0xcfad8\n            0x000bf898      bl    0xcb708\n            0x000bf89c      bl    method.std::__ndk1::basic_istream_char__std::__ndk1::char_traits_char___.read_char___long\n            0x000bf8a0      ldr   x8, [x20]\n            0x000bf8a4      ldur  x8, [x8, -0x18]                      ; [0x18:4]=0\n            0x000bf8a8      add   x8, x20, x8\n            0x000bf8ac      ldr   w8, [x8, 0x20]                       ; [0x20:4]=64 ; \"@\"\n        ,=< 0x000bf8b0      cbnz  w8, 0xbf8e8\n        |   0x000bf8b4      ldrh  w8, [x19, 2]                         ; [0x2:4]=0x102464c\n        |   0x000bf8b8      ldrh  w9, [x19, 4]                         ; [0x4:4]=0x10102\n        |   0x000bf8bc      sub   w8, w8, 0xa\n        |   0x000bf8c0      cmp   w8, 0x1ea\n        |   0x000bf8c4      mov   w8, 0x7fff\n        |   0x000bf8c8      ccmp  w9, w8, 0, ls\n       ,==< 0x000bf8cc      b.ne  0xbf8e8\n       ||   0x000bf8d0      ldrh  w8, [x19, 6]                         ; [0x6:4]=1\n       ||   0x000bf8d4      ldrh  w9, [x19, 8]                         ; [0x8:4]=0\n       ||   0x000bf8d8      mov   w10, 0xea60\n       ||   0x000bf8dc      cmp   w8, w10\n       ||   0x000bf8e0      ccmp  w9, w10, 2, ls\n      ,===< 0x000bf8e4      b.ls  0xbf910\n      |``-> 0x000bf8e8      mov   w21, wzr\n      |..-> 0x000bf8ec      bl    0xca264\n     ,====< 0x000bf8f0      b.ne  0xbf968\n     ||::   0x000bf8f4      mov   w0, w21\n     ||::   0x000bf8f8      ldp   x20, x19, [sp, 0xb0]\n     ||::   0x000bf8fc      ldp   x22, x21, [sp, 0xa0]\n     ||::   0x000bf900      ldp   x29, x30, [sp, 0x90]\n     ||::   0x000bf904      add   sp, sp, 0xc0\n     ||::   0x000bf908      autiasp\n     ||::   0x000bf90c      ret\n     |`---> 0x000bf910      add   x0, sp, 7\n     | ::   0x000bf914      mov   w1, wzr\n     | ::   0x000bf918      mov   w2, 0x81\n     | ::   0x000bf91c      bl    sym.imp.memset\n     | ::   0x000bf920      ldrh  w2, [x19, 0x1c]                      ; [0x1c:4]=0\n     | ::   0x000bf924      cmp   x2, 0x81\n     | ::   0x000bf928      cset  w21, lo\n     | ::   0x000bf92c      cmp   x2, 0x80\n     | `==< 0x000bf930      b.hi  0xbf8ec\n     |  :   0x000bf934      add   x1, sp, 7\n     |  :   0x000bf938      mov   x0, x20\n     |  :   0x000bf93c      add   x20, sp, 7\n     |  :   0x000bf940      bl    method.std::__ndk1::basic_istream_char__std::__ndk1::char_traits_char___.read_char___long\n     |  :   0x000bf944      ldrh  w8, [x19, 0x1c]                      ; [0x1c:4]=0\n     |  :   0x000bf948      cmp   x8, 0x81\n     | ,==< 0x000bf94c      b.hs  0xbf964\n     | |:   0x000bf950      add   x0, x19, 0x20\n     | |:   0x000bf954      add   x1, sp, 7\n     | |:   0x000bf958      strb  wzr, [x20, x8]\n     | |:   0x000bf95c      bl    0x5d1ec\n     | |`=< 0x000bf960      b     0xbf8ec\n     | `--> 0x000bf964      brk   1\n",
+    "stderr": "ERROR: Cannot determine entrypoint, using 0x0004c460.\n",
+    "exit_code": 0,
+    "signal": null,
+    "output_truncated": false,
+    "completion_status": "complete",
+    "artifact_sha256_after": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+    "artifact_changed": false
+  },
+  "normalized_result": {
+    "stdout": "            0x000bf870      paciasp\n            0x000bf874      sub   sp, sp, 0xc0\n            0x000bf878      stp   x29, x30, [sp, 0x90]\n            0x000bf87c      stp   x22, x21, [sp, 0xa0]\n            0x000bf880      stp   x20, x19, [sp, 0xb0]\n            0x000bf884      add   x29, sp, 0x90\n            0x000bf888      mrs   x22, tpidr_el0\n            0x000bf88c      mov   w2, 0x1e\n            0x000bf890      mov   x19, x1\n            0x000bf894      ldr   x8, [x22, 0x28]                      ; [0x28:4]=0xcfad8\n            0x000bf898      bl    0xcb708\n            0x000bf89c      bl    method.std::__ndk1::basic_istream_char__std::__ndk1::char_traits_char___.read_char___long\n            0x000bf8a0      ldr   x8, [x20]\n            0x000bf8a4      ldur  x8, [x8, -0x18]                      ; [0x18:4]=0\n            0x000bf8a8      add   x8, x20, x8\n            0x000bf8ac      ldr   w8, [x8, 0x20]                       ; [0x20:4]=64 ; \"@\"\n        ,=< 0x000bf8b0      cbnz  w8, 0xbf8e8\n        |   0x000bf8b4      ldrh  w8, [x19, 2]                         ; [0x2:4]=0x102464c\n        |   0x000bf8b8      ldrh  w9, [x19, 4]                         ; [0x4:4]=0x10102\n        |   0x000bf8bc      sub   w8, w8, 0xa\n        |   0x000bf8c0      cmp   w8, 0x1ea\n        |   0x000bf8c4      mov   w8, 0x7fff\n        |   0x000bf8c8      ccmp  w9, w8, 0, ls\n       ,==< 0x000bf8cc      b.ne  0xbf8e8\n       ||   0x000bf8d0      ldrh  w8, [x19, 6]                         ; [0x6:4]=1\n       ||   0x000bf8d4      ldrh  w9, [x19, 8]                         ; [0x8:4]=0\n       ||   0x000bf8d8      mov   w10, 0xea60\n       ||   0x000bf8dc      cmp   w8, w10\n       ||   0x000bf8e0      ccmp  w9, w10, 2, ls\n      ,===< 0x000bf8e4      b.ls  0xbf910\n      |``-> 0x000bf8e8      mov   w21, wzr\n      |..-> 0x000bf8ec      bl    0xca264\n     ,====< 0x000bf8f0      b.ne  0xbf968\n     ||::   0x000bf8f4      mov   w0, w21\n     ||::   0x000bf8f8      ldp   x20, x19, [sp, 0xb0]\n     ||::   0x000bf8fc      ldp   x22, x21, [sp, 0xa0]\n     ||::   0x000bf900      ldp   x29, x30, [sp, 0x90]\n     ||::   0x000bf904      add   sp, sp, 0xc0\n     ||::   0x000bf908      autiasp\n     ||::   0x000bf90c      ret\n     |`---> 0x000bf910      add   x0, sp, 7\n     | ::   0x000bf914      mov   w1, wzr\n     | ::   0x000bf918      mov   w2, 0x81\n     | ::   0x000bf91c      bl    sym.imp.memset\n     | ::   0x000bf920      ldrh  w2, [x19, 0x1c]                      ; [0x1c:4]=0\n     | ::   0x000bf924      cmp   x2, 0x81\n     | ::   0x000bf928      cset  w21, lo\n     | ::   0x000bf92c      cmp   x2, 0x80\n     | `==< 0x000bf930      b.hi  0xbf8ec\n     |  :   0x000bf934      add   x1, sp, 7\n     |  :   0x000bf938      mov   x0, x20\n     |  :   0x000bf93c      add   x20, sp, 7\n     |  :   0x000bf940      bl    method.std::__ndk1::basic_istream_char__std::__ndk1::char_traits_char___.read_char___long\n     |  :   0x000bf944      ldrh  w8, [x19, 0x1c]                      ; [0x1c:4]=0\n     |  :   0x000bf948      cmp   x8, 0x81\n     | ,==< 0x000bf94c      b.hs  0xbf964\n     | |:   0x000bf950      add   x0, x19, 0x20\n     | |:   0x000bf954      add   x1, sp, 7\n     | |:   0x000bf958      strb  wzr, [x20, x8]\n     | |:   0x000bf95c      bl    0x5d1ec\n     | |`=< 0x000bf960      b     0xbf8ec\n     | `--> 0x000bf964      brk   1\n",
+    "stderr": "ERROR: Cannot determine entrypoint, using 0x0004c460.\n",
+    "exit_code": 0,
+    "signal": null,
+    "output_truncated": false,
+    "completion_status": "complete",
+    "artifact_sha256_after": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+    "artifact_changed": false
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "The executable version and supported formats are reported as unknown because no reliable version probe was performed.",
+    "A non-zero process exit is preserved as an observed command result.",
+    "Rizin commands and retained plugins may read files or access network resources outside the selected artifact; those external inputs are not bound to Evidence.",
+    "When both are available, pre-run and post-run digests detect artifact changes across the provider call but cannot prove the exact bytes consumed during the call."
+  ],
+  "relationship_coverage": null,
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so"
+    }
+  ],
+  "evidence_links": []
+}

@@ -1,0 +1,266 @@
+{
+  "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+  "member_sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+  "selected_calls": {
+    "0xbf6b0": "0xbf870",
+    "0xbf89c": "0xcd570",
+    "0xbf940": "0xcd570",
+    "0xbf7f8": "0xcd570",
+    "0xbf800": "0xcd3a0"
+  },
+  "assets": {
+    "assets/params_map_v4_u1.txt": {
+      "bytes": 5222,
+      "sha256": "a1c9d71b0dd0fba7d42119c73577e9eb4fea318eca9737630138ac97f45c6829",
+      "projection": {
+        "fixed_header_read_complete": true,
+        "declared_length": 62,
+        "count6": 635,
+        "count8": 645,
+        "hash_length": 32,
+        "header_value_checks": true,
+        "hash_bytes_available": true,
+        "expected_consumed_bytes": 5222,
+        "actual_bytes": 5222,
+        "body_admitted": true
+      }
+    },
+    "assets/params_map_v4_u2.txt": {
+      "bytes": 179726,
+      "sha256": "f8c3ced3dd60b59c5532641dd9410d354a00bd641edc213fef8b3643e1722f37",
+      "projection": {
+        "fixed_header_read_complete": true,
+        "declared_length": 62,
+        "count6": 22398,
+        "count8": 22458,
+        "hash_length": 32,
+        "header_value_checks": true,
+        "hash_bytes_available": true,
+        "expected_consumed_bytes": 179726,
+        "actual_bytes": 179726,
+        "body_admitted": true
+      }
+    },
+    "assets/params_map_v4_u4.txt": {
+      "bytes": 638,
+      "sha256": "d133f3f26b18586b0ee539cac157174cb1fb17d1017896efeb95f77541b414b0",
+      "projection": {
+        "fixed_header_read_complete": true,
+        "declared_length": 62,
+        "count6": 2,
+        "count8": 72,
+        "hash_length": 32,
+        "header_value_checks": true,
+        "hash_bytes_available": true,
+        "expected_consumed_bytes": 638,
+        "actual_bytes": 638,
+        "body_admitted": true
+      }
+    },
+    "assets/params_map_v4_u6.txt": {
+      "bytes": 366,
+      "sha256": "e271c238a962812961acb40e4888b490c185f0ffdb90594ee60db99e75bb5255",
+      "projection": {
+        "fixed_header_read_complete": true,
+        "declared_length": 62,
+        "count6": 38,
+        "count8": 38,
+        "hash_length": 32,
+        "header_value_checks": true,
+        "hash_bytes_available": true,
+        "expected_consumed_bytes": 366,
+        "actual_bytes": 366,
+        "body_admitted": true
+      }
+    }
+  },
+  "projection_authority": "analyst transcription of selected helper gates under ordinary complete byte reads, not native execution or whole-loader validation",
+  "synthetic_u4_variants": {
+    "baseline": {
+      "fixed_header_read_complete": true,
+      "declared_length": 62,
+      "count6": 2,
+      "count8": 72,
+      "hash_length": 32,
+      "header_value_checks": true,
+      "hash_bytes_available": true,
+      "expected_consumed_bytes": 638,
+      "actual_bytes": 638,
+      "body_admitted": true
+    },
+    "version_bytes_changed": {
+      "fixed_header_read_complete": true,
+      "declared_length": 62,
+      "count6": 2,
+      "count8": 72,
+      "hash_length": 32,
+      "header_value_checks": true,
+      "hash_bytes_available": true,
+      "expected_consumed_bytes": 638,
+      "actual_bytes": 638,
+      "body_admitted": true
+    },
+    "declared_10": {
+      "fixed_header_read_complete": true,
+      "declared_length": 10,
+      "count6": 2,
+      "count8": 72,
+      "hash_length": 32,
+      "header_value_checks": true,
+      "hash_bytes_available": true,
+      "expected_consumed_bytes": 638,
+      "actual_bytes": 638,
+      "body_admitted": true
+    },
+    "declared_500": {
+      "fixed_header_read_complete": true,
+      "declared_length": 500,
+      "count6": 2,
+      "count8": 72,
+      "hash_length": 32,
+      "header_value_checks": true,
+      "hash_bytes_available": true,
+      "expected_consumed_bytes": 638,
+      "actual_bytes": 638,
+      "body_admitted": true
+    },
+    "declared_9": {
+      "fixed_header_read_complete": true,
+      "declared_length": 9,
+      "count6": 2,
+      "count8": 72,
+      "hash_length": 32,
+      "header_value_checks": false,
+      "hash_bytes_available": true,
+      "expected_consumed_bytes": 638,
+      "actual_bytes": 638,
+      "body_admitted": false
+    },
+    "declared_501": {
+      "fixed_header_read_complete": true,
+      "declared_length": 501,
+      "count6": 2,
+      "count8": 72,
+      "hash_length": 32,
+      "header_value_checks": false,
+      "hash_bytes_available": true,
+      "expected_consumed_bytes": 638,
+      "actual_bytes": 638,
+      "body_admitted": false
+    },
+    "magic_zero": {
+      "fixed_header_read_complete": true,
+      "declared_length": 62,
+      "count6": 2,
+      "count8": 72,
+      "hash_length": 32,
+      "header_value_checks": false,
+      "hash_bytes_available": true,
+      "expected_consumed_bytes": 638,
+      "actual_bytes": 638,
+      "body_admitted": false
+    },
+    "count6_60001": {
+      "fixed_header_read_complete": true,
+      "declared_length": 62,
+      "count6": 60001,
+      "count8": 72,
+      "hash_length": 32,
+      "header_value_checks": false,
+      "hash_bytes_available": true,
+      "expected_consumed_bytes": 638,
+      "actual_bytes": 638,
+      "body_admitted": false
+    },
+    "count6_zero": {
+      "fixed_header_read_complete": true,
+      "declared_length": 62,
+      "count6": 0,
+      "count8": 72,
+      "hash_length": 32,
+      "header_value_checks": true,
+      "hash_bytes_available": true,
+      "expected_consumed_bytes": 638,
+      "actual_bytes": 638,
+      "body_admitted": true
+    },
+    "count8_60001": {
+      "fixed_header_read_complete": true,
+      "declared_length": 62,
+      "count6": 2,
+      "count8": 60001,
+      "hash_length": 32,
+      "header_value_checks": false,
+      "hash_bytes_available": true,
+      "expected_consumed_bytes": 480070,
+      "actual_bytes": 638,
+      "body_admitted": false
+    },
+    "hash_length_129": {
+      "fixed_header_read_complete": true,
+      "declared_length": 62,
+      "count6": 2,
+      "count8": 72,
+      "hash_length": 129,
+      "header_value_checks": false,
+      "hash_bytes_available": true,
+      "expected_consumed_bytes": 735,
+      "actual_bytes": 638,
+      "body_admitted": false
+    },
+    "hash_length_zero": {
+      "fixed_header_read_complete": true,
+      "declared_length": 62,
+      "count6": 2,
+      "count8": 72,
+      "hash_length": 0,
+      "header_value_checks": true,
+      "hash_bytes_available": true,
+      "expected_consumed_bytes": 606,
+      "actual_bytes": 638,
+      "body_admitted": false
+    },
+    "unused_word26_changed": {
+      "fixed_header_read_complete": true,
+      "declared_length": 62,
+      "count6": 2,
+      "count8": 72,
+      "hash_length": 32,
+      "header_value_checks": true,
+      "hash_bytes_available": true,
+      "expected_consumed_bytes": 638,
+      "actual_bytes": 638,
+      "body_admitted": true
+    },
+    "trailing_byte": {
+      "fixed_header_read_complete": true,
+      "declared_length": 62,
+      "count6": 2,
+      "count8": 72,
+      "hash_length": 32,
+      "header_value_checks": true,
+      "hash_bytes_available": true,
+      "expected_consumed_bytes": 638,
+      "actual_bytes": 639,
+      "body_admitted": false
+    },
+    "truncated_body": {
+      "fixed_header_read_complete": true,
+      "declared_length": 62,
+      "count6": 2,
+      "count8": 72,
+      "hash_length": 32,
+      "header_value_checks": true,
+      "hash_bytes_available": true,
+      "expected_consumed_bytes": 638,
+      "actual_bytes": 637,
+      "body_admitted": false
+    },
+    "short_fixed_header": {
+      "fixed_header_read_complete": false,
+      "header_value_checks": false,
+      "body_admitted": false
+    }
+  },
+  "remaining": "caller routing, I/O fault states, record creation and configuration adoption untraced"
+}

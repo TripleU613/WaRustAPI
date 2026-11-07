@@ -96,3 +96,8 @@ observed runtime memory.
 full metadata mutation/validation, original schema-record population, selected
 file identity and decoder routing, enclosing loader status, response persistence
 and cache activation. No Rust runtime, sender or saved account state changed.
+
+Follow-up: [native parameter reader](../2.26.43.72-mobileconfig-native-param-reader/README.md)
+now traces the selected binary header/body helpers, with native validation
+distinguished from the Java header. Their 8-byte body vector is not the
+0x50-byte schema-record vector; original schema population remains unresolved.
