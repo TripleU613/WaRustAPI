@@ -5005,3 +5005,16 @@ The receive actor exercises refusal followed by a ping barrier, and capture-befo
 write for valid negative PN and exact LID zero. Global encoder/model, native
 exception recovery, constructor-null hosted strings, other classes and live
 acceptance remain separate; no account operation or new request family.
+
+## Nullable receipt context and participant output (2026-11-06)
+
+**Confirmed static / fixed offline:** [complete descriptor construction trace](apk/2.26.43.72-ack-nullable-context/README.md)
+shows F0R.A00/Efa.A00/Eoh do not assert a sender or participant; F3e.A05 omits
+null fields. This does not establish every handler's null-sender admission.
+The supported Rust ACK path retains its sender requirement. Its optional
+participant now honors known constructor-null PN/LID/hosted text rather than
+copying the broader generic parser's result. Nonnull Device256 writer failures
+remain distinct and still refuse ACK construction. Regression/actor checks cover
+actual encoding, durable capture and receive continuation. Fact attribution,
+notification handlers, typed constructors and live acceptance remain open;
+no account operation, stored selector or new request-family change.

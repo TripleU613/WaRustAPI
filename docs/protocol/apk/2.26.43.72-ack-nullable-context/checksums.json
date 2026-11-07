@@ -1,0 +1,14 @@
+{
+  "README.md": {
+    "bytes": 4641,
+    "sha256": "04c7913fe81c78d43ffb1bfbfc1cf90c1ea2b0b6f50623acc0eeff5d07bdbe0c"
+  },
+  "context-build.txt": {
+    "bytes": 1859,
+    "sha256": "349587fd5020bce518c36f486e5cfd40069338df46bbbbdcceb8f02195a1bc57"
+  },
+  "context-constructor.txt": {
+    "bytes": 1283,
+    "sha256": "ef5655aede1d50217f2ab6dbfae846d2fa89b6dd7b530d82bba49f49e6bc9bd9"
+  }
+}

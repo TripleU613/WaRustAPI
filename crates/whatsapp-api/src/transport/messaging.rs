@@ -2444,6 +2444,45 @@ mod tests {
     }
 
     #[test]
+    fn receipt_ack_omits_constructor_null_optional_participant() {
+        for route in [
+            "12345:100@lid",
+            "12345:128@lid",
+            "12345:255@lid",
+            "15555550100:100@s.whatsapp.net",
+            "15555550100:355@hosted",
+            "12345:355@hosted.lid",
+            "12345:0@hosted.lid",
+            "15555550100:2@hosted",
+            "12345:2@hosted.lid",
+        ] {
+            let input = Node::new("receipt")
+                .attr("from", "15555550100@s.whatsapp.net")
+                .attr("id", "NULL-PARTICIPANT")
+                .attr("participant", route);
+            let ack = received_confirmation(&input).expect("nullable participant is omitted");
+            assert!(ack.get_attr("participant").is_none(), "{route}");
+            Encoder::new(TokenDictionary::comparison_2_26_37_71())
+                .encode(&ack)
+                .unwrap();
+            assert!(
+                received_confirmation(&input.clone().attr("from", route)).is_none(),
+                "no supported sender: {route}"
+            );
+            assert_eq!(
+                input.get_attr("participant").and_then(|v| v.as_text()),
+                Some(route)
+            );
+        }
+        // A successfully constructed but unwritable object is not parser null.
+        let input = Node::new("receipt")
+            .attr("from", "15555550100@s.whatsapp.net")
+            .attr("id", "NONNULL-PARTICIPANT")
+            .attr("participant", "12345:256@lid");
+        assert!(received_confirmation(&input).is_none());
+    }
+
+    #[test]
     fn wrapped_device_numbers_cannot_create_unwritable_ack_fields() {
         for route in [
             "12345:256@lid",
@@ -2583,8 +2622,8 @@ mod tests {
             "123@interop.g.us",
             "15555550100:2@s.whatsapp.net",
             "100001:0@lid",
-            "15555550100:2@hosted",
-            "100001:2@hosted.lid",
+            "15555550100:99@hosted",
+            "100001:99@hosted.lid",
         ] {
             let node = base
                 .clone()

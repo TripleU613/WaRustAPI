@@ -1210,6 +1210,17 @@ pub(super) fn ack_wire_address(node: &Node, name: &str, parsed: Jid) -> Jid {
 }
 
 pub(super) fn receipt_ack_wire_address(node: &Node, name: &str) -> Option<Jid> {
+    // APK 43.72 F0R.A00 -> 0Tp.A0A -> 0Dd.A02: constructor failure
+    // yields null, so F3e.A05 omits an optional participant. Do not let the
+    // generic model's broader parser resurrect a known-null native address.
+    if matches!(
+        node.get_attr(name)?
+            .as_text()
+            .and_then(super::messaging::ack_user_text),
+        Some(super::messaging::AckUserText::Null)
+    ) {
+        return None;
+    }
     node.get_attr(name)
         .and_then(explicit_nonpositive_ack_address)
         .or_else(|| network_jid(node, name).map(ack_address))

@@ -1,3 +1,10 @@
+2026-11-06 — **Distinguished null receipt participants from unwritable objects.**
+Receipt ACK output now omits known constructor-null text participants rather than
+resurrecting them through the broader generic Jid parser. Nonnull unwritable
+objects still refuse the ACK. Native context construction accepts nullable fields;
+concrete handler admission and this client's supported sender requirement remain distinct.
+[Context/constructor proof, regressions and boundaries](apk/2.26.43.72-ack-nullable-context/README.md). No live account operation.
+
 2026-11-06 — **Guarded original device getter range before ACK output.**
 The pinned writer rejects AD device getters outside 0..255 despite constructor
 byte narrowing. Selected unwritable ACK fields are now refused; valid negative

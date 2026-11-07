@@ -1,4 +1,11 @@
 {
+  "x-receipt-ack-null-participant": {
+    "x-cli": "xtask apk-smali <apk> --class 'LX/Efa;' --method A00 --signatures --exceptions",
+    "x-transport": "automatic receipt ACK selected from/participant text conversion",
+    "x-live": false,
+    "description": "Receipt ACK output honors known constructor-null PN/LID/hosted text before generic Jid parsing. Optional null participants are omitted; the supported sender gate remains. Nonnull accepted Device256 is unwritable and still suppresses the ACK instead of being omitted. Complete F0R/Efa/Eoh trace confirms context fields are nullable but does not prove per-handler sender admission. Codec and actor regressions cover raw preservation, capture-before-write and receive continuation; fixtures have no pending sends and do not certify fact attribution. No global model, notification admission, typed constructor, HTTP route, stored selector or account operation change. Broader grammar, facts and live acceptance remain open.",
+    "evidence": "docs/protocol/apk/2.26.43.72-ack-nullable-context/README.md"
+  },
   "x-ack-original-device-range": {
     "x-cli": "xtask apk-smali <apk> --class 'LX/1r2;' --method A03 --signatures --exceptions",
     "x-transport": "selected receipt and shared notification ACK fields",

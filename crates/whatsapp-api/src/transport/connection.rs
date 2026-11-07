@@ -3581,6 +3581,78 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn receipt_ack_omits_native_null_participant_after_capture() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("null-receipt-participant.redb");
+        let store = open(&path);
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        (&mut fake.ready).await.unwrap();
+        let mut captures = Vec::new();
+        for participant in [
+            "12345:100@lid",
+            "12345:355@hosted.lid",
+            "15555550100:355@hosted",
+        ] {
+            let input = Node::new("receipt")
+                .attr("id", "NULL-ACTOR")
+                .attr("from", "15555550100@s.whatsapp.net")
+                .attr("participant", participant);
+            let capture = format!(
+                "inbound:sha256:{}",
+                hex::encode(sha2::Sha256::digest(encode(&input).unwrap()))
+            );
+            fake.deliver(input).await;
+            let (ack, written) = fake.written().await;
+            assert_eq!(
+                ack,
+                Node::new("ack")
+                    .attr("id", "NULL-ACTOR")
+                    .attr("to", Jid::parse("15555550100@s.whatsapp.net").unwrap())
+                    .attr("class", "receipt")
+            );
+            assert!(
+                store
+                    .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                    .unwrap()
+                    .is_some()
+            );
+            encode(&ack).unwrap();
+            captures.push(capture);
+            written.send(Ok(())).unwrap();
+        }
+        // Nonnull constructor output with an unwritable getter is not omitted.
+        fake.deliver(
+            Node::new("receipt")
+                .attr("id", "NONNULL-ACTOR")
+                .attr("from", "15555550100@s.whatsapp.net")
+                .attr("participant", "12345:256@lid"),
+        )
+        .await;
+        fake.deliver(
+            Node::new("iq")
+                .attr("type", "get")
+                .attr("xmlns", "urn:xmpp:ping"),
+        )
+        .await;
+        let (pong, written) = fake.written().await;
+        assert_eq!(pong.description, "iq");
+        written.send(Ok(())).unwrap();
+        fake.nothing_written(Duration::from_millis(30)).await;
+        fake.stop_cleanly().await;
+        drop(store);
+        let reopened = open(&path);
+        for capture in captures {
+            assert!(
+                reopened
+                    .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                    .unwrap()
+                    .is_some()
+            );
+        }
+    }
+
+    #[tokio::test]
     async fn native_server_ping_is_answered_before_activation_and_after_capture() {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("server-ping.redb");
