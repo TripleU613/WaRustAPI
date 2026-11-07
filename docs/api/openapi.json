@@ -20124,5 +20124,15 @@
     "x-library": [],
     "description": "Shared notification ACK route parsing requires pinned constructor grammar for nonempty lid/hosted.lid users (1..15 ASCII digits, no leading zero) before constructing destination/participant. Existing supported handler role/work checks, PN/bare-server/device/nonpositive profiles and wire normalization unchanged. Invalid routes refuse locally; no generic ACK, repair, queue work, HTTP route or live validation added.",
     "evidence": "docs/protocol/notification-ack-audit.md#shared-ack-routes-require-constructible-lid-users-2026-11-07"
+  },
+  "x-group-dirty-envelope-reopen-proof": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [
+      "whatsapp_api::transport::groups::handle_dirty_notification"
+    ],
+    "description": "New integration regression verifies existing groups_dirty ACK-route refusal preserves capture and account/checkpoint/pin/session/outbox/journal state across reopen/repeated handling, without action or generic fallback ACK. Pinned group constructor exports are distinguished from native raw-string scheduling; no global grammar or runtime admission change, route, query or live operation added.",
+    "evidence": "docs/protocol/apk/2.26.43.72-group-dirty-constructor-boundary/README.md"
   }
 }

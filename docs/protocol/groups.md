@@ -3395,3 +3395,20 @@ reservations stay intact. Current emitter tests remain local controls, not full
 - **2026-11-06 submit follow-through:** status future registration, original-device0 key normalization and null-valued callback completion are now retained. [Callback meaning and writer gap](message-ack.md#status-submit-future-completes-callbacks-without-carrying-acceptance-2026-11-06). No emitter/runtime change.
 
 - **2026-11-06 final writer follow-through:** selected status Eng reaches prepared message construction, transport-counter consumption and framed output. [Pinned trace and uncertainty boundaries](message-ack.md#status-final-writer-consumes-the-transport-counter-before-output-2026-11-06). No runtime change.
+
+### Dirty ACK envelope storage/reopen and constructor boundary (2026-11-07)
+
+**Confirmed existing behavior / new integration proof:** actual dedicated dirty
+handling and generic notification ACK admission reject malformed LID from/
+participant after capture, without actions or checkpoint/account/pin/session/
+outbox/journal changes. Text/typed cases preserve identical snapshots after
+reopen and repeated handling; no generic fallback ACK rescues a dirty refusal.
+The valid queue-before-ACK/dedup control remains. No new runtime guard added.
+
+**Confirmed static, pinned43.72:** complete1bc/0nW.A02/0Dl.A02 corroborate
+modern and legacy group constructor grammar. Selected0w9 dirty scheduling
+collects raw group@jid strings via0Tp.A0M instead of constructing GroupJid at
+that point. Constructor evidence alone therefore does not settle the downstream
+raw-string queue-to-request admission. Existing supported short legacy group IDs
+are not globally tightened. [Complete exports, regression and limits](apk/2.26.43.72-group-dirty-constructor-boundary/README.md).
+No live account operation or native blanket ACK parity claim.

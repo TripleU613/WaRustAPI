@@ -2829,6 +2829,74 @@ mod tests {
     }
 
     #[test]
+    fn malformed_dirty_ack_routes_preserve_capture_and_all_work_after_reopen() {
+        use crate::binary::AttributeValue;
+        for field in ["from", "participant"] {
+            for user in [
+                "letters-private",
+                "0",
+                "01234",
+                "1234567890123456",
+                "１２３",
+            ] {
+                for typed in [false, true] {
+                    let (dir, s) = store();
+                    s.write(|tx| {
+                        tx.put_json(Table::PeerIdentities, b"sentinel", 1, &true)?;
+                        tx.put_json(Table::SignalSessions, b"sentinel", 1, &true)
+                    })
+                    .unwrap();
+                    let text = format!("{user}@lid");
+                    let value = if typed {
+                        AttributeValue::from(Jid::parse(&text).unwrap())
+                    } else {
+                        AttributeValue::from(text.as_str())
+                    };
+                    let node = dirty_fixture().attr(field, value);
+                    super::super::inbox::preserve(&s, &node).unwrap();
+                    let snapshot = |store: &ProtocolStore| {
+                        store
+                            .read(|tx| {
+                                Ok([
+                                    tx.scan(Table::Account, 1, 100)?,
+                                    tx.scan(Table::Checkpoints, 1, 100)?,
+                                    tx.scan(Table::PeerIdentities, 1, 100)?,
+                                    tx.scan(Table::SignalSessions, 1, 100)?,
+                                    tx.scan(Table::Outbox, 1, 100)?,
+                                ])
+                            })
+                            .unwrap()
+                    };
+                    let before = snapshot(&s);
+                    let head = s.journal_head().unwrap();
+                    assert!(handle_dirty_notification(&s, &node).unwrap().is_none());
+                    assert!(
+                        notification_ack(&node).unwrap().is_none(),
+                        "dirty refusal cannot fall back to a generic ACK"
+                    );
+                    assert!(super::super::actions::outcomes(&s).unwrap().is_empty());
+                    assert_eq!(snapshot(&s), before);
+                    assert_eq!(s.journal_head().unwrap(), head);
+                    drop(s);
+                    let s = ProtocolStore::open(OpenOptions {
+                        path: dir.path().join("p.redb"),
+                        account_id: AccountId::new("a").unwrap(),
+                        key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                            [9u8; 32],
+                        ))),
+                        create: false,
+                    })
+                    .unwrap();
+                    assert!(handle_dirty_notification(&s, &node).unwrap().is_none());
+                    assert!(notification_ack(&node).unwrap().is_none());
+                    assert_eq!(snapshot(&s), before);
+                    assert_eq!(s.journal_head().unwrap(), head);
+                }
+            }
+        }
+    }
+
+    #[test]
     fn unsupported_dirty_notifications_do_not_ack_or_queue() {
         for case in [
             "empty",

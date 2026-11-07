@@ -10786,3 +10786,9 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   users for destination/participant, using pinned numeric grammar. Five-handler
   text/typed boundary regression added; bare-server/device/wire rules unchanged.
   No live request. See [ACK route admission](docs/protocol/notification-ack-audit.md#shared-ack-routes-require-constructible-lid-users-2026-11-07).
+
+- New dirty-notification store/reopen regression proves malformed ACK envelopes
+  queue nothing and receive no dedicated/generic fallback ACK after capture.
+  Pinned group constructors are retained separately from raw-string scheduling;
+  no global group grammar/runtime policy change. See
+  [dirty boundary](docs/protocol/groups.md#dirty-ack-envelope-storagereopen-and-constructor-boundary-2026-11-07).

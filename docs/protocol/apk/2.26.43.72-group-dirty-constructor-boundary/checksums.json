@@ -1,0 +1,22 @@
+{
+  "README.md": {
+    "bytes": 3675,
+    "sha256": "d2329758303eb5b5ee2687dcee76c12e2ea5f0f24c78f8fbcdfca3da75cc2762"
+  },
+  "group-constructor.txt": {
+    "bytes": 2960,
+    "sha256": "73002ff4c6b1f88d9b3b4b24427d30153010065f70369471139ef3319bca87ce"
+  },
+  "legacy-prefix-predicate.txt": {
+    "bytes": 1954,
+    "sha256": "7f63fb9526240868de9f743e98f0da76bd2dc9be5ffcfcf52948c51757287a81"
+  },
+  "modern-user-predicate.txt": {
+    "bytes": 1774,
+    "sha256": "474e1d0faa503a332eae865f6159100febe86cdbd9cd6d4b26973d9512c98c3f"
+  },
+  "reproduce.py": {
+    "bytes": 1054,
+    "sha256": "1190373f042a438e6b355281423be024012a53eaf24542a01a8594acd0a79ef2"
+  }
+}

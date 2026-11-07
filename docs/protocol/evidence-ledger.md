@@ -9814,3 +9814,10 @@ Local public upload eligibility omission corrected at shared entry, including ca
   pinned constructor grammar after parsing. Text/typed from/participant controls
   cover five base handlers; bare-server/device/wire policies unchanged. See
   [shared ACK admission](notification-ack-audit.md#shared-ack-routes-require-constructible-lid-users-2026-11-07).
+
+- Dirty notification ACK-route integration proof now covers text/typed malformed
+  LID envelope capture, no dedicated/generic fallback ACK, no queued action or
+  state/journal mutation and identical reopen/repeat handling. Pinned group
+  constructors corroborated, but selected dirty scheduling collects raw strings;
+  global group grammar is not tightened. See
+  [dirty boundary](groups.md#dirty-ack-envelope-storagereopen-and-constructor-boundary-2026-11-07).

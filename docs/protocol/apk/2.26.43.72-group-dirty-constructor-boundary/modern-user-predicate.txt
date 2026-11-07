@@ -1,0 +1,45 @@
+
+# class: LX/0nW;
+# extends: Ljava/lang/Object;
+
+.method public A02(ZL)  # .registers 8
+    # full signature: LX/0nW;->A02(Ljava/lang/String;)Z
+    0000..0002  const/4  v6, #0x0
+    0002..0008  invoke-static  {v7, v6}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  const-string  v0, "-"
+    000c..0012  invoke-static  {v7, v0, v6}, LX/0Cf;->A0z(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Z)Z
+    0012..0014  move-result  v0
+    0014..0018  if-nez  v0, +0x3a
+    0018..001e  invoke-virtual  {v7}, Ljava/lang/String;->length()I
+    001e..0020  move-result  v5
+    0020..0022  const/4  v4, #0x1
+    0022..0026  if-lt  v5, v4, +0x33
+    0026..002a  const/16  v0, #0x14
+    002a..002e  if-gt  v5, v0, +0x2f
+    002e..0034  invoke-virtual  {v7, v6}, Ljava/lang/String;->charAt(I)C
+    0034..0036  move-result  v1
+    0036..003a  const/16  v0, #0x31
+    003a..0040  invoke-static  {v1, v0}, LX/00l;->A00(II)I
+    0040..0042  move-result  v0
+    0042..0046  if-ltz  v0, +0x23
+    0046..004a  const/16  v3, #0x39
+    004a..0050  invoke-static  {v1, v3}, LX/00l;->A00(II)I
+    0050..0052  move-result  v0
+    0052..0056  if-gtz  v0, +0x1b
+    0056..0058  const/4  v2, #0x1
+    0058..005c  if-ge  v2, v5, +0x17
+    005c..0062  invoke-virtual  {v7, v2}, Ljava/lang/String;->charAt(I)C
+    0062..0064  move-result  v1
+    0064..0068  const/16  v0, #0x30
+    0068..006e  invoke-static  {v1, v0}, LX/00l;->A00(II)I
+    006e..0070  move-result  v0
+    0070..0074  if-ltz  v0, +0xc
+    0074..007a  invoke-static  {v1, v3}, LX/00l;->A00(II)I
+    007a..007c  move-result  v0
+    007c..0080  if-gtz  v0, +0x6
+    0080..0084  add-int/lit8  v2, v2, #0x1
+    0084..0086  goto  -0x16
+    0086..0088  return  v4
+    0088..008a  return  v6
+    # exception table: 0 try range(s)
+.end method
