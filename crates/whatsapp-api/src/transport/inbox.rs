@@ -3282,11 +3282,15 @@ mod tests {
         let group = Jid::parse("120363000000000001@g.us").unwrap();
         let sender = Jid::parse("123456:3@lid").unwrap();
         let account = AccountRecord {
+            generation: store.generation(),
             own_jid: Some(Jid::parse("15555550199@s.whatsapp.net").unwrap()),
             registration: crate::session::RegistrationStatus::Registered,
             signal_registration_id: Some(31),
             ..Default::default()
         };
+        // A registered retry producer has saved account authority; recovery
+        // must not rely on the unregistered account-less offline adapter.
+        store.write(|tx| account.save(tx)).unwrap();
         let mine = prepare_own_sender_key(&group, &sender, None).await.unwrap();
         let payload = super::super::group_send::text_payload("late distribution fixture").unwrap();
         let (cipher, _) = encrypt_group_payload(&group, &sender, &mine.updated_key, &payload)

@@ -1355,7 +1355,7 @@ pub(crate) async fn drive(
                 };
                 if received == super::inbox::IncomingResult::Undecryptable || retry_cause.is_some() {
                     match super::receipts::queue_retry_for_incoming_with_cause(&store, &account, &node, retry_cause) {
-                        Ok(0) => tracing::info!(target: "whatsapp_api::incoming", "retry already recorded; no repeat"),
+                        Ok(0) => tracing::info!(target: "whatsapp_api::incoming", "no retry queued; existing reservation or unsupported input"),
                         Ok(_) => {
                             for receipt in super::receipts::reserve_pending_owned(&store)? {
                                 link.send_receipt(&store,&receipt).await?;
@@ -4697,6 +4697,9 @@ mod tests {
             store
                 .write(|tx| {
                     let mut account = AccountRecord::load_in_write(tx)?.unwrap();
+                    // Prepared retries now bind a valid saved account to this
+                    // store generation, like the registered production setup.
+                    account.generation = tx.generation();
                     if !prekey {
                         account.signal_registration_id = Some(0x0102_0304);
                     }

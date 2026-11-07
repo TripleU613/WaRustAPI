@@ -525,6 +525,30 @@ pub(crate) fn queue_retry_for_incoming_with_cause(
     let wire = crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
         .encode(&retry)?;
     store.write(|tx| {
+        // Freeze the same account authority that supplied the registration
+        // bytes. Reservation-time ownership alone cannot detect a stale actor
+        // snapshot or an account change between preparation and reservation.
+        let prepared_account = match crate::session::AccountRecord::load_in_write(tx)? {
+            Some(current) => {
+                let expected = receipt_account_authority(tx.generation(), Some(account))?;
+                if current.generation != tx.generation()
+                    || receipt_account_authority(tx.generation(), Some(&current))? != expected
+                {
+                    return Err(Error::invalid(
+                        "receipt",
+                        "retry preparation account changed",
+                    ));
+                }
+                Some(hex::encode(expected))
+            }
+            None if account.is_registered() => {
+                return Err(Error::invalid(
+                    "receipt",
+                    "retry preparation account unavailable",
+                ));
+            }
+            None => None, // Existing unregistered account-less offline adapter.
+        };
         // Inbox redelivery may name the same sender by its other address
         // (inbox::direct_record_in resolves the same pair for read receipts).
         let chats = if chat.server == Server::Group {
@@ -553,7 +577,11 @@ pub(crate) fn queue_retry_for_incoming_with_cause(
             Table::Checkpoints,
             key.as_bytes(),
             1,
-            &serde_json::json!({"status":"pending", "wire":wire}),
+            &match prepared_account {
+                Some(authority) => serde_json::json!({"status":"pending", "wire":wire,
+                    "prepared_account_authority_sha256": authority}),
+                None => serde_json::json!({"status":"pending", "wire":wire}),
+            },
         )?;
         Ok(1)
     })
@@ -871,6 +899,14 @@ pub fn reserve_pending_owned(store: &ProtocolStore) -> Result<Vec<ReservedReceip
                 let wire: Vec<u8> = serde_json::from_value(row["wire"].clone())
                     .map_err(|_| Error::invalid("receipt", "invalid receipt intent"))?;
                 let node = decode(&wire)?;
+                if row
+                    .get("prepared_account_authority_sha256")
+                    .is_some_and(|prepared| {
+                        prepared.as_str() != Some(hex::encode(account_authority).as_str())
+                    })
+                {
+                    return Err(Error::invalid("receipt", "prepared retry account changed"));
+                }
                 let origin = automatic_origin(&row)?;
                 let _ = deferred_reason(&row)?;
                 if origin == Some(true) && automatic_direct_receipt_disabled(tx, &node)? {
@@ -2167,6 +2203,106 @@ mod tests {
                 .unwrap(),
             held
         );
+    }
+
+    #[test]
+    fn retry_preparation_and_reservation_bind_the_saved_account() {
+        for change in [
+            "registration",
+            "identity",
+            "generation",
+            "jid",
+            "status",
+            "missing",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("retry-account.redb");
+            let store = open(&path, true);
+            let account = crate::session::AccountRecord {
+                generation: store.generation(),
+                registration: crate::session::RegistrationStatus::Registered,
+                own_jid: Some(Jid::parse("15555550199@s.whatsapp.net").unwrap()),
+                signal_registration_id: Some(31),
+                signal_identity: Some(crate::session::SignalIdentityKey(
+                    crate::session::KeyMaterial {
+                        public: [1; 32],
+                        private: [2; 32],
+                    },
+                )),
+                ..Default::default()
+            };
+            store.write(|tx| account.save(tx)).unwrap();
+            let mut changed = account.clone();
+            match change {
+                "registration" => changed.signal_registration_id = Some(32),
+                "generation" => changed.generation.0 += 1,
+                "jid" => changed.own_jid = Some(Jid::parse("15555550200@s.whatsapp.net").unwrap()),
+                "status" => changed.registration = crate::session::RegistrationStatus::Revoked,
+                _ => changed.signal_identity.as_mut().unwrap().0.private[0] ^= 1,
+            }
+            store.write(|tx| changed.save(tx)).unwrap();
+            let node = Node::new("message")
+                .attr("from", "15555550100@s.whatsapp.net")
+                .attr("id", "ACCOUNT-BOUND")
+                .attr("t", "1700000000");
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                .unwrap();
+            assert!(queue_retry_for_incoming(&store, &account, &node).is_err());
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                    .unwrap(),
+                before
+            );
+            if change == "missing" {
+                store
+                    .write(|tx| {
+                        tx.delete(Table::Account, b"account")?;
+                        Ok(())
+                    })
+                    .unwrap();
+                assert!(queue_retry_for_incoming(&store, &account, &node).is_err());
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                        .unwrap(),
+                    before
+                );
+            }
+            store.write(|tx| account.save(tx)).unwrap();
+            assert_eq!(
+                queue_retry_for_incoming(&store, &account, &node).unwrap(),
+                1
+            );
+            store
+                .write(|tx| {
+                    if change == "missing" {
+                        // session.rs ACCOUNT_KEY; deletion models absent authority.
+                        tx.delete(Table::Account, b"account")?;
+                        Ok(())
+                    } else {
+                        changed.save(tx)
+                    }
+                })
+                .unwrap();
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                .unwrap();
+            drop(store);
+            let store = open(&path, false);
+            assert!(reserve_pending_owned(&store).is_err(), "{change}");
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                    .unwrap(),
+                before
+            );
+            store.write(|tx| account.save(tx)).unwrap();
+            let pending = reserve_pending_owned(&store).unwrap();
+            assert_eq!(pending.len(), 1);
+            assert!(reserve_pending_owned(&store).unwrap().is_empty());
+        }
     }
 
     #[test]

@@ -402,3 +402,66 @@ selected SDK integer-zero path disables the extra >0 predicate, while legacy
 overrides can require key preparation. Rust policy selection remains unported.
 [Evidence and reproducible derivation](apk/2.26.43.72-retry-config-inputs/README.md).
 No runtime behavior, key mutation or live operation changed.
+
+## Retry preparation account binding (2026-11-07)
+
+**Confirmed Rust ownership gap fixed.** The retry queue froze registration bytes
+from its supplied AccountRecord snapshot, while receipt account ownership was
+first established at reserve_pending_owned. A stale snapshot could therefore
+prepare old registration bytes and later have them reserved under current
+authority. A pending request could likewise outlive an account change before
+its first reservation. The real-store regression reproduced stale preparation
+on the previous code. This is a local ownership defect, not proof of a native
+server rejection or restriction trigger.
+
+When a saved account exists, queue_retry_for_incoming_with_cause now verifies
+that the supplied snapshot has the current generation and the existing receipt
+authority fingerprint (phone, own JID, registration status/id, identity public/
+private material and store generation). It performs that comparison in the same
+write transaction that freezes the retry row. New owned rows retain an internal
+prepared_account_authority_sha256 marker. It contains no raw identity material.
+
+reserve_pending_owned rechecks that preparation marker against current account
+authority before changing pending status or building callback reservations.
+Mismatch, malformed marker or missing account refuses the transaction and leaves
+wire and reservations unchanged; the existing final pre-write authority fence
+continues to protect changes after reservation. No keys, IDs or account state
+are regenerated or reset. The encoded retry receipt itself is unchanged.
+
+The regression covers changed registration ID, identity private bytes, generation,
+own JID, registration status and account disappearance before preparation or reservation. It verifies stale
+preparation refusal without checkpoint mutation, then valid preparation followed
+by changed account and database reopen. Reservation refuses without replacing
+the pending row. Restoring original authority permits exactly one reservation;
+repeating cannot replay the uncertain request. No account operation is performed.
+
+**Explicit compatibility boundary:** unregistered account-less offline queue
+calls retain their previous unbound format. A registered snapshot with a missing
+saved account refuses preparation instead of falling back to that adapter. Historical rows without the preparation
+marker are not retroactively bound to a guessed account; their existing reserve/
+write checks remain. Thus this does not claim complete historical provenance or
+all receipt-family preparation ownership. The runtime no-queue diagnostic also
+now says existing reservation OR unsupported input; zero queued does not prove
+a retry row already exists (count-admission refusals create none).
+
+Related native evidence remains the pinned2.26.43.72
+[retry key callable](apk/2.26.43.72-enc-state-pq-retry-inputs/retry-key-callable.txt),
+which obtains current local registration/key material under its selected Signal
+lock, and [retry ownership trace](apk/2.26.43.72-retry-prekey-distribution/README.md).
+This Rust fence is an integration invariant, not a newly inferred wire field or
+universal server requirement. Stateless policy, carried keys and full count
+progression remain unfinished. No new ACK/retry family or live account traffic.
+
+The existing fake-link retry/write-cut regression initially exposed a fixture
+with AccountRecord's default generation0 inside a generation1 store. The fixture
+now records its actual store generation, matching production registered setup.
+Its focused multi-cause retry/write-cut/no-replay run passes with the ownership
+check intact. The group recovery fixture also now saves its registered account
+with the actual store generation instead of using an account-less registered
+snapshot. Unregistered account-less offline compatibility remains separately tested.
+
+Verification: stale preparation and registered-account disappearance regressions
+failed before their respective guards, then passed. After correcting the two
+registered fixtures, all1,592 workspace/all-feature tests passed. Strict
+all-target/all-feature Clippy, formatting, CLI reference, OpenAPI library-symbol
+check, APK coverage and repository hygiene passed. No account traffic occurred.

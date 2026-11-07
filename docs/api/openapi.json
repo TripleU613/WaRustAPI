@@ -1,4 +1,11 @@
 {
+  "x-retry-prepared-account-authority": {
+    "x-cli": "existing receive/listen retry queue and receipt reservation; no new command or flag",
+    "x-transport": "new saved-account retry preparation verifies current authority and retains internal prepared_account_authority_sha256, rechecked before reservation",
+    "x-live": false,
+    "description": "Closes local preparation/reservation gap: supplied registration/identity snapshot must match saved account and store generation in queue transaction. Owned pending retry rows freeze existing receipt authority fingerprint; reservation rejects changed/missing authority or malformed marker without mutating wire/status. Existing final pre-write fence remains. Real-store stale registration/identity/generation/JID/status and missing-account regression covers reopen, restoration and once-only reservation. Registered snapshots cannot fall back to account-less preparation after account disappearance. Historical/unregistered account-less unbound rows retain legacy limits. Internal checkpoint metadata is not a wire field or HTTP route. No new retry/ACK family, key generation or live operation.",
+    "evidence": "docs/protocol/outgoing-retry-receipts.md#retry-preparation-account-binding-2026-11-07"
+  },
   "x-stateless-retry-effective-config-static-boundary": {
     "x-cli": "research through existing APK inspection and retained derivation; no new command or flag",
     "x-transport": "research only; no runtime retry policy or key emission changed",

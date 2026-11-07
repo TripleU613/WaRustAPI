@@ -1,5 +1,10 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
+**Retry preparation ownership gap closed.** New retries with saved account
+state bind registration/identity authority at preparation and recheck it before
+reservation. Stale snapshots and intervening changes refuse without rewriting
+pending wire, including after reopen. [Evidence](outgoing-retry-receipts.md#retry-preparation-account-binding-2026-11-07).
+
 **Stateless retry configuration inputs narrowed.** Selected compiled0/false
 entries and zero initial SDK specifiers are reproducible; effective preferences/
 readiness and full precedence remain unproven. No raw-AB shortcut or runtime

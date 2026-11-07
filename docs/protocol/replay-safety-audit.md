@@ -1579,3 +1579,14 @@ not mapped by the identity-only32s trace. This path retains the existing generic
 30s captured wait and configured I/O caps as local bounds. No32s timeout is
 inferred for it, no native scheduler is copied, and no live account operation or
 restriction-prevention guarantee is established.
+
+## Retry preparation precedes reservation ownership (2026-11-07)
+
+New retries prepared with a saved account now freeze its authority fingerprint
+and require the supplied registration/identity snapshot to match within the
+queue transaction. Reservation rechecks that marker before creating uncertain
+write/callback ownership, closing the preparation-to-reservation gap. Tests
+cover stale registration/identity/generation/JID/status and missing account
+across reopen with unchanged pending wire on refusal. Historical/account-less
+unbound rows retain their explicit legacy boundary.
+[Detailed evidence and limits](outgoing-retry-receipts.md#retry-preparation-account-binding-2026-11-07).
