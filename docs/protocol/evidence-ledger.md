@@ -1,5 +1,10 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
+**Overwritten missing-body bypass closed.** All immediate enc children now receive
+the native null-body admission check before routing/selection. Exact live-location
+exception and null-versus-empty distinction are retained. Real ciphertext verifies
+refusal without durable state advancement. [Evidence](media-network-outcomes.md#ciphertext-body-presence-before-descriptor-overwrite-2026-11-07).
+
 **Group ciphertext selection corrected.** Receive now uses the last descriptor
 per native parser slot, with matching pairwise type/session routing. A corrupted
 last packet cannot fall back to an earlier valid packet and earn ACK authority;

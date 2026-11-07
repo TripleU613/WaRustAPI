@@ -1,4 +1,11 @@
 {
+  "x-inbox-encrypted-child-body-presence": {
+    "x-cli": "existing receive/listen and saved inbox processing; no new command or flag",
+    "x-transport": "per-child ciphertext body-presence admission before routing and descriptor overwrite",
+    "x-live": false,
+    "description": "Pinned EuN checks each Ezj.A07 for null before overwrite, allowing exact mediatype=livelocation; this is not a zero-length check. Rust previously allowed missing-body earlier enc plus valid later skmsg to return Decrypted. Shared gate now refuses missing byte/text bodies unless exact native exception applies. Present empty byte/text values remain admitted at this gate; selected nonempty/crypto policy is separate. Real-store both-order regression preserves sender keys/checkpoints/journal, corrected last-packet processing still succeeds. Native wire normalization, live-location feature behavior and LIL response ownership remain incomplete. No new ACK/retry or live operation.",
+    "evidence": "docs/protocol/media-network-outcomes.md#ciphertext-body-presence-before-descriptor-overwrite-2026-11-07"
+  },
   "x-inbox-last-group-ciphertext-selection": {
     "x-cli": "existing receive/listen and saved inbox processing; no new command or flag",
     "x-transport": "group receive and participant session/type routing share last-match selection per supported direct/skmsg descriptor slot",

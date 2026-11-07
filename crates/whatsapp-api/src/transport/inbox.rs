@@ -111,6 +111,15 @@ fn encrypted_children_metadata_valid(node: &Node) -> bool {
         if enc.get_attr("v").and_then(|v| v.as_text()) != Some("2") {
             return false;
         }
+        // APK43.72 EuN.A01 checks Ezj.A07 for null at0c4a..0c9c,
+        // before descriptor overwrite. Only exact mediatype=livelocation
+        // bypasses that check. Empty byte arrays are nonnull in this parser;
+        // the selected ciphertext's nonempty/crypto checks remain separate.
+        if !matches!(&enc.content, NodeContent::Bytes(_) | NodeContent::Text(_))
+            && enc.get_attr("mediatype").and_then(|v| v.as_text()) != Some("livelocation")
+        {
+            return false;
+        }
         let count = match enc.get_attr("count") {
             None => 0,
             Some(value) => {
@@ -936,7 +945,7 @@ async fn process_direct(
         return Ok(IncomingResult::Unsupported);
     }
     if !encrypted_children_metadata_valid(node) {
-        tracing::warn!("encrypted child type/version/count refused before decryption or ACK");
+        tracing::warn!("encrypted child type/version/count/body refused before decryption or ACK");
         return Ok(IncomingResult::Unsupported);
     }
     if node.get_attr("recipient").is_some() {
@@ -2561,9 +2570,33 @@ mod tests {
     }
 
     #[test]
+    fn encrypted_child_body_presence_preserves_native_null_exception() {
+        let missing = Node::new("enc").attr("v", "2").attr("type", "skmsg");
+        for (child, admitted) in [
+            (missing.clone(), false),
+            (missing.clone().children(vec![Node::new("nested")]), false),
+            (missing.clone().attr("mediatype", "image"), false),
+            (missing.clone().attr("mediatype", "LiveLocation"), false),
+            (missing.clone().attr("mediatype", "livelocation "), false),
+            (missing.clone().attr("mediatype", "livelocation"), true),
+            (missing.clone().bytes(Vec::new()), true),
+            (missing.clone().text(""), true),
+            (missing.bytes(vec![1]), true),
+        ] {
+            assert_eq!(
+                encrypted_children_metadata_valid(&Node::new("message").children(vec![child])),
+                admitted
+            );
+        }
+    }
+
+    #[test]
     fn encrypted_child_metadata_preserves_native_count_order_and_integer_domain() {
         let enc = |count: Option<&str>| {
-            let node = Node::new("enc").attr("v", "2").attr("type", "skmsg");
+            let node = Node::new("enc")
+                .attr("v", "2")
+                .attr("type", "skmsg")
+                .bytes(vec![1]);
             count.map_or(node.clone(), |count| node.attr("count", count))
         };
         for (counts, expected) in [
@@ -2805,6 +2838,36 @@ mod tests {
             .attr("participant", sender)
             .attr("id", "LAST-CHILD")
             .children(vec![good.clone(), bad.clone()]);
+        let missing = Node::new("enc").attr("v", "2").attr("type", "skmsg");
+        for children in [
+            vec![missing.clone(), good.clone()],
+            vec![good.clone(), missing],
+        ] {
+            let malformed = node.clone().children(children);
+            let capture = preserve(&store, &malformed).unwrap();
+            let keys = store.read(|tx| tx.scan(Table::SenderKeys, 1, 100)).unwrap();
+            let checkpoints = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let head = store.journal_head().unwrap();
+            assert_eq!(
+                process(&store, &account, &malformed, &capture)
+                    .await
+                    .unwrap(),
+                IncomingResult::Unsupported
+            );
+            assert_eq!(
+                store.read(|tx| tx.scan(Table::SenderKeys, 1, 100)).unwrap(),
+                keys
+            );
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                checkpoints
+            );
+            assert_eq!(store.journal_head().unwrap(), head);
+        }
         let capture = preserve(&store, &node).unwrap();
         let keys = store.read(|tx| tx.scan(Table::SenderKeys, 1, 100)).unwrap();
         let checkpoints = store

@@ -1792,3 +1792,60 @@ selection; both pairwise route orders passed. All1,589 workspace/all-feature
 tests, strict all-target/all-feature Clippy, formatting, CLI reference, OpenAPI
 library-symbol check, APK coverage, retained checksums and hygiene passed.
 No account operation was performed.
+
+## Ciphertext body presence before descriptor overwrite (2026-11-07)
+
+**Confirmed selected static and Rust mismatch fixed.** Pinned APK2.26.43.72
+build264307238, SHA256
+`887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e`,
+[EIM.A00](apk/2.26.43.72-encrypted-child-metadata/enc-descriptor-parser.txt)
+copies0Tp.A01 byte-array reference into the Ezj descriptor; its
+[constructor](apk/2.26.43.72-encrypted-child-metadata/enc-descriptor-constructors.txt)
+stores that reference in A07. The selected
+[EuN.A01 parser](apk/2.26.43.72-encrypted-child-metadata/chat-stanza-parser.txt)
+checks A07 for null at0c4a..0c54 before descriptor overwrites at0ca4/0cda.
+A nonnull array branches to0c9c (0c50 +0x26*2). If null, ONLY exact
+mediatype=livelocation bypasses the check (0c60 +0x1e*2 =0c9c). Otherwise
+it records missing-ciphertext and throws LIL at0c9a. The earlier selected
+loop has equivalent checks08a4..08f6. This is a per-child parser requirement,
+not merely a check on the final surviving descriptor.
+
+Crucially, this code checks null, not array length. No zero-length rejection
+is established by this selected parser check, and the live-location exception
+must not disappear in translation. Complete wire decoder empty-array
+normalization and the exception's later runtime behavior remain untraced.
+
+Rust already checked supported nonempty ciphertext on the selected child, but
+a bodyless earlier supported enc could be overwritten by a later valid one.
+A real-ciphertext regression reproduced that gap before the fix: missing-body
+skmsg then valid skmsg returned Decrypted instead of Unsupported.
+
+The shared immediate-child gate now checks body presence on EVERY enc before
+routing or selection. Byte/text content represents a present body in the
+existing Rust adapter; absent/child-tree content represents no ciphertext bytes.
+Missing bodies are refused unless mediatype is exact livelocation. The guard
+does not reject present-but-empty byte/text bodies; the selected ciphertext's
+existing nonempty and crypto checks remain independent. Text-to-bytes behavior
+is an existing supported Rust adapter, not newly established native wire parity.
+
+The real-store regression checks missing bodies in both child orders alongside
+valid signed ciphertext, with unchanged sender keys, checkpoints and journal
+after capture preservation. Existing last-corrupt-signature classification,
+reverse-order successful decryption and duplicate replay remain covered. A
+focused boundary test preserves exact live-location spelling, rejects ordinary
+missing/child-tree bodies, and admits present empty byte/text values at this
+parser gate. Admission of a live-location exception is not feature completion
+or automatic ACK authority: selected null/empty ciphertext still follows the
+existing Unsupported path, and native live-location processing remains unported.
+
+Native LIL response handling, later-pass permission, full nested parser behavior,
+other unported ciphertext types, and durable error491 response ownership remain
+open. No new parser error/retry code, automatic network operation or server
+restriction causality is inferred. Existing complete DEX exports and their
+checksum manifest are reused without duplication.
+
+Verification: the missing-first-body regression reproduced Decrypted on the
+previous code, then both orders passed after the guard. All1,590 workspace/
+all-feature tests, strict all-target/all-feature Clippy, formatting, CLI
+reference, OpenAPI library-symbol check, APK coverage, retained evidence
+checksums and repository hygiene passed. No account operation was performed.
