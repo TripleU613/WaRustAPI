@@ -1,0 +1,22 @@
+{
+  "README.md": {
+    "bytes": 3768,
+    "sha256": "c507232fd98bb465e6c8c9e9cddd96afe407dbf39c4291073e65d6940a2b1595"
+  },
+  "integer-parser.txt": {
+    "bytes": 1686,
+    "sha256": "ff0f1f7c71b9a6726dff0257b0cdf58a9bb0554480a8b439e943143007451445"
+  },
+  "reproduce.py": {
+    "bytes": 1268,
+    "sha256": "9082f7510dc6fac3292e41924eb76a12b01e679d250166a802bd0f24a078c97b"
+  },
+  "required-integer.txt": {
+    "bytes": 483,
+    "sha256": "597d100312ac9154448fc3039f4d2d4ab1ee50e169dcf43cd4647a01e1b1c7d6"
+  },
+  "required-text.txt": {
+    "bytes": 1438,
+    "sha256": "eff6d1b171e5de4446d9680c816777d3f479af777668c7ad0fc9a97b6909092a"
+  }
+}

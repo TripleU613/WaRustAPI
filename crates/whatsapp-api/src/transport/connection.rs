@@ -208,15 +208,26 @@ fn record_login_reply_checked(
             ));
         }
     };
-    // `<failure reason=N>`: observed 403 for a banned account (2026-11-01).
-    // 405 is the outdated-client code in public multi-device clients
-    // (reference only, not traced in the APK); keeping the number is what
-    // tells a retired app version apart from any other refusal.
-    let code = (status == "refused")
-        .then(|| reply.get_attr("reason").and_then(|v| v.as_text()))
-        .flatten()
-        .filter(|v| v.len() <= 5)
-        .and_then(|v| v.parse::<u32>().ok());
+    // APK43.72 0ZJ.A13 -> 0Tp.A04/A0L/A06 requires reason and
+    // Integer.parseInt; invalid content throws before native failure mapping.
+    // Retain local uncertainty rather than manufacturing an unclassified refusal.
+    // Signed native values outside u32 remain unrepresented by Error's code field.
+    let code = if status == "refused" {
+        let reason = reply
+            .get_attr("reason")
+            .and_then(|value| value.as_text())
+            .and_then(super::mex::java_decimal_long)
+            .and_then(|value| i32::try_from(value).ok())
+            .ok_or_else(|| {
+                Error::invalid(
+                    "connection",
+                    "invalid login failure reason; reservation retained",
+                )
+            })?;
+        u32::try_from(reason).ok()
+    } else {
+        None
+    };
     store.write(|tx| {
         if let Some((snapshot, reservation)) = ownership {
             check_login_snapshot(tx, snapshot)?;
@@ -2033,9 +2044,22 @@ mod tests {
         record_login_reply(&store, &Node::new("success")).unwrap();
         // A refusal keeps its numeric reason (403 banned, observed; 405 for a
         // retired client version in public clients) instead of dropping it.
-        for (reason, code) in [("405", Some(405)), ("x", None)] {
+        for (reason, code) in [
+            ("405", Some(405)),
+            ("+403", Some(403)),
+            ("000000403", Some(403)),
+            ("４０３", Some(403)),
+            ("2147483647", Some(2147483647)),
+            ("-2147483648", None),
+        ] {
             let error = record_login_reply(&store, &Node::new("failure").attr("reason", reason));
             assert!(matches!(error, Err(Error::Authentication { code: c }) if c == code));
+            let outcome: serde_json::Value = store
+                .read(|tx| tx.get_json(Table::Checkpoints, LOGIN_KEY, 1))
+                .unwrap()
+                .unwrap();
+            assert_eq!(outcome["status"], "refused");
+            assert_eq!(outcome["code"], serde_json::json!(code));
         }
         record_login_reply(&store, &Node::new("success")).unwrap();
         assert_eq!(
@@ -2080,6 +2104,69 @@ mod tests {
                 .collect()
             })
             .unwrap()
+    }
+
+    #[test]
+    fn malformed_login_failure_reason_retains_capture_and_owned_uncertainty() {
+        let replies = [
+            None,
+            Some(""),
+            Some("private-invalid-reason"),
+            Some("2147483648"),
+            Some("-2147483649"),
+            Some(" 403"),
+            Some("403 "),
+        ]
+        .into_iter()
+        .map(|reason| match reason {
+            Some(reason) => Node::new("failure").attr("reason", reason),
+            None => Node::new("failure"),
+        })
+        .chain([
+            Node::new("failure").attr(
+                "reason",
+                crate::binary::AttributeValue::Bytes(bytes::Bytes::from_static(b"\xff")),
+            ),
+            Node::new("failure").attr("reason", Jid::parse("12345@lid").unwrap()),
+        ]);
+        for reply in replies {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("failure-reason.redb");
+            let store = identity_store(&path);
+            let account = AccountRecord {
+                generation: store.generation(),
+                ..Default::default()
+            };
+            store.write(|tx| account.save(tx)).unwrap();
+            let snapshot = store
+                .read(|tx| LoginSnapshot::capture_in(tx, &account))
+                .unwrap();
+            let owner = reserve_login(&store, &snapshot).unwrap();
+            super::super::inbox::preserve_in_epoch(&store, &reply, ConnectionEpoch(1)).unwrap();
+            let before = login_snapshot(&store);
+            let head = store.journal_head().unwrap();
+            let error =
+                record_login_reply_checked(&store, &reply, Some((&snapshot, &owner))).unwrap_err();
+            assert!(
+                matches!(
+                    error,
+                    Error::InvalidInput {
+                        field: "connection",
+                        ..
+                    }
+                ),
+                "malformed reason became refusal: {error}"
+            );
+            assert!(!error.to_string().contains("private-invalid-reason"));
+            assert!(!error.is_recoverable_by_reconnect());
+            assert_eq!(login_snapshot(&store), before);
+            assert_eq!(store.journal_head().unwrap(), head);
+            drop(store);
+            let store = identity_store(&path);
+            assert_eq!(login_snapshot(&store), before);
+            assert!(reserve_login(&store, &snapshot).is_err());
+            assert_eq!(store.journal_head().unwrap(), head);
+        }
     }
 
     #[test]

@@ -20033,5 +20033,13 @@
     ],
     "description": "Shared login identity validation enforces pinned LidUserJid constructor grammar (1..15 ASCII digits, no leading zero) for supplied LIDs and saved LIDs during requested updates. Invalid values refuse atomically after capture, retaining uncertainty and no-replay ownership. PN, agent/device admission and valid-LID replacement policy unchanged. No new route or live validation.",
     "evidence": "docs/protocol/login-identity-updates.md#lid-constructor-grammar-at-login"
+  },
+  "x-initial-login-failure-reason-admission": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [],
+    "description": "Initial library login requires failure.reason text accepted by Java decimal parsing within signed i32 before result settlement. Invalid content preserves capture and owned uncertain reservation with fixed terminal local error; valid failure remains refused. Existing unsigned optional code retains nonnegative values and maps valid negative reasons to null. Other CLI/live-session failure handlers unchanged; no route or live verification.",
+    "evidence": "docs/protocol/messaging-transport.md#initial-login-failure-reason-admission"
   }
 }

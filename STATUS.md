@@ -10728,3 +10728,9 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   and uncertain reservation on refusal. Owned text/typed/reopen controls added.
   PN, valid replacement policy and live operation unchanged. See
   [LID constructor grammar](docs/protocol/login-identity-updates.md#lid-constructor-grammar-at-login).
+
+- Initial library login now validates required failure reason using pinned Java
+  signed-i32 grammar before settlement. Missing/malformed values retain capture
+  and uncertain reservation; valid longer/leading-zero/BMP-digit reasons retain
+  nonnegative codes. Owned reopen/no-replay regression added; no live operation.
+  See [reason admission](docs/protocol/messaging-transport.md#initial-login-failure-reason-admission).

@@ -2405,3 +2405,24 @@ reopens the encrypted store and confirms the uncertain reservation still blocks
 reserve_login. It does not emulate Noise/socket admission. Existing known success/
 failure and stale-ownership tests remain controls. No live operation or wire
 construction changed, and no server-directed wait/refusal is cleared.
+
+## Initial login failure reason admission
+
+2026-11-07. **Confirmed static/local defect, corrected offline**, baseline
+`41f5204a`: pinned 0ZJ.A13 calls0Tp.A04(reason), whose required-text and
+Integer.parseInt getters throw before reason mapping on missing/malformed input.
+Rust previously stored such failure roots as refused/code=null and imposed a
+five-byte unsigned parser on valid reasons. The initial checked result setter
+now requires Java decimal text bounded to signed i32 before any settlement.
+Invalid input preserves raw capture and the owned uncertain reservation with a
+fixed terminal local error; no reconnect/replay follows. Valid failures still
+settle as refused. Existing Option<u32> code representation retains nonnegative
+values and represents negative native values as None; no reason meaning invented.
+
+Owned real-store/reopen controls cover missing, malformed, i32 overflow, whitespace
+and nontext input, unchanged state/journal and blocked re-reservation. Valid
+Java sign/leading-zero/BMP-digit/i32-boundary controls check stored refusal/code.
+This changes the initial library-login setter only; CLI lab-login, active-session
+failure handling and complete native exception lifecycle remain separate.
+See [complete methods and reproducible limits](apk/2.26.43.72-login-failure-reason/README.md).
+No live request or server-directed refusal/wait was cleared.

@@ -9750,3 +9750,10 @@ Local public upload eligibility omission corrected at shared entry, including ca
   Owned text/typed capture/reopen/no-replay and valid boundary controls added.
   Existing fill-only native setter corroborated; full flag/provider lifecycle
   remains separate. See [LID login grammar](login-identity-updates.md#lid-constructor-grammar-at-login).
+
+- Confirmed initial login failure reason admission defect at `41f5204a`:
+  missing/malformed reason became refused/code=null. Pinned required Java-int
+  getters now guide admission before settlement; invalid input retains capture
+  and uncertainty. Owned reopen/no-replay and valid numeric controls added.
+  Signed negative code representation and other callers remain separate. See
+  [failure reason admission](messaging-transport.md#initial-login-failure-reason-admission).
