@@ -1397,3 +1397,25 @@ retain the operation-selection/crypto/output-adoption unknowns. This narrows the
 prior shared-leaf comparison without establishing a universal full-media206/416
 success rule. No request, retry, automatic resume, status relaxation or runtime
 behavior was added; supported-profile factory/start/end binding remains open.
+
+## Pinned download factory selection (2026-11-06)
+
+**Confirmed selected static / research only:** MF7.A00 maps LPG.PUSH to MuZ and
+other values to MuY; enum initialization independently identifies PUSH/PULL.
+MF7.A01 chooses mode through media category, photo dimensions/thresholds and
+runtime configuration. MX3.A07 merely selects categories2/3, while A05 invokes
+an optional sidecar Callable and returns null on its selected exception path.
+
+A selected LHc branch in synthetic MtX.Cb6 separately checks eligibility and
+MWP.A0b, requires usable sidecar bytes/index conditions for its streaming path,
+and fails on missing required sidecar instead of automatically falling back.
+Other predicates select normal MVv. FileMediaDownload constructs MVv directly;
+status/chat/newsletter producers retain context-specific stream/normal paths.
+No single factory branch describes every encrypted media operation.
+
+[Constructor censuses, complete factories and predicates, enum evidence, checked
+byte PCs, repro and checksums](apk/2.26.43.72-media-download-factories/README.md)
+refine the shared200/206 leaf comparison. Original message-to-MX3 and sidecar
+Callable construction, MWP.A0b semantics and exact starting file/range state for
+Rust's profile remain unknown. No native fallback, guessed mandatory sidecar,
+PUSH header,206/416 adoption, automatic resume/retry or live operation is added.

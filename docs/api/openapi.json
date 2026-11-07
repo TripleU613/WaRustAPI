@@ -1,4 +1,11 @@
 {
+  "x-media-download-factory-boundary": {
+    "x-cli": "existing ordinary/view-once media retrieval; no new command or flag",
+    "x-transport": "research-only pinned download factory and sidecar-selection boundaries; no runtime change",
+    "x-live": false,
+    "description": "MF7.A00 selects MuZ for LPG.PUSH, otherwise MuY; MF7.A01 mode depends on category/dimensions/config. MX3.A07 category eligibility differs from A05 optional sidecar Callable. Selected LHc path requires sidecar/index conditions or fails, while other predicates select MVv. File/status/chat/newsletter contexts are distinct. Original message-to-MX3, Callable producer, MWP.A0b semantics and exact Rust-profile input binding remain unknown. No universal fallback, guessed header/sidecar, status relaxation, resume/retry or live traffic.",
+    "evidence": "docs/protocol/apk/2.26.43.72-media-download-factories/README.md"
+  },
   "x-media-download-range-result-boundary": {
     "x-cli": "existing media retrieval; no new command or flag",
     "x-transport": "research-only pinned stream/range and normal result-adoption consumers; no runtime behavior change",

@@ -1,0 +1,33 @@
+
+# class: LX/MF7;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLLLLLLLLLLLLLLLLL)  # .registers 35
+    # full signature: LX/MF7;->A00(LX/M3d;LX/K1R;LX/MWP;LX/Nb8;LX/Ncz;LX/MOq;LX/0Hi;LX/1wY;LX/1we;LX/MX3;LX/LPG;Ljava/io/File;Ljava/io/File;Ljava/io/File;Ljava/net/URL;[B[I)LX/Nbk;
+    0000..0004  sget-object  v0, LX/LPG;->A02:LX/LPG;
+    0004..0008  move-object/from16  v13, v30
+    0008..000c  move-object/from16  v12, v29
+    000c..0010  move-object/from16  v1, v28
+    0010..0014  move-object/from16  v11, v27
+    0014..0018  move-object/from16  v17, v34
+    0018..001c  move-object/from16  v5, v21
+    001c..0020  move-object/from16  v16, v33
+    0020..0024  move-object/from16  v4, v20
+    0024..0028  move-object/from16  v15, v32
+    0028..002c  move-object/from16  v3, v19
+    002c..0030  move-object/from16  v14, v31
+    0030..0034  move-object/from16  v2, v18
+    0034..0038  move-object/from16  v6, v22
+    0038..003c  move-object/from16  v7, v23
+    003c..0040  move-object/from16  v8, v24
+    0040..0044  move-object/from16  v9, v25
+    0044..0048  move-object/from16  v10, v26
+    0048..004c  if-ne  v1, v0, +0x8
+    004c..0050  new-instance  v1, LX/MuZ;
+    0050..0056  invoke-direct/range  {v1..v17}, LX/MuZ;-><init>(LX/M3d;LX/K1R;LX/MWP;LX/Nb8;LX/Ncz;LX/MOq;LX/0Hi;LX/1wY;LX/1we;LX/MX3;Ljava/io/File;Ljava/io/File;Ljava/io/File;Ljava/net/URL;[B[I)V
+    0056..0058  return-object  v1
+    0058..005c  new-instance  v1, LX/MuY;
+    005c..0062  invoke-direct/range  {v1..v17}, LX/MuY;-><init>(LX/M3d;LX/K1R;LX/MWP;LX/Nb8;LX/Ncz;LX/MOq;LX/0Hi;LX/1wY;LX/1we;LX/MX3;Ljava/io/File;Ljava/io/File;Ljava/io/File;Ljava/net/URL;[B[I)V
+    0062..0064  return-object  v1
+    # exception table: 0 try range(s)
+.end method

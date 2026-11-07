@@ -1,0 +1,25 @@
+
+# class: LX/MX3;
+# extends: Ljava/lang/Object;
+
+.method public A05(L)  # .registers 5
+    # full signature: LX/MX3;->A05()LX/LvR;
+    0000..0004  iget-object  v0, v4, LX/MX3;->A0t:Ljava/util/concurrent/Callable;
+    0004..0006  const/4  v3, #0x0
+    0006..000a  if-nez  v0, +0x3
+    000a..000c  return-object  v3
+    000c..0012  invoke-interface  {v0}, Ljava/util/concurrent/Callable;->call()Ljava/lang/Object;
+    0012..0014  move-result-object  v0
+    0014..0018  check-cast  v0, LX/LvR;
+    0018..001a  return-object  v0
+    001a..001c  move-exception  v2
+    001c..0020  const-string  v0, "failed to get streaming sidecar: "
+    0020..0026  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0026..0028  move-result-object  v1
+    0028..002e  invoke-virtual  {v2}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    002e..0030  move-result-object  v0
+    0030..0036  invoke-static  {v1, v0}, LX/2L9;->A1J(Ljava/lang/StringBuilder;Ljava/lang/String;)V
+    0036..0038  return-object  v3
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/Exception; code_units 0006..000d -> 000d
+.end method

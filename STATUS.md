@@ -1,5 +1,11 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
+**Download factories traced.** Confirmed PUSH/PULL enum-to-handler mapping,
+config-dependent mode selection, category eligibility and sidecar Callable
+behavior. The selected chat branch fails on missing required sidecar rather than
+automatically falling back. No runtime policy change.
+[Evidence](docs/protocol/media-network-outcomes.md#pinned-download-factory-selection-2026-11-06).
+
 **Download range/result consumers traced.** Pinned MuY/MuZ wrappers lead to
 stream/window handlers; MuY packages a chunk-MAC decrypter separately from HTTP
 status. Normal finalization checks transfer/plaintext hashes and cancellation.

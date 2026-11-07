@@ -1,0 +1,23 @@
+
+# class: LX/LPG;
+# extends: Ljava/lang/Enum;
+
+.method public <clinit>(V)  # .registers 4
+    # full signature: LX/LPG;-><clinit>()V
+    0000..0004  const-string  v1, "PULL"
+    0004..0006  const/4  v0, #0x0
+    0006..000a  new-instance  v3, LX/LPG;
+    000a..0010  invoke-direct  {v3, v1, v0}, LX/LPG;-><init>(Ljava/lang/String;I)V
+    0010..0014  sput-object  v3, LX/LPG;->A01:LX/LPG;
+    0014..0018  const-string  v2, "PUSH"
+    0018..001a  const/4  v0, #0x1
+    001a..001e  new-instance  v1, LX/LPG;
+    001e..0024  invoke-direct  {v1, v2, v0}, LX/LPG;-><init>(Ljava/lang/String;I)V
+    0024..0028  sput-object  v1, LX/LPG;->A02:LX/LPG;
+    0028..002a  const/4  v0, #0x2
+    002a..002e  new-array  v0, v0, [LX/LPG;
+    002e..0034  invoke-static  {v3, v1, v0}, LX/2L7;->A1V(Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;)V
+    0034..0038  sput-object  v0, LX/LPG;->A00:[LX/LPG;
+    0038..003a  return-void
+    # exception table: 0 try range(s)
+.end method

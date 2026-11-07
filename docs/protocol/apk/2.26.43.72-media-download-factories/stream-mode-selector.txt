@@ -1,0 +1,77 @@
+
+# class: LX/MF7;
+# extends: Ljava/lang/Object;
+
+.method public A01(LLL)  # .registers 9
+    # full signature: LX/MF7;->A01(LX/08Y;LX/MX3;)LX/LPG;
+    0000..0004  iget  v1, v8, LX/MX3;->A03:I
+    0004..0006  const/4  v0, #0x2
+    0006..000a  if-eq  v1, v0, +0x7a
+    000a..000c  const/4  v0, #0x3
+    000c..0010  if-ne  v1, v0, +0x7a
+    0010..0014  iget-object  v3, v8, LX/MX3;->A0A:Landroid/util/Size;
+    0014..0018  const-string  v4, "photo_hd"
+    0018..001c  if-eqz  v3, +0x2e
+    001c..0022  invoke-virtual  {v3}, Landroid/util/Size;->getWidth()I
+    0022..0024  move-result  v0
+    0024..0028  if-lez  v0, +0x28
+    0028..002e  invoke-virtual  {v3}, Landroid/util/Size;->getHeight()I
+    002e..0030  move-result  v0
+    0030..0034  if-lez  v0, +0x22
+    0034..0038  iget-boolean  v2, v8, LX/MX3;->A0n:Z
+    0038..003a  const/4  v0, #0x0
+    003a..0040  invoke-static  {v7, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0040..0046  invoke-virtual  {v3}, Landroid/util/Size;->getHeight()I
+    0046..0048  move-result  v1
+    0048..004e  invoke-virtual  {v3}, Landroid/util/Size;->getWidth()I
+    004e..0050  move-result  v0
+    0050..0056  invoke-static  {v1, v0}, Ljava/lang/Math;->max(II)I
+    0056..0058  move-result  v1
+    0058..005c  const/16  v0, #0xbfc
+    005c..0060  if-eqz  v2, +0x4
+    0060..0064  const/16  v0, #0x178f
+    0064..006a  invoke-virtual  {v7, v0}, LX/00E;->A0a(I)I
+    006a..006c  move-result  v0
+    006c..0070  if-ge  v1, v0, +0x4
+    0070..0074  const-string  v4, "photo_sd"
+    0074..0078  sget-object  v0, LX/LnX;->A2w:LX/0AA;
+    0078..007e  invoke-virtual  {v7, v0}, LX/00E;->A0m(LX/0AA;)Ljava/lang/String;
+    007e..0080  move-result-object  v1
+    0080..0086  invoke-static  {v1}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+    0086..0088  move-result  v0
+    0088..008c  if-eqz  v0, +0x15
+    008c..0090  sget-object  v6, Ljava/util/Collections;->EMPTY_SET:Ljava/util/Set;
+    0090..0096  invoke-interface  {v6, v4}, Ljava/util/Set;->contains(Ljava/lang/Object;)Z
+    0096..0098  move-result  v0
+    0098..009c  if-eqz  v0, +0x34
+    009c..00a0  sget-object  v0, LX/LnX;->A0Z:LX/00f;
+    00a0..00a6  invoke-virtual  {v7, v0}, LX/00E;->A17(LX/00f;)Z
+    00a6..00a8  move-result  v0
+    00a8..00ac  if-eqz  v0, +0x2c
+    00ac..00b0  sget-object  v0, LX/LPG;->A02:LX/LPG;
+    00b0..00b2  return-object  v0
+    00b2..00b8  invoke-static  {}, LX/2L6;->A1F()Ljava/util/HashSet;
+    00b8..00ba  move-result-object  v6
+    00ba..00be  const-string  v0, ","
+    00be..00c4  invoke-virtual  {v1, v0}, Ljava/lang/String;->split(Ljava/lang/String;)[Ljava/lang/String;
+    00c4..00c6  move-result-object  v5
+    00c6..00c8  array-length  v3, v5
+    00c8..00ca  const/4  v2, #0x0
+    00ca..00ce  if-ge  v2, v3, -0x1d
+    00ce..00d2  aget-object  v0, v5, v2
+    00d2..00d8  invoke-virtual  {v0}, Ljava/lang/String;->trim()Ljava/lang/String;
+    00d8..00da  move-result-object  v0
+    00da..00e0  invoke-static  {v0}, LX/Fws;->A12(Ljava/lang/String;)Ljava/lang/String;
+    00e0..00e2  move-result-object  v1
+    00e2..00e8  invoke-virtual  {v1}, Ljava/lang/String;->isEmpty()Z
+    00e8..00ea  move-result  v0
+    00ea..00ee  if-nez  v0, +0x5
+    00ee..00f4  invoke-virtual  {v6, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    00f4..00f8  add-int/lit8  v2, v2, #0x1
+    00f8..00fa  goto  -0x17
+    00fa..00fe  const-string  v4, "video"
+    00fe..0100  goto  -0x45
+    0100..0104  sget-object  v0, LX/LPG;->A01:LX/LPG;
+    0104..0106  return-object  v0
+    # exception table: 0 try range(s)
+.end method

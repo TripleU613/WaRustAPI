@@ -1,0 +1,16 @@
+
+# class: LX/MX3;
+# extends: Ljava/lang/Object;
+
+.method public A07(Z)  # .registers 4
+    # full signature: LX/MX3;->A07()Z
+    0000..0004  iget  v2, v3, LX/MX3;->A03:I
+    0004..0006  const/4  v0, #0x3
+    0006..000a  if-eq  v2, v0, +0x6
+    000a..000c  const/4  v1, #0x2
+    000c..000e  const/4  v0, #0x0
+    000e..0012  if-ne  v2, v1, +0x3
+    0012..0014  const/4  v0, #0x1
+    0014..0016  return  v0
+    # exception table: 0 try range(s)
+.end method

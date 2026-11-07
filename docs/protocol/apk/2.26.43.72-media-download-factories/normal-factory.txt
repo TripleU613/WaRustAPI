@@ -1,0 +1,620 @@
+
+# class: LX/LHb;
+# extends: LX/LHe;
+
+.method public A02(LLLLL)  # .registers 43
+    # full signature: LX/LHb;->A02(LX/M3d;LX/LHb;Ljava/io/File;Ljava/net/URL;)LX/MXt;
+    0000..0004  const/16  v0, #0x4e3
+    0004..0008  move-object/from16  v4, v40
+    0008..000e  invoke-static  {v4, v0}, LX/LHb;->A09(LX/LHb;I)Ljava/lang/Object;
+    000e..0010  move-result-object  v10
+    0010..0014  check-cast  v10, LX/0GO;
+    0014..0016  const/4  v0, #0x7
+    0016..001c  invoke-static  {v0}, Landroid/net/TrafficStats;->setThreadStatsTag(I)V
+    001c..0022  invoke-static  {v4}, LX/LHb;->A06(LX/LHb;)LX/MX3;
+    0022..0024  move-result-object  v0
+    0024..0028  iget-boolean  v0, v0, LX/MX3;->A0c:Z
+    0028..002c  if-nez  v0, +0x199
+    002c..0032  invoke-static  {v4}, LX/LHb;->A06(LX/LHb;)LX/MX3;
+    0032..0034  move-result-object  v0
+    0034..003a  invoke-virtual  {v0}, LX/MX3;->A06()Ljava/lang/String;
+    003a..003c  move-result-object  v0
+    003c..0040  if-nez  v0, +0xa
+    0040..0044  const/16  v0, #0x1c
+    0044..004a  invoke-static  {v0}, LX/MXt;->A01(I)LX/MXt;
+    004a..004c  move-result-object  v2
+    004c..0050  goto/16  +0x473
+    0050..0054  iget-object  v2, v4, LX/LHb;->A1I:LX/00p;
+    0054..005a  invoke-static  {v2}, LX/Klq;->A0X(LX/00p;)LX/MOv;
+    005a..005c  move-result-object  v1
+    005c..0062  invoke-static  {v4}, LX/LHb;->A06(LX/LHb;)LX/MX3;
+    0062..0064  move-result-object  v0
+    0064..0068  iget-boolean  v0, v0, LX/MX3;->A0j:Z
+    0068..006e  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    006e..0070  move-result-object  v0
+    0070..0074  iput-object  v0, v1, LX/MOv;->A0J:Ljava/lang/Boolean;
+    0074..007a  invoke-static  {v2}, LX/Klq;->A0X(LX/00p;)LX/MOv;
+    007a..007c  move-result-object  v1
+    007c..0080  iget  v0, v4, LX/LHb;->A09:I
+    0080..0086  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0086..0088  move-result-object  v0
+    0088..008c  iput-object  v0, v1, LX/MOv;->A0Q:Ljava/lang/Integer;
+    008c..0092  invoke-static  {v2}, LX/Klq;->A0X(LX/00p;)LX/MOv;
+    0092..0094  move-result-object  v1
+    0094..009a  invoke-static  {v4}, LX/LHb;->A06(LX/LHb;)LX/MX3;
+    009a..009c  move-result-object  v0
+    009c..00a0  iget  v0, v0, LX/MX3;->A07:I
+    00a0..00a6  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    00a6..00a8  move-result-object  v0
+    00a8..00ac  iput-object  v0, v1, LX/MOv;->A0T:Ljava/lang/Integer;
+    00ac..00b2  invoke-static  {v2}, LX/Klq;->A0X(LX/00p;)LX/MOv;
+    00b2..00b4  move-result-object  v2
+    00b4..00b8  iget-object  v0, v4, LX/LHb;->A13:LX/LXh;
+    00b8..00bc  iget  v1, v0, LX/LXh;->A00:I
+    00bc..00c2  invoke-static  {v4}, LX/LHb;->A06(LX/LHb;)LX/MX3;
+    00c2..00c4  move-result-object  v0
+    00c4..00c8  iget-boolean  v0, v0, LX/MX3;->A0o:Z
+    00c8..00ce  invoke-static  {v1, v0}, LX/MXi;->A03(IZ)I
+    00ce..00d0  move-result  v0
+    00d0..00d6  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    00d6..00d8  move-result-object  v0
+    00d8..00dc  iput-object  v0, v2, LX/MOv;->A0P:Ljava/lang/Integer;
+    00dc..00e2  invoke-static  {v4}, LX/MPf;->A02(LX/NaG;)Z
+    00e2..00e4  move-result  v5
+    00e4..00ea  invoke-direct  {v4}, LX/LHb;->A0O()Z
+    00ea..00ec  move-result  v12
+    00ec..00f0  if-eqz  v12, +0xc0
+    00f0..00f4  iget-object  v1, v4, LX/LHb;->A04:Ljava/io/File;
+    00f4..00f8  const-string  v11, "downloadFile"
+    00f8..00fc  if-eqz  v1, +0xb0
+    00fc..0102  invoke-static  {v4}, LX/LHb;->A06(LX/LHb;)LX/MX3;
+    0102..0104  move-result-object  v0
+    0104..010a  invoke-virtual  {v0}, LX/MX3;->A06()Ljava/lang/String;
+    010a..010c  move-result-object  v0
+    010c..0112  invoke-static  {v1, v0}, LX/MFA;->A01(Ljava/io/File;Ljava/lang/String;)Z
+    0112..0114  move-result  v0
+    0114..0118  if-eqz  v0, +0xe
+    0118..011c  const-string  v0, "StatusMediaDownload/downloadFreshChannelThumbnail/reusing verified thumbnail"
+    011c..0122  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0122..0124  const/4  v0, #0x0
+    0124..012a  invoke-static  {v0}, LX/MXt;->A01(I)LX/MXt;
+    012a..012c  move-result-object  v2
+    012c..0130  goto/16  +0xba
+    0130..0134  const-string  v0, "StatusMediaDownload/downloadFreshChannelThumbnail/fresh download"
+    0134..013a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    013a..013e  iget-object  v0, v4, LX/LHb;->A04:Ljava/io/File;
+    013e..0142  if-eqz  v0, +0x8d
+    0142..0148  invoke-virtual  {v0}, Ljava/io/File;->getParentFile()Ljava/io/File;
+    0148..014a  move-result-object  v3
+    014a..0150  invoke-virtual  {v0}, Ljava/io/File;->getName()Ljava/lang/String;
+    0150..0152  move-result-object  v0
+    0152..0158  invoke-static  {}, Ljava/util/UUID;->randomUUID()Ljava/util/UUID;
+    0158..015a  move-result-object  v2
+    015a..0160  invoke-static  {v0}, LX/1Xl;->A16(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0160..0162  move-result-object  v1
+    0162..0166  const-string  v0, "."
+    0166..016c  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    016c..0172  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0172..0176  const-string  v0, ".tmp"
+    0176..017c  invoke-static  {v3, v0, v1}, LX/8t5;->A0m(Ljava/io/File;Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/io/File;
+    017c..017e  move-result-object  v1
+    017e..0184  invoke-direct  {v4, v1, v5}, LX/LHb;->A03(Ljava/io/File;Z)LX/LIl;
+    0184..0186  move-result-object  v2
+    0186..018a  iget-object  v0, v4, LX/LHb;->A1F:LX/00p;
+    018a..0190  invoke-static  {v0}, LX/Klq;->A0W(LX/00p;)LX/MOq;
+    0190..0192  move-result-object  v0
+    0192..0196  const/16  v10, #0x9
+    0196..019c  invoke-static  {v0, v4, v10}, LX/MOq;->A00(LX/MOq;Ljava/lang/Object;I)V
+    019c..01a2  invoke-virtual  {v2}, LX/N2E;->A04()LX/LqJ;
+    01a2..01a4  move-result-object  v0
+    01a4..01a8  iget-object  v2, v0, LX/LqJ;->A00:LX/MXt;
+    01a8..01ae  invoke-virtual  {v2}, LX/MXt;->A06()Z
+    01ae..01b0  move-result  v0
+    01b0..01b4  if-eqz  v0, +0x50
+    01b4..01ba  invoke-static  {v4}, LX/LHb;->A06(LX/LHb;)LX/MX3;
+    01ba..01bc  move-result-object  v0
+    01bc..01c2  invoke-virtual  {v0}, LX/MX3;->A06()Ljava/lang/String;
+    01c2..01c4  move-result-object  v3
+    01c4..01c8  if-eqz  v3, +0x28
+    01c8..01ce  invoke-virtual  {v3}, Ljava/lang/String;->length()I
+    01ce..01d0  move-result  v0
+    01d0..01d4  if-eqz  v0, +0x22
+    01d4..01d6  const/4  v0, #0x0
+    01d6..01dc  invoke-static  {v3, v0}, Landroid/util/Base64;->decode(Ljava/lang/String;I)[B
+    01dc..01e2  invoke-virtual  {v1}, Ljava/io/File;->length()J
+    01e2..01e4  move-result-wide  v8
+    01e4..01ea  const-wide/32  v6, #0xf4240
+    01ea..01ee  cmp-long  v0, v8, v6
+    01ee..01f2  if-gtz  v0, +0x13
+    01f2..01f8  invoke-static  {v1, v3}, LX/MFA;->A01(Ljava/io/File;Ljava/lang/String;)Z
+    01f8..01fa  move-result  v0
+    01fa..01fe  if-nez  v0, +0xd
+    01fe..0202  const-string  v0, "StatusMediaDownload/downloadFreshChannelThumbnail/downloaded bytes do not match the thumb hash"
+    0202..0208  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0208..020a  const/4  v0, #0x7
+    020a..0210  invoke-static  {v2, v0}, LX/MFA;->A00(LX/MXt;I)LX/MXt;
+    0210..0212  move-result-object  v2
+    0212..0214  goto  +0x1f
+    0214..0218  iget-object  v3, v4, LX/LHb;->A04:Ljava/io/File;
+    0218..021c  if-nez  v3, +0x7
+    021c..0222  invoke-static  {v11}, LX/00l;->A0H(Ljava/lang/String;)V
+    0222..0224  const/4  v0, #0x0
+    0224..0226  throw  v0
+    0226..022c  invoke-virtual  {v1, v3}, Ljava/io/File;->renameTo(Ljava/io/File;)Z
+    022c..022e  move-result  v0
+    022e..0232  if-nez  v0, +0x11
+    0232..0238  invoke-static  {v1, v3}, LX/KmE;->A0V(Ljava/io/File;Ljava/io/File;)Z
+    0238..023a  move-result  v0
+    023a..023e  if-nez  v0, +0xb
+    023e..0242  const-string  v0, "FreshFileDownload/publish/rename failed"
+    0242..0248  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0248..024e  invoke-static  {v2, v10}, LX/MFA;->A00(LX/MXt;I)LX/MXt;
+    024e..0250  move-result-object  v2
+    0250..0256  invoke-static  {v1}, LX/KmE;->A0S(Ljava/io/File;)Z
+    0256..0258  goto  +0x25
+    0258..025e  invoke-static  {v11}, LX/00l;->A0H(Ljava/lang/String;)V
+    025e..0260  const/4  v0, #0x0
+    0260..0262  goto  +0x5
+    0262..0264  move-exception  v0
+    0264..026a  invoke-static  {v1}, LX/KmE;->A0S(Ljava/io/File;)Z
+    026a..026c  throw  v0
+    026c..026e  const/4  v1, #0x0
+    026e..0272  iget-object  v0, v4, LX/LHb;->A04:Ljava/io/File;
+    0272..0276  if-eqz  v0, +0x6d
+    0276..027c  invoke-direct  {v4, v0, v5}, LX/LHb;->A03(Ljava/io/File;Z)LX/LIl;
+    027c..027e  move-result-object  v2
+    027e..0282  iget-object  v0, v4, LX/LHb;->A1F:LX/00p;
+    0282..0288  invoke-static  {v0}, LX/Klq;->A0W(LX/00p;)LX/MOq;
+    0288..028a  move-result-object  v1
+    028a..028e  const/16  v0, #0x9
+    028e..0294  invoke-static  {v1, v4, v0}, LX/MOq;->A00(LX/MOq;Ljava/lang/Object;I)V
+    0294..029a  invoke-virtual  {v2}, LX/N2E;->A04()LX/LqJ;
+    029a..029c  move-result-object  v0
+    029c..02a0  iget-object  v2, v0, LX/LqJ;->A00:LX/MXt;
+    02a0..02a2  const/4  v3, #0x0
+    02a2..02a6  if-eqz  v12, +0xa
+    02a6..02ac  invoke-virtual  {v2}, LX/MXt;->A06()Z
+    02ac..02ae  move-result  v0
+    02ae..02b2  if-nez  v0, +0x4
+    02b2..02b6  goto/16  +0x340
+    02b6..02bc  invoke-static  {v4}, LX/LHb;->A06(LX/LHb;)LX/MX3;
+    02bc..02be  move-result-object  v0
+    02be..02c2  iget-boolean  v0, v0, LX/MX3;->A0o:Z
+    02c2..02c4  const/4  v1, #0x0
+    02c4..02c8  if-eqz  v0, +0x29
+    02c8..02cc  iget-object  v0, v4, LX/LHb;->A04:Ljava/io/File;
+    02cc..02d0  if-nez  v0, +0x8
+    02d0..02d4  const-string  v0, "downloadFile"
+    02d4..02da  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    02da..02dc  throw  v1
+    02dc..02e2  invoke-static  {v0}, LX/KmE;->A0Z(Ljava/io/File;)[B
+    02e2..02e4  move-result-object  v1
+    02e4..02e8  iget-object  v0, v4, LX/LHb;->A1G:LX/00p;
+    02e8..02ee  invoke-static  {v0}, LX/Klq;->A0V(LX/00p;)LX/MWP;
+    02ee..02f0  move-result-object  v0
+    02f0..02f6  invoke-virtual  {v0, v1}, LX/MWP;->A0a([B)V
+    02f6..02fc  invoke-direct  {v4}, LX/LHb;->A0B()V
+    02fc..0302  invoke-virtual  {v4, v3}, LX/LHb;->CUO(I)V
+    0302..0306  goto/16  +0x318
+    0306..0308  move-exception  v1
+    0308..030c  const-string  v0, "StatusMediaDownload/downloadNonEncryptedMedia Failed loading thumbnail bytes, with exception: "
+    030c..0312  invoke-static  {v0, v1}, LX/2LE;->A1A(Ljava/lang/String;Ljava/lang/Object;)V
+    0312..0316  goto/16  +0x310
+    0316..031a  if-eqz  v5, +0x30e
+    031a..0320  invoke-virtual  {v4, v3}, LX/LHb;->CUO(I)V
+    0320..0326  invoke-static  {v4}, LX/MPf;->A02(LX/NaG;)Z
+    0326..0328  move-result  v0
+    0328..032c  if-nez  v0, +0x305
+    032c..0330  iget-object  v0, v4, LX/LHb;->A04:Ljava/io/File;
+    0330..0334  if-eqz  v0, +0xe
+    0334..033a  invoke-direct  {v4, v0, v3}, LX/LHb;->A03(Ljava/io/File;Z)LX/LIl;
+    033a..033c  move-result-object  v0
+    033c..0342  invoke-virtual  {v0}, LX/N2E;->A04()LX/LqJ;
+    0342..0344  move-result-object  v0
+    0344..0348  iget-object  v2, v0, LX/LqJ;->A00:LX/MXt;
+    0348..034c  goto/16  +0x2f5
+    034c..0350  const-string  v0, "downloadFile"
+    0350..0356  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    0356..035a  goto/16  +0x233
+    035a..0360  invoke-static  {v4}, LX/LHb;->A0Q(LX/LHb;)Z
+    0360..0362  move-result  v0
+    0362..0366  move-object/from16  v40, v39
+    0366..036a  move-object/from16  v39, v42
+    036a..036e  if-eqz  v0, +0x22a
+    036e..0372  iget-object  v13, v4, LX/LHb;->A1G:LX/00p;
+    0372..0378  invoke-static  {v13}, LX/Klq;->A0V(LX/00p;)LX/MWP;
+    0378..037a  move-result-object  v0
+    037a..0380  invoke-virtual  {v0}, LX/MWP;->A0b()Z
+    0380..0382  move-result  v0
+    0382..0386  if-nez  v0, +0x21e
+    0386..038c  invoke-static  {v4}, LX/LHb;->A06(LX/LHb;)LX/MX3;
+    038c..038e  move-result-object  v0
+    038e..0394  invoke-virtual  {v0}, LX/MX3;->A05()LX/LvR;
+    0394..0396  move-result-object  v9
+    0396..0398  const/4  v5, #0x0
+    0398..039a  const/4  v2, #0x1
+    039a..039e  if-eqz  v9, +0x20
+    039e..03a2  iget-object  v11, v9, LX/LvR;->A01:[B
+    03a2..03a6  if-eqz  v11, +0x1c
+    03a6..03ac  invoke-static  {v4}, LX/LHb;->A06(LX/LHb;)LX/MX3;
+    03ac..03ae  move-result-object  v0
+    03ae..03b2  iget-object  v1, v0, LX/MX3;->A0D:LX/0jS;
+    03b2..03b6  sget-object  v0, LX/MHJ;->A00:Ljava/util/Set;
+    03b6..03b8  const/4  v3, #0x0
+    03b8..03be  invoke-static  {v1, v3}, LX/00l;->A09(Ljava/lang/Object;I)V
+    03be..03c4  invoke-static  {v1}, LX/MYf;->A0F(LX/0jS;)Z
+    03c4..03c6  move-result  v0
+    03c6..03ca  if-nez  v0, +0x2b
+    03ca..03ce  sget-object  v0, LX/0jS;->A10:LX/0jS;
+    03ce..03d2  if-eq  v1, v0, +0x27
+    03d2..03d6  iget-object  v0, v9, LX/LvR;->A02:[I
+    03d6..03da  if-nez  v0, +0x23
+    03da..03e0  invoke-static  {v4}, LX/LHb;->A0K(LX/LHb;)V
+    03e0..03e4  sget-object  v0, LX/02X;->A00:Ljava/lang/Integer;
+    03e4..03ea  invoke-direct  {v4, v9, v0}, LX/LHb;->A0J(LX/LvR;Ljava/lang/Integer;)V
+    03ea..03f0  invoke-static  {v4}, LX/LHb;->A04(LX/LHb;)LX/MOv;
+    03f0..03f2  move-result-object  v1
+    03f2..03f8  invoke-static  {}, LX/2L7;->A1A()Ljava/lang/Integer;
+    03f8..03fa  move-result-object  v0
+    03fa..03fe  iput-object  v0, v1, LX/MOv;->A0S:Ljava/lang/Integer;
+    03fe..0404  invoke-static  {v13}, LX/Klq;->A0V(LX/00p;)LX/MWP;
+    0404..0406  move-result-object  v0
+    0406..040c  invoke-virtual  {v0}, LX/MWP;->A0N()V
+    040c..0410  const/16  v0, #0x1e
+    0410..0416  invoke-static  {v5, v0, v2}, LX/MXt;->A02(Ljava/lang/String;IZ)LX/MXt;
+    0416..0418  move-result-object  v2
+    0418..041c  goto/16  +0x28d
+    041c..0422  invoke-static  {v4}, LX/LHb;->A06(LX/LHb;)LX/MX3;
+    0422..0424  move-result-object  v0
+    0424..0428  iget-object  v0, v0, LX/MX3;->A0W:LX/00v;
+    0428..042e  invoke-interface  {v0}, LX/00v;->get()Ljava/lang/Object;
+    042e..0430  move-result-object  v8
+    0430..0434  check-cast  v8, Ljava/io/File;
+    0434..0438  iget-object  v12, v4, LX/LHb;->A1F:LX/00p;
+    0438..043e  invoke-static  {v12}, LX/Klq;->A0W(LX/00p;)LX/MOq;
+    043e..0440  move-result-object  v0
+    0440..0446  invoke-virtual  {v0}, LX/MOq;->A02()Ljava/io/File;
+    0446..0448  move-result-object  v7
+    0448..044e  invoke-static  {v4}, LX/LHb;->A06(LX/LHb;)LX/MX3;
+    044e..0450  move-result-object  v0
+    0450..0454  iget-object  v0, v0, LX/MX3;->A0L:Ljava/lang/String;
+    0454..045a  invoke-static  {v0}, LX/00L;->A05(Ljava/lang/Object;)V
+    045a..0460  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    0460..0466  invoke-static  {v0}, LX/8t5;->A0u(Ljava/lang/String;)Ljava/lang/String;
+    0466..0468  move-result-object  v0
+    0468..046e  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    046e..0474  invoke-static  {v0}, LX/1Xl;->A16(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0474..0476  move-result-object  v1
+    0476..047a  const-string  v0, ".chk.tmp"
+    047a..0480  invoke-static  {v0, v1}, LX/1Xl;->A0z(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    0480..0482  move-result-object  v0
+    0482..0486  iget-object  v6, v4, LX/LHb;->A10:LX/0Hi;
+    0486..048c  invoke-virtual  {v6, v0}, LX/0Hi;->A0s(Ljava/lang/String;)Ljava/io/File;
+    048c..048e  move-result-object  v28
+    048e..0492  if-eqz  v8, +0x17f
+    0492..0496  if-eqz  v7, +0x17d
+    0496..049c  invoke-virtual  {v4}, LX/LHe;->CsV()V
+    049c..04a0  const-string  v14, "Required value was null."
+    04a0..04a6  invoke-static  {v4}, LX/LHb;->A00(LX/LHb;)LX/K1R;
+    04a6..04a8  move-result-object  v10
+    04a8..04ac  iget-object  v2, v4, LX/LHb;->A02:LX/Nbk;
+    04ac..04b0  if-eqz  v2, +0xc
+    04b0..04b4  move-object/from16  v1, v40
+    04b4..04b8  move-object/from16  v0, v39
+    04b8..04be  invoke-interface  {v2, v1, v10, v0}, LX/Nbk;->AIj(LX/M3d;LX/K1R;Ljava/net/URL;)LX/Nbk;
+    04be..04c0  move-result-object  v2
+    04c0..04c4  if-nez  v2, +0x4a
+    04c4..04c8  iget-object  v0, v4, LX/LHb;->A1J:LX/00p;
+    04c8..04ce  invoke-static  {v0}, LX/2L7;->A1J(LX/00p;)Ljava/lang/Object;
+    04ce..04d0  move-result-object  v5
+    04d0..04d4  check-cast  v5, LX/LPG;
+    04d4..04d8  iget-object  v2, v4, LX/LHb;->A0l:LX/08Y;
+    04d8..04de  invoke-static  {v4}, LX/LHb;->A06(LX/LHb;)LX/MX3;
+    04de..04e0  move-result-object  v0
+    04e0..04e6  invoke-static  {v2, v3, v0}, LX/2L9;->A1B(Ljava/lang/Object;ILjava/lang/Object;)V
+    04e6..04e8  const/4  v1, #0x2
+    04e8..04ec  iget  v0, v0, LX/MX3;->A03:I
+    04ec..04f0  if-eq  v0, v1, +0x86
+    04f0..04f4  sget-object  v3, LX/Ncz;->A01:LX/Ncz;
+    04f4..04f8  iget-object  v2, v4, LX/LHb;->A11:LX/1wY;
+    04f8..04fc  iget-object  v1, v4, LX/LHb;->A12:LX/1we;
+    04fc..0502  invoke-static  {v12}, LX/Klq;->A0W(LX/00p;)LX/MOq;
+    0502..0504  move-result-object  v20
+    0504..0508  iget-object  v0, v9, LX/LvR;->A02:[I
+    0508..050e  invoke-static  {v4}, LX/LHb;->A06(LX/LHb;)LX/MX3;
+    050e..0510  move-result-object  v24
+    0510..0516  invoke-static  {v13}, LX/Klq;->A0V(LX/00p;)LX/MWP;
+    0516..0518  move-result-object  v17
+    0518..051c  move-object/from16  v15, v40
+    051c..0520  move-object/from16  v16, v10
+    0520..0524  move-object/from16  v18, v4
+    0524..0528  move-object/from16  v19, v3
+    0528..052c  move-object/from16  v21, v6
+    052c..0530  move-object/from16  v22, v2
+    0530..0534  move-object/from16  v23, v1
+    0534..0538  move-object/from16  v25, v5
+    0538..053c  move-object/from16  v26, v8
+    053c..0540  move-object/from16  v27, v7
+    0540..0544  move-object/from16  v29, v39
+    0544..0548  move-object/from16  v30, v11
+    0548..054c  move-object/from16  v31, v0
+    054c..0552  invoke-static/range  {v15..v31}, LX/MF7;->A00(LX/M3d;LX/K1R;LX/MWP;LX/Nb8;LX/Ncz;LX/MOq;LX/0Hi;LX/1wY;LX/1we;LX/MX3;LX/LPG;Ljava/io/File;Ljava/io/File;Ljava/io/File;Ljava/net/URL;[B[I)LX/Nbk;
+    0552..0554  move-result-object  v2
+    0554..0558  iput-object  v2, v4, LX/LHb;->A02:LX/Nbk;
+    0558..055e  invoke-static  {v12}, LX/Klq;->A0W(LX/00p;)LX/MOq;
+    055e..0560  move-result-object  v1
+    0560..0564  const/16  v0, #0xa
+    0564..056a  invoke-static  {v1, v4, v0}, LX/MOq;->A00(LX/MOq;Ljava/lang/Object;I)V
+    056a..0570  invoke-interface  {v2}, LX/Nbk;->AOV()I
+    0570..0572  move-result  v5
+    0572..0576  iget-object  v3, v4, LX/LHb;->A1I:LX/00p;
+    0576..057c  invoke-static  {v3}, LX/Klq;->A0X(LX/00p;)LX/MOv;
+    057c..057e  move-result-object  v1
+    057e..0584  invoke-interface  {v2}, LX/Nbk;->AjY()Ljava/lang/Exception;
+    0584..0586  move-result-object  v0
+    0586..058c  invoke-virtual  {v1, v0}, LX/MOv;->A0G(Ljava/lang/Exception;)V
+    058c..0592  invoke-interface  {v2}, LX/Nbk;->AhA()LX/LvQ;
+    0592..0594  move-result-object  v0
+    0594..0598  if-eqz  v0, +0xa
+    0598..059e  invoke-static  {v3}, LX/Klq;->A0X(LX/00p;)LX/MOv;
+    059e..05a0  move-result-object  v1
+    05a0..05a4  iget-object  v0, v0, LX/LvQ;->A00:Ljava/lang/Boolean;
+    05a4..05a8  iput-object  v0, v1, LX/MOv;->A0H:Ljava/lang/Boolean;
+    05a8..05ae  invoke-virtual  {v4}, LX/LHe;->CsV()V
+    05ae..05b4  invoke-static  {v3}, LX/Klq;->A0X(LX/00p;)LX/MOv;
+    05b4..05b6  move-result-object  v10
+    05b6..05bc  invoke-static  {v12}, LX/Klq;->A0W(LX/00p;)LX/MOq;
+    05bc..05be  move-result-object  v0
+    05be..05c2  iget-wide  v0, v0, LX/MOq;->A0F:J
+    05c2..05c6  iput-wide  v0, v10, LX/MOv;->A0A:J
+    05c6..05cc  invoke-static  {v3}, LX/Klq;->A0X(LX/00p;)LX/MOv;
+    05cc..05ce  move-result-object  v1
+    05ce..05d4  invoke-static  {v12}, LX/Klq;->A0W(LX/00p;)LX/MOq;
+    05d4..05d6  move-result-object  v0
+    05d6..05da  iget-object  v0, v0, LX/MOq;->A0I:Ljava/lang/Long;
+    05da..05de  iput-object  v0, v1, LX/MOv;->A0X:Ljava/lang/Long;
+    05de..05e4  invoke-static  {v3}, LX/Klq;->A0X(LX/00p;)LX/MOv;
+    05e4..05e6  move-result-object  v1
+    05e6..05ec  invoke-static  {v12}, LX/Klq;->A0W(LX/00p;)LX/MOq;
+    05ec..05ee  move-result-object  v0
+    05ee..05f2  iget-object  v0, v0, LX/MOq;->A0J:Ljava/lang/String;
+    05f2..05f6  iput-object  v0, v1, LX/MOv;->A0e:Ljava/lang/String;
+    05f6..05f8  goto  +0x8
+    05f8..05fc  new-instance  v3, LX/Mtp;
+    05fc..0602  invoke-direct  {v3, v2, v4}, LX/Mtp;-><init>(LX/08Y;LX/Nb8;)V
+    0602..0606  goto/16  -0x87
+    0606..060a  const/16  v0, #0x22
+    060a..060c  const/4  v10, #0x7
+    060c..0610  if-eqz  v5, +0x4f
+    0610..0614  if-eq  v5, v0, +0x4d
+    0614..061a  invoke-static  {v3}, LX/Klq;->A0X(LX/00p;)LX/MOv;
+    061a..061c  move-result-object  v1
+    061c..0622  invoke-static/range  {v39..v39}, LX/K2k;->A00(Ljava/net/URL;)Ljava/lang/String;
+    0622..0624  move-result-object  v0
+    0624..0628  iput-object  v0, v1, LX/MOv;->A0f:Ljava/lang/String;
+    0628..062c  if-ne  v5, v10, +0x3
+    062c..062e  goto  +0x7
+    062e..0632  const/16  v0, #0x20
+    0632..0636  if-eq  v5, v0, +0x9
+    0636..0638  const/4  v1, #0x1
+    0638..063a  goto  +0x1c
+    063a..063e  sget-object  v0, LX/02X;->A01:Ljava/lang/Integer;
+    063e..0644  invoke-direct  {v4, v9, v0}, LX/LHb;->A0J(LX/LvR;Ljava/lang/Integer;)V
+    0644..064a  invoke-static  {v3}, LX/Klq;->A0X(LX/00p;)LX/MOv;
+    064a..064c  move-result-object  v1
+    064c..064e  const/4  v0, #0x2
+    064e..0652  if-ne  v5, v10, +0x3
+    0652..0654  const/4  v0, #0x1
+    0654..065a  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    065a..065c  move-result-object  v0
+    065c..0660  iput-object  v0, v1, LX/MOv;->A0S:Ljava/lang/Integer;
+    0660..0666  invoke-static  {v13}, LX/Klq;->A0V(LX/00p;)LX/MWP;
+    0666..0668  move-result-object  v0
+    0668..066a  const/4  v1, #0x1
+    066a..0670  invoke-virtual  {v0}, LX/MWP;->A0N()V
+    0670..0676  invoke-static  {v13}, LX/Klq;->A0V(LX/00p;)LX/MWP;
+    0676..0678  move-result-object  v2
+    0678..067a  monitor-enter
+    067a..067e  iget-boolean  v0, v2, LX/MWP;->A0A:Z
+    067e..0680  monitor-exit
+    0680..0684  if-eqz  v0, +0x3
+    0684..0686  goto  +0x3
+    0686..0688  const/4  v0, #0x0
+    0688..068a  goto  +0x7
+    068a..0690  invoke-static  {v8, v7}, LX/AES;->A0L(Ljava/io/File;Ljava/io/File;)V
+    0690..0692  const/4  v0, #0x0
+    0692..0696  iput-object  v0, v4, LX/LHb;->A02:LX/Nbk;
+    0696..069c  invoke-static  {v0, v5, v1}, LX/MXt;->A02(Ljava/lang/String;IZ)LX/MXt;
+    069c..069e  move-result-object  v2
+    069e..06a2  goto/16  +0x14a
+    06a2..06a4  move-exception  v1
+    06a4..06a6  monitor-exit
+    06a6..06aa  goto/16  +0x8b
+    06aa..06ac  const/4  v9, #0x0
+    06ac..06ae  const/4  v5, #0x1
+    06ae..06b4  invoke-static  {v13}, LX/Klq;->A0V(LX/00p;)LX/MWP;
+    06b4..06b6  move-result-object  v0
+    06b6..06bc  invoke-virtual  {v0}, LX/MWP;->A0c()Z
+    06bc..06be  move-result  v0
+    06be..06c2  if-eqz  v0, +0xf
+    06c2..06c8  invoke-static  {v4}, LX/LHb;->A06(LX/LHb;)LX/MX3;
+    06c8..06ca  move-result-object  v0
+    06ca..06d0  invoke-static  {v0}, LX/MX3;->A00(LX/MX3;)LX/MXt;
+    06d0..06d2  move-result-object  v2
+    06d2..06d8  invoke-static  {v2, v6, v8, v7}, LX/AES;->A0J(LX/MXt;LX/0Hi;Ljava/io/File;Ljava/io/File;)V
+    06d8..06dc  goto/16  +0x12d
+    06dc..06e2  invoke-static  {v3}, LX/Klq;->A0X(LX/00p;)LX/MOv;
+    06e2..06e4  move-result-object  v0
+    06e4..06ea  invoke-virtual  {v0}, LX/MOv;->A0B()V
+    06ea..06f0  invoke-interface  {v2}, LX/Nbk;->AiD()Ljava/lang/String;
+    06f0..06f2  move-result-object  v11
+    06f2..06f8  invoke-interface  {v2}, LX/Nbk;->AhA()LX/LvQ;
+    06f8..06fa  move-result-object  v1
+    06fa..06fe  if-eqz  v1, +0x42
+    06fe..0704  invoke-static  {v4}, LX/LHb;->A06(LX/LHb;)LX/MX3;
+    0704..0706  move-result-object  v0
+    0706..070c  invoke-static  {v1, v0, v7, v11}, LX/AES;->A01(LX/LvQ;LX/MX3;Ljava/io/File;Ljava/lang/String;)I
+    070c..070e  move-result  v0
+    070e..0712  if-eqz  v0, +0xa
+    0712..0718  invoke-static  {v9, v0, v5}, LX/MXt;->A02(Ljava/lang/String;IZ)LX/MXt;
+    0718..071a  move-result-object  v2
+    071a..0720  invoke-static  {v2, v6, v8, v7}, LX/AES;->A0J(LX/MXt;LX/0Hi;Ljava/io/File;Ljava/io/File;)V
+    0720..0722  goto  +0x26
+    0722..0728  invoke-interface  {v2}, LX/Nbk;->Ag2()Ljava/lang/String;
+    0728..072a  move-result-object  v1
+    072a..0730  invoke-static  {v4}, LX/LHb;->A06(LX/LHb;)LX/MX3;
+    0730..0732  move-result-object  v0
+    0732..0738  invoke-static  {v0, v1}, LX/AES;->A02(LX/MX3;Ljava/lang/String;)I
+    0738..073a  move-result  v0
+    073a..073e  if-eqz  v0, +0x10
+    073e..0742  if-eq  v0, v5, +0x7
+    0742..0748  invoke-static  {v9, v10, v5}, LX/MXt;->A02(Ljava/lang/String;IZ)LX/MXt;
+    0748..074a  move-result-object  v2
+    074a..074c  goto  -0x18
+    074c..0750  const/16  v0, #0x1f
+    0750..0756  invoke-static  {v9, v0, v5}, LX/MXt;->A02(Ljava/lang/String;IZ)LX/MXt;
+    0756..0758  move-result-object  v2
+    0758..075a  goto  -0x1f
+    075a..0760  invoke-static  {v4}, LX/LHb;->A06(LX/LHb;)LX/MX3;
+    0760..0762  move-result-object  v0
+    0762..0768  invoke-static  {v0}, LX/MX3;->A00(LX/MX3;)LX/MXt;
+    0768..076a  move-result-object  v2
+    076a..076c  goto  -0x28
+    076c..0772  invoke-static  {v3}, LX/Klq;->A0X(LX/00p;)LX/MOv;
+    0772..0774  move-result-object  v0
+    0774..077a  invoke-virtual  {v0}, LX/MOv;->A0A()V
+    077a..077e  goto/16  +0xdc
+    077e..0784  invoke-static  {v14}, LX/1Xl;->A0g(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+    0784..0786  move-result-object  v0
+    0786..0788  throw  v0
+    0788..078a  move-exception  v1
+    078a..078c  goto  +0x12
+    078c..0792  invoke-static  {v4}, LX/LHb;->A06(LX/LHb;)LX/MX3;
+    0792..0794  move-result-object  v0
+    0794..0798  iget-object  v0, v0, LX/MX3;->A0L:Ljava/lang/String;
+    0798..079e  invoke-static  {v0}, LX/MTl;->A01(Ljava/lang/String;)Ljava/lang/String;
+    079e..07a0  move-result-object  v1
+    07a0..07a4  const-string  v0, "StatusMediaDownload/MMS download failed due to message allowed into download encrypted without sufficient information to compute a download file; mediaHash="
+    07a4..07aa  invoke-static  {v0, v1}, LX/3q7;->A0K(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/IllegalStateException;
+    07aa..07ac  move-result-object  v1
+    07ac..07ae  goto  +0x8
+    07ae..07b4  invoke-static  {v3}, LX/Klq;->A0X(LX/00p;)LX/MOv;
+    07b4..07b6  move-result-object  v0
+    07b6..07bc  invoke-virtual  {v0}, LX/MOv;->A0A()V
+    07bc..07be  throw  v1
+    07be..07c4  invoke-static  {v4}, LX/LHb;->A0Q(LX/LHb;)Z
+    07c4..07c6  move-result  v0
+    07c6..07ca  if-eqz  v0, +0x17
+    07ca..07ce  iget-object  v0, v4, LX/LHb;->A1G:LX/00p;
+    07ce..07d4  invoke-static  {v0}, LX/Klq;->A0V(LX/00p;)LX/MWP;
+    07d4..07d6  move-result-object  v0
+    07d6..07dc  invoke-virtual  {v0}, LX/MWP;->A0b()Z
+    07dc..07de  move-result  v0
+    07de..07e2  if-eqz  v0, +0xb
+    07e2..07e8  invoke-static  {v4}, LX/LHb;->A04(LX/LHb;)LX/MOv;
+    07e8..07ea  move-result-object  v1
+    07ea..07ee  iget-object  v0, v1, LX/MOv;->A0S:Ljava/lang/Integer;
+    07ee..07f4  invoke-virtual  {v1, v0}, LX/MOv;->A0H(Ljava/lang/Integer;)V
+    07f4..07f8  iget-object  v12, v4, LX/LHb;->A1F:LX/00p;
+    07f8..07fe  invoke-static  {v12}, LX/Klq;->A0W(LX/00p;)LX/MOq;
+    07fe..0800  move-result-object  v1
+    0800..0804  const/16  v0, #0x8
+    0804..080a  invoke-static  {v1, v4, v0}, LX/MOq;->A00(LX/MOq;Ljava/lang/Object;I)V
+    080a..080e  iget-object  v0, v4, LX/LHb;->A0l:LX/08Y;
+    080e..0812  move-object/from16  v18, v0
+    0812..0816  iget-object  v0, v4, LX/LHb;->A0r:LX/08Z;
+    0816..081a  move-object/from16  v20, v0
+    081a..081e  iget-object  v0, v4, LX/LHb;->A10:LX/0Hi;
+    081e..0822  move-object/from16  v17, v0
+    0822..0826  iget-object  v0, v4, LX/LHb;->A1N:LX/0aa;
+    0826..082a  move-object/from16  v19, v0
+    082a..082e  iget-object  v15, v4, LX/LHb;->A0w:LX/0VM;
+    082e..0832  iget-object  v14, v4, LX/LHb;->A1V:LX/16s;
+    0832..0836  iget-object  v11, v4, LX/LHb;->A0x:LX/1wO;
+    0836..083a  iget-object  v9, v4, LX/LHb;->A11:LX/1wY;
+    083a..083e  iget-object  v8, v4, LX/LHb;->A1R:LX/9s2;
+    083e..0842  iget-object  v7, v4, LX/LHb;->A0t:Lcom/whatsapp/infra/media/WamediaManager;
+    0842..0846  iget-object  v0, v4, LX/LHb;->A0h:LX/05a;
+    0846..084c  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    084c..084e  move-result-object  v6
+    084e..0852  check-cast  v6, LX/0l4;
+    0852..0856  iget-object  v5, v4, LX/LHb;->A12:LX/1we;
+    0856..085a  iget-object  v0, v4, LX/LHb;->A0f:LX/05a;
+    085a..0860  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0860..0862  move-result-object  v3
+    0862..0866  check-cast  v3, LX/0VW;
+    0866..086a  iget-object  v2, v4, LX/LHb;->A0v:LX/0lO;
+    086a..0870  invoke-static  {v4}, LX/LHb;->A06(LX/LHb;)LX/MX3;
+    0870..0872  move-result-object  v36
+    0872..0878  invoke-static  {v4}, LX/LHb;->A04(LX/LHb;)LX/MOv;
+    0878..087a  move-result-object  v30
+    087a..087e  iget-object  v1, v4, LX/LHb;->A1O:LX/0Ze;
+    087e..0882  iget-object  v0, v4, LX/LHb;->A01:LX/M3l;
+    0882..0886  iget-object  v13, v4, LX/LHb;->A1G:LX/00p;
+    0886..088c  invoke-static  {v13}, LX/Klq;->A0V(LX/00p;)LX/MWP;
+    088c..088e  move-result-object  v25
+    088e..0894  invoke-static  {v12}, LX/Klq;->A0W(LX/00p;)LX/MOq;
+    0894..0896  move-result-object  v29
+    0896..089a  new-instance  v16, LX/MVv;
+    089a..089e  move-object/from16  v31, v8
+    089e..08a2  move-object/from16  v32, v17
+    08a2..08a6  move-object/from16  v33, v6
+    08a6..08aa  move-object/from16  v34, v9
+    08aa..08ae  move-object/from16  v35, v5
+    08ae..08b2  move-object/from16  v37, v4
+    08b2..08b6  move-object/from16  v38, v14
+    08b6..08ba  move-object/from16  v17, v18
+    08ba..08be  move-object/from16  v18, v10
+    08be..08c2  move-object/from16  v21, v1
+    08c2..08c6  move-object/from16  v22, v3
+    08c6..08ca  move-object/from16  v23, v7
+    08ca..08ce  move-object/from16  v24, v0
+    08ce..08d2  move-object/from16  v26, v2
+    08d2..08d6  move-object/from16  v27, v15
+    08d6..08da  move-object/from16  v28, v11
+    08da..08e0  invoke-direct/range  {v16..v39}, LX/MVv;-><init>(LX/08Y;LX/0GO;LX/0aa;LX/08Z;LX/0Ze;LX/0VW;Lcom/whatsapp/infra/media/WamediaManager;LX/M3l;LX/MWP;LX/0lO;LX/0VM;LX/1wO;LX/MOq;LX/MOv;LX/9s2;LX/0Hi;LX/0l4;LX/1wY;LX/1we;LX/MX3;LX/NgU;LX/16s;Ljava/net/URL;)V
+    08e0..08e6  invoke-static  {v4}, LX/MPf;->A02(LX/NaG;)Z
+    08e6..08e8  move-result  v10
+    08e8..08ea  const/4  v0, #0x0
+    08ea..08f0  invoke-static  {v4}, LX/LHb;->A00(LX/LHb;)LX/K1R;
+    08f0..08f2  move-result-object  v7
+    08f2..08f6  move-object/from16  v8, v41
+    08f6..08fa  move-object/from16  v5, v16
+    08fa..08fe  move-object/from16  v6, v40
+    08fe..0902  move-object/from16  v9, v39
+    0902..0908  invoke-virtual/range  {v5..v10}, LX/MVv;->A04(LX/M3d;LX/K1R;Ljava/io/File;Ljava/net/URL;Z)LX/MXt;
+    0908..090a  move-result-object  v2
+    090a..090e  if-eqz  v10, +0x14
+    090e..0914  invoke-virtual  {v4, v0}, LX/LHb;->CUO(I)V
+    0914..091a  invoke-static  {v4}, LX/MPf;->A02(LX/NaG;)Z
+    091a..091c  move-result  v0
+    091c..0920  if-nez  v0, +0xb
+    0920..0926  invoke-static  {v4}, LX/LHb;->A00(LX/LHb;)LX/K1R;
+    0926..0928  move-result-object  v7
+    0928..092a  const/4  v10, #0x0
+    092a..0930  invoke-virtual/range  {v5..v10}, LX/MVv;->A04(LX/M3d;LX/K1R;Ljava/io/File;Ljava/net/URL;Z)LX/MXt;
+    0930..0932  move-result-object  v2
+    0932..0938  invoke-static  {}, Landroid/net/TrafficStats;->clearThreadStatsTag()V
+    0938..093a  return-object  v2
+    093a..093c  move-exception  v0
+    093c..0942  invoke-static  {}, Landroid/net/TrafficStats;->clearThreadStatsTag()V
+    0942..0944  throw  v0
+    # exception table: 15 try range(s)
+    # catch <all> code_units 000b..00bf -> 049d
+    # catch <all> code_units 00bf..00eb -> 0131
+    # catch Ljava/lang/IllegalArgumentException; code_units 00eb..00ee -> 010a
+    # catch <all> code_units 00eb..00ee -> 0131
+    # catch <all> code_units 00ee..0128 -> 0131
+    # catch <all> code_units 0128..0164 -> 049d
+    # catch Ljava/io/IOException; code_units 0164..0183 -> 0183
+    # catch <all> code_units 0164..0183 -> 049d
+    # catch <all> code_units 0183..033d -> 049d
+    # catch <all> code_units 033d..033f -> 0351
+    # catch <all> code_units 033f..0351 -> 049d
+    # catch <all> code_units 0352..0357 -> 0351
+    # catch <all> code_units 0357..0375 -> 049d
+    # catch <all> code_units 0375..03b6 -> 03c4
+    # catch <all> code_units 03b6..03bf -> 049d
+    # catch <all> code_units 03bf..03c4 -> 03c4
+    # catch <all> code_units 03c6..0499 -> 049d
+.end method
