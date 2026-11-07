@@ -9535,3 +9535,8 @@ Local public upload eligibility omission corrected at shared entry, including ca
   generation. New optional authority digest closes identity changes for new rows
   and operation reservation/promotion; legacy rows are not backfilled. See
   [upload ownership](media-network-outcomes.md#upload-identity-authority-beyond-phone-and-generation).
+
+- Confirmed Rust source gap at `1ad0451f`: outgoing_media omitted upload owner
+  checks when bridging saved uploads into references/payloads. Shared owner
+  validation and transactional creation fencing added, with offline reopen
+  regression. See [bridge admission](media-network-outcomes.md#uploaded-media-bridge-account-admission).

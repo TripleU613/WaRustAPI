@@ -1,4 +1,11 @@
 {
+  "x-outgoing-upload-bridge-account-admission": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "evidence": "docs/protocol/media-network-outcomes.md#uploaded-media-bridge-account-admission",
+    "behavior": "Uploaded-media bridge validates current account against saved upload owner on payload/reference reads and transactionally fences reference creation. Legacy provenance remains unknown; no automatic upload/send."
+  },
   "x-media-upload-identity-authority": {
     "x-cli": false,
     "x-transport": true,

@@ -10557,3 +10557,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   closing same-phone/generation JID and Signal identity changes at reservation,
   cached-owner validation and final promotion. Legacy identity provenance stays
   unknown. Offline rollback regressions extended; no live upload performed.
+
+- Outgoing uploaded-media bridge now validates saved upload ownership during
+  payload reads/reference resolution and rechecks operation owner transactionally
+  at reference creation. Public/message-bound offline reopen regressions cover
+  identity/logout changes. Legacy provenance remains unknown; no live operation.

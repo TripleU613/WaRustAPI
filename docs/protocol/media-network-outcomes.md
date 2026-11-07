@@ -1943,3 +1943,33 @@ change at promotion. They retain exact checkpoint/journal rollback and reopen
 checks. The observation-only timestamp control remains admitted. A separate
 regression checks rejection of a new saved digest after identity change, legacy
 no-backfill behavior and malformed digest refusal. No live POST is performed.
+
+## Uploaded-media bridge account admission
+
+**Confirmed Rust source defect, corrected offline.** At baseline `1ad0451f`,
+`outgoing_media` verified confirmed-upload status, recipient/content hashes and
+sealed reference integrity but did not apply the saved upload owner. Direct
+bridge reference creation/resolution could therefore reuse an identity-bound
+upload after same-store account change, bypassing upload preparation's owner
+check. This is a local adoption defect, not a new APK field or observed ban cause.
+
+Both public content-key uploads and message-bound uploads now load the upload
+row and current account in one read transaction and apply the shared upload-owner
+validator. New identity-bound rows compare full authority; older bound rows keep
+the existing phone/generation policy; fully unbound historical rows keep their
+explicit unknown-provenance compatibility policy. Reads do not assign owners.
+Missing accounts and malformed bound owners refuse.
+
+Reference creation captures the operation account fingerprint before loading the
+payload, then checks it and the current upload owner in the same write transaction
+that installs/reuses its sealed reference. Resolution also runs upload-owner
+admission before returning payload. No upload, send or replay is initiated here.
+Read validation is not a lease held through a later network send; existing send
+reservation checks and final caller lifetimes remain separate boundaries.
+
+The offline regression creates public and message references under an original
+account, changes JID/Signal registration ID/registration, reopens the encrypted
+store and checks both creation/reuse and resolution. Changed owners refuse with
+unchanged checkpoint rows and journal head; a same-owner control succeeds. The
+write-transaction operation-owner check is also exercised. No network request
+or live account operation occurs.

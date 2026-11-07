@@ -622,6 +622,21 @@ fn check_upload_owner(saved: &serde_json::Value, expected: &UploadOwner) -> Resu
     }
 }
 
+// Reused by the outgoing bridge; an uploaded row is not account authority.
+pub(super) fn check_saved_upload_owner(
+    saved: &serde_json::Value,
+    generation: crate::model::ids::AccountGeneration,
+    account: Option<&crate::session::AccountRecord>,
+) -> Result<()> {
+    if saved.get("upload_owner_version").is_none() && saved.get("upload_owner").is_none() {
+        return Ok(()); // Preserve explicit legacy unknown-provenance policy.
+    }
+    check_upload_owner(
+        saved,
+        &upload_owner(account.ok_or(Error::NotRegistered)?, generation)?,
+    )
+}
+
 fn replace_upload_state_in(
     tx: &mut crate::store::WriteTx<'_>,
     key: &str,

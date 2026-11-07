@@ -52,6 +52,35 @@ struct UploadBinding {
     payload_hash: [u8; 32],
 }
 
+fn operation_owner(store: &ProtocolStore) -> Result<[u8; 32]> {
+    store.read(|tx| {
+        let account = crate::session::AccountRecord::load(tx)?;
+        super::account_authority::fingerprint(tx.generation(), account.as_ref())
+    })
+}
+fn owned_upload(store: &ProtocolStore, key: &str) -> Result<serde_json::Value> {
+    store.read(|tx| {
+        let saved = tx
+            .get_json(Table::Checkpoints, key.as_bytes(), 1)?
+            .ok_or_else(bad)?;
+        let account = crate::session::AccountRecord::load(tx)?;
+        super::image_upload::check_saved_upload_owner(&saved, tx.generation(), account.as_ref())?;
+        Ok(saved)
+    })
+}
+fn check_reference_owner_in(
+    tx: &crate::store::WriteTx<'_>,
+    owner: [u8; 32],
+    key: &str,
+) -> Result<()> {
+    super::media::check_download_owner_in(tx, owner)?;
+    let saved = tx
+        .get_json(Table::Checkpoints, key.as_bytes(), 1)?
+        .ok_or_else(bad)?;
+    let account = crate::session::AccountRecord::load_in_write(tx)?;
+    super::image_upload::check_saved_upload_owner(&saved, tx.generation(), account.as_ref())
+}
+
 fn public_uploaded(
     store: &ProtocolStore,
     key: &str,
@@ -61,9 +90,7 @@ fn public_uploaded(
     if suffix.len() != 64 || !suffix.bytes().all(|b| b.is_ascii_hexdigit()) {
         return Err(bad());
     }
-    let mut saved: serde_json::Value = store
-        .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))?
-        .ok_or_else(bad)?;
+    let mut saved = owned_upload(store, key)?;
     let hash = saved["hash"].as_str().ok_or_else(bad)?;
     if saved["status"] != "uploaded"
         || saved["to"] != ""
@@ -89,9 +116,11 @@ fn public_uploaded(
 #[cfg(any(test, feature = "comparison-client"))]
 pub(crate) fn upload_reference(store: &ProtocolStore, key: &str) -> Result<MediaReference> {
     use sha2::{Digest, Sha256};
+    let owner = operation_owner(store)?;
     let (payload, kind, length) = public_uploaded(store, key)?;
     let checkpoint = format!("{key}:reference");
     store.write(|tx| {
+        check_reference_owner_in(tx, owner, key)?;
         if let Some(reference) = tx.get_json(Table::Checkpoints, checkpoint.as_bytes(), 1)? {
             // No nested store read/write: verify the saved envelope against this
             // confirmed upload directly while holding the transaction.
@@ -169,15 +198,7 @@ fn uploaded(
     {
         return Err(bad());
     }
-    let saved: serde_json::Value = store
-        .read(|tx| {
-            tx.get_json(
-                Table::Checkpoints,
-                format!("message:{}:upload", id.as_str()).as_bytes(),
-                1,
-            )
-        })?
-        .ok_or_else(bad)?;
+    let saved = owned_upload(store, &format!("message:{}:upload", id.as_str()))?;
     let to = saved["to"].as_str().ok_or_else(bad)?;
     // A group upload is bound to its chat, not an empty direct `to`. Never
     // interpret the same numeric user in another namespace as the recipient.
@@ -224,6 +245,7 @@ pub fn reference(
             "request already belongs to a lab send; no duplicate transmission",
         ));
     }
+    let owner = operation_owner(store)?;
     let (payload, kind) = uploaded(store, id, peer)?;
     let old: Option<MediaReference> =
         store.read(|tx| tx.get_json(Table::Checkpoints, reference_key(id).as_bytes(), 1))?;
@@ -240,6 +262,7 @@ pub fn reference(
         length: None,
     };
     store.write(|tx| {
+        check_reference_owner_in(tx, owner, &format!("message:{}:upload", id.as_str()))?;
         if tx
             .get(Table::Checkpoints, reference_key(id).as_bytes(), 1)?
             .is_some()
@@ -288,6 +311,96 @@ mod tests {
         model::ids::AccountId,
         store::{MasterKey, OpenOptions, StaticKeySource},
     };
+    #[test]
+    fn uploaded_bridge_rechecks_identity_for_references_and_resolution_after_reopen() {
+        use crate::session::{AccountRecord, RegistrationStatus};
+        use sha2::{Digest, Sha256};
+        for change in ["same", "jid", "registration-id", "logout"] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("bridge-owner.redb");
+            let open = |create| {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: AccountId::new("test").unwrap(),
+                    create,
+                    key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                        [8; 32],
+                    ))),
+                })
+                .unwrap()
+            };
+            let store = open(true);
+            let config: crate::registration::request::LabRegistrationConfig =
+                serde_json::from_str(crate::registration::request::TEMPLATE_JSON).unwrap();
+            let original = AccountRecord {
+                generation: store.generation(),
+                phone: Some(config.phone),
+                registration: RegistrationStatus::Registered,
+                ..Default::default()
+            };
+            let authority =
+                super::super::account_authority::fingerprint(store.generation(), Some(&original))
+                    .unwrap();
+            let owner = serde_json::json!({"generation":store.generation(),"phone":original.phone,"authority":authority});
+            let id = ClientRequestId::new("owned-bridge").unwrap();
+            let peer = Jid::parse("15550000000@s.whatsapp.net").unwrap();
+            let hash = "ptt:synthetic-owned";
+            let public_key = format!(
+                "media-upload:{}",
+                hex::encode(Sha256::digest(hash.as_bytes()))
+            );
+            store.write(|tx| { original.save(tx)?;
+                tx.put_json(Table::Checkpoints,b"message:owned-bridge:upload",1,
+                    &serde_json::json!({"status":"uploaded","to":peer.user,"hash":hash,"protobuf":[66,0],"upload_owner_version":1,"upload_owner":owner}))?;
+                tx.put_json(Table::Checkpoints,public_key.as_bytes(),1,
+                    &serde_json::json!({"status":"uploaded","to":"","hash":hash,"protobuf":[66,0],"plaintext_len":2,"upload_owner_version":1,"upload_owner":owner}))
+            }).unwrap();
+            let message_reference = reference(&store, &id, &peer).unwrap();
+            let public_reference = upload_reference(&store, &public_key).unwrap();
+            let mut replacement = original.clone();
+            match change {
+                "jid" => replacement.own_jid = Some(Jid::parse("100@s.whatsapp.net").unwrap()),
+                "registration-id" => replacement.signal_registration_id = Some(42),
+                "logout" => replacement.registration = RegistrationStatus::Unregistered,
+                _ => {}
+            }
+            store.write(|tx| replacement.save(tx)).unwrap();
+            drop(store);
+            let store = open(false);
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let journal = store.journal_head().unwrap();
+            assert_eq!(reference(&store, &id, &peer).is_ok(), change == "same");
+            assert_eq!(
+                upload_reference(&store, &public_key).is_ok(),
+                change == "same"
+            );
+            assert_eq!(
+                resolve(&store, &id, &peer, &message_reference).is_ok(),
+                change == "same"
+            );
+            assert_eq!(
+                resolve(&store, &id, &peer, &public_reference).is_ok(),
+                change == "same"
+            );
+            assert_eq!(
+                store
+                    .write(|tx| check_reference_owner_in(tx, authority, &public_key))
+                    .is_ok(),
+                change == "same"
+            );
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                before
+            );
+            if change != "same" {
+                assert_eq!(store.journal_head().unwrap(), journal);
+            }
+        }
+    }
     #[test]
     fn references_are_stable_scoped_and_refuse_unknown_uploads() {
         let dir = tempfile::tempdir().unwrap();
