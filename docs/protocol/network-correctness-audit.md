@@ -6268,3 +6268,9 @@ evidence, not new APK behavior or proof of full group-send/network parity.
   refuses without returning token or mutation. Missing-account and staged-change
   reopen controls added; capture origin and discovery bound remain separate. See
   [recovery ownership](ban-appeal.md#historical-recovery-account-ownership).
+
+- Confirmed appeal recovery false absence beyond20,000 checkpoint rows at
+  `ac4ea629`. Discovery now pages256 physical rows to exhaustion in one snapshot,
+  preserving first-match order and account-authority checks. Public recovery/
+  encrypted-reopen regression covers20,005 unrelated rows plus malformed decoys
+  and unchanged captures. See [paged discovery](ban-appeal.md#exhaustive-paged-token-discovery).

@@ -214,3 +214,35 @@ tests,91 CLI tests and integration/xtask suites. Strict all-target/all-feature
 Clippy, CLI-reference regeneration, OpenAPI library-symbol test, APK coverage,
 formatting, whitespace and staged repository hygiene passed. No fresh APK trace
 or live account operation was performed for this local ownership correction.
+
+## Exhaustive paged token discovery
+
+2026-11-07. **Confirmed local discovery defect/fixed offline**, baseline
+`ac4ea629`: historical recovery read only the first20,000 physical checkpoint
+rows, including unrelated records. A failure capture later in lexicographic
+order therefore returned None even though its token remained preserved. The
+failing-before regression reproduced this after encrypted-store reopen with
+20,005 unrelated rows preceding eligible malformed-wire/JSON decoys and the
+actual captured failure. This is a local lookup defect, not a native/server
+requirement or evidence that a refusal should be retried.
+
+Discovery now uses scan_after with256-row pages to exhaustion in the same read
+snapshot. Its exclusive cursor advances by the final physical key of each page,
+so unrelated or malformed records cannot stop traversal. Existing candidate
+filters, first matching lexicographic selection, decoding, account authority
+capture and checked persistence remain. Memory retained for each checkpoint
+page is bounded; total scan work scales with stored history. No new capture
+provenance or most-recent-token selection policy is inferred.
+
+The regression invokes public recovery after reopen, checks the expected token
+and byte-identical complete synthetic checkpoint history, then reopens again
+and verifies resulting credential/account plus captures. Existing empty-store,
+missing-account and changed-account controls remain. The previously documented
+20,000-row discovery limitation is closed; historical account attribution, old
+credential precedence and submission binding remain separate unknowns. No
+account request, replay, identity reset or appeal submission is performed.
+
+Validation: full workspace/all-feature tests passed, including 1,417 library
+tests and the integration/CLI/xtask suites. Strict Clippy, CLI-reference
+regeneration, OpenAPI library-symbol test, APK coverage, formatting, whitespace
+and staged hygiene passed. No new APK claim or live operation.

@@ -10746,3 +10746,9 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   check; changed/missing account refuses without mutation or token return.
   Reopen controls added. Historical provenance/discovery bound remain separate;
   no live request. See [recovery ownership](docs/protocol/ban-appeal.md#historical-recovery-account-ownership).
+
+- Historical appeal-token discovery now pages the complete checkpoint snapshot
+  instead of silently stopping at20,000 rows. Reopen regression reproduces the
+  former false absence and preserves all captured history. Account binding and
+  no-replay policy unchanged; no live operation. See
+  [paged recovery](docs/protocol/ban-appeal.md#exhaustive-paged-token-discovery).

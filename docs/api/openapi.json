@@ -20061,5 +20061,15 @@
     ],
     "description": "Historical appeal token recovery captures existing account authority with candidate discovery and rechecks inside credential write. Missing account returns NotRegistered; changed authority returns fixed redacted InvalidInput(ban_appeal). Neither mutates account/capture state or returns token. Empty no-capture store remains None. Existing first-token/capacity/discovery bounds unchanged; historical capture provenance and submission ownership unproven. No HTTP route, appeal submission or live operation added.",
     "evidence": "docs/protocol/ban-appeal.md#historical-recovery-account-ownership"
+  },
+  "x-appeal-recovery-paged-discovery": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [
+      "whatsapp_api::transport::ban_appeal::recover_appeal_token_from_captures"
+    ],
+    "description": "Historical appeal-token discovery exhausts the same checkpoint read snapshot using 256-row exclusive-cursor pages. Unrelated history and malformed capture decoys no longer cause false absence at a 20000-row cutoff. Existing first lexicographic match, decoding, account continuity and persistence policies remain; no latest-token/provenance claim, route, replay, appeal submission or live validation added.",
+    "evidence": "docs/protocol/ban-appeal.md#exhaustive-paged-token-discovery"
   }
 }

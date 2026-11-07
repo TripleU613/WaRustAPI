@@ -118,56 +118,61 @@ struct CapturedAppealToken {
 fn find_captured_appeal_token(store: &ProtocolStore) -> Result<Option<CapturedAppealToken>> {
     use crate::binary::unpack_frame_payload;
     store.read(|tx| {
-        // 256 rows was a bound set when the only source was a handful of
-        // registration captures; a live account accumulates thousands, and the
-        // one row holding the token is not necessarily among the first few.
-        let captures = tx.scan(Table::Checkpoints, 1, 20_000)?;
         let limits = crate::profile::Limits::default();
-
-        for (key, value) in captures {
-            // `inbound:sha256:` is the registration-era capture prefix.
-            // `login-result:` is the preserved primary-login result, which is
-            // where a transport refusal's `<failure>` — and its appeal token —
-            // is kept. A refusal cannot be replayed to fetch the token again, so
-            // both sources have to be searched.
-            if !key.starts_with(b"inbound:sha256:")
-                && !key.starts_with(b"login-result:")
-                && !key.starts_with(b"inbound:")
-            {
-                continue;
+        let mut cursor = None;
+        // Page the same read snapshot to exhaustion: unrelated checkpoints must
+        // not turn a retained refusal token into a false absence result.
+        loop {
+            let captures = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+            if captures.is_empty() {
+                break;
             }
+            cursor = captures.last().map(|(key, _)| key.clone());
+            for (key, value) in captures {
+                // `inbound:sha256:` is the registration-era capture prefix.
+                // `login-result:` is the preserved primary-login result, which is
+                // where a transport refusal's `<failure>` — and its appeal token —
+                // is kept. A refusal cannot be replayed to fetch the token again, so
+                // both sources have to be searched.
+                if !key.starts_with(b"inbound:sha256:")
+                    && !key.starts_with(b"login-result:")
+                    && !key.starts_with(b"inbound:")
+                {
+                    continue;
+                }
 
-            let wire = match serde_json::from_slice::<Vec<u8>>(&value) {
-                Ok(w) => w,
-                Err(_) => continue,
-            };
+                let wire = match serde_json::from_slice::<Vec<u8>>(&value) {
+                    Ok(w) => w,
+                    Err(_) => continue,
+                };
 
-            let payload = match unpack_frame_payload(&wire, &limits) {
-                Ok(p) => p,
-                Err(_) => continue,
-            };
+                let payload = match unpack_frame_payload(&wire, &limits) {
+                    Ok(p) => p,
+                    Err(_) => continue,
+                };
 
-            let node = match crate::binary::Decoder::new(
-                &payload,
-                crate::binary::TokenDictionary::comparison_2_26_37_71(),
-                &limits,
-            )
-            .decode_node()
-            {
-                Ok(n) => n,
-                Err(_) => continue,
-            };
+                let node = match crate::binary::Decoder::new(
+                    &payload,
+                    crate::binary::TokenDictionary::comparison_2_26_37_71(),
+                    &limits,
+                )
+                .decode_node()
+                {
+                    Ok(n) => n,
+                    Err(_) => continue,
+                };
 
-            if node.description == "failure"
-                && let Some(token) = node.get_attr("appeal_token").and_then(|v| v.as_text())
-            {
-                let account = AccountRecord::load(tx)?.ok_or(Error::NotRegistered)?;
-                let authority =
-                    super::account_authority::fingerprint(tx.generation(), Some(&account))?;
-                return Ok(Some(CapturedAppealToken {
-                    token: Zeroizing::new(token.as_bytes().to_vec()),
-                    authority,
-                }));
+                if node.description == "failure"
+                    && let Some(token) = node.get_attr("appeal_token").and_then(|v| v.as_text())
+                {
+                    let account = AccountRecord::load(tx)?.ok_or(Error::NotRegistered)?;
+                    let authority =
+                        super::account_authority::fingerprint(tx.generation(), Some(&account))?;
+                    return Ok(Some(CapturedAppealToken {
+                        token: Zeroizing::new(token.as_bytes().to_vec()),
+                        authority,
+                    }));
+                }
             }
         }
         Ok(None)
@@ -529,6 +534,84 @@ mod tests {
         let cred = saved_token.unwrap();
         assert_eq!(String::from_utf8_lossy(&cred.value), "test-appeal-token");
         assert_eq!(cred.source_step, Some("failure-capture".into()));
+    }
+
+    #[test]
+    fn recovery_finds_failure_beyond_twenty_thousand_rows_after_reopen() {
+        let temp = tempfile::TempDir::new().unwrap();
+        let path = temp.path().join("paged-recovery.redb");
+        let open = |create| {
+            ProtocolStore::open(OpenOptions {
+                path: path.clone(),
+                account_id: AccountId::new("test").unwrap(),
+                key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9u8; 32]))),
+                create,
+            })
+            .unwrap()
+        };
+        let store = open(true);
+        store
+            .write(|tx| {
+                AccountRecord::default().save(tx)?;
+                for index in 0..20_005 {
+                    tx.put_json(
+                        Table::Checkpoints,
+                        format!("before:{index:05}").as_bytes(),
+                        1,
+                        &false,
+                    )?;
+                }
+                Ok(())
+            })
+            .unwrap();
+        crate::transport::inbox::preserve(
+            &store,
+            &Node::new("failure")
+                .attr("reason", "403")
+                .attr("appeal_token", "paged-private-token"),
+        )
+        .unwrap();
+        // Decoy eligible captures must not prevent traversal to the real failure.
+        store
+            .write(|tx| {
+                tx.put(Table::Checkpoints, b"inbound:000-invalid-json", 1, b"{")?;
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"inbound:001-invalid-wire",
+                    1,
+                    &vec![255u8],
+                )
+            })
+            .unwrap();
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 30_000))
+            .unwrap();
+        drop(store);
+        let store = open(false);
+        let token = recover_appeal_token_from_captures(&store).unwrap();
+        assert_eq!(
+            token.as_deref().map(|v| v.as_str()),
+            Some("paged-private-token")
+        );
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 30_000))
+                .unwrap(),
+            before
+        );
+        let account = store.read(|tx| tx.scan(Table::Account, 1, 10)).unwrap();
+        drop(store);
+        let store = open(false);
+        assert_eq!(
+            store.read(|tx| tx.scan(Table::Account, 1, 10)).unwrap(),
+            account
+        );
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 30_000))
+                .unwrap(),
+            before
+        );
     }
 
     #[test]
