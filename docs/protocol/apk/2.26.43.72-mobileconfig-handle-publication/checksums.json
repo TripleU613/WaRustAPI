@@ -1,11 +1,35 @@
 {
   "README.md": {
-    "bytes": 7299,
-    "sha256": "62d3f3cc5050874114eebda222f32894d63f7d5a85c760c298061bf4a82f6777"
+    "bytes": 7525,
+    "sha256": "1c7bb3aacf0be9aef3b451c9b93701f39c9fe78e03155e56a802ad37e7b413d8"
   },
   "candidate-wrapper.txt": {
     "bytes": 1941,
     "sha256": "3598d500f509613c6a56ddc044caeb6b5e942744cd5e785735e879dde313fb37"
+  },
+  "consumer-body.txt": {
+    "bytes": 1665,
+    "sha256": "e4037bae78753b69f5e03ba4d457ab44e0ab6e479ed5ca4cee0aee0b7d4e989a"
+  },
+  "consumer-hash-window.txt": {
+    "bytes": 1264,
+    "sha256": "72b2f2114d95ad9c6f9083ba98b5f778bfa01c1cd1b40dca8b9b5b5ada554283"
+  },
+  "consumer-helpers.txt": {
+    "bytes": 484,
+    "sha256": "e410cb9cb819cf94b1c8318ba730495433c96fee3c2508023d1173d69a11700f"
+  },
+  "consumer-prologue-helper.txt": {
+    "bytes": 247,
+    "sha256": "df1b77cb63fc85838b41d66565c725bf87e53e1a13f23f935874d07e10d81a93"
+  },
+  "consumer-slots.txt": {
+    "bytes": 332,
+    "sha256": "1cb11084fb14d6e103d9a6a558831c37095881826e6df0a7bbc28e18d2b6ed61"
+  },
+  "consumer.md": {
+    "bytes": 2157,
+    "sha256": "287950d18fb9dfe93e08e49c2a8fcf1b3c983ea8c828283ede78848a30fad879"
   },
   "context-caller-one.txt": {
     "bytes": 711,
@@ -70,6 +94,10 @@
   "publication.json": {
     "bytes": 1772,
     "sha256": "6ec1767e1b38091042d6e4fff410bf0c860e6fe491ccd376de9526451bd4c04c"
+  },
+  "rea-consumer.json": {
+    "bytes": 6961,
+    "sha256": "f132a147f2118fb8a0c56b09a4dcb5c40ca4578b514e0b837e65d59c6ad330b7"
   },
   "rea-followup.json": {
     "bytes": 9557,

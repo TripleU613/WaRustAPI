@@ -5813,3 +5813,8 @@ No live operation or automatic retry/reset.
   mode/strings through receiver virtual+0x50; reader/status are not arguments.
   Concrete receiver effects and activation remain unknown. See
   [retained trace](apk/2.26.43.72-mobileconfig-handle-publication/followup.md).
+
+- Confirmed selected APK 2.26.43.72 StorageManager slot+0x58 (`0x83dc8`)
+  consumes the shared snapshot but ignores its status byte, checking availability
+  and a nonnull-root probe. Full acceptance remains unknown. See
+  [consumer evidence](apk/2.26.43.72-mobileconfig-handle-publication/consumer.md).

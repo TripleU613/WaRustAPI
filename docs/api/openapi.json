@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-snapshot-consumer-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-handle-publication/consumer.md",
+    "finding": "Selected StorageManager slot+0x58 ignores snapshot status and checks availability plus root-pointer probe; full acceptance unknown."
+  },
   "x-mobileconfig-post-publication-followup": {
     "x-cli": false,
     "x-transport": false,

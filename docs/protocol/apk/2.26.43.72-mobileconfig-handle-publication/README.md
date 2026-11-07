@@ -127,3 +127,7 @@ memory observations.
 producers, downstream owner/observer admission, runtime timing/exception behavior,
 durable active configuration and retry/account ownership. No Rust runtime or
 saved account state changed.
+
+The [selected consumer predicate](consumer.md) now traces StorageManager slot
++0x58: RequestData availability, snapshot, nonnull handle and root probe. It
+does not read the snapshot status; other consumers remain unresolved.
