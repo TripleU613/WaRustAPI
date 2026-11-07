@@ -1,0 +1,26 @@
+{
+  "README.md": {
+    "bytes": 4944,
+    "sha256": "d2bf40c1c0474c3b954c888f459497a25d33881c3d20f087fc0aa4a5dfc57d0b"
+  },
+  "alternate-callback-register.txt": {
+    "bytes": 3420,
+    "sha256": "b5e4ea502916c5ebaab717b1b286129feed8a2e64a2114354ab26abc9800f511"
+  },
+  "callback-register.txt": {
+    "bytes": 3420,
+    "sha256": "77e00a8bdd26d93c4d6f8c29561149da59f6c962becb07dc8f74e3fb3c60ed1d"
+  },
+  "callback-wrapper.txt": {
+    "bytes": 2826,
+    "sha256": "8dc8819ee9672d92648767a2b6c55b8381d2aa713fbceb4669904247a1e84a84"
+  },
+  "send-register.txt": {
+    "bytes": 1567,
+    "sha256": "a30c11a369d8e45a318fcc5015d3ad4a01888d8342b223d07c9537da2e996cc9"
+  },
+  "stanza-key-normalization.txt": {
+    "bytes": 2292,
+    "sha256": "2f6edfd0a23db41930c28f6296426a37fba049c334d95e85e9550cb2347dcad1"
+  }
+}

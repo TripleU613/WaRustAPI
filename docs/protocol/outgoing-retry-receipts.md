@@ -508,3 +508,12 @@ stored bytes and taking exactly the next32. The common ID helper corroborates
 existing low24 big-endian research. [Method traces and boundaries](apk/2.26.43.72-retry-key-envelope-bytes/README.md).
 This resolves a constructor ambiguity in the earlier retry distribution bundle,
 not the full signing/generation/policy/lifecycle integration. No retry enabled.
+
+## Retry job callback ownership is not the bulk-query map
+
+**Confirmed selected static:** retry job0Sf.A0B registers a fresh FfK in0Th.A04
+before dispatch, then the job waits on untimed get. Wrapper mode0 forwards null
+on success; duplicate registration reports then replaces on normal continuation.
+The previously traced bulk disconnect method clears A05, so it does not prove
+retry-receipt cleanup. [Exact methods, normalization and remaining consumers](apk/2.26.43.72-retry-receipt-callback-handoff/README.md).
+Rust durable no-replay ownership remains unchanged; no automatic retry added.

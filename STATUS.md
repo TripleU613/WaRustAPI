@@ -10656,3 +10656,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   constructors and classic signed values to type0x05/32-byte decode. Preserved
   DEX methods, checksums and REA provider failure; carried-key policy/signing/
   durable publication integration remain incomplete. Research only, no live request.
+
+- Pinned retry receipt job callback handoff now binds register-before-dispatch,
+  mode0/null completion and untimed wait to A04; bulk disconnect cleanup covers
+  separate A05. A04 consumers/native recovery remain unresolved. Retained compact
+  DEX evidence; research only, no runtime change or live operation.

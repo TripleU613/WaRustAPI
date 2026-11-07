@@ -6152,3 +6152,10 @@ evidence, not new APK behavior or proof of full group-send/network parity.
   at stale Java21 path; complete failure retained, method text from repository
   DEX inspector. No runtime behavior or live request added. See
   [retry byte binding](apk/2.26.43.72-retry-key-envelope-bytes/README.md).
+
+- Confirmed pinned retry job callback handoff:0Sf.A0B registers FfK through0Th.A01
+  into in-memory A04 before dispatch; selected wrapper mode0 completes with null,
+  and job waits on untimed get. Duplicate registration reports then replaces on
+  normal continuation. Bulk disconnect evidence covers A05, not this A04 map;
+  retry ACK/removal/failure consumers remain unresolved. Research only. See
+  [retry callback handoff](apk/2.26.43.72-retry-receipt-callback-handoff/README.md).
