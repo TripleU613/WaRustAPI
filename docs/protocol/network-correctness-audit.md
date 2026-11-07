@@ -6124,3 +6124,10 @@ evidence, not new APK behavior or proof of full group-send/network parity.
   original members; duplicate ACK/reservation causes no replay or mutation.
   No runtime policy or live request changed. See
   [physical-page ACK verification](read-receipt-batching.md#physical-page-ack-settlement-after-restart).
+
+- Concrete HTTP source inventory at `86cde074` records five reqwest send sites,
+  their response/persistence boundaries, evidence links and remaining unknowns.
+  Confirmed upload response loop ignored smaller configured budgets; streamed
+  accumulation now honors min(configured, 64 KiB), with offline boundary tests.
+  Selected receipt parser cross-check found no new mismatch, without claiming
+  exhaustive parity. See [HTTP send map](http-send-audit-map.md).

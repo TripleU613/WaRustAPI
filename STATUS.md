@@ -10636,3 +10636,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   read queue/reservation with 300 intents, direct/group success/refusal controls,
   original members beyond first 256 physical rows, exact unrelated-row retention
   and duplicate/no-replay checks. No runtime policy or live operation changed.
+
+- Recorded the five concrete HTTP send sites and their evidence/unknowns in the
+  HTTP send audit map. Upload responses now honor smaller configured byte budgets
+  under the unchanged 64 KiB ceiling, with accumulator boundary regressions.
+  No live request, request-construction change or full-parity claim.

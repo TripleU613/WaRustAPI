@@ -495,6 +495,19 @@ fn upload_url_kind(
     Ok(url)
 }
 
+// Keep the upload-specific hard ceiling while honoring a tighter operator budget.
+// Refusal must not promote a partial response or release its uncertain reservation.
+fn append_upload_response(body: &mut Vec<u8>, chunk: &[u8], configured_limit: usize) -> Result<()> {
+    let limit = configured_limit.min(65536);
+    if body.len().saturating_add(chunk.len()) > limit {
+        return Err(invalid(
+            "upload response exceeds local bound; outcome unknown",
+        ));
+    }
+    body.extend_from_slice(chunk);
+    Ok(())
+}
+
 pub(super) fn client(config: &LabRegistrationConfig) -> Result<reqwest::Client> {
     let roots = rustls::RootCertStore::from_iter(webpki_roots::TLS_SERVER_ROOTS.iter().cloned());
     let tls = rustls::ClientConfig::builder_with_provider(Arc::new(
@@ -1032,12 +1045,7 @@ async fn upload_prepared(
         .await
         .map_err(|_| invalid("upload response interrupted; outcome unknown"))?
     {
-        if body.len() + chunk.len() > 65536 {
-            return Err(invalid(
-                "upload response exceeds local bound; outcome unknown",
-            ));
-        }
-        body.extend_from_slice(&chunk);
+        append_upload_response(&mut body, &chunk, config.transport.max_response_bytes)?;
     }
     capture_upload_response(store, &key, &saved, status, Some(&body))?;
     saved["http_status"] = status.into();
@@ -1180,6 +1188,19 @@ mod tests {
         saved["upload_owner"]["authority"] = serde_json::json!([1, 2]);
         assert!(check_upload_owner(&saved, &changed).is_err());
     }
+    #[test]
+    fn upload_response_stream_honors_configured_and_hard_byte_budgets() {
+        let mut body = Vec::new();
+        append_upload_response(&mut body, b"ab", 3).unwrap();
+        append_upload_response(&mut body, b"c", 3).unwrap();
+        assert!(append_upload_response(&mut body, b"d", 3).is_err());
+        assert_eq!(body, b"abc");
+        let mut body = vec![0; 65535];
+        append_upload_response(&mut body, &[0], usize::MAX).unwrap();
+        assert!(append_upload_response(&mut body, &[0], usize::MAX).is_err());
+        assert_eq!(body.len(), 65536);
+    }
+
     #[tokio::test]
     async fn missing_upload_user_agent_refuses_new_work_and_preserves_saved_outcomes() {
         use crate::session::{AccountRecord, RegistrationStatus};

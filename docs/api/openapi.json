@@ -1,4 +1,11 @@
 {
+  "x-http-send-map-upload-response-budget": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "evidence": "docs/protocol/http-send-audit-map.md",
+    "behavior": "Concrete HTTP send source inventory; media-upload response chunks now obey min(max_response_bytes, 64 KiB), without changing request construction or retry policy. Source coverage is not APK parity."
+  },
   "x-receipt-ack-physical-page-verification": {
     "x-cli": false,
     "x-transport": false,
