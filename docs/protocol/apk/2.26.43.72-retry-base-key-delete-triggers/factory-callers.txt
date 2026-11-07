@@ -1,0 +1,78 @@
+classes8.dex  Lcom/whatsapp/infra/push/WAFbnsPreloadReceiver;->onReceive(VLL)
+  invoke dex byte offset: 0x40d9fc
+classes8.dex  LX/DFU;->A01(VLLL)
+  invoke dex byte offset: 0x411026
+classes8.dex  LX/DFU;->A05(VLL)
+  invoke dex byte offset: 0x4111a2
+classes8.dex  LX/DGq;->Bmj(VL)
+  invoke dex byte offset: 0x4308de
+classes8.dex  Lcom/whatsapp/calling/ui/VoipActivityV2;->A0z(V)
+  invoke dex byte offset: 0x496a86
+classes8.dex  Lcom/whatsapp/calling/ui/VoipActivityV2;->A13(V)
+  invoke dex byte offset: 0x496c8a
+classes8.dex  Lcom/whatsapp/calling/ui/VoipActivityV2;->A1E(VL)
+  invoke dex byte offset: 0x49755c
+classes8.dex  Lcom/whatsapp/calling/ui/VoipActivityV2;->A1X(VLL)
+  invoke dex byte offset: 0x4985ea
+classes8.dex  LX/DmR;->A13(VL)
+  invoke dex byte offset: 0x4b5918
+classes8.dex  LX/Eco;->A00(VLL)
+  invoke dex byte offset: 0x5889d0
+classes8.dex  LX/EnM;->A00(VLLL)
+  invoke dex byte offset: 0x5c52ae
+classes8.dex  LX/FBG;->A08(VLLLLLLLLLLZZZZZ)
+  invoke dex byte offset: 0x70b880
+classes8.dex  LX/FBG;->A0A(VLL)
+  invoke dex byte offset: 0x70c730
+classes8.dex  LX/FBG;->A19(V)
+  invoke dex byte offset: 0x70fe3e
+classes8.dex  Lcom/whatsapp/calling/service/OutgoingSignalingHandler;->sendPendingRekeyRequest(VL)
+  invoke dex byte offset: 0x714f9e
+classes8.dex  LX/FBa;->Cnt(VLL)
+  invoke dex byte offset: 0x715c58
+classes8.dex  Lcom/whatsapp/calling/service/VoiceServiceEventCallback;->maybeShowWaitingRoomReminderNotification(V)
+  invoke dex byte offset: 0x725e94
+classes8.dex  Lcom/whatsapp/calling/service/VoiceServiceEventCallback;->callLinkStateChanged(VIL)
+  invoke dex byte offset: 0x71fe36
+classes8.dex  Lcom/whatsapp/calling/service/VoiceServiceEventCallback;->lambda$maybeShowWaitingRoomReminderNotification$1$com-whatsapp-calling-service-VoiceServiceEventCallback(VLL)
+  invoke dex byte offset: 0x72515c
+classes8.dex  Lcom/whatsapp/calling/service/VoiceServiceEventCallback;->lonelyStateTimeout(VI)
+  invoke dex byte offset: 0x725b1c
+classes8.dex  LX/FDP;->Bb6(VLL)
+  invoke dex byte offset: 0x728d2c
+classes8.dex  LX/FFZ;->BKh(LL)
+  invoke dex byte offset: 0x734ba8
+classes8.dex  LX/FJV;->accept(VL)
+  invoke dex byte offset: 0x752010
+classes8.dex  LX/FJb;->accept(VL)
+  invoke dex byte offset: 0x753018
+classes8.dex  LX/FUY;->CK4(VLL)
+  invoke dex byte offset: 0x7b6bf0
+classes8.dex  LX/FYB;->A0C(VLL)
+  invoke dex byte offset: 0x7d7732
+classes8.dex  LX/FcP;->run(V)
+  invoke dex byte offset: 0x7fc4a0
+classes8.dex  LX/FeO;->run(V)
+  invoke dex byte offset: 0x8207fc
+classes8.dex  LX/FeQ;->run(V)
+  invoke dex byte offset: 0x822f48
+classes8.dex  LX/FeR;->run(V)
+  invoke dex byte offset: 0x823bbc
+classes8.dex  LX/Feg;->run(V)
+  invoke dex byte offset: 0x834828
+classes8.dex  LX/Feo;->run(V)
+  invoke dex byte offset: 0x83ef5c
+classes8.dex  LX/Feo;->run(V)
+  invoke dex byte offset: 0x841516
+classes8.dex  LX/FkV;->invokeSuspend(LL)
+  invoke dex byte offset: 0x8835ba
+classes8.dex  LX/FkV;->invokeSuspend(LL)
+  invoke dex byte offset: 0x88369a
+classes8.dex  LX/Fm5;->invokeSuspend(LL)
+  invoke dex byte offset: 0x898bf0
+classes8.dex  LX/Fm5;->invokeSuspend(LL)
+  invoke dex byte offset: 0x898c82
+classes8.dex  LX/FmT;->invokeSuspend(LL)
+  invoke dex byte offset: 0x8b20c4
+classes8.dex  LX/Fn2;->invoke(LL)
+  invoke dex byte offset: 0x8bfe6e

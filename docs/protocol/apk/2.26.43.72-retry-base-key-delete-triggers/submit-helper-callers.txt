@@ -1,0 +1,14 @@
+classes8.dex  Lcom/whatsapp/calling/ui/VoipActivityV2;->onCreate(VL)
+  invoke dex byte offset: 0x49f1cc
+classes8.dex  LX/Eu4;->A01(VLL)
+  invoke dex byte offset: 0x5ec99c
+classes8.dex  LX/Euf;->A02(VLL)
+  invoke dex byte offset: 0x5f5c72
+classes8.dex  LX/F4Y;->onLocationChanged(VL)
+  invoke dex byte offset: 0x6e2da8
+classes8.dex  LX/FFU;->BKh(LL)
+  invoke dex byte offset: 0x732fb0
+classes8.dex  LX/FeA;->run(V)
+  invoke dex byte offset: 0x814970
+classes8.dex  LX/FgX;->invoke(LL)
+  invoke dex byte offset: 0x8676e0

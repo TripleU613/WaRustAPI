@@ -1,0 +1,154 @@
+
+# class: LX/Ens;
+# extends: Ljava/lang/Object;
+
+.method public A01(VL)  # .registers 24
+    # full signature: LX/Ens;->A01(LX/FvR;)V
+    0000..0002  const/4  v15, #0x0
+    0002..0006  move-object/from16  v12, v23
+    0006..000c  invoke-interface  {v12}, LX/FvR;->size()I
+    000c..000e  move-result  v4
+    000e..0014  invoke-static  {}, LX/1Xl;->A18()Ljava/util/ArrayList;
+    0014..0016  move-result-object  v6
+    0016..0018  const/4  v14, #0x0
+    0018..001c  const/16  v8, #0xfa
+    001c..0020  move-object/from16  v3, v22
+    0020..0024  if-ge  v14, v4, +0xce
+    0024..002a  invoke-interface  {v12, v14}, LX/FvR;->CRF(I)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    002a..002c  move-result-object  v9
+    002c..0030  if-eqz  v9, +0x18
+    0030..0034  iget-object  v0, v3, LX/Ens;->A03:LX/05a;
+    0034..003a  invoke-static  {v0}, LX/2L8;->A15(LX/05a;)LX/0Ws;
+    003a..003c  move-result-object  v1
+    003c..0040  iget-object  v0, v9, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    0040..0046  invoke-virtual  {v1, v0}, LX/0Ws;->A0H(Lcom/whatsapp/infra/core/jid/UserJid;)LX/0Dx;
+    0046..0048  move-result-object  v1
+    0048..004c  if-eqz  v1, +0xa
+    004c..0052  invoke-virtual  {v9}, Lcom/whatsapp/infra/core/jid/Jid;->getDevice()I
+    0052..0054  move-result  v0
+    0054..005a  invoke-static  {v1, v0}, LX/0Dn;->A04(LX/0Dx;I)LX/0EM;
+    005a..005c  move-result-object  v9
+    005c..0062  invoke-interface  {v12, v14}, LX/FvR;->CsZ(I)J
+    0062..0064  move-result-wide  v0
+    0064..006a  invoke-interface  {v12, v14}, LX/FvR;->Ba4(I)LX/1dW;
+    006a..006c  move-result-object  v7
+    006c..0070  iget-boolean  v2, v7, LX/1dW;->A02:Z
+    0070..0074  if-nez  v2, +0x31
+    0074..007a  invoke-interface  {v12}, LX/FvR;->CVa()Lcom/whatsapp/infra/core/jid/UserJid;
+    007a..007c  move-result-object  v5
+    007c..0080  iget-object  v2, v7, LX/1dW;->A00:LX/0DY;
+    0080..0086  invoke-static  {v2}, LX/0Dn;->A0h(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0086..0088  move-result  v2
+    0088..008c  if-eqz  v2, +0x28
+    008c..0090  iget-object  v2, v3, LX/Ens;->A04:LX/05a;
+    0090..0094  iget-object  v10, v2, LX/05a;->A00:LX/00x;
+    0094..009a  invoke-static  {v10, v5}, LX/6oj;->A1W(LX/00x;LX/0DY;)Z
+    009a..009c  move-result  v2
+    009c..00a0  if-eqz  v2, +0x1e
+    00a0..00a6  invoke-static  {v10}, LX/2L6;->A0o(LX/00x;)LX/09F;
+    00a6..00a8  move-result-object  v2
+    00a8..00ae  invoke-interface  {v2, v9}, LX/09F;->BWN(Lcom/whatsapp/infra/core/jid/DeviceJid;)Z
+    00ae..00b0  move-result  v2
+    00b0..00b4  if-eqz  v2, +0x14
+    00b4..00b8  iget-object  v2, v3, LX/Ens;->A09:LX/05a;
+    00b8..00be  invoke-static  {v2}, LX/6ok;->A0H(LX/05a;)LX/08Y;
+    00be..00c0  move-result-object  v10
+    00c0..00c6  const  v2, #0x9938
+    00c6..00cc  invoke-virtual  {v10, v2}, LX/00E;->A14(I)Z
+    00cc..00ce  move-result  v2
+    00ce..00d2  if-eqz  v2, +0x5
+    00d2..00d6  sget-object  v5, LX/0EG;->A00:LX/0EG;
+    00d6..00d8  goto  +0xb
+    00d8..00dc  iget-object  v2, v3, LX/Ens;->A03:LX/05a;
+    00dc..00e2  invoke-static  {v2}, LX/2L8;->A15(LX/05a;)LX/0Ws;
+    00e2..00e4  move-result-object  v2
+    00e4..00ea  invoke-virtual  {v2, v5}, LX/0Ws;->A0H(Lcom/whatsapp/infra/core/jid/UserJid;)LX/0Dx;
+    00ea..00ec  move-result-object  v5
+    00ec..00f0  if-eqz  v5, +0x53
+    00f0..00f4  const-wide/16  v10, #0x0
+    00f4..00f8  cmp-long  v2, v0, v10
+    00f8..00fc  if-lez  v2, +0x4d
+    00fc..0102  invoke-interface  {v12, v14}, LX/FvR;->Cqo(I)I
+    0102..0104  move-result  v19
+    0104..0108  sget-object  v2, LX/F2a;->A00:LX/F2a;
+    0108..010c  iget-object  v2, v7, LX/1dW;->A01:Ljava/lang/String;
+    010c..0112  invoke-static  {v2}, LX/F2a;->A01(Ljava/lang/String;)Ljava/lang/String;
+    0112..0114  move-result-object  v10
+    0114..0118  iget-object  v7, v7, LX/1dW;->A00:LX/0DY;
+    0118..011c  if-eqz  v7, +0x19
+    011c..0122  invoke-static  {v7}, LX/0Dn;->A0h(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0122..0124  move-result  v2
+    0124..0128  if-nez  v2, +0x15
+    0128..012e  invoke-static  {v7}, LX/0Dn;->A0a(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    012e..0130  move-result  v2
+    0130..0134  if-nez  v2, +0xf
+    0134..013a  invoke-static  {v7}, LX/0Dn;->A0l(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    013a..013c  move-result  v2
+    013c..0140  if-nez  v2, +0x9
+    0140..0144  const-string  v2, "StatusStateManager/getValidRemoteChatJid invalid remoteChatJid for FStatusKey, using StatusJid"
+    0144..014a  invoke-static  {v2}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    014a..014e  sget-object  v7, LX/2p4;->A00:LX/2p4;
+    014e..0152  new-instance  v11, LX/Dwc;
+    0152..0158  invoke-direct  {v11, v5, v7, v10}, LX/Dwc;-><init>(LX/0DY;LX/0DY;Ljava/lang/String;)V
+    0158..015c  new-instance  v2, LX/Eld;
+    015c..0160  move-wide/from16  v20, v0
+    0160..0164  move-object/from16  v17, v9
+    0164..0168  move-object/from16  v18, v11
+    0168..016c  move-object/from16  v16, v2
+    016c..0172  invoke-direct/range  {v16..v21}, LX/Eld;-><init>(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/Dwc;IJ)V
+    0172..0178  invoke-virtual  {v6, v2}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0178..017e  invoke-virtual  {v6}, Ljava/util/AbstractCollection;->size()I
+    017e..0180  move-result  v0
+    0180..0184  if-le  v0, v8, +0x1a
+    0184..018a  invoke-virtual  {v3, v6}, LX/Ens;->A02(Ljava/util/List;)V
+    018a..0190  invoke-virtual  {v6}, Ljava/util/AbstractCollection;->clear()V
+    0190..0192  goto  +0x12
+    0192..0198  invoke-static  {}, LX/1Xl;->A13()Ljava/lang/StringBuilder;
+    0198..019a  move-result-object  v5
+    019a..019e  const-string  v2, "StatusStateManager/onStatusMessageStateUpdate invalidtimestamp: key="
+    019e..01a4  invoke-virtual  {v5, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    01a4..01aa  invoke-virtual  {v5, v7}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    01aa..01ae  const-string  v2, ", timestamp="
+    01ae..01b4  invoke-static  {v2, v5, v0, v1}, LX/DBh;->A1L(Ljava/lang/String;Ljava/lang/StringBuilder;J)V
+    01b4..01b8  add-int/lit8  v14, v14, #0x1
+    01b8..01bc  goto/16  -0xd0
+    01bc..01c2  invoke-virtual  {v6}, Ljava/util/AbstractCollection;->size()I
+    01c2..01c4  move-result  v0
+    01c4..01c8  if-gt  v0, v8, +0x2a
+    01c8..01ce  invoke-virtual  {v3, v6}, LX/Ens;->A02(Ljava/util/List;)V
+    01ce..01d0  return-void
+    01d0..01d2  move-exception  v2
+    01d2..01d8  invoke-static  {}, LX/1Xl;->A13()Ljava/lang/StringBuilder;
+    01d8..01da  move-result-object  v1
+    01da..01de  const-string  v0, "StatusStateManager/onStatusStateUpdate; sqlite exception "
+    01de..01e4  invoke-static  {v2, v0, v1}, LX/6ok;->A16(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    01e4..01e6  goto  +0xb
+    01e6..01e8  move-exception  v2
+    01e8..01ee  invoke-static  {}, LX/1Xl;->A13()Ljava/lang/StringBuilder;
+    01ee..01f0  move-result-object  v1
+    01f0..01f4  const-string  v0, "StatusStateManager/onStatusStateUpdate; exception "
+    01f4..01fa  invoke-static  {v2, v0, v1}, LX/6ok;->A16(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    01fa..01fe  if-ge  v14, v4, +0xf
+    01fe..0202  iget-object  v0, v3, LX/Ens;->A0D:LX/05a;
+    0202..0208  invoke-static  {v0}, LX/DBe;->A0l(LX/05a;)LX/0fW;
+    0208..020a  move-result-object  v13
+    020a..020e  const-wide/16  v16, #0x0
+    020e..0212  const/16  v18, #0x1
+    0212..0218  invoke-interface/range  {v12..v18}, LX/FvR;->Cc5(LX/0fW;IIJZ)V
+    0218..021a  return-void
+    021a..021c  move-exception  v1
+    021c..0220  if-ge  v14, v4, +0xf
+    0220..0224  iget-object  v0, v3, LX/Ens;->A0D:LX/05a;
+    0224..022a  invoke-static  {v0}, LX/DBe;->A0l(LX/05a;)LX/0fW;
+    022a..022c  move-result-object  v13
+    022c..0230  const-wide/16  v16, #0x0
+    0230..0234  const/16  v18, #0x1
+    0234..023a  invoke-interface/range  {v12..v18}, LX/FvR;->Cc5(LX/0fW;IIJZ)V
+    023a..023c  throw  v1
+    # exception table: 3 try range(s)
+    # catch Ljava/lang/IllegalStateException; code_units 0012..00e8 -> 00f3
+    # catch Landroid/database/sqlite/SQLiteException; code_units 0012..00e8 -> 00e8
+    # catch <all> code_units 0012..00e8 -> 010d
+    # catch <all> code_units 00e9..00f3 -> 010d
+    # catch <all> code_units 00f4..00ff -> 010d
+.end method

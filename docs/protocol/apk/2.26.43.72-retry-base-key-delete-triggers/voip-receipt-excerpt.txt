@@ -1,0 +1,96 @@
+# Bounded excerpt; full source bytes=214697, sha256=104e191915998d307029e4ef785804351506993c85c4cc95d89d726072e1063e
+# Other instructions and exception tables omitted. Not a complete method.
+# class: LX/Feo;
+# extends: Ljava/lang/Object;
+.method public run(V)  # .registers 41
+    # full signature: LX/Feo;->run()V
+    0000..0004  move-object/from16  v7, v40
+    0004..0008  iget  v0, v7, LX/Feo;->$t:I
+    0008..000e  packed-switch  v0, payload@0x38b4, cases=[0:@0x3788, 1:@0xe74, 2:@0x4e, 3:@0xe54, 4:@0xe1c, 5:@0xc08, 6:@0xe, 7:@0xe, 8:@0xe, 9:@0x3760, 10:@0xe, 11:@0x35c6, 12:@0xe, 13:@0x35aa, 14:@0xe, 15:@0x3570, 16:@0xbc0, 17:@0xb48, 18:@0xa4a, 19:@0x9f6, 20:@0x354e, 21:@0x34ce, 22:@0x348c, 23:@0x3448, 24:@0x3410, 25:@0x978, 26:@0x33f8, 27:@0x33e0, 28:@0x334a, 29:@0x3316, 30:@0x926, 31:@0x8da, 32:@0x89e, 33:@0x32e2, 34:@0x326c, 35:@0x3206, 36:@0x31e6, 37:@0x826, 38:@0x7a0, 39:@0x31ba, 40:@0x720, 41:@0x496, 42:@0x36, 43:@0x319a, 44:@0x3126, 45:@0x448, 46:@0xeec, 47:@0x110, 48:@0x66, 49:@0xeb2], default@0xe
+    0eec..0ef0  iget-object  v0, v7, LX/Feo;->A00:Ljava/lang/Object;
+    0ef0..0ef4  move-object/from16  v16, v0
+    0ef4..0ef8  move-object/from16  v0, v16
+    0ef8..0efc  check-cast  v0, LX/FBG;
+    0efc..0f00  move-object/from16  v16, v0
+    0f00..0f04  iget-object  v6, v7, LX/Feo;->A01:Ljava/lang/Object;
+    0f04..0f08  check-cast  v6, Landroid/os/Message;
+    0f08..0f0c  iget-object  v0, v0, LX/FBG;->A0a:LX/F2A;
+    0f0c..0f0e  const/4  v1, #0x0
+    0f0e..0f14  invoke-static  {v6, v1}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0f14..0f18  iget  v5, v6, Landroid/os/Message;->arg1:I
+    0f18..0f1c  const/16  v4, #0xc5
+    0f1c..0f20  const/16  v3, #0xc1
+    0f20..0f24  const/16  v2, #0xc0
+    0f24..0f28  if-eq  v5, v2, +0x303
+    0f28..0f2c  if-eq  v5, v3, +0x16e
+    0f2c..0f30  if-eq  v5, v4, +0xdc
+    10e4..10e8  iget-object  v6, v6, Landroid/os/Message;->obj:Ljava/lang/Object;
+    10e8..10ec  check-cast  v6, LX/ETr;
+    10ec..10f0  iget-object  v5, v6, LX/ETr;->A01:Lcom/whatsapp/infra/protocol/VoipStanzaChildNode;
+    10f0..10f4  const-string  v2, "offer"
+    10f4..10f8  iget-object  v1, v5, Lcom/whatsapp/infra/protocol/VoipStanzaChildNode;->tag:Ljava/lang/String;
+    10f8..10fe  invoke-virtual  {v2, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    10fe..1100  move-result  v1
+    1100..1104  if-eqz  v1, +0x2b
+    1104..1108  iget-object  v1, v0, LX/F2A;->A01:LX/00x;
+    1108..110e  invoke-static  {v1}, LX/2L6;->A0d(LX/00x;)LX/00E;
+    110e..1110  move-result-object  v2
+    1110..1114  sget-object  v1, LX/0lm;->A0Q:LX/00f;
+    1114..111a  invoke-virtual  {v2, v1}, LX/00E;->A17(LX/00f;)Z
+    111a..111c  move-result  v1
+    111c..1120  if-eqz  v1, +0x1d
+    1120..1124  iget-object  v1, v0, LX/F2A;->A0L:LX/00x;
+    1124..112a  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    112a..112c  move-result-object  v8
+    112c..1130  check-cast  v8, LX/1wE;
+    1130..1134  iget-object  v7, v6, LX/ETr;->A02:Ljava/lang/String;
+    1134..1138  const-string  v4, "OutgoingOfferTracker/onOfferReceiptReceived"
+    1138..113c  iget-object  v1, v8, LX/1wE;->A09:LX/00p;
+    113c..1142  invoke-static  {v1}, LX/8t1;->A0h(LX/00p;)LX/098;
+    1142..1144  move-result-object  v3
+    1144..1146  const/4  v2, #0x2
+    1146..114a  new-instance  v1, LX/FcC;
+    114a..1150  invoke-direct  {v1, v8, v7, v4, v2}, LX/FcC;-><init>(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;I)V
+    1150..1156  invoke-virtual  {v3, v1}, LX/098;->execute(Ljava/lang/Runnable;)V
+    1156..115a  const-string  v2, "enc_rekey"
+    115a..115e  iget-object  v1, v5, Lcom/whatsapp/infra/protocol/VoipStanzaChildNode;->tag:Ljava/lang/String;
+    115e..1164  invoke-virtual  {v2, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    1164..1166  move-result  v1
+    1166..116a  if-eqz  v1, +0x24
+    116a..116e  iget-object  v7, v6, LX/ETr;->A00:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    116e..1172  iget-object  v3, v7, Lcom/whatsapp/infra/core/jid/DeviceJid;->userJid:Lcom/whatsapp/infra/core/jid/UserJid;
+    1172..1174  const/4  v2, #0x1
+    1174..1178  const-string  v1, "call_rekey"
+    1178..117e  invoke-static  {v3, v1, v2}, LX/DBb;->A0g(LX/0DY;Ljava/lang/String;Z)LX/1dW;
+    117e..1180  move-result-object  v4
+    1180..1186  invoke-static  {v7}, LX/F3k;->A04(Lcom/whatsapp/infra/core/jid/DeviceJid;)LX/EoY;
+    1186..1188  move-result-object  v2
+    1188..118c  iget-object  v1, v0, LX/F2A;->A0P:LX/00x;
+    118c..1192  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    1192..1194  move-result-object  v3
+    1194..1198  check-cast  v3, LX/0YM;
+    1198..119c  const/16  v1, #0xf
+    119c..11a2  invoke-static  {v2, v4, v0, v1}, LX/Fei;->A00(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)LX/Fei;
+    11a2..11a4  move-result-object  v2
+    11a4..11a8  const-string  v1, "base_key_delete"
+    11a8..11ae  invoke-virtual  {v3, v1, v2}, LX/0YM;->A02(Ljava/lang/String;Ljava/lang/Runnable;)V
+    11ae..11b2  iget-object  v1, v0, LX/F2A;->A0Y:LX/00x;
+    11b2..11b8  invoke-static  {v1}, LX/DBc;->A0G(LX/00x;)LX/FvZ;
+    11b8..11ba  move-result-object  v4
+    11ba..11be  iget-object  v3, v6, LX/ETr;->A00:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    11be..11c2  check-cast  v4, Lcom/whatsapp/calling/voipcalling/VoipNativeImpl;
+    11c2..11c4  const/4  v1, #0x5
+    11c4..11c8  new-instance  v2, LX/Fff;
+    11c8..11ce  invoke-direct  {v2, v3, v5, v4, v1}, LX/Fff;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+    11ce..11d2  const-string  v1, "handleIncomingSignalingXmppReceipt"
+    11d2..11d8  invoke-static  {v4, v1, v2}, Lcom/whatsapp/calling/voipcalling/VoipNativeImpl;->A0o(Lcom/whatsapp/calling/voipcalling/VoipNativeImpl;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;
+    11d8..11da  move-result-object  v1
+    11da..11e0  invoke-static  {v1}, LX/000;->A00(Ljava/lang/Object;)I
+    11e0..11e2  move-result  v2
+    11e2..11e8  const  v1, #0x11174
+    11e8..11ec  if-ne  v2, v1, -0x142
+    11ec..11f2  const-string/jumbo  v1, "voip/service/onCallStanzaCorrupt/receipt_corrupt"
+    11f2..11f8  invoke-static  {v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    11f8..11fa  const/4  v1, #0x0
+    11fa..1200  invoke-virtual  {v0, v1}, LX/F2A;->A07(Ljava/lang/String;)V
+    1200..1204  goto/16  -0x14e

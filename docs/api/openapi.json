@@ -1,4 +1,12 @@
 {
+  "x-pinned-retry-base-key-delete-producers": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Existing xtask reproduces selected status-state and VoIP enc_rekey base-key deletion producers and executor submission. Status scheduling precedes its transaction success marker; call_rekey cleanup is queued before native receipt invocation. Asynchronous enqueue does not prove committed deletion, rollback cancellation, ordinary-chat cleanup or global TTL. Research only; Rust persistence and higher retry counts unchanged.",
+    "evidence": "docs/protocol/apk/2.26.43.72-retry-base-key-delete-triggers/README.md"
+  },
   "x-pinned-retry-base-key-recipient-evidence": {
     "x-cli": true,
     "x-transport": false,

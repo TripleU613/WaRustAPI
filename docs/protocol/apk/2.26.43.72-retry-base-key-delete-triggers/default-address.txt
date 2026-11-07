@@ -1,0 +1,13 @@
+
+# class: LX/F3k;
+# extends: Ljava/lang/Object;
+
+.method public A04(LL)  # .registers 3
+    # full signature: LX/F3k;->A04(Lcom/whatsapp/infra/core/jid/DeviceJid;)LX/EoY;
+    0000..0004  sget-object  v1, LX/E78;->A02:LX/E78;
+    0004..0008  sget-object  v0, LX/E7N;->A03:LX/E7N;
+    0008..000e  invoke-static  {v2, v1, v0}, LX/F3k;->A06(Lcom/whatsapp/infra/core/jid/DeviceJid;LX/E78;LX/E7N;)LX/EoY;
+    000e..0010  move-result-object  v0
+    0010..0012  return-object  v0
+    # exception table: 0 try range(s)
+.end method

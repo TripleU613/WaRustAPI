@@ -1,0 +1,18 @@
+
+# class: LX/0YM;
+# extends: Ljava/lang/Object;
+
+.method public A02(VLL)  # .registers 7
+    # full signature: LX/0YM;->A02(Ljava/lang/String;Ljava/lang/Runnable;)V
+    0000..0006  invoke-static  {v6}, LX/099;->A00(Ljava/lang/Runnable;)Ljava/lang/String;
+    0006..0008  move-result-object  v3
+    0008..000c  iget-object  v2, v4, LX/0YM;->A01:Ljava/util/concurrent/ThreadPoolExecutor;
+    000c..0010  iget-object  v1, v4, LX/0YM;->A02:LX/0YO;
+    0010..0012  const/4  v0, #0x0
+    0012..0018  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0018..001e  invoke-virtual  {v1, v6, v5, v3}, LX/0YO;->A01(Ljava/lang/Runnable;Ljava/lang/String;Ljava/lang/String;)LX/09A;
+    001e..0020  move-result-object  v0
+    0020..0026  invoke-virtual  {v2, v0}, Ljava/util/concurrent/ThreadPoolExecutor;->execute(Ljava/lang/Runnable;)V
+    0026..0028  return-void
+    # exception table: 0 try range(s)
+.end method

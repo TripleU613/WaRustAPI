@@ -23,3 +23,5 @@ For a mapped user, A02 calls DeviceJid.Companion.A02 with original EoY.A00 (devi
 These findings refine recipient identity and missing-mapping policy but do not close base-key TTL, bulk deletion triggers, full migration, all caller conditions or transaction/crash semantics. Rust count2 base-key persistence and higher-count policy remain unported; counts above two remain refused. No runtime code, outgoing field, retry count, database migration or account operation changed.
 
 Reproduce: `python3 docs/protocol/apk/2.26.43.72-retry-base-key-addresses/reproduce.py ../android-lab/apks/WhatsApp.1.apk`. The script checks the APK hash and every retained export, including complete-source identity before excerpting. `checksums.json` covers every bundle file except itself.
+
+Selected status-state and VoIP producers for these direct deletion arms are now retained in [the producer follow-up](../2.26.43.72-retry-base-key-delete-triggers/README.md); global TTL and ordinary-chat/bulk cleanup remain unproved.

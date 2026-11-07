@@ -1,0 +1,13 @@
+# Bounded excerpt; full source bytes=23582, sha256=f54500fc559364c4b6debd30af1d2dc421e26545a5559a4ad280e4614172770e
+# Other instructions and exception tables omitted. Not a complete method.
+# class: LX/FUY;
+# extends: Ljava/lang/Object;
+.method public CK4(VLL)  # .registers 34
+    # full signature: LX/FUY;->CK4(LX/0Tp;Ljava/lang/String;)V
+    0634..0638  iget-object  v1, v0, LX/FUY;->A01:LX/EXq;
+    0638..063c  iget-object  v2, v1, LX/EXq;->A04:Ljava/lang/Integer;
+    063c..0640  iget-object  v3, v0, LX/FUY;->A0I:LX/0Js;
+    0640..0644  const/16  v1, #0x2a
+    0644..064a  invoke-static  {v4, v2, v0, v1}, LX/Fei;->A00(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)LX/Fei;
+    064a..064c  move-result-object  v1
+    064c..0650  goto/16  -0xdd

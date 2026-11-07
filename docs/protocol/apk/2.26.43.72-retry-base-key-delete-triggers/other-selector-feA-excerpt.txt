@@ -1,0 +1,13 @@
+# Bounded excerpt; full source bytes=32141, sha256=0cf58c661b50fab8449a0c8035b85999f9b09a7916dbc6c3bfb2055f0dc67b71
+# Other instructions and exception tables omitted. Not a complete method.
+# class: LX/FeA;
+# extends: Ljava/lang/Object;
+.method public run(V)  # .registers 51
+    # full signature: LX/FeA;->run()V
+    08bc..08c0  iget-object  v0, v11, LX/Ewy;->A05:LX/05a;
+    08c0..08c6  invoke-static  {v0}, LX/2L8;->A10(LX/05a;)LX/08Z;
+    08c6..08c8  move-result-object  v2
+    08c8..08cc  const/16  v1, #0x2e
+    08cc..08d0  move-object/from16  v0, v22
+    08d0..08d6  invoke-static  {v2, v11, v0, v12, v1}, LX/Fei;->A01(LX/08Z;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+    08d6..08d8  return-void
