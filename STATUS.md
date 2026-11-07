@@ -1,5 +1,10 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
+**Retry state restoration and receipt pass traced.** Native retry state can be
+restored from saved metadata; selected first-pass receipt permission depends on
+secondary-descriptor absence. Later-pass/durability/classification gaps remain;
+no runtime response change. [Evidence](docs/protocol/media-network-outcomes.md#retry-metadata-and-receipt-pass-selection-2026-11-06).
+
 **Media error response modes narrowed.** Native sendReceipt differs by callback;
 isSendRetry can be set before retry-job enqueue, and typed stop paths clear
 action permission. Evidence retained; Rust error491 remains unimplemented until

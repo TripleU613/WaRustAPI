@@ -1,4 +1,11 @@
 {
+  "x-media-error-retry-producers-static-boundary": {
+    "x-cli": "existing APK research commands; no new command or flag",
+    "x-transport": "research only; no new ACK or retry emission",
+    "x-live": false,
+    "description": "All five direct F1Z.A03 writer sites now bounded: selected retry actions or saved metadata restoration. F2C encodes into1k8.A02 and Fc1 conditionally restores. Selected first F2q/Ed7/EmK/FKc pass sets sendReceipt when secondary descriptor is absent. Later-pass policy, storage transactions, invalid-media classification and response ownership remain unproven.",
+    "evidence": "docs/protocol/apk/2.26.43.72-media-error-retry-producers/README.md"
+  },
   "x-media-error-mode-static-boundary": {
     "x-cli": "research only; existing APK inspection commands, no new command or flag",
     "x-transport": "no runtime response change; conditional native media error mode provenance retained",

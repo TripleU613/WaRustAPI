@@ -1657,3 +1657,13 @@ is not proof of transmission. Remaining producers, durability and native-invalid
 versus locally unsupported classification still block safe Rust error491 wiring.
 [Complete mode evidence](apk/2.26.43.72-media-error-mode-inputs/README.md).
 No Rust behavior, account traffic or retry/replay policy changed.
+
+## Retry metadata and receipt pass selection (2026-11-06)
+
+**Confirmed selected static:** the remaining native retry-flag writers select
+retry actions or restore saved Dd3 metadata. F2C copies the flag into1k8.A02;
+Fc1 restores it only when the metadata presence bit is set. The selected first
+F2q→Ed7→EmK→FKc pass enables sendReceipt when its secondary descriptor is absent.
+Later-pass policy, persistence transactions and typed-invalid classification remain
+open. [Evidence](apk/2.26.43.72-media-error-retry-producers/README.md). No Rust
+response/retry behavior or live operation changed.

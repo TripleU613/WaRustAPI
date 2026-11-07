@@ -1,0 +1,48 @@
+
+# class: LX/1k8;
+# extends: LX/1k6;
+
+.method public <init>(VLLLLLLLLLLLLIJJJJZZZ)  # .registers 48
+    # full signature: LX/1k8;-><init>(LX/E6e;LX/2DG;LX/1kz;LX/E88;Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/Jid;LX/0Tp;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/String;[B[BIJJJJZZZ)V
+    0000..0002  const/4  v0, #0x1
+    0002..0006  move-object/from16  v11, v33
+    0006..000c  invoke-static  {v11, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000c..000e  const/4  v0, #0x3
+    000e..0012  move-object/from16  v5, v26
+    0012..0018  invoke-static  {v5, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0018..001c  const/16  v0, #0x8
+    001c..0020  move-object/from16  v1, v27
+    0020..0026  invoke-static  {v1, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0026..002a  const/16  v22, #0x0
+    002a..002e  move-object/from16  v2, v23
+    002e..0032  move/from16  v12, v36
+    0032..0036  move-object/from16  v10, v32
+    0036..003a  move-object/from16  v9, v31
+    003a..003e  move-object/from16  v8, v30
+    003e..0042  move/from16  v21, v46
+    0042..0046  move-wide/from16  v19, v43
+    0046..004a  move-wide/from16  v17, v41
+    004a..004e  move-object/from16  v6, v28
+    004e..0052  move-wide/from16  v15, v39
+    0052..0056  move-wide/from16  v13, v37
+    0056..005a  move-object/from16  v3, v24
+    005a..005e  move-object/from16  v4, v25
+    005e..0062  move-object/from16  v7, v29
+    0062..0068  invoke-direct/range  {v2..v22}, LX/1k3;-><init>(LX/E6e;LX/2DG;LX/1kz;Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/Jid;LX/0Tp;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/String;IJJJJZZ)V
+    0068..006c  iput-object  v1, v2, LX/1k8;->A00:LX/E88;
+    006c..0070  move-object/from16  v0, v34
+    0070..0074  iput-object  v0, v2, LX/1k8;->A03:[B
+    0074..0078  move-object/from16  v0, v35
+    0078..007c  iput-object  v0, v2, LX/1k8;->A02:[B
+    007c..0080  move/from16  v0, v45
+    0080..0084  iput-boolean  v0, v2, LX/1k8;->A01:Z
+    0084..0088  move/from16  v0, v47
+    0088..008c  iput-boolean  v0, v2, LX/1k8;->A04:Z
+    008c..0090  if-eqz  v47, +0x5
+    0090..0092  const/4  v0, #0x1
+    0092..0096  if-nez  v31, +0x3
+    0096..0098  const/4  v0, #0x0
+    0098..009c  iput-boolean  v0, v2, LX/1k8;->A05:Z
+    009c..009e  return-void
+    # exception table: 0 try range(s)
+.end method

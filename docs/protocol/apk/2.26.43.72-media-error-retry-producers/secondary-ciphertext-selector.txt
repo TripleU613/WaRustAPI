@@ -1,0 +1,19 @@
+
+# class: LX/F1Z;
+# extends: Ljava/lang/Object;
+
+.method public A0A(L)  # .registers 2
+    # full signature: LX/F1Z;->A0A()LX/Ezj;
+    0000..0004  instance-of  v0, v1, LX/Dxr;
+    0004..0008  if-eqz  v0, +0xa
+    0008..000a  move-object  v0, v1
+    000a..000e  check-cast  v0, LX/Dxr;
+    000e..0012  iget-object  v0, v0, LX/Dxr;->A00:LX/Enw;
+    0012..0016  iget-object  v0, v0, LX/Enw;->A01:LX/Ezj;
+    0016..0018  return-object  v0
+    0018..001a  move-object  v0, v1
+    001a..001e  check-cast  v0, LX/Dxs;
+    001e..0022  iget-object  v0, v0, LX/Dxs;->A0A:LX/Ezj;
+    0022..0024  return-object  v0
+    # exception table: 0 try range(s)
+.end method

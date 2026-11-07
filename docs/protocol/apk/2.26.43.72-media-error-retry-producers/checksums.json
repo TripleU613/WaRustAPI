@@ -1,0 +1,50 @@
+{
+  "README.md": {
+    "bytes": 6244,
+    "sha256": "8cf7bbe66c810a7df765204fc94465cb9b64e1b4aa5386dec7a7e584500dedff"
+  },
+  "decrypt-callback-factory.txt": {
+    "bytes": 19190,
+    "sha256": "3ba3d09b8b352db2df7f784d4aaab955f4041b6cf36b85fc6ef480049440f1e7"
+  },
+  "decrypt-factory-callers.txt": {
+    "bytes": 136,
+    "sha256": "d275bfcfd929fa5b62e9f7b15da76ecab65f6b87d39a2e813ab481221d612551"
+  },
+  "decrypt-retry-processing.txt": {
+    "bytes": 79810,
+    "sha256": "b15669ea7d45682acb937e242becc368ee3de8d663a8656204de318ea52f451a"
+  },
+  "nonnull-predicate.txt": {
+    "bytes": 322,
+    "sha256": "12378e689412e6edab3bc81d92bfa6b11d2790c009da8c7fcc084a28e0a75b45"
+  },
+  "receipt-context-callers.txt": {
+    "bytes": 70,
+    "sha256": "18231c4ba81bf55cc3eac5959403d029cc05ff4ecc2c130afd7e1884f7f6f3dd"
+  },
+  "receipt-context-constructor.txt": {
+    "bytes": 729,
+    "sha256": "eaa2965d3fc0d0d6df51a891bb607cfb5613351fb05c23ae11761ae3e1de94e4"
+  },
+  "receipt-context-writers.txt": {
+    "bytes": 85,
+    "sha256": "fc0dd1d7fdc7cdacafeb2b18eea81681ab5d0cedc5b11acc06395ce7c3d3c8f2"
+  },
+  "retry-metadata-encoder.txt": {
+    "bytes": 5269,
+    "sha256": "69e08a0bf075f4e64acb7a24d800ce8347de0b1ef35450d2e913a3d4f547a9aa"
+  },
+  "retry-metadata-refs.txt": {
+    "bytes": 159,
+    "sha256": "2054d8d6f0f221e6449abe011a5117642f594b6d86667a315396883ca31cbdfc"
+  },
+  "saved-container-constructor.txt": {
+    "bytes": 2323,
+    "sha256": "f6009e3a07c967e4e728a32bb5b840c788256222cb047923cc68b685423e4568"
+  },
+  "secondary-ciphertext-selector.txt": {
+    "bytes": 653,
+    "sha256": "6ea64e0b5f1022c48f7bdc38b6c21cf8ea86a5d5dda8763d28e461fc640e8acc"
+  }
+}

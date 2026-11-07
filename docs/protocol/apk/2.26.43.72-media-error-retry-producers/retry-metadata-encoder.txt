@@ -1,0 +1,98 @@
+
+# class: LX/F2C;
+# extends: Ljava/lang/Object;
+
+.method private A00(LLLLLLZ)  # .registers 46
+    # full signature: LX/F2C;->A00(LX/E88;LX/1kA;LX/Fuy;LX/F1Z;[BZ)LX/1k8;
+    0000..0004  if-eqz  v45, +0xb0
+    0004..0008  sget-object  v16, LX/1kz;->A04:LX/1kz;
+    0008..000c  move-object/from16  v1, v39
+    000c..0012  invoke-static  {v1}, LX/F2C;->A01(LX/F2C;)LX/0av;
+    0012..0014  move-result-object  v0
+    0014..0018  iget-boolean  v0, v0, LX/0av;->A0I:Z
+    0018..001c  xor-int/lit8  v36, v0, #0x1
+    001c..0020  iget-object  v0, v1, LX/F2C;->A02:LX/05a;
+    0020..0026  invoke-static  {v0}, LX/DBe;->A01(LX/05a;)J
+    0026..0028  move-result-wide  v33
+    0028..002c  sget-object  v0, LX/Dd3;->DEFAULT_INSTANCE:LX/Dd3;
+    002c..0032  invoke-virtual  {v0}, Lcom/google/protobuf/GeneratedMessageLite;->createBuilder()Lcom/google/protobuf/GeneratedMessageLite$Builder;
+    0032..0034  move-result-object  v3
+    0034..0038  move-object/from16  v6, v43
+    0038..003c  iget  v2, v6, LX/F1Z;->A00:I
+    003c..0042  invoke-static  {v3}, LX/8t1;->A0Z(Lcom/google/protobuf/GeneratedMessageLite$Builder;)Lcom/google/protobuf/GeneratedMessageLite;
+    0042..0044  move-result-object  v1
+    0044..0048  check-cast  v1, LX/Dd3;
+    0048..004c  iget  v0, v1, LX/Dd3;->bitField0_:I
+    004c..0050  or-int/lit8  v0, v0, #0x1
+    0050..0054  iput  v0, v1, LX/Dd3;->bitField0_:I
+    0054..0058  iput  v2, v1, LX/Dd3;->placeholderDisplayReason_:I
+    0058..005c  iget-boolean  v2, v6, LX/F1Z;->A03:Z
+    005c..0062  invoke-static  {v3}, LX/8t1;->A0Z(Lcom/google/protobuf/GeneratedMessageLite$Builder;)Lcom/google/protobuf/GeneratedMessageLite;
+    0062..0064  move-result-object  v1
+    0064..0068  check-cast  v1, LX/Dd3;
+    0068..006c  iget  v0, v1, LX/Dd3;->bitField0_:I
+    006c..0070  or-int/lit8  v0, v0, #0x2
+    0070..0074  iput  v0, v1, LX/Dd3;->bitField0_:I
+    0074..0078  iput-boolean  v2, v1, LX/Dd3;->isSendRetryReceipt_:Z
+    0078..007e  invoke-virtual  {v6}, LX/F1Z;->A0K()Ljava/lang/Integer;
+    007e..0080  move-result-object  v0
+    0080..0084  if-eqz  v0, +0x14
+    0084..008a  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    008a..008c  move-result  v2
+    008c..0092  invoke-static  {v3}, LX/8t1;->A0Z(Lcom/google/protobuf/GeneratedMessageLite$Builder;)Lcom/google/protobuf/GeneratedMessageLite;
+    0092..0094  move-result-object  v1
+    0094..0098  check-cast  v1, LX/Dd3;
+    0098..009c  iget  v0, v1, LX/Dd3;->bitField0_:I
+    009c..00a0  or-int/lit8  v0, v0, #0x4
+    00a0..00a4  iput  v0, v1, LX/Dd3;->bitField0_:I
+    00a4..00a8  iput  v2, v1, LX/Dd3;->resolvedSessionScopeForWam_:I
+    00a8..00ae  invoke-static  {v3}, LX/DBe;->A1a(Lcom/google/protobuf/GeneratedMessageLite$Builder;)[B
+    00ae..00b0  move-result-object  v25
+    00b0..00b2  const/4  v5, #0x0
+    00b2..00b6  move-object/from16  v7, v41
+    00b6..00bc  invoke-static  {v7, v5}, LX/00l;->A09(Ljava/lang/Object;I)V
+    00bc..00c0  iget-object  v0, v7, LX/1k3;->A0A:Ljava/lang/String;
+    00c0..00c4  move-object/from16  v18, v0
+    00c4..00c8  iget-object  v0, v7, LX/1k3;->A05:LX/2DG;
+    00c8..00cc  move-object/from16  v38, v0
+    00cc..00d0  iget-object  v15, v7, LX/1k3;->A04:LX/E6e;
+    00d0..00d4  iget-object  v14, v7, LX/1k3;->A07:Lcom/whatsapp/infra/core/jid/Jid;
+    00d4..00d8  iget-object  v13, v7, LX/1k3;->A08:Lcom/whatsapp/infra/core/jid/Jid;
+    00d8..00dc  iget-object  v12, v7, LX/1k3;->A09:LX/0Tp;
+    00dc..00e2  invoke-static  {v12}, LX/00L;->A05(Ljava/lang/Object;)V
+    00e2..00e6  iget-wide  v8, v7, LX/1k3;->A03:J
+    00e6..00ea  iget-wide  v2, v7, LX/1k3;->A01:J
+    00ea..00ee  iget-wide  v0, v7, LX/1k3;->A02:J
+    00ee..00f2  iget-boolean  v11, v7, LX/1kA;->A04:Z
+    00f2..00f6  iget-object  v10, v7, LX/1k3;->A0E:Ljava/lang/Long;
+    00f6..00fa  const/16  v21, #0x0
+    00fa..00fe  const/16  v35, #0x1
+    00fe..0102  new-instance  v4, LX/1k8;
+    0102..0106  move-object/from16  v17, v40
+    0106..010a  move-object/from16  v24, v44
+    010a..010e  move-wide/from16  v27, v8
+    010e..0112  move-wide/from16  v29, v2
+    0112..0116  move-wide/from16  v31, v0
+    0116..011a  move/from16  v37, v11
+    011a..011e  move-object/from16  v20, v12
+    011e..0122  move-object/from16  v22, v10
+    0122..0126  move-object/from16  v23, v18
+    0126..012a  move/from16  v26, v5
+    012a..012e  move-object/from16  v18, v14
+    012e..0132  move-object/from16  v19, v13
+    0132..0134  move-object  v14, v15
+    0134..0138  move-object/from16  v15, v38
+    0138..013a  move-object  v13, v4
+    013a..0140  invoke-direct/range  {v13..v37}, LX/1k8;-><init>(LX/E6e;LX/2DG;LX/1kz;LX/E88;Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/Jid;LX/0Tp;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/String;[B[BIJJJJZZZ)V
+    0140..0144  iget-wide  v0, v7, LX/1k3;->A0C:J
+    0144..0148  iput-wide  v0, v4, LX/1k3;->A0C:J
+    0148..014c  move-object/from16  v1, v42
+    014c..0150  if-eqz  v42, +0x9
+    0150..0154  new-instance  v0, LX/ERg;
+    0154..015a  invoke-direct  {v0, v1, v6}, LX/ERg;-><init>(LX/Fuy;LX/F1Z;)V
+    015a..015e  iput-object  v0, v4, LX/1k8;->A06:LX/ERg;
+    015e..0160  return-object  v4
+    0160..0164  sget-object  v16, LX/1kz;->A03:LX/1kz;
+    0164..0168  goto/16  -0xae
+    # exception table: 0 try range(s)
+.end method
