@@ -194,6 +194,11 @@ fn queue_read_with_origin(
                     "incoming message is not authenticated locally",
                 ));
             }
+            // Initial public preflight is only a hint: eligibility must use
+            // this transaction's current payload, before queuing any read.
+            if automatic && !automatic_readable(&saved)? {
+                continue;
+            }
             let receipt_key = format!(
                 "receipt-outbox:{}:read",
                 hex::encode(Sha256::digest(key.as_bytes()))
@@ -285,6 +290,16 @@ fn queue_read_with_origin(
 /// audioMessage 8, videoMessage 9, stickerMessage 26, ptvMessage 66.
 const READABLE_FIELDS: [u32; 8] = [1, 3, 6, 7, 8, 9, 26, 66];
 
+fn automatic_readable(saved: &serde_json::Value) -> Result<bool> {
+    if saved["status"] != "decrypted" {
+        return Ok(false);
+    }
+    let protobuf = serde_json::from_value::<zeroize::Zeroizing<Vec<u8>>>(saved["protobuf"].clone())
+        .map_err(|_| Error::invalid("receipt", "invalid stored message payload bytes"))?;
+    let fields = crate::signal::direct::payload_fields(&protobuf).unwrap_or_default();
+    Ok(fields.iter().any(|field| READABLE_FIELDS.contains(field)))
+}
+
 /// Queue a read receipt for one authenticated incoming message, including a
 /// duplicate recovered offline, when its content is something a person reads.
 /// Returns newly eligible intents (0 or 1); a known-disabled direct preference
@@ -328,13 +343,7 @@ pub fn queue_read_for_incoming(store: &ProtocolStore, node: &Node) -> Result<usi
         };
         (record.chat, saved)
     };
-    if saved["status"] != "decrypted" {
-        return Ok(0);
-    }
-    let protobuf = serde_json::from_value::<zeroize::Zeroizing<Vec<u8>>>(saved["protobuf"].clone())
-        .map_err(|_| Error::invalid("receipt", "invalid stored message payload bytes"))?;
-    let fields = crate::signal::direct::payload_fields(&protobuf).unwrap_or_default();
-    if !fields.iter().any(|f| READABLE_FIELDS.contains(f)) {
+    if !automatic_readable(&saved)? {
         return Ok(0);
     }
     // DeviceAddress cannot preserve an agent component. Refuse this automatic
@@ -3631,6 +3640,81 @@ mod tests {
             .unwrap();
         node
     }
+    #[test]
+    fn automatic_read_rechecks_current_payload_in_preparation_transaction() {
+        for group in [false, true] {
+            for change in ["same", "nonreadable", "consumed", "malformed"] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("read-eligibility-transaction.redb");
+                let db = open(&path, true);
+                let incoming = automatic_text_fixture(&db, "eligibility", group);
+                let chat = jid(&incoming, "from").unwrap();
+                let key = format!("received:{chat}:eligibility");
+                let mut receipt = explicit_read_for(&incoming);
+                if group {
+                    receipt.from = Some(
+                        crate::model::ids::DeviceAddress::from_jid(
+                            &jid(&incoming, "participant").unwrap(),
+                        )
+                        .unwrap(),
+                    );
+                }
+                // Model the public entry's completed initial readable-payload inspection.
+                let old: serde_json::Value = db
+                    .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
+                    .unwrap()
+                    .unwrap();
+                let protobuf: Vec<u8> = serde_json::from_value(old["protobuf"].clone()).unwrap();
+                assert!(
+                    crate::signal::direct::payload_fields(&protobuf)
+                        .unwrap()
+                        .contains(&1)
+                );
+                db.write(|tx| {
+                    let mut current = old.clone();
+                    match change {
+                        "nonreadable" => current["protobuf"] = serde_json::json!([18, 0]),
+                        "consumed" => {
+                            current["status"] = "consumed".into();
+                            current.as_object_mut().unwrap().remove("protobuf");
+                        }
+                        "malformed" => current["protobuf"] = "private-shape-sentinel".into(),
+                        _ => {}
+                    }
+                    tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &current)
+                })
+                .unwrap();
+                drop(db);
+                let db = open(&path, false);
+                let before = db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap();
+                let head = db.journal_head().unwrap();
+                let result = queue_read_with_origin(&db, &receipt, true);
+                if change == "same" {
+                    assert_eq!(result.unwrap(), 1);
+                    assert_eq!(reserve_pending_owned(&db).unwrap().len(), 1);
+                    assert!(reserve_pending_owned(&db).unwrap().is_empty());
+                } else {
+                    if change == "malformed" {
+                        let error = result.unwrap_err();
+                        assert!(!error.to_string().contains("private-shape"));
+                    } else {
+                        assert_eq!(
+                            result.unwrap(),
+                            0,
+                            "{group}/{change}: stale eligibility queued a read"
+                        );
+                    }
+                    assert_eq!(
+                        db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap(),
+                        before
+                    );
+                    assert_eq!(db.journal_head().unwrap(), head);
+                    assert!(outcomes(&db).unwrap().is_empty());
+                }
+            }
+        }
+    }
+
     #[test]
     fn automatic_read_reports_invalid_saved_payload_without_mutation_after_reopen() {
         for group in [false, true] {

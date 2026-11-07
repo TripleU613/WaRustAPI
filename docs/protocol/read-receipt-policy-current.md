@@ -258,3 +258,35 @@ Account-less offline adapters and historical rows without preparation digests
 keep their explicit unbound/unknown provenance; no proof is backfilled. This
 checks mutation after local preparation, not the original authenticated message's
 historical account ownership or complete native receipt parity. No live operation.
+
+## Automatic eligibility rechecked in the preparation transaction
+
+**Confirmed Rust stale-admission defect, corrected offline**, baseline `ec1461f5`.
+queue_read_for_incoming inspected readable payload fields in a read transaction,
+then called queue_read_with_origin in a separate write transaction. The latter
+reloaded the source but only checked decrypted/consumed status, so an earlier
+readable-payload decision could authorize a read after the row became non-readable.
+The deterministic regression models completed initial inspection, changes the
+saved row, reopens the store and invokes that same preparation boundary. Old
+code queued1 for the non-readable direct control instead of0.
+
+The existing status/field eligibility check is now a shared helper used both by
+public preflight and, for automatic intents, on the currently selected row inside
+the queue preparation transaction before intent/marker mutation. A consumed or
+non-readable current row contributes no automatic read. Invalid stored byte-vector
+shapes retain the existing fixed redacted error. Unsupported/malformed protobuf
+inspection and size-bound behavior remain unchanged. Explicit user reads keep
+their existing separate eligibility policy; no new readable field is admitted.
+
+Offline direct/group controls cover unchanged content, supported non-readable
+field2, consumed status with removed payload, and malformed byte-vector shape.
+Refused/skipped cases preserve checkpoint/journal snapshots and create no receipt
+intent after reopen. Unchanged controls reserve once without replay. This tests
+the actual inner transaction boundary with a staged initial inspection, not an
+observed thread race or live server response. Existing public-entry tests remain
+integration controls. No request is sent or wire format changed.
+
+This closes stale content eligibility across local preparation transactions.
+It does not establish historical message/account provenance, complete native
+normal-read authority, or ordering after a successful send reservation. Existing
+account/wire preparation and final writer/callback checks remain independent.

@@ -1,4 +1,11 @@
 {
+  "x-automatic-read-transactional-content-eligibility": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "evidence": "docs/protocol/read-receipt-policy-current.md#automatic-eligibility-rechecked-in-the-preparation-transaction",
+    "behavior": "Automatic read preparation rechecks current source content eligibility in the same write transaction as intent creation. Consumed/non-readable rows skip, malformed saved byte shapes error; explicit policy and wire unchanged."
+  },
   "x-read-played-prepared-wire-integrity": {
     "x-cli": false,
     "x-transport": true,

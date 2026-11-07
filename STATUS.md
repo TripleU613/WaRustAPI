@@ -10701,3 +10701,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   account authority. First reservation and explicit automatic-read promotion
   refuse altered wire without mutation; reopen/late-privacy rollback regression
   added. Legacy unbound provenance unchanged; no live operation or wire change.
+
+- Automatic-read content eligibility now rechecks the current source row inside
+  its preparation transaction, closing stale preflight admission. Direct/group
+  staged-inspection/reopen regression covers non-readable/consumed/malformed rows
+  and unchanged controls. No live operation, wire or explicit-read policy change.

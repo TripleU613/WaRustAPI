@@ -6213,3 +6213,10 @@ evidence, not new APK behavior or proof of full group-send/network parity.
   validation. Reopen/late-privacy rollback and unchanged no-replay controls added.
   No wire format/live operation changed. See
   [wire integrity](read-receipt-policy-current.md#readplayed-prepared-wire-integrity).
+
+- Confirmed automatic-read stale content admission at `ec1461f5`: old code
+  queued after staged readable content became non-readable. Current eligibility
+  now rechecks inside intent preparation's write transaction through the same
+  helper as public preflight. Direct/group reopen controls cover non-readable,
+  consumed and malformed rows with no mutation; explicit policy/wire unchanged.
+  See [atomic eligibility](read-receipt-policy-current.md#automatic-eligibility-rechecked-in-the-preparation-transaction).
