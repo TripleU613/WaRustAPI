@@ -89,6 +89,10 @@ storage schema, transaction boundaries, crash recovery and downstream effects
 remain untraced here. Do not persist a claimed verified/non-E2EE state merely
 because the parser supplied an attestation or this helper returned DtZ.
 
+Follow-up: the callee also performs an earlier identity-table AEA write before
+returning. The ordering above applies specifically to the later Em2.A02 helper,
+not to every AEA mutation. [Session/storage trace and exception limits](../2.26.43.72-retry-session-aea-storage/README.md).
+
 ## Current Rust comparison and next proof
 
 Confirmed source: retry_answer explicitly records receipt_keys_unsupported and

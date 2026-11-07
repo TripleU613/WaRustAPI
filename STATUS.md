@@ -1,5 +1,10 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
+**Earlier identity AEA write located.** Session processing writes identity-table
+AEA before returning, followed by a separate caller update. Update count is
+discarded; exception status does not prove rollback. Concrete transaction/crash
+semantics remain open. [Evidence](docs/protocol/retry-answers.md#session-processing-contains-an-earlier-aea-write-2026-11-07). Research only.
+
 **Receipt-key AEA input and ordering traced.** Native signature-domain bytes,
 state enums, result distinctions and post-session state-update call are retained.
 Full verification/persistence port remains open; Rust key-adoption refusal stays

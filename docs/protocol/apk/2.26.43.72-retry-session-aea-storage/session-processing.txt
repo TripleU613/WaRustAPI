@@ -1,0 +1,269 @@
+
+# class: LX/0WJ;
+# extends: Ljava/lang/Object;
+
+.method public A0K(ILLLLLLLB)  # .registers 34
+    # full signature: LX/0WJ;->A0K(LX/E7b;LX/EoY;LX/ETs;LX/ETs;LX/ETs;[B[BB)I
+    0000..0004  const-string  v2, "processPreKeyBundle"
+    0004..0008  move-object/from16  v5, v25
+    0008..000c  iget-object  v1, v5, LX/0WJ;->A0P:LX/0YG;
+    000c..0010  const-string  v0, "sessions"
+    0010..0014  move-object/from16  v4, v27
+    0014..001a  invoke-virtual  {v1, v4, v2, v0}, LX/0YG;->A02(LX/EoY;Ljava/lang/String;Ljava/lang/String;)LX/EoY;
+    001a..001c  move-result-object  v8
+    001c..0020  iget-object  v0, v5, LX/0WJ;->A0I:LX/0Wk;
+    0020..0026  invoke-static  {v8, v0}, LX/0Wk;->A00(LX/EoY;LX/0Wk;)LX/FjI;
+    0026..0028  move-result-object  v16
+    0028..002e  invoke-virtual/range  {v16..v16}, Ljava/util/concurrent/locks/ReentrantLock;->lock()V
+    002e..0034  invoke-direct  {v5}, LX/0WJ;->A0I()Z
+    0034..0036  move-result  v0
+    0036..003a  if-eqz  v0, +0x39
+    003a..0040  invoke-direct  {v5, v4, v8}, LX/0WJ;->A02(LX/EoY;LX/EoY;)LX/Etk;
+    0040..0042  move-result-object  v0
+    0042..0046  iget-object  v0, v0, LX/Etk;->A01:LX/EZK;
+    0046..004a  iget-object  v0, v0, LX/EZK;->A00:LX/Dha;
+    004a..004e  iget-object  v0, v0, LX/Dha;->remoteIdentityPublic_:Lcom/google/protobuf/ByteString;
+    004e..0054  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    0054..0056  move-result-object  v7
+    0056..0058  array-length  v3, v7
+    0058..005c  move-object/from16  v6, v31
+    005c..0060  move/from16  v13, v33
+    0060..0064  if-eqz  v3, +0x1d
+    0064..0066  const/4  v2, #0x1
+    0066..0068  sub-int/2addr  v3, v2
+    0068..006c  new-array  v1, v3, [B
+    006c..006e  const/4  v0, #0x0
+    006e..0074  invoke-static  {v7, v2, v1, v0, v3}, Ljava/lang/System;->arraycopy(Ljava/lang/Object;ILjava/lang/Object;II)V
+    0074..0078  aget-byte  v0, v7, v0
+    0078..007c  if-ne  v0, v13, +0x8
+    007c..0082  invoke-static  {v6, v1}, Ljava/util/Arrays;->equals([B[B)Z
+    0082..0084  move-result  v0
+    0084..0088  if-nez  v0, +0xb
+    0088..008e  invoke-direct  {v5}, LX/0WJ;->A0I()Z
+    008e..0090  move-result  v0
+    0090..0094  if-eqz  v0, +0x8
+    0094..009a  invoke-direct  {v5, v4, v8}, LX/0WJ;->A0E(LX/EoY;LX/EoY;)V
+    009a..009e  iget-object  v11, v5, LX/0WJ;->A01:LX/0Yl;
+    009e..00a0  goto  +0xa
+    00a0..00a6  invoke-virtual  {v5, v4}, LX/0WJ;->A0q(LX/EoY;)V
+    00a6..00a8  goto  -0x6
+    00a8..00ae  invoke-virtual  {v5, v4}, LX/0WJ;->A0M(LX/EoY;)LX/Etk;
+    00ae..00b0  move-result-object  v0
+    00b0..00b2  goto  -0x37
+    00b2..00b4  const/4  v10, #0x0
+    00b4..00b6  array-length  v3, v6
+    00b6..00b8  const/4  v2, #0x1
+    00b8..00bc  add-int/lit8  v0, v3, #0x1
+    00bc..00c0  new-array  v1, v0, [B
+    00c0..00c2  const/4  v0, #0x0
+    00c2..00c6  aput-byte  v33, v1, v0
+    00c6..00cc  invoke-static  {v6, v0, v1, v2, v3}, Ljava/lang/System;->arraycopy(Ljava/lang/Object;ILjava/lang/Object;II)V
+    00cc..00d2  invoke-static  {v1}, LX/0Yu;->A00([B)LX/Fbl;
+    00d2..00d4  move-result-object  v9
+    00d4..00d6  goto  +0x14
+    00d6..00d8  move-exception  v2
+    00d8..00dc  const-string  v1, "SignalCoordinatorDefault/process invalid identity key returned from server during prekey fetch; address="
+    00dc..00e0  new-instance  v0, Ljava/lang/StringBuilder;
+    00e0..00e6  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00e6..00ec  invoke-virtual  {v0, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    00ec..00f2  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00f2..00f4  move-result-object  v0
+    00f4..00fa  invoke-static  {v0, v2}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    00fa..00fc  move-object  v9, v10
+    00fc..0100  move-object/from16  v3, v28
+    0100..0104  if-eqz  v28, +0x27
+    0104..0108  iget-object  v7, v3, LX/ETs;->A00:[B
+    0108..010a  array-length  v6, v7
+    010a..010c  const/4  v2, #0x1
+    010c..0110  add-int/lit8  v0, v6, #0x1
+    0110..0114  new-array  v1, v0, [B
+    0114..0116  const/4  v0, #0x0
+    0116..011a  aput-byte  v33, v1, v0
+    011a..0120  invoke-static  {v7, v0, v1, v2, v6}, Ljava/lang/System;->arraycopy(Ljava/lang/Object;ILjava/lang/Object;II)V
+    0120..0126  invoke-static  {v1}, LX/0Yu;->A00([B)LX/Fbl;
+    0126..0128  move-result-object  v8
+    0128..012a  goto  +0x14
+    012a..012c  move-exception  v2
+    012c..0130  const-string  v1, "SignalCoordinatorDefault/process invalid prekey returned from server during prekey fetch; address="
+    0130..0134  new-instance  v0, Ljava/lang/StringBuilder;
+    0134..013a  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    013a..0140  invoke-virtual  {v0, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0140..0146  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0146..0148  move-result-object  v0
+    0148..014e  invoke-static  {v0, v2}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    014e..0150  move-object  v8, v10
+    0150..0154  move-object/from16  v12, v29
+    0154..0158  iget-object  v7, v12, LX/ETs;->A00:[B
+    0158..015a  array-length  v6, v7
+    015a..015c  const/4  v2, #0x1
+    015c..0160  add-int/lit8  v0, v6, #0x1
+    0160..0164  new-array  v1, v0, [B
+    0164..0166  const/4  v0, #0x0
+    0166..016a  aput-byte  v33, v1, v0
+    016a..0170  invoke-static  {v7, v0, v1, v2, v6}, Ljava/lang/System;->arraycopy(Ljava/lang/Object;ILjava/lang/Object;II)V
+    0170..0176  invoke-static  {v1}, LX/0Yu;->A00([B)LX/Fbl;
+    0176..0178  move-result-object  v10
+    0178..017a  goto  +0x13
+    017a..017c  move-exception  v2
+    017c..0180  const-string  v1, "SignalCoordinatorDefault/process invalid signed prekey returned from server during prekey fetch; address="
+    0180..0184  new-instance  v0, Ljava/lang/StringBuilder;
+    0184..018a  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    018a..0190  invoke-virtual  {v0, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0190..0196  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0196..0198  move-result-object  v0
+    0198..019e  invoke-static  {v0, v2}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    019e..01a0  const/4  v0, #0x0
+    01a0..01a4  move-object/from16  v1, v32
+    01a4..01aa  invoke-static  {v1, v0}, LX/1nr;->A01([BI)I
+    01aa..01ac  move-result  v7
+    01ac..01ae  const/4  v15, #0x0
+    01ae..01b2  if-nez  v28, +0x4
+    01b2..01b4  const/4  v6, #0xff (-1)
+    01b4..01b6  goto  +0x7
+    01b6..01ba  iget-object  v0, v3, LX/ETs;->A01:[B
+    01ba..01c0  invoke-static  {v0}, LX/1nr;->A00([B)I
+    01c0..01c2  move-result  v6
+    01c2..01c6  iget-object  v0, v12, LX/ETs;->A01:[B
+    01c6..01cc  invoke-static  {v0}, LX/1nr;->A00([B)I
+    01cc..01ce  move-result  v3
+    01ce..01d2  move-object/from16  v0, v30
+    01d2..01d6  if-eqz  v30, +0x8c
+    01d6..01da  iget-object  v2, v0, LX/ETs;->A00:[B
+    01da..01de  iget-object  v1, v0, LX/ETs;->A02:[B
+    01de..01e2  if-eqz  v1, +0x61
+    01e2..01e6  iget-object  v0, v0, LX/ETs;->A01:[B
+    01e6..01ec  invoke-static  {v0}, LX/1nr;->A00([B)I
+    01ec..01ee  move-result  v0
+    01ee..01f4  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    01f4..01f6  move-result-object  v0
+    01f6..01fc  invoke-virtual  {v0}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+    01fc..0200  new-instance  v14, LX/Fqj;
+    0200..0206  invoke-direct  {v14, v0}, LX/Fqj;-><init>(Ljava/lang/Object;)V
+    0206..020a  new-instance  v0, Lorg/whispersystems/libsignal/kem/KEMPublicKey;
+    020a..0210  invoke-direct  {v0, v2}, Lorg/whispersystems/libsignal/kem/KEMPublicKey;-><init>([B)V
+    0210..0214  new-instance  v13, LX/Fqj;
+    0214..021a  invoke-direct  {v13, v0}, LX/Fqj;-><init>(Ljava/lang/Object;)V
+    021a..021e  new-instance  v2, LX/Fqj;
+    021e..0224  invoke-direct  {v2, v1}, LX/Fqj;-><init>(Ljava/lang/Object;)V
+    0224..0228  iget-object  v1, v12, LX/ETs;->A02:[B
+    0228..022c  new-instance  v0, LX/EuZ;
+    022c..0232  invoke-direct  {v0, v9}, LX/EuZ;-><init>(LX/Fbl;)V
+    0232..0236  new-instance  v9, LX/EEt;
+    0236..023c  invoke-direct  {v9}, Ljava/lang/Object;-><init>()V
+    023c..0240  iput  v7, v9, LX/EEt;->A01:I
+    0240..0244  iput  v6, v9, LX/EEt;->A00:I
+    0244..0248  iput-object  v8, v9, LX/EEt;->A04:LX/Fbl;
+    0248..024c  iput  v3, v9, LX/EEt;->A02:I
+    024c..0250  iput-object  v10, v9, LX/EEt;->A05:LX/Fbl;
+    0250..0254  iput-object  v1, v9, LX/EEt;->A09:[B
+    0254..0258  iput-object  v0, v9, LX/EEt;->A03:LX/EuZ;
+    0258..025c  iput-object  v14, v9, LX/EEt;->A06:LX/Fbh;
+    025c..0260  iput-object  v13, v9, LX/EEt;->A07:LX/Fbh;
+    0260..0264  iput-object  v2, v9, LX/EEt;->A08:LX/Fbh;
+    0264..0268  iget-object  v2, v11, LX/0Yl;->A03:LX/0Yj;
+    0268..026c  iget-object  v1, v2, LX/0Yj;->A09:LX/0Yk;
+    026c..0272  invoke-static  {v4}, LX/F39;->A05(LX/EoY;)LX/Ej3;
+    0272..0274  move-result-object  v21
+    0274..0278  iget-object  v0, v11, LX/0Yl;->A02:LX/0Ym;
+    0278..027c  new-instance  v6, LX/Ecx;
+    027c..0280  move-object/from16  v23, v2
+    0280..0284  move-object/from16  v24, v2
+    0284..0288  move-object/from16  v19, v2
+    0288..028c  move-object/from16  v18, v0
+    028c..0290  move-object/from16  v20, v1
+    0290..0294  move-object/from16  v22, v2
+    0294..0298  move-object/from16  v17, v6
+    0298..029e  invoke-direct/range  {v17..v24}, LX/Ecx;-><init>(LX/0Ym;LX/0Yj;LX/0Yk;LX/Ej3;LX/0Yi;LX/0Yc;LX/0Yh;)V
+    029e..02a0  goto  +0x2b
+    02a0..02a4  const-string  v0, "SignalCoordinatorDefault/process pqPreKey provided but data or signature is null; address="
+    02a4..02a8  new-instance  v2, Ljava/lang/StringBuilder;
+    02a8..02ae  invoke-direct  {v2, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    02ae..02b4  invoke-virtual  {v2, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    02b4..02b8  const-string  v0, ", data="
+    02b8..02be  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    02be..02c2  const-string  v0, "present"
+    02c2..02c6  const-string  v1, "null"
+    02c6..02cc  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    02cc..02d0  const-string  v0, ", signature="
+    02d0..02d6  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    02d6..02dc  invoke-virtual  {v2, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    02dc..02e2  invoke-virtual  {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    02e2..02e4  move-result-object  v0
+    02e4..02ea  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    02ea..02ee  sget-object  v14, LX/Fqk;->A00:LX/Fqk;
+    02ee..02f0  move-object  v13, v14
+    02f0..02f2  move-object  v2, v14
+    02f2..02f4  goto  -0x67
+    02f4..02f8  iget-object  v3, v11, LX/0Yl;->A00:LX/08Y;
+    02f8..02fc  sget-object  v2, LX/00G;->A02:LX/00G;
+    02fc..0300  const/16  v1, #0x5f3f
+    0300..0302  const/4  v0, #0x0
+    0302..0308  invoke-static  {v2, v3, v0, v1}, LX/00E;->A0D(LX/00G;LX/00E;Ljava/lang/Boolean;I)Z
+    0308..030a  move-result  v0
+    030a..030e  if-eqz  v0, +0x6
+    030e..0314  invoke-virtual  {v6, v9}, LX/Ecx;->A00(LX/EEt;)V
+    0314..0316  goto  +0x8
+    0316..031a  sget-object  v1, LX/F22;->A06:Ljava/lang/Object;
+    031a..031c  monitor-enter
+    031c..0322  invoke-virtual  {v6, v9}, LX/Ecx;->A00(LX/EEt;)V
+    0322..0324  monitor-exit
+    0324..0328  move-object/from16  v2, v26
+    0328..032c  if-eqz  v26, +0x2f
+    032c..0330  iget-object  v1, v5, LX/0WJ;->A0A:LX/08Y;
+    0330..0334  const/16  v0, #0x6f6f
+    0334..033a  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    033a..033c  move-result  v0
+    033c..0340  if-eqz  v0, +0x25
+    0340..0344  iget-object  v1, v5, LX/0WJ;->A0J:LX/0YT;
+    0344..0348  const-string  v0, "saveAccountEncryptionAttestationType"
+    0348..034e  invoke-static  {v4, v1, v0}, LX/0YT;->A03(LX/EoY;LX/0YT;Ljava/lang/String;)LX/EoY;
+    034e..0350  move-result-object  v0
+    0350..0354  if-eqz  v0, +0x1b
+    0354..035a  invoke-static  {v2, v0, v1}, LX/0YT;->A00(LX/E7b;LX/EoY;LX/0YT;)I
+    035a..0360  invoke-static  {v2, v0, v1}, LX/0YT;->A05(LX/E7b;LX/EoY;LX/0YT;)V
+    0360..0362  goto  +0x13
+    0362..0364  move-exception  v0
+    0364..0366  monitor-exit
+    0366..0368  throw  v0
+    0368..036a  move-exception  v1
+    036a..036e  const-string  v0, "SignalCoordinatorDefault/process"
+    036e..0374  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0374..0376  goto  +0x7
+    0376..037a  const/16  v15, #0xfc0e (-1010)
+    037a..037c  goto  +0x6
+    037c..0380  const/16  v15, #0xfc16 (-1002)
+    0380..0382  goto  +0x3
+    0382..0386  const/16  v15, #0xfc18 (-1000)
+    0386..038c  invoke-virtual/range  {v16..v16}, LX/FjI;->close()V
+    038c..038e  return  v15
+    038e..0390  move-exception  v1
+    0390..0396  invoke-virtual/range  {v16..v16}, LX/FjI;->close()V
+    0396..0398  throw  v1
+    0398..039a  move-exception  v0
+    039a..03a0  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    03a0..03a2  throw  v1
+    # exception table: 14 try range(s)
+    # catch <all> code_units 0017..005a -> 01c7
+    # catch LX/EDQ; code_units 005a..006b -> 006b
+    # catch <all> code_units 005a..006b -> 01c7
+    # catch <all> code_units 006b..0084 -> 01c7
+    # catch LX/EDQ; code_units 0084..0095 -> 0095
+    # catch <all> code_units 0084..0095 -> 01c7
+    # catch <all> code_units 0095..00a8 -> 01c7
+    # catch LX/EDQ; code_units 00a8..00bd -> 00bd
+    # catch <all> code_units 00a8..00bd -> 01c7
+    # catch <all> code_units 00bd..017a -> 01c7
+    # catch LX/EDQ; code_units 017a..018e -> 01be
+    # catch LX/2xu; code_units 017a..018e -> 01bb
+    # catch Ljava/lang/Exception; code_units 017a..018e -> 01b4
+    # catch <all> code_units 017a..018e -> 01c7
+    # catch <all> code_units 018e..0196 -> 01b1
+    # catch <all> code_units 0196..01b1 -> 01c7
+    # catch <all> code_units 01b1..01b3 -> 01b1
+    # catch LX/EDQ; code_units 01b3..01b4 -> 01be
+    # catch LX/2xu; code_units 01b3..01b4 -> 01bb
+    # catch Ljava/lang/Exception; code_units 01b3..01b4 -> 01b4
+    # catch <all> code_units 01b3..01b4 -> 01c7
+    # catch <all> code_units 01b4..01bb -> 01c7
+    # catch <all> code_units 01c8..01cb -> 01cc
+.end method

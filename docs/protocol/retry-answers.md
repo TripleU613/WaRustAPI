@@ -627,3 +627,14 @@ state-policy and persistence parity remain open. Rust retains its explicit
 receipt_keys_unsupported refusal with no adoption/send/query.
 [Complete trace and limits](apk/2.26.43.72-retry-aea-admission/README.md).
 No runtime behavior, attestation generation or live operation changed.
+
+## Session processing contains an earlier AEA write (2026-11-07)
+
+**Confirmed selected static:**0WJ.A0K already writes identity-table AEA after
+session building and before its status0 return. This precedes the separate later
+Em2.A02 update. The identity update count is discarded; selected exceptions map
+to-1002/-1010/-1000, without proven rollback. Ecx stores session then identity;
+earlier identity-mismatch cleanup may precede validation. Do not infer no mutation
+from refusal or durable atomic success from zero. Rust receipt-key refusal remains.
+[Complete methods, storage predicates, result mapping and limits](apk/2.26.43.72-retry-session-aea-storage/README.md).
+No runtime change or live account operation.

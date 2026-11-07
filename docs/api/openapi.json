@@ -1,4 +1,11 @@
 {
+  "x-retry-session-aea-storage-static-boundary": {
+    "x-cli": "research via existing APK inspection commands; no new command",
+    "x-transport": "research only; receipt-carried keys remain unsupported",
+    "x-live": false,
+    "description": "Selected 0WJ.A0K performs session construction then identity-table AEA update before its result; update count discarded. Selected EDQ/2xu/Exception status mappings are -1002/-1010/-1000. Ecx session and identity writes precede AEA; earlier identity-change cleanup can precede validation. No enclosing atomicity/rollback or full storage semantics proven. Separate later Em2 update remains distinct. No runtime adoption or live account operation.",
+    "evidence": "docs/protocol/apk/2.26.43.72-retry-session-aea-storage/README.md"
+  },
   "x-retry-carried-key-aea-static-boundary": {
     "x-cli": "research through existing APK inspection commands; no new command or flag",
     "x-transport": "research only; receipt-carried keys remain unsupported with no adoption/send/query",
