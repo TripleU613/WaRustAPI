@@ -2349,3 +2349,32 @@ notice decoding to an unsupported event; it does not fetch/apply history or
 invent history queues/aliases. No ACK, receipt, request, timing rule or retry is
 added. Full native UserJid parsing and alternate app-data paths remain open.
 No live account/network operation is performed.
+
+## Account context frozen during historical event backfill
+
+**Confirmed Rust source defect, corrected offline**, baseline `91f33fe0`.
+`inbox_events::restore` loaded an authenticated historical route/payload and
+rechecked the saved message row before event/alias writes, but did not freeze
+this invocation's account context. A same-generation account change during
+restoration could let publish read a different own-identity context while the
+historical row itself remained unchanged.
+
+Restoration now captures the existing account-authority fingerprint before
+loading/decoding historical input and checks it in the same transaction as the
+saved-row comparison, alias validation and event/marker publication. Mismatch
+returns `account changed during event backfill` before those writes. Fingerprint
+observation-only timestamps remain excluded. No identity material is returned
+or added to the wire.
+
+The offline regression holds an original operation owner, preserves the same
+historical group-notice row, changes own JID/registration/Signal registration ID,
+reopens the encrypted store and invokes the owned restoration path. Mismatch
+leaves checkpoint, inbox, Signal session and peer-identity rows plus journal head
+unchanged. Same-owner and observation-time-only controls publish exactly one
+notice event and refuse duplicate publication. No ACK or network request occurs.
+
+This fences concurrent operation context; it does not invent historical account
+provenance for old message rows, resolve all capture-row lifetime questions or
+implement history fetching/application. Previously stored authenticated inputs,
+exact route/key checks and saved-row OCC remain necessary. No live account
+operation is performed.

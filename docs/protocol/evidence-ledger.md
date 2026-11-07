@@ -9572,3 +9572,9 @@ Local public upload eligibility omission corrected at shared entry, including ca
   accepted normalization in both receiver lists; no production filter or native
   rejection claim added. See
   [notice normalization](cross-device-sync.md#notice-receiver-zero-suffix-normalization-verified).
+
+- Confirmed source gap at `91f33fe0`: historical event backfill rechecked its
+  saved message but not operation account context. It now fences the original
+  authority transactionally before alias/event/marker writes, with identity
+  change/reopen rollback and observation-only controls. See
+  [backfill authority](cross-device-sync.md#account-context-frozen-during-historical-event-backfill).

@@ -1,4 +1,11 @@
 {
+  "x-inbox-event-backfill-account-context": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "evidence": "docs/protocol/cross-device-sync.md#account-context-frozen-during-historical-event-backfill",
+    "behavior": "Historical event backfill captures operation account authority and rechecks it transactionally before alias/event/marker writes. Changed authority refuses without publication; old historical ownership remains unknown."
+  },
   "x-history-notice-primary-representation": {
     "x-cli": false,
     "x-transport": false,

@@ -1603,6 +1603,21 @@ pub(super) fn restore(
     if saved["status"] != "decrypted" {
         return Ok(false);
     }
+    let owner = store.read(|tx| {
+        let account = crate::session::AccountRecord::load(tx)?;
+        super::account_authority::fingerprint(tx.generation(), account.as_ref())
+    })?;
+    restore_for_owner(store, key, saved, owner)
+}
+
+// Preserve this invocation's account context; historical record ownership is
+// separate and must never be invented from whichever account is current now.
+fn restore_for_owner(
+    store: &crate::store::ProtocolStore,
+    key: &[u8],
+    saved: &serde_json::Value,
+    owner: [u8; 32],
+) -> Result<bool> {
     let wire: Option<Vec<u8>> = if !saved["route"].is_null() {
         serde_json::from_value(saved["route"].clone()).ok()
     } else if let Ok(capture) = serde_json::from_value::<Vec<u8>>(saved["capture"].clone()) {
@@ -1647,6 +1662,13 @@ pub(super) fn restore(
     let payload: zeroize::Zeroizing<Vec<u8>> = serde_json::from_value(saved["protobuf"].clone())
         .map_err(|_| crate::Error::invalid("inbox", "invalid saved authenticated payload"))?;
     store.write(|tx| {
+        let account = crate::session::AccountRecord::load_in_write(tx)?;
+        if super::account_authority::fingerprint(tx.generation(), account.as_ref())? != owner {
+            return Err(crate::Error::invalid(
+                "inbox",
+                "account changed during event backfill",
+            ));
+        }
         let current: Option<serde_json::Value> = tx.get_json(Table::Checkpoints, key, 1)?;
         if current.as_ref() != Some(saved) {
             return Err(crate::Error::invalid(
@@ -1681,6 +1703,99 @@ mod tests {
         model::ids::{AccountId, EventCursor},
         store::{ConsumerId, MasterKey, OpenOptions, ProtocolStore, StaticKeySource},
     };
+    #[test]
+    fn historical_projection_refuses_account_change_without_touching_events_after_reopen() {
+        use crate::session::{AccountRecord, RegistrationStatus};
+        for change in ["same", "observation", "jid", "logout", "registration-id"] {
+            let dir = tempfile::tempdir().unwrap();
+            let options = || OpenOptions {
+                path: dir.path().join("backfill-owner.redb"),
+                account_id: AccountId::new("test").unwrap(),
+                create: true,
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [3; 32],
+                ))),
+            };
+            let store = ProtocolStore::open(options()).unwrap();
+            let original = AccountRecord {
+                generation: store.generation(),
+                registration: RegistrationStatus::Registered,
+                own_jid: Some(crate::model::jid::Jid::parse("100@s.whatsapp.net").unwrap()),
+                ..Default::default()
+            };
+            let payload = b"\xb2\x06\x0d\x12\x0b\x0a\x051@lid\x10\x0a\x18\x02".to_vec();
+            let node =
+                group_node().children(vec![Node::new("meta").attr("appdata", "group_history")]);
+            let route = crate::binary::Encoder::new(
+                crate::binary::TokenDictionary::comparison_2_26_37_71(),
+            )
+            .encode(&node)
+            .unwrap();
+            let key = b"received:120363000000000001@g.us:fixture";
+            let saved = serde_json::json!({"status":"decrypted","route":route,"protobuf":payload});
+            store
+                .write(|tx| {
+                    original.save(tx)?;
+                    tx.put_json(Table::Checkpoints, key, 1, &saved)
+                })
+                .unwrap();
+            let owner =
+                super::super::account_authority::fingerprint(store.generation(), Some(&original))
+                    .unwrap();
+            let mut replacement = original.clone();
+            match change {
+                "observation" => replacement.last_authenticated_at = Some(Timestamp(123)),
+                "jid" => {
+                    replacement.own_jid =
+                        Some(crate::model::jid::Jid::parse("200@s.whatsapp.net").unwrap())
+                }
+                "logout" => replacement.registration = RegistrationStatus::Unregistered,
+                "registration-id" => replacement.signal_registration_id = Some(42),
+                _ => {}
+            }
+            store.write(|tx| replacement.save(tx)).unwrap();
+            drop(store);
+            let store = ProtocolStore::open(options()).unwrap();
+            let snapshot = |store: &ProtocolStore| {
+                store
+                    .read(|tx| {
+                        Ok((
+                            [
+                                Table::Checkpoints,
+                                Table::Inbox,
+                                Table::SignalSessions,
+                                Table::PeerIdentities,
+                            ]
+                            .iter()
+                            .map(|table| tx.scan(*table, 1, 100))
+                            .collect::<Result<Vec<_>>>()?,
+                            tx.journal_head()?,
+                        ))
+                    })
+                    .unwrap()
+            };
+            let before = snapshot(&store);
+            let result = restore_for_owner(&store, key, &saved, owner);
+            if matches!(change, "same" | "observation") {
+                assert!(result.unwrap());
+                assert!(!restore_for_owner(&store, key, &saved, owner).unwrap());
+                let events = store
+                    .read_events(
+                        &ConsumerId::new("backfill").unwrap(),
+                        EventCursor::START,
+                        10,
+                    )
+                    .unwrap();
+                assert_eq!(events.events.len(), 1);
+                assert_eq!(events.events[0].event.kind(), "group_history_notice");
+            } else {
+                assert!(
+                    matches!(result,Err(Error::InvalidInput { field:"inbox",reason }) if reason == "account changed during event backfill")
+                );
+                assert_eq!(snapshot(&store), before);
+            }
+        }
+    }
     fn node() -> Node {
         Node::new("message")
             .attr("from", "15555550100@s.whatsapp.net")

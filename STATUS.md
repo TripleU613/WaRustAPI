@@ -10592,3 +10592,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   protobuf cases. Explicit numeric-zero suffixes parse as Plain, refuting the
   proposed kind-filter correction. No production behavior change, ACK/history
   request or live operation; native parser equivalence remains unknown.
+
+- Historical event restoration now rechecks the invocation account authority
+  transactionally before alias/event/marker publication. Offline JID/logout/
+  registration-ID changes preserve rows/journal; same-owner and observation-only
+  controls publish once. Historical provenance remains separate; no live operation.
