@@ -1,0 +1,85 @@
+
+# class: LX/0WJ;
+# extends: Ljava/lang/Object;
+
+.method public A16(ZLL)  # .registers 13
+    # full signature: LX/0WJ;->A16(LX/EoY;[B)Z
+    0000..0006  const-string/jumbo  v2, "storeSession"
+    0006..0008  move-object  v6, v10
+    0008..000c  iget-object  v1, v10, LX/0WJ;->A0P:LX/0YG;
+    000c..0010  const-string  v0, "sessions"
+    0010..0012  move-object  v8, v11
+    0012..0018  invoke-virtual  {v1, v11, v2, v0}, LX/0YG;->A02(LX/EoY;Ljava/lang/String;Ljava/lang/String;)LX/EoY;
+    0018..001a  move-result-object  v7
+    001a..001e  new-instance  v0, LX/Etk;
+    001e..0020  move-object  v5, v12
+    0020..0026  invoke-direct  {v0, v12}, LX/Etk;-><init>([B)V
+    0026..002c  invoke-virtual  {v10, v0}, LX/0WJ;->A0o(LX/Etk;)V
+    002c..0030  const/16  v9, #0x1a
+    0030..0034  new-instance  v4, LX/FcP;
+    0034..003a  invoke-direct/range  {v4..v9}, LX/FcP;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+    003a..0040  invoke-direct  {v10}, LX/0WJ;->A0I()Z
+    0040..0042  move-result  v0
+    0042..0046  if-eqz  v0, +0x14
+    0046..004a  iget-object  v0, v10, LX/0WJ;->A0I:LX/0Wk;
+    004a..0050  invoke-static  {v7, v0}, LX/0Wk;->A00(LX/EoY;LX/0Wk;)LX/FjI;
+    0050..0052  move-result-object  v0
+    0052..0058  invoke-virtual  {v0}, Ljava/util/concurrent/locks/ReentrantLock;->lock()V
+    0058..005e  invoke-direct  {v10, v4}, LX/0WJ;->A0F(Ljava/lang/Runnable;)V
+    005e..0060  goto  +0x27
+    0060..0062  move-exception  v1
+    0062..0068  invoke-virtual  {v0}, LX/FjI;->close()V
+    0068..006a  throw  v1
+    006a..006e  iget-object  v0, v10, LX/0WJ;->A0Q:LX/0Xp;
+    006e..0074  invoke-virtual  {v0}, LX/0Xp;->A07()LX/0aq;
+    0074..0076  move-result-object  v3
+    0076..007c  invoke-virtual  {v3}, LX/0aq;->A00()LX/1hk;
+    007c..007e  move-result-object  v2
+    007e..0082  iget-object  v0, v10, LX/0WJ;->A05:LX/00x;
+    0082..0088  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0088..008a  move-result-object  v1
+    008a..008e  check-cast  v1, LX/Eoe;
+    008e..0090  monitor-enter
+    0090..0096  invoke-virtual  {v4}, LX/FcP;->run()V
+    0096..009c  invoke-virtual  {v2}, LX/1hk;->A00()V
+    009c..009e  monitor-exit
+    009e..00a4  invoke-virtual  {v2}, LX/1hk;->close()V
+    00a4..00aa  invoke-virtual  {v3}, LX/0aq;->close()V
+    00aa..00ac  goto  +0x4
+    00ac..00b2  invoke-virtual  {v0}, LX/FjI;->close()V
+    00b2..00b4  const/4  v0, #0x1
+    00b4..00b6  return  v0
+    00b6..00b8  move-exception  v0
+    00b8..00ba  monitor-exit
+    00ba..00bc  throw  v0
+    00bc..00be  move-exception  v1
+    00be..00c4  invoke-virtual  {v2}, LX/1hk;->close()V
+    00c4..00c6  goto  +0x5
+    00c6..00c8  move-exception  v0
+    00c8..00ce  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    00ce..00d0  throw  v1
+    00d0..00d2  move-exception  v1
+    00d2..00d8  invoke-virtual  {v3}, LX/0aq;->close()V
+    00d8..00da  throw  v1
+    00da..00dc  move-exception  v0
+    00dc..00e2  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    00e2..00e4  throw  v1
+    00e4..00e6  move-exception  v1
+    00e6..00ea  const-string  v0, "sessionStoreImpl/invalid-session-record"
+    00ea..00f0  invoke-static  {v0, v1}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    00f0..00f2  const/4  v0, #0x0
+    00f2..00f4  return  v0
+    # exception table: 12 try range(s)
+    # catch Ljava/io/IOException; code_units 000d..0016 -> 0072
+    # catch <all> code_units 002c..0030 -> 0030
+    # catch <all> code_units 0031..0034 -> 006d
+    # catch <all> code_units 003b..003f -> 0068
+    # catch <all> code_units 003f..0048 -> 005e
+    # catch <all> code_units 0048..004f -> 005b
+    # catch <all> code_units 004f..0052 -> 0068
+    # catch <all> code_units 005c..005d -> 005b
+    # catch <all> code_units 005d..005e -> 005e
+    # catch <all> code_units 005f..0063 -> 0063
+    # catch <all> code_units 0064..0068 -> 0068
+    # catch <all> code_units 0069..006c -> 006d
+.end method

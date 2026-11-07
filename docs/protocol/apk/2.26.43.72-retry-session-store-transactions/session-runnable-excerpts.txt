@@ -1,0 +1,143 @@
+# Bounded FcP.run excerpts; NOT a complete method.
+# Source: xtask apk-smali pinned APK --class LX/FcP; --method run --signatures --exceptions
+# Full export sha256: 7bd25f8973f751f89ad08b17baeff33c3f32b8a4cd590a4f48e376b50af82d76
+# Retained instruction byte PCs: [0000,000e), [0394,0584), [22c0,22c2).
+# Exception records: any range intersecting [0394,0584) or handler within it.
+    0000..0004  move-object/from16  v1, v82
+    0004..0008  iget  v0, v1, LX/FcP;->$t:I
+    0008..000e  packed-switch  v0, payload@0x3aec, cases=[0:@0xd7e, 1:@0x2276, 2:@0xd40, 3:@0x222a, 4:@0x3756, 5:@0x21cc, 6:@0xc6c, 7:@0x36c4, 8:@0xb64, 9:@0x2104, 10:@0x2080, 11:@0xb06, 12:@0xab6, 13:@0x201a, 14:@0x1fde, 15:@0x92c, 16:@0x1e1c, 17:@0x7b8, 18:@0x1df4, 19:@0x642, 20:@0x1d50, 21:@0x584, 22:@0x1d24, 23:@0x1c98, 24:@0x1be6, 25:@0x13c4, 26:@0x394, 27:@0x1360, 28:@0x131e, 29:@0x14a, 30:@0x12bc, 31:@0x11de, 32:@0x1160, 33:@0x8c, 34:@0xffe, 35:@0xdba], default@0xe
+    0394..0398  iget-object  v8, v1, LX/FcP;->A00:Ljava/lang/Object;
+    0398..039c  check-cast  v8, LX/0WJ;
+    039c..03a0  iget-object  v7, v1, LX/FcP;->A01:Ljava/lang/Object;
+    03a0..03a4  check-cast  v7, LX/EoY;
+    03a4..03a8  iget-object  v6, v1, LX/FcP;->A02:Ljava/lang/Object;
+    03a8..03ac  check-cast  v6, LX/EoY;
+    03ac..03b0  iget-object  v9, v1, LX/FcP;->A03:Ljava/lang/Object;
+    03b0..03b4  check-cast  v9, [B
+    03b4..03b8  iget-object  v1, v8, LX/0WJ;->A0N:LX/0YE;
+    03b8..03ba  const/4  v0, #0x1
+    03ba..03c0  invoke-static  {v9, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    03c0..03c4  const-string  v2, "saveSession"
+    03c4..03c8  iget-object  v0, v1, LX/0YE;->A01:LX/0YG;
+    03c8..03cc  const-string  v14, "sessions"
+    03cc..03d2  invoke-virtual  {v0, v7, v2, v14}, LX/0YG;->A02(LX/EoY;Ljava/lang/String;Ljava/lang/String;)LX/EoY;
+    03d2..03d4  move-result-object  v11
+    03d4..03d8  iget-object  v10, v1, LX/0YE;->A02:LX/0Xp;
+    03d8..03de  invoke-virtual  {v10}, LX/0Xp;->A07()LX/0aq;
+    03de..03e0  move-result-object  v5
+    03e0..03e6  invoke-virtual  {v5}, LX/0aq;->A00()LX/1hk;
+    03e6..03e8  move-result-object  v4
+    03e8..03ee  invoke-virtual  {v10}, LX/0Xp;->A07()LX/0aq;
+    03ee..03f0  move-result-object  v3
+    03f0..03f6  invoke-static  {}, LX/2LA;->A06()Landroid/content/ContentValues;
+    03f6..03f8  move-result-object  v13
+    03f8..03fc  const-string  v2, "record"
+    03fc..0402  invoke-virtual  {v13, v2, v9}, Landroid/content/ContentValues;->put(Ljava/lang/String;[B)V
+    0402..0406  iget-object  v12, v3, LX/0aq;->A02:LX/0KU;
+    0406..040a  const-string  v15, "recipient_account_id = ? AND recipient_account_type = ? AND device_id = ? AND session_scope = ? AND session_type = ? "
+    040a..0410  invoke-virtual  {v11}, LX/EoY;->A01()[Ljava/lang/String;
+    0410..0412  move-result-object  v17
+    0412..0416  const-string  v16, "SignalSessionStore/saveSessionUpdateSingleSession"
+    0416..041c  invoke-virtual/range  {v12..v17}, LX/0KU;->A02(Landroid/content/ContentValues;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+    041c..041e  move-result  v11
+    041e..0424  invoke-virtual  {v3}, LX/0aq;->close()V
+    0424..0428  if-nez  v11, +0x5b
+    0428..042c  const-string  v12, "SignalSessionStore/insertNewSession "
+    042c..0430  const-string  v3, "insertNewSession"
+    0430..0436  invoke-virtual  {v0, v7, v3, v14}, LX/0YG;->A02(LX/EoY;Ljava/lang/String;Ljava/lang/String;)LX/EoY;
+    0436..0438  move-result-object  v13
+    0438..043e  invoke-virtual  {v10}, LX/0Xp;->A07()LX/0aq;
+    043e..0440  move-result-object  v3
+    0440..0444  iget-object  v0, v1, LX/0YE;->A00:LX/08q;
+    0444..044a  invoke-static  {v0}, LX/B21;->A02(LX/08q;)J
+    044a..044c  move-result-wide  v0
+    044c..0452  invoke-static  {}, LX/2LA;->A06()Landroid/content/ContentValues;
+    0452..0454  move-result-object  v11
+    0454..045a  invoke-virtual  {v11, v2, v9}, Landroid/content/ContentValues;->put(Ljava/lang/String;[B)V
+    045a..045e  const-string  v10, "device_id"
+    045e..0462  iget  v2, v7, LX/EoY;->A00:I
+    0462..0468  invoke-static  {v11, v10, v2}, LX/2LB;->A1H(Landroid/content/ContentValues;Ljava/lang/String;I)V
+    0468..046e  const-string/jumbo  v2, "timestamp"
+    046e..0474  invoke-static  {v11, v2, v0, v1}, LX/2LB;->A1I(Landroid/content/ContentValues;Ljava/lang/String;J)V
+    0474..0478  const-string  v10, "session_scope"
+    0478..047c  iget-object  v2, v7, LX/EoY;->A02:LX/E78;
+    047c..0480  iget  v2, v2, LX/E78;->intValue:I
+    0480..0486  invoke-static  {v11, v10, v2}, LX/2LB;->A1H(Landroid/content/ContentValues;Ljava/lang/String;I)V
+    0486..048a  const-string  v10, "session_type"
+    048a..048e  iget-object  v2, v7, LX/EoY;->A03:LX/E7N;
+    048e..0492  iget  v2, v2, LX/E7N;->intValue:I
+    0492..0498  invoke-static  {v11, v10, v2}, LX/2LB;->A1H(Landroid/content/ContentValues;Ljava/lang/String;I)V
+    0498..049c  const-string  v10, "recipient_account_id"
+    049c..04a0  iget-object  v2, v13, LX/EoY;->A04:Ljava/lang/String;
+    04a0..04a6  invoke-virtual  {v11, v10, v2}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/String;)V
+    04a6..04aa  const-string  v10, "recipient_account_type"
+    04aa..04ae  iget  v2, v13, LX/EoY;->A01:I
+    04ae..04b4  invoke-static  {v11, v10, v2}, LX/2LB;->A1H(Landroid/content/ContentValues;Ljava/lang/String;I)V
+    04b4..04ba  invoke-static  {v7, v12}, LX/1Xl;->A15(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    04ba..04bc  move-result-object  v10
+    04bc..04c0  const-string  v2, " at "
+    04c0..04c6  invoke-static  {v2, v10, v0, v1}, LX/DBb;->A1L(Ljava/lang/String;Ljava/lang/StringBuilder;J)V
+    04c6..04ca  iget-object  v1, v3, LX/0aq;->A02:LX/0KU;
+    04ca..04ce  const-string  v0, "SignalSessionStore/saveSession"
+    04ce..04d4  invoke-virtual  {v1, v14, v0, v11}, LX/0KU;->A05(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J
+    04d4..04da  invoke-virtual  {v3}, LX/0aq;->close()V
+    04da..04e0  invoke-virtual  {v4}, LX/1hk;->A00()V
+    04e0..04e6  invoke-virtual  {v4}, LX/1hk;->close()V
+    04e6..04ec  invoke-virtual  {v5}, LX/0aq;->close()V
+    04ec..04f0  const-string  v0, "SignalSessionStore/saveSession "
+    04f0..04f6  invoke-static  {v0, v7}, LX/2LA;->A1L(Ljava/lang/String;Ljava/lang/Object;)V
+    04f6..04fa  iget-object  v0, v8, LX/0WJ;->A05:LX/00x;
+    04fa..0500  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0500..0502  move-result-object  v1
+    0502..0506  check-cast  v1, LX/Eoe;
+    0506..050a  new-instance  v0, LX/Etk;
+    050a..0510  invoke-direct  {v0, v9}, LX/Etk;-><init>([B)V
+    0510..0516  invoke-virtual  {v1, v0, v6}, LX/Eoe;->A04(LX/Etk;LX/EoY;)V
+    0516..051a  goto/16  +0xed8
+    051a..051c  move-exception  v1
+    051c..051e  throw  v1
+    051e..0520  move-exception  v0
+    0520..0526  invoke-static  {v3, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    0526..0528  throw  v0
+    0528..052a  move-exception  v1
+    052a..052c  throw  v1
+    052c..052e  move-exception  v0
+    052e..0534  invoke-static  {v4, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    0534..0536  throw  v0
+    0536..0538  move-exception  v1
+    0538..053a  throw  v1
+    053a..053c  move-exception  v0
+    053c..0542  invoke-static  {v5, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    0542..0544  throw  v0
+    0544..0546  move-exception  v2
+    0546..054a  const-string  v0, "SignalCoordinator/storeSession for "
+    054a..0550  invoke-static  {v6, v0}, LX/1Xl;->A15(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0550..0552  move-result-object  v1
+    0552..0556  const-string  v0, " failed to update"
+    0556..055c  invoke-static  {v0, v1, v2}, LX/8t5;->A1H(Ljava/lang/String;Ljava/lang/StringBuilder;Ljava/lang/Throwable;)V
+    055c..0560  sget-object  v1, Ljava/lang/Boolean;->TRUE:Ljava/lang/Boolean;
+    0560..0564  sget-object  v0, LX/0WJ;->A0T:Ljava/lang/ThreadLocal;
+    0564..056a  invoke-virtual  {v0}, Ljava/lang/ThreadLocal;->get()Ljava/lang/Object;
+    056a..056c  move-result-object  v0
+    056c..0572  invoke-virtual  {v1, v0}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
+    0572..0574  move-result  v0
+    0574..0578  if-eqz  v0, -0x275
+    0578..057c  new-instance  v0, LX/Dvm;
+    057c..0582  invoke-direct  {v0, v2}, LX/Dvm;-><init>(Ljava/lang/Throwable;)V
+    0582..0584  throw  v0
+    22c0..22c2  return-void
+    # catch Ljava/io/IOException; code_units 01da..01f0 -> 02a2
+    # catch <all> code_units 01f0..01f4 -> 029b
+    # catch <all> code_units 01f4..01f8 -> 0294
+    # catch <all> code_units 01f8..020f -> 028d
+    # catch <all> code_units 020f..0220 -> 0294
+    # catch <all> code_units 0220..026a -> 028d
+    # catch <all> code_units 026a..0270 -> 0294
+    # catch <all> code_units 0270..0273 -> 029b
+    # catch Ljava/io/IOException; code_units 0273..028d -> 02a2
+    # catch <all> code_units 028e..028f -> 028f
+    # catch <all> code_units 028f..0294 -> 0294
+    # catch <all> code_units 0295..0296 -> 0296
+    # catch <all> code_units 0297..029b -> 029b
+    # catch <all> code_units 029c..029d -> 029d
+    # catch Ljava/io/IOException; code_units 029d..02a2 -> 02a2

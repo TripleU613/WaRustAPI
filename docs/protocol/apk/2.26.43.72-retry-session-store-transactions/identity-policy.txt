@@ -1,0 +1,30 @@
+
+# class: LX/0WJ;
+# extends: Ljava/lang/Object;
+
+.method public A12(ZLL)  # .registers 5
+    # full signature: LX/0WJ;->A12(LX/Ee1;LX/EoY;)Z
+    0000..0006  invoke-static  {v4}, LX/F3k;->A00(LX/EoY;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0006..0008  move-result-object  v0
+    0008..000c  iget-object  v1, v2, LX/0WJ;->A0B:LX/09F;
+    000c..0012  invoke-interface  {v1, v0}, LX/09F;->BRq(Lcom/whatsapp/infra/core/jid/DeviceJid;)Z
+    0012..0014  move-result  v0
+    0014..0018  if-eqz  v0, +0x13
+    0018..001e  invoke-interface  {v1}, LX/09F;->BU7()Z
+    001e..0020  move-result  v0
+    0020..0024  if-eqz  v0, +0x13
+    0024..002a  invoke-static  {v4}, LX/F3k;->A00(LX/EoY;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    002a..002c  move-result-object  v0
+    002c..0032  invoke-interface  {v1, v0}, LX/09F;->BRq(Lcom/whatsapp/infra/core/jid/DeviceJid;)Z
+    0032..0034  move-result  v0
+    0034..003a  invoke-static  {v0}, LX/00L;->A0A(Z)V
+    003a..003c  const/4  v0, #0x0
+    003c..0042  invoke-static  {v2, v0, v3, v4, v0}, LX/0WJ;->A0J(LX/0WJ;LX/E7b;LX/Ee1;LX/EoY;[LX/Ejr;)Z
+    0042..0044  move-result  v0
+    0044..0046  return  v0
+    0046..004a  const-string  v0, "SignalCoordinator/saveIdentity - Not allowed to save my companion identity as primary"
+    004a..0050  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0050..0052  const/4  v0, #0x0
+    0052..0054  return  v0
+    # exception table: 0 try range(s)
+.end method

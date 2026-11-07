@@ -1,5 +1,9 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
+**Session/identity transaction scopes traced.** Native adapters discard save
+booleans; local SQLite scopes and conditional IOException propagation are
+retained. Shared outer ownership/crash semantics remain open. [Evidence](retry-answers.md#concrete-session-and-identity-transaction-scopes-2026-11-07). Research only.
+
 **Earlier identity AEA write located.** Session processing writes identity-table
 AEA before returning, followed by a separate caller update. Update count is
 discarded; exception status does not prove rollback. Concrete transaction/crash

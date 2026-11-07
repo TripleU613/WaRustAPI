@@ -1,4 +1,11 @@
 {
+  "x-retry-session-store-transactions-static-boundary": {
+    "x-cli": "research through existing APK inspection commands; no new command",
+    "x-transport": "research only; receipt-carried keys remain unsupported",
+    "x-live": false,
+    "description": "Concrete 0Yj adapters discard session/identity-save boolean results. 0WJ session and identity helpers use local SQLite scopes, with a nested session callback scope; shared outer transaction and crash semantics remain unproven. Session IOException propagation is conditional on ThreadLocal A0T; Ff8 policy provenance remains open. No Rust key adoption or live account operation.",
+    "evidence": "docs/protocol/apk/2.26.43.72-retry-session-store-transactions/README.md"
+  },
   "x-retry-session-aea-storage-static-boundary": {
     "x-cli": "research via existing APK inspection commands; no new command",
     "x-transport": "research only; receipt-carried keys remain unsupported",

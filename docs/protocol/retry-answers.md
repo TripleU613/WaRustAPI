@@ -638,3 +638,13 @@ earlier identity-mismatch cleanup may precede validation. Do not infer no mutati
 from refusal or durable atomic success from zero. Rust receipt-key refusal remains.
 [Complete methods, storage predicates, result mapping and limits](apk/2.26.43.72-retry-session-aea-storage/README.md).
 No runtime change or live account operation.
+
+## Concrete session and identity transaction scopes (2026-11-07)
+
+**Confirmed selected static:**0Yj adapters discard session/identity-save booleans.
+0WJ.A16 and A0J have local SQLite transaction scopes; the session callback also
+opens a nested scope. Shared outer transaction/crash semantics remain unproven.
+Selected session IOException propagation depends on a ThreadLocal flag; Ff8
+provenance remains open. Five session-address dimensions and update/insert order
+are retained. [Complete trace and limits](apk/2.26.43.72-retry-session-store-transactions/README.md).
+Research only; Rust receipt-key refusal remains, no live operation.

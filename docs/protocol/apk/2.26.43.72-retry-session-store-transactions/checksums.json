@@ -1,0 +1,66 @@
+{
+  "README.md": {
+    "bytes": 5626,
+    "sha256": "e27b50e9aca4356ec2450ce83320035688ac1c7c7eb385793cce0de3766147c8"
+  },
+  "database-begin.txt": {
+    "bytes": 394,
+    "sha256": "dd5a6d1203ddfcde15e04418ffa39d5bf9a81553061fec4cfe23889c58baa813"
+  },
+  "database-end.txt": {
+    "bytes": 665,
+    "sha256": "fec4e6e0d607c0876e3fca30f52bf30375027a1997385c9cb3cf1794dc16e23e"
+  },
+  "database-success.txt": {
+    "bytes": 402,
+    "sha256": "7b4f0ef50a4fefa6315b283fbbf3eeba24cd0763fd7bc2afffd2ccc52bc6c5d4"
+  },
+  "failure-policy-refs.txt": {
+    "bytes": 234,
+    "sha256": "864c2709df31febdf97686306cb2948921c145a7fbbc7168d748c51b6efd8b6e"
+  },
+  "handle-begin.txt": {
+    "bytes": 678,
+    "sha256": "d1b6e8b774a7c1f584fe3610e14475d258a8ff438aad81393dd9b3b40f90422c"
+  },
+  "handle-constructor.txt": {
+    "bytes": 723,
+    "sha256": "c4b968fa0e4729dd368caff25eddaa9c997bbf319e2950d69d81ae4ff4e509d1"
+  },
+  "identity-adapter.txt": {
+    "bytes": 1279,
+    "sha256": "5f807af56f0808ba9625fa4b01e1977ac807b167da052e64405ff819d89d6584"
+  },
+  "identity-policy.txt": {
+    "bytes": 1470,
+    "sha256": "e94bb89c73823bb9b71f6787e16fc091ed5f318f9b32fd93f505589ad8702479"
+  },
+  "identity-store.txt": {
+    "bytes": 11843,
+    "sha256": "da1556e0cb4e2ca851408641e16ddaa9e18aabaed286c1f0eafff19ce765900d"
+  },
+  "runnable-constructor.txt": {
+    "bytes": 674,
+    "sha256": "86252479dcd80e5dbaef3e1bf28c40458067dc899132692fae3bf986bdf8ddeb"
+  },
+  "session-adapter.txt": {
+    "bytes": 1691,
+    "sha256": "76a586893b6011d4b4676fd91a21d63e9546b8c58b0bf938e83eb972e0601753"
+  },
+  "session-runnable-excerpts.txt": {
+    "bytes": 9192,
+    "sha256": "5ae6e3e19c7f7d23f01fcb341dfa6068402586833c5d849b405945175d1e43fa"
+  },
+  "session-store.txt": {
+    "bytes": 4028,
+    "sha256": "8f0fa33218487f0713664f929317dfb096ee33779d29c696f068eae60e66439c"
+  },
+  "session-transaction.txt": {
+    "bytes": 1559,
+    "sha256": "52517c085d786803b9069833538cbbaf8c30a2dda78abf632337f0c6d712f210"
+  },
+  "transaction-handle.txt": {
+    "bytes": 9276,
+    "sha256": "ac752fff0278bab01c4a966d8f9a2d5f940e5b5cf5c679af36cafa0ad1b348a7"
+  }
+}

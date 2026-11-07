@@ -1,0 +1,16 @@
+
+# class: LX/0aq;
+# extends: Ljava/lang/Object;
+
+.method public A00(L)  # .registers 4
+    # full signature: LX/0aq;->A00()LX/1hk;
+    0000..0004  sget-object  v0, LX/00M;->A03:Ljava/lang/Boolean;
+    0004..0006  const/4  v2, #0x0
+    0006..000c  invoke-static  {v2}, LX/00L;->A07(Ljava/lang/String;)V
+    000c..0010  iget-object  v1, v3, LX/0aq;->A02:LX/0KU;
+    0010..0014  iget-object  v0, v3, LX/0aq;->A01:LX/0HC;
+    0014..001a  invoke-virtual  {v3, v2, v0, v1}, LX/0aq;->A02(Landroid/database/sqlite/SQLiteTransactionListener;LX/0HC;LX/0KU;)LX/1hk;
+    001a..001c  move-result-object  v0
+    001c..001e  return-object  v0
+    # exception table: 0 try range(s)
+.end method
