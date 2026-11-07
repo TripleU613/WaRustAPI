@@ -1,3 +1,8 @@
+**Normal group preparation now retains its original account.** Timeout/save,
+device/key-query creation and final sender-key reservation reject owner drift.
+Child key batches receive the original parent authority even on first creation.
+[Regression evidence and remaining limits](group-preparation-account-ownership.md). No live operation.
+
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
 **New directory key batches retain account ownership.** Page reservation,

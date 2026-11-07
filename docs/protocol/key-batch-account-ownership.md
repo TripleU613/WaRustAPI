@@ -45,7 +45,9 @@ across reopen and no new query after complete original-owner assembly.
 This closes the new key-batch lifecycle's local account gap. It does not by
 itself bind an earlier group Pending/Row to the first batch creation, protect all
 read-to-crypto gaps, or establish account ownership in group sender-key commit.
-Those higher-level transitions remain the next audit targets. Existing normal
+Those higher-level transitions are now addressed in the subsequent
+[group preparation account audit](group-preparation-account-ownership.md), within
+its documented limits. Existing normal
 [group writer checks](group-writer-account-ownership.md) and [group projection](group-projection-ownership.md)
 remain separate safeguards. Non-group/offline consumers do not gain permission
 to replay queries or override account/session state from this change.

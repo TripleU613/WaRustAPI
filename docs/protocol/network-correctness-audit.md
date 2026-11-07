@@ -1,5 +1,10 @@
 # Network correctness audit
 
+**Normal group preparation now retains its original account.** Timeout/save,
+device/key-query creation and final sender-key reservation reject owner drift.
+Child key batches receive the original parent authority even on first creation.
+[Regression evidence and remaining limits](group-preparation-account-ownership.md). No live operation.
+
 **New directory key batches retain account ownership.** Page reservation,
 settlement and assembled-key reuse now reject changed owners, including after
 reopen, without rewriting uncertain outcomes. Legacy owner absence stays unknown.

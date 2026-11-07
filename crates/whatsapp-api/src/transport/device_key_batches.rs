@@ -99,6 +99,20 @@ fn decode(wire: &[u8]) -> Result<Node> {
         .decode_node()
         .map_err(|_| invalid("invalid saved key-batch reply"))
 }
+// An upstream preparation owner must not be replaced by reloading a new
+// account when its first directory page is created.
+fn check_expected_account(
+    generation: crate::model::ids::AccountGeneration,
+    account: Option<&crate::session::AccountRecord>,
+    expected: Option<[u8; 32]>,
+) -> Result<()> {
+    if let Some(expected) = expected
+        && super::account_authority::fingerprint(generation, account)? != expected
+    {
+        return Err(invalid("caller key-batch account changed"));
+    }
+    Ok(())
+}
 impl Batch {
     fn check_account(
         &self,
@@ -236,9 +250,26 @@ pub fn reserve_next(
     id: &ClientRequestId,
     input: &[Jid],
 ) -> Result<Option<Node>> {
+    reserve_next_inner(store, id, input, None)
+}
+pub(crate) fn reserve_next_owned(
+    store: &ProtocolStore,
+    id: &ClientRequestId,
+    input: &[Jid],
+    expected: [u8; 32],
+) -> Result<Option<Node>> {
+    reserve_next_inner(store, id, input, Some(expected))
+}
+fn reserve_next_inner(
+    store: &ProtocolStore,
+    id: &ClientRequestId,
+    input: &[Jid],
+    expected: Option<[u8; 32]>,
+) -> Result<Option<Node>> {
     let input = devices(input)?;
     store.write(|tx| {
         let account = crate::session::AccountRecord::load_in_write(tx)?;
+        check_expected_account(tx.generation(), account.as_ref(), expected)?;
 
         let raw=tx.get(Table::Checkpoints,&key(id),1)?;
         let mut batch:Batch=match raw {
@@ -338,6 +369,22 @@ fn classify(node: &Node, expected: &[Jid]) -> std::result::Result<(), Reason> {
 /// wire privately. Returns false for non-replies or unmatched/terminal IDs without mutation.
 /// Call only after transport authentication; saving does not replace peer pins.
 pub fn settle(store: &ProtocolStore, id: &ClientRequestId, node: &Node) -> Result<bool> {
+    settle_inner(store, id, node, None)
+}
+pub(crate) fn settle_owned(
+    store: &ProtocolStore,
+    id: &ClientRequestId,
+    node: &Node,
+    expected: [u8; 32],
+) -> Result<bool> {
+    settle_inner(store, id, node, Some(expected))
+}
+fn settle_inner(
+    store: &ProtocolStore,
+    id: &ClientRequestId,
+    node: &Node,
+    expected: Option<[u8; 32]>,
+) -> Result<bool> {
     // APK43.72 1rA.A03 and 0ln.A01 select result/error before invoking
     // callbacks. An ID alone must not consume durable pending ownership.
     if node.description != "iq"
@@ -364,6 +411,7 @@ pub fn settle(store: &ProtocolStore, id: &ClientRequestId, node: &Node) -> Resul
             return Ok(false);
         };
         let account = crate::session::AccountRecord::load_in_write(tx)?;
+        check_expected_account(tx.generation(), account.as_ref(), expected)?;
         batch.check_account(tx.generation(), account.as_ref())?;
         let result = classify(node, batch.expected(index));
         let page = &mut batch.pages[index];
@@ -389,6 +437,22 @@ pub fn assembled(
     id: &ClientRequestId,
     input: &[Jid],
 ) -> Result<Option<Node>> {
+    assembled_inner(store, id, input, None)
+}
+pub(crate) fn assembled_owned(
+    store: &ProtocolStore,
+    id: &ClientRequestId,
+    input: &[Jid],
+    expected: [u8; 32],
+) -> Result<Option<Node>> {
+    assembled_inner(store, id, input, Some(expected))
+}
+fn assembled_inner(
+    store: &ProtocolStore,
+    id: &ClientRequestId,
+    input: &[Jid],
+    expected: Option<[u8; 32]>,
+) -> Result<Option<Node>> {
     let input = devices(input)?;
     store.read(|tx| {
         let Some(batch) = load(tx, id)? else {
@@ -404,6 +468,7 @@ pub fn assembled(
             };
         };
         let account = crate::session::AccountRecord::load(tx)?;
+        check_expected_account(tx.generation(), account.as_ref(), expected)?;
         batch.check_account(tx.generation(), account.as_ref())?;
         batch.matches_devices(&input)?;
         let mut users = Vec::with_capacity(batch.devices.len());
@@ -599,6 +664,44 @@ mod tests {
             })
             .unwrap()
     }
+    #[test]
+    fn caller_owner_cannot_be_replaced_when_first_key_page_is_created() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("caller-owner.redb"));
+        let account = crate::session::AccountRecord {
+            generation: store.generation(),
+            signal_registration_id: Some(31),
+            ..Default::default()
+        };
+        store.write(|tx| account.save(tx)).unwrap();
+        let expected =
+            super::super::account_authority::fingerprint(store.generation(), Some(&account))
+                .unwrap();
+        let mut changed = account.clone();
+        changed.signal_registration_id = Some(32);
+        store.write(|tx| changed.save(tx)).unwrap();
+        let before = state(&store);
+        let targets = [target(0)];
+        assert!(reserve_next_owned(&store, &id(), &targets, expected).is_err());
+        assert_eq!(state(&store), before);
+        assert!(summary(&store, &id()).unwrap().is_none());
+        store.write(|tx| account.save(tx)).unwrap();
+        let query = reserve_next_owned(&store, &id(), &targets, expected)
+            .unwrap()
+            .unwrap();
+        assert!(settle_owned(&store, &id(), &reply(&query, &user_template()), expected).unwrap());
+        assert!(
+            assembled_owned(&store, &id(), &targets, expected)
+                .unwrap()
+                .is_some()
+        );
+        assert!(
+            reserve_next_owned(&store, &id(), &targets, expected)
+                .unwrap()
+                .is_none()
+        );
+    }
+
     #[test]
     fn key_batch_reservation_settlement_and_assembly_keep_the_original_account() {
         let dir = tempfile::tempdir().unwrap();

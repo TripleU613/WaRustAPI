@@ -137,6 +137,38 @@ pub(super) mod tests {
             })
             .unwrap()
     }
+    #[test]
+    fn group_preparation_cannot_record_timeout_under_a_replacement_account() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("group-preparation-owner.redb");
+        let store = group_fanout::tests::open(&path);
+        let account = AccountRecord {
+            generation: store.generation(),
+            signal_registration_id: Some(31),
+            ..Default::default()
+        };
+        store.write(|tx| account.save(tx)).unwrap();
+        let chat = Jid::parse("12345-67890@g.us").unwrap();
+        let ticket = enqueue(&store, &chat, "group-owner");
+        let (pending, _) = begin_selected(&store, ticket).unwrap().unwrap();
+        let mut replacement = account;
+        replacement.signal_registration_id = Some(32);
+        store.write(|tx| replacement.save(tx)).unwrap();
+        let before = rows(&store);
+        let head = store.journal_head().unwrap();
+        assert!(
+            pending
+                .expire(&store, &mut devices::DeviceSyncCursor::default())
+                .is_err()
+        );
+        assert_eq!(rows(&store), before);
+        assert_eq!(store.journal_head().unwrap(), head);
+        drop(store);
+        let reopened = group_fanout::tests::open(&path);
+        assert_eq!(rows(&reopened), before);
+        assert!(begin_selected(&reopened, ticket).unwrap().is_none());
+    }
+
     #[tokio::test]
     async fn normal_group_references_decrypt_with_exact_participants_and_never_replay() {
         use super::super::group_references::tests::{reference, save_parent};
@@ -1635,6 +1667,8 @@ enum Block {
 }
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 struct Row {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    account_authority: Option<[u8; 32]>,
     local_id: LocalMessageId,
     phase: Phase,
     reason: Option<Block>,
@@ -1645,6 +1679,22 @@ struct Row {
     device_count: usize,
 }
 
+impl Row {
+    fn authority(&self) -> Result<[u8; 32]> {
+        self.account_authority
+            .ok_or_else(|| invalid("group preparation account authority unavailable"))
+    }
+    fn check_account(
+        &self,
+        generation: crate::model::ids::AccountGeneration,
+        account: Option<&AccountRecord>,
+    ) -> Result<()> {
+        if super::account_authority::fingerprint(generation, account)? != self.authority()? {
+            return Err(invalid("group preparation account changed"));
+        }
+        Ok(())
+    }
+}
 /// Read-only progress, independent of delivery facts. Reservation is not an ACK.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct PreparationSummary {
@@ -1969,7 +2019,12 @@ pub(crate) fn begin_selected(
         {
             return Ok(None);
         }
+        let saved_account = AccountRecord::load_in_write(tx)?;
         let mut row = Row {
+            account_authority: Some(super::account_authority::fingerprint(
+                tx.generation(),
+                saved_account.as_ref(),
+            )?),
             local_id: ticket,
             phase: Phase::Membership,
             reason: None,
@@ -2031,6 +2086,27 @@ fn membership_digest(store: &ProtocolStore, chat: &Jid) -> Result<Option<[u8; 32
     })
 }
 impl Pending {
+    fn check_account_in(&self, tx: &crate::store::WriteTx<'_>) -> Result<()> {
+        let saved = AccountRecord::load_in_write(tx)?;
+        self.row.check_account(tx.generation(), saved.as_ref())
+    }
+    fn check_account_read(
+        &self,
+        store: &ProtocolStore,
+        supplied: Option<&AccountRecord>,
+    ) -> Result<()> {
+        store.read(|tx| {
+            let saved = AccountRecord::load(tx)?;
+            self.row.check_account(tx.generation(), saved.as_ref())?;
+            if saved.is_some()
+                && let Some(supplied) = supplied
+            {
+                self.row.check_account(tx.generation(), Some(supplied))?;
+            }
+            Ok(())
+        })
+    }
+
     pub fn matches(&self, node: &Node) -> bool {
         match &self.waiting {
             Waiting::Membership(id) | Waiting::Keys(id) => {
@@ -2067,6 +2143,7 @@ impl Pending {
     }
     fn save(&self, store: &ProtocolStore, old: &Row) -> Result<()> {
         store.write(|tx| {
+            self.check_account_in(tx)?;
             let held: Option<Row> =
                 tx.get_json(Table::Checkpoints, key(self.entry.local_id).as_bytes(), 1)?;
             if held.as_ref() != Some(old) {
@@ -2129,6 +2206,7 @@ impl Pending {
         if !self.matches(node) {
             return Err(invalid("mismatched group preparation reply"));
         }
+        self.check_account_read(store, Some(account))?;
         if store.read(|tx| {
             Ok(outbox()
                 .get(tx, self.entry.local_id)?
@@ -2151,10 +2229,11 @@ impl Pending {
                     Err(error) => return Err(error),
                 },
                 Waiting::Keys(_) => {
-                    if !device_key_batches::settle(
+                    if !device_key_batches::settle_owned(
                         store,
                         &bundle_selector(self.entry.local_id)?,
                         node,
+                        self.row.authority()?,
                     )? {
                         return Err(invalid("directory batch cannot settle"));
                     }
@@ -2288,8 +2367,12 @@ impl Pending {
                 self.next_keys(store, account, epoch, policy).await
             }
             Waiting::Keys(_) => {
-                if !device_key_batches::settle(store, &bundle_selector(self.entry.local_id)?, node)?
-                {
+                if !device_key_batches::settle_owned(
+                    store,
+                    &bundle_selector(self.entry.local_id)?,
+                    node,
+                    self.row.authority()?,
+                )? {
                     return Err(invalid("directory batch cannot settle"));
                 }
                 self.next_keys(store, account, epoch, policy).await
@@ -2318,6 +2401,7 @@ impl Pending {
             .collect();
         let old = self.row.clone();
         let (query, node) = store.write(|tx| {
+            self.check_account_in(tx)?;
             if outbox().get_mut(tx, self.entry.local_id)?.as_ref() != Some(&self.entry) {
                 return Err(invalid("intent changed before device query"));
             }
@@ -2361,6 +2445,7 @@ impl Pending {
         epoch: ConnectionEpoch,
         policy: crate::registration::request::IdentityChangePolicy,
     ) -> Result<Step> {
+        self.check_account_read(store, Some(account))?;
         if membership_digest(store, self.entry.intent.chat.jid())? != self.membership {
             return self.block(store, Block::MembershipChanged);
         }
@@ -2377,10 +2462,11 @@ impl Pending {
                 return self.block(store, Block::KeysInvalid);
             }
         }
-        match device_key_batches::reserve_next(
+        match device_key_batches::reserve_next_owned(
             store,
             &bundle_selector(self.entry.local_id)?,
             &self.needed,
+            self.row.authority()?,
         ) {
             Ok(Some(query)) => {
                 let id = query
@@ -2400,10 +2486,11 @@ impl Pending {
             Err(Error::InvalidInput { .. }) => self.block(store, Block::KeysInvalid),
             Err(error) => Err(error),
             Ok(None) => {
-                let keys = device_key_batches::assembled(
+                let keys = device_key_batches::assembled_owned(
                     store,
                     &bundle_selector(self.entry.local_id)?,
                     &self.needed,
+                    self.row.authority()?,
                 )?;
                 let (body, content, reference_guard) =
                     match payload(store, &self.entry, self.own.as_ref()) {
@@ -2485,6 +2572,7 @@ impl Pending {
                 reserved.phase = Phase::Reserved;
                 reserved.device_count = plan.devices.len();
                 let result = store.write(|tx| {
+                    self.check_account_in(tx)?;
                     let mut current = outbox()
                         .get_mut(tx, self.entry.local_id)?
                         .ok_or_else(|| invalid("original group intent missing"))?;
@@ -2564,6 +2652,7 @@ impl Pending {
         if membership_digest(store, self.entry.intent.chat.jid())? != self.membership {
             return self.block(store, Block::MembershipChanged);
         }
+        self.check_account_read(store, None)?;
         let guard = self
             .routing_guard
             .as_ref()

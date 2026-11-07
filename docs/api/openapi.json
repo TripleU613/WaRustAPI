@@ -1,4 +1,11 @@
 {
+  "x-group-preparation-account-ownership": {
+    "x-cli": "existing group outbox preparation and inspection; no new command or flag",
+    "x-transport": "private preparation owner checked at stage mutation and passed to child directory creation, settlement and assembly",
+    "x-live": false,
+    "description": "Offline red regression reproduced timeout mutation after saved account replacement. New preparation rows freeze account/store authority; saves, device reservation and final sender-key/outbox commit check transactionally. Owned child directory helpers prevent first-page replacement-owner adoption. Two regressions cover unchanged persisted state, reopen, no replay and original-owner completion. Legacy missing owner remains unknown; account-less offline and separate transaction limits documented. No new wire field or live operation.",
+    "evidence": "docs/protocol/group-preparation-account-ownership.md"
+  },
   "x-key-batch-account-ownership": {
     "x-cli": "existing group key-batch inspection/transport flows; no new command/flag/public output field",
     "x-transport": "new private Batch.account_authority checked before page continuation, matching settlement and assembled-key reuse",
