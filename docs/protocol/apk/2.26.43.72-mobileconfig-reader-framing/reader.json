@@ -1,0 +1,64 @@
+{
+  "member_sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+  "diagnostics": {
+    "0x17d83": "verifyBuffer",
+    "0x15ed8": "empty",
+    "0x1618b": "verifyAndLoadBody"
+  },
+  "calls": {
+    "0xa2a94": "0xa08d0",
+    "0xa2aec": "0xa12bc",
+    "0xa2b20": "0xa2bf4",
+    "0x881a4": "0xa2a70",
+    "0xa179c": "0xc2310",
+    "0xa8fc4": "0x9e308",
+    "0x5e888": "0x5dd68",
+    "0x5e89c": "0xccb90",
+    "0xa2f54": "0x9ac7c"
+  },
+  "verifier": {
+    "address_point": "0xd61c0",
+    "slot": "0xd61d8",
+    "target": "0xa2ee4",
+    "selected_min_body_bytes": 12
+  },
+  "hash_projection": "prefix before first colon; unchanged when absent",
+  "synthetic_hash_prefixes": {
+    "abc:v1": "abc",
+    "abc:v2": "abc",
+    ":suffix": "",
+    "plain": "plain"
+  },
+  "projection_authority": "analyst-derived envelope and ASCII prefix examples; no native verification or acceptance",
+  "synthetic_envelopes": {
+    "writer_shape": {
+      "route": "framed verifier handoff",
+      "body_offset": 8,
+      "body_bytes": 3
+    },
+    "version_zero": {
+      "route": "framed verifier handoff",
+      "body_offset": 8,
+      "body_bytes": 3
+    },
+    "version_two": {
+      "route": "framing diagnostic"
+    },
+    "offset_zero": {
+      "route": "framed verifier handoff",
+      "body_offset": 0,
+      "body_bytes": 11
+    },
+    "wrong_size": {
+      "route": "framing diagnostic"
+    },
+    "wrong_footer": {
+      "route": "framing diagnostic"
+    },
+    "raw": {
+      "route": "raw verifier handoff",
+      "body_bytes": 3
+    }
+  },
+  "remaining": "provider binding/readiness, all verifier helpers and table schema, diagnostic cleanup effects and active-state admission"
+}

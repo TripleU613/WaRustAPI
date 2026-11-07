@@ -1,0 +1,39 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   88144:      	paciasp
+   88148:      	stp	x29, x30, [sp, #-0x50]!
+   8814c:      	stp	x26, x25, [sp, #0x10]
+   88150:      	bl	0xca54c <JNI_OnLoad+0x5b3ac>
+   88154:      	mov	x29, sp
+   88158:      	mov	x24, x0
+   8815c:      	mov	w0, #0xc8               // =200
+   88160:      	mov	w19, w5
+   88164:      	mov	w20, w4
+   88168:      	mov	w21, w3
+   8816c:      	mov	x22, x2
+   88170:      	mov	x23, x1
+   88174:      	bl	0xccfa0 <__wrap__Znwm@plt>
+   88178:      	adrp	x8, 0xd6000
+   8817c:      	add	x8, x8, #0x0
+   88180:      	add	x26, x0, #0x18
+   88184:      	mov	x25, x0
+   88188:      	stp	xzr, xzr, [x0, #0x8]
+   8818c:      	and	w3, w21, #0x1
+   88190:      	str	x8, [x0]
+   88194:      	and	w4, w20, #0x1
+   88198:      	mov	x0, x26
+   8819c:      	bl	0xcc774 <JNI_OnLoad+0x5d5d4>
+   881a0:      	mov	w5, w19
+   881a4:      	bl	0xa2a70 <JNI_OnLoad+0x338d0>
+   881a8:      	stp	x26, x25, [x24]
+   881ac:      	bl	0xcacc4 <JNI_OnLoad+0x5bb24>
+   881b0:      	mov	x0, xzr
+   881b4:      	ldp	x24, x23, [sp, #0x20]
+   881b8:      	ldp	x26, x25, [sp, #0x10]
+   881bc:      	ldp	x29, x30, [sp], #0x50
+   881c0:      	autiasp
+   881c4:      	b	0x7667c <JNI_OnLoad+0x74dc>

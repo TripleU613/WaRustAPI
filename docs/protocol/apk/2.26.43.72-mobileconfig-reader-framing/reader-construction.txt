@@ -1,0 +1,56 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   a2a70:      	paciasp
+   a2a74:      	stp	x29, x30, [sp, #-0x30]!
+   a2a78:      	stp	x22, x21, [sp, #0x10]
+   a2a7c:      	stp	x20, x19, [sp, #0x20]
+   a2a80:      	mov	x29, sp
+   a2a84:      	mov	w20, w5
+   a2a88:      	mov	w21, w4
+   a2a8c:      	mov	w22, w3
+   a2a90:      	mov	x19, x0
+   a2a94:      	bl	0xa08d0 <JNI_OnLoad+0x31730>
+   a2a98:      	movi	v0.2d, #0000000000000000
+   a2a9c:      	adrp	x8, 0xd6000
+   a2aa0:      	add	x8, x8, #0x1c0
+   a2aa4:      	str	x8, [x19]
+   a2aa8:      	mov	w8, #0x1                // =1
+   a2aac:      	str	wzr, [x19, #0x48]
+   a2ab0:      	str	wzr, [x19, #0x80]
+   a2ab4:      	stp	q0, q0, [x19, #0x50]
+   a2ab8:      	str	q0, [x19, #0x70]
+   a2abc:      	strb	w8, [x19, #0x84]
+   a2ac0:      	stp	xzr, xzr, [x19, #0x88]
+   a2ac4:      	add	x0, x19, #0x98
+   a2ac8:      	bl	0xa2b6c <JNI_OnLoad+0x339cc>
+   a2acc:      	tst	w22, #0x1
+   a2ad0:      	mov	w8, #0x2                // =2
+   a2ad4:      	stp	xzr, xzr, [x19, #0xa0]
+   a2ad8:      	cinc	w8, w8, eq
+   a2adc:      	tst	w21, #0x1
+   a2ae0:      	csinc	w1, w8, wzr, eq
+   a2ae4:      	mov	x0, x19
+   a2ae8:      	mov	w2, w20
+   a2aec:      	bl	0xa12bc <JNI_OnLoad+0x3211c>
+   a2af0:      	tbz	w0, #0x0, 0xa2b08 <JNI_OnLoad+0x33968>
+   a2af4:      	ldr	x8, [x19, #0x18]
+   a2af8:      	cbz	x8, 0xa2b18 <JNI_OnLoad+0x33978>
+   a2afc:      	ldr	w9, [x8]
+   a2b00:      	add	x1, x8, x9
+   a2b04:      	b	0xa2b1c <JNI_OnLoad+0x3397c>
+   a2b08:      	bl	0xcad6c <JNI_OnLoad+0x5bbcc>
+   a2b0c:      	ldp	x29, x30, [sp], #0x30
+   a2b10:      	autiasp
+   a2b14:      	ret
+   a2b18:      	mov	x1, xzr
+   a2b1c:      	mov	x0, x19
+   a2b20:      	bl	0xa2bf4 <JNI_OnLoad+0x33a54>
+   a2b24:      	mov	x0, x19
+   a2b28:      	bl	0xcad6c <JNI_OnLoad+0x5bbcc>
+   a2b2c:      	ldp	x29, x30, [sp], #0x30
+   a2b30:      	autiasp
+   a2b34:      	b	0xa2d48 <JNI_OnLoad+0x33ba8>

@@ -1,5 +1,10 @@
 # MobileConfig upgrade dispatch and schema/hash gates
 
+Follow-up: [reader framing and hash-prefix evidence](../2.26.43.72-mobileconfig-reader-framing/README.md)
+resolves 0xa8fa4 to the prefix before the first colon, and binds the reader's
+framing/verifier handoff. The original unknowns below describe this bundle's
+bounded trace; complete body verification and installation remain unresolved.
+
 **Confirmed selected static evidence**, APK 2.26.43.72 code 264307238,
 SHA256 `887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e`.
 Reconstructed arm64 libmobileconfig-jni.so: 852440 bytes, SHA256

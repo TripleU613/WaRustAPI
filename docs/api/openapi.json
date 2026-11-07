@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-reader-framing-evidence": {
+    "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-reader-framing/inspect-reader.py <pinned-library>",
+    "x-transport": "offline native reader research; no Rust transport or HTTP route enabled",
+    "x-live": false,
+    "description": "Confirmed selected static MobileConfig reader distinguishes raw buffers from framed input and checks framed length/version/declared size/footer/offset before a separate body verifier. Envelope handoff is not table acceptance. The earlier hash transformation is now resolved to the prefix before the first colon; raw-string checks remain separate. Complete verifier/provider and active-state admission remain unresolved.",
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-reader-framing/README.md"
+  },
   "x-mobileconfig-upgrade-dispatch-evidence": {
     "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-upgrade-dispatch/inspect-upgrade.py <pinned-library>",
     "x-transport": "offline load/upgrade research; no enabled Rust transport or HTTP route",

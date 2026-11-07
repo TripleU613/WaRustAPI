@@ -1,0 +1,74 @@
+{
+  "README.md": {
+    "bytes": 6501,
+    "sha256": "f83212a65fb9372f1dcb71419abff53a32b8de8748ec081e2057d892409d6cf6"
+  },
+  "body-verifier.txt": {
+    "bytes": 18386,
+    "sha256": "a53b144f484c196470d93812564838156974ac4be21882f576fd6014deccccde"
+  },
+  "find-byte.txt": {
+    "bytes": 366,
+    "sha256": "bfb093795021dfa66026903c1e9d63fe35a3f1b8d6adc237ea82be9d1e922472"
+  },
+  "find-span.txt": {
+    "bytes": 1600,
+    "sha256": "9a9de616397e0f92fb3fbfad738fb5fa7ca25909ab528f936d91c89ab872b9d4"
+  },
+  "find-string.txt": {
+    "bytes": 704,
+    "sha256": "002aea029757cf3aa498a525b06d4b365a5967a47eee3c58ab241fb02ae038ca"
+  },
+  "hash-prefix.txt": {
+    "bytes": 952,
+    "sha256": "fcbb87afff5d4d9edbfa28f09dc38166920c2f5917c3cedfa81e78a9fe40b874"
+  },
+  "inspect-reader.py": {
+    "bytes": 3035,
+    "sha256": "45ba0e1c94e140c9d2274868c8585049ef8eec5573c41d4b730a94821d034b01"
+  },
+  "provider-construction-entry.txt": {
+    "bytes": 6191,
+    "sha256": "b9eddc708da98d7eb6a83c9b613bf77a01e8ef7beefdc1c21fcddb21c76e82d3"
+  },
+  "provider-pointer-slot.txt": {
+    "bytes": 212,
+    "sha256": "d1bdaf38e8b2acabd12a47a41b3aae1dc296172084f1fe0eddadf5e8962f4119"
+  },
+  "provider-size-slot.txt": {
+    "bytes": 212,
+    "sha256": "3c672fd7cb22e75ac36b0fd0a3a9736741bc9fc6aac0fc1814b6a737c6642dc6"
+  },
+  "rea-reader.json": {
+    "bytes": 6133,
+    "sha256": "979c0261e17d1d521e890c6d687239c2fdf6cd8c7bb613cd63089c0844dc7cf9"
+  },
+  "reader-construction.txt": {
+    "bytes": 1989,
+    "sha256": "e223fce2a7481c0de516aeec6078a41b86aecabac95aae08a248e2255cbb26d9"
+  },
+  "reader-gate.txt": {
+    "bytes": 18996,
+    "sha256": "67958e3315fc45791d725621a940da114a87778e7606273dc10fbd169a5e5d33"
+  },
+  "reader.json": {
+    "bytes": 1693,
+    "sha256": "39399877f2d77d87eaf85e79af7d45224835919dc6aee972cbe4a6187d252947"
+  },
+  "root-offset-args.txt": {
+    "bytes": 202,
+    "sha256": "8f6152672118ea54bd1992c58fe1506dec25a7ed4fbc9828c6a1048f12f572ee"
+  },
+  "shared-reader.txt": {
+    "bytes": 1306,
+    "sha256": "720cd1a07333f23f27e78dc1daf16db79212e9f543d478d2a7abddee81897c83"
+  },
+  "verifier-args.txt": {
+    "bytes": 202,
+    "sha256": "fd2680deaade7b3e6d21a1f9673a40e2367f6ca5be93c46058a6629aafddb376"
+  },
+  "verifier-root-offset.txt": {
+    "bytes": 1138,
+    "sha256": "128aae148694ea6ad2f6bfb7d4fd0c3f0da5ef34d16f1a0c541dcd0ed871c8db"
+  }
+}
