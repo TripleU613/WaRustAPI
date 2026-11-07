@@ -1,4 +1,11 @@
 {
+  "x-stateless-retry-effective-config-static-boundary": {
+    "x-cli": "research through existing APK inspection and retained derivation; no new command or flag",
+    "x-transport": "research only; no runtime retry policy or key emission changed",
+    "x-live": false,
+    "description": "Stateless retry controls21477/23884 use effective00E configuration. Selected complete builder methods insert0/false; all2065 literal lookup writes confirm both concrete initial MobileConfig specifiers are0. Selected SDK integer-zero result makes the extra >0 predicate false, but buildKeepingLast, legacy preferences/cache and readiness prevent treating raw AB rows or selected defaults as account-effective policy. Pinned derivation retained. Full configuration/carried-key integration remains incomplete; no new gate, request or key mutation.",
+    "evidence": "docs/protocol/apk/2.26.43.72-retry-config-inputs/README.md"
+  },
   "x-outgoing-minimal-retry-count-admission": {
     "x-cli": "existing receive/listen retry queue; no new command or flag",
     "x-transport": "bounded minimal retry admission uses shared incoming aggregate count parser; nonzero/invalid count does not queue or reset wire",

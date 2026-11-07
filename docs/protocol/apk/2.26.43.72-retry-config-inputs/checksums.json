@@ -1,0 +1,22 @@
+{
+  "README.md": {
+    "bytes": 5913,
+    "sha256": "03be95f6a7eeb629b09de34be4044589e7f5e19c7ad9b0bbd7001fbdcfd51fca"
+  },
+  "boolean-default-helper.txt": {
+    "bytes": 350440,
+    "sha256": "241ec9b7d0252fbff69f27a0712a446d53ab65cd078b45803674e8a961039eaa"
+  },
+  "derive-inputs.py": {
+    "bytes": 3320,
+    "sha256": "6ad86b530dd5ad58f5ebe5a1cf7fd4ecf6e6cb6502ebde85d5ab72c45db42a3e"
+  },
+  "derived-inputs.json": {
+    "bytes": 602,
+    "sha256": "84d8d042eb15b5a5e12a652d40a22f1e594a9a021c4adca06b17a85499f73b43"
+  },
+  "integer-default-helper.txt": {
+    "bytes": 377564,
+    "sha256": "105798ee6f76957aed0e6e515f9ac6ddbe778dcc3e48c549a2881662d54f3380"
+  }
+}

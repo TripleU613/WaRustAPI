@@ -1,5 +1,10 @@
 # Network correctness audit
 
+**Stateless retry configuration inputs narrowed.** Selected compiled0/false
+entries and zero initial SDK specifiers are reproducible; effective preferences/
+readiness and full precedence remain unproven. No raw-AB shortcut or runtime
+policy change added. [Evidence](outgoing-retry-receipts.md#stateless-retry-configuration-authority-2026-11-07).
+
 **Minimal retry count reset closed.** Incoming nonzero/invalid counts can no
 longer create a constant count1 request. Aggregate0 retains the existing minimal
 request; advanced progression/carried keys remain explicitly unported. Durable

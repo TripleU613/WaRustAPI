@@ -390,3 +390,15 @@ code, then returned zero without durable changes after the fix. All1,591
 workspace/all-feature tests, strict all-target/all-feature Clippy, formatting,
 CLI reference, OpenAPI library-symbol check, APK coverage, retained evidence
 checksums and repository hygiene passed. No account traffic was generated.
+
+## Stateless retry configuration authority (2026-11-07)
+
+**Confirmed selected static:** the two extra retry-key controls use effective
+00E accessors. Selected compiled entries insert0 for21477 and false for23884;
+both concrete initial MobileConfig specifiers are0 after a complete2065-write
+lookup check. These are not account-effective values or a complete final-map
+audit: buildKeepingLast, preferences, cache and readiness remain separate. The
+selected SDK integer-zero path disables the extra >0 predicate, while legacy
+overrides can require key preparation. Rust policy selection remains unported.
+[Evidence and reproducible derivation](apk/2.26.43.72-retry-config-inputs/README.md).
+No runtime behavior, key mutation or live operation changed.

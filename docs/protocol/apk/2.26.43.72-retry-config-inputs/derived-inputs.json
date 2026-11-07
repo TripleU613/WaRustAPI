@@ -1,0 +1,15 @@
+{
+  "integer_source_sha256": "105798ee6f76957aed0e6e515f9ac6ddbe778dcc3e48c549a2881662d54f3380",
+  "boolean_source_sha256": "241ec9b7d0252fbff69f27a0712a446d53ab65cd078b45803674e8a961039eaa",
+  "lookup_source_sha256": "3d4034aa9b13618d835abc9f413dffab6a2766192de460251f02e52e60d4f386",
+  "literal_lookup_writes_checked": 2065,
+  "selected_default_entries": {
+    "21477": 0,
+    "23884": false
+  },
+  "concrete_initial_specifiers": {
+    "21477": "0x0",
+    "23884": "0x0"
+  },
+  "scope": "Selected insertions and initial lookup, not effective runtime values or complete buildKeepingLast precedence"
+}
