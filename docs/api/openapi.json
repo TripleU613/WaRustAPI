@@ -1,4 +1,11 @@
 {
+  "x-ordinary-download-source-binding": {
+    "x-cli": "existing ordinary media list/open/save/reference paths; no new command or flag",
+    "x-transport": "local exact inbox source checks at GET reservation, successful ciphertext adoption and plaintext handoff",
+    "x-live": false,
+    "description": "Source bytes remain in zeroizing memory and are not sent over HTTP. Reservation and successful adoption compare exact inbox bytes atomically with checkpoint writes; handoff also checks current source eligibility/expiry. Replaced or removed source preserves uncertainty and does not authorize replay. Numeric HTTP refusals remain independently bound to the attempt. No native cancellation/account-lifecycle or external-consumer atomicity claim.",
+    "evidence": "docs/protocol/media-network-outcomes.md#ordinary-download-source-binding-2026-11-06"
+  },
   "x-media-upload-response-owner": {
     "x-cli": "existing media preparation, response settlement and cache reuse; no new command or flag",
     "x-transport": "versioned local phone/generation ownership for prospective upload result promotion and completed cache reuse",

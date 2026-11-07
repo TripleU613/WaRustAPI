@@ -1326,3 +1326,35 @@ HTTP cancellation/ownership after commit, store-generation loss/removal, and ful
 native upload/account/queue behavior. Observation retention never bypasses store
 lease/authentication failures. These tests perform no HTTP/account operation and
 prove neither server acceptance nor freedom from restrictions.
+
+## Ordinary download source binding (2026-11-06)
+
+**Confirmed Rust gap / fixed offline.** Ordinary media selection retained only
+the inbox key and parsed descriptor. Unlike view-once source binding, reservation
+and success settlement did not compare the original inbox bytes. Final availability
+checked the selector key alone: replacement under that key could still allow old
+ciphertext adoption or plaintext handoff. This is a local authority correction,
+not a newly traced APK cancellation or account-lifecycle rule. Pinned artifact
+remains WhatsApp 2.26.43.72; no native wire field is inferred from this fix.
+
+Candidate selection now retains the exact source bytes in zeroizing memory. New
+GET reservation requires that source to remain byte-identical in the same write
+transaction that reserves the attempt. Successful authenticated ciphertext adoption
+checks both source and reservation atomically. Cached and newly received plaintext
+handoffs recheck the current eligible source bytes, including existing expiry
+checks. Removed/replaced sources refuse without resetting or replaying the GET.
+No source bytes or local fence metadata are sent over HTTP.
+
+Definite HTTP refusal remains an observation owned by the exact reservation;
+it can be retained even after source removal. Failed source adoption preserves
+the uncertain reservation. The real-store regression
+`changed_ordinary_source_cannot_adopt_ciphertext_after_reopen` covers unchanged,
+replaced, metadata-only changed and removed source rows across reopen, exact
+checkpoint/journal preservation on refusal, handoff eligibility and independent
+HTTP refusal retention. No live request is made.
+
+**Unknown / separate:** account replacement, full native download lifecycle,
+wall-clock expiry crossing inside a transaction, historical cache provenance,
+and mutation after the final eligibility snapshot or between return and external
+file/viewer use. This check does not establish atomic ownership of an external
+consumer or a zero-restriction guarantee.

@@ -1,5 +1,11 @@
 # Network correctness audit
 
+**Ordinary media source binding.** Reservation and successful ciphertext adoption
+now atomically compare the selected inbox bytes; plaintext handoff rechecks the
+eligible source. Refusal observations remain attempt-owned. Offline regression
+covers replacement/removal/metadata changes and reopen. Native lifecycle remains
+unverified. [Details](media-network-outcomes.md#ordinary-download-source-binding-2026-11-06).
+
 Owner priority, 2026-11-04: strengthen request/response correctness before adding
 features. Avoiding account restrictions is the objective; zero bans is not a
 measurable guarantee from static analysis. No restriction cause has been proven

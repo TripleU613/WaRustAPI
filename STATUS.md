@@ -1,4 +1,10 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
+
+**Ordinary media source binding.** Reservation and successful ciphertext adoption
+now atomically compare the selected inbox bytes; plaintext handoff rechecks the
+eligible source. Refusal observations remain attempt-owned. Offline regression
+covers replacement/removal/metadata changes and reopen. Native lifecycle remains
+unverified. [Details](docs/protocol/media-network-outcomes.md#ordinary-download-source-binding-2026-11-06).
 New encrypted phone/generation metadata gates final uploaded promotion and cache
 reuse. Revoked/replaced accounts cannot adopt late payloads, while HTTP evidence
 remains durable. Tests cover owner/metadata/stale-row faults, every-table/journal

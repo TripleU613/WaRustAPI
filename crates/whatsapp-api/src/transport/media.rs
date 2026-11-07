@@ -356,7 +356,9 @@ fn descriptor(bytes: &[u8]) -> Result<Option<Descriptor>> {
     }
     Ok(Some(d))
 }
-fn candidates(store: &ProtocolStore) -> Result<Vec<(Vec<u8>, Descriptor)>> {
+type Candidate = (Vec<u8>, Descriptor, Zeroizing<Vec<u8>>);
+
+fn candidates(store: &ProtocolStore) -> Result<Vec<Candidate>> {
     let rows = store.read(|tx| tx.scan(Table::Checkpoints, 1, 10000))?;
     if rows.len() == 10000 {
         return Err(bad("inbox requires pagination"));
@@ -392,7 +394,7 @@ fn candidates(store: &ProtocolStore) -> Result<Vec<(Vec<u8>, Descriptor)>> {
             {
                 continue;
             }
-            out.push((key, d));
+            out.push((key, d, Zeroizing::new(bytes)));
         }
     }
     Ok(out)
@@ -401,7 +403,7 @@ fn candidates(store: &ProtocolStore) -> Result<Vec<(Vec<u8>, Descriptor)>> {
 pub fn list(store: &ProtocolStore) -> Result<Vec<MediaEntry>> {
     Ok(candidates(store)?
         .into_iter()
-        .map(|(key, d)| MediaEntry {
+        .map(|(key, d, _)| MediaEntry {
             id: hex::encode(Sha256::digest(key)),
             kind: d.kind,
             bytes: d.length,
@@ -595,7 +597,7 @@ pub(super) fn event_content(
 pub fn references(store: &ProtocolStore) -> Result<Vec<crate::model::message::MediaReference>> {
     candidates(store)?
         .into_iter()
-        .map(|(key, d)| {
+        .map(|(key, d, _)| {
             media_url(&d)?;
             let id = hex::encode(Sha256::digest(key));
             Ok(crate::model::message::MediaReference {
@@ -629,9 +631,9 @@ pub fn reference_selector(
     if id.len() != 64 || !id.bytes().all(|b| b.is_ascii_hexdigit()) {
         return Err(bad("invalid reference selector"));
     }
-    let (_, d) = candidates(store)?
+    let (_, d, _) = candidates(store)?
         .into_iter()
-        .find(|(key, _)| hex::encode(Sha256::digest(key)) == id)
+        .find(|(key, _, _)| hex::encode(Sha256::digest(key)) == id)
         .ok_or_else(|| bad("ordinary attachment not found"))?;
     let kind = match d.kind {
         MediaKind::Image => crate::model::message::MediaKind::Image,
@@ -772,9 +774,9 @@ pub async fn open(
     if id.len() != 64 || !id.bytes().all(|b| b.is_ascii_hexdigit()) {
         return Err(bad("invalid attachment selector"));
     }
-    let (_, d) = candidates(store)?
+    let (source_key, d, source) = candidates(store)?
         .into_iter()
-        .find(|(key, _)| hex::encode(Sha256::digest(key)) == id)
+        .find(|(key, _, _)| hex::encode(Sha256::digest(key)) == id)
         .ok_or_else(|| bad("ordinary attachment not found"))?;
     let state_key = format!("media-download:{id}");
     let saved: Option<serde_json::Value> =
@@ -796,13 +798,14 @@ pub async fn open(
         let body: Zeroizing<Vec<u8>> = serde_json::from_value(saved["body"].take())
             .map_err(|_| bad("invalid saved ciphertext"))?;
         let plain = decrypt(&d, &body)?;
-        ensure_available(store, id)?;
+        ensure_source_available(store, id, &source_key, &source)?;
         return Ok((d.kind, plain));
     }
     let url = media_url(&d)?;
     let client = super::image_upload::client(config)?;
     let reservation = serde_json::json!({"status":"outcome_unknown", "reservation":super::messaging::new_message_id()?});
     store.write(|tx| {
+        ensure_source(tx, &source_key, &source)?;
         if tx
             .get_json::<serde_json::Value>(Table::Checkpoints, state_key.as_bytes(), 1)?
             .is_some()
@@ -841,13 +844,16 @@ pub async fn open(
         body.extend_from_slice(&chunk);
     }
     let plain = decrypt(&d, &body)?;
-    settle_download(
-        store,
-        &state_key,
-        &reservation,
-        &serde_json::json!({"status":"downloaded","body":&*body}),
-    )?;
-    ensure_available(store, id)?;
+    store.write(|tx| {
+        ensure_source(tx, &source_key, &source)?;
+        settle_download_in(
+            tx,
+            &state_key,
+            &reservation,
+            &serde_json::json!({"status":"downloaded","body":&*body}),
+        )
+    })?;
+    ensure_source_available(store, id, &source_key, &source)?;
     Ok((d.kind, plain))
 }
 
@@ -867,14 +873,51 @@ fn settle_download(
     expected: &serde_json::Value,
     result: &serde_json::Value,
 ) -> Result<()> {
-    store.write(|tx| {
-        let prior: Option<serde_json::Value> =
-            tx.get_json(Table::Checkpoints, state_key.as_bytes(), 1)?;
-        if expected["status"] != "outcome_unknown" || prior.as_ref() != Some(expected) {
-            return Err(bad("media download reservation changed before settlement"));
-        }
-        tx.put_json(Table::Checkpoints, state_key.as_bytes(), 1, result)
-    })
+    store.write(|tx| settle_download_in(tx, state_key, expected, result))
+}
+
+// Local inbox authority fence, not an APK lifecycle/schema claim.
+fn ensure_source(tx: &crate::store::WriteTx<'_>, key: &[u8], source: &[u8]) -> Result<()> {
+    let current = tx.get(Table::Checkpoints, key, 1)?.map(Zeroizing::new);
+    if current.as_deref().map(Vec::as_slice) != Some(source) {
+        return Err(bad("ordinary media source changed before state transition"));
+    }
+    Ok(())
+}
+
+fn ensure_source_available(
+    store: &ProtocolStore,
+    id: &str,
+    key: &[u8],
+    source: &[u8],
+) -> Result<()> {
+    if !candidates(store)?
+        .iter()
+        .any(|(current_key, _, current_source)| {
+            current_key == key
+                && hex::encode(Sha256::digest(current_key)) == id
+                && current_source.as_slice() == source
+        })
+    {
+        return Err(bad(
+            "ordinary media source changed or expired before plaintext handoff",
+        ));
+    }
+    Ok(())
+}
+
+fn settle_download_in(
+    tx: &mut crate::store::WriteTx<'_>,
+    state_key: &str,
+    expected: &serde_json::Value,
+    result: &serde_json::Value,
+) -> Result<()> {
+    let prior: Option<serde_json::Value> =
+        tx.get_json(Table::Checkpoints, state_key.as_bytes(), 1)?;
+    if expected["status"] != "outcome_unknown" || prior.as_ref() != Some(expected) {
+        return Err(bad("media download reservation changed before settlement"));
+    }
+    tx.put_json(Table::Checkpoints, state_key.as_bytes(), 1, result)
 }
 
 fn retain_download_refusal_bound(
@@ -897,7 +940,7 @@ fn retain_download_refusal_bound(
 pub(crate) fn ensure_available(store: &ProtocolStore, id: &str) -> Result<()> {
     if !candidates(store)?
         .iter()
-        .any(|(key, _)| hex::encode(Sha256::digest(key)) == id)
+        .any(|(key, _, _)| hex::encode(Sha256::digest(key)) == id)
     {
         return Err(bad("attachment expired or no longer available"));
     }
@@ -906,6 +949,114 @@ pub(crate) fn ensure_available(store: &ProtocolStore, id: &str) -> Result<()> {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn changed_ordinary_source_cannot_adopt_ciphertext_after_reopen() {
+        use super::*;
+        use crate::{
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        for change in ["same", "replaced", "metadata", "removed"] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("source.redb");
+            let open = |create| {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: AccountId::new("fixture").unwrap(),
+                    create,
+                    key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                        [7; 32],
+                    ))),
+                })
+                .unwrap()
+            };
+            let store = open(true);
+            let image = Image {
+                url: "https://mmg.whatsapp.net/test".into(),
+                mime: "image/png".into(),
+                hash: vec![1; 32],
+                key: vec![2; 32],
+                enc_hash: vec![3; 32],
+                length: 32,
+                once: false,
+            }
+            .encode_to_vec();
+            let payload = RawEnvelope {
+                image: Some(image),
+                ..Default::default()
+            }
+            .encode_to_vec();
+            let source =
+                serde_json::to_vec(&serde_json::json!({"status":"decrypted","protobuf":payload}))
+                    .unwrap();
+            let source = source.as_slice();
+            let reservation =
+                serde_json::json!({"status":"outcome_unknown","reservation":"original"});
+            store
+                .write(|tx| {
+                    tx.put(Table::Checkpoints, b"received:source", 1, source)?;
+                    tx.put_json(Table::Checkpoints, b"download", 1, &reservation)
+                })
+                .unwrap();
+            store
+                .write(|tx| {
+                    match change {
+                        "replaced" => tx.put(
+                            Table::Checkpoints,
+                            b"received:source",
+                            1,
+                            br#"{"status":"decrypted","protobuf":[4,5,6]}"#,
+                        )?,
+                        "metadata" => {
+                            let mut changed: serde_json::Value =
+                                serde_json::from_slice(source).unwrap();
+                            changed["local_note"] = "changed".into();
+                            tx.put_json(Table::Checkpoints, b"received:source", 1, &changed)?;
+                        }
+                        "removed" => {
+                            tx.delete(Table::Checkpoints, b"received:source")?;
+                        }
+                        _ => {}
+                    }
+                    Ok(())
+                })
+                .unwrap();
+            drop(store);
+            let store = open(false);
+            let rows = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let journal = store.journal_head().unwrap();
+            let id = hex::encode(Sha256::digest(b"received:source"));
+            assert_eq!(
+                ensure_source_available(&store, &id, b"received:source", source).is_ok(),
+                change == "same"
+            );
+            let result = store.write(|tx| {
+                ensure_source(tx, b"received:source", source)?;
+                settle_download_in(
+                    tx,
+                    "download",
+                    &reservation,
+                    &serde_json::json!({"status":"downloaded","body":[1,2,3]}),
+                )
+            });
+            assert_eq!(result.is_ok(), change == "same");
+            if change != "same" {
+                assert_eq!(store.journal_head().unwrap(), journal);
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    rows
+                );
+                // Refusal observations still belong to the attempt, independent
+                // of whether its source remains eligible for payload adoption.
+                retain_download_refusal_bound(&store, "download", 403, &reservation).unwrap();
+            }
+        }
+    }
+
     #[test]
     fn late_download_result_cannot_replace_changed_or_settled_reservation_after_reopen() {
         use super::*;
