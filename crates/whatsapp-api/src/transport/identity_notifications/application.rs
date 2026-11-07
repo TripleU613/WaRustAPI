@@ -102,10 +102,20 @@ async fn stage(
             AccountRecord::load(tx)?,
             reply,
             request_wire,
+            actions::prepared_account_matches_in(tx, id)?,
         )))
     })?;
-    let Some((inspection, status, peer, pin, previous_session, account, reply, request_wire)) =
-        snapshot
+    let Some((
+        inspection,
+        status,
+        peer,
+        pin,
+        previous_session,
+        account,
+        reply,
+        request_wire,
+        preparation_account_matches,
+    )) = snapshot
     else {
         return Ok(Preparation::Finished(Application::Unrelated));
     };
@@ -114,6 +124,12 @@ async fn stage(
     }
     if policy != IdentityChangePolicy::ApkAuthenticated {
         return Ok(deferred("identity_policy_pinned"));
+    }
+    // An account change before staging is a held-work outcome, just like a
+    // change after derivation. Do not derive under the replacement account and
+    // turn the final ownership refusal into a fatal recovery error.
+    if preparation_account_matches == Some(false) {
+        return Ok(deferred("action_account_changed"));
     }
     if status != actions::ActionStatus::Ok || inspection.status != DirectoryStatus::VerifiedBundle {
         return Ok(deferred("reply_not_verified"));
@@ -3380,6 +3396,35 @@ mod tests {
             assert_eq!(before, snapshot(&f.store));
             assert_eq!(head, f.store.journal_head().unwrap());
         }
+    }
+
+    #[tokio::test]
+    async fn changed_preparation_account_defers_refresh_recovery_without_mutation() {
+        let f = fixture("222222222222222@lid").await;
+        settle(&f, &f.response);
+        f.store
+            .write(|tx| {
+                let mut account = AccountRecord::load_in_write(tx)?.unwrap();
+                account.signal_registration_id = Some(32);
+                account.save(tx)
+            })
+            .unwrap();
+        let before = snapshot(&f.store);
+        let head = f.store.journal_head().unwrap();
+        assert!(matches!(
+            stage(&f.store, &f.id, IdentityChangePolicy::ApkAuthenticated).await,
+            Ok(Preparation::Finished(Application::Deferred(
+                "action_account_changed"
+            )))
+        ));
+        assert_eq!(
+            recover(&f.store, IdentityChangePolicy::ApkAuthenticated)
+                .await
+                .unwrap(),
+            0
+        );
+        assert_eq!(snapshot(&f.store), before);
+        assert_eq!(f.store.journal_head().unwrap(), head);
     }
 
     #[tokio::test]

@@ -1,5 +1,10 @@
 # Network correctness audit
 
+**Identity refresh now defers preparation-account drift.** A same-snapshot
+read check prevents stale action staging under a replacement account and avoids
+turning the final ownership refusal into a recovery error. Final fences remain.
+[Evidence and regression](identity-refresh-account-deferral.md). No live operation.
+
 **Group reply projection ownership gap closed.** Saved action/account authority
 and decoded request/reply/settlement are reloaded in the final group transaction.
 Stale candidates refuse without membership, marker or journal mutation.

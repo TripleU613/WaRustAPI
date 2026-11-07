@@ -333,6 +333,23 @@ pub(crate) fn settled_at_in(tx: &crate::store::WriteTx<'_>, id: &str) -> Result<
     Ok(row.and_then(|row| row.settled_at))
 }
 
+/// Read-only preparation ownership for feature admission. None is historical
+/// absence (or no row), never proof of a matching account. Inspection can still
+/// use view_in; mutation paths must retain their final transactional checks.
+pub(crate) fn prepared_account_matches_in(
+    tx: &crate::store::ReadTx<'_>,
+    id: &str,
+) -> Result<Option<bool>> {
+    let row: Option<Row> = tx.get_json(Table::Checkpoints, key(id).as_bytes(), 1)?;
+    let Some(prepared) = row.and_then(|row| row.prepared_account_authority) else {
+        return Ok(None);
+    };
+    let account = crate::session::AccountRecord::load(tx)?;
+    Ok(Some(
+        prepared == super::account_authority::fingerprint(tx.generation(), account.as_ref())?,
+    ))
+}
+
 /// One immutable view of an action and its authenticated saved response.
 pub(crate) fn view_in(
     tx: &crate::store::ReadTx<'_>,

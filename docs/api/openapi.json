@@ -1,4 +1,11 @@
 {
+  "x-identity-refresh-account-deferral": {
+    "x-cli": "existing identity-refresh application/recovery; no new command or flag",
+    "x-transport": "stage returns fixed action_account_changed deferral when new prepared action belongs to another saved account",
+    "x-live": false,
+    "description": "A pre-staging account change could derive under a replacement account and reach a final owned-view error during recovery. Read-only tri-state preparation ownership now shares the immutable request/reply/pin/session/account snapshot; explicit mismatch defers before candidate derivation. Missing legacy metadata remains unknown. Final account/request/peer/action transaction checks remain, including post-staging account_changed_before_commit. Regression verifies exact deferred preparation, zero recovery applications and unchanged persisted snapshot/journal. No new wire field, reset, retry or live operation.",
+    "evidence": "docs/protocol/identity-refresh-account-deferral.md"
+  },
   "x-group-projection-ownership": {
     "x-cli": "existing group ingestion and pending-reply recovery; no new command or flag",
     "x-transport": "group saved-action projection reloads account-owned action and candidate inputs in the commit transaction",
