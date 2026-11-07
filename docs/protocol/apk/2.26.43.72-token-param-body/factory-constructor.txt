@@ -1,0 +1,101 @@
+
+# class: LX/09u;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLLLLLLLLIZ)  # .registers 22
+    # full signature: LX/09u;-><init>(Landroid/content/res/AssetManager;LX/09l;LX/09i;LX/09n;LX/09j;LX/09h;Ljava/io/File;Ljava/util/Set;LX/00v;LX/00v;LX/00v;[[IIZ)V
+    0000..0002  const/4  v4, #0x0
+    0002..0006  const/16  v3, #0x258
+    0006..000a  const/16  v2, #0x5a19
+    000a..0010  invoke-direct  {v7}, Ljava/lang/Object;-><init>()V
+    0010..0012  const/4  v5, #0x0
+    0012..0016  iput-object  v5, v7, LX/09u;->A06:LX/PMl;
+    0016..001a  new-instance  v0, Ljava/util/concurrent/atomic/AtomicBoolean;
+    001a..0020  invoke-direct  {v0, v4}, Ljava/util/concurrent/atomic/AtomicBoolean;-><init>(Z)V
+    0020..0024  iput-object  v0, v7, LX/09u;->A0H:Ljava/util/concurrent/atomic/AtomicBoolean;
+    0024..0026  const/4  v1, #0x1
+    0026..002a  new-instance  v0, Ljava/util/concurrent/atomic/AtomicBoolean;
+    002a..0030  invoke-direct  {v0, v1}, Ljava/util/concurrent/atomic/AtomicBoolean;-><init>(Z)V
+    0030..0034  iput-object  v0, v7, LX/09u;->A0F:Ljava/util/concurrent/atomic/AtomicBoolean;
+    0034..0038  new-instance  v0, Ljava/util/concurrent/atomic/AtomicBoolean;
+    0038..003e  invoke-direct  {v0, v4}, Ljava/util/concurrent/atomic/AtomicBoolean;-><init>(Z)V
+    003e..0042  iput-object  v0, v7, LX/09u;->A0E:Ljava/util/concurrent/atomic/AtomicBoolean;
+    0042..0046  new-instance  v0, Ljava/lang/Object;
+    0046..004c  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    004c..0050  iput-object  v0, v7, LX/09u;->A0R:Ljava/lang/Object;
+    0050..0054  new-instance  v0, Ljava/util/concurrent/atomic/AtomicBoolean;
+    0054..005a  invoke-direct  {v0, v4}, Ljava/util/concurrent/atomic/AtomicBoolean;-><init>(Z)V
+    005a..005e  iput-object  v0, v7, LX/09u;->A0G:Ljava/util/concurrent/atomic/AtomicBoolean;
+    005e..0062  sget-object  v0, LX/09v;->A02:LX/09v;
+    0062..0066  iput-object  v0, v7, LX/09u;->A0X:LX/09v;
+    0066..006a  new-instance  v0, Ljava/util/concurrent/ConcurrentHashMap;
+    006a..0070  invoke-direct  {v0}, Ljava/util/concurrent/ConcurrentHashMap;-><init>()V
+    0070..0076  invoke-static  {v0}, Ljava/util/Collections;->newSetFromMap(Ljava/util/Map;)Ljava/util/Set;
+    0076..0078  move-result-object  v0
+    0078..007c  iput-object  v0, v7, LX/09u;->A0T:Ljava/util/Set;
+    007c..0080  const/16  v0, #0x2710
+    0080..0084  iput  v0, v7, LX/09u;->A01:I
+    0084..0088  new-instance  v0, Ljava/util/HashSet;
+    0088..008e  invoke-direct  {v0}, Ljava/util/HashSet;-><init>()V
+    008e..0094  invoke-static  {v0}, Ljava/util/Collections;->synchronizedSet(Ljava/util/Set;)Ljava/util/Set;
+    0094..0096  move-result-object  v0
+    0096..009a  iput-object  v0, v7, LX/09u;->A0D:Ljava/util/Set;
+    009a..009e  new-instance  v0, LX/09w;
+    009e..00a4  invoke-direct  {v0}, LX/09w;-><init>()V
+    00a4..00a8  iput-object  v0, v7, LX/09u;->A09:LX/09w;
+    00a8..00ac  new-instance  v0, Ljava/util/Random;
+    00ac..00b2  invoke-direct  {v0}, Ljava/util/Random;-><init>()V
+    00b2..00b6  iput-object  v0, v7, LX/09u;->A0S:Ljava/util/Random;
+    00b6..00ba  iput-object  v9, v7, LX/09u;->A0A:LX/09l;
+    00ba..00be  iput-object  v10, v7, LX/09u;->A0O:LX/09i;
+    00be..00c2  move/from16  v0, v20
+    00c2..00c6  iput  v0, v7, LX/09u;->A08:I
+    00c6..00ca  iput-object  v14, v7, LX/09u;->A0C:Ljava/io/File;
+    00ca..00ce  iput-object  v8, v7, LX/09u;->A0J:Landroid/content/res/AssetManager;
+    00ce..00d2  iput-object  v15, v7, LX/09u;->A0U:Ljava/util/Set;
+    00d2..00d8  invoke-interface  {v15}, Ljava/util/Set;->isEmpty()Z
+    00d8..00da  move-result  v0
+    00da..00de  xor-int/lit8  v0, v0, #0x1
+    00de..00e2  iput-boolean  v0, v7, LX/09u;->A0V:Z
+    00e2..00e6  move-object/from16  v0, v16
+    00e6..00ea  iput-object  v0, v7, LX/09u;->A0a:LX/00v;
+    00ea..00ee  move/from16  v0, v21
+    00ee..00f2  iput-boolean  v0, v7, LX/09u;->A0I:Z
+    00f2..00f6  move-object/from16  v0, v17
+    00f6..00fa  iput-object  v0, v7, LX/09u;->A04:LX/00v;
+    00fa..00fe  move-object/from16  v0, v19
+    00fe..0102  iput-object  v0, v7, LX/09u;->A07:[[I
+    0102..0106  iput-object  v13, v7, LX/09u;->A0Q:LX/09h;
+    0106..010a  iput-object  v12, v7, LX/09u;->A0P:LX/09j;
+    010a..010e  iput-object  v11, v7, LX/09u;->A0B:LX/09n;
+    010e..0114  invoke-virtual  {v9}, LX/09k;->getOrCreateOverridesTable()LX/09x;
+    0114..0116  move-result-object  v6
+    0116..011a  iput-object  v6, v7, LX/09u;->A02:LX/09x;
+    011a..011e  sget-object  v1, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__ACCESSED_AFTER_MC_DISPOSE:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+    011e..0122  new-instance  v0, LX/0A3;
+    0122..0128  invoke-direct  {v0, v6, v1, v11}, LX/0A3;-><init>(LX/09x;Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;LX/09n;)V
+    0128..012c  iput-object  v0, v7, LX/09u;->A0K:LX/0A3;
+    012c..0130  sget-object  v1, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__ACCESSED_BEFORE_MC_INIT:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+    0130..0134  new-instance  v0, LX/0A3;
+    0134..013a  invoke-direct  {v0, v6, v1, v11}, LX/0A3;-><init>(LX/09x;Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;LX/09n;)V
+    013a..013e  iput-object  v0, v7, LX/09u;->A0L:LX/0A3;
+    013e..0142  sget-object  v1, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__INVALID_CONFIG_PARAM_NAME:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+    0142..0146  new-instance  v0, LX/0A3;
+    0146..014c  invoke-direct  {v0, v6, v1, v11}, LX/0A3;-><init>(LX/09x;Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;LX/09n;)V
+    014c..0150  iput-object  v0, v7, LX/09u;->A0M:LX/0A3;
+    0150..0154  sget-object  v1, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__SERVICE_NOT_FOUND:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+    0154..0158  new-instance  v0, LX/0A3;
+    0158..015e  invoke-direct  {v0, v6, v1, v11}, LX/0A3;-><init>(LX/09x;Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;LX/09n;)V
+    015e..0162  iput-object  v0, v7, LX/09u;->A0N:LX/0A3;
+    0162..0166  iput-object  v5, v7, LX/09u;->A0Y:LX/09t;
+    0166..016a  move-object/from16  v0, v18
+    016a..016e  iput-object  v0, v7, LX/09u;->A0b:LX/00v;
+    016e..0172  iput  v2, v7, LX/09u;->A01:I
+    0172..0176  new-instance  v0, Ljava/util/concurrent/atomic/AtomicReferenceArray;
+    0176..017c  invoke-direct  {v0, v2}, Ljava/util/concurrent/atomic/AtomicReferenceArray;-><init>(I)V
+    017c..0180  iput-object  v0, v7, LX/09u;->A0Z:Ljava/util/concurrent/atomic/AtomicReferenceArray;
+    0180..0184  iput-boolean  v4, v7, LX/09u;->A05:Z
+    0184..0188  iput  v3, v7, LX/09u;->A00:I
+    0188..018a  return-void
+    # exception table: 0 try range(s)
+.end method

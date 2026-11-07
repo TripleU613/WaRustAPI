@@ -308,3 +308,13 @@ matching table/map schema prefixes and parsed translation state. Header metadata
 is distinct from effective bucket values; body rows, complete manager selection
 and loaded-table hydration remain open. No Rust policy or live operation changed.
 [Retained methods, extraction and limits](apk/2.26.43.72-token-param-header/README.md).
+
+## Parameter pairs and selected token translation —2026-11-07
+
+ConfirmedPcn loads two little-endian ints per parameter. All four packaged bodies
+validate size, config count, unique encoded keys and sorted search partitions.
+A pinned DEX payload derivation binds compiled config keys to the token rows;
+865/909/996/997 translate to slots101/110/125/126, matching their current original
+slots for this packaged map. Dynamic tables, schema versions, silent push and
+manager/cache selection remain separate. No runtime timing or live change.
+[Methods, selected pairs and reproduction](apk/2.26.43.72-token-param-body/README.md).

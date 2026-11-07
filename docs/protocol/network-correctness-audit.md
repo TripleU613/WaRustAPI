@@ -1,5 +1,10 @@
 # Network correctness audit
 
+**Token parameter-map bodies and selected translation entries are decoded.**
+All four packaged pair arrays validate; compiled DEX config keys locate the four
+token rows, whose packaged translated slots match their original specifiers.
+[Derivation and dynamic-policy limits](apk/2.26.43.72-token-param-body/README.md). No runtime policy change or live operation.
+
 **Token parameter-map v4 headers and schema gating are now decoded.**
 Four pinned packaged universes reproduce bounded header/hash metadata; the
 lightweight-manager path requires schema compatibility before translation install.

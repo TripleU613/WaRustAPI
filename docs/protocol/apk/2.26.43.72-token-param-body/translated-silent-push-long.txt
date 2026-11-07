@@ -1,0 +1,30 @@
+
+# class: LX/QAh;
+# extends: Ljava/lang/Object;
+
+.method public A01(JLLJ)  # .registers 6
+    # full signature: LX/QAh;->A01(LX/0Ek;LX/Pmp;J)J
+    0000..0004  iget-object  v0, v3, LX/Pmp;->A02:Ljava/lang/Object;
+    0004..0008  if-eqz  v0, +0x1d
+    0008..000c  iget  v1, v3, LX/Pmp;->A00:I
+    000c..000e  const/4  v0, #0x2
+    000e..0012  if-ne  v1, v0, +0x18
+    0012..0018  invoke-virtual  {v3}, LX/Pmp;->A02()Ljava/lang/Long;
+    0018..001a  move-result-object  v1
+    001a..001e  if-eqz  v1, +0x12
+    001e..0022  if-eqz  v2, +0xb
+    0022..0026  iget-boolean  v0, v2, LX/0Ek;->A02:Z
+    0026..002a  if-eqz  v0, +0x7
+    002a..002e  sget-object  v0, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->SILENT_PUSH_VALUE:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+    002e..0034  invoke-virtual  {v2, v0}, LX/0Ek;->A01(Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;)V
+    0034..003a  invoke-virtual  {v1}, Ljava/lang/Number;->longValue()J
+    003a..003c  move-result-wide  v0
+    003c..003e  return-wide  v0
+    003e..0042  if-eqz  v2, +0xb
+    0042..0046  iget-boolean  v0, v2, LX/0Ek;->A02:Z
+    0046..004a  if-eqz  v0, +0x7
+    004a..004e  sget-object  v0, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__FROM_SILENT_PUSH_FALLBACK:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+    004e..0054  invoke-virtual  {v2, v0}, LX/0Ek;->A01(Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;)V
+    0054..0056  return-wide  v4
+    # exception table: 0 try range(s)
+.end method

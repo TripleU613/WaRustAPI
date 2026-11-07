@@ -1,0 +1,25 @@
+
+# class: LX/0Ep;
+# extends: Ljava/lang/Object;
+
+.method public A00(IJ)  # .registers 8
+    # full signature: LX/0Ep;->A00(J)I
+    0000..0004  const/16  v0, #0x3e
+    0004..0008  ushr-long  v4, v6, v0
+    0008..000c  const-wide/16  v2, #0x1
+    000c..000e  and-long/2addr  v4, v2
+    000e..0012  cmp-long  v1, v4, v2
+    0012..0016  const/16  v0, #0x10
+    0016..0018  ushr-long/2addr  v6, v0
+    0018..001c  if-nez  v1, +0xc
+    001c..0026  const-wide  v0, #0xffffffff (4294967295)
+    0026..0028  and-long/2addr  v6, v0
+    0028..002a  long-to-int  v0, v6
+    002a..002e  and-int/lit16  v0, v0, #0xfff
+    002e..0030  return  v0
+    0030..0036  const-wide/32  v0, #0xffff
+    0036..0038  and-long/2addr  v6, v0
+    0038..003a  long-to-int  v0, v6
+    003a..003c  return  v0
+    # exception table: 0 try range(s)
+.end method

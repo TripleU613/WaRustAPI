@@ -1,4 +1,11 @@
 {
+  "x-token-param-body-evidence": {
+    "x-cli": "existing static exports and pinned derive-token-rows.py --apk; no product command or HTTP route",
+    "x-transport": "research only; effective configured token timing remains unported",
+    "x-live": false,
+    "description": "Pinned APK43.72 Pcn pair loading andPLr binary-search/specifier reconstruction are retained. All four packaged bodies validate size, sorted partitions, unique keys and config counts. Exact DEX initializer/payload extraction binds four token config keys and packaged translated slots101/110/125/126. Identity translation is conditional on this map; dynamic table values, schema changes, silent push and manager/cache selection remain unresolved. No runtime timing, wire or live account change.",
+    "evidence": "docs/protocol/apk/2.26.43.72-token-param-body/README.md"
+  },
   "x-token-param-header-evidence": {
     "x-cli": "existing xtask static exports and pinned ZIP-only derive-asset-headers.py --apk; no product command or HTTP route",
     "x-transport": "research only; configured token scheduling and effective-value resolution remain unported",

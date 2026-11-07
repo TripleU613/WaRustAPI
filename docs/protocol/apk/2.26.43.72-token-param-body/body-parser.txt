@@ -1,0 +1,400 @@
+
+# class: LX/Pcn;
+# extends: Ljava/lang/Object;
+
+.method public A02(VLLI)  # .registers 27
+    # full signature: LX/Pcn;->A02(Ljava/lang/String;Ljava/lang/String;I)V
+    0000..0004  new-instance  v0, Ljava/io/FileInputStream;
+    0004..0008  move-object/from16  v1, v24
+    0008..000e  invoke-direct  {v0, v1}, Ljava/io/FileInputStream;-><init>(Ljava/lang/String;)V
+    000e..0012  move-object/from16  v1, v25
+    0012..0016  if-nez  v25, +0x4
+    0016..0018  const/4  v6, #0x0
+    0018..001a  goto  +0x6
+    001a..001e  new-instance  v6, Ljava/io/FileInputStream;
+    001e..0024  invoke-direct  {v6, v1}, Ljava/io/FileInputStream;-><init>(Ljava/lang/String;)V
+    0024..0028  move-object/from16  v5, v23
+    0028..002c  move/from16  v1, v26
+    002c..0030  iput  v1, v5, LX/Pcn;->A00:I
+    0030..0036  invoke-static  {v0}, Ljava/nio/channels/Channels;->newChannel(Ljava/io/InputStream;)Ljava/nio/channels/ReadableByteChannel;
+    0036..0038  move-result-object  v7
+    0038..003e  invoke-static  {v7}, LX/PfF;->A01(Ljava/nio/channels/ReadableByteChannel;)LX/PHU;
+    003e..0040  move-result-object  v2
+    0040..0044  iput-object  v2, v5, LX/Pcn;->A01:LX/PHU;
+    0044..0048  iget  v0, v2, LX/PHU;->A02:I
+    0048..004c  if-gtz  v0, +0x48
+    004c..0050  iget-object  v1, v2, LX/PHU;->A04:Ljava/lang/String;
+    0050..0054  sget-object  v8, Ljava/util/Locale;->US:Ljava/util/Locale;
+    0054..005a  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    005a..005c  move-result-object  v6
+    005c..0060  iget  v0, v2, LX/PHU;->A03:I
+    0060..0066  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0066..0068  move-result-object  v4
+    0068..006c  iget  v0, v2, LX/PHU;->A00:I
+    006c..006e  const/4  v3, #0x1
+    006e..0074  invoke-static  {v0}, LX/2L9;->A1N(I)Z
+    0074..0076  move-result  v0
+    0076..007c  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    007c..007e  move-result-object  v2
+    007e..0082  if-eqz  v1, +0x9
+    0082..0088  invoke-virtual  {v1}, Ljava/lang/String;->isEmpty()Z
+    0088..008a  move-result  v1
+    008a..008c  const/4  v0, #0x1
+    008c..0090  if-eqz  v1, +0x3
+    0090..0092  const/4  v0, #0x0
+    0092..0098  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0098..009a  move-result-object  v0
+    009a..00a0  invoke-static  {v6}, LX/NhB;->A1Z(Ljava/lang/Object;)[Ljava/lang/Object;
+    00a0..00a2  move-result-object  v1
+    00a2..00a8  invoke-static  {v4, v2, v0, v1, v3}, LX/2LA;->A1H(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;I)V
+    00a8..00ac  const-string  v0, "Invalid param count: %d (header version: %d, config count > 0: %b, schema hash present: %b)"
+    00ac..00b2  invoke-static  {v8, v0, v1}, Ljava/lang/String;->format(Ljava/util/Locale;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+    00b2..00b4  move-result-object  v2
+    00b4..00b8  iget-object  v1, v5, LX/Pcn;->A06:Ljava/lang/StringBuilder;
+    00b8..00be  invoke-virtual  {v1}, Ljava/lang/StringBuilder;->length()I
+    00be..00c0  move-result  v0
+    00c0..00c4  if-lez  v0, +0x7
+    00c4..00c8  const-string  v0, "; "
+    00c8..00ce  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00ce..00d4  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00d4..00d8  goto/16  +0x147
+    00d8..00dc  mul-int/lit8  v3, v0, #0x2
+    00dc..00de  const/4  v12, #0x0
+    00de..00e2  if-lez  v3, +0x4
+    00e2..00e4  const/4  v1, #0x0
+    00e4..00e6  goto  +0xd
+    00e6..00ea  sget-object  v2, Ljava/util/Locale;->US:Ljava/util/Locale;
+    00ea..00f0  invoke-static  {v3}, LX/2LD;->A1Y(I)[Ljava/lang/Object;
+    00f0..00f2  move-result-object  v1
+    00f2..00f6  const-string  v0, "received unexpected param size: %d"
+    00f6..00fc  invoke-static  {v2, v0, v1}, Ljava/lang/String;->format(Ljava/util/Locale;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+    00fc..00fe  move-result-object  v1
+    00fe..0102  const-string  v9, "loadParamsArrayFromChannel: %s"
+    0102..0106  const-string  v4, "FileParsingUtils"
+    0106..0108  const/4  v8, #0x0
+    0108..010a  const/4  v11, #0x1
+    010a..010e  if-eqz  v1, +0x27
+    010e..0112  new-array  v0, v11, [Ljava/lang/Object;
+    0112..0116  aput-object  v1, v0, v12
+    0116..011c  invoke-static  {v4, v9, v0}, LX/070;->A0T(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+    011c..0120  new-instance  v2, LX/PCa;
+    0120..0126  invoke-direct  {v2, v1, v8}, LX/PCa;-><init>(Ljava/lang/String;[I)V
+    0126..012a  iget-object  v0, v2, LX/PCa;->A01:[I
+    012a..012e  iput-object  v0, v5, LX/Pcn;->A05:[I
+    012e..0132  iget-object  v2, v2, LX/PCa;->A00:Ljava/lang/String;
+    0132..0136  if-eqz  v2, +0x76
+    0136..013a  iget-object  v1, v5, LX/Pcn;->A06:Ljava/lang/StringBuilder;
+    013a..0140  invoke-virtual  {v1}, Ljava/lang/StringBuilder;->length()I
+    0140..0142  move-result  v0
+    0142..0146  if-lez  v0, +0x7
+    0146..014a  const-string  v0, "; "
+    014a..0150  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0150..0156  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0156..0158  goto  +0x64
+    0158..015c  mul-int/lit8  v1, v3, #0x4
+    015c..0162  invoke-static  {v1}, Ljava/nio/ByteBuffer;->allocateDirect(I)Ljava/nio/ByteBuffer;
+    0162..0164  move-result-object  v2
+    0164..016a  invoke-interface  {v7, v2}, Ljava/nio/channels/ReadableByteChannel;->read(Ljava/nio/ByteBuffer;)I
+    016a..016c  move-result  v0
+    016c..0170  if-eq  v0, v1, +0x23
+    0170..0174  sget-object  v3, Ljava/util/Locale;->US:Ljava/util/Locale;
+    0174..0178  const-string  v2, "params body truncated; expected %d bytes, read %d"
+    0178..017e  invoke-static  {v1}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    017e..0180  move-result-object  v1
+    0180..0186  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0186..0188  move-result-object  v0
+    0188..018e  invoke-static  {v1, v0, v11}, LX/2L9;->A1b(Ljava/lang/Object;Ljava/lang/Object;I)[Ljava/lang/Object;
+    018e..0190  move-result-object  v0
+    0190..0196  invoke-static  {v3, v2, v0}, Ljava/lang/String;->format(Ljava/util/Locale;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+    0196..0198  move-result-object  v1
+    0198..019c  new-array  v0, v11, [Ljava/lang/Object;
+    019c..01a0  aput-object  v1, v0, v12
+    01a0..01a6  invoke-static  {v4, v9, v0}, LX/070;->A0T(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+    01a6..01aa  new-instance  v2, LX/PCa;
+    01aa..01b0  invoke-direct  {v2, v1, v8}, LX/PCa;-><init>(Ljava/lang/String;[I)V
+    01b0..01b2  goto  -0x45
+    01b2..01b8  invoke-virtual  {v2}, Ljava/nio/Buffer;->flip()Ljava/nio/Buffer;
+    01b8..01bc  new-array  v1, v3, [I
+    01bc..01c0  sget-object  v0, Ljava/nio/ByteOrder;->LITTLE_ENDIAN:Ljava/nio/ByteOrder;
+    01c0..01c6  invoke-virtual  {v2, v0}, Ljava/nio/ByteBuffer;->order(Ljava/nio/ByteOrder;)Ljava/nio/ByteBuffer;
+    01c6..01c8  move-result-object  v0
+    01c8..01ce  invoke-virtual  {v0}, Ljava/nio/ByteBuffer;->asIntBuffer()Ljava/nio/IntBuffer;
+    01ce..01d0  move-result-object  v0
+    01d0..01d6  invoke-virtual  {v0, v1}, Ljava/nio/IntBuffer;->get([I)Ljava/nio/IntBuffer;
+    01d6..01da  new-instance  v2, LX/PCa;
+    01da..01e0  invoke-direct  {v2, v8, v1}, LX/PCa;-><init>(Ljava/lang/String;[I)V
+    01e0..01e2  goto  -0x5d
+    01e2..01e4  move-exception  v3
+    01e4..01e8  sget-object  v2, Ljava/util/Locale;->US:Ljava/util/Locale;
+    01e8..01ee  invoke-virtual  {v3}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    01ee..01f0  move-result-object  v0
+    01f0..01f4  new-array  v1, v11, [Ljava/lang/Object;
+    01f4..01f8  aput-object  v0, v1, v12
+    01f8..01fc  const-string  v0, "load failed: %s"
+    01fc..0202  invoke-static  {v2, v0, v1}, Ljava/lang/String;->format(Ljava/util/Locale;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+    0202..0204  move-result-object  v1
+    0204..0208  new-array  v0, v11, [Ljava/lang/Object;
+    0208..020c  aput-object  v1, v0, v12
+    020c..0212  invoke-static  {v4, v3, v9, v0}, LX/070;->A0b(Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;[Ljava/lang/Object;)V
+    0212..0216  new-instance  v2, LX/PCa;
+    0216..021c  invoke-direct  {v2, v1, v8}, LX/PCa;-><init>(Ljava/lang/String;[I)V
+    021c..021e  goto  -0x7b
+    021e..0222  if-eqz  v6, +0x9c
+    0222..0228  invoke-static  {}, LX/1Xl;->A13()Ljava/lang/StringBuilder;
+    0228..022a  move-result-object  v3
+    022a..022e  sget-object  v0, Ljava/nio/charset/StandardCharsets;->UTF_8:Ljava/nio/charset/Charset;
+    022e..0234  invoke-virtual  {v0}, Ljava/nio/charset/Charset;->name()Ljava/lang/String;
+    0234..0236  move-result-object  v0
+    0236..023c  invoke-static  {v0}, Ljava/nio/charset/Charset;->forName(Ljava/lang/String;)Ljava/nio/charset/Charset;
+    023c..023e  move-result-object  v1
+    023e..0242  new-instance  v0, Ljava/io/InputStreamReader;
+    0242..0248  invoke-direct  {v0, v6, v1}, Ljava/io/InputStreamReader;-><init>(Ljava/io/InputStream;Ljava/nio/charset/Charset;)V
+    0248..024c  new-instance  v2, Ljava/io/BufferedReader;
+    024c..0252  invoke-direct  {v2, v0}, Ljava/io/BufferedReader;-><init>(Ljava/io/Reader;)V
+    0252..0254  const/4  v1, #0xff (-1)
+    0254..025a  invoke-virtual  {v2}, Ljava/io/Reader;->read()I
+    025a..025c  move-result  v0
+    025c..0260  if-eq  v0, v1, +0x7
+    0260..0262  int-to-char  v0, v0
+    0262..0268  invoke-virtual  {v3, v0}, Ljava/lang/StringBuilder;->append(C)Ljava/lang/StringBuilder;
+    0268..026a  goto  -0xa
+    026a..0270  invoke-virtual  {v2}, Ljava/io/Reader;->close()V
+    0270..0272  goto  +0x1c
+    0272..0274  move-exception  v1
+    0274..027a  invoke-virtual  {v2}, Ljava/io/Reader;->close()V
+    027a..027c  goto  +0x5
+    027c..027e  move-exception  v0
+    027e..0284  invoke-static  {v0, v1}, LX/NhF;->A1B(Ljava/lang/Object;Ljava/lang/Object;)V
+    0284..0286  throw  v1
+    0286..0288  move-exception  v2
+    0288..028c  new-array  v1, v11, [Ljava/lang/Object;
+    028c..0290  aput-object  v6, v1, v12
+    0290..0294  const-string  v0, "getFileContentAsString: failed. File does not exist: %s "
+    0294..029a  invoke-static  {v4, v2, v0, v1}, LX/070;->A0a(Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;[Ljava/lang/Object;)V
+    029a..029c  goto  +0x7
+    029c..029e  move-exception  v1
+    029e..02a2  const-string  v0, "getFileContentAsString: failed due to exception: "
+    02a2..02a8  invoke-static  {v4, v0, v1}, LX/070;->A0P(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+    02a8..02ae  invoke-virtual  {v3}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    02ae..02b0  move-result-object  v0
+    02b0..02b4  new-instance  v10, Lorg/json/JSONArray;
+    02b4..02ba  invoke-direct  {v10, v0}, Lorg/json/JSONArray;-><init>(Ljava/lang/String;)V
+    02ba..02c0  invoke-static  {}, LX/2L6;->A1E()Ljava/util/HashMap;
+    02c0..02c2  move-result-object  v9
+    02c2..02c4  const/4  v8, #0x0
+    02c4..02ca  invoke-virtual  {v10}, Lorg/json/JSONArray;->length()I
+    02ca..02cc  move-result  v0
+    02cc..02d0  if-ge  v8, v0, +0x49
+    02d0..02d6  invoke-virtual  {v10, v8}, Lorg/json/JSONArray;->getString(I)Ljava/lang/String;
+    02d6..02d8  move-result-object  v1
+    02d8..02dc  if-eqz  v1, +0x2d
+    02dc..02e0  const-string  v0, ":"
+    02e0..02e6  invoke-virtual  {v1, v0}, Ljava/lang/String;->split(Ljava/lang/String;)[Ljava/lang/String;
+    02e6..02e8  move-result-object  v6
+    02e8..02ec  aget-object  v0, v6, v12
+    02ec..02f2  invoke-static  {v0}, LX/Fwt;->A10(Ljava/lang/String;)Ljava/lang/Integer;
+    02f2..02f4  move-result-object  v4
+    02f4..02f8  aget-object  v1, v6, v11
+    02f8..02fe  invoke-static  {}, LX/2L6;->A1E()Ljava/util/HashMap;
+    02fe..0300  move-result-object  v3
+    0300..0302  const/4  v0, #0xfe (-2)
+    0302..0308  invoke-static  {v1, v3, v0}, LX/NhB;->A1I(Ljava/lang/Object;Ljava/util/AbstractMap;I)V
+    0308..030a  const/4  v2, #0x2
+    030a..030c  array-length  v0, v6
+    030c..0310  if-ge  v2, v0, +0x10
+    0310..0316  invoke-static  {v2, v6}, LX/NhA;->A06(I[Ljava/lang/String;)I
+    0316..0318  move-result  v1
+    0318..031c  add-int/lit8  v0, v2, #0x1
+    031c..0320  aget-object  v0, v6, v0
+    0320..0326  invoke-static  {v0, v3, v1}, LX/NhB;->A1I(Ljava/lang/Object;Ljava/util/AbstractMap;I)V
+    0326..032a  add-int/lit8  v2, v2, #0x2
+    032a..032c  goto  -0x10
+    032c..0332  invoke-virtual  {v9, v4, v3}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0332..0336  add-int/lit8  v8, v8, #0x1
+    0336..0338  goto  -0x39
+    0338..033a  move-exception  v2
+    033a..033e  const-string  v1, "ParamsMapParser"
+    033e..0344  invoke-virtual  {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0344..0346  move-result-object  v0
+    0346..034c  invoke-static  {v1, v0, v2}, LX/070;->A0M(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+    034c..0352  invoke-static  {}, LX/2L6;->A1E()Ljava/util/HashMap;
+    0352..0354  move-result-object  v9
+    0354..0356  goto  +0x5
+    0356..035c  invoke-static  {}, LX/2L6;->A1E()Ljava/util/HashMap;
+    035c..035e  move-result-object  v9
+    035e..0362  iput-object  v9, v5, LX/Pcn;->A03:Ljava/util/Map;
+    0362..0366  if-eqz  v7, +0x38
+    0366..036c  invoke-interface  {v7}, Ljava/nio/channels/Channel;->close()V
+    036c..036e  goto  +0x33
+    036e..0370  move-exception  v1
+    0370..0374  if-eqz  v7, +0xa
+    0374..037a  invoke-interface  {v7}, Ljava/nio/channels/Channel;->close()V
+    037a..037c  goto  +0x5
+    037c..037e  move-exception  v0
+    037e..0384  invoke-static  {v0, v1}, LX/NhF;->A1B(Ljava/lang/Object;Ljava/lang/Object;)V
+    0384..0386  throw  v1
+    0386..0388  move-exception  v2
+    0388..038c  const-string  v1, "ParamsMapParser"
+    038c..0390  const-string  v0, "Failed to load params map due to exception"
+    0390..0396  invoke-static  {v1, v0, v2}, LX/070;->A0M(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+    0396..039c  invoke-virtual  {v2}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+    039c..039e  move-result-object  v0
+    039e..03a4  invoke-static  {v0}, LX/2LD;->A1Z(Ljava/lang/Object;)[Ljava/lang/Object;
+    03a4..03a6  move-result-object  v1
+    03a6..03aa  const-string  v0, "Failed to load params map: %s"
+    03aa..03b0  invoke-static  {v0, v1}, Ljava/lang/String;->format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+    03b0..03b2  move-result-object  v2
+    03b2..03b6  iget-object  v1, v5, LX/Pcn;->A06:Ljava/lang/StringBuilder;
+    03b6..03bc  invoke-virtual  {v1}, Ljava/lang/StringBuilder;->length()I
+    03bc..03be  move-result  v0
+    03be..03c2  if-lez  v0, +0x7
+    03c2..03c6  const-string  v0, "; "
+    03c6..03cc  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    03cc..03d2  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    03d2..03d6  iget-boolean  v0, v5, LX/Pcn;->A04:Z
+    03d6..03da  if-nez  v0, +0xbf
+    03da..03de  const-string  v1, "ParamsMapParser"
+    03de..03e2  iget-object  v0, v5, LX/Pcn;->A05:[I
+    03e2..03e6  if-eqz  v0, +0xb4
+    03e6..03ea  iget-object  v4, v5, LX/Pcn;->A02:LX/PCb;
+    03ea..03ec  const/4  v14, #0xff (-1)
+    03ec..03ee  const/4  v3, #0x0
+    03ee..03f0  const/4  v2, #0x0
+    03f0..03f2  const/4  v1, #0x0
+    03f2..03f6  iget-object  v9, v5, LX/Pcn;->A05:[I
+    03f6..03f8  array-length  v0, v9
+    03f8..03fc  if-ge  v3, v0, +0xae
+    03fc..0400  add-int/lit8  v0, v3, #0x1
+    0400..0404  aget  v6, v9, v0
+    0404..0408  ushr-int/lit8  v0, v6, #0xc
+    0408..040c  and-int/lit16  v13, v6, #0xfff
+    040c..0410  aget  v6, v9, v3
+    0410..0414  shr-int/lit8  v6, v6, #0x9
+    0414..0418  and-int/lit8  v10, v6, #0x7f
+    0418..041c  and-int/lit8  v8, v10, #0x2
+    041c..041e  const/4  v7, #0x1
+    041e..0420  ??(0xb9)  v8, v7
+    0420..0424  if-eq  v0, v2, +0x13
+    0424..0428  add-int/lit8  v14, v14, #0x1
+    0428..042c  iget  v1, v5, LX/Pcn;->A00:I
+    042c..0430  if-eqz  v1, +0x8
+    0430..0434  if-eq  v1, v7, +0x6
+    0434..0436  const/4  v6, #0x2
+    0436..0438  move  v2, v0
+    0438..043c  if-ne  v1, v6, +0x7
+    043c..043e  move  v2, v0
+    043e..0440  const/4  v1, #0x2
+    0440..0444  if-lez  v8, +0x3
+    0444..0446  const/4  v1, #0x1
+    0446..044a  aget  v8, v9, v3
+    044a..044e  const/high16  v6, #0xffff0000
+    044e..0450  and-int/2addr  v6, v8
+    0450..0454  shr-int/lit8  v16, v6, #0x10
+    0454..0458  and-int/lit16  v6, v8, #0x3800
+    0458..045c  shr-int/lit8  v17, v6, #0xb
+    045c..0460  and-int/lit8  v6, v10, #0x20
+    0460..0464  if-nez  v6, +0x71
+    0464..0468  iget-object  v6, v5, LX/Pcn;->A03:Ljava/util/Map;
+    0468..046e  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    046e..0470  move-result-object  v9
+    0470..0476  invoke-interface  {v6, v9}, Ljava/util/Map;->containsKey(Ljava/lang/Object;)Z
+    0476..0478  move-result  v6
+    0478..047c  const-string  v12, ""
+    047c..0480  if-eqz  v6, +0x46
+    0480..0484  iget-object  v6, v5, LX/Pcn;->A03:Ljava/util/Map;
+    0484..048a  invoke-interface  {v6, v9}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    048a..048c  move-result-object  v8
+    048c..0490  check-cast  v8, Ljava/util/Map;
+    0490..0496  invoke-virtual  {v8}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+    0496..0498  const/4  v6, #0xfe (-2)
+    0498..049e  invoke-static  {v8, v6}, LX/2LC;->A0x(Ljava/util/Map;I)Ljava/lang/Object;
+    049e..04a0  move-result-object  v11
+    04a0..04a4  check-cast  v11, Ljava/lang/String;
+    04a4..04aa  invoke-virtual  {v11}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+    04aa..04ae  iget-object  v6, v5, LX/Pcn;->A03:Ljava/util/Map;
+    04ae..04b4  invoke-interface  {v6, v9}, Ljava/util/Map;->containsKey(Ljava/lang/Object;)Z
+    04b4..04b6  move-result  v6
+    04b6..04ba  if-eqz  v6, +0x26
+    04ba..04be  iget-object  v6, v5, LX/Pcn;->A03:Ljava/util/Map;
+    04be..04c4  invoke-interface  {v6, v9}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    04c4..04c6  move-result-object  v6
+    04c6..04ca  check-cast  v6, Ljava/util/Map;
+    04ca..04d0  invoke-virtual  {v6}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+    04d0..04d6  invoke-static  {v13}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    04d6..04d8  move-result-object  v8
+    04d8..04de  invoke-interface  {v6, v8}, Ljava/util/Map;->containsKey(Ljava/lang/Object;)Z
+    04de..04e0  move-result  v6
+    04e0..04e4  if-eqz  v6, +0x11
+    04e4..04e8  iget-object  v6, v5, LX/Pcn;->A03:Ljava/util/Map;
+    04e8..04ee  invoke-interface  {v6, v9}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    04ee..04f0  move-result-object  v6
+    04f0..04f4  check-cast  v6, Ljava/util/Map;
+    04f4..04fa  invoke-static  {v8, v6}, LX/2LB;->A18(Ljava/lang/Object;Ljava/util/Map;)Ljava/lang/String;
+    04fa..04fc  move-result-object  v12
+    04fc..0502  invoke-virtual  {v12}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+    0502..0506  rem-int/lit8  v6, v10, #0x2
+    0506..0508  goto  +0x3
+    0508..050a  move-object  v11, v12
+    050a..050c  goto  -0x30
+    050c..0512  invoke-static  {v6, v7}, LX/2L9;->A1O(II)Z
+    0512..0514  move-result  v20
+    0514..0518  shr-int/lit8  v6, v10, #0x6
+    0518..051e  invoke-static  {v6, v7}, LX/2L9;->A1O(II)Z
+    051e..0520  move-result  v21
+    0520..0524  const/16  v22, #0x0
+    0524..0528  new-instance  v10, LX/PNq;
+    0528..052a  move  v15, v13
+    052a..052e  move/from16  v18, v1
+    052e..0532  move/from16  v19, v0
+    0532..0538  invoke-direct/range  {v10..v22}, LX/PNq;-><init>(Ljava/lang/String;Ljava/lang/String;IIIIIIIZZZ)V
+    0538..053c  iget-object  v0, v4, LX/PCb;->A00:Ljava/util/List;
+    053c..0542  invoke-interface  {v0, v10}, Ljava/util/List;->add(Ljava/lang/Object;)Z
+    0542..0546  add-int/lit8  v3, v3, #0x2
+    0546..054a  goto/16  -0xaa
+    054a..054e  const-string  v0, "Failed to load base params_map v4"
+    054e..0554  invoke-static  {v1, v0}, LX/070;->A0G(Ljava/lang/String;Ljava/lang/String;)V
+    0554..0556  return-void
+    0556..0558  move-exception  v2
+    0558..055c  const-string  v1, "ParamsMapParser"
+    055c..0560  const-string  v0, "Failed to parse params map V4 by paths"
+    0560..0566  invoke-static  {v1, v0, v2}, LX/070;->A0M(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+    0566..0568  return-void
+    # exception table: 21 try range(s)
+    # catch Ljava/io/IOException; code_units 0000..0018 -> 02ab
+    # catch Ljava/io/IOException; code_units 0018..001c -> 01c3
+    # catch Ljava/io/IOException; code_units 0018..001c -> 02ab
+    # catch <all> code_units 001c..0036 -> 01b7
+    # catch <all> code_units 003b..00ae -> 01b7
+    # catch Ljava/io/IOException; code_units 00ae..00f1 -> 00f1
+    # catch <all> code_units 00ae..00f1 -> 01b7
+    # catch <all> code_units 00f1..0115 -> 01b7
+    # catch Ljava/io/FileNotFoundException; code_units 0115..012a -> 0143
+    # catch Ljava/io/IOException; code_units 0115..012a -> 014e
+    # catch <all> code_units 0115..012a -> 01b7
+    # catch <all> code_units 012a..0135 -> 0139
+    # catch Ljava/io/FileNotFoundException; code_units 0135..0139 -> 0143
+    # catch Ljava/io/IOException; code_units 0135..0139 -> 014e
+    # catch <all> code_units 0135..0139 -> 01b7
+    # catch <all> code_units 013a..013e -> 013e
+    # catch Ljava/lang/Exception; code_units 013f..0142 -> 0142
+    # catch Ljava/io/FileNotFoundException; code_units 013f..0142 -> 0143
+    # catch Ljava/io/IOException; code_units 013f..0142 -> 014e
+    # catch <all> code_units 013f..0142 -> 01b7
+    # catch Ljava/io/FileNotFoundException; code_units 0142..0143 -> 0143
+    # catch Ljava/io/IOException; code_units 0142..0143 -> 014e
+    # catch <all> code_units 0142..0143 -> 01b7
+    # catch <all> code_units 0143..0158 -> 01b7
+    # catch Lorg/json/JSONException; code_units 0158..019c -> 019c
+    # catch <all> code_units 0158..019c -> 01b7
+    # catch <all> code_units 019c..01b3 -> 01b7
+    # catch Ljava/io/IOException; code_units 01b3..01b7 -> 01c3
+    # catch Ljava/io/IOException; code_units 01b3..01b7 -> 02ab
+    # catch <all> code_units 01ba..01be -> 01be
+    # catch Ljava/lang/Exception; code_units 01bf..01c2 -> 01c2
+    # catch Ljava/io/IOException; code_units 01bf..01c2 -> 01c3
+    # catch Ljava/io/IOException; code_units 01bf..01c2 -> 02ab
+    # catch Ljava/io/IOException; code_units 01c2..01c3 -> 01c3
+    # catch Ljava/io/IOException; code_units 01c2..01c3 -> 02ab
+    # catch Ljava/io/IOException; code_units 01c3..0286 -> 02ab
+    # catch Ljava/io/IOException; code_units 0292..02ab -> 02ab
+.end method

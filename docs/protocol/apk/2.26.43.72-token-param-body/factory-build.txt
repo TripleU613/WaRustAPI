@@ -1,0 +1,94 @@
+
+# class: LX/NhI;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLLLLLLLLLI)  # .registers 32
+    # full signature: LX/NhI;->A00(LX/00x;LX/00x;LX/00x;LX/09i;LX/09h;Ljava/lang/String;LX/00v;LX/00v;LX/00v;I)LX/09u;
+    0000..0002  const/4  v0, #0x1
+    0002..0006  move-object/from16  v11, v25
+    0006..000a  move-object/from16  v1, v27
+    000a..0010  invoke-static  {v1, v0, v11}, LX/2LC;->A1R(Ljava/lang/Object;ILjava/lang/Object;)V
+    0010..0016  invoke-static  {}, LX/00J;->A00()Landroid/app/Application;
+    0016..0018  move-result-object  v3
+    0018..001c  new-instance  v13, LX/09j;
+    001c..0020  move/from16  v21, v31
+    0020..0022  move-object  v4, v13
+    0022..0024  move-object  v8, v1
+    0024..0028  move/from16  v9, v21
+    0028..002c  move-object/from16  v5, v22
+    002c..0030  move-object/from16  v6, v23
+    0030..0034  move-object/from16  v7, v24
+    0034..003a  invoke-direct/range  {v4..v9}, LX/09j;-><init>(LX/00x;LX/00x;LX/00x;Ljava/lang/String;I)V
+    003a..003e  new-instance  v10, LX/09l;
+    003e..0044  invoke-direct  {v10}, LX/09l;-><init>()V
+    0044..004a  invoke-static  {}, LX/2L6;->A1F()Ljava/util/HashSet;
+    004a..004c  move-result-object  v16
+    004c..0052  invoke-virtual  {v3}, Landroid/content/Context;->getFilesDir()Ljava/io/File;
+    0052..0054  move-result-object  v15
+    0054..005a  invoke-virtual  {v3}, Landroid/content/Context;->getAssets()Landroid/content/res/AssetManager;
+    005a..005c  move-result-object  v9
+    005c..0060  new-instance  v12, LX/09n;
+    0060..0066  invoke-direct  {v12}, Ljava/lang/Object;-><init>()V
+    0066..006a  new-instance  v1, Ljava/util/Random;
+    006a..0070  invoke-direct  {v1}, Ljava/util/Random;-><init>()V
+    0070..0074  const/16  v0, #0x3c
+    0074..007a  invoke-virtual  {v1, v0}, Ljava/util/Random;->nextInt(I)I
+    007a..007c  move-result  v0
+    007c..0080  if-nez  v0, +0x3d
+    0080..0084  const-string  v5, "api2"
+    0084..008a  const  v4, #0x278d00
+    008a..0090  invoke-static  {}, Ljava/lang/System;->currentTimeMillis()J
+    0090..0092  move-result-wide  v0
+    0092..0098  invoke-static  {v0, v1}, LX/2LB;->A06(J)J
+    0098..009a  move-result-wide  v0
+    009a..009c  long-to-int  v2, v0
+    009c..00a0  const-string  v8, "mc_ratelimit_"
+    00a0..00a6  invoke-static  {v8, v5}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    00a6..00a8  move-result-object  v1
+    00a8..00ac  new-instance  v0, LX/Loj;
+    00ac..00b2  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    00b2..00b6  iput-object  v3, v0, LX/Loj;->A00:Landroid/content/Context;
+    00b6..00bc  invoke-static  {v0, v1}, LX/MVb;->A00(LX/Loj;Ljava/lang/String;)I
+    00bc..00be  move-result  v0
+    00be..00c2  if-nez  v0, +0x40
+    00c2..00c8  invoke-static  {}, Ljava/lang/Math;->random()D
+    00c8..00ca  move-result-wide  v0
+    00ca..00d4  const-wide  v6, #0x4143c68000000000 (4702820688963043328)
+    00d4..00d6  mul-double/2addr  v0, v6
+    00d6..00d8  double-to-int  v4, v0
+    00d8..00da  sub-int/2addr  v2, v4
+    00da..00e0  invoke-static  {v8, v5}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    00e0..00e2  move-result-object  v1
+    00e2..00e6  new-instance  v0, LX/Loj;
+    00e6..00ec  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    00ec..00f0  iput-object  v3, v0, LX/Loj;->A00:Landroid/content/Context;
+    00f0..00f6  invoke-static  {v0, v1, v2}, LX/MVb;->A03(LX/Loj;Ljava/lang/String;I)V
+    00f6..00fa  const/16  v22, #0x0
+    00fa..00fe  sget-object  v20, LX/09o;->A0B:[[I
+    00fe..0104  invoke-static/range  {v21..v21}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0104..0106  move-result-object  v2
+    0106..010a  const-string  v1, "MobileConfigFactoryImpl"
+    010a..010e  const-string  v0, "Created MobileConfigFactoryImpl, unitType:%s"
+    010e..0114  invoke-static  {v2, v1, v0}, LX/070;->A0E(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)V
+    0114..0118  new-instance  v8, LX/09u;
+    0118..011c  move-object/from16  v14, v26
+    011c..0120  move-object/from16  v18, v28
+    0120..0124  move-object/from16  v17, v29
+    0124..0128  move-object/from16  v19, v30
+    0128..012e  invoke-direct/range  {v8..v22}, LX/09u;-><init>(Landroid/content/res/AssetManager;LX/09l;LX/09i;LX/09n;LX/09j;LX/09h;Ljava/io/File;Ljava/util/Set;LX/00v;LX/00v;LX/00v;[[IIZ)V
+    012e..0132  new-instance  v0, LX/0A5;
+    0132..0138  invoke-direct  {v0}, LX/0A5;-><init>()V
+    0138..013c  iput-object  v0, v8, LX/09u;->A03:LX/0A5;
+    013c..013e  return-object  v8
+    013e..0140  add-int/2addr  v0, v4
+    0140..0144  if-gt  v0, v2, -0x25
+    0144..014a  invoke-static  {v8, v5}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    014a..014c  move-result-object  v1
+    014c..0150  new-instance  v0, LX/Loj;
+    0150..0156  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0156..015a  iput-object  v3, v0, LX/Loj;->A00:Landroid/content/Context;
+    015a..0160  invoke-static  {v0, v1, v2}, LX/MVb;->A03(LX/Loj;Ljava/lang/String;I)V
+    0160..0164  const/16  v22, #0x1
+    0164..0166  goto  -0x35
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,92 @@
+{
+  "kind": "pinned packaged translation rows; not effective values",
+  "dex": "classes.dex",
+  "dex_sha256": "96fd9ecb4e4c75782e4049243e897196416649c6ba93ac507d6c829271ecda79",
+  "initializer_code_offset": 3709820,
+  "initializer_access_flags": 65545,
+  "selected_key_payload_sha256": "c6c2816ed3b337913f99b51df42009a37f4105975f851962f3ad7b428aad1a9c",
+  "assets": [
+    {
+      "path": "assets/params_map_v4_u1.txt",
+      "distinct_config_keys": 635,
+      "pairs": 645,
+      "first_partition_pairs": 645,
+      "body_sha256": "9f6bd271bdf3048d358261526f6899b2925b98453dfac962f18a623b8b271822"
+    },
+    {
+      "path": "assets/params_map_v4_u2.txt",
+      "distinct_config_keys": 22398,
+      "pairs": 22458,
+      "first_partition_pairs": 22458,
+      "body_sha256": "0f207fa07001355bce307d9f6b8646bd813d255ea40c87cc59d1e7e522a4f6be"
+    },
+    {
+      "path": "assets/params_map_v4_u4.txt",
+      "distinct_config_keys": 2,
+      "pairs": 72,
+      "first_partition_pairs": 72,
+      "body_sha256": "4af2477c877b14eef5925016b092cf754d91133828dcbc5528f4c2815b3a97cd"
+    },
+    {
+      "path": "assets/params_map_v4_u6.txt",
+      "distinct_config_keys": 38,
+      "pairs": 38,
+      "first_partition_pairs": 38,
+      "body_sha256": "f24ce3ff2432eecb85c1122c1ce446820fdfd8282b5e48615d10fa23ebb1273c"
+    }
+  ],
+  "selected": {
+    "865": {
+      "specifier_hex": "0x8201a700000065",
+      "config_index": 423,
+      "config_key": 865,
+      "parameter_id": 0,
+      "pair_index": 423,
+      "pair_hex": [
+        "0x00651001",
+        "0x00361000"
+      ],
+      "translated_slot_signed": 101,
+      "original_slot": 101
+    },
+    "909": {
+      "specifier_hex": "0x8201bc0000006e",
+      "config_index": 444,
+      "config_key": 909,
+      "parameter_id": 0,
+      "pair_index": 444,
+      "pair_hex": [
+        "0x006e1001",
+        "0x0038d000"
+      ],
+      "translated_slot_signed": 110,
+      "original_slot": 110
+    },
+    "996": {
+      "specifier_hex": "0x8201e30000007d",
+      "config_index": 483,
+      "config_key": 996,
+      "parameter_id": 0,
+      "pair_index": 483,
+      "pair_hex": [
+        "0x007d1001",
+        "0x003e4000"
+      ],
+      "translated_slot_signed": 125,
+      "original_slot": 125
+    },
+    "997": {
+      "specifier_hex": "0x8201e40000007e",
+      "config_index": 484,
+      "config_key": 997,
+      "parameter_id": 0,
+      "pair_index": 484,
+      "pair_hex": [
+        "0x007e1001",
+        "0x003e5000"
+      ],
+      "translated_slot_signed": 126,
+      "original_slot": 126
+    }
+  }
+}

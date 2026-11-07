@@ -84,3 +84,7 @@ Remaining: translation body semantics, actual loaded-table schema and hydration,
 complete manager/flag selection and00E effective-cache lifecycle. No Rust timing,
 admission or wire request changed; no private state or live account operation.
 Full network parity and restriction outcomes remain unproven.
+
+The subsequent [parameter-body trace](../2.26.43.72-token-param-body/README.md)
+decodes all four packed arrays and binds selected token translation rows through
+compiled DEX config keys. Effective runtime values remain open.
