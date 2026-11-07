@@ -368,7 +368,7 @@ enum WriteGuard {
         Option<super::devices::DeviceQuery>,
     ),
     DirectQuery(Arc<ProtocolStore>, super::outgoing::Pending),
-    DirectAccount(Arc<ProtocolStore>, [u8; 32]),
+    DirectMessage(Arc<ProtocolStore>, super::outgoing::MessageWriteGuard),
     Prekey(Arc<ProtocolStore>, super::prekeys::PendingUpload),
     Devices(Arc<ProtocolStore>, super::devices::DeviceQuery),
     RetryConfirmation(
@@ -415,18 +415,9 @@ impl Outbound {
             Some(WriteGuard::DirectQuery(store, pending)) => {
                 pending.check_write_authority(&store, &self.node)
             }
-            Some(WriteGuard::DirectAccount(store, expected)) => store.read(|tx| {
-                let current = AccountRecord::load(tx)?;
-                if super::account_authority::fingerprint(tx.generation(), current.as_ref())?
-                    != expected
-                {
-                    return Err(Error::invalid(
-                        "outbox",
-                        "direct account changed before message write",
-                    ));
-                }
-                Ok(())
-            }),
+            Some(WriteGuard::DirectMessage(store, guard)) => {
+                guard.check_write_authority(&store, &self.node)
+            }
             Some(WriteGuard::Prekey(store, pending)) => {
                 pending.check_write_authority(&store, &self.node)
             }
@@ -610,12 +601,9 @@ impl NodeLink {
         account: &AccountRecord,
         node: &Node,
     ) -> Result<()> {
-        let expected = super::account_authority::fingerprint(account.generation, Some(account))?;
-        self.send_guarded(
-            node,
-            Some(WriteGuard::DirectAccount(store.clone(), expected)),
-        )
-        .await
+        let guard = super::outgoing::MessageWriteGuard::capture(store, account, node)?;
+        self.send_guarded(node, Some(WriteGuard::DirectMessage(store.clone(), guard)))
+            .await
     }
 
     async fn send_prekey_upload(
@@ -7050,14 +7038,46 @@ mod tests {
             profile::Limits,
         };
         for mode in ["query", "message"] {
-            for change in ["same", "account", "node_id", "node_to", "node_body"] {
-                if mode == "message" && change.starts_with("node_") {
+            for change in [
+                "same",
+                "account",
+                "node_id",
+                "node_to",
+                "node_body",
+                "owner_missing",
+                "owner_changed",
+                "query_changed",
+                "attempt_changed",
+                "outbox_missing",
+                "progress",
+            ] {
+                if mode == "query"
+                    && !matches!(
+                        change,
+                        "same" | "account" | "node_id" | "node_to" | "node_body"
+                    )
+                {
                     continue;
                 }
                 let changed = change != "same";
                 let dir = tempfile::tempdir().unwrap();
                 let path = dir.path().join("direct-owner.redb");
                 let store = open(&path);
+                let snapshot = |store: &ProtocolStore| {
+                    store
+                        .read(|tx| {
+                            [
+                                Table::Account,
+                                Table::Outbox,
+                                Table::Checkpoints,
+                                Table::SignalSessions,
+                            ]
+                            .into_iter()
+                            .map(|table| tx.scan(table, 1, 10000))
+                            .collect::<Result<Vec<_>>>()
+                        })
+                        .unwrap()
+                };
                 let account = AccountRecord {
                     generation: store.generation(),
                     signal_registration_id: Some(31),
@@ -7087,6 +7107,33 @@ mod tests {
                 let (pending, query) = super::super::outgoing::begin_selected(&store, Some(ticket))
                     .unwrap()
                     .unwrap();
+                if mode == "message" {
+                    store
+                        .write(|tx| {
+                            let outbox = Outbox::new("comparison-driver", Limits::default());
+                            let mut entry = outbox.get_mut(tx, ticket)?.unwrap();
+                            let wire_id = MessageId::new("frozen").unwrap();
+                            entry.wire_id = Some(wire_id.clone());
+                            entry.progress = crate::model::send::AttemptProgress::InFlight;
+                            entry.attempts.push(crate::outbox::AttemptRecord {
+                                index: 0,
+                                prepared_at: Timestamp::now(),
+                                epoch: Some(ConnectionEpoch(1)),
+                                payload: Some(
+                                    encode(&Node::new("message").attr("id", "frozen"))?.into(),
+                                ),
+                                re_encryption: false,
+                            });
+                            super::super::outgoing::reserve_ack_owner_in(tx, ticket, &wire_id)?;
+                            let key = format!("outbox-key-query:{ticket}");
+                            let mut query: serde_json::Value =
+                                tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?.unwrap();
+                            query["status"] = "answered".into();
+                            tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &query)?;
+                            tx.put_json(Table::Outbox, &ticket.0, 1, &entry)
+                        })
+                        .unwrap();
+                }
                 let (_incoming, incoming) = mpsc::channel(1);
                 let (outgoing, mut writes) = mpsc::channel(1);
                 let link = NodeLink::new(incoming, outgoing);
@@ -7119,9 +7166,57 @@ mod tests {
                     replacement.signal_registration_id = Some(32);
                     store.write(|tx| replacement.save(tx)).unwrap();
                 }
-                let before = store
-                    .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
-                    .unwrap();
+                if mode == "message"
+                    && matches!(
+                        change,
+                        "owner_missing"
+                            | "owner_changed"
+                            | "query_changed"
+                            | "attempt_changed"
+                            | "outbox_missing"
+                            | "progress"
+                    )
+                {
+                    store
+                        .write(|tx| {
+                            if change.starts_with("owner_") {
+                                let key = format!("outbox-message-ack-owner:{ticket}");
+                                if change == "owner_missing" {
+                                    tx.delete(Table::Checkpoints, key.as_bytes())?;
+                                } else {
+                                    let mut row: serde_json::Value = tx
+                                        .get_json(Table::Checkpoints, key.as_bytes(), 1)?
+                                        .unwrap();
+                                    row["wire_id"] = "changed-fixture".into();
+                                    tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &row)?;
+                                }
+                            } else if change == "query_changed" {
+                                let key = format!("outbox-key-query:{ticket}");
+                                let mut row: serde_json::Value =
+                                    tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?.unwrap();
+                                row["status"] = "outcome_unknown".into();
+                                tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &row)?;
+                            } else {
+                                let mut entry = Outbox::new("comparison-driver", Limits::default())
+                                    .get_mut(tx, ticket)?
+                                    .unwrap();
+                                if change == "outbox_missing" {
+                                    tx.delete(Table::Outbox, &ticket.0)?;
+                                } else {
+                                    if change == "progress" {
+                                        entry.progress =
+                                            crate::model::send::AttemptProgress::Failed;
+                                    } else {
+                                        entry.attempts[0].payload = Some(vec![9, 9, 9].into());
+                                    }
+                                    tx.put_json(Table::Outbox, &ticket.0, 1, &entry)?;
+                                }
+                            }
+                            Ok(())
+                        })
+                        .unwrap();
+                }
+                let before = snapshot(&store);
                 let head = store.journal_head().unwrap();
                 let prepared = queued.prepare();
                 if changed {
@@ -7132,12 +7227,7 @@ mod tests {
                 }
                 assert_eq!(task.await.unwrap().is_err(), changed, "{mode}");
                 assert!(writes.recv().await.is_none());
-                assert_eq!(
-                    store
-                        .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
-                        .unwrap(),
-                    before
-                );
+                assert_eq!(snapshot(&store), before);
                 assert!(
                     super::super::outgoing::begin_selected(&store, Some(ticket))
                         .unwrap()
@@ -7146,12 +7236,7 @@ mod tests {
                 assert_eq!(store.journal_head().unwrap(), head);
                 drop(store);
                 let reopened = identity_store(&path);
-                assert_eq!(
-                    reopened
-                        .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
-                        .unwrap(),
-                    before
-                );
+                assert_eq!(snapshot(&reopened), before);
                 assert_eq!(reopened.journal_head().unwrap(), head);
             }
         }

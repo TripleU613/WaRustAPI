@@ -20151,6 +20151,14 @@
     "description": "Pinned dirty stanza lazy selector/constructors/accessors establish iq/get/g.us/w:g2, supplied id/context and typed group children; selected Rust semantic fields match. ID bound is Java string length; list diagnostics do not establish hard gates without assertion policy. Legacy group admission, encoded order and callback/persistence remain separate. Existing xtask reproduces evidence; no wire/route/runtime/live change.",
     "evidence": "docs/protocol/apk/2.26.43.72-group-dirty-stanza-serializer/README.md"
   },
+  "x-ordinary-direct-message-writer-binding": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [],
+    "description": "Ordinary direct-message writer requires the actual queued encoding to match its committed non-re-encryption InFlight attempt, with frozen outbox/ACK-owner/answered-query rows and initiating account authority. Missing historical owner proof is not backfilled. Local refusal preserves ciphertext, ratchet and uncertainty without reset, new query, schema/wire field or new deadline. Peer/version lifecycle and complete native parity remain separate; no live acceptance claim.",
+    "evidence": "docs/protocol/replay-safety-audit.md#ordinary-direct-message-committed-writer-binding-2026-11-07"
+  },
   "x-pinned-retry-base-key-declaration-evidence": {
     "x-cli": true,
     "x-transport": false,
@@ -20200,7 +20208,7 @@
     "x-cli": true,
     "x-transport": true,
     "x-live": false,
-    "description": "New direct key queries capture an encoded-request digest within reservation. Actor writer checks actual queued IQ encoding alongside account, durable query ID/status and deadline. Offline saved identity-policy resumes have no request write authority. Refusal preserves uncertainty without reset/replay; no wire/schema migration or native-completeness claim. Final direct-message payload provenance remains separate.",
+    "description": "New direct key queries capture an encoded-request digest within reservation. Actor writer checks actual queued IQ encoding alongside account, durable query ID/status and deadline. Offline saved identity-policy resumes have no request write authority. Refusal preserves uncertainty without reset/replay; no wire/schema migration or native-completeness claim. Final direct-message admission is separately bound to its committed attempt.",
     "evidence": "docs/protocol/replay-safety-audit.md#direct-key-query-payload-binding-at-writer-dequeue-2026-11-07"
   },
   "x-device-query-writer-payload-binding": {

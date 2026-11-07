@@ -182,6 +182,134 @@ pub fn identity_suspension(
     })
 }
 
+/// Connection-local authority for one newly committed ordinary direct message.
+#[derive(Clone)]
+pub(crate) struct MessageWriteGuard {
+    account_authority: [u8; 32],
+    local_id: LocalMessageId,
+    payload_sha256: [u8; 32],
+    entry: Zeroizing<Vec<u8>>,
+    ack_owner: Zeroizing<Vec<u8>>,
+    query: Zeroizing<Vec<u8>>,
+}
+impl MessageWriteGuard {
+    pub(crate) fn capture(
+        store: &ProtocolStore,
+        account: &AccountRecord,
+        node: &Node,
+    ) -> Result<Self> {
+        if node.description != "message" {
+            return Err(Error::invalid("outbox", "direct write is not a message"));
+        }
+        let wire_id = MessageId::new(
+            node.get_attr("id")
+                .and_then(|v| v.as_text())
+                .ok_or_else(|| Error::invalid("outbox", "direct message id missing"))?,
+        )?;
+        let payload_sha256 = write_payload_sha256(node)?;
+        let account_authority =
+            super::account_authority::fingerprint(account.generation, Some(account))?;
+        store.read(|tx| {
+            let saved = AccountRecord::load(tx)?;
+            if super::account_authority::fingerprint(tx.generation(), saved.as_ref())?
+                != account_authority
+            {
+                return Err(Error::invalid(
+                    "outbox",
+                    "direct account changed before message handoff",
+                ));
+            }
+            let entry = outbox()
+                .by_wire_id(tx, &wire_id)?
+                .ok_or_else(|| Error::invalid("outbox", "committed direct attempt missing"))?;
+            let last = entry
+                .attempts
+                .last()
+                .filter(|attempt| !attempt.re_encryption)
+                .ok_or_else(|| Error::invalid("outbox", "ordinary direct attempt missing"))?;
+            use sha2::{Digest, Sha256};
+            if entry.progress != AttemptProgress::InFlight
+                || last
+                    .payload
+                    .as_ref()
+                    .is_none_or(|wire| <[u8; 32]>::from(Sha256::digest(wire)) != payload_sha256)
+            {
+                return Err(Error::invalid(
+                    "outbox",
+                    "direct payload differs from in-flight attempt",
+                ));
+            }
+            let local_id = entry.local_id;
+            let owner: AckOwner = tx
+                .get_json(Table::Checkpoints, ack_owner_key(local_id).as_bytes(), 1)?
+                .ok_or_else(|| Error::invalid("outbox", "direct message ACK owner missing"))?;
+            if owner.wire_id != wire_id || owner.account_authority != account_authority {
+                return Err(Error::invalid("outbox", "direct message ACK owner changed"));
+            }
+            let query: serde_json::Value = tx
+                .get_json(Table::Checkpoints, query_key(local_id).as_bytes(), 1)?
+                .ok_or_else(|| Error::invalid("outbox", "answered direct query missing"))?;
+            if query["status"] != "answered" {
+                return Err(Error::invalid("outbox", "direct query is not answered"));
+            }
+            let snapshot = |table, key: &[u8]| -> Result<_> {
+                Ok(Zeroizing::new(tx.get(table, key, 1)?.ok_or_else(|| {
+                    Error::invalid("outbox", "direct write reservation missing")
+                })?))
+            };
+            Ok(Self {
+                account_authority,
+                local_id,
+                payload_sha256,
+                entry: snapshot(Table::Outbox, &local_id.0)?,
+                ack_owner: snapshot(Table::Checkpoints, ack_owner_key(local_id).as_bytes())?,
+                query: snapshot(Table::Checkpoints, query_key(local_id).as_bytes())?,
+            })
+        })
+    }
+    pub(crate) fn check_write_authority(&self, store: &ProtocolStore, node: &Node) -> Result<()> {
+        if write_payload_sha256(node)? != self.payload_sha256 {
+            return Err(Error::invalid(
+                "outbox",
+                "queued direct payload differs from committed attempt",
+            ));
+        }
+        store.read(|tx| {
+            let saved = AccountRecord::load(tx)?;
+            if super::account_authority::fingerprint(tx.generation(), saved.as_ref())?
+                != self.account_authority
+            {
+                return Err(Error::invalid(
+                    "outbox",
+                    "direct account changed before message write",
+                ));
+            }
+            for (table, key, expected) in [
+                (Table::Outbox, self.local_id.0.to_vec(), &self.entry),
+                (
+                    Table::Checkpoints,
+                    ack_owner_key(self.local_id).into_bytes(),
+                    &self.ack_owner,
+                ),
+                (
+                    Table::Checkpoints,
+                    query_key(self.local_id).into_bytes(),
+                    &self.query,
+                ),
+            ] {
+                let current = Zeroizing::new(tx.get(table, &key, 1)?.unwrap_or_default());
+                if *current != **expected {
+                    return Err(Error::invalid(
+                        "outbox",
+                        "committed direct reservation changed before write",
+                    ));
+                }
+            }
+            Ok(())
+        })
+    }
+}
+
 /// A pending query is connection-local; its reservation survives cancellation.
 #[derive(Clone)]
 pub struct Pending {
@@ -419,7 +547,7 @@ pub fn begin_selected(
                 return Ok(None);
             }
             let node = super::messaging::key_request(peer, &query_id);
-            let request_sha256 = query_request_sha256(&node)?;
+            let request_sha256 = write_payload_sha256(&node)?;
             let saved = AccountRecord::load_in_write(tx)?;
             let authority = super::account_authority::fingerprint(tx.generation(), saved.as_ref())?;
             tx.put_json(
@@ -793,7 +921,7 @@ fn chat_setting_payload_for(
     })
 }
 
-fn query_request_sha256(node: &Node) -> Result<[u8; 32]> {
+fn write_payload_sha256(node: &Node) -> Result<[u8; 32]> {
     use sha2::{Digest, Sha256};
     let wire = Zeroizing::new(Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(node)?);
     Ok(Sha256::digest(&*wire).into())
@@ -817,7 +945,7 @@ impl Pending {
     pub(crate) fn check_write_authority(&self, store: &ProtocolStore, node: &Node) -> Result<()> {
         // Policy-resume Pending values process a saved reply only. Never infer
         // new writer authority from a historical query reservation.
-        if self.request_sha256 != Some(query_request_sha256(node)?) {
+        if self.request_sha256 != Some(write_payload_sha256(node)?) {
             return Err(Error::invalid(
                 "outbox",
                 "queued direct query differs from its reservation",
