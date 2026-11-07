@@ -190,3 +190,47 @@ subset. Historical count-only/missing snapshots retain wire-only attribution.
 The current Rust builder distributes SKDMs to every plan device; omitted SKDM
 recipients are covered by native-shaped fixtures, not a claimed current live bug.
 Full native receipt cache/cleanup remains unported.
+
+
+## Constructor-null incoming addresses cannot match saved rows (2026-11-06)
+
+**Confirmed selected static / implemented**, pinned APK2.26.43.72 build264307238,
+SHA256 `887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e`.
+The generic Rust JID model may represent text rejected by the native optional
+reader. The earlier receipt ACK/direct-fact correction did not protect group
+attribution: target still read source/participant through generic jid. An exact
+historical target match could therefore project a delivery/read/played fact for
+a constructor-null participant. Malformed group source text could likewise match
+a historical chat accepted by our older generic validator.
+
+Incoming group target selection now consults the SAME text-only native-null
+classifier before generic parsing. Null actor/source produces no group target,
+not a new fact, identity relation or saved-row error. This check is shared by pure
+validation and transactional record_in. Existing saved target validation and
+history remain unchanged; matching a saved row cannot authorize a rejected
+incoming object. Typed/binary objects are not reclassified through text grammar.
+
+The source check also runs before aggregate expansion: otherwise key/message_id
+expansion could reconstruct a typed generic source and lose the original text
+constructor failure before group attribution. Under this client's existing
+source-required fact/ACK capability policy, a known-null root remains captured
+and unprojected. This is not a claim that every native null-source/qualified route
+has the same response; the full upstream recipient/error policy remains open.
+
+Evidence is reused from the pinned complete exports:
+
+- [Current generic optional reader and PN/LID constructor behavior](apk/2.26.43.72-ack-address-accessors/README.md), with the [retained current text-null boundaries](receipt-optional-addresses.md#non-user-text-constructor-failures-in-receipts-2026-11-06).
+- [Complete group constructor and narrow numeric/phone-time grammar](apk/2.26.43.72-group-newsletter-ack-text/README.md).
+- [Upstream root/participant/context read ordering](apk/2.26.43.72-receipt-router-boundary/receipt-route.txt) and [source/device-to-chat conversion](apk/2.26.43.72-unhandled-receipt-root/README.md).
+
+New regressions deliberately construct historical matching normal and legacy
+rows with generic-model targets rejected by the text constructors. Through a
+codec roundtrip and the public receipt path, PN/LID invalid-device/invalid-user
+actors cannot record any of the three facts. All table rows and the journal stay
+unchanged, including after reopen/redelivery. A separate historical outbox chat
+fixture covers invalid group source text with no body, key aggregate and
+message_id aggregate; it likewise leaves every table and journal unchanged.
+Existing valid PN/LID/companion/zero-device/mapped/frozen-target controls still
+run in the full suite. No historical normalization, deletion, identity adoption,
+query/resend/ACK or live operation is added. Native binary/cache/scheduling and
+full live group parity remain unverified.

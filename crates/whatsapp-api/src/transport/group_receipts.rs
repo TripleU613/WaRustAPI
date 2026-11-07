@@ -222,6 +222,15 @@ pub(super) fn target(node: &Node) -> Result<Option<Target<'_>>> {
     if node.description != "receipt" || super::receipts::recipient(node).is_some() {
         return Ok(None);
     }
+    // APK43.72 F0R/0Tp.A0A keeps text-constructor failure null before
+    // F10 group attribution. A historical target match cannot resurrect it.
+    // Text-only: do not reinterpret an existing typed/binary object here.
+    if ["from", "participant"]
+        .into_iter()
+        .any(|name| super::receipts::native_text_address_is_null(node, name))
+    {
+        return Ok(None);
+    }
     let Some(kind) = receipt_kind(node) else {
         return Ok(None);
     };
@@ -912,6 +921,126 @@ mod tests {
             0
         );
     }
+    #[test]
+    fn constructor_null_group_actors_cannot_match_historical_targets() {
+        for route in [
+            "15555550100:100@s.whatsapp.net",
+            "100001:100@lid",
+            "100001:128@lid",
+            "01555550100@s.whatsapp.net",
+            "not-a-user@lid",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("null-group-actor.redb");
+            let store = open(&path, true);
+            let targets = [Jid::parse(route).unwrap()];
+            legacy(&store, "legacy", "legacy-wire", &targets, false, true);
+            queued(&store, "normal-wire", &targets);
+            let snapshot = |store: &ProtocolStore| {
+                store
+                    .read(|tx| {
+                        Ok((
+                            Table::ALL
+                                .iter()
+                                .map(|table| tx.scan(*table, 1, 100))
+                                .collect::<Result<Vec<_>>>()?,
+                            tx.journal_head()?,
+                        ))
+                    })
+                    .unwrap()
+            };
+            let before = snapshot(&store);
+            for id in ["legacy-wire", "normal-wire"] {
+                for kind in ["delivery", "read", "played"] {
+                    let input = receipt(id, route, kind);
+                    let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71())
+                        .encode(&input)
+                        .unwrap();
+                    let decoded = decode_wire(&wire).unwrap();
+                    super::super::receipts::validate(&decoded).unwrap();
+                    assert_eq!(record(&store, &decoded).unwrap(), 0, "{route}");
+                    assert_eq!(snapshot(&store), before);
+                }
+            }
+            drop(store);
+            let store = open(&path, false);
+            assert_eq!(snapshot(&store), before);
+            assert_eq!(
+                record(&store, &receipt("normal-wire", route, "read")).unwrap(),
+                0
+            );
+            assert_eq!(snapshot(&store), before);
+        }
+    }
+
+    #[test]
+    fn constructor_null_group_source_cannot_match_historical_outbox_chat() {
+        for source in ["bad@g.us", "012345@g.us", "15555550100-0123456789@g.us"] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("null-group-source.redb"), true);
+            let targets = [Jid::parse(PN).unwrap()];
+            let local = queued(&store, "normal-wire", &targets);
+            let outbox = Outbox::new("group-fixture", Limits::default());
+            store
+                .write(|tx| {
+                    let mut entry = outbox.get_mut(tx, local)?.unwrap();
+                    entry.intent.chat = ChatId::from_jid(&Jid::parse(source)?)?;
+                    let node = decode_wire(&wire("normal-wire", &targets))?.attr("to", source);
+                    entry.attempts[0].payload = Some(
+                        Encoder::new(TokenDictionary::comparison_2_26_37_71())
+                            .encode(&node)?
+                            .into(),
+                    );
+                    tx.put_json(Table::Outbox, &local.0, 1, &entry)
+                })
+                .unwrap();
+            let before = store
+                .read(|tx| {
+                    Ok((
+                        Table::ALL
+                            .iter()
+                            .map(|table| tx.scan(*table, 1, 100))
+                            .collect::<Result<Vec<_>>>()?,
+                        tx.journal_head()?,
+                    ))
+                })
+                .unwrap();
+            for kind in ["delivery", "read", "played"] {
+                for selector in [None, Some("key"), Some("message_id")] {
+                    let mut input = receipt("normal-wire", PN, kind).attr("from", source);
+                    if let Some(selector) = selector {
+                        input = input.children(vec![
+                            Node::new("participants")
+                                .attr(selector, "normal-wire")
+                                .children(vec![
+                                    Node::new("participant")
+                                        .attr("jid", PN)
+                                        .attr("type", kind)
+                                        .attr("t", "20"),
+                                ]),
+                        ]);
+                    }
+                    super::super::receipts::validate(&input).unwrap();
+                    assert_eq!(record(&store, &input).unwrap(), 0);
+                    assert_eq!(
+                        store
+                            .read(|tx| {
+                                Ok((
+                                    Table::ALL
+                                        .iter()
+                                        .map(|table| tx.scan(*table, 1, 100))
+                                        .collect::<Result<Vec<_>>>()?,
+                                    tx.journal_head()?,
+                                ))
+                            })
+                            .unwrap(),
+                        before
+                    );
+                }
+            }
+        }
+    }
+
     #[test]
     fn invalid_optional_recipient_does_not_hide_an_original_group_target() {
         let dir = tempfile::tempdir().unwrap();

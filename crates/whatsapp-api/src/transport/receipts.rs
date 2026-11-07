@@ -1209,7 +1209,7 @@ pub(super) fn ack_wire_address(node: &Node, name: &str, parsed: Jid) -> Jid {
         .unwrap_or_else(|| ack_address(parsed))
 }
 
-fn native_text_address_is_null(node: &Node, name: &str) -> bool {
+pub(super) fn native_text_address_is_null(node: &Node, name: &str) -> bool {
     let Some(text) = node.get_attr(name).and_then(|value| value.as_text()) else {
         return false; // Typed/binary objects are not text-constructor failures.
     };
@@ -1443,6 +1443,12 @@ pub fn validate(node: &Node) -> Result<()> {
 /// The receipts one stanza stands for: an aggregate's per-participant
 /// receipts, none for the observed status-receipt shape, else the stanza.
 fn expand(node: &Node, key_seconds: impl FnOnce() -> Result<i64>) -> Result<Vec<Node>> {
+    // Root text construction precedes F10 dispatch. Do not turn a known-null
+    // source into a typed generic Jid while expanding aggregate children.
+    // This client's source-required fact/ACK paths cannot project that route.
+    if native_text_address_is_null(node, "from") {
+        return Ok(Vec::new());
+    }
     let Some(participants) = node
         .child_nodes()
         .first()

@@ -5342,3 +5342,18 @@ rules. No generic JID rewrite or identity learning. Codec/fact/receive-loop test
 cover malformed non-user text and explicit redelivery/cut/reopen boundaries.
 [Exact constructor links, interpretation and remaining coverage](receipt-optional-addresses.md#non-user-text-constructor-failures-in-receipts-2026-11-06).
 No live account operation or server acceptance claim.
+
+
+## Native-null root/actor guards precede group projection (2026-11-06)
+
+**Confirmed selected static / implemented:** incoming group source/participant
+now use the existing text-constructor-null classifier before generic target
+parsing. Exact historical chat/target matches cannot grant fact authority to a
+known-null incoming object. Known-null root source is checked before aggregate
+expansion can erase its text origin; current source-required fact paths leave it
+unprojected. Tests cover normal/legacy matching targets through codec/public
+record, all three facts, every-table/journal preservation and reopen/redelivery;
+malformed group sources cover direct/key/message_id shapes. Existing typed
+objects and stored validation/history remain distinct.
+[Evidence, native versus local boundaries and remaining scope](group-receipts.md#constructor-null-incoming-addresses-cannot-match-saved-rows-2026-11-06).
+No live operation, identity adoption or response-policy expansion.

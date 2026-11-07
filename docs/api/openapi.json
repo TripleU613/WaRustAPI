@@ -1,4 +1,11 @@
 {
+  "x-group-receipt-native-null-attribution": {
+    "x-cli": "existing receipt validation, group recording and receive paths; no new command or flag",
+    "x-transport": "native-null text source/actor guards before group target matching and root aggregate expansion",
+    "x-live": false,
+    "description": "Pinned optional address construction can return null for text accepted by the generic model. Incoming group target selection now preserves this result for source/participant; a known-null root is also checked before aggregate expansion rebuilds typed nodes. Historical matching targets/chats cannot authorize new delivery/read/played facts. Tests seed normal/legacy matching targets, codec/public-record paths, all three facts, every-table/journal preservation and reopen/redelivery; malformed group sources cover direct/key/message_id shapes. Stored rows/validation and typed binary objects remain unchanged. The source-required local fact policy does not claim full native null-source response parity. No identity learning, query/resend, ACK expansion, HTTP route or account operation; binary/cache/runtime/live completeness remain open.",
+    "evidence": "docs/protocol/group-receipts.md"
+  },
   "x-receipt-nonuser-constructor-null": {
     "x-cli": "existing receive/receipt fact/confirmation paths; no new command or flag",
     "x-transport": "native-null non-user text addresses in receipt output and direct fact selection",

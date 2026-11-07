@@ -1,3 +1,10 @@
+2026-11-06 — **Blocked group facts from constructor-null incoming addresses.**
+Group source/actor selection now preserves native text null before matching saved
+rows. A root-source guard also precedes aggregate expansion. Tests seed matching
+historical targets/chats and verify no facts or changes to any table/journal,
+including reopen/redelivery; stored rows and typed carriers remain unchanged.
+[Evidence and remaining boundaries](docs/protocol/group-receipts.md#constructor-null-incoming-addresses-cannot-match-saved-rows-2026-11-06). No live account operation.
+
 2026-11-06 — **Kept failed non-user receipt address construction null.**
 Receipt success/copied/fresh ACKs now omit invalid group/broadcast/newsletter/
 temp/call participants instead of resurrecting them through the generic parser.
