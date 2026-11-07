@@ -3490,3 +3490,12 @@ tests and actor/group follow-up controls. Strict all-target/all-feature Clippy,
 CLI-reference regeneration, OpenAPI library-symbol test, APK coverage,
 formatting, whitespace and staged hygiene passed. Existing pinned evidence was
 reused; no fresh live account operation or server acceptance claim.
+
+
+## Saved batch target admission (2026-11-07)
+
+**Confirmed (Rust regression; pinned static evidence).** Both batch and single-action reservation now apply the concrete group-target predicate to queued `group-refresh` rows before their `sent` transition. This extends the prospective constructor guard to historical payloads. The APK basis remains `FetchTruncatedGroupsJob.A0L -> 1bd.A01 -> 1bc` before request dispatch; see [worker evidence](apk/2.26.43.72-group-dirty-worker-dispatch/README.md) and [constructor evidence](apk/2.26.43.72-group-dirty-constructor-boundary/README.md).
+
+Missing query/targets, non-group children and unconstructible group targets produce a redacted local error. A stored-input fault propagates and rolls back the reservation transaction, including earlier valid rows in the same batch. No payload rewrite, server-refusal classification, provenance backfill or uncertain-action reset occurs. Already-sent rows are skipped. The reopen regression first failed with an invalid legacy target being reserved; it now checks both entry points, exact checkpoint/journal preservation, and an uncertain-row control alongside a valid request reserved once.
+
+**Unknown:** this target check does not prove all arbitrary historical stanza fields, final frame identity, native wire ordering, or server acceptance. No live operation was performed; account restriction prevention cannot be guaranteed.

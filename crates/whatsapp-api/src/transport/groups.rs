@@ -269,6 +269,28 @@ fn require_batch_group(jid: &Jid) -> Result<Jid> {
     Ok(jid.clone())
 }
 
+/// Apply the pinned worker's typed-target admission to historical queued work.
+pub(crate) fn validate_saved_batch_targets(node: &Node) -> Result<()> {
+    let query = node
+        .child("query")
+        .ok_or_else(|| invalid("saved batch refresh query is missing"))?;
+    let groups = query.child_nodes();
+    if groups.is_empty() {
+        return Err(invalid("saved batch refresh has no groups"));
+    }
+    for group in groups {
+        if group.description != "group" {
+            return Err(invalid("saved batch refresh target is not a group"));
+        }
+        let jid = attr_string(group, "jid")
+            .ok_or_else(|| invalid("saved batch refresh group is missing"))?;
+        // Do not include persisted target text in local diagnostics.
+        let jid = Jid::parse(&jid).map_err(|_| invalid("saved batch refresh group is invalid"))?;
+        require_batch_group(&jid)?;
+    }
+    Ok(())
+}
+
 fn refresh_node(id: &str, groups: &[TruncatedGroup], follow_up: bool) -> Result<Node> {
     let children = groups
         .iter()

@@ -419,6 +419,9 @@ fn prepare_for_reservation_in(
     row: &mut Row,
     node: Node,
 ) -> Result<Option<Node>> {
+    if row.kind == "group-refresh" {
+        super::groups::validate_saved_batch_targets(&node)?;
+    }
     if row.kind == super::contacts::ACTION_KIND {
         if !super::contacts::check_correlation_in(tx, id, &node)? {
             let reason = ActionDeferReason::ContactCheckCorrelationMissing;
@@ -1712,6 +1715,103 @@ mod tests {
         })
         .unwrap();
         (dir, s)
+    }
+
+    #[test]
+    fn legacy_batch_targets_refuse_before_reservation_and_preserve_earlier_rows() {
+        for target in [
+            "0@g.us",
+            "01@g.us",
+            "123456789012345678901@g.us",
+            "12345-67890@g.us",
+        ] {
+            let (dir, db) = store();
+            let make = |id: &str| {
+                Ok(Node::new("iq")
+                    .attr("id", id)
+                    .attr("xmlns", "w:g2")
+                    .attr("type", "get")
+                    .attr("to", "g.us")
+                    .children(vec![
+                        Node::new("query")
+                            .attr("context", "per_group_dirty_recovery")
+                            .children(vec![Node::new("group").attr("jid", "1@g.us")]),
+                    ]))
+            };
+            let mut ids = [
+                queue(&db, "group-refresh", "fixture", make).unwrap(),
+                queue(&db, "group-refresh", "fixture", make).unwrap(),
+            ];
+            ids.sort();
+            let bad_id = &ids[1];
+            db.write(|tx| {
+                let mut row: Row = tx
+                    .get_json(Table::Checkpoints, key(bad_id).as_bytes(), 1)?
+                    .unwrap();
+                row.wire = encode(
+                    &Node::new("iq")
+                        .attr("id", bad_id.as_str())
+                        .attr("xmlns", "w:g2")
+                        .attr("type", "get")
+                        .attr("to", "g.us")
+                        .children(vec![
+                            Node::new("query")
+                                .attr("context", "per_group_dirty_recovery")
+                                .children(vec![Node::new("group").attr("jid", target)]),
+                        ]),
+                )?;
+                row.prepared_account_authority = None;
+                tx.put_json(Table::Checkpoints, key(bad_id).as_bytes(), 1, &row)
+            })
+            .unwrap();
+            drop(db);
+            let db = ProtocolStore::open(OpenOptions {
+                path: dir.path().join("p.redb"),
+                account_id: AccountId::new("a").unwrap(),
+                key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([7u8; 32]))),
+                create: false,
+            })
+            .unwrap();
+            let rows = db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap();
+            let head = db.journal_head().unwrap();
+            assert!(
+                reserve_pending(&db).is_err(),
+                "legacy invalid target reserved after an earlier valid row"
+            );
+            assert_eq!(
+                db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap(),
+                rows
+            );
+            assert!(db.write(|tx| reserve_one_in(tx, bad_id)).is_err());
+            assert_eq!(
+                db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap(),
+                rows
+            );
+            assert_eq!(db.journal_head().unwrap(), head);
+            // An uncertain invalid row is never reset, rewritten or replayed.
+            let uncertain = db
+                .write(|tx| {
+                    let mut row: Row = tx
+                        .get_json(Table::Checkpoints, key(bad_id).as_bytes(), 1)?
+                        .unwrap();
+                    row.status = ActionStatus::Sent;
+                    tx.put_json(Table::Checkpoints, key(bad_id).as_bytes(), 1, &row)?;
+                    tx.get_json::<Row>(Table::Checkpoints, key(bad_id).as_bytes(), 1)
+                })
+                .unwrap()
+                .unwrap();
+            let pending = reserve_pending(&db).unwrap();
+            assert_eq!(pending.len(), 1);
+            assert!(reserve_pending(&db).unwrap().is_empty());
+            let after: Row = db
+                .read(|tx| tx.get_json(Table::Checkpoints, key(bad_id).as_bytes(), 1))
+                .unwrap()
+                .unwrap();
+            assert_eq!(
+                serde_json::to_vec(&after).unwrap(),
+                serde_json::to_vec(&uncertain).unwrap()
+            );
+        }
     }
 
     #[test]

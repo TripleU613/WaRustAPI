@@ -1,3 +1,5 @@
+**Saved batch group targets now validate before reservation.** Both reservation paths reject unconstructible historical queued `group-refresh` targets before marking sent; a late invalid row rolls back earlier reservations. Reopen regression covers unchanged checkpoints/journal and uncertain-row preservation. No rewrite, reset, replay or live acceptance claim. [Details](docs/protocol/groups.md#saved-batch-target-admission-2026-11-07).
+
 **MobileConfig Java/native completion binding now reaches a stored callable.**
 
 Confirmed selected static MobileConfig shared-handle publication at storage slot+0xe8. It replaces manager+0x20 under mutex+0x34 and stores status+0x30 even after a null/false-probe reason; the selected probe checks only root-pointer presence. Hash handling includes an asymmetric candidate-prefix comparison. Shared-handle replacement is now located; downstream semantic admission and durability remain unresolved. [Handle publication evidence](docs/protocol/apk/2.26.43.72-mobileconfig-handle-publication/README.md). No live operation or Rust runtime change.

@@ -20151,6 +20151,13 @@
     "description": "Pinned dirty stanza lazy selector/constructors/accessors establish iq/get/g.us/w:g2, supplied id/context and typed group children; selected Rust semantic fields match. ID bound is Java string length; list diagnostics do not establish hard gates without assertion policy. Legacy group admission, encoded order and callback/persistence remain separate. Existing xtask reproduces evidence; no wire/route/runtime/live change.",
     "evidence": "docs/protocol/apk/2.26.43.72-group-dirty-stanza-serializer/README.md"
   },
+  "x-saved-batch-group-target-admission": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Queued stored group-refresh actions validate concrete native group targets before either reservation path marks sent. Invalid stored input rolls back the transaction; already-sent actions remain untouched. No payload rewrite, uncertainty reset, replay or full historical stanza parity claim.",
+    "evidence": "docs/protocol/groups.md#saved-batch-target-admission-2026-11-07"
+  },
   "x-new-batch-group-constructor-admission": {
     "x-cli": true,
     "x-transport": true,
