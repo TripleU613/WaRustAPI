@@ -294,3 +294,19 @@ remain unsupported; no new success ACK, fact, unknown-type response or live
 operation is introduced. The saved-session workflow exercises validation,
 recording and resend/refetch policy with first-count key-only children.
 [Exact route evidence and test/coverage limits](apk/2.26.43.72-retry-upstream-routing/README.md).
+
+
+## Supported unhandled root routes receive copied487 (2026-11-06)
+
+**Confirmed selected static / implemented:** after preceding1rU.A05 routes,
+2Cx copies the original descriptor and adds wire487 (local diagnostic490 differs).
+Supported ordinary user/group unknown roots now receive that response through the
+shared ACK path, preserving recipient/edit and outer id/type, without received
+children/category. Ordinary/special types and leading participants/message_id
+remain excluded; key-only/later aggregate or unrelated error child do not divert
+it. view on supported user/group routes fails the native type21 condition and
+also reaches fallback. Local address/string/writer/outer-ID guards remain.
+A receive-loop regression proves capture-before-write, explicit-redelivery ACK,
+unchanged outbox/ratchet/identity and no uncertain ACK replay after cut/reopen.
+[Complete evidence, context/type predicates and remaining boundaries](apk/2.26.43.72-unhandled-receipt-root/README.md).
+Full sender/provider/binary/special-handler parity and live acceptance remain open.

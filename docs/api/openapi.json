@@ -1,4 +1,11 @@
 {
+  "x-unhandled-receipt-root-response": {
+    "x-cli": "existing normal and selected CLI receive confirmation paths; no new command or flag",
+    "x-transport": "copied-context487 for supported unhandled ordinary user/group receipt roots",
+    "x-live": false,
+    "description": "Pinned1rU.A05 final2Cx path copies Eoh and adds wire487, distinct from local diagnostic490 and fresh1rg parse errors. Supported unhandled text root kinds now receive original outer id/type, selected addresses and nonempty/nonzero edit, without category/received children. Ordinary/special roots and leading participants/message_id are excluded; key-only/later children and unrelated error child do not divert. Supported user/group view fails native type21 special condition and reaches fallback. Local context/string/outer-ID/writer limits remain. Actor tests cover capture-before-write, explicit redelivery and cut/reopen without uncertain replay or outbox/ratchet/identity mutation. Full sender/binary/provider/special parity and live acceptance remain open; no HTTP route or account operation.",
+    "evidence": "docs/protocol/apk/2.26.43.72-unhandled-receipt-root/README.md"
+  },
   "x-peer-retry-parser-errors": {
     "x-cli": "existing receive/retry paths; no new command or flag",
     "x-transport": "shared retry parser errors for ordinary and peer routes; distinct responder admission",
@@ -10,21 +17,21 @@
     "x-cli": "existing receive/receipt inspection paths; no new command or flag",
     "x-transport": "ordinary root-set selection before key-aggregate expansion and validation",
     "x-live": false,
-    "description": "Pinned1rU.A05 only forwards its seven ordinary status root kinds after the early participants/message_id branch. A key-only leading participants child no longer makes retry or other special/unknown text roots fail ordinary aggregate validation. Those roots remain unexpanded for existing consumer admission; unsupported consumers and unknown copied487 remain open. Ordinary missing-key causes and early message_id precedence remain. Saved-session tests exercise validate/record/responder with first-count key-only children, durable reservation and duplicate/refusal policy. No new success ACK, fact kind, HTTP route or account operation; live acceptance unverified.",
+    "description": "Pinned1rU.A05 only forwards its seven ordinary status root kinds after the early participants/message_id branch. A key-only leading participants child no longer makes retry or other special/unknown text roots fail ordinary aggregate validation. Those roots remain unexpanded for existing consumer admission; unsupported consumers and other unknown copied487 routes remain open. Ordinary missing-key causes and early message_id precedence remain. Saved-session tests exercise validate/record/responder with first-count key-only children, durable reservation and duplicate/refusal policy. No new success ACK, fact kind, HTTP route or account operation; live acceptance unverified.",
     "evidence": "docs/protocol/apk/2.26.43.72-retry-upstream-routing/README.md"
   },
   "x-retry-upstream-routing": {
     "x-cli": "existing receive and retry inspection paths; no new command or flag",
     "x-transport": "shared ordinary retry route selector before parsing, error ACK and resend/refetch processing",
     "x-live": false,
-    "description": "Pinned1rU.A05 forwards a first participants/message_id before retry selection, while category=peer selects263 instead of ordinary2. Both routes return no ordinary RetryRequest, handled success ACK, resend or refetch reservation. Subsequent17t tracing confirms that peer still shares parser schema/version487 responses; only leading message_id suppresses retry-parser error classification. Empty message_id selects the early route; key-only/nonleading participants do not. Nontext selectors remain unsupported. Saved-session regression preserves outbox/checkpoint/ratchet/identity rows. Aggregate validation remains independent. Full router, alternate consumers, unknown copied487, feature/queue state and live acceptance remain open; no HTTP route or account operation.",
+    "description": "Pinned1rU.A05 forwards a first participants/message_id before retry selection, while category=peer selects263 instead of ordinary2. Both routes return no ordinary RetryRequest, handled success ACK, resend or refetch reservation. Subsequent17t tracing confirms that peer still shares parser schema/version487 responses; only leading message_id suppresses retry-parser error classification. Empty message_id selects the early route; key-only/nonleading participants do not. Nontext selectors remain unsupported. Saved-session regression preserves outbox/checkpoint/ratchet/identity rows. Aggregate validation remains independent. Full router, alternate consumers, unsupported unknown copied487 routes, feature/queue state and live acceptance remain open; no HTTP route or account operation.",
     "evidence": "docs/protocol/apk/2.26.43.72-retry-upstream-routing/README.md"
   },
   "x-receipt-upstream-router-research": {
     "x-cli": "xtask apk-smali <apk> --class 'LX/1rU;' --method A05 --signatures --exceptions",
-    "x-transport": "research only; upstream receipt router and unhandled copy487 implementation gap",
+    "x-transport": "retained upstream-router research; supported unhandled copy487 now implemented separately",
     "x-live": false,
-    "description": "Pinned inherited1rA.A03 virtually invokes receipt1rU.A05. Complete routing evidence distinguishes early participants/message_id, ordinary status set and special call/biz/view/simple/retry/rekey/root-error paths before2Cx fallback. Admitted unhandled root types use copied-context wire487 preserving recipient/edit, not fresh1rg parse-error487; downstream F10 unknown-type logic alone cannot classify incoming roots. Epa.A00 is an attribute hash, not a type selector; zero direct14h.BLn callers do not disprove handler dispatch. No Rust runtime/traffic change. Future implementation needs route-before-response classification, typed-field/writer guards and capture/no-replay tests. Provider/feature/queue/binary and live completeness remain open; no HTTP route or account operation.",
+    "description": "Pinned inherited1rA.A03 virtually invokes receipt1rU.A05. Complete routing evidence distinguishes early participants/message_id, ordinary status set and special call/biz/view/simple/retry/rekey/root-error paths before2Cx fallback. Admitted unhandled root types use copied-context wire487 preserving recipient/edit, not fresh1rg parse-error487; downstream F10 unknown-type logic alone cannot classify incoming roots. Epa.A00 is an attribute hash, not a type selector; zero direct14h.BLn callers do not disprove handler dispatch. The original research chunk changed no runtime behavior. Subsequent supported unhandled-copy487 implementation is documented in x-unhandled-receipt-root-response; full router parity remains open. Provider/feature/queue/binary and live completeness remain open; no HTTP route or account operation.",
     "evidence": "docs/protocol/apk/2.26.43.72-receipt-router-boundary/README.md"
   },
   "x-aggregate-required-key-error-boundary": {

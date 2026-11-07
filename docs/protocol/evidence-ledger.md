@@ -1,3 +1,10 @@
+2026-11-06 — **Added copied-context487 for supported unhandled receipt roots.**
+Response selection follows the upstream router and preserves original recipient/
+edit instead of using fresh parse-error context. Special types and early message_id
+routes remain distinct. Receive-loop tests cover capture ordering, explicit
+redelivery and write-cut/reopen without replay; broader receipt parity remains open.
+[Evidence, field semantics and local limits](apk/2.26.43.72-unhandled-receipt-root/README.md). No live account operation.
+
 2026-11-06 — **Restored proven peer-retry schema/version error responses.**
 The peer handler calls the same retry parser before its separate responder.
 Shared error classification now permits peer fresh/copied487 responses while

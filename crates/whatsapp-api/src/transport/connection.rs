@@ -3850,6 +3850,86 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn unhandled_receipts_copy_context_after_capture_without_uncertain_replay() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("unhandled-receipt.redb");
+        let store = open(&path);
+        let snapshot = |store: &ProtocolStore| {
+            store
+                .read(|tx| {
+                    [Table::Outbox, Table::PeerIdentities, Table::SignalSessions]
+                        .into_iter()
+                        .map(|table| tx.scan(table, 1, 100))
+                        .collect::<Result<Vec<_>>>()
+                })
+                .unwrap()
+        };
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        (&mut fake.ready).await.unwrap();
+        let before = snapshot(&store);
+        let input = Node::new("receipt")
+            .attr("id", "UNHANDLED-ROOT")
+            .attr("from", "15555550100@s.whatsapp.net")
+            .attr("type", "unknown-kind")
+            .attr("recipient", "15555550101@s.whatsapp.net")
+            .attr("edit", "7")
+            .attr("category", "private")
+            .children(vec![Node::new("participants").attr("key", "INNER")]);
+        let capture = format!(
+            "inbound:sha256:{}",
+            hex::encode(sha2::Sha256::digest(encode(&input).unwrap()))
+        );
+        let expected = Node::new("ack")
+            .attr("id", "UNHANDLED-ROOT")
+            .attr("to", Jid::parse("15555550100@s.whatsapp.net").unwrap())
+            .attr("class", "receipt")
+            .attr("type", "unknown-kind")
+            .attr(
+                "recipient",
+                Jid::parse("15555550101@s.whatsapp.net").unwrap(),
+            )
+            .attr("edit", "7")
+            .attr("error", "487");
+        for _ in 0..2 {
+            fake.deliver(input.clone()).await;
+            let (ack, written) = fake.written().await;
+            assert_eq!(ack, expected);
+            assert!(
+                store
+                    .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                    .unwrap()
+                    .is_some()
+            );
+            assert_eq!(snapshot(&store), before);
+            written.send(Ok(())).unwrap();
+        }
+        fake.stop_cleanly().await;
+        let mut cut = start(&store, false, None);
+        cut.activate().await;
+        (&mut cut.ready).await.unwrap();
+        cut.deliver(input).await;
+        let (ack, written) = cut.written().await;
+        assert_eq!(ack, expected);
+        written
+            .send(Err(Error::Io(std::io::Error::new(
+                std::io::ErrorKind::BrokenPipe,
+                "synthetic unhandled ACK cut",
+            ))))
+            .unwrap();
+        assert!(cut.finished().await.is_err());
+        assert_eq!(snapshot(&store), before);
+        drop(store);
+        let reopened = open(&path);
+        let mut next = start(&reopened, false, None);
+        next.activate().await;
+        (&mut next.ready).await.unwrap();
+        next.nothing_written(Duration::from_millis(30)).await;
+        assert_eq!(snapshot(&reopened), before);
+        next.stop_cleanly().await;
+    }
+
+    #[tokio::test]
     async fn native_server_ping_is_answered_before_activation_and_after_capture() {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("server-ping.redb");

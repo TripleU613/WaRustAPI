@@ -86,7 +86,13 @@ ROOT TYPE to error, then requires an error child. Mere presence of an error chil
 under another type does not select it. The complete export already shows this;
 canonical prose is corrected in this change.
 
-## Remaining scope
+## Subsequent unhandled-root implementation
+
+[Supported ordinary user/group unhandled copied487](../2.26.43.72-unhandled-receipt-root/README.md)
+is now implemented. Remaining-scope notes below describe the original checkpoint;
+full sender/binary/special-handler parity remains open.
+
+## Original remaining scope
 
 The full router, unknown-type copied487 response, peer retry consumer, special
 call/biz/view/simple/rekey/error processing, complete binary/string equivalence,

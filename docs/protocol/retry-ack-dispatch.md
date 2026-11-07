@@ -423,3 +423,19 @@ Leading participants/message_id retains precedence. Valid peer schema remains
 without ordinary success ACK or resend; full peer responder policy is unported.
 [Complete handler, registration census, error-context tests and open boundaries](apk/2.26.43.72-peer-retry-handler/README.md).
 No live account operation or server acceptance claim.
+
+
+## Supported unhandled root routes receive copied487 (2026-11-06)
+
+**Confirmed selected static / implemented:** after preceding1rU.A05 routes,
+2Cx copies the original descriptor and adds wire487 (local diagnostic490 differs).
+Supported ordinary user/group unknown roots now receive that response through the
+shared ACK path, preserving recipient/edit and outer id/type, without received
+children/category. Ordinary/special types and leading participants/message_id
+remain excluded; key-only/later aggregate or unrelated error child do not divert
+it. view on supported user/group routes fails the native type21 condition and
+also reaches fallback. Local address/string/writer/outer-ID guards remain.
+A receive-loop regression proves capture-before-write, explicit-redelivery ACK,
+unchanged outbox/ratchet/identity and no uncertain ACK replay after cut/reopen.
+[Complete evidence, context/type predicates and remaining boundaries](apk/2.26.43.72-unhandled-receipt-root/README.md).
+Full sender/provider/binary/special-handler parity and live acceptance remain open.

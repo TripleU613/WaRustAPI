@@ -947,8 +947,8 @@ pub fn received_confirmation_for_account(
 /// delivery and read receipt was redelivered at each login (seen live as a
 /// burst of `receipt chat=group confirmed=false` lines).
 ///
-/// Only the receipt types this client handles are acknowledged — delivery,
-/// read and played. Retry success/error handling is distinct: the evidenced
+/// Handled delivery/read/played receipts receive success ACKs. Selected
+/// unhandled root routes receive copied-context487. Retry handling is distinct: the evidenced
 /// unsupported-version and confirmed schema-error branches get error487;
 /// a separately reserved resend may receive a success ACK through the private
 /// handled constructor. Other cases wait for their completion policy.
@@ -1030,6 +1030,7 @@ fn receipt_ack_after_processing(incoming: &Node, handled_retry: bool) -> Option<
     // (1rg). Both use487, but their context fields differ. Local capability
     // refusals are not a generic parse error. docs/protocol/retry-ack-dispatch.md
     let retry_error = retry_receipt_error(incoming);
+    let unhandled_kind = unhandled_receipt_root(incoming);
     let copy_recipient = !matches!(retry_error, Some(RetryReceiptError::Parsing(_)));
     if ["from", "participant"].into_iter().any(|name| {
         incoming
@@ -1047,6 +1048,8 @@ fn receipt_ack_after_processing(incoming: &Node, handled_retry: bool) -> Option<
     }
     let kind = if retry_error.is_some() || handled_retry {
         "retry"
+    } else if let Some(kind) = unhandled_kind {
+        kind
     } else {
         super::receipts::receipt_kind(incoming)?
     };
@@ -1086,7 +1089,54 @@ fn receipt_ack_after_processing(incoming: &Node, handled_retry: bool) -> Option<
         tracing::debug!(field, error = 487, "retry receipt error response");
         ack = ack.attr("error", "487");
     }
+    if unhandled_kind.is_some() {
+        // APK43.72 1rU.A05 final branch ->2Cx.A00 copies Eoh and adds487.
+        // Its local diagnostic490 is not the wire error. Keep original fields.
+        ack = ack.attr("error", "487");
+    }
     Some(ack)
+}
+
+fn unhandled_receipt_root(incoming: &Node) -> Option<&str> {
+    if incoming.description != "receipt" || !retry_context_supported(incoming) {
+        return None;
+    }
+    let kind = incoming.get_attr("type")?.as_text()?;
+    if matches!(
+        kind,
+        "delivery"
+            | "inactive"
+            | "sender"
+            | "played"
+            | "played-self"
+            | "read"
+            | "read-self"
+            | "server-error"
+            | "peer_msg"
+            | "hist_sync"
+            | "retry"
+            | "enc_rekey_retry"
+            | "error"
+    ) || incoming.child_nodes().first().is_some_and(|child| {
+        child.description == "participants" && child.get_attr("message_id").is_some()
+    }) || ["category", "class", "offline"].into_iter().any(|name| {
+        incoming
+            .get_attr(name)
+            .is_some_and(|value| value.as_text().is_none())
+    }) {
+        return None;
+    }
+    // Confirm the preceding native ChatJid resolution for supported ordinary
+    // user/group routes. A server-only, broadcast, newsletter or opaque sender
+    // may fail or dispatch elsewhere; do not invent its error context.
+    let from = super::receipts::network_jid(incoming, "from")?;
+    if !(from.is_user_like() || from.is_group()) || from.user.is_empty() {
+        return None;
+    }
+    // `view` only escapes the fallback when the status selector AND native
+    // type21 predicate succeed. These supported user/group routes are not21.
+    // docs/protocol/apk/2.26.43.72-receipt-router-boundary/receipt-route.txt
+    Some(kind)
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -2351,6 +2401,91 @@ mod tests {
             )
             .is_some()
         );
+    }
+
+    #[test]
+    fn unhandled_root_receipts_use_copied_487_after_upstream_routing() {
+        let base = Node::new("receipt")
+            .attr("id", "ROOT")
+            .attr("from", "15555550100@s.whatsapp.net")
+            .attr("participant", "15555550100:2@s.whatsapp.net")
+            .attr("recipient", "15555550101@s.whatsapp.net")
+            .attr("edit", "7")
+            .attr("category", "private");
+        for kind in ["unknown-kind", "", "view"] {
+            for children in [
+                vec![],
+                vec![Node::new("participants").attr("key", "INNER")],
+                vec![Node::new("error").attr("type", "feature-incapable")],
+                vec![
+                    Node::new("other"),
+                    Node::new("participants").attr("message_id", "INNER"),
+                ],
+            ] {
+                let input = base.clone().attr("type", kind).children(children);
+                super::super::receipts::validate(&input).unwrap();
+                let ack = received_confirmation(&input).unwrap();
+                assert_eq!(
+                    ack.get_attr("type").and_then(|value| value.as_text()),
+                    Some(kind)
+                );
+                assert_eq!(
+                    ack.get_attr("error").and_then(|value| value.as_text()),
+                    Some("487")
+                );
+                assert!(ack.get_attr("recipient").is_some());
+                assert!(ack.get_attr("participant").is_some());
+                assert_eq!(
+                    ack.get_attr("edit").and_then(|value| value.as_text()),
+                    Some("7")
+                );
+                assert!(ack.get_attr("category").is_none());
+                assert!(ack.child_nodes().is_empty());
+            }
+        }
+        for sender in ["12345@lid", "120363000000000001@g.us"] {
+            let ack = received_confirmation(
+                &base
+                    .clone()
+                    .attr("from", sender)
+                    .attr("type", "view")
+                    .attr("class", "status"),
+            )
+            .unwrap();
+            assert_eq!(
+                ack.get_attr("error").and_then(|value| value.as_text()),
+                Some("487")
+            );
+        }
+        for kind in [
+            "inactive",
+            "sender",
+            "played-self",
+            "read-self",
+            "server-error",
+            "peer_msg",
+            "hist_sync",
+            "enc_rekey_retry",
+            "error",
+        ] {
+            assert!(
+                received_confirmation(&base.clone().attr("type", kind)).is_none(),
+                "{kind}"
+            );
+        }
+        let unknown = base.attr("type", "unknown-kind");
+        for input in [
+            unknown
+                .clone()
+                .children(vec![Node::new("participants").attr("message_id", "")]),
+            unknown.clone().attr("from", "s.whatsapp.net"),
+            unknown.clone().attr("from", "status@broadcast"),
+            unknown.clone().attr("from", "123@newsletter"),
+            unknown.clone().attr("id", ""),
+            unknown.attr("edit", Jid::parse("12345@lid").unwrap()),
+        ] {
+            assert!(received_confirmation(&input).is_none());
+        }
     }
 
     #[test]

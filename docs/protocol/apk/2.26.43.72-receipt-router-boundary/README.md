@@ -77,7 +77,14 @@ is not enough evidence to NACK every unknown incoming root type as a parse error
 Earlier assumptions based only on that downstream branch are refuted by this
 router. No blanket error response should be added from a type string alone.
 
-## Consequence and retained implementation gap
+## Subsequent supported fallback implementation
+
+[Supported unhandled-root copied487](../2.26.43.72-unhandled-receipt-root/README.md)
+is now implemented with route/context guards and capture/cut/reopen tests. Full
+router and unsupported sender/binary/special-handler parity remain open. The
+initial implementation-gap discussion below is retained as research history.
+
+## Consequence and original implementation gap
 
 Rust currently has selected ordinary fact/ACK allowlists and proven native
 parse-error causes. It has not yet ported this complete receipt router or its
