@@ -1,0 +1,332 @@
+
+# class: LX/09u;
+# extends: Ljava/lang/Object;
+
+.method public A07(LI)  # .registers 19
+    # full signature: LX/09u;->A07(I)LX/09t;
+    0000..0002  const/4  v3, #0x0
+    0002..0006  move-object/from16  v5, v17
+    0006..000a  iget-object  v8, v5, LX/09u;->A0Z:Ljava/util/concurrent/atomic/AtomicReferenceArray;
+    000a..000e  const-string  v9, "MobileConfigFactoryImpl"
+    000e..0010  const/4  v4, #0x1
+    0010..0014  move/from16  v7, v18
+    0014..0018  if-ltz  v18, +0x25c
+    0018..001e  invoke-virtual  {v8}, Ljava/util/concurrent/atomic/AtomicReferenceArray;->length()I
+    001e..0020  move-result  v0
+    0020..0024  if-ge  v7, v0, +0x256
+    0024..002a  invoke-virtual  {v8, v7}, Ljava/util/concurrent/atomic/AtomicReferenceArray;->get(I)Ljava/lang/Object;
+    002a..002c  move-result-object  v6
+    002c..0030  check-cast  v6, LX/09t;
+    0030..0034  if-nez  v6, +0x24d
+    0034..0038  iget  v2, v5, LX/09u;->A08:I
+    0038..003a  const/4  v0, #0x2
+    003a..003e  if-ne  v2, v0, +0x1a
+    003e..0042  const-string  v1, ""
+    0042..0048  invoke-virtual  {v5}, LX/09u;->A0B()Ljava/lang/String;
+    0048..004a  move-result-object  v0
+    004a..0050  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0050..0052  move-result  v0
+    0052..0056  if-eqz  v0, +0xe
+    0056..005a  const-string  v1, "Attempt to read config (index:%d) after logout, see https://fburl.com/bicj8iz0"
+    005a..0060  invoke-static  {v7}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0060..0062  move-result-object  v0
+    0062..0068  invoke-static  {v0, v9, v1}, LX/070;->A0D(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)V
+    0068..006c  iget-object  v0, v5, LX/09u;->A0K:LX/0A3;
+    006c..006e  return-object  v0
+    006e..0072  iget-object  v0, v5, LX/09u;->A0a:LX/00v;
+    0072..0076  if-eqz  v0, +0x9e
+    0076..007a  iget-boolean  v0, v5, LX/09u;->A0I:Z
+    007a..007e  if-eqz  v0, +0x9a
+    007e..0082  new-instance  v10, Ljava/util/HashMap;
+    0082..0088  invoke-direct  {v10}, Ljava/util/HashMap;-><init>()V
+    0088..008c  const-string  v11, ""
+    008c..0092  invoke-static  {}, Ljava/lang/System;->currentTimeMillis()J
+    0092..0094  move-result-wide  v0
+    0094..009a  invoke-static  {v0, v1}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+    009a..009c  move-result-object  v1
+    009c..00a0  const-string  v0, "accessTime"
+    00a0..00a6  invoke-virtual  {v10, v0, v1}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    00a6..00ac  invoke-virtual  {v5, v7}, LX/09u;->A08(I)LX/09t;
+    00ac..00ae  move-result-object  v9
+    00ae..00b0  move-object  v12, v9
+    00b0..00b4  instance-of  v0, v12, LX/Nv3;
+    00b4..00b8  if-eqz  v0, +0xc
+    00b8..00bc  check-cast  v12, LX/Nv3;
+    00bc..00c0  if-eqz  v12, +0x5a
+    00c0..00c6  invoke-virtual  {v12}, LX/0A2;->B3y()Ljava/lang/String;
+    00c6..00c8  move-result-object  v16
+    00c8..00ca  const/4  v15, #0x0
+    00ca..00cc  goto  +0xa
+    00cc..00d0  instance-of  v0, v12, LX/QAh;
+    00d0..00d4  if-eqz  v0, +0x50
+    00d4..00d8  check-cast  v12, LX/QAh;
+    00d8..00dc  iget-object  v12, v12, LX/QAh;->A00:LX/0A1;
+    00dc..00de  goto  -0x16
+    00de..00e2  iget-object  v14, v12, LX/Nv3;->A03:LX/Nux;
+    00e2..00e6  if-eqz  v14, +0x13
+    00e6..00ea  const/16  v0, #0x30
+    00ea..00f0  invoke-virtual  {v14, v0}, LX/Oy1;->A01(I)I
+    00f0..00f2  move-result  v13
+    00f2..00f6  if-eqz  v13, +0xb
+    00f6..00fa  iget-object  v1, v14, LX/Oy1;->A01:Ljava/nio/ByteBuffer;
+    00fa..00fe  iget  v0, v14, LX/Oy1;->A00:I
+    00fe..0100  add-int/2addr  v13, v0
+    0100..0106  invoke-virtual  {v1, v13}, Ljava/nio/ByteBuffer;->getInt(I)I
+    0106..0108  move-result  v15
+    0108..010e  invoke-static  {v15}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+    010e..0110  move-result-object  v1
+    0110..0114  const-string  v0, "creationSource"
+    0114..011a  invoke-virtual  {v10, v0, v1}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    011a..011e  if-eqz  v16, +0x4
+    011e..0122  move-object/from16  v11, v16
+    0122..0126  const-string  v0, "requestAppVersion"
+    0126..012c  invoke-virtual  {v10, v0, v11}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    012c..0132  invoke-virtual  {v12}, LX/0A2;->B43()J
+    0132..0134  move-result-wide  v0
+    0134..013a  invoke-static  {v0, v1}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+    013a..013c  move-result-object  v1
+    013c..0140  const-string  v0, "requestTime"
+    0140..0146  invoke-virtual  {v10, v0, v1}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0146..014a  const-string  v11, "manager"
+    014a..014e  iget-object  v0, v12, LX/Nv3;->A04:LX/09k;
+    014e..0152  check-cast  v0, LX/09l;
+    0152..0158  invoke-virtual  {v0}, LX/09l;->A00()LX/09k;
+    0158..015a  move-result-object  v1
+    015a..015e  if-eqz  v1, +0x27
+    015e..0162  instance-of  v0, v1, Lcom/facebook/mobileconfig/MobileConfigManagerHolderImpl;
+    0162..0166  if-eqz  v0, +0x15
+    0166..016a  const-string  v0, "MobileConfigManagerHolderImpl"
+    016a..0170  invoke-virtual  {v10, v11, v0}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0170..0174  new-instance  v0, Landroid/util/Pair;
+    0174..017a  invoke-direct  {v0, v9, v10}, Landroid/util/Pair;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+    017a..017e  iget-object  v1, v0, Landroid/util/Pair;->first:Ljava/lang/Object;
+    017e..0182  check-cast  v1, LX/09t;
+    0182..0186  iget-object  v0, v0, Landroid/util/Pair;->second:Ljava/lang/Object;
+    0186..018a  check-cast  v0, Ljava/util/Map;
+    018a..018c  goto  +0x17
+    018c..0190  instance-of  v0, v1, LX/0EV;
+    0190..0194  if-eqz  v0, +0x5
+    0194..0198  const-string  v0, "MobileConfigJavaManager"
+    0198..019a  goto  -0x17
+    019a..019e  instance-of  v0, v1, LX/09m;
+    019e..01a2  if-eqz  v0, +0x5
+    01a2..01a6  const-string  v0, "MobileConfigManagerHolderNoop"
+    01a6..01a8  goto  -0x1e
+    01a8..01ac  const-string  v0, "Unknown"
+    01ac..01ae  goto  -0x21
+    01ae..01b4  invoke-virtual  {v5, v7}, LX/09u;->A08(I)LX/09t;
+    01b4..01b6  move-result-object  v1
+    01b6..01b8  const/4  v0, #0x0
+    01b8..01be  invoke-static  {v6, v1, v8, v7}, LX/0Eq;->A00(Ljava/lang/Object;Ljava/lang/Object;Ljava/util/concurrent/atomic/AtomicReferenceArray;I)Z
+    01be..01c0  move-result  v6
+    01c0..01c4  if-nez  v6, +0x8
+    01c4..01ca  invoke-virtual  {v8, v7}, Ljava/util/concurrent/atomic/AtomicReferenceArray;->get(I)Ljava/lang/Object;
+    01ca..01cc  move-result-object  v1
+    01cc..01d0  check-cast  v1, LX/09t;
+    01d0..01d4  instance-of  v6, v1, LX/0A1;
+    01d4..01d8  if-eqz  v6, +0x17a
+    01d8..01dc  iget-object  v9, v5, LX/09u;->A0a:LX/00v;
+    01dc..01e0  if-eqz  v9, +0x176
+    01e0..01e4  iget-boolean  v6, v5, LX/09u;->A0I:Z
+    01e4..01e8  if-eqz  v6, +0x172
+    01e8..01ec  iget-object  v10, v5, LX/09u;->A0A:LX/09l;
+    01ec..01f2  invoke-virtual  {v10}, LX/09k;->syncFetchReason()Ljava/lang/String;
+    01f2..01f6  const-class  v8, Lcom/facebook/mobileconfig/MobileConfigManagerHolderImpl;
+    01f6..01fa  instance-of  v6, v10, LX/09l;
+    01fa..01fe  if-eqz  v6, +0x9
+    01fe..0202  check-cast  v10, LX/09l;
+    0202..0208  invoke-virtual  {v10}, LX/09l;->A00()LX/09k;
+    0208..020a  move-result-object  v10
+    020a..020c  goto  -0xa
+    020c..0212  invoke-virtual  {v8, v10}, Ljava/lang/Class;->isInstance(Ljava/lang/Object;)Z
+    0212..0214  move-result  v6
+    0214..0218  if-nez  v6, +0x3
+    0218..021a  const/4  v10, #0x0
+    021a..021e  check-cast  v10, Lcom/facebook/mobileconfig/MobileConfigManagerHolderImpl;
+    021e..0222  if-eqz  v10, +0x7c
+    0222..0228  invoke-virtual  {v10}, Lcom/facebook/mobileconfig/MobileConfigManagerHolderImpl;->getFamilyDeviceId()Ljava/lang/String;
+    0228..022a  move-result-object  v6
+    022a..0230  invoke-virtual  {v5}, LX/09u;->A0A()LX/PMl;
+    0230..0232  move-result-object  v8
+    0232..0236  if-eqz  v8, +0x14
+    0236..023c  invoke-virtual  {v8, v7}, LX/PMl;->A00(I)Ljava/util/List;
+    023c..023e  move-result-object  v8
+    023e..0242  if-eqz  v8, +0xe
+    0242..0248  invoke-interface  {v8}, Ljava/util/List;->isEmpty()Z
+    0248..024a  move-result  v7
+    024a..024e  if-nez  v7, +0x8
+    024e..0254  invoke-static  {v1, v8, v3}, LX/Pjx;->A01(LX/09t;Ljava/util/List;Z)Ljava/lang/String;
+    0254..0256  move-result-object  v13
+    0256..025a  if-nez  v13, +0x4
+    025a..025e  const-string  v13, ""
+    025e..0264  invoke-static  {v13}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+    0264..0266  move-result  v7
+    0266..026a  if-nez  v7, +0x131
+    026a..026e  if-eq  v2, v4, +0xc
+    026e..0274  invoke-virtual  {v5}, LX/09u;->A0B()Ljava/lang/String;
+    0274..0276  move-result-object  v7
+    0276..027c  invoke-static  {v7}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+    027c..027e  move-result  v7
+    027e..0282  if-nez  v7, +0x125
+    0282..0288  invoke-static  {}, Lcom/google/common/collect/ImmutableMap;->builder()Lcom/google/common/collect/ImmutableMap$Builder;
+    0288..028a  move-result-object  v10
+    028a..028e  if-eqz  v0, +0x40
+    028e..0290  move-object  v7, v0
+    0290..0296  invoke-virtual  {v10, v7}, Lcom/google/common/collect/ImmutableMap$Builder;->putAll(Ljava/util/Map;)Lcom/google/common/collect/ImmutableMap$Builder;
+    0296..029a  const-string  v8, "NO"
+    029a..029e  const-string  v7, "isRN"
+    029e..02a4  invoke-virtual  {v10, v7, v8}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    02a4..02a8  const-string  v8, "0"
+    02a8..02ac  const-string  v7, "loggedDueToAdvancedLogging"
+    02ac..02b2  invoke-virtual  {v10, v7, v8}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    02b2..02b4  const/4  v7, #0x2
+    02b4..02b8  if-ne  v2, v7, +0x13
+    02b8..02bc  const-string  v2, "sessionId"
+    02bc..02c0  if-eqz  v0, +0x8
+    02c0..02c6  invoke-interface  {v0, v2}, Ljava/util/Map;->containsKey(Ljava/lang/Object;)Z
+    02c6..02c8  move-result  v0
+    02c8..02cc  if-nez  v0, +0x9
+    02cc..02d2  invoke-virtual  {v5}, LX/09u;->A0B()Ljava/lang/String;
+    02d2..02d4  move-result-object  v0
+    02d4..02da  invoke-virtual  {v10, v2, v0}, Lcom/google/common/collect/ImmutableMap$Builder;->put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;
+    02da..02e0  invoke-virtual  {v10}, Lcom/google/common/collect/ImmutableMap$Builder;->build()Lcom/google/common/collect/ImmutableMap;
+    02e0..02e2  move-result-object  v2
+    02e2..02e8  invoke-interface  {v9}, LX/00v;->get()Ljava/lang/Object;
+    02e8..02ea  move-result-object  v12
+    02ea..02ee  check-cast  v12, LX/ESp;
+    02ee..02f2  sget-object  v11, LX/OZe;->A01:LX/OZe;
+    02f2..02f6  const-string  v8, "familyDeviceId"
+    02f6..02f8  const/4  v0, #0x3
+    02f8..02fe  invoke-static  {v6, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    02fe..0302  const-string  v0, "MobileConfigApiLoggerImpl_log"
+    0302..0308  invoke-static  {v0}, Lcom/facebook/debug/tracer/Tracer;->A01(Ljava/lang/String;)V
+    0308..030a  goto  +0xa
+    030a..030e  new-instance  v7, Ljava/util/HashMap;
+    030e..0314  invoke-direct  {v7}, Ljava/util/HashMap;-><init>()V
+    0314..0316  goto  -0x42
+    0316..031a  const-string  v6, ""
+    031a..031c  goto  -0x78
+    031c..0320  const-string  v9, ""
+    0320..0324  const/16  v0, #0x25e
+    0324..032a  invoke-static  {v0}, LX/05W;->A01(I)LX/0BP;
+    032a..032c  move-result-object  v0
+    032c..0332  invoke-virtual  {v0}, Lcom/google/common/base/Optional;->A01()Ljava/lang/Object;
+    0332..0336  new-instance  v5, Ljava/util/TreeMap;
+    0336..033c  invoke-direct  {v5}, Ljava/util/TreeMap;-><init>()V
+    033c..0340  if-eqz  v2, +0x2d
+    0340..0346  invoke-virtual  {v2}, Lcom/google/common/collect/ImmutableMap;->entrySet()Ljava/util/Set;
+    0346..0348  move-result-object  v0
+    0348..034c  check-cast  v0, Lcom/google/common/collect/ImmutableSet;
+    034c..0352  invoke-virtual  {v0}, Lcom/google/common/collect/ImmutableCollection;->iterator()LX/0LD;
+    0352..0354  move-result-object  v7
+    0354..035a  invoke-static  {v7}, LX/00l;->A05(Ljava/lang/Object;)V
+    035a..0360  invoke-interface  {v7}, Ljava/util/Iterator;->hasNext()Z
+    0360..0362  move-result  v0
+    0362..0366  if-eqz  v0, +0x1a
+    0366..036c  invoke-interface  {v7}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    036c..036e  move-result-object  v0
+    036e..0372  check-cast  v0, Ljava/util/Map$Entry;
+    0372..0378  invoke-interface  {v0}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+    0378..037a  move-result-object  v2
+    037a..0380  invoke-static  {v2}, LX/00l;->A05(Ljava/lang/Object;)V
+    0380..0386  invoke-interface  {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+    0386..0388  move-result-object  v0
+    0388..038e  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    038e..0394  invoke-virtual  {v5, v2, v0}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0394..0396  goto  -0x1d
+    0396..039c  const-string/jumbo  v0, "useAddedParamsMapResource"
+    039c..03a2  invoke-virtual  {v5, v0, v9}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    03a2..03a8  invoke-virtual  {v6}, Ljava/lang/String;->length()I
+    03a8..03aa  move-result  v0
+    03aa..03ae  if-lez  v0, +0x5
+    03ae..03b4  invoke-virtual  {v5, v8, v6}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    03b4..03b8  sget-object  v0, LX/Pjx;->A00:LX/0iH;
+    03b8..03be  invoke-virtual  {v0}, LX/0iH;->A01()LX/Nha;
+    03be..03c0  move-result-object  v6
+    03c0..03c6  invoke-virtual  {v5}, Ljava/util/AbstractMap;->entrySet()Ljava/util/Set;
+    03c6..03c8  move-result-object  v0
+    03c8..03ce  invoke-interface  {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    03ce..03d0  move-result-object  v5
+    03d0..03d6  invoke-interface  {v5}, Ljava/util/Iterator;->hasNext()Z
+    03d6..03d8  move-result  v0
+    03d8..03dc  if-eqz  v0, +0x1a
+    03dc..03e2  invoke-interface  {v5}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    03e2..03e4  move-result-object  v0
+    03e4..03e8  check-cast  v0, Ljava/util/Map$Entry;
+    03e8..03ee  invoke-interface  {v0}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+    03ee..03f0  move-result-object  v2
+    03f0..03f4  check-cast  v2, Ljava/lang/String;
+    03f4..03fa  invoke-interface  {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+    03fa..03fc  move-result-object  v0
+    03fc..0402  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0402..0404  move-result-object  v0
+    0404..040a  invoke-static  {v6, v0, v2}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    040a..040c  goto  -0x1d
+    040c..040e  move-object  v5, v1
+    040e..0412  check-cast  v5, LX/0A1;
+    0412..0418  invoke-interface  {v5}, LX/0A1;->B43()J
+    0418..041a  move-result-wide  v9
+    041a..041e  const-wide/16  v7, #0x0
+    041e..0422  cmp-long  v0, v9, v7
+    0422..0426  if-lez  v0, +0xc
+    0426..042c  const-string/jumbo  v2, "ts"
+    042c..0432  invoke-static  {v9, v10}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+    0432..0434  move-result-object  v0
+    0434..043a  invoke-static  {v6, v0, v2}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    043a..0440  invoke-interface  {v5}, LX/0A1;->BET()Ljava/util/List;
+    0440..0442  move-result-object  v5
+    0442..0448  invoke-interface  {v5}, Ljava/util/List;->isEmpty()Z
+    0448..044a  move-result  v0
+    044a..044e  if-nez  v0, +0xe
+    044e..0454  const-string/jumbo  v2, "unitIds"
+    0454..0458  const-string  v0, ","
+    0458..045e  invoke-static  {v0, v5}, Landroid/text/TextUtils;->join(Ljava/lang/CharSequence;Ljava/lang/Iterable;)Ljava/lang/String;
+    045e..0460  move-result-object  v0
+    0460..0466  invoke-static  {v6, v0, v2}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    0466..046c  invoke-static  {v6}, LX/Pjx;->A00(LX/Nha;)Ljava/lang/String;
+    046c..046e  move-result-object  v14
+    046e..0470  goto  +0x10
+    0470..0472  move-exception  v0
+    0472..0476  new-array  v4, v4, [Ljava/lang/Object;
+    0476..047a  aput-object  v0, v4, v3
+    047a..047e  const-string  v2, "MobileConfigDebugUtil"
+    047e..0482  const-string  v0, "Failed to generate flags JSON"
+    0482..0488  invoke-static  {v2, v0, v4}, LX/PT8;->A00(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+    0488..048e  const-string/jumbo  v14, "{}"
+    048e..0490  move-object  v0, v12
+    0490..0494  check-cast  v0, LX/DJs;
+    0494..0498  iget-object  v0, v0, LX/DJs;->A00:LX/00p;
+    0498..049e  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    049e..04a0  move-result-object  v0
+    04a0..04a4  check-cast  v0, Ljava/util/concurrent/ExecutorService;
+    04a4..04a8  new-instance  v10, LX/FcX;
+    04a8..04aa  move  v15, v3
+    04aa..04b0  invoke-direct/range  {v10..v15}, LX/FcX;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;I)V
+    04b0..04b6  invoke-interface  {v0, v10}, Ljava/util/concurrent/Executor;->execute(Ljava/lang/Runnable;)V
+    04b6..04bc  invoke-static  {}, Lcom/facebook/debug/tracer/Tracer;->A00()V
+    04bc..04be  return-object  v1
+    04be..04c0  move-exception  v0
+    04c0..04c6  invoke-static  {}, Lcom/facebook/debug/tracer/Tracer;->A00()V
+    04c6..04c8  throw  v0
+    04c8..04ca  return-object  v1
+    04ca..04cc  return-object  v6
+    04cc..04d2  invoke-static  {v7}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    04d2..04d4  move-result-object  v6
+    04d4..04d8  iget  v0, v5, LX/09u;->A08:I
+    04d8..04de  invoke-static  {v0}, LX/Fx0;->A00(I)Ljava/lang/String;
+    04de..04e0  move-result-object  v2
+    04e0..04e2  const/4  v0, #0x2
+    04e2..04e6  new-array  v1, v0, [Ljava/lang/Object;
+    04e6..04ea  aput-object  v6, v1, v3
+    04ea..04ee  aput-object  v2, v1, v4
+    04ee..04f2  const-string  v0, "contextForConfig - Attempt to read invalid config index(%d) from config caches, unitType: %s"
+    04f2..04f8  invoke-static  {v9, v0, v1}, LX/070;->A0S(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+    04f8..04fc  iget-object  v0, v5, LX/09u;->A0M:LX/0A3;
+    04fc..04fe  return-object  v0
+    # exception table: 4 try range(s)
+    # catch Ljava/lang/IndexOutOfBoundsException; code_units 006f..0084 -> 0084
+    # catch <all> code_units 018e..01da -> 025f
+    # catch Ljava/io/IOException; code_units 01da..0238 -> 0238
+    # catch <all> code_units 01da..0238 -> 025f
+    # catch <all> code_units 0238..025b -> 025f
+.end method

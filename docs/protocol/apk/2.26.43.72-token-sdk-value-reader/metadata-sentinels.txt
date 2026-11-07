@@ -1,0 +1,25 @@
+
+# class: LX/P7S;
+# extends: Ljava/lang/Object;
+
+.method public <clinit>(V)  # .registers 3
+    # full signature: LX/P7S;-><clinit>()V
+    0000..0002  const/4  v1, #0xff (-1)
+    0002..0006  const/16  v2, #0x8
+    0006..0008  shl-int/2addr  v1, v2
+    0008..000c  const/16  v0, #0x11
+    000c..000e  or-int/2addr  v0, v1
+    000e..0012  sput  v0, LX/P7S;->A00:I
+    0012..0014  const/4  v1, #0xfe (-2)
+    0014..0016  shl-int/2addr  v1, v2
+    0016..001a  const/16  v0, #0x11
+    001a..001c  or-int/2addr  v0, v1
+    001c..0020  sput  v0, LX/P7S;->A02:I
+    0020..0022  const/4  v1, #0xfd (-3)
+    0022..0024  shl-int/2addr  v1, v2
+    0024..0028  const/16  v0, #0x11
+    0028..002a  or-int/2addr  v0, v1
+    002a..002e  sput  v0, LX/P7S;->A01:I
+    002e..0030  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,3 +1,8 @@
+**Token SDK value reads now reach concrete Java table handling.**
+Nv3/0A3 override the bodyless base; context construction/cache, little-endian
+long/metadata reads and source/fallback branches are retained with derived cases.
+[Methods and remaining hydration/selection limits](docs/protocol/apk/2.26.43.72-token-sdk-value-reader/README.md). No runtime policy change or live operation.
+
 **Token bucket defaults now have two complete static derivations.**
 SDK09n switch defaults and final legacy08Y map both resolve865/996=604800,
 909/997=4. Override/silent-push/source dispatch remains separate from defaults.

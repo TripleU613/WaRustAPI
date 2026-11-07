@@ -1,0 +1,14 @@
+
+# class: LX/Nv3;
+# extends: LX/0A2;
+
+.method public A01(IJ)  # .registers 4
+    # full signature: LX/Nv3;->A01(J)I
+    0000..0004  const/16  v0, #0x30
+    0004..0006  ushr-long/2addr  v2, v0
+    0006..000a  const-wide/16  v0, #0x3f
+    000a..000c  and-long/2addr  v2, v0
+    000c..000e  long-to-int  v0, v2
+    000e..0010  return  v0
+    # exception table: 0 try range(s)
+.end method

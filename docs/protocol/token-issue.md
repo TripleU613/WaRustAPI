@@ -279,3 +279,13 @@ bodyless value-reader boundaries. This closes selected-entry overwrite and
 SDK-default questions without decoding binary parameter assets. Effective instance,
 overrides and initialization still remain open; no Rust policy changes or live
 operation. [Methods, derivations and limits](apk/2.26.43.72-token-sdk-defaults/README.md).
+
+## Concrete SDK table reading —2026-11-07
+
+The previous bodyless0A2 boundary is narrowed: Nv3 and0A3 provide DEX overrides.
+09u context construction chooses default-only/direct/translated contexts;
+Nv3 reads little-endian long and metadata vectors and reports distinct source
+classifications. Retained methods and35 analyst-derived metadata cases separate
+source gating, fallback masks and values. Manager/handle producers, translation,
+readiness/cache and effective connection selection remain open. No Rust policy
+change or live operation. [Evidence and reproduction](apk/2.26.43.72-token-sdk-value-reader/README.md).

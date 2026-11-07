@@ -1,0 +1,67 @@
+
+# class: LX/Nv3;
+# extends: LX/0A2;
+
+.method public A07(LJ)  # .registers 9
+    # full signature: LX/Nv3;->A07(J)LX/0A4;
+    0000..0004  iget-object  v0, v6, LX/Nv3;->A03:LX/Nux;
+    0004..000a  invoke-static  {v0}, LX/2L9;->A1W(Ljava/lang/Object;)Z
+    000a..000c  move-result  v0
+    000c..0010  if-nez  v0, +0xa
+    0010..0014  sget-object  v1, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__NO_DATA_ON_DISK:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+    0014..0018  new-instance  v0, LX/0A4;
+    0018..001e  invoke-direct  {v0, v1}, LX/0A4;-><init>(Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;)V
+    001e..0020  return-object  v0
+    0020..0026  invoke-direct  {v6, v7, v8}, LX/Nv3;->A00(J)I
+    0026..0028  move-result  v5
+    0028..002c  sget  v0, LX/P7S;->A00:I
+    002c..0030  if-eq  v5, v0, +0x48
+    0030..0034  const/16  v0, #0x11
+    0034..0038  if-eq  v5, v0, +0x44
+    0038..003c  sget  v0, LX/P7S;->A02:I
+    003c..0040  if-ne  v5, v0, +0xe
+    0040..0044  sget-object  v3, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__MISSING_SERVER_VALUE_INVALID_TYPE:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+    0044..0048  sget-object  v0, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__MISSING_SERVER_VALUE:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+    0048..004c  if-ne  v3, v0, +0x3d
+    004c..0050  new-instance  v2, LX/0A4;
+    0050..0056  invoke-direct  {v2, v3}, LX/0A4;-><init>(Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;)V
+    0056..0058  return-object  v2
+    0058..005c  sget  v0, LX/P7S;->A01:I
+    005c..0060  if-ne  v5, v0, +0x5
+    0060..0064  sget-object  v3, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__MISSING_SERVER_VALUE_INVALID_SLOT_ID:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+    0064..0066  goto  -0x10
+    0066..006a  and-int/lit8  v0, v5, #0x10
+    006a..006c  const/4  v4, #0x2
+    006c..006e  const/4  v3, #0x0
+    006e..0074  invoke-static  {v0}, LX/B1w;->A00(I)I
+    0074..0076  move-result  v2
+    0076..0078  const/4  v1, #0x1
+    0078..007c  and-int/lit8  v0, v5, #0x1
+    007c..0080  if-eqz  v0, +0x3
+    0080..0082  const/4  v3, #0x1
+    0082..0084  or-int/2addr  v2, v3
+    0084..0088  if-eqz  v2, +0x19
+    0088..008c  if-eq  v2, v1, +0x14
+    008c..0090  if-eq  v2, v4, +0xf
+    0090..0092  const/4  v0, #0x3
+    0092..0096  if-eq  v2, v0, +0x15
+    0096..009a  const-string  v1, "MobileConfigTableUtil"
+    009a..009e  const-string  v0, "should never reach default case in getValueSource"
+    009e..00a4  invoke-static  {v1, v0}, LX/070;->A0G(Ljava/lang/String;Ljava/lang/String;)V
+    00a4..00a8  sget-object  v3, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->UNKNOWN:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+    00a8..00aa  goto  -0x32
+    00aa..00ae  sget-object  v3, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__SERVER_RETURNED_NULL_EMPTY_UNIT_ID:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+    00ae..00b0  goto  -0x35
+    00b0..00b4  sget-object  v3, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__SERVER_RETURNED_NULL:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+    00b4..00b6  goto  -0x38
+    00b6..00ba  sget-object  v3, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->SERVER:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+    00ba..00bc  goto  -0x3b
+    00bc..00c0  sget-object  v3, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__MISSING_SERVER_VALUE:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+    00c0..00c2  goto  -0x3e
+    00c2..00c8  invoke-virtual  {v6}, LX/0A2;->B43()J
+    00c8..00ca  move-result-wide  v0
+    00ca..00ce  new-instance  v2, LX/0A4;
+    00ce..00d4  invoke-direct  {v2, v3, v0, v1}, LX/0A4;-><init>(Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;J)V
+    00d4..00d6  return-object  v2
+    # exception table: 0 try range(s)
+.end method

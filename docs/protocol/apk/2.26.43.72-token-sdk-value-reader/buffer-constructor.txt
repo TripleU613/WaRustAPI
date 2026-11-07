@@ -1,0 +1,246 @@
+
+# class: LX/Nv3;
+# extends: LX/0A2;
+
+.method public <init>(VLLLLL)  # .registers 17
+    # full signature: LX/Nv3;-><init>(LX/Own;LX/09k;LX/09x;LX/09n;LX/00v;)V
+    0000..0006  invoke-direct  {v11, v14, v15}, LX/0A2;-><init>(LX/09x;LX/09n;)V
+    0006..000a  iput-object  v13, v11, LX/Nv3;->A04:LX/09k;
+    000a..000e  move-object/from16  v0, v16
+    000e..0012  iput-object  v0, v11, LX/Nv3;->A00:LX/00v;
+    0012..0016  iput-object  v12, v11, LX/Nv3;->A05:LX/Own;
+    0016..0018  const/4  v5, #0x0
+    0018..001c  if-eqz  v12, +0x139
+    001c..0022  invoke-virtual  {v12}, LX/Own;->getJavaByteBuffer()Ljava/nio/ByteBuffer;
+    0022..0024  move-result-object  v2
+    0024..0028  if-eqz  v2, +0x133
+    0028..002e  invoke-virtual  {v2}, Ljava/nio/Buffer;->capacity()I
+    002e..0030  move-result  v0
+    0030..0034  if-lez  v0, +0x12d
+    0034..0038  new-instance  v9, LX/Nux;
+    0038..003e  invoke-direct  {v9}, LX/Nux;-><init>()V
+    003e..0042  sget-object  v0, Ljava/nio/ByteOrder;->LITTLE_ENDIAN:Ljava/nio/ByteOrder;
+    0042..0048  invoke-virtual  {v2, v0}, Ljava/nio/ByteBuffer;->order(Ljava/nio/ByteOrder;)Ljava/nio/ByteBuffer;
+    0048..004e  invoke-virtual  {v2}, Ljava/nio/Buffer;->position()I
+    004e..0050  move-result  v0
+    0050..0056  invoke-virtual  {v2, v0}, Ljava/nio/ByteBuffer;->getInt(I)I
+    0056..0058  move-result  v1
+    0058..005e  invoke-virtual  {v2}, Ljava/nio/Buffer;->position()I
+    005e..0060  move-result  v0
+    0060..0062  add-int/2addr  v1, v0
+    0062..0066  iput  v1, v9, LX/Oy1;->A00:I
+    0066..006a  iput-object  v2, v9, LX/Oy1;->A01:Ljava/nio/ByteBuffer;
+    006a..0070  invoke-virtual  {v9}, LX/OQ3;->A06()I
+    0070..0072  move-result  v0
+    0072..0078  const  v3, #0x1e240
+    0078..007c  if-ne  v0, v3, +0x28
+    007c..0080  const/16  v0, #0x22
+    0080..0086  invoke-virtual  {v9, v0}, LX/Oy1;->A01(I)I
+    0086..0088  move-result  v2
+    0088..008c  if-eqz  v2, +0xd
+    008c..0090  iget-object  v1, v9, LX/Oy1;->A01:Ljava/nio/ByteBuffer;
+    0090..0094  iget  v0, v9, LX/Oy1;->A00:I
+    0094..0096  add-int/2addr  v2, v0
+    0096..009c  invoke-virtual  {v1, v2}, Ljava/nio/ByteBuffer;->getInt(I)I
+    009c..009e  move-result  v0
+    009e..00a2  if-eq  v0, v3, +0x2a
+    00a2..00a6  const/16  v0, #0x22
+    00a6..00ac  invoke-virtual  {v9, v0}, LX/Oy1;->A01(I)I
+    00ac..00ae  move-result  v2
+    00ae..00b2  if-eqz  v2, +0x22
+    00b2..00b6  iget-object  v1, v9, LX/Oy1;->A01:Ljava/nio/ByteBuffer;
+    00b6..00ba  iget  v0, v9, LX/Oy1;->A00:I
+    00ba..00bc  add-int/2addr  v2, v0
+    00bc..00c2  invoke-virtual  {v1, v2}, Ljava/nio/ByteBuffer;->getInt(I)I
+    00c2..00c4  move-result  v0
+    00c4..00c8  if-eqz  v0, +0x17
+    00c8..00ce  invoke-virtual  {v9}, LX/OQ3;->A06()I
+    00ce..00d2  const/16  v0, #0x22
+    00d2..00d8  invoke-virtual  {v9, v0}, LX/Oy1;->A01(I)I
+    00d8..00da  move-result  v2
+    00da..00de  if-eqz  v2, +0xd8
+    00de..00e2  iget-object  v1, v9, LX/Oy1;->A01:Ljava/nio/ByteBuffer;
+    00e2..00e6  iget  v0, v9, LX/Oy1;->A00:I
+    00e6..00e8  add-int/2addr  v2, v0
+    00e8..00ee  invoke-virtual  {v1, v2}, Ljava/nio/ByteBuffer;->getInt(I)I
+    00ee..00f2  goto/16  +0xce
+    00f2..00f4  const/4  v0, #0x6
+    00f4..00fa  invoke-virtual  {v9, v0}, LX/Oy1;->A01(I)I
+    00fa..00fc  move-result  v0
+    00fc..0100  iput  v0, v9, LX/Nux;->A01:I
+    0100..0104  const/16  v0, #0x8
+    0104..010a  invoke-virtual  {v9, v0}, LX/Oy1;->A01(I)I
+    010a..010c  move-result  v0
+    010c..0110  iput  v0, v9, LX/Nux;->A00:I
+    0110..0114  const/16  v0, #0xa
+    0114..011a  invoke-virtual  {v9, v0}, LX/Oy1;->A01(I)I
+    011a..011c  move-result  v0
+    011c..0120  iput  v0, v9, LX/Nux;->A06:I
+    0120..0124  const/16  v0, #0xc
+    0124..012a  invoke-virtual  {v9, v0}, LX/Oy1;->A01(I)I
+    012a..012c  move-result  v0
+    012c..0130  iput  v0, v9, LX/Nux;->A05:I
+    0130..0134  const/16  v0, #0xe
+    0134..013a  invoke-virtual  {v9, v0}, LX/Oy1;->A01(I)I
+    013a..013e  const/16  v0, #0x10
+    013e..0144  invoke-virtual  {v9, v0}, LX/Oy1;->A01(I)I
+    0144..0148  const/16  v0, #0x12
+    0148..014e  invoke-virtual  {v9, v0}, LX/Oy1;->A01(I)I
+    014e..0150  move-result  v0
+    0150..0154  iput  v0, v9, LX/Nux;->A03:I
+    0154..0158  const/16  v0, #0x14
+    0158..015e  invoke-virtual  {v9, v0}, LX/Oy1;->A01(I)I
+    015e..0160  move-result  v0
+    0160..0164  iput  v0, v9, LX/Nux;->A02:I
+    0164..0168  const/16  v0, #0x16
+    0168..016e  invoke-virtual  {v9, v0}, LX/Oy1;->A01(I)I
+    016e..0170  move-result  v0
+    0170..0174  iput  v0, v9, LX/Nux;->A08:I
+    0174..0178  const/16  v0, #0x18
+    0178..017e  invoke-virtual  {v9, v0}, LX/Oy1;->A01(I)I
+    017e..0180  move-result  v0
+    0180..0184  iput  v0, v9, LX/Nux;->A07:I
+    0184..0188  const/16  v0, #0x1a
+    0188..018e  invoke-virtual  {v9, v0}, LX/Oy1;->A01(I)I
+    018e..0190  move-result  v0
+    0190..0194  iput  v0, v9, LX/Nux;->A04:I
+    0194..0198  const/16  v0, #0x2a
+    0198..019e  invoke-virtual  {v9, v0}, LX/Oy1;->A01(I)I
+    019e..01a0  move-result  v0
+    01a0..01a4  iput  v0, v9, LX/Nux;->A09:I
+    01a4..01a8  const/16  v0, #0x20
+    01a8..01ae  invoke-virtual  {v9, v0}, LX/Oy1;->A01(I)I
+    01ae..01b0  move-result  v0
+    01b0..01b4  if-eqz  v0, +0x6c
+    01b4..01ba  invoke-virtual  {v9, v0}, LX/Oy1;->A03(I)I
+    01ba..01bc  move-result  v8
+    01bc..01be  const/4  v7, #0x0
+    01be..01c2  const/high16  v0, #0x10000
+    01c2..01c6  if-le  v8, v0, +0x3
+    01c6..01c8  goto  +0x62
+    01c8..01cc  if-ge  v7, v8, +0x60
+    01cc..01d0  const/16  v0, #0x20
+    01d0..01d6  invoke-virtual  {v9, v0}, LX/Oy1;->A01(I)I
+    01d6..01d8  move-result  v0
+    01d8..01dc  if-eqz  v0, +0x55
+    01dc..01e2  invoke-virtual  {v9, v0}, LX/Oy1;->A02(I)I
+    01e2..01e4  move-result  v10
+    01e4..01e8  mul-int/lit8  v0, v7, #0x4
+    01e8..01ea  add-int/2addr  v10, v0
+    01ea..01ee  iget-object  v0, v9, LX/Oy1;->A01:Ljava/nio/ByteBuffer;
+    01ee..01f4  invoke-virtual  {v0, v10}, Ljava/nio/ByteBuffer;->getInt(I)I
+    01f4..01f6  move-result  v0
+    01f6..01f8  add-int/2addr  v10, v0
+    01f8..01fc  iget-object  v6, v9, LX/Oy1;->A01:Ljava/nio/ByteBuffer;
+    01fc..0200  iget-object  v4, v9, LX/Nux;->A0A:Ljava/util/Map;
+    0200..0204  const/16  v2, #0x8
+    0204..020a  invoke-virtual  {v6, v10}, Ljava/nio/ByteBuffer;->getInt(I)I
+    020a..020c  move-result  v0
+    020c..0210  sub-int  v1, v10, v0
+    0210..0216  invoke-virtual  {v6, v1}, Ljava/nio/ByteBuffer;->getShort(I)S
+    0216..0218  move-result  v0
+    0218..021c  if-ge  v2, v0, +0x33
+    021c..0220  add-int/lit8  v0, v1, #0x8
+    0220..0226  invoke-virtual  {v6, v0}, Ljava/nio/ByteBuffer;->getShort(I)S
+    0226..0228  move-result  v0
+    0228..022c  if-eqz  v0, +0x2b
+    022c..022e  add-int/2addr  v0, v10
+    022e..0234  invoke-virtual  {v6, v0}, Ljava/nio/ByteBuffer;->getInt(I)I
+    0234..0236  move-result  v0
+    0236..023c  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    023c..023e  move-result-object  v3
+    023e..0240  const/4  v2, #0x6
+    0240..0246  invoke-virtual  {v6, v10}, Ljava/nio/ByteBuffer;->getInt(I)I
+    0246..0248  move-result  v0
+    0248..024c  sub-int  v1, v10, v0
+    024c..0252  invoke-virtual  {v6, v1}, Ljava/nio/ByteBuffer;->getShort(I)S
+    0252..0254  move-result  v0
+    0254..0258  if-ge  v2, v0, +0x13
+    0258..025c  add-int/lit8  v0, v1, #0x6
+    025c..0262  invoke-virtual  {v6, v0}, Ljava/nio/ByteBuffer;->getShort(I)S
+    0262..0264  move-result  v0
+    0264..0268  if-eqz  v0, +0xb
+    0268..026a  add-int/2addr  v0, v10
+    026a..0270  invoke-virtual  {v6, v0}, Ljava/nio/ByteBuffer;->getInt(I)I
+    0270..0272  move-result  v0
+    0272..0278  invoke-static  {v3, v4, v0}, LX/1Xl;->A1T(Ljava/lang/Object;Ljava/util/Map;I)V
+    0278..027a  goto  +0x5
+    027a..027c  const/4  v0, #0x0
+    027c..027e  goto  -0x5
+    027e..0280  const/4  v0, #0x0
+    0280..0282  goto  -0x25
+    0282..0286  add-int/lit8  v7, v7, #0x1
+    0286..0288  goto  -0x5f
+    0288..028a  move-object  v5, v9
+    028a..028e  iput-object  v5, v11, LX/Nv3;->A03:LX/Nux;
+    028e..0294  invoke-static  {}, LX/1Xl;->A18()Ljava/util/ArrayList;
+    0294..0296  move-result-object  v4
+    0296..0298  const/4  v3, #0x0
+    0298..029c  if-eqz  v5, +0x50
+    029c..02a0  const/16  v0, #0x1a
+    02a0..02a6  invoke-virtual  {v5, v0}, LX/Oy1;->A01(I)I
+    02a6..02a8  move-result  v0
+    02a8..02ac  if-eqz  v0, +0x6
+    02ac..02b2  invoke-virtual  {v5, v0}, LX/Oy1;->A03(I)I
+    02b2..02b4  move-result  v3
+    02b4..02b6  const/4  v2, #0x0
+    02b6..02ba  iget-object  v1, v11, LX/Nv3;->A03:LX/Nux;
+    02ba..02be  const/16  v0, #0x2a
+    02be..02c4  invoke-virtual  {v1, v0}, LX/Oy1;->A01(I)I
+    02c4..02c6  move-result  v0
+    02c6..02ca  if-eqz  v0, +0x7
+    02ca..02d0  invoke-virtual  {v1, v0}, LX/Oy1;->A03(I)I
+    02d0..02d2  move-result  v0
+    02d2..02d4  goto  +0x2
+    02d4..02d6  const/4  v0, #0x0
+    02d6..02da  if-ge  v2, v0, +0x31
+    02da..02de  iget-object  v1, v11, LX/Nv3;->A03:LX/Nux;
+    02de..02e2  iget  v0, v1, LX/Nux;->A09:I
+    02e2..02e6  if-eqz  v0, +0xa
+    02e6..02ec  invoke-static  {v1, v0, v2}, LX/Nv3;->A04(LX/Oy1;II)Ljava/lang/String;
+    02ec..02ee  move-result-object  v0
+    02ee..02f4  invoke-virtual  {v4, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    02f4..02f6  goto  +0x3
+    02f6..02f8  const/4  v0, #0x0
+    02f8..02fa  goto  -0x5
+    02fa..02fe  add-int/lit8  v2, v2, #0x1
+    02fe..0300  goto  -0x24
+    0300..0302  move-exception  v2
+    0302..0304  goto  +0x3
+    0304..0306  move-exception  v2
+    0306..0308  const/4  v3, #0x0
+    0308..030c  const-string  v1, "MobileConfigContextV2Impl"
+    030c..0310  const-string  v0, "Failed to initialize config table data due to corrupted flatbuffer"
+    0310..0316  invoke-static  {v2, v1, v0}, LX/Klr;->A1N(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)V
+    0316..0318  goto  +0x11
+    0318..031a  move-exception  v1
+    031a..031e  new-instance  v0, LX/P9U;
+    031e..0324  invoke-direct  {v0, v3}, LX/P9U;-><init>(I)V
+    0324..0328  iput-object  v0, v11, LX/Nv3;->A02:LX/P9U;
+    0328..032c  new-instance  v0, LX/P9U;
+    032c..0332  invoke-direct  {v0, v3}, LX/P9U;-><init>(I)V
+    0332..0336  iput-object  v0, v11, LX/Nv3;->A01:LX/P9U;
+    0336..0338  throw  v1
+    0338..033c  new-instance  v0, LX/P9U;
+    033c..0342  invoke-direct  {v0, v3}, LX/P9U;-><init>(I)V
+    0342..0346  iput-object  v0, v11, LX/Nv3;->A02:LX/P9U;
+    0346..034a  new-instance  v0, LX/P9U;
+    034a..0350  invoke-direct  {v0, v3}, LX/P9U;-><init>(I)V
+    0350..0354  iput-object  v0, v11, LX/Nv3;->A01:LX/P9U;
+    0354..0356  const/4  v0, #0x4
+    0356..035a  new-instance  v1, LX/Qrw;
+    035a..0360  invoke-direct  {v1, v4, v0}, LX/Qrw;-><init>(Ljava/lang/Object;I)V
+    0360..0364  new-instance  v0, LX/Qrv;
+    0364..036a  invoke-direct  {v0, v1}, LX/Qrv;-><init>(LX/00v;)V
+    036a..036e  iput-object  v0, v11, LX/Nv3;->A06:LX/00v;
+    036e..0370  return-void
+    # exception table: 4 try range(s)
+    # catch Ljava/lang/IndexOutOfBoundsException; code_units 0035..0145 -> 0145
+    # catch Ljava/lang/IndexOutOfBoundsException; code_units 014e..015b -> 0182
+    # catch Ljava/nio/BufferUnderflowException; code_units 014e..015b -> 0182
+    # catch <all> code_units 014e..015b -> 018c
+    # catch Ljava/lang/IndexOutOfBoundsException; code_units 015b..0180 -> 0180
+    # catch Ljava/nio/BufferUnderflowException; code_units 015b..0180 -> 0180
+    # catch <all> code_units 015b..0180 -> 018c
+    # catch <all> code_units 0184..018c -> 018c
+.end method

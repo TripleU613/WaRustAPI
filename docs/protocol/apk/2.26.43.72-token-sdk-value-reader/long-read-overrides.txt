@@ -1,0 +1,88 @@
+# Declared overrides with interface ancestry: LX/0A2;->A06(JJZ)J
+# Coverage: 114178 APK classes; superclass/interface ancestry; declared overrides only; inherited-target/default-method/external/runtime dispatch unverified
+# ancestry: LX/0A2; -> Ljava/lang/Object;
+# interfaces: LX/0A2; => LX/0A1;
+# ancestry: LX/0A3; -> LX/0A2; -> Ljava/lang/Object;
+# interfaces: LX/0A2; => LX/0A1;
+# ancestry: LX/Nv3; -> LX/0A2; -> Ljava/lang/Object;
+# interfaces: LX/Nv3; => LX/09t;
+# interfaces: LX/0A2; => LX/0A1;
+
+# class: LX/0A2;
+# extends: Ljava/lang/Object;
+
+.method public A06(JJJZ)  # .registers 0
+    # full signature: LX/0A2;->A06(JJZ)J
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/0A3;
+# extends: LX/0A2;
+
+.method public A06(JJJZ)  # .registers 6
+    # full signature: LX/0A3;->A06(JJZ)J
+    0000..0002  return-wide  v3
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/Nv3;
+# extends: LX/0A2;
+
+.method public A06(JJJZ)  # .registers 14
+    # full signature: LX/Nv3;->A06(JJZ)J
+    0000..0004  const-string  v3, "MobileConfigContextV2Impl"
+    0004..0008  iget-object  v6, v8, LX/Nv3;->A03:LX/Nux;
+    0008..000c  if-eqz  v6, +0x53
+    000c..0012  invoke-static  {v9, v10}, LX/Nv3;->A01(J)I
+    0012..0014  move-result  v1
+    0014..0016  const/4  v0, #0x2
+    0016..001a  if-ne  v1, v0, +0x4c
+    001a..0020  const-wide/32  v4, #0xffff
+    0020..0024  and-long  v0, v9, v4
+    0024..0026  long-to-int  v5, v0
+    0026..0028  const/4  v7, #0x0
+    0028..002a  const/4  v4, #0x1
+    002a..002e  iget  v0, v6, LX/Nux;->A05:I
+    002e..0032  if-eqz  v0, +0x19
+    0032..0038  invoke-static  {v6, v0, v5}, LX/Nv3;->A02(LX/Oy1;II)I
+    0038..003a  move-result  v1
+    003a..003c  int-to-byte  v0, v1
+    003c..0040  and-int/lit8  v0, v0, #0x6
+    0040..0044  if-eqz  v0, +0x7
+    0044..0048  if-nez  v13, +0xa
+    0048..004e  invoke-virtual  {v8, v1, v9, v10}, LX/Nv3;->A0B(IJ)V
+    004e..0052  and-int/lit8  v0, v1, #0x11
+    0052..0056  if-eqz  v0, +0x7
+    0056..0058  return-wide  v11
+    0058..005e  invoke-virtual  {v8, v1}, LX/Nv3;->A0A(I)V
+    005e..0060  goto  -0x8
+    0060..0064  iget  v0, v6, LX/Nux;->A06:I
+    0064..0068  if-eqz  v0, +0x10
+    0068..006c  iget-object  v2, v6, LX/Oy1;->A01:Ljava/nio/ByteBuffer;
+    006c..0072  invoke-virtual  {v6, v0}, LX/Oy1;->A02(I)I
+    0072..0074  move-result  v1
+    0074..0078  mul-int/lit8  v0, v5, #0x8
+    0078..007a  add-int/2addr  v1, v0
+    007a..0080  invoke-virtual  {v2, v1}, Ljava/nio/ByteBuffer;->getLong(I)J
+    0080..0082  move-result-wide  v0
+    0082..0084  return-wide  v0
+    0084..0088  const-wide/16  v0, #0x0
+    0088..008a  return-wide  v0
+    008a..008c  move-exception  v0
+    008c..0090  new-array  v1, v4, [Ljava/lang/Object;
+    0090..0094  aput-object  v0, v1, v7
+    0094..0098  const-string  v0, "Failed to get long value from config table"
+    0098..009a  goto  +0x8
+    009a..009c  move-exception  v0
+    009c..00a0  new-array  v1, v4, [Ljava/lang/Object;
+    00a0..00a4  aput-object  v0, v1, v7
+    00a4..00a8  const-string  v0, "Failed to get long meta from config table"
+    00a8..00ae  invoke-static  {v3, v0, v1}, LX/PT8;->A00(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+    00ae..00b0  return-wide  v11
+    # exception table: 2 try range(s)
+    # catch Ljava/lang/IndexOutOfBoundsException; code_units 0015..0024 -> 004d
+    # catch Ljava/nio/BufferUnderflowException; code_units 0015..0024 -> 004d
+    # catch Ljava/lang/IndexOutOfBoundsException; code_units 0030..0045 -> 0045
+    # catch Ljava/nio/BufferUnderflowException; code_units 0030..0045 -> 0045
+.end method

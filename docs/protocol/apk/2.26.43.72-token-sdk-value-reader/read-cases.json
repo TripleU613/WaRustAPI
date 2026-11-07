@@ -1,0 +1,211 @@
+{
+  "kind": "analyst-derived static branch cases",
+  "input_sha256": {
+    "specifier-type.txt": "96b32c054547c6329ce84a4adc12f0c71240e88ff24d914c093810eeb8008500",
+    "metadata-sentinels.txt": "f1cde8587515835033c89d734cfc7f0e0c0c690edebea3b2b178897f74a570d4",
+    "source-bit.txt": "d459671b8073162a00e6fdbc6b0ed6e1e8a37649ec97a938afd1442c0cbfe553",
+    "value-source.txt": "7f6754d54ac8e19ede59f98e76c5cc7482c31d88a3da8dd3a86e303dc45cf18d",
+    "long-read-overrides.txt": "38657a9cd28b3bcf3c9d623a28bd3dcc2e73ffa3ca92a427ea5b2b62596e5b48",
+    "metadata-read.txt": "41278ed76cd61918fa59eb103f3493c78ad4219ec0e445cc0bb8ebf2691608f1",
+    "vector-base.txt": "85280724dd8c2ba173d7310729d90be00d93b877ed447effe8fdf71b09118aad"
+  },
+  "token_specifiers": {
+    "865": {
+      "type": 2,
+      "config_index": 423,
+      "slot": 101
+    },
+    "909": {
+      "type": 2,
+      "config_index": 444,
+      "slot": 110
+    },
+    "996": {
+      "type": 2,
+      "config_index": 483,
+      "slot": 125
+    },
+    "997": {
+      "type": 2,
+      "config_index": 484,
+      "slot": 126
+    }
+  },
+  "cases": [
+    {
+      "metadata": 0,
+      "source": "server",
+      "long_reader_uses_default_mask": false
+    },
+    {
+      "metadata": 1,
+      "source": "server_returned_null",
+      "long_reader_uses_default_mask": true
+    },
+    {
+      "metadata": 2,
+      "source": "server",
+      "long_reader_uses_default_mask": false
+    },
+    {
+      "metadata": 3,
+      "source": "server_returned_null",
+      "long_reader_uses_default_mask": true
+    },
+    {
+      "metadata": 4,
+      "source": "server",
+      "long_reader_uses_default_mask": false
+    },
+    {
+      "metadata": 5,
+      "source": "server_returned_null",
+      "long_reader_uses_default_mask": true
+    },
+    {
+      "metadata": 6,
+      "source": "server",
+      "long_reader_uses_default_mask": false
+    },
+    {
+      "metadata": 7,
+      "source": "server_returned_null",
+      "long_reader_uses_default_mask": true
+    },
+    {
+      "metadata": 8,
+      "source": "server",
+      "long_reader_uses_default_mask": false
+    },
+    {
+      "metadata": 9,
+      "source": "server_returned_null",
+      "long_reader_uses_default_mask": true
+    },
+    {
+      "metadata": 10,
+      "source": "server",
+      "long_reader_uses_default_mask": false
+    },
+    {
+      "metadata": 11,
+      "source": "server_returned_null",
+      "long_reader_uses_default_mask": true
+    },
+    {
+      "metadata": 12,
+      "source": "server",
+      "long_reader_uses_default_mask": false
+    },
+    {
+      "metadata": 13,
+      "source": "server_returned_null",
+      "long_reader_uses_default_mask": true
+    },
+    {
+      "metadata": 14,
+      "source": "server",
+      "long_reader_uses_default_mask": false
+    },
+    {
+      "metadata": 15,
+      "source": "server_returned_null",
+      "long_reader_uses_default_mask": true
+    },
+    {
+      "metadata": 16,
+      "source": "server_returned_null_empty_unit",
+      "long_reader_uses_default_mask": true
+    },
+    {
+      "metadata": 17,
+      "source": "missing_server_value",
+      "long_reader_uses_default_mask": true
+    },
+    {
+      "metadata": 18,
+      "source": "server_returned_null_empty_unit",
+      "long_reader_uses_default_mask": true
+    },
+    {
+      "metadata": 19,
+      "source": "missing_server_value",
+      "long_reader_uses_default_mask": true
+    },
+    {
+      "metadata": 20,
+      "source": "server_returned_null_empty_unit",
+      "long_reader_uses_default_mask": true
+    },
+    {
+      "metadata": 21,
+      "source": "missing_server_value",
+      "long_reader_uses_default_mask": true
+    },
+    {
+      "metadata": 22,
+      "source": "server_returned_null_empty_unit",
+      "long_reader_uses_default_mask": true
+    },
+    {
+      "metadata": 23,
+      "source": "missing_server_value",
+      "long_reader_uses_default_mask": true
+    },
+    {
+      "metadata": 24,
+      "source": "server_returned_null_empty_unit",
+      "long_reader_uses_default_mask": true
+    },
+    {
+      "metadata": 25,
+      "source": "missing_server_value",
+      "long_reader_uses_default_mask": true
+    },
+    {
+      "metadata": 26,
+      "source": "server_returned_null_empty_unit",
+      "long_reader_uses_default_mask": true
+    },
+    {
+      "metadata": 27,
+      "source": "missing_server_value",
+      "long_reader_uses_default_mask": true
+    },
+    {
+      "metadata": 28,
+      "source": "server_returned_null_empty_unit",
+      "long_reader_uses_default_mask": true
+    },
+    {
+      "metadata": 29,
+      "source": "missing_server_value",
+      "long_reader_uses_default_mask": true
+    },
+    {
+      "metadata": 30,
+      "source": "server_returned_null_empty_unit",
+      "long_reader_uses_default_mask": true
+    },
+    {
+      "metadata": 31,
+      "source": "missing_server_value",
+      "long_reader_uses_default_mask": true
+    },
+    {
+      "metadata": -239,
+      "source": "missing_server_value",
+      "long_reader_uses_default_mask": true
+    },
+    {
+      "metadata": -495,
+      "source": "invalid_type",
+      "long_reader_uses_default_mask": true
+    },
+    {
+      "metadata": -751,
+      "source": "invalid_slot",
+      "long_reader_uses_default_mask": true
+    }
+  ]
+}

@@ -80,3 +80,8 @@ This narrows the [configuration gap](../2.26.43.72-token-bucket-configuration/RE
 and [MobileConfig boundary](../2.26.43.72-token-mobileconfig-binding/README.md).
 It does not change Rust scheduling/admission, implement effective configuration,
 prove server acceptance or authorize live requests. No live account operation.
+
+The subsequent [concrete value-reader trace](../2.26.43.72-token-sdk-value-reader/README.md)
+closes the bodyless-base boundary through Nv3/0A3 DEX overrides and retains
+context construction, table reads and source classification. Hydration and
+effective selection remain unresolved.

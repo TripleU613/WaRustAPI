@@ -1,0 +1,55 @@
+
+# class: LX/09u;
+# extends: Ljava/lang/Object;
+
+.method public A08(LI)  # .registers 9
+    # full signature: LX/09u;->A08(I)LX/09t;
+    0000..0004  iget  v6, v7, LX/09u;->A08:I
+    0004..0006  const/4  v0, #0x2
+    0006..000a  if-ne  v6, v0, +0x1c
+    000a..000e  const-string  v1, ""
+    000e..0014  invoke-virtual  {v7}, LX/09u;->A0B()Ljava/lang/String;
+    0014..0016  move-result-object  v0
+    0016..001c  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    001c..001e  move-result  v0
+    001e..0022  if-eqz  v0, +0x10
+    0022..0026  const-string  v2, "MobileConfigFactoryImpl"
+    0026..002a  const-string  v1, "Attempt to read config (index:%d) after logout, see https://fburl.com/bicj8iz0"
+    002a..0030  invoke-static  {v8}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0030..0032  move-result-object  v0
+    0032..0038  invoke-static  {v0, v2, v1}, LX/070;->A0D(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)V
+    0038..003c  iget-object  v0, v7, LX/09u;->A0K:LX/0A3;
+    003c..003e  return-object  v0
+    003e..0042  iget-object  v5, v7, LX/09u;->A0Y:LX/09t;
+    0042..0046  if-nez  v5, +0x2f
+    0046..0048  monitor-enter
+    0048..004c  iget-object  v0, v7, LX/09u;->A0Y:LX/09t;
+    004c..0050  if-eqz  v0, +0x4
+    0050..0052  monitor-exit
+    0052..0054  return-object  v0
+    0054..005a  invoke-direct  {v7}, LX/09u;->A01()LX/0A1;
+    005a..005c  move-result-object  v5
+    005c..0060  iput-object  v5, v7, LX/09u;->A0Y:LX/09t;
+    0060..0062  monitor-exit
+    0062..0064  goto  +0x4
+    0064..0066  move-exception  v0
+    0066..0068  monitor-exit
+    0068..006a  throw  v0
+    006a..006e  const-string  v4, "MobileConfigFactoryImpl"
+    006e..0072  const-string  v3, "Updated cached latest contextV2 - isValid: %s, unitType: %s withTranslationTable: %s"
+    0072..0078  invoke-interface  {v5}, LX/0A1;->isValid()Z
+    0078..007a  move-result  v0
+    007a..0080  invoke-static  {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0080..0082  move-result-object  v2
+    0082..0088  invoke-static  {v6}, LX/Fx0;->A00(I)Ljava/lang/String;
+    0088..008a  move-result-object  v1
+    008a..0090  invoke-interface  {v5}, LX/0A1;->BDj()I
+    0090..0092  move-result  v0
+    0092..0098  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0098..009a  move-result-object  v0
+    009a..00a0  invoke-static  {v2, v1, v0, v4, v3}, LX/070;->A0A(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)V
+    00a0..00a2  return-object  v5
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0024..0032 -> 0032
+    # catch <all> code_units 0033..0034 -> 0032
+.end method
