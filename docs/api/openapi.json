@@ -1,4 +1,11 @@
 {
+  "x-media-document-current-ingress-boundary": {
+    "x-cli": "existing document references/open/save/export; no new command or flag",
+    "x-transport": "research-only current document schema/parser comparison; source provenance comments only",
+    "x-live": false,
+    "description": "Di0/Eel core document tags and selected hash-width checks match Rust. Ordinary FOt converter excludes medianotify before Eel projection. Native parser permits zero length; Rust Descriptor and shared crypto retain local nonempty limits pending complete native empty-file transfer evidence. Document MIME lacks audio-style allowlist in this selected method; Rust export token/size bounds remain local. Separate title/caption/filename fields do not grant sender-controlled output paths. No request/retry/status relaxation or live traffic; wrapper/update/URL/range/account behavior remains open.",
+    "evidence": "docs/protocol/apk/2.26.43.72-media-document-ingress/README.md"
+  },
   "x-media-audio-opus-mime-admission": {
     "x-cli": "existing received-media list/reference/open/save; no new command or flag",
     "x-transport": "canonical Opus MIME admission before descriptor selection, cache reuse or GET reservation",

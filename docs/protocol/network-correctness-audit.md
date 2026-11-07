@@ -1,5 +1,11 @@
 # Network correctness audit
 
+**Current document ingress traced.** Core tags/hash guards match Rust; native
+parser permits zero length and stores MIME without the audio-style allowlist.
+Rust's nonempty/size/MIME export bounds remain labelled local; zero-byte transfer
+parity remains unverified. No runtime change.
+[Evidence](media-network-outcomes.md#pinned-current-document-ingress-2026-11-06).
+
 **Opus voice-note preflight corrected.** Pinned audio schema/converters and exact
 MIME selector show contradictory codec metadata must not authorize the supported
 Opus path. Only canonical Opus PTT is selectable/cache-reusable; regression covers

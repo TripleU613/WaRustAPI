@@ -1,0 +1,113 @@
+
+# class: LX/Di0;
+# extends: Lcom/google/protobuf/GeneratedMessageLite;
+
+.method public dynamicMethod(LLLL)  # .registers 7
+    # full signature: LX/Di0;->dynamicMethod(Lcom/google/protobuf/GeneratedMessageLite$MethodToInvoke;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0000..0006  invoke-virtual  {v4}, Ljava/lang/Enum;->ordinal()I
+    0006..0008  move-result  v2
+    0008..000a  const/4  v1, #0x1
+    000a..000c  const/4  v0, #0x0
+    000c..0012  packed-switch  v2, payload@0x18c, cases=[0:@0x1c, 1:@0x26, 2:@0x2e, 3:@0x17e, 4:@0x13e, 5:@0x28, 6:@0x14a], default@0x12
+    0012..0018  invoke-static  {}, LX/8t1;->A1K()Ljava/lang/UnsupportedOperationException;
+    0018..001a  move-result-object  v0
+    001a..001c  throw  v0
+    001c..0022  invoke-static  {v1}, Ljava/lang/Byte;->valueOf(B)Ljava/lang/Byte;
+    0022..0024  move-result-object  v0
+    0024..0026  return-object  v0
+    0026..0028  return-object  v0
+    0028..002c  sget-object  v0, LX/Di0;->DEFAULT_INSTANCE:LX/Di0;
+    002c..002e  return-object  v0
+    002e..0032  const/16  v0, #0x16
+    0032..0036  new-array  v2, v0, [Ljava/lang/Object;
+    0036..003c  invoke-static  {v2}, LX/8t2;->A1Y([Ljava/lang/Object;)V
+    003c..0042  const-string/jumbo  v0, "url_"
+    0042..0046  aput-object  v0, v2, v1
+    0046..004a  const-string  v1, "mimetype_"
+    004a..004c  const/4  v0, #0x2
+    004c..0050  aput-object  v1, v2, v0
+    0050..0056  const-string/jumbo  v0, "title_"
+    0056..005c  invoke-static  {v2, v0}, LX/DBg;->A1J([Ljava/lang/Object;Ljava/lang/Object;)V
+    005c..0060  const-string  v1, "fileLength_"
+    0060..0062  const/4  v0, #0x5
+    0062..0066  aput-object  v1, v2, v0
+    0066..006a  const-string  v1, "pageCount_"
+    006a..006c  const/4  v0, #0x6
+    006c..0070  aput-object  v1, v2, v0
+    0070..0074  const-string  v1, "mediaKey_"
+    0074..0076  const/4  v0, #0x7
+    0076..007a  aput-object  v1, v2, v0
+    007a..007e  const-string  v1, "fileName_"
+    007e..0082  const/16  v0, #0x8
+    0082..0086  aput-object  v1, v2, v0
+    0086..008a  const-string  v1, "fileEncSha256_"
+    008a..008e  const/16  v0, #0x9
+    008e..0092  aput-object  v1, v2, v0
+    0092..0096  const-string  v1, "directPath_"
+    0096..009a  const/16  v0, #0xa
+    009a..009e  aput-object  v1, v2, v0
+    009e..00a2  const-string  v1, "mediaKeyTimestamp_"
+    00a2..00a6  const/16  v0, #0xb
+    00a6..00aa  aput-object  v1, v2, v0
+    00aa..00ae  const-string  v1, "contactVcard_"
+    00ae..00b2  const/16  v0, #0xc
+    00b2..00b6  aput-object  v1, v2, v0
+    00b6..00bc  const-string/jumbo  v1, "thumbnailDirectPath_"
+    00bc..00c0  const/16  v0, #0xd
+    00c0..00c4  aput-object  v1, v2, v0
+    00c4..00ca  const-string/jumbo  v1, "thumbnailSha256_"
+    00ca..00ce  const/16  v0, #0xe
+    00ce..00d2  aput-object  v1, v2, v0
+    00d2..00d8  const-string/jumbo  v1, "thumbnailEncSha256_"
+    00d8..00dc  const/16  v0, #0xf
+    00dc..00e0  aput-object  v1, v2, v0
+    00e0..00e4  const-string  v1, "jpegThumbnail_"
+    00e4..00e8  const/16  v0, #0x10
+    00e8..00ec  aput-object  v1, v2, v0
+    00ec..00f0  const-string  v1, "contextInfo_"
+    00f0..00f4  const/16  v0, #0x11
+    00f4..00f8  aput-object  v1, v2, v0
+    00f8..00fe  const-string/jumbo  v1, "thumbnailHeight_"
+    00fe..0102  const/16  v0, #0x12
+    0102..0106  aput-object  v1, v2, v0
+    0106..010c  const-string/jumbo  v1, "thumbnailWidth_"
+    010c..0110  const/16  v0, #0x13
+    0110..0114  aput-object  v1, v2, v0
+    0114..0118  const-string  v1, "caption_"
+    0118..011c  const/16  v0, #0x14
+    011c..0120  aput-object  v1, v2, v0
+    0120..0124  const-string  v1, "accessibilityLabel_"
+    0124..0128  const/16  v0, #0x15
+    0128..012c  aput-object  v1, v2, v0
+    012c..0130  const-string  v1, "\u{1}\u{15}\0\u{1}\u{1}\u{15}\u{15}\0\0\0\u{1}ဈ\0\u{2}ဈ\u{1}\u{3}ဈ\u{2}\u{4}ည\u{3}\u{5}ဃ\u{4}\u{6}ဋ\u{5}\u{7}ည\u{6}\u{8}ဈ\u{7}\tည\u{8}\nဈ\t\u{b}ဂ\n\u{c}ဇ\u{b}\rဈ\u{c}\u{e}ည\r\u{f}ည\u{e}\u{10}ည\u{f}\u{11}ဉ\u{10}\u{12}ဋ\u{11}\u{13}ဋ\u{12}\u{14}ဈ\u{13}\u{15}ဈ\u{14}"
+    0130..0134  sget-object  v0, LX/Di0;->DEFAULT_INSTANCE:LX/Di0;
+    0134..013a  invoke-static  {v0, v1, v2}, Lcom/google/protobuf/GeneratedMessageLite;->newMessageInfo(Lcom/google/protobuf/MessageLite;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/Object;
+    013a..013c  move-result-object  v0
+    013c..013e  return-object  v0
+    013e..0142  new-instance  v0, LX/DW4;
+    0142..0148  invoke-direct  {v0}, LX/DW4;-><init>()V
+    0148..014a  return-object  v0
+    014a..014e  sget-object  v0, LX/Di0;->PARSER:Lcom/google/protobuf/Parser;
+    014e..0152  if-nez  v0, +0x1d
+    0152..0156  const-class  v1, LX/Di0;
+    0156..0158  monitor-enter
+    0158..015c  sget-object  v0, LX/Di0;->PARSER:Lcom/google/protobuf/Parser;
+    015c..0160  if-nez  v0, +0xc
+    0160..0164  sget-object  v0, Lcom/google/protobuf/AbstractParser;->EMPTY_REGISTRY:Lcom/google/protobuf/ExtensionRegistryLite;
+    0164..0168  sget-object  v0, LX/Di0;->DEFAULT_INSTANCE:LX/Di0;
+    0168..016e  invoke-static  {v0}, LX/8t1;->A0Y(Lcom/google/protobuf/GeneratedMessageLite;)Lcom/google/protobuf/GeneratedMessageLite$DefaultInstanceBasedParser;
+    016e..0170  move-result-object  v0
+    0170..0174  sput-object  v0, LX/Di0;->PARSER:Lcom/google/protobuf/Parser;
+    0174..0176  monitor-exit
+    0176..0178  return-object  v0
+    0178..017a  move-exception  v0
+    017a..017c  monitor-exit
+    017c..017e  throw  v0
+    017e..0182  new-instance  v0, LX/Di0;
+    0182..0188  invoke-direct  {v0}, LX/Di0;-><init>()V
+    0188..018a  return-object  v0
+    018a..018c  nop
+    018c..01b0  packed-switch-payload  size=7
+    # exception table: 1 try range(s)
+    # catch <all> code_units 00ac..00be -> 00bc
+.end method

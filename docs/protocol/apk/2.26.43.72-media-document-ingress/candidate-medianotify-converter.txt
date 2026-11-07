@@ -1,0 +1,198 @@
+
+# class: LX/FPY;
+# extends: Ljava/lang/Object;
+
+.method public CR7(LL)  # .registers 12
+    # full signature: LX/FPY;->CR7(LX/F2D;)LX/18U;
+    0000..0004  iget-object  v2, v11, LX/F2D;->A0G:LX/DiW;
+    0004..000a  invoke-static  {v2}, LX/DBc;->A0v(LX/DiW;)LX/DiN;
+    000a..000c  move-result-object  v3
+    000c..0012  invoke-virtual  {v3}, LX/DiN;->A00()LX/ECd;
+    0012..0014  move-result-object  v1
+    0014..0018  sget-object  v0, LX/ECd;->A0L:LX/ECd;
+    0018..001c  if-ne  v1, v0, +0xa2
+    001c..0020  iget  v1, v3, LX/DiN;->bitField0_:I
+    0020..0024  const/high16  v0, #0x20000
+    0024..0026  and-int/2addr  v1, v0
+    0026..002a  if-eqz  v1, +0x94
+    002a..002e  iget-object  v0, v10, LX/FPY;->A00:LX/00x;
+    002e..0034  invoke-static  {v0}, LX/B22;->A0Z(LX/00x;)Ljava/lang/Object;
+    0034..0036  move-result-object  v4
+    0036..003a  check-cast  v4, LX/0GO;
+    003a..003e  iget-object  v3, v11, LX/F2D;->A0A:LX/1dW;
+    003e..0042  iget-wide  v0, v11, LX/F2D;->A05:J
+    0042..0046  const/16  v5, #0x45
+    0046..004a  new-instance  v6, LX/DwO;
+    004a..0050  invoke-direct  {v6, v3, v5, v0, v1}, LX/18U;-><init>(LX/1dW;IJ)V
+    0050..0056  invoke-static  {v2}, LX/DBc;->A0v(LX/DiW;)LX/DiN;
+    0056..0058  move-result-object  v0
+    0058..005c  iget-object  v8, v0, LX/DiN;->mediaNotifyMessage_:LX/Dd7;
+    005c..0060  if-nez  v8, +0x4
+    0060..0064  sget-object  v8, LX/Dd7;->DEFAULT_INSTANCE:LX/Dd7;
+    0064..0068  iget-object  v0, v8, LX/Dd7;->expressPathUrl_:Ljava/lang/String;
+    0068..006e  invoke-static  {v0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+    006e..0070  move-result  v0
+    0070..0074  if-eqz  v0, +0xd
+    0074..0078  iget-object  v1, v10, LX/FPY;->A01:LX/08Y;
+    0078..007c  const/16  v0, #0x5034
+    007c..0082  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    0082..0084  move-result  v0
+    0084..0086  const/4  v2, #0x1
+    0086..008a  if-nez  v0, +0x3
+    008a..008c  const/4  v2, #0x0
+    008c..0090  iget  v0, v8, LX/Dd7;->bitField0_:I
+    0090..0094  and-int/lit8  v0, v0, #0x1
+    0094..0098  if-eqz  v0, +0xc
+    0098..009c  iget-object  v1, v8, LX/Dd7;->expressPathUrl_:Ljava/lang/String;
+    009c..00a0  iget-object  v0, v10, LX/FPY;->A01:LX/08Y;
+    00a0..00a6  invoke-static  {v0, v4, v3, v1}, LX/2Ae;->A00(LX/08Y;LX/0GO;LX/1dW;Ljava/lang/String;)Z
+    00a6..00a8  move-result  v0
+    00a8..00ac  if-nez  v0, +0xb
+    00ac..00b0  if-nez  v2, +0x9
+    00b0..00b4  const/16  v0, #0xf
+    00b4..00ba  invoke-static  {v0}, LX/Dxp;->A04(I)LX/Dxp;
+    00ba..00bc  move-result-object  v0
+    00bc..00be  throw  v0
+    00be..00c2  iget-object  v0, v8, LX/Dd7;->expressPathUrl_:Ljava/lang/String;
+    00c2..00c6  iput-object  v0, v6, LX/DwO;->A03:Ljava/lang/String;
+    00c6..00ca  iget  v7, v8, LX/Dd7;->bitField0_:I
+    00ca..00ce  and-int/lit8  v0, v7, #0x4
+    00ce..00d2  if-eqz  v0, +0x2d
+    00d2..00d6  iget-wide  v4, v8, LX/Dd7;->fileLength_:J
+    00d6..00da  const-wide/16  v1, #0x0
+    00da..00de  cmp-long  v0, v4, v1
+    00de..00e2  if-ltz  v0, +0x25
+    00e2..00e6  iput-wide  v4, v6, LX/DwO;->A00:J
+    00e6..00ea  and-int/lit8  v0, v7, #0x2
+    00ea..00ee  if-eqz  v0, +0xea
+    00ee..00f2  iget-object  v0, v8, LX/Dd7;->fileEncSha256_:Lcom/google/protobuf/ByteString;
+    00f2..00f8  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    00f8..00fa  move-result-object  v7
+    00fa..00fc  array-length  v1, v7
+    00fc..0100  const/16  v0, #0x20
+    0100..0104  if-eq  v1, v0, +0xd9
+    0104..0108  const-string  v0, "FMessageMediaExpessPathNotify/bogus sha-256 enc hash received; length="
+    0108..010e  invoke-static  {v1, v0}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    010e..0110  move-result-object  v1
+    0110..0114  const-string  v0, "; message.key="
+    0114..011a  invoke-static  {v3, v0, v1}, LX/6ok;->A16(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    011a..011e  const/16  v0, #0xe
+    011e..0124  invoke-static  {v0}, LX/Dxp;->A04(I)LX/Dxp;
+    0124..0126  move-result-object  v0
+    0126..0128  throw  v0
+    0128..012c  const-string  v0, "FMessageMediaExpessPathNotify/bogus media size received; file_length="
+    012c..0132  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0132..0134  move-result-object  v2
+    0134..0138  iget-wide  v0, v8, LX/Dd7;->fileLength_:J
+    0138..013e  invoke-virtual  {v2, v0, v1}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    013e..0144  invoke-static  {v2}, LX/DBb;->A15(Ljava/lang/Object;)V
+    0144..014a  invoke-static  {}, LX/Dxp;->A01()LX/Dxp;
+    014a..014c  move-result-object  v0
+    014c..014e  throw  v0
+    014e..0152  const/16  v0, #0xb
+    0152..0158  invoke-static  {v0}, LX/Dxp;->A04(I)LX/Dxp;
+    0158..015a  move-result-object  v0
+    015a..015c  throw  v0
+    015c..0160  iget  v0, v2, LX/DiW;->bitField0_:I
+    0160..0164  and-int/lit8  v0, v0, #0x40
+    0164..016a  invoke-static  {v0}, LX/2L9;->A1M(I)Z
+    016a..016c  move-result  v0
+    016c..0170  if-eqz  v0, +0xb9
+    0170..0174  iget-object  v1, v11, LX/F2D;->A0P:Ljava/lang/String;
+    0174..0178  const-string  v0, "medianotify"
+    0178..017e  invoke-virtual  {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    017e..0180  move-result  v0
+    0180..0184  if-eqz  v0, +0xaf
+    0184..0188  iget-object  v0, v10, LX/FPY;->A00:LX/00x;
+    0188..018e  invoke-static  {v0}, LX/B22;->A0Z(LX/00x;)Ljava/lang/Object;
+    018e..0190  move-result-object  v3
+    0190..0194  check-cast  v3, LX/0GO;
+    0194..0198  iget-object  v7, v2, LX/DiW;->documentMessage_:LX/Di0;
+    0198..019c  if-nez  v7, +0x4
+    019c..01a0  sget-object  v7, LX/Di0;->DEFAULT_INSTANCE:LX/Di0;
+    01a0..01a6  invoke-static  {v7}, LX/00L;->A05(Ljava/lang/Object;)V
+    01a6..01aa  iget-object  v4, v11, LX/F2D;->A0A:LX/1dW;
+    01aa..01ae  iget-wide  v0, v11, LX/F2D;->A05:J
+    01ae..01b2  const/16  v2, #0x45
+    01b2..01b6  new-instance  v6, LX/DwO;
+    01b6..01bc  invoke-direct  {v6, v4, v2, v0, v1}, LX/18U;-><init>(LX/1dW;IJ)V
+    01bc..01c0  iget-object  v0, v7, LX/Di0;->url_:Ljava/lang/String;
+    01c0..01c6  invoke-static  {v0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+    01c6..01c8  move-result  v0
+    01c8..01cc  if-eqz  v0, +0xd
+    01cc..01d0  iget-object  v1, v10, LX/FPY;->A01:LX/08Y;
+    01d0..01d4  const/16  v0, #0x5034
+    01d4..01da  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    01da..01dc  move-result  v0
+    01dc..01de  const/4  v2, #0x1
+    01de..01e2  if-nez  v0, +0x3
+    01e2..01e4  const/4  v2, #0x0
+    01e4..01e8  iget  v0, v7, LX/Di0;->bitField0_:I
+    01e8..01ec  and-int/lit8  v0, v0, #0x1
+    01ec..01f0  if-eqz  v0, +0xc
+    01f0..01f4  iget-object  v1, v7, LX/Di0;->url_:Ljava/lang/String;
+    01f4..01f8  iget-object  v0, v10, LX/FPY;->A01:LX/08Y;
+    01f8..01fe  invoke-static  {v0, v3, v4, v1}, LX/2Ae;->A00(LX/08Y;LX/0GO;LX/1dW;Ljava/lang/String;)Z
+    01fe..0200  move-result  v0
+    0200..0204  if-nez  v0, +0xb
+    0204..0208  if-nez  v2, +0x9
+    0208..020c  const/16  v0, #0xf
+    020c..0212  invoke-static  {v0}, LX/Dxp;->A04(I)LX/Dxp;
+    0212..0214  move-result-object  v0
+    0214..0216  throw  v0
+    0216..021a  iget-object  v0, v7, LX/Di0;->url_:Ljava/lang/String;
+    021a..021e  iput-object  v0, v6, LX/DwO;->A03:Ljava/lang/String;
+    021e..0222  iget  v3, v7, LX/Di0;->bitField0_:I
+    0222..0226  and-int/lit8  v0, v3, #0x10
+    0226..022a  if-eqz  v0, +0x57
+    022a..022e  iget-wide  v1, v7, LX/Di0;->fileLength_:J
+    022e..0232  const-wide/16  v8, #0x0
+    0232..0236  cmp-long  v0, v1, v8
+    0236..023a  if-ltz  v0, +0x4f
+    023a..023e  iput-wide  v1, v6, LX/DwO;->A00:J
+    023e..0242  and-int/lit8  v0, v3, #0x8
+    0242..0248  invoke-static  {v0}, LX/2L9;->A1M(I)Z
+    0248..024a  move-result  v0
+    024a..024e  const/16  v5, #0xe
+    024e..0252  const-string  v3, "; message.key="
+    0252..0256  const/16  v2, #0x20
+    0256..025a  if-eqz  v0, +0x11
+    025a..025e  iget-object  v0, v7, LX/Di0;->fileSha256_:Lcom/google/protobuf/ByteString;
+    025e..0264  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    0264..0266  move-result-object  v0
+    0266..0268  array-length  v1, v0
+    0268..026c  if-ne  v1, v2, +0x2c
+    026c..0272  invoke-static  {v0}, LX/8t2;->A1D([B)Ljava/lang/String;
+    0272..0274  move-result-object  v0
+    0274..0278  iput-object  v0, v6, LX/DwO;->A02:Ljava/lang/String;
+    0278..027c  iget  v0, v7, LX/Di0;->bitField0_:I
+    027c..0280  and-int/lit16  v0, v0, #0x100
+    0280..0284  if-eqz  v0, +0x1f
+    0284..0288  iget-object  v0, v7, LX/Di0;->fileEncSha256_:Lcom/google/protobuf/ByteString;
+    0288..028e  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    028e..0290  move-result-object  v7
+    0290..0292  array-length  v1, v7
+    0292..0296  if-eq  v1, v2, +0x10
+    0296..029a  const-string  v0, "FMessageMediaExpessPathNotify/bogus sha-256 enc hash received; length="
+    029a..02a0  invoke-static  {v1, v0}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    02a0..02a2  move-result-object  v0
+    02a2..02a8  invoke-static  {v4, v3, v0}, LX/6ok;->A16(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    02a8..02ae  invoke-static  {v5}, LX/Dxp;->A04(I)LX/Dxp;
+    02ae..02b0  move-result-object  v0
+    02b0..02b2  throw  v0
+    02b2..02b8  invoke-static  {v7}, LX/8t2;->A1D([B)Ljava/lang/String;
+    02b8..02ba  move-result-object  v0
+    02ba..02be  iput-object  v0, v6, LX/DwO;->A01:Ljava/lang/String;
+    02be..02c0  return-object  v6
+    02c0..02c4  const-string  v0, "FMessageMediaExpessPathNotify/bogus sha-256 hash received; length="
+    02c4..02ca  invoke-static  {v4, v0, v3, v1}, LX/DBi;->A0l(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;I)V
+    02ca..02d0  invoke-static  {v5}, LX/Dxp;->A04(I)LX/Dxp;
+    02d0..02d2  move-result-object  v0
+    02d2..02d4  throw  v0
+    02d4..02da  invoke-static  {}, LX/Dxp;->A01()LX/Dxp;
+    02da..02dc  move-result-object  v0
+    02dc..02de  throw  v0
+    02de..02e0  const/4  v6, #0x0
+    02e0..02e2  return-object  v6
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,38 @@
+{
+  "README.md": {
+    "bytes": 6602,
+    "sha256": "c4b207cf2da26e39f5645aebf9bb7a22afee2d9adb6a157cb5d1a76ede06f9e8"
+  },
+  "alternate-converter.txt": {
+    "bytes": 16362,
+    "sha256": "6f03e871efe156d0221d79f46471b7533723042359cb3a421bf185dab23d4e75"
+  },
+  "candidate-medianotify-converter.txt": {
+    "bytes": 10155,
+    "sha256": "1e1f2d0993adfa5c1cc96ab9d1afcb58f08713df05ca12d4341317d6b5b0fe33"
+  },
+  "document-converter.txt": {
+    "bytes": 2260,
+    "sha256": "b93a805b4ac6fb4a5a85c7a7a7cb938e5e576c055e3dc8c8b4716377eedeffdd"
+  },
+  "document-descriptor.txt": {
+    "bytes": 5743,
+    "sha256": "98bc91fa0a0436e6d3368ba2dc9542a98f2498b436ddc53c117cf1cacf9c1297"
+  },
+  "document-fields.txt": {
+    "bytes": 479,
+    "sha256": "f20846436b2b60b50a6c0194b19df9b90eceef8e9cba97d16b78d0e41b130666"
+  },
+  "document-projector.txt": {
+    "bytes": 13899,
+    "sha256": "9cb44d3ff9cd496ce5b2768537bc94f5b3798702fd616317e55b391f391485e4"
+  },
+  "encrypted-hash-refs.txt": {
+    "bytes": 790,
+    "sha256": "7f85f37a7f9be116edbfe6ab8d36fc8d701458812d153e450a4f916914bd506e"
+  },
+  "projector-callers.txt": {
+    "bytes": 273,
+    "sha256": "514decfc35ae90a3275125abba607ffecfc74dc2c7b53879c27402fe45b58a25"
+  }
+}

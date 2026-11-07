@@ -126,3 +126,12 @@ No prior send ID was changed or acknowledged send repeated. The built CLI also
 refused a synthetic media-save invocation without live opt-in before accessing
 config, store or output. Current notification/account-sync and identity-input
 integration work remains open; the goal is not complete.
+
+## Current-build ingress comparison (2026-11-06)
+
+Pinned2.26.43.72 Di0/Eel confirms the core tags and ordinary converter/hash chain.
+The native selected parser permits zero length, unlike Rust's local nonempty
+admission/crypto limits; full empty-file transfer parity remains unverified.
+Document MIME is stored without an audio-style allowlist in this selected method,
+so Rust's export token/size bounds remain local policy. No runtime behavior changed.
+[Current evidence and precise limits](apk/2.26.43.72-media-document-ingress/README.md).

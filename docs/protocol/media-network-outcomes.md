@@ -1509,3 +1509,23 @@ after cache removal/reopen without a new reservation. Uncached bad fixtures have
 an unapproved-host backstop; no live HTTP exchange is involved. Full native
 update/error/ACK behavior, URL/range handling and provider/output ownership remain
 open; no server acceptance or restriction-cause claim is made.
+
+## Pinned current document ingress (2026-11-06)
+
+**Confirmed selected static / research only:** Di0/Eel core document tags and
+selected32-byte hash guards agree with Rust. FOt's ordinary document branch calls
+Eel.A01 and excludes medianotify; other hash-reader/converter contexts are retained
+separately rather than treated as equivalent ingress.
+
+Eel permits zero fileLength at its selected parser check (`if-ltz`); Rust's
+Descriptor and shared crypto verifier both require nonempty content. This is a
+known leaf-policy difference/local limit, not verified native empty-file transfer
+success. Eel also stores document MIME without the selected audio-style allowlist;
+Rust's bounded token/export policy remains local. Title, caption and filename have
+separate native fields/setters and Rust's explicit output path is unchanged.
+
+[Complete descriptor/projector/converters, exact censuses and limits](apk/2.26.43.72-media-document-ingress/README.md)
+retain the zero-length/metadata/context boundaries. Full wrapper/update/empty-file
+crypto/URL/range behavior and live interoperability remain unknown. Runtime code
+changes are provenance comments only; no automatic request, retry, status
+relaxation or account operation was added.

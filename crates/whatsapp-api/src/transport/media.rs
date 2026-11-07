@@ -119,6 +119,9 @@ struct Video {
 }
 // APK 37.71 BZB.dynamicMethod 011e..012c, with Ayp.A1K name helper:
 // DocumentMessage tags differ from image/video; caption=20, fileName=8.
+// Pinned43.72 Di0/Eel confirms the core tags; native parser permits zero size.
+// Nonempty admission/crypto remain local limits; see
+// docs/protocol/apk/2.26.43.72-media-document-ingress.
 #[derive(Message)]
 struct Document {
     #[prost(string, tag = "1")]

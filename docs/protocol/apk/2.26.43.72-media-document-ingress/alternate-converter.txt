@@ -1,0 +1,332 @@
+
+# class: LX/FPq;
+# extends: Ljava/lang/Object;
+
+.method public CR7(LL)  # .registers 22
+    # full signature: LX/FPq;->CR7(LX/F2D;)LX/18U;
+    0000..0004  move-object/from16  v1, v21
+    0004..000a  invoke-static  {v1}, LX/F2D;->A02(LX/F2D;)LX/DiW;
+    000a..000c  move-result-object  v2
+    000c..0012  invoke-virtual  {v2}, LX/DiW;->A0G()Z
+    0012..0014  move-result  v0
+    0014..0018  if-nez  v0, +0x4
+    0018..001a  const/4  v0, #0x0
+    001a..001c  return-object  v0
+    001c..0020  iget-object  v2, v2, LX/DiW;->templateMessage_:LX/DiS;
+    0020..0024  if-nez  v2, +0x4
+    0024..0028  sget-object  v2, LX/DiS;->DEFAULT_INSTANCE:LX/DiS;
+    0028..002e  invoke-static  {v2}, LX/00l;->A08(Ljava/lang/Object;)V
+    002e..0032  move-object/from16  v6, v20
+    0032..0036  instance-of  v0, v6, LX/E3v;
+    0036..003a  if-eqz  v0, +0x7a
+    003a..003e  check-cast  v6, LX/E3v;
+    003e..0044  invoke-static  {v1, v2}, LX/00l;->A0A(Ljava/lang/Object;Ljava/lang/Object;)V
+    0044..004a  invoke-static  {v2}, LX/F2S;->A04(LX/DiS;)Z
+    004a..004c  move-result  v0
+    004c..0050  if-eqz  v0, +0x24f
+    0050..0056  invoke-static  {v2}, LX/F2S;->A01(LX/DiS;)LX/DiM;
+    0056..0058  move-result-object  v7
+    0058..005c  iget-boolean  v0, v7, LX/DiM;->gifPlayback_:Z
+    005c..0060  if-nez  v0, +0x247
+    0060..0064  iget-object  v5, v1, LX/F2D;->A0A:LX/1dW;
+    0064..0068  iget-wide  v3, v1, LX/F2D;->A05:J
+    0068..006c  const/16  v0, #0x1c
+    006c..0070  new-instance  v15, LX/BUb;
+    0070..0076  invoke-direct  {v15, v5, v0, v3, v4}, LX/9JU;-><init>(LX/1dW;IJ)V
+    0076..007a  iget-object  v0, v6, LX/E3v;->A00:LX/F1B;
+    007a..0080  invoke-static  {v15, v0, v1, v7}, LX/F2D;->A03(LX/9JX;LX/F1B;LX/F2D;LX/DiM;)V
+    0080..0084  instance-of  v0, v15, LX/1g1;
+    0084..0088  if-eqz  v0, +0x4b
+    0088..008a  move-object  v3, v15
+    008a..008e  check-cast  v3, LX/1g1;
+    008e..0094  invoke-static  {v3, v2}, LX/2LA;->A17(Ljava/lang/Object;Ljava/lang/Object;)V
+    0094..0098  iget  v0, v2, LX/DiS;->bitField0_:I
+    0098..009c  and-int/lit8  v0, v0, #0x2
+    009c..00a0  if-eqz  v0, +0x42
+    00a0..00a6  invoke-static  {v2}, LX/DBd;->A0y(LX/DiS;)LX/DgY;
+    00a6..00a8  move-result-object  v4
+    00a8..00ac  iget-object  v6, v4, LX/DgY;->hydratedContentText_:Ljava/lang/String;
+    00ac..00b0  iget  v0, v4, LX/DgY;->bitField0_:I
+    00b0..00b4  and-int/lit8  v0, v0, #0x2
+    00b4..00ba  invoke-static  {v0}, LX/2L9;->A1M(I)Z
+    00ba..00bc  move-result  v0
+    00bc..00be  const/4  v12, #0x0
+    00be..00c2  if-eqz  v0, +0x2f
+    00c2..00c6  iget-object  v7, v4, LX/DgY;->hydratedFooterText_:Ljava/lang/String;
+    00c6..00ca  iget-object  v8, v4, LX/DgY;->templateId_:Ljava/lang/String;
+    00ca..00d0  invoke-static  {v4}, LX/F2S;->A03(LX/DgY;)Ljava/util/ArrayList;
+    00d0..00d2  move-result-object  v2
+    00d2..00d6  iget  v0, v4, LX/DgY;->bitField0_:I
+    00d6..00da  and-int/lit8  v0, v0, #0x8
+    00da..00de  if-eqz  v0, +0x7
+    00de..00e2  iget-boolean  v0, v4, LX/DgY;->maskLinkedDevices_:Z
+    00e2..00e4  const/4  v14, #0x1
+    00e4..00e8  if-nez  v0, +0x3
+    00e8..00ea  const/4  v14, #0x0
+    00ea..00f0  invoke-static  {v6}, LX/00l;->A08(Ljava/lang/Object;)V
+    00f0..00f4  if-eqz  v2, +0x6
+    00f4..00fa  invoke-static  {v2}, LX/07Z;->A1H(Ljava/lang/Iterable;)Ljava/util/List;
+    00fa..00fc  move-result-object  v12
+    00fc..0100  iget-object  v9, v1, LX/F2D;->A0L:Ljava/lang/String;
+    0100..0104  iget-object  v10, v1, LX/F2D;->A0M:Ljava/lang/String;
+    0104..0106  const/4  v5, #0x0
+    0106..010a  new-instance  v4, LX/EoN;
+    010a..010c  move-object  v13, v5
+    010c..010e  move-object  v11, v5
+    010e..0114  invoke-direct/range  {v4..v14}, LX/EoN;-><init>(Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Z)V
+    0114..011a  invoke-interface  {v3, v4}, LX/1g1;->Ck4(LX/EoN;)V
+    011a..011c  return-object  v15
+    011c..011e  move-object  v7, v12
+    011e..0120  goto  -0x2c
+    0120..0126  invoke-virtual  {v2}, LX/DiS;->A02()LX/DgY;
+    0126..0128  move-result-object  v4
+    0128..012a  goto  -0x40
+    012a..012e  instance-of  v0, v6, LX/E3u;
+    012e..0132  if-eqz  v0, +0x5b
+    0132..0136  check-cast  v6, LX/E3u;
+    0136..013c  invoke-static  {v1, v2}, LX/2LA;->A1Z(Ljava/lang/Object;Ljava/lang/Object;)Z
+    013c..013e  move-result  v3
+    013e..0142  iget  v0, v2, LX/DiS;->formatCase_:I
+    0142..0146  if-ne  v0, v3, +0x46
+    0146..014c  invoke-virtual  {v2}, LX/DiS;->A01()LX/Dfi;
+    014c..014e  move-result-object  v0
+    014e..0152  iget  v0, v0, LX/Dfi;->titleCase_:I
+    0152..0158  invoke-static  {v0}, LX/DBi;->A0D(I)Ljava/lang/Integer;
+    0158..015a  move-result-object  v0
+    015a..015e  sget-object  v3, LX/02X;->A0Y:Ljava/lang/Integer;
+    015e..0162  if-ne  v0, v3, +0x1c6
+    0162..0166  iget-object  v0, v1, LX/F2D;->A0A:LX/1dW;
+    0166..016a  iget-wide  v3, v1, LX/F2D;->A05:J
+    016a..016e  new-instance  v15, LX/BUk;
+    016e..0174  invoke-direct  {v15, v0, v3, v4}, LX/BUk;-><init>(LX/1dW;J)V
+    0174..0178  iget-object  v5, v6, LX/E3u;->A00:LX/Eem;
+    0178..017c  iget  v3, v2, LX/DiS;->formatCase_:I
+    017c..017e  const/4  v0, #0x1
+    017e..0182  if-ne  v3, v0, +0x19
+    0182..0188  invoke-virtual  {v2}, LX/DiS;->A01()LX/Dfi;
+    0188..018a  move-result-object  v4
+    018a..018e  iget  v3, v4, LX/Dfi;->titleCase_:I
+    018e..0190  const/4  v0, #0x5
+    0190..0194  if-ne  v3, v0, +0x1c
+    0194..0198  iget-object  v3, v4, LX/Dfi;->title_:Ljava/lang/Object;
+    0198..019c  check-cast  v3, LX/DhQ;
+    019c..01a2  invoke-static  {v3}, LX/00l;->A08(Ljava/lang/Object;)V
+    01a2..01a6  iget-boolean  v0, v1, LX/F2D;->A0X:Z
+    01a6..01ac  invoke-virtual  {v5, v15, v3, v0}, LX/Eem;->A01(LX/J9y;LX/DhQ;Z)V
+    01ac..01b0  goto/16  -0x96
+    01b0..01b6  invoke-static  {v2}, LX/DBd;->A0y(LX/DiS;)LX/DgY;
+    01b6..01b8  move-result-object  v4
+    01b8..01bc  iget  v3, v4, LX/DgY;->titleCase_:I
+    01bc..01be  const/4  v0, #0x5
+    01be..01c2  if-ne  v3, v0, +0x5
+    01c2..01c6  iget-object  v3, v4, LX/DgY;->title_:Ljava/lang/Object;
+    01c6..01c8  goto  -0x17
+    01c8..01cc  sget-object  v3, LX/DhQ;->DEFAULT_INSTANCE:LX/DhQ;
+    01cc..01ce  goto  -0x18
+    01ce..01d4  invoke-static  {v2}, LX/DBd;->A0y(LX/DiS;)LX/DgY;
+    01d4..01d6  move-result-object  v0
+    01d6..01da  iget  v0, v0, LX/DgY;->titleCase_:I
+    01da..01e0  invoke-static  {v0}, LX/DBi;->A0D(I)Ljava/lang/Integer;
+    01e0..01e2  move-result-object  v0
+    01e2..01e4  goto  -0x44
+    01e4..01e8  instance-of  v0, v6, LX/E3t;
+    01e8..01ec  if-eqz  v0, +0x69
+    01ec..01f0  check-cast  v6, LX/E3t;
+    01f0..01f6  invoke-static  {v1, v2}, LX/2LA;->A1Z(Ljava/lang/Object;Ljava/lang/Object;)Z
+    01f6..01f8  move-result  v3
+    01f8..01fc  iget  v0, v2, LX/DiS;->formatCase_:I
+    01fc..0200  if-ne  v0, v3, +0x54
+    0200..0206  invoke-virtual  {v2}, LX/DiS;->A01()LX/Dfi;
+    0206..0208  move-result-object  v0
+    0208..020c  iget  v0, v0, LX/Dfi;->titleCase_:I
+    020c..0212  invoke-static  {v0}, LX/DBi;->A0D(I)Ljava/lang/Integer;
+    0212..0214  move-result-object  v0
+    0214..0218  sget-object  v3, LX/02X;->A0C:Ljava/lang/Integer;
+    0218..021c  if-ne  v0, v3, +0x169
+    021c..0220  iget-object  v5, v1, LX/F2D;->A0A:LX/1dW;
+    0220..0224  iget-wide  v3, v1, LX/F2D;->A05:J
+    0224..0228  const/16  v0, #0x19
+    0228..022c  new-instance  v15, LX/BUZ;
+    022c..0232  invoke-direct  {v15, v5, v0, v3, v4}, LX/1g4;-><init>(LX/1dW;IJ)V
+    0232..0236  iget-object  v14, v6, LX/E3t;->A00:LX/EwA;
+    0236..023a  iget  v3, v2, LX/DiS;->formatCase_:I
+    023a..023c  const/4  v0, #0x1
+    023c..0240  if-ne  v3, v0, +0x25
+    0240..0246  invoke-virtual  {v2}, LX/DiS;->A01()LX/Dfi;
+    0246..0248  move-result-object  v4
+    0248..024c  iget  v3, v4, LX/Dfi;->titleCase_:I
+    024c..024e  const/4  v0, #0x3
+    024e..0252  if-ne  v3, v0, +0x28
+    0252..0256  iget-object  v4, v4, LX/Dfi;->title_:Ljava/lang/Object;
+    0256..025a  check-cast  v4, LX/DiL;
+    025a..0260  invoke-static  {v4}, LX/00l;->A08(Ljava/lang/Object;)V
+    0260..0266  invoke-virtual  {v1}, LX/F2D;->A06()Z
+    0266..0268  move-result  v18
+    0268..026c  iget-boolean  v3, v1, LX/F2D;->A0X:Z
+    026c..0270  iget  v0, v15, LX/18U;->A00:I
+    0270..0274  move/from16  v19, v3
+    0274..0278  move-object/from16  v16, v4
+    0278..027c  move/from16  v17, v0
+    027c..0282  invoke-virtual/range  {v14..v19}, LX/EwA;->A03(LX/1g2;LX/DiL;IZZ)V
+    0282..0286  goto/16  -0x101
+    0286..028c  invoke-static  {v2}, LX/DBd;->A0y(LX/DiS;)LX/DgY;
+    028c..028e  move-result-object  v4
+    028e..0292  iget  v3, v4, LX/DgY;->titleCase_:I
+    0292..0294  const/4  v0, #0x3
+    0294..0298  if-ne  v3, v0, +0x5
+    0298..029c  iget-object  v4, v4, LX/DgY;->title_:Ljava/lang/Object;
+    029c..029e  goto  -0x23
+    029e..02a2  sget-object  v4, LX/DiL;->DEFAULT_INSTANCE:LX/DiL;
+    02a2..02a4  goto  -0x24
+    02a4..02aa  invoke-static  {v2}, LX/DBd;->A0y(LX/DiS;)LX/DgY;
+    02aa..02ac  move-result-object  v0
+    02ac..02b0  iget  v0, v0, LX/DgY;->titleCase_:I
+    02b0..02b6  invoke-static  {v0}, LX/DBi;->A0D(I)Ljava/lang/Integer;
+    02b6..02b8  move-result-object  v0
+    02b8..02ba  goto  -0x52
+    02ba..02be  instance-of  v0, v6, LX/E3s;
+    02be..02c2  if-eqz  v0, +0x72
+    02c2..02c8  invoke-static  {v1, v2}, LX/2LA;->A1Z(Ljava/lang/Object;Ljava/lang/Object;)Z
+    02c8..02ca  move-result  v5
+    02ca..02ce  iget  v4, v2, LX/DiS;->formatCase_:I
+    02ce..02d2  if-ne  v4, v5, +0x33
+    02d2..02d8  invoke-virtual  {v2}, LX/DiS;->A01()LX/Dfi;
+    02d8..02da  move-result-object  v0
+    02da..02de  iget  v0, v0, LX/Dfi;->titleCase_:I
+    02de..02e4  invoke-static  {v0}, LX/DBi;->A0D(I)Ljava/lang/Integer;
+    02e4..02e6  move-result-object  v0
+    02e6..02ea  sget-object  v3, LX/02X;->A01:Ljava/lang/Integer;
+    02ea..02ee  if-eq  v0, v3, +0x3
+    02ee..02f0  const/4  v5, #0x0
+    02f0..02f2  const/4  v3, #0x0
+    02f2..02f6  if-nez  v5, +0x2c
+    02f6..02f8  const/4  v0, #0x1
+    02f8..02fc  if-ne  v4, v0, +0x13
+    02fc..0302  invoke-virtual  {v2}, LX/DiS;->A01()LX/Dfi;
+    0302..0304  move-result-object  v0
+    0304..0308  iget  v0, v0, LX/Dfi;->titleCase_:I
+    0308..030e  invoke-static  {v0}, LX/DBi;->A0D(I)Ljava/lang/Integer;
+    030e..0310  move-result-object  v0
+    0310..0314  sget-object  v4, LX/02X;->A0j:Ljava/lang/Integer;
+    0314..0318  if-eq  v0, v4, +0x1b
+    0318..031a  move-object  v15, v3
+    031a..031e  goto/16  -0x14d
+    031e..0324  invoke-static  {v2}, LX/DBd;->A0y(LX/DiS;)LX/DgY;
+    0324..0326  move-result-object  v0
+    0326..032a  iget  v0, v0, LX/DgY;->titleCase_:I
+    032a..0330  invoke-static  {v0}, LX/DBi;->A0D(I)Ljava/lang/Integer;
+    0330..0332  move-result-object  v0
+    0332..0334  goto  -0x11
+    0334..033a  invoke-static  {v2}, LX/DBd;->A0y(LX/DiS;)LX/DgY;
+    033a..033c  move-result-object  v0
+    033c..0340  iget  v0, v0, LX/DgY;->titleCase_:I
+    0340..0346  invoke-static  {v0}, LX/DBi;->A0D(I)Ljava/lang/Integer;
+    0346..0348  move-result-object  v0
+    0348..034a  goto  -0x31
+    034a..034e  iget-object  v6, v1, LX/F2D;->A0A:LX/1dW;
+    034e..0352  iget-wide  v4, v1, LX/F2D;->A05:J
+    0352..0356  const/16  v0, #0x1b
+    0356..035a  new-instance  v15, LX/BUg;
+    035a..0360  invoke-direct  {v15, v6, v0, v4, v5}, LX/1e2;-><init>(LX/1dW;IJ)V
+    0360..0364  iget  v0, v2, LX/DiS;->bitField0_:I
+    0364..0368  and-int/lit8  v0, v0, #0x2
+    0368..036c  if-eqz  v0, +0x18
+    036c..0370  iget-object  v5, v2, LX/DiS;->hydratedTemplate_:LX/DgY;
+    0370..0374  if-nez  v5, +0x6
+    0374..0378  sget-object  v5, LX/DgY;->DEFAULT_INSTANCE:LX/DgY;
+    0378..037c  if-eqz  v5, -0x17c
+    037c..0380  iget  v4, v5, LX/DgY;->titleCase_:I
+    0380..0382  const/4  v0, #0x2
+    0382..0386  if-ne  v4, v0, +0x6
+    0386..038a  iget-object  v3, v5, LX/DgY;->title_:Ljava/lang/Object;
+    038a..038e  check-cast  v3, Ljava/lang/String;
+    038e..0394  invoke-virtual  {v15, v3}, LX/18U;->A0p(Ljava/lang/String;)V
+    0394..0398  goto/16  -0x18a
+    0398..039e  invoke-virtual  {v2}, LX/DiS;->A02()LX/DgY;
+    039e..03a0  move-result-object  v5
+    03a0..03a2  goto  -0x14
+    03a2..03a6  instance-of  v0, v6, LX/E3r;
+    03a6..03aa  if-eqz  v0, +0x3c
+    03aa..03ae  check-cast  v6, LX/E3r;
+    03ae..03b4  invoke-static  {v1, v2}, LX/00l;->A0A(Ljava/lang/Object;Ljava/lang/Object;)V
+    03b4..03ba  invoke-static  {v2}, LX/F2S;->A04(LX/DiS;)Z
+    03ba..03bc  move-result  v0
+    03bc..03c0  if-eqz  v0, +0x97
+    03c0..03c6  invoke-static  {v2}, LX/F2S;->A01(LX/DiS;)LX/DiM;
+    03c6..03c8  move-result-object  v7
+    03c8..03cc  iget-boolean  v0, v7, LX/DiM;->gifPlayback_:Z
+    03cc..03d0  if-eqz  v0, +0x8f
+    03d0..03d4  iget-object  v5, v1, LX/F2D;->A0A:LX/1dW;
+    03d4..03d8  iget-wide  v3, v1, LX/F2D;->A05:J
+    03d8..03dc  const/16  v0, #0x1d
+    03dc..03e0  new-instance  v15, LX/BUY;
+    03e0..03e6  invoke-direct  {v15, v5, v0, v3, v4}, LX/9JX;-><init>(LX/1dW;IJ)V
+    03e6..03ea  iget-object  v14, v6, LX/E3r;->A00:LX/F1B;
+    03ea..03f0  invoke-virtual  {v1}, LX/F2D;->A06()Z
+    03f0..03f2  move-result  v18
+    03f2..03f6  iget-boolean  v3, v1, LX/F2D;->A0X:Z
+    03f6..03fa  iget  v0, v15, LX/18U;->A00:I
+    03fa..03fe  move/from16  v19, v3
+    03fe..0402  move-object/from16  v16, v7
+    0402..0406  move/from16  v17, v0
+    0406..040c  invoke-virtual/range  {v14..v19}, LX/F1B;->A05(LX/9JX;LX/DiM;IZZ)V
+    040c..0410  iget  v3, v15, LX/18U;->A00:I
+    0410..0414  iget-boolean  v0, v1, LX/F2D;->A0W:Z
+    0414..041a  invoke-static  {v15, v7, v3, v0}, LX/FOu;->A01(LX/9JT;LX/DiM;IZ)V
+    041a..041e  goto/16  -0x1cd
+    041e..0422  check-cast  v6, LX/E3q;
+    0422..0428  invoke-static  {v1, v2}, LX/2LA;->A1Z(Ljava/lang/Object;Ljava/lang/Object;)Z
+    0428..042a  move-result  v3
+    042a..042e  iget  v0, v2, LX/DiS;->formatCase_:I
+    042e..0432  if-ne  v0, v3, +0x53
+    0432..0438  invoke-virtual  {v2}, LX/DiS;->A01()LX/Dfi;
+    0438..043a  move-result-object  v0
+    043a..043e  iget  v0, v0, LX/Dfi;->titleCase_:I
+    043e..0444  invoke-static  {v0}, LX/DBi;->A0D(I)Ljava/lang/Integer;
+    0444..0446  move-result-object  v0
+    0446..044a  sget-object  v3, LX/02X;->A00:Ljava/lang/Integer;
+    044a..044e  if-ne  v0, v3, +0x50
+    044e..0452  iget-object  v5, v1, LX/F2D;->A0A:LX/1dW;
+    0452..0456  iget-wide  v3, v1, LX/F2D;->A05:J
+    0456..045a  const/16  v0, #0x1a
+    045a..045e  new-instance  v15, LX/BUX;
+    045e..0464  invoke-direct  {v15, v5, v0, v3, v4}, LX/1eQ;-><init>(LX/1dW;IJ)V
+    0464..0468  iget-object  v14, v6, LX/E3q;->A00:LX/Eel;
+    0468..046c  iget  v0, v2, LX/DiS;->formatCase_:I
+    046c..046e  const/4  v4, #0x1
+    046e..0472  if-ne  v0, v4, +0x24
+    0472..0478  invoke-virtual  {v2}, LX/DiS;->A01()LX/Dfi;
+    0478..047a  move-result-object  v3
+    047a..047e  iget  v0, v3, LX/Dfi;->titleCase_:I
+    047e..0482  if-ne  v0, v4, +0x28
+    0482..0486  iget-object  v4, v3, LX/Dfi;->title_:Ljava/lang/Object;
+    0486..048a  check-cast  v4, LX/Di0;
+    048a..0490  invoke-static  {v4}, LX/00l;->A08(Ljava/lang/Object;)V
+    0490..0496  invoke-virtual  {v1}, LX/F2D;->A06()Z
+    0496..0498  move-result  v18
+    0498..049c  iget-boolean  v3, v1, LX/F2D;->A0X:Z
+    049c..04a0  iget  v0, v1, LX/F2D;->A00:I
+    04a0..04a4  move/from16  v19, v3
+    04a4..04a8  move-object/from16  v16, v4
+    04a8..04ac  move/from16  v17, v0
+    04ac..04b2  invoke-virtual/range  {v14..v19}, LX/Eel;->A01(LX/9JR;LX/Di0;IZZ)V
+    04b2..04b6  goto/16  -0x219
+    04b6..04bc  invoke-static  {v2}, LX/DBd;->A0y(LX/DiS;)LX/DgY;
+    04bc..04be  move-result-object  v4
+    04be..04c2  iget  v3, v4, LX/DgY;->titleCase_:I
+    04c2..04c4  const/4  v0, #0x1
+    04c4..04c8  if-ne  v3, v0, +0x5
+    04c8..04cc  iget-object  v4, v4, LX/DgY;->title_:Ljava/lang/Object;
+    04cc..04ce  goto  -0x23
+    04ce..04d2  sget-object  v4, LX/Di0;->DEFAULT_INSTANCE:LX/Di0;
+    04d2..04d4  goto  -0x24
+    04d4..04da  invoke-static  {v2}, LX/DBd;->A0y(LX/DiS;)LX/DgY;
+    04da..04dc  move-result-object  v0
+    04dc..04e0  iget  v0, v0, LX/DgY;->titleCase_:I
+    04e0..04e6  invoke-static  {v0}, LX/DBi;->A0D(I)Ljava/lang/Integer;
+    04e6..04e8  move-result-object  v0
+    04e8..04ea  goto  -0x51
+    04ea..04ec  const/4  v15, #0x0
+    04ec..04f0  goto/16  -0x236
+    # exception table: 0 try range(s)
+.end method

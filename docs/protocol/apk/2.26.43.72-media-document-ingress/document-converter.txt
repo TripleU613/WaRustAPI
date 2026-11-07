@@ -1,0 +1,49 @@
+
+# class: LX/FOt;
+# extends: Ljava/lang/Object;
+
+.method public CR7(LL)  # .registers 10
+    # full signature: LX/FOt;->CR7(LX/F2D;)LX/18U;
+    0000..0004  iget-object  v1, v9, LX/F2D;->A0G:LX/DiW;
+    0004..0008  iget  v0, v1, LX/DiW;->bitField0_:I
+    0008..000c  and-int/lit8  v0, v0, #0x40
+    000c..0012  invoke-static  {v0}, LX/2L9;->A1M(I)Z
+    0012..0014  move-result  v0
+    0014..0018  if-eqz  v0, +0x2b
+    0018..001c  const-string  v1, "medianotify"
+    001c..0020  iget-object  v0, v9, LX/F2D;->A0P:Ljava/lang/String;
+    0020..0026  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0026..0028  move-result  v0
+    0028..002c  if-nez  v0, +0x3a
+    002c..0030  iget-object  v0, v9, LX/F2D;->A0G:LX/DiW;
+    0030..0034  iget-object  v4, v0, LX/DiW;->documentMessage_:LX/Di0;
+    0034..0038  if-nez  v4, +0x4
+    0038..003c  sget-object  v4, LX/Di0;->DEFAULT_INSTANCE:LX/Di0;
+    003c..0040  iget-object  v2, v9, LX/F2D;->A0A:LX/1dW;
+    0040..0044  iget-wide  v0, v9, LX/F2D;->A05:J
+    0044..0048  new-instance  v3, LX/9JR;
+    0048..004e  invoke-direct  {v3, v2, v0, v1}, LX/9JR;-><init>(LX/1dW;J)V
+    004e..0052  iget-object  v2, v8, LX/FOt;->A02:LX/Eel;
+    0052..0058  invoke-virtual  {v9}, LX/F2D;->A06()Z
+    0058..005a  move-result  v6
+    005a..005e  iget-boolean  v7, v9, LX/F2D;->A0X:Z
+    005e..0062  iget  v5, v9, LX/F2D;->A00:I
+    0062..0068  invoke-virtual/range  {v2..v7}, LX/Eel;->A01(LX/9JR;LX/Di0;IZZ)V
+    0068..006a  return-object  v3
+    006a..006e  iget  v0, v1, LX/DiW;->bitField1_:I
+    006e..0072  and-int/lit16  v0, v0, #0x200
+    0072..0078  invoke-static  {v0}, LX/2L9;->A1M(I)Z
+    0078..007a  move-result  v0
+    007a..007e  if-eqz  v0, +0x11
+    007e..0082  iget-object  v0, v1, LX/DiW;->documentWithCaptionMessage_:LX/DXv;
+    0082..0086  if-nez  v0, +0x4
+    0086..008a  sget-object  v0, LX/DXv;->DEFAULT_INSTANCE:LX/DXv;
+    008a..0090  invoke-static  {v0}, LX/DBc;->A0x(LX/DXv;)LX/DiW;
+    0090..0092  move-result-object  v0
+    0092..0098  invoke-virtual  {v9, v0}, LX/F2D;->A05(LX/DiW;)LX/F2D;
+    0098..009a  move-result-object  v9
+    009a..009c  goto  -0x37
+    009c..009e  const/4  v3, #0x0
+    009e..00a0  return-object  v3
+    # exception table: 0 try range(s)
+.end method
