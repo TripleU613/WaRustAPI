@@ -299,6 +299,11 @@ fn token_peer(node: &Node, name: &str) -> Option<crate::model::jid::Jid> {
     jid(node, name).filter(|peer| {
         !peer.user.is_empty()
             && matches!(peer.server, Server::User | Server::Lid)
+            // 43.72 10G.A09 requests UserJid; a LID user is constructed
+            // through 0Dx (1..15 ASCII digits, no leading zero). Generic
+            // Jid parsing alone does not establish that native class.
+            && (peer.server != Server::Lid
+                || super::messaging::native_plain_lid_user_valid(&peer.user))
             && peer.agent == 0
             && peer.device == 0
     })
@@ -1102,6 +1107,100 @@ mod tests {
     }
 
     #[test]
+    fn privacy_token_lid_constructor_grammar_precedes_storage_and_ack() {
+        use crate::{
+            binary::AttributeValue,
+            model::{ids::AccountId, jid::Jid},
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        for user in [
+            "letters-private",
+            "0",
+            "01234",
+            "1234567890123456",
+            "１２３",
+            "1",
+            "999999999999999",
+        ] {
+            let valid = matches!(user, "1" | "999999999999999");
+            for field in ["from", "sender_lid"] {
+                for typed in [false, true] {
+                    let dir = tempfile::tempdir().unwrap();
+                    let open = |create| {
+                        ProtocolStore::open(OpenOptions {
+                            path: dir.path().join("lid-grammar.redb"),
+                            account_id: AccountId::new("test").unwrap(),
+                            create,
+                            key_source: std::sync::Arc::new(StaticKeySource::new(
+                                MasterKey::from_bytes([4; 32]),
+                            )),
+                        })
+                        .unwrap()
+                    };
+                    let store = open(true);
+                    store
+                        .write(|tx| {
+                            tx.put_json(Table::PeerIdentities, b"sentinel", 1, &true)?;
+                            tx.put_json(Table::SignalSessions, b"sentinel", 1, &true)
+                        })
+                        .unwrap();
+                    let text = format!("{user}@lid");
+                    let address = if typed {
+                        AttributeValue::from(Jid::parse(&text).unwrap())
+                    } else {
+                        AttributeValue::from(text.as_str())
+                    };
+                    let node = Node::new("notification")
+                        .attr("type", "privacy_token")
+                        .attr("from", "15555550100@s.whatsapp.net")
+                        .attr("id", "fixture")
+                        .attr("t", "20")
+                        .attr(field, address)
+                        .children(vec![Node::new("tokens").children(
+                            vec![Node::new("token").attr("type", "trusted_contact").bytes(vec![1])],
+                        )]);
+                    super::super::inbox::preserve(&store, &node).unwrap();
+                    let snapshot = |store: &ProtocolStore| {
+                        store
+                            .read(|tx| {
+                                Ok([
+                                    tx.scan(Table::Checkpoints, 1, 100)?,
+                                    tx.scan(Table::PeerIdentities, 1, 100)?,
+                                    tx.scan(Table::SignalSessions, 1, 100)?,
+                                ])
+                            })
+                            .unwrap()
+                    };
+                    let before = snapshot(&store);
+                    let head = store.journal_head().unwrap();
+                    if valid {
+                        assert_eq!(record(&store, &node).unwrap(), 1);
+                        assert!(handle(&store, &node).unwrap().is_some());
+                    } else if field == "from" {
+                        assert_eq!(
+                            record(&store, &node).unwrap(),
+                            0,
+                            "invalid LID became token owner"
+                        );
+                        assert!(handle(&store, &node).unwrap().is_none());
+                    } else {
+                        assert!(validate(&node).is_err());
+                        let error = handle(&store, &node).unwrap_err();
+                        assert!(!error.to_string().contains("letters-private"));
+                    }
+                    if !valid {
+                        assert_eq!(snapshot(&store), before);
+                        assert_eq!(store.journal_head().unwrap(), head);
+                    }
+                    let saved = snapshot(&store);
+                    drop(store);
+                    assert_eq!(snapshot(&open(false)), saved);
+                }
+            }
+        }
+    }
+
+    #[test]
     fn mixed_privacy_tokens_commit_supported_entries_and_still_ack_known_type() {
         use crate::{
             model::ids::AccountId,
@@ -1171,6 +1270,9 @@ mod tests {
                     skipped = skipped.attr("t", time);
                 }
                 for unused_alias in [
+                    Some("letters-private@lid"),
+                    Some("01234@lid"),
+                    Some("1234567890123456@lid"),
                     None,
                     Some("1:invalid@lid"),
                     Some("15555550101.1:0@lid"),

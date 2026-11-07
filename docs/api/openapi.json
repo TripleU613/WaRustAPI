@@ -20105,5 +20105,16 @@
     "x-library": [],
     "description": "Pinned selected JAS/JAT status sources and sub400 CDR/400+ BvX callbacks linked to upload result classifier. JAT sets retryable=false; retained opening/proxy chain does not prove native redirects disabled. Effective backend/Tigon enforcement/upstream status provenance and durable completion remain partial. Existing xtask reproduces evidence; no Rust acceptance/retry/route/live change.",
     "evidence": "docs/protocol/apk/2.26.43.72-upload-backend-response/README.md"
+  },
+  "x-privacy-token-lid-constructor-admission": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [
+      "whatsapp_api::transport::notifications::handle",
+      "whatsapp_api::transport::notifications::validate"
+    ],
+    "description": "Shared privacy-token peer admission requires pinned LID constructor grammar (1..15 ASCII digits, no leading zero) for from and consumed sender_lid. Invalid sender retains local skip/no-ACK; consumed invalid alias retains fixed refusal/no-write. Unused aliases on empty/unsupported token lists still permit existing ACK. PN/device/time policies and complete native nullable fallback/base ACK parity unchanged; no route or live operation.",
+    "evidence": "docs/protocol/token-notification-peer.md#lid-constructor-grammar-before-trusted-contact-token-authority"
   }
 }

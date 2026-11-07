@@ -6299,3 +6299,9 @@ evidence, not new APK behavior or proof of full group-send/network parity.
   JAT sets retryable=false; new opening chain leaves native redirect/proxy and
   Tigon enforcement unresolved. No Rust acceptance/retry change. See
   [backend response boundary](media-network-outcomes.md#concrete-backend-response-code-and-retry-boundary).
+
+- Confirmed privacy-token LID constructor admission defect at `78214604`:
+  alphabetic LID wrote a token. Shared peer admission now requires pinned LID
+  grammar before storage/ACK. Text/typed field/boundary/reopen controls preserve
+  capture and invalid state, while unused malformed aliases still ACK for empty/
+  unsupported token lists. See [token authority](token-notification-peer.md#lid-constructor-grammar-before-trusted-contact-token-authority).

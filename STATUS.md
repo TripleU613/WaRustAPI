@@ -10775,3 +10775,9 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   evidence retained; native platform/enforcement and durable completion remain
   separate. No Rust policy/live change. See
   [backend bridge](docs/protocol/media-network-outcomes.md#concrete-backend-response-code-and-retry-boundary).
+
+- Privacy-token LID owners now require pinned constructor grammar before
+  storage/ACK. Invalid text/typed owners and consumed aliases preserve capture/
+  state across reopen; unused invalid aliases still follow existing ACK policy.
+  PN/native blanket ACK parity unchanged; no live operation. See
+  [LID token admission](docs/protocol/token-notification-peer.md#lid-constructor-grammar-before-trusted-contact-token-authority).

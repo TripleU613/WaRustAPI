@@ -155,3 +155,40 @@ not full native malformed-envelope ACK parity. Unknown/empty token lists still
 do not consume sender_lid; regression now includes unused zero-qualified aliases
 that must preserve state and still ACK. Special UserJid families, full parser
 parity and live acceptance remain unverified. No account traffic or query added.
+
+## LID constructor grammar before trusted-contact token authority
+
+2026-11-07. **Confirmed static/local defect, fixed offline**, baseline
+`78214604`. token_peer used generic Jid parsing and could admit alphabetic,
+leading-zero, oversized or Unicode-digit LID users as a trusted-contact token
+owner. The new regression failed with one update where zero was expected for
+letters-private@lid. Pinned43.72
+[10G.A09](apk/2.26.43.72-privacy-token-primary-address/privacy-token-handler.txt)
+requests UserJid for from/sender_lid; the retained
+[factory/0Dx constructor chain](apk/2.26.43.72-login-lid-constructor/README.md)
+requires 1..15 ASCII digits without leading zero for constructed LID users.
+This is a typed constructor boundary, not a new token format or trust rule.
+
+Shared token_peer now reuses native_plain_lid_user_valid for Server::Lid in
+both handle and parse. Invalid from retains the local skip/no-ACK contract;
+a consumed invalid sender_lid retains the local fixed InvalidInput/no-write
+contract. The native nullable alias fallback/base ACK is still separate and
+not claimed fully matched. PN admission, agent/device qualification, binary
+zero-device handling, timestamp ordering and stored-token replacement are
+unchanged. No new alias mapping or identity authority is created.
+
+Text and typed input controls cover both fields, invalid letters/zero/leading
+zero/16-digit/fullwidth users and valid one/15-digit boundaries. Durable capture
+precedes checking checkpoint/pin/session rows and journal; invalid inputs leave
+those snapshots unchanged, including after encrypted reopen. Valid boundaries
+record once and permit existing ACK handling. Unknown/empty token-list controls
+now also include unused invalid LID aliases: they still ACK without consuming
+the alias or mutating token state. Native complete malformed-envelope ACK
+policy and special UserJid families remain outside this correction. No live
+account operation or additional query is performed.
+
+Validation: the pinned handler export and reused constructor/factory bundle
+reproduced byte-for-byte. Full workspace/all-feature suites passed, including
+1,419 library tests. Strict Clippy, CLI-reference regeneration, OpenAPI
+library-symbol test, APK coverage, formatting, whitespace and staged hygiene
+passed. No live notification/account operation was performed.

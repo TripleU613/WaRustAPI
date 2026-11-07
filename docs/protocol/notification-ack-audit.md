@@ -680,3 +680,12 @@ The receive actor exercises refusal followed by a ping barrier, and capture-befo
 write for valid negative PN and exact LID zero. Global encoder/model, native
 exception recovery, constructor-null hosted strings, other classes and live
 acceptance remain separate; no account operation or new request family.
+
+### Trusted-contact LID constructor admission (2026-11-07)
+
+**Confirmed local defect/fixed offline:** malformed constructed LID users could
+become token owners and ACK destinations. Shared token_peer now applies pinned
+0Dx ASCII-digit/length/leading-zero grammar to LID from/consumed sender_lid.
+Existing skip/refusal policies and unused-alias ACKs remain. Text/typed store/
+capture/reopen and valid boundary controls added. No native blanket ACK or
+PN policy claim. [Evidence and limits](token-notification-peer.md#lid-constructor-grammar-before-trusted-contact-token-authority).
