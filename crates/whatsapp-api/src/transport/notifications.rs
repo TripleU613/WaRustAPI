@@ -278,11 +278,34 @@ pub(super) fn ack_route(node: &Node, name: &str) -> Option<crate::model::jid::Ji
     } else {
         // Retain existing parsed metadata where available; the validated native
         // nonpositive profile supplies formerly unparseable signed/Unicode forms.
-        jid(node, name).or_else(|| {
-            node.get_attr(name)
-                .and_then(super::receipts::explicit_nonpositive_ack_address)
-                .map(|wire| wire.to_non_ad())
-        })
+        jid(node, name)
+            .or_else(|| {
+                node.get_attr(name)
+                    .and_then(super::receipts::explicit_nonpositive_ack_address)
+                    .map(|wire| wire.to_non_ad())
+            })
+            // 43.72 0De.A02 constructs both lid/hosted.lid users through
+            // 0Dx. A generic Rust Jid can carry values that constructor rejects.
+            // This does not change device grammar or ACK wire normalization.
+            .filter(|peer| {
+                if peer.user.is_empty() || !matches!(peer.server, Server::Lid | Server::HostedLid) {
+                    return true;
+                }
+                // Native parsing strips ignored dot qualifiers before user
+                // construction; Rust's generic retained spelling may differ.
+                match node
+                    .get_attr(name)
+                    .and_then(|value| value.as_text())
+                    .and_then(super::messaging::ack_user_text)
+                {
+                    Some(
+                        super::messaging::AckUserText::User(_)
+                        | super::messaging::AckUserText::Device(_),
+                    ) => true,
+                    Some(_) => false,
+                    None => super::messaging::native_plain_lid_user_valid(&peer.user),
+                }
+            })
     }
 }
 
@@ -519,6 +542,42 @@ mod tests {
                         .is_some(),
                     "{address}"
                 );
+            }
+        }
+    }
+
+    #[test]
+    fn notification_ack_routes_refuse_invalid_constructed_lid_users() {
+        use crate::{binary::AttributeValue, model::jid::Jid};
+        for kind in ["psa", "business", "picture", "mex", "disappearing_mode"] {
+            for field in ["from", "participant"] {
+                for server in ["lid", "hosted.lid"] {
+                    for user in ["letters-private", "0", "0123", "1234567890123456", "１２３"] {
+                        let text = format!("{user}@{server}");
+                        for value in [
+                            AttributeValue::from(text.as_str()),
+                            AttributeValue::from(Jid::parse(&text).unwrap()),
+                        ] {
+                            let node = Node::new("notification")
+                                .attr("type", kind)
+                                .attr("id", "GRAMMAR")
+                                .attr("from", "s.whatsapp.net")
+                                .attr(field, value);
+                            let error = base_ack(&node, kind)
+                                .expect_err("invalid constructed LID became ACK route");
+                            assert!(!error.to_string().contains("letters-private"));
+                        }
+                    }
+                }
+                for user in ["1", "999999999999999"] {
+                    let text = format!("{user}@lid");
+                    let node = Node::new("notification")
+                        .attr("type", kind)
+                        .attr("id", "VALID")
+                        .attr("from", "s.whatsapp.net")
+                        .attr(field, text);
+                    assert!(base_ack(&node, kind).unwrap().is_some());
+                }
             }
         }
     }

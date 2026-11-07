@@ -20116,5 +20116,13 @@
     ],
     "description": "Shared privacy-token peer admission requires pinned LID constructor grammar (1..15 ASCII digits, no leading zero) for from and consumed sender_lid. Invalid sender retains local skip/no-ACK; consumed invalid alias retains fixed refusal/no-write. Unused aliases on empty/unsupported token lists still permit existing ACK. PN/device/time policies and complete native nullable fallback/base ACK parity unchanged; no route or live operation.",
     "evidence": "docs/protocol/token-notification-peer.md#lid-constructor-grammar-before-trusted-contact-token-authority"
+  },
+  "x-notification-ack-lid-route-admission": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [],
+    "description": "Shared notification ACK route parsing requires pinned constructor grammar for nonempty lid/hosted.lid users (1..15 ASCII digits, no leading zero) before constructing destination/participant. Existing supported handler role/work checks, PN/bare-server/device/nonpositive profiles and wire normalization unchanged. Invalid routes refuse locally; no generic ACK, repair, queue work, HTTP route or live validation added.",
+    "evidence": "docs/protocol/notification-ack-audit.md#shared-ack-routes-require-constructible-lid-users-2026-11-07"
   }
 }

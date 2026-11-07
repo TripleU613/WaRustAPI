@@ -9808,3 +9808,9 @@ Local public upload eligibility omission corrected at shared entry, including ca
   grammar before storage/ACK. Text/typed field/boundary/reopen controls preserve
   capture and invalid state, while unused malformed aliases still ACK for empty/
   unsupported token lists. See [token authority](token-notification-peer.md#lid-constructor-grammar-before-trusted-contact-token-authority).
+
+- Confirmed shared notification ACK route gap at `cf7bba87`: malformed LID
+  user produced a PSA ACK destination. Nonempty lid/hosted.lid users now require
+  pinned constructor grammar after parsing. Text/typed from/participant controls
+  cover five base handlers; bare-server/device/wire policies unchanged. See
+  [shared ACK admission](notification-ack-audit.md#shared-ack-routes-require-constructible-lid-users-2026-11-07).

@@ -10781,3 +10781,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   state across reopen; unused invalid aliases still follow existing ACK policy.
   PN/native blanket ACK parity unchanged; no live operation. See
   [LID token admission](docs/protocol/token-notification-peer.md#lid-constructor-grammar-before-trusted-contact-token-authority).
+
+- Shared notification ACK routes now reject nonempty malformed constructed LID
+  users for destination/participant, using pinned numeric grammar. Five-handler
+  text/typed boundary regression added; bare-server/device/wire rules unchanged.
+  No live request. See [ACK route admission](docs/protocol/notification-ack-audit.md#shared-ack-routes-require-constructible-lid-users-2026-11-07).

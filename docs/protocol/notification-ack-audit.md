@@ -689,3 +689,41 @@ become token owners and ACK destinations. Shared token_peer now applies pinned
 Existing skip/refusal policies and unused-alias ACKs remain. Text/typed store/
 capture/reopen and valid boundary controls added. No native blanket ACK or
 PN policy claim. [Evidence and limits](token-notification-peer.md#lid-constructor-grammar-before-trusted-contact-token-authority).
+
+### Shared ACK routes require constructible LID users (2026-11-07)
+
+**Confirmed local defect/fixed offline**, baseline `cf7bba87`: shared ack_route
+fell back to generic Jid parsing after native class checks and could construct
+ACK destinations or participants containing alphabetic, leading-zero, oversized
+or Unicode-digit LID users. The failing-before regression produced a PSA ACK
+to a malformed LID. This is a local supported-route admission defect, not a
+proven server restriction cause or a new native malformed-envelope ACK policy.
+
+The existing pinned 0De.A02 ->0Dx constructor chain applies to nonempty lid and
+hosted.lid users and requires 1..15 ASCII digits without leading zero. Shared
+ack_route now reuses that rule after existing route parsing, including fallback
+profiles. For text it uses the native-aware ACK classifier's stripped user
+prefix; validating Rust's generic retained spelling would incorrectly reject
+12345.ignored@lid, which the existing cross-handler device-class control caught.
+Typed values use their parsed user. PN admission, bare-server handling, agent/device validation, native
+nonpositive address handling and ack_wire_address normalization are unchanged.
+The rule is scoped to nonempty users; it does not invent new bare-server class
+policy. Existing callers still perform their own role/namespace/child/work checks.
+See [constructor/factory evidence](apk/2.26.43.72-login-lid-constructor/README.md)
+and [typed notification descriptor context](apk/2.26.43.72-group-missing-identification/README.md).
+
+The guard covers shared-route users in base notifications, devices, groups_dirty,
+identity notifications, account privacy and prekey ACK admission; this does not
+claim every notification handler is routed through it. Its own pure regression
+covers text/typed from and participant across PSA/business/picture/MEX/
+disappearing_mode, both LID namespace strings, malformed-user categories and
+valid one/15-digit LID controls. Existing store/actor/device normalization tests
+remain the integration controls; this new test itself performs no store mutation
+or socket write. No generic ACK for unknown outer types, no repair/normalization
+of an invalid user, no new queue work or live operation is added.
+
+Validation: full workspace/all-feature suites passed, including 1,420 library
+tests and the existing cross-handler literal-zero/ignored-qualifier control.
+Strict Clippy, regenerated CLI reference, OpenAPI library-symbol test, APK
+coverage, formatting, whitespace and staged repository hygiene passed. No new
+APK artifact or live acceptance claim; existing pinned evidence is reused.
