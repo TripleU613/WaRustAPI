@@ -6696,6 +6696,16 @@ mod tests {
             assert!(actions::outcomes(&store).unwrap().is_empty());
             write.send(Ok(())).unwrap();
         }
+        for participant in ["@s.whatsapp.net", "@lid", "@g.us"] {
+            fake.deliver(
+                identity_notifications::tests::notification(
+                    &peer.to_string(),
+                    "fixture-empty-user",
+                )
+                .attr("participant", participant),
+            )
+            .await;
+        }
         // Malformed descriptor stays captured and does not queue a new query.
         fake.deliver(
             identity_notifications::tests::notification(&peer.to_string(), "fixture-malformed")

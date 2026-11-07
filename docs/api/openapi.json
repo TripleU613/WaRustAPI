@@ -1,4 +1,11 @@
 {
+  "x-separate-notification-address-guards": {
+    "x-cli": false,
+    "x-transport": "identity_notifications::notification_ack; notifications::handle/record/validate",
+    "x-live": false,
+    "description": "Identity ACK participants now share the empty-user text routing refusal; malformed text cannot become a server participant or queue a key read through the receive actor. Privacy-token raw sender/consumed sender_lid .0/:0 qualifiers no longer gain primary-user authority through zero numeric fields: no update/ACK for unsupported sender and existing strict explicit-alias refusal retained. Binary zero-device users and ignored-list unused metadata handling remain. State-preservation, receive continuation and original-query recovery regressions cover the changes. Native optional cast/fallback/base-ACK semantics remain distinct from local supported-input policy. No global JID parser, saved identity normalization, replay, automatic query family, HTTP route or live operation.",
+    "evidence": "docs/protocol/notification-ack-audit.md#separate-identity-and-privacy-token-address-readers-2026-11-06"
+  },
   "x-notification-empty-user-route-guard": {
     "x-cli": false,
     "x-transport": "shared notifications::base_ack and authenticated receive actor",

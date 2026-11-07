@@ -234,25 +234,14 @@ pub(crate) fn base_ack(node: &Node, kind: &str) -> Result<Option<Node>> {
         .and_then(|v| v.as_text())
         .filter(|id| !id.is_empty() && id.len() <= 128)
         .ok_or_else(|| invalid("missing or excessive notification id"))?;
-    // APK43.72 F0R.A00 -> 0Tp.A0A -> 0Dd.A00 rejects text with @ at
-    // index zero. Our generic parser otherwise repairs it to a server JID.
-    // Keep the existing local invalid-route refusal, rather than importing
-    // native nullable-address ACK policy. See notification-ack-audit.md.
-    let route = |name| {
-        if node
-            .get_attr(name)
-            .and_then(|value| value.as_text())
-            .is_some_and(|text| text.rfind('@') == Some(0))
-        {
-            None
-        } else {
-            jid(node, name)
-        }
-    };
-    let from = route("from").ok_or_else(|| invalid("missing or invalid notification from"))?;
+    let from =
+        ack_route(node, "from").ok_or_else(|| invalid("missing or invalid notification from"))?;
     let participant = node
         .get_attr("participant")
-        .map(|_| route("participant").ok_or_else(|| invalid("invalid notification participant")))
+        .map(|_| {
+            ack_route(node, "participant")
+                .ok_or_else(|| invalid("invalid notification participant"))
+        })
         .transpose()?;
     let mut ack = Node::new("ack")
         .attr("id", id)
@@ -263,6 +252,39 @@ pub(crate) fn base_ack(node: &Node, kind: &str) -> Result<Option<Node>> {
         ack = ack.attr("participant", super::receipts::ack_address(participant));
     }
     Ok(Some(ack))
+}
+
+// APK43.72 F0R.A00 -> 0Tp.A0A -> 0Dd.A00 rejects text whose last @ is
+// at index zero. Keep that boundary for shared and identity notification ACKs.
+// Native nullable-address policy remains separate; see notification-ack-audit.md.
+pub(super) fn ack_route(node: &Node, name: &str) -> Option<crate::model::jid::Jid> {
+    if node
+        .get_attr(name)?
+        .as_text()
+        .is_some_and(|text| text.rfind('@') == Some(0))
+    {
+        None
+    } else {
+        jid(node, name)
+    }
+}
+
+// 10G.A09 requests UserJid. 0Dd.A00 tests qualifier presence, not numeric
+// value: explicit .0/:0 still selects DeviceJid, which is not a UserJid.
+// Binary zero-device values are distinct (123.A02/A04 reconstruct a user).
+fn token_peer(node: &Node, name: &str) -> Option<crate::model::jid::Jid> {
+    if node.get_attr(name)?.as_text().is_some_and(|text| {
+        text.rsplit_once('@')
+            .is_some_and(|(user, _)| user.contains(['.', ':']))
+    }) {
+        return None;
+    }
+    jid(node, name).filter(|peer| {
+        !peer.user.is_empty()
+            && matches!(peer.server, Server::User | Server::Lid)
+            && peer.agent == 0
+            && peer.device == 0
+    })
 }
 
 /// Apply supported tokens before acknowledging this known notification type.
@@ -278,12 +300,7 @@ pub fn handle(store: &ProtocolStore, node: &Node) -> Result<Option<Node>> {
     {
         return Ok(None);
     }
-    let Some(from) = jid(node, "from").filter(|v| {
-        !v.user.is_empty()
-            && matches!(v.server, Server::User | Server::Lid)
-            && v.agent == 0
-            && v.device == 0
-    }) else {
+    let Some(from) = token_peer(node, "from") else {
         return Ok(None);
     };
     let Some(id) = node
@@ -364,12 +381,7 @@ fn parse(node: &Node) -> Result<Option<TokenUpdates<'_>>> {
     // APK43.72 10G.A09 requests UserJid for from/sender_lid. Rust's
     // generic parser can also carry a legacy agent qualifier; that is not
     // primary token authority (the LID domain bit is Server::Lid, not agent).
-    let Some(from) = jid(node, "from").filter(|v| {
-        !v.user.is_empty()
-            && matches!(v.server, Server::User | Server::Lid)
-            && v.agent == 0
-            && v.device == 0
-    }) else {
+    let Some(from) = token_peer(node, "from") else {
         return Ok(None);
     };
     // APK43.72 10G.A09 uses0Tp.A0G/A0F: first named container,
@@ -397,10 +409,8 @@ fn parse(node: &Node) -> Result<Option<TokenUpdates<'_>>> {
         return Ok(None);
     }
     let target = if node.get_attr("sender_lid").is_some() {
-        jid(node, "sender_lid")
-            .filter(|v| {
-                !v.user.is_empty() && v.server == Server::Lid && v.agent == 0 && v.device == 0
-            })
+        token_peer(node, "sender_lid")
+            .filter(|peer| peer.server == Server::Lid)
             .ok_or_else(|| Error::invalid("notification", "invalid sender LID"))?
     } else {
         from
@@ -967,6 +977,15 @@ mod tests {
                 assert_eq!(record(&store, &node).unwrap(), 0);
                 assert!(handle(&store, &node).unwrap().is_none());
             }
+            // Text qualifiers select native DeviceJid even when their value is0.
+            // They cannot supply UserJid authority for incoming tokens.
+            for local in ["15555550100:0", "15555550100.0", "15555550100.0:0"] {
+                let node = notification()
+                    .attr("t", "30")
+                    .attr("from", format!("{local}@{}", server.as_str()));
+                assert_eq!(record(&store, &node).unwrap(), 0);
+                assert!(handle(&store, &node).unwrap().is_none());
+            }
             for kind in [JidKind::Plain, JidKind::AgentDevice] {
                 let peer = Jid {
                     user: String::new(),
@@ -1000,6 +1019,11 @@ mod tests {
             let node = notification().attr("sender_lid", value);
             let error = record(&store, &node).unwrap_err().to_string();
             assert!(error.contains("invalid sender LID"));
+            assert!(handle(&store, &node).is_err());
+        }
+        for local in ["10000000001:0", "10000000001.0", "10000000001.0:0"] {
+            let node = notification().attr("sender_lid", format!("{local}@lid"));
+            assert!(record(&store, &node).is_err());
             assert!(handle(&store, &node).is_err());
         }
         assert_eq!(snapshot(&store), before);
@@ -1076,7 +1100,13 @@ mod tests {
                 if let Some(time) = unused_time {
                     skipped = skipped.attr("t", time);
                 }
-                for unused_alias in [None, Some("1:invalid@lid"), Some("15555550101.1:0@lid")] {
+                for unused_alias in [
+                    None,
+                    Some("1:invalid@lid"),
+                    Some("15555550101.1:0@lid"),
+                    Some("10000000001:0@lid"),
+                    Some("10000000001.0@lid"),
+                ] {
                     let mut ignored = skipped.clone();
                     if let Some(alias) = unused_alias {
                         ignored = ignored.attr("sender_lid", alias);

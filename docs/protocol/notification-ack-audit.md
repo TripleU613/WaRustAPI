@@ -555,3 +555,28 @@ extended picture receive regression. Strict all-target/all-feature Clippy,
 formatting, OpenAPI library coverage, regenerated CLI reference, APK coverage
 and repository hygiene pass. Hygiene checked7992 local links and451 checksum
 bundles. These are offline results, not server ACK acceptance evidence.
+
+
+## Separate identity and privacy-token address readers (2026-11-06)
+
+**Confirmed local fixes:** [identity participant routing](identity-notification-ack.md#identity-participant-text-uses-the-shared-routing-guard-2026-11-06)
+now shares the invalid empty-user text guard; the separate builder previously
+still repaired malformed text into ACK participant routes. Its receive/cut
+regression preserves no-query-on-refusal and original-query recovery.
+[Privacy-token primary authority](token-notification-peer.md#explicit-zero-qualified-text-is-not-primary-user-authority-2026-11-06)
+now distinguishes explicit text .0/:0 from binary zero-device users. Supported
+PN/LID token senders and consumed LID aliases cannot acquire primary-user
+authority merely because generic numeric fields are zero. Both regressions
+failed before correction. Ignored token lists still ignore unused alias data;
+original token/checkpoint/pin/session state survives rejected input and reopen.
+Native nullable/fallback/base-ACK policy is explicitly separate from Rust's
+stricter supported-input boundaries. No global parser, identity normalization,
+automatic traffic or live acceptance claim.
+
+Verification: both targeted regressions failed before correction (identity
+returned an ACK with a repaired participant; a newer qualified token stored1
+update instead of0). All1544 workspace/all-feature tests now pass, including
+identity cut/recovery, binary zero-device privacy tokens and expanded unused
+alias controls. Strict Clippy, formatting, OpenAPI library symbols, regenerated
+CLI reference, APK coverage and repository hygiene pass;8013 local links and
+451 APK checksum bundles checked. All validation is offline.

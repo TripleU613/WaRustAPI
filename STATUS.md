@@ -1,3 +1,11 @@
+2026-11-06 — **Closed separate notification address-reader gaps.**
+Identity ACK participant routing now shares malformed empty-user text refusal.
+Privacy-token sender/consumed alias readers distinguish explicit .0/:0 text
+from primary user authority, preserving binary zero-device handling. Receive
+continuation, token/state preservation and original-query recovery are covered.
+[Evidence, regressions and native-policy limits](docs/protocol/notification-ack-audit.md#separate-identity-and-privacy-token-address-readers-2026-11-06).
+No live account operation.
+
 2026-11-06 — **Refused malformed empty-user notification ACK routes.**
 Shared ACK handling no longer repairs text such as @s.whatsapp.net into an
 outbound server destination; both sender and participant are guarded. Bare

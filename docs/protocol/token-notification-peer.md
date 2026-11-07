@@ -113,3 +113,45 @@ two topics and four artifacts unchanged. Hygiene validates 1,818 local links
 and 75 checksum bundles. The new regression failed on the unmodified parser
 and passed after the correction. Fresh live Unicode timestamp handling and
 full Android numeric/token admission parity remain unverified.
+
+
+## Explicit zero-qualified text is not primary-user authority (2026-11-06)
+
+**Confirmed static / implemented offline:** the existing current
+[10G.A09 export](apk/2.26.43.72-privacy-token-primary-address/privacy-token-handler.txt)
+requests UserJid for from and sender_lid at008e..00b6. The
+[typed getter](apk/2.26.43.72-group-missing-identification/ack-typed-jid-read.txt)
+casts to the requested class, returning null on ClassCastException. The
+[parser](apk/2.26.43.72-message-ack-chat/jid-parser.txt)
+checks dot/colon *presence* at0196..01b8 before parsing numbers. Qualified
+PN/LID forms construct0EE/0EM at021a..0236 and02b2..02bc, even for zero.
+The retained [device override ancestry](apk/2.26.43.72-group-missing-identification/current-device-overrides.txt)
+shows0EE and0EM inherit DeviceJid, which extends Jid rather than UserJid.
+These are existing complete static exports, not new REA Evidence IDs.
+
+Rust had accepted `user:0`, `user.0` and `user.0:0` text as a zero-valued
+primary token peer. The store-preservation regression failed with one update
+where zero was expected when supplied a newer timestamp. A separate ACK
+assertion also failed. A shared token_peer reader now checks raw text qualifier
+presence before generic parsing in both handle and parse. Invalid from yields
+no supported update/ACK; invalid explicitly consumed sender_lid keeps the
+existing InvalidInput/no-write policy. No token or primary identity is inferred
+from a qualified zero. PN/LID sender and LID alias controls cover all three
+spellings, preserving checkpoint/pin/session snapshots across reopen.
+
+**Distinct binary behavior:** binary zero-device PN/LID decoding in native
+123.A02/A04 reconstructs a plain user string; the existing
+[binary reader proof](apk/2.26.43.72-group-missing-identification/current-ad-string-reader.txt)
+and [joiner](apk/2.26.43.72-group-missing-identification/current-ad-string-join.txt)
+remain applicable. Rust typed zero-device input remains supported, including
+the existing binary-LID privacy-token ACK/storage regression. No global JID
+parser/decoder, stored identity, alias trust or token timestamp policy changed.
+Caller-supplied typed values that already lost text provenance remain a limit.
+
+**Native policy versus local support:** the native handler skips a null from
+for that entry and falls back to from for a null sender_lid; its base ACK is
+separate. Rust retains its stricter supported-envelope/explicit-alias policy,
+not full native malformed-envelope ACK parity. Unknown/empty token lists still
+do not consume sender_lid; regression now includes unused zero-qualified aliases
+that must preserve state and still ACK. Special UserJid families, full parser
+parity and live acceptance remain unverified. No account traffic or query added.

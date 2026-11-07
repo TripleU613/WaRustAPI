@@ -52,7 +52,7 @@ pub fn notification_ack(node: &Node) -> Result<Option<Node>> {
     {
         return Ok(None);
     }
-    let Some(from) = super::receipts::jid(node, "from").filter(|peer| {
+    let Some(from) = super::notifications::ack_route(node, "from").filter(|peer| {
         !peer.user.is_empty()
             && peer.agent == 0
             && matches!(peer.server, Server::User | Server::Lid)
@@ -73,7 +73,7 @@ pub fn notification_ack(node: &Node) -> Result<Option<Node>> {
     let participant = node
         .get_attr("participant")
         .map(|_| {
-            super::receipts::jid(node, "participant").ok_or_else(|| {
+            super::notifications::ack_route(node, "participant").ok_or_else(|| {
                 Error::invalid("identity_notification", "invalid notification participant")
             })
         })
@@ -943,6 +943,9 @@ pub(super) mod tests {
         for bad in [
             input.clone().attr("id", ""),
             input.clone().attr("id", "x".repeat(129)),
+            input.clone().attr("participant", "@s.whatsapp.net"),
+            input.clone().attr("participant", "@lid"),
+            input.clone().attr("participant", "@g.us"),
             input.attr("participant", "private:invalid@s.whatsapp.net"),
         ] {
             let error = notification_ack(&bad).unwrap_err().to_string();

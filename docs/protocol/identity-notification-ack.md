@@ -168,3 +168,30 @@ F3e.A05 preserves selected fields and omits nullable addresses. Rust now rejects
 malformed empty-user text in its shared base helper, keeping its stricter
 local envelope policy. This does not prove every identity-handler route uses
 that helper, all subtype parity, alternate transport scheduling or live acceptance.
+
+
+## Identity participant text uses the shared routing guard (2026-11-06)
+
+**Confirmed local defect / fixed offline:** identity notification_ack had its
+own participant getter, so the preceding shared-helper correction did not cover
+it. Raw `@s.whatsapp.net`, `@lid` and `@g.us` still became ACK participant
+server values. The existing descriptor regression failed with a returned ACK
+where invalid input was required. Shared and identity builders now use one
+ack_route text reader; identity sender PN/LID constraints and separate key-read
+primary projection remain unchanged.
+
+**Confirmed static:** [base0v6.BLn](apk/2.26.43.72-count-content-error-ack/base-handler.txt)
+builds F0R.A02 with null error at0052..005a before8bl dispatch. Current15v
+extends0v6, as retained in the [identity dispatch evidence](apk/2.26.43.72-identity-ack-dispatch/README.md).
+The already [retained key/getter/parser/writer chain](apk/2.26.43.72-notification-route-boundary/README.md)
+therefore applies to this ordinary base descriptor too. This qualifies the
+prior identity-specific routing gap; alternate transport and failure paths
+are not generalized. Native null participant omission and Rust's stricter
+local refusal remain distinct.
+
+The receive cut/recovery regression injects all three malformed participants
+before its existing invalid descriptor: no ACK or key query is emitted, and
+subsequent valid input still queues exactly one read. The simulated failed ACK
+write preserves that read; reopening sends the original reserved query without
+reconstructing an ACK. Existing pin/session/outbox and journal controls remain.
+No live account operation, key adoption, replay widening or new query family.
