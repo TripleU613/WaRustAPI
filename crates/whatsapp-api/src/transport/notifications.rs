@@ -234,12 +234,25 @@ pub(crate) fn base_ack(node: &Node, kind: &str) -> Result<Option<Node>> {
         .and_then(|v| v.as_text())
         .filter(|id| !id.is_empty() && id.len() <= 128)
         .ok_or_else(|| invalid("missing or excessive notification id"))?;
-    let from = jid(node, "from").ok_or_else(|| invalid("missing or invalid notification from"))?;
+    // APK43.72 F0R.A00 -> 0Tp.A0A -> 0Dd.A00 rejects text with @ at
+    // index zero. Our generic parser otherwise repairs it to a server JID.
+    // Keep the existing local invalid-route refusal, rather than importing
+    // native nullable-address ACK policy. See notification-ack-audit.md.
+    let route = |name| {
+        if node
+            .get_attr(name)
+            .and_then(|value| value.as_text())
+            .is_some_and(|text| text.rfind('@') == Some(0))
+        {
+            None
+        } else {
+            jid(node, name)
+        }
+    };
+    let from = route("from").ok_or_else(|| invalid("missing or invalid notification from"))?;
     let participant = node
         .get_attr("participant")
-        .map(|_| {
-            jid(node, "participant").ok_or_else(|| invalid("invalid notification participant"))
-        })
+        .map(|_| route("participant").ok_or_else(|| invalid("invalid notification participant")))
         .transpose()?;
     let mut ack = Node::new("ack")
         .attr("id", id)
@@ -432,6 +445,23 @@ fn parse(node: &Node) -> Result<Option<TokenUpdates<'_>>> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn base_ack_refuses_empty_user_text_without_rejecting_server_only_routes() {
+        // APK43.72 0Dd.A00 rejects an @ at index zero, whereas a bare server
+        // is a distinct accepted input. Never repair malformed text into a route.
+        for kind in ["psa", "business", "picture", "mex", "disappearing_mode"] {
+            let incoming = Node::new("notification")
+                .attr("type", kind)
+                .attr("id", "EMPTY-USER")
+                .attr("from", "s.whatsapp.net");
+            assert!(base_ack(&incoming, kind).unwrap().is_some());
+            for invalid in ["@s.whatsapp.net", "@lid", "@g.us"] {
+                assert!(base_ack(&incoming.clone().attr("from", invalid), kind).is_err());
+                assert!(base_ack(&incoming.clone().attr("participant", invalid), kind).is_err());
+            }
+        }
+    }
+
     #[test]
     fn java_token_times_preserve_fallback_override_and_atomic_refusal() {
         use crate::{

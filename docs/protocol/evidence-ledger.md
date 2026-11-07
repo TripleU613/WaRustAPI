@@ -1,3 +1,11 @@
+2026-11-06 — **Refused malformed empty-user notification ACK routes.**
+Shared ACK handling no longer repairs text such as @s.whatsapp.net into an
+outbound server destination; both sender and participant are guarded. Bare
+server and typed device routes remain. Native nullable-address behavior and
+Rust's stricter local ID/routing limits are explicitly distinguished.
+[Current evidence, regression and limits](notification-ack-audit.md#shared-notification-text-routing-guard-2026-11-06).
+No live account operation.
+
 2026-11-06 — **Bound PSA watchdog and wakeup completion semantics.**
 Linked previously retained diagnostic-only watchdog proof; it does not expire
 held ACK ownership. Traced scheduler units/cancellation and wakeup normal versus

@@ -1,4 +1,11 @@
 {
+  "x-notification-empty-user-route-guard": {
+    "x-cli": false,
+    "x-transport": "shared notifications::base_ack and authenticated receive actor",
+    "x-live": false,
+    "description": "Rejects from/participant text whose last @ is at index zero instead of repairing malformed empty-user text into an ACK destination. Bare servers and typed zero/nonzero PN/LID routes remain. Current F0R/0Tp/0Dd/F3e evidence distinguishes native optional null addresses from Rust's existing stricter valid-route guard. Five supported kinds and receive-continuation regression covered offline. ID nonempty/128-byte limit remains local, not proven native/server requirement. No global parser, identity, replay, request, HTTP route or live operation change.",
+    "evidence": "docs/protocol/apk/2.26.43.72-notification-route-boundary/README.md"
+  },
   "x-psa-watchdog-wakeup-evidence": {
     "x-cli": "xtask apk-smali <apk> --class <class> --method <method> --signatures --exceptions; xtask apk-virtual-overrides <apk> --class <class> --method Cc2 --signature <signature> --include-interfaces",
     "x-transport": "offline PSA evidence only; legacy runtime ACK policy unchanged",
@@ -17431,7 +17438,7 @@
     "x-transport": true,
     "x-live": false,
     "evidence": "docs/protocol/apk/2.26.43.72-group-missing-identification/README.md",
-    "description": "The receive actor ACKs exact picture notifications after durable capture using existing base envelope guards and participant routing. Malformed envelopes log without ACK and receive continues; redelivery is ACKed again. Photo updates, automatic missing-identification lifecycle, native scheduling/CCQ parity and live acceptance remain unverified or unported. No new command or HTTP route. Offline actor regression covers capture before write, redelivery, malformed envelope plus ping, store reopen and omission of incoming recipient/edit/error/offline attributes. Current F0R fresh-key and F3e final-builder evidence confirms those omitted fields in the selected path. Current DBe/0Tl retain Jid objects; 0Tp compliance diagnostics log and continue rather than proving blanket rejection. Current123/1r2 selected zero-device PN/LID normalization now traced and actor-tested alongside nonzero-device routing; full special-subtype parity remains unverified. Native AD domain bits are distinct from Rust agent. No new address guard added."
+    "description": "The receive actor ACKs exact picture notifications after durable capture using existing base envelope guards and participant routing. Malformed envelopes log without ACK and receive continues; redelivery is ACKed again. Photo updates, automatic missing-identification lifecycle, native scheduling/CCQ parity and live acceptance remain unverified or unported. No new command or HTTP route. Offline actor regression covers capture before write, redelivery, malformed envelope plus ping, store reopen and omission of incoming recipient/edit/error/offline attributes. Current F0R fresh-key and F3e final-builder evidence confirms those omitted fields in the selected path. Current DBe/0Tl retain Jid objects; 0Tp compliance diagnostics log and continue rather than proving blanket rejection. Current123/1r2 selected zero-device PN/LID normalization now traced and actor-tested alongside nonzero-device routing; full special-subtype parity remains unverified. Native AD domain bits are distinct from Rust agent. The subsequent shared empty-user text routing guard is recorded in x-notification-empty-user-route-guard; full native malformed-envelope policy remains unported."
   },
   "x-notification-handler-constructor-census": {
     "x-cli": false,

@@ -158,3 +158,13 @@ The scheduler forwards decrypt_order to0YM.A02, which wraps and calls ThreadPool
 **Failure boundary:** base catches LIL into its non-deferred ACK continuation, but SQLiteFull/Corrupt rethrow; general Exception has a separate tracked-completion500 branch rather than that normal ACK continuation. No justification was found to turn every local saved-state failure or unsupported malformed route into a success ACK. No ACK widening or Rust change was made. The worker's additional0Fy/Ex8 gates,14t scheduling, identity-lookup cleanup and metadata/alias effects remain bounded unknowns, retained in the research bundle.
 
 **Verified negative:** freshly exported15v.A09 exactly matches the previous43.72 prekey dispatch export byte-for-byte; the new work is focused identity analysis and full current worker/scheduler/base/lookup evidence, not a claimed release difference. No live account action or ACK acceptance observation.
+
+## Shared current notification key boundary (2026-11-06)
+
+The earlier current descriptor/renderer gap above is now qualified by
+[reused current key/writer evidence and routing correction](apk/2.26.43.72-notification-route-boundary/README.md).
+F0R.A02/A00 binds notification/from/id/type/participant through Efa/Eoh;
+F3e.A05 preserves selected fields and omits nullable addresses. Rust now rejects
+malformed empty-user text in its shared base helper, keeping its stricter
+local envelope policy. This does not prove every identity-handler route uses
+that helper, all subtype parity, alternate transport scheduling or live acceptance.

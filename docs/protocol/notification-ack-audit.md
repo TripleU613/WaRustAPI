@@ -529,3 +529,29 @@ Waking worker27 normally completes after promotion selection/rendering method
 return; its selected Exception path uses487. No remote fetch or queued-render
 success is established by that call. Effective flags, wrapper/provider/runtime
 lifecycle, native application and recovery remain open. Runtime policy unchanged.
+
+## Shared notification text routing guard (2026-11-06)
+
+**Confirmed static / implemented offline:** [current descriptor-to-writer trace](apk/2.26.43.72-notification-route-boundary/README.md)
+connects F0R.A02/A00's generic from/participant getters to the nullable parser
+and F3e renderer. Text with its last @ at index0 throws in0Dd.A00; Rust was
+repairing it into a server-only ACK route. base_ack now refuses that malformed
+text in either field. Bare server routes and typed PN/LID device normalization
+remain unchanged. Five supported kinds have a red-before/green-after regression;
+the picture receive actor covers malformed sender/participant followed by ping,
+with existing capture/redelivery/reopen controls retained.
+
+This enforces the existing local valid-envelope policy: native nullable getter
+plus omitted to/participant is **not** copied as a new ACK policy. Native
+noncompliance logging also does not prove every invalid JID is refused. Full
+grammar, cached typed-value behavior, state adoption and live acceptance remain
+unverified.0Tp.A0L only checks null after A0M; Rust's nonempty128-byte ID cap
+remains a local supported-input bound, not a proven native/server obligation.
+No global parser/identity change, automatic traffic, replay or account operation.
+
+Verification: the new routing regression failed before the guard and passed
+with it. The workspace/all-feature suite passes1544 tests, including the
+extended picture receive regression. Strict all-target/all-feature Clippy,
+formatting, OpenAPI library coverage, regenerated CLI reference, APK coverage
+and repository hygiene pass. Hygiene checked7992 local links and451 checksum
+bundles. These are offline results, not server ACK acceptance evidence.

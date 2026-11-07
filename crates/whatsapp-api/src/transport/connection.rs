@@ -3429,6 +3429,15 @@ mod tests {
             assert_eq!(ack, expected);
             written.send(Ok(())).unwrap();
         }
+        // Raw malformed text must not be repaired into a server-only ACK route.
+        // The following ping barrier detects any accidental ACK and proves receive
+        // continues after rejecting either field; accepted frames above remain intact.
+        for field in ["from", "participant"] {
+            for invalid in ["@s.whatsapp.net", "@lid", "@g.us"] {
+                fake.deliver(notification.clone().attr(field, invalid))
+                    .await;
+            }
+        }
         // An unusable ACK envelope must not terminate receive or fabricate a peer.
         fake.deliver(
             Node::new("notification")
