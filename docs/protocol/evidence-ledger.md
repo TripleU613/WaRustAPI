@@ -9608,3 +9608,9 @@ Local public upload eligibility omission corrected at shared entry, including ca
   now refuses CRLF/NUL before send and marks Authorization sensitive for Debug.
   Offline regression only; server token syntax/acceptance remains unknown. See
   [authorization correction](ban-appeal.md#authorization-header-byte-preservation).
+
+- Confirmed direct-library appeal transport-settings omission at `803d40c3`:
+  submission now validates settings before credentials/client setup and streamed
+  chunks obey min(configured byte budget, 64 KiB). Offline boundary/refusal tests;
+  no inferred server requirement or live request. See
+  [transport bounds](ban-appeal.md#transport-bounds-at-library-entry).

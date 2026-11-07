@@ -2,7 +2,7 @@
 //! Requires `experimental-registration-https` for the constrained reqwest client.
 use crate::{
     Error, Result,
-    registration::request::LabRegistrationConfig,
+    registration::request::{LabRegistrationConfig, TransportSettings},
     session::AccountRecord,
     store::{ProtocolStore, Table},
 };
@@ -184,6 +184,7 @@ pub async fn submit_ban_appeal(
     config: &LabRegistrationConfig,
     input: BanAppealInput,
 ) -> Result<BanAppealResult> {
+    let response_limit = appeal_response_limit(&config.transport)?;
     // Read the login credential for Authorization.
     let login_token: Option<Zeroizing<Vec<u8>>> = store
         .run_blocking(|s| {
@@ -252,13 +253,7 @@ pub async fn submit_ban_appeal(
         .await
         .map_err(|_| Error::Io(std::io::Error::other("ban appeal response body failed")))?
     {
-        if raw.len().saturating_add(chunk.len()) > MAX_RESPONSE_BYTES {
-            return Err(Error::ResourceExhausted {
-                resource: "ban appeal response bytes",
-                limit: MAX_RESPONSE_BYTES as u64,
-            });
-        }
-        raw.extend_from_slice(&chunk);
+        append_response_chunk(&mut raw, &chunk, response_limit)?;
     }
 
     let summary = summarize(http_status, &raw);
@@ -266,6 +261,22 @@ pub async fn submit_ban_appeal(
         http_status,
         summary,
     })
+}
+
+fn appeal_response_limit(settings: &TransportSettings) -> Result<usize> {
+    settings.validate()?;
+    Ok(settings.max_response_bytes.min(MAX_RESPONSE_BYTES))
+}
+
+fn append_response_chunk(raw: &mut Vec<u8>, chunk: &[u8], limit: usize) -> Result<()> {
+    if raw.len().saturating_add(chunk.len()) > limit {
+        return Err(Error::ResourceExhausted {
+            resource: "ban appeal response bytes",
+            limit: limit as u64,
+        });
+    }
+    raw.extend_from_slice(chunk);
+    Ok(())
 }
 
 // Preserve opaque saved credential bytes. Lossy UTF-8 decoding changes the
@@ -356,6 +367,34 @@ mod tests {
         session::AccountRecord,
         store::{MasterKey, OpenOptions, StaticKeySource},
     };
+
+    #[test]
+    fn appeal_transport_bounds_validate_and_limit_streamed_chunks() {
+        let mut settings = TransportSettings::default();
+        assert_eq!(
+            appeal_response_limit(&settings).unwrap(),
+            MAX_RESPONSE_BYTES
+        );
+        settings.max_response_bytes = 3;
+        let limit = appeal_response_limit(&settings).unwrap();
+        let mut raw = Vec::new();
+        append_response_chunk(&mut raw, b"ab", limit).unwrap();
+        append_response_chunk(&mut raw, b"c", limit).unwrap();
+        assert_eq!(raw, b"abc");
+        assert!(matches!(
+            append_response_chunk(&mut raw, b"d", limit),
+            Err(Error::ResourceExhausted { limit: 3, .. })
+        ));
+        assert_eq!(raw, b"abc");
+        settings.timeout_ms = 0;
+        assert!(appeal_response_limit(&settings).is_err());
+        settings = TransportSettings::default();
+        settings.connect_timeout_ms = settings.timeout_ms + 1;
+        assert!(appeal_response_limit(&settings).is_err());
+        settings = TransportSettings::default();
+        settings.max_response_bytes = 0;
+        assert!(appeal_response_limit(&settings).is_err());
+    }
 
     #[test]
     fn appeal_authorization_preserves_bytes_and_redacts_debug() {

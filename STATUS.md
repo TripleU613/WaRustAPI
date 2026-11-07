@@ -10622,3 +10622,7 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   header formatting; invalid header bytes refuse before send. Offline regression
   covers byte preservation, CRLF/NUL refusal and Debug redaction. No live request;
   server token grammar, operation validity and account binding remain unverified.
+
+- Direct appeal submissions now validate transport settings and honor smaller
+  configured response budgets under the existing 64 KiB ceiling. Offline
+  timeout/budget/chunk-boundary regression; no live requests or server claims.

@@ -121,3 +121,22 @@ parser fact, not proof that ACS accepts such credentials. No new token syntax or
 server policy is inferred. Optional-auth selection, operation/doc_id, retries and
 account binding are unchanged and remain subject to the existing unknowns. No
 appeal or live account operation was performed.
+
+## Transport bounds at library entry
+
+**Confirmed Rust settings omission, corrected offline**, baseline `803d40c3`.
+Direct `submit_ban_appeal` callers previously bypassed TransportSettings validation
+and response streaming used only a fixed 64 KiB ceiling, ignoring a smaller
+configured max_response_bytes. CLI profile validation did not protect direct
+library calls. Submission now validates transport settings before credential
+lookup/client construction and applies min(configured response budget, 64 KiB)
+to every streamed chunk before appending. Over-budget errors report that effective
+limit; accumulated bytes are unchanged by the rejected chunk. Existing timeout
+values are passed unchanged to reqwest after validation.
+
+Offline regression covers zero timeout, connect timeout beyond whole-request
+timeout, zero response budget, the default ceiling, a smaller three-byte budget,
+exact-boundary acceptance across chunks and one-byte overflow refusal. No socket
+or account operation is used. These are local configuration/resource invariants,
+not APK/server timeout requirements. The fixed appeal hard ceiling, request
+construction, retry policy and server acceptance unknowns otherwise remain.

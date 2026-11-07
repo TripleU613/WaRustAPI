@@ -1,4 +1,11 @@
 {
+  "x-appeal-transport-bounds": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "evidence": "docs/protocol/ban-appeal.md#transport-bounds-at-library-entry",
+    "behavior": "Direct appeal submissions validate TransportSettings before credential lookup and enforce the smaller of max_response_bytes and the fixed 64 KiB ceiling for streamed response chunks. Local limits only."
+  },
   "x-appeal-authorization-byte-preservation": {
     "x-cli": false,
     "x-transport": true,
