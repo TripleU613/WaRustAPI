@@ -1,0 +1,83 @@
+
+# class: LX/16C;
+# extends: Ljava/lang/Object;
+
+.method public A06(VL)  # .registers 9
+    # full signature: LX/16C;->A06(LX/18U;)V
+    0000..0004  const-string  v5, "EditedMessageManager/handleOutgoingEditedMessage"
+    0004..0008  iget-object  v0, v7, LX/16C;->A0g:LX/00x;
+    0008..000e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    000e..0010  move-result-object  v0
+    0010..0014  check-cast  v0, LX/00X;
+    0014..001a  invoke-virtual  {v0}, LX/00X;->A01()LX/00Y;
+    001a..001c  move-result-object  v1
+    001c..0020  const/16  v0, #0x4e3
+    0020..0026  invoke-static  {v1, v0}, LX/09H;->A03(LX/00Y;I)Ljava/lang/Object;
+    0026..0028  move-result-object  v4
+    0028..002c  check-cast  v4, LX/0B0;
+    002c..002e  const/4  v2, #0x0
+    002e..0030  const/4  v3, #0x0
+    0030..0032  const/4  v0, #0x1
+    0032..0038  invoke-static  {v7, v8, v2, v0}, LX/16C;->A00(LX/16C;LX/18U;LX/2Ck;Z)LX/2DK;
+    0038..003a  move-result-object  v0
+    003a..003e  iget-object  v6, v0, LX/2DK;->A00:LX/18U;
+    003e..0042  if-eqz  v6, +0x1c
+    0042..0046  iget-wide  v0, v6, LX/18U;->A0k:J
+    0046..004a  iput-wide  v0, v8, LX/18U;->A0k:J
+    004a..004e  iget-object  v0, v7, LX/16C;->A0U:LX/00x;
+    004e..0054  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0054..0056  move-result-object  v0
+    0056..005a  check-cast  v0, LX/EON;
+    005a..005e  iget-object  v0, v0, LX/EON;->A00:LX/05a;
+    005e..0062  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0062..0068  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0068..006a  move-result-object  v0
+    006a..006e  check-cast  v0, LX/FLk;
+    006e..0074  invoke-virtual  {v0, v6}, LX/FLk;->A02(LX/18U;)V
+    0074..0076  return-void
+    0076..007a  const-string  v0, "EditedMessageManager/handleOutgoingEditedMessage message failed to store"
+    007a..0080  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0080..0082  return-void
+    0082..0084  move-exception  v0
+    0084..008a  invoke-static  {v5, v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    008a..008e  const-string  v0, "EditedMessageManager/handleOutgoingEditedMessage/invalid FMessage"
+    008e..0090  goto  +0x3e
+    0090..0092  move-exception  v0
+    0092..0098  invoke-static  {v5, v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0098..009c  iget-object  v2, v7, LX/16C;->A1A:LX/0wT;
+    009c..00a0  iget  v0, v0, LX/Dxp;->e2eFailureReason:I
+    00a0..00a6  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    00a6..00a8  move-result-object  v1
+    00a8..00ac  const/16  v0, #0x11
+    00ac..00b2  invoke-virtual  {v2, v8, v1, v0}, LX/0wT;->A07(LX/18U;Ljava/lang/Integer;I)V
+    00b2..00b4  return-void
+    00b4..00b6  move-exception  v2
+    00b6..00ba  const-string  v1, "EditedMessageManager/handleOutgoingEditedMessage; messageType="
+    00ba..00be  new-instance  v0, Ljava/lang/StringBuilder;
+    00be..00c4  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00c4..00c8  iget  v1, v8, LX/18U;->A0i:I
+    00c8..00ce  invoke-virtual  {v0, v1}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00ce..00d4  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00d4..00d6  move-result-object  v0
+    00d6..00dc  invoke-static  {v0, v2}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    00dc..00e2  invoke-static  {v1}, Ljava/lang/Integer;->toString(I)Ljava/lang/String;
+    00e2..00e4  move-result-object  v1
+    00e4..00e8  const-string  v0, "EditedMessageManager/handleOutgoingEditedMessage/cloningNotSupported"
+    00e8..00ee  invoke-virtual  {v4, v0, v1, v3}, LX/0B0;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+    00ee..00f0  return-void
+    00f0..00f2  move-exception  v0
+    00f2..00f8  invoke-static  {v5, v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    00f8..00fc  const-string  v0, "EditedMessageManager/handleOutgoingEditedMessage/invalidMessage"
+    00fc..00fe  goto  +0x7
+    00fe..0100  move-exception  v0
+    0100..0106  invoke-static  {v5, v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    0106..010a  const-string  v0, "EditedMessageManager/handleOutgoingEditedMessage/illegal state exception"
+    010a..0110  invoke-virtual  {v4, v0, v2, v3}, LX/0B0;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+    0110..0112  return-void
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/IllegalArgumentException; code_units 0018..0041 -> 0078
+    # catch LX/ECu; code_units 0018..0041 -> 005a
+    # catch LX/Dxp; code_units 0018..0041 -> 0048
+    # catch LX/EDZ; code_units 0018..0041 -> 0041
+    # catch Ljava/lang/IllegalStateException; code_units 0018..0041 -> 007f
+.end method

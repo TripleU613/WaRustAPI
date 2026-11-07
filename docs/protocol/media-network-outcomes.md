@@ -1622,3 +1622,27 @@ The existing literal-wrapper and subprocess crash fixtures now include MIME fiel
 so they still reach their intended bounds/crash checks under this required
 admission rule. Their crash points, consumption and uncertain-receipt no-replay
 assertions are unchanged.
+
+## Pinned media parser error-ACK boundary (2026-11-06)
+
+**Confirmed selected static / research only:** Dxp preserves parser failure
+reasons13(size),14(selected malformed hashes),16(missing key),17(MIME). EdS's
+selected plaintext-validation catch forwards the original reason to F0b.A01.
+That dispatcher selects reporting/action only under its processing/retry flags;
+ordinary non-BX2 action builds a message ACK envelope with mapped error and
+optional meta.failure_reason containing the ORIGINAL parser reason.
+
+ExA.A00 maps34 to500,106 to420,107 to421 and other inputs to491. Thus common
+media reasons can produce491, not the separate receipt-parser487 rule. Efa's
+error attribute and optional meta survive the selected Message(arg1=129) converted
+F3e ACK builder path. Queue submission/conversion is not socket/server acceptance.
+Original reason integers are not directly HTTP status or Signal retry causes.
+
+[Complete factories/consumers/mapper/envelope/queue evidence and precise limits](apk/2.26.43.72-media-parser-error-boundary/README.md)
+retain the distinction between shared plaintext, edited-message and orphan
+consumers. Rust's local UnsupportedMessage projection is not a typed native
+Dxp classification, and the MIME retrieval/cache fixes did not implement this
+receive-response family. Full input-mode ownership, supported native validation
+versus local feature limits, BX2/direct-writer and persistence/retry/defer lifecycle
+remain unverified. No491 ACK, blanket rejection of unsupported features, retry,
+ratchet reset or live account operation is added from an incomplete binding.

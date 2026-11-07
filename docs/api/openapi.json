@@ -1,4 +1,11 @@
 {
+  "x-media-parser-error-ack-static-boundary": {
+    "x-cli": "research-only comparison with existing receive/ACK paths; no new command or flag",
+    "x-transport": "no runtime error491/meta emission implemented; pinned conditional native application-parser error path retained",
+    "x-live": false,
+    "description": "Dxp reasons13/14/16/17 preserve selected media size/hash/key/MIME failure identity. EdS/F0b conditionally forwards reason through ExA:34=>500,106=>420,107=>421,otherwise491. Non-BX2 envelope path can carry mapped error and optional original meta.failure_reason through Message129 converted ACK construction. This differs from receipt-parser487 and Signal retry causes. Rust UnsupportedMessage projection is not equivalent to native Dxp failure; input-mode/BX2/direct-writer/durability/retry bindings remain unknown. No new ACK, retry, reset or live traffic.",
+    "evidence": "docs/protocol/apk/2.26.43.72-media-parser-error-boundary/README.md"
+  },
   "x-view-once-image-mime-admission": {
     "x-cli": "existing view-once prefetch/consume paths; no new command or flag",
     "x-transport": "shared whole-image MIME admission before eligible view-once descriptor/cache selection or one-shot consumption",

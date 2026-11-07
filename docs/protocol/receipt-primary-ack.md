@@ -200,3 +200,11 @@ remain distinct and still refuse ACK construction. Regression/actor checks cover
 actual encoding, durable capture and receive continuation. Fact attribution,
 notification handlers, typed constructors and live acceptance remain open;
 no account operation, stored selector or new request-family change.
+
+## Related media application error ACK (2026-11-06; research only)
+
+A distinct native media/plaintext validation path can produce message ACK error491
+and meta.failure_reason, subject to processing/retry/BX2 predicates. It is separate
+from receipt parsing's487 and does not authorize a generic Rust unsupported-message
+ACK. No runtime integration was added.
+[Full evidence and missing bindings](apk/2.26.43.72-media-parser-error-boundary/README.md).

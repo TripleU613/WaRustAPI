@@ -1,0 +1,49 @@
+
+# class: LX/F1Z;
+# extends: Ljava/lang/Object;
+
+.method public A0B(LLL)  # .registers 7
+    # full signature: LX/F1Z;->A0B(Ljava/lang/Integer;Ljava/lang/String;)LX/Eoh;
+    0000..0004  new-instance  v3, LX/Efa;
+    0004..000a  invoke-direct  {v3}, LX/Efa;-><init>()V
+    000a..000e  const-string  v0, "message"
+    000e..0012  iput-object  v0, v3, LX/Efa;->A06:Ljava/lang/String;
+    0012..0016  iget-object  v0, v4, LX/F1Z;->A0C:Ljava/lang/String;
+    0016..001a  iput-object  v0, v3, LX/Efa;->A08:Ljava/lang/String;
+    001a..001e  iget-wide  v0, v4, LX/F1Z;->A01:J
+    001e..0022  iput-wide  v0, v3, LX/Efa;->A00:J
+    0022..0028  invoke-virtual  {v4}, LX/F1Z;->A0L()Z
+    0028..002a  move-result  v1
+    002a..002e  if-eqz  v1, +0x39
+    002e..0032  iget-object  v0, v4, LX/F1Z;->A06:Lcom/whatsapp/infra/core/jid/Jid;
+    0032..0036  iput-object  v0, v3, LX/Efa;->A02:Lcom/whatsapp/infra/core/jid/Jid;
+    0036..003a  if-eqz  v1, +0x30
+    003a..003e  iget-object  v0, v4, LX/F1Z;->A07:Lcom/whatsapp/infra/core/jid/Jid;
+    003e..0042  iput-object  v0, v3, LX/Efa;->A01:Lcom/whatsapp/infra/core/jid/Jid;
+    0042..0046  iget-object  v0, v4, LX/F1Z;->A0D:Ljava/lang/String;
+    0046..004a  iput-object  v0, v3, LX/Efa;->A09:Ljava/lang/String;
+    004a..004e  if-eqz  v6, +0x21
+    004e..0054  invoke-virtual  {v6}, Ljava/lang/String;->length()I
+    0054..0056  move-result  v0
+    0056..005a  if-eqz  v0, +0x1b
+    005a..0060  invoke-virtual  {v3, v6}, LX/Efa;->A01(Ljava/lang/String;)V
+    0060..0064  if-eqz  v5, +0x16
+    0064..0066  const/4  v0, #0x1
+    0066..006a  new-array  v2, v0, [LX/0Tl;
+    006a..0070  invoke-static  {v5}, LX/B1y;->A0x(Ljava/lang/Number;)Ljava/lang/String;
+    0070..0072  move-result-object  v1
+    0072..0076  const-string  v0, "failure_reason"
+    0076..007c  invoke-static  {v0, v1, v2}, LX/B20;->A1O(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+    007c..0080  const-string  v0, "meta"
+    0080..0086  invoke-static  {v0, v2}, LX/B1w;->A0Z(Ljava/lang/String;[LX/0Tl;)LX/0Tp;
+    0086..0088  move-result-object  v0
+    0088..008c  iput-object  v0, v3, LX/Efa;->A04:LX/0Tp;
+    008c..0092  invoke-virtual  {v3}, LX/Efa;->A00()LX/Eoh;
+    0092..0094  move-result-object  v0
+    0094..0096  return-object  v0
+    0096..009a  iget-object  v0, v4, LX/F1Z;->A06:Lcom/whatsapp/infra/core/jid/Jid;
+    009a..009c  goto  -0x2e
+    009c..00a0  iget-object  v0, v4, LX/F1Z;->A07:Lcom/whatsapp/infra/core/jid/Jid;
+    00a0..00a2  goto  -0x37
+    # exception table: 0 try range(s)
+.end method

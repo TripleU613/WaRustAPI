@@ -1,0 +1,74 @@
+{
+  "README.md": {
+    "bytes": 7434,
+    "sha256": "ffc8902abcf6919bc34224a085293ea48451cdad14db9fa84ae9ecce50e39800"
+  },
+  "ack-job-builder.txt": {
+    "bytes": 1136,
+    "sha256": "41d66811a509d970f0aa378f83f3e302fefcf576e1d1689275e75f20d67e92b9"
+  },
+  "alternate-error-consumer.txt": {
+    "bytes": 29562,
+    "sha256": "bda6ab8a474613c42177180882f499273691bdb3f46cbe6d59a06c1d0c0382d2"
+  },
+  "edited-message-consumer.txt": {
+    "bytes": 5660,
+    "sha256": "1f58e9aa281ddadaddc7ee8f4f09d384b583a0e2303e130a968dbee1054f52f3"
+  },
+  "edited-message-report.txt": {
+    "bytes": 4868,
+    "sha256": "11e117c1a6adf6e2069bbd64de677305e84acee0371d687e02b1a4af80629ac2"
+  },
+  "error-attribute-setter.txt": {
+    "bytes": 593,
+    "sha256": "3fed8aab41bd496ddd2365981ad24294e0cf75fd9ec7a580ccbca67c9b65f0bb"
+  },
+  "error-consumer-1wC.txt": {
+    "bytes": 34695,
+    "sha256": "ffb7b7bad344c1070c9601a547217fe709955626d04c526d3796c6e81c2f18da"
+  },
+  "error-envelope-builder.txt": {
+    "bytes": 2531,
+    "sha256": "8e712f0e83d3eed46dd35d2a9d095b4170f6a4d8a5a202f6368f77d835466814"
+  },
+  "error-envelope-finalize.txt": {
+    "bytes": 1859,
+    "sha256": "349587fd5020bce518c36f486e5cfd40069338df46bbbbdcceb8f02195a1bc57"
+  },
+  "error-envelope.txt": {
+    "bytes": 19013,
+    "sha256": "3b687be66d696b5b59a62cc2789033396bb586368b8767c8e6a3503e77ba4811"
+  },
+  "error-job-submit.txt": {
+    "bytes": 578,
+    "sha256": "65a726e7eaebc9f3340807b427263c6509cae17738ef2d17675259f0e6be8ac5"
+  },
+  "error-reason-refs.txt": {
+    "bytes": 1841,
+    "sha256": "c0ce0560703eab4bcb658585f4ccf9db56ce25990e4c4ddf6ec7a996e92160ba"
+  },
+  "failure-dispatch.txt": {
+    "bytes": 6107,
+    "sha256": "f9476eaa70f96e64a8d45169a2313c5214499815440b30de61e34c62e5b70bc2"
+  },
+  "parser-errors.txt": {
+    "bytes": 3202,
+    "sha256": "e5541976a9136ce4ddd037d35a6cfb5dcdc0b82f7a9de7b4c23616bbda10d383"
+  },
+  "reason-action.txt": {
+    "bytes": 3979,
+    "sha256": "bdbd335b69f712f5174794b10c10c9aeb8d7bdb56a258ce1ead90cb2cba7cceb"
+  },
+  "reason-map.txt": {
+    "bytes": 623,
+    "sha256": "23528c4b3b57c79229c1aa37cd6b9a1e533d23ac7ad022c48e49c9cdcb8b11b4"
+  },
+  "reason-observation.txt": {
+    "bytes": 1779,
+    "sha256": "de2bc11bb1ce8f573519fcbd2601df778089da7c5d6e241049b98200d671cedf"
+  },
+  "receive-error-consumer.txt": {
+    "bytes": 72806,
+    "sha256": "ef67c7a6868c0232db10a1d7680150d34a371ccbd27580b4c165da09b4c230ad"
+  }
+}

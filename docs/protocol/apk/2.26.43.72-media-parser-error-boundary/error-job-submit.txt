@@ -1,0 +1,15 @@
+
+# class: LX/0x0;
+# extends: Ljava/lang/Object;
+
+.method public A09(VLL)  # .registers 3
+    # full signature: LX/0x0;->A09(Landroid/os/Message;LX/0x0;)V
+    0000..0004  iget-object  v0, v2, LX/0x0;->A07:LX/05a;
+    0004..0008  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0008..000e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    000e..0010  move-result-object  v0
+    0010..0014  check-cast  v0, LX/0Sf;
+    0014..001a  invoke-virtual  {v0, v1}, LX/0Sf;->A0V(Landroid/os/Message;)Z
+    001a..001c  return-void
+    # exception table: 0 try range(s)
+.end method

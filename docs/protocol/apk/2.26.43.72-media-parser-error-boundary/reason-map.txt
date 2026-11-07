@@ -1,0 +1,21 @@
+
+# class: LX/ExA;
+# extends: Ljava/lang/Object;
+
+.method public A00(II)  # .registers 3
+    # full signature: LX/ExA;->A00(I)I
+    0000..0004  const/16  v0, #0x22
+    0004..0008  if-eq  v2, v0, +0x12
+    0008..000c  const/16  v0, #0x6a
+    000c..0010  if-eq  v2, v0, +0xb
+    0010..0014  const/16  v1, #0x6b
+    0014..0018  const/16  v0, #0x1a5
+    0018..001c  if-eq  v2, v1, +0x4
+    001c..0020  const/16  v0, #0x1eb
+    0020..0022  return  v0
+    0022..0026  const/16  v0, #0x1a4
+    0026..0028  return  v0
+    0028..002c  const/16  v0, #0x1f4
+    002c..002e  return  v0
+    # exception table: 0 try range(s)
+.end method

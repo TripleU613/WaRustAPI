@@ -1,0 +1,46 @@
+classes.dex  LX/16C;->A05(LL)
+  read opcode 0x52, dex byte offset: 0x80b586
+classes.dex  LX/16C;->A05(LL)
+  read opcode 0x52, dex byte offset: 0x80b5ac
+classes.dex  LX/16C;->A05(LL)
+  read opcode 0x52, dex byte offset: 0x80b5be
+classes.dex  LX/16C;->A06(VL)
+  read opcode 0x52, dex byte offset: 0x80b740
+classes2.dex  LX/1wC;->A03(VLL)
+  read opcode 0x52, dex byte offset: 0x279844
+classes2.dex  LX/1x6;->A01(VLL)
+  read opcode 0x52, dex byte offset: 0x288430
+classes7.dex  LX/COi;->A04(LLLLLLIJZZZ)
+  read opcode 0x52, dex byte offset: 0x49ceb2
+classes8.dex  LX/Dxp;-><init>(VI)
+  write opcode 0x59, dex byte offset: 0x50ebee
+classes8.dex  LX/Dxp;-><init>(VIL)
+  write opcode 0x59, dex byte offset: 0x50ec0a
+classes8.dex  LX/Dxp;-><init>(VIL)
+  write opcode 0x59, dex byte offset: 0x50ec26
+classes8.dex  LX/EdS;->A00(VLLLLLLLZZZ)
+  read opcode 0x52, dex byte offset: 0x58f65a
+classes8.dex  LX/EdS;->A00(VLLLLLLLZZZ)
+  read opcode 0x52, dex byte offset: 0x58fd3c
+classes8.dex  LX/EdS;->A00(VLLLLLLLZZZ)
+  read opcode 0x52, dex byte offset: 0x58ffcc
+classes8.dex  LX/F0b;->A00(VLLLLLL)
+  read opcode 0x52, dex byte offset: 0x640e36
+classes8.dex  LX/F0b;->A00(VLLLLLL)
+  read opcode 0x52, dex byte offset: 0x640e88
+classes8.dex  LX/F0t;->A03(LLLI)
+  read opcode 0x52, dex byte offset: 0x6478c2
+classes8.dex  LX/FKg;->BLW(VL)
+  read opcode 0x52, dex byte offset: 0x765dd6
+classes8.dex  LX/FKg;->BLW(VL)
+  read opcode 0x52, dex byte offset: 0x765ef2
+classes8.dex  LX/FSF;->A01(LLLLZZZ)
+  read opcode 0x52, dex byte offset: 0x79c694
+classes8.dex  LX/FSF;->A01(LLLLZZZ)
+  read opcode 0x52, dex byte offset: 0x79c6e2
+classes8.dex  LX/Fc1;->run(V)
+  read opcode 0x52, dex byte offset: 0x7f231e
+classes8.dex  LX/Fc1;->run(V)
+  read opcode 0x52, dex byte offset: 0x7f26a8
+classes8.dex  LX/Ffj;->invoke(L)
+  read opcode 0x52, dex byte offset: 0x8544e6

@@ -1,0 +1,116 @@
+
+# class: LX/F0b;
+# extends: Ljava/lang/Object;
+
+.method public A01(VLLLI)  # .registers 13
+    # full signature: LX/F0b;->A01(LX/1k2;LX/DiW;LX/F0b;I)V
+    0000..0004  iget-object  v5, v11, LX/F0b;->A02:LX/Dxs;
+    0004..0008  iget-boolean  v2, v5, LX/F1Z;->A03:Z
+    0008..000c  const-string  v0, "SharedMessageProcessor/onProcessingFailure reason="
+    000c..000e  move  v7, v12
+    000e..0014  invoke-static  {v12, v0}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    0014..0016  move-result-object  v1
+    0016..001a  const-string  v0, ", isSendRetry="
+    001a..0020  invoke-static  {v0, v1, v2}, LX/2LA;->A0q(Ljava/lang/String;Ljava/lang/StringBuilder;Z)Ljava/lang/String;
+    0020..0022  move-result-object  v0
+    0022..0028  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0028..002c  iget-object  v4, v11, LX/F0b;->A01:LX/FUe;
+    002c..002e  const/4  v0, #0x0
+    002e..0032  iput-object  v0, v4, LX/FUe;->A02:LX/18U;
+    0032..0036  iget-boolean  v0, v11, LX/F0b;->A00:Z
+    0036..003a  if-eqz  v0, +0x39
+    003a..003e  iget-object  v0, v11, LX/F0b;->A09:LX/EdS;
+    003e..0042  iget-object  v0, v0, LX/EdS;->A0B:LX/05a;
+    0042..0048  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0048..004a  move-result-object  v3
+    004a..004e  check-cast  v3, LX/ExA;
+    004e..0052  iget-boolean  v2, v11, LX/F0b;->A06:Z
+    0052..0056  iget-object  v6, v11, LX/F0b;->A05:Ljava/lang/Integer;
+    0056..0058  const/4  v1, #0x1
+    0058..005c  if-eqz  v9, +0x9
+    005c..0062  invoke-interface  {v9}, LX/1k2;->BUp()Z
+    0062..0064  move-result  v0
+    0064..0066  const/4  v8, #0x1
+    0066..006a  if-eq  v0, v1, +0x3
+    006a..006c  const/4  v8, #0x0
+    006c..0072  invoke-virtual/range  {v3..v8}, LX/ExA;->A02(LX/Fuy;LX/F1Z;Ljava/lang/Integer;IZ)V
+    0072..0076  iget-boolean  v0, v5, LX/F1Z;->A03:Z
+    0076..007a  if-nez  v0, +0x93
+    007a..007e  if-eqz  v2, +0x94
+    007e..0082  iget-object  v0, v3, LX/ExA;->A05:LX/05a;
+    0082..0088  invoke-static  {v0}, LX/DBe;->A0n(LX/05a;)LX/0x0;
+    0088..008a  move-result-object  v2
+    008a..0090  invoke-static  {v12}, LX/ExA;->A00(I)I
+    0090..0092  move-result  v1
+    0092..0098  invoke-static  {v12}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0098..009a  move-result-object  v0
+    009a..00a0  invoke-virtual  {v2, v9, v5, v0, v1}, LX/0x0;->A0b(LX/1k2;LX/F1Z;Ljava/lang/Integer;I)V
+    00a0..00a4  const/16  v0, #0x12
+    00a4..00a8  if-eq  v12, v0, +0x7f
+    00a8..00aa  const/4  v0, #0x0
+    00aa..00ae  iput-boolean  v0, v11, LX/F0b;->A00:Z
+    00ae..00b2  const/16  v0, #0x6b
+    00b2..00b6  if-eq  v12, v0, +0x74
+    00b6..00ba  const/16  v0, #0x6a
+    00ba..00be  if-eq  v12, v0, +0x70
+    00be..00c4  invoke-virtual  {v5}, LX/F1Z;->A0O()Z
+    00c4..00c6  move-result  v0
+    00c6..00ca  if-eqz  v0, +0x6a
+    00ca..00ce  iget-object  v4, v11, LX/F0b;->A09:LX/EdS;
+    00ce..00d2  iget-object  v0, v4, LX/EdS;->A00:LX/05a;
+    00d2..00d8  invoke-static  {v0}, LX/05a;->A00(LX/05a;)LX/00E;
+    00d8..00da  move-result-object  v1
+    00da..00de  const/16  v0, #0x1c77
+    00de..00e4  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    00e4..00e6  move-result  v0
+    00e6..00ea  if-eqz  v0, +0x5a
+    00ea..00f0  invoke-static  {v12}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+    00f0..00f2  move-result-object  v0
+    00f2..00f6  iget-object  v2, v5, LX/F1Z;->A0D:Ljava/lang/String;
+    00f6..00fc  invoke-static  {v0}, LX/1Xl;->A16(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00fc..00fe  move-result-object  v1
+    00fe..0102  const-string  v0, ", type="
+    0102..0108  invoke-static  {v0, v2, v1}, LX/1Xl;->A0x(Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    0108..010a  move-result-object  v9
+    010a..010e  if-eqz  v10, +0x18
+    010e..0112  iget-object  v0, v4, LX/EdS;->A07:LX/05a;
+    0112..0118  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0118..011a  move-result-object  v0
+    011a..011e  check-cast  v0, LX/DDS;
+    011e..0124  invoke-virtual  {v0, v10}, LX/DDS;->A07(LX/DiW;)Ljava/lang/String;
+    0124..0126  move-result-object  v2
+    0126..012c  invoke-static  {v9}, LX/1Xl;->A16(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    012c..012e  move-result-object  v1
+    012e..0132  const-string  v0, ", media="
+    0132..0138  invoke-static  {v0, v2, v1}, LX/1Xl;->A0x(Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    0138..013a  move-result-object  v9
+    013a..013e  iget-object  v0, v5, LX/Dxs;->A08:LX/EF4;
+    013e..0142  iget-object  v0, v0, LX/EF4;->A00:LX/1dW;
+    0142..0146  iget-object  v3, v0, LX/1dW;->A00:LX/0DY;
+    0146..014a  iget-boolean  v2, v0, LX/1dW;->A02:Z
+    014a..014e  iget-object  v0, v0, LX/1dW;->A01:Ljava/lang/String;
+    014e..0154  invoke-static  {v0}, LX/1Xl;->A16(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0154..0156  move-result-object  v1
+    0156..015a  const-string  v0, "-failure"
+    015a..0160  invoke-static  {v0, v1}, LX/1Xl;->A0z(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    0160..0162  move-result-object  v0
+    0162..0168  invoke-static  {v3, v0, v2}, LX/DBb;->A0g(LX/0DY;Ljava/lang/String;Z)LX/1dW;
+    0168..016a  move-result-object  v8
+    016a..016e  iget-object  v0, v4, LX/EdS;->A01:LX/05a;
+    016e..0174  invoke-static  {v0}, LX/2L8;->A0a(LX/05a;)LX/0wZ;
+    0174..0176  move-result-object  v6
+    0176..017a  iget-object  v0, v4, LX/EdS;->A0B:LX/05a;
+    017a..0180  invoke-static  {v0}, LX/2L6;->A1X(LX/05a;)V
+    0180..0186  invoke-static  {v12}, LX/ExA;->A00(I)I
+    0186..0188  move-result  v10
+    0188..018e  invoke-static  {v5}, LX/F1Z;->A00(LX/F1Z;)LX/0DY;
+    018e..0190  move-result-object  v7
+    0190..0194  iget-wide  v11, v5, LX/F1Z;->A05:J
+    0194..019a  invoke-virtual/range  {v6..v12}, LX/0wZ;->A0N(LX/0DY;LX/1dW;Ljava/lang/String;IJ)V
+    019a..019c  return-void
+    019c..01a0  if-eqz  v2, +0x3
+    01a0..01a2  goto  -0x80
+    01a2..01a4  const/4  v0, #0x1
+    01a4..01a6  goto  -0x7d
+    # exception table: 0 try range(s)
+.end method

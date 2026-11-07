@@ -1,5 +1,11 @@
 # Network correctness audit
 
+**Media parser error-ACK boundary traced.** Native Dxp reasons flow conditionally
+through a distinct mapper/envelope path: common media reasons map to error491
+with optional original failure_reason metadata. This is not receipt-parser487 or
+a Signal retry cause. Rust integration remains unproven; no wire change.
+[Evidence](media-network-outcomes.md#pinned-media-parser-error-ack-boundary-2026-11-06).
+
 **View-once cached MIME bypass closed.** Shared whole-image MIME admission now
 precedes view-once descriptor selection, cached prefetch reporting and one-shot
 plaintext consumption. Direct flags and all supported wrappers are regression

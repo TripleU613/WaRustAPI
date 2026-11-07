@@ -1,0 +1,89 @@
+
+# class: LX/Dxp;
+# extends: LX/EDP;
+
+.method public <init>(VI)  # .registers 2
+    # full signature: LX/Dxp;-><init>(I)V
+    0000..0006  invoke-direct  {v0}, LX/EDP;-><init>()V
+    0006..000a  iput  v1, v0, LX/Dxp;->e2eFailureReason:I
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VIL)  # .registers 3
+    # full signature: LX/Dxp;-><init>(ILjava/lang/Exception;)V
+    0000..0006  invoke-direct  {v0, v2}, LX/EDP;-><init>(Ljava/lang/Exception;)V
+    0006..000a  iput  v1, v0, LX/Dxp;->e2eFailureReason:I
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VIL)  # .registers 3
+    # full signature: LX/Dxp;-><init>(ILjava/lang/String;)V
+    0000..0006  invoke-direct  {v0}, LX/EDP;-><init>()V
+    0006..000a  iput  v1, v0, LX/Dxp;->e2eFailureReason:I
+    000a..000e  iput-object  v2, v0, LX/Dxp;->description:Ljava/lang/String;
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(L)  # .registers 2
+    # full signature: LX/Dxp;->A00()LX/Dxp;
+    0000..0002  const/4  v1, #0x0
+    0002..0006  new-instance  v0, LX/Dxp;
+    0006..000c  invoke-direct  {v0, v1}, LX/Dxp;-><init>(I)V
+    000c..000e  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A01(L)  # .registers 2
+    # full signature: LX/Dxp;->A01()LX/Dxp;
+    0000..0004  const/16  v1, #0xd
+    0004..0008  new-instance  v0, LX/Dxp;
+    0008..000e  invoke-direct  {v0, v1}, LX/Dxp;-><init>(I)V
+    000e..0010  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A02(L)  # .registers 2
+    # full signature: LX/Dxp;->A02()LX/Dxp;
+    0000..0004  const/16  v1, #0x10
+    0004..0008  new-instance  v0, LX/Dxp;
+    0008..000e  invoke-direct  {v0, v1}, LX/Dxp;-><init>(I)V
+    000e..0010  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A03(L)  # .registers 2
+    # full signature: LX/Dxp;->A03()LX/Dxp;
+    0000..0004  const/16  v1, #0x11
+    0004..0008  new-instance  v0, LX/Dxp;
+    0008..000e  invoke-direct  {v0, v1}, LX/Dxp;-><init>(I)V
+    000e..0010  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A04(LI)  # .registers 2
+    # full signature: LX/Dxp;->A04(I)LX/Dxp;
+    0000..0004  new-instance  v0, LX/Dxp;
+    0004..000a  invoke-direct  {v0, v1}, LX/Dxp;-><init>(I)V
+    000a..000c  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A05(LLI)  # .registers 2
+    # full signature: LX/Dxp;->A05(Ljava/lang/String;I)LX/Dxp;
+    0000..0006  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0006..000a  new-instance  v0, LX/Dxp;
+    000a..0010  invoke-direct  {v0, v1}, LX/Dxp;-><init>(I)V
+    0010..0012  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A06(LLI)  # .registers 3
+    # full signature: LX/Dxp;->A06(Ljava/lang/String;I)LX/Dxp;
+    0000..0004  new-instance  v0, LX/Dxp;
+    0004..000a  invoke-direct  {v0, v2, v1}, LX/Dxp;-><init>(ILjava/lang/String;)V
+    000a..000c  return-object  v0
+    # exception table: 0 try range(s)
+.end method
