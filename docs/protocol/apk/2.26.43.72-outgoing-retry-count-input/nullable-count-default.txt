@@ -1,0 +1,14 @@
+
+# class: LX/3q5;
+# extends: Ljava/lang/Object;
+
+.method public A0J(IL)  # .registers 1
+    # full signature: LX/3q5;->A0J(Ljava/lang/Number;)I
+    0000..0004  if-eqz  v0, +0x7
+    0004..000a  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    000a..000c  move-result  v0
+    000c..000e  return  v0
+    000e..0010  const/4  v0, #0x0
+    0010..0012  return  v0
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,14 @@
+{
+  "README.md": {
+    "bytes": 4483,
+    "sha256": "d51b6213caaa8a2c32a6a8c18ba4ba75e52588fad8003245523e024903b9ade1"
+  },
+  "incoming-count-getter.txt": {
+    "bytes": 863,
+    "sha256": "05d38af8e48d81b701f2bc79a9e5c7ad113440b1ed632514d7f35cf8994d9dfc"
+  },
+  "nullable-count-default.txt": {
+    "bytes": 417,
+    "sha256": "b7bde5c52900d7750c9fee7e867b8e468378da7a6b19ce8858c5c07e42122d48"
+  }
+}

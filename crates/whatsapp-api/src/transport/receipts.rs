@@ -502,6 +502,17 @@ pub(crate) fn queue_retry_for_incoming_with_cause(
                 "retry requires a usable original message timestamp",
             )
         })?;
+    // APK43.72 F1Z.A04 -> SendRetryReceiptJob.retryCount -> A0L adds1.
+    // Positive input counts also select carried-key preparation. Until that
+    // lifecycle is ported, this bounded minimal branch handles only count0;
+    // do not reset an advanced or invalid input to wire count1. Preserve the
+    // caller-owned capture and every historical reservation without queuing.
+    if super::inbox::incoming_retry_count(node) != Some(0) {
+        tracing::warn!(
+            "retry not queued: incoming count requires unsupported progression/key preparation or is invalid"
+        );
+        return Ok(0);
+    }
     let retry = super::messaging::retry_receipt_with_error(
         &chat,
         participant.as_ref(),
@@ -2150,6 +2161,109 @@ mod tests {
             0
         );
         assert!(reserve_pending(&store).unwrap().is_empty());
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                .unwrap(),
+            held
+        );
+    }
+
+    #[test]
+    fn retry_queue_preserves_unsupported_incoming_counts_without_resetting_them() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("retry-count.redb");
+        let store = open(&path, true);
+        let account = crate::session::AccountRecord {
+            signal_registration_id: Some(31),
+            ..Default::default()
+        };
+        let incoming = Node::new("message")
+            .attr("t", "1700000000")
+            .attr("from", Jid::parse("15555550100@s.whatsapp.net").unwrap())
+            .attr("id", "COUNT-FAILED");
+        let enc = |count| {
+            Node::new("enc")
+                .attr("type", "msg")
+                .attr("v", "2")
+                .attr("count", count)
+                .bytes(vec![9])
+        };
+        for counts in [
+            vec!["1"],
+            vec!["+01"],
+            vec!["١"],
+            vec!["-1"],
+            vec!["2147483647"],
+            vec!["2147483648"],
+            vec!["bad"],
+            vec!["0", "2"],
+            vec!["2", "0"],
+        ] {
+            let node = incoming
+                .clone()
+                .children(counts.into_iter().map(enc).collect());
+            super::super::inbox::preserve(&store, &node).unwrap();
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                .unwrap();
+            let head = store.journal_head().unwrap();
+            assert_eq!(
+                queue_retry_for_incoming_with_cause(
+                    &store,
+                    &account,
+                    &node,
+                    Some(RetryCause::MissingSession)
+                )
+                .unwrap(),
+                0
+            );
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                    .unwrap(),
+                before
+            );
+            assert_eq!(store.journal_head().unwrap(), head);
+        }
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+            .unwrap();
+        drop(store);
+        let store = open(&path, false);
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                .unwrap(),
+            before
+        );
+        let zero = incoming.children(vec![enc("+00")]);
+        assert_eq!(
+            queue_retry_for_incoming(&store, &account, &zero).unwrap(),
+            1
+        );
+        let pending = reserve_pending(&store).unwrap();
+        assert_eq!(pending.len(), 1);
+        assert_eq!(
+            pending[0]
+                .child("retry")
+                .unwrap()
+                .get_attr("count")
+                .and_then(|v| v.as_text()),
+            Some("1")
+        );
+        let held = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+            .unwrap();
+        assert_eq!(
+            queue_retry_for_incoming(&store, &account, &zero.clone().children(vec![enc("2")]))
+                .unwrap(),
+            0
+        );
+        assert_eq!(
+            queue_retry_for_incoming(&store, &account, &zero).unwrap(),
+            0
+        );
         assert_eq!(
             store
                 .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))

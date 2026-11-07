@@ -97,7 +97,6 @@ fn ciphertext_bytes(node: &Node) -> Option<&[u8]> {
 // against the previous count only when it was positive. Preserve child order:
 // [0,1] is admitted but [1,0] is refused. Reject before any ratchet/ACK authority.
 fn encrypted_children_metadata_valid(node: &Node) -> bool {
-    let mut previous_count = 0;
     for enc in node.child_nodes().iter().filter(|n| n.description == "enc") {
         // APK43.72 EIM.A00 rejects missing/unknown type before EuN selects
         // descriptors. Its frskmsg/msmsg/otsk branches are native-valid but
@@ -120,25 +119,30 @@ fn encrypted_children_metadata_valid(node: &Node) -> bool {
         {
             return false;
         }
+    }
+    incoming_retry_count(node).is_some()
+}
+
+// APK43.72 EuN.A01 -> Ewa.A0E -> Dxs.A0C -> F1Z.A04 retains the
+// final aggregate enc count. Native missing optional Integer defaults0.
+// Share the ordered Java-i32 parser with outgoing retry eligibility so that
+// malformed or advanced counts cannot silently become a new count1 request.
+pub(super) fn incoming_retry_count(node: &Node) -> Option<i32> {
+    let mut previous_count = 0;
+    for enc in node.child_nodes().iter().filter(|n| n.description == "enc") {
         let count = match enc.get_attr("count") {
             None => 0,
-            Some(value) => {
-                let Some(count) = value
-                    .as_text()
-                    .and_then(super::mex::java_decimal_long)
-                    .and_then(|count| i32::try_from(count).ok())
-                else {
-                    return false;
-                };
-                count
-            }
+            Some(value) => value
+                .as_text()
+                .and_then(super::mex::java_decimal_long)
+                .and_then(|count| i32::try_from(count).ok())?,
         };
         if previous_count > 0 && count != previous_count {
-            return false;
+            return None;
         }
         previous_count = count;
     }
-    true
+    Some(previous_count)
 }
 
 /// Primary chat identity for direct inbox/event/receipt lookup. Companion

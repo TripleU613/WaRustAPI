@@ -1,5 +1,10 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
+**Minimal retry count reset closed.** Incoming nonzero/invalid counts can no
+longer create a constant count1 request. Aggregate0 retains the existing minimal
+request; advanced progression/carried keys remain explicitly unported. Durable
+state, reopen and once-only behavior are tested. [Evidence](docs/protocol/outgoing-retry-receipts.md#incoming-count-cannot-reset-the-minimal-retry-2026-11-07).
+
 **Retry key publication ownership traced.** Native carried prekeys are marked
 directly distributed before retry submission; selected key/skey/pq wire mapping
 is now bound. Rust integration still needs durable ownership and upload exclusion;

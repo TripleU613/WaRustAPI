@@ -1,0 +1,23 @@
+
+# class: LX/F1Z;
+# extends: Ljava/lang/Object;
+
+.method public A04(I)  # .registers 2
+    # full signature: LX/F1Z;->A04()I
+    0000..0004  instance-of  v0, v1, LX/Dxr;
+    0004..0008  if-eqz  v0, +0xe
+    0008..000a  move-object  v0, v1
+    000a..000e  check-cast  v0, LX/Dxr;
+    000e..0012  iget-object  v0, v0, LX/Dxr;->A00:LX/Enw;
+    0012..0016  iget-object  v0, v0, LX/Enw;->A0D:Ljava/lang/Integer;
+    0016..001c  invoke-static  {v0}, LX/3q5;->A0J(Ljava/lang/Number;)I
+    001c..001e  move-result  v0
+    001e..0020  return  v0
+    0020..0022  move-object  v0, v1
+    0022..0026  check-cast  v0, LX/Dxs;
+    0026..002a  iget-object  v0, v0, LX/Dxs;->A0C:Ljava/lang/Integer;
+    002a..0030  invoke-static  {v0}, LX/3q5;->A0J(Ljava/lang/Number;)I
+    0030..0032  move-result  v0
+    0032..0034  return  v0
+    # exception table: 0 try range(s)
+.end method

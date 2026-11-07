@@ -1,4 +1,11 @@
 {
+  "x-outgoing-minimal-retry-count-admission": {
+    "x-cli": "existing receive/listen retry queue; no new command or flag",
+    "x-transport": "bounded minimal retry admission uses shared incoming aggregate count parser; nonzero/invalid count does not queue or reset wire",
+    "x-live": false,
+    "description": "Native enc aggregate count reaches retry job unchanged and is incremented; positive input also selects carried-key preparation. Rust previously always built count1. Current minimal queue now admits only aggregate0 and returns zero queued for other/invalid counts with unchanged captures/checkpoints/reservations. Ordered signed Java-i32 defaults and aliases remain shared with inbox. Real-store failure-before-fix, reopen and uncertain once-only regression retained. Full advanced count/carried-key/stateless policy integration remains incomplete; no native nonzero-count ban or new retry/ACK family claimed.",
+    "evidence": "docs/protocol/apk/2.26.43.72-outgoing-retry-count-input/README.md"
+  },
   "x-retry-prekey-direct-distribution-static-boundary": {
     "x-cli": "research through existing APK inspection commands; no new command or flag",
     "x-transport": "no runtime change; native retry key ownership and carried keys wire shape retained",

@@ -371,3 +371,22 @@ Rust has KEM inventory/upload support but no carried-key retry/direct-distributi
 state; do not add bytes without durable selection, upload exclusion and no-replay
 ownership. [Evidence](apk/2.26.43.72-retry-prekey-distribution/README.md). This is
 research only; no key mutation, runtime request or server-acceptance claim.
+
+## Incoming count cannot reset the minimal retry (2026-11-07)
+
+**Confirmed construction gap closed within the current supported scope:** native
+aggregate enc count reaches F1Z.A04 and retryCount unchanged, then the job adds1;
+positive input also selects carried-key preparation. Rust previously always
+built count1. The shared ordered Java-i32 parser now gates the bounded minimal
+queue to aggregate0; other/invalid counts stay preserved without new wire or
+reservation, and historical once-only/uncertain requests remain immutable. Full
+carried-key/count progression and stateless-policy integration remain unfinished.
+[Evidence](apk/2.26.43.72-outgoing-retry-count-input/README.md). Real-store
+regression reproduces the old queue result and verifies no mutation/reopen/reset.
+No new retry/ACK family or live operation.
+
+Verification: the real-store count1 regression first queued a request on old
+code, then returned zero without durable changes after the fix. All1,591
+workspace/all-feature tests, strict all-target/all-feature Clippy, formatting,
+CLI reference, OpenAPI library-symbol check, APK coverage, retained evidence
+checksums and repository hygiene passed. No account traffic was generated.
