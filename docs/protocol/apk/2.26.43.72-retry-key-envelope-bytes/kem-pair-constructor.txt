@@ -1,0 +1,31 @@
+
+# class: Lorg/whispersystems/libsignal/kem/KEMKeyPair;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLL)  # .registers 4
+    # full signature: Lorg/whispersystems/libsignal/kem/KEMKeyPair;-><init>(Lorg/whispersystems/libsignal/kem/KEMPublicKey;Lorg/whispersystems/libsignal/kem/KEMSecretKey;)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  const/4  v0, #0x1
+    000a..0010  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0010..0016  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    0016..001a  iput-object  v2, v1, Lorg/whispersystems/libsignal/kem/KEMKeyPair;->publicKey:Lorg/whispersystems/libsignal/kem/KEMPublicKey;
+    001a..001e  iput-object  v3, v1, Lorg/whispersystems/libsignal/kem/KEMKeyPair;->secretKey:Lorg/whispersystems/libsignal/kem/KEMSecretKey;
+    001e..0020  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VLL)  # .registers 5
+    # full signature: Lorg/whispersystems/libsignal/kem/KEMKeyPair;-><init>([B[B)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  const/4  v0, #0x1
+    000a..0010  invoke-static  {v4, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0010..0014  new-instance  v1, Lorg/whispersystems/libsignal/kem/KEMPublicKey;
+    0014..001a  invoke-direct  {v1, v3}, Lorg/whispersystems/libsignal/kem/KEMPublicKey;-><init>([B)V
+    001a..001e  new-instance  v0, Lorg/whispersystems/libsignal/kem/KEMSecretKey;
+    001e..0024  invoke-direct  {v0, v4}, Lorg/whispersystems/libsignal/kem/KEMSecretKey;-><init>([B)V
+    0024..002a  invoke-direct  {v2, v1, v0}, Lorg/whispersystems/libsignal/kem/KEMKeyPair;-><init>(Lorg/whispersystems/libsignal/kem/KEMPublicKey;Lorg/whispersystems/libsignal/kem/KEMSecretKey;)V
+    002a..002c  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,27 @@
+
+# class: LX/EtN;
+# extends: Ljava/lang/Object;
+
+.method public A00(L)  # .registers 4
+    # full signature: LX/EtN;->A00()LX/ERZ;
+    0000..0004  iget-object  v1, v3, LX/EtN;->A00:LX/Dfd;
+    0004..0008  iget-object  v0, v1, LX/Dfd;->publicKey_:Lcom/google/protobuf/ByteString;
+    0008..000e  invoke-static  {v0}, LX/DBd;->A1a(Lcom/google/protobuf/ByteString;)[B
+    000e..0010  move-result-object  v0
+    0010..0016  invoke-static  {v0}, LX/F3k;->A02([B)LX/Ehd;
+    0016..0018  move-result-object  v2
+    0018..001c  iget-object  v0, v1, LX/Dfd;->privateKey_:Lcom/google/protobuf/ByteString;
+    001c..0022  invoke-static  {v0}, LX/DBd;->A1a(Lcom/google/protobuf/ByteString;)[B
+    0022..0024  move-result-object  v0
+    0024..0028  new-instance  v1, LX/Ee0;
+    0028..002e  invoke-direct  {v1, v0}, LX/Ee0;-><init>([B)V
+    002e..0032  new-instance  v0, LX/ERZ;
+    0032..0038  invoke-direct  {v0, v1, v2}, LX/ERZ;-><init>(LX/Ee0;LX/Ehd;)V
+    0038..003a  return-object  v0
+    003a..003c  move-exception  v0
+    003c..0042  invoke-static  {v0}, LX/DBb;->A0q(Ljava/lang/Object;)Ljava/lang/AssertionError;
+    0042..0044  move-result-object  v0
+    0044..0046  throw  v0
+    # exception table: 1 try range(s)
+    # catch LX/ECt; code_units 0000..001d -> 001d
+.end method

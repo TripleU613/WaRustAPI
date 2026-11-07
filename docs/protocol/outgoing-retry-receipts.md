@@ -498,3 +498,13 @@ fix; the reopen/refusal/restoration/once-only regression now passes. All1,593
 workspace/all-feature tests, strict all-target/all-feature Clippy, formatting,
 CLI reference, OpenAPI library-symbol check, APK coverage and repository hygiene
 passed. No live account traffic was generated.
+
+## Carried-key byte binding narrowed
+
+**Confirmed selected static:** the pinned retry PQ getter's concrete byte-array
+KEMKeyPair overload stores public bytes unchanged through KEMPublicKey.A00; the
+classic signed getter instead reaches F3k.A02, requiring type0x05 and at least33
+stored bytes and taking exactly the next32. The common ID helper corroborates
+existing low24 big-endian research. [Method traces and boundaries](apk/2.26.43.72-retry-key-envelope-bytes/README.md).
+This resolves a constructor ambiguity in the earlier retry distribution bundle,
+not the full signing/generation/policy/lifecycle integration. No retry enabled.

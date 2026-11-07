@@ -1,0 +1,14 @@
+
+# class: LX/Ehd;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLB)  # .registers 4
+    # full signature: LX/Ehd;-><init>([BB)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    000e..0012  iput-object  v2, v1, LX/Ehd;->A01:[B
+    0012..0016  ??(0x5d)  v3, v1, LX/Ehd;->A00:B
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -9647,3 +9647,11 @@ Local public upload eligibility omission corrected at shared entry, including ca
   and preserve checkpoint/journal snapshots after another reopen. No runtime or
   live operation changed. See
   [content restart verification](http-send-audit-map.md#public-content-upload-refuses-uncertain-outcomes-after-rename).
+
+- Confirmed selected static APK2.26.43.72 retry key-byte plumbing: PQ getter's
+  byte-array KEMKeyPair/KEMPublicKey constructor chain preserves stored public
+  bytes; signed classic getter decodes type0x05 and copies32 bytes from offset1.
+  Three-byte ID helper corroborates prior findings. REA Android provider failed
+  at stale Java21 path; complete failure retained, method text from repository
+  DEX inspector. No runtime behavior or live request added. See
+  [retry byte binding](apk/2.26.43.72-retry-key-envelope-bytes/README.md).

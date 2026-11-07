@@ -65,8 +65,11 @@ constructs KEMKeyPair, obtains its public A00 bytes, retains the stored signatur
 and encodes the selected id via1nr.A04. It constructs ETs with those three inputs.
 [ETs constructor](key-fields-constructor.txt) assigns argument1→A01(id),
 argument2→A00(value),argument3→A02(signature). It does not regenerate a signature
-here. Exact KEM serialization/type-prefix semantics and signing input need their
-own provider binding; do not assume that raw stored public bytes can be copied
+here. The selected constructor/type-prefix binding is now resolved in the
+[retry envelope byte trace](../2.26.43.72-retry-key-envelope-bytes/README.md):
+this getter chain preserves stored public bytes unchanged. Signing input and
+valid generated-row provenance still need their own binding; do not assume that
+arbitrary stored public bytes can be copied
 without following KEMKeyPair conversion.
 
 [0WJ.A0c](signed-prekey-getter.txt) is the signed prekey getter (loads A0Z and

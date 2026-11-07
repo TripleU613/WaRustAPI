@@ -1,4 +1,11 @@
 {
+  "x-retry-key-envelope-byte-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-retry-key-envelope-bytes/README.md",
+    "behavior": "Pinned static retry envelope byte binding: PQ constructor chain preserves stored public bytes; signed classic decoder extracts32 bytes following type0x05. Research only, no carried-key retry capability enabled."
+  },
   "x-public-content-upload-restart-verification": {
     "x-cli": false,
     "x-transport": false,

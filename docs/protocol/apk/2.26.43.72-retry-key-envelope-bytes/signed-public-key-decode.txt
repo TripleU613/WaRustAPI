@@ -1,0 +1,35 @@
+
+# class: LX/F3k;
+# extends: Ljava/lang/Object;
+
+.method public A02(LL)  # .registers 6
+    # full signature: LX/F3k;->A02([B)LX/Ehd;
+    0000..0002  const/4  v4, #0x0
+    0002..0008  invoke-static  {v5, v4}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  array-length  v1, v5
+    000a..000e  const/16  v0, #0x21
+    000e..0012  if-lt  v1, v0, +0x24
+    0012..0016  aget-byte  v0, v5, v4
+    0016..001a  and-int/lit16  v0, v0, #0xff
+    001a..001c  int-to-byte  v1, v0
+    001c..001e  const/4  v3, #0x5
+    001e..0022  if-ne  v1, v3, +0x10
+    0022..0026  const/16  v2, #0x20
+    0026..002a  new-array  v1, v2, [B
+    002a..002c  const/4  v0, #0x1
+    002c..0032  invoke-static  {v5, v0, v1, v4, v2}, Ljava/lang/System;->arraycopy(Ljava/lang/Object;ILjava/lang/Object;II)V
+    0032..0036  new-instance  v0, LX/Ehd;
+    0036..003c  invoke-direct  {v0, v1, v3}, LX/Ehd;-><init>([BB)V
+    003c..003e  return-object  v0
+    003e..0042  const-string  v0, "Bad key type: "
+    0042..0048  invoke-static  {v0, v1}, LX/2LA;->A0p(Ljava/lang/String;I)Ljava/lang/String;
+    0048..004a  move-result-object  v1
+    004a..004e  new-instance  v0, LX/ECt;
+    004e..0054  invoke-direct  {v0, v1}, LX/ECt;-><init>(Ljava/lang/String;)V
+    0054..0056  throw  v0
+    0056..005a  const-string  v1, "Invalid byte array"
+    005a..005e  new-instance  v0, LX/ECt;
+    005e..0064  invoke-direct  {v0, v1}, LX/ECt;-><init>(Ljava/lang/String;)V
+    0064..0066  throw  v0
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,9 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"error\":{\"code\":\"capability_unavailable\",\"category\":\"unsupported_provider\",\"message\":\"Cannot execute JAVA_HOME java /usr/lib/jvm/java-21-openjdk/bin/java: ENOENT: no such file or directory, access '/usr/lib/jvm/java-21-openjdk/bin/java'\",\"retryable\":false,\"remediation\":{\"action\":\"Cannot execute JAVA_HOME java /usr/lib/jvm/java-21-openjdk/bin/java: ENOENT: no such file or directory, access '/usr/lib/jvm/java-21-openjdk/bin/java'\"},\"details\":{\"provider_id\":\"jadx\",\"operation\":\"inspect_android_package\",\"reason\":\"Cannot execute JAVA_HOME java /usr/lib/jvm/java-21-openjdk/bin/java: ENOENT: no such file or directory, access '/usr/lib/jvm/java-21-openjdk/bin/java'\"}}}"
+    }
+  ],
+  "isError": true
+}

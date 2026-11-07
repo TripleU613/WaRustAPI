@@ -1,0 +1,38 @@
+{
+  "README.md": {
+    "bytes": 4490,
+    "sha256": "1f4c7a7cb5006b21ddda1c36e10e35d525982e32e51ff24c54e3ab9ce0256397"
+  },
+  "id-writer.txt": {
+    "bytes": 695,
+    "sha256": "56c82fe43c2043ccfc64976d164df83b9f415f23dbb9eaf51a01780395316fdc"
+  },
+  "kem-pair-constructor.txt": {
+    "bytes": 1941,
+    "sha256": "02c6fddf1cc0ea4c98b2837f9e8a4c12f3ad71ad338d7e83406374261785b3e3"
+  },
+  "kem-public-constructor.txt": {
+    "bytes": 452,
+    "sha256": "d821fe2b941dcbf2546032811b92660885151060224c142b161989751fd9fb89"
+  },
+  "rea-provider-attempt.json": {
+    "bytes": 798,
+    "sha256": "143e917239c24f1f0bb4b952f0372068833155e4f0f22de2d2b7567e6ec0a052"
+  },
+  "signed-envelope.txt": {
+    "bytes": 1034,
+    "sha256": "c947a55b61fd144e82bafbb83e66fc9cd0cdfeacbba53b1887fb3f03290dd765"
+  },
+  "signed-public-key-constructor.txt": {
+    "bytes": 493,
+    "sha256": "f6f5426d7080d2534d6d6aa358dfcab6053f7c293702e0f89e069eda6698b2a2"
+  },
+  "signed-public-key-decode.txt": {
+    "bytes": 1500,
+    "sha256": "7cd491aae3d68e3733eb0e56da20cfd4fd617645b37f20ed3f6f98fe86892257"
+  },
+  "signed-record-pair.txt": {
+    "bytes": 1274,
+    "sha256": "213d54c55ee6f73630462996984ecbe351b26b0c3a7097e16ecd515335effa75"
+  }
+}

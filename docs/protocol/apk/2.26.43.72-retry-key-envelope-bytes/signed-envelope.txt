@@ -1,0 +1,23 @@
+
+# class: LX/0WJ;
+# extends: Ljava/lang/Object;
+
+.method public A05(LL)  # .registers 5
+    # full signature: LX/0WJ;->A05(LX/EtN;)LX/ETs;
+    0000..0004  iget-object  v1, v4, LX/EtN;->A00:LX/Dfd;
+    0004..0008  iget  v0, v1, LX/Dfd;->id_:I
+    0008..000e  invoke-static  {v0}, LX/1nr;->A04(I)[B
+    000e..0010  move-result-object  v3
+    0010..0016  invoke-virtual  {v4}, LX/EtN;->A00()LX/ERZ;
+    0016..0018  move-result-object  v0
+    0018..001c  iget-object  v0, v0, LX/ERZ;->A01:LX/Ehd;
+    001c..0020  iget-object  v2, v0, LX/Ehd;->A01:[B
+    0020..0024  iget-object  v0, v1, LX/Dfd;->signature_:Lcom/google/protobuf/ByteString;
+    0024..002a  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    002a..002c  move-result-object  v1
+    002c..0032  invoke-static  {v1}, LX/00l;->A05(Ljava/lang/Object;)V
+    0032..0036  new-instance  v0, LX/ETs;
+    0036..003c  invoke-direct  {v0, v3, v2, v1}, LX/ETs;-><init>([B[B[B)V
+    003c..003e  return-object  v0
+    # exception table: 0 try range(s)
+.end method

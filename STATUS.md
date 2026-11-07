@@ -10651,3 +10651,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   uncertain, HTTP200/503 header and invalid-response states. Repeated calls
   refuse replay, stay disconnected and preserve rows/journal through shutdown
   and reopen. Test only; no live request or server acceptance claim.
+
+- Pinned retry key-byte trace binds PQ public bytes unchanged through its concrete
+  constructors and classic signed values to type0x05/32-byte decode. Preserved
+  DEX methods, checksums and REA provider failure; carried-key policy/signing/
+  durable publication integration remain incomplete. Research only, no live request.
