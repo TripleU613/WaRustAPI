@@ -1245,3 +1245,74 @@ All1545 workspace/all-feature tests, strict all-target/all-feature Clippy,
 formatting, OpenAPI library symbols, regenerated CLI reference, APK coverage
 and repository hygiene pass. Hygiene checked8053 local links and451 APK
 checksum bundles. These are offline results, not live acceptance evidence.
+
+
+## Binary from construction precedes chat projection (2026-11-06)
+
+**Confirmed local defects / fixed offline:** message_ack_address had native
+constructor-aware text handling but returned generic binary from values. A
+hosted JID_PAIR from consequently failed to match the underlying PN/LID chat.
+More seriously, to_non_ad erased invalid binary device100 and could settle an
+otherwise matching message. Separate failing runs demonstrated both outcomes.
+An extended qualified-recipient run then showed a valid recipient could bypass
+that invalid binary from after the first projection-only correction.
+
+Known typed binary PN/LID/hosted from values now reconstruct the same selected
+user/server/device string as the native reader (device0 omitted), pass the
+existing native classifier, then project a valid User/Device base to the
+underlying PN/LID chat. Legacy agent metadata and unsupported kinds in this
+known family do not gain routing authority. Native AD domain flags are carried
+by Rust's Server value, not that legacy agent field.
+
+When a recipient exists, known invalid binary from is refused *before* selecting
+it. This is distinct from a nullable text getter returning null: the binary JID
+constructor already runs during decode. A valid binary from still allows the
+selected recipient to override it. Empty-user PN reconstruction is the separate
+valid server singleton, so the existing qualified path is not rejected merely
+because that singleton cannot itself identify a0DY chat. No new session-close,
+NACK, retry or endpoint policy is inferred from constructor failure.
+
+**Reused confirmed static evidence**, pinned APK43.72 SHA256887a6f94:
+
+- [123.A01](apk/2.26.43.72-group-missing-identification/current-jid-attribute-reader.txt)
+  reads JID_PAIR/AD and calls0Dd.A00 before creating the typed0Tl attribute.
+  [A02](apk/2.26.43.72-group-missing-identification/current-ad-string-reader.txt)
+  decodes domain/device/user. Hosted device mismatch logs and proceeds; it is
+  not an automatic refusal at this point.
+- [A04](apk/2.26.43.72-group-missing-identification/current-ad-string-join.txt)
+  omits device0, or returns server alone for empty user. Thus binary hosted AD0
+  can reach the plain hosted user factory; explicit text :0 remains different.
+- [Generic parser/factory](apk/2.26.43.72-message-ack-chat/jid-parser.txt),
+  [device constructor](apk/2.26.43.72-lid-device-ack-text/README.md),
+  [PN construction](apk/2.26.43.72-pn-ack-text/README.md), and
+  [hosted classes](apk/2.26.43.72-hosted-chatstate/README.md)
+  bind the supported user/device cases. For the ordinary numeric users tested,
+  100/128/255 fail signed-byte/range admission, ordinary7/99 pass, and hosted
+  nonzero devices require the original integer99.
+- [0Dn normalization and1rH dispatch](apk/2.26.43.72-message-ack-chat/README.md)
+  unwrap valid DeviceJid.userJid and use recipient before from for the message
+  key. [Bare classes](apk/2.26.43.72-bare-server-ack-types/README.md) remain
+  separate Jid-only objects. No new REA export or runtime evidence is claimed.
+
+**New outbox regression:** actual binary primary/hosted pairs and AD devices
+0/7/99/100/128/255 cover PN/LID, matching/mismatching from, with/without a valid
+recipient, and success/error500. Native-invalid inputs preserve entry and journal
+without a terminal fact even when a valid recipient is supplied. Valid selected
+routes append exactly one original acceptance/failure fact; repeats add none.
+Reopening preserves the entry and no original intent becomes eligible to resend.
+The regression first failed on hosted-pair mismatch, then false device100
+settlement, then device100 bypass through recipient. No live account was used.
+
+**Remaining scope:** this is selected ACK outcome admission, not a global Rust
+binary decoder rewrite or a claim of complete malformed-packet handling. Every
+other typed namespace, special cached object, participant/other attribute decoder
+policy, receipt-from projection, full native callbacks and live acceptance remain
+separate work. Original Node/capture, stored identities, alias trust, outgoing
+requests and automatic replay policy remain unchanged.
+
+Verification: three actual-wire regression runs failed on the original hosted
+mismatch, invalid-device settlement, and valid-recipient bypass respectively.
+The final matrix passes. All1546 workspace/all-feature tests, strict all-target/
+all-feature Clippy, formatting, OpenAPI library symbols, regenerated CLI
+reference, APK coverage and repository hygiene pass. Hygiene checked8065 local
+links and451 APK checksum bundles. No live ACK acceptance is claimed.

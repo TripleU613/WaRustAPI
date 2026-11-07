@@ -1,3 +1,10 @@
+2026-11-06 — **Validated binary ACK from before projection and recipient selection.**
+Hosted binary sources now project to PN/LID; invalid binary device sources cannot
+settle through primary normalization or a valid recipient. Valid source/recipient
+precedence and original outcome/journal/no-resend guards remain.
+[Current constructor/order evidence and full binary matrix](message-ack.md#binary-from-construction-precedes-chat-projection-2026-11-06).
+Other decoder fields/families remain an explicit audit; no live account operation.
+
 2026-11-06 — **Made native long-PN ACK admission carrier-independent.**
 A matching native-valid20-digit PN recipient now correlates in binary primary/
 hosted pairs and AD0 as it already did in text. Constructor-invalid long users

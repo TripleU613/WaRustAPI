@@ -1,4 +1,11 @@
 {
+  "x-binary-ack-from-construction-order": {
+    "x-cli": false,
+    "x-transport": "outgoing::message_ack_address/message_ack_chat known binary PN/LID/hosted from outcome admission",
+    "x-live": false,
+    "description": "Known binary primary/hosted from pairs and AD addresses now pass the existing native constructor classifier before underlying-user projection. Hosted from matches PN/LID; invalid100/128/255 devices cannot settle through to_non_ad. Invalid known binary from is gated before recipient selection so a valid recipient cannot rescue it; nullable text handling and valid recipient precedence stay distinct. Empty-user PN preserves its separate valid server singleton behavior. Actual encode/decode/outbox matrix covers four domains,0/7/99/100/128/255 and plain pair, match/mismatch, optional recipient, success/error500, unchanged entry/journal, one fact, duplicates and reopen/no resend. No global decoder, other typed-family/attribute policy, session-close/NACK, identity/alias trust, request, retry, HTTP route or account operation is added. Full native callback and live acceptance remain unverified.",
+    "evidence": "docs/protocol/message-ack.md#binary-from-construction-precedes-chat-projection-2026-11-06"
+  },
   "x-long-pn-ack-carrier-admission": {
     "x-cli": false,
     "x-transport": "outgoing::message_ack_chat longer-PN recipient correlation branch",

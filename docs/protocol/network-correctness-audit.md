@@ -4927,3 +4927,18 @@ matrix failed before correction; it covers valid20/1008-prefix and invalid21,
 leading-zero and prohibited10-prefix cases, opposite from, success/refusal,
 state/journal preservation, duplicates, reopen and no resend. LID/special/decode
 policy limits remain explicit. No new target builder, replay or account operation.
+
+
+### Binary ACK from constructor/order correction (2026-11-06)
+
+**Confirmed local fixes:** [binary from construction before chat projection](message-ack.md#binary-from-construction-precedes-chat-projection-2026-11-06)
+now follows the native selected pair/AD factory before projecting a PN/LID user.
+Hosted binary from reaches its underlying chat; invalid device100/128/255 cannot
+be erased into primary authority or bypassed through a valid recipient. Retained
+reader/joiner/constructor/class/dispatch evidence supports the order. The new
+real-wire outbox matrix covers four domains, seven carrier/device forms,
+matching/mismatching from, recipient precedence, success/refusal, unchanged
+entry/journal, one terminal fact, duplicates, reopen and no resend. Three failing
+runs exposed the missed match, false settlement and qualified bypass. Other
+attributes/typed families and global decoder/error policy remain open. No live
+operation, identity merge, extra request or retry was introduced.

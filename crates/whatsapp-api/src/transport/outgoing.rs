@@ -1312,6 +1312,43 @@ fn message_ack_address(node: &Node, name: &str) -> Option<crate::model::jid::Jid
         };
         return crate::model::jid::Jid::parse(&format!("{user}@{domain}")).ok();
     }
+    if name == "from"
+        && let Some(value) = node.get_attr(name).and_then(|value| value.as_jid())
+        && matches!(
+            value.server,
+            Server::User | Server::Lid | Server::Hosted | Server::HostedLid
+        )
+    {
+        if value.agent != 0
+            || !matches!(
+                value.kind,
+                crate::model::jid::JidKind::Plain | crate::model::jid::JidKind::AgentDevice
+            )
+        {
+            return None;
+        }
+        // APK43.72 123.A01/A02 joins binary user/server/device with A04,
+        // omitting device0, then0Dd.A00 constructs before0Dn.A00 unwraps.
+        // Do not erase an invalid binary device into an accepted chat.
+        let text = if value.device == 0 {
+            format!("{}@{}", value.user, value.server.as_str())
+        } else {
+            format!("{}:{}@{}", value.user, value.device, value.server.as_str())
+        };
+        use super::messaging::AckUserText;
+        let user = match super::messaging::ack_user_text(&text)? {
+            AckUserText::Null => return None,
+            AckUserText::User(user)
+            | AckUserText::Device(user)
+            | AckUserText::ServiceUser(user)
+            | AckUserText::NonUser(user) => user,
+        };
+        let server = match value.server {
+            Server::Lid | Server::HostedLid => Server::Lid,
+            _ => Server::User,
+        };
+        return crate::model::jid::Jid::new(user, server).ok();
+    }
     if name == "recipient"
         && let Some(value) = node.get_attr(name).and_then(|value| value.as_jid())
         && value.agent == 0
@@ -1337,6 +1374,26 @@ fn message_ack_address(node: &Node, name: &str) -> Option<crate::model::jid::Jid
 // before normalizing from; 0Dn.A00 unwraps DeviceJid.userJid. Plain PN/LID
 // types0/18 bypass A00's special bot type26/27 conversion.
 pub(crate) fn message_ack_chat(node: &Node) -> Option<crate::model::jid::Jid> {
+    if node.get_attr("recipient").is_some()
+        && let Some(from) = node.get_attr("from").and_then(|value| value.as_jid())
+        && matches!(
+            from.server,
+            Server::User | Server::Lid | Server::Hosted | Server::HostedLid
+        )
+        && !(from.user.is_empty()
+            && from.server == Server::User
+            && from.agent == 0
+            && matches!(
+                from.kind,
+                crate::model::jid::JidKind::Plain | crate::model::jid::JidKind::AgentDevice
+            ))
+        && message_ack_address(node, "from").is_none()
+    {
+        // Binary123 parses a supplied JID before optional recipient selection.
+        // A valid recipient cannot rescue an invalid binary user/device from.
+        // Empty-user PN reconstructs the separately valid server-only singleton.
+        return None;
+    }
     if node
         .get_attr("recipient")
         .and_then(|v| v.as_text())
@@ -3722,6 +3779,114 @@ mod tests {
                         assert!(!acknowledge(&store, &ack).unwrap());
                         let after = store.read(|tx| outbox().get(tx, local_id)).unwrap();
                         if matches && admitted {
+                            let facts = &after.as_ref().unwrap().facts;
+                            assert_eq!(facts.len(), 1);
+                            assert_eq!(
+                                facts[0].kind,
+                                if error.is_some() {
+                                    DeliveryFactKind::Failed
+                                } else {
+                                    DeliveryFactKind::ServerAccepted
+                                }
+                            );
+                        } else {
+                            assert_eq!(after, before);
+                            assert_eq!(store.journal_head().unwrap(), head);
+                        }
+                        drop(store);
+                        let store = open(&path);
+                        assert_eq!(store.read(|tx| outbox().get(tx, local_id)).unwrap(), after);
+                        assert!(begin_selected(&store, Some(local_id)).unwrap().is_none());
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn binary_from_users_follow_native_device_construction_before_settlement() {
+        // APK43.72 123.A01/A02/A04 ->0Dd.A00 ->0EE/0EM/Dv4/Dv6;
+        // 0Dn.A00 unwraps valid devices. Domain bits are not legacy agent.
+        for (server, primary, user, other, hosted) in [
+            (
+                Server::User,
+                Server::User,
+                "15555550100",
+                "15555550999",
+                false,
+            ),
+            (Server::Lid, Server::Lid, "12345", "99999", false),
+            (
+                Server::Hosted,
+                Server::User,
+                "15555550100",
+                "15555550999",
+                true,
+            ),
+            (Server::HostedLid, Server::Lid, "12345", "99999", true),
+        ] {
+            for (kind, device, admitted) in [
+                (crate::model::jid::JidKind::Plain, 0, true),
+                (crate::model::jid::JidKind::AgentDevice, 0, true),
+                (crate::model::jid::JidKind::AgentDevice, 7, !hosted),
+                (crate::model::jid::JidKind::AgentDevice, 99, true),
+                (crate::model::jid::JidKind::AgentDevice, 100, false),
+                (crate::model::jid::JidKind::AgentDevice, 128, false),
+                (crate::model::jid::JidKind::AgentDevice, 255, false),
+            ] {
+                for matches in [false, true] {
+                    for (error, qualified) in [
+                        (None, false),
+                        (Some("500"), false),
+                        (None, true),
+                        (Some("500"), true),
+                    ] {
+                        let dir = tempfile::tempdir().unwrap();
+                        let path = dir.path().join("binary-from.redb");
+                        let store = open(&path);
+                        let local_id = enqueue(&store);
+                        let target = Jid::new(user, primary.clone()).unwrap();
+                        store
+                            .write(|tx| {
+                                let mut entry = outbox().get_mut(tx, local_id)?.unwrap();
+                                entry.intent.chat = ChatId::from_jid(&target)?;
+                                entry.wire_id = Some(MessageId::new("fixture")?);
+                                outbox().set_progress(tx, &mut entry, AttemptProgress::InFlight)
+                            })
+                            .unwrap();
+                        let before = store.read(|tx| outbox().get(tx, local_id)).unwrap();
+                        let head = store.journal_head().unwrap();
+                        let from = Jid {
+                            user: if matches { user } else { other }.into(),
+                            server: server.clone(),
+                            agent: 0,
+                            device,
+                            kind,
+                        };
+                        let mut ack = Node::new("ack")
+                            .attr("class", "message")
+                            .attr("id", "fixture")
+                            .attr("from", from);
+                        if qualified {
+                            ack = ack.attr("recipient", target.clone());
+                        }
+                        if let Some(error) = error {
+                            ack = ack.attr("error", error);
+                        }
+                        let dict = TokenDictionary::comparison_2_26_37_71();
+                        let wire = Encoder::new(dict).encode(&ack).unwrap();
+                        let ack = crate::binary::Decoder::new(&wire[1..], dict, &Limits::default())
+                            .decode_node()
+                            .unwrap();
+                        let settles = (matches || qualified) && admitted;
+                        assert_eq!(
+                            acknowledge(&store, &ack).unwrap(),
+                            settles,
+                            "{server:?}/{kind:?}/{device}/{matches}/{qualified}/{error:?}"
+                        );
+                        assert!(!acknowledge(&store, &ack).unwrap());
+                        let after = store.read(|tx| outbox().get(tx, local_id)).unwrap();
+                        if settles {
                             let facts = &after.as_ref().unwrap().facts;
                             assert_eq!(facts.len(), 1);
                             assert_eq!(
