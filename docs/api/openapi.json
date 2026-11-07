@@ -1,4 +1,11 @@
 {
+  "x-media-upload-reservation-authority": {
+    "x-cli": "existing media upload preparation paths; no new command or flag",
+    "x-transport": "current route/account checks and atomic seed plus outcome_unknown upload reservation",
+    "x-live": false,
+    "description": "New uploads recheck current coordinator/legacy route validity, selected host/auth and registered phone/generation inside the write transaction after preparation. A changed material route is refused without silently changing URL/token. Seed-dependent URL and pending row commit together, preserving existing seed; failed builder/route/account/duplicate checks leave no new seed or upload reservation. Large body metadata stays outside writer. Active route projection shares raw read/write transaction rules and preserves storage-corruption classification. Real-store tests cover both seed states, expiry/auth/host/refusal/removal/owner/account changes, full rows/journal/reopen, duplicates and uncommitted owner/corrupt-current visibility. Cached payloads/uncertain holds remain unchanged; post-commit/in-flight account/clock/native refresh parity stays open. No HTTP route, automatic retry/refresh or live account operation.",
+    "evidence": "docs/protocol/media-network-outcomes.md"
+  },
   "x-media-deadline-consumer-research": {
     "x-cli": "xtask apk-field-refs and apk-smali; existing offline inspection paths",
     "x-transport": "research only: route refresh trigger versus auth expiry, timer, wait and selected transfer conditions",

@@ -5447,3 +5447,18 @@ separate. This refutes a blanket120s hard auth cutoff and does not establish
 route TTL as every upload's hard expiry. Rust's current minimum is local policy.
 [Complete field census, nine methods, exact gates and required next work](apk/2.26.43.72-media-deadline-consumers/README.md).
 No timer, automatic refresh, runtime behavior or live account operation changed.
+
+
+## Upload preparation cannot bypass current route/account reservation checks (2026-11-06)
+
+**Confirmed Rust race / implemented local fence:** host/auth selected before
+media encryption is now revalidated against current route age/coordinator and
+registered phone/generation inside the upload reservation transaction. Seed and
+outcome_unknown row commit together; failed builder/expired or replaced route/
+changed account cannot leave a seed or upload row. No silent URL/token switch,
+new refresh or POST occurs on a failed guard. Owned active-pointer selection
+shares identical read/write rules and retains corruption classification.
+Tests cover all-table/journal preservation with/without seeds, reopen, successful
+atomic commit, duplicate refusal and uncommitted owner/corruption visibility.
+[Native versus local scope, preparation window and remaining response/transfer work](media-network-outcomes.md#atomic-upload-routeaccount-fence-at-reservation-2026-11-06).
+No live account operation; this is not full native post-commit lifetime parity.

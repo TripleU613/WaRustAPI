@@ -1204,3 +1204,61 @@ separate. This refutes a blanket120s hard auth cutoff and does not establish
 route TTL as every upload's hard expiry. Rust's current minimum is local policy.
 [Complete field census, nine methods, exact gates and required next work](apk/2.26.43.72-media-deadline-consumers/README.md).
 No timer, automatic refresh, runtime behavior or live account operation changed.
+
+
+## Atomic upload route/account fence at reservation (2026-11-06)
+
+**Confirmed Rust race / implemented local correctness fence.** The selected
+[pinned upload/supplier evidence](apk/2.26.43.72-media-deadline-consumers/README.md)
+retains feature-gated auth identity/expiry rechecks near transfer; it does NOT
+establish an unconditional native120s cutoff or every native account check.
+Independently, Rust selected its host/auth before encryption, then reserved and
+posted using those captured values without revalidating route age/currentness.
+Its initial registered-account/phone precondition could also change during that
+preparation window. This correction fences those existing local preconditions;
+it does not port native refresh timers, offline-skip or replacement-token policy.
+
+New-upload reservation now reads current coordinator/legacy selection and checks
+expiry, selected host/auth, registered account, phone and generation in the SAME
+write transaction that commits the upload seed and outcome_unknown row. It will
+not silently substitute another URL/token when material changed. Legitimate new
+metadata retaining the same selected host/auth is not rejected merely for having
+a different response timestamp; current validity and ownership still must pass.
+Mutable authentication timestamps/credential observations are not frozen, and
+full same-phone identity-replacement/account lifecycle parity remains open.
+
+The seed is read/generated and used to build the URL inside the serialized
+reservation. A new seed is persisted only alongside the successful reservation;
+a failed builder, route/account check or duplicate cannot leave an orphan seed.
+Concurrent successful uploads therefore reuse the committed seed instead of
+constructing different token inputs outside transaction ownership. Large cipher-
+body metadata is materialized before taking the writer; only seed-dependent URL
+assembly, authority checks and final persistence are added within that boundary.
+Account checks run after preparation and require the previously consumed phone/
+generation to remain registered. No new identity/credential values are invented.
+
+Coordinator active-record selection is factored over the same raw transactional
+get/scan rules for read and write transactions, preserving owner/current pointer,
+sealed projection, generation, action/receipt/request binding and legacy fallback
+refusals. It does not nest a read transaction inside a writer or add a full-history
+scan on the owned active-pointer path. JSON corruption retains storage-serialization
+classification and redaction rather than becoming an ordinary input refusal.
+
+Real-store tests select a route, then independently expire/change auth/change host,
+refuse/remove it, introduce invalid coordinator ownership, remove/revoke/change
+the account, or fail the URL builder. Each case runs with and without an existing
+seed, returns no reservation and preserves EVERY table/journal, including reopen.
+The success control commits seed+outcome_unknown together, preserves an existing
+seed, and refuses duplicate reservation before calling the builder. It does not
+pretend to be a completed upload or allow saved_payload reuse. A separate
+coordinator test observes uncommitted owner/corrupt-current changes through the
+new write reader and verifies full rollback and preserved error class/redaction.
+Existing upload response snapshot/uncertain-replay tests remain in the suite.
+No live HTTP/account operation or automatic refresh/retry was performed.
+
+**Boundary:** this is reservation-time authority, not a guarantee that clocks,
+account state or server auth cannot change after commit or while HTTP is in flight.
+Late upload response account ownership and complete native transfer/refresh/clock
+parity remain independent audit work. Existing uncertain POST reservations remain
+held; this change never resets or replays them. Cached completed payload behavior
+and the current local route-TTL/auth-TTL minimum policy remain unchanged.

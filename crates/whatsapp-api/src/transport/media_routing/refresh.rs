@@ -589,41 +589,71 @@ fn settle_impl_in(tx: &mut WriteTx<'_>, id: &str, reply: &Node) -> Result<Settle
 pub(crate) fn active_record(store: &ProtocolStore) -> Result<Option<serde_json::Value>> {
     store
         .read(|tx| {
-            let owner: Option<bool> = tx.get_json(Table::Checkpoints, OWNER, 1)?;
-            if owner.is_none() {
-                if tx.get(Table::Checkpoints, CURRENT, 1)?.is_some()
-                    || has_context_rows(tx.scan(Table::Checkpoints, 1, 10000)?, false)?
-                {
-                    return Err(invalid(
-                        "prospective media history has no coordinator owner",
-                    ));
-                }
-                return Ok(None);
-            }
-            if owner != Some(true) {
-                return Err(invalid("invalid media route owner"));
-            }
-            let current: Current = tx
-                .get_json(Table::Checkpoints, CURRENT, 1)?
-                .ok_or_else(|| invalid("media refresh has no applied current route"))?;
-            if current.generation != tx.generation() {
-                return Err(invalid("media route generation mismatch"));
-            }
-            let saved: serde_json::Value = tx
-                .get_json(Table::Checkpoints, key(&current.action_id).as_bytes(), 1)?
-                .ok_or_else(|| invalid("current media route has no original record"))?;
-            let projected = effective_reply(&saved)?
-                .ok_or_else(|| invalid("current media route lacks prospective context"))?;
-            if conn(&projected)? != &super::super::actions::decode(&current.wire)?
-                || saved["requested_at"].as_i64() != Some(current.requested_at.0)
-                || saved["action_id"].as_str() != Some(current.action_id.as_str())
-                || saved["generation"].as_u64() != Some(u64::from(current.generation.0))
-            {
-                return Err(invalid("current media route differs from applied record"));
-            }
-            Ok(Some(saved))
+            active_record_from(
+                tx.generation(),
+                |key| tx.get(Table::Checkpoints, key, 1),
+                || tx.scan(Table::Checkpoints, 1, 10000),
+            )
         })
         .map_err(redact)
+}
+
+// Same projection/ownership checks against the upload reservation transaction.
+pub(crate) fn active_record_in(tx: &WriteTx<'_>) -> Result<Option<serde_json::Value>> {
+    active_record_from(
+        tx.generation(),
+        |key| tx.get(Table::Checkpoints, key, 1),
+        || tx.scan(Table::Checkpoints, 1, 10000),
+    )
+    .map_err(redact)
+}
+
+fn route_json<T: serde::de::DeserializeOwned>(value: Option<Vec<u8>>) -> Result<Option<T>> {
+    value
+        .map(|bytes| {
+            serde_json::from_slice(&bytes).map_err(|_| {
+                crate::Error::Storage(crate::store::StoreError::Serialization(
+                    "invalid stored media route metadata".into(),
+                ))
+            })
+        })
+        .transpose()
+}
+
+fn active_record_from(
+    generation: AccountGeneration,
+    mut get: impl FnMut(&[u8]) -> Result<Option<Vec<u8>>>,
+    scan: impl FnOnce() -> Result<Vec<(Vec<u8>, Vec<u8>)>>,
+) -> Result<Option<serde_json::Value>> {
+    let owner: Option<bool> = route_json(get(OWNER)?)?;
+    if owner.is_none() {
+        if get(CURRENT)?.is_some() || has_context_rows(scan()?, false)? {
+            return Err(invalid(
+                "prospective media history has no coordinator owner",
+            ));
+        }
+        return Ok(None);
+    }
+    if owner != Some(true) {
+        return Err(invalid("invalid media route owner"));
+    }
+    let current: Current = route_json(get(CURRENT)?)?
+        .ok_or_else(|| invalid("media refresh has no applied current route"))?;
+    if current.generation != generation {
+        return Err(invalid("media route generation mismatch"));
+    }
+    let saved: serde_json::Value = route_json(get(key(&current.action_id).as_bytes())?)?
+        .ok_or_else(|| invalid("current media route has no original record"))?;
+    let projected = effective_reply(&saved)?
+        .ok_or_else(|| invalid("current media route lacks prospective context"))?;
+    if conn(&projected)? != &super::super::actions::decode(&current.wire)?
+        || saved["requested_at"].as_i64() != Some(current.requested_at.0)
+        || saved["action_id"].as_str() != Some(current.action_id.as_str())
+        || saved["generation"].as_u64() != Some(u64::from(current.generation.0))
+    {
+        return Err(invalid("current media route differs from applied record"));
+    }
+    Ok(Some(saved))
 }
 
 /// Recompute a projected reply from sealed prospective context. None is legacy;
@@ -848,6 +878,47 @@ mod tests {
             Some("route-two")
         );
     }
+    #[test]
+    fn upload_route_reader_sees_uncommitted_ownership_and_preserves_corruption_class() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("write-reader.redb"));
+        prepare(&store, "a").unwrap();
+        settle(
+            &store,
+            "a",
+            &reply("a", "1", "a", "a-auth", "a.whatsapp.net"),
+        );
+        let before = active_record(&store).unwrap();
+        let journal = store.journal_head().unwrap();
+        store
+            .write(|tx| {
+                assert_eq!(active_record_in(tx)?, before);
+                Ok(())
+            })
+            .unwrap();
+        for corrupt in [false, true] {
+            let result: Result<()> = store.write(|tx| {
+                if corrupt {
+                    tx.put(Table::Checkpoints, CURRENT, 1, b"{private-sentinel")?;
+                } else {
+                    tx.put_json(Table::Checkpoints, OWNER, 1, &false)?;
+                }
+                let error = active_record_in(tx).unwrap_err();
+                if corrupt {
+                    assert!(matches!(
+                        &error,
+                        crate::Error::Storage(crate::store::StoreError::Serialization(_))
+                    ));
+                }
+                assert!(!error.to_string().contains("private-sentinel"));
+                Err(error)
+            });
+            assert!(result.is_err());
+            assert_eq!(active_record(&store).unwrap(), before);
+            assert_eq!(store.journal_head().unwrap(), journal);
+        }
+    }
+
     #[test]
     fn competing_reply_is_retained_stale_without_overwriting_current() {
         let dir = tempfile::tempdir().unwrap();

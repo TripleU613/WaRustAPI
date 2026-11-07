@@ -358,26 +358,37 @@ pub(super) fn approved_host(host: &str) -> bool {
 }
 
 fn route(store: &ProtocolStore) -> Result<(String, Zeroizing<String>)> {
-    let latest = match super::media_routing::refresh::active_record(store)? {
-        Some(saved) => saved,
-        None => {
-            let records = store.read(|tx| tx.scan(Table::Checkpoints, 1, 10000))?;
-            if records.len() == 10000 {
-                return Err(invalid("checkpoint scan limit reached"));
-            }
-            records
-                .into_iter()
-                .filter(|(key, _)| key.starts_with(b"media-route:"))
-                .map(|(_, value)| {
-                    serde_json::from_slice::<serde_json::Value>(&value)
-                        .map_err(|_| invalid("invalid saved route"))
-                })
-                .collect::<Result<Vec<_>>>()?
-                .into_iter()
-                .max_by_key(|v| v["at"].as_i64().unwrap_or(0))
-                .ok_or_else(|| invalid("no saved media route; run --login --media-route first"))?
-        }
-    };
+    let latest = select_route_record(super::media_routing::refresh::active_record(store)?, || {
+        store.read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+    })?;
+    route_from_record(&latest)
+}
+
+fn select_route_record(
+    active: Option<serde_json::Value>,
+    scan: impl FnOnce() -> Result<Vec<(Vec<u8>, Vec<u8>)>>,
+) -> Result<serde_json::Value> {
+    if let Some(saved) = active {
+        return Ok(saved);
+    }
+    let records = scan()?;
+    if records.len() == 10000 {
+        return Err(invalid("checkpoint scan limit reached"));
+    }
+    records
+        .into_iter()
+        .filter(|(key, _)| key.starts_with(b"media-route:"))
+        .map(|(_, value)| {
+            serde_json::from_slice::<serde_json::Value>(&value)
+                .map_err(|_| invalid("invalid saved route"))
+        })
+        .collect::<Result<Vec<_>>>()?
+        .into_iter()
+        .max_by_key(|value| value["at"].as_i64().unwrap_or(0))
+        .ok_or_else(|| invalid("no saved media route; run --login --media-route first"))
+}
+
+fn route_from_record(latest: &serde_json::Value) -> Result<(String, Zeroizing<String>)> {
     if latest["status"] != "result" {
         return Err(invalid(
             "latest media route request is refused or uncertain",
@@ -387,7 +398,7 @@ fn route(store: &ProtocolStore) -> Result<(String, Zeroizing<String>)> {
         .map_err(|_| invalid("invalid saved route wire"))?;
     let limits = Limits::default();
     let data = unpack_frame_payload(&wire, &limits)?;
-    let prospective = super::media_routing::refresh::effective_reply(&latest)?;
+    let prospective = super::media_routing::refresh::effective_reply(latest)?;
     let bound = prospective.is_some();
     let node = match prospective {
         Some(node) => node,
@@ -770,6 +781,59 @@ pub(crate) async fn upload_source(
     super::outgoing_media::upload_reference(store, &key)
 }
 
+// The selected host/auth may expire or be replaced during encryption. Recheck
+// current account/route in the same transaction that installs seed+reservation.
+// Local correctness fence; not a port of the APK's gated offline/refresh policy.
+fn reserve_upload(
+    store: &ProtocolStore,
+    account: &crate::session::AccountRecord,
+    key: &str,
+    host: &str,
+    auth: &str,
+    build: impl FnOnce(&[u8; 32]) -> Result<(reqwest::Url, serde_json::Value)>,
+) -> Result<(reqwest::Url, serde_json::Value)> {
+    store.write(|tx| {
+        if tx.get(Table::Checkpoints, key.as_bytes(), 1)?.is_some() {
+            return Err(invalid("upload already reserved"));
+        }
+        let existing_seed: Option<[u8; 32]> =
+            tx.get_json(Table::Checkpoints, b"upload-token-random-bytes", 1)?;
+        let seed = match existing_seed {
+            Some(seed) => seed,
+            None => {
+                let mut seed = [0; 32];
+                getrandom::fill(&mut seed).map_err(|_| invalid("entropy unavailable"))?;
+                seed
+            }
+        };
+        let (url, saved) = build(&seed)?;
+        let current =
+            crate::session::AccountRecord::load_in_write(tx)?.ok_or(Error::NotRegistered)?;
+        if !current.is_registered()
+            || !account.is_registered()
+            || current.generation != account.generation
+            || current.generation != tx.generation()
+            || current.phone.is_none()
+            || current.phone != account.phone
+        {
+            return Err(Error::NotRegistered);
+        }
+        let latest =
+            select_route_record(super::media_routing::refresh::active_record_in(tx)?, || {
+                tx.scan(Table::Checkpoints, 1, 10000)
+            })?;
+        let (current_host, current_auth) = route_from_record(&latest)?;
+        if current_host != host || current_auth.as_str() != auth {
+            return Err(invalid("media route changed before upload reservation"));
+        }
+        if existing_seed.is_none() {
+            tx.put_json(Table::Checkpoints, b"upload-token-random-bytes", 1, &seed)?;
+        }
+        tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &saved)?;
+        Ok((url, saved))
+    })
+}
+
 async fn upload_prepared(
     store: &ProtocolStore,
     config: &LabRegistrationConfig,
@@ -819,40 +883,30 @@ async fn upload_prepared(
     } else {
         image::encrypt(&bytes)?
     };
-    let seed: [u8; 32] = store.write(|tx| {
-        if let Some(seed) = tx.get_json(Table::Checkpoints, b"upload-token-random-bytes", 1)? {
-            return Ok(seed);
-        }
-        let mut seed = [0; 32];
-        getrandom::fill(&mut seed).map_err(|_| invalid("entropy unavailable"))?;
-        tx.put_json(Table::Checkpoints, b"upload-token-random-bytes", 1, &seed)?;
-        Ok(seed)
-    })?;
-    let url = if video.is_some() {
-        upload_url_kind(&host, &auth, &seed, &encrypted.encrypted_hash, "video")?
-    } else if document.is_some() {
-        upload_url_kind(&host, &auth, &seed, &encrypted.encrypted_hash, "document")?
-    } else if voice {
-        upload_url_kind(&host, &auth, &seed, &encrypted.encrypted_hash, "ptt")?
-    } else {
-        upload_url(&host, &auth, &seed, &encrypted.encrypted_hash)?
-    };
     let client = client(config)?;
     let wire_body = upload_wire_body(&encrypted, voice);
     let timestamp = Timestamp::now();
-    let saved = serde_json::json!({"status":"outcome_unknown", "hash":hash, "to":recipient,
+    // Materialize large body metadata before acquiring the writer; only the
+    // seed-dependent URL and final authority checks belong in the transaction.
+    let prepared = serde_json::json!({"status":"outcome_unknown", "hash":hash, "to":recipient,
         "plaintext_len":encrypted.plaintext_len,
         "media_key":encrypted.media_key.as_slice(), "encrypted_hash":encrypted.encrypted_hash,
         "body":wire_body, "encrypted_body_len":encrypted.body.len(),
         "upload_body_format":if voice { "finished_voice_seal_v1" } else { "encrypted_file_v1" },
-        "upload_url":url.as_str(), "at":timestamp});
-    store.write(|tx| {
-        let previous: Option<serde_json::Value> =
-            tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?;
-        if previous.is_some() {
-            return Err(invalid("upload already reserved"));
-        }
-        tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &saved)
+        "at":timestamp});
+    let (url, saved) = reserve_upload(store, &account, &key, &host, &auth, |seed| {
+        let url = if video.is_some() {
+            upload_url_kind(&host, &auth, seed, &encrypted.encrypted_hash, "video")?
+        } else if document.is_some() {
+            upload_url_kind(&host, &auth, seed, &encrypted.encrypted_hash, "document")?
+        } else if voice {
+            upload_url_kind(&host, &auth, seed, &encrypted.encrypted_hash, "ptt")?
+        } else {
+            upload_url(&host, &auth, seed, &encrypted.encrypted_hash)?
+        };
+        let mut saved = prepared;
+        saved["upload_url"] = serde_json::json!(url.as_str());
+        Ok((url, saved))
     })?;
     tracing::info!(
         bytes = wire_body.len(),
@@ -1344,6 +1398,185 @@ mod tests {
                     .unwrap(),
                 before
             );
+        }
+    }
+
+    #[test]
+    fn upload_reservation_rechecks_route_and_account_atomically_without_seed_leaks() {
+        use super::*;
+        use crate::{
+            binary::{Encoder, Node},
+            model::{ids::AccountId, phone::PhoneNumber},
+            session::{AccountRecord, RegistrationStatus},
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        for had_seed in [false, true] {
+            for change in [
+                "none",
+                "expiry",
+                "auth",
+                "host",
+                "refused",
+                "removed",
+                "owner",
+                "missing-account",
+                "revoked",
+                "phone",
+                "builder",
+            ] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("upload-fence.redb");
+                let open = |create| {
+                    ProtocolStore::open(OpenOptions {
+                        path: path.clone(),
+                        account_id: AccountId::new("upload-fence").unwrap(),
+                        key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([6; 32]))),
+                        create,
+                    })
+                    .unwrap()
+                };
+                let store = open(true);
+                let config: LabRegistrationConfig =
+                    serde_json::from_str(crate::registration::request::TEMPLATE_JSON).unwrap();
+                let account = AccountRecord {
+                    generation: store.generation(),
+                    phone: Some(config.phone.clone()),
+                    registration: RegistrationStatus::Registered,
+                    ..Default::default()
+                };
+                let wire = |auth: &str, host: &str| {
+                    Encoder::new(TokenDictionary::comparison_2_26_37_71())
+                        .encode(&Node::new("iq").attr("type", "result").children(
+                            vec![Node::new("media_conn")
+                    .attr("ttl","3600").attr("auth_ttl","3600").attr("auth",auth)
+                    .children(vec![Node::new("host").attr("hostname",host)])],
+                        ))
+                        .unwrap()
+                };
+                let initial = serde_json::json!({"status":"result","at":Timestamp::now().0,
+                    "requested_at":Timestamp::now().0-1000,"wire":wire("synthetic-auth","mmg.whatsapp.net")});
+                store
+                    .write(|tx| {
+                        account.save(tx)?;
+                        tx.put_json(Table::Checkpoints, b"media-route:fixture", 1, &initial)?;
+                        if had_seed {
+                            tx.put_json(
+                                Table::Checkpoints,
+                                b"upload-token-random-bytes",
+                                1,
+                                &[7u8; 32],
+                            )?;
+                        }
+                        Ok(())
+                    })
+                    .unwrap();
+                let (host, auth) = route(&store).unwrap(); // Selected before preparation.
+                store
+                    .write(|tx| {
+                        let mut updated = initial.clone();
+                        match change {
+                            "expiry" => {
+                                updated["requested_at"] = (Timestamp::now().0 - 4_000_000).into()
+                            }
+                            "auth" => {
+                                updated["wire"] =
+                                    serde_json::json!(wire("replacement-auth", "mmg.whatsapp.net"))
+                            }
+                            "host" => {
+                                updated["wire"] =
+                                    serde_json::json!(wire("synthetic-auth", "new.whatsapp.net"))
+                            }
+                            "refused" => updated["status"] = "refused".into(),
+                            "removed" => {
+                                tx.delete(Table::Checkpoints, b"media-route:fixture")?;
+                                return Ok(());
+                            }
+                            "owner" => {
+                                tx.put_json(
+                                    Table::Checkpoints,
+                                    b"media-routing-owner:v1",
+                                    1,
+                                    &true,
+                                )?;
+                            }
+                            "missing-account" => {
+                                tx.delete(Table::Account, b"account")?;
+                            }
+                            "revoked" | "phone" => {
+                                let mut current = account.clone();
+                                if change == "revoked" {
+                                    current.registration = RegistrationStatus::Revoked;
+                                } else {
+                                    current.phone = Some(PhoneNumber::new(1, "5555550199")?);
+                                }
+                                current.save(tx)?;
+                            }
+                            _ => {}
+                        }
+                        tx.put_json(Table::Checkpoints, b"media-route:fixture", 1, &updated)
+                    })
+                    .unwrap();
+                let snapshot = |store: &ProtocolStore| {
+                    store
+                        .read(|tx| {
+                            Ok((
+                                Table::ALL
+                                    .iter()
+                                    .map(|table| tx.scan(*table, 1, 100))
+                                    .collect::<Result<Vec<_>>>()?,
+                                tx.journal_head()?,
+                            ))
+                        })
+                        .unwrap()
+                };
+                let before = snapshot(&store);
+                let result = reserve_upload(
+                    &store,
+                    &account,
+                    "message:fixture:upload",
+                    &host,
+                    &auth,
+                    |seed| {
+                        if change == "builder" {
+                            return Err(invalid("synthetic builder refusal"));
+                        }
+                        Ok((
+                            upload_url(&host, &auth, seed, &[3; 32])?,
+                            serde_json::json!({"status":"outcome_unknown","body":[1,2,3]}),
+                        ))
+                    },
+                );
+                if change == "none" {
+                    let (url, saved) = result.unwrap();
+                    assert_eq!(url.host_str(), Some("mmg.whatsapp.net"));
+                    assert!(saved_payload(&saved, "fixture", "fixture").is_err());
+                    let seed: Option<[u8; 32]> = store
+                        .read(|tx| tx.get_json(Table::Checkpoints, b"upload-token-random-bytes", 1))
+                        .unwrap();
+                    assert!(seed.is_some());
+                    if had_seed {
+                        assert_eq!(seed, Some([7; 32]));
+                    }
+                    assert!(
+                        reserve_upload(
+                            &store,
+                            &account,
+                            "message:fixture:upload",
+                            &host,
+                            &auth,
+                            |_| unreachable!()
+                        )
+                        .is_err()
+                    );
+                } else {
+                    assert!(result.is_err(), "{change}");
+                    assert_eq!(snapshot(&store), before, "{change}");
+                }
+                let settled = snapshot(&store);
+                drop(store);
+                let reopened = open(false);
+                assert_eq!(snapshot(&reopened), settled);
+            }
         }
     }
 

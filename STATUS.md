@@ -1,3 +1,10 @@
+2026-11-06 — **Fenced media upload reservation with current route/account state.**
+After preparation, expiry/host/auth/registration/phone/generation are rechecked
+transactionally. Seed and pending upload commit together; failed checks/builds
+leave neither new state nor a POST. Tests cover every-table/journal preservation,
+reopen, duplicate refusal and write-local coordinator/corruption visibility.
+[Evidence, local policy and remaining in-flight boundaries](docs/protocol/media-network-outcomes.md#atomic-upload-routeaccount-fence-at-reservation-2026-11-06). No live operation.
+
 2026-11-06 — **Separated media refresh deadlines from hard auth validity.**
 Exact field/method tracing closes120s refresh trigger,60s timer and request-aware
 20s wait inputs, with distinct elapsed/uptime clocks and old-auth comparison.
