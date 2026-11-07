@@ -1,0 +1,280 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000004c460 <.text>:
+   58788:      	paciasp
+   5878c:      	sub	sp, sp, #0x160
+   58790:      	stp	x29, x30, [sp, #0x100]
+   58794:      	stp	x28, x27, [sp, #0x110]
+   58798:      	stp	x26, x25, [sp, #0x120]
+   5879c:      	bl	0xcc028 <JNI_OnLoad+0x5ce88>
+   587a0:      	add	x29, sp, #0x100
+   587a4:      	mrs	x28, TPIDR_EL0
+   587a8:      	mov	x19, x5
+   587ac:      	mov	x24, x4
+   587b0:      	ldr	x8, [x28, #0x28]
+   587b4:      	mov	x23, x3
+   587b8:      	mov	x22, x2
+   587bc:      	bl	0xcbd8c <JNI_OnLoad+0x5cbec>
+   587c0:      	stur	x8, [x29, #-0x10]
+   587c4:      	str	xzr, [sp, #0x68]
+   587c8:      	tbnz	x6, #0x20, 0x587d4 <.text+0xc374>
+   587cc:      	str	xzr, [sp, #0x68]
+   587d0:      	b	0x587e0 <.text+0xc380>
+   587d4:      	add	x0, sp, #0x68
+   587d8:      	mov	w1, w6
+   587dc:      	bl	0x59140 <.text+0xcce0>
+   587e0:      	str	xzr, [sp, #0x60]
+   587e4:      	adrp	x8, 0xdc000
+   587e8:      	add	x8, x8, #0x38
+   587ec:      	ldarb	w8, [x8]
+   587f0:      	tbz	w8, #0x0, 0x58c30 <.text+0xc7d0>
+   587f4:      	adrp	x8, 0xdc000
+   587f8:      	add	x8, x8, #0x48
+   587fc:      	adrp	x26, 0xdc000
+   58800:      	ldarb	w8, [x8]
+   58804:      	tbz	w8, #0x0, 0x58c5c <.text+0xc7fc>
+   58808:      	adrp	x8, 0xdc000
+   5880c:      	ldr	x25, [x8, #0x40]
+   58810:      	bl	0xcc9b0 <_ZN8facebook3jni11Environment7currentEv@plt>
+   58814:      	ldr	x1, [x26, #0x30]
+   58818:      	mov	x2, x25
+   5881c:      	bl	0x4d4c8 <.text+0x1068>
+   58820:      	cmp	x0, #0x0
+   58824:      	mov	x26, x0
+   58828:      	cset	w0, eq
+   5882c:      	bl	0xcca10 <_ZN8facebook3jni19throwCppExceptionIfEb@plt>
+   58830:      	ldp	x25, x27, [x20, #0x8]
+   58834:      	str	x26, [sp, #0x60]
+   58838:      	cmp	x25, x27
+   5883c:      	b.eq	0x58888 <.text+0xc428>
+   58840:      	sub	x0, x29, #0x70
+   58844:      	mov	x1, x25
+   58848:      	bl	0x4cc14 <.text+0x7b4>
+   5884c:      	ldur	x26, [x29, #-0x70]
+   58850:      	add	x25, x25, #0x18
+   58854:      	sub	x0, x29, #0x18
+   58858:      	mov	x1, x25
+   5885c:      	bl	0x4cc14 <.text+0x7b4>
+   58860:      	ldur	x2, [x29, #-0x18]
+   58864:      	add	x0, sp, #0x60
+   58868:      	mov	x1, x26
+   5886c:      	bl	0x592ec <.text+0xce8c>
+   58870:      	sub	x0, x29, #0x18
+   58874:      	bl	0x54fd0 <.text+0x8b70>
+   58878:      	sub	x0, x29, #0x70
+   5887c:      	bl	0x54fd0 <.text+0x8b70>
+   58880:      	add	x25, x25, #0x18
+   58884:      	b	0x58838 <.text+0xc3d8>
+   58888:      	ldp	x25, x27, [x23]
+   5888c:      	cmp	x25, x27
+   58890:      	b.eq	0x588dc <.text+0xc47c>
+   58894:      	sub	x0, x29, #0x70
+   58898:      	mov	x1, x25
+   5889c:      	bl	0x4cc14 <.text+0x7b4>
+   588a0:      	ldur	x26, [x29, #-0x70]
+   588a4:      	add	x23, x25, #0x18
+   588a8:      	sub	x0, x29, #0x18
+   588ac:      	mov	x1, x23
+   588b0:      	bl	0x4cc14 <.text+0x7b4>
+   588b4:      	ldur	x2, [x29, #-0x18]
+   588b8:      	add	x0, sp, #0x60
+   588bc:      	mov	x1, x26
+   588c0:      	bl	0x592ec <.text+0xce8c>
+   588c4:      	sub	x0, x29, #0x18
+   588c8:      	bl	0x54fd0 <.text+0x8b70>
+   588cc:      	sub	x0, x29, #0x70
+   588d0:      	bl	0x54fd0 <.text+0x8b70>
+   588d4:      	add	x25, x23, #0x18
+   588d8:      	b	0x5888c <.text+0xc42c>
+   588dc:      	adrp	x8, 0xdc000
+   588e0:      	add	x8, x8, #0x28
+   588e4:      	ldarb	w8, [x8]
+   588e8:      	tbz	w8, #0x0, 0x58cb0 <.text+0xc850>
+   588ec:      	ldr	x20, [x20, #0x38]
+   588f0:      	add	x0, sp, #0x58
+   588f4:      	mov	x1, x21
+   588f8:      	bl	0x4cc14 <.text+0x7b4>
+   588fc:      	ldr	x21, [sp, #0x58]
+   58900:      	add	x0, sp, #0x50
+   58904:      	mov	x1, x22
+   58908:      	bl	0x4cc14 <.text+0x7b4>
+   5890c:      	ldr	x22, [sp, #0x50]
+   58910:      	ldr	x23, [sp, #0x60]
+   58914:      	add	x0, sp, #0x10
+   58918:      	mov	x1, x24
+   5891c:      	bl	0x60148 <.text+0x13ce8>
+   58920:      	adrp	x8, 0xdc000
+   58924:      	add	x8, x8, #0xa0
+   58928:      	ldarb	w8, [x8]
+   5892c:      	tbz	w8, #0x0, 0x58d0c <.text+0xc8ac>
+   58930:      	mov	w0, #0x40               // =64
+   58934:      	bl	0xccfa0 <__wrap__Znwm@plt>
+   58938:      	mov	x24, x0
+   5893c:      	sub	x0, x29, #0x70
+   58940:      	add	x1, sp, #0x10
+   58944:      	bl	0x60148 <.text+0x13ce8>
+   58948:      	adrp	x8, 0xd4000
+   5894c:      	add	x8, x8, #0x570
+   58950:      	mov	x0, x24
+   58954:      	str	x8, [x0], #0x10
+   58958:      	sub	x1, x29, #0x70
+   5895c:      	bl	0x60148 <.text+0x13ce8>
+   58960:      	sub	x0, x29, #0x70
+   58964:      	bl	0xa975c <JNI_OnLoad+0x3a5bc>
+   58968:      	adrp	x8, 0xdb000
+   5896c:      	str	xzr, [sp, #0x70]
+   58970:      	ldrb	w8, [x8, #0xa58]
+   58974:      	cmp	w8, #0x1
+   58978:      	b.ne	0x58a54 <.text+0xc5f4>
+   5897c:      	adrp	x8, 0xdc000
+   58980:      	add	x8, x8, #0xb0
+   58984:      	ldarb	w8, [x8]
+   58988:      	tbz	w8, #0x0, 0x58d50 <.text+0xc8f0>
+   5898c:      	adrp	x8, 0xdc000
+   58990:      	add	x8, x8, #0xc0
+   58994:      	ldarb	w8, [x8]
+   58998:      	tbz	w8, #0x0, 0x58d7c <.text+0xc91c>
+   5899c:      	adrp	x8, 0xdc000
+   589a0:      	ldr	x25, [x8, #0xb8]
+   589a4:      	bl	0xcc9b0 <_ZN8facebook3jni11Environment7currentEv@plt>
+   589a8:      	adrp	x8, 0xdc000
+   589ac:      	ldr	x1, [x8, #0xa8]
+   589b0:      	mov	x2, x25
+   589b4:      	bl	0x4d4c8 <.text+0x1068>
+   589b8:      	cmp	x0, #0x0
+   589bc:      	mov	x25, x0
+   589c0:      	cset	w0, eq
+   589c4:      	bl	0xcca10 <_ZN8facebook3jni19throwCppExceptionIfEb@plt>
+   589c8:      	sub	x0, x29, #0x18
+   589cc:      	stur	xzr, [x29, #-0x18]
+   589d0:      	bl	0x55630 <.text+0x91d0>
+   589d4:      	add	x0, sp, #0x70
+   589d8:      	mov	x1, x25
+   589dc:      	stur	xzr, [x29, #-0x20]
+   589e0:      	bl	0x5563c <.text+0x91dc>
+   589e4:      	sub	x0, x29, #0x20
+   589e8:      	bl	0x55630 <.text+0x91d0>
+   589ec:      	ldr	x0, [sp, #0x70]
+   589f0:      	bl	0x4ef98 <.text+0x2b38>
+   589f4:      	stur	x0, [x29, #-0x28]
+   589f8:      	adrp	x8, 0xdc000
+   589fc:      	add	x8, x8, #0xd0
+   58a00:      	ldarb	w8, [x8]
+   58a04:      	tbz	w8, #0x0, 0x58db8 <.text+0xc958>
+   58a08:      	adrp	x8, 0xdc000
+   58a0c:      	ldur	x1, [x29, #-0x28]
+   58a10:      	sub	x0, x29, #0x20
+   58a14:      	ldr	x2, [x8, #0xc8]
+   58a18:      	bl	0x5d3f4 <.text+0x10f94>
+   58a1c:      	stur	x24, [x29, #-0x18]
+   58a20:      	sub	x0, x29, #0x20
+   58a24:      	sub	x1, x29, #0x18
+   58a28:      	bl	0xcca60 <_ZN8facebook3jni6detail16HybridDestructor16setNativePointerENSt6__ndk110unique_ptrINS1_15BaseHybridClassENS3_14default_deleteIS5_EEEE@plt>
+   58a2c:      	ldur	x0, [x29, #-0x18]
+   58a30:      	stur	xzr, [x29, #-0x18]
+   58a34:      	cbz	x0, 0x58a44 <.text+0xc5e4>
+   58a38:      	ldr	x8, [x0]
+   58a3c:      	ldr	x8, [x8, #0x8]
+   58a40:      	blr	x8
+   58a44:      	sub	x0, x29, #0x20
+   58a48:      	bl	0x55630 <.text+0x91d0>
+   58a4c:      	sub	x0, x29, #0x28
+   58a50:      	b	0x58b68 <.text+0xc708>
+   58a54:      	stur	xzr, [x29, #-0x78]
+   58a58:      	sub	x8, x29, #0x78
+   58a5c:      	bl	0xcca50 <_ZN8facebook3jni6detail10HybridData6createEv@plt>
+   58a60:      	ldur	x0, [x29, #-0x78]
+   58a64:      	bl	0x4ef98 <.text+0x2b38>
+   58a68:      	stp	x24, x0, [x29, #-0x20]
+   58a6c:      	sub	x0, x29, #0x18
+   58a70:      	sub	x1, x29, #0x20
+   58a74:      	bl	0x4ed44 <.text+0x28e4>
+   58a78:      	ldur	x0, [x29, #-0x20]
+   58a7c:      	cbz	x0, 0x58a8c <.text+0xc62c>
+   58a80:      	ldr	x8, [x0]
+   58a84:      	ldr	x8, [x8, #0x8]
+   58a88:      	blr	x8
+   58a8c:      	sub	x0, x29, #0x18
+   58a90:      	bl	0x55630 <.text+0x91d0>
+   58a94:      	ldur	x0, [x29, #-0x78]
+   58a98:      	bl	0x4ef98 <.text+0x2b38>
+   58a9c:      	str	x0, [sp, #0x78]
+   58aa0:      	bl	0x4ef98 <.text+0x2b38>
+   58aa4:      	stur	x0, [x29, #-0x30]
+   58aa8:      	adrp	x8, 0xdc000
+   58aac:      	add	x8, x8, #0xe0
+   58ab0:      	ldarb	w8, [x8]
+   58ab4:      	tbz	w8, #0x0, 0x58dfc <.text+0xc99c>
+   58ab8:      	adrp	x8, 0xdc000
+   58abc:      	add	x8, x8, #0xf0
+   58ac0:      	ldarb	w8, [x8]
+   58ac4:      	tbz	w8, #0x0, 0x58e28 <.text+0xc9c8>
+   58ac8:      	adrp	x8, 0xdc000
+   58acc:      	ldur	x0, [x29, #-0x30]
+   58ad0:      	ldr	x24, [x8, #0xe8]
+   58ad4:      	bl	0x4ef98 <.text+0x2b38>
+   58ad8:      	mov	x26, x0
+   58adc:      	stur	x0, [x29, #-0x28]
+   58ae0:      	bl	0xcc9b0 <_ZN8facebook3jni11Environment7currentEv@plt>
+   58ae4:      	adrp	x8, 0xdc000
+   58ae8:      	mov	x25, x0
+   58aec:      	ldr	x27, [x8, #0xd8]
+   58af0:      	mov	x0, x26
+   58af4:      	bl	0x4ef98 <.text+0x2b38>
+   58af8:      	mov	x3, x0
+   58afc:      	stur	x0, [x29, #-0x18]
+   58b00:      	mov	x0, x25
+   58b04:      	mov	x1, x27
+   58b08:      	mov	x2, x24
+   58b0c:      	bl	0x4d4c8 <.text+0x1068>
+   58b10:      	mov	x24, x0
+   58b14:      	sub	x0, x29, #0x18
+   58b18:      	bl	0x55630 <.text+0x91d0>
+   58b1c:      	cmp	x24, #0x0
+   58b20:      	cset	w0, eq
+   58b24:      	bl	0xcca10 <_ZN8facebook3jni19throwCppExceptionIfEb@plt>
+   58b28:      	sub	x0, x29, #0x20
+   58b2c:      	stur	xzr, [x29, #-0x20]
+   58b30:      	bl	0x55630 <.text+0x91d0>
+   58b34:      	sub	x0, x29, #0x28
+   58b38:      	bl	0x55630 <.text+0x91d0>
+   58b3c:      	sub	x0, x29, #0x30
+   58b40:      	bl	0x55630 <.text+0x91d0>
+   58b44:      	add	x0, sp, #0x70
+   58b48:      	mov	x1, x24
+   58b4c:      	str	xzr, [sp, #0x80]
+   58b50:      	bl	0x5563c <.text+0x91dc>
+   58b54:      	add	x0, sp, #0x80
+   58b58:      	bl	0x55630 <.text+0x91d0>
+   58b5c:      	add	x0, sp, #0x78
+   58b60:      	bl	0x55630 <.text+0x91d0>
+   58b64:      	sub	x0, x29, #0x78
+   58b68:      	bl	0x55630 <.text+0x91d0>
+   58b6c:      	ldr	x24, [sp, #0x70]
+   58b70:      	add	x0, sp, #0x70
+   58b74:      	str	xzr, [sp, #0x70]
+   58b78:      	str	x24, [sp, #0x48]
+   58b7c:      	bl	0x55630 <.text+0x91d0>
+   58b80:      	sub	x0, x29, #0x70
+   58b84:      	mov	x1, x19
+   58b88:      	bl	0x4cc14 <.text+0x7b4>
+   58b8c:      	ldur	x25, [x29, #-0x70]
+   58b90:      	ldr	x26, [sp, #0x68]
+   58b94:      	bl	0xcc9b0 <_ZN8facebook3jni11Environment7currentEv@plt>
+   58b98:      	adrp	x8, 0xdc000
+   58b9c:      	mov	x19, x0
+   58ba0:      	ldr	x2, [x8, #0x20]
+   58ba4:      	mov	x1, x20
+   58ba8:      	mov	x3, x21
+   58bac:      	mov	x4, x22
+   58bb0:      	mov	x5, x23
+   58bb4:      	mov	x6, x24
+   58bb8:      	mov	x7, x25
+   58bbc:      	str	x26, [sp]
+   58bc0:      	bl	0x4cc84 <.text+0x824>
+   58bc4:      	mov	x0, x19
+   58bc8:      	bl	0xcca20 <_ZN8facebook3jni38throwPendingJniExceptionAsCppExceptionEP7_JNIEnv@plt>
+   58bcc:      	sub	x0, x29, #0x70

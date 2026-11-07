@@ -1,0 +1,26 @@
+{
+  "member_sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+  "relative_relocations": {
+    "0xd1f10": "0x1e108",
+    "0xd1f58": "0x1e268",
+    "0xd4990": "0x58788",
+    "0xd4988": "0xd1f08",
+    "0xd4568": "0xd1f50",
+    "0xd4570": "0x59884",
+    "0xd4578": "0x59898"
+  },
+  "strings": {
+    "0x18fff": "fetch",
+    "0x1e1a8": "(Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lcom/facebook/mobileconfig/MobileConfigFetcherHandler;Ljava/lang/String;Ljava/lang/Integer;)V",
+    "0x1e108": "N8facebook12mobileconfig25MobileConfigFetcherClientE",
+    "0x1e268": "N8facebook12mobileconfig32MobileConfigFetcherHandlerHolderE",
+    "0x1e318": "com/facebook/mobileconfig/MobileConfigFetcherHandler"
+  },
+  "selected_direct_calls": {
+    "0x5891c": "0x60148",
+    "0x58944": "0x60148",
+    "0x5895c": "0x60148",
+    "0x58bc0": "0x4cc84"
+  },
+  "scope": "static construction and callable storage handoff; concrete captured state and commit behavior unresolved"
+}

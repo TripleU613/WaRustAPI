@@ -1,0 +1,46 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000004c460 <.text>:
+   58cb0:      	adrp	x0, 0xdc000
+   58cb4:      	add	x0, x0, #0x28
+   58cb8:      	bl	0xccfe0 <__wrap___cxa_guard_acquire@plt>
+   58cbc:      	cbz	w0, 0x588ec <.text+0xc48c>
+   58cc0:      	adrp	x8, 0xdc000
+   58cc4:      	add	x8, x8, #0x78
+   58cc8:      	ldarb	w8, [x8]
+   58ccc:      	tbz	w8, #0x0, 0x58e64 <.text+0xca04>
+   58cd0:      	adrp	x8, 0xdc000
+   58cd4:      	ldr	x8, [x8, #0x70]
+   58cd8:      	stur	x8, [x29, #-0x70]
+   58cdc:      	adrp	x1, 0x18000
+   58ce0:      	add	x1, x1, #0xfff
+   58ce4:      	nop
+   58ce8:      	adr	x2, 0x1e1a8
+   58cec:      	sub	x0, x29, #0x70
+   58cf0:      	bl	0x4ccc8 <.text+0x868>
+   58cf4:      	adrp	x8, 0xdc000
+   58cf8:      	add	x8, x8, #0x20
+   58cfc:      	str	x0, [x8], #0x8
+   58d00:      	mov	x0, x8
+   58d04:      	bl	0xccf20 <__wrap___cxa_guard_release@plt>
+   58d08:      	b	0x588ec <.text+0xc48c>
+   58d0c:      	adrp	x0, 0xdc000
+   58d10:      	add	x0, x0, #0xa0
+   58d14:      	bl	0xccfe0 <__wrap___cxa_guard_acquire@plt>
+   58d18:      	cbz	w0, 0x58930 <.text+0xc4d0>
+   58d1c:      	sub	x0, x29, #0x40
+   58d20:      	bl	0x597b0 <.text+0xd350>
+   58d24:      	ldur	x8, [x29, #-0x40]
+   58d28:      	stur	x8, [x29, #-0x38]
+   58d2c:      	sub	x0, x29, #0x38
+   58d30:      	bl	0x50bb0 <.text+0x4750>
+   58d34:      	adrp	x9, 0xdb000
+   58d38:      	add	x9, x9, #0xa58
+   58d3c:      	and	w8, w0, #0x1
+   58d40:      	add	x0, x9, #0x648
+   58d44:      	strb	w8, [x9]
+   58d48:      	bl	0xccf20 <__wrap___cxa_guard_release@plt>
+   58d4c:      	b	0x58930 <.text+0xc4d0>

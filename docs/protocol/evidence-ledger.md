@@ -1,4 +1,6 @@
 **MobileConfig Java/native completion binding now reaches a stored callable.**
+
+Confirmed selected static MobileConfig fetch construction copies a caller-supplied callable into a native handler holder; its target position matches the completion load at holder+0x30. Concrete captures, commit and cache activation remain unresolved. [Construction evidence](apk/2.26.43.72-mobileconfig-handler-construction/README.md). No live operation or Rust runtime change.
 Verified member relocations bindonCompletion to59574; argument conversion reaches
 an indirect callback at59748. Missing callable throws; persistence remains unproven.
 [REA observations, ELF proof and next boundary](apk/2.26.43.72-mobileconfig-native-completion/README.md). No runtime request or account operation.

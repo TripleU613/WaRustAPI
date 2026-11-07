@@ -1,0 +1,34 @@
+{
+  "README.md": {
+    "bytes": 4137,
+    "sha256": "ca79d81878fee33f5f832fbbeb8c0b23e8a879c2064bf9bcef52cb4f641df8f7"
+  },
+  "argument-save.txt": {
+    "bytes": 260,
+    "sha256": "22cf991577554220c9d777a9ae8fb5ec39908a8a1caa0f78a4b668c6134a017e"
+  },
+  "callable-copy.txt": {
+    "bytes": 1128,
+    "sha256": "cfe2d2e80937f9e672198a07e1770b276e729dd1eda1eead0eb94f981273eb5c"
+  },
+  "construction.json": {
+    "bytes": 987,
+    "sha256": "8dfad6b9d7000671b963257862b141c4b17821f53080a16dd39b443d51aeb7a2"
+  },
+  "fetch-construction.txt": {
+    "bytes": 10610,
+    "sha256": "aaf87ce3c292d0598a67d1e8f5374227db7716c33218bacd78c587261e61be5d"
+  },
+  "fetch-method-cache.txt": {
+    "bytes": 1711,
+    "sha256": "921ac4c36e75a925fc5949b457decca6803e9048f0a4f2d216f6658b22573221"
+  },
+  "holder-destruction.txt": {
+    "bytes": 603,
+    "sha256": "58757d37cd2485506d411f45679860ddd7e31c84545e72067a1a0d3a8e73d3f6"
+  },
+  "inspect-construction.py": {
+    "bytes": 1613,
+    "sha256": "6c8ff928e859e29bd7bf310168ed1039376ebffe03778bd22997e01f4221164f"
+  }
+}

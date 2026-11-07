@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-handler-construction-evidence": {
+    "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-handler-construction/inspect-construction.py <pinned-library>; offline inspection only",
+    "x-transport": "research only; upstream callable captures and configuration commit remain unresolved",
+    "x-live": false,
+    "description": "Confirmed selected static MobileConfig fetch construction copies a caller-supplied callable into a native handler holder; its target position matches the completion load at holder+0x30. Concrete captures, commit and cache activation remain unresolved. ",
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-handler-construction/README.md"
+  },
   "x-mobileconfig-native-completion-evidence": {
     "x-cli": "pinned ELF inspection and static disassembly/REA observations; no product command or HTTP route",
     "x-transport": "research only; concrete stored callback/persistence and effective configuration remain unresolved",
