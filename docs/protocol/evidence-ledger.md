@@ -1,3 +1,8 @@
+**Token parameter-map v4 headers and schema gating are now decoded.**
+Four pinned packaged universes reproduce bounded header/hash metadata; the
+lightweight-manager path requires schema compatibility before translation install.
+[Methods, artifact identities and undecoded-body limits](apk/2.26.43.72-token-param-header/README.md). No runtime policy change or live operation.
+
 **Token configuration cache refresh and file framing are now separated.**
 Retained manager handles, latest/session cache transitions and header validation;
 twelve synthetic Java vectors preserve signed-byte and cursor behavior.

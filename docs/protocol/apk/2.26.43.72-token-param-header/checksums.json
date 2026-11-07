@@ -1,0 +1,34 @@
+{
+  "README.md": {
+    "bytes": 4596,
+    "sha256": "1bec550757144dfd3e602257e81915cfebc1405f287af4ab41a254fc69abfd62"
+  },
+  "asset-headers.json": {
+    "bytes": 1774,
+    "sha256": "4f18deb6b8273e1d21f97ff5c2f09c2fd3a41363611cf97bd3e89620d06dfefe"
+  },
+  "derive-asset-headers.py": {
+    "bytes": 1929,
+    "sha256": "7ab26151b26659c373edcd2939a86ebe9aeff6ae6c2c990ccb757fa679712a84"
+  },
+  "header-defaults.txt": {
+    "bytes": 596,
+    "sha256": "9f70f13a994f6e889b24456dc2bdb8a2132ee63583bfbb4fd118977782822277"
+  },
+  "header-reader.txt": {
+    "bytes": 5212,
+    "sha256": "b7e1d8a17ad5121c7f6419f7b9e2cfd4cc9b7ad574391f0a24e1fd5b9cc9b5d0"
+  },
+  "parser-dispatch.txt": {
+    "bytes": 5381,
+    "sha256": "ec69ecb4818deaacdd5d606543d8892893db72318811fc4a6f00b6b09adb4375"
+  },
+  "schema-hash-match.txt": {
+    "bytes": 1772,
+    "sha256": "cd92dde306035d15c2c6216e26b88baea4dd1815f68e5b0c605c59d328f49a86"
+  },
+  "v4-header-fields.txt": {
+    "bytes": 2974,
+    "sha256": "481bf7ced3d1a63424c8e5725cf58679d2067bbb9c81d203e8c7a32fc42f46cc"
+  }
+}

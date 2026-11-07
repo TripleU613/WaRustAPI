@@ -1,0 +1,42 @@
+
+# class: LX/0A8;
+# extends: Ljava/lang/Object;
+
+.method public A05(ZLL)  # .registers 5
+    # full signature: LX/0A8;->A05(Ljava/lang/String;Ljava/lang/String;)Z
+    0000..0002  const/4  v2, #0x0
+    0002..0006  if-eqz  v3, +0x3d
+    0006..000c  invoke-virtual  {v3}, Ljava/lang/String;->isEmpty()Z
+    000c..000e  move-result  v0
+    000e..0012  if-nez  v0, +0x37
+    0012..0018  invoke-virtual  {v4}, Ljava/lang/String;->isEmpty()Z
+    0018..001a  move-result  v0
+    001a..001e  if-nez  v0, +0x31
+    001e..0022  const/16  v0, #0x3a
+    0022..0028  invoke-virtual  {v3, v0}, Ljava/lang/String;->indexOf(I)I
+    0028..002a  move-result  v1
+    002a..002c  const/4  v0, #0xff (-1)
+    002c..0030  if-eq  v1, v0, +0x6
+    0030..0036  invoke-virtual  {v3, v2, v1}, Ljava/lang/String;->substring(II)Ljava/lang/String;
+    0036..0038  move-result-object  v3
+    0038..003c  const/16  v0, #0x3a
+    003c..0042  invoke-virtual  {v4, v0}, Ljava/lang/String;->indexOf(I)I
+    0042..0044  move-result  v1
+    0044..0046  const/4  v0, #0xff (-1)
+    0046..004a  if-eq  v1, v0, +0x6
+    004a..0050  invoke-virtual  {v4, v2, v1}, Ljava/lang/String;->substring(II)Ljava/lang/String;
+    0050..0052  move-result-object  v4
+    0052..0056  if-eqz  v3, +0x15
+    0056..005c  invoke-virtual  {v3}, Ljava/lang/String;->isEmpty()Z
+    005c..005e  move-result  v0
+    005e..0062  if-nez  v0, +0xf
+    0062..0066  if-eqz  v4, +0xd
+    0066..006c  invoke-virtual  {v4}, Ljava/lang/String;->isEmpty()Z
+    006c..006e  move-result  v0
+    006e..0072  if-nez  v0, +0x7
+    0072..0078  invoke-virtual  {v3, v4}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0078..007a  move-result  v0
+    007a..007c  return  v0
+    007c..007e  return  v2
+    # exception table: 0 try range(s)
+.end method

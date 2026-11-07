@@ -299,3 +299,12 @@ context callbacks differ from full session/per-config/override refresh, which is
 called fromA0C andBPZ. Twelve analyst Java vectors cover header/cursor behavior.
 Manager selection, hydration/translation and00E effective invalidation remain open.
 [Retained methods and limits](apk/2.26.43.72-token-config-refresh/README.md). No runtime or live change.
+
+## Parameter-map header and schema gate —2026-11-07
+
+The four packaged binary v4 headers are now decoded throughPfF.A00/A01 and
+rechecked against prior member identities. Lightweight0EV installation requires
+matching table/map schema prefixes and parsed translation state. Header metadata
+is distinct from effective bucket values; body rows, complete manager selection
+and loaded-table hydration remain open. No Rust policy or live operation changed.
+[Retained methods, extraction and limits](apk/2.26.43.72-token-param-header/README.md).

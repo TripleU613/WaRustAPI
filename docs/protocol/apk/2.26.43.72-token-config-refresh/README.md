@@ -81,3 +81,7 @@ translation maps and invalidation into effective00E values on the token path.
 No private account files were opened. No Rust send policy, wire request, reset
 or live account operation changed. Effective timing and full network parity
 remain unproven.
+
+The subsequent [parameter-map header trace](../2.26.43.72-token-param-header/README.md)
+decodes selected packaged v4 headers and schema matching before lightweight-manager
+translation installation. Effective values and body semantics remain open.

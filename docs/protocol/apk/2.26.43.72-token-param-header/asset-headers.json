@@ -1,0 +1,61 @@
+{
+  "kind": "pinned static packaged parameter headers; body not decoded",
+  "selected": [
+    {
+      "path": "assets/params_map_v4_u1.txt",
+      "bytes": 5222,
+      "sha256": "a1c9d71b0dd0fba7d42119c73577e9eb4fea318eca9737630138ac97f45c6829",
+      "version": 4,
+      "header_bytes": 62,
+      "magic": 32767,
+      "PHU_A00": 635,
+      "PHU_A02": 645,
+      "PHU_A01": 645,
+      "schema_hash_bytes": 32,
+      "schema_hash": "3fddbefb3a15164ad07c754f9c1f1f03",
+      "remaining_body_bytes": 5160
+    },
+    {
+      "path": "assets/params_map_v4_u2.txt",
+      "bytes": 179726,
+      "sha256": "f8c3ced3dd60b59c5532641dd9410d354a00bd641edc213fef8b3643e1722f37",
+      "version": 4,
+      "header_bytes": 62,
+      "magic": 32767,
+      "PHU_A00": 22398,
+      "PHU_A02": 22458,
+      "PHU_A01": 22458,
+      "schema_hash_bytes": 32,
+      "schema_hash": "dcb90789b7d0cc86a1ba58265e691ead",
+      "remaining_body_bytes": 179664
+    },
+    {
+      "path": "assets/params_map_v4_u4.txt",
+      "bytes": 638,
+      "sha256": "d133f3f26b18586b0ee539cac157174cb1fb17d1017896efeb95f77541b414b0",
+      "version": 4,
+      "header_bytes": 62,
+      "magic": 32767,
+      "PHU_A00": 2,
+      "PHU_A02": 72,
+      "PHU_A01": 72,
+      "schema_hash_bytes": 32,
+      "schema_hash": "2da06bed746c5764bfd70f74277af737",
+      "remaining_body_bytes": 576
+    },
+    {
+      "path": "assets/params_map_v4_u6.txt",
+      "bytes": 366,
+      "sha256": "e271c238a962812961acb40e4888b490c185f0ffdb90594ee60db99e75bb5255",
+      "version": 4,
+      "header_bytes": 62,
+      "magic": 32767,
+      "PHU_A00": 38,
+      "PHU_A02": 38,
+      "PHU_A01": 38,
+      "schema_hash_bytes": 32,
+      "schema_hash": "a11889ae8ae5d2c975a357cad95eec71",
+      "remaining_body_bytes": 304
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+
+# class: LX/PHU;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 2
+    # full signature: LX/PHU;-><init>()V
+    0000..0006  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    0006..000a  const-string  v0, ""
+    000a..000e  iput-object  v0, v1, LX/PHU;->A04:Ljava/lang/String;
+    000e..0010  const/4  v0, #0x0
+    0010..0014  iput  v0, v1, LX/PHU;->A00:I
+    0014..0018  iput  v0, v1, LX/PHU;->A01:I
+    0018..001c  iput  v0, v1, LX/PHU;->A02:I
+    001c..0020  iput  v0, v1, LX/PHU;->A03:I
+    0020..0022  return-void
+    # exception table: 0 try range(s)
+.end method

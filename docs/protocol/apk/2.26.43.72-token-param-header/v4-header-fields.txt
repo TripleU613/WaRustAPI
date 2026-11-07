@@ -1,0 +1,57 @@
+
+# class: LX/PfF;
+# extends: Ljava/lang/Object;
+
+.method public A00(ILL)  # .registers 8
+    # full signature: LX/PfF;->A00(LX/PHU;Ljava/nio/ByteBuffer;)I
+    0000..0004  sget-object  v0, Ljava/nio/ByteOrder;->LITTLE_ENDIAN:Ljava/nio/ByteOrder;
+    0004..000a  invoke-virtual  {v7, v0}, Ljava/nio/ByteBuffer;->order(Ljava/nio/ByteOrder;)Ljava/nio/ByteBuffer;
+    000a..000c  move-result-object  v2
+    000c..0012  invoke-virtual  {v2}, Ljava/nio/ByteBuffer;->getShort()S
+    0012..0014  move-result  v5
+    0014..001a  invoke-virtual  {v2}, Ljava/nio/ByteBuffer;->getShort()S
+    001a..001c  move-result  v1
+    001c..0020  const/16  v0, #0x7fff
+    0020..0022  const/4  v4, #0xff (-1)
+    0022..0026  const-string  v3, "FileParsingUtils"
+    0026..002a  if-eq  v1, v0, +0x8
+    002a..002e  const-string  v0, "getSchemaHashFromMclistFile: magic mismatch"
+    002e..0034  invoke-static  {v3, v0}, LX/070;->A0K(Ljava/lang/String;Ljava/lang/String;)V
+    0034..0036  return  v4
+    0036..003c  invoke-virtual  {v2}, Ljava/nio/ByteBuffer;->getShort()S
+    003c..003e  move-result  v0
+    003e..0044  const  v1, #0xffff
+    0044..0046  and-int/2addr  v0, v1
+    0046..004a  iput  v0, v6, LX/PHU;->A00:I
+    004a..0050  invoke-virtual  {v2}, Ljava/nio/ByteBuffer;->getShort()S
+    0050..0052  move-result  v0
+    0052..0054  and-int/2addr  v0, v1
+    0054..0058  iput  v0, v6, LX/PHU;->A02:I
+    0058..005e  invoke-virtual  {v2}, Ljava/nio/ByteBuffer;->getShort()S
+    005e..0064  invoke-virtual  {v2}, Ljava/nio/ByteBuffer;->getShort()S
+    0064..006a  invoke-virtual  {v2}, Ljava/nio/ByteBuffer;->getShort()S
+    006a..0070  invoke-virtual  {v2}, Ljava/nio/ByteBuffer;->getShort()S
+    0070..0074  const/16  v0, #0x18
+    0074..007a  invoke-virtual  {v2, v0}, Ljava/nio/Buffer;->position(I)Ljava/nio/Buffer;
+    007a..0080  invoke-virtual  {v2}, Ljava/nio/ByteBuffer;->getShort()S
+    0080..0082  move-result  v0
+    0082..0084  and-int/2addr  v0, v1
+    0084..0088  iput  v0, v6, LX/PHU;->A01:I
+    0088..008c  const/16  v0, #0x1a
+    008c..0092  invoke-virtual  {v2, v0}, Ljava/nio/Buffer;->position(I)Ljava/nio/Buffer;
+    0092..0098  invoke-virtual  {v2}, Ljava/nio/ByteBuffer;->getShort()S
+    0098..009a  move-result  v2
+    009a..009e  if-ltz  v2, +0x7
+    009e..00a2  add-int/lit8  v0, v2, #0x1e
+    00a2..00a6  if-ne  v5, v0, +0x3
+    00a6..00a8  return  v2
+    00a8..00ae  invoke-static  {v5}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    00ae..00b0  move-result-object  v1
+    00b0..00b4  add-int/lit8  v0, v2, #0x1e
+    00b4..00ba  invoke-static  {v1, v0}, LX/NhF;->A1Y(Ljava/lang/Object;I)[Ljava/lang/Object;
+    00ba..00bc  move-result-object  v1
+    00bc..00c0  const-string  v0, "getSchemaHashFromMclistFile: header size doesn't match, in file: %d, read: %d"
+    00c0..00c6  invoke-static  {v3, v0, v1}, LX/070;->A0T(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+    00c6..00c8  return  v4
+    # exception table: 0 try range(s)
+.end method
