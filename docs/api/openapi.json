@@ -1,4 +1,11 @@
 {
+  "x-retry-ack-preflight": {
+    "x-cli": "existing retry responder and receive paths; no new command or flag",
+    "x-transport": "pure supported ACK construction and codec admission before eligible direct retry state/crypto work",
+    "x-live": false,
+    "description": "Shared answer_inner now preflights a handled-confirmation candidate and binary encoding before eligible user-like direct retry outbox reads, ratchet changes or resend/refetch reservations. Both answer and answer_with_confirmation grant no work for unsupported/unencodable contexts; the wrapper still exposes success ACK only after actual durable work commits. Known text-constructor-null optional participants pass as omitted fields. Saved-session tests preserve full outbox/checkpoint/session/identity rows for builder and actual encoder rejection; valid count2 query/ACK/refetch uses an omitted overflow participant. Generic valid retry alone still grants no success ACK. Existing write ordering, uncertain holds/no-replay and unsupported group/native queue policies remain distinct. No HTTP route or account operation; live acceptance unverified.",
+    "evidence": "docs/protocol/retry-ack-dispatch.md"
+  },
   "x-retry-requesting-device-source": {
     "x-cli": "existing retry parsing/receive/responder paths; no new command or flag",
     "x-transport": "original-chat-class device selection and text-constructor-null preservation before retry authority",

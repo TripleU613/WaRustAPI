@@ -208,6 +208,23 @@ async fn answer_inner(
     let Some(retry) = super::receipts::parse_retry(node) else {
         return Ok(None);
     };
+    // APK43.72 completion submits the ACK before Fe5 dispatches retry work.
+    // Preflight only: no success ACK is exposed until actual work commits.
+    // A known-unwritable/local-unsupported context must not advance a ratchet
+    // or reserve a refetch that the driver would send without its confirmation.
+    if retry.chat.is_user_like()
+        && super::messaging::handled_retry_confirmation(node).is_none_or(|confirmation| {
+            Encoder::new(TokenDictionary::comparison_2_26_37_71())
+                .encode(&confirmation)
+                .is_err()
+        })
+    {
+        tracing::warn!(
+            field = "retry_context",
+            "retry ACK context unsupported; no retry work reserved"
+        );
+        return Ok(None);
+    }
     let Ok(wire_id) = MessageId::new(retry.message_id.clone()) else {
         return Ok(None);
     };
@@ -2478,6 +2495,9 @@ mod tests {
         let (store_ref, account_ref) = (&store, &account);
         let ask = |count: u32, registration: u32| {
             let mut node = receipt(&peer, count, registration);
+            if count == 2 {
+                node = node.attr("participant", "15555550100:2147483648@s.whatsapp.net");
+            }
             if count == 1 {
                 // A direct retry's optional participant must not redirect its
                 // requesting device away from the authenticated root sender.
@@ -2561,6 +2581,47 @@ mod tests {
                 .unwrap()
         };
         let before_invalid = all_retry_state();
+        // A parseable retry is not authority to reserve work when its ACK
+        // cannot be represented/written. Exercise both public entrypoints,
+        // same-session resend and mismatched-registration refetch candidates.
+        for (count, registration) in [(1, 42), (2, 43)] {
+            let base = receipt(&peer, count, registration);
+            let unencodable = base.clone().attr(
+                "participant",
+                Jid::parse("15555550101:300@s.whatsapp.net").unwrap(),
+            );
+            let candidate = super::super::messaging::handled_retry_confirmation(&unencodable)
+                .expect("candidate exists before codec admission");
+            assert!(
+                Encoder::new(TokenDictionary::comparison_2_26_37_71())
+                    .encode(&candidate)
+                    .is_err()
+            );
+            for node in [
+                base.clone().attr("participant", "Server@s.whatsapp.net"),
+                base.clone().attr("participant", "123-456@temp"),
+                base.clone().attr("participant", "unknown.example"),
+                // A model object can construct a candidate but exceed the
+                // selected writer's one-byte AD device field.
+                unencodable,
+                base.attr("edit", Jid::parse("12345@lid").unwrap()),
+            ] {
+                assert!(super::super::receipts::parse_retry(&node).is_some());
+                assert!(
+                    answer(&store, &account, &node, ConnectionEpoch(2))
+                        .await
+                        .unwrap()
+                        .is_none()
+                );
+                assert!(
+                    answer_with_confirmation(&store, &account, &node, ConnectionEpoch(2))
+                        .await
+                        .unwrap()
+                        .is_none()
+                );
+                assert_eq!(all_retry_state(), before_invalid);
+            }
+        }
         for source in [
             "15555550100:100@s.whatsapp.net",
             "100001:128@lid",

@@ -5373,3 +5373,19 @@ participant; null-source variants with matching explicit qualifiers preserve all
 outbox/checkpoint/ratchet/identity rows and produce no request/confirmation.
 [Complete predicates, exact byte/code-unit branches and corrected expectations](apk/2.26.43.72-retry-device-source/README.md).
 Original chat/identity/reservation guards remain; no live account operation.
+
+
+## Preflight retry ACK encoding before eligible direct work (2026-11-06)
+
+**Implemented/offline:** direct retry work now requires a pure supported ACK
+candidate AND successful binary encoding before any state read/reservation or
+crypto preparation. Previously work could commit before ACK construction failed,
+then be returned with no confirmation. Both answer entrypoints share this guard;
+no success ACK is exposed until actual work commits. Known constructor-null
+optional participants are admitted as omitted fields, while unsupported or
+unwritable contexts leave outbox/checkpoint/ratchet/identity rows unchanged.
+Saved-session tests cover resend/refetch candidates, actual candidate-versus-codec
+failure, and valid count2 refetch with null optional participant. Existing ACK-
+before-write, uncertainty/no-replay and group capability policy remain distinct.
+[Evidence chain, ordering limits and complete tests](retry-ack-dispatch.md#ack-capability-preflight-before-direct-retry-work-2026-11-06).
+No live account operation or server acceptance claim.

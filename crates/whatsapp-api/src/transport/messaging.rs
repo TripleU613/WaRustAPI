@@ -956,8 +956,9 @@ fn receipt_ack(incoming: &Node) -> Option<Node> {
     receipt_ack_after_processing(incoming, false)
 }
 
-// Only retry_answer's completed durable reservation calls this. A valid parser
-// result alone is not proof that this client handled a receipt.
+// Pure ACK candidate: retry_answer may preflight it before reserving work,
+// but may expose/write it only after a completed durable reservation. A valid
+// parser result alone is not proof that this client handled the receipt.
 pub(super) fn handled_retry_confirmation(incoming: &Node) -> Option<Node> {
     let retry = super::receipts::parse_retry(incoming)?;
     if !retry.chat.is_user_like()
@@ -1149,6 +1150,7 @@ fn retry_context_supported(incoming: &Node) -> bool {
     // Keep unsupported context/address grammars unacknowledged. In particular,
     // do not infer which exception precedes F10 for a context we cannot read.
     if incoming.get_attr("participant").is_some()
+        && !super::receipts::native_text_address_is_null(incoming, "participant")
         && super::receipts::network_jid(incoming, "participant").is_none()
     {
         return false;
@@ -2756,6 +2758,31 @@ mod tests {
         let delivery =
             receipt_native_parse_error_confirmation(&input.attr("type", "delivery")).unwrap();
         assert!(delivery.get_attr("type").is_none());
+    }
+
+    #[test]
+    fn retry_ack_preflight_accepts_known_null_optional_participant_without_emitting_success() {
+        let base = Node::new("receipt")
+            .attr("id", "ROOT")
+            .attr("from", "15555550100@s.whatsapp.net")
+            .attr("type", "retry")
+            .attr("participant", "15555550100:2147483648@s.whatsapp.net");
+        let malformed = received_confirmation(&base).unwrap();
+        assert_eq!(
+            malformed
+                .get_attr("error")
+                .and_then(|value| value.as_text()),
+            Some("487")
+        );
+        assert!(malformed.get_attr("participant").is_none());
+        let valid = base.children(vec![
+            Node::new("retry").attr("id", "INNER").attr("t", "1"),
+            Node::new("registration").bytes(vec![0, 0, 0, 1]),
+        ]);
+        assert!(received_confirmation(&valid).is_none());
+        let candidate = handled_retry_confirmation(&valid).unwrap();
+        assert!(candidate.get_attr("error").is_none());
+        assert!(candidate.get_attr("participant").is_none());
     }
 
     #[test]

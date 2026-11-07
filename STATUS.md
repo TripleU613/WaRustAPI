@@ -1,3 +1,10 @@
+2026-11-06 — **Preflighted retry ACK construction/encoding before direct work.**
+Eligible direct retries cannot reserve a resend/query or advance a session when
+their confirmation is unsupported or unencodable. Both answer entrypoints share
+the guard. Known-null optional participants are omitted; valid refetch still
+works. Tests preserve every retry-state row on rejected confirmation contexts.
+[Evidence and ordering boundaries](docs/protocol/retry-ack-dispatch.md#ack-capability-preflight-before-direct-retry-work-2026-11-06). No live account operation.
+
 2026-11-06 — **Selected the correct requesting device for retry receipts.**
 Direct retries now use the root sender; group/broadcast use the participant,
 matching the native original-chat branch. Known-null text addresses cannot gain

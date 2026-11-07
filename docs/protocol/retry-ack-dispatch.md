@@ -439,3 +439,54 @@ A receive-loop regression proves capture-before-write, explicit-redelivery ACK,
 unchanged outbox/ratchet/identity and no uncertain ACK replay after cut/reopen.
 [Complete evidence, context/type predicates and remaining boundaries](apk/2.26.43.72-unhandled-receipt-root/README.md).
 Full sender/provider/binary/special-handler parity and live acceptance remain open.
+
+
+## ACK capability preflight before direct retry work (2026-11-06)
+
+**Confirmed selected static / implemented local correction**, pinned APK2.26.43.72
+build264307238, SHA256
+`887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e`.
+The earlier [complete base dispatch and160/Fe5 evidence](apk/2.26.43.72-retry-ack-dispatch/README.md)
+establishes ACK submission before deferred retry work, with the documented
+limits on physical wire order and queue coverage. Rust's driver already writes
+a returned confirmation before its reserved message/IQ, but answer_inner could
+commit that work and only afterwards discover that no supported ACK existed.
+answer_with_confirmation logged a warning and still returned the reserved work;
+the driver could submit it with confirmation=None.
+
+For eligible user-like direct retry chats, shared answer_inner now builds a pure
+confirmation candidate and encodes it with the existing transport dictionary
+before any outbox read, crypto preparation, ratchet change, query reservation or
+retry bookkeeping. Failure grants no work through either public answer or the
+normal answer_with_confirmation wrapper. Encoding is necessary: a typed model
+object may produce a candidate Node that exceeds the writer's one-byte AD device
+field. A constructible Node alone does not establish encodable output.
+
+This preflight emits nothing, exposes no success ACK and does not mark input
+handled. The existing wrapper still attaches the success confirmation only after
+actual durable resend/query work commits; NodeLink retains ACK-before-work write
+ordering and uncertain-write stop/no-replay policy. The public answer API still
+returns a reserved node to its caller, who remains responsible for transport
+handling. Group/other unsupported policy remains separate; this is not a blanket
+success ACK for all syntactically valid retries or parity with native queues.
+
+The context guard now permits a known text-constructor-null optional participant
+before applying generic network-JID admission. Its output omits that field.
+A direct root sender remains the selected device, as recently corrected. Unknown
+unsupported context is still refused locally, not converted into a new native
+error. The [pinned nullable constructor/accessor evidence](receipt-optional-addresses.md#non-user-text-constructor-failures-in-receipts-2026-11-06)
+and [device-source branch](apk/2.26.43.72-retry-device-source/README.md) are reused.
+
+The saved-session workflow tests both resend and mismatched-registration refetch
+candidates with valid-but-unwritable service/temp participants, unknown local
+participant representation, nontext edit, and an ACK candidate that fails actual
+codec encoding. Both answer entrypoints return no work and preserve complete
+outbox/checkpoint/ratchet/identity rows. The out-of-range model fixture explicitly
+asserts that the candidate exists and encoding fails; it does not claim that
+that impossible binary-device value was received over the wire. The count2
+workflow uses constructor-null overflowing participant text and still performs
+its existing reserved query/ACK/refetch sequence. A pure ACK regression verifies
+fresh487 omits it, a handled candidate omits it, and generic valid-retry handling
+still emits no success ACK before work. Full workspace tests retain write-cut,
+reopen, duplicate, owner-change and refetch-ownership coverage. No live account
+operation, identity adoption, server acceptance or restriction guarantee.
