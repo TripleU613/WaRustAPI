@@ -1,9 +1,16 @@
 {
+  "x-receipt-shared-text-factory-null": {
+    "x-cli": "existing receipt/retry/receive paths; no new command or flag",
+    "x-transport": "shared selected native text factory/cache null classification for optional receipt contexts",
+    "x-live": false,
+    "description": "Receipts now share the existing call-ACK definite-null text factory/cache predicate: empty text/user and unknown bare/domain outside recognized factory/cache names stay null. Retry ACK context omits those optional participants rather than blocking supported schema/version487 or post-reservation completion. Typed values and native bare objects remain distinct; false is unclassified. Unit/codec cases cover omission and no pre-work generic success ACK; saved-session count2 query/ACK/refetch uses null bare/domain participant text. Existing recipient/root capability, encoding preflight, ownership/identity/no-replay safeguards remain. No generic JID rewrite, new query/HTTP route or account operation; full cache/native/binary/live behavior remains open.",
+    "evidence": "docs/protocol/receipt-optional-addresses.md"
+  },
   "x-retry-ack-preflight": {
     "x-cli": "existing retry responder and receive paths; no new command or flag",
     "x-transport": "pure supported ACK construction and codec admission before eligible direct retry state/crypto work",
     "x-live": false,
-    "description": "Shared answer_inner now preflights a handled-confirmation candidate and binary encoding before eligible user-like direct retry outbox reads, ratchet changes or resend/refetch reservations. Both answer and answer_with_confirmation grant no work for unsupported/unencodable contexts; the wrapper still exposes success ACK only after actual durable work commits. Known text-constructor-null optional participants pass as omitted fields. Saved-session tests preserve full outbox/checkpoint/session/identity rows for builder and actual encoder rejection; valid count2 query/ACK/refetch uses an omitted overflow participant. Generic valid retry alone still grants no success ACK. Existing write ordering, uncertain holds/no-replay and unsupported group/native queue policies remain distinct. No HTTP route or account operation; live acceptance unverified.",
+    "description": "Shared answer_inner now preflights a handled-confirmation candidate and binary encoding before eligible user-like direct retry outbox reads, ratchet changes or resend/refetch reservations. Both answer and answer_with_confirmation grant no work for unsupported/unencodable contexts; the wrapper still exposes success ACK only after actual durable work commits. Known text-constructor-null optional participants pass as omitted fields. Saved-session tests preserve full outbox/checkpoint/session/identity rows for builder and actual encoder rejection; valid count2 query/ACK/refetch uses an omitted constructor-null participant. Generic valid retry alone still grants no success ACK. Existing write ordering, uncertain holds/no-replay and unsupported group/native queue policies remain distinct. No HTTP route or account operation; live acceptance unverified.",
     "evidence": "docs/protocol/retry-ack-dispatch.md"
   },
   "x-retry-requesting-device-source": {

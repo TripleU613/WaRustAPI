@@ -1,3 +1,10 @@
+2026-11-06 — **Shared native-null factory rules with receipt contexts.**
+Unknown bare/domain and empty optional participant text now follows the retained
+nullable factory rather than blocking retry487/completion ACKs. Typed values and
+recognized bare objects remain distinct. Count2 saved-session query/refetch tests
+exercise the corrected omission with existing ACK/state/identity safeguards.
+[Evidence, cache boundaries and corrected expectations](receipt-optional-addresses.md#shared-definite-null-text-factorycache-boundary-2026-11-06). No live account operation.
+
 2026-11-06 — **Preflighted retry ACK construction/encoding before direct work.**
 Eligible direct retries cannot reserve a resend/query or advance a session when
 their confirmation is unsupported or unencodable. Both answer entrypoints share

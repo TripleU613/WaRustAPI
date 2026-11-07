@@ -478,15 +478,29 @@ error. The [pinned nullable constructor/accessor evidence](receipt-optional-addr
 and [device-source branch](apk/2.26.43.72-retry-device-source/README.md) are reused.
 
 The saved-session workflow tests both resend and mismatched-registration refetch
-candidates with valid-but-unwritable service/temp participants, unknown local
+candidates with valid-but-unwritable service/temp participants, unknown typed
 participant representation, nontext edit, and an ACK candidate that fails actual
 codec encoding. Both answer entrypoints return no work and preserve complete
 outbox/checkpoint/ratchet/identity rows. The out-of-range model fixture explicitly
 asserts that the candidate exists and encoding fails; it does not claim that
 that impossible binary-device value was received over the wire. The count2
-workflow uses constructor-null overflowing participant text and still performs
+workflow uses constructor-null participant text and still performs
 its existing reserved query/ACK/refetch sequence. A pure ACK regression verifies
 fresh487 omits it, a handled candidate omits it, and generic valid-retry handling
 still emits no success ACK before work. Full workspace tests retain write-cut,
 reopen, duplicate, owner-change and refetch-ownership coverage. No live account
 operation, identity adoption, server acceptance or restriction guarantee.
+
+
+## Definite-null unknown optional text uses shared factory rules (2026-11-06)
+
+**Confirmed selected static / implemented:** receipts now share the existing
+call-ACK text factory/cache null predicate, including empty text/user and unknown
+bare/domain outside recognized factory/cache names. Retry context construction
+omits those optional participants instead of suppressing supported487 or durable
+completion ACKs. Typed objects and recognized native bare objects remain distinct;
+false remains unclassified. Root/recipient capability, ACK encoding preflight,
+reservation and no-success-before-work rules remain. Count2 saved-session
+query/ACK/refetch now exercises null bare/domain participant text.
+[Complete retained evidence and corrected test expectations](receipt-optional-addresses.md#shared-definite-null-text-factorycache-boundary-2026-11-06).
+No live operation, identity adoption or generic JID rewrite.

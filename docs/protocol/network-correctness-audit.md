@@ -5389,3 +5389,17 @@ failure, and valid count2 refetch with null optional participant. Existing ACK-
 before-write, uncertainty/no-replay and group capability policy remain distinct.
 [Evidence chain, ordering limits and complete tests](retry-ack-dispatch.md#ack-capability-preflight-before-direct-retry-work-2026-11-06).
 No live account operation or server acceptance claim.
+
+
+## Definite-null unknown optional text uses shared factory rules (2026-11-06)
+
+**Confirmed selected static / implemented:** receipts now share the existing
+call-ACK text factory/cache null predicate, including empty text/user and unknown
+bare/domain outside recognized factory/cache names. Retry context construction
+omits those optional participants instead of suppressing supported487 or durable
+completion ACKs. Typed objects and recognized native bare objects remain distinct;
+false remains unclassified. Root/recipient capability, ACK encoding preflight,
+reservation and no-success-before-work rules remain. Count2 saved-session
+query/ACK/refetch now exercises null bare/domain participant text.
+[Complete retained evidence and corrected test expectations](receipt-optional-addresses.md#shared-definite-null-text-factorycache-boundary-2026-11-06).
+No live operation, identity adoption or generic JID rewrite.

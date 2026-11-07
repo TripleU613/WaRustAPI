@@ -1644,9 +1644,12 @@ fn call_ack_sender_known_null(node: &Node) -> bool {
     let Some(value) = node.get_attr("from") else {
         return true;
     };
-    let Some(text) = value.as_text() else {
-        return false;
-    };
+    value.as_text().is_some_and(ack_text_address_is_known_null)
+}
+
+// Shared selected text factory/cache boundary. Existing typed/binary JIDs do
+// not pass through this constructor path; false remains unclassified.
+pub(crate) fn ack_text_address_is_known_null(text: &str) -> bool {
     if text.is_empty() {
         return true;
     }
@@ -2270,12 +2273,16 @@ mod tests {
             );
         }
         let unsupported = base.children(vec![Node::new("retry").attr("v", "2"), registration()]);
-        for (name, value) in [
-            ("participant", "bad"),
-            ("recipient", "bad"),
-            ("id", ""),
-            ("from", "bad"),
-        ] {
+        let null_participant =
+            received_confirmation(&unsupported.clone().attr("participant", "bad")).unwrap();
+        assert!(null_participant.get_attr("participant").is_none());
+        assert_eq!(
+            null_participant
+                .get_attr("error")
+                .and_then(|value| value.as_text()),
+            Some("487")
+        );
+        for (name, value) in [("recipient", "bad"), ("id", ""), ("from", "bad")] {
             assert!(received_confirmation(&unsupported.clone().attr(name, value)).is_none());
         }
     }
@@ -2758,6 +2765,44 @@ mod tests {
         let delivery =
             receipt_native_parse_error_confirmation(&input.attr("type", "delivery")).unwrap();
         assert!(delivery.get_attr("type").is_none());
+    }
+
+    #[test]
+    fn retry_ack_context_omits_definite_null_unknown_text_but_not_factory_bare_objects() {
+        let base = Node::new("receipt")
+            .attr("id", "ROOT")
+            .attr("from", "15555550100@s.whatsapp.net")
+            .attr("type", "retry");
+        for participant in [
+            "unknown.example",
+            "15555550100@unknown.example",
+            "@s.whatsapp.net",
+            "",
+        ] {
+            let malformed = base.clone().attr("participant", participant);
+            let error = received_confirmation(&malformed).unwrap();
+            assert_eq!(
+                error.get_attr("error").and_then(|value| value.as_text()),
+                Some("487")
+            );
+            assert!(error.get_attr("participant").is_none());
+            let valid = malformed.children(vec![
+                Node::new("retry").attr("id", "INNER").attr("t", "1"),
+                Node::new("registration").bytes(vec![0, 0, 0, 1]),
+            ]);
+            assert!(received_confirmation(&valid).is_none());
+            let candidate = handled_retry_confirmation(&valid).unwrap();
+            assert!(candidate.get_attr("participant").is_none());
+            Encoder::new(TokenDictionary::comparison_2_26_37_71())
+                .encode(&candidate)
+                .unwrap();
+        }
+        for bare in ["s.whatsapp.net", "g.us", "call", "status_me", "lid_me"] {
+            assert!(
+                !ack_text_address_is_known_null(bare),
+                "native bare object: {bare}"
+            );
+        }
     }
 
     #[test]

@@ -2496,7 +2496,14 @@ mod tests {
         let ask = |count: u32, registration: u32| {
             let mut node = receipt(&peer, count, registration);
             if count == 2 {
-                node = node.attr("participant", "15555550100:2147483648@s.whatsapp.net");
+                node = node.attr(
+                    "participant",
+                    if registration == 43 {
+                        "unknown.example"
+                    } else {
+                        "15555550100@unknown.example"
+                    },
+                );
             }
             if count == 1 {
                 // A direct retry's optional participant must not redirect its
@@ -2600,7 +2607,9 @@ mod tests {
             for node in [
                 base.clone().attr("participant", "Server@s.whatsapp.net"),
                 base.clone().attr("participant", "123-456@temp"),
-                base.clone().attr("participant", "unknown.example"),
+                // Typed objects are not classified through text factories.
+                base.clone()
+                    .attr("participant", Jid::parse("123@unknown.example").unwrap()),
                 // A model object can construct a candidate but exceed the
                 // selected writer's one-byte AD device field.
                 unencodable,

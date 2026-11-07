@@ -1210,17 +1210,12 @@ pub(super) fn ack_wire_address(node: &Node, name: &str, parsed: Jid) -> Jid {
 }
 
 pub(super) fn native_text_address_is_null(node: &Node, name: &str) -> bool {
-    let Some(text) = node.get_attr(name).and_then(|value| value.as_text()) else {
-        return false; // Typed/binary objects are not text-constructor failures.
-    };
-    // APK43.72 optional0Tp.A0A catches constructor failures for non-user
-    // namespaces too:1bc/0nW,2U8,0De.A03,7Kr,Dv5. Reuse the retained exact
-    // predicates; generic Jid::parse acceptance is not native object presence.
-    matches!(
-        super::messaging::ack_user_text(text),
-        Some(super::messaging::AckUserText::Null)
-    ) || super::messaging::ack_non_user_text_valid(text) == Some(false)
-        || super::messaging::ack_call_text_valid(text) == Some(false)
+    // Reuse the selected0Dd factory/cache/constructor boundaries for all
+    // text families, including unknown bare/domain and empty-user failures.
+    // Missing attributes and existing typed/binary objects stay distinct.
+    node.get_attr(name)
+        .and_then(|value| value.as_text())
+        .is_some_and(super::messaging::ack_text_address_is_known_null)
 }
 
 pub(super) fn receipt_ack_wire_address(node: &Node, name: &str) -> Option<Jid> {

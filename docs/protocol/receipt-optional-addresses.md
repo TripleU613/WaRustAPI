@@ -126,3 +126,50 @@ Dv5/7Kr constructor evidence. Codec tests encode the resulting ACKs. These are
 local offline guarantees, not server acceptance.
 Complete binary/string/cache/native scheduling parity and other sender grammars
 remain open. No live account operation or account-restriction guarantee.
+
+
+## Shared definite-null text factory/cache boundary (2026-11-06)
+
+**Confirmed selected static / implemented**, pinned APK2.26.43.72 build264307238,
+SHA256 `887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e`.
+The earlier receipt null helper reused individual recognized-family constructor
+predicates, but not the selected unknown-bare/domain/empty-user factory checks.
+Consequently generic ordinary receipt output omitted unparseable optional text,
+while retry's context guard could refuse that same null field and suppress its
+otherwise supported schema/version response or completion confirmation.
+
+The existing call-ACK definite-null text predicate is now factored into a shared
+pure helper and reused by receipt construction/facts. Call sender handling retains
+its separate missing-attribute behavior; typed/binary values still do not pass
+through text factories. Empty text, empty user, unknown qualified domain and
+unknown bare name OUTSIDE the recognized parser/factory/cache names remain null.
+Recognized family names without a fully classified bare route remain unclassified;
+false is not a claim of native validity. Native bare s.whatsapp.net/g.us/call and
+status_me/lid_me must not be erased as parser failure.
+
+The [complete factory, cache-field/caller census and limitations](apk/2.26.43.72-call-sender-text/README.md)
+are reused. Its0Dd.A00 domain switch/default throw,0De.A00 bare factory,
+0De.A03/A04 selected cache producers and0Dd.A02 optional catch boundary support
+this selected null classifier. No new APK runtime observation is claimed. Existing
+PN/LID/hosted/group/broadcast/newsletter/temp/call constructor predicates and
+valid-but-unwritable distinctions remain unchanged. Full reflection/native cache
+mutation, unclassified recognized-family and typed-JID behavior remain open.
+
+Retry's context guard now sees these text failures as omitted optional
+participants. The direct root still selects the requesting device, the explicit
+recipient capability guard remains unchanged, and pure success ACKs remain
+unexposed until actual durable retry work commits. Error487 schema/version
+responses may now omit a null participant instead of being incorrectly blocked.
+Unknown typed objects remain local unsupported context and cannot gain the same
+omission merely by matching a text spelling.
+
+Tests cover empty/bare/domain/empty-user participant text, fresh error487,
+handled candidates, codec encoding, and no generic valid-retry success ACK. Bare
+nonnull controls retain their distinct classification. An older version-error
+test incorrectly expected participant=bad to suppress the response; it now
+expects copied487 with no participant, while root-source/explicit-recipient/id
+local refusals remain. The saved-session count2 query/ACK/refetch workflow now
+uses unknown bare/domain optional text and succeeds; preflight refusal fixtures
+use a typed unsupported namespace instead. Existing overflow-null tests and
+unencodable/valid-but-unwritable preflight checks remain. No identity mapping,
+new query policy, native error cause, HTTP route or live operation is introduced.
