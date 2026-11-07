@@ -1,5 +1,11 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
+**Message-to-download model traced.** Confirmed stored encrypted/plaintext hash
+and length projection, register-correct constructor binding and lazy sidecar
+preparation. Transfer category depends on message/provider predicates, not MIME
+alone. No runtime or request-policy change.
+[Evidence](media-network-outcomes.md#pinned-message-to-download-model-2026-11-06).
+
 **Download factories traced.** Confirmed PUSH/PULL enum-to-handler mapping,
 config-dependent mode selection, category eligibility and sidecar Callable
 behavior. The selected chat branch fails on missing required sidecar rather than

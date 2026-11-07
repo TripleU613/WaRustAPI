@@ -1,0 +1,32 @@
+
+# class: LX/N3m;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLL)  # .registers 3
+    # full signature: LX/N3m;-><init>(LX/1eP;LX/1fV;)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v2, v0, LX/N3m;->A01:LX/1fV;
+    000a..000e  iput-object  v1, v0, LX/N3m;->A00:LX/1eP;
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public call(L)  # .registers 5
+    # full signature: LX/N3m;->call()Ljava/lang/Object;
+    0000..0004  iget-object  v3, v4, LX/N3m;->A01:LX/1fV;
+    0004..0008  if-nez  v3, +0x4
+    0008..000a  const/4  v3, #0x0
+    000a..000c  return-object  v3
+    000c..0010  iget-object  v0, v4, LX/N3m;->A00:LX/1eP;
+    0010..0016  invoke-static  {v0}, LX/AEH;->A06(LX/1eP;)V
+    0016..001c  invoke-interface  {v3}, LX/1fV;->B7k()[B
+    001c..001e  move-result-object  v2
+    001e..0024  invoke-interface  {v3}, LX/1fV;->AbZ()[I
+    0024..0026  move-result-object  v1
+    0026..002c  invoke-interface  {v3}, LX/1fV;->At5()Ljava/lang/Long;
+    002c..002e  move-result-object  v0
+    002e..0032  new-instance  v3, LX/LvR;
+    0032..0038  invoke-direct  {v3, v0, v2, v1}, LX/LvR;-><init>(Ljava/lang/Long;[B[I)V
+    0038..003a  return-object  v3
+    # exception table: 0 try range(s)
+.end method

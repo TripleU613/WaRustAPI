@@ -1419,3 +1419,23 @@ refine the shared200/206 leaf comparison. Original message-to-MX3 and sidecar
 Callable construction, MWP.A0b semantics and exact starting file/range state for
 Rust's profile remain unknown. No native fallback, guessed mandatory sidecar,
 PUSH header,206/416 adoption, automatic resume/retry or live operation is added.
+
+## Pinned message-to-download model (2026-11-06)
+
+**Confirmed selected static / research only:** MX3.A01 carries8tC.A0Y/A0Z/A0I
+into transfer hash A0K, plaintext hash A0L and length A09. The Cursor projector
+27G.A01 independently names the stored sources enc_file_hash/file_hash/file_length;
+it is not a protobuf decoder. Checked word-register bindings include wide values
+and the large constructor's actual range invocation.
+
+Transfer category3/2/1 comes from ACf/ADF message/provider predicates, not simply
+original media kind or MIME. N3m prepares a provider through AEH.A06 before
+projecting sidecar bytes/index/optional Long into LvR; raw field presence does not
+establish the native lazy-provider result or imply a network fetch.
+
+[Complete model/builders, sidecar Callable/preparation, predicates, hash writer
+censuses, exact register table and checksums](apk/2.26.43.72-media-download-model/README.md)
+refine prior factory-selection evidence. Full inbound protobuf-to-message tags,
+concrete provider behavior and native category/start/end for the exact Rust
+profile remain unknown. No guessed stream-mode choice, hash fallback,206/416
+adoption, sidecar requirement, preparation request or live traffic was added.

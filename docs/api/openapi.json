@@ -1,4 +1,11 @@
 {
+  "x-media-download-model-boundary": {
+    "x-cli": "existing media retrieval; no new command or flag",
+    "x-transport": "research-only pinned message-to-download model projection; Rust runtime unchanged",
+    "x-live": false,
+    "description": "MX3.A01 maps stored enc_file_hash/file_hash/file_length to consumed transfer/plaintext hash and object-length fields, with checked wide-register constructor binding. Category3/2/1 derives from message/provider predicates rather than MIME alone. Sidecar Callable performs preparation then projects bytes/index/optional Long into LvR; provider side effects and full inbound protobuf mapping remain unknown. No hash fallback, status relaxation, guessed mandatory sidecar/mode, network preparation or live traffic.",
+    "evidence": "docs/protocol/apk/2.26.43.72-media-download-model/README.md"
+  },
   "x-media-download-factory-boundary": {
     "x-cli": "existing ordinary/view-once media retrieval; no new command or flag",
     "x-transport": "research-only pinned download factory and sidecar-selection boundaries; no runtime change",

@@ -1,0 +1,163 @@
+
+# class: LX/27G;
+# extends: Ljava/lang/Object;
+
+.method public A01(VLLLZ)  # .registers 8
+    # full signature: LX/27G;->A01(Landroid/database/Cursor;LX/0K3;LX/8tC;Z)V
+    0000..0002  const/4  v0, #0x2
+    0002..0008  invoke-static  {v5, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  const-string  v0, "doodle_id"
+    000c..0012  invoke-static  {v4, v0}, LX/0MQ;->A05(Landroid/database/Cursor;Ljava/lang/String;)Ljava/lang/String;
+    0012..0014  move-result-object  v0
+    0014..0018  iput-object  v0, v6, LX/8tC;->A0W:Ljava/lang/String;
+    0018..001c  const-string  v0, "accessibility_label"
+    001c..0022  invoke-static  {v4, v0}, LX/0MQ;->A05(Landroid/database/Cursor;Ljava/lang/String;)Ljava/lang/String;
+    0022..0024  move-result-object  v0
+    0024..0028  iput-object  v0, v6, LX/8tC;->A0R:Ljava/lang/String;
+    0028..002c  const-string  v0, "media_job_uuid"
+    002c..0032  invoke-static  {v4, v0}, LX/0MQ;->A05(Landroid/database/Cursor;Ljava/lang/String;)Ljava/lang/String;
+    0032..0034  move-result-object  v0
+    0034..0038  iput-object  v0, v6, LX/8tC;->A0a:Ljava/lang/String;
+    0038..003c  const-string  v0, "transcoded"
+    003c..0042  invoke-interface  {v4, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0042..0044  move-result  v0
+    0044..004a  invoke-static  {v4, v0}, LX/0MQ;->A06(Landroid/database/Cursor;I)Z
+    004a..004c  move-result  v0
+    004c..0050  iput-boolean  v0, v6, LX/8tC;->A0s:Z
+    0050..0054  const-string  v2, "file_size"
+    0054..0058  const-wide/16  v0, #0x0
+    0058..005e  invoke-interface  {v4, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    005e..0060  move-result  v2
+    0060..0066  invoke-static  {v4, v2, v0, v1}, LX/0MQ;->A01(Landroid/database/Cursor;IJ)J
+    0066..0068  move-result-wide  v2
+    0068..006c  iput-wide  v2, v6, LX/8tC;->A0F:J
+    006c..0070  const-string  v2, "suspicious_content"
+    0070..0076  invoke-static  {v4, v2}, LX/1Xl;->A02(Landroid/database/Cursor;Ljava/lang/String;)I
+    0076..0078  move-result  v2
+    0078..007c  iput  v2, v6, LX/8tC;->A0C:I
+    007c..0080  const-string  v2, "trim_from"
+    0080..0086  invoke-interface  {v4, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0086..0088  move-result  v2
+    0088..008e  invoke-static  {v4, v2, v0, v1}, LX/0MQ;->A01(Landroid/database/Cursor;IJ)J
+    008e..0090  move-result-wide  v2
+    0090..0094  iput-wide  v2, v6, LX/8tC;->A0L:J
+    0094..0098  const-string  v2, "trim_to"
+    0098..009e  invoke-interface  {v4, v2}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    009e..00a0  move-result  v2
+    00a0..00a6  invoke-static  {v4, v2, v0, v1}, LX/0MQ;->A01(Landroid/database/Cursor;IJ)J
+    00a6..00a8  move-result-wide  v0
+    00a8..00ac  iput-wide  v0, v6, LX/8tC;->A0M:J
+    00ac..00b0  const-string  v1, "media_source_type"
+    00b0..00b2  const/4  v0, #0xff (-1)
+    00b2..00b8  invoke-static  {v4, v1, v0}, LX/1Xl;->A03(Landroid/database/Cursor;Ljava/lang/String;I)I
+    00b8..00ba  move-result  v0
+    00ba..00be  iput  v0, v6, LX/8tC;->A09:I
+    00be..00c2  const-string  v0, "direct_path"
+    00c2..00c8  invoke-static  {v4, v0}, LX/0MQ;->A05(Landroid/database/Cursor;Ljava/lang/String;)Ljava/lang/String;
+    00c8..00ca  move-result-object  v3
+    00ca..00cc  const/4  v2, #0x0
+    00cc..00d0  if-eqz  v3, +0xb
+    00d0..00d4  sget-object  v0, LX/Lkh;->A00:LX/06K;
+    00d4..00da  invoke-virtual  {v0, v3}, LX/06K;->A07(Ljava/lang/CharSequence;)Z
+    00da..00dc  move-result  v1
+    00dc..00de  move-object  v0, v3
+    00de..00e2  if-eqz  v1, +0x3
+    00e2..00e4  move-object  v0, v2
+    00e4..00e8  iput-object  v0, v6, LX/8tC;->A0V:Ljava/lang/String;
+    00e8..00ec  if-eqz  v3, +0xb7
+    00ec..00f0  sget-object  v0, LX/Lkh;->A00:LX/06K;
+    00f0..00f6  invoke-virtual  {v0, v3}, LX/06K;->A07(Ljava/lang/CharSequence;)Z
+    00f6..00f8  move-result  v0
+    00f8..00fc  if-eqz  v0, +0xaf
+    00fc..0100  iput-object  v3, v6, LX/8tC;->A0S:Ljava/lang/String;
+    0100..0104  const-string  v0, "media_key"
+    0104..010a  invoke-static  {v4, v0}, LX/1Xl;->A1Z(Landroid/database/Cursor;Ljava/lang/String;)[B
+    010a..010c  move-result-object  v0
+    010c..0110  iput-object  v0, v6, LX/8tC;->A0z:[B
+    0110..0114  const-string  v0, "media_key_timestamp"
+    0114..011a  invoke-static  {v4, v0}, LX/1Xl;->A0F(Landroid/database/Cursor;Ljava/lang/String;)J
+    011a..011c  move-result-wide  v0
+    011c..0120  iput-wide  v0, v6, LX/8tC;->A0G:J
+    0120..0124  const-string  v0, "width"
+    0124..012a  invoke-static  {v4, v0}, LX/1Xl;->A02(Landroid/database/Cursor;Ljava/lang/String;)I
+    012a..012c  move-result  v0
+    012c..0130  iput  v0, v6, LX/8tC;->A0D:I
+    0130..0134  const-string  v0, "height"
+    0134..013a  invoke-static  {v4, v0}, LX/1Xl;->A02(Landroid/database/Cursor;Ljava/lang/String;)I
+    013a..013c  move-result  v0
+    013c..0140  iput  v0, v6, LX/8tC;->A07:I
+    0140..0144  const-string  v1, "gif_attribution"
+    0144..0146  const/4  v0, #0x0
+    0146..014c  invoke-static  {v4, v1, v0}, LX/1Xl;->A03(Landroid/database/Cursor;Ljava/lang/String;I)I
+    014c..014e  move-result  v0
+    014e..0152  iput  v0, v6, LX/8tC;->A06:I
+    0152..0156  const-string  v0, "media_transcode_quality"
+    0156..015c  invoke-static  {v4, v0}, LX/1Xl;->A02(Landroid/database/Cursor;Ljava/lang/String;)I
+    015c..015e  move-result  v0
+    015e..0162  iput  v0, v6, LX/8tC;->A0A:I
+    0162..0166  const-string  v0, "file_path"
+    0166..016c  invoke-static  {v4, v0}, LX/0MQ;->A05(Landroid/database/Cursor;Ljava/lang/String;)Ljava/lang/String;
+    016c..016e  move-result-object  v1
+    016e..0172  if-eqz  v1, +0x65
+    0172..0176  if-eqz  v7, +0x65
+    0176..017c  invoke-virtual  {v6, v1}, LX/8tC;->A08(Ljava/lang/String;)V
+    017c..0180  const-string  v0, "partial_media_hash"
+    0180..0186  invoke-static  {v4, v0}, LX/0MQ;->A05(Landroid/database/Cursor;Ljava/lang/String;)Ljava/lang/String;
+    0186..0188  move-result-object  v0
+    0188..018c  iput-object  v0, v6, LX/8tC;->A0k:Ljava/lang/String;
+    018c..0190  const-string  v0, "partial_media_enc_hash"
+    0190..0196  invoke-static  {v4, v0}, LX/0MQ;->A05(Landroid/database/Cursor;Ljava/lang/String;)Ljava/lang/String;
+    0196..0198  move-result-object  v0
+    0198..019c  iput-object  v0, v6, LX/8tC;->A0j:Ljava/lang/String;
+    019c..01a0  const-string  v0, "mute_video"
+    01a0..01a6  invoke-interface  {v4, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    01a6..01a8  move-result  v0
+    01a8..01ae  invoke-static  {v4, v0}, LX/0MQ;->A06(Landroid/database/Cursor;I)Z
+    01ae..01b0  move-result  v0
+    01b0..01b4  iput-boolean  v0, v6, LX/8tC;->A0r:Z
+    01b4..01b8  const-string  v0, "file_length"
+    01b8..01be  invoke-static  {v4, v0}, LX/1Xl;->A0E(Landroid/database/Cursor;Ljava/lang/String;)J
+    01be..01c0  move-result-wide  v0
+    01c0..01c4  iput-wide  v0, v6, LX/8tC;->A0I:J
+    01c4..01c8  const-string  v0, "enc_file_hash"
+    01c8..01ce  invoke-static  {v4, v0}, LX/0MQ;->A05(Landroid/database/Cursor;Ljava/lang/String;)Ljava/lang/String;
+    01ce..01d0  move-result-object  v0
+    01d0..01d4  iput-object  v0, v6, LX/8tC;->A0Y:Ljava/lang/String;
+    01d4..01d8  const-string  v0, "file_hash"
+    01d8..01de  invoke-static  {v4, v0}, LX/0MQ;->A05(Landroid/database/Cursor;Ljava/lang/String;)Ljava/lang/String;
+    01de..01e0  move-result-object  v0
+    01e0..01e4  iput-object  v0, v6, LX/8tC;->A0Z:Ljava/lang/String;
+    01e4..01e8  const-string  v0, "mime_type"
+    01e8..01ee  invoke-static  {v4, v0}, LX/0MQ;->A05(Landroid/database/Cursor;Ljava/lang/String;)Ljava/lang/String;
+    01ee..01f0  move-result-object  v0
+    01f0..01f4  iput-object  v0, v6, LX/8tC;->A0b:Ljava/lang/String;
+    01f4..01f8  const-string  v0, "media_name"
+    01f8..01fe  invoke-static  {v4, v0}, LX/0MQ;->A05(Landroid/database/Cursor;Ljava/lang/String;)Ljava/lang/String;
+    01fe..0200  move-result-object  v0
+    0200..0204  iput-object  v0, v6, LX/8tC;->A0c:Ljava/lang/String;
+    0204..0208  const-string  v0, "original_file_hash"
+    0208..020e  invoke-static  {v4, v0}, LX/0MQ;->A05(Landroid/database/Cursor;Ljava/lang/String;)Ljava/lang/String;
+    020e..0210  move-result-object  v0
+    0210..0214  iput-object  v0, v6, LX/8tC;->A0i:Ljava/lang/String;
+    0214..0218  const-string  v1, "media_duration"
+    0218..021a  const/4  v0, #0x0
+    021a..0220  invoke-static  {v4, v1, v0}, LX/1Xl;->A03(Landroid/database/Cursor;Ljava/lang/String;I)I
+    0220..0222  move-result  v0
+    0222..0226  iput  v0, v6, LX/8tC;->A08:I
+    0226..022a  const-string  v0, "multicast_id"
+    022a..0230  invoke-static  {v4, v0}, LX/0MQ;->A05(Landroid/database/Cursor;Ljava/lang/String;)Ljava/lang/String;
+    0230..0232  move-result-object  v0
+    0232..0236  iput-object  v0, v6, LX/8tC;->A0h:Ljava/lang/String;
+    0236..0238  return-void
+    0238..023a  const/4  v0, #0x0
+    023a..023c  goto  +0xa
+    023c..0240  new-instance  v0, Ljava/io/File;
+    0240..0246  invoke-direct  {v0, v1}, Ljava/io/File;-><init>(Ljava/lang/String;)V
+    0246..024c  invoke-virtual  {v5, v0}, LX/0K3;->A07(Ljava/io/File;)Ljava/io/File;
+    024c..024e  move-result-object  v0
+    024e..0254  invoke-virtual  {v6, v0}, LX/8tC;->A07(Ljava/io/File;)V
+    0254..0256  goto  -0x6c
+    0256..0258  move-object  v3, v2
+    0258..025c  goto/16  -0xae
+    # exception table: 0 try range(s)
+.end method

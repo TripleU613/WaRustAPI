@@ -1,0 +1,120 @@
+
+# class: LX/MX3;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLLLLLLLLLLLLLLLLLLLLLLIIIIIIIIJJZZZZZZZZZZZZZZZZZZ)  # .registers 62
+    # full signature: LX/MX3;-><init>(Landroid/util/Size;LX/0DY;LX/0DY;LX/0jS;Ljava/io/File;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/concurrent/Callable;LX/00v;LX/00v;[B[BIIIIIIIIJJZZZZZZZZZZZZZZZZZZ)V
+    0000..0006  invoke-direct  {v5}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v9, v5, LX/MX3;->A0D:LX/0jS;
+    000a..000e  move/from16  v0, v32
+    000e..0012  iput  v0, v5, LX/MX3;->A00:I
+    0012..0016  move-object/from16  v0, v30
+    0016..001a  iput-object  v0, v5, LX/MX3;->A0r:[B
+    001a..001e  iput-object  v10, v5, LX/MX3;->A0E:Ljava/io/File;
+    001e..0022  move-object/from16  v0, v29
+    0022..0026  iput-object  v0, v5, LX/MX3;->A0W:LX/00v;
+    0026..002a  move-object/from16  v0, v28
+    002a..002e  iput-object  v0, v5, LX/MX3;->A0V:LX/00v;
+    002e..0032  iput-object  v6, v5, LX/MX3;->A0A:Landroid/util/Size;
+    0032..0036  move-wide/from16  v0, v40
+    0036..003a  iput-wide  v0, v5, LX/MX3;->A09:J
+    003a..003e  move-wide/from16  v2, v42
+    003e..0042  iput-wide  v2, v5, LX/MX3;->A08:J
+    0042..0046  move-object/from16  v2, v27
+    0046..004a  iput-object  v2, v5, LX/MX3;->A0t:Ljava/util/concurrent/Callable;
+    004a..004e  iput-object  v14, v5, LX/MX3;->A0P:Ljava/lang/String;
+    004e..0052  iput-object  v15, v5, LX/MX3;->A0L:Ljava/lang/String;
+    0052..0056  move-object/from16  v2, v16
+    0056..005a  iput-object  v2, v5, LX/MX3;->A0O:Ljava/lang/String;
+    005a..005e  move-object/from16  v2, v17
+    005e..0062  iput-object  v2, v5, LX/MX3;->A0M:Ljava/lang/String;
+    0062..0066  move-object/from16  v2, v18
+    0066..006a  iput-object  v2, v5, LX/MX3;->A0K:Ljava/lang/String;
+    006a..006e  move-object/from16  v2, v19
+    006e..0072  iput-object  v2, v5, LX/MX3;->A0N:Ljava/lang/String;
+    0072..0076  move-object/from16  v2, v20
+    0076..007a  iput-object  v2, v5, LX/MX3;->A0J:Ljava/lang/String;
+    007a..007e  move-object/from16  v2, v21
+    007e..0082  iput-object  v2, v5, LX/MX3;->A0I:Ljava/lang/String;
+    0082..0086  iput-object  v7, v5, LX/MX3;->A0B:LX/0DY;
+    0086..008a  move/from16  v2, v33
+    008a..008e  iput  v2, v5, LX/MX3;->A05:I
+    008e..0092  move/from16  v2, v34
+    0092..0096  iput  v2, v5, LX/MX3;->A02:I
+    0096..009a  move/from16  v2, v35
+    009a..009e  iput  v2, v5, LX/MX3;->A07:I
+    009e..00a2  move/from16  v2, v36
+    00a2..00a6  iput  v2, v5, LX/MX3;->A03:I
+    00a6..00aa  move/from16  v2, v44
+    00aa..00ae  iput-boolean  v2, v5, LX/MX3;->A0n:Z
+    00ae..00b2  move/from16  v2, v45
+    00b2..00b6  iput-boolean  v2, v5, LX/MX3;->A0m:Z
+    00b6..00ba  iput-object  v11, v5, LX/MX3;->A0F:Ljava/lang/Integer;
+    00ba..00be  move/from16  v2, v46
+    00be..00c2  iput-boolean  v2, v5, LX/MX3;->A0i:Z
+    00c2..00c6  move/from16  v2, v47
+    00c6..00ca  iput-boolean  v2, v5, LX/MX3;->A0e:Z
+    00ca..00ce  move/from16  v2, v48
+    00ce..00d2  iput-boolean  v2, v5, LX/MX3;->A0f:Z
+    00d2..00d6  move/from16  v2, v49
+    00d6..00da  iput-boolean  v2, v5, LX/MX3;->A0Z:Z
+    00da..00de  move/from16  v2, v50
+    00de..00e2  iput-boolean  v2, v5, LX/MX3;->A0a:Z
+    00e2..00e6  move-object/from16  v2, v31
+    00e6..00ea  iput-object  v2, v5, LX/MX3;->A0s:[B
+    00ea..00ee  move-object/from16  v2, v22
+    00ee..00f2  iput-object  v2, v5, LX/MX3;->A0R:Ljava/lang/String;
+    00f2..00f6  move/from16  v2, v51
+    00f6..00fa  iput-boolean  v2, v5, LX/MX3;->A0q:Z
+    00fa..00fe  move/from16  v2, v52
+    00fe..0102  iput-boolean  v2, v5, LX/MX3;->A0o:Z
+    0102..0106  move/from16  v2, v54
+    0106..010a  iput-boolean  v2, v5, LX/MX3;->A0p:Z
+    010a..010e  move/from16  v2, v53
+    010e..0112  iput-boolean  v2, v5, LX/MX3;->A0Y:Z
+    0112..0116  move/from16  v2, v37
+    0116..011a  iput  v2, v5, LX/MX3;->A04:I
+    011a..011e  move/from16  v2, v38
+    011e..0122  iput  v2, v5, LX/MX3;->A06:I
+    0122..0128  const-wide/32  v3, #0x3200000
+    0128..012c  cmp-long  v2, v40, v3
+    012c..0130  if-lez  v2, +0x7
+    0130..0134  sget-object  v1, LX/0jS;->A0C:LX/0jS;
+    0134..0136  const/4  v0, #0x1
+    0136..013a  if-eq  v9, v1, +0x3
+    013a..013c  const/4  v0, #0x0
+    013c..0140  iput-boolean  v0, v5, LX/MX3;->A0X:Z
+    0140..0146  invoke-static  {v9}, LX/MYf;->A0B(LX/0jS;)Z
+    0146..0148  move-result  v0
+    0148..014c  xor-int/lit8  v0, v0, #0x1
+    014c..0150  iput-boolean  v0, v5, LX/MX3;->A0c:Z
+    0150..0154  move/from16  v0, v55
+    0154..0158  iput-boolean  v0, v5, LX/MX3;->A0d:Z
+    0158..015c  move/from16  v0, v56
+    015c..0160  iput-boolean  v0, v5, LX/MX3;->A0j:Z
+    0160..0164  move/from16  v0, v57
+    0164..0168  iput-boolean  v0, v5, LX/MX3;->A0l:Z
+    0168..016c  move/from16  v0, v58
+    016c..0170  iput-boolean  v0, v5, LX/MX3;->A0k:Z
+    0170..0174  move/from16  v0, v59
+    0174..0178  iput-boolean  v0, v5, LX/MX3;->A0b:Z
+    0178..017c  move/from16  v0, v60
+    017c..0180  iput-boolean  v0, v5, LX/MX3;->A0g:Z
+    0180..0184  move/from16  v0, v61
+    0184..0188  iput-boolean  v0, v5, LX/MX3;->A0h:Z
+    0188..018c  move-object/from16  v0, v23
+    018c..0190  iput-object  v0, v5, LX/MX3;->A0Q:Ljava/lang/String;
+    0190..0194  move-object/from16  v0, v24
+    0194..0198  iput-object  v0, v5, LX/MX3;->A0U:Ljava/lang/String;
+    0198..019c  iput-object  v8, v5, LX/MX3;->A0C:LX/0DY;
+    019c..01a0  move-object/from16  v0, v25
+    01a0..01a4  iput-object  v0, v5, LX/MX3;->A0S:Ljava/lang/String;
+    01a4..01a8  move-object/from16  v0, v26
+    01a8..01ac  iput-object  v0, v5, LX/MX3;->A0T:Ljava/lang/String;
+    01ac..01b0  iput-object  v12, v5, LX/MX3;->A0G:Ljava/lang/Integer;
+    01b0..01b4  iput-object  v13, v5, LX/MX3;->A0H:Ljava/lang/Long;
+    01b4..01b8  move/from16  v0, v39
+    01b8..01bc  iput  v0, v5, LX/MX3;->A01:I
+    01bc..01be  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,40 @@
+
+# class: LX/ADF;
+# extends: Ljava/lang/Object;
+
+.method public A04(ZLLL)  # .registers 6
+    # full signature: LX/ADF;->A04(LX/08Y;LX/1eP;LX/8tC;)Z
+    0000..0002  const/4  v2, #0x0
+    0002..0008  invoke-static  {v4, v3, v2}, LX/1Xl;->A1Y(Ljava/lang/Object;Ljava/lang/Object;I)Z
+    0008..000a  move-result  v1
+    000a..000e  if-eqz  v5, +0x17
+    000e..0012  instance-of  v0, v4, LX/B1M;
+    0012..0016  if-eqz  v0, +0x32
+    0016..001a  iget-object  v0, v5, LX/8tC;->A13:LX/AT0;
+    001a..001e  if-eqz  v0, +0x2e
+    001e..0024  invoke-virtual  {v0}, LX/AT0;->BNb()Z
+    0024..0026  move-result  v0
+    0026..002a  if-ne  v0, v1, +0x28
+    002a..0030  invoke-static  {v3}, LX/ADF;->A01(LX/08Y;)Z
+    0030..0032  move-result  v0
+    0032..0036  if-eqz  v0, +0x22
+    0036..0038  return  v1
+    0038..003c  instance-of  v0, v4, LX/J9x;
+    003c..0040  if-nez  v0, +0x6
+    0040..0044  instance-of  v0, v4, LX/B1M;
+    0044..0048  if-eqz  v0, +0x19
+    0048..004e  invoke-interface  {v4}, LX/1eP;->AtA()LX/1fV;
+    004e..0050  move-result-object  v0
+    0050..0054  if-eqz  v0, +0x8
+    0054..005a  invoke-interface  {v0}, LX/1fV;->BNb()Z
+    005a..005c  move-result  v0
+    005c..0060  if-nez  v0, -0x19
+    0060..0066  invoke-static  {v4}, LX/8t1;->A0d(LX/18J;)LX/0DY;
+    0066..0068  move-result-object  v0
+    0068..006e  invoke-static  {v0}, LX/0Dn;->A0a(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    006e..0070  move-result  v0
+    0070..0074  if-eqz  v0, +0x3
+    0074..0076  goto  -0x25
+    0076..0078  return  v2
+    # exception table: 0 try range(s)
+.end method

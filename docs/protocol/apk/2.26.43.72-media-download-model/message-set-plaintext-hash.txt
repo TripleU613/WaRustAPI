@@ -1,0 +1,14 @@
+
+# class: LX/1eQ;
+# extends: LX/18U;
+
+.method public Ch4(VL)  # .registers 3
+    # full signature: LX/1eQ;->Ch4(Ljava/lang/String;)V
+    0000..0004  iput-object  v2, v1, LX/1eQ;->A07:Ljava/lang/String;
+    0004..000a  invoke-virtual  {v1}, LX/1eQ;->A0w()V
+    000a..000e  iget-object  v0, v1, LX/1eQ;->A01:LX/8tC;
+    000e..0012  if-eqz  v0, +0x4
+    0012..0016  iput-object  v2, v0, LX/8tC;->A0Z:Ljava/lang/String;
+    0016..0018  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,70 @@
+{
+  "README.md": {
+    "bytes": 6658,
+    "sha256": "54ac77c60892064d17fb944440b650ada17baaed9e1085ba71c611fa2917cfe5"
+  },
+  "builder-A01.txt": {
+    "bytes": 18588,
+    "sha256": "f02e971d42aae33f7cb99794dab980a9b60491a0b4b2c19947b185d15245baa8"
+  },
+  "builder-A02.txt": {
+    "bytes": 7087,
+    "sha256": "2e1db56386989bb4988ff8017f9a8ebcee2c2cce736e60dd15fe663b0284c8ed"
+  },
+  "builder-A03.txt": {
+    "bytes": 3616,
+    "sha256": "b3e05ad0d753c98583c0f7690960e0c8741a366b71324a891727c4711fcaba88"
+  },
+  "builder-A04.txt": {
+    "bytes": 5208,
+    "sha256": "6f05276452695f35662c2fce798305c963bcdad190292db90eb91e0cb16fd373"
+  },
+  "category2-predicate.txt": {
+    "bytes": 1568,
+    "sha256": "3a257fa130a71d37af6e6c630b4299e106d559fa567f351e9bb8d6fee8405ed9"
+  },
+  "category3-predicate.txt": {
+    "bytes": 639,
+    "sha256": "16717a3dd2346be941990773c26f34c4f8bf3becba7f206608d3699f8798f082"
+  },
+  "constructor-callers.txt": {
+    "bytes": 309,
+    "sha256": "ce3e5293bf2c49c7449dcae824f84376c5f771a1f57043fd6c5463f48cf61e1f"
+  },
+  "constructor.txt": {
+    "bytes": 6153,
+    "sha256": "2298be4d2eaecba10a8c571a4bf4f0ecb08aa49aa88dd9049a2dd28c63d64f66"
+  },
+  "message-hash-projection.txt": {
+    "bytes": 9451,
+    "sha256": "672e89e101b8717377efb314f4d36274b899d27b5efa0f16f70a210356ad2b5a"
+  },
+  "message-set-plaintext-hash.txt": {
+    "bytes": 494,
+    "sha256": "40d86efe78a9e235506cae1f885334d3df46f2f2b4298c1d2aceba90bbff370e"
+  },
+  "message-set-transfer-hash.txt": {
+    "bytes": 494,
+    "sha256": "c5b29d8fd754b0d670ce33fdc0226e0dc85e38dda3b8cc23474be210b189cc98"
+  },
+  "plaintext-hash-writers.txt": {
+    "bytes": 708,
+    "sha256": "fe67ffa58bceef374d5715281e1f81e285b99cdcff489e9773bd91cd94052eba"
+  },
+  "sidecar-callable.txt": {
+    "bytes": 1297,
+    "sha256": "4be07cdd8479f053c1e1eca459a18e441aa2345f1fa73ef78368545063d9d9fb"
+  },
+  "sidecar-model.txt": {
+    "bytes": 472,
+    "sha256": "85cade85d9e4588e761971003c64ee71a67ff42142c6d552c97263e5c3342dd9"
+  },
+  "sidecar-preparation.txt": {
+    "bytes": 1766,
+    "sha256": "56dcee2a3142c98abc7cf74b0602ec82db0e7c2934fda79c58d9573c1f25acff"
+  },
+  "transfer-hash-writers.txt": {
+    "bytes": 710,
+    "sha256": "69abb5a7d2cdfdbaf367bc1a141eca2f383151ff372e1a9621ffd6c0824cad17"
+  }
+}

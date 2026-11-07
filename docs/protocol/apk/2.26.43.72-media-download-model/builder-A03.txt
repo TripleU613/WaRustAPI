@@ -1,0 +1,76 @@
+
+# class: LX/MX3;
+# extends: Ljava/lang/Object;
+
+.method public A03(LLLLLLLIJ)  # .registers 69
+    # full signature: LX/MX3;->A03(LX/0jS;Ljava/io/File;Ljava/io/File;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;IJ)LX/MX3;
+    0000..0004  const/16  v34, #0x1
+    0004..0008  const/16  v37, #0x8
+    0008..000c  const/16  v3, #0x22
+    000c..0010  new-instance  v0, LX/1Wu;
+    0010..0014  move-object/from16  v1, v61
+    0014..001a  invoke-direct  {v0, v1, v3}, LX/1Wu;-><init>(Ljava/lang/Object;I)V
+    001a..001e  new-instance  v2, LX/09c;
+    001e..0024  invoke-direct  {v2, v0}, LX/09c;-><init>(LX/00v;)V
+    0024..0026  const/4  v4, #0x0
+    0026..002a  new-instance  v1, LX/1Wu;
+    002a..0030  invoke-direct  {v1, v4, v3}, LX/1Wu;-><init>(Ljava/lang/Object;I)V
+    0030..0034  new-instance  v0, LX/09c;
+    0034..003a  invoke-direct  {v0, v1}, LX/09c;-><init>(LX/00v;)V
+    003a..0040  invoke-static  {}, LX/2L8;->A1H()Ljava/lang/String;
+    0040..0042  move-result-object  v15
+    0042..0046  const/16  v30, #0x0
+    0046..004a  const-wide/16  v40, #0x0
+    004a..004e  const/16  v32, #0x2
+    004e..0052  new-instance  v3, LX/MX3;
+    0052..0054  move-object  v6, v4
+    0054..0056  move-object  v9, v4
+    0056..0058  move-object  v10, v4
+    0058..005a  move-object  v14, v4
+    005a..005e  move-object/from16  v16, v4
+    005e..0062  move-object/from16  v17, v4
+    0062..0066  move-object/from16  v18, v4
+    0066..006a  move-object/from16  v19, v4
+    006a..006e  move-object/from16  v20, v4
+    006e..0072  move-object/from16  v21, v4
+    0072..0076  move-object/from16  v22, v4
+    0076..007a  move-object/from16  v23, v4
+    007a..007e  move-object/from16  v24, v4
+    007e..0082  move-object/from16  v25, v4
+    0082..0086  move-object/from16  v28, v4
+    0086..008a  move-object/from16  v29, v4
+    008a..008e  move/from16  v36, v30
+    008e..0092  move/from16  v42, v30
+    0092..0096  move/from16  v43, v30
+    0096..009a  move/from16  v44, v30
+    009a..009e  move/from16  v45, v30
+    009e..00a2  move/from16  v46, v30
+    00a2..00a6  move/from16  v47, v30
+    00a6..00aa  move/from16  v48, v30
+    00aa..00ae  move/from16  v49, v30
+    00ae..00b2  move/from16  v50, v30
+    00b2..00b6  move/from16  v51, v30
+    00b6..00ba  move/from16  v52, v30
+    00ba..00be  move/from16  v53, v30
+    00be..00c2  move/from16  v54, v30
+    00c2..00c6  move/from16  v55, v30
+    00c6..00ca  move/from16  v56, v30
+    00ca..00ce  move/from16  v57, v30
+    00ce..00d2  move/from16  v58, v30
+    00d2..00d6  move/from16  v59, v30
+    00d6..00da  move-object/from16  v7, v60
+    00da..00de  move-object/from16  v8, v62
+    00de..00e2  move-object/from16  v11, v63
+    00e2..00e6  move-object/from16  v12, v64
+    00e6..00ea  move-object/from16  v13, v65
+    00ea..00ee  move/from16  v33, v66
+    00ee..00f2  move-wide/from16  v38, v67
+    00f2..00f4  move-object  v5, v4
+    00f4..00f8  move-object/from16  v26, v2
+    00f8..00fc  move-object/from16  v27, v0
+    00fc..0100  move/from16  v31, v30
+    0100..0104  move/from16  v35, v32
+    0104..010a  invoke-direct/range  {v3..v59}, LX/MX3;-><init>(Landroid/util/Size;LX/0DY;LX/0DY;LX/0jS;Ljava/io/File;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/concurrent/Callable;LX/00v;LX/00v;[B[BIIIIIIIIJJZZZZZZZZZZZZZZZZZZ)V
+    010a..010c  return-object  v3
+    # exception table: 0 try range(s)
+.end method
