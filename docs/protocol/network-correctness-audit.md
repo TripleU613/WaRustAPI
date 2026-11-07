@@ -1,5 +1,10 @@
 # Network correctness audit
 
+**Group reply projection ownership gap closed.** Saved action/account authority
+and decoded request/reply/settlement are reloaded in the final group transaction.
+Stale candidates refuse without membership, marker or journal mutation.
+[Evidence and regression](group-projection-ownership.md). No live operation.
+
 **Generic action account ownership closed for new rows.** Preparation now
 freezes its owner before builder execution; reservation, normal queued writes,
 settlement and transactional projection recheck it. Legacy absence stays unknown.

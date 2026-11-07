@@ -1,4 +1,11 @@
 {
+  "x-group-projection-ownership": {
+    "x-cli": "existing group ingestion and pending-reply recovery; no new command or flag",
+    "x-transport": "group saved-action projection reloads account-owned action and candidate inputs in the commit transaction",
+    "x-live": false,
+    "description": "Reproduced group-info projection after saved account registration ID changed following settlement. Shared group ingest now reloads actions::view_in_write before new projection and compares current outcome, decoded request, reply, supported kind and settled status to its candidate. Account drift or changed settlement refuses without checkpoint/journal/group updates. Existing consumed-marker shortcut remains; missing legacy preparation provenance is not backfilled. Direct offline information recording remains separate. No wire change, retry, callback resurrection or live operation.",
+    "evidence": "docs/protocol/group-projection-ownership.md"
+  },
   "x-action-account-ownership": {
     "x-cli": "existing action queue and feature commands; no new command/flag/public inspection field",
     "x-transport": "new action rows freeze internal prepared_account_authority; normal queued write/live callback guards also bind reservation account",

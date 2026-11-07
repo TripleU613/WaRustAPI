@@ -942,8 +942,8 @@ pub fn ingest(store: &ProtocolStore) -> Result<usize> {
     let mut applied = 0usize;
     for (outcome, reply) in super::actions::settled_for_kinds(store, &ACTION_KINDS)? {
         let kind = outcome.kind.as_str();
-        // The stored request is immutable. Load it before the write lock;
-        // invite/leave application must not nest a store transaction.
+        // Load a candidate without nesting transactions. ingest_reply_in
+        // rechecks this request, outcome and reply under the final write lock.
         let request = super::actions::request(store, &outcome.id)?;
         if store
             .write(|tx| ingest_reply_in(tx, kind, &outcome, request.as_ref(), reply.as_ref()))?
@@ -969,6 +969,27 @@ fn ingest_reply_in(
             format!("{PENDING_PREFIX}{}", outcome.id).as_bytes(),
         )?;
         return Ok(false);
+    }
+    // Enumeration is only a candidate. Reload original action authority and
+    // all projection inputs inside this commit, after the once-only short cut.
+    // Account ownership is enforced by the shared action view; a stale saved
+    // snapshot cannot authorize membership or journal changes.
+    let Some((current, current_reply, current_request)) =
+        super::actions::view_in_write(tx, &outcome.id)?
+    else {
+        return Err(invalid("group projection action disappeared"));
+    };
+    if current != *outcome
+        || kind != current.kind
+        || !ACTION_KINDS.contains(&kind)
+        || !matches!(
+            current.status,
+            super::actions::ActionStatus::Ok | super::actions::ActionStatus::Error
+        )
+        || current_reply.as_ref() != reply
+        || Some(&current_request) != request
+    {
+        return Err(invalid("group projection inputs changed before commit"));
     }
     if outcome.status == super::actions::ActionStatus::Ok
         && let Some(reply) = reply
@@ -2244,6 +2265,69 @@ mod tests {
         })
         .unwrap();
         (dir, s)
+    }
+
+    #[test]
+    fn group_projection_rechecks_account_and_settlement_inside_commit() {
+        for change in ["account", "settlement"] {
+            let (_dir, s) = store();
+            let account = crate::session::AccountRecord {
+                generation: s.generation(),
+                signal_registration_id: Some(31),
+                ..Default::default()
+            };
+            s.write(|tx| account.save(tx)).unwrap();
+            let group = Jid::parse("12345-67890@g.us").unwrap();
+            let id = queue_info(&s, &group).unwrap();
+            super::super::actions::reserve_pending(&s).unwrap();
+            let reply = Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "result")
+                .children(vec![
+                    Node::new("group")
+                        .attr("id", group.clone())
+                        .attr("subject", "Saved"),
+                ]);
+            super::super::actions::record_reply(&s, &reply).unwrap();
+            let (outcome, saved_reply) = s
+                .read(|tx| super::super::actions::view_in(tx, &id))
+                .unwrap()
+                .unwrap();
+            let request = super::super::actions::request(&s, &id).unwrap();
+            s.write(|tx| {
+                if change == "account" {
+                    let mut changed = account.clone();
+                    changed.signal_registration_id = Some(32);
+                    changed.save(tx)
+                } else {
+                    let key = format!("action-outbox:{id}");
+                    let mut row: serde_json::Value =
+                        tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?.unwrap();
+                    row["settlement_sequence"] = serde_json::json!(999);
+                    tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &row)
+                }
+            })
+            .unwrap();
+            let before = s.read(|tx| tx.scan(Table::Checkpoints, 1, 10000)).unwrap();
+            let head = s.journal_head().unwrap();
+            assert!(
+                s.write(|tx| ingest_reply_in(
+                    tx,
+                    "group-info",
+                    &outcome,
+                    request.as_ref(),
+                    saved_reply.as_ref()
+                ))
+                .is_err(),
+                "{change}"
+            );
+            assert_eq!(
+                s.read(|tx| tx.scan(Table::Checkpoints, 1, 10000)).unwrap(),
+                before
+            );
+            assert_eq!(s.journal_head().unwrap(), head);
+            assert!(get(&s, &group).unwrap().is_none());
+        }
     }
 
     fn text(node: &Node, name: &str) -> Option<String> {
