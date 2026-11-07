@@ -2513,6 +2513,107 @@ mod tests {
     }
     #[cfg(feature = "comparison-client")]
     #[tokio::test]
+    async fn public_content_upload_keeps_uncertain_outcomes_after_restart_and_rename() {
+        use crate::{
+            WhatsAppClient,
+            model::ids::AccountId,
+            session::{AccountRecord, RegistrationStatus},
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        for phase in [
+            "outcome_unknown",
+            "headers200",
+            "headers503",
+            "response_received",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("content-uncertain.redb");
+            let source = dir.path().join("fixture.png");
+            let mut png = b"\x89PNG\r\n\x1a\n\0\0\0\rIHDR".to_vec();
+            png.extend_from_slice(&1u32.to_be_bytes());
+            png.extend_from_slice(&1u32.to_be_bytes());
+            png.resize(33, 0);
+            std::fs::write(&source, &png).unwrap();
+            let hash = hex::encode(Sha256::digest(&png));
+            let key = format!(
+                "media-upload:{}",
+                hex::encode(Sha256::digest(hash.as_bytes()))
+            );
+            let keys = Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32])));
+            let options = |create| OpenOptions {
+                path: path.clone(),
+                account_id: AccountId::new("test").unwrap(),
+                key_source: keys.clone(),
+                create,
+            };
+            let store = ProtocolStore::open(options(true)).unwrap();
+            let mut config: LabRegistrationConfig =
+                serde_json::from_str(crate::registration::request::TEMPLATE_JSON).unwrap();
+            config.token = Zeroizing::new("offline-fixture".into());
+            let account = AccountRecord {
+                generation: store.generation(),
+                phone: Some(config.phone.clone()),
+                registration: RegistrationStatus::Registered,
+                ..Default::default()
+            };
+            let owner = upload_owner(&account, store.generation()).unwrap();
+            let pending = serde_json::json!({"status":"outcome_unknown", "hash":hash, "to":"", "upload_owner":owner, "upload_owner_version":1});
+            store
+                .write(|tx| {
+                    account.save(tx)?;
+                    tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &pending)
+                })
+                .unwrap();
+            if phase != "outcome_unknown" {
+                let status = if phase == "headers503" { 503 } else { 200 };
+                capture_upload_response(&store, &key, &pending, status, None).unwrap();
+                let headers = retain_response_headers(&store, &key, status, &pending).unwrap();
+                if phase == "response_received" {
+                    let mut response = headers.clone();
+                    response["status"] = "response_received".into();
+                    response["response"] = serde_json::json!(b"private-invalid-json");
+                    replace_upload_state(&store, &key, &headers, &response).unwrap();
+                }
+            }
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let head = store.journal_head().unwrap();
+            drop(store);
+            let renamed = dir.path().join("renamed.png");
+            std::fs::rename(&source, &renamed).unwrap();
+            let client = WhatsAppClient::builder()
+                .store_path(path.clone())
+                .account_id(AccountId::new("test").unwrap())
+                .key_source(keys.clone())
+                .create_store(false)
+                .comparison_transport(config)
+                .build()
+                .await
+                .unwrap();
+            for _ in 0..2 {
+                let error = client.upload_media(renamed.clone()).await.unwrap_err();
+                assert!(error.to_string().contains("no replay"), "{phase}: {error}");
+                assert!(!error.to_string().contains("private-invalid"));
+                assert!(matches!(
+                    client.connection_state().borrow().state,
+                    crate::runtime::ConnectionState::Stopped
+                ));
+            }
+            client.shutdown().await;
+            drop(client);
+            let store = ProtocolStore::open(options(false)).unwrap();
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                before
+            );
+            assert_eq!(store.journal_head().unwrap(), head);
+        }
+    }
+
+    #[tokio::test]
     async fn public_upload_reuses_confirmed_content_and_enters_normal_outbox_offline() {
         use crate::{
             WhatsAppClient,

@@ -65,3 +65,23 @@ construction. This closes the previous accumulator-only test boundary for restar
 and the two message-bound entry paths. It does not emulate response streaming over
 a socket, prove server acceptance or cover the separate public content-upload
 producer. Final upload promotion's account/exact-row checks remain separate tests.
+
+## Public content upload refuses uncertain outcomes after rename
+
+**Offline public-client integration verification**, baseline `6f62e094`.
+The regression stages owner-bound content-keyed PNG uploads in four non-success
+phases: outcome_unknown, HTTP200 headers, HTTP503 headers and response_received
+with invalid JSON bytes. Header phases use the response-stage helpers. It closes
+the store, renames the unchanged local file, then builds a new WhatsAppClient on
+the existing encrypted store with valid account/configuration inputs.
+
+Two upload_media calls per phase must return the saved no-replay error, not an
+earlier missing-account/config/route error; diagnostics omit the synthetic private
+response sentinel. The messaging connection stays Stopped. After shutdown and a
+second store reopen, checkpoint rows and journal match the original snapshot.
+Thus a file rename/restart does not turn these uncertain/refused upload states
+into a fresh content key, usable reference or POST. This covers the public-client
+entry omitted by the preceding message-bound regression, using the real source
+fingerprint and upload preparation path. No request is transmitted, no live
+server response is simulated, and no runtime policy changes. Successful reference
+creation is separately covered by the existing cached-success integration test.

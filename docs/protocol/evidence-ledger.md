@@ -9640,3 +9640,10 @@ Local public upload eligibility omission corrected at shared entry, including ca
   store reopen, and both message-bound preparation entrypoints. Saved header
   outcome refuses replay with unchanged rows/journal; no socket or runtime change.
   See [budget restart verification](http-send-audit-map.md#upload-budget-failure-survives-restart).
+
+- Public content-upload integration at `6f62e094`: owner-bound uncertain/header/
+  invalid-response phases survive restart and file rename; two actual public
+  upload_media calls per phase return saved no-replay errors, stay disconnected,
+  and preserve checkpoint/journal snapshots after another reopen. No runtime or
+  live operation changed. See
+  [content restart verification](http-send-audit-map.md#public-content-upload-refuses-uncertain-outcomes-after-rename).

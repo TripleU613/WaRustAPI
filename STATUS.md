@@ -10646,3 +10646,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   message-bound preparation entries: HTTP200/503 header observations persist,
   same request refuses replay, checkpoint rows/journal unchanged. Test only;
   separate content-upload producer and real HTTP streaming remain outside scope.
+
+- Added actual public upload_media restart/rename verification for owner-bound
+  uncertain, HTTP200/503 header and invalid-response states. Repeated calls
+  refuse replay, stay disconnected and preserve rows/journal through shutdown
+  and reopen. Test only; no live request or server acceptance claim.

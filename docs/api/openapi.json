@@ -1,4 +1,11 @@
 {
+  "x-public-content-upload-restart-verification": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "evidence": "docs/protocol/http-send-audit-map.md#public-content-upload-refuses-uncertain-outcomes-after-rename",
+    "behavior": "Offline public-client verification of upload_media no replay after restart/file rename for uncertain, HTTP200/503 header and invalid-response phases. No runtime capability added."
+  },
   "x-upload-budget-restart-verification": {
     "x-cli": false,
     "x-transport": false,
