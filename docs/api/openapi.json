@@ -1,4 +1,11 @@
 {
+  "x-retry-prepared-wire-integrity": {
+    "x-cli": "existing retry queue and receipt reservation; no new command or flag",
+    "x-transport": "new saved-account retry rows retain internal prepared_wire_sha256, checked before first reservation",
+    "x-live": false,
+    "description": "A validly encoded pending retry registration-byte change was previously adopted as original callback wire despite unchanged account binding. Queue now freezes a wire digest with prepared account ownership; reservation rejects mismatched/malformed present digests before status mutation. Real-store regression covers failure-before-fix, changed bytes across reopen, unchanged refusal row, restored original and once-only reservation. This is consistency metadata, not authentication against rewriting both bytes and digest. Legacy missing digests remain unbound and are not backfilled. No new wire field, request, key emission or live operation.",
+    "evidence": "docs/protocol/outgoing-retry-receipts.md#prepared-retry-wire-integrity-before-reservation-2026-11-07"
+  },
   "x-retry-prepared-account-authority": {
     "x-cli": "existing receive/listen retry queue and receipt reservation; no new command or flag",
     "x-transport": "new saved-account retry preparation verifies current authority and retains internal prepared_account_authority_sha256, rechecked before reservation",

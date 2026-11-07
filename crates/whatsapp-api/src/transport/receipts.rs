@@ -579,7 +579,8 @@ pub(crate) fn queue_retry_for_incoming_with_cause(
             1,
             &match prepared_account {
                 Some(authority) => serde_json::json!({"status":"pending", "wire":wire,
-                    "prepared_account_authority_sha256": authority}),
+                    "prepared_account_authority_sha256": authority,
+                    "prepared_wire_sha256": hex::encode(Sha256::digest(&wire))}),
                 None => serde_json::json!({"status":"pending", "wire":wire}),
             },
         )?;
@@ -898,6 +899,14 @@ pub fn reserve_pending_owned(store: &ProtocolStore) -> Result<Vec<ReservedReceip
                 }
                 let wire: Vec<u8> = serde_json::from_value(row["wire"].clone())
                     .map_err(|_| Error::invalid("receipt", "invalid receipt intent"))?;
+                // Catch changed pending bytes before adopting them as the
+                // original callback wire. Older rows without a preparation
+                // digest remain explicit legacy inputs; do not backfill proof.
+                if row.get("prepared_wire_sha256").is_some_and(|prepared| {
+                    prepared.as_str() != Some(hex::encode(Sha256::digest(&wire)).as_str())
+                }) {
+                    return Err(Error::invalid("receipt", "prepared retry wire changed"));
+                }
                 let node = decode(&wire)?;
                 if row
                     .get("prepared_account_authority_sha256")
@@ -2203,6 +2212,66 @@ mod tests {
                 .unwrap(),
             held
         );
+    }
+
+    #[test]
+    fn prepared_retry_wire_cannot_change_before_first_reservation() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("prepared-wire.redb");
+        let store = open(&path, true);
+        let account = crate::session::AccountRecord {
+            generation: store.generation(),
+            signal_registration_id: Some(31),
+            ..Default::default()
+        };
+        store.write(|tx| account.save(tx)).unwrap();
+        let incoming = Node::new("message")
+            .attr("from", "15555550100@s.whatsapp.net")
+            .attr("id", "PREPARED-WIRE")
+            .attr("t", "1700000000");
+        queue_retry_for_incoming(&store, &account, &incoming).unwrap();
+        let (key, mut row) = store
+            .read(|tx| {
+                let (key, bytes) = tx
+                    .scan(Table::Checkpoints, 1, 100)?
+                    .into_iter()
+                    .find(|(key, _)| key.starts_with(b"receipt-outbox:"))
+                    .unwrap();
+                Ok((
+                    key,
+                    serde_json::from_slice::<serde_json::Value>(&bytes).unwrap(),
+                ))
+            })
+            .unwrap();
+        let original = row.clone();
+        let wire: Vec<u8> = serde_json::from_value(row["wire"].clone()).unwrap();
+        let mut changed = decode(&wire).unwrap();
+        changed.content = crate::binary::NodeContent::Children(vec![
+            changed.child("retry").unwrap().clone(),
+            Node::new("registration").bytes(32u32.to_be_bytes().to_vec()),
+        ]);
+        let changed =
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
+                .encode(&changed)
+                .unwrap();
+        row["wire"] = serde_json::json!(changed);
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, &key, 1, &row))
+            .unwrap();
+        drop(store);
+        let store = open(&path, false);
+        assert!(reserve_pending_owned(&store).is_err());
+        assert_eq!(
+            store
+                .read(|tx| tx.get_json::<serde_json::Value>(Table::Checkpoints, &key, 1))
+                .unwrap(),
+            Some(row)
+        );
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, &key, 1, &original))
+            .unwrap();
+        assert_eq!(reserve_pending_owned(&store).unwrap().len(), 1);
+        assert!(reserve_pending_owned(&store).unwrap().is_empty());
     }
 
     #[test]

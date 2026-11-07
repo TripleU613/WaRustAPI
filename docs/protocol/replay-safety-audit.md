@@ -1590,3 +1590,12 @@ cover stale registration/identity/generation/JID/status and missing account
 across reopen with unchanged pending wire on refusal. Historical/account-less
 unbound rows retain their explicit legacy boundary.
 [Detailed evidence and limits](outgoing-retry-receipts.md#retry-preparation-account-binding-2026-11-07).
+
+## Pending retry bytes retain preparation integrity (2026-11-07)
+
+New saved-account retries freeze prepared_wire_sha256 before first reservation.
+Reservation refuses changed bytes instead of adopting them as callback originals.
+A validly encoded registration-byte substitution is tested across store reopen,
+with unchanged pending row on refusal and once-only reservation after restoration.
+Absent legacy digests are not silently backfilled.
+[Evidence and limits](outgoing-retry-receipts.md#prepared-retry-wire-integrity-before-reservation-2026-11-07).

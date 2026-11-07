@@ -1,5 +1,10 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
+**Prepared retry wire integrity closed.** New saved-account retries freeze a
+wire digest at preparation; changed bytes cannot become the first reservation
+original. Registration-byte substitution is tested across reopen without row
+mutation on refusal. Legacy missing-digest limits remain. [Evidence](docs/protocol/outgoing-retry-receipts.md#prepared-retry-wire-integrity-before-reservation-2026-11-07).
+
 **Retry preparation ownership gap closed.** New retries with saved account
 state bind registration/identity authority at preparation and recheck it before
 reservation. Stale snapshots and intervening changes refuse without rewriting

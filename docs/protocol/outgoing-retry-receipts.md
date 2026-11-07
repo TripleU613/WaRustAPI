@@ -465,3 +465,36 @@ failed before their respective guards, then passed. After correcting the two
 registered fixtures, all1,592 workspace/all-feature tests passed. Strict
 all-target/all-feature Clippy, formatting, CLI reference, OpenAPI library-symbol
 check, APK coverage and repository hygiene passed. No account traffic occurred.
+
+## Prepared retry wire integrity before reservation (2026-11-07)
+
+**Confirmed Rust ownership gap fixed.** Account preparation binding protected
+which account supplied a new retry, but reserve_pending_owned still adopted the
+then-current pending wire as its callback original. A real-store regression
+changed only the pending receipt's registration bytes (31→32), leaving account
+authority unchanged; old code reserved the changed bytes. This was not a decode
+failure: the replacement was a valid receipt encoding.
+
+New retries prepared with saved account state now retain prepared_wire_sha256
+alongside the preparation account fingerprint, in the same queue transaction.
+Reservation checks that digest before decoding/adopting callback ownership or
+changing status. A mismatched or malformed digest refuses the transaction, leaving
+the pending row and original reservation state unchanged. The existing reserved
+wire/account checks continue after this earlier stage. No wire-format field or
+network request was added; legitimate retry bytes are unchanged.
+
+The regression reproduces acceptance before the fix, then changes registration
+bytes, reopens the encrypted store, and verifies reservation refusal without row
+replacement. Restoring original persisted wire allows one reservation; repeating
+cannot replay it. This is an integrity consistency check, not cryptographic
+authentication against rewriting both wire and digest. Rows without a preparation
+digest (including earlier account-bound or account-less records) retain their
+explicit legacy checks; no hash is backfilled as inferred historical proof. Full
+historical preparation provenance and carried-key/count/configuration integration
+remain open. No live account operation or server-restriction causality inferred.
+
+Verification: the valid registration-byte substitution was accepted before the
+fix; the reopen/refusal/restoration/once-only regression now passes. All1,593
+workspace/all-feature tests, strict all-target/all-feature Clippy, formatting,
+CLI reference, OpenAPI library-symbol check, APK coverage and repository hygiene
+passed. No live account traffic was generated.
