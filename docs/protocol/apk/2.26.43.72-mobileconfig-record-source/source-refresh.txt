@@ -1,0 +1,294 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   a9a8c:      	paciasp
+   a9a90:      	stp	x29, x30, [sp, #-0x50]!
+   a9a94:      	bl	0xcc930 <JNI_OnLoad+0x5d790>
+   a9a98:      	bl	0xca54c <JNI_OnLoad+0x5b3ac>
+   a9a9c:      	sub	sp, sp, #0x280
+   a9aa0:      	bl	0xca4f4 <JNI_OnLoad+0x5b354>
+   a9aa4:      	stur	x8, [x29, #-0x8]
+   a9aa8:      	bl	0xcc610 <JNI_OnLoad+0x5d470>
+   a9aac:      	mov	x2, x19
+   a9ab0:      	bl	0x4c630 <.text+0x1d0>
+   a9ab4:      	cmp	w0, #0x1
+   a9ab8:      	b.eq	0xa9acc <JNI_OnLoad+0x3a92c>
+   a9abc:      	cbz	w0, 0xa9e10 <JNI_OnLoad+0x3ac70>
+   a9ac0:      	mov	x0, x19
+   a9ac4:      	bl	0xaa018 <JNI_OnLoad+0x3ae78>
+   a9ac8:      	b	0xa9aa8 <JNI_OnLoad+0x3a908>
+   a9acc:      	ldr	x23, [x20]
+   a9ad0:      	add	x9, sp, #0x24
+   a9ad4:      	strb	wzr, [sp, #0x24]
+   a9ad8:      	stp	xzr, x19, [sp, #0x8]
+   a9adc:      	ldr	x8, [x23, #0x258]
+   a9ae0:      	str	x9, [sp, #0x18]
+   a9ae4:      	ldr	x8, [x8]
+   a9ae8:      	cbnz	x8, 0xa9e00 <JNI_OnLoad+0x3ac60>
+   a9aec:      	ldrb	w8, [x23, #0x209]
+   a9af0:      	cmp	w8, #0x1
+   a9af4:      	b.ne	0xa9bd4 <JNI_OnLoad+0x3aa34>
+   a9af8:      	stp	xzr, xzr, [sp, #0x40]
+   a9afc:      	bl	0xcacdc <JNI_OnLoad+0x5bb3c>
+   a9b00:      	add	x0, sp, #0x28
+   a9b04:      	bl	0x4d9a0 <.text+0x1540>
+   a9b08:      	nop
+   a9b0c:      	adr	x0, 0xdba10
+   a9b10:      	bl	0xccb70 <_ZNSt6__ndk15mutex4lockEv@plt>
+   a9b14:      	stp	xzr, xzr, [sp, #0xb0]
+   a9b18:      	str	xzr, [sp, #0xc0]
+   a9b1c:      	bl	0xcb1c8 <JNI_OnLoad+0x5c028>
+   a9b20:      	add	x0, sp, #0x50
+   a9b24:      	add	x1, x23, #0x130
+   a9b28:      	bl	0x5dba4 <.text+0x11744>
+   a9b2c:      	bl	0xcc3ac <JNI_OnLoad+0x5d20c>
+   a9b30:      	add	x2, sp, #0x28
+   a9b34:      	bl	0x5d128 <.text+0x10cc8>
+   a9b38:      	bl	0xcb1c8 <JNI_OnLoad+0x5c028>
+   a9b3c:      	bl	0xcbce4 <JNI_OnLoad+0x5cb44>
+   a9b40:      	bl	0x5d0fc <.text+0x10c9c>
+   a9b44:      	adrp	x2, 0x19000
+   a9b48:      	add	x2, x2, #0xa24
+   a9b4c:      	bl	0xcc728 <JNI_OnLoad+0x5d588>
+   a9b50:      	bl	0x5d0fc <.text+0x10c9c>
+   a9b54:      	bl	0xcb1c8 <JNI_OnLoad+0x5c028>
+   a9b58:      	add	x0, sp, #0xc8
+   a9b5c:      	add	x1, sp, #0x98
+   a9b60:      	bl	0x5d0fc <.text+0x10c9c>
+   a9b64:      	adrp	x2, 0x19000
+   a9b68:      	add	x2, x2, #0xa24
+   a9b6c:      	add	x0, sp, #0xb0
+   a9b70:      	add	x1, sp, #0xc8
+   a9b74:      	bl	0x5d0fc <.text+0x10c9c>
+   a9b78:      	add	x0, sp, #0xc8
+   a9b7c:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   a9b80:      	add	x0, sp, #0x98
+   a9b84:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   a9b88:      	add	x0, sp, #0x80
+   a9b8c:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   a9b90:      	add	x0, sp, #0x68
+   a9b94:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   a9b98:      	add	x0, sp, #0x50
+   a9b9c:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   a9ba0:      	adrp	x24, 0xdb000
+   a9ba4:      	add	x24, x24, #0x580
+   a9ba8:      	mov	x8, x24
+   a9bac:      	mov	x19, x24
+   a9bb0:      	ldr	x20, [x8]
+   a9bb4:      	cbz	x20, 0xa9c40 <JNI_OnLoad+0x3aaa0>
+   a9bb8:      	add	x0, x20, #0x20
+   a9bbc:      	add	x1, sp, #0xb0
+   a9bc0:      	bl	0x5d9a0 <.text+0x11540>
+   a9bc4:      	bl	0xcc1e0 <JNI_OnLoad+0x5d040>
+   a9bc8:      	add	x8, x20, x9
+   a9bcc:      	csel	x19, x19, x20, lt
+   a9bd0:      	b	0xa9bb0 <JNI_OnLoad+0x3aa10>
+   a9bd4:      	add	x0, sp, #0xc8
+   a9bd8:      	bl	0xcc7d4 <JNI_OnLoad+0x5d634>
+   a9bdc:      	bl	0xcda10 <memset@plt>
+   a9be0:      	add	x0, sp, #0xc8
+   a9be4:      	bl	0xbad3c <JNI_OnLoad+0x4bb9c>
+   a9be8:      	add	x0, sp, #0xc8
+   a9bec:      	add	x1, x23, #0x130
+   a9bf0:      	bl	0xbb28c <JNI_OnLoad+0x4c0ec>
+   a9bf4:      	add	x0, sp, #0xb0
+   a9bf8:      	add	x1, sp, #0xc8
+   a9bfc:      	bl	0xbfc6c <JNI_OnLoad+0x50acc>
+   a9c00:      	ldr	x0, [x23, #0x258]
+   a9c04:      	add	x1, sp, #0xb0
+   a9c08:      	bl	0x5b7d8 <.text+0xf378>
+   a9c0c:      	ldr	x0, [sp, #0xb8]
+   a9c10:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   a9c14:      	add	x0, sp, #0xb0
+   a9c18:      	add	x1, sp, #0xc8
+   a9c1c:      	bl	0x5c900 <.text+0x104a0>
+   a9c20:      	add	x0, x23, #0x248
+   a9c24:      	add	x1, sp, #0xb0
+   a9c28:      	bl	0x5b7d8 <.text+0xf378>
+   a9c2c:      	ldr	x0, [sp, #0xb8]
+   a9c30:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   a9c34:      	add	x0, sp, #0xc8
+   a9c38:      	bl	0x5f824 <.text+0x133c4>
+   a9c3c:      	b	0xa9e00 <JNI_OnLoad+0x3ac60>
+   a9c40:      	cmp	x19, x24
+   a9c44:      	b.eq	0xa9c6c <JNI_OnLoad+0x3aacc>
+   a9c48:      	add	x0, sp, #0xb0
+   a9c4c:      	add	x1, x19, #0x20
+   a9c50:      	bl	0x5d9a0 <.text+0x11540>
+   a9c54:      	tbnz	w0, #0x7, 0xa9c6c <JNI_OnLoad+0x3aacc>
+   a9c58:      	stp	xzr, xzr, [sp, #0x40]
+   a9c5c:      	add	x0, sp, #0x40
+   a9c60:      	ldp	x1, x2, [x19, #0x38]
+   a9c64:      	bl	0x75fc8 <JNI_OnLoad+0x6e28>
+   a9c68:      	b	0xa9d9c <JNI_OnLoad+0x3abfc>
+   a9c6c:      	stp	xzr, xzr, [sp, #0x40]
+   a9c70:      	mov	w0, #0x1c8              // =456
+   a9c74:      	bl	0xccfa0 <__wrap__Znwm@plt>
+   a9c78:      	mov	x20, x0
+   a9c7c:      	adrp	x8, 0xd6000
+   a9c80:      	add	x8, x8, #0x5b0
+   a9c84:      	add	x19, x0, #0x18
+   a9c88:      	bl	0xcb3c4 <JNI_OnLoad+0x5c224>
+   a9c8c:      	mov	x0, x19
+   a9c90:      	mov	w1, wzr
+   a9c94:      	mov	w2, wzr
+   a9c98:      	bl	0xbad4c <JNI_OnLoad+0x4bbac>
+   a9c9c:      	mov	x0, xzr
+   a9ca0:      	stp	x19, x20, [sp, #0xc8]
+   a9ca4:      	bl	0x7667c <JNI_OnLoad+0x74dc>
+   a9ca8:      	add	x0, sp, #0x40
+   a9cac:      	add	x1, sp, #0xc8
+   a9cb0:      	bl	0x5b7d8 <.text+0xf378>
+   a9cb4:      	ldr	x0, [sp, #0xd0]
+   a9cb8:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   a9cbc:      	ldr	x0, [sp, #0x40]
+   a9cc0:      	add	x1, x23, #0x130
+   a9cc4:      	bl	0xbb28c <JNI_OnLoad+0x4c0ec>
+   a9cc8:      	ldrb	w8, [sp, #0x28]
+   a9ccc:      	ldr	x9, [sp, #0x30]
+   a9cd0:      	bl	0xca4a8 <JNI_OnLoad+0x5b308>
+   a9cd4:      	cbz	x8, 0xa9ce4 <JNI_OnLoad+0x3ab44>
+   a9cd8:      	ldr	x0, [sp, #0x40]
+   a9cdc:      	add	x1, sp, #0x28
+   a9ce0:      	bl	0xbb28c <JNI_OnLoad+0x4c0ec>
+   a9ce4:      	ldr	x8, [x24]
+   a9ce8:      	cbz	x8, 0xa9d30 <JNI_OnLoad+0x3ab90>
+   a9cec:      	add	x0, sp, #0xb0
+   a9cf0:      	add	x1, x8, #0x20
+   a9cf4:      	mov	x19, x8
+   a9cf8:      	bl	0x5d9a0 <.text+0x11540>
+   a9cfc:      	tbnz	w0, #0x7, 0xa9d20 <JNI_OnLoad+0x3ab80>
+   a9d00:      	add	x0, x19, #0x20
+   a9d04:      	add	x1, sp, #0xb0
+   a9d08:      	bl	0x5d9a0 <.text+0x11540>
+   a9d0c:      	tbz	w0, #0x7, 0xa9d9c <JNI_OnLoad+0x3abfc>
+   a9d10:      	mov	x20, x19
+   a9d14:      	ldr	x8, [x20, #0x8]!
+   a9d18:      	cbnz	x8, 0xa9cec <JNI_OnLoad+0x3ab4c>
+   a9d1c:      	b	0xa9d38 <JNI_OnLoad+0x3ab98>
+   a9d20:      	ldr	x8, [x19]
+   a9d24:      	mov	x20, x19
+   a9d28:      	cbnz	x8, 0xa9cec <JNI_OnLoad+0x3ab4c>
+   a9d2c:      	b	0xa9d38 <JNI_OnLoad+0x3ab98>
+   a9d30:      	mov	x19, x24
+   a9d34:      	mov	x20, x24
+   a9d38:      	str	xzr, [sp, #0xd8]
+   a9d3c:      	mov	w0, #0x48               // =72
+   a9d40:      	bl	0xccfa0 <__wrap__Znwm@plt>
+   a9d44:      	mov	x21, x0
+   a9d48:      	stp	x0, x24, [sp, #0xc8]
+   a9d4c:      	strb	wzr, [sp, #0xd8]
+   a9d50:      	add	x0, x0, #0x20
+   a9d54:      	add	x1, sp, #0xb0
+   a9d58:      	bl	0xcca30 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2ERKS5_@plt>
+   a9d5c:      	ldp	x9, x8, [sp, #0x40]
+   a9d60:      	stp	x9, x8, [x21, #0x38]
+   a9d64:      	cbz	x8, 0xa9d70 <JNI_OnLoad+0x3abd0>
+   a9d68:      	bl	0xcab60 <JNI_OnLoad+0x5b9c0>
+   a9d6c:      	bl	0x4c570 <.text+0x110>
+   a9d70:      	mov	w8, #0x1                // =1
+   a9d74:      	nop
+   a9d78:      	adr	x0, 0xdb578
+   a9d7c:      	mov	x1, x19
+   a9d80:      	mov	x2, x20
+   a9d84:      	mov	x3, x21
+   a9d88:      	strb	w8, [sp, #0xd8]
+   a9d8c:      	bl	0x8b774 <JNI_OnLoad+0x1c5d4>
+   a9d90:      	add	x0, sp, #0xc8
+   a9d94:      	str	xzr, [sp, #0xc8]
+   a9d98:      	bl	0xbfdc8 <JNI_OnLoad+0x50c28>
+   a9d9c:      	add	x0, sp, #0xb0
+   a9da0:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   a9da4:      	nop
+   a9da8:      	adr	x0, 0xdba10
+   a9dac:      	bl	0xccba0 <_ZNSt6__ndk15mutex6unlockEv@plt>
+   a9db0:      	add	x0, sp, #0x28
+   a9db4:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   a9db8:      	ldr	x1, [sp, #0x40]
+   a9dbc:      	add	x0, sp, #0xc8
+   a9dc0:      	bl	0xbfc6c <JNI_OnLoad+0x50acc>
+   a9dc4:      	ldr	x0, [x23, #0x258]
+   a9dc8:      	add	x1, sp, #0xc8
+   a9dcc:      	bl	0x5b7d8 <.text+0xf378>
+   a9dd0:      	ldr	x0, [sp, #0xd0]
+   a9dd4:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   a9dd8:      	ldr	x1, [sp, #0x40]
+   a9ddc:      	add	x0, sp, #0xc8
+   a9de0:      	bl	0x5c900 <.text+0x104a0>
+   a9de4:      	add	x0, x23, #0x248
+   a9de8:      	add	x1, sp, #0xc8
+   a9dec:      	bl	0x5b7d8 <.text+0xf378>
+   a9df0:      	ldr	x0, [sp, #0xd0]
+   a9df4:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   a9df8:      	ldr	x0, [sp, #0x48]
+   a9dfc:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   a9e00:      	mov	w8, #0x1                // =1
+   a9e04:      	add	x0, sp, #0x8
+   a9e08:      	strb	w8, [sp, #0x24]
+   a9e0c:      	bl	0xa9f0c <JNI_OnLoad+0x3ad6c>
+   a9e10:      	bl	0xca264 <JNI_OnLoad+0x5b0c4>
+   a9e14:      	b.ne	0xa9f00 <JNI_OnLoad+0x3ad60>
+   a9e18:      	add	sp, sp, #0x280
+   a9e1c:      	bl	0xcb100 <JNI_OnLoad+0x5bf60>
+   a9e20:      	ldp	x29, x30, [sp], #0x50
+   a9e24:      	autiasp
+   a9e28:      	ret
+   a9e2c:      	mov	x19, x0
+   a9e30:      	add	x0, sp, #0xc8
+   a9e34:      	bl	0xbfdc8 <JNI_OnLoad+0x50c28>
+   a9e38:      	b	0xa9ec4 <JNI_OnLoad+0x3ad24>
+   a9e3c:      	bl	0xcb800 <JNI_OnLoad+0x5c660>
+   a9e40:      	bl	0xccaf0 <_ZNSt6__ndk119__shared_weak_countD2Ev@plt>
+   a9e44:      	mov	x0, x20
+   a9e48:      	bl	0x7667c <JNI_OnLoad+0x74dc>
+   a9e4c:      	b	0xa9ec4 <JNI_OnLoad+0x3ad24>
+   a9e50:      	b	0xa9ec0 <JNI_OnLoad+0x3ad20>
+   a9e54:      	mov	x19, x0
+   a9e58:      	add	x0, sp, #0xc8
+   a9e5c:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   a9e60:      	b	0xa9e68 <JNI_OnLoad+0x3acc8>
+   a9e64:      	mov	x19, x0
+   a9e68:      	add	x0, sp, #0x98
+   a9e6c:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   a9e70:      	b	0xa9e78 <JNI_OnLoad+0x3acd8>
+   a9e74:      	mov	x19, x0
+   a9e78:      	add	x0, sp, #0x80
+   a9e7c:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   a9e80:      	b	0xa9e88 <JNI_OnLoad+0x3ace8>
+   a9e84:      	mov	x19, x0
+   a9e88:      	add	x0, sp, #0x68
+   a9e8c:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   a9e90:      	b	0xa9e98 <JNI_OnLoad+0x3acf8>
+   a9e94:      	mov	x19, x0
+   a9e98:      	add	x0, sp, #0x50
+   a9e9c:      	b	0xa9ed0 <JNI_OnLoad+0x3ad30>
+   a9ea0:      	mov	x19, x0
+   a9ea4:      	b	0xa9ed4 <JNI_OnLoad+0x3ad34>
+   a9ea8:      	mov	x19, x0
+   a9eac:      	add	x0, sp, #0xc8
+   a9eb0:      	bl	0x5f824 <.text+0x133c4>
+   a9eb4:      	b	0xa9ee8 <JNI_OnLoad+0x3ad48>
+   a9eb8:      	mov	x19, x0
+   a9ebc:      	b	0xa9ee0 <JNI_OnLoad+0x3ad40>
+   a9ec0:      	mov	x19, x0
+   a9ec4:      	ldr	x0, [sp, #0x48]
+   a9ec8:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   a9ecc:      	add	x0, sp, #0xb0
+   a9ed0:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   a9ed4:      	nop
+   a9ed8:      	adr	x0, 0xdba10
+   a9edc:      	bl	0xccba0 <_ZNSt6__ndk15mutex6unlockEv@plt>
+   a9ee0:      	add	x0, sp, #0x28
+   a9ee4:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   a9ee8:      	add	x0, sp, #0x8
+   a9eec:      	bl	0xa9f0c <JNI_OnLoad+0x3ad6c>
+   a9ef0:      	bl	0xca264 <JNI_OnLoad+0x5b0c4>
+   a9ef4:      	b.ne	0xa9f00 <JNI_OnLoad+0x3ad60>
+   a9ef8:      	mov	x0, x19
+   a9efc:      	bl	0xccf70 <__wrap__Unwind_Resume@plt>
+   a9f00:      	bl	0xcd9f0 <__stack_chk_fail@plt>
+   a9f04:      	mov	x19, x0
+   a9f08:      	b	0xa9ee8 <JNI_OnLoad+0x3ad48>

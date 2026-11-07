@@ -1,0 +1,57 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   bc0ac:      	paciasp
+   bc0b0:      	stp	x29, x30, [sp, #-0x40]!
+   bc0b4:      	stp	x24, x23, [sp, #0x10]
+   bc0b8:      	bl	0xcad30 <JNI_OnLoad+0x5bb90>
+   bc0bc:      	mov	x29, sp
+   bc0c0:      	adrp	x8, 0xd6000
+   bc0c4:      	bl	0xcbd8c <JNI_OnLoad+0x5cbec>
+   bc0c8:      	ldr	x8, [x8, #0xbc0]
+   bc0cc:      	mov	x19, x0
+   bc0d0:      	str	xzr, [x0, #0xe8]
+   bc0d4:      	add	x23, x8, #0x40
+   bc0d8:      	add	x24, x8, #0x18
+   bc0dc:      	str	x23, [x19, #0xb8]!
+   bc0e0:      	str	x24, [x0]
+   bc0e4:      	adrp	x22, 0xd6000
+   bc0e8:      	add	x2, x0, #0x10
+   bc0ec:      	ldr	x22, [x22, #0xbc8]
+   bc0f0:      	add	x1, x22, #0x8
+   bc0f4:      	bl	0x5fe48 <.text+0x139e8>
+   bc0f8:      	str	x24, [x20]
+   bc0fc:      	str	x23, [x20, #0xb8]
+   bc100:      	add	x0, x20, #0x10
+   bc104:      	bl	0xcd3d0 <_ZNSt6__ndk113basic_filebufIcNS_11char_traitsIcEEEC1Ev@plt>
+   bc108:      	add	x0, x20, #0x10
+   bc10c:      	mov	x1, x21
+   bc110:      	mov	w2, #0x8                // =8
+   bc114:      	bl	0x990c0 <JNI_OnLoad+0x29f20>
+   bc118:      	cbnz	x0, 0xbc130 <JNI_OnLoad+0x4cf90>
+   bc11c:      	ldr	x8, [x20]
+   bc120:      	ldur	x8, [x8, #-0x18]
+   bc124:      	add	x0, x20, x8
+   bc128:      	mov	w1, #0x4                // =4
+   bc12c:      	bl	0x990b0 <JNI_OnLoad+0x29f10>
+   bc130:      	bl	0xca810 <JNI_OnLoad+0x5b670>
+   bc134:      	ldp	x29, x30, [sp], #0x40
+   bc138:      	autiasp
+   bc13c:      	ret
+   bc140:      	mov	x21, x0
+   bc144:      	b	0xbc15c <JNI_OnLoad+0x4cfbc>
+   bc148:      	mov	x21, x0
+   bc14c:      	b	0xbc168 <JNI_OnLoad+0x4cfc8>
+   bc150:      	mov	x21, x0
+   bc154:      	add	x0, x20, #0x10
+   bc158:      	bl	0xcd3b0 <_ZNSt6__ndk113basic_filebufIcNS_11char_traitsIcEEED1Ev@plt>
+   bc15c:      	add	x1, x22, #0x8
+   bc160:      	mov	x0, x20
+   bc164:      	bl	0xcd3c0 <_ZNSt6__ndk113basic_istreamIcNS_11char_traitsIcEEED2Ev@plt>
+   bc168:      	mov	x0, x19
+   bc16c:      	bl	0xccb20 <_ZNSt6__ndk19basic_iosIcNS_11char_traitsIcEEED2Ev@plt>
+   bc170:      	mov	x0, x21
+   bc174:      	bl	0xccf70 <__wrap__Unwind_Resume@plt>

@@ -108,3 +108,8 @@ not observed runtime memory.
 factory, map collision rules, source retention, refresh concurrency, request-data
 construction and response parsing/file commit/cache activation. No Rust runtime
 or live account behavior changes are justified by this static grouping alone.
+
+Follow-up: [record source loading](../2.26.43.72-mobileconfig-record-source/README.md)
+now identifies configured-path loader/cache branches and a shared record pair
+retained by configuration on those paths. Path selection, decoding, replacement
+synchronization and account ownership remain unproven.

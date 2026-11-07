@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-record-source-evidence": {
+    "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-record-source/inspect-source.py <pinned-library> <pinned-apk>; offline inspection only",
+    "x-transport": "research only; static loader/shared-record handoff, no observed file read or enabled sender",
+    "x-live": false,
+    "description": "Confirmed selected static MobileConfig deferred source refresh loads from configuration+0x130, supports local/shared-loader cache branches, reaches a file-stream open and publishes a shared record vector. Native filename classification and pinned APK parameter-map names are separately verified; runtime path selection and decoder binding remain unresolved. Shared ownership narrows source-lifetime uncertainty but does not prove replacement or account safety.",
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-record-source/README.md"
+  },
   "x-mobileconfig-schema-grouping-evidence": {
     "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-schema-grouping/derive-grouping.py <pinned-library>; offline synthetic grouping only",
     "x-transport": "research only; existing-record table views, no extracted inputs or enabled sender",

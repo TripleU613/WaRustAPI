@@ -1,0 +1,24 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   bfc6c:      	bti	c
+   bfc70:      	ldr	x8, [x1, #0x28]
+   bfc74:      	ldrb	w9, [x8, #0x98]
+   bfc78:      	cmp	w9, #0x1
+   bfc7c:      	b.ne	0xbfc88 <JNI_OnLoad+0x50ae8>
+   bfc80:      	ldp	x9, x8, [x8, #0x50]
+   bfc84:      	b	0xbfc8c <JNI_OnLoad+0x50aec>
+   bfc88:      	ldp	x9, x8, [x1, #0x150]
+   bfc8c:      	stp	x9, x8, [x0]
+   bfc90:      	cbz	x8, 0xbfcb0 <JNI_OnLoad+0x50b10>
+   bfc94:      	paciasp
+   bfc98:      	stp	x29, x30, [sp, #-0x10]!
+   bfc9c:      	mov	x29, sp
+   bfca0:      	bl	0xcab60 <JNI_OnLoad+0x5b9c0>
+   bfca4:      	bl	0x4c570 <.text+0x110>
+   bfca8:      	ldp	x29, x30, [sp], #0x10
+   bfcac:      	autiasp
+   bfcb0:      	ret

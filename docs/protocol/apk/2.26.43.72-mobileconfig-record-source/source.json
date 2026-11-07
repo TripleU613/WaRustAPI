@@ -1,0 +1,31 @@
+{
+  "apk_sha256": "887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e",
+  "member_sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+  "native_filename_literals": {
+    "0x165a3": "params_map_v4_u1.txt",
+    "0x16549": "params_map_v4_u2.txt",
+    "0x16322": "params_map_kMobileConfigSessionless.txt",
+    "0x1636d": "params_map_kMobileConfigSessionbased.txt",
+    "0x1b1b2": "/\\"
+  },
+  "apk_parameter_map_members": [
+    "assets/params_map_v4_u1.txt",
+    "assets/params_map_v4_u2.txt",
+    "assets/params_map_v4_u4.txt",
+    "assets/params_map_v4_u6.txt"
+  ],
+  "selected_calls": {
+    "0xa9bf0": "0xbb28c",
+    "0xa9bfc": "0xbfc6c",
+    "0xa9cc4": "0xbb28c",
+    "0xa9ce0": "0xbb28c",
+    "0xa9dc0": "0xbfc6c",
+    "0xa9dcc": "0x5b7d8",
+    "0xbb39c": "0xbc0ac",
+    "0xbc114": "0x990c0"
+  },
+  "path_source": "configuration+0x130",
+  "source_destination": "configuration+0x258 -> first shared-pointer pair",
+  "record_accessor": "0xbfc6c selects child+0x50 pair when child byte+0x98 == 1, otherwise loader+0x150 pair",
+  "scope": "static file-loading and shared-record handoff; path producer and file-content decoder remain untraced"
+}

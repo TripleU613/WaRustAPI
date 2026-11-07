@@ -1,0 +1,57 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   a99c0:      	paciasp
+   a99c4:      	sub	sp, sp, #0x50
+   a99c8:      	stp	x29, x30, [sp, #0x20]
+   a99cc:      	str	x21, [sp, #0x30]
+   a99d0:      	stp	x20, x19, [sp, #0x40]
+   a99d4:      	add	x29, sp, #0x20
+   a99d8:      	bl	0xcadfc <JNI_OnLoad+0x5bc5c>
+   a99dc:      	add	x0, x1, #0x10
+   a99e0:      	ldr	x8, [x21, #0x28]
+   a99e4:      	bl	0xcaf70 <JNI_OnLoad+0x5bdd0>
+   a99e8:      	bl	0x5fb64 <.text+0x13704>
+   a99ec:      	tbz	w0, #0x0, 0xa9a24 <JNI_OnLoad+0x3a884>
+   a99f0:      	add	x0, sp, #0x8
+   a99f4:      	add	x1, x20, #0x10
+   a99f8:      	mov	w2, #0x2                // =2
+   a99fc:      	stp	xzr, xzr, [sp, #0x8]
+   a9a00:      	bl	0xba1dc <JNI_OnLoad+0x4b03c>
+   a9a04:      	ldr	x8, [sp, #0x8]
+   a9a08:      	cbz	x8, 0xa9a54 <JNI_OnLoad+0x3a8b4>
+   a9a0c:      	ldp	x9, x8, [x8, #0x28]
+   a9a10:      	stp	x9, x8, [x19]
+   a9a14:      	cbz	x8, 0xa9a58 <JNI_OnLoad+0x3a8b8>
+   a9a18:      	bl	0xcab60 <JNI_OnLoad+0x5b9c0>
+   a9a1c:      	bl	0x4c570 <.text+0x110>
+   a9a20:      	b	0xa9a58 <JNI_OnLoad+0x3a8b8>
+   a9a24:      	ldr	x8, [x20, #0x258]
+   a9a28:      	str	x20, [sp, #0x8]
+   a9a2c:      	add	x0, x8, #0x40
+   a9a30:      	ldarb	w8, [x0]
+   a9a34:      	cbnz	w8, 0xa9a7c <JNI_OnLoad+0x3a8dc>
+   a9a38:      	ldr	x8, [x20, #0x258]
+   a9a3c:      	ldp	x9, x8, [x8]
+   a9a40:      	stp	x9, x8, [x19]
+   a9a44:      	cbz	x8, 0xa9a60 <JNI_OnLoad+0x3a8c0>
+   a9a48:      	bl	0xcab60 <JNI_OnLoad+0x5b9c0>
+   a9a4c:      	bl	0x4c570 <.text+0x110>
+   a9a50:      	b	0xa9a60 <JNI_OnLoad+0x3a8c0>
+   a9a54:      	stp	xzr, xzr, [x19]
+   a9a58:      	ldr	x0, [sp, #0x10]
+   a9a5c:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   a9a60:      	bl	0xca254 <JNI_OnLoad+0x5b0b4>
+   a9a64:      	b.ne	0xa9a88 <JNI_OnLoad+0x3a8e8>
+   a9a68:      	bl	0xcaf58 <JNI_OnLoad+0x5bdb8>
+   a9a6c:      	ldp	x29, x30, [sp, #0x20]
+   a9a70:      	add	sp, sp, #0x50
+   a9a74:      	autiasp
+   a9a78:      	ret
+   a9a7c:      	add	x1, sp, #0x8
+   a9a80:      	bl	0xa9a8c <JNI_OnLoad+0x3a8ec>
+   a9a84:      	b	0xa9a38 <JNI_OnLoad+0x3a898>
+   a9a88:      	bl	0xcd9f0 <__stack_chk_fail@plt>
