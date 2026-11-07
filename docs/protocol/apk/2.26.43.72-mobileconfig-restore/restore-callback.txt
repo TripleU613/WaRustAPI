@@ -1,0 +1,60 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   8d550:      	paciasp
+   8d554:      	sub	sp, sp, #0x70
+   8d558:      	stp	x29, x30, [sp, #0x40]
+   8d55c:      	bl	0xcab54 <JNI_OnLoad+0x5b9b4>
+   8d560:      	add	x29, sp, #0x40
+   8d564:      	bl	0xcaa3c <JNI_OnLoad+0x5b89c>
+   8d568:      	adrp	x1, 0x1c000
+   8d56c:      	add	x1, x1, #0xb2
+   8d570:      	stur	x8, [x29, #-0x8]
+   8d574:      	ldr	x22, [x0, #0x20]
+   8d578:      	mov	x0, x20
+   8d57c:      	bl	0x70a28 <JNI_OnLoad+0x1888>
+   8d580:      	tbnz	w0, #0x0, 0x8d608 <JNI_OnLoad+0x1e468>
+   8d584:      	adrp	x1, 0x1c000
+   8d588:      	add	x1, x1, #0x55
+   8d58c:      	mov	x0, x20
+   8d590:      	bl	0x70a28 <JNI_OnLoad+0x1888>
+   8d594:      	tbnz	w0, #0x0, 0x8d608 <JNI_OnLoad+0x1e468>
+   8d598:      	adrp	x1, 0x1b000
+   8d59c:      	add	x1, x1, #0x490
+   8d5a0:      	mov	x0, x20
+   8d5a4:      	bl	0x70a28 <JNI_OnLoad+0x1888>
+   8d5a8:      	tbnz	w0, #0x0, 0x8d608 <JNI_OnLoad+0x1e468>
+   8d5ac:      	ldr	x8, [x19, #0x8]
+   8d5b0:      	ldrb	w9, [x8]
+   8d5b4:      	tbz	w9, #0x0, 0x8d604 <JNI_OnLoad+0x1e464>
+   8d5b8:      	ldr	x1, [x19, #0x10]
+   8d5bc:      	add	x0, sp, #0x20
+   8d5c0:      	mov	x2, x20
+   8d5c4:      	bl	0x5e0ec <.text+0x11c8c>
+   8d5c8:      	ldr	x1, [x19, #0x18]
+   8d5cc:      	add	x0, sp, #0x8
+   8d5d0:      	mov	x2, x20
+   8d5d4:      	bl	0x5e0ec <.text+0x11c8c>
+   8d5d8:      	ldr	x2, [x22, #0xf8]
+   8d5dc:      	bl	0xcb7d0 <JNI_OnLoad+0x5c630>
+   8d5e0:      	bl	0xc1f4c <JNI_OnLoad+0x52dac>
+   8d5e4:      	ldr	x8, [x19, #0x8]
+   8d5e8:      	and	w9, w0, #0x1
+   8d5ec:      	add	x0, sp, #0x8
+   8d5f0:      	strb	w9, [x8]
+   8d5f4:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   8d5f8:      	add	x0, sp, #0x20
+   8d5fc:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   8d600:      	b	0x8d608 <JNI_OnLoad+0x1e468>
+   8d604:      	strb	wzr, [x8]
+   8d608:      	bl	0xca254 <JNI_OnLoad+0x5b0b4>
+   8d60c:      	b.ne	0x8d624 <JNI_OnLoad+0x1e484>
+   8d610:      	bl	0xcac24 <JNI_OnLoad+0x5ba84>
+   8d614:      	ldp	x29, x30, [sp, #0x40]
+   8d618:      	add	sp, sp, #0x70
+   8d61c:      	autiasp
+   8d620:      	ret
+   8d624:      	bl	0xcd9f0 <__stack_chk_fail@plt>

@@ -1,0 +1,68 @@
+{
+  "member_sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+  "strings": {
+    "0x1c0b2": ".",
+    "0x1c055": "..",
+    "0x1b490": "DONE",
+    "0x17f94": "restore_from_backup",
+    "0x17f74": "instacrash_recovery_from_backup",
+    "0x16bd4": "recover_status",
+    "0x22b89": "ZN12mobileconfig28FBMobileConfigStorageManager14copyFromBackupEvE3$_0"
+  },
+  "storage_method_slot": {
+    "slot": "0xd5598",
+    "offset": "0x18",
+    "target": "0x834c8"
+  },
+  "callback_slot": {
+    "address_point": "0xd5a90",
+    "slot": "0xd5ac0",
+    "target": "0x8d550"
+  },
+  "calls": {
+    "0x836f8": "0x8cee8",
+    "0x8371c": "0x8b810",
+    "0x83754": "0xc2148",
+    "0x83778": "0xc28ac",
+    "0x837b8": "0xc2530",
+    "0x8d57c": "0x70a28",
+    "0x8d590": "0x70a28",
+    "0x8d5a4": "0x70a28",
+    "0x8d5e0": "0xc1f4c",
+    "0x8cfe0": "0xc2420",
+    "0xc257c": "0xcd8d0",
+    "0xc25c4": "0xcd8e0",
+    "0xc25c8": "0xcd8f0",
+    "0xc2630": "0xcd900",
+    "0x838e8": "0xc28ac"
+  },
+  "local_recover_codes": {
+    "0": "copy latch remains true",
+    "1": "empty backup base",
+    "2": "DONE status false",
+    "3": "destination directory helper false",
+    "4": "copy latch false",
+    "5": "pre-restore cleanup helper false"
+  },
+  "projection_authority": "analyst-derived callback projection with supplied order/outcomes, not native restore execution",
+  "synthetic_cases": {
+    "marker_only": {
+      "attempted": [],
+      "selected_recover_code": 0
+    },
+    "failure_skips_later_copy": {
+      "attempted": [
+        "first"
+      ],
+      "selected_recover_code": 4
+    },
+    "success": {
+      "attempted": [
+        "first",
+        "second"
+      ],
+      "selected_recover_code": 0
+    }
+  },
+  "remaining": "startup caller binding, flag producers, pre-cleanup side effects, iterator/imported I/O exceptions, verified restored bytes and activation"
+}

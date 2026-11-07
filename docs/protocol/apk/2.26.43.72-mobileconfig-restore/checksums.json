@@ -1,0 +1,70 @@
+{
+  "README.md": {
+    "bytes": 6450,
+    "sha256": "768038da59bf235fcab1d1a7df8097a0351e6c28e83faf4bd9735b9e00388d58"
+  },
+  "callback-args.txt": {
+    "bytes": 275,
+    "sha256": "59477e593390526c7db4993b9248be315eb6ac1e934981db73bdcd2a899ff608"
+  },
+  "callback-type.txt": {
+    "bytes": 695,
+    "sha256": "05f7d8256a0d53cf0d3ca94ef5f62a058deee744e5c91970373a7b2252105389"
+  },
+  "compare-result.txt": {
+    "bytes": 204,
+    "sha256": "9e47aa1354563be585140bfe66843c94acd6c610eb3bf52931240bd963159f0f"
+  },
+  "compare-spans.txt": {
+    "bytes": 815,
+    "sha256": "14bc38f31041139eb0591de87cf7445ea4903bb2b6bd5c87ab1c04af25ddfeeb"
+  },
+  "copy-args.txt": {
+    "bytes": 214,
+    "sha256": "7e6586947039c596a9601c285180213da7fb23717f916d0e15d9a005d6093fd1"
+  },
+  "directory-iteration.txt": {
+    "bytes": 5256,
+    "sha256": "f696f06f5bfc055974704d62ea1279fb70a50f3e7755f18812263b900a995c49"
+  },
+  "equal-spans.txt": {
+    "bytes": 536,
+    "sha256": "ca5a67e954dd5d48c670120eefe4ae61d1be47de1d62a35e19a063a715e1e7af"
+  },
+  "equal-string.txt": {
+    "bytes": 671,
+    "sha256": "382ece2cdacc8d9021fd01ed00ce698ab93d613c470237f66685f4ea88a76e1a"
+  },
+  "inspect-restore.py": {
+    "bytes": 2955,
+    "sha256": "ddbc34e393b123cc9176bc3477a2e31e47491ff3d439e5574a3d6c493de0cc61"
+  },
+  "pre-cleanup.txt": {
+    "bytes": 6659,
+    "sha256": "db787f93e633cfb6233b24866483b68c4d201c41bea22e021212d2181b6f8b65"
+  },
+  "rea-restore.json": {
+    "bytes": 7371,
+    "sha256": "9623207a329003e9d97a800b76fb050f3c5f95819c3f4be39ca485409e56d717"
+  },
+  "restore-callback.txt": {
+    "bytes": 2349,
+    "sha256": "818ef3ad3285edcb8a00c932f6d5cd2d21ddd8d1dd6526fba6077cec8b91160f"
+  },
+  "restore.json": {
+    "bytes": 1876,
+    "sha256": "36c0cf27586d642b756470dca7452ba7646a104cc09fa0d9328003c21b08984a"
+  },
+  "storage-method.txt": {
+    "bytes": 14122,
+    "sha256": "177fba0dd043b653ecfb2e900e73a47c25c537fefd9fca294cc9015d4185d82c"
+  },
+  "string-span.txt": {
+    "bytes": 484,
+    "sha256": "c4bf94afbb5800cd08595580e2a4aac083e0e6f26eda6401cfbd30acbd03e233"
+  },
+  "unequal-length.txt": {
+    "bytes": 175,
+    "sha256": "547d61ce451e2e16a4a7c317ddaddadad90422f272c28ea2278fa2c656eabf9b"
+  }
+}

@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-restore-evidence": {
+    "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-restore/inspect-restore.py <pinned-library>",
+    "x-transport": "offline restoration research; no Rust transport or HTTP route enabled",
+    "x-live": false,
+    "description": "Confirmed selected static MobileConfig copyFromBackup callback requires a DONE status gate, skips dot/dotdot/DONE entries and stops further copies after a failed copy-helper result. Pre-cleanup precedes marker checking, and selected recovery codes continue into later loading. A true copy latch does not prove complete or durable restored data; startup callers and load/activation admission remain untraced.",
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-restore/README.md"
+  },
   "x-mobileconfig-backup-evidence": {
     "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-backup/inspect-backup.py <pinned-library>",
     "x-transport": "offline backup research; no enabled Rust transport or HTTP route",
