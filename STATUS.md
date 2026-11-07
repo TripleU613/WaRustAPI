@@ -1,3 +1,11 @@
+2026-11-06 — **Preserved binary user-recipient precedence.**
+Message ACKs no longer ignore a binary zero-device user recipient and settle
+through an unrelated from. Hosted binary recipients project to their underlying
+PN/LID user; receipt ACK output now uses that native user address as well.
+[Current reader/factory/writer evidence and outbox regressions](docs/protocol/receipt-user-recipient.md#hosted-user-output-and-binary-recipient-precedence-2026-11-06).
+Success/refusal, mismatch, deduplication and reopen/no-resend controls retained.
+No live account operation.
+
 2026-11-06 — **Corrected receipt recipient text-class admission.**
 Dot-qualified zero/ignored suffixes and invalid PN/LID users no longer become
 primary-user recipient qualifiers through generic parsing. ACKs omit the field;

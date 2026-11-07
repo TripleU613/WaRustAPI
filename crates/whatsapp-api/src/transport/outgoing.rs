@@ -1312,6 +1312,24 @@ fn message_ack_address(node: &Node, name: &str) -> Option<crate::model::jid::Jid
         };
         return crate::model::jid::Jid::parse(&format!("{user}@{domain}")).ok();
     }
+    if name == "recipient"
+        && let Some(value) = node.get_attr(name).and_then(|value| value.as_jid())
+        && value.agent == 0
+        && value.device == 0
+        && matches!(
+            value.kind,
+            crate::model::jid::JidKind::Plain | crate::model::jid::JidKind::AgentDevice
+        )
+        && matches!(
+            value.server,
+            Server::User | Server::Lid | Server::Hosted | Server::HostedLid
+        )
+    {
+        // APK43.72 123.A01/A02/A04 constructs a UserJid for binary zero
+        // PN/LID, and the plain hosted user factory returns the underlying
+        // PN/LID class. Preserve recipient precedence, not wire-kind identity.
+        return super::receipts::recipient(node);
+    }
     super::receipts::jid(node, name)
 }
 
@@ -3601,6 +3619,84 @@ mod tests {
                 let store = open(&path);
                 assert_eq!(store.read(|tx| outbox().get(tx, local_id)).unwrap(), after);
                 assert!(begin_selected(&store, Some(local_id)).unwrap().is_none());
+            }
+        }
+    }
+
+    #[test]
+    fn binary_user_recipient_keeps_message_ack_precedence_across_reopen() {
+        for (server, hosted, user, other) in [
+            (Server::User, Server::Hosted, "15555550100", "15555550999"),
+            (Server::Lid, Server::HostedLid, "12345", "99999"),
+        ] {
+            for carrier in ["zero-ad", "hosted-pair", "primary-pair"] {
+                for matches in [false, true] {
+                    for error in [None, Some("500")] {
+                        let dir = tempfile::tempdir().unwrap();
+                        let path = dir.path().join("binary-recipient.redb");
+                        let store = open(&path);
+                        let local_id = enqueue(&store);
+                        let target = Jid::new(user, server.clone()).unwrap();
+                        store
+                            .write(|tx| {
+                                let mut entry = outbox().get_mut(tx, local_id)?.unwrap();
+                                entry.intent.chat = ChatId::from_jid(&target)?;
+                                entry.wire_id = Some(MessageId::new("fixture")?);
+                                outbox().set_progress(tx, &mut entry, AttemptProgress::InFlight)
+                            })
+                            .unwrap();
+                        let before = store.read(|tx| outbox().get(tx, local_id)).unwrap();
+                        let head = store.journal_head().unwrap();
+                        let selected_user = if matches { user } else { other };
+                        let recipient = match carrier {
+                            "hosted-pair" => Jid::new(selected_user, hosted.clone()).unwrap(),
+                            "zero-ad" => Jid::new_ad(selected_user, 0, 0, server.clone()).unwrap(),
+                            _ => Jid::new(selected_user, server.clone()).unwrap(),
+                        };
+                        // A selected UserJid recipient overrides the opposite from.
+                        let from =
+                            Jid::new(if matches { other } else { user }, server.clone()).unwrap();
+                        let mut ack = Node::new("ack")
+                            .attr("class", "message")
+                            .attr("id", "fixture")
+                            .attr("from", from)
+                            .attr("recipient", recipient);
+                        if let Some(error) = error {
+                            ack = ack.attr("error", error);
+                        }
+                        let dict = TokenDictionary::comparison_2_26_37_71();
+                        let wire = Encoder::new(dict).encode(&ack).unwrap();
+                        let ack = crate::binary::Decoder::new(&wire[1..], dict, &Limits::default())
+                            .decode_node()
+                            .unwrap();
+                        assert_eq!(
+                            acknowledge(&store, &ack).unwrap(),
+                            matches,
+                            "{server:?}/{carrier}/{matches}/{error:?}"
+                        );
+                        assert!(!acknowledge(&store, &ack).unwrap());
+                        let after = store.read(|tx| outbox().get(tx, local_id)).unwrap();
+                        if matches {
+                            let facts = &after.as_ref().unwrap().facts;
+                            assert_eq!(facts.len(), 1);
+                            assert_eq!(
+                                facts[0].kind,
+                                if error.is_some() {
+                                    DeliveryFactKind::Failed
+                                } else {
+                                    DeliveryFactKind::ServerAccepted
+                                }
+                            );
+                        } else {
+                            assert_eq!(after, before);
+                            assert_eq!(store.journal_head().unwrap(), head);
+                        }
+                        drop(store);
+                        let store = open(&path);
+                        assert_eq!(store.read(|tx| outbox().get(tx, local_id)).unwrap(), after);
+                        assert!(begin_selected(&store, Some(local_id)).unwrap().is_none());
+                    }
+                }
             }
         }
     }

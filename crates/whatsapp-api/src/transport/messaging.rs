@@ -2284,22 +2284,33 @@ mod tests {
             let ack = received_confirmation(&base.clone().attr("recipient", recipient)).unwrap();
             assert!(ack.get_attr("recipient").is_none(), "{recipient}");
         }
-        for recipient in [
-            "15555550100@s.whatsapp.net",
-            "100001@lid",
-            "15555550100@hosted",
-            "100001@hosted.lid",
-            "123@bot",
-            "123@interop",
+        for (recipient, expected) in [
+            ("15555550100@s.whatsapp.net", "15555550100@s.whatsapp.net"),
+            ("100001@lid", "100001@lid"),
+            ("15555550100@hosted", "15555550100@s.whatsapp.net"),
+            ("100001@hosted.lid", "100001@lid"),
+            ("123@bot", "123@bot"),
+            ("123@interop", "123@interop"),
         ] {
-            let node = base.clone().attr("recipient", recipient);
-            assert!(
-                received_confirmation(&node)
-                    .unwrap()
-                    .get_attr("recipient")
-                    .is_some(),
-                "{recipient}"
-            );
+            // Text and JID_PAIR carriers both go through the native user factory;
+            // compare the actual ACK field, not just whether it exists.
+            for node in [
+                base.clone().attr("recipient", recipient),
+                base.clone()
+                    .attr("recipient", Jid::parse(recipient).unwrap()),
+            ] {
+                let dict = TokenDictionary::comparison_2_26_37_71();
+                let wire = Encoder::new(dict).encode(&node).unwrap();
+                let node = Decoder::new(&wire[1..], dict, &Limits::default())
+                    .decode_node()
+                    .unwrap();
+                let ack = received_confirmation(&node).unwrap();
+                assert_eq!(
+                    ack.get_attr("recipient").and_then(|value| value.as_jid()),
+                    Some(&Jid::parse(expected).unwrap()),
+                    "{recipient}"
+                );
+            }
         }
         let node = base.attr(
             "recipient",

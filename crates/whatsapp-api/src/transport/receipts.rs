@@ -1241,7 +1241,18 @@ pub(super) fn recipient(node: &Node) -> Option<Jid> {
         && (matches!(value.server, Server::User | Server::Lid | Server::Hosted | Server::HostedLid | Server::Interop)
             || matches!(&value.server, Server::Other(server) if matches!(server.as_str(), "bot" | "status_me" | "lid_me")))
         && !(value.server == Server::User && value.user == "gdpr"))
-    .then(|| value.to_non_ad())
+    .then(|| {
+        // APK43.72 0De.A02 returns PhoneUserJid/0Dx for plain hosted
+        // aliases; their getServer is PN/LID. This projects this parsed
+        // UserJid attribute only, not stored alias or identity authority.
+        let mut user = value.to_non_ad();
+        user.server = match user.server {
+            Server::Hosted => Server::User,
+            Server::HostedLid => Server::Lid,
+            other => other,
+        };
+        user
+    })
 }
 
 pub(super) fn ids(node: &Node) -> Result<Vec<String>> {

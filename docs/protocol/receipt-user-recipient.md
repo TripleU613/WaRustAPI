@@ -148,3 +148,68 @@ with it. All1544 workspace/all-feature tests, strict all-target/all-feature
 Clippy, formatting, OpenAPI library symbols, regenerated CLI reference, APK
 coverage and repository hygiene pass. Hygiene checked8031 local links and451
 APK checksum bundles. These are offline results, not live acceptance evidence.
+
+
+## Hosted user output and binary recipient precedence (2026-11-06)
+
+**Confirmed static / implemented offline:** a plain hosted recipient is not a
+native UserJid retaining that server string. The shared
+[0De user factory](apk/2.26.43.72-message-ack-chat/user-factory.txt) returns
+PhoneUserJid for hosted/s.whatsapp.net and0Dx for hosted.lid/lid.
+[PhoneUserJid.getServer](apk/2.26.43.72-hosted-chatstate/phone-user-server.txt)
+returns s.whatsapp.net; [0Dx.getServer](apk/2.26.43.72-message-ack-chat/lid-user.txt)
+returns lid. [F0R.A03](apk/2.26.43.72-retry-ack-dispatch/receipt-context-factory.txt)
+selects the UserJid and the [F3e renderer](apk/2.26.43.72-prekey-upload-replies/prekey-ack-wire-builder.txt)
+passes it through [DBe/0Tl](apk/2.26.43.72-group-missing-identification/ack-attribute-constructors.txt),
+which retains the object and getRawString rather than the original alias text.
+
+**Binary binding:** [123.A01](apk/2.26.43.72-group-missing-identification/current-jid-attribute-reader.txt)
+branches on JID_PAIR0xfa at008a to00aa; reads user/server, joins with A04
+and calls0Dd.A00 at00dc. The same export reads AD via A02 at00f6 then
+calls the factory at0102. [A02](apk/2.26.43.72-group-missing-identification/current-ad-string-reader.txt)
+and [A04](apk/2.26.43.72-group-missing-identification/current-ad-string-join.txt)
+omit device0 before parsing. Thus ordinary zero-device binary PN/LID yields
+UserJid; it is distinct from explicit text :0/.0 DeviceJid syntax.
+
+Rust's recipient getter now projects supported zero-component hosted/hosted.lid
+user attributes to PN/LID after existing class/namespace guards. The ACK
+regression previously checked only field existence; strengthened exact-value
+checks failed with hosted instead of s.whatsapp.net. It now checks exact fields
+after real text and typed JID_PAIR encode/decode, retaining ordinary PN/LID,
+bot/interop and binary-zero controls. Device99/explicit-zero class guards remain.
+This supersedes only this getter's prior unprojected hosted output; no global
+JID decoder, stored identity or alias-trust normalization is introduced.
+
+**Message-ACK consequence / confirmed local defect:** outgoing message ACK
+correlation already projected raw hosted text but not binary hosted pairs, and
+it treated binary AD0 recipients as devices. Current
+[1rH.A03](apk/2.26.43.72-distribution-ack-admission/native.txt) instead prefers
+the parsed UserJid recipient before from at0294..02ac. A failed regression showed
+an unrelated binary-zero recipient being ignored and matching from incorrectly
+settling the message. A separate failed run showed matching hosted-pair recipient
+failing to settle. The known zero-component binary PN/LID/hosted recipient branch
+now uses the same user projection, preserving recipient precedence. Other typed
+families, nonzero devices and from grammar retain their previous subset.
+
+A new outbox regression covers PN/LID, primary pairs, hosted pairs and binary
+AD0, matching versus mismatching recipient with opposite from, and success versus
+error500. Mismatches preserve the original entry and journal head; matches append
+one original server-acceptance/failure fact. Duplicates add nothing; after reopen
+the same entry persists and no original intent is eligible to resend. No account
+operation, new query, identity adoption or callback replay was performed.
+
+**Boundaries:** receipt fact routing still treats a recognized user recipient as
+a qualified route; this projection does not add a new fact target or merge PN/LID.
+Strict outbound-receipt callback settlement is unchanged. Full current fact
+processing, special typed families, long typed PN recipients, other from forms,
+malformed cached objects and live ACK acceptance remain open. Static class and
+wire evidence is reused; no new REA Evidence ID is invented.
+
+Verification: the exact hosted-field regression failed before projection; the
+new outbox test separately failed on missed hosted-pair settlement and false
+binary-zero fallback settlement. All1545 workspace/all-feature tests pass.
+Strict all-target/all-feature Clippy and the focused outbox regression pass
+after test-only unused path-qualification cleanup. Formatting, OpenAPI library
+symbols, regenerated CLI reference, APK coverage and repository hygiene pass.
+Hygiene checked8044 local links and451 APK checksum bundles. Offline verification
+does not establish live server ACK acceptance or full native parity.

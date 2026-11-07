@@ -1,4 +1,11 @@
 {
+  "x-binary-user-recipient-precedence": {
+    "x-cli": false,
+    "x-transport": "receipts::recipient; messaging receipt ACK; outgoing::message_ack_chat",
+    "x-live": false,
+    "description": "Known zero-component hosted/hosted.lid user recipients now project to underlying PN/LID in receipt ACKs. Outgoing message ACK correlation uses the shared user projection for known zero-component binary PN/LID/hosted recipient carriers, preserving native UserJid recipient precedence over from. A failed regression demonstrated false settlement through from when binary AD0 named another recipient; matching hosted-pair ACKs also previously failed. Actual binary primary/hosted pairs and AD0 tests cover PN/LID, match/mismatch, success/error500, unchanged entry/journal, exactly one fact, duplicate/reopen and no resend eligibility. Explicit text device qualifiers and nonzero devices retain separate class handling. No global decoder/store/identity/alias trust normalization, new request, receipt callback policy, HTTP route or live operation. Other typed/from families, long typed PN recipient support and complete live/native parity remain open.",
+    "evidence": "docs/protocol/receipt-user-recipient.md#hosted-user-output-and-binary-recipient-precedence-2026-11-06"
+  },
   "x-receipt-recipient-text-class": {
     "x-cli": false,
     "x-transport": "receipts::recipient; messaging receipt ACK construction; existing direct/group fact admission",

@@ -4900,3 +4900,18 @@ Both ACK and fact regressions failed before correction; encode/decode/reopen
 controls verify the correction offline. Binary-zero and valid users remain.
 Full current fact dispatch, special families and live acceptance remain open.
 No global identity normalization, new request, replay or account operation.
+
+
+### Binary user-recipient precedence and hosted output (2026-11-06)
+
+**Confirmed local fixes:** [receipt user output and message ACK correlation](receipt-user-recipient.md#hosted-user-output-and-binary-recipient-precedence-2026-11-06)
+now reuse native UserJid projection for known zero-component binary recipients.
+Plain hosted receipt recipients render their underlying PN/LID address. Binary
+AD0 message recipients retain UserJid precedence rather than falling back to an
+unrelated from; hosted binary pairs can match the original PN/LID chat. Both a
+false settlement and missed settlement were demonstrated by failing outbox
+regressions. Current pair/AD reader, factory/getServer, receipt descriptor/writer
+and1rH precedence evidence are linked. New tests retain original entry/journal,
+matched success/refusal, deduplication, reopen and no-resend behavior. No global
+normalization, alias trust, new request or account operation. Other typed/from
+families and complete native/live parity remain unverified.
