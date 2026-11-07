@@ -137,3 +137,18 @@ agreement, malformed/wrong-domain LID, empty PN and non-success root. Negative
 cases preserve account/checkpoint rows and journal with fixed diagnostics; the
 valid LID survives reopening. Existing API identity corruption/partial-update
 controls still exercise the same helper. No live operation or key rotation.
+
+## Pinned initial reader audit (2026-11-07)
+
+**Confirmed static, bounded:** 2.26.43.72 `0ZJ.A13` reads success lid using
+`0Tp.A0A(Jid.class, "lid")`, normalizes DeviceJid for comparison and conditionally
+passes the original JID to `09F.ChR`. Its getter logs protocol noncompliance and
+continues to conversion; that check alone is not a rejection gate. No pn literal
+read occurs in this selected method or its two retained direct success helpers.
+The string parser, typed attribute producers, effective setter flag/implementation
+and full own-identity lifecycle remain unresolved. Existing Rust namespace and
+partial-update rules remain a local contract; do not infer stricter numeric
+login grammar from ACK-specific rules. The native initial reader separately
+throws for unexpected nodes rather than treating each as a failure stanza.
+See [complete methods, negative selectors and reproduction](apk/2.26.43.72-login-success-reader/README.md).
+No runtime change or live operation.

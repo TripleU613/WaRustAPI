@@ -1,0 +1,66 @@
+
+# class: LX/0Tp;
+# extends: Ljava/lang/Object;
+
+.method public A0A(LLL)  # .registers 8
+    # full signature: LX/0Tp;->A0A(Ljava/lang/Class;Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    0000..0006  invoke-virtual  {v5, v7}, LX/0Tp;->A0C(Ljava/lang/String;)LX/0Tl;
+    0006..0008  move-result-object  v0
+    0008..000a  const/4  v3, #0x0
+    000a..000e  if-eqz  v0, +0x6
+    000e..0012  iget-object  v4, v0, LX/0Tl;->A01:Lcom/whatsapp/infra/core/jid/Jid;
+    0012..0016  if-nez  v4, +0xe
+    0016..001c  invoke-virtual  {v5, v7, v3}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    001c..001e  move-result-object  v1
+    001e..0022  sget-object  v0, Lcom/whatsapp/infra/core/jid/Jid;->Companion:LX/0Dd;
+    0022..0028  invoke-virtual  {v0, v1}, LX/0Dd;->A02(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    0028..002a  move-result-object  v4
+    002a..002e  if-eqz  v4, +0x30
+    002e..0034  invoke-virtual  {v4}, Lcom/whatsapp/infra/core/jid/Jid;->isProtocolCompliant()Z
+    0034..0036  move-result  v0
+    0036..003a  if-nez  v0, +0x2a
+    003a..003e  const-string  v0, "ProtocolTreeNode/getAttributeJid invalid jid, Jid: '"
+    003e..0042  new-instance  v1, Ljava/lang/StringBuilder;
+    0042..0048  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0048..004e  invoke-virtual  {v1, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    004e..0052  const-string  v0, "' key: '"
+    0052..0058  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0058..005e  invoke-virtual  {v1, v7}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    005e..0062  const-string  v0, "' tag: '"
+    0062..0068  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0068..006c  iget-object  v0, v5, LX/0Tp;->A00:Ljava/lang/String;
+    006c..0072  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0072..0076  const-string  v0, "'"
+    0076..007c  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    007c..0082  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0082..0084  move-result-object  v0
+    0084..008a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    008a..008e  const-class  v0, Lcom/whatsapp/infra/core/jid/DeviceJid;
+    008e..0092  if-ne  v6, v0, +0xe
+    0092..0098  invoke-static  {v4}, LX/0Dn;->A0k(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0098..009a  move-result  v0
+    009a..009e  if-eqz  v0, +0x8
+    009e..00a2  sget-object  v0, Lcom/whatsapp/infra/core/jid/DeviceJid;->Companion:LX/0EB;
+    00a2..00a8  invoke-virtual  {v0, v4}, LX/0EB;->A00(Lcom/whatsapp/infra/core/jid/Jid;)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    00a8..00aa  move-result-object  v4
+    00aa..00b0  invoke-virtual  {v6, v4}, Ljava/lang/Class;->cast(Ljava/lang/Object;)Ljava/lang/Object;
+    00b0..00b2  move-result-object  v0
+    00b2..00b6  check-cast  v0, Lcom/whatsapp/infra/core/jid/Jid;
+    00b6..00b8  return-object  v0
+    00b8..00ba  move-exception  v2
+    00ba..00be  const-string  v0, "ProtocolTreeNode/getAttributeJid/failed to convert '"
+    00be..00c2  new-instance  v1, Ljava/lang/StringBuilder;
+    00c2..00c8  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00c8..00ce  invoke-virtual  {v1, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    00ce..00d2  const-string  v0, "' to "
+    00d2..00d8  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00d8..00de  invoke-virtual  {v6}, Ljava/lang/Class;->getName()Ljava/lang/String;
+    00de..00e0  move-result-object  v0
+    00e0..00e6  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00e6..00ec  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00ec..00ee  move-result-object  v0
+    00ee..00f4  invoke-static  {v0, v2}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;Ljava/lang/Throwable;)V
+    00f4..00f6  return-object  v3
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/ClassCastException; code_units 0055..005c -> 005c
+.end method

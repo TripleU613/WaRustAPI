@@ -6234,3 +6234,9 @@ evidence, not new APK behavior or proof of full group-send/network parity.
   preserved. Owned real-store/reopen controls prove no state mutation or replay.
   Native interleaving remains separate. See
   [unexpected login outcomes](messaging-transport.md#unexpected-initial-login-nodes-retain-uncertainty).
+
+- Pinned initial login reader now retained: 0ZJ.A13 explicitly distinguishes
+  web/success/failure and throws for unexpected nodes. Success LID uses Jid.class;
+  getter logs noncompliance then continues. Numeric login grammar, effective setter
+  and PN handling remain unresolved; no speculative runtime gate added. See
+  [reader evidence](apk/2.26.43.72-login-success-reader/README.md).

@@ -10716,3 +10716,9 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   outcome classes retain capture and the original uncertain reservation, with a
   fixed terminal error and no reconnect/replay. Owned store/reopen regression
   added; supported success/failure behavior and wire construction unchanged.
+
+- Retained reproducible pinned initial-login reader/getter evidence. Unexpected
+  nodes throw; supplied LID uses generic Jid.class and getter compliance failure
+  logs rather than rejecting. Full identity parser/setter parity remains unknown;
+  no speculative numeric gate or live operation. See
+  [login audit](docs/protocol/login-identity-updates.md#pinned-initial-reader-audit-2026-11-07).

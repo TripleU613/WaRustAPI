@@ -1,0 +1,10 @@
+
+# class: LX/295;
+# extends: LX/1rA;
+
+.method public <init>(V)  # .registers 1
+    # full signature: LX/295;-><init>()V
+    0000..0006  invoke-direct  {v0}, LX/1rA;-><init>()V
+    0006..0008  return-void
+    # exception table: 0 try range(s)
+.end method

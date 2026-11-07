@@ -1,0 +1,38 @@
+{
+  "README.md": {
+    "bytes": 4734,
+    "sha256": "9be95dd068ef8efaf460a5ed8b4960026aa0c159f5cca3b5c8ade210503c8164"
+  },
+  "empty-success-handler.txt": {
+    "bytes": 254,
+    "sha256": "b1621110106cca940ff9247801f151691074cccf0be1c6eefb7ae910c2ffc46c"
+  },
+  "jid-getter.txt": {
+    "bytes": 4444,
+    "sha256": "0e1523de412bd1c3e33fecc249ec1ed222f1656cb875b02634893a0b574fbee8"
+  },
+  "lid-setter-callers.txt": {
+    "bytes": 70,
+    "sha256": "1e853f1d6bd80b4dbfee2bb8874a4ebdc23e9af86a5e3eed780ca95c7a97c60a"
+  },
+  "location-helper.txt": {
+    "bytes": 1075,
+    "sha256": "759650f8ee2b0ee85c5cd64e096c41832aaf11a6e3674423d40f2cba78a40e1a"
+  },
+  "login-reader.txt": {
+    "bytes": 23419,
+    "sha256": "c3e0d42447a4fe4430aa9c58294f1a2562ba2feb1deced42d2505cc772bf980d"
+  },
+  "reproduce.py": {
+    "bytes": 1854,
+    "sha256": "4db0a4546802c3426ae6c56d4a24c153b00e4779d886c6fdee0352a20e4f3857"
+  },
+  "success-handler-registration.txt": {
+    "bytes": 3873,
+    "sha256": "f1a9e0f0cfd210e978f8fc8f86167bf812a5196456de4c30939a2065a3954648"
+  },
+  "success-key-helper.txt": {
+    "bytes": 3410,
+    "sha256": "5324d828e7104c92fa6c7234b7f7526aa05c037cc609f3b4ab79b466b9ba451f"
+  }
+}

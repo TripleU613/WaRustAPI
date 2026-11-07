@@ -1,0 +1,60 @@
+
+# class: LX/0ZJ;
+# extends: Landroid/os/HandlerThread;
+
+.method private A18(VL)  # .registers 7
+    # full signature: LX/0ZJ;->A18(LX/0Tp;)V
+    0000..0004  const-string  v3, "ConnectionThread/login/success: static_pq_key received, size="
+    0004..0008  iget-object  v2, v5, LX/0ZJ;->A0I:LX/00x;
+    0008..000e  invoke-interface  {v2}, LX/00x;->get()Ljava/lang/Object;
+    000e..0010  move-result-object  v0
+    0010..0014  check-cast  v0, LX/1j4;
+    0014..001a  invoke-virtual  {v0}, LX/1j4;->A04()Ljava/lang/Integer;
+    001a..001c  move-result-object  v1
+    001c..0020  sget-object  v0, LX/02X;->A00:Ljava/lang/Integer;
+    0020..0024  if-eq  v1, v0, +0x58
+    0024..002a  invoke-interface  {v2}, LX/00x;->get()Ljava/lang/Object;
+    002a..002c  move-result-object  v0
+    002c..0030  check-cast  v0, LX/1j4;
+    0030..0036  invoke-virtual  {v0}, LX/1j4;->A05()Ljava/lang/Integer;
+    0036..0038  move-result-object  v1
+    0038..003c  sget-object  v0, LX/02X;->A01:Ljava/lang/Integer;
+    003c..0040  if-ne  v1, v0, +0x4a
+    0040..0046  const-string/jumbo  v1, "static_pq_key"
+    0046..0048  const/4  v0, #0x0
+    0048..004e  invoke-virtual  {v6, v1, v0}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    004e..0050  move-result-object  v4
+    0050..0054  if-eqz  v4, +0x40
+    0054..0056  const/4  v0, #0x3
+    0056..005c  invoke-static  {v4, v0}, Landroid/util/Base64;->decode(Ljava/lang/String;I)[B
+    005c..005e  move-result-object  v2
+    005e..0062  new-instance  v1, Ljava/lang/StringBuilder;
+    0062..0068  invoke-direct  {v1, v3}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0068..006a  array-length  v0, v2
+    006a..0070  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0070..0076  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0076..0078  move-result-object  v0
+    0078..007e  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    007e..0084  invoke-direct  {v5}, LX/0ZJ;->A0L()LX/143;
+    0084..0086  move-result-object  v1
+    0086..008a  new-instance  v0, Lorg/whispersystems/libsignal/kem/KEMPublicKey;
+    008a..0090  invoke-direct  {v0, v2}, Lorg/whispersystems/libsignal/kem/KEMPublicKey;-><init>([B)V
+    0090..0096  invoke-interface  {v1, v0}, LX/143;->CjR(Lorg/whispersystems/libsignal/kem/KEMPublicKey;)V
+    0096..0098  return-void
+    0098..009e  invoke-direct  {v5}, LX/0ZJ;->A0F()LX/0GO;
+    009e..00a0  move-result-object  v3
+    00a0..00a4  const-string  v0, "base64_len="
+    00a4..00a8  new-instance  v1, Ljava/lang/StringBuilder;
+    00a8..00ae  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    00ae..00b4  invoke-virtual  {v4}, Ljava/lang/String;->length()I
+    00b4..00b6  move-result  v0
+    00b6..00bc  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    00bc..00c2  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00c2..00c4  move-result-object  v2
+    00c4..00c8  const-string  v1, "noise-pq-static-key-decode-failed"
+    00c8..00ca  const/4  v0, #0x1
+    00ca..00d0  invoke-virtual  {v3, v1, v2, v0, v0}, LX/0B0;->A0h(Ljava/lang/String;Ljava/lang/String;ZI)V
+    00d0..00d2  return-void
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/IllegalArgumentException; code_units 002b..004c -> 004c
+.end method
