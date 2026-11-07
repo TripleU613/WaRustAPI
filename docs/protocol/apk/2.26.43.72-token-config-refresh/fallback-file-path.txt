@@ -1,0 +1,81 @@
+
+# class: LX/0EV;
+# extends: LX/09k;
+
+.method public A01(LL)  # .registers 12
+    # full signature: LX/0EV;->A01(Ljava/lang/String;)Ljava/lang/String;
+    0000..0004  new-instance  v1, Ljava/io/File;
+    0004..000a  invoke-direct  {v1, v11}, Ljava/io/File;-><init>(Ljava/lang/String;)V
+    000a..000e  sget-object  v0, LX/0EX;->A00:LX/0EX;
+    000e..0014  invoke-virtual  {v1, v0}, Ljava/io/File;->listFiles(Ljava/io/FilenameFilter;)[Ljava/io/File;
+    0014..0016  move-result-object  v9
+    0016..001a  const-string  v11, ""
+    001a..001e  if-eqz  v9, +0x7e
+    001e..0022  new-instance  v5, Ljava/util/ArrayList;
+    0022..0028  invoke-direct  {v5}, Ljava/util/ArrayList;-><init>()V
+    0028..002a  array-length  v8, v9
+    002a..002c  const/4  v6, #0x0
+    002c..002e  const/4  v4, #0x0
+    002e..0030  const/4  v7, #0x1
+    0030..0034  if-ge  v4, v8, +0x38
+    0034..0038  aget-object  v10, v9, v4
+    0038..003e  invoke-virtual  {v10}, Ljava/io/File;->getName()Ljava/lang/String;
+    003e..0040  move-result-object  v1
+    0040..0046  invoke-static  {v1}, LX/00l;->A08(Ljava/lang/Object;)V
+    0046..004c  invoke-virtual  {v1}, Ljava/lang/String;->length()I
+    004c..004e  move-result  v0
+    004e..0052  add-int/lit8  v0, v0, #0xf8 (-8)
+    0052..0058  invoke-virtual  {v1, v6, v0}, Ljava/lang/String;->substring(II)Ljava/lang/String;
+    0058..005a  move-result-object  v0
+    005a..0060  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    0060..0066  invoke-static  {v0}, Ljava/lang/Integer;->parseInt(Ljava/lang/String;)I
+    0066..0068  move-result  v0
+    0068..006e  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    006e..0070  move-result-object  v1
+    0070..0074  new-instance  v0, LX/08T;
+    0074..007a  invoke-direct  {v0, v1, v10}, LX/08T;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+    007a..0080  invoke-virtual  {v5, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0080..0082  goto  +0xd
+    0082..0084  move-exception  v3
+    0084..0088  const-string  v2, "MobileConfigPathUtils"
+    0088..008c  new-array  v1, v7, [Ljava/lang/Object;
+    008c..0090  aput-object  v10, v1, v6
+    0090..0094  const-string  v0, "Unexpected mctable file: %s"
+    0094..009a  invoke-static  {v2, v3, v0, v1}, LX/070;->A0a(Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;[Ljava/lang/Object;)V
+    009a..009e  add-int/lit8  v4, v4, #0x1
+    009e..00a0  goto  -0x38
+    00a0..00a6  invoke-virtual  {v5}, Ljava/util/AbstractCollection;->size()I
+    00a6..00a8  move-result  v0
+    00a8..00ac  if-le  v0, v7, +0xa
+    00ac..00b0  new-instance  v0, LX/3eW;
+    00b0..00b6  invoke-direct  {v0, v6}, LX/3eW;-><init>(I)V
+    00b6..00bc  invoke-static  {v5, v0}, LX/07V;->A0J(Ljava/util/List;Ljava/util/Comparator;)V
+    00bc..00c2  invoke-virtual  {v5}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+    00c2..00c4  move-result-object  v5
+    00c4..00ca  invoke-interface  {v5}, Ljava/util/Iterator;->hasNext()Z
+    00ca..00cc  move-result  v0
+    00cc..00d0  if-eqz  v0, +0x25
+    00d0..00d6  invoke-interface  {v5}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    00d6..00d8  move-result-object  v0
+    00d8..00dc  check-cast  v0, LX/08T;
+    00dc..00e0  iget-object  v4, v0, LX/08T;->second:Ljava/lang/Object;
+    00e0..00e4  check-cast  v4, Ljava/io/File;
+    00e4..00ea  invoke-virtual  {v4}, Ljava/io/File;->getCanonicalPath()Ljava/lang/String;
+    00ea..00ec  move-result-object  v0
+    00ec..00f2  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    00f2..00f4  goto  +0x11
+    00f4..00f6  move-exception  v3
+    00f6..00fa  const-string  v2, "MobileConfigPathUtils"
+    00fa..00fc  const/4  v0, #0x2
+    00fc..0100  new-array  v1, v0, [Ljava/lang/Object;
+    0100..0104  aput-object  v4, v1, v6
+    0104..0108  aput-object  v3, v1, v7
+    0108..010c  const-string  v0, "In findLatestFlatbufferUnderDir, fail to get canonical path for %s: %s"
+    010c..0112  invoke-static  {v2, v3, v0, v1}, LX/070;->A0a(Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;[Ljava/lang/Object;)V
+    0112..0114  goto  -0x27
+    0114..0116  return-object  v0
+    0116..0118  return-object  v11
+    # exception table: 2 try range(s)
+    # catch Ljava/lang/NumberFormatException; code_units 0020..0034 -> 0041
+    # catch Ljava/io/IOException; code_units 0072..007a -> 007a
+.end method

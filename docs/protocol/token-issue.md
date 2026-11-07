@@ -289,3 +289,13 @@ classifications. Retained methods and35 analyst-derived metadata cases separate
 source gating, fallback masks and values. Manager/handle producers, translation,
 readiness/cache and effective connection selection remain open. No Rust policy
 change or live operation. [Evidence and reproduction](apk/2.26.43.72-token-sdk-value-reader/README.md).
+
+## SDK handle and cache lifecycle follow-up —2026-11-07
+
+Confirmed static handle producers now reach Java filename caches and native-holder
+wrappers. File framing validates optional3c f1 headers/footer and restores raw
+cursor0 on nonmagic input; it does not validate effective token values. Latest
+context callbacks differ from full session/per-config/override refresh, which is
+called fromA0C andBPZ. Twelve analyst Java vectors cover header/cursor behavior.
+Manager selection, hydration/translation and00E effective invalidation remain open.
+[Retained methods and limits](apk/2.26.43.72-token-config-refresh/README.md). No runtime or live change.

@@ -1,0 +1,98 @@
+# Declared overrides with interface ancestry: LX/09k;->getLatestHandle()LX/Own;
+# Coverage: 114178 APK classes; superclass/interface ancestry; declared overrides only; inherited-target/default-method/external/runtime dispatch unverified
+# ancestry: LX/09k; -> Ljava/lang/Object;
+# ancestry: LX/09l; -> LX/09k; -> Ljava/lang/Object;
+# ancestry: LX/09m; -> LX/09k; -> Ljava/lang/Object;
+# ancestry: LX/0EV; -> LX/09k; -> Ljava/lang/Object;
+# ancestry: Lcom/facebook/mobileconfig/MobileConfigManagerHolderImpl; -> LX/09k; -> Ljava/lang/Object;
+
+# class: LX/09k;
+# extends: Ljava/lang/Object;
+
+.method public getLatestHandle(L)  # .registers 0
+    # full signature: LX/09k;->getLatestHandle()LX/Own;
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/09l;
+# extends: LX/09k;
+
+.method public getLatestHandle(L)  # .registers 2
+    # full signature: LX/09l;->getLatestHandle()LX/Own;
+    0000..0004  iget-object  v0, v1, LX/09l;->A02:LX/09k;
+    0004..000a  invoke-virtual  {v0}, LX/09k;->getLatestHandle()LX/Own;
+    000a..000c  move-result-object  v0
+    000c..000e  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/09m;
+# extends: LX/09k;
+
+.method public getLatestHandle(L)  # .registers 2
+    # full signature: LX/09m;->getLatestHandle()LX/Own;
+    0000..0002  const/4  v0, #0x0
+    0002..0004  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/0EV;
+# extends: LX/09k;
+
+.method public getLatestHandle(L)  # .registers 3
+    # full signature: LX/0EV;->getLatestHandle()LX/Own;
+    0000..0004  iget-boolean  v0, v2, LX/0EV;->A04:Z
+    0004..0008  if-eqz  v0, +0x20
+    0008..000c  iget-object  v0, v2, LX/0EV;->A02:LX/L8k;
+    000c..0010  if-nez  v0, +0x19
+    0010..0016  invoke-direct  {v2}, LX/0EV;->A00()Ljava/lang/String;
+    0016..0018  move-result-object  v1
+    0018..001c  iget-boolean  v0, v2, LX/0EV;->A0C:Z
+    001c..0022  invoke-static  {v1, v0}, LX/0EV;->A02(Ljava/lang/String;Z)Ljava/lang/String;
+    0022..0024  move-result-object  v1
+    0024..002a  invoke-virtual  {v1}, Ljava/lang/String;->isEmpty()Z
+    002a..002c  move-result  v0
+    002c..0030  if-nez  v0, +0x9
+    0030..0034  new-instance  v0, LX/L8k;
+    0034..003a  invoke-direct  {v0, v1}, LX/L8k;-><init>(Ljava/lang/String;)V
+    003a..003e  iput-object  v0, v2, LX/0EV;->A02:LX/L8k;
+    003e..0042  iget-object  v0, v2, LX/0EV;->A02:LX/L8k;
+    0042..0044  return-object  v0
+    0044..0048  iget-object  v0, v2, LX/0EV;->A03:LX/Nuz;
+    0048..004c  if-nez  v0, +0x19
+    004c..0052  invoke-direct  {v2}, LX/0EV;->A00()Ljava/lang/String;
+    0052..0054  move-result-object  v1
+    0054..0058  iget-boolean  v0, v2, LX/0EV;->A0C:Z
+    0058..005e  invoke-static  {v1, v0}, LX/0EV;->A02(Ljava/lang/String;Z)Ljava/lang/String;
+    005e..0060  move-result-object  v1
+    0060..0066  invoke-virtual  {v1}, Ljava/lang/String;->isEmpty()Z
+    0066..0068  move-result  v0
+    0068..006c  if-nez  v0, +0x9
+    006c..0070  new-instance  v0, LX/Nuz;
+    0070..0076  invoke-direct  {v0, v1}, LX/Nuz;-><init>(Ljava/lang/String;)V
+    0076..007a  iput-object  v0, v2, LX/0EV;->A03:LX/Nuz;
+    007a..007e  iget-object  v0, v2, LX/0EV;->A03:LX/Nuz;
+    007e..0080  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: Lcom/facebook/mobileconfig/MobileConfigManagerHolderImpl;
+# extends: LX/09k;
+
+.method public getLatestHandle(L)  # .registers 3
+    # full signature: Lcom/facebook/mobileconfig/MobileConfigManagerHolderImpl;->getLatestHandle()LX/Own;
+    0000..0006  invoke-virtual  {v2}, Lcom/facebook/mobileconfig/MobileConfigManagerHolderImpl;->getLatestHandleHolder()Lcom/facebook/mobileconfig/MobileConfigMmapHandleHolder;
+    0006..0008  move-result-object  v1
+    0008..000c  if-nez  v1, +0x4
+    000c..000e  const/4  v1, #0x0
+    000e..0010  return-object  v1
+    0010..0014  iget-boolean  v0, v2, Lcom/facebook/mobileconfig/MobileConfigManagerHolderImpl;->mUseFileRepo:Z
+    0014..0018  if-eqz  v0, -0x3
+    0018..001e  invoke-virtual  {v1}, Lcom/facebook/mobileconfig/MobileConfigMmapHandleHolder;->getFilename()Ljava/lang/String;
+    001e..0020  move-result-object  v1
+    0020..0024  new-instance  v0, LX/L8k;
+    0024..002a  invoke-direct  {v0, v1}, LX/L8k;-><init>(Ljava/lang/String;)V
+    002a..002c  return-object  v0
+    # exception table: 0 try range(s)
+.end method

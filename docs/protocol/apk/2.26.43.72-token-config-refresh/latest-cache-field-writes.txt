@@ -1,0 +1,8 @@
+classes.dex  LX/09u;-><init>(VLLLLLLLLLLLLIZ)
+  write opcode 0x5b, dex byte offset: 0x48489a
+classes.dex  LX/09u;->A08(LI)
+  write opcode 0x5b, dex byte offset: 0x4851d0
+classes.dex  LX/09u;->A0D(V)
+  write opcode 0x5b, dex byte offset: 0x4859ac
+classes.dex  LX/09u;->onConfigChanged(VL)
+  write opcode 0x5b, dex byte offset: 0x486402

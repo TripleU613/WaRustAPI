@@ -1,0 +1,70 @@
+{
+  "HeaderOracle.java": {
+    "bytes": 2546,
+    "sha256": "5f6333c47559ba21ce835359d5723897828b9f38678075f841e361c2464b584e"
+  },
+  "README.md": {
+    "bytes": 5008,
+    "sha256": "4dcfddbc518b1641b99bebf6cd63e72c6ce84d4dc251bab19b2fa673ee100f77"
+  },
+  "alternate-handle-buffer.txt": {
+    "bytes": 451,
+    "sha256": "9000c2de4867416da19a6d1f1d042f470236d5f3d53f80c48d8b76c66de6a2a7"
+  },
+  "config-changed.txt": {
+    "bytes": 1930,
+    "sha256": "9047497c0ebcb6bb8bb6b99f4c5e4938fe8b258bb01267733823cf8c17c07d7b"
+  },
+  "cpp-initialization.txt": {
+    "bytes": 10363,
+    "sha256": "bbe4f8ce1f34f5a1886fb0d569955e115e1cde820fa7adbf7261c9f4e936eb76"
+  },
+  "fallback-file-path.txt": {
+    "bytes": 4368,
+    "sha256": "4d029693b26e74db253ccdcd0eb24d4781fab9b2d5f4b846637e1faf7b42f2e5"
+  },
+  "file-handle-buffer.txt": {
+    "bytes": 683,
+    "sha256": "3217d62ff38467e59fd5d8ac7b86b29c82f963052f372d739b3294b45384009a"
+  },
+  "header-magic.txt": {
+    "bytes": 522,
+    "sha256": "c0f158f02271d970a5f40df0eb793033ef3a41a2be6b546a144aec4c522f8263"
+  },
+  "header-validation.txt": {
+    "bytes": 4834,
+    "sha256": "31bb69fdb1146053e3d6c1df9d460641453c8c2c1fa0d2dcd2ba047996f24d93"
+  },
+  "header-vectors.json": {
+    "bytes": 696,
+    "sha256": "b33fd6e63c1e58a36011c0c29673d9f93295ce2b584f09b096a25a8749bf3cd8"
+  },
+  "latest-cache-field-writes.txt": {
+    "bytes": 335,
+    "sha256": "d7ef98bc6e0e6c8f00263f6b94f933ec23df947d808c9f76f02c032d25d0c990"
+  },
+  "latest-file-path.txt": {
+    "bytes": 2975,
+    "sha256": "b3a4776c748842e8bb4ef5335c1ce8baca5d0fe81dd272cb098d8a313c4e6201"
+  },
+  "manager-handle-overrides.txt": {
+    "bytes": 4369,
+    "sha256": "9051235de434b44b34e211b70b8c099d84748ca0645266fbc77bfa9eaaf7058f"
+  },
+  "repository-buffer-cache.txt": {
+    "bytes": 4892,
+    "sha256": "5adbe0fad15b998ee1d6d17494d360f4b66f3e9392330bd0c8f56c9a92410c9b"
+  },
+  "repository-file-read.txt": {
+    "bytes": 4349,
+    "sha256": "8011b61bd529cd692b7d8ed74408ff5251ce36a87b87851d3a43569f56b9e556"
+  },
+  "session-refresh-callers.txt": {
+    "bytes": 131,
+    "sha256": "e6074b741e33d2e8052fa9e39623d4e351a57b5aadb4e1807b4349445918fbec"
+  },
+  "session-refresh.txt": {
+    "bytes": 4207,
+    "sha256": "3f9639245ad7924900c9ad594f22a2e863e986be43d4eb36bac19e23ffe350ee"
+  }
+}

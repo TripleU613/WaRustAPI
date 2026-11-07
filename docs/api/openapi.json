@@ -1,4 +1,11 @@
 {
+  "x-token-config-refresh-evidence": {
+    "x-cli": "existing static APK exports and host-only synthetic Java header oracle; no product command or HTTP route",
+    "x-transport": "research only; effective configuration and token timing remain unported",
+    "x-live": false,
+    "description": "Pinned APK43.72 handle overrides, filename/reference cache, direct file reader and optional3c f1 framing are retained. Twelve analyst-transcribed synthetic ByteBuffer vectors preserve signed offset and cursor semantics, not full table validity. Latest-context callback differs from A0D session/per-config/override reset; callers include A0C and existing BPZ. Manager selection, hydration/translation and00E invalidation remain unresolved. No private account file, Rust policy, wire or live operation changed.",
+    "evidence": "docs/protocol/apk/2.26.43.72-token-config-refresh/README.md"
+  },
   "x-token-sdk-value-reader-evidence": {
     "x-cli": "existing xtask static DEX/override exports and bounded analyst case derivation; no product command or HTTP route",
     "x-transport": "research only; effective token configuration and timing remain unported",

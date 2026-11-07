@@ -88,3 +88,7 @@ translation maps, cache invalidation/readiness across updates, silent-push and
 override hydration, and connection/account selection into00E. Raw AB reply rows
 still do not establish effective SDK policy. No Rust timing/admission change,
 new network request, reset or live account operation; full parity remains open.
+
+The subsequent [handle/cache follow-up](../2.26.43.72-token-config-refresh/README.md)
+traces concrete handle producers, file framing and separate latest/session cache
+transitions. It does not establish complete effective-policy hydration.

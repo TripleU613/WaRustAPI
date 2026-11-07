@@ -1,0 +1,75 @@
+
+# class: Lcom/facebook/mobileconfig/MobileConfigFileRepository;
+# extends: Ljava/lang/Object;
+
+.method public readBuffer(LL)  # .registers 12
+    # full signature: Lcom/facebook/mobileconfig/MobileConfigFileRepository;->readBuffer(Ljava/lang/String;)Ljava/nio/ByteBuffer;
+    0000..0004  const-string  v3, "MobileConfigFileRepository"
+    0004..000a  invoke-static  {v11}, LX/8t1;->A1D(Ljava/lang/String;)Ljava/io/File;
+    000a..000c  move-result-object  v10
+    000c..000e  const/4  v9, #0x0
+    000e..0010  const/4  v8, #0x0
+    0010..0012  const/4  v4, #0x1
+    0012..0018  invoke-static  {v10}, LX/8t1;->A1E(Ljava/io/File;)Ljava/io/FileInputStream;
+    0018..001a  move-result-object  v7
+    001a..0020  invoke-virtual  {v7}, Ljava/io/FileInputStream;->getChannel()Ljava/nio/channels/FileChannel;
+    0020..0022  move-result-object  v6
+    0022..0028  invoke-virtual  {v6}, Ljava/nio/channels/FileChannel;->size()J
+    0028..002a  move-result-wide  v1
+    002a..002c  long-to-int  v0, v1
+    002c..0032  invoke-static  {v0}, Ljava/nio/ByteBuffer;->allocateDirect(I)Ljava/nio/ByteBuffer;
+    0032..0034  move-result-object  v5
+    0034..0038  sget-object  v0, Ljava/nio/ByteOrder;->LITTLE_ENDIAN:Ljava/nio/ByteOrder;
+    0038..003e  invoke-virtual  {v5, v0}, Ljava/nio/ByteBuffer;->order(Ljava/nio/ByteOrder;)Ljava/nio/ByteBuffer;
+    003e..0044  invoke-virtual  {v6, v5}, Ljava/nio/channels/FileChannel;->read(Ljava/nio/ByteBuffer;)I
+    0044..004a  invoke-virtual  {v5}, Ljava/nio/Buffer;->flip()Ljava/nio/Buffer;
+    004a..0050  invoke-virtual  {v10}, Ljava/io/File;->length()J
+    0050..0052  move-result-wide  v1
+    0052..0054  long-to-int  v0, v1
+    0054..005a  invoke-static  {v5, v0}, LX/MGo;->A00(Ljava/nio/ByteBuffer;I)Ljava/lang/String;
+    005a..005c  move-result-object  v2
+    005c..0062  invoke-virtual  {v2}, Ljava/lang/String;->isEmpty()Z
+    0062..0064  move-result  v0
+    0064..0068  if-nez  v0, +0x12
+    0068..006c  const-string  v1, "Cannot validate (from direct read) \"%s\", err:%s"
+    006c..0072  invoke-static  {v11, v2, v4}, LX/2L9;->A1b(Ljava/lang/Object;Ljava/lang/Object;I)[Ljava/lang/Object;
+    0072..0074  move-result-object  v0
+    0074..007a  invoke-static  {v3, v1, v0}, LX/070;->A0S(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+    007a..0080  invoke-virtual  {v6}, Ljava/nio/channels/spi/AbstractInterruptibleChannel;->close()V
+    0080..0086  invoke-virtual  {v7}, Ljava/io/InputStream;->close()V
+    0086..0088  return-object  v9
+    0088..008e  invoke-virtual  {v6}, Ljava/nio/channels/spi/AbstractInterruptibleChannel;->close()V
+    008e..0094  invoke-virtual  {v7}, Ljava/io/InputStream;->close()V
+    0094..0096  return-object  v5
+    0096..0098  move-exception  v1
+    0098..009c  if-eqz  v6, +0xa
+    009c..00a2  invoke-virtual  {v6}, Ljava/nio/channels/spi/AbstractInterruptibleChannel;->close()V
+    00a2..00a4  goto  +0x5
+    00a4..00a6  move-exception  v0
+    00a6..00ac  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    00ac..00ae  throw  v1
+    00ae..00b0  move-exception  v1
+    00b0..00b6  invoke-virtual  {v7}, Ljava/io/InputStream;->close()V
+    00b6..00b8  goto  +0x5
+    00b8..00ba  move-exception  v0
+    00ba..00c0  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    00c0..00c2  throw  v1
+    00c2..00c4  move-exception  v2
+    00c4..00c8  new-array  v1, v4, [Ljava/lang/Object;
+    00c8..00cc  aput-object  v11, v1, v8
+    00cc..00d0  const-string  v0, "Cannot open \"%s\""
+    00d0..00d6  invoke-static  {v3, v2, v0, v1}, LX/070;->A0a(Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;[Ljava/lang/Object;)V
+    00d6..00d8  return-object  v9
+    # exception table: 11 try range(s)
+    # catch Ljava/io/IOException; code_units 0009..000d -> 0061
+    # catch <all> code_units 000d..0011 -> 0057
+    # catch <all> code_units 0011..003d -> 004b
+    # catch <all> code_units 003d..0040 -> 0057
+    # catch Ljava/io/IOException; code_units 0040..0044 -> 0061
+    # catch <all> code_units 0044..0047 -> 0057
+    # catch Ljava/io/IOException; code_units 0047..004b -> 0061
+    # catch <all> code_units 004e..0052 -> 0052
+    # catch <all> code_units 0053..0057 -> 0057
+    # catch <all> code_units 0058..005c -> 005c
+    # catch Ljava/io/IOException; code_units 005d..0061 -> 0061
+.end method

@@ -1,0 +1,80 @@
+
+# class: LX/09u;
+# extends: Ljava/lang/Object;
+
+.method public A0D(V)  # .registers 7
+    # full signature: LX/09u;->A0D()V
+    0000..0004  iget  v1, v6, LX/09u;->A08:I
+    0004..0006  const/4  v0, #0x2
+    0006..000a  if-ne  v1, v0, +0xf
+    000a..000e  const-string  v1, ""
+    000e..0014  invoke-virtual  {v6}, LX/09u;->A0B()Ljava/lang/String;
+    0014..0016  move-result-object  v0
+    0016..001c  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    001c..001e  move-result  v0
+    001e..0020  const/4  v5, #0x1
+    0020..0024  if-nez  v0, +0x3
+    0024..0026  const/4  v5, #0x0
+    0026..002a  const-string  v2, "refreshSessionState isLoggedOut: %s"
+    002a..0030  invoke-static  {v5}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    0030..0032  move-result-object  v1
+    0032..0036  const-string  v0, "MobileConfigFactoryImpl"
+    0036..003c  invoke-static  {v1, v0, v2}, LX/070;->A0E(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)V
+    003c..003e  move-object  v4, v6
+    003e..0040  monitor-enter
+    0040..0044  iget-object  v0, v6, LX/09u;->A0A:LX/09l;
+    0044..004a  invoke-virtual  {v0}, LX/09k;->getOrCreateOverridesTable()LX/09x;
+    004a..004c  move-result-object  v0
+    004c..0050  iput-object  v0, v6, LX/09u;->A02:LX/09x;
+    0050..0054  iget  v1, v6, LX/09u;->A01:I
+    0054..0058  new-instance  v0, Ljava/util/concurrent/atomic/AtomicReferenceArray;
+    0058..005e  invoke-direct  {v0, v1}, Ljava/util/concurrent/atomic/AtomicReferenceArray;-><init>(I)V
+    005e..0062  iput-object  v0, v6, LX/09u;->A0Z:Ljava/util/concurrent/atomic/AtomicReferenceArray;
+    0062..0064  const/4  v3, #0x0
+    0064..0068  iput-object  v3, v6, LX/09u;->A0Y:LX/09t;
+    0068..006c  iget-object  v0, v6, LX/09u;->A0D:Ljava/util/Set;
+    006c..0072  invoke-interface  {v0}, Ljava/util/Set;->clear()V
+    0072..0076  iget-object  v1, v6, LX/09u;->A09:LX/09w;
+    0076..007a  iget-object  v0, v1, LX/09w;->A00:Ljava/util/Map;
+    007a..0080  invoke-interface  {v0}, Ljava/util/Map;->clear()V
+    0080..0084  iget-object  v1, v1, LX/09w;->A01:Ljava/util/concurrent/atomic/AtomicBoolean;
+    0084..0086  const/4  v0, #0x0
+    0086..008c  invoke-virtual  {v1, v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->set(Z)V
+    008c..0090  if-eqz  v5, +0x30
+    0090..0094  sget-object  v1, LX/2yz;->A00:LX/3Pw;
+    0094..0098  if-nez  v1, +0x9
+    0098..009c  new-instance  v1, LX/3Pw;
+    009c..00a2  invoke-direct  {v1}, LX/3Pw;-><init>()V
+    00a2..00a6  sput-object  v1, LX/2yz;->A00:LX/3Pw;
+    00a6..00a8  monitor-enter
+    00a8..00ac  iget-object  v0, v1, LX/3Pw;->A00:Ljava/util/Map;
+    00ac..00b2  invoke-interface  {v0}, Ljava/util/Map;->clear()V
+    00b2..00b4  monitor-exit
+    00b4..00b8  iget-object  v0, v6, LX/09u;->A0G:Ljava/util/concurrent/atomic/AtomicBoolean;
+    00b8..00ba  const/4  v2, #0x0
+    00ba..00c0  invoke-virtual  {v0, v2}, Ljava/util/concurrent/atomic/AtomicBoolean;->set(Z)V
+    00c0..00c4  iget-object  v0, v6, LX/09u;->A0H:Ljava/util/concurrent/atomic/AtomicBoolean;
+    00c4..00ca  invoke-virtual  {v0, v2}, Ljava/util/concurrent/atomic/AtomicBoolean;->set(Z)V
+    00ca..00ce  iget-object  v1, v6, LX/09u;->A0F:Ljava/util/concurrent/atomic/AtomicBoolean;
+    00ce..00d0  const/4  v0, #0x1
+    00d0..00d6  invoke-virtual  {v1, v0}, Ljava/util/concurrent/atomic/AtomicBoolean;->set(Z)V
+    00d6..00da  iget-object  v0, v6, LX/09u;->A0E:Ljava/util/concurrent/atomic/AtomicBoolean;
+    00da..00e0  invoke-virtual  {v0, v2}, Ljava/util/concurrent/atomic/AtomicBoolean;->set(Z)V
+    00e0..00e4  iput-object  v3, v6, LX/09u;->A0a:LX/00v;
+    00e4..00e6  goto  +0x4
+    00e6..00e8  move-exception  v0
+    00e8..00ea  monitor-exit
+    00ea..00ec  throw  v0
+    00ec..00ee  monitor-exit
+    00ee..00f0  return-void
+    00f0..00f2  move-exception  v0
+    00f2..00f4  monitor-exit
+    00f4..00f6  throw  v0
+    # exception table: 6 try range(s)
+    # catch <all> code_units 0020..0054 -> 0078
+    # catch <all> code_units 0054..0059 -> 0073
+    # catch <all> code_units 0059..0073 -> 0078
+    # catch <all> code_units 0074..0075 -> 0073
+    # catch <all> code_units 0075..0076 -> 0078
+    # catch <all> code_units 0079..007a -> 0078
+.end method

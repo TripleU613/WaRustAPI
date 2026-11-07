@@ -1,0 +1,42 @@
+
+# class: LX/09u;
+# extends: Ljava/lang/Object;
+
+.method public onConfigChanged(VL)  # .registers 5
+    # full signature: LX/09u;->onConfigChanged([Ljava/lang/String;)V
+    0000..0004  if-eqz  v4, +0x20
+    0004..0006  array-length  v0, v4
+    0006..000a  if-lez  v0, +0x1d
+    000a..000e  const-string  v2, "MobileConfigFactoryImpl"
+    000e..0012  const-string  v0, "Refreshing cached config context"
+    0012..0018  invoke-static  {v2, v0}, LX/070;->A0H(Ljava/lang/String;Ljava/lang/String;)V
+    0018..001a  monitor-enter
+    001a..0020  invoke-direct  {v3}, LX/09u;->A01()LX/0A1;
+    0020..0022  move-result-object  v0
+    0022..0024  goto  +0x8
+    0024..0026  move-exception  v1
+    0026..002a  const-string  v0, "Failed to pre-warm cached config context"
+    002a..0030  invoke-static  {v2, v1, v0}, LX/070;->A0V(Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;)V
+    0030..0032  const/4  v0, #0x0
+    0032..0036  iput-object  v0, v3, LX/09u;->A0Y:LX/09t;
+    0036..0038  monitor-exit
+    0038..003a  goto  +0x4
+    003a..003c  move-exception  v0
+    003c..003e  monitor-exit
+    003e..0040  throw  v0
+    0040..0044  iget-object  v0, v3, LX/09u;->A0W:Lcom/facebook/mobileconfig/MobileConfigCxxChangeListener;
+    0044..0048  if-eqz  v0, +0x5
+    0048..004e  invoke-interface  {v0, v4}, Lcom/facebook/mobileconfig/MobileConfigCxxChangeListener;->onConfigChanged([Ljava/lang/String;)V
+    004e..0050  return-void
+    # exception table: 3 try range(s)
+    # catch <all> code_units 000d..0012 -> 0012
+    # catch <all> code_units 0013..001d -> 001d
+    # catch <all> code_units 001e..001f -> 001d
+.end method
+
+.method public onConfigChanged(VLL)  # .registers 3
+    # full signature: LX/09u;->onConfigChanged([Ljava/lang/String;Ljava/lang/String;)V
+    0000..0006  invoke-virtual  {v0, v1}, LX/09u;->onConfigChanged([Ljava/lang/String;)V
+    0006..0008  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,3 +1,8 @@
+**Token configuration cache refresh and file framing are now separated.**
+Retained manager handles, latest/session cache transitions and header validation;
+twelve synthetic Java vectors preserve signed-byte and cursor behavior.
+[Evidence and remaining effective-policy boundary](docs/protocol/apk/2.26.43.72-token-config-refresh/README.md). No runtime policy change or live operation.
+
 **Token SDK value reads now reach concrete Java table handling.**
 Nv3/0A3 override the bodyless base; context construction/cache, little-endian
 long/metadata reads and source/fallback branches are retained with derived cases.

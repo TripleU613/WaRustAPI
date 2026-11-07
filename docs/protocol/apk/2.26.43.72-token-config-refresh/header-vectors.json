@@ -1,0 +1,14 @@
+[
+  {"case":"valid_frame","result":"ok","position":8},
+  {"case":"raw_no_magic","result":"raw","position":0},
+  {"case":"partial_magic","result":"raw","position":0},
+  {"case":"small_size","result":"small","position":0},
+  {"case":"short_limit","result":"limit","position":0},
+  {"case":"zero_version","result":"version","position":3},
+  {"case":"future_version","result":"version","position":3},
+  {"case":"zero_offset","result":"offset","position":4},
+  {"case":"signed_negative_offset","result":"offset","position":4},
+  {"case":"footer_offset","result":"offset","position":4},
+  {"case":"size_mismatch","result":"size","position":8},
+  {"case":"bad_footer","result":"footer","position":32}
+]
