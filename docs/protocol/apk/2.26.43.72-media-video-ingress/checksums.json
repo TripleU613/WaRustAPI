@@ -1,0 +1,50 @@
+{
+  "README.md": {
+    "bytes": 6138,
+    "sha256": "8a3fb3a8e1245cce21d9559610631abce948d99dc6ae58a58439e310f94437eb"
+  },
+  "alternate-video-converter.txt": {
+    "bytes": 1775,
+    "sha256": "a04109b6a70ce24ce72f6e4cb9994696c2cecbf5c9b153c78cba2312204b3de7"
+  },
+  "hash-string-helper.txt": {
+    "bytes": 475,
+    "sha256": "0df253203845da1d4d9b177d621a7742547d5d3aec806b1369666bfd86fa095b"
+  },
+  "presence_check.py": {
+    "bytes": 1321,
+    "sha256": "681b561456c73efa11eb923e4cd4ebb6232a67de1280b203c9a36e91b9d57cb5"
+  },
+  "projector-entry.txt": {
+    "bytes": 790,
+    "sha256": "bf14d96f178e60d6886310ceeb30c6942aef7d9f2ad151a986cf3b8362c43dec"
+  },
+  "selected-presence.json": {
+    "bytes": 230,
+    "sha256": "bb97bd49d6f168e4ab493f002e91a19b47a46920678632dc3521fbc54722a308"
+  },
+  "sidecar-projector.txt": {
+    "bytes": 1698,
+    "sha256": "31f88adbc76db353155c2099809ae5f0f77847767c39da00c6f4699cd6eb130a"
+  },
+  "sidecar-refs.txt": {
+    "bytes": 474,
+    "sha256": "a02037d74bbd18ebb05eb1c7cd878b885eb09b8cd63018a1258cf735184f1890"
+  },
+  "video-converter.txt": {
+    "bytes": 1690,
+    "sha256": "5ac23f735c0164cc25931e018052a1703d3e93cf96742b382289eaa9575dd8d5"
+  },
+  "video-descriptor.txt": {
+    "bytes": 7486,
+    "sha256": "49c47adb93477c064d043139db72c05c429737e5374059398e0edc054ad0ab37"
+  },
+  "video-fields.txt": {
+    "bytes": 781,
+    "sha256": "612df3f741a90533299e28cae5ae11255af95b569d5813bb451d0dd890ee11a4"
+  },
+  "view-once-refs.txt": {
+    "bytes": 390,
+    "sha256": "32702ed88a310dfb90898738c6dfb6a383bc3d390efc79502c716d33c31adc92"
+  }
+}

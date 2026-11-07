@@ -1,0 +1,41 @@
+
+# class: LX/FPf;
+# extends: Ljava/lang/Object;
+
+.method public CR7(LL)  # .registers 8
+    # full signature: LX/FPf;->CR7(LX/F2D;)LX/18U;
+    0000..0006  invoke-static  {v7}, LX/F2D;->A02(LX/F2D;)LX/DiW;
+    0006..0008  move-result-object  v1
+    0008..000e  invoke-virtual  {v1}, LX/DiW;->A0H()Z
+    000e..0010  move-result  v0
+    0010..0014  if-eqz  v0, +0x34
+    0014..0018  iget-object  v2, v1, LX/DiW;->videoMessage_:LX/DiM;
+    0018..001a  move-object  v5, v2
+    001a..001e  if-nez  v2, +0x4
+    001e..0022  sget-object  v2, LX/DiM;->DEFAULT_INSTANCE:LX/DiM;
+    0022..0026  iget-boolean  v0, v2, LX/DiM;->gifPlayback_:Z
+    0026..002a  if-nez  v0, +0x29
+    002a..002e  iget  v1, v2, LX/DiM;->bitField0_:I
+    002e..0032  const/high16  v0, #0x20000
+    0032..0034  and-int/2addr  v1, v0
+    0034..0038  if-eqz  v1, +0x22
+    0038..003c  iget-boolean  v0, v2, LX/DiM;->viewOnce_:Z
+    003c..0040  if-eqz  v0, +0x1e
+    0040..0044  if-nez  v5, +0xb
+    0044..0048  sget-object  v5, LX/DiM;->DEFAULT_INSTANCE:LX/DiM;
+    0048..004c  if-nez  v5, +0x7
+    004c..0052  invoke-static  {}, LX/2L8;->A1C()Ljava/lang/IllegalStateException;
+    0052..0054  move-result-object  v0
+    0054..0056  throw  v0
+    0056..005a  iget-object  v4, v7, LX/F2D;->A0A:LX/1dW;
+    005a..005e  iget-wide  v2, v7, LX/F2D;->A05:J
+    005e..0062  const/16  v0, #0x2b
+    0062..0066  new-instance  v1, LX/9JV;
+    0066..006c  invoke-direct  {v1, v4, v0, v2, v3}, LX/9JX;-><init>(LX/1dW;IJ)V
+    006c..0070  iget-object  v0, v6, LX/FPf;->A01:LX/F1B;
+    0070..0076  invoke-static  {v1, v0, v7, v5}, LX/F2D;->A03(LX/9JX;LX/F1B;LX/F2D;LX/DiM;)V
+    0076..0078  return-object  v1
+    0078..007a  const/4  v1, #0x0
+    007a..007c  return-object  v1
+    # exception table: 0 try range(s)
+.end method

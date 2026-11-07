@@ -1,0 +1,14 @@
+{
+  "mediaKey_tag6": {
+    "presence_index": 5,
+    "mask": "0x20"
+  },
+  "streamingSidecar_tag18": {
+    "presence_index": 15,
+    "mask": "0x8000"
+  },
+  "viewOnce_tag20": {
+    "presence_index": 17,
+    "mask": "0x20000"
+  }
+}

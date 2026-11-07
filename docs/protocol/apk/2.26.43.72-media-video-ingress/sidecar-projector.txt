@@ -1,0 +1,35 @@
+
+# class: LX/F1B;
+# extends: Ljava/lang/Object;
+
+.method public A02(VLLIZ)  # .registers 7
+    # full signature: LX/F1B;->A02(LX/9JX;LX/DiM;IZ)V
+    0000..0002  const/4  v0, #0x1
+    0002..0008  invoke-static  {v4, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  if-ne  v5, v0, +0x5
+    000c..0010  if-nez  v6, +0x3
+    0010..0012  return-void
+    0012..0016  iget-object  v2, v3, LX/1eQ;->A01:LX/8tC;
+    0016..001c  invoke-static  {v2}, LX/00L;->A05(Ljava/lang/Object;)V
+    001c..0022  invoke-static  {v2}, LX/00l;->A05(Ljava/lang/Object;)V
+    0022..0026  iget  v0, v4, LX/DiM;->bitField0_:I
+    0026..002a  and-int/lit8  v0, v0, #0x20
+    002a..002e  if-eqz  v0, +0x17
+    002e..0032  iget-object  v0, v4, LX/DiM;->streamingSidecar_:Lcom/google/protobuf/ByteString;
+    0032..0038  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    0038..003a  move-result-object  v1
+    003a..003e  if-eqz  v1, +0xf
+    003e..0040  array-length  v0, v1
+    0040..0044  if-eqz  v0, +0xc
+    0044..004a  invoke-virtual  {v3}, LX/1eQ;->A0v()LX/1fW;
+    004a..004c  move-result-object  v0
+    004c..0052  invoke-static  {v0}, LX/00L;->A05(Ljava/lang/Object;)V
+    0052..0058  invoke-virtual  {v0, v1}, LX/1fW;->Cdm([B)V
+    0058..005c  iget-object  v1, v4, LX/DiM;->annotations_:Lcom/google/protobuf/Internal$ProtobufList;
+    005c..0062  invoke-static  {v1}, LX/00l;->A05(Ljava/lang/Object;)V
+    0062..0066  iget-object  v0, v3, LX/18U;->A0j:LX/1dW;
+    0066..006a  iget-object  v0, v0, LX/1dW;->A00:LX/0DY;
+    006a..0070  invoke-static  {v0, v2, v1}, LX/A9C;->A02(LX/0DY;LX/8tC;Ljava/util/List;)V
+    0070..0072  return-void
+    # exception table: 0 try range(s)
+.end method

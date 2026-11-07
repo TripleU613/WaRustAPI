@@ -1,5 +1,11 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
+**Current video ingress checked.** Core hash/key/length/viewOnce tags match Rust;
+selected native converters separate ordinary/view-once ownership before common
+projection. Sidecar helper checks key presence, not sidecar presence; descriptor
+indexes are independently checked offline. Runtime behavior unchanged.
+[Evidence](docs/protocol/media-network-outcomes.md#pinned-current-video-ingress-2026-11-06).
+
 **Current image protobuf hash ingress confirmed.** Pinned DiL schema/EwA parser
 match Rust's core image tags and trace hashes through message setters into the
 download model. Sidecar validation is separate; absence is not a universal image

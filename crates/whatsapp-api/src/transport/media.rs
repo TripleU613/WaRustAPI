@@ -98,6 +98,8 @@ struct Sticker {
 }
 // APK 2.26.37.71 BZE.dynamicMethod 01a4..01b2 plus Ayq.A12:
 // videoMessage and ptvMessage share this schema; viewOnce is wire field 20.
+// Pinned43.72 DiM/F1B confirms the core video tags; current PTV dispatch is separate.
+// See docs/protocol/apk/2.26.43.72-media-video-ingress.
 #[derive(Message)]
 struct Video {
     #[prost(string, tag = "1")]

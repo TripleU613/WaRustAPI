@@ -1,4 +1,11 @@
 {
+  "x-media-video-current-ingress-boundary": {
+    "x-cli": "existing ordinary video retrieval; no new command or flag",
+    "x-transport": "research-only current video schema/converter/sidecar comparison; source provenance comments only",
+    "x-live": false,
+    "description": "DiM/F1B core video hash/key/length/viewOnce tags match Rust. Selected ordinary/view-once converters precede common projection. F1B.A02 tests media-key presence0x20 before nonempty sidecar adoption, not sidecar presence0x8000; bounded offline descriptor check confirms presence indexes. Caller modes, GIF/PTV/full dispatch, provider internals and operation-specific HTTP behavior remain unknown. No runtime fix/status relaxation, guessed sidecar requirement, retry or live traffic.",
+    "evidence": "docs/protocol/apk/2.26.43.72-media-video-ingress/README.md"
+  },
   "x-media-image-current-ingress-boundary": {
     "x-cli": "existing image media retrieval; no new command or flag",
     "x-transport": "research-only current image schema/parser confirmation; Rust provenance comments only",

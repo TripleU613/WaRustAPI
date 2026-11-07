@@ -1462,3 +1462,24 @@ retained-schema decoding was refused because that tool expects structural bundle
 format; direct pinned APK schema decoding succeeded. Full envelope routing,
 concrete providers, update-mode inputs and operation-specific HTTP parity remain
 open. Rust changes are provenance comments only; no account traffic occurred.
+
+## Pinned current video ingress (2026-11-06)
+
+**Confirmed selected static / research only:** DiM/F1B core video hash/key/length/
+viewOnce tags agree with Rust's existing descriptor. Selected native FOr/FPf
+converters separate ordinary and present-and-true view-once content before
+F2D.A03 invokes common field and sidecar projectors. Native GIF/PTV/full dispatch
+remains distinct and untraced; no universal media acceptance rule follows.
+
+F1B.A02 tests media-key presence (mask0x20), then nonempty streamingSidecar bytes;
+it does not test sidecar presence mask0x8000. Caller mode guards adoption too.
+The retained descriptor and a bounded offline presence-index checker independently
+confirm these masks and viewOnce0x20000. Image scan/index validation is a different
+path, not copied onto this video helper.
+
+[Complete converters/entry/helper, field censuses, descriptor, offline check and
+limits](apk/2.26.43.72-media-video-ingress/README.md) retain the findings. No new
+runtime bug was confirmed or fixed; source provenance comments only were added.
+Provider/setter internals, exact request/range behavior, current other-media
+projection and live interoperability remain open. No request, retry, status
+relaxation, new sidecar requirement or live account operation was introduced.
