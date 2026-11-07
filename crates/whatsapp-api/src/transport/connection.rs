@@ -2261,6 +2261,7 @@ mod tests {
     }
     #[tokio::test(start_paused = true)]
     async fn malformed_ack_stops_epoch_after_capture_and_keeps_reserved_action() {
+        use crate::model::jid::Server;
         use sha2::Digest;
         for class in ["message", "receipt", "notification", "call"] {
             for raw in [
@@ -2273,6 +2274,9 @@ mod tests {
                 Some("call-group-sender"),
                 Some("call-bare-pn"),
                 Some("call-bare-group"),
+                Some("call-binary-bare-pn"),
+                Some("call-binary-status-self"),
+                Some("call-binary-lid-self"),
             ] {
                 if class != "call" && raw.is_some_and(|raw| raw.starts_with("call-")) {
                     continue;
@@ -2317,6 +2321,26 @@ mod tests {
                 };
                 let before = snapshot(&store);
                 let bad = match raw {
+                    Some(
+                        "call-binary-bare-pn" | "call-binary-status-self" | "call-binary-lid-self",
+                    ) => Node::new("ack")
+                        .attr("class", "call")
+                        .attr("id", "fixture")
+                        .attr("type", "offer")
+                        .attr(
+                            "from",
+                            Jid::new(
+                                "",
+                                match raw {
+                                    Some("call-binary-status-self") => {
+                                        Server::Other("status_me".into())
+                                    }
+                                    Some("call-binary-lid-self") => Server::Other("lid_me".into()),
+                                    _ => Server::User,
+                                },
+                            )
+                            .unwrap(),
+                        ),
                     Some("call-bare-pn" | "call-bare-group") => Node::new("ack")
                         .attr("class", "call")
                         .attr("id", "fixture")
@@ -4789,6 +4813,14 @@ mod tests {
             base.clone().attr("type", peer()),
             base.clone().attr("from", "15555550100@unknown.example"),
             base.clone().attr("from", "lid"),
+            base.clone().attr(
+                "recipient",
+                Jid::new("", crate::model::jid::Server::Other("status_me".into())).unwrap(),
+            ),
+            base.clone().attr(
+                "participant",
+                Jid::new("", crate::model::jid::Server::Other("lid_me".into())).unwrap(),
+            ),
         ] {
             let wire = encode(&node).unwrap();
             let capture = format!(

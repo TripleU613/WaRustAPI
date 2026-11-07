@@ -224,3 +224,38 @@ primary/hosted JID_PAIR and binary AD0 use the projected user grammar too.
 21-digit, leading-zero and prohibited10-prefix cases remain unsettled. LID's
 bound and special/short-typed/decode-layer limitations remain separate.
 No receipt getter, global alias/store normalization or live operation changed.
+
+
+## Bare self-user receipt contexts (2026-11-06)
+
+**Confirmed local defect / fixed offline:** exact bare status_me/lid_me are
+nonnull UserJid singletons, not failed optional recipient parsing. Their
+[current classes](apk/2.26.43.72-self-user-ack-conversion/README.md) carry type11,
+empty user and corresponding server; getPrimaryDevice unconditionally throws.
+The current [receipt UserJid getter](apk/2.26.43.72-retry-ack-dispatch/receipt-context-factory.txt)
+can select them. Recovering an ordinary PN/LID fact by treating that unsupported
+self qualifier as absent is incorrect. A failing test recorded1 read fact from
+status_me recipient metadata on a matching ordinary original send.
+
+Pure validation and record now share an explicit known-self context refusal for
+from/participant/recipient before optional ordinary routing or store access.
+Expanded selected receipt contexts and selected aggregate jid actors use the
+same refusal before facts; unrelated extensions are not scanned or reclassified.
+Standalone ACK construction also refuses root self context, and notification
+ACK routes refuse self values through their shared guard. Type11's
+[noncompliant writer status](apk/2.26.43.72-group-missing-identification/ack-jid-compliance.txt)
+separately rules out simply echoing these objects as normal outbound JIDs.
+
+The new receipt regression covers text and decoded bare pairs for both names,
+root roles and selected aggregate actor, no ordinary fact/ACK, original outbox
+and journal unchanged, and reopen preservation. The receive regression checks
+binary self recipient/participant captures without ACK or session loss. All
+existing supported receipt routing, nullable malformed addresses, independent
+facts and original-target authority remain. Exact native aggregate error/ACK
+scheduling is not ported from this supported-context refusal.
+
+[Codec and ACK integration](message-ack.md#bare-self-user-pairs-and-carrier-independent-guards-2026-11-06)
+admits only bare empty-user pairs. Qualified aliases still require cache evidence,
+other symbolic domains and the generic server grammar stay unchanged. This is
+local supported-route refusal, not a new native NACK or epoch-close rule for
+receipts. No new request, read policy, identity alias, replay or account operation.

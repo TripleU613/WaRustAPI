@@ -4957,3 +4957,17 @@ classifications. New expected-chat/outbox tests cover constructor/cast controls,
 nullable text contrast, unchanged entry/journal, one outcome, duplicates, reopen
 and no resend. Other typed families and receipt/global decoder policy remain
 explicit work; no identity merge, extra request, retry or live account operation.
+
+
+### Bare self-pair decode, ACK conversion and receipt authority (2026-11-06)
+
+**Confirmed local fixes:** [bare self-user integration](message-ack.md#bare-self-user-pairs-and-carrier-independent-guards-2026-11-06)
+recognizes two native empty-user JID_PAIR names without widening general server
+or qualified-alias grammar. Conversion and bare call sender guards now share
+text/binary classification. Native-invalid binary call senders retain capture,
+consumed epoch and no replay. Self objects remain unwritable notification routes;
+known receipt self qualifiers/actors cannot become ordinary read/delivery facts
+or ACKs. A textual self recipient previously recorded1 read fact. Literal codec,
+actual wire, actor/state preservation and reopen tests retain these boundaries.
+Full native aggregate scheduling, other classes and decoder recovery remain
+open. No live account operation or automatic request family was introduced.

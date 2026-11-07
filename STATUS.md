@@ -1,3 +1,11 @@
+2026-11-06 — **Bound bare self-user pairs to native ACK and receipt semantics.**
+Two native symbolic pair forms now decode with the general server grammar intact.
+Self message ACKs remain uncertain; binary bare call sender restrictions match
+text. Unsupported self receipt metadata cannot create ordinary facts or ACKs,
+and unwritable self notification routes remain refused before work/write.
+[Codec, conversion, writer evidence and state/actor regressions](docs/protocol/message-ack.md#bare-self-user-pairs-and-carrier-independent-guards-2026-11-06).
+Qualified aliases/other classes remain open; no live account operation.
+
 2026-11-06 — **Separated binary ACK construction from optional casts and outcomes.**
 Known invalid binary participant/recipient fields can no longer settle through
 ordinary refusal or from fallback. Hosted binary participants now retain the

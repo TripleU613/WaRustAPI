@@ -1261,7 +1261,7 @@ pub(super) use super::messaging::is_auth_challenge_ack;
 fn message_ack_address(node: &Node, name: &str) -> Option<crate::model::jid::Jid> {
     if node
         .get_attr(name)
-        .and_then(|v| v.as_text())
+        .and_then(super::messaging::ack_bare_attribute_text)
         .and_then(super::messaging::ack_bare_server_call_allowed)
         .is_some()
     {
@@ -1389,8 +1389,7 @@ pub(crate) fn message_ack_chat(node: &Node) -> Option<crate::model::jid::Jid> {
     }
     if node
         .get_attr("recipient")
-        .and_then(|v| v.as_text())
-        .is_some_and(super::messaging::ack_self_user_text)
+        .is_some_and(super::messaging::ack_self_user_attribute)
     {
         // Native UserJid recipient takes precedence, but self-chat handling is
         // unsupported here. Do not fall back to an unrelated ordinary from.
@@ -3356,7 +3355,17 @@ mod tests {
     #[test]
     fn self_user_ack_conversion_or_selected_recipient_retains_uncertainty() {
         use super::super::messaging::{MessageAckOutcome, message_ack_outcome_for};
-        for text in ["status_me", "lid_me"] {
+        for (text, value) in ["status_me", "lid_me"].into_iter().flat_map(|text| {
+            [
+                (text, crate::binary::AttributeValue::from(text)),
+                (
+                    text,
+                    crate::binary::AttributeValue::from(
+                        Jid::new("", Server::Other(text.into())).unwrap(),
+                    ),
+                ),
+            ]
+        }) {
             for field in ["participant", "from", "recipient"] {
                 for error in [None, Some("500"), Some("459")] {
                     let dir = tempfile::tempdir().unwrap();
@@ -3379,10 +3388,16 @@ mod tests {
                     if field == "from" {
                         ack = ack.attr("recipient", "15555550100@s.whatsapp.net");
                     }
-                    ack = ack.attr(field, text);
+                    ack = ack.attr(field, value.clone());
                     if let Some(error) = error {
                         ack = ack.attr("error", error);
                     }
+                    let dict = TokenDictionary::comparison_2_26_37_71();
+                    let wire = Encoder::new(dict).encode(&ack).unwrap();
+                    let ack = crate::binary::Decoder::new(&wire[1..], dict, &Limits::default())
+                        .decode_node()
+                        .unwrap();
+                    let head = store.journal_head().unwrap();
                     assert!(
                         !acknowledge(&store, &ack).unwrap(),
                         "{field}/{text}/{error:?}"
@@ -3396,6 +3411,7 @@ mod tests {
                         }
                     );
                     assert_eq!(store.read(|tx| outbox().get(tx, local_id)).unwrap(), before);
+                    assert_eq!(store.journal_head().unwrap(), head);
                     drop(store);
                     let store = open(&path);
                     assert_eq!(store.read(|tx| outbox().get(tx, local_id)).unwrap(), before);

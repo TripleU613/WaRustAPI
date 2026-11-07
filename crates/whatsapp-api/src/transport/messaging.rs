@@ -970,6 +970,11 @@ pub(super) fn handled_retry_confirmation(incoming: &Node) -> Option<Node> {
 }
 
 fn receipt_ack_after_processing(incoming: &Node, handled_retry: bool) -> Option<Node> {
+    // Native type11 cannot be serialized by the protocol JID writer. Keep
+    // unsupported self-route receipts captured, not acknowledged as ordinary.
+    if super::receipts::has_self_user_address(incoming) {
+        return None;
+    }
     let from = super::receipts::ack_address(super::receipts::network_jid(incoming, "from")?);
     // APK43.72 distinguishes F10 null/unhandled (2Cx) from LIL parse errors
     // (1rg). Both use487, but their context fields differ. Local capability
@@ -1391,12 +1396,32 @@ pub(crate) fn message_ack_is_ignored_group_status(node: &Node, chat: &Jid) -> bo
 pub(crate) fn ack_self_user_text(text: &str) -> bool {
     matches!(text, "status_me" | "lid_me")
 }
+// Native123.A04 emits a bare server for empty-user JID_PAIR values. Keep
+// exact bare-name semantics shared by text and binary, without guessing cache
+// results for qualified self aliases or changing the general server grammar.
+pub(crate) fn ack_bare_attribute_text(value: &crate::binary::AttributeValue) -> Option<&str> {
+    if let Some(text) = value.as_text() {
+        return Some(text);
+    }
+    let jid = value.as_jid()?;
+    (jid.user.is_empty()
+        && jid.agent == 0
+        && jid.device == 0
+        && matches!(
+            jid.kind,
+            crate::model::jid::JidKind::Plain | crate::model::jid::JidKind::AgentDevice
+        ))
+    .then(|| jid.server.as_str())
+}
+
+pub(crate) fn ack_self_user_attribute(value: &crate::binary::AttributeValue) -> bool {
+    ack_bare_attribute_text(value).is_some_and(ack_self_user_text)
+}
+
 pub(crate) fn message_ack_device_conversion_fails(node: &Node) -> bool {
-    ["participant", "from"].into_iter().any(|name| {
-        node.get_attr(name)
-            .and_then(|v| v.as_text())
-            .is_some_and(ack_self_user_text)
-    })
+    ["participant", "from"]
+        .into_iter()
+        .any(|name| node.get_attr(name).is_some_and(ack_self_user_attribute))
 }
 
 // Selected0De.A00 bare factory:0mL/7Ks/J9P extend Jid directly.
@@ -1525,8 +1550,8 @@ pub fn validate_received_ack(node: &Node) -> crate::Result<()> {
         && (node.get_attr("id").and_then(|v| v.as_text()) == Some("")
             || node.get_attr("type").is_none()
             || node.get_attr("type").and_then(|v| v.as_text()) == Some("")
-            || node.get_attr("from").and_then(|v| v.as_text()).and_then(ack_bare_server_call_allowed) == Some(false)
-            || node.get_attr("from").and_then(|v| v.as_text()).is_some_and(ack_self_user_text)
+            || node.get_attr("from").and_then(ack_bare_attribute_text).and_then(ack_bare_server_call_allowed) == Some(false)
+            || node.get_attr("from").is_some_and(ack_self_user_attribute)
             // DCF/Dv7/J9O types7/8/9 are nonnull but excluded by0Dn.A0R.
             || matches!(node.get_attr("from").and_then(|v| v.as_text()).and_then(ack_user_text),
                 Some(AckUserText::User("0") | AckUserText::ServiceUser(_) | AckUserText::NonUser(_)))
@@ -3941,11 +3966,29 @@ mod captured_wait_tests {
 
     #[test]
     fn call_ack_bare_sender_factory_results_are_not_null_guesses() {
-        for sender in ["s.whatsapp.net", "g.us", "call", "status_me", "lid_me"] {
+        for (sender, value) in ["s.whatsapp.net", "g.us", "call", "status_me", "lid_me"]
+            .into_iter()
+            .flat_map(|sender| {
+                [
+                    (sender, crate::binary::AttributeValue::from(sender)),
+                    (
+                        sender,
+                        crate::binary::AttributeValue::from(
+                            Jid::new("", crate::model::jid::Server::Other(sender.into())).unwrap(),
+                        ),
+                    ),
+                ]
+            })
+        {
             let ack = Node::new("ack")
                 .attr("class", "call")
-                .attr("from", sender)
+                .attr("from", value)
                 .attr("id", "fixture");
+            let dict = TokenDictionary::comparison_2_26_37_71();
+            let wire = Encoder::new(dict).encode(&ack).unwrap();
+            let ack = Decoder::new(&wire[1..], dict, &Limits::default())
+                .decode_node()
+                .unwrap();
             assert!(!call_ack_sender_known_null(&ack));
             assert!(
                 validate_received_ack(&ack).is_err(),

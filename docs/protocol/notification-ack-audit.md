@@ -630,3 +630,16 @@ controls. Strict workspace/all-target/all-feature Clippy, formatting, OpenAPI
 library symbols, regenerated CLI reference, APK coverage and repository hygiene
 pass. Hygiene checked8020 local links and451 APK checksum bundles. Offline
 results do not establish native runtime parity or live server acceptance.
+
+
+## Self-user decode support retains unwritable-route refusal (2026-11-06)
+
+[Current self-pair codec and guard evidence](message-ack.md#bare-self-user-pairs-and-carrier-independent-guards-2026-11-06)
+now admits only exact bare empty-user status_me/lid_me JID_PAIR values. Native
+type11 isProtocolCompliant=false and the final pair writer refuses that object.
+Shared notifications::ack_route therefore refuses it as from/participant before
+any automatic ACK, group-dirty queue or restriction adoption through that guard.
+Five base kinds are regression-covered while valid server-only PN remains.
+Privacy/device owner restrictions and existing envelope checks remain separate.
+This does not expand writable self aliases or port other noncompliant classes;
+qualified-cache aliases, full handler state and live acceptance remain open.

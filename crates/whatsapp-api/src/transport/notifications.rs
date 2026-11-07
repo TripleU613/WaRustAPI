@@ -258,6 +258,14 @@ pub(crate) fn base_ack(node: &Node, kind: &str) -> Result<Option<Node>> {
 // at index zero. Keep that boundary in supported notification ACK builders.
 // Native nullable-address policy remains separate; see notification-ack-audit.md.
 pub(super) fn ack_route(node: &Node, name: &str) -> Option<crate::model::jid::Jid> {
+    // Native type11 isProtocolCompliant=false; the final JID writer refuses
+    // it. Recognizing its binary carrier must not enable an outbound ACK.
+    if node
+        .get_attr(name)
+        .is_some_and(super::messaging::ack_self_user_attribute)
+    {
+        return None;
+    }
     if node
         .get_attr(name)?
         .as_text()
@@ -465,6 +473,13 @@ mod tests {
                 .attr("id", "EMPTY-USER")
                 .attr("from", "s.whatsapp.net");
             assert!(base_ack(&incoming, kind).unwrap().is_some());
+            // Native type11 is not protocol-compliant; decode support must not
+            // grant it notification ACK routing authority.
+            for name in ["status_me", "lid_me"] {
+                let peer = crate::model::jid::Jid::new("", Server::Other(name.into())).unwrap();
+                assert!(base_ack(&incoming.clone().attr("from", peer.clone()), kind).is_err());
+                assert!(base_ack(&incoming.clone().attr("participant", peer), kind).is_err());
+            }
             for invalid in ["@s.whatsapp.net", "@lid", "@g.us"] {
                 assert!(base_ack(&incoming.clone().attr("from", invalid), kind).is_err());
                 assert!(base_ack(&incoming.clone().attr("participant", invalid), kind).is_err());

@@ -1,4 +1,11 @@
 {
+  "x-bare-self-user-pair-boundaries": {
+    "x-cli": false,
+    "x-transport": "binary JID_PAIR decoder; message/call ACK guards; receipt validation/facts; notification ACK route guards",
+    "x-live": false,
+    "description": "Decoder admits only exact empty-user status_me/lid_me JID_PAIR values; general Server::parse, qualified self aliases and other underscore domains remain unchanged. Shared bare-attribute classification keeps self message ACKs uncertain and binary bare call sender rules equivalent to text, including capture/epoch/no-reconnect and459 precedence. Known self receipt root/selected aggregate metadata is refused before normal facts/ACK; old textual self recipient produced1 ordinary read fact. Type11 is noncompliant and notification ACK routing refuses its unwritable values before work/write. Literal codec and actual-wire outcome tests, original entry/journal, actor capture/no later write, unsupported receipt read-on, reopen and no-resend controls retain boundaries. Generic encoder, other classes, native aggregate scheduling and global recovery remain unported. No identity/cache migration, new automatic request, NACK/receipt epoch rule, HTTP route or live account operation added.",
+    "evidence": "docs/protocol/message-ack.md#bare-self-user-pairs-and-carrier-independent-guards-2026-11-06"
+  },
   "x-binary-optional-ack-address-classes": {
     "x-cli": false,
     "x-transport": "messaging::binary_ack_user_class; outgoing message ACK admission; expected-chat outcome classification",

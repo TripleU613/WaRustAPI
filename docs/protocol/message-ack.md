@@ -1386,3 +1386,68 @@ The final matrix passes. All1547 workspace/all-feature tests, strict all-target/
 all-feature Clippy, formatting, OpenAPI library symbols, regenerated CLI
 reference, APK coverage and repository hygiene pass. Hygiene checked8077 local
 links and451 APK checksum bundles. These are offline results, not live acceptance.
+
+
+## Bare self-user pairs and carrier-independent guards (2026-11-06)
+
+**Confirmed codec gap / fixed offline:** the new wire regression initially failed
+before ACK processing: Server::parse rejected underscore names. Native
+[123.A01/A04](apk/2.26.43.72-group-missing-identification/current-jid-attribute-reader.txt)
+constructs a JID_PAIR with empty user as a bare name, and
+[0Dd/0EG/2LK](apk/2.26.43.72-self-user-ack-conversion/README.md) recognizes exact
+status_me/lid_me as type11 UserJid singletons. Decoder::read_jid_pair now admits
+only these two empty-user forms. General Server::parse, qualified self-domain
+aliases, other underscore names, FB/interop server decoding and stored identity
+normalization remain unchanged. Qualified aliases still depend on native cache;
+no cache-hit/class guess is added.
+
+The codec change and ACK guards are one bounded change. After the narrow decoder
+addition, the expanded actual-wire message-ACK test exposed that the old bare-text
+conversion predicate did not recognize binary self values. A shared bare-attribute
+reader now identifies exact zero-component pair representations alongside text.
+Self participant/from conversion cannot yield ordinary Accepted or Refused, and
+self recipient selection cannot fall back to an unrelated ordinary from. The
+existing459 challenge diversion/expected-chat uncertainty remains unchanged.
+
+**Call ACK correction:** an independent encode/decode test failed for an already
+supported binary bare s.whatsapp.net sender: valid call fields were accepted even
+though its text equivalent is rejected. The same bare-attribute projection now
+binds the known native classes0mL/7Ks/J9P and self singletons independent of carrier.
+[Call/bare class proof](apk/2.26.43.72-bare-server-ack-types/README.md) establishes
+13/16 excluded and20 admitted by0Dn.A0R; type11 is also excluded by the
+[current sender predicate](apk/2.26.43.72-call-ack-admission/README.md).
+Required-field/sender failure remains the existing capture-then-consume-epoch
+rule, with no automatic reconnect or replay. Challenge459 stays before that gate.
+The receive actor regression now includes binary bare PN and both self senders;
+it checks no later pong/write, preserved account/outbox/session/pin/checkpoints,
+reopen and no released reserved action.
+
+**Outbound and fact boundary:** decoder recognition does not establish a writable
+address. [Jid.isProtocolCompliant](apk/2.26.43.72-group-missing-identification/ack-jid-compliance.txt)
+returns false for type11, and [1r2 final serialization](apk/2.26.43.72-group-missing-identification/current-jid-writer.txt)
+rejects noncompliant pair objects. Notification ACK routing now refuses these
+exact self values before adoption/queue/write. Known self receipt contexts are
+refused before facts or ACK construction; a separate regression showed the old
+textual self recipient recorded1 ordinary read fact by treating it as absent.
+[Receipt role evidence and preservation tests](receipt-user-recipient.md#bare-self-user-receipt-contexts-2026-11-06)
+bound that correction. The generic carrier encoder remains unchanged; arbitrary
+caller-built Nodes are not certified as native-sendable by this codec addition.
+
+**Checks and limits:** independent literal JID_PAIR fixtures, semantic codec
+round-trip, qualified/unknown-name negatives, actual-wire self message outcomes,
+bare call classes, unsupported receipt capture/read-on, notification route guards
+and store/journal/reopen/no-resend checks are retained. The first codec failure
+is distinguished from the subsequently exposed guard failure; the prior decoder
+had not accepted those self frames. No new REA IDs or runtime captures are claimed.
+Other noncompliant types, qualified-cache aliases, typed families, global decoder
+recovery and complete native receipt application remain open. No live account
+operation, capture replay, identity migration or new automatic request occurred.
+
+Verification: the independent literal decoder test failed on the old underscore
+server rejection. After narrow decode support, the self-message guard test failed
+before its binary guard was added. Binary bare PN call classification separately
+failed true/false; the self-receipt test separately recorded1 ordinary read fact.
+All final regressions pass. All1549 workspace/all-feature tests, strict all-target/
+all-feature Clippy, formatting, OpenAPI library symbols, regenerated CLI reference,
+APK coverage and repository hygiene pass. Hygiene checked8092 local links and451
+APK checksum bundles. No fresh live behavior or server acceptance is claimed.

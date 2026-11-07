@@ -233,7 +233,24 @@ impl<'a> Decoder<'a> {
     fn read_jid_pair(&mut self) -> Result<Jid, CodecError> {
         let offset = self.pos;
         let user = self.read_string_value()?.unwrap_or_default();
-        let server = self.read_server()?;
+        let server_offset = self.pos;
+        let raw_server = self
+            .read_string_value()?
+            .ok_or_else(|| CodecError::InvalidJid {
+                offset: server_offset,
+                reason: "missing server".into(),
+            })?;
+        // APK43.72 123.A04 joins an empty user to the bare name;
+        // 0Dd.A00 returns0EG/2LK for these exact symbolic UserJids.
+        // Keep qualified/cache-dependent aliases and general server grammar separate.
+        let server = if user.is_empty() && matches!(raw_server.as_str(), "status_me" | "lid_me") {
+            Server::Other(raw_server)
+        } else {
+            Server::parse(&raw_server).map_err(|e| CodecError::InvalidJid {
+                offset: server_offset,
+                reason: e.to_string(),
+            })?
+        };
         Jid::new(user, server).map_err(|e| CodecError::InvalidJid {
             offset,
             reason: e.to_string(),
@@ -517,5 +534,69 @@ fn unpack_digit(tag: u8, v: u8, offset: usize) -> Result<char, CodecError> {
             _ => Err(CodecError::InvalidPackedDigit { value: v, offset }),
         },
         _ => Err(CodecError::UnknownTag { tag, offset }),
+    }
+}
+
+#[cfg(test)]
+mod self_user_pair_tests {
+    use super::*;
+    #[test]
+    fn bare_self_user_pairs_decode_without_opening_other_symbolic_domains() {
+        // APK43.72 123.A04 empty-user join ->0Dd.A00 ->0EG/2LK.
+        for (name, wire) in [
+            (
+                "status_me",
+                &b"\xf8\x03\xfc\x01n\xfc\x04from\xfa\x00\xfc\x09status_me"[..],
+            ),
+            (
+                "lid_me",
+                &b"\xf8\x03\xfc\x01n\xfc\x04from\xfa\x00\xfc\x06lid_me"[..],
+            ),
+        ] {
+            let dict = TokenDictionary::comparison_2_26_37_71();
+            let node = Decoder::new(wire, dict, &Limits::default())
+                .decode_node()
+                .unwrap();
+            let expected = Jid::new("", Server::Other(name.into())).unwrap();
+            assert_eq!(
+                node.get_attr("from").and_then(|value| value.as_jid()),
+                Some(&expected)
+            );
+            let encoded = crate::binary::Encoder::new(dict).encode(&node).unwrap();
+            assert_eq!(
+                Decoder::new(&encoded[1..], dict, &Limits::default())
+                    .decode_node()
+                    .unwrap(),
+                node
+            );
+            // Qualified self aliases depend on native cache; do not guess them.
+            let qualified = Node::new("n").attr(
+                "from",
+                Jid::new("12345", Server::Other(name.into())).unwrap(),
+            );
+            let wire = crate::binary::Encoder::new(dict)
+                .encode(&qualified)
+                .unwrap();
+            assert!(
+                Decoder::new(&wire[1..], dict, &Limits::default())
+                    .decode_node()
+                    .is_err()
+            );
+            assert!(
+                Server::parse(name).is_err(),
+                "general server grammar stays unchanged"
+            );
+        }
+        let node = Node::new("n").attr(
+            "from",
+            Jid::new("", Server::Other("unknown_self".into())).unwrap(),
+        );
+        let dict = TokenDictionary::comparison_2_26_37_71();
+        let wire = crate::binary::Encoder::new(dict).encode(&node).unwrap();
+        assert!(
+            Decoder::new(&wire[1..], dict, &Limits::default())
+                .decode_node()
+                .is_err()
+        );
     }
 }

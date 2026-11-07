@@ -1304,10 +1304,35 @@ pub(super) fn server_timestamp(node: &Node) -> Option<crate::model::time::Timest
         .map(|seconds| crate::model::time::Timestamp(seconds.wrapping_mul(1000)))
 }
 
+// Native self UserJids are nonnull qualifiers, not failed optional parsing.
+// Their primary-device conversion throws; ordinary receipt handling is unsupported.
+pub(super) fn has_self_user_address(node: &Node) -> bool {
+    ["from", "participant", "recipient"]
+        .into_iter()
+        .any(|name| {
+            node.get_attr(name)
+                .is_some_and(super::messaging::ack_self_user_attribute)
+        })
+}
+
+fn require_supported_self_addresses(node: &Node) -> Result<()> {
+    if has_self_user_address(node) {
+        return Err(Error::invalid(
+            "receipt",
+            "unsupported self-user receipt address",
+        ));
+    }
+    Ok(())
+}
+
 /// Persist supported direct receipt facts, matching sends by peer AND wire ID.
 /// Group participant facts use group_receipts; unsupported/self routes stay raw.
 pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
-    if node.description != "receipt" || recipient(node).is_some() {
+    if node.description != "receipt" {
+        return Ok(0);
+    }
+    require_supported_self_addresses(node)?;
+    if recipient(node).is_some() {
         return Ok(0);
     }
     let receipts = expand(node, || {
@@ -1328,12 +1353,17 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
 /// both run the same parsers (`expand`, `direct_target`,
 /// `group_receipts::target`). The receive loop catches only this stage.
 pub fn validate(node: &Node) -> Result<()> {
-    if node.description != "receipt" || recipient(node).is_some() {
+    if node.description != "receipt" {
+        return Ok(());
+    }
+    require_supported_self_addresses(node)?;
+    if recipient(node).is_some() {
         return Ok(());
     }
     // The default time only fills an absent participant `t`; it never decides
     // a refusal, so validation needs no clock.
     for receipt in expand(node, || Ok(0))? {
+        require_supported_self_addresses(&receipt)?;
         if routes_to_group(&receipt) {
             super::group_receipts::target(&receipt)?;
         } else {
@@ -1389,6 +1419,12 @@ fn offline_aggregate(node: &Node, participants: &Node) -> Result<Vec<Node>> {
     }
     let mut receipts = Vec::with_capacity(items.len());
     for item in items {
+        if item
+            .get_attr("jid")
+            .is_some_and(super::messaging::ack_self_user_attribute)
+        {
+            return Err(invalid("unsupported self-user aggregate actor"));
+        }
         let actor =
             jid(item, "jid").ok_or_else(|| invalid("missing or invalid participant jid"))?;
         let kind = match item.get_attr("type") {
@@ -1451,6 +1487,12 @@ fn key_aggregate(node: &Node, participants: &Node, default_seconds: i64) -> Resu
     }
     let mut receipts = Vec::with_capacity(items.len());
     for item in items {
+        if item
+            .get_attr("jid")
+            .is_some_and(super::messaging::ack_self_user_attribute)
+        {
+            return Err(invalid("unsupported self-user aggregate actor"));
+        }
         // Cmk.A03 -> 0hs.A0A: absent/unparseable JIDs skip even malformed t.
         let Some(actor) = network_jid(item, "jid") else {
             continue;
@@ -1548,6 +1590,7 @@ fn direct_target(node: &Node) -> Result<Option<DirectTarget<'_>>> {
 }
 
 fn record_in(tx: &mut crate::store::WriteTx<'_>, node: &Node) -> Result<usize> {
+    require_supported_self_addresses(node)?;
     if node.description == "receipt" && routes_to_group(node) {
         return super::group_receipts::record_in(tx, node);
     }
@@ -5324,6 +5367,70 @@ mod tests {
                             after
                         );
                     }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn self_user_receipt_metadata_never_becomes_a_fact_or_ack() {
+        for name in ["status_me", "lid_me"] {
+            for value in [
+                crate::binary::AttributeValue::from(name),
+                crate::binary::AttributeValue::from(
+                    Jid::new("", Server::Other(name.into())).unwrap(),
+                ),
+            ] {
+                for field in ["recipient", "participant", "from", "aggregate-jid"] {
+                    let dir = tempfile::tempdir().unwrap();
+                    let path = dir.path().join("self-receipt.redb");
+                    let store = open(&path, true);
+                    let local = saved_receipt_send(
+                        &store,
+                        "self",
+                        "15555550100@s.whatsapp.net",
+                        "self-fixture",
+                    );
+                    let outbox =
+                        crate::outbox::Outbox::new("self", crate::profile::Limits::default());
+                    let before = store.read(|tx| outbox.get(tx, local)).unwrap();
+                    let head = store.journal_head().unwrap();
+                    let mut node = Node::new("receipt")
+                        .attr("from", "15555550100@s.whatsapp.net")
+                        .attr("id", "self-fixture")
+                        .attr("type", "read")
+                        .attr("t", "20");
+                    if field == "aggregate-jid" {
+                        node = node.children(vec![
+                            Node::new("participants")
+                                .attr("key", "self-fixture")
+                                .children(vec![
+                                    Node::new("participant")
+                                        .attr("jid", value.clone())
+                                        .attr("t", "20"),
+                                ]),
+                        ]);
+                    } else {
+                        node = node.attr(field, value.clone());
+                    }
+                    let wire = crate::binary::Encoder::new(
+                        crate::binary::TokenDictionary::comparison_2_26_37_71(),
+                    )
+                    .encode(&node)
+                    .unwrap();
+                    let node = decode(&wire).unwrap();
+                    let result = record(&store, &node);
+                    assert!(result.is_err(), "{name}/{field}: {result:?}");
+                    assert!(validate(&node).is_err(), "{name}/{field}");
+                    if field != "aggregate-jid" {
+                        assert!(super::super::messaging::received_confirmation(&node).is_none());
+                    }
+                    assert_eq!(store.read(|tx| outbox.get(tx, local)).unwrap(), before);
+                    assert_eq!(store.journal_head().unwrap(), head);
+                    drop(store);
+                    let store = open(&path, false);
+                    assert_eq!(store.read(|tx| outbox.get(tx, local)).unwrap(), before);
+                    assert_eq!(store.journal_head().unwrap(), head);
                 }
             }
         }
