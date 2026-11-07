@@ -9783,3 +9783,10 @@ Local public upload eligibility omission corrected at shared entry, including ca
   valid ASCII/Unicode bytes and refuses invalid bytes with fixed diagnostics,
   without mutation or fallback. Read/reopen regression added; no token syntax
   or live acceptance claim. See [exact token text](ban-appeal.md#stored-appeal-token-text-is-exact-or-refused).
+
+- Confirmed local HTTP boundary inventory at `f7552102`: three explicit reqwest
+  builders serve registration, upload, ordinary/view-once download and appeal.
+  All selected builders explicitly disable redirects/retries/proxies/decompression;
+  validated caller boundaries retained. No missing setting or runtime fix inferred.
+  Native HTTP/TLS/deadline/header parity remains separate. See
+  [HTTP client map](http-client-boundaries.md).

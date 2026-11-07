@@ -20081,5 +20081,13 @@
     ],
     "description": "Stored appeal token reads use strict UTF-8: valid ASCII/Unicode text remains exact, invalid bytes return fixed redacted InvalidInput(ban_appeal) without mutation or capture fallback. Recovery shares conversion for already decoded text tokens. No ASCII-only syntax rule, credential rotation/deletion, route, Authorization-header change, submission or live validation added.",
     "evidence": "docs/protocol/ban-appeal.md#stored-appeal-token-text-is-exact-or-refused"
+  },
+  "x-http-client-boundary-audit": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Source-only inventory maps three explicit reqwest builders to registration, media upload, ordinary/view-once GET and appeal flows. Selected builders disable redirects/retries/proxy discovery/decompression; caller admission and deadlines are documented. No runtime capability or route added, no native HTTP/TLS/header parity or exhaustive dependency-path guarantee, no live validation.",
+    "evidence": "docs/protocol/http-client-boundaries.md"
   }
 }

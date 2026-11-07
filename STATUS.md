@@ -10757,3 +10757,9 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   Valid ASCII/Unicode text stays exact; malformed bytes refuse locally and remain
   untouched, with no capture fallback. Public async/reopen regression added.
   No live request. See [token text](docs/protocol/ban-appeal.md#stored-appeal-token-text-is-exact-or-refused).
+
+- Retained a bounded source audit of all three explicit reqwest builders and
+  their five request flows. Selected redirect/retry/proxy/decompression flags
+  and validation call sites are mapped; no missing setting found or runtime
+  change made. Native HTTP/TLS/header parity remains open. See
+  [HTTP boundaries](docs/protocol/http-client-boundaries.md).
