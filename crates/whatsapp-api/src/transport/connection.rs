@@ -403,7 +403,9 @@ impl Outbound {
                         query.check_write_authority(&store, &self.node)
                     })
                 }),
-            Some(WriteGuard::DirectQuery(store, pending)) => pending.check_write_authority(&store),
+            Some(WriteGuard::DirectQuery(store, pending)) => {
+                pending.check_write_authority(&store, &self.node)
+            }
             Some(WriteGuard::DirectAccount(store, expected)) => store.read(|tx| {
                 let current = AccountRecord::load(tx)?;
                 if super::account_authority::fingerprint(tx.generation(), current.as_ref())?
@@ -6734,9 +6736,14 @@ mod tests {
             profile::Limits,
         };
         for mode in ["query", "message"] {
-            for changed in [false, true] {
+            for change in ["same", "account", "node_id", "node_to", "node_body"] {
+                if mode == "message" && change.starts_with("node_") {
+                    continue;
+                }
+                let changed = change != "same";
                 let dir = tempfile::tempdir().unwrap();
-                let store = open(&dir.path().join("direct-owner.redb"));
+                let path = dir.path().join("direct-owner.redb");
+                let store = open(&path);
                 let account = AccountRecord {
                     generation: store.generation(),
                     signal_registration_id: Some(31),
@@ -6784,8 +6791,16 @@ mod tests {
                         .await
                     }
                 });
-                let queued = writes.recv().await.unwrap();
-                if changed {
+                let mut queued = writes.recv().await.unwrap();
+                match change {
+                    "node_id" => queued.node = queued.node.attr("id", "changed-fixture"),
+                    "node_to" => queued.node = queued.node.attr("to", "changed.invalid"),
+                    "node_body" => {
+                        queued.node = queued.node.children(vec![Node::new("changed-fixture")])
+                    }
+                    _ => {}
+                }
+                if change == "account" {
                     let mut replacement = account;
                     replacement.signal_registration_id = Some(32);
                     store.write(|tx| replacement.save(tx)).unwrap();
@@ -6793,9 +6808,10 @@ mod tests {
                 let before = store
                     .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
                     .unwrap();
+                let head = store.journal_head().unwrap();
                 let prepared = queued.prepare();
                 if changed {
-                    assert!(prepared.is_none(), "{mode}");
+                    assert!(prepared.is_none(), "{mode}/{change}");
                 } else {
                     let (_, written) = prepared.unwrap();
                     written.send(Ok(())).unwrap();
@@ -6813,6 +6829,16 @@ mod tests {
                         .unwrap()
                         .is_none()
                 );
+                assert_eq!(store.journal_head().unwrap(), head);
+                drop(store);
+                let reopened = identity_store(&path);
+                assert_eq!(
+                    reopened
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                        .unwrap(),
+                    before
+                );
+                assert_eq!(reopened.journal_head().unwrap(), head);
             }
         }
     }

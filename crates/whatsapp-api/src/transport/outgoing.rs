@@ -185,6 +185,8 @@ pub fn identity_suspension(
 /// A pending query is connection-local; its reservation survives cancellation.
 #[derive(Clone)]
 pub struct Pending {
+    // Absent for offline policy-resume callbacks, which cannot authorize a write.
+    request_sha256: Option<[u8; 32]>,
     account_authority: [u8; 32],
     local_id: LocalMessageId,
     query_id: String,
@@ -255,6 +257,7 @@ pub async fn resume_identity_selected(
         crate::binary::Decoder::new(&raw, TokenDictionary::comparison_2_26_37_71(), &limits)
             .decode_node()?;
     let pending = Pending {
+        request_sha256: None,
         account_authority: match row.get("account_authority").filter(|v| !v.is_null()) {
             Some(value) => serde_json::from_value(value.clone())
                 .map_err(|_| Error::invalid("outbox", "invalid suspended account authority"))?,
@@ -415,6 +418,8 @@ pub fn begin_selected(
                 )?;
                 return Ok(None);
             }
+            let node = super::messaging::key_request(peer, &query_id);
+            let request_sha256 = query_request_sha256(&node)?;
             let saved = AccountRecord::load_in_write(tx)?;
             let authority = super::account_authority::fingerprint(tx.generation(), saved.as_ref())?;
             tx.put_json(
@@ -423,17 +428,18 @@ pub fn begin_selected(
                 1,
                 &serde_json::json!({"status":"outcome_unknown","query_id":query_id,"account_authority":authority}),
             )?;
-            Ok(Some(authority))
+            Ok(Some((authority, node, request_sha256)))
         })?;
-        if let Some(account_authority) = won {
+        if let Some((account_authority, node, request_sha256)) = won {
             return Ok(Some((
                 Pending {
+                    request_sha256: Some(request_sha256),
                     account_authority,
                     local_id: entry.local_id,
                     query_id: query_id.clone(),
                     deadline: tokio::time::Instant::now() + std::time::Duration::from_secs(30),
                 },
-                super::messaging::key_request(peer, &query_id),
+                node,
             )));
         }
     }
@@ -787,6 +793,12 @@ fn chat_setting_payload_for(
     })
 }
 
+fn query_request_sha256(node: &Node) -> Result<[u8; 32]> {
+    use sha2::{Digest, Sha256};
+    let wire = Zeroizing::new(Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(node)?);
+    Ok(Sha256::digest(&*wire).into())
+}
+
 impl Pending {
     fn check_account(
         &self,
@@ -802,7 +814,15 @@ impl Pending {
         let saved = AccountRecord::load_in_write(tx)?;
         self.check_account(tx.generation(), saved.as_ref())
     }
-    pub(crate) fn check_write_authority(&self, store: &ProtocolStore) -> Result<()> {
+    pub(crate) fn check_write_authority(&self, store: &ProtocolStore, node: &Node) -> Result<()> {
+        // Policy-resume Pending values process a saved reply only. Never infer
+        // new writer authority from a historical query reservation.
+        if self.request_sha256 != Some(query_request_sha256(node)?) {
+            return Err(Error::invalid(
+                "outbox",
+                "queued direct query differs from its reservation",
+            ));
+        }
         store.read(|tx| {
             let saved = AccountRecord::load(tx)?;
             self.check_account(tx.generation(), saved.as_ref())?;

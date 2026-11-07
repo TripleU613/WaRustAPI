@@ -1639,3 +1639,14 @@ The initially open device-query payload boundary was subsequently reproduced and
 The hash covers IQ fields, usync SID/context/options and full user list using the same token dictionary as the connection encoder. Mismatch returns a fixed local error; original deadlines, marker revisions and uncertainty remain intact. No new stanza field, durable schema migration, retry or historical proof backfill was added. This protects the original construction; it does not establish that all construction fields match the APK.
 
 The expanded actor regression covers unchanged admission, changed ID/destination/session/body, changed/missing durable users/revisions/status, exact checkpoint/journal preservation and reopen. Existing deadline and group-device ownership tests remain. No live operation or server acceptance was observed. Other direct/group message writer payload families remain separate audit boundaries.
+
+
+## Direct key-query payload binding at writer dequeue (2026-11-07)
+
+**Confirmed local invariant gap, fixed offline.** `outgoing::Pending` checked account authority, reserved query ID/status and deadline, but the actor did not compare its actual queued key-request IQ with that reservation. The channel regression changed the queued ID while retaining the original pending query; writer preparation admitted it before the fix. This is synthetic local evidence, not an observed production mutation or live misrouted key query.
+
+New query construction and its SHA-256 encoded-request digest now occur within the existing reservation transaction. The connection-local pending value retains that digest. The actor passes the actual queued node into writer admission; its encoding must match before the existing account/durable-ID/status/deadline checks. This binds root, attributes, destination and complete request body to the original construction. It adds no stanza field, durable schema, retry or historical proof backfill. An encoding failure during preparation rolls back reservation rather than creating an unsendable pending query.
+
+An identity-policy resume processes an already saved response offline. Its reconstructed pending value deliberately has no request digest and cannot pass writer admission. Existing saved-response processing/identity-policy checks remain; this is not permission to resend a suspended query.
+
+The expanded channel regression covers changed ID/destination/body, unchanged admission and account replacement. It verifies checkpoints/journal unchanged through refusal and reopen, and that the original intent does not acquire a second query reservation. The same test retains ordinary direct-message account controls, but makes no claim of complete direct-message payload binding. Other message/retry writer families remain separate audit boundaries. No live operations, new APK behavior or server acceptance were observed.
