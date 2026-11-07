@@ -1,0 +1,72 @@
+{
+  "member_sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+  "selected_calls": {
+    "0xbfe78": "0x5b7d8",
+    "0xbff28": "0xbfbc0",
+    "0xbff74": "0xbfbc0",
+    "0xc007c": "0x5f9e8",
+    "0xc00cc": "0xbd714",
+    "0xc00e4": "0x6f44c",
+    "0xc0120": "0x75fc8"
+  },
+  "entry": "0xbfe18",
+  "guard": "loader byte+0x70 == 1 and byte+0xe1 low bit clear",
+  "branch": "child byte+0x98 == 1 selects paired existing/new merge; otherwise iterator-defined group append",
+  "merge_comparison": "signed record word+0x30; existing chosen on equality, with new still pending",
+  "authority": "static finalizer binding and analyst-derived scalar merge examples, not native execution or actual map ordering",
+  "synthetic_merge_examples": {
+    "interleaved": [
+      [
+        "existing",
+        1
+      ],
+      [
+        "new",
+        2
+      ],
+      [
+        "existing",
+        3
+      ],
+      [
+        "new",
+        4
+      ]
+    ],
+    "equal_words_retained": [
+      [
+        "existing",
+        2
+      ],
+      [
+        "new",
+        2
+      ]
+    ],
+    "signed_order": [
+      [
+        "existing",
+        -1
+      ],
+      [
+        "new",
+        0
+      ],
+      [
+        "existing",
+        2
+      ]
+    ],
+    "empty_existing": [
+      [
+        "new",
+        1
+      ],
+      [
+        "new",
+        2
+      ]
+    ]
+  },
+  "remaining": "map comparator/input ordering invariants, producer flags, caller admission, persistence and account ownership unresolved"
+}

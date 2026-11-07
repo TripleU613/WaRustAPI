@@ -109,3 +109,8 @@ wider source path. Register-relative annotations are not runtime memory.
 complete grammar, existing-record merges, map-to-vector finalization, alternate
 binary route, counter lifecycle, loader status/rollback and response persistence.
 No Rust runtime or saved account behavior changed.
+
+Follow-up: [record-vector finalization](../2.26.43.72-mobileconfig-record-finalization/README.md)
+now traces guarded map traversal and existing/new merge paths to shared accessor
+destinations. Final vector order is conditional on those stages; actual comparator
+and runtime caller/flag/input invariants remain unresolved.

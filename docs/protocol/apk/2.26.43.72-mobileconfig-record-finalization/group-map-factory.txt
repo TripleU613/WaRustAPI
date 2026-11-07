@@ -1,0 +1,45 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   bb0e0:      	paciasp
+   bb0e4:      	stp	x29, x30, [sp, #-0x20]!
+   bb0e8:      	str	x19, [sp, #0x10]
+   bb0ec:      	mov	x29, sp
+   bb0f0:      	mov	x19, x0
+   bb0f4:      	mov	w0, #0x40               // =64
+   bb0f8:      	bl	0xccfa0 <__wrap__Znwm@plt>
+   bb0fc:      	movi	v0.2d, #0000000000000000
+   bb100:      	mov	x8, x0
+   bb104:      	adrp	x9, 0xd6000
+   bb108:      	add	x9, x9, #0x7d0
+   bb10c:      	bl	0xcab90 <JNI_OnLoad+0x5b9f0>
+   bb110:      	ldp	x29, x30, [sp], #0x20
+   bb114:      	autiasp
+   bb118:      	b	0x7667c <JNI_OnLoad+0x74dc>
+   bb11c:      	bti	c
+   bb120:      	adrp	x8, 0xd6000
+   bb124:      	add	x8, x8, #0x7d0
+   bb128:      	str	x8, [x0]
+   bb12c:      	b	0xccaf0 <_ZNSt6__ndk119__shared_weak_countD2Ev@plt>
+   bb130:      	paciasp
+   bb134:      	stp	x29, x30, [sp, #-0x20]!
+   bb138:      	str	x19, [sp, #0x10]
+   bb13c:      	mov	x29, sp
+   bb140:      	mov	x19, x0
+   bb144:      	bl	0xbb11c <JNI_OnLoad+0x4bf7c>
+   bb148:      	bl	0xcaaa8 <JNI_OnLoad+0x5b908>
+   bb14c:      	ldp	x29, x30, [sp], #0x20
+   bb150:      	autiasp
+   bb154:      	b	0xccf30 <__wrap__ZdlPv@plt>
+   bb158:      	bti	c
+   bb15c:      	add	x0, x0, #0x18
+   bb160:      	b	0xb5768 <JNI_OnLoad+0x465c8>
+   bb164:      	bti	c
+   bb168:      	adrp	x8, 0xd6000
+   bb16c:      	add	x8, x8, #0x790
+   bb170:      	str	x8, [x0]
+   bb174:      	b	0xccaf0 <_ZNSt6__ndk119__shared_weak_countD2Ev@plt>
+   bb178:      	paciasp

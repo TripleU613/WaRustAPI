@@ -1,0 +1,51 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   bc178:      	paciasp
+   bc17c:      	sub	sp, sp, #0x100
+   bc180:      	stp	x29, x30, [sp, #0xa0]
+   bc184:      	stp	x28, x27, [sp, #0xb0]
+   bc188:      	stp	x26, x25, [sp, #0xc0]
+   bc18c:      	bl	0xcc0e8 <JNI_OnLoad+0x5cf48>
+   bc190:      	add	x29, sp, #0xa0
+   bc194:      	mrs	x23, TPIDR_EL0
+   bc198:      	mov	w24, #0x1               // =1
+   bc19c:      	mov	x19, x0
+   bc1a0:      	bl	0xcb32c <JNI_OnLoad+0x5c18c>
+   bc1a4:      	ldr	x8, [x0, #0x28]
+   bc1a8:      	strb	w24, [x8, #0x98]
+   bc1ac:      	ldr	w9, [x0, #0x20]
+   bc1b0:      	ldr	w10, [x0, #0x17c]
+   bc1b4:      	cmn	w9, #0x1
+   bc1b8:      	csinc	w9, w9, w10, ne
+   bc1bc:      	strh	w9, [x8, #0x6]
+   bc1c0:      	ldr	x1, [x0, #0x150]
+   bc1c4:      	ldp	x10, x9, [x1]
+   bc1c8:      	subs	x9, x9, x10
+   bc1cc:      	mov	w10, #0x50              // =80
+   bc1d0:      	sdiv	x9, x9, x10
+   bc1d4:      	strh	w9, [x8, #0x8]
+   bc1d8:      	ldr	q0, [x0, #0x1a0]
+   bc1dc:      	xtn	v0.4h, v0.4s
+   bc1e0:      	rev32	v1.4h, v0.4h
+   bc1e4:      	mov	v1.s[0], v0.s[0]
+   bc1e8:      	stur	d1, [x8, #0xa]
+   bc1ec:      	b.eq	0xbc25c <JNI_OnLoad+0x4d0bc>
+   bc1f0:      	ldr	x2, [x19, #0x158]
+   bc1f4:      	add	x0, x8, #0x50
+   bc1f8:      	bl	0x75fc8 <JNI_OnLoad+0x6e28>
+   bc1fc:      	add	x0, sp, #0x40
+   bc200:      	bl	0xbafac <JNI_OnLoad+0x4be0c>
+   bc204:      	add	x0, x19, #0x150
+   bc208:      	add	x1, sp, #0x40
+   bc20c:      	bl	0x5b7d8 <.text+0xf378>
+   bc210:      	ldr	x0, [sp, #0x48]
+   bc214:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   bc218:      	ldr	w8, [x19]
+   bc21c:      	ldr	x9, [x19, #0x28]
+   bc220:      	str	w8, [x9, #0x60]
+   bc224:      	add	x0, x9, #0x68
+   bc228:      	ldp	x1, x2, [x19, #0x38]

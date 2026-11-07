@@ -1,0 +1,69 @@
+{
+  "evidence_id": "ev_dc6208fc8abf1eb864ad35e32c7ad3710808055a5f30bf4339b6a021cccec838",
+  "subject": {
+    "name": "libmobileconfig-jni.so",
+    "digest": {
+      "sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so",
+    "format": "unknown",
+    "architecture": null
+  },
+  "provider": {
+    "id": "rizin",
+    "name": "Rizin",
+    "version": null
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.reverse-engineering.command-observation",
+  "operation": "execute_rizin_command",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so",
+    "command": "e scr.color=0; pd 62 @ 0xbfe18",
+    "provider_executable": "rizin",
+    "command_arguments": [
+      "-N",
+      "-q",
+      "-c",
+      "e scr.color=0; pd 62 @ 0xbfe18",
+      "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so"
+    ]
+  },
+  "raw_result": {
+    "stdout": "            0x000bfe18      paciasp\n            0x000bfe1c      sub   sp, sp, 0x90\n            0x000bfe20      stp   x29, x30, [sp, 0x30]\n            0x000bfe24      str   x27, [sp, 0x40]\n            0x000bfe28      bl    0xca5c0\n            0x000bfe2c      add   x29, sp, 0x30\n            0x000bfe30      mrs   x24, tpidr_el0\n            0x000bfe34      bl    0xcb7e8\n            0x000bfe38      ldrb  w8, [x0, 0x70]                       ; [0x70:4]=8\n            0x000bfe3c      cmp   w8, 1\n        ,=< 0x000bfe40      b.ne  0xc012c\n        |   0x000bfe44      ldrb  w8, [x0, 0xe1]                       ; [0xe1:4]=64\n        |   0x000bfe48      mov   x19, x0\n       ,==< 0x000bfe4c      tbnz  w8, 0, 0xc012c\n       ||   0x000bfe50      ldr   x8, [x19, 0x28]                      ; [0x28:4]=0xcfad8\n       ||   0x000bfe54      ldrb  w8, [x8, 0x98]                       ; [0x98:4]=0x48460\n       ||   0x000bfe58      cmp   w8, 1\n      ,===< 0x000bfe5c      b.ne  0xc0078\n      |||   0x000bfe60      ldr   x8, [x19, 0x100]                     ; [0x100:4]=0xd1a30 segment.GNU_RELRO\n     ,====< 0x000bfe64      cbz   x8, 0xc0124\n     ||||   0x000bfe68      mov   x0, sp\n     ||||   0x000bfe6c      bl    0xbafac\n     ||||   0x000bfe70      add   x0, x19, 0x150\n     ||||   0x000bfe74      mov   x1, sp\n     ||||   0x000bfe78      bl    0x5b7d8\n     ||||   0x000bfe7c      ldr   x0, [sp, 8]                          ; [0x8:4]=0\n     ||||   0x000bfe80      bl    0x6f20c\n     ||||   0x000bfe84      ldr   x8, [x19, 0x28]                      ; [0x28:4]=0xcfad8\n     ||||   0x000bfe88      ldr   x0, [x19, 0x150]                     ; [0x150:4]=0x4000 \"oogle10LogMessage6streamEv\"\n     ||||   0x000bfe8c      ldrh  w1, [x8, 8]                          ; [0x8:4]=0\n     ||||   0x000bfe90      bl    0xc0170\n     ||||   0x000bfe94      mov   x20, xzr\n     ||||   0x000bfe98      add   x25, x19, 0x118\n     ||||   0x000bfe9c      mov   w26, 0x18\n     ||||   0x000bfea0      ldrsw x8, [x19, 0x17c]                     ; [0x17c:4]=0\n     ||||   0x000bfea4      str   w20, [sp]\n     ||||   0x000bfea8      cmp   x20, x8\n    ,=====< 0x000bfeac      b.ge  0xc00f0\n    |||||   0x000bfeb0      add   x0, x19, 0x110\n    |||||   0x000bfeb4      mov   w1, w20\n    |||||   0x000bfeb8      bl    0xbfb1c\n    |||||   0x000bfebc      ldr   x8, [x19, 0x28]                      ; [0x28:4]=0xcfad8\n    |||||   0x000bfec0      cmp   x25, x0\n    |||||   0x000bfec4      ldr   x8, [x8, 0x78]                       ; [0x78:4]=1\n   ,======< 0x000bfec8      b.eq  0xc0000\n   ||||||   0x000bfecc      ldp   x0, x1, [x8]\n   ||||||   0x000bfed0      sub   x8, x1, x0\n   ||||||   0x000bfed4      sdiv  x8, x8, x26\n   ||||||   0x000bfed8      cmp   x8, x20\n  ,=======< 0x000bfedc      b.ls  0xc0030\n  |||||||   0x000bfee0      mov   x2, x20\n  |||||||   0x000bfee4      bl    0x92c98\n  |||||||   0x000bfee8      mov   x22, x0\n  |||||||   0x000bfeec      add   x0, x19, 0x110\n  |||||||   0x000bfef0      mov   x1, sp\n  |||||||   0x000bfef4      bl    0xbe3ec\n  |||||||   0x000bfef8      ldr   x21, [x0]\n  |||||||   0x000bfefc      ldr   x8, [x22]\n  |||||||   0x000bff00      ldr   w27, [x8, 0x30]                      ; [0x30:4]=0\n  |||||||   0x000bff04      add   x0, x19, 0xe8\n  |||||||   0x000bff08      add   x1, x21, 0x1c\n  |||||||   0x000bff0c      bl    0xbe260\n",
+    "stderr": "ERROR: Cannot determine entrypoint, using 0x0004c460.\n",
+    "exit_code": 0,
+    "signal": null,
+    "output_truncated": false,
+    "completion_status": "complete",
+    "artifact_sha256_after": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+    "artifact_changed": false
+  },
+  "normalized_result": {
+    "stdout": "            0x000bfe18      paciasp\n            0x000bfe1c      sub   sp, sp, 0x90\n            0x000bfe20      stp   x29, x30, [sp, 0x30]\n            0x000bfe24      str   x27, [sp, 0x40]\n            0x000bfe28      bl    0xca5c0\n            0x000bfe2c      add   x29, sp, 0x30\n            0x000bfe30      mrs   x24, tpidr_el0\n            0x000bfe34      bl    0xcb7e8\n            0x000bfe38      ldrb  w8, [x0, 0x70]                       ; [0x70:4]=8\n            0x000bfe3c      cmp   w8, 1\n        ,=< 0x000bfe40      b.ne  0xc012c\n        |   0x000bfe44      ldrb  w8, [x0, 0xe1]                       ; [0xe1:4]=64\n        |   0x000bfe48      mov   x19, x0\n       ,==< 0x000bfe4c      tbnz  w8, 0, 0xc012c\n       ||   0x000bfe50      ldr   x8, [x19, 0x28]                      ; [0x28:4]=0xcfad8\n       ||   0x000bfe54      ldrb  w8, [x8, 0x98]                       ; [0x98:4]=0x48460\n       ||   0x000bfe58      cmp   w8, 1\n      ,===< 0x000bfe5c      b.ne  0xc0078\n      |||   0x000bfe60      ldr   x8, [x19, 0x100]                     ; [0x100:4]=0xd1a30 segment.GNU_RELRO\n     ,====< 0x000bfe64      cbz   x8, 0xc0124\n     ||||   0x000bfe68      mov   x0, sp\n     ||||   0x000bfe6c      bl    0xbafac\n     ||||   0x000bfe70      add   x0, x19, 0x150\n     ||||   0x000bfe74      mov   x1, sp\n     ||||   0x000bfe78      bl    0x5b7d8\n     ||||   0x000bfe7c      ldr   x0, [sp, 8]                          ; [0x8:4]=0\n     ||||   0x000bfe80      bl    0x6f20c\n     ||||   0x000bfe84      ldr   x8, [x19, 0x28]                      ; [0x28:4]=0xcfad8\n     ||||   0x000bfe88      ldr   x0, [x19, 0x150]                     ; [0x150:4]=0x4000 \"oogle10LogMessage6streamEv\"\n     ||||   0x000bfe8c      ldrh  w1, [x8, 8]                          ; [0x8:4]=0\n     ||||   0x000bfe90      bl    0xc0170\n     ||||   0x000bfe94      mov   x20, xzr\n     ||||   0x000bfe98      add   x25, x19, 0x118\n     ||||   0x000bfe9c      mov   w26, 0x18\n     ||||   0x000bfea0      ldrsw x8, [x19, 0x17c]                     ; [0x17c:4]=0\n     ||||   0x000bfea4      str   w20, [sp]\n     ||||   0x000bfea8      cmp   x20, x8\n    ,=====< 0x000bfeac      b.ge  0xc00f0\n    |||||   0x000bfeb0      add   x0, x19, 0x110\n    |||||   0x000bfeb4      mov   w1, w20\n    |||||   0x000bfeb8      bl    0xbfb1c\n    |||||   0x000bfebc      ldr   x8, [x19, 0x28]                      ; [0x28:4]=0xcfad8\n    |||||   0x000bfec0      cmp   x25, x0\n    |||||   0x000bfec4      ldr   x8, [x8, 0x78]                       ; [0x78:4]=1\n   ,======< 0x000bfec8      b.eq  0xc0000\n   ||||||   0x000bfecc      ldp   x0, x1, [x8]\n   ||||||   0x000bfed0      sub   x8, x1, x0\n   ||||||   0x000bfed4      sdiv  x8, x8, x26\n   ||||||   0x000bfed8      cmp   x8, x20\n  ,=======< 0x000bfedc      b.ls  0xc0030\n  |||||||   0x000bfee0      mov   x2, x20\n  |||||||   0x000bfee4      bl    0x92c98\n  |||||||   0x000bfee8      mov   x22, x0\n  |||||||   0x000bfeec      add   x0, x19, 0x110\n  |||||||   0x000bfef0      mov   x1, sp\n  |||||||   0x000bfef4      bl    0xbe3ec\n  |||||||   0x000bfef8      ldr   x21, [x0]\n  |||||||   0x000bfefc      ldr   x8, [x22]\n  |||||||   0x000bff00      ldr   w27, [x8, 0x30]                      ; [0x30:4]=0\n  |||||||   0x000bff04      add   x0, x19, 0xe8\n  |||||||   0x000bff08      add   x1, x21, 0x1c\n  |||||||   0x000bff0c      bl    0xbe260\n",
+    "stderr": "ERROR: Cannot determine entrypoint, using 0x0004c460.\n",
+    "exit_code": 0,
+    "signal": null,
+    "output_truncated": false,
+    "completion_status": "complete",
+    "artifact_sha256_after": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+    "artifact_changed": false
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "The executable version and supported formats are reported as unknown because no reliable version probe was performed.",
+    "A non-zero process exit is preserved as an observed command result.",
+    "Rizin commands and retained plugins may read files or access network resources outside the selected artifact; those external inputs are not bound to Evidence.",
+    "When both are available, pre-run and post-run digests detect artifact changes across the provider call but cannot prove the exact bytes consumed during the call."
+  ],
+  "relationship_coverage": null,
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so"
+    }
+  ],
+  "evidence_links": []
+}

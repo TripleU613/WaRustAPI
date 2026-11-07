@@ -1,0 +1,40 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   bfd40:      	bl	0xcae14 <JNI_OnLoad+0x5bc74>
+   bfd44:      	add	x0, sp, #0x1b8
+   bfd48:      	add	x1, sp, #0x8
+   bfd4c:      	bl	0xbc3d0 <JNI_OnLoad+0x4d230>
+   bfd50:      	add	x0, sp, #0x1b8
+   bfd54:      	bl	0xbc384 <JNI_OnLoad+0x4d1e4>
+   bfd58:      	bl	0xcb888 <JNI_OnLoad+0x5c6e8>
+   bfd5c:      	bl	0xbdd90 <JNI_OnLoad+0x4ebf0>
+   bfd60:      	add	x0, sp, #0x8
+   bfd64:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   bfd68:      	add	x0, sp, #0x1b8
+   bfd6c:      	bl	0xbce20 <JNI_OnLoad+0x4dc80>
+   bfd70:      	bl	0xca254 <JNI_OnLoad+0x5b0b4>
+   bfd74:      	b.ne	0xbfdc4 <JNI_OnLoad+0x50c24>
+   bfd78:      	add	sp, sp, #0x310
+   bfd7c:      	ldp	x20, x19, [sp, #0x20]
+   bfd80:      	ldp	x28, x21, [sp, #0x10]
+   bfd84:      	ldp	x29, x30, [sp], #0x30
+   bfd88:      	autiasp
+   bfd8c:      	ret
+   bfd90:      	mov	x19, x0
+   bfd94:      	b	0xbfdac <JNI_OnLoad+0x50c0c>
+   bfd98:      	bl	0xcaf40 <JNI_OnLoad+0x5bda0>
+   bfd9c:      	bl	0x5f824 <.text+0x133c4>
+   bfda0:      	b	0xbfdac <JNI_OnLoad+0x50c0c>
+   bfda4:      	bl	0xcaf40 <JNI_OnLoad+0x5bda0>
+   bfda8:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   bfdac:      	add	x0, sp, #0x1b8
+   bfdb0:      	bl	0xbce20 <JNI_OnLoad+0x4dc80>
+   bfdb4:      	bl	0xca254 <JNI_OnLoad+0x5b0b4>
+   bfdb8:      	b.ne	0xbfdc4 <JNI_OnLoad+0x50c24>
+   bfdbc:      	mov	x0, x19
+   bfdc0:      	bl	0xccf70 <__wrap__Unwind_Resume@plt>
+   bfdc4:      	bl	0xcd9f0 <__stack_chk_fail@plt>

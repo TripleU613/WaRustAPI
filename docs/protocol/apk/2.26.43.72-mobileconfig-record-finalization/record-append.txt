@@ -1,0 +1,44 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   bfbc0:      	paciasp
+   bfbc4:      	sub	sp, sp, #0x70
+   bfbc8:      	stp	x29, x30, [sp, #0x30]
+   bfbcc:      	str	x23, [sp, #0x40]
+   bfbd0:      	bl	0xcab54 <JNI_OnLoad+0x5b9b4>
+   bfbd4:      	add	x29, sp, #0x30
+   bfbd8:      	bl	0xca204 <JNI_OnLoad+0x5b064>
+   bfbdc:      	b.hs	0xbfbf4 <JNI_OnLoad+0x50a54>
+   bfbe0:      	bl	0xcbb28 <JNI_OnLoad+0x5c988>
+   bfbe4:      	bl	0x80c74 <JNI_OnLoad+0x11ad4>
+   bfbe8:      	add	x20, x22, #0x50
+   bfbec:      	str	x20, [x19, #0x8]
+   bfbf0:      	b	0xbfc34 <JNI_OnLoad+0x50a94>
+   bfbf4:      	bl	0xca19c <JNI_OnLoad+0x5affc>
+   bfbf8:      	sub	x9, x22, x0
+   bfbfc:      	mov	w22, #0x50              // =80
+   bfc00:      	sdiv	x9, x9, x22
+   bfc04:      	bl	0xcb044 <JNI_OnLoad+0x5bea4>
+   bfc08:      	bl	0xbd810 <JNI_OnLoad+0x4e670>
+   bfc0c:      	bl	0xca34c <JNI_OnLoad+0x5b1ac>
+   bfc10:      	sdiv	x2, x8, x22
+   bfc14:      	bl	0xbd860 <JNI_OnLoad+0x4e6c0>
+   bfc18:      	bl	0xcc240 <JNI_OnLoad+0x5d0a0>
+   bfc1c:      	bl	0x80c74 <JNI_OnLoad+0x11ad4>
+   bfc20:      	add	x8, x21, #0x50
+   bfc24:      	bl	0xca6bc <JNI_OnLoad+0x5b51c>
+   bfc28:      	bl	0xbd8a0 <JNI_OnLoad+0x4e700>
+   bfc2c:      	bl	0xcb0f4 <JNI_OnLoad+0x5bf54>
+   bfc30:      	bl	0xbd988 <JNI_OnLoad+0x4e7e8>
+   bfc34:      	str	x20, [x19, #0x8]
+   bfc38:      	bl	0xca274 <JNI_OnLoad+0x5b0d4>
+   bfc3c:      	b.ne	0xbfc54 <JNI_OnLoad+0x50ab4>
+   bfc40:      	bl	0xca7f0 <JNI_OnLoad+0x5b650>
+   bfc44:      	ldp	x29, x30, [sp, #0x30]
+   bfc48:      	add	sp, sp, #0x70
+   bfc4c:      	autiasp
+   bfc50:      	ret
+   bfc54:      	bl	0xcd9f0 <__stack_chk_fail@plt>

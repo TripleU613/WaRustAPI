@@ -1,0 +1,58 @@
+{
+  "README.md": {
+    "bytes": 5844,
+    "sha256": "867720feb42fa4fbf43b56c030bb46bc33aff67eabafb0825183289cbcdf1703"
+  },
+  "alternate-text-loop-discovery.txt": {
+    "bytes": 2554,
+    "sha256": "8847841a31b41e80f8bee21a74062becbde9fe2f315930c6514795600bdf5e38"
+  },
+  "finalizer.json": {
+    "bytes": 1511,
+    "sha256": "a6da888a41e5b3883b40f1e14fa3b66c8235c38996a55a510680084387548d38"
+  },
+  "group-map-factory.txt": {
+    "bytes": 1617,
+    "sha256": "2c2cd58fe38907026897047e95f87cbc17942aab3f2d8c689ae74d6cd7736958"
+  },
+  "group-range-finalizer.txt": {
+    "bytes": 4786,
+    "sha256": "8cc8eaed54894bfd8567b126725eed7760ad13f99a3f39a9b695f028339f423d"
+  },
+  "inspect-finalizer.py": {
+    "bytes": 2005,
+    "sha256": "d227dfe29bb3ea1e123ff57be32a34394c7bc65aa3b1f40e68755cb3fc133e12"
+  },
+  "rea-finalizer-window.json": {
+    "bytes": 9579,
+    "sha256": "5fbdab8926ce7db106e6b7ae89c7d57ee74a7cae2bd7e689753023b790aa5c7d"
+  },
+  "record-append.txt": {
+    "bytes": 1783,
+    "sha256": "c9b307457cf84b3e9afd63e0280e4f30dc824869186c460e6a859d70ef2043a1"
+  },
+  "record-clear.txt": {
+    "bytes": 925,
+    "sha256": "b592673f0957cece936b8438fa2ee5a686c6050d6af3330760ce608cc8136cdf"
+  },
+  "record-copy-helper.txt": {
+    "bytes": 866,
+    "sha256": "19b43e879b6229f93e99e28c418dc4cc4c669494a775a5c21bfb1143128c77fd"
+  },
+  "record-finalizer.txt": {
+    "bytes": 8381,
+    "sha256": "d9a56997c003a4cf22ff2589e267603c711ef8816e0c5c8c0bdd4bc0c5a1d1b9"
+  },
+  "record-move-append.txt": {
+    "bytes": 2653,
+    "sha256": "12ef1d6f30ccd95107704bf1558cc69d2bff4883a85291390399fcab8004ac27"
+  },
+  "source-file-discovery.txt": {
+    "bytes": 1729,
+    "sha256": "f52161db4262895ac8b5bd359593cb37e77fd5777f17a9969eabd309e1467ced"
+  },
+  "transition-to-child-mode.txt": {
+    "bytes": 1888,
+    "sha256": "57d1079d6802605d3573d25ad022efdac8e1715fa321e64a97f8e5cbf01f8669"
+  }
+}

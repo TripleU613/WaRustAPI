@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-record-finalization-evidence": {
+    "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-record-finalization/inspect-finalizer.py <pinned-library>; offline static and synthetic merge projection",
+    "x-transport": "research only; record-vector finalization, not observed request/configuration acceptance",
+    "x-live": false,
+    "description": "Confirmed selected static MobileConfig record finalization has guarded map-order move-append and group-ordinal existing/new copy-merge paths. The merge compares signed parameter words, retains pending equal words and publishes a shared vector to the earlier accessor destination. Query ordering is conditional on these stages; map comparators, caller admission, ownership and persistence remain unresolved.",
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-record-finalization/README.md"
+  },
   "x-mobileconfig-text-records-evidence": {
     "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-text-records/derive-record-fields.py <pinned-library>; offline scalar projection only",
     "x-transport": "research only; text-record construction, not an enabled decoder or wire sender",

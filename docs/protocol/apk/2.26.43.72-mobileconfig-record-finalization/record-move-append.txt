@@ -1,0 +1,69 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   bd714:      	paciasp
+   bd718:      	sub	sp, sp, #0x70
+   bd71c:      	stp	x29, x30, [sp, #0x30]
+   bd720:      	str	x23, [sp, #0x40]
+   bd724:      	bl	0xcab54 <JNI_OnLoad+0x5b9b4>
+   bd728:      	add	x29, sp, #0x30
+   bd72c:      	bl	0xcaa50 <JNI_OnLoad+0x5b8b0>
+   bd730:      	ldur	x9, [x21, #-0x8]
+   bd734:      	cmp	x9, x8
+   bd738:      	b.hs	0xbd774 <JNI_OnLoad+0x4e5d4>
+   bd73c:      	bl	0xcb7ac <JNI_OnLoad+0x5c60c>
+   bd740:      	str	x8, [x9, #0x10]
+   bd744:      	str	q0, [x9]
+   bd748:      	ldr	x8, [x20, #0x28]
+   bd74c:      	ldur	q0, [x20, #0x18]
+   bd750:      	bl	0xcb4e8 <JNI_OnLoad+0x5c348>
+   bd754:      	str	x8, [x9, #0x28]
+   bd758:      	stur	q0, [x9, #0x18]
+   bd75c:      	ldp	q1, q0, [x20, #0x30]
+   bd760:      	stp	xzr, xzr, [x20, #0x20]
+   bd764:      	str	xzr, [x20, #0x18]
+   bd768:      	add	x20, x9, #0x50
+   bd76c:      	stp	q1, q0, [x9, #0x30]
+   bd770:      	b	0xbd7ec <JNI_OnLoad+0x4e64c>
+   bd774:      	ldr	x0, [x19]
+   bd778:      	mov	w23, #0x50              // =80
+   bd77c:      	bl	0xca604 <JNI_OnLoad+0x5b464>
+   bd780:      	sub	x9, x9, x0
+   bd784:      	bl	0xca92c <JNI_OnLoad+0x5b78c>
+   bd788:      	bl	0xbd810 <JNI_OnLoad+0x4e670>
+   bd78c:      	bl	0xca34c <JNI_OnLoad+0x5b1ac>
+   bd790:      	sdiv	x2, x8, x23
+   bd794:      	bl	0xbd860 <JNI_OnLoad+0x4e6c0>
+   bd798:      	ldr	x8, [sp, #0x10]
+   bd79c:      	ldr	x9, [x20, #0x10]
+   bd7a0:      	mov	x1, sp
+   bd7a4:      	ldr	q0, [x20]
+   bd7a8:      	mov	x0, x19
+   bd7ac:      	str	x9, [x8, #0x10]
+   bd7b0:      	str	q0, [x8]
+   bd7b4:      	ldr	x9, [x20, #0x28]
+   bd7b8:      	ldur	q0, [x20, #0x18]
+   bd7bc:      	bl	0xcb4e8 <JNI_OnLoad+0x5c348>
+   bd7c0:      	str	x9, [x8, #0x28]
+   bd7c4:      	stur	q0, [x8, #0x18]
+   bd7c8:      	ldp	q0, q1, [x20, #0x30]
+   bd7cc:      	stp	xzr, xzr, [x20, #0x20]
+   bd7d0:      	str	xzr, [x20, #0x18]
+   bd7d4:      	stp	q0, q1, [x8, #0x30]
+   bd7d8:      	add	x8, x8, #0x50
+   bd7dc:      	str	x8, [sp, #0x10]
+   bd7e0:      	bl	0xbd8a0 <JNI_OnLoad+0x4e700>
+   bd7e4:      	bl	0xcb0f4 <JNI_OnLoad+0x5bf54>
+   bd7e8:      	bl	0xbd988 <JNI_OnLoad+0x4e7e8>
+   bd7ec:      	str	x20, [x19, #0x8]
+   bd7f0:      	bl	0xca264 <JNI_OnLoad+0x5b0c4>
+   bd7f4:      	b.ne	0xbd80c <JNI_OnLoad+0x4e66c>
+   bd7f8:      	bl	0xca7f0 <JNI_OnLoad+0x5b650>
+   bd7fc:      	ldp	x29, x30, [sp, #0x30]
+   bd800:      	add	sp, sp, #0x70
+   bd804:      	autiasp
+   bd808:      	ret
+   bd80c:      	bl	0xcd9f0 <__stack_chk_fail@plt>
