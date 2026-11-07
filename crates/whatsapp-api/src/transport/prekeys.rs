@@ -565,6 +565,7 @@ fn account_authority(account: &AccountRecord) -> Result<[u8; 32]> {
 #[derive(Debug, Clone)]
 pub struct PendingUpload {
     iq_id: String,
+    request_sha256: [u8; 32],
     ids: Vec<u32>,
     public_sha256: Vec<[u8; 32]>,
     account_authority_sha256: [u8; 32],
@@ -808,6 +809,7 @@ fn begin_upload_selected(
             // Local durable provenance: freeze the exact request before commit.
             // This is inspection evidence, never authority to replay an uncertain IQ.
             let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(&node)?;
+            let request_sha256: [u8; 32] = Sha256::digest(&wire).into();
             tx.put_json(Table::Checkpoints, request_key(&iq_id).as_bytes(), 1,
             &serde_json::json!({"mode":if add { "add" } else { "set" }, "dictionary":"comparison_2_26_37_71", "wire":wire}))?;
             let kem_ids: Vec<u32> = kem_rows.iter().map(|r| r.id).collect();
@@ -830,14 +832,16 @@ fn begin_upload_selected(
                     kem_public_sha256: kem_public_sha256.clone(),
                 },
             )?;
-            Ok(Some((ids, public_sha256, kem_ids, kem_public_sha256, node)))
+            Ok(Some((ids, public_sha256, kem_ids, kem_public_sha256, node, request_sha256)))
         })?;
-    let Some((ids, public_sha256, kem_ids, kem_public_sha256, node)) = reserved else {
+    let Some((ids, public_sha256, kem_ids, kem_public_sha256, node, request_sha256)) = reserved
+    else {
         return Ok(None);
     };
     Ok(Some((
         PendingUpload {
             iq_id,
+            request_sha256,
             ids,
             public_sha256,
             account_authority_sha256,
@@ -851,7 +855,7 @@ fn begin_upload_selected(
 
 impl PendingUpload {
     /// Recheck local ownership after queue handoff and before writer encoding.
-    pub(crate) fn check_write_authority(&self, store: &ProtocolStore) -> Result<()> {
+    pub(crate) fn check_write_authority(&self, store: &ProtocolStore, node: &Node) -> Result<()> {
         self.check_deadline()?;
         store.read(|tx| {
             let current = AccountRecord::load(tx)?
@@ -860,6 +864,24 @@ impl PendingUpload {
                 || account_authority(&current)? != self.account_authority_sha256
             {
                 return Err(invalid("publication account changed before write"));
+            }
+            // Bind the final queued request and retained provenance to the
+            // original reservation; key ownership alone does not bind IQ fields.
+            #[derive(Deserialize)]
+            struct SavedRequest {
+                wire: Vec<u8>,
+            }
+            let saved: SavedRequest = tx
+                .get_json(Table::Checkpoints, request_key(&self.iq_id).as_bytes(), 1)?
+                .ok_or_else(|| invalid("reserved publication request disappeared before write"))?;
+            let actual = zeroize::Zeroizing::new(
+                Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(node)?,
+            );
+            use sha2::{Digest, Sha256};
+            if <[u8; 32]>::from(Sha256::digest(&saved.wire)) != self.request_sha256
+                || <[u8; 32]>::from(Sha256::digest(&*actual)) != self.request_sha256
+            {
+                return Err(invalid("reserved publication request changed before write"));
             }
             let batch: Batch = tx
                 .get_json(Table::Checkpoints, batch_key(&self.iq_id).as_bytes(), 1)?

@@ -416,7 +416,9 @@ impl Outbound {
                 }
                 Ok(())
             }),
-            Some(WriteGuard::Prekey(store, pending)) => pending.check_write_authority(&store),
+            Some(WriteGuard::Prekey(store, pending)) => {
+                pending.check_write_authority(&store, &self.node)
+            }
             Some(WriteGuard::Devices(store, query)) => query.check_write_authority(&store),
             Some(WriteGuard::RetryRefetch(store, pending)) => pending.check_write_authority(&store),
             Some(WriteGuard::Action(store, action)) => {
@@ -7208,8 +7210,14 @@ mod tests {
             "kem-missing",
             "kem-consumed",
             "kem-restored",
+            "node_id",
+            "node_to",
+            "node_body",
+            "request_missing",
+            "request_wire",
         ] {
-            let store = registered_store(&dir.path().join(format!("queued-authority-{case}.db")));
+            let path = dir.path().join(format!("queued-authority-{case}.db"));
+            let store = registered_store(&path);
             if case.starts_with("kem-") {
                 let prop = super::super::abprops::queue(&store).unwrap();
                 super::super::actions::reserve_pending(&store).unwrap();
@@ -7248,7 +7256,7 @@ mod tests {
                 (result, pending.is_some(), rounds)
             });
             // Hold the actual queued envelope before the shared writer preflight.
-            let queued = writes.recv().await.unwrap();
+            let mut queued = writes.recv().await.unwrap();
             assert!(matches!(&queued.guard, Some(WriteGuard::Prekey(..))));
             let iq_id = queued
                 .node
@@ -7256,8 +7264,31 @@ mod tests {
                 .and_then(|v| v.as_text())
                 .unwrap()
                 .to_owned();
+            match case {
+                "node_id" => queued.node = queued.node.attr("id", "changed-fixture"),
+                "node_to" => queued.node = queued.node.attr("to", "changed.invalid"),
+                "node_body" => {
+                    queued.node = queued.node.children(vec![Node::new("changed-fixture")])
+                }
+                _ => {}
+            }
             store
                 .write(|tx| {
+                    if case.starts_with("node_") {
+                        return Ok(());
+                    }
+                    if case.starts_with("request_") {
+                        let key = format!("prekey-upload-request:v1:{iq_id}");
+                        if case == "request_missing" {
+                            tx.delete(Table::Checkpoints, key.as_bytes())?;
+                        } else {
+                            let mut request: serde_json::Value =
+                                tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?.unwrap();
+                            request["wire"] = serde_json::json!([1, 2, 3]);
+                            tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &request)?;
+                        }
+                        return Ok(());
+                    }
                     if case.starts_with("legacy-") || case.starts_with("kem-") {
                         let batch: super::super::prekeys::Batch = tx
                             .get_json(
@@ -7355,6 +7386,7 @@ mod tests {
                     .unwrap()
             };
             let before = snapshot();
+            let head = store.journal_head().unwrap();
             let mut encoded = 0;
             if let Some((node, outcome)) = queued.prepare() {
                 encode(&node).unwrap();
@@ -7372,6 +7404,19 @@ mod tests {
                 assert!(result.is_err(), "{case} must stop queued upload");
                 assert_eq!(encoded, 0, "writer must refuse before encoding");
             }
+            assert_eq!(store.journal_head().unwrap(), head);
+            drop(store);
+            let reopened = identity_store(&path);
+            let after = reopened
+                .read(|tx| {
+                    [Table::Account, Table::Prekeys, Table::Checkpoints]
+                        .into_iter()
+                        .map(|t| tx.scan(t, 1, 10000))
+                        .collect::<Result<Vec<_>>>()
+                })
+                .unwrap();
+            assert_eq!(after, before);
+            assert_eq!(reopened.journal_head().unwrap(), head);
         }
     }
 

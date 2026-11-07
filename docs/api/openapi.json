@@ -20151,6 +20151,13 @@
     "description": "Pinned dirty stanza lazy selector/constructors/accessors establish iq/get/g.us/w:g2, supplied id/context and typed group children; selected Rust semantic fields match. ID bound is Java string length; list diagnostics do not establish hard gates without assertion policy. Legacy group admission, encoded order and callback/persistence remain separate. Existing xtask reproduces evidence; no wire/route/runtime/live change.",
     "evidence": "docs/protocol/apk/2.26.43.72-group-dirty-stanza-serializer/README.md"
   },
+  "x-prekey-upload-writer-payload-binding": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Prekey publication reservation captures its encoded request digest. Actor writer requires both retained original request bytes and actual queued IQ encoding to match, alongside existing account, key ownership/material and deadline checks. Refusal leaves uncertain batches untouched. No wire/schema migration, historical backfill, replay or live acceptance claim.",
+    "evidence": "docs/protocol/replay-safety-audit.md#prekey-publication-request-binding-before-writer-encoding-2026-11-07"
+  },
   "x-reserved-receipt-writer-payload-binding": {
     "x-cli": true,
     "x-transport": true,
