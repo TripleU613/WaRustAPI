@@ -1,4 +1,11 @@
 {
+  "x-send-path-atomic-adoption": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "evidence": "docs/protocol/send-path-atomicity.md",
+    "behavior": "First Lab/Outbox send-path adoption checks historical lab/outbox records and installs its claim in one write transaction; cross-path conflicts preserve state and never authorize replay."
+  },
   "x-group-media-preflight-verification": {
     "x-cli": false,
     "x-transport": false,

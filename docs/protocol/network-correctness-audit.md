@@ -6052,3 +6052,8 @@ so it does not claim a completely fresh call has no local side effects. It
 proves corruption does not reserve protocol work after that claim. The repaired
 control is test setup, not automatic production recovery. This is source/test
 evidence, not new APK behavior or proof of full group-send/network parity.
+
+- Confirmed source defect at `0fe4e785`: first send-path adoption checked
+  historical work outside its claim transaction. It now checks legacy lab and
+  paginated outbox records transactionally, with uncommitted-history rollback
+  and reopen regression. See [send-path atomicity](send-path-atomicity.md).

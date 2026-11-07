@@ -9555,3 +9555,8 @@ Local public upload eligibility omission corrected at shared entry, including ca
   operational errors. Integration regression verifies encrypted-store corruption
   cannot reserve membership work after send-path claim; no runtime fix claimed.
   See [group preflight](media-network-outcomes.md#group-media-preflight-corruption-boundary-verified).
+
+- Confirmed source defect at `0fe4e785`: first send-path adoption checked
+  historical work outside its claim transaction. It now checks legacy lab and
+  paginated outbox records transactionally, with uncommitted-history rollback
+  and reopen regression. See [send-path atomicity](send-path-atomicity.md).

@@ -10577,3 +10577,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   actual begin_selected corruption/reopen regression proves no membership
   reservation or preparation row after the established local send-path claim;
   repaired offline control reserves normally. No production policy/live change.
+
+- First Lab/Outbox send-path adoption now checks historical records and writes
+  its claim in one transaction, closing a duplicate-path race. Offline rollback
+  regression covers both directions and reopen. Same-path repeat policy and
+  no-replay guards remain unchanged; no live operation.
