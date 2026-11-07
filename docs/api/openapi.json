@@ -1,4 +1,11 @@
 {
+  "x-authenticated-epoch-writer-account-authority": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Every authenticated actor outbound envelope retains its original epoch account fingerprint. Writer dequeue rejects account change/removal before request-specific admission, including plain activation, presence, keepalive and automatic ACK writes. Observation-only timestamps remain excluded. Offline actor regression; no new wire fields, retry or server acceptance claim. Handshake-to-drive and inbound settlement authority remain separate audit scope.",
+    "evidence": "docs/protocol/replay-safety-audit.md#authenticated-epoch-account-authority-for-every-writer-handoff-2026-11-07"
+  },
   "x-final-group-routing-writer-admission": {
     "x-cli": true,
     "x-transport": true,

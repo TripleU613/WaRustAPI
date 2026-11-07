@@ -397,15 +397,43 @@ enum WriteGuard {
     Action(Arc<ProtocolStore>, super::actions::ActionWriteGuard),
     Receipt(Arc<ProtocolStore>, super::receipts::ReceiptWriteGuard),
 }
+#[derive(Clone)]
+struct EpochWriteAuthority {
+    store: Arc<ProtocolStore>,
+    expected: [u8; 32],
+}
+impl EpochWriteAuthority {
+    fn check(&self) -> Result<()> {
+        self.store.read(|tx| {
+            let current = AccountRecord::load(tx)?;
+            if super::account_authority::fingerprint(tx.generation(), current.as_ref())?
+                != self.expected
+            {
+                return Err(Error::invalid(
+                    "transport",
+                    "authenticated epoch account changed before write",
+                ));
+            }
+            Ok(())
+        })
+    }
+}
 pub(crate) struct Outbound {
     node: Node,
     reply: oneshot::Sender<Result<()>>,
     guard: Option<WriteGuard>,
+    epoch_authority: Option<EpochWriteAuthority>,
 }
 impl Outbound {
     // A refusal consumes the queued write and reports its actual local error.
     // The writer ends the epoch without encoding, writing, or releasing a batch.
     pub(crate) fn prepare(self) -> Option<Written> {
+        if let Some(authority) = &self.epoch_authority
+            && let Err(error) = authority.check()
+        {
+            let _ = self.reply.send(Err(error));
+            return None;
+        }
         let admission = match self.guard {
             Some(WriteGuard::FinalGroup(store, committed, routing)) => committed
                 .check_write_authority(&store, &self.node)
@@ -480,6 +508,7 @@ impl Outbound {
 pub(crate) struct NodeLink {
     incoming: mpsc::Receiver<Result<Inbound>>,
     outgoing: mpsc::Sender<Outbound>,
+    epoch_authority: Option<EpochWriteAuthority>,
 }
 
 /// One item from the reader task.
@@ -513,7 +542,11 @@ impl NodeLink {
         incoming: mpsc::Receiver<Result<Inbound>>,
         outgoing: mpsc::Sender<Outbound>,
     ) -> Self {
-        Self { incoming, outgoing }
+        Self {
+            incoming,
+            outgoing,
+            epoch_authority: None,
+        }
     }
     // APK43.72 14h.A00 submits the ACK before running the deferred Fe5
     // callback. Reservation has committed before this handoff. Any write error
@@ -737,6 +770,7 @@ impl NodeLink {
                 node: node.clone(),
                 reply,
                 guard,
+                epoch_authority: self.epoch_authority.clone(),
             })
             .await
             .map_err(|_| Error::Transport(super::TransportError::Closed))?;
@@ -1020,6 +1054,12 @@ pub(crate) async fn drive(
     let account = store
         .read(AccountRecord::load)?
         .ok_or(Error::NotRegistered)?;
+    // Freeze the authenticated epoch's original account, including plain ACK,
+    // presence and keepalive writes; request-specific guards remain additional.
+    link.epoch_authority = Some(EpochWriteAuthority {
+        store: store.clone(),
+        expected: super::account_authority::fingerprint(store.generation(), Some(&account))?,
+    });
     super::groups::recover_pending(&store)?;
     super::app_state_sync::recover_fetch_backoff(&store)?;
     super::identity_notifications::application::recover(&store, config.transport.identity_changes)
@@ -2986,6 +3026,93 @@ mod tests {
             assert!(self.finished().await.is_ok());
         }
     }
+    #[tokio::test]
+    async fn unreserved_epoch_writes_recheck_authenticated_account() {
+        for phase in ["activation", "presence", "pong", "notification_ack"] {
+            for change in ["same", "observation", "account", "missing"] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("epoch-owner.redb");
+                let store = open(&path);
+                let mut fake = start(&store, false, None);
+                if phase == "presence" {
+                    let (active, written) = fake.written().await;
+                    let id = active
+                        .get_attr("id")
+                        .and_then(|v| v.as_text())
+                        .unwrap()
+                        .to_owned();
+                    written.send(Ok(())).unwrap();
+                    fake.deliver(Node::new("iq").attr("type", "result").attr("id", id))
+                        .await;
+                } else if phase != "activation" {
+                    fake.activate().await;
+                    let incoming = if phase == "pong" {
+                        Node::new("iq")
+                            .attr("type", "get")
+                            .attr("xmlns", "urn:xmpp:ping")
+                    } else {
+                        Node::new("notification")
+                            .attr("type", "picture")
+                            .attr("from", "123456-789@g.us")
+                            .attr("participant", "15551234567@s.whatsapp.net")
+                            .attr("id", "EPOCH-PICTURE")
+                            .children(vec![
+                                Node::new("set")
+                                    .attr("jid", "123456-789@g.us")
+                                    .attr("id", "7"),
+                            ])
+                    };
+                    fake.deliver(incoming).await;
+                }
+                let queued = fake.from_worker.recv().await.unwrap();
+                store
+                    .write(|tx| {
+                        let mut account = AccountRecord::load_in_write(tx)?.unwrap();
+                        match change {
+                            "account" => account.signal_registration_id = Some(4321),
+                            "observation" => account.last_authenticated_at = Some(Timestamp::now()),
+                            "missing" => {
+                                tx.delete(Table::Account, b"account")?;
+                                return Ok(());
+                            }
+                            _ => {}
+                        }
+                        account.save(tx)
+                    })
+                    .unwrap();
+                let snapshot = |store: &ProtocolStore| {
+                    store
+                        .read(|tx| {
+                            Table::ALL
+                                .into_iter()
+                                .map(|table| tx.scan(table, 1, 10000))
+                                .collect::<Result<Vec<_>>>()
+                        })
+                        .unwrap()
+                };
+                let before = snapshot(&store);
+                let head = store.journal_head().unwrap();
+                let accepted = matches!(change, "same" | "observation");
+                let prepared = queued.prepare();
+                assert_eq!(prepared.is_some(), accepted, "{phase}/{change}");
+                if let Some((_, written)) = prepared {
+                    written.send(Ok(())).unwrap();
+                }
+                assert_eq!(snapshot(&store), before);
+                assert_eq!(store.journal_head().unwrap(), head);
+                if accepted {
+                    fake.stop_cleanly().await;
+                } else {
+                    assert!(fake.finished().await.is_err());
+                }
+                drop(store);
+                let reopened = identity_store(&path);
+                assert_eq!(snapshot(&reopened), before);
+                assert_eq!(reopened.journal_head().unwrap(), head);
+            }
+        }
+    }
+
     #[tokio::test(start_paused = true)]
     async fn malformed_ack_stops_epoch_after_capture_and_keeps_reserved_action() {
         use crate::model::jid::Server;
