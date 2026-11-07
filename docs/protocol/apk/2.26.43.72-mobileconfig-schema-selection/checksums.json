@@ -1,0 +1,54 @@
+{
+  "README.md": {
+    "bytes": 6252,
+    "sha256": "bc2f27307ac2c24a0b8f0561e23e07cd63c37745b3da9e871039b82b73b767ca"
+  },
+  "atomic-byte-cas.txt": {
+    "bytes": 591,
+    "sha256": "e6851755812621c9e73bdf4f44e15246457a9d16a53e4012ef96a04e7953fa47"
+  },
+  "derive-selection.py": {
+    "bytes": 2845,
+    "sha256": "f04d70d18cdac443a19fc5dcd8e33d3a2bb1a57a58bb8338315d7451a00b0853"
+  },
+  "length-equality.txt": {
+    "bytes": 593,
+    "sha256": "b5dd8bfc20c75095a32b091b97f0a454755062b06e67da6cab58a5f7b853e864"
+  },
+  "outlined-helpers.txt": {
+    "bytes": 2807,
+    "sha256": "61a40a8e3ea1580b877e83f5b4b457e94f38136d2dc6ad64af88f5dfcc643730"
+  },
+  "rea-selector-window.json": {
+    "bytes": 10089,
+    "sha256": "0ff2b833094565157ebf369a6b60b2173e853885b78c1fed3b205db9a7842864"
+  },
+  "refresh-release-entry.txt": {
+    "bytes": 1252,
+    "sha256": "6b2d9c95d0ad493e4e2c4e49db8e5fbf2e906f17c43841650c9ce34f6c70c428"
+  },
+  "refresh-selection.txt": {
+    "bytes": 3325,
+    "sha256": "8fa1d76355d24c31de1542b4b9e0f995df977d2db9ea15e5e50282e52e0b47ce"
+  },
+  "selection-and-predicate.txt": {
+    "bytes": 8221,
+    "sha256": "865edd22c8177ad1ca91bfac13f8acceba9c3f8b8b3ff0f4e6b4caafe99e6033"
+  },
+  "selection.json": {
+    "bytes": 3468,
+    "sha256": "65e639d3bc81205c89d86617bfd858501fb7a158e0745d9a76ac067a886e3156"
+  },
+  "string-compare-entry.txt": {
+    "bytes": 530,
+    "sha256": "cb86b2017df201d5ab7ab2c0ae373d6ce6d309efe49780ff35b05fa0b18b067b"
+  },
+  "string-equality.txt": {
+    "bytes": 728,
+    "sha256": "d36a9ff4f174dfac10c90411c492857b5244c6a853d64e5896835ecf10d6217a"
+  },
+  "string-span.txt": {
+    "bytes": 541,
+    "sha256": "9012d8757d7ffa350466b63a3f1378f3b62cb45fb28c8fc6a5af7f02d8d108ed"
+  }
+}

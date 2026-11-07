@@ -1,0 +1,69 @@
+{
+  "evidence_id": "ev_a551884b7359ea623457769bec6c1c7363b083227a53dcfefb97fdd8331ccd70",
+  "subject": {
+    "name": "libmobileconfig-jni.so",
+    "digest": {
+      "sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so",
+    "format": "unknown",
+    "architecture": null
+  },
+  "provider": {
+    "id": "rizin",
+    "name": "Rizin",
+    "version": null
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.reverse-engineering.command-observation",
+  "operation": "execute_rizin_command",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so",
+    "command": "e scr.color=0; pd 72 @ 0xab3e4",
+    "provider_executable": "rizin",
+    "command_arguments": [
+      "-N",
+      "-q",
+      "-c",
+      "e scr.color=0; pd 72 @ 0xab3e4",
+      "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so"
+    ]
+  },
+  "raw_result": {
+    "stdout": "            0x000ab3e4      paciasp\n            0x000ab3e8      sub   sp, sp, 0x80\n            0x000ab3ec      stp   x29, x30, [sp, 0x20]\n            0x000ab3f0      stp   x28, x27, [sp, 0x30]\n            0x000ab3f4      bl    0xca0d0\n            0x000ab3f8      add   x29, sp, 0x20\n            0x000ab3fc      str   w2, [sp, 0x10]\n            0x000ab400      mrs   x8, tpidr_el0\n            0x000ab404      movi  v0.2d, 0000000000000000\n            0x000ab408      str   x8, [sp]\n            0x000ab40c      mov   x23, x0\n            0x000ab410      mov   w20, w5\n            0x000ab414      ldr   x8, [x8, 0x28]                       ; [0x28:4]=0xcfad8\n            0x000ab418      mov   w21, w4\n            0x000ab41c      mov   w22, w3\n            0x000ab420      mov   x0, x1\n            0x000ab424      stur  x8, [x29, -8]\n            0x000ab428      mov   x8, x23\n            0x000ab42c      str   x1, [x23]\n            0x000ab430      str   q0, [x8, 8]!\n            0x000ab434      str   x8, [sp, 8]\n            0x000ab438      stur  q0, [x23, 0x18]\n            0x000ab43c      bl    0xaa594\n            0x000ab440      ldp   x19, x26, [x0]\n            0x000ab444      mov   x25, x0\n            0x000ab448      mov   w8, wzr\n            0x000ab44c      mov   w27, 0x18\n            0x000ab450      mov   w28, 0x50                            ; 'P'\n            0x000ab454      sub   x9, x26, x19\n            0x000ab458      stur  w8, [x29, -0xc]\n            0x000ab45c      sdiv  x9, x9, x27\n            0x000ab460      cmp   x9, w8, uxtw\n        ,=< 0x000ab464      b.ls  0xab560\n        |   0x000ab468      mov   w24, w8\n        |   0x000ab46c      umaddl x0, w24, w27, x19\n        |   0x000ab470      ldrb  w8, [x0, 0x10]                       ; [0x10:4]=0xb70003\n       ,==< 0x000ab474      tbnz  w8, 0, 0xab558\n       ||   0x000ab478      ldp   x9, x8, [x0]\n       ||   0x000ab47c      sub   x10, x8, x9\n       ||   0x000ab480      sdiv  x10, x10, x28\n      ,===< 0x000ab484      cbz   w10, 0xab558\n      |||   0x000ab488      cmp   x9, x8\n     ,====< 0x000ab48c      b.eq  0xab4a4\n    ,=====< 0x000ab490      tbz   w20, 0, 0xab4a4\n    |||||   0x000ab494      ldr   w10, [x9, 0x44]                      ; [0x44:4]=4\n    |||||   0x000ab498      ldr   w11, [sp, 0x10]                      ; [0x10:4]=0xb70003\n    |||||   0x000ab49c      cmp   w10, w11\n   ,======< 0x000ab4a0      b.ne  0xab558\n  ,=``----> 0x000ab4a4      cbz   w21, 0xab4f8\n  ||  |||   0x000ab4a8      cmp   w21, 1\n  || ,====< 0x000ab4ac      b.eq  0xab4e8\n  || ||||   0x000ab4b0      cmp   w21, 2\n  ||,=====< 0x000ab4b4      b.ne  0xab558\n  --------> 0x000ab4b8      cmp   x9, x8\n  ========< 0x000ab4bc      b.eq  0xab508\n  |||||||   0x000ab4c0      mov   x10, x9\n  |||||||   0x000ab4c4      ldrb  w9, [x9, 0x40]                       ; segment.PHDR\n  |||||||                                                              ; [0x40:4]=6\n  |||||||   0x000ab4c8      cmp   w9, 1\n  |||||||   0x000ab4cc      add   x9, x10, 0x50\n  ========< 0x000ab4d0      b.eq  0xab4b8\n  |||||||   0x000ab4d4      cmp   x10, x8\n  |||||||   0x000ab4d8      cset  w8, eq\n  |||||||   0x000ab4dc      eor   w8, w8, w22\n  ========< 0x000ab4e0      tbnz  w8, 0, 0xab50c\n  |||||||   0x000ab4e4      b     0xab558\n  |||`----> 0x000ab4e8      bl    0xab5a8\n  ||| |||   0x000ab4ec      eor   w8, w0, w22\n  ||| |||   0x000ab4f0      tbnz  w8, 0, 0xab50c\n  ||| |||   0x000ab4f4      b     0xab558\n  `-------> 0x000ab4f8      tbz   w22, 0, 0xab558\n   || |||   0x000ab4fc      bl    0xab5a8\n   || |||   0x000ab500      tbz   w0, 0, 0xab50c\n",
+    "stderr": "ERROR: Cannot determine entrypoint, using 0x0004c460.\n",
+    "exit_code": 0,
+    "signal": null,
+    "output_truncated": false,
+    "completion_status": "complete",
+    "artifact_sha256_after": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+    "artifact_changed": false
+  },
+  "normalized_result": {
+    "stdout": "            0x000ab3e4      paciasp\n            0x000ab3e8      sub   sp, sp, 0x80\n            0x000ab3ec      stp   x29, x30, [sp, 0x20]\n            0x000ab3f0      stp   x28, x27, [sp, 0x30]\n            0x000ab3f4      bl    0xca0d0\n            0x000ab3f8      add   x29, sp, 0x20\n            0x000ab3fc      str   w2, [sp, 0x10]\n            0x000ab400      mrs   x8, tpidr_el0\n            0x000ab404      movi  v0.2d, 0000000000000000\n            0x000ab408      str   x8, [sp]\n            0x000ab40c      mov   x23, x0\n            0x000ab410      mov   w20, w5\n            0x000ab414      ldr   x8, [x8, 0x28]                       ; [0x28:4]=0xcfad8\n            0x000ab418      mov   w21, w4\n            0x000ab41c      mov   w22, w3\n            0x000ab420      mov   x0, x1\n            0x000ab424      stur  x8, [x29, -8]\n            0x000ab428      mov   x8, x23\n            0x000ab42c      str   x1, [x23]\n            0x000ab430      str   q0, [x8, 8]!\n            0x000ab434      str   x8, [sp, 8]\n            0x000ab438      stur  q0, [x23, 0x18]\n            0x000ab43c      bl    0xaa594\n            0x000ab440      ldp   x19, x26, [x0]\n            0x000ab444      mov   x25, x0\n            0x000ab448      mov   w8, wzr\n            0x000ab44c      mov   w27, 0x18\n            0x000ab450      mov   w28, 0x50                            ; 'P'\n            0x000ab454      sub   x9, x26, x19\n            0x000ab458      stur  w8, [x29, -0xc]\n            0x000ab45c      sdiv  x9, x9, x27\n            0x000ab460      cmp   x9, w8, uxtw\n        ,=< 0x000ab464      b.ls  0xab560\n        |   0x000ab468      mov   w24, w8\n        |   0x000ab46c      umaddl x0, w24, w27, x19\n        |   0x000ab470      ldrb  w8, [x0, 0x10]                       ; [0x10:4]=0xb70003\n       ,==< 0x000ab474      tbnz  w8, 0, 0xab558\n       ||   0x000ab478      ldp   x9, x8, [x0]\n       ||   0x000ab47c      sub   x10, x8, x9\n       ||   0x000ab480      sdiv  x10, x10, x28\n      ,===< 0x000ab484      cbz   w10, 0xab558\n      |||   0x000ab488      cmp   x9, x8\n     ,====< 0x000ab48c      b.eq  0xab4a4\n    ,=====< 0x000ab490      tbz   w20, 0, 0xab4a4\n    |||||   0x000ab494      ldr   w10, [x9, 0x44]                      ; [0x44:4]=4\n    |||||   0x000ab498      ldr   w11, [sp, 0x10]                      ; [0x10:4]=0xb70003\n    |||||   0x000ab49c      cmp   w10, w11\n   ,======< 0x000ab4a0      b.ne  0xab558\n  ,=``----> 0x000ab4a4      cbz   w21, 0xab4f8\n  ||  |||   0x000ab4a8      cmp   w21, 1\n  || ,====< 0x000ab4ac      b.eq  0xab4e8\n  || ||||   0x000ab4b0      cmp   w21, 2\n  ||,=====< 0x000ab4b4      b.ne  0xab558\n  --------> 0x000ab4b8      cmp   x9, x8\n  ========< 0x000ab4bc      b.eq  0xab508\n  |||||||   0x000ab4c0      mov   x10, x9\n  |||||||   0x000ab4c4      ldrb  w9, [x9, 0x40]                       ; segment.PHDR\n  |||||||                                                              ; [0x40:4]=6\n  |||||||   0x000ab4c8      cmp   w9, 1\n  |||||||   0x000ab4cc      add   x9, x10, 0x50\n  ========< 0x000ab4d0      b.eq  0xab4b8\n  |||||||   0x000ab4d4      cmp   x10, x8\n  |||||||   0x000ab4d8      cset  w8, eq\n  |||||||   0x000ab4dc      eor   w8, w8, w22\n  ========< 0x000ab4e0      tbnz  w8, 0, 0xab50c\n  |||||||   0x000ab4e4      b     0xab558\n  |||`----> 0x000ab4e8      bl    0xab5a8\n  ||| |||   0x000ab4ec      eor   w8, w0, w22\n  ||| |||   0x000ab4f0      tbnz  w8, 0, 0xab50c\n  ||| |||   0x000ab4f4      b     0xab558\n  `-------> 0x000ab4f8      tbz   w22, 0, 0xab558\n   || |||   0x000ab4fc      bl    0xab5a8\n   || |||   0x000ab500      tbz   w0, 0, 0xab50c\n",
+    "stderr": "ERROR: Cannot determine entrypoint, using 0x0004c460.\n",
+    "exit_code": 0,
+    "signal": null,
+    "output_truncated": false,
+    "completion_status": "complete",
+    "artifact_sha256_after": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+    "artifact_changed": false
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "The executable version and supported formats are reported as unknown because no reliable version probe was performed.",
+    "A non-zero process exit is preserved as an observed command result.",
+    "Rizin commands and retained plugins may read files or access network resources outside the selected artifact; those external inputs are not bound to Evidence.",
+    "When both are available, pre-run and post-run digests detect artifact changes across the provider call but cannot prove the exact bytes consumed during the call."
+  ],
+  "relationship_coverage": null,
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so"
+    }
+  ],
+  "evidence_links": []
+}

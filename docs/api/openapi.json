@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-schema-selection-evidence": {
+    "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-schema-selection/derive-selection.py <pinned-library>; offline synthetic selection only",
+    "x-transport": "research only; no extracted real schema table or enabled sender",
+    "x-live": false,
+    "description": "Confirmed selected static MobileConfig refresh builds paired schema selections through an ascending filtered table walk. Mode0 leaves side0 empty; modes1/2 partition by a concrete special-label predicate or all-record byte flag. Version/skip/empty gates and selected-record counting are retained with a synthetic matrix. Actual schema construction, field producers, synchronization and persistence remain unresolved.",
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-schema-selection/README.md"
+  },
   "x-mobileconfig-schema-fragments-evidence": {
     "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-schema-fragments/derive-fragments.py <pinned-library>; offline synthetic projection only",
     "x-transport": "research only; no actual schema inputs or enabled request serializer",

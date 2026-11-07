@@ -1,0 +1,33 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   a9f0c:      	paciasp
+   a9f10:      	stp	x29, x30, [sp, #-0x40]!
+   a9f14:      	stp	x24, x23, [sp, #0x10]
+   a9f18:      	bl	0xcad30 <JNI_OnLoad+0x5bb90>
+   a9f1c:      	mov	x29, sp
+   a9f20:      	ldrb	w8, [x0]
+   a9f24:      	tbnz	w8, #0x0, 0xa9fcc <JNI_OnLoad+0x3ae2c>
+   a9f28:      	ldp	x0, x8, [x0, #0x8]
+   a9f2c:      	ldrb	w8, [x8]
+   a9f30:      	eor	w8, w8, #0x1
+   a9f34:      	stlrb	w8, [x0]
+   a9f38:      	bl	0xaa1a8 <JNI_OnLoad+0x3b008>
+   a9f3c:      	mov	x20, x0
+   a9f40:      	bl	0xcd4b0 <_ZN5folly18parking_lot_detail6Bucket9bucketForEm@plt>
+   a9f44:      	dmb	ish
+   a9f48:      	add	x8, x0, #0x38
+   a9f4c:      	mov	x19, x0
+   a9f50:      	ldar	x8, [x8]
+   a9f54:      	cbz	x8, 0xa9fcc <JNI_OnLoad+0x3ae2c>
+   a9f58:      	mov	x0, x19
+   a9f5c:      	bl	0xccb70 <_ZNSt6__ndk15mutex4lockEv@plt>
+   a9f60:      	adrp	x22, 0xd6000
+   a9f64:      	ldr	x24, [x19, #0x28]
+   a9f68:      	mov	w23, #0x1               // =1
+   a9f6c:      	ldr	x22, [x22, #0xbe8]
+   a9f70:      	cbz	x24, 0xa9fdc <JNI_OnLoad+0x3ae3c>
+   a9f74:      	ldr	x8, [x24]

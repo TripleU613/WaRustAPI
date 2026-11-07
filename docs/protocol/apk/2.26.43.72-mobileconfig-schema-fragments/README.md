@@ -99,3 +99,8 @@ selection, remaining hash functions, Java route consumption and response
 persistence/cache activation. No Rust runtime sender, timing or account state
 changes are justified yet. Next follow the producer of selected schema indices
 and the request-data constructor to connect these algorithms to real inputs.
+
+Follow-up: [paired schema selection](../2.26.43.72-mobileconfig-schema-selection/README.md)
+now identifies one ascending, unique index producer and its filtering rules.
+The synthetic reversed/duplicated fragment examples above remain algorithm
+projections, not selections emitted by that specific producer.

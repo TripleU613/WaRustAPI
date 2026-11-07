@@ -1,0 +1,167 @@
+{
+  "member_sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+  "selected_calls": {
+    "0xaa7fc": "0xab3e4",
+    "0xaa834": "0xab3e4",
+    "0xab43c": "0xaa594",
+    "0xab4e8": "0xab5a8",
+    "0xab4fc": "0xab5a8",
+    "0xab514": "0xab65c",
+    "0xab634": "0x70a28"
+  },
+  "refresh_mode": "0 if configuration byte +0x194 == 0 else 1 + (byte +0x208 & 1)",
+  "first_refresh_container": {
+    "destination": "configuration+0x258 -> +0x18",
+    "side": 1,
+    "version_gate": 1
+  },
+  "second_refresh_container": {
+    "destination": "configuration+0x258 -> +0x20",
+    "side": 0,
+    "version_gate": 1
+  },
+  "authority": "analyst-derived synthetic valid-table projection, not APK execution or extracted actual schema inputs",
+  "synthetic_table": [
+    {
+      "table_byte10": 0,
+      "records": [
+        {
+          "label": "gk_enabled",
+          "word30": 1,
+          "param_label": "",
+          "byte40": 1,
+          "word44": 7
+        }
+      ]
+    },
+    {
+      "table_byte10": 0,
+      "records": [
+        {
+          "label": "ordinary",
+          "word30": 2,
+          "param_label": "",
+          "byte40": 0,
+          "word44": 7
+        }
+      ]
+    },
+    {
+      "table_byte10": 0,
+      "records": [
+        {
+          "label": "gk_multiple",
+          "word30": 1,
+          "param_label": "",
+          "byte40": 1,
+          "word44": 7
+        },
+        {
+          "label": "gk_multiple",
+          "word30": 1,
+          "param_label": "",
+          "byte40": 1,
+          "word44": 7
+        }
+      ]
+    },
+    {
+      "table_byte10": 1,
+      "records": [
+        {
+          "label": "skipped",
+          "word30": 1,
+          "param_label": "",
+          "byte40": 1,
+          "word44": 7
+        }
+      ]
+    },
+    {
+      "table_byte10": 0,
+      "records": []
+    },
+    {
+      "table_byte10": 0,
+      "records": [
+        {
+          "label": "different_version",
+          "word30": 1,
+          "param_label": "",
+          "byte40": 1,
+          "word44": 8
+        }
+      ]
+    },
+    {
+      "table_byte10": 0,
+      "records": [
+        {
+          "label": "gk_underscore",
+          "word30": 1,
+          "param_label": "_",
+          "byte40": 0,
+          "word44": 7
+        }
+      ]
+    }
+  ],
+  "synthetic_selection_matrix": {
+    "mode0_side0": {
+      "selected_indices": [],
+      "selected_record_count": 0
+    },
+    "mode0_side1": {
+      "selected_indices": [
+        1,
+        2
+      ],
+      "selected_record_count": 3
+    },
+    "mode1_side0": {
+      "selected_indices": [
+        0,
+        6
+      ],
+      "selected_record_count": 2
+    },
+    "mode1_side1": {
+      "selected_indices": [
+        1,
+        2
+      ],
+      "selected_record_count": 3
+    },
+    "mode2_side0": {
+      "selected_indices": [
+        0,
+        2
+      ],
+      "selected_record_count": 3
+    },
+    "mode2_side1": {
+      "selected_indices": [
+        1,
+        6
+      ],
+      "selected_record_count": 2
+    },
+    "mode3_side0": {
+      "selected_indices": [],
+      "selected_record_count": 0
+    },
+    "mode3_side1": {
+      "selected_indices": [],
+      "selected_record_count": 0
+    },
+    "version_gate_disabled": {
+      "selected_indices": [
+        1,
+        2,
+        5
+      ],
+      "selected_record_count": 4
+    }
+  },
+  "remaining": "schema table construction, field producers, concurrent lifecycle, request-data modes and response persistence untraced"
+}
