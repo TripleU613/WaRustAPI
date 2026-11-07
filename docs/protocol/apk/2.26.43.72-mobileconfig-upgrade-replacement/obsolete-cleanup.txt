@@ -1,0 +1,58 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   8acd0:      	paciasp
+   8acd4:      	sub	sp, sp, #0x70
+   8acd8:      	stp	x29, x30, [sp, #0x30]
+   8acdc:      	str	x23, [sp, #0x40]
+   8ace0:      	bl	0xcab54 <JNI_OnLoad+0x5b9b4>
+   8ace4:      	add	x29, sp, #0x30
+   8ace8:      	bl	0xcadfc <JNI_OnLoad+0x5bc5c>
+   8acec:      	mov	w1, wzr
+   8acf0:      	bl	0xcabe8 <JNI_OnLoad+0x5ba48>
+   8acf4:      	add	x8, sp, #0x10
+   8acf8:      	add	x22, x8, #0x8
+   8acfc:      	bl	0xcbefc <JNI_OnLoad+0x5cd5c>
+   8ad00:      	stp	xzr, xzr, [sp, #0x18]
+   8ad04:      	stp	x8, x22, [sp, #0x8]
+   8ad08:      	bl	0x8b5c8 <JNI_OnLoad+0x1c428>
+   8ad0c:      	ldr	w8, [x19, #0x408]
+   8ad10:      	sub	w8, w8, #0x1
+   8ad14:      	cmp	w8, #0x1
+   8ad18:      	b.hi	0x8ad28 <JNI_OnLoad+0x1bb88>
+   8ad1c:      	mov	x0, sp
+   8ad20:      	mov	w1, #0x1                // =1
+   8ad24:      	bl	0x8b5c8 <JNI_OnLoad+0x1c428>
+   8ad28:      	ldr	x20, [sp, #0x10]
+   8ad2c:      	mov	w23, #0x1               // =1
+   8ad30:      	cmp	x20, x22
+   8ad34:      	b.eq	0x8ad6c <JNI_OnLoad+0x1bbcc>
+   8ad38:      	add	x0, x20, #0x20
+   8ad3c:      	mov	x1, xzr
+   8ad40:      	bl	0xc2148 <JNI_OnLoad+0x52fa8>
+   8ad44:      	tbz	w0, #0x0, 0x8ad5c <JNI_OnLoad+0x1bbbc>
+   8ad48:      	ldr	x1, [x19, #0xf8]
+   8ad4c:      	add	x0, x20, #0x20
+   8ad50:      	bl	0xc2310 <JNI_OnLoad+0x53170>
+   8ad54:      	tbnz	w0, #0x0, 0x8ad5c <JNI_OnLoad+0x1bbbc>
+   8ad58:      	mov	w23, wzr
+   8ad5c:      	mov	x0, x20
+   8ad60:      	bl	0x6f44c <JNI_OnLoad+0x2ac>
+   8ad64:      	mov	x20, x0
+   8ad68:      	b	0x8ad30 <JNI_OnLoad+0x1bb90>
+   8ad6c:      	ldr	x0, [sp, #0x18]
+   8ad70:      	bl	0x71adc <JNI_OnLoad+0x293c>
+   8ad74:      	bl	0xca254 <JNI_OnLoad+0x5b0b4>
+   8ad78:      	b.ne	0x8ad9c <JNI_OnLoad+0x1bbfc>
+   8ad7c:      	ldp	x20, x19, [sp, #0x60]
+   8ad80:      	and	w0, w23, #0x1
+   8ad84:      	ldp	x22, x21, [sp, #0x50]
+   8ad88:      	ldr	x23, [sp, #0x40]
+   8ad8c:      	ldp	x29, x30, [sp, #0x30]
+   8ad90:      	add	sp, sp, #0x70
+   8ad94:      	autiasp
+   8ad98:      	ret
+   8ad9c:      	bl	0xcd9f0 <__stack_chk_fail@plt>

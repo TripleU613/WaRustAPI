@@ -1,0 +1,69 @@
+{
+  "evidence_id": "ev_660d785be8a9f1b49845bb940986e8904b2db0057307c3c7680fa57ff5125571",
+  "subject": {
+    "name": "libmobileconfig-jni.so",
+    "digest": {
+      "sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so",
+    "format": "unknown",
+    "architecture": null
+  },
+  "provider": {
+    "id": "rizin",
+    "name": "Rizin",
+    "version": null
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.reverse-engineering.command-observation",
+  "operation": "execute_rizin_command",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so",
+    "command": "e scr.color=0; pd 42 @ 0x8bce4",
+    "provider_executable": "rizin",
+    "command_arguments": [
+      "-N",
+      "-q",
+      "-c",
+      "e scr.color=0; pd 42 @ 0x8bce4",
+      "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so"
+    ]
+  },
+  "raw_result": {
+    "stdout": "        ,=< 0x0008bce4      tbnz  w21, 0, 0x8bd3c\n      ,.--> 0x0008bce8      cbz   w24, 0x8bd3c\n      |:|   0x0008bcec      bl    0xcb114\n      |:|   0x0008bcf0      bl    0xc2820\n      |:|   0x0008bcf4      mov   w21, w0\n     ,====< 0x0008bcf8      tbnz  w0, 0, 0x8bd34\n     ||:|   0x0008bcfc      cmp   x25, 1\n    ,=====< 0x0008bd00      b.lt  0x8bd30\n    |||:|   0x0008bd04      cmp   x25, x23\n    |||:|   0x0008bd08      mul   x9, x25, x27\n    |||:|   0x0008bd0c      mov   x0, sp\n    |||:|   0x0008bd10      csel  w8, wzr, w26, eq\n    |||:|   0x0008bd14      csinc w8, w8, wzr, le\n    |||:|   0x0008bd18      csinv w8, w8, wzr, ge\n    |||:|   0x0008bd1c      cmp   w8, 0\n    |||:|   0x0008bd20      ccmp  w8, w26, 4, lt\n    |||:|   0x0008bd24      csel  x8, x9, x28, ne\n    |||:|   0x0008bd28      str   x8, [sp]\n    |||:|   0x0008bd2c      bl    method.std::__ndk1::this_thread.sleep_for_std::__ndk1::chrono::duration_int64_t__std::__ndk1::ratio_1l__1000000000l____const\n    `-----> 0x0008bd30      lsl   x25, x25, 1\n     `----> 0x0008bd34      add   w24, w24, 1\n      |`==< 0x0008bd38      tbz   w21, 0, 0x8bce8\n      `-`-> 0x0008bd3c      bl    0xca43c\n        ,=< 0x0008bd40      b.ne  0x8bd60\n        |   0x0008bd44      and   w0, w21, 1\n        |   0x0008bd48      bl    0xca3dc\n        |   0x0008bd4c      ldp   x28, x27, [sp, 0x20]\n        |   0x0008bd50      ldp   x29, x30, [sp, 0x10]\n        |   0x0008bd54      add   sp, sp, 0x70\n        |   0x0008bd58      autiasp\n        |   0x0008bd5c      ret\n        `-> 0x0008bd60      bl    sym.imp.__stack_chk_fail\n            0x0008bd64      paciasp\n            0x0008bd68      stp   x29, x30, [sp, -0x20]!\n            0x0008bd6c      str   x19, [sp, 0x10]\n            0x0008bd70      mov   x29, sp\n            0x0008bd74      adrp  x1, 0x1a000\n            0x0008bd78      add   x1, x1, 0xfd2\n            0x0008bd7c      mov   x19, x0\n            0x0008bd80      bl    0x4d9a0\n            0x0008bd84      add   x0, x19, 0x18\n            0x0008bd88      ldr   x19, [sp, 0x10]                      ; [0x10:4]=0xb70003\n",
+    "stderr": "ERROR: Cannot determine entrypoint, using 0x0004c460.\n",
+    "exit_code": 0,
+    "signal": null,
+    "output_truncated": false,
+    "completion_status": "complete",
+    "artifact_sha256_after": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+    "artifact_changed": false
+  },
+  "normalized_result": {
+    "stdout": "        ,=< 0x0008bce4      tbnz  w21, 0, 0x8bd3c\n      ,.--> 0x0008bce8      cbz   w24, 0x8bd3c\n      |:|   0x0008bcec      bl    0xcb114\n      |:|   0x0008bcf0      bl    0xc2820\n      |:|   0x0008bcf4      mov   w21, w0\n     ,====< 0x0008bcf8      tbnz  w0, 0, 0x8bd34\n     ||:|   0x0008bcfc      cmp   x25, 1\n    ,=====< 0x0008bd00      b.lt  0x8bd30\n    |||:|   0x0008bd04      cmp   x25, x23\n    |||:|   0x0008bd08      mul   x9, x25, x27\n    |||:|   0x0008bd0c      mov   x0, sp\n    |||:|   0x0008bd10      csel  w8, wzr, w26, eq\n    |||:|   0x0008bd14      csinc w8, w8, wzr, le\n    |||:|   0x0008bd18      csinv w8, w8, wzr, ge\n    |||:|   0x0008bd1c      cmp   w8, 0\n    |||:|   0x0008bd20      ccmp  w8, w26, 4, lt\n    |||:|   0x0008bd24      csel  x8, x9, x28, ne\n    |||:|   0x0008bd28      str   x8, [sp]\n    |||:|   0x0008bd2c      bl    method.std::__ndk1::this_thread.sleep_for_std::__ndk1::chrono::duration_int64_t__std::__ndk1::ratio_1l__1000000000l____const\n    `-----> 0x0008bd30      lsl   x25, x25, 1\n     `----> 0x0008bd34      add   w24, w24, 1\n      |`==< 0x0008bd38      tbz   w21, 0, 0x8bce8\n      `-`-> 0x0008bd3c      bl    0xca43c\n        ,=< 0x0008bd40      b.ne  0x8bd60\n        |   0x0008bd44      and   w0, w21, 1\n        |   0x0008bd48      bl    0xca3dc\n        |   0x0008bd4c      ldp   x28, x27, [sp, 0x20]\n        |   0x0008bd50      ldp   x29, x30, [sp, 0x10]\n        |   0x0008bd54      add   sp, sp, 0x70\n        |   0x0008bd58      autiasp\n        |   0x0008bd5c      ret\n        `-> 0x0008bd60      bl    sym.imp.__stack_chk_fail\n            0x0008bd64      paciasp\n            0x0008bd68      stp   x29, x30, [sp, -0x20]!\n            0x0008bd6c      str   x19, [sp, 0x10]\n            0x0008bd70      mov   x29, sp\n            0x0008bd74      adrp  x1, 0x1a000\n            0x0008bd78      add   x1, x1, 0xfd2\n            0x0008bd7c      mov   x19, x0\n            0x0008bd80      bl    0x4d9a0\n            0x0008bd84      add   x0, x19, 0x18\n            0x0008bd88      ldr   x19, [sp, 0x10]                      ; [0x10:4]=0xb70003\n",
+    "stderr": "ERROR: Cannot determine entrypoint, using 0x0004c460.\n",
+    "exit_code": 0,
+    "signal": null,
+    "output_truncated": false,
+    "completion_status": "complete",
+    "artifact_sha256_after": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+    "artifact_changed": false
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "The executable version and supported formats are reported as unknown because no reliable version probe was performed.",
+    "A non-zero process exit is preserved as an observed command result.",
+    "Rizin commands and retained plugins may read files or access network resources outside the selected artifact; those external inputs are not bound to Evidence.",
+    "When both are available, pre-run and post-run digests detect artifact changes across the provider call but cannot prove the exact bytes consumed during the call."
+  ],
+  "relationship_coverage": null,
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so"
+    }
+  ],
+  "evidence_links": []
+}

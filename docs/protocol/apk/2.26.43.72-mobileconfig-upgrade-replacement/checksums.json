@@ -1,0 +1,78 @@
+{
+  "README.md": {
+    "bytes": 7136,
+    "sha256": "0598eb6744eb72c4d61714234003059b01e205ee128f847451325324b7986d2b"
+  },
+  "cleanup-entry.txt": {
+    "bytes": 4397,
+    "sha256": "d62124a75a3cd38e842d86412f04b231305686afde98f5d19adf3e5ab6b23025"
+  },
+  "finish-and-failure.txt": {
+    "bytes": 6893,
+    "sha256": "28e65918387857bc7d71030ee14736a956c57902824ffd90faa9a93359f22514"
+  },
+  "inspect-replacement.py": {
+    "bytes": 2847,
+    "sha256": "398ba7b83f98441ce7da9a658ae2a9cb4ab047972129ec887b1ebcc6f5f66f7d"
+  },
+  "meta-first-args.txt": {
+    "bytes": 203,
+    "sha256": "79a1328dfc949f079fd95557cdd36c5dd1f8683b090802960403661e947f58ca"
+  },
+  "obsolete-cleanup.txt": {
+    "bytes": 2192,
+    "sha256": "70a0d859c9e17ac1acbf23f0d35cda9b677eb8a7bdc8a07d66d0a418dac3b496"
+  },
+  "ordered-pair.txt": {
+    "bytes": 1467,
+    "sha256": "8957253e320a700210ff81880c59f161b91dd87798ed9838cd794cb0135b2e27"
+  },
+  "rea-rename.json": {
+    "bytes": 7023,
+    "sha256": "51050bc368cdff43e722e8df2ec86ae92f2c2bade98bb1cf72bfb3271d059a7b"
+  },
+  "rename-args.txt": {
+    "bytes": 293,
+    "sha256": "82d11d56075e4e28f2d4bcb0503b2e8ac9e4a2e9009c512caa774181b88f5337"
+  },
+  "rename-destination-args.txt": {
+    "bytes": 208,
+    "sha256": "5e8b8d0e1d6635e15a934d5103a39611e5444afdd5bb879533e0bcccecad0bca"
+  },
+  "rename-import.txt": {
+    "bytes": 1692,
+    "sha256": "4b1cc1af3e771c6721ea36d03adf191f10700f0584cca62d01bd46c2651dd131"
+  },
+  "rename-source-args.txt": {
+    "bytes": 209,
+    "sha256": "a54fc3f6ce6cd8f9ad3e482f7c034a026c234152fe5c56fb65f7797269d1adac"
+  },
+  "replacement-branch.txt": {
+    "bytes": 2796,
+    "sha256": "8b91f261640fe8ea38fdbc20d3718fbaf9fab2a0149fe9ad12c659d108622445"
+  },
+  "replacement.json": {
+    "bytes": 2601,
+    "sha256": "08a712d36ec8be00eb0a78535dc904164809f0faa180d9dfa2cbf421eef94e28"
+  },
+  "retry-args.txt": {
+    "bytes": 203,
+    "sha256": "87b2323e021d116e48832c14a9bb3de694b3ee3cc51c332dee7ec2aab3df2a7a"
+  },
+  "retry-rename.txt": {
+    "bytes": 2352,
+    "sha256": "afda63e12332a86448f9f273cd820d1db559c6a573a170628017e8670b87e1ef"
+  },
+  "staged-replacement.txt": {
+    "bytes": 8253,
+    "sha256": "1907ecbf71d7487a5997f89eee3debaa981838a93017e5f0861bde5ff9fd498e"
+  },
+  "table-first-args.txt": {
+    "bytes": 203,
+    "sha256": "2da0707304b1dca7416e06832cdf91a2975e100185ef7d5bef43c332ea6f98e7"
+  },
+  "writer-args.txt": {
+    "bytes": 279,
+    "sha256": "819415331eda033010fd6c71373997f8b6d31e331a72493a578c60924ad6320e"
+  }
+}

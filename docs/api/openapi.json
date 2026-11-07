@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-upgrade-replacement-evidence": {
+    "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-upgrade-replacement/inspect-replacement.py <pinned-library>",
+    "x-transport": "offline local file replacement research; no Rust transport or HTTP route enabled",
+    "x-live": false,
+    "description": "Confirmed selected static MobileConfig upgrade has direct writes or temporary-file replacement. Default replacement attempts both renames once; flag-controlled ordering uses up to three local rename attempts with 4/8/16ms failure sleeps. Both pair replacements must succeed, while later cleanup failure only logs. This is filesystem policy, not network retry or proof of atomic/durable active state.",
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-upgrade-replacement/README.md"
+  },
   "x-mobileconfig-verifier-bounds-evidence": {
     "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-verifier-bounds/inspect-bounds.py <pinned-library>",
     "x-transport": "offline structural verifier research; no Rust transport or HTTP route enabled",

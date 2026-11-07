@@ -1,0 +1,108 @@
+{
+  "member_sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+  "diagnostics": {
+    "0x1811a": ".tmp",
+    "0x19ed0": "SchemaUpgradeFailedToRenameFile",
+    "0x17d09": "Unable to rename flatbuffer",
+    "0x1a39b": "fail_to_rename_table_in_upgrade",
+    "0x1a3d6": "fail_to_rename_meta_in_upgrade",
+    "0x1a891": "upgrade_schema_delete_failed"
+  },
+  "calls": {
+    "0x85844": "0x5dba4",
+    "0x85858": "0xc36c4",
+    "0x85a2c": "0x8bb80",
+    "0x85b1c": "0xc2820",
+    "0x85b2c": "0xc2820",
+    "0x8bbac": "0x8bc94",
+    "0x8bbb8": "0x8bc94",
+    "0x8bbd0": "0x8bc94",
+    "0x8bbdc": "0x8bc94",
+    "0x8bcf0": "0xc2820",
+    "0x8bd2c": "0xcd310",
+    "0xc285c": "0xcd8b0",
+    "0x85b50": "0x8acd0",
+    "0x8ad50": "0xc2310",
+    "0x85c04": "0x8ada0"
+  },
+  "projection_authority": "analyst-derived normal branch outcomes, not filesystem execution or network retry policy",
+  "synthetic_ordered_results": {
+    "table_first=False,table=False,meta=False": {
+      "attempted_pairs": [
+        "meta"
+      ],
+      "result": 0
+    },
+    "table_first=False,table=False,meta=True": {
+      "attempted_pairs": [
+        "meta",
+        "table"
+      ],
+      "result": 1
+    },
+    "table_first=False,table=True,meta=False": {
+      "attempted_pairs": [
+        "meta"
+      ],
+      "result": 0
+    },
+    "table_first=False,table=True,meta=True": {
+      "attempted_pairs": [
+        "meta",
+        "table"
+      ],
+      "result": 3
+    },
+    "table_first=True,table=False,meta=False": {
+      "attempted_pairs": [
+        "table"
+      ],
+      "result": 0
+    },
+    "table_first=True,table=False,meta=True": {
+      "attempted_pairs": [
+        "table"
+      ],
+      "result": 0
+    },
+    "table_first=True,table=True,meta=False": {
+      "attempted_pairs": [
+        "table",
+        "meta"
+      ],
+      "result": 2
+    },
+    "table_first=True,table=True,meta=True": {
+      "attempted_pairs": [
+        "table",
+        "meta"
+      ],
+      "result": 3
+    }
+  },
+  "synthetic_retry": {
+    "first_success": {
+      "attempts": 1,
+      "sleep_ms": [],
+      "result": true
+    },
+    "second_success": {
+      "attempts": 2,
+      "sleep_ms": [
+        4
+      ],
+      "result": true
+    },
+    "all_fail": {
+      "attempts": 3,
+      "sleep_ms": [
+        4,
+        8,
+        16
+      ],
+      "result": false
+    }
+  },
+  "default_path": "both rename helpers called once, even when the first fails; both must return true",
+  "remaining": "flag producers, exact paths, OS/filesystem durability, rollback/restart outcomes and active-state installation"
+}
