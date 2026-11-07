@@ -1,0 +1,104 @@
+
+# class: LX/EoO;
+# extends: Ljava/lang/Object;
+
+.method public A01(LLLLLL)  # .registers 26
+    # full signature: LX/EoO;->A01(LX/0DY;Lcom/whatsapp/infra/core/jid/UserJid;LX/18U;LX/AHF;Ljava/lang/Integer;)LX/9JS;
+    0000..0004  move-object/from16  v3, v24
+    0004..0008  iget-object  v0, v3, LX/AHF;->A06:LX/AGV;
+    0008..000c  move-object/from16  v4, v20
+    000c..0010  if-eqz  v0, +0x1a
+    0010..0014  iget-object  v0, v4, LX/EoO;->A00:LX/00x;
+    0014..001a  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    001a..001c  move-result-object  v0
+    001c..0020  check-cast  v0, LX/0gb;
+    0020..0026  invoke-virtual  {v0, v3}, LX/0gb;->A0M(LX/AHF;)Z
+    0026..0028  move-result  v0
+    0028..002c  if-nez  v0, +0xc
+    002c..0030  const-string  v0, "PaymentMessageMediaManager/materializeVerifiedExternalSticker/failed"
+    0030..0036  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    0036..0038  const/4  v0, #0x0
+    0038..003a  const/4  v5, #0x0
+    003a..003e  if-nez  v0, +0x5
+    003e..0040  return-object  v5
+    0040..0042  const/4  v0, #0x1
+    0042..0044  goto  -0x5
+    0044..0048  new-instance  v7, LX/8tC;
+    0048..004e  invoke-direct  {v7}, LX/8tC;-><init>()V
+    004e..0052  iget-object  v2, v3, LX/AHF;->A0E:Ljava/lang/String;
+    0052..0056  if-eqz  v2, +0xb
+    0056..005a  iget  v1, v3, LX/AHF;->A01:I
+    005a..005c  const/4  v0, #0x3
+    005c..0060  if-ne  v1, v0, +0x81
+    0060..0066  invoke-static  {v2}, Landroid/net/Uri;->parse(Ljava/lang/String;)Landroid/net/Uri;
+    0066..0068  move-result-object  v5
+    0068..006c  iget  v0, v3, LX/AHF;->A05:I
+    006c..0070  iput  v0, v7, LX/8tC;->A0D:I
+    0070..0074  iget  v0, v3, LX/AHF;->A02:I
+    0074..0078  iput  v0, v7, LX/8tC;->A07:I
+    0078..007c  iget-object  v4, v4, LX/EoO;->A08:LX/0jP;
+    007c..007e  const/4  v11, #0x0
+    007e..0080  const/4  v0, #0x0
+    0080..0084  new-instance  v8, LX/AB6;
+    0084..0086  move-object  v12, v11
+    0086..0088  move  v15, v0
+    0088..008c  move/from16  v16, v0
+    008c..0090  move/from16  v17, v0
+    0090..0092  move-object  v9, v11
+    0092..0094  move  v13, v0
+    0094..0098  move-object/from16  v10, v23
+    0098..009a  move  v14, v0
+    009a..00a0  invoke-direct/range  {v8..v17}, LX/AB6;-><init>(LX/0xC;LX/18U;LX/9zM;Ljava/lang/Long;IZZZZ)V
+    00a0..00a4  move-object/from16  v6, v21
+    00a4..00aa  invoke-static  {v6, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    00aa..00ae  const/16  v18, #0x14
+    00ae..00b0  move-object  v13, v11
+    00b0..00b2  move-object  v14, v11
+    00b2..00b4  move-object  v15, v11
+    00b4..00b8  move-object/from16  v16, v11
+    00b8..00bc  move-object/from16  v17, v11
+    00bc..00be  move-object  v10, v11
+    00be..00c2  move/from16  v19, v0
+    00c2..00c8  invoke-virtual/range  {v4..v19}, LX/0jP;->A03(Landroid/net/Uri;LX/0DY;LX/8tC;LX/AB6;LX/A8C;LX/CVV;LX/AQc;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;II)LX/1eQ;
+    00c8..00ca  move-result-object  v4
+    00ca..00ce  const-string  v0, "null cannot be cast to non-null type com.whatsapp.infra.media.fmessage.FMessageSticker"
+    00ce..00d4  invoke-static  {v4, v0}, LX/00l;->A0C(Ljava/lang/Object;Ljava/lang/String;)V
+    00d4..00d8  check-cast  v4, LX/9JS;
+    00d8..00de  invoke-static  {v6}, LX/0Dn;->A0l(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    00de..00e0  move-result  v0
+    00e0..00e4  if-eqz  v0, +0x7
+    00e4..00e8  move-object/from16  v0, v22
+    00e8..00ee  invoke-virtual  {v4, v0}, LX/18U;->A0O(LX/0DY;)V
+    00ee..00f2  iget-object  v0, v3, LX/AHF;->A0I:Ljava/lang/String;
+    00f2..00f8  invoke-virtual  {v4, v0}, LX/1eQ;->Ch4(Ljava/lang/String;)V
+    00f8..00fc  iget-object  v0, v3, LX/AHF;->A0H:Ljava/lang/String;
+    00fc..0102  invoke-virtual  {v4, v0}, LX/1eQ;->Ch5(Ljava/lang/String;)V
+    0102..0108  invoke-virtual  {v4}, LX/1eQ;->Asz()Ljava/lang/String;
+    0108..010a  move-result-object  v0
+    010a..010e  if-nez  v0, +0x7
+    010e..0112  const-string  v0, "image/webp"
+    0112..0118  invoke-virtual  {v4, v0}, LX/1eQ;->Ch5(Ljava/lang/String;)V
+    0118..011c  iget-object  v0, v3, LX/AHF;->A07:LX/ABC;
+    011c..0120  iput-object  v0, v4, LX/9JS;->A07:LX/ABC;
+    0120..0124  move-object/from16  v0, v25
+    0124..0128  iput-object  v0, v4, LX/9JS;->A08:Ljava/lang/Integer;
+    0128..012e  invoke-virtual  {v3}, LX/AHF;->A06()Z
+    012e..0130  move-result  v2
+    0130..0134  iget-boolean  v1, v3, LX/AHF;->A0M:Z
+    0134..0138  iget-boolean  v0, v3, LX/AHF;->A0Q:Z
+    0138..013c  if-eqz  v1, +0x4
+    013c..0140  or-int/lit8  v2, v2, #0x2
+    0140..0144  if-eqz  v0, +0x4
+    0144..0148  or-int/lit8  v2, v2, #0x4
+    0148..014e  invoke-static  {v2}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    014e..0150  move-result-object  v0
+    0150..0154  iput-object  v0, v4, LX/9JS;->A02:Ljava/lang/Integer;
+    0154..0158  iget  v0, v3, LX/AHF;->A04:I
+    0158..015c  iput  v0, v4, LX/9JS;->A00:I
+    015c..015e  return-object  v4
+    015e..0164  invoke-static  {v2}, LX/8t1;->A1D(Ljava/lang/String;)Ljava/io/File;
+    0164..0166  move-result-object  v0
+    0166..016c  invoke-virtual  {v7, v0}, LX/8tC;->A07(Ljava/io/File;)V
+    016c..0170  goto/16  -0x82
+    # exception table: 0 try range(s)
+.end method

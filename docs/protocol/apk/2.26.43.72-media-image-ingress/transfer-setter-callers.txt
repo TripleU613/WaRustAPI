@@ -1,0 +1,32 @@
+classes.dex  LX/0xH;->A02(VLLL)
+  invoke dex byte offset: 0x77ce4a
+classes2.dex  LX/1fA;->CTX(VLL)
+  invoke dex byte offset: 0x1d1b1c
+classes2.dex  LX/2D4;->A00(LLJ)
+  invoke dex byte offset: 0x2c3302
+classes4.dex  LX/6D9;->AKF(LLL)
+  invoke dex byte offset: 0x679bd2
+classes4.dex  LX/6D9;->AKF(LLL)
+  invoke dex byte offset: 0x679c32
+classes6.dex  LX/A2p;->A00(VLL)
+  invoke dex byte offset: 0x447cc6
+classes6.dex  Lcom/whatsapp/chattheme/send/ChatThemeSettingSenderImpl;->A01(LLLLLL)
+  invoke dex byte offset: 0x4c06b8
+classes6.dex  LX/AR8;->A02(VLLL)
+  invoke dex byte offset: 0x54a2c8
+classes6.dex  LX/ATz;->A01(VLL)
+  invoke dex byte offset: 0x55effe
+classes8.dex  LX/DBd;->A1R(VLL)
+  invoke dex byte offset: 0x3dc56a
+classes8.dex  LX/DEf;->A00(VL)
+  invoke dex byte offset: 0x40737c
+classes8.dex  LX/DtW;->AEN(VLLL)
+  invoke dex byte offset: 0x4f122c
+classes8.dex  LX/Ed1;->A00(VL)
+  invoke dex byte offset: 0x58a37c
+classes8.dex  LX/F1B;->A05(VLLIZZ)
+  invoke dex byte offset: 0x653e2a
+classes8.dex  LX/FPl;->CR7(LL)
+  invoke dex byte offset: 0x7870f8
+classes8.dex  Lcom/whatsapp/interactive/protocol/message/FMessageInteractiveFactory$createFMessageInteractiveOrderStatus$1;->invokeSuspend(LL)
+  invoke dex byte offset: 0x88cf5e

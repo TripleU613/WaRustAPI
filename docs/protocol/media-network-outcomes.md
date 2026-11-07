@@ -1439,3 +1439,26 @@ refine prior factory-selection evidence. Full inbound protobuf-to-message tags,
 concrete provider behavior and native category/start/end for the exact Rust
 profile remain unknown. No guessed stream-mode choice, hash fallback,206/416
 adoption, sidecar requirement, preparation request or live traffic was added.
+
+## Pinned current image protobuf ingress (2026-11-06)
+
+**Confirmed selected static / research only:** DiL.dynamicMethod and exact
+apk-proto-fields decoding identify current image hash/key/length/viewOnce tags,
+matching Rust's existing core descriptor. EwA.A03 reads fileSha256/fileEncSha256,
+requires32-byte values on the selected parse paths, and uses byte-to-Base64
+setters into the previously traced message/download-model chain. The conversion
+is local message representation, not a new HTTP/protobuf encoding requirement.
+
+Image scansSidecar21/scanLengths22 receive separate presence/count/index/sum
+validation before provider.Cdn. Invalid/absent scan metadata skips that block and
+continues; it is not a universal image refusal. The native byte-length division
+is floor(length/10), not an exact multiple check. No guessed stream requirement or
+range/retry behavior is added to Rust.
+
+[Complete current schema/helpers, actual image projector, setter chain, candidate
+censuses, bounded negative results and checksums](apk/2.26.43.72-media-image-ingress/README.md)
+record the direct-parser versus generated-result/Cursor distinction. Raw-smali
+retained-schema decoding was refused because that tool expects structural bundle
+format; direct pinned APK schema decoding succeeded. Full envelope routing,
+concrete providers, update-mode inputs and operation-specific HTTP parity remain
+open. Rust changes are provenance comments only; no account traffic occurred.

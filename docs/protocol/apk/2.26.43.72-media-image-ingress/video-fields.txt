@@ -1,0 +1,36 @@
+# LX/DiM;  (31 fields)
+#   followed helper LX/8t2;->A1Y
+#   followed helper LX/DBi;->A0w
+#   followed helper LX/DBg;->A1H
+#   followed helper LX/DBb;->A1G
+   1  url
+   2  mimetype
+   3  fileSha256
+   4  fileLength
+   5  seconds
+   6  mediaKey
+   7  caption
+   8  gifPlayback
+   9  height
+  10  width
+  11  fileEncSha256
+  13  directPath
+  14  mediaKeyTimestamp
+  16  jpegThumbnail
+  17  contextInfo
+  18  streamingSidecar
+  19  gifAttribution
+  20  viewOnce
+  21  thumbnailDirectPath
+  22  thumbnailSha256
+  23  thumbnailEncSha256
+  24  staticUrl
+  25  annotations
+  26  accessibilityLabel
+  27  processedVideos
+  28  externalShareFullVideoDurationInSeconds
+  29  motionPhotoPresentationOffsetMs
+  30  metadataUrl
+  31  videoSourceType
+  33  dashManifestUrl
+  34  smartThumbnailTs

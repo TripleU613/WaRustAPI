@@ -39,6 +39,8 @@ pub struct MediaEntry {
     /// Advertised plaintext length.
     pub bytes: u64,
 }
+// Pinned43.72 DiL.dynamicMethod and EwA.A03 confirm the core field mapping.
+// See docs/protocol/apk/2.26.43.72-media-image-ingress; full HTTP parity remains open.
 #[derive(Message)]
 struct Image {
     #[prost(string, tag = "1")]

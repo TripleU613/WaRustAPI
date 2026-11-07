@@ -1,0 +1,101 @@
+
+# class: LX/0xH;
+# extends: Ljava/lang/Object;
+
+.method public A02(VLLL)  # .registers 6
+    # full signature: LX/0xH;->A02(Landroid/database/Cursor;LX/1eQ;LX/8tC;)V
+    0000..0006  invoke-virtual  {v4, v5}, LX/1eQ;->Ch0(LX/8tC;)V
+    0006..000a  const-string  v0, "first_viewed_timestamp"
+    000a..000e  const-wide/16  v1, #0x0
+    000e..0014  invoke-interface  {v3, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0014..0016  move-result  v0
+    0016..001c  invoke-static  {v3, v0, v1, v2}, LX/0MQ;->A01(Landroid/database/Cursor;IJ)J
+    001c..001e  move-result-wide  v0
+    001e..0022  iput-wide  v0, v4, LX/1eQ;->A00:J
+    0022..0026  const-string  v0, "message_url"
+    0026..002c  invoke-static  {v3, v0}, LX/0MQ;->A05(Landroid/database/Cursor;Ljava/lang/String;)Ljava/lang/String;
+    002c..002e  move-result-object  v0
+    002e..0034  invoke-virtual  {v4, v0}, LX/1eQ;->ChB(Ljava/lang/String;)V
+    0034..0038  const-string  v0, "accessibility_label"
+    0038..003e  invoke-static  {v3, v0}, LX/0MQ;->A05(Landroid/database/Cursor;Ljava/lang/String;)Ljava/lang/String;
+    003e..0040  move-result-object  v0
+    0040..0046  invoke-virtual  {v4, v0}, LX/1eQ;->A0x(Ljava/lang/String;)V
+    0046..004a  const-string  v0, "multicast_id"
+    004a..0050  invoke-static  {v3, v0}, LX/0MQ;->A05(Landroid/database/Cursor;Ljava/lang/String;)Ljava/lang/String;
+    0050..0052  move-result-object  v0
+    0052..0058  invoke-virtual  {v4, v0}, LX/1eQ;->A0z(Ljava/lang/String;)V
+    0058..005c  const-string  v0, "mime_type"
+    005c..0062  invoke-static  {v3, v0}, LX/0MQ;->A05(Landroid/database/Cursor;Ljava/lang/String;)Ljava/lang/String;
+    0062..0064  move-result-object  v0
+    0064..006a  invoke-virtual  {v4, v0}, LX/1eQ;->Ch5(Ljava/lang/String;)V
+    006a..006e  const-string  v0, "file_length"
+    006e..0074  invoke-interface  {v3, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0074..0076  move-result  v0
+    0076..007c  invoke-interface  {v3, v0}, Landroid/database/Cursor;->getLong(I)J
+    007c..007e  move-result-wide  v0
+    007e..0084  invoke-virtual  {v4, v0, v1}, LX/1eQ;->Ch9(J)V
+    0084..0088  const-string  v0, "media_name"
+    0088..008e  invoke-static  {v3, v0}, LX/0MQ;->A05(Landroid/database/Cursor;Ljava/lang/String;)Ljava/lang/String;
+    008e..0090  move-result-object  v0
+    0090..0096  invoke-virtual  {v4, v0}, LX/1eQ;->Ch6(Ljava/lang/String;)V
+    0096..009a  const-string  v0, "file_hash"
+    009a..00a0  invoke-static  {v3, v0}, LX/0MQ;->A05(Landroid/database/Cursor;Ljava/lang/String;)Ljava/lang/String;
+    00a0..00a2  move-result-object  v0
+    00a2..00a8  invoke-virtual  {v4, v0}, LX/1eQ;->Ch4(Ljava/lang/String;)V
+    00a8..00ac  const-string  v0, "media_duration"
+    00ac..00b2  invoke-interface  {v3, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    00b2..00b4  move-result  v0
+    00b4..00ba  invoke-interface  {v3, v0}, Landroid/database/Cursor;->getInt(I)I
+    00ba..00bc  move-result  v0
+    00bc..00c2  invoke-virtual  {v4, v0}, LX/1eQ;->Ch1(I)V
+    00c2..00c6  const-string  v0, "enc_file_hash"
+    00c6..00cc  invoke-static  {v3, v0}, LX/0MQ;->A05(Landroid/database/Cursor;Ljava/lang/String;)Ljava/lang/String;
+    00cc..00ce  move-result-object  v0
+    00ce..00d4  invoke-virtual  {v4, v0}, LX/1eQ;->Ch2(Ljava/lang/String;)V
+    00d4..00d8  const-string  v0, "original_file_hash"
+    00d8..00de  invoke-static  {v3, v0}, LX/0MQ;->A05(Landroid/database/Cursor;Ljava/lang/String;)Ljava/lang/String;
+    00de..00e0  move-result-object  v0
+    00e0..00e6  invoke-virtual  {v4, v0}, LX/1eQ;->Chv(Ljava/lang/String;)V
+    00e6..00ea  instance-of  v0, v4, LX/9JS;
+    00ea..00ee  if-eqz  v0, +0x33
+    00ee..00f2  check-cast  v4, LX/9JS;
+    00f2..00f8  const-string/jumbo  v0, "sticker_flags"
+    00f8..00fe  invoke-interface  {v3, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    00fe..0100  move-result  v0
+    0100..0106  invoke-static  {v3, v0}, LX/0MQ;->A03(Landroid/database/Cursor;I)Ljava/lang/Integer;
+    0106..0108  move-result-object  v0
+    0108..010c  iput-object  v0, v4, LX/9JS;->A02:Ljava/lang/Integer;
+    010c..0110  const-string  v0, "is_animated_sticker"
+    0110..0116  invoke-interface  {v3, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0116..0118  move-result  v0
+    0118..011e  invoke-static  {v3, v0}, LX/0MQ;->A06(Landroid/database/Cursor;I)Z
+    011e..0120  move-result  v0
+    0120..0124  iput-boolean  v0, v4, LX/9JS;->A04:Z
+    0124..0128  const-string  v0, "premium_message"
+    0128..012a  const/4  v1, #0x0
+    012a..0130  invoke-interface  {v3, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0130..0132  move-result  v0
+    0132..0138  invoke-static  {v3, v0, v1}, LX/0MQ;->A00(Landroid/database/Cursor;II)I
+    0138..013a  move-result  v0
+    013a..013e  iput  v0, v4, LX/9JS;->A00:I
+    013e..0142  const-string  v0, "emoji_tags"
+    0142..0148  invoke-static  {v3, v0}, LX/0MQ;->A05(Landroid/database/Cursor;Ljava/lang/String;)Ljava/lang/String;
+    0148..014a  move-result-object  v0
+    014a..014e  iput-object  v0, v4, LX/9JS;->A09:Ljava/lang/String;
+    014e..0150  return-void
+    0150..0154  instance-of  v0, v4, LX/9JR;
+    0154..0158  if-eqz  v0, -0x3
+    0158..015c  check-cast  v4, LX/9JR;
+    015c..0160  const-string  v0, "page_count"
+    0160..0166  invoke-interface  {v3, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    0166..0168  move-result  v0
+    0168..016e  invoke-interface  {v3, v0}, Landroid/database/Cursor;->getInt(I)I
+    016e..0170  move-result  v0
+    0170..0174  iput  v0, v4, LX/9JR;->A00:I
+    0174..0178  const-string  v0, "media_caption"
+    0178..017e  invoke-static  {v3, v0}, LX/0MQ;->A05(Landroid/database/Cursor;Ljava/lang/String;)Ljava/lang/String;
+    017e..0180  move-result-object  v0
+    0180..0186  invoke-virtual  {v4, v0}, LX/9JR;->A13(Ljava/lang/String;)V
+    0186..0188  return-void
+    # exception table: 0 try range(s)
+.end method

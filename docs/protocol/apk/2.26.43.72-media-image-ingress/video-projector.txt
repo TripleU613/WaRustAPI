@@ -1,0 +1,428 @@
+
+# class: LX/F1B;
+# extends: Ljava/lang/Object;
+
+.method public A05(VLLIZZ)  # .registers 24
+    # full signature: LX/F1B;->A05(LX/9JX;LX/DiM;IZZ)V
+    0000..0002  const/4  v12, #0x1
+    0002..0006  move-object/from16  v7, v20
+    0006..000c  invoke-static  {v7, v12}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000c..0010  new-instance  v6, LX/8tC;
+    0010..0016  invoke-direct  {v6}, LX/8tC;-><init>()V
+    0016..001a  move-object/from16  v8, v19
+    001a..001e  move/from16  v0, v21
+    001e..0022  move/from16  v11, v22
+    0022..0026  if-ne  v0, v12, +0x19
+    0026..002a  if-nez  v22, +0x17
+    002a..002e  iget-object  v0, v8, LX/1eQ;->A01:LX/8tC;
+    002e..0032  if-nez  v0, +0x5
+    0032..0038  invoke-virtual  {v8, v6}, LX/1eQ;->Ch0(LX/8tC;)V
+    0038..003c  iget-object  v1, v7, LX/DiM;->caption_:Ljava/lang/String;
+    003c..0040  if-eqz  v1, +0x2e9
+    0040..0046  invoke-virtual  {v1}, Ljava/lang/String;->length()I
+    0046..0048  move-result  v0
+    0048..004c  if-eqz  v0, +0x2e3
+    004c..0052  invoke-static  {v8, v1}, LX/DBg;->A11(LX/1eQ;Ljava/lang/String;)V
+    0052..0054  return-void
+    0054..005a  invoke-virtual  {v8, v6}, LX/1eQ;->Ch0(LX/8tC;)V
+    005a..005e  iget-object  v2, v8, LX/18U;->A0j:LX/1dW;
+    005e..0062  iget-object  v5, v2, LX/1dW;->A00:LX/0DY;
+    0062..0068  invoke-static  {v5}, LX/0Dn;->A0a(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0068..006a  move-result  v10
+    006a..006e  if-nez  v22, +0x6
+    006e..0072  const/16  v17, #0x0
+    0072..0076  if-eqz  v10, +0x4
+    0076..007a  const/16  v17, #0x1
+    007a..007e  iget  v0, v7, LX/DiM;->bitField0_:I
+    007e..0082  and-int/lit8  v0, v0, #0x20
+    0082..0086  if-eqz  v0, +0x2ba
+    0086..008a  iget-object  v0, v7, LX/DiM;->mediaKey_:Lcom/google/protobuf/ByteString;
+    008a..0090  invoke-static  {v0}, LX/DBc;->A1Z(Lcom/google/protobuf/ByteString;)[B
+    0090..0092  move-result-object  v0
+    0092..0098  invoke-static  {v8, v6, v0}, LX/Exc;->A00(LX/1eQ;LX/8tC;[B)V
+    0098..009c  iget  v0, v7, LX/DiM;->bitField0_:I
+    009c..00a0  and-int/lit16  v0, v0, #0x1000
+    00a0..00a4  if-eqz  v0, +0x7
+    00a4..00a8  iget-wide  v0, v7, LX/DiM;->mediaKeyTimestamp_:J
+    00a8..00ae  invoke-static  {v6, v0, v1}, LX/DBe;->A1C(LX/8tC;J)V
+    00ae..00b2  iget-object  v0, v7, LX/DiM;->jpegThumbnail_:Lcom/google/protobuf/ByteString;
+    00b2..00b8  invoke-static  {v0}, LX/DBc;->A1Z(Lcom/google/protobuf/ByteString;)[B
+    00b8..00ba  move-result-object  v1
+    00ba..00bc  array-length  v0, v1
+    00bc..00c0  move-object/from16  v9, v18
+    00c0..00c4  if-eqz  v0, +0x11
+    00c4..00c8  iget-object  v0, v9, LX/F1B;->A02:Lcom/whatsapp/infra/attachment/E2EThumbnailValidator;
+    00c8..00ce  invoke-virtual  {v0, v1}, Lcom/whatsapp/infra/attachment/E2EThumbnailValidator;->isValidThumbnail([B)Z
+    00ce..00d0  move-result  v0
+    00d0..00d4  if-eqz  v0, +0x9
+    00d4..00d8  iput  v12, v8, LX/18U;->A01:I
+    00d8..00dc  move/from16  v0, v23
+    00dc..00e2  invoke-virtual  {v8, v1, v0}, LX/18U;->A0U([BZ)V
+    00e2..00e6  if-eqz  v17, +0x8
+    00e6..00ea  iget  v0, v7, LX/DiM;->bitField0_:I
+    00ea..00ee  and-int/lit8  v0, v0, #0x8
+    00ee..00f2  if-eqz  v0, +0xf
+    00f2..00f6  iget-wide  v3, v7, LX/DiM;->fileLength_:J
+    00f6..00fa  const-wide/16  v13, #0x0
+    00fa..00fe  cmp-long  v0, v3, v13
+    00fe..0102  if-lez  v0, +0x2c7
+    0102..0108  invoke-virtual  {v8, v3, v4}, LX/1eQ;->Ch9(J)V
+    0108..010c  if-eqz  v17, +0xc
+    010c..0110  iget  v1, v7, LX/DiM;->bitField0_:I
+    0110..0114  and-int/lit16  v0, v1, #0x200
+    0114..0118  if-eqz  v0, +0x10
+    0118..011c  and-int/lit16  v0, v1, #0x100
+    011c..0120  if-eqz  v0, +0xc
+    0120..0124  iget  v0, v7, LX/DiM;->width_:I
+    0124..0128  iput  v0, v6, LX/8tC;->A0D:I
+    0128..012c  iget  v0, v7, LX/DiM;->height_:I
+    012c..0130  iput  v0, v6, LX/8tC;->A07:I
+    0130..0134  if-eqz  v17, +0x8
+    0134..0138  iget  v0, v7, LX/DiM;->bitField0_:I
+    0138..013c  and-int/lit8  v0, v0, #0x4
+    013c..0140  if-eqz  v0, +0x17
+    0140..0144  iget-object  v0, v7, LX/DiM;->fileSha256_:Lcom/google/protobuf/ByteString;
+    0144..014a  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    014a..0150  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    0150..0152  move-result-object  v3
+    0152..0154  array-length  v1, v3
+    0154..0158  const/16  v0, #0x20
+    0158..015c  if-ne  v1, v0, +0x288
+    015c..0162  invoke-static  {v3}, LX/DBg;->A0f([B)Ljava/lang/String;
+    0162..0164  move-result-object  v0
+    0164..016a  invoke-virtual  {v8, v0}, LX/1eQ;->Ch4(Ljava/lang/String;)V
+    016a..016e  iget  v0, v7, LX/DiM;->bitField0_:I
+    016e..0172  and-int/lit16  v0, v0, #0x400
+    0172..0176  if-eqz  v0, +0x17
+    0176..017a  iget-object  v0, v7, LX/DiM;->fileEncSha256_:Lcom/google/protobuf/ByteString;
+    017a..0180  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    0180..0186  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    0186..0188  move-result-object  v3
+    0188..018a  array-length  v1, v3
+    018a..018e  const/16  v0, #0x20
+    018e..0192  if-ne  v1, v0, +0x25b
+    0192..0198  invoke-static  {v3}, LX/DBg;->A0f([B)Ljava/lang/String;
+    0198..019a  move-result-object  v0
+    019a..01a0  invoke-virtual  {v8, v0}, LX/1eQ;->Ch2(Ljava/lang/String;)V
+    01a0..01a4  if-eqz  v17, +0x8
+    01a4..01a8  iget  v0, v7, LX/DiM;->bitField0_:I
+    01a8..01ac  and-int/lit8  v0, v0, #0x2
+    01ac..01b0  if-eqz  v0, +0xf
+    01b0..01b4  iget-object  v0, v7, LX/DiM;->mimetype_:Ljava/lang/String;
+    01b4..01ba  invoke-static  {v0, v12}, LX/0jZ;->A09(Ljava/lang/String;Z)Ljava/lang/String;
+    01ba..01bc  move-result-object  v0
+    01bc..01c0  iget-object  v1, v7, LX/DiM;->mimetype_:Ljava/lang/String;
+    01c0..01c4  if-eqz  v0, +0x232
+    01c4..01ca  invoke-virtual  {v8, v1}, LX/1eQ;->Ch5(Ljava/lang/String;)V
+    01ca..01ce  iget-object  v0, v7, LX/DiM;->staticUrl_:Ljava/lang/String;
+    01ce..01d2  const/16  v1, #0x4874
+    01d2..01d6  const/16  v16, #0x0
+    01d6..01da  if-eqz  v0, +0x8
+    01da..01e0  invoke-virtual  {v0}, Ljava/lang/String;->length()I
+    01e0..01e2  move-result  v0
+    01e2..01e6  if-nez  v0, +0x207
+    01e6..01ea  iget-object  v0, v9, LX/F1B;->A01:LX/08Y;
+    01ea..01f0  invoke-virtual  {v0, v1}, LX/00E;->A14(I)Z
+    01f0..01f2  move-result  v0
+    01f2..01f6  if-eqz  v0, +0x1ff
+    01f6..01fa  iget-object  v0, v7, LX/DiM;->url_:Ljava/lang/String;
+    01fa..01fe  if-eqz  v0, +0x8
+    01fe..0204  invoke-virtual  {v0}, Ljava/lang/String;->length()I
+    0204..0206  move-result  v0
+    0206..020a  if-nez  v0, +0xb
+    020a..020e  iget-object  v0, v9, LX/F1B;->A01:LX/08Y;
+    020e..0214  invoke-virtual  {v0, v1}, LX/00E;->A14(I)Z
+    0214..0216  move-result  v0
+    0216..0218  const/4  v1, #0x1
+    0218..021c  if-nez  v0, +0x3
+    021c..021e  const/4  v1, #0x0
+    021e..0222  iget  v3, v7, LX/DiM;->bitField0_:I
+    0222..0226  const/high16  v0, #0x200000
+    0226..022a  and-int  v4, v3, v0
+    022a..022e  if-eqz  v4, +0x15a
+    022e..0232  if-nez  v12, +0x158
+    0232..0236  iget-object  v0, v7, LX/DiM;->staticUrl_:Ljava/lang/String;
+    0236..023c  invoke-virtual  {v8, v0}, LX/1eQ;->A10(Ljava/lang/String;)V
+    023c..0240  iget-object  v1, v7, LX/DiM;->caption_:Ljava/lang/String;
+    0240..0244  if-eqz  v1, +0xb
+    0244..024a  invoke-virtual  {v1}, Ljava/lang/String;->length()I
+    024a..024c  move-result  v0
+    024c..0250  if-eqz  v0, +0x5
+    0250..0256  invoke-static  {v8, v1}, LX/DBg;->A11(LX/1eQ;Ljava/lang/String;)V
+    0256..025a  iget-object  v1, v7, LX/DiM;->accessibilityLabel_:Ljava/lang/String;
+    025a..025e  if-eqz  v1, +0xd
+    025e..0264  invoke-virtual  {v1}, Ljava/lang/String;->length()I
+    0264..0266  move-result  v0
+    0266..026a  if-eqz  v0, +0x7
+    026a..0270  invoke-virtual  {v8, v1}, LX/1eQ;->A0x(Ljava/lang/String;)V
+    0270..0274  iput-object  v1, v6, LX/8tC;->A0R:Ljava/lang/String;
+    0274..0278  iget-object  v0, v7, LX/DiM;->directPath_:Ljava/lang/String;
+    0278..027e  invoke-static  {v0, v10}, LX/KmR;->A00(Ljava/lang/String;Z)Ljava/lang/String;
+    027e..0280  move-result-object  v0
+    0280..0284  iput-object  v0, v6, LX/8tC;->A0S:Ljava/lang/String;
+    0284..0288  if-nez  v0, +0x1a
+    0288..028c  iget-object  v3, v7, LX/DiM;->directPath_:Ljava/lang/String;
+    028c..0290  if-eqz  v3, +0x9
+    0290..0296  invoke-virtual  {v3}, Ljava/lang/String;->length()I
+    0296..0298  move-result  v0
+    0298..029a  const/4  v1, #0x0
+    029a..029e  if-nez  v0, +0x3
+    029e..02a0  const/4  v1, #0x1
+    02a0..02a4  if-eqz  v17, +0xa
+    02a4..02a8  iget  v0, v7, LX/DiM;->bitField0_:I
+    02a8..02ac  and-int/lit16  v0, v0, #0x800
+    02ac..02b0  if-eqz  v0, +0x112
+    02b0..02b4  if-nez  v1, +0x110
+    02b4..02b8  iput-object  v3, v6, LX/8tC;->A0V:Ljava/lang/String;
+    02b8..02bc  iget-object  v3, v7, LX/DiM;->thumbnailDirectPath_:Ljava/lang/String;
+    02bc..02c0  if-eqz  v3, +0x9
+    02c0..02c6  invoke-virtual  {v3}, Ljava/lang/String;->length()I
+    02c6..02c8  move-result  v0
+    02c8..02ca  const/4  v4, #0x0
+    02ca..02ce  if-nez  v0, +0x3
+    02ce..02d0  const/4  v4, #0x1
+    02d0..02d4  iget  v1, v7, LX/DiM;->bitField0_:I
+    02d4..02d8  const/high16  v0, #0x40000
+    02d8..02da  and-int/2addr  v0, v1
+    02da..02de  if-eqz  v0, +0x3c
+    02de..02e2  const/high16  v0, #0x100000
+    02e2..02e4  and-int/2addr  v0, v1
+    02e4..02e8  if-eqz  v0, +0xd2
+    02e8..02ec  const/high16  v0, #0x80000
+    02ec..02ee  and-int/2addr  v0, v1
+    02ee..02f2  if-eqz  v0, +0xcd
+    02f2..02f6  if-nez  v4, +0xcb
+    02f6..02fa  sget-object  v0, LX/1vU;->A0A:LX/1vU;
+    02fa..0300  invoke-static  {v0}, LX/DBg;->A0N(LX/1vU;)LX/2Go;
+    0300..0302  move-result-object  v10
+    0302..0308  invoke-virtual  {v8}, LX/18U;->A0a()Z
+    0308..030a  move-result  v0
+    030a..0310  invoke-static  {v3, v0}, LX/KmR;->A00(Ljava/lang/String;Z)Ljava/lang/String;
+    0310..0312  move-result-object  v0
+    0312..0316  iput-object  v0, v10, LX/2Go;->A05:Ljava/lang/String;
+    0316..031a  if-nez  v0, +0x4
+    031a..031e  iput-object  v3, v10, LX/2Go;->A06:Ljava/lang/String;
+    031e..0322  iget-object  v0, v7, LX/DiM;->thumbnailSha256_:Lcom/google/protobuf/ByteString;
+    0322..0328  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    0328..032a  move-result-object  v1
+    032a..032e  iget-object  v0, v7, LX/DiM;->thumbnailEncSha256_:Lcom/google/protobuf/ByteString;
+    032e..0334  invoke-static  {v0, v10, v1}, LX/DBh;->A0r(Lcom/google/protobuf/ByteString;LX/2Go;[B)V
+    0334..0338  iget-object  v0, v7, LX/DiM;->mediaKey_:Lcom/google/protobuf/ByteString;
+    0338..033e  invoke-static  {v0, v10}, LX/DBc;->A1G(Lcom/google/protobuf/ByteString;LX/2Go;)V
+    033e..0342  iget-wide  v0, v7, LX/DiM;->mediaKeyTimestamp_:J
+    0342..0346  const-wide/16  v3, #0x3e8
+    0346..0348  mul-long/2addr  v0, v3
+    0348..034c  iput-wide  v0, v10, LX/2Go;->A02:J
+    034c..0352  invoke-static  {v8, v10}, LX/2EB;->A01(LX/18U;LX/2Go;)V
+    0352..0356  iget  v0, v7, LX/DiM;->bitField0_:I
+    0356..035a  and-int/lit8  v0, v0, #0x10
+    035a..035e  if-eqz  v0, +0x94
+    035e..0362  iget  v0, v7, LX/DiM;->seconds_:I
+    0362..0368  invoke-virtual  {v8, v0}, LX/1eQ;->Ch1(I)V
+    0368..036c  iget  v1, v7, LX/DiM;->bitField0_:I
+    036c..0370  const/high16  v0, #0x800000
+    0370..0372  and-int/2addr  v0, v1
+    0372..0376  if-eqz  v0, +0x6
+    0376..037a  iget  v0, v7, LX/DiM;->externalShareFullVideoDurationInSeconds_:I
+    037a..037e  iput  v0, v6, LX/8tC;->A02:I
+    037e..0382  const/high16  v0, #0x1000000
+    0382..0384  and-int/2addr  v1, v0
+    0384..0388  if-eqz  v1, +0xa
+    0388..038c  iget-wide  v0, v7, LX/DiM;->motionPhotoPresentationOffsetMs_:J
+    038c..0392  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0392..0394  move-result-object  v0
+    0394..0398  iput-object  v0, v6, LX/8tC;->A0Q:Ljava/lang/Long;
+    0398..039c  iget-object  v0, v7, LX/DiM;->annotations_:Lcom/google/protobuf/Internal$ProtobufList;
+    039c..03a2  invoke-static  {v0}, LX/00l;->A05(Ljava/lang/Object;)V
+    03a2..03a8  invoke-static  {v5, v6, v0}, LX/A9C;->A02(LX/0DY;LX/8tC;Ljava/util/List;)V
+    03a8..03ac  iget  v1, v7, LX/DiM;->bitField0_:I
+    03ac..03b0  const/high16  v0, #0x2000000
+    03b0..03b2  and-int/2addr  v1, v0
+    03b2..03b6  if-eqz  v1, +0x20
+    03b6..03ba  iget-object  v1, v9, LX/F1B;->A01:LX/08Y;
+    03ba..03be  const/16  v0, #0x4483
+    03be..03c4  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    03c4..03c6  move-result  v0
+    03c6..03ca  if-eqz  v0, +0x16
+    03ca..03ce  iget-object  v3, v7, LX/DiM;->metadataUrl_:Ljava/lang/String;
+    03ce..03d4  invoke-static  {v3}, LX/3q1;->A0A(Ljava/lang/String;)I
+    03d4..03d6  move-result  v0
+    03d6..03da  if-lez  v0, +0xe
+    03da..03e0  invoke-static  {v3}, Landroid/net/Uri;->parse(Ljava/lang/String;)Landroid/net/Uri;
+    03e0..03e2  move-result-object  v1
+    03e2..03e8  invoke-static  {v1}, LX/5km;->A01(Landroid/net/Uri;)Z
+    03e8..03ea  move-result  v0
+    03ea..03ee  if-eqz  v0, +0x3c
+    03ee..03f2  iput-object  v3, v6, LX/8tC;->A0g:Ljava/lang/String;
+    03f2..03f8  invoke-virtual  {v8}, LX/18U;->A0a()Z
+    03f8..03fa  move-result  v0
+    03fa..03fe  if-eqz  v0, -0x1d4
+    03fe..0402  iget  v1, v7, LX/DiM;->bitField0_:I
+    0402..0406  const/high16  v0, #0x8000000
+    0406..0408  and-int/2addr  v1, v0
+    0408..040c  if-eqz  v1, -0x1db
+    040c..0410  iget-object  v1, v9, LX/F1B;->A01:LX/08Y;
+    0410..0414  sget-object  v0, LX/ELy;->A00:LX/00f;
+    0414..041a  invoke-static  {v1, v0}, LX/00E;->A0F(LX/00E;LX/00f;)Z
+    041a..041c  move-result  v0
+    041c..0420  if-eqz  v0, -0x1e5
+    0420..0424  iget-object  v4, v7, LX/DiM;->dashManifestUrl_:Ljava/lang/String;
+    0424..042a  invoke-static  {v4}, LX/3q1;->A0A(Ljava/lang/String;)I
+    042a..042c  move-result  v0
+    042c..0430  if-lez  v0, -0x1ed
+    0430..0436  invoke-static  {v4}, Landroid/net/Uri;->parse(Ljava/lang/String;)Landroid/net/Uri;
+    0436..0438  move-result-object  v3
+    0438..043e  invoke-virtual  {v3}, Landroid/net/Uri;->getScheme()Ljava/lang/String;
+    043e..0440  move-result-object  v1
+    0440..0444  const-string  v0, "https"
+    0444..044a  invoke-static  {v1, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    044a..044c  move-result  v0
+    044c..0450  if-eqz  v0, +0xe6
+    0450..0456  invoke-static  {v3}, LX/5km;->A01(Landroid/net/Uri;)Z
+    0456..0458  move-result  v0
+    0458..045c  if-eqz  v0, +0xe0
+    045c..0460  iput-object  v4, v6, LX/8tC;->A0T:Ljava/lang/String;
+    0460..0462  return-void
+    0462..0468  invoke-virtual  {v1}, Landroid/net/Uri;->getAuthority()Ljava/lang/String;
+    0468..046a  move-result-object  v1
+    046a..046e  const-string  v0, "FMessageVideoCommon/initMediaData/metadataUrl host not in allowlist; authority="
+    046e..0474  invoke-static  {v0, v1}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0474..0476  move-result-object  v1
+    0476..047a  const-string  v0, "; message.key="
+    047a..0480  invoke-static  {v2, v0, v1}, LX/DBh;->A1C(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    0480..0482  goto  -0x47
+    0482..0484  const/4  v0, #0x0
+    0484..0488  goto/16  -0x91
+    0488..048c  const/high16  v0, #0x80000
+    048c..048e  and-int/2addr  v1, v0
+    048e..0492  if-eqz  v1, -0x9e
+    0492..0498  invoke-virtual  {v8}, LX/18U;->A0a()Z
+    0498..049a  move-result  v1
+    049a..049e  if-eqz  v1, -0xa4
+    049e..04a2  if-nez  v4, -0xa6
+    04a2..04a6  sget-object  v0, LX/1vU;->A0A:LX/1vU;
+    04a6..04ac  invoke-static  {v0}, LX/DBg;->A0N(LX/1vU;)LX/2Go;
+    04ac..04ae  move-result-object  v10
+    04ae..04b4  invoke-static  {v3, v1}, LX/KmR;->A00(Ljava/lang/String;Z)Ljava/lang/String;
+    04b4..04b6  move-result-object  v0
+    04b6..04ba  iput-object  v0, v10, LX/2Go;->A05:Ljava/lang/String;
+    04ba..04be  if-nez  v0, +0x4
+    04be..04c2  iput-object  v3, v10, LX/2Go;->A06:Ljava/lang/String;
+    04c2..04c6  iget-object  v0, v7, LX/DiM;->thumbnailSha256_:Lcom/google/protobuf/ByteString;
+    04c6..04cc  invoke-static  {v0, v10}, LX/DBf;->A13(Lcom/google/protobuf/ByteString;LX/2Go;)V
+    04cc..04d0  goto/16  -0xc0
+    04d0..04d4  const-string  v0, "FMessageVideoCommon/buildE2eMessage/sending video with directPath not set; message.key="
+    04d4..04da  invoke-static  {v0, v2}, LX/3q7;->A1W(Ljava/lang/String;Ljava/lang/Object;)V
+    04da..04de  goto/16  -0x111
+    04de..04e2  if-eqz  v17, +0x6
+    04e2..04e6  and-int/lit8  v0, v3, #0x1
+    04e6..04ea  if-eqz  v0, -0x155
+    04ea..04ee  if-nez  v1, -0x157
+    04ee..04f2  iget-object  v0, v7, LX/DiM;->url_:Ljava/lang/String;
+    04f2..04f6  if-eqz  v0, +0x8
+    04f6..04fc  invoke-virtual  {v0}, Ljava/lang/String;->length()I
+    04fc..04fe  move-result  v0
+    04fe..0502  if-nez  v0, +0x75
+    0502..0506  if-nez  v10, +0x73
+    0506..050a  iget-boolean  v1, v7, LX/DiM;->gifPlayback_:Z
+    050a..0510  invoke-static  {v4}, LX/2L9;->A1M(I)Z
+    0510..0512  move-result  v15
+    0512..0516  and-int/lit8  v0, v3, #0x1
+    0516..051c  invoke-static  {v0}, LX/2L9;->A1M(I)Z
+    051c..051e  move-result  v14
+    051e..0522  and-int/lit16  v0, v3, #0x800
+    0522..0528  invoke-static  {v0}, LX/2L9;->A1M(I)Z
+    0528..052a  move-result  v13
+    052a..052e  iget-object  v0, v7, LX/DiM;->directPath_:Ljava/lang/String;
+    052e..0532  if-eqz  v0, +0x9
+    0532..0538  invoke-virtual  {v0}, Ljava/lang/String;->length()I
+    0538..053a  move-result  v0
+    053a..053c  const/4  v12, #0x0
+    053c..0540  if-nez  v0, +0x3
+    0540..0542  const/4  v12, #0x1
+    0542..0546  iget-object  v0, v7, LX/DiM;->caption_:Ljava/lang/String;
+    0546..054a  if-eqz  v0, +0x8
+    054a..0550  invoke-virtual  {v0}, Ljava/lang/String;->length()I
+    0550..0552  move-result  v0
+    0552..0556  if-nez  v0, +0x4
+    0556..055a  const/16  v16, #0x1
+    055a..055e  xor-int/lit8  v4, v16, #0x1
+    055e..0562  iget-object  v3, v7, LX/DiM;->mimetype_:Ljava/lang/String;
+    0562..0566  const-string  v0, "FMessageVideoCommon/initMediaData/empty media url; gifPlayback="
+    0566..056c  invoke-static  {v0, v1}, LX/2L8;->A1M(Ljava/lang/String;Z)Ljava/lang/StringBuilder;
+    056c..056e  move-result-object  v1
+    056e..0572  const-string  v0, "; hasStaticUrl="
+    0572..0578  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0578..057e  invoke-virtual  {v1, v15}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    057e..0582  const-string  v0, "; hasUrl="
+    0582..0588  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0588..058e  invoke-virtual  {v1, v14}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    058e..0592  const-string  v0, "; hasDirectPath="
+    0592..0598  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0598..059e  invoke-virtual  {v1, v13}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    059e..05a2  const-string  v0, "; directPathEmpty="
+    05a2..05a8  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    05a8..05ae  invoke-virtual  {v1, v12}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    05ae..05b2  const-string  v0, "; hasCaption="
+    05b2..05b8  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    05b8..05be  invoke-virtual  {v1, v4}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    05be..05c2  const-string  v0, "; mimeType="
+    05c2..05c8  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    05c8..05ce  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    05ce..05d2  const-string  v0, "; isHistorySyncOrQuoted="
+    05d2..05d8  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    05d8..05de  invoke-virtual  {v1, v11}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    05de..05e2  const-string  v0, "; message.key="
+    05e2..05e8  invoke-static  {v2, v0, v1}, LX/6ok;->A16(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    05e8..05ec  iget-object  v0, v7, LX/DiM;->url_:Ljava/lang/String;
+    05ec..05f0  goto/16  -0x1db
+    05f0..05f2  const/4  v12, #0x0
+    05f2..05f6  goto/16  -0x1fe
+    05f6..05fa  if-nez  v17, -0x2af
+    05fa..05fe  const-string  v0, "FMessageVideoCommon/missing media key; message.key="
+    05fe..0604  invoke-static  {v0, v2}, LX/3q7;->A1W(Ljava/lang/String;Ljava/lang/Object;)V
+    0604..060a  invoke-static  {}, LX/Dxp;->A02()LX/Dxp;
+    060a..060c  move-result-object  v0
+    060c..060e  throw  v0
+    060e..0614  invoke-static  {}, LX/Dxp;->A00()LX/Dxp;
+    0614..0616  move-result-object  v0
+    0616..0618  throw  v0
+    0618..061c  const-string  v0, "FMessageVideoCommon/initMediaData/dashManifestUrl not an allowlisted https url; message.key="
+    061c..0622  invoke-static  {v0, v2}, LX/3q7;->A1W(Ljava/lang/String;Ljava/lang/Object;)V
+    0622..0624  return-void
+    0624..0628  const-string  v0, "FMessageVideoCommon/unrecognized video mime type; mimeType="
+    0628..062e  invoke-static  {v0, v1}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    062e..0630  move-result-object  v1
+    0630..0634  const-string  v0, "; message.key="
+    0634..063a  invoke-static  {v2, v0, v1}, LX/DBh;->A1C(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    063a..0640  invoke-static  {}, LX/Dxp;->A03()LX/Dxp;
+    0640..0642  move-result-object  v0
+    0642..0644  throw  v0
+    0644..0648  const-string  v0, "FMessageVideoCommon/bogus sha-256 hash received; length="
+    0648..064e  invoke-static  {v1, v0}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    064e..0650  move-result-object  v1
+    0650..0654  const-string  v0, "; message.key="
+    0654..065a  invoke-static  {v2, v0, v1}, LX/DBh;->A1C(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    065a..065e  const/16  v0, #0xe
+    065e..0664  invoke-static  {v0}, LX/Dxp;->A04(I)LX/Dxp;
+    0664..0666  move-result-object  v0
+    0666..0668  throw  v0
+    0668..066c  const-string  v0, "FMessageVideoCommon/bogus sha-256 hash received; length="
+    066c..0672  invoke-static  {v1, v0}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    0672..0674  move-result-object  v1
+    0674..0678  const-string  v0, "; message.key="
+    0678..067e  invoke-static  {v2, v0, v1}, LX/DBh;->A1C(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    067e..0682  const/16  v0, #0xe
+    0682..0688  invoke-static  {v0}, LX/Dxp;->A04(I)LX/Dxp;
+    0688..068a  move-result-object  v0
+    068a..068c  throw  v0
+    068c..0690  const-string  v0, "FMessageVideoCommon/bogus media size received; file_length="
+    0690..0696  invoke-static  {v0, v3, v4}, LX/1Xl;->A17(Ljava/lang/String;J)Ljava/lang/StringBuilder;
+    0696..0698  move-result-object  v1
+    0698..069c  const-string  v0, "; message.key="
+    069c..06a2  invoke-static  {v2, v0, v1}, LX/DBh;->A1C(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    06a2..06a8  invoke-static  {}, LX/Dxp;->A01()LX/Dxp;
+    06a8..06aa  move-result-object  v0
+    06aa..06ac  throw  v0
+    # exception table: 0 try range(s)
+.end method

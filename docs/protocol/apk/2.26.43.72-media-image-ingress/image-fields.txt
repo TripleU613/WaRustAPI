@@ -1,0 +1,32 @@
+# LX/DiL;  (29 fields)
+#   followed helper LX/8t2;->A1Y
+#   followed helper LX/DBg;->A1J
+   1  url
+   2  mimetype
+   3  caption
+   4  fileSha256
+   5  fileLength
+   6  height
+   7  width
+   8  mediaKey
+   9  fileEncSha256
+  11  directPath
+  12  mediaKeyTimestamp
+  16  jpegThumbnail
+  17  contextInfo
+  18  firstScanSidecar
+  19  firstScanLength
+  20  experimentGroupId
+  21  scansSidecar
+  22  scanLengths
+  23  midQualityFileSha256
+  24  midQualityFileEncSha256
+  25  viewOnce
+  26  thumbnailDirectPath
+  27  thumbnailSha256
+  28  thumbnailEncSha256
+  29  staticUrl
+  30  annotations
+  31  imageSourceType
+  32  accessibilityLabel
+  34  qrUrl

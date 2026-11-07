@@ -1,0 +1,12 @@
+
+# class: LX/8t2;
+# extends: Ljava/lang/Object;
+
+.method public A1Y(VL)  # .registers 3
+    # full signature: LX/8t2;->A1Y([Ljava/lang/Object;)V
+    0000..0004  const-string  v1, "bitField0_"
+    0004..0006  const/4  v0, #0x0
+    0006..000a  aput-object  v1, v2, v0
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method

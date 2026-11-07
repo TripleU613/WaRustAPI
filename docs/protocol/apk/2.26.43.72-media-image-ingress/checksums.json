@@ -1,0 +1,82 @@
+{
+  "README.md": {
+    "bytes": 7442,
+    "sha256": "4e71c23afcfaf12c14e5650aec496a6eb42cc8ef4cdbef559bf05bca6545b825"
+  },
+  "candidate-Dh-fields.txt": {
+    "bytes": 20095,
+    "sha256": "3308e0da1c1f428eb10e49aa8602a3c38c19314b665fc99fba40d3ecd124dc7f"
+  },
+  "encrypted-byte-setter.txt": {
+    "bytes": 465,
+    "sha256": "3ef44b97107697b6e20d964e45906ac831a469ebd8d0e083857cf027f3e1b31b"
+  },
+  "excluded-DEf-propagation.txt": {
+    "bytes": 7005,
+    "sha256": "2cfcd54f73f8900d318d3956486838a20073d13ee07e7d2571374355afad87b4"
+  },
+  "excluded-Ed1-list.txt": {
+    "bytes": 10100,
+    "sha256": "f21dd120c017090d22239ac1a16f0df531d7b0c7e3039a02c7a121983f50fcec"
+  },
+  "excluded-EoO-projector.txt": {
+    "bytes": 5275,
+    "sha256": "1eaffd219eb0a0d05395854f25c7ce2b0a3cdea909ea419d5882650574ffc96b"
+  },
+  "excluded-cursor-projector.txt": {
+    "bytes": 6084,
+    "sha256": "77b6e7443b2bdf0a5968f6ecaa2c02310260759b76dd25cf12b6b27c22c41f81"
+  },
+  "excluded-generated-results.txt": {
+    "bytes": 80722,
+    "sha256": "9ae826f3f68ad457d6c89dd62c3fefc9044f01bf228cfeca0d3968acfb993d9c"
+  },
+  "hash-schema-xrefs.txt": {
+    "bytes": 2429,
+    "sha256": "070f0b80346054b8585739e9f6957eca253366aed9d63154f1c47f508e9fc0af"
+  },
+  "image-descriptor.txt": {
+    "bytes": 7144,
+    "sha256": "ff9158566047ae82841d9513cbc369bd72467a53823c680dc9cbadc2dd3943ec"
+  },
+  "image-encrypted-hash-refs.txt": {
+    "bytes": 712,
+    "sha256": "56282316c4d8ee8ac3e5fac6a708e444238937c366dc200359dccf89fbfe9cf0"
+  },
+  "image-fields.txt": {
+    "bytes": 645,
+    "sha256": "7532d90c4d94bbdd8bb87507854a3395920cc55b2bf18ead564d308f6fb4e257"
+  },
+  "image-projector.txt": {
+    "bytes": 21764,
+    "sha256": "542d693db939e9b93971e48007ebaaf8d1d4ad7280cb4dee07ff79b0ee48ce87"
+  },
+  "plaintext-byte-setter.txt": {
+    "bytes": 465,
+    "sha256": "5b1cba8457511ac0ac8067f5d15b5a7f8401a8fdf2134fbf9a31aa618699aa38"
+  },
+  "plaintext-setter-callers.txt": {
+    "bytes": 1312,
+    "sha256": "e4c6961fe043ff62d3a117d198c1526184341e92fa45e253e61059d9a0d0e08e"
+  },
+  "schema-common-helper.txt": {
+    "bytes": 344,
+    "sha256": "375d2578c776ed3cfd617d5349c057fe22fbb81844cefaf571f360014fca119b"
+  },
+  "schema-image-helper.txt": {
+    "bytes": 438,
+    "sha256": "98d4b2b3226c3fa047f6426b2604b145cab299ebdf89cca8c699e13e75e19bcb"
+  },
+  "transfer-setter-callers.txt": {
+    "bytes": 1237,
+    "sha256": "a0b0f2c4c571bf7dad7caa4c0691277b4bfe66e0fd1865849942fb33b52448d9"
+  },
+  "video-fields.txt": {
+    "bytes": 781,
+    "sha256": "612df3f741a90533299e28cae5ae11255af95b569d5813bb451d0dd890ee11a4"
+  },
+  "video-projector.txt": {
+    "bytes": 23522,
+    "sha256": "4e296eb67bade120ede67b38eaba679ad1b0db2aefcdb60f759ea9c9fdd9c1fc"
+  }
+}

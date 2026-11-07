@@ -1,4 +1,11 @@
 {
+  "x-media-image-current-ingress-boundary": {
+    "x-cli": "existing image media retrieval; no new command or flag",
+    "x-transport": "research-only current image schema/parser confirmation; Rust provenance comments only",
+    "x-live": false,
+    "description": "Pinned DiL/EwA confirm core image tags including plaintext hash4, length5, key8, encrypted hash9 and viewOnce25; selected hash paths require32-byte values and store Base64 through message setters. Scan sidecar21/index22 validation is separate, with floor byte-length division and invalid/absent metadata skipping that block. This is not a universal stream requirement or HTTP encoding change. Full receive routing, provider/update-mode behavior and full-file response parity remain unknown. No status relaxation, retry or live traffic.",
+    "evidence": "docs/protocol/apk/2.26.43.72-media-image-ingress/README.md"
+  },
   "x-media-download-model-boundary": {
     "x-cli": "existing media retrieval; no new command or flag",
     "x-transport": "research-only pinned message-to-download model projection; Rust runtime unchanged",

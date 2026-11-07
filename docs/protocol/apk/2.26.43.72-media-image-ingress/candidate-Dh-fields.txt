@@ -1,0 +1,920 @@
+# LX/Dh0;  (9 fields)
+#   followed helper LX/8t2;->A1Y
+   1  version
+   2  mutations
+   3  externalMutations
+   4  snapshotMac
+   5  patchMac
+   6  keyId
+   7  exitCode
+   8  deviceIndex
+   9  clientDebugData
+# LX/Dh1;  (9 fields)
+#   followed helper LX/8t2;->A1Y
+#   followed helper LX/DBb;->A1D
+   1  name
+   2  color
+   3  predefinedId
+   4  deleted
+   5  orderIndex
+   6  isActive
+   7  type
+   8  isImmutable
+   9  muteEndTimeMs
+# LX/Dh2;  (8 fields)
+#   followed helper LX/8t2;->A1Y
+#   followed helper LX/8t1;->A1X
+#   followed helper LX/DBb;->A1C
+   1  senderKeyHash
+   2  senderTimestamp
+   3  senderKeyIndexes
+   4  senderAccountType
+   5  receiverAccountType
+   8  recipientKeyHash
+   9  recipientTimestamp
+  10  recipientKeyIndexes
+# LX/Dh3;  (9 fields)
+#   followed helper LX/DBc;->A1a
+   1  acceptEndTimestamp
+   2  acceptStartTimestamp
+   3  amountRule
+   4  errorCode
+   5  frequencyRule
+   6  isRevocable
+   7  mandateInfo
+   8  mandateNo
+   9  originalAmount
+# LX/Dh4;  (10 fields)
+#   followed helper LX/8t2;->A1Y
+   1  phoneApplicationLifecycleState
+   2  phoneCameraPermissionState
+   3  phoneAudioPermissionState
+   4  phoneAppHasMultipleBuilds
+   5  phoneOutputVolume
+   6  phoneBluetoothPermissionState
+   7  phoneUserLinkingState
+   8  additionalProperties
+   9  callingCapabilities
+  10  phonePlatform
+# LX/Dh5;  (10 fields)
+#   followed helper LX/8t2;->A1Y
+   1  number
+   2  name
+   3  code
+   4  codeName
+   5  hasSender
+   6  senderUid
+   7  senderPid
+   8  hasFaultAddress
+   9  faultAddress
+  10  faultAdjacentMetadata
+# LX/Dh6;  (10 fields)
+#   followed helper LX/8t2;->A1Y
+#   followed helper LX/8t1;->A1Y
+   1  messageType
+   2  gridImageMetadata
+   3  messageText
+   4  imageMetadata
+   5  codeMetadata
+   6  tableMetadata
+   7  dynamicMetadata
+   8  latexMetadata
+   9  mapMetadata
+  10  contentItemsMetadata
+# LX/Dh7;  (10 fields)
+#   followed helper LX/8t2;->A1Y
+#   followed helper LX/8t1;->A1Y
+#   followed helper LX/DBg;->A1J
+   1  type
+   2  mimetype
+   3  fileSha256
+   4  fileLength
+   5  fileEncSha256
+   6  directPath
+   7  mediaKey
+   8  mediaKeyTimestamp
+   9  mediaDigest
+  10  fileName
+# LX/Dh8;  (10 fields)
+#   followed helper LX/8t2;->A1Y
+   1  messageId
+   2  senderJid
+   3  senderDeviceId
+   4  timestampSeconds
+   5  isUnreadMessage
+   6  distances
+   7  expandedFromMessageIds
+   8  toolCallInfo
+   9  mediaDigest
+  10  role
+# LX/Dh9;  (10 fields)
+#   followed helper LX/8t2;->A1Y
+   1  degreesLatitude
+   2  degreesLongitude
+   3  accuracyInMeters
+   4  speedInMps
+   5  degreesClockwiseFromMagneticNorth
+   6  caption
+   7  sequenceNumber
+   8  timeOffset
+  16  jpegThumbnail
+  17  contextInfo
+# LX/DhA;  (10 fields)
+#   followed helper LX/8t2;->A1Y
+#   followed helper LX/DBg;->A1H
+   1  flowId
+   2  galaxyFlowDownloadRequestId
+   3  fileName
+   4  mimetype
+   5  fileSha256
+   6  mediaKey
+   7  fileEncSha256
+   8  directPath
+   9  mediaKeyTimestamp
+  10  fileLength
+# LX/DhB;  (10 fields)
+#   followed helper LX/8t2;->A1Y
+   1  id
+   2  fileLength
+   3  width
+   4  height
+   5  mimetype
+   6  placeholderArgb
+   7  textArgb
+   8  subtextArgb
+   9  mediaData
+  10  type
+# LX/DhC;  (10 fields)
+#   followed helper LX/8t2;->A1Y
+#   followed helper LX/DBb;->A1E
+   1  text
+   2  matchedText
+   4  canonicalUrl
+   5  description
+   6  title
+   7  textArgb
+   8  backgroundArgb
+  10  previewType
+  16  jpegThumbnail
+  17  contextInfo
+# LX/DhD;  (11 fields)
+   1  appBuildNumber
+   2  appVersion
+   3  appPackage
+   4  callEngineVersion
+   5  deviceId
+   6  deviceSerial
+   7  deviceType
+   8  isE2ETest
+   9  osBuildNum
+  10  osBuildFlavor
+  12  socVersion
+# LX/DhE;  (10 fields)
+#   followed helper LX/DBc;->A1a
+   1  message
+   2  conversationHistory
+   3  additionalContext
+   4  configOverrides
+   5  aiPersonaMetadata
+   6  clientToolSpecs
+   7  clientSkills
+   8  clientToolResponses
+   9  personalizationInfo
+  18  prefixCacheContext
+# LX/DhF;  (10 fields)
+#   followed helper LX/DBc;->A1a
+   1  response
+   2  unifiedResponse
+   3  configOverrides
+   4  clientToolRequest
+   5  messageId
+   6  reaction
+   7  messageAddOns
+   8  toolCalls
+   9  skillUpdates
+  10  clientToolRequests
+# LX/DhH;  (11 fields)
+#   followed helper LX/8t2;->A1Y
+   1  requestId
+   2  isSuccess
+   3  errorReason
+   4  response
+   5  phoneMessageType
+   6  keyRotationResponse
+   7  accountInfo
+   8  encryptedPayload
+   9  mediaBlobs
+  10  inboxKeyRotationRequested
+  11  tetheredEnvelope
+# LX/DhI;  (11 fields)
+#   followed helper LX/8t2;->A1Y
+   1  threads
+   2  etag
+   3  etagForVibration
+   4  dateFormat
+   5  viewerId
+   6  profilePictureCacheKey
+   7  viewerProfilePicturePath
+   8  viewerProfilePictureEtag
+   9  imagesEnabled
+  10  inboxProfilePicturesEnabled
+  11  profilePictureTransport
+# LX/DhJ;  (11 fields)
+#   followed helper LX/8t2;->A1Y
+#   followed helper LX/8t1;->A1Y
+#   followed helper LX/DBb;->A1A
+   1  provider
+   2  pluginType
+   3  thumbnailCdnUrl
+   4  profilePhotoCdnUrl
+   5  searchProviderUrl
+   6  referenceIndex
+   7  expectedLinksCount
+   8  pluginVersion
+   9  searchQuery
+  11  parentPluginType
+  13  faviconCdnUrl
+# LX/DhK;  (11 fields)
+#   followed helper LX/8t2;->A1Y
+#   followed helper LX/DBb;->A1D
+   1  encKey
+   2  name
+   3  options
+   4  selectableOptionsCount
+   5  contextInfo
+   6  pollContentType
+   7  pollType
+   8  correctAnswer
+   9  endTime
+  10  hideParticipantName
+  11  allowAddOption
+# LX/DhL;  (11 fields)
+#   followed helper LX/8t2;->A1Y
+   1  currentLthash
+   2  newLthash
+   3  patchVersion
+   4  collectionName
+   5  firstFourBytesFromAHashOfSnapshotMacKey
+   6  newLthashSubtract
+   7  numberAdd
+   8  numberRemove
+   9  numberOverride
+  10  senderPlatform
+  11  isSenderPrimary
+# LX/DhM;  (11 fields)
+#   followed helper LX/8t2;->A1Y
+   1  deviceId
+   2  adId
+   3  name
+   4  msgId
+   5  broadcastJid
+   6  reservedQuota
+   7  scheduledTimestamp
+   8  createTimestamp
+   9  status
+  10  bbProStatus
+  11  customAudienceFbid
+# LX/DhN;  (11 fields)
+#   followed helper LX/8t2;->A1Y
+   1  partNumber
+   2  firmwareMajorVersion
+   3  firmwareMinorVersion
+   4  appVersion
+   5  connectAppVersion
+   6  platform
+   7  killswitches
+   8  ratingPromptTriggers
+   9  appCapabilities
+  10  voiceMessageMaxLengthSeconds
+  11  isAccountActive
+# LX/DhO;  (12 fields)
+#   followed helper LX/8t2;->A1Y
+   1  callKey
+   2  conversionSource
+   3  conversionData
+   4  conversionDelaySeconds
+   5  ctwaSignals
+   6  ctwaPayload
+   7  contextInfo
+   8  nativeFlowCallButtonPayload
+   9  deeplinkPayload
+  10  messageContextInfo
+  11  callEntryPoint
+  12  callReason
+# LX/DhP;  (12 fields)
+#   followed helper LX/8t2;->A1Y
+   1  contextInfo
+   2  isCanceled
+   3  name
+   4  description
+   5  location
+   6  joinLink
+   7  startTime
+   8  endTime
+   9  extraGuestsAllowed
+  10  isScheduleCall
+  11  hasReminder
+  12  reminderOffsetSec
+# LX/DhQ;  (12 fields)
+#   followed helper LX/8t2;->A1Y
+   1  degreesLatitude
+   2  degreesLongitude
+   3  name
+   4  address
+   5  url
+   6  isLive
+   7  accuracyInMeters
+   8  speedInMps
+   9  degreesClockwiseFromMagneticNorth
+  11  comment
+  16  jpegThumbnail
+  17  contextInfo
+# LX/DhR;  (12 fields)
+#   followed helper LX/8t2;->A1Y
+#   followed helper LX/8t1;->A1Y
+   1  peerDataOperationRequestType
+   2  requestStickerReupload
+   3  requestUrlPreview
+   4  historySyncOnDemandRequest
+   5  placeholderMessageResendRequest
+   6  fullHistorySyncOnDemandRequest
+   7  syncdCollectionFatalRecoveryRequest
+   9  galaxyFlowAction
+  10  companionCanonicalUserNonceFetchRequest
+  11  bizBroadcastInsightsContactListRequest
+  12  bizBroadcastInsightsRefreshRequest
+  13  recentConversationsOnDemandRequest
+# LX/DhS;  (13 fields)
+   1  provider
+   2  calleeId
+   3  isVideoCall
+   4  isE2Ee
+   5  isGroupCall
+   6  isWhatsAppSeciId
+   7  requestId
+   8  isAvatar
+   9  calleeIds
+  10  trigger
+  11  deviceOutgoingCallTimeoutMs
+  12  selfId
+  13  supportsCompanionErrorTts
+# LX/DhT;  (12 fields)
+#   followed helper LX/DBc;->A1a
+#   followed helper LX/DBb;->A1B
+   1  jobId
+   2  query
+   3  dimensionCols
+   4  metricCols
+   5  metricAggregations
+   6  privacy
+   7  timeDimensionIndex
+   8  windowMaturationSecs
+   9  snapshotIntervalSecs
+  10  maxReportStalenessSecs
+  11  tumblingWindowSecs
+  12  maxReleasesPerWindow
+# LX/DhU;  (13 fields)
+#   followed helper LX/8t2;->A1Y
+   1  callId
+   2  codecAvatarAvailable
+   3  codecAvatarOnDesired
+   4  selfCodecAvatarStreamState
+   6  peerCodecAvatarStreamState
+   7  codecAvatarPreviewVideoThumbnailUri
+   8  codecAvatarPreviewVideoUri
+   9  selfViewVideoStreamState
+  10  selfAvatarLiveWindowRequested
+  11  codecAvatarEnableFailureSeq
+  12  codecAvatarOnByDefault
+  13  codecAvatarEnableFailureReason
+  14  codecAvatarRequestingGlassesType
+# LX/DhV;  (13 fields)
+#   followed helper LX/8t2;->A1Y
+#   followed helper LX/DBb;->A1E
+   1  identifier
+   2  locale
+   3  serializedClientPolicy
+   4  enableTransparencyReporting
+   5  timezoneOffsetHour
+   6  timestampSeconds
+   7  phoneNumberCountryCode
+   8  clientSurface
+   9  requestFormatVersion
+  10  violationState
+  11  ageStatus
+  12  userAccountCountryCode
+  13  kvStorageKeys
+# LX/DhW;  (13 fields)
+#   followed helper LX/8t2;->A1Y
+#   followed helper LX/8t1;->A1Y
+#   followed helper LX/DBb;->A1C
+   1  chatLockSupportLevel
+   2  lidMigration
+   3  businessBroadcast
+   4  userHasAvatar
+   5  memberNameTagPrimarySupport
+   6  aiThread
+   7  aiFbidMigration
+   8  bizAiSettingsSync
+   9  contactRefresh
+  10  reverseHistorySync
+  11  newsletterChatsMigration
+  12  hostWriteMutationSupport
+  13  bizAiWebOnboarding
+# LX/DhX;  (13 fields)
+#   followed helper LX/8t2;->A1Y
+#   followed helper LX/DBb;->A1F
+   1  contextInfo
+   2  eventId
+   3  eventTitle
+   4  jpegThumbnail
+   5  startTime
+   6  caption
+   7  isCanceled
+   8  endTime
+   9  callLink
+  10  coverImageHandle
+  11  locationName
+  12  lastUpdatedTsUsec
+  13  status
+# LX/DhY;  (13 fields)
+#   followed helper LX/8t2;->A1Y
+#   followed helper LX/DBg;->A1H
+   2  mimetype
+   3  fileSha256
+   4  fileLength
+   5  seconds
+   6  ptt
+   7  mediaKey
+   8  fileEncSha256
+   9  directPath
+  10  mediaKeyTimestamp
+  17  contextInfo
+  18  streamingSidecar
+  19  waveform
+  20  backgroundArgb
+# LX/DhZ;  (13 fields)
+#   followed helper LX/8t2;->A1Y
+   1  url
+   2  fileEncSha256
+   3  mediaKey
+   4  mimetype
+   5  height
+   6  width
+   7  directPath
+   8  fileLength
+   9  isFavorite
+  10  deviceIdHint
+  11  isLottie
+  12  imageHash
+  13  isAvatarSticker
+# LX/Dha;  (13 fields)
+#   followed helper LX/8t2;->A1Y
+   1  sessionVersion
+   2  localIdentityPublic
+   3  remoteIdentityPublic
+   4  rootKey
+   5  previousCounter
+   6  senderChain
+   7  receiverChains
+   9  pendingPreKey
+  10  remoteRegistrationId
+  11  localRegistrationId
+  12  needsRefresh
+  13  aliceBaseKey
+  14  pendingKyberPreKey
+# LX/Dhb;  (14 fields)
+#   followed helper LX/8t2;->A1Y
+   1  id
+   2  remoteId
+   3  threadInfo
+   4  state
+   5  participants
+   6  inCallState
+   7  incomingCallDecision
+   8  endCallRequest
+   9  disconnectState
+  10  startWithVideo
+  11  hasParticipants
+  12  connectionSessionId
+  13  hostDeviceId
+  14  callType
+# LX/Dhc;  (14 fields)
+#   followed helper LX/8t2;->A1Y
+   1  id
+   2  name
+   3  profileImageUrl
+   4  isSelf
+   5  phoneNumber
+   6  state
+   7  idType
+   8  secondaryId
+   9  secondaryIdType
+  10  reaction
+  11  handRaise
+  12  profileImageBytes
+  13  isAudioMuted
+  14  joinOrder
+# LX/Dhd;  (14 fields)
+#   followed helper LX/8t2;->A1Y
+   1  glassesHingeState
+   2  glassesMountState
+   3  deviceThermalState
+   4  deviceBatteryState
+   5  devicePeakPowerState
+   6  deviceCameraErrorState
+   7  deviceApplicationLifecycleState
+   8  deviceConnectivityQualityState
+   9  deviceMetaAiVoiceModeState
+  10  deviceBatteryPercentage
+  11  deviceEmgConnectionState
+  12  additionalProperties
+  13  callingCapabilities
+  14  hasDisplay
+# LX/Dhe;  (14 fields)
+#   followed helper LX/8t2;->A1Y
+   1  messages
+   2  hasMoreMessages
+   3  otherThreadsEtag
+   4  etag
+   5  etagForVibration
+   7  contacts
+   8  profilePicture
+   9  sendAcknowledged
+  10  currentThreadProfilePicture
+  11  profilePictureTransport
+  12  chatName
+  13  isReadOnly
+  14  inactiveReason
+  15  isMarkedUnread
+# LX/Dhf;  (14 fields)
+#   followed helper LX/8t2;->A1Y
+   1  fileType
+   2  fileData
+   3  threadId
+   4  messageId
+   5  fileName
+   6  transferId
+   7  chunkIndex
+   8  cancel
+   9  complete
+  10  totalChunks
+  11  totalBytes
+  12  durationMs
+  13  audioFormat
+  14  oneWay
+# LX/Dhg;  (14 fields)
+#   followed helper LX/8t2;->A1Y
+#   followed helper LX/8t1;->A1X
+#   followed helper LX/DBb;->A1C
+   1  orderId
+   2  thumbnail
+   3  itemCount
+   4  status
+   5  surface
+   6  message
+   7  orderTitle
+   8  sellerJid
+   9  token
+  10  totalAmount1000
+  11  totalCurrencyCode
+  12  messageVersion
+  15  catalogType
+  17  contextInfo
+# LX/Dhh;  (14 fields)
+#   followed helper LX/8t2;->A1Y
+   1  url
+   2  fileSha256
+   3  fileEncSha256
+   4  mediaKey
+   5  mimetype
+   6  height
+   7  width
+   8  directPath
+   9  fileLength
+  10  weight
+  11  lastStickerSentTs
+  12  isLottie
+  13  imageHash
+  14  isAvatarSticker
+# LX/Dhi;  (14 fields)
+#   followed helper LX/DBc;->A1a
+   1  amount1000
+   2  bankTransactionId
+   3  credentialId
+   4  currency
+   5  errorCode
+   6  groupJid
+   7  messageStanzaId
+   8  recieverJid
+   9  senderJid
+  10  status
+  11  timestamp
+  12  transactionId
+  13  type
+  14  metadata
+# LX/Dhk;  (15 fields)
+#   followed helper LX/8t2;->A1Y
+#   followed helper LX/DBi;->A0v
+#   followed helper LX/DBb;->A1C
+   1  fileSha256
+   2  fileLength
+   3  mediaKey
+   4  fileEncSha256
+   5  directPath
+   6  syncType
+   7  chunkOrder
+   8  originalMessageId
+   9  progress
+  10  oldestMsgInChunkTimestampSec
+  11  initialHistBootstrapInlinePayload
+  12  peerDataRequestSessionId
+  13  fullHistorySyncOnDemandRequestMetadata
+  14  encHandle
+  15  messageAccessStatus
+# LX/Dhl;  (15 fields)
+#   followed helper LX/8t2;->A1Y
+#   followed helper LX/8t1;->A1Y
+#   followed helper LX/8t1;->A1X
+   1  callResult
+   2  isDndMode
+   3  silenceReason
+   4  duration
+   5  startTime
+   6  isIncoming
+   7  isVideo
+   8  isCallLink
+   9  callLinkToken
+  10  scheduledCallId
+  11  callId
+  12  callCreatorJid
+  13  groupJid
+  14  participants
+  15  callType
+# LX/Dhm;  (16 fields)
+#   followed helper LX/8t2;->A1Y
+   1  callId
+   2  defaultVideoStreamState
+   3  cameraOnDesired
+   4  cameraPausedDesired
+   5  cameraBlockedByMitigation
+   6  activeDeviceId
+   7  activeCameraId
+   8  deviceIdDesired
+   9  cameraIdDesired
+  10  cameraBlockedByScreenshare
+  11  lastActiveDeviceId
+  12  lastActiveCameraId
+  13  bypassCameraOnCheck
+  14  cameraSwitchRequestId
+  15  wearableScreenshareOn
+  16  cameraChangeCodecAvatarDriven
+# LX/Dhn;  (16 fields)
+#   followed helper LX/8t2;->A1Y
+#   followed helper LX/DBi;->A0w
+#   followed helper LX/DBi;->A0x
+   1  url
+   2  mimetype
+   3  fileSha256
+   4  fileLength
+   5  seconds
+   6  ptt
+   7  mediaKey
+   8  fileEncSha256
+   9  directPath
+  10  mediaKeyTimestamp
+  17  contextInfo
+  18  streamingSidecar
+  19  waveform
+  20  backgroundArgb
+  21  viewOnce
+  22  accessibilityLabel
+# LX/Dho;  (16 fields)
+#   followed helper LX/DBc;->A1a
+   1  teeChatRequest
+   2  aiPersonaMetadata
+   3  chatJid
+   4  senderJid
+   5  messageSecret
+   6  deviceIdentityToken
+   7  senderDeviceId
+   8  expiration
+   9  disappearingMode
+  10  threadKey
+  11  aiThreadInfo
+  12  afterReadDuration
+  13  responseStanzaIdOverride
+  14  teeClientRoutingSecret
+  15  meLocalizedString
+  16  labyrinthContext
+# LX/Dhq;  (17 fields)
+#   followed helper LX/8t2;->A1Y
+   1  chatJid
+   2  messages
+   3  conversation
+   4  additionalConversations
+   5  deviceIdentityToken
+   6  configOverrides
+   7  aiPersonaMetadata
+   8  clientToolSpecs
+   9  clientSkills
+  10  clientToolResponses
+  11  personalizationInfo
+  12  labyrinthContext
+  13  responseStanzaIdOverride
+  14  teeClientRoutingSecret
+  15  meLocalizedString
+  16  anchorMessageId
+  17  messageSecret
+# LX/Dhr;  (17 fields)
+#   followed helper LX/8t2;->A1Y
+#   followed helper LX/DBb;->A1F
+   1  conversations
+   2  timeStart
+   3  timeEnd
+   4  queries
+   5  maxRelevant
+   6  minRelevantPerQuery
+   7  maxRelevantPerQuery
+   8  distanceThreshold
+   9  windowAbove
+  10  windowBelow
+  11  includeLastNMessages
+  12  maxTotal
+  13  queryScope
+  14  unreadOnly
+  15  searchStrategy
+  16  rrfK
+  17  rrfListDepth
+# LX/Dhs;  (17 fields)
+#   followed helper LX/DBc;->A1a
+#   followed helper LX/8t1;->A1Y
+   1  type
+   2  text
+   3  senderName
+   4  timestampSeconds
+   5  timezoneOffsetHour
+   6  distances
+   7  messageId
+   8  expandedFromMessageIds
+   9  role
+  10  messageAddOns
+  11  senderJid
+  12  quotedMessageId
+  13  isUnreadMessage
+  14  mediaInfo
+  15  teeMediaInfo
+  16  toolCallInfo
+  17  e2EMessage
+# LX/Dht;  (18 fields)
+#   followed helper LX/8t2;->A1Y
+   1  tessaSessionId
+   2  simonSessionId
+   3  simonSurveyId
+   4  tessaRootId
+   5  requestId
+   6  tessaEvent
+   7  invitationHeaderText
+   8  invitationBodyText
+   9  invitationCtaText
+  10  invitationCtaUrl
+  11  surveyTitle
+  12  questions
+  13  surveyContinueButtonText
+  14  surveySubmitButtonText
+  15  privacyStatementFull
+  16  privacyStatementParts
+  17  feedbackToastText
+  18  startQuestionIndex
+# LX/Dhu;  (18 fields)
+#   followed helper LX/8t2;->A1Y
+   1  duration
+   2  filePath
+   3  thumbnailPath
+   4  waveform
+   5  thumbnailData
+   6  mediaData
+   7  directPath
+   8  mediaKey
+   9  mediaKeyEncHash
+  10  fileHash
+  11  isAnimated
+  12  thumbnailEncrypted
+  13  mediaEncrypted
+  14  encryptedBlobId
+  15  foaData
+  16  availableOnPhone
+  17  fileSize
+  18  isVideoNote
+# LX/Dhv;  (18 fields)
+#   followed helper LX/DBc;->A1a
+   1  amount
+   2  collectRequestId
+   3  counter
+   4  expiryTimestamp
+   5  lastStatusTimestamp
+   6  localTransactionId
+   7  messageKey
+   8  previousStatus
+   9  previousType
+  11  referenceMessageID
+  13  service
+  14  version
+  15  marketMetadata
+  17  order
+  18  offerClaim
+  19  messageType
+  20  messageContainsBackground
+  21  senderAlias
+# LX/Dhw;  (19 fields)
+#   followed helper LX/8t2;->A1Y
+#   followed helper LX/DBi;->A0w
+#   followed helper LX/DBg;->A1H
+#   followed helper LX/DBi;->A0x
+   2  mimetype
+   3  title
+   4  fileSha256
+   5  fileLength
+   6  pageCount
+   7  mediaKey
+   8  fileName
+   9  fileEncSha256
+  10  directPath
+  11  mediaKeyTimestamp
+  12  contactVcard
+  13  thumbnailDirectPath
+  14  thumbnailSha256
+  15  thumbnailEncSha256
+  16  jpegThumbnail
+  17  contextInfo
+  18  thumbnailHeight
+  19  thumbnailWidth
+  20  caption
+# LX/Dhx;  (19 fields)
+#   followed helper LX/8t2;->A1Y
+   2  mimetype
+   3  fileSha256
+   4  fileLength
+   5  seconds
+   6  mediaKey
+   7  caption
+   8  gifPlayback
+   9  height
+  10  width
+  11  fileEncSha256
+  13  directPath
+  14  mediaKeyTimestamp
+  16  jpegThumbnail
+  17  contextInfo
+  18  streamingSidecar
+  19  gifAttribution
+  21  thumbnailDirectPath
+  22  thumbnailSha256
+  23  thumbnailEncSha256
+# LX/Dhy;  (20 fields)
+#   followed helper LX/8t2;->A1Y
+#   followed helper LX/DBi;->A0w
+#   followed helper LX/DBi;->A0x
+   2  mimetype
+   3  caption
+   4  fileSha256
+   5  fileLength
+   6  height
+   7  width
+   8  mediaKey
+   9  fileEncSha256
+  11  directPath
+  12  mediaKeyTimestamp
+  16  jpegThumbnail
+  17  contextInfo
+  20  experimentGroupId
+  21  scansSidecar
+  22  scanLengths
+  23  midQualityFileSha256
+  24  midQualityFileEncSha256
+  26  thumbnailDirectPath
+  27  thumbnailSha256
+  28  thumbnailEncSha256
+# LX/Dhz;  (20 fields)
+#   followed helper LX/8t2;->A1Y
+#   followed helper LX/DBb;->A19
+   1  lightThemeWallpaper
+   2  mediaVisibility
+   3  darkThemeWallpaper
+   4  autoDownloadWiFi
+   5  autoDownloadCellular
+   6  autoDownloadRoaming
+   7  showIndividualNotificationsPreview
+   8  showGroupNotificationsPreview
+   9  disappearingModeDuration
+  10  disappearingModeTimestamp
+  11  avatarUserSettings
+  12  fontSize
+  13  securityNotifications
+  14  autoUnarchiveChats
+  15  videoQualityMode
+  16  photoQualityMode
+  17  individualNotificationSettings
+  18  groupNotificationSettings
+  19  chatLockSettings
+  20  chatDbLidMigrationTimestamp

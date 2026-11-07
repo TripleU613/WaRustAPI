@@ -1,5 +1,11 @@
 # Network correctness audit
 
+**Current image protobuf hash ingress confirmed.** Pinned DiL schema/EwA parser
+match Rust's core image tags and trace hashes through message setters into the
+download model. Sidecar validation is separate; absence is not a universal image
+refusal. Runtime behavior unchanged.
+[Evidence](media-network-outcomes.md#pinned-current-image-protobuf-ingress-2026-11-06).
+
 **Message-to-download model traced.** Confirmed stored encrypted/plaintext hash
 and length projection, register-correct constructor binding and lazy sidecar
 preparation. Transfer category depends on message/provider predicates, not MIME

@@ -1,0 +1,407 @@
+
+# class: LX/EwA;
+# extends: Ljava/lang/Object;
+
+.method public A03(VLLIZZ)  # .registers 27
+    # full signature: LX/EwA;->A03(LX/1g2;LX/DiL;IZZ)V
+    0000..0004  new-instance  v6, LX/8tC;
+    0004..000a  invoke-direct  {v6}, LX/8tC;-><init>()V
+    000a..000c  const/4  v5, #0x1
+    000c..0010  move-object/from16  v8, v22
+    0010..0014  move-object/from16  v7, v23
+    0014..0018  move/from16  v0, v24
+    0018..001c  if-ne  v0, v5, +0x19
+    001c..0020  if-nez  v25, +0x17
+    0020..0024  iget-object  v0, v8, LX/1eQ;->A01:LX/8tC;
+    0024..0028  if-nez  v0, +0x5
+    0028..002e  invoke-virtual  {v8, v6}, LX/1eQ;->Ch0(LX/8tC;)V
+    002e..0032  iget-object  v0, v7, LX/DiL;->caption_:Ljava/lang/String;
+    0032..0038  invoke-static  {v0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+    0038..003a  move-result  v0
+    003a..003e  if-nez  v0, +0x2d6
+    003e..0042  iget-object  v0, v7, LX/DiL;->caption_:Ljava/lang/String;
+    0042..0048  invoke-static  {v8, v0}, LX/DBg;->A11(LX/1eQ;Ljava/lang/String;)V
+    0048..004a  return-void
+    004a..004e  iget-object  v1, v7, LX/DiL;->accessibilityLabel_:Ljava/lang/String;
+    004e..0054  invoke-virtual  {v8, v6}, LX/1eQ;->Ch0(LX/8tC;)V
+    0054..005a  invoke-static  {v1}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+    005a..005c  move-result  v0
+    005c..0060  if-nez  v0, +0x7
+    0060..0064  iput-object  v1, v6, LX/8tC;->A0R:Ljava/lang/String;
+    0064..006a  invoke-virtual  {v8, v1}, LX/1eQ;->A0x(Ljava/lang/String;)V
+    006a..006e  iget-object  v4, v8, LX/18U;->A0j:LX/1dW;
+    006e..0072  iget-object  v15, v4, LX/1dW;->A00:LX/0DY;
+    0072..0078  invoke-static  {v15}, LX/0Dn;->A0a(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0078..007a  move-result  v3
+    007a..007c  const/4  v10, #0x0
+    007c..0080  if-nez  v25, +0x6
+    0080..0084  const/16  v20, #0x0
+    0084..0088  if-eqz  v3, +0x4
+    0088..008c  const/16  v20, #0x1
+    008c..0090  iget  v0, v7, LX/DiL;->bitField0_:I
+    0090..0094  and-int/lit16  v0, v0, #0x80
+    0094..0098  if-eqz  v0, +0x155
+    0098..009c  iget-object  v0, v7, LX/DiL;->mediaKey_:Lcom/google/protobuf/ByteString;
+    009c..00a2  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    00a2..00a4  move-result-object  v1
+    00a4..00a6  array-length  v0, v1
+    00a6..00aa  if-lez  v0, +0x5
+    00aa..00b0  invoke-static  {v8, v6, v1}, LX/Exc;->A00(LX/1eQ;LX/8tC;[B)V
+    00b0..00b4  iget  v0, v7, LX/DiL;->bitField0_:I
+    00b4..00b8  and-int/lit16  v0, v0, #0x400
+    00b8..00be  invoke-static  {v0}, LX/2L9;->A1M(I)Z
+    00be..00c0  move-result  v0
+    00c0..00c4  const-wide/16  v13, #0x3e8
+    00c4..00c8  if-eqz  v0, +0x7
+    00c8..00cc  iget-wide  v0, v7, LX/DiL;->mediaKeyTimestamp_:J
+    00cc..00ce  mul-long/2addr  v0, v13
+    00ce..00d2  iput-wide  v0, v6, LX/8tC;->A0G:J
+    00d2..00d6  iget-object  v0, v7, LX/DiL;->thumbnailDirectPath_:Ljava/lang/String;
+    00d6..00dc  invoke-static  {v0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+    00dc..00de  move-result  v2
+    00de..00e2  iget  v1, v7, LX/DiL;->bitField0_:I
+    00e2..00e6  const/high16  v0, #0x100000
+    00e6..00ec  invoke-static  {v1, v0}, LX/DBg;->A1L(II)Z
+    00ec..00ee  move-result  v0
+    00ee..00f0  const/4  v12, #0x2
+    00f0..00f4  if-eqz  v0, +0x38
+    00f4..00f8  const/high16  v0, #0x400000
+    00f8..00fa  and-int/2addr  v0, v1
+    00fa..00fe  if-eqz  v0, +0x100
+    00fe..0102  const/high16  v0, #0x200000
+    0102..0104  and-int/2addr  v0, v1
+    0104..0108  if-eqz  v0, +0xfb
+    0108..010c  if-nez  v2, +0xf9
+    010c..0110  sget-object  v0, LX/1vU;->A06:LX/1vU;
+    0110..0116  invoke-static  {v0}, LX/DBg;->A0N(LX/1vU;)LX/2Go;
+    0116..0118  move-result-object  v2
+    0118..011c  iget-object  v1, v7, LX/DiL;->thumbnailDirectPath_:Ljava/lang/String;
+    011c..0122  invoke-static  {v1, v3}, LX/KmR;->A00(Ljava/lang/String;Z)Ljava/lang/String;
+    0122..0124  move-result-object  v0
+    0124..0128  iput-object  v0, v2, LX/2Go;->A05:Ljava/lang/String;
+    0128..012c  if-nez  v0, +0x4
+    012c..0130  iput-object  v1, v2, LX/2Go;->A06:Ljava/lang/String;
+    0130..0134  iget-object  v0, v7, LX/DiL;->thumbnailSha256_:Lcom/google/protobuf/ByteString;
+    0134..013a  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    013a..013c  move-result-object  v1
+    013c..0140  iget-object  v0, v7, LX/DiL;->thumbnailEncSha256_:Lcom/google/protobuf/ByteString;
+    0140..0146  invoke-static  {v0, v2, v1}, LX/DBh;->A0r(Lcom/google/protobuf/ByteString;LX/2Go;[B)V
+    0146..014a  iget-object  v0, v7, LX/DiL;->mediaKey_:Lcom/google/protobuf/ByteString;
+    014a..0150  invoke-static  {v0, v2}, LX/DBc;->A1G(Lcom/google/protobuf/ByteString;LX/2Go;)V
+    0150..0154  iget-wide  v0, v7, LX/DiL;->mediaKeyTimestamp_:J
+    0154..0156  mul-long/2addr  v0, v13
+    0156..015a  iput-wide  v0, v2, LX/2Go;->A02:J
+    015a..0160  invoke-static  {v8, v2}, LX/2EB;->A01(LX/18U;LX/2Go;)V
+    0160..0164  iget-object  v0, v7, LX/DiL;->scanLengths_:Lcom/google/protobuf/Internal$IntList;
+    0164..016a  invoke-interface  {v0}, Ljava/util/List;->size()I
+    016a..016c  move-result  v14
+    016c..0170  iget  v1, v7, LX/DiL;->bitField0_:I
+    0170..0174  const/high16  v0, #0x10000
+    0174..0176  and-int/2addr  v1, v0
+    0176..017c  invoke-static  {v1}, LX/2L9;->A1M(I)Z
+    017c..017e  move-result  v0
+    017e..0182  const/16  v11, #0x20
+    0182..0186  if-eqz  v0, +0x80
+    0186..018a  if-lez  v14, +0x7e
+    018a..018e  iget-object  v0, v7, LX/DiL;->scansSidecar_:Lcom/google/protobuf/ByteString;
+    018e..0194  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    0194..0196  move-result-object  v13
+    0196..019a  new-array  v9, v14, [I
+    019a..019c  const/4  v1, #0x0
+    019c..01a0  iget-object  v0, v7, LX/DiL;->scanLengths_:Lcom/google/protobuf/Internal$IntList;
+    01a0..01a6  invoke-interface  {v0, v1}, Lcom/google/protobuf/Internal$IntList;->getInt(I)I
+    01a6..01a8  move-result  v0
+    01a8..01ac  aput  v0, v9, v1
+    01ac..01b0  add-int/lit8  v1, v1, #0x1
+    01b0..01b4  if-lt  v1, v14, -0xa
+    01b4..01b8  if-eqz  v13, +0x67
+    01b8..01bc  if-lt  v14, v12, +0x65
+    01bc..01c0  const/16  v0, #0x14
+    01c0..01c4  if-gt  v14, v0, +0x61
+    01c4..01c6  array-length  v0, v13
+    01c6..01ca  div-int/lit8  v0, v0, #0xa
+    01ca..01ce  if-ne  v0, v14, +0x5c
+    01ce..01d2  const-wide/16  v18, #0x0
+    01d2..01d4  const/4  v2, #0x0
+    01d4..01d8  aget  v0, v9, v2
+    01d8..01dc  if-lez  v0, +0x55
+    01dc..01de  int-to-long  v0, v0
+    01de..01e2  add-long  v18, v18, v0
+    01e2..01e8  const-wide/32  v16, #0x7fffffff
+    01e8..01ec  cmp-long  v0, v18, v16
+    01ec..01f0  if-gtz  v0, +0x4b
+    01f0..01f4  add-int/lit8  v2, v2, #0x1
+    01f4..01f8  if-lt  v2, v14, -0x10
+    01f8..01fe  invoke-virtual  {v8}, LX/1eQ;->A0v()LX/1fW;
+    01fe..0200  move-result-object  v0
+    0200..0206  invoke-static  {v0}, LX/00L;->A05(Ljava/lang/Object;)V
+    0206..020c  invoke-virtual  {v0, v13, v9}, LX/1fW;->Cdn([B[I)V
+    020c..0210  iget  v1, v7, LX/DiL;->bitField0_:I
+    0210..0214  const/high16  v0, #0x20000
+    0214..0216  and-int/2addr  v1, v0
+    0216..021a  if-eqz  v1, +0x11
+    021a..021e  iget-object  v0, v7, LX/DiL;->midQualityFileSha256_:Lcom/google/protobuf/ByteString;
+    021e..0224  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    0224..0226  move-result-object  v1
+    0226..0228  array-length  v0, v1
+    0228..022c  if-ne  v0, v11, +0x8
+    022c..0232  invoke-static  {v1, v12}, Landroid/util/Base64;->encodeToString([BI)Ljava/lang/String;
+    0232..0234  move-result-object  v0
+    0234..0238  iput-object  v0, v6, LX/8tC;->A0k:Ljava/lang/String;
+    0238..023c  iget  v1, v7, LX/DiL;->bitField0_:I
+    023c..0240  const/high16  v0, #0x40000
+    0240..0242  and-int/2addr  v1, v0
+    0242..0246  if-eqz  v1, +0x11
+    0246..024a  iget-object  v0, v7, LX/DiL;->midQualityFileEncSha256_:Lcom/google/protobuf/ByteString;
+    024a..0250  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    0250..0252  move-result-object  v1
+    0252..0254  array-length  v0, v1
+    0254..0258  if-ne  v0, v11, +0x8
+    0258..025e  invoke-static  {v1, v12}, Landroid/util/Base64;->encodeToString([BI)Ljava/lang/String;
+    025e..0260  move-result-object  v0
+    0260..0264  iput-object  v0, v6, LX/8tC;->A0j:Ljava/lang/String;
+    0264..0268  const/16  v2, #0xa
+    0268..026c  new-array  v1, v2, [B
+    026c..0270  iget-object  v0, v7, LX/DiL;->scansSidecar_:Lcom/google/protobuf/ByteString;
+    0270..0276  invoke-virtual  {v0, v1, v10, v10, v2}, Lcom/google/protobuf/ByteString;->copyTo([BIII)V
+    0276..027a  iput-object  v1, v6, LX/8tC;->A0w:[B
+    027a..027e  aget  v0, v9, v10
+    027e..0282  iput  v0, v6, LX/8tC;->A05:I
+    0282..0286  iget-object  v0, v7, LX/DiL;->jpegThumbnail_:Lcom/google/protobuf/ByteString;
+    0286..028c  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    028c..028e  move-result-object  v1
+    028e..0290  array-length  v0, v1
+    0290..0294  move-object/from16  v2, v21
+    0294..0298  if-lez  v0, +0x11
+    0298..029c  iget-object  v0, v2, LX/EwA;->A02:Lcom/whatsapp/infra/attachment/E2EThumbnailValidator;
+    029c..02a2  invoke-virtual  {v0, v1}, Lcom/whatsapp/infra/attachment/E2EThumbnailValidator;->isValidThumbnail([B)Z
+    02a2..02a4  move-result  v0
+    02a4..02a8  if-eqz  v0, +0x9
+    02a8..02ac  iput  v5, v8, LX/18U;->A01:I
+    02ac..02b0  move/from16  v0, v26
+    02b0..02b6  invoke-virtual  {v8, v1, v0}, LX/18U;->A0U([BZ)V
+    02b6..02ba  const-string  v9, "; message.key="
+    02ba..02be  if-eqz  v20, +0x8
+    02be..02c2  iget  v0, v7, LX/DiL;->bitField0_:I
+    02c2..02c6  and-int/lit8  v0, v0, #0x10
+    02c6..02ca  if-eqz  v0, +0x4f
+    02ca..02ce  iget-wide  v0, v7, LX/DiL;->fileLength_:J
+    02ce..02d2  const-wide/16  v12, #0x0
+    02d2..02d6  cmp-long  v10, v0, v12
+    02d6..02da  if-gtz  v10, +0x40
+    02da..02de  if-nez  v3, +0x3e
+    02de..02e2  const-string  v2, "FMessageImageCommon/bogus media size received; fileLength="
+    02e2..02e8  invoke-static  {v2, v0, v1}, LX/1Xl;->A17(Ljava/lang/String;J)Ljava/lang/StringBuilder;
+    02e8..02ea  move-result-object  v0
+    02ea..02f0  invoke-static  {v4, v9, v0}, LX/DBh;->A1C(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    02f0..02f6  invoke-static  {}, LX/Dxp;->A01()LX/Dxp;
+    02f6..02f8  move-result-object  v0
+    02f8..02fa  throw  v0
+    02fa..02fe  const/high16  v0, #0x200000
+    02fe..0300  and-int/2addr  v1, v0
+    0300..0304  if-eqz  v1, -0xd0
+    0304..0308  if-eqz  v3, -0xd2
+    0308..030c  if-nez  v2, -0xd4
+    030c..0310  sget-object  v0, LX/1vU;->A06:LX/1vU;
+    0310..0316  invoke-static  {v0}, LX/DBg;->A0N(LX/1vU;)LX/2Go;
+    0316..0318  move-result-object  v2
+    0318..031c  iget-object  v1, v7, LX/DiL;->thumbnailDirectPath_:Ljava/lang/String;
+    031c..0322  invoke-static  {v1, v3}, LX/KmR;->A00(Ljava/lang/String;Z)Ljava/lang/String;
+    0322..0324  move-result-object  v0
+    0324..0328  iput-object  v0, v2, LX/2Go;->A05:Ljava/lang/String;
+    0328..032c  if-nez  v0, +0x4
+    032c..0330  iput-object  v1, v2, LX/2Go;->A06:Ljava/lang/String;
+    0330..0334  iget-object  v0, v7, LX/DiL;->thumbnailSha256_:Lcom/google/protobuf/ByteString;
+    0334..033a  invoke-static  {v0, v2}, LX/DBf;->A13(Lcom/google/protobuf/ByteString;LX/2Go;)V
+    033a..033e  goto/16  -0xf0
+    033e..0342  if-nez  v20, -0x147
+    0342..0346  const-string  v0, "FMessageImageCommon/missing media key; message.key="
+    0346..034c  invoke-static  {v0, v4}, LX/3q7;->A1W(Ljava/lang/String;Ljava/lang/Object;)V
+    034c..0352  invoke-static  {}, LX/Dxp;->A02()LX/Dxp;
+    0352..0354  move-result-object  v0
+    0354..0356  throw  v0
+    0356..035a  cmp-long  v10, v0, v12
+    035a..035e  if-lez  v10, +0x5
+    035e..0364  invoke-virtual  {v8, v0, v1}, LX/1eQ;->Ch9(J)V
+    0364..0368  const/16  v12, #0xe
+    0368..036c  const-string  v10, "FMessageImageCommon/bogus sha-256 hash received; length="
+    036c..0370  if-eqz  v20, +0x8
+    0370..0374  iget  v0, v7, LX/DiL;->bitField0_:I
+    0374..0378  and-int/lit8  v0, v0, #0x8
+    0378..037c  if-eqz  v0, +0xe
+    037c..0380  iget-object  v0, v7, LX/DiL;->fileSha256_:Lcom/google/protobuf/ByteString;
+    0380..0386  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    0386..0388  move-result-object  v1
+    0388..038a  array-length  v0, v1
+    038a..038e  if-ne  v0, v11, +0x14e
+    038e..0394  invoke-static  {v8, v1}, LX/DBc;->A1K(LX/1eQ;[B)V
+    0394..0398  iget  v0, v7, LX/DiL;->bitField0_:I
+    0398..039c  and-int/lit16  v0, v0, #0x100
+    039c..03a0  if-eqz  v0, +0xe
+    03a0..03a4  iget-object  v0, v7, LX/DiL;->fileEncSha256_:Lcom/google/protobuf/ByteString;
+    03a4..03aa  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    03aa..03ac  move-result-object  v1
+    03ac..03ae  array-length  v0, v1
+    03ae..03b2  if-ne  v0, v11, +0x134
+    03b2..03b8  invoke-static  {v8, v1}, LX/DBd;->A1R(LX/1eQ;[B)V
+    03b8..03bc  if-nez  v3, +0x34
+    03bc..03c0  iget-object  v0, v7, LX/DiL;->staticUrl_:Ljava/lang/String;
+    03c0..03c6  invoke-static  {v0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+    03c6..03c8  move-result  v0
+    03c8..03cc  const/16  v1, #0x4874
+    03cc..03d0  if-eqz  v0, +0xb
+    03d0..03d4  iget-object  v0, v2, LX/EwA;->A00:LX/08Y;
+    03d4..03da  invoke-virtual  {v0, v1}, LX/00E;->A14(I)Z
+    03da..03dc  move-result  v0
+    03dc..03de  const/4  v10, #0x1
+    03de..03e2  if-nez  v0, +0x3
+    03e2..03e4  const/4  v10, #0x0
+    03e4..03e8  iget-object  v0, v7, LX/DiL;->url_:Ljava/lang/String;
+    03e8..03ee  invoke-static  {v0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+    03ee..03f0  move-result  v0
+    03f0..03f4  if-eqz  v0, +0xf8
+    03f4..03f8  iget-object  v0, v2, LX/EwA;->A00:LX/08Y;
+    03f8..03fe  invoke-virtual  {v0, v1}, LX/00E;->A14(I)Z
+    03fe..0400  move-result  v0
+    0400..0404  if-eqz  v0, +0xf0
+    0404..0408  iget  v1, v7, LX/DiL;->bitField0_:I
+    0408..040c  const/high16  v0, #0x800000
+    040c..040e  and-int/2addr  v0, v1
+    040e..0412  if-eqz  v0, +0xdd
+    0412..0416  if-nez  v10, +0xdb
+    0416..041a  iget-object  v0, v7, LX/DiL;->staticUrl_:Ljava/lang/String;
+    041a..0420  invoke-virtual  {v8, v0}, LX/1eQ;->A10(Ljava/lang/String;)V
+    0420..0424  iget-object  v0, v7, LX/DiL;->caption_:Ljava/lang/String;
+    0424..042a  invoke-static  {v0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+    042a..042c  move-result  v0
+    042c..0430  if-nez  v0, +0x7
+    0430..0434  iget-object  v0, v7, LX/DiL;->caption_:Ljava/lang/String;
+    0434..043a  invoke-static  {v8, v0}, LX/DBg;->A11(LX/1eQ;Ljava/lang/String;)V
+    043a..043e  if-eqz  v20, +0x8
+    043e..0442  iget  v0, v7, LX/DiL;->bitField0_:I
+    0442..0446  and-int/lit8  v0, v0, #0x2
+    0446..044a  if-eqz  v0, +0x33
+    044a..044e  const-string  v0, "image/jpeg"
+    044e..0452  iget-object  v5, v7, LX/DiL;->mimetype_:Ljava/lang/String;
+    0452..0458  invoke-virtual  {v0, v5}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+    0458..045a  move-result  v0
+    045a..045e  if-nez  v0, +0x24
+    045e..0462  const-string  v0, "image/png"
+    0462..0468  invoke-virtual  {v0, v5}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+    0468..046a  move-result  v0
+    046a..046e  if-nez  v0, +0x1c
+    046e..0472  iget-object  v1, v2, LX/EwA;->A00:LX/08Y;
+    0472..0476  const/16  v0, #0x38f9
+    0476..047c  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    047c..047e  move-result  v0
+    047e..0482  if-eqz  v0, +0xb9
+    0482..0486  instance-of  v0, v8, LX/BUZ;
+    0486..048a  if-nez  v0, +0x6
+    048a..048e  instance-of  v0, v8, LX/1g9;
+    048e..0492  if-eqz  v0, +0xb1
+    0492..0496  const-string  v0, "image/webp"
+    0496..049c  invoke-virtual  {v0, v5}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+    049c..049e  move-result  v0
+    049e..04a2  if-eqz  v0, +0xa9
+    04a2..04a6  iget-object  v0, v7, LX/DiL;->mimetype_:Ljava/lang/String;
+    04a6..04ac  invoke-virtual  {v8, v0}, LX/1eQ;->Ch5(Ljava/lang/String;)V
+    04ac..04b0  iget-object  v0, v7, LX/DiL;->directPath_:Ljava/lang/String;
+    04b0..04b6  invoke-static  {v0, v3}, LX/KmR;->A00(Ljava/lang/String;Z)Ljava/lang/String;
+    04b6..04b8  move-result-object  v0
+    04b8..04bc  iput-object  v0, v6, LX/8tC;->A0S:Ljava/lang/String;
+    04bc..04c0  if-nez  v0, +0x16
+    04c0..04c4  iget-object  v0, v7, LX/DiL;->directPath_:Ljava/lang/String;
+    04c4..04ca  invoke-static  {v0}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+    04ca..04cc  move-result  v1
+    04cc..04d0  if-eqz  v20, +0xa
+    04d0..04d4  iget  v0, v7, LX/DiL;->bitField0_:I
+    04d4..04d8  and-int/lit16  v0, v0, #0x200
+    04d8..04dc  if-eqz  v0, +0x62
+    04dc..04e0  if-nez  v1, +0x60
+    04e0..04e4  iget-object  v0, v7, LX/DiL;->directPath_:Ljava/lang/String;
+    04e4..04e8  iput-object  v0, v6, LX/8tC;->A0V:Ljava/lang/String;
+    04e8..04ec  if-eqz  v20, +0xc
+    04ec..04f0  iget  v1, v7, LX/DiL;->bitField0_:I
+    04f0..04f4  and-int/lit8  v0, v1, #0x40
+    04f4..04f8  if-eqz  v0, +0xe
+    04f8..04fc  and-int/lit8  v0, v1, #0x20
+    04fc..0500  if-eqz  v0, +0xa
+    0500..0504  iget  v0, v7, LX/DiL;->width_:I
+    0504..0508  iput  v0, v6, LX/8tC;->A0D:I
+    0508..050c  iget  v0, v7, LX/DiL;->height_:I
+    050c..0510  iput  v0, v6, LX/8tC;->A07:I
+    0510..0516  invoke-static  {v7}, LX/EwA;->A00(LX/DiL;)I
+    0516..0518  move-result  v0
+    0518..051c  iput  v0, v6, LX/8tC;->A09:I
+    051c..0520  iget-object  v0, v7, LX/DiL;->annotations_:Lcom/google/protobuf/Internal$ProtobufList;
+    0520..0526  invoke-static  {v15, v6, v0}, LX/A9C;->A02(LX/0DY;LX/8tC;Ljava/util/List;)V
+    0526..052a  iget-object  v3, v7, LX/DiL;->qrUrl_:Ljava/lang/String;
+    052a..0530  invoke-static  {v3}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+    0530..0532  move-result  v0
+    0532..0536  if-nez  v0, -0x275
+    0536..053c  const-string/jumbo  v0, "upi://pay"
+    053c..0542  invoke-virtual  {v3, v0}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z
+    0542..0544  move-result  v0
+    0544..0548  if-eqz  v0, +0xf
+    0548..054c  iget-object  v1, v2, LX/EwA;->A00:LX/08Y;
+    054c..0550  const/16  v0, #0x4c0a
+    0550..0556  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    0556..0558  move-result  v0
+    0558..055c  if-eqz  v0, -0x288
+    055c..0560  iput-object  v3, v6, LX/8tC;->A0l:Ljava/lang/String;
+    0560..0562  return-void
+    0562..0566  const-string  v0, "000201"
+    0566..056c  invoke-virtual  {v3, v0}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z
+    056c..056e  move-result  v0
+    056e..0572  if-eqz  v0, +0x11
+    0572..0576  sget-object  v0, Ljava/util/Locale;->ROOT:Ljava/util/Locale;
+    0576..057c  invoke-virtual  {v3, v0}, Ljava/lang/String;->toLowerCase(Ljava/util/Locale;)Ljava/lang/String;
+    057c..057e  move-result-object  v1
+    057e..0582  const-string  v0, "br.gov.bcb.pix"
+    0582..0588  invoke-virtual  {v1, v0}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+    0588..058a  move-result  v0
+    058a..058e  if-eqz  v0, +0x3
+    058e..0590  goto  -0x19
+    0590..0594  iget-object  v1, v2, LX/EwA;->A00:LX/08Y;
+    0594..059a  const  v0, #0x878c
+    059a..059c  goto  -0x25
+    059c..05a0  const-string  v0, "FMessageImageCommon/message without direct path received; message.key="
+    05a0..05a6  invoke-static  {v4, v0}, LX/1Xl;->A15(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    05a6..05a8  move-result-object  v1
+    05a8..05ac  const-string  v0, "; message.senderJid="
+    05ac..05b2  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    05b2..05b8  invoke-virtual  {v8}, LX/18U;->B6q()LX/0DY;
+    05b8..05ba  move-result-object  v0
+    05ba..05c0  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    05c0..05c6  invoke-static  {v1}, LX/DBb;->A16(Ljava/lang/Object;)V
+    05c6..05c8  goto  -0x6d
+    05c8..05cc  if-eqz  v25, +0x6
+    05cc..05d0  and-int/lit8  v0, v1, #0x1
+    05d0..05d4  if-eqz  v0, -0xd8
+    05d4..05d8  if-nez  v5, -0xda
+    05d8..05dc  iget-object  v0, v7, LX/DiL;->url_:Ljava/lang/String;
+    05dc..05e0  goto/16  -0xe1
+    05e0..05e2  const/4  v5, #0x0
+    05e2..05e6  goto/16  -0xef
+    05e6..05ec  invoke-static  {}, LX/Dxp;->A00()LX/Dxp;
+    05ec..05ee  move-result-object  v0
+    05ee..05f0  throw  v0
+    05f0..05f4  const-string  v0, "FMessageImageCommon/invalid mime type; mimetype="
+    05f4..05fa  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    05fa..05fc  move-result-object  v1
+    05fc..0600  iget-object  v0, v7, LX/DiL;->mimetype_:Ljava/lang/String;
+    0600..0606  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0606..060c  invoke-static  {v4, v9, v1}, LX/DBh;->A1C(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    060c..0612  invoke-static  {}, LX/Dxp;->A03()LX/Dxp;
+    0612..0614  move-result-object  v0
+    0614..0616  throw  v0
+    0616..061c  invoke-static  {v4, v10, v9, v0}, LX/DBi;->A0l(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;I)V
+    061c..0622  invoke-static  {v12}, LX/Dxp;->A04(I)LX/Dxp;
+    0622..0624  move-result-object  v0
+    0624..0626  throw  v0
+    0626..062c  invoke-static  {v4, v10, v9, v0}, LX/DBi;->A0l(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;I)V
+    062c..0632  invoke-static  {v12}, LX/Dxp;->A04(I)LX/Dxp;
+    0632..0634  move-result-object  v0
+    0634..0636  throw  v0
+    # exception table: 0 try range(s)
+.end method
