@@ -1,0 +1,44 @@
+# Bounded excerpt; full source bytes=36475, sha256=7205265812dd072f3bf805faadc7c84466694a2a000c91641ca6b6ad9f308c83
+# Other instructions and exception tables omitted. Not a complete method.
+# class: LX/28o;
+# extends: LX/0Xp;
+.method public onUpgrade(VLII)  # .registers 14
+    # full signature: LX/28o;->onUpgrade(Landroid/database/sqlite/SQLiteDatabase;II)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v11, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  const-string  v0, "AxolotlDbHelper/onUpgrade db from "
+    000c..0012  invoke-static  {v12, v0}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    0012..0014  move-result-object  v1
+    0014..0018  const-string  v0, " to "
+    0018..001e  invoke-static  {v0, v1, v13}, LX/1Xl;->A1U(Ljava/lang/String;Ljava/lang/StringBuilder;I)V
+    001e..0022  const/16  v0, #0x28
+    0022..0026  if-ne  v13, v0, +0x361
+    0026..002a  iget-object  v0, v10, LX/28o;->A03:LX/08q;
+    002a..0030  invoke-static  {v0}, LX/08q;->A00(LX/08q;)J
+    0030..0032  move-result-wide  v3
+    0032..0036  const-wide/16  v0, #0x3e8
+    0036..0038  div-long/2addr  v3, v0
+    0038..003a  const/4  v0, #0x1
+    003a..003e  if-gt  v12, v0, +0x2db
+    0070..0074  const-string  v0, "CREATE TABLE message_base_key (_id INTEGER PRIMARY KEY AUTOINCREMENT, msg_key_remote_jid TEXT NOT NULL, msg_key_from_me INTEGER NOT NULL DEFAULT 0, msg_key_id TEXT NOT NULL, last_alice_base_key BLOB NOT NULL, timestamp INTEGER)"
+    0074..007a  invoke-virtual  {v11, v0}, Landroid/database/sqlite/SQLiteDatabase;->execSQL(Ljava/lang/String;)V
+    007a..007e  const-string  v0, "CREATE UNIQUE INDEX IF NOT EXISTS message_base_key_idx ON message_base_key (msg_key_remote_jid, msg_key_from_me, msg_key_id)"
+    007e..0084  invoke-virtual  {v11, v0}, Landroid/database/sqlite/SQLiteDatabase;->execSQL(Ljava/lang/String;)V
+    026e..0272  const-string  v0, "ALTER TABLE message_base_key ADD COLUMN recipient_id INTEGER "
+    0272..0278  invoke-virtual  {v11, v0}, Landroid/database/sqlite/SQLiteDatabase;->execSQL(Ljava/lang/String;)V
+    0278..027c  const-string  v0, "ALTER TABLE message_base_key ADD COLUMN device_id INTEGER NOT NULL DEFAULT 0"
+    027c..0282  invoke-virtual  {v11, v0}, Landroid/database/sqlite/SQLiteDatabase;->execSQL(Ljava/lang/String;)V
+    0282..0286  const-string  v0, "DELETE FROM message_base_key WHERE msg_key_remote_jid NOT GLOB '[0-9]*@s.whatsapp.net'"
+    0286..028c  invoke-virtual  {v11, v0}, Landroid/database/sqlite/SQLiteDatabase;->execSQL(Ljava/lang/String;)V
+    028c..0290  const-string  v0, "UPDATE message_base_key SET recipient_id = CAST(REPLACE(msg_key_remote_jid, '@s.whatsapp.net', '') AS INTEGER)"
+    0290..0296  invoke-virtual  {v11, v0}, Landroid/database/sqlite/SQLiteDatabase;->execSQL(Ljava/lang/String;)V
+    0296..029a  const-string  v0, "DROP INDEX IF EXISTS message_base_key_idx"
+    029a..02a0  invoke-virtual  {v11, v0}, Landroid/database/sqlite/SQLiteDatabase;->execSQL(Ljava/lang/String;)V
+    02a0..02a4  const-string  v0, "CREATE UNIQUE INDEX IF NOT EXISTS message_base_key_idx ON message_base_key (msg_key_remote_jid, msg_key_from_me, msg_key_id, recipient_id, device_id)"
+    02a4..02aa  invoke-virtual  {v11, v0}, Landroid/database/sqlite/SQLiteDatabase;->execSQL(Ljava/lang/String;)V
+    02d2..02d6  const-string  v0, "ALTER TABLE message_base_key ADD COLUMN recipient_type INTEGER NOT NULL DEFAULT 0"
+    02d6..02dc  invoke-virtual  {v11, v0}, Landroid/database/sqlite/SQLiteDatabase;->execSQL(Ljava/lang/String;)V
+    02dc..02e0  const-string  v0, "DROP INDEX IF EXISTS message_base_key_idx"
+    02e0..02e6  invoke-virtual  {v11, v0}, Landroid/database/sqlite/SQLiteDatabase;->execSQL(Ljava/lang/String;)V
+    02e6..02ea  const-string  v0, "CREATE UNIQUE INDEX IF NOT EXISTS message_base_key_idx ON message_base_key (msg_key_remote_jid, msg_key_from_me, msg_key_id, recipient_id, recipient_type, device_id)"
+    02ea..02f0  invoke-virtual  {v11, v0}, Landroid/database/sqlite/SQLiteDatabase;->execSQL(Ljava/lang/String;)V

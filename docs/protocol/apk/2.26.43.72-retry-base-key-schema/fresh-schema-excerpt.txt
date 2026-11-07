@@ -1,0 +1,10 @@
+# Bounded excerpt; full source bytes=13253, sha256=5237d0a94cb0fc27671f7694b7cb2412f4ce75a5c8c9a4bc630735fffe713422
+# Other instructions and exception tables omitted. Not a complete method.
+# class: LX/28o;
+# extends: LX/0Xp;
+.method public onCreate(VL)  # .registers 3
+    # full signature: LX/28o;->onCreate(Landroid/database/sqlite/SQLiteDatabase;)V
+    0080..0084  const-string  v0, "CREATE TABLE message_base_key (_id INTEGER PRIMARY KEY AUTOINCREMENT, msg_key_remote_jid TEXT NOT NULL, msg_key_from_me INTEGER NOT NULL DEFAULT 0, msg_key_id TEXT NOT NULL, recipient_id INTEGER, recipient_type INTEGER NOT NULL DEFAULT 0, device_id INTEGER NOT NULL DEFAULT 0, last_alice_base_key BLOB NOT NULL, timestamp INTEGER )"
+    0084..008a  invoke-virtual  {v2, v0}, Landroid/database/sqlite/SQLiteDatabase;->execSQL(Ljava/lang/String;)V
+    008a..008e  const-string  v0, "CREATE UNIQUE INDEX IF NOT EXISTS message_base_key_idx ON message_base_key (msg_key_remote_jid, msg_key_from_me, msg_key_id, recipient_id, recipient_type, device_id)"
+    008e..0094  invoke-virtual  {v2, v0}, Landroid/database/sqlite/SQLiteDatabase;->execSQL(Ljava/lang/String;)V

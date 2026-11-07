@@ -1,0 +1,17 @@
+["CREATE TABLE message_base_key (_id INTEGER PRIMARY KEY AUTOINCREMENT, msg_key_remote_jid TEXT NOT NULL, msg_key_from_me INTEGER NOT NULL DEFAULT 0, msg_key_id TEXT NOT NULL, last_alice_base_key BLOB NOT NULL, timestamp INTEGER)"]  (1 reference(s))
+  classes2.dex  LX/28o;->onUpgrade(VLII)
+    dex byte offset: 0x2bc734
+["CREATE TABLE message_base_key (_id INTEGER PRIMARY KEY AUTOINCREMENT, msg_key_remote_jid TEXT NOT NULL, msg_key_from_me INTEGER NOT NULL DEFAULT 0, msg_key_id TEXT NOT NULL, recipient_id INTEGER, recipient_type INTEGER NOT NULL DEFAULT 0, device_id INTEGER NOT NULL DEFAULT 0, last_alice_base_key BLOB NOT NULL, timestamp INTEGER )"]  (1 reference(s))
+  classes2.dex  LX/28o;->onCreate(VL)
+    dex byte offset: 0x2bc5a0
+["CREATE UNIQUE INDEX IF NOT EXISTS message_base_key_idx ON message_base_key (msg_key_remote_jid, msg_key_from_me, msg_key_id)"]  (1 reference(s))
+  classes2.dex  LX/28o;->onUpgrade(VLII)
+    dex byte offset: 0x2bc73e
+["CREATE UNIQUE INDEX IF NOT EXISTS message_base_key_idx ON message_base_key (msg_key_remote_jid, msg_key_from_me, msg_key_id, recipient_id, device_id)"]  (1 reference(s))
+  classes2.dex  LX/28o;->onUpgrade(VLII)
+    dex byte offset: 0x2bc964
+["CREATE UNIQUE INDEX IF NOT EXISTS message_base_key_idx ON message_base_key (msg_key_remote_jid, msg_key_from_me, msg_key_id, recipient_id, recipient_type, device_id)"]  (2 reference(s))
+  classes2.dex  LX/28o;->onCreate(VL)
+    dex byte offset: 0x2bc5aa
+  classes2.dex  LX/28o;->onUpgrade(VLII)
+    dex byte offset: 0x2bc9aa

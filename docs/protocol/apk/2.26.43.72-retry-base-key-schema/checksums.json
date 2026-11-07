@@ -1,0 +1,50 @@
+{
+  "README.md": {
+    "bytes": 4549,
+    "sha256": "283dfa061e6ea134b886543665b910760dde262cff081d221bb8ecbafe9c9cfa"
+  },
+  "bulk-delete-excerpt.txt": {
+    "bytes": 6144,
+    "sha256": "fb87e5f34e75b88ae44bc001b396c598331b0286f5058f7dfe87b4a78ecce681"
+  },
+  "delete-helper.txt": {
+    "bytes": 1278,
+    "sha256": "28510187a7920bb7ff2ed8615fabbc01fd4e0db336be490a7f5b463c361aab76"
+  },
+  "delete-message-coordinator.txt": {
+    "bytes": 3488,
+    "sha256": "492b821e457a2f5f047a79b07e5dfc12474ad5720cb9e0308ac25f60b59f925a"
+  },
+  "delete-message-store.txt": {
+    "bytes": 4153,
+    "sha256": "22bf61e37fd27c99a4f8ea544a7d9e4abf563b4685ace690592aa67eb6bd00d2"
+  },
+  "fresh-schema-excerpt.txt": {
+    "bytes": 1149,
+    "sha256": "e75b450e5af5a78b7bdd295887a5a546cfcd31579f3ccddd1293827f1849a7d6"
+  },
+  "replace-helper.txt": {
+    "bytes": 1335,
+    "sha256": "27fd8fd8f553d509e18ec6be35c2c2fb35f7ef976123ee169b666920bfdd1630"
+  },
+  "reproduce.py": {
+    "bytes": 3266,
+    "sha256": "1e93cdd1e244bfa3ac370350c328315b8024bbd009774c13e562924c2f31d28c"
+  },
+  "schema-strings.json": {
+    "bytes": 1916,
+    "sha256": "6b99255ec5b9c081fb6cf0ffe7fccc2fe201efdec059c03e785bbef88cf38d80"
+  },
+  "schema-xref.txt": {
+    "bytes": 1531,
+    "sha256": "95ae187f89d4a022d4b365d77e3ff51dc19187e0f8dade1610b546ce79aa97eb"
+  },
+  "table-xref.txt": {
+    "bytes": 483,
+    "sha256": "1aa2a6da8ad93a0ef1c0987938cb6b81819dc124ca5df45c45ff17ffe56bf790"
+  },
+  "upgrade-schema-excerpt.txt": {
+    "bytes": 4036,
+    "sha256": "fea5a3dcd9eb6d14b0f1441b033f4649b4c15fe75cb7490624a8227af75dc222"
+  }
+}

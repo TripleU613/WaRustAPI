@@ -1,0 +1,106 @@
+# Bounded excerpt; full source bytes=72278, sha256=af6c9f602be2972cb9e95cce8986242dc8b0285a7f852cb8c5fcbe2bbe1c3241
+# Other instructions and exception tables omitted. Not a complete method.
+# class: LX/Fc1;
+# extends: Ljava/lang/Object;
+.method public run(V)  # .registers 31
+    # full signature: LX/Fc1;->run()V
+    0000..0004  move-object/from16  v6, v30
+    0004..0008  iget  v0, v6, LX/Fc1;->$t:I
+    0008..000e  packed-switch  v0, payload@0x1230, cases=[0:@0xbb2, 1:@0xe, 2:@0xe, 3:@0x108e, 4:@0x100a, 5:@0xb48, 6:@0xaf6, 7:@0xab0, 8:@0xa26, 9:@0x9ce, 10:@0x6c8, 11:@0x36, 12:@0xeec, 13:@0xed0, 14:@0xea4, 15:@0xdb6, 16:@0xd82, 17:@0xbfc, 18:@0xbce], default@0xe
+    0bfc..0c00  iget-object  v0, v6, LX/Fc1;->A00:Ljava/lang/Object;
+    0c00..0c04  check-cast  v0, LX/F21;
+    0c04..0c08  iget-object  v1, v6, LX/Fc1;->A01:Ljava/lang/Object;
+    0c08..0c0c  check-cast  v1, Ljava/util/Map;
+    0c0c..0c10  iget-object  v0, v0, LX/F21;->A0N:LX/05a;
+    0c10..0c16  invoke-static  {v0}, LX/DBe;->A0g(LX/05a;)LX/0WJ;
+    0c16..0c18  move-result-object  v8
+    0c18..0c1e  invoke-static  {}, LX/2L6;->A1E()Ljava/util/HashMap;
+    0c1e..0c20  move-result-object  v4
+    0c20..0c26  invoke-static  {v1}, LX/2LC;->A18(Ljava/util/Map;)Ljava/util/Iterator;
+    0c26..0c28  move-result-object  v7
+    0c28..0c2e  invoke-interface  {v7}, Ljava/util/Iterator;->hasNext()Z
+    0c2e..0c30  move-result  v0
+    0c30..0c34  if-eqz  v0, +0x36
+    0c34..0c3a  invoke-static  {v7}, LX/1Xl;->A1E(Ljava/util/Iterator;)Ljava/util/Map$Entry;
+    0c3a..0c3c  move-result-object  v0
+    0c3c..0c42  invoke-interface  {v0}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+    0c42..0c44  move-result-object  v6
+    0c44..0c48  check-cast  v6, LX/EoY;
+    0c48..0c4e  invoke-interface  {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+    0c4e..0c50  move-result-object  v5
+    0c50..0c54  const-string  v3, "deleteMessageBaseKeys"
+    0c54..0c5a  invoke-static  {}, LX/2L6;->A1F()Ljava/util/HashSet;
+    0c5a..0c5c  move-result-object  v2
+    0c5c..0c62  invoke-virtual  {v2, v6}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0c62..0c66  iget-object  v1, v8, LX/0WJ;->A0P:LX/0YG;
+    0c66..0c6a  const-string  v0, "message_base_key"
+    0c6a..0c70  invoke-virtual  {v1, v6, v3, v0}, LX/0YG;->A02(LX/EoY;Ljava/lang/String;Ljava/lang/String;)LX/EoY;
+    0c70..0c72  move-result-object  v0
+    0c72..0c78  invoke-virtual  {v2, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0c78..0c7e  invoke-virtual  {v2}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+    0c7e..0c80  move-result-object  v1
+    0c80..0c86  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    0c86..0c88  move-result  v0
+    0c88..0c8c  if-eqz  v0, -0x30
+    0c8c..0c92  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0c92..0c94  move-result-object  v0
+    0c94..0c9a  invoke-virtual  {v4, v0, v5}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    0c9a..0c9c  goto  -0xd
+    0c9c..0ca0  iget-object  v1, v8, LX/0WJ;->A0I:LX/0Wk;
+    0ca0..0ca6  invoke-virtual  {v4}, Ljava/util/AbstractMap;->keySet()Ljava/util/Set;
+    0ca6..0ca8  move-result-object  v0
+    0ca8..0cae  invoke-virtual  {v1, v0}, LX/0Wk;->A07(Ljava/util/Set;)Ljava/util/HashSet;
+    0cae..0cb0  move-result-object  v5
+    0cb0..0cb6  invoke-virtual  {v1, v5}, LX/0Wk;->A08(Ljava/util/Set;)V
+    0cb6..0cba  iget-object  v0, v8, LX/0WJ;->A0Q:LX/0Xp;
+    0cba..0cc0  invoke-virtual  {v0}, LX/0Xp;->A07()LX/0aq;
+    0cc0..0cc2  move-result-object  v7
+    0cc2..0cc8  invoke-virtual  {v7}, LX/0aq;->A00()LX/1hk;
+    0cc8..0cca  move-result-object  v6
+    0cca..0cd0  invoke-static  {v4}, LX/2L8;->A1N(Ljava/util/AbstractMap;)Ljava/util/Iterator;
+    0cd0..0cd2  move-result-object  v4
+    0cd2..0cd8  invoke-interface  {v4}, Ljava/util/Iterator;->hasNext()Z
+    0cd8..0cda  move-result  v0
+    0cda..0cde  if-eqz  v0, +0x2e
+    0cde..0ce4  invoke-static  {v4}, LX/1Xl;->A1E(Ljava/util/Iterator;)Ljava/util/Map$Entry;
+    0ce4..0ce6  move-result-object  v0
+    0ce6..0cec  invoke-interface  {v0}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+    0cec..0cee  move-result-object  v3
+    0cee..0cf2  check-cast  v3, LX/EoY;
+    0cf2..0cf8  invoke-interface  {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+    0cf8..0cfa  move-result-object  v0
+    0cfa..0cfe  check-cast  v0, Ljava/util/Set;
+    0cfe..0d04  invoke-interface  {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    0d04..0d06  move-result-object  v2
+    0d06..0d0c  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    0d0c..0d0e  move-result  v0
+    0d0e..0d12  if-eqz  v0, -0x1e
+    0d12..0d18  invoke-interface  {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0d18..0d1a  move-result-object  v1
+    0d1a..0d1e  check-cast  v1, LX/1dW;
+    0d1e..0d22  iget-object  v0, v8, LX/0WJ;->A06:LX/00x;
+    0d22..0d28  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0d28..0d2a  move-result-object  v0
+    0d2a..0d2e  check-cast  v0, LX/EbJ;
+    0d2e..0d34  invoke-virtual  {v0, v3, v1}, LX/EbJ;->A00(LX/EoY;LX/1dW;)V
+    0d34..0d36  goto  -0x17
+    0d36..0d3c  invoke-virtual  {v6}, LX/1hk;->A00()V
+    0d3c..0d42  invoke-virtual  {v6}, LX/1hk;->close()V
+    0d42..0d48  invoke-virtual  {v7}, LX/0aq;->close()V
+    0d48..0d4e  invoke-static  {v5}, LX/0Wk;->A03(Ljava/util/Set;)V
+    0d4e..0d50  return-void
+    0d50..0d52  move-exception  v1
+    0d52..0d58  invoke-virtual  {v6}, LX/1hk;->close()V
+    0d58..0d5a  goto  +0x5
+    0d5a..0d5c  move-exception  v0
+    0d5c..0d62  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    0d62..0d64  throw  v1
+    0d64..0d66  move-exception  v1
+    0d66..0d6c  invoke-virtual  {v7}, LX/0aq;->close()V
+    0d6c..0d6e  goto  +0x5
+    0d6e..0d70  move-exception  v0
+    0d70..0d76  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    0d76..0d78  throw  v1
+    0d78..0d7a  move-exception  v2
+    0d7a..0d80  invoke-static  {v5}, LX/0Wk;->A03(Ljava/util/Set;)V
+    0d80..0d82  throw  v2

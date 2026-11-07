@@ -1,0 +1,22 @@
+
+# class: LX/0KU;
+# extends: Ljava/lang/Object;
+
+.method public A04(ILLLL)  # .registers 9
+    # full signature: LX/0KU;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+    0000..0006  invoke-static  {v4, v7, v8}, LX/0KU;->A01(LX/0KU;Ljava/lang/String;[Ljava/lang/Object;)V
+    0006..000c  invoke-static  {}, Landroid/os/SystemClock;->uptimeMillis()J
+    000c..0010  iget-object  v0, v4, LX/0KU;->A02:Landroid/database/sqlite/SQLiteDatabase;
+    0010..0016  invoke-virtual  {v0, v5, v6, v8}, Landroid/database/sqlite/SQLiteDatabase;->delete(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+    0016..0018  move-result  v3
+    0018..001c  iget-object  v2, v4, LX/0KU;->A04:LX/0Du;
+    001c..0020  iget-object  v1, v4, LX/0KU;->A03:Ljava/lang/String;
+    0020..0022  const/4  v0, #0x4
+    0022..0028  invoke-virtual  {v2, v1, v0, v7}, LX/0Du;->A03(Ljava/lang/String;ILjava/lang/String;)V
+    0028..002a  return  v3
+    002a..002c  move-exception  v0
+    002c..0032  invoke-direct  {v4, v0}, LX/0KU;->A00(Landroid/database/sqlite/SQLiteDatabaseCorruptException;)V
+    0032..0034  throw  v0
+    # exception table: 1 try range(s)
+    # catch Landroid/database/sqlite/SQLiteDatabaseCorruptException; code_units 0006..000c -> 0015
+.end method

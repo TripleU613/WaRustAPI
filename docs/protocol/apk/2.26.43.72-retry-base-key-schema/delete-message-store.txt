@@ -1,0 +1,75 @@
+
+# class: LX/EbJ;
+# extends: Ljava/lang/Object;
+
+.method public A00(VLL)  # .registers 16
+    # full signature: LX/EbJ;->A00(LX/EoY;LX/1dW;)V
+    0000..0004  const-string  v6, "axolotl deleted "
+    0004..000a  invoke-static  {v14, v15}, LX/00l;->A0A(Ljava/lang/Object;Ljava/lang/Object;)V
+    000a..000e  iget-boolean  v0, v15, LX/1dW;->A02:Z
+    000e..0012  if-eqz  v0, +0x26
+    0012..0016  const-string  v1, " != "
+    0016..001a  const-string  v0, "msg_key_remote_jid  = ? AND recipient_id = ? AND recipient_type = ? AND device_id = ? AND msg_key_from_me "
+    001a..0020  invoke-static  {v0, v1}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0020..0022  move-result-object  v1
+    0022..0026  const-string  v0, " 0 AND msg_key_id = ?"
+    0026..002c  invoke-static  {v0, v1}, LX/1Xl;->A0z(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    002c..002e  move-result-object  v9
+    002e..0032  iget-object  v0, v15, LX/1dW;->A00:LX/0DY;
+    0032..0038  invoke-static  {v0}, LX/00L;->A05(Ljava/lang/Object;)V
+    0038..003e  invoke-virtual  {v0}, Lcom/whatsapp/infra/core/jid/Jid;->getRawString()Ljava/lang/String;
+    003e..0040  move-result-object  v11
+    0040..0044  iget-object  v0, v13, LX/EbJ;->A02:LX/00p;
+    0044..004a  invoke-interface  {v0}, LX/00p;->getValue()Ljava/lang/Object;
+    004a..004c  move-result-object  v0
+    004c..0050  check-cast  v0, LX/0Xp;
+    0050..0056  invoke-virtual  {v0}, LX/0Xp;->A07()LX/0aq;
+    0056..0058  move-result-object  v5
+    0058..005a  goto  +0x4
+    005a..005e  const-string  v1, " = "
+    005e..0060  goto  -0x24
+    0060..0064  iget-object  v8, v5, LX/0aq;->A02:LX/0KU;
+    0064..0068  const-string  v7, "message_base_key"
+    0068..006a  const/4  v0, #0x0
+    006a..0070  invoke-static  {v11, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0070..0072  const/4  v10, #0x1
+    0072..0074  const/4  v12, #0x2
+    0074..0078  iget-object  v1, v14, LX/EoY;->A04:Ljava/lang/String;
+    0078..007c  iget  v0, v14, LX/EoY;->A01:I
+    007c..0082  invoke-static  {v0}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+    0082..0084  move-result-object  v4
+    0084..0088  iget  v0, v14, LX/EoY;->A00:I
+    0088..008e  invoke-static  {v0}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+    008e..0090  move-result-object  v3
+    0090..0094  iget-object  v2, v15, LX/1dW;->A01:Ljava/lang/String;
+    0094..0096  const/4  v0, #0x5
+    0096..009c  invoke-static  {v11, v1, v0, v10}, LX/6oe;->A1b(Ljava/lang/Object;Ljava/lang/Object;II)[Ljava/lang/String;
+    009c..009e  move-result-object  v1
+    009e..00a2  aput-object  v4, v1, v12
+    00a2..00a8  invoke-static  {v3, v2, v1}, LX/DBb;->A1A(Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;)V
+    00a8..00ac  const-string  v0, "SignalMessageBaseKeyStore/removeMessageBaseKey"
+    00ac..00b2  invoke-virtual  {v8, v7, v9, v0, v1}, LX/0KU;->A04(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I
+    00b2..00b4  move-result  v0
+    00b4..00b6  int-to-long  v3, v0
+    00b6..00ba  const-wide/16  v1, #0x0
+    00ba..00be  cmp-long  v0, v3, v1
+    00be..00c0  const/4  v2, #0x5
+    00c0..00c4  if-lez  v0, +0x3
+    00c4..00c6  const/4  v2, #0x3
+    00c6..00cc  invoke-static  {v6, v3, v4}, LX/1Xl;->A17(Ljava/lang/String;J)Ljava/lang/StringBuilder;
+    00cc..00ce  move-result-object  v1
+    00ce..00d2  const-string  v0, " message base key rows for "
+    00d2..00d8  invoke-static  {v15, v0, v1}, LX/1Xl;->A0v(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    00d8..00da  move-result-object  v0
+    00da..00e0  invoke-static  {v2, v0}, Lcom/whatsapp/infra/logging/Log;->log(ILjava/lang/String;)V
+    00e0..00e6  invoke-virtual  {v5}, LX/0aq;->close()V
+    00e6..00e8  return-void
+    00e8..00ea  move-exception  v1
+    00ea..00ec  throw  v1
+    00ec..00ee  move-exception  v0
+    00ee..00f4  invoke-static  {v5, v1}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    00f4..00f6  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0030..0070 -> 0074
+    # catch <all> code_units 0075..0076 -> 0076
+.end method
