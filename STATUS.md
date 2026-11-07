@@ -10691,3 +10691,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   interfaces, composing observer delivery with separate queue wake submission.
   Null-manager/race/executor/lifecycle limits retained. Research only; no live
   account operation or Rust behavior change.
+
+- Fixed read/played pending-intent account adoption gap: preparation transaction
+  now freezes existing account authority; reservation and explicit automatic-read
+  promotion refuse changed authority. Real-store reopen controls added. Historical
+  account-less/unbound provenance remains unchanged; no live operation.

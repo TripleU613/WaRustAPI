@@ -1,4 +1,11 @@
 {
+  "x-read-played-preparation-account-binding": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "evidence": "docs/protocol/read-receipt-policy-current.md#readplayed-preparation-account-binding",
+    "behavior": "New read/played receipt intents with a saved account retain preparation authority atomically; first reservation and explicit promotion refuse changed/missing authority. Historical unbound rows are not backfilled; wire unchanged."
+  },
   "x-jobqueue-observer-dispatch-evidence": {
     "x-cli": false,
     "x-transport": false,

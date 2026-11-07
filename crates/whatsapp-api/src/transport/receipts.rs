@@ -87,6 +87,9 @@ pub fn queue_opened(store: &ProtocolStore, ticket: &str) -> Result<()> {
         // SendPlayedReceiptJobV2.A0L -> 0xW.A08 requires enabled privacy for
         // ordinary direct played; played-self routing remains unported.
         let mut intent = serde_json::json!({"status":"pending","wire":wire,"automatic":true});
+        if let Some(owner) = preparation_account_authority(tx)? {
+            intent["prepared_account_authority_sha256"] = owner.into();
+        }
         if automatic_direct_receipt_disabled(tx, &receipt)? {
             intent["deferred_reason"] = serde_json::json!(READ_DISABLED);
         }
@@ -169,6 +172,7 @@ fn queue_read_with_origin(
         ));
     }
     store.write(|tx| {
+        let prepared_account = preparation_account_authority(tx)?;
         let mut queued = 0;
         for id in &ids {
             let (key, mut saved) = if chat.server == Server::Group {
@@ -202,6 +206,19 @@ fn queue_read_with_origin(
                     && existing["status"] == "pending"
                     && automatic_origin(&existing)? == Some(true)
                 {
+                    if existing
+                        .get("prepared_account_authority_sha256")
+                        .is_some_and(|owner| {
+                            owner
+                                .as_str()
+                                .is_none_or(|owner| Some(owner) != prepared_account.as_deref())
+                        })
+                    {
+                        return Err(Error::invalid(
+                            "receipt",
+                            "prepared receipt account changed",
+                        ));
+                    }
                     existing["automatic"] = serde_json::json!(false);
                     existing
                         .as_object_mut()
@@ -233,6 +250,9 @@ fn queue_read_with_origin(
             .encode(&node)?;
             let deferred = automatic && automatic_direct_receipt_disabled(tx, &node)?;
             let mut row = serde_json::json!({"status":"pending","wire":wire,"automatic":automatic});
+            if let Some(owner) = &prepared_account {
+                row["prepared_account_authority_sha256"] = owner.clone().into();
+            }
             if deferred {
                 row["deferred_reason"] = serde_json::json!(READ_DISABLED);
             }
@@ -756,6 +776,15 @@ fn receipt_account_authority(
     Ok(hash.finalize().into())
 }
 
+// Bind new read/played work in its preparation transaction, before first
+// reservation can adopt it. Account-less offline adapters remain explicitly
+// unbound, like the existing retry adapter; historical rows are not backfilled.
+fn preparation_account_authority(tx: &crate::store::WriteTx<'_>) -> Result<Option<String>> {
+    crate::session::AccountRecord::load_in_write(tx)?
+        .map(|account| receipt_account_authority(tx.generation(), Some(&account)).map(hex::encode))
+        .transpose()
+}
+
 // Durable original callback ownership survives an uncertain write/reconnect.
 // This is local encrypted metadata, not a native stanza field or resend queue.
 #[derive(Serialize, Deserialize)]
@@ -911,7 +940,10 @@ pub fn reserve_pending_owned(store: &ProtocolStore) -> Result<Vec<ReservedReceip
                         prepared.as_str() != Some(hex::encode(account_authority).as_str())
                     })
                 {
-                    return Err(Error::invalid("receipt", "prepared retry account changed"));
+                    return Err(Error::invalid(
+                        "receipt",
+                        "prepared receipt account changed",
+                    ));
                 }
                 let origin = automatic_origin(&row)?;
                 let _ = deferred_reason(&row)?;
@@ -4176,6 +4208,85 @@ mod tests {
                         }
                     }
                     assert!(reserve_pending_owned(&db).unwrap().is_empty());
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn read_and_played_preparation_cannot_be_reserved_by_changed_accounts_after_reopen() {
+        use crate::session::AccountRecord;
+        for family in ["read", "automatic", "group", "played"] {
+            for change in ["same", "observation", "jid", "regid", "missing"] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("receipt-preparation-owner.redb");
+                let db = open(&path, true);
+                let account = AccountRecord {
+                    generation: db.generation(),
+                    signal_registration_id: Some(31),
+                    ..Default::default()
+                };
+                db.write(|tx| account.save(tx)).unwrap();
+                if family == "played" {
+                    let ticket = opened_fixture(&db, "15555550100@s.whatsapp.net");
+                    queue_opened(&db, &ticket).unwrap();
+                } else {
+                    let incoming = automatic_text_fixture(&db, "prepared-owner", family == "group");
+                    if family == "read" {
+                        queue_read(&db, &explicit_read_for(&incoming)).unwrap();
+                    } else {
+                        queue_read_for_incoming(&db, &incoming).unwrap();
+                    }
+                }
+                db.write(|tx| {
+                    let mut current = account.clone();
+                    match change {
+                        "jid" => {
+                            current.own_jid =
+                                Some(Jid::parse("15555550999@s.whatsapp.net").unwrap())
+                        }
+                        "regid" => current.signal_registration_id = Some(32),
+                        "missing" => {
+                            tx.delete(Table::Account, b"account")?;
+                            return Ok(());
+                        }
+                        "observation" => {
+                            current.last_authenticated_at = Some(crate::model::time::Timestamp(123))
+                        }
+                        _ => {}
+                    }
+                    current.save(tx)
+                })
+                .unwrap();
+                drop(db);
+                let db = open(&path, false);
+                let before = db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap();
+                let head = db.journal_head().unwrap();
+                if family == "automatic" && !matches!(change, "same" | "observation") {
+                    let incoming = Node::new("message")
+                        .attr("from", "15555550101@s.whatsapp.net")
+                        .attr("id", "prepared-owner");
+                    assert!(queue_read(&db, &explicit_read_for(&incoming)).is_err());
+                    assert_eq!(
+                        db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap(),
+                        before
+                    );
+                    assert_eq!(db.journal_head().unwrap(), head);
+                }
+                let result = reserve_pending_owned(&db);
+                if matches!(change, "same" | "observation") {
+                    assert_eq!(result.unwrap().len(), 1);
+                    assert!(reserve_pending_owned(&db).unwrap().is_empty());
+                } else {
+                    assert!(
+                        result.is_err(),
+                        "{family}/{change}: stale prepared receipt was reserved"
+                    );
+                    assert_eq!(
+                        db.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap(),
+                        before
+                    );
+                    assert_eq!(db.journal_head().unwrap(), head);
                 }
             }
         }

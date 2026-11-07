@@ -6199,3 +6199,10 @@ evidence, not new APK behavior or proof of full group-send/network parity.
   separate queue wake task; null manager returns without wake. Dispatch/wake
   completion, association races and provider lifecycle remain separate. See
   [observer dispatch](apk/2.26.43.72-jobqueue-observer-dispatch/README.md).
+
+- Confirmed read/played preparation ownership defect at `47cf4c22`, reproduced
+  by real-store changed-JID reservation. New owned intents now retain preparation
+  account authority in their queue transaction; explicit automatic-read promotion
+  checks the existing marker. Reopen regression covers read/automatic/group/played,
+  changed/missing account and same/observation controls. Legacy unbound rows remain
+  unbound. See [preparation binding](read-receipt-policy-current.md#readplayed-preparation-account-binding).

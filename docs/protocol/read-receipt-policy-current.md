@@ -196,3 +196,35 @@ payload inspection still skips unsupported/malformed protobuf and the inspection
 size bound as before; this change does not broaden supported message types or
 normal-read authority. This is source/store-shape evidence, not a new APK rule,
 server acceptance result or proof of every runtime caller's error handling.
+
+## Read/played preparation account binding
+
+**Confirmed Rust ownership defect, corrected offline**, baseline `47cf4c22`.
+New read/played intents previously acquired account authority only at first
+reservation. A changed account could therefore adopt old pending work. The
+new real-store regression failed on old code with read/jid: stale prepared
+receipt was reserved. This is a local ownership failure, not a demonstrated
+native server rejection or restriction trigger.
+
+When an account exists, queue_read_with_origin and queue_opened now record the
+existing receipt authority fingerprint as prepared_account_authority_sha256
+inside the same transaction as intent preparation. reserve_pending_owned's
+existing preparation check then refuses a changed/missing account before
+mutating pending rows or creating callbacks. Explicit promotion of an existing
+automatic read intent also checks its retained preparation marker before
+changing origin/deferral fields. It never rebinds the old row to current authority.
+The fixed error now says prepared receipt account changed for all families.
+
+Offline regression covers explicit direct read, automatic direct/group read and
+played preparation, then changed own JID, Signal registration ID or account
+removal, encrypted-store close/reopen, and reservation refusal without checkpoint/
+journal mutation. Automatic-direct explicit promotion is also refused after
+those changes. Same-account and observation-timestamp-only controls reserve once
+and cannot replay. No socket is used and encoded receipt bytes are unchanged.
+
+Account-less offline adapters remain explicitly unbound, consistent with the
+existing retry adapter. Historical rows lacking the preparation marker are not
+backfilled; original historical inbox/account provenance remains unknown.
+Preparation ownership does not itself prove original message ownership or
+complete native policy. Reserved callback/write/ACK authority checks remain
+independent. No receipt is sent and no account operation is performed.
