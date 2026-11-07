@@ -1457,7 +1457,25 @@ fn expand(node: &Node, key_seconds: impl FnOnce() -> Result<i64>) -> Result<Vec<
         }
         return offline_aggregate(node, participants);
     }
+    // APK43.72 1rU.A05 selects the ordinary status set at0482 before
+    // forwarding to F10.A03. A participants/key alone cannot override retry,
+    // simple/special or unhandled root routing. Do not preflight their children
+    // as an ordinary aggregate; downstream selected consumers own their grammar.
+    if node
+        .get_attr("type")
+        .and_then(|value| value.as_text())
+        .is_some_and(|kind| !ordinary_status_root_kind(kind))
+    {
+        return Ok(vec![node.clone()]);
+    }
     key_aggregate(node, participants, key_seconds()?)
+}
+
+fn ordinary_status_root_kind(kind: &str) -> bool {
+    matches!(
+        kind,
+        "delivery" | "read" | "played" | "sender" | "inactive" | "read-self" | "played-self"
+    )
 }
 
 /// `record_in` sends a receipt from a group chat to the group path.
@@ -1614,10 +1632,7 @@ fn key_aggregate(node: &Node, participants: &Node, default_seconds: i64) -> Resu
             .as_text()
             .ok_or_else(|| invalid("invalid root type"))?,
     };
-    if !matches!(
-        kind,
-        "delivery" | "read" | "played" | "sender" | "inactive" | "read-self" | "played-self"
-    ) {
+    if !ordinary_status_root_kind(kind) {
         return Err(invalid("unknown root type"));
     }
     // APK43.72 A0L rejects null only; 1dW.<init> asserts nonnull, not
@@ -5338,6 +5353,15 @@ mod tests {
                 .unwrap()
         };
         let before = snapshot();
+        // Upstream1rU never selects F10's key parser for this root kind.
+        // Keep it raw without facts; its copied487 policy is a separate gap.
+        let unhandled = root
+            .clone()
+            .attr("type", "SECRET")
+            .children(vec![good.clone()]);
+        validate(&unhandled).unwrap();
+        assert_eq!(record(&store, &unhandled).unwrap(), 0);
+        assert_eq!(snapshot(), before);
         for node in [
             root.clone()
                 .children(vec![Node::new("participants").children(vec![item.clone()])]),
@@ -5348,9 +5372,6 @@ mod tests {
             ]),
             root.clone()
                 .children(vec![Node::new("participants").attr("key", "fixture")]),
-            root.clone()
-                .attr("type", "SECRET")
-                .children(vec![good.clone()]),
             root.clone().children(vec![
                 Node::new("participants")
                     .attr("key", "fixture")
@@ -6425,6 +6446,54 @@ mod retry_tests {
     }
 
     #[test]
+    fn key_children_do_not_preflight_other_native_root_routes() {
+        let base = receipt(false);
+        for kind in [
+            "retry",
+            "server-error",
+            "peer_msg",
+            "hist_sync",
+            "enc_rekey_retry",
+            "error",
+            "view",
+            "unknown",
+        ] {
+            let node = base.clone().attr("type", kind).children(vec![
+                Node::new("participants").children(vec![Node::new("participant").attr("t", "bad")]),
+            ]);
+            assert!(validate(&node).is_ok(), "{kind}");
+            assert!(
+                super::super::messaging::received_parse_error_confirmation(&node).is_none(),
+                "{kind}"
+            );
+        }
+        for kind in [
+            "delivery",
+            "read",
+            "played",
+            "sender",
+            "inactive",
+            "read-self",
+            "played-self",
+        ] {
+            let node = base
+                .clone()
+                .attr("type", kind)
+                .children(vec![Node::new("participants")]);
+            assert!(
+                matches!(
+                    validate(&node),
+                    Err(Error::InvalidInput {
+                        field: NATIVE_KEY_FIELD,
+                        ..
+                    })
+                ),
+                "{kind}"
+            );
+        }
+    }
+
+    #[test]
     fn upstream_routes_precede_ordinary_retry_parsing() {
         let base = receipt(false);
         let aggregate = || Node::new("participants").attr("message_id", "");
@@ -6438,7 +6507,9 @@ mod retry_tests {
         assert!(parse_retry(&base.clone().children(children)).is_some());
         let mut children = vec![Node::new("participants").attr("key", "K1")];
         children.extend(base.child_nodes().iter().cloned());
-        assert!(parse_retry(&base.clone().children(children)).is_some());
+        let key_first = base.clone().children(children);
+        assert!(validate(&key_first).is_ok());
+        assert!(parse_retry(&key_first).is_some());
         assert!(parse_retry(&base.clone().attr("category", "other")).is_some());
     }
 

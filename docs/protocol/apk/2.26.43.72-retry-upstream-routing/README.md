@@ -31,6 +31,31 @@ workflow containing a matching accepted outbox entry. The latter verifies that
 both alternate routes produce no resend/query/confirmation and preserve all
 outbox, checkpoint, ratchet and peer-identity rows, before a normal retry proceeds.
 
+## Key-only children must not block another root route
+
+**Confirmed selected static / implemented:** absent a nonnull first-child
+message_id, 1rU.A05 tests its seven-element ordinary status set at0482..048e.
+Only that set forwards to ordinary/status processing; a key-only participants
+child does not override another root route. Rust previously called key_aggregate
+on any leading participants, whose unknown-root check refused retry and other
+special/unknown root kinds. The receive driver's validation gate consequently
+blocked a valid ordinary retry before retry_answer could inspect it.
+
+Expansion now checks that same seven-element set before key_aggregate. Other
+text root kinds remain unexpanded and pass to their existing selected consumers,
+which retain their own admission/response rules. This does not mark those
+consumers implemented, add a success ACK or bypass their schema checks. Nontext
+root types retain their previous local refusal. A leading message_id still has
+precedence and uses offline aggregation even for a nonordinary root kind.
+
+Regressions cover the seven ordinary kinds (missing key still yields its native
+cause), simple/retry/rekey/error/view/unknown kinds (their children no longer
+produce an ordinary aggregate refusal), and a complete retry behind a key-only
+child. The saved-session workflow now sends its first-count requests through
+validate, record and the responder with this extra child, while later-count
+requests retain the ordinary child shape. Thus the real validation gate, durable
+resend/refetch reservation, duplicate handling and later refusals are exercised.
+
 ## Additional traced boundaries and negative results
 
 [19t constructor](status-registration.txt) registers277/0x115 with14h, closing

@@ -107,3 +107,18 @@ identity state and emits no resend/query/confirmation for alternate routes.
 Full special/unknown-type routing and live acceptance remain open. The router's
 error branch tests root type=error before requiring its child; an arbitrary error
 child alone does not select it. No live account operation.
+
+
+## Key-only aggregate selection follows upstream root routing (2026-11-06)
+
+**Confirmed selected static / implemented:** without a leading nonnull
+participants/message_id, pinned1rU.A05 forwards only its seven ordinary status
+root kinds to F10.A03. A key-only participants child cannot turn retry or another
+special/unknown root kind into an ordinary aggregate. Expansion now preserves
+those roots for existing consumer policy instead of raising a key-aggregate
+unknown-type refusal that prevents valid retry processing. Ordinary missing-key
+causes and early message_id precedence remain. Unsupported special consumers
+remain unsupported; no new success ACK, fact, unknown-type response or live
+operation is introduced. The saved-session workflow exercises validation,
+recording and resend/refetch policy with first-count key-only children.
+[Exact route evidence and test/coverage limits](apk/2.26.43.72-retry-upstream-routing/README.md).

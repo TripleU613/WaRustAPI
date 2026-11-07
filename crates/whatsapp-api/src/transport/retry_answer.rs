@@ -2477,7 +2477,14 @@ mod tests {
             .unwrap();
         let (store_ref, account_ref) = (&store, &account);
         let ask = |count: u32, registration: u32| {
-            let node = receipt(&peer, count, registration);
+            let mut node = receipt(&peer, count, registration);
+            if count == 1 {
+                // Native retry routing ignores a leading key-only participants
+                // child; it must still reach the ordinary retry responder.
+                let mut children = vec![Node::new("participants").attr("key", "IGNORED")];
+                children.extend(node.child_nodes().iter().cloned());
+                node = node.children(children);
+            }
             async move {
                 // The order listen uses: a retry passes validation, records
                 // no delivery fact, and only then reaches the answer.

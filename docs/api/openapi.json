@@ -1,4 +1,11 @@
 {
+  "x-key-aggregate-upstream-routing": {
+    "x-cli": "existing receive/receipt inspection paths; no new command or flag",
+    "x-transport": "ordinary root-set selection before key-aggregate expansion and validation",
+    "x-live": false,
+    "description": "Pinned1rU.A05 only forwards its seven ordinary status root kinds after the early participants/message_id branch. A key-only leading participants child no longer makes retry or other special/unknown text roots fail ordinary aggregate validation. Those roots remain unexpanded for existing consumer admission; unsupported consumers and unknown copied487 remain open. Ordinary missing-key causes and early message_id precedence remain. Saved-session tests exercise validate/record/responder with first-count key-only children, durable reservation and duplicate/refusal policy. No new success ACK, fact kind, HTTP route or account operation; live acceptance unverified.",
+    "evidence": "docs/protocol/apk/2.26.43.72-retry-upstream-routing/README.md"
+  },
   "x-retry-upstream-routing": {
     "x-cli": "existing receive and retry inspection paths; no new command or flag",
     "x-transport": "shared ordinary retry route selector before parsing, error ACK and resend/refetch processing",

@@ -1,3 +1,10 @@
+2026-11-06 — **Stopped key-aggregate validation from blocking valid retry routes.**
+A leading participants child without message_id selects key aggregation only for
+the native ordinary status set. Retry/special/unknown roots now retain their own
+consumer policy. Tests preserve ordinary missing-key errors and exercise a real
+saved-session retry through validation, recording and durable response handling.
+[Evidence and remaining boundaries](apk/2.26.43.72-retry-upstream-routing/README.md). No live account operation.
+
 2026-11-06 — **Stopped ordinary retry processing on two alternate native routes.**
 Leading participants/message_id takes precedence over type=retry; category=peer
 selects a separate handler. Shared routing now prevents a false ordinary487,
