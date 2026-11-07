@@ -1,4 +1,11 @@
 {
+  "x-automatic-read-stored-payload-errors": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "evidence": "docs/protocol/read-receipt-policy-current.md#stored-payload-shape-errors-in-automatic-selection",
+    "behavior": "Automatic read queue entry reports a redacted error for invalid stored protobuf byte-vector shapes before mutation; no change to message eligibility or unsupported protobuf handling."
+  },
   "x-appeal-transport-bounds": {
     "x-cli": false,
     "x-transport": true,

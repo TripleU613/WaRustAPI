@@ -9614,3 +9614,9 @@ Local public upload eligibility omission corrected at shared entry, including ca
   chunks obey min(configured byte budget, 64 KiB). Offline boundary/refusal tests;
   no inferred server requirement or live request. See
   [transport bounds](ban-appeal.md#transport-bounds-at-library-entry).
+
+- Confirmed automatic-read source diagnostic defect at `32b4a7a0`: invalid saved
+  protobuf byte-vector shapes were silently classified as no work. Queue entry
+  now reports a redacted error; direct/group encrypted-store reopen regression
+  proves unchanged checkpoints/journal and no receipt intent. See
+  [stored payload shapes](read-receipt-policy-current.md#stored-payload-shape-errors-in-automatic-selection).

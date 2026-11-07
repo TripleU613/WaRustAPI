@@ -178,3 +178,21 @@ category-map adoption. The outgoing preference getter is unchanged; full mode,
 legacy registration, dispatch/order and corrective-send recovery are unported.
 No new Rust preference or read/read-self selection rule follows from this
 bounded source trace, and no missing preference is replaced with compiledtrue.
+
+## Stored payload shape errors in automatic selection
+
+**Confirmed Rust diagnostic defect**, baseline `32b4a7a0`, corrected offline.
+`queue_read_for_incoming` treated a decrypted row whose protobuf field could
+not decode as a byte vector as a successful zero-work result. This hid a stored
+record fault behind ordinary read ineligibility. It now returns a fixed redacted
+InvalidInput error before receipt construction or writes. Missing/null fields,
+text and out-of-range byte elements are invalid saved payload shapes.
+
+The actual queue entry regression uses direct and group fixture routes, corrupts
+only the stored payload field, closes/reopens the encrypted store, and verifies
+an error with unchanged checkpoint rows/journal and no receipt intent. No network
+is used. The existing successful fixture tests remain controls. Byte-vector
+payload inspection still skips unsupported/malformed protobuf and the inspection
+size bound as before; this change does not broaden supported message types or
+normal-read authority. This is source/store-shape evidence, not a new APK rule,
+server acceptance result or proof of every runtime caller's error handling.

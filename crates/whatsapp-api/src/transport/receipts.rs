@@ -302,11 +302,8 @@ pub fn queue_read_for_incoming(store: &ProtocolStore, node: &Node) -> Result<usi
     if saved["status"] != "decrypted" {
         return Ok(0);
     }
-    let Ok(protobuf) =
-        serde_json::from_value::<zeroize::Zeroizing<Vec<u8>>>(saved["protobuf"].clone())
-    else {
-        return Ok(0);
-    };
+    let protobuf = serde_json::from_value::<zeroize::Zeroizing<Vec<u8>>>(saved["protobuf"].clone())
+        .map_err(|_| Error::invalid("receipt", "invalid stored message payload bytes"))?;
     let fields = crate::signal::direct::payload_fields(&protobuf).unwrap_or_default();
     if !fields.iter().any(|f| READABLE_FIELDS.contains(f)) {
         return Ok(0);
@@ -3588,6 +3585,49 @@ mod tests {
             .unwrap();
         node
     }
+    #[test]
+    fn automatic_read_reports_invalid_saved_payload_without_mutation_after_reopen() {
+        for group in [false, true] {
+            for invalid in [
+                serde_json::Value::Null,
+                serde_json::json!("private-payload-sentinel"),
+                serde_json::json!([256]),
+            ] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("invalid-read-payload.redb");
+                let store = open(&path, true);
+                let incoming = automatic_text_fixture(&store, "invalid-payload", group);
+                let chat = jid(&incoming, "from").unwrap();
+                let key = format!("received:{chat}:invalid-payload");
+                store
+                    .write(|tx| {
+                        let mut saved: serde_json::Value =
+                            tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?.unwrap();
+                        saved["protobuf"] = invalid.clone();
+                        tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &saved)
+                    })
+                    .unwrap();
+                drop(store);
+                let store = open(&path, false);
+                let before = store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap();
+                let head = store.journal_head().unwrap();
+                let error = queue_read_for_incoming(&store, &incoming).unwrap_err();
+                assert!(matches!(error, Error::InvalidInput { .. }));
+                assert!(!error.to_string().contains("private-payload"));
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    before
+                );
+                assert_eq!(store.journal_head().unwrap(), head);
+                assert!(outcomes(&store).unwrap().is_empty());
+            }
+        }
+    }
+
     fn server_read_preference(store: &ProtocolStore, id: &str, value: &str) {
         let node = Node::new("notification")
             .attr("from", "s.whatsapp.net")

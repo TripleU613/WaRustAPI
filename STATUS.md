@@ -10626,3 +10626,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
 - Direct appeal submissions now validate transport settings and honor smaller
   configured response budgets under the existing 64 KiB ceiling. Offline
   timeout/budget/chunk-boundary regression; no live requests or server claims.
+
+- Automatic read selection now reports malformed stored payload byte-vector
+  shapes instead of silently returning no work. Direct/group reopen regression
+  proves no receipt intent or checkpoint/journal mutation. Content eligibility
+  and unsupported protobuf inspection behavior remain unchanged; no live request.
