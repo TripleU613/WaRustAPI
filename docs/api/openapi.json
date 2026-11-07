@@ -1,4 +1,11 @@
 {
+  "x-aggregate-timestamp-native-error-ack": {
+    "x-cli": "existing receive windows; xtask apk-smali <apk> --class 'LX/0Tp;' --method A09 --signatures --exceptions; no new command or flag",
+    "x-transport": "aggregate item native timestamp cause; shared ordinary error487 response builder",
+    "x-live": false,
+    "description": "APK43.72 A07/A0L/A09 missing/invalid required time and A08/A09 present invalid long text throw LIL. New receipt.aggregate.native_timestamp cause qualifies for fresh root487 responses; missing key-item time retains clock default, valid Java signed/BMP/i64 extrema stay valid, and opaque time values remain generic refusals. Normal actor and selected CLI receive paths share the cause predicate and pure received_parse_error_confirmation builder. Supported-recipient participant aggregates preflight grammar without enabling fact projection. Countercheck refutes delivery-only key routing: the branch skips biz metadata and rejoins before key parsing, so read/played routing is unchanged. Codec/actor/default/write-cut controls are offline. Root timestamps, native binary/clock/storage behavior and live acceptance remain open; no HTTP route, new query/resend or account operation.",
+    "evidence": "docs/protocol/apk/2.26.43.72-receipt-timestamp-errors/README.md"
+  },
   "x-ordinary-required-device-error-ack": {
     "x-cli": "existing listen, lab-transport receive and group-send post-send windows; no new command or flag",
     "x-transport": "pure validation native required-device cause; normal actor and selected CLI error ACK output",

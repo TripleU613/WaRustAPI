@@ -1372,12 +1372,14 @@ fn require_supported_self_addresses(node: &Node) -> Result<()> {
 }
 
 // A recipient suppresses this client's ordinary fact projection, not the native
-// F10.A03 required-actor grammar of an explicit offline aggregate. Both pure
+// F10.A03 grammar of selected message_id/key aggregates. Both pure
 // validation and record must expose the same proven parse failure in that case.
-fn validate_recipient_offline_aggregate(node: &Node) -> Result<()> {
-    if node.child_nodes().first().is_some_and(|child| {
-        child.description == "participants" && child.get_attr("message_id").is_some()
-    }) {
+fn validate_recipient_aggregate(node: &Node) -> Result<()> {
+    if node
+        .child_nodes()
+        .first()
+        .is_some_and(|child| child.description == "participants")
+    {
         expand(node, || Ok(0))?;
     }
     Ok(())
@@ -1391,7 +1393,7 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
     }
     require_supported_self_addresses(node)?;
     if recipient(node).is_some() {
-        validate_recipient_offline_aggregate(node)?;
+        validate_recipient_aggregate(node)?;
         return Ok(0);
     }
     let receipts = expand(node, || {
@@ -1417,7 +1419,7 @@ pub fn validate(node: &Node) -> Result<()> {
     }
     require_supported_self_addresses(node)?;
     if recipient(node).is_some() {
-        return validate_recipient_offline_aggregate(node);
+        return validate_recipient_aggregate(node);
     }
     // The default time only fills an absent participant `t`; it never decides
     // a refusal, so validation needs no clock.
@@ -1462,9 +1464,14 @@ fn routes_to_group(node: &Node) -> bool {
     jid(node, "from").is_some_and(|from| from.server == Server::Group)
 }
 
-// Only pure validation failures with this tag authorize the evidenced 1rg.A04
+// Only these proven pure validation tags authorize the evidenced 1rg.A04
 // ordinary parse-error response. Local bounds/storage/opaque binary failures do not.
 pub(super) const NATIVE_REQUIRED_DEVICE_FIELD: &str = "receipt.aggregate.native_required_device";
+pub(super) const NATIVE_TIMESTAMP_FIELD: &str = "receipt.aggregate.native_timestamp";
+
+pub(super) fn is_native_parse_error_field(field: &str) -> bool {
+    matches!(field, NATIVE_REQUIRED_DEVICE_FIELD | NATIVE_TIMESTAMP_FIELD)
+}
 
 fn offline_aggregate(node: &Node, participants: &Node) -> Result<Vec<Node>> {
     let invalid = |reason| Error::invalid("receipt.aggregate", reason);
@@ -1556,12 +1563,24 @@ fn offline_aggregate(node: &Node, participants: &Node) -> Result<Vec<Node>> {
         ) {
             return Err(invalid("unknown participant type"));
         }
-        // Cmk.A03 00aa..00be uses required 0hs.A07, not root's lenient time.
-        let time = item
-            .get_attr("t")
-            .and_then(|v| v.as_text())
-            .and_then(super::mex::java_decimal_long)
-            .ok_or_else(|| invalid("missing or invalid participant t"))?;
+        // APK43.72 F10.A03 ->0Tp.A07/A0L/A09: missing text or
+        // Long.parseLong failure throws LIL; opaque local values are separate.
+        let time = match item.get_attr("t") {
+            None => {
+                return Err(Error::invalid(
+                    NATIVE_TIMESTAMP_FIELD,
+                    "missing participant t",
+                ));
+            }
+            Some(value) => {
+                let text = value
+                    .as_text()
+                    .ok_or_else(|| invalid("unsupported participant t representation"))?;
+                super::mex::java_decimal_long(text).ok_or_else(|| {
+                    Error::invalid(NATIVE_TIMESTAMP_FIELD, "invalid participant t")
+                })?
+            }
+        };
         if matches!(kind, "delivery" | "read" | "played") {
             receipts.push(
                 Node::new("receipt")
@@ -1622,10 +1641,16 @@ fn key_aggregate(node: &Node, participants: &Node, default_seconds: i64) -> Resu
         };
         let time = match item.get_attr("t") {
             None => default_seconds,
-            Some(value) => value
-                .as_text()
-                .and_then(super::mex::java_decimal_long)
-                .ok_or_else(|| invalid("invalid participant t"))?,
+            Some(value) => {
+                // APK43.72 0Tp.A08 defaults only null text; a present supported
+                // string goes through A09's Long.parseLong -> LIL conversion.
+                let text = value
+                    .as_text()
+                    .ok_or_else(|| invalid("unsupported participant t representation"))?;
+                super::mex::java_decimal_long(text).ok_or_else(|| {
+                    Error::invalid(NATIVE_TIMESTAMP_FIELD, "invalid participant t")
+                })?
+            }
         };
         if matches!(kind, "delivery" | "read" | "played") {
             receipts.push(
@@ -4608,6 +4633,85 @@ mod tests {
                 Ok(ticket.local_id)
             })
             .unwrap()
+    }
+
+    #[test]
+    fn aggregate_timestamp_native_errors_get_487_without_reclassifying_defaults() {
+        let make = |selector: &str, time: Option<&str>| {
+            let mut actor = Node::new("participant").attr("jid", "15555550100@s.whatsapp.net");
+            if let Some(time) = time {
+                actor = actor.attr("t", time);
+            }
+            Node::new("receipt")
+                .attr("id", "ROOT-TIME")
+                .attr("from", "15555550100@s.whatsapp.net")
+                .attr(
+                    "type",
+                    if selector == "key" {
+                        "delivery"
+                    } else {
+                        "read"
+                    },
+                )
+                .children(vec![
+                    Node::new("participants")
+                        .attr(selector, "INNER")
+                        .children(vec![actor]),
+                ])
+        };
+        for selector in ["message_id", "key"] {
+            for bad in [
+                "",
+                "1.2",
+                " 20",
+                "+",
+                "9223372036854775808",
+                "-9223372036854775809",
+            ] {
+                let input = make(selector, Some(bad));
+                let encoded = crate::binary::Encoder::new(
+                    crate::binary::TokenDictionary::comparison_2_26_37_71(),
+                )
+                .encode(&input)
+                .unwrap();
+                let input = decode(&encoded).unwrap();
+                assert!(validate(&input).is_err());
+                let ack = super::super::messaging::received_parse_error_confirmation(&input)
+                    .expect("native aggregate Long.parseLong failure gets487");
+                assert_eq!(ack.get_attr("error").and_then(|v| v.as_text()), Some("487"));
+                assert_eq!(
+                    ack.get_attr("id").and_then(|v| v.as_text()),
+                    Some("ROOT-TIME")
+                );
+            }
+            for valid in ["-1", "+٢٢", "9223372036854775807", "-9223372036854775808"] {
+                let input = make(selector, Some(valid));
+                assert!(validate(&input).is_ok(), "{selector}/{valid}");
+                assert!(
+                    super::super::messaging::received_parse_error_confirmation(&input).is_none()
+                );
+            }
+        }
+        assert!(
+            super::super::messaging::received_parse_error_confirmation(&make("message_id", None))
+                .is_some()
+        );
+        assert!(validate(&make("key", None)).is_ok());
+        assert!(
+            super::super::messaging::received_parse_error_confirmation(&make("key", None))
+                .is_none()
+        );
+        let opaque = make("message_id", Some("20")).children(vec![
+            Node::new("participants")
+                .attr("message_id", "INNER")
+                .children(vec![
+                    Node::new("participant")
+                        .attr("jid", "15555550100@s.whatsapp.net")
+                        .attr("t", Jid::parse("12345@lid").unwrap()),
+                ]),
+        ]);
+        assert!(validate(&opaque).is_err());
+        assert!(super::super::messaging::received_parse_error_confirmation(&opaque).is_none());
     }
 
     #[test]

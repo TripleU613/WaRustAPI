@@ -969,15 +969,15 @@ pub(super) fn handled_retry_confirmation(incoming: &Node) -> Option<Node> {
     receipt_ack_after_processing(incoming, true)
 }
 
-/// Build an error487 receipt ACK only for a proven native required-device parse
-/// failure from pure validation. No store, network, retry or fact mutation.
+/// Build an error487 receipt ACK only for a proven native required-device or
+/// aggregate timestamp parse failure from pure validation. No store, network, retry or fact mutation.
 /// Call only after durable capture; a failed write must not be replayed locally.
 /// Local bounds, opaque binary failures and stored-row errors do not qualify.
 pub fn received_parse_error_confirmation(incoming: &Node) -> Option<Node> {
     let Err(crate::Error::InvalidInput { field, .. }) = super::receipts::validate(incoming) else {
         return None;
     };
-    if field != super::receipts::NATIVE_REQUIRED_DEVICE_FIELD {
+    if !super::receipts::is_native_parse_error_field(field) {
         return None;
     }
     receipt_native_parse_error_confirmation(incoming)

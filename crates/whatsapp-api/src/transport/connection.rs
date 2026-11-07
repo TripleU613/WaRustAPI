@@ -1115,7 +1115,7 @@ pub(crate) async fn drive(
                         true
                     }
                     Err(Error::InvalidInput { field, reason }) => {
-                        if field == super::receipts::NATIVE_REQUIRED_DEVICE_FIELD
+                        if super::receipts::is_native_parse_error_field(field)
                             && let Some(nack) = super::messaging::receipt_native_parse_error_confirmation(&node) {
                                 // Capture is already durable; validation failed before facts.
                                 // A failed/uncertain write ends the epoch without replay.
@@ -3724,6 +3724,51 @@ mod tests {
             );
             assert_eq!(snapshot(), before);
             written.send(Ok(())).unwrap();
+        }
+        for selector in ["message_id", "key"] {
+            for time in [None, Some(""), Some("9223372036854775808")] {
+                if selector == "key" && time.is_none() {
+                    continue;
+                }
+                let mut actor = Node::new("participant").attr("jid", "15555550100@s.whatsapp.net");
+                if let Some(time) = time {
+                    actor = actor.attr("t", time);
+                }
+                let malformed = input
+                    .clone()
+                    .attr(
+                        "type",
+                        if selector == "key" {
+                            "delivery"
+                        } else {
+                            "read"
+                        },
+                    )
+                    .children(vec![
+                        Node::new("participants")
+                            .attr(selector, "INNER-KEY")
+                            .children(vec![actor]),
+                    ]);
+                let saved = format!(
+                    "inbound:sha256:{}",
+                    hex::encode(sha2::Sha256::digest(encode(&malformed).unwrap()))
+                );
+                fake.deliver(malformed).await;
+                let (ack, written) = fake.written().await;
+                let mut expected_time = expected.clone();
+                if selector == "key" {
+                    expected_time.attributes.retain(|attr| attr.name != "type");
+                }
+                assert_eq!(ack, expected_time);
+                assert!(
+                    store
+                        .read(|tx| tx.get(Table::Checkpoints, saved.as_bytes(), 1))
+                        .unwrap()
+                        .is_some()
+                );
+                assert_eq!(snapshot(), before);
+                written.send(Ok(())).unwrap();
+            }
         }
         // This local bound is not a native LIL cause and gets no error ACK.
         let oversized = Node::new("receipt")

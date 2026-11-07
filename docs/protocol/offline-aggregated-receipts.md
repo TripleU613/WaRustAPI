@@ -251,3 +251,23 @@ warnings-denied Rustdoc, default CLI tests, CLI-reference check and experimental
 CLI build passed after test-only style fixes. The default build retains the
 existing unused clock::observe_login warning. No new live session was opened;
 fresh key aggregate projection remains unverified.
+
+## Aggregate timestamp native error responses (2026-11-06)
+
+**Confirmed static / fixed offline:** [required/defaulted Long parser chain, branch countercheck and regression table](apk/2.26.43.72-receipt-timestamp-errors/README.md)
+bind 0Tp.A07/A0L/A09 and A08/A09 to LIL and the existing ordinary fresh error487
+path. Missing required offline item timestamps and malformed supported signed-long
+item text now have a distinct native_timestamp validation cause; key item absence
+still uses its existing clock default. Opaque representations and local/storage
+failures are not automatically NACKed. Normal and selected CLI receive paths use
+the same cause predicate/builder. Recipient-bearing participants aggregates also
+preflight this grammar without granting new fact projection.
+
+The hypothesis that root delivery gates key-aggregate parsing was refuted by
+following 028c ->03aa ->02d0: only optional biz/privacy extraction is skipped.
+Existing non-delivery key routing and read/played facts remain unchanged. The
+new numeric codec regression and extended actor check fresh response fields,
+capture-before-write, no fact/identity/session mutation and default/valid-number
+controls. Existing atomic-fact and write-cut/no-replay tests remain. Ordinary root
+timestamps, complete binary/native clock/storage behavior and live acceptance
+remain open. No account operation or new request family.

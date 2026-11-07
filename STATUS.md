@@ -1,3 +1,11 @@
+2026-11-06 — **Added evidenced aggregate timestamp error487 responses.**
+Missing required item time and invalid supported signed-long text now carry a
+native timestamp cause shared by the receive/NACK paths. Key-item absence still
+defaults; valid signed/BMP/extreme integers and opaque local values stay distinct.
+A delivery-only key-routing hypothesis was refuted by the complete branch join;
+existing read/played key semantics remain unchanged.
+[Parser/error evidence, regression checks, negative branch result and open scope](docs/protocol/apk/2.26.43.72-receipt-timestamp-errors/README.md). No live account operation.
+
 2026-11-06 — **Implemented ordinary required-device parse-error ACKs.**
 Proven native required-actor failures now get a fresh root error487 response after
 durable capture in the normal actor and selected CLI receive windows. Local limits,
