@@ -10681,3 +10681,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   and synchronized per-facade NhR caching, plus RNL's factory case245. Complete
   set membership/provider lifecycle remain unknown. Research only; no runtime
   change or live account operation.
+
+- Pinned jobqueue connection observer compiled membership resolved: second set's
+  binding0x300f5 reaches RNL and the existing RF1/Cgm manager association path.
+  Strict static derivation checks all511 arrays. Runtime delivery/provider/
+  restart scope remains separate; research only, no live operation.

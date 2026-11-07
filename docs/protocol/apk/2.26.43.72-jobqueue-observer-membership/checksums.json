@@ -1,0 +1,34 @@
+{
+  "README.md": {
+    "bytes": 4933,
+    "sha256": "4715cb4b050638eacc123a3e1ff6a22b0c8899051b1b12e6fcc9d4350ea1bf79"
+  },
+  "app-lookup.txt": {
+    "bytes": 445,
+    "sha256": "61ca1ae2033c7f40604569ffa0ea628b4aa09c36bba7a9826086157e739f557a"
+  },
+  "app-set-shard-excerpt.txt": {
+    "bytes": 4374,
+    "sha256": "9c2c3483921f0e3ea667f39bc5552564f8017dd23c64750d4d2c622cdbdb740f"
+  },
+  "derive-members.py": {
+    "bytes": 1774,
+    "sha256": "07746307651aca9ddf9ceb4c8dd16aa1a35365cb7a026840b24b01e0f223a919"
+  },
+  "derived-members.json": {
+    "bytes": 573,
+    "sha256": "c9205673ad2ce31cb6e0510d58ec252e8b364e46f1e8c5203d40f0fbf83fb1f3"
+  },
+  "extract-set-case.py": {
+    "bytes": 1078,
+    "sha256": "5c1222980d0d3c3cfb776234eca9b831459851384337ce17e1739a09969bb54a"
+  },
+  "root-dispatch.txt": {
+    "bytes": 3374,
+    "sha256": "f852095f305051f8344d087a0efeb3f6742c3538d9cdde11fe11f74e2f7dda7e"
+  },
+  "session-lookup.txt": {
+    "bytes": 2129,
+    "sha256": "fc9a20b159051d888307fd8622f4a206ce3e7dcb4ffdb210593e424f08f7f914"
+  }
+}

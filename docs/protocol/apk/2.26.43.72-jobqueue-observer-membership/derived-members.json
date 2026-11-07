@@ -1,0 +1,28 @@
+{
+  "source_sha256": "d79dc1090c0d0fcf19386a9d65244c704d0e9ccc686f99faaed9f8fa54b68009",
+  "source_bytes": 392369,
+  "scope": "static straight-line initializer interpretation; not runtime execution",
+  "operations": 10696,
+  "arrays_checked": 511,
+  "selected_arrays": {
+    "A8D": [
+      "0x300f1",
+      "0x300f2",
+      "0x300f3",
+      "0x300f4",
+      "0x300f5",
+      "0x300f6",
+      "0x300f7",
+      "0x1096",
+      "0xc6b"
+    ],
+    "A8E": [
+      "0x1c1af"
+    ]
+  },
+  "connection_member": {
+    "id": "0x300f5",
+    "root_selector": 12,
+    "case": 245
+  }
+}

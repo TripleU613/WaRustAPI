@@ -554,3 +554,11 @@ associates each observer via Cgm. RNL's concrete masked factory case245 is now
 located; set-key membership/provider lifecycle remains unresolved. Existing wake
 and requirement traces are reused. [Provider evidence](apk/2.26.43.72-jobqueue-observer-provider/README.md).
 No runtime replay/reconnect behavior changed.
+
+## Connection observer is in the compiled manager input
+
+**Confirmed selected static + derived:** the two jobqueue set keys resolve to
+one/nine bindings; the second includes0x300f5 ->root12/RNH case245 ->RNL.
+Existing resolver/iterator/facade/Cgm evidence closes selected manager association.
+[Reproducible membership derivation and runtime limits](apk/2.26.43.72-jobqueue-observer-membership/README.md).
+No Rust wake/retry behavior or live request changed.

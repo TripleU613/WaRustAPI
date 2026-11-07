@@ -9689,3 +9689,10 @@ Local public upload eligibility omission corrected at shared entry, including ca
   association/wake path reused. RNH masked case245 constructs RNL, but backing
   set membership/global provider identity remain unresolved. Research only. See
   [observer provider evidence](apk/2.26.43.72-jobqueue-observer-provider/README.md).
+
+- Confirmed pinned jobqueue compiled observer membership: set0x1ded mapsA8E with
+  one binding; set0x1d37 mapsA8D with nine including0x300f5. Root selector12 and
+  low14-bit245 constructRNL, closing selected RF1/Cgm manager association.
+  Reproducible strict initializer interpretation checks10696 instructions/511
+  arrays. Runtime delivery/lifecycle remains separate. See
+  [compiled membership](apk/2.26.43.72-jobqueue-observer-membership/README.md).

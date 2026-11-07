@@ -1,4 +1,11 @@
 {
+  "x-jobqueue-observer-membership-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-jobqueue-observer-membership/README.md",
+    "behavior": "Static compiled jobqueue set membership resolves RNL binding0x300f5 and selected manager association; runtime delivery/lifecycle remains separate. No Rust retry or capability added."
+  },
   "x-jobqueue-observer-provider-evidence": {
     "x-cli": false,
     "x-transport": false,

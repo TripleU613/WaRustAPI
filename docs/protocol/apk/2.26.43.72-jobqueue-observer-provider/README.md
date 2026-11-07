@@ -76,3 +76,7 @@ python3 docs/protocol/apk/2.26.43.72-jobqueue-observer-provider/extract-factory-
 Use exact descriptors in other exports for the corresponding selectors. PCs are
 inspector bytes; branch deltas/exception comments use code units. Direct caller
 census excludes reflection and aliases. checksums.json pins every local artifact.
+
+Follow-up: [compiled set membership](../2.26.43.72-jobqueue-observer-membership/README.md)
+now resolves the second set to RNL binding0x300f5 and closes the selected
+manager-association chain. Runtime delivery/lifecycle limits remain separate.
