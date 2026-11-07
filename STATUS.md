@@ -10602,3 +10602,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   alongside account/message authority before event publication. Offline staged
   replacement/removal/corruption cases preserve rows/journal; unchanged fallback
   publishes once. No ACK, fetch, replay or live operation added.
+
+- Verified settled app-state patch promotion and fetch-backoff recovery against
+  account replacement after reopen, with positive observation-only controls.
+  Checkpoint/journal rollback retained. No runtime policy or live request change;
+  full fetch application/cursor parity remains incomplete.

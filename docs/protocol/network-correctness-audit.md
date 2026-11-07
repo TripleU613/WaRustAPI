@@ -6081,3 +6081,9 @@ evidence, not new APK behavior or proof of full group-send/network parity.
   now compares that snapshot transactionally, with replacement/removal/corruption
   rollback and unchanged fallback controls. See
   [capture snapshot](cross-device-sync.md#fallback-capture-snapshot-at-historical-publication).
+
+- Verified existing settled app-state account admission at `7d1a627c`: actual
+  patch success/fetch backoff action replies cannot be applied after identity
+  change and reopen. Recovery preserves old outcomes; same-owner/observation
+  controls promote normally. No runtime change. See
+  [settled authority](app-state-patch-atomicity.md#settled-response-account-adoption-verified).

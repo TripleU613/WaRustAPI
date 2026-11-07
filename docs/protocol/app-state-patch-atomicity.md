@@ -195,3 +195,28 @@ policy at writer admission, covering a deadline recorded while a reserved action
 waits in the queue. Malformed stored waits refuse; valid expiry and unrelated
 requests retain existing behavior. The gate does not reset Sent reservations or
 extend/erase waits. [Queue/reopen controls and limits](action-settlement-ordering.md#writer-rechecks-recorded-restrictions-and-explicit-backoff-2026-11-06).
+
+## Settled response account adoption verified
+
+**Confirmed current Rust source/test behavior**, baseline `7d1a627c`; no runtime
+policy change in this follow-up. App-state ingest_action calls
+`actions::view_in_write` before either fetch-refusal backoff handling or prepared
+patch promotion. That action view checks the persisted preparation account
+fingerprint against the current account inside the transaction. A durable reply
+alone does not transfer application authority to a replacement account.
+
+The integration regression queues and reserves an actual app-state action under
+an original account, records its matching reply, then changes own JID,
+registration or Signal registration ID and reopens the encrypted store. It covers
+both a successful push-name patch reply and a fetch error with explicit 60-second
+backoff. Ingest refuses changed authority without altering checkpoint rows or
+journal head. Fetch-backoff recovery also leaves those rows unchanged rather
+than adopting the old wait. Same-account and observation-time-only controls
+respectively promote the held collection or persist the explicit wait.
+
+This verifies cross-component account admission at response application, beyond
+the generic action reserve/settle checks. It does not establish full app-state
+fetch application, mandatory startup order, every collection/cursor transition,
+legacy account provenance or server acceptance. No native policy or wait value
+is invented; fixture backoff is a synthetic preserved response. No request is
+transmitted and no live account operation is performed.

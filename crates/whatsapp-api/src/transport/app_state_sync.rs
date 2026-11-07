@@ -2548,6 +2548,90 @@ mod settlement_atomic_tests {
     }
 
     #[test]
+    fn settled_app_state_outcomes_cannot_be_adopted_by_a_changed_account_after_reopen() {
+        use crate::session::{AccountRecord, RegistrationStatus};
+        for fetch_error in [false, true] {
+            for change in ["same", "observation", "jid", "logout", "registration-id"] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("settled-owner.redb");
+                let store = open(&path);
+                let original = AccountRecord {
+                    generation: store.generation(),
+                    registration: RegistrationStatus::Registered,
+                    own_jid: Some(Jid::parse("100@s.whatsapp.net").unwrap()),
+                    ..Default::default()
+                };
+                store.write(|tx| original.save(tx)).unwrap();
+                let id = if fetch_error {
+                    queue_fetch(&store).unwrap()
+                } else {
+                    queue(&store).unwrap()
+                };
+                super::super::actions::reserve_next(&store)
+                    .unwrap()
+                    .unwrap();
+                let reply = if fetch_error {
+                    Node::new("iq")
+                        .attr("id", id.as_str())
+                        .attr("type", "error")
+                        .children(vec![
+                            Node::new("error").attr("code", "503").attr("backoff", "60"),
+                        ])
+                } else {
+                    success(&id, "critical_block", "1")
+                };
+                assert!(super::super::actions::record_reply(&store, &reply).unwrap());
+                let mut replacement = original.clone();
+                match change {
+                    "observation" => {
+                        replacement.last_authenticated_at = Some(crate::model::time::Timestamp(123))
+                    }
+                    "jid" => replacement.own_jid = Some(Jid::parse("200@s.whatsapp.net").unwrap()),
+                    "logout" => replacement.registration = RegistrationStatus::Unregistered,
+                    "registration-id" => replacement.signal_registration_id = Some(42),
+                    _ => {}
+                }
+                store.write(|tx| replacement.save(tx)).unwrap();
+                drop(store);
+                let store = open(&path);
+                let before = snapshot(&store);
+                let journal = store.journal_head().unwrap();
+                let result = ingest_action(&store, &id);
+                if matches!(change, "same" | "observation") {
+                    assert_eq!(result.unwrap(), usize::from(!fetch_error));
+                    if fetch_error {
+                        assert!(
+                            store
+                                .read(|tx| tx.get(Table::Checkpoints, SERVER_BACKOFF, 1))
+                                .unwrap()
+                                .is_some()
+                        );
+                    } else {
+                        assert!(
+                            store
+                                .read(|tx| tx.get(
+                                    Table::Checkpoints,
+                                    held_key(Collection::CriticalBlock).as_bytes(),
+                                    1
+                                ))
+                                .unwrap()
+                                .is_some()
+                        );
+                    }
+                } else {
+                    assert!(result.is_err());
+                    assert_eq!(snapshot(&store), before);
+                    assert_eq!(store.journal_head().unwrap(), journal);
+                    if fetch_error {
+                        recover_fetch_backoff(&store).unwrap();
+                        assert_eq!(snapshot(&store), before);
+                        assert_eq!(store.journal_head().unwrap(), journal);
+                    }
+                }
+            }
+        }
+    }
+    #[test]
     fn accepted_versions_follow_java_decimal_without_weakening_prepared_authority() {
         // Handwritten oracle cases for Java Long.parseLong's signed BMP digits;
         // no whitespace, separators, surrogate pairs or out-of-range numbers.
