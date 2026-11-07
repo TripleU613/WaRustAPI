@@ -1,0 +1,27 @@
+
+# class: LX/Gf7;
+# extends: Ljava/lang/Enum;
+
+.method public <clinit>(V)  # .registers 5
+    # full signature: LX/Gf7;-><clinit>()V
+    0000..0004  const-string  v1, "Erlang"
+    0004..0006  const/4  v0, #0x0
+    0006..000a  new-instance  v4, LX/Gf7;
+    000a..0010  invoke-direct  {v4, v1, v0, v0}, LX/Gf7;-><init>(Ljava/lang/String;II)V
+    0010..0014  sput-object  v4, LX/Gf7;->A01:LX/Gf7;
+    0014..0018  const-string  v1, "WWW"
+    0018..001a  const/4  v0, #0x1
+    001a..001e  new-instance  v3, LX/Gf7;
+    001e..0024  invoke-direct  {v3, v1, v0, v0}, LX/Gf7;-><init>(Ljava/lang/String;II)V
+    0024..0028  sput-object  v3, LX/Gf7;->A02:LX/Gf7;
+    0028..002c  const-string  v2, "IGServer"
+    002c..002e  const/4  v0, #0x2
+    002e..0032  new-instance  v1, LX/Gf7;
+    0032..0038  invoke-direct  {v1, v2, v0, v0}, LX/Gf7;-><init>(Ljava/lang/String;II)V
+    0038..003a  const/4  v0, #0x3
+    003a..003e  new-array  v0, v0, [LX/Gf7;
+    003e..0044  invoke-static  {v4, v3, v1, v0}, LX/2LA;->A1G(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;)V
+    0044..0048  sput-object  v0, LX/Gf7;->A00:[LX/Gf7;
+    0048..004a  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-fetch-route-evidence": {
+    "x-cli": "existing static exports and selected apk-mex-queries check; no product command or HTTP route",
+    "x-transport": "research only; MobileConfig fetch/hydration adapter is unported and AB-property inspection remains observational",
+    "x-live": false,
+    "description": "Pinned APK43.72 Hmm fetch dispatch retains MEX/WWW stack gates, selected request setter inputs, persisted query IDs and IDq/ICt success callback ordering. Optional refresh-ID preference update precedes forwarding fetch_result_json to the SDK handler; forwarding success does not prove JSON validity, native table commit or effective token policy. Producer/null serialization, error and native boundaries remain unresolved. No request, runtime policy, private state or live operation enabled.",
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-fetch-route/README.md"
+  },
   "x-token-param-body-evidence": {
     "x-cli": "existing static exports and pinned derive-token-rows.py --apk; no product command or HTTP route",
     "x-transport": "research only; effective configured token timing remains unported",

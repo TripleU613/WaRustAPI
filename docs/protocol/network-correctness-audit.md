@@ -1,5 +1,10 @@
 # Network correctness audit
 
+**MobileConfig fetch is a distinct unported network/SDK pipeline.**
+Current APK MEX/WWW routing, selected input setters, persisted IDs and MEX callback
+ordering are retained; AB-property inspection is not effective table hydration.
+[Network evidence and native/error boundaries](apk/2.26.43.72-mobileconfig-fetch-route/README.md). No request or runtime policy enabled.
+
 **Token parameter-map bodies and selected translation entries are decoded.**
 All four packaged pair arrays validate; compiled DEX config keys locate the four
 token rows, whose packaged translated slots match their original specifiers.

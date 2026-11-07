@@ -1,0 +1,12 @@
+
+# class: LX/G7o;
+# extends: LX/0iM;
+
+.method public <init>(VL)  # .registers 3
+    # full signature: LX/G7o;-><init>(Lorg/json/JSONObject;)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-direct  {v1, v2}, LX/0iM;-><init>(Lorg/json/JSONObject;)V
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method

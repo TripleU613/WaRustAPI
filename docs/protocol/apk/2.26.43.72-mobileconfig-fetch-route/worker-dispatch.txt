@@ -1,0 +1,27 @@
+
+# class: LX/Hmm;
+# extends: Ljava/lang/Object;
+
+.method public A01(VLL)  # .registers 5
+    # full signature: LX/Hmm;->A01(LX/Hmm;Lkotlin/jvm/functions/Function0;)V
+    0000..0002  const/4  v2, #0x1
+    0002..0006  iget-object  v0, v3, LX/Hmm;->A00:LX/05a;
+    0006..000c  invoke-static  {v0}, LX/05a;->A00(LX/05a;)LX/00E;
+    000c..000e  move-result-object  v1
+    000e..0012  sget-object  v0, LX/GuG;->A01:LX/0AB;
+    0012..0018  invoke-static  {v0}, LX/00l;->A06(Ljava/lang/Object;)V
+    0018..001e  invoke-virtual  {v1, v0}, LX/00E;->A0d(LX/0AB;)I
+    001e..0020  move-result  v0
+    0020..0022  and-int/2addr  v2, v0
+    0022..0026  if-eqz  v2, +0x11
+    0026..002a  iget-object  v0, v3, LX/Hmm;->A07:LX/00p;
+    002a..0030  invoke-static  {v0}, LX/8t1;->A0h(LX/00p;)LX/098;
+    0030..0032  move-result-object  v1
+    0032..0036  new-instance  v0, LX/Dxc;
+    0036..003c  invoke-direct  {v0, v3, v4}, LX/Dxc;-><init>(LX/Hmm;Lkotlin/jvm/functions/Function0;)V
+    003c..0042  invoke-virtual  {v1, v0}, LX/098;->execute(Ljava/lang/Runnable;)V
+    0042..0044  return-void
+    0044..004a  invoke-interface  {v4}, Lkotlin/jvm/functions/Function0;->invoke()Ljava/lang/Object;
+    004a..004c  return-void
+    # exception table: 0 try range(s)
+.end method

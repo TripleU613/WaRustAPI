@@ -1,0 +1,50 @@
+{
+  "README.md": {
+    "bytes": 5640,
+    "sha256": "e3f1061a8284c080f9a5f754a9026f10000f9ed2ff17286dc35ec7dc8b779893"
+  },
+  "fetch-overrides.txt": {
+    "bytes": 28977,
+    "sha256": "5cc223eea3ade6177d692a9ee3a9b5d1d95ecdd1a9f2f1dc5b313e247f663ac4"
+  },
+  "mex-callback-adapter.txt": {
+    "bytes": 3656,
+    "sha256": "5728344ab317c643082f6b753fb4a5f1ef434e1e388c44a2978ac54c92d7a18d"
+  },
+  "mex-callback-constructor.txt": {
+    "bytes": 696,
+    "sha256": "001eeeac25ccb2caa5cb4dd723d87121a5be7a73511735615d51e570f9ea8c4b"
+  },
+  "mex-model.txt": {
+    "bytes": 411,
+    "sha256": "778df9cd59c3fff604f65280c391297bcb83aa75d95798d813945e71c7c7a40f"
+  },
+  "mex-result-constructor.txt": {
+    "bytes": 784,
+    "sha256": "942f1aad89c3cc194f962cf640a55d20cab5402463ca86302a838277f2ff67b5"
+  },
+  "mex-result-worker.txt": {
+    "bytes": 12872,
+    "sha256": "7efa622893c5842c687f28d4ff0b5fd25d5e894d70aef6742df9ef16525d966e"
+  },
+  "persisted-ids.json": {
+    "bytes": 1001,
+    "sha256": "513dc8c96c62a231a261ed4a1c21c541f9ef9777415b9631f6b90b7a1587efe6"
+  },
+  "refresh-id-preference.txt": {
+    "bytes": 1630,
+    "sha256": "6a0af8f53411787ef97dce018ca0d7e45ae503e244a30416bc88bcba1594566d"
+  },
+  "sdk-interface.txt": {
+    "bytes": 1917,
+    "sha256": "5c76ef319db8b0f3ef35a0f1221f593b78775af7e5e04d1c415247d190c68496"
+  },
+  "stack-values.txt": {
+    "bytes": 1210,
+    "sha256": "ea42825005d46450ce43ea22dd00ccf259940a08f6b142042d218d2e30542516"
+  },
+  "worker-dispatch.txt": {
+    "bytes": 1254,
+    "sha256": "c4bb0832ca288f00f19ddd5e33a8fe4b4966ab3e1a331f6611b9a141563e4d31"
+  }
+}

@@ -1,0 +1,41 @@
+
+# class: Lcom/facebook/mobileconfig/MobileConfigFetcherHandler;
+# extends: Ljava/lang/Object;
+
+.method public <clinit>(V)  # .registers 1
+    # full signature: Lcom/facebook/mobileconfig/MobileConfigFetcherHandler;-><clinit>()V
+    0000..0004  const-string  v0, "mobileconfig-jni"
+    0004..000a  invoke-static  {v0}, LX/0DG;->A07(Ljava/lang/String;)Z
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public <init>(VL)  # .registers 2
+    # full signature: Lcom/facebook/mobileconfig/MobileConfigFetcherHandler;-><init>(Lcom/facebook/jni/HybridData;)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v1, v0, Lcom/facebook/mobileconfig/MobileConfigFetcherHandler;->mHybridData:Lcom/facebook/jni/HybridData;
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method private onCompletion(VZL)  # .registers 0
+    # full signature: Lcom/facebook/mobileconfig/MobileConfigFetcherHandler;->onCompletion(ZLjava/lang/String;)V
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+.method public onComplete(VZL)  # .registers 3
+    # full signature: Lcom/facebook/mobileconfig/MobileConfigFetcherHandler;->onComplete(ZLjava/lang/String;)V
+    0000..0006  invoke-direct  {v0, v1, v2}, Lcom/facebook/mobileconfig/MobileConfigFetcherHandler;->onCompletion(ZLjava/lang/String;)V
+    0006..0008  return-void
+    # exception table: 0 try range(s)
+.end method
+
+# class: Lcom/facebook/mobileconfig/MobileConfigFetcher;
+# extends: Ljava/lang/Object;
+
+.method public fetch(VLLLLLL)  # .registers 0
+    # full signature: Lcom/facebook/mobileconfig/MobileConfigFetcher;->fetch(Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lcom/facebook/mobileconfig/MobileConfigFetcherHandler;Ljava/lang/String;Ljava/lang/Integer;)V
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method

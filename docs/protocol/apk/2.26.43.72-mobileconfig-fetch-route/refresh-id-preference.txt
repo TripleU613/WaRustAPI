@@ -1,0 +1,33 @@
+
+# class: LX/Hmm;
+# extends: Ljava/lang/Object;
+
+.method public A00(VLLLL)  # .registers 8
+    # full signature: LX/Hmm;->A00(LX/Gf7;LX/Hmm;Ljava/lang/Integer;Ljava/util/Map;)V
+    0000..0004  if-eqz  v6, +0x2d
+    0004..0008  const-string  v0, "unit_type"
+    0008..000e  invoke-static  {v0, v7}, LX/2LB;->A18(Ljava/lang/Object;Ljava/util/Map;)Ljava/lang/String;
+    000e..0010  move-result-object  v0
+    0010..0014  if-eqz  v0, +0x26
+    0014..001a  invoke-static  {v0}, LX/0Cd;->A06(Ljava/lang/String;)Ljava/lang/Integer;
+    001a..001c  move-result-object  v0
+    001c..0020  if-eqz  v0, +0x20
+    0020..0026  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    0026..0028  move-result  v3
+    0028..002c  const-string  v0, "unit_id"
+    002c..0032  invoke-static  {v0, v7}, LX/2LB;->A18(Ljava/lang/Object;Ljava/util/Map;)Ljava/lang/String;
+    0032..0034  move-result-object  v1
+    0034..0038  if-eqz  v1, +0x13
+    0038..003c  iget-object  v0, v5, LX/Hmm;->A08:LX/00p;
+    003c..0042  invoke-static  {v0}, LX/2LE;->A05(LX/00p;)Landroid/content/SharedPreferences$Editor;
+    0042..0044  move-result-object  v2
+    0044..004a  invoke-static  {v4, v1, v3}, LX/GoY;->A00(LX/Gf7;Ljava/lang/String;I)Ljava/lang/String;
+    004a..004c  move-result-object  v1
+    004c..0052  invoke-virtual  {v6}, Ljava/lang/Number;->intValue()I
+    0052..0054  move-result  v0
+    0054..005a  invoke-static  {v2, v1, v0}, LX/6og;->A1M(Landroid/content/SharedPreferences$Editor;Ljava/lang/String;I)V
+    005a..005c  return-void
+    005c..005e  const/4  v3, #0x0
+    005e..0060  goto  -0x1b
+    # exception table: 0 try range(s)
+.end method

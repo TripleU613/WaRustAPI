@@ -318,3 +318,14 @@ A pinned DEX payload derivation binds compiled config keys to the token rows;
 slots for this packaged map. Dynamic tables, schema versions, silent push and
 manager/cache selection remain separate. No runtime timing or live change.
 [Methods, selected pairs and reproduction](apk/2.26.43.72-token-param-body/README.md).
+
+## MobileConfig network producer follow-up —2026-11-07
+
+Hmm fetch dispatch now connects selected SDK configuration work to MEX/WWW
+branches, packaged query IDs and captured MEX result callback. fetch_result_json
+is forwarded to a native handler after selected refresh-ID preference work;
+that callback is not proof of native table commit or effective token policy.
+Rust has no corresponding MobileConfig fetch/hydration adapter. Producers,
+serializer, error/native persistence and effective selection remain open.
+[Full selected route evidence](apk/2.26.43.72-mobileconfig-fetch-route/README.md).
+No runtime request or live operation enabled.

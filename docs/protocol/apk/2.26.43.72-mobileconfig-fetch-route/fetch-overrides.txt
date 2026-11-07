@@ -1,0 +1,481 @@
+# Declared overrides with interface ancestry: Lcom/facebook/mobileconfig/MobileConfigFetcher;->fetch(Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lcom/facebook/mobileconfig/MobileConfigFetcherHandler;Ljava/lang/String;Ljava/lang/Integer;)V
+# Coverage: 114178 APK classes; superclass/interface ancestry; declared overrides only; inherited-target/default-method/external/runtime dispatch unverified
+# ancestry: LX/Hmm; -> Ljava/lang/Object;
+# interfaces: LX/Hmm; => Lcom/facebook/mobileconfig/MobileConfigFetcher;
+# ancestry: Lcom/facebook/mobileconfig/MobileConfigFetcher; -> Ljava/lang/Object;
+
+# class: LX/Hmm;
+# extends: Ljava/lang/Object;
+
+.method public fetch(VLLLLLL)  # .registers 30
+    # full signature: LX/Hmm;->fetch(Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lcom/facebook/mobileconfig/MobileConfigFetcherHandler;Ljava/lang/String;Ljava/lang/Integer;)V
+    0000..0002  const/4  v3, #0x1
+    0002..0006  move-object/from16  v6, v25
+    0006..000c  invoke-static  {v6, v3}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000c..0010  move-object/from16  v0, v26
+    0010..0014  move-object/from16  v22, v27
+    0014..0018  move-object/from16  v1, v22
+    0018..001e  invoke-static  {v0, v1}, LX/3q0;->A1P(Ljava/lang/Object;Ljava/lang/Object;)V
+    001e..0022  const-string  v1, "mobileconfig"
+    0022..0028  invoke-virtual  {v6, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0028..002a  move-result  v2
+    002a..002e  const-string  v8, "mobileconfig_emergency_push"
+    002e..0032  move-object/from16  v1, v23
+    0032..0036  move-object/from16  v5, v29
+    0036..003a  if-nez  v2, +0xbe
+    003a..0040  invoke-virtual  {v6, v8}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0040..0042  move-result  v2
+    0042..0046  if-nez  v2, +0xb8
+    0046..004a  const-string  v2, "mobileconfiglogging"
+    004a..0050  invoke-virtual  {v6, v2}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0050..0052  move-result  v2
+    0052..0056  if-eqz  v2, +0x20
+    0056..005a  const-string  v2, "type"
+    005a..0060  invoke-interface  {v0, v2}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    0060..0062  move-result-object  v4
+    0062..0066  const-string  v2, "BatchApi"
+    0066..006c  invoke-static  {v4, v2}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    006c..006e  move-result  v2
+    006e..0072  if-nez  v2, +0x312
+    0072..0076  const-string  v2, "BatchApi3"
+    0076..007c  invoke-static  {v4, v2}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    007c..007e  move-result  v2
+    007e..0082  if-nez  v2, +0x30a
+    0082..0086  const-string  v1, "{}"
+    0086..008a  move-object/from16  v0, v22
+    008a..0090  invoke-virtual  {v0, v3, v1}, Lcom/facebook/mobileconfig/MobileConfigFetcherHandler;->onComplete(ZLjava/lang/String;)V
+    0090..0092  return-void
+    0092..0096  const-string  v2, "mobileconfigsessionless"
+    0096..009c  invoke-virtual  {v6, v2}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    009c..009e  move-result  v2
+    009e..00a0  const/4  v3, #0x0
+    00a0..00a4  if-eqz  v2, +0x10
+    00a4..00a8  sget-object  v2, LX/Gf7;->A02:LX/Gf7;
+    00a8..00ac  iget  v4, v2, LX/Gf7;->value:I
+    00ac..00b0  if-eqz  v29, +0xa
+    00b0..00b6  invoke-virtual  {v5}, Ljava/lang/Number;->intValue()I
+    00b6..00b8  move-result  v2
+    00b8..00bc  if-ne  v2, v4, +0x4
+    00bc..00c0  goto/16  +0x97
+    00c0..00c4  const-string  v2, "mobileconfig_qe_info"
+    00c4..00ca  invoke-virtual  {v6, v2}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    00ca..00cc  move-result  v2
+    00cc..00d0  if-eqz  v2, +0x54
+    00d0..00d4  const-string  v2, "queries"
+    00d4..00da  invoke-static  {v2, v0}, LX/2LB;->A18(Ljava/lang/Object;Ljava/util/Map;)Ljava/lang/String;
+    00da..00dc  move-result-object  v3
+    00dc..00e0  const-string  v2, "needs_name"
+    00e0..00e6  invoke-interface  {v0, v2}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    00e6..00e8  move-result-object  v2
+    00e8..00ec  const-string  v0, "true"
+    00ec..00f2  invoke-static  {v2, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    00f2..00f4  move-result  v0
+    00f4..00f6  const/4  v10, #0x1
+    00f6..00fa  if-eqz  v0, +0x56
+    00fa..00fe  if-eqz  v3, +0x54
+    00fe..0104  invoke-virtual  {v3}, Ljava/lang/String;->length()I
+    0104..0106  move-result  v0
+    0106..010a  if-eqz  v0, +0x4e
+    010a..0110  invoke-static  {}, LX/3q0;->A0X()LX/0i1;
+    0110..0112  move-result-object  v4
+    0112..0116  sget-object  v2, Lcom/facebook/graphql/calls/GraphQlCallInput;->A02:LX/0iH;
+    0116..011a  const-string  v0, "query_string"
+    011a..0120  invoke-static  {v2, v4, v3, v0}, LX/6ol;->A10(LX/0iH;LX/0i1;Ljava/lang/Object;Ljava/lang/String;)V
+    0120..0124  const-class  v5, LX/GAI;
+    0124..0128  const-class  v6, Lcom/facebook/pando/TreeWithGraphQL;
+    0128..012c  sget-object  v9, LX/Kbf;->A00:LX/Kbf;
+    012c..0130  const-string  v8, "whatsapp-android-www"
+    0130..0134  const-string  v7, "MetaConfigNameFetchMutation"
+    0134..0138  new-instance  v3, LX/0iT;
+    0138..013e  invoke-direct/range  {v3..v10}, LX/0iT;-><init>(LX/0i1;Ljava/lang/Class;Ljava/lang/Class;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Z)V
+    013e..0142  iget-object  v0, v1, LX/Hmm;->A02:LX/05a;
+    0142..0148  invoke-static  {v3, v0}, LX/B21;->A0M(LX/0iQ;LX/05a;)LX/0iq;
+    0148..014a  move-result-object  v3
+    014a..014e  iput-boolean  v10, v3, LX/0iq;->A03:Z
+    014e..0152  iput-boolean  v10, v3, LX/0iq;->A04:Z
+    0152..0156  sget-object  v0, LX/12m;->A03:LX/12m;
+    0156..015c  invoke-virtual  {v3, v0}, LX/0iq;->Cyi(LX/12m;)V
+    015c..0160  const/16  v2, #0x1d
+    0160..0164  move-object/from16  v0, v22
+    0164..016a  invoke-static  {v1, v0, v2}, LX/IE9;->A00(Ljava/lang/Object;Ljava/lang/Object;I)LX/IE9;
+    016a..016c  move-result-object  v0
+    016c..0172  invoke-virtual  {v3, v0}, LX/0iq;->AQY(Lkotlin/jvm/functions/Function1;)V
+    0172..0174  return-void
+    0174..0178  const-string  v0, "WAMobileConfigFetcher/fetch/unexpected endpoint or stack target: "
+    0178..017e  invoke-static  {v0, v6}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    017e..0180  move-result-object  v0
+    0180..0184  const-string  v1, "/"
+    0184..018a  invoke-static  {v5, v1, v0}, LX/DBh;->A1C(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    018a..018e  const-string  v0, "unexpected endpoint or stack target: "
+    018e..0194  invoke-static  {v0, v6}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0194..0196  move-result-object  v0
+    0196..019c  invoke-static  {v5, v1, v0}, LX/1Xl;->A0v(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    019c..019e  move-result-object  v1
+    019e..01a2  goto/16  -0x8c
+    01a2..01a6  const-string  v1, "{}"
+    01a6..01aa  move-object/from16  v0, v22
+    01aa..01b0  invoke-virtual  {v0, v10, v1}, Lcom/facebook/mobileconfig/MobileConfigFetcherHandler;->onComplete(ZLjava/lang/String;)V
+    01b0..01b2  return-void
+    01b2..01b6  sget-object  v2, LX/Gf7;->A02:LX/Gf7;
+    01b6..01ba  iget  v4, v2, LX/Gf7;->value:I
+    01ba..01be  const-string  v7, "{}"
+    01be..01c2  if-eqz  v29, +0x152
+    01c2..01c8  invoke-virtual  {v5}, Ljava/lang/Number;->intValue()I
+    01c8..01ca  move-result  v2
+    01ca..01ce  if-ne  v2, v4, +0x14c
+    01ce..01d2  iget-object  v2, v1, LX/Hmm;->A00:LX/05a;
+    01d2..01d8  invoke-static  {v2}, LX/05a;->A00(LX/05a;)LX/00E;
+    01d8..01da  move-result-object  v4
+    01da..01de  const/16  v2, #0x7237
+    01de..01e4  invoke-virtual  {v4, v2}, LX/00E;->A14(I)Z
+    01e4..01e6  move-result  v2
+    01e6..01ea  if-eqz  v2, +0x158
+    01ea..01ee  const-string  v13, "unit_type"
+    01ee..01f4  invoke-static  {v13, v0}, LX/2LB;->A18(Ljava/lang/Object;Ljava/util/Map;)Ljava/lang/String;
+    01f4..01f6  move-result-object  v2
+    01f6..01fa  if-eqz  v2, +0x133
+    01fa..0200  invoke-static  {v2}, LX/0Cd;->A06(Ljava/lang/String;)Ljava/lang/Integer;
+    0200..0202  move-result-object  v2
+    0202..0206  if-eqz  v2, +0x12d
+    0206..020c  invoke-virtual  {v2}, Ljava/lang/Number;->intValue()I
+    020c..020e  move-result  v6
+    020e..0212  const-string  v15, "api_version"
+    0212..0218  invoke-static  {v15, v0}, LX/2LB;->A18(Ljava/lang/Object;Ljava/util/Map;)Ljava/lang/String;
+    0218..021a  move-result-object  v2
+    021a..021e  if-eqz  v2, +0x11d
+    021e..0224  invoke-static  {v2}, LX/0Cd;->A06(Ljava/lang/String;)Ljava/lang/Integer;
+    0224..0226  move-result-object  v2
+    0226..022a  if-eqz  v2, +0x117
+    022a..0230  invoke-virtual  {v2}, Ljava/lang/Number;->intValue()I
+    0230..0232  move-result  v21
+    0232..0236  const-string  v14, "fetch_type"
+    0236..023c  invoke-interface  {v0, v14}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    023c..023e  move-result-object  v11
+    023e..0242  if-nez  v11, +0x4
+    0242..0246  const-string  v11, ""
+    0246..024a  const-string  v7, "query_hash"
+    024a..0250  invoke-interface  {v0, v7}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    0250..0252  move-result-object  v20
+    0252..0256  const-string  v10, "queries"
+    0256..025c  invoke-interface  {v0, v10}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    025c..025e  move-result-object  v19
+    025e..0262  const-string  v9, "bln_queries"
+    0262..0268  invoke-interface  {v0, v9}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    0268..026a  move-result-object  v18
+    026a..0270  const  v4, #0x2040e
+    0270..0274  iget-object  v2, v1, LX/Hmm;->A04:LX/05a;
+    0274..027a  invoke-static  {v2, v4}, LX/2LA;->A0l(LX/05a;I)Ljava/lang/Object;
+    027a..027c  move-result-object  v2
+    027c..0280  check-cast  v2, LX/GwY;
+    0280..0284  iget-object  v2, v2, LX/GwY;->A00:LX/00p;
+    0284..028a  invoke-static  {v2}, LX/2L7;->A1J(LX/00p;)Ljava/lang/Object;
+    028a..028c  move-result-object  v12
+    028c..0290  check-cast  v12, Ljava/lang/String;
+    0290..0292  const/4  v4, #0x1
+    0292..0294  const/4  v8, #0x0
+    0294..0298  if-ne  v6, v4, +0xdc
+    0298..029c  const-string  v2, "device_id"
+    029c..02a2  invoke-interface  {v0, v2}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    02a2..02a4  move-result-object  v17
+    02a4..02aa  invoke-static  {}, LX/8t1;->A1H()Ljava/lang/Integer;
+    02aa..02ac  move-result-object  v16
+    02ac..02b0  sget-object  v5, Lcom/facebook/graphql/calls/GraphQlCallInput;->A02:LX/0iH;
+    02b0..02b6  invoke-static/range  {v21..v21}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    02b6..02b8  move-result-object  v2
+    02b8..02be  invoke-static  {v5, v2, v15}, LX/6og;->A0D(LX/0iH;Ljava/lang/Object;Ljava/lang/String;)LX/Nha;
+    02be..02c0  move-result-object  v5
+    02c0..02c6  invoke-static  {v5, v11, v14}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    02c6..02cc  invoke-static  {v6}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    02cc..02ce  move-result-object  v2
+    02ce..02d4  invoke-static  {v5, v2, v13}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    02d4..02d8  const-string  v2, "batch_size"
+    02d8..02de  invoke-static  {v5, v8, v2}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    02de..02e2  const-string  v2, "bln_li_hashes"
+    02e2..02e8  invoke-static  {v5, v8, v2}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    02e8..02ec  move-object/from16  v2, v18
+    02ec..02f2  invoke-static  {v5, v2, v9}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    02f2..02f6  const-string  v2, "bool_opt_policy"
+    02f6..02fc  invoke-static  {v5, v8, v2}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    02fc..0300  const-string  v2, "contact_point"
+    0300..0306  invoke-static  {v5, v8, v2}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    0306..030a  const-string  v11, "device_id"
+    030a..030e  move-object/from16  v2, v17
+    030e..0314  invoke-static  {v5, v2, v11}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    0314..0318  const-string  v2, "mc_debug_id"
+    0318..031e  invoke-static  {v5, v12, v2}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    031e..0322  const-string  v11, "mobile_app_universe_type"
+    0322..0326  move-object/from16  v2, v16
+    0326..032c  invoke-static  {v5, v2, v11}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    032c..0330  move-object/from16  v2, v20
+    0330..0336  invoke-static  {v5, v2, v7}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    0336..033a  const-string  v11, "query_string"
+    033a..033e  move-object/from16  v2, v19
+    033e..0344  invoke-static  {v5, v2, v11}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    0344..0348  const-string  v2, "unit_id"
+    0348..034e  invoke-static  {v5, v8, v2}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    034e..0354  invoke-static  {v10, v0}, LX/2LB;->A18(Ljava/lang/Object;Ljava/util/Map;)Ljava/lang/String;
+    0354..0356  move-result-object  v2
+    0356..035a  if-eqz  v2, +0xa
+    035a..0360  invoke-virtual  {v2}, Ljava/lang/String;->length()I
+    0360..0362  move-result  v2
+    0362..0368  invoke-static  {v2}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0368..036a  move-result-object  v8
+    036a..0370  invoke-static  {v9, v0}, LX/2LB;->A18(Ljava/lang/Object;Ljava/util/Map;)Ljava/lang/String;
+    0370..0372  move-result-object  v2
+    0372..0376  if-eqz  v2, +0x6b
+    0376..037c  invoke-virtual  {v2}, Ljava/lang/String;->length()I
+    037c..037e  move-result  v2
+    037e..0384  invoke-static  {v2}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0384..0386  move-result-object  v9
+    0386..038c  invoke-interface  {v0, v7}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    038c..038e  move-result-object  v7
+    038e..0392  const-string  v2, "WAMobileConfigFetcher/fetchWwwConfigs/request unit_type="
+    0392..0398  invoke-static  {v6, v2}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    0398..039a  move-result-object  v6
+    039a..039e  const-string  v2, " isAuthenticated="
+    039e..03a4  invoke-virtual  {v6, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    03a4..03aa  invoke-virtual  {v6, v3}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    03aa..03ae  const-string  v2, " queriesLen="
+    03ae..03b4  invoke-virtual  {v6, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    03b4..03ba  invoke-virtual  {v6, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    03ba..03be  const-string  v2, " blnQueriesLen="
+    03be..03c4  invoke-virtual  {v6, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    03c4..03ca  invoke-virtual  {v6, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    03ca..03ce  const-string  v2, " queryHash="
+    03ce..03d4  invoke-static  {v7, v2, v6}, LX/2LA;->A1J(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    03d4..03da  invoke-static  {}, LX/3q0;->A0X()LX/0i1;
+    03da..03dc  move-result-object  v6
+    03dc..03e0  const-string  v2, "input"
+    03e0..03e6  invoke-static  {v5, v6, v2}, LX/3q4;->A16(LX/NhZ;LX/0i1;Ljava/lang/String;)V
+    03e6..03ea  const-class  v7, LX/GAG;
+    03ea..03ee  const-class  v8, Lcom/facebook/pando/TreeWithGraphQL;
+    03ee..03f2  sget-object  v11, LX/Kbe;->A00:LX/Kbe;
+    03f2..03f6  const-string  v10, "whatsapp-android-www"
+    03f6..03fa  const-string  v9, "MetaConfigFetchMutation"
+    03fa..03fe  new-instance  v5, LX/0iT;
+    03fe..0400  move  v12, v4
+    0400..0406  invoke-direct/range  {v5..v12}, LX/0iT;-><init>(LX/0i1;Ljava/lang/Class;Ljava/lang/Class;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Z)V
+    0406..040a  iget-object  v2, v1, LX/Hmm;->A02:LX/05a;
+    040a..0410  invoke-static  {v5, v2}, LX/B21;->A0M(LX/0iQ;LX/05a;)LX/0iq;
+    0410..0412  move-result-object  v5
+    0412..0416  iput-boolean  v4, v5, LX/0iq;->A03:Z
+    0416..041a  iput-boolean  v4, v5, LX/0iq;->A04:Z
+    041a..041e  if-eqz  v3, +0x14
+    041e..0422  sget-object  v2, LX/12m;->A03:LX/12m;
+    0422..0428  invoke-virtual  {v5, v2}, LX/0iq;->Cyi(LX/12m;)V
+    0428..042c  const/16  v4, #0xa
+    042c..0430  new-instance  v3, LX/IDk;
+    0430..0434  move-object/from16  v2, v22
+    0434..043a  invoke-direct  {v3, v1, v0, v2, v4}, LX/IDk;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+    043a..0440  invoke-virtual  {v5, v3}, LX/0iq;->AQY(Lkotlin/jvm/functions/Function1;)V
+    0440..0442  return-void
+    0442..0446  iput-boolean  v4, v5, LX/0iq;->A02:Z
+    0446..0448  goto  -0xf
+    0448..044a  const/4  v9, #0x0
+    044a..044c  goto  -0x62
+    044c..0450  move-object/from16  v17, v8
+    0450..0454  goto/16  -0xd6
+    0454..0458  const/16  v21, #0x0
+    0458..045c  goto/16  -0x113
+    045c..045e  const/4  v6, #0x0
+    045e..0462  goto/16  -0x128
+    0462..0466  iget-object  v2, v1, LX/Hmm;->A00:LX/05a;
+    0466..046a  iget-object  v4, v2, LX/05a;->A00:LX/00x;
+    046a..0470  invoke-static  {v4}, LX/2L6;->A0d(LX/00x;)LX/00E;
+    0470..0472  move-result-object  v2
+    0472..0478  invoke-virtual  {v2}, LX/00E;->A13()Z
+    0478..047a  move-result  v2
+    047a..047e  if-nez  v2, +0x14
+    047e..0484  invoke-static  {v4}, LX/2L6;->A0d(LX/00x;)LX/00E;
+    0484..0486  move-result-object  v4
+    0486..048a  sget-object  v2, LX/GuG;->A00:LX/00f;
+    048a..0490  invoke-static  {v4, v2}, LX/00E;->A0F(LX/00E;LX/00f;)Z
+    0490..0492  move-result  v2
+    0492..0496  if-eqz  v2, +0x8
+    0496..049a  move-object/from16  v0, v22
+    049a..04a0  invoke-virtual  {v0, v3, v7}, Lcom/facebook/mobileconfig/MobileConfigFetcherHandler;->onComplete(ZLjava/lang/String;)V
+    04a0..04a2  return-void
+    04a2..04a8  invoke-virtual  {v6, v8}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    04a8..04aa  move-result  v19
+    04aa..04ae  const-string  v14, "unit_type"
+    04ae..04b4  invoke-static  {v14, v0}, LX/2LB;->A18(Ljava/lang/Object;Ljava/util/Map;)Ljava/lang/String;
+    04b4..04b6  move-result-object  v2
+    04b6..04ba  if-eqz  v2, +0xeb
+    04ba..04c0  invoke-static  {v2}, LX/0Cd;->A06(Ljava/lang/String;)Ljava/lang/Integer;
+    04c0..04c2  move-result-object  v2
+    04c2..04c6  if-eqz  v2, +0xe5
+    04c6..04cc  invoke-virtual  {v2}, Ljava/lang/Number;->intValue()I
+    04cc..04ce  move-result  v13
+    04ce..04d0  const/4  v4, #0x0
+    04d0..04d4  if-eq  v13, v3, +0xda
+    04d4..04d6  const/4  v2, #0x2
+    04d6..04da  if-eq  v13, v2, +0xd3
+    04da..04de  const-string  v12, "UNKNOWN"
+    04de..04e2  const-string  v11, "fetch_type"
+    04e2..04e8  invoke-static  {v11, v0}, LX/2LB;->A18(Ljava/lang/Object;Ljava/util/Map;)Ljava/lang/String;
+    04e8..04ea  move-result-object  v10
+    04ea..04ee  const-string  v15, ""
+    04ee..04f2  if-nez  v10, +0x3
+    04f2..04f4  move-object  v10, v15
+    04f4..04f8  const-string  v9, "api_version"
+    04f8..04fe  invoke-static  {v9, v0}, LX/2LB;->A18(Ljava/lang/Object;Ljava/util/Map;)Ljava/lang/String;
+    04fe..0500  move-result-object  v2
+    0500..0504  if-eqz  v2, +0xba
+    0504..050a  invoke-static  {v2}, LX/0Cd;->A06(Ljava/lang/String;)Ljava/lang/Integer;
+    050a..050c  move-result-object  v2
+    050c..0510  if-eqz  v2, +0xb4
+    0510..0516  invoke-virtual  {v2}, Ljava/lang/Number;->intValue()I
+    0516..0518  move-result  v16
+    0518..051c  const-string  v8, "global_value_hash"
+    051c..0522  invoke-static  {v8, v0}, LX/2LB;->A18(Ljava/lang/Object;Ljava/util/Map;)Ljava/lang/String;
+    0522..0524  move-result-object  v2
+    0524..0528  if-eqz  v2, +0x3
+    0528..052a  move-object  v15, v2
+    052a..052e  const-string  v7, "ep_refresh_id"
+    052e..0534  invoke-static  {v7, v0}, LX/2LB;->A18(Ljava/lang/Object;Ljava/util/Map;)Ljava/lang/String;
+    0534..0536  move-result-object  v2
+    0536..053a  if-eqz  v2, +0xa
+    053a..0540  invoke-static  {v2}, LX/0Cd;->A06(Ljava/lang/String;)Ljava/lang/Integer;
+    0540..0542  move-result-object  v2
+    0542..0548  invoke-static  {v2, v4}, LX/6og;->A05(Ljava/lang/Number;I)I
+    0548..054a  move-result  v4
+    054a..0550  invoke-static  {v4}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0550..0552  move-result-object  v6
+    0552..0558  const  v3, #0x2040e
+    0558..055c  iget-object  v2, v1, LX/Hmm;->A04:LX/05a;
+    055c..0562  invoke-static  {v2, v3}, LX/2LA;->A0l(LX/05a;I)Ljava/lang/Object;
+    0562..0564  move-result-object  v2
+    0564..0568  check-cast  v2, LX/GwY;
+    0568..056c  iget-object  v2, v2, LX/GwY;->A00:LX/00p;
+    056c..0572  invoke-static  {v2}, LX/2L7;->A1J(LX/00p;)Ljava/lang/Object;
+    0572..0574  move-result-object  v5
+    0574..0578  check-cast  v5, Ljava/lang/String;
+    0578..057a  const/4  v4, #0x0
+    057a..057e  new-instance  v3, LX/G6s;
+    057e..0584  invoke-direct  {v3}, Lcom/facebook/graphql/calls/GraphQlCallInput;-><init>()V
+    0584..058a  invoke-static/range  {v16..v16}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    058a..058c  move-result-object  v2
+    058c..0592  invoke-virtual  {v3, v9, v2}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A09(Ljava/lang/String;Ljava/lang/Integer;)V
+    0592..0598  invoke-virtual  {v3, v11, v10}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A0A(Ljava/lang/String;Ljava/lang/String;)V
+    0598..059e  invoke-virtual  {v3, v14, v12}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A0A(Ljava/lang/String;Ljava/lang/String;)V
+    059e..05a2  const-string  v2, "client_config_hash"
+    05a2..05a8  invoke-virtual  {v3, v2, v15}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A0A(Ljava/lang/String;Ljava/lang/String;)V
+    05a8..05ae  invoke-virtual  {v3, v7, v6}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A09(Ljava/lang/String;Ljava/lang/Integer;)V
+    05ae..05b2  const-string  v2, "mc_debug_id"
+    05b2..05b8  invoke-virtual  {v3, v2, v5}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A0A(Ljava/lang/String;Ljava/lang/String;)V
+    05b8..05bc  const-string  v2, "queries"
+    05bc..05c2  invoke-virtual  {v3, v2, v4}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A0B(Ljava/lang/String;Ljava/util/List;)V
+    05c2..05c6  const-string  v2, "query_hash"
+    05c6..05cc  invoke-virtual  {v3, v2, v4}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A0A(Ljava/lang/String;Ljava/lang/String;)V
+    05cc..05d0  const-string  v2, "query_string"
+    05d0..05d6  invoke-virtual  {v3, v2, v4}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A0A(Ljava/lang/String;Ljava/lang/String;)V
+    05d6..05da  const-string  v2, "SYNC_FULL"
+    05da..05e0  invoke-virtual  {v10, v2}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    05e0..05e2  move-result  v18
+    05e2..05e8  invoke-interface  {v0, v8}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    05e8..05ea  move-result-object  v8
+    05ea..05f0  invoke-interface  {v0, v7}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    05f0..05f2  move-result-object  v6
+    05f2..05f6  const-string  v2, "WAMobileConfigFetcher/fetchErlangConfigs/request unit_type="
+    05f6..05fc  invoke-static  {v13, v2}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    05fc..05fe  move-result-object  v5
+    05fe..0602  const-string  v2, " fetchType="
+    0602..0608  invoke-virtual  {v5, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0608..060e  invoke-virtual  {v5, v10}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    060e..0612  const-string  v2, " clientConfigHash="
+    0612..0618  invoke-virtual  {v5, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0618..061e  invoke-virtual  {v5, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    061e..0622  const-string  v2, " epRefreshId="
+    0622..0628  invoke-static  {v6, v2, v5}, LX/2LA;->A1J(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    0628..062e  invoke-static  {v3}, LX/6oj;->A0P(Lcom/facebook/graphql/calls/GraphQlCallInput;)LX/0i1;
+    062e..0630  move-result-object  v6
+    0630..0634  const-class  v7, LX/G7o;
+    0634..0636  const/4  v12, #0x0
+    0636..063a  const-string  v10, "whatsapp-android-mex"
+    063a..063e  const-string  v9, "MobileConfigFetchQuery"
+    063e..0642  new-instance  v5, LX/0iT;
+    0642..0644  move-object  v8, v4
+    0644..0646  move-object  v11, v4
+    0646..064c  invoke-direct/range  {v5..v12}, LX/0iT;-><init>(LX/0i1;Ljava/lang/Class;Ljava/lang/Class;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Z)V
+    064c..0650  iget-object  v2, v1, LX/Hmm;->A02:LX/05a;
+    0650..0656  invoke-static  {v5, v2}, LX/B21;->A0M(LX/0iQ;LX/05a;)LX/0iq;
+    0656..0658  move-result-object  v3
+    0658..065c  new-instance  v2, LX/IDq;
+    065c..065e  move-object  v13, v2
+    065e..0662  move-object/from16  v14, v22
+    0662..0664  move-object  v15, v1
+    0664..0668  move-object/from16  v16, v0
+    0668..066c  move/from16  v17, v12
+    066c..0672  invoke-direct/range  {v13..v19}, LX/IDq;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;IZZ)V
+    0672..0674  goto  +0x68
+    0674..0678  const/16  v16, #0x0
+    0678..067c  goto/16  -0xb0
+    067c..0680  const-string  v12, "SESSIONBASED"
+    0680..0684  goto/16  -0xd1
+    0684..0688  const-string  v12, "SESSIONLESS"
+    0688..068c  goto/16  -0xd5
+    068c..068e  const/4  v13, #0x0
+    068e..0692  goto/16  -0xe0
+    0692..0696  const-string  v7, "unit_type"
+    0696..069c  invoke-static  {v7, v0}, LX/2LB;->A18(Ljava/lang/Object;Ljava/util/Map;)Ljava/lang/String;
+    069c..069e  move-result-object  v2
+    069e..06a2  if-eqz  v2, +0x59
+    06a2..06a8  invoke-static  {v2}, LX/0Cd;->A06(Ljava/lang/String;)Ljava/lang/Integer;
+    06a8..06aa  move-result-object  v2
+    06aa..06ae  if-eqz  v2, +0x53
+    06ae..06b4  invoke-virtual  {v2}, Ljava/lang/Number;->intValue()I
+    06b4..06b6  move-result  v4
+    06b6..06ba  if-eq  v4, v3, +0x4a
+    06ba..06bc  const/4  v2, #0x2
+    06bc..06c0  if-ne  v4, v2, +0x4a
+    06c0..06c4  const-string  v6, "SESSIONBASED"
+    06c4..06c8  const-string  v2, "config"
+    06c8..06ce  invoke-interface  {v0, v2}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    06ce..06d0  move-result-object  v5
+    06d0..06d4  const-string  v4, ""
+    06d4..06d8  if-nez  v5, +0x3
+    06d8..06da  move-object  v5, v4
+    06da..06de  const-string  v3, "flags"
+    06de..06e4  invoke-interface  {v0, v3}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    06e4..06e6  move-result-object  v0
+    06e6..06ea  if-eqz  v0, +0x3
+    06ea..06ec  move-object  v4, v0
+    06ec..06f0  sget-object  v2, Lcom/facebook/graphql/calls/GraphQlCallInput;->A02:LX/0iH;
+    06f0..06f2  const/4  v8, #0x0
+    06f2..06f6  const-string  v0, "configs"
+    06f6..06fc  invoke-static  {v2, v5, v0}, LX/6og;->A0D(LX/0iH;Ljava/lang/Object;Ljava/lang/String;)LX/Nha;
+    06fc..06fe  move-result-object  v0
+    06fe..0704  invoke-static  {v0, v4, v3}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    0704..070a  invoke-static  {v0, v6, v7}, LX/2LF;->A09(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)LX/0i1;
+    070a..070c  move-result-object  v6
+    070c..0710  const-class  v7, LX/G7m;
+    0710..0712  const/4  v12, #0x0
+    0712..0716  const-string  v10, "whatsapp-android-mex"
+    0716..071a  const-string  v9, "MobileConfigConsistencyLoggingQuery"
+    071a..071e  new-instance  v5, LX/0iT;
+    071e..0720  move-object  v11, v8
+    0720..0726  invoke-direct/range  {v5..v12}, LX/0iT;-><init>(LX/0i1;Ljava/lang/Class;Ljava/lang/Class;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Z)V
+    0726..072a  iget-object  v0, v1, LX/Hmm;->A02:LX/05a;
+    072a..0730  invoke-static  {v5, v0}, LX/B21;->A0M(LX/0iQ;LX/05a;)LX/0iq;
+    0730..0732  move-result-object  v3
+    0732..0736  const/16  v1, #0x27
+    0736..073a  move-object/from16  v0, v22
+    073a..0740  invoke-static  {v0, v1}, LX/IDy;->A00(Ljava/lang/Object;I)LX/IDy;
+    0740..0742  move-result-object  v2
+    0742..0748  invoke-virtual  {v3, v2}, LX/0iq;->AQY(Lkotlin/jvm/functions/Function1;)V
+    0748..074a  return-void
+    074a..074e  const-string  v6, "SESSIONLESS"
+    074e..0750  goto  -0x45
+    0750..0754  const-string  v6, "UNKNOWN"
+    0754..0756  goto  -0x48
+    # exception table: 0 try range(s)
+.end method
+
+# class: Lcom/facebook/mobileconfig/MobileConfigFetcher;
+# extends: Ljava/lang/Object;
+
+.method public fetch(VLLLLLL)  # .registers 0
+    # full signature: Lcom/facebook/mobileconfig/MobileConfigFetcher;->fetch(Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lcom/facebook/mobileconfig/MobileConfigFetcherHandler;Ljava/lang/String;Ljava/lang/Integer;)V
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
