@@ -6093,3 +6093,9 @@ evidence, not new APK behavior or proof of full group-send/network parity.
   Active waits refuse without changing rows/journal; expired fixture controls
   complete locally and neither outcome replays after reopen. See
   [writer verification](app-state-patch-atomicity.md#real-producer-late-wait-at-the-writer-boundary).
+
+- Confirmed source redaction defect at `bd787981`: appeal HTTP summaries copied
+  free-form server values/key names despite their redacted contract. Summary now
+  returns fixed structural names/counts plus status/size, with synthetic JSON/Debug
+  sentinel regression. No request sent or construction changed. See
+  [summary correction](ban-appeal.md#response-summary-redaction-correction).

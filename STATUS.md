@@ -10612,3 +10612,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   late active waits block encoding and preserve original reservations through
   reopen. Expired fixture controls use mocked completion, not server ACK.
   No runtime policy or live operation changed.
+
+- Appeal-response summary redaction now omits server-selected text/key names
+  and error values, retaining fixed structural names/counts plus HTTP status/size.
+  JSON/Debug sentinel regression added and schema corrected; no appeal submitted.
+  Operation/doc_id validity and outcome handling remain unverified.

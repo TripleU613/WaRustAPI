@@ -1,4 +1,11 @@
 {
+  "x-appeal-response-summary-redaction": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "evidence": "docs/protocol/ban-appeal.md#response-summary-redaction-correction",
+    "behavior": "Appeal HTTP summary and Debug omit server-selected values/key names; retain fixed structural names/counts and local HTTP status/size. No submission or request-construction change."
+  },
   "x-app-state-real-producer-writer-verification": {
     "x-cli": false,
     "x-transport": false,
@@ -3742,29 +3749,29 @@
           "top_level_keys": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "data",
+                "errors",
+                "status",
+                "error",
+                "error_code",
+                "error_message",
+                "error_type"
+              ]
             },
-            "description": "Top-level JSON keys in response (redacted)"
+            "description": "Fixed recognized structural field names only; arbitrary server keys and all values omitted"
           },
-          "errors": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "code": {
-                  "type": "string",
-                  "description": "Error code"
-                },
-                "type": {
-                  "type": "string",
-                  "description": "Error type"
-                }
-              }
-            },
-            "description": "GraphQL errors in response"
+          "top_level_field_count": {
+            "type": "integer",
+            "description": "Total JSON object field count, when the root is an object"
+          },
+          "graphql_error_count": {
+            "type": "integer",
+            "description": "Number of entries when errors is an array; no code/type/message values"
           }
         },
-        "description": "Result of ban appeal submission via ACS GraphQL"
+        "description": "Redacted structural summary of ACS GraphQL response; not confirmation of appeal acceptance"
       },
       "CapabilityMatrix": {
         "type": "object",

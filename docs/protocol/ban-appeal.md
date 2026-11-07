@@ -54,8 +54,8 @@ Sends JSON (one of two forms):
 
 - The persistent-query `doc_id` for `SubmitAnAppealForIP` was not recovered from
   static APK analysis
-- Seven 15-digit candidate IDs exist in `classes9.dex` and can be tried with
-  `--doc-id` if the named-operation path is rejected
+- Seven 15-digit literals exist in `classes9.dex`; their mapping to this operation
+  is unverified, so none is established here as a valid submission doc_id
 - Appeal outcome handling and follow-up flows are not documented
 
 ## How to run
@@ -76,7 +76,30 @@ Optional flags:
 The response is summarized redacted:
 - HTTP status code
 - Response body size in bytes
-- Top-level JSON keys (no values)
-- Recognized error codes (if any)
+- Fixed recognized structural field names and total field count
+- GraphQL error-array entry count (when present)
+
+Free-form values, server-selected key names and error code/type/message values
+are omitted. A structural `errors` field/count does not prove the appeal outcome.
 
 No plaintext details are logged. The appeal has not been sent live yet.
+
+## Response-summary redaction correction
+
+**Confirmed Rust source defect, corrected offline**, baseline `bd787981`.
+The summary was documented as redacted, but copied top-level error_message/error/
+status values and error-array code/type strings, and exposed arbitrary object key
+names. A response could echo a credential/identifier into these outputs, including
+BanAppealResult Debug. Local synthetic sentinel responses reproduced that path.
+
+The summary now retains only HTTP status, body size, fixed recognized structural
+field names, total field count and error-array entry count. Response-selected
+text and field values are never copied into it. Invalid JSON/non-object roots
+retain only local status/size. API schema and CLI documentation describe the
+changed diagnostic shape; former free-form errors-array details are absent.
+
+The offline regression places sentinels in top-level values, nested errors,
+arbitrary key names, numeric error codes and invalid/non-object bodies; neither
+summary JSON nor result Debug contains them. No request-construction, appeal-token
+selection, retry or identity behavior changes. No appeal or account operation is
+performed. Operation/doc_id validity and server outcome handling remain unknown.
