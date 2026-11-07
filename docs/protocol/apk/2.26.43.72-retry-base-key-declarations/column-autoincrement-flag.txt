@@ -1,0 +1,11 @@
+
+# class: LX/0Me;
+# extends: Ljava/lang/Object;
+
+.method public A01(V)  # .registers 2
+    # full signature: LX/0Me;->A01()V
+    0000..0002  const/4  v0, #0x1
+    0002..0006  iput-boolean  v0, v1, LX/0Me;->A05:Z
+    0006..0008  return-void
+    # exception table: 0 try range(s)
+.end method

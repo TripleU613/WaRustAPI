@@ -1,0 +1,27 @@
+
+# class: Lcom/whatsapp/infra/core/util/string/StringUtils;
+# extends: Ljava/lang/Object;
+
+.method public A0J(ZL)  # .registers 7
+    # full signature: Lcom/whatsapp/infra/core/util/string/StringUtils;->A0J(Ljava/lang/CharSequence;)Z
+    0000..0002  const/4  v5, #0x1
+    0002..0006  if-eqz  v6, +0x1e
+    0006..000c  invoke-interface  {v6}, Ljava/lang/CharSequence;->length()I
+    000c..000e  move-result  v4
+    000e..0012  if-eqz  v4, +0x18
+    0012..0014  const/4  v3, #0x0
+    0014..0016  const/4  v2, #0x0
+    0016..001a  if-ge  v2, v4, +0x14
+    001a..0020  invoke-interface  {v6, v2}, Ljava/lang/CharSequence;->charAt(I)C
+    0020..0022  move-result  v1
+    0022..0026  const/16  v0, #0x200b
+    0026..002a  if-eq  v1, v0, +0x9
+    002a..0030  invoke-static  {v1}, Ljava/lang/Character;->isWhitespace(C)Z
+    0030..0032  move-result  v0
+    0032..0036  if-nez  v0, +0x3
+    0036..0038  return  v3
+    0038..003c  add-int/lit8  v2, v2, #0x1
+    003c..003e  goto  -0x13
+    003e..0040  return  v5
+    # exception table: 0 try range(s)
+.end method

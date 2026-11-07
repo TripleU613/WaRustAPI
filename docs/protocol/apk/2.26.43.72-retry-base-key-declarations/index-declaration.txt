@@ -1,0 +1,15 @@
+
+# class: LX/1jB;
+# extends: Ljava/lang/Object;
+
+.method public ATY(VLL)  # .registers 6
+    # full signature: LX/1jB;->ATY(LX/0MT;LX/0MZ;)V
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v5, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  const-string  v2, "message_base_key_idx"
+    000c..0010  const-string  v1, "\n            CREATE UNIQUE INDEX IF NOT EXISTS message_base_key_idx ON message_base_key (msg_key_remote_jid, msg_key_from_me, msg_key_id, recipient_id, recipient_type, device_id);\n            "
+    0010..0014  const-string  v0, "message_base_key"
+    0014..001a  invoke-interface  {v5, v0, v2, v1}, LX/0MZ;->CWU(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+    001a..001c  return-void
+    # exception table: 0 try range(s)
+.end method

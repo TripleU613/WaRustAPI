@@ -1,0 +1,10 @@
+
+# class: LX/1jB;
+# extends: Ljava/lang/Object;
+
+.method public <init>(V)  # .registers 1
+    # full signature: LX/1jB;-><init>()V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..0008  return-void
+    # exception table: 0 try range(s)
+.end method

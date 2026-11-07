@@ -1,0 +1,28 @@
+[
+  {
+    "operation": "apk-callers",
+    "args": [
+      "--class",
+      "LX/1jB;",
+      "--method",
+      "<init>"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "0 caller(s) of LX/1jB;-><init>\n"
+  },
+  {
+    "operation": "apk-smali",
+    "args": [
+      "--class",
+      "LX/1jB;",
+      "--method",
+      "<clinit>",
+      "--signatures",
+      "--exceptions"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "no method bodies match class filter \"LX/1jB;\" and method filter \"<clinit>\"\n"
+  }
+]

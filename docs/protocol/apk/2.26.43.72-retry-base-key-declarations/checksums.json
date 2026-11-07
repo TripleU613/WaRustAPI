@@ -1,0 +1,66 @@
+{
+  "README.md": {
+    "bytes": 4730,
+    "sha256": "428851dd124a67f5e84beee1a3c760a2f261c1b0c9a0283ddee6f72064e970a9"
+  },
+  "column-autoincrement-flag.txt": {
+    "bytes": 290,
+    "sha256": "eec429b21f53ab13f44c601a9ba32ac46365b67965646505f1113c2a6b8bb324"
+  },
+  "column-build-reset.txt": {
+    "bytes": 991,
+    "sha256": "540389ebd46bfcae7094f78503148fd36b88754616ca58ccf5805df038b0edfb"
+  },
+  "column-descriptor.txt": {
+    "bytes": 6590,
+    "sha256": "afdffac69e7f4821ca5cad9fdc96438d59db183e50ba3fcb7bbe8139eb22e0ef"
+  },
+  "column-primary-flag.txt": {
+    "bytes": 290,
+    "sha256": "7fe5902610621d14644365f2cec5d1d85e68e6090d479f1d5c5da5b77d239a7e"
+  },
+  "column-type-constructor.txt": {
+    "bytes": 410,
+    "sha256": "8dd32efe47436a0872ff2281ae0b710c564e038a5f0196cd9e04f7e49a49bd2a"
+  },
+  "column-types.txt": {
+    "bytes": 4410,
+    "sha256": "3add11bade64c0f43c490b673a8af0de6dbfe5792b87dcfcb12a1cbe0a8d920e"
+  },
+  "default-blank-check.txt": {
+    "bytes": 1053,
+    "sha256": "a0392ca72298e6e202daa8cb32ded718a302319c08a3af129b899d0b49c54406"
+  },
+  "index-declaration.txt": {
+    "bytes": 792,
+    "sha256": "c1b99c008040d2ebcf1cb72efeadfe9f6cb4d15bbbcd9abd888261a809cd0eea"
+  },
+  "index-registration.txt": {
+    "bytes": 2581,
+    "sha256": "88511ee91cf6a3ea1c1a3d44f7414d087956335382c9722fe1fef390927cc227"
+  },
+  "provider-constructor.txt": {
+    "bytes": 276,
+    "sha256": "90266ce315e184aa51125049bb390572a6b69b976830337a84f8a22d228ff6e6"
+  },
+  "provider-probes.json": {
+    "bytes": 529,
+    "sha256": "903505ac690b2e5fb9a5a1c08249f78ce7600134bead6e95c6cfe8252e79f3f4"
+  },
+  "reproduce.py": {
+    "bytes": 2367,
+    "sha256": "ea2e508547cb590cbfa3538796417d4136d4db3e92f6b1594997d38878e20fe2"
+  },
+  "table-declaration.txt": {
+    "bytes": 4605,
+    "sha256": "c637abecc3e2ce107db40c381828c4f0b776b477f9eb1d210cb25f70f771a13e"
+  },
+  "table-registration.txt": {
+    "bytes": 1335,
+    "sha256": "54ff30b605e2e53710e6b6645b003e1ec1a26570039e13bacbca0a3fa19c9f2a"
+  },
+  "table-sink-overrides.txt": {
+    "bytes": 1321,
+    "sha256": "e4a307f6e867421ee6a98be1d29bba5eb92dd34b454828a3ec0b74fa5053197c"
+  }
+}

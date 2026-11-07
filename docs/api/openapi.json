@@ -20151,6 +20151,14 @@
     "description": "Pinned dirty stanza lazy selector/constructors/accessors establish iq/get/g.us/w:g2, supplied id/context and typed group children; selected Rust semantic fields match. ID bound is Java string length; list diagnostics do not establish hard gates without assertion policy. Legacy group admission, encoded order and callback/persistence remain separate. Existing xtask reproduces evidence; no wire/route/runtime/live change.",
     "evidence": "docs/protocol/apk/2.26.43.72-group-dirty-stanza-serializer/README.md"
   },
+  "x-pinned-retry-base-key-declaration-evidence": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Existing xtask reproduces pinned schema declarations, column snapshot/reset and SQL type/constraint rendering. Selected sinks register maps rather than execute SQL; provider activation and later application remain unproved. The selected references do not establish phone/LID conversion. Rust persistence remains unported; no runtime, migration or HTTP route change.",
+    "evidence": "docs/protocol/apk/2.26.43.72-retry-base-key-declarations/README.md"
+  },
   "x-pinned-retry-base-key-schema-evidence": {
     "x-cli": true,
     "x-transport": false,

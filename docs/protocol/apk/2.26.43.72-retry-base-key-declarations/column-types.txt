@@ -1,0 +1,92 @@
+
+# class: LX/0Mg;
+# extends: Ljava/lang/Enum;
+
+.method public <clinit>(V)  # .registers 14
+    # full signature: LX/0Mg;-><clinit>()V
+    0000..0004  const-string  v1, "BLOB"
+    0004..0006  const/4  v0, #0x0
+    0006..000a  new-instance  v13, LX/0Mg;
+    000a..0010  invoke-direct  {v13, v1, v0, v1}, LX/0Mg;-><init>(Ljava/lang/String;ILjava/lang/String;)V
+    0010..0014  sput-object  v13, LX/0Mg;->A02:LX/0Mg;
+    0014..0018  const-string  v1, "DATE"
+    0018..001a  const/4  v0, #0x1
+    001a..001e  new-instance  v12, LX/0Mg;
+    001e..0024  invoke-direct  {v12, v1, v0, v1}, LX/0Mg;-><init>(Ljava/lang/String;ILjava/lang/String;)V
+    0024..0028  sput-object  v12, LX/0Mg;->A04:LX/0Mg;
+    0028..002c  const-string  v1, "DATETIME"
+    002c..002e  const/4  v0, #0x2
+    002e..0032  new-instance  v11, LX/0Mg;
+    0032..0038  invoke-direct  {v11, v1, v0, v1}, LX/0Mg;-><init>(Ljava/lang/String;ILjava/lang/String;)V
+    0038..003c  sput-object  v11, LX/0Mg;->A05:LX/0Mg;
+    003c..0040  const-string  v1, "DOUBLE"
+    0040..0042  const/4  v0, #0x3
+    0042..0046  new-instance  v10, LX/0Mg;
+    0046..004c  invoke-direct  {v10, v1, v0, v1}, LX/0Mg;-><init>(Ljava/lang/String;ILjava/lang/String;)V
+    004c..0050  sput-object  v10, LX/0Mg;->A06:LX/0Mg;
+    0050..0054  const-string  v1, "INTEGER"
+    0054..0056  const/4  v0, #0x4
+    0056..005a  new-instance  v9, LX/0Mg;
+    005a..0060  invoke-direct  {v9, v1, v0, v1}, LX/0Mg;-><init>(Ljava/lang/String;ILjava/lang/String;)V
+    0060..0064  sput-object  v9, LX/0Mg;->A07:LX/0Mg;
+    0064..0068  const-string  v1, "REAL"
+    0068..006a  const/4  v0, #0x5
+    006a..006e  new-instance  v8, LX/0Mg;
+    006e..0074  invoke-direct  {v8, v1, v0, v1}, LX/0Mg;-><init>(Ljava/lang/String;ILjava/lang/String;)V
+    0074..0078  sput-object  v8, LX/0Mg;->A09:LX/0Mg;
+    0078..007c  const-string  v1, "TEXT"
+    007c..007e  const/4  v0, #0x6
+    007e..0082  new-instance  v7, LX/0Mg;
+    0082..0088  invoke-direct  {v7, v1, v0, v1}, LX/0Mg;-><init>(Ljava/lang/String;ILjava/lang/String;)V
+    0088..008c  sput-object  v7, LX/0Mg;->A0B:LX/0Mg;
+    008c..0090  const-string  v1, "LONG"
+    0090..0092  const/4  v0, #0x7
+    0092..0096  new-instance  v6, LX/0Mg;
+    0096..009c  invoke-direct  {v6, v1, v0, v1}, LX/0Mg;-><init>(Ljava/lang/String;ILjava/lang/String;)V
+    009c..00a0  sput-object  v6, LX/0Mg;->A08:LX/0Mg;
+    00a0..00a4  const-string  v1, "STRING"
+    00a4..00a8  const/16  v0, #0x8
+    00a8..00ac  new-instance  v5, LX/0Mg;
+    00ac..00b2  invoke-direct  {v5, v1, v0, v1}, LX/0Mg;-><init>(Ljava/lang/String;ILjava/lang/String;)V
+    00b2..00b6  sput-object  v5, LX/0Mg;->A0A:LX/0Mg;
+    00b6..00ba  const-string  v1, "BOOLEAN"
+    00ba..00be  const/16  v0, #0x9
+    00be..00c2  new-instance  v4, LX/0Mg;
+    00c2..00c8  invoke-direct  {v4, v1, v0, v1}, LX/0Mg;-><init>(Ljava/lang/String;ILjava/lang/String;)V
+    00c8..00cc  sput-object  v4, LX/0Mg;->A03:LX/0Mg;
+    00cc..00d0  const/16  v3, #0xa
+    00d0..00d4  const-string  v1, ""
+    00d4..00d8  const-string  v0, "UNSPECIFIED"
+    00d8..00dc  new-instance  v2, LX/0Mg;
+    00dc..00e2  invoke-direct  {v2, v0, v3, v1}, LX/0Mg;-><init>(Ljava/lang/String;ILjava/lang/String;)V
+    00e2..00e6  sput-object  v2, LX/0Mg;->A0C:LX/0Mg;
+    00e6..00ea  const/16  v0, #0xb
+    00ea..00ee  new-array  v1, v0, [LX/0Mg;
+    00ee..00f0  const/4  v0, #0x0
+    00f0..00f4  aput-object  v13, v1, v0
+    00f4..00f6  const/4  v0, #0x1
+    00f6..00fa  aput-object  v12, v1, v0
+    00fa..00fc  const/4  v0, #0x2
+    00fc..0100  aput-object  v11, v1, v0
+    0100..0102  const/4  v0, #0x3
+    0102..0106  aput-object  v10, v1, v0
+    0106..0108  const/4  v0, #0x4
+    0108..010c  aput-object  v9, v1, v0
+    010c..010e  const/4  v0, #0x5
+    010e..0112  aput-object  v8, v1, v0
+    0112..0114  const/4  v0, #0x6
+    0114..0118  aput-object  v7, v1, v0
+    0118..011a  const/4  v0, #0x7
+    011a..011e  aput-object  v6, v1, v0
+    011e..0122  const/16  v0, #0x8
+    0122..0126  aput-object  v5, v1, v0
+    0126..012a  const/16  v0, #0x9
+    012a..012e  aput-object  v4, v1, v0
+    012e..0132  aput-object  v2, v1, v3
+    0132..0136  sput-object  v1, LX/0Mg;->A01:[LX/0Mg;
+    0136..013c  invoke-static  {v1}, LX/068;->A00([Ljava/lang/Enum;)LX/06C;
+    013c..013e  move-result-object  v0
+    013e..0142  sput-object  v0, LX/0Mg;->A00:LX/06B;
+    0142..0144  return-void
+    # exception table: 0 try range(s)
+.end method
