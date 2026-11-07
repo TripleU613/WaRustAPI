@@ -109,3 +109,8 @@ annotations are not runtime memory observations.
 producers, initialization and refresh synchronization, request-data construction,
 Java route consumption, and response parsing/file commit/cache activation. No
 Rust runtime, sender, timing or saved account behavior changes are justified yet.
+
+Follow-up: [deferred schema grouping](../2.26.43.72-mobileconfig-schema-grouping/README.md)
+now identifies one table builder: adjacent source runs keyed by word+0x34 become
+encounter-ordered table positions, distinct from wire-token word+0x4c. Original
+record population, alternate factory and source retention remain unresolved.

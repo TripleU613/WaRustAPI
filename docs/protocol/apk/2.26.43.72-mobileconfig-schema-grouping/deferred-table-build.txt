@@ -1,0 +1,116 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   aa3dc:      	paciasp
+   aa3e0:      	sub	sp, sp, #0x30
+   aa3e4:      	stp	x29, x30, [sp, #0x10]
+   aa3e8:      	stp	x20, x19, [sp, #0x20]
+   aa3ec:      	add	x29, sp, #0x10
+   aa3f0:      	bl	0xca66c <JNI_OnLoad+0x5b4cc>
+   aa3f4:      	bl	0xcc230 <JNI_OnLoad+0x5d090>
+   aa3f8:      	add	x0, x8, #0x41
+   aa3fc:      	ldarb	w8, [x0]
+   aa400:      	cbnz	w8, 0xaa428 <JNI_OnLoad+0x3b288>
+   aa404:      	ldr	x8, [x19, #0x258]
+   aa408:      	ldr	x0, [x8, #0x10]
+   aa40c:      	bl	0xca2cc <JNI_OnLoad+0x5b12c>
+   aa410:      	b.ne	0xaa434 <JNI_OnLoad+0x3b294>
+   aa414:      	ldp	x20, x19, [sp, #0x20]
+   aa418:      	ldp	x29, x30, [sp, #0x10]
+   aa41c:      	add	sp, sp, #0x30
+   aa420:      	autiasp
+   aa424:      	ret
+   aa428:      	mov	x1, sp
+   aa42c:      	bl	0xaa438 <JNI_OnLoad+0x3b298>
+   aa430:      	b	0xaa404 <JNI_OnLoad+0x3b264>
+   aa434:      	bl	0xcd9f0 <__stack_chk_fail@plt>
+   aa438:      	paciasp
+   aa43c:      	sub	sp, sp, #0x70
+   aa440:      	stp	x29, x30, [sp, #0x40]
+   aa444:      	str	x21, [sp, #0x50]
+   aa448:      	stp	x20, x19, [sp, #0x60]
+   aa44c:      	add	x29, sp, #0x40
+   aa450:      	bl	0xca29c <JNI_OnLoad+0x5b0fc>
+   aa454:      	bl	0xcc610 <JNI_OnLoad+0x5d470>
+   aa458:      	mov	x2, x20
+   aa45c:      	bl	0x4c630 <.text+0x1d0>
+   aa460:      	cmp	w0, #0x1
+   aa464:      	b.eq	0xaa478 <JNI_OnLoad+0x3b2d8>
+   aa468:      	cbz	w0, 0xaa4f4 <JNI_OnLoad+0x3b354>
+   aa46c:      	mov	x0, x20
+   aa470:      	bl	0xaa018 <JNI_OnLoad+0x3ae78>
+   aa474:      	b	0xaa454 <JNI_OnLoad+0x3b2b4>
+   aa478:      	ldr	x19, [x19]
+   aa47c:      	add	x8, sp, #0x1c
+   aa480:      	strb	wzr, [sp, #0x1c]
+   aa484:      	stp	xzr, x20, [sp]
+   aa488:      	str	x8, [sp, #0x10]
+   aa48c:      	sub	x0, x29, #0x18
+   aa490:      	mov	x1, x19
+   aa494:      	bl	0xa99c0 <JNI_OnLoad+0x3a820>
+   aa498:      	ldur	x20, [x29, #-0x18]
+   aa49c:      	cbz	x20, 0xaa4b8 <JNI_OnLoad+0x3b318>
+   aa4a0:      	mov	x0, x19
+   aa4a4:      	bl	0x760f4 <JNI_OnLoad+0x6f54>
+   aa4a8:      	mov	w2, w0
+   aa4ac:      	bl	0xcbd2c <JNI_OnLoad+0x5cb8c>
+   aa4b0:      	bl	0xc1534 <JNI_OnLoad+0x52394>
+   aa4b4:      	b	0xaa4c0 <JNI_OnLoad+0x3b320>
+   aa4b8:      	add	x0, sp, #0x20
+   aa4bc:      	bl	0xaa544 <JNI_OnLoad+0x3b3a4>
+   aa4c0:      	ldr	x8, [x19, #0x258]
+   aa4c4:      	ldr	x1, [sp, #0x20]
+   aa4c8:      	str	xzr, [sp, #0x20]
+   aa4cc:      	add	x0, x8, #0x10
+   aa4d0:      	bl	0x9c80c <JNI_OnLoad+0x2d66c>
+   aa4d4:      	add	x0, sp, #0x20
+   aa4d8:      	bl	0x9c778 <JNI_OnLoad+0x2d5d8>
+   aa4dc:      	ldur	x0, [x29, #-0x10]
+   aa4e0:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   aa4e4:      	mov	w8, #0x1                // =1
+   aa4e8:      	mov	x0, sp
+   aa4ec:      	strb	w8, [sp, #0x1c]
+   aa4f0:      	bl	0xa9f0c <JNI_OnLoad+0x3ad6c>
+   aa4f4:      	bl	0xca254 <JNI_OnLoad+0x5b0b4>
+   aa4f8:      	b.ne	0xaa540 <JNI_OnLoad+0x3b3a0>
+   aa4fc:      	bl	0xcbf2c <JNI_OnLoad+0x5cd8c>
+   aa500:      	ldp	x29, x30, [sp, #0x40]
+   aa504:      	add	sp, sp, #0x70
+   aa508:      	autiasp
+   aa50c:      	ret
+   aa510:      	b	0xaa514 <JNI_OnLoad+0x3b374>
+   aa514:      	mov	x19, x0
+   aa518:      	ldur	x0, [x29, #-0x10]
+   aa51c:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   aa520:      	b	0xaa528 <JNI_OnLoad+0x3b388>
+   aa524:      	mov	x19, x0
+   aa528:      	mov	x0, sp
+   aa52c:      	bl	0xa9f0c <JNI_OnLoad+0x3ad6c>
+   aa530:      	bl	0xca254 <JNI_OnLoad+0x5b0b4>
+   aa534:      	b.ne	0xaa540 <JNI_OnLoad+0x3b3a0>
+   aa538:      	mov	x0, x19
+   aa53c:      	bl	0xccf70 <__wrap__Unwind_Resume@plt>
+   aa540:      	bl	0xcd9f0 <__stack_chk_fail@plt>
+   aa544:      	paciasp
+   aa548:      	stp	x29, x30, [sp, #-0x20]!
+   aa54c:      	str	x19, [sp, #0x10]
+   aa550:      	mov	x29, sp
+   aa554:      	mov	x19, x0
+   aa558:      	mov	w0, #0x80               // =128
+   aa55c:      	bl	0xccfa0 <__wrap__Znwm@plt>
+   aa560:      	bl	0xcb338 <JNI_OnLoad+0x5c198>
+   aa564:      	bl	0xcbf14 <JNI_OnLoad+0x5cd74>
+   aa568:      	stp	q0, q0, [x0]
+   aa56c:      	stp	q0, q0, [x0, #0x20]
+   aa570:      	stp	q0, q0, [x0, #0x40]
+   aa574:      	stp	q0, q0, [x0, #0x60]
+   aa578:      	str	w8, [x0, #0x50]
+   aa57c:      	stur	q0, [x0, #0x58]
+   aa580:      	stur	q0, [x0, #0x68]
+   aa584:      	str	w8, [x0, #0x78]
+   aa588:      	ldp	x29, x30, [sp], #0x20
+   aa58c:      	autiasp
+   aa590:      	ret

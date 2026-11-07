@@ -1,0 +1,121 @@
+{
+  "member_sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+  "selected_calls": {
+    "0xaa4b0": "0xc1534",
+    "0xc1558": "0xaa544",
+    "0xc1578": "0xb98d0",
+    "0xc1584": "0xb99fc",
+    "0xc1608": "0xc16fc",
+    "0xc16a4": "0xc16fc",
+    "0xaa4d0": "0x9c80c"
+  },
+  "builder": "0xc1534",
+  "grouping_word": "record+0x34",
+  "distinct_wire_token_word": "record+0x4c",
+  "source_record_stride": "0x50",
+  "table_entry_stride": "0x18",
+  "table_order": "adjacent-run encounter order, not group-ID sort",
+  "map_default": 0,
+  "authority": "analyst-derived synthetic projection; actual source vector, slot count and field producers unresolved",
+  "synthetic_records": [
+    {
+      "word34": 2,
+      "word4c": 101
+    },
+    {
+      "word34": 2,
+      "word4c": 101
+    },
+    {
+      "word34": 0,
+      "word4c": 202
+    }
+  ],
+  "synthetic_examples": {
+    "sparse_group_ids": {
+      "table": [
+        {
+          "range": [
+            0,
+            2
+          ],
+          "skip_low_bit": 0,
+          "group_word34": 2,
+          "first_wire_word4c": 101
+        },
+        {
+          "range": [
+            2,
+            3
+          ],
+          "skip_low_bit": 0,
+          "group_word34": 0,
+          "first_wire_word4c": 202
+        },
+        {
+          "range": null,
+          "skip_low_bit": 1
+        },
+        {
+          "range": null,
+          "skip_low_bit": 1
+        }
+      ],
+      "group_id_to_table_index": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    "repeated_nonadjacent_group_id": {
+      "table": [
+        {
+          "range": [
+            0,
+            2
+          ],
+          "skip_low_bit": 0,
+          "group_word34": 2,
+          "first_wire_word4c": 101
+        },
+        {
+          "range": [
+            2,
+            3
+          ],
+          "skip_low_bit": 0,
+          "group_word34": 0,
+          "first_wire_word4c": 202
+        },
+        {
+          "range": [
+            3,
+            4
+          ],
+          "skip_low_bit": 0,
+          "group_word34": 2,
+          "first_wire_word4c": 101
+        },
+        {
+          "range": null,
+          "skip_low_bit": 1
+        }
+      ],
+      "group_id_to_table_index": [
+        1,
+        0,
+        2,
+        0
+      ]
+    },
+    "empty_records": {
+      "table": [],
+      "group_id_to_table_index": []
+    },
+    "zero_slots": {
+      "table": [],
+      "group_id_to_table_index": []
+    }
+  }
+}

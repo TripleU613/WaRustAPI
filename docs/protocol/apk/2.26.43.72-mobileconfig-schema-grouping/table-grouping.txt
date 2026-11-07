@@ -1,0 +1,120 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   c1534:      	paciasp
+   c1538:      	stp	x29, x30, [sp, #-0x50]!
+   c153c:      	stp	x26, x25, [sp, #0x10]
+   c1540:      	bl	0xca54c <JNI_OnLoad+0x5b3ac>
+   c1544:      	mov	x29, sp
+   c1548:      	mov	w21, w2
+   c154c:      	mov	x22, x1
+   c1550:      	mov	x19, x0
+   c1554:      	str	xzr, [x0]
+   c1558:      	bl	0xaa544 <JNI_OnLoad+0x3b3a4>
+   c155c:      	cbz	w21, 0xc16cc <JNI_OnLoad+0x5252c>
+   c1560:      	ldp	x8, x9, [x22]
+   c1564:      	cmp	x8, x9
+   c1568:      	b.eq	0xc16cc <JNI_OnLoad+0x5252c>
+   c156c:      	ldr	x20, [x19]
+   c1570:      	mov	w21, w21
+   c1574:      	bl	0xcb394 <JNI_OnLoad+0x5c1f4>
+   c1578:      	bl	0xb98d0 <JNI_OnLoad+0x4a730>
+   c157c:      	add	x0, x20, #0x18
+   c1580:      	mov	x1, x21
+   c1584:      	bl	0xb99fc <JNI_OnLoad+0x4a85c>
+   c1588:      	ldr	x25, [x22]
+   c158c:      	mov	w24, wzr
+   c1590:      	mov	w21, #-0x1              // =-1
+   c1594:      	mov	w26, #0x18              // =24
+   c1598:      	mov	x23, x25
+   c159c:      	ldr	x8, [x22, #0x8]
+   c15a0:      	cmp	x25, x8
+   c15a4:      	b.eq	0xc164c <JNI_OnLoad+0x524ac>
+   c15a8:      	ldr	w8, [x25, #0x34]
+   c15ac:      	cmp	w21, w8
+   c15b0:      	b.eq	0xc1644 <JNI_OnLoad+0x524a4>
+   c15b4:      	cmn	w21, #0x1
+   c15b8:      	b.eq	0xc163c <JNI_OnLoad+0x5249c>
+   c15bc:      	ldp	x9, x8, [x20]
+   c15c0:      	sub	x8, x8, x9
+   c15c4:      	sdiv	x8, x8, x26
+   c15c8:      	cmp	x8, w24, uxtw
+   c15cc:      	b.ls	0xc16e0 <JNI_OnLoad+0x52540>
+   c15d0:      	mov	w8, w24
+   c15d4:      	cmp	x25, x23
+   c15d8:      	umaddl	x10, w8, w26, x9
+   c15dc:      	cset	w12, eq
+   c15e0:      	stp	x23, x25, [x10]
+   c15e4:      	ldp	x9, x11, [x20]
+   c15e8:      	strb	w12, [x10, #0x10]
+   c15ec:      	sub	x11, x11, x9
+   c15f0:      	sdiv	x11, x11, x26
+   c15f4:      	cmp	x11, x8
+   c15f8:      	b.ls	0xc16e0 <JNI_OnLoad+0x52540>
+   c15fc:      	umaddl	x2, w8, w26, x9
+   c1600:      	add	x0, x20, #0x30
+   c1604:      	mov	x1, x23
+   c1608:      	bl	0xc16fc <JNI_OnLoad+0x5255c>
+   c160c:      	ldp	x8, x10, [x20, #0x18]
+   c1610:      	mov	w9, w21
+   c1614:      	bl	0xcbc28 <JNI_OnLoad+0x5ca88>
+   c1618:      	b.hs	0xc16e0 <JNI_OnLoad+0x52540>
+   c161c:      	str	w24, [x8, x9, lsl #2]
+   c1620:      	ldr	w1, [x23, #0x4c]
+   c1624:      	add	x0, x20, #0x58
+   c1628:      	mov	w2, w21
+   c162c:      	bl	0xb9e90 <JNI_OnLoad+0x4acf0>
+   c1630:      	ldr	w21, [x25, #0x34]
+   c1634:      	add	w24, w24, #0x1
+   c1638:      	b	0xc1640 <JNI_OnLoad+0x524a0>
+   c163c:      	mov	w21, w8
+   c1640:      	mov	x23, x25
+   c1644:      	add	x25, x25, #0x50
+   c1648:      	b	0xc159c <JNI_OnLoad+0x523fc>
+   c164c:      	cmp	x23, x25
+   c1650:      	b.eq	0xc16cc <JNI_OnLoad+0x5252c>
+   c1654:      	ldp	x10, x9, [x20]
+   c1658:      	mov	w11, #0x18              // =24
+   c165c:      	sub	x9, x9, x10
+   c1660:      	sdiv	x9, x9, x11
+   c1664:      	cmp	x9, w24, uxtw
+   c1668:      	b.ls	0xc16e0 <JNI_OnLoad+0x52540>
+   c166c:      	mov	w9, w24
+   c1670:      	mov	w11, #0x18              // =24
+   c1674:      	umaddl	x10, w9, w11, x10
+   c1678:      	stp	x23, x8, [x10]
+   c167c:      	ldp	x8, x12, [x20]
+   c1680:      	strb	wzr, [x10, #0x10]
+   c1684:      	sub	x12, x12, x8
+   c1688:      	sdiv	x11, x12, x11
+   c168c:      	cmp	x11, x9
+   c1690:      	b.ls	0xc16e0 <JNI_OnLoad+0x52540>
+   c1694:      	mov	w10, #0x18              // =24
+   c1698:      	umaddl	x2, w9, w10, x8
+   c169c:      	add	x0, x20, #0x30
+   c16a0:      	mov	x1, x23
+   c16a4:      	bl	0xc16fc <JNI_OnLoad+0x5255c>
+   c16a8:      	ldp	x8, x10, [x20, #0x18]
+   c16ac:      	mov	w9, w21
+   c16b0:      	bl	0xcbc28 <JNI_OnLoad+0x5ca88>
+   c16b4:      	b.hs	0xc16e0 <JNI_OnLoad+0x52540>
+   c16b8:      	str	w24, [x8, x9, lsl #2]
+   c16bc:      	ldr	w1, [x23, #0x4c]
+   c16c0:      	add	x0, x20, #0x58
+   c16c4:      	mov	w2, w21
+   c16c8:      	bl	0xb9e90 <JNI_OnLoad+0x4acf0>
+   c16cc:      	bl	0xca8c4 <JNI_OnLoad+0x5b724>
+   c16d0:      	ldp	x26, x25, [sp, #0x10]
+   c16d4:      	ldp	x29, x30, [sp], #0x50
+   c16d8:      	autiasp
+   c16dc:      	ret
+   c16e0:      	brk	#0x1
+   c16e4:      	b	0xc16ec <JNI_OnLoad+0x5254c>
+   c16e8:      	b	0xc16ec <JNI_OnLoad+0x5254c>
+   c16ec:      	bl	0xcae74 <JNI_OnLoad+0x5bcd4>
+   c16f0:      	bl	0x9c778 <JNI_OnLoad+0x2d5d8>
+   c16f4:      	mov	x0, x20
+   c16f8:      	bl	0xccf70 <__wrap__Unwind_Resume@plt>

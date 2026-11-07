@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-schema-grouping-evidence": {
+    "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-schema-grouping/derive-grouping.py <pinned-library>; offline synthetic grouping only",
+    "x-transport": "research only; existing-record table views, no extracted inputs or enabled sender",
+    "x-live": false,
+    "description": "Confirmed selected static MobileConfig deferred table builder groups adjacent existing records by word+0x34 into encounter-ordered ranges, distinct from wire-token word+0x4c. A separate zero-initialized group-ID map stores sequential table indices; zero alone is not proof of a missing ID. Actual record population, alternate factory, ownership and persistence remain unresolved.",
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-schema-grouping/README.md"
+  },
   "x-mobileconfig-schema-selection-evidence": {
     "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-schema-selection/derive-selection.py <pinned-library>; offline synthetic selection only",
     "x-transport": "research only; no extracted real schema table or enabled sender",

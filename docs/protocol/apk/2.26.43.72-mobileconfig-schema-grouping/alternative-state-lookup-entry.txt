@@ -1,0 +1,62 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   ba1d4:      	bti	c
+   ba1d8:      	b	0xba0d4 <JNI_OnLoad+0x4af34>
+   ba1dc:      	paciasp
+   ba1e0:      	stp	x29, x30, [sp, #-0x60]!
+   ba1e4:      	bl	0xc9fd4 <JNI_OnLoad+0x5ae34>
+   ba1e8:      	sub	sp, sp, #0x290
+   ba1ec:      	mrs	x24, TPIDR_EL0
+   ba1f0:      	mov	x19, x0
+   ba1f4:      	nop
+   ba1f8:      	adr	x0, 0xdb9e8
+   ba1fc:      	ldr	x8, [x24, #0x28]
+   ba200:      	mov	w22, w2
+   ba204:      	mov	x20, x1
+   ba208:      	stur	x8, [x29, #-0x10]
+   ba20c:      	bl	0xccb70 <_ZNSt6__ndk15mutex4lockEv@plt>
+   ba210:      	mov	x21, x20
+   ba214:      	stp	xzr, xzr, [sp, #0x160]
+   ba218:      	ldr	w0, [x21, #0x8]!
+   ba21c:      	str	xzr, [sp, #0x170]
+   ba220:      	add	x8, sp, #0x178
+   ba224:      	str	x24, [sp, #0x18]
+   ba228:      	bl	0xcd090 <_ZNSt6__ndk19to_stringEi@plt>
+   ba22c:      	bl	0xcb1c8 <JNI_OnLoad+0x5c028>
+   ba230:      	sub	x0, x29, #0x100
+   ba234:      	add	x1, sp, #0x178
+   ba238:      	bl	0x5d0fc <.text+0x10c9c>
+   ba23c:      	sub	x0, x29, #0xe8
+   ba240:      	sub	x1, x29, #0x100
+   ba244:      	add	x2, x20, #0x10
+   ba248:      	bl	0x5d128 <.text+0x10cc8>
+   ba24c:      	bl	0xcb1c8 <JNI_OnLoad+0x5c028>
+   ba250:      	sub	x0, x29, #0xd0
+   ba254:      	sub	x1, x29, #0xe8
+   ba258:      	bl	0x5d0fc <.text+0x10c9c>
+   ba25c:      	sub	x0, x29, #0xb8
+   ba260:      	sub	x1, x29, #0xd0
+   ba264:      	add	x2, x20, #0x28
+   ba268:      	bl	0x5d128 <.text+0x10cc8>
+   ba26c:      	bl	0xcb1c8 <JNI_OnLoad+0x5c028>
+   ba270:      	sub	x0, x29, #0xa0
+   ba274:      	sub	x1, x29, #0xb8
+   ba278:      	bl	0x5d0fc <.text+0x10c9c>
+   ba27c:      	sub	x0, x29, #0x88
+   ba280:      	sub	x1, x29, #0xa0
+   ba284:      	add	x2, x20, #0x40
+   ba288:      	bl	0x5d128 <.text+0x10cc8>
+   ba28c:      	bl	0xcb1c8 <JNI_OnLoad+0x5c028>
+   ba290:      	sub	x0, x29, #0x70
+   ba294:      	sub	x1, x29, #0x88
+   ba298:      	bl	0x5d0fc <.text+0x10c9c>
+   ba29c:      	sub	x0, x29, #0x58
+   ba2a0:      	sub	x1, x29, #0x70
+   ba2a4:      	add	x2, x20, #0x58
+   ba2a8:      	bl	0x5d128 <.text+0x10cc8>
+   ba2ac:      	bl	0xcb1c8 <JNI_OnLoad+0x5c028>
+   ba2b0:      	sub	x0, x29, #0x40

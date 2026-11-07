@@ -1,0 +1,98 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   aa594:      	paciasp
+   aa598:      	sub	sp, sp, #0x50
+   aa59c:      	stp	x29, x30, [sp, #0x30]
+   aa5a0:      	stp	x20, x19, [sp, #0x40]
+   aa5a4:      	add	x29, sp, #0x30
+   aa5a8:      	bl	0xcaf34 <JNI_OnLoad+0x5bd94>
+   aa5ac:      	add	x0, x0, #0x10
+   aa5b0:      	bl	0xcac48 <JNI_OnLoad+0x5baa8>
+   aa5b4:      	bl	0x5fb64 <.text+0x13704>
+   aa5b8:      	tbz	w0, #0x0, 0xaa614 <JNI_OnLoad+0x3b474>
+   aa5bc:      	mov	x0, sp
+   aa5c0:      	add	x1, x19, #0x10
+   aa5c4:      	mov	w2, #0x2                // =2
+   aa5c8:      	stp	xzr, xzr, [sp]
+   aa5cc:      	bl	0xba1dc <JNI_OnLoad+0x4b03c>
+   aa5d0:      	bl	0xcb550 <JNI_OnLoad+0x5c3b0>
+   aa5d4:      	b.eq	0xaa5ec <JNI_OnLoad+0x3b44c>
+   aa5d8:      	bl	0xcc090 <JNI_OnLoad+0x5cef0>
+   aa5dc:      	nop
+   aa5e0:      	adr	x2, 0xc9e90 <JNI_OnLoad+0x5acf0>
+   aa5e4:      	add	x1, sp, #0x18
+   aa5e8:      	bl	0xccec0 <_ZNSt6__ndk111__call_onceERVmPvPFvS2_E@plt>
+   aa5ec:      	ldr	x0, [sp, #0x8]
+   aa5f0:      	ldr	x19, [x19, #0x98]
+   aa5f4:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   aa5f8:      	bl	0xca2dc <JNI_OnLoad+0x5b13c>
+   aa5fc:      	b.ne	0xaa64c <JNI_OnLoad+0x3b4ac>
+   aa600:      	bl	0xcb3e8 <JNI_OnLoad+0x5c248>
+   aa604:      	ldp	x29, x30, [sp, #0x30]
+   aa608:      	add	sp, sp, #0x50
+   aa60c:      	autiasp
+   aa610:      	ret
+   aa614:      	bl	0xca2dc <JNI_OnLoad+0x5b13c>
+   aa618:      	b.ne	0xaa64c <JNI_OnLoad+0x3b4ac>
+   aa61c:      	bl	0xcb3e8 <JNI_OnLoad+0x5c248>
+   aa620:      	ldp	x29, x30, [sp, #0x30]
+   aa624:      	add	sp, sp, #0x50
+   aa628:      	autiasp
+   aa62c:      	b	0xaa3dc <JNI_OnLoad+0x3b23c>
+   aa630:      	ldr	x8, [sp, #0x8]
+   aa634:      	bl	0xcb3a0 <JNI_OnLoad+0x5c200>
+   aa638:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   aa63c:      	bl	0xca2dc <JNI_OnLoad+0x5b13c>
+   aa640:      	b.ne	0xaa64c <JNI_OnLoad+0x3b4ac>
+   aa644:      	mov	x0, x19
+   aa648:      	bl	0xccf70 <__wrap__Unwind_Resume@plt>
+   aa64c:      	bl	0xcd9f0 <__stack_chk_fail@plt>
+   aa650:      	paciasp
+   aa654:      	sub	sp, sp, #0x50
+   aa658:      	stp	x29, x30, [sp, #0x30]
+   aa65c:      	stp	x20, x19, [sp, #0x40]
+   aa660:      	add	x29, sp, #0x30
+   aa664:      	bl	0xcaf34 <JNI_OnLoad+0x5bd94>
+   aa668:      	add	x0, x0, #0x10
+   aa66c:      	bl	0xcac48 <JNI_OnLoad+0x5baa8>
+   aa670:      	bl	0x5fb64 <.text+0x13704>
+   aa674:      	tbz	w0, #0x0, 0xaa6b8 <JNI_OnLoad+0x3b518>
+   aa678:      	mov	x0, sp
+   aa67c:      	add	x1, x19, #0x10
+   aa680:      	mov	w2, #0x2                // =2
+   aa684:      	stp	xzr, xzr, [sp]
+   aa688:      	bl	0xba1dc <JNI_OnLoad+0x4b03c>
+   aa68c:      	bl	0xcb550 <JNI_OnLoad+0x5c3b0>
+   aa690:      	b.eq	0xaa6a8 <JNI_OnLoad+0x3b508>
+   aa694:      	bl	0xcc090 <JNI_OnLoad+0x5cef0>
+   aa698:      	nop
+   aa69c:      	adr	x2, 0xba1d4 <JNI_OnLoad+0x4b034>
+   aa6a0:      	add	x1, sp, #0x18
+   aa6a4:      	bl	0xccec0 <_ZNSt6__ndk111__call_onceERVmPvPFvS2_E@plt>
+   aa6a8:      	ldr	x0, [sp, #0x8]
+   aa6ac:      	ldr	x19, [x19, #0x98]
+   aa6b0:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   aa6b4:      	b	0xaa6c4 <JNI_OnLoad+0x3b524>
+   aa6b8:      	mov	x0, x19
+   aa6bc:      	bl	0xaa3dc <JNI_OnLoad+0x3b23c>
+   aa6c0:      	mov	x19, x0
+   aa6c4:      	bl	0xca2dc <JNI_OnLoad+0x5b13c>
+   aa6c8:      	b.ne	0xaa700 <JNI_OnLoad+0x3b560>
+   aa6cc:      	add	x0, x19, #0x18
+   aa6d0:      	ldp	x20, x19, [sp, #0x40]
+   aa6d4:      	ldp	x29, x30, [sp, #0x30]
+   aa6d8:      	add	sp, sp, #0x50
+   aa6dc:      	autiasp
+   aa6e0:      	ret
+   aa6e4:      	ldr	x8, [sp, #0x8]
+   aa6e8:      	bl	0xcb3a0 <JNI_OnLoad+0x5c200>
+   aa6ec:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   aa6f0:      	bl	0xca2dc <JNI_OnLoad+0x5b13c>
+   aa6f4:      	b.ne	0xaa700 <JNI_OnLoad+0x3b560>
+   aa6f8:      	mov	x0, x19
+   aa6fc:      	bl	0xccf70 <__wrap__Unwind_Resume@plt>
+   aa700:      	bl	0xcd9f0 <__stack_chk_fail@plt>

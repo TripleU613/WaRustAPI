@@ -1,0 +1,66 @@
+{
+  "README.md": {
+    "bytes": 6837,
+    "sha256": "e55b521e7a24768374a5103ce2700067118e0cd9451a5f61c7b8b9de9ee332aa"
+  },
+  "alternative-call-once-thunk.txt": {
+    "bytes": 253,
+    "sha256": "9f98e8764cb25402be29e95ac8af97cd50973b3d7bc52364216811792d1fceab"
+  },
+  "alternative-mode-check.txt": {
+    "bytes": 661,
+    "sha256": "ff551d343d69acc11c257ac0d429335a4e460813a1e2856f9491787a7cf9952f"
+  },
+  "alternative-state-lookup-entry.txt": {
+    "bytes": 2308,
+    "sha256": "823d2062cd9e1237d73d43cb6624a9e1848efe701af38482a45be332f29a1a9f"
+  },
+  "deferred-table-build.txt": {
+    "bytes": 4489,
+    "sha256": "3148588249b4e7c118b45ccf8d55a6432e5995854eb866711fb8f3d675d5159d"
+  },
+  "derive-grouping.py": {
+    "bytes": 2398,
+    "sha256": "1b7090f03c1d08672646e328e1866df5c429216d28416cd80fa1d72034d19e85"
+  },
+  "grouping.json": {
+    "bytes": 2465,
+    "sha256": "14594949e73afb80bd89464e5ae5c71ed99343c4c40cdc247bb5532e2854913a"
+  },
+  "index-map-resize.txt": {
+    "bytes": 2841,
+    "sha256": "c93655ef2c3bdf7d404b3511447e81466c934a1f5134e02f246edbc9192ccbd6"
+  },
+  "label-map-insert-entry.txt": {
+    "bytes": 2822,
+    "sha256": "3c2ab224c94c2905fb9c705fdef63656fa4b14cd486df12bfd071d1caeab42b2"
+  },
+  "outlined-helpers.txt": {
+    "bytes": 2455,
+    "sha256": "5f5cb787ae3058c9feae37070c3ddf25fe2f9dec6f45dfaf3b17881d74c4f34e"
+  },
+  "range-table-resize.txt": {
+    "bytes": 3189,
+    "sha256": "bffadd244eb1f52df5c2c4b9e3a3541643214ad04a96c9bc2a77881f285ab74d"
+  },
+  "rea-grouping-window.json": {
+    "bytes": 9225,
+    "sha256": "e2a1dca0e8d64d28f144f5b00ac0a456eddec3b716e8cf44c7f8e7a70369fd95"
+  },
+  "record-source-getter-entry.txt": {
+    "bytes": 1877,
+    "sha256": "be0febfe420d7dbb6de2b157365e102de5defdb62bbcb49c51907a163329c250"
+  },
+  "slot-count-getter-entry.txt": {
+    "bytes": 841,
+    "sha256": "245d81834acbb146542593361e94351c83b5c45a4c85f4c22ee9f6b74a689365"
+  },
+  "table-getter.txt": {
+    "bytes": 4001,
+    "sha256": "a9f061cb6a6b76c0d4b1eb446edd6d604b571f455134a4bdba6a11220306df9c"
+  },
+  "table-grouping.txt": {
+    "bytes": 4518,
+    "sha256": "9aade05543416a1c44d3c18bb1181632009988879d15aab38233bce1ce1214ee"
+  }
+}
