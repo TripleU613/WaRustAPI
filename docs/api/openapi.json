@@ -1,4 +1,11 @@
 {
+  "x-action-account-ownership": {
+    "x-cli": "existing action queue and feature commands; no new command/flag/public inspection field",
+    "x-transport": "new action rows freeze internal prepared_account_authority; normal queued write/live callback guards also bind reservation account",
+    "x-live": false,
+    "description": "Reproduced action reservation after saved registration ID replacement. Queue now captures account/store authority before builder execution and refuses changed authority before persistence. New prepared-row ownership is checked before batch/single reservation, settlement and transactional projection; normal ActionWriteGuard also binds current reservation account. Live callback failure remains consumed with no durable row mutation. Legacy absent preparation remains unknown, with no backfill/reset/replay. Shared fingerprint hashes identity bytes without new wire fields. Offline/feature-specific adapters remain separate audit scope; no live operation or server acceptance established.",
+    "evidence": "docs/protocol/action-account-ownership.md"
+  },
   "x-retry-refetch-account-ownership": {
     "x-cli": "existing retry receive/refetch flow; no new command or flag",
     "x-transport": "frozen account authority checked at queued retry ACK/query encoding and live refetch refusal/session adoption",

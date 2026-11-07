@@ -2120,6 +2120,7 @@ mod tests {
             let dir = tempfile::tempdir().unwrap();
             let path = dir.path().join("construction.redb");
             let store = open(&path);
+            let (mut account, signed) = account_and_signed(&store);
             if pq {
                 let id = super::super::abprops::queue(&store).unwrap();
                 super::super::actions::reserve_pending(&store).unwrap();
@@ -2148,7 +2149,6 @@ mod tests {
                     .unwrap()
             };
             let before = snapshot(&store);
-            let (mut account, signed) = account_and_signed(&store);
             account.signal_identity.as_mut().unwrap().0.public[0] ^= 1;
             assert!(begin_upload(&store, &account, &signed).is_err());
             assert_eq!(snapshot(&store), before);

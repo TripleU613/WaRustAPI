@@ -1119,6 +1119,7 @@ pub(super) mod tests {
             })
             .unwrap();
             let identity = install_pin(&store, &peer);
+            store.write(|tx| account.save(tx)).unwrap();
             let Refresh::Queued(id) = queue(
                 &store,
                 &account,

@@ -1,5 +1,10 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
+**Generic action account ownership closed for new rows.** Preparation now
+freezes its owner before builder execution; reservation, normal queued writes,
+settlement and transactional projection recheck it. Legacy absence stays unknown.
+[Evidence and regressions](docs/protocol/action-account-ownership.md). No live operation.
+
 **Retry refetch account handoff gap closed.** Frozen account authority now
 guards ACK/query encoding and live refusal/session-adoption transactions.
 Stale callbacks remain consumed without changing durable job/answer state.

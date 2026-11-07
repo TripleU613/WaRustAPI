@@ -90,6 +90,9 @@ pub enum ActionDeferReason {
 /// Stored row.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct Row {
+    // Local preparation owner, not a wire field. Legacy absence stays unknown.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    prepared_account_authority: Option<[u8; 32]>,
     kind: String,
     label: String,
     wire: Vec<u8>,
@@ -180,9 +183,13 @@ pub fn queue(
 ) -> Result<String> {
     // Preserve the public builder contract: callbacks may inspect/update
     // other local state, so run them before acquiring the store's write lock.
+    let authority = store.read(|tx| {
+        let account = crate::session::AccountRecord::load(tx)?;
+        super::account_authority::fingerprint(tx.generation(), account.as_ref())
+    })?;
     let id = super::messaging::new_message_id()?;
     let node = build(&id)?;
-    store.write(|tx| queue_prepared_in(tx, kind, label, id, node))
+    store.write(|tx| queue_prepared_in(tx, kind, label, id, node, authority))
 }
 
 /// Queue atomically with a feature's durable idempotency marker.
@@ -192,9 +199,10 @@ pub(crate) fn queue_in(
     label: &str,
     build: impl FnOnce(&str) -> Result<Node>,
 ) -> Result<String> {
+    let authority = account_authority_in(tx)?;
     let id = super::messaging::new_message_id()?;
     let node = build(&id)?;
-    queue_prepared_in(tx, kind, label, id, node)
+    queue_prepared_in(tx, kind, label, id, node, authority)
 }
 
 fn queue_prepared_in(
@@ -203,7 +211,14 @@ fn queue_prepared_in(
     label: &str,
     id: String,
     node: Node,
+    authority: [u8; 32],
 ) -> Result<String> {
+    if account_authority_in(tx)? != authority {
+        return Err(Error::invalid(
+            "action",
+            "account changed during action preparation",
+        ));
+    }
     if node.description != "iq" || node.get_attr("id").and_then(|v| v.as_text()) != Some(&id) {
         return Err(Error::invalid(
             "action",
@@ -211,6 +226,7 @@ fn queue_prepared_in(
         ));
     }
     let row = Row {
+        prepared_account_authority: Some(authority),
         kind: kind.to_owned(),
         label: label.to_owned(),
         wire: encode(&node)?,
@@ -233,6 +249,21 @@ fn queue_prepared_in(
     };
     tx.put_json(Table::Checkpoints, key(&id).as_bytes(), 1, &row)?;
     Ok(id)
+}
+
+fn account_authority_in(tx: &crate::store::WriteTx<'_>) -> Result<[u8; 32]> {
+    let account = crate::session::AccountRecord::load_in_write(tx)?;
+    super::account_authority::fingerprint(tx.generation(), account.as_ref())
+}
+
+fn check_prepared_account(row: &Row, authority: [u8; 32]) -> Result<()> {
+    if row
+        .prepared_account_authority
+        .is_some_and(|prepared| prepared != authority)
+    {
+        return Err(Error::invalid("action", "prepared action account changed"));
+    }
+    Ok(())
 }
 
 fn key(id: &str) -> String {
@@ -271,6 +302,7 @@ pub(crate) fn view_in_write(
     let Some(row) = row else {
         return Ok(None);
     };
+    check_prepared_account(&row, account_authority_in(tx)?)?;
     let request = decode(&row.wire)?;
     let reply = row.reply.map(|wire| decode(&wire)).transpose()?;
     Ok(Some((
@@ -430,6 +462,7 @@ pub(crate) struct ReservedAction {
 
 #[derive(Clone)]
 pub(crate) struct ActionWriteGuard {
+    account_authority: [u8; 32],
     key: Vec<u8>,
     row: zeroize::Zeroizing<Vec<u8>>,
     deadline: Option<tokio::time::Instant>,
@@ -437,6 +470,16 @@ pub(crate) struct ActionWriteGuard {
 impl ActionWriteGuard {
     pub(crate) fn check_write_authority(&self, store: &ProtocolStore) -> Result<()> {
         store.read(|tx| {
+            let account = crate::session::AccountRecord::load(tx)?;
+            if super::account_authority::fingerprint(tx.generation(), account.as_ref())?
+                != self.account_authority
+            {
+                return Err(Error::invalid(
+                    "action",
+                    "reserved action account changed before write",
+                ));
+            }
+
             let current = zeroize::Zeroizing::new(
                 tx.get(Table::Checkpoints, &self.key, 1)?
                     .unwrap_or_default(),
@@ -495,6 +538,7 @@ pub(crate) fn reserve_next_owned(store: &ProtocolStore) -> Result<Option<Reserve
 
 fn reserve_limit_owned(store: &ProtocolStore, limit: usize) -> Result<Vec<ReservedAction>> {
     store.write(|tx| {
+        let account_authority = account_authority_in(tx)?;
         let mut out = Vec::new();
         let mut cursor = None;
         while out.len() < limit {
@@ -516,6 +560,7 @@ fn reserve_limit_owned(store: &ProtocolStore, limit: usize) -> Result<Vec<Reserv
                 if row.status != ActionStatus::Queued {
                     continue;
                 }
+                check_prepared_account(&row, account_authority)?;
                 // Recheck at reservation: a restriction can arrive after queueing.
                 // Keep the original create queued, never mark it sent while held.
                 if row.kind == "group-create"
@@ -568,6 +613,7 @@ fn reserve_limit_owned(store: &ProtocolStore, limit: usize) -> Result<Vec<Reserv
                     node,
                     started,
                     guard: ActionWriteGuard {
+                        account_authority,
                         key: key.clone(),
                         row: zeroize::Zeroizing::new(row),
                         deadline,
@@ -591,6 +637,7 @@ pub(crate) fn reserve_one_in(tx: &mut crate::store::WriteTx<'_>, id: &str) -> Re
             "selected action already reserved; no replay",
         ));
     }
+    check_prepared_account(&row, account_authority_in(tx)?)?;
     if row.kind == "group-create"
         && super::notifications::recorded_active_reachout_timelock_in(tx)?.is_some()
     {
@@ -845,6 +892,14 @@ fn record_reply_inner(
         };
         if row.status != ActionStatus::Sent {
             return Ok(false);
+        }
+        let authority = account_authority_in(tx)?;
+        check_prepared_account(&row, authority)?;
+        if owner.is_some_and(|owner| owner.account_authority != authority) {
+            return Err(Error::invalid(
+                "action",
+                "written action account changed before reply",
+            ));
         }
         // A damaged saved request must not settle a different row merely
         // because the incoming ID matches that row's key.
@@ -1642,6 +1697,111 @@ mod tests {
         (dir, s)
     }
 
+    #[test]
+    fn action_account_owner_survives_queue_handoff_and_live_reply() {
+        let (_dir, db) = store();
+        let account = crate::session::AccountRecord {
+            generation: db.generation(),
+            signal_registration_id: Some(31),
+            ..Default::default()
+        };
+        db.write(|tx| account.save(tx)).unwrap();
+        let id = queue(&db, "fixture", "fixture", ping).unwrap();
+        let mut changed = account.clone();
+        changed.signal_registration_id = Some(32);
+        db.write(|tx| changed.save(tx)).unwrap();
+        let before = db.read(|tx| tx.scan(Table::Checkpoints, 1, 10000)).unwrap();
+        assert!(
+            reserve_next_owned(&db).is_err(),
+            "old queued account must refuse reservation"
+        );
+        assert_eq!(
+            db.read(|tx| tx.scan(Table::Checkpoints, 1, 10000)).unwrap(),
+            before
+        );
+        db.write(|tx| account.save(tx)).unwrap();
+        let action = reserve_next_owned(&db).unwrap().unwrap();
+        let mut live = LiveReplies::default();
+        live.record_written(&action).unwrap();
+        db.write(|tx| changed.save(tx)).unwrap();
+        let before = db.read(|tx| tx.scan(Table::Checkpoints, 1, 10000)).unwrap();
+        assert!(action.guard.check_write_authority(&db).is_err());
+        let reply = Node::new("iq")
+            .attr("id", id.as_str())
+            .attr("type", "result");
+        assert!(live.record_reply(&db, &reply).is_err());
+        assert!(record_reply(&db, &reply).is_err());
+        assert!(db.write(|tx| view_in_write(tx, &id)).is_err());
+
+        assert!(live.0.is_empty() && live.1.is_empty() && live.2.is_empty());
+        assert_eq!(
+            db.read(|tx| tx.scan(Table::Checkpoints, 1, 10000)).unwrap(),
+            before
+        );
+    }
+
+    #[test]
+    fn action_builder_cannot_adopt_a_replacement_account() {
+        let (_dir, db) = store();
+        let before = db.read(|tx| tx.scan(Table::Checkpoints, 1, 10000)).unwrap();
+        assert!(
+            queue(&db, "fixture", "fixture", |id| {
+                db.write(|tx| {
+                    crate::session::AccountRecord {
+                        generation: tx.generation(),
+                        signal_registration_id: Some(31),
+                        ..Default::default()
+                    }
+                    .save(tx)
+                })?;
+                ping(id)
+            })
+            .is_err()
+        );
+        assert_eq!(
+            db.read(|tx| tx.scan(Table::Checkpoints, 1, 10000)).unwrap(),
+            before
+        );
+    }
+
+    #[test]
+    fn legacy_action_preparation_stays_unknown_but_reserved_guard_binds_current_owner() {
+        let (_dir, db) = store();
+        let id = queue(&db, "fixture", "fixture", ping).unwrap();
+        db.write(|tx| {
+            let mut row: serde_json::Value = tx
+                .get_json(Table::Checkpoints, key(&id).as_bytes(), 1)?
+                .unwrap();
+            row.as_object_mut()
+                .unwrap()
+                .remove("prepared_account_authority");
+            tx.put_json(Table::Checkpoints, key(&id).as_bytes(), 1, &row)?;
+            crate::session::AccountRecord {
+                generation: tx.generation(),
+                signal_registration_id: Some(31),
+                ..Default::default()
+            }
+            .save(tx)
+        })
+        .unwrap();
+        let action = reserve_next_owned(&db).unwrap().unwrap();
+        action.guard.check_write_authority(&db).unwrap();
+        let row: serde_json::Value = db
+            .read(|tx| tx.get_json(Table::Checkpoints, key(&id).as_bytes(), 1))
+            .unwrap()
+            .unwrap();
+        assert!(
+            row.get("prepared_account_authority").is_none(),
+            "do not invent historical preparation proof"
+        );
+        db.write(|tx| {
+            tx.delete(Table::Account, b"account")?;
+            Ok(())
+        })
+        .unwrap();
+        assert!(action.guard.check_write_authority(&db).is_err());
+    }
+
     fn register_written(
         live: &mut LiveReplies,
         store: &ProtocolStore,
@@ -1658,6 +1818,15 @@ mod tests {
             node: node.clone(),
             started,
             guard: ActionWriteGuard {
+                account_authority: store
+                    .read(|tx| {
+                        let account = crate::session::AccountRecord::load(tx)?;
+                        super::super::account_authority::fingerprint(
+                            tx.generation(),
+                            account.as_ref(),
+                        )
+                    })
+                    .unwrap(),
                 key,
                 row: zeroize::Zeroizing::new(row),
                 deadline: callback_seconds(node)
@@ -1718,6 +1887,15 @@ mod tests {
                         node,
                         started: tokio::time::Instant::now(),
                         guard: ActionWriteGuard {
+                            account_authority: db
+                                .read(|tx| {
+                                    let account = crate::session::AccountRecord::load(tx)?;
+                                    super::super::account_authority::fingerprint(
+                                        tx.generation(),
+                                        account.as_ref(),
+                                    )
+                                })
+                                .unwrap(),
                             key: key(&id).into_bytes(),
                             row: zeroize::Zeroizing::new(raw),
                             deadline: None,

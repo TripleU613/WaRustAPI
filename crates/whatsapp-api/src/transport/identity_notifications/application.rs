@@ -285,6 +285,15 @@ fn commit(store: &ProtocolStore, staged: &Staged) -> Result<Application> {
         {
             return Ok(Application::Deferred("request_changed_before_commit"));
         }
+        // Keep this feature's established deferred outcome for account drift
+        // before the generic action ownership view can refuse the stale row.
+        let Some(account) = AccountRecord::load_in_write(tx)? else {
+            return Ok(Application::Deferred("account_changed_before_commit"));
+        };
+        if !account.is_registered() || account_fingerprint(&account)? != staged.account_fingerprint
+        {
+            return Ok(Application::Deferred("account_changed_before_commit"));
+        }
         let Some((action, reply, _)) = actions::view_in_write(tx, &staged.id)? else {
             return Ok(Application::Deferred("action_changed_before_commit"));
         };
@@ -306,13 +315,6 @@ fn commit(store: &ProtocolStore, staged: &Staged) -> Result<Application> {
             .map(Zeroizing::new);
         if pin.as_deref() != Some(staged.pin.as_slice()) || session != staged.previous_session {
             return Ok(Application::Deferred("peer_state_changed_before_commit"));
-        }
-        let Some(account) = AccountRecord::load_in_write(tx)? else {
-            return Ok(Application::Deferred("account_changed_before_commit"));
-        };
-        if !account.is_registered() || account_fingerprint(&account)? != staged.account_fingerprint
-        {
-            return Ok(Application::Deferred("account_changed_before_commit"));
         }
         let own = account.own_jid.as_ref().map(Jid::to_non_ad);
         let own_lid = super::super::group_send::own_lid_in(tx)?;
