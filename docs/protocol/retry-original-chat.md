@@ -17,7 +17,9 @@ a global original-message-ID lookup. A different chat with a matching participan
 or an explicit recipient naming another user could therefore enter session work
 for that ID. The shared parser now makes **chat** the supported plain user-like
 recipient when present, otherwise normalized from without its device suffix.
-The **device** still comes from participant/from, independently of recipient.
+The **device** source follows the native original-chat class: direct uses root
+from; group/broadcast uses participant. This corrects the earlier overbroad
+participant-first fallback. [Current exact branch trace and null-device limits](apk/2.26.43.72-retry-device-source/README.md).
 
 A malformed, non-user or device-form explicit recipient refuses locally with a
 redacted field diagnostic. Rust's supported-path refusal deliberately does not

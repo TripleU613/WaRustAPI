@@ -1,4 +1,11 @@
 {
+  "x-retry-requesting-device-source": {
+    "x-cli": "existing retry parsing/receive/responder paths; no new command or flag",
+    "x-transport": "original-chat-class device selection and text-constructor-null preservation before retry authority",
+    "x-live": false,
+    "description": "Pinned160.A04 selects root context.A02 for direct original-key chats and participant context.A01 for broadcast3/5/6 or group1/2/28 before DeviceJid conversion. Optional direct participant no longer redirects requesting-device/session selection. Known-null root, explicit recipient or selected group actor cannot gain a RetryRequest through generic parsing; unsupported null/non-user device cases grant no new error487 or resend. Saved-session successful resend/duplicates include a misleading participant; invalid-source qualifiers preserve outbox/checkpoint/session/identity rows without query/resend/confirmation. Existing typed objects, original-chat/identity/reservation and group capability policy remain; full native binary/cache/null-device/live behavior is open. No HTTP route or account operation.",
+    "evidence": "docs/protocol/apk/2.26.43.72-retry-device-source/README.md"
+  },
   "x-group-receipt-native-null-attribution": {
     "x-cli": "existing receipt validation, group recording and receive paths; no new command or flag",
     "x-transport": "native-null text source/actor guards before group target matching and root aggregate expansion",

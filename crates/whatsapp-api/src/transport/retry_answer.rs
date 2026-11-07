@@ -2354,7 +2354,7 @@ mod tests {
                     .is_none()
             );
             assert_eq!(
-                reason(&store, 1, &peer).as_deref(),
+                reason(&store, 1, if explicit_recipient { &peer } else { &other }).as_deref(),
                 Some("not_the_original_chat")
             );
             assert_eq!(protected(), before);
@@ -2479,6 +2479,9 @@ mod tests {
         let ask = |count: u32, registration: u32| {
             let mut node = receipt(&peer, count, registration);
             if count == 1 {
+                // A direct retry's optional participant must not redirect its
+                // requesting device away from the authenticated root sender.
+                node = node.attr("participant", "15555550101:3@s.whatsapp.net");
                 // Native retry routing ignores a leading key-only participants
                 // child; it must still reach the ordinary retry responder.
                 let mut children = vec![Node::new("participants").attr("key", "IGNORED")];
@@ -2558,6 +2561,23 @@ mod tests {
                 .unwrap()
         };
         let before_invalid = all_retry_state();
+        for source in [
+            "15555550100:100@s.whatsapp.net",
+            "100001:128@lid",
+            "01555550100@s.whatsapp.net",
+        ] {
+            let node = receipt(&peer, 1, 42)
+                .attr("from", source)
+                .attr("recipient", peer.clone())
+                .attr("participant", peer.clone());
+            assert!(
+                answer_with_confirmation(&store, &account, &node, ConnectionEpoch(2))
+                    .await
+                    .unwrap()
+                    .is_none()
+            );
+            assert_eq!(all_retry_state(), before_invalid);
+        }
         // 1rU routing precedes ordinary retry parsing, even when a complete
         // resendable retry and matching saved session follow the selector.
         let ordinary = receipt(&peer, 1, 42);
@@ -2715,6 +2735,7 @@ mod tests {
         store.write(|tx| account.save(tx)).unwrap(); // synthetic control only
         let default_count = receipt(&peer, 1, 42)
             .attr("id", "ROOT-RECEIPT")
+            .attr("participant", "15555550101:3@s.whatsapp.net")
             .attr("recipient", retry_alias.clone())
             .children(vec![
                 Node::new("retry").attr("id", "W1").attr("t", "1"),

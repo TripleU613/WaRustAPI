@@ -6333,6 +6333,9 @@ pub fn parse_retry(node: &Node) -> Option<RetryRequest> {
         return None;
     }
     let jid = |name: &str| -> Option<Jid> {
+        if native_text_address_is_null(node, name) {
+            return None;
+        }
         let value = node.get_attr(name)?;
         value
             .as_jid()
@@ -6434,10 +6437,25 @@ pub fn parse_retry(node: &Node) -> Option<RetryRequest> {
         // its user identity. Requesting device remains participant/from.
         from.to_non_ad()
     };
+    // APK43.72 160.A04 tests original-key chat type via0Dn.A0P/A0m.
+    // Broadcast3/5/6 and group1/2/28 branch to0faa (context.A01);
+    // other chats read context.A02 at0164, then share DeviceJid conversion.
+    // Never let an optional participant redirect an ordinary direct retry.
+    let uses_participant = matches!(chat.server, Server::Group | Server::Broadcast)
+        || matches!(&chat.server, Server::Other(server) if matches!(server.as_str(), "temp" | "interop.g.us"));
+    let device = if uses_participant {
+        jid("participant")?
+    } else {
+        from
+    };
+    // RetryRequest requires a representable requesting user/device. Native
+    // null/non-user conversion has additional policies this model cannot carry.
+    if !device.is_user_like() {
+        return None;
+    }
     Some(RetryRequest {
         chat,
-        // Recipient selects the original chat, never the requesting device.
-        device: jid("participant").unwrap_or(from),
+        device,
         message_id: message_id.to_owned(),
         count,
         registration: Some(registration),
@@ -6464,6 +6482,47 @@ mod retry_tests {
                 .attr("v", "1"),
             Node::new("registration").bytes(vec![1, 2, 3, 4]),
         ])
+    }
+
+    #[test]
+    fn retry_requesting_device_follows_native_chat_type_selection() {
+        let base = receipt(false).attr("from", "15555550100:2@s.whatsapp.net");
+        for participant in [
+            "15555550101:3@s.whatsapp.net",
+            "100001:3@lid",
+            "100001:100@lid",
+        ] {
+            let parsed = parse_retry(&base.clone().attr("participant", participant)).unwrap();
+            assert_eq!(
+                parsed.device,
+                Jid::parse("15555550100:2@s.whatsapp.net").unwrap()
+            );
+        }
+        // Selecting a direct recipient changes the original-key chat class;
+        // it does not turn a group source's participant into a direct sender.
+        let selected = receipt(true).attr("recipient", "15555550100@s.whatsapp.net");
+        assert!(parse_retry(&selected).is_none()); // Direct branch cannot convert group source.
+
+        assert!(parse_retry(&receipt(false)).is_none()); // No group actor.
+        assert!(parse_retry(&receipt(false).attr("participant", "100001:100@lid")).is_none());
+        for source in [
+            "15555550100:100@s.whatsapp.net",
+            "100001:128@lid",
+            "01555550100@s.whatsapp.net",
+            "bad@g.us",
+        ] {
+            assert!(
+                parse_retry(
+                    &base
+                        .clone()
+                        .attr("from", source)
+                        .attr("recipient", "15555550100@s.whatsapp.net")
+                        .attr("participant", "15555550100@s.whatsapp.net")
+                )
+                .is_none()
+            );
+        }
+        assert!(parse_retry(&base.attr("recipient", "01555550100@s.whatsapp.net")).is_none());
     }
 
     #[test]
@@ -6516,7 +6575,7 @@ mod retry_tests {
 
     #[test]
     fn upstream_routes_precede_ordinary_retry_parsing() {
-        let base = receipt(false);
+        let base = receipt(true);
         let aggregate = || Node::new("participants").attr("message_id", "");
         let mut children = vec![aggregate()];
         children.extend(base.child_nodes().iter().cloned());
@@ -6646,7 +6705,7 @@ mod retry_tests {
 
     #[test]
     fn retry_uses_nested_message_id_and_requires_nested_id_and_timestamp() {
-        let base = receipt(false).attr("id", "ROOT-RECEIPT");
+        let base = receipt(true).attr("id", "ROOT-RECEIPT");
         let registration = || Node::new("registration").bytes(vec![1, 2, 3, 4]);
         for time in ["0", "-1", "9223372036854775807", "-9223372036854775808"] {
             let node = base.clone().children(vec![
@@ -6685,11 +6744,12 @@ mod retry_tests {
         let from = Jid::parse("15551234567:7@s.whatsapp.net").unwrap();
         let recipient = Jid::parse("222222222222222@lid").unwrap();
         let base = receipt(true).attr("from", from.clone());
-        let participant = parse_retry(&base).unwrap().device;
+        let device = parse_retry(&base).unwrap().device;
+        assert_eq!(device, from);
         assert_eq!(parse_retry(&base).unwrap().chat, from.to_non_ad());
         let explicit = parse_retry(&base.clone().attr("recipient", recipient.clone())).unwrap();
         assert_eq!(explicit.chat, recipient);
-        assert_eq!(explicit.device, participant);
+        assert_eq!(explicit.device, device);
         for recipient in [
             "bad",
             "120363000000000001@g.us",

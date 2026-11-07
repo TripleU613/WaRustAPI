@@ -1,3 +1,10 @@
+2026-11-06 — **Selected the correct requesting device for retry receipts.**
+Direct retries now use the root sender; group/broadcast use the participant,
+matching the native original-chat branch. Known-null text addresses cannot gain
+retry authority through generic parsing. Tests cover misleading participants,
+real saved-session resend/duplicates and unchanged state for invalid sources.
+[Exact branch evidence and remaining limits](docs/protocol/apk/2.26.43.72-retry-device-source/README.md). No live account operation.
+
 2026-11-06 — **Blocked group facts from constructor-null incoming addresses.**
 Group source/actor selection now preserves native text null before matching saved
 rows. A root-source guard also precedes aggregate expansion. Tests seed matching

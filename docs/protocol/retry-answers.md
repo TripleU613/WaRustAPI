@@ -583,3 +583,19 @@ external mutation and lifecycle remain open; previous conditional full-key manag
 identity is not promoted into unconditional identity across generations.
 [Complete DEX, fresh REA proof and tool-repair scope](apk/2.26.43.72-provider-cache-initialization/README.md).
 No full-key timer, safe replay or runtime behavior changed.
+
+
+## Requesting device follows original chat class (2026-11-06)
+
+**Confirmed selected static / implemented:** pinned160.A04 uses context.A02 for
+direct original-key chats; broadcast3/5/6 and group1/2/28 instead branch to
+context.A01 participant before the shared DeviceJid conversion. The parser no
+longer lets an optional participant redirect an ordinary direct retry. It also
+preserves known text-constructor null for root/recipient/selected actor rather
+than resurrecting generic objects or using a missing group actor's root.
+Nonrepresentable native null-device policy remains unsupported, not error487.
+The saved-session success/duplicate workflow includes a misleading direct
+participant; null-source variants with matching explicit qualifiers preserve all
+outbox/checkpoint/ratchet/identity rows and produce no request/confirmation.
+[Complete predicates, exact byte/code-unit branches and corrected expectations](apk/2.26.43.72-retry-device-source/README.md).
+Original chat/identity/reservation guards remain; no live account operation.
