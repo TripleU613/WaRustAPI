@@ -1,4 +1,11 @@
 {
+  "x-key-aggregate-native-null-order": {
+    "x-cli": "cargo test --locked -p whatsapp-api --all-features key_aggregates",
+    "x-transport": "incoming key-aggregate receipt expansion before per-item timestamp parsing",
+    "x-live": false,
+    "description": "Known native constructor-null PN/LID/hosted item jid text is skipped before timestamp parsing, matching APK43.72 F10.A03 035e/0366->03a4. Such an item no longer causes malformed-time refusal of valid neighbors and is not expanded into a sender-attributed receipt. Nonnull generic-to-DeviceJid conversion and offline message_id aggregates remain distinct. Codec/encrypted-store regression verifies exactly valid inner-key facts, correct device/time, unchanged envelope send and intent/attempts/progress, reopen and duplicate idempotency. Existing valid-address bad-time atomic refusal controls remain. No new request, stored selector, identity, HTTP route or live operation; broader typed/native storage and live acceptance remain open.",
+    "evidence": "docs/protocol/receipt-canonicalizer.md#constructor-null-aggregate-actors-skip-before-timestamp-parsing-2026-11-06"
+  },
   "x-direct-receipt-native-null-actor": {
     "x-cli": "xtask apk-smali <apk> --class 'LX/F21;' --method A05 --signatures --exceptions",
     "x-transport": "ordinary direct receipt fact target parsing; shared text-null classification with ACK output",

@@ -1539,6 +1539,12 @@ fn key_aggregate(node: &Node, participants: &Node, default_seconds: i64) -> Resu
         {
             return Err(invalid("unsupported self-user aggregate actor"));
         }
+        // APK43.72 F10.A03 035e..036a ->03a4 skips constructor-null
+        // generic JIDs before reading t at0372. Preserve the text/null
+        // distinction before expansion turns the source into a typed actor.
+        if native_text_address_is_null(item, "jid") {
+            continue;
+        }
         // Cmk.A03 -> 0hs.A0A: absent/unparseable JIDs skip even malformed t.
         let Some(actor) = network_jid(item, "jid") else {
             continue;
@@ -4761,6 +4767,16 @@ mod tests {
                             .attr("jid", "invalid")
                             .attr("t", "bad"),
                         Node::new("participant").attr("jid", "lid").attr("t", "bad"),
+                        // Native null constructor output skips the item before t.
+                        Node::new("participant")
+                            .attr("jid", "15555550100:100@s.whatsapp.net")
+                            .attr("t", "bad"),
+                        Node::new("participant")
+                            .attr("jid", "100001:128@lid")
+                            .attr("t", "bad"),
+                        Node::new("participant")
+                            .attr("jid", "100001:355@hosted.lid")
+                            .attr("t", "bad"),
                         Node::new("participant")
                             .attr("jid", "broadcast")
                             .attr("t", "bad"),
@@ -4774,6 +4790,7 @@ mod tests {
                 .encode(&node)
                 .unwrap();
         let node = decode(&encoded).unwrap();
+        assert!(validate(&node).is_ok());
         assert_eq!(record(&store, &node).unwrap(), 2);
         let saved = store.read(|tx| Ok(outbox.get(tx, id)?.unwrap())).unwrap();
         assert_eq!(saved.facts.len(), 3);

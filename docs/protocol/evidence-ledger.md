@@ -1,3 +1,10 @@
+2026-11-06 — **Preserved valid aggregate receipts around native-null actors.**
+Key aggregates now skip known constructor-null participant text before parsing
+its timestamp, matching the pinned parser branch. A malformed time on such an
+ignored item no longer discards valid neighbors. Offline message_id aggregates
+and nonnull conversion failures remain separate.
+[Branch evidence, mixed-row persistence regression and limits](receipt-canonicalizer.md#constructor-null-aggregate-actors-skip-before-timestamp-parsing-2026-11-06). No live account operation.
+
 2026-11-06 — **Aligned direct receipt fact handling for native-null participants.**
 Known constructor-null PN/LID/hosted text now follows the existing supported
 sender-device fact fallback rather than becoming a false supplied target.

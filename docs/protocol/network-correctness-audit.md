@@ -5032,3 +5032,48 @@ timestamp, send intent/attempts/progress, reopened persistence and idempotency.
 Valid participant target checks, global/aggregate/group/retry parsing and request
 behavior remain unchanged. Complete status/feature/storage branches, required
 sender grammar, binary constructor fidelity and live acceptance remain open.
+
+## Constructor-null aggregate actors skip before timestamp parsing (2026-11-06)
+
+**Confirmed selected static, APK 2.26.43.72 / fixed offline:** the retained
+[complete F10.A03 parser](apk/2.26.43.72-receipt-null-fact-actor/receipt-parser.txt)
+reads each key-aggregate item using 0Tp.A0A(Jid,jid) at byte PC035e. A null result
+branches at0366 to03a4, advancing the item index. Only a nonnull generic Jid
+reaches DeviceJid conversion at036a and timestamp parsing at0372. The relative
+branch is in code units: 0366 + 2*0x1f =03a4. The prior
+[context/constructor evidence](apk/2.26.43.72-ack-nullable-context/README.md)
+and [native constructor trace](apk/2.26.43.72-lid-device-ack-text/README.md)
+bind known PN/LID/hosted text failures to null.
+
+This differs from an ordinary direct receipt's nullable participant: an invalid
+aggregate item is omitted entirely, not expanded with an absent participant and
+then attributed to the sender. A nonnull generic object whose DeviceJid
+conversion returns null still reaches timestamp parsing; no general
+"conversion-null skips time" rule is inferred or implemented.
+
+**Confirmed local mismatch:** key_aggregate previously accepted constructor-null
+text via the generic model, then parsed its malformed timestamp and refused the
+whole aggregate, including valid neighbors. It now uses the existing native text
+null classifier before generic parsing/expansion. It leaves raw captures, root
+metadata, existing selectors and valid actor handling intact.
+
+The expanded `key_aggregates_use_inner_key_root_kind_and_optional_target_times_once`
+regression failed at validation before correction. Its actual codec-roundtripped
+aggregate now includes PN device100, LID128 and hosted-LID355 with malformed
+item times, alongside valid device2 and primary rows. It records exactly the
+two valid inner-key read facts with their proper device/time, leaves the envelope
+send and original intent/attempts/progress unchanged, survives encrypted-store
+reopen and adds no duplicate fact or journal entry. Existing valid-address
+malformed-time controls retain full-table atomic refusal and error redaction.
+These atomic controls verify Rust policy, not every native worker/storage path.
+
+This is the key-aggregate branch only. Offline message_id aggregates use a
+required DeviceJid accessor and keep separate failure rules. Typed binary
+constructor fidelity, nonnull generic-to-device conversion details, all group
+and feature-dependent native storage paths, and live acceptance remain open.
+No new request, identity/trust authority or account operation.
+
+Reproduce with `cargo test --locked -p whatsapp-api --all-features key_aggregates`.
+The retained complete parser's reproduction and checksums are in its
+[existing evidence bundle](apk/2.26.43.72-receipt-null-fact-actor/README.md);
+no new export or duplicated evidence bundle was necessary.
