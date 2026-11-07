@@ -87,8 +87,9 @@ surface; it does not establish all downstream consumers' admission rules.
 ## Follow-up and adjacent state are separate
 
 After unlock, manager+0x440 nonnull, candidate nonnull and probe true can trigger
-helper **0xc4338** with manager word+0x408 and string+0x428. That external/state
-follow-up remains untraced. A call is not proof that another owner activated it.
+helper **0xc4338** with manager word+0x408 and string+0x428. The [follow-up trace](followup.md) now identifies keyed event/version
+bookkeeping and its virtual dispatch boundary; concrete receiver effects remain
+unknown. A call is not proof that another owner activated it.
 
 The separately inspected **0x79e24** setter works on a +0x360 shared pair under
 a +0x370 mutex, also read by 0x8e590. Its two bounded caller windows include

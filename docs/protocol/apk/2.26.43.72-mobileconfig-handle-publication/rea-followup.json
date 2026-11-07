@@ -1,0 +1,69 @@
+{
+  "evidence_id": "ev_e454fe658d9239b0e2d2fa9fdcfe5bafba6391a3cd3f5ba4edba7d87785c1608",
+  "subject": {
+    "name": "libmobileconfig-jni.so",
+    "digest": {
+      "sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so",
+    "format": "unknown",
+    "architecture": null
+  },
+  "provider": {
+    "id": "rizin",
+    "name": "Rizin",
+    "version": null
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.reverse-engineering.command-observation",
+  "operation": "execute_rizin_command",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so",
+    "command": "e scr.color=0; pd 61 @ 0xc4338",
+    "provider_executable": "rizin",
+    "command_arguments": [
+      "-N",
+      "-q",
+      "-c",
+      "e scr.color=0; pd 61 @ 0xc4338",
+      "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so"
+    ]
+  },
+  "raw_result": {
+    "stdout": "            0x000c4338      paciasp\n            0x000c433c      sub   sp, sp, 0x90\n            0x000c4340      stp   x29, x30, [sp, 0x40]\n            0x000c4344      str   x25, [sp, 0x50]\n            0x000c4348      bl    0xca820\n            0x000c434c      add   x29, sp, 0x40\n            0x000c4350      mrs   x24, tpidr_el0\n            0x000c4354      bl    0xcb7f4\n            0x000c4358      ldr   x8, [x24, 0x28]                      ; [0x28:4]=0xcfad8\n            0x000c435c      mov   w22, w1\n            0x000c4360      bl    0xcb72c\n            0x000c4364      bl    0xc3984\n            0x000c4368      adrp  x25, 0xdb000\n            0x000c436c      add   x0, sp, 0x20\n            0x000c4370      ldr   x1, [x25, 0x638]                     ; [0x638:4]=0\n            0x000c4374      bl    0x4d9a0\n            0x000c4378      bl    0xcb864\n            0x000c437c      add   x1, sp, 0x20\n            0x000c4380      bl    0x7b2c4\n        ,=< 0x000c4384      cbz   x0, 0xc4408\n        |   0x000c4388      bl    0xc3984\n        |   0x000c438c      ldr   x1, [x25, 0x638]                     ; [0x638:4]=0\n        |   0x000c4390      add   x0, sp, 8\n        |   0x000c4394      bl    0x4d9a0\n        |   0x000c4398      add   x0, sp, 8\n        |   0x000c439c      bl    0xc3e2c\n        |   0x000c43a0      ldr   w1, [x0]\n        |   0x000c43a4      mov   x0, x19\n        |   0x000c43a8      bl    0xc3e64\n        |   0x000c43ac      mov   w23, w0\n        |   0x000c43b0      add   x0, sp, 8\n        |   0x000c43b4      bl    method.std::__ndk1::basic_string_char__std::__ndk1::char_traits_char___std::__ndk1::allocator_char___._basic_string\n        |   0x000c43b8      add   x0, sp, 0x20\n        |   0x000c43bc      bl    method.std::__ndk1::basic_string_char__std::__ndk1::char_traits_char___std::__ndk1::allocator_char___._basic_string\n       ,==< 0x000c43c0      tbz   w23, 0, 0xc4410\n       ||   0x000c43c4      add   x0, x19, 0x15c\n       ||   0x000c43c8      bl    method.std::__ndk1::mutex.lock\n       ||   0x000c43cc      ldr   x1, [x25, 0x638]                     ; [0x638:4]=0\n       ||   0x000c43d0      add   x0, sp, 0x20\n       ||   0x000c43d4      bl    0x4d9a0\n       ||   0x000c43d8      add   x4, sp, 0x20\n       ||   0x000c43dc      mov   x0, x19\n       ||   0x000c43e0      mov   w1, w22\n       ||   0x000c43e4      mov   x2, x21\n       ||   0x000c43e8      mov   x3, x20\n       ||   0x000c43ec      mov   w5, 1\n       ||   0x000c43f0      bl    0xc3efc\n       ||   0x000c43f4      add   x0, sp, 0x20\n       ||   0x000c43f8      bl    method.std::__ndk1::basic_string_char__std::__ndk1::char_traits_char___std::__ndk1::allocator_char___._basic_string\n       ||   0x000c43fc      add   x0, x19, 0x15c\n       ||   0x000c4400      bl    method.std::__ndk1::mutex.unlock\n      ,===< 0x000c4404      b     0xc4410\n      ||`-> 0x000c4408      add   x0, sp, 0x20\n      ||    0x000c440c      bl    method.std::__ndk1::basic_string_char__std::__ndk1::char_traits_char___std::__ndk1::allocator_char___._basic_string\n      ``--> 0x000c4410      bl    0xca314\n        ,=< 0x000c4414      b.ne  0xc4478\n        |   0x000c4418      bl    0xcb780\n        |   0x000c441c      ldp   x29, x30, [sp, 0x40]\n        |   0x000c4420      add   sp, sp, 0x90\n        |   0x000c4424      autiasp\n        |   0x000c4428      ret\n",
+    "stderr": "ERROR: Cannot determine entrypoint, using 0x0004c460.\n",
+    "exit_code": 0,
+    "signal": null,
+    "output_truncated": false,
+    "completion_status": "complete",
+    "artifact_sha256_after": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+    "artifact_changed": false
+  },
+  "normalized_result": {
+    "stdout": "            0x000c4338      paciasp\n            0x000c433c      sub   sp, sp, 0x90\n            0x000c4340      stp   x29, x30, [sp, 0x40]\n            0x000c4344      str   x25, [sp, 0x50]\n            0x000c4348      bl    0xca820\n            0x000c434c      add   x29, sp, 0x40\n            0x000c4350      mrs   x24, tpidr_el0\n            0x000c4354      bl    0xcb7f4\n            0x000c4358      ldr   x8, [x24, 0x28]                      ; [0x28:4]=0xcfad8\n            0x000c435c      mov   w22, w1\n            0x000c4360      bl    0xcb72c\n            0x000c4364      bl    0xc3984\n            0x000c4368      adrp  x25, 0xdb000\n            0x000c436c      add   x0, sp, 0x20\n            0x000c4370      ldr   x1, [x25, 0x638]                     ; [0x638:4]=0\n            0x000c4374      bl    0x4d9a0\n            0x000c4378      bl    0xcb864\n            0x000c437c      add   x1, sp, 0x20\n            0x000c4380      bl    0x7b2c4\n        ,=< 0x000c4384      cbz   x0, 0xc4408\n        |   0x000c4388      bl    0xc3984\n        |   0x000c438c      ldr   x1, [x25, 0x638]                     ; [0x638:4]=0\n        |   0x000c4390      add   x0, sp, 8\n        |   0x000c4394      bl    0x4d9a0\n        |   0x000c4398      add   x0, sp, 8\n        |   0x000c439c      bl    0xc3e2c\n        |   0x000c43a0      ldr   w1, [x0]\n        |   0x000c43a4      mov   x0, x19\n        |   0x000c43a8      bl    0xc3e64\n        |   0x000c43ac      mov   w23, w0\n        |   0x000c43b0      add   x0, sp, 8\n        |   0x000c43b4      bl    method.std::__ndk1::basic_string_char__std::__ndk1::char_traits_char___std::__ndk1::allocator_char___._basic_string\n        |   0x000c43b8      add   x0, sp, 0x20\n        |   0x000c43bc      bl    method.std::__ndk1::basic_string_char__std::__ndk1::char_traits_char___std::__ndk1::allocator_char___._basic_string\n       ,==< 0x000c43c0      tbz   w23, 0, 0xc4410\n       ||   0x000c43c4      add   x0, x19, 0x15c\n       ||   0x000c43c8      bl    method.std::__ndk1::mutex.lock\n       ||   0x000c43cc      ldr   x1, [x25, 0x638]                     ; [0x638:4]=0\n       ||   0x000c43d0      add   x0, sp, 0x20\n       ||   0x000c43d4      bl    0x4d9a0\n       ||   0x000c43d8      add   x4, sp, 0x20\n       ||   0x000c43dc      mov   x0, x19\n       ||   0x000c43e0      mov   w1, w22\n       ||   0x000c43e4      mov   x2, x21\n       ||   0x000c43e8      mov   x3, x20\n       ||   0x000c43ec      mov   w5, 1\n       ||   0x000c43f0      bl    0xc3efc\n       ||   0x000c43f4      add   x0, sp, 0x20\n       ||   0x000c43f8      bl    method.std::__ndk1::basic_string_char__std::__ndk1::char_traits_char___std::__ndk1::allocator_char___._basic_string\n       ||   0x000c43fc      add   x0, x19, 0x15c\n       ||   0x000c4400      bl    method.std::__ndk1::mutex.unlock\n      ,===< 0x000c4404      b     0xc4410\n      ||`-> 0x000c4408      add   x0, sp, 0x20\n      ||    0x000c440c      bl    method.std::__ndk1::basic_string_char__std::__ndk1::char_traits_char___std::__ndk1::allocator_char___._basic_string\n      ``--> 0x000c4410      bl    0xca314\n        ,=< 0x000c4414      b.ne  0xc4478\n        |   0x000c4418      bl    0xcb780\n        |   0x000c441c      ldp   x29, x30, [sp, 0x40]\n        |   0x000c4420      add   sp, sp, 0x90\n        |   0x000c4424      autiasp\n        |   0x000c4428      ret\n",
+    "stderr": "ERROR: Cannot determine entrypoint, using 0x0004c460.\n",
+    "exit_code": 0,
+    "signal": null,
+    "output_truncated": false,
+    "completion_status": "complete",
+    "artifact_sha256_after": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+    "artifact_changed": false
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "The executable version and supported formats are reported as unknown because no reliable version probe was performed.",
+    "A non-zero process exit is preserved as an observed command result.",
+    "Rizin commands and retained plugins may read files or access network resources outside the selected artifact; those external inputs are not bound to Evidence.",
+    "When both are available, pre-run and post-run digests detect artifact changes across the provider call but cannot prove the exact bytes consumed during the call."
+  ],
+  "relationship_coverage": null,
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so"
+    }
+  ],
+  "evidence_links": []
+}

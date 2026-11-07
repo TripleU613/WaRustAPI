@@ -9472,3 +9472,9 @@ Local public upload eligibility omission corrected at shared entry, including ca
 - **2026-11-06 confirmed selected static / research only:** concreteDxh inherits bare-return1ru.A00, so reader-map cleanup is separate from bulkFfK. Two physical0Th.A03 callers and provider0x90 lazy/direct global-cache binding retained with reset/account-switch limits. No full-query32s timer, safe replay or usable-key success inferred. REA missing-Java provider error retained; supported DEX fallback completed trace. [Sources and unchanged Rust boundary](retry-answers.md#full-key-cleanup-and-future-failure-are-separate-2026-11-06).
 
 - **2026-11-06 observed host repair / confirmed selected static:** fixed only persisted REA JAVA_HOME to installed Temurin21 after private backup; fresh CLI now produces complete pinned-APK Evidence, while current MCP remains stale. Provider-cache census/accessors show selected optional initialization, not proven reset/account switch. Complete records/DEX and remaining concurrency/lifecycle boundaries retained. [Repair and evidence](apk-analysis.md#rea-android-java-path-repair-and-cli-proof-2026-11-06).
+
+- Confirmed selected APK 2.26.43.72 post-publication follow-up: `0xc4338`
+  looks up `mc_1st_set_latest_cache`, checks a version predicate and dispatches
+  mode/strings through receiver virtual+0x50; reader/status are not arguments.
+  Concrete receiver effects and activation remain unknown. See
+  [retained trace](apk/2.26.43.72-mobileconfig-handle-publication/followup.md).

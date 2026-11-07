@@ -1,0 +1,67 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   c4338:      	paciasp
+   c433c:      	sub	sp, sp, #0x90
+   c4340:      	stp	x29, x30, [sp, #0x40]
+   c4344:      	str	x25, [sp, #0x50]
+   c4348:      	bl	0xca820 <JNI_OnLoad+0x5b680>
+   c434c:      	add	x29, sp, #0x40
+   c4350:      	mrs	x24, TPIDR_EL0
+   c4354:      	bl	0xcb7f4 <JNI_OnLoad+0x5c654>
+   c4358:      	ldr	x8, [x24, #0x28]
+   c435c:      	mov	w22, w1
+   c4360:      	bl	0xcb72c <JNI_OnLoad+0x5c58c>
+   c4364:      	bl	0xc3984 <JNI_OnLoad+0x547e4>
+   c4368:      	adrp	x25, 0xdb000
+   c436c:      	add	x0, sp, #0x20
+   c4370:      	ldr	x1, [x25, #0x638]
+   c4374:      	bl	0x4d9a0 <.text+0x1540>
+   c4378:      	bl	0xcb864 <JNI_OnLoad+0x5c6c4>
+   c437c:      	add	x1, sp, #0x20
+   c4380:      	bl	0x7b2c4 <JNI_OnLoad+0xc124>
+   c4384:      	cbz	x0, 0xc4408 <JNI_OnLoad+0x55268>
+   c4388:      	bl	0xc3984 <JNI_OnLoad+0x547e4>
+   c438c:      	ldr	x1, [x25, #0x638]
+   c4390:      	add	x0, sp, #0x8
+   c4394:      	bl	0x4d9a0 <.text+0x1540>
+   c4398:      	add	x0, sp, #0x8
+   c439c:      	bl	0xc3e2c <JNI_OnLoad+0x54c8c>
+   c43a0:      	ldr	w1, [x0]
+   c43a4:      	mov	x0, x19
+   c43a8:      	bl	0xc3e64 <JNI_OnLoad+0x54cc4>
+   c43ac:      	mov	w23, w0
+   c43b0:      	add	x0, sp, #0x8
+   c43b4:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   c43b8:      	add	x0, sp, #0x20
+   c43bc:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   c43c0:      	tbz	w23, #0x0, 0xc4410 <JNI_OnLoad+0x55270>
+   c43c4:      	add	x0, x19, #0x15c
+   c43c8:      	bl	0xccb70 <_ZNSt6__ndk15mutex4lockEv@plt>
+   c43cc:      	ldr	x1, [x25, #0x638]
+   c43d0:      	add	x0, sp, #0x20
+   c43d4:      	bl	0x4d9a0 <.text+0x1540>
+   c43d8:      	add	x4, sp, #0x20
+   c43dc:      	mov	x0, x19
+   c43e0:      	mov	w1, w22
+   c43e4:      	mov	x2, x21
+   c43e8:      	mov	x3, x20
+   c43ec:      	mov	w5, #0x1                // =1
+   c43f0:      	bl	0xc3efc <JNI_OnLoad+0x54d5c>
+   c43f4:      	add	x0, sp, #0x20
+   c43f8:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   c43fc:      	add	x0, x19, #0x15c
+   c4400:      	bl	0xccba0 <_ZNSt6__ndk15mutex6unlockEv@plt>
+   c4404:      	b	0xc4410 <JNI_OnLoad+0x55270>
+   c4408:      	add	x0, sp, #0x20
+   c440c:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   c4410:      	bl	0xca314 <JNI_OnLoad+0x5b174>
+   c4414:      	b.ne	0xc4478 <JNI_OnLoad+0x552d8>
+   c4418:      	bl	0xcb780 <JNI_OnLoad+0x5c5e0>
+   c441c:      	ldp	x29, x30, [sp, #0x40]
+   c4420:      	add	sp, sp, #0x90
+   c4424:      	autiasp
+   c4428:      	ret

@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-post-publication-followup": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-handle-publication/followup.md",
+    "finding": "Post-publication mc_1st_set_latest_cache keyed version/event dispatch; concrete receiver effects unknown; no runtime changes."
+  },
   "x-mobileconfig-handle-publication-evidence": {
     "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-handle-publication/inspect-publication.py <pinned-library>",
     "x-transport": "offline shared-handle publication research; no Rust transport or HTTP route enabled",

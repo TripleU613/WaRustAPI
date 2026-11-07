@@ -1,0 +1,14 @@
+{
+  "artifact_sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+  "relocations": [
+    "00000000000db5f8  0000000000000403 R_AARCH64_RELATIVE                        18584",
+    "00000000000db638  0000000000000403 R_AARCH64_RELATIVE                        1a176"
+  ],
+  "rodata_va_equals_file_offset": true,
+  "strings": {
+    "0x18584": "mobileconfig_freshinstall_track_version",
+    "0x1a176": "mc_1st_set_latest_cache",
+    "0x1630d": "v",
+    "0x182b9": "extra_info"
+  }
+}

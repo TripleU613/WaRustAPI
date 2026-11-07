@@ -10495,3 +10495,9 @@ identical instead of storing a late503 refusal.
 and unrelated maintenance remain on their existing cadence. Outgoing/group
 waits and other request families are not converted by this chunk; no full
 network/timing or ban-prevention guarantee is claimed. No live operations.
+
+- Confirmed selected APK 2.26.43.72 post-publication follow-up: `0xc4338`
+  looks up `mc_1st_set_latest_cache`, checks a version predicate and dispatches
+  mode/strings through receiver virtual+0x50; reader/status are not arguments.
+  Concrete receiver effects and activation remain unknown. See
+  [retained trace](docs/protocol/apk/2.26.43.72-mobileconfig-handle-publication/followup.md).
