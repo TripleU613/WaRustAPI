@@ -57,3 +57,8 @@ Validation: three new complete exports and the reused factory reproduced
 byte-for-byte. Full workspace/all-feature tests passed, including 1,421 library
 tests; strict Clippy, CLI-reference regeneration, OpenAPI library-symbol test,
 APK coverage, formatting, whitespace and staged hygiene passed.
+
+Followup: the [current worker dispatch trace](../2.26.43.72-group-dirty-worker-dispatch/README.md)
+now binds required1bc parsing after raw-list collection and before the selected
+network branches. Effective flags, full serializer and durable continuation
+remain separate; the earlier boundary above describes the collection point.

@@ -1,0 +1,524 @@
+
+# class: Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;
+# extends: Lorg/whispersystems/jobqueue/Job;
+
+.method public <init>(VLLLLII)  # .registers 9
+    # full signature: Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;-><init>(LX/7e9;Ljava/lang/Integer;Ljava/util/List;Ljava/util/Set;II)V
+    0000..0004  new-instance  v1, LX/DCZ;
+    0004..000a  invoke-direct  {v1}, LX/DCZ;-><init>()V
+    000a..000e  const-string  v0, "fetch_truncated_groups_job"
+    000e..0014  invoke-static  {v0, v1}, LX/6ol;->A0n(Ljava/lang/String;LX/DCZ;)Lorg/whispersystems/jobqueue/JobParameters;
+    0014..0016  move-result-object  v0
+    0016..001c  invoke-direct  {v2, v0}, Lorg/whispersystems/jobqueue/Job;-><init>(Lorg/whispersystems/jobqueue/JobParameters;)V
+    001c..0020  iput  v7, v2, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->round:I
+    0020..0024  iput-object  v4, v2, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->maxNumberOfRounds:Ljava/lang/Integer;
+    0024..0028  iput  v8, v2, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->params:I
+    0028..002c  iput-object  v5, v2, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->groupsToFetch:Ljava/util/List;
+    002c..0030  iput-object  v6, v2, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->successfullyProcessedGroups:Ljava/util/Set;
+    0030..0034  iput-object  v3, v2, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->batchContext:LX/7e9;
+    0034..0036  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(LL)  # .registers 4
+    # full signature: Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A00(Ljava/lang/String;)Ljava/lang/String;
+    0000..0006  invoke-static  {v3}, LX/0CX;->A02(Ljava/lang/String;)Ljava/lang/String;
+    0006..0008  move-result-object  v3
+    0008..000c  const-string  v2, "\n"
+    000c..0010  const-string  v1, ""
+    0010..0012  const/4  v0, #0x0
+    0012..0018  invoke-static  {v3, v2, v1, v0}, LX/0Ce;->A0D(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)Ljava/lang/String;
+    0018..001a  move-result-object  v0
+    001a..001c  return-object  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A0J(V)  # .registers 1
+    # full signature: Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A0J()V
+    0000..0002  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A0K(V)  # .registers 2
+    # full signature: Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A0K()V
+    0000..0004  const-string  v0, "GroupInfoBatchProcessor/FetchTruncatedGroupJob canceled"
+    0004..000a  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A0L(V)  # .registers 23
+    # full signature: Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A0L()V
+    0000..0004  move-object/from16  v0, v22
+    0004..0008  iget-object  v10, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->batchContext:LX/7e9;
+    0008..000c  if-nez  v10, +0x8
+    000c..0010  const-string  v0, "GroupInfoBatchProcessor/FetchTruncatedGroupsJob/null context, dropping stale job"
+    0010..0016  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0016..0018  return-void
+    0018..001c  iget-object  v6, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A02:LX/7nL;
+    001c..0020  if-eqz  v6, +0x2f4
+    0020..0026  invoke-static  {}, Ljava/lang/Runtime;->getRuntime()Ljava/lang/Runtime;
+    0026..0028  move-result-object  v1
+    0028..002e  invoke-virtual  {v1}, Ljava/lang/Runtime;->freeMemory()J
+    002e..0030  move-result-wide  v1
+    0030..0032  long-to-double  v3, v1
+    0032..003c  const-wide  v1, #0x3fc3333333333333 (4594572339843380019)
+    003c..003e  mul-double/2addr  v3, v1
+    003e..0042  const-wide/high16  v1, #0x404e000000000000
+    0042..0044  div-double/2addr  v3, v1
+    0044..0046  double-to-int  v9, v3
+    0046..004a  const/16  v1, #0x2710
+    004a..004e  if-ge  v9, v1, +0x4
+    004e..0052  const/16  v9, #0x2710
+    0052..0056  const-string  v1, "GroupInfoBatchProcessor/processGroupInfo/getMaxParticipantsInGroupQueries - \n              | Client can handle "
+    0056..005c  invoke-static  {v9, v1}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    005c..005e  move-result-object  v2
+    005e..0062  const-string  v1, " per round as per memory \n              | constraints"
+    0062..0068  invoke-static  {v1, v2}, LX/1Xl;->A0z(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    0068..006a  move-result-object  v1
+    006a..0070  invoke-static  {v1}, LX/0CX;->A02(Ljava/lang/String;)Ljava/lang/String;
+    0070..0072  move-result-object  v1
+    0072..0076  const-string  v5, "\n"
+    0076..007a  const-string  v4, ""
+    007a..007c  const/4  v3, #0x0
+    007c..0082  invoke-static  {v1, v5, v4, v3}, LX/0Ce;->A0D(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)Ljava/lang/String;
+    0082..0086  iget-object  v2, v6, LX/7nL;->A00:LX/08Y;
+    0086..008a  const/16  v1, #0x187b
+    008a..0090  invoke-virtual  {v2, v1}, LX/00E;->A0a(I)I
+    0090..0092  move-result  v1
+    0092..0096  if-gt  v1, v9, +0x3
+    0096..0098  move  v9, v1
+    0098..009c  const-string  v1, "GroupInfoBatchProcessor/processGroupInfo/getMaxParticipantsInGroupQueriesCode - \n              | Processing "
+    009c..00a2  invoke-static  {v9, v1}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    00a2..00a4  move-result-object  v2
+    00a4..00a8  const-string  v1, " participants\n              | as per device constraints and server limits"
+    00a8..00ae  invoke-static  {v1, v2}, LX/1Xl;->A0z(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    00ae..00b0  move-result-object  v1
+    00b0..00b6  invoke-static  {v1}, LX/0CX;->A02(Ljava/lang/String;)Ljava/lang/String;
+    00b6..00b8  move-result-object  v1
+    00b8..00be  invoke-static  {v1, v5, v4, v3}, LX/0Ce;->A0D(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)Ljava/lang/String;
+    00be..00c2  iget-object  v1, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->groupsToFetch:Ljava/util/List;
+    00c2..00c8  invoke-static  {}, LX/1Xl;->A18()Ljava/util/ArrayList;
+    00c8..00ca  move-result-object  v8
+    00ca..00d0  invoke-static  {}, LX/1Xl;->A18()Ljava/util/ArrayList;
+    00d0..00d2  move-result-object  v7
+    00d2..00d8  invoke-interface  {v1}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    00d8..00da  move-result-object  v6
+    00da..00dc  const/4  v5, #0x0
+    00dc..00de  const/4  v4, #0x0
+    00de..00e4  invoke-interface  {v6}, Ljava/util/Iterator;->hasNext()Z
+    00e4..00e6  move-result  v1
+    00e6..00ea  if-eqz  v1, +0x20
+    00ea..00f0  invoke-static  {v6}, LX/2LB;->A1D(Ljava/util/Iterator;)LX/08T;
+    00f0..00f2  move-result-object  v3
+    00f2..00f8  invoke-static  {v3}, LX/2LC;->A07(LX/08T;)I
+    00f8..00fa  move-result  v2
+    00fa..00fe  if-eqz  v4, +0x11
+    00fe..0102  add-int  v1, v4, v2
+    0102..0106  if-le  v1, v9, +0xd
+    0106..010c  invoke-virtual  {v8, v7}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    010c..010e  const/4  v1, #0x1
+    010e..0112  new-array  v1, v1, [LX/08T;
+    0112..0118  invoke-static  {v3, v1, v5}, LX/6of;->A13(Ljava/lang/Object;[Ljava/lang/Object;I)Ljava/util/ArrayList;
+    0118..011a  move-result-object  v7
+    011a..011c  goto  -0x1f
+    011c..0122  invoke-virtual  {v7, v3}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0122..0124  add-int/2addr  v4, v2
+    0124..0126  goto  -0x23
+    0126..012c  invoke-virtual  {v7}, Ljava/util/AbstractCollection;->isEmpty()Z
+    012c..012e  move-result  v1
+    012e..0132  if-nez  v1, +0x5
+    0132..0138  invoke-virtual  {v8, v7}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0138..013e  invoke-static  {v8}, LX/07Z;->A1H(Ljava/lang/Iterable;)Ljava/util/List;
+    013e..0140  move-result-object  v1
+    0140..0146  invoke-static  {v1}, LX/07Z;->A0u(Ljava/util/List;)Ljava/lang/Object;
+    0146..0148  move-result-object  v3
+    0148..014c  check-cast  v3, Ljava/util/List;
+    014c..0150  iget  v2, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->round:I
+    0150..0154  const-string  v1, "GroupInfoBatchProcessor/FetchTruncatedGroupsJob/fetching additional\n          | group info; round="
+    0154..015a  invoke-static  {v1, v2}, LX/2LA;->A0p(Ljava/lang/String;I)Ljava/lang/String;
+    015a..015c  move-result-object  v1
+    015c..0162  invoke-static  {v1}, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A00(Ljava/lang/String;)Ljava/lang/String;
+    0162..0166  new-instance  v4, LX/FfK;
+    0166..016c  invoke-direct  {v4}, LX/FfK;-><init>()V
+    016c..0172  invoke-static  {v3}, LX/2L9;->A11(Ljava/lang/Iterable;)Ljava/util/ArrayList;
+    0172..0174  move-result-object  v7
+    0174..017a  invoke-interface  {v3}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    017a..017c  move-result-object  v3
+    017c..0182  invoke-interface  {v3}, Ljava/util/Iterator;->hasNext()Z
+    0182..0184  move-result  v1
+    0184..0188  if-eqz  v1, +0x14
+    0188..018e  invoke-static  {v3}, LX/2LB;->A1D(Ljava/util/Iterator;)LX/08T;
+    018e..0190  move-result-object  v2
+    0190..0194  sget-object  v1, LX/1bc;->A01:LX/1bd;
+    0194..0198  iget-object  v1, v2, LX/08T;->first:Ljava/lang/Object;
+    0198..019c  check-cast  v1, Ljava/lang/String;
+    019c..01a2  invoke-static  {v1}, LX/1bd;->A01(Ljava/lang/String;)LX/1bc;
+    01a2..01a4  move-result-object  v1
+    01a4..01aa  invoke-virtual  {v7, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    01aa..01ac  goto  -0x17
+    01ac..01b0  sget-object  v2, LX/7e9;->A02:LX/7e9;
+    01b0..01b4  if-eq  v10, v2, +0xe
+    01b4..01b8  iget-object  v3, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A00:LX/08Y;
+    01b8..01bc  if-eqz  v3, +0x223
+    01bc..01c0  const/16  v1, #0x344e
+    01c0..01c6  invoke-virtual  {v3, v1}, LX/00E;->A14(I)Z
+    01c6..01c8  move-result  v1
+    01c8..01cc  if-eqz  v1, +0x38
+    01cc..01d0  iget-object  v3, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A00:LX/08Y;
+    01d0..01d4  if-eqz  v3, +0x217
+    01d4..01d8  const/16  v1, #0x2a35
+    01d8..01de  invoke-virtual  {v3, v1}, LX/00E;->A14(I)Z
+    01de..01e0  move-result  v1
+    01e0..01e4  if-eqz  v1, +0x2c
+    01e4..01e8  iget  v5, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->round:I
+    01e8..01ec  iget  v1, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->params:I
+    01ec..01f0  new-instance  v3, LX/7xh;
+    01f0..01f6  invoke-direct  {v3, v5, v1}, LX/7xh;-><init>(II)V
+    01f6..01fa  iget-object  v1, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A04:LX/7uj;
+    01fa..01fe  if-eqz  v1, +0x1f7
+    01fe..0204  invoke-virtual  {v1, v10, v3, v4, v7}, LX/7uj;->A00(LX/7e9;LX/7xh;LX/FfK;Ljava/util/List;)V
+    0204..020a  invoke-virtual  {v4}, LX/FfK;->get()Ljava/lang/Object;
+    020a..020c  move-result-object  v6
+    020c..0210  check-cast  v6, LX/7zU;
+    0210..0214  iget-object  v1, v6, LX/7zU;->A02:Ljava/util/Set;
+    0214..021a  invoke-static  {v1}, LX/2L9;->A11(Ljava/lang/Iterable;)Ljava/util/ArrayList;
+    021a..021c  move-result-object  v4
+    021c..0222  invoke-interface  {v1}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    0222..0224  move-result-object  v3
+    0224..022a  invoke-interface  {v3}, Ljava/util/Iterator;->hasNext()Z
+    022a..022c  move-result  v1
+    022c..0230  if-eqz  v1, +0x7a
+    0230..0236  invoke-static  {v4, v3}, LX/2LE;->A1H(Ljava/util/AbstractCollection;Ljava/util/Iterator;)V
+    0236..0238  goto  -0x9
+    0238..023c  iget-object  v6, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A03:LX/7oo;
+    023c..0240  if-eqz  v6, +0x1de
+    0240..0244  const/16  v1, #0x10
+    0244..0248  new-instance  v13, LX/8di;
+    0248..024e  invoke-direct  {v13, v4, v10, v0, v1}, LX/8di;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+    024e..0250  const/4  v1, #0x2
+    0250..0256  invoke-virtual  {v10}, Ljava/lang/Enum;->ordinal()I
+    0256..0258  move-result  v3
+    0258..025c  if-eq  v3, v1, +0x61
+    025c..0260  if-eq  v3, v5, +0x5c
+    0260..0262  const/4  v1, #0x1
+    0262..0266  if-eq  v3, v1, +0x56
+    0266..0268  const/4  v1, #0x3
+    0268..026c  if-ne  v3, v1, +0x1c3
+    026c..0270  const-string  v5, "inactive_group_migration"
+    0270..0274  iget-object  v1, v6, LX/7oo;->A01:LX/05a;
+    0274..0278  iget-object  v1, v1, LX/05a;->A00:LX/00x;
+    0278..027e  invoke-static  {v1}, LX/6oj;->A12(LX/00x;)Ljava/lang/String;
+    027e..0280  move-result-object  v3
+    0280..0284  new-instance  v12, LX/8UL;
+    0284..028a  invoke-direct  {v12, v3, v5, v7}, LX/8UL;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+    028a..0290  invoke-static  {v1}, LX/6oe;->A0u(LX/00x;)LX/0Sf;
+    0290..0292  move-result-object  v1
+    0292..0296  iget-object  v5, v6, LX/7oo;->A00:LX/05a;
+    0296..029a  iget-object  v7, v5, LX/05a;->A00:LX/00x;
+    029a..02a0  invoke-interface  {v7}, LX/00x;->get()Ljava/lang/Object;
+    02a0..02a2  move-result-object  v6
+    02a2..02a4  const/4  v5, #0x7
+    02a4..02a8  new-instance  v14, LX/8kw;
+    02a8..02ae  invoke-direct  {v14, v6, v5}, LX/8kw;-><init>(Ljava/lang/Object;I)V
+    02ae..02b4  invoke-interface  {v7}, LX/00x;->get()Ljava/lang/Object;
+    02b4..02b6  move-result-object  v6
+    02b6..02ba  const/16  v5, #0x8
+    02ba..02be  new-instance  v15, LX/8kw;
+    02be..02c4  invoke-direct  {v15, v6, v5}, LX/8kw;-><init>(Ljava/lang/Object;I)V
+    02c4..02c8  const/16  v19, #0x14
+    02c8..02ca  const/4  v5, #0x0
+    02ca..02d0  invoke-static  {v1, v5}, LX/00l;->A09(Ljava/lang/Object;I)V
+    02d0..02d4  iget-object  v5, v12, LX/8UL;->A03:LX/00p;
+    02d4..02da  invoke-interface  {v5}, LX/00p;->getValue()Ljava/lang/Object;
+    02da..02dc  move-result-object  v5
+    02dc..02e0  check-cast  v5, LX/BVu;
+    02e0..02e6  invoke-virtual  {v5}, LX/BVu;->A00()LX/0Tp;
+    02e6..02e8  move-result-object  v17
+    02e8..02ec  const/16  v16, #0x0
+    02ec..02f0  new-instance  v11, LX/7PE;
+    02f0..02f6  invoke-direct/range  {v11..v16}, LX/7PE;-><init>(LX/8n5;Lkotlin/jvm/functions/Function1;LX/0AW;LX/0AW;I)V
+    02f6..02fa  const-wide/16  v20, #0x7d00
+    02fa..02fc  move-object  v15, v1
+    02fc..0300  move-object/from16  v16, v11
+    0300..0304  move-object/from16  v18, v3
+    0304..030a  invoke-virtual/range  {v15..v21}, LX/0Sf;->A0W(LX/0lG;LX/0Tp;Ljava/lang/String;IJ)Z
+    030a..030e  goto/16  -0x83
+    030e..0312  const-string  v5, "per_group_dirty_recovery_truncatable"
+    0312..0314  goto  -0x51
+    0314..0318  const-string  v5, "per_group_dirty_recovery"
+    0318..031a  goto  -0x54
+    031a..031e  const-string  v5, "get_participating_groups_paginated"
+    031e..0320  goto  -0x57
+    0320..0326  invoke-static  {v4}, LX/07Z;->A19(Ljava/lang/Iterable;)Ljava/util/HashSet;
+    0326..0328  move-result-object  v8
+    0328..032c  iget-object  v1, v6, LX/7zU;->A00:Ljava/util/Map;
+    032c..0332  invoke-interface  {v1}, Ljava/util/Map;->keySet()Ljava/util/Set;
+    0332..0334  move-result-object  v1
+    0334..033a  invoke-static  {v1}, LX/2L9;->A11(Ljava/lang/Iterable;)Ljava/util/ArrayList;
+    033a..033c  move-result-object  v4
+    033c..0342  invoke-interface  {v1}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    0342..0344  move-result-object  v3
+    0344..034a  invoke-interface  {v3}, Ljava/util/Iterator;->hasNext()Z
+    034a..034c  move-result  v1
+    034c..0350  if-eqz  v1, +0x6
+    0350..0356  invoke-static  {v4, v3}, LX/2LE;->A1H(Ljava/util/AbstractCollection;Ljava/util/Iterator;)V
+    0356..0358  goto  -0x9
+    0358..035e  invoke-static  {v4}, LX/07Z;->A19(Ljava/lang/Iterable;)Ljava/util/HashSet;
+    035e..0360  move-result-object  v1
+    0360..0366  invoke-static  {v1, v8}, LX/0Ef;->A06(Ljava/lang/Iterable;Ljava/util/Set;)Ljava/util/LinkedHashSet;
+    0366..0368  move-result-object  v7
+    0368..036c  iget-object  v1, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->groupsToFetch:Ljava/util/List;
+    036c..0372  invoke-static  {}, LX/1Xl;->A18()Ljava/util/ArrayList;
+    0372..0374  move-result-object  v5
+    0374..037a  invoke-interface  {v1}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    037a..037c  move-result-object  v4
+    037c..0382  invoke-interface  {v4}, Ljava/util/Iterator;->hasNext()Z
+    0382..0384  move-result  v1
+    0384..0388  if-eqz  v1, +0x15
+    0388..038e  invoke-interface  {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    038e..0390  move-result-object  v3
+    0390..0392  move-object  v1, v3
+    0392..0396  check-cast  v1, LX/08T;
+    0396..039a  iget-object  v1, v1, LX/08T;->first:Ljava/lang/Object;
+    039a..03a0  invoke-interface  {v7, v1}, Ljava/util/Collection;->contains(Ljava/lang/Object;)Z
+    03a0..03a2  move-result  v1
+    03a2..03a6  if-nez  v1, -0x13
+    03a6..03ac  invoke-virtual  {v5, v3}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    03ac..03ae  goto  -0x18
+    03ae..03b4  invoke-static  {v5}, LX/2L9;->A11(Ljava/lang/Iterable;)Ljava/util/ArrayList;
+    03b4..03b6  move-result-object  v12
+    03b6..03bc  invoke-virtual  {v5}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+    03bc..03be  move-result-object  v5
+    03be..03c4  invoke-interface  {v5}, Ljava/util/Iterator;->hasNext()Z
+    03c4..03c6  move-result  v1
+    03c6..03ca  if-eqz  v1, +0x20
+    03ca..03d0  invoke-static  {v5}, LX/2LB;->A1D(Ljava/util/Iterator;)LX/08T;
+    03d0..03d2  move-result-object  v1
+    03d2..03d6  iget-object  v4, v1, LX/08T;->first:Ljava/lang/Object;
+    03d6..03dc  invoke-static  {v1}, LX/2LC;->A07(LX/08T;)I
+    03dc..03de  move-result  v3
+    03de..03e2  iget-object  v1, v6, LX/7zU;->A01:Ljava/util/Map;
+    03e2..03e8  invoke-interface  {v1, v4}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    03e8..03ea  move-result-object  v1
+    03ea..03ee  check-cast  v1, Ljava/lang/Number;
+    03ee..03f4  invoke-static  {v1, v3}, LX/6og;->A05(Ljava/lang/Number;I)I
+    03f4..03f6  move-result  v1
+    03f6..03fc  invoke-static  {v1}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    03fc..03fe  move-result-object  v1
+    03fe..0404  invoke-static  {v4, v1, v12}, LX/2LC;->A1S(Ljava/lang/Object;Ljava/lang/Object;Ljava/util/AbstractCollection;)V
+    0404..0406  goto  -0x23
+    0406..040a  iget-object  v1, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->maxNumberOfRounds:Ljava/lang/Integer;
+    040a..040e  if-eqz  v1, +0x4d
+    040e..0414  invoke-virtual  {v1}, Ljava/lang/Number;->intValue()I
+    0414..0416  move-result  v3
+    0416..041a  iget-object  v1, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->successfullyProcessedGroups:Ljava/util/Set;
+    041a..0420  invoke-static  {v8, v1}, LX/0Ef;->A06(Ljava/lang/Iterable;Ljava/util/Set;)Ljava/util/LinkedHashSet;
+    0420..0422  move-result-object  v13
+    0422..0428  invoke-virtual  {v12}, Ljava/util/AbstractCollection;->isEmpty()Z
+    0428..042a  move-result  v1
+    042a..042c  const/4  v6, #0x1
+    042c..0430  if-nez  v1, +0x66
+    0430..0434  iget  v1, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->round:I
+    0434..0438  if-ge  v1, v3, +0x62
+    0438..043e  invoke-interface  {v7}, Ljava/util/Collection;->size()I
+    043e..0440  move-result  v2
+    0440..0446  invoke-virtual  {v12}, Ljava/util/AbstractCollection;->size()I
+    0446..0448  move-result  v4
+    0448..044c  const-string  v1, "GroupInfoBatchProcessor/FetchTruncatedGroupsJob/Scheduling new batch for processing.\n              | Processed "
+    044c..0452  invoke-static  {v2, v1}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    0452..0454  move-result-object  v2
+    0454..0458  const-string  v1, " groups. "
+    0458..045e  invoke-virtual  {v2, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    045e..0464  invoke-virtual  {v2, v4}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0464..0468  const-string  v1, " to go."
+    0468..046e  invoke-static  {v1, v2}, LX/1Xl;->A0z(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    046e..0470  move-result-object  v1
+    0470..0476  invoke-static  {v1}, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A00(Ljava/lang/String;)Ljava/lang/String;
+    0476..047a  iget  v1, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->round:I
+    047a..047e  add-int/lit8  v14, v1, #0x1
+    047e..0484  invoke-static  {v3}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0484..0486  move-result-object  v11
+    0486..048a  iget  v15, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->params:I
+    048a..048e  new-instance  v9, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;
+    048e..0494  invoke-direct/range  {v9..v15}, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;-><init>(LX/7e9;Ljava/lang/Integer;Ljava/util/List;Ljava/util/Set;II)V
+    0494..0498  iget-object  v0, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A08:LX/0fW;
+    0498..049c  if-eqz  v0, +0xb9
+    049c..04a2  invoke-virtual  {v0, v9}, LX/0fW;->A01(Lorg/whispersystems/jobqueue/Job;)V
+    04a2..04a4  return-void
+    04a4..04a8  iget-object  v3, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->groupsToFetch:Ljava/util/List;
+    04a8..04ac  iget-object  v1, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A02:LX/7nL;
+    04ac..04b0  if-eqz  v1, +0xac
+    04b0..04b6  invoke-interface  {v3}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    04b6..04b8  move-result-object  v4
+    04b8..04ba  const/4  v3, #0x0
+    04ba..04c0  invoke-interface  {v4}, Ljava/util/Iterator;->hasNext()Z
+    04c0..04c2  move-result  v1
+    04c2..04c6  if-eqz  v1, +0xc
+    04c6..04cc  invoke-static  {v4}, LX/2LB;->A1D(Ljava/util/Iterator;)LX/08T;
+    04cc..04ce  move-result-object  v1
+    04ce..04d4  invoke-static  {v1}, LX/2LC;->A07(LX/08T;)I
+    04d4..04d6  move-result  v1
+    04d6..04d8  add-int/2addr  v3, v1
+    04d8..04da  goto  -0xf
+    04da..04de  div-int/lit16  v1, v3, #0x2710
+    04de..04e2  add-int/lit8  v1, v1, #0x1
+    04e2..04e4  int-to-double  v3, v1
+    04e4..04ee  const-wide  v5, #0x3ff2666666666666 (4607857958744122982)
+    04ee..04f0  mul-double/2addr  v3, v5
+    04f0..04f2  double-to-int  v1, v3
+    04f2..04f6  add-int/lit8  v3, v1, #0x1
+    04f6..04f8  goto  -0x70
+    04f8..04fe  invoke-virtual  {v12}, Ljava/util/AbstractCollection;->isEmpty()Z
+    04fe..0500  move-result  v1
+    0500..0504  if-nez  v1, +0x25
+    0504..0508  iget-object  v5, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A07:LX/0B0;
+    0508..050c  if-eqz  v5, +0x6d
+    050c..0510  iget  v3, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->round:I
+    0510..0514  const-string  v1, "GroupInfoBatchProcessor/FetchTruncatedGroupsJob/Aborted after "
+    0514..051a  invoke-static  {v3, v1}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    051a..051c  move-result-object  v3
+    051c..0520  const-string  v1, " rounds"
+    0520..0526  invoke-static  {v1, v3}, LX/1Xl;->A0z(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    0526..0528  move-result-object  v4
+    0528..052e  invoke-virtual  {v12}, Ljava/util/AbstractCollection;->size()I
+    052e..0530  move-result  v1
+    0530..0536  invoke-static  {v1}, LX/3q3;->A0h(I)Ljava/lang/StringBuilder;
+    0536..0538  move-result-object  v3
+    0538..053c  const-string  v1, " unprocessed groups."
+    053c..0542  invoke-static  {v1, v3}, LX/1Xl;->A0z(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    0542..0544  move-result-object  v1
+    0544..054a  invoke-virtual  {v5, v4, v1, v6}, LX/0B0;->A0g(Ljava/lang/String;Ljava/lang/String;Z)V
+    054a..054e  if-ne  v10, v2, +0x38
+    054e..0552  iget-object  v2, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A06:LX/0cN;
+    0552..0556  if-eqz  v2, +0x2a
+    0556..0558  const/4  v1, #0x0
+    0558..055c  iput-boolean  v1, v2, LX/0cN;->A01:Z
+    055c..0560  iget-object  v5, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A05:LX/0wE;
+    0560..0564  if-eqz  v5, +0x20
+    0564..0568  iget  v4, v0, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->params:I
+    0568..056e  invoke-static  {v13}, LX/2L9;->A11(Ljava/lang/Iterable;)Ljava/util/ArrayList;
+    056e..0570  move-result-object  v3
+    0570..0576  invoke-interface  {v13}, Ljava/util/Collection;->iterator()Ljava/util/Iterator;
+    0576..0578  move-result-object  v2
+    0578..057e  invoke-interface  {v2}, Ljava/util/Iterator;->hasNext()Z
+    057e..0580  move-result  v0
+    0580..0584  if-eqz  v0, +0x16
+    0584..058a  invoke-static  {v2}, LX/2LB;->A1A(Ljava/util/Iterator;)Ljava/lang/String;
+    058a..058c  move-result-object  v1
+    058c..0590  sget-object  v0, LX/1bc;->A01:LX/1bd;
+    0590..0596  invoke-static  {v1}, LX/1bd;->A01(Ljava/lang/String;)LX/1bc;
+    0596..0598  move-result-object  v0
+    0598..059e  invoke-virtual  {v3, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    059e..05a0  goto  -0x13
+    05a0..05a4  const-string  v0, "groupChatManager"
+    05a4..05a6  goto  +0x35
+    05a6..05aa  const-string  v0, "groupSyncStateBridge"
+    05aa..05ac  goto  +0x32
+    05ac..05b2  invoke-static  {v3}, LX/07Z;->A1S(Ljava/lang/Iterable;)Ljava/util/Set;
+    05b2..05b4  move-result-object  v0
+    05b4..05ba  invoke-virtual  {v5, v0, v4}, LX/0wE;->A12(Ljava/util/Set;I)V
+    05ba..05c0  invoke-interface  {v13}, Ljava/util/Collection;->size()I
+    05c0..05c2  move-result  v1
+    05c2..05c6  const-string  v0, "GroupInfoBatchProcessor/FetchTruncatedGroupsJob/Sync batch group processing done.\n              | Processed "
+    05c6..05cc  invoke-static  {v1, v0}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    05cc..05ce  move-result-object  v1
+    05ce..05d2  const-string  v0, "\n              | groups in total."
+    05d2..05d8  invoke-static  {v0, v1}, LX/1Xl;->A0z(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    05d8..05da  move-result-object  v0
+    05da..05e0  invoke-static  {v0}, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A00(Ljava/lang/String;)Ljava/lang/String;
+    05e0..05e2  return-void
+    05e2..05e6  const-string  v0, "crashLogs"
+    05e6..05e8  goto  +0x14
+    05e8..05ec  const-string  v0, "mexBatchGetGroupInfoApi"
+    05ec..05ee  goto  +0x11
+    05ee..05f4  invoke-static  {}, LX/2L6;->A1N()LX/2K2;
+    05f4..05f6  move-result-object  v0
+    05f6..05f8  throw  v0
+    05f8..05fc  const-string  v0, "batchGetGroupInfoProtocolHelper"
+    05fc..05fe  goto  +0x9
+    05fe..0602  const-string  v0, "abProps"
+    0602..0604  goto  +0x6
+    0604..0608  const-string  v0, "groupInfoPipelineStrategyController"
+    0608..060a  goto  +0x3
+    060a..060e  const-string  v0, "waJobManager"
+    060e..0614  invoke-static  {v0}, LX/00l;->A0H(Ljava/lang/String;)V
+    0614..0616  const/4  v0, #0x0
+    0616..0618  throw  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public A0N(ZL)  # .registers 4
+    # full signature: Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A0N(Ljava/lang/Exception;)Z
+    0000..0002  const/4  v1, #0x0
+    0002..0008  invoke-static  {v3, v1}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  instance-of  v0, v3, LX/7gm;
+    000c..0010  if-nez  v0, +0xb
+    0010..0016  invoke-virtual  {v3}, Ljava/lang/Throwable;->getCause()Ljava/lang/Throwable;
+    0016..0018  move-result-object  v0
+    0018..001c  instance-of  v0, v0, LX/7gm;
+    001c..0020  if-nez  v0, +0x3
+    0020..0022  return  v1
+    0022..0024  const/4  v0, #0x1
+    0024..0026  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public Cf0(VL)  # .registers 12
+    # full signature: Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->Cf0(Landroid/content/Context;)V
+    0000..0006  invoke-static  {}, LX/2L9;->A0K()LX/08Y;
+    0006..0008  move-result-object  v9
+    0008..000c  const/16  v0, #0x114
+    000c..0012  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0012..0014  move-result-object  v8
+    0014..0018  check-cast  v8, LX/0B0;
+    0018..001c  const/16  v0, #0x1080
+    001c..0022  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0022..0024  move-result-object  v7
+    0024..0028  check-cast  v7, LX/0fW;
+    0028..002c  const/16  v0, #0xe39
+    002c..0032  invoke-static  {v0}, LX/00T;->A03(I)Ljava/lang/Object;
+    0032..0034  move-result-object  v6
+    0034..0038  check-cast  v6, LX/0wE;
+    0038..003c  const/16  v0, #0xf83
+    003c..0042  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0042..0044  move-result-object  v5
+    0044..0048  check-cast  v5, LX/85O;
+    0048..004c  const/16  v0, #0xe3d
+    004c..0052  invoke-static  {v0}, LX/00T;->A03(I)Ljava/lang/Object;
+    0052..0054  move-result-object  v4
+    0054..0058  check-cast  v4, LX/0cN;
+    0058..005c  const/16  v0, #0xf8b
+    005c..0062  invoke-static  {v0}, LX/00T;->A03(I)Ljava/lang/Object;
+    0062..0064  move-result-object  v3
+    0064..0068  check-cast  v3, LX/7uj;
+    0068..006c  const/16  v0, #0xf8a
+    006c..0072  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0072..0074  move-result-object  v2
+    0074..0078  check-cast  v2, LX/7oo;
+    0078..007c  const/16  v0, #0xf89
+    007c..0082  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0082..0084  move-result-object  v1
+    0084..0088  check-cast  v1, LX/7nL;
+    0088..008a  const/4  v0, #0x0
+    008a..0090  invoke-static  {v9, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0090..0094  iput-object  v9, v10, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A00:LX/08Y;
+    0094..009a  invoke-static  {v8, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    009a..009e  iput-object  v8, v10, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A07:LX/0B0;
+    009e..00a4  invoke-static  {v7, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    00a4..00a8  iput-object  v7, v10, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A08:LX/0fW;
+    00a8..00ae  invoke-static  {v6, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    00ae..00b2  iput-object  v6, v10, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A05:LX/0wE;
+    00b2..00b8  invoke-static  {v5, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    00b8..00bc  iput-object  v5, v10, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A01:LX/85O;
+    00bc..00c2  invoke-static  {v4, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    00c2..00c6  iput-object  v4, v10, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A06:LX/0cN;
+    00c6..00cc  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    00cc..00d0  iput-object  v3, v10, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A04:LX/7uj;
+    00d0..00d6  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    00d6..00da  iput-object  v2, v10, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A03:LX/7oo;
+    00da..00e0  invoke-static  {v1, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    00e0..00e4  iput-object  v1, v10, Lcom/whatsapp/group/batch/FetchTruncatedGroupsJob;->A02:LX/7nL;
+    00e4..00e6  return-void
+    # exception table: 0 try range(s)
+.end method

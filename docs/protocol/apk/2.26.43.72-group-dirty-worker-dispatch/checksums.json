@@ -1,0 +1,38 @@
+{
+  "README.md": {
+    "bytes": 5329,
+    "sha256": "0c3e2b58f3d6007c37e36c2e4651cccd01d894946c2c31c9319a592329908895"
+  },
+  "context-enum.txt": {
+    "bytes": 1809,
+    "sha256": "16e471771982d4c63da6be1550d909db1b2ad7a4f91b7820f64e7261a784af46"
+  },
+  "group-parser.txt": {
+    "bytes": 759,
+    "sha256": "9a21d4ae1afd214d2ee07102f3ad3a2e8c666921d50c082d1fca4c92fcbb9700"
+  },
+  "jid-wire-text.txt": {
+    "bytes": 506,
+    "sha256": "d9f6145da1195859615454db20505ea76906523754a8cafc66386dabbfe06fd0"
+  },
+  "job.txt": {
+    "bytes": 31046,
+    "sha256": "b3b2c94bc8350f3b8b938d2df6c9ea6af87375207f3135b1dc9526119516ecfc"
+  },
+  "mex-dispatch.txt": {
+    "bytes": 4087,
+    "sha256": "b44270d4d7cafa013f839799563bb2b1d6fcf2469924cf31bb5c093a6b0b550d"
+  },
+  "notification-scheduling-excerpt.txt": {
+    "bytes": 2831,
+    "sha256": "03df343611a3600f271818aa634656dd72ec95d21602b6d83361fb698d2a744b"
+  },
+  "reproduce.py": {
+    "bytes": 2460,
+    "sha256": "ce10f07e860425688ee429127f6c2669f2ac3ff93aae37c96324672ce5408540"
+  },
+  "stanza-operation.txt": {
+    "bytes": 3900,
+    "sha256": "7b18bba68b93303c51949d69b7141655ebac15f8a248c7f461a36b85ddabc666"
+  }
+}

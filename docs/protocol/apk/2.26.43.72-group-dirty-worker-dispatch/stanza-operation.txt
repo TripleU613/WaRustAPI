@@ -1,0 +1,78 @@
+
+# class: LX/8UL;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLL)  # .registers 5
+    # full signature: LX/8UL;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+    0000..0006  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v2, v1, LX/8UL;->A01:Ljava/lang/String;
+    000a..000e  iput-object  v3, v1, LX/8UL;->A00:Ljava/lang/String;
+    000e..0012  iput-object  v4, v1, LX/8UL;->A02:Ljava/util/List;
+    0012..0016  const/16  v0, #0xa
+    0016..001c  invoke-static  {v1, v0}, LX/8cm;->A01(Ljava/lang/Object;I)LX/00q;
+    001c..001e  move-result-object  v0
+    001e..0022  iput-object  v0, v1, LX/8UL;->A03:LX/00p;
+    0022..0024  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public equals(ZL)  # .registers 6
+    # full signature: LX/8UL;->equals(Ljava/lang/Object;)Z
+    0000..0002  const/4  v3, #0x1
+    0002..0006  if-eq  v4, v5, +0x28
+    0006..000a  instance-of  v0, v5, LX/8UL;
+    000a..000c  const/4  v2, #0x0
+    000c..0010  if-eqz  v0, +0x22
+    0010..0014  check-cast  v5, LX/8UL;
+    0014..0018  iget-object  v1, v4, LX/8UL;->A01:Ljava/lang/String;
+    0018..001c  iget-object  v0, v5, LX/8UL;->A01:Ljava/lang/String;
+    001c..0022  invoke-static  {v1, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    0022..0024  move-result  v0
+    0024..0028  if-eqz  v0, +0x16
+    0028..002c  iget-object  v1, v4, LX/8UL;->A00:Ljava/lang/String;
+    002c..0030  iget-object  v0, v5, LX/8UL;->A00:Ljava/lang/String;
+    0030..0036  invoke-static  {v1, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    0036..0038  move-result  v0
+    0038..003c  if-eqz  v0, +0xc
+    003c..0040  iget-object  v1, v4, LX/8UL;->A02:Ljava/util/List;
+    0040..0044  iget-object  v0, v5, LX/8UL;->A02:Ljava/util/List;
+    0044..004a  invoke-static  {v1, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    004a..004c  move-result  v0
+    004c..0050  if-nez  v0, +0x3
+    0050..0052  return  v2
+    0052..0054  return  v3
+    # exception table: 0 try range(s)
+.end method
+
+.method public hashCode(I)  # .registers 3
+    # full signature: LX/8UL;->hashCode()I
+    0000..0004  iget-object  v0, v2, LX/8UL;->A01:Ljava/lang/String;
+    0004..000a  invoke-static  {v0}, LX/2LB;->A04(Ljava/lang/String;)I
+    000a..000c  move-result  v1
+    000c..0010  iget-object  v0, v2, LX/8UL;->A00:Ljava/lang/String;
+    0010..0016  invoke-static  {v0, v1}, LX/2LC;->A03(Ljava/lang/String;I)I
+    0016..0018  move-result  v1
+    0018..001c  iget-object  v0, v2, LX/8UL;->A02:Ljava/util/List;
+    001c..0022  invoke-static  {v0, v1}, LX/2LB;->A03(Ljava/lang/Object;I)I
+    0022..0024  move-result  v0
+    0024..0026  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+.method public toString(L)  # .registers 5
+    # full signature: LX/8UL;->toString()Ljava/lang/String;
+    0000..0004  iget-object  v1, v4, LX/8UL;->A01:Ljava/lang/String;
+    0004..0008  iget-object  v3, v4, LX/8UL;->A00:Ljava/lang/String;
+    0008..000c  iget-object  v2, v4, LX/8UL;->A02:Ljava/util/List;
+    000c..0010  const-string  v0, "BatchGetGroupInfoRequest(iqId="
+    0010..0016  invoke-static  {v0, v1}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0016..0018  move-result-object  v1
+    0018..001c  const-string  v0, ", context="
+    001c..0022  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0022..0028  invoke-virtual  {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0028..002c  const-string  v0, ", groupJids="
+    002c..0032  invoke-static  {v2, v0, v1}, LX/1Xm;->A06(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    0032..0034  move-result-object  v0
+    0034..0036  return-object  v0
+    # exception table: 0 try range(s)
+.end method

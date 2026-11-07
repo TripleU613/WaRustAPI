@@ -1,0 +1,19 @@
+
+# class: LX/1bd;
+# extends: Ljava/lang/Object;
+
+.method public A01(LL)  # .registers 3
+    # full signature: LX/1bd;->A01(Ljava/lang/String;)LX/1bc;
+    0000..0004  sget-object  v0, Lcom/whatsapp/infra/core/jid/Jid;->Companion:LX/0Dd;
+    0004..000a  invoke-static  {v2}, LX/0Dd;->A00(Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    000a..000c  move-result-object  v1
+    000c..0010  instance-of  v0, v1, LX/1bc;
+    0010..0014  if-eqz  v0, +0x7
+    0014..0018  check-cast  v1, LX/1bc;
+    0018..001c  if-eqz  v1, +0x3
+    001c..001e  return-object  v1
+    001e..0022  new-instance  v0, LX/09P;
+    0022..0028  invoke-direct  {v0, v2}, LX/09P;-><init>(Ljava/lang/String;)V
+    0028..002a  throw  v0
+    # exception table: 0 try range(s)
+.end method

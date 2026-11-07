@@ -1,0 +1,73 @@
+
+# class: LX/7uj;
+# extends: Ljava/lang/Object;
+
+.method public A00(VLLLL)  # .registers 17
+    # full signature: LX/7uj;->A00(LX/7e9;LX/7xh;LX/FfK;Ljava/util/List;)V
+    0000..0002  move-object  v8, v12
+    0002..0006  iget-object  v4, v12, LX/7uj;->A04:LX/0if;
+    0006..0008  const/4  v5, #0x0
+    0008..000e  invoke-static  {}, LX/3q0;->A0X()LX/0i1;
+    000e..0010  move-result-object  v3
+    0010..0016  invoke-static/range  {v16..v16}, LX/1Xl;->A19(Ljava/lang/Iterable;)Ljava/util/ArrayList;
+    0016..0018  move-result-object  v6
+    0018..001e  invoke-interface/range  {v16..v16}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    001e..0020  move-result-object  v7
+    0020..0026  invoke-interface  {v7}, Ljava/util/Iterator;->hasNext()Z
+    0026..0028  move-result  v0
+    0028..002c  if-eqz  v0, +0x1f
+    002c..0032  invoke-static  {v7}, LX/2LB;->A0i(Ljava/util/Iterator;)Lcom/whatsapp/infra/core/jid/Jid;
+    0032..0034  move-result-object  v0
+    0034..0038  new-instance  v2, LX/6zi;
+    0038..003e  invoke-direct  {v2}, Lcom/facebook/graphql/calls/GraphQlCallInput;-><init>()V
+    003e..0044  invoke-static  {v0}, LX/2LD;->A0e(Lcom/whatsapp/infra/core/jid/Jid;)Ljava/lang/String;
+    0044..0046  move-result-object  v1
+    0046..004a  const-string  v0, "group_jid"
+    004a..0050  invoke-virtual  {v2, v0, v1}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A0A(Ljava/lang/String;Ljava/lang/String;)V
+    0050..0054  const-string  v1, "INTERACTIVE"
+    0054..0058  const-string  v0, "query_context"
+    0058..005e  invoke-virtual  {v2, v0, v1}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A0A(Ljava/lang/String;Ljava/lang/String;)V
+    005e..0064  invoke-virtual  {v6, v2}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0064..0066  goto  -0x22
+    0066..0068  move-object  v10, v13
+    0068..006e  invoke-virtual  {v13}, Ljava/lang/Enum;->ordinal()I
+    006e..0070  move-result  v1
+    0070..0072  const/4  v0, #0x2
+    0072..0076  if-eq  v1, v0, +0x3c
+    0076..0078  const/4  v0, #0x1
+    0078..007c  if-eq  v1, v0, +0x36
+    007c..0080  if-eq  v1, v5, +0x31
+    0080..0082  const/4  v0, #0x3
+    0082..0086  if-ne  v1, v0, +0x37
+    0086..008a  const-string  v2, "INACTIVE_GROUP_MIGRATION"
+    008a..008e  new-instance  v1, LX/6zH;
+    008e..0094  invoke-direct  {v1}, Lcom/facebook/graphql/calls/GraphQlCallInput;-><init>()V
+    0094..0098  const-string  v0, "groups"
+    0098..009e  invoke-virtual  {v1, v0, v6}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A0B(Ljava/lang/String;Ljava/util/List;)V
+    009e..00a2  const-string  v0, "request_context"
+    00a2..00a8  invoke-virtual  {v1, v0, v2}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A0A(Ljava/lang/String;Ljava/lang/String;)V
+    00a8..00ae  invoke-static  {v1, v3}, LX/6oe;->A1J(Lcom/facebook/graphql/calls/GraphQlCallInput;LX/0i1;)V
+    00ae..00b2  const-class  v1, LX/71h;
+    00b2..00b6  const-string  v0, "QueryBatchGetGroups"
+    00b6..00bc  invoke-static  {v3, v1, v0, v5}, LX/6oh;->A0D(LX/0i1;Ljava/lang/Class;Ljava/lang/String;Z)LX/0iT;
+    00bc..00be  move-result-object  v0
+    00be..00c4  invoke-static  {v0, v4}, LX/2LA;->A0Y(LX/0iQ;Ljava/lang/Object;)LX/0iq;
+    00c4..00c6  move-result-object  v0
+    00c6..00c8  const/4  v11, #0x6
+    00c8..00cc  new-instance  v6, LX/8da;
+    00cc..00ce  move-object  v7, v14
+    00ce..00d0  move-object  v9, v15
+    00d0..00d6  invoke-direct/range  {v6..v11}, LX/8da;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+    00d6..00dc  invoke-virtual  {v0, v6}, LX/0iq;->AQY(Lkotlin/jvm/functions/Function1;)V
+    00dc..00de  return-void
+    00de..00e2  const-string  v2, "PER_GROUP_DIRTY_RECOVERY"
+    00e2..00e4  goto  -0x2c
+    00e4..00e8  const-string  v2, "PER_GROUP_DIRTY_RECOVERY_TRUNCATABLE"
+    00e8..00ea  goto  -0x2f
+    00ea..00ee  const-string  v2, "GET_PARTICIPATING_GROUPS_PAGINATED"
+    00ee..00f0  goto  -0x32
+    00f0..00f6  invoke-static  {}, LX/2L6;->A1N()LX/2K2;
+    00f6..00f8  move-result-object  v0
+    00f8..00fa  throw  v0
+    # exception table: 0 try range(s)
+.end method

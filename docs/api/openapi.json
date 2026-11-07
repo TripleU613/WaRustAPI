@@ -20134,5 +20134,13 @@
     ],
     "description": "New integration regression verifies existing groups_dirty ACK-route refusal preserves capture and account/checkpoint/pin/session/outbox/journal state across reopen/repeated handling, without action or generic fallback ACK. Pinned group constructor exports are distinguished from native raw-string scheduling; no global grammar or runtime admission change, route, query or live operation added.",
     "evidence": "docs/protocol/apk/2.26.43.72-group-dirty-constructor-boundary/README.md"
+  },
+  "x-group-dirty-worker-admission-evidence": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Pinned dirty worker parses selected raw strings through required concrete group type before MEX/stanza dispatch. Context enum, selected MEX group_jid/INTERACTIVE fields, plain32000ms timer and job exception predicate retained. Effective flags/serializer/callback/persistence and broader Rust legacy compatibility remain separate. Existing xtask reproduces evidence; no global parser, saved-work rewrite/replay, route or live change.",
+    "evidence": "docs/protocol/apk/2.26.43.72-group-dirty-worker-dispatch/README.md"
   }
 }

@@ -10792,3 +10792,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   Pinned group constructors are retained separately from raw-string scheduling;
   no global group grammar/runtime policy change. See
   [dirty boundary](docs/protocol/groups.md#dirty-ack-envelope-storagereopen-and-constructor-boundary-2026-11-07).
+
+- Traced current groups_dirty raw-list worker into typed1bc admission before
+  MEX/stanza dispatch; retained distinct context/timer/request inputs. Broader
+  Rust legacy compatibility and native continuation remain separate; no runtime
+  or live change. See [worker gate](docs/protocol/groups.md#current-dirty-worker-typed-admission-before-dispatch-2026-11-07).

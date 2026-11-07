@@ -3412,3 +3412,17 @@ that point. Constructor evidence alone therefore does not settle the downstream
 raw-string queue-to-request admission. Existing supported short legacy group IDs
 are not globally tightened. [Complete exports, regression and limits](apk/2.26.43.72-group-dirty-constructor-boundary/README.md).
 No live account operation or native blanket ACK parity claim.
+
+### Current dirty worker typed admission before dispatch (2026-11-07)
+
+**Confirmed static, pinned43.72:**0w9 schedules FetchTruncatedGroupsJob with
+context7e9.A05=PER_GROUP_DIRTY_RECOVERY_TRUNCATABLE. A0L parses each selected raw
+group string with1bd.A01, requiring1bc, before choosing MEX (flags0x344e/0x2a35)
+or the stanza path. Selected MEX uses full group_jid plus INTERACTIVE and the
+uppercase request context; selected stanza dispatch uses lowercase context and
+32000ms. The raw scheduling-to-typed-request gate is now bound; complete
+serializer/callback/persistence and effective flags remain separate. Existing
+Rust broader legacy compatibility is not relabeled native-complete or globally
+changed; historical work is not rewritten/replayed.
+[Complete worker/parser/dispatch and bounded scheduler excerpt](apk/2.26.43.72-group-dirty-worker-dispatch/README.md).
+No live operation or runtime policy change.

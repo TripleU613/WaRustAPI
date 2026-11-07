@@ -9821,3 +9821,10 @@ Local public upload eligibility omission corrected at shared entry, including ca
   constructors corroborated, but selected dirty scheduling collects raw strings;
   global group grammar is not tightened. See
   [dirty boundary](groups.md#dirty-ack-envelope-storagereopen-and-constructor-boundary-2026-11-07).
+
+- Pinned current dirty worker admission closed: raw strings become required1bc
+  groups through1bd.A01 before either selected MEX/stanza dispatch. Context
+  enum, MEX input fields, plain32000ms timer and job-specific7gm exception
+  predicate retained; effective flags/serializer/durable continuation remain
+  separate. No historical replay or global parser change. See
+  [worker admission](groups.md#current-dirty-worker-typed-admission-before-dispatch-2026-11-07).
