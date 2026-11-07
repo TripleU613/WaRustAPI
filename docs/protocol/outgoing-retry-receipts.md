@@ -517,3 +517,12 @@ on success; duplicate registration reports then replaces on normal continuation.
 The previously traced bulk disconnect method clears A05, so it does not prove
 retry-receipt cleanup. [Exact methods, normalization and remaining consumers](apk/2.26.43.72-retry-receipt-callback-handoff/README.md).
 Rust durable no-replay ownership remains unchanged; no automatic retry added.
+
+## Retry callback consumers: ACK completion versus disconnect failure
+
+**Confirmed selected static:** exact A04 field-reference scan binds ordinary
+matched ACK completion to BsT(node), with retry wrapper forwarding null even
+for an error-bearing ACK. Selected fail-all handling snapshots/clears A04 then
+calls BsR(IOException(disconnected)); the status error-by-ID consumer is separate.
+[Methods and remaining producer/retry/restart scope](apk/2.26.43.72-retry-receipt-callback-consumers/README.md).
+No Rust success/refusal or no-replay policy change; no live operation.

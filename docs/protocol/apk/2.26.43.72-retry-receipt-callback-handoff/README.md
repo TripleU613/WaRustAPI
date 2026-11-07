@@ -79,3 +79,7 @@ The initial signing question did not need a new trace: existing [PQ signing
 provenance](../2.26.43.72-prekey-upload-replies/README.md#pq-signing-and-wire-byte-provenance-2026-11-04)
 already binds EqE's entire generated public array to signing/storage and0Yj.A00
 reuse. Native primitive equivalence and complete lifecycle remain separate.
+
+Follow-up: [exact A04 consumers](../2.26.43.72-retry-receipt-callback-consumers/README.md)
+now bind ACK completion, selected disconnect/fail-all handling and the other
+direct field reads. Full producer/scheduling/job-retry/restart parity stays open.

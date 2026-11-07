@@ -1,0 +1,39 @@
+
+# class: LX/0ln;
+# extends: Ljava/lang/Object;
+
+.method public A0B(VLL)  # .registers 6
+    # full signature: LX/0ln;->A0B(LX/Eoh;Ljava/lang/Exception;)V
+    0000..0004  iget-object  v2, v3, LX/0ln;->A0C:LX/0Th;
+    0004..0008  const-string  v1, "MessageCallbacksManager/received_message too large error; stanzaKey="
+    0008..000c  new-instance  v0, Ljava/lang/StringBuilder;
+    000c..0012  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0012..0018  invoke-virtual  {v0, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0018..001e  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    001e..0020  move-result-object  v0
+    0020..0026  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0026..002a  iget-object  v1, v2, LX/0Th;->A04:Ljava/util/Map;
+    002a..002c  monitor-enter
+    002c..0032  invoke-interface  {v1, v4}, Ljava/util/Map;->remove(Ljava/lang/Object;)Ljava/lang/Object;
+    0032..0034  move-result-object  v0
+    0034..0038  check-cast  v0, LX/1ue;
+    0038..003a  monitor-exit
+    003a..003e  if-eqz  v0, +0x18
+    003e..0044  invoke-interface  {v0, v5}, LX/1ue;->BsR(Ljava/lang/Exception;)V
+    0044..0048  iget-object  v0, v4, LX/Eoh;->A06:Ljava/lang/String;
+    0048..004e  invoke-static  {v0}, LX/0Th;->A00(Ljava/lang/String;)Z
+    004e..0050  move-result  v0
+    0050..0054  if-eqz  v0, +0xd
+    0054..0058  iget-object  v0, v2, LX/0Th;->A02:LX/00x;
+    0058..005e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    005e..0060  move-result-object  v0
+    0060..0064  check-cast  v0, LX/0V4;
+    0064..006a  invoke-virtual  {v0}, LX/0V4;->A07()V
+    006a..006c  return-void
+    006c..006e  move-exception  v0
+    006e..0070  monitor-exit
+    0070..0072  throw  v0
+    # exception table: 2 try range(s)
+    # catch <all> code_units 0016..001f -> 0036
+    # catch <all> code_units 0037..0038 -> 0036
+.end method

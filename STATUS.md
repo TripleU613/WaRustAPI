@@ -10661,3 +10661,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   mode0/null completion and untimed wait to A04; bulk disconnect cleanup covers
   separate A05. A04 consumers/native recovery remain unresolved. Retained compact
   DEX evidence; research only, no runtime change or live operation.
+
+- Pinned retry callback A04 direct consumers now traced: exact-key ACK completion,
+  disconnect snapshot/clear/failure and separate status-only error consumer.
+  Eight direct DEX references accounted for; native scheduling/retry/restart and
+  full reader admission remain separate. Research only, no live operation.

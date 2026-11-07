@@ -1,0 +1,11 @@
+
+# class: LX/E5V;
+# extends: Ljava/io/IOException;
+
+.method public <init>(V)  # .registers 2
+    # full signature: LX/E5V;-><init>()V
+    0000..0004  const-string  v0, "disconnected"
+    0004..000a  invoke-direct  {v1, v0}, Ljava/io/IOException;-><init>(Ljava/lang/String;)V
+    000a..000c  return-void
+    # exception table: 0 try range(s)
+.end method

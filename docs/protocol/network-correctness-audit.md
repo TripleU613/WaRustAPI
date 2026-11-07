@@ -6159,3 +6159,10 @@ evidence, not new APK behavior or proof of full group-send/network parity.
   normal continuation. Bulk disconnect evidence covers A05, not this A04 map;
   retry ACK/removal/failure consumers remain unresolved. Research only. See
   [retry callback handoff](apk/2.26.43.72-retry-receipt-callback-handoff/README.md).
+
+- Confirmed pinned retry A04 consumers: exhausted eight exact DEX field references;
+  message6 removes exact Eoh callback and calls BsT(node), including matched
+  error-bearing ACKs. Selected message3 snapshots/clears A04 then fails callbacks
+  with IOException(disconnected). Status-only error consumer is separate. Native
+  job completion is not server acceptance or resend permission. See
+  [callback consumers](apk/2.26.43.72-retry-receipt-callback-consumers/README.md).

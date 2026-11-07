@@ -1,0 +1,48 @@
+
+# class: LX/0ln;
+# extends: Ljava/lang/Object;
+
+.method public A0F(VZI)  # .registers 6
+    # full signature: LX/0ln;->A0F(ZI)V
+    0000..0004  iget-object  v2, v3, LX/0ln;->A0F:Ljava/lang/Object;
+    0004..0006  monitor-enter
+    0006..000a  iget-object  v0, v3, LX/0ln;->A0I:Ljava/util/Map;
+    000a..0010  invoke-interface  {v0}, Ljava/util/Map;->isEmpty()Z
+    0010..0012  move-result  v0
+    0012..0016  if-eqz  v0, +0xb
+    0016..001a  iget-object  v0, v3, LX/0ln;->A0H:Ljava/util/Map;
+    001a..0020  invoke-interface  {v0}, Ljava/util/Map;->isEmpty()Z
+    0020..0022  move-result  v1
+    0022..0024  const/4  v0, #0x0
+    0024..0028  if-nez  v1, +0x3
+    0028..002a  const/4  v0, #0x1
+    002a..002e  if-nez  v4, +0x17
+    002e..0032  if-nez  v0, +0x15
+    0032..0034  const/4  v0, #0x0
+    0034..0038  iput  v0, v3, LX/0ln;->A00:I
+    0038..003c  iget-object  v1, v3, LX/0ln;->A0E:LX/0m2;
+    003c..003e  const/4  v0, #0x4
+    003e..0044  invoke-virtual  {v1, v0}, Landroid/os/Handler;->removeMessages(I)V
+    0044..0048  const/16  v0, #0x8
+    0048..004e  invoke-virtual  {v1, v0}, Landroid/os/Handler;->removeMessages(I)V
+    004e..0052  iget-object  v0, v1, LX/0m2;->A00:Ljava/util/concurrent/ConcurrentMap;
+    0052..0058  invoke-interface  {v0}, Ljava/util/Map;->clear()V
+    0058..005a  monitor-exit
+    005a..005e  iget-object  v1, v3, LX/0ln;->A0E:LX/0m2;
+    005e..0060  const/4  v0, #0x3
+    0060..0066  invoke-virtual  {v1, v0}, Landroid/os/Handler;->obtainMessage(I)Landroid/os/Message;
+    0066..0068  move-result-object  v0
+    0068..006c  iput  v5, v0, Landroid/os/Message;->arg2:I
+    006c..0072  invoke-virtual  {v0}, Landroid/os/Message;->sendToTarget()V
+    0072..0074  return-void
+    0074..0076  move-exception  v0
+    0076..0078  throw  v0
+    0078..007a  move-exception  v0
+    007a..007c  monitor-exit
+    007c..007e  throw  v0
+    # exception table: 4 try range(s)
+    # catch <all> code_units 0003..0019 -> 003a
+    # catch <all> code_units 0019..002d -> 003c
+    # catch <all> code_units 003b..003c -> 003c
+    # catch <all> code_units 003d..003e -> 003c
+.end method
