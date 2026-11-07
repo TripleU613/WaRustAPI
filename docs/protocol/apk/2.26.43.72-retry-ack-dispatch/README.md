@@ -32,11 +32,15 @@ This is distinct from simply returningfalse.
 0Sf.A0O passes BX2 toA07. 0Sf.A0S explicitly bypasses its receipt feature-flag test
 when context.type is retry; after its other tag checks it reachesA07(false).
 A07(false) calls1i8.A03 thenA0V; A03 creates Android Message with arg1=76 and the
-Eoh context as obj. A07(true) emits ccq_android_ack_bypassed and returns without
-that message. The final Message76 consumer binding is still open. The previously
-retained [F3e.A05 writer](../2.26.43.72-prekey-upload-replies/prekey-ack-wire-builder.txt)
-constructs ack with context id/to/class/type/participant/recipient/edit and copies
-extra attributes, but this chunk does not claim to close the intervening binding.
+Eoh context as obj. **Correction 2026-11-06:** A07(true) emits
+ccq_android_ack_bypassed then falls through to the SAME message construction
+and enqueue path. The initial claim that it returned without that message was
+incorrect; a fresh export matched sender-common.txt exactly. See the
+[ordinary receipt error trace and branch correction](../2.26.43.72-ordinary-receipt-parse-error-dispatch/README.md).
+The [later writer-binding bundle](../2.26.43.72-retry-version-error-ack/README.md)
+closes the selected Message76-to-F3e.A05 binding; it was open only at this
+initial research checkpoint. F3e.A05 constructs ack with context
+id/to/class/type/participant/recipient/edit and copies extra attributes.
 
 ## Actual receipt context factory located
 

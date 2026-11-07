@@ -1,4 +1,11 @@
 {
+  "x-ordinary-receipt-parse-error-research": {
+    "x-cli": "xtask apk-virtual-overrides <apk> --class 'LX/1k2;' --method BX2 --signature '()Z' --include-interfaces",
+    "x-transport": "research only; ordinary parse-error ACK runtime remains unimplemented",
+    "x-live": false,
+    "description": "Pinned ordinary15H/F10 and status19t callers plus BX2 override census and queued1ic.A0E show both selected wrapper error routes reach1rg.A04 for LIL and fresh487 context. Corrected earlier evidence claim: A07(true) logs bypass then falls through into the same Message76 construction/enqueue as false; receipt flag selects logging boolean, not suppression at that method. Existing later writer binding is reused. No Rust runtime or traffic change. Native parser causes must be separated from local bounds/storage before implementing ordinary error ACKs; queue recovery, metadata and remote acceptance remain open. No account operation or HTTP route.",
+    "evidence": "docs/protocol/apk/2.26.43.72-ordinary-receipt-parse-error-dispatch/README.md"
+  },
   "x-offline-aggregate-required-device": {
     "x-cli": "xtask apk-smali <apk> --class 'LX/0Tp;' --method A0B --signatures --exceptions",
     "x-transport": "incoming offline message_id aggregate required actor admission",

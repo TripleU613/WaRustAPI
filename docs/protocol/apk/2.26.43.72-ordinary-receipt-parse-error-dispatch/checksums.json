@@ -1,0 +1,38 @@
+{
+  "README.md": {
+    "bytes": 6490,
+    "sha256": "27fb93879f8393dd354eef61dacfa16e1fa0302901a74aca56ed3a3c2cbe6043"
+  },
+  "conversion-callers.txt": {
+    "bytes": 406,
+    "sha256": "6fe5e8d6186a32c298eac10e74ea604a06a8f623da0f3e1737bfc34260dc2a12"
+  },
+  "ordinary-handler.txt": {
+    "bytes": 2499,
+    "sha256": "3e696d5e4540a88ac879df20a7cd00e77ff9559f824ce8f1dfac7eedc959e8d8"
+  },
+  "ordinary-registration.txt": {
+    "bytes": 1496,
+    "sha256": "1bfad52dc4189f14680b7e9dfe81cbd6ec5ad5cd0c344c316801a89c63692860"
+  },
+  "parser-callers.txt": {
+    "bytes": 132,
+    "sha256": "0a49497035eaa94ac7fb7406aed8578bd97b8a644eae35e0e17796fd06f7320d"
+  },
+  "queued-error-handler.txt": {
+    "bytes": 2649,
+    "sha256": "a7193627aea4b6f2502399da0d8064fbfd0673718f54ef97114442af890a5bc3"
+  },
+  "status-handler.txt": {
+    "bytes": 21036,
+    "sha256": "c7b35f255af3e5e138419f9543957d10ed41cfe6a6a1073f3a4feb81d28c9b2e"
+  },
+  "wrapper-flags.txt": {
+    "bytes": 1108,
+    "sha256": "d48f65e6f1663ee3be397a946d71111ab013f7e747f4b856a8366832112dcb9d"
+  },
+  "writer-builder-callers.txt": {
+    "bytes": 262,
+    "sha256": "cd23e2b85af0e3cdf814dfb149f7116cfd99a8d89d7ac6f593903372504ab096"
+  }
+}

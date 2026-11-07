@@ -1,3 +1,11 @@
+2026-11-06 — **Traced ordinary receipt error487 dispatch and corrected an evidence error.**
+Both selected native wrapper paths reach the parsing-error handler for LIL.
+A fresh export refuted the old claim that A07(true) returns without sending:
+it logs then falls through to the same Message76 path. The prior README and
+checksum now explicitly record the correction. Rust runtime remains unchanged;
+ordinary error response classification is the next implementation gap.
+[Complete handler/wrapper/error evidence, byte comparisons and limits](docs/protocol/apk/2.26.43.72-ordinary-receipt-parse-error-dispatch/README.md). No live account operation.
+
 2026-11-06 — **Refused malformed required actors in offline aggregates.**
 The message_id branch now distinguishes required DeviceJid failure from nullable
 key-aggregate skipping. Known constructor-null, wrong-class and bounded binary

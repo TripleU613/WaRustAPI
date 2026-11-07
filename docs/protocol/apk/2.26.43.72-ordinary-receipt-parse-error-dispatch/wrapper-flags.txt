@@ -1,0 +1,36 @@
+# Declared overrides with interface ancestry: LX/1k2;->BX2()Z
+# Coverage: 114178 APK classes; superclass/interface ancestry; declared overrides only; inherited-target/default-method/external/runtime dispatch unverified
+# ancestry: LX/1k2; -> Ljava/lang/Object;
+# ancestry: LX/1k3; -> Ljava/lang/Object;
+# interfaces: LX/1k3; => LX/1k2;, Ljava/lang/Comparable;
+# ancestry: LX/1uU; -> Ljava/lang/Object;
+# interfaces: LX/1uU; => LX/1k2;
+
+# class: LX/1k2;
+# extends: Ljava/lang/Object;
+
+.method public BX2(Z)  # .registers 0
+    # full signature: LX/1k2;->BX2()Z
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/1k3;
+# extends: Ljava/lang/Object;
+
+.method public BX2(Z)  # .registers 2
+    # full signature: LX/1k3;->BX2()Z
+    0000..0002  const/4  v0, #0x1
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method
+
+# class: LX/1uU;
+# extends: Ljava/lang/Object;
+
+.method public BX2(Z)  # .registers 2
+    # full signature: LX/1uU;->BX2()Z
+    0000..0002  const/4  v0, #0x0
+    0002..0004  return  v0
+    # exception table: 0 try range(s)
+.end method

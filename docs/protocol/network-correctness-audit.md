@@ -5091,3 +5091,25 @@ refuse with unchanged checkpoint/outbox rows and journal and redacted errors.
 Native ordinary parse-error response dispatch, full class/cache/binary fidelity,
 valid-device projection and live acceptance remain open; no new request or account
 operation. This guard does not assert universal native NACK or rollback behavior.
+
+## Ordinary parse-error convergence and corrected send gate (2026-11-06)
+
+**Confirmed selected static / runtime implementation gap:** [ordinary handler, wrapper census and queued error path](apk/2.26.43.72-ordinary-receipt-parse-error-dispatch/README.md)
+bind F10.A03 to ordinary15H and status19t handlers. Both selected BX2 variants
+reach 1rg.A04 for LIL, which builds a fresh error487 context. The queued path
+also creates distinct completion bookkeeping. Required offline aggregate actor
+failures are therefore candidates for an evidenced error response; current Rust
+silence is not claimed to match a native silence policy.
+
+**Corrected earlier evidence interpretation:** 0Sf.A07(true) logs a bypass then
+falls through into the same Message76 construction and enqueue path as false.
+It does not return without sending. Fresh bytes match the old retained export;
+its README and checksum now carry the correction explicitly. The receipt feature
+flag in A0S selects this boolean, not a wire-suppression gate in A07. The later
+writer bundle already closes the selected Message76-to-F3e.A05 binding.
+
+No runtime changed in this research chunk. The next implementation must carry
+confirmed native parse-error causes separately from local limits/storage faults,
+use the fresh descriptor without recipient/edit, preserve capture/write ordering
+and forbid resend/query/identity work. Queue recovery, unsupported metadata and
+remote acceptance remain unverified; this is not permission to ACK all refusals.

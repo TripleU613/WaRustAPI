@@ -1,0 +1,34 @@
+
+# class: LX/15H;
+# extends: LX/14h;
+
+.method public <init>(V)  # .registers 5
+    # full signature: LX/15H;-><init>()V
+    0000..0002  const/4  v0, #0x1
+    0002..0008  filled-new-array  {v0}, [I
+    0008..000a  move-result-object  v3
+    000a..000c  const/4  v0, #0x2
+    000c..0012  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0012..0014  move-result-object  v2
+    0014..0016  const/4  v1, #0x0
+    0016..001a  new-instance  v0, LX/00y;
+    001a..0020  invoke-direct  {v0, v2, v1}, LX/00y;-><init>(Ljava/lang/Object;LX/00v;)V
+    0020..0026  invoke-direct  {v4, v0, v3}, LX/14h;-><init>(LX/00x;[I)V
+    0026..002a  const/16  v0, #0xbf2
+    002a..0030  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0030..0032  move-result-object  v0
+    0032..0036  iput-object  v0, v4, LX/15H;->A00:LX/05a;
+    0036..003a  const/16  v0, #0x185f
+    003a..0040  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0040..0042  move-result-object  v0
+    0042..0046  iput-object  v0, v4, LX/15H;->A01:LX/05a;
+    0046..004a  const/16  v0, #0xbfd
+    004a..0050  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0050..0052  move-result-object  v0
+    0052..0056  iput-object  v0, v4, LX/15H;->A02:LX/05a;
+    0056..005a  new-instance  v0, Ljava/util/LinkedHashSet;
+    005a..0060  invoke-direct  {v0}, Ljava/util/LinkedHashSet;-><init>()V
+    0060..0064  iput-object  v0, v4, LX/15H;->A03:Ljava/util/Set;
+    0064..0066  return-void
+    # exception table: 0 try range(s)
+.end method

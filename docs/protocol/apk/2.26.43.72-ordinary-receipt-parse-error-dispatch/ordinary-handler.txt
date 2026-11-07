@@ -1,0 +1,54 @@
+
+# class: LX/15H;
+# extends: LX/14h;
+
+.method public A04(ZLL)  # .registers 13
+    # full signature: LX/15H;->A04(LX/0Tp;LX/Eoh;)Z
+    0000..0002  const/4  v2, #0x1
+    0002..0008  invoke-static  {v11, v2}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  const/4  v0, #0x2
+    000a..0010  invoke-static  {v12, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0010..0014  iget-object  v0, v10, LX/14h;->A02:LX/05a;
+    0014..0018  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0018..001e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    001e..0020  move-result-object  v3
+    0020..0024  check-cast  v3, LX/0Td;
+    0024..0028  iget-wide  v0, v12, LX/Eoh;->A00:J
+    0028..002e  invoke-static  {v3, v2, v0, v1}, LX/0Td;->A00(LX/0Td;IJ)LX/F0K;
+    002e..0030  move-result-object  v1
+    0030..0034  check-cast  v1, LX/E0D;
+    0034..0038  iget-object  v0, v10, LX/15H;->A02:LX/05a;
+    0038..003c  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    003c..0042  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0042..0044  move-result-object  v0
+    0044..0048  check-cast  v0, LX/F10;
+    0048..004e  invoke-virtual  {v0, v11, v12, v1}, LX/F10;->A03(LX/0Tp;LX/Eoh;LX/E0D;)LX/FvR;
+    004e..0050  move-result-object  v4
+    0050..0054  iget-object  v0, v10, LX/15H;->A00:LX/05a;
+    0054..0058  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    0058..005e  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    005e..0060  move-result-object  v3
+    0060..0064  check-cast  v3, LX/F21;
+    0064..0066  const/4  v5, #0x0
+    0066..006a  const-wide/16  v8, #0x0
+    006a..006e  const-wide/16  v6, #0x1388
+    006e..0074  invoke-virtual/range  {v3..v9}, LX/F21;->A05(LX/FvR;IJJ)V
+    0074..0078  iget-object  v1, v10, LX/15H;->A03:Ljava/util/Set;
+    0078..007a  monitor-enter
+    007a..0080  invoke-interface  {v1, v12}, Ljava/util/Set;->remove(Ljava/lang/Object;)Z
+    0080..0082  monitor-exit
+    0082..0084  return  v2
+    0084..0086  move-exception  v0
+    0086..008a  iget-object  v1, v10, LX/15H;->A03:Ljava/util/Set;
+    008a..008c  monitor-enter
+    008c..0092  invoke-interface  {v1, v12}, Ljava/util/Set;->remove(Ljava/lang/Object;)Z
+    0092..0094  monitor-exit
+    0094..0096  throw  v0
+    0096..0098  move-exception  v0
+    0098..009a  monitor-exit
+    009a..009c  throw  v0
+    # exception table: 3 try range(s)
+    # catch <all> code_units 0028..003a -> 0042
+    # catch <all> code_units 003d..0040 -> 004b
+    # catch <all> code_units 0046..0049 -> 004b
+.end method
