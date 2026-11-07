@@ -1,4 +1,11 @@
 {
+  "x-token-schedule-account-ownership": {
+    "x-cli": "existing normal ACK-triggered privacy-token actions; no new command or flag",
+    "x-transport": "private SendState account authority checked before scheduling decisions, token preparation and success timestamp updates",
+    "x-live": false,
+    "description": "Offline red regression reproduced silent recent-state suppression after saved registration ID replacement. New token schedules and missing-state completion insertions capture current account/store authority. Existing state is checked transactionally before recent timestamp return, expiry/owner preparation and success updates. Regression covers unchanged checkpoints/journal, reopen and original-owner once-only action completion. Legacy absence remains unknown; configured buckets/exclusions/clock parity remain unported. No wire change, new schedule on mismatch, replay, reset or live operation.",
+    "evidence": "docs/protocol/token-schedule-account-ownership.md"
+  },
   "x-message-ack-account-ownership": {
     "x-cli": "existing normal direct/group outbox and transport flows; no new command or flag",
     "x-transport": "private exact-wire/account ACK owner captured with final normal ciphertext reservation and checked before successful or failed ordinary ACK mutation",

@@ -34,6 +34,9 @@ pub const FALLBACK_SECONDS: i64 = 15_724_800;
 
 #[derive(Serialize, Deserialize)]
 struct SendState {
+    /// Original local schedule/cache owner, not a token field on the wire.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    account_authority: Option<[u8; 32]>,
     /// `sent_tc_token_timestamp`, in seconds.
     sent: i64,
     /// Native nullable real_issue_timestamp. Absent legacy fields are unknown;
@@ -46,6 +49,21 @@ struct SendState {
     /// Current schedule owner, not a live callback; legacy rows omit it.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     action_id: Option<String>,
+}
+
+impl SendState {
+    fn check_account_in(&self, tx: &WriteTx<'_>) -> Result<()> {
+        if let Some(expected) = self.account_authority
+            && current_authority_in(tx)? != expected
+        {
+            return Err(invalid("token schedule account changed"));
+        }
+        Ok(())
+    }
+}
+fn current_authority_in(tx: &WriteTx<'_>) -> Result<[u8; 32]> {
+    let account = crate::session::AccountRecord::load_in_write(tx)?;
+    super::account_authority::fingerprint(tx.generation(), account.as_ref())
 }
 
 /// Content-free effect of a correlated token result on saved timestamp state.
@@ -193,6 +211,7 @@ pub(crate) fn prepare_in(
             ActionDeferReason::PrivacyTokenStateMissing,
         ));
     };
+    state.check_account_in(tx)?;
     // APK43.72 0hu.A00 clamps each bucket threshold to this floor; A01 takes
     // their min. Older than this floor is invalid for every configuration.
     // Passing this necessary bound does not prove configured-bucket admission.
@@ -238,6 +257,7 @@ pub(crate) fn record_success_in(
             &selector,
             1,
             &SendState {
+                account_authority: Some(current_authority_in(tx)?),
                 sent: captured,
                 real_issue: None,
                 real_issue_known: true,
@@ -246,6 +266,7 @@ pub(crate) fn record_success_in(
         )?;
         return Ok(TokenIssueCompletion::InsertedCompletedState);
     };
+    state.check_account_in(tx)?;
     let effect = if state.sent <= captured {
         state.sent = captured;
         state.real_issue = None;
@@ -284,6 +305,9 @@ pub(crate) fn schedule_after_ack_in(
     let user = chat.to_non_ad();
     let selector = key(&user);
     let previous = tx.get_json::<SendState>(Table::Checkpoints, &selector, 1)?;
+    if let Some(state) = &previous {
+        state.check_account_in(tx)?;
+    }
     if previous
         .as_ref()
         .is_some_and(|state| state.sent >= now_seconds.saturating_sub(FALLBACK_SECONDS))
@@ -313,6 +337,7 @@ pub(crate) fn schedule_after_ack_in(
         &selector,
         1,
         &SendState {
+            account_authority: Some(current_authority_in(tx)?),
             sent: now_seconds,
             // 43.72 0hv.A08 projects raw NULL as the prior sent time,
             // raw zero as no issue time, otherwise the raw value. A0W
@@ -364,6 +389,82 @@ mod tests {
     }
     fn now() -> i64 {
         crate::model::time::Timestamp::now().as_millis() / 1000
+    }
+
+    #[test]
+    fn recent_token_schedule_cannot_suppress_work_for_a_replacement_account() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("owner.redb");
+        let store = open_at(&path, true);
+        let account = crate::session::AccountRecord {
+            generation: store.generation(),
+            signal_registration_id: Some(31),
+            ..Default::default()
+        };
+        let user = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let captured = now();
+        let id = store
+            .write(|tx| {
+                account.save(tx)?;
+                schedule_after_ack_in(tx, &user, captured)
+            })
+            .unwrap()
+            .unwrap();
+        let mut changed = account.clone();
+        changed.signal_registration_id = Some(32);
+        store.write(|tx| changed.save(tx)).unwrap();
+        let before = store
+            .read(|tx| tx.scan_after(Table::Checkpoints, 1, None, 4096))
+            .unwrap();
+        let head = store.journal_head().unwrap();
+        // An old recent timestamp is not a current-account scheduling decision.
+        assert!(
+            store
+                .write(|tx| schedule_after_ack_in(tx, &user, captured + 1))
+                .is_err()
+        );
+        assert_eq!(
+            store
+                .read(|tx| tx.scan_after(Table::Checkpoints, 1, None, 4096))
+                .unwrap(),
+            before
+        );
+        assert_eq!(store.journal_head().unwrap(), head);
+        drop(store);
+        let store = open_at(&path, false);
+        assert!(
+            store
+                .write(|tx| schedule_after_ack_in(tx, &user, captured + 1))
+                .is_err()
+        );
+        store.write(|tx| account.save(tx)).unwrap();
+        assert!(
+            store
+                .write(|tx| schedule_after_ack_in(tx, &user, captured + 1))
+                .unwrap()
+                .is_none()
+        );
+        let request = super::super::actions::reserve_next(&store)
+            .unwrap()
+            .unwrap();
+        assert_eq!(
+            request.get_attr("id").and_then(|value| value.as_text()),
+            Some(id.as_str())
+        );
+        assert!(
+            super::super::actions::record_reply(
+                &store,
+                &Node::new("iq")
+                    .attr("type", "result")
+                    .attr("id", id.as_str())
+            )
+            .unwrap()
+        );
+        assert!(
+            super::super::actions::reserve_next(&store)
+                .unwrap()
+                .is_none()
+        );
     }
 
     #[test]

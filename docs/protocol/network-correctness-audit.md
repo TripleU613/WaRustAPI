@@ -1,5 +1,10 @@
 # Network correctness audit
 
+**Trusted-contact token schedules now retain account ownership.**
+Recent old-account cache state can no longer silently suppress a new scheduling
+decision; preparation and successful timestamp updates also check the cache owner.
+[Regression evidence and policy/legacy limits](token-schedule-account-ownership.md). No live operation.
+
 **Normal outbox message ACKs now retain reservation account ownership.**
 Direct and group ciphertext reservation freeze the original owner; successful
 and failed ACKs refuse drift before outbox facts or dependent work can change.
