@@ -788,9 +788,11 @@ pub async fn open(
     id: &str,
 ) -> Result<(MediaKind, Zeroizing<Vec<u8>>)> {
     config.validate()?;
-    let account = store
-        .read(crate::session::AccountRecord::load)?
-        .ok_or(Error::NotRegistered)?;
+    let (account, owner) = store.read(|tx| {
+        let account = crate::session::AccountRecord::load(tx)?;
+        let owner = super::account_authority::fingerprint(tx.generation(), account.as_ref())?;
+        Ok((account.ok_or(Error::NotRegistered)?, owner))
+    })?;
     if !account.is_registered() || account.phone.as_ref() != Some(&config.phone) {
         return Err(Error::NotRegistered);
     }
@@ -822,12 +824,14 @@ pub async fn open(
             .map_err(|_| bad("invalid saved ciphertext"))?;
         let plain = decrypt(&d, &body)?;
         ensure_source_available(store, id, &source_key, &source)?;
+        check_download_owner(store, owner)?;
         return Ok((d.kind, plain));
     }
     let url = media_url(&d)?;
     let client = super::image_upload::client(config)?;
     let reservation = serde_json::json!({"status":"outcome_unknown", "reservation":super::messaging::new_message_id()?});
     store.write(|tx| {
+        check_download_owner_in(tx, owner)?;
         ensure_source(tx, &source_key, &source)?;
         if tx
             .get_json::<serde_json::Value>(Table::Checkpoints, state_key.as_bytes(), 1)?
@@ -837,6 +841,7 @@ pub async fn open(
         }
         tx.put_json(Table::Checkpoints, state_key.as_bytes(), 1, &reservation)
     })?;
+    check_download_owner(store, owner)?;
     let mut response = client
         .get(url)
         .header("Accept-Encoding", "identity")
@@ -845,7 +850,15 @@ pub async fn open(
         .map_err(|_| bad("media GET failed; reservation retained"))?;
     let http_status = response.status().as_u16();
     if http_status != 200 {
-        retain_download_refusal_bound(store, &state_key, http_status, &reservation)?;
+        store.write(|tx| {
+            check_download_owner_in(tx, owner)?;
+            settle_download_in(
+                tx,
+                &state_key,
+                &reservation,
+                &serde_json::json!({"status":"server_refused", "http_status":http_status}),
+            )
+        })?;
         return Err(Error::invalid(
             "media",
             format!("media GET HTTP {http_status}; refusal retained; no retry"),
@@ -868,6 +881,7 @@ pub async fn open(
     }
     let plain = decrypt(&d, &body)?;
     store.write(|tx| {
+        check_download_owner_in(tx, owner)?;
         ensure_source(tx, &source_key, &source)?;
         settle_download_in(
             tx,
@@ -877,7 +891,26 @@ pub async fn open(
         )
     })?;
     ensure_source_available(store, id, &source_key, &source)?;
+    check_download_owner(store, owner)?;
     Ok((d.kind, plain))
+}
+
+// Local operation ownership, not an APK wire field or permission to replay.
+fn check_download_owner(store: &ProtocolStore, expected: [u8; 32]) -> Result<()> {
+    store.read(|tx| {
+        let account = crate::session::AccountRecord::load(tx)?;
+        if super::account_authority::fingerprint(tx.generation(), account.as_ref())? != expected {
+            return Err(bad("media download account changed"));
+        }
+        Ok(())
+    })
+}
+fn check_download_owner_in(tx: &crate::store::WriteTx<'_>, expected: [u8; 32]) -> Result<()> {
+    let account = crate::session::AccountRecord::load_in_write(tx)?;
+    if super::account_authority::fingerprint(tx.generation(), account.as_ref())? != expected {
+        return Err(bad("media download account changed"));
+    }
+    Ok(())
 }
 
 // A received HTTP refusal is a known outcome, unlike a transport interruption.
@@ -890,6 +923,7 @@ fn retain_download_refusal(store: &ProtocolStore, state_key: &str, status: u16) 
     retain_download_refusal_bound(store, state_key, status, &prior)
 }
 
+#[cfg(test)]
 fn settle_download(
     store: &ProtocolStore,
     state_key: &str,
@@ -943,6 +977,7 @@ fn settle_download_in(
     tx.put_json(Table::Checkpoints, state_key.as_bytes(), 1, result)
 }
 
+#[cfg(test)]
 fn retain_download_refusal_bound(
     store: &ProtocolStore,
     state_key: &str,
@@ -972,6 +1007,100 @@ pub(crate) fn ensure_available(store: &ProtocolStore, id: &str) -> Result<()> {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn account_change_fences_download_settlement_and_handoff_after_reopen() {
+        use super::*;
+        use crate::{
+            model::ids::AccountId,
+            session::{AccountRecord, RegistrationStatus},
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        for change in ["same", "jid", "logout", "removed"] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("download-owner.redb");
+            let reopen = |create| {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: AccountId::new("fixture").unwrap(),
+                    create,
+                    key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                        [7; 32],
+                    ))),
+                })
+                .unwrap()
+            };
+            let store = reopen(true);
+            let original = AccountRecord {
+                registration: RegistrationStatus::Registered,
+                own_jid: Some(crate::model::jid::Jid::parse("100@s.whatsapp.net").unwrap()),
+                ..Default::default()
+            };
+            let reservation =
+                serde_json::json!({"status":"outcome_unknown","reservation":"original"});
+            store
+                .write(|tx| {
+                    original.save(tx)?;
+                    tx.put_json(Table::Checkpoints, b"download", 1, &reservation)
+                })
+                .unwrap();
+            let owner = store
+                .read(|tx| {
+                    super::super::account_authority::fingerprint(
+                        tx.generation(),
+                        AccountRecord::load(tx)?.as_ref(),
+                    )
+                })
+                .unwrap();
+            if change != "same" {
+                let mut replacement = original.clone();
+                if change == "jid" {
+                    replacement.own_jid =
+                        Some(crate::model::jid::Jid::parse("200@s.whatsapp.net").unwrap());
+                }
+                if change == "logout" {
+                    replacement.registration = RegistrationStatus::Unregistered;
+                }
+                if change == "removed" {
+                    replacement = AccountRecord::default();
+                }
+                store.write(|tx| replacement.save(tx)).unwrap();
+            }
+            drop(store);
+            let store = reopen(false);
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let journal = store.journal_head().unwrap();
+            assert_eq!(
+                check_download_owner(&store, owner).is_ok(),
+                change == "same"
+            );
+            for result in [
+                serde_json::json!({"status":"downloaded","body":[1,2]}),
+                serde_json::json!({"status":"server_refused","http_status":403}),
+            ] {
+                let outcome = store.write(|tx| {
+                    check_download_owner_in(tx, owner)?;
+                    settle_download_in(tx, "download", &reservation, &result)
+                });
+                assert_eq!(outcome.is_ok(), change == "same");
+                if change == "same" {
+                    store
+                        .write(|tx| tx.put_json(Table::Checkpoints, b"download", 1, &reservation))
+                        .unwrap();
+                } else {
+                    assert_eq!(
+                        store
+                            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                            .unwrap(),
+                        before
+                    );
+                    assert_eq!(store.journal_head().unwrap(), journal);
+                }
+            }
+        }
+    }
+
     #[tokio::test]
     async fn image_video_mime_admission_precedes_cached_plaintext_and_get_reservation() {
         use super::*;

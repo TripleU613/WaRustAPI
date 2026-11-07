@@ -1849,3 +1849,34 @@ previous code, then both orders passed after the guard. All1,590 workspace/
 all-feature tests, strict all-target/all-feature Clippy, formatting, CLI
 reference, OpenAPI library-symbol check, APK coverage, retained evidence
 checksums and repository hygiene passed. No account operation was performed.
+
+## Ordinary download account fencing
+
+**Confirmed Rust source defect, corrected offline.** At baseline `985bbae9`,
+`media::open` validated the account once, before selecting an ordinary attachment
+and awaiting HTTPS. Its reservation and settlement checked source/reservation
+identity but not the account authority. A concurrent same-generation account
+record replacement could therefore adopt a downloaded/refused outcome after the
+operation owner changed. This is a local lifecycle defect, not APK evidence of a
+mandatory wire field or a known account-restriction cause.
+
+The operation now captures the existing account-authority fingerprint together
+with its initial account read. It rechecks before reservation, immediately before
+GET, transactionally before ciphertext/refusal settlement, and before cached or
+new plaintext handoff. Authority includes store/account generation, registration,
+phone, own JID, registration ID and Signal identity through the existing shared
+fingerprint. No raw identity is persisted or logged by these checks.
+
+An account mismatch returns `media download account changed`; a pending outcome
+stays uncertain rather than being relabeled or retried. Source and exact
+reservation checks remain in place. The final handoff check is an observation,
+not a lock held across caller use; an account change after it is not prevented.
+An already sent HTTP request cannot be recalled. Existing cache rows are not
+retroactively assigned historical owners: this fences this invocation, not all
+legacy media provenance.
+
+The offline regression captures an owner, changes JID/registration/account
+record, reopens the encrypted store, and verifies that success and HTTP-refusal
+settlement are rejected with unchanged checkpoints and journal head. A same-owner
+control allows both transitions. It also verifies the handoff owner predicate.
+No live CDN request or account operation is part of this regression.

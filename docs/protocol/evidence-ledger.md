@@ -9518,3 +9518,9 @@ Local public upload eligibility omission corrected at shared entry, including ca
   `0xffffff11`, root field 8 and cached word+0x5c count. This is separate from
   raw byte default `0x11`; public flag meanings remain unknown. See
   [metadata evidence](apk/2.26.43.72-mobileconfig-handle-publication/bool-metadata.md).
+
+- Confirmed Rust source gap at `985bbae9`: ordinary media download awaited HTTP
+  without rechecking operation account authority at settlement. Corrected with
+  existing local fingerprint and offline encrypted-store reopen/rollback regression.
+  This is not an APK wire requirement or observed ban cause. See
+  [media lifecycle](media-network-outcomes.md#ordinary-download-account-fencing).

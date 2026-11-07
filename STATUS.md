@@ -10541,3 +10541,9 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   `0xffffff11`, root field 8 and cached word+0x5c count. This is separate from
   raw byte default `0x11`; public flag meanings remain unknown. See
   [metadata evidence](docs/protocol/apk/2.26.43.72-mobileconfig-handle-publication/bool-metadata.md).
+
+- Corrected ordinary media download account ownership across reservation, GET,
+  ciphertext/refusal settlement and plaintext handoff. Offline reopen/rollback
+  regression covers changed JID/registration/account record and same-owner control.
+  Historical cache provenance and post-check caller lifetime remain outside this
+  guard. See docs/protocol/media-network-outcomes.md. No live operation.

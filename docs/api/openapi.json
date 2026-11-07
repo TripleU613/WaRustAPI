@@ -1,4 +1,11 @@
 {
+  "x-media-download-account-fencing": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "evidence": "docs/protocol/media-network-outcomes.md#ordinary-download-account-fencing",
+    "behavior": "Ordinary media open rechecks initial local account authority before reservation/GET, transactional outcome settlement and plaintext handoff. Changed owner refuses without replay; legacy cache provenance remains unknown."
+  },
   "x-mobileconfig-bool-metadata-evidence": {
     "x-cli": false,
     "x-transport": false,
