@@ -171,3 +171,46 @@ recovery, old stored-token provenance, initial-login adapters and appeal submiss
 binding are separate audit boundaries; they are not retroactively authenticated
 by this change. No server challenge/refusal is bypassed and no live account
 operation or retry is added.
+
+## Historical recovery account ownership
+
+2026-11-07. **Confirmed local persistence defect/fixed offline**, baseline
+`4c8624b6`: recovery decoded a preserved failure token, then persisted it into
+whatever AccountRecord existed in a later write transaction, using a default
+record if absent. The failing-before regression reproduced creation of an
+account from a capture alone. This is local misattribution, not a confirmed
+server restriction cause or a newly established native recovery policy.
+
+Candidate selection now loads the existing account and computes the shared
+account-authority fingerprint in the same read snapshot as capture decoding.
+Persistence requires an existing account with that fingerprint inside its write
+transaction; changed authority returns a fixed redacted InvalidInput(ban_appeal),
+missing account returns NotRegistered, and no recovered token is returned on
+those errors. A captured token alone cannot create an account. Observation-only
+timestamp changes remain compatible with the existing shared authority policy.
+Empty stores with no eligible capture still return None without creating state.
+First-token/64-credential behavior, capture decoding/selection, return encoding,
+scan bound and credential names remain unchanged. No request or appeal is sent.
+
+Tests exercise actual public recovery with a capture and missing account,
+checking unchanged capture/account/journal and encrypted reopen. A second test
+uses the actual candidate-selection and persistence seams, stages an account JID
+change, registration-id change or deletion between them, and verifies no mutation
+or token disclosure. Same-account and observation-only controls persist the
+credential; captures and resulting account state survive reopen. The existing
+positive recovery fixture now explicitly creates its synthetic account.
+
+**Limits:** the fingerprint binds account continuity during this recovery
+operation; it does not prove which historical account produced an unowned
+capture. Historical token provenance, the fixed20,000-row discovery bound,
+existing-token precedence, and appeal-submission binding remain separate.
+Likewise initial-login integer parsing is not automatically a policy for
+post-login terminal failures: the current normal receive path preserves and
+terminates those without interpreting a reason code. No new malformed-terminal
+reason gate, reconnect, replay, identity repair or native parity claim is added.
+
+Validation: full workspace/all-feature suites passed, including1,416 library
+tests,91 CLI tests and integration/xtask suites. Strict all-target/all-feature
+Clippy, CLI-reference regeneration, OpenAPI library-symbol test, APK coverage,
+formatting, whitespace and staged repository hygiene passed. No fresh APK trace
+or live account operation was performed for this local ownership correction.

@@ -55,12 +55,21 @@ fn persist_appeal_token(
     store: &ProtocolStore,
     token: Zeroizing<Vec<u8>>,
     source_step: &str,
+    expected_account: &[u8; 32],
 ) -> Result<()> {
     use crate::{model::time::Timestamp, session::ObservedCredential};
 
     let now = Timestamp::now();
     store.write(|tx| {
-        let mut account = AccountRecord::load_in_write(tx)?.unwrap_or_default();
+        let mut account = AccountRecord::load_in_write(tx)?.ok_or(Error::NotRegistered)?;
+        if super::account_authority::fingerprint(tx.generation(), Some(&account))?
+            != *expected_account
+        {
+            return Err(Error::invalid(
+                "ban_appeal",
+                "account changed before recovered token persistence",
+            ));
+        }
         if account.credentials.len() < 64
             && !account
                 .credentials
@@ -83,9 +92,32 @@ fn persist_appeal_token(
 pub fn recover_appeal_token_from_captures(
     store: &ProtocolStore,
 ) -> Result<Option<Zeroizing<String>>> {
-    use crate::binary::unpack_frame_payload;
+    let found = find_captured_appeal_token(store)?;
+    if let Some(candidate) = found {
+        persist_appeal_token(
+            store,
+            candidate.token.clone(),
+            "failure-capture",
+            &candidate.authority,
+        )?;
+        Ok(Some(Zeroizing::new(
+            String::from_utf8_lossy(&candidate.token).into_owned(),
+        )))
+    } else {
+        Ok(None)
+    }
+}
 
-    let found = store.read(|tx| {
+struct CapturedAppealToken {
+    token: Zeroizing<Vec<u8>>,
+    authority: [u8; 32],
+}
+
+// Candidate and account authority share a read snapshot. This binds only the
+// recovery operation; historical capture origin remains a separate unknown.
+fn find_captured_appeal_token(store: &ProtocolStore) -> Result<Option<CapturedAppealToken>> {
+    use crate::binary::unpack_frame_payload;
+    store.read(|tx| {
         // 256 rows was a bound set when the only source was a handful of
         // registration captures; a live account accumulates thousands, and the
         // one row holding the token is not necessarily among the first few.
@@ -129,20 +161,17 @@ pub fn recover_appeal_token_from_captures(
             if node.description == "failure"
                 && let Some(token) = node.get_attr("appeal_token").and_then(|v| v.as_text())
             {
-                return Ok(Some(Zeroizing::new(token.as_bytes().to_vec())));
+                let account = AccountRecord::load(tx)?.ok_or(Error::NotRegistered)?;
+                let authority =
+                    super::account_authority::fingerprint(tx.generation(), Some(&account))?;
+                return Ok(Some(CapturedAppealToken {
+                    token: Zeroizing::new(token.as_bytes().to_vec()),
+                    authority,
+                }));
             }
         }
         Ok(None)
-    })?;
-
-    if let Some(token_bytes) = found {
-        persist_appeal_token(store, token_bytes.clone(), "failure-capture")?;
-        Ok(Some(Zeroizing::new(
-            String::from_utf8_lossy(&token_bytes).into_owned(),
-        )))
-    } else {
-        Ok(None)
-    }
+    })
 }
 
 /// Read the `noise_appeal_token` credential from the account store, if present.
@@ -469,6 +498,8 @@ mod tests {
         })
         .unwrap();
 
+        store.write(|tx| AccountRecord::default().save(tx)).unwrap();
+
         let failure_node = Node::new("failure")
             .attr("reason", "403")
             .attr("location", "cco")
@@ -498,6 +529,147 @@ mod tests {
         let cred = saved_token.unwrap();
         assert_eq!(String::from_utf8_lossy(&cred.value), "test-appeal-token");
         assert_eq!(cred.source_step, Some("failure-capture".into()));
+    }
+
+    #[test]
+    fn recovered_appeal_token_rechecks_account_authority_before_persistence() {
+        for case in ["jid", "registration", "missing", "observation", "same"] {
+            let temp = tempfile::TempDir::new().unwrap();
+            let path = temp.path().join("recovery-owner.redb");
+            let open = |create| {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: AccountId::new("test").unwrap(),
+                    key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9u8; 32]))),
+                    create,
+                })
+                .unwrap()
+            };
+            let store = open(true);
+            store.write(|tx| AccountRecord::default().save(tx)).unwrap();
+            crate::transport::inbox::preserve(
+                &store,
+                &Node::new("failure")
+                    .attr("reason", "403")
+                    .attr("appeal_token", "private-recovery-token"),
+            )
+            .unwrap();
+            let candidate = find_captured_appeal_token(&store).unwrap().unwrap();
+            store
+                .write(|tx| {
+                    let mut account = AccountRecord::load_in_write(tx)?.unwrap();
+                    match case {
+                        "jid" => {
+                            account.own_jid =
+                                Some(crate::model::jid::Jid::parse("15555550100@s.whatsapp.net")?)
+                        }
+                        "registration" => account.signal_registration_id = Some(123),
+                        "missing" => {
+                            tx.delete(Table::Account, b"account")?;
+                            return Ok(());
+                        }
+                        "observation" => {
+                            account.last_authenticated_at = Some(crate::model::time::Timestamp(123))
+                        }
+                        _ => {}
+                    }
+                    account.save(tx)
+                })
+                .unwrap();
+            let account = store.read(|tx| tx.scan(Table::Account, 1, 100)).unwrap();
+            let captures = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let head = store.journal_head().unwrap();
+            let result = persist_appeal_token(
+                &store,
+                candidate.token,
+                "failure-capture",
+                &candidate.authority,
+            );
+            if matches!(case, "same" | "observation") {
+                result.unwrap();
+                assert!(
+                    store
+                        .read(AccountRecord::load)
+                        .unwrap()
+                        .unwrap()
+                        .credentials
+                        .iter()
+                        .any(|c| c.name == "noise_appeal_token")
+                );
+            } else {
+                let error = result.unwrap_err();
+                assert!(!error.to_string().contains("private-recovery-token"));
+                assert_eq!(
+                    store.read(|tx| tx.scan(Table::Account, 1, 100)).unwrap(),
+                    account
+                );
+                assert_eq!(store.journal_head().unwrap(), head);
+            }
+            let saved = store.read(|tx| tx.scan(Table::Account, 1, 100)).unwrap();
+            drop(store);
+            let store = open(false);
+            assert_eq!(
+                store.read(|tx| tx.scan(Table::Account, 1, 100)).unwrap(),
+                saved
+            );
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                captures
+            );
+        }
+    }
+
+    #[test]
+    fn captured_appeal_token_does_not_create_a_missing_account() {
+        let temp = tempfile::TempDir::new().unwrap();
+        let path = temp.path().join("missing-account.redb");
+        let open = |create| {
+            ProtocolStore::open(OpenOptions {
+                path: path.clone(),
+                account_id: AccountId::new("test").unwrap(),
+                key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9u8; 32]))),
+                create,
+            })
+            .unwrap()
+        };
+        let store = open(true);
+        crate::transport::inbox::preserve(
+            &store,
+            &Node::new("failure")
+                .attr("reason", "403")
+                .attr("appeal_token", "private-recovery-token"),
+        )
+        .unwrap();
+        let captures = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        let head = store.journal_head().unwrap();
+        let result = recover_appeal_token_from_captures(&store);
+        assert!(
+            matches!(result, Err(Error::NotRegistered)),
+            "capture invented an account"
+        );
+        assert!(store.read(AccountRecord::load).unwrap().is_none());
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap(),
+            captures
+        );
+        assert_eq!(store.journal_head().unwrap(), head);
+        drop(store);
+        let store = open(false);
+        assert!(store.read(AccountRecord::load).unwrap().is_none());
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap(),
+            captures
+        );
     }
 
     #[test]

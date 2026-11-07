@@ -10740,3 +10740,9 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   Valid failures retain canonical numeric reason; actual settlement/reopen tests
   cover invalid/valid controls and prevent double settlement. No live operation.
   See [shared admission](docs/protocol/messaging-transport.md#cli-shares-initial-login-reply-admission).
+
+- Historical appeal-token recovery no longer creates a default account from a
+  preserved capture. Candidate read and credential write share an account-authority
+  check; changed/missing account refuses without mutation or token return.
+  Reopen controls added. Historical provenance/discovery bound remain separate;
+  no live request. See [recovery ownership](docs/protocol/ban-appeal.md#historical-recovery-account-ownership).

@@ -9764,3 +9764,10 @@ Local public upload eligibility omission corrected at shared entry, including ca
   preserve capture/ownership on invalid input and block second valid settlement.
   Numeric CLI reasons canonicalize without arbitrary text output. See
   [shared login admission](messaging-transport.md#cli-shares-initial-login-reply-admission).
+
+- Confirmed historical appeal-token recovery account synthesis at `4c8624b6`:
+  a capture alone created a default account. Recovery now binds candidate and
+  current account authority across read/write snapshots; missing/replaced account
+  refuses without returning token or mutation. Missing-account and staged-change
+  reopen controls added; capture origin and discovery bound remain separate. See
+  [recovery ownership](ban-appeal.md#historical-recovery-account-ownership).

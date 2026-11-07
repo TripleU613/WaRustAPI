@@ -20051,5 +20051,15 @@
     ],
     "description": "Pure shared initial login reply parser returns None for success and Some(signed i32) for valid failure; unsupported roots/malformed required reasons refuse locally. Caller retains authentication, capture, exact snapshot/reservation settlement and identity checks. CLI now retains uncertainty for invalid outcomes, preserves historical failure status and canonicalizes valid numeric reason text. No historical migration, replay, active-session failure change, new route or live validation.",
     "evidence": "docs/protocol/messaging-transport.md#cli-shares-initial-login-reply-admission"
+  },
+  "x-appeal-recovery-account-ownership": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [
+      "whatsapp_api::transport::ban_appeal::recover_appeal_token_from_captures"
+    ],
+    "description": "Historical appeal token recovery captures existing account authority with candidate discovery and rechecks inside credential write. Missing account returns NotRegistered; changed authority returns fixed redacted InvalidInput(ban_appeal). Neither mutates account/capture state or returns token. Empty no-capture store remains None. Existing first-token/capacity/discovery bounds unchanged; historical capture provenance and submission ownership unproven. No HTTP route, appeal submission or live operation added.",
+    "evidence": "docs/protocol/ban-appeal.md#historical-recovery-account-ownership"
   }
 }
