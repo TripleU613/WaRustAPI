@@ -1,0 +1,32 @@
+
+# class: LX/Epa;
+# extends: Ljava/lang/Object;
+
+.method public A00(ILL)  # .registers 8
+    # full signature: LX/Epa;->A00(LX/0Tp;Ljava/lang/String;)I
+    0000..0006  invoke-virtual  {v6}, LX/0Tp;->A0Q()[LX/0Tl;
+    0006..0008  move-result-object  v6
+    0008..000e  invoke-static  {}, LX/2L6;->A1E()Ljava/util/HashMap;
+    000e..0010  move-result-object  v5
+    0010..0014  const-string  v0, "stanza-type"
+    0014..001a  invoke-virtual  {v5, v0, v7}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    001a..001e  if-eqz  v6, +0x1c
+    001e..0020  array-length  v4, v6
+    0020..0022  const/4  v3, #0x0
+    0022..0026  if-ge  v3, v4, +0x18
+    0026..002a  aget-object  v2, v6, v3
+    002a..002e  const-string  v1, "offline"
+    002e..0032  iget-object  v0, v2, LX/0Tl;->A02:Ljava/lang/String;
+    0032..0038  invoke-virtual  {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0038..003a  move-result  v0
+    003a..003e  if-nez  v0, +0x9
+    003e..0042  iget-object  v1, v2, LX/0Tl;->A02:Ljava/lang/String;
+    0042..0046  iget-object  v0, v2, LX/0Tl;->A03:Ljava/lang/String;
+    0046..004c  invoke-virtual  {v5, v1, v0}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    004c..0050  add-int/lit8  v3, v3, #0x1
+    0050..0052  goto  -0x17
+    0052..0058  invoke-virtual  {v5}, Ljava/lang/Object;->hashCode()I
+    0058..005a  move-result  v0
+    005a..005c  return  v0
+    # exception table: 0 try range(s)
+.end method

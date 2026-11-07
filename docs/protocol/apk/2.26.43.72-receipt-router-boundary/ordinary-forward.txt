@@ -1,0 +1,28 @@
+
+# class: LX/1rU;
+# extends: LX/1rN;
+
+.method private A00(VLLLJZ)  # .registers 9
+    # full signature: LX/1rU;->A00(LX/1k2;LX/Eoh;LX/E0D;JZ)V
+    0000..0004  const-string  v1, "ReceiptStanzaHandler/handleMessageStatusUpdateReceipt stanzaKey="
+    0004..0008  new-instance  v0, Ljava/lang/StringBuilder;
+    0008..000e  invoke-direct  {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    000e..0014  invoke-virtual  {v0, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+    0014..001a  invoke-virtual  {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    001a..001c  move-result-object  v0
+    001c..0022  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->i(Ljava/lang/String;)V
+    0022..0024  const/4  v1, #0x1
+    0024..0028  if-eqz  v8, +0x4
+    0028..002c  const/16  v1, #0x115
+    002c..0032  invoke-static  {v6, v7}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0032..0034  move-result-object  v0
+    0034..003a  invoke-static  {v3, v0, v1}, LX/2Ai;->A00(LX/1k2;Ljava/lang/Long;I)Landroid/os/Message;
+    003a..003c  move-result-object  v1
+    003c..0042  invoke-static  {v1}, LX/00l;->A05(Ljava/lang/Object;)V
+    0042..0044  const/4  v0, #0x3
+    0044..004a  invoke-virtual  {v5, v0}, LX/F0K;->A09(I)V
+    004a..004e  iget-object  v0, v2, LX/1rU;->A00:LX/0Ji;
+    004e..0054  invoke-interface  {v0, v1}, LX/0Ji;->accept(Ljava/lang/Object;)V
+    0054..0056  return-void
+    # exception table: 0 try range(s)
+.end method

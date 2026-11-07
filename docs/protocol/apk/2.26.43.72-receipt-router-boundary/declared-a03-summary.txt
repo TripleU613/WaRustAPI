@@ -1,0 +1,7 @@
+Derived summary of xtask apk-virtual-overrides output, not an original Evidence envelope.
+Query: LX/1rA;->A03(LX/1k2;)V, include interfaces.
+Coverage header: 114178 APK classes; declared overrides only; inherited/default/external/runtime dispatch unverified.
+Declared method classes: LX/1rA;, LX/1rH;, LX/1rJ;, LX/1rL;
+All relevant base A03 instructions are independently re-exported in base-route.txt.
+Unrelated override bodies are not duplicated in this bundle.
+1rU does not declare A03 in this census; its actual receipt-specific override is A05, invoked virtually by inherited A03.

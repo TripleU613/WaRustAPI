@@ -1,3 +1,11 @@
+2026-11-06 — **Located the upstream receipt router and unknown-type context split.**
+The inherited generic route dispatches to1rU.A05, whose ordered child/type branches
+precede ordinary F10 parsing. An admitted unhandled root uses copied-context487,
+not fresh parse-error487; a leading participants/message_id can select ordinary
+processing first. No runtime behavior changed; the retained routing matrix now
+guides the next response correction.
+[Complete adapter/sets, dispatch evidence, negative results and remaining boundaries](docs/protocol/apk/2.26.43.72-receipt-router-boundary/README.md). No live account operation.
+
 2026-11-06 — **Added missing aggregate-key error487 with local-ID boundaries.**
 Only proved required key absence in the supported key branch gains a native error
 cause and fresh ROOT-ID response. Empty/overlong inner IDs remain local refusals,

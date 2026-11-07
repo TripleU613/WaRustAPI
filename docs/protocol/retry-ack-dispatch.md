@@ -375,3 +375,20 @@ read but follows key read; the earlier blanket ordering hypothesis was refuted.
 No synthesized ID, new fact/identity authority, query/resend or account operation.
 Opaque string/root-type policy, full native key/storage/chat/queue behavior and
 live acceptance remain open.
+
+## Receipt routing precedes root-type response classification (2026-11-06)
+
+**Confirmed selected static / runtime gap:** [full receipt adapter, sets, message forwarding and negative searches](apk/2.26.43.72-receipt-router-boundary/README.md)
+bind inherited1rA.A03 to receipt-specific1rU.A05. Epa.A00 is a diagnostic hash,
+not the type classifier, and zero direct14h.BLn callers do not mean no dispatch.
+The adapter handles first participants/message_id before ordinary type membership,
+then separate call/biz/view/simple/retry/rekey/error cases and unhandled fallback.
+Unknown root types cannot be classified from F10.A03 alone.
+
+The admitted unhandled path invokes2Cx with the original context and wire487,
+preserving recipient/edit; it is distinct from fresh1rg parse-error487. This is
+a confirmed routing/construction gap in Rust, not a runtime change in this chunk.
+Future response work must preserve the router's earlier branch selection and
+special types before deciding copied versus fresh fields. Feature/provider/queue
+and binary completeness, actual traffic and server acceptance remain unverified;
+no account operation or new request is performed.

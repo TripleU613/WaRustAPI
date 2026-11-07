@@ -1,4 +1,11 @@
 {
+  "x-receipt-upstream-router-research": {
+    "x-cli": "xtask apk-smali <apk> --class 'LX/1rU;' --method A05 --signatures --exceptions",
+    "x-transport": "research only; upstream receipt router and unhandled copy487 implementation gap",
+    "x-live": false,
+    "description": "Pinned inherited1rA.A03 virtually invokes receipt1rU.A05. Complete routing evidence distinguishes early participants/message_id, ordinary status set and special call/biz/view/simple/retry/rekey/error paths before2Cx fallback. Admitted unhandled root types use copied-context wire487 preserving recipient/edit, not fresh1rg parse-error487; downstream F10 unknown-type logic alone cannot classify incoming roots. Epa.A00 is an attribute hash, not a type selector; zero direct14h.BLn callers do not disprove handler dispatch. No Rust runtime/traffic change. Future implementation needs route-before-response classification, typed-field/writer guards and capture/no-replay tests. Provider/feature/queue/binary and live completeness remain open; no HTTP route or account operation.",
+    "evidence": "docs/protocol/apk/2.26.43.72-receipt-router-boundary/README.md"
+  },
   "x-aggregate-required-key-error-boundary": {
     "x-cli": "existing receive paths; no new command or flag",
     "x-transport": "selected key-aggregate required-key cause and fresh root487 response",

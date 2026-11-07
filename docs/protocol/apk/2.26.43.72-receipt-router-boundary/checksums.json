@@ -1,0 +1,54 @@
+{
+  "README.md": {
+    "bytes": 7333,
+    "sha256": "caac47495c03c96f665da0866d84a471d08f1ef3d1797c7843a0a5184aeff06e"
+  },
+  "attribute-hash.txt": {
+    "bytes": 1508,
+    "sha256": "e63a459e7f7c292dcea8f5635da02157cf3a08edd4bd177a671309764ee9ab41"
+  },
+  "base-a05.txt": {
+    "bytes": 18722,
+    "sha256": "de79d68032919efc6a0ee7bd3a6c2aa16b28878fa6a42af337cf6780b167b8a1"
+  },
+  "base-route.txt": {
+    "bytes": 23586,
+    "sha256": "28e18ba55fd1c87e6b8974285009ec71c52304bbcb3de606da8ff2259279c638"
+  },
+  "declared-a03-summary.txt": {
+    "bytes": 586,
+    "sha256": "bd996ce63e09edd0e14b34ddf111a3ba55794d35872ab85c1bfc6dbfde0171fd"
+  },
+  "forward-message.txt": {
+    "bytes": 934,
+    "sha256": "a6f3c125e904212899a1e604d68e84ba261e14e607e7867379a84d5da2222a3a"
+  },
+  "handler-direct-callers.txt": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "incoming-type-enum.txt": {
+    "bytes": 3730,
+    "sha256": "a9738489403006888a6d348e8474bb8868d46f47d2b0797d0f24e66dd370c89d"
+  },
+  "legacy-wrapper-callers.txt": {
+    "bytes": 65,
+    "sha256": "e28a963ad45b8a88fa84ad1bd6dbd7f7cc1407bdffef627a56cfc99783bbde8b"
+  },
+  "ordinary-forward.txt": {
+    "bytes": 1494,
+    "sha256": "964c111331deb2f9b56dbc7b2f50a837f2755f3147023fdfe7c9db21b5963bbf"
+  },
+  "receipt-route.txt": {
+    "bytes": 28087,
+    "sha256": "eb70b46474fdf04286244c63c2b1f16121d8893a9456e8c6c4d88b002ad77791"
+  },
+  "route-sets.txt": {
+    "bytes": 3441,
+    "sha256": "617022640032e37ec768c6202c406dc744dd6d8f5816b9ca8687bff3aca12444"
+  },
+  "router-constructor-callers.txt": {
+    "bytes": 132,
+    "sha256": "54552c5891997cde534dcef388876266ee04d55c13f672d40d1df4842dde0851"
+  }
+}
