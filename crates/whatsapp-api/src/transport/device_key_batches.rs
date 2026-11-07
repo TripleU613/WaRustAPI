@@ -223,6 +223,42 @@ fn load(tx: &crate::store::ReadTx<'_>, id: &ClientRequestId) -> Result<Option<Ba
     }
     Ok(batch)
 }
+/// Freeze an owned outstanding page for writer handoff without selecting it again.
+pub(super) fn reserved_write_snapshot_in(
+    tx: &crate::store::ReadTx<'_>,
+    id: &ClientRequestId,
+    input: &[Jid],
+    node: &Node,
+    authority: &[u8; 32],
+) -> Result<(Vec<u8>, zeroize::Zeroizing<Vec<u8>>)> {
+    let batch = load(tx, id)?.ok_or_else(|| invalid("reserved key batch missing before write"))?;
+    batch.matches_devices(&devices(input)?)?;
+    if batch.account_authority.as_ref() != Some(authority) {
+        return Err(invalid("reserved key batch authority changed before write"));
+    }
+    let query_id = node
+        .get_attr("id")
+        .and_then(|v| v.as_text())
+        .ok_or_else(|| invalid("reserved key query id missing"))?;
+    let index = batch
+        .pages
+        .iter()
+        .position(|page| {
+            page.status == Status::OutcomeUnknown && page.query_id.as_deref() == Some(query_id)
+        })
+        .ok_or_else(|| invalid("reserved key query no longer outstanding"))?;
+    let expected = super::messaging::key_request_many(batch.expected(index), query_id)?;
+    let encode = |node: &Node| Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(node);
+    if encode(&expected)? != encode(node)? {
+        return Err(invalid("reserved key query payload changed before write"));
+    }
+    let key = key(id);
+    let raw = tx
+        .get(Table::Checkpoints, &key, 1)?
+        .ok_or_else(|| invalid("reserved key batch missing before write"))?;
+    Ok((key, zeroize::Zeroizing::new(raw)))
+}
+
 fn legacy_in(tx: &crate::store::ReadTx<'_>, id: &ClientRequestId) -> Result<bool> {
     Ok(tx
         .get(

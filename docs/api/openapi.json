@@ -20151,6 +20151,14 @@
     "description": "Pinned dirty stanza lazy selector/constructors/accessors establish iq/get/g.us/w:g2, supplied id/context and typed group children; selected Rust semantic fields match. ID bound is Java string length; list diagnostics do not establish hard gates without assertion policy. Legacy group admission, encoded order and callback/persistence remain separate. Existing xtask reproduces evidence; no wire/route/runtime/live change.",
     "evidence": "docs/protocol/apk/2.26.43.72-group-dirty-stanza-serializer/README.md"
   },
+  "x-group-query-writer-admission-and-reservation-hold": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [],
+    "description": "Membership/key-query dequeue verifies privately prepared encoding, original action/page ownership, intent/group row, account and original deadline with applicable membership. New initial preparations atomically retain an independent local reservation marker: mutable preparation-row loss alone cannot create a second query, and single/list inspection reports a held missing-preparation fault. This adds encrypted checkpoint metadata without historical backfill, native wire fields, automatic row restoration or replay. Full native scheduling/lifecycle remains incomplete.",
+    "evidence": "docs/protocol/replay-safety-audit.md#group-membershipkey-query-writer-admission-and-original-reservation-hold-2026-11-07"
+  },
   "x-sender-key-distribution-writer-admission": {
     "x-cli": true,
     "x-transport": true,

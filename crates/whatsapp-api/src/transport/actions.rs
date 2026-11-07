@@ -270,6 +270,34 @@ fn key(id: &str) -> String {
     format!("{PREFIX}{id}")
 }
 
+/// Read-only handoff proof for an already reserved action, never re-reservation.
+pub(super) fn reserved_write_snapshot_in(
+    tx: &crate::store::ReadTx<'_>,
+    id: &str,
+    node: &Node,
+    authority: &[u8; 32],
+) -> Result<(Vec<u8>, zeroize::Zeroizing<Vec<u8>>)> {
+    let row: Row = tx
+        .get_json(Table::Checkpoints, key(id).as_bytes(), 1)?
+        .ok_or_else(|| {
+            Error::invalid("action", "reserved action missing before group query write")
+        })?;
+    if row.status != ActionStatus::Sent
+        || row.prepared_account_authority.as_ref() != Some(authority)
+        || encode(&decode_owned(id, &row.wire)?)? != encode(node)?
+    {
+        return Err(Error::invalid(
+            "action",
+            "reserved group action changed before write",
+        ));
+    }
+    let key = key(id).into_bytes();
+    let raw = tx
+        .get(Table::Checkpoints, &key, 1)?
+        .ok_or_else(|| Error::invalid("action", "reserved group action missing"))?;
+    Ok((key, zeroize::Zeroizing::new(raw)))
+}
+
 /// Save contact projection diagnostics in the same transaction as data/marker.
 /// Does not change request bytes, settlement order or callback ownership.
 pub(crate) fn record_contact_projection_in(

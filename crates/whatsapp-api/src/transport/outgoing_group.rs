@@ -23,6 +23,19 @@ use sha2::{Digest, Sha256};
 use zeroize::Zeroizing;
 
 const PREFIX: &str = "outbox-group:";
+const RESERVATION_PREFIX: &str = "outbox-group-reservation:";
+fn reservation_key(id: LocalMessageId) -> String {
+    format!("{RESERVATION_PREFIX}{id}")
+}
+fn save_initial_reservation(tx: &mut crate::store::WriteTx<'_>, row: &Row) -> Result<()> {
+    tx.put_json(
+        Table::Checkpoints,
+        reservation_key(row.local_id).as_bytes(),
+        1,
+        row,
+    )?;
+    tx.put_json(Table::Checkpoints, key(row.local_id).as_bytes(), 1, row)
+}
 pub(super) fn key(id: LocalMessageId) -> String {
     format!("{PREFIX}{id}")
 }
@@ -756,6 +769,179 @@ pub(super) mod tests {
             assert_eq!(snapshot(&reopened), before);
             assert_eq!(reopened.journal_head().unwrap(), head);
             assert!(begin_selected(&reopened, id).unwrap().is_none());
+        }
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn group_query_writer_binds_membership_and_key_preparation() {
+        for phase in ["membership", "keys"] {
+            for change in [
+                "same",
+                "id",
+                "to",
+                "body",
+                "group_row",
+                "entry",
+                "deadline",
+                "backend",
+                "account",
+                "membership",
+            ] {
+                if phase == "membership" && change == "membership" {
+                    continue;
+                }
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("group-query-writer.redb");
+                let store = std::sync::Arc::new(group_fanout::tests::open(&path));
+                let mut f = group_fanout::tests::fixture();
+                f.alice.generation = store.generation();
+                store.write(|tx| f.alice.save(tx)).unwrap();
+                let id = store
+                    .write(|tx| {
+                        Ok(outbox()
+                            .enqueue(
+                                tx,
+                                &SendRequest {
+                                    client_request_id: ClientRequestId::new("group-query-writer")?,
+                                    chat: ChatId::from_jid(&f.plan.chat)?,
+                                    content: MessageContent::Text {
+                                        body: "fixture".into(),
+                                        quoted: None,
+                                        style: Default::default(),
+                                    },
+                                },
+                            )?
+                            .0
+                            .local_id)
+                    })
+                    .unwrap();
+                let (mut pending, mut node) = begin_selected(&store, id).unwrap().unwrap();
+                let mut cursor = devices::DeviceSyncCursor::default();
+                while phase == "keys"
+                    && node.get_attr("xmlns").and_then(|v| v.as_text()) != Some("encrypt")
+                {
+                    let reply = match node.get_attr("xmlns").and_then(|v| v.as_text()) {
+                        Some("w:g2") => membership(&node, &f.plan.own, &f.plan.recipients),
+                        Some("usync") => device_reply(&node),
+                        _ => panic!("unexpected group query"),
+                    };
+                    let step = pending
+                        .settle(&store, &f.alice, &reply, ConnectionEpoch(29), &mut cursor)
+                        .await
+                        .unwrap();
+                    pending = step.pending.unwrap();
+                    node = step.node.unwrap();
+                }
+                match change {
+                    "id" => node = node.attr("id", "changed-fixture"),
+                    "to" => node = node.attr("to", "changed.invalid"),
+                    "body" => node = node.children(vec![Node::new("changed-fixture")]),
+                    _ => {}
+                }
+                let backend_key = store
+                    .read(|tx| match &pending.waiting {
+                        Waiting::Membership(query) => actions::reserved_write_snapshot_in(
+                            tx,
+                            query,
+                            &pending.write_node,
+                            &pending.row.authority()?,
+                        ),
+                        Waiting::Keys(_) => device_key_batches::reserved_write_snapshot_in(
+                            tx,
+                            &bundle_selector(id)?,
+                            &pending.needed,
+                            &pending.write_node,
+                            &pending.row.authority()?,
+                        ),
+                        _ => unreachable!(),
+                    })
+                    .unwrap()
+                    .0;
+                let (_incoming, incoming) = tokio::sync::mpsc::channel(1);
+                let (outgoing, mut writes) = tokio::sync::mpsc::channel(1);
+                let link = super::super::connection::NodeLink::new(incoming, outgoing);
+                let worker = store.clone();
+                let account = f.alice.clone();
+                let task = tokio::spawn(async move {
+                    link.send_group_step(&worker, &account, Some(&pending), &node)
+                        .await
+                });
+                let queued = writes.recv().await.unwrap();
+                match change {
+                    "entry" | "group_row" => store
+                        .write(|tx| {
+                            if change == "entry" {
+                                tx.delete(Table::Outbox, &id.0)?;
+                            } else {
+                                tx.delete(Table::Checkpoints, key(id).as_bytes())?;
+                            }
+                            Ok(())
+                        })
+                        .unwrap(),
+                    "deadline" => tokio::time::advance(std::time::Duration::from_secs(30)).await,
+                    "backend" => store
+                        .write(|tx| {
+                            tx.delete(Table::Checkpoints, &backend_key)?;
+                            Ok(())
+                        })
+                        .unwrap(),
+                    "account" => store
+                        .write(|tx| {
+                            let mut account = AccountRecord::load_in_write(tx)?.unwrap();
+                            account.signal_registration_id =
+                                Some(account.signal_registration_id.unwrap_or(31) ^ 1);
+                            account.save(tx)
+                        })
+                        .unwrap(),
+                    "membership" => {
+                        let notification = Node::new("notification")
+                            .attr("type", "w:gp2")
+                            .attr("id", "QUERY-MEMBERSHIP")
+                            .attr("from", f.plan.chat.clone())
+                            .children(vec![Node::new("remove").children(vec![
+                                Node::new("participant").attr("jid", f.plan.recipients[0].clone()),
+                            ])]);
+                        assert!(groups::apply_change_notification(&store, &notification).unwrap());
+                    }
+                    _ => {}
+                }
+                let snapshot = |store: &ProtocolStore| {
+                    store
+                        .read(|tx| {
+                            Table::ALL
+                                .into_iter()
+                                .map(|t| tx.scan(t, 1, 10000))
+                                .collect::<Result<Vec<_>>>()
+                        })
+                        .unwrap()
+                };
+                let before = snapshot(&store);
+                let head = store.journal_head().unwrap();
+                let prepared = queued.prepare();
+                assert_eq!(prepared.is_some(), change == "same", "{phase}/{change}");
+                if let Some((_, written)) = prepared {
+                    written.send(Ok(())).unwrap();
+                }
+                assert_eq!(
+                    task.await.unwrap().is_ok(),
+                    change == "same",
+                    "{phase}/{change}"
+                );
+                assert!(writes.recv().await.is_none());
+                assert_eq!(snapshot(&store), before);
+                assert_eq!(store.journal_head().unwrap(), head);
+                drop(store);
+                let reopened = group_fanout::tests::open(&path);
+                assert_eq!(snapshot(&reopened), before);
+                assert_eq!(reopened.journal_head().unwrap(), head);
+                assert!(begin_selected(&reopened, id).unwrap().is_none());
+                assert_eq!(snapshot(&reopened), before);
+                assert_eq!(reopened.journal_head().unwrap(), head);
+                if change == "group_row" {
+                    assert!(preparation(&reopened, id).is_err());
+                    assert!(preparations(&reopened).is_err());
+                }
+            }
         }
     }
 
@@ -2007,6 +2193,22 @@ pub fn preparations(store: &ProtocolStore) -> Result<Vec<PreparationSummary>> {
             }
             cursor = rows.last().map(|(k, _)| k.clone());
             for (k, value) in rows {
+                if k.starts_with(RESERVATION_PREFIX.as_bytes()) {
+                    let original: Row = serde_json::from_slice(&value)
+                        .map_err(|_| invalid("invalid original group reservation"))?;
+                    if reservation_key(original.local_id).as_bytes() != k.as_slice() {
+                        return Err(invalid("original group reservation selector mismatch"));
+                    }
+                    if tx
+                        .get(Table::Checkpoints, key(original.local_id).as_bytes(), 1)?
+                        .is_none()
+                    {
+                        return Err(invalid(
+                            "group preparation missing; original reservation held; no replay",
+                        ));
+                    }
+                    continue;
+                }
                 if !k.starts_with(PREFIX.as_bytes()) {
                     continue;
                 }
@@ -2035,6 +2237,15 @@ pub fn preparation(
                     .map_err(|_| invalid("invalid saved group preparation"))
             })
             .transpose()?;
+        if row.is_none()
+            && tx
+                .get(Table::Checkpoints, reservation_key(id).as_bytes(), 1)?
+                .is_some()
+        {
+            return Err(invalid(
+                "group preparation missing; original reservation held; no replay",
+            ));
+        }
         if row.as_ref().is_some_and(|r| r.local_id != id) {
             return Err(invalid("group preparation selector mismatch"));
         }
@@ -2043,7 +2254,10 @@ pub fn preparation(
     row.as_ref().map(|row| summary(store, row)).transpose()
 }
 pub(crate) fn reserved_in(tx: &ReadTx<'_>, id: LocalMessageId) -> Result<bool> {
-    Ok(tx.get(Table::Checkpoints, key(id).as_bytes(), 1)?.is_some())
+    Ok(tx.get(Table::Checkpoints, key(id).as_bytes(), 1)?.is_some()
+        || tx
+            .get(Table::Checkpoints, reservation_key(id).as_bytes(), 1)?
+            .is_some())
 }
 
 enum Waiting {
@@ -2268,6 +2482,9 @@ pub(crate) fn begin_selected(
             || tx
                 .get(Table::Checkpoints, key(ticket).as_bytes(), 1)?
                 .is_some()
+            || tx
+                .get(Table::Checkpoints, reservation_key(ticket).as_bytes(), 1)?
+                .is_some()
         {
             return Ok(None);
         }
@@ -2293,14 +2510,14 @@ pub(crate) fn begin_selected(
             } else {
                 Block::UnsupportedContent
             });
-            tx.put_json(Table::Checkpoints, key(ticket).as_bytes(), 1, &row)?;
+            save_initial_reservation(tx, &row)?;
             return Ok(None);
         }
         row.info_query = actions::queue_in(tx, "group-info", "group info", |id| {
             groups::info_request(entry.intent.chat.jid(), id)
         })?;
         let node = actions::reserve_one_in(tx, &row.info_query)?;
-        tx.put_json(Table::Checkpoints, key(ticket).as_bytes(), 1, &row)?;
+        save_initial_reservation(tx, &row)?;
         Ok(Some((row, node)))
     })?;
     Ok(result.map(|(row, node)| {
@@ -2338,6 +2555,61 @@ fn membership_digest(store: &ProtocolStore, chat: &Jid) -> Result<Option<[u8; 32
             .map(|raw| Sha256::digest(raw).into()))
     })
 }
+/// Original membership/key query and its durable group preparation ownership.
+pub(crate) struct QueryWriteGuard {
+    expected_sha256: [u8; 32],
+    row: Row,
+    entry: OutboxEntry,
+    backend_key: Vec<u8>,
+    backend: Zeroizing<Vec<u8>>,
+    membership: Option<[u8; 32]>,
+    deadline: tokio::time::Instant,
+}
+impl QueryWriteGuard {
+    pub(crate) fn check_write_authority(&self, store: &ProtocolStore, node: &Node) -> Result<()> {
+        let check_deadline = || {
+            if tokio::time::Instant::now() >= self.deadline {
+                Err(invalid("group query deadline elapsed before write"))
+            } else {
+                Ok(())
+            }
+        };
+        check_deadline()?;
+        let wire =
+            Zeroizing::new(Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(node)?);
+        if <[u8; 32]>::from(Sha256::digest(&*wire)) != self.expected_sha256 {
+            return Err(invalid("queued group query differs from preparation"));
+        }
+        store.read(|tx| {
+            let account = AccountRecord::load(tx)?;
+            self.row.check_account(tx.generation(), account.as_ref())?;
+            let row: Option<Row> =
+                tx.get_json(Table::Checkpoints, key(self.row.local_id).as_bytes(), 1)?;
+            if row.as_ref() != Some(&self.row)
+                || outbox().get(tx, self.entry.local_id)?.as_ref() != Some(&self.entry)
+            {
+                return Err(invalid(
+                    "group query preparation or intent changed before write",
+                ));
+            }
+            let backend = Zeroizing::new(
+                tx.get(Table::Checkpoints, &self.backend_key, 1)?
+                    .unwrap_or_default(),
+            );
+            if *backend != *self.backend {
+                return Err(invalid("group query reservation changed before write"));
+            }
+            Ok(())
+        })?;
+        if self.membership.is_some()
+            && membership_digest(store, self.entry.intent.chat.jid())? != self.membership
+        {
+            return Err(invalid("group membership changed before key query write"));
+        }
+        check_deadline()
+    }
+}
+
 /// One prepared distribution, its held final message and original time window.
 pub(crate) struct DistributionWriteGuard {
     expected_sha256: [u8; 32],
@@ -2389,6 +2661,44 @@ impl DistributionWriteGuard {
 }
 
 impl Pending {
+    pub(crate) fn query_write_guard(
+        &self,
+        store: &ProtocolStore,
+        account: &AccountRecord,
+    ) -> Result<Option<QueryWriteGuard>> {
+        if !matches!(self.waiting, Waiting::Membership(_) | Waiting::Keys(_)) {
+            return Ok(None);
+        }
+        self.check_account_read(store, Some(account))?;
+        let authority = self.row.authority()?;
+        let (backend_key, backend) = store.read(|tx| match &self.waiting {
+            Waiting::Membership(id) => {
+                actions::reserved_write_snapshot_in(tx, id, &self.write_node, &authority)
+            }
+            Waiting::Keys(_) => device_key_batches::reserved_write_snapshot_in(
+                tx,
+                &bundle_selector(self.entry.local_id)?,
+                &self.needed,
+                &self.write_node,
+                &authority,
+            ),
+            _ => unreachable!(),
+        })?;
+        let wire = Zeroizing::new(
+            Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(&self.write_node)?,
+        );
+        let guard = QueryWriteGuard {
+            expected_sha256: Sha256::digest(&*wire).into(),
+            row: self.row.clone(),
+            entry: self.entry.clone(),
+            backend_key,
+            backend,
+            membership: self.membership,
+            deadline: self.deadline,
+        };
+        guard.check_write_authority(store, &self.write_node)?;
+        Ok(Some(guard))
+    }
     pub(crate) fn distribution_write_guard(
         &self,
         store: &ProtocolStore,

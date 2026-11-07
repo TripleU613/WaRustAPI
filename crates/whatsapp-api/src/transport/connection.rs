@@ -362,6 +362,10 @@ pub fn update_login_identity(
 /// One outbound stanza and where to report the socket write outcome.
 type Written = (Node, oneshot::Sender<Result<()>>);
 enum WriteGuard {
+    GroupQuery(
+        Arc<ProtocolStore>,
+        Box<super::outgoing_group::QueryWriteGuard>,
+    ),
     GroupDistribution(
         Arc<ProtocolStore>,
         Box<super::outgoing_group::DistributionWriteGuard>,
@@ -398,6 +402,9 @@ impl Outbound {
     // The writer ends the epoch without encoding, writing, or releasing a batch.
     pub(crate) fn prepare(self) -> Option<Written> {
         let admission = match self.guard {
+            Some(WriteGuard::GroupQuery(store, guard)) => {
+                guard.check_write_authority(&store, &self.node)
+            }
             Some(WriteGuard::GroupDistribution(store, guard)) => {
                 guard.check_write_authority(&store, &self.node)
             }
@@ -644,6 +651,16 @@ impl NodeLink {
         pending: Option<&super::outgoing_group::Pending>,
         node: &Node,
     ) -> Result<()> {
+        if let Some(pending) = pending
+            && let Some(guard) = pending.query_write_guard(store, account)?
+        {
+            return self
+                .send_guarded(
+                    node,
+                    Some(WriteGuard::GroupQuery(store.clone(), Box::new(guard))),
+                )
+                .await;
+        }
         if let Some(pending) = pending
             && let Some(guard) = pending.distribution_write_guard(store, account)?
         {
