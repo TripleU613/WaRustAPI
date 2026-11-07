@@ -1,0 +1,82 @@
+{
+  "member_sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+  "diagnostics": {
+    "0x18f07": "UnknownQueryHash",
+    "0x18f18": "UnknownOneQueryHash",
+    "0x1b5d1": "hasQueryHash=",
+    "0x1b5af": "; queryHash=",
+    "0x1b5bc": "; previousQueryHash=",
+    "0x1b5ef": "hasOneQueryHash=",
+    "0x1b5df": "; oneQueryHash=",
+    "0x1b6a5": "; hasOneQueryHashSupported=",
+    "0x1ae24": "generateMetadata",
+    "0x1b13b": "response_"
+  },
+  "calls": {
+    "0x83210": "0x8d670",
+    "0x8d860": "0x60484",
+    "0x8d9c8": "0x60484",
+    "0x8da20": "0x8e590",
+    "0x8db60": "0x92fd4",
+    "0x8e148": "0x907ac",
+    "0x8e154": "0x908c8",
+    "0x8e380": "0x7f970",
+    "0x86784": "0x880f8",
+    "0x867b8": "0x880f8",
+    "0x86804": "0xccb70",
+    "0x87140": "blr x8"
+  },
+  "conditional_storage_slot_b8": {
+    "vtable": "0xd5580",
+    "slot": "0xd5638",
+    "target": "0x8674c"
+  },
+  "conditional_storage_slot_b0": {
+    "slot": "0xd5630",
+    "target": "0x860fc"
+  },
+  "projection_authority": "analyst-derived gate examples, not native execution or server acceptance",
+  "synthetic_cases": {
+    "both_unknown_query_wins": {
+      "query_unknown_output": true,
+      "one_unknown_output": true,
+      "selected_result": 4
+    },
+    "query_presence_absent": {
+      "query_unknown_output": false,
+      "one_unknown_output": false,
+      "selected_result": "later processing"
+    },
+    "previous_empty": {
+      "query_unknown_output": false,
+      "one_unknown_output": false,
+      "selected_result": "later processing"
+    },
+    "one_unknown_supported": {
+      "query_unknown_output": false,
+      "one_unknown_output": true,
+      "selected_result": 5
+    },
+    "one_unknown_unsupported": {
+      "query_unknown_output": false,
+      "one_unknown_output": true,
+      "selected_result": "later processing"
+    },
+    "query_presence_odd_byte": {
+      "query_unknown_output": true,
+      "one_unknown_output": false,
+      "selected_result": 4
+    },
+    "one_presence_not_exact_one": {
+      "query_unknown_output": false,
+      "one_unknown_output": false,
+      "selected_result": "later processing"
+    },
+    "nonempty_strings": {
+      "query_unknown_output": false,
+      "one_unknown_output": false,
+      "selected_result": "later processing"
+    }
+  },
+  "remaining": "consumer field producers, metadata body, storage write paths, commit/rollback durability, cache activation and retries"
+}

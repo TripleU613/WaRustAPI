@@ -1,0 +1,69 @@
+{
+  "evidence_id": "ev_2c63ead86866315f90cecdb74e7b8c574fd98e50e74452008ff82ec62b780a37",
+  "subject": {
+    "name": "libmobileconfig-jni.so",
+    "digest": {
+      "sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so",
+    "format": "unknown",
+    "architecture": null
+  },
+  "provider": {
+    "id": "rizin",
+    "name": "Rizin",
+    "version": null
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.reverse-engineering.command-observation",
+  "operation": "execute_rizin_command",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so",
+    "command": "e scr.color=0; pd 52 @ 0x8d69c",
+    "provider_executable": "rizin",
+    "command_arguments": [
+      "-N",
+      "-q",
+      "-c",
+      "e scr.color=0; pd 52 @ 0x8d69c",
+      "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so"
+    ]
+  },
+  "raw_result": {
+    "stdout": "            0x0008d69c      ldr   x8, [x2]\n            0x0008d6a0      ldrb  w23, [x8, 0x60]                      ; [0x60:4]=0x230\n        ,=< 0x0008d6a4      cbz   x6, 0x8d6b0\n        |   0x0008d6a8      ldr   x9, [x8, 0x390]                      ; [0x390:4]=70\n        |   0x0008d6ac      str   w9, [x6]\n        `-> 0x0008d6b0      ldr   x9, [x24]\n            0x0008d6b4      ldrb  w10, [x9, 0x10]                      ; [0x10:4]=0xb70003\n            0x0008d6b8      ldr   x9, [x9, 0x18]                       ; [0x18:4]=0\n            0x0008d6bc      lsr   x11, x10, 1\n            0x0008d6c0      tst   w10, 1\n            0x0008d6c4      csel  x10, x11, x9, eq\n            0x0008d6c8      mov   w9, wzr\n        ,=< 0x0008d6cc      cbz   x10, 0x8d6f4\n        |   0x0008d6d0      ldrb  w10, [x8, 0x2a8]                     ; [0x2a8:4]=0\n       ,==< 0x0008d6d4      tbz   w10, 0, 0x8d6f4\n       ||   0x0008d6d8      ldrb  w9, [x8, 0x290]                      ; [0x290:4]=0\n       ||   0x0008d6dc      ldr   x10, [x8, 0x298]                     ; [0x298:4]=0\n       ||   0x0008d6e0      lsr   x11, x9, 1\n       ||   0x0008d6e4      tst   w9, 1\n       ||   0x0008d6e8      csel  x9, x11, x10, eq\n       ||   0x0008d6ec      cmp   x9, 0\n       ||   0x0008d6f0      cset  w9, eq\n       ``-> 0x0008d6f4      ldrb  w10, [x8, 0x288]                     ; [0x288:4]=0x63353272 ; \"r25c\"\n            0x0008d6f8      cmp   w10, 1\n        ,=< 0x0008d6fc      b.ne  0x8d724\n        |   0x0008d700      ldrb  w10, [x8, segment.NOTE]              ; [0x270:4]=8\n        |   0x0008d704      ldr   x11, [x8, 0x278]                     ; [0x278:4]=1\n        |   0x0008d708      lsr   x12, x10, 1\n        |   0x0008d70c      tst   w10, 1\n        |   0x0008d710      csel  x10, x12, x11, eq\n        |   0x0008d714      cmp   x10, 0\n        |   0x0008d718      cset  w10, eq\n       ,==< 0x0008d71c      cbnz  x4, 0x8d72c\n      ,===< 0x0008d720      b     0x8d730\n      ||`-> 0x0008d724      mov   w10, wzr\n      ||,=< 0x0008d728      cbz   x4, 0x8d730\n      |`--> 0x0008d72c      strb  w9, [x4]\n      `,`-> 0x0008d730      cbz   x5, 0x8d738\n       |    0x0008d734      strb  w10, [x5]\n       `,=< 0x0008d738      cbz   w9, 0x8d874\n        |   0x0008d73c      ldr   x21, [x21, 0xf8]                     ; [0xf8:4]=0xd1a30 segment.GNU_RELRO\n        |   0x0008d740      adrp  x1, 0x18000\n        |   0x0008d744      add   x1, x1, 0xf07\n        |   0x0008d748      add   x0, sp, 0xa0\n        |   0x0008d74c      bl    0x4d9a0\n        |   0x0008d750      bl    0xcbea8\n        |   0x0008d754      sub   x0, x29, 0x70\n        |   0x0008d758      bl    0x4d9a0\n        |   0x0008d75c      ldr   x8, [x20]\n        |   0x0008d760      adrp  x9, 0x19000\n        |   0x0008d764      add   x9, x9, 0xa24\n        |   0x0008d768      add   x0, sp, 0x188\n",
+    "stderr": "ERROR: Cannot determine entrypoint, using 0x0004c460.\n",
+    "exit_code": 0,
+    "signal": null,
+    "output_truncated": false,
+    "completion_status": "complete",
+    "artifact_sha256_after": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+    "artifact_changed": false
+  },
+  "normalized_result": {
+    "stdout": "            0x0008d69c      ldr   x8, [x2]\n            0x0008d6a0      ldrb  w23, [x8, 0x60]                      ; [0x60:4]=0x230\n        ,=< 0x0008d6a4      cbz   x6, 0x8d6b0\n        |   0x0008d6a8      ldr   x9, [x8, 0x390]                      ; [0x390:4]=70\n        |   0x0008d6ac      str   w9, [x6]\n        `-> 0x0008d6b0      ldr   x9, [x24]\n            0x0008d6b4      ldrb  w10, [x9, 0x10]                      ; [0x10:4]=0xb70003\n            0x0008d6b8      ldr   x9, [x9, 0x18]                       ; [0x18:4]=0\n            0x0008d6bc      lsr   x11, x10, 1\n            0x0008d6c0      tst   w10, 1\n            0x0008d6c4      csel  x10, x11, x9, eq\n            0x0008d6c8      mov   w9, wzr\n        ,=< 0x0008d6cc      cbz   x10, 0x8d6f4\n        |   0x0008d6d0      ldrb  w10, [x8, 0x2a8]                     ; [0x2a8:4]=0\n       ,==< 0x0008d6d4      tbz   w10, 0, 0x8d6f4\n       ||   0x0008d6d8      ldrb  w9, [x8, 0x290]                      ; [0x290:4]=0\n       ||   0x0008d6dc      ldr   x10, [x8, 0x298]                     ; [0x298:4]=0\n       ||   0x0008d6e0      lsr   x11, x9, 1\n       ||   0x0008d6e4      tst   w9, 1\n       ||   0x0008d6e8      csel  x9, x11, x10, eq\n       ||   0x0008d6ec      cmp   x9, 0\n       ||   0x0008d6f0      cset  w9, eq\n       ``-> 0x0008d6f4      ldrb  w10, [x8, 0x288]                     ; [0x288:4]=0x63353272 ; \"r25c\"\n            0x0008d6f8      cmp   w10, 1\n        ,=< 0x0008d6fc      b.ne  0x8d724\n        |   0x0008d700      ldrb  w10, [x8, segment.NOTE]              ; [0x270:4]=8\n        |   0x0008d704      ldr   x11, [x8, 0x278]                     ; [0x278:4]=1\n        |   0x0008d708      lsr   x12, x10, 1\n        |   0x0008d70c      tst   w10, 1\n        |   0x0008d710      csel  x10, x12, x11, eq\n        |   0x0008d714      cmp   x10, 0\n        |   0x0008d718      cset  w10, eq\n       ,==< 0x0008d71c      cbnz  x4, 0x8d72c\n      ,===< 0x0008d720      b     0x8d730\n      ||`-> 0x0008d724      mov   w10, wzr\n      ||,=< 0x0008d728      cbz   x4, 0x8d730\n      |`--> 0x0008d72c      strb  w9, [x4]\n      `,`-> 0x0008d730      cbz   x5, 0x8d738\n       |    0x0008d734      strb  w10, [x5]\n       `,=< 0x0008d738      cbz   w9, 0x8d874\n        |   0x0008d73c      ldr   x21, [x21, 0xf8]                     ; [0xf8:4]=0xd1a30 segment.GNU_RELRO\n        |   0x0008d740      adrp  x1, 0x18000\n        |   0x0008d744      add   x1, x1, 0xf07\n        |   0x0008d748      add   x0, sp, 0xa0\n        |   0x0008d74c      bl    0x4d9a0\n        |   0x0008d750      bl    0xcbea8\n        |   0x0008d754      sub   x0, x29, 0x70\n        |   0x0008d758      bl    0x4d9a0\n        |   0x0008d75c      ldr   x8, [x20]\n        |   0x0008d760      adrp  x9, 0x19000\n        |   0x0008d764      add   x9, x9, 0xa24\n        |   0x0008d768      add   x0, sp, 0x188\n",
+    "stderr": "ERROR: Cannot determine entrypoint, using 0x0004c460.\n",
+    "exit_code": 0,
+    "signal": null,
+    "output_truncated": false,
+    "completion_status": "complete",
+    "artifact_sha256_after": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+    "artifact_changed": false
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "The executable version and supported formats are reported as unknown because no reliable version probe was performed.",
+    "A non-zero process exit is preserved as an observed command result.",
+    "Rizin commands and retained plugins may read files or access network resources outside the selected artifact; those external inputs are not bound to Evidence.",
+    "When both are available, pre-run and post-run digests detect artifact changes across the provider call but cannot prove the exact bytes consumed during the call."
+  ],
+  "relationship_coverage": null,
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so"
+    }
+  ],
+  "evidence_links": []
+}

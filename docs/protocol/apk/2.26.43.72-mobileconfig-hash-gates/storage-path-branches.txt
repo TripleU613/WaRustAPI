@@ -1,0 +1,83 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   86e10:      	mov	w25, #0x2               // =2
+   86e14:      	b	0x86fe4 <JNI_OnLoad+0x17e44>
+   86e18:      	mov	w25, #0x4               // =4
+   86e1c:      	b	0x86fe4 <JNI_OnLoad+0x17e44>
+   86e20:      	mov	w25, #0x1               // =1
+   86e24:      	b	0x86fcc <JNI_OnLoad+0x17e2c>
+   86e28:      	stp	xzr, xzr, [sp, #0xb8]
+   86e2c:      	str	xzr, [sp, #0xc8]
+   86e30:      	sub	x0, x29, #0x60
+   86e34:      	add	x2, sp, #0xb8
+   86e38:      	mov	x1, x19
+   86e3c:      	bl	0x8b8bc <JNI_OnLoad+0x1c71c>
+   86e40:      	add	x0, sp, #0xb8
+   86e44:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   86e48:      	ldurb	w8, [x29, #-0x48]
+   86e4c:      	cmp	w8, #0x1
+   86e50:      	b.ne	0x86fa8 <JNI_OnLoad+0x17e08>
+   86e54:      	add	x0, sp, #0xe8
+   86e58:      	mov	x1, xzr
+   86e5c:      	bl	0xc2148 <JNI_OnLoad+0x52fa8>
+   86e60:      	tbz	w0, #0x0, 0x86fa8 <JNI_OnLoad+0x17e08>
+   86e64:      	add	x0, sp, #0xd0
+   86e68:      	mov	x1, xzr
+   86e6c:      	bl	0xc2148 <JNI_OnLoad+0x52fa8>
+   86e70:      	tbz	w0, #0x0, 0x86fa8 <JNI_OnLoad+0x17e08>
+   86e74:      	sub	x0, x29, #0x60
+   86e78:      	mov	x1, xzr
+   86e7c:      	bl	0xc2148 <JNI_OnLoad+0x52fa8>
+   86e80:      	tbz	w0, #0x0, 0x86fa8 <JNI_OnLoad+0x17e08>
+   86e84:      	add	x0, sp, #0xb8
+   86e88:      	add	x1, sp, #0xe8
+   86e8c:      	stp	xzr, xzr, [sp, #0xb8]
+   86e90:      	str	xzr, [sp, #0xc8]
+   86e94:      	bl	0xc2da0 <JNI_OnLoad+0x53c00>
+   86e98:      	add	x0, sp, #0xa0
+   86e9c:      	add	x1, sp, #0xd0
+   86ea0:      	stp	xzr, xzr, [sp, #0xa0]
+   86ea4:      	str	xzr, [sp, #0xb0]
+   86ea8:      	bl	0xc2da0 <JNI_OnLoad+0x53c00>
+   86eac:      	add	x0, sp, #0x78
+   86eb0:      	sub	x1, x29, #0x60
+   86eb4:      	stp	xzr, xzr, [sp, #0x78]
+   86eb8:      	str	xzr, [sp, #0x88]
+   86ebc:      	bl	0xc2da0 <JNI_OnLoad+0x53c00>
+   86ec0:      	add	x0, sp, #0x60
+   86ec4:      	add	x1, sp, #0x100
+   86ec8:      	add	x2, sp, #0xb8
+   86ecc:      	bl	0x5e0ec <.text+0x11c8c>
+   86ed0:      	add	x0, sp, #0xe8
+   86ed4:      	add	x1, sp, #0x60
+   86ed8:      	mov	x2, xzr
+   86edc:      	bl	0xc1f4c <JNI_OnLoad+0x52dac>
+   86ee0:      	mov	w25, w0
+   86ee4:      	add	x0, sp, #0x60
+   86ee8:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   86eec:      	tbz	w25, #0x0, 0x87334 <JNI_OnLoad+0x18194>
+   86ef0:      	add	x0, sp, #0x60
+   86ef4:      	add	x1, sp, #0x100
+   86ef8:      	add	x2, sp, #0xa0
+   86efc:      	bl	0x5e0ec <.text+0x11c8c>
+   86f00:      	add	x0, sp, #0xd0
+   86f04:      	add	x1, sp, #0x60
+   86f08:      	mov	x2, xzr
+   86f0c:      	bl	0xc1f4c <JNI_OnLoad+0x52dac>
+   86f10:      	mov	w25, w0
+   86f14:      	add	x0, sp, #0x60
+   86f18:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   86f1c:      	tbz	w25, #0x0, 0x8733c <JNI_OnLoad+0x1819c>
+   86f20:      	add	x0, sp, #0x60
+   86f24:      	add	x1, sp, #0x100
+   86f28:      	add	x2, sp, #0x78
+   86f2c:      	bl	0x5e0ec <.text+0x11c8c>
+   86f30:      	sub	x0, x29, #0x60
+   86f34:      	add	x1, sp, #0x60
+   86f38:      	mov	x2, xzr
+   86f3c:      	bl	0xc1f4c <JNI_OnLoad+0x52dac>
+   86f40:      	mov	w25, w0

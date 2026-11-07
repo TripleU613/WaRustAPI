@@ -1,0 +1,38 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   c2148:      	paciasp
+   c214c:      	sub	sp, sp, #0xa0
+   c2150:      	stp	x29, x30, [sp, #0x60]
+   c2154:      	str	x23, [sp, #0x70]
+   c2158:      	bl	0xcaf7c <JNI_OnLoad+0x5bddc>
+   c215c:      	add	x29, sp, #0x60
+   c2160:      	bl	0xca4f4 <JNI_OnLoad+0x5b354>
+   c2164:      	stur	x8, [x29, #-0x8]
+   c2168:      	bl	0xcce70 <_ZNSt6__ndk115system_categoryEv@plt>
+   c216c:      	mov	x21, x0
+   c2170:      	stp	xzr, x0, [x29, #-0x18]
+   c2174:      	add	x0, sp, #0x30
+   c2178:      	mov	x1, x19
+   c217c:      	bl	0xc227c <JNI_OnLoad+0x530dc>
+   c2180:      	str	xzr, [sp, #0x18]
+   c2184:      	add	x8, sp, #0x18
+   c2188:      	add	x0, sp, #0x30
+   c218c:      	sub	x1, x29, #0x18
+   c2190:      	bl	0xcd890 <_ZNSt6__ndk14__fs10filesystem8__statusERKNS1_4pathEPNS_10error_codeE@plt>
+   c2194:      	ldrb	w23, [sp, #0x18]
+   c2198:      	cbz	x23, 0xc21a4 <JNI_OnLoad+0x53004>
+   c219c:      	stur	wzr, [x29, #-0x18]
+   c21a0:      	stur	x21, [x29, #-0x10]
+   c21a4:      	add	x0, sp, #0x30
+   c21a8:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   c21ac:      	cbz	x20, 0xc2210 <JNI_OnLoad+0x53070>
+   c21b0:      	ldur	w8, [x29, #-0x18]
+   c21b4:      	cbz	w8, 0xc2210 <JNI_OnLoad+0x53070>
+   c21b8:      	adrp	x1, 0x17000
+   c21bc:      	add	x1, x1, #0x434
+   c21c0:      	add	x0, sp, #0x30
+   c21c4:      	bl	0x4d9a0 <.text+0x1540>
