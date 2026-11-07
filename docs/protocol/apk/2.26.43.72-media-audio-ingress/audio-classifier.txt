@@ -1,0 +1,240 @@
+
+# class: LX/DDS;
+# extends: Ljava/lang/Object;
+
+.method public A07(LL)  # .registers 10
+    # full signature: LX/DDS;->A07(LX/DiW;)Ljava/lang/String;
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-static  {v9, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  iget  v0, v9, LX/DiW;->bitField0_:I
+    000c..0010  and-int/lit8  v0, v0, #0x4
+    0010..0016  invoke-static  {v0}, LX/2L9;->A1M(I)Z
+    0016..0018  move-result  v0
+    0018..001c  const-string  v7, "image"
+    001c..0020  if-nez  v0, +0x19a
+    0020..0024  iget  v4, v9, LX/DiW;->bitField2_:I
+    0024..0028  and-int/lit16  v0, v4, #0x80
+    0028..002c  if-nez  v0, +0x194
+    002c..0030  iget  v2, v9, LX/DiW;->bitField0_:I
+    0030..0034  and-int/lit8  v0, v2, #0x8
+    0034..0038  if-eqz  v0, +0x6
+    0038..003e  const-string/jumbo  v0, "vcard"
+    003e..0040  return-object  v0
+    0040..0044  and-int/lit16  v0, v2, #0x1000
+    0044..0048  if-eqz  v0, +0x5
+    0048..004c  const-string  v0, "contact_array"
+    004c..004e  return-object  v0
+    004e..0052  and-int/lit8  v0, v2, #0x10
+    0052..0056  if-eqz  v0, +0x5
+    0056..005a  const-string  v0, "location"
+    005a..005c  return-object  v0
+    005c..0060  const/high16  v0, #0x10000
+    0060..0066  invoke-static  {v2, v0}, LX/DBg;->A1L(II)Z
+    0066..0068  move-result  v0
+    0068..006c  if-eqz  v0, +0x5
+    006c..0070  const-string  v0, "livelocation"
+    0070..0072  return-object  v0
+    0072..0076  iget  v1, v9, LX/DiW;->bitField3_:I
+    0076..007c  const  v0, #0x8000
+    007c..0082  invoke-static  {v1, v0}, LX/DBg;->A1L(II)Z
+    0082..0084  move-result  v0
+    0084..0088  if-eqz  v0, +0x5
+    0088..008c  const-string  v0, "request_location"
+    008c..008e  return-object  v0
+    008e..0092  iget  v3, v9, LX/DiW;->bitField3_:I
+    0092..0096  const/high16  v0, #0x20000
+    0096..0098  and-int/2addr  v0, v3
+    0098..009c  if-eqz  v0, +0x5
+    009c..00a0  const-string  v0, "request_location_update"
+    00a0..00a2  return-object  v0
+    00a2..00a6  iget  v0, v9, LX/DiW;->bitField0_:I
+    00a6..00aa  and-int/lit8  v0, v0, #0x20
+    00aa..00b0  invoke-static  {v0}, LX/2L9;->A1M(I)Z
+    00b0..00b2  move-result  v0
+    00b2..00b4  const/4  v6, #0x0
+    00b4..00b8  if-eqz  v0, +0x31
+    00b8..00bc  iget-object  v0, v9, LX/DiW;->extendedTextMessage_:LX/Di6;
+    00bc..00be  move-object  v1, v0
+    00be..00c2  if-nez  v0, +0x4
+    00c2..00c6  sget-object  v0, LX/Di6;->DEFAULT_INSTANCE:LX/Di6;
+    00c6..00ca  iget  v0, v0, LX/Di6;->bitField0_:I
+    00ca..00ce  and-int/lit8  v0, v0, #0x2
+    00ce..00d2  if-eqz  v0, +0x123
+    00d2..00d6  if-nez  v1, +0x4
+    00d6..00da  sget-object  v1, LX/Di6;->DEFAULT_INSTANCE:LX/Di6;
+    00da..00de  iget-object  v3, v1, LX/Di6;->text_:Ljava/lang/String;
+    00de..00e2  iget-object  v0, v8, LX/DDS;->A00:LX/05a;
+    00e2..00e6  iget-object  v2, v0, LX/05a;->A00:LX/00x;
+    00e6..00ec  invoke-static  {v2, v3}, LX/DDS;->A01(LX/00x;Ljava/lang/String;)I
+    00ec..00ee  move-result  v1
+    00ee..00f0  const/4  v0, #0x6
+    00f0..00f4  if-ne  v0, v1, +0x5
+    00f4..00f8  const-string  v0, "cataloglink"
+    00f8..00fa  return-object  v0
+    00fa..0100  invoke-static  {v2, v3}, LX/DDS;->A01(LX/00x;Ljava/lang/String;)I
+    0100..0102  move-result  v1
+    0102..0104  const/4  v0, #0x5
+    0104..0108  if-ne  v0, v1, +0x5
+    0108..010c  const-string  v0, "productlink"
+    010c..010e  return-object  v0
+    010e..0114  const-string/jumbo  v0, "url"
+    0114..0116  return-object  v0
+    0116..011a  iget  v0, v9, LX/DiW;->bitField0_:I
+    011a..011e  and-int/lit8  v0, v0, #0x40
+    011e..0124  invoke-static  {v0}, LX/2L9;->A1M(I)Z
+    0124..0126  move-result  v0
+    0126..012a  if-eqz  v0, +0x5
+    012a..012e  const-string  v0, "document"
+    012e..0130  return-object  v0
+    0130..0134  iget  v0, v9, LX/DiW;->bitField0_:I
+    0134..0138  and-int/lit16  v0, v0, #0x80
+    0138..013e  invoke-static  {v0}, LX/2L9;->A1M(I)Z
+    013e..0140  move-result  v0
+    0140..0144  if-eqz  v0, +0x12
+    0144..0148  iget-object  v0, v9, LX/DiW;->audioMessage_:LX/Dhn;
+    0148..014c  if-nez  v0, +0x4
+    014c..0150  sget-object  v0, LX/Dhn;->DEFAULT_INSTANCE:LX/Dhn;
+    0150..0154  iget-boolean  v0, v0, LX/Dhn;->ptt_:Z
+    0154..0158  if-eqz  v0, +0x5
+    0158..015c  const-string  v0, "ptt"
+    015c..015e  return-object  v0
+    015e..0162  const-string  v0, "audio"
+    0162..0164  return-object  v0
+    0164..016a  invoke-virtual  {v9}, LX/DiW;->A0H()Z
+    016a..016c  move-result  v0
+    016c..0170  if-eqz  v0, +0x13
+    0170..0174  iget-object  v0, v9, LX/DiW;->videoMessage_:LX/DiM;
+    0174..0178  if-nez  v0, +0x4
+    0178..017c  sget-object  v0, LX/DiM;->DEFAULT_INSTANCE:LX/DiM;
+    017c..0180  iget-boolean  v0, v0, LX/DiM;->gifPlayback_:Z
+    0180..0184  if-eqz  v0, +0x5
+    0184..0188  const-string  v0, "gif"
+    0188..018a  return-object  v0
+    018a..0190  const-string/jumbo  v0, "video"
+    0190..0192  return-object  v0
+    0192..0196  iget  v0, v9, LX/DiW;->bitField1_:I
+    0196..019a  const/high16  v1, #0x200000
+    019a..01a0  invoke-static  {v0, v1}, LX/DBg;->A1L(II)Z
+    01a0..01a2  move-result  v0
+    01a2..01a6  if-eqz  v0, +0x5
+    01a6..01aa  const-string  v0, "ptv"
+    01aa..01ac  return-object  v0
+    01ac..01b0  and-int/lit8  v0, v4, #0x4
+    01b0..01b6  invoke-static  {v0}, LX/2L9;->A1M(I)Z
+    01b6..01b8  move-result  v0
+    01b8..01bc  const-string  v5, "collection"
+    01bc..01c0  if-nez  v0, +0xc9
+    01c0..01c6  invoke-virtual  {v9}, LX/DiW;->A0E()Z
+    01c6..01c8  move-result  v0
+    01c8..01cc  if-eqz  v0, +0x20
+    01cc..01d0  iget-object  v0, v9, LX/DiW;->protocolMessage_:LX/DiN;
+    01d0..01d2  move-object  v2, v0
+    01d2..01d6  if-nez  v0, +0x4
+    01d6..01da  sget-object  v0, LX/DiN;->DEFAULT_INSTANCE:LX/DiN;
+    01da..01e0  invoke-virtual  {v0}, LX/DiN;->A00()LX/ECd;
+    01e0..01e2  move-result-object  v1
+    01e2..01e6  sget-object  v0, LX/ECd;->A02:LX/ECd;
+    01e6..01ea  if-eq  v1, v0, +0xb4
+    01ea..01ee  if-nez  v2, +0x4
+    01ee..01f2  sget-object  v2, LX/DiN;->DEFAULT_INSTANCE:LX/DiN;
+    01f2..01f8  invoke-virtual  {v2}, LX/DiN;->A00()LX/ECd;
+    01f8..01fa  move-result-object  v1
+    01fa..01fe  sget-object  v0, LX/ECd;->A0A:LX/ECd;
+    01fe..0202  if-ne  v1, v0, +0x8b
+    0202..0206  const-string  v0, "chat_theme"
+    0206..0208  return-object  v0
+    0208..020c  iget  v0, v9, LX/DiW;->bitField0_:I
+    020c..0212  invoke-static  {v0, v1}, LX/DBg;->A1L(II)Z
+    0212..0214  move-result  v0
+    0214..0218  if-nez  v0, +0x81
+    0218..021c  iget  v1, v9, LX/DiW;->bitField1_:I
+    021c..0220  const/high16  v0, #0x8000000
+    0220..0226  invoke-static  {v1, v0}, LX/DBg;->A1L(II)Z
+    0226..0228  move-result  v0
+    0228..022c  if-nez  v0, +0x77
+    022c..0230  and-int/lit8  v0, v4, #0x8
+    0230..0234  if-nez  v0, +0x90
+    0234..023a  invoke-virtual  {v9}, LX/DiW;->A0D()Z
+    023a..023c  move-result  v0
+    023c..0240  if-eqz  v0, +0x1f
+    0240..0244  iget-object  v0, v9, LX/DiW;->productMessage_:LX/BOW;
+    0244..0246  move-object  v1, v0
+    0246..024a  if-nez  v0, +0x4
+    024a..024e  sget-object  v0, LX/BOW;->DEFAULT_INSTANCE:LX/BOW;
+    024e..0252  iget  v0, v0, LX/BOW;->bitField0_:I
+    0252..0256  and-int/lit8  v0, v0, #0x1
+    0256..025a  if-eqz  v0, +0x5
+    025a..025e  const-string  v0, "product"
+    025e..0260  return-object  v0
+    0260..0264  if-nez  v1, +0x4
+    0264..0268  sget-object  v1, LX/BOW;->DEFAULT_INSTANCE:LX/BOW;
+    0268..026c  iget  v0, v1, LX/BOW;->bitField0_:I
+    026c..0270  and-int/lit8  v0, v0, #0x4
+    0270..0274  if-eqz  v0, +0x52
+    0274..0278  const-string  v0, "catalog"
+    0278..027a  return-object  v0
+    027a..027e  const/high16  v0, #0x20000000
+    027e..0280  and-int/2addr  v0, v2
+    0280..0284  if-eqz  v0, +0x5
+    0284..0288  const-string  v0, "order"
+    0288..028a  return-object  v0
+    028a..0290  invoke-virtual  {v9}, LX/DiW;->A0A()Z
+    0290..0292  move-result  v0
+    0292..0296  if-eqz  v0, +0x5
+    0296..029a  const-string  v0, "list"
+    029a..029c  return-object  v0
+    029c..02a0  const/high16  v0, #0x40000000
+    02a0..02a2  and-int/2addr  v2, v0
+    02a2..02a6  if-eqz  v2, +0x5
+    02a6..02aa  const-string  v0, "list_response"
+    02aa..02ac  return-object  v0
+    02ac..02b0  iget  v2, v9, LX/DiW;->bitField1_:I
+    02b0..02b4  and-int/lit8  v0, v2, #0x2
+    02b4..02b8  if-eqz  v0, +0x5
+    02b8..02bc  const-string  v0, "buttons_response"
+    02bc..02be  return-object  v0
+    02be..02c2  and-int/lit8  v0, v2, #0x20
+    02c2..02c6  if-eqz  v0, +0x10
+    02c6..02ca  iget-object  v0, v9, LX/DiW;->interactiveResponseMessage_:LX/BOa;
+    02ca..02ce  if-nez  v0, +0x4
+    02ce..02d2  sget-object  v0, LX/BOa;->DEFAULT_INSTANCE:LX/BOa;
+    02d2..02d6  iget  v1, v0, LX/BOa;->interactiveResponseMessageCase_:I
+    02d6..02d8  const/4  v0, #0x2
+    02d8..02dc  if-ne  v1, v0, +0x5
+    02dc..02e0  const-string  v0, "native_flow_response"
+    02e0..02e2  return-object  v0
+    02e2..02e6  and-int/lit8  v0, v4, #0x10
+    02e6..02ea  if-eqz  v0, +0x5
+    02ea..02ee  const-string  v0, "sticker_pack"
+    02ee..02f0  return-object  v0
+    02f0..02f4  const/high16  v0, #0x1000000
+    02f4..02fa  invoke-static  {v2, v0}, LX/DBg;->A1L(II)Z
+    02fa..02fc  move-result  v0
+    02fc..0300  if-eqz  v0, +0x5
+    0300..0304  const-string  v0, "group_history"
+    0304..0306  return-object  v0
+    0306..030a  and-int/lit16  v0, v3, #0x200
+    030a..030e  if-eqz  v0, +0x5
+    030e..0312  const-string  v0, "music"
+    0312..0314  return-object  v0
+    0314..0316  return-object  v6
+    0316..031a  iget-object  v0, v9, LX/DiW;->stickerMessage_:LX/Di4;
+    031a..031c  move-object  v1, v0
+    031c..0320  if-nez  v0, +0x4
+    0320..0324  sget-object  v0, LX/Di4;->DEFAULT_INSTANCE:LX/Di4;
+    0324..0328  iget-boolean  v0, v0, LX/Di4;->isAvatar_:Z
+    0328..032c  if-eqz  v0, +0x5
+    032c..0330  const-string  v0, "avatar_sticker"
+    0330..0332  return-object  v0
+    0332..0336  if-nez  v1, +0x4
+    0336..033a  sget-object  v1, LX/Di4;->DEFAULT_INSTANCE:LX/Di4;
+    033a..033e  iget-boolean  v0, v1, LX/Di4;->isAiSticker_:Z
+    033e..0342  if-eqz  v0, +0x5
+    0342..0346  const-string  v0, "genai_sticker"
+    0346..0348  return-object  v0
+    0348..034c  const-string  v0, "sticker"
+    034c..034e  return-object  v0
+    034e..0350  return-object  v5
+    0350..0352  return-object  v7
+    # exception table: 0 try range(s)
+.end method

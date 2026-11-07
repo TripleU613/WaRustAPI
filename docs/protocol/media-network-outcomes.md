@@ -1483,3 +1483,29 @@ runtime bug was confirmed or fixed; source provenance comments only were added.
 Provider/setter internals, exact request/range behavior, current other-media
 projection and live interoperability remain open. No request, retry, status
 relaxation, new sidecar requirement or live account operation was introduced.
+
+## Pinned audio ingress and Opus MIME preflight (2026-11-06)
+
+**Confirmed selected static / fixed offline:** Dhn/Etl core audio tags match Rust,
+including PTT6/viewOnce21. Native ordinary/view-once converters separate ownership
+before common parsing; the common parser permits non-PTT audio too. Rust remains
+explicitly Opus PTT only, not a complete generic-audio implementation.
+
+Etl's selected fresh MIME validation calls0jZ.A08, whose Opus match is exact
+`audio/ogg; codecs=opus`. Rust previously stripped codec parameters and accepted
+bare audio/ogg, Vorbis or contradictory parameters as its Opus path. Descriptor
+admission now requires the exact canonical string before candidates, references,
+cache handoff or GET reservation. Outgoing voice notes already emit this string.
+This does not add the other generic native codecs, reinterpret history, clear
+uncertainty, reset a cache or send a new receipt/request.
+
+[Complete native schema/parser/converters/MIME leaf, evidence and limits](apk/2.26.43.72-media-audio-ingress/README.md)
+carry the native-versus-local scope distinctions. The real-store regression
+`voice_note_mime_gate_precedes_cache_handoff_and_network_reservation` uses valid
+audio-domain ciphertext and a synthetic bounded Opus fixture: canonical cached
+content still opens, unsupported MIME/PTT/viewOnce inputs cannot select/open
+content, and refused operations preserve checkpoint/journal state, including
+after cache removal/reopen without a new reservation. Uncached bad fixtures have
+an unapproved-host backstop; no live HTTP exchange is involved. Full native
+update/error/ACK behavior, URL/range handling and provider/output ownership remain
+open; no server acceptance or restriction-cause claim is made.

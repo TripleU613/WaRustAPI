@@ -1,0 +1,24 @@
+# LX/Di0;  (21 fields)
+#   followed helper LX/8t2;->A1Y
+#   followed helper LX/DBg;->A1J
+   1  url
+   2  mimetype
+   3  title
+   4  fileSha256
+   5  fileLength
+   6  pageCount
+   7  mediaKey
+   8  fileName
+   9  fileEncSha256
+  10  directPath
+  11  mediaKeyTimestamp
+  12  contactVcard
+  13  thumbnailDirectPath
+  14  thumbnailSha256
+  15  thumbnailEncSha256
+  16  jpegThumbnail
+  17  contextInfo
+  18  thumbnailHeight
+  19  thumbnailWidth
+  20  caption
+  21  accessibilityLabel

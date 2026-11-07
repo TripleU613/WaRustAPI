@@ -1,0 +1,46 @@
+{
+  "README.md": {
+    "bytes": 5987,
+    "sha256": "d0c3ff2e5f7fcdf4302ea847639d62d87d5f374094ee9c0a30a44dd6860d7c25"
+  },
+  "audio-classifier.txt": {
+    "bytes": 10398,
+    "sha256": "edab0d82d26095ab99a94a525add6337297aab8775730c41d8919d0ba751558e"
+  },
+  "audio-descriptor.txt": {
+    "bytes": 4500,
+    "sha256": "103af4f2527e6461fc7f3c2d01ca27d65ecb3c1c1b0a1e229ebf425a5ad0b7dc"
+  },
+  "audio-fields.txt": {
+    "bytes": 398,
+    "sha256": "a29c4d9ea3c4f05a57d60a41a8d3796e7380f07768fb3d64a220547812fe4424"
+  },
+  "audio-mime-selector.txt": {
+    "bytes": 2600,
+    "sha256": "a9baa25f21b8834dec957995bcfe2e8e331fe2bdb607895ee1377b62d78fafa2"
+  },
+  "audio-projector.txt": {
+    "bytes": 8441,
+    "sha256": "b27de3d0b866c768e0f46e0426baa35363d3a804c1c743dacacc74cbc6079945"
+  },
+  "excluded-document-fields.txt": {
+    "bytes": 479,
+    "sha256": "f20846436b2b60b50a6c0194b19df9b90eceef8e9cba97d16b78d0e41b130666"
+  },
+  "ordinary-converter.txt": {
+    "bytes": 1493,
+    "sha256": "fb77b4b628afa8c3cef1c849b6c74b6e89827ad3446fd380b6c13dff52bdde94"
+  },
+  "ptt-refs.txt": {
+    "bytes": 390,
+    "sha256": "439d3fe92d382d793e6f0f65c0920ef280be25fbab4b330bc8bce0e1cf63af49"
+  },
+  "view-once-converter.txt": {
+    "bytes": 1654,
+    "sha256": "71e9adfc97cbad50fa4fa760609c546835a900168bb5e24d525e0ac114ad95c1"
+  },
+  "view-once-refs.txt": {
+    "bytes": 390,
+    "sha256": "9d781b8e804ae6b508b28e7e5ff4ea2156b3995f6caa0166d2b994d78dd22e0c"
+  }
+}

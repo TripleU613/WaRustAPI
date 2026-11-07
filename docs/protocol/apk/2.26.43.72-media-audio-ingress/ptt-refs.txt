@@ -1,0 +1,10 @@
+classes8.dex  LX/DDS;->A07(LL)
+  read opcode 0x55, dex byte offset: 0x3f4744
+classes8.dex  LX/DWC;->A08(VZ)
+  write opcode 0x5c, dex byte offset: 0x44acdc
+classes8.dex  LX/Etl;->A00(VLLLZ)
+  read opcode 0x55, dex byte offset: 0x5ea48a
+classes8.dex  LX/FQr;->C9P(VLL)
+  read opcode 0x55, dex byte offset: 0x794808
+classes8.dex  LX/FWg;->CR9(LL)
+  read opcode 0x55, dex byte offset: 0x7c0d1c

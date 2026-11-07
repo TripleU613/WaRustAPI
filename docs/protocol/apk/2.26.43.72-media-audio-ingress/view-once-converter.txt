@@ -1,0 +1,38 @@
+
+# class: LX/FPd;
+# extends: Ljava/lang/Object;
+
+.method public CR7(LL)  # .registers 8
+    # full signature: LX/FPd;->CR7(LX/F2D;)LX/18U;
+    0000..0006  invoke-static  {v7}, LX/F2D;->A02(LX/F2D;)LX/DiW;
+    0006..0008  move-result-object  v1
+    0008..000c  iget  v0, v1, LX/DiW;->bitField0_:I
+    000c..0010  and-int/lit16  v0, v0, #0x80
+    0010..0016  invoke-static  {v0}, LX/2L9;->A1M(I)Z
+    0016..0018  move-result  v0
+    0018..001c  if-eqz  v0, +0x2d
+    001c..0020  iget-object  v1, v1, LX/DiW;->audioMessage_:LX/Dhn;
+    0020..0022  move-object  v5, v1
+    0022..0026  if-nez  v1, +0x4
+    0026..002a  sget-object  v1, LX/Dhn;->DEFAULT_INSTANCE:LX/Dhn;
+    002a..002e  iget  v0, v1, LX/Dhn;->bitField0_:I
+    002e..0032  and-int/lit16  v0, v0, #0x4000
+    0032..0036  if-eqz  v0, +0x20
+    0036..003a  iget-boolean  v0, v1, LX/Dhn;->viewOnce_:Z
+    003a..003e  if-eqz  v0, +0x1c
+    003e..0042  if-nez  v5, +0x4
+    0042..0046  sget-object  v5, LX/Dhn;->DEFAULT_INSTANCE:LX/Dhn;
+    0046..004a  iget-object  v4, v7, LX/F2D;->A0A:LX/1dW;
+    004a..004e  iget-wide  v2, v7, LX/F2D;->A05:J
+    004e..0052  const/16  v0, #0x52
+    0052..0056  new-instance  v1, LX/J9v;
+    0056..005c  invoke-direct  {v1, v4, v0, v2, v3}, LX/9JQ;-><init>(LX/1dW;IJ)V
+    005c..0062  invoke-static  {v5}, LX/00l;->A08(Ljava/lang/Object;)V
+    0062..0068  invoke-virtual  {v7}, LX/F2D;->A06()Z
+    0068..006a  move-result  v0
+    006a..0070  invoke-static  {v4, v1, v5, v0}, LX/Etl;->A00(LX/1dW;LX/9JQ;LX/Dhn;Z)V
+    0070..0072  return-object  v1
+    0072..0074  const/4  v1, #0x0
+    0074..0076  return-object  v1
+    # exception table: 0 try range(s)
+.end method

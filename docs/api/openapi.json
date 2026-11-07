@@ -1,4 +1,11 @@
 {
+  "x-media-audio-opus-mime-admission": {
+    "x-cli": "existing received-media list/reference/open/save; no new command or flag",
+    "x-transport": "canonical Opus MIME admission before descriptor selection, cache reuse or GET reservation",
+    "x-live": false,
+    "description": "Pinned Dhn/Etl/0jZ.A08 confirms core audio fields and exact Opus MIME audio/ogg; codecs=opus. Rust Opus PTT descriptors now exclude bare Ogg, contradictory codec/case/spacing/extra parameters before selection/cache/network reservation; canonical cached audio still decrypts. Generic AAC/MP4/AMR/MP3 remains outside Rust supported scope, not native-invalid. Real-store regression covers PTT/viewOnce and malformed MIME, valid audio ciphertext, unchanged checkpoints/journal and reopen/no reservation with no-network backstop. No retry/reset, new ACK, status relaxation or live traffic; native update/error/URL/range behavior remains unknown.",
+    "evidence": "docs/protocol/apk/2.26.43.72-media-audio-ingress/README.md"
+  },
   "x-media-video-current-ingress-boundary": {
     "x-cli": "existing ordinary video retrieval; no new command or flag",
     "x-transport": "research-only current video schema/converter/sidecar comparison; source provenance comments only",

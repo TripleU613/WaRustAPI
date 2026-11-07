@@ -299,7 +299,11 @@ fn descriptor(bytes: &[u8]) -> Result<Option<Descriptor>> {
             length: i.length,
         }
     } else if let Some(a) = e.audio {
-        if a.once || !a.ptt {
+        // Pinned43.72 Etl.A00 -> 0jZ.A08 admits the exact Opus MIME.
+        // This receiver only supports Opus PTT; stripping codec parameters
+        // would authorize a GET/cache handoff for metadata native parsing rejects.
+        // See docs/protocol/apk/2.26.43.72-media-audio-ingress.
+        if a.once || !a.ptt || a.mime != "audio/ogg; codecs=opus" {
             return Ok(None);
         }
         Descriptor {
@@ -953,6 +957,136 @@ pub(crate) fn ensure_available(store: &ProtocolStore, id: &str) -> Result<()> {
 
 #[cfg(test)]
 mod tests {
+    #[tokio::test]
+    async fn voice_note_mime_gate_precedes_cache_handoff_and_network_reservation() {
+        use super::*;
+        use crate::{
+            model::ids::AccountId,
+            session::{AccountRecord, RegistrationStatus},
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        fn page(flags: u8, seq: u32, granule: u64, payload: &[u8]) -> Vec<u8> {
+            let mut p = b"OggS".to_vec();
+            p.extend([0, flags]);
+            p.extend(granule.to_le_bytes());
+            p.extend(1u32.to_le_bytes());
+            p.extend(seq.to_le_bytes());
+            p.extend([0; 4]);
+            p.extend([1, u8::try_from(payload.len()).unwrap()]);
+            p.extend(payload);
+            p
+        }
+        let mut header = b"OpusHead".to_vec();
+        header.extend([1, 1, 56, 1, 128, 187, 0, 0, 0, 0, 0]);
+        let mut plain = page(2, 0, 0, &header);
+        plain.extend(page(4, 1, 96_312, &[0]));
+        assert_eq!(super::super::voice_note::seconds(&plain).unwrap(), 2);
+        let encrypted = crate::signal::image::encrypt_audio(&plain).unwrap();
+        for (mime, ptt, once, accepted) in [
+            ("audio/ogg; codecs=opus", true, false, true),
+            ("audio/ogg", true, false, false),
+            ("audio/ogg; codecs=vorbis", true, false, false),
+            ("audio/ogg; codecs=OPUS", true, false, false),
+            ("audio/ogg;codecs=opus", true, false, false),
+            (" audio/ogg; codecs=opus", true, false, false),
+            ("audio/ogg; codecs=opus ", true, false, false),
+            ("audio/ogg; codecs=opus; extra=1", true, false, false),
+            ("audio/aac", true, false, false),
+            ("audio/ogg; codecs=opus", false, false, false),
+            ("audio/ogg; codecs=opus", true, true, false),
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("voice-mime.redb");
+            let open_store = |create| {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: AccountId::new("fixture").unwrap(),
+                    create,
+                    key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                        [8; 32],
+                    ))),
+                })
+                .unwrap()
+            };
+            let store = open_store(true);
+            let mut config: LabRegistrationConfig =
+                serde_json::from_str(crate::registration::request::TEMPLATE_JSON).unwrap();
+            config.token = Zeroizing::new("offline-fixture".into());
+            let key = b"received:voice-mime";
+            let id = hex::encode(Sha256::digest(key));
+            let cache_key = format!("media-download:{id}");
+            let mut envelope = Envelope {
+                audio: Some(Audio {
+                    url: "https://mmg.whatsapp.net/offline-fixture".into(),
+                    mime: mime.into(),
+                    hash: encrypted.plaintext_hash.to_vec(),
+                    length: encrypted.plaintext_len,
+                    key: encrypted.media_key.to_vec(),
+                    enc_hash: encrypted.encrypted_hash.to_vec(),
+                    ptt,
+                    once,
+                }),
+                ..Default::default()
+            };
+            store.write(|tx| {
+                AccountRecord {phone:Some(config.phone.clone()), registration:RegistrationStatus::Registered,
+                    ..Default::default()}.save(tx)?;
+                tx.put_json(Table::Checkpoints,key,1,&serde_json::json!({"status":"decrypted","protobuf":envelope.encode_to_vec()}))?;
+                tx.put_json(Table::Checkpoints,cache_key.as_bytes(),1,&serde_json::json!({"status":"downloaded","body":encrypted.body}))
+            }).unwrap();
+            let rows = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let journal = store.journal_head().unwrap();
+            assert_eq!(list(&store).unwrap().len(), usize::from(accepted), "{mime}");
+            assert_eq!(
+                references(&store).unwrap().len(),
+                usize::from(accepted),
+                "{mime}"
+            );
+            if accepted {
+                let (kind, body) = open(&store, &config, &id).await.unwrap();
+                assert_eq!(kind, MediaKind::VoiceNote);
+                assert_eq!(&*body, &plain);
+            } else {
+                assert!(open(&store, &config, &id).await.is_err(), "{mime}");
+            }
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                rows
+            );
+            assert_eq!(store.journal_head().unwrap(), journal);
+            if !accepted {
+                // A regression must never contact a live CDN during this test.
+                // Cache-hit cases above use real valid Opus ciphertext; uncached
+                // cases additionally use a refused host as a network backstop.
+                envelope.audio.as_mut().unwrap().url =
+                    "https://not-a-media-host.invalid/fixture".into();
+                store.write(|tx| {
+                    tx.delete(Table::Checkpoints,cache_key.as_bytes())?;
+                    tx.put_json(Table::Checkpoints,key,1,&serde_json::json!({"status":"decrypted","protobuf":envelope.encode_to_vec()}))
+                }).unwrap();
+                drop(store);
+                let store = open_store(false);
+                let rows = store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap();
+                let journal = store.journal_head().unwrap();
+                assert!(list(&store).unwrap().is_empty());
+                assert!(open(&store, &config, &id).await.is_err());
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    rows
+                );
+                assert_eq!(store.journal_head().unwrap(), journal);
+            }
+        }
+    }
+
     #[test]
     fn changed_ordinary_source_cannot_adopt_ciphertext_after_reopen() {
         use super::*;

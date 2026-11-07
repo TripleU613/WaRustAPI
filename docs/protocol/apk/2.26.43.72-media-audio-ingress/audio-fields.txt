@@ -1,0 +1,20 @@
+# LX/Dhn;  (16 fields)
+#   followed helper LX/8t2;->A1Y
+#   followed helper LX/DBi;->A0w
+#   followed helper LX/DBi;->A0x
+   1  url
+   2  mimetype
+   3  fileSha256
+   4  fileLength
+   5  seconds
+   6  ptt
+   7  mediaKey
+   8  fileEncSha256
+   9  directPath
+  10  mediaKeyTimestamp
+  17  contextInfo
+  18  streamingSidecar
+  19  waveform
+  20  backgroundArgb
+  21  viewOnce
+  22  accessibilityLabel

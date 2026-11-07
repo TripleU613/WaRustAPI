@@ -1,5 +1,11 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
+**Opus voice-note preflight corrected.** Pinned audio schema/converters and exact
+MIME selector show contradictory codec metadata must not authorize the supported
+Opus path. Only canonical Opus PTT is selectable/cache-reusable; regression covers
+valid ciphertext, reopen and no reservation.
+[Evidence](docs/protocol/media-network-outcomes.md#pinned-audio-ingress-and-opus-mime-preflight-2026-11-06).
+
 **Current video ingress checked.** Core hash/key/length/viewOnce tags match Rust;
 selected native converters separate ordinary/view-once ownership before common
 projection. Sidecar helper checks key presence, not sidecar presence; descriptor

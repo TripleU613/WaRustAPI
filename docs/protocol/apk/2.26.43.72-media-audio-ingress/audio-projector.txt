@@ -1,0 +1,159 @@
+
+# class: LX/Etl;
+# extends: Ljava/lang/Object;
+
+.method public A00(VLLLZ)  # .registers 13
+    # full signature: LX/Etl;->A00(LX/1dW;LX/9JQ;LX/Dhn;Z)V
+    0000..0002  const/4  v3, #0x1
+    0002..0004  const/4  v0, #0x2
+    0004..000a  invoke-static  {v11, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000a..000e  iget-boolean  v0, v11, LX/Dhn;->ptt_:Z
+    000e..0012  iput  v0, v10, LX/18U;->A05:I
+    0012..0016  new-instance  v2, LX/8tC;
+    0016..001c  invoke-direct  {v2}, LX/8tC;-><init>()V
+    001c..0022  invoke-virtual  {v10, v2}, LX/1eQ;->Ch0(LX/8tC;)V
+    0022..0026  iget  v0, v11, LX/Dhn;->bitField0_:I
+    0026..002a  and-int/lit16  v0, v0, #0x1000
+    002a..002e  if-eqz  v0, +0xbb
+    002e..0032  iget-object  v0, v11, LX/Dhn;->waveform_:Lcom/google/protobuf/ByteString;
+    0032..0038  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->size()I
+    0038..003a  move-result  v0
+    003a..003e  if-lez  v0, +0xb3
+    003e..0042  iget-object  v0, v11, LX/Dhn;->waveform_:Lcom/google/protobuf/ByteString;
+    0042..0048  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->size()I
+    0048..004a  move-result  v1
+    004a..004e  const/16  v0, #0xc0
+    004e..0052  if-gt  v1, v0, +0xa9
+    0052..0056  iget-object  v0, v11, LX/Dhn;->waveform_:Lcom/google/protobuf/ByteString;
+    0056..005c  invoke-virtual  {v0}, Lcom/google/protobuf/ByteString;->toByteArray()[B
+    005c..005e  move-result-object  v4
+    005e..0062  iget  v0, v11, LX/Dhn;->bitField0_:I
+    0062..0066  and-int/lit16  v0, v0, #0x2000
+    0066..006c  invoke-static  {v0}, LX/2L9;->A1M(I)Z
+    006c..006e  move-result  v0
+    006e..0070  const/4  v8, #0x0
+    0070..0074  if-eqz  v0, +0x95
+    0074..0078  iget  v1, v11, LX/Dhn;->backgroundArgb_:I
+    0078..007c  if-nez  v4, +0x4
+    007c..0080  if-eqz  v1, +0xa
+    0080..0084  new-instance  v0, LX/AQa;
+    0084..008a  invoke-direct  {v0, v4, v1}, LX/AQa;-><init>([BI)V
+    008a..0090  invoke-virtual  {v10, v0}, LX/9JQ;->CeC(LX/AQa;)V
+    0090..0094  iget  v0, v11, LX/Dhn;->bitField0_:I
+    0094..0098  and-int/lit8  v0, v0, #0x40
+    0098..009c  if-eqz  v0, +0x6f
+    009c..00a0  iget-object  v0, v11, LX/Dhn;->mediaKey_:Lcom/google/protobuf/ByteString;
+    00a0..00a6  invoke-static  {v0}, LX/DBd;->A1a(Lcom/google/protobuf/ByteString;)[B
+    00a6..00a8  move-result-object  v0
+    00a8..00ae  invoke-static  {v10, v2, v0}, LX/Exc;->A00(LX/1eQ;LX/8tC;[B)V
+    00ae..00b2  iget  v4, v11, LX/Dhn;->bitField0_:I
+    00b2..00b6  and-int/lit16  v0, v4, #0x200
+    00b6..00ba  if-eqz  v0, +0x7
+    00ba..00be  iget-wide  v0, v11, LX/Dhn;->mediaKeyTimestamp_:J
+    00be..00c4  invoke-static  {v2, v0, v1}, LX/DBe;->A1C(LX/8tC;J)V
+    00c4..00c8  if-eqz  v12, +0x6
+    00c8..00cc  and-int/lit8  v0, v4, #0x8
+    00cc..00d0  if-eqz  v0, +0xd
+    00d0..00d4  iget-wide  v0, v11, LX/Dhn;->fileLength_:J
+    00d4..00d8  const-wide/16  v5, #0x0
+    00d8..00dc  cmp-long  v4, v0, v5
+    00dc..00e0  if-lez  v4, +0xb4
+    00e0..00e6  invoke-virtual  {v10, v0, v1}, LX/1eQ;->Ch9(J)V
+    00e6..00ea  const/16  v7, #0xe
+    00ea..00ee  const-string  v6, "FMessageAudio/bogus sha-256 hash received; length="
+    00ee..00f2  const/16  v5, #0x20
+    00f2..00f6  const-string  v4, "; message.key="
+    00f6..00fa  if-eqz  v12, +0x8
+    00fa..00fe  iget  v0, v11, LX/Dhn;->bitField0_:I
+    00fe..0102  and-int/lit8  v0, v0, #0x4
+    0102..0106  if-eqz  v0, +0xe
+    0106..010a  iget-object  v0, v11, LX/Dhn;->fileSha256_:Lcom/google/protobuf/ByteString;
+    010a..0110  invoke-static  {v0}, LX/DBd;->A1a(Lcom/google/protobuf/ByteString;)[B
+    0110..0112  move-result-object  v1
+    0112..0114  array-length  v0, v1
+    0114..0118  if-ne  v0, v5, +0x90
+    0118..011e  invoke-static  {v10, v1}, LX/DBc;->A1K(LX/1eQ;[B)V
+    011e..0122  iget  v0, v11, LX/Dhn;->bitField0_:I
+    0122..0126  and-int/lit16  v0, v0, #0x80
+    0126..012a  if-eqz  v0, +0xe
+    012a..012e  iget-object  v0, v11, LX/Dhn;->fileEncSha256_:Lcom/google/protobuf/ByteString;
+    012e..0134  invoke-static  {v0}, LX/DBd;->A1a(Lcom/google/protobuf/ByteString;)[B
+    0134..0136  move-result-object  v1
+    0136..0138  array-length  v0, v1
+    0138..013c  if-ne  v0, v5, +0x76
+    013c..0142  invoke-static  {v10, v1}, LX/DBd;->A1R(LX/1eQ;[B)V
+    0142..0146  if-nez  v12, +0x32
+    0146..014a  iget-object  v0, v11, LX/Dhn;->mimetype_:Ljava/lang/String;
+    014a..0150  invoke-static  {v0, v3}, LX/0jZ;->A08(Ljava/lang/String;Z)Ljava/lang/String;
+    0150..0152  move-result-object  v0
+    0152..0156  if-nez  v0, +0x2a
+    0156..015a  iget-object  v1, v11, LX/Dhn;->mimetype_:Ljava/lang/String;
+    015a..015e  const-string  v0, "FMessageAudio/unrecognized audio mime type; mimeType="
+    015e..0164  invoke-static  {v0, v1}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0164..0166  move-result-object  v0
+    0166..016c  invoke-static  {v9, v4, v0}, LX/DBh;->A1C(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    016c..0172  invoke-static  {}, LX/Dxp;->A03()LX/Dxp;
+    0172..0174  move-result-object  v0
+    0174..0176  throw  v0
+    0176..017a  if-nez  v12, -0x64
+    017a..0180  invoke-virtual  {v10}, LX/18U;->A0a()Z
+    0180..0182  move-result  v0
+    0182..0186  if-nez  v0, -0x6a
+    0186..018a  const-string  v0, "FMessageAudio/missing media key; message.key="
+    018a..0190  invoke-static  {v0, v9}, LX/3q7;->A1W(Ljava/lang/String;Ljava/lang/Object;)V
+    0190..0196  invoke-static  {}, LX/Dxp;->A02()LX/Dxp;
+    0196..0198  move-result-object  v0
+    0198..019a  throw  v0
+    019a..019c  const/4  v1, #0x0
+    019c..01a0  goto/16  -0x92
+    01a0..01a2  const/4  v4, #0x0
+    01a2..01a6  goto/16  -0xa2
+    01a6..01aa  iget-object  v0, v11, LX/Dhn;->mimetype_:Ljava/lang/String;
+    01aa..01b0  invoke-virtual  {v10, v0}, LX/1eQ;->Ch5(Ljava/lang/String;)V
+    01b0..01b4  if-eqz  v12, +0x8
+    01b4..01b8  iget  v0, v11, LX/Dhn;->bitField0_:I
+    01b8..01bc  and-int/lit8  v0, v0, #0x1
+    01bc..01c0  if-eqz  v0, +0x7
+    01c0..01c4  iget-object  v0, v11, LX/Dhn;->url_:Ljava/lang/String;
+    01c4..01ca  invoke-virtual  {v10, v0}, LX/1eQ;->A10(Ljava/lang/String;)V
+    01ca..01ce  iget-object  v1, v11, LX/Dhn;->directPath_:Ljava/lang/String;
+    01ce..01d2  if-eqz  v1, +0x8
+    01d2..01d8  invoke-virtual  {v1}, Ljava/lang/String;->length()I
+    01d8..01da  move-result  v0
+    01da..01de  if-nez  v0, +0x3
+    01de..01e0  const/4  v8, #0x1
+    01e0..01e4  if-eqz  v12, +0xa
+    01e4..01e8  iget  v0, v11, LX/Dhn;->bitField0_:I
+    01e8..01ec  and-int/lit16  v0, v0, #0x100
+    01ec..01f0  if-eqz  v0, +0xc
+    01f0..01f4  if-nez  v8, +0xa
+    01f4..01f8  iput-object  v1, v2, LX/8tC;->A0V:Ljava/lang/String;
+    01f8..01fc  iget  v0, v11, LX/Dhn;->seconds_:I
+    01fc..0202  invoke-virtual  {v10, v0}, LX/1eQ;->Ch1(I)V
+    0202..0204  return-void
+    0204..020a  invoke-virtual  {v10}, LX/18U;->B6q()LX/0DY;
+    020a..020c  move-result-object  v2
+    020c..0210  const-string  v0, "FMessageAudio/message without direct path received; message.key="
+    0210..0216  invoke-static  {v9, v0}, LX/1Xl;->A15(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0216..0218  move-result-object  v1
+    0218..021c  const-string  v0, "; message.senderJid="
+    021c..0222  invoke-static  {v2, v0, v1}, LX/DBh;->A1C(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    0222..0224  goto  -0x15
+    0224..022a  invoke-static  {v9, v6, v4, v0}, LX/DBi;->A0l(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;I)V
+    022a..0230  invoke-static  {v7}, LX/Dxp;->A04(I)LX/Dxp;
+    0230..0232  move-result-object  v0
+    0232..0234  throw  v0
+    0234..023a  invoke-static  {v9, v6, v4, v0}, LX/DBi;->A0l(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;I)V
+    023a..0240  invoke-static  {v7}, LX/Dxp;->A04(I)LX/Dxp;
+    0240..0242  move-result-object  v0
+    0242..0244  throw  v0
+    0244..0248  const-string  v2, "FMessageAudio/bogus media size received; fileLength="
+    0248..024e  invoke-static  {v2, v0, v1}, LX/1Xl;->A17(Ljava/lang/String;J)Ljava/lang/StringBuilder;
+    024e..0250  move-result-object  v1
+    0250..0254  const-string  v0, "; message.key= "
+    0254..025a  invoke-static  {v9, v0, v1}, LX/DBh;->A1C(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    025a..0260  invoke-static  {}, LX/Dxp;->A01()LX/Dxp;
+    0260..0262  move-result-object  v0
+    0262..0264  throw  v0
+    # exception table: 0 try range(s)
+.end method
