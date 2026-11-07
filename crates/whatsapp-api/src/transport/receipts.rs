@@ -836,11 +836,11 @@ impl ReservedReceipt {
     pub fn node(&self) -> &Node {
         &self.node
     }
-    /// Recheck account authority, original callback, members and read privacy.
+    /// Recheck payload binding, account authority, callback, members and read privacy.
     /// Normal actor uses this at its writer; direct writers must check just
     /// before encoding and preserve uncertainty on any failed/partial write.
     pub fn check_write_authority(&self, store: &ProtocolStore) -> Result<()> {
-        self.guard.check_write_authority(store)
+        self.guard.check_write_authority(store, &self.node)
     }
 }
 #[derive(Clone)]
@@ -851,7 +851,7 @@ pub(crate) struct ReceiptWriteGuard {
     automatic_direct_receipt: bool,
 }
 impl ReceiptWriteGuard {
-    pub(crate) fn check_write_authority(&self, store: &ProtocolStore) -> Result<()> {
+    pub(crate) fn check_write_authority(&self, store: &ProtocolStore, node: &Node) -> Result<()> {
         store.read(|tx| {
             let account = crate::session::AccountRecord::load(tx)?;
             if receipt_account_authority(tx.generation(), account.as_ref())?
@@ -860,6 +860,22 @@ impl ReceiptWriteGuard {
                 return Err(Error::invalid(
                     "receipt",
                     "local account changed before receipt write",
+                ));
+            }
+            // The callback key already commits to the complete original batch.
+            // Bind the actual writer payload without minting a new reservation.
+            let wire =
+                zeroize::Zeroizing::new(
+                    crate::binary::Encoder::new(
+                        crate::binary::TokenDictionary::comparison_2_26_37_71(),
+                    )
+                    .encode(node)?,
+                );
+            let owner = format!("receipt-callback:{}", hex::encode(Sha256::digest(&*wire)));
+            if owner.as_bytes() != self.callback_owner.0 {
+                return Err(Error::invalid(
+                    "receipt",
+                    "queued receipt payload differs from its reservation",
                 ));
             }
             // The durable callback is part of this same write authority; do
@@ -3901,6 +3917,9 @@ mod tests {
                 "batch_id_last",
                 "origin_last",
                 "privacy_disabled",
+                "node_id",
+                "node_to",
+                "node_body",
             ] {
                 let dir = tempfile::tempdir().unwrap();
                 let path = dir.path().join("receipt-write.redb");
@@ -3930,7 +3949,15 @@ mod tests {
                 }
                 let mut batch = reserve_pending_owned(&db).unwrap();
                 assert_eq!(batch.len(), 1);
-                let receipt = batch.pop().unwrap();
+                let mut receipt = batch.pop().unwrap();
+                match change {
+                    "node_id" => receipt.node = receipt.node.attr("id", "changed-fixture"),
+                    "node_to" => receipt.node = receipt.node.attr("to", "changed.invalid"),
+                    "node_body" => {
+                        receipt.node = receipt.node.children(vec![Node::new("changed-fixture")])
+                    }
+                    _ => {}
+                }
                 assert_eq!(receipt.guard.members.len(), count);
                 let expected_node = receipt.node().clone();
                 let callback_key = receipt.guard.callback_owner.0.clone();
@@ -4019,7 +4046,7 @@ mod tests {
                         current.save(tx)
                     })
                     .unwrap();
-                } else if change != "same" {
+                } else if change != "same" && !change.starts_with("node_") {
                     let key = if change.ends_with("last") {
                         keys.last().unwrap()
                     } else {

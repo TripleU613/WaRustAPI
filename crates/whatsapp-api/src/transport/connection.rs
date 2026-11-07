@@ -422,7 +422,9 @@ impl Outbound {
             Some(WriteGuard::Action(store, action)) => {
                 action.check_write_authority(&store, &self.node)
             }
-            Some(WriteGuard::Receipt(store, receipt)) => receipt.check_write_authority(&store),
+            Some(WriteGuard::Receipt(store, receipt)) => {
+                receipt.check_write_authority(&store, &self.node)
+            }
             None => Ok(()),
         };
         if let Err(error) = admission {
