@@ -1,0 +1,107 @@
+# Bounded instruction excerpts, NOT a complete method.
+# Reproduce apk-smali with signatures/exceptions; original export SHA256 69b25367fc107b83a320d42f42325e8a08fd83a13ad066bd3d22a4a0f53af81e
+# Instruction byte-PC ranges [1986,19fa), [26bc,272c)
+# All original exception records retained; omitted branch targets remain outside excerpt.
+    1986..198c  invoke-static/range  {v34..v34}, LX/1Xl;->A1E(Ljava/util/Iterator;)Ljava/util/Map$Entry;
+    198c..198e  move-result-object  v33
+    198e..1994  invoke-interface/range  {v33..v33}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+    1994..1996  move-result-object  v3
+    1996..199a  check-cast  v3, Lcom/whatsapp/infra/core/jid/UserJid;
+    199a..199e  move-object/from16  v0, v106
+    199e..19a4  invoke-interface  {v0, v3}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    19a4..19a6  move-result-object  v17
+    19a6..19aa  move-object/from16  v0, v17
+    19aa..19ae  check-cast  v0, LX/H6v;
+    19ae..19b2  move-object/from16  v17, v0
+    19b2..19b6  if-eqz  v0, +0x743
+    19b6..19ba  iget-object  v0, v0, LX/H6v;->A0D:LX/H3H;
+    19ba..19be  move-object/from16  v32, v0
+    19be..19c2  if-eqz  v0, +0x73d
+    19c2..19c6  iget-object  v0, v0, LX/H3H;->A00:Lcom/whatsapp/infra/core/jid/UserJid;
+    19c6..19ca  move-object/from16  v31, v0
+    19ca..19ce  const-string  v30, "profile"
+    19ce..19d2  if-eqz  v0, +0x676
+    19d2..19d6  move-object/from16  v0, v32
+    19d6..19da  iget-object  v0, v0, LX/H3H;->A01:LX/0Tp;
+    19da..19de  if-eqz  v0, +0x10
+    19de..19e2  move-object/from16  v1, v30
+    19e2..19e8  invoke-virtual  {v0, v1}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    19e8..19ea  move-result-object  v0
+    19ea..19ee  move-object/from16  v1, v31
+    19ee..19f4  invoke-static  {v1, v0}, LX/Hey;->A01(Lcom/whatsapp/infra/core/jid/UserJid;LX/0Tp;)LX/Hj8;
+    19f4..19f6  move-result-object  v0
+    19f6..19fa  goto/16  +0x663
+    26bc..26c0  move-object/from16  v1, v32
+    26c0..26c4  iget-object  v1, v1, LX/H3H;->A00:Lcom/whatsapp/infra/core/jid/UserJid;
+    26c4..26c8  if-eqz  v1, +0x34
+    26c8..26cc  move-object/from16  v2, v32
+    26cc..26d0  iget-object  v2, v2, LX/H3H;->A01:LX/0Tp;
+    26d0..26d4  if-eqz  v2, +0x2e
+    26d4..26d8  move-object/from16  v2, v17
+    26d8..26dc  iget-object  v4, v2, LX/H6v;->A09:LX/0Dx;
+    26dc..26e0  if-nez  v4, +0x3
+    26e0..26e2  move-object  v4, v1
+    26e2..26e6  iget-object  v1, v12, LX/HRw;->A05:LX/00x;
+    26e6..26ec  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    26ec..26ee  move-result-object  v2
+    26ee..26f2  check-cast  v2, LX/ExG;
+    26f2..26f6  move-object/from16  v1, v32
+    26f6..26fa  iget-object  v1, v1, LX/H3H;->A01:LX/0Tp;
+    26fa..26fe  move-object/from16  v5, v30
+    26fe..2704  invoke-virtual  {v1, v5}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    2704..2706  move-result-object  v5
+    2706..270a  if-eqz  v5, +0x69
+    270a..270e  const-string  v1, "aea_account_type"
+    270e..2714  invoke-virtual  {v5, v1}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    2714..2716  move-result-object  v5
+    2716..271a  if-eqz  v5, +0x61
+    271a..271e  const-string  v1, "value"
+    271e..2724  invoke-static  {v5, v1}, LX/6oe;->A18(LX/0Tp;Ljava/lang/String;)Ljava/lang/String;
+    2724..2726  move-result-object  v1
+    2726..272c  invoke-virtual  {v2, v4, v1}, LX/ExG;->A06(Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;)V
+    # catch Ljava/lang/IllegalArgumentException; code_units 0703..0707 -> 0718
+    # catch <all> code_units 0707..070a -> 070e
+    # catch Ljava/lang/IllegalArgumentException; code_units 070a..070e -> 0718
+    # catch <all> code_units 070f..0713 -> 0713
+    # catch Ljava/lang/IllegalArgumentException; code_units 0714..0718 -> 0718
+    # catch <all> code_units 08f3..0911 -> 09f2
+    # catch Landroid/database/SQLException; code_units 0a35..0a51 -> 0c31
+    # catch Ljava/lang/IllegalStateException; code_units 0a35..0a51 -> 0c39
+    # catch <all> code_units 0a51..0a55 -> 0c2a
+    # catch <all> code_units 0a55..0abf -> 0c21
+    # catch <all> code_units 0abf..0b02 -> 0be7
+    # catch <all> code_units 0b02..0be7 -> 0c21
+    # catch <all> code_units 0be8..0be9 -> 0be9
+    # catch <all> code_units 0be9..0c01 -> 0c21
+    # catch <all> code_units 0c01..0c04 -> 0c2a
+    # catch Landroid/database/SQLException; code_units 0c04..0c21 -> 0c31
+    # catch Ljava/lang/IllegalStateException; code_units 0c04..0c21 -> 0c39
+    # catch <all> code_units 0c22..0c23 -> 0c23
+    # catch <all> code_units 0c24..0c2a -> 0c2a
+    # catch <all> code_units 0c2b..0c2c -> 0c2c
+    # catch Landroid/database/SQLException; code_units 0c2c..0c31 -> 0c31
+    # catch Ljava/lang/IllegalStateException; code_units 0c2c..0c31 -> 0c39
+    # catch LX/LIL; code_units 0ce1..0ce5 -> 1965
+    # catch LX/LIL; code_units 0ce9..0f01 -> 1965
+    # catch Ljava/lang/NumberFormatException; code_units 0f01..0fe5 -> 14a6
+    # catch LX/LIL; code_units 0f01..0fe5 -> 1965
+    # catch LX/LIL; code_units 0fe5..135e -> 1965
+    # catch LX/LIL; code_units 14a6..14b3 -> 1965
+    # catch <all> code_units 15a8..15e3 -> 164d
+    # catch <all> code_units 15e3..160d -> 1611
+    # catch <all> code_units 160d..1611 -> 164d
+    # catch <all> code_units 1612..1613 -> 1613
+    # catch <all> code_units 1613..1618 -> 164d
+    # catch <all> code_units 164e..164f -> 164f
+    # catch <all> code_units 16db..16df -> 1746
+    # catch <all> code_units 16df..1703 -> 173f
+    # catch <all> code_units 1703..1714 -> 1731
+    # catch <all> code_units 1714..1731 -> 173f
+    # catch <all> code_units 1732..1733 -> 1733
+    # catch <all> code_units 1733..173b -> 173f
+    # catch <all> code_units 173b..173f -> 1746
+    # catch <all> code_units 1740..1741 -> 1741
+    # catch <all> code_units 1742..1746 -> 1746
+    # catch <all> code_units 1747..1748 -> 1748
+    # catch Ljava/lang/InterruptedException; code_units 17a9..17c9 -> 17c9
+    # catch Ljava/util/concurrent/ExecutionException; code_units 17a9..17c9 -> 17c9

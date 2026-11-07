@@ -1,0 +1,171 @@
+# Bounded instruction excerpts, NOT a complete method.
+# Reproduce apk-smali with signatures/exceptions; original export SHA256 eba44688e6a669e76ba27a0676c70e0fffb78c72984d34297b6ed3766d582253
+# Instruction byte-PC ranges [0000,029e)
+# All original exception records retained; omitted branch targets remain outside excerpt.
+    0000..0002  const/4  v3, #0x1
+    0002..0006  move-object/from16  v4, v26
+    0006..000c  invoke-static  {v4, v3}, LX/00l;->A09(Ljava/lang/Object;I)V
+    000c..0010  const/16  v2, #0x4e3
+    0010..0014  move-object/from16  v0, v25
+    0014..0018  iget-object  v1, v0, LX/19R;->A0F:LX/05a;
+    0018..001c  iget-object  v1, v1, LX/05a;->A00:LX/00x;
+    001c..0020  move-object/from16  v24, v1
+    0020..0026  invoke-interface/range  {v24..v24}, LX/00x;->get()Ljava/lang/Object;
+    0026..0028  move-result-object  v1
+    0028..002c  check-cast  v1, LX/00X;
+    002c..0032  invoke-virtual  {v1}, LX/00X;->A01()LX/00Y;
+    0032..0034  move-result-object  v1
+    0034..003a  invoke-static  {v1, v2}, LX/09H;->A03(LX/00Y;I)Ljava/lang/Object;
+    003a..003c  move-result-object  v23
+    003c..0040  move-object/from16  v1, v23
+    0040..0044  check-cast  v1, LX/0B0;
+    0044..0048  move-object/from16  v23, v1
+    0048..004c  const/16  v1, #0xca
+    004c..0050  move/from16  v2, v27
+    0050..0054  if-ne  v2, v1, +0xef
+    0054..005a  const-string/jumbo  v1, "verified_name"
+    005a..0060  invoke-virtual  {v4, v1}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    0060..0062  move-result-object  v1
+    0062..0066  const-string  v2, "profile"
+    0066..006c  invoke-virtual  {v4, v2}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    006c..006e  move-result-object  v15
+    006e..0072  const-string  v2, "remove"
+    0072..0078  invoke-virtual  {v4, v2}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    0078..007a  move-result-object  v11
+    007a..007e  const-string  v2, "product_catalog"
+    007e..0084  invoke-virtual  {v4, v2}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    0084..0086  move-result-object  v10
+    0086..008a  const-string  v2, "linked_accounts"
+    008a..0090  invoke-virtual  {v4, v2}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    0090..0092  move-result-object  v22
+    0092..0098  const-string/jumbo  v2, "suggestion"
+    0098..009e  invoke-virtual  {v4, v2}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    009e..00a0  move-result-object  v7
+    00a0..00a4  const-string  v2, "directory"
+    00a4..00aa  invoke-virtual  {v4, v2}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    00aa..00ac  move-result-object  v21
+    00ac..00b0  const-string  v2, "report"
+    00b0..00b6  invoke-virtual  {v4, v2}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    00b6..00b8  move-result-object  v5
+    00b8..00bc  const-string  v2, "ctwa_suggestion"
+    00bc..00c2  invoke-virtual  {v4, v2}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    00c2..00c6  const-string  v2, "biz_integrity_warning_notification"
+    00c6..00cc  invoke-virtual  {v4, v2}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    00cc..00ce  move-result-object  v20
+    00ce..00d4  const-string/jumbo  v6, "subscriptions"
+    00d4..00da  invoke-virtual  {v4, v6}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    00da..00dc  move-result-object  v19
+    00dc..00e2  const-string/jumbo  v2, "wa_ad_account_nonce"
+    00e2..00e8  invoke-virtual  {v4, v2}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    00e8..00ec  const-string  v2, "privacy"
+    00ec..00f2  invoke-virtual  {v4, v2}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    00f2..00f4  move-result-object  v13
+    00f4..00f8  const-string  v2, "mm_campaign"
+    00f8..00fe  invoke-virtual  {v4, v2}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    00fe..0100  move-result-object  v18
+    0100..0104  const-string  v2, "bb_pro_campaign"
+    0104..010a  invoke-virtual  {v4, v2}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    010a..010c  move-result-object  v9
+    010c..0110  const-string  v2, "app_icon"
+    0110..0116  invoke-virtual  {v4, v2}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    0116..011c  const-string/jumbo  v2, "username_integrity_pin_notification"
+    011c..0122  invoke-virtual  {v4, v2}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    0122..0124  move-result-object  v12
+    0124..0128  const-string  v2, "locked_profile_update"
+    0128..012e  invoke-virtual  {v4, v2}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    012e..0130  move-result-object  v17
+    0130..0134  sget-object  v16, LX/0vY;->A0H:LX/0vY;
+    0134..0138  const-string  v8, "hash"
+    0138..013c  const-string  v14, "jid"
+    013c..0140  if-eqz  v1, +0x7a
+    0140..0144  const-class  v2, Lcom/whatsapp/infra/core/jid/UserJid;
+    0144..014a  invoke-virtual  {v1, v2, v14}, LX/0Tp;->A0A(Ljava/lang/Class;Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    014a..014c  move-result-object  v9
+    014c..0150  check-cast  v9, Lcom/whatsapp/infra/core/jid/UserJid;
+    0150..0156  const-string/jumbo  v2, "verified_level"
+    0156..0158  const/4  v4, #0x0
+    0158..015e  invoke-virtual  {v1, v2, v4}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    015e..0160  move-result-object  v7
+    0160..0164  const-string  v5, "serial"
+    0164..0168  const-wide/16  v2, #0x0
+    0168..016e  invoke-virtual  {v1, v5, v2, v3}, LX/0Tp;->A08(Ljava/lang/String;J)J
+    016e..0170  move-result-wide  v13
+    0170..0176  const-string/jumbo  v2, "v"
+    0176..017c  invoke-virtual  {v1, v2, v4}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    017c..017e  move-result-object  v6
+    017e..0182  const-string  v2, "host_storage"
+    0182..0188  invoke-virtual  {v1, v2, v4}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0188..018a  move-result-object  v5
+    018a..018e  const-string  v2, "actual_actors"
+    018e..0194  invoke-virtual  {v1, v2, v4}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0194..0196  move-result-object  v3
+    0196..019a  const-string  v2, "privacy_mode_ts"
+    019a..01a0  invoke-virtual  {v1, v2, v4}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    01a0..01a2  move-result-object  v2
+    01a2..01a6  new-instance  v10, LX/11v;
+    01a6..01ac  invoke-direct  {v10, v5, v3, v2}, LX/11v;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+    01ac..01b0  if-eqz  v9, +0x836
+    01b0..01b4  const-string  v2, "1"
+    01b4..01ba  invoke-virtual  {v2, v6}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    01ba..01bc  move-result  v2
+    01bc..01c0  if-eqz  v2, +0x39
+    01c0..01c4  if-eqz  v7, +0x37
+    01c4..01ca  invoke-virtual  {v7}, Ljava/lang/String;->length()I
+    01ca..01cc  move-result  v2
+    01cc..01d0  if-eqz  v2, +0x31
+    01d0..01d4  iget-object  v11, v1, LX/0Tp;->A01:[B
+    01d4..01da  invoke-static  {v7}, LX/11p;->A00(Ljava/lang/String;)I
+    01da..01dc  move-result  v12
+    01dc..01e0  iget-object  v1, v0, LX/19R;->A0D:LX/05a;
+    01e0..01e4  iget-object  v3, v1, LX/05a;->A00:LX/00x;
+    01e4..01ea  invoke-interface  {v3}, LX/00x;->get()Ljava/lang/Object;
+    01ea..01ec  move-result-object  v2
+    01ec..01f0  check-cast  v2, LX/EoV;
+    01f0..01f4  const-string  v1, "BusinessNotificationHandler"
+    01f4..01fa  invoke-virtual  {v2, v1}, LX/EoV;->A03(Ljava/lang/String;)V
+    01fa..0200  invoke-interface  {v3}, LX/00x;->get()Ljava/lang/Object;
+    0200..0202  move-result-object  v3
+    0202..0206  check-cast  v3, LX/EoV;
+    0206..020a  const-string  v2, "entry_point"
+    020a..020e  const-string  v1, "notification_update"
+    020e..0214  invoke-virtual  {v3, v2, v4, v1}, LX/EoV;->A04(Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/String;)V
+    0214..0218  iget-object  v0, v0, LX/19R;->A03:LX/05a;
+    0218..021c  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    021c..0222  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0222..0224  move-result-object  v8
+    0224..0228  check-cast  v8, LX/Ec8;
+    0228..022e  invoke-virtual/range  {v8..v14}, LX/Ec8;->A00(Lcom/whatsapp/infra/core/jid/UserJid;LX/11v;[BIJ)V
+    022e..0230  return-void
+    0230..0232  const/4  v2, #0x0
+    0232..0236  if-eqz  v15, +0xa1
+    0236..023a  const-class  v1, Lcom/whatsapp/infra/core/jid/UserJid;
+    023a..0240  invoke-virtual  {v15, v1, v14}, LX/0Tp;->A0A(Ljava/lang/Class;Ljava/lang/String;)Lcom/whatsapp/infra/core/jid/Jid;
+    0240..0242  move-result-object  v7
+    0242..0246  check-cast  v7, Lcom/whatsapp/infra/core/jid/UserJid;
+    0246..024c  invoke-virtual  {v15, v8, v2}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    024c..024e  move-result-object  v4
+    024e..0252  if-eqz  v7, +0x20
+    0252..0256  const-string  v1, "aea_account_type"
+    0256..025c  invoke-virtual  {v15, v1}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    025c..025e  move-result-object  v3
+    025e..0262  if-eqz  v3, +0x18
+    0262..0268  const-string/jumbo  v1, "value"
+    0268..026e  invoke-virtual  {v3, v1, v2}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    026e..0270  move-result-object  v3
+    0270..0274  if-eqz  v3, +0xf
+    0274..0278  iget-object  v1, v0, LX/19R;->A0A:LX/05a;
+    0278..027c  iget-object  v1, v1, LX/05a;->A00:LX/00x;
+    027c..0282  invoke-interface  {v1}, LX/00x;->get()Ljava/lang/Object;
+    0282..0284  move-result-object  v1
+    0284..0288  check-cast  v1, LX/ExG;
+    0288..028e  invoke-virtual  {v1, v7, v3}, LX/ExG;->A06(Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;)V
+    028e..0292  if-eqz  v4, +0x8
+    0292..0298  invoke-virtual  {v4}, Ljava/lang/String;->length()I
+    0298..029a  move-result  v1
+    029a..029e  if-nez  v1, +0x3ec
+    # catch Ljava/lang/Exception; code_units 07c1..07c8 -> 07c8
+    # catch <all> code_units 093d..0941 -> 09a0
+    # catch <all> code_units 0941..094f -> 099e
+    # catch <all> code_units 094f..099e -> 09a0
+    # catch <all> code_units 099f..09a0 -> 09a0
+    # catch Ljava/lang/NumberFormatException; code_units 09bf..09c2 -> 09c2

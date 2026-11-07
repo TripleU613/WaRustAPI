@@ -1,0 +1,26 @@
+{
+  "README.md": {
+    "bytes": 4691,
+    "sha256": "0c8c543486cf9cbafec55b6977b4aa031cb162a85878e86d8c7d507a28e08f65"
+  },
+  "consumer-callers.txt": {
+    "bytes": 206,
+    "sha256": "978dee1810024ef36f0c35f8d52c293100c2214aa194dd3f177ed97b3f130b71"
+  },
+  "literal-refs.txt": {
+    "bytes": 236,
+    "sha256": "cf5cab39f9ceb0d077eb83d159c15ce692116fe8ba67ffe7a0b9fbb8adcce242"
+  },
+  "notification-excerpts.txt": {
+    "bytes": 9925,
+    "sha256": "03a2b4ed35d18b68bdaadfeb987de522b9eb17aed3ba0e365858cfafc0a28758"
+  },
+  "profile-result-excerpts.txt": {
+    "bytes": 5970,
+    "sha256": "4a3e0a00ffc7ad77c8ea2da995b139e65e4dc0f27ab0a5c8708a3e295308c82b"
+  },
+  "profile-worker-excerpts.txt": {
+    "bytes": 3669,
+    "sha256": "ffa4969a6ac527db491920f4561344e43f6b087d8c9fd18439bf9d19ce1ac566"
+  }
+}

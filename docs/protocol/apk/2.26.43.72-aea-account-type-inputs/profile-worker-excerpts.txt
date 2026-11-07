@@ -1,0 +1,51 @@
+# Bounded instruction excerpts, NOT a complete method.
+# Reproduce apk-smali with signatures/exceptions; original export SHA256 1526a4debab5da88022d9cddf937a8cbd8be3c44dce82716cba18dfd1d55ac06
+# Instruction byte-PC ranges [0000,000e), [1838,18c4)
+# All original exception records retained; omitted branch targets remain outside excerpt.
+    0000..0004  move-object/from16  v0, v22
+    0004..0008  iget  v1, v0, LX/IC1;->$t:I
+    0008..000e  packed-switch  v1, payload@0x19bc, cases=[0:@0x18fe, 1:@0x18c4, 2:@0xdd2, 3:@0xd7a, 4:@0x1838, 5:@0xab2, 6:@0xa86, 7:@0x1712, 8:@0xa06, 9:@0x16ee, 10:@0xe, 11:@0xe, 12:@0xe, 13:@0x1554, 14:@0x14f8, 15:@0x1444, 16:@0x9b8, 17:@0x141e, 18:@0x13d0, 19:@0x139e, 20:@0x990, 21:@0x134a, 22:@0x94c, 23:@0x132a, 24:@0x90e, 25:@0x130a, 26:@0x8d4, 27:@0x83a, 28:@0x1296, 29:@0x1266, 30:@0x121e, 31:@0x7fa, 32:@0x58c, 33:@0x11dc, 34:@0x1194, 35:@0x2de, 36:@0x113e, 37:@0x1086, 38:@0x26e, 39:@0x1f2, 40:@0x1040, 41:@0x178, 42:@0x1010, 43:@0x12e, 44:@0xb0, 45:@0xf54, 46:@0xf34, 47:@0xf12, 48:@0xeee, 49:@0x32], default@0xe
+    1838..183c  iget-object  v5, v0, LX/IC1;->A00:Ljava/lang/Object;
+    183c..1840  check-cast  v5, LX/Hyh;
+    1840..1844  iget-object  v4, v0, LX/IC1;->A01:Ljava/lang/Object;
+    1844..1848  check-cast  v4, LX/Hj8;
+    1848..184c  iget-object  v1, v0, LX/IC1;->A02:Ljava/lang/Object;
+    184c..1850  check-cast  v1, LX/0Tp;
+    1850..1854  iget-object  v0, v5, LX/Hyh;->A05:LX/05a;
+    1854..185a  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    185a..185c  move-result-object  v0
+    185c..1860  check-cast  v0, Lcom/whatsapp/businessprofile/biz/BusinessProfileManager;
+    1860..1864  iget-object  v3, v5, LX/Hyh;->A0D:Lcom/whatsapp/infra/core/jid/UserJid;
+    1864..186a  invoke-virtual  {v0, v4, v3}, Lcom/whatsapp/businessprofile/biz/BusinessProfileManager;->A0G(LX/Hj8;Lcom/whatsapp/infra/core/jid/UserJid;)V
+    186a..186e  iget-object  v0, v5, LX/Hyh;->A0A:LX/05a;
+    186e..1874  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    1874..1876  move-result-object  v2
+    1876..187a  check-cast  v2, LX/ExG;
+    187a..187e  if-eqz  v1, +0x23
+    187e..1882  const-string  v0, "aea_account_type"
+    1882..1888  invoke-virtual  {v1, v0}, LX/0Tp;->A0F(Ljava/lang/String;)LX/0Tp;
+    1888..188a  move-result-object  v1
+    188a..188e  if-eqz  v1, +0x1b
+    188e..1892  const-string  v0, "value"
+    1892..1898  invoke-static  {v1, v0}, LX/6oe;->A18(LX/0Tp;Ljava/lang/String;)Ljava/lang/String;
+    1898..189a  move-result-object  v0
+    189a..18a0  invoke-virtual  {v2, v3, v0}, LX/ExG;->A06(Lcom/whatsapp/infra/core/jid/UserJid;Ljava/lang/String;)V
+    18a0..18a4  iget-object  v0, v5, LX/Hyh;->A07:LX/05a;
+    18a4..18aa  invoke-static  {v0}, LX/2L9;->A0l(LX/05a;)LX/0Js;
+    18aa..18ac  move-result-object  v1
+    18ac..18b0  const/16  v0, #0x20
+    18b0..18b6  invoke-static  {v4, v5, v0}, LX/IC2;->A00(Ljava/lang/Object;Ljava/lang/Object;I)LX/IC2;
+    18b6..18b8  move-result-object  v0
+    18b8..18be  invoke-virtual  {v1, v0}, LX/0Js;->CbR(Ljava/lang/Runnable;)V
+    18be..18c0  return-void
+    18c0..18c2  const/4  v0, #0x0
+    18c2..18c4  goto  -0x14
+    # catch Ljava/io/IOException; code_units 0b37..0b3e -> 0b5c
+    # catch <all> code_units 0b3e..0b4e -> 0b52
+    # catch Ljava/io/IOException; code_units 0b4e..0b52 -> 0b5c
+    # catch <all> code_units 0b53..0b57 -> 0b57
+    # catch Ljava/io/IOException; code_units 0b58..0b5c -> 0b5c
+    # catch LX/Giz; code_units 0b65..0b6a -> 0b6a
+    # catch <all> code_units 0bd8..0bf5 -> 0bf5
+    # catch <all> code_units 0bf6..0bf7 -> 0bf5
+    # catch Landroid/content/ActivityNotFoundException; code_units 0cc5..0cc9 -> 0cc9

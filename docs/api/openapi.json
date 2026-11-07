@@ -1,4 +1,11 @@
 {
+  "x-aea-account-type-input-static-boundary": {
+    "x-cli": "research through existing APK inspection commands; no new command",
+    "x-transport": "research only; business-profile AEA classification adoption remains unsupported",
+    "x-live": false,
+    "description": "Exact ExG.A06 caller and aea_account_type literal censuses identify business notification profile, profile-result and business-profile worker consumers. Bounded traces retain differing missing/null value behavior and mapped-recipient source. No requirement to add fields to ordinary Rust contact/device queries or change business ACKs is established. Full reply correlation and indirect network policy remain untraced; no receipt attestation verification substitution, runtime change or live operation.",
+    "evidence": "docs/protocol/aea-account-type-inputs.md"
+  },
   "x-aea-local-cooldown-static-boundary": {
     "x-cli": "research through existing APK inspection commands; no new command",
     "x-transport": "research only; no AEA cooldown or receipt-key adoption added",

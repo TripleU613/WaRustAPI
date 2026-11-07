@@ -1,5 +1,9 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
+**AEA account-type inputs bounded.** Exact consumers point to business-profile
+data and notifications; they do not establish a required ordinary contact/device
+query field. Native classification capability remains unported. [Evidence](aea-account-type-inputs.md). Research only; no runtime change.
+
 **Local AEA cooldown reader traced.** It stabilizes chat classification using
 wall-clock time, configured hours and identity reset. Ignored SQL failure returns
 limit success claims; no server restriction meaning proven. [Evidence](retry-answers.md#local-aea-cooldown-reader-and-ignored-insert-result-2026-11-07). Research only.
