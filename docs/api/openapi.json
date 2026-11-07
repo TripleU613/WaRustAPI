@@ -1,4 +1,11 @@
 {
+  "x-jobqueue-observer-dispatch-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-jobqueue-observer-dispatch/README.md",
+    "behavior": "Static RNL interface proof binds scheduled observer dispatch then separate queue wake submission; delivery/order/lifecycle remains unverified. No runtime capability added."
+  },
   "x-jobqueue-observer-membership-evidence": {
     "x-cli": false,
     "x-transport": false,

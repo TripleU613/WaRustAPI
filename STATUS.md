@@ -10686,3 +10686,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   binding0x300f5 reaches RNL and the existing RF1/Cgm manager association path.
   Strict static derivation checks all511 arrays. Runtime delivery/provider/
   restart scope remains separate; research only, no live operation.
+
+- Bound queue connection observer RNL to scheduled07v dispatch via exact DEX
+  interfaces, composing observer delivery with separate queue wake submission.
+  Null-manager/race/executor/lifecycle limits retained. Research only; no live
+  account operation or Rust behavior change.

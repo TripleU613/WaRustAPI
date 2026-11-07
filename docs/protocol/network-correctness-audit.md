@@ -6193,3 +6193,9 @@ evidence, not new APK behavior or proof of full group-send/network parity.
   Reproducible strict initializer interpretation checks10696 instructions/511
   arrays. Runtime delivery/lifecycle remains separate. See
   [compiled membership](apk/2.26.43.72-jobqueue-observer-membership/README.md).
+
+- Pinned RNL metadata proves0AK->07v plusRF1, binding the queue connection
+  observer to the retained scheduled dispatch partition. Its BzL submits a
+  separate queue wake task; null manager returns without wake. Dispatch/wake
+  completion, association races and provider lifecycle remain separate. See
+  [observer dispatch](apk/2.26.43.72-jobqueue-observer-dispatch/README.md).

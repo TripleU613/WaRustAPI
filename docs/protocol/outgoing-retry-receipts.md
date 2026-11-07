@@ -562,3 +562,11 @@ one/nine bindings; the second includes0x300f5 ->root12/RNH case245 ->RNL.
 Existing resolver/iterator/facade/Cgm evidence closes selected manager association.
 [Reproducible membership derivation and runtime limits](apk/2.26.43.72-jobqueue-observer-membership/README.md).
 No Rust wake/retry behavior or live request changed.
+
+## Queue connection observer uses scheduled dispatch
+
+**Confirmed metadata + retained static bodies:** RNL implements0AK->07v andRF1,
+so ready notifications take the existing scheduled observer branch. BzL then
+conditionally submits the separate queue-wake task; neither stage is a send.
+[Declaration proof and ordering limits](apk/2.26.43.72-jobqueue-observer-dispatch/README.md).
+No runtime retry behavior or live account operation changed.
