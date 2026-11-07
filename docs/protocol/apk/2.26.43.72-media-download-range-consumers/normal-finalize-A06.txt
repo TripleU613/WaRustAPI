@@ -1,0 +1,51 @@
+
+# class: LX/AES;
+# extends: Ljava/lang/Object;
+
+.method public A06(LLLLLLLL)  # .registers 14
+    # full signature: LX/AES;->A06(LX/LvQ;LX/Nb8;LX/MX3;Ljava/io/File;Ljava/io/File;Ljava/lang/String;Ljava/lang/String;)LX/MXt;
+    0000..0006  invoke-static  {v7, v9, v11, v12}, LX/AES;->A01(LX/LvQ;LX/MX3;Ljava/io/File;Ljava/lang/String;)I
+    0006..0008  move-result  v6
+    0008..000c  check-cast  v8, LX/LHe;
+    000c..0010  iget-object  v5, v8, LX/LHe;->A02:Ljava/util/concurrent/FutureTask;
+    0010..0016  invoke-virtual  {v5}, Ljava/util/concurrent/FutureTask;->isCancelled()Z
+    0016..0018  move-result  v0
+    0018..001a  const/4  v4, #0x0
+    001a..001c  const/4  v3, #0x0
+    001c..0020  if-nez  v0, +0x3c
+    0020..0022  const/4  v2, #0x1
+    0022..0026  if-eqz  v6, +0x8
+    0026..002a  new-instance  v1, LX/MXt;
+    002a..0030  invoke-direct  {v1, v3, v3, v6, v2}, LX/MXt;-><init>(Ljava/io/File;Ljava/lang/String;IZ)V
+    0030..0032  return-object  v1
+    0032..0038  invoke-virtual  {v10, v11}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
+    0038..003a  move-result  v0
+    003a..003e  if-eqz  v0, +0xa
+    003e..0042  iget-object  v0, v7, LX/LvQ;->A02:Ljava/lang/String;
+    0042..0046  new-instance  v1, LX/MXt;
+    0046..004c  invoke-direct  {v1, v3, v0, v4, v2}, LX/MXt;-><init>(Ljava/io/File;Ljava/lang/String;IZ)V
+    004c..004e  return-object  v1
+    004e..0054  invoke-static  {v9, v13}, LX/AES;->A02(LX/MX3;Ljava/lang/String;)I
+    0054..0056  move-result  v1
+    0056..005c  invoke-virtual  {v5}, Ljava/util/concurrent/FutureTask;->isCancelled()Z
+    005c..005e  move-result  v0
+    005e..0062  if-nez  v0, +0x1b
+    0062..0066  if-eqz  v1, +0xd
+    0066..006a  const/16  v0, #0x1f
+    006a..006e  if-eq  v1, v2, +0x3
+    006e..0070  const/4  v0, #0x7
+    0070..0074  new-instance  v1, LX/MXt;
+    0074..007a  invoke-direct  {v1, v3, v3, v0, v2}, LX/MXt;-><init>(Ljava/io/File;Ljava/lang/String;IZ)V
+    007a..007c  return-object  v1
+    007c..0080  iget-object  v0, v9, LX/MX3;->A0N:Ljava/lang/String;
+    0080..0086  invoke-static  {v0}, LX/AES;->A0C(Ljava/lang/String;)Ljava/lang/String;
+    0086..0088  move-result-object  v1
+    0088..008c  new-instance  v0, LX/MXt;
+    008c..0092  invoke-direct  {v0, v3, v1, v4, v2}, LX/MXt;-><init>(Ljava/io/File;Ljava/lang/String;IZ)V
+    0092..0094  return-object  v0
+    0094..0098  const/16  v0, #0xd
+    0098..009c  new-instance  v1, LX/MXt;
+    009c..00a2  invoke-direct  {v1, v3, v3, v0, v4}, LX/MXt;-><init>(Ljava/io/File;Ljava/lang/String;IZ)V
+    00a2..00a4  return-object  v1
+    # exception table: 0 try range(s)
+.end method

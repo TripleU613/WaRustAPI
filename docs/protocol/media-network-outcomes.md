@@ -1374,3 +1374,26 @@ length and policy state. No status relaxation, resume, automatic retry, guessed
 header or live operation was added. Full retained methods, exact anchor/caller
 censuses, byte PCs, reproduction, checksums and untraced boundaries are in the
 [download HTTP evidence](apk/2.26.43.72-media-download-http/README.md).
+
+## Pinned download range and result consumers (2026-11-06)
+
+**Confirmed selected static / research only:** the MuY/MuZ wrappers from the
+shared HTTP caller census each have three direct call sites, all in their own
+stream/window A00 handler. MuY packages the response with a separate M29 chunk
+cipher/MAC object. A native internal output write before chunk-MAC comparison is
+not proof of user-visible unauthenticated output and does not justify weakening
+Rust's whole-file verification before handoff. MuZ is a separate push-stream
+family; its decrypter has not been equated with M29.
+
+Normal MVv handles206 Content-Range totals and separate length policy, then calls
+an obfuscated AES.A06 finalizer with transfer-hash validation, cancellation checks
+and conditional plaintext-hash validation. These are distinct from HTTP status
+acceptance. Missing expected transfer-hash fallback in this helper is not added
+to Rust's fixed-width authenticated descriptor requirements. Local native result
+codes are not HTTP errors or account-restriction signals.
+
+[Complete methods, exact invocation censuses, byte-PC findings and checksums](apk/2.26.43.72-media-download-range-consumers/README.md)
+retain the operation-selection/crypto/output-adoption unknowns. This narrows the
+prior shared-leaf comparison without establishing a universal full-media206/416
+success rule. No request, retry, automatic resume, status relaxation or runtime
+behavior was added; supported-profile factory/start/end binding remains open.

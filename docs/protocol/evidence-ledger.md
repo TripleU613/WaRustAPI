@@ -1,5 +1,11 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
+**Download range/result consumers traced.** Pinned MuY/MuZ wrappers lead to
+stream/window handlers; MuY packages a chunk-MAC decrypter separately from HTTP
+status. Normal finalization checks transfer/plaintext hashes and cancellation.
+No universal206/416 success rule or Rust status change is established.
+[Evidence](media-network-outcomes.md#pinned-download-range-and-result-consumers-2026-11-06).
+
 **Pinned download HTTP leaves audited.** Confirmed identity and conditional Range
 construction, distinct native timeouts,200/206 leaf acceptance and416 special
 handling. Rust remains200-only pending operation/caller binding; no guessed

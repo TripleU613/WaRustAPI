@@ -1,0 +1,186 @@
+
+# class: LX/M29;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLJ)  # .registers 7
+    # full signature: LX/M29;-><init>(LX/LvP;[BJ)V
+    0000..0002  const/4  v0, #0x1
+    0002..0008  invoke-static  {v3, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-direct  {v2}, Ljava/lang/Object;-><init>()V
+    000e..0012  iput-object  v4, v2, LX/M29;->A02:[B
+    0012..0016  iput-object  v3, v2, LX/M29;->A01:LX/LvP;
+    0016..001a  const-wide/16  v0, #0xa
+    001a..001c  sub-long/2addr  v5, v0
+    001c..0020  iput-wide  v5, v2, LX/M29;->A00:J
+    0020..0022  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method public A00(VLLIJJ)  # .registers 27
+    # full signature: LX/M29;->A00(Ljava/io/InputStream;Ljava/io/OutputStream;IJJ)V
+    0000..0002  const/4  v3, #0x2
+    0002..0004  const/4  v10, #0x1
+    0004..0008  const-string  v7, "Required value was null."
+    0008..000a  const/4  v6, #0x0
+    000a..000e  const-wide/16  v16, #0x0
+    000e..0012  move-wide/from16  v4, v23
+    0012..0016  cmp-long  v0, v23, v16
+    0016..001a  move-object/from16  v12, v19
+    001a..001e  move-object/from16  v18, v20
+    001e..0022  if-nez  v0, +0x16
+    0022..0026  iget-object  v1, v12, LX/M29;->A01:LX/LvP;
+    0026..002a  iget-object  v2, v1, LX/LvP;->A01:[B
+    002a..002e  if-eqz  v2, +0xb
+    002e..0032  iget-object  v0, v1, LX/LvP;->A02:[B
+    0032..0036  if-nez  v0, +0x28
+    0036..003c  invoke-static  {v7}, LX/1Xl;->A0g(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+    003c..003e  move-result-object  v0
+    003e..0040  throw  v0
+    0040..0046  invoke-static  {v7}, LX/1Xl;->A0g(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+    0046..0048  move-result-object  v0
+    0048..004a  throw  v0
+    004a..004e  const/16  v1, #0x10
+    004e..0052  new-array  v2, v1, [B
+    0052..0056  move-object/from16  v0, v18
+    0056..005c  invoke-virtual  {v0, v2, v6, v1}, Ljava/io/InputStream;->read([BII)I
+    005c..005e  move-result  v0
+    005e..0064  invoke-static  {v0, v1}, LX/2L9;->A1O(II)Z
+    0064..0066  move-result  v0
+    0066..006c  invoke-static  {v0}, LX/00L;->A0B(Z)V
+    006c..0070  iget-object  v1, v12, LX/M29;->A01:LX/LvP;
+    0070..0074  iget-object  v0, v1, LX/LvP;->A02:[B
+    0074..0078  if-nez  v0, +0x7
+    0078..007e  invoke-static  {v7}, LX/1Xl;->A0g(Ljava/lang/String;)Ljava/lang/IllegalStateException;
+    007e..0080  move-result-object  v0
+    0080..0082  throw  v0
+    0082..0088  invoke-static  {v2, v0}, LX/MTj;->A03([B[B)Ljavax/crypto/Mac;
+    0088..008a  move-result-object  v14
+    008a..008e  iget-wide  v6, v12, LX/M29;->A00:J
+    008e..0092  cmp-long  v0, v23, v6
+    0092..0096  if-ltz  v0, +0x51
+    0096..0098  const/4  v8, #0x0
+    0098..009a  const/4  v10, #0x0
+    009a..009e  const/16  v0, #0x2000
+    009e..00a2  new-array  v11, v0, [B
+    00a2..00a6  move-wide/from16  v2, v25
+    00a6..00aa  cmp-long  v0, v2, v16
+    00aa..00ae  move-object/from16  v15, v21
+    00ae..00b2  if-lez  v0, +0x71
+    00b2..00b6  const-wide/16  v0, #0x2000
+    00b6..00bc  invoke-static  {v2, v3, v0, v1}, Ljava/lang/Math;->min(JJ)J
+    00bc..00be  move-result-wide  v0
+    00be..00c0  long-to-int  v9, v0
+    00c0..00c2  int-to-long  v0, v9
+    00c2..00c4  sub-long/2addr  v2, v0
+    00c4..00c6  const/4  v1, #0x0
+    00c6..00ca  if-ge  v1, v9, +0xf
+    00ca..00ce  sub-int  v13, v9, v1
+    00ce..00d2  move-object/from16  v0, v18
+    00d2..00d8  invoke-virtual  {v0, v11, v1, v13}, Ljava/io/InputStream;->read([BII)I
+    00d8..00da  move-result  v13
+    00da..00dc  const/4  v0, #0xff (-1)
+    00dc..00e0  if-eq  v13, v0, +0x4c
+    00e0..00e2  add-int/2addr  v1, v13
+    00e2..00e4  goto  -0xe
+    00e4..00e6  const/4  v0, #0x0
+    00e6..00ec  invoke-virtual  {v14, v11, v0, v9}, Ljavax/crypto/Mac;->update([BII)V
+    00ec..00f0  sub-long  v0, v25, v2
+    00f0..00f4  add-long  v0, v0, v23
+    00f4..00f8  cmp-long  v13, v0, v6
+    00f8..00fc  if-lez  v13, +0x5
+    00fc..00fe  sub-long/2addr  v0, v6
+    00fe..0100  long-to-int  v13, v0
+    0100..0102  sub-int/2addr  v9, v13
+    0102..0106  if-lez  v9, -0x2e
+    0106..010a  if-eqz  v8, +0x3e
+    010a..010c  const/4  v1, #0x0
+    010c..0112  invoke-virtual  {v8, v11, v1, v9}, Ljavax/crypto/Cipher;->update([BII)[B
+    0112..0114  move-result-object  v9
+    0114..0118  if-eqz  v9, +0x7
+    0118..011a  array-length  v0, v9
+    011a..0120  invoke-virtual  {v15, v9, v1, v0}, Ljava/io/OutputStream;->write([BII)V
+    0120..0122  goto  -0x3d
+    0122..0126  if-nez  v10, -0x3e
+    0126..012a  const-string  v0, "decryption failed"
+    012a..0130  invoke-static  {v0}, LX/8t1;->A1G(Ljava/lang/String;)Ljava/io/IOException;
+    0130..0132  move-result-object  v0
+    0132..0134  throw  v0
+    0134..0138  add-long  v8, v23, v25
+    0138..013c  cmp-long  v0, v8, v6
+    013c..0140  iget-object  v1, v1, LX/LvP;->A00:[B
+    0140..0144  if-ltz  v0, +0x7
+    0144..014a  invoke-static  {v2, v1, v3}, LX/MTj;->A02([B[BI)Ljavax/crypto/Cipher;
+    014a..014c  move-result-object  v8
+    014c..014e  goto  -0x59
+    014e..0152  const-string  v0, "AES/CBC/NoPadding"
+    0152..0158  invoke-static  {v0}, Ljavax/crypto/Cipher;->getInstance(Ljava/lang/String;)Ljavax/crypto/Cipher;
+    0158..015a  move-result-object  v8
+    015a..0160  invoke-static  {v1}, LX/DBd;->A1L([B)Ljavax/crypto/spec/SecretKeySpec;
+    0160..0162  move-result-object  v1
+    0162..0166  new-instance  v0, Ljavax/crypto/spec/IvParameterSpec;
+    0166..016c  invoke-direct  {v0, v2}, Ljavax/crypto/spec/IvParameterSpec;-><init>([B)V
+    016c..0172  invoke-virtual  {v8, v3, v1, v0}, Ljavax/crypto/Cipher;->init(ILjava/security/Key;Ljava/security/spec/AlgorithmParameterSpec;)V
+    0172..0174  goto  -0x6d
+    0174..0178  const-string  v0, "Stream unexpectedly closed!"
+    0178..017e  invoke-static  {v0}, LX/8t1;->A1G(Ljava/lang/String;)Ljava/io/IOException;
+    017e..0180  move-result-object  v0
+    0180..0182  throw  v0
+    0182..0186  const-string  v0, "cipher should not be null"
+    0186..018c  invoke-static  {v0}, LX/1Xl;->A0f(Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+    018c..018e  move-result-object  v0
+    018e..0190  throw  v0
+    0190..0194  if-eqz  v10, +0x22
+    0194..0198  if-eqz  v8, +0x20
+    0198..019e  invoke-virtual  {v8}, Ljavax/crypto/Cipher;->doFinal()[B
+    019e..01a0  move-result-object  v0
+    01a0..01a6  invoke-virtual  {v15, v0}, Ljava/io/OutputStream;->write([B)V
+    01a6..01a8  goto  +0x17
+    01a8..01aa  move-exception  v0
+    01aa..01b0  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/Throwable;)V
+    01b0..01b4  const-string  v0, "Bad padding!"
+    01b4..01ba  invoke-static  {v0}, LX/8t1;->A1G(Ljava/lang/String;)Ljava/io/IOException;
+    01ba..01bc  move-result-object  v0
+    01bc..01be  throw  v0
+    01be..01c0  move-exception  v0
+    01c0..01c6  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/Throwable;)V
+    01c6..01ca  const-string  v0, "Bad block size!"
+    01ca..01d0  invoke-static  {v0}, LX/8t1;->A1G(Ljava/lang/String;)Ljava/io/IOException;
+    01d0..01d2  move-result-object  v0
+    01d2..01d4  throw  v0
+    01d4..01da  invoke-virtual  {v14}, Ljavax/crypto/Mac;->doFinal()[B
+    01da..01dc  move-result-object  v3
+    01dc..01e0  const/16  v1, #0xa
+    01e0..01e4  new-array  v2, v1, [B
+    01e4..01e6  const/4  v0, #0x0
+    01e6..01ec  invoke-static  {v3, v0, v2, v0, v1}, Ljava/lang/System;->arraycopy(Ljava/lang/Object;ILjava/lang/Object;II)V
+    01ec..01f0  iget-object  v1, v12, LX/M29;->A02:[B
+    01f0..01f4  move/from16  v3, v22
+    01f4..01f8  add-int/lit8  v0, v22, #0xa
+    01f8..01fe  invoke-static  {v1, v3, v0}, Ljava/util/Arrays;->copyOfRange([BII)[B
+    01fe..0200  move-result-object  v0
+    0200..0206  invoke-static  {v0, v2}, Ljava/security/MessageDigest;->isEqual([B[B)Z
+    0206..0208  move-result  v0
+    0208..020c  if-eqz  v0, +0x3
+    020c..020e  return-void
+    020e..0212  const-string  v0, "ChunkCipherDecrypter/match failed at byte_offset="
+    0212..0218  invoke-static  {v0, v4, v5}, LX/1Xl;->A17(Ljava/lang/String;J)Ljava/lang/StringBuilder;
+    0218..021a  move-result-object  v1
+    021a..021e  const-string  v0, ", end_of_payload="
+    021e..0224  invoke-static  {v0, v1, v10}, LX/2LA;->A0q(Ljava/lang/String;Ljava/lang/StringBuilder;Z)Ljava/lang/String;
+    0224..0226  move-result-object  v0
+    0226..022c  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->e(Ljava/lang/String;)V
+    022c..0230  new-instance  v0, LX/LUP;
+    0230..0236  invoke-direct  {v0}, LX/LUP;-><init>()V
+    0236..0238  throw  v0
+    0238..023a  move-exception  v0
+    023a..0240  invoke-static  {v0}, LX/DBb;->A0q(Ljava/lang/Object;)Ljava/lang/AssertionError;
+    0240..0242  move-result-object  v0
+    0242..0244  throw  v0
+    # exception table: 2 try range(s)
+    # catch Ljava/security/NoSuchAlgorithmException; code_units 00a7..00ba -> 011c
+    # catch Ljavax/crypto/NoSuchPaddingException; code_units 00a7..00ba -> 011c
+    # catch Ljava/security/InvalidAlgorithmParameterException; code_units 00a7..00ba -> 011c
+    # catch Ljava/security/InvalidKeyException; code_units 00a7..00ba -> 011c
+    # catch Ljavax/crypto/IllegalBlockSizeException; code_units 00cc..00d4 -> 00df
+    # catch Ljavax/crypto/BadPaddingException; code_units 00cc..00d4 -> 00d4
+.end method

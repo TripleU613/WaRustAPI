@@ -1,0 +1,61 @@
+
+# class: LX/AES;
+# extends: Ljava/lang/Object;
+
+.method public A01(ILLLL)  # .registers 7
+    # full signature: LX/AES;->A01(LX/LvQ;LX/MX3;Ljava/io/File;Ljava/lang/String;)I
+    0000..0004  iget-object  v2, v4, LX/MX3;->A0K:Ljava/lang/String;
+    0004..0008  if-nez  v2, +0x13
+    0008..000c  const-string  v0, "MediaDownload/checkMediaHash/message-supplied media hash is null mediaHash="
+    000c..0012  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0012..0014  move-result-object  v1
+    0014..0018  iget-object  v0, v4, LX/MX3;->A0L:Ljava/lang/String;
+    0018..001e  invoke-static  {v0}, LX/MTl;->A01(Ljava/lang/String;)Ljava/lang/String;
+    001e..0020  move-result-object  v0
+    0020..0026  invoke-static  {v1, v0}, LX/2LD;->A1D(Ljava/lang/StringBuilder;Ljava/lang/String;)V
+    0026..002a  iget-object  v2, v3, LX/LvQ;->A01:Ljava/lang/String;
+    002a..002e  if-nez  v6, +0x27
+    002e..0032  const-string  v0, "MediaDownload/MMS download failed to calculate hash; mediaHash="
+    0032..0038  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0038..003a  move-result-object  v1
+    003a..003e  iget-object  v0, v4, LX/MX3;->A0L:Ljava/lang/String;
+    003e..0044  invoke-static  {v0}, LX/MTl;->A01(Ljava/lang/String;)Ljava/lang/String;
+    0044..0046  move-result-object  v0
+    0046..004c  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    004c..0050  const-string  v0, "; urlPresent=true; downloadFile.exists?="
+    0050..0056  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0056..005c  invoke-virtual  {v5}, Ljava/io/File;->exists()Z
+    005c..005e  move-result  v0
+    005e..0064  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    0064..006a  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    006a..006c  move-result-object  v0
+    006c..0072  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0072..0076  const/16  v1, #0x1b
+    0076..0078  return  v1
+    0078..007e  invoke-virtual  {v6, v2}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    007e..0080  move-result  v0
+    0080..0082  const/4  v1, #0x0
+    0082..0086  if-nez  v0, -0x6
+    0086..008a  const-string  v0, "MediaDownload/MMS download failed due to hash mismatch; mediaHash="
+    008a..0090  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0090..0092  move-result-object  v1
+    0092..0096  iget-object  v0, v4, LX/MX3;->A0L:Ljava/lang/String;
+    0096..009c  invoke-static  {v0}, LX/MTl;->A01(Ljava/lang/String;)Ljava/lang/String;
+    009c..009e  move-result-object  v0
+    009e..00a4  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00a4..00a8  const-string  v0, "; urlPresent=true; receivedHashPresent="
+    00a8..00ae  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00ae..00b4  invoke-static  {v2}, LX/2L9;->A1W(Ljava/lang/Object;)Z
+    00b4..00b6  move-result  v0
+    00b6..00bc  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    00bc..00c0  const-string  v0, "; localHashPresent="
+    00c0..00c6  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    00c6..00c8  const/4  v0, #0x1
+    00c8..00ce  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    00ce..00d4  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00d4..00d6  move-result-object  v0
+    00d6..00dc  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    00dc..00e0  const/16  v1, #0x20
+    00e0..00e2  return  v1
+    # exception table: 0 try range(s)
+.end method

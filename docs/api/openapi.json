@@ -1,4 +1,11 @@
 {
+  "x-media-download-range-result-boundary": {
+    "x-cli": "existing media retrieval; no new command or flag",
+    "x-transport": "research-only pinned stream/range and normal result-adoption consumers; no runtime behavior change",
+    "x-live": false,
+    "description": "MuY/MuZ each have three direct wrapper call sites inside their own stream/window handler. MuY packages a distinct chunk decrypter and response; MuZ push-stream decrypter remains separate. Normal MVv handles Content-Range totals independently of obfuscated AES.A06 transfer/plaintext hash checks and cancellation. Internal pre-MAC writes do not prove user-visible output. No universal206/416 success rule, status relaxation, replay, guessed hash fallback or live account operation. Supported full-media operation factory and range input binding remain unknown.",
+    "evidence": "docs/protocol/apk/2.26.43.72-media-download-range-consumers/README.md"
+  },
   "x-media-download-http-static-boundary": {
     "x-cli": "existing ordinary and view-once media retrieval; no new command",
     "x-transport": "research-only pinned shared download header/status comparison; Rust remains full-body200-only",

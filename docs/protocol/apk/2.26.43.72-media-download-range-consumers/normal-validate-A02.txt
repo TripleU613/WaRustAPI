@@ -1,0 +1,50 @@
+
+# class: LX/AES;
+# extends: Ljava/lang/Object;
+
+.method public A02(ILL)  # .registers 9
+    # full signature: LX/AES;->A02(LX/MX3;Ljava/lang/String;)I
+    0000..0004  const-string  v6, "; mediaSize="
+    0004..0008  const-string  v5, "; urlPresent=true; calculatedHashPresent="
+    0008..000a  const/4  v4, #0x1
+    000a..000c  const/4  v3, #0x0
+    000c..0010  if-nez  v8, +0x27
+    0010..0014  const-string  v0, "MediaDownload/MMS download failed during media decryption due to plaintext hash not calculated properly; mediaHash="
+    0014..001a  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    001a..001c  move-result-object  v2
+    001c..0020  iget-object  v0, v7, LX/MX3;->A0L:Ljava/lang/String;
+    0020..0026  invoke-static  {v0}, LX/MTl;->A01(Ljava/lang/String;)Ljava/lang/String;
+    0026..0028  move-result-object  v0
+    0028..002e  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    002e..0034  invoke-virtual  {v2, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0034..003a  invoke-virtual  {v2, v3}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    003a..0040  invoke-virtual  {v2, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0040..0044  iget-wide  v0, v7, LX/MX3;->A09:J
+    0044..004a  invoke-virtual  {v2, v0, v1}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    004a..0050  invoke-virtual  {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    0050..0052  move-result-object  v0
+    0052..0058  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    0058..005a  return  v4
+    005a..005e  iget-object  v1, v7, LX/MX3;->A0L:Ljava/lang/String;
+    005e..0064  invoke-virtual  {v8, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    0064..0066  move-result  v0
+    0066..006a  if-nez  v0, +0x26
+    006a..006e  const-string  v0, "MediaDownload/MMS download failed during media decryption due to plaintext hash mismatch; mediaHash="
+    006e..0074  invoke-static  {v0}, LX/2L6;->A1B(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0074..0076  move-result-object  v2
+    0076..007c  invoke-static  {v1}, LX/MTl;->A01(Ljava/lang/String;)Ljava/lang/String;
+    007c..007e  move-result-object  v0
+    007e..0084  invoke-virtual  {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0084..008a  invoke-virtual  {v2, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    008a..0090  invoke-virtual  {v2, v4}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+    0090..0096  invoke-virtual  {v2, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0096..009a  iget-wide  v0, v7, LX/MX3;->A09:J
+    009a..00a0  invoke-virtual  {v2, v0, v1}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+    00a0..00a6  invoke-virtual  {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    00a6..00a8  move-result-object  v0
+    00a8..00ae  invoke-static  {v0}, Lcom/whatsapp/infra/logging/Log;->w(Ljava/lang/String;)V
+    00ae..00b0  const/4  v0, #0x2
+    00b0..00b2  return  v0
+    00b2..00b4  return  v3
+    # exception table: 0 try range(s)
+.end method

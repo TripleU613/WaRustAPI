@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "bytes": 6442,
+    "sha256": "5e58d4c1126cdfc7faba6a47e393e8ce6cd517c52750b8c842b44199aacf5fa8"
+  },
+  "muy-A00.txt": {
+    "bytes": 95784,
+    "sha256": "7c3f66bda87e3d5fad8e1c53a53f7824694e6c9c656c9ce6d552e9bedb44881f"
+  },
+  "muy-A03-callers.txt": {
+    "bytes": 198,
+    "sha256": "720475b7c3b2744919da3fee5219664a558a8d418139a33973a87f9a922283ad"
+  },
+  "muz-A00.txt": {
+    "bytes": 112104,
+    "sha256": "387cf5a11c69bbc86a589e31fe181b0c4b26d8b7902065abb57745981745dccd"
+  },
+  "muz-A03-callers.txt": {
+    "bytes": 198,
+    "sha256": "3bdfeefd6f0bb2554c971c5fd44ae43941da0b2d9ee179e069fd926c8f3d8ef8"
+  },
+  "normal-finalize-A06.txt": {
+    "bytes": 2607,
+    "sha256": "9e22e68fee9f0f66548d84af92fb60a6925bb0c650532e24558c6eb57f490409"
+  },
+  "normal-validate-A01.txt": {
+    "bytes": 3950,
+    "sha256": "f1723b4d9ab6b3949e2c0c27e68994b5b2aead6c8264760aea64b7c843a04eea"
+  },
+  "normal-validate-A02.txt": {
+    "bytes": 3341,
+    "sha256": "0410ad1cea5dccb2fa134ff7492e76613b3f45ccbaf733bdc442bd514733854f"
+  },
+  "stream-decrypter-M29.txt": {
+    "bytes": 9291,
+    "sha256": "bb2bd414dbbec0cac338c567034678f87e6d64e2c734e9005625f8d8cd7e2046"
+  },
+  "stream-response-wrapper.txt": {
+    "bytes": 1457,
+    "sha256": "2e397bbe93794c0da69a4eeb3fbb3ef0d05e1df7e518a16ae5f7fef178dfe17d"
+  }
+}
