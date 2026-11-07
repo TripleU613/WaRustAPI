@@ -1210,12 +1210,17 @@ pub(super) fn ack_wire_address(node: &Node, name: &str, parsed: Jid) -> Jid {
 }
 
 fn native_text_address_is_null(node: &Node, name: &str) -> bool {
+    let Some(text) = node.get_attr(name).and_then(|value| value.as_text()) else {
+        return false; // Typed/binary objects are not text-constructor failures.
+    };
+    // APK43.72 optional0Tp.A0A catches constructor failures for non-user
+    // namespaces too:1bc/0nW,2U8,0De.A03,7Kr,Dv5. Reuse the retained exact
+    // predicates; generic Jid::parse acceptance is not native object presence.
     matches!(
-        node.get_attr(name)
-            .and_then(|value| value.as_text())
-            .and_then(super::messaging::ack_user_text),
+        super::messaging::ack_user_text(text),
         Some(super::messaging::AckUserText::Null)
-    )
+    ) || super::messaging::ack_non_user_text_valid(text) == Some(false)
+        || super::messaging::ack_call_text_valid(text) == Some(false)
 }
 
 pub(super) fn receipt_ack_wire_address(node: &Node, name: &str) -> Option<Jid> {
@@ -5875,6 +5880,11 @@ mod tests {
                     "100001:355@hosted.lid",
                     "not-a-user@lid",
                     "01555550100@s.whatsapp.net",
+                    "bad@g.us",
+                    "012345@broadcast",
+                    "0letters@newsletter",
+                    "nodash@temp",
+                    "123@call",
                 ]
                 .into_iter()
                 .chain(

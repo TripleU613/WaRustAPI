@@ -1,4 +1,11 @@
 {
+  "x-receipt-nonuser-constructor-null": {
+    "x-cli": "existing receive/receipt fact/confirmation paths; no new command or flag",
+    "x-transport": "native-null non-user text addresses in receipt output and direct fact selection",
+    "x-live": false,
+    "description": "The receipt text-null classifier now reuses pinned group/broadcast/newsletter/temp/call constructor predicates as well as PN/LID. Known-invalid optional participants are omitted from success, copied487 and fresh487 ACKs and treated as absent by direct facts; known-null source grants no response under existing capability policy. Successfully constructed but unwritable objects retain whole-ACK refusal; typed/binary values are not reclassified via text. Codec/direct-fact matrix and copied487 actor cover capture/redelivery/cut/reopen with no uncertain replay. No generic JID rewrite or identity adoption; full cache/binary/native runtime and live acceptance remain open. No HTTP route or live account operation.",
+    "evidence": "docs/protocol/receipt-optional-addresses.md"
+  },
   "x-unhandled-receipt-root-response": {
     "x-cli": "existing normal and selected CLI receive confirmation paths; no new command or flag",
     "x-transport": "copied-context487 for supported unhandled ordinary user/group receipt roots",

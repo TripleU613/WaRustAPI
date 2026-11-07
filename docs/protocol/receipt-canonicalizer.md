@@ -310,3 +310,17 @@ A receive-loop regression proves capture-before-write, explicit-redelivery ACK,
 unchanged outbox/ratchet/identity and no uncertain ACK replay after cut/reopen.
 [Complete evidence, context/type predicates and remaining boundaries](apk/2.26.43.72-unhandled-receipt-root/README.md).
 Full sender/provider/binary/special-handler parity and live acceptance remain open.
+
+
+## Non-user constructor-null receipt addresses (2026-11-06)
+
+**Confirmed selected static / implemented:** generic receipt Jid reading also
+returns null for failed group/broadcast/newsletter/temp/call text construction.
+The shared receipt null classifier now reuses the existing APK-backed predicates,
+so invalid optional participants are omitted from success/copied487/fresh487
+contexts and treated as absent by direct facts. A null source grants no response;
+valid-but-unwritable objects and typed binary carriers retain their separate
+rules. No generic JID rewrite or identity learning. Codec/fact/receive-loop tests
+cover malformed non-user text and explicit redelivery/cut/reopen boundaries.
+[Exact constructor links, interpretation and remaining coverage](receipt-optional-addresses.md#non-user-text-constructor-failures-in-receipts-2026-11-06).
+No live account operation or server acceptance claim.

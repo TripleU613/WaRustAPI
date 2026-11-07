@@ -1,3 +1,10 @@
+2026-11-06 — **Kept failed non-user receipt address construction null.**
+Receipt success/copied/fresh ACKs now omit invalid group/broadcast/newsletter/
+temp/call participants instead of resurrecting them through the generic parser.
+Direct facts use the same null result; typed objects and valid writer refusals
+remain distinct. Tests cover codec/facts and receive capture/redelivery/no-replay.
+[Evidence and limits](docs/protocol/receipt-optional-addresses.md#non-user-text-constructor-failures-in-receipts-2026-11-06). No live account operation.
+
 2026-11-06 — **Added copied-context487 for supported unhandled receipt roots.**
 Response selection follows the upstream router and preserves original recipient/
 edit instead of using fresh parse-error context. Special types and early message_id

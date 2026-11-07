@@ -2759,6 +2759,48 @@ mod tests {
     }
 
     #[test]
+    fn all_receipt_error_contexts_omit_nonuser_constructor_null_text() {
+        for route in [
+            "bad@g.us",
+            "012345@broadcast",
+            "0letters@newsletter",
+            "nodash@temp",
+            "123@call",
+        ] {
+            let input = Node::new("receipt")
+                .attr("id", "ROOT")
+                .attr("from", "15555550100@s.whatsapp.net")
+                .attr("participant", route)
+                .attr("type", "unknown-kind");
+            // The unhandled route's conservative context gate can still read
+            // the generic address; selected output must omit native null.
+            let ack = received_confirmation(&input).unwrap();
+            assert!(ack.get_attr("participant").is_none(), "{route}");
+            assert!(
+                receipt_native_parse_error_confirmation(&input)
+                    .unwrap()
+                    .get_attr("participant")
+                    .is_none(),
+                "{route}"
+            );
+            assert!(
+                received_confirmation(&input.attr("from", route)).is_none(),
+                "{route}"
+            );
+        }
+        let valid = Node::new("receipt")
+            .attr("id", "ROOT")
+            .attr("from", "15555550100@s.whatsapp.net")
+            .attr("participant", "120363000000000001@g.us");
+        assert!(
+            received_confirmation(&valid)
+                .unwrap()
+                .get_attr("participant")
+                .is_some()
+        );
+    }
+
+    #[test]
     fn receipt_ack_omits_constructor_null_optional_participant() {
         for route in [
             "12345:100@lid",
@@ -2770,6 +2812,13 @@ mod tests {
             "12345:0@hosted.lid",
             "15555550100:2@hosted",
             "12345:2@hosted.lid",
+            "bad@g.us",
+            "012345@g.us",
+            "15555550100-0123456789@g.us",
+            "012345@broadcast",
+            "0letters@newsletter",
+            "nohyphen@temp",
+            "123@call",
         ] {
             let input = Node::new("receipt")
                 .attr("from", "15555550100@s.whatsapp.net")
@@ -2956,7 +3005,13 @@ mod tests {
             .unwrap();
             let ack = received_confirmation(&node).unwrap();
             assert!(ack.get_attr("recipient").is_none(), "{recipient}");
-            assert!(ack.get_attr("participant").is_some(), "{recipient}");
+            // These two fixtures fail Dv5/7Kr construction; the others
+            // remain actual generic Jid participants after the UserJid cast.
+            assert_eq!(
+                ack.get_attr("participant").is_some(),
+                !matches!(recipient, "123@call" | "123@temp"),
+                "{recipient}"
+            );
         }
         for recipient in [
             "01555550100@s.whatsapp.net",

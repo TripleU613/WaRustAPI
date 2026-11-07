@@ -3876,10 +3876,6 @@ mod tests {
             .attr("edit", "7")
             .attr("category", "private")
             .children(vec![Node::new("participants").attr("key", "INNER")]);
-        let capture = format!(
-            "inbound:sha256:{}",
-            hex::encode(sha2::Sha256::digest(encode(&input).unwrap()))
-        );
         let expected = Node::new("ack")
             .attr("id", "UNHANDLED-ROOT")
             .attr("to", Jid::parse("15555550100@s.whatsapp.net").unwrap())
@@ -3891,8 +3887,16 @@ mod tests {
             )
             .attr("edit", "7")
             .attr("error", "487");
-        for _ in 0..2 {
-            fake.deliver(input.clone()).await;
+        for delivery in [
+            input.clone(),
+            input.clone().attr("participant", "bad@g.us"),
+            input.clone().attr("participant", "bad@g.us"),
+        ] {
+            let capture = format!(
+                "inbound:sha256:{}",
+                hex::encode(sha2::Sha256::digest(encode(&delivery).unwrap()))
+            );
+            fake.deliver(delivery).await;
             let (ack, written) = fake.written().await;
             assert_eq!(ack, expected);
             assert!(

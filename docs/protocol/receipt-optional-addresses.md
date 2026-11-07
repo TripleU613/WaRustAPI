@@ -83,3 +83,46 @@ UserJid recipient authority. They omit the ACK recipient and allow ordinary
 facts only under the unchanged original-chat/device/attempt correlation.
 Generic participant handling and strict outbound-receipt ACK settlement remain
 separate. No global parser, alias normalization, retry or live operation changed.
+
+
+## Non-user text constructor failures in receipts (2026-11-06)
+
+**Confirmed selected static / implemented**, pinned APK2.26.43.72 build264307238,
+SHA256 `887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e`.
+The nullable receipt reader is generic Jid for source/participant, not only
+PN/LID. Its constructor failures must remain null even when Rust's wider generic
+Jid parser accepts the text. Previously the receipt helper checked only the
+PN/LID/hosted classifier. Invalid group/broadcast/newsletter/temp/call strings
+could consequently become selected ACK addresses or suppress direct facts as
+if they were nonnull participants.
+
+The shared text-null check now also reuses the exact existing
+ack_non_user_text_valid and ack_call_text_valid predicates. A null source grants
+no response through the client's required-source capability guard; a null optional
+participant is omitted from ordinary, copied487 and fresh487 ACK contexts. Direct
+fact projection treats it as absent and retains its original chat/device guards.
+Successfully constructed objects keep their own protocol-compliance/writer rules;
+valid temp/type2 still refuses the whole ACK rather than being omitted as null.
+Typed/binary objects are not reclassified through text constructors. No cache,
+identity association or generic JID-model rewrite is introduced.
+
+Evidence is reused, not newly observed execution:
+
+- [Group/newsletter constructors and complete selected factory/accessor chain](apk/2.26.43.72-group-newsletter-ack-text/README.md): group1bc/0nW accepts selected numeric or phone-time shapes; newsletter uses Java-trimmed nonempty/nonzero-leading text, preserving the original user. Newsletter is not generally digit-only.
+- [Broadcast constructor and cache boundaries](apk/2.26.43.72-broadcast-ack-text/README.md): selected2U8 numeric/status/location construction, nullable factory, generic cache and selected call handling remain separately evidenced.
+- [Call and noncompliant temp constructor boundary](apk/2.26.43.72-call-temp-ack-text/README.md): retained factory coverage and selected predicate are reused; valid object/writer refusal differs from construction failure.
+- [Receipt routing/context and copied error policy](apk/2.26.43.72-unhandled-receipt-root/README.md): original field selection precedes ACK construction; this correction prevents resurrecting known-null fields there.
+
+Regression cases cover invalid group numeric/phone-time forms, broadcast leading
+zero, newsletter zero-leading letters, temp without hyphen, and call user shorter
+than the selected18..32 ASCII-hex grammar. Valid group and existing valid-but-
+unwritable controls remain distinct. The direct-fact matrix covers PN/LID peers,
+all three fact kinds, and invalid optional participant/recipient values with
+existing idempotence/target/ratchet/identity guards. The copied487 receive-loop
+case now includes a constructor-null group participant, explicit redelivery,
+capture-before-write and cut/reopen without uncertain replay. The older generic-
+participant codec test incorrectly expected 123@call and 123@temp to remain nonnull; those expectations are corrected to their retained
+Dv5/7Kr constructor evidence. Codec tests encode the resulting ACKs. These are
+local offline guarantees, not server acceptance.
+Complete binary/string/cache/native scheduling parity and other sender grammars
+remain open. No live account operation or account-restriction guarantee.
