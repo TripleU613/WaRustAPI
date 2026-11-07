@@ -1,5 +1,10 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
+**Media error response modes narrowed.** Native sendReceipt differs by callback;
+isSendRetry can be set before retry-job enqueue, and typed stop paths clear
+action permission. Evidence retained; Rust error491 remains unimplemented until
+classification and response ownership are proven. [Trace](media-network-outcomes.md#media-error-response-mode-provenance-2026-11-06).
+
 **Media parser error-ACK boundary traced.** Native Dxp reasons flow conditionally
 through a distinct mapper/envelope path: common media reasons map to error491
 with optional original failure_reason metadata. This is not receipt-parser487 or

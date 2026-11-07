@@ -1,0 +1,39 @@
+
+# class: LX/FKc;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VL)  # .registers 4
+    # full signature: LX/FKc;-><init>(LX/EmK;)V
+    0000..0006  invoke-direct  {v2}, Ljava/lang/Object;-><init>()V
+    0006..000a  const/16  v0, #0xbf8
+    000a..0010  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0010..0012  move-result-object  v0
+    0012..0016  iput-object  v0, v2, LX/FKc;->A00:LX/05a;
+    0016..001a  const/16  v0, #0xd15
+    001a..0020  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0020..0022  move-result-object  v0
+    0022..0026  iput-object  v0, v2, LX/FKc;->A02:LX/05a;
+    0026..002a  const/16  v0, #0xbf7
+    002a..0030  invoke-static  {v0}, LX/05d;->A00(I)LX/05a;
+    0030..0032  move-result-object  v0
+    0032..0036  iput-object  v0, v2, LX/FKc;->A01:LX/05a;
+    0036..003a  iget-object  v0, v3, LX/EmK;->A03:Ljava/lang/Integer;
+    003a..003e  iput-object  v0, v2, LX/FKc;->A07:Ljava/lang/Integer;
+    003e..0042  iget-object  v0, v3, LX/EmK;->A02:LX/1k2;
+    0042..0046  iput-object  v0, v2, LX/FKc;->A05:LX/1k2;
+    0046..004a  iget-object  v1, v3, LX/EmK;->A01:LX/Dxs;
+    004a..004e  iput-object  v1, v2, LX/FKc;->A04:LX/Dxs;
+    004e..0052  iget-object  v0, v3, LX/EmK;->A00:LX/FUe;
+    0052..0056  iput-object  v0, v2, LX/FKc;->A03:LX/FUe;
+    0056..005a  const/16  v0, #0x894
+    005a..0060  invoke-static  {v0}, LX/00D;->A02(I)Ljava/lang/Object;
+    0060..0062  move-result-object  v0
+    0062..0066  check-cast  v0, LX/0Td;
+    0066..006c  invoke-static  {v1, v0}, LX/F1Z;->A02(LX/F1Z;LX/0Td;)LX/E0A;
+    006c..006e  move-result-object  v0
+    006e..0072  iput-object  v0, v2, LX/FKc;->A06:LX/E0A;
+    0072..0076  iget-boolean  v0, v3, LX/EmK;->A04:Z
+    0076..007a  iput-boolean  v0, v2, LX/FKc;->A08:Z
+    007a..007c  return-void
+    # exception table: 0 try range(s)
+.end method

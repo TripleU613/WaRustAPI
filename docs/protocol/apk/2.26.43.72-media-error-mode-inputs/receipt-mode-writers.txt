@@ -1,0 +1,2 @@
+classes8.dex  LX/F0b;-><init>(VLLLLLLZZZ)
+  write opcode 0x5c, dex byte offset: 0x640ab4

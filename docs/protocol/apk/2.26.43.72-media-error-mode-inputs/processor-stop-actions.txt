@@ -1,0 +1,53 @@
+
+# class: LX/F0b;
+# extends: Ljava/lang/Object;
+
+.method public A02(ZLLLLL)  # .registers 9
+    # full signature: LX/F0b;->A02(LX/FUe;LX/Dxs;LX/1k2;LX/DiW;LX/F0b;)Z
+    0000..0004  iget-object  v2, v8, LX/F0b;->A09:LX/EdS;
+    0004..0008  iget-object  v0, v2, LX/EdS;->A05:LX/05a;
+    0008..000e  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    000e..0010  move-result-object  v0
+    0010..0014  check-cast  v0, LX/18w;
+    0014..001a  invoke-virtual  {v0, v4, v5, v7}, LX/18w;->A03(LX/FUe;LX/Dxs;LX/DiW;)LX/Frl;
+    001a..001c  move-result-object  v1
+    001c..0020  instance-of  v0, v1, LX/FSU;
+    0020..0022  const/4  v3, #0x0
+    0022..0026  if-eqz  v0, +0x1b
+    0026..002a  iget-object  v0, v5, LX/Dxs;->A08:LX/EF4;
+    002a..002e  iget-object  v1, v0, LX/EF4;->A00:LX/1dW;
+    002e..0032  const-string  v0, "SharedMessageProcessor/handlePlaintext/stop/recent "
+    0032..0038  invoke-static  {v0, v1}, LX/2LA;->A1L(Ljava/lang/String;Ljava/lang/Object;)V
+    0038..003c  iget-boolean  v0, v8, LX/F0b;->A06:Z
+    003c..0040  if-eqz  v0, +0xd
+    0040..0044  iget-object  v0, v2, LX/EdS;->A0A:LX/05a;
+    0044..004a  invoke-static  {v0}, LX/DBe;->A0n(LX/05a;)LX/0x0;
+    004a..004c  move-result-object  v0
+    004c..0052  invoke-virtual  {v0, v6, v4, v5, v3}, LX/0x0;->A0Y(LX/1k2;LX/Fuy;LX/F1Z;I)V
+    0052..0056  iput-boolean  v3, v8, LX/F0b;->A00:Z
+    0056..0058  return  v3
+    0058..005c  instance-of  v0, v1, LX/FSS;
+    005c..0060  if-eqz  v0, +0x19
+    0060..0064  check-cast  v1, LX/FSS;
+    0064..0068  iget  v2, v1, LX/FSS;->A00:I
+    0068..006c  iget-object  v0, v5, LX/Dxs;->A08:LX/EF4;
+    006c..0070  iget-object  v1, v0, LX/EF4;->A00:LX/1dW;
+    0070..0074  const-string  v0, "SharedMessageProcessor/handlePlaintext/stop/ack "
+    0074..007a  invoke-static  {v1, v0}, LX/1Xl;->A15(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    007a..007c  move-result-object  v1
+    007c..0080  const-string  v0, " e2eFailureReason="
+    0080..0086  invoke-static  {v0, v1, v2}, LX/1Xl;->A1U(Ljava/lang/String;Ljava/lang/StringBuilder;I)V
+    0086..008c  invoke-static  {v6, v7, v8, v2}, LX/F0b;->A01(LX/1k2;LX/DiW;LX/F0b;I)V
+    008c..008e  return  v3
+    008e..0092  instance-of  v0, v1, LX/FST;
+    0092..0096  if-nez  v0, +0xf
+    0096..009c  invoke-static  {v1}, LX/1Xl;->A0t(Ljava/lang/Object;)Ljava/lang/String;
+    009c..009e  move-result-object  v1
+    009e..00a2  const-string  v0, "action must be Continue, but it is "
+    00a2..00a8  invoke-static  {v0, v1}, LX/000;->A04(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    00a8..00aa  move-result-object  v0
+    00aa..00b0  invoke-static  {v3, v0}, LX/00L;->A0C(ZLjava/lang/String;)V
+    00b0..00b2  const/4  v0, #0x1
+    00b2..00b4  return  v0
+    # exception table: 0 try range(s)
+.end method

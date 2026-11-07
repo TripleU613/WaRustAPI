@@ -1646,3 +1646,14 @@ receive-response family. Full input-mode ownership, supported native validation
 versus local feature limits, BX2/direct-writer and persistence/retry/defer lifecycle
 remain unverified. No491 ACK, blanket rejection of unsupported features, retry,
 ratchet reset or live account operation is added from an incomplete binding.
+
+## Media error response mode provenance (2026-11-06)
+
+**Confirmed selected static:** F0b.A06 is EdS's first boolean, logged
+`sendReceipt`. FKc inherits it from EmK.A04; FSC passes true for all three
+processing booleans. F0b.A00 starts true but has typed stop/clear paths. EuT
+sets `isSendRetry` before later retry-job construction/enqueue, so the flag
+is not proof of transmission. Remaining producers, durability and native-invalid
+versus locally unsupported classification still block safe Rust error491 wiring.
+[Complete mode evidence](apk/2.26.43.72-media-error-mode-inputs/README.md).
+No Rust behavior, account traffic or retry/replay policy changed.

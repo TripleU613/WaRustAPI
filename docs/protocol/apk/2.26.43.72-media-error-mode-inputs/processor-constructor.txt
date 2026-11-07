@@ -1,0 +1,21 @@
+
+# class: LX/F0b;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLLZZZ)  # .registers 11
+    # full signature: LX/F0b;-><init>(LX/FUe;LX/Dxs;LX/1k2;LX/E0A;LX/EdS;Ljava/lang/Integer;ZZZ)V
+    0000..0002  const/4  v0, #0x1
+    0002..0006  iput-object  v6, v1, LX/F0b;->A09:LX/EdS;
+    0006..000c  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    000c..0010  iput-object  v7, v1, LX/F0b;->A05:Ljava/lang/Integer;
+    0010..0014  iput-object  v4, v1, LX/F0b;->A03:LX/1k2;
+    0014..0018  iput-object  v3, v1, LX/F0b;->A02:LX/Dxs;
+    0018..001c  iput-object  v2, v1, LX/F0b;->A01:LX/FUe;
+    001c..0020  iput-boolean  v8, v1, LX/F0b;->A06:Z
+    0020..0024  iput-boolean  v0, v1, LX/F0b;->A00:Z
+    0024..0028  iput-object  v5, v1, LX/F0b;->A04:LX/E0A;
+    0028..002c  iput-boolean  v9, v1, LX/F0b;->A07:Z
+    002c..0030  iput-boolean  v10, v1, LX/F0b;->A08:Z
+    0030..0032  return-void
+    # exception table: 0 try range(s)
+.end method

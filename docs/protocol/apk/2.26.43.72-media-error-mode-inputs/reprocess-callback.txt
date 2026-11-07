@@ -1,0 +1,57 @@
+
+# class: LX/FSC;
+# extends: Ljava/lang/Object;
+
+.method public BLN(LLLLZ)  # .registers 25
+    # full signature: LX/FSC;->BLN(LX/1k8;LX/Fuy;LX/F1Z;Z)LX/Evz;
+    0000..0004  move-object/from16  v5, v22
+    0004..0008  move-object/from16  v6, v23
+    0008..000a  const/4  v12, #0x1
+    000a..0010  invoke-static  {v12, v6, v5}, LX/3q3;->A03(ILjava/lang/Object;Ljava/lang/Object;)I
+    0010..0012  move-result  v17
+    0012..0016  check-cast  v6, LX/Dxs;
+    0016..001a  check-cast  v5, LX/FUe;
+    001a..001e  move-object/from16  v3, v20
+    001e..0022  iget-object  v0, v3, LX/FSC;->A00:LX/05a;
+    0022..0028  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0028..002a  move-result-object  v4
+    002a..002e  check-cast  v4, LX/0Td;
+    002e..0032  move-object/from16  v7, v21
+    0032..0036  iget-wide  v0, v7, LX/1k3;->A0C:J
+    0036..0038  const/4  v2, #0x0
+    0038..003e  invoke-static  {v4, v2, v0, v1}, LX/0Td;->A00(LX/0Td;IJ)LX/F0K;
+    003e..0040  move-result-object  v9
+    0040..0044  check-cast  v9, LX/E0A;
+    0044..0048  if-nez  v9, +0x19
+    0048..004c  iget-object  v0, v3, LX/FSC;->A01:LX/05a;
+    004c..0052  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0052..0054  move-result-object  v1
+    0054..0058  check-cast  v1, LX/2Ce;
+    0058..005c  iget-object  v0, v3, LX/FSC;->A03:LX/05a;
+    005c..0062  invoke-static  {v0}, LX/DBe;->A01(LX/05a;)J
+    0062..0064  move-result-wide  v18
+    0064..0068  const/16  v16, #0x0
+    0068..006a  move-object  v13, v7
+    006a..006c  move-object  v14, v6
+    006c..006e  move-object  v15, v1
+    006e..0074  invoke-static/range  {v13..v19}, LX/EpZ;->A00(LX/1k2;LX/F1Z;LX/2Ce;Ljava/lang/Integer;IJ)LX/E0A;
+    0074..0076  move-result-object  v9
+    0076..007a  iget-object  v0, v3, LX/FSC;->A02:LX/05a;
+    007a..0080  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0080..0082  move-result-object  v4
+    0082..0086  check-cast  v4, LX/EdS;
+    0086..008c  invoke-virtual  {v6}, LX/F1Z;->A05()I
+    008c..008e  move-result  v0
+    008e..0094  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0094..0096  move-result-object  v10
+    0096..009a  iget-object  v11, v7, LX/1k8;->A03:[B
+    009a..009c  move  v14, v12
+    009c..009e  move-object  v8, v7
+    009e..00a0  move  v13, v12
+    00a0..00a6  invoke-virtual/range  {v4..v14}, LX/EdS;->A00(LX/FUe;LX/Dxs;LX/1k2;LX/1k2;LX/E0A;Ljava/lang/Integer;[BZZZ)V
+    00a6..00a8  const/4  v1, #0x0
+    00a8..00ac  new-instance  v0, LX/Evz;
+    00ac..00b2  invoke-direct  {v0, v1, v1, v12}, LX/Evz;-><init>(LX/EvU;LX/1vZ;Z)V
+    00b2..00b4  return-object  v0
+    # exception table: 0 try range(s)
+.end method

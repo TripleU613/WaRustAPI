@@ -1,4 +1,11 @@
 {
+  "x-media-error-mode-static-boundary": {
+    "x-cli": "research only; existing APK inspection commands, no new command or flag",
+    "x-transport": "no runtime response change; conditional native media error mode provenance retained",
+    "x-live": false,
+    "description": "F0b.A06 is sendReceipt: FKc inherits EmK.A04, FSC forces three booleans true. Mutable A00 also has typed stop/clear paths. EuT sets isSendRetry before later retry-job enqueue, not proof of sending. Remaining producer, native-invalid classification, durable ownership and writer gaps prevent blanket error491 integration.",
+    "evidence": "docs/protocol/apk/2.26.43.72-media-error-mode-inputs/README.md"
+  },
   "x-media-parser-error-ack-static-boundary": {
     "x-cli": "research-only comparison with existing receive/ACK paths; no new command or flag",
     "x-transport": "no runtime error491/meta emission implemented; pinned conditional native application-parser error path retained",

@@ -1,0 +1,10 @@
+classes8.dex  LX/EuT;->A01(VI)
+  write opcode 0x5c, dex byte offset: 0x5f1448
+classes8.dex  LX/F2q;->A01(LLLLLLLZ)
+  write opcode 0x5c, dex byte offset: 0x689f76
+classes8.dex  LX/F2q;->A03(VLLLLLL)
+  write opcode 0x5c, dex byte offset: 0x68a3c2
+classes8.dex  LX/F2q;->A09(VLLL)
+  write opcode 0x5c, dex byte offset: 0x68bace
+classes8.dex  LX/Fc1;->run(V)
+  write opcode 0x5c, dex byte offset: 0x7f2882
