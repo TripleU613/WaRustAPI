@@ -10641,3 +10641,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   HTTP send audit map. Upload responses now honor smaller configured byte budgets
   under the unchanged 64 KiB ceiling, with accumulator boundary regressions.
   No live request, request-construction change or full-parity claim.
+
+- Verified upload response-budget failure across encrypted-store restart and both
+  message-bound preparation entries: HTTP200/503 header observations persist,
+  same request refuses replay, checkpoint rows/journal unchanged. Test only;
+  separate content-upload producer and real HTTP streaming remain outside scope.

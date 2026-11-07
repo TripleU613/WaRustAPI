@@ -6131,3 +6131,9 @@ evidence, not new APK behavior or proof of full group-send/network parity.
   accumulation now honors min(configured, 64 KiB), with offline boundary tests.
   Selected receipt parser cross-check found no new mismatch, without claiming
   exhaustive parity. See [HTTP send map](http-send-audit-map.md).
+
+- Upload response-budget restart integration at `f5831e02`: owner-bound synthetic
+  reservation, actual header/accumulator helpers, HTTP200/503 controls, encrypted
+  store reopen, and both message-bound preparation entrypoints. Saved header
+  outcome refuses replay with unchanged rows/journal; no socket or runtime change.
+  See [budget restart verification](http-send-audit-map.md#upload-budget-failure-survives-restart).

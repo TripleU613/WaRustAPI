@@ -1365,6 +1365,98 @@ mod tests {
         }
     }
 
+    #[tokio::test]
+    async fn over_budget_upload_headers_survive_reopen_and_public_paths_refuse_replay() {
+        use crate::session::{AccountRecord, RegistrationStatus};
+        for status in [200, 503] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("upload-budget-restart.redb");
+            let store = super::super::group_fanout::tests::open(&path);
+            let source = dir.path().join("fixture.png");
+            let mut png = b"\x89PNG\r\n\x1a\n\0\0\0\rIHDR".to_vec();
+            png.extend_from_slice(&1u32.to_be_bytes());
+            png.extend_from_slice(&1u32.to_be_bytes());
+            png.resize(33, 0);
+            std::fs::write(&source, &png).unwrap();
+            let message: MessageRequest = serde_json::from_value(serde_json::json!({
+                "to":"15555550100@s.whatsapp.net", "request_id":"budget-restart", "image":source
+            }))
+            .unwrap();
+            let mut config: LabRegistrationConfig =
+                serde_json::from_str(crate::registration::request::TEMPLATE_JSON).unwrap();
+            config.token = Zeroizing::new("offline-fixture".into());
+            config.transport.max_response_bytes = 3;
+            let account = AccountRecord {
+                generation: store.generation(),
+                phone: Some(config.phone.clone()),
+                registration: RegistrationStatus::Registered,
+                ..Default::default()
+            };
+            let owner = upload_owner(&account, store.generation()).unwrap();
+            let key = "message:budget-restart:upload";
+            let pending = serde_json::json!({"status":"outcome_unknown", "hash":input_hash(&message, &png),
+                "to":message.to.to_string(), "encrypted_hash":[1,2,3], "upload_owner":owner, "upload_owner_version":1});
+            store
+                .write(|tx| {
+                    account.save(tx)?;
+                    tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &pending)
+                })
+                .unwrap();
+            let capture = capture_upload_response(&store, key, &pending, status, None).unwrap();
+            let headers = retain_response_headers(&store, key, status, &pending).unwrap();
+            let mut partial = Vec::new();
+            append_upload_response(&mut partial, b"abc", config.transport.max_response_bytes)
+                .unwrap();
+            assert!(
+                append_upload_response(&mut partial, b"d", config.transport.max_response_bytes)
+                    .is_err()
+            );
+            assert_eq!(partial, b"abc");
+            drop(store);
+            let store = super::super::group_fanout::tests::open(&path);
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let head = store.journal_head().unwrap();
+            assert_eq!(
+                store
+                    .read(|tx| tx.get_json::<serde_json::Value>(
+                        Table::Checkpoints,
+                        key.as_bytes(),
+                        1
+                    ))
+                    .unwrap(),
+                Some(headers)
+            );
+            assert!(
+                store
+                    .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                    .unwrap()
+                    .is_some()
+            );
+            for outbox in [false, true] {
+                let result = if outbox {
+                    prepare_outbox(&store, &message, &config).await
+                } else {
+                    prepare(&store, &message, &config).await
+                };
+                let error = result.unwrap_err();
+                assert!(
+                    error
+                        .to_string()
+                        .contains("saved upload refused or uncertain; no replay")
+                );
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    before
+                );
+                assert_eq!(store.journal_head().unwrap(), head);
+            }
+        }
+    }
+
     // Existing phase tests use the current record; production passes its frozen
     // initiating reservation explicitly to the parent function.
     fn test_response_headers(

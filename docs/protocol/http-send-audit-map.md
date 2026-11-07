@@ -46,3 +46,22 @@ aggregates are validated without ordinary fact projection. This bounded source
 review found no new confirmed routing mismatch; it is not an exhaustive inbound
 coverage claim. [Receipt grammar/evidence](offline-aggregated-receipts.md) and
 [direct receipt evidence](direct-receipts.md) retain their explicit unknowns.
+
+## Upload budget failure survives restart
+
+**Offline integration verification**, baseline `f5831e02`; no runtime change.
+The new regression stages an owner-bound upload reservation for a synthetic PNG,
+retains the HTTP header observation/status using the actual response-stage helpers,
+then runs the actual bounded accumulator through exact-budget acceptance and a
+one-byte overflow. Both HTTP200 and HTTP503 header cases are exercised.
+
+After closing/reopening the encrypted store, the exact header-stage row and its
+independent observation remain present. Calling both prepare and prepare_outbox
+with the same message returns the existing uncertain/refused no-replay error,
+with checkpoint rows and journal unchanged. These entry calls use valid local
+configuration/account inputs, so the assertion establishes saved-outcome refusal
+rather than an earlier preflight failure. They exit before client/route/new POST
+construction. This closes the previous accumulator-only test boundary for restart
+and the two message-bound entry paths. It does not emulate response streaming over
+a socket, prove server acceptance or cover the separate public content-upload
+producer. Final upload promotion's account/exact-row checks remain separate tests.
