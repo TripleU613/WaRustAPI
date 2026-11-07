@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-storage-preconditions-evidence": {
+    "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-storage-preconditions/inspect-preconditions.py <pinned-library>; offline static and synthetic precedence projection",
+    "x-transport": "research only; native response preconditions, no full validation or enabled transport behavior",
+    "x-live": false,
+    "description": "Confirmed selected static storage response preconditions distinguish unavailable RequestData, zero-length JSON and the selector2/context5 gate with internal result bytes2/3/12. Availability can rely on source-pointer presence alone. Later parser-null/wrong-tag paths continue to further processing, so parse result and final rejection are not equated. Validation, persistence and account ownership remain unresolved.",
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-storage-preconditions/README.md"
+  },
   "x-mobileconfig-storage-receiver-evidence": {
     "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-storage-receiver/inspect-receiver.py <pinned-library>; offline RTTI/construction inspection",
     "x-transport": "research only; selected response virtual target, parsing/adoption untraced",

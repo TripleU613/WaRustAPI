@@ -1,0 +1,32 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000004c460 <.text>:
+   60484:      	paciasp
+   60488:      	stp	x29, x30, [sp, #-0x20]!
+   6048c:      	stp	x20, x19, [sp, #0x10]
+   60490:      	mov	x29, sp
+   60494:      	bl	0xcc8d0 <JNI_OnLoad+0x5d730>
+   60498:      	strb	w1, [x0]
+   6049c:      	strb	w2, [x0, #0x1]
+   604a0:      	strb	wzr, [x0, #0x4]
+   604a4:      	strb	wzr, [x0, #0x8]
+   604a8:      	str	xzr, [x20, #0x10]!
+   604ac:      	stp	xzr, xzr, [x0, #0x18]
+   604b0:      	add	x0, x0, #0x28
+   604b4:      	mov	x1, x3
+   604b8:      	bl	0xcca30 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2ERKS5_@plt>
+   604bc:      	strh	wzr, [x19, #0x40]
+   604c0:      	strb	wzr, [x19, #0x42]
+   604c4:      	str	xzr, [x19, #0x48]
+   604c8:      	str	wzr, [x19, #0x44]
+   604cc:      	ldp	x20, x19, [sp, #0x10]
+   604d0:      	ldp	x29, x30, [sp], #0x20
+   604d4:      	autiasp
+   604d8:      	ret
+   604dc:      	bl	0xcb800 <JNI_OnLoad+0x5c660>
+   604e0:      	bl	0x59c4c <.text+0xd7ec>
+   604e4:      	mov	x0, x19
+   604e8:      	bl	0xccf70 <__wrap__Unwind_Resume@plt>

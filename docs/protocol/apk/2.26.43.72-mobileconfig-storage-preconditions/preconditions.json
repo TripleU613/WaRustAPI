@@ -1,0 +1,37 @@
+{
+  "member_sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+  "diagnostics": {
+    "0x17ccc": "Invalid StorageManager",
+    "0x176b4": "JSONDeserializeError",
+    "0x1b372": "Attempted to persist without JSON",
+    "0x177d5": "EPAndEmptyMetaSchemaError",
+    "0x198ee": "Empty meta schema when handling EP response"
+  },
+  "selected_calls": {
+    "0x82d1c": "0x880f8",
+    "0x82df4": "0x60484",
+    "0x82e90": "0x60484",
+    "0x82f2c": "0x60484",
+    "0x83008": "0xc950c",
+    "0x83014": "0xcc370",
+    "0x830cc": "0x60484"
+  },
+  "early_result_bytes": {
+    "unavailable_request_data": 2,
+    "empty_response": 3,
+    "selector2_context_mode5": 12
+  },
+  "parser": "strlen-based shared adapter 0xc950c; null parse root copies diagnostics and continues to later processing",
+  "tag3_zero_word18": "sets local marker, constructs result byte1 and clears output byte+0x50",
+  "projection_authority": "analyst-derived precedence cases, not native execution, HTTP codes or complete response validation",
+  "synthetic_cases": {
+    "missing_state_overrides_empty_response": 2,
+    "empty_response_overrides_ep_gate": 3,
+    "ep_gate": 12,
+    "source_pointer_only": "later parser/consumer path; adoption unproven",
+    "path_and_hash": "later parser/consumer path; adoption unproven",
+    "path_only": 2,
+    "alternate_state": "later parser/consumer path; adoption unproven"
+  },
+  "remaining": "root callback kinds, later processing/future, validation and persistence untraced"
+}

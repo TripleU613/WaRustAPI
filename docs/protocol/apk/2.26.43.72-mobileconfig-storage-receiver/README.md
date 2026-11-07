@@ -79,3 +79,8 @@ Register-relative annotations are not runtime memory observations.
 admission, processing at storage-manager+0x98, response parsing and field
 validation, persistence ordering, retries, cache activation and account ownership.
 No Rust runtime or saved account behavior changed.
+
+Follow-up: [storage response preconditions](../2.26.43.72-mobileconfig-storage-preconditions/README.md)
+now traces early result gates and the shared YAJL adapter boundary. Parser-null
+and wrong-tag contexts can continue into later processing; complete validation,
+result propagation and persistence remain unresolved.

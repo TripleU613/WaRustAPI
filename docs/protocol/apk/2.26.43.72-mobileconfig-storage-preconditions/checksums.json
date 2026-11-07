@@ -1,0 +1,38 @@
+{
+  "README.md": {
+    "bytes": 6134,
+    "sha256": "bd23c93094afc8fe6f6142115a86a8a755d7017121bdbede2f7f43ba18229116"
+  },
+  "inspect-preconditions.py": {
+    "bytes": 2448,
+    "sha256": "571a1739087e5f42a5d788d8878ef501908a78db97e429ad060b841955b80439"
+  },
+  "outlined-helpers.txt": {
+    "bytes": 1317,
+    "sha256": "4906e359964409727d7c3a14b0ff51b40cab019c52856acb90c3b7a1fcf4551b"
+  },
+  "preconditions-and-parser.txt": {
+    "bytes": 11976,
+    "sha256": "d1ec3b51a99654872ec29a06a50b29b68135ecca811b8de9436eb3a952739c9b"
+  },
+  "preconditions.json": {
+    "bytes": 1505,
+    "sha256": "e19a21f5a4db8d8e9e7ab7f931cffb0ceb3795825d3f6f0909e99aa962a75dd0"
+  },
+  "prior-alternate-mode-predicate.txt": {
+    "bytes": 661,
+    "sha256": "ff551d343d69acc11c257ac0d429335a4e460813a1e2856f9491787a7cf9952f"
+  },
+  "rea-storage-gates.json": {
+    "bytes": 7583,
+    "sha256": "0c020ec97e45ee9398823f7d5a641d63e2aa6e39c63ef0af025aa8441dabedce"
+  },
+  "request-data-availability.txt": {
+    "bytes": 913,
+    "sha256": "e5546006e0794e51eb47174be6da4eeb8b3c5e2e2497fa7cbed0a06d0248fc32"
+  },
+  "result-initializer.txt": {
+    "bytes": 1210,
+    "sha256": "d37700261dbda9b70db991325d8c59c2b717593f5f9350969b910783797a2336"
+  }
+}

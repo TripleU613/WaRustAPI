@@ -1,0 +1,69 @@
+{
+  "evidence_id": "ev_e24454f2da3dc1f35612d7055c32c6034b462d60490b20c9cc69f4c71d69950c",
+  "subject": {
+    "name": "libmobileconfig-jni.so",
+    "digest": {
+      "sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so",
+    "format": "unknown",
+    "architecture": null
+  },
+  "provider": {
+    "id": "rizin",
+    "name": "Rizin",
+    "version": null
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.reverse-engineering.command-observation",
+  "operation": "execute_rizin_command",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so",
+    "command": "e scr.color=0; pd 44 @ 0x82d14",
+    "provider_executable": "rizin",
+    "command_arguments": [
+      "-N",
+      "-q",
+      "-c",
+      "e scr.color=0; pd 44 @ 0x82d14",
+      "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so"
+    ]
+  },
+  "raw_result": {
+    "stdout": "            0x00082d14      ldr   x25, [x21, 0x98]                     ; [0x98:4]=0x48460\n            0x00082d18      mov   x0, x25\n            0x00082d1c      bl    0x880f8\n        ,=< 0x00082d20      tbz   w0, 0, 0x82d68\n        |   0x00082d24      ldrb  w8, [x28]\n        |   0x00082d28      ldr   x9, [x28, 8]                         ; [0x8:4]=0\n        |   0x00082d2c      bl    0xca4a8\n       ,==< 0x00082d30      cbz   x8, 0x82e00\n       ||   0x00082d34      ldr   x8, [x27]\n       ||   0x00082d38      cmp   w23, 2\n       ||   0x00082d3c      ldr   w8, [x8, 0x70]                       ; [0x70:4]=8\n       ||   0x00082d40      ccmp  w8, 5, 0, eq\n      ,===< 0x00082d44      b.eq  0x82e9c\n      |||   0x00082d48      cmp   w23, 2\n      |||   0x00082d4c      stp   x26, x22, [sp]\n     ,====< 0x00082d50      b.eq  0x82f64\n     ||||   0x00082d54      cmp   w23, 1\n    ,=====< 0x00082d58      b.eq  0x82f5c\n   ,======< 0x00082d5c      cbnz  w23, 0x82f6c\n   ||||||   0x00082d60      add   w22, w8, 2\n  ,=======< 0x00082d64      b     0x82f70\n  ||||||`-> 0x00082d68      ldr   x22, [x21, 0xf8]                     ; [0xf8:4]=0xd1a30 segment.GNU_RELRO\n  ||||||    0x00082d6c      bl    0xcc698\n  ||||||    0x00082d70      sub   x0, x29, 0x70\n  ||||||    0x00082d74      bl    0x4d9a0\n  ||||||    0x00082d78      bl    0xcbea8\n  ||||||    0x00082d7c      sub   x0, x29, 0xc0\n  ||||||    0x00082d80      bl    0x4d9a0\n  ||||||    0x00082d84      adrp  x1, 0x17000\n  ||||||    0x00082d88      add   x1, x1, 0xccc\n  ||||||    0x00082d8c      sub   x0, x29, 0xd8\n  ||||||    0x00082d90      bl    0x4d9a0\n  ||||||    0x00082d94      ldr   x8, [x22]\n  ||||||    0x00082d98      sub   x1, x29, 0x70\n  ||||||    0x00082d9c      sub   x2, x29, 0xc0\n  ||||||    0x00082da0      sub   x3, x29, 0xd8\n  ||||||    0x00082da4      mov   x0, x22\n  ||||||    0x00082da8      ldr   x8, [x8]\n  ||||||    0x00082dac      blr   x8\n  ||||||    0x00082db0      sub   x0, x29, 0xd8\n  ||||||    0x00082db4      bl    method.std::__ndk1::basic_string_char__std::__ndk1::char_traits_char___std::__ndk1::allocator_char___._basic_string\n  ||||||    0x00082db8      sub   x0, x29, 0xc0\n  ||||||    0x00082dbc      bl    method.std::__ndk1::basic_string_char__std::__ndk1::char_traits_char___std::__ndk1::allocator_char___._basic_string\n  ||||||    0x00082dc0      sub   x0, x29, 0x70\n",
+    "stderr": "ERROR: Cannot determine entrypoint, using 0x0004c460.\n",
+    "exit_code": 0,
+    "signal": null,
+    "output_truncated": false,
+    "completion_status": "complete",
+    "artifact_sha256_after": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+    "artifact_changed": false
+  },
+  "normalized_result": {
+    "stdout": "            0x00082d14      ldr   x25, [x21, 0x98]                     ; [0x98:4]=0x48460\n            0x00082d18      mov   x0, x25\n            0x00082d1c      bl    0x880f8\n        ,=< 0x00082d20      tbz   w0, 0, 0x82d68\n        |   0x00082d24      ldrb  w8, [x28]\n        |   0x00082d28      ldr   x9, [x28, 8]                         ; [0x8:4]=0\n        |   0x00082d2c      bl    0xca4a8\n       ,==< 0x00082d30      cbz   x8, 0x82e00\n       ||   0x00082d34      ldr   x8, [x27]\n       ||   0x00082d38      cmp   w23, 2\n       ||   0x00082d3c      ldr   w8, [x8, 0x70]                       ; [0x70:4]=8\n       ||   0x00082d40      ccmp  w8, 5, 0, eq\n      ,===< 0x00082d44      b.eq  0x82e9c\n      |||   0x00082d48      cmp   w23, 2\n      |||   0x00082d4c      stp   x26, x22, [sp]\n     ,====< 0x00082d50      b.eq  0x82f64\n     ||||   0x00082d54      cmp   w23, 1\n    ,=====< 0x00082d58      b.eq  0x82f5c\n   ,======< 0x00082d5c      cbnz  w23, 0x82f6c\n   ||||||   0x00082d60      add   w22, w8, 2\n  ,=======< 0x00082d64      b     0x82f70\n  ||||||`-> 0x00082d68      ldr   x22, [x21, 0xf8]                     ; [0xf8:4]=0xd1a30 segment.GNU_RELRO\n  ||||||    0x00082d6c      bl    0xcc698\n  ||||||    0x00082d70      sub   x0, x29, 0x70\n  ||||||    0x00082d74      bl    0x4d9a0\n  ||||||    0x00082d78      bl    0xcbea8\n  ||||||    0x00082d7c      sub   x0, x29, 0xc0\n  ||||||    0x00082d80      bl    0x4d9a0\n  ||||||    0x00082d84      adrp  x1, 0x17000\n  ||||||    0x00082d88      add   x1, x1, 0xccc\n  ||||||    0x00082d8c      sub   x0, x29, 0xd8\n  ||||||    0x00082d90      bl    0x4d9a0\n  ||||||    0x00082d94      ldr   x8, [x22]\n  ||||||    0x00082d98      sub   x1, x29, 0x70\n  ||||||    0x00082d9c      sub   x2, x29, 0xc0\n  ||||||    0x00082da0      sub   x3, x29, 0xd8\n  ||||||    0x00082da4      mov   x0, x22\n  ||||||    0x00082da8      ldr   x8, [x8]\n  ||||||    0x00082dac      blr   x8\n  ||||||    0x00082db0      sub   x0, x29, 0xd8\n  ||||||    0x00082db4      bl    method.std::__ndk1::basic_string_char__std::__ndk1::char_traits_char___std::__ndk1::allocator_char___._basic_string\n  ||||||    0x00082db8      sub   x0, x29, 0xc0\n  ||||||    0x00082dbc      bl    method.std::__ndk1::basic_string_char__std::__ndk1::char_traits_char___std::__ndk1::allocator_char___._basic_string\n  ||||||    0x00082dc0      sub   x0, x29, 0x70\n",
+    "stderr": "ERROR: Cannot determine entrypoint, using 0x0004c460.\n",
+    "exit_code": 0,
+    "signal": null,
+    "output_truncated": false,
+    "completion_status": "complete",
+    "artifact_sha256_after": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+    "artifact_changed": false
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "The executable version and supported formats are reported as unknown because no reliable version probe was performed.",
+    "A non-zero process exit is preserved as an observed command result.",
+    "Rizin commands and retained plugins may read files or access network resources outside the selected artifact; those external inputs are not bound to Evidence.",
+    "When both are available, pre-run and post-run digests detect artifact changes across the provider call but cannot prove the exact bytes consumed during the call."
+  ],
+  "relationship_coverage": null,
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so"
+    }
+  ],
+  "evidence_links": []
+}
