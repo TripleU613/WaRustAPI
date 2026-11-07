@@ -1,4 +1,11 @@
 {
+  "x-group-writer-account-ownership": {
+    "x-cli": "existing normal group-outbox driver; no new command or flag",
+    "x-transport": "every normal queued group step checks connection account authority in addition to optional DeviceQuery authority",
+    "x-live": false,
+    "description": "Reproduced non-device group IQ encoding admission after saved registration ID replacement. GroupStep now freezes the connection account at handoff; all normal group phases including final messages without Pending recheck at Outbound.prepare. Optional device query still checks its own original reservation/deadline. Tests cover unchanged/replaced IQ/message owners and stale device status with matching account. Stale-generation fixtures corrected; earlier group staging/bundle/sender-key commit and non-normal adapters remain separate audit scope. No wire/timer/ACK-order change, replay, repair or live operation.",
+    "evidence": "docs/protocol/group-writer-account-ownership.md"
+  },
   "x-direct-outbox-account-ownership": {
     "x-cli": "existing direct outbox and explicit identity-resume flows; no new command or flag",
     "x-transport": "ordinary direct directory reservation, reply/suspension/ratchet commit and normal queued query/message writes bind saved account authority",

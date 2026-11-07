@@ -1,5 +1,10 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
+**Normal group writer account gap closed.** Every queued group step now
+checks connection account ownership, including final messages without Pending.
+Device-query reservation/deadline admission remains an additional guard.
+[Evidence, regressions and staging limits](docs/protocol/group-writer-account-ownership.md). No live operation.
+
 **Ordinary direct outbox account gap closed.** Query reservation freezes its
 owner; reply/suspension/send transactions and normal queued query/message writes
 recheck authority. Refusal preserves uncertain state without replay.

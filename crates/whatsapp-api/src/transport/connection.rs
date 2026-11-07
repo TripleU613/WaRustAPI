@@ -332,6 +332,11 @@ pub fn update_login_identity(
 /// One outbound stanza and where to report the socket write outcome.
 type Written = (Node, oneshot::Sender<Result<()>>);
 enum WriteGuard {
+    GroupStep(
+        Arc<ProtocolStore>,
+        [u8; 32],
+        Option<super::devices::DeviceQuery>,
+    ),
     DirectQuery(Arc<ProtocolStore>, super::outgoing::Pending),
     DirectAccount(Arc<ProtocolStore>, [u8; 32]),
     Prekey(Arc<ProtocolStore>, super::prekeys::PendingUpload),
@@ -350,6 +355,24 @@ impl Outbound {
     // The writer ends the epoch without encoding, writing, or releasing a batch.
     pub(crate) fn prepare(self) -> Option<Written> {
         let admission = match self.guard {
+            Some(WriteGuard::GroupStep(store, expected, query)) => store
+                .read(|tx| {
+                    let current = AccountRecord::load(tx)?;
+                    if super::account_authority::fingerprint(tx.generation(), current.as_ref())?
+                        != expected
+                    {
+                        return Err(Error::invalid(
+                            "group",
+                            "group account changed before write",
+                        ));
+                    }
+                    Ok(())
+                })
+                .and_then(|()| {
+                    query
+                        .as_ref()
+                        .map_or(Ok(()), |query| query.check_write_authority(&store))
+                }),
             Some(WriteGuard::DirectQuery(store, pending)) => pending.check_write_authority(&store),
             Some(WriteGuard::DirectAccount(store, expected)) => store.read(|tx| {
                 let current = AccountRecord::load(tx)?;
@@ -521,13 +544,20 @@ impl NodeLink {
     async fn send_group_step(
         &self,
         store: &Arc<ProtocolStore>,
+        account: &AccountRecord,
         pending: Option<&super::outgoing_group::Pending>,
         node: &Node,
     ) -> Result<()> {
-        let guard = pending
-            .and_then(|p| p.device_query())
-            .map(|query| WriteGuard::Devices(store.clone(), query.clone()));
-        self.send_guarded(node, guard).await
+        // Every group phase belongs to the connection account, including final
+        // messages with no remaining Pending. Preserve the stronger device-query
+        // reservation/deadline guard as an additional check, not an alternative.
+        let expected = super::account_authority::fingerprint(account.generation, Some(account))?;
+        let query = pending.and_then(|p| p.device_query()).cloned();
+        self.send_guarded(
+            node,
+            Some(WriteGuard::GroupStep(store.clone(), expected, query)),
+        )
+        .await
     }
     async fn send_guarded(&self, node: &Node, guard: Option<WriteGuard>) -> Result<()> {
         let (reply, outcome) = oneshot::channel();
@@ -894,7 +924,7 @@ pub(crate) async fn drive(
                     if let Some(id) = selected {
                         if let Some((pending,node))=super::outgoing_group::begin_selected(&store,id)? {
                             group_outgoing=Some(pending);
-                            link.send_group_step(&store, group_outgoing.as_ref(), &node).await?;
+                            link.send_group_step(&store, &account, group_outgoing.as_ref(), &node).await?;
                         } else if let Some((pending,node))=super::outgoing::begin_selected(&store,Some(id))? {
                             outgoing=Some(pending);
                             link.send_direct_query(&store,outgoing.as_ref().expect("reserved direct query"),&node).await?;
@@ -1011,7 +1041,7 @@ pub(crate) async fn drive(
                 if node.description == "ack" && group_outgoing.as_ref().is_some_and(|v|tokio::time::Instant::now() < v.deadline && v.matches(&node)) {
                     let next=group_outgoing.take().expect("matched group distribution").settle_with_policy(&store,&account,&node,epoch,&mut device_cursor,config.transport.outgoing_identity_changes).await?;
                     group_outgoing=next.pending;
-                    if let Some(stanza)=next.node { link.send_group_step(&store, group_outgoing.as_ref(), &stanza).await?; }
+                    if let Some(stanza)=next.node { link.send_group_step(&store, &account, group_outgoing.as_ref(), &stanza).await?; }
                 }
                 if node.description == "iq" {
                     // A retry answer waiting for the peer's fresh bundle (retry_answer).
@@ -1031,7 +1061,7 @@ pub(crate) async fn drive(
                         let next=group_outgoing.take().expect("matched group preparation").settle_with_policy(&store,&account,&node,epoch,&mut device_cursor,config.transport.outgoing_identity_changes).await?;
                         group_outgoing=next.pending;
                         if let Some(pending) = &group_outgoing { pending.observe_device_query(&mut device_cursor); }
-                        if let Some(stanza)=next.node { link.send_group_step(&store, group_outgoing.as_ref(), &stanza).await?; }
+                        if let Some(stanza)=next.node { link.send_group_step(&store, &account, group_outgoing.as_ref(), &stanza).await?; }
                         continue;
                     }
                     if outgoing.as_ref().is_some_and(|v|tokio::time::Instant::now() < v.deadline && v.matches(&node)) {
@@ -5727,7 +5757,8 @@ mod tests {
         for cut in ["membership", "devices", "keys", "send"] {
             let dir = tempfile::tempdir().unwrap();
             let store = open(&dir.path().join("normal-group-cut.redb"));
-            let f = group_fanout::tests::fixture();
+            let mut f = group_fanout::tests::fixture();
+            f.alice.generation = store.generation();
             store.write(|tx| f.alice.save(tx)).unwrap();
             let ticket = enqueue(&store, &f.plan.chat, "original-group-cut");
             let mut fake = start(&store, true, Some(ticket));
@@ -5894,7 +5925,8 @@ mod tests {
             let dir = tempfile::tempdir().unwrap();
             let path = dir.path().join("malformed-direct.redb");
             let store = open(&path);
-            let f = group_fanout::tests::fixture();
+            let mut f = group_fanout::tests::fixture();
+            f.alice.generation = store.generation();
             store.write(|tx| f.alice.save(tx)).unwrap();
             let outbox = Outbox::new("comparison-driver", Limits::default());
             let ticket = store
@@ -6224,6 +6256,119 @@ mod tests {
                     .unwrap()
                     .is_none()
             );
+        }
+    }
+
+    #[tokio::test]
+    async fn group_account_guard_preserves_device_reservation_admission() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("group-device-owner.redb"));
+        let account = AccountRecord {
+            generation: store.generation(),
+            signal_registration_id: Some(31),
+            ..Default::default()
+        };
+        store.write(|tx| account.save(tx)).unwrap();
+        super::super::devices::request_sync(&store, None, &peer(), None, "fixture").unwrap();
+        let (query, node) = super::super::devices::begin_query(
+            &store,
+            super::super::devices::SyncContext::Interactive,
+        )
+        .unwrap()
+        .unwrap();
+        let id = node
+            .get_attr("id")
+            .and_then(|v| v.as_text())
+            .unwrap()
+            .to_owned();
+        let expected =
+            super::super::account_authority::fingerprint(account.generation, Some(&account))
+                .unwrap();
+        let (_incoming, incoming) = mpsc::channel(1);
+        let (outgoing, mut writes) = mpsc::channel(1);
+        let link = NodeLink::new(incoming, outgoing);
+        let worker_store = store.clone();
+        let task = tokio::spawn(async move {
+            link.send_guarded(
+                &node,
+                Some(WriteGuard::GroupStep(worker_store, expected, Some(query))),
+            )
+            .await
+        });
+        let queued = writes.recv().await.unwrap();
+        store
+            .write(|tx| {
+                let key = format!("device-sync:{id}");
+                let mut row: serde_json::Value =
+                    tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?.unwrap();
+                row["status"] = serde_json::json!("refused");
+                tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &row)
+            })
+            .unwrap();
+        let before = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+            .unwrap();
+        assert!(queued.prepare().is_none());
+        assert!(task.await.unwrap().is_err());
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                .unwrap(),
+            before
+        );
+    }
+
+    #[tokio::test]
+    async fn queued_non_device_group_steps_refuse_changed_account_before_encoding() {
+        for description in ["iq", "message"] {
+            for changed in [true, false] {
+                let dir = tempfile::tempdir().unwrap();
+                let store = open(&dir.path().join("group-owner.redb"));
+                let account = AccountRecord {
+                    generation: store.generation(),
+                    signal_registration_id: Some(31),
+                    ..Default::default()
+                };
+                store.write(|tx| account.save(tx)).unwrap();
+                let (_incoming, incoming) = mpsc::channel(1);
+                let (outgoing, mut writes) = mpsc::channel(1);
+                let link = NodeLink::new(incoming, outgoing);
+                let worker_store = store.clone();
+                let worker_account = account.clone();
+                let task = tokio::spawn(async move {
+                    link.send_group_step(
+                        &worker_store,
+                        &worker_account,
+                        None,
+                        &Node::new(description).attr("id", "frozen-group-step"),
+                    )
+                    .await
+                });
+                let queued = writes.recv().await.unwrap();
+                if changed {
+                    let mut replacement = account;
+                    replacement.signal_registration_id = Some(32);
+                    store.write(|tx| replacement.save(tx)).unwrap();
+                }
+                let before = store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                    .unwrap();
+                let prepared = queued.prepare();
+                if changed {
+                    assert!(prepared.is_none(), "{description}");
+                } else {
+                    let (_, written) = prepared.unwrap();
+                    written.send(Ok(())).unwrap();
+                }
+                assert_eq!(task.await.unwrap().is_err(), changed);
+                assert!(writes.recv().await.is_none());
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                        .unwrap(),
+                    before
+                );
+            }
         }
     }
 
@@ -8614,7 +8759,8 @@ mod tests {
             let dir = tempfile::tempdir().unwrap();
             let path = dir.path().join("cancelled-group.redb");
             let store = open(&path);
-            let f = group_fanout::tests::fixture();
+            let mut f = group_fanout::tests::fixture();
+            f.alice.generation = store.generation();
             store.write(|tx| f.alice.save(tx)).unwrap();
             let ticket = enqueue(&store, &f.plan.chat, "cancelled-group");
             let outbox =
@@ -8734,7 +8880,8 @@ mod tests {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("group-preparation-deadline.redb");
         let store = open(&path);
-        let f = group_fanout::tests::fixture();
+        let mut f = group_fanout::tests::fixture();
+        f.alice.generation = store.generation();
         store.write(|tx| f.alice.save(tx)).unwrap();
         let ticket = enqueue(&store, &f.plan.chat, "group-deadline");
         let mut fake = start(&store, true, Some(ticket));
