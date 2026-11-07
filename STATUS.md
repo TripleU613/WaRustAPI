@@ -1,3 +1,10 @@
+2026-11-06 — **Stopped ordinary retry processing on two alternate native routes.**
+Leading participants/message_id takes precedence over type=retry; category=peer
+selects a separate handler. Shared routing now prevents a false ordinary487,
+success ACK, resend or key query on those inputs. Saved-session tests preserve
+outbox, checkpoint, ratchet and identity state. Full router parity remains open.
+[Evidence, registration and negative findings](docs/protocol/apk/2.26.43.72-retry-upstream-routing/README.md). No live account operation.
+
 2026-11-06 — **Located the upstream receipt router and unknown-type context split.**
 The inherited generic route dispatches to1rU.A05, whose ordered child/type branches
 precede ordinary F10 parsing. An admitted unhandled root uses copied-context487,

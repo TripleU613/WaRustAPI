@@ -1116,7 +1116,7 @@ fn retry_context_supported(incoming: &Node) -> bool {
 }
 
 fn retry_receipt_error(incoming: &Node) -> Option<RetryReceiptError> {
-    if incoming.get_attr("type").and_then(|v| v.as_text()) != Some("retry") {
+    if !super::receipts::ordinary_retry_route(incoming) {
         return None;
     }
     if !retry_context_supported(incoming) {
@@ -2323,6 +2323,37 @@ mod tests {
                 .is_none()
             );
         }
+    }
+
+    #[test]
+    fn upstream_retry_routes_do_not_emit_ordinary_retry_errors() {
+        let base = Node::new("receipt")
+            .attr("id", "R1")
+            .attr("from", "15555550100@s.whatsapp.net")
+            .attr("type", "retry");
+        for node in [
+            base.clone().attr("category", "peer"),
+            base.clone()
+                .children(vec![Node::new("participants").attr("message_id", "")]),
+        ] {
+            assert!(retry_receipt_error(&node).is_none());
+            assert!(received_confirmation(&node).is_none());
+            assert!(handled_retry_confirmation(&node).is_none());
+        }
+        assert!(received_confirmation(&base).is_some()); // Missing ordinary retry =>487.
+        assert!(
+            received_confirmation(&base.clone().children(vec![
+                Node::new("other"),
+                Node::new("participants").attr("message_id", "M1")
+            ]))
+            .is_some()
+        );
+        assert!(
+            received_confirmation(
+                &base.children(vec![Node::new("participants").attr("key", "K1")])
+            )
+            .is_some()
+        );
     }
 
     /// `LX/Cp2->A05`: a receipt's ack mirrors the receipt — `to` its `from`,

@@ -2551,6 +2551,23 @@ mod tests {
                 .unwrap()
         };
         let before_invalid = all_retry_state();
+        // 1rU routing precedes ordinary retry parsing, even when a complete
+        // resendable retry and matching saved session follow the selector.
+        let ordinary = receipt(&peer, 1, 42);
+        let mut aggregate_children = vec![Node::new("participants").attr("message_id", "W1")];
+        aggregate_children.extend(ordinary.child_nodes().iter().cloned());
+        for routed_elsewhere in [
+            ordinary.clone().children(aggregate_children),
+            ordinary.attr("category", "peer"),
+        ] {
+            assert!(
+                answer_with_confirmation(&store, &account, &routed_elsewhere, ConnectionEpoch(2))
+                    .await
+                    .unwrap()
+                    .is_none()
+            );
+            assert_eq!(all_retry_state(), before_invalid);
+        }
         for registration in [
             None,
             Some(vec![]),

@@ -6271,9 +6271,23 @@ pub struct RetryRequest {
     pub registration: Option<Vec<u8>>,
 }
 
-/// Parse a `receipt type="retry"`. Returns `None` for any other receipt.
+// APK43.72 1rU.A05: a first participants/message_id routes at028e before
+// retry selection; category=peer routes to263, not ordinary retry code2.
+// Nontext selector carriers remain unsupported rather than authorizing a resend.
+pub(super) fn ordinary_retry_route(node: &Node) -> bool {
+    node.description == "receipt"
+        && node.get_attr("type").and_then(|value| value.as_text()) == Some("retry")
+        && !node.child_nodes().first().is_some_and(|child| {
+            child.description == "participants" && child.get_attr("message_id").is_some()
+        })
+        && node
+            .get_attr("category")
+            .is_none_or(|value| value.as_text().is_some_and(|category| category != "peer"))
+}
+
+/// Parse an ordinary retry receipt after the native upstream routing selectors.
 pub fn parse_retry(node: &Node) -> Option<RetryRequest> {
-    if node.description != "receipt" || node.get_attr("type")?.as_text()? != "retry" {
+    if !ordinary_retry_route(node) {
         return None;
     }
     let jid = |name: &str| -> Option<Jid> {
@@ -6408,6 +6422,24 @@ mod retry_tests {
                 .attr("v", "1"),
             Node::new("registration").bytes(vec![1, 2, 3, 4]),
         ])
+    }
+
+    #[test]
+    fn upstream_routes_precede_ordinary_retry_parsing() {
+        let base = receipt(false);
+        let aggregate = || Node::new("participants").attr("message_id", "");
+        let mut children = vec![aggregate()];
+        children.extend(base.child_nodes().iter().cloned());
+        assert!(parse_retry(&base.clone().children(children)).is_none());
+        assert!(parse_retry(&base.clone().attr("category", "peer")).is_none());
+        // Only the FIRST child and nonnull message_id select the early route.
+        let mut children = base.child_nodes().to_vec();
+        children.push(aggregate());
+        assert!(parse_retry(&base.clone().children(children)).is_some());
+        let mut children = vec![Node::new("participants").attr("key", "K1")];
+        children.extend(base.child_nodes().iter().cloned());
+        assert!(parse_retry(&base.clone().children(children)).is_some());
+        assert!(parse_retry(&base.clone().attr("category", "other")).is_some());
     }
 
     /// The fields a resend needs: which device, which message, and the

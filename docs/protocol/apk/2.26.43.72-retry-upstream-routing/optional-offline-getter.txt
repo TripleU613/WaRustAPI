@@ -1,0 +1,17 @@
+
+# class: LX/0Tp;
+# extends: Ljava/lang/Object;
+
+.method public A0H(LL)  # .registers 4
+    # full signature: LX/0Tp;->A0H(Ljava/lang/String;)Ljava/lang/Integer;
+    0000..0002  const/4  v1, #0x0
+    0002..0008  invoke-virtual  {v2, v3, v1}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0008..000a  move-result-object  v0
+    000a..000e  if-eqz  v0, +0x7
+    000e..0014  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(Ljava/lang/String;)Ljava/lang/Integer;
+    0014..0016  move-result-object  v0
+    0016..0018  return-object  v0
+    0018..001a  return-object  v1
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/NumberFormatException; code_units 0007..000c -> 000c
+.end method

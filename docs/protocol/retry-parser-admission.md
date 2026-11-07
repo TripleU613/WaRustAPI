@@ -91,3 +91,19 @@ repository hygiene checked before push.
 [Supported recipient selection and original-chat correlation](retry-original-chat.md)
 now separate the failed message chat from the requesting device, using existing
 saved peer/LID state. Full native context/alias/fallback/ACK parity remains open.
+
+
+## Upstream routing excludes two ordinary retry paths (2026-11-06)
+
+**Confirmed selected static / implemented:** pinned1rU.A05 forwards a FIRST
+participants/message_id before root-type retry selection; empty message_id is
+nonnull. category=peer instead selects code263, not ordinary retry code2.
+The shared selector now prevents ordinary retry parsing, error487 classification,
+handled-success ACK and resend/refetch reservation on both routes. Key-only or
+later participants do not select the early route. Nontext selectors remain local
+unsupported inputs. Saved-session regression preserves outbox/checkpoint/ratchet/
+identity state and emits no resend/query/confirmation for alternate routes.
+[Evidence, status277 registration, lenient-offline negative result and limits](apk/2.26.43.72-retry-upstream-routing/README.md).
+Full special/unknown-type routing and live acceptance remain open. The router's
+error branch tests root type=error before requiring its child; an arbitrary error
+child alone does not select it. No live account operation.

@@ -50,7 +50,7 @@ The selected order after context creation is significant:
 4. Ordinary type-set membership at0482..048a forwards to status processing.
    Feature-gated view/status handling is adjacent and is not collapsed into it.
 5. Simple mapped types, retry (including category=peer), enc_rekey_retry and
-   error-child receipts each take their separate paths.
+   root type=error receipts (requiring an error child) each take their separate paths.
 6. The remaining path at0768 calls2Cx.A00 with the EXISTING Eoh context.
 
 [Private ordinary forwarder](ordinary-forward.txt) chooses message code1 or277
