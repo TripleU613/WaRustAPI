@@ -1,0 +1,19 @@
+
+# class: LX/FSI;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLLLLIJ)  # .registers 10
+    # full signature: LX/FSI;-><init>(Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/UserJid;LX/Eoh;LX/11v;[LX/1dW;IJ)V
+    0000..0006  invoke-static  {v6, v2}, LX/00l;->A0A(Ljava/lang/Object;Ljava/lang/Object;)V
+    0006..000c  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    000c..0010  iput-object  v6, v0, LX/FSI;->A07:[LX/1dW;
+    0010..0014  iput-object  v2, v0, LX/FSI;->A03:Lcom/whatsapp/infra/core/jid/Jid;
+    0014..0018  iput-object  v1, v0, LX/FSI;->A02:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0018..001c  iput  v7, v0, LX/FSI;->A00:I
+    001c..0020  iput-wide  v8, v0, LX/FSI;->A01:J
+    0020..0024  iput-object  v4, v0, LX/FSI;->A05:LX/Eoh;
+    0024..0028  iput-object  v5, v0, LX/FSI;->A06:LX/11v;
+    0028..002c  iput-object  v3, v0, LX/FSI;->A04:Lcom/whatsapp/infra/core/jid/UserJid;
+    002c..002e  return-void
+    # exception table: 0 try range(s)
+.end method

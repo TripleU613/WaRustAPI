@@ -1,0 +1,6 @@
+classes8.dex  LX/FSI;-><init>(VLLLLLLIJ)
+  write opcode 0x5b, dex byte offset: 0x79ccb4
+classes8.dex  LX/FSI;->CRF(LI)
+  read opcode 0x54, dex byte offset: 0x79cd14
+classes8.dex  LX/FSI;->Cc5(VLIIJZ)
+  read opcode 0x54, dex byte offset: 0x79cd92

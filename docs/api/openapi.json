@@ -1,4 +1,11 @@
 {
+  "x-direct-receipt-native-null-actor": {
+    "x-cli": "xtask apk-smali <apk> --class 'LX/F21;' --method A05 --signatures --exceptions",
+    "x-transport": "ordinary direct receipt fact target parsing; shared text-null classification with ACK output",
+    "x-live": false,
+    "description": "Known constructor-null PN/LID/hosted participant text no longer becomes a supplied device through generic parsing. It follows the existing authenticated sender-device fact fallback; valid participants retain original-target binding. Pinned F10/FSI/F21 parser/event/worker trace and encrypted-store regression cover PN/LID delivery/read/played, actor, timestamp, retained intent/attempts/progress, reopen and duplicate idempotency. No global model, aggregate/group/retry admission, selector, identity, new request or HTTP route change. Complete feature/storage branches, required sender grammar, binary constructor validation and live acceptance remain open; no account operation.",
+    "evidence": "docs/protocol/apk/2.26.43.72-receipt-null-fact-actor/README.md"
+  },
   "x-receipt-ack-null-participant": {
     "x-cli": "xtask apk-smali <apk> --class 'LX/Efa;' --method A00 --signatures --exceptions",
     "x-transport": "automatic receipt ACK selected from/participant text conversion",

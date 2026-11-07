@@ -1,0 +1,10 @@
+
+# class: LX/FSI;
+# extends: Ljava/lang/Object;
+
+.method public CXN(L)  # .registers 2
+    # full signature: LX/FSI;->CXN()Lcom/whatsapp/infra/core/jid/Jid;
+    0000..0004  iget-object  v0, v1, LX/FSI;->A03:Lcom/whatsapp/infra/core/jid/Jid;
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method

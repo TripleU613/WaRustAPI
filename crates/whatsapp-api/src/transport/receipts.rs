@@ -1209,16 +1209,20 @@ pub(super) fn ack_wire_address(node: &Node, name: &str, parsed: Jid) -> Jid {
         .unwrap_or_else(|| ack_address(parsed))
 }
 
+fn native_text_address_is_null(node: &Node, name: &str) -> bool {
+    matches!(
+        node.get_attr(name)
+            .and_then(|value| value.as_text())
+            .and_then(super::messaging::ack_user_text),
+        Some(super::messaging::AckUserText::Null)
+    )
+}
+
 pub(super) fn receipt_ack_wire_address(node: &Node, name: &str) -> Option<Jid> {
     // APK 43.72 F0R.A00 -> 0Tp.A0A -> 0Dd.A02: constructor failure
     // yields null, so F3e.A05 omits an optional participant. Do not let the
     // generic model's broader parser resurrect a known-null native address.
-    if matches!(
-        node.get_attr(name)?
-            .as_text()
-            .and_then(super::messaging::ack_user_text),
-        Some(super::messaging::AckUserText::Null)
-    ) {
+    if native_text_address_is_null(node, name) {
         return None;
     }
     node.get_attr(name)
@@ -1598,7 +1602,16 @@ fn direct_target(node: &Node) -> Result<Option<DirectTarget<'_>>> {
     }
     // APK 37.71 Cmk.A03 051a..05bc retains remote chat separately from
     // DeviceJid.Companion.A00(participant). Never treat a device as the chat.
-    let participant = network_jid(node, "participant");
+    // APK43.72 F0R.A00/0Tp.A0A -> F10.A03 -> FSI.CRF keeps constructor
+    // null distinct from a supplied device. The ordinary outgoing direct branch
+    // in F21.A05 uses the remote sender device. Honor null before the generic
+    // parser can resurrect it as a mismatching participant; valid devices retain
+    // this client's existing original-target checks below/in record_in.
+    let participant = if native_text_address_is_null(node, "participant") {
+        None
+    } else {
+        network_jid(node, "participant")
+    };
     if let Some(actor) = participant.as_ref()
         && (actor.user.is_empty()
             || actor.agent != 0
@@ -5331,6 +5344,16 @@ mod tests {
                     "lid",
                     "@s.whatsapp.net",
                     "15555550100@c.us",
+                    // APK43.72 constructor failures are native null even when
+                    // the generic model can parse the same text.
+                    "15555550100:100@s.whatsapp.net",
+                    "100001:100@lid",
+                    "100001:128@lid",
+                    "100001:255@lid",
+                    "15555550100:2@hosted",
+                    "100001:355@hosted.lid",
+                    "not-a-user@lid",
+                    "01555550100@s.whatsapp.net",
                 ]
                 .into_iter()
                 .chain(

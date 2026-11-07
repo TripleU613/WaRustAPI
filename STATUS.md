@@ -1,3 +1,10 @@
+2026-11-06 — **Aligned direct receipt fact handling for native-null participants.**
+Known constructor-null PN/LID/hosted text now follows the existing supported
+sender-device fact fallback rather than becoming a false supplied target.
+Valid participants retain original-target checks. Current APK parser/event/worker
+traces and encrypted-store regressions bind the distinction and remaining limits.
+[Evidence, persistence checks and open branches](docs/protocol/apk/2.26.43.72-receipt-null-fact-actor/README.md). No live account operation.
+
 2026-11-06 — **Distinguished null receipt participants from unwritable objects.**
 Receipt ACK output now omits known constructor-null text participants rather than
 resurrecting them through the broader generic Jid parser. Nonnull unwritable

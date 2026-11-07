@@ -1,0 +1,28 @@
+
+# class: LX/FSI;
+# extends: Ljava/lang/Object;
+
+.method public Cc5(VLIIJZ)  # .registers 20
+    # full signature: LX/FSI;->Cc5(LX/0fW;IIJZ)V
+    0000..0002  const/4  v2, #0x0
+    0002..0008  invoke-static  {v14, v2}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000c  iget-object  v1, v13, LX/FSI;->A07:[LX/1dW;
+    000c..000e  array-length  v0, v1
+    000e..0010  sub-int/2addr  v0, v15
+    0010..0014  new-array  v5, v0, [LX/1dW;
+    0014..001a  invoke-static  {v1, v15, v5, v2, v0}, Ljava/lang/System;->arraycopy(Ljava/lang/Object;ILjava/lang/Object;II)V
+    001a..001e  iget-object  v2, v13, LX/FSI;->A03:Lcom/whatsapp/infra/core/jid/Jid;
+    001e..0022  iget-object  v1, v13, LX/FSI;->A02:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0022..0026  iget  v6, v13, LX/FSI;->A00:I
+    0026..002a  iget-wide  v8, v13, LX/FSI;->A01:J
+    002a..002e  iget-object  v4, v13, LX/FSI;->A06:LX/11v;
+    002e..0032  iget-object  v3, v13, LX/FSI;->A04:Lcom/whatsapp/infra/core/jid/UserJid;
+    0032..0036  new-instance  v0, Lcom/whatsapp/xmpp/jobqueue/job/ReceiptProcessingJob;
+    0036..003a  move/from16  v7, v16
+    003a..003e  move-wide/from16  v10, v17
+    003e..0042  move/from16  v12, v19
+    0042..0048  invoke-direct/range  {v0..v12}, Lcom/whatsapp/xmpp/jobqueue/job/ReceiptProcessingJob;-><init>(Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/Jid;Lcom/whatsapp/infra/core/jid/UserJid;LX/11v;[LX/1dW;IIJJZ)V
+    0048..004e  invoke-virtual  {v14, v0}, LX/0fW;->A01(Lorg/whispersystems/jobqueue/Job;)V
+    004e..0050  return-void
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,10 @@
+
+# class: LX/FSI;
+# extends: Ljava/lang/Object;
+
+.method public CRF(LI)  # .registers 3
+    # full signature: LX/FSI;->CRF(I)Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0000..0004  iget-object  v0, v1, LX/FSI;->A02:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method

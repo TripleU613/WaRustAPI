@@ -5018,3 +5018,17 @@ remain distinct and still refuse ACK construction. Regression/actor checks cover
 actual encoding, durable capture and receive continuation. Fact attribution,
 notification handlers, typed constructors and live acceptance remain open;
 no account operation, stored selector or new request-family change.
+
+## Native-null participant and ordinary direct facts (2026-11-06)
+
+**Confirmed selected static / fixed offline:** [current parser, event and consumer trace](apk/2.26.43.72-receipt-null-fact-actor/README.md)
+follows F10.A03 -> FSI -> F21.A05. The ordinary outgoing direct branch uses
+its remote sender device; constructor-null participant text cannot supply a real
+participant target. Direct Rust receipt parsing now honors known native null
+before generic parsing, reusing its existing authenticated sender fallback.
+An expanded encrypted-store regression failed before correction with zero facts
+instead of one; PN/LID delivery/read/played controls now retain correct actor,
+timestamp, send intent/attempts/progress, reopened persistence and idempotency.
+Valid participant target checks, global/aggregate/group/retry parsing and request
+behavior remain unchanged. Complete status/feature/storage branches, required
+sender grammar, binary constructor fidelity and live acceptance remain open.
