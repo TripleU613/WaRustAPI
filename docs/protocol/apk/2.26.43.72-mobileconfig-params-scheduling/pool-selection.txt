@@ -1,0 +1,32 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   77574:      	ldr	x8, [sp, #0x68]
+   77578:      	ldr	x20, [x8]
+   7757c:      	cbnz	x20, 0x775a8 <JNI_OnLoad+0x8408>
+   77580:      	sub	x0, x29, #0xa0
+   77584:      	bl	0x770bc <JNI_OnLoad+0x7f1c>
+   77588:      	ldr	x19, [sp, #0x68]
+   7758c:      	sub	x1, x29, #0xa0
+   77590:      	mov	x0, x19
+   77594:      	bl	0x5b7d8 <.text+0xf378>
+   77598:      	ldur	x0, [x29, #-0x98]
+   7759c:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   775a0:      	ldr	x20, [x19]
+   775a4:      	ldr	x19, [sp, #0xa0]
+   775a8:      	mov	w0, #0x4b0              // =1200
+   775ac:      	stp	xzr, xzr, [sp, #0xf0]
+   775b0:      	bl	0xccfa0 <__wrap__Znwm@plt>
+   775b4:      	mov	x21, x0
+   775b8:      	adrp	x8, 0xd4000
+   775bc:      	add	x8, x8, #0xf60
+   775c0:      	bl	0xcb3c4 <JNI_OnLoad+0x5c224>
+   775c4:      	cbz	x20, 0x775d8 <JNI_OnLoad+0x8438>
+   775c8:      	ldr	x8, [x20]
+   775cc:      	ldur	x8, [x8, #-0x48]
+   775d0:      	add	x23, x20, x8
+   775d4:      	b	0x775dc <JNI_OnLoad+0x843c>
+   775d8:      	mov	x23, xzr

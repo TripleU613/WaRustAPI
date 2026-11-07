@@ -1,0 +1,43 @@
+{
+  "member_sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+  "diagnostics": {
+    "0x1753f": "PersistParamsMapError",
+    "0x18b1b": "FBMobileConfigStorageManager::scheduleWritingLatestParamsMapToDisk",
+    "0x188a4": "Failed to persist params map because mcThreadPool_ is null",
+    "0x1c6ee": "writeToFile() returned false for: ",
+    "0x1b185": "params_map_v4_"
+  },
+  "selected_calls": {
+    "0x85c04": "0x8ada0",
+    "0x8ade4": "0x8b030",
+    "0x8adfc": "0x8b0b0",
+    "0x8ae5c": "0x8b130",
+    "0x8ae84": "0x8b130",
+    "0x8af08": "0x87f90",
+    "0x8b3cc": "0x8b130",
+    "0x8b3fc": "0x8b130",
+    "0x8b06c": "0xc5e0c",
+    "0x8b0ec": "0xc5d00",
+    "0x8b244": "0xc1f4c",
+    "0x8b284": "0xc1f4c",
+    "0x8b2d0": "0xc044c",
+    "0x77584": "0x770bc"
+  },
+  "default_factory_imports": {
+    "0xd6ba0": {
+      "type": 1025,
+      "name": "_ZTVN8facebook6mobile5xplat8executor20InlineSerialExecutorE",
+      "addend": 0
+    },
+    "0xd6ba8": {
+      "type": 1025,
+      "name": "_ZTTN8facebook6mobile5xplat8executor20InlineSerialExecutorE",
+      "addend": 0
+    }
+  },
+  "inline_mode": "manager230==1; optional first path when manager212 bit0 clear, then second path",
+  "scheduled_mode": "other manager230 values; invoke 8b384, manager 8b428, captured flags50/51",
+  "missing_pool": "logs PersistParamsMapError; appends byte3 to supplied result vector",
+  "authority": "static imports/calls and analyst-transcribed branches, not task execution or active-state admission",
+  "remaining": "runtime executor override, external dispatch implementation, task completion/copy outcomes and active-table installation"
+}

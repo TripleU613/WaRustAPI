@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-params-scheduling-evidence": {
+    "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-params-scheduling/inspect-scheduling.py <pinned-library>",
+    "x-transport": "offline params-map scheduling research; no Rust transport or HTTP route enabled",
+    "x-live": false,
+    "description": "Confirmed selected static MobileConfig upgrade follow-up schedules parameter-map file persistence, not established active-table installation. It supports direct calls or a captured task; missing mcThreadPool logs and appends reason byte3. Default construction imports InlineSerialExecutor symbols, while actual dispatch/completion remains external. Configuration-owner installation is still unresolved.",
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-params-scheduling/README.md"
+  },
   "x-mobileconfig-upgrade-replacement-evidence": {
     "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-upgrade-replacement/inspect-replacement.py <pinned-library>",
     "x-transport": "offline local file replacement research; no Rust transport or HTTP route enabled",

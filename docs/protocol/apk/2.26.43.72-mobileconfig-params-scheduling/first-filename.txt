@@ -1,0 +1,71 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   c5e0c:      	paciasp
+   c5e10:      	sub	sp, sp, #0x40
+   c5e14:      	stp	x29, x30, [sp, #0x20]
+   c5e18:      	stp	x20, x19, [sp, #0x30]
+   c5e1c:      	add	x29, sp, #0x20
+   c5e20:      	bl	0xca66c <JNI_OnLoad+0x5b4cc>
+   c5e24:      	cmp	w1, #0x4
+   c5e28:      	stur	x8, [x29, #-0x8]
+   c5e2c:      	b.ne	0xc5e78 <JNI_OnLoad+0x56cd8>
+   c5e30:      	adrp	x1, 0x18000
+   c5e34:      	add	x1, x1, #0x1ed
+   c5e38:      	mov	x0, sp
+   c5e3c:      	mov	w2, #0xa                // =10
+   c5e40:      	bl	0x7b010 <JNI_OnLoad+0xbe70>
+   c5e44:      	adrp	x2, 0x16000
+   c5e48:      	add	x2, x2, #0x3fa
+   c5e4c:      	bl	0xcacb8 <JNI_OnLoad+0x5bb18>
+   c5e50:      	bl	0x5d0fc <.text+0x10c9c>
+   c5e54:      	mov	x0, sp
+   c5e58:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   c5e5c:      	bl	0xca2dc <JNI_OnLoad+0x5b13c>
+   c5e60:      	b.ne	0xc5f0c <JNI_OnLoad+0x56d6c>
+   c5e64:      	ldp	x20, x19, [sp, #0x30]
+   c5e68:      	ldp	x29, x30, [sp, #0x20]
+   c5e6c:      	add	sp, sp, #0x40
+   c5e70:      	autiasp
+   c5e74:      	ret
+   c5e78:      	cmp	w1, #0x1
+   c5e7c:      	b.ne	0xc5ea0 <JNI_OnLoad+0x56d00>
+   c5e80:      	tbz	w2, #0x0, 0xc5ea0 <JNI_OnLoad+0x56d00>
+   c5e84:      	bl	0xca2dc <JNI_OnLoad+0x5b13c>
+   c5e88:      	b.ne	0xc5f0c <JNI_OnLoad+0x56d6c>
+   c5e8c:      	adrp	x1, 0x16000
+   c5e90:      	add	x1, x1, #0x322
+   c5e94:      	mov	x0, x19
+   c5e98:      	mov	w2, #0x27               // =39
+   c5e9c:      	b	0xc5ee0 <JNI_OnLoad+0x56d40>
+   c5ea0:      	cmp	w1, #0x2
+   c5ea4:      	b.ne	0xc5ec8 <JNI_OnLoad+0x56d28>
+   c5ea8:      	tbz	w2, #0x0, 0xc5ec8 <JNI_OnLoad+0x56d28>
+   c5eac:      	bl	0xca2dc <JNI_OnLoad+0x5b13c>
+   c5eb0:      	b.ne	0xc5f0c <JNI_OnLoad+0x56d6c>
+   c5eb4:      	adrp	x1, 0x16000
+   c5eb8:      	add	x1, x1, #0x36d
+   c5ebc:      	mov	x0, x19
+   c5ec0:      	mov	w2, #0x28               // =40
+   c5ec4:      	b	0xc5ee0 <JNI_OnLoad+0x56d40>
+   c5ec8:      	bl	0xca2dc <JNI_OnLoad+0x5b13c>
+   c5ecc:      	b.ne	0xc5f0c <JNI_OnLoad+0x56d6c>
+   c5ed0:      	adrp	x1, 0x16000
+   c5ed4:      	add	x1, x1, #0x34b
+   c5ed8:      	mov	x0, x19
+   c5edc:      	mov	w2, #0xe                // =14
+   c5ee0:      	ldp	x20, x19, [sp, #0x30]
+   c5ee4:      	ldp	x29, x30, [sp, #0x20]
+   c5ee8:      	add	sp, sp, #0x40
+   c5eec:      	autiasp
+   c5ef0:      	b	0x7b010 <JNI_OnLoad+0xbe70>
+   c5ef4:      	bl	0xcab3c <JNI_OnLoad+0x5b99c>
+   c5ef8:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   c5efc:      	bl	0xca2dc <JNI_OnLoad+0x5b13c>
+   c5f00:      	b.ne	0xc5f0c <JNI_OnLoad+0x56d6c>
+   c5f04:      	mov	x0, x19
+   c5f08:      	bl	0xccf70 <__wrap__Unwind_Resume@plt>
+   c5f0c:      	bl	0xcd9f0 <__stack_chk_fail@plt>

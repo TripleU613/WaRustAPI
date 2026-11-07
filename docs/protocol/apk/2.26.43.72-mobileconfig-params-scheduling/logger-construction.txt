@@ -1,0 +1,30 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   77320:      	ldr	x8, [sp, #0x98]
+   77324:      	mov	w0, #0x170              // =368
+   77328:      	ldr	x8, [x8]
+   7732c:      	ldr	w20, [x8, #0x190]
+   77330:      	bl	0xccfa0 <__wrap__Znwm@plt>
+   77334:      	movi	v0.2d, #0000000000000000
+   77338:      	ldr	x26, [x23]
+   7733c:      	str	xzr, [x23]
+   77340:      	adrp	x8, 0xd5000
+   77344:      	add	x8, x8, #0xfc0
+   77348:      	ldr	x28, [x22]
+   7734c:      	mov	x21, x0
+   77350:      	str	x8, [x0]
+   77354:      	adrp	x8, 0xd6000
+   77358:      	add	x8, x8, #0x500
+   7735c:      	mov	x9, x0
+   77360:      	str	xzr, [x22]
+   77364:      	mov	x22, x0
+   77368:      	mov	w19, #0x3f800000        // =1065353216
+   7736c:      	mov	x23, x0
+   77370:      	mov	x24, x0
+   77374:      	stp	xzr, xzr, [x0, #0x8]
+   77378:      	str	x8, [x9, #0x18]!
+   7737c:      	str	x9, [sp, #0x80]
