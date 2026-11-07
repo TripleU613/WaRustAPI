@@ -2048,3 +2048,18 @@ so it does not claim a completely fresh call has no local side effects. It
 proves corruption does not reserve protocol work after that claim. The repaired
 control is test setup, not automatic production recovery. This is source/test
 evidence, not new APK behavior or proof of full group-send/network parity.
+
+## Transfer result classification and completion boundary
+
+2026-11-07. **Confirmed static, pinned2.26.43.72:** selected MtZ.Cb6 classifies
+a nonnegative returned code below400 through mode/path checks, rather than an
+exact200 check. MKA.A01 opaque and A02 required-path conditions plus runtime
+key3300 determine missing-path outcome29 versus0. The Lyh result separately
+retains parsed metadata, integer outcome/code and JSON-error flag. Existing
+MOu.A07 adds transferred-info/path adoption checks; MvO.ARB branches on results
+and invokes that consumer. This is not proof that every sub400 HTTP response is
+a completed reusable upload. Concrete executor/effective flags, other consumers,
+full persistence and retry authority remain open. Rust's HTTP200 acceptance and
+no-replay policy remain unchanged. See
+[complete transfer/result evidence](apk/2.26.43.72-upload-result-classification/README.md).
+No live operation or runtime change.

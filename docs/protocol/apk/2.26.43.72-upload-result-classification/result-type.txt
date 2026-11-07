@@ -1,0 +1,12 @@
+
+# class: LX/Lyh;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLI)  # .registers 3
+    # full signature: LX/Lyh;-><init>(LX/M3d;I)V
+    0000..0006  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput  v2, v0, LX/Lyh;->A06:I
+    000a..000e  iput-object  v1, v0, LX/Lyh;->A07:LX/M3d;
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method

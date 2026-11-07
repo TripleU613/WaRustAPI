@@ -20089,5 +20089,13 @@
     "x-library": [],
     "description": "Source-only inventory maps three explicit reqwest builders to registration, media upload, ordinary/view-once GET and appeal flows. Selected builders disable redirects/retries/proxy discovery/decompression; caller admission and deadlines are documented. No runtime capability or route added, no native HTTP/TLS/header parity or exhaustive dependency-path guarantee, no live validation.",
     "evidence": "docs/protocol/http-client-boundaries.md"
+  },
+  "x-upload-result-classification-evidence": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Pinned static upload transfer returned-code/mode/path classification traced through Lyh result and selected MOu/MvO consumers. Nonnegative sub400 classification and runtime3300 missing-path behavior do not establish reusable-media completion. Concrete executor/effective flags/other consumers/persistence remain partial. Existing xtask selectors reproduce retained exports; no Rust acceptance, retry, route or live behavior change.",
+    "evidence": "docs/protocol/apk/2.26.43.72-upload-result-classification/README.md"
   }
 }

@@ -9790,3 +9790,9 @@ Local public upload eligibility omission corrected at shared entry, including ca
   validated caller boundaries retained. No missing setting or runtime fix inferred.
   Native HTTP/TLS/deadline/header parity remains separate. See
   [HTTP client map](http-client-boundaries.md).
+
+- Pinned upload classifier traced: MtZ returned-code/mode/path gate differs
+  from exactly200; key3300 affects missing-path outcome. Lyh stores distinct
+  outcome/code/JSON-error state; MOu/MvO add downstream gates. Concrete executor,
+  effective flags and durable completion remain partial; no Rust acceptance or
+  retry widened. See [upload result boundary](media-network-outcomes.md#transfer-result-classification-and-completion-boundary).

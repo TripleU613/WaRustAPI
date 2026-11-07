@@ -10763,3 +10763,9 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   and validation call sites are mapped; no missing setting found or runtime
   change made. Native HTTP/TLS/header parity remains open. See
   [HTTP boundaries](docs/protocol/http-client-boundaries.md).
+
+- Retained pinned upload transfer/result classifier and downstream consumer
+  boundary. Broader native returned-code handling is not reusable-media proof;
+  missing-path flag/modes and downstream adoption remain separate. Rust200/
+  no-replay rules unchanged; no live operation. See
+  [result classification](docs/protocol/media-network-outcomes.md#transfer-result-classification-and-completion-boundary).

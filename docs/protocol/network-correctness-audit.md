@@ -6287,3 +6287,9 @@ evidence, not new APK behavior or proof of full group-send/network parity.
   validated caller boundaries retained. No missing setting or runtime fix inferred.
   Native HTTP/TLS/deadline/header parity remains separate. See
   [HTTP client map](http-client-boundaries.md).
+
+- Pinned upload classifier traced: MtZ returned-code/mode/path gate differs
+  from exactly200; key3300 affects missing-path outcome. Lyh stores distinct
+  outcome/code/JSON-error state; MOu/MvO add downstream gates. Concrete executor,
+  effective flags and durable completion remain partial; no Rust acceptance or
+  retry widened. See [upload result boundary](media-network-outcomes.md#transfer-result-classification-and-completion-boundary).

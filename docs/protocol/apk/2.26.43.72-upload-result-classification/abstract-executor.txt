@@ -1,0 +1,9 @@
+
+# class: LX/K2k;
+# extends: Ljava/lang/Object;
+
+.method public A04(ILLI)  # .registers 0
+    # full signature: LX/K2k;->A04(LX/M3d;Ljava/lang/String;I)I
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method
