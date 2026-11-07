@@ -10526,3 +10526,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   sentinels and can install partially populated vectors after bounds logging.
   Lookup preserves upper 48 bits and returns low-16 sentinel for out-of-range
   inputs; downstream sentinel handling remains unknown. See [mapping trace](docs/protocol/apk/2.26.43.72-mobileconfig-handle-publication/mapping.md).
+
+- Confirmed selected APK 2.26.43.72 `getBoolData` raw-byte default is `0x11`,
+  with cached/actual vector-count checks and optional corruption logging.
+  Boolean decoding and translator-sentinel caller binding remain unknown. See
+  [reader evidence](docs/protocol/apk/2.26.43.72-mobileconfig-handle-publication/bool-reader.md).

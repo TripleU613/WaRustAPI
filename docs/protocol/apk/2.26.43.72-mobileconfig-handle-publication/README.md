@@ -147,3 +147,7 @@ readiness rather than the later root probe; nested builder semantics remain open
 The [vector mapping trace](mapping.md) confirms sentinel-filled u16 mappings,
 bounds-log continuation into vector installation, and packed lookup preserving
 upper bits. Nonempty-vector readiness is not complete mapping coverage.
+
+The [raw boolean-data reader](bool-reader.md) now records count/default paths
+and pinned raw default byte 0x11. Typed sentinel caller and value decoding remain
+unresolved; raw nonzero must not be assumed to mean a Rust boolean.

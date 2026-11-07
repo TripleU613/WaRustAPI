@@ -1,7 +1,31 @@
 {
   "README.md": {
-    "bytes": 8457,
-    "sha256": "725d7b7e8046576dfed7675a1e2df3ce1db916d7e6ade9063529a2dbf85c9406"
+    "bytes": 8686,
+    "sha256": "41f063d24bdd7480adccb218fe38e5507d771bdc44acdc47276dd0b1ecc870cc"
+  },
+  "bool-reader-accessor.txt": {
+    "bytes": 851,
+    "sha256": "c9bc457912547cb8b0ad265a1d08532e193b4a804d20f2ee4c3b2d2e28b4c36e"
+  },
+  "bool-reader-args.txt": {
+    "bytes": 380,
+    "sha256": "6ff9f8cac6139d5003f23893bc70134dbe20695962eea441b13dc34943994df2"
+  },
+  "bool-reader-body.txt": {
+    "bytes": 4817,
+    "sha256": "68eb858e7fe518d6f91fdbc6fdc7296b5547ae80609f5013b33b2fecf9d67c8b"
+  },
+  "bool-reader-data.json": {
+    "bytes": 312,
+    "sha256": "bff14d5db1efb332084cc72b596c18d7fe10f72cacfc6275918730e9e2d6b43c"
+  },
+  "bool-reader-slots.txt": {
+    "bytes": 83,
+    "sha256": "d8cadbd3ef20cea817c422cb77b5a7691b376a93584bbdfdd33e5f68c273966c"
+  },
+  "bool-reader.md": {
+    "bytes": 2957,
+    "sha256": "a64a3090ddef6f2c4a154365562cfa53cd8506ee8bfa6ea30cdcc7295f202a4c"
   },
   "candidate-wrapper.txt": {
     "bytes": 1941,
@@ -122,6 +146,10 @@
   "publication.json": {
     "bytes": 1772,
     "sha256": "6ec1767e1b38091042d6e4fff410bf0c860e6fe491ccd376de9526451bd4c04c"
+  },
+  "rea-bool-reader.json": {
+    "bytes": 5805,
+    "sha256": "b002223b878215aa1646d419c7a9526fac35a01b71f18e5e3b2ec19a499e5429"
   },
   "rea-consumer.json": {
     "bytes": 6961,
