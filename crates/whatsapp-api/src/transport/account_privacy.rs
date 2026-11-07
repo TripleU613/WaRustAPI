@@ -123,8 +123,8 @@ fn parse(node: &Node) -> Result<Option<Update>> {
     // Local supported route: server-only envelope, first event is privacy.
     // APK43.72 19N.A09 selects0Tp.A0D; later event siblings are not applied.
     attributes(node, &["from", "id", "type", "t"])?;
-    let from =
-        super::receipts::jid(node, "from").ok_or_else(|| invalid("invalid account-sync source"))?;
+    let from = super::notifications::ack_route(node, "from")
+        .ok_or_else(|| invalid("invalid account-sync source"))?;
     if from != Jid::parse("s.whatsapp.net")? {
         return Err(invalid("unsupported account-sync source"));
     }
@@ -412,6 +412,7 @@ mod tests {
         let cases = vec![
             good.clone().attr("from", "15555550100@s.whatsapp.net"),
             good.clone().attr("from", "s.whatsapp.net:1"),
+            good.clone().attr("from", "@s.whatsapp.net"),
             good.clone()
                 .attr("participant", "15555550100@s.whatsapp.net"),
             good.clone().attr("recipient", "15555550100@s.whatsapp.net"),
@@ -451,8 +452,8 @@ mod tests {
         ];
         let before = snapshot(&store);
         for case in cases {
-            assert!(validate(&case).is_err());
             assert!(handle(&store, &case).is_err());
+            assert!(validate(&case).is_err());
             assert_eq!(snapshot(&store), before);
         }
     }

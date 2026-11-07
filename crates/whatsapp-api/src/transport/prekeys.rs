@@ -1130,7 +1130,7 @@ pub fn low_count_ack(node: &Node) -> Result<Node> {
     let to = node
         .get_attr("from")
         .map(|_| {
-            super::receipts::jid(node, "from")
+            super::notifications::ack_route(node, "from")
                 .ok_or_else(|| invalid("count notification has invalid source"))
         })
         .transpose()?;
@@ -3645,6 +3645,9 @@ mod tests {
             ack.get_attr("type").and_then(|v| v.as_text()),
             Some("encrypt")
         );
+        for source in ["@s.whatsapp.net", "@lid", "@g.us"] {
+            assert!(low_count_ack(&node.clone().attr("from", source)).is_err());
+        }
         let pq_only = Node::new("notification")
             .attr("type", "encrypt")
             .attr("id", "N2")
@@ -3657,6 +3660,7 @@ mod tests {
                 pq: Some(3)
             })
         );
+        assert!(low_count_ack(&pq_only).unwrap().get_attr("to").is_none());
         for other in [
             Node::new("notification")
                 .attr("type", "encrypt")

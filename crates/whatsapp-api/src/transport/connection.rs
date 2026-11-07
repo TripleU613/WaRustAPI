@@ -3181,6 +3181,42 @@ mod tests {
                     .is_none()
             );
         }
+        // A malformed server source must not acquire authority to adopt settings.
+        let malformed = Node::new("notification")
+            .attr("type", "account_sync")
+            .attr("from", "@s.whatsapp.net")
+            .attr("id", "EMPTY-USER-SOURCE")
+            .children(vec![Node::new("privacy").children(
+                vec![Node::new("category")
+                .attr("name", "readreceipts")
+                .attr("value", "all")],
+            )]);
+        let capture = format!(
+            "inbound:sha256:{}",
+            hex::encode(sha2::Sha256::digest(encode(&malformed).unwrap()))
+        );
+        fake.deliver(malformed).await;
+        fake.deliver(
+            Node::new("iq")
+                .attr("type", "get")
+                .attr("xmlns", "urn:xmpp:ping"),
+        )
+        .await;
+        let (pong, written) = fake.written().await;
+        assert_eq!(pong.description, "iq");
+        written.send(Ok(())).unwrap();
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                .unwrap()
+                .is_some()
+        );
+        assert!(
+            super::super::account_privacy::read_receipts(&store)
+                .unwrap()
+                .is_none()
+        );
+        fake.nothing_written(Duration::from_millis(30)).await;
         fake.stop_cleanly().await;
     }
 
@@ -6772,6 +6808,12 @@ mod tests {
         ]))
         .await;
         fake.nothing_written(Duration::from_millis(100)).await;
+        for source in ["@s.whatsapp.net", "@lid", "@g.us"] {
+            fake.deliver(count_notification("invalid-source", "count", "7").attr("from", source))
+                .await;
+        }
+        fake.nothing_written(Duration::from_millis(100)).await;
+        assert_eq!(summary(&store).unwrap().uploaded, 50);
         // PQ-first dispatch ignores a later legacy child and never uploads.
         let mut pq = count_notification("pq", "pq_count", "٢").children(vec![
             Node::new("pq_count"),

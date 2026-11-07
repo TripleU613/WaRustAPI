@@ -456,7 +456,7 @@ pub fn handle_dirty_notification(store: &ProtocolStore, node: &Node) -> Result<O
     // Local input restrictions are stronger than the APK raw-string extraction.
     // Invalid/empty lists stay captured rather than acknowledging an empty job.
     let prepare = || -> Result<_> {
-        let from = super::receipts::jid(node, "from")
+        let from = super::notifications::ack_route(node, "from")
             .ok_or_else(|| invalid("dirty notification source is missing or invalid"))?;
         let id = node
             .get_attr("id")
@@ -465,7 +465,7 @@ pub fn handle_dirty_notification(store: &ProtocolStore, node: &Node) -> Result<O
             .ok_or_else(|| invalid("dirty notification ID is missing or outside local bound"))?;
         let participant = if node.get_attr("participant").is_some() {
             Some(
-                super::receipts::jid(node, "participant")
+                super::notifications::ack_route(node, "participant")
                     .ok_or_else(|| invalid("dirty notification participant is invalid"))?,
             )
         } else {
@@ -2750,6 +2750,8 @@ mod tests {
             "other-child",
             "missing-id",
             "bad-participant",
+            "empty-user-source",
+            "empty-user-participant",
         ] {
             let (_dir, s) = store();
             let mut node = Node::new("notification")
@@ -2760,6 +2762,12 @@ mod tests {
             }
             if case == "bad-participant" {
                 node = node.attr("participant", "user:broken@s.whatsapp.net");
+            }
+            if case == "empty-user-source" {
+                node = node.attr("from", "@s.whatsapp.net");
+            }
+            if case == "empty-user-participant" {
+                node = node.attr("participant", "@lid");
             }
             let group = Node::new("group").attr(
                 "jid",

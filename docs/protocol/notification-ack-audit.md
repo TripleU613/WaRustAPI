@@ -38,6 +38,8 @@ current-APK parity for every handler. Most other handler traces are retained
 
 | Recognized notification | Existing ACK path | Before ACK / limits |
 | --- | --- | --- |
+| `account_sync` / supported privacy | `account_privacy::handle` | Server-only supported source, all selected readreceipts categories adopted atomically with deduplication before ACK; mixed/modify/unowned setters stay refused |
+| `picture` | `notifications::picture_ack` | Base ACK after durable capture; photo/marker application and complete native work parity remain unported |
 | `privacy_token` | `notifications::handle` | Validate and atomically store supported tokens; ignored subtypes no longer suppress ACK |
 | `w:gp2` / `groups_dirty` | `groups::handle_dirty_notification` | Queue refresh durably; malformed wire inputs return no ACK, not receive termination |
 | Other `w:gp2` | `groups::notification_ack` | Known-type base ACK after capture; membership/change application remains partial |
@@ -580,3 +582,51 @@ identity cut/recovery, binary zero-device privacy tokens and expanded unused
 alias controls. Strict Clippy, formatting, OpenAPI library symbols, regenerated
 CLI reference, APK coverage and repository hygiene pass;8013 local links and
 451 APK checksum bundles checked. All validation is offline.
+
+
+## Remaining ACK builders preserve raw route refusal (2026-11-06)
+
+**Confirmed local defects / fixed offline:** the shared/identity routing fix did
+not cover device, prekey-count, dirty-group or account-privacy builders. Each
+still parsed raw empty-user text into a server JID before constructing its
+ACK or applying state. Four extended regressions failed: device/count returned
+ACKs, dirty-group admitted a refresh, and account privacy accepted malformed
+server-source validation and handle. All four now call notifications::ack_route
+for their envelope from, and dirty-group also uses it for participant. Existing
+native-null versus local-invalid policy is preserved: count still omits to for
+an absent source; explicitly malformed supplied source is refused. No new
+namespace whitelist, required source for count, global JID change or retry.
+
+**Reused confirmed static evidence:** current pinned APK43.72 digest887a6f94
+was freshly verified. The [current key/getter/parser/writer chain](apk/2.26.43.72-notification-route-boundary/README.md)
+shows0Dd.A00's index-zero @ throw, nullable getter and F3e omitted-null fields.
+[Base0v6.BLn](apk/2.26.43.72-count-content-error-ack/base-handler.txt) invokes
+F0R.A02 at0052..005a; [dirty-group ingress](apk/2.26.43.72-group-missing-identification/README.md)
+and [account-sync handler](rea/2.26.43.72-notification-sync-obligations/account-sync-dex.txt)
+retain their separate obligations. No new REA Evidence ID or copied export is
+claimed. This does not prove a blanket native fatal-address policy: Rust's
+existing supported-envelope refusal remains stricter than nullable native ACKs.
+
+**State and receive boundaries:** dirty-group regression now proves malformed
+source/participant creates no ACK or queued action. Account-privacy checks every
+checkpoint unchanged after refusal; its receive regression captures a malformed
+server-source notification with otherwise supported readreceipts/all, leaves
+preference unknown, and reaches a ping result without extra output. Count receive
+regression injects malformed sources before ordinary no-source PQ and legacy
+count controls: no ACK/upload from malformed input; valid controls continue and
+retain normal upload bounds. Device builder rejects invalid text; its existing
+primary-owner receive filtering and pending-device handling remain unchanged.
+Existing zero/nonzero PN/LID routing controls still apply.
+
+**Unknown:** full device/count/dirty-group native scheduling and state parity,
+all special JID subtypes, remaining notification families and live acceptance.
+This is not an all-network completion claim. The inventory above now explicitly
+lists previously implemented picture/account-privacy paths that were missing
+from that table. No account operation or new automatic request was performed.
+
+Verification: all1544 workspace/all-feature tests pass, including the four
+extended failing-before regressions and actor capture/continuation/no-upload
+controls. Strict workspace/all-target/all-feature Clippy, formatting, OpenAPI
+library symbols, regenerated CLI reference, APK coverage and repository hygiene
+pass. Hygiene checked8020 local links and451 APK checksum bundles. Offline
+results do not establish native runtime parity or live server acceptance.

@@ -368,3 +368,23 @@ adoption or resend. Full workspace:1534 tests, nine suites including doc tests.
 No new sender, replay, timer, automatic refresh or live-account operation.
 Native category-keyed owner, effective protocol selection and success recovery
 remain unported; this conservative recognition is broader than native ownership.
+
+
+## Preserve the raw server-source boundary (2026-11-06)
+
+**Confirmed local fix / offline:** generic Jid parsing repaired raw
+`@s.whatsapp.net` into the server-only value used by account_sync admission.
+Malformed source text could consequently pass validate and handle with a
+supported category. The extended checkpoint-preservation test failed before
+correction. Source reading now goes through the shared notification ack_route
+text guard before the existing exact-server comparison, preventing repaired
+text from acquiring local settings authority. Every earlier category, duplicate,
+setter-ownership and atomic persistence guard remains.
+
+The receive regression delivers that source with an otherwise supported
+readreceipts/all category, checks durable capture, unknown preference and a
+subsequent ping result without extra output. Valid-source commit-before-ACK,
+write-failure and reopen tests remain. [Current parser evidence and other ACK builders](notification-ack-audit.md#remaining-ack-builders-preserve-raw-route-refusal-2026-11-06)
+distinguish native nullable-address handling from this stricter local supported
+source policy. This is not a native transport-authentication or complete
+account_sync port claim. No live operation or policy-changing request added.

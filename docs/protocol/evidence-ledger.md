@@ -1,3 +1,11 @@
+2026-11-06 — **Closed raw-route gaps in remaining notification ACK builders.**
+Device, prekey-count, dirty-group and account-privacy envelope readers now share
+empty-user text refusal. Malformed text cannot gain local server settings
+admission or queue dirty-group refreshes. Absent-source count ACKs remain valid.
+[Evidence, state/receive regressions and remaining limits](notification-ack-audit.md#remaining-ack-builders-preserve-raw-route-refusal-2026-11-06).
+Updated the ACK inventory to include existing picture/account-privacy paths.
+No live account operation.
+
 2026-11-06 — **Closed separate notification address-reader gaps.**
 Identity ACK participant routing now shares malformed empty-user text refusal.
 Privacy-token sender/consumed alias readers distinguish explicit .0/:0 text

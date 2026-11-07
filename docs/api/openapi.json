@@ -1,4 +1,11 @@
 {
+  "x-remaining-notification-raw-route-guards": {
+    "x-cli": false,
+    "x-transport": "devices::notification_ack; prekeys::low_count_ack; groups::handle_dirty_notification; account_privacy::validate/handle",
+    "x-live": false,
+    "description": "Remaining notification envelope builders now use shared ack_route raw empty-user text refusal for from; dirty-group also guards participant. Malformed @server text cannot become an ACK route, settings-source authority or dirty-group refresh input through generic parser repair. Four regressions failed before correction. Account-privacy capture/no-adoption/receive continuation, dirty-group no-queue, count no-ACK/no-upload and absent-source controls are covered offline. Native nullable-address versus local invalid-input policy remains distinct; missing count source still omits to. Existing namespace, device owner, callback, bounds and persistence rules remain. ACK inventory includes already implemented picture/account-privacy paths. No global parser, required source for count, automatic request family, retry, HTTP route or live operation added.",
+    "evidence": "docs/protocol/notification-ack-audit.md#remaining-ack-builders-preserve-raw-route-refusal-2026-11-06"
+  },
   "x-separate-notification-address-guards": {
     "x-cli": false,
     "x-transport": "identity_notifications::notification_ack; notifications::handle/record/validate",

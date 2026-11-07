@@ -317,7 +317,8 @@ pub fn notification_ack(node: &Node) -> Result<Node> {
     let id = attr_text(node, "id")
         .filter(|v| !v.is_empty() && v.len() <= 128)
         .ok_or_else(|| invalid("devices notification without id"))?;
-    let to = attr_jid(node, "from").ok_or_else(|| invalid("devices notification without from"))?;
+    let to = super::notifications::ack_route(node, "from")
+        .ok_or_else(|| invalid("devices notification without from"))?;
     Ok(Node::new("ack")
         .attr("to", super::receipts::ack_address(to))
         .attr("id", id)
@@ -2624,6 +2625,9 @@ mod tests {
                         Node::new("key-index-list").attr("ts", "1700000000"),
                     ]),
             ]);
+        for source in ["@s.whatsapp.net", "@lid", "@g.us"] {
+            assert!(notification_ack(&node.clone().attr("from", source)).is_err());
+        }
         let parsed = notification(&node).unwrap();
         assert_eq!(parsed.owner, contact());
         assert!(parsed.added);

@@ -255,7 +255,7 @@ pub(crate) fn base_ack(node: &Node, kind: &str) -> Result<Option<Node>> {
 }
 
 // APK43.72 F0R.A00 -> 0Tp.A0A -> 0Dd.A00 rejects text whose last @ is
-// at index zero. Keep that boundary for shared and identity notification ACKs.
+// at index zero. Keep that boundary in supported notification ACK builders.
 // Native nullable-address policy remains separate; see notification-ack-audit.md.
 pub(super) fn ack_route(node: &Node, name: &str) -> Option<crate::model::jid::Jid> {
     if node
