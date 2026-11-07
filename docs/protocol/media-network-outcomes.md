@@ -1262,3 +1262,67 @@ Late upload response account ownership and complete native transfer/refresh/cloc
 parity remain independent audit work. Existing uncertain POST reservations remain
 held; this change never resets or replays them. Cached completed payload behavior
 and the current local route-TTL/auth-TTL minimum policy remain unchanged.
+
+
+## Upload response adoption and prospective cache owner (2026-11-06)
+
+**Confirmed Rust authority gap / implemented offline.** Reservation-time account
+checks did not constrain final upload promotion: after HTTP completed, an unchanged
+pending row could become uploaded even if the account was removed/revoked or its
+phone/generation changed. Raw observation and payload authority are now separated.
+This is a local storage/authority correction, not a claim that the pinned APK uses
+this schema or that its full logout/cancellation/account lifecycle was traced.
+
+New reservations atomically add encrypted checkpoint fields:
+
+- upload_owner_version: integer1;
+- upload_owner: generation and the existing structured PhoneNumber.
+
+These fields are LOCAL at-rest metadata. They are not HTTP headers/body/query,
+media protobuf, device provenance or server-account claims. No new credential is
+created. The owner captures only the registered phone/generation already consumed
+by upload preparation; Noise/Signal identity replacement under the same owner is
+not newly classified here.
+
+Header/body captures and response_received transitions remain independent of
+mutable account registration, under the existing store-generation/authentication
+and reservation-snapshot guards. A late200 observation can thus remain durable
+without proving usable upload success. Final promotion now atomically requires
+current registered phone/generation to match the prepared account, prospective
+owner metadata to match, next owner fields to preserve the original binding, and
+the original expected row to remain unchanged. It does NOT require route auth to
+remain fresh after the server already completed a request. Failed adoption leaves
+response_received/uncertain state held, returns no payload and authorizes no POST
+replay, reservation reset or outbox/ratchet work.
+
+Bound uploaded-cache rows receive the same phone/generation check before reuse,
+even when the new registered account matches the caller's new config. Both
+prepare and prepare_outbox use it. A missing half, invalid/unknown version or
+malformed structured owner remains a redacted STORAGE serialization error, not
+silent fallback. Promotion cannot drop/change owner metadata to create a legacy
+row. New rows always have both fields; no schema backfill or read-time mutation
+is performed.
+
+Historical rows with NEITHER marker retain their prior documented unbound cache
+policy and initial registered-account/config-phone checks. Their original owner
+cannot be inferred, and this change does not invent one. Existing public legacy
+cache/group binding and uncertain-replay tests still pass. This compatibility
+boundary is explicitly not full historical cache ownership proof; migration or
+recovery needs separate evidence and scope. Completely absent provenance cannot
+be distinguished from historical format by merely guessing from timestamps.
+
+Real-store late-result tests cover current account, benign authentication-time
+update, missing/revoked/other-phone/wrong-generation account, replaced row,
+malformed/missing owner/version, different owner and changed next-owner fields.
+Header/body observations remain readable; rejected promotion preserves EVERY
+remaining table/journal exactly and survives reopen. Success retains the same
+binding and produces the existing reusable payload. The public cache regression
+first reuses a bound completed row under its owner, then changes registered phone
+AND config and verifies both preparation APIs refuse without state changes or a
+network route. This avoids falsely relying on the initial config mismatch guard.
+
+**Still open:** same-phone identity/lifecycle changes, legacy unbound provenance,
+HTTP cancellation/ownership after commit, store-generation loss/removal, and full
+native upload/account/queue behavior. Observation retention never bypasses store
+lease/authentication failures. These tests perform no HTTP/account operation and
+prove neither server acceptance nor freedom from restrictions.

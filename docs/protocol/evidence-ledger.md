@@ -1,3 +1,10 @@
+2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
+New encrypted phone/generation metadata gates final uploaded promotion and cache
+reuse. Revoked/replaced accounts cannot adopt late payloads, while HTTP evidence
+remains durable. Tests cover owner/metadata/stale-row faults, every-table/journal
+preservation, reopen and public cross-phone cache refusal. Legacy stays unbound.
+[Format, tested guarantees and remaining lifecycle scope](media-network-outcomes.md#upload-response-adoption-and-prospective-cache-owner-2026-11-06). No live operation.
+
 2026-11-06 — **Fenced media upload reservation with current route/account state.**
 After preparation, expiry/host/auth/registration/phone/generation are rechecked
 transactionally. Seed and pending upload commit together; failed checks/builds

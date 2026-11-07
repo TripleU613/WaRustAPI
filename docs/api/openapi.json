@@ -1,4 +1,11 @@
 {
+  "x-media-upload-response-owner": {
+    "x-cli": "existing media preparation, response settlement and cache reuse; no new command or flag",
+    "x-transport": "versioned local phone/generation ownership for prospective upload result promotion and completed cache reuse",
+    "x-live": false,
+    "description": "New encrypted checkpoints carry upload_owner_version=1 and upload_owner={generation,phone}; neither field is sent in HTTP/protobuf. Final uploaded promotion atomically requires current registered owner, preserved owner fields and exact expected reservation. Raw HTTP header/body observations remain independent and durable where the original store lease permits, without granting payload/replay authority. Bound cache rows check owner before prepare/prepare_outbox reuse even when new config matches another registered phone. Missing halves/invalid versions/malformed owner remain redacted storage errors; historical rows with neither marker keep the prior unbound policy without backfill. Real-store tests cover owner/stale-row/metadata faults, benign auth-time update, every-table/journal/reopen preservation and public cross-phone cache refusal. Same-phone identity/lifecycle, historical provenance and in-flight cancellation/native parity remain open. No HTTP route, automatic reset/retry or live account operation.",
+    "evidence": "docs/protocol/media-network-outcomes.md"
+  },
   "x-media-upload-reservation-authority": {
     "x-cli": "existing media upload preparation paths; no new command or flag",
     "x-transport": "current route/account checks and atomic seed plus outcome_unknown upload reservation",

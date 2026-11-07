@@ -5462,3 +5462,19 @@ Tests cover all-table/journal preservation with/without seeds, reopen, successfu
 atomic commit, duplicate refusal and uncommitted owner/corruption visibility.
 [Native versus local scope, preparation window and remaining response/transfer work](media-network-outcomes.md#atomic-upload-routeaccount-fence-at-reservation-2026-11-06).
 No live account operation; this is not full native post-commit lifetime parity.
+
+
+## Late upload observation is not account authority (2026-11-06)
+
+**Confirmed Rust gap / implemented local owner binding:** new upload reservations
+store version1 phone/generation metadata. Final payload promotion rechecks current
+registered owner and exact reservation in one transaction, preserving owner fields.
+Raw headers/body remain observations even after revocation; they cannot alone
+produce uploaded status, payload reuse or resend authority. Prospective completed
+cache rows check the owner before both preparation paths return bytes. Corrupt or
+partially missing version/owner metadata remains a redacted storage error.
+Tests cover owner loss/replacement, benign auth-time updates, stale rows, metadata
+faults, all-table/journal/reopen preservation and real cache/config cross-phone
+refusal. Historical unbound rows remain explicitly legacy, without backfill.
+[Format, native-versus-local scope and remaining lifecycle/cancellation work](media-network-outcomes.md#upload-response-adoption-and-prospective-cache-owner-2026-11-06).
+No live operation or automatic retry/reset.

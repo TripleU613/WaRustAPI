@@ -568,21 +568,95 @@ fn locations(response: &serde_json::Value) -> Result<(String, String)> {
     Ok((url.to_owned(), path.to_owned()))
 }
 
+#[derive(serde::Serialize, serde::Deserialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+struct UploadOwner {
+    generation: crate::model::ids::AccountGeneration,
+    phone: crate::model::phone::PhoneNumber,
+}
+
+fn upload_owner(
+    account: &crate::session::AccountRecord,
+    generation: crate::model::ids::AccountGeneration,
+) -> Result<UploadOwner> {
+    if !account.is_registered() || account.generation != generation {
+        return Err(Error::NotRegistered);
+    }
+    Ok(UploadOwner {
+        generation,
+        phone: account.phone.clone().ok_or(Error::NotRegistered)?,
+    })
+}
+
+// Prospective owner binding only. Historical completed rows are not assigned
+// invented provenance; their existing cache policy remains a separate boundary.
+fn check_upload_owner(saved: &serde_json::Value, expected: &UploadOwner) -> Result<()> {
+    let corrupt = || {
+        Error::Storage(crate::store::StoreError::Serialization(
+            "invalid stored upload owner".into(),
+        ))
+    };
+    match (saved.get("upload_owner_version"), saved.get("upload_owner")) {
+        (None, None) => Ok(()), // Historical, unbound compatibility policy.
+        (Some(version), Some(value)) if version.as_u64() == Some(1) => {
+            let owner: UploadOwner =
+                serde_json::from_value(value.clone()).map_err(|_| corrupt())?;
+            if &owner != expected {
+                return Err(invalid("saved upload belongs to another account"));
+            }
+            Ok(())
+        }
+        _ => Err(corrupt()),
+    }
+}
+
+fn replace_upload_state_in(
+    tx: &mut crate::store::WriteTx<'_>,
+    key: &str,
+    expected: &serde_json::Value,
+    next: &serde_json::Value,
+) -> Result<()> {
+    let current: Option<serde_json::Value> = tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?;
+    if current.as_ref() != Some(expected) {
+        return Err(invalid(
+            "upload reservation changed before response settlement",
+        ));
+    }
+    tx.put_json(Table::Checkpoints, key.as_bytes(), 1, next)
+}
+
 fn replace_upload_state(
     store: &ProtocolStore,
     key: &str,
     expected: &serde_json::Value,
     next: &serde_json::Value,
 ) -> Result<()> {
+    store.write(|tx| replace_upload_state_in(tx, key, expected, next))
+}
+
+fn promote_upload(
+    store: &ProtocolStore,
+    account: &crate::session::AccountRecord,
+    key: &str,
+    expected: &serde_json::Value,
+    next: &serde_json::Value,
+) -> Result<()> {
     store.write(|tx| {
-        let current: Option<serde_json::Value> =
-            tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?;
-        if current.as_ref() != Some(expected) {
-            return Err(invalid(
-                "upload reservation changed before response settlement",
-            ));
+        let owner = upload_owner(account, tx.generation())?;
+        let current =
+            crate::session::AccountRecord::load_in_write(tx)?.ok_or(Error::NotRegistered)?;
+        if upload_owner(&current, tx.generation())? != owner {
+            return Err(Error::NotRegistered);
         }
-        tx.put_json(Table::Checkpoints, key.as_bytes(), 1, next)
+        check_upload_owner(expected, &owner)?;
+        if next.get("upload_owner") != expected.get("upload_owner")
+            || next.get("upload_owner_version") != expected.get("upload_owner_version")
+        {
+            return Err(invalid("upload owner changed before promotion"));
+        }
+        // Observed headers/body remain independent; only final payload adoption
+        // requires current account authority plus the original row snapshot.
+        replace_upload_state_in(tx, key, expected, next)
     })
 }
 
@@ -806,18 +880,16 @@ fn reserve_upload(
                 seed
             }
         };
-        let (url, saved) = build(&seed)?;
+        let (url, mut saved) = build(&seed)?;
         let current =
             crate::session::AccountRecord::load_in_write(tx)?.ok_or(Error::NotRegistered)?;
-        if !current.is_registered()
-            || !account.is_registered()
-            || current.generation != account.generation
-            || current.generation != tx.generation()
-            || current.phone.is_none()
-            || current.phone != account.phone
-        {
+        let owner = upload_owner(account, tx.generation())?;
+        if upload_owner(&current, tx.generation())? != owner {
             return Err(Error::NotRegistered);
         }
+        saved["upload_owner"] =
+            serde_json::to_value(&owner).map_err(|_| invalid("cannot encode upload owner"))?;
+        saved["upload_owner_version"] = 1.into();
         let latest =
             select_route_record(super::media_routing::refresh::active_record_in(tx)?, || {
                 tx.scan(Table::Checkpoints, 1, 10000)
@@ -861,6 +933,9 @@ async fn upload_prepared(
     let old: Option<serde_json::Value> =
         store.read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))?;
     if let Some(old) = old {
+        if old.get("upload_owner_version").is_some() || old.get("upload_owner").is_some() {
+            check_upload_owner(&old, &upload_owner(&account, store.generation())?)?;
+        }
         return saved_payload(&old, &hash, &recipient);
     }
     // APK43.72 RlW installs WAUserAgentInterceptor: HTTPS requests without
@@ -1046,7 +1121,7 @@ async fn upload_prepared(
     };
     saved["protobuf"] = serde_json::json!(&*payload);
     saved["status"] = "uploaded".into();
-    replace_upload_state(store, &key, &response_state, &saved)?;
+    promote_upload(store, &account, &key, &response_state, &saved)?;
     Ok(payload)
 }
 
@@ -1399,6 +1474,237 @@ mod tests {
                 before
             );
         }
+    }
+
+    #[test]
+    fn late_upload_observations_survive_owner_loss_without_payload_promotion() {
+        use super::*;
+        use crate::{
+            model::{ids::AccountId, phone::PhoneNumber},
+            session::{AccountRecord, RegistrationStatus},
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        for change in [
+            "none",
+            "auth-observation",
+            "missing",
+            "revoked",
+            "phone",
+            "generation",
+            "row-replaced",
+            "owner-corrupt",
+            "owner-missing",
+            "version-missing",
+            "owner-mismatch",
+            "next-owner",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("upload-response-owner.redb");
+            let open = |create| {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: AccountId::new("upload-owner").unwrap(),
+                    key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([6; 32]))),
+                    create,
+                })
+                .unwrap()
+            };
+            let store = open(true);
+            let config: LabRegistrationConfig =
+                serde_json::from_str(crate::registration::request::TEMPLATE_JSON).unwrap();
+            let account = AccountRecord {
+                generation: store.generation(),
+                phone: Some(config.phone.clone()),
+                registration: RegistrationStatus::Registered,
+                ..Default::default()
+            };
+            let owner = upload_owner(&account, store.generation()).unwrap();
+            let key = "message:owner:upload";
+            let pending = serde_json::json!({"status":"outcome_unknown","hash":"fixture","to":"fixture",
+                "encrypted_hash":[3,4,5],"upload_owner_version":1,"upload_owner":serde_json::to_value(&owner).unwrap()});
+            store
+                .write(|tx| {
+                    account.save(tx)?;
+                    tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &pending)
+                })
+                .unwrap();
+            store
+                .write(|tx| {
+                    if change == "missing" {
+                        tx.delete(Table::Account, b"account")?;
+                        return Ok(());
+                    }
+                    let mut current = account.clone();
+                    match change {
+                        "revoked" => current.registration = RegistrationStatus::Revoked,
+                        "phone" => current.phone = Some(PhoneNumber::new(1, "5555550199")?),
+                        "generation" => current.generation.0 += 1,
+                        "auth-observation" => current.last_authenticated_at = Some(Timestamp(123)),
+                        _ => {}
+                    }
+                    current.save(tx)
+                })
+                .unwrap();
+            let header_capture = capture_upload_response(&store, key, &pending, 200, None).unwrap();
+            let headers = retain_response_headers(&store, key, 200, &pending).unwrap();
+            let body_capture =
+                capture_upload_response(&store, key, &headers, 200, Some(b"synthetic response"))
+                    .unwrap();
+            let mut body = headers.clone();
+            body["status"] = "response_received".into();
+            body["response"] = serde_json::json!(b"synthetic response");
+            match change {
+                "owner-corrupt" => {
+                    body["upload_owner"] = serde_json::json!({"private-sentinel":true})
+                }
+                "owner-missing" => {
+                    body.as_object_mut().unwrap().remove("upload_owner");
+                }
+                "version-missing" => {
+                    body.as_object_mut().unwrap().remove("upload_owner_version");
+                }
+                "owner-mismatch" => {
+                    body["upload_owner"]["generation"] = serde_json::json!(store.generation().0 + 1)
+                }
+                _ => {}
+            }
+            replace_upload_state(&store, key, &headers, &body).unwrap();
+            if change == "row-replaced" {
+                store
+                    .write(|tx| {
+                        let mut row = body.clone();
+                        row["status"] = "refused".into();
+                        tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &row)
+                    })
+                    .unwrap();
+            }
+            let snapshot = |store: &ProtocolStore| {
+                store
+                    .read(|tx| {
+                        Ok((
+                            Table::ALL
+                                .iter()
+                                .map(|table| tx.scan(*table, 1, 100))
+                                .collect::<Result<Vec<_>>>()?,
+                            tx.journal_head()?,
+                        ))
+                    })
+                    .unwrap()
+            };
+            let before = snapshot(&store);
+            let mut uploaded = body.clone();
+            uploaded["status"] = "uploaded".into();
+            uploaded["protobuf"] = serde_json::json!([26, 0]);
+            if change == "next-owner" {
+                uploaded["upload_owner"]["generation"] =
+                    serde_json::json!(store.generation().0 + 1);
+            }
+            let result = promote_upload(&store, &account, key, &body, &uploaded);
+            if matches!(change, "none" | "auth-observation") {
+                result.unwrap();
+                check_upload_owner(&uploaded, &owner).unwrap();
+                assert_eq!(
+                    &*saved_payload(&uploaded, "fixture", "fixture").unwrap(),
+                    &[26, 0]
+                );
+            } else {
+                let error = result.unwrap_err();
+                assert!(!error.to_string().contains("private-sentinel"));
+                if matches!(
+                    change,
+                    "owner-corrupt" | "owner-missing" | "version-missing"
+                ) {
+                    assert!(matches!(
+                        error,
+                        Error::Storage(crate::store::StoreError::Serialization(_))
+                    ));
+                }
+                assert_eq!(snapshot(&store), before, "{change}");
+                assert!(saved_payload(&body, "fixture", "fixture").is_err());
+            }
+            for capture in [&header_capture, &body_capture] {
+                assert!(
+                    store
+                        .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                        .unwrap()
+                        .is_some()
+                );
+            }
+            let settled = snapshot(&store);
+            drop(store);
+            let reopened = open(false);
+            assert_eq!(snapshot(&reopened), settled);
+        }
+    }
+
+    #[tokio::test]
+    async fn prospective_uploaded_cache_cannot_cross_registered_phone_ownership() {
+        use super::*;
+        use crate::session::{AccountRecord, RegistrationStatus};
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("owned-cache.redb");
+        let store = super::super::group_fanout::tests::open(&path);
+        let source = dir.path().join("fixture.png");
+        let mut png = b"\x89PNG\r\n\x1a\n\0\0\0\rIHDR".to_vec();
+        png.extend_from_slice(&1u32.to_be_bytes());
+        png.extend_from_slice(&1u32.to_be_bytes());
+        png.resize(33, 0);
+        std::fs::write(&source, &png).unwrap();
+        let message: MessageRequest =
+            serde_json::from_value(serde_json::json!({"to":"15555550100@s.whatsapp.net",
+            "request_id":"owned-cache","image":source}))
+            .unwrap();
+        let mut config: LabRegistrationConfig =
+            serde_json::from_str(crate::registration::request::TEMPLATE_JSON).unwrap();
+        config.token = Zeroizing::new("offline-fixture".into());
+        let mut account = AccountRecord {
+            generation: store.generation(),
+            phone: Some(config.phone.clone()),
+            registration: RegistrationStatus::Registered,
+            ..Default::default()
+        };
+        let owner = upload_owner(&account, store.generation()).unwrap();
+        store.write(|tx|{account.save(tx)?;tx.put_json(Table::Checkpoints,b"message:owned-cache:upload",1,
+            &serde_json::json!({"status":"uploaded","hash":input_hash(&message,&png),"to":message.to.to_string(),
+                "protobuf":[26,0],"upload_owner_version":1,"upload_owner":serde_json::to_value(&owner).unwrap()}))}).unwrap();
+        assert_eq!(
+            &*prepare(&store, &message, &config).await.unwrap().unwrap(),
+            &[26, 0]
+        );
+        config.phone = crate::model::phone::PhoneNumber::new(1, "5555550199").unwrap();
+        account.phone = Some(config.phone.clone());
+        store.write(|tx| account.save(tx)).unwrap();
+        let before = store
+            .read(|tx| {
+                Ok((
+                    Table::ALL
+                        .iter()
+                        .map(|table| tx.scan(*table, 1, 100))
+                        .collect::<Result<Vec<_>>>()?,
+                    tx.journal_head()?,
+                ))
+            })
+            .unwrap();
+        for outbox in [false, true] {
+            let result = if outbox {
+                prepare_outbox(&store, &message, &config).await
+            } else {
+                prepare(&store, &message, &config).await
+            };
+            assert!(result.is_err());
+        }
+        assert_eq!(
+            store
+                .read(|tx| Ok((
+                    Table::ALL
+                        .iter()
+                        .map(|table| tx.scan(*table, 1, 100))
+                        .collect::<Result<Vec<_>>>()?,
+                    tx.journal_head()?
+                )))
+                .unwrap(),
+            before
+        );
     }
 
     #[test]
