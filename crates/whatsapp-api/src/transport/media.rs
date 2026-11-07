@@ -896,7 +896,7 @@ pub async fn open(
 }
 
 // Local operation ownership, not an APK wire field or permission to replay.
-fn check_download_owner(store: &ProtocolStore, expected: [u8; 32]) -> Result<()> {
+pub(super) fn check_download_owner(store: &ProtocolStore, expected: [u8; 32]) -> Result<()> {
     store.read(|tx| {
         let account = crate::session::AccountRecord::load(tx)?;
         if super::account_authority::fingerprint(tx.generation(), account.as_ref())? != expected {
@@ -905,7 +905,10 @@ fn check_download_owner(store: &ProtocolStore, expected: [u8; 32]) -> Result<()>
         Ok(())
     })
 }
-fn check_download_owner_in(tx: &crate::store::WriteTx<'_>, expected: [u8; 32]) -> Result<()> {
+pub(super) fn check_download_owner_in(
+    tx: &crate::store::WriteTx<'_>,
+    expected: [u8; 32],
+) -> Result<()> {
     let account = crate::session::AccountRecord::load_in_write(tx)?;
     if super::account_authority::fingerprint(tx.generation(), account.as_ref())? != expected {
         return Err(bad("media download account changed"));

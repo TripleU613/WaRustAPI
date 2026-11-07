@@ -1,4 +1,11 @@
 {
+  "x-view-once-download-account-fencing": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "evidence": "docs/protocol/media-network-outcomes.md#view-once-download-account-fencing",
+    "behavior": "New view-once download reservations retain starting local account authority and reject reservation/settlement after owner change. No replay or consumption change; legacy ownership remains unknown."
+  },
   "x-media-download-account-fencing": {
     "x-cli": false,
     "x-transport": true,

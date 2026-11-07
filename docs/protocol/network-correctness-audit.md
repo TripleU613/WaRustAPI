@@ -5884,3 +5884,34 @@ record, reopens the encrypted store, and verifies that success and HTTP-refusal
 settlement are rejected with unchanged checkpoints and journal head. A same-owner
 control allows both transitions. It also verifies the handoff owner predicate.
 No live CDN request or account operation is part of this regression.
+
+## View-once download account fencing
+
+**Confirmed Rust source defect, corrected offline.** At baseline `bcb45a5d`,
+`download_view_once` checked the account before HTTP but its exact source and
+reservation guards did not recheck the account at completion. A same-generation
+account-record change could therefore adopt an old operation's ciphertext or
+HTTP refusal. This is a local ownership defect, not a new APK wire requirement
+or observed restriction cause.
+
+New view-once reservations retain the original local account-authority digest.
+Reservation creation checks that owner transactionally; the operation checks it
+again immediately before GET, and settlement checks it in the same transaction
+as the exact reservation and source. The cached-return path checks the invocation
+owner before returning the saved size. The shared ordinary-media owner predicate
+is reused. Raw identity material is not logged or added to network requests.
+
+A changed owner refuses before writing the new outcome, preserving uncertainty
+and preventing replay. Legacy reservations without an owner remain historically
+unknown; this path never resumes them for a fresh request or backfills ownership.
+Downloaded cache provenance is not retroactively established. Consumption,
+opened receipts and the single-use viewer are unchanged. Requests already sent
+cannot be recalled, and an account change after the final observation is outside
+that observation's guarantee.
+
+The offline regression reserves with an original owner, changes own JID,
+registration or Signal registration ID, reopens the encrypted store, then tests
+both downloaded-unopened and HTTP-refused settlement. Changed owners preserve
+all checkpoint rows and journal head; an additional reservation with the stale
+owner also refuses. Same-owner controls settle normally. No live CDN request or
+view-once consumption is performed.

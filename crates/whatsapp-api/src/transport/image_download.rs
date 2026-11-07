@@ -202,9 +202,11 @@ pub async fn download_view_once(
     // Same pre-network account/config fence as ordinary media::open. A saved
     // inbox descriptor cannot authorize using another account's configuration.
     config.validate()?;
-    let account = store
-        .read(crate::session::AccountRecord::load)?
-        .ok_or(Error::NotRegistered)?;
+    let (account, owner) = store.read(|tx| {
+        let account = crate::session::AccountRecord::load(tx)?;
+        let owner = super::account_authority::fingerprint(tx.generation(), account.as_ref())?;
+        Ok((account.ok_or(Error::NotRegistered)?, owner))
+    })?;
     if !account.is_registered() || account.phone.as_ref() != Some(&config.phone) {
         return Err(Error::NotRegistered);
     }
@@ -240,11 +242,13 @@ pub async fn download_view_once(
     let previous: Option<serde_json::Value> =
         store.read(|tx| tx.get_json(Table::Checkpoints, state_key.as_bytes(), 1))?;
     if let Some(previous) = previous {
+        super::media::check_download_owner(store, owner)?;
         return state_size(&previous);
     }
     let url = url(&image)?;
     let client = super::image_upload::client(config)?;
-    let reservation = reserve_download(store, &state_key, &key, &source)?;
+    let reservation = reserve_download_for_owner(store, &state_key, &key, &source, owner)?;
+    super::media::check_download_owner(store, owner)?;
     let mut response = client
         .get(url)
         .header("Accept-Encoding", "identity")
@@ -309,15 +313,31 @@ pub async fn download_view_once(
 }
 
 // Local attempt ownership only; this identifier is never sent to WhatsApp.
+#[cfg(test)]
 fn reserve_download(
     store: &ProtocolStore,
     state_key: &str,
     source_key: &[u8],
     source: &[u8],
 ) -> Result<serde_json::Value> {
+    let owner = store.read(|tx| {
+        let account = crate::session::AccountRecord::load(tx)?;
+        super::account_authority::fingerprint(tx.generation(), account.as_ref())
+    })?;
+    reserve_download_for_owner(store, state_key, source_key, source, owner)
+}
+
+fn reserve_download_for_owner(
+    store: &ProtocolStore,
+    state_key: &str,
+    source_key: &[u8],
+    source: &[u8],
+    owner: [u8; 32],
+) -> Result<serde_json::Value> {
     let reservation = serde_json::json!({"status":"outcome_unknown",
-        "at":Timestamp::now(),"reservation":super::messaging::new_message_id()?});
+        "at":Timestamp::now(),"reservation":super::messaging::new_message_id()?, "account_authority":owner});
     store.write(|tx| {
+        super::media::check_download_owner_in(tx, owner)?;
         if tx
             .get_json::<serde_json::Value>(Table::Checkpoints, state_key.as_bytes(), 1)?
             .is_some()
@@ -342,6 +362,13 @@ fn settle_download(
     // recreate removed state or replace another attempt/consumed outcome.
     // See docs/protocol/media-network-outcomes.md (view-once ownership audit).
     store.write(|tx| {
+        // Newly reserved work carries its original local account authority.
+        // Missing legacy authority remains unknown; it is never backfilled.
+        if let Some(value) = expected.get("account_authority") {
+            let owner: [u8; 32] = serde_json::from_value(value.clone())
+                .map_err(|_| invalid("invalid download account authority"))?;
+            super::media::check_download_owner_in(tx, owner)?;
+        }
         let prior: Option<serde_json::Value> =
             tx.get_json(Table::Checkpoints, state_key.as_bytes(), 1)?;
         if expected["status"] != "outcome_unknown"
@@ -375,6 +402,96 @@ fn ensure_view_once_source(
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn view_once_download_account_change_preserves_uncertain_reservation_after_reopen() {
+        use super::*;
+        use crate::{
+            model::ids::AccountId,
+            session::{AccountRecord, RegistrationStatus},
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        for change in ["same", "jid", "logout", "identity"] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("view-once-owner.redb");
+            let reopen = |create| {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: AccountId::new("fixture").unwrap(),
+                    create,
+                    key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                        [7; 32],
+                    ))),
+                })
+                .unwrap()
+            };
+            let store = reopen(true);
+            let original = AccountRecord {
+                registration: RegistrationStatus::Registered,
+                own_jid: Some(crate::model::jid::Jid::parse("100@s.whatsapp.net").unwrap()),
+                ..Default::default()
+            };
+            let source = b"synthetic source ownership fixture";
+            store
+                .write(|tx| {
+                    original.save(tx)?;
+                    tx.put(Table::Checkpoints, b"source", 1, source)
+                })
+                .unwrap();
+            let owner = store
+                .read(|tx| {
+                    super::super::account_authority::fingerprint(
+                        tx.generation(),
+                        AccountRecord::load(tx)?.as_ref(),
+                    )
+                })
+                .unwrap();
+            let reservation =
+                reserve_download_for_owner(&store, "download", b"source", source, owner).unwrap();
+            let mut replacement = original.clone();
+            match change {
+                "jid" => {
+                    replacement.own_jid =
+                        Some(crate::model::jid::Jid::parse("200@s.whatsapp.net").unwrap())
+                }
+                "logout" => replacement.registration = RegistrationStatus::Unregistered,
+                "identity" => replacement.signal_registration_id = Some(42),
+                _ => {}
+            }
+            store.write(|tx| replacement.save(tx)).unwrap();
+            drop(store);
+            let store = reopen(false);
+            let before = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let journal = store.journal_head().unwrap();
+            if change != "same" {
+                assert!(
+                    reserve_download_for_owner(&store, "other", b"source", source, owner).is_err()
+                );
+            }
+            for result in [
+                serde_json::json!({"status":"downloaded_unopened","body":[1,2],"encrypted_bytes":2}),
+                serde_json::json!({"status":"server_refused","http_status":403}),
+            ] {
+                let outcome =
+                    settle_download(&store, "download", &reservation, b"source", source, &result);
+                assert_eq!(outcome.is_ok(), change == "same");
+                if change == "same" {
+                    store
+                        .write(|tx| tx.put_json(Table::Checkpoints, b"download", 1, &reservation))
+                        .unwrap();
+                } else {
+                    assert_eq!(
+                        store
+                            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                            .unwrap(),
+                        before
+                    );
+                    assert_eq!(store.journal_head().unwrap(), journal);
+                }
+            }
+        }
+    }
     use super::*;
     #[tokio::test]
     async fn view_once_mime_admission_precedes_cached_prefetch_and_consumption() {

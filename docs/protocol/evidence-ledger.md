@@ -9524,3 +9524,9 @@ Local public upload eligibility omission corrected at shared entry, including ca
   existing local fingerprint and offline encrypted-store reopen/rollback regression.
   This is not an APK wire requirement or observed ban cause. See
   [media lifecycle](media-network-outcomes.md#ordinary-download-account-fencing).
+
+- Confirmed Rust source gap at `bcb45a5d`: view-once HTTP download settlement
+  matched source/reservation but not original account. New reservations now retain
+  local authority and recheck it transactionally; offline reopen/rollback cases
+  cover JID, registration and registration ID changes. See
+  [media lifecycle](media-network-outcomes.md#view-once-download-account-fencing).

@@ -10547,3 +10547,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   regression covers changed JID/registration/account record and same-owner control.
   Historical cache provenance and post-check caller lifetime remain outside this
   guard. See docs/protocol/media-network-outcomes.md. No live operation.
+
+- View-once downloads now bind new reservations and transactional HTTP outcome
+  settlement to the original account authority, with offline reopen/rollback
+  regression. Consumption and historical cache provenance remain separate.
+  See docs/protocol/media-network-outcomes.md. No live operation.
