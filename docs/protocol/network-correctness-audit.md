@@ -6117,3 +6117,10 @@ evidence, not new APK behavior or proof of full group-send/network parity.
   now reports a redacted error; direct/group encrypted-store reopen regression
   proves unchanged checkpoints/journal and no receipt intent. See
   [stored payload shapes](read-receipt-policy-current.md#stored-payload-shape-errors-in-automatic-selection).
+
+- Receipt ACK pagination integration verification at `da46e00b`: 300 actual
+  automatic read intents, physical-order target, all selected callback members
+  proven beyond the first 256 rows after reopen. Success/refusal settles only
+  original members; duplicate ACK/reservation causes no replay or mutation.
+  No runtime policy or live request changed. See
+  [physical-page ACK verification](read-receipt-batching.md#physical-page-ack-settlement-after-restart).

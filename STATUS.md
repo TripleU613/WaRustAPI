@@ -10631,3 +10631,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   shapes instead of silently returning no work. Direct/group reopen regression
   proves no receipt intent or checkpoint/journal mutation. Content eligibility
   and unsupported protobuf inspection behavior remain unchanged; no live request.
+
+- Added receipt ACK physical-page/restart integration verification: real automatic
+  read queue/reservation with 300 intents, direct/group success/refusal controls,
+  original members beyond first 256 physical rows, exact unrelated-row retention
+  and duplicate/no-replay checks. No runtime policy or live operation changed.

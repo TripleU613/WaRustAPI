@@ -4182,6 +4182,123 @@ mod tests {
     }
 
     #[test]
+    fn receipt_ack_finds_last_physical_receipt_after_paged_reservations_and_reopen() {
+        for group in [false, true] {
+            for refused in [false, true] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("physical-ack-pages.redb");
+                let db = open(&path, true);
+                for i in 0..300 {
+                    let incoming = automatic_text_fixture(&db, &format!("paged-{i:03}"), group);
+                    queue_read_for_incoming(&db, &incoming).unwrap();
+                }
+                let target = db
+                    .read(|tx| {
+                        let rows = tx.scan(Table::Checkpoints, 1, 1000)?;
+                        let target = rows
+                            .iter()
+                            .rev()
+                            .find(|(key, _)| key.starts_with(b"receipt-outbox:"))
+                            .unwrap()
+                            .0
+                            .clone();
+                        assert!(
+                            !tx.scan(Table::Checkpoints, 1, 256)?
+                                .iter()
+                                .any(|(key, _)| key == &target)
+                        );
+                        Ok(target)
+                    })
+                    .unwrap();
+                let mut selected = None;
+                loop {
+                    let batch = reserve_pending_owned(&db).unwrap();
+                    if batch.is_empty() {
+                        break;
+                    }
+                    for receipt in batch {
+                        if receipt.guard.members.iter().any(|(key, _)| key == &target) {
+                            selected = Some(receipt);
+                        }
+                    }
+                }
+                let receipt = selected.unwrap();
+                let node = receipt.node();
+                let mut ack = Node::new("ack")
+                    .attr("class", "receipt")
+                    .attr("id", node.get_attr("id").unwrap().clone())
+                    .attr("from", node.get_attr("to").unwrap().clone());
+                for name in ["type", "participant"] {
+                    if let Some(value) = node.get_attr(name) {
+                        ack = ack.attr(name, value.clone());
+                    }
+                }
+                if refused {
+                    ack = ack.attr("error", "500");
+                }
+                let members: Vec<_> = receipt
+                    .guard
+                    .members
+                    .iter()
+                    .map(|(key, _)| key.clone())
+                    .collect();
+                let owner = receipt.guard.callback_owner.0.clone();
+                drop(receipt);
+                drop(db);
+                let db = open(&path, false);
+                let before = db.read(|tx| tx.scan(Table::Checkpoints, 1, 1000)).unwrap();
+                db.read(|tx| {
+                    let first_page = tx.scan(Table::Checkpoints, 1, 256)?;
+                    assert!(
+                        members
+                            .iter()
+                            .all(|member| !first_page.iter().any(|(key, _)| key == member))
+                    );
+                    Ok(())
+                })
+                .unwrap();
+                assert!(record_ack(&db, &ack).unwrap());
+                db.read(|tx| {
+                    for (key, raw) in &before {
+                        let current = tx.get(Table::Checkpoints, key, 1)?.unwrap();
+                        if members.contains(key) {
+                            let mut expected: serde_json::Value =
+                                serde_json::from_slice(raw).unwrap();
+                            expected["status"] = if refused {
+                                "refused"
+                            } else {
+                                "server_acknowledged"
+                            }
+                            .into();
+                            assert_eq!(
+                                serde_json::from_slice::<serde_json::Value>(&current).unwrap(),
+                                expected
+                            );
+                        } else if key == &owner {
+                            let current: ReceiptCallbackOwner =
+                                serde_json::from_slice(&current).unwrap();
+                            assert!(current.consumed);
+                        } else {
+                            assert_eq!(&current, raw);
+                        }
+                    }
+                    Ok(())
+                })
+                .unwrap();
+                let settled = db.read(|tx| tx.scan(Table::Checkpoints, 1, 1000)).unwrap();
+                let head = db.journal_head().unwrap();
+                assert!(!record_ack(&db, &ack).unwrap());
+                assert!(reserve_pending_owned(&db).unwrap().is_empty());
+                assert_eq!(
+                    db.read(|tx| tx.scan(Table::Checkpoints, 1, 1000)).unwrap(),
+                    settled
+                );
+                assert_eq!(db.journal_head().unwrap(), head);
+            }
+        }
+    }
+
+    #[test]
     fn receipt_ack_keeps_account_bound_reservations_uncertain_after_reopen() {
         for group in [false, true] {
             for refused in [false, true] {

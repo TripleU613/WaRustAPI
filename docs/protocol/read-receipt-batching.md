@@ -103,3 +103,22 @@ new network request was made. Complete native read/read-self privacy policy,
 linked-device authority, specialized routes and Android scheduler parity remain
 unported. This closes the wire batching and durable ACK lifecycle, not those
 remaining client requirements.
+
+## Physical-page ACK settlement after restart
+
+**Offline Rust integration verification**, baseline `da46e00b`; no runtime policy
+change. The regression queues 300 real automatic read intents from stored direct
+or group message fixtures and selects the last receipt in the store's actual
+physical scan order, not a guessed logical key order. It reserves all batches
+through reserve_pending_owned without transmitting them, saves the selected
+callback's original members, closes the store and reopens it.
+
+Before applying the synthetic success/error500 ACK, the test proves every member
+of that callback lies outside the first 256 physical checkpoint rows. record_ack
+must therefore traverse later pages. Only those original members change to
+server_acknowledged/refused and their callback becomes consumed; every other
+checkpoint remains byte-identical. Repeating the ACK returns false, no pending
+receipt is replayed, and rows/journal remain unchanged. Both direct/group and
+success/refusal combinations are covered. Existing owner/account-change tests
+remain separate controls; this does not establish real server ACK acceptance or
+full inbound receipt coverage. No sockets or live accounts are used.
