@@ -1179,6 +1179,14 @@ pub(crate) fn ordinary_ack_has_participant(node: &Node) -> bool {
         return matches!(parsed, AckUserText::User(_) | AckUserText::Device(_));
     }
 
+    if let Some(class) = node
+        .get_attr("participant")
+        .and_then(|value| value.as_jid())
+        .and_then(binary_ack_user_class)
+    {
+        return matches!(class, BinaryAckUserClass::User | BinaryAckUserClass::Device);
+    }
+
     super::receipts::jid(node, "participant").is_some_and(|jid| {
         matches!(
             jid.server,
@@ -1297,6 +1305,52 @@ pub(crate) fn ack_user_text(text: &str) -> Option<AckUserText<'_>> {
         return Some(AckUserText::Null);
     }
     Some(AckUserText::Device(user))
+}
+
+// Selected binary123 constructors run before optional0Tp getters. This class
+// projection is limited to known PN/LID/hosted pair/AD values, not every JID.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum BinaryAckUserClass {
+    Invalid,
+    User,
+    Device,
+    ServiceUser,
+    NonUser,
+    ServerOnly,
+}
+
+pub(crate) fn binary_ack_user_class(value: &Jid) -> Option<BinaryAckUserClass> {
+    use crate::model::jid::{JidKind, Server};
+    if !matches!(
+        value.server,
+        Server::User | Server::Lid | Server::Hosted | Server::HostedLid
+    ) {
+        return None;
+    }
+    if value.agent != 0 || !matches!(value.kind, JidKind::Plain | JidKind::AgentDevice) {
+        return Some(BinaryAckUserClass::Invalid);
+    }
+    // 123.A04 returns the bare server for an empty user. Of these four
+    // domains only s.whatsapp.net has a valid native server singleton.
+    if value.user.is_empty() {
+        return Some(if value.server == Server::User {
+            BinaryAckUserClass::ServerOnly
+        } else {
+            BinaryAckUserClass::Invalid
+        });
+    }
+    let text = if value.device == 0 {
+        format!("{}@{}", value.user, value.server.as_str())
+    } else {
+        format!("{}:{}@{}", value.user, value.device, value.server.as_str())
+    };
+    Some(match ack_user_text(&text) {
+        None | Some(AckUserText::Null) => BinaryAckUserClass::Invalid,
+        Some(AckUserText::User(_)) => BinaryAckUserClass::User,
+        Some(AckUserText::Device(_)) => BinaryAckUserClass::Device,
+        Some(AckUserText::ServiceUser(_)) => BinaryAckUserClass::ServiceUser,
+        Some(AckUserText::NonUser(_)) => BinaryAckUserClass::NonUser,
+    })
 }
 
 // APK43.72 FcQ.run case0 044c..045c parses Eoh.edit with

@@ -1,3 +1,11 @@
+2026-11-06 — **Separated binary ACK construction from optional casts and outcomes.**
+Known invalid binary participant/recipient fields can no longer settle through
+ordinary refusal or from fallback. Hosted binary participants now retain the
+ordinary-success exclusion; valid device/non-user recipient casts and special
+participant classes remain distinct from nullable malformed text.
+[Current evidence, expected-chat/outbox regressions and limits](message-ack.md#binary-optional-address-construction-and-participant-class-2026-11-06).
+No live account operation; other families/decoder paths remain under audit.
+
 2026-11-06 — **Validated binary ACK from before projection and recipient selection.**
 Hosted binary sources now project to PN/LID; invalid binary device sources cannot
 settle through primary normalization or a valid recipient. Valid source/recipient

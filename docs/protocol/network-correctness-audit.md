@@ -4942,3 +4942,18 @@ entry/journal, one terminal fact, duplicates, reopen and no resend. Three failin
 runs exposed the missed match, false settlement and qualified bypass. Other
 attributes/typed families and global decoder/error policy remain open. No live
 operation, identity merge, extra request or retry was introduced.
+
+
+### Binary optional ACK field admission and class separation (2026-11-06)
+
+**Confirmed local fixes:** [common binary ACK address classes](message-ack.md#binary-optional-address-construction-and-participant-class-2026-11-06)
+now gate constructor-invalid from/participant/recipient before message route
+selection. Hosted binary participants cannot bypass the ordinary-success guard;
+invalid participant/refusal and invalid recipient/fallback cannot settle through
+an otherwise matching route. Valid Device/NonUser/server recipients retain the
+native failed-UserJid-cast fallback, and ServiceUser/NonUser participant conversion
+remains separate. Two failing actual-wire runs exposed false Accepted and Refused
+classifications. New expected-chat/outbox tests cover constructor/cast controls,
+nullable text contrast, unchanged entry/journal, one outcome, duplicates, reopen
+and no resend. Other typed families and receipt/global decoder policy remain
+explicit work; no identity merge, extra request, retry or live account operation.

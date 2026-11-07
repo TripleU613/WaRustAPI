@@ -1350,22 +1350,22 @@ fn message_ack_address(node: &Node, name: &str) -> Option<crate::model::jid::Jid
         return crate::model::jid::Jid::new(user, server).ok();
     }
     if name == "recipient"
-        && let Some(value) = node.get_attr(name).and_then(|value| value.as_jid())
-        && value.agent == 0
-        && value.device == 0
-        && matches!(
-            value.kind,
-            crate::model::jid::JidKind::Plain | crate::model::jid::JidKind::AgentDevice
-        )
-        && matches!(
-            value.server,
-            Server::User | Server::Lid | Server::Hosted | Server::HostedLid
-        )
+        && let Some(class) = node
+            .get_attr(name)
+            .and_then(|value| value.as_jid())
+            .and_then(super::messaging::binary_ack_user_class)
     {
-        // APK43.72 123.A01/A02/A04 constructs a UserJid for binary zero
-        // PN/LID, and the plain hosted user factory returns the underlying
-        // PN/LID class. Preserve recipient precedence, not wire-kind identity.
-        return super::receipts::recipient(node);
+        // Native UserJid cast excludes a constructed Device/NonUser/server,
+        // including a dot-qualified user inside a binary JID_PAIR.
+        return if matches!(
+            class,
+            super::messaging::BinaryAckUserClass::User
+                | super::messaging::BinaryAckUserClass::ServiceUser
+        ) {
+            super::receipts::recipient(node)
+        } else {
+            None
+        };
     }
     super::receipts::jid(node, name)
 }
@@ -1374,24 +1374,17 @@ fn message_ack_address(node: &Node, name: &str) -> Option<crate::model::jid::Jid
 // before normalizing from; 0Dn.A00 unwraps DeviceJid.userJid. Plain PN/LID
 // types0/18 bypass A00's special bot type26/27 conversion.
 pub(crate) fn message_ack_chat(node: &Node) -> Option<crate::model::jid::Jid> {
-    if node.get_attr("recipient").is_some()
-        && let Some(from) = node.get_attr("from").and_then(|value| value.as_jid())
-        && matches!(
-            from.server,
-            Server::User | Server::Lid | Server::Hosted | Server::HostedLid
-        )
-        && !(from.user.is_empty()
-            && from.server == Server::User
-            && from.agent == 0
-            && matches!(
-                from.kind,
-                crate::model::jid::JidKind::Plain | crate::model::jid::JidKind::AgentDevice
-            ))
-        && message_ack_address(node, "from").is_none()
+    if ["from", "participant", "recipient"]
+        .into_iter()
+        .any(|name| {
+            node.get_attr(name)
+                .and_then(|value| value.as_jid())
+                .and_then(super::messaging::binary_ack_user_class)
+                == Some(super::messaging::BinaryAckUserClass::Invalid)
+        })
     {
-        // Binary123 parses a supplied JID before optional recipient selection.
-        // A valid recipient cannot rescue an invalid binary user/device from.
-        // Empty-user PN reconstructs the separately valid server-only singleton.
+        // Binary123 constructs all these supplied JIDs before1rH dispatch.
+        // Optional text parsing remains nullable; it is not this binary path.
         return None;
     }
     if node
@@ -3907,6 +3900,173 @@ mod tests {
                         assert!(begin_selected(&store, Some(local_id)).unwrap().is_none());
                     }
                 }
+            }
+        }
+    }
+
+    #[test]
+    fn binary_optional_ack_addresses_construct_before_outcome_and_user_cast() {
+        use super::super::messaging::{MessageAckOutcome, message_ack_outcome_for};
+        use crate::binary::AttributeValue;
+        let plain = |user, server| AttributeValue::from(Jid::new(user, server).unwrap());
+        let ad = |user, server, device| {
+            AttributeValue::from(Jid::new_ad(user, 0, device, server).unwrap())
+        };
+        // Current123 reader constructs binary JIDs before1rH dispatch; 0EB/196
+        // ordinary-success participation is separate from UserJid recipient cast.
+        let cases = [
+            (
+                "participant",
+                ad("15555550100", Server::User, 100),
+                false,
+                false,
+            ),
+            (
+                "participant",
+                plain("15555550100", Server::Hosted),
+                false,
+                true,
+            ),
+            (
+                "participant",
+                plain("12345", Server::HostedLid),
+                false,
+                true,
+            ),
+            (
+                "participant",
+                ad("15555550100", Server::Hosted, 99),
+                false,
+                true,
+            ),
+            (
+                "participant",
+                ad("12345", Server::HostedLid, 99),
+                false,
+                true,
+            ),
+            (
+                "participant",
+                ad("15555550100", Server::Hosted, 0),
+                false,
+                true,
+            ),
+            ("participant", ad("12345", Server::Lid, 128), false, false),
+            (
+                "participant",
+                ad("15555550100", Server::Hosted, 7),
+                false,
+                false,
+            ),
+            (
+                "participant",
+                plain("01555550100", Server::User),
+                false,
+                false,
+            ),
+            ("participant", plain("Server", Server::User), true, true),
+            ("participant", plain("gdpr", Server::User), true, true),
+            (
+                "recipient",
+                ad("15555550999", Server::User, 100),
+                false,
+                false,
+            ),
+            (
+                "recipient",
+                ad("15555550999", Server::Hosted, 7),
+                false,
+                false,
+            ),
+            (
+                "recipient",
+                plain("15555550999.0", Server::User),
+                true,
+                true,
+            ),
+            ("recipient", ad("99999", Server::HostedLid, 99), true, true),
+            ("recipient", plain("", Server::User), true, true),
+            ("recipient", plain("", Server::Lid), false, false),
+            // Failed optional text parsing stays nullable, unlike binary construction.
+            (
+                "participant",
+                AttributeValue::from("15555550100:100@s.whatsapp.net"),
+                true,
+                true,
+            ),
+            (
+                "recipient",
+                AttributeValue::from("15555550999:100@s.whatsapp.net"),
+                true,
+                true,
+            ),
+        ];
+        for (field, value, success, refusal) in cases {
+            for error in [None, Some("500")] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("optional-binary-ack.redb");
+                let store = open(&path);
+                let local_id = enqueue(&store);
+                store
+                    .write(|tx| {
+                        let mut entry = outbox().get_mut(tx, local_id)?.unwrap();
+                        entry.wire_id = Some(MessageId::new("fixture")?);
+                        outbox().set_progress(tx, &mut entry, AttemptProgress::InFlight)
+                    })
+                    .unwrap();
+                let before = store.read(|tx| outbox().get(tx, local_id)).unwrap();
+                let head = store.journal_head().unwrap();
+                let mut ack = Node::new("ack")
+                    .attr("class", "message")
+                    .attr("id", "fixture")
+                    .attr("from", "15555550100@s.whatsapp.net")
+                    .attr(field, value.clone());
+                if let Some(error) = error {
+                    ack = ack.attr("error", error);
+                }
+                let dict = TokenDictionary::comparison_2_26_37_71();
+                let wire = Encoder::new(dict).encode(&ack).unwrap();
+                let ack = crate::binary::Decoder::new(&wire[1..], dict, &Limits::default())
+                    .decode_node()
+                    .unwrap();
+                let settles = if error.is_some() { refusal } else { success };
+                let outcome = if !settles {
+                    MessageAckOutcome::Unrelated
+                } else if error.is_some() {
+                    MessageAckOutcome::Refused
+                } else {
+                    MessageAckOutcome::Accepted
+                };
+                assert_eq!(
+                    message_ack_outcome_for(
+                        &ack,
+                        &Jid::parse("15555550100@s.whatsapp.net").unwrap()
+                    ),
+                    outcome,
+                    "{field}/{value:?}/{error:?}"
+                );
+                assert_eq!(acknowledge(&store, &ack).unwrap(), settles);
+                assert!(!acknowledge(&store, &ack).unwrap());
+                let after = store.read(|tx| outbox().get(tx, local_id)).unwrap();
+                if settles {
+                    let facts = &after.as_ref().unwrap().facts;
+                    assert_eq!(facts.len(), 1);
+                    assert_eq!(
+                        facts[0].kind,
+                        if error.is_some() {
+                            DeliveryFactKind::Failed
+                        } else {
+                            DeliveryFactKind::ServerAccepted
+                        }
+                    );
+                } else {
+                    assert_eq!(after, before);
+                    assert_eq!(store.journal_head().unwrap(), head);
+                }
+                drop(store);
+                let store = open(&path);
+                assert_eq!(store.read(|tx| outbox().get(tx, local_id)).unwrap(), after);
+                assert!(begin_selected(&store, Some(local_id)).unwrap().is_none());
             }
         }
     }

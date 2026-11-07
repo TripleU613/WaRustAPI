@@ -1,4 +1,11 @@
 {
+  "x-binary-optional-ack-address-classes": {
+    "x-cli": false,
+    "x-transport": "messaging::binary_ack_user_class; outgoing message ACK admission; expected-chat outcome classification",
+    "x-live": false,
+    "description": "Known binary PN/LID/hosted pair/AD from/participant/recipient construction is checked before message route/outcome selection. Hosted User/Device participants retain ordinary-success exclusion; invalid binary participant errors and invalid recipient fallback remain uncertain rather than Accepted/Refused. Device/NonUser/server recipients fail UserJid cast and retain from fallback; ServiceUser and NonUser participant conversions stay separate. Malformed optional text is still nullable. Real encode/decode expected-chat/outbox matrix checks success/error500, exact entry/journal preservation, one original fact, duplicates/reopen/no resend. Other namespaces/binary self-user/unknown cached kinds, other/nested fields, receipt-specific and global decoder recovery remain unported. No global alias/store normalization, NACK/epoch-close, request, retry, HTTP route or live account operation added.",
+    "evidence": "docs/protocol/message-ack.md#binary-optional-address-construction-and-participant-class-2026-11-06"
+  },
   "x-binary-ack-from-construction-order": {
     "x-cli": false,
     "x-transport": "outgoing::message_ack_address/message_ack_chat known binary PN/LID/hosted from outcome admission",

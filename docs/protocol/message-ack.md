@@ -1316,3 +1316,73 @@ The final matrix passes. All1546 workspace/all-feature tests, strict all-target/
 all-feature Clippy, formatting, OpenAPI library symbols, regenerated CLI
 reference, APK coverage and repository hygiene pass. Hygiene checked8065 local
 links and451 APK checksum bundles. No live ACK acceptance is claimed.
+
+
+## Binary optional address construction and participant class (2026-11-06)
+
+**Confirmed local defects / fixed offline:** an ordinary ACK success with a
+hosted binary participant was accepted because the fallback guard recognized
+only PN/LID domains. The same native user supplied as text was already treated
+as a converted participant and held. A failing encode/decode regression returned
+Accepted instead of Unrelated. A second run with binary PN device100 showed
+Refused for error500 even though native construction fails before dispatch.
+Invalid typed recipient devices could similarly fall back to a matching from.
+
+A shared binary_ack_user_class now models the selected PN/LID/hosted pair/AD
+constructor class: Invalid, User, Device, ServiceUser, NonUser or ServerOnly.
+It reconstructs the native join (device0 omitted, empty user becomes bare server)
+and reuses the existing native text classifier. Unsupported legacy agent/kind
+metadata in this known family remains outside supported authority; native AD
+domain flags are represented separately by Server.
+
+message_ack_chat gates known invalid binary from/participant/recipient before
+route selection. Constructed Device/NonUser/server recipients fail the UserJid
+cast and use the existing from fallback; a binary pair containing a dot-qualified
+local user no longer becomes a primary-user qualifier. User/ServiceUser preserve
+recipient precedence. Ordinary success now recognizes constructed User/Device
+participants, including hosted alias/99/AD0 forms. ServiceUser and NonUser keep
+their separate conversion result instead of being misclassified by namespace.
+Valid participant refusals remain available. Optional malformed text still uses
+its nullable getter semantics; it is not upgraded into binary construction failure.
+
+**Reused confirmed static evidence**, pinned APK43.72 SHA256887a6f94:
+[123.A01](apk/2.26.43.72-group-missing-identification/current-jid-attribute-reader.txt)
+constructs JID_PAIR/AD through0Dd.A00 before writing typed0Tl attributes;
+[A04](apk/2.26.43.72-group-missing-identification/current-ad-string-join.txt)
+binds zero/empty behavior. [Factory/parser](apk/2.26.43.72-message-ack-chat/jid-parser.txt),
+[device constructors](apk/2.26.43.72-lid-device-ack-text/README.md),
+[hosted user classes](apk/2.26.43.72-hosted-chatstate/README.md), and
+[bare classes](apk/2.26.43.72-bare-server-ack-types/README.md) bind the selected
+construction outcomes. [0EB/1lZ/196 participation proof](apk/2.26.43.72-ack-participant-success/README.md)
+explains ordinary-success exclusion; type8 Server is not among0Dn.A0k's admitted
+user-primary conversions, and [gdpr/type9](apk/2.26.43.72-special-pn-ack/README.md)
+is not UserJid. The existing bot-feedback exception remains unported.
+[Optional0Tp getter](apk/2.26.43.72-group-missing-identification/ack-typed-jid-read.txt)
+returns null on failed text parse/cast; binary direct construction is a separate
+phase. No new REA record or runtime capture is claimed.
+
+**New actual-wire/outbox regression:** binary hosted participants (plain,99,AD0),
+invalid PN/LID/hosted devices, constructor-invalid plain users, special Server/
+gdpr participants, invalid and valid-device recipients, dot-qualified JID_PAIR
+recipient and bare PN/LID cases exercise success and error500. Text invalid
+participant/recipient controls remain accepted/refused under the existing nullable
+path. Expected-chat classification and durable outbox classification must agree.
+Rejected inputs preserve original entry and journal; admitted outcomes add one
+original acceptance/failure fact. Duplicates/reopen add no outcome or resend.
+Existing from and recipient-precedence matrices remain active.
+
+**Boundaries:** known common-user construction admission is now shared across
+these three message-ACK fields; this supersedes that part of the earlier binary
+participant/recipient gap. Other namespaces, binary self-user singletons, unknown
+cached kinds, other/nested attributes, receipt-specific constructor/cast/fact
+handling, global network decoder recovery and complete native callbacks remain
+open. Original Node/capture, stored identities, alias trust, outgoing request
+construction and replay policy are unchanged. No NACK/epoch-close rule was guessed
+and no live account operation was performed.
+
+Verification: the new actual-wire matrix failed before correction with a hosted
+participant falsely Accepted and an invalid device participant falsely Refused.
+The final matrix passes. All1547 workspace/all-feature tests, strict all-target/
+all-feature Clippy, formatting, OpenAPI library symbols, regenerated CLI
+reference, APK coverage and repository hygiene pass. Hygiene checked8077 local
+links and451 APK checksum bundles. These are offline results, not live acceptance.
