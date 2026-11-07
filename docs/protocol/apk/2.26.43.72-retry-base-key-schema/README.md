@@ -23,3 +23,5 @@ The writer supplies recipient ID with ContentValues.put(String,String), despite 
 The exact `message_base_key` [reference inventory](table-xref.txt) also finds1jB.ATY/ATc. A [subsequent declaration trace](../2.26.43.72-retry-base-key-declarations/README.md) resolves them as schema declarations with resetting column-builder state; provider activation and actual application remain untraced. Consequently no global cleanup absence, periodic TTL, all alias-migration semantics or complete lifecycle is claimed. No Rust runtime/store migration, count limit or network behavior changed.
 
 Reproduce with `python3 docs/protocol/apk/2.26.43.72-retry-base-key-schema/reproduce.py ../android-lab/apks/WhatsApp.1.apk` after building xtask. The script checks the APK, complete-method identities and every retained export. `checksums.json` covers all files except itself.
+
+Selected original-versus-normalized recipient handling and the two direct single-delete runnable arms are now traced in [the address follow-up](../2.26.43.72-retry-base-key-addresses/README.md). It does not establish the cleanup scheduler, TTL or full migration policy.

@@ -1,0 +1,19 @@
+
+# class: LX/0Dn;
+# extends: Ljava/lang/Object;
+
+.method public A0O(ZL)  # .registers 2
+    # full signature: LX/0Dn;->A0O(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0000..0004  if-eqz  v1, +0x10
+    0004..000a  invoke-virtual  {v1}, Lcom/whatsapp/infra/core/jid/Jid;->getType()I
+    000a..000c  move-result  v1
+    000c..0010  const/16  v0, #0x1a
+    0010..0014  if-eq  v1, v0, +0x6
+    0014..0018  const/16  v0, #0x1b
+    0018..001c  if-ne  v1, v0, +0x4
+    001c..001e  const/4  v0, #0x1
+    001e..0020  return  v0
+    0020..0022  const/4  v0, #0x0
+    0022..0024  return  v0
+    # exception table: 0 try range(s)
+.end method

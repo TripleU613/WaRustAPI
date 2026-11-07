@@ -1,0 +1,78 @@
+{
+  "README.md": {
+    "bytes": 4904,
+    "sha256": "8535b35b14e8c23f9acb00b04fe6e9698563bd9f6a46fd880a0075eb7061b077"
+  },
+  "address-build.txt": {
+    "bytes": 1296,
+    "sha256": "3356869933afe4d528665d32bb290a9b773c405c6d1a1cfa9eda4bd88f06ecb6"
+  },
+  "address-phone.txt": {
+    "bytes": 3001,
+    "sha256": "2c6b2a1b3526eb6d7a4d6f83a3ed198c4b2315510f3ef4a000aff0ef5fce2d5e"
+  },
+  "address-type.txt": {
+    "bytes": 986,
+    "sha256": "29a790959cb37939713ca53ab706ee583a3d4aa269c165915d3fb18ecf9f95d4"
+  },
+  "delete-callers.txt": {
+    "bytes": 130,
+    "sha256": "c6ec2b7bdaf37a16e4999e1dd087513c6e4bfce14864ded45b5146ddb3e79a5d"
+  },
+  "delete-producer-probe.json": {
+    "bytes": 115,
+    "sha256": "371b0b22fc8e0401a885e195ebd1b32282d9c33e6d71b8abe2284c17adf20d1f"
+  },
+  "delete-trigger-i-excerpt.txt": {
+    "bytes": 1633,
+    "sha256": "776a26e4d59e013f0338e41ac85831aefc8c4c8c1db44647fc9d7a4d66d755ab"
+  },
+  "delete-trigger-q-excerpt.txt": {
+    "bytes": 1682,
+    "sha256": "55088e1495eea5059796255eb3243388ca6cd3c1324cb3703e7708bc1a86f623"
+  },
+  "missing-mapping.txt": {
+    "bytes": 2050,
+    "sha256": "2b21bb972f8d7b212844350079d0dfbd2bdf8a25fc50878d332e0f6ffe630ff5"
+  },
+  "normalize-address.txt": {
+    "bytes": 2699,
+    "sha256": "52390af4d483c232164534a3b6955030eb3f531804e8deb48fe85c831b5348e8"
+  },
+  "reproduce.py": {
+    "bytes": 3302,
+    "sha256": "42ca80a06005bdd073b444dd27c391a945c67e42a723f3dde8878c35f0789c42"
+  },
+  "special-conversion.txt": {
+    "bytes": 1805,
+    "sha256": "a9aa9cb98ed8b72b9a95cdb2bd7be68da8da66b743eb218c74a6d831a27b2377"
+  },
+  "special-phone-kind.txt": {
+    "bytes": 616,
+    "sha256": "b246720c1dd82b48c80c4addaba5662c9d69e8ca4916e25ace67f3b060ce68c7"
+  },
+  "special-phone.txt": {
+    "bytes": 535,
+    "sha256": "d1097e16b8d95a1a2a92dde0b90c4d0a7571c9e602ced288f5be06b2306536aa"
+  },
+  "special-user.txt": {
+    "bytes": 1383,
+    "sha256": "cc8634770df9c10188211e2fc67c7d0ae5f42ad4c18a3154a5b92996a1fba998"
+  },
+  "stored-mapping.txt": {
+    "bytes": 3616,
+    "sha256": "b1733cce7c2966dfa10ad573eb265efbb296f51e884bce5438b07c7a933b84f7"
+  },
+  "type-A0O.txt": {
+    "bytes": 625,
+    "sha256": "6092b714709b158a7becce008f2bf445b93bc44b972755deaa913983284fc87e"
+  },
+  "type-A0W.txt": {
+    "bytes": 525,
+    "sha256": "cd9814337cfda3ffe4960f7deea4cc14fc46a3d561f266f4cfa8b5bd335ddfea"
+  },
+  "type-A0Z.txt": {
+    "bytes": 525,
+    "sha256": "89b6d8dde9cfc793154eb3ccd944c2c9eb1646d86375dd02449d39330b284b21"
+  }
+}

@@ -1,4 +1,12 @@
 {
+  "x-pinned-retry-base-key-recipient-evidence": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Existing xtask reproduces selected pinned recipient normalization, mapping fallback, address-dimension/type preservation and bounded direct deletion arms. Missing mapping returns original address; earlier special filtering limits later bot-branch reachability claims. Static evidence only; Rust base-key persistence, higher-count policy, scheduler/TTL and full migration remain unported or untraced.",
+    "evidence": "docs/protocol/apk/2.26.43.72-retry-base-key-addresses/README.md"
+  },
   "x-inbound-epoch-account-admission": {
     "x-cli": true,
     "x-transport": true,

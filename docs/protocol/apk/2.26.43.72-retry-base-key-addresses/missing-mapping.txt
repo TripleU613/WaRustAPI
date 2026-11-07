@@ -1,0 +1,40 @@
+
+# class: LX/0YG;
+# extends: Ljava/lang/Object;
+
+.method private A00(VLLL)  # .registers 14
+    # full signature: LX/0YG;->A00(Lcom/whatsapp/infra/core/jid/PhoneUserJid;Ljava/lang/String;Ljava/lang/String;)V
+    0000..0004  const/16  v1, #0x4e3
+    0004..0006  move-object  v4, v10
+    0006..000a  iget-object  v0, v10, LX/0YG;->A00:LX/05a;
+    000a..000e  iget-object  v0, v0, LX/05a;->A00:LX/00x;
+    000e..0014  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0014..0016  move-result-object  v0
+    0016..001a  check-cast  v0, LX/00X;
+    001a..0020  invoke-virtual  {v0}, LX/00X;->A01()LX/00Y;
+    0020..0022  move-result-object  v0
+    0022..0028  invoke-static  {v0, v1}, LX/09H;->A03(LX/00Y;I)Ljava/lang/Object;
+    0028..002a  move-result-object  v3
+    002a..002c  move-object  v5, v11
+    002c..0032  invoke-static  {v11}, LX/0x9;->A03(LX/0DY;)Z
+    0032..0034  move-result  v0
+    0034..0038  if-nez  v0, +0x22
+    0038..003c  iget-object  v1, v10, LX/0YG;->A02:LX/08Y;
+    003c..0040  const/16  v0, #0x2176
+    0040..0046  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    0046..0048  move-result  v0
+    0048..004c  if-eqz  v0, +0x18
+    004c..0050  const-string  v0, "Missing accountJid"
+    0050..0054  new-instance  v6, Ljava/lang/IllegalStateException;
+    0054..005a  invoke-direct  {v6, v0}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+    005a..005e  iget-object  v1, v10, LX/0YG;->A04:LX/08Z;
+    005e..0060  const/4  v9, #0x1
+    0060..0064  new-instance  v2, LX/FdF;
+    0064..0066  move-object  v8, v12
+    0066..0068  move-object  v7, v13
+    0068..006e  invoke-direct/range  {v2..v9}, LX/FdF;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;I)V
+    006e..0072  const-string  v0, "AxolotlAccountJidMigrationUtils/reportMissingAccountCriticalEvent"
+    0072..0078  invoke-interface  {v1, v0, v2}, LX/08Z;->CbU(Ljava/lang/String;Ljava/lang/Runnable;)V
+    0078..007a  return-void
+    # exception table: 0 try range(s)
+.end method

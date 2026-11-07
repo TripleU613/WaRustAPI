@@ -1,0 +1,21 @@
+# Bounded excerpt; full source bytes=132904, sha256=b6dd55a4fc8b80ede9cdd8804ad7d92d8878b6a6435049ac536584407b5ae5d7
+# Other instructions and exception tables omitted. Not a complete method.
+# class: LX/Feq;
+# extends: Ljava/lang/Object;
+.method public run(V)  # .registers 32
+    # full signature: LX/Feq;->run()V
+    0000..0004  move-object/from16  v0, v31
+    0004..0008  iget  v1, v0, LX/Feq;->$t:I
+    0008..000e  packed-switch  v1, payload@0x2400, cases=[0:@0x1e44, 1:@0x1e14, 2:@0xe, 3:@0xe, 4:@0xe, 5:@0x1224, 6:@0x1dd4, 7:@0x23b6, 8:@0x11d4, 9:@0x1d9a, 10:@0x1ca2, 11:@0x1b06, 12:@0x1a30, 13:@0x1050, 14:@0x19c2, 15:@0x1984, 16:@0x1948, 17:@0xfb8, 18:@0xb48, 19:@0xae8, 20:@0x1910, 21:@0x1910, 22:@0x18da, 23:@0xaa6, 24:@0xa30, 25:@0x18b8, 26:@0x1888, 27:@0x9fe, 28:@0x1862, 29:@0x9d2, 30:@0x1778, 31:@0x1562, 32:@0x972, 33:@0x1532, 34:@0x1500, 35:@0x8a4, 36:@0x14ac, 37:@0x1470, 38:@0x13e2, 39:@0x13be, 40:@0x13aa, 41:@0x1396, 42:@0x1382, 43:@0x844, 44:@0x1340, 45:@0x3c6, 46:@0x2e, 47:@0x129c, 48:@0x1254], default@0xe
+    1532..1536  iget-object  v1, v0, LX/Feq;->A00:Ljava/lang/Object;
+    1536..153a  check-cast  v1, LX/Ens;
+    153a..153e  iget-object  v3, v0, LX/Feq;->A01:Ljava/lang/Object;
+    153e..1542  check-cast  v3, LX/EoY;
+    1542..1546  iget-object  v2, v0, LX/Feq;->A02:Ljava/lang/Object;
+    1546..154a  check-cast  v2, LX/F1A;
+    154a..154e  iget-object  v0, v1, LX/Ens;->A06:LX/05a;
+    154e..1554  invoke-static  {v0}, LX/DBe;->A0g(LX/05a;)LX/0WJ;
+    1554..1556  move-result-object  v1
+    1556..155a  iget-object  v0, v2, LX/F1A;->A01:LX/1dW;
+    155a..1560  invoke-virtual  {v1, v3, v0}, LX/0WJ;->A0r(LX/EoY;LX/1dW;)V
+    1560..1562  return-void

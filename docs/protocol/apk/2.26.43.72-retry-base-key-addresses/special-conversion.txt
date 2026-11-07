@@ -1,0 +1,31 @@
+
+# class: LX/0Dn;
+# extends: Ljava/lang/Object;
+
+.method public A08(LL)  # .registers 4
+    # full signature: LX/0Dn;->A08(Lcom/whatsapp/infra/core/jid/UserJid;)Lcom/whatsapp/infra/core/jid/UserJid;
+    0000..0006  invoke-static  {v3}, LX/0Dn;->A0c(Lcom/whatsapp/infra/core/jid/Jid;)Z
+    0006..0008  move-result  v2
+    0008..000c  const-string  v0, "Jids/convertPNJidtoBotJidIfExists pnJid must be phone jid type:"
+    000c..0010  new-instance  v1, Ljava/lang/StringBuilder;
+    0010..0016  invoke-direct  {v1, v0}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+    0016..001c  invoke-virtual  {v3}, Lcom/whatsapp/infra/core/jid/Jid;->getType()I
+    001c..001e  move-result  v0
+    001e..0024  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    0024..002a  invoke-virtual  {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+    002a..002c  move-result-object  v0
+    002c..0032  invoke-static  {v2, v0}, LX/00L;->A0C(ZLjava/lang/String;)V
+    0032..0036  iget-object  v1, v3, Lcom/whatsapp/infra/core/jid/Jid;->user:Ljava/lang/String;
+    0036..003a  sget-object  v0, LX/7m0;->A00:Lcom/google/common/collect/HashBiMap;
+    003a..003c  const/4  v0, #0x0
+    003c..0042  invoke-static  {v1, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0042..0046  sget-object  v0, LX/7m0;->A00:Lcom/google/common/collect/HashBiMap;
+    0046..004c  invoke-virtual  {v0, v1}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    004c..004e  move-result-object  v0
+    004e..0052  check-cast  v0, Ljava/lang/String;
+    0052..0056  if-eqz  v0, +0x7
+    0056..005a  new-instance  v3, LX/0xC;
+    005a..0060  invoke-direct  {v3, v0}, LX/0xC;-><init>(Ljava/lang/String;)V
+    0060..0062  return-object  v3
+    # exception table: 0 try range(s)
+.end method

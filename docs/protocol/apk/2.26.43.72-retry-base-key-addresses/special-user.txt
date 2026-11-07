@@ -1,0 +1,34 @@
+
+# class: LX/0x9;
+# extends: Ljava/lang/Object;
+
+.method public A0A(ZL)  # .registers 7
+    # full signature: LX/0x9;->A0A(Ljava/lang/String;)Z
+    0000..0002  const/4  v5, #0x0
+    0002..0008  invoke-static  {v6, v5}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-static  {v6}, LX/12J;->A00(Ljava/lang/String;)LX/0yr;
+    000e..0010  move-result-object  v0
+    0010..0014  if-eqz  v0, +0x33
+    0014..0018  iget-wide  v2, v0, LX/0yr;->A00:J
+    0018..0022  const-wide  v0, #0x30ef09630 (13135550000)
+    0022..0028  invoke-static  {v2, v3, v0, v1}, LX/12L;->A00(JJ)I
+    0028..002a  move-result  v0
+    002a..002c  const/4  v4, #0x1
+    002c..0030  if-ltz  v0, +0xe
+    0030..003a  const-wide  v0, #0x30ef0bd3f (13135559999)
+    003a..0040  invoke-static  {v2, v3, v0, v1}, LX/12L;->A00(JJ)I
+    0040..0042  move-result  v0
+    0042..0046  if-gtz  v0, +0x3
+    0046..0048  return  v4
+    0048..0052  const-wide  v0, #0x310ba59b0 (13165550000)
+    0052..0058  invoke-static  {v2, v3, v0, v1}, LX/12L;->A00(JJ)I
+    0058..005a  move-result  v0
+    005a..005e  if-ltz  v0, +0xe
+    005e..0068  const-wide  v0, #0x310ba5a13 (13165550099)
+    0068..006e  invoke-static  {v2, v3, v0, v1}, LX/12L;->A00(JJ)I
+    006e..0070  move-result  v0
+    0070..0074  if-gtz  v0, +0x3
+    0074..0076  return  v4
+    0076..0078  return  v5
+    # exception table: 0 try range(s)
+.end method
