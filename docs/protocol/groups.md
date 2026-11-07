@@ -1870,8 +1870,11 @@ with jid. `groups::queue_refresh` emits that classic shape through the existing
 durable one-shot action queue. `whatsapp-cli group refresh --chat <group-jid>
 --chat <another-group-jid>` is the offline operator entry point; an authenticated
 session transmits it once. Inputs must be distinct concrete group identities
-and number one to 256. That ceiling is explicitly **local**, not an APK/server
-limit; no APK memory/partition/round policy is silently approximated by it.
+and number one to 256. New batch targets also follow the pinned43.72
+[concrete group admission](#prospective-native-batch-group-admission-2026-11-07),
+including its modern/legacy length and leading-digit rules. That256-group
+ceiling is explicitly **local**, not an APK/server limit; no APK memory/partition/
+round policy is silently approximated by it.
 
 **Confirmed/local complete-result application:** group-refresh is the eleventh
 supported group action kind. Settlement uses the existing pending projection
@@ -3439,3 +3442,51 @@ failure policy, encoded attribute order, legacy group compatibility and complete
 callback/persistence remain separate.
 [Exact selected constructors, helper chain and reproduction](apk/2.26.43.72-group-dirty-stanza-serializer/README.md).
 No live account operation or runtime change.
+
+### Prospective native batch-group admission (2026-11-07)
+
+**Confirmed construction mismatch/fixed offline**, baseline `b9c004f3`: new
+batch refreshes accepted generic group IDs that pinned43.72's worker rejects
+before dispatch. The failing-before public API regression queued0@g.us rather
+than refusing it. The [worker/parser chain](apk/2.26.43.72-group-dirty-worker-dispatch/README.md)
+binds FetchTruncatedGroupsJob.A0L ->1bd.A01 ->1bc before either MEX or stanza;
+[complete constructor predicates](apk/2.26.43.72-group-dirty-constructor-boundary/README.md)
+provide the modern/legacy rules. This does not infer server acceptance from
+client construction or claim every group operation has this same admission.
+
+A shared require_batch_group now applies the existing native-aware g.us
+constructor predicate at new refresh query construction, direct public refresh
+entry and supported groups_dirty preparation. Modern users require1..20 ASCII
+digits without leading zero. Legacy prefix uses the pinned PN predicate
+(5..20 ASCII digits, nonzero-leading,10 prefix only when1008); suffix is exactly
+10 ASCII digits with first1..9. Concrete namespace/no-device checks remain.
+This is scoped to new batch requests; generic Jid parsing, stored projections
+and other group command compatibility are unchanged. Generated continuations
+pass the same construction guard inside their existing transaction.
+
+Malformed new dirty lists are rejected by pure preparation before queue/marker
+mutation, keeping the capture and returning no dedicated or generic fallback
+ACK under the existing local unsupported-content policy. Public batch queue
+calls return fixed group InvalidInput without state/journal mutation. Existing
+queued payloads, IDs, outcomes and historical report rows are not migrated,
+rewritten, reset or replayed by this patch. This prospective gate alone does
+not prove every historical action has been validated against the current APK.
+New redeliveries with unsupported group identities can remain unacknowledged
+under the existing local policy; native malformed-job/base-ACK lifecycle remains
+separate. No source snapshot is silently repaired.
+
+The new regression covers both public refresh modes, leading-zero/zero/21-digit
+modern inputs and malformed legacy prefix/suffix cases. It checks no writes,
+then captures equivalent dirty notifications and verifies no queued action or
+ACK fallback, unchanged capture and event head, encrypted reopen and no pending
+request. Positive controls cover modern1/20-digit and valid ordinary/1008-prefix
+legacy forms. Existing queue-before-ACK, follow-up partition/round/error, snapshot
+correlation and actor ACK-cut/restart controls remain; their shortened synthetic
+legacy IDs now use valid10-digit suffixes. Negative fixtures and historical
+short-ID inspection remain unchanged. No new request family or live operation.
+
+Validation: full workspace/all-feature suites passed, including 1,422 library
+tests and actor/group follow-up controls. Strict all-target/all-feature Clippy,
+CLI-reference regeneration, OpenAPI library-symbol test, APK coverage,
+formatting, whitespace and staged hygiene passed. Existing pinned evidence was
+reused; no fresh live account operation or server acceptance claim.

@@ -10803,3 +10803,9 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   with no invented numeric-ID requirement or new hard limit. Native legacy
   compatibility/callback/persistence remain open; no runtime/live change. See
   [serializer](docs/protocol/groups.md#current-dirty-stanza-concrete-serialization-2026-11-07).
+
+- New batch group queries now require pinned concrete group construction rules
+  before queueing/serialization; malformed dirty lists preserve capture without
+  work or fallback ACK. Public/reopen and valid-boundary controls added. Generic
+  parser and saved history are unchanged; no live operation. See
+  [batch group admission](docs/protocol/groups.md#prospective-native-batch-group-admission-2026-11-07).

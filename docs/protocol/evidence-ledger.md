@@ -9834,3 +9834,10 @@ Local public upload eligibility omission corrected at shared entry, including ca
   matches; no missing field found. ID bounds are string length and list
   diagnostics are not proved hard gates. No runtime policy change. See
   [concrete serializer](groups.md#current-dirty-stanza-concrete-serialization-2026-11-07).
+
+- Confirmed new batch refresh construction mismatch at `b9c004f3`:0@g.us
+  queued despite pinned1bc rejection. Scoped new-query/dirty preparation gate
+  now reuses full modern/legacy group constructor rules. Public queue/capture/
+  reopen/no-action and valid-boundary controls added; positive synthetic batch
+  fixtures corrected. Generic parsing/history remain unchanged. See
+  [batch admission](groups.md#prospective-native-batch-group-admission-2026-11-07).

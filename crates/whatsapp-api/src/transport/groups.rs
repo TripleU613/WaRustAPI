@@ -253,10 +253,26 @@ struct RefreshContinuation {
     remaining: Vec<TruncatedGroup>,
 }
 
+fn require_batch_group(jid: &Jid) -> Result<Jid> {
+    require_group(jid)?;
+    // APK43.72 FetchTruncatedGroupsJob.A0L -> 1bd.A01 requires 1bc
+    // before either request branch. Reuse the pinned constructor predicate;
+    // do not tighten generic JID parsing or rewrite saved action payloads.
+    if jid.user.is_empty()
+        || jid.is_ad()
+        || super::messaging::ack_non_user_text_valid(&jid.to_string()) != Some(true)
+    {
+        return Err(invalid(
+            "batch refresh group is not constructible by the pinned group parser",
+        ));
+    }
+    Ok(jid.clone())
+}
+
 fn refresh_node(id: &str, groups: &[TruncatedGroup], follow_up: bool) -> Result<Node> {
     let children = groups
         .iter()
-        .map(|g| Ok(Node::new("group").attr("jid", Jid::parse(&g.jid)?)))
+        .map(|g| Ok(Node::new("group").attr("jid", require_batch_group(&Jid::parse(&g.jid)?)?)))
         .collect::<Result<Vec<_>>>()?;
     Ok(iq(
         id,
@@ -286,10 +302,7 @@ fn queue_refresh_mode(store: &ProtocolStore, groups: &[Jid], follow_up: bool) ->
     let mut unique = std::collections::BTreeSet::new();
     let mut inputs = Vec::new();
     for group in groups {
-        require_group(group)?;
-        if group.user.is_empty() || group.is_ad() {
-            return Err(invalid("batch refresh requires concrete group identities"));
-        }
+        require_batch_group(group)?;
         if !unique.insert(group.to_string()) {
             return Err(invalid("batch refresh has duplicate groups"));
         }
@@ -485,7 +498,7 @@ pub fn handle_dirty_notification(store: &ProtocolStore, node: &Node) -> Result<O
             }
             let jid = super::receipts::jid(group, "jid")
                 .ok_or_else(|| invalid("dirty notification group identity is invalid"))?;
-            require_group(&jid)?;
+            require_batch_group(&jid)?;
             if jid.user.is_empty() || jid.is_ad() || !unique.insert(jid.to_string()) {
                 return Err(invalid(
                     "dirty notification group identity is empty, device or duplicate",
@@ -2439,7 +2452,7 @@ mod tests {
     fn mixed_refresh_outcome_and_full_snapshot_commit_once_across_restart() {
         let (dir, s) = store();
         let groups: Vec<Jid> = (0..4)
-            .map(|n| Jid::parse(&format!("12345-6789{n}@g.us")).unwrap())
+            .map(|n| Jid::parse(&format!("12345-678900000{n}@g.us")).unwrap())
             .collect();
         for group in &groups {
             record_info_reply(
@@ -2566,7 +2579,7 @@ mod tests {
     fn follow_up_is_atomic_ordered_bounded_and_once_only_after_reopen() {
         let (dir, mut s) = store();
         let groups: Vec<Jid> = (0..3)
-            .map(|n| Jid::parse(&format!("12345-6789{n}@g.us")).unwrap())
+            .map(|n| Jid::parse(&format!("12345-678900000{n}@g.us")).unwrap())
             .collect();
         let mut id = queue_refresh_follow_up(&s, &groups).unwrap();
         for round in 0..=2 {
@@ -2664,7 +2677,7 @@ mod tests {
     fn follow_up_excludes_completed_errors_and_never_replays_uncertain_queries() {
         let (_dir, s) = store();
         let groups: Vec<Jid> = (0..4)
-            .map(|n| Jid::parse(&format!("12345-6789{n}@g.us")).unwrap())
+            .map(|n| Jid::parse(&format!("12345-678900000{n}@g.us")).unwrap())
             .collect();
         let id = queue_refresh_follow_up(&s, &groups).unwrap();
         super::super::actions::reserve_pending(&s).unwrap();
@@ -2725,7 +2738,7 @@ mod tests {
     fn follow_up_stops_on_complete_unknown_and_root_refusal() {
         for case in ["complete", "unknown", "refused"] {
             let (_dir, s) = store();
-            let group = Jid::parse("12345-67890@g.us").unwrap();
+            let group = Jid::parse("12345-6789000000@g.us").unwrap();
             let id = queue_refresh_follow_up(&s, std::slice::from_ref(&group)).unwrap();
             super::super::actions::reserve_pending(&s).unwrap();
             let mut node = Node::new("group").attr("id", group);
@@ -2769,7 +2782,7 @@ mod tests {
             .attr("edit", "7")
             .children(vec![Node::new("groups_dirty").children(vec![
                 Node::new("group"), // APK logs/skips missing jid.
-                Node::new("group").attr("jid", "12345-67890@g.us"),
+                Node::new("group").attr("jid", "12345-6789000000@g.us"),
             ])])
     }
 
@@ -2822,10 +2835,110 @@ mod tests {
             .attr("id", "DIRTY1")
             .attr("type", "w:gp2")
             .children(vec![Node::new("groups_dirty").children(vec![
-                Node::new("group").attr("jid", "12345-67891@g.us"),
+                Node::new("group").attr("jid", "12345-6789100000@g.us"),
             ])]);
         assert!(handle_dirty_notification(&s, &changed).unwrap().is_none());
         assert_eq!(super::super::actions::outcomes(&s).unwrap().len(), 1);
+    }
+
+    #[test]
+    fn new_batch_refresh_refuses_unconstructible_native_groups_without_mutation() {
+        for text in [
+            "0@g.us",
+            "01@g.us",
+            "123456789012345678901@g.us",
+            "12345-67890@g.us",
+            "10123-1234567890@g.us",
+            "1234-1234567890@g.us",
+            "12345-0234567890@g.us",
+        ] {
+            for follow_up in [false, true] {
+                let (dir, s) = store();
+                let group = Jid::parse(text).unwrap();
+                let before = s
+                    .read(|tx| {
+                        Ok((
+                            tx.scan(Table::Checkpoints, 1, 100)?,
+                            tx.scan(Table::Outbox, 1, 100)?,
+                        ))
+                    })
+                    .unwrap();
+                let head = s.journal_head().unwrap();
+                let result = if follow_up {
+                    queue_refresh_follow_up(&s, &[group])
+                } else {
+                    queue_refresh(&s, &[group])
+                };
+                assert!(
+                    result.is_err(),
+                    "new query accepted a group rejected by pinned construction"
+                );
+                assert_eq!(
+                    s.read(|tx| Ok((
+                        tx.scan(Table::Checkpoints, 1, 100)?,
+                        tx.scan(Table::Outbox, 1, 100)?
+                    )))
+                    .unwrap(),
+                    before
+                );
+                assert_eq!(s.journal_head().unwrap(), head);
+                let notification = dirty_fixture().children(vec![
+                    Node::new("groups_dirty").children(vec![Node::new("group").attr("jid", text)]),
+                ]);
+                super::super::inbox::preserve(&s, &notification).unwrap();
+                let captured = s.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap();
+                assert!(
+                    handle_dirty_notification(&s, &notification)
+                        .unwrap()
+                        .is_none()
+                );
+                assert!(notification_ack(&notification).unwrap().is_none());
+                assert_eq!(
+                    s.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap(),
+                    captured
+                );
+                assert!(super::super::actions::outcomes(&s).unwrap().is_empty());
+                assert_eq!(s.journal_head().unwrap(), head);
+                drop(s);
+                let s = ProtocolStore::open(OpenOptions {
+                    path: dir.path().join("p.redb"),
+                    account_id: AccountId::new("a").unwrap(),
+                    key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9u8; 32]))),
+                    create: false,
+                })
+                .unwrap();
+                assert_eq!(
+                    s.read(|tx| tx.scan(Table::Checkpoints, 1, 100)).unwrap(),
+                    captured
+                );
+                assert!(
+                    super::super::actions::reserve_pending(&s)
+                        .unwrap()
+                        .is_empty()
+                );
+                assert_eq!(s.journal_head().unwrap(), head);
+            }
+        }
+        for text in [
+            "1@g.us",
+            "99999999999999999999@g.us",
+            "12345-1234567890@g.us",
+            "10080-1234567890@g.us",
+        ] {
+            for follow_up in [false, true] {
+                let (_dir, s) = store();
+                queue_refresh_mode(&s, &[Jid::parse(text).unwrap()], follow_up).unwrap();
+                let requests = super::super::actions::reserve_pending(&s).unwrap();
+                assert_eq!(requests.len(), 1);
+                assert_eq!(
+                    requests[0].child("query").unwrap().child_nodes()[0]
+                        .get_attr("jid")
+                        .and_then(|v| v.as_jid())
+                        .map(ToString::to_string),
+                    Some(text.to_owned())
+                );
+            }
+        }
     }
 
     #[test]
@@ -2974,7 +3087,7 @@ mod tests {
             Some("19999"),
         ] {
             let (_dir, s) = store();
-            let group = Jid::parse("12345-67890@g.us").unwrap();
+            let group = Jid::parse("12345-6789000000@g.us").unwrap();
             let id = queue_refresh(&s, std::slice::from_ref(&group)).unwrap();
             super::super::actions::reserve_pending(&s).unwrap();
             let mut node = Node::new("group")
@@ -3011,8 +3124,8 @@ mod tests {
             "error",
         ] {
             let (_dir, s) = store();
-            let first = Jid::parse("12345-67890@g.us").unwrap();
-            let second = Jid::parse("12345-67891@g.us").unwrap();
+            let first = Jid::parse("12345-6789000000@g.us").unwrap();
+            let second = Jid::parse("12345-6789100000@g.us").unwrap();
             for group in [&first, &second] {
                 record_info_reply(
                     &s,
@@ -3061,7 +3174,7 @@ mod tests {
                     children.pop();
                 }
                 "duplicate" => children[1] = full(&first),
-                "unexpected" => children[1] = full(&Jid::parse("12345-67892@g.us").unwrap()),
+                "unexpected" => children[1] = full(&Jid::parse("12345-6789200000@g.us").unwrap()),
                 "error" => children[1] = full(&second).attr("error", "500"),
                 _ => {}
             }

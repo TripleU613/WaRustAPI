@@ -4423,7 +4423,7 @@ mod tests {
             .attr("id", "DIRTY-CUT")
             .attr("type", "w:gp2")
             .children(vec![Node::new("groups_dirty").children(vec![
-                Node::new("group").attr("jid", "12345-67890@g.us"),
+                Node::new("group").attr("jid", "12345-6789000000@g.us"),
             ])]);
         let mut fake = start(&store, false, None);
         fake.activate().await;
@@ -4457,7 +4457,7 @@ mod tests {
                 .attr("id", id.as_str())
                 .attr("type", "result")
                 .children(vec![Node::new("groups").children(vec![Node::new("group")
-                .attr("id", "12345-67890@g.us").attr("subject", "Recovered")])]),
+                .attr("id", "12345-6789000000@g.us").attr("subject", "Recovered")])]),
         )
         .await;
         tokio::time::timeout(Duration::from_secs(5), async {

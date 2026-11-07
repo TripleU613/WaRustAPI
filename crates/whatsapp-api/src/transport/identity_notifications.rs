@@ -824,12 +824,11 @@ pub(super) mod tests {
                 .attr("id", "LITERAL-ZERO");
             let dir = tempfile::tempdir().unwrap();
             let store = open(&dir.path().join("notifications.redb"));
-            let dirty = base
-                .clone()
-                .attr("type", "w:gp2")
-                .children(vec![Node::new("groups_dirty").children(vec![
-                    Node::new("group").attr("jid", "12345-67890@g.us"),
-                ])]);
+            let dirty = base.clone().attr("type", "w:gp2").children(vec![
+                Node::new("groups_dirty").children(vec![
+                    Node::new("group").attr("jid", "12345-6789000000@g.us"),
+                ]),
+            ]);
             let acks = [
                 super::super::notifications::base_ack(
                     &base.clone().attr("type", "picture"),
@@ -895,7 +894,7 @@ pub(super) mod tests {
             .attr("type", "w:gp2")
             .attr("participant", from)
             .children(vec![Node::new("groups_dirty").children(vec![
-                Node::new("group").attr("jid", "12345-67890@g.us"),
+                Node::new("group").attr("jid", "12345-6789000000@g.us"),
             ])]);
         let privacy = base
             .clone()
