@@ -675,8 +675,17 @@ async fn answer_retries(
             Ok(()) => whatsapp_api::transport::receipts::record(store, &node),
             Err(Error::InvalidInput { field, reason }) => {
                 eprintln!(
-                    "group-send: receipt content refused ({field}: {reason}); frame preserved, not correlated or answered"
+                    "group-send: receipt content refused ({field}: {reason}); frame preserved, not correlated or retried"
                 );
+                if let Some(nack) =
+                    whatsapp_api::transport::messaging::received_parse_error_confirmation(&node)
+                    && let Err(error) = write_node(channel, &nack).await
+                {
+                    eprintln!(
+                        "group-send: error ACK write failed ({error}); window ended without replay"
+                    );
+                    break;
+                }
                 continue;
             }
             Err(error) => Err(error),

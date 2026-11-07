@@ -258,3 +258,7 @@ confirmed native parse-error causes separately from local limits/storage faults,
 use the fresh descriptor without recipient/edit, preserve capture/write ordering
 and forbid resend/query/identity work. Queue recovery, unsupported metadata and
 remote acceptance remain unverified; this is not permission to ACK all refusals.
+
+## Ordinary required-device NACK implementation (2026-11-06)
+
+**Fixed offline:** [cause separation, fresh error487 descriptor, actor tests and limits](retry-ack-dispatch.md#ordinary-required-device-error-responses-implemented-2026-11-06). Known required-device failures now get a response after capture without recording batch facts. Explicit offline aggregate validation also precedes the supported-recipient no-fact shortcut. Generic local/binary/storage failures remain distinct; key-aggregate skipping and valid fact attribution are unchanged. No live account operation.

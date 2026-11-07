@@ -969,6 +969,56 @@ pub(super) fn handled_retry_confirmation(incoming: &Node) -> Option<Node> {
     receipt_ack_after_processing(incoming, true)
 }
 
+/// Build an error487 receipt ACK only for a proven native required-device parse
+/// failure from pure validation. No store, network, retry or fact mutation.
+/// Call only after durable capture; a failed write must not be replayed locally.
+/// Local bounds, opaque binary failures and stored-row errors do not qualify.
+pub fn received_parse_error_confirmation(incoming: &Node) -> Option<Node> {
+    let Err(crate::Error::InvalidInput { field, .. }) = super::receipts::validate(incoming) else {
+        return None;
+    };
+    if field != super::receipts::NATIVE_REQUIRED_DEVICE_FIELD {
+        return None;
+    }
+    receipt_native_parse_error_confirmation(incoming)
+}
+
+// APK43.72 15H/14h ->1rg.A04/A03 ->0Sf.A0S ->F3e.A05. Only the
+// receive driver's proven native validation cause invokes this fresh descriptor.
+// This builder is not a classifier for arbitrary local receipt failures.
+pub(super) fn receipt_native_parse_error_confirmation(incoming: &Node) -> Option<Node> {
+    if incoming.description != "receipt"
+        || ["from", "participant"].into_iter().any(|name| {
+            incoming
+                .get_attr(name)
+                .is_some_and(ack_attribute_is_known_unwritable)
+        })
+    {
+        return None;
+    }
+    let id = incoming.get_attr("id")?.as_text()?;
+    if id.is_empty() || id.len() > 128 {
+        return None;
+    }
+    let from = super::receipts::receipt_ack_wire_address(incoming, "from")?;
+    let kind = match incoming.get_attr("type") {
+        None => None,
+        Some(value) => Some(value.as_text()?),
+    };
+    let mut ack = Node::new("ack")
+        .attr("id", id)
+        .attr("to", from)
+        .attr("class", "receipt");
+    if let Some(kind) = kind.filter(|kind| *kind != "delivery") {
+        ack = ack.attr("type", kind);
+    }
+    if let Some(participant) = super::receipts::receipt_ack_wire_address(incoming, "participant") {
+        ack = ack.attr("participant", participant);
+    }
+    // Fresh 1rg context intentionally excludes recipient/edit/category/children.
+    Some(ack.attr("error", "487"))
+}
+
 fn receipt_ack_after_processing(incoming: &Node, handled_retry: bool) -> Option<Node> {
     // Native type11 cannot be serialized by the protocol JID writer. Keep
     // unsupported self-route receipts captured, not acknowledged as ordinary.
@@ -2441,6 +2491,58 @@ mod tests {
             ack.get_attr("to").and_then(|v| v.as_jid()),
             Some(&Jid::parse("12345@lid").unwrap())
         );
+    }
+
+    #[test]
+    fn ordinary_parse_error_descriptor_copies_only_selected_root_fields() {
+        let input = Node::new("receipt")
+            .attr("id", "ROOT")
+            .attr("from", "15555550100@s.whatsapp.net")
+            .attr("type", "read")
+            .attr("participant", "12345:0@lid")
+            .attr("recipient", "gdpr@s.whatsapp.net")
+            .attr("edit", "7")
+            .attr("category", "private")
+            .children(vec![Node::new("participants").attr("message_id", "INNER")]);
+        let ack = receipt_native_parse_error_confirmation(&input).unwrap();
+        assert_eq!(
+            ack,
+            Node::new("ack")
+                .attr("id", "ROOT")
+                .attr("to", Jid::parse("15555550100@s.whatsapp.net").unwrap())
+                .attr("class", "receipt")
+                .attr("type", "read")
+                .attr(
+                    "participant",
+                    Jid::new_ad("12345", 0, 0, crate::model::jid::Server::Lid).unwrap()
+                )
+                .attr("error", "487")
+        );
+        Encoder::new(TokenDictionary::comparison_2_26_37_71())
+            .encode(&ack)
+            .unwrap();
+        for field in ["from", "participant"] {
+            assert!(
+                receipt_native_parse_error_confirmation(
+                    &input.clone().attr(field, "Server@s.whatsapp.net")
+                )
+                .is_none()
+            );
+            assert!(
+                receipt_native_parse_error_confirmation(
+                    &input.clone().attr(field, "12345:256@lid")
+                )
+                .is_none()
+            );
+        }
+        let nullable = receipt_native_parse_error_confirmation(
+            &input.clone().attr("participant", "12345:100@lid"),
+        )
+        .unwrap();
+        assert!(nullable.get_attr("participant").is_none());
+        let delivery =
+            receipt_native_parse_error_confirmation(&input.attr("type", "delivery")).unwrap();
+        assert!(delivery.get_attr("type").is_none());
     }
 
     #[test]

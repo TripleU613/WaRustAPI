@@ -1371,6 +1371,18 @@ fn require_supported_self_addresses(node: &Node) -> Result<()> {
     Ok(())
 }
 
+// A recipient suppresses this client's ordinary fact projection, not the native
+// F10.A03 required-actor grammar of an explicit offline aggregate. Both pure
+// validation and record must expose the same proven parse failure in that case.
+fn validate_recipient_offline_aggregate(node: &Node) -> Result<()> {
+    if node.child_nodes().first().is_some_and(|child| {
+        child.description == "participants" && child.get_attr("message_id").is_some()
+    }) {
+        expand(node, || Ok(0))?;
+    }
+    Ok(())
+}
+
 /// Persist supported direct receipt facts, matching sends by peer AND wire ID.
 /// Group participant facts use group_receipts; unsupported/self routes stay raw.
 pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
@@ -1379,6 +1391,7 @@ pub fn record(store: &ProtocolStore, node: &Node) -> Result<usize> {
     }
     require_supported_self_addresses(node)?;
     if recipient(node).is_some() {
+        validate_recipient_offline_aggregate(node)?;
         return Ok(0);
     }
     let receipts = expand(node, || {
@@ -1404,7 +1417,7 @@ pub fn validate(node: &Node) -> Result<()> {
     }
     require_supported_self_addresses(node)?;
     if recipient(node).is_some() {
-        return Ok(());
+        return validate_recipient_offline_aggregate(node);
     }
     // The default time only fills an absent participant `t`; it never decides
     // a refusal, so validation needs no clock.
@@ -1449,8 +1462,18 @@ fn routes_to_group(node: &Node) -> bool {
     jid(node, "from").is_some_and(|from| from.server == Server::Group)
 }
 
+// Only pure validation failures with this tag authorize the evidenced 1rg.A04
+// ordinary parse-error response. Local bounds/storage/opaque binary failures do not.
+pub(super) const NATIVE_REQUIRED_DEVICE_FIELD: &str = "receipt.aggregate.native_required_device";
+
 fn offline_aggregate(node: &Node, participants: &Node) -> Result<Vec<Node>> {
     let invalid = |reason| Error::invalid("receipt.aggregate", reason);
+    let required = || {
+        Error::invalid(
+            NATIVE_REQUIRED_DEVICE_FIELD,
+            "missing or invalid required DeviceJid",
+        )
+    };
     let id = participants
         .get_attr("message_id")
         .and_then(|v| v.as_text())
@@ -1474,9 +1497,7 @@ fn offline_aggregate(node: &Node, participants: &Node) -> Result<Vec<Node>> {
         // APK43.72 F10.A03 0098 requests DeviceJid with required A0B.
         // A0A returns null on constructor/cast failure; A0B then throws LIL.
         // This branch must refuse, not apply key-aggregate null skipping.
-        let source = item
-            .get_attr("jid")
-            .ok_or_else(|| invalid("missing or invalid participant jid"))?;
+        let source = item.get_attr("jid").ok_or_else(required)?;
         if matches!(
             source.as_text().and_then(super::messaging::ack_user_text),
             Some(
@@ -1485,36 +1506,43 @@ fn offline_aggregate(node: &Node, participants: &Node) -> Result<Vec<Node>> {
                     | super::messaging::AckUserText::NonUser(_)
             )
         ) {
-            return Err(invalid("missing or invalid participant jid"));
+            return Err(required());
         }
         let actor =
             jid(item, "jid").ok_or_else(|| invalid("missing or invalid participant jid"))?;
-        let known_binary_failure = source.as_jid().is_some_and(|value| {
+        let known_binary_cast_failure = if let Some(value) = source.as_jid().filter(|value| {
             value.agent == 0
                 && matches!(
                     value.kind,
                     crate::model::jid::JidKind::Plain | crate::model::jid::JidKind::AgentDevice
                 )
-                && matches!(
-                    super::messaging::binary_ack_user_class(value),
-                    Some(
-                        super::messaging::BinaryAckUserClass::Invalid
-                            | super::messaging::BinaryAckUserClass::ServiceUser
-                            | super::messaging::BinaryAckUserClass::NonUser
-                            | super::messaging::BinaryAckUserClass::ServerOnly
-                    )
-                )
-        });
+        }) {
+            match super::messaging::binary_ack_user_class(value) {
+                // Upstream binary constructor/recovery behavior is not the same
+                // proof as an actual wrong-class object reaching required A0B.
+                Some(super::messaging::BinaryAckUserClass::Invalid) => {
+                    return Err(invalid("missing or invalid participant jid"));
+                }
+                Some(
+                    super::messaging::BinaryAckUserClass::ServiceUser
+                    | super::messaging::BinaryAckUserClass::NonUser
+                    | super::messaging::BinaryAckUserClass::ServerOnly,
+                ) => true,
+                _ => false,
+            }
+        } else {
+            false
+        };
         // These known generic classes neither are DeviceJid nor satisfy
         // 0Dn.A0k's UserJid-to-primary-device conversion predicate.
-        if known_binary_failure
+        if known_binary_cast_failure
             || matches!(
                 actor.server,
                 Server::Group | Server::Broadcast | Server::Newsletter
             )
             || matches!(&actor.server, Server::Other(server) if matches!(server.as_str(), "call" | "temp"))
         {
-            return Err(invalid("missing or invalid participant jid"));
+            return Err(required());
         }
         let kind = match item.get_attr("type") {
             None => "delivery",
@@ -4580,6 +4608,55 @@ mod tests {
                 Ok(ticket.local_id)
             })
             .unwrap()
+    }
+
+    #[test]
+    fn ordinary_native_parse_error_cause_excludes_local_and_binary_refusals() {
+        let make = |actor: Node| {
+            Node::new("receipt")
+                .attr("id", "ROOT")
+                .attr("from", "15555550100@s.whatsapp.net")
+                .children(vec![
+                    Node::new("participants")
+                        .attr("message_id", "INNER")
+                        .children(vec![actor]),
+                ])
+        };
+        let field = |node: &Node| match validate(node).unwrap_err() {
+            Error::InvalidInput { field, .. } => field,
+            _ => panic!("pure validation error"),
+        };
+        for actor in [
+            Node::new("participant").attr("t", "20"),
+            Node::new("participant")
+                .attr("jid", "12345:100@lid")
+                .attr("t", "20"),
+            Node::new("participant")
+                .attr("jid", "Server@s.whatsapp.net")
+                .attr("t", "20"),
+            Node::new("participant")
+                .attr("jid", Jid::parse("123@g.us").unwrap())
+                .attr("t", "20"),
+        ] {
+            assert_eq!(field(&make(actor)), NATIVE_REQUIRED_DEVICE_FIELD);
+        }
+        for actor in [
+            Node::new("participant").attr("jid", "15555550100@s.whatsapp.net"),
+            Node::new("participant")
+                .attr("jid", Jid::parse("12345:100@lid").unwrap())
+                .attr("t", "20"),
+        ] {
+            assert_ne!(field(&make(actor)), NATIVE_REQUIRED_DEVICE_FIELD);
+        }
+        let oversized = Node::new("receipt")
+            .attr("id", "ROOT")
+            .attr("from", "15555550100@s.whatsapp.net")
+            .children(vec![
+                Node::new("participants")
+                    .attr("message_id", "INNER")
+                    .children(vec![Node::new("participant"); 4097]),
+            ]);
+        assert_ne!(field(&oversized), NATIVE_REQUIRED_DEVICE_FIELD);
     }
 
     #[test]

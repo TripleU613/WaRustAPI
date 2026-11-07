@@ -762,13 +762,19 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                     );
                 }
                 // Same gate as `listen` (receive audit F1): a receipt whose
-                // wire content is refused stays captured without ACK and the
-                // window continues; a fault in stored rows still ends it.
+                // wire content is refused stays captured; proven native parse
+                // failures may get a fresh error ACK. Stored faults still end it.
+                let mut receipt_error_confirmation = None;
                 let receipt_accepted = match whatsapp_api::transport::receipts::validate(&node) {
                     Ok(()) => true,
                     Err(Error::InvalidInput { field, reason }) => {
+                        receipt_error_confirmation =
+                            whatsapp_api::transport::messaging::received_parse_error_confirmation(
+                                &node,
+                            );
                         eprintln!(
-                            "transport: receipt content refused ({field}: {reason}); captured without ACK"
+                            "transport: receipt content refused ({field}: {reason}); captured; error response available={}",
+                            receipt_error_confirmation.is_some()
                         );
                         false
                     }
@@ -815,12 +821,15 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                         Err(error) => return Err(error),
                     }
                 }
-                let confirmation = if (tag == "receipt" && receipt_accepted)
+                let confirmation = if let Some(nack) = receipt_error_confirmation {
+                    Some(nack)
+                } else if (tag == "receipt" && receipt_accepted)
                     || matches!(
                         incoming,
                         whatsapp_api::transport::inbox::IncomingResult::Decrypted
                             | whatsapp_api::transport::inbox::IncomingResult::Duplicate
-                    ) {
+                    )
+                {
                     whatsapp_api::transport::messaging::received_confirmation_for_account(
                         &store, &account, &node,
                     )?

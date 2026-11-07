@@ -1,3 +1,11 @@
+2026-11-06 — **Implemented ordinary required-device parse-error ACKs.**
+Proven native required-actor failures now get a fresh root error487 response after
+durable capture in the normal actor and selected CLI receive windows. Local limits,
+unverified binary failures and storage errors remain separate. Recipient-bearing
+offline aggregates no longer bypass this grammar check; no facts or retry work
+are authorized by a NACK. Synthetic cut/reopen/redelivery checks retain no-replay.
+[Cause/output contract, retained native evidence, verification and open scope](docs/protocol/retry-ack-dispatch.md#ordinary-required-device-error-responses-implemented-2026-11-06). No live account operation.
+
 2026-11-06 — **Traced ordinary receipt error487 dispatch and corrected an evidence error.**
 Both selected native wrapper paths reach the parsing-error handler for LIL.
 A fresh export refuted the old claim that A07(true) returns without sending:

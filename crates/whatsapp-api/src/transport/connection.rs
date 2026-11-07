@@ -1108,13 +1108,21 @@ pub(crate) async fn drive(
                 // validation stage is caught: once it passes, a refusal from
                 // recording concerns our stored rows (a corrupt outbox entry,
                 // an ambiguous wire ID) and ends the session visibly.
+                let mut receipt_error_ack = false;
                 let receipt_recorded = match super::receipts::validate(&node) {
                     Ok(()) => {
                         super::receipts::record(&store, &node)?;
                         true
                     }
                     Err(Error::InvalidInput { field, reason }) => {
-                        tracing::warn!(field, reason, "receipt content refused; captured without ACK; session continues");
+                        if field == super::receipts::NATIVE_REQUIRED_DEVICE_FIELD
+                            && let Some(nack) = super::messaging::receipt_native_parse_error_confirmation(&node) {
+                                // Capture is already durable; validation failed before facts.
+                                // A failed/uncertain write ends the epoch without replay.
+                                link.send(&nack).await?;
+                                receipt_error_ack = true;
+                        }
+                        tracing::warn!(field, reason, error_ack = receipt_error_ack, "receipt content refused; session continues");
                         false
                     }
                     Err(error) => return Err(error),
@@ -1323,7 +1331,7 @@ pub(crate) async fn drive(
                 // A peer that could not decrypt our direct send asks for it
                 // again (2.26.37.71 RetryReceiptHandler; retry_answer). The
                 // answer is reserved before this write; refusals are recorded.
-                let mut confirmed = false;
+                let mut confirmed = receipt_error_ack;
                 if receipt_recorded {
                     match super::retry_answer::answer_with_confirmation(&store, &account, &node, epoch).await {
                         Ok(Some(answer)) => {
@@ -3650,6 +3658,128 @@ mod tests {
                     .is_some()
             );
         }
+    }
+
+    #[tokio::test]
+    async fn offline_required_actor_parse_error_gets_fresh_487_after_capture() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("ordinary-parse-error.redb");
+        let store = open(&path);
+        let snapshot = || {
+            store
+                .read(|tx| {
+                    Ok((
+                        tx.scan(Table::Outbox, 1, 100)?,
+                        tx.scan(Table::PeerIdentities, 1, 100)?,
+                        tx.scan(Table::SignalSessions, 1, 100)?,
+                    ))
+                })
+                .unwrap()
+        };
+        let before = snapshot();
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        (&mut fake.ready).await.unwrap();
+        let input = Node::new("receipt")
+            .attr("id", "ROOT-PARSE-ERROR")
+            .attr("from", "15555550100@s.whatsapp.net")
+            .attr("type", "read")
+            .attr("participant", "15555550100:2@s.whatsapp.net")
+            .attr("recipient", "15555550999@s.whatsapp.net")
+            .attr("edit", "7")
+            .attr("category", "private")
+            .children(vec![
+                Node::new("participants")
+                    .attr("message_id", "INNER-KEY")
+                    .children(vec![
+                        Node::new("participant")
+                            .attr("jid", "12345:100@lid")
+                            .attr("t", "20"),
+                    ]),
+            ]);
+        let capture = format!(
+            "inbound:sha256:{}",
+            hex::encode(sha2::Sha256::digest(encode(&input).unwrap()))
+        );
+        let expected = Node::new("ack")
+            .attr("id", "ROOT-PARSE-ERROR")
+            .attr("to", Jid::parse("15555550100@s.whatsapp.net").unwrap())
+            .attr("class", "receipt")
+            .attr("type", "read")
+            .attr(
+                "participant",
+                Jid::parse("15555550100:2@s.whatsapp.net").unwrap(),
+            )
+            .attr("error", "487");
+        for _ in 0..2 {
+            fake.deliver(input.clone()).await;
+            let (ack, written) = fake.written_within(Duration::from_millis(300)).await;
+            assert_eq!(ack, expected);
+            encode(&ack).unwrap();
+            assert!(
+                store
+                    .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                    .unwrap()
+                    .is_some()
+            );
+            assert_eq!(snapshot(), before);
+            written.send(Ok(())).unwrap();
+        }
+        // This local bound is not a native LIL cause and gets no error ACK.
+        let oversized = Node::new("receipt")
+            .attr("id", "LOCAL-BOUND")
+            .attr("from", "15555550100@s.whatsapp.net")
+            .children(vec![
+                Node::new("participants")
+                    .attr("message_id", "INNER-KEY")
+                    .children(vec![
+                        Node::new("participant")
+                            .attr("jid", "15555550100@s.whatsapp.net")
+                            .attr("t", "20");
+                        4097
+                    ]),
+            ]);
+        fake.deliver(oversized).await;
+        fake.deliver(
+            Node::new("iq")
+                .attr("type", "get")
+                .attr("xmlns", "urn:xmpp:ping"),
+        )
+        .await;
+        let (pong, written) = fake.written().await;
+        assert_eq!(pong.description, "iq");
+        written.send(Ok(())).unwrap();
+        fake.nothing_written(Duration::from_millis(30)).await;
+        fake.stop_cleanly().await;
+        assert_eq!(snapshot(), before);
+        let mut cut = start(&store, false, None);
+        cut.activate().await;
+        (&mut cut.ready).await.unwrap();
+        cut.deliver(input).await;
+        let (ack, written) = cut.written().await;
+        assert_eq!(ack, expected);
+        written
+            .send(Err(Error::Io(std::io::Error::new(
+                std::io::ErrorKind::BrokenPipe,
+                "synthetic NACK write cut",
+            ))))
+            .unwrap();
+        assert!(cut.finished().await.is_err());
+        assert_eq!(snapshot(), before);
+        drop(store);
+        let reopened = open(&path);
+        assert!(
+            reopened
+                .read(|tx| tx.get(Table::Checkpoints, capture.as_bytes(), 1))
+                .unwrap()
+                .is_some()
+        );
+        let mut next = start(&reopened, false, None);
+        next.activate().await;
+        (&mut next.ready).await.unwrap();
+        // A stored capture is not authorization to replay an uncertain NACK.
+        next.nothing_written(Duration::from_millis(30)).await;
+        next.stop_cleanly().await;
     }
 
     #[tokio::test]

@@ -1,4 +1,11 @@
 {
+  "x-ordinary-required-device-error-ack": {
+    "x-cli": "existing listen, lab-transport receive and group-send post-send windows; no new command or flag",
+    "x-transport": "pure validation native required-device cause; normal actor and selected CLI error ACK output",
+    "x-live": false,
+    "description": "Confirmed native ordinary required-device failures receive fresh root receipt ACK error487 after capture. The new pure public library builder whatsapp_api::transport::messaging::received_parse_error_confirmation validates the cause before constructing supported output. Diagnostic field receipt.aggregate.native_required_device is distinct from local bounds, unverified binary Invalid, storage and other unsupported failures. Recipient-bearing explicit message_id aggregates preflight grammar without granting fact projection. Output copies root id/from/type/participant, omits recipient/edit/category/children, and applies existing writable-field and supported sender/id guards. Error responses do not authorize facts, resend, queries or identity changes. Normal actor cut/reopen/redelivery and pure builder/cause tests are offline; CLI sites typechecked. Other causes, native recovery, nullable sender/subtype grammar and live acceptance remain open. No HTTP route or account operation.",
+    "evidence": "docs/protocol/retry-ack-dispatch.md#ordinary-required-device-error-responses-implemented-2026-11-06"
+  },
   "x-ordinary-receipt-parse-error-research": {
     "x-cli": "xtask apk-virtual-overrides <apk> --class 'LX/1k2;' --method BX2 --signature '()Z' --include-interfaces",
     "x-transport": "research only; ordinary parse-error ACK runtime remains unimplemented",

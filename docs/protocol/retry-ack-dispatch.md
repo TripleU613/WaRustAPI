@@ -239,3 +239,79 @@ confirmed native parse-error causes separately from local limits/storage faults,
 use the fresh descriptor without recipient/edit, preserve capture/write ordering
 and forbid resend/query/identity work. Queue recovery, unsupported metadata and
 remote acceptance remain unverified; this is not permission to ACK all refusals.
+
+## Ordinary required-device error responses implemented (2026-11-06)
+
+**Confirmed local correction / offline**, grounded in the pinned APK2.26.43.72
+[ordinary handler/wrapper/error-dispatch trace](apk/2.26.43.72-ordinary-receipt-parse-error-dispatch/README.md)
+and [required DeviceJid accessor](apk/2.26.43.72-offline-required-receipt-actor/README.md).
+F10.A03 required-actor failures reach 1rg.A04/A03 and its fresh error487
+context. This implements the previously documented ordinary response gap for
+proven required-device causes, not every local receipt refusal.
+
+### Cause classification precedes output
+
+The pure parser assigns `receipt.aggregate.native_required_device` only to a
+missing required actor, known native-null PN/LID/hosted text, known wrong-class
+text or generic classes, and the bounded binary service/nonuser/server-only
+cast failures. Ordinary binary `Invalid` remains a generic refusal because its
+upstream constructor/recovery error route is not established by a class-cast
+proof. Local batch bounds, opaque/unknown representations, other unported
+schema/time/type failures, self-user policy, and stored-row/storage failures
+are NOT automatically mapped to487. The field is an internal diagnostic cause,
+not an HTTP route, user-supplied switch or identity authority.
+
+A supported recipient previously caused validate/record to return before
+inspecting offline aggregate grammar. Both now preflight only the explicit
+message_id aggregate in that no-fact-projection branch. A valid recipient still
+does not grant ordinary fact projection, while a confirmed malformed required
+actor exposes the same native cause. Other recipient/aggregate paths retain
+existing behavior.
+
+### Fresh root descriptor, all selected receive paths
+
+`messaging::received_parse_error_confirmation` is a public, pure, validation-gated
+builder: it returns a Node only for that native cause and supported root output.
+It performs no capture, store mutation or I/O. Normal connection.rs, the CLI
+comparison receive window and group-send post-send window now emit the response
+after preserving the inbound frame. A genuine redelivery may receive another
+NACK; a stored capture does not authorize local write replay.
+
+The descriptor uses ROOT id/from/type/participant and error487, without
+recipient/edit/category or aggregate children. It never substitutes the inner
+message_id for the stanza id. Delivery type is omitted; other textual root types
+are copied. Known-null root participants are omitted; known noncompliant or
+out-of-range selected writer fields suppress construction. An omitted recipient
+cannot make the fresh output unwritable. Existing supported root-id and sender
+admission remains: this does not yet port arbitrary nullable sender output,
+unknown metadata or every native subtype.
+
+The normal driver sets receipt_recorded=false after the validation failure, so
+it does not record facts, invoke retry answers or build an ordinary success ACK.
+Its error ACK diagnostic is distinct from receipt success/facts. The comparison
+window reuses existing outcome_unknown-before-write/written-after-write markers;
+write failure ends the window. Group-send error ACK write failure ends its
+post-send window without replay or claiming the original send failed.
+
+### Verification and remaining scope
+
+`offline_required_actor_parse_error_gets_fresh_487_after_capture` first timed out
+waiting for the missing NACK. It now checks a real UserJid recipient, exact fresh
+root descriptor, capture-before-write, repeated server delivery, unchanged
+outbox/peer-identity/session snapshots, exclusion of a 4097-item local bound,
+a following ping barrier, a synthetic write cut, preserved capture after reopen
+and no automatic NACK replay on the next activation. Existing aggregate tests
+retain atomic refusal with a valid sibling and unchanged facts/journal.
+
+`ordinary_native_parse_error_cause_excludes_local_and_binary_refusals` binds the
+cause distinction. `ordinary_parse_error_descriptor_copies_only_selected_root_fields`
+checks literal LID0 projection, selected writer refusals, null participant omission,
+codec output and delivery-type omission. Full CLI typechecking covers the two
+additional receive call sites; they are not represented as independently observed
+network traffic.
+
+Unknown native constructor/queue/recovery behavior, other parse-error causes,
+full nullable sender grammar, all request families and live acceptance remain
+open. No new query, resend, identity change or live account operation occurred.
+Run `cargo test --locked --workspace --all-features -- --test-threads=4` plus
+strict workspace Clippy and the existing CLI/OpenAPI/coverage/hygiene gates.
