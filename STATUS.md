@@ -10536,3 +10536,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   mask `0x11` and extracts bit 7; raw default `0x11` is not treated as true.
   Full caller construction and public result remain unresolved. See
   [decoder evidence](docs/protocol/apk/2.26.43.72-mobileconfig-handle-publication/bool-decode.md).
+
+- Confirmed selected APK 2.26.43.72 boolean metadata getter uses default
+  `0xffffff11`, root field 8 and cached word+0x5c count. This is separate from
+  raw byte default `0x11`; public flag meanings remain unknown. See
+  [metadata evidence](docs/protocol/apk/2.26.43.72-mobileconfig-handle-publication/bool-metadata.md).

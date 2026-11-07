@@ -40,3 +40,7 @@ binding the corresponding Rust path and complete caller semantics.
 
 Retained bool-decode-body.txt, bool-decode-args.txt and bool-decode-slots.txt
 provide bounded LLVM/RELA reproduction. Full REA record is rea-bool-decode.json.
+
+The [metadata getter follow-up](bool-metadata.md) records the exact default
+word 0xffffff11, field-8 source and cached count bound, separately from the raw
+byte getter. Flag names and final public result remain unresolved.

@@ -1,7 +1,7 @@
 {
   "README.md": {
-    "bytes": 8876,
-    "sha256": "664d1b47376e7c61b315b5cb989c5358b271954fda89a0b050e2ba8d56289c85"
+    "bytes": 9100,
+    "sha256": "0b85041dd569a6992ebaca0fced77c23ede0dd8b60df17391d23f0315b8ce21a"
   },
   "bool-decode-args.txt": {
     "bytes": 243,
@@ -16,8 +16,12 @@
     "sha256": "f0b70c553c75454427662c0ccce6c96f2b9e22f6c947d6ade8f4d4c9f400829d"
   },
   "bool-decode.md": {
-    "bytes": 2422,
-    "sha256": "7da6239cb54631d8cad06b397c61b3a13c44369094535574f0095c312785ea90"
+    "bytes": 2646,
+    "sha256": "20159cbc4459e64355c8abb086d4d9d9c4cba676e41c70472473b4af4d74880c"
+  },
+  "bool-metadata.md": {
+    "bytes": 2469,
+    "sha256": "b7ca3c1e3ca4317f4192cdfeac39a8a1990538f47de31dd6f3cacd9969c13556"
   },
   "bool-reader-accessor.txt": {
     "bytes": 851,
@@ -135,6 +139,30 @@
     "bytes": 3490,
     "sha256": "e329e3c79b1591b6741b64d04abb23733237086b9723323fca3231a6945d6b74"
   },
+  "metadata-accessor.txt": {
+    "bytes": 246,
+    "sha256": "50ba036d1302643e81a02e31995932d467ea73c65c69667361aad8d6b12495b0"
+  },
+  "metadata-body.txt": {
+    "bytes": 1112,
+    "sha256": "82bf043d24c8261fc96e6bee4805384e79c7abdeecb042fee7610bbb5666afbe"
+  },
+  "metadata-count-init.txt": {
+    "bytes": 944,
+    "sha256": "e04e45bd2693d2076134505b924a398e9c4b18dcff68bc4fd7f59801285756f1"
+  },
+  "metadata-data.json": {
+    "bytes": 224,
+    "sha256": "db2558a01670745062196f296ca5620d851837b4cc32daff392ed05d1d664990"
+  },
+  "metadata-helpers.txt": {
+    "bytes": 860,
+    "sha256": "eb477a5abba9e0bd15e0e7c267d88d9c08b04f2636fe17bd8db1a8076432b141"
+  },
+  "metadata-slots.txt": {
+    "bytes": 83,
+    "sha256": "1a55027a6ce4d0b61a1f9ff58878db294f3fa16cf78c4b20d38df482da7b6e40"
+  },
   "nonnull-result.txt": {
     "bytes": 204,
     "sha256": "8df564ddb5c9783e3f5db4c58fd657072075b9c05260d7d795c3ba112deb6b8e"
@@ -166,6 +194,10 @@
   "rea-bool-decode.json": {
     "bytes": 4793,
     "sha256": "49a44d7d68bd111f9c7063677ae25263d781a90695b7de8d889445e745a706f8"
+  },
+  "rea-bool-metadata.json": {
+    "bytes": 5205,
+    "sha256": "adde75f0521273ca8cf4a0875ca1515c049c46866487c1f384b1863f23c3a68c"
   },
   "rea-bool-reader.json": {
     "bytes": 5805,

@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-bool-metadata-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-handle-publication/bool-metadata.md",
+    "finding": "Selected boolean metadata getter uses field 8, cached count and raw default 0xffffff11; public flag meanings unresolved."
+  },
   "x-mobileconfig-bool-decoder-evidence": {
     "x-cli": false,
     "x-transport": false,

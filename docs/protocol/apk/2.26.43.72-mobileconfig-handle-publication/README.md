@@ -155,3 +155,7 @@ unresolved; raw nonzero must not be assumed to mean a Rust boolean.
 The [selected boolean decoder](bool-decode.md) now establishes conditional
 mask-0x11 gating and bit-7 extraction. Full receiver construction and final API
 return semantics remain untraced.
+
+The [metadata getter follow-up](bool-metadata.md) records the exact default
+word 0xffffff11, field-8 source and cached count bound, separately from the raw
+byte getter. Flag names and final public result remain unresolved.
