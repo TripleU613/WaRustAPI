@@ -155,6 +155,144 @@ pub(crate) struct ReservedAnswer {
     pub refetch: Option<RefetchWriteGuard>,
 }
 
+/// Final retry write owns a committed re-encryption, never a replay permit.
+#[derive(Clone)]
+pub(crate) struct CommittedResendGuard {
+    account_authority: [u8; 32],
+    wire_id: MessageId,
+    entry_sha256: [u8; 32],
+    payload_sha256: [u8; 32],
+    original_prepared_at: Timestamp,
+}
+fn retry_entry_sha256(entry: &OutboxEntry) -> Result<[u8; 32]> {
+    use sha2::{Digest, Sha256};
+    let raw = zeroize::Zeroizing::new(
+        serde_json::to_vec(entry)
+            .map_err(|_| Error::invalid("retry", "invalid committed retry entry"))?,
+    );
+    Ok(Sha256::digest(&*raw).into())
+}
+impl CommittedResendGuard {
+    pub(crate) fn capture(
+        store: &ProtocolStore,
+        account_authority: [u8; 32],
+        node: &Node,
+    ) -> Result<Self> {
+        if node.description != "message" {
+            return Err(Error::invalid("retry", "retry resend is not a message"));
+        }
+        let wire_id = MessageId::new(
+            node.get_attr("id")
+                .and_then(|v| v.as_text())
+                .ok_or_else(|| Error::invalid("retry", "retry resend lacks message id"))?,
+        )?;
+        let payload_sha256 = retry_payload_sha256(node)?;
+        let guard = store.read(|tx| {
+            let entry = super::outgoing::outbox()
+                .by_wire_id(tx, &wire_id)?
+                .ok_or_else(|| Error::invalid("retry", "committed retry attempt missing"))?;
+            let first = entry
+                .attempts
+                .first()
+                .ok_or_else(|| Error::invalid("retry", "original retry attempt missing"))?;
+            let last = entry
+                .attempts
+                .last()
+                .filter(|attempt| attempt.re_encryption)
+                .ok_or_else(|| {
+                    Error::invalid("retry", "latest attempt is not a committed re-encryption")
+                })?;
+            use sha2::{Digest, Sha256};
+            let payload = last
+                .payload
+                .as_ref()
+                .ok_or_else(|| Error::invalid("retry", "committed retry payload missing"))?;
+            if <[u8; 32]>::from(Sha256::digest(payload)) != payload_sha256 {
+                return Err(Error::invalid(
+                    "retry",
+                    "retry payload differs from committed attempt",
+                ));
+            }
+            Ok(Self {
+                account_authority,
+                wire_id: wire_id.clone(),
+                entry_sha256: retry_entry_sha256(&entry)?,
+                payload_sha256,
+                original_prepared_at: first.prepared_at,
+            })
+        })?;
+        // Reapply the supported direct-recipient eligibility before adopting
+        // a committed attempt as writer authority. Native DNP.run checks delivery.
+        let entry = store
+            .read(|tx| super::outgoing::outbox().by_wire_id(tx, &wire_id))?
+            .ok_or_else(|| Error::invalid("retry", "committed retry attempt missing"))?;
+        let peer = entry.intent.chat.jid();
+        let lid = super::inbox::lid_for(store, peer)?;
+        let addresses = std::iter::once(peer)
+            .chain(lid.as_ref())
+            .filter_map(|jid| DeviceAddress::from_jid(jid).ok())
+            .collect::<Vec<_>>();
+        if retry_entry_sha256(&entry)? != guard.entry_sha256
+            || !entry
+                .facts
+                .iter()
+                .any(|fact| fact.kind == DeliveryFactKind::ServerAccepted)
+            || entry.facts.iter().any(|fact| {
+                fact.kind == DeliveryFactKind::Failed
+                    || (matches!(
+                        fact.kind,
+                        DeliveryFactKind::Delivered
+                            | DeliveryFactKind::Read
+                            | DeliveryFactKind::Played
+                    ) && fact
+                        .device
+                        .as_ref()
+                        .is_none_or(|device| addresses.contains(device)))
+            })
+        {
+            return Err(Error::invalid(
+                "retry",
+                "original no longer eligible before resend write",
+            ));
+        }
+        guard.check_write_authority(store, node)?;
+        Ok(guard)
+    }
+    pub(crate) fn check_write_authority(&self, store: &ProtocolStore, node: &Node) -> Result<()> {
+        if retry_payload_sha256(node)? != self.payload_sha256 {
+            return Err(Error::invalid(
+                "retry",
+                "queued resend differs from committed attempt",
+            ));
+        }
+        store.read(|tx| {
+            let account = AccountRecord::load(tx)?;
+            if super::account_authority::fingerprint(tx.generation(), account.as_ref())?
+                != self.account_authority
+            {
+                return Err(Error::invalid(
+                    "retry",
+                    "resend account changed before write",
+                ));
+            }
+            let entry = super::outgoing::outbox()
+                .by_wire_id(tx, &self.wire_id)?
+                .ok_or_else(|| Error::invalid("retry", "committed retry attempt disappeared"))?;
+            // DNP.run checks delivery before resend. Preserve any newer fact or
+            // attempt rather than adopting it as authority for this queued write.
+            if retry_entry_sha256(&entry)? != self.entry_sha256
+                || original_too_old(self.original_prepared_at, Timestamp::now())
+            {
+                return Err(Error::invalid(
+                    "retry",
+                    "committed retry entry changed or expired before write",
+                ));
+            }
+            Ok(())
+        })
+    }
+}
+
 /// Frozen locally prepared ACK; never authority to replay after a write cut.
 #[derive(Clone)]
 pub(crate) struct ReservedConfirmation {
@@ -176,6 +314,13 @@ impl ReservedConfirmation {
     }
     pub(crate) fn node(&self) -> &Node {
         &self.node
+    }
+    pub(crate) fn reserve_resend(
+        &self,
+        store: &ProtocolStore,
+        node: &Node,
+    ) -> Result<CommittedResendGuard> {
+        CommittedResendGuard::capture(store, self.account_authority, node)
     }
     pub(crate) fn check_write_authority(&self, store: &ProtocolStore, node: &Node) -> Result<()> {
         if retry_payload_sha256(node)? != self.payload_sha256 {

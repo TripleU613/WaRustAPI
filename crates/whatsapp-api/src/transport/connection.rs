@@ -377,6 +377,10 @@ enum WriteGuard {
         Option<super::retry_answer::RefetchWriteGuard>,
     ),
     RetryRefetchQuery(Arc<ProtocolStore>, super::retry_answer::RefetchWriteGuard),
+    RetryResend(
+        Arc<ProtocolStore>,
+        super::retry_answer::CommittedResendGuard,
+    ),
     Action(Arc<ProtocolStore>, super::actions::ActionWriteGuard),
     Receipt(Arc<ProtocolStore>, super::receipts::ReceiptWriteGuard),
 }
@@ -436,6 +440,9 @@ impl Outbound {
                         .as_ref()
                         .map_or(Ok(()), |pending| pending.check_write_authority(&store))
                 }),
+            Some(WriteGuard::RetryResend(store, guard)) => {
+                guard.check_write_authority(&store, &self.node)
+            }
             Some(WriteGuard::RetryRefetchQuery(store, pending)) => {
                 pending.check_query_write_authority(&store, &self.node)
             }
@@ -503,6 +510,22 @@ impl NodeLink {
         store: &Arc<ProtocolStore>,
         answer: &super::retry_answer::ReservedAnswer,
     ) -> Result<bool> {
+        let resend_guard = if answer.node.description == "message" {
+            Some(
+                answer
+                    .confirmation
+                    .as_ref()
+                    .ok_or_else(|| {
+                        Error::invalid(
+                            "retry",
+                            "retry resend lacks initiating confirmation authority",
+                        )
+                    })?
+                    .reserve_resend(store, &answer.node)?,
+            )
+        } else {
+            None
+        };
         let confirmed = if let Some(confirmation) = &answer.confirmation {
             self.send_guarded(
                 confirmation.node(),
@@ -521,8 +544,23 @@ impl NodeLink {
             .refetch
             .as_ref()
             .map(|pending| WriteGuard::RetryRefetchQuery(store.clone(), pending.clone()));
-        self.send_guarded(&answer.node, query_guard).await?;
+        let write_guard = resend_guard
+            .map(|guard| WriteGuard::RetryResend(store.clone(), guard))
+            .or(query_guard);
+        self.send_guarded(&answer.node, write_guard).await?;
         Ok(confirmed)
+    }
+
+    async fn send_retry_resend(
+        &self,
+        store: &Arc<ProtocolStore>,
+        account: &AccountRecord,
+        node: &Node,
+    ) -> Result<()> {
+        let authority = super::account_authority::fingerprint(account.generation, Some(account))?;
+        let guard = super::retry_answer::CommittedResendGuard::capture(store, authority, node)?;
+        self.send_guarded(node, Some(WriteGuard::RetryResend(store.clone(), guard)))
+            .await
     }
 
     /// Write one stanza and wait for the socket outcome. A closed writer is a
@@ -1129,7 +1167,7 @@ pub(crate) async fn drive(
                     match retry_refetches.complete(&store, &account, &node, epoch).await {
                         Ok(Some(resend)) => {
                             if let Some(resend) = resend {
-                                link.send(&resend).await?;
+                                link.send_retry_resend(&store, &account, &resend).await?;
                                 tracing::info!(target: "whatsapp_api::incoming", "retry receipt answered with a fresh session; same message id");
                             }
                             continue;
@@ -2430,6 +2468,54 @@ mod tests {
         Jid::parse("15555550101@s.whatsapp.net").unwrap()
     }
 
+    fn committed_retry_fixture(store: &ProtocolStore, node: &Node) {
+        use crate::{
+            model::{ids::ClientRequestId, message::MessageContent, send::SendRequest},
+            outbox::{AttemptRecord, Outbox},
+            profile::Limits,
+        };
+        store
+            .write(|tx| {
+                let outbox = Outbox::new("comparison-driver", Limits::default());
+                let id = outbox
+                    .enqueue(
+                        tx,
+                        &SendRequest {
+                            client_request_id: ClientRequestId::new("retry-writer-fixture")
+                                .unwrap(),
+                            chat: ChatId::from_jid(&peer()).unwrap(),
+                            content: MessageContent::Text {
+                                body: "fixture".into(),
+                                quoted: None,
+                                style: Default::default(),
+                            },
+                        },
+                    )?
+                    .0
+                    .local_id;
+                let mut entry = outbox.get_mut(tx, id)?.unwrap();
+                entry.wire_id = Some(MessageId::new("W1").unwrap());
+                entry.facts.push(crate::model::send::DeliveryFact {
+                    kind: crate::model::send::DeliveryFactKind::ServerAccepted,
+                    device: None,
+                    observed_at: Timestamp::now(),
+                    server_timestamp: None,
+                    code: None,
+                });
+                for index in 0..2 {
+                    entry.attempts.push(AttemptRecord {
+                        index,
+                        prepared_at: Timestamp::now(),
+                        epoch: Some(ConnectionEpoch(1)),
+                        payload: Some(encode(node)?.into()),
+                        re_encryption: index == 1,
+                    });
+                }
+                tx.put_json(Table::Outbox, &id.0, 1, &entry)
+            })
+            .unwrap();
+    }
+
     #[tokio::test]
     async fn retry_ack_write_precedes_resend_and_failure_stops_the_pair() {
         for answer_kind in ["message", "iq"] {
@@ -2441,13 +2527,25 @@ mod tests {
                 "ack_to",
                 "ack_body",
                 "ack_account",
+                "resend_id",
+                "resend_to",
+                "resend_body",
             ] {
+                if answer_kind != "message"
+                    && outcome_kind.starts_with("resend_")
+                    && outcome_kind != "resend_failed"
+                {
+                    continue;
+                }
                 let (_incoming, incoming) = mpsc::channel(1);
                 let (outgoing, mut writes) = mpsc::channel(2);
                 let link = NodeLink::new(incoming, outgoing);
                 let dir = tempfile::tempdir().unwrap();
                 let path = dir.path().join("retry-write.db");
                 let store = open(&path);
+                if answer_kind == "message" {
+                    committed_retry_fixture(&store, &Node::new("message").attr("id", "W1"));
+                }
                 let worker_store = store.clone();
                 let task = tokio::spawn(async move {
                     link.send_retry_answer(
@@ -2527,7 +2625,36 @@ mod tests {
                 ));
                 if outcome_kind != "ack_failed" {
                     outcome.send(Ok(())).unwrap();
-                    let (second, outcome) = writes.recv().await.unwrap().prepare().unwrap();
+                    let mut queued = writes.recv().await.unwrap();
+                    match outcome_kind {
+                        "resend_id" => queued.node = queued.node.attr("id", "changed-fixture"),
+                        "resend_to" => queued.node = queued.node.attr("to", "changed.invalid"),
+                        "resend_body" => {
+                            queued.node = queued.node.children(vec![Node::new("changed-fixture")])
+                        }
+                        _ => {}
+                    }
+                    if matches!(outcome_kind, "resend_id" | "resend_to" | "resend_body") {
+                        let before = store.read(|tx| tx.scan(Table::Outbox, 1, 100)).unwrap();
+                        let head = store.journal_head().unwrap();
+                        assert!(queued.prepare().is_none(), "{outcome_kind}");
+                        assert!(task.await.unwrap().is_err());
+                        assert!(writes.recv().await.is_none());
+                        assert_eq!(
+                            store.read(|tx| tx.scan(Table::Outbox, 1, 100)).unwrap(),
+                            before
+                        );
+                        assert_eq!(store.journal_head().unwrap(), head);
+                        drop(store);
+                        let reopened = identity_store(&path);
+                        assert_eq!(
+                            reopened.read(|tx| tx.scan(Table::Outbox, 1, 100)).unwrap(),
+                            before
+                        );
+                        assert_eq!(reopened.journal_head().unwrap(), head);
+                        continue;
+                    }
+                    let (second, outcome) = queued.prepare().unwrap();
                     assert_eq!(second.description, answer_kind);
                     assert_eq!(second.get_attr("id").and_then(|v| v.as_text()), Some("W1"));
                     if outcome_kind == "written" {
@@ -2548,6 +2675,110 @@ mod tests {
                     assert!(writes.recv().await.is_none());
                 }
             }
+        }
+    }
+
+    #[tokio::test]
+    async fn fresh_retry_resend_rechecks_committed_attempt_at_dequeue() {
+        for change in [
+            "same",
+            "id",
+            "ciphertext",
+            "attempt",
+            "delivery",
+            "missing",
+            "account",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("fresh-retry-writer.redb");
+            let store = open(&path);
+            let mut account = store.read(AccountRecord::load).unwrap().unwrap();
+            account.generation = store.generation();
+            store.write(|tx| account.save(tx)).unwrap();
+            let node = Node::new("message")
+                .attr("id", "W1")
+                .attr("to", peer())
+                .children(vec![
+                    Node::new("enc").attr("count", "1").bytes(vec![1, 2, 3]),
+                ]);
+            committed_retry_fixture(&store, &node);
+            let (_incoming, incoming) = mpsc::channel(1);
+            let (outgoing, mut writes) = mpsc::channel(1);
+            let link = NodeLink::new(incoming, outgoing);
+            let worker = store.clone();
+            let task =
+                tokio::spawn(async move { link.send_retry_resend(&worker, &account, &node).await });
+            let mut queued = writes.recv().await.unwrap();
+            match change {
+                "id" => queued.node = queued.node.attr("id", "changed-fixture"),
+                "ciphertext" => {
+                    queued.node = queued.node.children(vec![
+                        Node::new("enc").attr("count", "1").bytes(vec![9, 9, 9]),
+                    ])
+                }
+                "account" => store
+                    .write(|tx| {
+                        let mut account = AccountRecord::load_in_write(tx)?.unwrap();
+                        account.signal_registration_id = Some(31);
+                        account.save(tx)
+                    })
+                    .unwrap(),
+                "attempt" | "delivery" | "missing" => store
+                    .write(|tx| {
+                        let mut entry = super::super::outgoing::outbox()
+                            .by_wire_id_in_write(tx, &MessageId::new("W1").unwrap())?
+                            .unwrap();
+                        if change == "missing" {
+                            tx.delete(Table::Outbox, &entry.local_id.0)?;
+                            return Ok(());
+                        }
+                        if change == "attempt" {
+                            entry.attempts.last_mut().unwrap().payload = Some(vec![9, 9, 9].into());
+                        } else {
+                            entry.facts.push(crate::model::send::DeliveryFact {
+                                kind: crate::model::send::DeliveryFactKind::Delivered,
+                                device: None,
+                                observed_at: Timestamp::now(),
+                                server_timestamp: None,
+                                code: None,
+                            });
+                        }
+                        tx.put_json(Table::Outbox, &entry.local_id.0, 1, &entry)
+                    })
+                    .unwrap(),
+                _ => {}
+            }
+            let snapshot = |store: &ProtocolStore| {
+                store
+                    .read(|tx| {
+                        [
+                            Table::Account,
+                            Table::Outbox,
+                            Table::Checkpoints,
+                            Table::SignalSessions,
+                        ]
+                        .into_iter()
+                        .map(|t| tx.scan(t, 1, 100))
+                        .collect::<Result<Vec<_>>>()
+                    })
+                    .unwrap()
+            };
+            let before = snapshot(&store);
+            let head = store.journal_head().unwrap();
+            let prepared = queued.prepare();
+            assert_eq!(prepared.is_some(), change == "same", "{change}");
+            if let Some((node, outcome)) = prepared {
+                encode(&node).unwrap();
+                outcome.send(Ok(())).unwrap();
+            }
+            assert_eq!(task.await.unwrap().is_ok(), change == "same", "{change}");
+            assert!(writes.recv().await.is_none());
+            assert_eq!(snapshot(&store), before);
+            assert_eq!(store.journal_head().unwrap(), head);
+            drop(store);
+            let reopened = identity_store(&path);
+            assert_eq!(snapshot(&reopened), before);
+            assert_eq!(reopened.journal_head().unwrap(), head);
         }
     }
 
