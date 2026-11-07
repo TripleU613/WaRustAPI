@@ -1,3 +1,10 @@
+2026-11-06 — **Guarded selected automatic ACK writer compliance.**
+Notification and receipt ACKs no longer copy known noncompliant native address
+objects. Omitted recipients and fresh retry contexts remain distinct from copied
+fields; valid service-backed devices are not rejected by name.
+[Current declaration census, class/writer evidence and codec regressions](docs/protocol/apk/2.26.43.72-jid-write-compliance/README.md).
+General grammar/recovery remain open; no live account operation.
+
 2026-11-06 — **Bound bare self-user pairs to native ACK and receipt semantics.**
 Two native symbolic pair forms now decode with the general server grammar intact.
 Self message ACKs remain uncertain; binary bare call sender restrictions match

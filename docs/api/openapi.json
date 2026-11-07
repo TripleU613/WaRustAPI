@@ -1,4 +1,11 @@
 {
+  "x-selected-ack-writer-compliance": {
+    "x-cli": "xtask apk-virtual-overrides <apk> --class 'Lcom/whatsapp/infra/core/jid/Jid;' --method isProtocolCompliant --signature '()Z' --include-interfaces",
+    "x-transport": "notification ACK route guard and selected receipt ACK output fields",
+    "x-live": false,
+    "description": "Known noncompliant native types2/8/9/11 now prevent construction of automatic ACKs containing those selected objects. Complete declared compliance census across114178 APK classes found only the base declaration; retained class mappings and final writer show the pair IOException path. Service-backed Device17/24 and ordinary0 remain distinct. Receipt compliance is checked after UserJid cast/retry context selection: omitted gdpr/temp recipients and fresh parse-error recipient removal do not block writable output, while copied service recipients do. Actual codec regressions failed before correction. General constructor/cache grammar, unknown metadata, global encoder admission, native writer recovery and live acceptance remain unverified. No fact, identity, alias, replay, request family or HTTP route change; no account operation.",
+    "evidence": "docs/protocol/apk/2.26.43.72-jid-write-compliance/README.md"
+  },
   "x-bare-self-user-pair-boundaries": {
     "x-cli": false,
     "x-transport": "binary JID_PAIR decoder; message/call ACK guards; receipt validation/facts; notification ACK route guards",

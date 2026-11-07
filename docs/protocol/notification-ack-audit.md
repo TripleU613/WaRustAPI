@@ -643,3 +643,23 @@ Five base kinds are regression-covered while valid server-only PN remains.
 Privacy/device owner restrictions and existing envelope checks remain separate.
 This does not expand writable self aliases or port other noncompliant classes;
 qualified-cache aliases, full handler state and live acceptance remain open.
+
+
+## Known noncompliant writer classes (2026-11-06)
+
+**Confirmed static / fixed offline:** [writer compliance census and class mapping](apk/2.26.43.72-jid-write-compliance/README.md)
+binds temp/ServiceUser/gdpr/self types2/8/9/11 to the final writer's false
+compliance path. ACK routes previously accepted plain Server@s.whatsapp.net and
+other mapped fields even though native serialization rejects the selected object.
+The actual-codec regression failed before correction. Shared ack_route now
+refuses known-unwritable text/typed from or participant before work/write.
+Explicit Server device forms and ordinary0 user remain supported; this is not
+a user-string blacklist. Native nullable parse failure, other classes, complete
+route grammar and writer failure recovery remain separate obligations.
+
+Verification: both new actual-codec regressions failed before correction on
+Server@s.whatsapp.net output. All1551 workspace/all-feature tests, strict
+all-target/all-feature Clippy, formatting, OpenAPI library symbols, regenerated
+CLI reference, APK coverage and repository hygiene pass. The new declaration
+census is retained with reproduction and checksums; hygiene checked8108 local
+links and452 APK checksum bundles after staging the new evidence bundle. No live acceptance is claimed.

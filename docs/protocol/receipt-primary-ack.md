@@ -122,3 +122,21 @@ picture actor test now covers zero/nonzero PN/LID sender and participant forms.
 Native domain flags are distinct from Rust's agent field. No runtime policy
 change; all subtype/hosted/interop behavior and live acceptance are not claimed.
 [Current source and census](apk/2.26.43.72-group-missing-identification/README.md).
+
+
+## Writer compliance follows selected receipt context (2026-11-06)
+
+**Confirmed local fix / offline:** [known writer compliance evidence](apk/2.26.43.72-jid-write-compliance/README.md)
+now guards selected ACK to/participant and copied recipient fields. Plain service,
+gdpr and valid temp generic fields no longer produce unwritable ACKs. Nonuser
+gdpr/temp recipients fail the UserJid cast and are omitted; they do not suppress
+an otherwise supported ACK. A parse-error retry487 removes recipient/edit in its
+fresh context, whereas unsupported-version487 copies original metadata. The new
+regression checks this distinction with a service recipient and passes only when
+compliance is checked after context selection.
+
+The earlier generic-participant test's gdpr expectation certified only field
+presence, not writer success. It is replaced by explicit unwritable-participant
+and omitted-recipient controls. Native writer recovery, complete address grammar
+and live acceptance remain open. No fact/identity/replay policy, request family
+or global encoder behavior changed.

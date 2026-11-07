@@ -258,11 +258,11 @@ pub(crate) fn base_ack(node: &Node, kind: &str) -> Result<Option<Node>> {
 // at index zero. Keep that boundary in supported notification ACK builders.
 // Native nullable-address policy remains separate; see notification-ack-audit.md.
 pub(super) fn ack_route(node: &Node, name: &str) -> Option<crate::model::jid::Jid> {
-    // Native type11 isProtocolCompliant=false; the final JID writer refuses
-    // it. Recognizing its binary carrier must not enable an outbound ACK.
+    // Native types2/8/9/11 are not protocol-compliant at the final writer.
+    // Parsed metadata alone must not grant an unwritable ACK route.
     if node
         .get_attr(name)
-        .is_some_and(super::messaging::ack_self_user_attribute)
+        .is_some_and(super::messaging::ack_attribute_is_known_unwritable)
     {
         return None;
     }
@@ -463,6 +463,52 @@ fn parse(node: &Node) -> Result<Option<TokenUpdates<'_>>> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn notification_ack_refuses_native_noncompliant_classes_but_keeps_devices() {
+        use crate::binary::{AttributeValue, Decoder, Encoder, TokenDictionary};
+        for kind in ["psa", "business", "picture", "mex", "disappearing_mode"] {
+            let base = Node::new("notification")
+                .attr("type", kind)
+                .attr("id", "COMPLIANCE")
+                .attr("from", "s.whatsapp.net");
+            for address in [
+                "Server@s.whatsapp.net",
+                "Server@hosted",
+                "gdpr@s.whatsapp.net",
+                "a-b@temp",
+            ] {
+                for value in [
+                    AttributeValue::from(address),
+                    AttributeValue::from(crate::model::jid::Jid::parse(address).unwrap()),
+                ] {
+                    for field in ["from", "participant"] {
+                        let input = base.clone().attr(field, value.clone());
+                        let dict = TokenDictionary::comparison_2_26_37_71();
+                        let wire = Encoder::new(dict).encode(&input).unwrap();
+                        let input =
+                            Decoder::new(&wire[1..], dict, &crate::profile::Limits::default())
+                                .decode_node()
+                                .unwrap();
+                        assert!(base_ack(&input, kind).is_err(), "{kind}/{field}/{address}");
+                    }
+                }
+            }
+            // Native Device17/24 remains compliant even with a ServiceUser base.
+            for address in [
+                "0@s.whatsapp.net",
+                "Server:0@s.whatsapp.net",
+                "Server:99@hosted",
+            ] {
+                assert!(
+                    base_ack(&base.clone().attr("from", address), kind)
+                        .unwrap()
+                        .is_some(),
+                    "{address}"
+                );
+            }
+        }
+    }
+
     #[test]
     fn base_ack_refuses_empty_user_text_without_rejecting_server_only_routes() {
         // APK43.72 0Dd.A00 rejects an @ at index zero, whereas a bare server

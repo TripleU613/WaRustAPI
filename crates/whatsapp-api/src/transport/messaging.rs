@@ -980,6 +980,21 @@ fn receipt_ack_after_processing(incoming: &Node, handled_retry: bool) -> Option<
     // (1rg). Both use487, but their context fields differ. Local capability
     // refusals are not a generic parse error. docs/protocol/retry-ack-dispatch.md
     let retry_error = retry_receipt_error(incoming);
+    let copy_recipient = !matches!(retry_error, Some(RetryReceiptError::Parsing(_)));
+    if ["from", "participant"].into_iter().any(|name| {
+        incoming
+            .get_attr(name)
+            .is_some_and(ack_attribute_is_known_unwritable)
+    }) || (copy_recipient
+        && super::receipts::recipient(incoming).is_some()
+        && incoming
+            .get_attr("recipient")
+            .is_some_and(ack_attribute_is_known_unwritable))
+    {
+        // Check only fields selected by the native descriptor/cast/error context.
+        // Omitted non-UserJid recipients cannot make the output unwritable.
+        return None;
+    }
     let kind = if retry_error.is_some() || handled_retry {
         "retry"
     } else {
@@ -1001,7 +1016,7 @@ fn receipt_ack_after_processing(incoming: &Node, handled_retry: bool) -> Option<
     }
     // 1rg.A03 makes a fresh parse-error context with no recipient/edit.
     // 2Cx's unhandled-version path instead copies the original Eoh context.
-    if !matches!(retry_error, Some(RetryReceiptError::Parsing(_))) {
+    if copy_recipient {
         if let Some(recipient) = super::receipts::recipient(incoming) {
             ack = ack.attr("recipient", recipient);
         }
@@ -1416,6 +1431,30 @@ pub(crate) fn ack_bare_attribute_text(value: &crate::binary::AttributeValue) -> 
 
 pub(crate) fn ack_self_user_attribute(value: &crate::binary::AttributeValue) -> bool {
     ack_bare_attribute_text(value).is_some_and(ack_self_user_text)
+}
+
+// Selected APK43.72 Jid.isProtocolCompliant rejects types2/8/9/11.
+// A false result here is unclassified, not a certification of all JID grammar.
+pub(crate) fn ack_attribute_is_known_unwritable(value: &crate::binary::AttributeValue) -> bool {
+    if ack_self_user_attribute(value) {
+        return true;
+    }
+    if let Some(text) = value.as_text() {
+        return matches!(
+            ack_user_text(text),
+            Some(AckUserText::ServiceUser(_) | AckUserText::NonUser(_))
+        ) || (text
+            .rsplit_once('@')
+            .is_some_and(|(_, domain)| domain == "temp")
+            && ack_non_user_text_valid(text) == Some(true));
+    }
+    value.as_jid().is_some_and(|jid| {
+        matches!(
+            binary_ack_user_class(jid),
+            Some(BinaryAckUserClass::ServiceUser | BinaryAckUserClass::NonUser)
+        ) || (matches!(&jid.server, crate::model::jid::Server::Other(server) if server == "temp")
+            && jid.user.contains('-'))
+    })
 }
 
 pub(crate) fn message_ack_device_conversion_fails(node: &Node) -> bool {
@@ -2315,6 +2354,66 @@ mod tests {
     }
 
     #[test]
+    fn receipt_ack_checks_compliance_only_for_selected_output_fields() {
+        let base = Node::new("receipt")
+            .attr("from", "15555550100@s.whatsapp.net")
+            .attr("id", "WRITER")
+            .attr("type", "read");
+        for address in [
+            "Server@s.whatsapp.net",
+            "Server@hosted",
+            "gdpr@s.whatsapp.net",
+            "a-b@temp",
+        ] {
+            for value in [
+                crate::binary::AttributeValue::from(address),
+                crate::binary::AttributeValue::from(Jid::parse(address).unwrap()),
+            ] {
+                for field in ["from", "participant"] {
+                    let node = base.clone().attr(field, value.clone());
+                    let dict = TokenDictionary::comparison_2_26_37_71();
+                    let wire = Encoder::new(dict).encode(&node).unwrap();
+                    let node = Decoder::new(&wire[1..], dict, &Limits::default())
+                        .decode_node()
+                        .unwrap();
+                    assert!(received_confirmation(&node).is_none(), "{field}/{address}");
+                }
+            }
+        }
+        for recipient in ["gdpr@s.whatsapp.net", "a-b@temp"] {
+            // The native UserJid cast omits these fields, so they cannot make
+            // the remaining supported ACK unwritable.
+            let ack = received_confirmation(&base.clone().attr("recipient", recipient)).unwrap();
+            assert!(ack.get_attr("recipient").is_none());
+        }
+        assert!(
+            received_confirmation(&base.clone().attr("recipient", "Server@s.whatsapp.net"))
+                .is_none()
+        );
+        let retry = base
+            .attr("type", "retry")
+            .attr("recipient", "Server@s.whatsapp.net")
+            .children(vec![
+                Node::new("retry")
+                    .attr("v", "1")
+                    .attr("count", "bad")
+                    .attr("id", "M")
+                    .attr("t", "1"),
+                Node::new("registration").bytes(vec![0, 0, 0, 1]),
+            ]);
+        // Native1rg uses a fresh parse-error context with no recipient;2Cx
+        // copies the original context for unsupported versions instead.
+        let ack = received_confirmation(&retry).unwrap();
+        assert_eq!(ack.get_attr("error").and_then(|v| v.as_text()), Some("487"));
+        assert!(ack.get_attr("recipient").is_none());
+        let version = retry.children(vec![
+            Node::new("retry").attr("v", "2"),
+            Node::new("registration").bytes(vec![0, 0, 0, 1]),
+        ]);
+        assert!(received_confirmation(&version).is_none());
+    }
+
+    #[test]
     fn receipt_ack_requires_user_recipient_but_keeps_generic_participant() {
         let base = Node::new("receipt")
             .attr("from", "15555550100@s.whatsapp.net")
@@ -2330,7 +2429,6 @@ mod tests {
             "123@call",
             "123@temp",
             "123@interop.g.us",
-            "gdpr@s.whatsapp.net",
             "15555550100:2@s.whatsapp.net",
             "100001:0@lid",
             "15555550100:2@hosted",

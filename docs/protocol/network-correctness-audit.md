@@ -4971,3 +4971,16 @@ or ACKs. A textual self recipient previously recorded1 read fact. Literal codec,
 actual wire, actor/state preservation and reopen tests retain these boundaries.
 Full native aggregate scheduling, other classes and decoder recovery remain
 open. No live account operation or automatic request family was introduced.
+
+
+### Selected automatic ACK writer compliance (2026-11-06)
+
+**Confirmed local fix:** [mapped noncompliant classes and complete declaration census](apk/2.26.43.72-jid-write-compliance/README.md)
+now prevent automatic notification/receipt ACKs containing known writer-rejected
+objects. Type2/8/9/11 from/participant and selected UserJid recipients are guarded;
+omitted nonuser recipients and fresh retry parse-error metadata do not cause a
+blanket refusal. Device-backed service users remain allowed. Both actual-codec
+regressions failed on previously constructed service-user ACKs. This preserves
+native context/cast distinctions while leaving general grammar, codec policy,
+writer recovery and live acceptance explicit. No new request, receipt fact,
+identity normalization or account operation.
