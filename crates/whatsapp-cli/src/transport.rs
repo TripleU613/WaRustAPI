@@ -108,6 +108,56 @@ fn validate_cli_login_owner(
     Ok(())
 }
 
+fn record_cli_login_reply(
+    store: &ProtocolStore,
+    node: &whatsapp_api::binary::Node,
+    login_snapshot: &whatsapp_api::transport::connection::LoginSnapshot,
+    reservation: &str,
+) -> Result<(&'static str, Option<String>), Error> {
+    let reason = whatsapp_api::transport::connection::login_reply_reason(node)?
+        .map(|value| value.to_string());
+    let status = if reason.is_some() {
+        "failure"
+    } else {
+        "success"
+    };
+    // `<success>` carries this account's own LID (LX/0iS->A12 reads the
+    // `lid` attribute and reports `reg-lid-chatd-lid-expected-but-null`
+    // when it is missing). A LID-addressed group names us by it, so a
+    // sender-key fan-out cannot be built without recording it here.
+    let result = serde_json::json!({"status":status,"reason":reason,"at":Timestamp::now(),"message_sent":false});
+    // Preserve the raw login result. A `<failure>` can carry an appeal
+    // token, and saving only the status code throws that away at exactly
+    // the moment it matters; a refusal cannot be replayed to fetch it again.
+    let login_wire = whatsapp_api::binary::Encoder::new(
+        whatsapp_api::binary::tokens::TokenDictionary::comparison_2_26_37_71(),
+    )
+    .encode(node)
+    .ok();
+    store.write(|tx| {
+        validate_cli_login_owner(tx, login_snapshot, reservation)?;
+        tx.put_json(
+            whatsapp_api::store::Table::Checkpoints,
+            b"comparison-primary-login-v1",
+            1,
+            &result,
+        )?;
+        if let Some(wire) = &login_wire {
+            tx.put_json(
+                whatsapp_api::store::Table::Checkpoints,
+                format!("login-result:{}", Timestamp::now().0).as_bytes(),
+                1,
+                wire,
+            )?;
+        }
+        if status == "success" {
+            apply_cli_login_success(tx, node)?;
+        }
+        Ok(())
+    })?;
+    Ok((status, reason))
+}
+
 /// Pure preflight: run before uploads, refusal-history mutation or sockets.
 fn saved_noise_identity(account: &AccountRecord) -> Result<StaticKeypair, Error> {
     let key = account
@@ -457,45 +507,9 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
         // Durable capture precedes ownership checks: a stale reply is evidence,
         // not authority to settle a newer login or change its account.
         whatsapp_api::transport::inbox::preserve_in_epoch(&store, &node, ConnectionEpoch(1))?;
-        let status = match node.description.as_str() {
-            "success" => "success",
-            "failure" => "failure",
-            "stream:error" => "stream_error",
-            _ => "unrecognized",
-        };
-        let reason = node
-            .get_attr("reason")
-            .and_then(|v| v.as_text())
-            .filter(|v| v.len() <= 5 && v.bytes().all(|b| b.is_ascii_digit()));
-        // `<success>` carries this account's own LID (LX/0iS->A12 reads the
-        // `lid` attribute and reports `reg-lid-chatd-lid-expected-but-null`
-        // when it is missing). A LID-addressed group names us by it, so a
-        // sender-key fan-out cannot be built without recording it here.
         let supplied_lid = node.get_attr("lid").is_some();
-        let result = serde_json::json!({"status":status,"reason":reason,"at":Timestamp::now(),"message_sent":false});
-        // Preserve the raw login result. A `<failure>` can carry an appeal
-        // token, and saving only the status code throws that away at exactly
-        // the moment it matters; a refusal cannot be replayed to fetch it again.
-        let login_wire =
-            whatsapp_api::binary::Encoder::new(TokenDictionary::comparison_2_26_37_71())
-                .encode(&node)
-                .ok();
-        store.write(|tx| {
-            validate_cli_login_owner(tx, &login_snapshot, &reservation)?;
-            tx.put_json(Table::Checkpoints, LOGIN_KEY, 1, &result)?;
-            if let Some(wire) = &login_wire {
-                tx.put_json(
-                    Table::Checkpoints,
-                    format!("login-result:{}", Timestamp::now().0).as_bytes(),
-                    1,
-                    wire,
-                )?;
-            }
-            if status == "success" {
-                apply_cli_login_success(tx, &node)?;
-            }
-            Ok(())
-        })?;
+        let (status, reason) =
+            record_cli_login_reply(&store, &node, &login_snapshot, &reservation)?;
         println!(
             "transport: own LID {} by the login result",
             if status != "success" {
@@ -508,7 +522,7 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
         );
         println!(
             "transport: login status={status}, reason={}; message not sent",
-            reason.unwrap_or("none")
+            reason.as_deref().unwrap_or("none")
         );
         if status != "success" {
             return Err(Error::invalid(
@@ -1008,6 +1022,151 @@ mod tests {
         model::jid::Jid,
         store::{MasterKey, StaticKeySource},
     };
+
+    #[test]
+    fn cli_login_reply_admission_preserves_owned_uncertainty_after_capture_and_reopen() {
+        use whatsapp_api::store::Table;
+        for reply in [
+            Node::new("failure"),
+            Node::new("failure").attr("reason", "private-invalid-reason"),
+            Node::new("failure").attr("reason", "2147483648"),
+            Node::new("iq").attr("reason", "403"),
+            Node::new("stream:error").attr("reason", "403"),
+            Node::new("notification").attr("reason", "403"),
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("cli-reply-admission.redb");
+            let open = |create| {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: AccountId::new("fixture").unwrap(),
+                    create,
+                    key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+                })
+                .unwrap()
+            };
+            let store = open(true);
+            store.write(|tx| AccountRecord::default().save(tx)).unwrap();
+            let (_, snapshot) = load_transport_account(&store).unwrap();
+            let owner = reserve_cli_login(&store, &snapshot, 7).unwrap();
+            whatsapp_api::transport::inbox::preserve_in_epoch(&store, &reply, ConnectionEpoch(1))
+                .unwrap();
+            let rows = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let account = store.read(|tx| tx.scan(Table::Account, 1, 20)).unwrap();
+            let head = store.journal_head().unwrap();
+            let error = record_cli_login_reply(&store, &reply, &snapshot, &owner)
+                .expect_err("invalid reply settled CLI login");
+            assert!(!error.to_string().contains("private-invalid-reason"));
+            assert!(!error.is_recoverable_by_reconnect());
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                rows
+            );
+            assert_eq!(
+                store.read(|tx| tx.scan(Table::Account, 1, 20)).unwrap(),
+                account
+            );
+            assert_eq!(store.journal_head().unwrap(), head);
+            drop(store);
+            let store = open(false);
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                rows
+            );
+            assert!(reserve_cli_login(&store, &snapshot, 7).is_err());
+            assert_eq!(store.journal_head().unwrap(), head);
+        }
+    }
+
+    #[test]
+    fn cli_login_valid_reply_uses_shared_grammar_and_cannot_settle_twice() {
+        use whatsapp_api::store::Table;
+        for (reply, status, reason) in [
+            (
+                Node::new("failure").attr("reason", "+403"),
+                "failure",
+                Some("403"),
+            ),
+            (
+                Node::new("failure").attr("reason", "000000403"),
+                "failure",
+                Some("403"),
+            ),
+            (
+                Node::new("failure").attr("reason", "４０３"),
+                "failure",
+                Some("403"),
+            ),
+            (
+                Node::new("failure").attr("reason", "2147483647"),
+                "failure",
+                Some("2147483647"),
+            ),
+            (
+                Node::new("failure").attr("reason", "-2147483648"),
+                "failure",
+                Some("-2147483648"),
+            ),
+            (
+                Node::new("success")
+                    .attr("lid", "100@lid")
+                    .attr("reason", "ignored-private"),
+                "success",
+                None,
+            ),
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("cli-valid-reply.redb");
+            let open = |create| {
+                ProtocolStore::open(OpenOptions {
+                    path: path.clone(),
+                    account_id: AccountId::new("fixture").unwrap(),
+                    create,
+                    key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+                })
+                .unwrap()
+            };
+            let store = open(true);
+            store.write(|tx| AccountRecord::default().save(tx)).unwrap();
+            let (_, snapshot) = load_transport_account(&store).unwrap();
+            let owner = reserve_cli_login(&store, &snapshot, 7).unwrap();
+            whatsapp_api::transport::inbox::preserve_in_epoch(&store, &reply, ConnectionEpoch(1))
+                .unwrap();
+            let result = record_cli_login_reply(&store, &reply, &snapshot, &owner).unwrap();
+            assert_eq!(result, (status, reason.map(str::to_owned)));
+            let saved: serde_json::Value = store
+                .read(|tx| tx.get_json(Table::Checkpoints, b"comparison-primary-login-v1", 1))
+                .unwrap()
+                .unwrap();
+            assert_eq!(saved["status"], status);
+            assert_eq!(saved["reason"], serde_json::json!(reason));
+            let rows = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let account = store.read(|tx| tx.scan(Table::Account, 1, 20)).unwrap();
+            let head = store.journal_head().unwrap();
+            drop(store);
+            let store = open(false);
+            assert!(record_cli_login_reply(&store, &reply, &snapshot, &owner).is_err());
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                rows
+            );
+            assert_eq!(
+                store.read(|tx| tx.scan(Table::Account, 1, 20)).unwrap(),
+                account
+            );
+            assert_eq!(store.journal_head().unwrap(), head);
+        }
+    }
 
     #[test]
     fn cli_login_identity_preserves_partial_fields_and_refuses_malformed_success_atomically() {

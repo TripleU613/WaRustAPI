@@ -184,6 +184,34 @@ fn login_material(
     Ok((local, payload, snapshot))
 }
 
+/// Parse the supported initial login outcome and its required failure reason.
+/// None means success; Some is the signed native failure reason. Other roots
+/// and malformed reasons refuse locally. This does not authenticate a node,
+/// capture it, settle a reservation or apply success identity fields.
+// APK43.72 0ZJ.A13 -> 0Tp.A04/A0L/A06; retained in
+// docs/protocol/apk/2.26.43.72-login-failure-reason/.
+pub fn login_reply_reason(reply: &Node) -> Result<Option<i32>> {
+    match reply.description.as_str() {
+        "success" => Ok(None),
+        "failure" => reply
+            .get_attr("reason")
+            .and_then(|value| value.as_text())
+            .and_then(super::mex::java_decimal_long)
+            .and_then(|value| i32::try_from(value).ok())
+            .map(Some)
+            .ok_or_else(|| {
+                Error::invalid(
+                    "connection",
+                    "invalid login failure reason; reservation retained",
+                )
+            }),
+        _ => Err(Error::invalid(
+            "connection",
+            "unexpected login response; reservation retained",
+        )),
+    }
+}
+
 // One transaction commits the login result, clock sample and own identity.
 #[cfg(test)]
 fn record_login_reply(store: &ProtocolStore, reply: &Node) -> Result<()> {
@@ -195,39 +223,16 @@ fn record_login_reply_checked(
     reply: &Node,
     ownership: Option<(&LoginSnapshot, &str)>,
 ) -> Result<()> {
-    // Only the explicit login result classes establish a known outcome.
-    // Other authenticated stanzas remain captured, but cannot invent a refusal
-    // or release/rewrite the original uncertain login reservation.
-    let status = match reply.description.as_str() {
-        "success" => "success",
-        "failure" => "refused",
-        _ => {
-            return Err(Error::invalid(
-                "connection",
-                "unexpected login response; reservation retained",
-            ));
-        }
-    };
-    // APK43.72 0ZJ.A13 -> 0Tp.A04/A0L/A06 requires reason and
-    // Integer.parseInt; invalid content throws before native failure mapping.
-    // Retain local uncertainty rather than manufacturing an unclassified refusal.
-    // Signed native values outside u32 remain unrepresented by Error's code field.
-    let code = if status == "refused" {
-        let reason = reply
-            .get_attr("reason")
-            .and_then(|value| value.as_text())
-            .and_then(super::mex::java_decimal_long)
-            .and_then(|value| i32::try_from(value).ok())
-            .ok_or_else(|| {
-                Error::invalid(
-                    "connection",
-                    "invalid login failure reason; reservation retained",
-                )
-            })?;
-        u32::try_from(reason).ok()
+    // Shared APK43.72 0ZJ.A13 / 0Tp required-int admission. Capture and
+    // owned settlement remain each caller's responsibility.
+    let reason = login_reply_reason(reply)?;
+    let status = if reason.is_some() {
+        "refused"
     } else {
-        None
+        "success"
     };
+    // Error's existing unsigned code cannot represent negative native reasons.
+    let code = reason.and_then(|value| u32::try_from(value).ok());
     store.write(|tx| {
         if let Some((snapshot, reservation)) = ownership {
             check_login_snapshot(tx, snapshot)?;

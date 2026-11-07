@@ -10734,3 +10734,9 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   and uncertain reservation; valid longer/leading-zero/BMP-digit reasons retain
   nonnegative codes. Owned reopen/no-replay regression added; no live operation.
   See [reason admission](docs/protocol/messaging-transport.md#initial-login-failure-reason-admission).
+
+- CLI lab-login now shares library root/required-int reason admission, preserving
+  capture and uncertain reservation on malformed failure or unrelated replies.
+  Valid failures retain canonical numeric reason; actual settlement/reopen tests
+  cover invalid/valid controls and prevent double settlement. No live operation.
+  See [shared admission](docs/protocol/messaging-transport.md#cli-shares-initial-login-reply-admission).

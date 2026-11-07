@@ -9757,3 +9757,10 @@ Local public upload eligibility omission corrected at shared entry, including ca
   and uncertainty. Owned reopen/no-replay and valid numeric controls added.
   Signed negative code representation and other callers remain separate. See
   [failure reason admission](messaging-transport.md#initial-login-failure-reason-admission).
+
+- Confirmed separate CLI login admission gap at `51e5c1e6`: missing reason
+  settled as failure and unexpected roots replaced uncertainty. Library/CLI now
+  share pure login_reply_reason admission; actual CLI settlement/reopen tests
+  preserve capture/ownership on invalid input and block second valid settlement.
+  Numeric CLI reasons canonicalize without arbitrary text output. See
+  [shared login admission](messaging-transport.md#cli-shares-initial-login-reply-admission).

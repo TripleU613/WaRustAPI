@@ -20041,5 +20041,15 @@
     "x-library": [],
     "description": "Initial library login requires failure.reason text accepted by Java decimal parsing within signed i32 before result settlement. Invalid content preserves capture and owned uncertain reservation with fixed terminal local error; valid failure remains refused. Existing unsigned optional code retains nonnegative values and maps valid negative reasons to null. Other CLI/live-session failure handlers unchanged; no route or live verification.",
     "evidence": "docs/protocol/messaging-transport.md#initial-login-failure-reason-admission"
+  },
+  "x-shared-initial-login-reply-admission": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [
+      "whatsapp_api::transport::connection::login_reply_reason"
+    ],
+    "description": "Pure shared initial login reply parser returns None for success and Some(signed i32) for valid failure; unsupported roots/malformed required reasons refuse locally. Caller retains authentication, capture, exact snapshot/reservation settlement and identity checks. CLI now retains uncertainty for invalid outcomes, preserves historical failure status and canonicalizes valid numeric reason text. No historical migration, replay, active-session failure change, new route or live validation.",
+    "evidence": "docs/protocol/messaging-transport.md#cli-shares-initial-login-reply-admission"
   }
 }

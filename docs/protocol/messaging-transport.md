@@ -2426,3 +2426,45 @@ This changes the initial library-login setter only; CLI lab-login, active-sessio
 failure handling and complete native exception lifecycle remain separate.
 See [complete methods and reproducible limits](apk/2.26.43.72-login-failure-reason/README.md).
 No live request or server-directed refusal/wait was cleared.
+
+## CLI shares initial login reply admission
+
+2026-11-07. **Confirmed local defect/fixed offline**, baseline `51e5c1e6`.
+The CLI lab-login path independently wrote malformed failure reasons as failure
+and unrelated roots as stream_error/unrecognized, replacing an owned uncertain
+reservation. Its five-byte ASCII-only reason filter also lost native-valid signed,
+leading-zero, BMP decimal-digit and longer i32 values. The initial APK reader and
+required integer evidence retained in the preceding section apply to this same
+selected login sequence; no new native lifecycle is claimed.
+
+Public pure connection.login_reply_reason now supplies common success/failure
+root and required signed-i32 reason admission to both library and CLI. None
+means success, Some means numeric failure, and unsupported roots/malformed failure
+reasons return fixed local terminal errors. This helper authenticates nothing,
+changes no storage and does not validate success identity fields or authorize
+continuing/retrying login. Each caller still owns capture, snapshot and exact
+reservation checks; CLI retains apply_cli_login_success in its settlement
+transaction. Existing account/material ownership checks are unchanged.
+
+CLI's actual settlement is extracted as record_cli_login_reply. The live path
+still durably captures before calling it. Invalid replies now leave the original
+unknown row intact and end the attempt. Valid failure retains historical CLI
+status=failure and reason as canonical decimal text, including negative i32.
+The library retains its existing optional unsigned code representation. Original
+reason formatting remains in captured evidence; CLI output uses only parsed
+numeric text. No arbitrary wire reason is printed. No historical row is migrated,
+refusal cleared, payload replayed or active-session failure behavior changed.
+
+The failing-before CLI regression settled missing reason as (failure,None).
+Actual capture/settlement/reopen controls now cover missing/nonnumeric/overflow
+reason and IQ/stream:error/notification roots carrying403; they preserve account/
+checkpoint rows and journal, redact errors and keep re-reservation blocked.
+Valid signed/leading-zero/BMP-digit/i32-boundary failures and success (with an
+irrelevant malformed reason) verify stored outcome plus no second settlement
+after reopen. Existing CLI identity/ownership and library malformed-reason
+controls remain. Synthetic offline data only, no live account operation.
+
+Validation: full workspace/all-feature suites, strict Clippy, CLI-reference
+regeneration, OpenAPI library-symbol test, APK coverage, formatting, whitespace
+and staged hygiene passed. Existing pinned evidence is reused; no raw APK or
+private state is added.
