@@ -151,8 +151,52 @@ impl ActiveRefetches {
 /// attached only after actual message/query work commits, never merely parsed input.
 pub(crate) struct ReservedAnswer {
     pub node: Node,
-    pub confirmation: Option<Node>,
+    pub confirmation: Option<ReservedConfirmation>,
     pub refetch: Option<RefetchWriteGuard>,
+}
+
+/// Frozen locally prepared ACK; never authority to replay after a write cut.
+#[derive(Clone)]
+pub(crate) struct ReservedConfirmation {
+    node: Node,
+    account_authority: [u8; 32],
+    payload_sha256: [u8; 32],
+}
+impl ReservedConfirmation {
+    pub(crate) fn new(
+        generation: crate::model::ids::AccountGeneration,
+        account: Option<&AccountRecord>,
+        node: Node,
+    ) -> Result<Self> {
+        Ok(Self {
+            account_authority: super::account_authority::fingerprint(generation, account)?,
+            payload_sha256: retry_payload_sha256(&node)?,
+            node,
+        })
+    }
+    pub(crate) fn node(&self) -> &Node {
+        &self.node
+    }
+    pub(crate) fn check_write_authority(&self, store: &ProtocolStore, node: &Node) -> Result<()> {
+        if retry_payload_sha256(node)? != self.payload_sha256 {
+            return Err(Error::invalid(
+                "retry",
+                "queued confirmation differs from its preparation",
+            ));
+        }
+        store.read(|tx| {
+            let account = AccountRecord::load(tx)?;
+            if super::account_authority::fingerprint(tx.generation(), account.as_ref())?
+                != self.account_authority
+            {
+                return Err(Error::invalid(
+                    "retry",
+                    "confirmation account changed before write",
+                ));
+            }
+            Ok(())
+        })
+    }
 }
 
 pub(crate) async fn answer_with_confirmation(
@@ -180,6 +224,9 @@ pub(crate) async fn answer_with_confirmation(
     } else {
         None
     };
+    let confirmation = confirmation
+        .map(|node| ReservedConfirmation::new(account.generation, Some(account), node))
+        .transpose()?;
     Ok(Some(ReservedAnswer {
         node: answer,
         confirmation,
@@ -346,7 +393,7 @@ async fn answer_inner(
                 count: retry.count,
             };
             let request = super::messaging::key_request(&peer, &query);
-            let request_sha256 = refetch_request_sha256(&request)?;
+            let request_sha256 = retry_payload_sha256(&request)?;
             let reserved = reserve_refetch(
                 store,
                 &entry,
@@ -449,7 +496,7 @@ pub(crate) struct RefetchWriteGuard {
     query: String,
     job: Refetch,
 }
-fn refetch_request_sha256(node: &Node) -> Result<[u8; 32]> {
+fn retry_payload_sha256(node: &Node) -> Result<[u8; 32]> {
     use sha2::{Digest, Sha256};
     let wire = zeroize::Zeroizing::new(
         Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(node)?,
@@ -463,7 +510,7 @@ impl RefetchWriteGuard {
         store: &ProtocolStore,
         node: &Node,
     ) -> Result<()> {
-        if refetch_request_sha256(node)? != self.request_sha256 {
+        if retry_payload_sha256(node)? != self.request_sha256 {
             return Err(Error::invalid(
                 "retry",
                 "queued refetch query differs from its reservation",
@@ -1256,7 +1303,7 @@ mod tests {
             })
             .unwrap();
         let guard = RefetchWriteGuard {
-            request_sha256: refetch_request_sha256(&Node::new("iq").attr("id", "Q1")).unwrap(),
+            request_sha256: retry_payload_sha256(&Node::new("iq").attr("id", "Q1")).unwrap(),
             account_authority: store
                 .read(|tx| {
                     let account = AccountRecord::load(tx)?;
@@ -1659,7 +1706,7 @@ mod tests {
                     })
                     .unwrap();
                 let authority = RefetchWriteGuard {
-                    request_sha256: refetch_request_sha256(&Node::new("iq").attr("id", "Q1"))
+                    request_sha256: retry_payload_sha256(&Node::new("iq").attr("id", "Q1"))
                         .unwrap(),
                     account_authority: store
                         .read(|tx| {
@@ -1691,7 +1738,14 @@ mod tests {
                                     .children(vec![Node::new("changed-fixture")]),
                                 _ => Node::new("iq").attr("id", "Q1"),
                             },
-                            confirmation: Some(Node::new("ack").attr("id", "R1")),
+                            confirmation: Some(
+                                ReservedConfirmation::new(
+                                    worker_store.generation(),
+                                    worker_store.read(AccountRecord::load).unwrap().as_ref(),
+                                    Node::new("ack").attr("id", "R1"),
+                                )
+                                .unwrap(),
+                            ),
                             refetch: Some(authority),
                         },
                     )
@@ -1824,7 +1878,7 @@ mod tests {
                 })
                 .unwrap();
             let write_guard = RefetchWriteGuard {
-                request_sha256: refetch_request_sha256(&Node::new("iq").attr("id", "Q1")).unwrap(),
+                request_sha256: retry_payload_sha256(&Node::new("iq").attr("id", "Q1")).unwrap(),
                 account_authority: store
                     .read(|tx| {
                         let account = AccountRecord::load(tx)?;
@@ -2051,7 +2105,7 @@ mod tests {
                     node: Node::new("iq").attr("id", "Q1"),
                     confirmation: None,
                     refetch: Some(RefetchWriteGuard {
-                        request_sha256: refetch_request_sha256(&Node::new("iq").attr("id", "Q1"))
+                        request_sha256: retry_payload_sha256(&Node::new("iq").attr("id", "Q1"))
                             .unwrap(),
                         account_authority: store
                             .read(|tx| {
@@ -2097,7 +2151,7 @@ mod tests {
                             node: Node::new("iq").attr("id", "Q1"),
                             confirmation: None,
                             refetch: Some(RefetchWriteGuard {
-                                request_sha256: refetch_request_sha256(
+                                request_sha256: retry_payload_sha256(
                                     &Node::new("iq").attr("id", "Q1")
                                 )
                                 .unwrap(),
@@ -2262,7 +2316,7 @@ mod tests {
                     node: Node::new("iq").attr("id", "Q1"),
                     confirmation: None,
                     refetch: Some(RefetchWriteGuard {
-                        request_sha256: refetch_request_sha256(&Node::new("iq").attr("id", "Q1"))
+                        request_sha256: retry_payload_sha256(&Node::new("iq").attr("id", "Q1"))
                             .unwrap(),
                         account_authority: store
                             .read(|tx| {
@@ -2767,7 +2821,8 @@ mod tests {
                         let ack = answer
                             .confirmation
                             .as_ref()
-                            .expect("durable refetch gets a receipt ACK");
+                            .expect("durable refetch gets a receipt ACK")
+                            .node();
                         assert_eq!(
                             ack.get_attr("id").and_then(|v| v.as_text()),
                             node.get_attr("id").and_then(|v| v.as_text())
@@ -3040,6 +3095,7 @@ mod tests {
         let confirmation = reserved
             .confirmation
             .expect("reserved message has a receipt ACK");
+        let confirmation = confirmation.node();
         assert_eq!(confirmation.description, "ack");
         assert_eq!(
             confirmation.get_attr("id").and_then(|v| v.as_text()),

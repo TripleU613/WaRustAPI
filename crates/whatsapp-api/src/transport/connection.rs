@@ -371,7 +371,11 @@ enum WriteGuard {
     DirectAccount(Arc<ProtocolStore>, [u8; 32]),
     Prekey(Arc<ProtocolStore>, super::prekeys::PendingUpload),
     Devices(Arc<ProtocolStore>, super::devices::DeviceQuery),
-    RetryRefetch(Arc<ProtocolStore>, super::retry_answer::RefetchWriteGuard),
+    RetryConfirmation(
+        Arc<ProtocolStore>,
+        super::retry_answer::ReservedConfirmation,
+        Option<super::retry_answer::RefetchWriteGuard>,
+    ),
     RetryRefetchQuery(Arc<ProtocolStore>, super::retry_answer::RefetchWriteGuard),
     Action(Arc<ProtocolStore>, super::actions::ActionWriteGuard),
     Receipt(Arc<ProtocolStore>, super::receipts::ReceiptWriteGuard),
@@ -425,7 +429,13 @@ impl Outbound {
             Some(WriteGuard::Devices(store, query)) => {
                 query.check_write_authority(&store, &self.node)
             }
-            Some(WriteGuard::RetryRefetch(store, pending)) => pending.check_write_authority(&store),
+            Some(WriteGuard::RetryConfirmation(store, confirmation, pending)) => confirmation
+                .check_write_authority(&store, &self.node)
+                .and_then(|()| {
+                    pending
+                        .as_ref()
+                        .map_or(Ok(()), |pending| pending.check_write_authority(&store))
+                }),
             Some(WriteGuard::RetryRefetchQuery(store, pending)) => {
                 pending.check_query_write_authority(&store, &self.node)
             }
@@ -493,14 +503,16 @@ impl NodeLink {
         store: &Arc<ProtocolStore>,
         answer: &super::retry_answer::ReservedAnswer,
     ) -> Result<bool> {
-        let guard = || {
-            answer
-                .refetch
-                .as_ref()
-                .map(|pending| WriteGuard::RetryRefetch(store.clone(), pending.clone()))
-        };
         let confirmed = if let Some(confirmation) = &answer.confirmation {
-            self.send_guarded(confirmation, guard()).await?;
+            self.send_guarded(
+                confirmation.node(),
+                Some(WriteGuard::RetryConfirmation(
+                    store.clone(),
+                    confirmation.clone(),
+                    answer.refetch.clone(),
+                )),
+            )
+            .await?;
             true
         } else {
             false
@@ -2421,29 +2433,92 @@ mod tests {
     #[tokio::test]
     async fn retry_ack_write_precedes_resend_and_failure_stops_the_pair() {
         for answer_kind in ["message", "iq"] {
-            for outcome_kind in ["ack_failed", "resend_failed", "written"] {
+            for outcome_kind in [
+                "ack_failed",
+                "resend_failed",
+                "written",
+                "ack_id",
+                "ack_to",
+                "ack_body",
+                "ack_account",
+            ] {
                 let (_incoming, incoming) = mpsc::channel(1);
                 let (outgoing, mut writes) = mpsc::channel(2);
                 let link = NodeLink::new(incoming, outgoing);
                 let dir = tempfile::tempdir().unwrap();
-                let store = Arc::new(open(&dir.path().join("retry-write.db")));
+                let path = dir.path().join("retry-write.db");
+                let store = open(&path);
+                let worker_store = store.clone();
                 let task = tokio::spawn(async move {
                     link.send_retry_answer(
-                        &store,
+                        &worker_store,
                         &super::super::retry_answer::ReservedAnswer {
                             refetch: None,
                             confirmation: Some(
-                                Node::new("ack")
-                                    .attr("id", "ROOT")
-                                    .attr("class", "receipt")
-                                    .attr("type", "retry"),
+                                super::super::retry_answer::ReservedConfirmation::new(
+                                    worker_store.generation(),
+                                    worker_store.read(AccountRecord::load).unwrap().as_ref(),
+                                    Node::new("ack")
+                                        .attr("id", "ROOT")
+                                        .attr("class", "receipt")
+                                        .attr("type", "retry"),
+                                )
+                                .unwrap(),
                             ),
                             node: Node::new(answer_kind).attr("id", "W1"),
                         },
                     )
                     .await
                 });
-                let (first, outcome) = writes.recv().await.unwrap().prepare().unwrap();
+                let mut queued = writes.recv().await.unwrap();
+                match outcome_kind {
+                    "ack_id" => queued.node = queued.node.attr("id", "changed-fixture"),
+                    "ack_to" => queued.node = queued.node.attr("to", "changed.invalid"),
+                    "ack_body" => {
+                        queued.node = queued.node.children(vec![Node::new("changed-fixture")])
+                    }
+                    "ack_account" => store
+                        .write(|tx| {
+                            let mut account = AccountRecord::load_in_write(tx)?.unwrap();
+                            account.signal_registration_id = Some(31);
+                            account.save(tx)
+                        })
+                        .unwrap(),
+                    _ => {}
+                }
+                let before = store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap();
+                let head = store.journal_head().unwrap();
+                if matches!(
+                    outcome_kind,
+                    "ack_id" | "ack_to" | "ack_body" | "ack_account"
+                ) {
+                    assert!(queued.prepare().is_none(), "{answer_kind}/{outcome_kind}");
+                    assert!(task.await.unwrap().is_err());
+                    assert!(
+                        writes.recv().await.is_none(),
+                        "refused ACK must not release answer"
+                    );
+                    assert_eq!(
+                        store
+                            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                            .unwrap(),
+                        before
+                    );
+                    assert_eq!(store.journal_head().unwrap(), head);
+                    drop(store);
+                    let reopened = identity_store(&path);
+                    assert_eq!(
+                        reopened
+                            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                            .unwrap(),
+                        before
+                    );
+                    assert_eq!(reopened.journal_head().unwrap(), head);
+                    continue;
+                }
+                let (first, outcome) = queued.prepare().unwrap();
                 assert_eq!(first.description, "ack");
                 assert_eq!(first.get_attr("id").and_then(|v| v.as_text()), Some("ROOT"));
                 assert!(matches!(
