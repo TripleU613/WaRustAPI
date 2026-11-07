@@ -1,4 +1,11 @@
 {
+  "x-offline-aggregate-required-device": {
+    "x-cli": "xtask apk-smali <apk> --class 'LX/0Tp;' --method A0B --signatures --exceptions",
+    "x-transport": "incoming offline message_id aggregate required actor admission",
+    "x-live": false,
+    "description": "Offline aggregate items require DeviceJid via pinned F10.A03/0Tp.A0B. Known constructor-null or failed required-device text classes, generic non-device families and bounded zero-agent Plain/AD binary failures now refuse ordinary processing before facts are expanded. Key-aggregate null skipping remains distinct. Codec/encrypted-store tests verify validation and recording refusal, unchanged checkpoint/outbox/journal snapshots and redacted errors. Native ordinary parse-error response dispatch is not ported here; unknown class/cache/opaque binary behavior, valid-device projection and live acceptance remain open. No global model/decoder, selector, identity, new request, HTTP route or account operation change.",
+    "evidence": "docs/protocol/apk/2.26.43.72-offline-required-receipt-actor/README.md"
+  },
   "x-key-aggregate-native-null-order": {
     "x-cli": "cargo test --locked -p whatsapp-api --all-features key_aggregates",
     "x-transport": "incoming key-aggregate receipt expansion before per-item timestamp parsing",

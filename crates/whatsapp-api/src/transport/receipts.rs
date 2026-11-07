@@ -1471,8 +1471,51 @@ fn offline_aggregate(node: &Node, participants: &Node) -> Result<Vec<Node>> {
         {
             return Err(invalid("unsupported self-user aggregate actor"));
         }
+        // APK43.72 F10.A03 0098 requests DeviceJid with required A0B.
+        // A0A returns null on constructor/cast failure; A0B then throws LIL.
+        // This branch must refuse, not apply key-aggregate null skipping.
+        let source = item
+            .get_attr("jid")
+            .ok_or_else(|| invalid("missing or invalid participant jid"))?;
+        if matches!(
+            source.as_text().and_then(super::messaging::ack_user_text),
+            Some(
+                super::messaging::AckUserText::Null
+                    | super::messaging::AckUserText::ServiceUser(_)
+                    | super::messaging::AckUserText::NonUser(_)
+            )
+        ) {
+            return Err(invalid("missing or invalid participant jid"));
+        }
         let actor =
             jid(item, "jid").ok_or_else(|| invalid("missing or invalid participant jid"))?;
+        let known_binary_failure = source.as_jid().is_some_and(|value| {
+            value.agent == 0
+                && matches!(
+                    value.kind,
+                    crate::model::jid::JidKind::Plain | crate::model::jid::JidKind::AgentDevice
+                )
+                && matches!(
+                    super::messaging::binary_ack_user_class(value),
+                    Some(
+                        super::messaging::BinaryAckUserClass::Invalid
+                            | super::messaging::BinaryAckUserClass::ServiceUser
+                            | super::messaging::BinaryAckUserClass::NonUser
+                            | super::messaging::BinaryAckUserClass::ServerOnly
+                    )
+                )
+        });
+        // These known generic classes neither are DeviceJid nor satisfy
+        // 0Dn.A0k's UserJid-to-primary-device conversion predicate.
+        if known_binary_failure
+            || matches!(
+                actor.server,
+                Server::Group | Server::Broadcast | Server::Newsletter
+            )
+            || matches!(&actor.server, Server::Other(server) if matches!(server.as_str(), "call" | "temp"))
+        {
+            return Err(invalid("missing or invalid participant jid"));
+        }
         let kind = match item.get_attr("type") {
             None => "delivery",
             Some(value) => value
@@ -4576,6 +4619,20 @@ mod tests {
             good.clone().attr("type", peer.clone()),
             good.clone()
                 .attr("jid", "SECRET-BAD-JID:70000@s.whatsapp.net"),
+            good.clone().attr("jid", "15555550100:100@s.whatsapp.net"),
+            good.clone().attr("jid", "100001:128@lid"),
+            good.clone().attr("jid", "100001:355@hosted.lid"),
+            good.clone().attr("jid", "Server@s.whatsapp.net"),
+            good.clone().attr("jid", "gdpr@s.whatsapp.net"),
+            good.clone().attr("jid", "120363000000000001@g.us"),
+            good.clone().attr("jid", "123@newsletter"),
+            good.clone().attr("jid", "status@broadcast"),
+            good.clone().attr("jid", "1234567890abcdef12@call"),
+            good.clone().attr("jid", "12-34@temp"),
+            good.clone()
+                .attr("jid", Jid::parse("15555550100:100@s.whatsapp.net").unwrap()),
+            good.clone()
+                .attr("jid", Jid::parse("120363000000000001@g.us").unwrap()),
         ] {
             let node = Node::new("receipt")
                 .attr("from", peer.clone())
@@ -4584,6 +4641,12 @@ mod tests {
                         .attr("message_id", "fixture")
                         .children(vec![good.clone(), bad]),
                 ]);
+            let encoded = crate::binary::Encoder::new(
+                crate::binary::TokenDictionary::comparison_2_26_37_71(),
+            )
+            .encode(&node)
+            .unwrap();
+            let node = decode(&encoded).unwrap();
             // The receive loop's pre-store stage refuses exactly what record does.
             assert!(validate(&node).is_err());
             let error = record(&store, &node).unwrap_err().to_string();

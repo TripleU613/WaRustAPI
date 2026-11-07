@@ -1,3 +1,9 @@
+2026-11-06 — **Refused malformed required actors in offline aggregates.**
+The message_id branch now distinguishes required DeviceJid failure from nullable
+key-aggregate skipping. Known constructor-null, wrong-class and bounded binary
+actor failures refuse ordinary processing before any batch facts are written.
+[Required accessor/conversion evidence, atomic refusal tests and remaining response-policy gap](apk/2.26.43.72-offline-required-receipt-actor/README.md). No live account operation.
+
 2026-11-06 — **Preserved valid aggregate receipts around native-null actors.**
 Key aggregates now skip known constructor-null participant text before parsing
 its timestamp, matching the pinned parser branch. A malformed time on such an

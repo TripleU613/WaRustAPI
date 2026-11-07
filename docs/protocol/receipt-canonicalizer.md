@@ -222,3 +222,17 @@ Reproduce with `cargo test --locked -p whatsapp-api --all-features key_aggregate
 The retained complete parser's reproduction and checksums are in its
 [existing evidence bundle](apk/2.26.43.72-receipt-null-fact-actor/README.md);
 no new export or duplicated evidence bundle was necessary.
+
+## Required DeviceJid in offline aggregate items (2026-11-06)
+
+**Confirmed selected static / fixed offline:** [complete required accessor and conversion predicate](apk/2.26.43.72-offline-required-receipt-actor/README.md)
+bind F10.A03's message_id branch to A0B(DeviceJid,jid). Constructor-null or
+failed class conversion throws LIL instead of skipping an item. The supported
+Rust parser now refuses known text constructor/cast failures, generic non-device
+families and bounded ordinary binary failures before expanding any batch facts.
+Key-aggregate nullable skip behavior remains distinct. A codec-roundtripped
+mixed valid/invalid regression failed before correction; now validate/record
+refuse with unchanged checkpoint/outbox rows and journal and redacted errors.
+Native ordinary parse-error response dispatch, full class/cache/binary fidelity,
+valid-device projection and live acceptance remain open; no new request or account
+operation. This guard does not assert universal native NACK or rollback behavior.

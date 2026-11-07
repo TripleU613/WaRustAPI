@@ -1,0 +1,14 @@
+{
+  "README.md": {
+    "bytes": 4655,
+    "sha256": "124f503535c4c3f58ce1dd4079e220763f974572076990f8caadb5bcfd470690"
+  },
+  "convertible-user-predicate.txt": {
+    "bytes": 873,
+    "sha256": "15ac20b5755091ceb6fa5e8645b00557e528b2d7821e65e46c50130d8a622e6b"
+  },
+  "required-accessor.txt": {
+    "bytes": 1451,
+    "sha256": "33324a648ffc5c10fb37e2fa08375276afef05e4511265fcb755ec4c1535eb92"
+  }
+}
