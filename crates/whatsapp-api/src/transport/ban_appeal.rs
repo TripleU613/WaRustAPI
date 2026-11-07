@@ -100,9 +100,7 @@ pub fn recover_appeal_token_from_captures(
             "failure-capture",
             &candidate.authority,
         )?;
-        Ok(Some(Zeroizing::new(
-            String::from_utf8_lossy(&candidate.token).into_owned(),
-        )))
+        Ok(Some(appeal_token_text(&candidate.token)?))
     } else {
         Ok(None)
     }
@@ -179,6 +177,14 @@ fn find_captured_appeal_token(store: &ProtocolStore) -> Result<Option<CapturedAp
     })
 }
 
+// JSON needs text. Never silently substitute token bytes with replacement
+// characters; refuse locally without disclosing the stored credential.
+fn appeal_token_text(bytes: &[u8]) -> Result<Zeroizing<String>> {
+    std::str::from_utf8(bytes)
+        .map(|text| Zeroizing::new(text.to_owned()))
+        .map_err(|_| Error::invalid("ban_appeal", "stored appeal token is not valid UTF-8"))
+}
+
 /// Read the `noise_appeal_token` credential from the account store, if present.
 /// Falls back to recovery from preserved failure captures if no credential exists.
 pub async fn read_stored_appeal_token(
@@ -195,7 +201,8 @@ pub async fn read_stored_appeal_token(
                     .iter()
                     .rev()
                     .find(|c| c.name == "noise_appeal_token")
-                    .map(|c| Zeroizing::new(String::from_utf8_lossy(&c.value).into_owned()));
+                    .map(|c| appeal_token_text(&c.value))
+                    .transpose()?;
                 Ok(token)
             })
         })
@@ -534,6 +541,80 @@ mod tests {
         let cred = saved_token.unwrap();
         assert_eq!(String::from_utf8_lossy(&cred.value), "test-appeal-token");
         assert_eq!(cred.source_step, Some("failure-capture".into()));
+    }
+
+    #[tokio::test]
+    async fn stored_appeal_token_text_is_exact_or_refused_without_mutation() {
+        for (bytes, valid) in [
+            (b"private-ascii-token".as_slice(), true),
+            ("private-שלום-token".as_bytes(), true),
+            (b"private-invalid-\xff-token".as_slice(), false),
+        ] {
+            let temp = tempfile::TempDir::new().unwrap();
+            let path = temp.path().join("token-text.redb");
+            let open = |create| {
+                Arc::new(
+                    ProtocolStore::open(OpenOptions {
+                        path: path.clone(),
+                        account_id: AccountId::new("test").unwrap(),
+                        key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                            [9u8; 32],
+                        ))),
+                        create,
+                    })
+                    .unwrap(),
+                )
+            };
+            let store = open(true);
+            store
+                .write(|tx| {
+                    let mut account = AccountRecord::default();
+                    account
+                        .credentials
+                        .push(crate::session::ObservedCredential {
+                            name: "noise_appeal_token".into(),
+                            value: Zeroizing::new(bytes.to_vec()),
+                            observed_at: crate::model::time::Timestamp(1),
+                            source_step: Some("fixture".into()),
+                        });
+                    account.save(tx)
+                })
+                .unwrap();
+            let before = store.read(|tx| tx.scan(Table::Account, 1, 100)).unwrap();
+            let head = store.journal_head().unwrap();
+            let result = read_stored_appeal_token(&store).await;
+            if valid {
+                assert_eq!(result.unwrap().unwrap().as_bytes(), bytes);
+            } else {
+                let error =
+                    result.expect_err("invalid token bytes became replacement-character text");
+                assert!(matches!(
+                    error,
+                    Error::InvalidInput {
+                        field: "ban_appeal",
+                        ..
+                    }
+                ));
+                assert!(!error.to_string().contains("private-invalid"));
+            }
+            assert_eq!(
+                store.read(|tx| tx.scan(Table::Account, 1, 100)).unwrap(),
+                before
+            );
+            assert!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap()
+                    .is_empty()
+            );
+            assert_eq!(store.journal_head().unwrap(), head);
+            drop(store);
+            let store = open(false);
+            assert_eq!(
+                store.read(|tx| tx.scan(Table::Account, 1, 100)).unwrap(),
+                before
+            );
+        }
     }
 
     #[test]

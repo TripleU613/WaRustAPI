@@ -10752,3 +10752,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   former false absence and preserves all captured history. Account binding and
   no-replay policy unchanged; no live operation. See
   [paged recovery](docs/protocol/ban-appeal.md#exhaustive-paged-token-discovery).
+
+- Stored appeal-token reads no longer replace invalid UTF-8 before JSON input.
+  Valid ASCII/Unicode text stays exact; malformed bytes refuse locally and remain
+  untouched, with no capture fallback. Public async/reopen regression added.
+  No live request. See [token text](docs/protocol/ban-appeal.md#stored-appeal-token-text-is-exact-or-refused).

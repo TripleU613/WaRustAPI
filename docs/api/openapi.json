@@ -20071,5 +20071,15 @@
     ],
     "description": "Historical appeal-token discovery exhausts the same checkpoint read snapshot using 256-row exclusive-cursor pages. Unrelated history and malformed capture decoys no longer cause false absence at a 20000-row cutoff. Existing first lexicographic match, decoding, account continuity and persistence policies remain; no latest-token/provenance claim, route, replay, appeal submission or live validation added.",
     "evidence": "docs/protocol/ban-appeal.md#exhaustive-paged-token-discovery"
+  },
+  "x-appeal-token-exact-text": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "x-library": [
+      "whatsapp_api::transport::ban_appeal::read_stored_appeal_token"
+    ],
+    "description": "Stored appeal token reads use strict UTF-8: valid ASCII/Unicode text remains exact, invalid bytes return fixed redacted InvalidInput(ban_appeal) without mutation or capture fallback. Recovery shares conversion for already decoded text tokens. No ASCII-only syntax rule, credential rotation/deletion, route, Authorization-header change, submission or live validation added.",
+    "evidence": "docs/protocol/ban-appeal.md#stored-appeal-token-text-is-exact-or-refused"
   }
 }

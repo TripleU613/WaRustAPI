@@ -246,3 +246,32 @@ Validation: full workspace/all-feature tests passed, including 1,417 library
 tests and the integration/CLI/xtask suites. Strict Clippy, CLI-reference
 regeneration, OpenAPI library-symbol test, APK coverage, formatting, whitespace
 and staged hygiene passed. No new APK claim or live operation.
+
+## Stored appeal-token text is exact or refused
+
+2026-11-07. **Confirmed local request-input defect/fixed offline**, baseline
+`f40a7080`: read_stored_appeal_token decoded saved credential bytes through
+String::from_utf8_lossy. Invalid UTF-8 could therefore become a different token
+containing replacement characters before BanAppealInput JSON construction. The
+failing-before public async regression returned a token for invalid byte input.
+This is byte-to-text correctness, not newly traced native token syntax.
+
+The read path now uses strict UTF-8 conversion through a shared local helper.
+Invalid bytes return fixed redacted InvalidInput(ban_appeal) and remain stored
+unchanged; they do not become None or trigger capture fallback. Valid ASCII and
+Unicode text retain their exact UTF-8 bytes. Recovery uses the same helper,
+although tokens selected through decoded node text are already UTF-8. No ASCII
+restriction, token rotation, credential deletion or speculative format check is
+added. Bearer login header byte handling is separate and remains unchanged.
+
+The public read regression exercises ASCII, Unicode and invalid UTF-8 credentials,
+checking unchanged account bytes, empty capture table, event head and encrypted
+reopen. It invokes no HTTPS client or submission. Existing captured-token
+recovery/account-ownership/pagination tests remain controls. Valid text alone
+does not prove token authenticity, account provenance, service acceptance or the
+complete native appeal request contract. No live account operation performed.
+
+Validation: full workspace/all-feature tests passed (1,418 library tests plus
+integration/CLI/xtask suites). Strict Clippy, CLI-reference regeneration,
+OpenAPI library-symbol test, APK coverage, formatting, whitespace and staged
+hygiene passed. No new native syntax or live acceptance evidence is claimed.

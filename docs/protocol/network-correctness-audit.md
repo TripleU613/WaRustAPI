@@ -6274,3 +6274,9 @@ evidence, not new APK behavior or proof of full group-send/network parity.
   preserving first-match order and account-authority checks. Public recovery/
   encrypted-reopen regression covers20,005 unrelated rows plus malformed decoys
   and unchanged captures. See [paged discovery](ban-appeal.md#exhaustive-paged-token-discovery).
+
+- Confirmed stored appeal-token lossy text conversion at `f40a7080`: invalid
+  UTF-8 returned a replacement-character token. Public async read now preserves
+  valid ASCII/Unicode bytes and refuses invalid bytes with fixed diagnostics,
+  without mutation or fallback. Read/reopen regression added; no token syntax
+  or live acceptance claim. See [exact token text](ban-appeal.md#stored-appeal-token-text-is-exact-or-refused).
