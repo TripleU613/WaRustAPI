@@ -2378,3 +2378,32 @@ provenance for old message rows, resolve all capture-row lifetime questions or
 implement history fetching/application. Previously stored authenticated inputs,
 exact route/key checks and saved-row OCC remain necessary. No live account
 operation is performed.
+
+## Fallback capture snapshot at historical publication
+
+**Confirmed Rust source defect, corrected offline**, baseline `fc1f2ead`.
+Historical records without inline route bytes load their route from a separate
+capture checkpoint. Restoration rechecked account context and the message row,
+but not that separately loaded capture. Replacing/removing it between decode
+and publication could leave projection using an old route while the linked
+capture had changed.
+
+The fallback path now retains capture key and decoded wire bytes as a snapshot.
+The staged BackfillProjection commits in one transaction: check initial account,
+compare saved message row, compare fallback capture bytes if used, validate alias,
+then publish event/marker. Changed/deleted capture refuses with
+`capture changed during event backfill`; malformed current capture storage also
+refuses. Inline-route records remain covered by their existing exact message-row
+comparison and do not acquire a speculative capture dependency.
+
+The offline regression stages a valid group notice with a separate capture,
+replaces that capture with a different valid same-message route (changed timestamp),
+removes it or writes malformed JSON, reopens the store and calls the actual staged
+publication transaction. Each rejected case preserves checkpoint/inbox rows and
+journal head. An unchanged control publishes exactly one event, then exercises
+the public fallback restore path and observes no duplicate. No ACK, history fetch
+or network operation occurs.
+
+This is operation consistency, not proof that arbitrary historical data was
+originally authenticated or that all capture producers are immutable. It does
+not repair capture rows, assign old account provenance or authorize replay.

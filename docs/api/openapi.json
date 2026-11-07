@@ -1,4 +1,11 @@
 {
+  "x-inbox-backfill-capture-snapshot": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "evidence": "docs/protocol/cross-device-sync.md#fallback-capture-snapshot-at-historical-publication",
+    "behavior": "Historical fallback-route projection compares its capture snapshot in the event publication transaction; changed/deleted/corrupt captures refuse without events. Inline routes retain existing message-row binding."
+  },
   "x-inbox-event-backfill-account-context": {
     "x-cli": false,
     "x-transport": true,

@@ -10597,3 +10597,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   transactionally before alias/event/marker publication. Offline JID/logout/
   registration-ID changes preserve rows/journal; same-owner and observation-only
   controls publish once. Historical provenance remains separate; no live operation.
+
+- Historical backfill now rechecks separately loaded fallback capture bytes
+  alongside account/message authority before event publication. Offline staged
+  replacement/removal/corruption cases preserve rows/journal; unchanged fallback
+  publishes once. No ACK, fetch, replay or live operation added.

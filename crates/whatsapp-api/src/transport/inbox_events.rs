@@ -1612,16 +1612,42 @@ pub(super) fn restore(
 
 // Preserve this invocation's account context; historical record ownership is
 // separate and must never be invented from whichever account is current now.
+struct BackfillCapture {
+    key: Vec<u8>,
+    wire: Vec<u8>,
+}
+impl BackfillCapture {
+    fn check_in(&self, tx: &WriteTx<'_>) -> Result<()> {
+        let current: Option<Vec<u8>> = tx.get_json(Table::Checkpoints, &self.key, 1)?;
+        if current.as_deref() != Some(self.wire.as_slice()) {
+            return Err(crate::Error::invalid(
+                "inbox",
+                "capture changed during event backfill",
+            ));
+        }
+        Ok(())
+    }
+}
+
 fn restore_for_owner(
     store: &crate::store::ProtocolStore,
     key: &[u8],
     saved: &serde_json::Value,
     owner: [u8; 32],
 ) -> Result<bool> {
+    let mut capture_source = None;
     let wire: Option<Vec<u8>> = if !saved["route"].is_null() {
         serde_json::from_value(saved["route"].clone()).ok()
     } else if let Ok(capture) = serde_json::from_value::<Vec<u8>>(saved["capture"].clone()) {
-        store.read(|tx| tx.get_json(Table::Checkpoints, &capture, 1))?
+        let wire: Option<Vec<u8>> =
+            store.read(|tx| tx.get_json(Table::Checkpoints, &capture, 1))?;
+        if let Some(wire) = &wire {
+            capture_source = Some(BackfillCapture {
+                key: capture,
+                wire: wire.clone(),
+            });
+        }
+        wire
     } else {
         None
     };
@@ -1662,6 +1688,39 @@ fn restore_for_owner(
     let payload: zeroize::Zeroizing<Vec<u8>> = serde_json::from_value(saved["protobuf"].clone())
         .map_err(|_| crate::Error::invalid("inbox", "invalid saved authenticated payload"))?;
     store.write(|tx| {
+        BackfillProjection {
+            key,
+            saved,
+            node: &node,
+            sender: &sender,
+            payload: &payload,
+            owner,
+            capture: capture_source.as_ref(),
+        }
+        .commit(tx)
+    })
+}
+
+struct BackfillProjection<'a> {
+    key: &'a [u8],
+    saved: &'a serde_json::Value,
+    node: &'a Node,
+    sender: &'a crate::model::jid::Jid,
+    payload: &'a [u8],
+    owner: [u8; 32],
+    capture: Option<&'a BackfillCapture>,
+}
+impl BackfillProjection<'_> {
+    fn commit(self, tx: &mut WriteTx<'_>) -> Result<bool> {
+        let Self {
+            key,
+            saved,
+            node,
+            sender,
+            payload,
+            owner,
+            capture,
+        } = self;
         let account = crate::session::AccountRecord::load_in_write(tx)?;
         if super::account_authority::fingerprint(tx.generation(), account.as_ref())? != owner {
             return Err(crate::Error::invalid(
@@ -1676,9 +1735,12 @@ fn restore_for_owner(
                 "record changed during event backfill",
             ));
         }
-        if let Some(from) = super::receipts::jid(&node, "from")
+        if let Some(capture) = capture {
+            capture.check_in(tx)?;
+        }
+        if let Some(from) = super::receipts::jid(node, "from")
             && from.server == crate::model::jid::Server::Lid
-            && let Some(phone) = super::inbox::authenticated_phone_alias(&node, &sender)
+            && let Some(phone) = super::inbox::authenticated_phone_alias(node, sender)
         {
             let mapping = format!("authenticated-lid:{}", from.to_non_ad());
             let old: Option<crate::model::jid::Jid> =
@@ -1691,8 +1753,8 @@ fn restore_for_owner(
             }
             tx.put_json(Table::Checkpoints, mapping.as_bytes(), 1, &phone)?;
         }
-        publish(tx, key, &node, &payload)
-    })
+        publish(tx, key, node, payload)
+    }
 }
 
 #[cfg(test)]
@@ -1703,6 +1765,103 @@ mod tests {
         model::ids::{AccountId, EventCursor},
         store::{ConsumerId, MasterKey, OpenOptions, ProtocolStore, StaticKeySource},
     };
+    #[test]
+    fn backfill_capture_replacement_rolls_back_actual_publication_after_reopen() {
+        for change in ["same", "replaced", "removed", "corrupt"] {
+            let dir = tempfile::tempdir().unwrap();
+            let options = || OpenOptions {
+                path: dir.path().join("backfill-capture.redb"),
+                account_id: AccountId::new("test").unwrap(),
+                create: true,
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [3; 32],
+                ))),
+            };
+            let store = ProtocolStore::open(options()).unwrap();
+            let node =
+                group_node().children(vec![Node::new("meta").attr("appdata", "group_history")]);
+            let encode = |node: &Node| {
+                crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
+                    .encode(node)
+                    .unwrap()
+            };
+            let wire = encode(&node);
+            let capture = BackfillCapture {
+                key: b"capture-fixture".to_vec(),
+                wire: wire.clone(),
+            };
+            let payload = b"\xb2\x06\x0d\x12\x0b\x0a\x051@lid\x10\x0a\x18\x02";
+            let key = b"received:120363000000000001@g.us:fixture";
+            let sender = crate::model::jid::Jid::parse("120363000000000001@g.us").unwrap();
+            let saved =
+                serde_json::json!({"status":"decrypted","capture":capture.key,"protobuf":payload});
+            store
+                .write(|tx| {
+                    tx.put_json(Table::Checkpoints, key, 1, &saved)?;
+                    tx.put_json(Table::Checkpoints, &capture.key, 1, &wire)
+                })
+                .unwrap();
+            let owner =
+                super::super::account_authority::fingerprint(store.generation(), None).unwrap();
+            store
+                .write(|tx| match change {
+                    "replaced" => tx.put_json(
+                        Table::Checkpoints,
+                        &capture.key,
+                        1,
+                        &encode(&node.clone().attr("t", "456")),
+                    ),
+                    "removed" => tx.delete(Table::Checkpoints, &capture.key).map(|_| ()),
+                    "corrupt" => tx.put(Table::Checkpoints, &capture.key, 1, b"not-json"),
+                    _ => Ok(()),
+                })
+                .unwrap();
+            drop(store);
+            let store = ProtocolStore::open(options()).unwrap();
+            let before = store
+                .read(|tx| {
+                    Ok((
+                        tx.scan(Table::Checkpoints, 1, 100)?,
+                        tx.scan(Table::Inbox, 1, 100)?,
+                        tx.journal_head()?,
+                    ))
+                })
+                .unwrap();
+            let result = store.write(|tx| {
+                BackfillProjection {
+                    key,
+                    saved: &saved,
+                    node: &node,
+                    sender: &sender,
+                    payload,
+                    owner,
+                    capture: Some(&capture),
+                }
+                .commit(tx)
+            });
+            if change == "same" {
+                assert!(result.unwrap());
+                assert!(!restore(&store, key, &saved).unwrap());
+                let events = store
+                    .read_events(&ConsumerId::new("capture").unwrap(), EventCursor::START, 10)
+                    .unwrap();
+                assert_eq!(events.events.len(), 1);
+                assert_eq!(events.events[0].event.kind(), "group_history_notice");
+            } else {
+                assert!(result.is_err());
+                assert_eq!(
+                    store
+                        .read(|tx| Ok((
+                            tx.scan(Table::Checkpoints, 1, 100)?,
+                            tx.scan(Table::Inbox, 1, 100)?,
+                            tx.journal_head()?
+                        )))
+                        .unwrap(),
+                    before
+                );
+            }
+        }
+    }
     #[test]
     fn historical_projection_refuses_account_change_without_touching_events_after_reopen() {
         use crate::session::{AccountRecord, RegistrationStatus};

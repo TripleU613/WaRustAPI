@@ -9578,3 +9578,9 @@ Local public upload eligibility omission corrected at shared entry, including ca
   authority transactionally before alias/event/marker writes, with identity
   change/reopen rollback and observation-only controls. See
   [backfill authority](cross-device-sync.md#account-context-frozen-during-historical-event-backfill).
+
+- Confirmed source gap at `fc1f2ead`: historical fallback capture bytes were
+  loaded separately but not rechecked before event publication. Staged publication
+  now compares that snapshot transactionally, with replacement/removal/corruption
+  rollback and unchanged fallback controls. See
+  [capture snapshot](cross-device-sync.md#fallback-capture-snapshot-at-historical-publication).
