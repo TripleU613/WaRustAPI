@@ -1,0 +1,40 @@
+{
+  "member_sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+  "counter_limits": [
+    64,
+    1000000
+  ],
+  "selected_calls": {
+    "0x9aca8": "0x9b050",
+    "0x9ade0": "0x9ac7c",
+    "0x9ae2c": "0x9afc0",
+    "0x9aee0": "0x9adfc",
+    "0x9aff8": "0x9b050",
+    "0xa2f54": "0x9ac7c",
+    "0xa2f64": "0x9acec",
+    "0xa2f74": "0x9ad9c",
+    "0xa2f88": "0x9adfc",
+    "0xa2fb8": "0x9afc0"
+  },
+  "projection_authority": "analyst-derived helper bounds with nonnegative offsets and positive strides; no native execution or complete table verification",
+  "synthetic_word_span": {
+    "exact4bytes": false,
+    "word_at_tail": true,
+    "unaligned": false
+  },
+  "synthetic_root": {
+    "positive_in_range": true,
+    "zero_delta": false,
+    "negative_delta": false,
+    "target_one_past_end": false
+  },
+  "synthetic_vector": {
+    "exact_whole_buffer": false,
+    "one_spare_byte": true,
+    "tail_span": true,
+    "overrun": false,
+    "count_at_cap": false
+  },
+  "required_final_scalar": "root vtable entry 0x1c must exist and contain numeric 123456",
+  "remaining": "field semantics, all nested table verifiers, counter lifecycle, actual fixtures and active-state admission"
+}

@@ -1,0 +1,73 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   9adfc:      	paciasp
+   9ae00:      	sub	sp, sp, #0x30
+   9ae04:      	stp	x29, x30, [sp, #0x10]
+   9ae08:      	stp	x20, x19, [sp, #0x20]
+   9ae0c:      	add	x29, sp, #0x10
+   9ae10:      	mrs	x20, TPIDR_EL0
+   9ae14:      	bl	0xcac54 <JNI_OnLoad+0x5bab4>
+   9ae18:      	cbz	x1, 0x9ae54 <JNI_OnLoad+0x2bcb4>
+   9ae1c:      	mov	x3, sp
+   9ae20:      	mov	w2, #0x1                // =1
+   9ae24:      	mov	x19, x0
+   9ae28:      	str	xzr, [sp]
+   9ae2c:      	bl	0x9afc0 <JNI_OnLoad+0x2be20>
+   9ae30:      	tbz	w0, #0x0, 0x9ae4c <JNI_OnLoad+0x2bcac>
+   9ae34:      	ldr	x9, [x19, #0x8]
+   9ae38:      	ldr	x8, [sp]
+   9ae3c:      	sub	x10, x9, #0x1
+   9ae40:      	cmp	x9, #0x2
+   9ae44:      	ccmp	x10, x8, #0x0, hs
+   9ae48:      	b.hs	0x9ae5c <JNI_OnLoad+0x2bcbc>
+   9ae4c:      	mov	w0, wzr
+   9ae50:      	b	0x9ae6c <JNI_OnLoad+0x2bccc>
+   9ae54:      	mov	w0, #0x1                // =1
+   9ae58:      	b	0x9ae6c <JNI_OnLoad+0x2bccc>
+   9ae5c:      	ldr	x9, [x19]
+   9ae60:      	ldrb	w8, [x9, x8]
+   9ae64:      	cmp	w8, #0x0
+   9ae68:      	cset	w0, eq
+   9ae6c:      	bl	0xca2cc <JNI_OnLoad+0x5b12c>
+   9ae70:      	b.ne	0x9ae88 <JNI_OnLoad+0x2bce8>
+   9ae74:      	ldp	x20, x19, [sp, #0x20]
+   9ae78:      	ldp	x29, x30, [sp, #0x10]
+   9ae7c:      	add	sp, sp, #0x30
+   9ae80:      	autiasp
+   9ae84:      	ret
+   9ae88:      	bl	0xcd9f0 <__stack_chk_fail@plt>
+   9ae8c:      	paciasp
+   9ae90:      	stp	x29, x30, [sp, #-0x40]!
+   9ae94:      	stp	x24, x23, [sp, #0x10]
+   9ae98:      	bl	0xcad30 <JNI_OnLoad+0x5bb90>
+   9ae9c:      	mov	x29, sp
+   9aea0:      	cbz	x1, 0x9aef0 <JNI_OnLoad+0x2bd50>
+   9aea4:      	bl	0xcac0c <JNI_OnLoad+0x5ba6c>
+   9aea8:      	mov	x8, xzr
+   9aeac:      	add	x22, x1, #0x4
+   9aeb0:      	mov	x23, #-0x1              // =-1
+   9aeb4:      	ldr	w9, [x19]
+   9aeb8:      	add	x23, x23, #0x1
+   9aebc:      	cmp	x23, x9
+   9aec0:      	cset	w21, hs
+   9aec4:      	b.hs	0x9aef4 <JNI_OnLoad+0x2bd54>
+   9aec8:      	and	x9, x8, #0xfffffffc
+   9aecc:      	mov	x0, x20
+   9aed0:      	add	x24, x8, #0x4
+   9aed4:      	add	x9, x22, x9
+   9aed8:      	ldr	w10, [x9]
+   9aedc:      	add	x1, x9, x10
+   9aee0:      	bl	0x9adfc <JNI_OnLoad+0x2bc5c>
+   9aee4:      	mov	x8, x24
+   9aee8:      	tbnz	w0, #0x0, 0x9aeb4 <JNI_OnLoad+0x2bd14>
+   9aeec:      	b	0x9aef4 <JNI_OnLoad+0x2bd54>
+   9aef0:      	mov	w21, #0x1               // =1
+   9aef4:      	mov	w0, w21
+   9aef8:      	bl	0xca810 <JNI_OnLoad+0x5b670>
+   9aefc:      	ldp	x29, x30, [sp], #0x40
+   9af00:      	autiasp
+   9af04:      	ret

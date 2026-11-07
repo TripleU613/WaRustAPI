@@ -1,0 +1,58 @@
+{
+  "README.md": {
+    "bytes": 6261,
+    "sha256": "71327e1c8e9f2665fc4d2118f18eca2c6fe38f35d7d1efa6cdbb5128df27a656"
+  },
+  "body-entry.txt": {
+    "bytes": 2512,
+    "sha256": "b3463c2d99b327c6ff8db497626b66a0830e4f0871ec7a4b2ee79009b22d831c"
+  },
+  "body-final-scalar.txt": {
+    "bytes": 1397,
+    "sha256": "efe84588d4ce5ef321d6e6b2aac8d6c38721b033cf9d6d2964d9c53e56ba0e00"
+  },
+  "bounds.json": {
+    "bytes": 1209,
+    "sha256": "acc77ab9acc89e159e06956c88e98ae6a9f63268dc63b95e5884d4a8874663e7"
+  },
+  "field-access.txt": {
+    "bytes": 605,
+    "sha256": "aa5cec7aeda60634dd03e03b30db52c164bb1c174ca391b60c382310528f2513"
+  },
+  "inspect-bounds.py": {
+    "bytes": 2566,
+    "sha256": "d8bad0a014014be9ec47c93f460ac4944963d4cd538466b0fa6ebd69e396d029"
+  },
+  "offset-field.txt": {
+    "bytes": 926,
+    "sha256": "4acb4259a02b9f4b0f5052b1355329bc563b0009872e58dccb77dce04c929215"
+  },
+  "rea-bounds.json": {
+    "bytes": 6287,
+    "sha256": "a0704ac6a476105d529d435fa41408d0b9f71001e70579fb13def23956a0b6ba"
+  },
+  "root-and-table.txt": {
+    "bytes": 2782,
+    "sha256": "c1a68d29fb131e9fb1c4577e5cb29a899ee6dd4198cd934ae7b96a249f856b91"
+  },
+  "root-args.txt": {
+    "bytes": 203,
+    "sha256": "baf5b1a64eaccf4fcb240dcd8851c267a37057219455d289b8e0056d900c6760"
+  },
+  "scalar-fields.txt": {
+    "bytes": 1797,
+    "sha256": "dad0bb33d0225603931e9a439ab8510840d5c831cbde4ddaa0fe58340cd4a30e"
+  },
+  "string-and-string-vector.txt": {
+    "bytes": 2665,
+    "sha256": "47e1f462c2e74252658964b740e0af2d5de4626db599db5e482ea98abc21981b"
+  },
+  "vector-span.txt": {
+    "bytes": 1745,
+    "sha256": "7023db101925dd11cf4c151a96323a9b60abae378027cd70cd32e6c01d5c015d"
+  },
+  "vector-wrappers.txt": {
+    "bytes": 1220,
+    "sha256": "4b658072a29d36800d85d1c45a3972fddc2ea5c2f0d8a96af71d1011525c54f5"
+  }
+}

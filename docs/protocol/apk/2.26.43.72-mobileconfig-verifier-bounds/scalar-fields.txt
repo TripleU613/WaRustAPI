@@ -1,0 +1,52 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   9af08:      	bti	c
+   9af0c:      	ldrsw	x8, [x0]
+   9af10:      	sub	x8, x0, x8
+   9af14:      	ldrh	w9, [x8]
+   9af18:      	cmp	w9, w2, uxth
+   9af1c:      	b.ls	0x9af4c <JNI_OnLoad+0x2bdac>
+   9af20:      	and	x9, x2, #0xffff
+   9af24:      	ldrh	w8, [x8, x9]
+   9af28:      	cbz	x8, 0x9af4c <JNI_OnLoad+0x2bdac>
+   9af2c:      	ldr	x9, [x1]
+   9af30:      	sub	x9, x0, x9
+   9af34:      	add	x8, x9, x8
+   9af38:      	tst	x8, #0x7
+   9af3c:      	b.eq	0x9af50 <JNI_OnLoad+0x2bdb0>
+   9af40:      	ldrb	w9, [x1, #0x18]
+   9af44:      	tbz	w9, #0x0, 0x9af50 <JNI_OnLoad+0x2bdb0>
+   9af48:      	b	0xcae9c <JNI_OnLoad+0x5bcfc>
+   9af4c:      	b	0xcaff4 <JNI_OnLoad+0x5be54>
+   9af50:      	ldr	x9, [x1, #0x8]
+   9af54:      	subs	x9, x9, #0x8
+   9af58:      	ccmp	x9, x8, #0x0, hi
+   9af5c:      	cset	w0, hs
+   9af60:      	ret
+   9af64:      	bti	c
+   9af68:      	ldrsw	x8, [x0]
+   9af6c:      	sub	x8, x0, x8
+   9af70:      	ldrh	w9, [x8]
+   9af74:      	cmp	w9, w2, uxth
+   9af78:      	b.ls	0x9afa8 <JNI_OnLoad+0x2be08>
+   9af7c:      	and	x9, x2, #0xffff
+   9af80:      	ldrh	w8, [x8, x9]
+   9af84:      	cbz	x8, 0x9afa8 <JNI_OnLoad+0x2be08>
+   9af88:      	ldr	x9, [x1]
+   9af8c:      	sub	x9, x0, x9
+   9af90:      	add	x8, x9, x8
+   9af94:      	tst	x8, #0x3
+   9af98:      	b.eq	0x9afac <JNI_OnLoad+0x2be0c>
+   9af9c:      	ldrb	w9, [x1, #0x18]
+   9afa0:      	tbz	w9, #0x0, 0x9afac <JNI_OnLoad+0x2be0c>
+   9afa4:      	b	0xcae9c <JNI_OnLoad+0x5bcfc>
+   9afa8:      	b	0xcaff4 <JNI_OnLoad+0x5be54>
+   9afac:      	ldr	x9, [x1, #0x8]
+   9afb0:      	subs	x9, x9, #0x4
+   9afb4:      	ccmp	x9, x8, #0x0, hi
+   9afb8:      	cset	w0, hs
+   9afbc:      	ret

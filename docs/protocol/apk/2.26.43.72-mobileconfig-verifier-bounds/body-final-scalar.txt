@@ -1,0 +1,37 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   a34a0:      	add	x0, x22, x20
+   a34a4:      	mov	w1, #0x3c               // =60
+   a34a8:      	bl	0x9ac18 <JNI_OnLoad+0x2ba78>
+   a34ac:      	bl	0xcab78 <JNI_OnLoad+0x5b9d8>
+   a34b0:      	bl	0x9adfc <JNI_OnLoad+0x2bc5c>
+   a34b4:      	tbz	w0, #0x0, 0xa34f4 <JNI_OnLoad+0x34354>
+   a34b8:      	ldr	x8, [x19, #0x18]
+   a34bc:      	cbz	x8, 0xa34f4 <JNI_OnLoad+0x34354>
+   a34c0:      	bl	0xcc340 <JNI_OnLoad+0x5d1a0>
+   a34c4:      	ldrsw	x9, [x8]
+   a34c8:      	sub	x9, x8, x9
+   a34cc:      	ldrh	w10, [x9]
+   a34d0:      	cmp	w10, #0x1d
+   a34d4:      	b.lo	0xa34f4 <JNI_OnLoad+0x34354>
+   a34d8:      	ldrh	w9, [x9, #0x1c]
+   a34dc:      	cbz	x9, 0xa34f4 <JNI_OnLoad+0x34354>
+   a34e0:      	ldr	w8, [x8, x9]
+   a34e4:      	sub	w8, w8, #0x1e, lsl #12  // =0x1e000
+   a34e8:      	cmp	w8, #0x240
+   a34ec:      	cset	w0, eq
+   a34f0:      	b	0xa34f8 <JNI_OnLoad+0x34358>
+   a34f4:      	mov	w0, wzr
+   a34f8:      	bl	0xca254 <JNI_OnLoad+0x5b0b4>
+   a34fc:      	b.ne	0xa3518 <JNI_OnLoad+0x34378>
+   a3500:      	bl	0xcaf94 <JNI_OnLoad+0x5bdf4>
+   a3504:      	ldp	x28, x27, [sp, #0x60]
+   a3508:      	ldp	x29, x30, [sp, #0x50]
+   a350c:      	add	sp, sp, #0xb0
+   a3510:      	autiasp
+   a3514:      	ret
+   a3518:      	bl	0xcd9f0 <__stack_chk_fail@plt>

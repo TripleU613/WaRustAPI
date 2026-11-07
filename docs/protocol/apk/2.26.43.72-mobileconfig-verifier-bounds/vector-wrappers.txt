@@ -1,0 +1,33 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   a3cc4:      	bti	c
+   a3cc8:      	mov	w1, #0x4                // =4
+   a3ccc:      	b	0x9ac18 <JNI_OnLoad+0x2ba78>
+   a3cd0:      	bti	c
+   a3cd4:      	cbz	x1, 0xa3ce4 <JNI_OnLoad+0x34b44>
+   a3cd8:      	mov	w2, #0x4                // =4
+   a3cdc:      	mov	x3, xzr
+   a3ce0:      	b	0x9afc0 <JNI_OnLoad+0x2be20>
+   a3ce4:      	b	0xcaff4 <JNI_OnLoad+0x5be54>
+   a3ce8:      	bti	c
+   a3cec:      	cbz	x1, 0xa3cfc <JNI_OnLoad+0x34b5c>
+   a3cf0:      	mov	w2, #0x8                // =8
+   a3cf4:      	mov	x3, xzr
+   a3cf8:      	b	0x9afc0 <JNI_OnLoad+0x2be20>
+   a3cfc:      	b	0xcaff4 <JNI_OnLoad+0x5be54>
+   a3d00:      	bti	c
+   a3d04:      	mov	w1, #0x20               // =32
+   a3d08:      	b	0x9ac18 <JNI_OnLoad+0x2ba78>
+   a3d0c:      	bti	c
+   a3d10:      	mov	w1, #0x26               // =38
+   a3d14:      	b	0x9ac18 <JNI_OnLoad+0x2ba78>
+   a3d18:      	bti	c
+   a3d1c:      	mov	w1, #0x2a               // =42
+   a3d20:      	b	0x9ac18 <JNI_OnLoad+0x2ba78>
+   a3d24:      	bti	c
+   a3d28:      	mov	w1, #0x2e               // =46
+   a3d2c:      	b	0x9ac18 <JNI_OnLoad+0x2ba78>
