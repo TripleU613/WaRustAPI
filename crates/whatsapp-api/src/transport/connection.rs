@@ -425,7 +425,7 @@ impl EpochWriteAuthority {
             {
                 return Err(Error::invalid(
                     "transport",
-                    "authenticated epoch account changed before write",
+                    "authenticated epoch account changed",
                 ));
             }
             Ok(())
@@ -1090,6 +1090,10 @@ pub(crate) async fn drive(
             expected,
         });
     }
+    let epoch_authority = link
+        .epoch_authority
+        .clone()
+        .ok_or_else(|| Error::invalid("transport", "authenticated actor lacks epoch authority"))?;
     super::groups::recover_pending(&store)?;
     super::app_state_sync::recover_fetch_backoff(&store)?;
     super::identity_notifications::application::recover(&store, config.transport.identity_changes)
@@ -1256,6 +1260,7 @@ pub(crate) async fn drive(
                     // decode error is not traced.
                     Inbound::Undecodable { frame, class, description } => {
                         super::inbox::preserve_undecodable(&store, &frame, class, Some(epoch))?;
+                        epoch_authority.check()?;
                         if let Some(terminal) = super::messaging::terminal_frame_error(class) {
                             // Native 1s2 exits on stream-end or corrupt framing.
                             // Existing transport recovery category grants no replay.
@@ -1275,6 +1280,9 @@ pub(crate) async fn drive(
                     }
                 };
                 let capture = super::inbox::preserve_in_epoch(&store, &node, epoch)?;
+                // Raw evidence survives a stale connection. Its old account may
+                // not authorize clock, response, crypto or notification effects.
+                epoch_authority.check()?;
                 super::messaging::validate_received_ack(&node)?;
                 super::clock::observe(&store, &node)?;
                 // APK 43.72 1rA.A03 -> 1lZ.A0t -> 0ZJ.A0q handles
@@ -3056,6 +3064,112 @@ mod tests {
             assert!(self.finished().await.is_ok());
         }
     }
+    #[tokio::test]
+    async fn incoming_epoch_change_preserves_capture_without_applying_protocol_state() {
+        for kind in ["clock", "privacy"] {
+            for change in ["same", "observation", "account", "missing"] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("incoming-epoch-owner.redb");
+                let store = open(&path);
+                let mut fake = start(&store, false, None);
+                fake.activate().await;
+                (&mut fake.ready).await.unwrap();
+                store
+                    .write(|tx| {
+                        let mut account = AccountRecord::load_in_write(tx)?.unwrap();
+                        match change {
+                            "account" => account.signal_registration_id = Some(4321),
+                            "observation" => account.last_authenticated_at = Some(Timestamp(123)),
+                            "missing" => {
+                                tx.delete(Table::Account, b"account")?;
+                                return Ok(());
+                            }
+                            _ => {}
+                        }
+                        account.save(tx)
+                    })
+                    .unwrap();
+                let node = if kind == "clock" {
+                    Node::new("iq")
+                        .attr("type", "get")
+                        .attr("xmlns", "urn:xmpp:ping")
+                        .attr("t", "1700000000")
+                } else {
+                    Node::new("notification")
+                        .attr("type", "account_sync")
+                        .attr("from", "s.whatsapp.net")
+                        .attr("id", "EPOCH-PRIVACY")
+                        .attr("t", "1700000000")
+                        .children(vec![Node::new("privacy").children(vec![
+                                Node::new("category")
+                                    .attr("name", "readreceipts")
+                                    .attr("value", "none"),
+                            ])])
+                };
+                let snapshot = |store: &ProtocolStore| {
+                    store
+                        .read(|tx| {
+                            Table::ALL
+                                .into_iter()
+                                .map(|table| {
+                                    let mut rows = tx.scan(table, 1, 10000)?;
+                                    if table == Table::Checkpoints {
+                                        rows.retain(|(key, _)| !key.starts_with(b"inbound:"));
+                                    }
+                                    Ok(rows)
+                                })
+                                .collect::<Result<Vec<_>>>()
+                        })
+                        .unwrap()
+                };
+                let before = snapshot(&store);
+                fake.deliver(node.clone()).await;
+                let queued = tokio::time::timeout(Duration::from_secs(5), fake.from_worker.recv())
+                    .await
+                    .unwrap_or_else(|_| {
+                        panic!("{kind}/{change}: actor did not produce write or terminate")
+                    });
+                let accepted = matches!(change, "same" | "observation");
+                if !accepted {
+                    assert!(
+                        snapshot(&store) == before,
+                        "{kind}/{change}: stale inbound changed protocol state"
+                    );
+                }
+                assert_eq!(queued.is_some(), accepted, "{kind}/{change}");
+                if let Some(queued) = queued {
+                    let (_, written) = queued.prepare().unwrap();
+                    written.send(Ok(())).unwrap();
+                    assert_ne!(
+                        snapshot(&store),
+                        before,
+                        "positive control must apply protocol state"
+                    );
+                    fake.stop_cleanly().await;
+                } else {
+                    assert!(fake.finished().await.is_err());
+                }
+                let wire = encode(&node).unwrap();
+                use sha2::Digest;
+                let key = format!(
+                    "inbound:sha256:{}",
+                    hex::encode(sha2::Sha256::digest(&wire))
+                );
+                let capture: Vec<u8> = store
+                    .read(|tx| tx.get_json(Table::Checkpoints, key.as_bytes(), 1))
+                    .unwrap()
+                    .unwrap();
+                assert_eq!(capture, wire);
+                let after = snapshot(&store);
+                let head = store.journal_head().unwrap();
+                drop(store);
+                let reopened = identity_store(&path);
+                assert_eq!(snapshot(&reopened), after);
+                assert_eq!(reopened.journal_head().unwrap(), head);
+            }
+        }
+    }
+
     #[tokio::test]
     async fn actor_start_preserves_authenticated_login_authority() {
         for change in ["same", "observation", "account", "missing"] {

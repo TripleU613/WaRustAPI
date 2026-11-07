@@ -1,4 +1,11 @@
 {
+  "x-inbound-epoch-account-admission": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Authenticated actor preserves decoded/undecodable raw capture then checks original epoch account authority before protocol dispatch. Changed/missing account ends processing before clock, callbacks, crypto, notifications or automatic ACKs; observation-only timestamps remain allowed. Offline clock/privacy actor regression. This entry check is not atomic fencing of all downstream handlers or offline reprocessing; no new wire fields or replay.",
+    "evidence": "docs/protocol/replay-safety-audit.md#inbound-epoch-admission-before-protocol-effects-2026-11-07"
+  },
   "x-login-settlement-actor-authority": {
     "x-cli": true,
     "x-transport": true,
