@@ -1,0 +1,18 @@
+classes.dex  LX/107;->BLn(ZLI)
+  invoke dex byte offset: 0x7aaf88
+classes10.dex  LX/Ib5;->A08(VL)
+  invoke dex byte offset: 0x2c89b6
+classes10.dex  LX/IbM;->A1W(VLZ)
+  invoke dex byte offset: 0x2d1052
+classes10.dex  LX/IbM;->A1W(VLZ)
+  invoke dex byte offset: 0x2d10d6
+classes10.dex  LX/J4K;->A02(V)
+  invoke dex byte offset: 0x3de942
+classes13.dex  LX/TDp;->invoke(L)
+  invoke dex byte offset: 0x64833c
+classes8.dex  Lcom/whatsapp/calling/service/OutgoingSignalingHandler;->getBulkEncryptedE2EKeys(LLIZL)
+  invoke dex byte offset: 0x713daa
+classes8.dex  LX/FTs;->AEF(LLIZ)
+  invoke dex byte offset: 0x7aec3c
+classes8.dex  Lcom/whatsapp/locationsharing/jobqueue/job/SendLiveLocationKeyJob;->A0L(V)
+  invoke dex byte offset: 0x8d2b9e

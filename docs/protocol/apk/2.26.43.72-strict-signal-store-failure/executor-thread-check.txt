@@ -1,0 +1,18 @@
+
+# class: LX/0YM;
+# extends: Ljava/lang/Object;
+
+.method public A03(Z)  # .registers 4
+    # full signature: LX/0YM;->A03()Z
+    0000..0004  iget-object  v0, v3, LX/0YM;->A03:Ljava/lang/ref/WeakReference;
+    0004..0008  if-eqz  v0, +0xd
+    0008..000e  invoke-static  {}, Ljava/lang/Thread;->currentThread()Ljava/lang/Thread;
+    000e..0010  move-result-object  v2
+    0010..0016  invoke-virtual  {v0}, Ljava/lang/ref/Reference;->get()Ljava/lang/Object;
+    0016..0018  move-result-object  v1
+    0018..001a  const/4  v0, #0x1
+    001a..001e  if-eq  v2, v1, +0x3
+    001e..0020  const/4  v0, #0x0
+    0020..0022  return  v0
+    # exception table: 0 try range(s)
+.end method

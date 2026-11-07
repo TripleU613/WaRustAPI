@@ -87,3 +87,7 @@ methods. Reproduce field census with apk-field-refs exact0WJ/A0T/ThreadLocal.
 FcP.run extraction ranges and full export hash are in the excerpt header; the
 full unrelated discriminator branches remain outside Git. Manifest covers each
 retained file except itself.
+
+Follow-up: [strict flag owner and failure propagation](../2.26.43.72-strict-signal-store-failure/README.md)
+now binds Ff8 discriminator2 to migration bootstrap and retains scoped restore
+behavior. Ordinary retry linkage and enclosing atomicity remain unproven.

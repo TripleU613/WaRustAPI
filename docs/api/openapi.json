@@ -1,4 +1,11 @@
 {
+  "x-strict-signal-store-failure-static-boundary": {
+    "x-cli": "research through existing APK inspection commands; no new command",
+    "x-transport": "research only; no migration support or receipt-key adoption added",
+    "x-live": false,
+    "description": "Selected strict Signal store-failure flag setter is Ff8.call discriminator2, traced from TDp migration bootstrap. It requires Signal executor thread, sets true around A0N/A0O and restores/removes previous context on success or exception. Dvm extends Fj7; selected decrypt handlers rethrow persistence/full/corrupt faults rather than generic decryption status. No linkage proving ordinary retries use this wrapper; no new Rust defect demonstrated or live operation.",
+    "evidence": "docs/protocol/apk/2.26.43.72-strict-signal-store-failure/README.md"
+  },
   "x-retry-session-store-transactions-static-boundary": {
     "x-cli": "research through existing APK inspection commands; no new command",
     "x-transport": "research only; receipt-carried keys remain unsupported",

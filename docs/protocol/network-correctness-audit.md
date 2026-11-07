@@ -1,5 +1,10 @@
 # Network correctness audit
 
+**Strict store-failure scope located.** The traced flag setter wraps migration
+bootstrap decryption and restores prior thread context. Persistence exceptions
+remain distinct from content failures; ordinary retry linkage is unproven.
+[Evidence](retry-answers.md#strict-store-failure-flag-is-migration-scoped-2026-11-07). Research only; no runtime change.
+
 **Session/identity transaction scopes traced.** Native adapters discard save
 booleans; local SQLite scopes and conditional IOException propagation are
 retained. Shared outer ownership/crash semantics remain open. [Evidence](retry-answers.md#concrete-session-and-identity-transaction-scopes-2026-11-07). Research only.

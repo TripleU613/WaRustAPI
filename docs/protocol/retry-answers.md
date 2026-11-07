@@ -648,3 +648,14 @@ Selected session IOException propagation depends on a ThreadLocal flag; Ff8
 provenance remains open. Five session-address dimensions and update/insert order
 are retained. [Complete trace and limits](apk/2.26.43.72-retry-session-store-transactions/README.md).
 Research only; Rust receipt-key refusal remains, no live operation.
+
+## Strict store-failure flag is migration scoped (2026-11-07)
+
+**Confirmed selected static:** Ff8.call discriminator2 sets/restores the store
+failure ThreadLocal around A0N/A0O on the Signal executor. Its traced producer
+TDp is migration bootstrap, not the retry-carried-key caller. Dvm extends Fj7;
+A0N/A0O rethrow that class and selected SQLite faults rather than reporting an
+ordinary decrypt failure. Rust already preserves the content-versus-transaction
+error distinction; no runtime defect newly demonstrated.
+[Complete methods, dispatch, timeout and scope limits](apk/2.26.43.72-strict-signal-store-failure/README.md).
+Research only; receipt-key adoption remains unsupported and no live operation.

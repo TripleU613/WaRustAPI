@@ -1,0 +1,10 @@
+
+# class: LX/Dvm;
+# extends: LX/Fj7;
+
+.method public <init>(VL)  # .registers 2
+    # full signature: LX/Dvm;-><init>(Ljava/lang/Throwable;)V
+    0000..0006  invoke-direct  {v0, v1}, LX/Fj7;-><init>(Ljava/lang/Throwable;)V
+    0006..0008  return-void
+    # exception table: 0 try range(s)
+.end method
