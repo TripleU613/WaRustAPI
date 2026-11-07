@@ -102,10 +102,12 @@ mod view_once_crash {
 
     const INBOX: &[u8] = b"received:crash:view-once";
 
-    // Minimal APK ImageMessage fields: hash=4, length=5, key=8,
+    // Minimal APK ImageMessage fields: MIME=2, hash=4, length=5, key=8,
     // encrypted hash=9 and view-once=25, inside Message field 3.
     #[derive(Message)]
     struct ImageFixture {
+        #[prost(string, tag = "2")]
+        mime: String,
         #[prost(bytes = "vec", tag = "4")]
         hash: Vec<u8>,
         #[prost(uint64, tag = "5")]
@@ -132,6 +134,7 @@ mod view_once_crash {
         let encrypted = whatsapp_api::signal::image::encrypt(b"crash fixture image").unwrap();
         let protobuf = EnvelopeFixture {
             image: Some(ImageFixture {
+                mime: "image/png".into(),
                 hash: encrypted.plaintext_hash.to_vec(),
                 length: encrypted.plaintext_len,
                 key: encrypted.media_key.to_vec(),

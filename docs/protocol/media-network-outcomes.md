@@ -1578,3 +1578,47 @@ journal state stays unchanged. After cache removal and reopen bad metadata creat
 no GET reservation; bad uncached fixtures use a refused-host no-network backstop.
 Synthetic crypto fixtures do not establish renderer or live HTTP validity. No
 reset/retry, response relaxation or live account operation was introduced.
+
+## View-once image MIME before cache and consumption (2026-11-06)
+
+**Confirmed Rust cache/consumption gap / fixed offline.** The separate
+image_download path had a strict whole-MIME URL preflight, but checked that only
+for a NEW GET. A saved downloaded_unopened row could return a prefetch size
+without MIME validation; consume_selected could decrypt, commit consumed state
+and hand off plaintext without any MIME validation. Hash/MAC and source ownership
+alone did not establish supported metadata. This bypass was independent of the
+ordinary-media MIME fixes.
+
+The selected pinned [EwA image parser](apk/2.26.43.72-media-image-ingress/README.md)
+and [whole visual MIME rules/limits](apk/2.26.43.72-media-visual-mime/README.md)
+remain the evidence; no new native wrapper/HTTP policy was inferred. The shared
+supported image MIME predicate now applies to eligible view-once descriptor
+selection and URL preflight. Thus cached prefetch and local consumption cannot
+bypass whole-MIME admission. ASCII image case variants are accepted consistently;
+parameters/padding/unrelated types refuse before state mutation. WebP/native
+context and full Java Unicode folding remain explicitly bounded as before.
+
+The check applies only to an image eligible through its direct viewOnce flag or
+an existing supported wrapper. An ordinary image remains outside this path;
+ambiguity/depth bounds and source/reservation ownership checks are unchanged.
+No new wrapper, ordinary export, download, receipt, display-success or server
+opened claim is introduced. A MIME refusal leaves cached ciphertext and inbox
+source intact; it does not consume, reset, retry or mark a viewer as displayed.
+
+The real-store async regression
+`view_once_mime_admission_precedes_cached_prefetch_and_consumption` uses actual
+image-domain ciphertext/MAC/both hashes for synthetic plaintext. It exercises
+direct flag and wrappers37/55/59, canonical/ASCII-case MIME and unsupported
+parameters/padding/type. Accepted cached prefetch reports size then consumption
+returns plaintext exactly once; later calls refuse. Unsupported MIME makes both
+prefetch and ticketed consumption refuse with checkpoint rows and journal head
+unchanged, including after store reopen. Every download fixture already has a completed
+cache, so tests require no HTTP exchange; synthetic plaintext does not prove an
+image renderer's success. No native ACK/error mapping or live-account acceptance
+is claimed. Full wrapper/native update/context/URL/range/account/consumer parity
+remains ongoing audit work.
+
+The existing literal-wrapper and subprocess crash fixtures now include MIME field2
+so they still reach their intended bounds/crash checks under this required
+admission rule. Their crash points, consumption and uncertain-receipt no-replay
+assertions are unchanged.

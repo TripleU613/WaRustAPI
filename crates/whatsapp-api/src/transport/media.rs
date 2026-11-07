@@ -707,7 +707,7 @@ pub async fn save(
 // Pinned43.72 EwA.A03 and 0jZ.A09/A0E compare whole MIME strings.
 // These are the receiver's supported formats, not all native codec/context paths.
 // See docs/protocol/apk/2.26.43.72-media-visual-mime.
-fn supported_mime(kind: MediaKind, mime: &str) -> bool {
+pub(super) fn supported_mime(kind: MediaKind, mime: &str) -> bool {
     match kind {
         MediaKind::Image => ["image/jpeg", "image/png", "image/webp"]
             .iter()

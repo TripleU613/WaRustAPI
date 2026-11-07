@@ -1,4 +1,11 @@
 {
+  "x-view-once-image-mime-admission": {
+    "x-cli": "existing view-once prefetch/consume paths; no new command or flag",
+    "x-transport": "shared whole-image MIME admission before eligible view-once descriptor/cache selection or one-shot consumption",
+    "x-live": false,
+    "description": "Closes a separate cache bypass: URL-only MIME validation previously allowed cached prefetch size reporting and local plaintext consumption without supported MIME. Eligible direct viewOnce and existing wrappers37/55/59 now check the shared whole-image predicate; ASCII case variants work and unsupported parameters/padding/types refuse without consuming/resetting either record. Real encrypted-store lifecycle regression covers cached size, one-shot consumption, ticketed refusal and unchanged checkpoints/journal after reopen. No HTTP, new wrapper/export/receipt/display-success claim or retry; native WebP/Unicode/wrapper/update/HTTP/account parity remains bounded.",
+    "evidence": "docs/protocol/media-network-outcomes.md#view-once-image-mime-before-cache-and-consumption-2026-11-06"
+  },
   "x-media-visual-whole-mime-admission": {
     "x-cli": "existing image/video/video-note list/reference/open/save; no new command or flag",
     "x-transport": "shared whole supported-MIME admission at descriptor and URL preflight, before cache/network authority",

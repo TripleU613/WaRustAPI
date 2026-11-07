@@ -64,6 +64,14 @@ fn descriptor(bytes: &[u8], depth: usize, wrapped: bool) -> Result<Option<Image>
         return Err(invalid("ambiguous image envelope"));
     }
     if let Some(image) = envelope.image {
+        if (wrapped || image.view_once)
+            && !super::media::supported_mime(super::media::MediaKind::Image, &image.mime)
+        {
+            // Pinned43.72 EwA.A03 compares the whole image MIME. A completed
+            // ciphertext cache must not bypass this check during consumption.
+            // See docs/protocol/media-network-outcomes.md (view-once MIME).
+            return Err(invalid("unsupported view-once image MIME"));
+        }
         return Ok((wrapped || image.view_once).then_some(image));
     }
     if let Some(wrapper) = wrappers.into_iter().flatten().next() {
@@ -74,10 +82,7 @@ fn descriptor(bytes: &[u8], depth: usize, wrapped: bool) -> Result<Option<Image>
 
 fn url(image: &Image) -> Result<reqwest::Url> {
     if image.url.len() > 8192
-        || !matches!(
-            image.mime.as_str(),
-            "image/jpeg" | "image/png" | "image/webp"
-        )
+        || !super::media::supported_mime(super::media::MediaKind::Image, &image.mime)
         || image.length == 0
         || image.length > 8 * 1024 * 1024
         || image.key.len() != 32
@@ -371,6 +376,126 @@ fn ensure_view_once_source(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[tokio::test]
+    async fn view_once_mime_admission_precedes_cached_prefetch_and_consumption() {
+        use crate::{
+            model::ids::AccountId,
+            session::{AccountRecord, RegistrationStatus},
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let encrypted = crate::signal::image::encrypt(b"synthetic one-shot MIME fixture").unwrap();
+        for wrapper in [0, 37, 55, 59] {
+            for (mime, accepted) in [
+                ("image/png", true),
+                ("IMAGE/PNG", true),
+                ("Image/Jpeg", true),
+                ("image/png; extra=1", false),
+                (" image/png", false),
+                ("image/png ", false),
+                ("application/was", false),
+            ] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("once-mime.redb");
+                let open_store = |create| {
+                    ProtocolStore::open(OpenOptions {
+                        path: path.clone(),
+                        account_id: AccountId::new("fixture").unwrap(),
+                        create,
+                        key_source: std::sync::Arc::new(StaticKeySource::new(
+                            MasterKey::from_bytes([9; 32]),
+                        )),
+                    })
+                    .unwrap()
+                };
+                let store = open_store(true);
+                let mut config: LabRegistrationConfig =
+                    serde_json::from_str(crate::registration::request::TEMPLATE_JSON).unwrap();
+                config.token = Zeroizing::new("offline-fixture".into());
+                let image = Image {
+                    url: "https://mmg.whatsapp.net/offline".into(),
+                    mime: mime.into(),
+                    plaintext_hash: encrypted.plaintext_hash.to_vec(),
+                    length: encrypted.plaintext_len,
+                    key: encrypted.media_key.to_vec(),
+                    encrypted_hash: encrypted.encrypted_hash.to_vec(),
+                    view_once: wrapper == 0,
+                };
+                let mut envelope = Envelope {
+                    image: Some(image),
+                    once: None,
+                    once_v2: None,
+                    once_ext: None,
+                };
+                if wrapper != 0 {
+                    let inner = envelope.encode_to_vec();
+                    envelope.image = None;
+                    let wrapped = Some(Wrapper { message: inner });
+                    match wrapper {
+                        37 => envelope.once = wrapped,
+                        55 => envelope.once_v2 = wrapped,
+                        59 => envelope.once_ext = wrapped,
+                        _ => unreachable!(),
+                    }
+                }
+                let protobuf = envelope.encode_to_vec();
+                if accepted {
+                    assert!(url(&descriptor(&protobuf, 0, false).unwrap().unwrap()).is_ok());
+                }
+                let key = b"received:once-mime";
+                let state_key = format!("view-once-download:{}", hex::encode(Sha256::digest(key)));
+                store.write(|tx| {
+                    AccountRecord {phone:Some(config.phone.clone()),registration:RegistrationStatus::Registered,
+                        ..Default::default()}.save(tx)?;
+                    tx.put_json(Table::Checkpoints,key,1,&serde_json::json!({"status":"decrypted","protobuf":protobuf}))?;
+                    tx.put_json(Table::Checkpoints,state_key.as_bytes(),1,&serde_json::json!({"status":"downloaded_unopened","body":encrypted.body,"encrypted_bytes":encrypted.body.len()}))
+                }).unwrap();
+                if accepted {
+                    assert_eq!(
+                        download_view_once(&store, &config).await.unwrap(),
+                        encrypted.body.len() as u64
+                    );
+                    assert_eq!(
+                        &*consume_view_once(&store).unwrap(),
+                        b"synthetic one-shot MIME fixture"
+                    );
+                    assert!(consume_view_once(&store).is_err());
+                    assert!(download_view_once(&store, &config).await.is_err());
+                } else {
+                    let rows = store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap();
+                    let journal = store.journal_head().unwrap();
+                    assert!(
+                        download_view_once(&store, &config).await.is_err(),
+                        "{wrapper} {mime}"
+                    );
+                    assert!(
+                        consume_view_once_with_ticket(&store).is_err(),
+                        "{wrapper} {mime}"
+                    );
+                    assert_eq!(
+                        store
+                            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                            .unwrap(),
+                        rows
+                    );
+                    assert_eq!(store.journal_head().unwrap(), journal);
+                    drop(store);
+                    let store = open_store(false);
+                    assert!(download_view_once(&store, &config).await.is_err());
+                    assert!(consume_view_once(&store).is_err());
+                    assert_eq!(
+                        store
+                            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                            .unwrap(),
+                        rows
+                    );
+                    assert_eq!(store.journal_head().unwrap(), journal);
+                }
+            }
+        }
+    }
+
     #[test]
     fn consumption_refuses_changed_source_without_consuming_either_record_after_reopen() {
         use crate::{
@@ -835,12 +960,20 @@ mod tests {
     #[test]
     fn only_view_once_images_qualify_and_wrappers_are_bounded() {
         assert!(descriptor(&[26, 0], 0, false).unwrap().is_none());
-        assert!(descriptor(&[26, 3, 200, 1, 1], 0, false).unwrap().is_some());
-        assert!(
-            descriptor(&[186, 3, 4, 10, 2, 26, 0], 0, false)
-                .unwrap()
-                .is_some()
-        );
+        // Eligible one-shot descriptors now require a supported MIME. Keep
+        // literal wire tags so wrapper classification is independently checked.
+        let normal = [
+            26, 11, 18, 9, b'i', b'm', b'a', b'g', b'e', b'/', b'p', b'n', b'g',
+        ];
+        assert!(descriptor(&normal, 0, false).unwrap().is_none());
+        let mut once = normal.to_vec();
+        once[1] += 3;
+        once.extend([200, 1, 1]);
+        assert!(descriptor(&once, 0, false).unwrap().is_some());
+        let mut wrapped = vec![186, 3, 15, 10, 13];
+        wrapped.extend(normal);
+        assert!(descriptor(&wrapped, 0, false).unwrap().is_some());
+        assert!(descriptor(&[26, 3, 200, 1, 1], 0, false).is_err());
         assert!(descriptor(&[26, 0], 5, true).is_err());
         assert!(descriptor(&[26, 9], 0, false).is_err());
     }

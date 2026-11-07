@@ -1,5 +1,11 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
+**View-once cached MIME bypass closed.** Shared whole-image MIME admission now
+precedes view-once descriptor selection, cached prefetch reporting and one-shot
+plaintext consumption. Direct flags and all supported wrappers are regression
+tested with valid ciphertext and unchanged state on refusal/reopen.
+[Evidence](docs/protocol/media-network-outcomes.md#view-once-image-mime-before-cache-and-consumption-2026-11-06).
+
 **Image/video whole-MIME preflight corrected.** A shared supported-format check
 now gates descriptors and URLs, preventing parameterized/padded visual metadata
 from authorizing cached plaintext or a new GET. Image ASCII case works; MP4 remains
