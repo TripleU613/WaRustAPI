@@ -1,0 +1,22 @@
+
+# class: LX/Hxy;
+# extends: Ljava/lang/Object;
+
+.method public A02(Z)  # .registers 3
+    # full signature: LX/Hxy;->A02()Z
+    0000..0004  iget-object  v1, v2, LX/Hxy;->A00:Lorg/json/JSONObject;
+    0004..0008  if-eqz  v1, +0xe
+    0008..000c  const-string  v0, "severity"
+    000c..0012  invoke-virtual  {v1, v0}, Lorg/json/JSONObject;->optString(Ljava/lang/String;)Ljava/lang/String;
+    0012..0014  move-result-object  v1
+    0014..0018  const-string  v0, "critical"
+    0018..001c  if-nez  v1, +0x6
+    001c..001e  const/4  v0, #0x0
+    001e..0020  return  v0
+    0020..0022  const/4  v1, #0x0
+    0022..0024  goto  -0x7
+    0024..002a  invoke-virtual  {v1, v0}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+    002a..002c  move-result  v0
+    002c..002e  return  v0
+    # exception table: 0 try range(s)
+.end method

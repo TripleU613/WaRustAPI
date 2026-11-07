@@ -1,0 +1,13 @@
+
+# class: LX/ID2;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLI)  # .registers 4
+    # full signature: LX/ID2;-><init>(Ljava/lang/Object;Ljava/lang/Object;I)V
+    0000..0004  iput  v3, v0, LX/ID2;->$t:I
+    0004..0008  iput-object  v1, v0, LX/ID2;->A00:Ljava/lang/Object;
+    0008..000c  iput-object  v2, v0, LX/ID2;->A01:Ljava/lang/Object;
+    000c..0012  invoke-direct  {v0}, Ljava/lang/Object;-><init>()V
+    0012..0014  return-void
+    # exception table: 0 try range(s)
+.end method

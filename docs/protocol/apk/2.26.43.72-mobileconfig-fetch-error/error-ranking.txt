@@ -1,0 +1,78 @@
+
+# class: LX/Hbw;
+# extends: Ljava/lang/Object;
+
+.method public A00(LL)  # .registers 8
+    # full signature: LX/Hbw;->A00(Ljava/util/List;)LX/Nap;
+    0000..0006  invoke-interface  {v7}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0006..0008  move-result-object  v7
+    0008..000e  invoke-interface  {v7}, Ljava/util/Iterator;->hasNext()Z
+    000e..0010  move-result  v0
+    0010..0014  if-eqz  v0, +0x6a
+    0014..001a  invoke-interface  {v7}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    001a..001c  move-result-object  v6
+    001c..0022  invoke-interface  {v7}, Ljava/util/Iterator;->hasNext()Z
+    0022..0024  move-result  v0
+    0024..0028  if-eqz  v0, +0x40
+    0028..002a  move-object  v3, v6
+    002a..002e  check-cast  v3, LX/Nap;
+    002e..0032  instance-of  v0, v3, LX/Hxy;
+    0032..0036  if-eqz  v0, +0x52
+    0036..0038  move-object  v2, v3
+    0038..003c  check-cast  v2, LX/Hxy;
+    003c..0040  iget-object  v1, v2, LX/Hxy;->A00:Lorg/json/JSONObject;
+    0040..0044  if-eqz  v1, +0x43
+    0044..0048  const-string  v0, "summary"
+    0048..004e  invoke-virtual  {v1, v0}, Lorg/json/JSONObject;->optBoolean(Ljava/lang/String;)Z
+    004e..0050  move-result  v1
+    0050..0052  const/4  v0, #0x1
+    0052..0056  if-ne  v1, v0, +0x3a
+    0056..0058  const/4  v5, #0x0
+    0058..005e  invoke-interface  {v7}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    005e..0060  move-result-object  v4
+    0060..0062  move-object  v3, v4
+    0062..0066  check-cast  v3, LX/Nap;
+    0066..006a  instance-of  v0, v3, LX/Hxy;
+    006a..006e  if-eqz  v0, +0x28
+    006e..0070  move-object  v2, v3
+    0070..0074  check-cast  v2, LX/Hxy;
+    0074..0078  iget-object  v1, v2, LX/Hxy;->A00:Lorg/json/JSONObject;
+    0078..007c  if-eqz  v1, +0x19
+    007c..0080  const-string  v0, "summary"
+    0080..0086  invoke-virtual  {v1, v0}, Lorg/json/JSONObject;->optBoolean(Ljava/lang/String;)Z
+    0086..0088  move-result  v1
+    0088..008a  const/4  v0, #0x1
+    008a..008e  if-ne  v1, v0, +0x10
+    008e..0090  const/4  v0, #0x0
+    0090..0094  if-le  v5, v0, +0x4
+    0094..0096  move-object  v6, v4
+    0096..0098  move  v5, v0
+    0098..009e  invoke-interface  {v7}, Ljava/util/Iterator;->hasNext()Z
+    009e..00a0  move-result  v0
+    00a0..00a4  if-nez  v0, -0x24
+    00a4..00a8  check-cast  v6, LX/Nap;
+    00a8..00aa  return-object  v6
+    00aa..00b0  invoke-virtual  {v2}, LX/Hxy;->A02()Z
+    00b0..00b2  move-result  v0
+    00b2..00b6  if-eqz  v0, +0x4
+    00b6..00b8  const/4  v0, #0x1
+    00b8..00ba  goto  -0x14
+    00ba..00be  instance-of  v0, v3, LX/LIM;
+    00be..00c2  if-eqz  v0, -0x13
+    00c2..00c4  const/4  v0, #0x2
+    00c4..00c6  goto  -0x1a
+    00c6..00cc  invoke-virtual  {v2}, LX/Hxy;->A02()Z
+    00cc..00ce  move-result  v0
+    00ce..00d2  if-eqz  v0, +0x4
+    00d2..00d4  const/4  v5, #0x1
+    00d4..00d6  goto  -0x3e
+    00d6..00da  instance-of  v0, v3, LX/LIM;
+    00da..00dc  const/4  v5, #0x3
+    00dc..00e0  if-eqz  v0, -0x42
+    00e0..00e2  const/4  v5, #0x2
+    00e2..00e4  goto  -0x45
+    00e4..00e8  new-instance  v0, Ljava/util/NoSuchElementException;
+    00e8..00ee  invoke-direct  {v0}, Ljava/util/NoSuchElementException;-><init>()V
+    00ee..00f0  throw  v0
+    # exception table: 0 try range(s)
+.end method

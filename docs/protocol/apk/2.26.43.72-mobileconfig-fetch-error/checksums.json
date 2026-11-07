@@ -1,0 +1,54 @@
+{
+  "README.md": {
+    "bytes": 4482,
+    "sha256": "c23c95762e27b2f3840b70243f60b34fca1d7bf914a7627e943b1977b8abea39"
+  },
+  "callback-constructors.txt": {
+    "bytes": 1314,
+    "sha256": "6760ba0f2487c056aaece643a267021faab88d6bcf33a5c196cbdc0dee266722"
+  },
+  "callback-factory.txt": {
+    "bytes": 402,
+    "sha256": "83b41779c8cde915da04fbdb8deed54372b2508391f13447cfb8092ca5da6ace"
+  },
+  "critical-classifier.txt": {
+    "bytes": 836,
+    "sha256": "e8160c2a83cb67b7b9220b3b35d57d01afdb51ef86351ea0f1c59198dc113ab5"
+  },
+  "derive-error-excerpts.py": {
+    "bytes": 1798,
+    "sha256": "9f2aa3ff05e2b27759cc9bd952cabeb4593b98d1de9fe5efb9498323c5090b98"
+  },
+  "error-ranking.txt": {
+    "bytes": 3256,
+    "sha256": "c3e4857b6468038c46c926e9549f8656ae09bffe7ac4ae28d1dabaed439ba221"
+  },
+  "error-record-constructors.txt": {
+    "bytes": 3029,
+    "sha256": "839923804eca211bbfe6c96608c8ce5530073120e48978cb556362a466c88de4"
+  },
+  "json-error-constructor.txt": {
+    "bytes": 648,
+    "sha256": "7d9b4baef5ed348b4076694878e763a184e1291089ac2c3ce4164f41069c1ce5"
+  },
+  "message-helper.txt": {
+    "bytes": 469,
+    "sha256": "d81ccced98c4308b294fce423de370d7eb2e9f085bafa5078e800040e659ec29"
+  },
+  "message-overrides.txt": {
+    "bytes": 2410,
+    "sha256": "0edf8ff820ab340b448cf454f65127d494c375e8f9f9495b3c3fc4edaafb772e"
+  },
+  "selected-callbacks.json": {
+    "bytes": 5316,
+    "sha256": "693218ed120fe711a39f2754ef143e8b3366211e11a38111a052ce7147a27bd2"
+  },
+  "worker-constructor.txt": {
+    "bytes": 498,
+    "sha256": "a14c50890bfb49851c4862ffe0808a849ca9501e4613629815e14de00d7b4c09"
+  },
+  "worker-factory.txt": {
+    "bytes": 402,
+    "sha256": "965fa31a5f2c16482401dc04c8fc88492f1e26cefe561b76793fdb1cfd89e977"
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "IE9": {
+    "full_source_sha256": "b2b33fa0cd84e980606dd9d121124a792fe30efa0ec40ded7b31c31a6acafcdd",
+    "full_source_bytes": 122718,
+    "entry_and_switch": [
+      "    0000..0004  move-object/from16  v0, v32",
+      "    0004..0008  move-object/from16  v1, v31",
+      "    0008..000c  iget  v2, v1, LX/IE9;->$t:I",
+      "    000c..0012  packed-switch  v2, payload@0x2070, cases=[0:@0x2ec, 1:@0x52, 2:@0x438, 3:@0x45a, 4:@0x4b8, 5:@0x508, 6:@0x674, 7:@0x6aa, 8:@0x7be, 9:@0x87e, 10:@0x8c8, 11:@0x8f8, 12:@0x930, 13:@0x966, 14:@0x984, 15:@0xb18, 16:@0xc88, 17:@0xcf6, 18:@0xe7e, 19:@0xef4, 20:@0xf76, 21:@0xfec, 22:@0x10aa, 23:@0x128e, 24:@0x12ba, 25:@0x1356, 26:@0x1396, 27:@0x15c4, 28:@0x1750, 29:@0x17fa, 30:@0x182e, 31:@0x162, 32:@0x12f4, 33:@0x185e, 34:@0x189a, 35:@0x18ec, 36:@0x1924, 37:@0x19a2, 38:@0x19da, 39:@0x1a22, 40:@0x1a5a, 41:@0x1aac, 42:@0x1b66, 43:@0x1bee, 44:@0x1c28, 45:@0x1c64, 46:@0x1c88, 47:@0x1d9e, 48:@0x1e12], default@0x12"
+    ],
+    "selected_byte_ranges": [
+      [
+        "0x182e",
+        "0x185e"
+      ]
+    ],
+    "selected_instructions": [
+      "    182e..1832  iget-object  v3, v1, LX/IE9;->A00:Ljava/lang/Object;",
+      "    1832..1836  check-cast  v3, LX/Hmm;",
+      "    1836..183a  iget-object  v2, v1, LX/IE9;->A01:Ljava/lang/Object;",
+      "    183a..183c  const/4  v1, #0x2",
+      "    183c..1842  invoke-static  {v0, v1}, LX/00l;->A09(Ljava/lang/Object;I)V",
+      "    1842..1846  const/16  v1, #0x14",
+      "    1846..184c  invoke-static  {v0, v2, v1}, LX/ID2;->A00(Ljava/lang/Object;Ljava/lang/Object;I)LX/ID2;",
+      "    184c..184e  move-result-object  v0",
+      "    184e..1854  invoke-static  {v3, v0}, LX/Hmm;->A01(LX/Hmm;Lkotlin/jvm/functions/Function0;)V",
+      "    1854..185a  invoke-static  {}, LX/2L8;->A1A()Ljava/lang/Boolean;",
+      "    185a..185c  move-result-object  v3",
+      "    185c..185e  return-object  v3"
+    ],
+    "signature_and_complete_catch_metadata": [
+      "    # full signature: LX/IE9;->invoke(Ljava/lang/Object;)Ljava/lang/Object;",
+      "    # exception table: 7 try range(s)",
+      "    # catch <all> code_units 00d1..00d6 -> 00d6",
+      "    # catch <all> code_units 00fc..0109 -> 0109",
+      "    # catch <all> code_units 0485..0492 -> 0495",
+      "    # catch Lorg/json/JSONException; code_units 0509..0583 -> 0583",
+      "    # catch Ljava/lang/RuntimeException; code_units 0bd1..0bd4 -> 0bd4",
+      "    # catch Landroid/content/IntentSender$SendIntentException; code_units 0d70..0d7e -> 0d85",
+      "    # catch Lorg/json/JSONException; code_units 0e92..0ea2 -> 0eba"
+    ]
+  },
+  "ID2": {
+    "full_source_sha256": "b4c94aff5973ccae4f47675b11a04156c4eaf8ac0df3283298a926d87ecf5d1c",
+    "full_source_bytes": 43691,
+    "entry_and_switch": [
+      "    0000..0004  iget  v0, v15, LX/ID2;->$t:I",
+      "    0004..000a  packed-switch  v0, payload@0xb18, cases=[0:@0xac6, 1:@0xaaa, 2:@0x9e8, 3:@0x9bc, 4:@0x96e, 5:@0x94c, 6:@0x932, 7:@0x90a, 8:@0x8e8, 9:@0x8b0, 10:@0x88e, 11:@0x866, 12:@0x852, 13:@0x836, 14:@0x7d2, 15:@0x760, 16:@0x74a, 17:@0x656, 18:@0x63c, 19:@0x622, 20:@0x5e0, 21:@0x5ca, 22:@0x5b6, 23:@0x58a, 24:@0x542, 25:@0xa, 26:@0xa, 27:@0xa, 28:@0x4e8, 29:@0x34, 30:@0x4c2, 31:@0x4a0, 32:@0x444, 33:@0x41c, 34:@0x386, 35:@0x2fc, 36:@0x2e2, 37:@0x296, 38:@0x26c, 39:@0x228, 40:@0x1f8, 41:@0x196, 42:@0x17c, 43:@0x162, 44:@0x136, 45:@0x11c, 46:@0xe8, 47:@0xaa, 48:@0x8c, 49:@0x64], default@0xa",
+      "    000a..000e  iget-object  v0, v15, LX/ID2;->A00:Ljava/lang/Object;",
+      "    000e..0012  check-cast  v0, LX/10q;"
+    ],
+    "selected_byte_ranges": [
+      [
+        "0x5e0",
+        "0x622"
+      ],
+      [
+        "0xac0",
+        "0xac6"
+      ]
+    ],
+    "selected_instructions": [
+      "    05e0..05e4  iget-object  v0, v15, LX/ID2;->A00:Ljava/lang/Object;",
+      "    05e4..05e8  check-cast  v0, LX/Hbw;",
+      "    05e8..05ec  iget-object  v3, v15, LX/ID2;->A01:Ljava/lang/Object;",
+      "    05ec..05f0  check-cast  v3, Lcom/facebook/mobileconfig/MobileConfigFetcherHandler;",
+      "    05f0..05f4  iget-object  v2, v0, LX/Hbw;->A01:Ljava/util/List;",
+      "    05f4..05fa  invoke-static  {v2}, LX/6oe;->A19(Ljava/util/List;)Ljava/lang/String;",
+      "    05fa..05fc  move-result-object  v1",
+      "    05fc..0600  const-string  v0, \"WAMobileConfigFetcher/fetchErlangConfigs/error: \"",
+      "    0600..0606  invoke-static  {v0, v1}, LX/2LE;->A1B(Ljava/lang/String;Ljava/lang/String;)V",
+      "    0606..060c  invoke-static  {v2}, LX/6oe;->A19(Ljava/util/List;)Ljava/lang/String;",
+      "    060c..060e  move-result-object  v1",
+      "    060e..0612  if-nez  v1, +0x4",
+      "    0612..0616  const-string  v1, \"Unknown error\"",
+      "    0616..0618  const/4  v0, #0x0",
+      "    0618..061e  invoke-virtual  {v3, v0, v1}, Lcom/facebook/mobileconfig/MobileConfigFetcherHandler;->onComplete(ZLjava/lang/String;)V",
+      "    061e..0622  goto/16  +0x251",
+      "    0ac0..0ac4  sget-object  v4, LX/05u;->A00:LX/05u;",
+      "    0ac4..0ac6  return-object  v4"
+    ],
+    "signature_and_complete_catch_metadata": [
+      "    # full signature: LX/ID2;->invoke()Ljava/lang/Object;",
+      "    # exception table: 2 try range(s)",
+      "    # catch <all> code_units 02b1..02b8 -> 02b8",
+      "    # catch <all> code_units 04c7..04ce -> 04ce"
+    ]
+  }
+}

@@ -1,5 +1,10 @@
 # Network correctness audit
 
+**MobileConfig MEX errors now have a traced failure handoff.**
+Selected worker forwards false plus a ranked message; no explicit retry or refresh
+write occurs in that Java branch. Summary/critical/exception ranking is retained.
+[Exact selectors, excerpts and native-policy limits](apk/2.26.43.72-mobileconfig-fetch-error/README.md). No runtime request enabled.
+
 **MobileConfig fetch is a distinct unported network/SDK pipeline.**
 Current APK MEX/WWW routing, selected input setters, persisted IDs and MEX callback
 ordering are retained; AB-property inspection is not effective table hydration.

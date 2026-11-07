@@ -1,0 +1,15 @@
+
+# class: LX/Hxy;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VL)  # .registers 3
+    # full signature: LX/Hxy;-><init>(Lorg/json/JSONObject;)V
+    0000..0006  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    0006..000a  iput-object  v2, v1, LX/Hxy;->A01:Lorg/json/JSONObject;
+    000a..000e  const-string  v0, "extensions"
+    000e..0014  invoke-virtual  {v2, v0}, Lorg/json/JSONObject;->optJSONObject(Ljava/lang/String;)Lorg/json/JSONObject;
+    0014..0016  move-result-object  v0
+    0016..001a  iput-object  v0, v1, LX/Hxy;->A00:Lorg/json/JSONObject;
+    001a..001c  return-void
+    # exception table: 0 try range(s)
+.end method

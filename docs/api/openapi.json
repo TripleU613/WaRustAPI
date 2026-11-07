@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-fetch-error-evidence": {
+    "x-cli": "existing static DEX exports and pinned selected-excerpt derivation; no product command or HTTP route",
+    "x-transport": "research only; MobileConfig failure/hydration adapter remains unported",
+    "x-live": false,
+    "description": "Pinned APK43.72 IE9 selector30 andID2 selector20 forward false with ranked Hbw message through the SDK callback. Stable ranking prioritizes extensions.summary, critical severity, LIM exception and other errors. Selected Java branches contain no explicit retry or refresh-ID write; empty and null messages differ. Complete catches and full-export identities accompany bounded excerpts. Native completion and generic transport timeout/retry remain unresolved. No runtime request, state or live operation changed.",
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-fetch-error/README.md"
+  },
   "x-mobileconfig-fetch-route-evidence": {
     "x-cli": "existing static exports and selected apk-mex-queries check; no product command or HTTP route",
     "x-transport": "research only; MobileConfig fetch/hydration adapter is unported and AB-property inspection remains observational",

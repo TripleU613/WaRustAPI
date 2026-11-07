@@ -329,3 +329,13 @@ Rust has no corresponding MobileConfig fetch/hydration adapter. Producers,
 serializer, error/native persistence and effective selection remain open.
 [Full selected route evidence](apk/2.26.43.72-mobileconfig-fetch-route/README.md).
 No runtime request or live operation enabled.
+
+## MobileConfig selected error handoff —2026-11-07
+
+IE9 selector30 dispatchesID2 selector20, which forwards false and a selected
+Hbw message to the SDK handler. Ranking prioritizes extensions.summary, critical
+severity, exception family, then other errors, preserving earlier ties. Null and
+empty messages remain distinct. The selected Java branch has no explicit retry
+or refresh-ID write; native and generic transport policy remain untraced.
+[Selected bodies and reproduction](apk/2.26.43.72-mobileconfig-fetch-error/README.md).
+No Rust request, state or live operation changed.

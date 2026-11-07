@@ -1619,3 +1619,12 @@ The new oracle runs the unmodified pinned JSON library on synthetic maps and
 records complete bodies/UTF8 counts. It narrows the selected non-Pando value
 boundary under that reference; it does not observe Pando, a device library,
 account-safe write or server acceptance. No Rust migration sender is added.
+
+### Current-build MobileConfig error selection follow-up
+
+APK43.72Hbw.A00 ranks summary, critical, LIM and other errors with stable ties;
+MobileConfig's selected worker forwards only the chosen message and false to its
+SDK handler. Root message and extensions classification remain separate. This
+narrows the older ranking unknown, without porting exception/Android coercion,
+backoff, native persistence or generic MEX retry policy.
+[Current methods and selected callback evidence](apk/2.26.43.72-mobileconfig-fetch-error/README.md).
