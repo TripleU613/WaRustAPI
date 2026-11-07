@@ -8,8 +8,9 @@ RELA **0xd55a0 -> 0x83a04**, has diagnostic
 The selected normal body obtains a string plus word+0x18 using virtual+0xe0
 (RELA 0xd5660 -> 0x878e0). Empty string returns before snapshot retrieval.
 0x878e0 derives a path through 0x88888 and invokes 0xc310c; the latter uses a
-directory visitor and emits a string plus selected integer. Its full selection
-policy is still unknown: do not call this proof of latest-by-time selection.
+directory visitor and emits a string plus selected integer. The [selection follow-up](selection.md) establishes a greatest qualifying
+numeric filename-prefix policy, not a latest-by-time policy; enumeration and
+parser edge cases remain bounded.
 
 For a nonempty string, reload obtains the shared snapshot via virtual+0x40,
 selected 0x83c7c. A nonnull handle's string+0x28 is compared with that string

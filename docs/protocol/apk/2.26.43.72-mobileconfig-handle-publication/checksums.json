@@ -1,7 +1,7 @@
 {
   "README.md": {
-    "bytes": 7758,
-    "sha256": "1080ec4d48419524a0cc1fed3ce31e9d69dbc89112148125331e11f64c137f94"
+    "bytes": 7993,
+    "sha256": "617c2401d1a6a2788ec75caacee1c2a4670d9f498865ba4ed74ae236757e0d6b"
   },
   "candidate-wrapper.txt": {
     "bytes": 1941,
@@ -111,6 +111,10 @@
     "bytes": 7639,
     "sha256": "286cbdf043cd535396f19fcc6e21ded2964b3ccfccf4375d0ae3ec63b566ae60"
   },
+  "rea-selection.json": {
+    "bytes": 7497,
+    "sha256": "5c3863e3096008bb79ec9649e17eb44477a89bf622de73a75da23d605dbb17f1"
+  },
   "reload-body.txt": {
     "bytes": 5404,
     "sha256": "79bd006e47c5595e766035f219b47a61d75cc6f2de88544e381858762748f3d5"
@@ -132,8 +136,8 @@
     "sha256": "1433c3da4df3da8df1df7ab10e6e8dde447f9f9f49feea373107baa2897af463"
   },
   "reload.md": {
-    "bytes": 3098,
-    "sha256": "4da4980a8dd60bbef14968b7d844bfdb221a12b118b7fd7434f0d81c6f9e2421"
+    "bytes": 3187,
+    "sha256": "096bef6ae72f5060e6b74cdf98be7a90d2fd11534a8df577912ed170b154c394"
   },
   "root-candidate-constructor.txt": {
     "bytes": 2504,
@@ -146,6 +150,46 @@
   "root-probe.txt": {
     "bytes": 232,
     "sha256": "dd021e719f1a432cf55bbd8fd334a140dca3e78339cef94103f6e3a6114ccda5"
+  },
+  "selection-callback.txt": {
+    "bytes": 4670,
+    "sha256": "6b4fb93d772bab8203ecc5fe23206c8be433b056862eb5375e1d79a6558852f6"
+  },
+  "selection-data.json": {
+    "bytes": 202,
+    "sha256": "adf61b7c6e2a97acb8a645a2e973cb33f48fab8a0831df9b85acab22654e2131"
+  },
+  "selection-directory.txt": {
+    "bytes": 3608,
+    "sha256": "b85acb352d469a9c6b62a5cc8425bbcffd887944a93655eccab1377c73ddc825"
+  },
+  "selection-helpers.txt": {
+    "bytes": 970,
+    "sha256": "defe28739c54005f787b4d1a596bedeaedca1543afdc199791b0e2477d285843"
+  },
+  "selection-integer.txt": {
+    "bytes": 2415,
+    "sha256": "eb4e8296a889fb89ed24b20adef9cc38f70020965b224aea5ead499cb3ad9d39"
+  },
+  "selection-slots.txt": {
+    "bytes": 83,
+    "sha256": "47d2425cb5e027af5cb4af3c0a90c2a285ad9f7c76b7ae5fe8e358558d51745c"
+  },
+  "selection-string-view.txt": {
+    "bytes": 509,
+    "sha256": "cb322fd1e9b4a1caf1158e678c7a366e3b08ec4c839575643af4a6bd4359a750"
+  },
+  "selection-suffix-compare.txt": {
+    "bytes": 685,
+    "sha256": "43bf1c1bb0d90eacc67d6f4578da22be4f726d5855afd4a7d282713f04158f91"
+  },
+  "selection-suffix.txt": {
+    "bytes": 314,
+    "sha256": "bb103db0644c02ffeff1d084af39ef927b911e0aa4e8f430e832dc420148bfdf"
+  },
+  "selection.md": {
+    "bytes": 3455,
+    "sha256": "a25b0a5d70225348daca24d5878a51aa3405746ce180055b0ade24b0dd4a7ad7"
   },
   "shared-pair-args.txt": {
     "bytes": 231,

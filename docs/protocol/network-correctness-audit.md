@@ -5823,3 +5823,8 @@ No live operation or automatic retry/reset.
   hash match exits; schema bit 0/8 selection controls translation versus
   explicit republication. Translation failure logs then exits, with no local
   publication fallback. See [reload trace](apk/2.26.43.72-mobileconfig-handle-publication/reload.md).
+
+- Confirmed selected APK 2.26.43.72 disk selector ranks `.mctable` filenames
+  by parsed numeric prefix, requires prefix-derived `.meta` existence and keeps
+  the first equal index encountered. This does not establish body validity or
+  timestamp order. See [selection evidence](apk/2.26.43.72-mobileconfig-handle-publication/selection.md).

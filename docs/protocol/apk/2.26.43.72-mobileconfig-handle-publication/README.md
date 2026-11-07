@@ -135,3 +135,7 @@ does not read the snapshot status; other consumers remain unresolved.
 The [reload consumer](reload.md) now distinguishes hash equality, schema-bit
 selection, translation attempt and explicit republication. Snapshot status is
 not consumed there; directory selection and final acceptance remain unknown.
+
+The [disk selector](selection.md) chooses the greatest qualifying signed numeric
+filename prefix, requiring an existence-like metadata counterpart check. Equal
+indexes retain iterator-first choice; body validity is not checked there.

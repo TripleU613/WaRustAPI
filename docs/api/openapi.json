@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-disk-selection-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-handle-publication/selection.md",
+    "finding": "Disk selector uses maximum qualifying numeric filename prefix and metadata existence, not modification time or body verification."
+  },
   "x-mobileconfig-reload-consumer-evidence": {
     "x-cli": false,
     "x-transport": false,
