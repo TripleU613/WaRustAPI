@@ -1,0 +1,61 @@
+{
+  "member_sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+  "diagnostics": {
+    "0x191df": "shared_extension_schema_match",
+    "0x1767c": "SchemaMismatchError",
+    "0x19f34": "FBMobileConfigStorageManager::validateAndCreateMmapHandle"
+  },
+  "virtual_bindings": {
+    "0xd5668": "0x87940",
+    "0xd5648": "0x87388",
+    "0xd55c0": "0x83c7c",
+    "0xd61d0": "0x886ec",
+    "0xd5890": "0x886ec"
+  },
+  "calls": {
+    "0x879bc": "0x88144",
+    "0x87a0c": "0x531f8",
+    "0x87a30": "0xa8fa4",
+    "0x87a44": "0x531f8",
+    "0x87b38": "0xa3d78",
+    "0x87c30": "0x87f90",
+    "0x87c44": "0xccb70",
+    "0x87c5c": "0x75fc8",
+    "0x87cb8": "0x5e4a8",
+    "0x87cfc": "0xc4338",
+    "0x87f40": "0x88344",
+    "0x83c98": "0xccb70"
+  },
+  "probe": "0x886ec tests only object+0x50 nonnull through 0xcabbc",
+  "publication": "candidate pair replaces manager+0x20 under mutex+0x34; status byte+0x30 is stored before unlock",
+  "projection_authority": "analyst-derived publication suffix cases, not execution or complete upstream admission",
+  "synthetic_cases": {
+    "normal_root": {
+      "appended_at_probe": [],
+      "replaces_shared_pair": true,
+      "stored_status": 6
+    },
+    "missing_root": {
+      "appended_at_probe": [
+        8
+      ],
+      "replaces_shared_pair": true,
+      "stored_status": 7
+    },
+    "null_candidate": {
+      "appended_at_probe": [
+        4
+      ],
+      "replaces_shared_pair": true,
+      "stored_status": 7
+    },
+    "category5_missing_root": {
+      "appended_at_probe": [
+        8
+      ],
+      "replaces_shared_pair": true,
+      "stored_status": 3
+    }
+  },
+  "remaining": "complete rebuild/candidate constructors, status meanings, observer/owner follow-up and active configuration semantics"
+}

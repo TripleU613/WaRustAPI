@@ -1,0 +1,82 @@
+{
+  "README.md": {
+    "bytes": 7188,
+    "sha256": "f53e6b3bfa79ab089f5814e25ba17a648384f328a4f3c2e7da75dd1c8721d84a"
+  },
+  "candidate-wrapper.txt": {
+    "bytes": 1941,
+    "sha256": "3598d500f509613c6a56ddc044caeb6b5e942744cd5e785735e879dde313fb37"
+  },
+  "context-caller-one.txt": {
+    "bytes": 711,
+    "sha256": "8e0938ccf89a3d4d8deccbff31925d9b7de8a82ada18671ce6f065beb73c3f6a"
+  },
+  "context-caller-two.txt": {
+    "bytes": 357,
+    "sha256": "87ad356de98326cc539a17ce637b31eafb14f7096fd9952fb61a10d059421625"
+  },
+  "inspect-publication.py": {
+    "bytes": 2734,
+    "sha256": "16b2a7bd13c01b31904e8fd67feb0b57f16ef12233c325cb03be692ca6827ace"
+  },
+  "nonnull-result.txt": {
+    "bytes": 204,
+    "sha256": "8df564ddb5c9783e3f5db4c58fd657072075b9c05260d7d795c3ba112deb6b8e"
+  },
+  "observer-invoke.txt": {
+    "bytes": 1846,
+    "sha256": "5cbd14573af868e285e81e40b6aa15756ebbc1c000807696a79f058571766da0"
+  },
+  "observer-method.txt": {
+    "bytes": 4793,
+    "sha256": "b75bdee99bed3b0cf965699e9aaa382d865b0a1c545269473a0af4295711051c"
+  },
+  "other-context-setter.txt": {
+    "bytes": 1157,
+    "sha256": "0155be03a6d418696b08b1468e90292da518561006f71ce1bc44b81b3a325bd8"
+  },
+  "path-predicate.txt": {
+    "bytes": 1135,
+    "sha256": "7d063f10f24a10eb90e2869ad9ef9a5af20e6886029beeeebe1a3050a1cb8e98"
+  },
+  "publication-method.txt": {
+    "bytes": 16654,
+    "sha256": "070eeb397a403b0cf62c70254ebb3e43d1a204d3bb846304ec714d0206e22867"
+  },
+  "publication.json": {
+    "bytes": 1772,
+    "sha256": "6ec1767e1b38091042d6e4fff410bf0c860e6fe491ccd376de9526451bd4c04c"
+  },
+  "rea-publication.json": {
+    "bytes": 6723,
+    "sha256": "ffba7773140831cea9ba9520ad93cd6def2d7a936e24f8ce9e8e9a609aa7ffe0"
+  },
+  "root-candidate-constructor.txt": {
+    "bytes": 2504,
+    "sha256": "3ccab32bde4a6efdbd43caf9368e7b0e16d8a1e1d11bc551f1e8306f35330ec7"
+  },
+  "root-probe-args.txt": {
+    "bytes": 205,
+    "sha256": "781299f0986bafcb5bceeba570704dd3a3c3950dc3437c827316d7ed0a4ab5fa"
+  },
+  "root-probe.txt": {
+    "bytes": 232,
+    "sha256": "dd021e719f1a432cf55bbd8fd334a140dca3e78339cef94103f6e3a6114ccda5"
+  },
+  "shared-pair-args.txt": {
+    "bytes": 231,
+    "sha256": "2ef19ce688fea5279d817d3abe2ab08c0e679303533d5268b2bcbe65b37c1d73"
+  },
+  "shared-pair-replace.txt": {
+    "bytes": 742,
+    "sha256": "b2c0baee18cde31988c5cb8f2b9239a3c3ba0b23c2e7d82293f7aa547d52348b"
+  },
+  "snapshot-getter.txt": {
+    "bytes": 942,
+    "sha256": "1db5b37d71149716b7779e029ea922a9dc32a6e61c13a4432a0aaea71bb1a857"
+  },
+  "unlock-helper.txt": {
+    "bytes": 278,
+    "sha256": "66a28941e87cd3042762e79c1a05f3f75a019192219603530c1eb4459103d209"
+  }
+}

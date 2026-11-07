@@ -1,0 +1,10 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000004c460 <.text>:
+   5e4a8:      	bti	c
+   5e4ac:      	tbz	w1, #0x0, 0x5e4b4 <.text+0x12054>
+   5e4b0:      	b	0xccba0 <_ZNSt6__ndk15mutex6unlockEv@plt>
+   5e4b4:      	ret
