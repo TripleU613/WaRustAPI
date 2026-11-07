@@ -1685,3 +1685,47 @@ Verification: all1,588 workspace/all-feature tests passed, including the real-st
 metadata refusal/corrected-decryption fixture; strict all-target/all-feature Clippy
 and formatting passed. CLI reference, OpenAPI library-symbol check, APK coverage
 and retained-evidence integrity passed. No account operation was performed.
+
+## Mixed encrypted child type admission (2026-11-07)
+
+**Confirmed Rust mismatch fixed.** The pinned2.26.43.72 build264307238
+[EIM.A00 parser](apk/2.26.43.72-encrypted-child-metadata/enc-descriptor-parser.txt),
+SHA256 `887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e`,
+rejects missing/unknown enc types at0050..0066. Its exact recognized strings
+include msg,pkmsg,skmsg,frskmsg,msmsg,otsk. The prior retained
+[EuN caller](apk/2.26.43.72-encrypted-child-metadata/chat-stanza-parser.txt)
+invokes that parser for immediate encrypted children before descriptor selection.
+Do not classify the latter three native-recognized types as malformed native
+messages: they have native branches that Rust has not implemented.
+
+The group Rust selector previously selected supported msg/pkmsg/skmsg children
+and silently ignored an extra child with a missing/unknown or unported type.
+A real encrypted-store regression demonstrated the bug before the fix: valid
+skmsg plus an enc with no type returned Decrypted instead of Unsupported. This
+could advance the sender key and authorize a stanza-level response without
+processing all of its encrypted children. This is confirmed local behavior, not
+evidence of server rejection or account restriction causality.
+
+The shared immediate-child gate now requires each enc to use a supported exact
+msg/pkmsg/skmsg type before direct/group/recipient routing, duplicate lookup or
+ratchet changes. Missing, unknown, case/space variants and native-recognized but
+unported types return Unsupported; the caller-owned capture remains retained
+without a delivery ACK or decryption retry. This is partly a native parser
+correction and partly an explicit local coverage boundary. It does not emulate
+frskmsg/msmsg/otsk, assign them a parser/Signal error code, or claim the native
+exception path sends no response. Those implementations and native response
+ownership remain open work. Duplicate supported child selection and nested
+recipient descriptor policy remain independently unproven.
+
+The regression covers missing type, unknown, SKMSG, padded skmsg, frskmsg,msmsg,
+otsk in both child orders alongside valid ciphertext. Every refusal leaves
+sender keys and journal unchanged after capture preservation; the corrected
+original still decrypts, and existing replay/consumption checks continue.
+No live operation or new ACK/retry family is introduced. Existing retained
+evidence and its checksum manifest are reused without duplicating DEX exports.
+
+Verification: the expanded real-ciphertext regression first failed on the old
+code (Decrypted instead of Unsupported), then passed after the guard. All1,588
+workspace/all-feature tests, strict all-target/all-feature Clippy, formatting,
+CLI reference, OpenAPI library-symbol check, APK coverage, retained checksums
+and repository hygiene passed. No account traffic was generated.

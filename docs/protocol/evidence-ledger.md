@@ -1,5 +1,10 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
+**Mixed encrypted-child type bypass closed.** A missing/unknown or unported enc
+can no longer be ignored while a valid sibling decrypts and earns ACK authority.
+Both child orders are tested with valid ciphertext and unchanged state on refusal.
+Native-valid unported types remain explicit coverage gaps. [Evidence](media-network-outcomes.md#mixed-encrypted-child-type-admission-2026-11-07).
+
 **Encrypted child admission corrected.** Exact outer version2 and native ordered
 retry-count checks now precede inbox decryption/ACK authority. Valid-ciphertext
 regressions cover refusal without sender-key/journal advancement, then successful

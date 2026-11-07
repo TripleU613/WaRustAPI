@@ -1,4 +1,11 @@
 {
+  "x-inbox-mixed-encrypted-child-types": {
+    "x-cli": "existing receive/listen and saved inbox processing; no new command or flag",
+    "x-transport": "all immediate encrypted children must have supported exact msg/pkmsg/skmsg type before inbox routing/decryption/ACK authority",
+    "x-live": false,
+    "description": "Closes reproduced mixed-child bypass: a valid skmsg plus a missing-type enc previously returned Decrypted. Pinned EIM.A00 rejects missing/unknown types. Native-valid frskmsg/msmsg/otsk remain unimplemented and are preserved Unsupported as a local coverage boundary, not labelled native-invalid. Regression covers both child orders, invalid case/padding, unchanged sender keys/journal and corrected ciphertext decryption. No new ACK/retry or live account operation. Duplicate supported-child and nested parsing policy remain open.",
+    "evidence": "docs/protocol/media-network-outcomes.md#mixed-encrypted-child-type-admission-2026-11-07"
+  },
   "x-inbox-encrypted-child-metadata-admission": {
     "x-cli": "existing receive/listen and saved inbox processing; no new command or flag",
     "x-transport": "shared immediate enc version/count admission before direct/group/recipient routing and decryption",

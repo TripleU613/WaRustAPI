@@ -99,6 +99,15 @@ fn ciphertext_bytes(node: &Node) -> Option<&[u8]> {
 fn encrypted_children_metadata_valid(node: &Node) -> bool {
     let mut previous_count = 0;
     for enc in node.child_nodes().iter().filter(|n| n.description == "enc") {
+        // APK43.72 EIM.A00 rejects missing/unknown type before EuN selects
+        // descriptors. Its frskmsg/msmsg/otsk branches are native-valid but
+        // unported here: do not silently drop one and ACK a supported sibling.
+        if !matches!(
+            enc.get_attr("type").and_then(|v| v.as_text()),
+            Some("msg" | "pkmsg" | "skmsg")
+        ) {
+            return false;
+        }
         if enc.get_attr("v").and_then(|v| v.as_text()) != Some("2") {
             return false;
         }
@@ -927,7 +936,7 @@ async fn process_direct(
         return Ok(IncomingResult::Unsupported);
     }
     if !encrypted_children_metadata_valid(node) {
-        tracing::warn!("encrypted child version/count metadata refused before decryption or ACK");
+        tracing::warn!("encrypted child type/version/count refused before decryption or ACK");
         return Ok(IncomingResult::Unsupported);
     }
     if node.get_attr("recipient").is_some() {
@@ -2778,9 +2787,9 @@ mod tests {
                     .bytes(cipher.to_vec()),
             ]);
         // Valid ciphertext must not advance its sender key or earn a durable
-        // result when enclosing enc metadata violates the native parser gate.
+        // result when enc metadata violates native parsing or local type coverage.
         let keys_before = store.read(|tx| tx.scan(Table::SenderKeys, 1, 100)).unwrap();
-        for children in [
+        let mut refused_children = vec![
             vec![node.child_nodes()[0].clone().attr("count", "2147483648")],
             vec![node.child_nodes()[0].clone().attr("count", "garbage")],
             vec![
@@ -2797,7 +2806,27 @@ mod tests {
                     .attr("type", "msg")
                     .bytes(vec![9]),
             ],
+        ];
+        // Unknown/missing types are native parser errors. Native-recognized
+        // frskmsg/msmsg/otsk are a local coverage gap, never permission to
+        // ignore that child and ACK the sibling's successful skmsg.
+        for kind in [
+            None,
+            Some("unknown"),
+            Some("SKMSG"),
+            Some("skmsg "),
+            Some("frskmsg"),
+            Some("msmsg"),
+            Some("otsk"),
         ] {
+            let mut other = Node::new("enc").attr("v", "2").bytes(vec![9]);
+            if let Some(kind) = kind {
+                other = other.attr("type", kind);
+            }
+            refused_children.push(vec![node.child_nodes()[0].clone(), other.clone()]);
+            refused_children.push(vec![other, node.child_nodes()[0].clone()]);
+        }
+        for children in refused_children {
             let refused = node.clone().children(children);
             let capture = preserve(&store, &refused).unwrap();
             let head = store.journal_head().unwrap();
