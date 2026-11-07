@@ -5403,3 +5403,18 @@ reservation and no-success-before-work rules remain. Count2 saved-session
 query/ACK/refetch now exercises null bare/domain participant text.
 [Complete retained evidence and corrected test expectations](receipt-optional-addresses.md#shared-definite-null-text-factorycache-boundary-2026-11-06).
 No live operation, identity adoption or generic JID rewrite.
+
+
+## Valid Java-reference numbers do not mask later retry errors (2026-11-06)
+
+**Confirmed getter calls / implemented with explicit host-reference limits:**
+retry count/t now share the existing signed BMP-decimal parser instead of Rust
+ASCII admission. Valid numbers advance error classification to the next required
+field; invalid non-ASCII still does not gain automatic487 authority. Count retains
+signed32/nonnegative-model bounds and default1. Independent host Java178-case
+int/long fixture drives admission/error-order tests; saved-session Arabic count1
+and fullwidth time1 normalize to the same durable reservation as ASCII1 and the
+existing outgoing enc count remains ASCII. Android runtime digit-table parity is
+not claimed. ACK encoding/owner/identity/refetch/no-replay controls remain.
+[Exact APK/API evidence, reference provenance and reproduction](retry-parser-admission.md#shared-java-reference-numeric-admission-and-later-error-ordering-2026-11-06).
+No live account operation.

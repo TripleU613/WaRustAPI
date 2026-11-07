@@ -1,0 +1,902 @@
+{
+  "oracle": "Executed host Java library; not Android/APK execution",
+  "java_version": "openjdk version \"27\" 2026-09-15\nOpenJDK Runtime Environment (build 27)\nOpenJDK 64-Bit Server VM (build 27, mixed mode, sharing)",
+  "source": "docs/protocol/MexJavaNumericOracle.java",
+  "apk_binding": "2.26.43.72 F10.A04 ->0Tp.A05/A06 Integer.parseInt; A07/A09 Long.parseLong",
+  "android_contract": [
+    "https://developer.android.com/reference/java/lang/Integer",
+    "https://developer.android.com/reference/java/lang/Long"
+  ],
+  "cases": [
+    {
+      "input": "",
+      "int": null,
+      "long": null
+    },
+    {
+      "input": "+",
+      "int": null,
+      "long": null
+    },
+    {
+      "input": "-",
+      "int": null,
+      "long": null
+    },
+    {
+      "input": "0",
+      "int": "0",
+      "long": "0"
+    },
+    {
+      "input": "-0",
+      "int": "0",
+      "long": "0"
+    },
+    {
+      "input": "+0",
+      "int": "0",
+      "long": "0"
+    },
+    {
+      "input": "1",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "2",
+      "int": "2",
+      "long": "2"
+    },
+    {
+      "input": "4",
+      "int": "4",
+      "long": "4"
+    },
+    {
+      "input": "2147483647",
+      "int": "2147483647",
+      "long": "2147483647"
+    },
+    {
+      "input": "2147483648",
+      "int": null,
+      "long": "2147483648"
+    },
+    {
+      "input": "-2147483648",
+      "int": "-2147483648",
+      "long": "-2147483648"
+    },
+    {
+      "input": "-2147483649",
+      "int": null,
+      "long": "-2147483649"
+    },
+    {
+      "input": "4294967295",
+      "int": null,
+      "long": "4294967295"
+    },
+    {
+      "input": "9223372036854775807",
+      "int": null,
+      "long": "9223372036854775807"
+    },
+    {
+      "input": "-9223372036854775808",
+      "int": null,
+      "long": "-9223372036854775808"
+    },
+    {
+      "input": "9223372036854775808",
+      "int": null,
+      "long": null
+    },
+    {
+      "input": "-9223372036854775809",
+      "int": null,
+      "long": null
+    },
+    {
+      "input": " 1",
+      "int": null,
+      "long": null
+    },
+    {
+      "input": "1 ",
+      "int": null,
+      "long": null
+    },
+    {
+      "input": "0x1",
+      "int": null,
+      "long": null
+    },
+    {
+      "input": "1_0",
+      "int": null,
+      "long": null
+    },
+    {
+      "input": "𝟙",
+      "int": null,
+      "long": null
+    },
+    {
+      "input": "١x",
+      "int": null,
+      "long": null
+    },
+    {
+      "input": "＋１",
+      "int": null,
+      "long": null
+    },
+    {
+      "input": "-１２３",
+      "int": "-123",
+      "long": "-123"
+    },
+    {
+      "input": "+١٢٣",
+      "int": "123",
+      "long": "123"
+    },
+    {
+      "input": "١٢٣",
+      "int": "123",
+      "long": "123"
+    },
+    {
+      "input": "１２３",
+      "int": "123",
+      "long": "123"
+    },
+    {
+      "input": "９２２３３７２０３６８５４７７５８０７",
+      "int": null,
+      "long": "9223372036854775807"
+    },
+    {
+      "input": "-９２２３３７２０３６８５４７７５８０８",
+      "int": null,
+      "long": "-9223372036854775808"
+    },
+    {
+      "input": "01",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+1",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-1",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "١",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "٠١",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+١",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-١",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "۱",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "۰۱",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+۱",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-۱",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "߁",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "߀߁",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+߁",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-߁",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "१",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "०१",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+१",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-१",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "১",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "০১",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+১",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-১",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "੧",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "੦੧",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+੧",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-੧",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "૧",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "૦૧",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+૧",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-૧",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "୧",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "୦୧",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+୧",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-୧",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "௧",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "௦௧",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+௧",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-௧",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "౧",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "౦౧",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+౧",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-౧",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "೧",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "೦೧",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+೧",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-೧",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "൧",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "൦൧",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+൧",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-൧",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "෧",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "෦෧",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+෧",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-෧",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "๑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "๐๑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+๑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-๑",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "໑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "໐໑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+໑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-໑",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "༡",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "༠༡",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+༡",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-༡",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "၁",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "၀၁",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+၁",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-၁",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "႑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "႐႑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+႑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-႑",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "១",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "០១",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+១",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-១",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "᠑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "᠐᠑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+᠑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-᠑",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "᥇",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "᥆᥇",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+᥇",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-᥇",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "᧑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "᧐᧑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+᧑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-᧑",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "᪁",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "᪀᪁",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+᪁",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-᪁",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "᪑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "᪐᪑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+᪑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-᪑",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "᭑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "᭐᭑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+᭑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-᭑",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "᮱",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "᮰᮱",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+᮱",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-᮱",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "᱁",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "᱀᱁",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+᱁",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-᱁",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "᱑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "᱐᱑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+᱑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-᱑",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "꘡",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "꘠꘡",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+꘡",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-꘡",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "꣑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "꣐꣑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+꣑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-꣑",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "꤁",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "꤀꤁",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+꤁",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-꤁",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "꧑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "꧐꧑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+꧑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-꧑",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "꧱",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "꧰꧱",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+꧱",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-꧱",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "꩑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "꩐꩑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+꩑",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-꩑",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "꯱",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "꯰꯱",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+꯱",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-꯱",
+      "int": "-1",
+      "long": "-1"
+    },
+    {
+      "input": "１",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "０１",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "+１",
+      "int": "1",
+      "long": "1"
+    },
+    {
+      "input": "-１",
+      "int": "-1",
+      "long": "-1"
+    }
+  ]
+}

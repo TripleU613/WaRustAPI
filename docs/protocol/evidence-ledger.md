@@ -1,3 +1,10 @@
+2026-11-06 — **Unified retry number admission and required-field ordering.**
+Java-reference BMP counts/times now pass the shared parser and cannot hide a later
+missing required field. Independent host Java178-case fixture checks int/long
+admission and error order; the saved-session resend proves Unicode/ASCII count1
+share one reservation. Non-ASCII failures retain conservative error-ACK limits.
+[APK calls, Android contract, host-reference scope and reproduction](retry-parser-admission.md#shared-java-reference-numeric-admission-and-later-error-ordering-2026-11-06). No live account operation.
+
 2026-11-06 — **Shared native-null factory rules with receipt contexts.**
 Unknown bare/domain and empty optional participant text now follows the retained
 nullable factory rather than blocking retry487/completion ACKs. Typed values and

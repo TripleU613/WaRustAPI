@@ -6367,7 +6367,8 @@ pub fn parse_retry(node: &Node) -> Option<RetryRequest> {
         Some(value) => {
             let count = value
                 .as_text()
-                .and_then(|text| text.parse::<i32>().ok())
+                .and_then(super::mex::java_decimal_long)
+                .and_then(|count| i32::try_from(count).ok())
                 .and_then(|count| u32::try_from(count).ok());
             let Some(count) = count else {
                 tracing::debug!(
@@ -6385,7 +6386,7 @@ pub fn parse_retry(node: &Node) -> Option<RetryRequest> {
     if retry
         .get_attr("t")
         .and_then(|value| value.as_text())
-        .and_then(|text| text.parse::<i64>().ok())
+        .and_then(super::mex::java_decimal_long)
         .is_none()
     {
         tracing::debug!(field = "retry.t", "retry requires a signed64-bit timestamp");
@@ -6477,6 +6478,43 @@ mod retry_tests {
                 .attr("v", "1"),
             Node::new("registration").bytes(vec![1, 2, 3, 4]),
         ])
+    }
+
+    #[test]
+    fn retry_numeric_admission_matches_independent_java_oracle() {
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../../fixtures/transport/retry-java-numbers.json"
+        ))
+        .unwrap();
+        let base = receipt(true).attr("from", "15555550100@s.whatsapp.net");
+        for case in fixture["cases"].as_array().unwrap() {
+            let text = case["input"].as_str().unwrap();
+            let expected_count = case["int"]
+                .as_str()
+                .and_then(|value| value.parse::<i32>().ok())
+                .and_then(|value| u32::try_from(value).ok());
+            let count_node = base.clone().children(vec![
+                Node::new("retry")
+                    .attr("id", "INNER")
+                    .attr("count", text)
+                    .attr("t", "1"),
+                Node::new("registration").bytes(vec![0, 0, 0, 1]),
+            ]);
+            assert_eq!(
+                parse_retry(&count_node).map(|request| request.count),
+                expected_count,
+                "count {text:?}"
+            );
+            let time_node = base.clone().children(vec![
+                Node::new("retry").attr("id", "INNER").attr("t", text),
+                Node::new("registration").bytes(vec![0, 0, 0, 1]),
+            ]);
+            assert_eq!(
+                parse_retry(&time_node).is_some(),
+                case["long"].is_string(),
+                "t {text:?}"
+            );
+        }
     }
 
     #[test]

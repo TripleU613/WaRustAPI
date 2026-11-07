@@ -2803,24 +2803,27 @@ mod tests {
         );
         assert_eq!(all_retry_state(), before_stale_account);
         store.write(|tx| account.save(tx)).unwrap(); // synthetic control only
-        let default_count = receipt(&peer, 1, 42)
+        let unicode_count = receipt(&peer, 1, 42)
             .attr("id", "ROOT-RECEIPT")
             .attr("participant", "15555550101:3@s.whatsapp.net")
             .attr("recipient", retry_alias.clone())
             .children(vec![
-                Node::new("retry").attr("id", "W1").attr("t", "1"),
+                Node::new("retry")
+                    .attr("id", "W1")
+                    .attr("t", "１")
+                    .attr("count", "١"),
                 Node::new("registration").bytes(42u32.to_be_bytes().to_vec()),
             ]);
-        super::super::receipts::validate(&default_count).unwrap();
+        super::super::receipts::validate(&unicode_count).unwrap();
         assert_eq!(
-            super::super::receipts::record(&store, &default_count).unwrap(),
+            super::super::receipts::record(&store, &unicode_count).unwrap(),
             0
         );
         let reserved =
-            answer_with_confirmation(&store, &account, &default_count, ConnectionEpoch(2))
+            answer_with_confirmation(&store, &account, &unicode_count, ConnectionEpoch(2))
                 .await
                 .unwrap()
-                .expect("default count answered as1");
+                .expect("BMP decimal count answered as1");
         let confirmation = reserved
             .confirmation
             .expect("reserved message has a receipt ACK");
@@ -2850,7 +2853,7 @@ mod tests {
             .unwrap();
         assert_eq!(checkpoint["status"], "reserved");
         assert!(
-            answer_with_confirmation(&store, &account, &default_count, ConnectionEpoch(2))
+            answer_with_confirmation(&store, &account, &unicode_count, ConnectionEpoch(2))
                 .await
                 .unwrap()
                 .is_none()

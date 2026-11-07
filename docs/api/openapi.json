@@ -1,4 +1,11 @@
 {
+  "x-retry-java-numeric-admission": {
+    "x-cli": "existing retry parser/receive/responder paths; no new command or flag",
+    "x-transport": "shared Java-reference positive numeric admission and later-required-field error precedence",
+    "x-live": false,
+    "description": "Pinned F10 count/t getters call Integer.parseInt/Long.parseLong. Retry parsing now shares the existing signed BMP decimal reference parser; count retains signed32 range, nonnegative model and default1. Valid numeric values advance error classification to the next required t/id; invalid non-ASCII remains outside new automatic487 authority. Independent host OpenJDK27 178-case int/long fixture tests admission/order, with Android API contract and explicit non-Android-runtime provenance. Saved-session Arabic count1/fullwidth time1 emits ASCII enc count1 and ASCII duplicate uses the same reservation. Existing count/age/keys/ACK-preflight/owner/identity/no-replay guards remain. Full Android/OEM digit-table and numeric failure parity remain open; no HTTP route or account operation.",
+    "evidence": "docs/protocol/retry-parser-admission.md"
+  },
   "x-receipt-shared-text-factory-null": {
     "x-cli": "existing receipt/retry/receive paths; no new command or flag",
     "x-transport": "shared selected native text factory/cache null classification for optional receipt contexts",
@@ -347,7 +354,7 @@
     "x-cli": false,
     "x-transport": "shared normal and comparison receipt confirmation",
     "x-live": false,
-    "description": "APK43.72 confirmed required retry/registration, exact four-byte registration, ASCII signed32 count, required ASCII signed64 t and missing nested id failures now get error487 using 1rg.A03 fresh context: root id/from/type/participant, no recipient/edit. Native first-error ordering retained; non-1 version uses the separate copied 2Cx context. Local negative/high counts, empty/oversize ids, carried-key support, non-text/Unicode and unsupported root grammars do not become generic native errors. No success ACK, key fetch/session mutation or new route. Complete routing/BX2/error/recovery parity and live acceptance remain unverified. docs/protocol/retry-ack-dispatch.md"
+    "description": "APK43.72 confirmed required retry/registration, exact four-byte registration, confirmed ASCII signed32 count/required signed64 t failures and missing nested id failures now get error487 using 1rg.A03 fresh context: root id/from/type/participant, no recipient/edit. Native first-error ordering retained; non-1 version uses the separate copied 2Cx context. Local negative/high counts, empty/oversize ids, carried-key support, non-text/unclassified Unicode failures and unsupported root grammars do not become generic native errors; valid Java-reference BMP numeric values now advance to later required-field checks. No success ACK, key fetch/session mutation or new route. Complete routing/BX2/error/recovery parity and live acceptance remain unverified. docs/protocol/retry-ack-dispatch.md"
   },
   "x-retry-version-error-ack": {
     "x-cli": false,

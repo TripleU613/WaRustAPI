@@ -153,3 +153,69 @@ participant; null-source variants with matching explicit qualifiers preserve all
 outbox/checkpoint/ratchet/identity rows and produce no request/confirmation.
 [Complete predicates, exact byte/code-unit branches and corrected expectations](apk/2.26.43.72-retry-device-source/README.md).
 Original chat/identity/reservation guards remain; no live account operation.
+
+
+## Shared Java-reference numeric admission and later-error ordering (2026-11-06)
+
+**Confirmed APK calls / implemented and host-reference tested**, pinned APK
+2.26.43.72 build264307238, SHA256
+`887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e`.
+The complete retained [count getter chain](apk/2.26.43.72-retry-parser-admission/README.md)
+invokes Integer.parseInt; the [required time getter](apk/2.26.43.72-retry-message-correlation/long-value-reader.txt)
+invokes Long.parseLong. Android's official [Integer](https://developer.android.com/reference/java/lang/Integer)
+and [Long](https://developer.android.com/reference/java/lang/Long) API contracts
+use radix10 and Character.digit(char,radix), with ASCII sign handling. This is
+platform documentation, not APK runtime execution or a recovered Android digit table.
+
+Previously parse_retry used Rust ASCII integer parsing for count/t, and the error
+classifier returned immediately for any non-ASCII numeric text. A valid Java-style
+BMP count/time could thus be refused locally and mask a later required t/id error.
+Both now use the existing java_decimal_long reference parser; count additionally
+requires signed32 range and the public model's existing nonnegative conversion.
+Missing count still defaults1. Negative/high count capability policy, original-ID,
+carried-key, age, ACK-preflight and durable reservation rules remain unchanged.
+The model adds no time field and does not trust the supplied retry timestamp as
+its local original-age clock. Non-ASCII parse failures STILL remain unclassified
+for automatic error487; no blanket Unicode failure NACK is added.
+
+An independent executed [178-case fixture](../../crates/whatsapp-api/fixtures/transport/retry-java-numbers.json)
+records host OpenJDK27 int/long validity and values using the existing
+[Java oracle source](MexJavaNumericOracle.java), not Rust outputs. It covers ASCII
+signs and bounds, all37 BMP decimal families in the existing Java21 reference
+table, leading zeroes, mixed signs/digits, fullwidth/Arabic bounds, whitespace,
+malformed and supplementary-plane controls. The shared parser's table remains
+explicitly host-reference data. This does not prove Android/OEM/runtime Unicode-
+version equivalence or exhaustive numeric failure parity.
+
+Two tests compare public retry admission and error-read ordering against every
+fixture case. Valid signed32 values (including negative values outside local
+resend admission) advance to missing required t; valid signed64 time advances to
+missing nested id. Invalid ASCII retains the earlier getter error, while invalid
+non-ASCII remains outside new native-error authority. The saved-session success
+workflow uses Arabic count1 and fullwidth time1, still emits ASCII enc count1,
+and subsequently treats ASCII count1 as the same reserved retry rather than a
+new resend. Existing refetch/owner/write-cut/reopen tests remain in the suite.
+No identity mapping, automatic retry, live account operation or server acceptance
+claim is introduced.
+
+Reproduce the independent fixture answers from its retained input strings:
+
+```sh
+python3 - <<'PYREF'
+import base64, json, subprocess
+p = 'crates/whatsapp-api/fixtures/transport/retry-java-numbers.json'
+cases = json.load(open(p))['cases']
+lines = ''.join(base64.b64encode(c['input'].encode()).decode()+'\n' for c in cases)
+for mode, field in [('integers', 'int'), ('validity', 'long')]:
+    output = subprocess.run(['java', 'docs/protocol/MexJavaNumericOracle.java', mode],
+        input=lines, text=True, capture_output=True, check=True).stdout.splitlines()
+    assert len(output) == len(cases)
+    for c, line in zip(cases, output):
+        valid, value, *_ = line.split('\t')
+        assert (value if valid == 'true' else None) == c[field]
+print('178 Java int/long reference cases matched')
+PYREF
+```
+
+A different host Java version is a separately identified oracle, not a silent
+update to Android compatibility. The exact executed version is in the fixture.

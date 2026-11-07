@@ -1193,26 +1193,29 @@ fn retry_receipt_error(incoming: &Node) -> Option<RetryReceiptError> {
         return Some(RetryReceiptError::UnsupportedVersion);
     }
     // F10 then reads count (default1), required signed64 t, required id. Java
-    // parseInt/parseLong wrap NumberFormatException as LIL. Classify ASCII
-    // only: unsupported Unicode grammar must not become a false protocol error.
+    // parseInt/parseLong wrap NumberFormatException as LIL. Use the same
+    // Java-reference admission as parse_retry so a valid BMP value cannot hide
+    // a later missing field. Unclassified non-ASCII failures remain outside
+    // native-error authority; the digit table is host-reference, not APK data.
     if let Some(count) = retry.get_attr("count") {
         let count = count.as_text()?;
-        if !count.is_ascii() {
-            return None;
-        }
-        if count.parse::<i32>().is_err() {
-            return Some(RetryReceiptError::Parsing("retry.count"));
+        if super::mex::java_decimal_long(count)
+            .and_then(|value| i32::try_from(value).ok())
+            .is_none()
+        {
+            return count
+                .is_ascii()
+                .then_some(RetryReceiptError::Parsing("retry.count"));
         }
     }
     let Some(timestamp) = retry.get_attr("t") else {
         return Some(RetryReceiptError::Parsing("retry.t"));
     };
     let timestamp = timestamp.as_text()?;
-    if !timestamp.is_ascii() {
-        return None;
-    }
-    if timestamp.parse::<i64>().is_err() {
-        return Some(RetryReceiptError::Parsing("retry.t"));
+    if super::mex::java_decimal_long(timestamp).is_none() {
+        return timestamp
+            .is_ascii()
+            .then_some(RetryReceiptError::Parsing("retry.t"));
     }
     if retry.get_attr("id").is_none() {
         return Some(RetryReceiptError::Parsing("retry.id"));
@@ -2231,6 +2234,43 @@ mod tests {
                     .unwrap(),
                 ack
             );
+        }
+    }
+
+    #[test]
+    fn retry_java_numeric_admission_does_not_mask_later_required_errors() {
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../../fixtures/transport/retry-java-numbers.json"
+        ))
+        .unwrap();
+        let base = Node::new("receipt")
+            .attr("id", "ROOT")
+            .attr("from", "15555550100@s.whatsapp.net")
+            .attr("type", "retry");
+        for case in fixture["cases"].as_array().unwrap() {
+            let text = case["input"].as_str().unwrap();
+            let count_node = base.clone().children(vec![
+                Node::new("retry").attr("count", text),
+                Node::new("registration").bytes(vec![0, 0, 0, 1]),
+            ]);
+            let expected = if case["int"].is_string() {
+                Some(RetryReceiptError::Parsing("retry.t"))
+            } else {
+                text.is_ascii()
+                    .then_some(RetryReceiptError::Parsing("retry.count"))
+            };
+            assert_eq!(retry_receipt_error(&count_node), expected, "count {text:?}");
+            let time_node = base.clone().children(vec![
+                Node::new("retry").attr("t", text),
+                Node::new("registration").bytes(vec![0, 0, 0, 1]),
+            ]);
+            let expected = if case["long"].is_string() {
+                Some(RetryReceiptError::Parsing("retry.id"))
+            } else {
+                text.is_ascii()
+                    .then_some(RetryReceiptError::Parsing("retry.t"))
+            };
+            assert_eq!(retry_receipt_error(&time_node), expected, "t {text:?}");
         }
     }
 
