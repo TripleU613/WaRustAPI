@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-inline-executor-evidence": {
+    "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-inline-executor/inspect-executor.py <pinned-mobileconfig-library> <pinned-merged-library>",
+    "x-transport": "offline cross-member executor research; no Rust transport or HTTP route enabled",
+    "x-live": false,
+    "description": "Confirmed selected static cross-member binding resolves MobileConfig default InlineSerialExecutor dispatch to a four-instruction direct callable invocation in pinned libwhatsappmerged.so. The captured parameter-map task runs during that selected normal dispatch, without a queue in the slot method. Supplied overrides, runtime binding, file success and active configuration installation remain separate.",
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-inline-executor/README.md"
+  },
   "x-mobileconfig-params-scheduling-evidence": {
     "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-params-scheduling/inspect-scheduling.py <pinned-library>",
     "x-transport": "offline params-map scheduling research; no Rust transport or HTTP route enabled",

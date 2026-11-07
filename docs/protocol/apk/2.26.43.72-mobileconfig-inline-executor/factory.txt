@@ -1,0 +1,42 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   770bc:      	paciasp
+   770c0:      	stp	x29, x30, [sp, #-0x20]!
+   770c4:      	str	x19, [sp, #0x10]
+   770c8:      	mov	x29, sp
+   770cc:      	mov	x19, x0
+   770d0:      	mov	w0, #0x20               // =32
+   770d4:      	bl	0xccfa0 <__wrap__Znwm@plt>
+   770d8:      	adrp	x9, 0xd6000
+   770dc:      	mov	x8, x0
+   770e0:      	adrp	x10, 0xd4000
+   770e4:      	add	x10, x10, #0xea0
+   770e8:      	ldr	x9, [x9, #0xba8]
+   770ec:      	stp	xzr, xzr, [x8, #0x8]
+   770f0:      	str	x10, [x8]
+   770f4:      	add	x12, x8, #0x18
+   770f8:      	mov	x0, xzr
+   770fc:      	ldp	x11, x10, [x9, #0x30]
+   77100:      	ldur	x11, [x11, #-0x48]
+   77104:      	str	x10, [x12, x11]
+   77108:      	ldp	x13, x10, [x9, #0x8]
+   7710c:      	ldr	x9, [x9, #0x18]
+   77110:      	str	x13, [x8, #0x18]
+   77114:      	ldur	x11, [x13, #-0x50]
+   77118:      	str	x10, [x12, x11]
+   7711c:      	adrp	x11, 0xd6000
+   77120:      	ldr	x10, [x8, #0x18]
+   77124:      	ldr	x11, [x11, #0xba0]
+   77128:      	stp	x12, x8, [x19]
+   7712c:      	ldr	x19, [sp, #0x10]
+   77130:      	ldur	x10, [x10, #-0x48]
+   77134:      	str	x9, [x12, x10]
+   77138:      	add	x9, x11, #0x50
+   7713c:      	str	x9, [x8, #0x18]
+   77140:      	ldp	x29, x30, [sp], #0x20
+   77144:      	autiasp
+   77148:      	b	0x7667c <JNI_OnLoad+0x74dc>

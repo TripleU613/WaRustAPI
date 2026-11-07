@@ -1,0 +1,47 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   8af4c:      	mov	w0, #0x58               // =88
+   8af50:      	strb	w27, [sp, #0xd8]
+   8af54:      	strb	w26, [sp, #0xd9]
+   8af58:      	bl	0xccfa0 <__wrap__Znwm@plt>
+   8af5c:      	ldr	x8, [sp, #0x98]
+   8af60:      	ldur	q0, [sp, #0x88]
+   8af64:      	sub	x1, x29, #0x50
+   8af68:      	stp	xzr, xzr, [sp, #0x88]
+   8af6c:      	str	x8, [x0, #0x10]
+   8af70:      	ldur	x8, [x22, #0x28]
+   8af74:      	str	q0, [x0]
+   8af78:      	ldur	q0, [x22, #0x18]
+   8af7c:      	stp	x8, x24, [x0, #0x28]
+   8af80:      	ldrh	w8, [sp, #0xd8]
+   8af84:      	str	xzr, [sp, #0x98]
+   8af88:      	strh	w8, [x0, #0x50]
+   8af8c:      	adrp	x8, 0x8b000 <JNI_OnLoad+0x1be60>
+   8af90:      	add	x9, x8, #0x384
+   8af94:      	nop
+   8af98:      	adr	x8, 0x8b428 <JNI_OnLoad+0x1c288>
+   8af9c:      	stur	q0, [x0, #0x18]
+   8afa0:      	stp	xzr, xzr, [x22, #0x18]
+   8afa4:      	stp	xzr, xzr, [x22, #0x28]
+   8afa8:      	stp	x19, x25, [x0, #0x38]
+   8afac:      	str	x20, [x0, #0x48]
+   8afb0:      	stp	xzr, xzr, [x22, #0x40]
+   8afb4:      	stur	xzr, [x22, #0x38]
+   8afb8:      	stur	x0, [x29, #-0x50]
+   8afbc:      	mov	x0, x21
+   8afc0:      	stp	x9, x8, [x29, #-0x20]
+   8afc4:      	ldr	x8, [x21]
+   8afc8:      	ldr	x8, [x8, #0x10]
+   8afcc:      	blr	x8
+   8afd0:      	ldur	x8, [x29, #-0x18]
+   8afd4:      	cbz	x8, 0x8afe8 <JNI_OnLoad+0x1be48>
+   8afd8:      	sub	x1, x29, #0x50
+   8afdc:      	mov	w0, #0x1                // =1
+   8afe0:      	mov	x2, xzr
+   8afe4:      	blr	x8
+   8afe8:      	add	x0, sp, #0x88
+   8afec:      	bl	0x8b484 <JNI_OnLoad+0x1c2e4>

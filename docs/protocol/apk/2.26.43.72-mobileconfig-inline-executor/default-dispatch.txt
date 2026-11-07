@@ -1,0 +1,10 @@
+
+pinned libwhatsappmerged.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+0000000000667114 <_ZN8facebook5tigon21TigonWeakRequestTokenC1ENSt6__ndk18weak_ptrINS0_17TigonRequestTokenEEE>:
+  6679f0:      	bti	c
+  6679f4:      	ldr	x16, [x1, #0x30]
+  6679f8:      	mov	x0, x1
+  6679fc:      	br	x16

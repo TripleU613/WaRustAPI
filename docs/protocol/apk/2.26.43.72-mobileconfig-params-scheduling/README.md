@@ -1,5 +1,11 @@
 # MobileConfig parameter-map persistence scheduling
 
+Follow-up: [default executor binding](../2.26.43.72-mobileconfig-inline-executor/README.md)
+resolves the selected imported dispatch in pinned libwhatsappmerged.so to direct
+callable invocation. Supplied executor overrides, runtime binding and persistence
+outcomes remain separate; the original external-boundary unknown below is now
+narrowed for this default construction chain.
+
 **Confirmed selected static evidence**, APK 2.26.43.72 code 264307238,
 SHA256 `887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e`.
 Reconstructed arm64 libmobileconfig-jni.so: 852440 bytes, SHA256

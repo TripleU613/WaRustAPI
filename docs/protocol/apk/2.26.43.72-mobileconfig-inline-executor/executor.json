@@ -1,0 +1,32 @@
+{
+  "mobileconfig_sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+  "merged_sha256": "d0ab3f2237e92a76ac3519c3577b5836b9e6f65a186c2016cefd43c4923f4b0d",
+  "merged_bytes": 7871544,
+  "executor_exports": {
+    "_ZTVN8facebook6mobile5xplat8executor20InlineSerialExecutorE": {
+      "value": "0x757780",
+      "bytes": 136,
+      "defined": true
+    },
+    "_ZTTN8facebook6mobile5xplat8executor20InlineSerialExecutorE": {
+      "value": "0x757808",
+      "bytes": 64,
+      "defined": true
+    }
+  },
+  "selected_default_binding": {
+    "address_point": "0x7577d0",
+    "virtual_base_adjustment": 0,
+    "slot10": "0x7577e0",
+    "target": "0x6679f0"
+  },
+  "instructions": [
+    "bti c",
+    "ldr x16, [x1, #0x30]",
+    "mov x0, x1",
+    "br x16"
+  ],
+  "callable_handoff": "selected MobileConfig holder+0x30 contains 0x8b384; default dispatch tail-invokes it directly",
+  "authority": "cross-member static binding, not runtime dispatch or persisted-byte observation",
+  "remaining": "actual dynamic symbol resolution, supplied executor overrides, exceptions, file outcomes and active-table installation"
+}
