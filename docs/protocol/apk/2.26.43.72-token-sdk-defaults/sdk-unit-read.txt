@@ -1,0 +1,71 @@
+
+# class: LX/0A2;
+# extends: Ljava/lang/Object;
+
+.method public Ark(JLJJ)  # .registers 14
+    # full signature: LX/0A2;->Ark(LX/0Ek;JJ)J
+    0000..0002  move-wide  v5, v12
+    0002..0006  sget-boolean  v0, LX/09y;->A0B:Z
+    0006..0008  move-object  v2, v8
+    0008..000a  move-wide  v3, v10
+    000a..000e  if-eqz  v0, +0x1a
+    000e..0012  iget-object  v1, v8, LX/0A2;->A00:LX/09x;
+    0012..0016  if-eqz  v1, +0x16
+    0016..001c  invoke-interface  {v1, v10, v11}, LX/09x;->hasIntOverrideForParam(J)Z
+    001c..001e  move-result  v0
+    001e..0022  if-eqz  v0, +0x10
+    0022..0026  iget-boolean  v0, v9, LX/0Ek;->A02:Z
+    0026..002a  if-eqz  v0, +0x7
+    002a..002e  sget-object  v0, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->OVERRIDE:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+    002e..0034  invoke-virtual  {v9, v0}, LX/0Ek;->A01(Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;)V
+    0034..003a  invoke-interface  {v1, v10, v11, v12, v13}, LX/09x;->intOverrideForParam(JJ)J
+    003a..003c  move-result-wide  v0
+    003c..003e  return-wide  v0
+    003e..0044  invoke-static  {v9, v10, v11}, LX/0A2;->A00(LX/0Ek;J)Ljava/lang/Integer;
+    0044..0046  move-result-object  v1
+    0046..004a  sget-object  v0, LX/02X;->A01:Ljava/lang/Integer;
+    004a..004e  if-ne  v1, v0, +0x32
+    004e..0054  invoke-static  {v12, v13}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0054..0056  move-result-object  v1
+    0056..005a  sget-boolean  v0, LX/0EZ;->A03:Z
+    005a..005e  if-eqz  v0, +0x25
+    005e..0064  invoke-static  {}, LX/0EZ;->A01()LX/0Ea;
+    0064..0066  move-result-object  v0
+    0066..006a  if-eqz  v0, +0x1f
+    006a..0070  invoke-virtual  {v0, v10, v11}, LX/0Ea;->A05(J)LX/Pmp;
+    0070..0072  move-result-object  v2
+    0072..0076  if-eqz  v2, +0x15
+    0076..007a  iget-object  v0, v2, LX/Pmp;->A02:Ljava/lang/Object;
+    007a..007e  if-eqz  v0, +0x11
+    007e..0082  iget  v1, v2, LX/Pmp;->A00:I
+    0082..0084  const/4  v0, #0x2
+    0084..0088  if-ne  v1, v0, +0xc
+    0088..008e  invoke-virtual  {v2}, LX/Pmp;->A02()Ljava/lang/Long;
+    008e..0090  move-result-object  v0
+    0090..0094  if-eqz  v0, +0x6
+    0094..009a  invoke-virtual  {v0}, Ljava/lang/Number;->longValue()J
+    009a..009c  move-result-wide  v5
+    009c..00a2  invoke-static  {v5, v6}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    00a2..00a4  move-result-object  v1
+    00a4..00aa  invoke-virtual  {v1}, Ljava/lang/Number;->longValue()J
+    00aa..00ac  move-result-wide  v0
+    00ac..00ae  return-wide  v0
+    00ae..00b2  sget-object  v0, LX/02X;->A0C:Ljava/lang/Integer;
+    00b2..00b6  if-eq  v1, v0, +0x1d
+    00b6..00ba  iget-boolean  v0, v9, LX/0Ek;->A02:Z
+    00ba..00be  if-eqz  v0, +0x12
+    00be..00c4  invoke-virtual  {v8, v10, v11}, LX/0A2;->A07(J)LX/0A4;
+    00c4..00c6  move-result-object  v0
+    00c6..00ca  iput-object  v0, v9, LX/0Ek;->A00:LX/0A4;
+    00ca..00ce  iget-object  v1, v0, LX/0A4;->A00:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+    00ce..00d2  sget-object  v0, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->SERVER:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+    00d2..00d6  if-eq  v1, v0, +0x6
+    00d6..00da  sget-object  v0, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__SERVER_RETURNED_NULL:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+    00da..00de  if-ne  v1, v0, +0x9
+    00de..00e2  iget-boolean  v7, v9, LX/0Ej;->A00:Z
+    00e2..00e8  invoke-virtual/range  {v2..v7}, LX/0A2;->A06(JJZ)J
+    00e8..00ea  move-result-wide  v0
+    00ea..00ec  return-wide  v0
+    00ec..00ee  return-wide  v12
+    # exception table: 0 try range(s)
+.end method

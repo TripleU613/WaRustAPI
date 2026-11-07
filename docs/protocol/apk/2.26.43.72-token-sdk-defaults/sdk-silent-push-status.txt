@@ -1,0 +1,72 @@
+
+# class: LX/0A2;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLJ)  # .registers 10
+    # full signature: LX/0A2;->A00(LX/0Ek;J)Ljava/lang/Integer;
+    0000..0004  sget-boolean  v0, LX/0EZ;->A03:Z
+    0004..0008  if-eqz  v0, +0x4d
+    0008..000e  invoke-static  {}, LX/0EZ;->A01()LX/0Ea;
+    000e..0010  move-result-object  v1
+    0010..0014  if-eqz  v1, +0x47
+    0014..0018  iget-object  v3, v1, LX/0Ea;->A04:Ljava/lang/Object;
+    0018..001a  monitor-enter
+    001a..001e  iget-boolean  v0, v1, LX/0Ea;->A02:Z
+    001e..0022  if-nez  v0, +0x5
+    0022..0026  sget-object  v0, LX/02X;->A00:Ljava/lang/Integer;
+    0026..0028  goto  +0x37
+    0028..002c  iget-object  v0, v1, LX/0Ea;->A03:LX/09z;
+    002c..0032  invoke-virtual  {v0, v8, v9}, LX/09z;->A05(J)Ljava/lang/Object;
+    0032..0034  move-result-object  v6
+    0034..0038  check-cast  v6, LX/Pmp;
+    0038..003c  if-nez  v6, +0x5
+    003c..0040  sget-object  v0, LX/02X;->A00:Ljava/lang/Integer;
+    0040..0042  goto  +0x2a
+    0042..0046  iget-wide  v4, v1, LX/0Ea;->A00:J
+    0046..004a  const-wide/16  v1, #0x0
+    004a..004e  cmp-long  v0, v4, v1
+    004e..0052  if-lez  v0, +0xb
+    0052..0056  iget-wide  v1, v6, LX/Pmp;->A01:J
+    0056..005a  cmp-long  v0, v1, v4
+    005a..005e  if-gez  v0, +0x5
+    005e..0062  sget-object  v0, LX/02X;->A00:Ljava/lang/Integer;
+    0062..0064  goto  +0x19
+    0064..0068  iget-object  v1, v6, LX/Pmp;->A02:Ljava/lang/Object;
+    0068..006a  const/4  v0, #0x0
+    006a..006e  if-eqz  v1, +0x3
+    006e..0070  const/4  v0, #0x1
+    0070..0074  if-eqz  v0, +0x10
+    0074..0078  const/16  v0, #0x30
+    0078..007a  ushr-long/2addr  v8, v0
+    007a..007e  const-wide/16  v0, #0x3f
+    007e..0080  and-long/2addr  v8, v0
+    0080..0082  long-to-int  v1, v8
+    0082..0086  iget  v0, v6, LX/Pmp;->A00:I
+    0086..008a  if-ne  v0, v1, +0x5
+    008a..008e  sget-object  v0, LX/02X;->A01:Ljava/lang/Integer;
+    008e..0090  goto  +0x3
+    0090..0094  sget-object  v0, LX/02X;->A0C:Ljava/lang/Integer;
+    0094..0096  monitor-exit
+    0096..0098  goto  +0x6
+    0098..009a  move-exception  v0
+    009a..009c  monitor-exit
+    009c..009e  throw  v0
+    009e..00a2  sget-object  v0, LX/02X;->A00:Ljava/lang/Integer;
+    00a2..00a6  sget-object  v1, LX/02X;->A01:Ljava/lang/Integer;
+    00a6..00aa  if-ne  v0, v1, +0xc
+    00aa..00ae  iget-boolean  v0, v7, LX/0Ek;->A02:Z
+    00ae..00b2  if-eqz  v0, +0x7
+    00b2..00b6  sget-object  v0, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->SILENT_PUSH_VALUE:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+    00b6..00bc  invoke-virtual  {v7, v0}, LX/0Ek;->A01(Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;)V
+    00bc..00be  return-object  v1
+    00be..00c2  sget-object  v1, LX/02X;->A0C:Ljava/lang/Integer;
+    00c2..00c6  if-ne  v0, v1, +0x9
+    00c6..00ca  iget-boolean  v0, v7, LX/0Ek;->A02:Z
+    00ca..00ce  if-eqz  v0, -0x7
+    00ce..00d2  sget-object  v0, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__FROM_SILENT_PUSH_FALLBACK:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+    00d2..00d4  goto  -0xe
+    00d4..00d8  sget-object  v1, LX/02X;->A00:Ljava/lang/Integer;
+    00d8..00da  return-object  v1
+    # exception table: 1 try range(s)
+    # catch <all> code_units 000d..004a -> 004c
+.end method

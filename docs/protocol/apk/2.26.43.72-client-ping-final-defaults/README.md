@@ -65,3 +65,8 @@ saved preferences, SDK readiness/selection, direct versus comparison precedence,
 first-access caching and owner lifetime must be respected. This research does not
 change Rust timer values or claim server acceptance, native effective timing,
 complete protocol parity or a guarantee against bans.
+
+The optional `--policy token-buckets` selection reuses this complete constructor
+model for865/909/996/997, retaining the original default client-ping output. Its
+[separate SDK/default evidence](../2.26.43.72-token-sdk-defaults/README.md) records
+those results and their effective-configuration limits.

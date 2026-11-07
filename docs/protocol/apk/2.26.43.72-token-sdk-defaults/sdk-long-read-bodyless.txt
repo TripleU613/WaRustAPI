@@ -1,0 +1,9 @@
+
+# class: LX/0A2;
+# extends: Ljava/lang/Object;
+
+.method public A06(JJJZ)  # .registers 0
+    # full signature: LX/0A2;->A06(JJZ)J
+    # (abstract / native)
+    # exception table: 0 try range(s)
+.end method

@@ -1,3 +1,8 @@
+**Token bucket defaults now have two complete static derivations.**
+SDK09n switch defaults and final legacy08Y map both resolve865/996=604800,
+909/997=4. Override/silent-push/source dispatch remains separate from defaults.
+[Retained methods, proofs and remaining boundary](docs/protocol/apk/2.26.43.72-token-sdk-defaults/README.md). No runtime policy change or live operation.
+
 **Trusted-contact token schedules now retain account ownership.**
 Recent old-account cache state can no longer silently suppress a new scheduling
 decision; preparation and successful timestamp updates also check the cache owner.

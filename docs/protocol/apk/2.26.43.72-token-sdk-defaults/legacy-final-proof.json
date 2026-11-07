@@ -1,0 +1,152 @@
+{
+  "source_sha256": {
+    "<init>": "009d605b135aedae3c507b09f88bafd2f847eab8bbb7db29f2785e6d014b138d",
+    "A0B": "105798ee6f76957aed0e6e515f9ac6ddbe778dcc3e48c549a2881662d54f3380",
+    "A0I": "7c5a0b305e3ec8dd63723621c46ddaafc894b16cb1ebf092f0051465d905ccf3",
+    "A0Q": "1aabc3db01f657440201c00ebedaebaaf17a235221b0ec3782cfb469d986fb8a"
+  },
+  "all_visited_puts": 5551,
+  "integer_puts": 4158,
+  "distinct_integer_keys": 3585,
+  "constructor_builder_calls": [
+    {
+      "method": "A08",
+      "pc": "00fc",
+      "builder": 0
+    },
+    {
+      "method": "A0H",
+      "pc": "0102",
+      "builder": 0
+    },
+    {
+      "method": "A0P",
+      "pc": "0108",
+      "builder": 0
+    },
+    {
+      "method": "A0R",
+      "pc": "010e",
+      "builder": 0
+    },
+    {
+      "method": "A0S",
+      "pc": "0114",
+      "builder": 0
+    },
+    {
+      "method": "A0T",
+      "pc": "011a",
+      "builder": 0
+    },
+    {
+      "method": "A0U",
+      "pc": "0120",
+      "builder": 0
+    },
+    {
+      "method": "A0V",
+      "pc": "0126",
+      "builder": 0
+    },
+    {
+      "method": "A0W",
+      "pc": "012c",
+      "builder": 0
+    },
+    {
+      "method": "A0X",
+      "pc": "0132",
+      "builder": 0
+    },
+    {
+      "method": "A0J",
+      "pc": "0138",
+      "builder": 0
+    },
+    {
+      "method": "A0K",
+      "pc": "013e",
+      "builder": 0
+    },
+    {
+      "method": "A0L",
+      "pc": "0144",
+      "builder": 0
+    },
+    {
+      "method": "A0M",
+      "pc": "014a",
+      "builder": 0
+    },
+    {
+      "method": "A0N",
+      "pc": "0150",
+      "builder": 0
+    },
+    {
+      "method": "A0O",
+      "pc": "0156",
+      "builder": 0
+    },
+    {
+      "method": "A0B",
+      "pc": "43b2",
+      "builder": 1
+    },
+    {
+      "method": "A0I",
+      "pc": "43b8",
+      "builder": 1
+    },
+    {
+      "method": "A0Q",
+      "pc": "43be",
+      "builder": 1
+    },
+    {
+      "method": "A0G",
+      "pc": "8af2",
+      "builder": 3
+    },
+    {
+      "method": "A07",
+      "pc": "99c4",
+      "builder": 0
+    }
+  ],
+  "selected": {
+    "865": [
+      {
+        "method": "A0Q",
+        "pc": "4f52",
+        "key": 865,
+        "value": 604800
+      }
+    ],
+    "909": [
+      {
+        "method": "A0Q",
+        "pc": "4f7a",
+        "key": 909,
+        "value": 4
+      }
+    ],
+    "996": [
+      {
+        "method": "A0Q",
+        "pc": "4f68",
+        "key": 996,
+        "value": 604800
+      }
+    ],
+    "997": [
+      {
+        "method": "A0Q",
+        "pc": "4f8c",
+        "key": 997,
+        "value": 4
+      }
+    ]
+  }
+}

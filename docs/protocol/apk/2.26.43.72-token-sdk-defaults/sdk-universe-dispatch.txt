@@ -1,0 +1,72 @@
+
+# class: LX/09u;
+# extends: Ljava/lang/Object;
+
+.method public Ark(JLJJ)  # .registers 19
+    # full signature: LX/09u;->Ark(LX/0Ek;JJ)J
+    0000..0004  move-wide/from16  v11, v17
+    0004..0006  move-object  v8, v14
+    0006..000c  invoke-direct  {v13}, LX/09u;->A03()Ljava/util/Set;
+    000c..000e  move-result-object  v6
+    000e..0014  invoke-interface  {v6}, Ljava/util/Set;->isEmpty()Z
+    0014..0016  move-result  v0
+    0016..001a  if-nez  v0, +0x9
+    001a..0020  invoke-static  {v14}, LX/0Ek;->A00(LX/0Ek;)LX/0Ek;
+    0020..0022  move-result-object  v8
+    0022..0024  const/4  v0, #0x1
+    0024..0028  iput-boolean  v0, v8, LX/0Ek;->A02:Z
+    0028..002a  move-wide  v9, v15
+    002a..0030  invoke-direct  {v13, v9, v10}, LX/09u;->A06(J)Z
+    0030..0032  move-result  v0
+    0032..0036  if-nez  v0, +0x2b
+    0036..003a  iget-boolean  v0, v8, LX/0Ek;->A02:Z
+    003a..003e  if-eqz  v0, +0x7
+    003e..0042  sget-object  v0, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__MISMATCH_UNIT_TYPE:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+    0042..0048  invoke-virtual  {v8, v0}, LX/0Ek;->A01(Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;)V
+    0048..004e  invoke-interface  {v6}, Ljava/util/Set;->isEmpty()Z
+    004e..0050  move-result  v0
+    0050..0054  if-nez  v0, +0x50
+    0054..0058  iget-object  v0, v13, LX/09u;->A0A:LX/09l;
+    0058..005e  invoke-virtual  {v0}, LX/09k;->syncFetchReason()Ljava/lang/String;
+    005e..0064  invoke-interface  {v6}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+    0064..0066  move-result-object  v1
+    0066..006c  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    006c..006e  move-result  v0
+    006e..0072  if-eqz  v0, +0x41
+    0072..0078  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0078..007c  const-string  v1, "getSamplingRate"
+    007c..0080  new-instance  v0, Ljava/lang/NullPointerException;
+    0080..0086  invoke-direct  {v0, v1}, Ljava/lang/NullPointerException;-><init>(Ljava/lang/String;)V
+    0086..0088  throw  v0
+    0088..008a  const/4  v5, #0x2
+    008a..008e  const/16  v0, #0x30
+    008e..0092  ushr-long  v1, v15, v0
+    0092..0096  const-wide/16  v3, #0x3f
+    0096..0098  and-long/2addr  v1, v3
+    0098..009a  long-to-int  v0, v1
+    009a..009e  if-eq  v5, v0, +0x10
+    009e..00a4  invoke-static  {v11, v12}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+    00a4..00a6  move-result-object  v0
+    00a6..00ac  invoke-direct  {v13, v9, v10, v0}, LX/09u;->A04(JLjava/lang/String;)V
+    00ac..00b0  iget-boolean  v0, v8, LX/0Ek;->A02:Z
+    00b0..00b4  if-eqz  v0, -0x34
+    00b4..00b8  sget-object  v0, Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;->DEFAULT__MISMATCH_PARAM_TYPE:Lcom/facebook/mobileconfig/factory/MobileConfigValueSource;
+    00b8..00ba  goto  -0x3b
+    00ba..00be  iget-boolean  v5, v8, LX/0Ek;->A01:Z
+    00be..00c2  const/16  v0, #0x20
+    00c2..00c6  ushr-long  v1, v15, v0
+    00c6..00cc  const-wide/32  v3, #0xffff
+    00cc..00ce  and-long/2addr  v1, v3
+    00ce..00d0  long-to-int  v0, v1
+    00d0..00d4  if-eqz  v5, +0xb
+    00d4..00da  invoke-virtual  {v13, v0}, LX/09u;->A08(I)LX/09t;
+    00da..00dc  move-result-object  v7
+    00dc..00e2  invoke-interface/range  {v7..v12}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->Ark(LX/0Ek;JJ)J
+    00e2..00e4  move-result-wide  v11
+    00e4..00e6  goto  -0x4e
+    00e6..00ec  invoke-virtual  {v13, v0}, LX/09u;->A07(I)LX/09t;
+    00ec..00ee  move-result-object  v7
+    00ee..00f0  goto  -0x9
+    00f0..00f2  return-wide  v11
+    # exception table: 0 try range(s)
+.end method

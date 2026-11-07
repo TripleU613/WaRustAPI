@@ -1,0 +1,38 @@
+{
+  "source_sha256": "6566da12fa8983d039c672171faf0f5550ce2eb83a6fec63a376e2023f5b19e3",
+  "switch_entries_checked": 2357,
+  "selected": {
+    "865": {
+      "specifier_hex": "0x8201a700000065",
+      "default_index": 131173,
+      "remainder": 1,
+      "switch_pc": "005a",
+      "literal_pc": "0356",
+      "value": 604800
+    },
+    "909": {
+      "specifier_hex": "0x8201bc0000006e",
+      "default_index": 131182,
+      "remainder": 2,
+      "switch_pc": "004e",
+      "literal_pc": "0510",
+      "value": 4
+    },
+    "996": {
+      "specifier_hex": "0x8201e30000007d",
+      "default_index": 131197,
+      "remainder": 1,
+      "switch_pc": "005a",
+      "literal_pc": "0356",
+      "value": 604800
+    },
+    "997": {
+      "specifier_hex": "0x8201e40000007e",
+      "default_index": 131198,
+      "remainder": 2,
+      "switch_pc": "004e",
+      "literal_pc": "0510",
+      "value": 4
+    }
+  }
+}

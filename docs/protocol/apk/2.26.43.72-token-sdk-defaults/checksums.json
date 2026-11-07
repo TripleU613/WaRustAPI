@@ -1,0 +1,46 @@
+{
+  "README.md": {
+    "bytes": 4738,
+    "sha256": "0a5c9766bb2948590ced4662fe1e0010b1fe13a7db8e59192cddc51e081d59d8"
+  },
+  "derive-sdk-defaults.py": {
+    "bytes": 2460,
+    "sha256": "6f6efde2dd8f46f6f8f3d14231d692a674d472993dc7d55c585e44ae709eb817"
+  },
+  "legacy-final-proof.json": {
+    "bytes": 2562,
+    "sha256": "96c9104b50c0277bccba875b9ce0e672a7c625e74f04bdb5284d05eb7a4f55a8"
+  },
+  "sdk-arl-overrides.txt": {
+    "bytes": 3968,
+    "sha256": "c4cade797a000363524c2f657c9c20e9dd18321bf0475713598c6d9ff822101b"
+  },
+  "sdk-default-proof.json": {
+    "bytes": 906,
+    "sha256": "7f32635ce089a86f9d9fb84727a40cf1e28e0dc3866de04a5947f38549e20bd1"
+  },
+  "sdk-generated-defaults.txt": {
+    "bytes": 55057,
+    "sha256": "6566da12fa8983d039c672171faf0f5550ce2eb83a6fec63a376e2023f5b19e3"
+  },
+  "sdk-long-read-bodyless.txt": {
+    "bytes": 207,
+    "sha256": "ff27af8e96411ba009bcbe093bc7661dc35227e46bf674e871fc82a9c8fa226f"
+  },
+  "sdk-silent-push-status.txt": {
+    "bytes": 3325,
+    "sha256": "300287bcc992dccca9a0dccb0927212377e2c7c315998314361c3d78c70a99bf"
+  },
+  "sdk-source-read-bodyless.txt": {
+    "bytes": 209,
+    "sha256": "8f47e7b52e52b43c615fbb4c0aeb6a41371ebe48ec34ffbd170c55e89296ea6f"
+  },
+  "sdk-unit-read.txt": {
+    "bytes": 3704,
+    "sha256": "50ea0f5a8867828a906c43c9fc14d701277e3640fc0c3008746a85ea217e8cb4"
+  },
+  "sdk-universe-dispatch.txt": {
+    "bytes": 3650,
+    "sha256": "5db69dbc0ef0a9f5ee66f8c21ddcee80cba3fe7f726c86b6f0a22a1b73ce0e86"
+  }
+}

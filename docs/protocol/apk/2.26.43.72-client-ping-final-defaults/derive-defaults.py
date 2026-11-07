@@ -14,7 +14,10 @@ group = parser.add_mutually_exclusive_group(required=True)
 group.add_argument("--apk", type=Path)
 group.add_argument("--exports-dir", type=Path)
 parser.add_argument("--xtask", type=Path, default=Path("target/debug/xtask"))
+parser.add_argument("--policy", choices=("client-ping", "token-buckets"), default="client-ping")
 args = parser.parse_args()
+if args.policy == "token-buckets":
+    TARGETS = (865, 909, 996, 997)
 if args.apk:
     digest = hashlib.sha256()
     with args.apk.open("rb") as apk:
@@ -116,7 +119,8 @@ if proof.builders!=5 or proof.target_builder!=1 or proof.field_builder!=1:
 if proof.puts!=5551: raise ValueError('put coverage changed')
 selected={str(k):[row for row in proof.events if row['key']==k] for k in TARGETS}
 if any(len(rows)!=1 for rows in selected.values()): raise ValueError('selected key is missing or overwritten')
-expected={15103:32000,15183:240000,15270:15000}
+expected = ({15103:32000,15183:240000,15270:15000} if args.policy == "client-ping"
+            else {865:604800,909:4,996:604800,997:4})
 if any(rows[0]['value']!=expected[int(k)] for k,rows in selected.items()): raise ValueError('default values changed')
 print(json.dumps({'source_sha256':{m:hashlib.sha256(s.encode()).hexdigest() for m,s in sources.items()},
                   'all_visited_puts':proof.puts,'integer_puts':len(proof.events),

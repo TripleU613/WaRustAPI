@@ -269,3 +269,13 @@ existing exclusion. Rust's PN/LID allowlist already excludes them; a regression
 proves no action/state mutation and retains PN/LID positive controls.
 [Current methods, conditional namespace table and mapping limits](apk/2.26.43.72-token-namespace-selection/README.md).
 No automatic alias merge/deletion or live account operation was introduced.
+
+## SDK and final legacy token defaults —2026-11-07
+
+**Confirmed static:** generated09n.A01 SDK switch values and complete08Y integer
+map construction independently resolve865/996=604800 and909/997=4. Declared Arl
+implementations lead through defaults, override/silent-push/source dispatch and
+bodyless value-reader boundaries. This closes selected-entry overwrite and
+SDK-default questions without decoding binary parameter assets. Effective instance,
+overrides and initialization still remain open; no Rust policy changes or live
+operation. [Methods, derivations and limits](apk/2.26.43.72-token-sdk-defaults/README.md).

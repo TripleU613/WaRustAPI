@@ -1,4 +1,11 @@
 {
+  "x-token-sdk-default-evidence": {
+    "x-cli": "existing xtask APK static exports and bounded proof script --policy token-buckets; no product command or HTTP route",
+    "x-transport": "research only; effective token scheduling/admission remains unported",
+    "x-live": false,
+    "description": "Pinned APK43.72 SDK09n defaults and final08Y integer map independently resolve865/996=604800 and909/997=4. Interface-aware declared Arl scan and complete09u/0A2 methods retain override, silent-push and source dispatch. Bodyless reads and effective instance/configuration lifecycle remain unresolved. Existing client-ping proof output and fault checks preserved. No runtime send policy or live operation changed.",
+    "evidence": "docs/protocol/apk/2.26.43.72-token-sdk-defaults/README.md"
+  },
   "x-token-schedule-account-ownership": {
     "x-cli": "existing normal ACK-triggered privacy-token actions; no new command or flag",
     "x-transport": "private SendState account authority checked before scheduling decisions, token preparation and success timestamp updates",
