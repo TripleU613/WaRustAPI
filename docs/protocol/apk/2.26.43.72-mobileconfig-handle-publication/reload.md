@@ -32,15 +32,15 @@ The mode test is `(word & ~1) == 2`. A false 0x8bfe0 result logs
 `TranslationTableParamsParserError` (**0x174b7**) with the above method name
 and `buildLatestConfigWithTranslationTable failed` (**0x1a90d**), then returns
 through cleanup. A true result also joins cleanup. The reload body does not
-call publication after either translation result; effects inside 0x8bfe0 remain
-separate. Only the clear-selected-bit branch explicitly invokes publication.
+call publication after either translation result; the [translation suffix](translation.md) now confirms its own internal
+publication after translator readiness. Only the clear-selected-bit branch explicitly invokes publication.
 
 The snapshot's status at output+0x10 (frame x29-0x38) is not read by this body.
 It uses the handle string and the separate selected integer (x29-0x18).
 Shared snapshot ownership is released at 0x83bc0. There is no mutex acquisition
 in this selected method body; caller synchronization remains unknown.
 
-**Unknown:** directory selection completeness, translation's full semantics,
+**Unknown:** directory selection completeness, translation's nested construction semantics,
 all callers, concrete logger effects and final application acceptance. This
 trace does not establish server-required telemetry or a Rust runtime correction.
 

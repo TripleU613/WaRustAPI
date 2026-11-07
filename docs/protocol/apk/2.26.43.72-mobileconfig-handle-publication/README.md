@@ -139,3 +139,7 @@ not consumed there; directory selection and final acceptance remain unknown.
 The [disk selector](selection.md) chooses the greatest qualifying signed numeric
 filename prefix, requiring an existence-like metadata counterpart check. Equal
 indexes retain iterator-first choice; body validity is not checked there.
+
+The [translation suffix](translation.md) independently replaces the shared
+reader and stores status 4/5 after translator readiness. Its return retains
+readiness rather than the later root probe; nested builder semantics remain open.

@@ -1,0 +1,69 @@
+{
+  "evidence_id": "ev_88c3cf55946cae9c39e2c764061c8972ba1e7569727d189176fa6ce89e79f146",
+  "subject": {
+    "name": "libmobileconfig-jni.so",
+    "digest": {
+      "sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so",
+    "format": "unknown",
+    "architecture": null
+  },
+  "provider": {
+    "id": "rizin",
+    "name": "Rizin",
+    "version": null
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.reverse-engineering.command-observation",
+  "operation": "execute_rizin_command",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so",
+    "command": "e scr.color=0; pd 39 @ 0x8c968",
+    "provider_executable": "rizin",
+    "command_arguments": [
+      "-N",
+      "-q",
+      "-c",
+      "e scr.color=0; pd 39 @ 0x8c968",
+      "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so"
+    ]
+  },
+  "raw_result": {
+    "stdout": "            0x0008c968      ldr   x0, [sp, 0x28]                       ; [0x28:4]=0xcfad8\n            0x0008c96c      bl    0xcb46c\n            0x0008c970      blr   x8\n            0x0008c974      mov   w22, w0\n        ,=< 0x0008c978      tbz   w0, 0, 0x8cae0\n        |   0x0008c97c      ldp   x25, x24, [sp, 0x28]\n        |   0x0008c980      ldr   x23, [sp, 0x38]                      ; [0x38:4]=0x40000a\n       ,==< 0x0008c984      cbz   x24, 0x8c994\n       ||   0x0008c988      add   x1, x24, 8\n       ||   0x0008c98c      mov   w0, 1\n       ||   0x0008c990      bl    0x4c570\n       `--> 0x0008c994      add   x0, x23, 0xa0\n        |   0x0008c998      mov   x1, x25\n        |   0x0008c99c      mov   x2, x24\n        |   0x0008c9a0      bl    0x75fc8\n        |   0x0008c9a4      mov   x0, x24\n        |   0x0008c9a8      bl    0x6f20c\n        |   0x0008c9ac      add   w8, w21, 1\n        |   0x0008c9b0      add   x0, x19, 0x34\n        |   0x0008c9b4      str   w8, [x19, 0x18]\n        |   0x0008c9b8      bl    method.std::__ndk1::mutex.lock\n        |   0x0008c9bc      ldr   x2, [sp, 0x40]                       ; segment.PHDR\n        |                                                              ; [0x40:4]=6\n        |   0x0008c9c0      add   x0, x19, 0x20\n        |   0x0008c9c4      mov   x1, x23\n        |   0x0008c9c8      bl    0x75fc8\n        |   0x0008c9cc      ldr   x0, [x19, 0x20]                      ; [0x20:4]=64 ; \"@\"\n       ,==< 0x0008c9d0      cbz   x0, 0x8c9ec\n       ||   0x0008c9d4      bl    0xcb43c\n       ||   0x0008c9d8      blr   x8\n       ||   0x0008c9dc      mov   w8, 4\n       ||   0x0008c9e0      tst   w0, 1\n       ||   0x0008c9e4      cinc  w8, w8, eq\n      ,===< 0x0008c9e8      b     0x8c9f0\n      |`--> 0x0008c9ec      mov   w8, 5\n      `---> 0x0008c9f0      ldr   x20, [sp, 8]                         ; [0x8:4]=0\n        |   0x0008c9f4      add   x0, x19, 0x34\n        |   0x0008c9f8      mov   w1, 1\n        |   0x0008c9fc      strb  w8, [x19, 0x30]\n        |   0x0008ca00      bl    0x5e4a8\n",
+    "stderr": "ERROR: Cannot determine entrypoint, using 0x0004c460.\n",
+    "exit_code": 0,
+    "signal": null,
+    "output_truncated": false,
+    "completion_status": "complete",
+    "artifact_sha256_after": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+    "artifact_changed": false
+  },
+  "normalized_result": {
+    "stdout": "            0x0008c968      ldr   x0, [sp, 0x28]                       ; [0x28:4]=0xcfad8\n            0x0008c96c      bl    0xcb46c\n            0x0008c970      blr   x8\n            0x0008c974      mov   w22, w0\n        ,=< 0x0008c978      tbz   w0, 0, 0x8cae0\n        |   0x0008c97c      ldp   x25, x24, [sp, 0x28]\n        |   0x0008c980      ldr   x23, [sp, 0x38]                      ; [0x38:4]=0x40000a\n       ,==< 0x0008c984      cbz   x24, 0x8c994\n       ||   0x0008c988      add   x1, x24, 8\n       ||   0x0008c98c      mov   w0, 1\n       ||   0x0008c990      bl    0x4c570\n       `--> 0x0008c994      add   x0, x23, 0xa0\n        |   0x0008c998      mov   x1, x25\n        |   0x0008c99c      mov   x2, x24\n        |   0x0008c9a0      bl    0x75fc8\n        |   0x0008c9a4      mov   x0, x24\n        |   0x0008c9a8      bl    0x6f20c\n        |   0x0008c9ac      add   w8, w21, 1\n        |   0x0008c9b0      add   x0, x19, 0x34\n        |   0x0008c9b4      str   w8, [x19, 0x18]\n        |   0x0008c9b8      bl    method.std::__ndk1::mutex.lock\n        |   0x0008c9bc      ldr   x2, [sp, 0x40]                       ; segment.PHDR\n        |                                                              ; [0x40:4]=6\n        |   0x0008c9c0      add   x0, x19, 0x20\n        |   0x0008c9c4      mov   x1, x23\n        |   0x0008c9c8      bl    0x75fc8\n        |   0x0008c9cc      ldr   x0, [x19, 0x20]                      ; [0x20:4]=64 ; \"@\"\n       ,==< 0x0008c9d0      cbz   x0, 0x8c9ec\n       ||   0x0008c9d4      bl    0xcb43c\n       ||   0x0008c9d8      blr   x8\n       ||   0x0008c9dc      mov   w8, 4\n       ||   0x0008c9e0      tst   w0, 1\n       ||   0x0008c9e4      cinc  w8, w8, eq\n      ,===< 0x0008c9e8      b     0x8c9f0\n      |`--> 0x0008c9ec      mov   w8, 5\n      `---> 0x0008c9f0      ldr   x20, [sp, 8]                         ; [0x8:4]=0\n        |   0x0008c9f4      add   x0, x19, 0x34\n        |   0x0008c9f8      mov   w1, 1\n        |   0x0008c9fc      strb  w8, [x19, 0x30]\n        |   0x0008ca00      bl    0x5e4a8\n",
+    "stderr": "ERROR: Cannot determine entrypoint, using 0x0004c460.\n",
+    "exit_code": 0,
+    "signal": null,
+    "output_truncated": false,
+    "completion_status": "complete",
+    "artifact_sha256_after": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+    "artifact_changed": false
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "The executable version and supported formats are reported as unknown because no reliable version probe was performed.",
+    "A non-zero process exit is preserved as an observed command result.",
+    "Rizin commands and retained plugins may read files or access network resources outside the selected artifact; those external inputs are not bound to Evidence.",
+    "When both are available, pre-run and post-run digests detect artifact changes across the provider call but cannot prove the exact bytes consumed during the call."
+  ],
+  "relationship_coverage": null,
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so"
+    }
+  ],
+  "evidence_links": []
+}

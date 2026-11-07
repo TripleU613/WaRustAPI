@@ -10516,3 +10516,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   by parsed numeric prefix, requires prefix-derived `.meta` existence and keeps
   the first equal index encountered. This does not establish body validity or
   timestamp order. See [selection evidence](docs/protocol/apk/2.26.43.72-mobileconfig-handle-publication/selection.md).
+
+- Confirmed selected APK 2.26.43.72 translation helper has its own shared
+  publication suffix after mode-specific translator readiness; stores root-probe
+  status 4/5 while returning retained readiness. Nested mapping construction and
+  durable acceptance remain unknown. See [translation evidence](docs/protocol/apk/2.26.43.72-mobileconfig-handle-publication/translation.md).
