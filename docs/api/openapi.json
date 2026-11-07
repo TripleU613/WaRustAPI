@@ -1,4 +1,11 @@
 {
+  "x-media-download-http-static-boundary": {
+    "x-cli": "existing ordinary and view-once media retrieval; no new command",
+    "x-transport": "research-only pinned shared download header/status comparison; Rust remains full-body200-only",
+    "x-live": false,
+    "description": "Pinned0lO.A01 explicitly uses identity encoding; Range omitted for start0/end-1. Extra telemetry headers are conditional and native timeouts have different semantics. Shared leaves accept200/206 and specially inspect416; four direct DEX callers carry range/resume/length/policy state. Supported encrypted operation binding remains unknown, so no status relaxation, retry, range or header fabrication is introduced. Anchor counts are bounded literal searches, not request coverage.",
+    "evidence": "docs/protocol/apk/2.26.43.72-media-download-http/README.md"
+  },
   "x-ordinary-download-source-binding": {
     "x-cli": "existing ordinary media list/open/save/reference paths; no new command or flag",
     "x-transport": "local exact inbox source checks at GET reservation, successful ciphertext adoption and plaintext handoff",

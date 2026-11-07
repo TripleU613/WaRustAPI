@@ -1,0 +1,170 @@
+["Accept-Encoding"]  (11 reference(s))
+  classes.dex  LX/0lO;->A01(LLLLJJ)
+    dex byte offset: 0x6d67c2
+  classes.dex  LX/0lO;->A01(LLLLJJ)
+    dex byte offset: 0x6d6d5a
+  classes.dex  LX/11q;->A09(LLL)
+    dex byte offset: 0x7c3118
+  classes.dex  LX/12F;->A01(LLLLLLLLLLLLIZZZZZZZ)
+    dex byte offset: 0x7cb7f4
+  classes10.dex  LX/JAS;->A04(ILLI)
+    dex byte offset: 0x434f3c
+  classes10.dex  LX/JAT;->A04(ILLI)
+    dex byte offset: 0x43565c
+  classes10.dex  LX/JAU;->A0E(LLLLLLLLLLLIZZZZZ)
+    dex byte offset: 0x435fb2
+  classes10.dex  LX/KWI;->invoke(L)
+    dex byte offset: 0x652c1e
+  classes12.dex  LX/Nng;->CPv(JL)
+    dex byte offset: 0x3bc026
+  classes12.dex  LX/QmS;->run(V)
+    dex byte offset: 0x74e940
+  classes12.dex  LX/R5G;->A09(LLL)
+    dex byte offset: 0x7b5430
+["GET"]  (73 reference(s))
+  classes.dex  LX/0lO;->A01(LLLLJJ)
+    dex byte offset: 0x6d6788
+  classes.dex  Lcom/whatsapp/infra/tee/connection/TeeTigonHttpClient;->A02(LLLL)
+    dex byte offset: 0x854c00
+  classes10.dex  LX/JAU;->A0C(LLLLLL)
+    dex byte offset: 0x435e4a
+  classes10.dex  LX/JAU;->A0D(LLLLLL)
+    dex byte offset: 0x435edc
+  classes10.dex  LX/JAU;->A0E(LLLLLLLLLLLIZZZZZ)
+    dex byte offset: 0x436014
+  classes10.dex  LX/K03;->A00(LLLLLLLLZ)
+    dex byte offset: 0x52263e
+  classes10.dex  LX/KM1;->A02(LLLLLLIZ)
+    dex byte offset: 0x5e1504
+  classes10.dex  LX/KVK;->run(V)
+    dex byte offset: 0x63e180
+  classes11.dex  LX/L5U;->shouldInterceptRequest(LLL)
+    dex byte offset: 0x3a8ee8
+  classes11.dex  LX/L5U;->shouldInterceptRequest(LLL)
+    dex byte offset: 0x3aa714
+  classes11.dex  LX/L5U;->shouldInterceptRequest(LLL)
+    dex byte offset: 0x3aa7ea
+  classes11.dex  LX/L5U;->shouldInterceptRequest(LLL)
+    dex byte offset: 0x3aab68
+  classes11.dex  LX/LPC;-><clinit>(V)
+    dex byte offset: 0x3023cc
+  classes11.dex  LX/LQS;-><clinit>(V)
+    dex byte offset: 0x304234
+  classes11.dex  LX/LU1;-><clinit>(V)
+    dex byte offset: 0x3193e8
+  classes11.dex  Lcom/whatsapp/hatch/datacontrols/HatchDataControlsRepository;->A02(LLJ)
+    dex byte offset: 0x528074
+  classes11.dex  Lcom/whatsapp/teecommon/mistore/IplsdHandshakeExecutor;->A05(LLLLLL)
+    dex byte offset: 0x57eacc
+  classes11.dex  LX/Mpd;->ASB(L)
+    dex byte offset: 0x68c406
+  classes11.dex  LX/Mpd;->AXm(LLL)
+    dex byte offset: 0x68c652
+  classes11.dex  LX/Mpd;->Baj(LLLLI)
+    dex byte offset: 0x68c992
+  classes11.dex  LX/Mpd;->Cbm(ZLLLLLL)
+    dex byte offset: 0x68d7b6
+  classes12.dex  LX/Nng;->CPv(JL)
+    dex byte offset: 0x3bc05c
+  classes12.dex  LX/PLI;->A00(LL)
+    dex byte offset: 0x4cd672
+  classes12.dex  LX/PiK;->toString(L)
+    dex byte offset: 0x538eda
+  classes12.dex  LX/PoL;->A07(VLLLL)
+    dex byte offset: 0x58b8e4
+  classes12.dex  LX/PoL;->A08(VLLLLLL)
+    dex byte offset: 0x58bb92
+  classes12.dex  LX/QqB;->call(L)
+    dex byte offset: 0x76a036
+  classes12.dex  LX/R5G;->build(L)
+    dex byte offset: 0x7b5694
+  classes12.dex  LX/R5I;->A09(LL)
+    dex byte offset: 0x7b5e02
+  classes13.dex  Lcom/whatsapp/infra/tee/nodetoken/NodeTokenManager;->A00(LLLLLLLL)
+    dex byte offset: 0x4d33d0
+  classes13.dex  Lcom/whatsapp/bot/infra/vmmedia/HatchWorkspaceMediaApi;->A02(LLLIJ)
+    dex byte offset: 0x4f8ae8
+  classes13.dex  Lcom/whatsapp/bot/infra/vmmedia/HatchWorkspaceMediaApi;->A05(LLLJ)
+    dex byte offset: 0x4f904e
+  classes13.dex  Lcom/whatsapp/hatch/ideas/data/HatchIdeasVmClient;->A03(LLL)
+    dex byte offset: 0x50a020
+  classes13.dex  Lcom/whatsapp/hatch/onboarding/HatchWaffleOnboarding;->A00(LLLLLL)
+    dex byte offset: 0x5362ae
+  classes13.dex  Lcom/whatsapp/bot/agentspaces/actions/HatchSpaceActions;->ARf(LLL)
+    dex byte offset: 0x5d5086
+  classes13.dex  Lcom/whatsapp/bot/agentspaces/actions/HatchSpaceActions;->ClF(LLL)
+    dex byte offset: 0x5d53be
+  classes13.dex  Lcom/whatsapp/bot/agentspaces/noisetransport/NoiseHatchVmTransport;->CVA(LLLLI)
+    dex byte offset: 0x5d5a28
+  classes13.dex  Lcom/whatsapp/bot/agentspaces/actions/HatchSpaceActions$publish$result$1$poll$1;->invokeSuspend(LL)
+    dex byte offset: 0x683bf4
+  classes3.dex  LX/2ga;-><init>(V)
+    dex byte offset: 0x2562dc
+  classes3.dex  Lcom/whatsapp/bot/agentspaces/host/HatchSpaceTunnel;->A03(LL)
+    dex byte offset: 0x31904c
+  classes3.dex  LX/3jI;->invokeSuspend(LL)
+    dex byte offset: 0x410c10
+  classes3.dex  LX/3jI;->invokeSuspend(LL)
+    dex byte offset: 0x410cb8
+  classes3.dex  LX/3jI;->invokeSuspend(LL)
+    dex byte offset: 0x410cee
+  classes4.dex  LX/4Nj;->A02(LLL)
+    dex byte offset: 0x446d60
+  classes4.dex  LX/4Rw;->A04(VLLLL)
+    dex byte offset: 0x45b0a4
+  classes4.dex  Lcom/whatsapp/hatch/connectors/HatchConnectorPermissionsRequester$Companion;->A00(LLLL)
+    dex byte offset: 0x4e7506
+  classes4.dex  Lcom/whatsapp/hatch/connectors/HatchBoundChatRequester;->A00(LL)
+    dex byte offset: 0x4e97fc
+  classes4.dex  Lcom/whatsapp/hatch/connectors/HatchConnectorAccountsRequester;->A00(LLL)
+    dex byte offset: 0x4ebf9e
+  classes4.dex  Lcom/whatsapp/hatch/connectors/HatchFoaAccountsRequester;->A00(LLL)
+    dex byte offset: 0x4ec99c
+  classes4.dex  Lcom/whatsapp/hatch/connectors/HatchConnectInfoRequester;->A00(LLL)
+    dex byte offset: 0x4eefc4
+  classes4.dex  LX/5ZV;-><clinit>(V)
+    dex byte offset: 0x34779e
+  classes4.dex  LX/5ZW;-><clinit>(V)
+    dex byte offset: 0x3477ce
+  classes4.dex  Lcom/whatsapp/hatch/connectors/HatchConnectorsListRequester;->A01(LL)
+    dex byte offset: 0x5338b8
+  classes4.dex  Lcom/whatsapp/hatch/permissions/HatchPermissionsRepository;->A01(LLJ)
+    dex byte offset: 0x5382bc
+  classes4.dex  Lcom/whatsapp/bot/agentactivity/feed/HatchGoalStepsApi;->A00(LLLLLIJ)
+    dex byte offset: 0x53b254
+  classes4.dex  Lcom/whatsapp/bot/agentapprovals/HatchApprovalHistoryApi;->A02(LLLJ)
+    dex byte offset: 0x561cac
+  classes4.dex  Lcom/whatsapp/bot/agentactivity/feed/HatchActivityRefresher;->A00(LLLLJ)
+    dex byte offset: 0x57e6fe
+  classes4.dex  Lcom/whatsapp/bot/agentgoals/HatchGoalsApi;->A01(LLLLLJ)
+    dex byte offset: 0x58a388
+  classes4.dex  Lcom/whatsapp/bot/securecredentials/data/SecureCredentialVault;->A05(LLLL)
+    dex byte offset: 0x5b8aec
+  classes4.dex  Lcom/whatsapp/bot/securecredentials/data/SecureCredentialVault;->A06(LLLI)
+    dex byte offset: 0x5b8fa8
+  classes4.dex  Lcom/whatsapp/bot/securecredentials/data/SecureCredentialVault;->A0G(LLL)
+    dex byte offset: 0x5ba274
+  classes4.dex  LX/62i;->A0I(LLLI)
+    dex byte offset: 0x6380d2
+  classes4.dex  Lcom/whatsapp/bot/agentbrowser/impl/BrowserTaskSubscriptionTransportImpl$loadPreview$2;->invokeSuspend(LL)
+    dex byte offset: 0x6f40e4
+  classes4.dex  LX/6Rc;->invokeSuspend(LL)
+    dex byte offset: 0x701800
+  classes4.dex  LX/6Rh;->invokeSuspend(LL)
+    dex byte offset: 0x703a42
+  classes4.dex  LX/6Rh;->invokeSuspend(LL)
+    dex byte offset: 0x703ae8
+  classes6.dex  LX/A7N;->A04(LL)
+    dex byte offset: 0x461218
+  classes6.dex  LX/ABQ;->A06(LL)
+    dex byte offset: 0x491b04
+  classes6.dex  LX/AKO;->CdP(VLLLLLLL)
+    dex byte offset: 0x523d48
+  classes9.dex  LX/Gdm;-><clinit>(V)
+    dex byte offset: 0x319c40
+  classes9.dex  Lcom/whatsapp/hatch/ideas/data/HatchIdeasApiImpl;->A01(LLLJ)
+    dex byte offset: 0x5ad806
+  classes9.dex  Lcom/whatsapp/hatch/ideas/data/HatchIdeasApiImpl;->A02(LLJ)
+    dex byte offset: 0x5ad9d0
+  classes9.dex  LX/Hce;->A02(LLLL)
+    dex byte offset: 0x600876

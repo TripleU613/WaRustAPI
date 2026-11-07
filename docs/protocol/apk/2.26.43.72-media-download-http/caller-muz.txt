@@ -1,0 +1,37 @@
+
+# class: LX/MuZ;
+# extends: Ljava/lang/Object;
+
+.method private A03(LLJJ)  # .registers 14
+    # full signature: LX/MuZ;->A03(Ljava/net/URL;JJ)LX/1gY;
+    0000..0004  iget-object  v0, v8, LX/MuZ;->A05:LX/MC6;
+    0004..0008  iget-wide  v3, v0, LX/MC6;->A00:J
+    0008..000c  const-wide/16  v1, #0x0
+    000c..0010  cmp-long  v0, v3, v1
+    0010..0016  invoke-static  {v0}, LX/2L9;->A1N(I)Z
+    0016..0018  move-result  v0
+    0018..001c  iput-boolean  v0, v8, LX/MuZ;->A08:Z
+    001c..0020  iget-object  v0, v8, LX/MuZ;->A0l:LX/00x;
+    0020..0026  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0026..0028  move-result-object  v0
+    0028..002c  check-cast  v0, LX/0lO;
+    002c..0030  iget-object  v1, v8, LX/MuZ;->A0A:LX/M3d;
+    0030..0034  iget-object  v2, v8, LX/MuZ;->A0B:LX/K1R;
+    0034..0036  move-object  v3, v9
+    0036..0038  move-wide  v4, v10
+    0038..003a  move-wide  v6, v12
+    003a..0040  invoke-virtual/range  {v0..v7}, LX/0lO;->A01(LX/M3d;LX/K1R;Ljava/net/URL;JJ)LX/1gY;
+    0040..0042  move-result-object  v3
+    0042..0046  iget-object  v0, v8, LX/MuZ;->A01:LX/LvQ;
+    0046..004a  if-nez  v0, +0x13
+    004a..004e  const-string  v0, "X-WA-Metadata"
+    004e..0054  invoke-interface  {v3, v0}, LX/1gY;->BOE(Ljava/lang/String;)Ljava/lang/String;
+    0054..0056  move-result-object  v2
+    0056..005c  invoke-interface  {v3}, LX/1gY;->BRy()Ljava/lang/Boolean;
+    005c..005e  move-result-object  v1
+    005e..0062  new-instance  v0, LX/LvQ;
+    0062..0068  invoke-direct  {v0, v2, v1}, LX/LvQ;-><init>(Ljava/lang/String;Ljava/lang/Boolean;)V
+    0068..006c  iput-object  v0, v8, LX/MuZ;->A01:LX/LvQ;
+    006c..006e  return-object  v3
+    # exception table: 0 try range(s)
+.end method

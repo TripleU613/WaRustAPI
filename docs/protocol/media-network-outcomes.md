@@ -1358,3 +1358,19 @@ wall-clock expiry crossing inside a transaction, historical cache provenance,
 and mutation after the final eligibility snapshot or between return and external
 file/viewer use. This check does not establish atomic ownership of an external
 consumer or a zero-restriction guarantee.
+
+## Pinned shared download HTTP leaves (2026-11-06)
+
+**Confirmed selected static / research only:** `0lO.A01` contains both Tigon and
+HttpURLConnection download branches. Both explicitly set identity encoding and
+omit Range for start0/end-1. Additional headers are conditional; native transport
+connect/idle/read/request timeout meanings differ from Rust's configurable total
+timeout. No mandatory missing telemetry header is established.
+
+Both leaves accept200/206 and specially inspect416 Content-Range. Rust's current
+non200 refusal policy is a confirmed leaf-policy difference, with supported
+operation impact still unknown: the four direct DEX callers carry range/resume,
+length and policy state. No status relaxation, resume, automatic retry, guessed
+header or live operation was added. Full retained methods, exact anchor/caller
+censuses, byte PCs, reproduction, checksums and untraced boundaries are in the
+[download HTTP evidence](apk/2.26.43.72-media-download-http/README.md).

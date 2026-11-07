@@ -1,0 +1,304 @@
+
+# class: LX/JAU;
+# extends: LX/12E;
+
+.method public <init>(V)  # .registers 2
+    # full signature: LX/JAU;-><init>()V
+    0000..0006  invoke-direct  {v1}, LX/12E;-><init>()V
+    0006..000a  const/16  v0, #0xfe0
+    000a..0010  invoke-static  {v0}, LX/05W;->A00(I)LX/05a;
+    0010..0012  move-result-object  v0
+    0012..0016  iput-object  v0, v1, LX/JAU;->A00:LX/05a;
+    0016..001a  const/16  v0, #0x22
+    001a..0020  invoke-static  {v1, v0}, LX/KWt;->A01(Ljava/lang/Object;I)LX/00q;
+    0020..0022  move-result-object  v0
+    0022..0026  iput-object  v0, v1, LX/JAU;->A01:LX/00p;
+    0026..0028  return-void
+    # exception table: 0 try range(s)
+.end method
+
+.method private A01(LLL)  # .registers 8
+    # full signature: LX/JAU;->A01(Lcom/facebook/tigon/iface/TigonRequestBuilder;LX/IxI;)Lcom/crossapp/tigonhttp/TigonResult;
+    0000..0004  iget-object  v0, v5, LX/JAU;->A01:LX/00p;
+    0004..000a  invoke-static  {v0}, LX/2L7;->A1J(LX/00p;)Ljava/lang/Object;
+    000a..000c  move-result-object  v4
+    000c..0010  check-cast  v4, LX/0eA;
+    0010..0016  invoke-virtual  {v6}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->build()Lcom/facebook/tigon/iface/TigonRequest;
+    0016..0018  move-result-object  v3
+    0018..001a  const/4  v2, #0x0
+    001a..001c  const/4  v1, #0x1
+    001c..0020  sget-object  v0, LX/0eA;->A07:LX/0BD;
+    0020..0026  invoke-virtual  {v4, v7, v2, v3, v1}, LX/0eA;->A01(Lcom/facebook/tigon/TigonBodyProvider;Lcom/facebook/tigon/TigonCallbacks;Lcom/facebook/tigon/iface/TigonRequest;Z)Lcom/crossapp/tigonhttp/TigonResult;
+    0026..0028  move-result-object  v0
+    0028..002a  return-object  v0
+    002a..002c  move-exception  v2
+    002c..0032  invoke-static  {}, LX/DBd;->A1N()V
+    0032..0036  const-string  v1, "Tigon sendRequestSync interrupted"
+    0036..003a  new-instance  v0, Ljava/io/InterruptedIOException;
+    003a..0040  invoke-direct  {v0, v1}, Ljava/io/InterruptedIOException;-><init>(Ljava/lang/String;)V
+    0040..0046  invoke-virtual  {v0, v2}, Ljava/lang/Throwable;->initCause(Ljava/lang/Throwable;)Ljava/lang/Throwable;
+    0046..0048  throw  v0
+    # exception table: 1 try range(s)
+    # catch Ljava/lang/InterruptedException; code_units 0000..0015 -> 0015
+.end method
+
+.method private A02(LLLLLZ)  # .registers 11
+    # full signature: LX/JAU;->A02(LX/K1R;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0000..0004  new-instance  v2, Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0004..000a  invoke-direct  {v2, v9, v7}, Lcom/facebook/tigon/iface/TigonRequestBuilder;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    000a..000e  const-wide/16  v0, #0x3a98
+    000e..0012  iput-wide  v0, v2, Lcom/facebook/tigon/iface/TigonRequestBuilder;->connectionTimeoutMS:J
+    0012..0016  const-wide/16  v0, #0x7530
+    0016..001a  iput-wide  v0, v2, Lcom/facebook/tigon/iface/TigonRequestBuilder;->idleTimeoutMS:J
+    001a..001e  iget-object  v0, v5, LX/12E;->A00:LX/05a;
+    001e..0022  iget-object  v4, v0, LX/05a;->A00:LX/00x;
+    0022..0028  invoke-static  {v4}, LX/2L6;->A0d(LX/00x;)LX/00E;
+    0028..002a  move-result-object  v1
+    002a..0030  const  v0, #0x9625
+    0030..0036  invoke-virtual  {v1, v0}, LX/00E;->A0a(I)I
+    0036..0038  move-result  v0
+    0038..003c  if-lez  v0, +0x6
+    003c..003e  int-to-long  v0, v0
+    003e..0044  invoke-virtual  {v2, v0, v1}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->setRequestTimeoutMS(J)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0044..0048  iput-boolean  v10, v2, Lcom/facebook/tigon/iface/TigonRequestBuilder;->retryable:Z
+    0048..004c  if-nez  v10, +0x12
+    004c..0050  new-instance  v3, Lcom/facebook/tigon/iface/TigonPropertyContainer$Group;
+    0050..0056  invoke-direct  {v3}, Lcom/facebook/tigon/iface/TigonPropertyContainer$Group;-><init>()V
+    0056..005a  sget-object  v1, LX/JY5;->A00:LX/1FK;
+    005a..005c  const/4  v0, #0x1
+    005c..0062  invoke-virtual  {v3, v1, v0}, Lcom/facebook/tigon/iface/TigonPropertyContainer$Group;->setProperty(LX/1FK;Z)V
+    0062..0066  sget-object  v0, LX/1FJ;->A0A:LX/1FK;
+    0066..006c  invoke-virtual  {v2, v0, v3}, Lcom/facebook/tigon/iface/TigonPropertyContainer;->setPropertyGroup(LX/1FK;Lcom/facebook/tigon/iface/TigonPropertyContainer$Group;)V
+    006c..0072  invoke-static  {v4}, LX/2L6;->A0d(LX/00x;)LX/00E;
+    0072..0074  move-result-object  v1
+    0074..007a  const  v0, #0x945e
+    007a..0080  invoke-virtual  {v1, v0}, LX/00E;->A14(I)Z
+    0080..0082  move-result  v0
+    0082..0086  if-eqz  v0, +0x8
+    0086..008a  sget-object  v1, LX/1FJ;->A07:LX/1FK;
+    008a..008c  const/4  v0, #0x1
+    008c..0092  invoke-virtual  {v2, v1, v0}, Lcom/facebook/tigon/iface/TigonPropertyContainer;->setProperty(LX/1FK;Z)V
+    0092..0096  if-nez  v6, +0x18
+    0096..009c  invoke-virtual  {v5}, LX/12E;->A0B()LX/K1R;
+    009c..009e  move-result-object  v6
+    009e..00a2  if-nez  v6, +0x12
+    00a2..00a6  const-string  v1, ""
+    00a6..00ac  invoke-virtual  {v8}, Ljava/lang/String;->length()I
+    00ac..00ae  move-result  v0
+    00ae..00b2  if-nez  v0, +0x4
+    00b2..00b6  const-string  v8, "api"
+    00b6..00ba  const-string  v0, "TigonWaHttpClient"
+    00ba..00c0  invoke-virtual  {v2, v8, v1, v0}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->setFriendlyNameAndTags(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    00c0..00c2  return-object  v2
+    00c2..00c8  invoke-virtual  {v6}, LX/K1R;->A02()LX/1FF;
+    00c8..00ca  move-result-object  v0
+    00ca..00d0  invoke-virtual  {v2, v0}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->setRequestCategory(LX/1FF;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    00d0..00d6  invoke-virtual  {v6}, LX/K1R;->A03()LX/1FH;
+    00d6..00d8  move-result-object  v0
+    00d8..00de  invoke-virtual  {v2, v0}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->setPurpose(LX/1FH;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    00de..00e2  sget-object  v1, LX/1FJ;->A02:LX/1FK;
+    00e2..00e4  const/4  v0, #0x0
+    00e4..00ea  invoke-virtual  {v2, v1, v0}, Lcom/facebook/tigon/iface/TigonPropertyContainer;->setProperty(LX/1FK;Z)V
+    00ea..00ee  sget-object  v1, LX/1FJ;->A0E:LX/1FK;
+    00ee..00f2  iget-object  v0, v6, LX/K1R;->A04:Ljava/lang/String;
+    00f2..00f8  invoke-virtual  {v2, v1, v0}, Lcom/facebook/tigon/iface/TigonPropertyContainer;->setProperty(LX/1FK;Ljava/lang/String;)V
+    00f8..00fe  invoke-virtual  {v6}, LX/K1R;->A05()Lorg/json/JSONObject;
+    00fe..0100  move-result-object  v0
+    0100..0106  invoke-static  {v0}, LX/2L7;->A1L(Ljava/lang/Object;)Ljava/lang/String;
+    0106..0108  move-result-object  v1
+    0108..010a  goto  -0x31
+    # exception table: 0 try range(s)
+.end method
+
+.method public A03(VL)  # .registers 3
+    # full signature: LX/JAU;->A03(Lcom/facebook/tigon/TigonError;)V
+    0000..0004  iget-object  v1, v2, Lcom/facebook/tigon/TigonError;->A02:Ljava/lang/String;
+    0004..0008  const-string  v0, "WATigonBodyProvider"
+    0008..000e  invoke-static  {v1, v0}, LX/00l;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+    000e..0010  move-result  v0
+    0010..0014  if-eqz  v0, +0x9
+    0014..0018  sget-object  v0, Lcom/facebook/tigon/TigonXplatBodyProvider;->$redex_init_class:Lcom/facebook/tigon/TigonXplatBodyProvider;
+    0018..001e  invoke-static  {v2}, LX/JWK;->A00(Lcom/facebook/tigon/TigonError;)V
+    001e..0020  const/4  v0, #0x0
+    0020..0022  throw  v0
+    0022..0026  sget-object  v0, LX/0eA;->A07:LX/0BD;
+    0026..002c  invoke-static  {v2}, LX/0eB;->A02(Lcom/facebook/tigon/TigonError;)V
+    002c..002e  goto  -0x7
+    # exception table: 0 try range(s)
+.end method
+
+.method public A0C(LLLLLL)  # .registers 16
+    # full signature: LX/JAU;->A0C(Landroid/util/Pair;LX/0lS;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)LX/1gY;
+    0000..0002  const/4  v9, #0x1
+    0002..0008  invoke-static  {v13, v9}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-static  {v13}, Landroid/net/Uri;->parse(Ljava/lang/String;)Landroid/net/Uri;
+    000e..0010  move-result-object  v0
+    0010..0016  invoke-static  {v0}, LX/2L7;->A1L(Ljava/lang/Object;)Ljava/lang/String;
+    0016..0018  move-result-object  v6
+    0018..001e  invoke-static  {v6}, LX/IWS;->A19(Ljava/lang/String;)Ljava/net/URL;
+    001e..0020  move-result-object  v3
+    0020..0022  const/4  v5, #0x0
+    0022..0026  const-string  v8, "GET"
+    0026..0028  move-object  v4, v10
+    0028..002a  move-object  v7, v15
+    002a..0030  invoke-direct/range  {v4..v9}, LX/JAU;->A02(LX/K1R;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0030..0032  move-result-object  v2
+    0032..0036  if-eqz  v14, +0x7
+    0036..003a  const-string  v0, "If-None-Match"
+    003a..0040  invoke-virtual  {v2, v0, v14}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->addHeader(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0040..0044  if-eqz  v11, +0xb
+    0044..0048  const-string  v1, "Range"
+    0048..004e  invoke-static  {v11}, LX/12E;->A00(Landroid/util/Pair;)Ljava/lang/String;
+    004e..0050  move-result-object  v0
+    0050..0056  invoke-virtual  {v2, v1, v0}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->addHeader(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0056..005a  iget-object  v0, v10, LX/12E;->A02:LX/0lR;
+    005a..0060  invoke-virtual  {v0}, LX/0lR;->A02()Ljava/lang/String;
+    0060..0062  move-result-object  v1
+    0062..0068  invoke-static  {v1}, LX/00l;->A05(Ljava/lang/Object;)V
+    0068..006c  const-string  v0, "User-Agent"
+    006c..0072  invoke-virtual  {v2, v0, v1}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->addHeader(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0072..0078  invoke-direct  {v10, v2, v5}, LX/JAU;->A01(Lcom/facebook/tigon/iface/TigonRequestBuilder;LX/IxI;)Lcom/crossapp/tigonhttp/TigonResult;
+    0078..007a  move-result-object  v2
+    007a..007e  iget-object  v0, v2, Lcom/crossapp/tigonhttp/TigonResult;->error:Lcom/facebook/tigon/TigonError;
+    007e..0082  if-nez  v0, +0x9
+    0082..0084  const/4  v1, #0x0
+    0084..0088  new-instance  v0, LX/1gZ;
+    0088..008e  invoke-direct  {v0, v2, v3, v1}, LX/1gZ;-><init>(Lcom/crossapp/tigonhttp/TigonResult;Ljava/net/URL;Z)V
+    008e..0090  return-object  v0
+    0090..0096  invoke-static  {v0}, LX/JAU;->A03(Lcom/facebook/tigon/TigonError;)V
+    0096..0098  throw  v5
+    # exception table: 0 try range(s)
+.end method
+
+.method public A0D(LLLLLL)  # .registers 17
+    # full signature: LX/JAU;->A0D(LX/0lS;LX/K1R;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;)LX/1gY;
+    0000..0002  move-object  v7, v14
+    0002..0008  invoke-static  {v14}, LX/IWS;->A19(Ljava/lang/String;)Ljava/net/URL;
+    0008..000a  move-result-object  v4
+    000a..000c  const/4  v3, #0x0
+    000c..0010  const-string  v9, "GET"
+    0010..0012  const/4  v10, #0x1
+    0012..0014  move-object  v5, v11
+    0014..0016  move-object  v6, v13
+    0016..0018  move-object  v8, v15
+    0018..001e  invoke-direct/range  {v5..v10}, LX/JAU;->A02(LX/K1R;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    001e..0020  move-result-object  v2
+    0020..0024  iget-object  v0, v11, LX/12E;->A02:LX/0lR;
+    0024..002a  invoke-virtual  {v0}, LX/0lR;->A02()Ljava/lang/String;
+    002a..002c  move-result-object  v1
+    002c..0030  const-string  v0, "User-Agent"
+    0030..0036  invoke-virtual  {v2, v0, v1}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->addHeader(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0036..003a  if-eqz  v16, +0x10
+    003a..0040  invoke-static/range  {v16..v16}, LX/2LC;->A18(Ljava/util/Map;)Ljava/util/Iterator;
+    0040..0042  move-result-object  v1
+    0042..0048  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    0048..004a  move-result  v0
+    004a..004e  if-eqz  v0, +0x6
+    004e..0054  invoke-static  {v2, v1}, LX/IWV;->A0b(Lcom/facebook/tigon/iface/TigonRequestBuilder;Ljava/util/Iterator;)V
+    0054..0056  goto  -0x9
+    0056..005c  invoke-direct  {v11, v2, v3}, LX/JAU;->A01(Lcom/facebook/tigon/iface/TigonRequestBuilder;LX/IxI;)Lcom/crossapp/tigonhttp/TigonResult;
+    005c..005e  move-result-object  v2
+    005e..0062  iget-object  v0, v2, Lcom/crossapp/tigonhttp/TigonResult;->error:Lcom/facebook/tigon/TigonError;
+    0062..0066  if-nez  v0, +0x9
+    0066..0068  const/4  v1, #0x0
+    0068..006c  new-instance  v0, LX/1gZ;
+    006c..0072  invoke-direct  {v0, v2, v4, v1}, LX/1gZ;-><init>(Lcom/crossapp/tigonhttp/TigonResult;Ljava/net/URL;Z)V
+    0072..0074  return-object  v0
+    0074..007a  invoke-static  {v0}, LX/JAU;->A03(Lcom/facebook/tigon/TigonError;)V
+    007a..007c  throw  v3
+    # exception table: 0 try range(s)
+.end method
+
+.method public A0E(LLLLLLLLLLLIZZZZZ)  # .registers 36
+    # full signature: LX/JAU;->A0E(LX/0lS;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;[BIZZZZZ)LX/1gY;
+    0000..0004  move-object/from16  v3, v29
+    0004..0006  const/4  v0, #0x6
+    0006..000a  move-object/from16  v4, v25
+    000a..0010  invoke-static  {v4, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0010..0014  move-object/from16  v15, v23
+    0014..001a  invoke-static  {v15}, LX/IWS;->A19(Ljava/lang/String;)Ljava/net/URL;
+    001a..001c  move-result-object  v1
+    001c..0020  if-nez  v24, +0x51
+    0020..0024  if-nez  v29, +0x4f
+    0024..0028  if-eqz  v33, +0x4a
+    0028..002c  const-string  v17, "DELETE"
+    002c..002e  const/4  v6, #0x0
+    002e..0032  move-object/from16  v13, v19
+    0032..0036  move-object/from16  v16, v27
+    0036..003a  move/from16  v18, v35
+    003a..003c  move-object  v14, v6
+    003c..0042  invoke-direct/range  {v13..v18}, LX/JAU;->A02(LX/K1R;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0042..0044  move-result-object  v2
+    0044..0048  const-string  v0, "User-Agent"
+    0048..004e  invoke-virtual  {v2, v0, v4}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->addHeader(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    004e..0052  const-string  v5, "gzip"
+    0052..0056  if-eqz  v31, +0x7
+    0056..005a  const-string  v0, "Accept-Encoding"
+    005a..0060  invoke-virtual  {v2, v0, v5}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->addHeader(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0060..0064  move/from16  v11, v32
+    0064..0068  if-nez  v24, +0x4
+    0068..006c  if-eqz  v29, +0x14
+    006c..0070  const-string  v4, "Content-Type"
+    0070..0074  move-object/from16  v0, v26
+    0074..0078  if-nez  v26, +0x1e
+    0078..007c  const-string  v0, "application/json"
+    007c..0082  invoke-virtual  {v2, v4, v0}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->addHeader(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0082..0086  if-eqz  v32, +0x7
+    0086..008a  const-string  v0, "Content-Encoding"
+    008a..0090  invoke-virtual  {v2, v0, v5}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->addHeader(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    0090..0094  if-eqz  v28, +0x1a
+    0094..009a  invoke-static/range  {v28..v28}, LX/2LC;->A18(Ljava/util/Map;)Ljava/util/Iterator;
+    009a..009c  move-result-object  v4
+    009c..00a2  invoke-interface  {v4}, Ljava/util/Iterator;->hasNext()Z
+    00a2..00a4  move-result  v0
+    00a4..00a8  if-eqz  v0, +0x10
+    00a8..00ae  invoke-static  {v2, v4}, LX/IWV;->A0b(Lcom/facebook/tigon/iface/TigonRequestBuilder;Ljava/util/Iterator;)V
+    00ae..00b0  goto  -0x9
+    00b0..00b6  invoke-virtual  {v2, v4, v0}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->addHeader(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    00b6..00b8  goto  -0x1a
+    00b8..00bc  const-string  v17, "GET"
+    00bc..00be  goto  -0x48
+    00be..00c2  const-string  v17, "POST"
+    00c2..00c4  goto  -0x4b
+    00c4..00c6  const/4  v4, #0x0
+    00c6..00ca  if-nez  v24, +0x33
+    00ca..00ce  if-eqz  v29, +0x22
+    00ce..00d0  array-length  v0, v3
+    00d0..00d2  int-to-long  v9, v0
+    00d2..00d6  if-nez  v32, +0xb
+    00d6..00da  const-string  v4, "Content-Length"
+    00da..00e0  invoke-static  {v9, v10}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+    00e0..00e2  move-result-object  v0
+    00e2..00e8  invoke-virtual  {v2, v4, v0}, Lcom/facebook/tigon/iface/TigonRequestBuilder;->addHeader(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/tigon/iface/TigonRequestBuilder;
+    00e8..00ec  sget-object  v0, Lcom/facebook/tigon/TigonXplatBodyProvider;->$redex_init_class:Lcom/facebook/tigon/TigonXplatBodyProvider;
+    00ec..00f0  const/16  v0, #0x1f
+    00f0..00f4  new-instance  v7, LX/KXS;
+    00f4..00fa  invoke-direct  {v7, v3, v0}, LX/KXS;-><init>(Ljava/lang/Object;I)V
+    00fa..00fe  iget-object  v5, v13, LX/12E;->A03:LX/0Ze;
+    00fe..0100  const/4  v12, #0x0
+    0100..0104  new-instance  v4, LX/IxI;
+    0104..0108  move/from16  v8, v30
+    0108..010e  invoke-direct/range  {v4..v12}, LX/IxI;-><init>(LX/0Ze;Ljava/lang/Integer;Lkotlin/jvm/functions/Function1;IJZZ)V
+    010e..0114  invoke-direct  {v13, v2, v4}, LX/JAU;->A01(Lcom/facebook/tigon/iface/TigonRequestBuilder;LX/IxI;)Lcom/crossapp/tigonhttp/TigonResult;
+    0114..0116  move-result-object  v3
+    0116..011a  iget-object  v0, v3, Lcom/crossapp/tigonhttp/TigonResult;->error:Lcom/facebook/tigon/TigonError;
+    011a..011e  if-nez  v0, +0x10
+    011e..0120  const/4  v2, #0x0
+    0120..0124  new-instance  v0, LX/1gZ;
+    0124..012a  invoke-direct  {v0, v3, v1, v2}, LX/1gZ;-><init>(Lcom/crossapp/tigonhttp/TigonResult;Ljava/net/URL;Z)V
+    012a..012c  return-object  v0
+    012c..0130  if-nez  v29, -0x2f
+    0130..0136  invoke-static/range  {v24..v24}, LX/2LD;->A1X(Ljava/lang/String;)[B
+    0136..0138  move-result-object  v3
+    0138..013a  goto  -0x35
+    013a..0140  invoke-static  {v0}, LX/JAU;->A03(Lcom/facebook/tigon/TigonError;)V
+    0140..0142  throw  v6
+    # exception table: 0 try range(s)
+.end method
+
+.method public A0F(L)  # .registers 2
+    # full signature: LX/JAU;->A0F()Ljava/lang/String;
+    0000..0004  const-string  v0, "TigonWaHttpClient"
+    0004..0006  return-object  v0
+    # exception table: 0 try range(s)
+.end method

@@ -1,5 +1,10 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
+**Pinned download HTTP leaves audited.** Confirmed identity and conditional Range
+construction, distinct native timeouts,200/206 leaf acceptance and416 special
+handling. Rust remains200-only pending operation/caller binding; no guessed
+header or live traffic. [Evidence](media-network-outcomes.md#pinned-shared-download-http-leaves-2026-11-06).
+
 **Ordinary media source binding.** Reservation and successful ciphertext adoption
 now atomically compare the selected inbox bytes; plaintext handoff rechecks the
 eligible source. Refusal observations remain attempt-owned. Offline regression
