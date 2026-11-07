@@ -1,0 +1,24 @@
+{
+  "member_sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+  "relative_relocations": {
+    "0xd3810": "0x219e1",
+    "0xd53f8": "0xd3808",
+    "0xd5430": "0x80604",
+    "0xd5398": "0x7e5ac"
+  },
+  "callable_rtti": "NSt6__ndk110__function6__funcIZN12mobileconfig7updater28FBMobileConfigDefaultUpdater12queueRequestERKNS_10shared_ptrINS2_28FBMobileConfigRequestContextEEEbNS2_17QueryStringFormatENS2_9FetchTypeENS_8optionalI17mc_stack_target_tEEE3$_0NS_9allocatorISF_EEFvbRKNS_12basic_stringIcNS_11char_traitsIcEENSG_IcEEEEEEE",
+  "updater_rtti": "N12mobileconfig7updater28FBMobileConfigDefaultUpdaterE",
+  "expired_owner_diagnostic": "updater deallocated",
+  "selected_calls": {
+    "0x80620": "0xcaf88",
+    "0x80640": "0x76d38",
+    "0x76d5c": "0xcd210",
+    "0x7e468": "0x80490"
+  },
+  "callback_entry": "0x80604",
+  "owner_lock_helper": "0x76d38",
+  "completion_virtual_slot": "0x38",
+  "updater_vtable_address_point": "0xd5360",
+  "selected_updater_target": "0x7e5ac",
+  "boundary": "candidate upstream callback; intermediate dispatch to Java fetch bridge not resolved"
+}

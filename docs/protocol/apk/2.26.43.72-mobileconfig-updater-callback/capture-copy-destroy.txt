@@ -1,0 +1,99 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   80490:      	paciasp
+   80494:      	stp	x29, x30, [sp, #-0x20]!
+   80498:      	stp	x20, x19, [sp, #0x10]
+   8049c:      	mov	x29, sp
+   804a0:      	ldp	x9, x8, [x1]
+   804a4:      	bl	0xcacd0 <JNI_OnLoad+0x5bb30>
+   804a8:      	stp	x9, x8, [x0]
+   804ac:      	cbz	x8, 0x804bc <JNI_OnLoad+0x1131c>
+   804b0:      	add	x1, x8, #0x10
+   804b4:      	mov	w0, #0x1                // =1
+   804b8:      	bl	0x4c570 <.text+0x110>
+   804bc:      	ldp	x9, x8, [x20, #0x10]
+   804c0:      	stp	x9, x8, [x19, #0x10]
+   804c4:      	cbz	x8, 0x804d0 <JNI_OnLoad+0x11330>
+   804c8:      	bl	0xcab60 <JNI_OnLoad+0x5b9c0>
+   804cc:      	bl	0x4c570 <.text+0x110>
+   804d0:      	ldp	x9, x8, [x20, #0x20]
+   804d4:      	stp	x9, x8, [x19, #0x20]
+   804d8:      	cbz	x8, 0x804e4 <JNI_OnLoad+0x11344>
+   804dc:      	bl	0xcab60 <JNI_OnLoad+0x5b9c0>
+   804e0:      	bl	0x4c570 <.text+0x110>
+   804e4:      	ldur	x8, [x20, #0x3d]
+   804e8:      	ldr	q0, [x20, #0x30]
+   804ec:      	stur	x8, [x19, #0x3d]
+   804f0:      	str	q0, [x19, #0x30]
+   804f4:      	ldp	x20, x19, [sp, #0x10]
+   804f8:      	ldp	x29, x30, [sp], #0x20
+   804fc:      	autiasp
+   80500:      	ret
+   80504:      	paciasp
+   80508:      	stp	x29, x30, [sp, #-0x20]!
+   8050c:      	str	x19, [sp, #0x10]
+   80510:      	mov	x29, sp
+   80514:      	mov	x19, x0
+   80518:      	ldr	x0, [x0, #0x28]
+   8051c:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   80520:      	ldr	x0, [x19, #0x18]
+   80524:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   80528:      	bl	0xcb40c <JNI_OnLoad+0x5c26c>
+   8052c:      	ldp	x29, x30, [sp], #0x20
+   80530:      	autiasp
+   80534:      	b	0x72ec8 <JNI_OnLoad+0x3d28>
+   80538:      	bti	c
+   8053c:      	adrp	x8, 0xd5000
+   80540:      	add	x8, x8, #0x400
+   80544:      	str	x8, [x0], #0x8
+   80548:      	b	0x80504 <JNI_OnLoad+0x11364>
+   8054c:      	paciasp
+   80550:      	stp	x29, x30, [sp, #-0x20]!
+   80554:      	str	x19, [sp, #0x10]
+   80558:      	mov	x29, sp
+   8055c:      	mov	x19, x0
+   80560:      	bl	0x80538 <JNI_OnLoad+0x11398>
+   80564:      	bl	0xcaaa8 <JNI_OnLoad+0x5b908>
+   80568:      	ldp	x29, x30, [sp], #0x20
+   8056c:      	autiasp
+   80570:      	b	0xccf30 <__wrap__ZdlPv@plt>
+   80574:      	paciasp
+   80578:      	stp	x29, x30, [sp, #-0x20]!
+   8057c:      	stp	x20, x19, [sp, #0x10]
+   80580:      	mov	x29, sp
+   80584:      	mov	x19, x0
+   80588:      	mov	w0, #0x50               // =80
+   8058c:      	bl	0xccfa0 <__wrap__Znwm@plt>
+   80590:      	adrp	x8, 0xd5000
+   80594:      	add	x8, x8, #0x400
+   80598:      	bl	0xcb23c <JNI_OnLoad+0x5c09c>
+   8059c:      	bl	0x80490 <JNI_OnLoad+0x112f0>
+   805a0:      	bl	0xcb960 <JNI_OnLoad+0x5c7c0>
+   805a4:      	ldp	x29, x30, [sp], #0x20
+   805a8:      	autiasp
+   805ac:      	ret
+   805b0:      	bti	c
+   805b4:      	mov	x8, x1
+   805b8:      	adrp	x9, 0xd5000
+   805bc:      	add	x9, x9, #0x400
+   805c0:      	str	x9, [x8], #0x8
+   805c4:      	add	x1, x0, #0x8
+   805c8:      	mov	x0, x8
+   805cc:      	b	0x80490 <JNI_OnLoad+0x112f0>
+   805d0:      	bti	c
+   805d4:      	add	x0, x0, #0x8
+   805d8:      	b	0x80504 <JNI_OnLoad+0x11364>
+   805dc:      	paciasp
+   805e0:      	stp	x29, x30, [sp, #-0x20]!
+   805e4:      	str	x19, [sp, #0x10]
+   805e8:      	mov	x29, sp
+   805ec:      	bl	0xcb818 <JNI_OnLoad+0x5c678>
+   805f0:      	bl	0x80504 <JNI_OnLoad+0x11364>
+   805f4:      	bl	0xcaaa8 <JNI_OnLoad+0x5b908>
+   805f8:      	ldp	x29, x30, [sp], #0x20
+   805fc:      	autiasp
+   80600:      	b	0xccf30 <__wrap__ZdlPv@plt>

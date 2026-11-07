@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-updater-callback-evidence": {
+    "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-updater-callback/inspect-callback.py <pinned-library>; offline research only",
+    "x-transport": "research only; intermediate fetch dispatch, captures and persistence unresolved",
+    "x-live": false,
+    "description": "Confirmed selected static MobileConfig queueRequest callback locks a weak owner before forwarding bool/string to virtual completion slot +0x38; the default-updater slot resolves to 0x7e5ac. Expired-owner processing is conditional, with downstream effects still untraced. The intermediate dispatch linking this candidate to the Java fetch handler remains unresolved.",
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-updater-callback/README.md"
+  },
   "x-mobileconfig-handler-construction-evidence": {
     "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-handler-construction/inspect-construction.py <pinned-library>; offline inspection only",
     "x-transport": "research only; upstream callable captures and configuration commit remain unresolved",

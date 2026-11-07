@@ -1,0 +1,69 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   7e5ac:      	paciasp
+   7e5b0:      	stp	x29, x30, [sp, #-0x60]!
+   7e5b4:      	bl	0xc9fd4 <JNI_OnLoad+0x5ae34>
+   7e5b8:      	sub	sp, sp, #0x1e0
+   7e5bc:      	str	w4, [sp, #0x28]
+   7e5c0:      	mov	x20, x0
+   7e5c4:      	ldr	x21, [x29, #0x68]
+   7e5c8:      	str	x1, [sp, #0x30]
+   7e5cc:      	mrs	x23, TPIDR_EL0
+   7e5d0:      	add	x1, x0, #0x344
+   7e5d4:      	ldr	x8, [x23, #0x28]
+   7e5d8:      	mov	w0, #0x1                // =1
+   7e5dc:      	mov	w19, w7
+   7e5e0:      	mov	w25, w6
+   7e5e4:      	mov	x24, x5
+   7e5e8:      	mov	w27, w3
+   7e5ec:      	mov	x26, x2
+   7e5f0:      	add	x28, sp, #0xc0
+   7e5f4:      	stur	x8, [x29, #-0x18]
+   7e5f8:      	bl	0x4c5d0 <.text+0x170>
+   7e5fc:      	cmp	w25, #0x0
+   7e600:      	lsr	x22, x21, #32
+   7e604:      	str	w19, [sp, #0x2c]
+   7e608:      	ccmp	w19, #0x3, #0x0, eq
+   7e60c:      	cset	w19, eq
+   7e610:      	tbz	w27, #0x0, 0x7e78c <JNI_OnLoad+0xf5ec>
+   7e614:      	cbz	w19, 0x7e62c <JNI_OnLoad+0xf48c>
+   7e618:      	ldr	x8, [sp, #0x30]
+   7e61c:      	ldr	x8, [x8]
+   7e620:      	add	x8, x8, #0x9
+   7e624:      	ldarb	w8, [x8]
+   7e628:      	tbnz	w8, #0x0, 0x7ebb0 <JNI_OnLoad+0xfa10>
+   7e62c:      	bl	0xcd190 <_ZNSt6__ndk16chrono12system_clock3nowEv@plt>
+   7e630:      	movi	v0.2d, #0000000000000000
+   7e634:      	ldp	x9, x8, [x26]
+   7e638:      	str	x0, [sp, #0x10]
+   7e63c:      	strb	wzr, [sp, #0x78]
+   7e640:      	strb	wzr, [sp, #0x5c]
+   7e644:      	stp	q0, q0, [x28, #0x10]
+   7e648:      	stp	q0, q0, [x28, #0x30]
+   7e64c:      	str	q0, [x28]
+   7e650:      	ldr	x28, [x20, #0x2d8]
+   7e654:      	str	xzr, [sp, #0x110]
+   7e658:      	stp	x9, x8, [sp, #0x48]
+   7e65c:      	cbz	x8, 0x7e668 <JNI_OnLoad+0xf4c8>
+   7e660:      	bl	0xcab60 <JNI_OnLoad+0x5b9c0>
+   7e664:      	bl	0x4c570 <.text+0x110>
+   7e668:      	ldr	x8, [x28]
+   7e66c:      	cmp	w25, #0x0
+   7e670:      	add	x2, sp, #0x48
+   7e674:      	cset	w3, eq
+   7e678:      	add	x4, sp, #0x78
+   7e67c:      	add	x5, sp, #0x5c
+   7e680:      	ldr	x9, [x8, #0x10]
+   7e684:      	add	x8, sp, #0xc0
+   7e688:      	mov	x0, x28
+   7e68c:      	mov	x1, x24
+   7e690:      	mov	x6, xzr
+   7e694:      	mov	x7, x21
+   7e698:      	str	w3, [sp, #0x1c]
+   7e69c:      	blr	x9
+   7e6a0:      	ldr	x0, [sp, #0x50]
+   7e6a4:      	bl	0x6f20c <JNI_OnLoad+0x6c>

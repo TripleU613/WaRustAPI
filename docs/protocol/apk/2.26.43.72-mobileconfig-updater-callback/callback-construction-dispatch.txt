@@ -1,0 +1,64 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   7e450:      	bl	0xcbb90 <JNI_OnLoad+0x5c9f0>
+   7e454:      	ldr	x8, [x8, #0x48]
+   7e458:      	blr	x8
+   7e45c:      	mov	x26, x0
+   7e460:      	add	x0, sp, #0xf0
+   7e464:      	sub	x1, x29, #0xc8
+   7e468:      	bl	0x80490 <JNI_OnLoad+0x112f0>
+   7e46c:      	mov	w0, #0x50               // =80
+   7e470:      	stur	xzr, [x29, #-0x20]
+   7e474:      	bl	0xccfa0 <__wrap__Znwm@plt>
+   7e478:      	adrp	x8, 0xd5000
+   7e47c:      	add	x8, x8, #0x400
+   7e480:      	ldr	q0, [sp, #0xf0]
+   7e484:      	str	x8, [x0]
+   7e488:      	ldp	x9, x8, [sp, #0x100]
+   7e48c:      	mov	x20, x0
+   7e490:      	stur	q0, [x0, #0x8]
+   7e494:      	stp	xzr, xzr, [sp, #0xf0]
+   7e498:      	stp	x9, x8, [x0, #0x18]
+   7e49c:      	cbz	x8, 0x7e4a8 <JNI_OnLoad+0xf308>
+   7e4a0:      	bl	0xcab60 <JNI_OnLoad+0x5b9c0>
+   7e4a4:      	bl	0x4c570 <.text+0x110>
+   7e4a8:      	add	x10, sp, #0xf0
+   7e4ac:      	ldr	q0, [sp, #0x110]
+   7e4b0:      	stur	x20, [x29, #-0x20]
+   7e4b4:      	ldur	x8, [x10, #0x3d]
+   7e4b8:      	ldur	q1, [x10, #0x30]
+   7e4bc:      	sub	x1, x29, #0x40
+   7e4c0:      	stur	q0, [x20, #0x28]
+   7e4c4:      	ldr	x9, [sp, #0x80]
+   7e4c8:      	add	x3, sp, #0x140
+   7e4cc:      	stur	x8, [x20, #0x45]
+   7e4d0:      	ldr	w11, [sp, #0x5c]
+   7e4d4:      	mov	x0, x26
+   7e4d8:      	stur	q1, [x20, #0x38]
+   7e4dc:      	ldr	x9, [x9]
+   7e4e0:      	ldr	x8, [x26]
+   7e4e4:      	cmp	w11, #0x0
+   7e4e8:      	stp	xzr, xzr, [x10, #0x20]
+   7e4ec:      	mov	w10, #0x68              // =104
+   7e4f0:      	mov	w11, #0x80              // =128
+   7e4f4:      	ldr	x8, [x8, #0x10]
+   7e4f8:      	csel	x10, x11, x10, ne
+   7e4fc:      	add	x2, x9, x10
+   7e500:      	blr	x8
+   7e504:      	sub	x0, x29, #0x40
+   7e508:      	bl	0xa975c <JNI_OnLoad+0x3a5bc>
+   7e50c:      	add	x0, sp, #0xf0
+   7e510:      	bl	0x80504 <JNI_OnLoad+0x11364>
+   7e514:      	add	x1, x23, #0x340
+   7e518:      	mov	w0, #0x1                // =1
+   7e51c:      	bl	0x4c5d0 <.text+0x170>
+   7e520:      	add	x0, sp, #0x140
+   7e524:      	bl	0x7a008 <JNI_OnLoad+0xae68>
+   7e528:      	sub	x0, x29, #0xf0
+   7e52c:      	bl	0x7a05c <JNI_OnLoad+0xaebc>
+   7e530:      	sub	x0, x29, #0xc8
+   7e534:      	bl	0x80504 <JNI_OnLoad+0x11364>
