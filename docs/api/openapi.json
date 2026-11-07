@@ -1,4 +1,11 @@
 {
+  "x-inbox-last-group-ciphertext-selection": {
+    "x-cli": "existing receive/listen and saved inbox processing; no new command or flag",
+    "x-transport": "group receive and participant session/type routing share last-match selection per supported direct/skmsg descriptor slot",
+    "x-live": false,
+    "description": "Pinned EuN parser overwrites descriptor slots in traversal order. Rust previously selected first-match ciphertext and any pkmsg for primary LID prekey routing. Shared last_group_enc now binds decryption, companion kind and LID prekey routing consistently. Regression reproduces old Decrypted result for good-then-bad signed skmsg; corrected selection returns existing InvalidSenderKeySignature with unchanged durable state. Bad-then-good decrypts once, replay is Duplicate. Earlier metadata/type gates remain; direct/recipient duplicates and overwritten-body validation remain incomplete. No new retry/ACK family or live operation.",
+    "evidence": "docs/protocol/media-network-outcomes.md#last-group-ciphertext-descriptor-and-consistent-routing-2026-11-07"
+  },
   "x-inbox-mixed-encrypted-child-types": {
     "x-cli": "existing receive/listen and saved inbox processing; no new command or flag",
     "x-transport": "all immediate encrypted children must have supported exact msg/pkmsg/skmsg type before inbox routing/decryption/ACK authority",

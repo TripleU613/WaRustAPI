@@ -1729,3 +1729,66 @@ code (Decrypted instead of Unsupported), then passed after the guard. All1,588
 workspace/all-feature tests, strict all-target/all-feature Clippy, formatting,
 CLI reference, OpenAPI library-symbol check, APK coverage, retained checksums
 and repository hygiene passed. No account traffic was generated.
+
+## Last group ciphertext descriptor and consistent routing (2026-11-07)
+
+**Confirmed selected static and Rust mismatch fixed.** In pinned APK2.26.43.72
+build264307238, SHA256
+`887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e`,
+[EuN.A01](apk/2.26.43.72-encrypted-child-metadata/chat-stanza-parser.txt)
+traverses its selected child array in increasing index order (0bb6..0bc2,
+0d58 increments v5,0d5c jumps back to0bba). Each admitted skmsg descriptor
+overwrites Ewa.A0B at0ca4; other selected descriptors overwrite A0A at0cda.
+There is no first-only guard at these writes. The earlier selected loop has
+corresponding writes08fe/0930.
+[EIM type mapping](apk/2.26.43.72-encrypted-child-metadata/enc-descriptor-parser.txt)
+and [Ezj constructors](apk/2.26.43.72-encrypted-child-metadata/enc-descriptor-constructors.txt)
+identify skmsg as type2.
+[Ewa.A01](apk/2.26.43.72-encrypted-child-metadata/chat-context-builder.txt)
+passes those resulting descriptors to
+[Dxs](apk/2.26.43.72-encrypted-child-metadata/chat-context-constructor.txt).
+Thus last admitted descriptor per slot survives the selected parser, rather
+than the first descriptor or the first ciphertext that decrypts successfully.
+Full alternate/nested parser policy remains separately bounded.
+
+Rust group receive previously used find for the direct msg/pkmsg slot and skmsg
+slot. A real encrypted-store regression reproduced a consequence before the
+fix: good skmsg then signature-corrupted skmsg returned Decrypted, although the
+last native-selected descriptor is the corrupt packet. Rust also selected a
+companion's direct kind with find and primary LID prekey routing with any(pkmsg),
+which could disagree with the ciphertext chosen after switching only decryption
+to last-match semantics.
+
+A single last_group_enc selector now chooses the last supported msg/pkmsg child
+for the direct slot and last skmsg for the group slot. Both companion kind
+admission and primary LID prekey/session selection use that same direct slot.
+An overwritten earlier pkmsg cannot force prekey routing when the selected
+packet is msg. This preserves the existing held-LID/PN-fallback and companion
+authority policies; it does not establish those full policies from the slot
+overwrites alone. Prior whole-child type/version/count admission still runs
+before routing, so this is not a fallback past invalid metadata.
+
+The real-ciphertext test now returns InvalidSenderKeySignature for good-then-bad
+and preserves sender keys, checkpoints and journal after capture preservation.
+Reversing the packets yields Decrypted and one durable record; repeating returns
+Duplicate without a journal advance. The selected failure keeps its existing
+classification; no trial of the earlier packet or new retry/ACK policy is added.
+The alias regression covers pkmsg→msg selecting the existing phone fallback and
+msg→pkmsg selecting LID bootstrap when no LID session is held.
+
+**Unknown / remaining:** validation of every overwritten packet body, all
+nested/alternate descriptor producers, full later-pass receipt permission,
+native-invalid versus unsupported application classification, direct writer and
+durable response ownership. Native-recognized frskmsg/msmsg/otsk stay explicit
+local coverage gaps. Ordinary direct/recipient paths still enforce their existing
+single-ciphertext bounds; this change does not claim native duplicate parity
+for those paths. No account traffic, server acceptance or restriction causality
+is established. Existing pinned exports/manifests are reused without duplicate
+evidence files.
+
+Verification: the real-ciphertext regression failed on first-match code
+(Decrypted instead of InvalidSenderKeySignature), then passed with last-slot
+selection; both pairwise route orders passed. All1,589 workspace/all-feature
+tests, strict all-target/all-feature Clippy, formatting, CLI reference, OpenAPI
+library-symbol check, APK coverage, retained checksums and hygiene passed.
+No account operation was performed.

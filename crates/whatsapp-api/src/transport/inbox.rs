@@ -1351,6 +1351,22 @@ async fn process_direct(
     Ok(IncomingResult::Decrypted)
 }
 
+// APK43.72 EuN.A01 traverses enc children in order and overwrites Ewa.A0A
+// for direct kinds and A0B for skmsg (0c9c..0cde, loop0d58..0d60).
+// Ewa.A01 -> Dxs preserves those last descriptors. Never try earlier ciphertext
+// after the selected one fails, and use the same selection for ratchet routing.
+#[cfg(feature = "experimental-signal-crypto")]
+fn last_group_enc<'a>(node: &'a Node, kinds: &[&str]) -> Option<&'a Node> {
+    node.child_nodes().iter().rfind(|enc| {
+        enc.description == "enc"
+            && enc.get_attr("v").and_then(|v| v.as_text()) == Some("2")
+            && enc
+                .get_attr("type")
+                .and_then(|v| v.as_text())
+                .is_some_and(|kind| kinds.contains(&kind))
+    })
+}
+
 /// The participant's direct-session identity. The sender-key distribution for a
 /// group arrives inside an ordinary Signal session with that member, keyed the
 /// same way as a direct chat (`comparison-direct:<selected PN or LID>`). Prefer
@@ -1378,18 +1394,8 @@ fn participant_session_jid(
         if !matches!(participant.server, Server::User | Server::Lid) {
             return Ok(None);
         }
-        let direct_kind = node
-            .child_nodes()
-            .iter()
-            .find(|n| {
-                n.description == "enc"
-                    && n.get_attr("v").and_then(|v| v.as_text()) == Some("2")
-                    && matches!(
-                        n.get_attr("type").and_then(|v| v.as_text()),
-                        Some("msg" | "pkmsg")
-                    )
-            })
-            .and_then(|n| n.get_attr("type").and_then(|v| v.as_text()));
+        let direct_kind = last_group_enc(node, &["msg", "pkmsg"])
+            .and_then(|enc| enc.get_attr("type").and_then(|v| v.as_text()));
         if direct_kind != Some("msg") {
             tracing::warn!("group companion prekey requires separate ADV admission");
             return Ok(None);
@@ -1446,11 +1452,9 @@ fn participant_session_jid(
             )
         })?
         .is_some();
-    let is_prekey = node.child_nodes().iter().any(|n| {
-        n.description == "enc"
-            && n.get_attr("type").and_then(|v| v.as_text()) == Some("pkmsg")
-            && n.get_attr("v").and_then(|v| v.as_text()) == Some("2")
-    });
+    let is_prekey = last_group_enc(node, &["msg", "pkmsg"])
+        .and_then(|enc| enc.get_attr("type").and_then(|v| v.as_text()))
+        == Some("pkmsg");
     Ok(match phone {
         Some(phone) => Some(direct_session_peer(&phone, Some(lid), held, is_prekey)),
         None if held => Some(lid),
@@ -1682,17 +1686,7 @@ async fn process_group_inner(
     else {
         return Ok(IncomingResult::Unsupported);
     };
-    // Select the enc children by type; a stanza may legitimately carry both.
-    let enc_of = |want: &[&str]| {
-        node.child_nodes().iter().find(|n| {
-            n.description == "enc"
-                && n.get_attr("v").and_then(|v| v.as_text()) == Some("2")
-                && n.get_attr("type")
-                    .and_then(|v| v.as_text())
-                    .is_some_and(|t| want.contains(&t))
-        })
-    };
-    let direct_enc = enc_of(&["pkmsg", "msg"]);
+    let direct_enc = last_group_enc(node, &["pkmsg", "msg"]);
     let hybrid_prekey = if let Some(enc) = direct_enc
         && enc.get_attr("type").and_then(|v| v.as_text()) == Some("pkmsg")
         && let Some(ciphertext) = ciphertext_bytes(enc)
@@ -1710,7 +1704,7 @@ async fn process_group_inner(
             "group companion hybrid prekey skipped: companion KEM admission is unported"
         );
     }
-    let sk_enc = enc_of(&["skmsg"]);
+    let sk_enc = last_group_enc(node, &["skmsg"]);
     if direct_enc.is_none() && sk_enc.is_none() {
         return Ok(IncomingResult::Unsupported);
     }
@@ -2128,6 +2122,26 @@ mod resilience_tests {
             participant_session_jid(&store, &node("msg", false), &lid).unwrap(),
             None
         );
+        for (kinds, expected) in [
+            (["pkmsg", "msg"], phone.clone()),
+            (["msg", "pkmsg"], lid.clone()),
+        ] {
+            let mixed = node("msg", true).children(
+                kinds
+                    .into_iter()
+                    .map(|kind| {
+                        Node::new("enc")
+                            .attr("v", "2")
+                            .attr("type", kind)
+                            .bytes(vec![1])
+                    })
+                    .collect(),
+            );
+            assert_eq!(
+                participant_session_jid(&store, &mixed, &lid).unwrap(),
+                Some(expected)
+            );
+        }
         let key = format!("comparison-direct:{lid}");
         store
             .write(|tx| tx.put_json(Table::SignalSessions, key.as_bytes(), 1, &vec![1u8; 20]))
@@ -2736,6 +2750,102 @@ mod tests {
     /// Viewing a view-once marks its record consumed. A redelivery after a cut
     /// delivery confirmation is still a known message (Duplicate), as on the
     /// direct path, not Unsupported (receive audit F5).
+    #[tokio::test]
+    async fn group_duplicate_ciphertext_uses_last_descriptor_without_fallback() {
+        use crate::signal::group::{
+            commit_skdm, encrypt_group_payload, extract_skdm_from_payload, prepare_own_sender_key,
+            process_skdm, sender_key_db_key,
+        };
+        use crate::{
+            model::ids::AccountId,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("last-group-child.redb"),
+            account_id: AccountId::new("fixture").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([22; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let chat = Jid::parse("120363000000000001@g.us").unwrap();
+        let account = AccountRecord {
+            own_jid: Some(Jid::parse("15555550199@s.whatsapp.net").unwrap()),
+            ..Default::default()
+        };
+        let sender = Jid::parse("15555550100:3@lid").unwrap();
+        let own = prepare_own_sender_key(&chat, &sender, None).await.unwrap();
+        let (_, bytes) = extract_skdm_from_payload(&own.distribution_message).unwrap();
+        let installed = process_skdm(
+            &chat,
+            &sender,
+            sender_key_db_key(&chat, &sender),
+            None,
+            &bytes,
+        )
+        .await
+        .unwrap();
+        assert!(store.write(|tx| commit_skdm(tx, &installed)).unwrap());
+        let plain = super::super::group_send::text_payload("last ciphertext fixture").unwrap();
+        let (cipher, _) = encrypt_group_payload(&chat, &sender, &own.updated_key, &plain)
+            .await
+            .unwrap();
+        let good = Node::new("enc")
+            .attr("v", "2")
+            .attr("type", "skmsg")
+            .bytes(cipher.to_vec());
+        let mut invalid = cipher.to_vec();
+        *invalid.last_mut().unwrap() ^= 1;
+        let bad = Node::new("enc")
+            .attr("v", "2")
+            .attr("type", "skmsg")
+            .bytes(invalid);
+        let node = Node::new("message")
+            .attr("from", chat)
+            .attr("participant", sender)
+            .attr("id", "LAST-CHILD")
+            .children(vec![good.clone(), bad.clone()]);
+        let capture = preserve(&store, &node).unwrap();
+        let keys = store.read(|tx| tx.scan(Table::SenderKeys, 1, 100)).unwrap();
+        let checkpoints = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        let head = store.journal_head().unwrap();
+        assert_eq!(
+            process(&store, &account, &node, &capture).await.unwrap(),
+            IncomingResult::InvalidSenderKeySignature
+        );
+        assert_eq!(
+            store.read(|tx| tx.scan(Table::SenderKeys, 1, 100)).unwrap(),
+            keys
+        );
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap(),
+            checkpoints
+        );
+        assert_eq!(store.journal_head().unwrap(), head);
+        // Selection is ordered, not a blanket duplicate-child refusal and not
+        // trial decryption until one succeeds. The last valid packet wins.
+        let reversed = node.children(vec![bad, good]);
+        let capture = preserve(&store, &reversed).unwrap();
+        assert_eq!(
+            process(&store, &account, &reversed, &capture)
+                .await
+                .unwrap(),
+            IncomingResult::Decrypted
+        );
+        let head = store.journal_head().unwrap();
+        assert_eq!(
+            process(&store, &account, &reversed, &capture)
+                .await
+                .unwrap(),
+            IncomingResult::Duplicate
+        );
+        assert_eq!(store.journal_head().unwrap(), head);
+    }
+
     #[tokio::test]
     async fn consumed_group_record_is_a_duplicate_on_redelivery() {
         use crate::signal::group::{

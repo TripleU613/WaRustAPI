@@ -1,5 +1,10 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
+**Group ciphertext selection corrected.** Receive now uses the last descriptor
+per native parser slot, with matching pairwise type/session routing. A corrupted
+last packet cannot fall back to an earlier valid packet and earn ACK authority;
+reversing the order decrypts once. [Evidence](media-network-outcomes.md#last-group-ciphertext-descriptor-and-consistent-routing-2026-11-07).
+
 **Mixed encrypted-child type bypass closed.** A missing/unknown or unported enc
 can no longer be ignored while a valid sibling decrypts and earns ACK authority.
 Both child orders are tested with valid ciphertext and unchanged state on refusal.
