@@ -9508,3 +9508,8 @@ Local public upload eligibility omission corrected at shared entry, including ca
   with cached/actual vector-count checks and optional corruption logging.
   Boolean decoding and translator-sentinel caller binding remain unknown. See
   [reader evidence](apk/2.26.43.72-mobileconfig-handle-publication/bool-reader.md).
+
+- Confirmed selected APK 2.26.43.72 boolean decoder gates on metadata/raw
+  mask `0x11` and extracts bit 7; raw default `0x11` is not treated as true.
+  Full caller construction and public result remain unresolved. See
+  [decoder evidence](apk/2.26.43.72-mobileconfig-handle-publication/bool-decode.md).

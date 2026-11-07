@@ -1,7 +1,23 @@
 {
   "README.md": {
-    "bytes": 8686,
-    "sha256": "41f063d24bdd7480adccb218fe38e5507d771bdc44acdc47276dd0b1ecc870cc"
+    "bytes": 8876,
+    "sha256": "664d1b47376e7c61b315b5cb989c5358b271954fda89a0b050e2ba8d56289c85"
+  },
+  "bool-decode-args.txt": {
+    "bytes": 243,
+    "sha256": "5987ae484dc41d513375a94257b260dd18933ce4593afaf9f889c80b493d7f0f"
+  },
+  "bool-decode-body.txt": {
+    "bytes": 4425,
+    "sha256": "38c21bd8b2de766615cb4ee4b4c20bfc964ccb53419dc10f59736dad921039fa"
+  },
+  "bool-decode-slots.txt": {
+    "bytes": 166,
+    "sha256": "f0b70c553c75454427662c0ccce6c96f2b9e22f6c947d6ade8f4d4c9f400829d"
+  },
+  "bool-decode.md": {
+    "bytes": 2422,
+    "sha256": "7da6239cb54631d8cad06b397c61b3a13c44369094535574f0095c312785ea90"
   },
   "bool-reader-accessor.txt": {
     "bytes": 851,
@@ -24,8 +40,8 @@
     "sha256": "d8cadbd3ef20cea817c422cb77b5a7691b376a93584bbdfdd33e5f68c273966c"
   },
   "bool-reader.md": {
-    "bytes": 2957,
-    "sha256": "a64a3090ddef6f2c4a154365562cfa53cd8506ee8bfa6ea30cdcc7295f202a4c"
+    "bytes": 3147,
+    "sha256": "0ede35f9564234f7867f9e5a7e74570993c3d7ecf95ee590b7ebf33a258b2333"
   },
   "candidate-wrapper.txt": {
     "bytes": 1941,
@@ -146,6 +162,10 @@
   "publication.json": {
     "bytes": 1772,
     "sha256": "6ec1767e1b38091042d6e4fff410bf0c860e6fe491ccd376de9526451bd4c04c"
+  },
+  "rea-bool-decode.json": {
+    "bytes": 4793,
+    "sha256": "49a44d7d68bd111f9c7063677ae25263d781a90695b7de8d889445e745a706f8"
   },
   "rea-bool-reader.json": {
     "bytes": 5805,

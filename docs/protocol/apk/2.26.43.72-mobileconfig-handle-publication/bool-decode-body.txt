@@ -1,0 +1,118 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   a25d0:      	ldr	w1, [x21, #0x30]
+   a25d4:      	add	x0, sp, #0x30
+   a25d8:      	add	x2, x21, #0x18
+   a25dc:      	bl	0xc73c4 <JNI_OnLoad+0x58224>
+   a25e0:      	ldrb	w8, [x21, #0x40]
+   a25e4:      	bl	0xcb6fc <JNI_OnLoad+0x5c55c>
+   a25e8:      	b.hi	0xa27ac <JNI_OnLoad+0x3360c>
+   a25ec:      	nop
+   a25f0:      	adr	x11, 0x1cdb7
+   a25f4:      	adr	x9, 0xa2604 <JNI_OnLoad+0x33464>
+   a25f8:      	ldrb	w10, [x11, x8]
+   a25fc:      	add	x9, x9, x10, lsl #2
+   a2600:      	br	x9
+   a2604:      	bti	j
+   a2608:      	bl	0xcaf00 <JNI_OnLoad+0x5bd60>
+   a260c:      	ldr	x8, [x8, #0x40]
+   a2610:      	blr	x8
+   a2614:      	mov	w24, w0
+   a2618:      	bl	0xcaf00 <JNI_OnLoad+0x5bd60>
+   a261c:      	ldr	x8, [x8, #0x20]
+   a2620:      	blr	x8
+   a2624:      	mov	w8, #0x11               // =17
+   a2628:      	bics	wzr, w8, w24
+   a262c:      	b.eq	0xa2724 <JNI_OnLoad+0x33584>
+   a2630:      	tst	w0, w8
+   a2634:      	b.ne	0xa2760 <JNI_OnLoad+0x335c0>
+   a2638:      	ubfx	w25, w0, #7, #1
+   a263c:      	add	x0, x22, #0x40
+   a2640:      	bl	0xc73a8 <JNI_OnLoad+0x58208>
+   a2644:      	mov	w8, #0x1                // =1
+   a2648:      	strb	w25, [sp, #0x78]
+   a264c:      	b	0xa275c <JNI_OnLoad+0x335bc>
+   a2650:      	bti	j
+   a2654:      	bl	0xcaf00 <JNI_OnLoad+0x5bd60>
+   a2658:      	ldr	x8, [x8, #0x58]
+   a265c:      	blr	x8
+   a2660:      	mov	w8, #0x11               // =17
+   a2664:      	mov	w24, w0
+   a2668:      	ands	w8, w0, w8
+   a266c:      	b.ne	0xa271c <JNI_OnLoad+0x3357c>
+   a2670:      	bl	0xcaf00 <JNI_OnLoad+0x5bd60>
+   a2674:      	ldr	x8, [x8, #0x38]
+   a2678:      	mov	w2, w24
+   a267c:      	nop
+   a2680:      	adr	x3, 0x25876
+   a2684:      	blr	x8
+   a2688:      	mov	x1, x0
+   a268c:      	sub	x0, x29, #0x50
+   a2690:      	bl	0x4d9a0 <.text+0x1540>
+   a2694:      	ldrb	w8, [sp, #0x70]
+   a2698:      	cmp	w8, #0x3
+   a269c:      	b.ne	0xa2880 <JNI_OnLoad+0x336e0>
+   a26a0:      	add	x0, x22, #0x48
+   a26a4:      	sub	x1, x29, #0x50
+   a26a8:      	bl	0xccbb0 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEaSERKS5_@plt>
+   a26ac:      	b	0xa2894 <JNI_OnLoad+0x336f4>
+   a26b0:      	bti	j
+   a26b4:      	bl	0xcaf00 <JNI_OnLoad+0x5bd60>
+   a26b8:      	ldr	x8, [x8, #0x50]
+   a26bc:      	blr	x8
+   a26c0:      	mov	w8, #0x11               // =17
+   a26c4:      	mov	w24, w0
+   a26c8:      	ands	w8, w0, w8
+   a26cc:      	b.ne	0xa271c <JNI_OnLoad+0x3357c>
+   a26d0:      	bl	0xcaf00 <JNI_OnLoad+0x5bd60>
+   a26d4:      	ldr	x8, [x8, #0x30]
+   a26d8:      	movi	d0, #0000000000000000
+   a26dc:      	mov	w2, w24
+   a26e0:      	blr	x8
+   a26e4:      	add	x0, x22, #0x40
+   a26e8:      	fmov	d8, d0
+   a26ec:      	bl	0xc73a8 <JNI_OnLoad+0x58208>
+   a26f0:      	mov	w8, #0x4                // =4
+   a26f4:      	str	d8, [sp, #0x78]
+   a26f8:      	b	0xa275c <JNI_OnLoad+0x335bc>
+   a26fc:      	bti	j
+   a2700:      	bl	0xcaf00 <JNI_OnLoad+0x5bd60>
+   a2704:      	ldr	x8, [x8, #0x48]
+   a2708:      	blr	x8
+   a270c:      	mov	w8, #0x11               // =17
+   a2710:      	mov	w24, w0
+   a2714:      	ands	w8, w0, w8
+   a2718:      	b.eq	0xa2734 <JNI_OnLoad+0x33594>
+   a271c:      	cmp	w8, #0x11
+   a2720:      	b.ne	0xa2760 <JNI_OnLoad+0x335c0>
+   a2724:      	mov	w8, #0x1                // =1
+   a2728:      	strb	w8, [sp, #0x90]
+   a272c:      	tbz	w24, #0x6, 0xa276c <JNI_OnLoad+0x335cc>
+   a2730:      	b	0xa2764 <JNI_OnLoad+0x335c4>
+   a2734:      	bl	0xcaf00 <JNI_OnLoad+0x5bd60>
+   a2738:      	ldr	x8, [x8, #0x28]
+   a273c:      	mov	w2, w24
+   a2740:      	mov	x3, xzr
+   a2744:      	blr	x8
+   a2748:      	mov	x25, x0
+   a274c:      	add	x0, x22, #0x40
+   a2750:      	bl	0xc73a8 <JNI_OnLoad+0x58208>
+   a2754:      	mov	w8, #0x2                // =2
+   a2758:      	str	x25, [sp, #0x78]
+   a275c:      	strb	w8, [sp, #0x70]
+   a2760:      	tbz	w24, #0x6, 0xa276c <JNI_OnLoad+0x335cc>
+   a2764:      	mov	w8, #0x1                // =1
+   a2768:      	strb	w8, [sp, #0x50]
+   a276c:      	tst	w24, #0x6
+   a2770:      	b.eq	0xa27ac <JNI_OnLoad+0x3360c>
+   a2774:      	lsl	w8, w24, #4
+   a2778:      	ldr	x0, [x20]
+   a277c:      	lsr	w1, w24, #8
+   a2780:      	and	w8, w8, #0x80
+   a2784:      	bfxil	w8, w24, #1, #2
+   a2788:      	str	w8, [sp, #0x54]
+   a278c:      	bl	0xcb714 <JNI_OnLoad+0x5c574>

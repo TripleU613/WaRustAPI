@@ -48,3 +48,7 @@ Retained bool-reader-body.txt, bool-reader-accessor.txt, bool-reader-args.txt,
 bool-reader-slots.txt and bool-reader-data.json reproduce the positive trace.
 REA evidence is retained in rea-bool-reader.json. Next required work remains
 typed caller binding and raw-value decoding, not guessing boolean defaults.
+
+The [selected boolean decoder](bool-decode.md) now establishes conditional
+mask-0x11 gating and bit-7 extraction. Full receiver construction and final API
+return semantics remain untraced.

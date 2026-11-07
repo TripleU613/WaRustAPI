@@ -151,3 +151,7 @@ upper bits. Nonempty-vector readiness is not complete mapping coverage.
 The [raw boolean-data reader](bool-reader.md) now records count/default paths
 and pinned raw default byte 0x11. Typed sentinel caller and value decoding remain
 unresolved; raw nonzero must not be assumed to mean a Rust boolean.
+
+The [selected boolean decoder](bool-decode.md) now establishes conditional
+mask-0x11 gating and bit-7 extraction. Full receiver construction and final API
+return semantics remain untraced.

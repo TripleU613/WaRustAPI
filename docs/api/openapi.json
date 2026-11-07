@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-bool-decoder-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-handle-publication/bool-decode.md",
+    "finding": "Selected boolean extraction uses metadata/raw mask 0x11 gates then bit 7, not raw nonzero; full caller construction remains unresolved."
+  },
   "x-mobileconfig-raw-bool-reader-evidence": {
     "x-cli": false,
     "x-transport": false,

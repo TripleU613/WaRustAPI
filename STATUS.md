@@ -10531,3 +10531,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   with cached/actual vector-count checks and optional corruption logging.
   Boolean decoding and translator-sentinel caller binding remain unknown. See
   [reader evidence](docs/protocol/apk/2.26.43.72-mobileconfig-handle-publication/bool-reader.md).
+
+- Confirmed selected APK 2.26.43.72 boolean decoder gates on metadata/raw
+  mask `0x11` and extracts bit 7; raw default `0x11` is not treated as true.
+  Full caller construction and public result remain unresolved. See
+  [decoder evidence](docs/protocol/apk/2.26.43.72-mobileconfig-handle-publication/bool-decode.md).
