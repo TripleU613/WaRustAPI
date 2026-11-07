@@ -1627,4 +1627,15 @@ Reservation already freezes the exact request in `prekey-upload-request:v1:<id>`
 
 The expanded actor regression covers changed ID/destination/body, missing retained request and changed retained wire, alongside legacy/KEM consumption/replacement/missing/ownership, revocation and the permitted authentication-observation control. It verifies saved account/prekey/checkpoint rows and journal survive refusal and reopen unchanged. Existing normal/expired publication tests remain. This local invariant does not establish additional APK parity or live acceptance.
 
-**Open bounded source observation:** `DeviceQuery::check_write_authority` checks account, durable users/revisions/status and deadline; the selected method does not receive the actual queued node. This audit has not yet tested whether that separate handoff admits an altered payload. Device-query framing remains a next audit boundary, not a confirmed runtime defect. No live operations were performed.
+The initially open device-query payload boundary was subsequently reproduced and hardened in [device-query writer binding](#device-query-payload-binding-at-writer-dequeue-2026-11-07). No live operations were performed.
+
+
+## Device-query payload binding at writer dequeue (2026-11-07)
+
+**Confirmed local invariant gap, fixed offline.** The device-query writer checked account authority, exact reserved users/revisions/status and original deadline but not its actual queued IQ. The channel regression changed the queued ID with an unchanged reservation; `Outbound::prepare` admitted it before the fix. This is a synthetic local handoff defect, not evidence of production payload mutation or an incorrect live request.
+
+`reserve_query_in` now captures SHA-256 of the complete encoded query in connection-local `DeviceQuery`, within its reservation transaction. Writer admission receives the actual queued node and requires its encoding digest to match before the existing durable admission checks. Both the dedicated device path and the group workflow's device-query phase pass that node. `outgoing_group::Pending::device_query` returns a query only while waiting for devices, so this does not impose a device-query digest on later group-message phases.
+
+The hash covers IQ fields, usync SID/context/options and full user list using the same token dictionary as the connection encoder. Mismatch returns a fixed local error; original deadlines, marker revisions and uncertainty remain intact. No new stanza field, durable schema migration, retry or historical proof backfill was added. This protects the original construction; it does not establish that all construction fields match the APK.
+
+The expanded actor regression covers unchanged admission, changed ID/destination/session/body, changed/missing durable users/revisions/status, exact checkpoint/journal preservation and reopen. Existing deadline and group-device ownership tests remain. No live operation or server acceptance was observed. Other direct/group message writer payload families remain separate audit boundaries.

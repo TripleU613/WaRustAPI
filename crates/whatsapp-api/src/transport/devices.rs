@@ -512,6 +512,7 @@ pub fn pending_users(store: &ProtocolStore) -> Result<Vec<Jid>> {
 #[derive(Debug, Clone)]
 pub struct DeviceQuery {
     iq_id: String,
+    request_sha256: [u8; 32],
     users: Vec<Jid>,
     generations: Vec<u64>,
     // Local handoff ownership; never emitted as a stanza field.
@@ -704,6 +705,7 @@ pub(crate) fn reserve_query_in(
         ]);
     Ok(Some((
         DeviceQuery {
+            request_sha256: query_request_sha256(&node)?,
             iq_id,
             users,
             generations,
@@ -1027,6 +1029,15 @@ fn ingest_user(
     Ok(UserIngest::Stored)
 }
 
+fn query_request_sha256(node: &Node) -> Result<[u8; 32]> {
+    use sha2::{Digest, Sha256};
+    let wire = zeroize::Zeroizing::new(
+        crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
+            .encode(node)?,
+    );
+    Ok(Sha256::digest(&*wire).into())
+}
+
 impl DeviceQuery {
     fn check_account(
         &self,
@@ -1051,8 +1062,13 @@ impl DeviceQuery {
         Ok(())
     }
     /// Recheck the durable reservation after queue handoff, without writes.
-    pub(crate) fn check_write_authority(&self, store: &ProtocolStore) -> Result<()> {
+    pub(crate) fn check_write_authority(&self, store: &ProtocolStore, node: &Node) -> Result<()> {
         check_deadline(self.deadline)?;
+        // Users/revisions alone do not bind the IQ/session/context at dequeue.
+        // Preserve the original uncertain reservation on any payload mismatch.
+        if query_request_sha256(node)? != self.request_sha256 {
+            return Err(invalid("queued device query differs from its reservation"));
+        }
         store.read(|tx| {
             let record: QueryRecord = tx
                 .get_json(Table::Checkpoints, query_key(&self.iq_id).as_bytes(), 1)?
@@ -1401,7 +1417,10 @@ mod tests {
                     }
                 })
                 .unwrap();
-            assert!(query.check_write_authority(&store).is_err(), "{change}");
+            assert!(
+                query.check_write_authority(&store, &iq).is_err(),
+                "{change}"
+            );
             assert!(
                 query
                     .ingest(
@@ -1423,7 +1442,7 @@ mod tests {
             assert_eq!(pending_users(&store).unwrap(), [contact()]);
         }
         store.write(|tx| account.save(tx)).unwrap();
-        query.check_write_authority(&store).unwrap();
+        query.check_write_authority(&store, &iq).unwrap();
         query
             .ingest(
                 &store,
@@ -2855,7 +2874,7 @@ mod tests {
                         .unwrap()
                 };
                 let before = snapshot(&store);
-                assert!(query.check_write_authority(&store).is_err());
+                assert!(query.check_write_authority(&store, &iq).is_err());
                 assert!(
                     query.ingest(&store, &response).is_err(),
                     "changed durable binding {damage}/{kind} cannot settle"

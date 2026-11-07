@@ -20151,6 +20151,13 @@
     "description": "Pinned dirty stanza lazy selector/constructors/accessors establish iq/get/g.us/w:g2, supplied id/context and typed group children; selected Rust semantic fields match. ID bound is Java string length; list diagnostics do not establish hard gates without assertion policy. Legacy group admission, encoded order and callback/persistence remain separate. Existing xtask reproduces evidence; no wire/route/runtime/live change.",
     "evidence": "docs/protocol/apk/2.26.43.72-group-dirty-stanza-serializer/README.md"
   },
+  "x-device-query-writer-payload-binding": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Device-query reservation captures a complete encoded-request digest. Dedicated and group device-query writer admission compare the actual queued IQ with that original digest alongside account, durable users/revisions/status and original deadline. Refusal preserves uncertainty without resetting or replaying queries. No wire/schema migration, historical backfill or native-completeness claim.",
+    "evidence": "docs/protocol/replay-safety-audit.md#device-query-payload-binding-at-writer-dequeue-2026-11-07"
+  },
   "x-prekey-upload-writer-payload-binding": {
     "x-cli": true,
     "x-transport": true,

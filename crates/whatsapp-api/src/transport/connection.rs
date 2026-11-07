@@ -399,9 +399,9 @@ impl Outbound {
                     Ok(())
                 })
                 .and_then(|()| {
-                    query
-                        .as_ref()
-                        .map_or(Ok(()), |query| query.check_write_authority(&store))
+                    query.as_ref().map_or(Ok(()), |query| {
+                        query.check_write_authority(&store, &self.node)
+                    })
                 }),
             Some(WriteGuard::DirectQuery(store, pending)) => pending.check_write_authority(&store),
             Some(WriteGuard::DirectAccount(store, expected)) => store.read(|tx| {
@@ -419,7 +419,9 @@ impl Outbound {
             Some(WriteGuard::Prekey(store, pending)) => {
                 pending.check_write_authority(&store, &self.node)
             }
-            Some(WriteGuard::Devices(store, query)) => query.check_write_authority(&store),
+            Some(WriteGuard::Devices(store, query)) => {
+                query.check_write_authority(&store, &self.node)
+            }
             Some(WriteGuard::RetryRefetch(store, pending)) => pending.check_write_authority(&store),
             Some(WriteGuard::Action(store, action)) => {
                 action.check_write_authority(&store, &self.node)
@@ -6988,9 +6990,19 @@ mod tests {
     #[tokio::test]
     async fn queued_device_query_refuses_changed_or_missing_reservation() {
         let dir = tempfile::tempdir().unwrap();
-        for damage in ["missing", "users", "revisions", "settled"] {
-            let store =
-                registered_store(&dir.path().join(format!("queued-device-owner-{damage}.db")));
+        for damage in [
+            "same",
+            "missing",
+            "users",
+            "revisions",
+            "settled",
+            "node_id",
+            "node_sid",
+            "node_body",
+            "node_to",
+        ] {
+            let path = dir.path().join(format!("queued-device-owner-{damage}.db"));
+            let store = registered_store(&path);
             super::super::devices::request_sync(&store, None, &peer(), None, "fixture").unwrap();
             let (query, node) = super::super::devices::begin_query(
                 &store,
@@ -7010,9 +7022,29 @@ mod tests {
                 tokio::spawn(
                     async move { link.send_device_query(&worker_store, &query, &node).await },
                 );
-            let queued = writes.recv().await.unwrap();
+            let mut queued = writes.recv().await.unwrap();
+            match damage {
+                "node_id" => queued.node = queued.node.attr("id", "changed-fixture"),
+                "node_to" => queued.node = queued.node.attr("to", "changed.invalid"),
+                "node_body" => {
+                    queued.node = queued.node.children(vec![Node::new("changed-fixture")])
+                }
+                "node_sid" => {
+                    let usync = queued
+                        .node
+                        .child("usync")
+                        .unwrap()
+                        .clone()
+                        .attr("sid", "changed-fixture");
+                    queued.node = queued.node.children(vec![usync]);
+                }
+                _ => {}
+            }
             store
                 .write(|tx| {
+                    if damage == "same" || damage.starts_with("node_") {
+                        return Ok(());
+                    }
                     if damage == "missing" {
                         tx.delete(Table::Checkpoints, key.as_bytes())?;
                     } else {
@@ -7031,15 +7063,21 @@ mod tests {
             let before = store
                 .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
                 .unwrap();
-            assert!(
-                queued.prepare().is_none(),
-                "changed device reservation must refuse before encoding"
-            );
-            let error = task.await.unwrap().unwrap_err();
-            assert!(
-                !super::super::devices::is_expired(&error),
-                "ownership failure must not be hidden as expiry"
-            );
+            let head = store.journal_head().unwrap();
+            let prepared = queued.prepare();
+            assert_eq!(prepared.is_some(), damage == "same", "{damage}");
+            if let Some((node, outcome)) = prepared {
+                encode(&node).unwrap();
+                outcome.send(Ok(())).unwrap();
+            }
+            let result = task.await.unwrap();
+            assert_eq!(result.is_ok(), damage == "same", "{damage}");
+            if let Err(error) = result {
+                assert!(
+                    !super::super::devices::is_expired(&error),
+                    "ownership failure is not expiry"
+                );
+            }
             assert!(writes.recv().await.is_none());
             assert_eq!(
                 store
@@ -7051,6 +7089,16 @@ mod tests {
                 super::super::devices::pending_users(&store).unwrap().len(),
                 1
             );
+            assert_eq!(store.journal_head().unwrap(), head);
+            drop(store);
+            let reopened = identity_store(&path);
+            assert_eq!(
+                reopened
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                    .unwrap(),
+                before
+            );
+            assert_eq!(reopened.journal_head().unwrap(), head);
         }
     }
 
