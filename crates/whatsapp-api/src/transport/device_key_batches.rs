@@ -85,6 +85,9 @@ struct Page {
 }
 #[derive(Serialize, Deserialize)]
 struct Batch {
+    // Local owner at initial page reservation; absent legacy proof is not backfilled.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    account_authority: Option<[u8; 32]>,
     devices: Vec<Jid>,
     pages: Vec<Page>,
 }
@@ -97,6 +100,19 @@ fn decode(wire: &[u8]) -> Result<Node> {
         .map_err(|_| invalid("invalid saved key-batch reply"))
 }
 impl Batch {
+    fn check_account(
+        &self,
+        generation: crate::model::ids::AccountGeneration,
+        account: Option<&crate::session::AccountRecord>,
+    ) -> Result<()> {
+        if let Some(expected) = self.account_authority
+            && super::account_authority::fingerprint(generation, account)? != expected
+        {
+            return Err(invalid("key-batch account changed"));
+        }
+        Ok(())
+    }
+
     fn validate(&self) -> Result<()> {
         if self.devices.is_empty()
             || devices(&self.devices)? != self.devices
@@ -222,6 +238,8 @@ pub fn reserve_next(
 ) -> Result<Option<Node>> {
     let input = devices(input)?;
     store.write(|tx| {
+        let account = crate::session::AccountRecord::load_in_write(tx)?;
+
         let raw=tx.get(Table::Checkpoints,&key(id),1)?;
         let mut batch:Batch=match raw {
             Some(raw)=>serde_json::from_slice(&raw).map_err(|_|invalid("invalid saved key-batch state"))?,
@@ -230,10 +248,10 @@ pub fn reserve_next(
                     return Err(invalid("legacy key outcome lacks frozen batch provenance; original attempt preserved"));
                 }
                 if input.is_empty() { return Ok(None); }
-                Batch { pages:(0..input.len().div_ceil(QUERY_WIDTH)).map(|_|Page { status:Status::Ready,query_id:None,reply:None,reason:None }).collect(), devices:input.clone() }
+                Batch { account_authority:Some(super::account_authority::fingerprint(tx.generation(), account.as_ref())?), pages:(0..input.len().div_ceil(QUERY_WIDTH)).map(|_|Page { status:Status::Ready,query_id:None,reply:None,reason:None }).collect(), devices:input.clone() }
             },
         };
-        batch.validate()?;batch.matches_devices(&input)?;
+        batch.validate()?;batch.check_account(tx.generation(), account.as_ref())?;batch.matches_devices(&input)?;
         // Recheck saved answered evidence before another query or completion.
         for (index, page) in batch.pages.iter().enumerate() {
             if page.status == Status::Answered { batch.answered_reply(index)?; }
@@ -345,6 +363,8 @@ pub fn settle(store: &ProtocolStore, id: &ClientRequestId, node: &Node) -> Resul
         }) else {
             return Ok(false);
         };
+        let account = crate::session::AccountRecord::load_in_write(tx)?;
+        batch.check_account(tx.generation(), account.as_ref())?;
         let result = classify(node, batch.expected(index));
         let page = &mut batch.pages[index];
         page.reason = result.err();
@@ -383,6 +403,8 @@ pub fn assembled(
                 Err(invalid("missing saved key-batch plan"))
             };
         };
+        let account = crate::session::AccountRecord::load(tx)?;
+        batch.check_account(tx.generation(), account.as_ref())?;
         batch.matches_devices(&input)?;
         let mut users = Vec::with_capacity(batch.devices.len());
         for (index, page) in batch.pages.iter().enumerate() {
@@ -577,6 +599,51 @@ mod tests {
             })
             .unwrap()
     }
+    #[test]
+    fn key_batch_reservation_settlement_and_assembly_keep_the_original_account() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("batch-account.redb");
+        let store = open(&path);
+        let account = crate::session::AccountRecord {
+            generation: store.generation(),
+            signal_registration_id: Some(31),
+            ..Default::default()
+        };
+        store.write(|tx| account.save(tx)).unwrap();
+        let targets: Vec<_> = (0..QUERY_WIDTH + 1).map(target).collect();
+        let selector = id();
+        let template = user_template();
+        let first = reserve_next(&store, &selector, &targets).unwrap().unwrap();
+        let mut changed = account.clone();
+        changed.signal_registration_id = Some(32);
+        store.write(|tx| changed.save(tx)).unwrap();
+        let before = state(&store);
+        assert!(settle(&store, &selector, &reply(&first, &template)).is_err());
+        assert!(reserve_next(&store, &selector, &targets).is_err());
+        assert_eq!(state(&store), before);
+        store.write(|tx| account.save(tx)).unwrap();
+        assert!(settle(&store, &selector, &reply(&first, &template)).unwrap());
+        let second = reserve_next(&store, &selector, &targets).unwrap().unwrap();
+        assert!(settle(&store, &selector, &reply(&second, &template)).unwrap());
+        assert!(assembled(&store, &selector, &targets).unwrap().is_some());
+        store.write(|tx| changed.save(tx)).unwrap();
+        let before = state(&store);
+        assert!(assembled(&store, &selector, &targets).is_err());
+        assert!(summary(&store, &selector).unwrap().is_some());
+        assert_eq!(state(&store), before);
+        drop(store);
+        let reopened = open(&path);
+        assert!(assembled(&reopened, &selector, &targets).is_err());
+        assert_eq!(state(&reopened), before);
+        reopened.write(|tx| account.save(tx)).unwrap();
+        assert!(assembled(&reopened, &selector, &targets).unwrap().is_some());
+        assert!(
+            reserve_next(&reopened, &selector, &targets)
+                .unwrap()
+                .is_none()
+        );
+    }
+
     #[test]
     fn nonreply_iq_cannot_consume_pending_key_batch_across_reopen() {
         let dir = tempfile::tempdir().unwrap();

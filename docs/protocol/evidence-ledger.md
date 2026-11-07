@@ -1,5 +1,10 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
+**New directory key batches retain account ownership.** Page reservation,
+settlement and assembled-key reuse now reject changed owners, including after
+reopen, without rewriting uncertain outcomes. Legacy owner absence stays unknown.
+[Evidence and higher-level group limits](key-batch-account-ownership.md). No live operation.
+
 **Normal group writer account gap closed.** Every queued group step now
 checks connection account ownership, including final messages without Pending.
 Device-query reservation/deadline admission remains an additional guard.

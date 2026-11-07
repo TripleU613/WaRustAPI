@@ -1,4 +1,11 @@
 {
+  "x-key-batch-account-ownership": {
+    "x-cli": "existing group key-batch inspection/transport flows; no new command/flag/public output field",
+    "x-transport": "new private Batch.account_authority checked before page continuation, matching settlement and assembled-key reuse",
+    "x-live": false,
+    "description": "Reproduced acceptance of valid first key page after saved registration ID replacement. New batches bind original account/store authority at initial reservation; matching settlement and continuation recheck transactionally, assembly checks the same read snapshot, and read-only summary remains inspectable. Two-page regression covers changed owner, unchanged state, original-owner completion, reopen and no new query. Legacy missing owner remains unknown/no backfill. Earlier group Pending/Row and sender-key commit ownership remain separate work. No wire change, reset, replay or live operation.",
+    "evidence": "docs/protocol/key-batch-account-ownership.md"
+  },
   "x-group-writer-account-ownership": {
     "x-cli": "existing normal group-outbox driver; no new command or flag",
     "x-transport": "every normal queued group step checks connection account authority in addition to optional DeviceQuery authority",
