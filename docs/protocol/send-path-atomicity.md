@@ -29,3 +29,27 @@ server restriction causality. It does not authorize replay, erase outcomes,
 rebind account identity, or prevent an unrelated writer from creating new
 historical state after a claim. Each implementation's reservation and uncertain
 outcome checks remain necessary. No live network/account operation is performed.
+
+## Historical pagination and entry-point check
+
+**Confirmed current source/test behavior**, baseline `902e0379`; no production
+policy change in this follow-up. The comparison CLI's transport entry claims
+Lab ownership before inspecting/reusing its message checkpoint or starting media
+work. The outbox-send CLI claims Outbox before its upload/preparation workflow.
+The direct and group outgoing adapters also claim Outbox during initial send
+selection, before key/membership query reservation. These are named call sites,
+not proof that every low-level library primitive enforces a claim.
+
+The atomic historical scan uses WriteTx::scan_after with an exclusive physical
+cursor and page size 256. Outbox keys are blinded, so creation/insertion order
+cannot be used to select a second-page conflict deterministically. The new
+regression enqueues 300 synthetic intents across two namespaces, reads their
+actual physical ordering and selects the final physical row. It verifies that
+row is absent from the first 256, reopens the encrypted store, and invokes the
+public claim entry point. Lab adoption refuses without changing outbox rows,
+checkpoints or journal head. Outbox adoption then succeeds, and another reopen
+still refuses Lab migration. No query or send occurs.
+
+This covers the transactional scanner's multi-page adoption boundary after the
+atomicity change. Complete caller coverage, arbitrary external checkpoint writers
+and account lifecycle remain distinct from this local historical-path guard.

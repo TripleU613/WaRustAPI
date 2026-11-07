@@ -6057,3 +6057,9 @@ evidence, not new APK behavior or proof of full group-send/network parity.
   historical work outside its claim transaction. It now checks legacy lab and
   paginated outbox records transactionally, with uncommitted-history rollback
   and reopen regression. See [send-path atomicity](send-path-atomicity.md).
+
+- Verified transactional send-path history scan beyond its first 256 physical
+  rows: offline 300-intent/two-namespace regression selects the final blinded
+  row and refuses Lab adoption after reopen without state changes. Named CLI
+  and direct/group adapter claim ordering recorded; no full caller claim. See
+  [pagination evidence](send-path-atomicity.md#historical-pagination-and-entry-point-check).

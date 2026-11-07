@@ -10582,3 +10582,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   its claim in one transaction, closing a duplicate-path race. Offline rollback
   regression covers both directions and reopen. Same-path repeat policy and
   no-replay guards remain unchanged; no live operation.
+
+- Verified send-path adoption scans beyond the first 256 blinded outbox rows
+  across namespaces and survives reopen, with an actual 300-intent regression.
+  Named comparison/outbox CLI and direct/group claim ordering audited. No runtime
+  policy change or live operation in this follow-up.

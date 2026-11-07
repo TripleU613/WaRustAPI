@@ -1,4 +1,11 @@
 {
+  "x-send-path-history-pagination-verification": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "evidence": "docs/protocol/send-path-atomicity.md#historical-pagination-and-entry-point-check",
+    "finding": "Offline 300-intent regression verifies historical conflict admission beyond the first 256 blinded rows; named entry-point ordering audited, not complete low-level caller coverage."
+  },
   "x-send-path-atomic-adoption": {
     "x-cli": false,
     "x-transport": true,

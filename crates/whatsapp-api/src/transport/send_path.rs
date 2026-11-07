@@ -98,6 +98,72 @@ mod tests {
         store::{MasterKey, OpenOptions, StaticKeySource},
     };
     #[test]
+    fn historical_conflict_beyond_first_physical_page_survives_reopen() {
+        let dir = tempfile::tempdir().unwrap();
+        let options = || OpenOptions {
+            path: dir.path().join("paged-path.redb"),
+            account_id: AccountId::new("test").unwrap(),
+            create: true,
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([3; 32]))),
+        };
+        let store = ProtocolStore::open(options()).unwrap();
+        store
+            .write(|tx| {
+                for index in 0..300 {
+                    Outbox::new(
+                        if index % 2 == 0 { "one" } else { "two" },
+                        Limits::default(),
+                    )
+                    .enqueue(
+                        tx,
+                        &SendRequest {
+                            client_request_id: ClientRequestId::new(format!("page-{index}"))?,
+                            chat: ChatId::from_jid(&Jid::parse("100@s.whatsapp.net")?)?,
+                            content: MessageContent::Text {
+                                body: "synthetic".into(),
+                                quoted: None,
+                                style: Default::default(),
+                            },
+                        },
+                    )?;
+                }
+                Ok(())
+            })
+            .unwrap();
+        // Select by actual blinded physical ordering, not insertion order.
+        let rows = store.read(|tx| tx.scan(Table::Outbox, 1, 400)).unwrap();
+        assert_eq!(rows.len(), 300);
+        let target: OutboxEntry = serde_json::from_slice(&rows.last().unwrap().1).unwrap();
+        assert!(!rows[..256].iter().any(|(_, bytes)| {
+            serde_json::from_slice::<OutboxEntry>(bytes)
+                .unwrap()
+                .client_request_id
+                == target.client_request_id
+        }));
+        drop(store);
+        let store = ProtocolStore::open(options()).unwrap();
+        let checkpoints = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+            .unwrap();
+        let journal = store.journal_head().unwrap();
+        assert!(claim(&store, &target.client_request_id, SendPath::Lab).is_err());
+        assert_eq!(
+            store.read(|tx| tx.scan(Table::Outbox, 1, 400)).unwrap(),
+            rows
+        );
+        assert_eq!(
+            store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap(),
+            checkpoints
+        );
+        assert_eq!(store.journal_head().unwrap(), journal);
+        claim(&store, &target.client_request_id, SendPath::Outbox).unwrap();
+        drop(store);
+        let store = ProtocolStore::open(options()).unwrap();
+        assert!(claim(&store, &target.client_request_id, SendPath::Lab).is_err());
+    }
+    #[test]
     fn first_claim_sees_uncommitted_history_and_rolls_back_conflicts() {
         for path in [SendPath::Lab, SendPath::Outbox] {
             let dir = tempfile::tempdir().unwrap();
