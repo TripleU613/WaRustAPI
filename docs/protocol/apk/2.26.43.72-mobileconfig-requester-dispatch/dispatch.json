@@ -1,0 +1,27 @@
+{
+  "member_sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+  "relative_relocations": {
+    "0xd53a8": "0x7f648",
+    "0xd6458": "0xd3fe0",
+    "0xd3fe8": "0x24c29",
+    "0xd6470": "0xabf18",
+    "0xd4990": "0x58788"
+  },
+  "requester_rtti": "N12mobileconfig23FBMobileConfigRequesterE",
+  "static_short_strings": {
+    "0x24c58": "mobileconfig",
+    "0x24c70": "POST"
+  },
+  "local_refusal": "Empty query params",
+  "selected_calls": {
+    "0xabf60": "0xac09c",
+    "0xabfbc": "0x60148",
+    "0xac050": "0x5971c"
+  },
+  "updater_getter": "0x7f648",
+  "requester_entry": "0xabf18",
+  "fetch_interface_call": "0xabfec",
+  "callback_argument": "x4: copied callable storage",
+  "refusal_gate": "request-data word +0x9c != 1 and constructed query vector empty",
+  "scope": "selected conditional static route; runtime fetcher implementation and full query-vector producer remain unobserved"
+}

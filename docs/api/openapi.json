@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-requester-dispatch-evidence": {
+    "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-requester-dispatch/inspect-dispatch.py <pinned-library>; offline research only",
+    "x-transport": "research only; conditional native interface route, not an enabled HTTP endpoint",
+    "x-live": false,
+    "description": "Confirmed selected static MobileConfig default updater obtains FBMobileConfigRequester; it copies the queue callback into fetch-interface x4, matching the Java bridge when that fetcher is installed. A non-1 request mode with an empty native query vector completes locally with false/Empty query params and bypasses the fetch call. Runtime fetcher injection, field producers and configuration persistence remain unresolved.",
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-requester-dispatch/README.md"
+  },
   "x-mobileconfig-updater-callback-evidence": {
     "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-updater-callback/inspect-callback.py <pinned-library>; offline research only",
     "x-transport": "research only; intermediate fetch dispatch, captures and persistence unresolved",

@@ -1,0 +1,288 @@
+Bounded discovery window 0x59488..0x5954c
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000004c460 <.text>:
+   59488:      	paciasp
+   5948c:      	stp	x29, x30, [sp, #-0x20]!
+   59490:      	str	x19, [sp, #0x10]
+   59494:      	mov	x29, sp
+   59498:      	mov	x19, x0
+   5949c:      	ldr	x0, [x0, #0x28]
+   594a0:      	adrp	x8, 0xd4000
+   594a4:      	add	x8, x8, #0xb90
+   594a8:      	str	x8, [x19]
+   594ac:      	bl	0x55a3c <.text+0x95dc>
+   594b0:      	bl	0xcb93c <JNI_OnLoad+0x5c79c>
+   594b4:      	ldp	x29, x30, [sp], #0x20
+   594b8:      	autiasp
+   594bc:      	b	0x594c0 <.text+0xd060>
+   594c0:      	bti	c
+   594c4:      	ldr	x8, [x0]
+   594c8:      	cbz	x8, 0x594f8 <.text+0xd098>
+   594cc:      	paciasp
+   594d0:      	stp	x29, x30, [sp, #-0x20]!
+   594d4:      	str	x19, [sp, #0x10]
+   594d8:      	mov	x29, sp
+   594dc:      	mov	x19, x0
+   594e0:      	bl	0x594fc <.text+0xd09c>
+   594e4:      	ldr	x0, [x19]
+   594e8:      	ldr	x19, [sp, #0x10]
+   594ec:      	ldp	x29, x30, [sp], #0x20
+   594f0:      	autiasp
+   594f4:      	b	0xccf30 <__wrap__ZdlPv@plt>
+   594f8:      	ret
+   594fc:      	paciasp
+   59500:      	stp	x29, x30, [sp, #-0x30]!
+   59504:      	str	x21, [sp, #0x10]
+   59508:      	stp	x20, x19, [sp, #0x20]
+   5950c:      	mov	x29, sp
+   59510:      	ldp	x21, x20, [x0]
+   59514:      	mov	x19, x0
+   59518:      	cmp	x20, x21
+   5951c:      	b.eq	0x59530 <.text+0xd0d0>
+   59520:      	sub	x20, x20, #0x30
+   59524:      	mov	x0, x20
+   59528:      	bl	0x5fa3c <.text+0x135dc>
+   5952c:      	b	0x59518 <.text+0xd0b8>
+   59530:      	str	x21, [x19, #0x8]
+   59534:      	bl	0xcab6c <JNI_OnLoad+0x5b9cc>
+   59538:      	ldp	x29, x30, [sp], #0x30
+   5953c:      	autiasp
+   59540:      	ret
+   59544:      	bti	c
+   59548:      	brk	#0x1
+Bounded discovery window 0x70358..0x70414
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   70358:      	paciasp
+   7035c:      	stp	x29, x30, [sp, #-0x20]!
+   70360:      	str	x19, [sp, #0x10]
+   70364:      	mov	x29, sp
+   70368:      	adrp	x8, 0xd4000
+   7036c:      	add	x8, x8, #0xb60
+   70370:      	mov	x19, x0
+   70374:      	str	x8, [x0], #0x78
+   70378:      	bl	0x709f4 <JNI_OnLoad+0x1854>
+   7037c:      	ldr	x0, [x19, #0x68]
+   70380:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   70384:      	ldr	x0, [x19, #0x58]
+   70388:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   7038c:      	ldr	x0, [x19, #0x48]
+   70390:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   70394:      	bl	0xcaaa8 <JNI_OnLoad+0x5b908>
+   70398:      	ldp	x29, x30, [sp], #0x20
+   7039c:      	autiasp
+   703a0:      	b	0x59488 <.text+0xd028>
+   703a4:      	paciasp
+   703a8:      	stp	x29, x30, [sp, #-0x20]!
+   703ac:      	str	x19, [sp, #0x10]
+   703b0:      	mov	x29, sp
+   703b4:      	mov	x19, x0
+   703b8:      	bl	0x70358 <JNI_OnLoad+0x11b8>
+   703bc:      	bl	0xcaaa8 <JNI_OnLoad+0x5b908>
+   703c0:      	ldp	x29, x30, [sp], #0x20
+   703c4:      	autiasp
+   703c8:      	b	0xccf30 <__wrap__ZdlPv@plt>
+   703cc:      	paciasp
+   703d0:      	sub	sp, sp, #0x80
+   703d4:      	stp	x29, x30, [sp, #0x50]
+   703d8:      	bl	0xcac00 <JNI_OnLoad+0x5ba60>
+   703dc:      	add	x29, sp, #0x50
+   703e0:      	mrs	x22, TPIDR_EL0
+   703e4:      	mov	x19, x8
+   703e8:      	bl	0xcaca4 <JNI_OnLoad+0x5bb04>
+   703ec:      	ldrb	w8, [x2]
+   703f0:      	ldr	x9, [x2, #0x8]
+   703f4:      	bl	0xcb198 <JNI_OnLoad+0x5bff8>
+   703f8:      	bl	0xca4a8 <JNI_OnLoad+0x5b308>
+   703fc:      	cbz	x8, 0x7041c <JNI_OnLoad+0x127c>
+   70400:      	adrp	x8, 0x1c000
+   70404:      	add	x8, x8, #0xb2
+   70408:      	sub	x0, x29, #0x20
+   7040c:      	mov	x1, x2
+   70410:      	mov	x2, x8
+Bounded discovery window 0x6f4e8..0x6f5ec
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   6f4e8:      	paciasp
+   6f4ec:      	stp	x29, x30, [sp, #-0x60]!
+   6f4f0:      	bl	0xc9fd4 <JNI_OnLoad+0x5ae34>
+   6f4f4:      	sub	sp, sp, #0x600
+   6f4f8:      	str	xzr, [sp]
+   6f4fc:      	mrs	x26, TPIDR_EL0
+   6f500:      	mov	x22, x1
+   6f504:      	mov	x19, x0
+   6f508:      	ldr	x8, [x26, #0x28]
+   6f50c:      	adrp	x1, 0x1b000
+   6f510:      	add	x1, x1, #0xa20
+   6f514:      	add	x0, sp, #0x158
+   6f518:      	mov	x23, x5
+   6f51c:      	mov	x20, x4
+   6f520:      	mov	x24, x3
+   6f524:      	mov	x21, x2
+   6f528:      	stur	x8, [x29, #-0x10]
+   6f52c:      	stp	xzr, xzr, [sp, #0x158]
+   6f530:      	str	xzr, [sp, #0x168]
+   6f534:      	bl	0x4d9a0 <.text+0x1540>
+   6f538:      	adrp	x1, 0x17000
+   6f53c:      	add	x1, x1, #0xa22
+   6f540:      	add	x0, sp, #0x140
+   6f544:      	stp	xzr, xzr, [sp, #0x140]
+   6f548:      	str	xzr, [sp, #0x150]
+   6f54c:      	bl	0x4d9a0 <.text+0x1540>
+   6f550:      	stp	xzr, xzr, [sp, #0x128]
+   6f554:      	str	xzr, [sp, #0x138]
+   6f558:      	adrp	x1, 0x1b000
+   6f55c:      	add	x1, x1, #0xe00
+   6f560:      	add	x0, sp, #0x128
+   6f564:      	bl	0x4d9a0 <.text+0x1540>
+   6f568:      	movi	v0.2d, #0000000000000000
+   6f56c:      	stp	q0, q0, [sp, #0x100]
+   6f570:      	str	q0, [sp, #0xf0]
+   6f574:      	adrp	x1, 0x19000
+   6f578:      	add	x1, x1, #0x434
+   6f57c:      	add	x0, sp, #0xf0
+   6f580:      	add	x25, sp, #0xf0
+   6f584:      	bl	0x4d9a0 <.text+0x1540>
+   6f588:      	adrp	x1, 0x18000
+   6f58c:      	add	x1, x1, #0x1b4
+   6f590:      	add	x0, x25, #0x18
+   6f594:      	bl	0x4d9a0 <.text+0x1540>
+   6f598:      	movi	v0.2d, #0000000000000000
+   6f59c:      	stp	q0, q0, [sp, #0xd0]
+   6f5a0:      	str	q0, [sp, #0xc0]
+   6f5a4:      	adrp	x1, 0x19000
+   6f5a8:      	add	x1, x1, #0xc89
+   6f5ac:      	add	x0, sp, #0xc0
+   6f5b0:      	add	x25, sp, #0xc0
+   6f5b4:      	bl	0x4d9a0 <.text+0x1540>
+   6f5b8:      	adrp	x1, 0x1a000
+   6f5bc:      	add	x1, x1, #0xa3d
+   6f5c0:      	add	x0, x25, #0x18
+   6f5c4:      	bl	0x4d9a0 <.text+0x1540>
+   6f5c8:      	ldr	x8, [x19, #0x50]
+   6f5cc:      	cbz	x8, 0x6f60c <JNI_OnLoad+0x46c>
+   6f5d0:      	ldr	x8, [x19, #0x40]
+   6f5d4:      	cbz	x8, 0x6f630 <JNI_OnLoad+0x490>
+   6f5d8:      	stp	x19, x26, [sp, #0x20]
+   6f5dc:      	ldp	x26, x24, [x24]
+   6f5e0:      	adrp	x27, 0x18000
+   6f5e4:      	add	x27, x27, #0x5ac
+   6f5e8:      	mov	x25, x26
+Bounded discovery window 0x71c98..0x71ccc
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   71c98:      	bti	c
+   71c9c:      	ret
+   71ca0:      	bti	c
+   71ca4:      	ret
+   71ca8:      	bti	c
+   71cac:      	mov	x0, x1
+   71cb0:      	b	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   71cb4:      	bti	c
+   71cb8:      	ldr	x0, [x1, #0x8]
+   71cbc:      	b	0x55a3c <.text+0x95dc>
+   71cc0:      	bti	c
+   71cc4:      	ldr	x0, [x1, #0x8]
+   71cc8:      	b	0x71ad4 <JNI_OnLoad+0x2934>
+Bounded discovery window 0x73540..0x735ac
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   73540:      	bti	c
+   73544:      	ldr	x0, [x0, #0x18]
+   73548:      	cbz	x0, 0x73558 <JNI_OnLoad+0x43b8>
+   7354c:      	ldr	x8, [x0]
+   73550:      	ldr	x16, [x8]
+   73554:      	br	x16
+   73558:      	ret
+   7355c:      	bti	c
+   73560:      	ldrb	w9, [x0, #0x14c]
+   73564:      	cmp	w9, #0x1
+   73568:      	b.ne	0x73578 <JNI_OnLoad+0x43d8>
+   7356c:      	stp	xzr, xzr, [x8]
+   73570:      	strb	wzr, [x8, #0x10]
+   73574:      	ret
+   73578:      	ldr	x0, [x0, #0x88]
+   7357c:      	ldr	x9, [x0]
+   73580:      	ldr	x16, [x9, #0x40]
+   73584:      	br	x16
+   73588:      	bti	c
+   7358c:      	add	x1, x0, #0x28
+   73590:      	mov	x0, x8
+   73594:      	b	0xcca30 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2ERKS5_@plt>
+   73598:      	bti	c
+   7359c:      	ldr	w0, [x0, #0x308]
+   735a0:      	ret
+   735a4:      	bti	c
+   735a8:      	ldr	w0, [x0, #0x324]
+Bounded discovery window 0x7b800..0x7b8b4
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   7b800:      	ldp	x9, x8, [x19, #0xf0]
+   7b804:      	ldr	x20, [x19, #0x120]
+   7b808:      	stp	x9, x8, [sp, #0x68]
+   7b80c:      	cbz	x8, 0x7b818 <JNI_OnLoad+0xc678>
+   7b810:      	bl	0xcab60 <JNI_OnLoad+0x5b9c0>
+   7b814:      	bl	0x4c570 <.text+0x110>
+   7b818:      	ldp	x9, x8, [x19, #0x88]
+   7b81c:      	ldr	x23, [sp, #0x30]
+   7b820:      	stp	x9, x8, [sp, #0x58]
+   7b824:      	cbz	x8, 0x7b830 <JNI_OnLoad+0xc690>
+   7b828:      	bl	0xcab60 <JNI_OnLoad+0x5b9c0>
+   7b82c:      	bl	0x4c570 <.text+0x110>
+   7b830:      	ldp	x9, x8, [x19, #0x18]
+   7b834:      	stp	x9, x8, [sp, #0x48]
+   7b838:      	cbz	x8, 0x7b844 <JNI_OnLoad+0xc6a4>
+   7b83c:      	bl	0xcab60 <JNI_OnLoad+0x5b9c0>
+   7b840:      	bl	0x4c570 <.text+0x110>
+   7b844:      	ldr	x8, [x19, #0x110]
+   7b848:      	cbz	x8, 0x7b85c <JNI_OnLoad+0xc6bc>
+   7b84c:      	ldr	x9, [x8]
+   7b850:      	ldur	x9, [x9, #-0x48]
+   7b854:      	add	x9, x8, x9
+   7b858:      	b	0x7b860 <JNI_OnLoad+0xc6c0>
+   7b85c:      	mov	x9, xzr
+   7b860:      	ldr	x8, [x19, #0x118]
+   7b864:      	stp	x9, x8, [sp, #0x38]
+   7b868:      	cbz	x8, 0x7b874 <JNI_OnLoad+0xc6d4>
+   7b86c:      	bl	0xcab60 <JNI_OnLoad+0x5b9c0>
+   7b870:      	bl	0x4c570 <.text+0x110>
+   7b874:      	ldr	x8, [x20]
+   7b878:      	add	x1, x19, #0x98
+   7b87c:      	add	x2, sp, #0x68
+   7b880:      	add	x3, sp, #0x58
+   7b884:      	add	x4, sp, #0x48
+   7b888:      	add	x5, sp, #0x38
+   7b88c:      	ldr	x8, [x8, #0x10]
+   7b890:      	mov	x0, x20
+   7b894:      	blr	x8
+   7b898:      	ldr	x0, [sp, #0x40]
+   7b89c:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   7b8a0:      	ldr	x0, [sp, #0x50]
+   7b8a4:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   7b8a8:      	ldr	x0, [sp, #0x60]
+   7b8ac:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   7b8b0:      	ldr	x0, [sp, #0x70]

@@ -1,0 +1,103 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   abf18:      	paciasp
+   abf1c:      	sub	sp, sp, #0xb0
+   abf20:      	stp	x29, x30, [sp, #0x70]
+   abf24:      	str	x23, [sp, #0x80]
+   abf28:      	bl	0xcb8d0 <JNI_OnLoad+0x5c730>
+   abf2c:      	add	x29, sp, #0x70
+   abf30:      	mrs	x23, TPIDR_EL0
+   abf34:      	mov	x22, x0
+   abf38:      	mov	x21, x2
+   abf3c:      	ldr	x8, [x23, #0x28]
+   abf40:      	mov	x20, x1
+   abf44:      	add	x0, sp, #0x18
+   abf48:      	mov	x1, x22
+   abf4c:      	mov	x2, x3
+   abf50:      	mov	x19, x3
+   abf54:      	stur	x8, [x29, #-0x8]
+   abf58:      	stp	xzr, xzr, [sp, #0x18]
+   abf5c:      	str	xzr, [sp, #0x28]
+   abf60:      	bl	0xac09c <JNI_OnLoad+0x3cefc>
+   abf64:      	ldr	w8, [x19, #0x9c]
+   abf68:      	cmp	w8, #0x1
+   abf6c:      	b.eq	0xabf7c <JNI_OnLoad+0x3cddc>
+   abf70:      	ldp	x9, x8, [sp, #0x18]
+   abf74:      	cmp	x8, x9
+   abf78:      	b.eq	0xac02c <JNI_OnLoad+0x3ce8c>
+   abf7c:      	ldrb	w8, [x22, #0x8]
+   abf80:      	nop
+   abf84:      	adr	x9, 0xdb9d0
+   abf88:      	stp	xzr, xzr, [sp]
+   abf8c:      	cmp	w8, #0x0
+   abf90:      	nop
+   abf94:      	adr	x8, 0x24c58
+   abf98:      	csel	x1, x8, x9, ne
+   abf9c:      	str	xzr, [sp, #0x10]
+   abfa0:      	mov	x0, sp
+   abfa4:      	bl	0xcca30 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2ERKS5_@plt>
+   abfa8:      	bl	0xcd190 <_ZNSt6__ndk16chrono12system_clock3nowEv@plt>
+   abfac:      	str	x0, [x21]
+   abfb0:      	ldr	x21, [x22, #0x40]
+   abfb4:      	add	x0, sp, #0x30
+   abfb8:      	mov	x1, x20
+   abfbc:      	bl	0x60148 <.text+0x13ce8>
+   abfc0:      	ldr	x8, [x21]
+   abfc4:      	ldr	x9, [x19, #0xf0]
+   abfc8:      	ldr	x8, [x8]
+   abfcc:      	nop
+   abfd0:      	adr	x1, 0x24c70
+   abfd4:      	mov	x2, sp
+   abfd8:      	add	x3, sp, #0x18
+   abfdc:      	add	x4, sp, #0x30
+   abfe0:      	add	x5, x19, #0x80
+   abfe4:      	and	x6, x9, #0xffffffffff
+   abfe8:      	mov	x0, x21
+   abfec:      	blr	x8
+   abff0:      	add	x0, sp, #0x30
+   abff4:      	bl	0xa975c <JNI_OnLoad+0x3a5bc>
+   abff8:      	mov	x0, sp
+   abffc:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   ac000:      	add	x0, sp, #0x18
+   ac004:      	bl	0x594c0 <.text+0xd060>
+   ac008:      	bl	0xca274 <JNI_OnLoad+0x5b0d4>
+   ac00c:      	b.ne	0xac098 <JNI_OnLoad+0x3cef8>
+   ac010:      	ldp	x20, x19, [sp, #0xa0]
+   ac014:      	ldr	x23, [sp, #0x80]
+   ac018:      	ldp	x22, x21, [sp, #0x90]
+   ac01c:      	ldp	x29, x30, [sp, #0x70]
+   ac020:      	add	sp, sp, #0xb0
+   ac024:      	autiasp
+   ac028:      	ret
+   ac02c:      	bl	0xcd190 <_ZNSt6__ndk16chrono12system_clock3nowEv@plt>
+   ac030:      	str	x0, [x21]
+   ac034:      	adrp	x1, 0x16000
+   ac038:      	add	x1, x1, #0xf64
+   ac03c:      	mov	x0, sp
+   ac040:      	bl	0x4d9a0 <.text+0x1540>
+   ac044:      	ldr	x0, [x20, #0x20]
+   ac048:      	mov	x2, sp
+   ac04c:      	mov	w1, wzr
+   ac050:      	bl	0x5971c <.text+0xd2bc>
+   ac054:      	b	0xabff8 <JNI_OnLoad+0x3ce58>
+   ac058:      	b	0xac06c <JNI_OnLoad+0x3cecc>
+   ac05c:      	b	0xac07c <JNI_OnLoad+0x3cedc>
+   ac060:      	bl	0xcb990 <JNI_OnLoad+0x5c7f0>
+   ac064:      	bl	0xa975c <JNI_OnLoad+0x3a5bc>
+   ac068:      	b	0xac070 <JNI_OnLoad+0x3ced0>
+   ac06c:      	mov	x19, x0
+   ac070:      	mov	x0, sp
+   ac074:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   ac078:      	b	0xac080 <JNI_OnLoad+0x3cee0>
+   ac07c:      	mov	x19, x0
+   ac080:      	add	x0, sp, #0x18
+   ac084:      	bl	0x594c0 <.text+0xd060>
+   ac088:      	bl	0xca274 <JNI_OnLoad+0x5b0d4>
+   ac08c:      	b.ne	0xac098 <JNI_OnLoad+0x3cef8>
+   ac090:      	mov	x0, x19
+   ac094:      	bl	0xccf70 <__wrap__Unwind_Resume@plt>
+   ac098:      	bl	0xcd9f0 <__stack_chk_fail@plt>

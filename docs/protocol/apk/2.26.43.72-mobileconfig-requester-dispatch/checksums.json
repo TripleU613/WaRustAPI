@@ -1,0 +1,38 @@
+{
+  "README.md": {
+    "bytes": 6125,
+    "sha256": "e15821581f361d56efbcaa92c45703754fdc4a2f4a65099ecef404460062965e"
+  },
+  "dispatch.json": {
+    "bytes": 916,
+    "sha256": "bb6a1c64e270b7f7423985c9b4a7d33d00d078ebc347fa921b3a58cbffec5ff0"
+  },
+  "excluded-candidates.txt": {
+    "bytes": 10272,
+    "sha256": "7a7f5fb6a3ac21312be91bbfd177ef25b9be590e6373be499b62dc760560fe03"
+  },
+  "getter-restore.txt": {
+    "bytes": 288,
+    "sha256": "029601d9819f68a06a1ee4fca3374cd6a15811eb45f28256fcb94d28acf1fc86"
+  },
+  "inspect-dispatch.py": {
+    "bytes": 2142,
+    "sha256": "e5085bbe147b7c4067fc996251285ead88e3b479f9dfac956bc41f2a7df21f84"
+  },
+  "query-producer-entry.txt": {
+    "bytes": 1455,
+    "sha256": "97f970e8e9a2b58c4a120ae8c5cccb743e711b4c4b6791c448e51746b801acd7"
+  },
+  "rea-requester-window.json": {
+    "bytes": 11623,
+    "sha256": "b5f6b695810ef42c2d87b090535fd7d81643daf8db79c8bcbe90ac879a03124d"
+  },
+  "requester-construction.txt": {
+    "bytes": 3035,
+    "sha256": "6724081e4747a1bac01bd6824ffbf3ce5a5447120f8de908d530822a79075e5d"
+  },
+  "requester-entry.txt": {
+    "bytes": 3932,
+    "sha256": "511939b098c456a0634cd63029e70eeb8dc16b43200850df2db07ae5c8083eb8"
+  }
+}

@@ -1,5 +1,7 @@
 **MobileConfig Java/native completion binding now reaches a stored callable.**
 
+Confirmed selected static MobileConfig default updater obtains FBMobileConfigRequester; it copies the queue callback into fetch-interface x4, matching the Java bridge when that fetcher is installed. A non-1 request mode with an empty native query vector completes locally with false/Empty query params and bypasses the fetch call. Runtime fetcher injection, field producers and configuration persistence remain unresolved. [Requester dispatch evidence](apk/2.26.43.72-mobileconfig-requester-dispatch/README.md). No live operation or Rust runtime change.
+
 Confirmed selected static MobileConfig queueRequest callback locks a weak owner before forwarding bool/string to virtual completion slot +0x38; the default-updater slot resolves to 0x7e5ac. Expired-owner processing is conditional, with downstream effects still untraced. The intermediate dispatch linking this candidate to the Java fetch handler remains unresolved. [Callback evidence](apk/2.26.43.72-mobileconfig-updater-callback/README.md). No live operation or Rust runtime change.
 
 Confirmed selected static MobileConfig fetch construction copies a caller-supplied callable into a native handler holder; its target position matches the completion load at holder+0x30. Concrete captures, commit and cache activation remain unresolved. [Construction evidence](apk/2.26.43.72-mobileconfig-handler-construction/README.md). No live operation or Rust runtime change.

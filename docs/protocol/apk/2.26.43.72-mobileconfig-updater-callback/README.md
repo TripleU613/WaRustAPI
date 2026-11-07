@@ -87,3 +87,9 @@ that dereference register-relative operands are not runtime memory observations.
 then follow response parsing, persistence, retries and cache activation. Owner
 lifetime guarding does not establish account-generation guarding. No Rust runtime
 change, live operation, server-acceptance claim or zero-ban guarantee follows.
+
+Follow-up: [requester dispatch](../2.26.43.72-mobileconfig-requester-dispatch/README.md)
+now resolves the intermediate dispatcher for the selected default-updater route
+and supplies the callback as fetch-interface x4. Actual fetcher installation and
+response persistence remain open; the historical boundary above is narrowed by
+that conditional handoff evidence.

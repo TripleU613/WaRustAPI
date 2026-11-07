@@ -67,3 +67,9 @@ The nearby 0x594c0 candidate inspected during discovery is vector destruction,
 not evidence of callable construction. No Rust sender or hydration behavior is
 changed. The next useful trace is the upstream caller supplying x4, retaining
 these ownership and persistence gaps instead of guessing a commit contract.
+
+Follow-up: [requester dispatch](../2.26.43.72-mobileconfig-requester-dispatch/README.md)
+now resolves the intermediate dispatcher for the selected default-updater route
+and supplies the callback as fetch-interface x4. Actual fetcher installation and
+response persistence remain open; the historical boundary above is narrowed by
+that conditional handoff evidence.

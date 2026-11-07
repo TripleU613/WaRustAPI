@@ -1,0 +1,40 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   ac09c:      	paciasp
+   ac0a0:      	stp	x29, x30, [sp, #-0x60]!
+   ac0a4:      	bl	0xc9fd4 <JNI_OnLoad+0x5ae34>
+   ac0a8:      	sub	sp, sp, #0x350
+   ac0ac:      	mrs	x11, TPIDR_EL0
+   ac0b0:      	mov	x22, x1
+   ac0b4:      	mov	x21, x1
+   ac0b8:      	ldr	x8, [x11, #0x28]
+   ac0bc:      	stur	x8, [x29, #-0x18]
+   ac0c0:      	ldrb	w8, [x22, #0x28]!
+   ac0c4:      	ldr	x9, [x22, #0x8]
+   ac0c8:      	str	x11, [sp, #0x30]
+   ac0cc:      	bl	0xca4a8 <JNI_OnLoad+0x5b308>
+   ac0d0:      	cbz	x8, 0xac0f4 <JNI_OnLoad+0x3cf54>
+   ac0d4:      	ldr	x8, [x2, #0x50]
+   ac0d8:      	mov	x20, x2
+   ac0dc:      	str	x0, [sp, #0x18]
+   ac0e0:      	cbz	x8, 0xac164 <JNI_OnLoad+0x3cfc4>
+   ac0e4:      	ldr	x8, [x8, #0x18]
+   ac0e8:      	bl	0xcc71c <JNI_OnLoad+0x5d57c>
+   ac0ec:      	str	w8, [sp, #0x2c]
+   ac0f0:      	b	0xac168 <JNI_OnLoad+0x3cfc8>
+   ac0f4:      	mov	x19, x0
+   ac0f8:      	adrp	x1, 0x17000
+   ac0fc:      	add	x1, x1, #0xede
+   ac100:      	add	x0, sp, #0x220
+   ac104:      	bl	0x4d9a0 <.text+0x1540>
+   ac108:      	adrp	x1, 0x16000
+   ac10c:      	add	x1, x1, #0xf77
+   ac110:      	add	x0, sp, #0x110
+   ac114:      	bl	0x4d9a0 <.text+0x1540>
+   ac118:      	adrp	x1, 0x1a000
+   ac11c:      	add	x1, x1, #0xc1d
+   ac120:      	add	x0, sp, #0xf8
