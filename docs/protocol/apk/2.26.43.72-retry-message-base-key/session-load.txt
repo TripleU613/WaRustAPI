@@ -1,0 +1,50 @@
+
+# class: LX/0WJ;
+# extends: Ljava/lang/Object;
+
+.method public A0M(LL)  # .registers 5
+    # full signature: LX/0WJ;->A0M(LX/EoY;)LX/Etk;
+    0000..0004  const-string  v2, "loadSession"
+    0004..0008  iget-object  v1, v3, LX/0WJ;->A0P:LX/0YG;
+    0008..000c  const-string  v0, "sessions"
+    000c..0012  invoke-virtual  {v1, v4, v2, v0}, LX/0YG;->A02(LX/EoY;Ljava/lang/String;Ljava/lang/String;)LX/EoY;
+    0012..0014  move-result-object  v1
+    0014..001a  invoke-direct  {v3}, LX/0WJ;->A0I()Z
+    001a..001c  move-result  v0
+    001c..0020  if-eqz  v0, +0x1d
+    0020..0024  iget-object  v0, v3, LX/0WJ;->A0I:LX/0Wk;
+    0024..002a  invoke-static  {v1, v0}, LX/0Wk;->A00(LX/EoY;LX/0Wk;)LX/FjI;
+    002a..002c  move-result-object  v0
+    002c..0032  invoke-virtual  {v0}, Ljava/util/concurrent/locks/ReentrantLock;->lock()V
+    0032..0038  invoke-direct  {v3, v4, v1}, LX/0WJ;->A02(LX/EoY;LX/EoY;)LX/Etk;
+    0038..003a  move-result-object  v1
+    003a..0040  invoke-virtual  {v0}, LX/FjI;->close()V
+    0040..0042  return-object  v1
+    0042..0044  move-exception  v1
+    0044..004a  invoke-virtual  {v0}, LX/FjI;->close()V
+    004a..004c  throw  v1
+    004c..004e  move-exception  v0
+    004e..0054  invoke-static  {v1, v0}, LX/Oy7;->A00(Ljava/lang/Throwable;Ljava/lang/Throwable;)V
+    0054..0056  throw  v1
+    0056..005a  iget-object  v0, v3, LX/0WJ;->A05:LX/00x;
+    005a..0060  invoke-interface  {v0}, LX/00x;->get()Ljava/lang/Object;
+    0060..0062  move-result-object  v0
+    0062..0064  monitor-enter
+    0064..006a  invoke-direct  {v3, v4, v1}, LX/0WJ;->A01(LX/EoY;LX/EoY;)LX/Etk;
+    006a..006c  move-result-object  v1
+    006c..0070  if-eqz  v1, +0x4
+    0070..0072  monitor-exit
+    0072..0074  return-object  v1
+    0074..0076  monitor-exit
+    0076..007c  invoke-static  {v3, v4}, LX/0WJ;->A00(LX/0WJ;LX/EoY;)LX/Etk;
+    007c..007e  move-result-object  v1
+    007e..0080  return-object  v1
+    0080..0082  move-exception  v1
+    0082..0084  monitor-exit
+    0084..0086  throw  v1
+    # exception table: 4 try range(s)
+    # catch <all> code_units 0019..001d -> 0021
+    # catch <all> code_units 0022..0025 -> 0026
+    # catch <all> code_units 0032..003b -> 0040
+    # catch <all> code_units 0041..0042 -> 0040
+.end method

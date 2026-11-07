@@ -692,3 +692,12 @@ transactions. Callback failure preserves durable rows and never restores live
 replay authority. Public offline adapter and historical provenance limits remain.
 [Complete correction, tests and scope](retry-refetch-account-ownership.md).
 No live account operation or new wire field.
+
+
+## Pinned message base-key persistence and comparison (2026-11-07)
+
+**Confirmed selected static, 2.26.43.72.** [Complete exports and reproduction](apk/2.26.43.72-retry-message-base-key/README.md) resolve the selected `163.A04 -> 0WJ.A0s/A15` storage/comparison boundary. With a matching held registration, count2 records the session's copied `aliceBaseKey_` and returns null. Missing session or changed registration bypasses that recording branch; changed registration can return the old key after cleanup. At higher counts, a matching saved base key selects the wait/old-key return, with an additional address-integer3/config branch. This is selected method control flow, not permission to accept arbitrary counts or infer effective flags.
+
+The record carries message remote/from-me/ID, recipient ID/type/device, supplied base-key blob and seconds timestamp. Save targets original plus normalized addresses; lookup uses the normalized recipient and returns false for absent blob, otherwise Arrays.equals against the current session base key. Address migration, schema uniqueness/conflicts/TTL, full session/job reentry and effective flags remain unresolved. The three direct DEX callers are the ordinary gate, location wrappers and a VoIP failure method; the latter is not an ordinary fresh-bundle completion path.
+
+**Rust gap remains:** per-message/address count2 base-key persistence and higher-count comparison are unported. Counts above two remain refused; this evidence adds no outgoing fields or unconditional count2 fetch. No runtime code or live account operation changed.

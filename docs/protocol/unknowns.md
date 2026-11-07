@@ -510,6 +510,8 @@ producer-to-writer chain now confirms the incoming count reaches outgoing
 `enc count` unchanged, and both Rust paths emit it. [Evidence and implementation](retry-enc-count.md).
 The older statement that only the no-fetch path existed was stale.
 
+Pinned 43.72 selected storage/comparison is now traced: [record keys, normalized
+address lookup, byte provenance and branch limits](retry-answers.md#pinned-message-base-key-persistence-and-comparison-2026-11-07).
 Still unported: the per-device/message count-2 alice-base-key record and the
 count > 2 comparison, sessions built from receipt `<keys>`, and ordinary-runtime
 group/broadcast retries. Counts above two remain refused. No retry answer was
