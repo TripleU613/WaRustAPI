@@ -1,0 +1,14 @@
+
+# class: LX/Nha;
+# extends: LX/NhZ;
+
+.method public A0A(VLL)  # .registers 3
+    # full signature: LX/Nha;->A0A(LX/NhZ;Ljava/lang/String;)V
+    0000..0006  invoke-direct  {v0, v2}, LX/Nha;->A01(Ljava/lang/String;)V
+    0006..000c  invoke-virtual  {v1}, LX/NhZ;->A03()V
+    000c..0012  invoke-static  {v0, v1, v2}, LX/Nha;->A00(LX/Nha;Ljava/lang/Object;Ljava/lang/String;)V
+    0012..0018  invoke-virtual  {v1}, LX/NhZ;->A03()V
+    0018..001c  iput-object  v0, v1, LX/NhZ;->A00:LX/NhZ;
+    001c..001e  return-void
+    # exception table: 0 try range(s)
+.end method

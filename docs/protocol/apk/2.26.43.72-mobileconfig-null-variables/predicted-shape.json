@@ -1,0 +1,17 @@
+{
+  "authority": "platform-qualified static inference; not observed or executable request",
+  "scope": "selected non-Pando JSONObject(Map) route with synthetic caller inputs; not Pando",
+  "variables": {
+    "input": {
+      "api_version": 0,
+      "fetch_type": "",
+      "unit_type": "UNKNOWN",
+      "client_config_hash": "",
+      "ep_refresh_id": 0,
+      "mc_debug_id": "synthetic-debug-only",
+      "queries": [],
+      "query_hash": null,
+      "query_string": null
+    }
+  }
+}

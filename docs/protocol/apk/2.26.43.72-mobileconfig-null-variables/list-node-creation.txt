@@ -1,0 +1,19 @@
+
+# class: LX/Nha;
+# extends: LX/NhZ;
+
+.method public A07(LL)  # .registers 4
+    # full signature: LX/Nha;->A07(Ljava/lang/String;)LX/Nhb;
+    0000..0004  iget-object  v1, v2, LX/NhZ;->A01:LX/0iH;
+    0004..0008  iget-object  v0, v1, LX/0iH;->A00:LX/0iL;
+    0008..000e  invoke-virtual  {v0}, LX/0iK;->A8D()Ljava/lang/Object;
+    000e..0010  move-result-object  v0
+    0010..0014  check-cast  v0, LX/Nhb;
+    0014..0018  if-nez  v0, +0x7
+    0018..001c  new-instance  v0, LX/Nhb;
+    001c..0022  invoke-direct  {v0}, LX/Nhb;-><init>()V
+    0022..0028  invoke-virtual  {v0, v1}, LX/NhZ;->A06(LX/0iH;)V
+    0028..002e  invoke-virtual  {v2, v0, v3}, LX/Nha;->A0A(LX/NhZ;Ljava/lang/String;)V
+    002e..0030  return-object  v0
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,12 @@
+
+# class: LX/0i1;
+# extends: Ljava/lang/Object;
+
+.method public A00(VLL)  # .registers 4
+    # full signature: LX/0i1;->A00(Lcom/facebook/graphql/calls/GraphQlCallInput;Ljava/lang/String;)V
+    0000..0004  if-eqz  v2, +0x7
+    0004..0008  iget-object  v0, v1, LX/0i1;->A00:LX/0iG;
+    0008..000e  invoke-virtual  {v0, v2, v3}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A05(Lcom/facebook/graphql/calls/GraphQlCallInput;Ljava/lang/String;)V
+    000e..0010  return-void
+    # exception table: 0 try range(s)
+.end method

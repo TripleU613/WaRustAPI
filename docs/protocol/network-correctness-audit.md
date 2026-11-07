@@ -1,5 +1,10 @@
 # Network correctness audit
 
+**MobileConfig list/null setter ambiguity is narrowed.**
+queries becomes an empty list; query_hash/query_string retain null. Reused pinned
+Android JSON evidence predicts[]/null/null on the selected non-Pando route.
+[Source, synthetic shape and platform/Pando limits](apk/2.26.43.72-mobileconfig-null-variables/README.md). No request enabled.
+
 **MobileConfig MEX errors now have a traced failure handoff.**
 Selected worker forwards false plus a ranked message; no explicit retry or refresh
 write occurs in that Java branch. Summary/critical/exception ranking is retained.

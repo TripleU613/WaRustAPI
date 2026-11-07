@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-null-variables-evidence": {
+    "x-cli": "existing static DEX exports and qualified synthetic JSON shape; no product command or HTTP route",
+    "x-transport": "research only; selected non-Pando variables prediction does not establish Pando or live wire behavior",
+    "x-live": false,
+    "description": "Pinned APK43.72 null list setter creates an attached empty queries node; direct query_hash/query_string null setters retain scalars. Existing map conversion and pinned Android16 JSONObject(Map) evidence predict queries[] and two explicit nulls on the selected JSON route. Synthetic debug value is not a producer or ready-to-send request. Platform runtime, Pando serialization, full envelope and hydration remain unproven. No Rust sender, state or live request enabled.",
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-null-variables/README.md"
+  },
   "x-mobileconfig-fetch-error-evidence": {
     "x-cli": "existing static DEX exports and pinned selected-excerpt derivation; no product command or HTTP route",
     "x-transport": "research only; MobileConfig failure/hydration adapter remains unported",

@@ -339,3 +339,11 @@ empty messages remain distinct. The selected Java branch has no explicit retry
 or refresh-ID write; native and generic transport policy remain untraced.
 [Selected bodies and reproduction](apk/2.26.43.72-mobileconfig-fetch-error/README.md).
 No Rust request, state or live operation changed.
+
+## MobileConfig list/null serialization follow-up —2026-11-07
+
+The nullqueries list setter attaches an emptyNhb before returning, while direct
+query_hash/query_string null setters retain null scalars. ReusedMap/JSONObject
+and Android16 platform source predict[]/null/null on the selected non-Pando JSON
+route. Pando/platform runtime and full wire remain unknown; no request enabled.
+[Methods and qualified synthetic shape](apk/2.26.43.72-mobileconfig-null-variables/README.md).

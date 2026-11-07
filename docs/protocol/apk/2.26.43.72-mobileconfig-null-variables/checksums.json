@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "bytes": 4036,
+    "sha256": "353f871ff4da428e8a6c6fd8ae179c69eb44f9bf0eb37bd493e729cb9a1bac04"
+  },
+  "child-node-attachment.txt": {
+    "bytes": 564,
+    "sha256": "69b5d392a4827c035873e3eeea7da4347781592faf248129d9163dcf05ec239c"
+  },
+  "input-wrapper.txt": {
+    "bytes": 526,
+    "sha256": "d4dd865ee9a4f1c35c7302029afa10cb27efb74763ba30e0c636164bb9c492b2"
+  },
+  "list-constructor.txt": {
+    "bytes": 475,
+    "sha256": "5b8733a54bfae7346c795d249f64dea26dda8de4bfaf121bbb4f61b6ae0cf9a0"
+  },
+  "list-node-creation.txt": {
+    "bytes": 772,
+    "sha256": "f15eb03f6e3509b9074c0a79b83f445271679eb74dea7631f3a25fe373c1c036"
+  },
+  "list-population.txt": {
+    "bytes": 7122,
+    "sha256": "77f27f951ed81c79db4a162c257fa7e57e8b883f142e259826d47e1cfeae4356"
+  },
+  "list-setter.txt": {
+    "bytes": 696,
+    "sha256": "db21a2679beac26a087ce9931541b5f7c7c2764e7d975eeee4e56821fff5311d"
+  },
+  "mutation-key-guard.txt": {
+    "bytes": 1378,
+    "sha256": "04961b2fe9ea45299762558a705e3f3d92d085755c872f927284d3499922e40d"
+  },
+  "predicted-shape.json": {
+    "bytes": 486,
+    "sha256": "b6c07b33dce4b361ef92a51128b7910c9470088b427fdf75ed77542ef411ae48"
+  },
+  "root-input-attachment.txt": {
+    "bytes": 522,
+    "sha256": "b7bad4a2b763630ea0f054c91342524d27f533df306d32fc9edb0e8f6c88fbb4"
+  }
+}
