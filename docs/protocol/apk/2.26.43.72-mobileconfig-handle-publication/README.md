@@ -143,3 +143,7 @@ indexes retain iterator-first choice; body validity is not checked there.
 The [translation suffix](translation.md) independently replaces the shared
 reader and stores status 4/5 after translator readiness. Its return retains
 readiness rather than the later root probe; nested builder semantics remain open.
+
+The [vector mapping trace](mapping.md) confirms sentinel-filled u16 mappings,
+bounds-log continuation into vector installation, and packed lookup preserving
+upper bits. Nonempty-vector readiness is not complete mapping coverage.

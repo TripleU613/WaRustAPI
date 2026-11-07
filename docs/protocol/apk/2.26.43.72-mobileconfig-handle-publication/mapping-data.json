@@ -1,0 +1,10 @@
+{
+  "artifact_sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+  "rodata_va_equals_file_offset": true,
+  "strings": {
+    "0x17479": "TranslationTableTypeSlotOutofBoundsError",
+    "0x1a049": "FBMobileConfigStorageMigrationUtils::buildTranslationTable",
+    "0x1cb56": "Failed to build translation table. Type/slot ids out of bounds type_id: ",
+    "0x1cb4a": ", slot_id: "
+  }
+}

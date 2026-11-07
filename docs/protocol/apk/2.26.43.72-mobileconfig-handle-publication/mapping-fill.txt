@@ -1,0 +1,77 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   a8574:      	paciasp
+   a8578:      	stp	x29, x30, [sp, #-0x30]!
+   a857c:      	stp	x22, x21, [sp, #0x10]
+   a8580:      	stp	x20, x19, [sp, #0x20]
+   a8584:      	mov	x29, sp
+   a8588:      	mov	x19, x0
+   a858c:      	ldr	x8, [x0, #0x10]
+   a8590:      	ldr	x0, [x0]
+   a8594:      	mov	x20, x1
+   a8598:      	mov	x21, x2
+   a859c:      	sub	x9, x8, x0
+   a85a0:      	cmp	x1, x9, asr #1
+   a85a4:      	b.ls	0xa8600 <JNI_OnLoad+0x39460>
+   a85a8:      	cbz	x0, 0xa85bc <JNI_OnLoad+0x3941c>
+   a85ac:      	str	x0, [x19, #0x8]
+   a85b0:      	bl	0xccf30 <__wrap__ZdlPv@plt>
+   a85b4:      	mov	x8, xzr
+   a85b8:      	bl	0xcade4 <JNI_OnLoad+0x5bc44>
+   a85bc:      	tbnz	x20, #0x3f, 0xa8664 <JNI_OnLoad+0x394c4>
+   a85c0:      	cmp	x8, x20
+   a85c4:      	mov	x9, #0x7ffffffffffffffe // =9223372036854775806
+   a85c8:      	csel	x10, x8, x20, hi
+   a85cc:      	cmp	x8, x9
+   a85d0:      	mov	x8, #0x7fffffffffffffff // =9223372036854775807
+   a85d4:      	csel	x22, x10, x8, lo
+   a85d8:      	tbnz	x22, #0x3f, 0xa8664 <JNI_OnLoad+0x394c4>
+   a85dc:      	lsl	x0, x22, #1
+   a85e0:      	bl	0xccfa0 <__wrap__Znwm@plt>
+   a85e4:      	mov	x8, x0
+   a85e8:      	bl	0xcad54 <JNI_OnLoad+0x5bbb4>
+   a85ec:      	add	x9, x8, x22, lsl #1
+   a85f0:      	stp	x8, x8, [x19]
+   a85f4:      	mov	x2, x21
+   a85f8:      	str	x9, [x19, #0x10]
+   a85fc:      	b	0xa8638 <JNI_OnLoad+0x39498>
+   a8600:      	ldr	x8, [x19, #0x8]
+   a8604:      	mov	x10, x0
+   a8608:      	sub	x8, x8, x0
+   a860c:      	asr	x8, x8, #1
+   a8610:      	cmp	x8, x20
+   a8614:      	csel	x9, x8, x20, lo
+   a8618:      	cbz	x9, 0xa862c <JNI_OnLoad+0x3948c>
+   a861c:      	ldrh	w11, [x21]
+   a8620:      	sub	x9, x9, #0x1
+   a8624:      	strh	w11, [x10], #0x2
+   a8628:      	cbnz	x9, 0xa861c <JNI_OnLoad+0x3947c>
+   a862c:      	subs	x1, x20, x8
+   a8630:      	b.ls	0xa8648 <JNI_OnLoad+0x394a8>
+   a8634:      	bl	0xcb8b8 <JNI_OnLoad+0x5c718>
+   a8638:      	bl	0xcad6c <JNI_OnLoad+0x5bbcc>
+   a863c:      	ldp	x29, x30, [sp], #0x30
+   a8640:      	autiasp
+   a8644:      	b	0xa8668 <JNI_OnLoad+0x394c8>
+   a8648:      	add	x8, x0, x20, lsl #1
+   a864c:      	ldp	x22, x21, [sp, #0x10]
+   a8650:      	str	x8, [x19, #0x8]
+   a8654:      	ldp	x20, x19, [sp, #0x20]
+   a8658:      	ldp	x29, x30, [sp], #0x30
+   a865c:      	autiasp
+   a8660:      	ret
+   a8664:      	bl	0x5ffa8 <.text+0x13b48>
+   a8668:      	bti	c
+   a866c:      	ldr	x8, [x0, #0x8]
+   a8670:      	lsl	x10, x1, #1
+   a8674:      	add	x9, x8, x1, lsl #1
+   a8678:      	cbz	x10, 0xa868c <JNI_OnLoad+0x394ec>
+   a867c:      	ldrh	w11, [x2]
+   a8680:      	sub	x10, x10, #0x2
+   a8684:      	strh	w11, [x8], #0x2
+   a8688:      	cbnz	x10, 0xa867c <JNI_OnLoad+0x394dc>
+   a868c:      	b	0xcc184 <JNI_OnLoad+0x5cfe4>

@@ -5833,3 +5833,8 @@ No live operation or automatic retry/reset.
   publication suffix after mode-specific translator readiness; stores root-probe
   status 4/5 while returning retained readiness. Nested mapping construction and
   durable acceptance remain unknown. See [translation evidence](apk/2.26.43.72-mobileconfig-handle-publication/translation.md).
+
+- Confirmed selected APK 2.26.43.72 vector translation uses `0xffff` slot
+  sentinels and can install partially populated vectors after bounds logging.
+  Lookup preserves upper 48 bits and returns low-16 sentinel for out-of-range
+  inputs; downstream sentinel handling remains unknown. See [mapping trace](apk/2.26.43.72-mobileconfig-handle-publication/mapping.md).

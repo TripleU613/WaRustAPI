@@ -56,3 +56,7 @@ Reproduce with translation-body.txt, translation-readiness.txt,
 translation-slots.txt and translation-reader-args.txt. Full REA evidence in
 rea-translation.json covers the readiness gate and shared-handle replacement.
 No Rust runtime behavior is changed from incomplete nested translation evidence.
+
+The [vector mapping follow-up](mapping.md) now resolves selected fill, merge,
+bounds-log continuation and packed lookup/sentinel rules. Record provenance,
+sorting and sentinel consumers remain untraced.

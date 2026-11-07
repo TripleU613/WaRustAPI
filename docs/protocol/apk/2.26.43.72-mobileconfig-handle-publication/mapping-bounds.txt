@@ -1,0 +1,56 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   8cb1c:      	adrp	x1, 0x17000
+   8cb20:      	add	x1, x1, #0x479
+   8cb24:      	add	x0, sp, #0xe8
+   8cb28:      	bl	0x4d9a0 <.text+0x1540>
+   8cb2c:      	adrp	x1, 0x1a000
+   8cb30:      	add	x1, x1, #0x49
+   8cb34:      	add	x0, sp, #0xc0
+   8cb38:      	bl	0x4d9a0 <.text+0x1540>
+   8cb3c:      	add	x8, sp, #0x60
+   8cb40:      	mov	x0, x27
+   8cb44:      	bl	0xcd200 <_ZNSt6__ndk19to_stringEm@plt>
+   8cb48:      	adrp	x1, 0x1c000
+   8cb4c:      	add	x1, x1, #0xb56
+   8cb50:      	add	x0, sp, #0x78
+   8cb54:      	add	x2, sp, #0x60
+   8cb58:      	bl	0x76d80 <JNI_OnLoad+0x7be0>
+   8cb5c:      	adrp	x2, 0x1c000
+   8cb60:      	add	x2, x2, #0xb4a
+   8cb64:      	add	x0, sp, #0x90
+   8cb68:      	add	x1, sp, #0x78
+   8cb6c:      	bl	0x5d0fc <.text+0x10c9c>
+   8cb70:      	add	x8, sp, #0x48
+   8cb74:      	mov	w0, w26
+   8cb78:      	bl	0xcd090 <_ZNSt6__ndk19to_stringEi@plt>
+   8cb7c:      	bl	0xcc628 <JNI_OnLoad+0x5d488>
+   8cb80:      	add	x2, sp, #0x48
+   8cb84:      	bl	0x5d128 <.text+0x10cc8>
+   8cb88:      	ldr	x8, [x25]
+   8cb8c:      	ldr	x8, [x8]
+   8cb90:      	add	x1, sp, #0xe8
+   8cb94:      	add	x2, sp, #0xc0
+   8cb98:      	add	x3, sp, #0xa8
+   8cb9c:      	mov	x0, x25
+   8cba0:      	blr	x8
+   8cba4:      	add	x0, sp, #0xa8
+   8cba8:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   8cbac:      	add	x0, sp, #0x48
+   8cbb0:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   8cbb4:      	add	x0, sp, #0x90
+   8cbb8:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   8cbbc:      	add	x0, sp, #0x78
+   8cbc0:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   8cbc4:      	add	x0, sp, #0x60
+   8cbc8:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   8cbcc:      	add	x0, sp, #0xc0
+   8cbd0:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   8cbd4:      	add	x0, sp, #0xe8
+   8cbd8:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   8cbdc:      	b	0x8c820 <JNI_OnLoad+0x1d680>
+   8cbe0:      	brk	#0x1

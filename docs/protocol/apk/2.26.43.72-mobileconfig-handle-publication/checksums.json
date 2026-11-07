@@ -1,7 +1,7 @@
 {
   "README.md": {
-    "bytes": 8227,
-    "sha256": "fd57257b14b550e42adccead2e0ed3c5c6f490302e3ae363cbe69722d7e65572"
+    "bytes": 8457,
+    "sha256": "725d7b7e8046576dfed7675a1e2df3ce1db916d7e6ade9063529a2dbf85c9406"
   },
   "candidate-wrapper.txt": {
     "bytes": 1941,
@@ -67,6 +67,34 @@
     "bytes": 2734,
     "sha256": "16b2a7bd13c01b31904e8fd67feb0b57f16ef12233c325cb03be692ca6827ace"
   },
+  "mapping-bounds.txt": {
+    "bytes": 2391,
+    "sha256": "4a6d4b7be3e57587ee1b8f67768333ac5573a381f4d6857649f512de1c2ef4b3"
+  },
+  "mapping-build.txt": {
+    "bytes": 3865,
+    "sha256": "8adf150d85254748a430f3cfd5a56612aad63e89f708212d28a3f6201c987e32"
+  },
+  "mapping-data.json": {
+    "bytes": 408,
+    "sha256": "5543670914f53a78993c74d5bdb999274ede104af4c0c5ede0d5a449e4b56dbb"
+  },
+  "mapping-fill.txt": {
+    "bytes": 2883,
+    "sha256": "35642ef8fc3a5eff4b86f463bddb44980fe14cda389ed6a011872ab1daa21410"
+  },
+  "mapping-lookup.txt": {
+    "bytes": 1067,
+    "sha256": "a71a8edbb91d17a685434369fc8281d706605d9be6abccf81185b003eb1441a6"
+  },
+  "mapping-slots.txt": {
+    "bytes": 166,
+    "sha256": "7045b5e6f14d019154f642903b94ee175cb0fff9ac05a7d44554876ce0607d26"
+  },
+  "mapping.md": {
+    "bytes": 3490,
+    "sha256": "e329e3c79b1591b6741b64d04abb23733237086b9723323fca3231a6945d6b74"
+  },
   "nonnull-result.txt": {
     "bytes": 204,
     "sha256": "8df564ddb5c9783e3f5db4c58fd657072075b9c05260d7d795c3ba112deb6b8e"
@@ -102,6 +130,10 @@
   "rea-followup.json": {
     "bytes": 9557,
     "sha256": "9f9f02e846c266660a5d7eb681390f53e0bd62649ec7a7d409fb28285b0c22ce"
+  },
+  "rea-mapping.json": {
+    "bytes": 5015,
+    "sha256": "5d71d8d5377e2739cabbe35de60f799313065a418af80f16993ee582601b3e3a"
   },
   "rea-publication.json": {
     "bytes": 6723,
@@ -224,8 +256,8 @@
     "sha256": "57ed65bd9aa0bd0a896fffba77e3c8f03f268a7faee6d28bfd0210fe76d1a8e0"
   },
   "translation.md": {
-    "bytes": 3762,
-    "sha256": "3687a013d5fec6c112acd56a7c07093e3d1253370dade554428ab2618883e634"
+    "bytes": 3966,
+    "sha256": "f88e7b91b6972c1c8a1a0c44b677faa3006d38c1d80f8c9efabb609dc232154a"
   },
   "unlock-helper.txt": {
     "bytes": 278,

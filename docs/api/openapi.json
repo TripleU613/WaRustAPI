@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-vector-mapping-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-handle-publication/mapping.md",
+    "finding": "Selected vector translation uses sentinel-filled slots, bounds-log continuation and packed low-16 replacement; downstream sentinel handling unknown."
+  },
   "x-mobileconfig-translation-publication-evidence": {
     "x-cli": false,
     "x-transport": false,
