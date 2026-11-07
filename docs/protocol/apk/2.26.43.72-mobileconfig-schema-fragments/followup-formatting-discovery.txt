@@ -1,0 +1,62 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   adbc4:      	paciasp
+   adbc8:      	sub	sp, sp, #0x40
+   adbcc:      	stp	x29, x30, [sp, #0x20]
+   adbd0:      	stp	x20, x19, [sp, #0x30]
+   adbd4:      	add	x29, sp, #0x20
+   adbd8:      	bl	0xca66c <JNI_OnLoad+0x5b4cc>
+   adbdc:      	cmn	w2, #0x1
+   adbe0:      	ccmp	w1, w2, #0x4, ne
+   adbe4:      	stur	x8, [x29, #-0x8]
+   adbe8:      	b.ne	0xadc28 <JNI_OnLoad+0x3ea88>
+   adbec:      	cmp	w1, #0x6
+   adbf0:      	b.hi	0xadc70 <JNI_OnLoad+0x3ead0>
+   adbf4:      	mov	w8, w1
+   adbf8:      	nop
+   adbfc:      	adr	x9, 0x1cdd8
+   adc00:      	adr	x10, 0xadc10 <JNI_OnLoad+0x3ea70>
+   adc04:      	ldrb	w11, [x9, x8]
+   adc08:      	add	x10, x10, x11, lsl #2
+   adc0c:      	br	x10
+   adc10:      	bti	j
+   adc14:      	bl	0xca2dc <JNI_OnLoad+0x5b13c>
+   adc18:      	b.ne	0xadd28 <JNI_OnLoad+0x3eb88>
+   adc1c:      	adrp	x1, 0x1b000
+   adc20:      	add	x1, x1, #0x2ac
+   adc24:      	b	0xadc84 <JNI_OnLoad+0x3eae4>
+   adc28:      	cmp	w2, #0x3
+   adc2c:      	b.ne	0xadc70 <JNI_OnLoad+0x3ead0>
+   adc30:      	mov	x0, sp
+   adc34:      	mov	w2, #-0x1               // =-1
+   adc38:      	bl	0xadbc4 <JNI_OnLoad+0x3ea24>
+   adc3c:      	adrp	x2, 0x1b000
+   adc40:      	add	x2, x2, #0x3f4
+   adc44:      	bl	0xcacb8 <JNI_OnLoad+0x5bb18>
+   adc48:      	bl	0x5d0fc <.text+0x10c9c>
+   adc4c:      	mov	x0, sp
+   adc50:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   adc54:      	bl	0xca2dc <JNI_OnLoad+0x5b13c>
+   adc58:      	b.ne	0xadd28 <JNI_OnLoad+0x3eb88>
+   adc5c:      	ldp	x20, x19, [sp, #0x30]
+   adc60:      	ldp	x29, x30, [sp, #0x20]
+   adc64:      	add	sp, sp, #0x40
+   adc68:      	autiasp
+   adc6c:      	ret
+   adc70:      	bti	j
+   adc74:      	bl	0xca2dc <JNI_OnLoad+0x5b13c>
+   adc78:      	b.ne	0xadd28 <JNI_OnLoad+0x3eb88>
+   adc7c:      	adrp	x1, 0x1b000
+   adc80:      	add	x1, x1, #0x343
+   adc84:      	bl	0xcb96c <JNI_OnLoad+0x5c7cc>
+   adc88:      	ldp	x29, x30, [sp, #0x20]
+   adc8c:      	add	sp, sp, #0x40
+   adc90:      	autiasp
+   adc94:      	b	0x4d9a0 <.text+0x1540>
+   adc98:      	bti	j
+   adc9c:      	bl	0xca2dc <JNI_OnLoad+0x5b13c>
+   adca0:      	b.ne	0xadd28 <JNI_OnLoad+0x3eb88>

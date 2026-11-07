@@ -1,0 +1,27 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000004c460 <.text>:
+   5e4b8:      	bti	c
+   5e4bc:      	ldrb	w8, [x1]
+   5e4c0:      	ldp	x10, x9, [x1, #0x8]
+   5e4c4:      	mov	x2, x30
+   5e4c8:      	bl	0xcc53c <JNI_OnLoad+0x5d39c>
+   5e4cc:      	mov	x30, x2
+   5e4d0:      	csinc	x1, x9, x1, ne
+   5e4d4:      	csel	x2, x11, x10, eq
+   5e4d8:      	b	0xccbf0 <_ZNSt6__ndk124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m@plt>
+   5e4dc:      	paciasp
+   5e4e0:      	sub	sp, sp, #0x30
+   5e4e4:      	stp	x29, x30, [sp, #0x10]
+   5e4e8:      	str	x19, [sp, #0x20]
+   5e4ec:      	add	x29, sp, #0x10
+   5e4f0:      	mrs	x19, TPIDR_EL0
+   5e4f4:      	mov	w2, #0x1                // =1
+   5e4f8:      	ldr	x8, [x19, #0x28]
+   5e4fc:      	str	x8, [sp, #0x8]
+   5e500:      	strb	w1, [sp, #0x4]
+   5e504:      	add	x1, sp, #0x4
+   5e508:      	bl	0xccbf0 <_ZNSt6__ndk124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m@plt>

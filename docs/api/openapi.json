@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-schema-fragments-evidence": {
+    "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-schema-fragments/derive-fragments.py <pinned-library>; offline synthetic projection only",
+    "x-transport": "research only; no actual schema inputs or enabled request serializer",
+    "x-live": false,
+    "description": "Confirmed selected static MobileConfig schema fragments retain selected-index order, numeric/name fallback boundaries and literal array wrapping. param_list_checksum uses ordered 32-bit recurrence with multiplier397 and per-record term P+31*C+16337, optional first-record group filtering and conditional second-container XOR. Synthetic projections are analyst-derived only; real schema inputs, other hashes and persistence remain unresolved.",
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-schema-fragments/README.md"
+  },
   "x-mobileconfig-query-setup-evidence": {
     "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-query-setup/inspect-query-setup.py <pinned-library>; offline research only",
     "x-transport": "research only; native parameter-vector gates, not a complete wire serializer",

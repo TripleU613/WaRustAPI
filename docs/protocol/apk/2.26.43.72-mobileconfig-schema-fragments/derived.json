@@ -1,0 +1,81 @@
+{
+  "member_sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+  "selected_calls": {
+    "0xab828": "0xc150c",
+    "0xab86c": "0xc14e4",
+    "0xab9c4": "0x9c754",
+    "0xab974": "0xaa594",
+    "0xadb44": "0x5e4b8",
+    "0xad9c8": "0xab954",
+    "0xad9e0": "0xab954"
+  },
+  "record_stride": "0x50",
+  "selected_index_stride": 4,
+  "group_table_stride": "0x18",
+  "record_words": {
+    "0x4c": "word used for group token/filter and checksum",
+    "0x30": "word used for parameter token and checksum"
+  },
+  "recurrence": "acc = ((acc * 397) XOR (param_word + 31 * config_word + 16337)) mod 2^32",
+  "examples_authority": "analyst-derived synthetic transcription, not APK execution or live request data",
+  "synthetic_examples": {
+    "empty_selection": {
+      "fragments": [],
+      "literal_array": "[]",
+      "checksum_u32": 0,
+      "checksum_decimal": "0"
+    },
+    "original_order": {
+      "fragments": [
+        "1:2:3",
+        "named_config:named_param"
+      ],
+      "literal_array": "[\"1:2:3\",\"named_config:named_param\"]",
+      "checksum_u32": 2555940917,
+      "checksum_decimal": "2555940917"
+    },
+    "reverse_order": {
+      "fragments": [
+        "named_config:named_param",
+        "1:2:3"
+      ],
+      "literal_array": "[\"named_config:named_param\",\"1:2:3\"]",
+      "checksum_u32": 1889789449,
+      "checksum_decimal": "1889789449"
+    },
+    "duplicate_selection": {
+      "fragments": [
+        "1:2:3",
+        "1:2:3"
+      ],
+      "literal_array": "[\"1:2:3\",\"1:2:3\"]",
+      "checksum_u32": 1248283736,
+      "checksum_decimal": "1248283736"
+    },
+    "first_record_filter": {
+      "fragments": [
+        "named_config:named_param"
+      ],
+      "literal_array": "[\"named_config:named_param\"]",
+      "checksum_u32": 32522192,
+      "checksum_decimal": "32522192"
+    },
+    "signed_param_boundaries": {
+      "fragments": [
+        "7:minus_one:-2:16383:named_boundary"
+      ],
+      "literal_array": "[\"7:minus_one:-2:16383:named_boundary\"]",
+      "checksum_u32": 2399102810,
+      "checksum_decimal": "2399102810"
+    },
+    "wrapping_words": {
+      "fragments": [
+        "large:fallback",
+        "large:fallback"
+      ],
+      "literal_array": "[\"large:fallback\",\"large:fallback\"]",
+      "checksum_u32": 6486732,
+      "checksum_decimal": "6486732"
+    }
+  }
+}

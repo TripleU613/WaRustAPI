@@ -1,0 +1,46 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   9c974:      	bti	c
+   9c978:      	cbz	x1, 0x9ca0c <JNI_OnLoad+0x2d86c>
+   9c97c:      	fmov	d0, x1
+   9c980:      	mov	w9, w2
+   9c984:      	mov	x3, x30
+   9c988:      	bl	0xca118 <JNI_OnLoad+0x5af78>
+   9c98c:      	mov	x30, x3
+   9c990:      	b.hi	0x9c9a0 <JNI_OnLoad+0x2d800>
+   9c994:      	sub	w10, w1, #0x1
+   9c998:      	and	x10, x10, x9
+   9c99c:      	b	0x9c9b4 <JNI_OnLoad+0x2d814>
+   9c9a0:      	cmp	x9, x1
+   9c9a4:      	mov	x10, x9
+   9c9a8:      	b.lo	0x9c9b4 <JNI_OnLoad+0x2d814>
+   9c9ac:      	udiv	w10, w2, w1
+   9c9b0:      	msub	w10, w10, w1, w2
+   9c9b4:      	ldr	x0, [x0, x10, lsl #3]
+   9c9b8:      	cbz	x0, 0x9ca10 <JNI_OnLoad+0x2d870>
+   9c9bc:      	sub	x11, x1, #0x1
+   9c9c0:      	ldr	x0, [x0]
+   9c9c4:      	cbz	x0, 0x9ca10 <JNI_OnLoad+0x2d870>
+   9c9c8:      	ldr	x12, [x0, #0x8]
+   9c9cc:      	cmp	x12, x9
+   9c9d0:      	b.ne	0x9c9e4 <JNI_OnLoad+0x2d844>
+   9c9d4:      	ldr	w12, [x0, #0x10]
+   9c9d8:      	cmp	w12, w2
+   9c9dc:      	b.ne	0x9c9c0 <JNI_OnLoad+0x2d820>
+   9c9e0:      	b	0x9ca10 <JNI_OnLoad+0x2d870>
+   9c9e4:      	cmp	x8, #0x1
+   9c9e8:      	b.hi	0x9c9f4 <JNI_OnLoad+0x2d854>
+   9c9ec:      	and	x12, x12, x11
+   9c9f0:      	b	0x9ca04 <JNI_OnLoad+0x2d864>
+   9c9f4:      	cmp	x12, x1
+   9c9f8:      	b.lo	0x9ca04 <JNI_OnLoad+0x2d864>
+   9c9fc:      	udiv	x13, x12, x1
+   9ca00:      	msub	x12, x13, x1, x12
+   9ca04:      	cmp	x12, x10
+   9ca08:      	b.eq	0x9c9c0 <JNI_OnLoad+0x2d820>
+   9ca0c:      	mov	x0, xzr
+   9ca10:      	ret

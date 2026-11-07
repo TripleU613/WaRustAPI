@@ -1,0 +1,54 @@
+{
+  "README.md": {
+    "bytes": 6030,
+    "sha256": "1940d15ce3f61f6c160bed2aff85e71ab4a1c770bed5b694138a485156794b0b"
+  },
+  "array-wrapper.txt": {
+    "bytes": 2747,
+    "sha256": "bbe9ec37bf753d90c99048356b965edc3aba7678359cea938488308a973409aa"
+  },
+  "derive-fragments.py": {
+    "bytes": 3186,
+    "sha256": "6fc4c788531430da8091f0a8ff8764c6aefb589fb7fb40fc12d9a9b77183a84d"
+  },
+  "derived.json": {
+    "bytes": 2352,
+    "sha256": "596568fc8682a1096165463663e06c39db357de2c3fb5a6bcb20f84311fe118c"
+  },
+  "filter-bucket-lookup.txt": {
+    "bytes": 1683,
+    "sha256": "3e4e2809acf4f25fc5eee4c930d6d4184eb2157479d2a0c580c34d6c9e0c04f6"
+  },
+  "filter-lookup.txt": {
+    "bytes": 471,
+    "sha256": "efdfb0a3f0fd1ba16cc8da9573ec2a5c6d8b2ae14462ff2423697b4e3bbae1aa"
+  },
+  "followup-formatting-discovery.txt": {
+    "bytes": 2363,
+    "sha256": "43f4d2dce4611d66a758883529aa6aeb5174a2fc57f3301a12373b15b51718dc"
+  },
+  "fragment-and-checksum.txt": {
+    "bytes": 7723,
+    "sha256": "f0f62603794869e7a7fd48777c4cec2d119052ca209d7d5a7cacea472f58e2d6"
+  },
+  "outlined-helpers.txt": {
+    "bytes": 1683,
+    "sha256": "a768fcd6ff879cc6a103d5bef3cd275b7d3279643511a808fd308a8fdb46df4c"
+  },
+  "rea-checksum-window.json": {
+    "bytes": 7829,
+    "sha256": "40e69fc31f9a5c6171f74268072f4d277e709981af22ab48cf461805e66b71a4"
+  },
+  "schema-table-getter-entry.txt": {
+    "bytes": 1186,
+    "sha256": "3048c9b92085ef33b78a0ff3b4669cde149730b0c0756ad142a269f09735d301"
+  },
+  "stream-write.txt": {
+    "bytes": 1111,
+    "sha256": "873ef18f6264802e23b7299954f09195d38c61f6f01372adb70a230566374831"
+  },
+  "token-selection.txt": {
+    "bytes": 1068,
+    "sha256": "c5802dbdbb3f070940373a18917e23a6b48a7a372a88f433e884a784a8909222"
+  }
+}

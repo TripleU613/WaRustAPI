@@ -1,0 +1,70 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   adac4:      	paciasp
+   adac8:      	sub	sp, sp, #0x160
+   adacc:      	stp	x29, x30, [sp, #0x120]
+   adad0:      	stp	x28, x23, [sp, #0x130]
+   adad4:      	stp	x22, x21, [sp, #0x140]
+   adad8:      	stp	x20, x19, [sp, #0x150]
+   adadc:      	add	x29, sp, #0x120
+   adae0:      	mrs	x22, TPIDR_EL0
+   adae4:      	mov	x21, x1
+   adae8:      	bl	0xcaf10 <JNI_OnLoad+0x5bd70>
+   adaec:      	mov	x0, sp
+   adaf0:      	bl	0xcb6f0 <JNI_OnLoad+0x5c550>
+   adaf4:      	mov	x23, sp
+   adaf8:      	stur	x8, [x29, #-0x8]
+   adafc:      	bl	0xcda10 <memset@plt>
+   adb00:      	mov	x0, sp
+   adb04:      	bl	0x5b354 <.text+0xeef4>
+   adb08:      	bl	0xcc364 <JNI_OnLoad+0x5d1c4>
+   adb0c:      	add	x0, x23, #0x10
+   adb10:      	bl	0x586f8 <.text+0xc298>
+   adb14:      	ldp	x20, x21, [x21]
+   adb18:      	mov	w8, #0x1                // =1
+   adb1c:      	cmp	x20, x21
+   adb20:      	b.eq	0xadb5c <JNI_OnLoad+0x3e9bc>
+   adb24:      	tbnz	w8, #0x0, 0xadb34 <JNI_OnLoad+0x3e994>
+   adb28:      	add	x0, x23, #0x10
+   adb2c:      	mov	w1, #0x2c               // =44
+   adb30:      	bl	0x5e4dc <.text+0x1207c>
+   adb34:      	add	x0, x23, #0x10
+   adb38:      	mov	w1, #0x22               // =34
+   adb3c:      	bl	0x5e4dc <.text+0x1207c>
+   adb40:      	mov	x1, x20
+   adb44:      	bl	0x5e4b8 <.text+0x12058>
+   adb48:      	mov	w1, #0x22               // =34
+   adb4c:      	bl	0x5e4dc <.text+0x1207c>
+   adb50:      	mov	w8, wzr
+   adb54:      	add	x20, x20, #0x18
+   adb58:      	b	0xadb1c <JNI_OnLoad+0x3e97c>
+   adb5c:      	bl	0xcc358 <JNI_OnLoad+0x5d1b8>
+   adb60:      	add	x0, x23, #0x10
+   adb64:      	bl	0x586f8 <.text+0xc298>
+   adb68:      	mov	x8, sp
+   adb6c:      	add	x1, x8, #0x18
+   adb70:      	mov	x0, x19
+   adb74:      	bl	0x51980 <.text+0x5520>
+   adb78:      	mov	x0, sp
+   adb7c:      	bl	0x59bac <.text+0xd74c>
+   adb80:      	bl	0xca264 <JNI_OnLoad+0x5b0c4>
+   adb84:      	b.ne	0xadbc0 <JNI_OnLoad+0x3ea20>
+   adb88:      	bl	0xcc5c4 <JNI_OnLoad+0x5d424>
+   adb8c:      	ldp	x28, x23, [sp, #0x130]
+   adb90:      	ldp	x29, x30, [sp, #0x120]
+   adb94:      	add	sp, sp, #0x160
+   adb98:      	autiasp
+   adb9c:      	ret
+   adba0:      	b	0xadba8 <JNI_OnLoad+0x3ea08>
+   adba4:      	b	0xadba8 <JNI_OnLoad+0x3ea08>
+   adba8:      	bl	0xcab3c <JNI_OnLoad+0x5b99c>
+   adbac:      	bl	0x59bac <.text+0xd74c>
+   adbb0:      	bl	0xca264 <JNI_OnLoad+0x5b0c4>
+   adbb4:      	b.ne	0xadbc0 <JNI_OnLoad+0x3ea20>
+   adbb8:      	mov	x0, x19
+   adbbc:      	bl	0xccf70 <__wrap__Unwind_Resume@plt>
+   adbc0:      	bl	0xcd9f0 <__stack_chk_fail@plt>

@@ -92,3 +92,7 @@ route consumption, runtime fetcher installation, response parsing, persistence,
 retry policy and cache activation. No Rust runtime behavior changes or guarantee
 of server acceptance follows. Next trace the concrete schema query/hash producers
 and the request-data constructor rather than guessing required wire values.
+
+Follow-up: [schema fragments and ordered checksum](../2.26.43.72-mobileconfig-schema-fragments/README.md)
+now derives the selected fragment-token rules and param_list_checksum recurrence.
+Real table/selection producers and other hash algorithms remain untraced.

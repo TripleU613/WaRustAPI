@@ -1,0 +1,30 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   aa594:      	paciasp
+   aa598:      	sub	sp, sp, #0x50
+   aa59c:      	stp	x29, x30, [sp, #0x30]
+   aa5a0:      	stp	x20, x19, [sp, #0x40]
+   aa5a4:      	add	x29, sp, #0x30
+   aa5a8:      	bl	0xcaf34 <JNI_OnLoad+0x5bd94>
+   aa5ac:      	add	x0, x0, #0x10
+   aa5b0:      	bl	0xcac48 <JNI_OnLoad+0x5baa8>
+   aa5b4:      	bl	0x5fb64 <.text+0x13704>
+   aa5b8:      	tbz	w0, #0x0, 0xaa614 <JNI_OnLoad+0x3b474>
+   aa5bc:      	mov	x0, sp
+   aa5c0:      	add	x1, x19, #0x10
+   aa5c4:      	mov	w2, #0x2                // =2
+   aa5c8:      	stp	xzr, xzr, [sp]
+   aa5cc:      	bl	0xba1dc <JNI_OnLoad+0x4b03c>
+   aa5d0:      	bl	0xcb550 <JNI_OnLoad+0x5c3b0>
+   aa5d4:      	b.eq	0xaa5ec <JNI_OnLoad+0x3b44c>
+   aa5d8:      	bl	0xcc090 <JNI_OnLoad+0x5cef0>
+   aa5dc:      	nop
+   aa5e0:      	adr	x2, 0xc9e90 <JNI_OnLoad+0x5acf0>
+   aa5e4:      	add	x1, sp, #0x18
+   aa5e8:      	bl	0xccec0 <_ZNSt6__ndk111__call_onceERVmPvPFvS2_E@plt>
+   aa5ec:      	ldr	x0, [sp, #0x8]
+   aa5f0:      	ldr	x19, [x19, #0x98]
