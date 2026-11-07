@@ -1,4 +1,11 @@
 {
+  "x-history-notice-primary-representation": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "evidence": "docs/protocol/cross-device-sync.md#notice-receiver-zero-suffix-normalization-verified",
+    "finding": "Literal BX5 tests verify local zero-suffix PN/LID normalization to Plain in both lists; proposed representation-filter hypothesis refuted. Native parser equivalence unknown; no runtime behavior change."
+  },
   "x-send-path-history-pagination-verification": {
     "x-cli": false,
     "x-transport": false,

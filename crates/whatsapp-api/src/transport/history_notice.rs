@@ -230,6 +230,35 @@ mod tests {
     }
 
     #[test]
+    fn primary_receiver_metadata_follows_zero_suffix_normalization() {
+        for address in [
+            "1@lid",
+            "1@s.whatsapp.net",
+            "1:0@lid",
+            "1.0:0@lid",
+            "1:0@s.whatsapp.net",
+            "1.0:0@s.whatsapp.net",
+        ] {
+            let parsed = Jid::parse(address).unwrap();
+            assert_eq!(parsed.kind, crate::model::jid::JidKind::Plain);
+            assert_eq!(parsed.agent, 0);
+            assert_eq!(parsed.device, 0);
+            // Literal BX5 fields, not the production message encoder.
+            let mut metadata = vec![0x0a, address.len() as u8];
+            metadata.extend_from_slice(address.as_bytes());
+            metadata.extend_from_slice(&[0x10, 10, 0x18, 2]);
+            assert!(decode_body(&body(&metadata)).is_ok(), "{address}");
+            // The non-history receiver list has the same primary identity subset.
+            let mut metadata = META.to_vec();
+            metadata.extend_from_slice(&[0x22, address.len() as u8]);
+            metadata.extend_from_slice(address.as_bytes());
+            assert!(
+                decode_body(&body(&metadata)).is_ok(),
+                "non-receiver {address}"
+            );
+        }
+    }
+    #[test]
     fn literal_metadata_decodes_without_receiver_or_context_values() {
         let metadata = decode(PAYLOAD).unwrap().unwrap();
         assert_eq!(metadata.message_count, 2);

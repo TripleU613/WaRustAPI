@@ -6063,3 +6063,9 @@ evidence, not new APK behavior or proof of full group-send/network parity.
   row and refuses Lab adoption after reopen without state changes. Named CLI
   and direct/group adapter claim ordering recorded; no full caller claim. See
   [pagination evidence](send-path-atomicity.md#historical-pagination-and-entry-point-check).
+
+- Refuted a history-notice subset hypothesis at `94a268f5`: zero agent/device
+  textual suffixes normalize to Plain in Jid::parse. Literal BX5 tests now retain
+  accepted normalization in both receiver lists; no production filter or native
+  rejection claim added. See
+  [notice normalization](cross-device-sync.md#notice-receiver-zero-suffix-normalization-verified).

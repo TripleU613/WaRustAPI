@@ -10587,3 +10587,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   across namespaces and survives reopen, with an actual 300-intent regression.
   Named comparison/outbox CLI and direct/group claim ordering audited. No runtime
   policy change or live operation in this follow-up.
+
+- Verified history-notice receiver zero-suffix normalization with literal BX5
+  protobuf cases. Explicit numeric-zero suffixes parse as Plain, refuting the
+  proposed kind-filter correction. No production behavior change, ACK/history
+  request or live operation; native parser equivalence remains unknown.

@@ -2326,3 +2326,26 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
 **Confirmed static APK43.72:** [device99 constructor, distinct domain and scope limits](apk/2.26.43.72-hosted-lid-device99/README.md) show the LID conversion constructs hosted.lid for99, with raw user:99@hosted.lid and type25. Ordinary0EM has server lid/type19/agent1. Hosted addresses must not be silently normalized into ordinary LID hash inputs. Rust hash/reconciliation currently refuses hosted domains; no supported-scope mismatch found.
 
 **Unknown / unchanged:** intermediate0EL declarations/full format3 dispatch, self-device mixed-domain collection authority, hosted lifecycle and effective version. No runtime change or live operation.
+
+## Notice receiver zero-suffix normalization verified
+
+**Confirmed current Rust source/test behavior**, baseline `94a268f5`.
+An investigated hypothesis was refuted: textual `1:0@lid` / `1.0:0@lid` and PN
+counterparts do not retain AgentDevice kind through Jid::parse. The parser sets
+Plain when parsed agent and device are both zero. Consequently adding a Plain
+kind check in history_notice would not reject those strings. No production
+filter change is made, and native rejection of zero-suffix strings remains
+unestablished.
+
+Literal BX5 protobuf cases now verify these normalized forms alongside plain
+PN/LID controls in both receiver and non-receiver repeated fields. The test
+checks parsed Plain/zero components and successful supported metadata decoding.
+This records local normalization behavior; it is not an APK parser-equivalence
+claim. Existing nonzero device/agent and nonnumeric/foreign-server refusals stay
+unchanged.
+
+The notice decoder is metadata-only. inbox_events::project maps unsupported
+notice decoding to an unsupported event; it does not fetch/apply history or
+invent history queues/aliases. No ACK, receipt, request, timing rule or retry is
+added. Full native UserJid parsing and alternate app-data paths remain open.
+No live account/network operation is performed.
