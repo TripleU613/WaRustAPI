@@ -1529,3 +1529,28 @@ retain the zero-length/metadata/context boundaries. Full wrapper/update/empty-fi
 crypto/URL/range behavior and live interoperability remain unknown. Runtime code
 changes are provenance comments only; no automatic request, retry, status
 relaxation or account operation was added.
+
+## Pinned sticker ingress and whole MIME preflight (2026-11-06)
+
+**Confirmed selected static / fixed offline:** Di4's core normal fields agree
+with Rust. The general schema decoder refuses its new audio oneof, so exact
+array/helper writes and a bounded normal-prefix descriptor check establish only
+the selected tags without literal-order guessing. Full embedded audio/Lottie/
+wrapper behavior remains outside this confirmation.
+
+FPx.A00's non-Lottie branch compares the WHOLE MIME against image/webp ignoring
+case; the Lottie branch instead recognizes application/was. Rust previously
+trimmed/split the MIME for URL preflight and could hand off cached ciphertext
+without that check. Sticker descriptor and URL admission now require whole-string
+ASCII-insensitive image/webp before candidate/reference/cache/GET authority, while
+retaining Lottie exclusion. Full Java Unicode folding is not claimed.
+
+[Native methods/helper writes, censuses, bounded offline decoder, repro and limits](apk/2.26.43.72-media-sticker-ingress/README.md)
+retain the evidence. The expanded real-store sticker regression proves accepted
+ASCII case variants retain cached plaintext, unsupported parameters/padding/MIME/
+Lottie cannot produce ordinary selectors or open cached content, and refusal
+preserves checkpoint/journal without reserving an uncached GET. Uncached bad
+fixtures have an unapproved-host no-network backstop; synthetic plaintext tests
+crypto/handoff, not WebP renderer validity. No reset, retry, status relaxation or
+live request was added. Native zero-byte/parser/update/URL/range semantics and
+embedded-audio ownership remain separate audit work.

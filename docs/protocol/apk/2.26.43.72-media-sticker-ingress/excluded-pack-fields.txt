@@ -1,0 +1,24 @@
+# LX/Di2;  (22 fields)
+#   followed helper LX/8t2;->A1Y
+   1  stickerPackId
+   2  name
+   3  publisher
+   4  stickers
+   5  fileLength
+   6  fileSha256
+   7  fileEncSha256
+   8  mediaKey
+   9  directPath
+  10  caption
+  11  contextInfo
+  12  packDescription
+  13  mediaKeyTimestamp
+  14  trayIconFileName
+  15  thumbnailDirectPath
+  16  thumbnailSha256
+  17  thumbnailEncSha256
+  18  thumbnailHeight
+  19  thumbnailWidth
+  20  imageDataHash
+  21  stickerPackSize
+  22  stickerPackOrigin

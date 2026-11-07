@@ -342,7 +342,11 @@ fn descriptor(bytes: &[u8]) -> Result<Option<Descriptor>> {
             length: doc.length,
         }
     } else if let Some(s) = e.sticker {
-        if s.lottie {
+        // Pinned43.72 FPx.A00 compares the whole non-Lottie WebP MIME
+        // case-insensitively. Parameters/whitespace cannot authorize retrieval.
+        // ASCII MIME scope; full Java Unicode case folding is not claimed.
+        // See docs/protocol/apk/2.26.43.72-media-sticker-ingress.
+        if s.lottie || !s.mime.eq_ignore_ascii_case("image/webp") {
             return Ok(None);
         }
         Descriptor {
@@ -705,7 +709,7 @@ fn media_url(d: &Descriptor) -> Result<reqwest::Url> {
     let allowed = match d.kind {
         MediaKind::Image => matches!(mime, "image/jpeg" | "image/png" | "image/webp"),
         MediaKind::VoiceNote => mime == "audio/ogg",
-        MediaKind::Sticker => mime == "image/webp",
+        MediaKind::Sticker => d.mime.eq_ignore_ascii_case("image/webp"),
         MediaKind::Video | MediaKind::VideoNote => mime == "video/mp4",
         // Export-only media: MIME is metadata, never a program/viewer choice.
         // Token syntax/256-byte bound is local policy, not an APK MIME allowlist.
@@ -2268,6 +2272,76 @@ mod tests {
         let (kind, plain) = open(&store, &config, &id).await.unwrap();
         assert_eq!(kind, MediaKind::Sticker);
         assert_eq!(&*plain, b"sticker crypto fixture");
+        // Valid cached ciphertext cannot override unsupported MIME/Lottie
+        // metadata. ASCII case variants match the pinned native WebP rule.
+        for (mime, lottie, accepted) in [
+            ("IMAGE/WEBP", false, true),
+            ("Image/WebP", false, true),
+            ("image/webp; codec=other", false, false),
+            (" image/webp", false, false),
+            ("image/webp ", false, false),
+            ("image/png", false, false),
+            ("application/was", true, false),
+            ("image/webp", true, false),
+        ] {
+            let mut envelope = Envelope::decode(payload.as_slice()).unwrap();
+            let sticker = envelope.sticker.as_mut().unwrap();
+            sticker.mime = mime.into();
+            sticker.lottie = lottie;
+            store.write(|tx| {
+                tx.put_json(Table::Checkpoints,key,1,&serde_json::json!({"status":"decrypted","protobuf":envelope.encode_to_vec()}))?;
+                tx.put_json(Table::Checkpoints,format!("media-download:{id}").as_bytes(),1,
+                    &serde_json::json!({"status":"downloaded","body":encrypted.body}))
+            }).unwrap();
+            let rows = store
+                .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                .unwrap();
+            let journal = store.journal_head().unwrap();
+            assert_eq!(list(&store).unwrap().len(), usize::from(accepted), "{mime}");
+            assert_eq!(
+                references(&store).unwrap().len(),
+                usize::from(accepted),
+                "{mime}"
+            );
+            if accepted {
+                assert_eq!(
+                    &*open(&store, &config, &id).await.unwrap().1,
+                    b"sticker crypto fixture"
+                );
+            } else {
+                assert!(open(&store, &config, &id).await.is_err(), "{mime}");
+            }
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap(),
+                rows
+            );
+            assert_eq!(store.journal_head().unwrap(), journal);
+            if !accepted {
+                // Refused host prevents a regression from issuing live traffic
+                // after removing the cache; selector assertions prove MIME gating.
+                envelope.sticker.as_mut().unwrap().url =
+                    "https://not-a-media-host.invalid/fixture".into();
+                store.write(|tx| {
+                    tx.delete(Table::Checkpoints,format!("media-download:{id}").as_bytes())?;
+                    tx.put_json(Table::Checkpoints,key,1,&serde_json::json!({"status":"decrypted","protobuf":envelope.encode_to_vec()}))
+                }).unwrap();
+                let rows = store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap();
+                let journal = store.journal_head().unwrap();
+                assert!(list(&store).unwrap().is_empty());
+                assert!(open(&store, &config, &id).await.is_err());
+                assert_eq!(
+                    store
+                        .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                        .unwrap(),
+                    rows
+                );
+                assert_eq!(store.journal_head().unwrap(), journal);
+            }
+        }
         // Mixed messages must never publish a sticker event.
         let mut mixed = payload.clone();
         mixed.extend_from_slice(b"\x0a\x01x");

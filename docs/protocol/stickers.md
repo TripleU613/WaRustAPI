@@ -78,3 +78,12 @@ does not expand the two array-fill helpers. The refusal is correct; it is not
 proof that the schema is unavailable. Reproduce the trace with `xtask apk-smali`
 for `BZC.dynamicMethod`, `6al.A1W`, `Ayq.A11` and `1qB.<clinit>` against the
 identified APK. Bulk dumps remain private under ignored `lab/`.
+
+## Current whole-MIME preflight (2026-11-06)
+
+Pinned43.72 Di4 normal fields/FPx parser confirm core sticker tags despite the
+new audio oneof. The WebP-only receiver now compares whole MIME case-insensitively
+within ASCII rather than stripping parameters/whitespace; invalid metadata and
+Lottie cannot authorize cached plaintext or a new GET. Embedded audio, full Java
+Unicode folding and native empty-file transfer remain unverified.
+[Evidence and regression scope](apk/2.26.43.72-media-sticker-ingress/README.md).

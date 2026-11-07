@@ -1,5 +1,11 @@
 2026-11-06 — **Bound upload result adoption and new cache rows to their owner.**
 
+**Sticker MIME preflight corrected.** Pinned Di4/FPx core fields and whole-string
+WebP comparison confirm parameters/padding must not authorize the supported path.
+ASCII case variants now work; Lottie remains excluded before cache/network use.
+The new audio oneof remains explicitly outside confirmed complete handling.
+[Evidence](docs/protocol/media-network-outcomes.md#pinned-sticker-ingress-and-whole-mime-preflight-2026-11-06).
+
 **Current document ingress traced.** Core tags/hash guards match Rust; native
 parser permits zero length and stores MIME without the audio-style allowlist.
 Rust's nonempty/size/MIME export bounds remain labelled local; zero-byte transfer

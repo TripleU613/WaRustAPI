@@ -1,0 +1,10 @@
+classes8.dex  LX/Exd;->A01(LLLL)
+  read opcode 0x55, dex byte offset: 0x61474a
+classes8.dex  LX/FPx;->A00(LL)
+  read opcode 0x55, dex byte offset: 0x78b902
+classes8.dex  LX/FPx;->A00(LL)
+  read opcode 0x55, dex byte offset: 0x78ba2e
+classes8.dex  LX/FPx;->A01(LLLL)
+  write opcode 0x5c, dex byte offset: 0x78c720
+classes8.dex  LX/FQe;->A00(LLL)
+  read opcode 0x55, dex byte offset: 0x793692

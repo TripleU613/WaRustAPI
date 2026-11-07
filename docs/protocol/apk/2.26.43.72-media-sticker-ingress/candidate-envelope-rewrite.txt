@@ -1,0 +1,212 @@
+
+# class: LX/Exd;
+# extends: Ljava/lang/Object;
+
+.method public A01(LLLL)  # .registers 5
+    # full signature: LX/Exd;->A01(LX/08Y;LX/DiW;Lkotlin/jvm/functions/Function0;)LX/DiW;
+    0000..0004  iget  v0, v3, LX/DiW;->bitField1_:I
+    0004..0008  and-int/lit16  v0, v0, #0x4000
+    0008..000c  if-eqz  v0, +0x174
+    000c..0010  const/16  v0, #0xaf2
+    0010..0016  invoke-virtual  {v2, v0}, LX/00E;->A14(I)Z
+    0016..0018  move-result  v0
+    0018..001c  if-nez  v0, +0xa
+    001c..0020  const/16  v0, #0x7961
+    0020..0026  invoke-virtual  {v2, v0}, LX/00E;->A14(I)Z
+    0026..0028  move-result  v0
+    0028..002c  if-eqz  v0, +0x164
+    002c..0030  iget-object  v0, v3, LX/DiW;->viewOnceMessageV2Extension_:LX/DXv;
+    0030..0034  if-nez  v0, +0x4
+    0034..0038  sget-object  v0, LX/DXv;->DEFAULT_INSTANCE:LX/DXv;
+    0038..003c  iget-object  v1, v0, LX/DXv;->message_:LX/DiW;
+    003c..0040  if-nez  v1, +0x2a
+    0040..0044  sget-object  v1, LX/DiW;->DEFAULT_INSTANCE:LX/DiW;
+    0044..0048  if-nez  v1, +0x26
+    0048..004e  invoke-virtual  {v3}, LX/DiW;->A03()Z
+    004e..0050  move-result  v0
+    0050..0054  if-eqz  v0, +0x21
+    0054..0058  iget-object  v0, v3, LX/DiW;->botGroupParticipantMessage_:LX/DXv;
+    0058..005c  if-nez  v0, +0x4
+    005c..0060  sget-object  v0, LX/DXv;->DEFAULT_INSTANCE:LX/DXv;
+    0060..0064  iget  v0, v0, LX/DXv;->bitField0_:I
+    0064..0068  and-int/lit8  v0, v0, #0x1
+    0068..006c  if-eqz  v0, +0x15
+    006c..0070  sget-object  v0, LX/EMb;->A01:LX/00f;
+    0070..0076  invoke-static  {v2, v0}, LX/00E;->A0F(LX/00E;LX/00f;)Z
+    0076..0078  move-result  v0
+    0078..007c  if-eqz  v0, +0xd
+    007c..0080  iget-object  v0, v3, LX/DiW;->botGroupParticipantMessage_:LX/DXv;
+    0080..0084  if-nez  v0, +0x4
+    0084..0088  sget-object  v0, LX/DXv;->DEFAULT_INSTANCE:LX/DXv;
+    0088..008e  invoke-static  {v0}, LX/DBc;->A0x(LX/DXv;)LX/DiW;
+    008e..0090  move-result-object  v1
+    0090..0092  return-object  v1
+    0092..0096  iget  v1, v3, LX/DiW;->bitField0_:I
+    0096..009a  const/high16  v0, #0x80000000
+    009a..00a0  invoke-static  {v1, v0}, LX/DBg;->A1L(II)Z
+    00a0..00a2  move-result  v0
+    00a2..00a6  if-eqz  v0, +0x5
+    00a6..00aa  iget-object  v0, v3, LX/DiW;->ephemeralMessage_:LX/DXv;
+    00aa..00ac  goto  -0x15
+    00ac..00b0  iget  v0, v3, LX/DiW;->bitField1_:I
+    00b0..00b4  and-int/lit16  v0, v0, #0x200
+    00b4..00ba  invoke-static  {v0}, LX/2L9;->A1M(I)Z
+    00ba..00bc  move-result  v0
+    00bc..00c0  if-eqz  v0, +0x5
+    00c0..00c4  iget-object  v0, v3, LX/DiW;->documentWithCaptionMessage_:LX/DXv;
+    00c4..00c6  goto  -0x22
+    00c6..00cc  invoke-virtual  {v3}, LX/DiW;->A06()Z
+    00cc..00ce  move-result  v0
+    00ce..00d2  if-eqz  v0, +0x2a
+    00d2..00d6  const/16  v0, #0x88d
+    00d6..00dc  invoke-virtual  {v2, v0}, LX/00E;->A14(I)Z
+    00dc..00de  move-result  v0
+    00de..00e2  if-eqz  v0, +0x22
+    00e2..00e6  iget-object  v0, v3, LX/DiW;->editedMessage_:LX/DXv;
+    00e6..00ea  if-nez  v0, +0x4
+    00ea..00ee  sget-object  v0, LX/DXv;->DEFAULT_INSTANCE:LX/DXv;
+    00ee..00f4  invoke-static  {v0}, LX/DBc;->A0x(LX/DXv;)LX/DiW;
+    00f4..00f6  move-result-object  v1
+    00f6..00fc  invoke-virtual  {v1}, LX/DiW;->A0B()Z
+    00fc..00fe  move-result  v0
+    00fe..0102  if-nez  v0, -0x37
+    0102..0108  invoke-static  {v1}, LX/DBc;->A0t(Lcom/google/protobuf/GeneratedMessageLite;)LX/DWP;
+    0108..010a  move-result-object  v1
+    010a..0110  invoke-static  {v3}, LX/DBd;->A12(LX/DiW;)LX/DiV;
+    0110..0112  move-result-object  v0
+    0112..0118  invoke-virtual  {v1, v0}, LX/DWP;->A0s(LX/DiV;)V
+    0118..011e  invoke-static  {v1}, LX/DBc;->A0w(Lcom/google/protobuf/GeneratedMessageLite$Builder;)LX/DiW;
+    011e..0120  move-result-object  v1
+    0120..0122  return-object  v1
+    0122..0128  invoke-virtual  {v3}, LX/DiW;->A04()Z
+    0128..012a  move-result  v0
+    012a..012e  if-eqz  v0, +0x5
+    012e..0132  iget-object  v0, v3, LX/DiW;->botInvokeMessage_:LX/DXv;
+    0132..0134  goto  -0x59
+    0134..0138  iget  v0, v3, LX/DiW;->bitField3_:I
+    0138..013c  and-int/lit16  v0, v0, #0x800
+    013c..0140  if-eqz  v0, +0x13
+    0140..0146  invoke-static  {v4}, LX/2LD;->A1V(Lkotlin/jvm/functions/Function0;)Z
+    0146..0148  move-result  v0
+    0148..014c  if-eqz  v0, +0xd
+    014c..0150  sget-object  v0, LX/EMb;->A00:LX/00f;
+    0150..0156  invoke-static  {v2, v0}, LX/00E;->A0F(LX/00E;LX/00f;)Z
+    0156..0158  move-result  v0
+    0158..015c  if-eqz  v0, +0x5
+    015c..0160  iget-object  v0, v3, LX/DiW;->botPlatformRegistrationSuccessMessage_:LX/DXv;
+    0160..0162  goto  -0x70
+    0162..0166  iget  v1, v3, LX/DiW;->bitField1_:I
+    0166..016a  const/high16  v0, #0x8000000
+    016a..0170  invoke-static  {v1, v0}, LX/DBg;->A1L(II)Z
+    0170..0172  move-result  v0
+    0172..0176  if-eqz  v0, +0xe
+    0176..017a  const/16  v0, #0x163c
+    017a..0180  invoke-virtual  {v2, v0}, LX/00E;->A14(I)Z
+    0180..0182  move-result  v0
+    0182..0186  if-eqz  v0, +0x6
+    0186..018a  iget-object  v0, v3, LX/DiW;->lottieStickerMessage_:LX/DXv;
+    018a..018e  goto/16  -0x85
+    018e..0192  iget  v0, v3, LX/DiW;->bitField3_:I
+    0192..0196  and-int/lit16  v0, v0, #0x4000
+    0196..019a  if-eqz  v0, +0x32
+    019a..019e  sget-object  v0, LX/EMb;->A03:LX/00f;
+    019e..01a4  invoke-static  {v2, v0}, LX/00E;->A0F(LX/00E;LX/00f;)Z
+    01a4..01a6  move-result  v0
+    01a6..01aa  if-eqz  v0, +0x2a
+    01aa..01ae  iget-object  v0, v3, LX/DiW;->audioStickerMessage_:LX/DXv;
+    01ae..01b2  if-nez  v0, +0x4
+    01b2..01b6  sget-object  v0, LX/DXv;->DEFAULT_INSTANCE:LX/DXv;
+    01b6..01bc  invoke-static  {v0}, LX/DBc;->A0x(LX/DXv;)LX/DiW;
+    01bc..01be  move-result-object  v0
+    01be..01c2  iget-object  v0, v0, LX/DiW;->stickerMessage_:LX/Di4;
+    01c2..01c6  if-nez  v0, +0x4
+    01c6..01ca  sget-object  v0, LX/Di4;->DEFAULT_INSTANCE:LX/Di4;
+    01ca..01ce  iget-boolean  v0, v0, LX/Di4;->isLottie_:Z
+    01ce..01d2  if-eqz  v0, +0x12
+    01d2..01d6  const/16  v0, #0x163c
+    01d6..01dc  invoke-virtual  {v2, v0}, LX/00E;->A14(I)Z
+    01dc..01de  move-result  v0
+    01de..01e2  if-eqz  v0, +0xe
+    01e2..01e6  const/16  v0, #0x2227
+    01e6..01ec  invoke-virtual  {v2, v0}, LX/00E;->A14(I)Z
+    01ec..01ee  move-result  v0
+    01ee..01f2  if-nez  v0, +0x6
+    01f2..01f6  iget-object  v0, v3, LX/DiW;->audioStickerMessage_:LX/DXv;
+    01f6..01fa  goto/16  -0xbb
+    01fa..01fe  iget  v0, v3, LX/DiW;->bitField2_:I
+    01fe..0202  and-int/lit8  v0, v0, #0x8
+    0202..0206  if-eqz  v0, +0xe
+    0206..020a  const/16  v0, #0x2258
+    020a..0210  invoke-virtual  {v2, v0}, LX/00E;->A14(I)Z
+    0210..0212  move-result  v0
+    0212..0216  if-eqz  v0, +0x6
+    0216..021a  iget-object  v0, v3, LX/DiW;->eventCoverImage_:LX/DXv;
+    021a..021e  goto/16  -0xcd
+    021e..0222  iget  v0, v3, LX/DiW;->bitField2_:I
+    0222..0226  and-int/lit8  v0, v0, #0x20
+    0226..022a  if-eqz  v0, +0x6
+    022a..022e  iget-object  v0, v3, LX/DiW;->statusMentionMessage_:LX/DXv;
+    022e..0232  goto/16  -0xd7
+    0232..0238  invoke-virtual  {v3}, LX/DiW;->A0C()Z
+    0238..023a  move-result  v0
+    023a..023e  if-eqz  v0, +0xe
+    023e..0242  const/16  v0, #0x572e
+    0242..0248  invoke-virtual  {v2, v0}, LX/00E;->A14(I)Z
+    0248..024a  move-result  v0
+    024a..024e  if-eqz  v0, +0x6
+    024e..0252  iget-object  v0, v3, LX/DiW;->newsletterAdminProfileMessage_:LX/DXv;
+    0252..0256  goto/16  -0xe9
+    0256..025a  iget  v0, v3, LX/DiW;->bitField3_:I
+    025a..025e  and-int/lit16  v0, v0, #0x1000
+    025e..0264  invoke-static  {v0}, LX/2L9;->A1M(I)Z
+    0264..0266  move-result  v0
+    0266..026a  if-eqz  v0, +0xf
+    026a..0270  const  v0, #0x8a5e
+    0270..0276  invoke-virtual  {v2, v0}, LX/00E;->A14(I)Z
+    0276..0278  move-result  v0
+    0278..027c  if-eqz  v0, +0x6
+    027c..0280  iget-object  v0, v3, LX/DiW;->newsletterScheduledMessage_:LX/DXv;
+    0280..0284  goto/16  -0x100
+    0284..0288  iget  v0, v3, LX/DiW;->bitField2_:I
+    0288..028c  and-int/lit16  v0, v0, #0x400
+    028c..0292  invoke-static  {v0}, LX/2L9;->A1M(I)Z
+    0292..0294  move-result  v0
+    0294..0298  if-eqz  v0, +0xe
+    0298..029c  const/16  v0, #0x2ecc
+    029c..02a2  invoke-virtual  {v2, v0}, LX/00E;->A14(I)Z
+    02a2..02a4  move-result  v0
+    02a4..02a8  if-eqz  v0, +0x6
+    02a8..02ac  iget-object  v0, v3, LX/DiW;->pollCreationMessageV4_:LX/DXv;
+    02ac..02b0  goto/16  -0x116
+    02b0..02b6  invoke-virtual  {v3}, LX/DiW;->A02()Z
+    02b6..02b8  move-result  v0
+    02b8..02bc  if-eqz  v0, +0x6
+    02bc..02c0  iget-object  v0, v3, LX/DiW;->botForwardedMessage_:LX/DXv;
+    02c0..02c4  goto/16  -0x120
+    02c4..02c8  iget  v1, v3, LX/DiW;->bitField2_:I
+    02c8..02cc  const/high16  v0, #0x40000000
+    02cc..02d2  invoke-static  {v1, v0}, LX/DBg;->A1L(II)Z
+    02d2..02d4  move-result  v0
+    02d4..02d8  if-eqz  v0, +0x26
+    02d8..02dc  const/16  v0, #0x56cd
+    02dc..02e2  invoke-virtual  {v2, v0}, LX/00E;->A14(I)Z
+    02e2..02e4  move-result  v0
+    02e4..02e8  if-eqz  v0, +0x1e
+    02e8..02ec  iget-object  v0, v3, LX/DiW;->spoilerMessage_:LX/DXv;
+    02ec..02f0  goto/16  -0x136
+    02f0..02f4  iget  v0, v3, LX/DiW;->bitField1_:I
+    02f4..02f8  and-int/lit16  v0, v0, #0x800
+    02f8..02fc  if-eqz  v0, +0x6
+    02fc..0300  iget-object  v0, v3, LX/DiW;->viewOnceMessageV2_:LX/DXv;
+    0300..0304  goto/16  -0x168
+    0304..0308  iget  v1, v3, LX/DiW;->bitField0_:I
+    0308..030c  const/high16  v0, #0x10000000
+    030c..0312  invoke-static  {v1, v0}, LX/DBg;->A1L(II)Z
+    0312..0314  move-result  v0
+    0314..0318  if-eqz  v0, -0x166
+    0318..031c  iget-object  v0, v3, LX/DiW;->viewOnceMessage_:LX/DXv;
+    031c..0320  goto/16  -0x176
+    0320..0322  const/4  v1, #0x0
+    0322..0324  return-object  v1
+    # exception table: 0 try range(s)
+.end method

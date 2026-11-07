@@ -1,0 +1,54 @@
+{
+  "README.md": {
+    "bytes": 6526,
+    "sha256": "84fa8c937a8ed0266f0f846a2c6745c89b7a47e222ead4af274484cb525f5b77"
+  },
+  "candidate-envelope-rewrite.txt": {
+    "bytes": 9776,
+    "sha256": "311a88f3af0abebb6b523a73cffdd4e66fb735dd300883333db1d5c7b7ade3d1"
+  },
+  "excluded-pack-fields.txt": {
+    "bytes": 487,
+    "sha256": "01141bc0082b92b11a496ded25f7618df89cb773aa58f6a139f0a9063e722bbb"
+  },
+  "hash-array-helper.txt": {
+    "bytes": 438,
+    "sha256": "98d4b2b3226c3fa047f6426b2604b145cab299ebdf89cca8c699e13e75e19bcb"
+  },
+  "key-array-helper.txt": {
+    "bytes": 436,
+    "sha256": "4b7b27d431d40d49a804953cc7d2ddf234ee2ceebcb27cab9cd72ff8b476876b"
+  },
+  "lottie-refs.txt": {
+    "bytes": 391,
+    "sha256": "83ff17ab4fd6cf05e6e9180caec4c2ee6369a3f24965b706c82339465625248c"
+  },
+  "lottie-schema-xrefs.txt": {
+    "bytes": 332,
+    "sha256": "32635cc51f758bd9fd4fdaad57887318a7eccc9b0c77ac09a0ac7f8a18a5d0df"
+  },
+  "normal_fields_check.py": {
+    "bytes": 1626,
+    "sha256": "d1e8e6223b3639250b270c81540125446d10b6774b2aef158c5eeff47f1ced05"
+  },
+  "oneof-array-helper.txt": {
+    "bytes": 437,
+    "sha256": "ca79a5fe582d59a45c0e32f961d986c2c447012da867742393eba08c5fba83f6"
+  },
+  "selected-normal-fields.json": {
+    "bytes": 828,
+    "sha256": "f8bbae17b8e6482a0445d07e1f002f450ec46b8f3573b1b03a5bed913ad45441"
+  },
+  "sticker-converter.txt": {
+    "bytes": 1168,
+    "sha256": "ae7ff463f32543f23a5365c8484d3cc02c1b86d51d727d4783003ef0193ff529"
+  },
+  "sticker-descriptor.txt": {
+    "bytes": 6081,
+    "sha256": "3a6e0406d3ea03d57b63fb6e8d860f8a26e57a19a62e0adbad655a0e3018195a"
+  },
+  "sticker-projector.txt": {
+    "bytes": 26204,
+    "sha256": "570e0afab8db8edc4691558463b3d3250b7f78bf702965d5ad7edbca62b137af"
+  }
+}

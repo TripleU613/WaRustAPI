@@ -1,0 +1,9 @@
+["isLottie_"]  (4 reference(s))
+  classes8.dex  LX/Dg3;->dynamicMethod(LLLL)
+    dex byte offset: 0x479d0c
+  classes8.dex  LX/DhZ;->dynamicMethod(LLLL)
+    dex byte offset: 0x483108
+  classes8.dex  LX/Dhh;->dynamicMethod(LLLL)
+    dex byte offset: 0x483fc2
+  classes8.dex  LX/Di4;->dynamicMethod(LLLL)
+    dex byte offset: 0x4870b4

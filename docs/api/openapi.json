@@ -1,4 +1,11 @@
 {
+  "x-media-sticker-whole-mime-admission": {
+    "x-cli": "existing sticker list/reference/open/save; no new command or flag",
+    "x-transport": "whole-string ASCII-insensitive WebP MIME admission before selector/cache/network authority, with Lottie exclusion",
+    "x-live": false,
+    "description": "Pinned Di4/FPx core normal fields and non-Lottie whole-string MIME comparison confirm the fix: parameters/padding/unrelated MIME cannot authorize the supported sticker path; ASCII case variants work. Expanded encrypted-store regression covers valid cached ciphertext, selector/reference exclusion, unchanged checkpoints/journal and uncached no-reservation with a refused-host backstop. General oneof decoder still refuses the new audio branch; bounded normal-prefix check does not claim full oneof/embedded audio, Unicode folding or native zero-byte transfer parity. No cache reset, retry, status relaxation or live traffic.",
+    "evidence": "docs/protocol/apk/2.26.43.72-media-sticker-ingress/README.md"
+  },
   "x-media-document-current-ingress-boundary": {
     "x-cli": "existing document references/open/save/export; no new command or flag",
     "x-transport": "research-only current document schema/parser comparison; source provenance comments only",
