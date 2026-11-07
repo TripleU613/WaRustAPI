@@ -1,0 +1,53 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   9901c:      	paciasp
+   99020:      	stp	x29, x30, [sp, #-0x20]!
+   99024:      	str	x19, [sp, #0x10]
+   99028:      	mov	x29, sp
+   9902c:      	bl	0xcb818 <JNI_OnLoad+0x5c678>
+   99030:      	bl	0xcd6d0 <_ZNSt6__ndk113basic_filebufIcNS_11char_traitsIcEEE5closeEv@plt>
+   99034:      	cbz	x0, 0x99048 <JNI_OnLoad+0x29ea8>
+   99038:      	ldr	x19, [sp, #0x10]
+   9903c:      	ldp	x29, x30, [sp], #0x20
+   99040:      	autiasp
+   99044:      	ret
+   99048:      	ldr	x8, [x19]
+   9904c:      	mov	w1, #0x4                // =4
+   99050:      	ldur	x8, [x8, #-0x18]
+   99054:      	add	x0, x19, x8
+   99058:      	ldr	x19, [sp, #0x10]
+   9905c:      	ldp	x29, x30, [sp], #0x20
+   99060:      	autiasp
+   99064:      	b	0x990b0 <JNI_OnLoad+0x29f10>
+   99068:      	paciasp
+   9906c:      	stp	x29, x30, [sp, #-0x20]!
+   99070:      	stp	x20, x19, [sp, #0x10]
+   99074:      	mov	x29, sp
+   99078:      	adrp	x20, 0xd6000
+   9907c:      	mov	x19, x0
+   99080:      	ldr	x20, [x20, #0xbd8]
+   99084:      	bl	0xcb0b4 <JNI_OnLoad+0x5bf14>
+   99088:      	add	x0, x0, #0x8
+   9908c:      	bl	0xcd3b0 <_ZNSt6__ndk113basic_filebufIcNS_11char_traitsIcEEED1Ev@plt>
+   99090:      	add	x1, x20, #0x8
+   99094:      	mov	x0, x19
+   99098:      	bl	0xccb30 <_ZNSt6__ndk113basic_ostreamIcNS_11char_traitsIcEEED2Ev@plt>
+   9909c:      	add	x0, x19, #0xb0
+   990a0:      	ldp	x20, x19, [sp, #0x10]
+   990a4:      	ldp	x29, x30, [sp], #0x20
+   990a8:      	autiasp
+   990ac:      	b	0xccb20 <_ZNSt6__ndk19basic_iosIcNS_11char_traitsIcEEED2Ev@plt>
+   990b0:      	bti	c
+   990b4:      	ldr	w8, [x0, #0x20]
+   990b8:      	orr	w1, w8, w1
+   990bc:      	b	0xcd3f0 <_ZNSt6__ndk18ios_base5clearEj@plt>
+   990c0:      	bti	c
+   990c4:      	ldrb	w8, [x1]
+   990c8:      	ldr	x9, [x1, #0x10]
+   990cc:      	tst	w8, #0x1
+   990d0:      	csinc	x1, x9, x1, ne
+   990d4:      	b	0xcd3e0 <_ZNSt6__ndk113basic_filebufIcNS_11char_traitsIcEEE4openEPKcj@plt>

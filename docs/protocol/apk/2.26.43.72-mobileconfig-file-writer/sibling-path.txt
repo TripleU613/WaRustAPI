@@ -1,0 +1,38 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   c36c4:      	paciasp
+   c36c8:      	stp	x29, x30, [sp, #-0x30]!
+   c36cc:      	str	x21, [sp, #0x10]
+   c36d0:      	stp	x20, x19, [sp, #0x20]
+   c36d4:      	mov	x29, sp
+   c36d8:      	bl	0xcacd0 <JNI_OnLoad+0x5bb30>
+   c36dc:      	adrp	x1, 0x19000
+   c36e0:      	add	x1, x1, #0xf86
+   c36e4:      	mov	x0, x20
+   c36e8:      	mov	w2, #0x8                // =8
+   c36ec:      	bl	0xbbff0 <JNI_OnLoad+0x4ce50>
+   c36f0:      	cmn	x0, #0x1
+   c36f4:      	b.eq	0xc3730 <JNI_OnLoad+0x54590>
+   c36f8:      	mov	x21, x0
+   c36fc:      	bl	0xcad54 <JNI_OnLoad+0x5bbb4>
+   c3700:      	bl	0xcade4 <JNI_OnLoad+0x5bc44>
+   c3704:      	bl	0xcca30 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2ERKS5_@plt>
+   c3708:      	adrp	x3, 0x1a000
+   c370c:      	add	x3, x3, #0xd70
+   c3710:      	bl	0xcaf64 <JNI_OnLoad+0x5bdc4>
+   c3714:      	mov	w2, #0x8                // =8
+   c3718:      	mov	w4, #0x5                // =5
+   c371c:      	bl	0xcd340 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE7replaceEmmPKcm@plt>
+   c3720:      	bl	0xcab6c <JNI_OnLoad+0x5b9cc>
+   c3724:      	ldp	x29, x30, [sp], #0x30
+   c3728:      	autiasp
+   c372c:      	ret
+   c3730:      	bl	0xca614 <JNI_OnLoad+0x5b474>
+   c3734:      	bl	0xcacdc <JNI_OnLoad+0x5bb3c>
+   c3738:      	ldp	x29, x30, [sp], #0x30
+   c373c:      	autiasp
+   c3740:      	b	0x4d9a0 <.text+0x1540>

@@ -1,0 +1,60 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   c2310:      	paciasp
+   c2314:      	sub	sp, sp, #0x90
+   c2318:      	stp	x29, x30, [sp, #0x60]
+   c231c:      	bl	0xcb1b0 <JNI_OnLoad+0x5c010>
+   c2320:      	add	x29, sp, #0x60
+   c2324:      	mrs	x22, TPIDR_EL0
+   c2328:      	bl	0xcbd8c <JNI_OnLoad+0x5cbec>
+   c232c:      	bl	0xcae5c <JNI_OnLoad+0x5bcbc>
+   c2330:      	bl	0xcce70 <_ZNSt6__ndk115system_categoryEv@plt>
+   c2334:      	stp	xzr, x0, [x29, #-0x18]
+   c2338:      	add	x0, sp, #0x30
+   c233c:      	mov	x1, x20
+   c2340:      	bl	0xc227c <JNI_OnLoad+0x530dc>
+   c2344:      	add	x0, sp, #0x30
+   c2348:      	sub	x1, x29, #0x18
+   c234c:      	bl	0xcd8a0 <_ZNSt6__ndk14__fs10filesystem8__removeERKNS1_4pathEPNS_10error_codeE@plt>
+   c2350:      	mov	w19, w0
+   c2354:      	add	x0, sp, #0x30
+   c2358:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   c235c:      	cbz	x21, 0xc23c8 <JNI_OnLoad+0x53228>
+   c2360:      	ldur	w8, [x29, #-0x18]
+   c2364:      	cbz	w8, 0xc23c8 <JNI_OnLoad+0x53228>
+   c2368:      	adrp	x1, 0x17000
+   c236c:      	add	x1, x1, #0x722
+   c2370:      	add	x0, sp, #0x30
+   c2374:      	bl	0x4d9a0 <.text+0x1540>
+   c2378:      	mov	x8, sp
+   c237c:      	sub	x0, x29, #0x18
+   c2380:      	bl	0xcd670 <_ZNKSt6__ndk110error_code7messageEv@plt>
+   c2384:      	adrp	x1, 0x1c000
+   c2388:      	add	x1, x1, #0xabf
+   c238c:      	add	x0, sp, #0x18
+   c2390:      	mov	x2, sp
+   c2394:      	bl	0x76d80 <JNI_OnLoad+0x7be0>
+   c2398:      	ldr	x8, [x21]
+   c239c:      	ldr	x8, [x8]
+   c23a0:      	bl	0xcc798 <JNI_OnLoad+0x5d5f8>
+   c23a4:      	mov	x0, x21
+   c23a8:      	mov	x3, x20
+   c23ac:      	blr	x8
+   c23b0:      	add	x0, sp, #0x18
+   c23b4:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   c23b8:      	mov	x0, sp
+   c23bc:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   c23c0:      	add	x0, sp, #0x30
+   c23c4:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   c23c8:      	bl	0xca264 <JNI_OnLoad+0x5b0c4>
+   c23cc:      	b.ne	0xc2418 <JNI_OnLoad+0x53278>
+   c23d0:      	and	w0, w19, #0x1
+   c23d4:      	bl	0xcb4b4 <JNI_OnLoad+0x5c314>
+   c23d8:      	ldp	x29, x30, [sp, #0x60]
+   c23dc:      	add	sp, sp, #0x90
+   c23e0:      	autiasp
+   c23e4:      	ret

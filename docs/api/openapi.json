@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-file-writer-evidence": {
+    "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-file-writer/inspect-writer.py <pinned-library>",
+    "x-transport": "offline storage research; no Rust transport or HTTP route enabled",
+    "x-live": false,
+    "description": "Confirmed selected static MobileConfig writer framing, per-write stream checks and post-close result gate. The alternate storage path writes two files in order and attempts removal of the first path if the second write fails; this does not establish atomic replacement, complete rollback or crash durability. Full activation and the other storage branch remain untraced.",
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-file-writer/README.md"
+  },
   "x-mobileconfig-hash-gates-evidence": {
     "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-hash-gates/inspect-hash-gates.py <pinned-library>",
     "x-transport": "offline native research; no Rust adapter or HTTP route enabled",

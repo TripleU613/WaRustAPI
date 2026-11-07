@@ -1,0 +1,62 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   98e40:      	paciasp
+   98e44:      	stp	x29, x30, [sp, #-0x50]!
+   98e48:      	str	x25, [sp, #0x10]
+   98e4c:      	bl	0xca54c <JNI_OnLoad+0x5b3ac>
+   98e50:      	mov	x29, sp
+   98e54:      	adrp	x8, 0xd6000
+   98e58:      	mov	w22, w2
+   98e5c:      	mov	x21, x1
+   98e60:      	ldr	x8, [x8, #0xbd0]
+   98e64:      	mov	x20, x0
+   98e68:      	mov	x19, x0
+   98e6c:      	str	xzr, [x0, #0xe0]
+   98e70:      	add	x24, x8, #0x40
+   98e74:      	add	x25, x8, #0x18
+   98e78:      	str	x24, [x19, #0xb0]!
+   98e7c:      	str	x25, [x0]
+   98e80:      	adrp	x23, 0xd6000
+   98e84:      	add	x2, x0, #0x8
+   98e88:      	ldr	x23, [x23, #0xbd8]
+   98e8c:      	add	x1, x23, #0x8
+   98e90:      	bl	0x51aac <.text+0x564c>
+   98e94:      	str	x25, [x20]
+   98e98:      	str	x24, [x20, #0xb0]
+   98e9c:      	add	x0, x20, #0x8
+   98ea0:      	bl	0xcd3d0 <_ZNSt6__ndk113basic_filebufIcNS_11char_traitsIcEEEC1Ev@plt>
+   98ea4:      	add	x0, x20, #0x8
+   98ea8:      	orr	w2, w22, #0x10
+   98eac:      	mov	x1, x21
+   98eb0:      	bl	0x990c0 <JNI_OnLoad+0x29f20>
+   98eb4:      	cbnz	x0, 0x98ecc <JNI_OnLoad+0x29d2c>
+   98eb8:      	ldr	x8, [x20]
+   98ebc:      	ldur	x8, [x8, #-0x18]
+   98ec0:      	add	x0, x20, x8
+   98ec4:      	mov	w1, #0x4                // =4
+   98ec8:      	bl	0x990b0 <JNI_OnLoad+0x29f10>
+   98ecc:      	ldp	x20, x19, [sp, #0x40]
+   98ed0:      	ldr	x25, [sp, #0x10]
+   98ed4:      	ldp	x22, x21, [sp, #0x30]
+   98ed8:      	ldp	x24, x23, [sp, #0x20]
+   98edc:      	ldp	x29, x30, [sp], #0x50
+   98ee0:      	autiasp
+   98ee4:      	ret
+   98ee8:      	mov	x21, x0
+   98eec:      	b	0x98f04 <JNI_OnLoad+0x29d64>
+   98ef0:      	mov	x21, x0
+   98ef4:      	b	0x98f10 <JNI_OnLoad+0x29d70>
+   98ef8:      	mov	x21, x0
+   98efc:      	add	x0, x20, #0x8
+   98f00:      	bl	0xcd3b0 <_ZNSt6__ndk113basic_filebufIcNS_11char_traitsIcEEED1Ev@plt>
+   98f04:      	add	x1, x23, #0x8
+   98f08:      	mov	x0, x20
+   98f0c:      	bl	0xccb30 <_ZNSt6__ndk113basic_ostreamIcNS_11char_traitsIcEEED2Ev@plt>
+   98f10:      	mov	x0, x19
+   98f14:      	bl	0xccb20 <_ZNSt6__ndk19basic_iosIcNS_11char_traitsIcEEED2Ev@plt>
+   98f18:      	mov	x0, x21
+   98f1c:      	bl	0xccf70 <__wrap__Unwind_Resume@plt>
