@@ -2377,3 +2377,31 @@ Changed/missing bindings refuse before encoding or application; historical
 missing revisions are not inferred. Newer pending notifications remain distinct
 from the original query binding. [Regression matrix, snapshot scope and limits](device-query-deadlines.md#durable-userrevision-ownership-2026-11-06).
 No repair, new retry policy or live operation.
+
+## Unexpected initial login nodes retain uncertainty
+
+**Confirmed local result-classification defect, corrected offline**, baseline
+`e0383e87`. record_login_reply_checked previously treated every non-success node
+as refused and could copy its reason attribute into an authentication error.
+A real-store regression supplied an IQ with reason403 after an owned login
+reservation and reproduced status=refused. Such a node is not itself an explicit
+login failure. This is a local classification correction, not a newly traced
+APK state machine or proof of a server/account refusal cause.
+
+Settlement now recognizes success and failure as its supported login outcome
+classes. Other descriptions return a fixed redacted, non-reconnectable error
+without modifying the original reservation, account, clock, identity/session
+state or journal. The connect path still captures the authenticated node before
+settlement, ends the attempt and drops its connection; it does not read another
+node, invent success, reconnect or release uncertainty. stream:error remains
+terminal but is not relabeled an explicit login failure by this result setter.
+Full native pre-login interleaving/continuation behavior remains unported here.
+
+Offline owned-reservation controls cover IQ, ACK, notification, stream:error and
+an unrecognized description, each carrying reason403/time fields. The test uses
+the actual capture/checked-settlement store seams, verifies fixed redacted error,
+unchanged account/checkpoint/peer/session/outbox snapshots and journal, then
+reopens the encrypted store and confirms the uncertain reservation still blocks
+reserve_login. It does not emulate Noise/socket admission. Existing known success/
+failure and stale-ownership tests remain controls. No live operation or wire
+construction changed, and no server-directed wait/refusal is cleared.

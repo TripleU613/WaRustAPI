@@ -10711,3 +10711,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   update checks initiating authority, never creates a default account and surfaces
   persistence errors after capture. Fake-link/reopen controls retain terminal
   no-reconnect behavior and unchanged wrong/missing account state. No live request.
+
+- Initial login no longer classifies every non-success node as refusal. Unknown
+  outcome classes retain capture and the original uncertain reservation, with a
+  fixed terminal error and no reconnect/replay. Owned store/reopen regression
+  added; supported success/failure behavior and wire construction unchanged.

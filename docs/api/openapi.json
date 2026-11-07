@@ -1,4 +1,11 @@
 {
+  "x-unexpected-login-outcome-uncertainty": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "evidence": "docs/protocol/messaging-transport.md#unexpected-initial-login-nodes-retain-uncertainty",
+    "behavior": "Initial login settlement recognizes success/failure; other captured node classes return a fixed terminal error and preserve the original uncertain reservation instead of inventing a refusal. No continuation/reconnect/replay added."
+  },
   "x-live-failure-token-account-ownership": {
     "x-cli": false,
     "x-transport": true,

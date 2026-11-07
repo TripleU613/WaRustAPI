@@ -9730,3 +9730,10 @@ Local public upload eligibility omission corrected at shared entry, including ca
   a missing account, and propagates faults. Terminal capture/no-reconnect remain;
   receive-loop/reopen controls retain refusal and account state. See
   [failure token ownership](ban-appeal.md#active-session-failure-token-account-ownership).
+
+- Confirmed initial-login outcome misclassification at `e0383e87`: an IQ carrying
+  reason403 became a stored refusal. Checked settlement now recognizes only
+  success/failure; other captured nodes end locally with original uncertainty
+  preserved. Owned real-store/reopen controls prove no state mutation or replay.
+  Native interleaving remains separate. See
+  [unexpected login outcomes](messaging-transport.md#unexpected-initial-login-nodes-retain-uncertainty).

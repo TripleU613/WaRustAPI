@@ -195,10 +195,18 @@ fn record_login_reply_checked(
     reply: &Node,
     ownership: Option<(&LoginSnapshot, &str)>,
 ) -> Result<()> {
-    let status = if reply.description == "success" {
-        "success"
-    } else {
-        "refused"
+    // Only the explicit login result classes establish a known outcome.
+    // Other authenticated stanzas remain captured, but cannot invent a refusal
+    // or release/rewrite the original uncertain login reservation.
+    let status = match reply.description.as_str() {
+        "success" => "success",
+        "failure" => "refused",
+        _ => {
+            return Err(Error::invalid(
+                "connection",
+                "unexpected login response; reservation retained",
+            ));
+        }
     };
     // `<failure reason=N>`: observed 403 for a banned account (2026-11-01).
     // 405 is the outdated-client code in public multi-device clients
@@ -2066,6 +2074,52 @@ mod tests {
                 .collect()
             })
             .unwrap()
+    }
+
+    #[test]
+    fn unexpected_login_nodes_preserve_uncertain_reservation_capture_and_account() {
+        for kind in [
+            "iq",
+            "ack",
+            "notification",
+            "stream:error",
+            "private-unrecognized-node",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("unexpected-login.redb");
+            let store = identity_store(&path);
+            let account = AccountRecord {
+                generation: store.generation(),
+                ..Default::default()
+            };
+            store.write(|tx| account.save(tx)).unwrap();
+            let snapshot = store
+                .read(|tx| LoginSnapshot::capture_in(tx, &account))
+                .unwrap();
+            let owner = reserve_login(&store, &snapshot).unwrap();
+            let reply = Node::new(kind)
+                .attr("reason", "403")
+                .attr("t", "1700000000");
+            super::super::inbox::preserve_in_epoch(&store, &reply, ConnectionEpoch(1)).unwrap();
+            let before = login_snapshot(&store);
+            let head = store.journal_head().unwrap();
+            let error =
+                record_login_reply_checked(&store, &reply, Some((&snapshot, &owner))).unwrap_err();
+            assert!(!error.is_recoverable_by_reconnect());
+            assert!(!error.to_string().contains("private-unrecognized"));
+            assert_eq!(
+                last_login_status(&store).unwrap().as_deref(),
+                Some("outcome_unknown"),
+                "{kind}: unexpected node became a refusal"
+            );
+            assert_eq!(login_snapshot(&store), before);
+            assert_eq!(store.journal_head().unwrap(), head);
+            drop(store);
+            let store = identity_store(&path);
+            assert_eq!(login_snapshot(&store), before);
+            assert!(reserve_login(&store, &snapshot).is_err());
+            assert_eq!(login_snapshot(&store), before);
+        }
     }
 
     #[test]
