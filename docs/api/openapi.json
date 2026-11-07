@@ -1,4 +1,11 @@
 {
+  "x-device-query-account-ownership": {
+    "x-cli": "existing device query/receive workflows; no new command or flag",
+    "x-transport": "DeviceQuery freezes account/store authority at reservation and rechecks before writer handoff and transactional reply adoption",
+    "x-live": false,
+    "description": "A stale device query previously passed pre-write admission after saved registration ID changed across reopen. Internal actor authority now binds store/account generation, phone, own JID, registration status/ID and identity bytes or explicit absence. Changed/missing authority refuses before state mutation. Regression covers registration, private identity, generation, JID, revoked status and missing account with unchanged checkpoint rows, restoration and once-only settlement. No wire/durable record/CLI field or automatic replay added. This local ownership fix does not establish server acceptance or full native USync policy.",
+    "evidence": "docs/protocol/device-query-account-ownership.md"
+  },
   "x-aea-account-type-input-static-boundary": {
     "x-cli": "research through existing APK inspection commands; no new command",
     "x-transport": "research only; business-profile AEA classification adoption remains unsupported",

@@ -1,5 +1,10 @@
 # Network correctness audit
 
+**Device queries now retain account ownership.** A reproduced stale actor
+passed writer admission after saved-account replacement. Reservation now freezes
+account/store authority, checked before write and transactional reply adoption.
+Refusal preserves pending/query/list state across reopen. [Evidence and tests](device-query-account-ownership.md). No live operation.
+
 **AEA account-type inputs bounded.** Exact consumers point to business-profile
 data and notifications; they do not establish a required ordinary contact/device
 query field. Native classification capability remains unported. [Evidence](aea-account-type-inputs.md). Research only; no runtime change.

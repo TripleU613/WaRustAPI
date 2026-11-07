@@ -514,6 +514,8 @@ pub struct DeviceQuery {
     iq_id: String,
     users: Vec<Jid>,
     generations: Vec<u64>,
+    // Local handoff ownership; never emitted as a stanza field.
+    account_authority: [u8; 32],
     /// After this instant the reply is no longer awaited this session.
     pub deadline: tokio::time::Instant,
 }
@@ -643,6 +645,8 @@ pub(crate) fn reserve_query_in(
     if users.is_empty() {
         return Ok(None);
     }
+    let account = crate::session::AccountRecord::load_in_write(tx)?;
+    let account_authority = query_account_authority(tx.generation(), account.as_ref())?;
     let iq_id = super::messaging::new_message_id()?;
     let sid = super::messaging::new_message_id()?;
     let generations = {
@@ -702,6 +706,7 @@ pub(crate) fn reserve_query_in(
             iq_id,
             users,
             generations,
+            account_authority,
             deadline: tokio::time::Instant::now() + std::time::Duration::from_secs(30),
         },
         node,
@@ -1021,7 +1026,53 @@ fn ingest_user(
     Ok(UserIngest::Stored)
 }
 
+// A matching IQ ID/pending revision does not authorize an actor prepared under
+// another saved account. Freeze authority at reservation and check under the
+// same transaction that would adopt its reply. This is local ownership policy,
+// not an APK wire field or permission to resend an uncertain query.
+fn query_account_authority(
+    generation: crate::model::ids::AccountGeneration,
+    account: Option<&crate::session::AccountRecord>,
+) -> Result<[u8; 32]> {
+    use sha2::{Digest, Sha256};
+    let metadata = serde_json::to_vec(&(
+        generation,
+        account.map(|a| {
+            (
+                a.generation,
+                &a.phone,
+                &a.own_jid,
+                a.registration,
+                a.signal_registration_id,
+            )
+        }),
+    ))
+    .map_err(|_| invalid("account authority serialization"))?;
+    let mut hash = Sha256::new();
+    hash.update(b"WaRustAPI device query authority v1\0");
+    hash.update((metadata.len() as u64).to_be_bytes());
+    hash.update(metadata);
+    if let Some(identity) = account.and_then(|a| a.signal_identity.as_ref()) {
+        hash.update([1]);
+        hash.update(identity.0.public);
+        hash.update(identity.0.private);
+    } else {
+        hash.update([0]);
+    }
+    Ok(hash.finalize().into())
+}
+
 impl DeviceQuery {
+    fn check_account(
+        &self,
+        generation: crate::model::ids::AccountGeneration,
+        account: Option<&crate::session::AccountRecord>,
+    ) -> Result<()> {
+        if query_account_authority(generation, account)? != self.account_authority {
+            return Err(invalid("device query account changed"));
+        }
+        Ok(())
+    }
     fn check_record(&self, record: &QueryRecord) -> Result<()> {
         if record.status != "outcome_unknown" {
             return Err(invalid("query already settled"));
@@ -1042,6 +1093,8 @@ impl DeviceQuery {
                 .get_json(Table::Checkpoints, query_key(&self.iq_id).as_bytes(), 1)?
                 .ok_or_else(|| invalid("reserved query disappeared before write"))?;
             self.check_record(&record)?;
+            let account = crate::session::AccountRecord::load(tx)?;
+            self.check_account(tx.generation(), account.as_ref())?;
             check_deadline(self.deadline)
         })
     }
@@ -1078,6 +1131,8 @@ impl DeviceQuery {
                 .get_json(Table::Checkpoints, key.as_bytes(), 1)?
                 .ok_or_else(|| invalid("reserved query disappeared"))?;
             self.check_record(&record)?;
+            let account = crate::session::AccountRecord::load_in_write(tx)?;
+            self.check_account(tx.generation(), account.as_ref())?;
             let mut summary = IngestSummary {
                 accepted,
                 ..Default::default()
@@ -1323,6 +1378,96 @@ mod tests {
         Node::new("user")
             .attr("jid", owner.clone())
             .children(vec![Node::new("devices").children(children)])
+    }
+
+    #[test]
+    fn device_query_cannot_cross_saved_account_change() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("account-owner.redb");
+        let store = open(&path);
+        let account = crate::session::AccountRecord {
+            generation: store.generation(),
+            own_jid: Some(Jid::parse("15555550199@s.whatsapp.net").unwrap()),
+            registration: crate::session::RegistrationStatus::Registered,
+            signal_registration_id: Some(31),
+            signal_identity: Some(crate::session::SignalIdentityKey(
+                crate::session::KeyMaterial {
+                    public: [1; 32],
+                    private: [2; 32],
+                },
+            )),
+            ..Default::default()
+        };
+        store.write(|tx| account.save(tx)).unwrap();
+        request_sync(&store, None, &contact(), None, "owner").unwrap();
+        let (query, iq) = begin_query(&store, SyncContext::Interactive)
+            .unwrap()
+            .unwrap();
+        let before = query_record(&store, &query.iq_id).unwrap().unwrap();
+        let baseline = store
+            .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+            .unwrap();
+        drop(store);
+        let store = open(&path);
+        for change in [
+            "registration",
+            "identity",
+            "generation",
+            "jid",
+            "status",
+            "missing",
+        ] {
+            let mut changed = account.clone();
+            match change {
+                "registration" => changed.signal_registration_id = Some(32),
+                "identity" => changed.signal_identity.as_mut().unwrap().0.private[0] ^= 1,
+                "generation" => changed.generation.0 += 1,
+                "jid" => changed.own_jid = Some(Jid::parse("15555550200@s.whatsapp.net").unwrap()),
+                "status" => changed.registration = crate::session::RegistrationStatus::Revoked,
+                _ => {}
+            }
+            store
+                .write(|tx| {
+                    if change == "missing" {
+                        tx.delete(Table::Account, b"account")?;
+                        Ok(())
+                    } else {
+                        changed.save(tx)
+                    }
+                })
+                .unwrap();
+            assert!(query.check_write_authority(&store).is_err(), "{change}");
+            assert!(
+                query
+                    .ingest(
+                        &store,
+                        &reply(&iq, vec![user_node(&contact(), &[(0, 0, false)], None)])
+                    )
+                    .is_err(),
+                "{change}"
+            );
+            assert_eq!(
+                store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
+                    .unwrap(),
+                baseline,
+                "{change}"
+            );
+            assert_eq!(query_record(&store, &query.iq_id).unwrap().unwrap(), before);
+            assert!(device_list(&store, &contact()).unwrap().is_none());
+            assert_eq!(pending_users(&store).unwrap(), [contact()]);
+        }
+        store.write(|tx| account.save(tx)).unwrap();
+        query.check_write_authority(&store).unwrap();
+        query
+            .ingest(
+                &store,
+                &reply(&iq, vec![user_node(&contact(), &[(0, 0, false)], None)]),
+            )
+            .unwrap()
+            .require_complete()
+            .unwrap();
+        assert!(query.ingest(&store, &reply(&iq, vec![])).is_err());
     }
 
     #[test]
