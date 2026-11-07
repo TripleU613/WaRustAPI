@@ -4199,6 +4199,93 @@ mod tests {
     }
 
     #[test]
+    fn group_ack_owner_refusal_preserves_outbox_and_distribution() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("group-ack-owner.redb"));
+        let account = AccountRecord {
+            generation: store.generation(),
+            signal_registration_id: Some(31),
+            ..Default::default()
+        };
+        let group = Jid::parse("123456@g.us").unwrap();
+        let own = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let peer = Jid::parse("15555550102:3@s.whatsapp.net").unwrap();
+        let local_id = store
+            .write(|tx| {
+                account.save(tx)?;
+                let (ticket, _) = outbox().enqueue(
+                    tx,
+                    &SendRequest {
+                        client_request_id: ClientRequestId::new("group-owner")?,
+                        chat: ChatId::from_jid(&group)?,
+                        content: MessageContent::Text {
+                            body: "offline fixture".into(),
+                            quoted: None,
+                            style: Default::default(),
+                        },
+                    },
+                )?;
+                let mut entry = outbox().get_mut(tx, ticket.local_id)?.unwrap();
+                entry.wire_id = Some(MessageId::new("group-owner-wire")?);
+                outbox().set_progress(tx, &mut entry, AttemptProgress::InFlight)?;
+                super::super::sender_key_distribution::reserve_in(
+                    tx,
+                    &group,
+                    &own,
+                    None,
+                    std::slice::from_ref(&peer),
+                )?;
+                super::super::sender_key_distribution::pending_ack_in(
+                    tx,
+                    &group,
+                    &own,
+                    "group-owner-wire",
+                    std::slice::from_ref(&peer),
+                )?;
+                Ok(entry.local_id)
+            })
+            .unwrap();
+        let mut replacement = account.clone();
+        replacement.signal_registration_id = Some(32);
+        store.write(|tx| replacement.save(tx)).unwrap();
+        let ack = Node::new("ack")
+            .attr("class", "message")
+            .attr("id", "group-owner-wire")
+            .attr("from", group.clone());
+        let before = store
+            .read(|tx| outbox().status(tx, local_id))
+            .unwrap()
+            .unwrap();
+        let head = store.journal_head().unwrap();
+        assert!(acknowledge(&store, &ack).is_err());
+        assert_eq!(
+            store
+                .read(|tx| outbox().status(tx, local_id))
+                .unwrap()
+                .unwrap(),
+            before
+        );
+        assert_eq!(store.journal_head().unwrap(), head);
+        assert!(
+            !store
+                .read(|tx| super::super::sender_key_distribution::load_in(tx, &group, &own))
+                .unwrap()
+                .unwrap()
+                .delivered(&peer)
+        );
+        store.write(|tx| account.save(tx)).unwrap();
+        assert!(acknowledge(&store, &ack).unwrap());
+        assert!(!acknowledge(&store, &ack).unwrap());
+        assert!(
+            store
+                .read(|tx| super::super::sender_key_distribution::load_in(tx, &group, &own))
+                .unwrap()
+                .unwrap()
+                .delivered(&peer)
+        );
+    }
+
+    #[test]
     fn acknowledgement_timestamp_uses_java_oracle_and_survives_reopen() {
         // Independent executed Java oracle, retained for 0Gv.A01 and DEX
         // mul-long semantics; ACK 1Qy.A02 uses the same parser/multiplication.

@@ -1,4 +1,11 @@
 {
+  "x-distribution-ack-account-ownership": {
+    "x-cli": "existing group outbox/transport and inspection flows; no new command or flag",
+    "x-transport": "new private PendingAck account authority checked before successful distribution ACK consumption and delivered-device mutation",
+    "x-live": false,
+    "description": "Offline red regression reproduced successful distribution ACK adoption after saved registration ID replacement. New records freeze reservation account/store authority; explicit mismatch refuses transactionally before deletion and state mutation. Ordinary outgoing successful group ACK shares this transaction with outbox facts. Tests cover unchanged state and journal, reopen and original-owner once-only completion. Legacy absence remains unknown with existing behavior; direct and failed ordinary ACK ownership remain separate work. No wire change, replay, reset or live account operation.",
+    "evidence": "docs/protocol/distribution-ack-account-ownership.md"
+  },
   "x-group-preparation-account-ownership": {
     "x-cli": "existing group outbox preparation and inspection; no new command or flag",
     "x-transport": "private preparation owner checked at stage mutation and passed to child directory creation, settlement and assembly",

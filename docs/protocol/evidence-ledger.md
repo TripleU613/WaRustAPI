@@ -1,3 +1,8 @@
+**Sender-key distribution ACKs now retain reservation account ownership.**
+Owner drift refuses before consuming the pending ACK or marking devices delivered;
+ordinary successful group ACK settlement shares that transaction with outbox facts.
+[Regression evidence and legacy/ordinary-ACK limits](distribution-ack-account-ownership.md). No live operation.
+
 **Normal group preparation now retains its original account.** Timeout/save,
 device/key-query creation and final sender-key reservation reject owner drift.
 Child key batches receive the original parent authority even on first creation.

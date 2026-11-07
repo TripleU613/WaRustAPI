@@ -191,6 +191,8 @@ pub fn reserve_in(
 
 #[derive(Serialize, Deserialize)]
 struct PendingAck {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    account_authority: Option<[u8; 32]>,
     chat: Jid,
     own: Jid,
     chain: u64,
@@ -216,7 +218,12 @@ pub fn pending_ack_in(
     let state: DistributionState = tx
         .get_json(Table::Checkpoints, &key(chat, own), 1)?
         .ok_or_else(|| Error::invalid("group_send", "distribution state missing after reserve"))?;
+    let account = crate::session::AccountRecord::load_in_write(tx)?;
     let record = PendingAck {
+        account_authority: Some(super::account_authority::fingerprint(
+            tx.generation(),
+            account.as_ref(),
+        )?),
         chat: chat.clone(),
         own: own.clone(),
         chain: state.chain,
@@ -235,6 +242,17 @@ pub fn confirm_ack_in(tx: &mut WriteTx<'_>, wire_id: &str) -> Result<()> {
     else {
         return Ok(());
     };
+    // Preserve the original reservation on owner drift. The caller's transaction
+    // also owns outbox facts, so refusal must precede consuming this ACK record.
+    if let Some(expected) = record.account_authority {
+        let account = crate::session::AccountRecord::load_in_write(tx)?;
+        if super::account_authority::fingerprint(tx.generation(), account.as_ref())? != expected {
+            return Err(Error::invalid(
+                "group_send",
+                "distribution ACK account changed",
+            ));
+        }
+    }
     tx.delete(Table::Checkpoints, &pending_key(wire_id))?;
     let selector = key(&record.chat, &record.own);
     let Some(mut state): Option<DistributionState> =
@@ -344,6 +362,60 @@ mod tests {
     }
     fn jid(raw: &str) -> Jid {
         Jid::parse(raw).unwrap()
+    }
+
+    #[test]
+    fn distribution_ack_cannot_adopt_a_replacement_account() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("ack-owner.redb");
+        let store = open(&path, true);
+        let account = crate::session::AccountRecord {
+            generation: store.generation(),
+            signal_registration_id: Some(31),
+            ..Default::default()
+        };
+        let own = jid("15555550101@s.whatsapp.net");
+        let peer = jid("15555550102:3@s.whatsapp.net");
+        let group = jid("123456@g.us");
+        store
+            .write(|tx| {
+                account.save(tx)?;
+                reserve_in(tx, &group, &own, None, std::slice::from_ref(&peer))?;
+                pending_ack_in(tx, &group, &own, "owner-wire", std::slice::from_ref(&peer))
+            })
+            .unwrap();
+        let mut replacement = account.clone();
+        replacement.signal_registration_id = Some(32);
+        store.write(|tx| replacement.save(tx)).unwrap();
+        let snapshot = || {
+            store
+                .read(|tx| tx.scan_after(Table::Checkpoints, 1, None, 4096))
+                .unwrap()
+        };
+        let before = snapshot();
+        let head = store.journal_head().unwrap();
+        assert!(store.write(|tx| confirm_ack_in(tx, "owner-wire")).is_err());
+        assert_eq!(snapshot(), before);
+        assert_eq!(store.journal_head().unwrap(), head);
+        drop(store);
+        let store = open(&path, false);
+        assert!(store.write(|tx| confirm_ack_in(tx, "owner-wire")).is_err());
+        store.write(|tx| account.save(tx)).unwrap();
+        store.write(|tx| confirm_ack_in(tx, "owner-wire")).unwrap();
+        assert!(
+            store
+                .read(|tx| load_in(tx, &group, &own))
+                .unwrap()
+                .unwrap()
+                .delivered(&peer)
+        );
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, &pending_key("owner-wire"), 1))
+                .unwrap()
+                .is_none()
+        );
+        store.write(|tx| confirm_ack_in(tx, "owner-wire")).unwrap();
     }
 
     #[test]
