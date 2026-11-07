@@ -20151,6 +20151,13 @@
     "description": "Pinned dirty stanza lazy selector/constructors/accessors establish iq/get/g.us/w:g2, supplied id/context and typed group children; selected Rust semantic fields match. ID bound is Java string length; list diagnostics do not establish hard gates without assertion policy. Legacy group admission, encoded order and callback/persistence remain separate. Existing xtask reproduces evidence; no wire/route/runtime/live change.",
     "evidence": "docs/protocol/apk/2.26.43.72-group-dirty-stanza-serializer/README.md"
   },
+  "x-reserved-action-writer-payload-binding": {
+    "x-cli": true,
+    "x-transport": true,
+    "x-live": false,
+    "description": "Writer dequeue compares the actual queued action encoding with canonical saved reservation wire in addition to account, exact row, restriction/backoff and deadline checks. Mismatch refuses locally without resetting uncertain sent work. No observed production mutation or native protocol completeness claim.",
+    "evidence": "docs/protocol/replay-safety-audit.md#reserved-action-payload-binding-at-writer-dequeue-2026-11-07"
+  },
   "x-saved-batch-group-target-admission": {
     "x-cli": true,
     "x-transport": true,

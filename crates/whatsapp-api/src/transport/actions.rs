@@ -488,7 +488,7 @@ pub(crate) struct ActionWriteGuard {
     deadline: Option<tokio::time::Instant>,
 }
 impl ActionWriteGuard {
-    pub(crate) fn check_write_authority(&self, store: &ProtocolStore) -> Result<()> {
+    pub(crate) fn check_write_authority(&self, store: &ProtocolStore, node: &Node) -> Result<()> {
         store.read(|tx| {
             let account = crate::session::AccountRecord::load(tx)?;
             if super::account_authority::fingerprint(tx.generation(), account.as_ref())?
@@ -513,9 +513,21 @@ impl ActionWriteGuard {
             #[derive(Deserialize)]
             struct AdmissionKind {
                 kind: String,
+                wire: Vec<u8>,
             }
             let row: AdmissionKind = serde_json::from_slice(&current)
                 .map_err(|_| Error::invalid("action", "invalid reserved action metadata"))?;
+            // Bind the queued payload as well as the persisted reservation. Compare
+            // canonical encodings: saved token/packing choices can differ without
+            // changing the request. Never log either payload on refusal.
+            let expected = zeroize::Zeroizing::new(encode(&decode(&row.wire)?)?);
+            let actual = zeroize::Zeroizing::new(encode(node)?);
+            if *actual != *expected {
+                return Err(Error::invalid(
+                    "action",
+                    "queued action payload differs from its reservation",
+                ));
+            }
             // Reuse reservation admission at the last local write boundary:
             // a restriction/backoff notification can arrive during queueing.
             if row.kind == "group-create"
@@ -1842,7 +1854,12 @@ mod tests {
         live.record_written(&action).unwrap();
         db.write(|tx| changed.save(tx)).unwrap();
         let before = db.read(|tx| tx.scan(Table::Checkpoints, 1, 10000)).unwrap();
-        assert!(action.guard.check_write_authority(&db).is_err());
+        assert!(
+            action
+                .guard
+                .check_write_authority(&db, &action.node)
+                .is_err()
+        );
         let reply = Node::new("iq")
             .attr("id", id.as_str())
             .attr("type", "result");
@@ -1902,7 +1919,10 @@ mod tests {
         })
         .unwrap();
         let action = reserve_next_owned(&db).unwrap().unwrap();
-        action.guard.check_write_authority(&db).unwrap();
+        action
+            .guard
+            .check_write_authority(&db, &action.node)
+            .unwrap();
         let row: serde_json::Value = db
             .read(|tx| tx.get_json(Table::Checkpoints, key(&id).as_bytes(), 1))
             .unwrap()
@@ -1916,7 +1936,12 @@ mod tests {
             Ok(())
         })
         .unwrap();
-        assert!(action.guard.check_write_authority(&db).is_err());
+        assert!(
+            action
+                .guard
+                .check_write_authority(&db, &action.node)
+                .is_err()
+        );
     }
 
     fn register_written(
@@ -2238,6 +2263,10 @@ mod tests {
             (true, 0, "label"),
             (true, 0, "sent_at"),
             (true, 0, "slow_completion"),
+            (true, 0, "node_id"),
+            (true, 0, "node_to"),
+            (true, 0, "node_root"),
+            (true, 0, "node_payload"),
         ] {
             let (dir, db) = store();
             let db = Arc::new(db);
@@ -2248,7 +2277,16 @@ mod tests {
                 super::super::blocklist::queue_fetch(&db)
             }
             .unwrap();
-            let action = reserve_next_owned(&db).unwrap().unwrap();
+            let mut action = reserve_next_owned(&db).unwrap().unwrap();
+            match change {
+                "node_id" => action.node = action.node.attr("id", "changed-fixture"),
+                "node_to" => action.node = action.node.attr("to", "changed.invalid"),
+                "node_root" => action.node.description = "message".into(),
+                "node_payload" => {
+                    action.node = action.node.children(vec![Node::new("changed-fixture")])
+                }
+                _ => {}
+            }
             let started = action.started;
             assert_eq!(
                 action.guard.deadline,
@@ -2261,7 +2299,7 @@ mod tests {
             let task = tokio::spawn(async move { link.send_action(&worker_db, &action).await });
             let queued = writes.recv().await.unwrap();
             advance(Duration::from_millis(delay_ms)).await;
-            if !matches!(change, "same" | "slow_completion") {
+            if !matches!(change, "same" | "slow_completion") && !change.starts_with("node_") {
                 db.write(|tx| {
                     if change == "missing" {
                         tx.delete(Table::Checkpoints, key(&id).as_bytes())?;

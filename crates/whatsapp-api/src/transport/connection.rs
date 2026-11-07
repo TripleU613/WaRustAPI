@@ -419,7 +419,9 @@ impl Outbound {
             Some(WriteGuard::Prekey(store, pending)) => pending.check_write_authority(&store),
             Some(WriteGuard::Devices(store, query)) => query.check_write_authority(&store),
             Some(WriteGuard::RetryRefetch(store, pending)) => pending.check_write_authority(&store),
-            Some(WriteGuard::Action(store, action)) => action.check_write_authority(&store),
+            Some(WriteGuard::Action(store, action)) => {
+                action.check_write_authority(&store, &self.node)
+            }
             Some(WriteGuard::Receipt(store, receipt)) => receipt.check_write_authority(&store),
             None => Ok(()),
         };

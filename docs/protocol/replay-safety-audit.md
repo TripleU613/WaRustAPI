@@ -1599,3 +1599,12 @@ A validly encoded registration-byte substitution is tested across store reopen,
 with unchanged pending row on refusal and once-only reservation after restoration.
 Absent legacy digests are not silently backfilled.
 [Evidence and limits](outgoing-retry-receipts.md#prepared-retry-wire-integrity-before-reservation-2026-11-07).
+
+
+## Reserved action payload binding at writer dequeue (2026-11-07)
+
+**Confirmed local admission gap, hardened offline.** `ReservedAction.node` is crate-visible. `NodeLink::send_action` cloned that node into `Outbound`, but `ActionWriteGuard` previously checked only account authority, exact saved-row bytes, restrictions/backoff and deadline. A regression changing the in-memory request ID while retaining the original guard passed `Outbound::prepare`; the persisted reservation was unchanged. No production caller mutating this node was found in the bounded transport-source search; this is a demonstrated missing invariant, not evidence that incorrect requests were sent live.
+
+The writer now passes its actual queued node into the guard. Inside the same store-read snapshot, after exact reservation equality, the guard compares the node's encoding against the re-encoded decoded saved wire using the same comparison token dictionary as the connection writer. This binds ID, destination, root, attributes and payload while allowing alternate historical packing/token choices to canonicalize. A mismatch returns a fixed local error before encoding into the transport or writing the socket. The saved `sent` row remains uncertain: no reset, retry, mutation or synthetic server refusal.
+
+The channel-level regression covers changed ID, destination, root and child payload; it checks local refusal, no admitted writer node, exact checkpoint/journal preservation and reopen. Existing unchanged/timed/untimed/deadline and changed-row controls remain. This is a local persistence-to-wire invariant, not a new APK behavior claim or proof of native protocol completeness. Other writer guard families remain separate audit boundaries. No live operation was performed.

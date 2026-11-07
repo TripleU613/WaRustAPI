@@ -1,3 +1,5 @@
+**Reserved action payloads now bind to their saved reservation at writer dequeue.** A changed in-memory ID, destination, root or body is refused locally before writing; stored uncertainty remains intact. The regression reproduced the missing guard before the fix. No production mutation or live incorrect send was observed. [Evidence and limits](replay-safety-audit.md#reserved-action-payload-binding-at-writer-dequeue-2026-11-07).
+
 **Saved batch group targets now validate before reservation.** Both reservation paths reject unconstructible historical queued `group-refresh` targets before marking sent; a late invalid row rolls back earlier reservations. Reopen regression covers unchanged checkpoints/journal and uncertain-row preservation. No rewrite, reset, replay or live acceptance claim. [Details](groups.md#saved-batch-target-admission-2026-11-07).
 
 **MobileConfig Java/native completion binding now reaches a stored callable.**
