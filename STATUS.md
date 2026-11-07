@@ -1,3 +1,10 @@
+2026-11-06 — **Verified lenient ordinary root timestamp handling in the current APK.**
+The root parser defaults missing/empty/malformed/overflow time to0 instead of
+throwing aggregate-style parse errors. Existing runtime policy is retained;
+a new codec/store regression prevents blanket487 NACKs and fabricated supplied
+zero times while preserving read facts and duplicate/reopen behavior.
+[Current parser evidence, negative hypothesis, regression and limits](docs/protocol/apk/2.26.43.72-receipt-root-time-fallback/README.md). No live account operation.
+
 2026-11-06 — **Added evidenced aggregate timestamp error487 responses.**
 Missing required item time and invalid supported signed-long text now carry a
 native timestamp cause shared by the receive/NACK paths. Key-item absence still

@@ -335,3 +335,15 @@ capture-before-write, no fact/identity/session mutation and default/valid-number
 controls. Existing atomic-fact and write-cut/no-replay tests remain. Ordinary root
 timestamps, complete binary/native clock/storage behavior and live acceptance
 remain open. No account operation or new request family.
+
+## Current-build ordinary root time remains lenient (2026-11-06)
+
+**Confirmed selected static / verified offline:** [complete43.72 optional-string, numeric-wrapper and lenient-long chain](apk/2.26.43.72-receipt-root-time-fallback/README.md)
+binds ordinary root t to 6oe.A18 ->6ol.A06 ->0HF.A01(default0), not the strict
+aggregate item chain. Missing/empty/malformed/overflow text defaults rather than
+throwing LIL; blanket487 classification would be wrong. Production behavior is
+unchanged. A new codec/encrypted-store regression verifies ordinary read ACKs
+without error, no parse-error NACK, correctly attributed facts with unknown time
+rather than fabricated supplied0, valid0/BMP controls, preserved send state,
+reopen and duplicate idempotency. Complete native row/carrier/other-handler and
+live behavior remain open; no account operation.

@@ -1,0 +1,18 @@
+{
+  "README.md": {
+    "bytes": 3784,
+    "sha256": "990c096cad616725120a9b35e074a4a2cb9e1267c21f6a19a5063a8c2f2995cf"
+  },
+  "lenient-long.txt": {
+    "bytes": 654,
+    "sha256": "4a1eb020bb9e148ae3f7c569f8a08417b3a58bdf74456fca6ddc00a1c26af078"
+  },
+  "optional-root-string.txt": {
+    "bytes": 441,
+    "sha256": "e73ef0aa7bf37ff48f58b489c034d485ae6a86d939434e570c0797d1253cbd43"
+  },
+  "root-time-millis.txt": {
+    "bytes": 464,
+    "sha256": "838a10ca68fa37f15c4b493c727ad77a436e09423553931456e12f337946a649"
+  }
+}

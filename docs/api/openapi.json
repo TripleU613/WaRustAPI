@@ -1,4 +1,11 @@
 {
+  "x-ordinary-root-time-lenient-verification": {
+    "x-cli": "existing local status/send fact inspection; no new command or flag",
+    "x-transport": "ordinary root receipt timestamp handling verified; no production behavior change",
+    "x-live": false,
+    "description": "Current APK43.72 F10.A03 root t uses optional6oe.A18 ->6ol.A06 ->0HF.A01(default0), returning default on null/empty/Long.parseLong error before wrapping millisecond multiplication. It does not use aggregate strict LIL parsing, so malformed root time alone does not authorize487. Existing public fact projection retains absent/malformed time as None rather than supplied0, while valid literal0 stays Some(0). A codec/encrypted-store regression verifies ordinary read ACK without error, no native-error NACK, correct attributed fact/time, retained intent/attempts/progress, reopen and duplicate idempotency. Native storage/carrier/other-handler/time-field parity and live acceptance remain open. No runtime, new request, identity, HTTP route or account operation change.",
+    "evidence": "docs/protocol/apk/2.26.43.72-receipt-root-time-fallback/README.md"
+  },
   "x-aggregate-timestamp-native-error-ack": {
     "x-cli": "existing receive windows; xtask apk-smali <apk> --class 'LX/0Tp;' --method A09 --signatures --exceptions; no new command or flag",
     "x-transport": "aggregate item native timestamp cause; shared ordinary error487 response builder",

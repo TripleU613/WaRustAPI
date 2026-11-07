@@ -1,0 +1,12 @@
+
+# class: LX/6oe;
+# extends: Ljava/lang/Object;
+
+.method public A18(LLL)  # .registers 3
+    # full signature: LX/6oe;->A18(LX/0Tp;Ljava/lang/String;)Ljava/lang/String;
+    0000..0002  const/4  v0, #0x0
+    0002..0008  invoke-virtual  {v1, v2, v0}, LX/0Tp;->A0M(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    0008..000a  move-result-object  v0
+    000a..000c  return-object  v0
+    # exception table: 0 try range(s)
+.end method

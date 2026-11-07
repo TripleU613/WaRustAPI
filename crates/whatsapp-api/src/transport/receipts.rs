@@ -1341,8 +1341,9 @@ pub(super) fn receipt_kind(node: &Node) -> Option<&str> {
 
 /// Supplied root receipt time, separate from local observation/admission.
 pub(super) fn server_timestamp(node: &Node) -> Option<crate::model::time::Timestamp> {
-    // APK 37.71 Cmk.A03 04e0..04fe -> 0Gv.A01: Java signed decimal
-    // seconds, then wrapping mul-long 1000. Preserve missing/invalid as
+    // APK 37.71 Cmk.A03 ->0Gv.A01; current43.72 F10.A03 ->6oe.A18
+    // ->6ol.A06 ->0HF.A01: lenient root time defaults natively to zero,
+    // unlike required/defaulted aggregate item Long parsing. Preserve missing/invalid as
     // unknown in public facts; the native device-cache path defaults to zero.
     node.get_attr("t")
         .and_then(|v| v.as_text())
@@ -4633,6 +4634,71 @@ mod tests {
                 Ok(ticket.local_id)
             })
             .unwrap()
+    }
+
+    #[test]
+    fn ordinary_root_time_fallback_never_becomes_aggregate_error_nack() {
+        use crate::model::send::DeliveryFactKind;
+        for (time, expected_ms) in [
+            (None, None),
+            (Some(""), None),
+            (Some("not-integral"), None),
+            (Some("9223372036854775808"), None),
+            (Some("-9223372036854775809"), None),
+            (Some("0"), Some(0)),
+            (Some("+٢٢"), Some(22_000)),
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("root-time-fallback.redb");
+            let store = open(&path, true);
+            let local = saved_receipt_send(
+                &store,
+                "root-time",
+                "15555550100@s.whatsapp.net",
+                "ROOT-TIME",
+            );
+            let outbox = crate::outbox::Outbox::new("root-time", crate::profile::Limits::default());
+            let before = store.read(|tx| outbox.get(tx, local)).unwrap().unwrap();
+            let mut input = Node::new("receipt")
+                .attr("id", "ROOT-TIME")
+                .attr("from", "15555550100@s.whatsapp.net")
+                .attr("type", "read");
+            if let Some(time) = time {
+                input = input.attr("t", time);
+            }
+            let wire = crate::binary::Encoder::new(
+                crate::binary::TokenDictionary::comparison_2_26_37_71(),
+            )
+            .encode(&input)
+            .unwrap();
+            let input = decode(&wire).unwrap();
+            assert!(validate(&input).is_ok());
+            assert!(super::super::messaging::received_parse_error_confirmation(&input).is_none());
+            let ack = super::super::messaging::received_confirmation(&input).unwrap();
+            assert!(ack.get_attr("error").is_none());
+            assert_eq!(ack.get_attr("type").and_then(|v| v.as_text()), Some("read"));
+            assert_eq!(record(&store, &input).unwrap(), 1);
+            let after = store.read(|tx| outbox.get(tx, local)).unwrap().unwrap();
+            assert_eq!(after.intent, before.intent);
+            assert_eq!(after.attempts, before.attempts);
+            assert_eq!(after.progress, before.progress);
+            assert_eq!(after.facts.len(), before.facts.len() + 1);
+            let fact = after.facts.last().unwrap();
+            assert_eq!(fact.kind, DeliveryFactKind::Read);
+            assert_eq!(
+                fact.server_timestamp.map(|value| value.as_millis()),
+                expected_ms
+            );
+            let head = store.journal_head().unwrap();
+            drop(store);
+            let store = open(&path, false);
+            assert_eq!(record(&store, &input).unwrap(), 0);
+            assert_eq!(store.journal_head().unwrap(), head);
+            assert_eq!(
+                store.read(|tx| outbox.get(tx, local)).unwrap().unwrap(),
+                after
+            );
+        }
     }
 
     #[test]
