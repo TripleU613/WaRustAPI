@@ -5818,3 +5818,8 @@ No live operation or automatic retry/reset.
   consumes the shared snapshot but ignores its status byte, checking availability
   and a nonnull-root probe. Full acceptance remains unknown. See
   [consumer evidence](apk/2.26.43.72-mobileconfig-handle-publication/consumer.md).
+
+- Confirmed selected APK 2.26.43.72 `reloadLatestCacheOnDisk` branches:
+  hash match exits; schema bit 0/8 selection controls translation versus
+  explicit republication. Translation failure logs then exits, with no local
+  publication fallback. See [reload trace](apk/2.26.43.72-mobileconfig-handle-publication/reload.md).

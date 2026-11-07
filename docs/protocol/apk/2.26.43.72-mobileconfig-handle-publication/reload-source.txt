@@ -1,0 +1,30 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   878e0:      	paciasp
+   878e4:      	sub	sp, sp, #0x40
+   878e8:      	stp	x29, x30, [sp, #0x20]
+   878ec:      	stp	x20, x19, [sp, #0x30]
+   878f0:      	add	x29, sp, #0x20
+   878f4:      	mrs	x20, TPIDR_EL0
+   878f8:      	mov	x19, x8
+   878fc:      	mov	x1, x0
+   87900:      	ldr	x8, [x20, #0x28]
+   87904:      	mov	x0, sp
+   87908:      	bl	0xca3cc <JNI_OnLoad+0x5b22c>
+   8790c:      	bl	0x88888 <JNI_OnLoad+0x196e8>
+   87910:      	bl	0xcacb8 <JNI_OnLoad+0x5bb18>
+   87914:      	bl	0xc310c <JNI_OnLoad+0x53f6c>
+   87918:      	mov	x0, sp
+   8791c:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   87920:      	bl	0xca2dc <JNI_OnLoad+0x5b13c>
+   87924:      	b.ne	0x8793c <JNI_OnLoad+0x1879c>
+   87928:      	ldp	x20, x19, [sp, #0x30]
+   8792c:      	ldp	x29, x30, [sp, #0x20]
+   87930:      	add	sp, sp, #0x40
+   87934:      	autiasp
+   87938:      	ret
+   8793c:      	bl	0xcd9f0 <__stack_chk_fail@plt>

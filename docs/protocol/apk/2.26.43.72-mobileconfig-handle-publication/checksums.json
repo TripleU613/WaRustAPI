@@ -1,7 +1,7 @@
 {
   "README.md": {
-    "bytes": 7525,
-    "sha256": "1c7bb3aacf0be9aef3b451c9b93701f39c9fe78e03155e56a802ad37e7b413d8"
+    "bytes": 7758,
+    "sha256": "1080ec4d48419524a0cc1fed3ce31e9d69dbc89112148125331e11f64c137f94"
   },
   "candidate-wrapper.txt": {
     "bytes": 1941,
@@ -106,6 +106,34 @@
   "rea-publication.json": {
     "bytes": 6723,
     "sha256": "ffba7773140831cea9ba9520ad93cd6def2d7a936e24f8ce9e8e9a609aa7ffe0"
+  },
+  "rea-reload.json": {
+    "bytes": 7639,
+    "sha256": "286cbdf043cd535396f19fcc6e21ded2964b3ccfccf4375d0ae3ec63b566ae60"
+  },
+  "reload-body.txt": {
+    "bytes": 5404,
+    "sha256": "79bd006e47c5595e766035f219b47a61d75cc6f2de88544e381858762748f3d5"
+  },
+  "reload-data.json": {
+    "bytes": 338,
+    "sha256": "d3d270423e7a9be07563d0a8b2c0eeb42faef591a465b83e7e63858a7d28c83a"
+  },
+  "reload-selector.txt": {
+    "bytes": 2230,
+    "sha256": "95b4db3d8773fb436e9b8e34460a80ca741ceee370eb147fe3a4431d931c4dc4"
+  },
+  "reload-slots.txt": {
+    "bytes": 166,
+    "sha256": "1f218452ccd6a3c1a06015471c2a7803d70509d64fb05bff34addc68dde5d945"
+  },
+  "reload-source.txt": {
+    "bytes": 1091,
+    "sha256": "1433c3da4df3da8df1df7ab10e6e8dde447f9f9f49feea373107baa2897af463"
+  },
+  "reload.md": {
+    "bytes": 3098,
+    "sha256": "4da4980a8dd60bbef14968b7d844bfdb221a12b118b7fd7434f0d81c6f9e2421"
   },
   "root-candidate-constructor.txt": {
     "bytes": 2504,
